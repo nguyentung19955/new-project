@@ -128,6 +128,21 @@ function render() {
     ctx.arc(sel.x, sel.y, heroStats(sel).range, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
+    // đường nối tương sinh với tướng đứng kề (màu hành sinh ra)
+    const el = HEROES[sel.type].el;
+    for (const o of game.adjacent(sel)) {
+      const oel = HEROES[o.type].el;
+      const giver = EL_SINH[oel] === el ? oel : EL_SINH[el] === oel ? el : null;
+      if (!giver) continue;
+      ctx.save();
+      ctx.strokeStyle = ELEMENTS[giver].color;
+      ctx.globalAlpha = 0.55 + 0.25 * Math.sin(t * 4);
+      ctx.lineWidth = 3;
+      ctx.setLineDash([6, 5]);
+      ctx.lineDashOffset = -t * 20;
+      ctx.beginPath(); ctx.moveTo(sel.x, sel.y - 4); ctx.lineTo(o.x, o.y - 4); ctx.stroke();
+      ctx.restore();
+    }
   }
 
   // vẽ theo trục y để vật thể phía dưới đè lên phía trên
@@ -146,8 +161,17 @@ function render() {
 
 function drawProjectile(p, t) {
   ctx.save();
-  ctx.translate(p.x, p.y);
-  ctx.rotate(p.angle || 0);
+  if (p.curve) {
+    // Bộ Chim Lạc: tên bay vòng cung
+    const all = Math.hypot(p.tx - p.sx, p.ty - p.sy) || 1;
+    const q = 1 - Math.min(1, Math.hypot(p.tx - p.x, p.ty - p.y) / all);
+    const lift = Math.min(60, all * 0.25);
+    ctx.translate(p.x, p.y - Math.sin(q * Math.PI) * lift);
+    ctx.rotate((p.angle || 0) - Math.cos(q * Math.PI) * 0.6 * Math.sign(p.tx - p.sx || 1));
+  } else {
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.angle || 0);
+  }
   switch (p.kind) {
     case 'evil':
       ctx.shadowColor = '#5AB4D6';
@@ -406,6 +430,9 @@ function drawHeroOnMap(h, t) {
   ctx.stroke();
   ctx.fillStyle = ATTRS[HEROES[h.type].attr].color;
   ctx.fillText(h.level, h.x + 22, h.y - 2.5);
+  // chấm hành
+  circle(ctx, h.x + 28.5, h.y - 12, 3.2, '#0D0B08');
+  circle(ctx, h.x + 28.5, h.y - 12, 2.4, ELEMENTS[HEROES[h.type].el].color);
   if (h.stunT > 0) {
     for (let i = 0; i < 3; i++) {
       const a = t * 5 + (i * Math.PI * 2) / 3;

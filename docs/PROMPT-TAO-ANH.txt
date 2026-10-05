@@ -1,0 +1,462 @@
+NÚI CAO NƯỚC DÂNG · PROMPT TẠO BẢNG ASSET (bám theo GAMEPLAY.md v15)
+==================================================================
+Tổng: 37 bảng asset (S01–S37, 295 ô) + 10 ảnh đơn (F01–F10).
+
+CÁCH DÙNG
+- Mở Gemini, chọn mô hình KHÁC "Flash-Lite". Copy toàn bộ từ "===== BẮT ĐẦU COPY =====" đến "===== HẾT =====", dán vào một đoạn chat mới.
+- Gemini vẽ từng bảng một rồi hỏi có tạo tiếp không. Trả lời "tiếp", "vẽ lại", hoặc nói điều cần sửa.
+- Lưu từng ảnh, ĐẶT TÊN THEO MÃ BẢNG (ví dụ S01.png, S02.png, F01.png). Gửi cho Claude để cắt tự động thành từng file PNG nền trong suốt.
+- Kiểm tra mỗi bảng: đúng số hàng × cột, mỗi ô một vật, nền ô màu xám trơn (KHÔNG phải ô carô), nhân vật không chạm viền ô. Sai thì bảo "vẽ lại".
+- Gemini quên thứ tự / đổi nét: nhắc "tiếp bảng SXX theo danh sách ban đầu, cùng phong cách bảng S01".
+- S01–S08 (tướng 4 bậc đồ): nếu có ảnh tướng đã vẽ đẹp, đính kèm để Gemini giữ đúng mặt.
+
+===== BẮT ĐẦU COPY =====
+
+Tạo các BẢNG ASSET cho game mobile "Núi Cao Nước Dâng" (thủ thành, truyền thuyết Sơn Tinh Thủy Tinh). Hãy tạo LẦN LƯỢT TỪNG ẢNH MỘT theo danh sách bên dưới, mỗi lượt chỉ 1 ảnh. Sau mỗi ảnh, ghi mã và tên ảnh vừa tạo (ví dụ "S01 - Tướng · Lạc Tướng & Lực Sĩ Núi") rồi hỏi tôi: "Tạo tiếp ảnh [mã tiếp theo] (tên) không? Trả lời 'tiếp' để tạo tiếp, 'vẽ lại' để vẽ lại ảnh này, hoặc nói điều cần sửa." Chỉ tạo ảnh tiếp theo khi tôi trả lời. Giữ cùng một phong cách cho mọi ảnh, dùng S01 làm chuẩn; nhân vật xuất hiện lại phải giữ đúng gương mặt và dáng người.
+
+PHONG CÁCH CHUNG: hand-painted stylized fantasy game art, Warcraft 3 style, chibi-heroic proportions (about 2.5 heads tall), bold readable silhouette, soft dark-brown outline, Đông Sơn bronze-drum motifs (concentric circles, 12-point star, Lạc birds), ancient Vietnamese Văn Lang era.
+
+QUY TẮC BẢNG ASSET (áp dụng cho mọi ảnh mã S):
+- Landscape 16:9. Page background: dark aged parchment. Sheet title in small bronze letters at the top-left (the sheet code and title).
+- A STRICT GRID of exactly ROWS × COLS equal square cells, evenly spaced, generous gaps between cells, aligned perfectly.
+- Every cell: flat SOLID light grey fill (#D9D9D9), NO checkerboard pattern, NO gradient, NO texture, with a thin dark bronze border.
+- Exactly ONE asset per cell, centered, fully inside the cell with margin on all sides, never touching or crossing the cell border, nothing shared between cells. No ground shadow.
+- Below each cell, OUTSIDE the cell border, a small label with the cell name. No other text inside cells.
+- Cells are filled left to right, top to bottom, in the order listed. Empty cells (if any) stay plain grey.
+
+ẢNH ĐƠN (mã F): full image, landscape 16:9 (Icon app: square), no grid, no labels, no characters unless described.
+
+DANH SÁCH:
+
+S01 Tướng · Lạc Tướng & Lực Sĩ Núi · 4 bậc đồ — grid 2 rows × 4 cols. Hero sprite, full body, 3/4 front view, same pose and same face in all 4 cells of a row. Row 1 = Lạc Tướng (male bronze-axe warrior with round bronze shield, feathered headdress, moss green and red cloth); tier changes: axe stone→bronze→engraved bronze→golden thunder axe; headwear cloth wrap→feather headdress→bronze horned helmet→tall golden Lạc feather crown; armor hemp tunic→leather with bronze plates→engraved bronze armor→golden jade armor with Lạc bird shoulders. Row 2 = Lực Sĩ Núi (huge muscular male mountain strongman carrying a boulder, rattan rope on shoulder); tier changes: axe, headwear and armor change exactly like Lạc Tướng, fitted to his huge body; he keeps the boulder.
+  1. Lạc Tướng · Thường
+  2. Lạc Tướng · Hiếm
+  3. Lạc Tướng · Sử thi
+  4. Lạc Tướng · Huyền thoại
+  5. Lực Sĩ Núi · Thường
+  6. Lực Sĩ Núi · Hiếm
+  7. Lực Sĩ Núi · Sử thi
+  8. Lực Sĩ Núi · Huyền thoại
+
+S02 Tướng · Xạ Thủ Văn Lang & Thợ Săn Rừng · 4 bậc đồ — grid 2 rows × 4 cols. Hero sprite, full body, 3/4 front view, same pose and same face in all 4 cells of a row. Row 1 = Xạ Thủ Văn Lang (young male crossbow archer with arrow quiver); tier changes: crossbow wooden→bronze→Lạc bird engraved→golden with bird-wing arms; headwear and armor change like Lạc Tướng. Row 2 = Thợ Săn Rừng (agile male jungle hunter with twin daggers and leaf cloak); tier changes: daggers bamboo knife→bronze→jade hilt→twin glowing golden leaf daggers; headwear and armor change like Lạc Tướng.
+  1. Xạ Thủ Văn Lang · Thường
+  2. Xạ Thủ Văn Lang · Hiếm
+  3. Xạ Thủ Văn Lang · Sử thi
+  4. Xạ Thủ Văn Lang · Huyền thoại
+  5. Thợ Săn Rừng · Thường
+  6. Thợ Săn Rừng · Hiếm
+  7. Thợ Săn Rừng · Sử thi
+  8. Thợ Săn Rừng · Huyền thoại
+
+S03 Tướng · Thầy Mo Lửa & Thần Sương Núi · 4 bậc đồ — grid 2 rows × 4 cols. Hero sprite, full body, 3/4 front view, same pose and same face in all 4 cells of a row. Row 1 = Thầy Mo Lửa (old male fire shaman with burning spirit torch staff); tier changes: staff curved wood→bronze round head→bronze drum top→golden staff with floating flame; headwear and armor change like Lạc Tướng. Row 2 = Thần Sương Núi (female frost mountain spirit in pale blue robes with icy mist staff); tier changes: staff curved wood→bronze round head→bronze drum top→golden staff with floating ice crystal; headwear and armor change like Lạc Tướng.
+  1. Thầy Mo Lửa · Thường
+  2. Thầy Mo Lửa · Hiếm
+  3. Thầy Mo Lửa · Sử thi
+  4. Thầy Mo Lửa · Huyền thoại
+  5. Thần Sương Núi · Thường
+  6. Thần Sương Núi · Hiếm
+  7. Thần Sương Núi · Sử thi
+  8. Thần Sương Núi · Huyền thoại
+
+S04 Tướng · Thánh Gióng & Lạc Long Quân · 4 bậc đồ — grid 2 rows × 4 cols. Hero sprite, full body, 3/4 front view, same pose and same face in all 4 cells of a row. Row 1 = Thánh Gióng (giant heroic boy in black iron armor holding a flaming bamboo staff, iron helmet); tier changes: keeps bamboo staff and iron armor shape; only material and glow change. Row 2 = Lạc Long Quân (male dragon lord in jade dragon-scale armor with dragon claw gauntlet and small dragon horns); tier changes: keeps claw gauntlet; headwear is a dragon-horn crown; only material and glow change.
+  1. Thánh Gióng · Thường
+  2. Thánh Gióng · Hiếm
+  3. Thánh Gióng · Sử thi
+  4. Thánh Gióng · Huyền thoại
+  5. Lạc Long Quân · Thường
+  6. Lạc Long Quân · Hiếm
+  7. Lạc Long Quân · Sử thi
+  8. Lạc Long Quân · Huyền thoại
+
+S05 Tướng · Thần Kim Quy & Thạch Sanh · 4 bậc đồ — grid 2 rows × 4 cols. Hero sprite, full body, 3/4 front view, same pose and same face in all 4 cells of a row. Row 1 = Thần Kim Quy (wise golden turtle god standing upright with glowing drum-pattern shell and golden claws); tier changes: headwear is a small crown; armor slot decorates his shell; only material and glow change. Row 2 = Thạch Sanh (young male woodcutter hero with axe, golden bow on his back and a magic lute); tier changes: keeps axe, bow and lute shapes; only material and glow change.
+  1. Thần Kim Quy · Thường
+  2. Thần Kim Quy · Hiếm
+  3. Thần Kim Quy · Sử thi
+  4. Thần Kim Quy · Huyền thoại
+  5. Thạch Sanh · Thường
+  6. Thạch Sanh · Hiếm
+  7. Thạch Sanh · Sử thi
+  8. Thạch Sanh · Huyền thoại
+
+S06 Tướng · Cao Lỗ & Mai An Tiêm · 4 bậc đồ — grid 2 rows × 4 cols. Hero sprite, full body, 3/4 front view, same pose and same face in all 4 cells of a row. Row 1 = Cao Lỗ (male master crossbow maker with a giant repeating crossbow with turtle-claw trigger); tier changes: keeps the repeating crossbow shape; only material and glow change. Row 2 = Mai An Tiêm (cheerful male island farmer with a basket of watermelons and a sling, conical hat); tier changes: keeps basket and sling; only material and glow change.
+  1. Cao Lỗ · Thường
+  2. Cao Lỗ · Hiếm
+  3. Cao Lỗ · Sử thi
+  4. Cao Lỗ · Huyền thoại
+  5. Mai An Tiêm · Thường
+  6. Mai An Tiêm · Hiếm
+  7. Mai An Tiêm · Sử thi
+  8. Mai An Tiêm · Huyền thoại
+
+S07 Tướng · Âu Cơ & Chử Đồng Tử · 4 bậc đồ — grid 2 rows × 4 cols. Hero sprite, full body, 3/4 front view, same pose and same face in all 4 cells of a row. Row 1 = Âu Cơ (beautiful FEMALE fairy mother with long hair, white feather wings, flower crown, holding a glowing flower branch); tier changes: armor slot changes her feather wings: plain→blue-tipped→purple-tipped→golden; only material and glow change. Row 2 = Chử Đồng Tử (humble young male fisherman with magic staff and magic conical hat, river water swirling); tier changes: keeps staff and conical hat; only material and glow change.
+  1. Âu Cơ · Thường
+  2. Âu Cơ · Hiếm
+  3. Âu Cơ · Sử thi
+  4. Âu Cơ · Huyền thoại
+  5. Chử Đồng Tử · Thường
+  6. Chử Đồng Tử · Hiếm
+  7. Chử Đồng Tử · Sử thi
+  8. Chử Đồng Tử · Huyền thoại
+
+S08 Tướng · Tiên Dung & Lang Liêu · 4 bậc đồ — grid 2 rows × 4 cols. Hero sprite, full body, 3/4 front view, same pose and same face in all 4 cells of a row. Row 1 = Tiên Dung (graceful FEMALE princess in flowing silk dress with fairy fan and pink lotus, flower hairpin); tier changes: keeps fan; only material and glow change. Row 2 = Lang Liêu (gentle young male prince with folded turban holding a tray of square bánh chưng and round bánh giầy, rice stalks around); tier changes: keeps tray and bamboo staff; only material and glow change.
+  1. Tiên Dung · Thường
+  2. Tiên Dung · Hiếm
+  3. Tiên Dung · Sử thi
+  4. Tiên Dung · Huyền thoại
+  5. Lang Liêu · Thường
+  6. Lang Liêu · Hiếm
+  7. Lang Liêu · Sử thi
+  8. Lang Liêu · Huyền thoại
+
+S09 Chân dung tướng — grid 2 rows × 4 cols. Square head-and-shoulders portrait, base outfit, inside a round bronze drum frame. Same faces as the hero sprites.
+  1. Chân dung Lạc Tướng: male bronze-axe warrior with round bronze shield, feathered headdress, moss green and red cloth
+  2. Chân dung Lực Sĩ Núi: huge muscular male mountain strongman carrying a boulder, rattan rope on shoulder
+  3. Chân dung Xạ Thủ Văn Lang: young male crossbow archer with arrow quiver
+  4. Chân dung Thợ Săn Rừng: agile male jungle hunter with twin daggers and leaf cloak
+  5. Chân dung Thầy Mo Lửa: old male fire shaman with burning spirit torch staff
+  6. Chân dung Thần Sương Núi: female frost mountain spirit in pale blue robes with icy mist staff
+  7. Chân dung Thánh Gióng: giant heroic boy in black iron armor holding a flaming bamboo staff, iron helmet
+  8. Chân dung Lạc Long Quân: male dragon lord in jade dragon-scale armor with dragon claw gauntlet and small dragon horns
+
+S10 Chân dung tướng — grid 2 rows × 4 cols. Square head-and-shoulders portrait, base outfit, inside a round bronze drum frame. Same faces as the hero sprites.
+  1. Chân dung Thần Kim Quy: wise golden turtle god standing upright with glowing drum-pattern shell and golden claws
+  2. Chân dung Thạch Sanh: young male woodcutter hero with axe, golden bow on his back and a magic lute
+  3. Chân dung Cao Lỗ: male master crossbow maker with a giant repeating crossbow with turtle-claw trigger
+  4. Chân dung Mai An Tiêm: cheerful male island farmer with a basket of watermelons and a sling, conical hat
+  5. Chân dung Âu Cơ: beautiful FEMALE fairy mother with long hair, white feather wings, flower crown, holding a glowing flower branch
+  6. Chân dung Chử Đồng Tử: humble young male fisherman with magic staff and magic conical hat, river water swirling
+  7. Chân dung Tiên Dung: graceful FEMALE princess in flowing silk dress with fairy fan and pink lotus, flower hairpin
+  8. Chân dung Lang Liêu: gentle young male prince with folded turban holding a tray of square bánh chưng and round bánh giầy, rice stalks around
+
+S11 Quân Thủy Tinh — grid 3 rows × 3 cols. Monster, full body, 3/4 front view, menacing but chibi.
+  1. Tôm Binh: shrimp soldier with spear, Water element, blue-teal
+  2. Cá Sấu: crocodile with shiny metallic bronze-silver scales (Metal element)
+  3. Cá Sấu hóa điên: same crocodile enraged, red eyes, steam
+  4. Rùa Giáp: heavy turtle with earth-brown rocky spiked shell (Earth element)
+  5. Rùa Giáp khổng lồ (tinh anh): giant elite version, glowing cracks on shell
+  6. Phù Thủy Nước: fish-like water witch casting water orbs
+  7. Chim Bão: flying storm bird with green-teal wind feathers and gusts (Wood element)
+  8. Ếch Mẹ: fat blue mother frog
+  9. Nòng Nọc: three small fast tadpoles
+
+S12 Boss & sinh vật triệu hồi — grid 2 rows × 4 cols. Boss / creature, full body, 3/4 front view.
+  1. Thuồng Luồng: giant river serpent with fins, glowing eyes
+  2. Thuồng Luồng hóa điên: same serpent enraged, red eyes, steaming red scales
+  3. Hà Bá: old river lord in pearl and shell armor, long beard, coral staff
+  4. Hà Bá giai đoạn 2 (Kim): same river lord resurfaced, scales turned shining bronze-silver metal
+  5. Thủy Tinh: water god with coral crown, water trident, storm clouds
+  6. Lạc Tử: small Lạc children warriors hatching from a glowing egg sack
+  7. Chim Thần: flock of small magic birds
+  8. Chim Lạc: one white-gold Lạc bird diving to attack
+
+S13 Giao Long Con & sính lễ — grid 2 rows × 4 cols.
+  1. Giao Long Con · Kim: small baby water dragon, silver-white scales
+  2. Giao Long Con · Mộc: same baby dragon, green scales
+  3. Giao Long Con · Thủy: same baby dragon, dark blue scales
+  4. Giao Long Con · Hỏa: same baby dragon, red scales
+  5. Giao Long Con · Thổ: same baby dragon, earth-gold scales
+  6. Voi Chín Ngà: nine-tusked elephant treasure
+  7. Gà Chín Cựa: nine-spurred rooster treasure
+  8. Ngựa Chín Hồng Mao: horse with nine red manes treasure
+
+S14 Đồ · Rìu & Dao găm — grid 2 rows × 4 cols. Item icon, single object, 3/4 view. Rarity style: Thường plain wood/cloth brown-grey no glow; Hiếm bright bronze thin blue glow; Sử thi engraved bronze with drum patterns and purple jade, purple glow; Huyền thoại gold with Lạc bird engravings, orange-gold aura.
+  1. Rìu · Thường: stone axe with wooden handle
+  2. Rìu · Hiếm: bronze axe
+  3. Rìu · Sử thi: bronze axe engraved with drum patterns
+  4. Rìu · Huyền thoại: golden thunder axe with lightning
+  5. Dao găm · Thường: sharpened bamboo knife
+  6. Dao găm · Hiếm: bronze dagger
+  7. Dao găm · Sử thi: bronze dagger with jade hilt
+  8. Dao găm · Huyền thoại: twin golden daggers with glowing leaf blades
+
+S15 Đồ · Nỏ & Gậy — grid 2 rows × 4 cols. Item icon, single object, 3/4 view. Rarity style: Thường plain wood/cloth brown-grey no glow; Hiếm bright bronze thin blue glow; Sử thi engraved bronze with drum patterns and purple jade, purple glow; Huyền thoại gold with Lạc bird engravings, orange-gold aura.
+  1. Nỏ · Thường: simple wooden crossbow
+  2. Nỏ · Hiếm: bronze crossbow
+  3. Nỏ · Sử thi: crossbow engraved with Lạc birds
+  4. Nỏ · Huyền thoại: golden crossbow with Lạc bird wings as arms
+  5. Gậy · Thường: curved wooden stick
+  6. Gậy · Hiếm: bronze staff with round head
+  7. Gậy · Sử thi: staff topped with a small bronze drum
+  8. Gậy · Huyền thoại: golden staff with floating flame and ice crystal
+
+S16 Đồ · Mũ & Giáp — grid 2 rows × 4 cols. Item icon, single object, 3/4 view. Rarity style: Thường plain wood/cloth brown-grey no glow; Hiếm bright bronze thin blue glow; Sử thi engraved bronze with drum patterns and purple jade, purple glow; Huyền thoại gold with Lạc bird engravings, orange-gold aura. Armor shown with no body inside.
+  1. Mũ · Thường: cloth head wrap
+  2. Mũ · Hiếm: feathered headdress
+  3. Mũ · Sử thi: bronze horned helmet
+  4. Mũ · Huyền thoại: tall golden Lạc bird feather crown
+  5. Giáp · Thường: rough hemp tunic
+  6. Giáp · Hiếm: leather armor with bronze plates
+  7. Giáp · Sử thi: engraved bronze armor
+  8. Giáp · Huyền thoại: golden armor inlaid with jade, Lạc bird head shoulders
+
+S17 Bộ Lạc Long (Thủy) — grid 2 rows × 4 cols. Epic-to-legendary equipment set, all pieces in one consistent design: jade green and gold dragon scales.
+  1. Lạc Long · Rìu: axe made of jade green and gold dragon scales
+  2. Lạc Long · Dao găm: dagger made of jade green and gold dragon scales
+  3. Lạc Long · Nỏ: crossbow made of jade green and gold dragon scales
+  4. Lạc Long · Gậy: magic staff made of jade green and gold dragon scales
+  5. Lạc Long · Mũ: helmet made of jade green and gold dragon scales
+  6. Lạc Long · Giáp: chest armor made of jade green and gold dragon scales, no body inside
+  7. Lạc Long · Hiệu ứng sau lưng: pair of large jade-green dragon wings, seen from the front as it would appear behind a hero, nothing else
+  8. Lạc Long · Huy hiệu bộ: round bronze emblem badge of the Lạc Long set
+
+S18 Bộ Sơn Tinh (Thổ) — grid 2 rows × 4 cols. Epic-to-legendary equipment set, all pieces in one consistent design: mossy stone and earth-gold, rock textures.
+  1. Sơn Tinh · Rìu: axe made of mossy stone and earth-gold, rock textures
+  2. Sơn Tinh · Dao găm: dagger made of mossy stone and earth-gold, rock textures
+  3. Sơn Tinh · Nỏ: crossbow made of mossy stone and earth-gold, rock textures
+  4. Sơn Tinh · Gậy: magic staff made of mossy stone and earth-gold, rock textures
+  5. Sơn Tinh · Mũ: helmet made of mossy stone and earth-gold, rock textures
+  6. Sơn Tinh · Giáp: chest armor made of mossy stone and earth-gold, rock textures, no body inside
+  7. Sơn Tinh · Hiệu ứng sau lưng: small floating mountain of rocks, seen from the front as it would appear behind a hero, nothing else
+  8. Sơn Tinh · Huy hiệu bộ: round bronze emblem badge of the Sơn Tinh set
+
+S19 Bộ Chim Lạc (Kim) — grid 2 rows × 4 cols. Epic-to-legendary equipment set, all pieces in one consistent design: silver-white and gold feathers.
+  1. Chim Lạc · Rìu: axe made of silver-white and gold feathers
+  2. Chim Lạc · Dao găm: dagger made of silver-white and gold feathers
+  3. Chim Lạc · Nỏ: crossbow made of silver-white and gold feathers
+  4. Chim Lạc · Gậy: magic staff made of silver-white and gold feathers
+  5. Chim Lạc · Mũ: helmet made of silver-white and gold feathers
+  6. Chim Lạc · Giáp: chest armor made of silver-white and gold feathers, no body inside
+  7. Chim Lạc · Hiệu ứng sau lưng: pair of white-gold Lạc bird feather wings, seen from the front as it would appear behind a hero, nothing else
+  8. Chim Lạc · Huy hiệu bộ: round bronze emblem badge of the Chim Lạc set
+
+S20 Bộ Trống Đồng (Kim) — grid 2 rows × 4 cols. Epic-to-legendary equipment set, all pieces in one consistent design: dark bronze engraved with drum patterns.
+  1. Trống Đồng · Rìu: axe made of dark bronze engraved with drum patterns
+  2. Trống Đồng · Dao găm: dagger made of dark bronze engraved with drum patterns
+  3. Trống Đồng · Nỏ: crossbow made of dark bronze engraved with drum patterns
+  4. Trống Đồng · Gậy: magic staff made of dark bronze engraved with drum patterns
+  5. Trống Đồng · Mũ: helmet made of dark bronze engraved with drum patterns
+  6. Trống Đồng · Giáp: chest armor made of dark bronze engraved with drum patterns, no body inside
+  7. Trống Đồng · Hiệu ứng sau lưng: large bronze drum face disk, seen from the front as it would appear behind a hero, nothing else
+  8. Trống Đồng · Huy hiệu bộ: round bronze emblem badge of the Trống Đồng set
+
+S21 Bộ Ngựa Sắt (Hỏa) — grid 2 rows × 4 cols. Epic-to-legendary equipment set, all pieces in one consistent design: black iron glowing red, flame accents.
+  1. Ngựa Sắt · Rìu: axe made of black iron glowing red, flame accents
+  2. Ngựa Sắt · Dao găm: dagger made of black iron glowing red, flame accents
+  3. Ngựa Sắt · Nỏ: crossbow made of black iron glowing red, flame accents
+  4. Ngựa Sắt · Gậy: magic staff made of black iron glowing red, flame accents
+  5. Ngựa Sắt · Mũ: helmet made of black iron glowing red, flame accents
+  6. Ngựa Sắt · Giáp: chest armor made of black iron glowing red, flame accents, no body inside
+  7. Ngựa Sắt · Hiệu ứng sau lưng: flaming horse mane trailing, seen from the front as it would appear behind a hero, nothing else
+  8. Ngựa Sắt · Huy hiệu bộ: round bronze emblem badge of the Ngựa Sắt set
+
+S22 Phụ kiện 1 — grid 2 rows × 4 cols. Accessory item icon, simple, common-to-rare look, no strong glow.
+  1. Vuốt Hổ: tiger claw
+  2. Găng Da: leather glove
+  3. Đai: belt with bronze buckle
+  4. Dép Cỏ: woven grass sandals
+  5. Khăn: cloth scarf
+  6. Khăn Hiền Giả: sage scarf with symbols
+  7. Mắt Ngọc: jade eye gem
+  8. Ngọc Sinh Lực: red life jade
+
+S23 Phụ kiện 2 — grid 2 rows × 3 cols. Accessory item icon, simple, common-to-rare look, no strong glow.
+  1. Mặt Trống: bronze drum face
+  2. Dùi Trống: drumstick
+  3. Sừng Tê: rhino horn
+  4. Lông Chim Lạc: white-gold Lạc bird feather
+  5. Vảy Cá: shimmering fish scale
+  6. Hạt Lúa: bundle of golden rice grains
+
+S24 Đồ ghép 1 — grid 2 rows × 4 cols. Crafted item icon, powerful, its own colored aura.
+  1. Song Rìu Cuồng Nộ: twin fury axes
+  2. Gậy Tam Giới: three-realm staff
+  3. Gậy Thời Không: time staff with hourglass jade
+  4. Giáp Đồng Bất Diệt: immortal bronze armor
+  5. Lưỡi Hái Chí Tử: death scythe
+  6. Trống Đồng: small bronze drum with drumstick
+  7. Mũi Sừng Phá Giáp: horn-tipped bronze spear point
+  8. Rìu Quét Sông: wide river-sweeping axe
+
+S25 Đồ ghép 2 — grid 2 rows × 3 cols. Crafted item icon, powerful, its own colored aura.
+  1. Cung Mắt Chim: bird-eye bow with jade
+  2. Bùa Chim Lạc: Lạc bird feather amulet
+  3. Áo Vảy Cá: fish-scale vest
+  4. Ngọc Trấn Thủy: blue jade water-sealing orb
+  5. Lưới Đánh Cá: glowing fishing net
+  6. Bồ Lúa Thần: golden rice basket
+
+S26 Ngũ hành & tiến hoá — grid 2 rows × 4 cols.
+  1. Hành Kim: round bronze-drum badge with silver-white axe blade symbol
+  2. Hành Mộc: same badge with green sprout symbol
+  3. Hành Thủy: same badge with dark blue wave symbol
+  4. Hành Hỏa: same badge with red flame symbol
+  5. Hành Thổ: same badge with earth-gold mountain symbol
+  6. Tiến hoá ★: top-down ground aura: one bronze drum-pattern ring
+  7. Tiến hoá ★★: top-down ground aura: two rings, inner ring glowing
+  8. Tiến hoá ★★★: three rings with rising sparks and a floating 12-point drum star
+
+S27 Giao diện 1 · tài nguyên — grid 2 rows × 4 cols.
+  1. Đồng xu: ancient round bronze coin with square hole
+  2. Đống vàng: pile of bronze coins
+  3. Mạng: red heart token with drum pattern
+  4. Mực nước: rising water level gauge icon
+  5. Hũ báu: clay treasure jar with glowing lid
+  6. Hũ Vua Hùng: royal golden treasure jar
+  7. Kho lúa: rice granary basket
+  8. Gọi sớm: bronze horn blowing
+
+S28 Giao diện 2 · nâng cấp & bí truyền — grid 2 rows × 4 cols.
+  1. Hiệu ứng ẩn ???: bronze seal with a question mark, mysterious
+  2. Đã khám phá: opened scroll with golden light
+  3. Khung chân dung thường: empty round bronze portrait frame
+  4. Khung chân dung vàng: empty ornate golden portrait frame with Lạc birds
+  5. Tôi luyện ✦: glowing four-point star over an anvil fire
+  6. Luyện thể: muscular arm with golden aura
+  7. Tẩy luyện: swirling dice-like jade cycle symbol
+  8. Khóa đồ: bronze padlock
+
+S29 Bản đồ · núi, thành, ô đặt tướng — grid 2 rows × 5 cols.
+  1. Núi Tản Viên 1: small hill
+  2. Núi Tản Viên 2: rocky hill
+  3. Núi Tản Viên 3: forested mountain
+  4. Núi Tản Viên 4: tall mountain with lingzhi mushrooms
+  5. Núi Tản Viên 5: giant sacred mountain with golden light at peak
+  6. Thành Phong Châu: ancient walled citadel, wooden gates, bronze drums on towers, top-down 3/4 view
+  7. Ô thấp: small grassy stone tile for placing a hero, low near river, top-down 3/4
+  8. Ô giữa: same tile on a raised earth step
+  9. Ô cao: same tile on a high rocky hill top
+  10. Ô ngập: same low tile flooded with muddy water
+
+S30 Icon kỹ năng · Lạc Tướng & Lực Sĩ Núi — grid 2 rows × 4 cols. Square skill icon, single clear symbol, high contrast. Frames: Q gold frame; W and E dark frame with inner border (passive); R double gold glowing frame.
+  1. Lạc Tướng · Q Khiên Đồng: bronze shield bash with stun stars
+  2. Lạc Tướng · W Rìu Lốc Xoáy: spinning axe whirlwind
+  3. Lạc Tướng · E Hùng Khí: red battle aura, speed lines
+  4. Lạc Tướng · R Sấm Tản Viên: lightning bolt from mountain sky
+  5. Lực Sĩ Núi · Q Dây Mây: rattan rope lasso pulling
+  6. Lực Sĩ Núi · W Gánh Núi: shoulders carrying a mountain
+  7. Lực Sĩ Núi · E Bụi Đá: rock dust explosion ring
+  8. Lực Sĩ Núi · R Vùi Đá: monster buried under boulders
+
+S31 Icon kỹ năng · Xạ Thủ Văn Lang & Thợ Săn Rừng — grid 2 rows × 4 cols. Square skill icon, single clear symbol, high contrast. Frames: Q gold frame; W and E dark frame with inner border (passive); R double gold glowing frame.
+  1. Xạ Thủ Văn Lang · Q Tên Xuyên Thấu: arrow piercing through
+  2. Xạ Thủ Văn Lang · W Đa Tiễn: fan of multiple arrows
+  3. Xạ Thủ Văn Lang · E Tên Tẩm Nhựa Độc: green poison-dripping arrow
+  4. Xạ Thủ Văn Lang · R Mưa Tên: rain of arrows from sky
+  5. Thợ Săn Rừng · Q Bước Lá Rừng: X-shaped slash with leaves
+  6. Thợ Săn Rừng · W Dao Ẩn: hidden dagger in shadow
+  7. Thợ Săn Rừng · E Đòn Chí Mạng: critical strike burst
+  8. Thợ Săn Rừng · R Săn Mồi: predator eye with crossed daggers
+
+S32 Icon kỹ năng · Thầy Mo Lửa & Thần Sương Núi — grid 2 rows × 4 cols. Square skill icon, single clear symbol, high contrast. Frames: Q gold frame; W and E dark frame with inner border (passive); R double gold glowing frame.
+  1. Thầy Mo Lửa · Q Cột Lửa: pillar of fire
+  2. Thầy Mo Lửa · W Đuốc Linh Hồn: spirit torch with soul flame
+  3. Thầy Mo Lửa · E Lửa Thiêu: burning embers
+  4. Thầy Mo Lửa · R Hỏa Sơn: flaming rocks falling from sky
+  5. Thần Sương Núi · Q Vòng Sương: frost ring
+  6. Thần Sương Núi · W Mũi Sương Giá: ice shard spear
+  7. Thần Sương Núi · E Hơi Lạnh Đỉnh Núi: cold wind from snowy peak
+  8. Thần Sương Núi · R Mù Sương Tản Viên: frozen mist dome
+
+S33 Icon kỹ năng · Thánh Gióng & Lạc Long Quân — grid 2 rows × 4 cols. Square skill icon, single clear symbol, high contrast. Frames: Q gold frame; W and E dark frame with inner border (passive); R double gold glowing frame.
+  1. Thánh Gióng · Q Gậy Tre Ngà: bamboo staff smash
+  2. Thánh Gióng · W Giáp Sắt: iron armor plate
+  3. Thánh Gióng · E Ngựa Sắt Phun Lửa: iron horse breathing fire
+  4. Thánh Gióng · R Bay Về Trời: hero rising to the sky on horse
+  5. Lạc Long Quân · Q Vuốt Rồng: dragon claw slash
+  6. Lạc Long Quân · W Vảy Rồng: jade dragon scales
+  7. Lạc Long Quân · E Gầm Biển: roaring sea wave
+  8. Lạc Long Quân · R Hóa Rồng: dragon breathing water and lightning
+
+S34 Icon kỹ năng · Thần Kim Quy & Thạch Sanh — grid 2 rows × 4 cols. Square skill icon, single clear symbol, high contrast. Frames: Q gold frame; W and E dark frame with inner border (passive); R double gold glowing frame.
+  1. Thần Kim Quy · Q Mai Vàng: golden shell shield
+  2. Thần Kim Quy · W Móng Thần: golden turtle claw
+  3. Thần Kim Quy · E Địa Chấn: earthquake crack
+  4. Thần Kim Quy · R Kim Quy Hộ Thành: golden turtle guarding a citadel
+  5. Thạch Sanh · Q Rìu Đốn Củi: woodcutter axe chop
+  6. Thạch Sanh · W Cung Tên Vàng: golden bow and arrow
+  7. Thạch Sanh · E Đàn Thần: magic lute with music notes
+  8. Thạch Sanh · R Diệt Chằn Tinh: giant slash slaying an ogre
+
+S35 Icon kỹ năng · Cao Lỗ & Mai An Tiêm — grid 2 rows × 4 cols. Square skill icon, single clear symbol, high contrast. Frames: Q gold frame; W and E dark frame with inner border (passive); R double gold glowing frame.
+  1. Cao Lỗ · Q Nỏ Liên Châu: three arrows at once
+  2. Cao Lỗ · W Lẫy Thần: magic crossbow trigger
+  3. Cao Lỗ · E Tên Móng Rùa: turtle-claw arrowhead
+  4. Cao Lỗ · R Nỏ Thần: giant beam arrow piercing a line
+  5. Mai An Tiêm · Q Ném Dưa Hấu: flying watermelon
+  6. Mai An Tiêm · W Hạt Giống Vàng: golden seeds
+  7. Mai An Tiêm · E Chim Thần: flock of magic birds
+  8. Mai An Tiêm · R Mưa Dưa: watermelons raining down
+
+S36 Icon kỹ năng · Âu Cơ & Chử Đồng Tử — grid 2 rows × 4 cols. Square skill icon, single clear symbol, high contrast. Frames: Q gold frame; W and E dark frame with inner border (passive); R double gold glowing frame.
+  1. Âu Cơ · Q Hoa Tiên: healing fairy flower
+  2. Âu Cơ · W Lông Vũ Tiên: flying fairy feathers
+  3. Âu Cơ · E Núi Mẹ: rock spikes rising
+  4. Âu Cơ · R Bọc Trăm Trứng: glowing egg sack hatching
+  5. Chử Đồng Tử · Q Gậy Thần: healing magic staff
+  6. Chử Đồng Tử · W Nón Thần: magic conical hat shield
+  7. Chử Đồng Tử · E Sóng Sông Hồng: red river wave
+  8. Chử Đồng Tử · R Thành Một Đêm: citadel rising overnight
+
+S37 Icon kỹ năng · Tiên Dung & Lang Liêu — grid 2 rows × 4 cols. Square skill icon, single clear symbol, high contrast. Frames: Q gold frame; W and E dark frame with inner border (passive); R double gold glowing frame.
+  1. Tiên Dung · Q Quạt Tiên: fairy fan gust
+  2. Tiên Dung · W Ánh Ngọc: glowing jade light
+  3. Tiên Dung · E Sen Hồng: pink lotus healing
+  4. Tiên Dung · R Mưa Hoa Tiên: rain of fairy flowers
+  5. Lang Liêu · Q Bánh Chưng: square rice cake shield
+  6. Lang Liêu · W Bánh Giầy: round rice cake healing
+  7. Lang Liêu · E Ruộng Lúa: rice field growing
+  8. Lang Liêu · R Lễ Tổ Tiên: ancestral altar with golden light
+
+F01 Bản đồ ải 1: top-down 3/4 game map, winding river from right to left, grassy banks with stone hero tiles on three height levels, walled citadel Phong Châu at the left end, Tản Viên mountain in background.
+F02 Bản đồ ải 2: same map style, river gorge with cliffs and rice terraces, flooded areas.
+F03 Bản đồ ải 3: same map style, wide river delta with bamboo forests and stilt houses.
+F04 Bản đồ ải 4: same map style, stormy night river with rain and lightning, final battle near Phong Châu.
+F05 Truyện 1: storybook painting: King Hùng on his throne announcing a contest to marry his daughter Mị Nương.
+F06 Truyện 2: storybook painting: Sơn Tinh and Thủy Tinh arriving with wedding gifts, mountain side versus sea side.
+F07 Truyện 3: storybook painting: Sơn Tinh raising mountains while Thủy Tinh summons a great flood with water monsters.
+F08 Nền menu: epic scene, Sơn Tinh on a mountain facing Thủy Tinh on a giant wave, stormy sky, empty space in the center for buttons.
+F09 Logo: title "Núi Cao Nước Dâng" in bold bronze carved letters with correct Vietnamese diacritics, mountain left, rising wave right, Đông Sơn drum circle behind, dark background.
+F10 Icon app: square app icon, bronze mountain peak above a crashing blue wave inside a round bronze drum frame, no text.
+
+Bắt đầu với S01.
+
+===== HẾT =====
+
+BẢNG TÊN FILE SAU KHI CẮT (Claude dùng bảng này để đặt tên)
+S01: 1=lac-tuong_thuong, 2=lac-tuong_hiem, 3=lac-tuong_su-thi, 4=lac-tuong_huyen-thoai, 5=luc-si-nui_thuong, 6=luc-si-nui_hiem, 7=luc-si-nui_su-thi, 8=luc-si-nui_huyen-thoai
+S02: 1=xa-thu-van-lang_thuong, 2=xa-thu-van-lang_hiem, 3=xa-thu-van-lang_su-thi, 4=xa-thu-van-lang_huyen-thoai, 5=tho-san-rung_thuong, 6=tho-san-rung_hiem, 7=tho-san-rung_su-thi, 8=tho-san-rung_huyen-thoai
+S03: 1=thay-mo-lua_thuong, 2=thay-mo-lua_hiem, 3=thay-mo-lua_su-thi, 4=thay-mo-lua_huyen-thoai, 5=than-suong-nui_thuong, 6=than-suong-nui_hiem, 7=than-suong-nui_su-thi, 8=than-suong-nui_huyen-thoai
+S04: 1=thanh-giong_thuong, 2=thanh-giong_hiem, 3=thanh-giong_su-thi, 4=thanh-giong_huyen-thoai, 5=lac-long-quan_thuong, 6=lac-long-quan_hiem, 7=lac-long-quan_su-thi, 8=lac-long-quan_huyen-thoai
+S05: 1=than-kim-quy_thuong, 2=than-kim-quy_hiem, 3=than-kim-quy_su-thi, 4=than-kim-quy_huyen-thoai, 5=thach-sanh_thuong, 6=thach-sanh_hiem, 7=thach-sanh_su-thi, 8=thach-sanh_huyen-thoai
+S06: 1=cao-lo_thuong, 2=cao-lo_hiem, 3=cao-lo_su-thi, 4=cao-lo_huyen-thoai, 5=mai-an-tiem_thuong, 6=mai-an-tiem_hiem, 7=mai-an-tiem_su-thi, 8=mai-an-tiem_huyen-thoai
+S07: 1=au-co_thuong, 2=au-co_hiem, 3=au-co_su-thi, 4=au-co_huyen-thoai, 5=chu-dong-tu_thuong, 6=chu-dong-tu_hiem, 7=chu-dong-tu_su-thi, 8=chu-dong-tu_huyen-thoai
+S08: 1=tien-dung_thuong, 2=tien-dung_hiem, 3=tien-dung_su-thi, 4=tien-dung_huyen-thoai, 5=lang-lieu_thuong, 6=lang-lieu_hiem, 7=lang-lieu_su-thi, 8=lang-lieu_huyen-thoai
+S09: 1=chan-dung_lac-tuong, 2=chan-dung_luc-si-nui, 3=chan-dung_xa-thu-van-lang, 4=chan-dung_tho-san-rung, 5=chan-dung_thay-mo-lua, 6=chan-dung_than-suong-nui, 7=chan-dung_thanh-giong, 8=chan-dung_lac-long-quan
+S10: 1=chan-dung_than-kim-quy, 2=chan-dung_thach-sanh, 3=chan-dung_cao-lo, 4=chan-dung_mai-an-tiem, 5=chan-dung_au-co, 6=chan-dung_chu-dong-tu, 7=chan-dung_tien-dung, 8=chan-dung_lang-lieu
+S11: 1=quai_tom-binh, 2=quai_ca-sau, 3=quai_ca-sau-hoa-dien, 4=quai_rua-giap, 5=quai_rua-giap-tinh-anh, 6=quai_phu-thuy-nuoc, 7=quai_chim-bao, 8=quai_ech-me, 9=quai_nong-noc
+S12: 1=boss_thuong-luong, 2=boss_thuong-luong-hoa-dien, 3=boss_ha-ba, 4=boss_ha-ba-kim, 5=boss_thuy-tinh, 6=trieu-hoi_lac-tu, 7=trieu-hoi_chim-than, 8=trieu-hoi_chim-lac
+S13: 1=giao-long_kim, 2=giao-long_moc, 3=giao-long_thuy, 4=giao-long_hoa, 5=giao-long_tho, 6=sinh-le_voi-chin-nga, 7=sinh-le_ga-chin-cua, 8=sinh-le_ngua-chin-hong-mao
+S14: 1=do_riu_thuong, 2=do_riu_hiem, 3=do_riu_su-thi, 4=do_riu_huyen-thoai, 5=do_dao_thuong, 6=do_dao_hiem, 7=do_dao_su-thi, 8=do_dao_huyen-thoai
+S15: 1=do_no_thuong, 2=do_no_hiem, 3=do_no_su-thi, 4=do_no_huyen-thoai, 5=do_gay_thuong, 6=do_gay_hiem, 7=do_gay_su-thi, 8=do_gay_huyen-thoai
+S16: 1=do_mu_thuong, 2=do_mu_hiem, 3=do_mu_su-thi, 4=do_mu_huyen-thoai, 5=do_giap_thuong, 6=do_giap_hiem, 7=do_giap_su-thi, 8=do_giap_huyen-thoai
+S17: 1=bo-lac-long_riu, 2=bo-lac-long_dao, 3=bo-lac-long_no, 4=bo-lac-long_gay, 5=bo-lac-long_mu, 6=bo-lac-long_giap, 7=bo-lac-long_sau-lung, 8=bo-lac-long_huy-hieu
+S18: 1=bo-son-tinh_riu, 2=bo-son-tinh_dao, 3=bo-son-tinh_no, 4=bo-son-tinh_gay, 5=bo-son-tinh_mu, 6=bo-son-tinh_giap, 7=bo-son-tinh_sau-lung, 8=bo-son-tinh_huy-hieu
+S19: 1=bo-chim-lac_riu, 2=bo-chim-lac_dao, 3=bo-chim-lac_no, 4=bo-chim-lac_gay, 5=bo-chim-lac_mu, 6=bo-chim-lac_giap, 7=bo-chim-lac_sau-lung, 8=bo-chim-lac_huy-hieu
+S20: 1=bo-trong-dong_riu, 2=bo-trong-dong_dao, 3=bo-trong-dong_no, 4=bo-trong-dong_gay, 5=bo-trong-dong_mu, 6=bo-trong-dong_giap, 7=bo-trong-dong_sau-lung, 8=bo-trong-dong_huy-hieu
+S21: 1=bo-ngua-sat_riu, 2=bo-ngua-sat_dao, 3=bo-ngua-sat_no, 4=bo-ngua-sat_gay, 5=bo-ngua-sat_mu, 6=bo-ngua-sat_giap, 7=bo-ngua-sat_sau-lung, 8=bo-ngua-sat_huy-hieu
+S22: 1=phu-kien_vuot-ho, 2=phu-kien_gang-da, 3=phu-kien_dai, 4=phu-kien_dep-co, 5=phu-kien_khan, 6=phu-kien_khan-hien-gia, 7=phu-kien_mat-ngoc, 8=phu-kien_ngoc-sinh-luc
+S23: 1=phu-kien_mat-trong, 2=phu-kien_dui-trong, 3=phu-kien_sung-te, 4=phu-kien_long-chim-lac, 5=phu-kien_vay-ca, 6=phu-kien_hat-lua
+S24: 1=do-ghep_song-riu-cuong-no, 2=do-ghep_gay-tam-gioi, 3=do-ghep_gay-thoi-khong, 4=do-ghep_giap-dong-bat-diet, 5=do-ghep_luoi-hai-chi-tu, 6=do-ghep_trong-dong, 7=do-ghep_mui-sung-pha-giap, 8=do-ghep_riu-quet-song
+S25: 1=do-ghep_cung-mat-chim, 2=do-ghep_bua-chim-lac, 3=do-ghep_ao-vay-ca, 4=do-ghep_ngoc-tran-thuy, 5=do-ghep_luoi-danh-ca, 6=do-ghep_bo-lua-than
+S26: 1=hanh_kim, 2=hanh_moc, 3=hanh_thuy, 4=hanh_hoa, 5=hanh_tho, 6=tien-hoa_1, 7=tien-hoa_2, 8=tien-hoa_3
+S27: 1=ui_dong-xu, 2=ui_dong-vang, 3=ui_mang, 4=ui_muc-nuoc, 5=ui_hu-bau, 6=ui_hu-vua-hung, 7=ui_kho-lua, 8=ui_goi-som
+S28: 1=ui_an, 2=ui_da-kham-pha, 3=ui_khung-thuong, 4=ui_khung-vang, 5=ui_toi-luyen, 6=ui_luyen-the, 7=ui_tay-luyen, 8=ui_khoa
+S29: 1=ban-do_nui-1, 2=ban-do_nui-2, 3=ban-do_nui-3, 4=ban-do_nui-4, 5=ban-do_nui-5, 6=ban-do_phong-chau, 7=ban-do_o-thap, 8=ban-do_o-giua, 9=ban-do_o-cao, 10=ban-do_o-ngap
+S30: 1=ky-nang_lac-tuong_q, 2=ky-nang_lac-tuong_w, 3=ky-nang_lac-tuong_e, 4=ky-nang_lac-tuong_r, 5=ky-nang_luc-si-nui_q, 6=ky-nang_luc-si-nui_w, 7=ky-nang_luc-si-nui_e, 8=ky-nang_luc-si-nui_r
+S31: 1=ky-nang_xa-thu-van-lang_q, 2=ky-nang_xa-thu-van-lang_w, 3=ky-nang_xa-thu-van-lang_e, 4=ky-nang_xa-thu-van-lang_r, 5=ky-nang_tho-san-rung_q, 6=ky-nang_tho-san-rung_w, 7=ky-nang_tho-san-rung_e, 8=ky-nang_tho-san-rung_r
+S32: 1=ky-nang_thay-mo-lua_q, 2=ky-nang_thay-mo-lua_w, 3=ky-nang_thay-mo-lua_e, 4=ky-nang_thay-mo-lua_r, 5=ky-nang_than-suong-nui_q, 6=ky-nang_than-suong-nui_w, 7=ky-nang_than-suong-nui_e, 8=ky-nang_than-suong-nui_r
+S33: 1=ky-nang_thanh-giong_q, 2=ky-nang_thanh-giong_w, 3=ky-nang_thanh-giong_e, 4=ky-nang_thanh-giong_r, 5=ky-nang_lac-long-quan_q, 6=ky-nang_lac-long-quan_w, 7=ky-nang_lac-long-quan_e, 8=ky-nang_lac-long-quan_r
+S34: 1=ky-nang_than-kim-quy_q, 2=ky-nang_than-kim-quy_w, 3=ky-nang_than-kim-quy_e, 4=ky-nang_than-kim-quy_r, 5=ky-nang_thach-sanh_q, 6=ky-nang_thach-sanh_w, 7=ky-nang_thach-sanh_e, 8=ky-nang_thach-sanh_r
+S35: 1=ky-nang_cao-lo_q, 2=ky-nang_cao-lo_w, 3=ky-nang_cao-lo_e, 4=ky-nang_cao-lo_r, 5=ky-nang_mai-an-tiem_q, 6=ky-nang_mai-an-tiem_w, 7=ky-nang_mai-an-tiem_e, 8=ky-nang_mai-an-tiem_r
+S36: 1=ky-nang_au-co_q, 2=ky-nang_au-co_w, 3=ky-nang_au-co_e, 4=ky-nang_au-co_r, 5=ky-nang_chu-dong-tu_q, 6=ky-nang_chu-dong-tu_w, 7=ky-nang_chu-dong-tu_e, 8=ky-nang_chu-dong-tu_r
+S37: 1=ky-nang_tien-dung_q, 2=ky-nang_tien-dung_w, 3=ky-nang_tien-dung_e, 4=ky-nang_tien-dung_r, 5=ky-nang_lang-lieu_q, 6=ky-nang_lang-lieu_w, 7=ky-nang_lang-lieu_e, 8=ky-nang_lang-lieu_r
+F01: nen_ai-1
+F02: nen_ai-2
+F03: nen_ai-3
+F04: nen_ai-4
+F05: truyen_1
+F06: truyen_2
+F07: truyen_3
+F08: nen_menu
+F09: logo
+F10: icon-app

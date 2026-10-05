@@ -91,7 +91,9 @@ Phong cách: bảng điều khiển game chiến thuật kiểu Warcraft 3 (khun
 | Quái | 6 + biến thể tinh anh | Tôm Binh, Cá Sấu, Rùa Giáp, Phù Thủy Nước, Chim Bão (bay), Ếch Mẹ + Nòng Nọc |
 | Boss | 3 | Thuồng Luồng, Hà Bá (2 giai đoạn), Thủy Tinh (+ Giao Long Con) |
 | Icon kỹ năng | 64 | Đã có bản vector trong `KyNang`, `KyNangHT1`, `KyNangHT2` |
-| Icon đồ | khoảng 20 món + 3 sính lễ | Bản vector trong `TuiDo`, `CuaHang`, `LoDucDong` |
+| Icon đồ | khoảng 32 món + 3 sính lễ | Bản vector cũ trong `TuiDo`, `CuaHang`, `LoDucDong`; thêm 4 phụ kiện và 8 đồ ghép mới (v15) |
+| Đồ bộ | 5 bộ × 3 món (Lạc Long, Sơn Tinh, Chim Lạc, Trống Đồng, Ngựa Sắt) | Vũ khí bộ theo 4 dáng; hiệu ứng sau lưng khi đủ bộ |
+| Ngũ hành | 5 biểu tượng Kim Mộc Thủy Hỏa Thổ | Màu ở GAMEPLAY.md mục 14; đồ nhuộm màu theo hành bằng code |
 | Bản đồ | 8 ải | Sông, bờ đất, ô đặt tướng 3 bậc độ cao (Thấp / Giữa / Cao), thành Phong Châu, núi Tản Viên |
 | Hiệu ứng hạt | Lửa, băng/sương, nước, sét, lá, hoa, lông vũ, đá, lúa, nốt nhạc, vàng | Xem `den-anh-hung.html` |
 

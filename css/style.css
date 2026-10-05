@@ -869,3 +869,54 @@ button:disabled { cursor: default; }
 @keyframes noticeBlink { 50% { border-color: var(--gold-hi); box-shadow: 0 0 12px #FFD66BAA, inset 0 0 8px #FFD66B55; } }
 .dk-sk.fresh::after { content: ''; position: absolute; inset: 0; z-index: 4; pointer-events: none; border-radius: 6px; animation: skFresh .5s ease-out forwards; }
 @keyframes skFresh { 0% { background: #FFE9A0; box-shadow: inset 0 0 0 2px #FFD66B; opacity: .95; } 100% { background: #FFE9A000; box-shadow: inset 0 0 0 2px #FFD66B00; opacity: 0; } }
+
+/* v19: Ngũ hành, dòng phụ, hiệu ứng ẩn, Bí truyền */
+.eli { flex: none; vertical-align: -3px; }
+.chip.elc { display: inline-flex; align-items: center; gap: 4px; background: #1A1208; border: 1px solid; }
+.eld { position: absolute; left: 3px; top: 3px; width: 7px; height: 7px; border-radius: 50%; border: 1px solid #1A1208; box-shadow: 0 0 0 1px #0008; z-index: 2; }
+.elrow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 4px; font-size: 11px; }
+.elrow .rel { font-weight: 800; }
+.elrow .rel.ok { color: #6AE06A; } .elrow .rel.no { color: #FF8A6A; }
+.aff { font-size: 12px; color: #9ED0FF; font-weight: 700; line-height: 1.35; }
+.hid { font-size: 12px; color: #C8BFA8; line-height: 1.35; margin-top: 3px; }
+.hid b { color: #C8A0F0; } .hid i { color: #E8E0CC; }
+.hid.ok b { color: #FFD66B; } .hid.ok { color: #F2E6C8; }
+.setl { font-size: 11px; line-height: 1.4; border-left: 3px solid; padding-left: 6px; margin-top: 4px; color: #E8E0CC; }
+.bag-det .enh { overflow-y: auto; max-height: 190px; }
+.dk-info .nm { display: flex; align-items: center; gap: 4px; }
+.dk-pt .lv i { font-style: normal; font-size: 9px; color: #FFD66B; margin-left: 1px; }
+.dk-pt.goldf, .ro-pic.goldf { box-shadow: 0 0 0 2px #FFD66B, 0 0 10px #FFD66B88; }
+.ro-card.goldf { border-color: #FFD66B !important; box-shadow: 0 0 8px #FFD66B66; }
+.bt-top { margin: 0 10px; padding: 6px 12px; border-radius: 6px; display: flex; align-items: center; gap: 12px; }
+.bt-top .ttl { font-size: 17px; white-space: nowrap; }
+.bt-top .pbar { width: 160px; height: 8px; flex: none; }
+.bt-top .note { font-size: 11px; }
+.bt-body { display: grid !important; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; overflow-y: auto; align-items: start; }
+.bt-group { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.bt-h { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid #5C4620; padding-bottom: 2px; }
+.bt-h .ttl { font-size: 13px; } .bt-h small { color: #C8BFA8; font-weight: 800; }
+.bt-row { display: flex; gap: 6px; align-items: flex-start; background: #0D0B08AA; border: 1px solid #3A3226; border-radius: 5px; padding: 4px; }
+.bt-row.ok { border-color: #8C6A2E; }
+.bt-ic { width: 28px; height: 28px; flex: none; display: flex; align-items: center; justify-content: center; filter: grayscale(1) brightness(.6); }
+.bt-row.ok .bt-ic { filter: none; }
+.bt-ic img, .bt-ic svg, .bt-ic canvas { width: 28px; height: 28px; border-radius: 4px; }
+.bt-ic img.gold { box-shadow: 0 0 0 1.5px #FFD66B; }
+.bt-tx { display: flex; flex-direction: column; min-width: 0; font-size: 10.5px; line-height: 1.3; color: #C8BFA8; }
+.bt-tx b { color: #E8E0CC; font-size: 11px; display: flex; align-items: center; gap: 3px; }
+.bt-row.ok .bt-tx span { color: #F2E6C8; }
+.bt-top .pbar { border-radius: 3px; overflow: hidden; }
+.bt-top .pbar i { display: block; height: 100%; background: linear-gradient(90deg, #B8852A, #FFD66B); }
+.bag-det { min-height: 0; }
+.bag-det .enh { flex: 1 1 auto; min-height: 60px; max-height: none; overflow-y: auto; gap: 3px; }
+.bag-det .it-head .slot { width: 46px; height: 46px; }
+.bag-det .it-head .ttl { font-size: 17px; }
+.bag-det .det-btns .btn { height: 34px; font-size: 13px; }
+.bag-det .det-btns .r2 .btn { padding: 0 4px; }
+.chip.hidc { background: #1A1208; border: 1px dashed #A86CE0; color: #C8A0F0; font-style: italic; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chip.hidc.ok { border: 1px solid #FFD66B; color: #FFE9A0; font-style: normal; }
+.shop-grid { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; padding: 6px; }
+.shop-it { height: 88px; padding: 4px 2px; }
+.shop-it .slot { width: 34px; height: 34px; }
+.shop-it .slot .svgi { width: 26px; height: 26px; }
+.shop-it .nm { font-size: 10.5px; }
+.shop-it .pr { font-size: 11px; }

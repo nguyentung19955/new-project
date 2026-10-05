@@ -112,18 +112,53 @@ const PATH = (() => {
 // ------------------------------------------------------------
 //  ĐỒ: mỗi món trong túi là một bản riêng { uid, id, rarity, plus, locked, spent }
 // ------------------------------------------------------------
-function makeItem(id, rarity) {
-  return { uid: nextId++, id, rarity: rarity || ITEMS[id].rarity, plus: 0, locked: false, spent: 0 };
+// Đồ trang phục mang 1 hành (đồ bộ: hành của bộ). o.drop: đồ rơi / trong hũ
+// có thêm dòng phụ ngẫu nhiên. Đồ Sử thi / Huyền thoại có 1 hiệu ứng ẩn theo hành.
+const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+function makeItem(id, rarity, o = {}) {
+  const it = ITEMS[id];
+  const inst = { uid: nextId++, id, rarity: rarity || it.rarity, plus: 0, locked: false, spent: 0 };
+  if (GEAR_SLOTS.includes(it.slot)) {
+    inst.el = it.set ? SETS[it.set].el : pick(EL_ORDER);
+    inst.aff = o.drop ? rollAffixes([], AFFIX_COUNT[inst.rarity]) : [];
+    inst.temper = 0;
+    inst.rerolls = 0;
+    rollHidden(inst);
+  }
+  return inst;
+}
+function rollAffixes(keep, n) {
+  const out = keep.slice();
+  const pool = Object.keys(AFFIXES).filter((k) => !out.includes(k));
+  while (out.length < n && pool.length) out.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
+  return out;
+}
+// hiệu ứng ẩn của món (đồ bộ dùng hiệu ứng ẩn của bộ)
+function rollHidden(inst) {
+  if (inst.hid || ITEMS[inst.id].set || RARITY_ORDER.indexOf(inst.rarity) < 2) return;
+  inst.hid = `i.${inst.el}${1 + Math.floor(Math.random() * 2)}`;
+}
+function itemHiddens(inst) {
+  const out = [];
+  if (inst.hid) out.push(inst.hid);
+  if (inst.hid && inst.temper >= 10) out.push(inst.hid.endsWith('1') ? inst.hid.slice(0, -1) + '2' : inst.hid.slice(0, -1) + '1');
+  if (SECRETS['r.' + inst.id]) out.push('r.' + inst.id);
+  return out;
 }
 
-// Chỉ số của một món: chỉ số gốc theo độ hiếm hiện tại, mỗi cấp cường hóa +10%
-function itemStats(inst) {
+// Chỉ số của một món: chỉ số gốc theo độ hiếm hiện tại, mỗi cấp cường hóa +10%,
+// mỗi lần Tôi luyện +3%, hành của món so với hành tướng ±%
+function itemStats(inst, heroType) {
   const it = ITEMS[inst.id];
-  const k = (RARITY[inst.rarity].mult / RARITY[it.rarity].mult) * (1 + 0.1 * inst.plus);
+  const rel = heroType ? itemRelation(inst.el, HEROES[heroType].el) : null;
+  const k = (RARITY[inst.rarity].mult / RARITY[it.rarity].mult) * (1 + 0.1 * inst.plus) * (1 + 0.03 * (inst.temper || 0))
+    * (1 + (rel ? ELEM.item[rel] : 0) / 100);
   const out = {};
   for (const s in it.stats) out[s] = Math.round(it.stats[s] * k * 10) / 10;
   return out;
 }
+// giá trị dòng phụ (Tôi luyện ✦5: dòng phụ mạnh thêm 50%)
+const affixVal = (inst, key) => AFFIXES[key].val * ((inst.temper || 0) >= 5 ? 1.5 : 1);
 const enhanceCost = (inst) => (inst.plus + 1) * COSTS.enhance[inst.rarity];
 const promoteCost = (inst) => COSTS.promote[inst.rarity] || 0;
 const scrapValue = (inst) => COSTS.scrap[inst.rarity] + Math.floor(inst.spent * 0.6);
@@ -132,6 +167,8 @@ function heroAttrs(h) {
   const def = HEROES[h.type];
   const out = {};
   for (const a of Object.keys(ATTRS)) out[a] = def.attrs[a] + def.gain[a] * (h.level - 1);
+  // Luyện thể (cấp 25): mỗi lần +3 thuộc tính chính, +1 mỗi thuộc tính phụ
+  if (h.train) for (const a of Object.keys(ATTRS)) out[a] += h.train * (a === def.attr ? 3 : 1);
   return out;
 }
 
@@ -152,6 +189,9 @@ function heroStats(h) {
     str: base.str, agi: base.agi, int: base.int, hp: 0, regen: 0, cdr: 0, dr: 0,
     pierce: h.type === 'caolo' ? 50 : 0, canAir: def.attack !== 'melee', airMult: 1,
     goldOnKill: 0, stunChance: 0,
+    hpPct: 0, rangePct: 0, skillPct: 0, bossPct: 0, floodPct: 0, shred: 0, spread: 0, magicRes: 0,
+    noHeal: 0, netSlow: 0, hitAir: 0, touchSlow: 0, drumAura: 0, fireTrail: 0, curve: 0, airPct: 0,
+    hid: {}, sets: {},
   };
   def.skills.forEach((sk, i) => {
     const lv = skillLevel(h, i);
@@ -170,19 +210,57 @@ function heroStats(h) {
   for (const slot of SLOTS) {
     const inst = h.equip[slot];
     if (!inst) continue;
-    const st = itemStats(inst);
+    const it = ITEMS[inst.id];
+    const st = itemStats(inst, h.type);
     for (const k in st) s[k] += st[k];
-    if (ITEMS[inst.id].stunChance) s.stunChance += ITEMS[inst.id].stunChance;
+    if (it.stunChance) s.stunChance += it.stunChance;
+    if (it.fx) for (const k in it.fx) s[k] += it.fx[k];
+    for (const a of inst.aff || []) {
+      const v = affixVal(inst, a);
+      if (a === 'haste') s.haste += v;
+      else if (a === 'boss') s.bossPct += v;
+      else if (a === 'air') s.airPct += v;
+      else if (a === 'cdr') s.cdr += v;
+      else if (a === 'gold') s.goldOnKill += v;
+      else if (a === 'flood') s.floodPct += v;
+      else if (a === 'range') s.rangePct += v;
+      else if (a === 'crit') s.crit += v;
+    }
+    for (const k of itemHiddens(inst)) s.hid[k] = 1;
   }
-  for (const set of activeSets(h.equip)) SETS[set].apply(s);
+  // bộ đồ: 2 món / đủ 3 món; đủ bộ cùng hành với tướng = Thiên mệnh (+50%)
+  const sc = setCounts(h.equip);
+  for (const set in sc) {
+    if (!SETS[set] || sc[set] < 2) continue;
+    const n = Math.min(3, sc[set]);
+    const k = n >= 3 && SETS[set].el === def.el ? 1.5 : 1;
+    SETS[set].apply(s, n, k);
+    s.sets[set] = n;
+    if (n >= 3) s.hid['s.' + set] = 1;
+    if (k > 1) s.thienMenh = set;
+  }
+  // hiệu ứng ẩn và hào quang có điều kiện
+  if (s.hid['r.gay_tam_gioi'] && b.tamGioi) { s.str += 5; s.agi += 5; s.int += 5; }
+  if (s.hid['i.hoa2'] && h.hp < (h.hpMaxLast || 1) * 0.5) s.haste += 20;
+  if (s.hid['r.cung_mat_chim'] && b.airWave) s.haste += 20;
+  if (h.rageT > 0) s.haste += 5 * (h.rageN || 0);        // Song Rìu Cuồng Nộ
+  if (h.warT > 0) s.haste += 20;                           // Trống Đồng gõ đầu đợt
+  if (s.hid['i.moc2'] && (h.still || 0) >= 10) s.bonusDmgPct += 15;
+  if (s.hid['i.thuy1'] && h.flooded) s.bonusDmgPct += 10;
+  if (h.flooded) s.bonusDmgPct += s.floodPct;
+  s.bonusDmgPct += (b.sinh || 0) * ELEM.sinh + (b.full ? ELEM.full : 0) + (b.drum || 0) - (b.llqPen ? 10 : 0);
+  s.airMult += s.airPct / 100;
+  if (s.hitAir) s.canAir = true;
+  if (h.type === 'xathu' && h.airKills) s.rangePct += Math.min(10, Math.floor(h.airKills / 10));
 
   // quy đổi thuộc tính như Dota
   s.damage += s[def.attr];
   s.haste += s.agi + (b.haste || 0);
   const grow = 1 + (h.grow || 0) * 0.05;             // Thánh Gióng: Vươn Vai
-  s.hpMax = Math.round((150 + s.str * 18 + s.hp) * grow * (1 + (b.hpPct || 0) / 100));
+  s.hpMax = Math.round((150 + s.str * 18 + s.hp) * grow * (1 + ((b.hpPct || 0) + s.hpPct) / 100));
+  s.range *= 1 + s.rangePct / 100;
   s.regen += 0.5 + s.str * 0.06 + (b.regen || 0);
-  s.skillPower = 1 + s.int * 0.015;
+  s.skillPower = (1 + s.int * 0.015) * (1 + s.skillPct / 100);
   s.cdr = Math.min(50, s.cdr + s.int * 0.3);
   s.cleave = Math.min(1, s.cleave);
   s.pierce = Math.min(100, s.pierce + (b.pierce || 0));
@@ -195,8 +273,13 @@ function heroStats(h) {
   s.dr = Math.min(80, s.dr);
   s.cooldown = s.baseCooldown / Math.max(0.2, 1 + s.haste / 100);
   if (h.bogged) { s.cooldown *= 2; s.manaRegen = 0; }   // sa lầy: -50% tốc đánh, không hồi năng lượng
+  if (def.attack === 'melee' && s.spread) { s.cleave = Math.min(1, s.cleave + s.spread / 100); s.spread = 0; }
+  h.hpMaxLast = s.hpMax;
   return s;
 }
+
+// quái bay (Bùa Chim Lạc đánh rơi xuống đất 1 giây)
+const isFlying = (e) => e.def.flying && !(e.groundT > 0);
 
 function setCounts(equip) {
   const counts = {};
@@ -222,7 +305,7 @@ function canEquip(heroType, itemId) {
 function rollItem(minRarity) {
   const min = RARITY_ORDER.indexOf(minRarity || 'common');
   const pool = Object.keys(ITEMS).filter((id) =>
-    GEAR_SLOTS.includes(ITEMS[id].slot) && !ITEMS[id].bossOnly && RARITY_ORDER.indexOf(ITEMS[id].rarity) >= min);
+    GEAR_SLOTS.includes(ITEMS[id].slot) && !ITEMS[id].bossOnly && !ITEMS[id].set && RARITY_ORDER.indexOf(ITEMS[id].rarity) >= min);
   const total = pool.reduce((a, id) => a + RARITY[ITEMS[id].rarity].weight, 0);
   let r = Math.random() * total;
   for (const id of pool) {
@@ -230,6 +313,12 @@ function rollItem(minRarity) {
     if (r <= 0) return id;
   }
   return pool[pool.length - 1];
+}
+
+// Đồ bộ: chỉ rơi từ quái tinh anh, boss và Hũ Vua Hùng
+function rollSetItem() {
+  const set = pick(SET_ORDER);
+  return pick(Object.values(SETS[set].ids));
 }
 
 // ------------------------------------------------------------
@@ -287,7 +376,10 @@ const SKILL_CASTS = {
     const e = game.findTarget(h.x, h.y, st.range, false);
     if (!e) return false;
     game.effects.push({ type: 'bash', x: e.x, y: e.y - 8, ttl: 0.45, max: 0.45 });
-    game.stun(e, e.def.boss ? 0.4 : 1, 'stun');
+    // ẩn: đứng kề Lực Sĩ Núi thì choáng thêm 0,5 giây
+    const pal = game.adjacent(h).some((o) => o.type === 'lucsi');
+    if (pal) game.discover('h.lactuong', h.x, h.y);
+    game.stun(e, (e.def.boss ? 0.4 : 1) + (pal ? 0.5 : 0), 'stun');
     game.hit(e, (st.damage * 2 + n * 0.6) * st.skillPower, h, { big: true, color: '#F2D27A' });
     game.shake = Math.max(game.shake, 3);
     return true;
@@ -372,10 +464,14 @@ const SKILL_CASTS = {
     const normal = list.filter((e) => !e.def.boss && !e.champion);
     game.effects.push({ type: 'vortex', x: h.x, y: h.y - 22, color: '#B9A274', ttl: 0.6, max: 0.6 });
     if (normal.length) {
-      const e = normal.reduce((a, b) => (b.hp > a.hp ? b : a));
-      game.effects.push({ type: 'rockfall', x: e.x, y: e.y, ttl: 0.6, max: 0.6 });
-      game.text(e.x, e.y - 30, 'VÙI ĐÁ!', '#E8D8B0', 0.9, 18);
-      game.hit(e, e.hp + (e.shield || 0) + 1, h, { dt: 'pure' });
+      // ẩn: đứng ô bậc Cao thì chôn 2 quái
+      const two = CONFIG.slotTier[h.slot] === 2 && normal.length > 1;
+      if (two) game.discover('h.lucsi', h.x, h.y);
+      for (const e of normal.sort((a, b) => b.hp - a.hp).slice(0, two ? 2 : 1)) {
+        game.effects.push({ type: 'rockfall', x: e.x, y: e.y, ttl: 0.6, max: 0.6 });
+        game.text(e.x, e.y - 30, 'VÙI ĐÁ!', '#E8D8B0', 0.9, 18);
+        game.hit(e, e.hp + (e.shield || 0) + 1, h, { dt: 'pure' });
+      }
     } else {
       game.hit(list[0], (st.damage * 6 + n * 2) * st.skillPower, h, { big: true, color: '#B9A274' });
     }
@@ -401,6 +497,11 @@ const SKILL_CASTS = {
         game.sparks(e.x, e.y - 8, '#c0392b', 12);
         game.shake = Math.max(game.shake, 5);
         game.hit(e, (st.damage * 6 + n * 3) * st.skillPower, h, { big: true, color: '#E25A3A' });
+        // ẩn: hạ gục mục tiêu thì hồi ngay 50% năng lượng
+        if (e.dead && !h.dead) {
+          h.mana = Math.min(heroStats(h).maxMana, h.mana + heroStats(h).maxMana * 0.5);
+          game.discover('h.thosan', h.x, h.y);
+        }
       } });
     return true;
   },
@@ -561,7 +662,10 @@ const SKILL_CASTS = {
     const t = game.findTarget(h.x, h.y, st.range * 1.2);
     if (!t) return false;
     game.effects.push({ type: 'banner', str: 'Nỏ Thần', color: '#FFF1C4', ttl: 1.6, max: 1.6 });
-    game.lineHit(h, t, st.range * 2.6, (st.damage * 6 + n * 2) * st.skillPower, { color: '#FFF1C4', width: 18, dt: 'pure' });
+    // ẩn: Thần Kim Quy cùng trên sân thì Nỏ Thần x2
+    const turtle = game.heroes.some((o) => o && !o.dead && o.type === 'kimquy');
+    if (turtle) game.discover('h.caolo', h.x, h.y);
+    game.lineHit(h, t, st.range * 2.6, (st.damage * 6 + n * 2) * st.skillPower * (turtle ? 2 : 1), { color: '#FFF1C4', width: 18, dt: 'pure' });
     game.shake = Math.max(game.shake, 5);
     return true;
   },
@@ -605,7 +709,18 @@ const SKILL_CASTS = {
   // ----- Âu Cơ
   flowerheal(game, h, st, n) {
     if (!hurtNear(game, h.x, h.y, 180)) return false;
-    healHeroes(game, h.x, h.y, 180, (0.25 + n * 0.003) * skillMult(skillLevel(h, 0)), '#FF9EC4');
+    const pct = (0.25 + n * 0.003) * skillMult(skillLevel(h, 0));
+    healHeroes(game, h.x, h.y, 180, pct, '#FF9EC4');
+    // ẩn: đứng ô bậc Cao thì hồi thêm cho 1 tướng ở xa hơn
+    if (CONFIG.slotTier[h.slot] === 2) {
+      const far = game.heroes.filter((o) => o && !o.dead && Math.hypot(o.x - h.x, o.y - h.y) > 180 && o.hp < heroStats(o).hpMax)
+        .sort((a, b) => a.hp / heroStats(a).hpMax - b.hp / heroStats(b).hpMax)[0];
+      if (far) {
+        far.hp = Math.min(heroStats(far).hpMax, far.hp + heroStats(far).hpMax * pct);
+        game.effects.push({ type: 'heal', x: far.x, y: far.y, r: 36, color: '#FF9EC4', ttl: 0.8, max: 0.8 });
+        game.discover('h.auco', h.x, h.y);
+      }
+    }
     game.effects.push({ type: 'petals', x: h.x, y: h.y, r: 180, color: '#FF9EC4', ttl: 1, max: 1 });
     return true;
   },
@@ -620,7 +735,10 @@ const SKILL_CASTS = {
   hundredeggs(game, h, st) {
     const t = game.findTarget(h.x, h.y, st.range * 2, false);
     if (!t) return false;
-    game.blocks.push({ kind: 'eggs', dist: Math.min(PATH.total - 40, t.dist + 50), ttl: 6, max: 6 });
+    // ẩn: Lạc Long Quân cùng trên sân thì nở thêm 50% Lạc Tử (chặn lâu hơn)
+    const dad = game.heroes.some((o) => o && !o.dead && o.type === 'llq');
+    if (dad) game.discover('h.llq', h.x, h.y);
+    game.blocks.push({ kind: 'eggs', dist: Math.min(PATH.total - 40, t.dist + 50), ttl: dad ? 9 : 6, max: dad ? 9 : 6 });
     game.effects.push({ type: 'banner', str: 'Bọc Trăm Trứng', color: '#F2E6C8', ttl: 1.6, max: 1.6 });
     return true;
   },
@@ -681,6 +799,12 @@ const SKILL_CASTS = {
     game.effects.push({ type: 'petals', x: t.x, y: t.y, r: 130, color: '#FFB8D8', ttl: 1.4, max: 1.4 });
     for (const e of game.enemiesInRange(t.x, t.y, 130)) game.hit(e, (st.damage * 4 + n * 2) * st.skillPower, h, { big: true, color: '#FFB8D8' });
     healHeroes(game, h.x, h.y, 200, 0.3, '#FFB8D8');
+    // ẩn: Chử Đồng Tử được hồi gấp đôi
+    const hus = game.heroes.find((o) => o && !o.dead && o.type === 'cdt' && Math.hypot(o.x - h.x, o.y - h.y) <= 200);
+    if (hus) {
+      hus.hp = Math.min(heroStats(hus).hpMax, hus.hp + heroStats(hus).hpMax * 0.3);
+      game.discover('h.tiendung', hus.x, hus.y);
+    }
     return true;
   },
   // ----- Lang Liêu
@@ -719,7 +843,30 @@ const IDLE_FX = new Set(['levelup', 'evolve', 'equipflash', 'promote', 'ring', '
 class Game {
   constructor(notify) {
     this.notify = notify || (() => {});
+    this.known = new Set();      // hiệu ứng ẩn đã khám phá (lưu vĩnh viễn, UI nạp từ save)
     this.reset(0);
+  }
+
+  // Lần đầu một hiệu ứng ẩn xảy ra: hiện "Đã khám phá!" và ghi vào Bí truyền
+  discover(key, x, y) {
+    if (!SECRETS[key] || this.known.has(key)) return;
+    this.known.add(key);
+    this.events.push({ type: 'secret', key });
+    if (x !== undefined) this.text(x, y - 86, 'Đã khám phá!', '#FFD66B', 1.6, 15);
+  }
+
+  // tướng còn sống đứng kề (cách một ô)
+  adjacent(h) {
+    return this.heroes.filter((o) => o && o !== h && !o.dead && Math.hypot(o.x - h.x, o.y - h.y) <= ELEM.adj);
+  }
+
+  // hệ số hành: tướng đánh quái thuộc hành mình khắc +30%, bị khắc −20%
+  elemMult(hero, e) {
+    const el = HEROES[hero.type].el;
+    if (!el || !e.el) return 0;
+    if (EL_KHAC[el] === e.el || (e.el2 && EL_KHAC[el] === e.el2)) return ELEM.khac;
+    if (EL_KHAC[e.el] === el) return ELEM.biKhac;
+    return 0;
   }
 
   reset(level) {
@@ -764,6 +911,24 @@ class Game {
   }
 
   get levelWaves() { return this.lv.waves; }
+
+  // ẩn khi thành nguy: Thánh Gióng Vươn Vai tối đa (≤ 5 mạng), Kim Quy tự hộ thành (1 mạng)
+  livesLost() {
+    for (const h of this.heroes) {
+      if (!h || h.dead) continue;
+      if (h.type === 'giong' && this.lives <= 5 && this.lives > 0 && h.grow < 10) {
+        h.grow = 10;
+        this.text(h.x, h.y - 80, 'Vươn Vai!', '#FFB04A', 1.2, 17);
+        this.discover('h.giong', h.x, h.y);
+      }
+      if (h.type === 'kimquy' && this.lives === 1 && !h.autoGuard) {
+        h.autoGuard = true;
+        this.guardT = 5;
+        this.effects.push({ type: 'banner', str: 'Kim Quy Hộ Thành', color: '#FFD66B', ttl: 1.6, max: 1.6 });
+        this.discover('h.kimquy', h.x, h.y);
+      }
+    }
+  }
 
   // ---------- Nước Dâng
   isFlooded(slot) {
@@ -833,6 +998,7 @@ class Game {
 
   // Kéo tướng sang ô khác: ô trống thì chuyển, ô có tướng thì đổi chỗ
   moveHero(from, to) {
+    if (this.heroes[from]) this.heroes[from].still = 0;
     if (from === to || !this.heroes[from]) return false;
     const a = this.heroes[from], b = this.heroes[to];
     this.heroes[to] = a;
@@ -892,6 +1058,23 @@ class Game {
     this.effects.push({ type, hero: h, x: at[0], y: at[1], color, ttl: type === 'promote' ? 0.6 : 0.3, max: type === 'promote' ? 0.6 : 0.3 });
   }
 
+  // Luyện thể (tướng cấp 25): +3 thuộc tính chính, +1 thuộc tính phụ mỗi lần
+  trainCost(h) { return COSTS.train(h.train || 0); }
+  trainHero(h) {
+    if (h.level < CONFIG.maxLevel) return `Cần tướng cấp ${CONFIG.maxLevel}`;
+    const c = this.trainCost(h);
+    if (this.gold < c) return `Cần ${c} vàng`;
+    const before = heroStats(h).hpMax;
+    this.gold -= c;
+    h.spent += c;
+    h.train = (h.train || 0) + 1;
+    if (!h.dead) h.hp += heroStats(h).hpMax - before;
+    h.bounceT = 0.3;
+    this.text(h.x, h.y - 70, `Luyện thể ✦${h.train}`, '#FFD66B', 1, 15);
+    this.effects.push({ type: 'levelup', hero: h, x: h.x, y: h.y, count: 1, lv: h.level, train: h.train, ttl: 0.6, max: 0.6 });
+    return true;
+  }
+
   // Mở khóa kỹ năng W/E/R bằng vàng
   unlockSkill(h, i) {
     const sk = HEROES[h.type].skills[i];
@@ -939,7 +1122,7 @@ class Game {
 
   // ---------- túi đồ
   addItem(inst, silent) {
-    if (typeof inst === 'string') inst = makeItem(inst);
+    if (typeof inst === 'string') inst = makeItem(inst, null, { drop: true });
     if (this.inventory.length >= CONFIG.bagSize) {
       const v = scrapValue(inst);
       this.gold += v;
@@ -964,18 +1147,19 @@ class Game {
       if (!slot) return 'Hết ô phụ kiện. Tháo bớt một món trước';
     }
     const before = heroStats(h).hpMax;
-    const hadSet = activeSets(h.equip).includes('laclong');
+    const hadSets = activeSets(h.equip);
     this.inventory.splice(idx, 1);
     if (h.equip[slot]) this.inventory.push(h.equip[slot]);
     h.equip[slot] = inst;
     if (!h.dead) h.hp += Math.max(0, heroStats(h).hpMax - before);
     this.flags.equipped = true;
     this.gearFx(h, slot, RARITY[inst.rarity].color, 'equipflash');
-    if (!hadSet && activeSets(h.equip).includes('laclong')) {
-      // đủ Bộ Lạc Long: cánh rồng bung ra, rung nhẹ, chữ giữa màn (1,5 giây)
+    const done = activeSets(h.equip).find((k) => !hadSets.includes(k));
+    if (done) {
+      // vừa đủ bộ: hiệu ứng sau lưng bung ra, rung nhẹ, chữ giữa màn (1,5 giây)
       h.wingT = 1.5;
       this.shake = Math.max(this.shake, 4);
-      this.events.push({ type: 'setDone', name: SETS.laclong.name, hero: h });
+      this.events.push({ type: 'setDone', name: SETS[done].name + (SETS[done].el === HEROES[h.type].el ? ' · Thiên mệnh' : ''), hero: h });
     }
     return true;
   }
@@ -1026,7 +1210,40 @@ class Game {
     inst.spent += c;
     inst.rarity = nextR;
     inst.plus = 0;
+    rollHidden(inst);
+    if (inst.aff && inst.aff.length && inst.aff.length < AFFIX_COUNT[nextR]) inst.aff = rollAffixes(inst.aff, AFFIX_COUNT[nextR]);
     if (f.hero) this.gearFx(f.hero, f.slot, RARITY[nextR].color, 'promote');
+    return true;
+  }
+
+  // Tôi luyện: đồ Huyền thoại +5, mỗi lần +3% chỉ số gốc. ✦5: dòng phụ +50%; ✦10: hiệu ứng ẩn thứ hai
+  temper(uid) {
+    const f = this.findItem(uid);
+    if (!f) return 'Không tìm thấy món đồ';
+    const inst = f.inst;
+    if (inst.rarity !== 'legendary' || inst.plus < 5) return 'Chỉ đồ Huyền thoại +5 mới Tôi luyện được';
+    const c = COSTS.temper(inst.temper || 0);
+    if (this.gold < c) return `Cần ${c} vàng`;
+    this.gold -= c;
+    inst.spent += c;
+    inst.temper = (inst.temper || 0) + 1;
+    if (f.hero) this.gearFx(f.hero, f.slot, '#FFD66B', 'promote');
+    return true;
+  }
+
+  // Tẩy luyện: rút lại dòng phụ. 50 vàng, mỗi lần sau gấp đôi, tối đa 400
+  reroll(uid) {
+    const f = this.findItem(uid);
+    if (!f) return 'Không tìm thấy món đồ';
+    const inst = f.inst;
+    if (!inst.aff || !inst.aff.length) return 'Món này không có dòng phụ';
+    if (inst.locked) return 'Mở khóa món đồ trước khi tẩy luyện';
+    const c = COSTS.reroll(inst.rerolls || 0);
+    if (this.gold < c) return `Cần ${c} vàng`;
+    this.gold -= c;
+    inst.spent += c;
+    inst.rerolls = (inst.rerolls || 0) + 1;
+    inst.aff = rollAffixes([], inst.aff.length);
     return true;
   }
 
@@ -1072,7 +1289,7 @@ class Game {
     if (this.gold < CONFIG.chestCost) return null;
     if (this.inventory.length >= CONFIG.bagSize) return null;
     this.gold -= CONFIG.chestCost;
-    return this.addItem(rollItem());
+    return this.addItem(makeItem(rollItem(), null, { drop: true }));
   }
 
   buy(id) {
@@ -1115,6 +1332,14 @@ class Game {
     this.nextWave = buildWave(this.wave + 1, this.level);
     this.spawnTimer = 0;
     this.waveActive = true;
+    // ẩn Trống Đồng: gõ trống đầu đợt, mọi tướng +20% tốc đánh 5 giây
+    const drummer = this.heroes.find((h) => h && !h.dead && ACC_SLOTS.some((sl) => h.equip[sl] && h.equip[sl].id === 'trong_dong'));
+    if (drummer) {
+      for (const h of this.heroes) if (h) h.warT = 5;
+      this.effects.push({ type: 'ring', x: drummer.x, y: drummer.y, r: 220, color: '#F2D27A', ttl: 0.8, max: 0.8 });
+      this.discover('r.trong_dong', drummer.x, drummer.y);
+    }
+    for (const h of this.heroes) if (h) { h.blockUsed = false; h.gbdUsed = false; }
   }
 
   // Gọi sớm: giữa hai đợt thì bắt đầu ngay; đang trong đợt thì dồn đợt kế vào luôn
@@ -1188,14 +1413,14 @@ class Game {
 
   // ---------- truy vấn
   enemiesInRange(x, y, r, air = true) {
-    return this.enemies.filter((e) => !e.dead && (air || !e.def.flying) && Math.hypot(e.x - x, e.y - y) <= r);
+    return this.enemies.filter((e) => !e.dead && (air || !isFlying(e)) && Math.hypot(e.x - x, e.y - y) <= r);
   }
 
   // Ưu tiên quái đi xa nhất (gần thành nhất)
   findTarget(x, y, r, air = true) {
     let best = null;
     for (const e of this.enemies) {
-      if (e.dead || (!air && e.def.flying) || Math.hypot(e.x - x, e.y - y) > r) continue;
+      if (e.dead || (!air && isFlying(e)) || Math.hypot(e.x - x, e.y - y) > r) continue;
       if (!best || e.dist > best.dist) best = e;
     }
     return best;
@@ -1225,16 +1450,60 @@ class Game {
   // ---------- hào quang & đặc trưng tướng (tính lại mỗi khung hình)
   updateAuras() {
     const list = this.heroes.filter((h) => h);
+    const owns = new Map();
     for (const h of list) {
       h.buff = {};
       h.flooded = this.isFlooded(h.slot);
-      h.bogged = h.flooded && h.type !== 'llq';
+      h.bogged = false;
+      owns.set(h, heroStatsNoAura(h));
+    }
+    for (const h of list) {
+      if (!h.flooded) continue;
+      // không sa lầy: Lạc Long Quân (Con Rồng); ẩn: Chử Đồng Tử, đồ hành Thủy "Cá gặp nước", đủ Bộ Lạc Long
+      const own = owns.get(h);
+      const free = h.type === 'llq' ? null : h.type === 'cdt' ? 'h.cdt' : own.hid['i.thuy1'] ? 'i.thuy1' : own.hid['s.laclong'] ? 's.laclong' : '';
+      h.bogged = free === '';
+      if (free && !h.dead) this.discover(free, h.x, h.y);
     }
     const near = (a, b, r) => a !== b && Math.hypot(a.x - b.x, a.y - b.y) <= r;
+    // Ngũ hành: tương sinh khi đứng kề, đủ 5 hành trên sân
+    const alive = list.filter((h) => !h.dead);
+    const els = new Set(alive.map((h) => HEROES[h.type].el));
+    const full = els.size >= 5;
+    if (full && !this.fullEl) this.notify('Ngũ hành tề tựu! Toàn quân +10% sát thương', '#FFD66B');
+    this.fullEl = full;
+    const attrs = new Set(alive.map((h) => HEROES[h.type].attr));
+    const airWave = this.waveActive && waveKind(this.wave, this.level) === 'air';
+    for (const h of alive) {
+      const el = HEROES[h.type].el;
+      h.buff.sinh = Math.min(ELEM.sinhMax, alive.filter((o) => near(h, o, ELEM.adj) && EL_SINH[HEROES[o.type].el] === el).length);
+      h.buff.full = full;
+      h.buff.tamGioi = attrs.size >= 3;
+      h.buff.airWave = airWave;
+      const own = owns.get(h);
+      if (own.hid['r.gay_tam_gioi'] && attrs.size >= 3) this.discover('r.gay_tam_gioi', h.x, h.y);
+      if (own.hid['r.cung_mat_chim'] && airWave) this.discover('r.cung_mat_chim', h.x, h.y);
+      if (own.hid['i.moc2'] && (h.still || 0) >= 10) this.discover('i.moc2', h.x, h.y);
+      if (own.hid['i.thuy1'] && h.flooded) this.discover('i.thuy1', h.x, h.y);
+      // ẩn Lạc Long Quân: đứng kề Âu Cơ thì cả hai −10% sát thương
+      if ((h.type === 'llq' || h.type === 'auco') && alive.some((o) => o.type === (h.type === 'llq' ? 'auco' : 'llq') && near(h, o, ELEM.adj))) {
+        h.buff.llqPen = true;
+        this.discover('h.llq', h.x, h.y);
+      }
+    }
     for (const src of list) {
       if (src.dead) continue;
       const t = src.type;
-      const own = heroStatsNoAura(src);
+      const own = owns.get(src);
+      // Bộ Trống Đồng: hào quang +10% sát thương trong 2 ô (gấp đôi 5 giây khi có tướng dùng R)
+      if (own.drumAura) {
+        const v = own.drumAura * (src.drumBoostT > 0 ? 2 : 1);
+        for (const o of alive) if (o === src || near(src, o, 140)) o.buff.drum = Math.max(o.buff.drum || 0, v);
+      }
+      // ẩn đồ hành Thổ "Núi che chở": đứng ô Cao, tướng kề giảm 10% sát thương nhận
+      if (own.hid['i.tho2'] && CONFIG.slotTier[src.slot] === 2) {
+        for (const o of alive) if (near(src, o, ELEM.adj)) { o.buff.dr = Math.max(o.buff.dr || 0, 10); this.discover('i.tho2', src.x, src.y); }
+      }
       for (const o of list) {
         if (o.dead) continue;
         const b = o.buff;
@@ -1292,6 +1561,13 @@ class Game {
       if (!h) continue;
       if (h.type === 'giong' && h.grow < 10) { h.grow++; this.text(h.x, h.y - 80, 'Vươn Vai!', '#FFB04A', 1.2); }
       if (h.type === 'antiem') extra += 20;
+      // ẩn: sau đợt 20, 10% mỗi đợt "dưa vàng" / "bồ lúa vàng" +100 vàng
+      if (this.wave > 20 && h.type === 'antiem' && Math.random() < 0.1) {
+        extra += 100; this.text(h.x, h.y - 80, 'Dưa vàng! +100', '#FFD66B', 1.4, 15); this.discover('h.antiem', h.x, h.y);
+      }
+      if (this.wave > 20 && ACC_SLOTS.some((sl) => h.equip[sl] && h.equip[sl].id === 'bo_lua') && Math.random() < 0.1) {
+        extra += 100; this.text(h.x, h.y - 80, 'Bồ lúa vàng! +100', '#FFD66B', 1.4, 15); this.discover('r.bo_lua', h.x, h.y);
+      }
     }
     if (extra) this.addGold(extra);
     this.moc = this.mocMax();
@@ -1321,7 +1597,10 @@ class Game {
       atkCd: 1, slamCd: 4, summonCd: 6, healCd: 2, burnT: 0, dead: false, stunKind: 'stun', pullT: 0, pullSpeed: 0,
       elite: elite || null, armor: (def.armor || 0) + (elite === 'armored' ? 10 : 0), mr: def.mr || 0,
       shield: elite === 'shield' ? hp * 0.4 : 0, phase: 0, reborn: false, enraged: false, hitT: 0, zoneSlow: 0,
+      el: def.el || pick(EL_ORDER), el2: null, shredN: 0, noHealT: 0, groundT: 0,
     };
+    e.baseArmor = e.armor;
+    if (type === 'giaolong') this.discover('e.giaolong');
     this.enemies.push(e);
     if (!def.minion && !this.seen[type]) {
       this.seen[type] = true;
@@ -1341,6 +1620,9 @@ class Game {
       e.champion = true;
       e.hp = e.maxHp = e.maxHp * 3;
       e.armor += 15;
+      e.baseArmor = e.armor;
+      // ẩn: 30% mang thêm một hành phụ, chịu khắc từ cả hai hành
+      if (Math.random() < 0.3) { e.el2 = pick(EL_ORDER.filter((x) => x !== e.el)); this.discover('e.elite'); }
       this.events.push({ type: 'boss', name: `${e.def.name} khổng lồ`, armor: e.armor, champion: true });
     }
     if (e.def.boss) this.events.push({ type: 'boss', name: e.def.name, armor: e.armor, enemy: e.type });
@@ -1351,7 +1633,7 @@ class Game {
     for (const z of this.zones) {
       z.ttl -= dt;
       for (const e of this.enemies) {
-        if (e.dead || e.def.flying) continue;
+        if (e.dead || isFlying(e)) continue;
         const inside = z.d1 !== undefined ? e.dist >= z.d1 && e.dist <= z.d2 : Math.hypot(e.x - z.x, e.y - z.y) <= z.r;
         if (!inside) continue;
         this.hit(e, z.dps * dt, z.hero, { silent: true, dt: z.dt });
@@ -1382,7 +1664,9 @@ class Game {
       e.hp = Math.min(e.maxHp * d.reincarnate.pct, e.hp + (e.maxHp * d.reincarnate.pct / d.reincarnate.delay) * dt);
       return;
     }
-    if (e.elite === 'regen') e.hp = Math.min(e.maxHp, e.hp + e.maxHp * 0.03 * dt);
+    if (e.noHealT > 0) e.noHealT -= dt;
+    if (e.groundT > 0) e.groundT -= dt;
+    if (e.elite === 'regen' && !(e.noHealT > 0)) e.hp = Math.min(e.maxHp, e.hp + e.maxHp * 0.03 * dt);
     if (d.enrage && !e.enraged && e.hp < e.maxHp * d.enrage.below) {
       e.enraged = true;
       this.text(e.x, e.y - 30, d.boss ? 'HÓA ĐIÊN!' : 'Điên!', '#ff4d4d', 0.9, d.boss ? 18 : 13);
@@ -1392,7 +1676,7 @@ class Game {
       e.healCd -= dt;
       if (e.healCd <= 0) {
         e.healCd = d.heal.cd;
-        const hurt = this.enemies.filter((o) => !o.dead && o !== e && o.hp < o.maxHp && Math.hypot(o.x - e.x, o.y - e.y) <= d.heal.radius);
+        const hurt = this.enemies.filter((o) => !o.dead && o !== e && o.hp < o.maxHp && !(o.noHealT > 0) && Math.hypot(o.x - e.x, o.y - e.y) <= d.heal.radius);
         if (hurt.length) {
           this.effects.push({ type: 'heal', x: e.x, y: e.y, r: d.heal.radius, color: '#5AB4D6', ttl: 0.6, max: 0.6 });
           for (const o of hurt) {
@@ -1409,7 +1693,7 @@ class Game {
         e.burnT = 1;
         for (const h of this.heroes) {
           if (h && !h.dead && Math.hypot(h.x - e.x, h.y - e.y) <= d.burnAura.radius) {
-            this.damageHero(h, d.burnAura.dps * (1 + this.wave * 0.06));
+            this.damageHero(h, d.burnAura.dps * (1 + this.wave * 0.06), false, true);
           }
         }
       }
@@ -1496,6 +1780,7 @@ class Game {
       }
       this.lives -= d.lives || 1;
       this.effects.push({ type: 'flash', ttl: 0.3, max: 0.3 });
+      this.livesLost();
       if (this.lives <= 0) {
         this.lives = 0;
         this.over = true;
@@ -1530,7 +1815,7 @@ class Game {
     return best;
   }
 
-  damageHero(h, amount, ranged) {
+  damageHero(h, amount, ranged, magic) {
     if (h.dead || h.invulnT > 0) return;
     const b = h.buff || {};
     if (ranged && b.block && Math.random() * 100 < b.block) {
@@ -1539,6 +1824,21 @@ class Game {
     }
     const st = heroStats(h);
     amount *= (1 - st.dr / 100) * (1 - (b.dr || 0) / 100);
+    if (magic && st.magicRes) amount *= 1 - st.magicRes / 100;
+    // ẩn đồ hành Thổ "Đất lành chim đậu": máu dưới 30% thì giảm 30% sát thương 4 giây (hồi 20 giây)
+    if (st.hid['i.tho1'] && h.hp < st.hpMax * 0.3 && !(h.earthCd > 0)) {
+      h.earthT = 4; h.earthCd = 20;
+      this.discover('i.tho1', h.x, h.y);
+    }
+    if (h.earthT > 0) amount *= 0.7;
+    // ẩn đủ Bộ Sơn Tinh: mỗi đợt chặn hoàn toàn 1 đòn đánh gây chết
+    if (st.hid['s.sontinh'] && !h.blockUsed && amount >= h.hp + (h.shield || 0)) {
+      h.blockUsed = true;
+      this.text(h.x, h.y - 60, 'Núi chặn!', '#C99A3C', 1, 15);
+      this.effects.push({ type: 'ring', x: h.x, y: h.y - 20, r: 40, color: '#C99A3C', ttl: 0.6, max: 0.6 });
+      this.discover('s.sontinh', h.x, h.y);
+      return;
+    }
     if (h.shield > 0) {
       const a = Math.min(h.shield, amount);
       h.shield -= a;
@@ -1558,10 +1858,32 @@ class Game {
       this.notify(`${def.name} hồi sinh nhờ Ngọc Hồi Sinh!`, '#F0A030');
       return;
     }
+    // ẩn Giáp Đồng Bất Diệt: gục lần đầu mỗi đợt thì hồi sinh ngay với 30% máu
+    if (st.hid['r.giap_bat_diet'] && !h.gbdUsed) {
+      h.gbdUsed = true;
+      h.hp = st.hpMax * 0.3;
+      this.effects.push({ type: 'revive', x: h.x, y: h.y, ttl: 0.9, max: 0.9 });
+      this.discover('r.giap_bat_diet', h.x, h.y);
+      return;
+    }
     h.dead = true;
     h.hp = 0;
     h.respawnT = 4 + h.level * 0.8;
     h.fallT = 0.6;
+    // ẩn Thạch Sanh: đứng gần tướng vừa gục, tướng đó hồi sinh nhanh hơn 50%
+    const ts = this.heroes.find((o) => o && o !== h && !o.dead && o.type === 'thachsanh' && Math.hypot(o.x - h.x, o.y - h.y) <= 170);
+    if (ts) { h.respawnT *= 0.5; this.discover('h.thachsanh', ts.x, ts.y); }
+    // ẩn đồ hành Thủy "Nước chảy về chỗ trũng": tướng kề gục, hồi 20% máu cho các tướng kề còn lại
+    for (const w of this.adjacent(h)) {
+      if (!heroStats(w).hid['i.thuy2']) continue;
+      for (const o of [w, ...this.adjacent(w)]) {
+        if (o === h) continue;
+        const mx = heroStats(o).hpMax;
+        o.hp = Math.min(mx, o.hp + mx * 0.2);
+        this.effects.push({ type: 'heal', x: o.x, y: o.y, r: 30, color: '#5AB4D6', ttl: 0.7, max: 0.7 });
+      }
+      this.discover('i.thuy2', w.x, w.y);
+    }
     this.notify(`${def.name} đã gục! Hồi sinh sau ${Math.ceil(h.respawnT)} giây`, '#E25A3A');
   }
 
@@ -1587,6 +1909,15 @@ class Game {
     }
     if (h.invulnT > 0) h.invulnT -= dt;
     if (h.shieldT > 0) { h.shieldT -= dt; if (h.shieldT <= 0) h.shield = 0; }
+    for (const k of ['rageT', 'warT', 'earthT', 'earthCd', 'drumBoostT', 'trailCd', 'breathCd']) if (h[k] > 0) h[k] -= dt;
+    if (!(h.rageT > 0)) h.rageN = 0;
+    h.still = (h.still || 0) + dt;
+    if (st.hid['r.ao_vay_ca'] && h.flooded) {
+      h.hp = Math.min(st.hpMax, h.hp + st.hpMax * 0.02 * dt);
+      if (h.hp < st.hpMax) this.discover('r.ao_vay_ca', h.x, h.y);
+    }
+    // Bộ Sơn Tinh: quái chạm vào bị chậm
+    if (st.touchSlow) for (const e of this.enemiesInRange(h.x, h.y, 60, false)) this.slow(e, st.touchSlow, 0.5);
     const heal = (h.buff.healPct || 0) / 100 * st.hpMax;
     h.hp = Math.min(st.hpMax, h.hp + (st.regen + heal) * dt);
     h.mana = Math.min(st.maxMana, h.mana + st.manaRegen * dt);
@@ -1634,8 +1965,25 @@ class Game {
       if (sk.active.mana < reserve && h.mana - sk.active.mana < reserve) continue;
       const cst = { ...st, skillPower: st.skillPower * skillMult(lv) };
       if (SKILL_CASTS[sk.active.cast](this, h, cst, skillN(h.level))) {
-        h.mana -= sk.active.mana;
+        // ẩn Gậy Thời Không: 10% dùng chiêu không tốn năng lượng
+        if (st.hid['r.gay_thoi_khong'] && Math.random() < 0.1) {
+          this.text(h.x, h.y - 84, 'Không tốn năng lượng!', '#4a90e2', 1, 13);
+          this.discover('r.gay_thoi_khong', h.x, h.y);
+        } else h.mana -= sk.active.mana;
         h.skillCd[sk.id] = sk.active.cooldown * (1 - st.cdr / 100);
+        // ẩn Lang Liêu: đợt có Thủy Tinh, Lễ Tổ Tiên giảm 50% hồi chiêu
+        if (sk.active.cast === 'ancestor' && this.enemies.some((e) => !e.dead && e.type === 'thuytinh')) {
+          h.skillCd[sk.id] *= 0.5;
+          this.discover('h.langlieu', h.x, h.y);
+        }
+        // ẩn đủ Bộ Trống Đồng: tướng trong hào quang dùng R thì hào quang gấp đôi 5 giây
+        if (i === 3 && h.buff.drum) {
+          for (const o of this.heroes) {
+            if (!o || o.dead || Math.hypot(o.x - h.x, o.y - h.y) > 140 || !heroStats(o).hid['s.drum']) continue;
+            o.drumBoostT = 5;
+            this.discover('s.drum', o.x, o.y);
+          }
+        }
         h.swing = 1;
         const color = SKILL_COLOR[sk.active.cast] || '#fff';
         h.castT = i === 3 ? 0.9 : 0.5;
@@ -1679,7 +2027,7 @@ class Game {
   shoot(h, target, kind, speed, st) {
     this.projectiles.push({
       kind, x: h.x + h.dir * 10, y: h.y - 30, sx: h.x, sy: h.y - 30, target, tx: target.x, ty: target.y,
-      speed, hero: h, st: { ...st },
+      speed, hero: h, st: { ...st }, curve: st.curve ? 1 : 0,
     });
   }
 
@@ -1701,7 +2049,7 @@ class Game {
       p.done = true;
       const { st, hero } = p;
       if (p.kind === 'evil') {
-        if (!p.target.dead) this.damageHero(p.target, p.dmg, true);
+        if (!p.target.dead) this.damageHero(p.target, p.dmg, true, true);
       } else if (st.splash > 0) {
         this.effects.push({ type: 'ring', x: p.tx, y: p.ty, r: st.splash, color: p.kind === 'melon' ? '#3EDC4E' : '#F28A2E', ttl: 0.3, max: 0.3 });
         for (const e of this.enemiesInRange(p.tx, p.ty, Math.max(st.splash, 14))) {
@@ -1711,6 +2059,8 @@ class Game {
       } else {
         if (p.target.dead) continue;
         this.hit(p.target, st.damage, hero, { st });
+        // Rìu Quét Sông (tướng đánh xa): lan sát thương ra quái xung quanh
+        if (st.spread) for (const o of this.enemiesInRange(p.tx, p.ty, 50)) if (o !== p.target) this.hit(o, st.damage * st.spread / 100, hero, { silent: true });
         if (p.target.dead) continue;
         if (st.poison > 0) this.dot(p.target, st.poison, hero, '#7FC24A', 'pure');
         if (st.slow > 0) this.slow(p.target, st.slow, 1.5);
@@ -1731,8 +2081,13 @@ class Game {
     }
   }
 
-  dot(e, dps, hero, color, type) {
-    e.poisonT = 3;
+  dot(e, dps, hero, color, type, t) {
+    e.poisonT = t || 3;
+    // ẩn Thầy Mo Lửa: lửa đốt quái hành Kim kéo dài gấp đôi
+    if (hero && hero.type === 'thaymo' && (e.el === 'kim' || e.el2 === 'kim')) {
+      e.poisonT *= 2;
+      this.discover('h.thaymo', hero.x, hero.y);
+    }
     e.poisonDps = dps;
     e.poisonBy = hero;
     e.dotColor = color;
@@ -1774,18 +2129,35 @@ class Game {
     const type = o.dt || (def ? def.dmgType : 'phys');
     let dmg = amount;
     const st = o.st;
+    const hid = st ? st.hid : {};
     const crit = st && Math.random() * 100 < st.crit;
-    if (crit) dmg *= st.critMult || 2;
+    let critMult = st ? st.critMult || 2 : 2;
+    if (crit && e.elite && hid['r.luoi_hai']) { critMult = 3; this.discover('r.luoi_hai', hero.x, hero.y); }
+    if (crit) dmg *= critMult;
     if (st && e.def.flying && st.airMult > 1) dmg *= st.airMult;
+    if (st && e.def.boss && st.bossPct) dmg *= 1 + st.bossPct / 100;
+    // Ngũ hành: khắc +30%, bị khắc −20% (hành của đòn đánh là hành của tướng)
+    const em = hero ? this.elemMult(hero, e) : 0;
+    dmg *= 1 + em / 100;
+    // ẩn đồ hành Kim: đòn thứ 5 liên tiếp vào cùng một quái +50%
+    if (st && !o.silent && hid['i.kim2']) {
+      hero.streak = hero.streakId === e.id ? (hero.streak || 0) + 1 : 1;
+      hero.streakId = e.id;
+      if (hero.streak % 5 === 0) { dmg *= 1.5; this.discover('i.kim2', hero.x, hero.y); }
+    }
     if (type === 'phys') {
-      const pierce = st ? st.pierce : hero ? heroStats(hero).pierce : 0;
+      let pierce = st ? st.pierce : hero ? heroStats(hero).pierce : 0;
+      if (hid['i.kim1'] && e.hp < e.maxHp * 0.3) { pierce = Math.min(100, pierce + 30); this.discover('i.kim1', hero.x, hero.y); }
       const armor = e.armor * (1 - pierce / 100);
       dmg *= 1 - (0.06 * armor) / (1 + 0.06 * armor);
     } else if (type === 'magic') dmg *= 1 - e.mr / 100;
     if (st && st.stunChance && Math.random() * 100 < st.stunChance) this.stun(e, 0.5, 'stun');
+    if (st && !o.silent) this.onHitFx(e, hero, st, crit, dmg);
     if (!o.silent) e.hitT = 0.12;
-    if (crit) this.text(e.x, e.y - 30, Math.round(dmg) + '!', '#FFD66B', 0.7);
-    else if (o.big) this.text(e.x, e.y - 30, Math.round(dmg), o.color || '#fff', 0.8);
+    // số sát thương: khắc chế hiện vàng, bị khắc hiện xám
+    const numColor = em > 0 ? '#FFD66B' : em < 0 ? '#9A968C' : null;
+    if (crit) this.text(e.x, e.y - 30, Math.round(dmg) + '!', numColor || '#FFD66B', 0.7);
+    else if (o.big) this.text(e.x, e.y - 30, Math.round(dmg), numColor || o.color || '#fff', 0.8);
     if (e.shield > 0) {
       const a = Math.min(e.shield, dmg);
       e.shield -= a;
@@ -1801,10 +2173,56 @@ class Game {
       e.reviveT = e.def.reincarnate.delay;
       this.effects.push({ type: 'dive', x: e.x, y: e.y, ttl: e.def.reincarnate.delay, max: e.def.reincarnate.delay });
       this.text(e.x, e.y - 70, 'HÀ BÁ LẶN XUỐNG!', '#9EDDF2', 1.6, 18);
+      e.el = 'kim';      // ẩn: trồi lên với vảy hóa đồng (hành Kim)
+      this.discover('e.haba');
       this.shake = Math.max(this.shake, 5);
       return;
     }
     this.kill(e, hero);
+  }
+
+  // hiệu ứng theo đòn đánh thường của tướng (đồ ghép, đồ bộ, hiệu ứng ẩn)
+  onHitFx(e, hero, st, crit, dmg) {
+    const hid = st.hid || {};
+    if (st.shred && e.shredN < 3) {
+      e.shredN++;
+      e.armor = Math.max(0, e.baseArmor - st.shred * e.shredN);
+      if (e.type === 'rua' && e.armor <= 0 && hid['r.mui_sung'] && !e.cracked) {
+        e.cracked = true;
+        this.stun(e, 1, 'stun');
+        this.text(e.x, e.y - 34, 'Vỡ mai!', '#E8D8B0', 0.9, 14);
+        this.discover('r.mui_sung', hero.x, hero.y);
+      }
+    }
+    if (st.noHeal) e.noHealT = st.noHeal;
+    if (st.netSlow) {
+      this.slow(e, st.netSlow, 1);
+      if (e.type === 'casau' && e.enraged && !e.netted && hid['r.luoi_ca']) {
+        e.netted = true;
+        this.stun(e, 1, 'net');
+        this.discover('r.luoi_ca', hero.x, hero.y);
+      }
+    }
+    if (e.def.flying && hid['r.bua_chim_lac'] && !(e.groundT > 0)) {
+      e.groundT = 1;
+      this.discover('r.bua_chim_lac', hero.x, hero.y);
+    }
+    if (crit && hid['i.hoa1']) { this.dot(e, dmg * 0.2, hero, '#E0452C', 'magic', 2); this.discover('i.hoa1', hero.x, hero.y); }
+    // ẩn đủ Bộ Lạc Long: đứng ô ngập, 10% phóng sét lan 3 quái
+    if (hid['s.laclong'] && hero.flooded && Math.random() < 0.1) {
+      const near = this.enemiesInRange(e.x, e.y, 130).filter((o) => o !== e).slice(0, 3);
+      for (const o of near) {
+        this.effects.push({ type: 'streak', x: e.x, y: e.y - 14, x2: o.x, y2: o.y - 14, color: '#BFF0FF', w: 4, ttl: 0.3, max: 0.3 });
+        this.hit(o, st.damage * 0.6, hero, { dt: 'magic', silent: true });
+      }
+      if (near.length) this.discover('s.laclong', hero.x, hero.y);
+    }
+    // Bộ Ngựa Sắt: đòn đánh để lại vệt lửa trên sông 2 giây
+    if (st.fireTrail && !isFlying(e) && !(hero.trailCd > 0)) {
+      hero.trailCd = 0.5;
+      this.zones.push({ kind: 'fire', d1: Math.max(0, e.dist - 30), d2: e.dist + 30, ttl: 2, max: 2,
+        dps: st.damage * st.fireTrail, hero, dt: 'magic' });
+    }
   }
 
   kill(e, hero) {
@@ -1819,7 +2237,20 @@ class Game {
       this.effects.push({ type: 'spark', x: e.x, y: e.y - 8, a: Math.random() * 6.28, color: e.def.color, ttl: 0.4, max: 0.4 });
     }
     this.effects.push({ type: 'die', x: e.x, y: e.y, etype: e.type, dir: e.dir, ttl: 0.4, max: 0.4 });
-    if (hero && this.heroes[hero.slot] === hero) hero.kills++;
+    if (hero && this.heroes[hero.slot] === hero) {
+      hero.kills++;
+      this.onKillFx(e, hero);
+    }
+    // ẩn Thần Sương Núi: quái chết khi đang đóng băng thì vỡ băng, làm chậm quái xung quanh
+    if (e.stunT > 0 && e.stunKind === 'ice') {
+      const near = this.enemiesInRange(e.x, e.y, 90).filter((o) => o !== e);
+      for (const o of near) this.slow(o, 50, 1.5);
+      if (near.length) {
+        this.effects.push({ type: 'nova', x: e.x, y: e.y, r: 90, ttl: 0.45, max: 0.45 });
+        const ice = this.heroes.find((h) => h && h.type === 'thansuong');
+        if (ice) this.discover('h.thansuong', ice.x, ice.y);
+      }
+    }
 
     if (e.def.split) {
       for (let i = 0; i < e.def.split.count; i++) this.spawn(e.def.split.type, Math.max(0, e.dist - 6 + i * 8));
@@ -1834,8 +2265,10 @@ class Game {
       this.events.push({ type: 'reward', boss: e.type, options: this.bossRewards(e.type) });
     }
     if (Math.random() < e.def.drop * (e.elite ? 3 : 1)) {
-      const id = rollItem(e.def.boss ? 'rare' : e.elite ? 'rare' : 'common');
-      const inst = this.addItem(id);
+      // quái tinh anh và boss: 25% rơi một món đồ bộ
+      const id = (e.elite || e.def.boss || e.champion) && Math.random() < 0.25 ? rollSetItem()
+        : rollItem(e.def.boss ? 'rare' : e.elite ? 'rare' : 'common');
+      const inst = this.addItem(makeItem(id, null, { drop: true }));
       if (inst) {
         const it = ITEMS[id];
         this.notify(`Rơi đồ: ${it.name} (${RARITY[it.rarity].name})`, RARITY[it.rarity].color);
@@ -1844,10 +2277,66 @@ class Game {
     }
   }
 
+  // hiệu ứng khi tướng hạ quái (đồ ghép, đồ bộ, hiệu ứng ẩn)
+  onKillFx(e, h) {
+    const st = heroStats(h);
+    const hid = st.hid;
+    if (hid['i.moc1'] && !h.dead) {
+      h.hp = Math.min(st.hpMax, h.hp + st.hpMax * 0.03);
+      this.discover('i.moc1', h.x, h.y);
+    }
+    if (hid['r.song_riu']) {
+      h.rageT = 3;
+      h.rageN = Math.min(5, (h.rageN || 0) + 1);
+      if (h.rageN >= 2) this.discover('r.song_riu', h.x, h.y);
+    }
+    if (e.type === 'tom' && hid['r.riu_quet']) {
+      h.tomKills = (h.tomKills || []).filter((t) => this.time - t < 0.6);
+      h.tomKills.push(this.time);
+      if (h.tomKills.length >= 5) {
+        h.tomKills = [];
+        this.addGold(10);
+        this.text(h.x, h.y - 80, 'Quét sạch! +10', '#FFD66B', 1, 14);
+        this.discover('r.riu_quet', h.x, h.y);
+      }
+    }
+    if (e.type === 'phuthuy' && hid['r.ngoc_tran_thuy']) {
+      for (const o of this.enemiesInRange(e.x, e.y, 110)) if (!o.def.boss) this.hit(o, o.maxHp * 0.1, h, { dt: 'pure', silent: true });
+      this.effects.push({ type: 'ring', x: e.x, y: e.y, r: 110, color: '#2F6FB0', ttl: 0.5, max: 0.5 });
+      this.discover('r.ngoc_tran_thuy', h.x, h.y);
+    }
+    if (h.type === 'xathu' && e.def.flying) {
+      h.airKills = (h.airKills || 0) + 1;
+      if (h.airKills % 10 === 0 && h.airKills <= 100) {
+        this.text(h.x, h.y - 80, 'Mắt quen trời: +1% tầm', '#9EDDF2', 1.2, 13);
+        this.discover('h.xathu', h.x, h.y);
+      }
+    }
+    if (e.type === 'chimbao' && hid['s.chimlac'] && Math.random() < 0.2) {
+      const t = this.findTarget(e.x, e.y, 400);
+      if (t) {
+        this.effects.push({ type: 'bird', x: e.x, y: e.y - 30, target: t, ttl: 0.6, max: 0.6,
+          onEnd: () => this.hit(t, st.damage * 1.5, h, { big: true, color: '#F2E6C8' }) });
+        this.discover('s.chimlac', h.x, h.y);
+      }
+    }
+    if (hid['s.nguasat'] && !(h.breathCd > 0)) {
+      h.killTimes = (h.killTimes || []).filter((t) => this.time - t < 2);
+      h.killTimes.push(this.time);
+      if (h.killTimes.length >= 3) {
+        h.killTimes = [];
+        h.breathCd = 6;
+        const t = this.findTarget(h.x, h.y, st.range * 2, false) || e;
+        this.lineHit(h, t, 320, st.damage * 2.5, { color: '#FF8A2E', width: 20, dt: 'magic' });
+        this.discover('s.nguasat', h.x, h.y);
+      }
+    }
+  }
+
   // Vua Hùng ban thưởng: chọn 1 trong 3
   bossRewards(bossType) {
     const opts = [{ kind: 'item', id: ENEMIES[bossType].reward, title: 'Sính lễ' }];
-    opts.push({ kind: 'item', id: rollItem('epic'), title: 'Hũ Vua Hùng', jar: true });
+    opts.push({ kind: 'item', id: Math.random() < 0.3 ? rollSetItem() : rollItem('epic'), title: 'Hũ Vua Hùng', jar: true });
     if (Math.random() < 0.5) {
       opts.push({ kind: 'treasure', gold: 200 + this.wave * 15, lives: 3, title: 'Kho lúa · Đắp thành' });
     } else {

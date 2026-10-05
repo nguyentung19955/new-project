@@ -82,6 +82,7 @@ const STAT_NAMES = {
   damage: 'Sát thương', range: 'Tầm', haste: '% Tốc đánh', crit: '% Chí mạng',
   bonusDmgPct: '% Sát thương', str: 'Sức mạnh', agi: 'Nhanh nhẹn', int: 'Trí tuệ',
   hp: 'Máu', regen: 'Hồi máu/s', cleave: 'Chém lan', cdr: '% Giảm hồi chiêu', dr: '% Giảm sát thương nhận',
+  goldOnKill: 'Vàng mỗi quái hạ',
 };
 
 // Sức mạnh gốc của kỹ năng: không còn tăng theo số quái hạ mà tăng theo
@@ -526,15 +527,219 @@ const ITEMS = {
                 stats: {}, desc: 'Khi gục sẽ hồi sinh ngay với đầy máu (dùng 1 lần)' },
 };
 
-// Bộ đồ: mặc đủ `pieces` món cùng bộ -> cộng chỉ số + biến hình
+// ------------------------------------------------------------
+//  ĐỒ MỚI (v15): 4 phụ kiện, 8 đồ ghép, 4 bộ đồ (Sơn Tinh, Chim Lạc,
+//  Trống Đồng, Ngựa Sắt). fx: hiệu ứng đặc biệt cộng vào chỉ số tướng.
+// ------------------------------------------------------------
+Object.assign(ITEMS, {
+  sung_te:    { name: 'Sừng Tê', slot: 'acc', rarity: 'common', price: 120, stats: { damage: 8 },
+                desc: 'Nguyên liệu: Mũi Sừng Phá Giáp, Rìu Quét Sông' },
+  long_chim_lac: { name: 'Lông Chim Lạc', slot: 'acc', rarity: 'common', price: 110, stats: { range: 15, agi: 4 },
+                desc: 'Nguyên liệu: Cung Mắt Chim, Bùa Chim Lạc' },
+  vay_ca:     { name: 'Vảy Cá', slot: 'acc', rarity: 'common', price: 110, stats: { hp: 100, dr: 4 },
+                desc: 'Nguyên liệu: Áo Vảy Cá, Ngọc Trấn Thủy, Lưới Đánh Cá' },
+  hat_lua:    { name: 'Hạt Lúa', slot: 'acc', rarity: 'common', price: 100, stats: { hp: 60, regen: 1 },
+                desc: 'Nguyên liệu: Bồ Lúa Thần' },
+
+  mui_sung:   { name: 'Mũi Sừng Phá Giáp', slot: 'acc', rarity: 'epic', counter: 'rua',
+                recipe: { parts: ['sung_te', 'vuot_ho'], cost: 150 }, stats: { damage: 18 }, fx: { shred: 5 },
+                desc: 'Đòn đánh giảm 5 giáp mục tiêu (cộng dồn 3 lần)', look: { aura: '#C8BFA8' } },
+  riu_quet:   { name: 'Rìu Quét Sông', slot: 'acc', rarity: 'epic', counter: 'tom',
+                recipe: { parts: ['sung_te', 'gang_da'], cost: 150 }, stats: { damage: 10, haste: 10 }, fx: { spread: 35 },
+                desc: 'Đòn đánh lan 35% sát thương ra quái xung quanh', look: { aura: '#5AB4D6' } },
+  cung_mat_chim: { name: 'Cung Mắt Chim', slot: 'acc', rarity: 'epic', counter: 'chimbao',
+                recipe: { parts: ['long_chim_lac', 'mat_ngoc'], cost: 150 }, stats: { range: 35 }, fx: { airPct: 50 },
+                desc: '+50% sát thương lên quái bay', look: { aura: '#F2E6C8' } },
+  bua_chim_lac: { name: 'Bùa Chim Lạc', slot: 'acc', rarity: 'epic', counter: 'chimbao',
+                recipe: { parts: ['long_chim_lac', 'khan'], cost: 150 }, stats: { int: 6 }, fx: { hitAir: 1 },
+                desc: 'Tướng cận chiến đánh được quái bay', look: { aura: '#FFE08A' } },
+  ao_vay_ca:  { name: 'Áo Vảy Cá', slot: 'acc', rarity: 'epic', counter: 'phuthuy',
+                recipe: { parts: ['vay_ca', 'ngoc_sinh_luc'], cost: 150 }, stats: { hp: 250 }, fx: { magicRes: 35 },
+                desc: 'Giảm 35% sát thương phép nhận vào (Phù Thủy Nước, mưa của Thủy Tinh)', look: { aura: '#5AB4D6' } },
+  ngoc_tran_thuy: { name: 'Ngọc Trấn Thủy', slot: 'acc', rarity: 'epic', counter: 'phuthuy',
+                recipe: { parts: ['vay_ca', 'mat_ngoc'], cost: 150 }, stats: { range: 20, int: 6 }, fx: { noHeal: 3 },
+                desc: 'Quái bị đánh không được hồi máu trong 3 giây', look: { aura: '#2F6FB0' } },
+  luoi_ca:    { name: 'Lưới Đánh Cá', slot: 'acc', rarity: 'epic', counter: 'casau',
+                recipe: { parts: ['vay_ca', 'dep_co'], cost: 150 }, stats: { agi: 8 }, fx: { netSlow: 20 },
+                desc: 'Đòn đánh làm chậm 20% trong 1 giây', look: { aura: '#8C7A5A' } },
+  bo_lua:     { name: 'Bồ Lúa Thần', slot: 'acc', rarity: 'epic',
+                recipe: { parts: ['hat_lua', 'dai'], cost: 150 }, stats: { str: 6, hp: 100, goldOnKill: 3 },
+                desc: '+3 vàng mỗi quái hạ', look: { aura: '#E8D070' } },
+});
+
+// Bộ đồ v15: 3 món (vũ khí theo loại tướng, mũ, giáp), cùng hành. Rơi từ quái
+// tinh anh và boss ở độ hiếm Sử thi, thăng phẩm lên Huyền thoại được.
+const SET_ITEMS = {
+  sontinh: { el: 'tho', color: '#8C7A5A', glow: '#C99A3C', names: ['Rìu Đá Tản Viên', 'Nỏ Đá Núi', 'Gậy Đá Núi', 'Mũ Đá Núi', 'Giáp Đá Núi'],
+    helmet: { str: 8, hp: 120 }, armor: { hp: 220, dr: 5 } },
+  chimlac: { el: 'kim', color: '#F2E6C8', glow: '#FFF1C4', names: ['Rìu Chim Lạc', 'Nỏ Chim Lạc', 'Gậy Chim Lạc', 'Mũ Lông Lạc', 'Áo Lông Lạc'],
+    helmet: { agi: 8, range: 10 }, armor: { agi: 6, haste: 10 } },
+  drum:    { el: 'kim', color: '#C8943A', glow: '#F2D27A', names: ['Rìu Mặt Trống', 'Nỏ Mặt Trống', 'Gậy Dùi Trống', 'Mũ Trống Đồng', 'Giáp Trống Đồng'],
+    helmet: { int: 8, cdr: 5 }, armor: { int: 6, hp: 150 } },
+  nguasat: { el: 'hoa', color: '#3A3030', glow: '#E0452C', names: ['Rìu Ngựa Sắt', 'Nỏ Ngựa Sắt', 'Gậy Ngựa Sắt', 'Mũ Bờm Lửa', 'Giáp Sắt Đen'],
+    helmet: { str: 5, damage: 6 }, armor: { damage: 8, hp: 120 } },
+};
+for (const [set, d] of Object.entries(SET_ITEMS)) {
+  const base = { rarity: 'epic', set };
+  ITEMS[set + '_riu'] = { ...base, name: d.names[0], slot: 'weapon', wclass: 'blade', stats: { damage: 16, crit: 5 }, look: { type: 'axe', color: d.color, glow: d.glow } };
+  ITEMS[set + '_no'] = { ...base, name: d.names[1], slot: 'weapon', wclass: 'bow', stats: { damage: 10, haste: 10, range: 15 }, look: { type: 'crossbow', color: d.color, glow: d.glow } };
+  ITEMS[set + '_gay'] = { ...base, name: d.names[2], slot: 'weapon', wclass: 'staff', stats: { damage: 18 }, look: { type: 'staff', color: d.color, orb: d.glow, glow: d.glow } };
+  ITEMS[set + '_mu'] = { ...base, name: d.names[3], slot: 'helmet', stats: d.helmet, look: { type: 'helm', color: d.color } };
+  ITEMS[set + '_giap'] = { ...base, name: d.names[4], slot: 'armor', stats: d.armor, look: { type: 'plate', color: d.color } };
+}
+
+// Bộ đồ: mặc 2 / 3 món cùng bộ. apply(s, n, k): n = số món, k = 1.5 khi
+// đủ bộ cùng hành với tướng ("Thiên mệnh": hiệu ứng 3 món mạnh thêm 50%).
 const SETS = {
   laclong: {
-    name: 'Bộ Lạc Long', pieces: 3,
+    name: 'Bộ Lạc Long', el: 'thuy', pieces: 3, fit: 'mọi tướng', color: '#2ecc71',
+    ids: { blade: 'long_riu', bow: 'long_no', staff: 'long_truong', helmet: 'mu_lac_long', armor: 'giap_vay_rong' },
+    p2: '+10% sát thương', p3: '+30% sát thương, mọc cánh rồng', look3: 'Cánh rồng xanh ngọc',
     desc: '+30% sát thương, mọc cánh rồng: dòng dõi Lạc Long Quân',
-    apply: (s) => { s.bonusDmgPct += 30; },
+    apply: (s, n, k) => { if (n >= 2) s.bonusDmgPct += 10; if (n >= 3) s.bonusDmgPct += 30 * k - 10; },
     look: { wings: '#1e8449', aura: '#2ecc71' },
   },
+  sontinh: {
+    name: 'Bộ Sơn Tinh', el: 'tho', pieces: 3, fit: 'tướng chặn đường', color: '#C99A3C',
+    p2: '+15% máu', p3: '−15% sát thương nhận, quái chạm vào bị chậm 20%', look3: 'Khối núi đá lơ lửng sau lưng',
+    apply: (s, n, k) => { if (n >= 2) s.hpPct += 15; if (n >= 3) { s.dr += 15 * k; s.touchSlow = 20 * k; } },
+  },
+  chimlac: {
+    name: 'Bộ Chim Lạc', el: 'kim', pieces: 3, fit: 'tướng đánh xa', color: '#F2E6C8',
+    p2: '+10% tầm', p3: '+40% sát thương lên quái bay, tên bay vòng cung', look3: 'Cánh lông chim Lạc trắng vàng',
+    apply: (s, n, k) => { if (n >= 2) s.rangePct += 10; if (n >= 3) { s.airMult += 0.4 * k; s.curve = 1; } },
+  },
+  drum: {
+    name: 'Bộ Trống Đồng', el: 'kim', pieces: 3, fit: 'tướng phép, hỗ trợ', color: '#F2D27A',
+    p2: '+10% sức mạnh kỹ năng', p3: 'Hào quang +10% sát thương cho tướng trong 2 ô', look3: 'Mặt trống đồng xoay sau lưng',
+    apply: (s, n, k) => { if (n >= 2) s.skillPct += 10; if (n >= 3) s.drumAura = 10 * k; },
+  },
+  nguasat: {
+    name: 'Bộ Ngựa Sắt', el: 'hoa', pieces: 3, fit: 'tướng cận chiến', color: '#E0452C',
+    p2: '+10% tốc đánh', p3: 'Đòn đánh để lại vệt lửa trên sông 2 giây', look3: 'Bờm lửa, giáp sắt đen ánh đỏ',
+    apply: (s, n, k) => { if (n >= 2) s.haste += 10; if (n >= 3) s.fireTrail = 0.25 * k; },
+  },
 };
+for (const [set, d] of Object.entries(SET_ITEMS)) {
+  SETS[set].ids = { blade: set + '_riu', bow: set + '_no', staff: set + '_gay', helmet: set + '_mu', armor: set + '_giap' };
+  SETS[set].glow = d.glow;
+}
+const SET_ORDER = ['laclong', 'sontinh', 'chimlac', 'drum', 'nguasat'];
+
+// ------------------------------------------------------------
+//  NGŨ HÀNH (v15). Hành không thay hệ Sức mạnh / Nhanh nhẹn / Trí tuệ mà
+//  chồng lên: hệ quyết định chỉ số, hành quyết định khắc chế và đội hình.
+// ------------------------------------------------------------
+const ELEMENTS = {
+  kim:  { name: 'Kim',  color: '#D9DDE0' },
+  moc:  { name: 'Mộc',  color: '#5FB84A' },
+  thuy: { name: 'Thủy', color: '#2F6FB0' },
+  hoa:  { name: 'Hỏa',  color: '#E0452C' },
+  tho:  { name: 'Thổ',  color: '#C99A3C' },
+};
+const EL_ORDER = ['kim', 'moc', 'thuy', 'hoa', 'tho'];
+const EL_KHAC = { kim: 'moc', moc: 'tho', tho: 'thuy', thuy: 'hoa', hoa: 'kim' };   // a khắc EL_KHAC[a]
+const EL_SINH = { kim: 'thuy', thuy: 'moc', moc: 'hoa', hoa: 'tho', tho: 'kim' };   // a sinh EL_SINH[a]
+const ELEM = {
+  khac: 30,        // đánh quái thuộc hành mình khắc: +30% sát thương
+  biKhac: -20,     // đánh quái thuộc hành khắc mình: −20%
+  sinh: 10,        // đứng kề tướng thuộc hành sinh ra mình: +10%, tối đa 2 lần
+  sinhMax: 2,
+  full: 10,        // đủ 5 hành trên sân: toàn quân +10%
+  adj: 115,        // "đứng kề": khoảng cách giữa hai ô (px logic)
+  item: { same: 10, sinh: 5, khac: -10 },    // hành đồ so với hành tướng: % chỉ số gốc
+};
+const HERO_EL = { lactuong: 'kim', lucsi: 'tho', xathu: 'kim', thosan: 'moc', thaymo: 'hoa', thansuong: 'thuy',
+  giong: 'hoa', llq: 'thuy', kimquy: 'kim', thachsanh: 'moc', caolo: 'kim', antiem: 'moc',
+  auco: 'tho', cdt: 'thuy', tiendung: 'hoa', langlieu: 'tho' };
+for (const id in HERO_EL) HEROES[id].el = HERO_EL[id];
+// hành "rủi ro" của đồ so với tướng: 'same' | 'sinh' | 'khac' | null
+function itemRelation(itemEl, heroEl) {
+  if (!itemEl || !heroEl) return null;
+  if (itemEl === heroEl) return 'same';
+  if (EL_SINH[itemEl] === heroEl) return 'sinh';
+  if (EL_KHAC[itemEl] === heroEl) return 'khac';
+  return null;
+}
+
+// Dòng phụ ngẫu nhiên của đồ rơi / đồ trong Hũ báu (đồ mua ở cửa hàng không có)
+const AFFIXES = {
+  haste: { val: 8,  label: (v) => `+${v}% tốc đánh` },
+  boss:  { val: 15, label: (v) => `+${v}% sát thương lên boss` },
+  air:   { val: 20, label: (v) => `+${v}% sát thương lên quái bay` },
+  cdr:   { val: 8,  label: (v) => `−${v}% hồi chiêu` },
+  gold:  { val: 2,  label: (v) => `+${v} vàng mỗi quái hạ` },
+  flood: { val: 10, label: (v) => `+${v}% sát thương khi đứng ô ngập` },
+  range: { val: 10, label: (v) => `+${v}% tầm đánh` },
+  crit:  { val: 5,  label: (v) => `+${v}% chí mạng` },
+};
+const AFFIX_COUNT = { common: 0, rare: 1, epic: 1, legendary: 2 };
+Object.assign(COSTS, {
+  reroll: (n) => Math.min(400, 50 * Math.pow(2, n)),   // Tẩy luyện: 50, 100, 200, 400…
+  temper: (n) => 300 + 100 * n,                         // Tôi luyện đồ Huyền thoại +5
+  train: (n) => 200 + 50 * n,                           // Luyện thể tướng cấp 25
+});
+
+// ------------------------------------------------------------
+//  HIỆU ỨNG ẨN: hiện "???" kèm gợi ý cho tới lần kích hoạt đầu tiên,
+//  sau đó luôn hiển thị và ghi vào Bách khoa (tab Bí truyền).
+// ------------------------------------------------------------
+const SECRETS = {
+  // tướng
+  'h.lactuong':  { hero: 'lactuong', hint: 'Rìu cần người gánh núi', desc: 'Đứng kề Lực Sĩ Núi: Khiên Đồng choáng thêm 0,5 giây' },
+  'h.lucsi':     { hero: 'lucsi', hint: 'Đứng càng cao, núi càng nặng', desc: 'Đứng ô bậc Cao: Vùi Đá chôn 2 quái' },
+  'h.xathu':     { hero: 'xathu', hint: 'Mắt quen trời', desc: 'Mỗi 10 quái bay bị hạ: +1% tầm, tối đa +10% trong trận' },
+  'h.thosan':    { hero: 'thosan', hint: 'Thú săn được nuôi thợ săn', desc: 'Săn Mồi hạ gục mục tiêu: hồi ngay 50% năng lượng' },
+  'h.thaymo':    { hero: 'thaymo', hint: 'Lửa thử vàng', desc: 'Lửa đốt quái hành Kim kéo dài gấp đôi' },
+  'h.thansuong': { hero: 'thansuong', hint: 'Băng vỡ, sương lan', desc: 'Quái chết khi đang đóng băng: vỡ băng, làm chậm quái xung quanh 1,5 giây' },
+  'h.giong':     { hero: 'giong', hint: 'Giặc đến nhà', desc: 'Khi thành còn ≤ 5 mạng: Vươn Vai lập tức đạt tối đa' },
+  'h.llq':       { hero: 'llq', hint: 'Năm mươi lên núi, năm mươi xuống biển', desc: 'Âu Cơ cùng trên sân: Bọc Trăm Trứng nở thêm 50% Lạc Tử. Nhưng nếu hai người đứng kề nhau, cả hai −10% sát thương' },
+  'h.kimquy':    { hero: 'kimquy', hint: 'Rùa vàng giữ thành', desc: 'Thành còn 1 mạng: Kim Quy Hộ Thành tự kích hoạt một lần, kể cả đang hồi chiêu' },
+  'h.thachsanh': { hero: 'thachsanh', hint: 'Niêu cơm ăn mãi không hết', desc: 'Đứng gần tướng vừa gục: tướng đó hồi sinh nhanh hơn 50%' },
+  'h.caolo':     { hero: 'caolo', hint: 'Móng rùa thần', desc: 'Thần Kim Quy cùng trên sân: Nỏ Thần gây sát thương x2' },
+  'h.antiem':    { hero: 'antiem', hint: 'Đảo hoang thành vườn', desc: 'Sau đợt 20: mỗi đợt 10% rơi "dưa vàng" +100 vàng' },
+  'h.auco':      { hero: 'auco', hint: 'Mẹ ở trên núi', desc: 'Đứng ô bậc Cao: Hoa Tiên hồi máu cho thêm 1 tướng' },
+  'h.cdt':       { hero: 'cdt', hint: 'Người đánh cá quen sông', desc: 'Đứng ô ngập: không bị sa lầy' },
+  'h.tiendung':  { hero: 'tiendung', hint: 'Bãi Tự Nhiên', desc: 'Mưa Hoa Tiên hồi máu gấp đôi cho Chử Đồng Tử' },
+  'h.langlieu':  { hero: 'langlieu', hint: 'Đất trời chứng giám', desc: 'Đợt có Thủy Tinh: Lễ Tổ Tiên giảm 50% hồi chiêu' },
+  // đồ trang phục Sử thi / Huyền thoại, rút theo hành của món
+  'i.kim1':  { el: 'kim', hint: 'Lưỡi đồng tìm chỗ hở', desc: 'Đánh quái dưới 30% máu: bỏ qua thêm 30% giáp' },
+  'i.kim2':  { el: 'kim', hint: 'Gõ mãi đá cũng mòn', desc: 'Mỗi đòn thứ 5 liên tiếp vào cùng một quái: gây thêm 50% sát thương' },
+  'i.moc1':  { el: 'moc', hint: 'Cây hút nhựa từ đất', desc: 'Hạ quái: hồi 3% máu tối đa' },
+  'i.moc2':  { el: 'moc', hint: 'Rễ càng sâu, cây càng vững', desc: 'Đứng yên 10 giây không đổi chỗ: +15% sát thương cho tới khi bị dời' },
+  'i.thuy1': { el: 'thuy', hint: 'Cá gặp nước', desc: 'Đứng ô ngập: không bị sa lầy và +10% sát thương' },
+  'i.thuy2': { el: 'thuy', hint: 'Nước chảy về chỗ trũng', desc: 'Khi tướng đứng kề gục: hồi 20% máu cho mọi tướng kề còn lại' },
+  'i.hoa1':  { el: 'hoa', hint: 'Lửa bén rơm', desc: 'Đòn chí mạng làm cháy mục tiêu 2 giây' },
+  'i.hoa2':  { el: 'hoa', hint: 'Lửa thử vàng', desc: 'Khi máu dưới 50%: +20% tốc đánh' },
+  'i.tho1':  { el: 'tho', hint: 'Đất lành chim đậu', desc: 'Khi máu dưới 30%: giảm 30% sát thương nhận vào trong 4 giây (hồi 20 giây)' },
+  'i.tho2':  { el: 'tho', hint: 'Núi che chở', desc: 'Đứng ô bậc Cao: tướng đứng kề giảm 10% sát thương nhận vào' },
+  // đồ ghép: hiệu ứng ẩn cố định
+  'r.song_riu':      { item: 'song_riu', hint: 'Máu càng nóng, tay càng nhanh', desc: 'Hạ quái: +5% tốc đánh 3 giây, cộng dồn 5 lần' },
+  'r.gay_tam_gioi':  { item: 'gay_tam_gioi', hint: 'Ba cõi hợp một', desc: 'Có đủ 3 hệ tướng trên sân: +5 mọi thuộc tính nữa' },
+  'r.gay_thoi_khong':{ item: 'gay_thoi_khong', hint: 'Thời gian đứng lại', desc: '10% dùng chiêu không tốn năng lượng' },
+  'r.giap_bat_diet': { item: 'giap_bat_diet', hint: 'Đồng không gãy', desc: 'Gục lần đầu mỗi đợt: hồi sinh ngay với 30% máu' },
+  'r.luoi_hai':      { item: 'luoi_hai', hint: 'Hái kẻ mạnh trước', desc: 'Chí mạng lên quái tinh anh: x3' },
+  'r.trong_dong':    { item: 'trong_dong', hint: 'Trống trận đầu đợt', desc: 'Đầu mỗi đợt: gõ trống, mọi tướng +20% tốc đánh 5 giây' },
+  'r.mui_sung':      { item: 'mui_sung', hint: 'Mai cứng cũng vỡ', desc: 'Rùa Giáp bị phá hết giáp: rùa bị choáng 1 giây' },
+  'r.riu_quet':      { item: 'riu_quet', hint: 'Một nhát cả bầy', desc: 'Hạ 5 Tôm Binh một lúc: +10 vàng' },
+  'r.cung_mat_chim': { item: 'cung_mat_chim', hint: 'Mắt chim nhìn xa', desc: 'Đợt bay: +20% tốc bắn' },
+  'r.bua_chim_lac':  { item: 'bua_chim_lac', hint: 'Chim sa cánh', desc: 'Quái bay bị đánh rơi xuống đất 1 giây' },
+  'r.ao_vay_ca':     { item: 'ao_vay_ca', hint: 'Vảy cá gặp nước', desc: 'Đứng ô ngập: hồi 2% máu mỗi giây' },
+  'r.ngoc_tran_thuy':{ item: 'ngoc_tran_thuy', hint: 'Trấn thầy phù thủy', desc: 'Hạ Phù Thủy Nước: quái quanh nó mất 10% máu' },
+  'r.luoi_ca':       { item: 'luoi_ca', hint: 'Cá sấu mắc lưới', desc: 'Cá Sấu hóa điên bị lưới giữ chân 1 giây' },
+  'r.bo_lua':        { item: 'bo_lua', hint: 'Được mùa', desc: 'Sau đợt 20: mỗi đợt 10% ra "bồ lúa vàng" +100 vàng' },
+  // đồ bộ: hiệu ứng ẩn khi đủ bộ
+  's.laclong': { set: 'laclong', hint: 'Rồng gặp nước', desc: 'Đứng ô ngập: miễn sa lầy, đòn đánh có 10% phóng sét lan 3 quái' },
+  's.sontinh': { set: 'sontinh', hint: 'Núi không đổ', desc: 'Mỗi đợt có 1 lần chặn hoàn toàn đòn đánh gây chết' },
+  's.chimlac': { set: 'chimlac', hint: 'Chim Lạc săn bão', desc: 'Hạ Chim Bão: 20% gọi 1 chim Lạc mổ quái gần nhất' },
+  's.drum':    { set: 'drum', hint: 'Trống giục quân', desc: 'Khi tướng trong hào quang dùng R: hào quang tăng gấp đôi trong 5 giây' },
+  's.nguasat': { set: 'nguasat', hint: 'Ngựa sắt hí vang', desc: 'Hạ 3 quái trong 2 giây: phun lửa thẳng hàng một lần' },
+  // quái & boss
+  'e.haba':     { enemy: 'haba', hint: 'Vảy hóa đồng', desc: 'Hà Bá bị hạ lần đầu, trồi lên đổi sang hành Kim: dùng tướng Hỏa để khắc' },
+  'e.giaolong': { enemy: 'giaolong', hint: 'Vảy năm màu', desc: 'Mỗi Giao Long Con mang 1 hành ngẫu nhiên, nhìn màu vảy để biết' },
+  'e.elite':    { enemy: 'rua', hint: 'Mai hai lớp', desc: 'Rùa Giáp khổng lồ có 30% mang thêm một hành phụ: chịu khắc từ cả hai hành' },
+};
+const SECRET_KEYS = Object.keys(SECRETS);
 
 // ------------------------------------------------------------
 //  QUÂN THỦY TINH
@@ -588,6 +793,10 @@ const ENEMIES = {
             tip: 'Đặt tướng vật lý chặn Giao Long Con: chúng kháng phép rất cao.' },
 };
 const BOSS_ORDER = ['thuongluong', 'haba', 'thuytinh'];
+// hành của quân Thủy Tinh (Giao Long Con: hành ngẫu nhiên lúc xuất hiện)
+const ENEMY_EL = { tom: 'thuy', casau: 'kim', rua: 'tho', phuthuy: 'thuy', chimbao: 'moc', echme: 'thuy', nongnoc: 'thuy',
+  giaolong: null, thuongluong: 'thuy', haba: 'thuy', thuytinh: 'thuy' };
+for (const id in ENEMY_EL) ENEMIES[id].el = ENEMY_EL[id];
 
 // Quái tinh anh (từ đợt 6): máu x1.8, thưởng nhiều hơn, thêm một đặc tính
 const ELITE_MODS = {

@@ -1,5 +1,40 @@
 # Ảnh vẽ tay (AI) cho Núi Cao Nước Dâng
 
+## Cách mới (bản giao v15): 37 bảng asset + script cắt ảnh
+
+1. Tạo ảnh bằng `docs/PROMPT-TAO-ANH.txt` (Gemini vẽ lần lượt 37 bảng S01–S37 và 10 ảnh đơn F01–F10). Lưu mỗi ảnh theo **mã bảng**: `S01.png`, `S02.png`, …, `F01.png`.
+2. Gửi các ảnh bảng cho Claude, hoặc tự cắt:
+   ```
+   pip install pillow numpy scipy
+   python3 tools/cat-anh.py <thư mục ảnh bảng> assets
+   ```
+   Script đọc `tools/asset-manifest.json`, tìm ô nền xám trong từng bảng, xoá nền và lưu từng PNG nền trong suốt thẳng vào `assets/` với tên như `lac-tuong_hiem.png`, `quai_ca-sau.png`, `do-ghep_trong-dong.png`.
+3. Tải lại game (tăng số `?v=` trong `index.html` nếu điện thoại còn giữ bản cũ).
+
+Game dùng các tên file này như sau (ảnh nào chưa có thì vẫn dùng hình vector):
+
+| Ảnh | Dùng ở |
+|---|---|
+| `<tướng>_thuong / _hiem / _su-thi / _huyen-thoai.png` (S01–S08) | Tướng trên bản đồ. Game chọn theo **bậc trang phục** = độ hiếm trung bình của vũ khí, mũ, giáp (ô trống tính là Thường). Hào quang tiến hoá, sao, cánh và hiệu ứng bộ đồ vẫn vẽ chồng lên. |
+| `chan-dung_<tướng>.png` (S09–S10) | Chân dung ở thẻ tướng, nút triệu hồi, hộp thoại |
+| `quai_*.png`, `boss_*.png` (S11–S12) | Quái và boss; có bản riêng cho Cá Sấu / Thuồng Luồng hóa điên, Rùa Giáp khổng lồ, Hà Bá hóa Kim |
+| `giao-long_<hành>.png`, `sinh-le_*.png` (S13) | Giao Long Con theo hành, 3 sính lễ |
+| `do_<riu/no/gay/mu/giap>_<độ hiếm>.png` (S14–S16) | Icon đồ trang phục |
+| `bo-<bộ>_<riu/no/gay/mu/giap>.png` (S17–S21) | Icon đồ bộ |
+| `phu-kien_*.png`, `do-ghep_*.png` (S22–S25) | Icon phụ kiện và đồ ghép |
+| `hanh_<kim/moc/thuy/hoa/tho>.png` (S26) | Biểu tượng Ngũ hành |
+| `ui_hu-bau.png` (S27), `ban-do_nui-1…5.png` (S29) | Hũ báu, 5 giai đoạn Núi Tản Viên |
+| `ky-nang_<tướng>_<q/w/e/r>.png` (S30–S37) | Icon kỹ năng |
+| `nen_menu.png`, `truyen_1…3.png` (F05–F08) | Nền menu, 3 khung truyện |
+
+Tên `<tướng>` là tên tướng bỏ dấu, nối bằng gạch ngang (`lac-tuong`, `than-suong-nui`, `lac-long-quan`…), đúng như trong `tools/asset-manifest.json`.
+
+Chưa dùng: `nen_ai-1…4` (bản đồ ải: ảnh AI không giữ đúng đường sông mà quái đi theo, nên game vẫn vẽ bản đồ bằng code), các ô `ban-do_o-*`, icon `ui_*` còn lại, ảnh sinh vật triệu hồi, `bo-*_sau-lung` và `bo-*_huy-hieu` (hiệu ứng sau lưng đang vẽ bằng code).
+
+---
+
+## Cách cũ (vẫn dùng được làm dự phòng)
+
 Game tự nạp ảnh PNG trong thư mục `assets/` nếu **đúng tên file** dưới đây. Ảnh nào chưa có thì game dùng hình vector hiện tại (`js/art.js`), nên có thể bổ sung dần từng ảnh. Sau khi thêm ảnh, tải lại trang (trên điện thoại có thể cần tăng số `?v=` trong `index.html` để trình duyệt bỏ bản cũ).
 
 Tên file và mã (H01–H16, E01–E08, B01–B03) theo tài liệu prompt. Mọi ảnh là **PNG, nền trong suốt** (trừ bản đồ, cảnh nền, ô đặt tướng và icon có nền tối).

@@ -1,0 +1,1827 @@
+{
+ "sheets": [
+  {
+   "code": "S01",
+   "title": "Tướng · Lạc Tướng & Lực Sĩ Núi · 4 bậc đồ",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Lạc Tướng · Thường",
+     "file": "lac-tuong_thuong.png"
+    },
+    {
+     "index": 2,
+     "name": "Lạc Tướng · Hiếm",
+     "file": "lac-tuong_hiem.png"
+    },
+    {
+     "index": 3,
+     "name": "Lạc Tướng · Sử thi",
+     "file": "lac-tuong_su-thi.png"
+    },
+    {
+     "index": 4,
+     "name": "Lạc Tướng · Huyền thoại",
+     "file": "lac-tuong_huyen-thoai.png"
+    },
+    {
+     "index": 5,
+     "name": "Lực Sĩ Núi · Thường",
+     "file": "luc-si-nui_thuong.png"
+    },
+    {
+     "index": 6,
+     "name": "Lực Sĩ Núi · Hiếm",
+     "file": "luc-si-nui_hiem.png"
+    },
+    {
+     "index": 7,
+     "name": "Lực Sĩ Núi · Sử thi",
+     "file": "luc-si-nui_su-thi.png"
+    },
+    {
+     "index": 8,
+     "name": "Lực Sĩ Núi · Huyền thoại",
+     "file": "luc-si-nui_huyen-thoai.png"
+    }
+   ]
+  },
+  {
+   "code": "S02",
+   "title": "Tướng · Xạ Thủ Văn Lang & Thợ Săn Rừng · 4 bậc đồ",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Xạ Thủ Văn Lang · Thường",
+     "file": "xa-thu-van-lang_thuong.png"
+    },
+    {
+     "index": 2,
+     "name": "Xạ Thủ Văn Lang · Hiếm",
+     "file": "xa-thu-van-lang_hiem.png"
+    },
+    {
+     "index": 3,
+     "name": "Xạ Thủ Văn Lang · Sử thi",
+     "file": "xa-thu-van-lang_su-thi.png"
+    },
+    {
+     "index": 4,
+     "name": "Xạ Thủ Văn Lang · Huyền thoại",
+     "file": "xa-thu-van-lang_huyen-thoai.png"
+    },
+    {
+     "index": 5,
+     "name": "Thợ Săn Rừng · Thường",
+     "file": "tho-san-rung_thuong.png"
+    },
+    {
+     "index": 6,
+     "name": "Thợ Săn Rừng · Hiếm",
+     "file": "tho-san-rung_hiem.png"
+    },
+    {
+     "index": 7,
+     "name": "Thợ Săn Rừng · Sử thi",
+     "file": "tho-san-rung_su-thi.png"
+    },
+    {
+     "index": 8,
+     "name": "Thợ Săn Rừng · Huyền thoại",
+     "file": "tho-san-rung_huyen-thoai.png"
+    }
+   ]
+  },
+  {
+   "code": "S03",
+   "title": "Tướng · Thầy Mo Lửa & Thần Sương Núi · 4 bậc đồ",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Thầy Mo Lửa · Thường",
+     "file": "thay-mo-lua_thuong.png"
+    },
+    {
+     "index": 2,
+     "name": "Thầy Mo Lửa · Hiếm",
+     "file": "thay-mo-lua_hiem.png"
+    },
+    {
+     "index": 3,
+     "name": "Thầy Mo Lửa · Sử thi",
+     "file": "thay-mo-lua_su-thi.png"
+    },
+    {
+     "index": 4,
+     "name": "Thầy Mo Lửa · Huyền thoại",
+     "file": "thay-mo-lua_huyen-thoai.png"
+    },
+    {
+     "index": 5,
+     "name": "Thần Sương Núi · Thường",
+     "file": "than-suong-nui_thuong.png"
+    },
+    {
+     "index": 6,
+     "name": "Thần Sương Núi · Hiếm",
+     "file": "than-suong-nui_hiem.png"
+    },
+    {
+     "index": 7,
+     "name": "Thần Sương Núi · Sử thi",
+     "file": "than-suong-nui_su-thi.png"
+    },
+    {
+     "index": 8,
+     "name": "Thần Sương Núi · Huyền thoại",
+     "file": "than-suong-nui_huyen-thoai.png"
+    }
+   ]
+  },
+  {
+   "code": "S04",
+   "title": "Tướng · Thánh Gióng & Lạc Long Quân · 4 bậc đồ",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Thánh Gióng · Thường",
+     "file": "thanh-giong_thuong.png"
+    },
+    {
+     "index": 2,
+     "name": "Thánh Gióng · Hiếm",
+     "file": "thanh-giong_hiem.png"
+    },
+    {
+     "index": 3,
+     "name": "Thánh Gióng · Sử thi",
+     "file": "thanh-giong_su-thi.png"
+    },
+    {
+     "index": 4,
+     "name": "Thánh Gióng · Huyền thoại",
+     "file": "thanh-giong_huyen-thoai.png"
+    },
+    {
+     "index": 5,
+     "name": "Lạc Long Quân · Thường",
+     "file": "lac-long-quan_thuong.png"
+    },
+    {
+     "index": 6,
+     "name": "Lạc Long Quân · Hiếm",
+     "file": "lac-long-quan_hiem.png"
+    },
+    {
+     "index": 7,
+     "name": "Lạc Long Quân · Sử thi",
+     "file": "lac-long-quan_su-thi.png"
+    },
+    {
+     "index": 8,
+     "name": "Lạc Long Quân · Huyền thoại",
+     "file": "lac-long-quan_huyen-thoai.png"
+    }
+   ]
+  },
+  {
+   "code": "S05",
+   "title": "Tướng · Thần Kim Quy & Thạch Sanh · 4 bậc đồ",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Thần Kim Quy · Thường",
+     "file": "than-kim-quy_thuong.png"
+    },
+    {
+     "index": 2,
+     "name": "Thần Kim Quy · Hiếm",
+     "file": "than-kim-quy_hiem.png"
+    },
+    {
+     "index": 3,
+     "name": "Thần Kim Quy · Sử thi",
+     "file": "than-kim-quy_su-thi.png"
+    },
+    {
+     "index": 4,
+     "name": "Thần Kim Quy · Huyền thoại",
+     "file": "than-kim-quy_huyen-thoai.png"
+    },
+    {
+     "index": 5,
+     "name": "Thạch Sanh · Thường",
+     "file": "thach-sanh_thuong.png"
+    },
+    {
+     "index": 6,
+     "name": "Thạch Sanh · Hiếm",
+     "file": "thach-sanh_hiem.png"
+    },
+    {
+     "index": 7,
+     "name": "Thạch Sanh · Sử thi",
+     "file": "thach-sanh_su-thi.png"
+    },
+    {
+     "index": 8,
+     "name": "Thạch Sanh · Huyền thoại",
+     "file": "thach-sanh_huyen-thoai.png"
+    }
+   ]
+  },
+  {
+   "code": "S06",
+   "title": "Tướng · Cao Lỗ & Mai An Tiêm · 4 bậc đồ",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Cao Lỗ · Thường",
+     "file": "cao-lo_thuong.png"
+    },
+    {
+     "index": 2,
+     "name": "Cao Lỗ · Hiếm",
+     "file": "cao-lo_hiem.png"
+    },
+    {
+     "index": 3,
+     "name": "Cao Lỗ · Sử thi",
+     "file": "cao-lo_su-thi.png"
+    },
+    {
+     "index": 4,
+     "name": "Cao Lỗ · Huyền thoại",
+     "file": "cao-lo_huyen-thoai.png"
+    },
+    {
+     "index": 5,
+     "name": "Mai An Tiêm · Thường",
+     "file": "mai-an-tiem_thuong.png"
+    },
+    {
+     "index": 6,
+     "name": "Mai An Tiêm · Hiếm",
+     "file": "mai-an-tiem_hiem.png"
+    },
+    {
+     "index": 7,
+     "name": "Mai An Tiêm · Sử thi",
+     "file": "mai-an-tiem_su-thi.png"
+    },
+    {
+     "index": 8,
+     "name": "Mai An Tiêm · Huyền thoại",
+     "file": "mai-an-tiem_huyen-thoai.png"
+    }
+   ]
+  },
+  {
+   "code": "S07",
+   "title": "Tướng · Âu Cơ & Chử Đồng Tử · 4 bậc đồ",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Âu Cơ · Thường",
+     "file": "au-co_thuong.png"
+    },
+    {
+     "index": 2,
+     "name": "Âu Cơ · Hiếm",
+     "file": "au-co_hiem.png"
+    },
+    {
+     "index": 3,
+     "name": "Âu Cơ · Sử thi",
+     "file": "au-co_su-thi.png"
+    },
+    {
+     "index": 4,
+     "name": "Âu Cơ · Huyền thoại",
+     "file": "au-co_huyen-thoai.png"
+    },
+    {
+     "index": 5,
+     "name": "Chử Đồng Tử · Thường",
+     "file": "chu-dong-tu_thuong.png"
+    },
+    {
+     "index": 6,
+     "name": "Chử Đồng Tử · Hiếm",
+     "file": "chu-dong-tu_hiem.png"
+    },
+    {
+     "index": 7,
+     "name": "Chử Đồng Tử · Sử thi",
+     "file": "chu-dong-tu_su-thi.png"
+    },
+    {
+     "index": 8,
+     "name": "Chử Đồng Tử · Huyền thoại",
+     "file": "chu-dong-tu_huyen-thoai.png"
+    }
+   ]
+  },
+  {
+   "code": "S08",
+   "title": "Tướng · Tiên Dung & Lang Liêu · 4 bậc đồ",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Tiên Dung · Thường",
+     "file": "tien-dung_thuong.png"
+    },
+    {
+     "index": 2,
+     "name": "Tiên Dung · Hiếm",
+     "file": "tien-dung_hiem.png"
+    },
+    {
+     "index": 3,
+     "name": "Tiên Dung · Sử thi",
+     "file": "tien-dung_su-thi.png"
+    },
+    {
+     "index": 4,
+     "name": "Tiên Dung · Huyền thoại",
+     "file": "tien-dung_huyen-thoai.png"
+    },
+    {
+     "index": 5,
+     "name": "Lang Liêu · Thường",
+     "file": "lang-lieu_thuong.png"
+    },
+    {
+     "index": 6,
+     "name": "Lang Liêu · Hiếm",
+     "file": "lang-lieu_hiem.png"
+    },
+    {
+     "index": 7,
+     "name": "Lang Liêu · Sử thi",
+     "file": "lang-lieu_su-thi.png"
+    },
+    {
+     "index": 8,
+     "name": "Lang Liêu · Huyền thoại",
+     "file": "lang-lieu_huyen-thoai.png"
+    }
+   ]
+  },
+  {
+   "code": "S09",
+   "title": "Chân dung tướng",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Chân dung Lạc Tướng",
+     "file": "chan-dung_lac-tuong.png"
+    },
+    {
+     "index": 2,
+     "name": "Chân dung Lực Sĩ Núi",
+     "file": "chan-dung_luc-si-nui.png"
+    },
+    {
+     "index": 3,
+     "name": "Chân dung Xạ Thủ Văn Lang",
+     "file": "chan-dung_xa-thu-van-lang.png"
+    },
+    {
+     "index": 4,
+     "name": "Chân dung Thợ Săn Rừng",
+     "file": "chan-dung_tho-san-rung.png"
+    },
+    {
+     "index": 5,
+     "name": "Chân dung Thầy Mo Lửa",
+     "file": "chan-dung_thay-mo-lua.png"
+    },
+    {
+     "index": 6,
+     "name": "Chân dung Thần Sương Núi",
+     "file": "chan-dung_than-suong-nui.png"
+    },
+    {
+     "index": 7,
+     "name": "Chân dung Thánh Gióng",
+     "file": "chan-dung_thanh-giong.png"
+    },
+    {
+     "index": 8,
+     "name": "Chân dung Lạc Long Quân",
+     "file": "chan-dung_lac-long-quan.png"
+    }
+   ]
+  },
+  {
+   "code": "S10",
+   "title": "Chân dung tướng",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Chân dung Thần Kim Quy",
+     "file": "chan-dung_than-kim-quy.png"
+    },
+    {
+     "index": 2,
+     "name": "Chân dung Thạch Sanh",
+     "file": "chan-dung_thach-sanh.png"
+    },
+    {
+     "index": 3,
+     "name": "Chân dung Cao Lỗ",
+     "file": "chan-dung_cao-lo.png"
+    },
+    {
+     "index": 4,
+     "name": "Chân dung Mai An Tiêm",
+     "file": "chan-dung_mai-an-tiem.png"
+    },
+    {
+     "index": 5,
+     "name": "Chân dung Âu Cơ",
+     "file": "chan-dung_au-co.png"
+    },
+    {
+     "index": 6,
+     "name": "Chân dung Chử Đồng Tử",
+     "file": "chan-dung_chu-dong-tu.png"
+    },
+    {
+     "index": 7,
+     "name": "Chân dung Tiên Dung",
+     "file": "chan-dung_tien-dung.png"
+    },
+    {
+     "index": 8,
+     "name": "Chân dung Lang Liêu",
+     "file": "chan-dung_lang-lieu.png"
+    }
+   ]
+  },
+  {
+   "code": "S11",
+   "title": "Quân Thủy Tinh",
+   "rows": 3,
+   "cols": 3,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Tôm Binh",
+     "file": "quai_tom-binh.png"
+    },
+    {
+     "index": 2,
+     "name": "Cá Sấu",
+     "file": "quai_ca-sau.png"
+    },
+    {
+     "index": 3,
+     "name": "Cá Sấu hóa điên",
+     "file": "quai_ca-sau-hoa-dien.png"
+    },
+    {
+     "index": 4,
+     "name": "Rùa Giáp",
+     "file": "quai_rua-giap.png"
+    },
+    {
+     "index": 5,
+     "name": "Rùa Giáp khổng lồ (tinh anh)",
+     "file": "quai_rua-giap-tinh-anh.png"
+    },
+    {
+     "index": 6,
+     "name": "Phù Thủy Nước",
+     "file": "quai_phu-thuy-nuoc.png"
+    },
+    {
+     "index": 7,
+     "name": "Chim Bão",
+     "file": "quai_chim-bao.png"
+    },
+    {
+     "index": 8,
+     "name": "Ếch Mẹ",
+     "file": "quai_ech-me.png"
+    },
+    {
+     "index": 9,
+     "name": "Nòng Nọc",
+     "file": "quai_nong-noc.png"
+    }
+   ]
+  },
+  {
+   "code": "S12",
+   "title": "Boss & sinh vật triệu hồi",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Thuồng Luồng",
+     "file": "boss_thuong-luong.png"
+    },
+    {
+     "index": 2,
+     "name": "Thuồng Luồng hóa điên",
+     "file": "boss_thuong-luong-hoa-dien.png"
+    },
+    {
+     "index": 3,
+     "name": "Hà Bá",
+     "file": "boss_ha-ba.png"
+    },
+    {
+     "index": 4,
+     "name": "Hà Bá giai đoạn 2 (Kim)",
+     "file": "boss_ha-ba-kim.png"
+    },
+    {
+     "index": 5,
+     "name": "Thủy Tinh",
+     "file": "boss_thuy-tinh.png"
+    },
+    {
+     "index": 6,
+     "name": "Lạc Tử",
+     "file": "trieu-hoi_lac-tu.png"
+    },
+    {
+     "index": 7,
+     "name": "Chim Thần",
+     "file": "trieu-hoi_chim-than.png"
+    },
+    {
+     "index": 8,
+     "name": "Chim Lạc",
+     "file": "trieu-hoi_chim-lac.png"
+    }
+   ]
+  },
+  {
+   "code": "S13",
+   "title": "Giao Long Con & sính lễ",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Giao Long Con · Kim",
+     "file": "giao-long_kim.png"
+    },
+    {
+     "index": 2,
+     "name": "Giao Long Con · Mộc",
+     "file": "giao-long_moc.png"
+    },
+    {
+     "index": 3,
+     "name": "Giao Long Con · Thủy",
+     "file": "giao-long_thuy.png"
+    },
+    {
+     "index": 4,
+     "name": "Giao Long Con · Hỏa",
+     "file": "giao-long_hoa.png"
+    },
+    {
+     "index": 5,
+     "name": "Giao Long Con · Thổ",
+     "file": "giao-long_tho.png"
+    },
+    {
+     "index": 6,
+     "name": "Voi Chín Ngà",
+     "file": "sinh-le_voi-chin-nga.png"
+    },
+    {
+     "index": 7,
+     "name": "Gà Chín Cựa",
+     "file": "sinh-le_ga-chin-cua.png"
+    },
+    {
+     "index": 8,
+     "name": "Ngựa Chín Hồng Mao",
+     "file": "sinh-le_ngua-chin-hong-mao.png"
+    }
+   ]
+  },
+  {
+   "code": "S14",
+   "title": "Đồ · Rìu & Dao găm",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Rìu · Thường",
+     "file": "do_riu_thuong.png"
+    },
+    {
+     "index": 2,
+     "name": "Rìu · Hiếm",
+     "file": "do_riu_hiem.png"
+    },
+    {
+     "index": 3,
+     "name": "Rìu · Sử thi",
+     "file": "do_riu_su-thi.png"
+    },
+    {
+     "index": 4,
+     "name": "Rìu · Huyền thoại",
+     "file": "do_riu_huyen-thoai.png"
+    },
+    {
+     "index": 5,
+     "name": "Dao găm · Thường",
+     "file": "do_dao_thuong.png"
+    },
+    {
+     "index": 6,
+     "name": "Dao găm · Hiếm",
+     "file": "do_dao_hiem.png"
+    },
+    {
+     "index": 7,
+     "name": "Dao găm · Sử thi",
+     "file": "do_dao_su-thi.png"
+    },
+    {
+     "index": 8,
+     "name": "Dao găm · Huyền thoại",
+     "file": "do_dao_huyen-thoai.png"
+    }
+   ]
+  },
+  {
+   "code": "S15",
+   "title": "Đồ · Nỏ & Gậy",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Nỏ · Thường",
+     "file": "do_no_thuong.png"
+    },
+    {
+     "index": 2,
+     "name": "Nỏ · Hiếm",
+     "file": "do_no_hiem.png"
+    },
+    {
+     "index": 3,
+     "name": "Nỏ · Sử thi",
+     "file": "do_no_su-thi.png"
+    },
+    {
+     "index": 4,
+     "name": "Nỏ · Huyền thoại",
+     "file": "do_no_huyen-thoai.png"
+    },
+    {
+     "index": 5,
+     "name": "Gậy · Thường",
+     "file": "do_gay_thuong.png"
+    },
+    {
+     "index": 6,
+     "name": "Gậy · Hiếm",
+     "file": "do_gay_hiem.png"
+    },
+    {
+     "index": 7,
+     "name": "Gậy · Sử thi",
+     "file": "do_gay_su-thi.png"
+    },
+    {
+     "index": 8,
+     "name": "Gậy · Huyền thoại",
+     "file": "do_gay_huyen-thoai.png"
+    }
+   ]
+  },
+  {
+   "code": "S16",
+   "title": "Đồ · Mũ & Giáp",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Mũ · Thường",
+     "file": "do_mu_thuong.png"
+    },
+    {
+     "index": 2,
+     "name": "Mũ · Hiếm",
+     "file": "do_mu_hiem.png"
+    },
+    {
+     "index": 3,
+     "name": "Mũ · Sử thi",
+     "file": "do_mu_su-thi.png"
+    },
+    {
+     "index": 4,
+     "name": "Mũ · Huyền thoại",
+     "file": "do_mu_huyen-thoai.png"
+    },
+    {
+     "index": 5,
+     "name": "Giáp · Thường",
+     "file": "do_giap_thuong.png"
+    },
+    {
+     "index": 6,
+     "name": "Giáp · Hiếm",
+     "file": "do_giap_hiem.png"
+    },
+    {
+     "index": 7,
+     "name": "Giáp · Sử thi",
+     "file": "do_giap_su-thi.png"
+    },
+    {
+     "index": 8,
+     "name": "Giáp · Huyền thoại",
+     "file": "do_giap_huyen-thoai.png"
+    }
+   ]
+  },
+  {
+   "code": "S17",
+   "title": "Bộ Lạc Long (Thủy)",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Lạc Long · Rìu",
+     "file": "bo-lac-long_riu.png"
+    },
+    {
+     "index": 2,
+     "name": "Lạc Long · Dao găm",
+     "file": "bo-lac-long_dao.png"
+    },
+    {
+     "index": 3,
+     "name": "Lạc Long · Nỏ",
+     "file": "bo-lac-long_no.png"
+    },
+    {
+     "index": 4,
+     "name": "Lạc Long · Gậy",
+     "file": "bo-lac-long_gay.png"
+    },
+    {
+     "index": 5,
+     "name": "Lạc Long · Mũ",
+     "file": "bo-lac-long_mu.png"
+    },
+    {
+     "index": 6,
+     "name": "Lạc Long · Giáp",
+     "file": "bo-lac-long_giap.png"
+    },
+    {
+     "index": 7,
+     "name": "Lạc Long · Hiệu ứng sau lưng",
+     "file": "bo-lac-long_sau-lung.png"
+    },
+    {
+     "index": 8,
+     "name": "Lạc Long · Huy hiệu bộ",
+     "file": "bo-lac-long_huy-hieu.png"
+    }
+   ]
+  },
+  {
+   "code": "S18",
+   "title": "Bộ Sơn Tinh (Thổ)",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Sơn Tinh · Rìu",
+     "file": "bo-son-tinh_riu.png"
+    },
+    {
+     "index": 2,
+     "name": "Sơn Tinh · Dao găm",
+     "file": "bo-son-tinh_dao.png"
+    },
+    {
+     "index": 3,
+     "name": "Sơn Tinh · Nỏ",
+     "file": "bo-son-tinh_no.png"
+    },
+    {
+     "index": 4,
+     "name": "Sơn Tinh · Gậy",
+     "file": "bo-son-tinh_gay.png"
+    },
+    {
+     "index": 5,
+     "name": "Sơn Tinh · Mũ",
+     "file": "bo-son-tinh_mu.png"
+    },
+    {
+     "index": 6,
+     "name": "Sơn Tinh · Giáp",
+     "file": "bo-son-tinh_giap.png"
+    },
+    {
+     "index": 7,
+     "name": "Sơn Tinh · Hiệu ứng sau lưng",
+     "file": "bo-son-tinh_sau-lung.png"
+    },
+    {
+     "index": 8,
+     "name": "Sơn Tinh · Huy hiệu bộ",
+     "file": "bo-son-tinh_huy-hieu.png"
+    }
+   ]
+  },
+  {
+   "code": "S19",
+   "title": "Bộ Chim Lạc (Kim)",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Chim Lạc · Rìu",
+     "file": "bo-chim-lac_riu.png"
+    },
+    {
+     "index": 2,
+     "name": "Chim Lạc · Dao găm",
+     "file": "bo-chim-lac_dao.png"
+    },
+    {
+     "index": 3,
+     "name": "Chim Lạc · Nỏ",
+     "file": "bo-chim-lac_no.png"
+    },
+    {
+     "index": 4,
+     "name": "Chim Lạc · Gậy",
+     "file": "bo-chim-lac_gay.png"
+    },
+    {
+     "index": 5,
+     "name": "Chim Lạc · Mũ",
+     "file": "bo-chim-lac_mu.png"
+    },
+    {
+     "index": 6,
+     "name": "Chim Lạc · Giáp",
+     "file": "bo-chim-lac_giap.png"
+    },
+    {
+     "index": 7,
+     "name": "Chim Lạc · Hiệu ứng sau lưng",
+     "file": "bo-chim-lac_sau-lung.png"
+    },
+    {
+     "index": 8,
+     "name": "Chim Lạc · Huy hiệu bộ",
+     "file": "bo-chim-lac_huy-hieu.png"
+    }
+   ]
+  },
+  {
+   "code": "S20",
+   "title": "Bộ Trống Đồng (Kim)",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Trống Đồng · Rìu",
+     "file": "bo-trong-dong_riu.png"
+    },
+    {
+     "index": 2,
+     "name": "Trống Đồng · Dao găm",
+     "file": "bo-trong-dong_dao.png"
+    },
+    {
+     "index": 3,
+     "name": "Trống Đồng · Nỏ",
+     "file": "bo-trong-dong_no.png"
+    },
+    {
+     "index": 4,
+     "name": "Trống Đồng · Gậy",
+     "file": "bo-trong-dong_gay.png"
+    },
+    {
+     "index": 5,
+     "name": "Trống Đồng · Mũ",
+     "file": "bo-trong-dong_mu.png"
+    },
+    {
+     "index": 6,
+     "name": "Trống Đồng · Giáp",
+     "file": "bo-trong-dong_giap.png"
+    },
+    {
+     "index": 7,
+     "name": "Trống Đồng · Hiệu ứng sau lưng",
+     "file": "bo-trong-dong_sau-lung.png"
+    },
+    {
+     "index": 8,
+     "name": "Trống Đồng · Huy hiệu bộ",
+     "file": "bo-trong-dong_huy-hieu.png"
+    }
+   ]
+  },
+  {
+   "code": "S21",
+   "title": "Bộ Ngựa Sắt (Hỏa)",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Ngựa Sắt · Rìu",
+     "file": "bo-ngua-sat_riu.png"
+    },
+    {
+     "index": 2,
+     "name": "Ngựa Sắt · Dao găm",
+     "file": "bo-ngua-sat_dao.png"
+    },
+    {
+     "index": 3,
+     "name": "Ngựa Sắt · Nỏ",
+     "file": "bo-ngua-sat_no.png"
+    },
+    {
+     "index": 4,
+     "name": "Ngựa Sắt · Gậy",
+     "file": "bo-ngua-sat_gay.png"
+    },
+    {
+     "index": 5,
+     "name": "Ngựa Sắt · Mũ",
+     "file": "bo-ngua-sat_mu.png"
+    },
+    {
+     "index": 6,
+     "name": "Ngựa Sắt · Giáp",
+     "file": "bo-ngua-sat_giap.png"
+    },
+    {
+     "index": 7,
+     "name": "Ngựa Sắt · Hiệu ứng sau lưng",
+     "file": "bo-ngua-sat_sau-lung.png"
+    },
+    {
+     "index": 8,
+     "name": "Ngựa Sắt · Huy hiệu bộ",
+     "file": "bo-ngua-sat_huy-hieu.png"
+    }
+   ]
+  },
+  {
+   "code": "S22",
+   "title": "Phụ kiện 1",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Vuốt Hổ",
+     "file": "phu-kien_vuot-ho.png"
+    },
+    {
+     "index": 2,
+     "name": "Găng Da",
+     "file": "phu-kien_gang-da.png"
+    },
+    {
+     "index": 3,
+     "name": "Đai",
+     "file": "phu-kien_dai.png"
+    },
+    {
+     "index": 4,
+     "name": "Dép Cỏ",
+     "file": "phu-kien_dep-co.png"
+    },
+    {
+     "index": 5,
+     "name": "Khăn",
+     "file": "phu-kien_khan.png"
+    },
+    {
+     "index": 6,
+     "name": "Khăn Hiền Giả",
+     "file": "phu-kien_khan-hien-gia.png"
+    },
+    {
+     "index": 7,
+     "name": "Mắt Ngọc",
+     "file": "phu-kien_mat-ngoc.png"
+    },
+    {
+     "index": 8,
+     "name": "Ngọc Sinh Lực",
+     "file": "phu-kien_ngoc-sinh-luc.png"
+    }
+   ]
+  },
+  {
+   "code": "S23",
+   "title": "Phụ kiện 2",
+   "rows": 2,
+   "cols": 3,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Mặt Trống",
+     "file": "phu-kien_mat-trong.png"
+    },
+    {
+     "index": 2,
+     "name": "Dùi Trống",
+     "file": "phu-kien_dui-trong.png"
+    },
+    {
+     "index": 3,
+     "name": "Sừng Tê",
+     "file": "phu-kien_sung-te.png"
+    },
+    {
+     "index": 4,
+     "name": "Lông Chim Lạc",
+     "file": "phu-kien_long-chim-lac.png"
+    },
+    {
+     "index": 5,
+     "name": "Vảy Cá",
+     "file": "phu-kien_vay-ca.png"
+    },
+    {
+     "index": 6,
+     "name": "Hạt Lúa",
+     "file": "phu-kien_hat-lua.png"
+    }
+   ]
+  },
+  {
+   "code": "S24",
+   "title": "Đồ ghép 1",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Song Rìu Cuồng Nộ",
+     "file": "do-ghep_song-riu-cuong-no.png"
+    },
+    {
+     "index": 2,
+     "name": "Gậy Tam Giới",
+     "file": "do-ghep_gay-tam-gioi.png"
+    },
+    {
+     "index": 3,
+     "name": "Gậy Thời Không",
+     "file": "do-ghep_gay-thoi-khong.png"
+    },
+    {
+     "index": 4,
+     "name": "Giáp Đồng Bất Diệt",
+     "file": "do-ghep_giap-dong-bat-diet.png"
+    },
+    {
+     "index": 5,
+     "name": "Lưỡi Hái Chí Tử",
+     "file": "do-ghep_luoi-hai-chi-tu.png"
+    },
+    {
+     "index": 6,
+     "name": "Trống Đồng",
+     "file": "do-ghep_trong-dong.png"
+    },
+    {
+     "index": 7,
+     "name": "Mũi Sừng Phá Giáp",
+     "file": "do-ghep_mui-sung-pha-giap.png"
+    },
+    {
+     "index": 8,
+     "name": "Rìu Quét Sông",
+     "file": "do-ghep_riu-quet-song.png"
+    }
+   ]
+  },
+  {
+   "code": "S25",
+   "title": "Đồ ghép 2",
+   "rows": 2,
+   "cols": 3,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Cung Mắt Chim",
+     "file": "do-ghep_cung-mat-chim.png"
+    },
+    {
+     "index": 2,
+     "name": "Bùa Chim Lạc",
+     "file": "do-ghep_bua-chim-lac.png"
+    },
+    {
+     "index": 3,
+     "name": "Áo Vảy Cá",
+     "file": "do-ghep_ao-vay-ca.png"
+    },
+    {
+     "index": 4,
+     "name": "Ngọc Trấn Thủy",
+     "file": "do-ghep_ngoc-tran-thuy.png"
+    },
+    {
+     "index": 5,
+     "name": "Lưới Đánh Cá",
+     "file": "do-ghep_luoi-danh-ca.png"
+    },
+    {
+     "index": 6,
+     "name": "Bồ Lúa Thần",
+     "file": "do-ghep_bo-lua-than.png"
+    }
+   ]
+  },
+  {
+   "code": "S26",
+   "title": "Ngũ hành & tiến hoá",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Hành Kim",
+     "file": "hanh_kim.png"
+    },
+    {
+     "index": 2,
+     "name": "Hành Mộc",
+     "file": "hanh_moc.png"
+    },
+    {
+     "index": 3,
+     "name": "Hành Thủy",
+     "file": "hanh_thuy.png"
+    },
+    {
+     "index": 4,
+     "name": "Hành Hỏa",
+     "file": "hanh_hoa.png"
+    },
+    {
+     "index": 5,
+     "name": "Hành Thổ",
+     "file": "hanh_tho.png"
+    },
+    {
+     "index": 6,
+     "name": "Tiến hoá ★",
+     "file": "tien-hoa_1.png"
+    },
+    {
+     "index": 7,
+     "name": "Tiến hoá ★★",
+     "file": "tien-hoa_2.png"
+    },
+    {
+     "index": 8,
+     "name": "Tiến hoá ★★★",
+     "file": "tien-hoa_3.png"
+    }
+   ]
+  },
+  {
+   "code": "S27",
+   "title": "Giao diện 1 · tài nguyên",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Đồng xu",
+     "file": "ui_dong-xu.png"
+    },
+    {
+     "index": 2,
+     "name": "Đống vàng",
+     "file": "ui_dong-vang.png"
+    },
+    {
+     "index": 3,
+     "name": "Mạng",
+     "file": "ui_mang.png"
+    },
+    {
+     "index": 4,
+     "name": "Mực nước",
+     "file": "ui_muc-nuoc.png"
+    },
+    {
+     "index": 5,
+     "name": "Hũ báu",
+     "file": "ui_hu-bau.png"
+    },
+    {
+     "index": 6,
+     "name": "Hũ Vua Hùng",
+     "file": "ui_hu-vua-hung.png"
+    },
+    {
+     "index": 7,
+     "name": "Kho lúa",
+     "file": "ui_kho-lua.png"
+    },
+    {
+     "index": 8,
+     "name": "Gọi sớm",
+     "file": "ui_goi-som.png"
+    }
+   ]
+  },
+  {
+   "code": "S28",
+   "title": "Giao diện 2 · nâng cấp & bí truyền",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Hiệu ứng ẩn ???",
+     "file": "ui_an.png"
+    },
+    {
+     "index": 2,
+     "name": "Đã khám phá",
+     "file": "ui_da-kham-pha.png"
+    },
+    {
+     "index": 3,
+     "name": "Khung chân dung thường",
+     "file": "ui_khung-thuong.png"
+    },
+    {
+     "index": 4,
+     "name": "Khung chân dung vàng",
+     "file": "ui_khung-vang.png"
+    },
+    {
+     "index": 5,
+     "name": "Tôi luyện ✦",
+     "file": "ui_toi-luyen.png"
+    },
+    {
+     "index": 6,
+     "name": "Luyện thể",
+     "file": "ui_luyen-the.png"
+    },
+    {
+     "index": 7,
+     "name": "Tẩy luyện",
+     "file": "ui_tay-luyen.png"
+    },
+    {
+     "index": 8,
+     "name": "Khóa đồ",
+     "file": "ui_khoa.png"
+    }
+   ]
+  },
+  {
+   "code": "S29",
+   "title": "Bản đồ · núi, thành, ô đặt tướng",
+   "rows": 2,
+   "cols": 5,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Núi Tản Viên 1",
+     "file": "ban-do_nui-1.png"
+    },
+    {
+     "index": 2,
+     "name": "Núi Tản Viên 2",
+     "file": "ban-do_nui-2.png"
+    },
+    {
+     "index": 3,
+     "name": "Núi Tản Viên 3",
+     "file": "ban-do_nui-3.png"
+    },
+    {
+     "index": 4,
+     "name": "Núi Tản Viên 4",
+     "file": "ban-do_nui-4.png"
+    },
+    {
+     "index": 5,
+     "name": "Núi Tản Viên 5",
+     "file": "ban-do_nui-5.png"
+    },
+    {
+     "index": 6,
+     "name": "Thành Phong Châu",
+     "file": "ban-do_phong-chau.png"
+    },
+    {
+     "index": 7,
+     "name": "Ô thấp",
+     "file": "ban-do_o-thap.png"
+    },
+    {
+     "index": 8,
+     "name": "Ô giữa",
+     "file": "ban-do_o-giua.png"
+    },
+    {
+     "index": 9,
+     "name": "Ô cao",
+     "file": "ban-do_o-cao.png"
+    },
+    {
+     "index": 10,
+     "name": "Ô ngập",
+     "file": "ban-do_o-ngap.png"
+    }
+   ]
+  },
+  {
+   "code": "S30",
+   "title": "Icon kỹ năng · Lạc Tướng & Lực Sĩ Núi",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Lạc Tướng · Q Khiên Đồng",
+     "file": "ky-nang_lac-tuong_q.png"
+    },
+    {
+     "index": 2,
+     "name": "Lạc Tướng · W Rìu Lốc Xoáy",
+     "file": "ky-nang_lac-tuong_w.png"
+    },
+    {
+     "index": 3,
+     "name": "Lạc Tướng · E Hùng Khí",
+     "file": "ky-nang_lac-tuong_e.png"
+    },
+    {
+     "index": 4,
+     "name": "Lạc Tướng · R Sấm Tản Viên",
+     "file": "ky-nang_lac-tuong_r.png"
+    },
+    {
+     "index": 5,
+     "name": "Lực Sĩ Núi · Q Dây Mây",
+     "file": "ky-nang_luc-si-nui_q.png"
+    },
+    {
+     "index": 6,
+     "name": "Lực Sĩ Núi · W Gánh Núi",
+     "file": "ky-nang_luc-si-nui_w.png"
+    },
+    {
+     "index": 7,
+     "name": "Lực Sĩ Núi · E Bụi Đá",
+     "file": "ky-nang_luc-si-nui_e.png"
+    },
+    {
+     "index": 8,
+     "name": "Lực Sĩ Núi · R Vùi Đá",
+     "file": "ky-nang_luc-si-nui_r.png"
+    }
+   ]
+  },
+  {
+   "code": "S31",
+   "title": "Icon kỹ năng · Xạ Thủ Văn Lang & Thợ Săn Rừng",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Xạ Thủ Văn Lang · Q Tên Xuyên Thấu",
+     "file": "ky-nang_xa-thu-van-lang_q.png"
+    },
+    {
+     "index": 2,
+     "name": "Xạ Thủ Văn Lang · W Đa Tiễn",
+     "file": "ky-nang_xa-thu-van-lang_w.png"
+    },
+    {
+     "index": 3,
+     "name": "Xạ Thủ Văn Lang · E Tên Tẩm Nhựa Độc",
+     "file": "ky-nang_xa-thu-van-lang_e.png"
+    },
+    {
+     "index": 4,
+     "name": "Xạ Thủ Văn Lang · R Mưa Tên",
+     "file": "ky-nang_xa-thu-van-lang_r.png"
+    },
+    {
+     "index": 5,
+     "name": "Thợ Săn Rừng · Q Bước Lá Rừng",
+     "file": "ky-nang_tho-san-rung_q.png"
+    },
+    {
+     "index": 6,
+     "name": "Thợ Săn Rừng · W Dao Ẩn",
+     "file": "ky-nang_tho-san-rung_w.png"
+    },
+    {
+     "index": 7,
+     "name": "Thợ Săn Rừng · E Đòn Chí Mạng",
+     "file": "ky-nang_tho-san-rung_e.png"
+    },
+    {
+     "index": 8,
+     "name": "Thợ Săn Rừng · R Săn Mồi",
+     "file": "ky-nang_tho-san-rung_r.png"
+    }
+   ]
+  },
+  {
+   "code": "S32",
+   "title": "Icon kỹ năng · Thầy Mo Lửa & Thần Sương Núi",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Thầy Mo Lửa · Q Cột Lửa",
+     "file": "ky-nang_thay-mo-lua_q.png"
+    },
+    {
+     "index": 2,
+     "name": "Thầy Mo Lửa · W Đuốc Linh Hồn",
+     "file": "ky-nang_thay-mo-lua_w.png"
+    },
+    {
+     "index": 3,
+     "name": "Thầy Mo Lửa · E Lửa Thiêu",
+     "file": "ky-nang_thay-mo-lua_e.png"
+    },
+    {
+     "index": 4,
+     "name": "Thầy Mo Lửa · R Hỏa Sơn",
+     "file": "ky-nang_thay-mo-lua_r.png"
+    },
+    {
+     "index": 5,
+     "name": "Thần Sương Núi · Q Vòng Sương",
+     "file": "ky-nang_than-suong-nui_q.png"
+    },
+    {
+     "index": 6,
+     "name": "Thần Sương Núi · W Mũi Sương Giá",
+     "file": "ky-nang_than-suong-nui_w.png"
+    },
+    {
+     "index": 7,
+     "name": "Thần Sương Núi · E Hơi Lạnh Đỉnh Núi",
+     "file": "ky-nang_than-suong-nui_e.png"
+    },
+    {
+     "index": 8,
+     "name": "Thần Sương Núi · R Mù Sương Tản Viên",
+     "file": "ky-nang_than-suong-nui_r.png"
+    }
+   ]
+  },
+  {
+   "code": "S33",
+   "title": "Icon kỹ năng · Thánh Gióng & Lạc Long Quân",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Thánh Gióng · Q Gậy Tre Ngà",
+     "file": "ky-nang_thanh-giong_q.png"
+    },
+    {
+     "index": 2,
+     "name": "Thánh Gióng · W Giáp Sắt",
+     "file": "ky-nang_thanh-giong_w.png"
+    },
+    {
+     "index": 3,
+     "name": "Thánh Gióng · E Ngựa Sắt Phun Lửa",
+     "file": "ky-nang_thanh-giong_e.png"
+    },
+    {
+     "index": 4,
+     "name": "Thánh Gióng · R Bay Về Trời",
+     "file": "ky-nang_thanh-giong_r.png"
+    },
+    {
+     "index": 5,
+     "name": "Lạc Long Quân · Q Vuốt Rồng",
+     "file": "ky-nang_lac-long-quan_q.png"
+    },
+    {
+     "index": 6,
+     "name": "Lạc Long Quân · W Vảy Rồng",
+     "file": "ky-nang_lac-long-quan_w.png"
+    },
+    {
+     "index": 7,
+     "name": "Lạc Long Quân · E Gầm Biển",
+     "file": "ky-nang_lac-long-quan_e.png"
+    },
+    {
+     "index": 8,
+     "name": "Lạc Long Quân · R Hóa Rồng",
+     "file": "ky-nang_lac-long-quan_r.png"
+    }
+   ]
+  },
+  {
+   "code": "S34",
+   "title": "Icon kỹ năng · Thần Kim Quy & Thạch Sanh",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Thần Kim Quy · Q Mai Vàng",
+     "file": "ky-nang_than-kim-quy_q.png"
+    },
+    {
+     "index": 2,
+     "name": "Thần Kim Quy · W Móng Thần",
+     "file": "ky-nang_than-kim-quy_w.png"
+    },
+    {
+     "index": 3,
+     "name": "Thần Kim Quy · E Địa Chấn",
+     "file": "ky-nang_than-kim-quy_e.png"
+    },
+    {
+     "index": 4,
+     "name": "Thần Kim Quy · R Kim Quy Hộ Thành",
+     "file": "ky-nang_than-kim-quy_r.png"
+    },
+    {
+     "index": 5,
+     "name": "Thạch Sanh · Q Rìu Đốn Củi",
+     "file": "ky-nang_thach-sanh_q.png"
+    },
+    {
+     "index": 6,
+     "name": "Thạch Sanh · W Cung Tên Vàng",
+     "file": "ky-nang_thach-sanh_w.png"
+    },
+    {
+     "index": 7,
+     "name": "Thạch Sanh · E Đàn Thần",
+     "file": "ky-nang_thach-sanh_e.png"
+    },
+    {
+     "index": 8,
+     "name": "Thạch Sanh · R Diệt Chằn Tinh",
+     "file": "ky-nang_thach-sanh_r.png"
+    }
+   ]
+  },
+  {
+   "code": "S35",
+   "title": "Icon kỹ năng · Cao Lỗ & Mai An Tiêm",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Cao Lỗ · Q Nỏ Liên Châu",
+     "file": "ky-nang_cao-lo_q.png"
+    },
+    {
+     "index": 2,
+     "name": "Cao Lỗ · W Lẫy Thần",
+     "file": "ky-nang_cao-lo_w.png"
+    },
+    {
+     "index": 3,
+     "name": "Cao Lỗ · E Tên Móng Rùa",
+     "file": "ky-nang_cao-lo_e.png"
+    },
+    {
+     "index": 4,
+     "name": "Cao Lỗ · R Nỏ Thần",
+     "file": "ky-nang_cao-lo_r.png"
+    },
+    {
+     "index": 5,
+     "name": "Mai An Tiêm · Q Ném Dưa Hấu",
+     "file": "ky-nang_mai-an-tiem_q.png"
+    },
+    {
+     "index": 6,
+     "name": "Mai An Tiêm · W Hạt Giống Vàng",
+     "file": "ky-nang_mai-an-tiem_w.png"
+    },
+    {
+     "index": 7,
+     "name": "Mai An Tiêm · E Chim Thần",
+     "file": "ky-nang_mai-an-tiem_e.png"
+    },
+    {
+     "index": 8,
+     "name": "Mai An Tiêm · R Mưa Dưa",
+     "file": "ky-nang_mai-an-tiem_r.png"
+    }
+   ]
+  },
+  {
+   "code": "S36",
+   "title": "Icon kỹ năng · Âu Cơ & Chử Đồng Tử",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Âu Cơ · Q Hoa Tiên",
+     "file": "ky-nang_au-co_q.png"
+    },
+    {
+     "index": 2,
+     "name": "Âu Cơ · W Lông Vũ Tiên",
+     "file": "ky-nang_au-co_w.png"
+    },
+    {
+     "index": 3,
+     "name": "Âu Cơ · E Núi Mẹ",
+     "file": "ky-nang_au-co_e.png"
+    },
+    {
+     "index": 4,
+     "name": "Âu Cơ · R Bọc Trăm Trứng",
+     "file": "ky-nang_au-co_r.png"
+    },
+    {
+     "index": 5,
+     "name": "Chử Đồng Tử · Q Gậy Thần",
+     "file": "ky-nang_chu-dong-tu_q.png"
+    },
+    {
+     "index": 6,
+     "name": "Chử Đồng Tử · W Nón Thần",
+     "file": "ky-nang_chu-dong-tu_w.png"
+    },
+    {
+     "index": 7,
+     "name": "Chử Đồng Tử · E Sóng Sông Hồng",
+     "file": "ky-nang_chu-dong-tu_e.png"
+    },
+    {
+     "index": 8,
+     "name": "Chử Đồng Tử · R Thành Một Đêm",
+     "file": "ky-nang_chu-dong-tu_r.png"
+    }
+   ]
+  },
+  {
+   "code": "S37",
+   "title": "Icon kỹ năng · Tiên Dung & Lang Liêu",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Tiên Dung · Q Quạt Tiên",
+     "file": "ky-nang_tien-dung_q.png"
+    },
+    {
+     "index": 2,
+     "name": "Tiên Dung · W Ánh Ngọc",
+     "file": "ky-nang_tien-dung_w.png"
+    },
+    {
+     "index": 3,
+     "name": "Tiên Dung · E Sen Hồng",
+     "file": "ky-nang_tien-dung_e.png"
+    },
+    {
+     "index": 4,
+     "name": "Tiên Dung · R Mưa Hoa Tiên",
+     "file": "ky-nang_tien-dung_r.png"
+    },
+    {
+     "index": 5,
+     "name": "Lang Liêu · Q Bánh Chưng",
+     "file": "ky-nang_lang-lieu_q.png"
+    },
+    {
+     "index": 6,
+     "name": "Lang Liêu · W Bánh Giầy",
+     "file": "ky-nang_lang-lieu_w.png"
+    },
+    {
+     "index": 7,
+     "name": "Lang Liêu · E Ruộng Lúa",
+     "file": "ky-nang_lang-lieu_e.png"
+    },
+    {
+     "index": 8,
+     "name": "Lang Liêu · R Lễ Tổ Tiên",
+     "file": "ky-nang_lang-lieu_r.png"
+    }
+   ]
+  }
+ ],
+ "singles": [
+  {
+   "code": "F01",
+   "name": "Bản đồ ải 1",
+   "file": "nen_ai-1.png"
+  },
+  {
+   "code": "F02",
+   "name": "Bản đồ ải 2",
+   "file": "nen_ai-2.png"
+  },
+  {
+   "code": "F03",
+   "name": "Bản đồ ải 3",
+   "file": "nen_ai-3.png"
+  },
+  {
+   "code": "F04",
+   "name": "Bản đồ ải 4",
+   "file": "nen_ai-4.png"
+  },
+  {
+   "code": "F05",
+   "name": "Truyện 1",
+   "file": "truyen_1.png"
+  },
+  {
+   "code": "F06",
+   "name": "Truyện 2",
+   "file": "truyen_2.png"
+  },
+  {
+   "code": "F07",
+   "name": "Truyện 3",
+   "file": "truyen_3.png"
+  },
+  {
+   "code": "F08",
+   "name": "Nền menu",
+   "file": "nen_menu.png"
+  },
+  {
+   "code": "F09",
+   "name": "Logo",
+   "file": "logo.png"
+  },
+  {
+   "code": "F10",
+   "name": "Icon app",
+   "file": "icon-app.png"
+  }
+ ]
+}

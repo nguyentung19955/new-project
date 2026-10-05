@@ -94,29 +94,83 @@ function asset(path) {
   }
   return a.ok ? a.img : null;
 }
-const assetUrl = (path) => (asset(path) ? ASSET_ROOT + path : '');
-// mã tướng / quái theo tài liệu prompt (H01..H16, E01..E08, B01..B03)
+// nhận một đường dẫn hoặc danh sách (thử lần lượt, dùng ảnh đầu tiên đã có)
+function assetAny(paths) {
+  if (!Array.isArray(paths)) paths = [paths];
+  for (const p of paths) { const img = asset(p); if (img) return { img, path: p }; }
+  return null;
+}
+const assetUrl = (paths) => { const a = assetAny(paths); return a ? ASSET_ROOT + a.path : ''; };
+
+// Tên file theo asset-manifest.json của bản giao v15 (ảnh cắt từ bảng S01–S37
+// bằng tools/cat-anh.py, để phẳng trong assets/). Tên cũ (heroes/hero_h01_C.png…)
+// vẫn dùng được làm dự phòng.
+const slugify = (name) => name.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[đĐ]/g, 'd')
+  .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const HERO_CODE = { lactuong: 'h01', lucsi: 'h02', xathu: 'h03', thosan: 'h04', thaymo: 'h05', thansuong: 'h06',
   giong: 'h07', llq: 'h08', kimquy: 'h09', thachsanh: 'h10', auco: 'h11', caolo: 'h12', antiem: 'h13',
   cdt: 'h14', tiendung: 'h15', langlieu: 'h16' };
 const ENEMY_CODE = { tom: 'E01', casau: 'E02', rua: 'E03', phuthuy: 'E04', chimbao: 'E05', echme: 'E06',
   nongnoc: 'E07', giaolong: 'E08', thuongluong: 'B01', haba: 'B02', thuytinh: 'B03' };
-// tên file đồ theo tài liệu (còn lại: mã đồ đổi "_" thành "-")
-const ITEM_FILE = { no_tre: 'no', gay_mo: 'gay-thay-mo', mu_long_chim: 'mulong-chim', song_riu: 'song-riu-cuong-no',
-  ngua_hong_mao: 'ngua-chin-hong-mao' };
-// A = splash, B = chân dung, C = sprite trong trận, D = sprite lúc đánh / tung chiêu
-const heroPng = (type, v) => asset(`heroes/hero_${HERO_CODE[type]}_${v}.png`);
-const enemyPng = (type, elite) => {
+const heroSlug = (type) => slugify(HEROES[type].name);
+// bậc trang phục = độ hiếm trung bình của vũ khí, mũ, giáp (ô trống tính là Thường)
+const GEAR_TIER_FILE = ['thuong', 'hiem', 'su-thi', 'huyen-thoai'];
+function gearTier(h) {
+  if (!h || !h.equip) return 0;
+  const sum = GEAR_SLOTS.reduce((a, sl) => a + (h.equip[sl] ? RARITY_ORDER.indexOf(h.equip[sl].rarity) : 0), 0);
+  return Math.round(sum / GEAR_SLOTS.length);
+}
+// v: 'B' chân dung, 'C' đứng, 'D' ra đòn (bảng 4 bậc đồ chỉ có dáng đứng)
+function heroPng(type, v, h) {
+  const slug = heroSlug(type), code = HERO_CODE[type];
+  if (v === 'B') return (assetAny([`chan-dung_${slug}.png`, `heroes/hero_${code}_B.png`]) || {}).img || null;
+  const tier = GEAR_TIER_FILE[gearTier(h)];
+  const list = v === 'D' ? [`heroes/hero_${code}_D.png`] : [`${slug}_${tier}.png`, `${slug}_thuong.png`, `heroes/hero_${code}_C.png`];
+  return (assetAny(list) || {}).img || null;
+}
+const ENEMY_FILE = { tom: 'quai_tom-binh', casau: 'quai_ca-sau', rua: 'quai_rua-giap', phuthuy: 'quai_phu-thuy-nuoc',
+  chimbao: 'quai_chim-bao', echme: 'quai_ech-me', nongnoc: 'quai_nong-noc',
+  thuongluong: 'boss_thuong-luong', haba: 'boss_ha-ba', thuytinh: 'boss_thuy-tinh' };
+// e (tuỳ chọn): chọn ảnh theo trạng thái (hóa điên, tinh anh, Hà Bá hóa Kim, Giao Long theo hành)
+const enemyPng = (type, elite, e) => {
   const c = ENEMY_CODE[type];
   if (!c) return null;
-  return (elite && asset(`${c[0] === 'B' ? 'bosses' : 'enemies'}/${c}_elite_B.png`)) || asset(`${c[0] === 'B' ? 'bosses' : 'enemies'}/${c}.png`);
+  const f = ENEMY_FILE[type];
+  const list = [];
+  if (type === 'giaolong') list.push(`giao-long_${(e && e.el) || 'thuy'}.png`);
+  if (e && e.enraged && (type === 'casau' || type === 'thuongluong')) list.push(`${f}-hoa-dien.png`);
+  if (e && type === 'haba' && e.el === 'kim') list.push('boss_ha-ba-kim.png');
+  if (elite && type === 'rua') list.push('quai_rua-giap-tinh-anh.png');
+  if (f) list.push(`${f}.png`);
+  const dir = c[0] === 'B' ? 'bosses' : 'enemies';
+  if (elite) list.push(`${dir}/${c}_elite_B.png`);
+  list.push(`${dir}/${c}.png`);
+  return (assetAny(list) || {}).img || null;
 };
-const itemPngPath = (id) => `items/${ITEM_FILE[id] || id.replace(/_/g, '-')}.png`;
-const skillPngPath = (type, i) => `skills/${HERO_CODE[type]}_${SKILL_KEYS[i]}.png`;
-const SCENE_FILE = { menu: 'key-art-menu.png', story1: 'scenes/story-1.png', story2: 'scenes/story-2.png', story3: 'scenes/story-3.png',
-  win: 'scenes/victory-bg.png', lose: 'scenes/defeat-bg.png', mountain1: 'scenes/mountain-1.png', mountain2: 'scenes/mountain-2.png',
-  mountain3: 'scenes/mountain-3.png', mountain4: 'scenes/mountain-4.png', mountain5: 'scenes/mountain-5.png',
-  voi: 'items/voi-chin-nga.png', ga: 'items/ga-chin-cua.png', ngua: 'items/ngua-chin-hong-mao.png', hubau: 'items/hu-bau.png' };
+// icon đồ: đồ trang phục theo loại + độ hiếm, đồ bộ theo bộ, phụ kiện / đồ ghép / sính lễ theo tên
+const ITEM_FILE = { no_tre: 'no', gay_mo: 'gay-thay-mo', mu_long_chim: 'mulong-chim', song_riu: 'song-riu-cuong-no',
+  ngua_hong_mao: 'ngua-chin-hong-mao' };
+const RAR_FILE = { common: 'thuong', rare: 'hiem', epic: 'su-thi', legendary: 'huyen-thoai' };
+const KIND_FILE = { blade: 'riu', bow: 'no', staff: 'gay', helmet: 'mu', armor: 'giap' };
+function itemPngPath(id, rarity) {
+  const it = ITEMS[id];
+  const kind = KIND_FILE[it.slot === 'weapon' ? it.wclass : it.slot];
+  const list = [];
+  if (it.set) list.push(`bo-${slugify(SETS[it.set].name.replace('Bộ ', ''))}_${kind}.png`);
+  else if (kind) list.push(`do_${kind}_${RAR_FILE[rarity || it.rarity]}.png`);
+  else list.push(`${it.bossOnly ? 'sinh-le' : it.recipe ? 'do-ghep' : 'phu-kien'}_${slugify(it.name)}.png`);
+  list.push(`items/${ITEM_FILE[id] || id.replace(/_/g, '-')}.png`);
+  return list;
+}
+const skillPngPath = (type, i) => [`ky-nang_${heroSlug(type)}_${SKILL_KEYS[i].toLowerCase()}.png`, `skills/${HERO_CODE[type]}_${SKILL_KEYS[i]}.png`];
+const SCENE_FILE = { menu: ['nen_menu.png', 'key-art-menu.png'], story1: ['truyen_1.png', 'scenes/story-1.png'],
+  story2: ['truyen_2.png', 'scenes/story-2.png'], story3: ['truyen_3.png', 'scenes/story-3.png'],
+  win: 'scenes/victory-bg.png', lose: 'scenes/defeat-bg.png',
+  mountain1: ['ban-do_nui-1.png', 'scenes/mountain-1.png'], mountain2: ['ban-do_nui-2.png', 'scenes/mountain-2.png'],
+  mountain3: ['ban-do_nui-3.png', 'scenes/mountain-3.png'], mountain4: ['ban-do_nui-4.png', 'scenes/mountain-4.png'],
+  mountain5: ['ban-do_nui-5.png', 'scenes/mountain-5.png'],
+  voi: ['sinh-le_voi-chin-nga.png', 'items/voi-chin-nga.png'], ga: ['sinh-le_ga-chin-cua.png', 'items/ga-chin-cua.png'],
+  ngua: ['sinh-le_ngua-chin-hong-mao.png', 'items/ngua-chin-hong-mao.png'], hubau: ['ui_hu-bau.png', 'items/hu-bau.png'] };
 // Hiệu ứng: dải khung hình nằm ngang, mỗi khung vuông (rộng = cao)
 const VFX_FILE = { pillar: 'fire-pillar', explosion: 'fire-burst', nova: 'ice-ring', snow: 'freeze', wave: 'water-wave',
   bolt: 'lightning', xslash: 'slash-gold', slash: 'slash-gold', claw: 'slash-gold', heal: 'heal', dome: 'shield-gold',
@@ -299,7 +353,16 @@ const MAT = {
   legendary: { main: '#F2C040', dark: '#A86A10', light: '#FFF1C4', gem: '#E25A3A' },
   set:       { main: '#1F9A8A', dark: '#0E5A50', light: '#F2D27A', gem: '#F2D27A' },
 };
-const matOf = (g) => MAT[g.set ? 'set' : g.rarity];
+// chất liệu riêng của từng bộ đồ; đồ thường đổi màu điểm nhấn (đá quý) theo hành
+const MAT_SET = {
+  laclong: MAT.set,
+  sontinh: { main: '#8C7A5A', dark: '#4A3E2A', light: '#C8B48A', gem: '#5FB84A' },
+  chimlac: { main: '#E8DDBF', dark: '#9A8A60', light: '#FFF8E0', gem: '#F2D27A' },
+  drum:    { main: '#B07A3A', dark: '#5E3A14', light: '#F2D27A', gem: '#F2D27A' },
+  nguasat: { main: '#3A3030', dark: '#1A1414', light: '#E0452C', gem: '#FF8A2E' },
+};
+const matOf = (g) => (g.set ? MAT_SET[g.set] || MAT.set
+  : g.el && g.rarity !== 'common' ? { ...MAT[g.rarity], gem: ELEMENTS[g.el].color } : MAT[g.rarity]);
 // loại vũ khí theo tướng cơ bản (bảng v15)
 const WEAPON_KIND = { lactuong: 'axe', lucsi: 'axe', thosan: 'daggers', xathu: 'crossbow', thaymo: 'staff', thansuong: 'staff' };
 // tướng huyền thoại giữ dáng vũ khí đặc trưng; mũ / giáp đổi kiểu riêng
@@ -319,7 +382,7 @@ function computeLook(h) {
     const inst = h.equip[slot];
     if (!inst) continue;
     const it = ITEMS[inst.id];
-    const g = { rarity: inst.rarity, plus: inst.plus, set: !!it.set };
+    const g = { rarity: inst.rarity, plus: inst.plus, set: it.set || null, el: inst.el };
     if (slot === 'weapon') { g.kind = def.legend ? 'signature' : WEAPON_KIND[h.type] || 'axe'; g.ice = h.type === 'thansuong'; }
     if (slot === 'helmet') g.style = (def.legend && LEGEND_HELM[h.type]) || 'rarity';
     if (slot === 'armor') g.style = def.legend ? LEGEND_ARMOR[h.type] || 'tint' : 'rarity';
@@ -334,10 +397,12 @@ function computeLook(h) {
       look.accAura = { color: it.look.aura, rarity: inst.rarity, kind: ACC_AURA_KIND[inst.id] || 'ring' };
     }
   }
-  if (activeSets(h.equip).includes('laclong')) {
+  const full = activeSets(h.equip);
+  if (full.includes('laclong')) {
     look.wings = SETS.laclong.look.wings;
     if (h.type === 'llq') { look.wingScale = 1.5; look.sparkWings = true; }
   }
+  look.setFx = full.find((k) => k !== 'laclong') || null;    // hiệu ứng sau lưng khi đủ bộ
   return look;
 }
 
@@ -378,7 +443,7 @@ function drawPart(ctx, img, glow, blur) {
 // ánh theo độ hiếm (dùng cho shadow khi vẽ): Hiếm viền mảnh, Sử thi thở chậm, Huyền thoại rực
 function rarityGlow(g, t) {
   if (!g) return null;
-  if (g.set) return { color: '#3EDCC0', blur: 7 };
+  if (g.set) return { color: g.set === 'laclong' ? '#3EDCC0' : SETS[g.set].glow, blur: 7 };
   if (g.rarity === 'rare') return { color: RAR_COLOR.rare, blur: 4 };
   if (g.rarity === 'epic') return { color: RAR_COLOR.epic, blur: 5 + Math.sin(t * 2) * 3 };
   if (g.rarity === 'legendary') return { color: RAR_COLOR.legendary, blur: 9 + Math.sin(t * 4) * 3 };
@@ -450,10 +515,11 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
 
   // ảnh vẽ tay (assets/): ảnh phẳng không thay được từng món đồ,
   // nên đồ mặc hiện qua hào quang, cánh rồng và sao tiến hoá.
-  const png = !o.vector && (((o.castT > 0 || o.swing > 0.5) && heroPng(h.type, 'D')) || heroPng(h.type, 'C'));
+  const png = !o.vector && (((o.castT > 0 || o.swing > 0.5) && heroPng(h.type, 'D', h)) || heroPng(h.type, 'C', h));
   if (png) {
     if (tierShown >= 3) drawSunHalo(ctx, t);
     if (look.wings) withProc(ctx, () => drawWings(ctx, look, t, o.wingT));
+    if (look.setFx) withProc(ctx, () => drawSetBack(ctx, look.setFx, t, o.wingT));
     const hgt = 236, w = hgt * png.naturalWidth / png.naturalHeight;
     ctx.translate(100, 222);
     ctx.scale(1 + Math.sin(t * 2.85 + seed) * 0.012, 1 - Math.sin(t * 2.85 + seed) * 0.018 + lift * -0.004);
@@ -467,6 +533,7 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
   // sau lưng: vầng sao 12 cánh (★★★), cánh rồng, cánh lông vũ (Âu Cơ)
   if (tierShown >= 3) drawSunHalo(ctx, t);
   if (look.wings) withProc(ctx, () => drawWings(ctx, look, t, o.wingT));
+  if (look.setFx) withProc(ctx, () => drawSetBack(ctx, look.setFx, t, o.wingT));
   if (look.armor && look.armor.style === 'wings') withProc(ctx, () => drawFeatherWings(ctx, look.armor, t));
   ctx.save();
   ctx.translate(100, 120); ctx.rotate(backRot); ctx.translate(-100, -120);
@@ -753,6 +820,50 @@ function drawWings(ctx, look, t, wingT) {
     ctx.moveTo(x, y);
     for (let i = 0; i < 4; i++) { x -= 5; y += (Math.random() - 0.5) * 8; ctx.lineTo(x, y); }
     ctx.stroke();
+  }
+  ctx.restore();
+}
+
+// Hiệu ứng sau lưng khi đủ bộ (v15): Sơn Tinh khối núi đá lơ lửng, Chim Lạc cánh lông
+// trắng vàng, Trống Đồng mặt trống xoay, Ngựa Sắt bờm lửa. wingT: vừa đủ bộ thì bung ra
+function drawSetBack(ctx, set, t, wingT) {
+  const open = wingT > 0 ? Math.min(1, (1 - wingT / 1.5) * 1.4) : 1;
+  ctx.save();
+  ctx.globalAlpha *= 0.3 + 0.7 * open;
+  if (set === 'sontinh') {
+    const y = -46 + Math.sin(t * 1.6) * 1.6;
+    ctx.translate(-9, y);
+    ctx.scale(open, open);
+    ctx.fillStyle = '#8C7A5A';
+    ctx.beginPath(); ctx.moveTo(-8, 4); ctx.lineTo(-5, -4); ctx.lineTo(-1, -9); ctx.lineTo(3, -3); ctx.lineTo(6, -6); ctx.lineTo(9, 4); ctx.closePath();
+    ctx.fill(); outline(ctx);
+    ctx.fillStyle = '#5FB84A';
+    ctx.beginPath(); ctx.moveTo(-5, -4); ctx.lineTo(-1, -9); ctx.lineTo(1, -6); ctx.lineTo(-3, -3); ctx.fill();
+    ctx.fillStyle = '#C8B48A';
+    for (let i = 0; i < 3; i++) circle(ctx, -6 + i * 6, 7 + Math.sin(t * 3 + i) * 1.2, 0.9, '#C8B48A');
+  } else if (set === 'chimlac') {
+    ctx.scale(0.6 + 0.4 * open, 0.6 + 0.4 * open);
+    drawFeatherWings(ctx, { rarity: 'legendary', set: 'chimlac' }, t);
+  } else if (set === 'drum') {
+    ctx.translate(0, -28);
+    ctx.scale(open, open);
+    ctx.rotate(t * 0.6);
+    ctx.fillStyle = '#B07A3A';
+    ctx.beginPath(); ctx.arc(0, 0, 15, 0, Math.PI * 2); ctx.fill(); outline(ctx);
+    ctx.strokeStyle = '#F2D27A'; ctx.lineWidth = 0.6;
+    for (const r of [11.5, 8]) { ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.stroke(); }
+    ctx.beginPath();
+    for (let i = 0; i < 24; i++) { const a = (i / 24) * Math.PI * 2, r = i % 2 ? 2.4 : 6; ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r); }
+    ctx.closePath(); ctx.fillStyle = '#F2D27A'; ctx.fill();
+    for (let i = 0; i < 4; i++) { const a = (i / 4) * Math.PI * 2 + 0.4; circle(ctx, Math.cos(a) * 13.3, Math.sin(a) * 13.3, 0.9, '#FFF1C4'); }
+  } else if (set === 'nguasat') {
+    ctx.translate(-2, -40);
+    for (let i = 0; i < 5; i++) {
+      const k = Math.sin(t * 9 + i * 1.7) * 1.4;
+      const x = -9 + i * 3.2, h = (7 + (i % 2) * 3 + k) * open;
+      ctx.fillStyle = i % 2 ? '#FF8A2E' : '#E0452C';
+      ctx.beginPath(); ctx.moveTo(x - 2, 2); ctx.quadraticCurveTo(x - 3, -h * 0.6, x + 1, -h); ctx.quadraticCurveTo(x + 2, -h * 0.4, x + 2.5, 2); ctx.fill();
+    }
   }
   ctx.restore();
 }
@@ -1158,7 +1269,7 @@ function drawEnemy(ctx, e, t, o = {}) {
     ctx.shadowColor = '#ff2d2d';
     ctx.shadowBlur = 14;
   }
-  const png = enemyPng(e.type, e.elite || e.champion);
+  const png = enemyPng(e.type, e.elite || e.champion, e);
   if (png) {
     // ảnh vẽ tay: chân ở giữa đáy ảnh, rộng theo ENEMY_W
     const h2 = box.w * png.naturalHeight / png.naturalWidth;
@@ -1246,6 +1357,11 @@ function drawEnemy(ctx, e, t, o = {}) {
   const r = e.hp / e.maxHp;
   ctx.fillStyle = r > 0.5 ? '#3EBE3E' : r > 0.25 ? '#E0B030' : '#D84A2A';
   ctx.fillRect(e.x - w / 2, by, w * Math.max(0, r), 3);
+  // chấm hành bên trái thanh máu (quái tinh anh có thể có hành phụ)
+  [e.el, e.el2].filter(Boolean).forEach((el, k) => {
+    circle(ctx, e.x - w / 2 - 5 - k * 7, by + 1.5, 3.4, '#0D0B08');
+    circle(ctx, e.x - w / 2 - 5 - k * 7, by + 1.5, 2.6, ELEMENTS[el].color);
+  });
   if (e.shield > 0) {
     ctx.fillStyle = '#5AB4D6';
     ctx.fillRect(e.x - w / 2, by - 3, w * Math.min(1, e.shield / e.maxHp), 2);
