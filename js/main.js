@@ -270,8 +270,8 @@ let last = performance.now();
 function loop(now) {
   const dt = Math.min(0.05, (now - last) / 1000);
   last = now;
-  // tạm dừng khi đang mở bảng để người chơi thong thả chọn tướng / mặc đồ
-  if (game.started && !game.paused && !ui.sheet) {
+  // game vẫn chạy khi mở bảng tướng / đồ; chỉ dừng khi bấm nút tạm dừng
+  if (game.started && !game.paused) {
     // chia nhỏ bước khi tăng tốc để mô phỏng ổn định
     for (let i = 0; i < game.speed; i++) game.update(dt);
   }

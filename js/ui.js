@@ -168,7 +168,10 @@ class UI {
         <div class="slots6" id="hs-slots"></div>
         <h4>Túi đồ <span class="dim">· chạm để mặc</span></h4>
         <div class="items" id="hs-bag"></div>
-        <div class="hero-foot" id="hs-foot"></div>`;
+        <div class="hero-foot">
+          <div class="evo" id="hs-evo"></div>
+          <button class="danger-link" id="hs-sell" data-act="sell"></button>
+        </div>`;
       this.previewCanvas = $('#preview');
     } else {
       this.previewCanvas = null;
@@ -266,7 +269,7 @@ class UI {
     $('#gold').textContent = g.gold;
     $('#wave').textContent = g.wave;
     $('#bag-count').textContent = g.inventory.length;
-    $('#paused-tag').hidden = !(g.started && (g.paused || this.sheet));
+    $('#paused-tag').hidden = !(g.started && g.paused);
 
     const bw = $('#btn-wave');
     bw.disabled = g.waveActive;
@@ -451,9 +454,14 @@ class UI {
 
   renderBuild() {
     const g = this.game;
-    if (!this.changed('build', g.gold)) return;
+    if (!this.changed('build', 1)) {
+      document.querySelectorAll('.hero-card').forEach((el) => {
+        el.classList.toggle('disabled', g.gold < HEROES[el.dataset.type].cost);
+      });
+      return;
+    }
     const card = ([type, def]) => `
-      <div class="hero-card ${g.gold < def.cost ? 'disabled' : ''}" style="--ac:${ATTRS[def.attr].color}">
+      <div class="hero-card ${g.gold < def.cost ? 'disabled' : ''}" data-type="${type}" style="--ac:${ATTRS[def.attr].color}">
         <canvas data-hero="${type}" width="90" height="100"></canvas>
         <b>${def.name}</b>
         <span class="role">${def.role}</span>
@@ -485,7 +493,18 @@ class UI {
 
   renderShop() {
     const g = this.game;
-    if (!this.changed('shop', `${g.gold}|${g.inventory.join()}|${this.shopTab}`)) return;
+    if (!this.changed('shop', `${g.inventory.join()}|${this.shopTab}`)) {
+      $('#shop-gold').textContent = g.gold + ' 💰';
+      document.querySelectorAll('[data-act=buy]').forEach((b) => { b.disabled = g.gold < ITEMS[b.dataset.id].price; });
+      document.querySelectorAll('[data-act=craft]').forEach((b) => {
+        const ok = !g.missingParts(b.dataset.id).length && g.gold >= ITEMS[b.dataset.id].recipe.cost;
+        b.disabled = !ok;
+        b.textContent = ok ? 'Ghép đồ' : 'Chưa đủ nguyên liệu';
+      });
+      document.querySelectorAll('[data-act=chest]').forEach((b) => { b.disabled = g.gold < CONFIG.chestCost; });
+      document.querySelectorAll('.part.gold').forEach((el) => el.classList.toggle('has', g.gold >= +el.dataset.cost));
+      return;
+    }
     const tabs = [['basic', 'Cơ bản'], ['recipe', 'Ghép đồ'], ['chest', 'Rương']]
       .map(([k, n]) => `<button data-act="shoptab" data-tab="${k}" class="${this.shopTab === k ? 'on' : ''}">${n}</button>`).join('');
     let body = '';
@@ -509,7 +528,7 @@ class UI {
           return `<div class="recipe" style="--rc:${RARITY[it.rarity].color}">
             <div class="recipe-top"><span class="icon">${it.icon}</span>
               <span class="meta"><b style="color:${RARITY[it.rarity].color}">${it.name}</b><small>${statText(it.stats)}</small></span></div>
-            <div class="parts">${parts}<span class="plus">+</span><span class="part ${g.gold >= it.recipe.cost ? 'has' : ''}">${it.recipe.cost} 💰</span></div>
+            <div class="parts">${parts}<span class="plus">+</span><span class="part gold ${g.gold >= it.recipe.cost ? 'has' : ''}" data-cost="${it.recipe.cost}">${it.recipe.cost} 💰</span></div>
             <button class="go" data-act="craft" data-id="${id}" ${ok ? '' : 'disabled'}>${ok ? 'Ghép đồ' : 'Chưa đủ nguyên liệu'}</button>
           </div>`;
         }).join('')}</div>`;
@@ -524,7 +543,7 @@ class UI {
       </div>`;
     }
     $('#sheet-dyn').innerHTML = `
-      <div class="sheet-head"><h3>Cửa hàng</h3><span class="gold-chip">${g.gold} 💰</span>
+      <div class="sheet-head"><h3>Cửa hàng</h3><span class="gold-chip" id="shop-gold">${g.gold} 💰</span>
         <button class="x" data-act="close" aria-label="Đóng">✕</button></div>
       <div class="tabs">${tabs}</div>${body}`;
   }
@@ -556,7 +575,8 @@ class UI {
         <span class="chip"><i>Giảm hồi chiêu</i> ${Math.round(st.cdr)}%</span>${sets}`;
     }
 
-    if (this.changed('skills', `${h.kills}|${this.skillSel}`)) {
+    const unlocked = def.skills.filter((sk) => h.kills >= sk.unlock).length;
+    if (this.changed('skills', `${unlocked}|${this.skillSel}`)) {
       const color = ATTRS[def.attr].color;
       $('#hs-skills').innerHTML = def.skills.map((sk, i) => {
         const on = h.kills >= sk.unlock;
@@ -565,6 +585,8 @@ class UI {
           ${on ? (sk.active ? `<i class="cd" id="cd-${i}"></i>` : '') : `<span class="lock">${sk.unlock}☠</span>`}
         </button>`;
       }).join('');
+    }
+    if (this.changed('desc', `${h.kills}|${this.skillSel}|${Math.round(st.cdr)}`)) {
       const sk = def.skills[this.skillSel];
       const on = h.kills >= sk.unlock;
       const cd = sk.active ? ` · hồi ${(sk.active.cooldown * (1 - st.cdr / 100)).toFixed(1)}s` : '';
@@ -597,13 +619,15 @@ class UI {
       $('#hs-bag').innerHTML = inv || '<p class="dim">Chưa có đồ hợp với tướng này. Ghé Cửa hàng hoặc diệt quái để có thêm.</p>';
     }
 
-    if (this.changed('foot', `${h.kills}|${this.sellArmed}`)) {
+    if (this.changed('evo', h.kills)) {
       const cur = CONFIG.tiers[tier], next = CONFIG.tiers[tier + 1];
+      $('#hs-evo').innerHTML = `<span>${next ? `Tiến hóa ${'★'.repeat(tier + 1)} khi hạ ${next} quái` : 'Đã tiến hóa tối đa'}</span>
+          <div class="bar"><i style="width:${next ? ((h.kills - cur) / (next - cur)) * 100 : 100}%"></i></div>`;
+    }
+    if (this.changed('sell', this.sellArmed)) {
       const refund = Math.floor(def.cost * CONFIG.sellRatio);
-      $('#hs-foot').innerHTML = `
-        <div class="evo"><span>${next ? `Tiến hóa ${'★'.repeat(tier + 1)} khi hạ ${next} quái` : 'Đã tiến hóa tối đa'}</span>
-          <div class="bar"><i style="width:${next ? ((h.kills - cur) / (next - cur)) * 100 : 100}%"></i></div></div>
-        <button class="danger-link ${this.sellArmed ? 'confirm' : ''}" data-act="sell">${this.sellArmed ? `Chạm lần nữa để bán (+${refund}💰)` : `Bán tướng (+${refund}💰)`}</button>`;
+      $('#hs-sell').className = `danger-link ${this.sellArmed ? 'confirm' : ''}`;
+      $('#hs-sell').textContent = this.sellArmed ? `Chạm lần nữa để bán (+${refund}💰)` : `Bán tướng (+${refund}💰)`;
     }
   }
 }
