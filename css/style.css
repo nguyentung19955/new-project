@@ -1001,3 +1001,30 @@ button:disabled { cursor: default; }
 .craft-out .svgi { width: 52px; height: 52px; }
 .craft-part { font-size: 12px; }
 .panel .btn svg { width: 18px; height: 18px; flex: none; }
+
+/* v27: cây thăng thần 3 bậc */
+#legends { width: 600px; }
+.asc-row { gap: 5px; }
+.asc-base { width: 104px; }
+.asc-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.asc-col .asc-to { flex: none; }
+.asc-to b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.asc-arr { text-align: center; line-height: 1; font-size: 9px; }
+#legends { width: 640px; }
+.asc-col { flex-direction: row; flex-wrap: wrap; gap: 2px 8px; }
+.asc-row { padding: 1px 6px; min-height: 26px; }
+.asc-base b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.asc-arr { display: flex; flex-direction: column; align-items: center; font-size: 9.5px; width: 38px; }
+.asc-arr small { color: #FFD66B; font-weight: 800; font-size: 10px; }
+.asc-arr.leg { color: #FF7A3A; }
+#legends { width: 760px; }
+.asc-base { width: 124px; }
+.asc-col { flex: 1 1 0; }
+.asc-col + .asc-arr + .asc-col { flex: 1.35 1 0; }
+.asc-col .asc-to { gap: 3px; }
+.ro-det .kvt span { white-space: nowrap; }
+.ro-det .kvt > div { gap: 8px; }
+.ro-sk span { -webkit-line-clamp: 2; }
+.ro-det { overflow-y: auto; }
+.ro-top .ro-pic { width: 128px; height: 128px; }
+.ro-top .ro-pic canvas, .ro-top .ro-pic img { width: 128px; height: 128px; }

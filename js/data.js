@@ -2,7 +2,7 @@
 
 // ============================================================
 //  NÚI CAO NƯỚC DÂNG · DỮ LIỆU GAME
-//  Bản đồ, tướng Văn Lang (6 cơ bản + 10 huyền thoại), kỹ năng,
+//  Bản đồ, tướng Văn Lang (6 cơ bản + 8 thần Sử thi + 6 Huyền thoại), kỹ năng,
 //  trang bị, Lò đúc đồng, quân Thủy Tinh, boss, Núi Tản Viên,
 //  Nước Dâng và chiến dịch dọc sông Đà.
 //  Muốn cân bằng game / thêm nội dung thì chủ yếu sửa file này.
@@ -272,7 +272,7 @@ const HEROES = {
     ],
   },
   thachsanh: {
-    legend: 'legendary', name: 'Thạch Sanh', attr: 'agi', attack: 'melee', wclass: 'blade', dmgType: 'phys',
+    legend: 'epic', name: 'Thạch Sanh', attr: 'agi', attack: 'melee', wclass: 'blade', dmgType: 'phys',
     role: 'Diệt boss', title: 'Rìu đốn củi, đàn thần và niêu cơm', color: '#7FC24A',
     attrs: { str: 20, agi: 28, int: 14 }, gain: { str: 2.0, agi: 3.2, int: 1.4 },
     base: { damage: 10, range: 150, cooldown: 0.9 },
@@ -404,27 +404,117 @@ const HEROES = {
         info: () => 'Toàn quân hồi đầy máu, bất tử 2 giây' },
     ],
   },
+  // ---------------- 4 TƯỚNG THẦN MỚI (v27): đủ chuỗi Thường → Sử thi → Huyền thoại ----------------
+  lachau: {
+    legend: 'epic', name: 'Lạc Hầu', attr: 'str', attack: 'melee', wclass: 'blade', dmgType: 'phys',
+    role: 'Giữ trận', title: 'Thủ lĩnh bộ Lạc, búa đá và khiên đồng', color: '#E25A3A',
+    attrs: { str: 28, agi: 12, int: 15 }, gain: { str: 3.2, agi: 1.1, int: 1.5 },
+    base: { damage: 11, range: 145, cooldown: 1.2 },
+    look: { aura: '#D9A84E', bulk: 1.12, weapon: { type: 'cleaver', color: '#B8853A' } },
+    trait: { name: 'Lệnh Lạc Hầu', desc: 'Tướng đứng kề nhận ít hơn 15% sát thương' },
+    skills: [
+      { id: 'h_q', name: 'Dậm Đất Phong Châu', active: { cooldown: 8, cast: 'quake', mana: 55 },
+        info: (n) => `Dậm đất làm choáng quái trong tầm 1.2 giây, x1.5 sát thương +${n}` },
+      { id: 'h_w', name: 'Giáp Da Tê',
+        info: (n) => `Giảm ${Math.round(Math.min(45, 15 + n * 0.4))}% sát thương nhận vào, +${Math.min(40, Math.floor(n / 3))} sức mạnh`,
+        apply: (s, n) => { s.dr += Math.min(45, 15 + n * 0.4); s.str += Math.min(40, Math.floor(n / 3)); } },
+      { id: 'h_e', name: 'Khiên Đồng Bộ Lạc', active: { cooldown: 10, cast: 'goldshell', mana: 70 },
+        info: (n) => `Khiên cho tướng trong 170: chặn ${Math.round(20 + n * 0.25)}% máu tối đa` },
+      { id: 'h_r', name: 'Vùi Núi', active: { cooldown: 16, cast: 'devour', mana: 95 },
+        info: (n) => `Chôn sống quái thường máu cao nhất trong tầm. Với boss: x6 sát thương +${n * 2}` },
+    ],
+  },
+  thansan: {
+    legend: 'epic', name: 'Thần Săn Ba Vì', attr: 'agi', attack: 'melee', wclass: 'blade', dmgType: 'phys',
+    role: 'Săn mồi', title: 'Thợ săn được núi Ba Vì truyền phép, vuốt hổ dao lá', color: '#7FC24A',
+    attrs: { str: 18, agi: 28, int: 13 }, gain: { str: 1.9, agi: 3.3, int: 1.3 },
+    base: { damage: 6, range: 145, cooldown: 0.8 },
+    look: { aura: '#5FB84A', weapon: { type: 'daggers', color: '#E8E0C0' } },
+    trait: { name: 'Mắt Rừng', desc: 'Đánh quái đang bị làm chậm hoặc choáng: +25% sát thương' },
+    skills: [
+      { id: 's_q', name: 'Lướt Ngàn Cây', active: { cooldown: 5, cast: 'shadowstep', mana: 40 },
+        info: (n) => `Lướt tới quái xa nhất trong tầm gấp đôi, chém chữ X: x2 sát thương +${(n * 0.5).toFixed(0)}` },
+      { id: 's_w', name: 'Nanh Hổ',
+        info: (n) => `+${Math.round(10 + Math.min(20, n * 0.1))}% chí mạng, +${Math.min(40, Math.round(n * 0.3))}% tốc đánh`,
+        apply: (s, n) => { s.crit += 10 + Math.min(20, n * 0.1); s.haste += Math.min(40, n * 0.3); } },
+      { id: 's_e', name: 'Vuốt Hổ Ba Vì', active: { cooldown: 6, cast: 'claw', mana: 45 },
+        info: (n) => `Cào hai đường vuốt: 2 lần x1.5 sát thương +${(n * 0.5).toFixed(0)}` },
+      { id: 's_r', name: 'Săn Thú Thần', active: { cooldown: 13, cast: 'assassinate', mana: 100 },
+        info: (n) => `Đánh dấu rồi vồ quái máu cao nhất: x6 sát thương +${n * 3}` },
+    ],
+  },
+  adv: {
+    legend: 'legendary', name: 'An Dương Vương', attr: 'agi', attack: 'arrow', proj: 'bolt', wclass: 'bow', dmgType: 'phys',
+    role: 'Nỏ thần', title: 'Vua Âu Lạc, thành Cổ Loa và nỏ Linh Quang', color: '#7FC24A',
+    attrs: { str: 18, agi: 30, int: 16 }, gain: { str: 1.8, agi: 3.4, int: 1.6 },
+    base: { damage: 10, range: 190, cooldown: 0.9 },
+    look: { aura: '#FFD66B', weapon: { type: 'crossbow', color: '#E0B030' } },
+    trait: { name: 'Nỏ Linh Quang', desc: 'Mỗi phát bắn thứ 4 xuyên cả hàng quái, x2 sát thương' },
+    skills: [
+      { id: 'v_q', name: 'Nỏ Liên Châu', active: { cooldown: 5, cast: 'triple', mana: 40 },
+        info: (n) => `Bắn 3 mũi cùng lúc vào 3 quái: mỗi mũi x1.5 sát thương +${(n * 0.5).toFixed(0)}` },
+      { id: 'v_w', name: 'Thành Ốc Cổ Loa',
+        info: (n) => `Bắn ${Math.min(4, 2 + Math.floor(n / 50))} mũi tên · xuyên thêm ${Math.round(Math.min(40, 15 + n * 0.1))}% giáp · +20% sát thương lên quái bay`,
+        apply: (s, n) => { s.arrows = Math.min(4, 2 + Math.floor(n / 50)); s.pierce += Math.min(40, 15 + n * 0.1); s.airPct += 20; } },
+      { id: 'v_e', name: 'Mưa Tên Cổ Loa', active: { cooldown: 9, cast: 'arrowrain', mana: 80 },
+        info: (n) => `Trút mưa tên vùng rộng: x2 sát thương +${(n * 0.5).toFixed(0)}` },
+      { id: 'v_r', name: 'Linh Quang Thần Nỏ', active: { cooldown: 13, cast: 'divinebow', mana: 100 },
+        info: (n) => `Một phát xuyên cả hàng quái: x6 sát thương chuẩn +${n * 2}` },
+    ],
+  },
+  mau: {
+    legend: 'legendary', name: 'Mẫu Thượng Ngàn', attr: 'int', attack: 'magic', proj: 'petal', wclass: 'staff', dmgType: 'magic',
+    role: 'Mẹ rừng', title: 'Bà chúa núi rừng, cây lá nghe lời', color: '#A88CE8',
+    attrs: { str: 17, agi: 14, int: 30 }, gain: { str: 1.7, agi: 1.4, int: 3.4 },
+    base: { damage: 11, range: 165, cooldown: 1.25, slow: 15 },
+    look: { aura: '#5FD06A', weapon: { type: 'staff', color: '#5A3A1A', orb: '#7FE07A', glow: '#5FD06A' } },
+    trait: { name: 'Mẹ Rừng', desc: 'Tướng đứng gần +10% sát thương và +2 hồi máu/giây' },
+    skills: [
+      { id: 'm_q', name: 'Lộc Rừng', active: { cooldown: 7, cast: 'flowerheal', mana: 50 },
+        info: (n) => `Hồi ${Math.round(25 + n * 0.3)}% máu cho tướng trong 180` },
+      { id: 'm_w', name: 'Rễ Ngàn Năm',
+        info: (n) => `Làm chậm ${Math.round(Math.min(45, 20 + n * 0.2))}% · +${(n * 0.5).toFixed(1)} sát thương phép`,
+        apply: (s, n) => { s.slow = Math.max(s.slow, Math.min(45, 20 + n * 0.2)); s.damage += n * 0.5; } },
+      { id: 'm_e', name: 'Rừng Mọc', active: { cooldown: 9, cast: 'ricefield', mana: 80 },
+        info: (n) => `Cây rừng mọc làm chậm 40% quái trong vùng 4 giây, ${(8 + n * 0.3).toFixed(0)} sát thương/giây` },
+      { id: 'm_r', name: 'Mưa Lá Thiêng', active: { cooldown: 15, cast: 'flowerrain', mana: 110 },
+        info: (n) => `Lá thiêng rơi vùng lớn: x4 sát thương phép +${n * 2}, hồi 30% máu cho tướng gần` },
+    ],
+  },
 };
 const BASIC_HEROES = ['lactuong', 'lucsi', 'xathu', 'thosan', 'thaymo', 'thansuong'];
-const LEGEND_HEROES = ['giong', 'llq', 'kimquy', 'thachsanh', 'caolo', 'antiem', 'auco', 'cdt', 'tiendung', 'langlieu'];
+const LEGEND_HEROES = ['thachsanh', 'lachau', 'thansan', 'caolo', 'antiem', 'tiendung', 'langlieu', 'cdt',
+  'giong', 'llq', 'kimquy', 'adv', 'auco', 'mau'];
 for (const id of LEGEND_HEROES) HEROES[id].cost = COSTS.legend[HEROES[id].legend];
 
-// THĂNG THẦN: tướng huyền thoại không triệu hồi thẳng mà phát triển từ tướng cơ bản.
-// Tướng cơ bản đạt ★★★ trả vàng để hóa thân (chọn 1 nhánh nếu có 2). Giữ cấp,
-// điểm kỹ năng, cấp Q W E R, bậc ★★★ và toàn bộ đồ (cùng loại vũ khí).
+// THĂNG THẦN 2 bậc: tướng Thường ★★★ → thần Sử thi (tím) → thần Huyền thoại (vàng).
+// Mỗi lần hóa thân trả vàng (chọn 1 nhánh nếu có 2), giữ cấp, đồ, thuộc tính và nội tại
+// của mọi bậc trước (cây phả hệ h.lineage). Bậc 2 cần thần Sử thi đạt Thần tinh ★★.
 const ASCEND = {
-  lactuong: ['llq', 'giong'],          // rìu cận chiến Sức mạnh
-  lucsi: ['kimquy'],                   // lực sĩ giữ thành
-  thosan: ['thachsanh'],               // thợ rừng
+  lactuong: ['thachsanh'],             // rìu Sức mạnh → tiều phu diệt chằn
+  lucsi: ['lachau'],                   // người gánh núi → thủ lĩnh bộ Lạc
+  thosan: ['thansan'],                 // thợ săn → thần săn Ba Vì
   xathu: ['caolo', 'antiem'],          // xạ thủ
   thaymo: ['tiendung', 'langlieu'],    // thầy mo, phép
-  thansuong: ['auco', 'cdt'],          // thần núi / sông
+  thansuong: ['cdt'],                  // sương núi → chàng đánh cá sông Hồng
+  // Sử thi → Huyền thoại
+  thachsanh: ['llq', 'giong'],
+  lachau: ['kimquy', 'giong'],
+  thansan: ['giong', 'llq'],
+  caolo: ['adv'],
+  antiem: ['adv'],
+  tiendung: ['auco', 'mau'],
+  langlieu: ['mau', 'auco'],
+  cdt: ['auco', 'mau'],
 };
+// gốc của mỗi tướng thần (bậc 1 lấy tướng Thường; Huyền thoại có nhiều đường, lấy đường chính)
 const ASCEND_FROM = {};
-for (const [b, list] of Object.entries(ASCEND)) for (const t of list) ASCEND_FROM[t] = b;
-Object.assign(COSTS, { ascend: { epic: 300, legendary: 550 }, ascendTier: 3 });
+for (const [b, list] of Object.entries(ASCEND)) for (const t of list) if (!ASCEND_FROM[t]) ASCEND_FROM[t] = b;
+// mọi tướng có thể hóa thân thành t (để hiện cây)
+const ascendSources = (t) => Object.keys(ASCEND).filter((b) => ASCEND[b].includes(t));
+Object.assign(COSTS, { ascend: { epic: 300, legendary: 650 }, ascendTier: 3, ascendTier2: 2 });
 // Thần lực: hệ số sát thương và máu của tướng đã thăng thần (kỹ năng +một nửa mức này)
-const ASCEND_POWER = { epic: 1.15, legendary: 2.0 };
+const ASCEND_POWER = { epic: 1.15, legendary: 1.6 };
 // Thần tinh của tướng thần Huyền thoại mạnh hơn Sử thi (nhân chỉ số mỗi bậc sao)
 const ASC_EVO_MULT = { epic: 1, legendary: 1.3 };
 // Sau Thăng thần, bộ kỹ năng mới học lại bằng VÀNG: mở khóa W/E/R đắt hơn, nâng cấp trả vàng
@@ -713,7 +803,7 @@ const ELEM = {
 };
 const HERO_EL = { lactuong: 'kim', lucsi: 'tho', xathu: 'kim', thosan: 'moc', thaymo: 'hoa', thansuong: 'thuy',
   giong: 'hoa', llq: 'thuy', kimquy: 'kim', thachsanh: 'moc', caolo: 'kim', antiem: 'moc',
-  auco: 'tho', cdt: 'thuy', tiendung: 'hoa', langlieu: 'tho' };
+  auco: 'tho', cdt: 'thuy', tiendung: 'hoa', langlieu: 'tho', lachau: 'tho', thansan: 'moc', adv: 'kim', mau: 'moc' };
 for (const id in HERO_EL) HEROES[id].el = HERO_EL[id];
 // hành "rủi ro" của đồ so với tướng: 'same' | 'sinh' | 'khac' | null
 function itemRelation(itemEl, heroEl) {
@@ -765,6 +855,10 @@ const SECRETS = {
   'h.auco':      { hero: 'auco', hint: 'Mẹ ở trên núi', desc: 'Đứng ô bậc Cao: Hoa Tiên hồi máu cho thêm 1 tướng' },
   'h.cdt':       { hero: 'cdt', hint: 'Người đánh cá quen sông', desc: 'Đứng ô ngập: không bị sa lầy' },
   'h.tiendung':  { hero: 'tiendung', hint: 'Bãi Tự Nhiên', desc: 'Mưa Hoa Tiên hồi máu gấp đôi cho Chử Đồng Tử' },
+  'h.lachau':    { hero: 'lachau', hint: 'Đứng cao trông xa', desc: 'Đứng ô bậc Cao: Lệnh Lạc Hầu giảm 25% sát thương thay vì 15%' },
+  'h.thansan':   { hero: 'thansan', hint: 'Chim sa cá lặn', desc: 'Hạ quái bay: +30% tốc đánh trong 3 giây' },
+  'h.adv':       { hero: 'adv', hint: 'Rùa vàng trao móng', desc: 'Thần Kim Quy cùng trên sân: phát Nỏ Linh Quang gây x3 thay vì x2' },
+  'h.mau':       { hero: 'mau', hint: 'Cây cùng cội', desc: 'Đứng kề tướng hành Mộc: hào quang Mẹ Rừng gấp đôi' },
   'h.langlieu':  { hero: 'langlieu', hint: 'Đất trời chứng giám', desc: 'Đợt có Thủy Tinh: Lễ Tổ Tiên giảm 50% hồi chiêu' },
   // đồ trang phục Sử thi / Huyền thoại, rút theo hành của món
   'i.kim1':  { el: 'kim', hint: 'Lưỡi đồng tìm chỗ hở', desc: 'Đánh quái dưới 30% máu: bỏ qua thêm 30% giáp' },

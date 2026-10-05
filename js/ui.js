@@ -491,16 +491,23 @@ class UI {
   // ---------- bảng triệu hồi
   buildSummon() {
     // hàng thẻ dưới đáy dựng trong updateDeck; ở đây dựng bảng "Cây thăng thần"
-    $('#lg-grid').innerHTML = Object.entries(ASCEND).map(([b, list]) => `<div class="asc-row">
-      <span class="asc-base"><img src="${heroImgUrl(b, 'head')}" alt=""><b>${HEROES[b].name}</b></span><span class="asc-arr">★★★ ➜</span>
-      ${list.map((t) => `<span class="asc-to ${HEROES[t].legend}"><img src="${heroImgUrl(t, 'head')}" alt=""><b>${HEROES[t].name}</b><small>${COSTS.ascend[HEROES[t].legend]}</small></span>`).join('')}
-    </div>`).join('');
+    // mỗi hàng: tướng Thường ★★★ ➜ thần Sử thi (tím) ★★ ➜ thần Huyền thoại (vàng)
+    const card = (t) => `<span class="asc-to ${HEROES[t].legend}"><img src="${heroImgUrl(t, 'head')}" alt=""><b>${HEROES[t].name}</b></span>`;
+    $('#lg-grid').innerHTML = BASIC_HEROES.map((b) => {
+      const epics = ASCEND[b] || [];
+      const legs = [...new Set(epics.flatMap((e) => ASCEND[e] || []))];
+      return `<div class="asc-row">
+      <span class="asc-base"><img src="${heroImgUrl(b, 'head')}" alt=""><b>${HEROES[b].name}</b></span><span class="asc-arr">★★★ ➜<small>${COSTS.ascend.epic}</small></span>
+      <span class="asc-col">${epics.map(card).join('')}</span><span class="asc-arr leg">${'★'.repeat(COSTS.ascendTier2)} ➜<small>${COSTS.ascend.legendary}</small></span>
+      <span class="asc-col">${legs.map(card).join('')}</span>
+    </div>`;
+    }).join('');
   }
 
   renderLegends() {
     const g = this.game;
     $('#lg-count').textContent = `Huyền thoại trên sân ${g.legendCount()}/${CONFIG.maxLegends}`;
-    $('#lg-info').innerHTML = 'Tướng huyền thoại không triệu hồi được: tiến hoá tướng cơ bản lên <b>★★★</b> rồi mở <b>⋯ → Tiến hoá → Thăng thần</b>. Tướng giữ nguyên cấp, kỹ năng và đồ đang mặc.';
+    $('#lg-info').innerHTML = `Tướng thần không triệu hồi được. Tướng Thường <b>★★★</b> hóa thân <b style="color:${RARITY.epic.color}">thần Sử thi</b>; thần Sử thi đạt Thần tinh <b style="color:#FF7A3A">${'★'.repeat(COSTS.ascendTier2)}</b> hóa thân <b style="color:${RARITY.legendary.color}">Huyền thoại</b> (<b>⋯ → Tiến hoá → Thăng thần</b>). Giữ cấp, đồ và nội tại của mọi bậc trước.`;
   }
 
   // ============================================================
@@ -781,9 +788,10 @@ class UI {
     const h = g.heroes[this.sel];
     if (!h) return;
     const t = h.tier || 0;
+    const canAsc = !!ASCEND[h.type] && t >= g.ascendNeed(h);
     $('#more').innerHTML = `
       <button class="metal ${h.notice.skills ? 'notice' : ''}" data-act="open-skills">Kỹ năng<small>${h.skillPts ? `+${h.skillPts} điểm` : 'cây kỹ năng'}</small></button>
-      <button class="metal ${h.notice.evo ? 'notice' : ''}" data-act="open-evo">${t >= 3 && ASCEND[h.type] ? 'Thăng thần' : h.from ? 'Thần tinh' : 'Tiến hoá'}<small>${t < 3 ? `★${t + 1} · ${evoCost(h, t)} vàng` : ASCEND[h.type] ? 'hóa thân huyền thoại' : 'tối đa'}</small></button>
+      <button class="metal ${h.notice.evo ? 'notice' : ''}" data-act="open-evo">${canAsc ? 'Thăng thần' : h.from ? 'Thần tinh' : 'Tiến hoá'}<small>${canAsc ? (h.from ? 'hóa thân Huyền thoại' : 'hóa thân thần Sử thi') : t < 3 ? `★${t + 1} · ${evoCost(h, t)} vàng` : 'tối đa'}</small></button>
       <button class="metal ${this.upCount(h) ? 'notice' : ''}" data-act="open-bag">Trang bị<small>${this.upCount(h) ? `▲ ${this.upCount(h)} món tốt hơn` : `lực chiến ${heroPower(h)}`}</small></button>
       <button class="metal" style="color:#6AE06A" data-act="auto-eq">Tự mặc đồ<small>chọn món tốt nhất</small></button>
       <button class="metal ${this.moving >= 0 ? 'armed' : ''}" data-act="move">Đổi chỗ<small>hoặc giữ & kéo</small></button>
@@ -832,7 +840,7 @@ class UI {
     coach.style.top = Math.max(48, pos[1] - 30) + 'px';
   }
 
-  // ---------- Anh Hùng (16): xem 16 tướng, kỹ năng, đặc trưng
+  // ---------- Anh Hùng (20): xem 20 tướng, kỹ năng, đặc trưng
   showRoster(sel) {
     this.rosterSel = sel || this.rosterSel || 'lactuong';
     this.hideOverlays();
@@ -847,7 +855,7 @@ class UI {
     const n = skillN(1);
     $('#roster').innerHTML = `<div class="screen" style="z-index:auto">
       <div class="scr-head metal"><button class="xbtn metal" data-act="ro-back" aria-label="Quay lại">${ICON.back}</button><h1 class="ttl">Anh Hùng Văn Lang</h1>
-        <span class="chip dark">16 tướng · 6 cơ bản + 10 huyền thoại</span><div class="sp"></div>
+        <span class="chip dark">20 tướng · 6 Thường · 8 Sử thi · 6 Huyền thoại</span><div class="sp"></div>
         <button class="btn metal title" data-act="ro-temple">Đền Anh Hùng · xem hoạt ảnh</button></div>
       <div class="scr-body">
         <div class="ro-grid">${all.map((k) => {
@@ -868,12 +876,13 @@ class UI {
                 <span style="background:#3A2410;color:${d.legend ? RARITY[d.legend].color : '#C8BFA8'}">${d.legend ? RARITY[d.legend].name : 'Cơ bản'}</span>
                 <span style="background:#2A1810;color:#FFB08A">${d.dmgType === 'magic' ? 'Phép' : 'Vật lý'} · ${d.attack === 'melee' ? 'Cận chiến' : 'Đánh xa'}</span>
                 <span style="background:#1A1610;color:#C8BFA8">${d.role}</span></div></div>
-              <div class="kvt inset" style="font-size:12px"><div><span>Giá triệu hồi</span><b style="color:#FFD66B">${d.cost} vàng</b></div>
-                <div><span>Tầm · Tốc đánh</span><b>${d.base.range} · ${d.base.cooldown}s</b></div>
-                <div><span>Sức · Nhanh · Trí (cấp 1)</span><b>${d.attrs.str} · ${d.attrs.agi} · ${d.attrs.int}</b></div></div>
+              <div class="kvt inset" style="font-size:12px">${d.legend
+                ? `<div><span>Từ</span><b style="text-align:right">${ascendSources(t).map((x) => HEROES[x].name).join(' / ')}</b></div>
+                  <div><span>Cần</span><b style="color:#FFD66B">${d.legend === 'epic' ? '★★★' : `Thần tinh ${'★'.repeat(COSTS.ascendTier2)}`} · ${COSTS.ascend[d.legend]} vàng</b></div>`
+                : `<div><span>Giá triệu hồi</span><b style="color:#FFD66B">${d.cost} vàng</b></div>`}
+                ${ASCEND[t] ? `<div><span>Lên</span><b style="text-align:right;color:${RARITY[d.legend ? 'legendary' : 'epic'].color}">${ASCEND[t].map((x) => HEROES[x].name).join(' / ')}</b></div>` : ''}
+                <div><span>Tầm · Tốc · S/N/T</span><b>${d.base.range} · ${d.base.cooldown}s · ${d.attrs.str}/${d.attrs.agi}/${d.attrs.int}</b></div></div>
               ${d.trait ? `<div class="tipbox inset" style="font-size:12px">★ <b>${d.trait.name}:</b> ${esc(d.trait.desc)}</div>` : ''}
-              <div class="tipbox inset" style="font-size:12px">${d.legend ? `⬆ <b>Thăng thần từ:</b> ${HEROES[ASCEND_FROM[t]].name} ★★★ · ${COSTS.ascend[d.legend]} vàng`
-                : `⬆ <b>Thăng thần thành:</b> ${ASCEND[t].map((x) => HEROES[x].name).join(' hoặc ')} (khi đạt ★★★)`}</div>
               ${secretLine(this.game, 'h.' + t)}
             </div></div>
           <div class="ro-sk">${d.skills.map((sk, i) => `<div class="inset">${svgI(skillIcon(t, i))}<b style="color:#F2D27A">${SKILL_KEYS[i]} · ${sk.name}</b><span style="color:#C8BFA8;font-weight:500">${esc(sk.info(n))}</span></div>`).join('')}</div>
@@ -1731,8 +1740,10 @@ class UI {
   // bảng Thăng thần trong màn Tiến hoá
   ascendPanel(h) {
     const g = this.game;
-    const ready = (h.tier || 0) >= COSTS.ascendTier;
-    return `<div class="panel metal set-panel asc-panel"><div class="ph"><span class="ttl" style="font-size:20px">Thăng thần</span><small>${ready ? 'đã đủ ★★★' : 'cần ★★★'}</small></div>
+    const need = g.ascendNeed(h);
+    const ready = (h.tier || 0) >= need;
+    const stars = '★'.repeat(need);
+    return `<div class="panel metal set-panel asc-panel"><div class="ph"><span class="ttl" style="font-size:20px">Thăng thần</span><small>${ready ? `đã đủ ${stars}` : `cần ${h.from ? 'Thần tinh ' : ''}${stars}`}</small></div>
       ${ASCEND[h.type].map((t) => {
         const d = HEROES[t];
         const ok = g.canAscend(h, t);
@@ -1742,7 +1753,7 @@ class UI {
             <span title="${esc(d.trait.desc)}">${esc(d.trait.desc)}</span></div>
           <button class="btn ${ok === true ? 'btn-gold' : 'btn-ghost'}" data-act="ascend" data-to="${t}" ${ok === true ? '' : `disabled title="${esc(ok)}"`}>${coin(1)}${COSTS.ascend[d.legend]}</button></div>`;
       }).join('')}
-      <div class="note">Giữ cấp, ★★★, đồ và <b>nội tại của tướng gốc</b>; thêm Thần lực (Sử thi ×${ASCEND_POWER.epic}, Huyền thoại ×${ASCEND_POWER.legendary} sát thương và máu). Tối đa ${CONFIG.maxLegends} Huyền thoại trên sân.</div></div>`;
+      <div class="note">Giữ cấp, sao, đồ và <b>nội tại của mọi bậc trước</b>; thêm Thần lực (Sử thi ×${ASCEND_POWER.epic}, Huyền thoại ×${ASCEND_POWER.legendary} sát thương và máu). Tối đa ${CONFIG.maxLegends} Huyền thoại trên sân.</div></div>`;
   }
 
   // ---------- Núi Tản Viên

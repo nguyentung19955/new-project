@@ -1,6 +1,6 @@
 NÚI CAO NƯỚC DÂNG · PROMPT CHO FOOOCUS (Google Colab) · bám theo GAMEPLAY.md v15
 ==============================================================================
-Tổng cộng 305 ảnh. Mỗi mục = 1 lần bấm Generate.
+Tổng cộng 341 ảnh (305 ảnh gốc + 36 ảnh tướng mới v27 ở mục E cuối file). Mỗi mục = 1 lần bấm Generate.
 
 A. CÀI ĐẶT MỘT LẦN TRONG FOOOCUS
 - Tick "Advanced". Tab Setting:
@@ -988,3 +988,115 @@ stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown o
 
 [305] File: icon-app.png   ·   Tỉ lệ: 1024×1024
 stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, square app icon, bronze mountain peak above a crashing blue wave inside a round bronze drum frame, no text
+
+
+E. BỔ SUNG v27 · 4 TƯỚNG THẦN MỚI (Lạc Hầu, Thần Săn Ba Vì — Sử thi; An Dương Vương, Mẫu Thượng Ngàn — Huyền thoại)
+==============================================================================
+
+[306] File: lac-hau_thuong.png   ·   Tỉ lệ: 896×1152   ·   Ảnh GỐC của tướng: vẽ trước, chọn bản ưng nhất
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, stocky male Lac tribal chieftain with tall white feather headdress, bronze round shield and a heavy stone war hammer, tiger-hide armor, keeping his or her signature items and silhouette, common gear: plain wood, bamboo, rough hemp cloth and leather, dull brown-grey colors, no glow, heroic standing pose, 3/4 front view, Vietnamese facial features, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[307] File: lac-hau_hiem.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, stocky male Lac tribal chieftain with tall white feather headdress, bronze round shield and a heavy stone war hammer, tiger-hide armor, keeping his or her signature items and silhouette, rare gear: bright polished bronze and white feathers, thin blue glowing outline, heroic standing pose, 3/4 front view, Vietnamese facial features, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[308] File: lac-hau_su-thi.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, stocky male Lac tribal chieftain with tall white feather headdress, bronze round shield and a heavy stone war hammer, tiger-hide armor, keeping his or her signature items and silhouette, epic gear: bronze engraved with drum spirals, purple jade gems, soft purple glow, heroic standing pose, 3/4 front view, Vietnamese facial features, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[309] File: lac-hau_huyen-thoai.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, stocky male Lac tribal chieftain with tall white feather headdress, bronze round shield and a heavy stone war hammer, tiger-hide armor, keeping his or her signature items and silhouette, legendary gear: pure gold with Lac bird engravings and green jade, bright orange-gold aura, sparkles, heroic standing pose, 3/4 front view, Vietnamese facial features, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[310] File: than-san-ba-vi_thuong.png   ·   Tỉ lệ: 896×1152   ·   Ảnh GỐC của tướng: vẽ trước, chọn bản ưng nhất
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, agile male forest hunter god from Ba Vi mountain with deer antler headdress, tiger-claw gloves and twin leaf-shaped bronze daggers, green and ochre hunter clothes, keeping his or her signature items and silhouette, common gear: plain wood, bamboo, rough hemp cloth and leather, dull brown-grey colors, no glow, heroic standing pose, 3/4 front view, Vietnamese facial features, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[311] File: than-san-ba-vi_hiem.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, agile male forest hunter god from Ba Vi mountain with deer antler headdress, tiger-claw gloves and twin leaf-shaped bronze daggers, green and ochre hunter clothes, keeping his or her signature items and silhouette, rare gear: bright polished bronze and white feathers, thin blue glowing outline, heroic standing pose, 3/4 front view, Vietnamese facial features, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[312] File: than-san-ba-vi_su-thi.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, agile male forest hunter god from Ba Vi mountain with deer antler headdress, tiger-claw gloves and twin leaf-shaped bronze daggers, green and ochre hunter clothes, keeping his or her signature items and silhouette, epic gear: bronze engraved with drum spirals, purple jade gems, soft purple glow, heroic standing pose, 3/4 front view, Vietnamese facial features, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[313] File: than-san-ba-vi_huyen-thoai.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, agile male forest hunter god from Ba Vi mountain with deer antler headdress, tiger-claw gloves and twin leaf-shaped bronze daggers, green and ochre hunter clothes, keeping his or her signature items and silhouette, legendary gear: pure gold with Lac bird engravings and green jade, bright orange-gold aura, sparkles, heroic standing pose, 3/4 front view, Vietnamese facial features, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[314] File: an-duong-vuong_thuong.png   ·   Tỉ lệ: 896×1152   ·   Ảnh GỐC của tướng: vẽ trước, chọn bản ưng nhất
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, noble male king of Au Lac with a golden crown, red royal robe and the magic Linh Quang crossbow with golden turtle-claw trigger, keeping his or her signature items and silhouette, common gear: plain wood, bamboo, rough hemp cloth and leather, dull brown-grey colors, no glow, heroic standing pose, 3/4 front view, Vietnamese facial features, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[315] File: an-duong-vuong_hiem.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, noble male king of Au Lac with a golden crown, red royal robe and the magic Linh Quang crossbow with golden turtle-claw trigger, keeping his or her signature items and silhouette, rare gear: bright polished bronze and white feathers, thin blue glowing outline, heroic standing pose, 3/4 front view, Vietnamese facial features, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[316] File: an-duong-vuong_su-thi.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, noble male king of Au Lac with a golden crown, red royal robe and the magic Linh Quang crossbow with golden turtle-claw trigger, keeping his or her signature items and silhouette, epic gear: bronze engraved with drum spirals, purple jade gems, soft purple glow, heroic standing pose, 3/4 front view, Vietnamese facial features, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[317] File: an-duong-vuong_huyen-thoai.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, noble male king of Au Lac with a golden crown, red royal robe and the magic Linh Quang crossbow with golden turtle-claw trigger, keeping his or her signature items and silhouette, legendary gear: pure gold with Lac bird engravings and green jade, bright orange-gold aura, sparkles, heroic standing pose, 3/4 front view, Vietnamese facial features, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[318] File: mau-thuong-ngan_thuong.png   ·   Tỉ lệ: 896×1152   ·   Ảnh GỐC của tướng: vẽ trước, chọn bản ưng nhất
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, motherly female forest goddess of the mountains with leaf crown, green flowing robe, leafy wing shapes and a flowering wooden staff, keeping his or her signature items and silhouette, common gear: plain wood, bamboo, rough hemp cloth and leather, dull brown-grey colors, no glow, heroic standing pose, 3/4 front view, Vietnamese facial features, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[319] File: mau-thuong-ngan_hiem.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, motherly female forest goddess of the mountains with leaf crown, green flowing robe, leafy wing shapes and a flowering wooden staff, keeping his or her signature items and silhouette, rare gear: bright polished bronze and white feathers, thin blue glowing outline, heroic standing pose, 3/4 front view, Vietnamese facial features, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[320] File: mau-thuong-ngan_su-thi.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, motherly female forest goddess of the mountains with leaf crown, green flowing robe, leafy wing shapes and a flowering wooden staff, keeping his or her signature items and silhouette, epic gear: bronze engraved with drum spirals, purple jade gems, soft purple glow, heroic standing pose, 3/4 front view, Vietnamese facial features, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[321] File: mau-thuong-ngan_huyen-thoai.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, motherly female forest goddess of the mountains with leaf crown, green flowing robe, leafy wing shapes and a flowering wooden staff, keeping his or her signature items and silhouette, legendary gear: pure gold with Lac bird engravings and green jade, bright orange-gold aura, sparkles, heroic standing pose, 3/4 front view, Vietnamese facial features, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[322] File: chan-dung_lac-hau.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Thường của tướng làm Image Prompt
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, head and shoulders portrait of stocky male Lac tribal chieftain with tall white feather headdress, bronze round shield and a heavy stone war hammer, tiger-hide armor, Vietnamese facial features, front view, inside an ornate round bronze drum frame, plain light grey background
+
+[323] File: chan-dung_than-san-ba-vi.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Thường của tướng làm Image Prompt
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, head and shoulders portrait of agile male forest hunter god from Ba Vi mountain with deer antler headdress, tiger-claw gloves and twin leaf-shaped bronze daggers, green and ochre hunter clothes, Vietnamese facial features, front view, inside an ornate round bronze drum frame, plain light grey background
+
+[324] File: chan-dung_an-duong-vuong.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Thường của tướng làm Image Prompt
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, head and shoulders portrait of noble male king of Au Lac with a golden crown, red royal robe and the magic Linh Quang crossbow with golden turtle-claw trigger, Vietnamese facial features, front view, inside an ornate round bronze drum frame, plain light grey background
+
+[325] File: chan-dung_mau-thuong-ngan.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Thường của tướng làm Image Prompt
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, head and shoulders portrait of motherly female forest goddess of the mountains with leaf crown, green flowing robe, leafy wing shapes and a flowering wooden staff, Vietnamese facial features, front view, inside an ornate round bronze drum frame, plain light grey background
+
+[326] File: ky-nang_lac-hau_q.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, square game skill icon, ground stomp shockwave with cracks, single clear symbol, high contrast, square gold frame, filling the whole image
+
+[327] File: ky-nang_lac-hau_w.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, square game skill icon, rhino-hide armor plate, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[328] File: ky-nang_lac-hau_e.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, square game skill icon, bronze tribal shield dome, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[329] File: ky-nang_lac-hau_r.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, square game skill icon, mountain burying an enemy, single clear symbol, high contrast, double gold glowing square frame, filling the whole image
+
+[330] File: ky-nang_than-san-ba-vi_q.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, square game skill icon, dash through forest trees leaving afterimage, single clear symbol, high contrast, square gold frame, filling the whole image
+
+[331] File: ky-nang_than-san-ba-vi_w.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, square game skill icon, tiger fang, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[332] File: ky-nang_than-san-ba-vi_e.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, square game skill icon, two tiger claw slashes, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[333] File: ky-nang_than-san-ba-vi_r.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, square game skill icon, hunter mark on a beast, single clear symbol, high contrast, double gold glowing square frame, filling the whole image
+
+[334] File: ky-nang_an-duong-vuong_q.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, square game skill icon, three crossbow bolts at once, single clear symbol, high contrast, square gold frame, filling the whole image
+
+[335] File: ky-nang_an-duong-vuong_w.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, square game skill icon, spiral citadel Co Loa, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[336] File: ky-nang_an-duong-vuong_e.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, square game skill icon, rain of arrows over a citadel, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[337] File: ky-nang_an-duong-vuong_r.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, square game skill icon, glowing magic crossbow piercing a line, single clear symbol, high contrast, double gold glowing square frame, filling the whole image
+
+[338] File: ky-nang_mau-thuong-ngan_q.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, square game skill icon, healing green leaves blessing, single clear symbol, high contrast, square gold frame, filling the whole image
+
+[339] File: ky-nang_mau-thuong-ngan_w.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, square game skill icon, ancient tree roots, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[340] File: ky-nang_mau-thuong-ngan_e.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, square game skill icon, forest sprouting from the ground, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[341] File: ky-nang_mau-thuong-ngan_r.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, square game skill icon, rain of sacred leaves, single clear symbol, high contrast, double gold glowing square frame, filling the whole image

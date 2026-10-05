@@ -163,13 +163,22 @@ const enhanceCost = (inst) => (inst.plus + 1) * COSTS.enhance[inst.rarity];
 const promoteCost = (inst) => COSTS.promote[inst.rarity] || 0;
 const scrapValue = (inst) => COSTS.scrap[inst.rarity] + Math.floor(inst.spent * 0.6);
 
+// Phả hệ thăng thần: [{ type, skillLv, tier }] từ tướng Thường tới bậc ngay trước.
+// Bản lưu cũ (v20–v26) chỉ có h.from / skillLvFrom / baseTier: đổi sang 1 bậc.
+function heroLineage(h) {
+  if (h.lineage) return h.lineage;
+  return h.from ? [{ type: h.from, skillLv: h.skillLvFrom || {}, tier: h.baseTier ?? 3 }] : [];
+}
+// tướng này (hoặc một bậc trước của nó) là `t`
+const hasLine = (h, t) => h.type === t || heroLineage(h).some((a) => a.type === t);
+
 function heroAttrs(h) {
   const def = HEROES[h.type];
   const out = {};
   for (const a of Object.keys(ATTRS)) out[a] = def.attrs[a] + def.gain[a] * (h.level - 1);
-  // Thăng thần: kế thừa thuộc tính của tướng gốc (lấy bên cao hơn)
-  if (h.from) {
-    const fd = HEROES[h.from];
+  // Thăng thần: kế thừa thuộc tính của mọi bậc trước (lấy bên cao nhất)
+  for (const anc of heroLineage(h)) {
+    const fd = HEROES[anc.type];
     for (const a of Object.keys(ATTRS)) out[a] = Math.max(out[a], fd.attrs[a] + fd.gain[a] * (h.level - 1));
   }
   // Luyện thể (cấp 25): mỗi lần +3 thuộc tính chính, +1 mỗi thuộc tính phụ
@@ -188,38 +197,41 @@ function heroStats(h) {
   const def = HEROES[h.type];
   const base = heroAttrs(h);
   const b = h.buff || {};
+  const line = heroLineage(h);
   const s = {
     damage: def.base.damage, range: def.base.range, baseCooldown: def.base.cooldown,
     haste: 0, crit: 5, critMult: 2, cleave: 0, arrows: 1, poison: 0,
     splash: def.base.splash || 0, slow: def.base.slow || 0, stench: 0, bonusDmgPct: 0,
     str: base.str, agi: base.agi, int: base.int, hp: 0, regen: 0, cdr: 0, dr: 0,
-    pierce: h.type === 'caolo' ? 50 : 0, mpen: 0, canAir: def.attack !== 'melee', airMult: 1,
+    pierce: hasLine(h, 'caolo') ? 50 : 0, mpen: 0, canAir: def.attack !== 'melee', airMult: 1,
     goldOnKill: 0, stunChance: 0,
     hpPct: 0, rangePct: 0, skillPct: 0, bossPct: 0, floodPct: 0, shred: 0, spread: 0, magicRes: 0,
     noHeal: 0, netSlow: 0, hitAir: 0, touchSlow: 0, drumAura: 0, fireTrail: 0, curve: 0, airPct: 0,
     hid: {}, sets: {},
-    ...(h.from ? inheritBase(def, HEROES[h.from]) : {}),
+    ...line.reduce((o, a) => inheritBase(def, HEROES[a.type], o), null),
   };
-  // Thăng thần: giữ nội tại của tướng gốc (cấp kỹ năng lúc hóa thân) rồi cộng nội tại tướng thần
-  const passives = def.skills.map((sk, i) => [sk, skillLevel(h, i)]);
-  if (h.from) HEROES[h.from].skills.forEach((sk) => { if (sk.apply) passives.unshift([sk, (h.skillLvFrom || {})[sk.id] || 0, true]); });
-  let baseArrows = 1;
-  passives.forEach(([sk, lv, inherited], idx) => {
-    // số tia bắn: lấy bên nhiều hơn giữa tướng gốc và tướng thần, không cộng dồn
-    if (h.from && !inherited && idx > 0 && passives[idx - 1][2]) { baseArrows = s.arrows; s.arrows = 1; }
-    if (!lv || !sk.apply) return;
-    const before = { ...s };
-    sk.apply(s, skillN(h.level));
-    const m = skillMult(lv);
-    if (m > 1) {
-      for (const k in s) {
-        const b0 = typeof before[k] === 'number' ? before[k] : 0;
-        if (typeof s[k] === 'number' && s[k] !== b0) s[k] += (s[k] - b0) * (m - 1);
+  // Thăng thần: giữ nội tại của mọi bậc trước (cấp kỹ năng lúc hóa thân) rồi cộng nội tại bậc hiện tại.
+  // Số tia bắn lấy bên nhiều nhất giữa các bậc, không cộng dồn.
+  let arrowsMax = 1;
+  for (const [d, lvMap] of [...line.map((a) => [HEROES[a.type], a.skillLv || {}]), [def, null]]) {
+    s.arrows = 1;
+    d.skills.forEach((sk, i) => {
+      const lv = lvMap ? lvMap[sk.id] || 0 : skillLevel(h, i);
+      if (!lv || !sk.apply) return;
+      const before = { ...s };
+      sk.apply(s, skillN(h.level));
+      const m = skillMult(lv);
+      if (m > 1) {
+        for (const k in s) {
+          const b0 = typeof before[k] === 'number' ? before[k] : 0;
+          if (typeof s[k] === 'number' && s[k] !== b0) s[k] += (s[k] - b0) * (m - 1);
+        }
+        s.arrows = Math.min(5, Math.round(s.arrows));
       }
-      s.arrows = Math.round(s.arrows);
-    }
-  });
-  if (h.from) s.arrows = Math.max(s.arrows, baseArrows);
+    });
+    arrowsMax = Math.max(arrowsMax, s.arrows);
+  }
+  s.arrows = arrowsMax;
   for (const slot of SLOTS) {
     const inst = h.equip[slot];
     if (!inst) continue;
@@ -266,15 +278,19 @@ function heroStats(h) {
   s.bonusDmgPct += (b.sinh || 0) * ELEM.sinh + (b.full ? ELEM.full : 0) + (b.drum || 0) - (b.llqPen ? 10 : 0);
   s.airMult += s.airPct / 100;
   if (s.hitAir) s.canAir = true;
+  if (h.huntT > 0) s.haste += 30;                          // ẩn Thần Săn Ba Vì
   if (h.type === 'xathu' && h.airKills) s.rangePct += Math.min(10, Math.floor(h.airKills / 10));
 
-  // sao tiến hoá: tướng gốc theo bậc hiện tại; tướng thần giữ ★★★ gốc + bậc Thần tinh
-  const evos = h.from ? [EVO_BONUS.base[h.baseTier ?? 3], EVO_BONUS.asc[h.tier || 0]] : [EVO_BONUS.base[h.tier || 0]];
+  // sao tiến hoá: tướng Thường theo bậc hiện tại; tướng thần giữ sao của mọi bậc trước + bậc Thần tinh
+  // (Thần tinh Huyền thoại nhân ASC_EVO_MULT nên mạnh hơn)
+  const evos = line.length
+    ? [...line.map((a, i) => (i ? [EVO_BONUS.asc[a.tier || 0], 0.5] : [EVO_BONUS.base[a.tier ?? 3], 1])),     // Thần tinh bậc Sử thi giữ một nửa
+      [EVO_BONUS.asc[h.tier || 0], ASC_EVO_MULT[def.legend] || 1]]
+    : [[EVO_BONUS.base[h.tier || 0], 1]];
   let evoHp = 0, evoSkill = 0;
-  evos.forEach((e, i) => {
-    const m = h.from && i === 1 ? ASC_EVO_MULT[def.legend] || 1 : 1;     // Thần tinh Huyền thoại mạnh hơn
+  for (const [e, m] of evos) {
     s.bonusDmgPct += (e.dmg || 0) * m; evoHp += (e.hp || 0) * m; s.haste += (e.haste || 0) * m; evoSkill += (e.skill || 0) * m;
-  });
+  }
   // quy đổi thuộc tính như Dota
   s.damage += s[def.attr];
   s.haste += s.agi + (b.haste || 0);
@@ -290,6 +306,7 @@ function heroStats(h) {
   s.mpen = Math.min(100, s.mpen);
   if (h.type === 'llq' && h.flooded) s.bonusDmgPct += 30;   // Con Rồng
   if (def.dmgType === 'magic') s.bonusDmgPct += b.magicPct || 0;
+  s.bonusDmgPct += b.forest || 0;                          // Mẫu Thượng Ngàn: Mẹ Rừng
   s.damage *= (1 + s.bonusDmgPct / 100) * grow;
   // Thần lực: tướng đã thăng thần mạnh hơn hẳn tướng gốc
   if (h.from) {
@@ -343,11 +360,12 @@ function upgradeGain(h, inst) {
 }
 
 // chỉ số gốc của tướng thăng thần: lấy bên tốt hơn giữa tướng gốc và tướng thần
-function inheritBase(def, fd) {
+function inheritBase(def, fd, prev) {
   // tốc đánh giữ theo tướng thần (nét riêng của tướng), sát thương / tầm lấy bên cao hơn
-  const out = { damage: Math.max(def.base.damage, fd.base.damage), range: Math.max(def.base.range, fd.base.range) };
-  if (fd.base.splash && !def.base.splash) out.splash = fd.base.splash;
-  if (fd.base.slow && !def.base.slow) out.slow = fd.base.slow;
+  const p = prev || { damage: def.base.damage, range: def.base.range };
+  const out = { ...p, damage: Math.max(p.damage, fd.base.damage), range: Math.max(p.range, fd.base.range) };
+  if (fd.base.splash && !def.base.splash) out.splash = Math.max(out.splash || 0, fd.base.splash);
+  if (fd.base.slow && !def.base.slow) out.slow = Math.max(out.slow || 0, fd.base.slow);
   return out;
 }
 
@@ -1231,15 +1249,16 @@ class Game {
     h.tier = t + 1;
     this.notify(`${HEROES[h.type].name} ${h.from ? 'đạt Thần tinh' : 'tiến hoá lên'} ${'★'.repeat(h.tier)}!`, h.from ? '#FF8A4A' : '#F2D27A');
     h.evoT = 1.2;
-    h.notice.evo = !h.from && h.tier >= COSTS.ascendTier && !!ASCEND[h.type];   // nhắc Thăng thần
+    h.notice.evo = !!ASCEND[h.type] && h.tier >= this.ascendNeed(h);   // nhắc Thăng thần
     this.effects.push({ type: 'evolve', hero: h, x: h.x, y: h.y, color: ATTRS[HEROES[h.type].attr].color, ttl: 1.2, max: 1.2 });
     return true;
   }
 
-  // Thăng thần: tướng cơ bản ★★★ hóa thân thành tướng huyền thoại cùng dòng
+  // Thăng thần: tướng Thường ★★★ hóa thân thần Sử thi; thần Sử thi Thần tinh ★★ hóa thân Huyền thoại
+  ascendNeed(h) { return h.from ? COSTS.ascendTier2 : COSTS.ascendTier; }
   canAscend(h, to) {
     if (!(ASCEND[h.type] || []).includes(to)) return 'Không thể thăng thần theo nhánh này';
-    if ((h.tier || 0) < COSTS.ascendTier) return 'Cần tiến hoá ★★★ trước';
+    if ((h.tier || 0) < this.ascendNeed(h)) return h.from ? `Cần Thần tinh ${'★'.repeat(COSTS.ascendTier2)} trước` : 'Cần tiến hoá ★★★ trước';
     const d = HEROES[to];
     if (d.legend === 'legendary' && this.heroes.filter((o) => o && o !== h && HEROES[o.type].legend === 'legendary').length >= CONFIG.maxLegends)
       return `Tối đa ${CONFIG.maxLegends} tướng Huyền thoại trên sân`;
@@ -1247,11 +1266,14 @@ class Game {
     if (this.gold < c) return `Cần ${c} vàng`;
     return true;
   }
+  // bản sao tướng sau khi hóa thân thành `to` (dùng cho ascend và xem trước lực chiến)
+  ascendState(h, to) {
+    const lineage = [...heroLineage(h), { type: h.type, skillLv: { ...h.skillLv }, tier: h.tier || 0 }];
+    return { lineage, from: h.type, baseTier: lineage[0].tier, tier: 0, type: to, skillLv: { [HEROES[to].skills[0].id]: 1 } };
+  }
   // lực chiến nếu thăng thần thành `to` (để so trước khi bấm)
   ascendPreview(h, to) {
-    const d = HEROES[to];
-    const c = { ...h, type: to, from: h.type, baseTier: h.tier || 0, tier: 0, skillLvFrom: { ...h.skillLv }, skillLv: { [d.skills[0].id]: 1 }, buff: h.buff || {} };
-    return heroPower(c);
+    return heroPower({ ...h, ...this.ascendState(h, to), buff: h.buff || {} });
   }
   ascend(h, to) {
     const ok = this.canAscend(h, to);
@@ -1261,19 +1283,16 @@ class Game {
     const before = heroStats(h).hpMax;
     this.gold -= c;
     h.spent += c;
-    h.skillLvFrom = { ...h.skillLv };
-    h.from = h.type;
-    h.baseTier = h.tier || 0;     // giữ ★★★ của tướng gốc
-    h.tier = 0;                   // tiến hoá Thần tinh lại từ đầu
-    h.type = to;
-    // bộ kỹ năng mới học lại từ đầu: Q cấp 1, W/E/R mở khóa và nâng bằng vàng
-    h.skillLv = { [d.skills[0].id]: 1 };
+    // Q cấp 1, W/E/R mở khóa và nâng bằng vàng; Thần tinh tiến hoá lại từ đầu
+    Object.assign(h, this.ascendState(h, to));
+    delete h.skillLvFrom;
     h.skillCd = {};
     h.grow = 0;
+    h.shotN = 0;
     if (!h.dead) h.hp = Math.max(1, h.hp + heroStats(h).hpMax - before);
     h.evoT = 1.2;
     h.notice.evo = false;
-    this.shake = Math.max(this.shake, 6);
+    this.shake = Math.max(this.shake, d.legend === 'legendary' ? 9 : 6);
     this.effects.push({ type: 'evolve', hero: h, x: h.x, y: h.y, color: d.color || ATTRS[d.attr].color, big: true, ttl: 1.2, max: 1.2 });
     this.events.push({ type: 'ascend', from: from.name, to: d.name, hero: h });
     return true;
@@ -1761,6 +1780,18 @@ class Game {
         if (own.hasteAura && (o === src || near(src, o, 170))) b.haste = Math.max(b.haste || 0, own.hasteAura);
         if (!near(src, o, 170)) continue;
         if (t === 'kimquy' && near(src, o, 110)) b.dr = Math.max(b.dr || 0, 30);
+        if (t === 'lachau' && near(src, o, ELEM.adj)) {
+          const high = CONFIG.slotTier[src.slot] === 2;
+          b.dr = Math.max(b.dr || 0, high ? 25 : 15);
+          if (high) this.discover('h.lachau', src.x, src.y);
+        }
+        if (t === 'mau') {
+          // ẩn: đứng kề tướng hành Mộc thì hào quang gấp đôi
+          const k = alive.some((x) => x !== src && HEROES[x.type].el === 'moc' && near(src, x, ELEM.adj)) ? 2 : 1;
+          if (k > 1) this.discover('h.mau', src.x, src.y);
+          b.forest = Math.max(b.forest || 0, 10 * k);
+          b.regen = Math.max(b.regen || 0, 2 * k);
+        }
         if (own.pierceAura) b.pierce = Math.max(b.pierce || 0, own.pierceAura);
         if (t === 'thachsanh') b.manaPct = Math.max(b.manaPct || 0, 50);
         if (t === 'auco') b.healPct = Math.max(b.healPct || 0, 2);
@@ -2166,7 +2197,7 @@ class Game {
     }
     if (h.invulnT > 0) h.invulnT -= dt;
     if (h.shieldT > 0) { h.shieldT -= dt; if (h.shieldT <= 0) h.shield = 0; }
-    for (const k of ['rageT', 'warT', 'earthT', 'earthCd', 'drumBoostT', 'trailCd', 'breathCd']) if (h[k] > 0) h[k] -= dt;
+    for (const k of ['huntT', 'rageT', 'warT', 'earthT', 'earthCd', 'drumBoostT', 'trailCd', 'breathCd']) if (h[k] > 0) h[k] -= dt;
     if (!(h.rageT > 0)) h.rageN = 0;
     h.still = (h.still || 0) + dt;
     if (st.hid['r.ao_vay_ca'] && h.flooded) {
@@ -2288,6 +2319,12 @@ class Game {
           if (e !== target) this.hit(e, st.damage * st.cleave, h, { st });
         }
       }
+    } else if (h.type === 'adv' && (h.shotN = (h.shotN || 0) + 1) % 4 === 0) {
+      // Nỏ Linh Quang: phát thứ 4 xuyên cả hàng (ẩn: Kim Quy cùng trên sân thì x3)
+      const turtle = this.heroes.some((o) => o && !o.dead && o.type === 'kimquy');
+      if (turtle) this.discover('h.adv', h.x, h.y);
+      this.lineHit(h, target, st.range * 1.6, st.damage * (turtle ? 3 : 2), { color: '#FFE08A', width: 14 });
+      this.sparks(h.x + h.dir * 14, h.y - 30, '#FFE08A', 6);
     } else if (st.arrows > 1) {
       const targets = this.enemies
         .filter((e) => !e.dead && Math.hypot(e.x - h.x, e.y - h.y) <= st.range)
@@ -2415,6 +2452,8 @@ class Game {
     if (crit) dmg *= critMult;
     if (st && e.def.flying && st.airMult > 1) dmg *= st.airMult;
     if (st && e.def.boss && st.bossPct) dmg *= 1 + st.bossPct / 100;
+    // Thần Săn Ba Vì: Mắt Rừng
+    if (hero && hero.type === 'thansan' && (e.slowT > 0 || e.stunT > 0 || e.zoneSlow > 0)) dmg *= 1.25;
     // Ngũ hành: khắc +30%, bị khắc −20% (hành của đòn đánh là hành của tướng)
     const em = hero ? this.elemMult(hero, e) : 0;
     dmg *= 1 + em / 100;
@@ -2579,6 +2618,11 @@ class Game {
       this.proc(h, 'moc1', h.x, h.y - 24, '#5FB84A');
       h.hp = Math.min(st.hpMax, h.hp + st.hpMax * 0.03);
       this.discover('i.moc1', h.x, h.y);
+    }
+    if (h.type === 'thansan' && e.def.flying && !h.dead) {
+      h.huntT = 3;
+      this.proc(h, 'hunt', h.x, h.y - 24, '#7FC24A');
+      this.discover('h.thansan', h.x, h.y);
     }
     if (hid['r.song_riu']) {
       h.rageT = 3;

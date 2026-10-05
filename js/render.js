@@ -109,10 +109,56 @@ const slugify = (name) => name.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(
   .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const HERO_CODE = { lactuong: 'h01', lucsi: 'h02', xathu: 'h03', thosan: 'h04', thaymo: 'h05', thansuong: 'h06',
   giong: 'h07', llq: 'h08', kimquy: 'h09', thachsanh: 'h10', auco: 'h11', caolo: 'h12', antiem: 'h13',
-  cdt: 'h14', tiendung: 'h15', langlieu: 'h16' };
+  cdt: 'h14', tiendung: 'h15', langlieu: 'h16', lachau: 'h17', thansan: 'h18', adv: 'h19', mau: 'h20' };
 const ENEMY_CODE = { tom: 'E01', casau: 'E02', rua: 'E03', phuthuy: 'E04', chimbao: 'E05', echme: 'E06',
   nongnoc: 'E07', giaolong: 'E08', thuongluong: 'B01', haba: 'B02', thuytinh: 'B03' };
 const heroSlug = (type) => slugify(HEROES[type].name);
+
+// ---- Hình vector cho 4 tướng thần v27: phối lại màu từ tướng cùng dòng + thêm mũ / sừng / vương miện
+(function deriveArt() {
+  if (typeof ART === 'undefined' || !ART.hero) return;
+  const recolor = (str, map) => Object.entries(map).reduce((a, [f, t]) => a.split(f).join(t), str || '');
+  const derive = (to, from, map, add = {}) => {
+    const src = ART.hero[from];
+    if (!src || ART.hero[to]) return;
+    const out = {};
+    for (const k of Object.keys(src)) out[k] = recolor(src[k], map);
+    for (const k in add) out[k] = add[k].pre ? add[k].pre + out[k] : out[k] + add[k];
+    ART.hero[to] = out;
+  };
+  const feather = (x, rot) => `<path transform="rotate(${rot} ${x} 60)" d="M${x - 4} 62 Q${x - 8} 30 ${x} 14 Q${x + 8} 30 ${x + 4} 62 Z" fill="#F2EEE0" stroke="#2A1608" stroke-width="1.8"/><path transform="rotate(${rot} ${x} 60)" d="M${x} 58 V22" stroke="#B8853A" stroke-width="1.4"/>`;
+  derive('lachau', 'lucsi', { '#6A5032': '#7A4A22', '#5E9A3A': '#D9A84E', '#2E5A1E': '#8A5A1E', '#7FC24A': '#FFE08A', '#6A4A2A': '#8A3A22',
+    '#8A8070': '#B8853A', '#5A5040': '#6A4418', '#B8AE98': '#F2D27A' }, {
+    head: feather(74, -38) + feather(126, 38) + feather(66, -58) + feather(134, 58)
+      + '<path d="M70 70 Q100 58 130 70" stroke="#2A1608" stroke-width="7" fill="none"/><path d="M70 70 Q100 58 130 70" stroke="#D9A84E" stroke-width="4" fill="none"/><circle cx="100" cy="63" r="4" fill="#3EDCC0" stroke="#2A1608" stroke-width="1.4"/>',
+  });
+  const antler = (sx) => `<path d="M${100 + sx * 16} 58 Q${100 + sx * 24} 34 ${100 + sx * 20} 14 M${100 + sx * 22} 38 Q${100 + sx * 34} 32 ${100 + sx * 38} 20 M${100 + sx * 21} 26 Q${100 + sx * 12} 18 ${100 + sx * 10} 8" stroke="#2A1608" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M${100 + sx * 16} 58 Q${100 + sx * 24} 34 ${100 + sx * 20} 14 M${100 + sx * 22} 38 Q${100 + sx * 34} 32 ${100 + sx * 38} 20 M${100 + sx * 21} 26 Q${100 + sx * 12} 18 ${100 + sx * 10} 8" stroke="#C8A070" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+  derive('thansan', 'thosan', { '#1E3A22': '#5A3A14', '#2E5A2E': '#B8782A', '#2E4A2A': '#3E6A22', '#4A3220': '#6A3A12', '#D0D8DC': '#F2E6B0' }, {
+    head: antler(-1) + antler(1) + '<path d="M80 108 l6 -4 M120 108 l-6 -4 M84 74 l4 6 M116 74 l-4 6" stroke="#2A1608" stroke-width="2.2" stroke-linecap="round"/>',
+    body: '<path d="M70 130 l14 6 M70 150 l14 4 M130 130 l-14 6 M130 150 l-14 4" stroke="#1A0C04" stroke-width="3" stroke-linecap="round"/>',
+  });
+  derive('adv', 'caolo', { '#7A5230': '#A8281E', '#5A3A1A': '#7A1410', '#5A4028': '#5A1A12', '#3A2A14': '#5A1410', '#6A4420': '#8A5A1A', '#9A7038': '#E0B030' }, {
+    head: '<path d="M70 62 L74 34 L86 50 L100 26 L114 50 L126 34 L130 62 Q100 54 70 62 Z" fill="#F2C840" stroke="#2A1608" stroke-width="2.2"/><circle cx="100" cy="46" r="4.5" fill="#E2483A" stroke="#2A1608" stroke-width="1.4"/><circle cx="82" cy="54" r="3" fill="#3EDCC0" stroke="#2A1608"/><circle cx="118" cy="54" r="3" fill="#3EDCC0" stroke="#2A1608"/><path d="M84 112 Q100 128 116 112" stroke="#1A0C04" stroke-width="3" fill="none"/>',
+  });
+  derive('mau', 'auco', { '#E87AA0': '#3E8A3A', '#D8A0C0': '#7FC24A', '#F7EEF2': '#E2F2D0', '#C8B8E0': '#8ACB6A', '#F7F3FC': '#E8F8DC', '#F08AB0': '#FFC44A' }, {
+    head: '<path d="M66 70 Q60 52 74 46 Q72 60 80 64 Z M134 70 Q140 52 126 46 Q128 60 120 64 Z M88 50 Q86 36 100 30 Q114 36 112 50 Q100 44 88 50 Z" fill="#5FB84A" stroke="#2A1608" stroke-width="1.6"/>',
+  });
+  // icon kỹ năng: mượn icon chiêu cùng loại của tướng khác (đổi tiền tố id để không trùng)
+  const ICON_SRC = {
+    lachau: [['kimquy', 'E'], ['lucsi', 'W'], ['kimquy', 'Q'], ['lucsi', 'R']],
+    thansan: [['thosan', 'Q'], ['thosan', 'E'], ['llq', 'Q'], ['thosan', 'R']],
+    adv: [['caolo', 'Q'], ['caolo', 'W'], ['xathu', 'R'], ['caolo', 'R']],
+    mau: [['auco', 'Q'], ['thansuong', 'E'], ['langlieu', 'E'], ['tiendung', 'R']],
+  };
+  for (const [to, list] of Object.entries(ICON_SRC)) {
+    if (ART.skill[to]) continue;
+    ART.skill[to] = {};
+    list.forEach(([from, k], i) => {
+      const svg = (ART.skill[from] || {})[k];
+      if (svg) ART.skill[to]['QWER'[i]] = svg.split(`sk${from}${k}-`).join(`sk${to}${'QWER'[i]}-`);
+    });
+  }
+})();
 // bậc trang phục = độ hiếm trung bình của vũ khí, mũ, giáp (ô trống tính là Thường)
 const GEAR_TIER_FILE = ['thuong', 'hiem', 'su-thi', 'huyen-thoai'];
 function gearTier(h) {
@@ -367,8 +413,9 @@ const matOf = (g) => (g.set ? MAT_SET[g.set] || MAT.set
 // loại vũ khí theo tướng cơ bản (bảng v15)
 const WEAPON_KIND = { lactuong: 'axe', lucsi: 'axe', thosan: 'daggers', xathu: 'crossbow', thaymo: 'staff', thansuong: 'staff' };
 // tướng huyền thoại giữ dáng vũ khí đặc trưng; mũ / giáp đổi kiểu riêng
-const LEGEND_HELM = { giong: 'helm', llq: 'horncrown', kimquy: 'crownSmall', cdt: 'conical', antiem: 'conical', tiendung: 'flower', langlieu: 'turban' };
-const LEGEND_ARMOR = { kimquy: 'shell', auco: 'wings' };
+const LEGEND_HELM = { giong: 'helm', llq: 'horncrown', kimquy: 'crownSmall', cdt: 'conical', antiem: 'conical', tiendung: 'flower', langlieu: 'turban',
+  lachau: 'helm', adv: 'crownSmall', mau: 'flower' };
+const LEGEND_ARMOR = { kimquy: 'shell', auco: 'wings', mau: 'wings' };
 const ACC_AURA_KIND = { trong_dong: 'drum', giap_bat_diet: 'copper' };
 const TIER_SCALE = [1, 1.10, 1.15, 1.20];
 

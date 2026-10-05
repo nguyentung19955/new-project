@@ -640,3 +640,21 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - Thần lực: Sử thi ×1,15, **Huyền thoại ×2** sát thương và máu; Thần tinh của tướng Huyền thoại mạnh thêm 30% mỗi bậc. Giá Thăng thần Huyền thoại 550 vàng (Sử thi 300).
 - Kế thừa hợp lý hơn: tốc đánh giữ theo tướng thần; số tia bắn lấy bên nhiều hơn chứ không cộng dồn. Lẫy Thần của Cao Lỗ giảm còn +15% + 0,2 × sức mạnh kỹ năng.
 - Lực chiến ngay khi lên thần (so với tướng gốc ★★★, cấp 18): Huyền thoại ×2,0–2,35 (Âu Cơ ×3,4), Sử thi ×1,15–1,9.
+
+### Phiên bản 27 · chuỗi Thường → Sử thi (tím) → Huyền thoại (vàng), thêm 4 tướng thần
+
+- **Thăng thần 2 bậc:** tướng Thường ★★★ hóa thân **thần Sử thi** (300 vàng); thần Sử thi đạt **Thần tinh ★★** hóa thân **Huyền thoại** (650 vàng). Mỗi bậc giữ cấp, đồ, thuộc tính / tầm / sát thương gốc cao nhất và **nội tại của mọi bậc trước**; Thần tinh của bậc Sử thi giữ một nửa khi lên Huyền thoại.
+- **Cây thăng thần:**
+  - Lạc Tướng → Thạch Sanh (nay là Sử thi) → Lạc Long Quân / Thánh Gióng
+  - Lực Sĩ Núi → **Lạc Hầu** → Thần Kim Quy / Thánh Gióng
+  - Thợ Săn Rừng → **Thần Săn Ba Vì** → Thánh Gióng / Lạc Long Quân
+  - Xạ Thủ Văn Lang → Cao Lỗ / Mai An Tiêm → **An Dương Vương**
+  - Thầy Mo Lửa → Tiên Dung / Lang Liêu → Âu Cơ / **Mẫu Thượng Ngàn**
+  - Thần Sương Núi → Chử Đồng Tử → Âu Cơ / **Mẫu Thượng Ngàn**
+- **4 tướng mới:**
+  - **Lạc Hầu** (Sử thi, Sức mạnh, Thổ, rìu): Lệnh Lạc Hầu, tướng đứng kề −15% sát thương nhận. Q Dậm Đất Phong Châu · W Giáp Da Tê · E Khiên Đồng Bộ Lạc · R Vùi Núi. Ẩn: đứng ô Cao thì −25%.
+  - **Thần Săn Ba Vì** (Sử thi, Nhanh nhẹn, Mộc, dao): Mắt Rừng, +25% sát thương lên quái đang chậm / choáng. Q Lướt Ngàn Cây · W Nanh Hổ · E Vuốt Hổ Ba Vì · R Săn Thú Thần. Ẩn: hạ quái bay +30% tốc đánh 3 giây.
+  - **An Dương Vương** (Huyền thoại, Nhanh nhẹn, Kim, nỏ): Nỏ Linh Quang, mỗi phát thứ 4 xuyên cả hàng x2. Q Nỏ Liên Châu · W Thành Ốc Cổ Loa · E Mưa Tên Cổ Loa · R Linh Quang Thần Nỏ. Ẩn: có Thần Kim Quy trên sân thì phát xuyên x3.
+  - **Mẫu Thượng Ngàn** (Huyền thoại, Trí tuệ, Mộc, gậy): Mẹ Rừng, tướng đứng gần +10% sát thương và +2 hồi máu/giây. Q Lộc Rừng · W Rễ Ngàn Năm · E Rừng Mọc · R Mưa Lá Thiêng. Ẩn: đứng kề tướng hành Mộc thì hào quang gấp đôi.
+- **Cân bằng:** Thần lực Huyền thoại ×1,6 (Sử thi ×1,15) vì đã cộng dồn hai bậc. Lực chiến so với tướng gốc ★★★ cấp 20: Sử thi ★★ ×1,6–3,4 · Huyền thoại mới lên ×2,5–4,1 · Huyền thoại ★★★ ×4,2–7,5. Số tia bắn tối đa 5.
+- Ảnh vector tạm cho 4 tướng mới (phối màu từ tướng cùng dòng); prompt Fooocus mục E [306]–[341], manifest S38–S42.

@@ -1770,6 +1770,226 @@
      "file": "ky-nang_lang-lieu_r.png"
     }
    ]
+  },
+  {
+   "code": "S38",
+   "title": "Tướng · Lạc Hầu & Thần Săn Ba Vì · 4 bậc đồ",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Lạc Hầu · Thường",
+     "file": "lac-hau_thuong.png"
+    },
+    {
+     "index": 2,
+     "name": "Lạc Hầu · Hiếm",
+     "file": "lac-hau_hiem.png"
+    },
+    {
+     "index": 3,
+     "name": "Lạc Hầu · Sử thi",
+     "file": "lac-hau_su-thi.png"
+    },
+    {
+     "index": 4,
+     "name": "Lạc Hầu · Huyền thoại",
+     "file": "lac-hau_huyen-thoai.png"
+    },
+    {
+     "index": 5,
+     "name": "Thần Săn Ba Vì · Thường",
+     "file": "than-san-ba-vi_thuong.png"
+    },
+    {
+     "index": 6,
+     "name": "Thần Săn Ba Vì · Hiếm",
+     "file": "than-san-ba-vi_hiem.png"
+    },
+    {
+     "index": 7,
+     "name": "Thần Săn Ba Vì · Sử thi",
+     "file": "than-san-ba-vi_su-thi.png"
+    },
+    {
+     "index": 8,
+     "name": "Thần Săn Ba Vì · Huyền thoại",
+     "file": "than-san-ba-vi_huyen-thoai.png"
+    }
+   ]
+  },
+  {
+   "code": "S39",
+   "title": "Tướng · An Dương Vương & Mẫu Thượng Ngàn · 4 bậc đồ",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "An Dương Vương · Thường",
+     "file": "an-duong-vuong_thuong.png"
+    },
+    {
+     "index": 2,
+     "name": "An Dương Vương · Hiếm",
+     "file": "an-duong-vuong_hiem.png"
+    },
+    {
+     "index": 3,
+     "name": "An Dương Vương · Sử thi",
+     "file": "an-duong-vuong_su-thi.png"
+    },
+    {
+     "index": 4,
+     "name": "An Dương Vương · Huyền thoại",
+     "file": "an-duong-vuong_huyen-thoai.png"
+    },
+    {
+     "index": 5,
+     "name": "Mẫu Thượng Ngàn · Thường",
+     "file": "mau-thuong-ngan_thuong.png"
+    },
+    {
+     "index": 6,
+     "name": "Mẫu Thượng Ngàn · Hiếm",
+     "file": "mau-thuong-ngan_hiem.png"
+    },
+    {
+     "index": 7,
+     "name": "Mẫu Thượng Ngàn · Sử thi",
+     "file": "mau-thuong-ngan_su-thi.png"
+    },
+    {
+     "index": 8,
+     "name": "Mẫu Thượng Ngàn · Huyền thoại",
+     "file": "mau-thuong-ngan_huyen-thoai.png"
+    }
+   ]
+  },
+  {
+   "code": "S40",
+   "title": "Chân dung tướng v27",
+   "rows": 1,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Chân dung Lạc Hầu",
+     "file": "chan-dung_lac-hau.png"
+    },
+    {
+     "index": 2,
+     "name": "Chân dung Thần Săn Ba Vì",
+     "file": "chan-dung_than-san-ba-vi.png"
+    },
+    {
+     "index": 3,
+     "name": "Chân dung An Dương Vương",
+     "file": "chan-dung_an-duong-vuong.png"
+    },
+    {
+     "index": 4,
+     "name": "Chân dung Mẫu Thượng Ngàn",
+     "file": "chan-dung_mau-thuong-ngan.png"
+    }
+   ]
+  },
+  {
+   "code": "S41",
+   "title": "Icon kỹ năng · Lạc Hầu & Thần Săn Ba Vì",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Lạc Hầu · Q",
+     "file": "ky-nang_lac-hau_q.png"
+    },
+    {
+     "index": 2,
+     "name": "Lạc Hầu · W",
+     "file": "ky-nang_lac-hau_w.png"
+    },
+    {
+     "index": 3,
+     "name": "Lạc Hầu · E",
+     "file": "ky-nang_lac-hau_e.png"
+    },
+    {
+     "index": 4,
+     "name": "Lạc Hầu · R",
+     "file": "ky-nang_lac-hau_r.png"
+    },
+    {
+     "index": 5,
+     "name": "Thần Săn Ba Vì · Q",
+     "file": "ky-nang_than-san-ba-vi_q.png"
+    },
+    {
+     "index": 6,
+     "name": "Thần Săn Ba Vì · W",
+     "file": "ky-nang_than-san-ba-vi_w.png"
+    },
+    {
+     "index": 7,
+     "name": "Thần Săn Ba Vì · E",
+     "file": "ky-nang_than-san-ba-vi_e.png"
+    },
+    {
+     "index": 8,
+     "name": "Thần Săn Ba Vì · R",
+     "file": "ky-nang_than-san-ba-vi_r.png"
+    }
+   ]
+  },
+  {
+   "code": "S42",
+   "title": "Icon kỹ năng · An Dương Vương & Mẫu Thượng Ngàn",
+   "rows": 2,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "An Dương Vương · Q",
+     "file": "ky-nang_an-duong-vuong_q.png"
+    },
+    {
+     "index": 2,
+     "name": "An Dương Vương · W",
+     "file": "ky-nang_an-duong-vuong_w.png"
+    },
+    {
+     "index": 3,
+     "name": "An Dương Vương · E",
+     "file": "ky-nang_an-duong-vuong_e.png"
+    },
+    {
+     "index": 4,
+     "name": "An Dương Vương · R",
+     "file": "ky-nang_an-duong-vuong_r.png"
+    },
+    {
+     "index": 5,
+     "name": "Mẫu Thượng Ngàn · Q",
+     "file": "ky-nang_mau-thuong-ngan_q.png"
+    },
+    {
+     "index": 6,
+     "name": "Mẫu Thượng Ngàn · W",
+     "file": "ky-nang_mau-thuong-ngan_w.png"
+    },
+    {
+     "index": 7,
+     "name": "Mẫu Thượng Ngàn · E",
+     "file": "ky-nang_mau-thuong-ngan_e.png"
+    },
+    {
+     "index": 8,
+     "name": "Mẫu Thượng Ngàn · R",
+     "file": "ky-nang_mau-thuong-ngan_r.png"
+    }
+   ]
   }
  ],
  "singles": [
