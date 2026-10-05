@@ -68,7 +68,7 @@ function saveBest(n) {
 class UI {
   constructor(game) {
     this.game = game;
-    this.sheet = null;        // { kind: 'build'|'hero'|'bag'|'shop', slot }
+    this.sheet = null;        // { kind: 'hero'|'bag'|'shop', slot }
     this.skillSel = 0;
     this.shopTab = 'basic';
     this.sellArmed = false;
@@ -79,6 +79,7 @@ class UI {
     this.best = loadBest();
     this.coachSlot = -1;
     this.bannerT = 0;
+    this.pickSlot = -1;
 
     $('#btn-play').onclick = () => this.startGame();
     $('#btn-howto').onclick = () => { $('#howto').hidden = false; };
@@ -103,6 +104,10 @@ class UI {
       this.toggle({ kind: 'shop' });
     };
     $('#btn-bag').onclick = () => this.toggle({ kind: 'bag' });
+    $('#picker').addEventListener('click', (ev) => {
+      const el = ev.target.closest('[data-type]');
+      if (el) this.pick(el.dataset.type);
+    });
     $('#sheet').addEventListener('click', (ev) => {
       const el = ev.target.closest('[data-act]');
       if (el && !el.disabled) this.action(el.dataset);
@@ -123,17 +128,82 @@ class UI {
   }
 
   // ---------- chạm vào bản đồ
-  // Bệ nằm dưới điểm chạm (tính cả thân tướng phía trên bệ)
+  // Vị trí gần điểm chạm nhất: ô có tướng thì tính theo thân tướng,
+  // ô trống thì bắt dính khi chạm vào bãi cỏ quanh đó
   slotAt(x, y) {
-    return CONFIG.slots.findIndex(([sx, sy]) => Math.hypot(sx - x, sy - (y + 14)) < 38);
+    let best = -1, bd = Infinity;
+    CONFIG.slots.forEach(([sx, sy], i) => {
+      const h = this.game.heroes[i];
+      const d = h ? Math.hypot(sx - x, sy - 20 - y) : Math.hypot(sx - x, sy - y);
+      if (d < (h ? 28 : 38) && d < bd) { bd = d; best = i; }
+    });
+    return best;
   }
 
   tapMap(x, y) {
     if (!this.game.started) return;
     const slot = this.slotAt(x, y);
-    if (slot < 0) return this.close();
-    if (this.sheet && this.sheet.slot === slot) return this.close();
-    this.open({ kind: this.game.heroes[slot] ? 'hero' : 'build', slot });
+    if (slot < 0 || slot === this.pickSlot) { this.closePicker(); return this.close(); }
+    if (this.game.heroes[slot]) {
+      this.closePicker();
+      if (this.sheet && this.sheet.slot === slot) return this.close();
+      return this.open({ kind: 'hero', slot });
+    }
+    this.close();
+    this.openPicker(slot);
+  }
+
+  // Bảng chọn tướng nhỏ gọn hiện ngay tại chỗ chạm
+  openPicker(slot) {
+    this.pickSlot = slot;
+    const el = $('#picker');
+    el.innerHTML = Object.entries(HEROES).map(([type, def]) => `
+      <button class="pk" data-type="${type}" style="--ac:${ATTRS[def.attr].color}" aria-label="${def.name}">
+        <canvas width="72" height="72"></canvas>
+        <span class="pk-name">${def.name}</span>
+        <span class="pk-cost">${def.cost}</span>
+      </button>`).join('');
+    el.querySelectorAll('.pk').forEach((b) => {
+      const look = computeLook(b.dataset.type, {}, 0);
+      drawHero(b.querySelector('canvas').getContext('2d'), look, 36, 66, { scale: 1.15 / look.bulk, t: 1 });
+    });
+    el.hidden = false;
+    this.updatePicker();
+    // đặt bảng ngay trên ô (không đủ chỗ thì đặt dưới), không tràn ra ngoài màn hình
+    const [x, y] = CONFIG.slots[slot];
+    const W = $('#wrap').clientWidth, H = $('#wrap').clientHeight;
+    const w = el.offsetWidth, h = el.offsetHeight;
+    let top = y * this.scale - h - 14 * this.scale;
+    if (top < 50 * this.scale) top = y * this.scale + 14 * this.scale;
+    top = Math.min(top, H - h - 80 * this.scale);
+    const left = Math.max(6, Math.min(W - w - 6, x * this.scale - w / 2));
+    el.style.left = left + 'px';
+    el.style.top = top + 'px';
+  }
+
+  updatePicker() {
+    if (this.pickSlot < 0) return;
+    $('#picker').querySelectorAll('.pk').forEach((b) => {
+      b.classList.toggle('poor', this.game.gold < HEROES[b.dataset.type].cost);
+    });
+  }
+
+  closePicker() {
+    this.pickSlot = -1;
+    $('#picker').hidden = true;
+  }
+
+  pick(type) {
+    const g = this.game;
+    const slot = this.pickSlot;
+    if (slot < 0) return;
+    if (!g.placeHero(slot, type)) return this.toast(`Cần ${HEROES[type].cost} vàng`, '#e58b74');
+    this.closePicker();
+    this.toast(`${HEROES[type].name} đã vào vị trí`, '#7cc45f');
+    if (g.heroes.filter(Boolean).length === 2 && !g.flags.dragTip) {
+      g.flags.dragTip = true;
+      setTimeout(() => this.toast('Mẹo: giữ và kéo tướng sang chỗ khác để đổi vị trí', '#9dffc4'), 900);
+    }
   }
 
   toggle(sheet) {
@@ -142,6 +212,7 @@ class UI {
   }
 
   open(sheet) {
+    this.closePicker();
     this.sheet = sheet;
     this.sellArmed = false;
     this.sig = {};
@@ -199,18 +270,6 @@ class UI {
     switch (d.act) {
       case 'close':
         return this.close();
-      case 'build':
-        if (g.placeHero(this.sheet.slot, d.type)) {
-          this.toast(`${HEROES[d.type].name} đã vào vị trí`, '#7cc45f');
-          if (g.heroes.filter(Boolean).length === 2 && !g.flags.dragTip) {
-            g.flags.dragTip = true;
-            setTimeout(() => this.toast('Mẹo: giữ và kéo tướng sang bệ khác để đổi chỗ', '#9dffc4'), 900);
-          }
-          this.close();
-        } else {
-          this.toast(`Cần ${HEROES[d.type].cost} vàng`, '#e58b74');
-        }
-        return;
       case 'skill':
         this.skillSel = +d.i;
         break;
@@ -321,6 +380,8 @@ class UI {
     }
 
     this.updateCoach();
+    this.updatePicker();
+    if (g.over) this.closePicker();
 
     this.refreshTimer -= dt;
     if (this.refreshTimer <= 0) {
@@ -414,13 +475,13 @@ class UI {
     this.coachSlot = -1;
     bw.classList.remove('pulse');
 
-    if (g.started && !g.over && !this.sheet) {
+    if (g.started && !g.over && !this.sheet && this.pickSlot < 0) {
       const heroes = g.heroes.filter(Boolean);
       if (!heroes.length) {
         this.coachSlot = CONFIG.coachSlot;
         const [x, y] = CONFIG.slots[CONFIG.coachSlot];
         pos = [x, y - 22];
-        text = 'Chạm vào bệ đá để đặt tướng';
+        text = 'Chạm vào bãi cỏ cạnh đường để đặt tướng';
       } else if (g.wave === 0 && !g.waveActive) {
         bw.classList.add('pulse');
         pos = [CONFIG.W - 105, CONFIG.H - 92];
@@ -438,9 +499,13 @@ class UI {
     }
     coach.hidden = !pos;
     if (pos) {
-      coach.style.left = pos[0] * this.scale + 'px';
-      coach.style.top = pos[1] * this.scale + 'px';
       if ($('#coach-text').textContent !== text) $('#coach-text').textContent = text;
+      // giữ bóng chữ trong màn hình (đo chiều rộng thật)
+      const half = coach.offsetWidth / 2 + 6;
+      const W = $('#wrap').clientWidth;
+      const x = Math.max(half, Math.min(W - half, pos[0] * this.scale));
+      coach.style.left = x + 'px';
+      coach.style.top = Math.max(115, pos[1]) * this.scale + 'px';
     }
   }
 
@@ -455,39 +520,9 @@ class UI {
     if (!this.sheet) return;
     if (force) this.sig = {};
     const kind = this.sheet.kind;
-    if (kind === 'build') this.renderBuild();
-    else if (kind === 'bag') this.renderBag();
+    if (kind === 'bag') this.renderBag();
     else if (kind === 'shop') this.renderShop();
     else this.renderHero();
-  }
-
-  renderBuild() {
-    const g = this.game;
-    if (!this.changed('build', 1)) {
-      document.querySelectorAll('.hero-card').forEach((el) => {
-        el.classList.toggle('disabled', g.gold < HEROES[el.dataset.type].cost);
-      });
-      return;
-    }
-    const card = ([type, def]) => `
-      <div class="hero-card ${g.gold < def.cost ? 'disabled' : ''}" data-type="${type}" style="--ac:${ATTRS[def.attr].color}">
-        <canvas data-hero="${type}" width="90" height="100"></canvas>
-        <b>${def.name}</b>
-        <span class="role">${def.role}</span>
-        <button class="go" data-act="build" data-type="${type}">${def.cost} 💰</button>
-      </div>`;
-    const groups = Object.keys(ATTRS).map((a) => `
-      <div class="attr-group">
-        <div class="attr-label" style="--ac:${ATTRS[a].color}"><b>${ATTRS[a].name}</b><small>${ATTRS[a].desc}</small></div>
-        <div class="build-list">${Object.entries(HEROES).filter(([, d]) => d.attr === a).map(card).join('')}</div>
-      </div>`).join('');
-    $('#sheet-dyn').innerHTML = `
-      <div class="sheet-head"><h3>Chọn tướng</h3><button class="x" data-act="close" aria-label="Đóng">✕</button></div>
-      ${groups}`;
-    document.querySelectorAll('canvas[data-hero]').forEach((c) => {
-      const look = computeLook(c.dataset.hero, {}, 0);
-      drawHero(c.getContext('2d'), look, 45, 94, { scale: 1.5 / look.bulk, t: 1 });
-    });
   }
 
   renderBag() {

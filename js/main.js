@@ -57,6 +57,7 @@ canvas.addEventListener('pointerdown', (ev) => {
   const [x, y] = toLogical(ev);
   const slot = ui.slotAt(x, y);
   if (game.started && !game.over && slot >= 0 && game.heroes[slot]) {
+    ui.closePicker();
     drag = { from: slot, sx: x, sy: y, x, y, moved: false, id: ev.pointerId };
     try { canvas.setPointerCapture(ev.pointerId); } catch (e) { /* bỏ qua */ }
     return;
@@ -100,8 +101,15 @@ function render() {
   const dropSlot = dragging ? ui.slotAt(dragging.x, dragging.y) : -1;
   CONFIG.slots.forEach(([x, y], i) => {
     const h = game.heroes[i];
-    drawSlot(ctx, x, y, i === selected || i === dropSlot, i === ui.coachSlot || (dragging && i !== dragging.from), t,
-      !!h, h && ATTRS[HEROES[h.type].attr].color);
+    if (dragging) {
+      if (i === dropSlot) drawSpot(ctx, x, y, 'target', t);
+      else if (!h) drawSpot(ctx, x, y, 'free', t);
+    } else if (i === selected || i === ui.pickSlot) {
+      drawSpot(ctx, x, y, 'target', t);
+    } else if (!h && i === ui.coachSlot) {
+      drawSpot(ctx, x, y, 'hint', t);
+    }
+    if (h && !(dragging && i === dragging.from)) drawSpot(ctx, x, y, 'hero', t, ATTRS[HEROES[h.type].attr].color);
   });
 
   // vòng tầm đánh của tướng đang chọn

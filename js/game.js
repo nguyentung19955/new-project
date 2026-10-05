@@ -7,6 +7,30 @@
 
 let nextId = 1;
 
+// --- Sinh lưới vị trí đặt tướng (khoảng 40 ô) dọc hai bên đường, tránh sông & lâu đài
+(function buildSpots() {
+  const { sx, sy, y0, minY, minD, maxD } = CONFIG.buildGrid;
+  const out = [];
+  let row = 0;
+  for (let y = y0; y <= 850; y += sy, row++) {
+    for (let x = 28 + (row % 2 ? sx / 2 : 0); x <= 516; x += sx) {
+      if (y < minY) continue;                              // dưới thanh HUD
+      const d = distToPath(x, y);
+      if (d < minD || d > maxD) continue;
+      if (distToPolyline(RIVER, x, y) < 34) continue;
+      if (Math.abs(x - 270) < 100 && y > 815) continue;   // lâu đài
+      out.push([Math.round(x), y]);
+    }
+  }
+  CONFIG.slots = out;
+  // ô gợi ý cho người mới: gần giữa bản đồ
+  let best = 0;
+  out.forEach(([x, y], i) => {
+    if (Math.hypot(x - 270, y - 440) < Math.hypot(out[best][0] - 270, out[best][1] - 440)) best = i;
+  });
+  CONFIG.coachSlot = best;
+})();
+
 // --- Đường đi: tính sẵn độ dài từng đoạn để quái di chuyển theo quãng đường
 const PATH = (() => {
   const segs = [];

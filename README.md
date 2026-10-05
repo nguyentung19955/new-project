@@ -19,7 +19,9 @@ npx serve .          # hoặc: python3 -m http.server 8000
 
 Sau đó mở `http://<ip-máy-tính>:8000` trên điện thoại.
 
-**Cách chơi:** chạm vào bệ rune (20 bệ) để đặt tướng. Giữ và kéo tướng sang bệ khác để chuyển chỗ hoặc đổi chỗ với tướng ở đó. Chạm vào tướng để xem bảng tướng (chân dung, Q W E R, 6 ô đồ). Mua và ghép đồ ở **Cửa hàng**. Bấm **Gọi đợt** để quái tới.
+**Cách chơi:** chạm vào bãi cỏ sát đường, bảng chọn tướng nhỏ hiện ngay tại chỗ (có khoảng 40 vị trí ẩn xếp nhiều hàng dọc hai bên đường; chạm lệch một chút vẫn bắt dính). Giữ và kéo tướng sang chỗ khác để chuyển hoặc đổi chỗ. Chạm vào tướng để mở bảng tướng. Mua và ghép đồ ở **Cửa hàng**. Bấm **Gọi đợt** để quái tới.
+
+Vị trí đặt tướng được sinh tự động theo `CONFIG.buildGrid` trong `js/data.js` (khoảng cách ô, dải cách đường).
 
 **Khi cập nhật game:** tăng số `?v=` của các file CSS/JS trong `index.html` (và dòng "Phiên bản" trên màn hình bắt đầu). Như vậy Safari trên điện thoại sẽ buộc phải tải bản mới thay vì dùng bản cũ trong bộ nhớ đệm.
 

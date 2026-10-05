@@ -19,12 +19,10 @@ const CONFIG = {
   // Đường đi của quái (các điểm gấp khúc)
   path: [[-30, 150], [440, 150], [440, 350], [100, 350], [100, 550],
          [440, 550], [440, 750], [270, 750], [270, 1000]],
-  // Bệ đặt tướng (20 bệ, mỗi vùng giữa các khúc đường một hàng)
-  slots: [[40, 250], [125, 250], [210, 250], [295, 250], [380, 250], [510, 250],
-          [35, 450], [170, 435], [270, 435], [370, 435], [510, 450],
-          [55, 640], [155, 660], [255, 650], [355, 660], [510, 650],
-          [70, 800], [165, 800], [375, 815], [470, 815]],
-  coachSlot: 8,      // bệ được gợi ý cho người mới
+  // Vị trí đặt tướng: lưới ẩn dọc hai bên đường (sinh trong game.js).
+  // sx/sy: khoảng cách ô; minD/maxD: dải cách tim đường được phép đặt
+  buildGrid: { sx: 62, sy: 56, y0: 98, minY: 118, minD: 52, maxD: 108 },
+  slots: [],
   // Bậc tiến hóa theo số mạng hạ gục -> tướng to hơn, có sao, hào quang
   tiers: [0, 25, 75, 150],
 };

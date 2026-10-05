@@ -861,72 +861,51 @@ function drawPortal(ctx, t) {
   ctx.restore();
 }
 
-// Bệ đặt tướng: vòng rune phát sáng kiểu "Circle of Power" của Warcraft III
-// occupied: đã có tướng (rune tối màu theo hệ của tướng)
-function drawSlot(ctx, x, y, selected, hint, t, occupied, color) {
-  const glow = occupied ? (color || '#d4a752') : '#f1c40f';
-  ctx.fillStyle = 'rgba(0,0,0,0.35)';
-  ctx.beginPath();
-  ctx.ellipse(x, y + 4, 29, 12, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.fillStyle = '#4a463f';
-  ctx.beginPath();
-  ctx.ellipse(x, y + 1.5, 28, 11.5, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.fillStyle = selected ? '#8a8270' : '#6b665c';
-  ctx.beginPath();
-  ctx.ellipse(x, y - 1, 27, 11, 0, 0, Math.PI * 2);
-  ctx.fill();
-  // khía đá
-  ctx.strokeStyle = 'rgba(30,28,24,0.6)';
-  ctx.lineWidth = 1;
-  for (let i = 0; i < 8; i++) {
-    const a = (i / 8) * Math.PI * 2;
-    ctx.beginPath();
-    ctx.moveTo(x + Math.cos(a) * 21, y - 1 + Math.sin(a) * 8.5);
-    ctx.lineTo(x + Math.cos(a) * 27, y - 1 + Math.sin(a) * 11);
-    ctx.stroke();
-  }
-  // vòng rune sáng
-  const pulse = occupied ? 0.45 : 0.65 + Math.sin(t * 3 + x) * 0.25;
+// Dấu vị trí đặt tướng (không còn bệ đá):
+//  'hero'   vòng mờ dưới chân tướng theo màu hệ
+//  'free'   chấm mờ ở ô trống (chỉ hiện khi đang kéo tướng)
+//  'target' ô đang chọn / ô sẽ thả
+//  'hint'   gợi ý nhấp nháy cho người mới
+function drawSpot(ctx, x, y, mode, t, color) {
   ctx.save();
-  ctx.globalAlpha = pulse;
-  ctx.shadowColor = glow;
-  ctx.shadowBlur = 8;
-  ctx.strokeStyle = glow;
-  ctx.lineWidth = 1.8;
-  ctx.beginPath();
-  ctx.ellipse(x, y - 1, 19, 7.6, 0, 0, Math.PI * 2);
-  ctx.stroke();
-  ctx.lineWidth = 1.4;
-  for (let i = 0; i < 6; i++) {
-    const a = (i / 6) * Math.PI * 2 + t * 0.4;
-    const rx = x + Math.cos(a) * 14, ry = y - 1 + Math.sin(a) * 5.6;
+  if (mode === 'hero') {
+    ctx.strokeStyle = color || '#d4a752';
+    ctx.globalAlpha = 0.55;
+    ctx.lineWidth = 1.6;
     ctx.beginPath();
-    ctx.moveTo(rx - 2, ry - 1.5); ctx.lineTo(rx, ry + 1.5); ctx.lineTo(rx + 2, ry - 1.5);
+    ctx.ellipse(x, y, 17, 6.5, 0, 0, Math.PI * 2);
     ctx.stroke();
-  }
-  if (!occupied) {
+  } else if (mode === 'free') {
+    ctx.fillStyle = 'rgba(157,255,196,0.18)';
+    ctx.strokeStyle = 'rgba(157,255,196,0.55)';
+    ctx.lineWidth = 1.2;
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath();
+    ctx.ellipse(x, y, 18, 7, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+  } else if (mode === 'target') {
+    const k = 0.75 + Math.sin(t * 6) * 0.25;
+    ctx.fillStyle = `rgba(246,231,176,${0.25 * k})`;
+    ctx.strokeStyle = '#f6e7b0';
+    ctx.shadowColor = '#f1c40f';
+    ctx.shadowBlur = 10;
     ctx.lineWidth = 2.2;
     ctx.beginPath();
-    ctx.moveTo(x - 5, y - 1); ctx.lineTo(x + 5, y - 1);
-    ctx.moveTo(x, y - 4); ctx.lineTo(x, y + 2);
+    ctx.ellipse(x, y, 21, 8.5, 0, 0, Math.PI * 2);
+    ctx.fill();
     ctx.stroke();
-  }
-  ctx.restore();
-  if (selected) {
-    ctx.strokeStyle = '#f6e7b0';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.ellipse(x, y - 1, 28, 11.5, 0, 0, Math.PI * 2);
-    ctx.stroke();
-  }
-  if (hint) {
+  } else if (mode === 'hint') {
     const k = (t * 1.2) % 1;
     ctx.strokeStyle = `rgba(241,196,15,${1 - k})`;
     ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.ellipse(x, y - 1, 27 + k * 22, 11 + k * 9, 0, 0, Math.PI * 2);
+    ctx.ellipse(x, y, 14 + k * 26, 6 + k * 10, 0, 0, Math.PI * 2);
     ctx.stroke();
+    ctx.fillStyle = 'rgba(241,196,15,0.25)';
+    ctx.beginPath();
+    ctx.ellipse(x, y, 16, 6.5, 0, 0, Math.PI * 2);
+    ctx.fill();
   }
+  ctx.restore();
 }

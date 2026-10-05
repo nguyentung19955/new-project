@@ -9,7 +9,7 @@
   <title>Thủ Thành Anh Hùng</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Be+Vietnam+Pro:wght@400;600;700&display=swap">
-  <link rel="stylesheet" href="css/style.css?v=8">
+  <link rel="stylesheet" href="css/style.css?v=9">
 </head>
 <body>
 <!--BODY-->
@@ -39,6 +39,7 @@
     </div>
     <div id="banner" hidden><small>Boss xuất hiện</small><b id="banner-text"></b></div>
 
+    <div id="picker" hidden></div>
     <div id="coach" hidden><span id="coach-text"></span></div>
     <div id="toasts"></div>
     <div id="paused-tag" hidden>Tạm dừng</div>
@@ -60,7 +61,7 @@
         <button id="btn-play" class="go big">Chơi ngay</button>
         <button id="btn-howto" class="ghost">Cách chơi</button>
         <p id="best" class="best"></p>
-        <p class="version">Phiên bản 8</p>
+        <p class="version">Phiên bản 9</p>
       </div>
     </div>
 
@@ -69,7 +70,7 @@
       <div class="menu-card">
         <h2>Cách chơi</h2>
         <ol class="steps">
-          <li><b>Đặt tướng</b><span>Chạm vào bệ rune cạnh đường. Có 6 tướng chia 3 hệ: <i class="a-str">Sức mạnh</i>, <i class="a-agi">Nhanh nhẹn</i>, <i class="a-int">Trí tuệ</i>. Giữ và kéo tướng sang bệ khác để đổi chỗ.</span></li>
+          <li><b>Đặt tướng</b><span>Chạm vào bãi cỏ sát đường rồi chọn tướng. Có 6 tướng chia 3 hệ: <i class="a-str">Sức mạnh</i>, <i class="a-agi">Nhanh nhẹn</i>, <i class="a-int">Trí tuệ</i>. Giữ và kéo tướng sang chỗ khác để đổi vị trí.</span></li>
           <li><b>Gọi đợt quái</b><span>Bấm nút xanh ở góc dưới. Đừng để quái lọt vào cổng thành.</span></li>
           <li><b>Kỹ năng Q W E R</b><span>Tướng hạ càng nhiều quái thì kỹ năng càng mạnh và mở thêm kỹ năng mới. Diệt quái còn cho kinh nghiệm để lên cấp.</span></li>
           <li><b>Mặc đồ, ghép đồ</b><span>Đồ trang phục đổi hình dạng tướng. Mua phụ kiện ở Cửa hàng rồi ghép thành đồ mạnh có hào quang.</span></li>
@@ -101,10 +102,10 @@
       el.textContent = 'Lỗi: ' + (e.message || e.error) + (e.filename ? ' (' + e.filename.split('/').pop() + ':' + e.lineno + ')' : '');
     });
   </script>
-  <script src="js/data.js?v=8"></script>
-  <script src="js/render.js?v=8"></script>
-  <script src="js/game.js?v=8"></script>
-  <script src="js/ui.js?v=8"></script>
-  <script src="js/main.js?v=8"></script>
+  <script src="js/data.js?v=9"></script>
+  <script src="js/render.js?v=9"></script>
+  <script src="js/game.js?v=9"></script>
+  <script src="js/ui.js?v=9"></script>
+  <script src="js/main.js?v=9"></script>
 </body>
 </html>
