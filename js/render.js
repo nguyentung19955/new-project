@@ -578,10 +578,9 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
     ctx.beginPath();
     ctx.ellipse(0, 0, 13 * DK * (s / 0.28), 4 * DK * (s / 0.28), 0, 0, Math.PI * 2);
     ctx.fill();
-    // hào quang tiến hoá nằm dưới hào quang phụ kiện
-    if (tierShown > 0) drawEvoAura(ctx, tierShown, look.attrColor, s, t);
-    if (ascShown > 0) drawAscAura(ctx, ascShown, s, t);
-    if (look.accAura) drawAccAura(ctx, look.accAura, s, t);
+    // v50: bỏ các vòng tròn dưới chân (cấp sao, Thần tinh, phụ kiện); cấp sao / Thần tinh đã hiện ở trang phục,
+    // hào quang sau lưng; phụ kiện chỉ còn quầng sáng (không vòng). Ô trống vẫn có vòng.
+    if (look.accAura) drawAccAura(ctx, look.accAura, s, t, true);
   }
   ctx.translate(0, evoLift * DK * (o.scale || 0.26) / 0.26);
   // nghiêng người + co giãn (squash & stretch) quanh bàn chân
@@ -1007,11 +1006,18 @@ function drawEvoAura(ctx, tier, attrColor, s, t) {
 }
 
 // Hào quang phụ kiện (1 món mạnh nhất): Trống Đồng có sóng âm lan ra, Giáp Đồng Bất Diệt đồng đỏ
-function drawAccAura(ctx, a, s, t) {
+function drawAccAura(ctx, a, s, t, glowOnly) {
   const k = s / 0.28;
   const rx = 30 * DK * k, ry = 10 * DK * k;
   const color = a.kind === 'copper' ? '#C8603A' : a.color;
   ctx.save();
+  if (glowOnly) {
+    const g0 = ctx.createRadialGradient(0, -30 * k, 2, 0, -30 * k, 40 * k);
+    g0.addColorStop(0, hexA(color, '00')); g0.addColorStop(0.7, hexA(color, '2a')); g0.addColorStop(1, hexA(color, '00'));
+    ctx.fillStyle = g0; ctx.beginPath(); ctx.arc(0, -30 * k, 40 * k, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    return;
+  }
   ctx.globalAlpha = 0.6 + Math.sin(t * 3) * 0.15;
   ctx.strokeStyle = color;
   ctx.lineWidth = 2;

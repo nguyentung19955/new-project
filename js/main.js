@@ -204,6 +204,8 @@ function render() {
     else if (i === ui.sel && h) o.mode = 'sel';
     else if (!h && ui.armed && !o.flooded) o.mode = 'free';
     else if (!h && i === ui.coachSlot) o.mode = 'hint';
+    // v50: ô đã có tướng thì không vẽ vòng tròn (trừ khi đang chọn / đang kéo để ghép)
+    if (h && !o.mode) return;
     drawSpot(ctx, x, y, o, t);
   });
 
@@ -649,16 +651,6 @@ function drawRankAura(h, t, front) {
     ctx.beginPath();
     ctx.moveTo(x - a.r * 0.55, y); ctx.lineTo(x - a.r * 0.3, y - 95); ctx.lineTo(x + a.r * 0.3, y - 95); ctx.lineTo(x + a.r * 0.55, y);
     ctx.fill();
-    // tia sáng ngắn quanh bệ (chỉ Vàng), xoay chậm
-    for (let i = 0; i < a.ray; i++) {
-      const an = t * 0.4 + (i * Math.PI * 2) / a.ray;
-      ctx.strokeStyle = `rgba(${a.hi},${0.3 * pulse})`;
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(x + Math.cos(an) * a.r * 0.85, y + Math.sin(an) * a.r * 0.32);
-      ctx.lineTo(x + Math.cos(an) * a.r * 1.25, y + Math.sin(an) * a.r * 0.47);
-      ctx.stroke();
-    }
     // hạt sáng bay lên ở HAI BÊN người (sau lưng, không đè mặt); máy yếu thì bỏ
     const nMotes = GFX.level() >= 2 ? 0 : a.n;
     for (let i = 0; i < nMotes; i++) {
@@ -672,18 +664,8 @@ function drawRankAura(h, t, front) {
       ctx.fillStyle = `rgba(${a.hi},${0.85 * al})`;
       ctx.beginPath(); ctx.arc(px2, py2, 1.7, 0, Math.PI * 2); ctx.fill();
     }
-  } else {
-    // vòng ấn trên mặt bệ: một vòng liền + một vòng nét đứt xoay chậm
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = `rgba(${a.c},${0.75 * pulse})`;
-    ctx.beginPath(); ctx.ellipse(x, y, a.r * 0.8, a.r * 0.29, 0, 0, Math.PI * 2); ctx.stroke();
-    ctx.strokeStyle = `rgba(${a.hi},${0.7 * pulse})`;
-    ctx.lineWidth = 1.5;
-    ctx.setLineDash([8, 6]);
-    ctx.lineDashOffset = -t * 10;
-    ctx.beginPath(); ctx.ellipse(x, y, a.r * 0.62, a.r * 0.22, 0, 0, Math.PI * 2); ctx.stroke();
-    ctx.setLineDash([]);
   }
+  // v50: bỏ vòng ấn dưới chân (tướng đứng trên ô không còn vòng tròn)
   ctx.restore();
 }
 

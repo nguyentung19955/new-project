@@ -855,3 +855,7 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
   - Triệu Đà **tráo lẫy nỏ**: còn nửa máu thì tướng mạnh nhất trên sân bị choáng 6 giây; trống trận thúc quân nhanh hơn 25%.
 - **Tướng nét hơn:** ảnh tướng dựng lớn hơn cỡ hiện 1,6 lần rồi thu nhỏ chất lượng cao khi vẽ.
 - **Chống bấm nhầm:** nút màn kết quả (Ải tiếp theo / Chơi lại / Bản đồ) chuyển lên thanh tiêu đề trên cùng, xa nút Lên cấp ở đáy; màn kết quả và màn chọn sính lễ khoá nút 1,2 giây khi vừa hiện (có vạch vàng chạy trên cùng).
+
+### Phiên bản 50
+
+- **Ô có tướng đứng không còn vòng tròn:** bỏ ô tròn, vòng chấm cấp sao, vòng nét đứt Thần tinh, vòng ấn và tia sáng dưới chân tướng Tím / Vàng, vòng phụ kiện. Ô trống vẫn hiện vòng; ô của tướng đang chọn và ô sáng lên khi kéo để ghép / hợp thể vẫn hiện để biết đang thao tác ô nào. Cấp sao / Thần tinh vẫn nhìn được qua trang phục và hào quang sau lưng.
