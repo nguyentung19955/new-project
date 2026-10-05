@@ -310,3 +310,14 @@ Game hiện chạy được đầy đủ luật chơi v14 ở trên. Những đi
 - **Màn Cài đặt** (chưa có trong thiết kế): hiện số sát thương, rung màn hình, bỏ qua cốt truyện, xoá tiến trình. Nút ≡ trong trận mở bảng Tạm dừng: Tiếp tục, Chơi lại, Bản đồ, Menu chính.
 - **Tab Huyền thoại** (chưa có trong thiết kế): bảng 10 tướng hiện cạnh bảng Triệu hồi. Chạm một lần xem đặc trưng, chạm lần nữa để triệu hồi.
 - **Công nghệ:** vẫn là HTML5 Canvas + JavaScript thuần (chưa chuyển Phaser/Spine). Hình vector lấy thẳng từ file thiết kế (`js/art.js`). Tướng được ghép từ các phần (đầu, thân, tay, vũ khí, sau lưng) và có hoạt ảnh theo bản mẫu Đền Anh Hùng: thở, vung đòn, giật lùi khi bắn, giơ tay khi dùng phép, phóng to khi tung R, xuất hiện, sa lầy, gục, hồi sinh. Đồ mặc vẫn vẽ chồng lên để đổi hình dạng.
+
+### Phiên bản 15 · theo bản thiết kế mobile và tài liệu prompt ảnh
+
+Giữ màn hình **ngang**. Lấy từ bản thiết kế mobile những phần hợp:
+- **Menu chính:** khung người chơi Sơn Tinh (cấp theo tổng quái đã hạ, số sao), tài nguyên tích lũy (🪙 tổng vàng đã kiếm, 🌿 Linh Chi đã hái), nút chính **Xuất Quân** màu đỏ son.
+- **Anh Hùng (16):** xem cả 16 tướng, chỉ số, đặc trưng và 4 kỹ năng; có nút sang Đền Anh Hùng xem hoạt ảnh.
+- **Kho Báu:** bộ sưu tập mọi món đồ đã từng có (món chưa có hiện màu tối).
+- **Thanh mực nước** trên thanh trên: chạy dần tới lần dâng nước kế tiếp.
+- **Hộp thoại có ảnh nhân vật:** Sơn Tinh lúc bắt đầu trận, boss khi xuất hiện, Thủy Tinh khi dâng nước.
+
+**Ảnh vẽ tay (AI):** game tự nạp PNG trong `assets/` nếu đặt đúng tên file theo tài liệu prompt (H01–H16, E01–E08, B01–B03, `map-01`…, `tile-low`…, icon đồ, 64 icon kỹ năng, VFX). Danh sách đầy đủ và quy ước (chân ở giữa đáy ảnh, đường sông của bản đồ…) ở `docs/ASSETS.md`. Chưa có ảnh nào thì dùng hình vector như cũ.

@@ -793,6 +793,7 @@ class Game {
     if (this.water >= 3) return;
     this.water++;
     this.effects.push({ type: 'floodrise', ttl: 1.6, max: 1.6 });
+    this.events.push({ type: 'flood', level: this.water });
     this.notify(`Thủy Tinh dâng nước! Các ô bậc ${TIER_NAMES[this.water - 1]} đã ngập`, '#5AB4D6');
   }
 
@@ -1131,6 +1132,7 @@ class Game {
     const n = this.mountain.herbs;
     if (!n) return 0;
     this.mountain.herbs = 0;
+    this.stats.herbs = (this.stats.herbs || 0) + n;
     this.addGold(n * MOUNTAIN.herbGold);
     for (const h of this.heroes) {
       if (h && !h.dead) h.hp = Math.min(heroStats(h).hpMax, h.hp + heroStats(h).hpMax * 0.25 * n);

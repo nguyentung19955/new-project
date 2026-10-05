@@ -4,7 +4,8 @@ Game thủ thành **màn hình ngang** cho điện thoại, chủ đề **Sơn T
 
 - Luật chơi và số liệu: [`GAMEPLAY.md`](GAMEPLAY.md). Mục 14 ghi những gì đã làm trong code.
 - Tài liệu bàn giao thiết kế: [`docs/HANDOFF.md`](docs/HANDOFF.md).
-- Trang **Đền Anh Hùng** (bản mẫu hoạt ảnh 16 tướng): `den-anh-hung.html`, mở từ menu chính.
+- Trang **Đền Anh Hùng** (bản mẫu hoạt ảnh 16 tướng): `den-anh-hung.html`, mở từ màn Anh Hùng (16).
+- Ảnh vẽ tay (AI): thả PNG vào `assets/` theo đúng tên trong [`docs/ASSETS.md`](docs/ASSETS.md); chưa có thì game dùng hình vector.
 
 ## Tính năng chính
 

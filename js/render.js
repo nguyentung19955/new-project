@@ -74,14 +74,77 @@ function svgImage(key, svg) {
 const ready = (img) => img && img.complete && img.naturalWidth > 0;
 
 // ------------------------------------------------------------
+//  ẢNH VẼ TAY (AI) TRONG THƯ MỤC assets/ — đặt đúng tên file theo
+//  docs/ASSETS.md là game tự dùng; chưa có ảnh thì dùng hình vector.
+//  Ảnh được thử tải khi cần lần đầu (không cần danh sách trước).
+// ------------------------------------------------------------
+const ASSET_ROOT = 'assets/';
+const assetMap = new Map();      // đường dẫn -> { img, ok: null | true | false }
+let assetVersion = 0;            // tăng mỗi khi có ảnh mới tải xong (để giao diện vẽ lại)
+let useAssets = true;
+function asset(path) {
+  if (!useAssets) return null;
+  let a = assetMap.get(path);
+  if (!a) {
+    a = { img: new Image(), ok: null };
+    a.img.onload = () => { a.ok = true; assetVersion++; };
+    a.img.onerror = () => { a.ok = false; };
+    a.img.src = ASSET_ROOT + path;
+    assetMap.set(path, a);
+  }
+  return a.ok ? a.img : null;
+}
+const assetUrl = (path) => (asset(path) ? ASSET_ROOT + path : '');
+// mã tướng / quái theo tài liệu prompt (H01..H16, E01..E08, B01..B03)
+const HERO_CODE = { lactuong: 'h01', lucsi: 'h02', xathu: 'h03', thosan: 'h04', thaymo: 'h05', thansuong: 'h06',
+  giong: 'h07', llq: 'h08', kimquy: 'h09', thachsanh: 'h10', auco: 'h11', caolo: 'h12', antiem: 'h13',
+  cdt: 'h14', tiendung: 'h15', langlieu: 'h16' };
+const ENEMY_CODE = { tom: 'E01', casau: 'E02', rua: 'E03', phuthuy: 'E04', chimbao: 'E05', echme: 'E06',
+  nongnoc: 'E07', giaolong: 'E08', thuongluong: 'B01', haba: 'B02', thuytinh: 'B03' };
+// tên file đồ theo tài liệu (còn lại: mã đồ đổi "_" thành "-")
+const ITEM_FILE = { no_tre: 'no', gay_mo: 'gay-thay-mo', mu_long_chim: 'mulong-chim', song_riu: 'song-riu-cuong-no',
+  ngua_hong_mao: 'ngua-chin-hong-mao' };
+// A = splash, B = chân dung, C = sprite trong trận, D = sprite lúc đánh / tung chiêu
+const heroPng = (type, v) => asset(`heroes/hero_${HERO_CODE[type]}_${v}.png`);
+const enemyPng = (type, elite) => {
+  const c = ENEMY_CODE[type];
+  if (!c) return null;
+  return (elite && asset(`${c[0] === 'B' ? 'bosses' : 'enemies'}/${c}_elite_B.png`)) || asset(`${c[0] === 'B' ? 'bosses' : 'enemies'}/${c}.png`);
+};
+const itemPngPath = (id) => `items/${ITEM_FILE[id] || id.replace(/_/g, '-')}.png`;
+const skillPngPath = (type, i) => `skills/${HERO_CODE[type]}_${SKILL_KEYS[i]}.png`;
+const SCENE_FILE = { menu: 'key-art-menu.png', story1: 'scenes/story-1.png', story2: 'scenes/story-2.png', story3: 'scenes/story-3.png',
+  win: 'scenes/victory-bg.png', lose: 'scenes/defeat-bg.png', mountain1: 'scenes/mountain-1.png', mountain2: 'scenes/mountain-2.png',
+  mountain3: 'scenes/mountain-3.png', mountain4: 'scenes/mountain-4.png', mountain5: 'scenes/mountain-5.png',
+  voi: 'items/voi-chin-nga.png', ga: 'items/ga-chin-cua.png', ngua: 'items/ngua-chin-hong-mao.png', hubau: 'items/hu-bau.png' };
+// Hiệu ứng: dải khung hình nằm ngang, mỗi khung vuông (rộng = cao)
+const VFX_FILE = { pillar: 'fire-pillar', explosion: 'fire-burst', nova: 'ice-ring', snow: 'freeze', wave: 'water-wave',
+  bolt: 'lightning', xslash: 'slash-gold', slash: 'slash-gold', claw: 'slash-gold', heal: 'heal', dome: 'shield-gold',
+  rockfall: 'rocks', cracks: 'rocks', drop: 'coins', notes: 'music-notes', summon: 'spawn-ring', die: 'dust',
+  bash: 'hit-spark', floodrise: 'flood-rise', raise: 'mountain-rise' };
+function vfxSheet(type) {
+  const f = VFX_FILE[type];
+  return f ? asset(`vfx/${f}.png`) : null;
+}
+// vẽ một khung của dải hiệu ứng theo tiến độ p (0..1), tâm (x, y), cạnh size
+function drawVfx(ctx, img, p, x, y, size) {
+  const n = Math.max(1, Math.round(img.naturalWidth / img.naturalHeight));
+  const fr = Math.min(n - 1, Math.floor(p * n));
+  const fw = img.naturalWidth / n;
+  ctx.drawImage(img, fr * fw, 0, fw, img.naturalHeight, x - size / 2, y - size / 2, size, size);
+}
+
+// ------------------------------------------------------------
 //  BẢN ĐỒ
 // ------------------------------------------------------------
 let mapImgKey = '';
-function mapImage(pw, ph) {
+function mapImage(pw, ph, level) {
+  const png = asset(`maps/map-0${(level || 0) + 1}.png`);
+  if (png) return png;
   if (!HAS_ART) return null;
   const key = `map|${pw}x${ph}`;
   mapImgKey = key;
-  return svgImage(key, sizedSvg(ART.map, pw, ph));
+  return svgCache.get(key) || svgImage(key, sizedSvg(ART.map, pw, ph));
 }
 
 // Vẽ nền dự phòng khi chưa có ảnh: cỏ + sông theo đường đi
@@ -121,10 +184,18 @@ function drawWaterLevel(ctx, water, t) {
 // state: dry | flooded | raised | target | free | hint | soon
 function drawSpot(ctx, x, y, o, t) {
   const rx = 15 * DK, ry = 10 * DK;
+  const tile = asset(o.flooded ? 'tiles/tile-flooded.png' : o.raised || o.tier === 2 ? 'tiles/tile-high.png' : o.tier === 1 ? 'tiles/tile-mid.png' : 'tiles/tile-low.png');
+  if (tile) {
+    // ô vẽ tay: ảnh vuông, vẽ phẳng theo phối cảnh ô (rộng 2.4 × bán kính)
+    ctx.drawImage(tile, x - rx * 1.25, y - ry * 1.25, rx * 2.5, ry * 2.5);
+    o = { ...o, tileArt: true };
+  }
   ctx.save();
   ctx.beginPath();
   ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
-  if (o.flooded) {
+  if (o.tileArt) {
+    // đã có ảnh ô
+  } else if (o.flooded) {
     ctx.fillStyle = 'rgba(44,106,134,0.85)';
     ctx.fill();
     ctx.setLineDash([3 * DK, 3 * DK]);
@@ -319,6 +390,19 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
   ctx.translate(-100 + (lunge + recoil + hurtX), -222 + drop + sink);
   if (fallRot) { ctx.translate(100, 222); ctx.rotate(fallRot); ctx.translate(-100, -222); }
 
+  // ảnh vẽ tay: chân ở giữa đáy ảnh. Ảnh phẳng không thay được từng món đồ,
+  // nên đồ mặc hiện qua hào quang, cánh rồng và sao tiến hoá.
+  const png = !o.vector && (((o.castT > 0 || o.swing > 0.5) && heroPng(h.type, 'D')) || heroPng(h.type, 'C'));
+  if (png) {
+    if (look.wings) withProc(ctx, () => drawWings(ctx, look.wings, t));
+    const hgt = 236, w = hgt * png.naturalWidth / png.naturalHeight;
+    ctx.translate(100, 222);
+    ctx.scale(1 + Math.sin(t * 2.85 + seed) * 0.012, 1 - Math.sin(t * 2.85 + seed) * 0.018 + lift * -0.004);
+    ctx.drawImage(png, -w / 2, -hgt, w, hgt);
+    ctx.restore();
+    if (o.bog) drawBogWater(ctx, x, y, s, t);
+    return { top: y - 240 * s * big, s };
+  }
   const P = (part) => heroPartImage(h.type, part, q);
   const hasArt = !!P('body');
   // sau lưng: áo choàng, cánh
@@ -794,8 +878,21 @@ function drawEnemy(ctx, e, t, o = {}) {
     ctx.shadowColor = '#ff2d2d';
     ctx.shadowBlur = 14;
   }
-  const img = a && enemyImage(e.type, o.px || 1);
-  if (ready(img)) {
+  const png = enemyPng(e.type, e.elite || e.champion);
+  if (png) {
+    // ảnh vẽ tay: chân ở giữa đáy ảnh, rộng theo ENEMY_W
+    const h2 = box.w * png.naturalHeight / png.naturalWidth;
+    ctx.drawImage(png, -box.w / 2, -h2 + (d.flying ? h2 * 0.5 : 0), box.w, h2);
+    if (e.hitT > 0) {
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.globalAlpha = e.hitT / 0.12 * 0.55;
+      ctx.drawImage(png, -box.w / 2, -h2 + (d.flying ? h2 * 0.5 : 0), box.w, h2);
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 1;
+    }
+  }
+  const img = !png && a && enemyImage(e.type, o.px || 1);
+  if (png) { /* đã vẽ */ } else if (ready(img)) {
     const x0 = -(a.ax / a.w) * box.w, y0 = -box.ay;
     ctx.drawImage(img, x0, y0, box.w, box.h);
     // chớp sáng khi trúng đòn
@@ -880,6 +977,12 @@ function drawEnemyIcon(cv, type, pad = 0.12) {
   const c = cv.getContext('2d');
   const W = cv.width, H = cv.height;
   c.clearRect(0, 0, W, H);
+  const png = enemyPng(type);
+  if (png) {
+    const k2 = Math.min((W * (1 - pad * 2)) / png.naturalWidth, (H * (1 - pad * 2)) / png.naturalHeight);
+    c.drawImage(png, (W - png.naturalWidth * k2) / 2, (H - png.naturalHeight * k2) / 2, png.naturalWidth * k2, png.naturalHeight * k2);
+    return;
+  }
   const a = enemyArt(type);
   if (!a) { circle(c, W / 2, H / 2, Math.min(W, H) * 0.3, ENEMIES[type].color); return; }
   const k = Math.min((W * (1 - pad * 2)) / a.w, (H * (1 - pad * 2)) / a.h);
@@ -896,6 +999,12 @@ function drawHeroPortrait(cv, h, t, o = {}) {
   const c = cv.getContext('2d');
   const W = cv.width, H = cv.height;
   c.clearRect(0, 0, W, H);
+  const png = !o.full && heroPng(h.type, 'B');
+  if (png) {
+    const k = Math.max(W / png.naturalWidth, H / png.naturalHeight);
+    c.drawImage(png, (W - png.naturalWidth * k) / 2, 0, png.naturalWidth * k, png.naturalHeight * k);
+    return;
+  }
   const s = o.full ? H / 290 : H / 175;
   const look = computeLook({ ...h, grow: 0 });
   look.aura = null;

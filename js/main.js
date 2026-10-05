@@ -40,7 +40,7 @@ function resize() {
   canvas.height = Math.round(h * dpr);
   view = { scale, dpr };
   ui.scale = scale;
-  mapImg = mapImage(canvas.width, canvas.height);
+  mapImg = mapImage(canvas.width, canvas.height, game.level);
 }
 window.addEventListener('resize', resize);
 window.addEventListener('orientationchange', () => setTimeout(resize, 200));
@@ -95,6 +95,9 @@ function render() {
   if (game.shake > 0.2) ctx.translate((Math.random() - 0.5) * game.shake, (Math.random() - 0.5) * game.shake);
   if (ready(mapImg)) ctx.drawImage(mapImg, 0, 0, CONFIG.W, CONFIG.H);
   else drawMapFallback(ctx);
+  // thành Phong Châu vẽ tay (khi bản đồ chưa có ảnh riêng)
+  const castle = !asset(`maps/map-0${game.level + 1}.png`) && asset('tiles/castle-phong-chau.png');
+  if (castle) ctx.drawImage(castle, 838 * DK, 70 * DK, 110 * DK, 150 * DK);
   drawWaterLevel(ctx, game.water, t);
   drawZones(t);
   drawBlocks(t);
@@ -472,6 +475,15 @@ function drawEffects(t) {
     const p = 1 - k;         // 0 -> 1
     ctx.save();
     ctx.globalAlpha = Math.max(0, Math.min(1, k * 1.5));
+    // hiệu ứng vẽ tay (dải khung hình trong assets/vfx/) nếu có
+    const sheet = f.x !== undefined && vfxSheet(f.type);
+    if (sheet) {
+      const size = Math.max(60, (f.r || 30) * 2.2);
+      ctx.globalAlpha = 1;
+      drawVfx(ctx, sheet, p, f.x, f.y - size * 0.3, size);
+      ctx.restore();
+      continue;
+    }
     switch (f.type) {
       case 'text': {
         const pop = p < 0.15 ? 0.7 + p * 2 : 1;
@@ -1067,7 +1079,7 @@ function loop(now) {
   if (game.started && game.running) {
     for (let i = 0; i < game.speed; i++) game.update(dt);
   }
-  if (!ready(mapImg) && mapImg) mapImg = mapImage(canvas.width, canvas.height);
+  mapImg = mapImage(canvas.width, canvas.height, game.level);
   render();
   ui.tick(dt);
   requestAnimationFrame(loop);

@@ -28,20 +28,34 @@ const svgI = (svg, cls = '') => `<span class="svgi ${cls}">${svg || ''}</span>`;
 const coin = (sm) => `<i class="coin${sm ? ' sm' : ''}"></i>`;
 const rarCls = (r) => ({ common: 'rt', rare: 'rh', epic: 'rs', legendary: 'rl' }[r]);
 const ATTR_CLS = { str: 'a-str', agi: 'a-agi', int: 'a-int' };
+const BOSS_LINES = {
+  thuongluong: 'Ta là Thuồng Luồng sông Đà! Một cú quẫy đuôi là tướng của ngươi nằm rạp!',
+  haba: 'Hà Bá ta sống dưới nước nghìn năm. Hạ ta một lần chưa phải là xong đâu!',
+  thuytinh: 'Mị Nương phải là của ta! Mưa gió ơi, nhấn chìm Phong Châu!',
+};
 const RUN_CHIP = '<span class="chip run">Quái vẫn đang chạy</span>';
 
+// Icon: ưu tiên ảnh vẽ tay trong assets/ (nếu đã có), không thì dùng hình vector
 function skillIcon(type, i) {
+  const u = assetUrl(skillPngPath(type, i));
+  if (u) return `<img src="${u}" alt="">`;
   return HAS_ART && ART.skill[type] ? ART.skill[type][SKILL_KEYS[i]] : '';
 }
 function itemIcon(id) {
+  const u = assetUrl(itemPngPath(id));
+  if (u) return `<img src="${u}" alt="">`;
   return HAS_ART && ART.item[id] ? ART.item[id] : '';
 }
 function sceneArt(k) {
+  const u = SCENE_FILE[k] && assetUrl(SCENE_FILE[k]);
+  if (u) return `<img src="${u}" alt="">`;
   return HAS_ART && ART.scene[k] ? ART.scene[k] : '';
 }
 // Ảnh tướng ghép đủ các phần (để làm nút triệu hồi, chân dung nhỏ)
 const heroUrlCache = {};
 function heroImgUrl(type, crop) {
+  const png = assetUrl(`heroes/hero_${HERO_CODE[type]}_${crop === 'head' ? 'B' : 'C'}.png`);
+  if (png) return png;
   const key = type + (crop || '');
   if (heroUrlCache[key]) return heroUrlCache[key];
   if (!HAS_ART || !ART.hero[type]) return '';
@@ -56,6 +70,7 @@ function heroImgUrl(type, crop) {
 const SAVE_KEY = 'nuicao.v1';
 function loadSave() {
   const def = { stars: LEVELS.map(() => 0), unlocked: 1, last: 0, best: {}, storySeen: false,
+    lifeGold: 0, lifeKills: 0, lifeHerbs: 0, collected: [],
     settings: { dmgText: true, shake: true, skipStory: false } };
   try {
     const s = JSON.parse(localStorage.getItem(SAVE_KEY) || '{}');
@@ -96,7 +111,8 @@ class UI {
     const g = this.game;
     $('#btn-continue').onclick = () => this.playLevel(this.save.last);
     $('#btn-campaign').onclick = () => this.showCampaign(this.save.last);
-    $('#btn-temple').onclick = () => { location.href = 'den-anh-hung.html'; };
+    $('#btn-heroes').onclick = () => this.showRoster();
+    $('#btn-treasury').onclick = () => this.showTreasury();
     $('#btn-menu-codex').onclick = () => this.openScreen('codex', { top: true });
     $('#btn-settings').onclick = () => this.showSettings(false);
     $('#btn-menu').onclick = () => this.showSettings(true);
@@ -107,7 +123,10 @@ class UI {
       if (!g.started || g.over) return;
       if (g.won && !g.endless) return;
       g.running = !g.running;
-      if (g.running && g.wave === 0 && !g.waveActive) g.startWave();
+      if (g.running && g.wave === 0 && !g.waveActive) {
+        g.startWave();
+        this.say('sontinh', 'Nước dâng bao nhiêu, núi cao bấy nhiêu! Các tướng Văn Lang, giữ lấy Phong Châu!');
+      }
     };
     $('#btn-speed').onclick = () => { g.speed = g.speed === 1 ? 2 : g.speed === 2 ? 3 : 1; };
     $('#btn-early').onclick = () => {
@@ -119,7 +138,7 @@ class UI {
     };
     $('#btn-legend').onclick = () => { $('#legends').hidden = !$('#legends').hidden; this.renderLegends(); };
     // ủy quyền sự kiện cho các vùng dựng lại liên tục
-    for (const id of ['#screen', '#bt-cmds', '#bt-items', '#bt-info', '#reward', '#result', '#story', '#campaign', '#settings', '#legends']) {
+    for (const id of ['#screen', '#bt-cmds', '#bt-items', '#bt-info', '#reward', '#result', '#story', '#campaign', '#settings', '#legends', '#roster', '#treasury']) {
       $(id).addEventListener('click', (ev) => {
         const el = ev.target.closest('[data-act]');
         if (el && !el.disabled) this.action(el.dataset, el);
@@ -141,12 +160,16 @@ class UI {
     $('#menu').hidden = false;
     const s = this.save;
     const total = s.stars.reduce((a, b) => a + b, 0);
-    $('#menu-stars').innerHTML = `<span style="color:#FFD66B">★</span> ${total} / ${LEVELS.length * 3}`;
-    $('#continue-label').textContent = `${this.game.started && !this.game.over && !this.game.won ? 'Chơi tiếp' : 'Vào trận'} · Ải ${s.last + 1}`;
+    const lv = 1 + Math.floor(Math.sqrt(s.lifeKills / 25));
+    $('#menu-player').innerHTML = `<span class="av">${svgI(sceneArt('drum'))}</span><span><b>Sơn Tinh</b><small>Cấp ${lv} · ★ ${total}/${LEVELS.length * 3}</small></span>`;
+    const short = (n) => (n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace('.', ',') + 'k' : n);
+    $('#menu-res').innerHTML = `<span title="Tổng vàng đã kiếm">${coin(1)} ${short(s.lifeGold)}</span><span title="Linh Chi đã hái">🌿 ${short(s.lifeHerbs)}</span>`;
+    $('#menu-art').innerHTML = svgI(sceneArt('menu'));
+    $('#continue-label').textContent = `${this.game.started && !this.game.over && !this.game.won ? 'Chơi tiếp' : 'Xuất Quân'} · Ải ${s.last + 1}`;
     this.setInGame(false);
   }
   hideOverlays() {
-    for (const id of ['#menu', '#story', '#campaign', '#settings', '#result', '#reward']) $(id).hidden = true;
+    for (const id of ['#menu', '#story', '#campaign', '#settings', '#result', '#reward', '#roster', '#treasury']) $(id).hidden = true;
   }
   setInGame(on) {
     document.querySelectorAll('.ingame').forEach((el) => { el.hidden = !on; });
@@ -167,7 +190,9 @@ class UI {
 
   startLevel(i) {
     const g = this.game;
+    if (g.started) this.bankStats();
     g.reset(i);
+    g.runId = Date.now();
     g.started = true;
     g.running = false;
     g.speed = 1;
@@ -410,6 +435,22 @@ class UI {
   tick(dt) {
     const g = this.game;
     this.handleEvents();
+    if (this.assetSeen !== assetVersion) {
+      // có ảnh vẽ tay mới tải xong: vẽ lại các phần dùng ảnh
+      this.assetSeen = assetVersion;
+      this.sig = {};
+      this.buildSummon();
+      if (!$('#menu').hidden) this.showMenu();
+    }
+    this.collectT = (this.collectT || 0) - dt;
+    if (g.started && this.collectT <= 0) {
+      this.collectT = 2;
+      const have = new Set(this.save.collected);
+      const n0 = have.size;
+      for (const i of g.inventory) have.add(i.id);
+      for (const h of g.heroes) if (h) for (const sl of SLOTS) if (h.equip[sl]) have.add(h.equip[sl].id);
+      if (have.size !== n0) { this.save.collected = [...have]; writeSave(this.save); }
+    }
     if (!g.started) return;
     const inGame = $('#menu').hidden && $('#campaign').hidden && $('#story').hidden;
     if (!inGame) return;
@@ -440,12 +481,30 @@ class UI {
         this.showReward(ev);
       } else if (ev.type === 'boss') {
         this.banner(ev.champion ? 'Quái khổng lồ' : 'Boss xuất hiện', ev.name);
+        if (ev.enemy) this.say(ev.enemy, BOSS_LINES[ev.enemy]);
+      } else if (ev.type === 'flood') {
+        this.say('thuytinh', ev.level >= 2 ? 'Nước dâng cao nữa! Xem núi của ngươi cao được bao nhiêu!' : 'Sơn Tinh! Ta dâng nước nhấn chìm Phong Châu!');
       } else if (ev.type === 'victory') {
         this.finishLevel(true);
       } else if (ev.type === 'defeat') {
         this.finishLevel(false);
       }
     }
+  }
+
+  // Hộp thoại có ảnh nhân vật (theo bản thiết kế mobile)
+  say(who, text) {
+    if (!text) return;
+    const box = $('#dialogue');
+    const foe = !!ENEMIES[who];
+    const name = foe ? ENEMIES[who].name : who === 'sontinh' ? 'Sơn Tinh' : HEROES[who] ? HEROES[who].name : who;
+    box.className = foe ? 'foe' : 'ally';
+    const av = foe ? '<canvas width="108" height="124"></canvas>' : HEROES[who] ? `<img src="${heroImgUrl(who, 'head')}" alt="">` : svgI(sceneArt('drum'));
+    box.innerHTML = `<div class="dav">${av}</div><div><h4>${esc(name)}</h4><p>“${esc(text)}”</p></div>`;
+    if (foe) drawEnemyIcon(box.querySelector('canvas'), who, 0.04);
+    box.hidden = false;
+    clearTimeout(this.sayT);
+    this.sayT = setTimeout(() => { box.hidden = true; }, 4200);
   }
 
   banner(sub, text) {
@@ -479,6 +538,14 @@ class UI {
     this.setText('#tb-gold b', fmt(g.gold));
     this.setText('#tb-lives b', g.lives);
     this.setText('#tb-water b', `${g.water}/3`);
+    // thanh mực nước: tiến tới lần dâng nước kế (sau đợt boss tiếp theo)
+    let prev = 0, next = 0;
+    for (let n = 1; n <= Math.max(g.levelWaves, g.wave + 10); n++) {
+      if (!bossAt(n, g.level)) continue;
+      if (n <= g.wave && !(n === g.wave && g.waveActive)) prev = n; else { next = n; break; }
+    }
+    const fill = g.water >= 3 ? 1 : next ? Math.max(0, Math.min(1, (g.wave - prev) / (next - prev))) : 1;
+    $('#tb-flood').style.width = `${fill * 100}%`;
     this.setText('#btn-mountain', `Núi · ${g.mountainStage()}`);
     $('#btn-speed').textContent = 'x' + g.speed;
     $('#btn-speed').classList.toggle('on', g.speed > 1);
@@ -708,6 +775,78 @@ class UI {
     coach.style.top = Math.max(48, pos[1] - 30) + 'px';
   }
 
+  // ---------- Anh Hùng (16): xem 16 tướng, kỹ năng, đặc trưng
+  showRoster(sel) {
+    this.rosterSel = sel || this.rosterSel || 'lactuong';
+    this.hideOverlays();
+    $('#roster').hidden = false;
+    this.renderRoster();
+  }
+  renderRoster() {
+    const t = this.rosterSel;
+    const d = HEROES[t];
+    const all = [...BASIC_HEROES, ...LEGEND_HEROES];
+    const splash = assetUrl(`heroes/hero_${HERO_CODE[t]}_A.png`);
+    const n = skillN(1);
+    $('#roster').innerHTML = `<div class="screen" style="z-index:auto">
+      <div class="scr-head metal"><button class="xbtn metal" data-act="ro-back" aria-label="Quay lại">${ICON.back}</button><h1 class="ttl">Anh Hùng Văn Lang</h1>
+        <span class="chip dark">16 tướng · 6 cơ bản + 10 huyền thoại</span><div class="sp"></div>
+        <button class="btn metal title" data-act="ro-temple">Đền Anh Hùng · xem hoạt ảnh</button></div>
+      <div class="scr-body">
+        <div class="ro-grid">${all.map((k) => {
+          const h = HEROES[k];
+          return `<button class="ro-card ${h.legend || ''} ${k === t ? 'on' : ''}" data-act="ro-sel" data-type="${k}">
+            <span class="tag" style="color:${ATTRS[h.attr].color}">${ATTRS[h.attr].short}</span>
+            <img src="${heroImgUrl(k)}" alt=""><span class="nm">${h.name}</span></button>`;
+        }).join('')}</div>
+        <div class="panel metal ro-det">
+          <div class="ro-top">
+            <div class="ro-pic inset">${splash ? `<img src="${splash}" alt="">` : '<canvas id="ro-cv" width="300" height="300"></canvas>'}</div>
+            <div style="display:flex;flex-direction:column;gap:5px;min-width:0">
+              <div class="ttl" style="font-size:26px;line-height:1">${d.name}</div>
+              <div class="note" style="font-style:italic">${esc(d.title)}</div>
+              <div class="bt-info" style="padding:0;background:none;border:0;box-shadow:none"><div class="tags">
+                <span class="${ATTR_CLS[d.attr]}">${ATTRS[d.attr].name}</span>
+                <span style="background:#3A2410;color:${d.legend ? RARITY[d.legend].color : '#C8BFA8'}">${d.legend ? RARITY[d.legend].name : 'Cơ bản'}</span>
+                <span style="background:#2A1810;color:#FFB08A">${d.dmgType === 'magic' ? 'Phép' : 'Vật lý'} · ${d.attack === 'melee' ? 'Cận chiến' : 'Đánh xa'}</span>
+                <span style="background:#1A1610;color:#C8BFA8">${d.role}</span></div></div>
+              <div class="kvt inset" style="font-size:12px"><div><span>Giá triệu hồi</span><b style="color:#FFD66B">${d.cost} vàng</b></div>
+                <div><span>Tầm · Tốc đánh</span><b>${d.base.range} · ${d.base.cooldown}s</b></div>
+                <div><span>Sức · Nhanh · Trí (cấp 1)</span><b>${d.attrs.str} · ${d.attrs.agi} · ${d.attrs.int}</b></div></div>
+              ${d.trait ? `<div class="tipbox inset" style="font-size:12px">★ <b>${d.trait.name}:</b> ${esc(d.trait.desc)}</div>` : ''}
+            </div></div>
+          <div class="ro-sk">${d.skills.map((sk, i) => `<div class="inset">${svgI(skillIcon(t, i))}<b style="color:#F2D27A">${SKILL_KEYS[i]} · ${sk.name}</b><span style="color:#C8BFA8;font-weight:500">${esc(sk.info(n))}</span></div>`).join('')}</div>
+        </div></div></div>`;
+    // ảnh vector tải không đồng bộ: vẽ lại vài lần cho chắc
+    const draw = () => {
+      const cv = $('#ro-cv');
+      if (cv && this.rosterSel === t) drawHeroPortrait(cv, { type: t, id: 1, level: 1, tier: 0, equip: {}, skillLv: {} }, 0, { full: true });
+    };
+    [0, 120, 400, 1000].forEach((ms) => setTimeout(draw, ms));
+  }
+
+  // ---------- Kho Báu: bộ sưu tập đồ đã từng có
+  showTreasury() {
+    this.hideOverlays();
+    $('#treasury').hidden = false;
+    const have = new Set(this.save.collected);
+    const groups = [
+      ['Vũ khí', (it) => it.slot === 'weapon'], ['Mũ', (it) => it.slot === 'helmet'], ['Giáp', (it) => it.slot === 'armor'],
+      ['Phụ kiện', (it) => it.slot === 'acc' && it.price], ['Đồ đúc', (it) => it.recipe], ['Sính lễ & bảo vật', (it) => it.bossOnly],
+    ];
+    const ids = Object.keys(ITEMS);
+    const got = ids.filter((id) => have.has(id)).length;
+    $('#treasury').innerHTML = `<div class="screen" style="z-index:auto">
+      <div class="scr-head metal"><button class="xbtn metal" data-act="ro-back" aria-label="Quay lại">${ICON.back}</button><h1 class="ttl">Kho Báu</h1>
+        <span class="chip ok">Đã sưu tầm ${got} / ${ids.length}</span><div class="sp"></div>
+        <span class="chip dark">${coin(1)} Tổng vàng ${fmt(this.save.lifeGold)} · Quái đã hạ ${fmt(this.save.lifeKills)}</span></div>
+      <div class="tr-body">${groups.map(([name, f]) => `<div class="tr-sec"><div class="h">${name}</div><div class="tr-row">${ids.filter((id) => f(ITEMS[id])).map((id) => {
+        const it = ITEMS[id];
+        return `<span class="slot ${rarCls(it.rarity)} ${have.has(id) ? '' : 'no'}" title="${it.name}${have.has(id) ? '' : ' (chưa có)'}">${svgI(itemIcon(id))}</span>`;
+      }).join('')}</div></div>`).join('')}
+      <div class="note">Đồ có được trong trận (rơi từ quái, Hũ báu, Lò đúc, sính lễ) được ghi vào Kho Báu. Đồ chưa có hiện màu tối.</div></div></div>`;
+  }
+
   // ============================================================
   //  SÍNH LỄ, KẾT QUẢ
   // ============================================================
@@ -753,6 +892,19 @@ class UI {
     else this.toast('Mọi tướng +2 cấp!', '#6AE06A');
   }
 
+  // cộng thành tích trận vào hồ sơ người chơi (chỉ cộng phần mới)
+  bankStats() {
+    const g = this.game, s = this.save;
+    const b = this.banked || { kills: 0, gold: 0, herbs: 0, id: null };
+    if (b.id !== g.runId) { b.kills = 0; b.gold = 0; b.herbs = 0; b.id = g.runId; }
+    s.lifeKills += g.stats.kills - b.kills;
+    s.lifeGold += g.stats.goldEarned - b.gold;
+    s.lifeHerbs += (g.stats.herbs || 0) - b.herbs;
+    b.kills = g.stats.kills; b.gold = g.stats.goldEarned; b.herbs = g.stats.herbs || 0;
+    this.banked = b;
+    writeSave(s);
+  }
+
   finishLevel(win) {
     const g = this.game;
     const s = this.save;
@@ -764,7 +916,7 @@ class UI {
       s.unlocked = Math.max(s.unlocked, Math.min(LEVELS.length, lv + 2));
     }
     s.best[lv] = Math.max(s.best[lv] || 0, g.wave);
-    writeSave(s);
+    this.bankStats();
     this.closeScreen();
     $('#reward').hidden = true;
     const rows = `<div><span>⚑ Đợt</span><b>${g.wave}/${g.levelWaves}</b></div>
@@ -849,7 +1001,10 @@ class UI {
         break;
       case 'restart': this.startLevel(g.level); break;
       case 'to-map': this.showCampaign(g.level); break;
-      case 'to-menu': $('#settings').hidden = true; this.showMenu(); break;
+      case 'to-menu': $('#settings').hidden = true; if (g.started) this.bankStats(); this.showMenu(); break;
+      case 'ro-sel': this.rosterSel = d.type; this.renderRoster(); break;
+      case 'ro-back': this.showMenu(); break;
+      case 'ro-temple': location.href = 'den-anh-hung.html'; break;
       case 'next-level': this.save.last = Math.min(LEVELS.length - 1, g.level + 1); writeSave(this.save); this.showCampaign(this.save.last); break;
       case 'endless':
         g.endless = true;
@@ -1053,7 +1208,7 @@ class UI {
     const h = g.heroes[this.sel];
     const heroKey = h ? `${h.id}|${h.level}|${h.skillPts}|${h.tier}|${JSON.stringify(h.skillLv)}|${SLOTS.map((s) => h.equip[s] ? h.equip[s].uid + '.' + h.equip[s].plus + h.equip[s].rarity + h.equip[s].locked : '').join()}` : '';
     const invKey = g.inventory.map((i) => i.uid + '.' + i.plus + i.rarity + (i.locked ? 'L' : '')).join();
-    const key = [sc.kind, sc.tab, sc.skill, sc.pick, sc.recipe, sc.shop, sc.opened, sc.slot, g.gold, heroKey, invKey,
+    const key = [assetVersion, sc.kind, sc.tab, sc.skill, sc.pick, sc.recipe, sc.shop, sc.opened, sc.slot, g.gold, heroKey, invKey,
       g.mountain.growth, g.mountain.herbs, g.mountain.soiled, g.wave, g.running, JSON.stringify(this.scrapFilter), Object.keys(g.seen).length].join('|');
     if (!force && this.sig.screen === key) return;
     this.sig.screen = key;
