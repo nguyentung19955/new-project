@@ -33,7 +33,8 @@ function viewportSize() {
 }
 
 // Cỡ chữ & nút: 'auto' = màn hình thấp (điện thoại xoay ngang, cao < 520 px) phóng to 1,2 lần
-const UIW = 932, UIZ = 1;
+let UIW = 932, UIH = 430, MAPX = 0, MAPY = 0;
+const UIZ = 1;
 let HZ = 1;
 function uiZoom(vh) {
   const m = (ui && ui.save && ui.save.settings.uiSize) || 'auto';
@@ -57,27 +58,41 @@ const GFX = {
     if (this.ema > 24) { this.lv++; this.ema = 16; this.apply(); }
   },
 };
+// Tự xoay ngang (v42): cầm điện thoại dọc thì xoay cả khung game 90° cho vừa màn hình,
+// người chơi chỉ việc cầm ngang — không cần bật xoay màn hình của máy.
+let ROT = false;
 function resize() {
-  const [vw, vh] = viewportSize();
+  let [vw, vh] = viewportSize();
   if (!vw || !vh) return requestAnimationFrame(resize);
-  $('#rotate').hidden = !(vh > vw && vw < 900);
-  const scale = Math.min(vw / CONFIG.W, vh / CONFIG.H);
-  const w = Math.floor(CONFIG.W * scale), h = Math.floor(CONFIG.H * scale);
+  ROT = vh > vw;
+  if (ROT) [vw, vh] = [vh, vw];
+  $('#rotate').hidden = true;
+  wrap.classList.toggle('rot', ROT);
+  // Responsive (v42): khung game phủ KÍN màn hình. Bản đồ co vừa (được cắt bớt tối đa CROP đơn vị
+  // nền trống trên + dưới khi màn hình dẹt), nằm giữa; phần thừa phủ ảnh bản đồ mờ tối.
+  // Giao diện bám mép màn hình thật nên che ít bản đồ hơn.
+  const CROP = 34;
+  const scale = Math.min(vw / CONFIG.W, vh / (CONFIG.H - CROP));
+  const w = Math.floor(vw), h = Math.floor(vh);
+  const ox = (w / scale - CONFIG.W) / 2;                       // lệch bản đồ (đơn vị logic)
+  const hv = h / scale;
+  const oy = hv >= CONFIG.H ? (hv - CONFIG.H) / 2 : (hv - CONFIG.H) * 0.55;   // cắt trên nhiều hơn dưới một chút
   const dpr = Math.min(window.devicePixelRatio || 1, GFX.dprCap());
   wrap.style.width = w + 'px';
   wrap.style.height = h + 'px';
-  // giao diện dựng ở khung thiết kế 932×430 rồi phóng to theo màn hình.
-  // Cỡ giao diện (UIZ): khung thiết kế thu nhỏ lại 1/z rồi phóng to thêm z lần → chữ, nút to hơn z lần.
-  // Cỡ chữ & nút (--hz): chỉ phóng to phần trong trận (thanh trên, thanh tướng, nút nổi, thông báo…),
-  // các màn toàn trang (túi đồ, lò đúc…) giữ khung chuẩn để không tràn chữ.
-  wrap.style.setProperty('--k', w / 932);
+  // giao diện: cùng tỉ lệ với bản đồ (k), khung thiết kế rộng / cao theo màn hình (UIW × UIH)
+  const k = scale * DK;
+  UIW = w / k; UIH = h / k; MAPX = ox; MAPY = oy;
+  $('#ui').style.width = UIW + 'px';
+  $('#ui').style.height = UIH + 'px';
+  wrap.style.setProperty('--k', k);
   HZ = uiZoom(vh);
   wrap.style.setProperty('--hz', HZ);
   canvas.width = Math.round(w * dpr);
   canvas.height = Math.round(h * dpr);
-  view = { scale, dpr };
+  view = { scale, dpr, ox, oy };
   ui.scale = scale;
-  mapImg = mapImage(canvas.width, canvas.height, game.level);
+  mapImg = mapImage(Math.round(CONFIG.W * scale * dpr), Math.round(CONFIG.H * scale * dpr), game.level);
 }
 window.addEventListener('resize', resize);
 window.addEventListener('orientationchange', () => setTimeout(resize, 200));
@@ -88,7 +103,9 @@ resize();
 let drag = null;
 const toLogical = (ev) => {
   const r = canvas.getBoundingClientRect();
-  return [(ev.clientX - r.left) / view.scale, (ev.clientY - r.top) / view.scale];
+  // khung đang xoay 90° (chiều kim đồng hồ): trục ngang của game chạy dọc màn hình
+  if (ROT) return [(ev.clientY - r.top) / view.scale - view.ox, (r.right - ev.clientX) / view.scale - view.oy];
+  return [(ev.clientX - r.left) / view.scale - view.ox, (ev.clientY - r.top) / view.scale - view.oy];
 };
 
 canvas.addEventListener('pointerdown', (ev) => {
@@ -143,7 +160,19 @@ function drawAiMap(img) {
 
 function render() {
   const t = performance.now() / 1000;
-  ctx.setTransform(px(), 0, 0, px(), 0, 0);
+  // phần màn hình ngoài bản đồ: ảnh bản đồ phóng phủ kín, tối đi (chỉ khi có lề)
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  if (view.ox > 0.5 || view.oy > 0.5) {
+    ctx.fillStyle = '#1E2A16';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    if (ready(mapImg)) {
+      const cs = Math.max(canvas.width / CONFIG.W, canvas.height / CONFIG.H);
+      ctx.globalAlpha = 0.45;
+      ctx.drawImage(mapImg, (canvas.width - CONFIG.W * cs) / 2, (canvas.height - CONFIG.H * cs) / 2, CONFIG.W * cs, CONFIG.H * cs);
+      ctx.globalAlpha = 1;
+    }
+  }
+  ctx.setTransform(px(), 0, 0, px(), view.ox * px(), view.oy * px());
   if (game.shake > 0.2) ctx.translate((Math.random() - 0.5) * game.shake, (Math.random() - 0.5) * game.shake);
   const nen = !asset(`maps/map-0${game.level + 1}.png`) && asset(`nen_ai-${NEN_AI[game.level] || 1}.png`);
   if (nen) drawAiMap(nen);
@@ -1568,7 +1597,7 @@ function loop(now) {
   if (game.started && game.running) {
     for (let i = 0; i < game.speed; i++) game.update(dt);
   } else if (game.started) game.updateIdle(dt);
-  mapImg = mapImage(canvas.width, canvas.height, game.level);
+  mapImg = mapImage(Math.round(CONFIG.W * view.scale * view.dpr), Math.round(CONFIG.H * view.scale * view.dpr), game.level);
   render();
   ui.tick(dt);
   requestAnimationFrame(loop);

@@ -996,6 +996,12 @@ const AIR_WAVES = [7, 13, 17, 24, 27];
 const CHAMPION_WAVES = [5, 15, 25];
 
 // Chiến dịch dọc sông Đà (tên ải là đề xuất)
+// Chế độ Khó (v42): máu quái nhân thêm theo từng ải
+const HARD = {
+  // hệ số máu quái theo ải (đã chạy bot cân bằng: người chơi mặc đồ tốt về đích còn ~10–15 mạng)
+  table: [1.6, 1.7, 1.8, 1.75, 1.6, 1.45, 1.4, 1.35],
+  hp(level) { return this.table[Math.min(level, this.table.length - 1)]; },
+};
 const LEVELS = [
   { name: 'Bến Sông Đà', waves: 10, hp: 0.75, bosses: { 10: 'thuongluong' },
     desc: 'Bến sông yên bình nơi Thủy Tinh thử quân lần đầu. Mười đợt để làm quen.', hint: ['xathu', 'lactuong', 'thaymo'] },

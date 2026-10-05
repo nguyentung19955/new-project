@@ -791,3 +791,11 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - **Cỡ chữ & nút** (Cài đặt): Tự động / Vừa / To / Rất to (×1 / ×1,2 / ×1,35). Tự động: màn hình thấp (điện thoại xoay ngang, cao dưới 520 px) phóng ×1,2. Chỉ phóng các phần trong trận — thanh trên, thanh tướng (ô kỹ năng, nút lên cấp), thanh thao tác nổi, dải hợp thể, menu ≡, thông báo, máu boss, thùng hủy, bảng chỉ số. Các màn toàn trang (Túi đồ, Lò đúc, Bách khoa…) giữ cỡ cũ vì phóng lên sẽ tràn chữ.
 - Tướng trên bản đồ vẽ to hơn ~10%.
 - Menu ≡ cuộn được khi màn hình thấp.
+
+### Phiên bản 42 · tự xoay ngang, màn chơi phủ kín, chế độ Khó
+
+- **Tự xoay ngang:** cầm điện thoại dọc thì game tự xoay 90° cho vừa màn hình — chỉ việc cầm ngang, không cần bật xoay màn hình của máy. Chạm / kéo tướng tính đúng theo hướng xoay. Bỏ màn "Xoay ngang điện thoại để chơi".
+- **Màn chơi phủ kín màn hình (responsive):** khung game luôn lấp đầy màn hình, không còn viền đen. Bản đồ co vừa và nằm giữa; màn hình dẹt (Safari có thanh địa chỉ) được cắt bớt tối đa 34 đơn vị nền trống trên + dưới để bản đồ to hơn; phần thừa phủ ảnh bản đồ mờ tối. Thanh trên, thanh tướng, các nút bám mép màn hình thật nên che ít bản đồ hơn.
+- **2 nút tự động ở góc dưới phải:** ⬆ Nâng đồ và 🛡 Mặc đồ (chấm xanh = đang có việc để làm). Bỏ khỏi menu ≡; trong Túi đồ vẫn có.
+- **Cài đặt cuộn được** trên màn hình thấp.
+- **Chế độ Khó** (chọn ở bảng ải trên bản đồ chiến dịch, cạnh nút Vào trận): máu quái nhân theo bảng từng ải `HARD.table`. Thanh trên ghi "🔥 Khó"; sao ải Khó lưu riêng và hiện cạnh nút Khó. Chế độ Thường giữ nguyên.

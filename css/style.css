@@ -1159,3 +1159,29 @@ button:disabled { cursor: default; }
 #more { transform: scale(var(--hz, 1)); transform-origin: 50% 100%; }
 #more.below { transform-origin: 50% 0; }
 #drawer { max-height: calc((430px - 52px * var(--hz, 1)) / var(--hz, 1)); overflow-y: auto; }
+/* v42: Cài đặt cuộn được (danh sách dài hơn màn hình điện thoại) */
+#settings .screen { overflow: hidden; }
+.set-list { flex: 1 1 auto; min-height: 0; overflow-y: auto; margin: 0 auto; padding: 14px 4px 24px; box-sizing: border-box; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+.set-list > * { flex: none; }
+/* chế độ Khó trên bản đồ chiến dịch */
+.cp-diff { display: flex; gap: 6px; margin-top: 8px; }
+.cp-diff button { flex: 1; height: 32px; border-radius: 6px; font-weight: 800; font-size: 13px; }
+.cp-diff button.on { background: linear-gradient(180deg, #C8401E, #7A1E0E); color: #FFE0C8; border: 1px solid #FF8A6A; box-shadow: 0 0 10px #E25A3A88; }
+.cp-diff small { color: #FFD66B; }
+.cp-hardnote { margin-top: 4px; font-size: 11px; color: #FFB08A; }
+/* 2 nút tự động góc dưới phải */
+#auto-btns { position: absolute; right: 6px; bottom: 6px; display: flex; flex-direction: column; gap: 6px; z-index: 5; transform: scale(var(--hz, 1)); transform-origin: 100% 100%; }
+#auto-btns .ab { position: relative; width: 52px; height: 46px; padding: 0; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0; color: var(--gold-pale); }
+#auto-btns .ab .i { font-size: 17px; line-height: 1.1; }
+#auto-btns .ab .l { font-size: 10px; font-weight: 800; white-space: nowrap; }
+#auto-btns .ab .dot { position: absolute; right: -3px; top: -3px; width: 11px; height: 11px; border-radius: 50%; background: #3EDC4E; box-shadow: 0 0 6px #3EDC4E; border: 1.5px solid #1A120C; }
+#trash, #quick-eq { bottom: calc(112px * var(--hz, 1)); }
+/* v42: tự xoay ngang khi cầm điện thoại dọc */
+#wrap.rot { transform: rotate(90deg); flex: none; }
+body { overflow: hidden; }
+.cp-side { overflow-y: auto; }
+.cp-act { margin-top: auto; display: flex; gap: 6px; align-items: stretch; }
+.cp-act .cp-diff { margin-top: 0; flex-direction: column; gap: 4px; width: 92px; flex: none; }
+.cp-act .cp-diff button { height: 23px; font-size: 12px; padding: 0 4px; }
+.cp-act .go { flex: 1; margin-top: 0; height: 50px; }
+.cp-hardnote { display: none; }

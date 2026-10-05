@@ -2309,6 +2309,7 @@ class Game {
     // boss tăng máu chậm hơn quái thường để không đột biến ở cuối chiến dịch
     let hp = def.hp * (def.boss ? Math.pow(waveHpMult(this.wave), 0.85) : waveHpMult(this.wave)) * this.lv.hp;
     if (elite) hp *= 1.8;
+    if (this.hard) hp *= HARD.hp(this.level);
     const p = PATH.at(dist);
     const e = {
       id: nextId++, type, def, hp, maxHp: hp, dist, x: p.x, y: p.y, dir: 1,

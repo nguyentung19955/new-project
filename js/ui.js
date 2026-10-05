@@ -249,7 +249,7 @@ class UI {
       if (b) this.toast(`Gọi sớm: +${b} vàng`, '#F2D27A');
     };
     // ủy quyền sự kiện cho các vùng dựng lại liên tục
-    for (const id of ['#fuse-strip', '#screen', '#deck', '#drawer', '#more', '#reward', '#result', '#story', '#campaign', '#settings', '#legends', '#roster', '#treasury']) {
+    for (const id of ['#fuse-strip', '#auto-btns', '#screen', '#deck', '#drawer', '#more', '#reward', '#result', '#story', '#campaign', '#settings', '#legends', '#roster', '#treasury']) {
       $(id).addEventListener('click', (ev) => {
         const el = ev.target.closest('[data-act]');
         if (el && !el.disabled) this.action(el.dataset, el);
@@ -315,6 +315,7 @@ class UI {
   startLevel(i) {
     const g = this.game;
     if (g.started) this.bankStats();
+    g.hard = !!this.save.settings.hard;
     g.reset(i);
     g.runId = Date.now();
     g.started = true;
@@ -400,7 +401,8 @@ class UI {
             ${STAR_RULES.map((r, k) => `<div class="${s.stars[i] > k ? 'got' : ''}"><span>${'★'.repeat(k + 1)}</span><span>${r}</span></div>`).join('')}</div>
           <div class="hint-h">TƯỚNG GỢI Ý</div>
           <div class="heroes">${lv.hint.map((t) => `<span style="border-color:${ATTRS[HEROES[t].attr].color};color:${ATTRS[HEROES[t].attr].color}">${HEROES[t].name}</span>`).join('')}</div>
-          <button class="go btn-gold" data-act="cp-go">⚔ Vào trận</button>
+          <div class="cp-act"><div class="cp-diff"><button class="${this.save.settings.hard ? 'metal' : 'btn-gold'}" data-act="diff" data-k="0">Thường</button><button class="${this.save.settings.hard ? 'on' : 'metal'}" data-act="diff" data-k="1" title="Máu quái ×${HARD.hp(i).toFixed(2)}">🔥 Khó${(s.hardStars || [])[i] ? ` <small>${'★'.repeat(s.hardStars[i])}</small>` : ` <small>×${HARD.hp(i).toFixed(2).replace('.', ',')}</small>`}</button></div>
+          <button class="go btn-gold" data-act="cp-go">⚔ Vào trận</button></div>
         </div>
       </div></div>`;
   }
@@ -437,7 +439,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px">${[['auto', 'Tự động'], ['high', 'Đẹp'], ['low', 'Tiết kiệm']].map(([k, n]) => `<button class="btn ${(st.gfx || 'auto') === k ? 'btn-gold' : 'metal'}" style="height:34px;padding:0 10px;font-size:13px" data-act="set-gfx" data-k="${k}">${n}</button>`).join('')}</div></div>
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 41 · Tiến trình lưu trên trình duyệt của bạn</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 42 · Tiến trình lưu trên trình duyệt của bạn</div>
       </div></div>`;
   }
 
@@ -607,6 +609,8 @@ class UI {
   tick(dt) {
     const g = this.game;
     this.handleEvents();
+    this.abT = (this.abT || 0) - dt;
+    if (this.abT <= 0 && g.started) { this.abT = 1; this.updateAutoBtns(); }
     if (this.assetSeen !== assetVersion) {
       // có ảnh vẽ tay mới tải xong: vẽ lại các phần dùng ảnh
       this.assetSeen = assetVersion;
@@ -725,7 +729,7 @@ class UI {
   updateTopbar() {
     const g = this.game;
     const total = g.levelWaves;
-    this.setText('#tb-wave', g.endless ? `Đợt ${g.wave} · Vô tận` : `Đợt ${g.wave} / ${total}`);
+    this.setText('#tb-wave', (g.endless ? `Đợt ${g.wave} · Vô tận` : `Đợt ${g.wave} / ${total}`) + (g.hard ? ' · 🔥 Khó' : ''));
     const prog = g.waveActive && g.waveTotal ? 1 - (g.spawnQueue.length + g.enemies.length * 0.5) / (g.waveTotal * 1.5) : 0;
     $('#tb-fill').style.width = `${Math.max(0, Math.min(1, ((g.wave - 1 + Math.max(0, prog)) / total))) * 100}%`;
     this.setText('#tb-gold b', fmt(g.gold));
@@ -948,6 +952,18 @@ class UI {
     return this.upVal;
   }
 
+  // 2 nút góc dưới phải: chấm xanh khi có việc để làm (đồ tốt hơn trong túi / đủ vàng nâng đồ đang mặc)
+  updateAutoBtns() {
+    const g = this.game, el = $('#auto-btns');
+    if (!el || el.hidden) return;
+    const eq = g.inventory.some((i) => { const b = g.bestHeroFor(i); return b && b.gain > 0; });
+    const reserve = COSTS.summon(g.summonN || 0);
+    const up = g.heroes.some((h) => h && SLOTS.some((sl) => { const i = h.equip[sl]; return i && i.plus < 5 && g.gold - enhanceCost(i) >= reserve; }));
+    const [bu, be] = el.querySelectorAll('.dot');
+    if (bu.hidden === up) bu.hidden = !up;
+    if (be.hidden === eq) be.hidden = !eq;
+  }
+
   // thùng hủy tướng: hiện khi đang kéo một tướng; thả vào = hủy, hoàn vàng
   showTrash(slot) {
     const h = this.game.heroes[slot];
@@ -1016,10 +1032,8 @@ class UI {
   // đặt thanh ngay trên đầu tướng, kẹp trong màn hình
   placeMore(h) {
     const el = $('#more');
-    const c = canvas.getBoundingClientRect(), w = $('#ui').getBoundingClientRect();
-    const k = w.width / UIW;
-    const x = (c.left - w.left + h.x * view.scale) / k, y = (c.top - w.top + h.y * view.scale) / k;
-    const head = (c.top - w.top + (h.y - 66) * view.scale) / k;
+    // toạ độ trong khung thiết kế 932×430 (đúng cả khi khung đang tự xoay ngang)
+    const x = (h.x + MAPX) / DK, y = (h.y + MAPY) / DK, head = (h.y - 66 + MAPY) / DK;
     const bw = el.offsetWidth || 260, bh = el.offsetHeight || 50;
     // thanh được phóng --hz quanh mép dưới giữa (hoặc mép trên khi hiện dưới chân)
     const hz = typeof HZ !== 'undefined' ? HZ : 1;
@@ -1220,6 +1234,7 @@ class UI {
     if (win) {
       stars = g.stars();
       s.stars[lv] = Math.max(s.stars[lv], stars);
+      if (g.hard) { s.hardStars = s.hardStars || LEVELS.map(() => 0); s.hardStars[lv] = Math.max(s.hardStars[lv] || 0, stars); }
       s.unlocked = Math.max(s.unlocked, Math.min(LEVELS.length, lv + 2));
     }
     s.best[lv] = Math.max(s.best[lv] || 0, g.wave);
@@ -1287,6 +1302,7 @@ class UI {
       case 'story-skip': this.save.storySeen = true; writeSave(this.save); this.startLevel(this.storyLevel); break;
       case 'cp-back': this.showMenu(); break;
       case 'cp-sel': this.cpSel = +d.i; this.renderCampaign(); break;
+      case 'diff': this.save.settings.hard = d.k === '1'; writeSave(this.save); this.renderCampaign(); break;
       case 'cp-go': this.save.last = this.cpSel; this.playLevel(this.cpSel); break;
       case 'set':
         this.save.settings[d.k] = !this.save.settings[d.k];
