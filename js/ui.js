@@ -539,7 +539,7 @@ class UI {
   renderLegends() {
     const g = this.game;
     $('#lg-count').textContent = `Huyền thoại trên sân ${g.legendCount()}/${CONFIG.maxLegends}`;
-    $('#lg-info').innerHTML = `Tướng thần không triệu hồi được. Tướng Thường <b>★★★</b> hóa thân <b style="color:${RARITY.epic.color}">thần Sử thi</b>; thần Sử thi đạt Thần tinh <b style="color:#FF7A3A">${'★'.repeat(COSTS.ascendTier2)}</b> hóa thân <b style="color:${RARITY.legendary.color}">Huyền thoại</b> (<b>⋯ → Tiến hoá → Thăng thần</b>). Giữ cấp, đồ và nội tại của mọi bậc trước.`;
+    $('#lg-info').innerHTML = `Tướng thần không triệu hồi được. Tướng Thường <b>★★★</b> và <b>kỹ năng tối đa</b> hóa thân <b style="color:${RARITY.epic.color}">thần Sử thi</b>; thần Sử thi đạt Thần tinh <b style="color:#FF7A3A">${'★'.repeat(COSTS.ascendTier2)}</b> và kỹ năng tối đa hóa thân <b style="color:${RARITY.legendary.color}">Huyền thoại</b> (<b>⋯ → Tiến hoá → Thăng thần</b>). Giữ cấp, đồ và nội tại của mọi bậc trước.`;
   }
 
   // ============================================================
@@ -836,7 +836,7 @@ class UI {
     const h = g.heroes[this.sel];
     if (!h) return;
     const t = h.tier || 0;
-    const canAsc = !!ASCEND[h.type] && t >= g.ascendNeed(h);
+    const canAsc = g.ascendReady(h) === true;
     $('#more').innerHTML = `
       <button class="metal ${h.notice.skills ? 'notice' : ''}" data-act="open-skills">Kỹ năng<small>${h.skillPts ? `+${h.skillPts} điểm` : 'cây kỹ năng'}</small></button>
       <button class="metal ${h.notice.evo ? 'notice' : ''}" data-act="open-evo">${canAsc ? 'Thăng thần' : h.from ? 'Thần tinh' : 'Tiến hoá'}<small>${canAsc ? (h.from ? 'hóa thân Huyền thoại' : 'hóa thân thần Sử thi') : t < 3 ? `★${t + 1} · ${evoCost(h, t)} vàng` : 'tối đa'}</small></button>
@@ -926,7 +926,7 @@ class UI {
                 <span style="background:#1A1610;color:#C8BFA8">${d.role}</span></div></div>
               <div class="kvt inset" style="font-size:12px">${d.legend
                 ? `<div><span>Từ</span><b style="text-align:right">${ascendSources(t).map((x) => HEROES[x].name).join(' / ')}</b></div>
-                  <div><span>Cần</span><b style="color:#FFD66B">${d.legend === 'epic' ? '★★★' : `Thần tinh ${'★'.repeat(COSTS.ascendTier2)}`} · ${COSTS.ascend[d.legend]} vàng</b></div>`
+                  <div><span>Cần</span><b style="color:#FFD66B">${d.legend === 'epic' ? '★★★' : `Thần tinh ${'★'.repeat(COSTS.ascendTier2)}`} · kỹ năng tối đa · ${COSTS.ascend[d.legend]} vàng</b></div>`
                 : `<div><span>Giá triệu hồi</span><b style="color:#FFD66B">${d.cost} vàng</b></div>`}
                 ${ASCEND[t] ? `<div><span>Lên</span><b style="text-align:right;color:${RARITY[d.legend ? 'legendary' : 'epic'].color}">${ASCEND[t].map((x) => HEROES[x].name).join(' / ')}</b></div>` : ''}
                 <div><span>Tầm · Tốc · S/N/T</span><b>${d.base.range} · ${d.base.cooldown}s · ${d.attrs.str}/${d.attrs.agi}/${d.attrs.int}</b></div></div>
@@ -1755,7 +1755,9 @@ class UI {
       const bought = t > k, cur = t === k;
       const needLv = evoReq(h, k);
       const cost = evoCost(h, k);
-      const bon = EVO_BONUS[h.from ? 'asc' : 'base'][k + 1];
+      // tướng vàng: Thần tinh mạnh hơn tướng tím (nhân ASC_EVO_MULT), hiện đúng số
+      const mul = h.from ? ASC_EVO_MULT[def.legend] || 1 : 1;
+      const bon = Object.fromEntries(Object.entries(EVO_BONUS[h.from ? 'asc' : 'base'][k + 1]).map(([key, v]) => [key, Math.round(v * mul)]));
       const lvOk = h.level >= needLv;
       let btn;
       if (bought) btn = `<button class="big-btn done" disabled>${ICON.check} ĐÃ MUA</button>`;
@@ -1766,7 +1768,7 @@ class UI {
         <div class="stars ${bought || cur ? '' : 'off'}" ${h.from ? 'style="color:#FF7A3A"' : ''}>${'★'.repeat(k + 1)}</div>
         <div class="well inset">${svgI(sceneArt('evo'))}<canvas data-hero data-tier="${k + 1}" width="250" height="300" style="position:absolute;inset:0;width:100%;height:150px"></canvas>${!bought && !cur ? `<span class="lk">${ICON.lock}</span>` : ''}</div>
         <div class="pr">${coin()} ${cost} vàng · <span class="req ${lvOk ? '' : 'no'}">${cur && !lvOk ? 'Cần' : 'cần'} cấp ${needLv}</span></div>
-        <div class="ds">${cur && !lvOk ? `Đang cấp ${h.level} · còn ${needLv - h.level} cấp` : h.from ? ['Vòng lửa thần', 'Lửa thần rực hơn', 'Thần tinh tối đa'][k] : ['To hơn, hào quang trống đồng', 'Hào quang rực hơn', 'Bậc cao nhất'][k]}<br><b>${evoText(bon)}</b></div>
+        <div class="ds">${cur && !lvOk ? `Đang cấp ${h.level} · còn ${needLv - h.level} cấp` : h.from ? (def.legend === 'legendary' ? ['Lửa thần vàng', 'Hào quang vàng rực', 'Thần tinh vàng tối đa'] : ['Vòng lửa thần', 'Lửa thần rực hơn', 'Thần tinh tối đa'])[k] : ['To hơn, hào quang trống đồng', 'Hào quang rực hơn', 'Bậc cao nhất'][k]}<br><b>${evoText(bon)}</b></div>
         ${btn}</div>`;
     }).join('');
     // bộ đồ đang mặc nhiều món nhất (chưa có thì giới thiệu Bộ Lạc Long)
@@ -1797,9 +1799,13 @@ class UI {
   ascendPanel(h) {
     const g = this.game;
     const need = g.ascendNeed(h);
-    const ready = (h.tier || 0) >= need;
+    const starOk = (h.tier || 0) >= need;
     const stars = '★'.repeat(need);
-    return `<div class="panel metal set-panel asc-panel"><div class="ph"><span class="ttl" style="font-size:20px">Thăng thần</span><small>${ready ? `đã đủ ${stars}` : `cần ${h.from ? 'Thần tinh ' : ''}${stars}`}</small></div>
+    const left = g.skillsLeft(h);
+    const ck = (ok) => `<b style="color:${ok ? '#6AE06A' : '#E25A3A'}">${ok ? '✓' : '✗'}</b>`;
+    return `<div class="panel metal set-panel asc-panel"><div class="ph"><span class="ttl" style="font-size:20px">Thăng thần</span><small>${starOk && !left.length ? 'đủ điều kiện' : 'chưa đủ điều kiện'}</small></div>
+      <div class="asc-req inset">${ck(starOk)} ${h.from ? 'Thần tinh ' : 'Tiến hoá '}${stars}
+        <span>${ck(!left.length)} Kỹ năng tối đa${left.length ? ` <small>(còn ${left.map(([k, lv, mx]) => `${k} ${lv}/${mx}`).join(' · ')})</small>` : ''}</span></div>
       ${ASCEND[h.type].map((t) => {
         const d = HEROES[t];
         const ok = g.canAscend(h, t);

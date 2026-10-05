@@ -1422,16 +1422,29 @@ class Game {
     h.tier = t + 1;
     this.notify(`${HEROES[h.type].name} ${h.from ? 'đạt Thần tinh' : 'tiến hoá lên'} ${'★'.repeat(h.tier)}!`, h.from ? '#FF8A4A' : '#F2D27A');
     h.evoT = 1.2;
-    h.notice.evo = !!ASCEND[h.type] && h.tier >= this.ascendNeed(h);   // nhắc Thăng thần
+    h.notice.evo = this.ascendReady(h) === true;   // nhắc Thăng thần
     this.effects.push({ type: 'evolve', hero: h, x: h.x, y: h.y, color: ATTRS[HEROES[h.type].attr].color, ttl: 1.2, max: 1.2 });
     return true;
   }
 
   // Thăng thần: tướng Thường ★★★ hóa thân thần Sử thi; thần Sử thi Thần tinh ★★ hóa thân Huyền thoại
   ascendNeed(h) { return h.from ? COSTS.ascendTier2 : COSTS.ascendTier; }
+  // kỹ năng chưa đạt tối đa (điều kiện thăng thần; nâng chỉ số bằng điểm thừa thì không bắt buộc)
+  skillsLeft(h) {
+    return HEROES[h.type].skills.map((sk, i) => [SKILL_KEYS[i], skillLevel(h, i), SKILL_MAX[i]]).filter(([, lv, mx]) => lv < mx);
+  }
+  // đủ sao + đủ kỹ năng để thăng thần (chưa tính vàng / giới hạn Huyền thoại)
+  ascendReady(h) {
+    if (!ASCEND[h.type]) return 'Đã là bậc cao nhất';
+    if ((h.tier || 0) < this.ascendNeed(h)) return h.from ? `Cần Thần tinh ${'★'.repeat(COSTS.ascendTier2)} trước` : 'Cần tiến hoá ★★★ trước';
+    const left = this.skillsLeft(h);
+    if (left.length) return `Cần nâng tối đa kỹ năng: ${left.map(([k, lv, mx]) => `${k} ${lv}/${mx}`).join(', ')}`;
+    return true;
+  }
   canAscend(h, to) {
     if (!(ASCEND[h.type] || []).includes(to)) return 'Không thể thăng thần theo nhánh này';
-    if ((h.tier || 0) < this.ascendNeed(h)) return h.from ? `Cần Thần tinh ${'★'.repeat(COSTS.ascendTier2)} trước` : 'Cần tiến hoá ★★★ trước';
+    const ready = this.ascendReady(h);
+    if (ready !== true) return ready;
     const d = HEROES[to];
     if (d.legend === 'legendary' && this.heroes.filter((o) => o && o !== h && HEROES[o.type].legend === 'legendary').length >= CONFIG.maxLegends)
       return `Tối đa ${CONFIG.maxLegends} tướng Huyền thoại trên sân`;

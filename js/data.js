@@ -512,11 +512,12 @@ const ASCEND_FROM = {};
 for (const [b, list] of Object.entries(ASCEND)) for (const t of list) if (!ASCEND_FROM[t]) ASCEND_FROM[t] = b;
 // mọi tướng có thể hóa thân thành t (để hiện cây)
 const ascendSources = (t) => Object.keys(ASCEND).filter((b) => ASCEND[b].includes(t));
-Object.assign(COSTS, { ascend: { epic: 300, legendary: 650 }, ascendTier: 3, ascendTier2: 2 });
+// lên vàng cần thần tím Thần tinh ★★★ (đủ sao rồi mới hóa thân), giá cao hơn bậc sao cuối
+Object.assign(COSTS, { ascend: { epic: 300, legendary: 1200 }, ascendTier: 3, ascendTier2: 3 });
 // Thần lực: hệ số sát thương và máu của tướng đã thăng thần (kỹ năng +một nửa mức này)
 const ASCEND_POWER = { epic: 1.15, legendary: 1.6 };
 // Thần tinh của tướng thần Huyền thoại mạnh hơn Sử thi (nhân chỉ số mỗi bậc sao)
-const ASC_EVO_MULT = { epic: 1, legendary: 1.3 };
+const ASC_EVO_MULT = { epic: 1, legendary: 1.5 };
 // Sau Thăng thần, bộ kỹ năng mới học lại bằng VÀNG: mở khóa W/E/R đắt hơn, nâng cấp trả vàng
 Object.assign(COSTS, {
   unlockAsc: [0, 150, 300, 500],
@@ -548,9 +549,15 @@ const EVO_BONUS = {
   base: [{}, { dmg: 15, hp: 10 }, { dmg: 30, hp: 20, haste: 10 }, { dmg: 50, hp: 35, haste: 20, skill: 10 }],
   asc:  [{}, { dmg: 20, hp: 15, skill: 10 }, { dmg: 45, hp: 30, haste: 10, skill: 20 }, { dmg: 80, hp: 50, haste: 20, skill: 35 }],
 };
-Object.assign(COSTS, { evoAsc: [300, 600, 1000], evoReqAsc: [16, 20, 24] });
-const evoCost = (h, t) => (h.from ? COSTS.evoAsc[t] : COSTS.evo[t]);
-const evoReq = (h, t) => (h.from ? COSTS.evoReqAsc[t] : COSTS.evoReq[t]);
+// Thần tinh: thần Sử thi (tím) và Huyền thoại (vàng) có mốc cấp và giá riêng, nối tiếp nhau
+// Thường ★ cấp 5/10/15 → tím Thần tinh cấp 16/18/20 → vàng Thần tinh cấp 21/23/25
+Object.assign(COSTS, {
+  evoAsc: { epic: [300, 600, 1000], legendary: [1500, 2200, 3200] },
+  evoReqAsc: { epic: [16, 18, 20], legendary: [21, 23, 25] },
+});
+const ascRank = (h) => HEROES[h.type].legend || 'epic';
+const evoCost = (h, t) => (h.from ? COSTS.evoAsc[ascRank(h)][t] : COSTS.evo[t]);
+const evoReq = (h, t) => (h.from ? COSTS.evoReqAsc[ascRank(h)][t] : COSTS.evoReq[t]);
 // dòng mô tả một bậc sao
 function evoText(b) {
   const out = [];

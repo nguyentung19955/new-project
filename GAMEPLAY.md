@@ -691,3 +691,9 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - Nhận 225 ảnh (`anh/NuiCaoNuocDang_anh/`, đặt tên đúng 100%). Đánh giá từng ảnh: **105 dùng được** (đã xoá nền, nén 256 màu, đưa vào `assets/`, tổng 7,5 MB), **106 cần làm lại**, 14 thuộc nhóm "BỎ QUA". Danh sách và lý do: `tools/anh-lam-lai.txt`; danh sách cần vẽ tiếp kèm prompt: `docs/ANH-CON-THIEU.txt`.
 - Lỗi chính: đồ, phụ kiện, đồ ghép, sính lễ, nhiều icon giao diện ra **đĩa trống đồng tròn** giống nhau; quái (cá sấu, tôm, rùa, nòng nọc, chim bão), Giao Long, chim Lạc ra **hình người**; vài tướng sai (Cao Lỗ thành người máy / rùa, Lạc Long Quân thường thành quỷ, Lạc Tướng thường da xanh). Nguyên nhân nằm ở prompt: cụm "bronze drum spiral patterns" + "game item icon" và tiền tố "chibi character" cho cả thú. Đã sửa 117 prompt đồ / icon, 16 prompt quái, 100 prompt tướng (cấm vòng tròn sau lưng) và thêm NEGATIVE riêng cho đồ / quái / tướng.
 - `tools/xoa-nen.py`: xoá được nền tối / màu / chuyển màu và ảnh có viền khung mảnh ở mép; nén PNG 256 màu (nhẹ ~5 lần). `tools/kiem-tra-anh.py`: tính cả ảnh cần làm lại, tách icon kỹ năng tuỳ chọn.
+
+### Phiên bản 32 · điều kiện thăng thần chặt hơn, Thần tinh vàng riêng
+
+- **Thăng thần cần đủ cả sao lẫn kỹ năng:** lên tím cần ★★★ và cả 4 kỹ năng đạt tối đa (Q W E 4/4, R 3/3); lên vàng cần Thần tinh ★★★ (trước là ★★) và cả 4 kỹ năng của thần tím đạt tối đa. Điểm thừa đổi chỉ số không bắt buộc. Bảng Thăng thần hiện ✓ / ✗ từng điều kiện và kỹ năng nào còn thiếu.
+- **Sửa thứ tự giá:** trước đây thần tím Thần tinh ★★ đã được lên vàng (650 vàng) rẻ hơn Thần tinh ★★★ (1000 vàng) nên dễ bỏ sót sao cuối. Nay lên vàng 1200 vàng và chỉ mở sau ★★★.
+- **Thần tinh của tướng vàng có mốc riêng:** cấp 21 / 23 / 25, giá 1500 / 2200 / 3200 vàng (tím vẫn cấp 16 / 18 / 20, 300 / 600 / 1000). Mỗi sao vàng mạnh gấp 1,5 lần sao tím và màn Thần tinh hiện đúng số (ví dụ ★★★ vàng +120% sát thương thay vì +80%).
