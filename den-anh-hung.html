@@ -436,13 +436,24 @@ const ATTR_C={'Sức mạnh':'var(--a-str)','Nhanh nhẹn':'var(--a-agi)','Trí 
       {k:'E',n:'Lũy Nỏ Cổ Loa',t:'Chủ động',d:'Tướng đánh xa quanh mình bắn thêm 1 mũi 6 giây.',a:'shoot',c:'#E8DDBF',fx:'xR'},
       {k:'R',n:'Linh Quang Thần Nỏ',t:'Tối thượng',d:'Ba phát xuyên hàng xoè hình quạt.',a:'ult',c:'#FFF1C4',fx:'cR'}]},
       {'#7A5230':'#A8281E','#5A3A1A':'#7A1410'},`<path d="M70 62 L74 34 L86 50 L100 26 L114 50 L126 34 L130 62 Q100 54 70 62 Z" fill="#F2C840" stroke="${OL}" stroke-width="2.2"/><circle cx="100" cy="46" r="4.5" fill="#E2483A" stroke="${OL}" stroke-width="1.4"/>`),
-    derive('auco',{id:'mau',name:'Mẫu Thượng Ngàn',attr:'Trí tuệ',rar:'Huyền thoại',sig:['Mẹ Rừng','Tướng đứng gần +10% sát thương và hồi máu.'],skills:[
+    derive('tiendung',{id:'mau',name:'Mẫu Thượng Ngàn',attr:'Trí tuệ',rar:'Huyền thoại',sig:['Mẹ Rừng','Tướng đứng gần +10% sát thương và hồi máu.'],skills:[
       {k:'Q',n:'Dây Rừng Trói',t:'Chủ động',d:'Dây leo trói 4 quái đi đầu.',a:'cast',c:'#5FD06A',fx:'nE'},
       {k:'W',n:'Rễ Ngàn Năm',t:'Nội tại',d:'Làm chậm quái, tăng sát thương phép.',a:'cast',c:'#3E9A4A',fx:'tsE'},
       {k:'E',n:'Cây Đa Thần',t:'Chủ động',d:'Trồng cây đa: quái quanh cây chậm, tướng gần hồi máu.',a:'cast',c:'#7FE07A',fx:'nW'},
       {k:'R',n:'Rừng Thiêng Nổi Giận',t:'Tối thượng',d:'Rễ cây trói mọi quái dưới đất, toàn quân hồi máu.',a:'ult',c:'#5FD06A',fx:'aE'}]},
-      {'#E87AA0':'#3E8A3A','#D8A0C0':'#7FC24A','#F7EEF2':'#E2F2D0','#C8B8E0':'#8ACB6A','#F08AB0':'#FFC44A'},
-      `<path d="M88 50 Q86 36 100 30 Q114 36 112 50 Q100 44 88 50 Z" fill="#5FB84A" stroke="${OL}" stroke-width="1.6"/>`));
+      {'#C8302A':'#2E7A3A'},
+      `<path d="M66 78 Q66 44 100 42 Q134 44 134 78 Q120 60 100 60 Q80 60 66 78 Z" fill="#C8302A" stroke="${OL}" stroke-width="2"/><path d="M70 70 Q100 50 130 70" stroke="#F2D27A" stroke-width="2.4" fill="none"/>`
+      +[[-34,62,-0.9],[-24,50,-0.55],[-12,43,-0.25],[0,40,0],[12,43,0.25],[24,50,0.55],[34,62,0.9]].map(([dx,y,r])=>`<ellipse cx="${100+dx}" cy="${y}" rx="5" ry="10" transform="rotate(${r*57} ${100+dx} ${y})" fill="${Math.abs(dx)%24?'#5FB84A':'#3E8A2E'}" stroke="${OL}" stroke-width="1.4"/>`).join('')
+      +`<circle cx="100" cy="36" r="5" fill="#F7F3FC" stroke="${OL}" stroke-width="1.4"/><circle cx="100" cy="36" r="2" fill="#FFC44A"/><circle cx="80" cy="44" r="3.6" fill="#E85A8A" stroke="${OL}"/><circle cx="120" cy="44" r="3.6" fill="#E85A8A" stroke="${OL}"/>`));
+  // v52: Mẫu Thượng Ngàn khác Âu Cơ — cầm cành cây, ông Hổ nằm bên chân, không cánh
+  { const m=by('mau'); const stripe=(x,y)=>`<path d="M${x} ${y} q3 6 0 12" stroke="#1A0C04" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+    m.armF=`<path d="M138 168 Q150 110 162 34" stroke="${OL}" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M138 168 Q150 110 162 34" stroke="#7A5232" stroke-width="5" fill="none" stroke-linecap="round"/>`
+      +[[152,120,-40],[146,96,40],[157,78,-35],[152,58,35],[162,40,-20],[168,30,30]].map(([x,y,r])=>`<ellipse cx="${x}" cy="${y}" rx="6" ry="12" transform="rotate(${r} ${x} ${y})" fill="#5FB84A" stroke="${OL}" stroke-width="1.6"/>`).join('')
+      +`<circle cx="158" cy="66" r="4" fill="#E8403A" stroke="${OL}" stroke-width="1.2"/><circle cx="148" cy="108" r="4" fill="#E8403A" stroke="${OL}" stroke-width="1.2"/>`+armF('#2E7A3A',SKF);
+    m.back=`<path d="M8 196 Q-16 176 -6 156" stroke="${OL}" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M8 196 Q-16 176 -6 156" stroke="#E8843A" stroke-width="6" fill="none" stroke-linecap="round"/><ellipse cx="40" cy="200" rx="40" ry="20" fill="#E8843A" stroke="${OL}" stroke-width="2.4"/><path d="M14 214 v8 M30 216 v8 M54 216 v8 M68 212 v10" stroke="${OL}" stroke-width="8" stroke-linecap="round"/><path d="M14 214 v8 M30 216 v8 M54 216 v8 M68 212 v10" stroke="#E8843A" stroke-width="5" stroke-linecap="round"/>`
+      +stripe(20,186)+stripe(32,182)+stripe(44,182)+stripe(56,186)
+      +`<ellipse cx="40" cy="210" rx="26" ry="7" fill="#F7EEDC" opacity="0.9"/><circle cx="78" cy="180" r="18" fill="#E8843A" stroke="${OL}" stroke-width="2.4"/><path d="M64 168 l-2 -10 l10 4 z M90 166 l4 -10 l-10 4 z" fill="#E8843A" stroke="${OL}" stroke-width="1.8"/><ellipse cx="82" cy="188" rx="9" ry="6" fill="#F7EEDC" stroke="${OL}" stroke-width="1.4"/><circle cx="72" cy="178" r="2.6" fill="#1A0C04"/><circle cx="86" cy="178" r="2.6" fill="#1A0C04"/><path d="M80 185 l3 2 l3 -2" fill="#1A0C04"/>`
+      +stripe(70,164)+stripe(80,162); }
   HEROES.forEach(h=>{h.recipe=RECIPE[h.id]||'';});
   const ord={'Huyền thoại':0,'Sử thi':1,'Thường':2};HEROES.sort((a,b)=>ord[a.rar]-ord[b.rar]);
 })();

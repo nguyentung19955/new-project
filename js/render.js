@@ -161,9 +161,35 @@ const heroSlug = (type) => slugCache[type] || (slugCache[type] = slugify(HEROES[
   derive('adv', 'caolo', { '#7A5230': '#A8281E', '#5A3A1A': '#7A1410', '#5A4028': '#5A1A12', '#3A2A14': '#5A1410', '#6A4420': '#8A5A1A', '#9A7038': '#E0B030' }, {
     head: '<path d="M70 62 L74 34 L86 50 L100 26 L114 50 L126 34 L130 62 Q100 54 70 62 Z" fill="#F2C840" stroke="#2A1608" stroke-width="2.2"/><circle cx="100" cy="46" r="4.5" fill="#E2483A" stroke="#2A1608" stroke-width="1.4"/><circle cx="82" cy="54" r="3" fill="#3EDCC0" stroke="#2A1608"/><circle cx="118" cy="54" r="3" fill="#3EDCC0" stroke="#2A1608"/><path d="M84 112 Q100 128 116 112" stroke="#1A0C04" stroke-width="3" fill="none"/>',
   });
-  derive('mau', 'auco', { '#E87AA0': '#3E8A3A', '#D8A0C0': '#7FC24A', '#F7EEF2': '#E2F2D0', '#C8B8E0': '#8ACB6A', '#F7F3FC': '#E8F8DC', '#F08AB0': '#FFC44A' }, {
-    head: '<path d="M66 70 Q60 52 74 46 Q72 60 80 64 Z M134 70 Q140 52 126 46 Q128 60 120 64 Z M88 50 Q86 36 100 30 Q114 36 112 50 Q100 44 88 50 Z" fill="#5FB84A" stroke="#2A1608" stroke-width="1.6"/>',
+  // v52: Mẫu Thượng Ngàn vẽ lại cho khác Âu Cơ — dáng Tiên Dung (tóc búi), áo tứ thân xanh rừng viền vàng,
+  // khăn vấn đỏ cài vòng lá + hoa rừng, tay cầm cành cây, ông Hổ nằm bên chân (không có cánh)
+  derive('mau', 'tiendung', { '#C8302A': '#2E7A3A' }, {
+    head: '<path d="M66 78 Q66 44 100 42 Q134 44 134 78 Q120 60 100 60 Q80 60 66 78 Z" fill="#C8302A" stroke="#2A1608" stroke-width="2"/>'
+      + '<path d="M70 70 Q100 50 130 70" stroke="#F2D27A" stroke-width="2.4" fill="none"/>'
+      + '<path d="M128 70 q12 -2 14 10 q-8 -2 -12 4 z" fill="#C8302A" stroke="#2A1608" stroke-width="1.6"/>'
+      + [[-34, 62, -0.9], [-24, 50, -0.55], [-12, 43, -0.25], [0, 40, 0], [12, 43, 0.25], [24, 50, 0.55], [34, 62, 0.9]].map(([dx, y, r]) =>
+        `<ellipse cx="${100 + dx}" cy="${y}" rx="5" ry="10" transform="rotate(${r * 57} ${100 + dx} ${y})" fill="${Math.abs(dx) % 24 ? '#5FB84A' : '#3E8A2E'}" stroke="#2A1608" stroke-width="1.4"/>`).join('')
+      + '<circle cx="100" cy="36" r="5" fill="#F7F3FC" stroke="#2A1608" stroke-width="1.4"/><circle cx="100" cy="36" r="2" fill="#FFC44A"/>'
+      + '<circle cx="80" cy="44" r="3.6" fill="#E85A8A" stroke="#2A1608"/><circle cx="120" cy="44" r="3.6" fill="#E85A8A" stroke="#2A1608"/>',
   });
+  if (ART.hero.mau) {
+    ART.hero.mau.weapon = '<path d="M138 168 Q150 110 162 34" stroke="#2A1608" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M138 168 Q150 110 162 34" stroke="#7A5232" stroke-width="5" fill="none" stroke-linecap="round"/>'
+      + [[152, 120, -40], [146, 96, 40], [157, 78, -35], [152, 58, 35], [162, 40, -20], [168, 30, 30]].map(([x, y, r]) =>
+        `<ellipse cx="${x}" cy="${y}" rx="6" ry="12" transform="rotate(${r} ${x} ${y})" fill="#5FB84A" stroke="#2A1608" stroke-width="1.6"/><path d="M${x} ${y - 9} V${y + 9}" transform="rotate(${r} ${x} ${y})" stroke="#2E5A1E" stroke-width="1"/>`).join('')
+      + '<circle cx="158" cy="66" r="4" fill="#E8403A" stroke="#2A1608" stroke-width="1.2"/><circle cx="148" cy="108" r="4" fill="#E8403A" stroke="#2A1608" stroke-width="1.2"/>';
+    // ông Hổ nằm bên chân trái (vẽ sau lưng nên chân / váy của Mẫu đè lên)
+    const stripe = (x, y) => `<path d="M${x} ${y} q3 6 0 12" stroke="#1A0C04" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+    ART.hero.mau.back = '<path d="M8 196 Q-16 176 -6 156" stroke="#2A1608" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M8 196 Q-16 176 -6 156" stroke="#E8843A" stroke-width="6" fill="none" stroke-linecap="round"/>'
+      + '<ellipse cx="40" cy="200" rx="40" ry="20" fill="#E8843A" stroke="#2A1608" stroke-width="2.4"/>'
+      + '<path d="M14 214 v8 M30 216 v8 M54 216 v8 M68 212 v10" stroke="#2A1608" stroke-width="8" stroke-linecap="round"/><path d="M14 214 v8 M30 216 v8 M54 216 v8 M68 212 v10" stroke="#E8843A" stroke-width="5" stroke-linecap="round"/>'
+      + stripe(20, 186) + stripe(32, 182) + stripe(44, 182) + stripe(56, 186)
+      + '<ellipse cx="40" cy="210" rx="26" ry="7" fill="#F7EEDC" opacity="0.9"/>'
+      + '<circle cx="78" cy="180" r="18" fill="#E8843A" stroke="#2A1608" stroke-width="2.4"/>'
+      + '<path d="M64 168 l-2 -10 l10 4 z M90 166 l4 -10 l-10 4 z" fill="#E8843A" stroke="#2A1608" stroke-width="1.8"/>'
+      + '<ellipse cx="82" cy="188" rx="9" ry="6" fill="#F7EEDC" stroke="#2A1608" stroke-width="1.4"/>'
+      + '<circle cx="72" cy="178" r="2.6" fill="#1A0C04"/><circle cx="86" cy="178" r="2.6" fill="#1A0C04"/><path d="M80 185 l3 2 l3 -2" fill="#1A0C04"/>'
+      + stripe(70, 164) + stripe(80, 162);
+  }
   // icon kỹ năng: mượn icon chiêu cùng loại của tướng khác (đổi tiền tố id để không trùng)
   const ICON_SRC = {
     lachau: [['lactuong', 'E'], ['lucsi', 'W'], ['kimquy', 'E'], ['kimquy', 'R']],
@@ -445,7 +471,7 @@ const WEAPON_KIND = { lactuong: 'axe', lucsi: 'axe', thosan: 'daggers', xathu: '
 // tướng huyền thoại giữ dáng vũ khí đặc trưng; mũ / giáp đổi kiểu riêng
 const LEGEND_HELM = { giong: 'helm', llq: 'horncrown', kimquy: 'crownSmall', cdt: 'conical', antiem: 'conical', tiendung: 'flower', langlieu: 'turban',
   lachau: 'helm', adv: 'crownSmall', mau: 'flower' };
-const LEGEND_ARMOR = { kimquy: 'shell', auco: 'wings', mau: 'wings' };
+const LEGEND_ARMOR = { kimquy: 'shell', auco: 'wings' };
 const ACC_AURA_KIND = { trong_dong: 'drum', giap_bat_diet: 'copper' };
 const TIER_SCALE = [1, 1.10, 1.15, 1.20];
 
