@@ -1,5 +1,18 @@
 # Ảnh vẽ tay (AI) cho Núi Cao Nước Dâng
 
+## Tạo bằng Fooocus (ảnh đơn): `docs/PROMPT-FOOOCUS.txt`
+
+Mỗi mục trong prompt là một ảnh, đặt tên đúng dòng "File:". Xoá nền xám và thu nhỏ:
+```
+pip install pillow numpy scipy
+python3 tools/xoa-nen.py <thư mục ảnh Fooocus> assets
+```
+Tên file giống hệt bảng dưới (305 ảnh khớp `tools/asset-manifest.json`). Lưu ý khi vẽ:
+- **Bản đồ ải (`nen_ai-*`) game chưa dùng**: bản đồ vẽ bằng code vì quái đi đúng theo đường sông. Prompt hiện ghi "sông chảy phải sang trái, thành ở đầu trái", ngược với game (quái đi từ trái sang, thành Phong Châu ở bên **phải**). Nếu muốn vẽ, sửa thành "river flows from left to right, citadel at the right end".
+- Không có ảnh **dáng ra đòn**: game tự làm động tác đánh bằng code (nghiêng, co giãn, vệt chém) nên chỉ cần ảnh đứng.
+- `do_dao_*` (dao găm) chưa dùng: đồ rìu / dao trong game là một loại; icon dùng `do_riu_*`. `bo-*_huy-hieu` và phần lớn `ui_*` cũng chưa dùng.
+- Tướng huyền thoại có được bằng **Thăng thần** từ tướng cơ bản (GAMEPLAY mục 15, v20), vẫn mặc đồ nên vẫn cần đủ 4 bậc ảnh.
+
 ## Cách mới (bản giao v15): 37 bảng asset + script cắt ảnh
 
 1. Tạo ảnh bằng `docs/PROMPT-TAO-ANH.txt` (Gemini vẽ lần lượt 37 bảng S01–S37 và 10 ảnh đơn F01–F10). Lưu mỗi ảnh theo **mã bảng**: `S01.png`, `S02.png`, …, `F01.png`.

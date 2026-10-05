@@ -96,7 +96,7 @@ function render() {
   if (ready(mapImg)) ctx.drawImage(mapImg, 0, 0, CONFIG.W, CONFIG.H);
   else drawMapFallback(ctx);
   // thành Phong Châu vẽ tay (khi bản đồ chưa có ảnh riêng)
-  const castle = !asset(`maps/map-0${game.level + 1}.png`) && asset('tiles/castle-phong-chau.png');
+  const castle = !asset(`maps/map-0${game.level + 1}.png`) && (assetAny(['ban-do_phong-chau.png', 'tiles/castle-phong-chau.png']) || {}).img;
   if (castle) ctx.drawImage(castle, 838 * DK, 70 * DK, 110 * DK, 150 * DK);
   drawWaterLevel(ctx, game.water, t);
   drawZones(t);
@@ -300,6 +300,14 @@ function drawBlocks(t) {
         rrect(ctx, x, y, 12, 11, 1, (r + c) % 2 ? '#8A7046' : '#A08458');
         ctx.strokeStyle = '#2A1F12'; ctx.lineWidth = 1; ctx.strokeRect(x, y, 12, 11);
       }
+    } else if (asset('trieu-hoi_lac-tu.png')) {
+      // ảnh vẽ tay Lạc Tử: 7 đứa đứng thành 2 hàng
+      const img = asset('trieu-hoi_lac-tu.png');
+      const hh = 26, ww = hh * img.naturalWidth / img.naturalHeight;
+      for (let i = 0; i < 7; i++) {
+        const x = p.x - 24 + (i % 4) * 16 + (i > 3 ? 8 : 0), y = p.y + (i > 3 ? 6 : -6) + Math.sin(t * 6 + i) * 1.5;
+        ctx.drawImage(img, x - ww / 2, y - hh, ww, hh);
+      }
     } else {
       for (let i = 0; i < 7; i++) {
         const x = p.x - 24 + (i % 4) * 16 + (i > 3 ? 8 : 0), y = p.y + (i > 3 ? 6 : -6);
@@ -386,12 +394,14 @@ function drawHeroOnMap(h, t) {
     ctx.ellipse(h.x, h.y - 30, 26, 38, 0, 0, Math.PI * 2);
     ctx.fill(); ctx.stroke();
   }
+  drawHeroStates(h, st, t, false);
   const r = drawHeroSprite(ctx, h, h.x, h.y, {
     t, dir: h.dir, swing: h.swing, castT: h.castT, castUlt: h.castUlt, hurt: h.hurtT, px: px(),
     bog: h.bogged, summon: h.summonT, fall: h.dead ? h.fallT : undefined,
     bounce: h.bounceT, evo: h.evoT, wingT: h.wingT,
   });
   if (h.dead) return;
+  drawHeroStates(h, st, t, true);
   const top = r.top + 6;
   if (h.invulnT > 0) {
     ctx.strokeStyle = '#FFE08A';
@@ -444,6 +454,97 @@ function drawHeroOnMap(h, t) {
     ctx.fillStyle = '#9EDDF2';
     ctx.fillText('SA LẦY', h.x, h.y + 16);
   }
+}
+
+// Hiệu ứng của đồ trên người mặc. back = false: vẽ dưới chân (trước sprite),
+// true: vẽ đè lên người (sau sprite)
+const ORB_ITEMS = (h) => ACC_SLOTS.map((s) => h.equip[s]).filter((i) => i && ITEMS[i.id].look && ITEMS[i.id].look.aura
+  && (ITEMS[i.id].fx || ITEMS[i.id].stunChance || ITEMS[i.id].hasteAura || SECRETS['r.' + i.id] || ITEMS[i.id].bossOnly));
+function drawHeroStates(h, st, t, over) {
+  const x = h.x, y = h.y;
+  ctx.save();
+  if (!over) {
+    // Trống Đồng gõ đầu đợt: vòng sóng âm vàng
+    if (h.warT > 0) {
+      for (let i = 0; i < 2; i++) {
+        const q = (t * 1.6 + i / 2) % 1;
+        ctx.strokeStyle = `rgba(242,210,122,${(1 - q) * 0.8})`;
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.ellipse(x, y, 16 + q * 30, 5 + q * 10, 0, 0, Math.PI * 2); ctx.stroke();
+      }
+    }
+    // Bộ Sơn Tinh: bụi đá quanh chân làm chậm quái chạm vào
+    if (st.touchSlow) {
+      for (let i = 0; i < 6; i++) {
+        const a = t * 1.2 + (i * Math.PI) / 3;
+        circle(ctx, x + Math.cos(a) * 22, y + Math.sin(a) * 6, 1.8, 'rgba(200,180,138,0.8)');
+      }
+    }
+    // Đồ hành Mộc "Rễ càng sâu": đứng yên lâu thì rễ cây mọc quanh chân
+    if (st.hid['i.moc2'] && (h.still || 0) >= 10) {
+      ctx.strokeStyle = 'rgba(95,184,74,0.85)';
+      ctx.lineWidth = 1.6;
+      for (let i = 0; i < 5; i++) {
+        const a = (i / 5) * Math.PI * 2 + 0.3;
+        ctx.beginPath(); ctx.moveTo(x, y);
+        ctx.quadraticCurveTo(x + Math.cos(a) * 10, y + Math.sin(a) * 3 + 3, x + Math.cos(a) * 20, y + Math.sin(a) * 6);
+        ctx.stroke();
+      }
+    }
+  } else {
+    // Song Rìu Cuồng Nộ: lửa đỏ bùng theo số tầng
+    if (h.rageT > 0 && h.rageN) {
+      for (let i = 0; i < h.rageN; i++) {
+        const a = t * 3 + (i / h.rageN) * Math.PI * 2;
+        const fx = x + Math.cos(a) * 16, fy = y - 28 + Math.sin(a) * 6;
+        const hgt = 7 + Math.sin(t * 12 + i) * 2;
+        ctx.fillStyle = 'rgba(231,76,60,0.75)';
+        ctx.beginPath(); ctx.moveTo(fx - 3, fy); ctx.quadraticCurveTo(fx - 2, fy - hgt, fx, fy - hgt * 1.3); ctx.quadraticCurveTo(fx + 2, fy - hgt, fx + 3, fy); ctx.fill();
+      }
+    }
+    // Đất lành chim đậu: da đá bao quanh
+    if (h.earthT > 0) {
+      ctx.globalAlpha = Math.min(1, h.earthT) * 0.55;
+      ctx.fillStyle = '#8C7A5A';
+      ctx.strokeStyle = '#C8B48A';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.ellipse(x, y - 28, 20, 32, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+    // Cá gặp nước: bong bóng khi đứng ô ngập
+    if (h.flooded && st.hid['i.thuy1']) {
+      for (let i = 0; i < 4; i++) {
+        const q = (t * 0.8 + i / 4) % 1;
+        ctx.strokeStyle = `rgba(158,221,242,${1 - q})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.arc(x - 12 + i * 8, y - q * 40, 2 + q * 2, 0, Math.PI * 2); ctx.stroke();
+      }
+    }
+    // Lửa thử vàng: máu dưới 50% thì người bốc lửa
+    if (st.hid['i.hoa2'] && h.hp < st.hpMax * 0.5) {
+      ctx.globalCompositeOperation = 'lighter';
+      for (let i = 0; i < 3; i++) {
+        const fx = x - 8 + i * 8, hgt = 10 + Math.sin(t * 14 + i * 2) * 3;
+        ctx.fillStyle = 'rgba(224,69,44,0.55)';
+        ctx.beginPath(); ctx.moveTo(fx - 3, y - 6); ctx.quadraticCurveTo(fx, y - 6 - hgt * 1.4, fx + 3, y - 6); ctx.fill();
+      }
+      ctx.globalCompositeOperation = 'source-over';
+    }
+    // phụ kiện có hiệu ứng: quả cầu nhỏ màu riêng bay vòng quanh người
+    const orbs = ORB_ITEMS(h);
+    orbs.forEach((inst, i) => {
+      const a = t * 1.8 + (i / orbs.length) * Math.PI * 2;
+      const ox = x + Math.cos(a) * 19, oy = y - 30 + Math.sin(a) * 7;
+      if (Math.sin(a) < -0.2) ctx.globalAlpha = 0.45;      // phía sau người: mờ đi
+      const c = ITEMS[inst.id].look.aura;
+      const g = ctx.createRadialGradient(ox, oy, 0, ox, oy, 6);
+      g.addColorStop(0, '#FFFFFF'); g.addColorStop(0.4, c); g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(ox, oy, 6, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+    });
+  }
+  ctx.restore();
 }
 
 // Bụi Đá: bụi đá lượn quanh Lực Sĩ Núi
@@ -1050,6 +1151,13 @@ function drawEffects(t) {
         const q = Math.min(1, p * 1.2);
         const x = f.x + (e.x - f.x) * q, y = f.y + (e.y - 20 - f.y) * q - Math.sin(q * Math.PI) * 30;
         const flap = Math.sin(t * 30) * 4;
+        const bimg = asset(f.kind === 'lac' ? 'trieu-hoi_chim-lac.png' : 'trieu-hoi_chim-than.png');
+        if (bimg) {
+          const bh = 22, bw = bh * bimg.naturalWidth / bimg.naturalHeight;
+          ctx.save(); ctx.translate(x, y); if (e.x < f.x) ctx.scale(-1, 1);
+          ctx.scale(1, 1 + flap * 0.03); ctx.drawImage(bimg, -bw / 2, -bh / 2, bw, bh); ctx.restore();
+          break;
+        }
         ctx.strokeStyle = '#F2E6C8';
         ctx.lineWidth = 2;
         ctx.beginPath(); ctx.moveTo(x - 7, y - flap); ctx.quadraticCurveTo(x - 3, y - 3, x, y); ctx.quadraticCurveTo(x + 3, y - 3, x + 7, y - flap); ctx.stroke();
@@ -1155,6 +1263,29 @@ function drawEffects(t) {
         ctx.globalCompositeOperation = 'lighter';
         ctx.fillStyle = gr;
         ctx.beginPath(); ctx.arc(f.x, f.y, r, 0, Math.PI * 2); ctx.fill();
+        break;
+      }
+      case 'proc': {
+        // đồ kích hoạt: vòng sáng nở ra + tia
+        ctx.globalCompositeOperation = 'lighter';
+        ctx.globalAlpha = k;
+        ctx.strokeStyle = f.color;
+        ctx.lineWidth = 2.5 * k + 0.5;
+        ctx.beginPath(); ctx.arc(f.x, f.y, f.r * (0.4 + p * 0.8), 0, Math.PI * 2); ctx.stroke();
+        for (let i = 0; i < 6; i++) {
+          const a = (i / 6) * Math.PI * 2 + f.r;
+          const r0 = f.r * (0.3 + p * 0.6), r1 = r0 + 6 * k;
+          ctx.beginPath(); ctx.moveTo(f.x + Math.cos(a) * r0, f.y + Math.sin(a) * r0); ctx.lineTo(f.x + Math.cos(a) * r1, f.y + Math.sin(a) * r1); ctx.stroke();
+        }
+        break;
+      }
+      case 'coin': {
+        // vàng thêm khi hạ quái (Bồ Lúa Thần, dòng phụ vàng)
+        const yy = f.y - 18 * Math.sin(Math.min(1, p * 1.5) * Math.PI * 0.5);
+        ctx.globalAlpha = k;
+        circle(ctx, f.x, yy, 4.5, '#B8852A');
+        circle(ctx, f.x, yy, 3.5, '#F2D27A');
+        ctx.fillStyle = '#7A5418'; ctx.fillRect(f.x - 1, yy - 1, 2, 2);
         break;
       }
       case 'die':

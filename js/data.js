@@ -409,6 +409,21 @@ const BASIC_HEROES = ['lactuong', 'lucsi', 'xathu', 'thosan', 'thaymo', 'thansuo
 const LEGEND_HEROES = ['giong', 'llq', 'kimquy', 'thachsanh', 'caolo', 'antiem', 'auco', 'cdt', 'tiendung', 'langlieu'];
 for (const id of LEGEND_HEROES) HEROES[id].cost = COSTS.legend[HEROES[id].legend];
 
+// THĂNG THẦN: tướng huyền thoại không triệu hồi thẳng mà phát triển từ tướng cơ bản.
+// Tướng cơ bản đạt ★★★ trả vàng để hóa thân (chọn 1 nhánh nếu có 2). Giữ cấp,
+// điểm kỹ năng, cấp Q W E R, bậc ★★★ và toàn bộ đồ (cùng loại vũ khí).
+const ASCEND = {
+  lactuong: ['llq', 'giong'],          // rìu cận chiến Sức mạnh
+  lucsi: ['kimquy'],                   // lực sĩ giữ thành
+  thosan: ['thachsanh'],               // thợ rừng
+  xathu: ['caolo', 'antiem'],          // xạ thủ
+  thaymo: ['tiendung', 'langlieu'],    // thầy mo, phép
+  thansuong: ['auco', 'cdt'],          // thần núi / sông
+};
+const ASCEND_FROM = {};
+for (const [b, list] of Object.entries(ASCEND)) for (const t of list) ASCEND_FROM[t] = b;
+Object.assign(COSTS, { ascend: { epic: 300, legendary: 450 }, ascendTier: 3 });
+
 const SKILL_KEYS = ['Q', 'W', 'E', 'R'];
 const SKILL_MAX = [4, 4, 4, 3];
 const skillMult = (lv) => 1 + 0.25 * (Math.max(1, lv) - 1);   // mỗi cấp kỹ năng +25% hiệu lực
@@ -826,11 +841,11 @@ const LEVELS = [
   { name: 'Chân Núi Tản', waves: 30, hp: 1.16, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'thuytinh' },
     desc: 'Dưới chân núi Tản, Sơn Tinh đứng ra chặn nước.', hint: ['thosan', 'xathu', 'thaymo'] },
   { name: 'Đầm Lầy', waves: 30, hp: 1.24, water: 1, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'thuytinh' },
-    desc: 'Đầm lầy ngập sẵn: các ô bậc Thấp đã ngập từ đầu trận.', hint: ['llq', 'xathu', 'thansuong'] },
+    desc: 'Đầm lầy ngập sẵn: các ô bậc Thấp đã ngập từ đầu trận.', hint: ['lactuong', 'xathu', 'thansuong'] },
   { name: 'Cửa Sông Hồng', waves: 30, hp: 1.32, bosses: { 10: 'haba', 20: 'thuytinh', 30: 'thuytinh' },
-    desc: 'Nơi sông Đà đổ về sông Hồng, nước dâng dữ nhất.', hint: ['cdt', 'tiendung', 'xathu'] },
+    desc: 'Nơi sông Đà đổ về sông Hồng, nước dâng dữ nhất.', hint: ['thansuong', 'thaymo', 'xathu'] },
   { name: 'Thành Phong Châu', waves: 30, hp: 1.4, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'thuytinh' },
-    desc: 'Trận cuối giữ kinh đô Văn Lang. Thủy Tinh đích thân dâng nước.', hint: ['giong', 'kimquy', 'thaymo'] },
+    desc: 'Trận cuối giữ kinh đô Văn Lang. Thủy Tinh đích thân dâng nước.', hint: ['lactuong', 'lucsi', 'thaymo'] },
 ];
 const STAR_RULES = ['Thắng ải', 'Còn ≥ 15 mạng', 'Không mất mạng'];
 

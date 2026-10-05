@@ -920,3 +920,45 @@ button:disabled { cursor: default; }
 .shop-it .slot .svgi { width: 26px; height: 26px; }
 .shop-it .nm { font-size: 10.5px; }
 .shop-it .pr { font-size: 11px; }
+
+/* v20: Thăng thần */
+.lg-grid { display: flex; flex-direction: column; gap: 4px; }
+.asc-row { display: flex; align-items: center; gap: 6px; background: #0D0B08AA; border: 1px solid #3A3226; border-radius: 5px; padding: 3px 6px; }
+.asc-row img { width: 26px; height: 26px; object-fit: contain; flex: none; }
+.asc-base, .asc-to { display: flex; align-items: center; gap: 4px; font-size: 11px; min-width: 0; }
+.asc-base { width: 112px; flex: none; }
+.asc-to { flex: 1; flex-wrap: wrap; border-left: 2px solid var(--r-epic); padding-left: 4px; }
+.asc-to.legendary { border-color: var(--r-legend); }
+.asc-to small { width: 100%; color: var(--text-2); font-size: 9.5px; padding-left: 30px; margin-top: -6px; }
+.asc-arr { color: #FFD66B; font-size: 10px; flex: none; }
+#lg-info { font-size: 11px; color: var(--text-2); margin-top: 6px; line-height: 1.35; }
+.asc-panel { gap: 6px; }
+.asc-opt { display: flex; align-items: center; gap: 8px; border-radius: 6px; padding: 6px; border-left: 3px solid var(--r-epic); }
+.asc-opt.legendary { border-left-color: var(--r-legend); }
+.asc-opt img { width: 44px; height: 44px; object-fit: contain; flex: none; }
+.asc-opt .tx { flex: 1; min-width: 0; font-size: 12px; line-height: 1.3; }
+.asc-opt .tx span { display: block; color: var(--text-2); font-size: 11px; }
+.asc-opt .btn { flex: none; height: 38px; padding: 0 10px; display: flex; align-items: center; gap: 4px; }
+.asc-row { padding: 2px 6px; }
+.asc-row img { width: 22px; height: 22px; }
+.asc-base { width: 128px; font-size: 11px; }
+.asc-to { border-left-width: 2px; font-size: 11px; flex-wrap: nowrap; }
+.asc-to small { width: auto; padding: 0; margin: 0 0 0 auto; color: #FFD66B; font-weight: 800; }
+.asc-opt .tx small { display: block; font-size: 10.5px; }
+.asc-opt .tx span { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font-size: 10.5px; }
+.asc-opt img { width: 38px; height: 38px; }
+.asc-panel .note { font-size: 11px; }
+
+/* v20: mặc đồ dễ hơn */
+.slot .upa { position: absolute; right: 2px; bottom: 1px; color: #3EDC4E; font-size: 13px; font-weight: 900; text-shadow: 0 1px 2px #000; z-index: 3; animation: upBob 1s ease-in-out infinite; }
+@keyframes upBob { 50% { transform: translateY(-2px); } }
+.dk-more .upb { position: absolute; left: 3px; bottom: 2px; color: #3EDC4E; font-size: 12px; text-shadow: 0 1px 2px #000; }
+.cmp { font-size: 12px; font-weight: 700; color: var(--text-2); }
+.cmp.ok b { color: #6AE06A; } .cmp.no b { color: #FF8A6A; }
+#quick-eq { position: absolute; right: 14px; bottom: 84px; z-index: 6; display: flex; align-items: center; gap: 8px; padding: 5px 10px 5px 5px; border-radius: 8px;
+  border: 2px solid #3EDC4E; box-shadow: 0 0 14px #3EDC4E66; animation: qeIn .3s ease-out; text-align: left; }
+#quick-eq .slot { width: 36px; height: 36px; }
+#quick-eq .slot .svgi { width: 28px; height: 28px; }
+#quick-eq b { display: block; color: #6AE06A; font-size: 13px; } #quick-eq small { display: block; font-size: 10.5px; color: var(--text-2); }
+@keyframes qeIn { from { transform: translateY(10px); opacity: 0; } }
+.bag-det .det-btns .r2 .btn { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

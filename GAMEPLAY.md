@@ -597,3 +597,19 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - **Lò đúc:** 14 công thức (8 mới), 4 phụ kiện mới (Sừng Tê, Lông Chim Lạc, Vảy Cá, Hạt Lúa), ghi rõ món khắc chế quái nào.
 - **Luyện thể:** tướng cấp 25 đổi nút Nâng cấp thành Luyện thể (200 + 50 × lần, +3 thuộc tính chính, +1 thuộc tính phụ), hiện ✦N.
 - **Ảnh:** đọc tên file theo `tools/asset-manifest.json` (xem `docs/ASSETS.md`); tướng dùng ảnh theo **bậc trang phục** = độ hiếm trung bình của vũ khí, mũ, giáp.
+
+### Phiên bản 20 · Thăng thần, animation, mặc đồ dễ hơn
+
+- **Thăng thần:** tướng huyền thoại không còn triệu hồi thẳng bằng vàng. Tướng cơ bản đạt ★★★ mở **⋯ → Thăng thần** để hóa thân (Sử thi 300 vàng, Huyền thoại 450 vàng), giữ cấp, cấp Q W E R, ★★★ và đồ đang mặc; tối đa 2 Huyền thoại trên sân. Cây thăng thần (theo loại vũ khí để đồ vẫn mặc được):
+  - Lạc Tướng → Lạc Long Quân / Thánh Gióng
+  - Lực Sĩ Núi → Thần Kim Quy
+  - Thợ Săn Rừng → Thạch Sanh
+  - Xạ Thủ Văn Lang → Cao Lỗ / Mai An Tiêm
+  - Thầy Mo Lửa → Tiên Dung / Lang Liêu
+  - Thần Sương Núi → Âu Cơ / Chử Đồng Tử
+
+  Nút ★ ở hàng thẻ mở bảng Cây thăng thần (chỉ xem). Gợi ý tướng của các ải đổi sang tướng cơ bản.
+- **Animation đánh:** 3 pha lấy đà → ra đòn → thu về, có nghiêng người và co giãn; vệt chém hình lưỡi liềm (màu theo độ hiếm vũ khí), chớp sáng đầu nỏ, quả cầu sáng tụ ở đầu gậy. Sát thương rơi đúng lúc ra đòn (trễ ~0,13 giây). Quái trúng đòn giật lùi và nén lại, bơi có nhịp co giãn; tướng bị đánh ngả người.
+- **Hiệu ứng đồ trên người mặc:** phụ kiện có hiệu ứng có quả cầu màu bay quanh người; trạng thái hiện rõ (lửa Song Rìu theo số tầng, sóng Trống Đồng đầu đợt, da đá, rễ cây, bong bóng, người bốc lửa khi máu thấp, bụi đá Bộ Sơn Tinh). Mỗi lần đồ kích hoạt có vòng chớp sáng màu của món; trên quái có dấu nứt giáp, lưới, băng, ấn cấm hồi máu, đồng vàng khi hạ quái có thưởng vàng.
+- **Mặc đồ dễ hơn:** chỉ số **Lực chiến** để so đồ; mũi tên ▲ xanh trên món trong túi làm tướng mạnh hơn và trên nút ⋯; nút **Tự mặc đồ tốt nhất** (trong túi đồ và menu ⋯); thẻ món đồ hiện Lực chiến trước → sau; chạm lần hai vào món đang chọn để đeo; đồ vừa rơi tốt hơn cho tướng nào thì hiện nút **▲ Đeo cho …** góc dưới phải.
+- **Ảnh Fooocus:** `tools/xoa-nen.py` xoá nền xám cho ảnh đơn; game dùng thêm `bo-*_sau-lung`, `tien-hoa_1..3`, `ban-do_o-*`, `ban-do_phong-chau`, `trieu-hoi_*`.

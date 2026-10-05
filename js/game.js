@@ -278,6 +278,40 @@ function heroStats(h) {
   return s;
 }
 
+// Lực chiến: một con số để so đồ (sát thương mỗi giây, máu, tầm, sức mạnh kỹ năng)
+function heroPower(h) {
+  const st = heroStats(h);
+  const dps = st.damage * (1 + (Math.min(100, st.crit) / 100) * ((st.critMult || 2) - 1)) / st.cooldown
+    * (1 + st.cleave * 0.6 + (st.arrows - 1) * 0.5 + (st.splash ? 0.5 : 0));
+  return Math.round(dps * 6 + st.hpMax / 8 * (1 + st.dr / 100) + (st.skillPower - 1) * 220 + st.range * 0.4 + st.regen * 4);
+}
+// lực chiến nếu mặc thử món inst vào ô slot (không đổi trạng thái thật)
+function powerWith(h, slot, inst) {
+  const old = h.equip[slot];
+  const hp = h.hp, mx = h.hpMaxLast;
+  h.equip[slot] = inst;
+  const p = heroPower(h);
+  h.equip[slot] = old;
+  h.hp = hp; h.hpMaxLast = mx;
+  return p;
+}
+// ô hợp với món (phụ kiện: ô trống đầu tiên, hết ô thì ô có món yếu nhất)
+function slotFor(h, inst) {
+  const it = ITEMS[inst.id];
+  if (it.slot !== 'acc') return it.slot;
+  const free = ACC_SLOTS.find((s) => !h.equip[s]);
+  if (free) return free;
+  let worst = null, wp = Infinity;
+  for (const s of ACC_SLOTS) { const p = powerWith(h, s, null); if (-p < wp) { wp = -p; worst = s; } }
+  return worst;
+}
+// món trong túi mặc vào thì lực chiến tăng bao nhiêu (0 nếu không mặc được / không tốt hơn)
+function upgradeGain(h, inst) {
+  if (!h || !canEquip(h.type, inst.id)) return 0;
+  const slot = slotFor(h, inst);
+  return Math.max(0, powerWith(h, slot, inst) - heroPower(h));
+}
+
 // quái bay (Bùa Chim Lạc đánh rơi xuống đất 1 giây)
 const isFlying = (e) => e.def.flying && !(e.groundT > 0);
 
@@ -838,7 +872,10 @@ const SKILL_CASTS = {
 // ------------------------------------------------------------
 //  TRẠNG THÁI TRẬN
 // ------------------------------------------------------------
-const IDLE_FX = new Set(['levelup', 'evolve', 'equipflash', 'promote', 'ring', 'summon', 'text']);
+// hoạt ảnh đánh: swing chạy 1 → 0 với tốc độ này (≈ 0,38 giây); sát thương rơi lúc ra đòn
+const SWING_RATE = 2.6;
+const STRIKE_DELAY = { melee: 0.13, arrow: 0.12, magic: 0.14, frost: 0.14 };
+const IDLE_FX = new Set(['levelup', 'evolve', 'equipflash', 'promote', 'ring', 'summon', 'text', 'proc', 'coin']);
 
 class Game {
   constructor(notify) {
@@ -853,6 +890,14 @@ class Game {
     this.known.add(key);
     this.events.push({ type: 'secret', key });
     if (x !== undefined) this.text(x, y - 86, 'Đã khám phá!', '#FFD66B', 1.6, 15);
+  }
+
+  // chớp sáng khi hiệu ứng của đồ kích hoạt (giới hạn mỗi nguồn 0,35 giây cho đỡ rối)
+  proc(who, key, x, y, color, r = 22) {
+    who.procT = who.procT || {};
+    if (who.procT[key] > this.time) return;
+    who.procT[key] = this.time + 0.35;
+    this.effects.push({ type: 'proc', x, y, color, r, ttl: 0.4, max: 0.4 });
   }
 
   // tướng còn sống đứng kề (cách một ô)
@@ -972,7 +1017,7 @@ class Game {
     const def = HEROES[type];
     if (this.heroes[slot]) return 'Ô đã có tướng';
     if (this.isFlooded(slot)) return 'Ô đang ngập: dùng Mọc Núi để cứu ô này';
-    if (def.legend && this.legendCount() >= CONFIG.maxLegends) return `Tối đa ${CONFIG.maxLegends} tướng huyền thoại trên sân`;
+    if (def.legend) return 'Tướng huyền thoại có được bằng Thăng thần từ tướng cơ bản ★★★';
     if (this.gold < def.cost) return `Cần ${def.cost} vàng`;
     return true;
   }
@@ -1115,8 +1160,43 @@ class Game {
     h.tier = t + 1;
     this.notify(`${HEROES[h.type].name} tiến hoá lên ${'★'.repeat(h.tier)}!`, '#F2D27A');
     h.evoT = 1.2;
-    h.notice.evo = false;
+    h.notice.evo = h.tier >= COSTS.ascendTier && !!ASCEND[h.type];   // nhắc Thăng thần
     this.effects.push({ type: 'evolve', hero: h, x: h.x, y: h.y, color: ATTRS[HEROES[h.type].attr].color, ttl: 1.2, max: 1.2 });
+    return true;
+  }
+
+  // Thăng thần: tướng cơ bản ★★★ hóa thân thành tướng huyền thoại cùng dòng
+  canAscend(h, to) {
+    if (!(ASCEND[h.type] || []).includes(to)) return 'Không thể thăng thần theo nhánh này';
+    if ((h.tier || 0) < COSTS.ascendTier) return 'Cần tiến hoá ★★★ trước';
+    const d = HEROES[to];
+    if (d.legend === 'legendary' && this.heroes.filter((o) => o && o !== h && HEROES[o.type].legend === 'legendary').length >= CONFIG.maxLegends)
+      return `Tối đa ${CONFIG.maxLegends} tướng Huyền thoại trên sân`;
+    const c = COSTS.ascend[d.legend];
+    if (this.gold < c) return `Cần ${c} vàng`;
+    return true;
+  }
+  ascend(h, to) {
+    const ok = this.canAscend(h, to);
+    if (ok !== true) return ok;
+    const from = HEROES[h.type], d = HEROES[to];
+    const c = COSTS.ascend[d.legend];
+    const before = heroStats(h).hpMax;
+    this.gold -= c;
+    h.spent += c;
+    const lv = from.skills.map((sk) => h.skillLv[sk.id] || 0);
+    h.from = h.type;
+    h.type = to;
+    h.skillLv = {};
+    d.skills.forEach((sk, i) => { if (lv[i]) h.skillLv[sk.id] = lv[i]; });
+    h.skillCd = {};
+    h.grow = 0;
+    if (!h.dead) h.hp = Math.max(1, h.hp + heroStats(h).hpMax - before);
+    h.evoT = 1.2;
+    h.notice.evo = false;
+    this.shake = Math.max(this.shake, 6);
+    this.effects.push({ type: 'evolve', hero: h, x: h.x, y: h.y, color: d.color || ATTRS[d.attr].color, big: true, ttl: 1.2, max: 1.2 });
+    this.events.push({ type: 'ascend', from: from.name, to: d.name, hero: h });
     return true;
   }
 
@@ -1135,7 +1215,7 @@ class Game {
   invIndex(uid) { return this.inventory.findIndex((i) => i.uid === uid); }
 
   // Trả về true nếu mặc được, ngược lại là câu báo lỗi
-  equip(h, uid) {
+  equip(h, uid, forceSlot) {
     const idx = this.invIndex(uid);
     if (idx < 0) return 'Không tìm thấy món đồ';
     const inst = this.inventory[idx];
@@ -1143,7 +1223,7 @@ class Game {
     if (!canEquip(h.type, inst.id)) return `Vũ khí này dành cho tướng dùng ${WCLASS_NAMES[it.wclass]}`;
     let slot = it.slot;
     if (slot === 'acc') {
-      slot = ACC_SLOTS.find((s) => !h.equip[s]);
+      slot = forceSlot || ACC_SLOTS.find((s) => !h.equip[s]);
       if (!slot) return 'Hết ô phụ kiện. Tháo bớt một món trước';
     }
     const before = heroStats(h).hpMax;
@@ -1162,6 +1242,31 @@ class Game {
       this.events.push({ type: 'setDone', name: SETS[done].name + (SETS[done].el === HEROES[h.type].el ? ' · Thiên mệnh' : ''), hero: h });
     }
     return true;
+  }
+
+  // Tự mặc đồ tốt nhất từ túi (lặp tới khi không còn món nào làm tăng lực chiến)
+  autoEquip(h) {
+    let changed = 0;
+    for (let guard = 0; guard < 12; guard++) {
+      let best = null, bg = 0;
+      for (const inst of this.inventory) {
+        const g = upgradeGain(h, inst);
+        if (g > bg) { bg = g; best = inst; }
+      }
+      if (!best || this.equip(h, best.uid, slotFor(h, best)) !== true) break;
+      changed++;
+    }
+    return changed;
+  }
+  // tướng nào trên sân mặc món này lợi nhất
+  bestHeroFor(inst) {
+    let best = null, bg = 0;
+    for (const h of this.heroes) {
+      if (!h) continue;
+      const g = upgradeGain(h, inst);
+      if (g > bg) { bg = g; best = h; }
+    }
+    return best ? { hero: best, gain: bg } : null;
   }
 
   unequip(h, slot) {
@@ -1665,6 +1770,7 @@ class Game {
       return;
     }
     if (e.noHealT > 0) e.noHealT -= dt;
+    if (e.kbT > 0) e.kbT -= dt;
     if (e.groundT > 0) e.groundT -= dt;
     if (e.elite === 'regen' && !(e.noHealT > 0)) e.hp = Math.min(e.maxHp, e.hp + e.maxHp * 0.03 * dt);
     if (d.enrage && !e.enraged && e.hp < e.maxHp * d.enrage.below) {
@@ -1824,10 +1930,11 @@ class Game {
     }
     const st = heroStats(h);
     amount *= (1 - st.dr / 100) * (1 - (b.dr || 0) / 100);
-    if (magic && st.magicRes) amount *= 1 - st.magicRes / 100;
+    if (magic && st.magicRes) { amount *= 1 - st.magicRes / 100; this.proc(h, 'scale', h.x, h.y - 26, '#5AB4D6', 26); }
     // ẩn đồ hành Thổ "Đất lành chim đậu": máu dưới 30% thì giảm 30% sát thương 4 giây (hồi 20 giây)
     if (st.hid['i.tho1'] && h.hp < st.hpMax * 0.3 && !(h.earthCd > 0)) {
       h.earthT = 4; h.earthCd = 20;
+      this.proc(h, 'earth', h.x, h.y - 24, '#C99A3C', 34);
       this.discover('i.tho1', h.x, h.y);
     }
     if (h.earthT > 0) amount *= 0.7;
@@ -1921,7 +2028,12 @@ class Game {
     const heal = (h.buff.healPct || 0) / 100 * st.hpMax;
     h.hp = Math.min(st.hpMax, h.hp + (st.regen + heal) * dt);
     h.mana = Math.min(st.maxMana, h.mana + st.manaRegen * dt);
-    h.swing = Math.max(0, h.swing - dt * 4);
+    h.swing = Math.max(0, h.swing - dt * SWING_RATE);
+    // đòn đánh thường rơi đúng lúc hoạt ảnh ra đòn (sau pha lấy đà)
+    if (h.strike) {
+      h.strike.t -= dt;
+      if (h.strike.t <= 0) { const f = h.strike.fn; h.strike = null; f(); }
+    }
     if (h.castT > 0) h.castT -= dt;
     for (const sk of def.skills) {
       if (sk.active) h.skillCd[sk.id] = (h.skillCd[sk.id] || 0) - dt;
@@ -2000,12 +2112,23 @@ class Game {
     const target = this.findTarget(h.x, h.y, st.range, st.canAir);
     if (!target) return;
     h.dir = target.x >= h.x ? 1 : -1;
-    if (h.cd > 0) return;
+    if (h.cd > 0 || h.strike) return;
     h.cd = st.cooldown;
     h.swing = 1;
+    h.strike = { t: STRIKE_DELAY[def.attack] || 0.12, fn: () => this.heroAttack(h, target) };
+  }
+
+  // đòn đánh thường (gọi khi hoạt ảnh tới lúc ra đòn)
+  heroAttack(h, target) {
+    if (h.dead || !this.heroes.includes(h)) return;
+    const def = HEROES[h.type];
+    const st = heroStats(h);
+    if (target.dead) target = this.findTarget(h.x, h.y, st.range, st.canAir);
+    if (!target) return;
 
     if (def.attack === 'melee') {
       this.effects.push({ type: 'slash', x: target.x, y: target.y - 10, dir: h.dir, ttl: 0.2, max: 0.2 });
+      this.sparks(target.x, target.y - 12, '#FFF1C4', 4);
       this.hit(target, st.damage, h, { st });
       if (st.cleave > 0) {
         for (const e of this.enemiesInRange(h.x, h.y, st.range, false)) {
@@ -2060,7 +2183,10 @@ class Game {
         if (p.target.dead) continue;
         this.hit(p.target, st.damage, hero, { st });
         // Rìu Quét Sông (tướng đánh xa): lan sát thương ra quái xung quanh
-        if (st.spread) for (const o of this.enemiesInRange(p.tx, p.ty, 50)) if (o !== p.target) this.hit(o, st.damage * st.spread / 100, hero, { silent: true });
+        if (st.spread) {
+          this.proc(p.target, 'spread', p.tx, p.ty, '#5AB4D6', 40);
+          for (const o of this.enemiesInRange(p.tx, p.ty, 50)) if (o !== p.target) this.hit(o, st.damage * st.spread / 100, hero, { silent: true });
+        }
         if (p.target.dead) continue;
         if (st.poison > 0) this.dot(p.target, st.poison, hero, '#7FC24A', 'pure');
         if (st.slow > 0) this.slow(p.target, st.slow, 1.5);
@@ -2151,9 +2277,12 @@ class Game {
       const armor = e.armor * (1 - pierce / 100);
       dmg *= 1 - (0.06 * armor) / (1 + 0.06 * armor);
     } else if (type === 'magic') dmg *= 1 - e.mr / 100;
-    if (st && st.stunChance && Math.random() * 100 < st.stunChance) this.stun(e, 0.5, 'stun');
+    if (st && st.stunChance && Math.random() * 100 < st.stunChance) { this.stun(e, 0.5, 'stun'); this.proc(e, 'tusk', e.x, e.y - 16, '#C8A040', 22); }
     if (st && !o.silent) this.onHitFx(e, hero, st, crit, dmg);
-    if (!o.silent) e.hitT = 0.12;
+    if (!o.silent) {
+      e.hitT = 0.12;
+      if (st && hero) { e.kbT = 0.14; e.kbDir = e.x >= hero.x ? 1 : -1; }
+    }
     // số sát thương: khắc chế hiện vàng, bị khắc hiện xám
     const numColor = em > 0 ? '#FFD66B' : em < 0 ? '#9A968C' : null;
     if (crit) this.text(e.x, e.y - 30, Math.round(dmg) + '!', numColor || '#FFD66B', 0.7);
@@ -2186,6 +2315,7 @@ class Game {
     const hid = st.hid || {};
     if (st.shred && e.shredN < 3) {
       e.shredN++;
+      this.proc(e, 'shred', e.x, e.y - 14, '#E8D8B0', 16);
       e.armor = Math.max(0, e.baseArmor - st.shred * e.shredN);
       if (e.type === 'rua' && e.armor <= 0 && hid['r.mui_sung'] && !e.cracked) {
         e.cracked = true;
@@ -2194,8 +2324,9 @@ class Game {
         this.discover('r.mui_sung', hero.x, hero.y);
       }
     }
-    if (st.noHeal) e.noHealT = st.noHeal;
+    if (st.noHeal) { if (!(e.noHealT > 0)) this.proc(e, 'jade', e.x, e.y - 18, '#3EC08A', 14); e.noHealT = st.noHeal; }
     if (st.netSlow) {
+      if (!(e.slowT > 0)) this.proc(e, 'net', e.x, e.y - 10, '#D8C8A0', 14);
       this.slow(e, st.netSlow, 1);
       if (e.type === 'casau' && e.enraged && !e.netted && hid['r.luoi_ca']) {
         e.netted = true;
@@ -2205,9 +2336,11 @@ class Game {
     }
     if (e.def.flying && hid['r.bua_chim_lac'] && !(e.groundT > 0)) {
       e.groundT = 1;
+      this.proc(e, 'ground', e.x, e.y - 30, '#FFE08A', 20);
       this.discover('r.bua_chim_lac', hero.x, hero.y);
     }
-    if (crit && hid['i.hoa1']) { this.dot(e, dmg * 0.2, hero, '#E0452C', 'magic', 2); this.discover('i.hoa1', hero.x, hero.y); }
+    if (crit && hid['i.hoa1']) {
+      this.proc(e, 'burn', e.x, e.y - 14, '#E0452C', 18); this.dot(e, dmg * 0.2, hero, '#E0452C', 'magic', 2); this.discover('i.hoa1', hero.x, hero.y); }
     // ẩn đủ Bộ Lạc Long: đứng ô ngập, 10% phóng sét lan 3 quái
     if (hid['s.laclong'] && hero.flooded && Math.random() < 0.1) {
       const near = this.enemiesInRange(e.x, e.y, 130).filter((o) => o !== e).slice(0, 3);
@@ -2271,6 +2404,8 @@ class Game {
       const inst = this.addItem(makeItem(id, null, { drop: true }));
       if (inst) {
         const it = ITEMS[id];
+        const bh = this.bestHeroFor(inst);
+        if (bh) this.events.push({ type: 'upgrade', uid: inst.uid, hero: bh.hero, gain: bh.gain });
         this.notify(`Rơi đồ: ${it.name} (${RARITY[it.rarity].name})`, RARITY[it.rarity].color);
         this.effects.push({ type: 'drop', x: e.x, y: e.y, color: RARITY[it.rarity].color, ttl: 1, max: 1 });
       }
@@ -2281,13 +2416,16 @@ class Game {
   onKillFx(e, h) {
     const st = heroStats(h);
     const hid = st.hid;
+    if (st.goldOnKill) this.effects.push({ type: 'coin', x: e.x, y: e.y - 16, ttl: 0.6, max: 0.6 });
     if (hid['i.moc1'] && !h.dead) {
+      this.proc(h, 'moc1', h.x, h.y - 24, '#5FB84A');
       h.hp = Math.min(st.hpMax, h.hp + st.hpMax * 0.03);
       this.discover('i.moc1', h.x, h.y);
     }
     if (hid['r.song_riu']) {
       h.rageT = 3;
       h.rageN = Math.min(5, (h.rageN || 0) + 1);
+      this.proc(h, 'rage', h.x, h.y - 24, '#E74C3C');
       if (h.rageN >= 2) this.discover('r.song_riu', h.x, h.y);
     }
     if (e.type === 'tom' && hid['r.riu_quet']) {
@@ -2315,7 +2453,7 @@ class Game {
     if (e.type === 'chimbao' && hid['s.chimlac'] && Math.random() < 0.2) {
       const t = this.findTarget(e.x, e.y, 400);
       if (t) {
-        this.effects.push({ type: 'bird', x: e.x, y: e.y - 30, target: t, ttl: 0.6, max: 0.6,
+        this.effects.push({ type: 'bird', kind: 'lac', x: e.x, y: e.y - 30, target: t, ttl: 0.6, max: 0.6,
           onEnd: () => this.hit(t, st.damage * 1.5, h, { big: true, color: '#F2E6C8' }) });
         this.discover('s.chimlac', h.x, h.y);
       }

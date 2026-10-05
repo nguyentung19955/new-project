@@ -238,7 +238,8 @@ function drawWaterLevel(ctx, water, t) {
 // state: dry | flooded | raised | target | free | hint | soon
 function drawSpot(ctx, x, y, o, t) {
   const rx = 15 * DK, ry = 10 * DK;
-  const tile = asset(o.flooded ? 'tiles/tile-flooded.png' : o.raised || o.tier === 2 ? 'tiles/tile-high.png' : o.tier === 1 ? 'tiles/tile-mid.png' : 'tiles/tile-low.png');
+  const tk = o.flooded ? 'ngap' : o.raised || o.tier === 2 ? 'cao' : o.tier === 1 ? 'giua' : 'thap';
+  const tile = (assetAny([`ban-do_o-${tk}.png`, `tiles/tile-${{ ngap: 'flooded', cao: 'high', giua: 'mid', thap: 'low' }[tk]}.png`]) || {}).img;
   if (tile) {
     // ô vẽ tay: ảnh vuông, vẽ phẳng theo phối cảnh ô (rộng 2.4 × bán kính)
     ctx.drawImage(tile, x - rx * 1.25, y - ry * 1.25, rx * 2.5, ry * 2.5);
@@ -472,23 +473,9 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
   const breathe = Math.sin(t * 2.85 + seed) * 3;
   const headRot = Math.sin(t * 1.9 + seed) * 0.05;
   const backRot = Math.sin(t * 2.2 + seed) * 0.07;
-  // vung đòn / bắn / phép
-  const u = 1 - (o.swing || 0);
-  let armF = 0, armB = 0, lunge = 0, lift = 0, recoil = 0, big = 1;
-  if (o.castT > 0) {
-    const k = Math.min(1, o.castT / 0.3);
-    armF = -2.0 * k; armB = 2.0 * k; lift = -6 * k;
-    if (o.castUlt) big = 1 + 0.14 * Math.min(1, o.castT / 0.4);
-  } else if (o.swing > 0) {
-    if (def.attack === 'melee') {
-      armF = u < 0.6 ? -1.4 * Math.sin((Math.PI * u) / 0.6) : 0.5 * Math.sin((Math.PI * (u - 0.6)) / 0.4);
-      lunge = 16 * Math.sin(Math.PI * u);
-    } else if (def.attack === 'arrow') {
-      recoil = -9 * Math.sin(Math.PI * u);
-    } else {
-      armF = -1.0 * Math.sin(Math.PI * u); lift = -4 * Math.sin(Math.PI * u);
-    }
-  }
+  // vung đòn / bắn / phép: 3 pha lấy đà → ra đòn → thu về (u: 0 → 1)
+  const pose = attackPose(def.attack, o.swing || 0, o.castT || 0, !!o.castUlt);
+  const { armF, armB, lunge, lift, recoil, big, lean, sqx, sqy } = pose;
   let drop = 0, fallRot = 0, alpha = o.alpha ?? 1;
   if (o.summon > 0) drop = -60 * (o.summon / 0.5) * (o.summon / 0.5);
   if (o.bounce > 0) drop -= (4 * DK / s) * Math.sin(Math.PI * (1 - o.bounce / 0.3));   // nảy 4px khi lên cấp
@@ -509,7 +496,10 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
     if (look.accAura) drawAccAura(ctx, look.accAura, s, t);
   }
   ctx.translate(0, evoLift * DK * (o.scale || 0.26) / 0.26);
-  ctx.scale(dir * s * big, s * big);
+  // nghiêng người + co giãn (squash & stretch) quanh bàn chân
+  const sway = Math.sin(t * 1.3 + seed) * 0.018;
+  ctx.scale(dir * s * big * sqx, s * big * sqy);
+  ctx.rotate(lean + sway + (o.hurt > 0 ? -0.12 * (o.hurt / 0.2) : 0));
   ctx.translate(-100 + (lunge + recoil + hurtX), -222 + drop + sink);
   if (fallRot) { ctx.translate(100, 222); ctx.rotate(fallRot); ctx.translate(-100, -222); }
 
@@ -524,6 +514,15 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
     ctx.translate(100, 222);
     ctx.scale(1 + Math.sin(t * 2.85 + seed) * 0.012, 1 - Math.sin(t * 2.85 + seed) * 0.018 + lift * -0.004);
     ctx.drawImage(png, -w / 2, -hgt, w, hgt);
+    if (o.hurt > 0) {
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.globalAlpha = (o.hurt / 0.2) * 0.45;
+      ctx.drawImage(png, -w / 2, -hgt, w, hgt);
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 1;
+    }
+    ctx.translate(-100, -222);
+    drawAttackFx(ctx, def, pose, look, t);
     ctx.restore();
     if (o.bog) drawBogWater(ctx, x, y, s, t);
     return { top: y - 240 * s * big, s };
@@ -572,6 +571,7 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
     }
     ctx.restore();
     ctx.restore();
+    drawAttackFx(ctx, def, pose, look, t);
   }
   // ★★★: hạt sáng màu hệ bay lên quanh người
   if (tierShown >= 3) risingSparks(ctx, 100, 200, look.attrColor, t, 120);
@@ -579,6 +579,106 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
 
   if (o.bog) drawBogWater(ctx, x, y, s, t);
   return { top: y - 240 * s * big, s };
+}
+
+// ------------------------------------------------------------
+//  HOẠT ẢNH ĐÁNH (v20): lấy đà → ra đòn → thu về, có co giãn và nghiêng người.
+//  swing chạy 1 → 0 trong ATTACK_TIME giây; sát thương rơi đúng lúc ra đòn (game.js).
+// ------------------------------------------------------------
+const easeOut = (k) => 1 - (1 - k) * (1 - k);
+const easeInOut = (k) => (k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2);
+function attackPose(attack, swing, castT, ult) {
+  const P = { armF: 0, armB: 0, lunge: 0, lift: 0, recoil: 0, big: 1, lean: 0, sqx: 1, sqy: 1, phase: '', k: 0 };
+  if (castT > 0) {
+    // tung chiêu: giơ vũ khí lên cao, người vươn, rồi hạ
+    const k = Math.min(1, castT / 0.3);
+    P.armF = 0.3 * easeOut(k); P.armB = 1.8 * k; P.lift = -10 * k; P.lean = -0.06 * k;
+    P.sqx = 1 - 0.05 * k; P.sqy = 1 + 0.07 * k; P.phase = 'cast'; P.k = k;
+    if (ult) P.big = 1 + 0.14 * Math.min(1, castT / 0.4);
+    return P;
+  }
+  if (!(swing > 0)) return P;
+  const u = 1 - swing;
+  if (attack === 'melee') {
+    if (u < 0.25) {            // lấy đà: vũ khí vòng ra sau, người ngả về sau, hơi nén
+      const k = easeOut(u / 0.25);
+      P.armF = -1.1 * k; P.lunge = -5 * k; P.lean = -0.07 * k; P.sqx = 1 - 0.04 * k; P.sqy = 1 + 0.05 * k; P.phase = 'wind'; P.k = k;
+    } else if (u < 0.45) {     // chém: nhanh, lao tới, dãn ngang
+      const k = easeOut((u - 0.25) / 0.2);
+      P.armF = -1.1 + 2.8 * k; P.lunge = -5 + 26 * k; P.lean = -0.07 + 0.2 * k; P.sqx = 1 + 0.09 * k; P.sqy = 1 - 0.07 * k; P.phase = 'strike'; P.k = k;
+    } else {                   // thu về
+      const k = easeInOut((u - 0.45) / 0.55);
+      P.armF = 1.7 * (1 - k); P.lunge = 21 * (1 - k); P.lean = 0.13 * (1 - k); P.sqx = 1 + 0.09 * (1 - k); P.sqy = 1 - 0.07 * (1 - k); P.phase = 'recover'; P.k = k;
+    }
+  } else if (attack === 'arrow') {
+    if (u < 0.3) {             // kéo dây: lùi nhẹ, nâng nỏ
+      const k = easeOut(u / 0.3);
+      P.recoil = -4 * k; P.armF = -0.25 * k; P.lean = -0.04 * k; P.phase = 'wind'; P.k = k;
+    } else if (u < 0.42) {     // nhả: giật mạnh về sau
+      const k = (u - 0.3) / 0.12;
+      P.recoil = -4 - 9 * k; P.armF = -0.25 + 0.15 * k; P.sqx = 1 - 0.05 * k; P.sqy = 1 + 0.04 * k; P.phase = 'strike'; P.k = k;
+    } else {
+      const k = easeInOut((u - 0.42) / 0.58);
+      P.recoil = -13 * (1 - k); P.armF = -0.1 * (1 - k); P.sqx = 1 - 0.05 * (1 - k); P.sqy = 1 + 0.04 * (1 - k); P.phase = 'recover'; P.k = k;
+    }
+  } else {                     // phép: giơ gậy, tụ sáng, phóng
+    if (u < 0.35) {
+      const k = easeOut(u / 0.35);
+      P.armF = -0.25 * k; P.lift = -6 * k; P.lean = -0.05 * k; P.sqy = 1 + 0.05 * k; P.phase = 'wind'; P.k = k;
+    } else if (u < 0.5) {
+      const k = (u - 0.35) / 0.15;
+      P.armF = -0.25 + 1.15 * k; P.lift = -6 + 4 * k; P.lean = -0.05 + 0.1 * k; P.sqx = 1 + 0.05 * k; P.sqy = 1 + 0.05 - 0.09 * k; P.phase = 'strike'; P.k = k;
+    } else {
+      const k = easeInOut((u - 0.5) / 0.5);
+      P.armF = 0.9 * (1 - k); P.lift = -2 * (1 - k); P.lean = 0.05 * (1 - k); P.sqx = 1 + 0.05 * (1 - k); P.sqy = 1 - 0.04 * (1 - k); P.phase = 'recover'; P.k = k;
+    }
+  }
+  return P;
+}
+// vệt chém, tia lửa đầu nỏ, quả cầu sáng đầu gậy (khung 200×230, đã lật theo hướng)
+function drawAttackFx(ctx, def, P, look, t) {
+  if (!P.phase || P.phase === 'cast') return;
+  const col = look.weapon ? (look.weapon.set ? '#9EF2E0' : RAR_COLOR[look.weapon.rarity]) : '#FFF1C4';
+  ctx.save();
+  if (def.attack === 'melee' && (P.phase === 'strike' || (P.phase === 'recover' && P.k < 0.5))) {
+    // vệt chém hình lưỡi liềm quanh vai
+    const a0 = -2.3, a1 = P.phase === 'strike' ? -2.3 + 2.9 * P.k : 0.6;
+    const fade = P.phase === 'strike' ? 1 : 1 - P.k * 2;
+    ctx.globalAlpha = 0.85 * fade;
+    ctx.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < 3; i++) {
+      ctx.strokeStyle = i === 0 ? '#FFFFFF' : col;
+      ctx.lineWidth = [5, 14, 26][i];
+      ctx.globalAlpha = 0.85 * fade * [0.9, 0.45, 0.18][i];
+      ctx.beginPath(); ctx.arc(122, 124, 92, Math.max(a0, a1 - 1.6), a1); ctx.stroke();
+    }
+  } else {
+    // nỏ / gậy xoay theo tay trước
+    ctx.translate(122, 124); ctx.rotate(P.armF); ctx.translate(-122, -124);
+  }
+  if (def.attack === 'arrow' && P.phase === 'strike') {
+    // chớp sáng đầu nỏ + vòng dây bật
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.globalAlpha = 1 - P.k;
+    const g = ctx.createRadialGradient(178, 118, 0, 178, 118, 34);
+    g.addColorStop(0, '#FFFFFF'); g.addColorStop(0.4, col); g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(178, 118, 34, 0, Math.PI * 2); ctx.fill();
+  } else if (def.attack !== 'arrow' && def.attack !== 'melee') {
+    // quả cầu sáng tụ ở đầu gậy rồi bung ra
+    const r = P.phase === 'wind' ? 10 + 16 * P.k : P.phase === 'strike' ? 26 + 40 * P.k : 0;
+    if (r > 0) {
+      const ac = def.attack === 'frost' ? '#BDEBFA' : '#FFB04A';
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.globalAlpha = P.phase === 'strike' ? 1 - P.k : 0.9;
+      const g = ctx.createRadialGradient(150, 40, 0, 150, 40, r);
+      g.addColorStop(0, '#FFFFFF'); g.addColorStop(0.35, ac); g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(150, 40, r, 0, Math.PI * 2); ctx.fill();
+      if (P.phase === 'strike') { ctx.strokeStyle = ac; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(150, 40, r * 1.2, 0, Math.PI * 2); ctx.stroke(); }
+    }
+  }
+  ctx.restore();
 }
 
 // chuyển sang hệ tọa độ vẽ đồ (đầu tại (0,-34) bán kính 8) trong khung 200×230
@@ -609,6 +709,17 @@ function risingSparks(ctx, cx, cy, color, t, spread) {
 function drawEvoAura(ctx, tier, attrColor, s, t) {
   const k = s / 0.28;
   const rx = 24 * DK * k, ry = 8 * DK * k;
+  // ảnh vẽ tay vòng hào quang (tien-hoa_1..3): vẽ dẹt theo phối cảnh, xoay chậm
+  const img = asset(`tien-hoa_${tier}.png`);
+  if (img) {
+    ctx.save();
+    ctx.scale(1, ry / rx);
+    ctx.rotate(t * 0.3);
+    ctx.globalAlpha *= 0.9;
+    ctx.drawImage(img, -rx * 1.15, -rx * 1.15, rx * 2.3, rx * 2.3);
+    ctx.restore();
+    return;
+  }
   ctx.save();
   for (let i = 0; i < tier; i++) {
     const f = 1 - i * 0.24;
@@ -784,6 +895,7 @@ function legendSparks(ctx, g, t, x, y) {
 function drawWings(ctx, look, t, wingT) {
   const color = look.wings;
   const open = wingT > 0 ? 1 - wingT / 1.5 : 1;
+  if (look.wingScale <= 1 && drawSetBackPng(ctx, 'laclong', t, open)) return;
   const flap = Math.sin(t * 2) * 0.18;
   ctx.save();
   ctx.translate(-4, -24);
@@ -824,10 +936,26 @@ function drawWings(ctx, look, t, wingT) {
   ctx.restore();
 }
 
+function drawSetBackPng(ctx, set, t, open) {
+  const img = asset(`bo-${slugify(SETS[set].name.replace('Bộ ', ''))}_sau-lung.png`);
+  if (!img) return false;
+  ctx.save();
+  ctx.translate(0, -30 + Math.sin(t * 1.6) * 0.8);
+  const sc = (0.4 + 0.6 * open) * (1 + Math.sin(t * 2) * 0.02);
+  ctx.scale(sc, sc);
+  const w = 46, hh = w * img.naturalHeight / img.naturalWidth;
+  ctx.globalAlpha *= 0.3 + 0.7 * open;
+  ctx.drawImage(img, -w / 2, -hh / 2, w, hh);
+  ctx.restore();
+  return true;
+}
+
 // Hiệu ứng sau lưng khi đủ bộ (v15): Sơn Tinh khối núi đá lơ lửng, Chim Lạc cánh lông
 // trắng vàng, Trống Đồng mặt trống xoay, Ngựa Sắt bờm lửa. wingT: vừa đủ bộ thì bung ra
 function drawSetBack(ctx, set, t, wingT) {
   const open = wingT > 0 ? Math.min(1, (1 - wingT / 1.5) * 1.4) : 1;
+  // ảnh vẽ tay hiệu ứng sau lưng (bo-<bộ>_sau-lung.png)
+  if (drawSetBackPng(ctx, set, t, open)) return;
   ctx.save();
   ctx.globalAlpha *= 0.3 + 0.7 * open;
   if (set === 'sontinh') {
@@ -1261,10 +1389,14 @@ function drawEnemy(ctx, e, t, o = {}) {
     ctx.rect(-box.w, -box.h * 2, box.w * 2, box.h * 2 - sinkK * box.h * 0.8 + 4);
     ctx.clip();
   }
-  ctx.rotate(wig * (d.flying ? 2 : 1));
+  // trúng đòn: giật lùi + nén lại; bơi: co giãn theo nhịp
+  const kb = e.kbT > 0 ? e.kbT / 0.14 : 0;
+  if (kb) ctx.translate((e.kbDir || 1) * 7 * Math.sin(kb * Math.PI), 0);
+  ctx.rotate(wig * (d.flying ? 2 : 1) + (kb ? (e.kbDir || 1) * 0.12 * kb : 0));
   const flip = e.dir < 0 ? -1 : 1;
   const flapY = d.flying ? 1 + Math.sin(t * 16 + e.id) * 0.12 : 1;
-  ctx.scale(flip, flapY);
+  const swim = d.flying || e.stunT > 0 ? 0 : Math.sin(t * 9 + e.id) * 0.035;
+  ctx.scale(flip * (1 + swim + kb * 0.1), flapY * (1 - swim - kb * 0.1));
   if (e.enraged) {
     ctx.shadowColor = '#ff2d2d';
     ctx.shadowBlur = 14;
@@ -1301,6 +1433,7 @@ function drawEnemy(ctx, e, t, o = {}) {
   ctx.restore();
 
   const top = e.y - lift - box.ay - 4;
+  if (!o.icon) drawEnemyStatus(ctx, e, box, lift, t);
   ctx.save();
   ctx.translate(e.x, 0);
   // bị làm chậm: phủ sương xanh
@@ -1366,6 +1499,58 @@ function drawEnemy(ctx, e, t, o = {}) {
     ctx.fillStyle = '#5AB4D6';
     ctx.fillRect(e.x - w / 2, by - 3, w * Math.min(1, e.shield / e.maxHp), 2);
   }
+}
+
+// Dấu trạng thái trên quái do kỹ năng / đồ gây ra: đóng băng, mắc lưới,
+// nứt giáp (Mũi Sừng Phá Giáp), cấm hồi máu (Ngọc Trấn Thủy), bị đánh rơi xuống đất
+function drawEnemyStatus(ctx, e, box, lift, t) {
+  const cx = e.x, cy = e.y - lift - box.h * 0.4;
+  ctx.save();
+  if (e.stunT > 0 && e.stunKind === 'ice') {
+    ctx.fillStyle = 'rgba(190,235,250,0.38)';
+    ctx.strokeStyle = 'rgba(232,248,255,0.9)';
+    ctx.lineWidth = 1.4;
+    const w = box.w * 0.5, hh = box.h * 0.55;
+    ctx.beginPath();
+    ctx.moveTo(cx - w, cy + hh); ctx.lineTo(cx - w * 0.9, cy - hh * 0.7); ctx.lineTo(cx - w * 0.2, cy - hh);
+    ctx.lineTo(cx + w * 0.8, cy - hh * 0.8); ctx.lineTo(cx + w, cy + hh); ctx.closePath();
+    ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx - w * 0.5, cy - hh * 0.5); ctx.lineTo(cx - w * 0.2, cy); ctx.stroke();
+  }
+  if (e.stunT > 0 && e.stunKind === 'net') {
+    ctx.strokeStyle = 'rgba(216,200,160,0.9)';
+    ctx.lineWidth = 1;
+    const r = box.w * 0.5;
+    for (let i = -2; i <= 2; i++) {
+      ctx.beginPath(); ctx.moveTo(cx - r, cy + i * r * 0.35 - r * 0.3); ctx.lineTo(cx + r, cy + i * r * 0.35 + r * 0.3); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx - r, cy + i * r * 0.35 + r * 0.3); ctx.lineTo(cx + r, cy + i * r * 0.35 - r * 0.3); ctx.stroke();
+    }
+  }
+  if (e.shredN > 0) {
+    // vết nứt giáp: càng nhiều tầng càng nhiều vết
+    ctx.strokeStyle = '#E8D8B0';
+    ctx.lineWidth = 1.3;
+    for (let i = 0; i < e.shredN; i++) {
+      const x0 = cx - box.w * 0.18 + i * box.w * 0.16, y0 = cy - box.h * 0.1;
+      ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x0 + 3, y0 + 5); ctx.lineTo(x0 - 1, y0 + 9); ctx.lineTo(x0 + 2, y0 + 13); ctx.stroke();
+    }
+  }
+  if (e.noHealT > 0) {
+    // dấu ấn ngọc: vòng xanh có gạch chéo
+    const y0 = cy - box.h * 0.55;
+    ctx.globalAlpha = 0.85;
+    ctx.strokeStyle = '#3EC08A'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(cx + box.w * 0.32, y0, 4.5, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx + box.w * 0.32 - 3, y0 - 3); ctx.lineTo(cx + box.w * 0.32 + 3, y0 + 3); ctx.stroke();
+  }
+  if (e.groundT > 0 && e.def.flying) {
+    ctx.fillStyle = 'rgba(255,224,138,0.6)';
+    for (let i = 0; i < 3; i++) {
+      const a = t * 8 + i * 2.1;
+      circle(ctx, cx + Math.cos(a) * box.w * 0.4, cy - box.h * 0.4 + Math.sin(a) * 3, 1.6, '#FFE08A');
+    }
+  }
+  ctx.restore();
 }
 
 // Vẽ quái làm biểu tượng (bảng đợt, bách khoa) vào một canvas
