@@ -3099,7 +3099,11 @@ class Game {
   // Vua Hùng ban thưởng: chọn 1 trong 3
   bossRewards(bossType) {
     const opts = [{ kind: 'item', id: ENEMIES[bossType].reward, title: 'Sính lễ' }];
-    opts.push({ kind: 'item', id: Math.random() < 0.3 ? rollSetItem() : rollItem('epic'), title: 'Hũ Vua Hùng', jar: true });
+    // Hũ Vua Hùng (v37): nhiều món, chọn món hợp với các tướng mạnh nhất trên sân
+    const lvl = { thuongluong: 0, haba: 1, thuytinh: 2 }[bossType] || 0;
+    const plan = [['epic', 'epic'], ['set', 'epic', 'epic'], ['set', 'set', 'epic']][lvl];
+    const ids = plan.map((r) => this.jarPick(r));
+    opts.push({ kind: 'item', id: ids[0], ids, title: 'Hũ Vua Hùng', jar: true });
     if (Math.random() < 0.5) {
       opts.push({ kind: 'treasure', gold: 200 + this.wave * 15, lives: 3, title: 'Kho lúa · Đắp thành' });
     } else {
@@ -3108,9 +3112,22 @@ class Game {
     return opts;
   }
 
+  // bốc 6 món cùng độ hiếm, lấy món tăng lực chiến nhiều nhất cho 3 tướng mạnh nhất
+  jarPick(rarity) {
+    const top = this.heroes.filter(Boolean).sort((a, b) => heroPower(b) - heroPower(a)).slice(0, 3);
+    let best = null, bg = -1;
+    for (let i = 0; i < 6; i++) {
+      const id = rarity === 'set' || rarity === 'legendary' ? rollSetItem() : rollItem(rarity);
+      const inst = makeItem(id);
+      const gain = top.reduce((m, h) => Math.max(m, upgradeGain(h, inst)), 0);
+      if (gain > bg) { bg = gain; best = id; }
+    }
+    return best;
+  }
+
   claimReward(o) {
     if (o.kind === 'item') {
-      this.addItem(o.id);
+      for (const id of o.ids || [o.id]) this.addItem(id);
     } else if (o.kind === 'treasure') {
       this.addGold(o.gold);
       this.lives += o.lives;

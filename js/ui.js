@@ -863,7 +863,7 @@ class UI {
         ${skills}
         ${maxed ? `<button class="dk-up btn-gold" data-act="train" ${g.gold < tc ? 'disabled' : ''} aria-label="Luyện thể"><b>${uiIc('luyen-the')}Luyện thể ✦${(h.train || 0) + 1}</b><span>${coin(1)}${tc}</span></button>`
           : `<button class="dk-up btn-gold" data-act="levelup" ${g.gold < lc ? 'disabled' : ''} aria-label="Nâng cấp tướng"><b>Lên cấp ${h.level + 1}</b><span>${coin(1)}${lc}</span></button>`}
-        <button class="dk-more metal ${notice || up ? 'notice' : ''}" data-act="more" aria-label="Thêm">⋯${h.skillPts ? `<span class="badge">${h.skillPts}</span>` : ''}${up ? '<span class="upb">▲</span>' : ''}</button>`;
+`;
     }
     if (this.sig.deck !== key) {
       this.sig.deck = key;
@@ -886,6 +886,12 @@ class UI {
         const cn = el.querySelector('.cdn');
         if (cn.textContent !== txt) cn.textContent = txt;
       });
+      // thanh thao tác nổi trên tướng: tự hiện khi chọn tướng (ẩn khi mở màn khác / menu)
+      const show = !h.dead && !this.screen && $('#drawer').hidden && this.moving < 0;
+      const mk = show ? this.moreKey(h) : '';
+      if (show && (this.moreSig !== mk || $('#more').hidden)) { this.moreSig = mk; $('#more').hidden = false; this.renderMore(); }
+      else if (show) this.placeMore(h);
+      else if (!$('#more').hidden) $('#more').hidden = true;
     } else $('#more').hidden = true;
     // gợi ý ngắn trên hàng thẻ
     const hint = this.moving >= 0 ? 'Chạm ô muốn chuyển tướng tới (tướng cùng loại cùng sao: ghép)' : '';
@@ -940,36 +946,58 @@ class UI {
     this.toast(`Đã hủy ${HEROES[h.type].name}: +${v} vàng`, '#F2D27A');
   }
 
+  // Thanh thao tác nổi ngay trên tướng đang chọn (v37): chạm tướng là thấy, mỗi việc 1 chạm.
+  // Ghép / hợp thể / mặc đồ làm luôn khi đủ điều kiện; đổi chỗ = giữ & kéo; hủy = chạm 2 lần hoặc kéo vào 🗑.
+  moreKey(h) {
+    const g = this.game;
+    const twin = !h.from && g.heroes.some((o) => o && o !== h && g.canMerge(o, h) === true);
+    const fz = (ASCEND[h.type] || []).map((to) => {
+      const o = g.heroes.find((x) => x && x !== h && x.type === fusionPartner(h.type, to) && typeof g.canFuse(x, h) !== 'string');
+      return o ? o.slot : -1;
+    }).join();
+    return [h.id, h.type, h.tier, h.skillPts, h.notice.skills, h.notice.evo, twin, fz, this.upCount(h), this.sellArmed, h.spent].join('|');
+  }
   renderMore() {
     const g = this.game;
     const h = g.heroes[this.sel];
     if (!h) return;
     const t = h.tier || 0;
-    const canAsc = !!h.from && g.ascendReady(h) === true;
-    // ghép sao (tướng Thường) và hợp thể (đúng công thức, đối tác đang trên sân)
     const twin = !h.from && g.heroes.find((o) => o && o !== h && g.canMerge(o, h) === true);
-    const fuses = (ASCEND[h.type] || []).map((to) => {
+    const readyF = (ASCEND[h.type] || []).map((to) => {
       const pt = fusionPartner(h.type, to);
-      const o = g.heroes.filter((x) => x && x !== h && x.type === pt).sort((x, y) => (y.tier || 0) - (x.tier || 0))[0];
-      return { to, pt, o, ok: o ? g.canFuse(o, h) : 'Chưa có ' + HEROES[pt].name + ' trên sân' };
-    });
-    const readyF = fuses.filter((f) => f.o && typeof f.ok !== 'string');
-    const fuseBtns = readyF.map((f) => `<button class="metal notice" style="grid-column:span 2;color:${RARITY[HEROES[f.to].legend].color}" data-act="fuse-with" data-slot="${f.o.slot}">
-        Hợp thể → ${HEROES[f.to].name}<small>với ${HEROES[f.pt].name} · ${coin(1)}${COSTS.ascend[HEROES[f.to].legend]}</small></button>`).join('')
-      + (fuses.length && !readyF.length ? `<button class="metal" style="grid-column:span 2" data-act="open-evo">Hợp thể<small>${fuses.length} công thức · xem điều kiện</small></button>` : '');
-    $('#more').innerHTML = `
-      <button class="metal ${h.notice.skills ? 'notice' : ''}" data-act="open-skills">Kỹ năng<small>${h.skillPts ? `+${h.skillPts} điểm` : 'cây kỹ năng'}</small></button>
-      ${h.from ? `<button class="metal ${h.notice.evo ? 'notice' : ''}" data-act="open-evo">Thần tinh<small>${t < 3 ? `★${t + 1} · ${evoCost(h, t)} vàng` : 'tối đa'}</small></button>`
-        : `<button class="metal ${twin ? 'notice' : ''}" data-act="${twin ? 'merge-any' : 'open-evo'}">Ghép sao<small>${t >= 3 ? '★★★ tối đa' : twin ? `ghép thành ${'★'.repeat(t + 1)}` : `cần 1 ${HEROES[h.type].name} ${'★'.repeat(t)}`}</small></button>`}
-      <button class="metal ${this.upCount(h) ? 'notice' : ''}" data-act="open-bag">Trang bị<small>${this.upCount(h) ? `▲ ${this.upCount(h)} món tốt hơn` : `lực chiến ${heroPower(h)}`}</small></button>
-      <button class="metal" style="color:#6AE06A" data-act="auto-eq">Tự mặc đồ<small>chọn món tốt nhất</small></button>
-      <button class="metal" style="color:#6AE06A" data-act="auto-eq-all">Mặc cả đội<small>tướng mạnh chọn trước</small></button>
-      <button class="metal ${this.moving >= 0 ? 'armed' : ''}" data-act="move">Đổi chỗ<small>hoặc giữ & kéo</small></button>
-      ${fuseBtns}
-      <button class="metal danger ${this.sellArmed ? 'armed' : ''}" data-act="sell" style="grid-column:span 2">${this.sellArmed ? `Chạm lần nữa để hủy · +${g.sellValue(h)} vàng` : `🗑 Hủy tướng · hoàn ${g.sellValue(h)} vàng`}</button>`;
-    const r = $('#deck').getBoundingClientRect(), w = $('#ui').getBoundingClientRect();
+      const o = g.heroes.filter((x) => x && x !== h && x.type === pt && typeof g.canFuse(x, h) !== 'string')[0];
+      return o ? { to, pt, o } : null;
+    }).filter(Boolean);
+    const up = this.upCount(h);
+    const b = (cls, act, ic, label, extra = '') => `<button class="ha ${cls}" data-act="${act}" ${extra}><span class="i">${ic}</span><span class="l">${label}</span></button>`;
+    $('#more').innerHTML = [
+      b(h.skillPts || h.notice.skills ? 'notice' : '', 'open-skills', '⚔', h.skillPts ? `Kỹ năng <i>+${h.skillPts}</i>` : 'Kỹ năng'),
+      h.from ? b(h.notice.evo ? 'notice' : '', 'open-evo', '✦', t < 3 ? `Thần tinh ★${t + 1}` : 'Thần tinh')
+        : twin ? b('go', 'merge-any', '⇄', `Ghép ${'★'.repeat(t + 1)}`)
+        : b('dim', 'open-evo', '★', t >= 3 ? '★★★ tối đa' : 'Ghép sao'),
+      up ? b('go', 'auto-eq', '▲', `Mặc ${up} món`) : b('', 'open-bag', '🛡', 'Trang bị'),
+      ...readyF.map((f) => b('fuse', 'fuse-with', '✸', `→ ${HEROES[f.to].name}`, `data-slot="${f.o.slot}" style="color:${RARITY[HEROES[f.to].legend].color}"`)),
+      b(`danger ${this.sellArmed ? 'armed' : ''}`, 'sell', '🗑', this.sellArmed ? `Chắc chắn? +${g.sellValue(h)}` : 'Hủy'),
+    ].join('');
+    this.placeMore(h);
+  }
+  // đặt thanh ngay trên đầu tướng, kẹp trong màn hình
+  placeMore(h) {
+    const el = $('#more');
+    const c = canvas.getBoundingClientRect(), w = $('#ui').getBoundingClientRect();
     const k = w.width / 932;
-    $('#more').style.left = `${Math.min(932 - 226, (r.right - w.left) / k - 220)}px`;
+    const x = (c.left - w.left + h.x * view.scale) / k, y = (c.top - w.top + h.y * view.scale) / k;
+    const head = (c.top - w.top + (h.y - 66) * view.scale) / k;
+    const bw = el.offsetWidth || 260, bh = el.offsetHeight || 50;
+    let top = head - bh - 4;
+    if (top < 48) top = y + 10;              // sát mép trên thì hiện dưới chân
+    const left = Math.max(6, Math.min(932 - bw - 6, x - bw / 2));
+    const L = `${left.toFixed(0)}px`, T = `${top.toFixed(0)}px`;
+    if (el.style.left !== L) el.style.left = L;
+    if (el.style.top !== T) el.style.top = T;
+    el.classList.toggle('below', top > y);
+    const A = `${Math.max(14, Math.min(bw - 14, x - left)).toFixed(0)}px`;
+    if (el.style.getPropertyValue('--ax') !== A) el.style.setProperty('--ax', A);
   }
 
   updateCoach() {
@@ -1109,8 +1137,11 @@ class UI {
         <div class="sl-card gift"><div class="sl-well">${svgI(sceneArt(art))}<span class="sl-tag" style="left:6px;background:#0D0B08;border:1px solid #8C6A2E;color:#F2E6C8">SÍNH LỄ</span><span class="sl-tag" style="right:6px;background:#F0A030;color:#2A1A08">Huyền thoại</span></div>
           <div class="sl-name">${it.name}</div><div class="sl-desc">${esc(it.desc)}<br><b>${statLine(it.stats)}</b></div>
           <button class="sl-pick btn-gold" data-act="reward" data-i="0">Chọn</button></div>
-        <div class="sl-card jar"><div class="sl-well">${svgI(sceneArt('huvua'))}<span class="sl-tag" style="left:6px;background:#0D0B08;border:1px solid #8C6A2E;color:#F2E6C8">HŨ BÁU</span><span class="sl-tag" style="right:6px;background:#A86CE0;color:#1A0A28">Sử thi+</span></div>
-          <div class="sl-name">Hũ Vua Hùng</div><div class="sl-desc">Mở ra ngẫu nhiên 1 món đồ <b style="color:#C8A0F0">Sử thi</b> hoặc <b>Huyền thoại</b>.<br>Lần này: <span class="c-${jit.rarity}">${jit.name}</span></div>
+        <div class="sl-card jar"><div class="sl-well">${svgI(sceneArt('huvua'))}<span class="sl-tag" style="left:6px;background:#0D0B08;border:1px solid #8C6A2E;color:#F2E6C8">HŨ BÁU</span><span class="sl-tag" style="right:6px;background:#A86CE0;color:#1A0A28">${(jar.ids || []).length} món</span></div>
+          <div class="sl-name">Hũ Vua Hùng · ${(jar.ids || [jar.id]).length} món</div><div class="sl-desc jar-list">${(jar.ids || [jar.id]).map((id) => {
+            const best = g.bestHeroFor(makeItem(id));
+            return `<div><span class="c-${ITEMS[id].rarity}">${ITEMS[id].name}</span>${best ? `<small>▲${best.gain} ${HEROES[best.hero.type].name}</small>` : ''}</div>`;
+          }).join('')}</div>
           <button class="sl-pick metal" style="color:#F2D27A" data-act="reward" data-i="1">Chọn</button></div>
         <div class="sl-card misc"><div class="sl-well">${svgI(sceneArt('kholua'))}<span class="sl-tag" style="left:6px;background:#0D0B08;border:1px solid #8C6A2E;color:#F2E6C8">${misc.kind === 'treasure' ? 'KHO LÚA' : 'HỘI LÀNG'}</span><span class="sl-tag" style="right:6px;background:#12301A;border:1px solid #3EDC4E;color:#6AE06A">Ngẫu nhiên</span></div>
           <div class="sl-name">${misc.title}</div>
@@ -1127,7 +1158,8 @@ class UI {
     const o = this.rewardOpts[i];
     this.game.claimReward(o);
     $('#reward').hidden = true;
-    if (o.kind === 'item') this.toast(`Nhận ${ITEMS[o.id].name}! Mở Túi đồ để đeo cho tướng`, RARITY[ITEMS[o.id].rarity].color);
+    if (o.kind === 'item' && o.ids) this.toast(`Nhận ${o.ids.length} món từ Hũ Vua Hùng · bấm ≡ → Mặc đồ cả đội`, '#C8A0F0');
+    else if (o.kind === 'item') this.toast(`Nhận ${ITEMS[o.id].name}! Mở Túi đồ để đeo cho tướng`, RARITY[ITEMS[o.id].rarity].color);
     else if (o.kind === 'treasure') this.toast(`+${o.gold} vàng, +${o.lives} mạng`, '#F2D27A');
     else this.toast('Mọi tướng +2 cấp!', '#6AE06A');
   }
@@ -1267,7 +1299,6 @@ class UI {
       case 'fuse-with': this.fuseWith(+d.slot); break;
       case 'legend-open': $('#legends').hidden = !$('#legends').hidden; $('#drawer').hidden = true; this.renderLegends(); break;
       case 'deck-close': this.clearSel(); $('#more').hidden = true; break;
-      case 'more': $('#more').hidden = !$('#more').hidden; this.sellArmed = false; this.renderMore(); break;
       case 'dw':
         $('#drawer').hidden = true;
         if (d.k === 'pause') this.showSettings(true);

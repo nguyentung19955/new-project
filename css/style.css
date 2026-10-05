@@ -1091,3 +1091,23 @@ button:disabled { cursor: default; }
 #trash b { font-size: 15px; }
 #trash small { font-size: 11px; color: #F2D27A; display: flex; align-items: center; gap: 3px; }
 #trash.hot { background: #8A2A18f0; border-style: solid; color: #fff; transform: scale(1.08); box-shadow: 0 0 18px #E25A3A; }
+/* v37: thanh thao tác nổi trên tướng đang chọn (thay bảng ⋯) */
+#more { bottom: auto; width: auto; display: flex; gap: 4px; padding: 4px; border-radius: 10px; grid-template-columns: none; background: #1A120Ce8; border: 1.5px solid #D9B25A; box-shadow: 0 4px 14px #000b; }
+#more::after { content: ''; position: absolute; left: 50%; bottom: -6px; width: 10px; height: 10px; background: #1A120C; border-right: 1.5px solid #D9B25A; border-bottom: 1.5px solid #D9B25A; transform: translateX(-50%) rotate(45deg); }
+#more button.ha { width: auto; min-width: 50px; height: 46px; padding: 0 6px; border-radius: 8px; background: linear-gradient(180deg, #3A2818, #22170E); border: 1px solid #8C6A2E; color: var(--text); gap: 0; }
+#more .ha .i { font-size: 17px; line-height: 1.1; }
+#more .ha .l { font-size: 10.5px; font-weight: 800; white-space: nowrap; }
+#more .ha .l i { font-style: normal; color: #6AE06A; }
+#more .ha.go { border-color: #6AE06A; color: #9DFFC4; box-shadow: 0 0 8px #3EDC4E66; }
+#more .ha.fuse { border-color: #F0A030; box-shadow: 0 0 10px #F0A03088; animation: noticeBlink 1s ease-in-out infinite; }
+#more .ha.dim { color: #9A8E78; }
+#more .ha.danger { color: #FFB08A; min-width: 40px; }
+#more .ha.danger.armed { background: #8A2A18; color: #fff; border-color: #FF8A6A; }
+#more .ha.notice { border-color: #FFD66B; }
+#more::after { left: var(--ax, 50%); }
+#more.below::after { bottom: auto; top: -6px; transform: translateX(-50%) rotate(225deg); }
+/* v37: Hũ Vua Hùng nhiều món */
+.sl-desc.jar-list { display: flex; flex-direction: column; gap: 1px; font-size: 13px; line-height: 1.2; }
+.sl-desc.jar-list div { display: flex; justify-content: space-between; gap: 6px; white-space: nowrap; }
+.sl-desc.jar-list span { font-weight: 800; overflow: hidden; text-overflow: ellipsis; }
+.sl-desc.jar-list small { color: #6AE06A; font-size: 11px; overflow: hidden; text-overflow: ellipsis; }
