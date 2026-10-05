@@ -8,8 +8,8 @@
 
 let nextId = 1;
 
-// --- Dòng sông (đường quái đi) lấy từ bản thiết kế: lấy mẫu đường cong SVG
-const RIVER_D = 'M -20 210 C 100 210 150 120 280 128 S 450 240 580 214 S 740 140 880 160';
+// --- Đường quái đi: lấy mẫu đường cong SVG của bản đồ đang chơi (MAPS, data.js)
+let RIVER_D = MAPS.song1.d;
 function sampleSvgPath(d, steps = 26) {
   const tok = d.match(/[MCS]|-?\d*\.?\d+/g);
   const pts = [];
@@ -34,7 +34,6 @@ function sampleSvgPath(d, steps = 26) {
   }
   return pts;
 }
-CONFIG.path = sampleSvgPath(RIVER_D).map(([x, y]) => [x * DK, y * DK]);
 
 function distToPolyline(pts, x, y) {
   let best = Infinity;
@@ -48,20 +47,53 @@ function distToPolyline(pts, x, y) {
 }
 const distToPath = (x, y) => distToPolyline(CONFIG.path, x, y);
 
-// --- Sinh khoảng 22 ô đặt tướng dọc hai bờ sông, chia 3 bậc độ cao
-(function buildSpots() {
+// --- Đường đi: độ dài từng đoạn để quái di chuyển theo quãng đường (dựng lại khi đổi bản đồ)
+const PATH = {
+  total: 0, segs: [],
+  build() {
+    this.segs = []; this.total = 0;
+    for (let i = 1; i < CONFIG.path.length; i++) {
+      const [ax, ay] = CONFIG.path[i - 1], [bx, by] = CONFIG.path[i];
+      const len = Math.hypot(bx - ax, by - ay);
+      this.segs.push({ ax, ay, bx, by, len, start: this.total });
+      this.total += len;
+    }
+  },
+  at(d) {
+    const segs = this.segs;
+    const s = segs.find((g) => d <= g.start + g.len) || segs[segs.length - 1];
+    const k = Math.max(0, Math.min(1, (d - s.start) / s.len));
+    return { x: s.ax + (s.bx - s.ax) * k, y: s.ay + (s.by - s.ay) * k, dx: s.bx - s.ax };
+  },
+  // quãng đường gần nhất với một điểm (để đặt vệt lửa, thành chặn...)
+  distOf(x, y) {
+    let best = 0, bd = Infinity;
+    for (const s of this.segs) {
+      const dx = s.bx - s.ax, dy = s.by - s.ay;
+      const k = Math.max(0, Math.min(1, ((x - s.ax) * dx + (y - s.ay) * dy) / (dx * dx + dy * dy || 1)));
+      const d = Math.hypot(s.ax + dx * k - x, s.ay + dy * k - y);
+      if (d < bd) { bd = d; best = s.start + s.len * k; }
+    }
+    return best;
+  },
+};
+
+// --- Ô đặt tướng dọc hai bên đường (sinh lại theo bản đồ), tránh vùng giao diện và thành cuối đường
+function buildSpots(map) {
   const { sx, sy, minD, maxD } = CONFIG.buildGrid;
+  const [ex, ey] = map.end;
+  const zones = CONFIG.hudZones.filter((z) => !z.castle).concat([[ex - 54, ey - 64, ex + 54, ey + 50]]);
   const out = [];
   let row = 0;
   for (let y = 60; y <= 336; y += sy, row++) {
     for (let x = 20 + (row % 2 ? sx / 2 : 0); x <= 912; x += sx) {
       const d = distToPath(x * DK, y * DK) / DK;
       if (d < minD || d > maxD) continue;
-      if (CONFIG.hudZones.some(([x1, y1, x2, y2]) => x >= x1 && x <= x2 && y >= y1 && y <= y2)) continue;
+      if (zones.some(([x1, y1, x2, y2]) => x >= x1 && x <= x2 && y >= y1 && y <= y2)) continue;
       out.push({ x: Math.round(x * DK), y: Math.round(y * DK), d });
     }
   }
-  // v35: thưa bớt ô (giữ ô cách nhau ≥ spacing) cho màn hình gọn — lượt ưu tiên xen kẽ gần / xa sông
+  // thưa bớt ô (giữ ô cách nhau ≥ spacing)
   if (CONFIG.buildGrid.spacing) {
     const sp = CONFIG.buildGrid.spacing * DK;
     const pick = [];
@@ -70,50 +102,33 @@ const distToPath = (x, y) => distToPolyline(CONFIG.path, x, y);
     out.length = 0;
     out.push(...pick);
   }
-  // v36: bỏ bậc ô Thấp / Giữa / Cao. Chỉ giữ thứ tự gần sông để nước dâng ngập dần ô sát sông nhất.
   const order = out.map((s, i) => i).sort((a, b) => out[a].d - out[b].d);
   CONFIG.slots = out.map((s) => [s.x, s.y]);
   CONFIG.slotRank = [];
   order.forEach((idx, rank) => { CONFIG.slotRank[idx] = rank; });
-  CONFIG.slotTier = out.map(() => 1);       // giữ cho code cũ / ảnh ô: mọi ô như nhau
-  // ô gợi ý cho người mới: ô bậc Giữa gần giữa bản đồ
+  CONFIG.slotTier = out.map(() => 1);
+  // ô gợi ý cho người mới: gần giữa bản đồ
   let best = -1;
   out.forEach((s, i) => {
     if (best < 0 || Math.hypot(s.x - 560, s.y - 230) < Math.hypot(out[best].x - 560, out[best].y - 230)) best = i;
   });
   CONFIG.coachSlot = Math.max(0, best);
-})();
+}
 
-// --- Đường đi: tính sẵn độ dài từng đoạn để quái di chuyển theo quãng đường
-const PATH = (() => {
-  const segs = [];
-  let total = 0;
-  for (let i = 1; i < CONFIG.path.length; i++) {
-    const [ax, ay] = CONFIG.path[i - 1], [bx, by] = CONFIG.path[i];
-    const len = Math.hypot(bx - ax, by - ay);
-    segs.push({ ax, ay, bx, by, len, start: total });
-    total += len;
-  }
-  return {
-    total,
-    at(d) {
-      const s = segs.find((g) => d <= g.start + g.len) || segs[segs.length - 1];
-      const k = Math.max(0, Math.min(1, (d - s.start) / s.len));
-      return { x: s.ax + (s.bx - s.ax) * k, y: s.ay + (s.by - s.ay) * k, dx: s.bx - s.ax };
-    },
-    // quãng đường gần nhất với một điểm (để đặt vệt lửa, thành chặn...)
-    distOf(x, y) {
-      let best = 0, bd = Infinity;
-      for (const s of segs) {
-        const dx = s.bx - s.ax, dy = s.by - s.ay;
-        const k = Math.max(0, Math.min(1, ((x - s.ax) * dx + (y - s.ay) * dy) / (dx * dx + dy * dy || 1)));
-        const d = Math.hypot(s.ax + dx * k - x, s.ay + dy * k - y);
-        if (d < bd) { bd = d; best = s.start + s.len * k; }
-      }
-      return best;
-    },
-  };
-})();
+// Đổi bản đồ: đường đi, ô đặt tướng (gọi khi vào ải)
+let MAP_ID = '';
+function setMap(id) {
+  const map = MAPS[id] || MAPS.song1;
+  if (MAP_ID === id && CONFIG.slots.length) return map;
+  MAP_ID = MAPS[id] ? id : 'song1';
+  RIVER_D = map.d;
+  CONFIG.path = sampleSvgPath(map.d).map(([x, y]) => [x * DK, y * DK]);
+  CONFIG.mapEnd = [map.end[0] * DK, map.end[1] * DK];
+  PATH.build();
+  buildSpots(map);
+  return map;
+}
+setMap('song1');
 
 // ------------------------------------------------------------
 //  ĐỒ: mỗi món trong túi là một bản riêng { uid, id, rarity, plus, locked, spent }
@@ -1172,6 +1187,7 @@ class Game {
   reset(level) {
     this.level = level || 0;
     this.lv = LEVELS[this.level];
+    setMap(this.lv.map || 'song1');
     this.gold = CONFIG.startGold;
     this.lives = CONFIG.startLives;
     this.wave = 0;

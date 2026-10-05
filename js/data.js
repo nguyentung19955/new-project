@@ -38,7 +38,6 @@ const CONFIG = {
     [270, 46, 660, 80],       // dải "đợt sắp tới"
     [300, 330, 632, 430],     // hàng thẻ tướng dưới đáy
     [0, 340, 932, 430],       // mép dưới màn hình
-    [846, 70, 932, 220],      // thành Phong Châu
   ],
   // Lưới ô đặt tướng (tọa độ thiết kế): khoảng cách ô, dải cách tim sông
   buildGrid: { sx: 46, sy: 33, minD: 40, maxD: 98, spacing: 70 },   // spacing: khoảng cách tối thiểu giữa 2 ô (thiết kế)
@@ -1002,22 +1001,53 @@ const HARD = {
   table: [1.6, 1.7, 1.8, 1.75, 1.6, 1.45, 1.4, 1.35],
   hp(level) { return this.table[Math.min(level, this.table.length - 1)]; },
 };
+// ============================================================
+//  BẢN ĐỒ (v48): mỗi ải một đường đi riêng (đường cong SVG, toạ độ thiết kế 932×430,
+//  chỉ dùng M / C / S) + chủ đề nền. end = vị trí thành / cổng cuối đường.
+//  theme: song (sông), rung (đường rừng), hang (hang núi), dong (đồng lúa), bien (bờ biển), thanh (Cổ Loa)
+// ============================================================
+const MAPS = {
+  song1: { theme: 'song', d: 'M -20 210 C 100 210 150 120 280 128 S 450 240 580 214 S 740 140 880 160', end: [899, 156] },
+  song2: { theme: 'song', d: 'M -20 150 C 120 150 160 290 300 290 S 470 150 600 160 S 760 290 880 250', end: [899, 246] },
+  song3: { theme: 'song', d: 'M -20 280 C 90 280 120 140 240 140 S 360 300 470 300 S 580 140 700 150 S 840 230 880 220', end: [899, 216] },
+  song4: { theme: 'dam', d: 'M -20 190 C 140 100 260 300 400 220 S 560 120 660 230 S 800 300 880 200', end: [899, 196] },
+  rung1: { theme: 'rung', d: 'M -20 130 C 160 130 180 300 340 300 S 520 120 660 150 S 800 300 880 260', end: [899, 256] },
+  rung2: { theme: 'rung', d: 'M -20 300 C 140 300 120 150 260 140 S 420 270 520 270 S 640 130 760 150 S 860 230 880 230', end: [899, 226] },
+  hang1: { theme: 'hang', d: 'M -20 250 C 80 250 100 140 200 140 S 300 300 400 300 S 500 140 600 140 S 700 300 800 290 S 870 200 880 200', end: [899, 196] },
+  dong1: { theme: 'dong', d: 'M -20 310 C 140 310 160 310 220 300 C 270 290 260 150 320 140 C 420 130 520 140 580 150 C 640 160 620 290 690 300 C 760 310 820 300 880 290', end: [899, 286] },
+  dong2: { theme: 'dong', d: 'M -20 160 C 120 160 200 160 250 200 S 280 300 380 300 S 520 300 560 240 S 600 150 700 150 S 840 170 880 170', end: [899, 166] },
+  bien1: { theme: 'bien', d: 'M 60 60 C 80 160 200 180 320 190 S 520 260 600 300 S 780 320 880 280', end: [899, 276] },
+  bien2: { theme: 'bien', d: 'M -20 120 C 160 100 260 200 360 280 S 560 330 640 260 S 760 130 880 150', end: [899, 146] },
+  song5: { theme: 'song', d: 'M -20 300 C 140 300 120 150 260 140 S 420 270 520 270 S 640 130 760 150 S 860 230 880 230', end: [899, 226] },
+  cuasong: { theme: 'bien', d: 'M -20 150 C 120 130 220 220 330 260 S 520 300 600 250 S 720 150 880 170', end: [899, 166] },
+  thanh1: { theme: 'thanh', d: 'M -20 200 C 100 80 400 66 580 100 S 790 250 640 320 S 300 340 250 240 S 380 150 470 205', end: [470, 205], center: true },
+};
+const MAP_THEMES = {
+  song: { ground: '#3A5A28', grass: '#4E7434', dot: '#2C4620', water: true, bank: '#8A7650', deco: ['tree', 'tree', 'rock', 'reed', 'hut'], gate: 'castle' },
+  dam:  { ground: '#3E5530', grass: '#56703A', dot: '#2E3E22', water: true, bank: '#6E6040', deco: ['reed', 'reed', 'lotus', 'tree', 'rock'], gate: 'castle' },
+  rung: { ground: '#2E4A22', grass: '#3E6A2E', dot: '#203818', water: false, road: '#7A6040', roadEdge: '#4E3C26', deco: ['tree', 'tree', 'tree', 'bush', 'rock'], gate: 'hut' },
+  hang: { ground: '#4A4236', grass: '#5A5040', dot: '#2E2820', water: false, road: '#2A2420', roadEdge: '#1A1612', deco: ['rock', 'rock', 'crystal', 'bones', 'stalag'], gate: 'cave' },
+  dong: { ground: '#5E7A30', grass: '#7A9A3E', dot: '#4A6224', water: false, road: '#A08A5A', roadEdge: '#6E5E3C', deco: ['rice', 'rice', 'rice', 'buffalo', 'tree'], gate: 'village' },
+  bien: { ground: '#D8C890', grass: '#E8DCA8', dot: '#B8A870', water: true, sea: true, bank: '#C8B47A', deco: ['palm', 'shell', 'rock', 'boat', 'palm'], gate: 'castle' },
+  thanh:{ ground: '#4A5A2E', grass: '#5E7038', dot: '#36441E', water: true, bank: '#7E6A48', deco: ['tree', 'rock', 'hut', 'banner'], gate: 'citadel' },
+};
+
 const LEVELS = [
-  { name: 'Bến Sông Đà', waves: 10, hp: 0.75, bosses: { 10: 'thuongluong' },
+  { name: 'Bến Sông Đà', map: 'song1', waves: 10, hp: 0.75, bosses: { 10: 'thuongluong' },
     desc: 'Bến sông yên bình nơi Thủy Tinh thử quân lần đầu. Mười đợt để làm quen.', hint: ['xathu', 'lactuong', 'thaymo'] },
-  { name: 'Thác Bờ', waves: 20, hp: 0.85, bosses: { 10: 'thuongluong', 20: 'haba' },
+  { name: 'Thác Bờ', map: 'song2', waves: 20, hp: 0.85, bosses: { 10: 'thuongluong', 20: 'haba' },
     desc: 'Thác nước đổ mạnh, quân Thủy Tinh xuôi dòng nhanh hơn.', hint: ['thansuong', 'xathu', 'lucsi'] },
-  { name: 'Rừng Lim', waves: 30, hp: 1, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'haba' },
+  { name: 'Rừng Lim', map: 'song3', waves: 30, hp: 1, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'haba' },
     desc: 'Rừng lim cổ thụ phủ kín hai bờ. Đường quái dài, uốn quanh tán lá rậm.', hint: ['xathu', 'thaymo', 'lucsi'] },
-  { name: 'Bãi Phù Sa', waves: 30, hp: 1.08, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'thuytinh' },
+  { name: 'Bãi Phù Sa', map: 'song4', waves: 30, hp: 1.08, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'thuytinh' },
     desc: 'Bãi phù sa màu mỡ, Núi Tản Viên mọc nhanh hơn ở đây.', hint: ['lactuong', 'thaymo', 'thansuong'] },
-  { name: 'Chân Núi Tản', waves: 30, hp: 1.16, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'thuytinh' },
+  { name: 'Chân Núi Tản', map: 'song5', waves: 30, hp: 1.16, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'thuytinh' },
     desc: 'Dưới chân núi Tản, Sơn Tinh đứng ra chặn nước.', hint: ['thosan', 'xathu', 'thaymo'] },
-  { name: 'Đầm Lầy', waves: 30, hp: 1.24, water: 1, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'thuytinh' },
+  { name: 'Đầm Lầy', map: 'song4', waves: 30, hp: 1.24, water: 1, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'thuytinh' },
     desc: 'Đầm lầy: quái máu dày hơn.', hint: ['lactuong', 'xathu', 'thansuong'] },
-  { name: 'Cửa Sông Hồng', waves: 30, hp: 1.32, bosses: { 10: 'haba', 20: 'thuytinh', 30: 'thuytinh' },
+  { name: 'Cửa Sông Hồng', map: 'cuasong', waves: 30, hp: 1.32, bosses: { 10: 'haba', 20: 'thuytinh', 30: 'thuytinh' },
     desc: 'Nơi sông Đà đổ về sông Hồng, nước dâng dữ nhất.', hint: ['thansuong', 'thaymo', 'xathu'] },
-  { name: 'Thành Phong Châu', waves: 30, hp: 1.4, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'thuytinh' },
+  { name: 'Thành Phong Châu', map: 'song1', waves: 30, hp: 1.4, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'thuytinh' },
     desc: 'Trận cuối giữ kinh đô Văn Lang. Thủy Tinh đích thân dâng nước.', hint: ['lactuong', 'lucsi', 'thaymo'] },
 ];
 const STAR_RULES = ['Thắng ải', 'Còn ≥ 15 mạng', 'Không mất mạng'];

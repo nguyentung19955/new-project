@@ -270,9 +270,11 @@ function mapImage(pw, ph, level) {
   const png = asset(`maps/map-0${(level || 0) + 1}.png`);
   if (png) return png;
   if (!HAS_ART) return null;
-  const key = `map|${pw}x${ph}`;
+  // v48: nền dựng theo bản đồ của ải (js/maps.js)
+  const id = typeof MAP_ID !== 'undefined' && MAP_ID ? MAP_ID : 'song1';
+  const key = `map|${id}|${pw}x${ph}`;
   mapImgKey = key;
-  return svgCache.get(key) || svgImage(key, sizedSvg(ART.map, pw, ph));
+  return svgCache.get(key) || svgImage(key, sizedSvg(typeof buildMapSvg === 'function' ? buildMapSvg(id) : ART.map, pw, ph));
 }
 
 // Vẽ nền dự phòng khi chưa có ảnh: cỏ + sông theo đường đi
