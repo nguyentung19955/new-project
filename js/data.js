@@ -37,8 +37,7 @@ const CONFIG = {
   // Lưới ô đặt tướng (tọa độ thiết kế): khoảng cách ô, dải cách tim sông
   buildGrid: { sx: 46, sy: 33, minD: 40, maxD: 98, spacing: 70 },   // spacing: khoảng cách tối thiểu giữa 2 ô (thiết kế)
   slots: [],      // [x, y] tọa độ logic (sinh trong game.js)
-  slotTier: [],   // 0 = Thấp (sát sông), 1 = Giữa, 2 = Cao (sườn núi)
-  tierCounts: [15, 16],     // số ô bậc Thấp, Giữa (còn lại là Cao)
+  slotTier: [],   // (bỏ ở v36: mọi ô như nhau)
 };
 
 const TIER_NAMES = ['Thấp', 'Giữa', 'Cao'];
@@ -239,7 +238,7 @@ const HEROES = {
     attrs: { str: 28, agi: 16, int: 16 }, gain: { str: 3.2, agi: 1.6, int: 1.6 },
     base: { damage: 12, range: 150, cooldown: 1.0 },
     look: { aura: '#5AB4D6', weapon: { type: 'none' } },
-    trait: { name: 'Con Rồng', desc: 'Không bị sa lầy khi ô ngập nước; đứng trên ô ngập còn được +30% sát thương' },
+    trait: { name: 'Con Rồng', desc: 'Khi máu dưới 50%: rồng nổi giận, +30% sát thương' },
     skills: [
       { id: 'l_q', name: 'Vuốt Rồng', active: { cooldown: 5, cast: 'claw', mana: 40 },
         info: (n) => `Cào hai đường vuốt nước: 2 lần x1.5 sát thương +${(n * 0.5).toFixed(0)}` },
@@ -840,7 +839,7 @@ const AFFIXES = {
   air:   { val: 20, label: (v) => `+${v}% sát thương lên quái bay` },
   cdr:   { val: 8,  label: (v) => `−${v}% hồi chiêu` },
   gold:  { val: 2,  label: (v) => `+${v} vàng mỗi quái hạ` },
-  flood: { val: 10, label: (v) => `+${v}% sát thương khi đứng ô ngập` },
+  flood: { val: 6, label: (v) => `+${v}% sát thương` },
   range: { val: 10, label: (v) => `+${v}% tầm đánh` },
   crit:  { val: 5,  label: (v) => `+${v}% chí mạng` },
   pen:   { val: 10, label: (v) => `+${v}% xuyên giáp` },
@@ -860,7 +859,7 @@ Object.assign(COSTS, {
 const SECRETS = {
   // tướng
   'h.lactuong':  { hero: 'lactuong', hint: 'Rìu cần người gánh núi', desc: 'Đứng kề Lực Sĩ Núi: Khiên Đồng choáng thêm 0,5 giây' },
-  'h.lucsi':     { hero: 'lucsi', hint: 'Đứng càng cao, núi càng nặng', desc: 'Đứng ô bậc Cao: Vùi Đá chôn 2 quái' },
+  'h.lucsi':     { hero: 'lucsi', hint: 'Hai người khỏe gánh được núi', desc: 'Đứng kề Lạc Tướng: Vùi Đá chôn 2 quái' },
   'h.xathu':     { hero: 'xathu', hint: 'Mắt quen trời', desc: 'Mỗi 10 quái bay bị hạ: +1% tầm, tối đa +10% trong trận' },
   'h.thosan':    { hero: 'thosan', hint: 'Thú săn được nuôi thợ săn', desc: 'Săn Mồi hạ gục mục tiêu: hồi ngay 50% năng lượng' },
   'h.thaymo':    { hero: 'thaymo', hint: 'Lửa thử vàng', desc: 'Lửa đốt quái hành Kim kéo dài gấp đôi' },
@@ -871,10 +870,10 @@ const SECRETS = {
   'h.thachsanh': { hero: 'thachsanh', hint: 'Niêu cơm ăn mãi không hết', desc: 'Đứng gần tướng vừa gục: tướng đó hồi sinh nhanh hơn 50%' },
   'h.caolo':     { hero: 'caolo', hint: 'Móng rùa thần', desc: 'Thần Kim Quy cùng trên sân: Nỏ Thần gây sát thương x2' },
   'h.antiem':    { hero: 'antiem', hint: 'Đảo hoang thành vườn', desc: 'Sau đợt 20: mỗi đợt 10% rơi "dưa vàng" +100 vàng' },
-  'h.auco':      { hero: 'auco', hint: 'Mẹ ở trên núi', desc: 'Đứng ô bậc Cao: Hoa Tiên hồi máu cho thêm 1 tướng' },
-  'h.cdt':       { hero: 'cdt', hint: 'Người đánh cá quen sông', desc: 'Đứng ô ngập: không bị sa lầy' },
+  'h.auco':      { hero: 'auco', hint: 'Mẹ ở trên núi', desc: 'Có từ 2 tướng đứng kề: Hoa Tiên hồi máu cho thêm 1 tướng ở xa' },
+  'h.cdt':       { hero: 'cdt', hint: 'Người đánh cá quen sông', desc: 'Gậy Thần hồi cho tướng dưới 25% máu: hồi gấp đôi' },
   'h.tiendung':  { hero: 'tiendung', hint: 'Bãi Tự Nhiên', desc: 'Mưa Hoa Tiên hồi máu gấp đôi cho Chử Đồng Tử' },
-  'h.lachau':    { hero: 'lachau', hint: 'Đứng cao trông xa', desc: 'Đứng ô bậc Cao: Lệnh Lạc Hầu giảm 25% sát thương thay vì 15%' },
+  'h.lachau':    { hero: 'lachau', hint: 'Đông người thì vững', desc: 'Có từ 2 tướng đứng kề: Lệnh Lạc Hầu giảm 25% sát thương thay vì 15%' },
   'h.thansan':   { hero: 'thansan', hint: 'Chim sa cá lặn', desc: 'Hạ quái bay: +30% tốc đánh trong 3 giây' },
   'h.adv':       { hero: 'adv', hint: 'Rùa vàng trao móng', desc: 'Thần Kim Quy cùng trên sân: phát Nỏ Linh Quang gây x3 thay vì x2' },
   'h.mau':       { hero: 'mau', hint: 'Cây cùng cội', desc: 'Đứng kề tướng hành Mộc: hào quang Mẹ Rừng gấp đôi' },
@@ -884,12 +883,12 @@ const SECRETS = {
   'i.kim2':  { el: 'kim', hint: 'Gõ mãi đá cũng mòn', desc: 'Mỗi đòn thứ 5 liên tiếp vào cùng một quái: gây thêm 50% sát thương' },
   'i.moc1':  { el: 'moc', hint: 'Cây hút nhựa từ đất', desc: 'Hạ quái: hồi 3% máu tối đa' },
   'i.moc2':  { el: 'moc', hint: 'Rễ càng sâu, cây càng vững', desc: 'Đứng yên 10 giây không đổi chỗ: +15% sát thương cho tới khi bị dời' },
-  'i.thuy1': { el: 'thuy', hint: 'Cá gặp nước', desc: 'Đứng ô ngập: không bị sa lầy và +10% sát thương' },
+  'i.thuy1': { el: 'thuy', hint: 'Cá gặp nước', desc: 'Đứng kề tướng hành Thủy: +10% sát thương' },
   'i.thuy2': { el: 'thuy', hint: 'Nước chảy về chỗ trũng', desc: 'Khi tướng đứng kề gục: hồi 20% máu cho mọi tướng kề còn lại' },
   'i.hoa1':  { el: 'hoa', hint: 'Lửa bén rơm', desc: 'Đòn chí mạng làm cháy mục tiêu 2 giây' },
   'i.hoa2':  { el: 'hoa', hint: 'Lửa thử vàng', desc: 'Khi máu dưới 50%: +20% tốc đánh' },
   'i.tho1':  { el: 'tho', hint: 'Đất lành chim đậu', desc: 'Khi máu dưới 30%: giảm 30% sát thương nhận vào trong 4 giây (hồi 20 giây)' },
-  'i.tho2':  { el: 'tho', hint: 'Núi che chở', desc: 'Đứng ô bậc Cao: tướng đứng kề giảm 10% sát thương nhận vào' },
+  'i.tho2':  { el: 'tho', hint: 'Núi che chở', desc: 'Đứng yên 10 giây: tướng đứng kề giảm 10% sát thương nhận vào' },
   // đồ ghép: hiệu ứng ẩn cố định
   'r.song_riu':      { item: 'song_riu', hint: 'Máu càng nóng, tay càng nhanh', desc: 'Hạ quái: +5% tốc đánh 3 giây, cộng dồn 5 lần' },
   'r.gay_tam_gioi':  { item: 'gay_tam_gioi', hint: 'Ba cõi hợp một', desc: 'Có đủ 3 hệ tướng trên sân: +5 mọi thuộc tính nữa' },
@@ -901,12 +900,12 @@ const SECRETS = {
   'r.riu_quet':      { item: 'riu_quet', hint: 'Một nhát cả bầy', desc: 'Hạ 5 Tôm Binh một lúc: +10 vàng' },
   'r.cung_mat_chim': { item: 'cung_mat_chim', hint: 'Mắt chim nhìn xa', desc: 'Đợt bay: +20% tốc bắn' },
   'r.bua_chim_lac':  { item: 'bua_chim_lac', hint: 'Chim sa cánh', desc: 'Quái bay bị đánh rơi xuống đất 1 giây' },
-  'r.ao_vay_ca':     { item: 'ao_vay_ca', hint: 'Vảy cá gặp nước', desc: 'Đứng ô ngập: hồi 2% máu mỗi giây' },
+  'r.ao_vay_ca':     { item: 'ao_vay_ca', hint: 'Vảy cá gặp nước', desc: 'Khi máu dưới 50%: hồi 2% máu mỗi giây' },
   'r.ngoc_tran_thuy':{ item: 'ngoc_tran_thuy', hint: 'Trấn thầy phù thủy', desc: 'Hạ Phù Thủy Nước: quái quanh nó mất 10% máu' },
   'r.luoi_ca':       { item: 'luoi_ca', hint: 'Cá sấu mắc lưới', desc: 'Cá Sấu hóa điên bị lưới giữ chân 1 giây' },
   'r.bo_lua':        { item: 'bo_lua', hint: 'Được mùa', desc: 'Sau đợt 20: mỗi đợt 10% ra "bồ lúa vàng" +100 vàng' },
   // đồ bộ: hiệu ứng ẩn khi đủ bộ
-  's.laclong': { set: 'laclong', hint: 'Rồng gặp nước', desc: 'Đứng ô ngập: miễn sa lầy, đòn đánh có 10% phóng sét lan 3 quái' },
+  's.laclong': { set: 'laclong', hint: 'Rồng gặp nước', desc: 'Đòn đánh có 10% phóng sét lan 3 quái' },
   's.sontinh': { set: 'sontinh', hint: 'Núi không đổ', desc: 'Mỗi đợt có 1 lần chặn hoàn toàn đòn đánh gây chết' },
   's.chimlac': { set: 'chimlac', hint: 'Chim Lạc săn bão', desc: 'Hạ Chim Bão: 20% gọi 1 chim Lạc mổ quái gần nhất' },
   's.drum':    { set: 'drum', hint: 'Trống giục quân', desc: 'Khi tướng trong hào quang dùng R: hào quang tăng gấp đôi trong 5 giây' },
@@ -964,7 +963,7 @@ const ENEMIES = {
   thuytinh:{ name: 'Thủy Tinh', hp: 1200, speed: 22, gold: 170, size: 28, color: '#3A6AB0',
             drop: 1, boss: true, lives: 5, armor: 6, mr: 50, reward: 'ngua_hong_mao',
             burnAura: { radius: 150, dps: 10 }, phaseSummon: { type: 'giaolong', count: 4 }, slowResist: 0.5,
-            tempFlood: { count: 3, time: 8 }, tags: ['Hô mưa gọi gió', 'Gọi Giao Long', 'Ngập tạm 3 ô'],
+            tempFlood: { count: 3, time: 8 }, tags: ['Hô mưa gọi gió', 'Gọi Giao Long'],
             short: 'Hô mưa gọi gió gây sát thương tướng đứng gần; mỗi lần mất 25% máu gọi 4 Giao Long Con và làm ngập tạm 3 ô trong 8 giây',
             desc: 'Thần nước nổi giận. Hô mưa gọi gió gây sát thương tướng đứng gần. Mỗi lần mất 25% máu gọi 4 Giao Long Con (kháng phép cao) và làm ngập tạm 3 ô trong 8 giây.',
             tip: 'Đặt tướng vật lý chặn Giao Long Con: chúng kháng phép rất cao.' },
@@ -1003,7 +1002,7 @@ const LEVELS = [
   { name: 'Chân Núi Tản', waves: 30, hp: 1.16, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'thuytinh' },
     desc: 'Dưới chân núi Tản, Sơn Tinh đứng ra chặn nước.', hint: ['thosan', 'xathu', 'thaymo'] },
   { name: 'Đầm Lầy', waves: 30, hp: 1.24, water: 1, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'thuytinh' },
-    desc: 'Đầm lầy ngập sẵn: các ô bậc Thấp đã ngập từ đầu trận.', hint: ['lactuong', 'xathu', 'thansuong'] },
+    desc: 'Đầm lầy: quái máu dày hơn.', hint: ['lactuong', 'xathu', 'thansuong'] },
   { name: 'Cửa Sông Hồng', waves: 30, hp: 1.32, bosses: { 10: 'haba', 20: 'thuytinh', 30: 'thuytinh' },
     desc: 'Nơi sông Đà đổ về sông Hồng, nước dâng dữ nhất.', hint: ['thansuong', 'thaymo', 'xathu'] },
   { name: 'Thành Phong Châu', waves: 30, hp: 1.4, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'thuytinh' },

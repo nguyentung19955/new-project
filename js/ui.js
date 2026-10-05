@@ -425,7 +425,7 @@ class UI {
         ${tg('vectorHeroes', 'Tướng vẽ nét (thấy từng món đồ)', 'Tắt: dùng ảnh vẽ tay, đồ mặc đổi theo bậc trang phục. Bật: hình vẽ nét, mũ / giáp / vũ khí hiện riêng từng món')}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 35 · Tiến trình lưu trên trình duyệt của bạn</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 36 · Tiến trình lưu trên trình duyệt của bạn</div>
       </div></div>`;
   }
 
@@ -488,7 +488,6 @@ class UI {
     if (this.armed) return this.place(this.armed, slot);
     this.spot = -1;
     this.sel = -1;
-    if (g.isFlooded(slot)) this.toast('Ô đang ngập: dùng Mọc Núi để cứu ô này', '#5AB4D6');
   }
 
   // ---------- v34: triệu hồi ngẫu nhiên · ghép · hợp thể
@@ -784,7 +783,7 @@ class UI {
         if (t) html = `<b>Đợt ${g.wave + 1}:</b> ${t}`;
       }
     }
-    if (g.floodSoon() >= 0) html += `${html ? ' · ' : ''}<span class="flood">💧 Nước sắp dâng: ô ${TIER_NAMES[g.floodSoon()]}</span>`;
+    if (g.floodSoon() >= 0) html += `${html ? ' · ' : ''}<span class="flood">💧 Nước sắp dâng: thêm ${FLOOD_PER_RISE} ô sát sông ngập</span>`;
     el.classList.toggle('early', early);
     this.setHTML('#nextwaves', html, html);
     el.hidden = !html;
@@ -833,7 +832,7 @@ class UI {
       const afford = [lc, g.trainCost(h), ...def.skills.map((sk, i) => (skillLevel(h, i) ? (h.from ? COSTS.skillGold(i, skillLevel(h, i)) : 0) : unlockCost(h, i)))]
         .map((c) => (g.gold >= c ? 1 : 0)).join('');
       key = `h|${h.id}|${h.type}|${h.level}|${h.train || 0}|${h.tier}|${h.skillPts}|${skillKey}|${afford}|${h.dead}|${h.bogged}|${fresh}|${notice}|${up}|${assetVersion}`;
-      const status = h.dead ? `Hồi sinh sau ${Math.ceil(h.respawnT)}s` : h.bogged ? 'Sa lầy · dùng Mọc Núi' : `${ATTRS[def.attr].name} · ô ${TIER_NAMES[CONFIG.slotTier[h.slot]]}`;
+      const status = h.dead ? `Hồi sinh sau ${Math.ceil(h.respawnT)}s` : h.bogged ? 'Sa lầy · dùng Mọc Núi' : `${ATTRS[def.attr].name} · Hành ${ELEMENTS[def.el].name}`;
       const skills = def.skills.map((sk, i) => {
         const lv = skillLevel(h, i);
         if (!lv) {
@@ -886,7 +885,7 @@ class UI {
     if (hint) this.setText('#deck-hint', hint);
     // Mọc Núi: chỉ hiện khi nước sắp dâng hoặc đã ngập
     const moc = $('#btn-moc');
-    const need = g.moc > 0 && (g.floodSoon() >= 0 || g.water > 0 || g.tempFlood.some((t2) => t2 > g.time));
+    const need = false;     // v36: bỏ Mọc Núi
     moc.hidden = !need;
     if (need) {
       moc.classList.toggle('on', this.raising);
@@ -949,7 +948,7 @@ class UI {
       } else if (g.wave === 0 && !g.running) {
         pos = [800, 76];
         text = 'Bấm ▶ (góc trên phải) để quân Thủy Tinh tràn tới';
-      } else if (g.floodSoon() >= 0 && !g.flags.floodTip && g.moc > 0) {
+      } else if (false) {
         pos = [560, 250];
         text = 'Nước sắp dâng! Bấm Mọc Núi (góc dưới phải) rồi chạm ô nhấp nháy';
       }
@@ -1056,7 +1055,7 @@ class UI {
     this.rewardBoss = ev.boss;
     this.closeScreen();
     const g = this.game;
-    const flood = g.water < 3;
+    const flood = false;      // v36: bỏ nước dâng ngập ô
     const gift = ev.options[0], jar = ev.options[1], misc = ev.options[2];
     const art = { voi_chin_nga: 'voi', ga_chin_cua: 'ga', ngua_hong_mao: 'ngua' }[gift.id];
     const it = ITEMS[gift.id];
@@ -1152,7 +1151,7 @@ class UI {
             <div style="flex:1"><div class="inset" style="height:12px;border-radius:4px;overflow:hidden"><i style="display:block;height:100%;width:${g.wave / g.levelWaves * 100}%;background:linear-gradient(90deg,#2C6A86,#5AB4D6)"></i></div>
             <div class="note" style="margin-top:4px">Kỷ lục ải này: đợt ${s.best[lv]}</div></div></div>
           <div class="res-tips"><div class="h">💡 MẸO LẦN SAU</div>
-            <div class="t"><i>1</i><span>Dùng <b>Mọc Núi</b> trước khi nước dâng để giữ các ô quan trọng khỏi ngập.</span></div>
+            <div class="t"><i>1</i><span><b>Ghép</b> 2 tướng cùng loại cùng sao và <b>hợp thể</b> đúng cặp để có tướng thần mạnh hơn hẳn.</span></div>
             <div class="t"><i>2</i><span>Đặt tướng <b>đánh xa</b> cho đợt <b style="color:#9EDDF2">Chim Bão</b> (quái bay).</span></div>
             <div class="t"><i>3</i><span>Nâng cấp tướng bằng <b>vàng</b> giữa các đợt; mở khóa W, E, R trong Cây kỹ năng.</span></div></div>
           <div class="res-btns">
@@ -1933,7 +1932,7 @@ class UI {
         <div class="well inset">${svgI(sceneArt('mountain' + k))}${!past && !cur ? `<span class="lkb">${ICON.lock}</span>` : ''}</div>
         <div class="nm">${k} · ${name}</div>
         ${past ? `<div class="st ok">${ICON.check} Đã qua</div>` : cur ? (k < 5 ? `<div class="pbar inset"><i style="width:${g.mountainProgress() * 100}%"></i></div>` : '<div class="st gold">Đỉnh cao nhất</div>')
-          : k === 4 ? '<div class="st gold">Mở: Mọc Núi 2 lượt/đợt</div>' : k === 3 ? '<div class="st gold">Mở: mọc Linh Chi</div>' : k === 2 ? '<div class="st gold">Mở: +1 mạng mỗi 3 đợt</div>' : '<div class="st">Giai đoạn cuối</div>'}
+          : k === 4 ? '<div class="st gold">Mở: Linh Chi mọc 2 cây/đợt</div>' : k === 3 ? '<div class="st gold">Mở: mọc Linh Chi</div>' : k === 2 ? '<div class="st gold">Mở: +1 mạng mỗi 3 đợt</div>' : '<div class="st">Giai đoạn cuối</div>'}
       </div>`;
     }).join('');
     return `${this.head('Núi Tản Viên', `<i style="font-size:14px;color:#C8BFA8">Nước dâng bao nhiêu, núi cao bấy nhiêu</i>${this.runChip()}`, '', ICON.mount)}
@@ -1943,7 +1942,6 @@ class UI {
           <div class="nt-tile inset"><div class="nt-ico metal">${coin()}</div><div><div class="nt-lbl">VÀNG MỖI ĐỢT</div><div class="nt-val">+${st * MOUNTAIN.goldPerStage}</div><div class="nt-note">Giai đoạn ${st} × ${MOUNTAIN.goldPerStage}</div></div></div>
           <div class="nt-tile inset"><div class="nt-ico metal" style="color:#E25A3A">♥</div><div><div class="nt-lbl">MẠNG THÀNH</div><div class="nt-val">${st >= 2 ? '+1 mỗi 3 đợt' : 'Chưa mở'}</div><div class="nt-note">Mở từ giai đoạn 2</div></div></div>
           <button class="nt-tile metal act" data-act="harvest" ${m.herbs ? '' : 'disabled'}><div class="nt-ico inset">🍄</div><div><div class="nt-val" style="font-size:19px;color:#F2D27A">Hái ${m.herbs} Linh Chi</div><div class="nt-note">${coin(1)} <b>+${m.herbs * MOUNTAIN.herbGold} vàng</b> · <b style="color:#6AE06A">hồi máu</b></div></div></button>
-          <div class="nt-tile inset"><div class="nt-ico metal" style="color:#F2D27A">${ICON.mount}</div><div><div class="nt-lbl">MỌC NÚI</div><div class="nt-val">${g.mocMax()} lượt / đợt</div><div class="nt-note">Còn ${g.moc} lượt · giai đoạn 4: <b>2 lượt</b></div></div></div>
           <div class="nt-tile inset"><div class="nt-ico metal">🍄</div><div><div class="nt-lbl">LINH CHI</div><div class="nt-val">${MOUNTAIN.herbGold} vàng / cây</div><div class="nt-note">${st >= 3 ? 'Mọc 1 cây mỗi đợt (tối đa 5)' : 'Mọc từ giai đoạn 3'} · hồi <b style="color:#6AE06A">máu tướng</b></div></div></div>
           <button class="nt-tile actg" data-act="soil" ${m.soiled || g.gold < MOUNTAIN.soilCost || st >= 5 ? 'disabled' : ''}><div class="nt-ico" style="background:#0D0B0833;border:1px solid #5A3608">⛰</div><div><div class="nt-val">Bồi đất · ${MOUNTAIN.soilCost} vàng</div><div class="nt-note">${m.soiled ? 'Đợt này đã bồi đất' : 'Núi cao nhanh hơn · 1 lần/đợt'}</div></div></button>
         </div></div>`;

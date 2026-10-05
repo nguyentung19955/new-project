@@ -129,7 +129,7 @@ function render() {
   CONFIG.slots.forEach(([x, y], i) => {
     const h = game.heroes[i];
     const o = { tier: CONFIG.slotTier[i], flooded: game.isFlooded(i), raised: game.raised[i], hero: !!h,
-      soon: soon >= 0 && CONFIG.slotTier[i] === soon };
+      soon: game.started && game.floodNext(i) };
     // đang kéo: ô thả sáng, tướng ghép được (cùng loại cùng sao) / hợp thể được nhấp nháy vàng
     if (dragging) {
       const dh = game.heroes[dragging.from];

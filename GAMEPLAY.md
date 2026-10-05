@@ -4,6 +4,8 @@
 
 Game thủ thành trên điện thoại, chơi **màn hình ngang**, lấy cảm hứng từ Dota 1, các game "triệu hồi ngẫu nhiên rồi ghép" và truyền thuyết **Sơn Tinh Thủy Tinh**. Người chơi vào vai Sơn Tinh, **triệu hồi ngẫu nhiên** các tướng Văn Lang dọc dòng sông, **ghép 2 tướng giống nhau** để lên sao và **hợp thể** 2 tướng đúng cặp thành thần Sử thi rồi Huyền thoại, chặn đạo quân thủy quái của Thủy Tinh tràn vào **thành Phong Châu**. Vàng dùng để triệu hồi, nâng cấp tướng, mở kỹ năng, hợp thể, Thần tinh và mua đồ.
 
+> **Phiên bản 36:** bỏ bậc ô Thấp / Giữa / Cao và bỏ hẳn cơ chế **Nước Dâng ngập ô**, **Mọc Núi**, **sa lầy** (mục 9 chỉ còn để tham khảo).
+>
 > **Thay đổi lớn ở phiên bản 34–35:** bỏ chọn tướng / chọn ô và tiến hoá bằng vàng của tướng Thường. Thay bằng **Triệu hồi ngẫu nhiên → Ghép sao → Hợp thể** (mục 1, 2, 4). Bản đồ còn 17 ô. Lịch sử thay đổi cũ giữ dưới đây để tham khảo.
 
 > **Thay đổi so với phiên bản 12:** giữ nguyên toàn bộ cơ chế và số liệu, đổi tên tướng / quái / boss / vật phẩm theo chủ đề, Cây Sự Sống thành **Núi Tản Viên**, thêm cơ chế mới **Nước Dâng** (mục 9).
@@ -18,7 +20,7 @@ Game thủ thành trên điện thoại, chơi **màn hình ngang**, lấy cảm
 
 1. **Triệu hồi:** bấm nút lớn **Triệu hồi** giữa thanh dưới. Mỗi lần gọi ra **1 trong 6 tướng Thường ngẫu nhiên (★)** vào **1 ô trống ngẫu nhiên**.
    - Giá **60 vàng**, mỗi lần sau **+6** (tối đa 220), tính lại từ đầu mỗi ải.
-   - Bản đồ có **17 ô** dọc hai bờ sông, chia **3 bậc độ cao** (6 Thấp, 6 Giữa, 5 Cao, xem mục 9). Hết ô trống thì phải ghép hoặc bán bớt.
+   - Bản đồ có **17 ô** dọc hai bờ sông, mọi ô như nhau. Hết ô trống thì phải ghép hoặc bán bớt.
    - Giữ và kéo tướng để đổi chỗ.
 2. **Ghép sao:** kéo 1 tướng thả lên tướng **cùng loại, cùng sao** → lên 1 sao (★ + ★ → ★★, ★★ + ★★ → ★★★). Nút **⇄ Ghép tự động** gộp mọi cặp một lần. Xem mục 4.
 3. **Hợp thể:** 2 tướng ★★★ **đúng công thức**, đã nâng tối đa kỹ năng, kéo vào nhau → **thần Sử thi** (300 vàng). 2 thần Sử thi **Thần tinh ★★★**, kỹ năng tối đa → **thần Huyền thoại** (1200 vàng). Dải gợi ý trên cùng hiện % tiến độ các công thức, đủ 100% thì bấm để hợp thể. Xem mục 2.
@@ -374,7 +376,7 @@ Núi cao thêm 1 bước sau mỗi đợt quái, có 5 giai đoạn: **Gò Đấ
 
 ---
 
-## 9. Cơ chế mới · Nước Dâng *(đề xuất, số liệu cần chơi thử để cân bằng)*
+## 9. ~~Cơ chế Nước Dâng~~ · ĐÃ BỎ ở phiên bản 36 (giữ lại để tham khảo)
 
 Đây là điểm làm game khác các game thủ thành khác, lấy thẳng từ truyền thuyết.
 
@@ -742,3 +744,13 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - **Ảnh tướng theo sao, không theo đồ:** ★ ảnh Thường, ★★ ảnh Hiếm, ★★★ ảnh Sử thi (tướng thần theo Thần tinh) để dễ nhận ra 2 con giống nhau mà ghép; đồ mặc hiện bằng viền sáng màu độ hiếm. Thiếu ảnh bậc nào thì lấy bậc gần nhất (sửa lỗi Lạc Tướng mất ảnh).
 - **Ít ô hơn:** 43 → 17 ô (6 Thấp, 6 Giữa, 5 Cao), cách nhau rộng; chừa dải trên cùng cho gợi ý hợp thể.
 - **Thử ghép đồ từng món lên ảnh vẽ tay:** có ảnh `lac-tuong_than.png` (thân trần vẽ theo `docs/dang-chuan.png`) thì game vẽ mũ / giáp / vũ khí đang mặc lên người theo điểm neo. Prompt mục G [391].
+
+### Phiên bản 36 · bỏ bậc ô và ngập nước
+
+- Bỏ **bậc ô Thấp / Giữa / Cao**: 17 ô như nhau. Bỏ **Nước Dâng ngập ô**, ngập tạm khi Thủy Tinh xuất hiện, **Mọc Núi** và **sa lầy**. Chỉ số mực nước trên thanh trên cũng bỏ.
+- Thay các hiệu ứng / đặc trưng đang dựa vào ô:
+  - Lạc Long Quân · Con Rồng: khi máu dưới 50%, +30% sát thương.
+  - Ẩn Lực Sĩ Núi: đứng kề Lạc Tướng thì Vùi Đá chôn 2 quái. Ẩn Âu Cơ: có từ 2 tướng đứng kề thì Hoa Tiên hồi thêm 1 tướng ở xa. Ẩn Lạc Hầu: có từ 2 tướng đứng kề thì giảm 25%. Ẩn Chử Đồng Tử: Gậy Thần hồi gấp đôi cho tướng dưới 25% máu.
+  - Đồ hành Thủy "Cá gặp nước": đứng kề tướng hành Thủy +10% sát thương. Đồ hành Thổ "Núi che chở": đứng yên 10 giây thì tướng kề giảm 10% sát thương nhận. Áo Vảy Cá: máu dưới 50% hồi 2%/giây. Đủ Bộ Lạc Long: 10% phóng sét lan (không cần ô ngập). Dòng phụ "nước" thành +6% sát thương.
+  - Núi Tản Viên giai đoạn 4: Linh Chi mọc 2 cây / đợt (thay Mọc Núi 2 lượt).
+- Cân bằng: bot (triệu hồi + ghép + nâng cấp) ải 3, 4 thắng cả hai; ải 6, 8 thắng 1 / thua 1 — như trước khi bỏ, giữ nguyên máu quái.

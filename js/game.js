@@ -70,20 +70,15 @@ const distToPath = (x, y) => distToPolyline(CONFIG.path, x, y);
     out.length = 0;
     out.push(...pick);
   }
-  // bậc độ cao theo khoảng cách tới sông: gần nhất = Thấp
+  // v36: bỏ bậc ô Thấp / Giữa / Cao. Chỉ giữ thứ tự gần sông để nước dâng ngập dần ô sát sông nhất.
   const order = out.map((s, i) => i).sort((a, b) => out[a].d - out[b].d);
-  const nT = Math.round(out.length * 0.35), nM = Math.round(out.length * 0.37);
-  CONFIG.tierCounts = [nT, nM];
-  const tier = [];
-  order.forEach((idx, rank) => {
-    tier[idx] = rank < CONFIG.tierCounts[0] ? 0 : rank < CONFIG.tierCounts[0] + CONFIG.tierCounts[1] ? 1 : 2;
-  });
   CONFIG.slots = out.map((s) => [s.x, s.y]);
-  CONFIG.slotTier = tier;
+  CONFIG.slotRank = [];
+  order.forEach((idx, rank) => { CONFIG.slotRank[idx] = rank; });
+  CONFIG.slotTier = out.map(() => 1);       // giữ cho code cũ / ảnh ô: mọi ô như nhau
   // ô gợi ý cho người mới: ô bậc Giữa gần giữa bản đồ
   let best = -1;
   out.forEach((s, i) => {
-    if (tier[i] !== 1) return;
     if (best < 0 || Math.hypot(s.x - 560, s.y - 230) < Math.hypot(out[best].x - 560, out[best].y - 230)) best = i;
   });
   CONFIG.coachSlot = Math.max(0, best);
@@ -258,7 +253,7 @@ function heroStats(h) {
       else if (a === 'air') s.airPct += v;
       else if (a === 'cdr') s.cdr += v;
       else if (a === 'gold') s.goldOnKill += v;
-      else if (a === 'flood') s.floodPct += v;
+      else if (a === 'flood') s.bonusDmgPct += v;       // v36: dòng phụ "nước" thành +% sát thương
       else if (a === 'range') s.rangePct += v;
       else if (a === 'crit') s.crit += v;
       else if (a === 'pen') s.pierce += v;
@@ -284,8 +279,7 @@ function heroStats(h) {
   if (h.rageT > 0) s.haste += 5 * (h.rageN || 0);        // Song Rìu Cuồng Nộ
   if (h.warT > 0) s.haste += 20;                           // Trống Đồng gõ đầu đợt
   if (s.hid['i.moc2'] && (h.still || 0) >= 10) s.bonusDmgPct += 15;
-  if (s.hid['i.thuy1'] && h.flooded) s.bonusDmgPct += 10;
-  if (h.flooded) s.bonusDmgPct += s.floodPct;
+  if (s.hid['i.thuy1'] && b.thuyAdj) s.bonusDmgPct += 10;   // đứng kề tướng hành Thủy
   s.bonusDmgPct += (b.sinh || 0) * ELEM.sinh + (b.full ? ELEM.full : 0) + (b.drum || 0) - (b.llqPen ? 10 : 0);
   s.airMult += s.airPct / 100;
   if (s.hitAir) s.canAir = true;
@@ -321,7 +315,7 @@ function heroStats(h) {
   s.cleave = Math.min(1, s.cleave);
   s.pierce = Math.min(100, s.pierce + (b.pierce || 0));
   s.mpen = Math.min(100, s.mpen);
-  if (h.type === 'llq' && h.flooded) s.bonusDmgPct += 30;   // Con Rồng
+  if (h.type === 'llq' && h.hp < (h.hpMaxLast || 1) * 0.5) s.bonusDmgPct += 30;   // Con Rồng: rồng nổi giận khi bị thương
   if (def.dmgType === 'magic') s.bonusDmgPct += b.magicPct || 0;
   s.bonusDmgPct += b.forest || 0;                          // Mẫu Thượng Ngàn: Mẹ Rừng
   s.damage *= (1 + s.bonusDmgPct / 100) * grow;
@@ -581,7 +575,7 @@ const SKILL_CASTS = {
     game.effects.push({ type: 'vortex', x: h.x, y: h.y - 22, color: '#B9A274', ttl: 0.6, max: 0.6 });
     if (normal.length) {
       // ẩn: đứng ô bậc Cao thì chôn 2 quái
-      const two = hasLine(h, 'lucsi') && CONFIG.slotTier[h.slot] === 2 && normal.length > 1;
+      const two = hasLine(h, 'lucsi') && game.adjacent(h).some((o) => o.type === 'lactuong') && normal.length > 1;
       if (two) game.discover('h.lucsi', h.x, h.y);
       for (const e of normal.sort((a, b) => b.hp - a.hp).slice(0, two ? 2 : 1)) {
         game.effects.push({ type: 'rockfall', x: e.x, y: e.y, ttl: 0.6, max: 0.6 });
@@ -831,7 +825,7 @@ const SKILL_CASTS = {
     const pct = (0.25 + n * 0.003) * skillMult(st.lv || 1);
     healHeroes(game, h.x, h.y, 180, pct, '#FF9EC4');
     // ẩn: đứng ô bậc Cao thì hồi thêm cho 1 tướng ở xa hơn
-    if (hasLine(h, 'auco') && CONFIG.slotTier[h.slot] === 2) {
+    if (hasLine(h, 'auco') && game.adjacent(h).length >= 2) {
       const far = game.heroes.filter((o) => o && !o.dead && Math.hypot(o.x - h.x, o.y - h.y) > 180 && o.hp < heroStats(o).hpMax)
         .sort((a, b) => a.hp / heroStats(a).hpMax - b.hp / heroStats(b).hpMax)[0];
       if (far) {
@@ -875,7 +869,10 @@ const SKILL_CASTS = {
     }
     if (!best) return false;
     const mx = heroStats(best.o).hpMax;
-    best.o.hp = Math.min(mx, best.o.hp + mx * (0.35 + n * 0.003) * skillMult(st.lv || 1));
+    // ẩn Chử Đồng Tử: tướng sắp gục (dưới 25% máu) được hồi gấp đôi
+    const dbl = hasLine(h, 'cdt') && best.r < 0.25;
+    if (dbl) game.discover('h.cdt', h.x, h.y);
+    best.o.hp = Math.min(mx, best.o.hp + mx * (0.35 + n * 0.003) * skillMult(st.lv || 1) * (dbl ? 2 : 1));
     game.effects.push({ type: 'heal', x: best.o.x, y: best.o.y, r: 40, color: '#9EDDF2', ttl: 0.8, max: 0.8 });
     game.effects.push({ type: 'streak', x: h.x, y: h.y - 40, x2: best.o.x, y2: best.o.y - 30, color: '#9EDDF2', ttl: 0.3, max: 0.3 });
     return true;
@@ -1120,6 +1117,9 @@ const SKILL_CASTS = {
   },
 };
 
+// mỗi lần Thủy Tinh dâng nước: số ô sát sông nhất bị ngập thêm
+const FLOOD_PER_RISE = 2;
+
 // ------------------------------------------------------------
 //  TRẠNG THÁI TRẬN
 // ------------------------------------------------------------
@@ -1200,7 +1200,7 @@ class Game {
     this.guardT = 0;
     this.oathT = 0;
     // Nước Dâng
-    this.water = this.lv.water || 0;           // số bậc đã ngập (0..3)
+    this.water = 0;           // số bậc đã ngập (0..3)
     this.raised = CONFIG.slots.map(() => false);   // ô đã Mọc Núi (khô vĩnh viễn)
     this.tempFlood = CONFIG.slots.map(() => 0);    // ngập tạm tới thời điểm
     this.moc = 1;                                   // lượt Mọc Núi còn lại
@@ -1236,17 +1236,21 @@ class Game {
 
   // ---------- Nước Dâng
   isFlooded(slot) {
-    if (this.raised[slot]) return false;
-    return CONFIG.slotTier[slot] < this.water || this.tempFlood[slot] > this.time;
+    return false;      // v36: bỏ cơ chế ngập ô
   }
-  // bậc sắp ngập (nhấp nháy xanh) hoặc -1
+  // ô sẽ ngập ở lần nước dâng tới (nhấp nháy xanh)
+  floodNext(slot) {
+    const r = CONFIG.slotRank[slot];
+    return this.floodSoon() >= 0 && r >= this.water * FLOOD_PER_RISE && r < (this.water + 1) * FLOOD_PER_RISE;
+  }
+  // lần dâng nước sắp tới (đợt boss) hoặc -1
   floodSoon() {
     const boss = this.waveActive ? bossAt(this.wave, this.level) : bossAt(this.wave + 1, this.level);
-    return boss && this.water < 3 ? this.water : -1;
+    return -1;
   }
   mocMax() { return this.mountainStage() >= 4 ? 2 : 1; }
   canRaise(slot) {
-    return !this.raised[slot] && (CONFIG.slotTier[slot] < 3);
+    return !this.raised[slot];
   }
   raiseSpot(slot) {
     if (this.moc <= 0) return 'Hết lượt Mọc Núi (mỗi đợt nạp lại)';
@@ -1261,11 +1265,11 @@ class Game {
     return true;
   }
   riseWater() {
-    if (this.water >= 3) return;
+    return;            // v36: bỏ nước dâng ngập ô (mực nước chỉ còn là hình nền)
     this.water++;
     this.effects.push({ type: 'floodrise', ttl: 1.6, max: 1.6 });
     this.events.push({ type: 'flood', level: this.water });
-    this.notify(`Thủy Tinh dâng nước! Các ô bậc ${TIER_NAMES[this.water - 1]} đã ngập`, '#5AB4D6');
+    this.notify(`Thủy Tinh dâng nước! ${FLOOD_PER_RISE} ô sát sông nhất bị ngập (dùng Mọc Núi để cứu)`, '#5AB4D6');
   }
 
   // ---------- hành động của người chơi
@@ -2063,7 +2067,7 @@ class Game {
     const gold = st * MOUNTAIN.goldPerStage;
     this.addGold(gold);
     if (st >= 2 && this.wave % 3 === 0) this.lives++;
-    if (st >= 3) m.herbs = Math.min(5, m.herbs + 1);
+    if (st >= 3) m.herbs = Math.min(5, m.herbs + (st >= 4 ? 2 : 1));   // giai đoạn 4: mọc 2 cây / đợt
     return gold;
   }
 
@@ -2113,14 +2117,6 @@ class Game {
       h.bogged = false;
       owns.set(h, heroStatsNoAura(h));
     }
-    for (const h of list) {
-      if (!h.flooded) continue;
-      // không sa lầy: Lạc Long Quân (Con Rồng); ẩn: Chử Đồng Tử, đồ hành Thủy "Cá gặp nước", đủ Bộ Lạc Long
-      const own = owns.get(h);
-      const free = h.type === 'llq' ? null : h.type === 'cdt' ? 'h.cdt' : own.hid['i.thuy1'] ? 'i.thuy1' : own.hid['s.laclong'] ? 's.laclong' : '';
-      h.bogged = free === '';
-      if (free && !h.dead) this.discover(free, h.x, h.y);
-    }
     const near = (a, b, r) => a !== b && Math.hypot(a.x - b.x, a.y - b.y) <= r;
     // Ngũ hành: tương sinh khi đứng kề, đủ 5 hành trên sân
     const alive = list.filter((h) => !h.dead);
@@ -2140,7 +2136,8 @@ class Game {
       if (own.hid['r.gay_tam_gioi'] && attrs.size >= 3) this.discover('r.gay_tam_gioi', h.x, h.y);
       if (own.hid['r.cung_mat_chim'] && airWave) this.discover('r.cung_mat_chim', h.x, h.y);
       if (own.hid['i.moc2'] && (h.still || 0) >= 10) this.discover('i.moc2', h.x, h.y);
-      if (own.hid['i.thuy1'] && h.flooded) this.discover('i.thuy1', h.x, h.y);
+      h.buff.thuyAdj = alive.some((o) => near(h, o, ELEM.adj) && HEROES[o.type].el === 'thuy');
+      if (own.hid['i.thuy1'] && h.buff.thuyAdj) this.discover('i.thuy1', h.x, h.y);
       // ẩn Lạc Long Quân: đứng kề Âu Cơ thì cả hai −10% sát thương
       if ((h.type === 'llq' || h.type === 'auco') && alive.some((o) => o.type === (h.type === 'llq' ? 'auco' : 'llq') && near(h, o, ELEM.adj))) {
         h.buff.llqPen = true;
@@ -2157,7 +2154,7 @@ class Game {
         for (const o of alive) if (o === src || near(src, o, 140)) o.buff.drum = Math.max(o.buff.drum || 0, v);
       }
       // ẩn đồ hành Thổ "Núi che chở": đứng ô Cao, tướng kề giảm 10% sát thương nhận
-      if (own.hid['i.tho2'] && CONFIG.slotTier[src.slot] === 2) {
+      if (own.hid['i.tho2'] && (src.still || 0) >= 10) {
         for (const o of alive) if (near(src, o, ELEM.adj)) { o.buff.dr = Math.max(o.buff.dr || 0, 10); this.discover('i.tho2', src.x, src.y); }
       }
       for (const o of list) {
@@ -2168,7 +2165,7 @@ class Game {
         if (!near(src, o, 170)) continue;
         if (t === 'kimquy' && near(src, o, 110)) b.dr = Math.max(b.dr || 0, 30);
         if (t === 'lachau' && near(src, o, ELEM.adj)) {
-          const high = CONFIG.slotTier[src.slot] === 2;
+          const high = this.adjacent(src).length >= 2;
           b.dr = Math.max(b.dr || 0, high ? 25 : 15);
           if (high) this.discover('h.lachau', src.x, src.y);
         }
@@ -2477,6 +2474,7 @@ class Game {
   }
 
   tempFloodSpots(count, time) {
+    return;            // v36: bỏ ngập tạm
     const dry = CONFIG.slots.map((s, i) => i).filter((i) => !this.isFlooded(i));
     for (let k = 0; k < count && dry.length; k++) {
       const i = dry.splice(Math.floor(Math.random() * dry.length), 1)[0];
@@ -2600,7 +2598,7 @@ class Game {
     for (const k of ['rallyT', 'feastT', 'hotT', 'volleyT', 'huntT', 'rageT', 'warT', 'earthT', 'earthCd', 'drumBoostT', 'trailCd', 'breathCd']) if (h[k] > 0) h[k] -= dt;
     if (!(h.rageT > 0)) h.rageN = 0;
     h.still = (h.still || 0) + dt;
-    if (st.hid['r.ao_vay_ca'] && h.flooded) {
+    if (st.hid['r.ao_vay_ca'] && h.hp < st.hpMax * 0.5) {
       h.hp = Math.min(st.hpMax, h.hp + st.hpMax * 0.02 * dt);
       if (h.hp < st.hpMax) this.discover('r.ao_vay_ca', h.x, h.y);
     }
@@ -2945,7 +2943,7 @@ class Game {
     if (crit && hid['i.hoa1']) {
       this.proc(e, 'burn', e.x, e.y - 14, '#E0452C', 18); this.dot(e, dmg * 0.2, hero, '#E0452C', 'magic', 2); this.discover('i.hoa1', hero.x, hero.y); }
     // ẩn đủ Bộ Lạc Long: đứng ô ngập, 10% phóng sét lan 3 quái
-    if (hid['s.laclong'] && hero.flooded && Math.random() < 0.1) {
+    if (hid['s.laclong'] && Math.random() < 0.1) {
       const near = this.enemiesInRange(e.x, e.y, 130).filter((o) => o !== e).slice(0, 3);
       for (const o of near) {
         this.effects.push({ type: 'streak', x: e.x, y: e.y - 14, x2: o.x, y2: o.y - 14, color: '#BFF0FF', w: 4, ttl: 0.3, max: 0.3 });
