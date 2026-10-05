@@ -704,3 +704,13 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - **Quái chết** có hoạt ảnh: chớp trắng, ngã nghiêng, co lại, chìm xuống nước và mờ dần (0,45 giây) thay vì biến mất ngay.
 - **Mặc đồ với ảnh vẽ tay:** bậc ảnh trang phục làm tròn lên — mặc món Hiếm đầu tiên đã đổi sang ảnh bậc Hiếm. Cài đặt có thêm **"Tướng vẽ nét (thấy từng món đồ)"**: bật lên thì tướng dùng hình vẽ nét, mũ / giáp / vũ khí hiện riêng từng món.
 - **Tách nền bằng AI:** `tools/xoa-nen.py` dùng rembg (mô hình isnet-anime) cho ảnh tướng / quái / boss, gỡ được đĩa tròn và vầng sáng sau lưng (nếu chưa cài rembg vẫn chạy cách cũ). Ảnh "nên làm lại khi rảnh" giảm từ 26 xuống 11.
+
+### Phiên bản 34 · lối chơi mới: triệu hồi ngẫu nhiên, ghép sao, hợp thể
+
+- **Triệu hồi:** nút lớn giữa thanh dưới. Mỗi lần gọi ra 1 trong 6 tướng Thường ngẫu nhiên (★) vào 1 ô trống ngẫu nhiên. Giá 60 vàng, mỗi lần sau +6 (tối đa 220), tính lại từ đầu mỗi ải. Không còn chọn tướng / chọn ô; vẫn kéo thả để đổi chỗ.
+- **Ghép sao:** kéo 1 tướng thả lên tướng **cùng loại, cùng sao**: ★ + ★ → ★★, ★★ + ★★ → ★★★ (hoặc chạm tướng → **Ghép sao**). Tướng mới giữ cấp cao hơn, kỹ năng cao hơn, đồ của cả hai (thừa thì vào túi). Mỗi sao mạnh gấp ~1,8 lần (★★★ ≈ ×3,2 sát thương ★). Tiến hoá bằng vàng của tướng Thường bỏ; tướng thần vẫn Thần tinh bằng vàng.
+- **Hợp thể:** 2 tướng ★★★ **đúng công thức**, cả hai đã nâng tối đa kỹ năng, kéo vào nhau (hoặc chạm tướng → Hợp thể) → thần Sử thi (300 vàng). 2 thần tím Thần tinh ★★★, kỹ năng tối đa → Huyền thoại (1200 vàng). Thần mới giữ cấp, đồ và nội tại của cả hai.
+  - Thầy Mo Lửa + Thần Sương Núi → Chử Đồng Tử · Lạc Tướng + Lực Sĩ Núi → Lạc Hầu · Lạc Tướng + Thợ Săn Rừng → Thạch Sanh · Thợ Săn Rừng + Xạ Thủ → Thần Săn Ba Vì · Xạ Thủ + Lực Sĩ Núi → Cao Lỗ · Thợ Săn Rừng + Thầy Mo Lửa → Mai An Tiêm · Thần Sương Núi + Xạ Thủ → Tiên Dung · Lực Sĩ Núi + Thầy Mo Lửa → Lang Liêu
+  - Thạch Sanh + Lạc Hầu → Thánh Gióng · Thần Săn Ba Vì + Chử Đồng Tử → Lạc Long Quân · Lạc Hầu + Cao Lỗ → Thần Kim Quy · Cao Lỗ + Mai An Tiêm → An Dương Vương · Tiên Dung + Lang Liêu → Âu Cơ · Thần Săn Ba Vì + Lang Liêu → Mẫu Thượng Ngàn
+- **Cân bằng:** tím mới hợp thể mạnh ≈ ×2,8 tổng 2 tướng ★★★ (Thần tinh ★★★ ≈ ×4,6); vàng mới hợp thể ≈ ×2,2 tổng 2 thần tím ★★★ (★★★ ≈ ×3,7) — chỉnh riêng từng thần (`FUSE_ADJ`, đo bằng `sim/cmp4.js`). Bot mới (triệu hồi + ghép + nâng cấp, không đồ): ải 3, 5, 8 thắng / thua tùy may rủi.
+- Giao diện: kéo tướng thì các tướng ghép / hợp thể được nhấp nháy vàng; bảng **Cây hợp thể** liệt kê 14 công thức; màn Tiến hoá có bảng Hợp thể (điều kiện ✓ / ✗, đối tác trên sân, lực chiến sau khi hợp thể).

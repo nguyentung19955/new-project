@@ -286,10 +286,13 @@ function heroStats(h) {
 
   // sao tiến hoá: tướng Thường theo bậc hiện tại; tướng thần giữ sao của mọi bậc trước + bậc Thần tinh
   // (Thần tinh Huyền thoại nhân ASC_EVO_MULT nên mạnh hơn)
+  // tướng thần: sao Thường lấy bậc cao nhất trong các tướng Thường đã ghép; Thần tinh của mỗi
+  // thần tím đã ghép giữ một nửa; cộng Thần tinh hiện tại (vàng mạnh hơn tím)
+  const baseTier = line.filter((a) => !HEROES[a.type].legend).reduce((m, a) => Math.max(m, a.tier ?? 3), 0);
   const evos = line.length
-    ? [...line.map((a, i) => (i ? [EVO_BONUS.asc[a.tier || 0], 0.5] : [EVO_BONUS.base[a.tier ?? 3], 1])),     // Thần tinh bậc Sử thi giữ một nửa
+    ? [[EVO_BONUS.base[baseTier], 1], ...line.filter((a) => HEROES[a.type].legend).map((a) => [EVO_BONUS.asc[a.tier || 0], 0.5]),
       [EVO_BONUS.asc[h.tier || 0], ASC_EVO_MULT[def.legend] || 1]]
-    : [[EVO_BONUS.base[h.tier || 0], 1]];
+    : [];      // tướng Thường: sức mạnh sao tính bằng MERGE_MULT (ghép), không cộng EVO_BONUS
   let evoHp = 0, evoSkill = 0;
   for (const [e, m] of evos) {
     s.bonusDmgPct += (e.dmg || 0) * m; evoHp += (e.hp || 0) * m; s.haste += (e.haste || 0) * m; evoSkill += (e.skill || 0) * m;
@@ -311,6 +314,14 @@ function heroStats(h) {
   if (def.dmgType === 'magic') s.bonusDmgPct += b.magicPct || 0;
   s.bonusDmgPct += b.forest || 0;                          // Mẫu Thượng Ngàn: Mẹ Rừng
   s.damage *= (1 + s.bonusDmgPct / 100) * grow;
+  // Sao ghép (v34): mỗi sao mạnh gấp ~2 lần, để ghép 2 con thành 1 luôn đáng.
+  // Tướng thần mang theo sức mạnh ★★★ của các tướng Thường đã ghép thành nó.
+  const mk = line.length ? MERGE_MULT[3] * (FUSE_MULT[def.legend] || 1) * (FUSE_ADJ[h.type] || 1) : MERGE_MULT[h.tier || 0];
+  if (mk !== 1) {
+    s.damage *= mk;
+    s.hpMax = Math.round(s.hpMax * (1 + (mk - 1) * 0.6));
+    s.skillPower *= 1 + (mk - 1) * 0.5;
+  }
   // Thần lực: tướng đã thăng thần mạnh hơn hẳn tướng gốc
   if (h.from) {
     const k = ASCEND_POWER[def.legend] || 1;
@@ -332,7 +343,7 @@ function heroStats(h) {
 function heroPower(h) {
   const st = heroStats(h);
   const dps = st.damage * (1 + (Math.min(100, st.crit) / 100) * ((st.critMult || 2) - 1)) / st.cooldown
-    * (1 + st.cleave * 0.6 + Math.min(4, st.arrows - 1) * 0.2 + (st.splash ? 0.5 : 0));
+    * (1 + st.cleave * 0.6 + (HEROES[h.type].attack === 'melee' ? 0 : Math.min(4, st.arrows - 1) * 0.2) + (st.splash ? 0.5 : 0));
   return Math.round(dps * 6 + st.hpMax / 8 * (1 + st.dr / 100) + (st.skillPower - 1) * 220 + st.range * 0.4 + st.regen * 4);
 }
 // lực chiến nếu mặc thử món inst vào ô slot (không đổi trạng thái thật)
@@ -1154,6 +1165,7 @@ class Game {
     this.lives = CONFIG.startLives;
     this.wave = 0;
     this.heroes = CONFIG.slots.map(() => null);
+    this.summonN = 0;         // số lần triệu hồi trong ải (giá tăng dần)
     this.enemies = [];
     this.projectiles = [];
     this.effects = [];
@@ -1274,6 +1286,153 @@ class Game {
     h.hp = heroStats(h).hpMax;
     h.mana = heroStats(h).maxMana * 0.5;
     this.effects.push({ type: 'summon', x, y, ttl: 0.6, max: 0.6 });
+    return true;
+  }
+
+  // ---------- TRIỆU HỒI NGẪU NHIÊN · GHÉP SAO · HỢP THỂ (v34)
+  summonCost() { return COSTS.summon(this.summonN || 0); }
+  freeSlots() { return CONFIG.slots.map((_, i) => i).filter((i) => !this.heroes[i] && !this.isFlooded(i)); }
+  canSummon() {
+    if (this.gold < this.summonCost()) return `Cần ${this.summonCost()} vàng`;
+    if (!this.freeSlots().length) return 'Hết ô trống: ghép hoặc bán bớt tướng';
+    return true;
+  }
+  // gọi 1 tướng Thường ngẫu nhiên (★) vào 1 ô trống ngẫu nhiên; trả về ô vừa đặt
+  summonRandom(rng = Math.random) {
+    const ok = this.canSummon();
+    if (ok !== true) return ok;
+    const free = this.freeSlots();
+    const slot = free[Math.floor(rng() * free.length)];
+    const type = BASIC_HEROES[Math.floor(rng() * BASIC_HEROES.length)];
+    const c = this.summonCost();
+    this.gold -= c;
+    this.summonN = (this.summonN || 0) + 1;
+    this.spawnHero(slot, type, { tier: 1, spent: c });
+    return slot;
+  }
+  // tạo tướng ở ô (không trừ vàng)
+  spawnHero(slot, type, o = {}) {
+    const def = HEROES[type];
+    const [x, y] = CONFIG.slots[slot];
+    const h = {
+      id: nextId++, type, slot, x, y, kills: 0, level: 1, cd: 0, swing: 0, dir: 1,
+      dead: false, respawnT: 0, stunT: 0, hp: 0, mana: 0, skillLv: { [def.skills[0].id]: 1 }, skillPts: 0,
+      tier: o.tier || 0, spent: o.spent || 0, grow: 0, shield: 0, shieldT: 0, invulnT: 0, reviveCd: 0,
+      equip: { weapon: null, helmet: null, armor: null, acc1: null, acc2: null, acc3: null },
+      skillCd: {}, buff: {}, summonT: 0.5, notice: {},
+    };
+    this.heroes[slot] = h;
+    this.updateAuras();
+    h.hp = heroStats(h).hpMax;
+    h.mana = heroStats(h).maxMana * 0.5;
+    this.effects.push({ type: 'summon', x, y, ttl: 0.6, max: 0.6 });
+    return h;
+  }
+  // ghép đồ của tướng bị ghép vào tướng còn lại (ô trống thì mặc vào, còn lại cất túi)
+  absorbGear(keep, gone) {
+    for (const s of SLOTS) {
+      const it = gone.equip[s];
+      if (!it) continue;
+      if (!keep.equip[s] && (!ITEMS[it.id].wclass || ITEMS[it.id].wclass === HEROES[keep.type].wclass)) keep.equip[s] = it;
+      else this.addItem(it, true);
+      gone.equip[s] = null;
+    }
+  }
+  // gộp cấp / điểm / kỹ năng: lấy bên cao hơn
+  absorbProgress(keep, gone) {
+    if (gone.level > keep.level) { keep.level = gone.level; keep.skillPts = gone.skillPts; }
+    keep.statPts = Math.max(keep.statPts || 0, gone.statPts || 0);
+    keep.train = Math.max(keep.train || 0, gone.train || 0);
+    keep.kills = (keep.kills || 0) + (gone.kills || 0);
+    keep.spent = (keep.spent || 0) + (gone.spent || 0);
+  }
+  // 2 tướng cùng loại cùng sao → lên 1 sao
+  canMerge(a, b) {
+    if (!a || !b || a === b) return 'Chọn 2 tướng';
+    if (a.type !== b.type) return 'Chỉ ghép được 2 tướng cùng loại';
+    if (a.from || b.from || HEROES[a.type].legend) return 'Tướng thần lên sao bằng Thần tinh';
+    if ((a.tier || 0) !== (b.tier || 0)) return 'Chỉ ghép 2 tướng cùng số sao';
+    if ((a.tier || 0) >= 3) return 'Đã ★★★: hợp thể với tướng khác để lên thần';
+    return true;
+  }
+  merge(fromSlot, toSlot) {
+    const a = this.heroes[fromSlot], b = this.heroes[toSlot];
+    const ok = this.canMerge(a, b);
+    if (ok !== true) return ok;
+    const before = heroStats(b).hpMax;
+    for (const sk of HEROES[b.type].skills) b.skillLv[sk.id] = Math.max(b.skillLv[sk.id] || 0, a.skillLv[sk.id] || 0) || undefined;
+    for (const k in b.skillLv) if (!b.skillLv[k]) delete b.skillLv[k];
+    this.absorbProgress(b, a);
+    this.absorbGear(b, a);
+    this.heroes[fromSlot] = null;
+    b.tier = (b.tier || 0) + 1;
+    b.evoT = 1.2;
+    if (!b.dead) b.hp = Math.min(heroStats(b).hpMax, b.hp + heroStats(b).hpMax - before + heroStats(b).hpMax * 0.3);
+    this.effects.push({ type: 'evolve', hero: b, x: b.x, y: b.y, color: ATTRS[HEROES[b.type].attr].color, ttl: 1.2, max: 1.2 });
+    this.effects.push({ type: 'streak', x: a.x, y: a.y - 30, x2: b.x, y2: b.y - 30, color: '#FFE08A', ttl: 0.35, max: 0.35 });
+    this.notify(`${HEROES[b.type].name} lên ${'★'.repeat(b.tier)}!`, '#F2D27A');
+    b.notice.evo = b.tier >= 3;
+    return true;
+  }
+  // 2 tướng ★★★ đúng công thức (đủ kỹ năng) → thần mới
+  fusionReady(h) {
+    if ((h.tier || 0) < this.ascendNeed(h)) return h.from ? `${HEROES[h.type].name} cần Thần tinh ${'★'.repeat(COSTS.ascendTier2)}` : `${HEROES[h.type].name} cần ★★★`;
+    const left = this.skillsLeft(h);
+    if (left.length) return `${HEROES[h.type].name} cần nâng tối đa kỹ năng: ${left.map(([k, lv, mx]) => `${k} ${lv}/${mx}`).join(', ')}`;
+    return true;
+  }
+  canFuse(a, b) {
+    if (!a || !b || a === b) return 'Chọn 2 tướng';
+    const f = fusionFor(a.type, b.type);
+    if (!f) return 'Hai tướng này không có công thức hợp thể';
+    for (const h of [a, b]) { const r = this.fusionReady(h); if (r !== true) return r; }
+    const d = HEROES[f.to];
+    if (d.legend === 'legendary' && this.heroes.filter((o) => o && o !== a && o !== b && HEROES[o.type].legend === 'legendary').length >= CONFIG.maxLegends)
+      return `Tối đa ${CONFIG.maxLegends} tướng Huyền thoại trên sân`;
+    const c = COSTS.ascend[d.legend];
+    if (this.gold < c) return `Cần ${c} vàng`;
+    return f;
+  }
+  fusePreview(a, b) {
+    const f = fusionFor(a.type, b.type);
+    if (!f) return 0;
+    const lineage = [...heroLineage(a), { type: a.type, skillLv: { ...a.skillLv }, tier: a.tier || 0 },
+      ...heroLineage(b), { type: b.type, skillLv: { ...b.skillLv }, tier: b.tier || 0 }];
+    return heroPower({ ...b, level: Math.max(a.level, b.level), lineage, from: b.type, tier: 0, type: f.to, skillLv: { [HEROES[f.to].skills[0].id]: 1 }, buff: b.buff || {} });
+  }
+  fuse(fromSlot, toSlot) {
+    const a = this.heroes[fromSlot], b = this.heroes[toSlot];
+    const f = this.canFuse(a, b);
+    if (typeof f === 'string') return f;
+    const d = HEROES[f.to];
+    const c = COSTS.ascend[d.legend];
+    const fromName = `${HEROES[a.type].name} + ${HEROES[b.type].name}`;
+    const before = heroStats(b).hpMax;
+    this.gold -= c;
+    b.spent = (b.spent || 0) + c;
+    b.lineage = [...heroLineage(a), { type: a.type, skillLv: { ...a.skillLv }, tier: a.tier || 0 },
+      ...heroLineage(b), { type: b.type, skillLv: { ...b.skillLv }, tier: b.tier || 0 }];
+    delete b.skillLvFrom;
+    b.from = b.type;
+    b.baseTier = 3;
+    b.tier = 0;
+    b.type = f.to;
+    b.skillLv = { [d.skills[0].id]: 1 };
+    b.skillCd = {};
+    b.grow = 0;
+    b.shotN = 0;
+    this.absorbProgress(b, a);
+    // đổi hệ vũ khí (ví dụ rìu + gậy → gậy): đồ không hợp thì cất túi
+    for (const s of SLOTS) { const it = b.equip[s]; if (it && ITEMS[it.id].wclass && ITEMS[it.id].wclass !== d.wclass) { this.addItem(it, true); b.equip[s] = null; } }
+    this.absorbGear(b, a);
+    this.heroes[fromSlot] = null;
+    if (!b.dead) b.hp = Math.max(1, Math.min(heroStats(b).hpMax, b.hp + heroStats(b).hpMax - before));
+    b.evoT = 1.2;
+    b.notice.evo = false;
+    this.shake = Math.max(this.shake, d.legend === 'legendary' ? 9 : 6);
+    this.effects.push({ type: 'streak', x: a.x, y: a.y - 30, x2: b.x, y2: b.y - 30, color: d.color || '#FFE08A', ttl: 0.45, max: 0.45 });
+    this.effects.push({ type: 'evolve', hero: b, x: b.x, y: b.y, color: d.color || ATTRS[d.attr].color, big: true, ttl: 1.2, max: 1.2 });
+    this.events.push({ type: 'ascend', from: fromName, to: d.name, hero: b });
     return true;
   }
 
@@ -1412,6 +1571,7 @@ class Game {
 
   // Tiến hoá bằng vàng, lần lượt từng bậc
   evolve(h) {
+    if (!h.from) return 'Ghép 2 tướng giống nhau cùng sao để lên sao';
     const t = h.tier || 0;
     if (t >= 3) return 'Đã đạt bậc cao nhất';
     if (h.level < evoReq(h, t)) return `Cần tướng cấp ${evoReq(h, t)}`;

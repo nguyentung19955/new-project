@@ -84,13 +84,8 @@ canvas.addEventListener('pointerup', (ev) => {
   drag = null;
   if (!d.moved) return ui.tapMap(d.sx, d.sy);
   const to = ui.slotAt(d.x, d.y);
-  if (to >= 0 && to !== d.from) {
-    const other = game.heroes[to];
-    const name = HEROES[game.heroes[d.from].type].name;
-    game.moveHero(d.from, to);
-    ui.sel = to;
-    ui.toast(other ? `${name} đổi chỗ với ${HEROES[other.type].name}` : `${name} chuyển sang ô mới`, '#9dffc4');
-  }
+  // thả lên tướng cùng loại cùng sao: ghép; đúng công thức: hợp thể; còn lại: đổi chỗ
+  if (to >= 0 && to !== d.from) ui.dropOn(d.from, to);
 });
 canvas.addEventListener('pointercancel', () => { drag = null; });
 
@@ -135,7 +130,12 @@ function render() {
     const h = game.heroes[i];
     const o = { tier: CONFIG.slotTier[i], flooded: game.isFlooded(i), raised: game.raised[i], hero: !!h,
       soon: soon >= 0 && CONFIG.slotTier[i] === soon };
-    if (dragging) o.mode = i === dropSlot ? 'target' : !h ? 'free' : '';
+    // đang kéo: ô thả sáng, tướng ghép được (cùng loại cùng sao) / hợp thể được nhấp nháy vàng
+    if (dragging) {
+      const dh = game.heroes[dragging.from];
+      const pair = h && dh && h !== dh && (game.canMerge(dh, h) === true || fusionFor(dh.type, h.type));
+      o.mode = i === dropSlot ? 'target' : pair ? 'sel' : !h ? 'free' : '';
+    }
     else if (ui.raising) o.mode = game.canRaise(i) && (o.flooded || o.soon) ? 'free' : '';
     else if (i === ui.spot) o.mode = 'target';
     else if (i === ui.sel && h) o.mode = 'sel';

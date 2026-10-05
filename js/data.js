@@ -487,31 +487,43 @@ const LEGEND_HEROES = ['thachsanh', 'lachau', 'thansan', 'caolo', 'antiem', 'tie
   'giong', 'llq', 'kimquy', 'adv', 'auco', 'mau'];
 for (const id of LEGEND_HEROES) HEROES[id].cost = COSTS.legend[HEROES[id].legend];
 
-// THĂNG THẦN 2 bậc: tướng Thường ★★★ → thần Sử thi (tím) → thần Huyền thoại (vàng).
-// Mỗi lần hóa thân trả vàng (chọn 1 nhánh nếu có 2), giữ cấp, đồ, thuộc tính và nội tại
-// của mọi bậc trước (cây phả hệ h.lineage). Bậc 2 cần thần Sử thi đạt Thần tinh ★★.
-const ASCEND = {
-  lactuong: ['thachsanh'],             // rìu Sức mạnh → tiều phu diệt chằn
-  lucsi: ['lachau'],                   // người gánh núi → thủ lĩnh bộ Lạc
-  thosan: ['thansan'],                 // thợ săn → thần săn Ba Vì
-  xathu: ['caolo', 'antiem'],          // xạ thủ
-  thaymo: ['tiendung', 'langlieu'],    // thầy mo, phép
-  thansuong: ['cdt'],                  // sương núi → chàng đánh cá sông Hồng
+// HỢP THỂ (v34): hai tướng ★★★ đúng công thức kéo vào nhau → một thần mới.
+// Thường + Thường → thần Sử thi (tím); thần tím Thần tinh ★★★ + thần tím → thần Huyền thoại (vàng).
+// Thần mới giữ cấp, đồ, thuộc tính và nội tại của CẢ HAI bên (cây phả hệ h.lineage).
+const FUSION = [
+  // Thường → Sử thi
+  { a: 'thaymo', b: 'thansuong', to: 'cdt', why: 'lửa gặp sương thành mây mưa sông Hồng' },
+  { a: 'lactuong', b: 'lucsi', to: 'lachau', why: 'hai dũng sĩ hợp thành thủ lĩnh bộ Lạc' },
+  { a: 'lactuong', b: 'thosan', to: 'thachsanh', why: 'rìu đồng + tay rừng thành chàng tiều phu' },
+  { a: 'thosan', b: 'xathu', to: 'thansan', why: 'thợ săn + cung thủ thành thần săn Ba Vì' },
+  { a: 'xathu', b: 'lucsi', to: 'caolo', why: 'tay nỏ + sức khỏe thành người chế nỏ thần' },
+  { a: 'thosan', b: 'thaymo', to: 'antiem', why: 'đốt rẫy làm nương, đảo hoang thành vườn' },
+  { a: 'thansuong', b: 'xathu', to: 'tiendung', why: 'sương mỏng + gió tên thành quạt tiên' },
+  { a: 'lucsi', b: 'thaymo', to: 'langlieu', why: 'sức trai + lửa bếp nấu bánh chưng' },
   // Sử thi → Huyền thoại
-  thachsanh: ['llq', 'giong'],
-  lachau: ['kimquy', 'giong'],
-  thansan: ['giong', 'llq'],
-  caolo: ['adv'],
-  antiem: ['adv'],
-  tiendung: ['auco', 'mau'],
-  langlieu: ['mau', 'auco'],
-  cdt: ['auco', 'mau'],
-};
-// gốc của mỗi tướng thần (bậc 1 lấy tướng Thường; Huyền thoại có nhiều đường, lấy đường chính)
+  { a: 'thachsanh', b: 'lachau', to: 'giong', why: 'sức người cả làng hun đúc Thánh Gióng' },
+  { a: 'thansan', b: 'cdt', to: 'llq', why: 'núi rừng gặp sông biển: Lạc Long Quân' },
+  { a: 'lachau', b: 'caolo', to: 'kimquy', why: 'giữ thành + nỏ thần: Thần Kim Quy' },
+  { a: 'caolo', b: 'antiem', to: 'adv', why: 'nỏ thần + đất trù phú dựng nước Âu Lạc' },
+  { a: 'tiendung', b: 'langlieu', to: 'auco', why: 'tiên nữ + lễ vật đất trời: Mẹ Âu Cơ' },
+  { a: 'thansan', b: 'langlieu', to: 'mau', why: 'rừng thiêng + lúa nương: Mẫu Thượng Ngàn' },
+];
+// tương thích: ASCEND[x] = các thần x có thể hợp thành; ascendSources(t) = các tướng ghép ra t
+const ASCEND = {};
+for (const f of FUSION) for (const x of [f.a, f.b]) (ASCEND[x] = ASCEND[x] || []).push(f.to);
 const ASCEND_FROM = {};
-for (const [b, list] of Object.entries(ASCEND)) for (const t of list) if (!ASCEND_FROM[t]) ASCEND_FROM[t] = b;
-// mọi tướng có thể hóa thân thành t (để hiện cây)
-const ascendSources = (t) => Object.keys(ASCEND).filter((b) => ASCEND[b].includes(t));
+for (const f of FUSION) if (!ASCEND_FROM[f.to]) ASCEND_FROM[f.to] = f.a;
+const ascendSources = (t) => { const f = FUSION.find((x) => x.to === t); return f ? [f.a, f.b] : []; };
+const fusionFor = (a, b) => FUSION.find((f) => (f.a === a && f.b === b) || (f.a === b && f.b === a)) || null;
+const fusionPartner = (x, to) => { const f = FUSION.find((y) => y.to === to && (y.a === x || y.b === x)); return f ? (f.a === x ? f.b : f.a) : null; };
+// TRIỆU HỒI NGẪU NHIÊN: giá tăng theo số lần đã gọi trong ải
+Object.assign(COSTS, { summon: (n) => Math.min(220, 60 + 6 * n) });
+// sức mạnh theo sao ghép của tướng Thường (★ / ★★ / ★★★): sát thương ×, máu và kỹ năng tăng ít hơn
+const MERGE_MULT = [1, 1, 1.8, 3.2];
+// thêm cho tướng thần (đã gồm ★★★ của các tướng Thường đã ghép): hợp thể 2 thần tím ra vàng
+const FUSE_MULT = { epic: 1.3, legendary: 2.0 };
+// cân bằng riêng từng thần (vì mỗi cặp ghép gộp nội tại khác nhau): đo bằng sim/cmp4.js
+const FUSE_ADJ = { cdt: 1.069, lachau: 0.96, thachsanh: 0.45, thansan: 0.516, caolo: 0.969, antiem: 0.692, tiendung: 1.068, langlieu: 1.54, giong: 0.904, llq: 0.755, kimquy: 1.371, adv: 0.599, auco: 1.398, mau: 0.416 };
 // lên vàng cần thần tím Thần tinh ★★★ (đủ sao rồi mới hóa thân), giá cao hơn bậc sao cuối
 Object.assign(COSTS, { ascend: { epic: 300, legendary: 1200 }, ascendTier: 3, ascendTier2: 3 });
 // Thần lực: hệ số sát thương và máu của tướng đã thăng thần (kỹ năng +một nửa mức này)
