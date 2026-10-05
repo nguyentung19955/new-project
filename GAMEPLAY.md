@@ -658,3 +658,11 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
   - **Mẫu Thượng Ngàn** (Huyền thoại, Trí tuệ, Mộc, gậy): Mẹ Rừng, tướng đứng gần +10% sát thương và +2 hồi máu/giây. Q Lộc Rừng · W Rễ Ngàn Năm · E Rừng Mọc · R Mưa Lá Thiêng. Ẩn: đứng kề tướng hành Mộc thì hào quang gấp đôi.
 - **Cân bằng:** Thần lực Huyền thoại ×1,6 (Sử thi ×1,15) vì đã cộng dồn hai bậc. Lực chiến so với tướng gốc ★★★ cấp 20: Sử thi ★★ ×1,6–3,4 · Huyền thoại mới lên ×2,5–4,1 · Huyền thoại ★★★ ×4,2–7,5. Số tia bắn tối đa 5.
 - Ảnh vector tạm cho 4 tướng mới (phối màu từ tướng cùng dòng); prompt Fooocus mục E [306]–[341], manifest S38–S42.
+
+### Phiên bản 28 · rà lại kỹ năng cho khớp mô tả
+
+- **Thánh Gióng R · Bay Về Trời:** cưỡi ngựa sắt bay dọc **cả dòng sông**, đánh mọi quái trên bản đồ (cả quái bay), quái gần thành bị đánh sau theo đường ngựa chạy. Trước đây chỉ đánh một đoạn ±260 quanh mục tiêu. Hồi chiêu 20 giây, 120 năng lượng.
+- **Khiên / hồi máu tính theo cấp của chính chiêu đó:** Khiên Đồng Bộ Lạc (E của Lạc Hầu) trước đây lấy cấp Q; nay mọi chiêu khiên / hồi máu (Mai Vàng, Bánh Chưng, Hoa Tiên, Lộc Rừng, Gậy Thần, Sen Hồng) dùng cấp của chính nó.
+- **Tên chiêu trên băng rôn** theo tướng đang dùng (ví dụ An Dương Vương hiện "Linh Quang Thần Nỏ", Mẫu Thượng Ngàn hiện "Mưa Lá Thiêng" thay vì tên chiêu của tướng khác).
+- **Hiệu ứng ẩn của chiêu** chỉ kích hoạt cho tướng gốc và các bậc thăng thần của nó (ví dụ Mẫu Thượng Ngàn không lấy ẩn "Mẹ ở trên núi" của Âu Cơ).
+- Mô tả rõ hơn: Gầm Biển (sóng quanh mình), Mù Sương Tản Viên (boss 1 giây), Đàn Thần (cần từ 2 quái, boss 0,6 giây), Lễ Tổ Tiên (dùng khi có tướng dưới 50% máu).

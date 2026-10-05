@@ -468,7 +468,7 @@ const SKILL_CASTS = {
     if (!e) return false;
     game.effects.push({ type: 'bash', x: e.x, y: e.y - 8, ttl: 0.45, max: 0.45 });
     // ẩn: đứng kề Lực Sĩ Núi thì choáng thêm 0,5 giây
-    const pal = game.adjacent(h).some((o) => o.type === 'lucsi');
+    const pal = hasLine(h, 'lactuong') && game.adjacent(h).some((o) => o.type === 'lucsi');
     if (pal) game.discover('h.lactuong', h.x, h.y);
     game.stun(e, (e.def.boss ? 0.4 : 1) + (pal ? 0.5 : 0), 'stun');
     game.hit(e, (st.damage * 2 + n * 0.6) * st.skillPower, h, { big: true, color: '#F2D27A' });
@@ -556,7 +556,7 @@ const SKILL_CASTS = {
     game.effects.push({ type: 'vortex', x: h.x, y: h.y - 22, color: '#B9A274', ttl: 0.6, max: 0.6 });
     if (normal.length) {
       // ẩn: đứng ô bậc Cao thì chôn 2 quái
-      const two = CONFIG.slotTier[h.slot] === 2 && normal.length > 1;
+      const two = hasLine(h, 'lucsi') && CONFIG.slotTier[h.slot] === 2 && normal.length > 1;
       if (two) game.discover('h.lucsi', h.x, h.y);
       for (const e of normal.sort((a, b) => b.hp - a.hp).slice(0, two ? 2 : 1)) {
         game.effects.push({ type: 'rockfall', x: e.x, y: e.y, ttl: 0.6, max: 0.6 });
@@ -589,7 +589,7 @@ const SKILL_CASTS = {
         game.shake = Math.max(game.shake, 5);
         game.hit(e, (st.damage * 6 + n * 3) * st.skillPower, h, { big: true, color: '#E25A3A' });
         // ẩn: hạ gục mục tiêu thì hồi ngay 50% năng lượng
-        if (e.dead && !h.dead) {
+        if (e.dead && !h.dead && hasLine(h, 'thosan')) {
           h.mana = Math.min(heroStats(h).maxMana, h.mana + heroStats(h).maxMana * 0.5);
           game.discover('h.thosan', h.x, h.y);
         }
@@ -641,15 +641,18 @@ const SKILL_CASTS = {
     return true;
   },
   skyride(game, h, st, n) {
-    const t = game.findTarget(h.x, h.y, st.range * 1.5, false);
-    if (!t) return false;
-    const d1 = Math.max(0, t.dist - 260), d2 = t.dist + 260;
-    game.effects.push({ type: 'skyride', d1, d2, ttl: 0.9, max: 0.9 });
-    game.effects.push({ type: 'banner', str: 'Bay Về Trời', color: '#FFB04A', ttl: 1.6, max: 1.6 });
+    // cưỡi ngựa sắt bay dọc cả dòng sông: đánh mọi quái trên bản đồ (cả quái bay)
+    const list = game.enemies.filter((e) => !e.dead);
+    if (list.length < 3 && !list.some((e) => e.def.boss)) return false;
+    game.effects.push({ type: 'skyride', d1: 0, d2: PATH.total, ttl: 1.1, max: 1.1 });
+    game.effects.push({ type: 'banner', str: st.skName || 'Bay Về Trời', color: '#FFB04A', ttl: 1.6, max: 1.6 });
     game.effects.push({ type: 'flash', color: '#FFE0A0', ttl: 0.3, max: 0.3 });
     game.shake = Math.max(game.shake, 8);
-    for (const e of game.enemies) {
-      if (!e.dead && e.dist >= d1 && e.dist <= d2) game.hit(e, (st.damage * 4 + n * 2) * st.skillPower, h, { big: true, color: '#FFB04A' });
+    for (const e of list) {
+      // ngựa chạy từ cửa sông về thành: quái càng gần thành bị đánh càng sau
+      const delay = 0.05 + 0.85 * (e.dist / PATH.total);
+      game.effects.push({ type: 'none', ttl: delay, max: delay,
+        onEnd: () => { if (!e.dead) game.hit(e, (st.damage * 4 + n * 2) * st.skillPower, h, { big: true, color: '#FFB04A' }); } });
     }
     return true;
   },
@@ -674,7 +677,7 @@ const SKILL_CASTS = {
   dragonbeam(game, h, st, n) {
     const t = game.findTarget(h.x, h.y, st.range * 1.3);
     if (!t) return false;
-    game.effects.push({ type: 'banner', str: 'Hóa Rồng', color: '#7FE0F0', ttl: 1.6, max: 1.6 });
+    game.effects.push({ type: 'banner', str: st.skName || 'Hóa Rồng', color: '#7FE0F0', ttl: 1.6, max: 1.6 });
     game.lineHit(h, t, st.range * 2.2, (st.damage * 5 + n * 2) * st.skillPower,
       { color: '#BFF0FF', width: 26, dt: 'magic', stun: 0.5, bolt: true });
     game.shake = Math.max(game.shake, 7);
@@ -683,7 +686,7 @@ const SKILL_CASTS = {
   // ----- Thần Kim Quy
   goldshell(game, h, st, n) {
     if (!hurtNear(game, h.x, h.y, 170, 0.95) && !game.enemiesInRange(h.x, h.y, 200).length) return false;
-    shieldHeroes(game, h.x, h.y, 170, (0.2 + n * 0.0025) * skillMult(skillLevel(h, 0)), '#F2D27A');
+    shieldHeroes(game, h.x, h.y, 170, (0.2 + n * 0.0025) * skillMult(st.lv || 1), '#F2D27A');
     game.effects.push({ type: 'dome', x: h.x, y: h.y, r: 170, color: '#F2D27A', ttl: 0.8, max: 0.8 });
     return true;
   },
@@ -703,7 +706,7 @@ const SKILL_CASTS = {
     const danger = game.enemies.some((e) => !e.dead && e.dist > PATH.total - 170);
     if (!danger) return false;
     game.guardT = 5;
-    game.effects.push({ type: 'banner', str: 'Kim Quy Hộ Thành', color: '#FFD66B', ttl: 1.6, max: 1.6 });
+    game.effects.push({ type: 'banner', str: st.skName || 'Kim Quy Hộ Thành', color: '#FFD66B', ttl: 1.6, max: 1.6 });
     game.effects.push({ type: 'flash', color: '#FFE08A', ttl: 0.3, max: 0.3 });
     return true;
   },
@@ -726,7 +729,7 @@ const SKILL_CASTS = {
     const list = game.enemiesInRange(h.x, h.y, st.range * 1.3);
     if (!list.length) return false;
     const e = list.reduce((a, b) => (b.hp > a.hp ? b : a));
-    game.effects.push({ type: 'banner', str: 'Diệt Chằn Tinh', color: '#FF6B4A', ttl: 1.6, max: 1.6 });
+    game.effects.push({ type: 'banner', str: st.skName || 'Diệt Chằn Tinh', color: '#FF6B4A', ttl: 1.6, max: 1.6 });
     game.effects.push({ type: 'xslash', x: e.x, y: e.y - 10, color: '#FFB04A', ttl: 0.45, max: 0.45, big: true });
     game.shake = Math.max(game.shake, 8);
     const boss = e.def.boss || e.champion ? 3 : 1;
@@ -752,9 +755,9 @@ const SKILL_CASTS = {
   divinebow(game, h, st, n) {
     const t = game.findTarget(h.x, h.y, st.range * 1.2);
     if (!t) return false;
-    game.effects.push({ type: 'banner', str: 'Nỏ Thần', color: '#FFF1C4', ttl: 1.6, max: 1.6 });
+    game.effects.push({ type: 'banner', str: st.skName || 'Nỏ Thần', color: '#FFF1C4', ttl: 1.6, max: 1.6 });
     // ẩn: Thần Kim Quy cùng trên sân thì Nỏ Thần x2
-    const turtle = game.heroes.some((o) => o && !o.dead && o.type === 'kimquy');
+    const turtle = hasLine(h, 'caolo') && game.heroes.some((o) => o && !o.dead && o.type === 'kimquy');
     if (turtle) game.discover('h.caolo', h.x, h.y);
     game.lineHit(h, t, st.range * 2.6, (st.damage * 6 + n * 2) * st.skillPower * (turtle ? 2 : 1), { color: '#FFF1C4', width: 18, dt: 'pure' });
     game.shake = Math.max(game.shake, 5);
@@ -787,7 +790,7 @@ const SKILL_CASTS = {
   melonrain(game, h, st, n) {
     const list = game.enemies.filter((e) => !e.dead);
     if (list.length < 4) return false;
-    game.effects.push({ type: 'banner', str: 'Mưa Dưa', color: '#3EDC4E', ttl: 1.6, max: 1.6 });
+    game.effects.push({ type: 'banner', str: st.skName || 'Mưa Dưa', color: '#3EDC4E', ttl: 1.6, max: 1.6 });
     for (const e of list) {
       game.effects.push({ type: 'lob', x: e.x - 40, y: e.y - 220, x2: e.x, y2: e.y, color: '#3EDC4E', ttl: 0.4 + Math.random() * 0.5, max: 0.9,
         onEnd: () => {
@@ -800,10 +803,10 @@ const SKILL_CASTS = {
   // ----- Âu Cơ
   flowerheal(game, h, st, n) {
     if (!hurtNear(game, h.x, h.y, 180)) return false;
-    const pct = (0.25 + n * 0.003) * skillMult(skillLevel(h, 0));
+    const pct = (0.25 + n * 0.003) * skillMult(st.lv || 1);
     healHeroes(game, h.x, h.y, 180, pct, '#FF9EC4');
     // ẩn: đứng ô bậc Cao thì hồi thêm cho 1 tướng ở xa hơn
-    if (CONFIG.slotTier[h.slot] === 2) {
+    if (hasLine(h, 'auco') && CONFIG.slotTier[h.slot] === 2) {
       const far = game.heroes.filter((o) => o && !o.dead && Math.hypot(o.x - h.x, o.y - h.y) > 180 && o.hp < heroStats(o).hpMax)
         .sort((a, b) => a.hp / heroStats(a).hpMax - b.hp / heroStats(b).hpMax)[0];
       if (far) {
@@ -827,10 +830,10 @@ const SKILL_CASTS = {
     const t = game.findTarget(h.x, h.y, st.range * 2, false);
     if (!t) return false;
     // ẩn: Lạc Long Quân cùng trên sân thì nở thêm 50% Lạc Tử (chặn lâu hơn)
-    const dad = game.heroes.some((o) => o && !o.dead && o.type === 'llq');
+    const dad = hasLine(h, 'auco') && game.heroes.some((o) => o && !o.dead && o.type === 'llq');
     if (dad) game.discover('h.llq', h.x, h.y);
     game.blocks.push({ kind: 'eggs', dist: Math.min(PATH.total - 40, t.dist + 50), ttl: dad ? 9 : 6, max: dad ? 9 : 6 });
-    game.effects.push({ type: 'banner', str: 'Bọc Trăm Trứng', color: '#F2E6C8', ttl: 1.6, max: 1.6 });
+    game.effects.push({ type: 'banner', str: st.skName || 'Bọc Trăm Trứng', color: '#F2E6C8', ttl: 1.6, max: 1.6 });
     return true;
   },
   // ----- Chử Đồng Tử
@@ -843,7 +846,7 @@ const SKILL_CASTS = {
     }
     if (!best) return false;
     const mx = heroStats(best.o).hpMax;
-    best.o.hp = Math.min(mx, best.o.hp + mx * (0.35 + n * 0.003) * skillMult(skillLevel(h, 0)));
+    best.o.hp = Math.min(mx, best.o.hp + mx * (0.35 + n * 0.003) * skillMult(st.lv || 1));
     game.effects.push({ type: 'heal', x: best.o.x, y: best.o.y, r: 40, color: '#9EDDF2', ttl: 0.8, max: 0.8 });
     game.effects.push({ type: 'streak', x: h.x, y: h.y - 40, x2: best.o.x, y2: best.o.y - 30, color: '#9EDDF2', ttl: 0.3, max: 0.3 });
     return true;
@@ -862,7 +865,7 @@ const SKILL_CASTS = {
     const t = game.findTarget(h.x, h.y, st.range * 2, false);
     if (!t) return false;
     game.blocks.push({ kind: 'wall', dist: Math.min(PATH.total - 40, t.dist + 40), ttl: 6, max: 6 });
-    game.effects.push({ type: 'banner', str: 'Thành Một Đêm', color: '#C8A878', ttl: 1.6, max: 1.6 });
+    game.effects.push({ type: 'banner', str: st.skName || 'Thành Một Đêm', color: '#C8A878', ttl: 1.6, max: 1.6 });
     game.shake = Math.max(game.shake, 4);
     return true;
   },
@@ -879,19 +882,19 @@ const SKILL_CASTS = {
   },
   lotus(game, h, st, n) {
     if (!hurtNear(game, h.x, h.y, 180)) return false;
-    healHeroes(game, h.x, h.y, 180, (0.2 + n * 0.003) * skillMult(skillLevel(h, 2)), '#FF9EC4');
+    healHeroes(game, h.x, h.y, 180, (0.2 + n * 0.003) * skillMult(st.lv || 1), '#FF9EC4');
     game.effects.push({ type: 'petals', x: h.x, y: h.y, r: 120, color: '#FF9EC4', ttl: 1, max: 1 });
     return true;
   },
   flowerrain(game, h, st, n) {
     const t = game.findTarget(h.x, h.y, st.range * 1.3);
     if (!t) return false;
-    game.effects.push({ type: 'banner', str: 'Mưa Hoa Tiên', color: '#FFB8D8', ttl: 1.6, max: 1.6 });
+    game.effects.push({ type: 'banner', str: st.skName || 'Mưa Hoa Tiên', color: '#FFB8D8', ttl: 1.6, max: 1.6 });
     game.effects.push({ type: 'petals', x: t.x, y: t.y, r: 130, color: '#FFB8D8', ttl: 1.4, max: 1.4 });
     for (const e of game.enemiesInRange(t.x, t.y, 130)) game.hit(e, (st.damage * 4 + n * 2) * st.skillPower, h, { big: true, color: '#FFB8D8' });
     healHeroes(game, h.x, h.y, 200, 0.3, '#FFB8D8');
     // ẩn: Chử Đồng Tử được hồi gấp đôi
-    const hus = game.heroes.find((o) => o && !o.dead && o.type === 'cdt' && Math.hypot(o.x - h.x, o.y - h.y) <= 200);
+    const hus = hasLine(h, 'tiendung') && game.heroes.find((o) => o && !o.dead && o.type === 'cdt' && Math.hypot(o.x - h.x, o.y - h.y) <= 200);
     if (hus) {
       hus.hp = Math.min(heroStats(hus).hpMax, hus.hp + heroStats(hus).hpMax * 0.3);
       game.discover('h.tiendung', hus.x, hus.y);
@@ -901,7 +904,7 @@ const SKILL_CASTS = {
   // ----- Lang Liêu
   banhchung(game, h, st, n) {
     if (!hurtNear(game, h.x, h.y, 170, 0.95) && !game.enemiesInRange(h.x, h.y, 200).length) return false;
-    shieldHeroes(game, h.x, h.y, 170, (0.2 + n * 0.0025) * skillMult(skillLevel(h, 0)), '#7FC24A');
+    shieldHeroes(game, h.x, h.y, 170, (0.2 + n * 0.0025) * skillMult(st.lv || 1), '#7FC24A');
     game.effects.push({ type: 'dome', x: h.x, y: h.y, r: 170, color: '#7FC24A', ttl: 0.8, max: 0.8 });
     return true;
   },
@@ -914,7 +917,7 @@ const SKILL_CASTS = {
   },
   ancestor(game, h) {
     if (!game.heroes.some((o) => o && !o.dead && o.hp < heroStats(o).hpMax * 0.5)) return false;
-    game.effects.push({ type: 'banner', str: 'Lễ Tổ Tiên', color: '#FFE08A', ttl: 1.6, max: 1.6 });
+    game.effects.push({ type: 'banner', str: st.skName || 'Lễ Tổ Tiên', color: '#FFE08A', ttl: 1.6, max: 1.6 });
     game.effects.push({ type: 'flash', color: '#FFF1C4', ttl: 0.4, max: 0.4 });
     for (const o of game.heroes) {
       if (!o || o.dead) continue;
@@ -2256,7 +2259,7 @@ class Game {
       const lv = skillLevel(h, i);
       if (!sk.active || !lv || h.skillCd[sk.id] > 0 || h.mana < sk.active.mana) continue;
       if (sk.active.mana < reserve && h.mana - sk.active.mana < reserve) continue;
-      const cst = { ...st, skillPower: st.skillPower * skillMult(lv) };
+      const cst = { ...st, skillPower: st.skillPower * skillMult(lv), lv, skName: sk.name };
       this.ultCast = i === 3;
       const castOk = SKILL_CASTS[sk.active.cast](this, h, cst, skillN(h.level));
       this.ultCast = false;
