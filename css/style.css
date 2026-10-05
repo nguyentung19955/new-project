@@ -850,3 +850,16 @@ button:disabled { cursor: default; }
 #legends { left: 50%; top: auto; bottom: 84px; transform: translateX(-50%); }
 #toasts { top: 76px; }
 #dialogue { left: 12px; bottom: 86px; }
+
+/* ---------- menu chính theo bản mẫu mobile (v17) ---------- */
+#menu .mc-nav { top: 74px; gap: 10px; }
+.mc-btn { height: 44px; transition: transform .1s ease; }
+.mc-btn:active, .btn:active, .dk-card:active, .dk-up:active { transform: scale(.97); }
+.mc-btn.main { height: 52px; font-size: 19px; }
+.mc-sub { height: 30px; border: none; background: none; color: var(--text-2); font-size: 13px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+#menu .title p.sub { margin: 6px 0 0; font-size: 14px; font-style: italic; color: #D9B25A; font-weight: 700; }
+#menu .title p:not(.sub) { margin-top: 6px; }
+.mc-foot { position: absolute; left: 0; right: 0; bottom: 8px; text-align: center; font-size: 11px; color: #8C7355; pointer-events: none; text-shadow: 0 1px 2px #000; }
+#menu .mc-nav { width: 244px; }
+#menu .mc-btn { font-size: 16px; white-space: nowrap; padding: 0 12px; gap: 9px; }
+#menu .mc-btn.main { font-size: 19px; }

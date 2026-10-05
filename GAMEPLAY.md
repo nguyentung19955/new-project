@@ -330,3 +330,7 @@ Màn đánh quái chỉ hiện thứ cần ngay lúc đó:
 - **Hàng thẻ dưới đáy:** 6 thẻ tướng + ★ Huyền thoại để triệu hồi. Chạm vào tướng trên sân thì hàng thẻ đổi thành **thẻ tướng**: chân dung, Q W E R (chạm ô khóa để mở bằng vàng), **Lên cấp**, và **⋯** (Kỹ năng, Tiến hoá, Trang bị, Đổi chỗ, Bán).
 - **Mọc Núi:** nút nổi góc dưới phải, chỉ hiện khi nước sắp dâng hoặc đã ngập.
 - Bỏ bản đồ nhỏ và 6 ô đồ khỏi màn chơi (xem đồ trong Trang bị / Túi đồ). Phần dưới bản đồ được mở thêm 6 ô đặt tướng (tổng 50 ô).
+
+### Phiên bản 17 · menu chính theo bản mẫu mobile
+
+Menu chính có 4 nút như bản mẫu: **Xuất Quân** (đỏ son; mở bản đồ chiến dịch, hoặc quay lại trận đang dở), **Anh Hùng (16 Tướng)**, **Kho Báu & Sính Lễ**, **Cài Đặt**. Bách khoa thủy quái là liên kết nhỏ bên dưới. Thêm dòng "Sơn Tinh • Thủy Tinh (~500 TCN)", chân trang "Phong Châu Thành • Đông Sơn Fantasy", nút lún nhẹ khi bấm.

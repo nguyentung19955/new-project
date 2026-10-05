@@ -109,8 +109,12 @@ class UI {
   // ---------- gắn sự kiện
   bind() {
     const g = this.game;
-    $('#btn-continue').onclick = () => this.playLevel(this.save.last);
-    $('#btn-campaign').onclick = () => this.showCampaign(this.save.last);
+    // Xuất Quân: đang có trận dở thì quay lại trận, không thì mở bản đồ chiến dịch
+    $('#btn-continue').onclick = () => {
+      const g = this.game;
+      if (g.started && !g.over && !g.won) return this.playLevel(g.level);
+      this.showCampaign(this.save.last);
+    };
     $('#btn-heroes').onclick = () => this.showRoster();
     $('#btn-treasury').onclick = () => this.showTreasury();
     $('#btn-menu-codex').onclick = () => this.openScreen('codex', { top: true });
@@ -165,7 +169,7 @@ class UI {
     const short = (n) => (n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace('.', ',') + 'k' : n);
     $('#menu-res').innerHTML = `<span title="Tổng vàng đã kiếm">${coin(1)} ${short(s.lifeGold)}</span><span title="Linh Chi đã hái">🌿 ${short(s.lifeHerbs)}</span>`;
     $('#menu-art').innerHTML = svgI(sceneArt('menu'));
-    $('#continue-label').textContent = `${this.game.started && !this.game.over && !this.game.won ? 'Chơi tiếp' : 'Xuất Quân'} · Ải ${s.last + 1}`;
+    $('#continue-label').textContent = this.game.started && !this.game.over && !this.game.won ? `Chơi tiếp · Ải ${this.game.level + 1}` : 'Xuất Quân';
     this.setInGame(false);
   }
   hideOverlays() {
@@ -777,13 +781,14 @@ class UI {
     $('#treasury').hidden = false;
     const have = new Set(this.save.collected);
     const groups = [
+      ['Sính lễ & bảo vật', (it) => it.bossOnly],
       ['Vũ khí', (it) => it.slot === 'weapon'], ['Mũ', (it) => it.slot === 'helmet'], ['Giáp', (it) => it.slot === 'armor'],
-      ['Phụ kiện', (it) => it.slot === 'acc' && it.price], ['Đồ đúc', (it) => it.recipe], ['Sính lễ & bảo vật', (it) => it.bossOnly],
+      ['Phụ kiện', (it) => it.slot === 'acc' && it.price], ['Đồ đúc', (it) => it.recipe],
     ];
     const ids = Object.keys(ITEMS);
     const got = ids.filter((id) => have.has(id)).length;
     $('#treasury').innerHTML = `<div class="screen" style="z-index:auto">
-      <div class="scr-head metal"><button class="xbtn metal" data-act="ro-back" aria-label="Quay lại">${ICON.back}</button><h1 class="ttl">Kho Báu</h1>
+      <div class="scr-head metal"><button class="xbtn metal" data-act="ro-back" aria-label="Quay lại">${ICON.back}</button><h1 class="ttl">Kho Báu &amp; Sính Lễ</h1>
         <span class="chip ok">Đã sưu tầm ${got} / ${ids.length}</span><div class="sp"></div>
         <span class="chip dark">${coin(1)} Tổng vàng ${fmt(this.save.lifeGold)} · Quái đã hạ ${fmt(this.save.lifeKills)}</span></div>
       <div class="tr-body">${groups.map(([name, f]) => `<div class="tr-sec"><div class="h">${name}</div><div class="tr-row">${ids.filter((id) => f(ITEMS[id])).map((id) => {
