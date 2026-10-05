@@ -264,6 +264,10 @@ function heroStats(h) {
   if (s.hitAir) s.canAir = true;
   if (h.type === 'xathu' && h.airKills) s.rangePct += Math.min(10, Math.floor(h.airKills / 10));
 
+  // sao tiến hoá: tướng gốc theo bậc hiện tại; tướng thần giữ ★★★ gốc + bậc Thần tinh
+  const evos = h.from ? [EVO_BONUS.base[h.baseTier ?? 3], EVO_BONUS.asc[h.tier || 0]] : [EVO_BONUS.base[h.tier || 0]];
+  let evoHp = 0, evoSkill = 0;
+  for (const e of evos) { s.bonusDmgPct += e.dmg || 0; evoHp += e.hp || 0; s.haste += e.haste || 0; evoSkill += e.skill || 0; }
   // quy đổi thuộc tính như Dota
   s.damage += s[def.attr];
   s.haste += s.agi + (b.haste || 0);
@@ -271,12 +275,12 @@ function heroStats(h) {
   s.hpMax = Math.round((150 + s.str * 18 + s.hp) * grow * (1 + ((b.hpPct || 0) + s.hpPct) / 100));
   s.range *= 1 + s.rangePct / 100;
   s.regen += 0.5 + s.str * 0.06 + (b.regen || 0);
-  s.skillPower = (1 + s.int * 0.015) * (1 + s.skillPct / 100);
+  s.skillPower = (1 + s.int * 0.015) * (1 + s.skillPct / 100) * (1 + evoSkill / 100);
+  s.hpMax = Math.round(s.hpMax * (1 + evoHp / 100));
   s.cdr = Math.min(50, s.cdr + s.int * 0.3);
   s.cleave = Math.min(1, s.cleave);
   s.pierce = Math.min(100, s.pierce + (b.pierce || 0));
   s.mpen = Math.min(100, s.mpen);
-  s.bonusDmgPct += (h.tier || 0) * 10;               // mỗi sao tiến hóa +10% sát thương
   if (h.type === 'llq' && h.flooded) s.bonusDmgPct += 30;   // Con Rồng
   if (def.dmgType === 'magic') s.bonusDmgPct += b.magicPct || 0;
   s.damage *= (1 + s.bonusDmgPct / 100) * grow;
@@ -1126,7 +1130,7 @@ class Game {
     const hit = (lv) => lv > from && lv <= h.level;
     if (COSTS.unlockReq.some((lv, i) => lv > 1 && hit(lv) && !skillLevel(h, i))) h.notice.skills = true;
     const t = h.tier || 0;
-    if (t < 3 && hit(COSTS.evoReq[t])) h.notice.evo = true;
+    if (t < 3 && hit(evoReq(h, t))) h.notice.evo = true;
   }
 
   // Lóe sáng màu độ hiếm tại chỗ món đồ (tay, đầu, thân)
@@ -1210,14 +1214,15 @@ class Game {
   evolve(h) {
     const t = h.tier || 0;
     if (t >= 3) return 'Đã đạt bậc cao nhất';
-    if (h.level < COSTS.evoReq[t]) return `Cần tướng cấp ${COSTS.evoReq[t]}`;
-    if (this.gold < COSTS.evo[t]) return `Cần ${COSTS.evo[t]} vàng`;
-    this.gold -= COSTS.evo[t];
-    h.spent += COSTS.evo[t];
+    if (h.level < evoReq(h, t)) return `Cần tướng cấp ${evoReq(h, t)}`;
+    const c = evoCost(h, t);
+    if (this.gold < c) return `Cần ${c} vàng`;
+    this.gold -= c;
+    h.spent += c;
     h.tier = t + 1;
-    this.notify(`${HEROES[h.type].name} tiến hoá lên ${'★'.repeat(h.tier)}!`, '#F2D27A');
+    this.notify(`${HEROES[h.type].name} ${h.from ? 'đạt Thần tinh' : 'tiến hoá lên'} ${'★'.repeat(h.tier)}!`, h.from ? '#FF8A4A' : '#F2D27A');
     h.evoT = 1.2;
-    h.notice.evo = h.tier >= COSTS.ascendTier && !!ASCEND[h.type];   // nhắc Thăng thần
+    h.notice.evo = !h.from && h.tier >= COSTS.ascendTier && !!ASCEND[h.type];   // nhắc Thăng thần
     this.effects.push({ type: 'evolve', hero: h, x: h.x, y: h.y, color: ATTRS[HEROES[h.type].attr].color, ttl: 1.2, max: 1.2 });
     return true;
   }
@@ -1236,7 +1241,7 @@ class Game {
   // lực chiến nếu thăng thần thành `to` (để so trước khi bấm)
   ascendPreview(h, to) {
     const d = HEROES[to];
-    const c = { ...h, type: to, from: h.type, skillLvFrom: { ...h.skillLv }, skillLv: { [d.skills[0].id]: 1 }, buff: h.buff || {} };
+    const c = { ...h, type: to, from: h.type, baseTier: h.tier || 0, tier: 0, skillLvFrom: { ...h.skillLv }, skillLv: { [d.skills[0].id]: 1 }, buff: h.buff || {} };
     return heroPower(c);
   }
   ascend(h, to) {
@@ -1249,6 +1254,8 @@ class Game {
     h.spent += c;
     h.skillLvFrom = { ...h.skillLv };
     h.from = h.type;
+    h.baseTier = h.tier || 0;     // giữ ★★★ của tướng gốc
+    h.tier = 0;                   // tiến hoá Thần tinh lại từ đầu
     h.type = to;
     // bộ kỹ năng mới học lại từ đầu: Q cấp 1, W/E/R mở khóa và nâng bằng vàng
     h.skillLv = { [d.skills[0].id]: 1 };

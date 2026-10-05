@@ -375,7 +375,7 @@ const TIER_SCALE = [1, 1.10, 1.15, 1.20];
 function computeLook(h) {
   const def = HEROES[h.type];
   const look = {
-    helmet: null, armor: null, weapon: null, tier: h.tier || 0, attrColor: ATTRS[def.attr].color,
+    helmet: null, armor: null, weapon: null, tier: h.from ? (h.baseTier ?? 3) : h.tier || 0, asc: h.from ? h.tier || 0 : 0, attrColor: ATTRS[def.attr].color,
     legend: !!def.legend, bulk: (def.look.bulk || 1) * (1 + (h.grow || 0) * 0.025),
     accAura: null, wings: null, wingScale: 1, sparkWings: false,
   };
@@ -460,14 +460,15 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
   const t = o.t || 0;
   const dir = o.dir || 1;
   // tiến hoá: 60% đầu giữ kích thước cũ, rồi hạ xuống với kích thước mới
-  let tierShown = look.tier;
+  let tierShown = look.tier, ascShown = look.asc || 0;
   let evoLift = 0;
   if (o.evo > 0) {
     const p = 1 - o.evo / 1.2;
     evoLift = -10 * Math.sin(Math.PI * Math.min(1, p / 0.8));
-    if (p < 0.6) tierShown = Math.max(0, look.tier - 1);
+    if (p < 0.6) { if (ascShown > 0) ascShown--; else tierShown = Math.max(0, look.tier - 1); }
   }
-  const s = (o.scale || 0.26) * TIER_SCALE[tierShown] * look.bulk;
+  // Thần tinh: mỗi bậc to thêm 4%
+  const s = (o.scale || 0.26) * TIER_SCALE[tierShown] * (1 + 0.04 * ascShown) * look.bulk;
   const q = heroQ((o.px || 1) * s);
   const seed = (h.id || 0) * 1.7;
   const breathe = Math.sin(t * 2.85 + seed) * 3;
@@ -493,6 +494,7 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
     ctx.fill();
     // hào quang tiến hoá nằm dưới hào quang phụ kiện
     if (tierShown > 0) drawEvoAura(ctx, tierShown, look.attrColor, s, t);
+    if (ascShown > 0) drawAscAura(ctx, ascShown, s, t);
     if (look.accAura) drawAccAura(ctx, look.accAura, s, t);
   }
   ctx.translate(0, evoLift * DK * (o.scale || 0.26) / 0.26);
@@ -706,6 +708,32 @@ function risingSparks(ctx, cx, cy, color, t, spread) {
 
 // Hào quang tiến hoá dưới chân: ★ 1 vòng đồng xoay chậm · ★★ 2 vòng, vòng trong màu hệ ·
 // ★★★ 3 vòng + hạt sáng màu hệ (vẽ ở drawHeroSprite)
+// Thần tinh (sao sau Thăng thần): vòng lửa thần cam đỏ, mỗi bậc thêm một vòng và nhiều tia hơn
+function drawAscAura(ctx, asc, s, t) {
+  const k = s / 0.28;
+  const rx = 30 * DK * k, ry = 10 * DK * k;
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < asc; i++) {
+    const r = 1 + i * 0.22;
+    ctx.strokeStyle = `rgba(255,${120 - i * 25},60,${0.55 - i * 0.1})`;
+    ctx.lineWidth = 2;
+    ctx.setLineDash([10, 6]);
+    ctx.lineDashOffset = (i % 2 ? 1 : -1) * t * 30;
+    ctx.beginPath(); ctx.ellipse(0, 0, rx * r, ry * r, 0, 0, Math.PI * 2); ctx.stroke();
+  }
+  ctx.setLineDash([]);
+  // tia lửa thần bốc lên
+  for (let i = 0; i < 4 + asc * 3; i++) {
+    const a = i * 2.4 + t * 0.7;
+    const q = (t * 0.9 + i * 0.37) % 1;
+    const x = Math.cos(a) * rx * 0.9, y = Math.sin(a) * ry * 0.9 - q * 70 * k;
+    ctx.globalAlpha = (1 - q) * 0.8;
+    circle(ctx, x, y, 1.6 * k + 0.6, i % 2 ? '#FFB04A' : '#FF6A3A');
+  }
+  ctx.restore();
+}
+
 function drawEvoAura(ctx, tier, attrColor, s, t) {
   const k = s / 0.28;
   const rx = 24 * DK * k, ry = 8 * DK * k;

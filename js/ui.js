@@ -736,7 +736,7 @@ class UI {
       const maxed = h.level >= CONFIG.maxLevel;
       const tc = g.trainCost(h);
       html = `<button class="dk-x metal" data-act="deck-close" aria-label="Bỏ chọn">${ICON.close}</button>
-        <span class="dk-pt ${g.known.has('h.' + h.type) ? 'goldf' : ''}"><canvas id="dk-portrait" width="108" height="116"></canvas><span class="lv">${h.level}${h.train ? `<i>✦${h.train}</i>` : ''}</span><span class="st">${'★'.repeat(h.tier || 0)}</span></span>
+        <span class="dk-pt ${g.known.has('h.' + h.type) ? 'goldf' : ''}"><canvas id="dk-portrait" width="108" height="116"></canvas><span class="lv">${h.level}${h.train ? `<i>✦${h.train}</i>` : ''}</span><span class="st" ${h.from ? 'style="color:#FF7A3A"' : ''}>${'★'.repeat(h.tier || 0)}</span></span>
         <span class="dk-info"><span class="nm">${elIcon(def.el, 15)}${def.name}</span><span class="sub ${h.bogged || h.dead ? 'warn' : ''}">${status}</span>
           <span class="bar hp"><i id="dk-hp"></i></span><span class="bar mp"><i id="dk-mp"></i></span></span>
         ${skills}
@@ -783,7 +783,7 @@ class UI {
     const t = h.tier || 0;
     $('#more').innerHTML = `
       <button class="metal ${h.notice.skills ? 'notice' : ''}" data-act="open-skills">Kỹ năng<small>${h.skillPts ? `+${h.skillPts} điểm` : 'cây kỹ năng'}</small></button>
-      <button class="metal ${h.notice.evo ? 'notice' : ''}" data-act="open-evo">${t >= 3 && ASCEND[h.type] ? 'Thăng thần' : 'Tiến hoá'}<small>${t < 3 ? `★${t + 1} · ${COSTS.evo[t]} vàng` : ASCEND[h.type] ? 'hóa thân huyền thoại' : 'tối đa'}</small></button>
+      <button class="metal ${h.notice.evo ? 'notice' : ''}" data-act="open-evo">${t >= 3 && ASCEND[h.type] ? 'Thăng thần' : h.from ? 'Thần tinh' : 'Tiến hoá'}<small>${t < 3 ? `★${t + 1} · ${evoCost(h, t)} vàng` : ASCEND[h.type] ? 'hóa thân huyền thoại' : 'tối đa'}</small></button>
       <button class="metal ${this.upCount(h) ? 'notice' : ''}" data-act="open-bag">Trang bị<small>${this.upCount(h) ? `▲ ${this.upCount(h)} món tốt hơn` : `lực chiến ${heroPower(h)}`}</small></button>
       <button class="metal" style="color:#6AE06A" data-act="auto-eq">Tự mặc đồ<small>chọn món tốt nhất</small></button>
       <button class="metal ${this.moving >= 0 ? 'armed' : ''}" data-act="move">Đổi chỗ<small>hoặc giữ & kéo</small></button>
@@ -1626,18 +1626,20 @@ class UI {
     const t = h.tier || 0;
     const cards = [0, 1, 2].map((k) => {
       const bought = t > k, cur = t === k;
-      const needLv = COSTS.evoReq[k];
+      const needLv = evoReq(h, k);
+      const cost = evoCost(h, k);
+      const bon = EVO_BONUS[h.from ? 'asc' : 'base'][k + 1];
       const lvOk = h.level >= needLv;
       let btn;
       if (bought) btn = `<button class="big-btn done" disabled>${ICON.check} ĐÃ MUA</button>`;
-      else if (cur && lvOk) btn = `<button class="big-btn btn-gold" data-act="evolve" ${g.gold < COSTS.evo[k] ? 'disabled' : ''}>Tiến hoá · ${coin()} ${COSTS.evo[k]}</button>`;
+      else if (cur && lvOk) btn = `<button class="big-btn btn-gold" data-act="evolve" ${g.gold < cost ? 'disabled' : ''}>${h.from ? 'Thần tinh' : 'Tiến hoá'} · ${coin()} ${cost}</button>`;
       else if (cur) btn = `<button class="big-btn metal" style="color:#F2D27A;border-color:#FFD66B;font-size:13px" data-act="sk-level" ${g.gold < g.levelCost(h) ? 'disabled' : ''}>${ICON.dup} Nâng cấp tướng · ${coin(1)} ${g.levelCost(h)}</button>`;
       else btn = `<button class="big-btn btn-ghost" disabled>${ICON.lock} Khóa · cần cấp ${needLv}</button>`;
       return `<div class="evo-card metal ${cur ? 'cur' : ''} ${!bought && !cur ? 'lockd' : ''}">
-        <div class="stars ${bought || cur ? '' : 'off'}">${'★'.repeat(k + 1)}</div>
+        <div class="stars ${bought || cur ? '' : 'off'}" ${h.from ? 'style="color:#FF7A3A"' : ''}>${'★'.repeat(k + 1)}</div>
         <div class="well inset">${svgI(sceneArt('evo'))}<canvas data-hero data-tier="${k + 1}" width="250" height="300" style="position:absolute;inset:0;width:100%;height:150px"></canvas>${!bought && !cur ? `<span class="lk">${ICON.lock}</span>` : ''}</div>
-        <div class="pr">${coin()} ${COSTS.evo[k]} vàng · <span class="req ${lvOk ? '' : 'no'}">${cur && !lvOk ? 'Cần' : 'cần'} cấp ${needLv}</span></div>
-        <div class="ds">${k === 0 ? 'To hơn, hào quang trống đồng' : cur && !lvOk ? `Đang cấp ${h.level} · còn ${needLv - h.level} cấp` : k === 2 ? 'Bậc cao nhất' : 'Hào quang rực hơn'}<br><b>+${(k + 1) * 10}% sát thương</b></div>
+        <div class="pr">${coin()} ${cost} vàng · <span class="req ${lvOk ? '' : 'no'}">${cur && !lvOk ? 'Cần' : 'cần'} cấp ${needLv}</span></div>
+        <div class="ds">${cur && !lvOk ? `Đang cấp ${h.level} · còn ${needLv - h.level} cấp` : h.from ? ['Vòng lửa thần', 'Lửa thần rực hơn', 'Thần tinh tối đa'][k] : ['To hơn, hào quang trống đồng', 'Hào quang rực hơn', 'Bậc cao nhất'][k]}<br><b>${evoText(bon)}</b></div>
         ${btn}</div>`;
     }).join('');
     // bộ đồ đang mặc nhiều món nhất (chưa có thì giới thiệu Bộ Lạc Long)
@@ -1646,7 +1648,7 @@ class UI {
     const SD = SETS[setK];
     const pieces = [[SD.ids[def.wclass], 'Vũ khí', 'weapon'], [SD.ids.helmet, 'Mũ', 'helmet'], [SD.ids.armor, 'Giáp', 'armor']];
     const have = pieces.filter(([id, , s]) => h.equip[s] && h.equip[s].id === id).length;
-    return `${this.head('Tiến hoá', `<span class="chip dark">${def.name} · Cấp ${h.level}</span><span class="chip ${ATTR_CLS[def.attr]}">${ATTRS[def.attr].name}</span>${t ? `<span class="chip goldc">★ Bậc ${t}</span>` : ''}${this.runChip()}`)}
+    return `${this.head(h.from ? 'Thần tinh' : 'Tiến hoá', `<span class="chip dark">${def.name} · Cấp ${h.level}</span><span class="chip ${ATTR_CLS[def.attr]}">${ATTRS[def.attr].name}</span>${t ? `<span class="chip goldc">★ Bậc ${t}</span>` : ''}${this.runChip()}`)}
       <div class="scr-body">${cards}
         ${ASCEND[h.type] ? this.ascendPanel(h) : `<div class="panel metal set-panel"><div class="ph"><span class="ttl" style="font-size:20px">${SD.name}</span><small style="font-weight:800;color:#E8E0CC;font-size:14px">${have} / 3 món</small></div>
           ${pieces.map(([id, lab, s]) => `<div class="set-row inset ${h.equip[s] && h.equip[s].id === id ? 'have' : ''}"><span class="slot ${h.equip[s] && h.equip[s].id === id ? 'rl' : ''}">${svgI(itemIcon(id))}</span><span class="n">${ITEMS[id].name}</span><small>${lab}</small></div>`).join('')}

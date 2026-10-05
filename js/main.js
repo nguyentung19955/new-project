@@ -443,8 +443,9 @@ function drawHeroOnMap(h, t) {
   ctx.fillRect(h.x - 16, top - 1.2, 32 * Math.max(0, h.mana / st.maxMana), 1.6);
   // sao mới hiện khi tướng hạ xuống (60% thời gian tiến hoá)
   const stars = (h.tier || 0) - (h.evoT > 0.48 ? 1 : 0);
-  for (let i = 0; i < stars; i++) drawStar(ctx, h.x - 8 * ((stars - 1) / 2) + i * 8, top - 11, 4, '#FFD66B');
-  if (stars >= 3) {
+  // tướng thần: sao Thần tinh màu cam đỏ, lớn hơn
+  for (let i = 0; i < stars; i++) drawStar(ctx, h.x - 8 * ((stars - 1) / 2) + i * 8, top - 11, h.from ? 4.8 : 4, h.from ? '#FF7A3A' : '#FFD66B');
+  if (stars >= 3 || h.from) {
     // ★★★: tên tướng trên thanh máu chuyển chữ vàng
     ctx.font = '800 9px "Alegreya Sans", sans-serif';
     ctx.textAlign = 'center';

@@ -622,3 +622,8 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - **Giáp / kháng phép quái tăng theo đợt:** mỗi 10 đợt +1 giáp và +3% kháng phép (quái vốn có kháng phép, tối đa 80%). Bách khoa ghi mức giảm sát thương; thanh boss hiện giáp và kháng phép.
 - **Xuyên giáp / xuyên kháng phép:** vũ khí Hiếm trở lên (rìu, nỏ: xuyên giáp; gậy: xuyên kháng phép), Mũ Sừng, Nón Thầy Mo, Sừng Tê, Khăn Hiền Giả, Gậy Thời Không, Mũi Sừng Phá Giáp, Ngọc Trấn Thủy, vũ khí đồ bộ; 2 dòng phụ mới (+10% xuyên giáp, +10% xuyên kháng phép). Chiêu tối thượng R xuyên thêm 30% giáp và kháng phép. Cây kỹ năng và túi đồ hiện xuyên giáp / xuyên kháng của tướng.
 - **Bản đồ ải AI:** sửa prompt `nen_ai-1..4` (sông chảy trái → phải, thành ở mép phải, núi dọc mép trên, 1/3 dưới để trống); game dùng ảnh làm nền rồi vẽ lại dòng sông lên trên để đường quái đi luôn đúng. Ải 1, 5 → ảnh 1; ải 2, 6 → ảnh 2; ải 3, 4, 7 → ảnh 3; ải 8 → ảnh 4.
+
+### Phiên bản 23 · Thần tinh và sao mạnh hơn
+
+- **Sao tiến hoá mạnh hơn** (cộng dồn sẵn theo bậc): ★ +15% sát thương +10% máu · ★★ +30% sát thương +20% máu +10% tốc đánh · ★★★ +50% sát thương +35% máu +20% tốc đánh +10% kỹ năng.
+- **Thần tinh (sau Thăng thần):** tướng thần giữ chỉ số ★★★ của tướng gốc, rồi tiến hoá lại 3 bậc Thần tinh (sao cam đỏ, vòng lửa thần, mỗi bậc to thêm 4%): 300 / 600 / 1000 vàng, cần cấp 16 / 20 / 24. ★ +20% sát thương +15% máu +10% kỹ năng · ★★ +45% / +30% máu / +10% tốc đánh / +20% kỹ năng · ★★★ +80% / +50% máu / +20% tốc đánh / +35% kỹ năng.

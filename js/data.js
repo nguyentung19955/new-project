@@ -433,6 +433,25 @@ Object.assign(COSTS, {
 });
 const unlockCost = (h, i) => (h.from ? COSTS.unlockAsc[i] : COSTS.unlock[i]);
 
+// TIẾN HOÁ: chỉ số mỗi bậc sao (cộng dồn sẵn, không cộng từng bậc).
+// Tướng thăng thần giữ ★★★ của tướng gốc rồi tiến hoá tiếp 3 bậc Thần tinh (đắt hơn, mạnh hơn).
+const EVO_BONUS = {
+  base: [{}, { dmg: 15, hp: 10 }, { dmg: 30, hp: 20, haste: 10 }, { dmg: 50, hp: 35, haste: 20, skill: 10 }],
+  asc:  [{}, { dmg: 20, hp: 15, skill: 10 }, { dmg: 45, hp: 30, haste: 10, skill: 20 }, { dmg: 80, hp: 50, haste: 20, skill: 35 }],
+};
+Object.assign(COSTS, { evoAsc: [300, 600, 1000], evoReqAsc: [16, 20, 24] });
+const evoCost = (h, t) => (h.from ? COSTS.evoAsc[t] : COSTS.evo[t]);
+const evoReq = (h, t) => (h.from ? COSTS.evoReqAsc[t] : COSTS.evoReq[t]);
+// dòng mô tả một bậc sao
+function evoText(b) {
+  const out = [];
+  if (b.dmg) out.push(`+${b.dmg}% sát thương`);
+  if (b.hp) out.push(`+${b.hp}% máu`);
+  if (b.haste) out.push(`+${b.haste}% tốc đánh`);
+  if (b.skill) out.push(`+${b.skill}% kỹ năng`);
+  return out.join(' · ');
+}
+
 const SKILL_KEYS = ['Q', 'W', 'E', 'R'];
 const SKILL_MAX = [4, 4, 4, 3];
 const skillMult = (lv) => 1 + 0.25 * (Math.max(1, lv) - 1);   // mỗi cấp kỹ năng +25% hiệu lực
