@@ -19,10 +19,17 @@ function circle(ctx, x, y, r, color) {
   ctx.fill();
 }
 
+// Tự vẽ bo góc (ctx.roundRect không có trên iOS < 16)
 function rrect(ctx, x, y, w, h, r, color) {
+  r = Math.min(r, w / 2, h / 2);
   ctx.fillStyle = color;
   ctx.beginPath();
-  ctx.roundRect(x, y, w, h, r);
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
   ctx.fill();
 }
 
@@ -437,56 +444,172 @@ function drawEnemy(ctx, e, t) {
   ctx.fillRect(e.x - w / 2, by, w * Math.max(0, e.hp / e.maxHp), 3);
 }
 
+
 // ------------------------------------------------------------
-//  BẢN ĐỒ (vẽ 1 lần vào canvas phụ)
+//  BẢN ĐỒ (phần tĩnh vẽ 1 lần vào canvas phụ)
 // ------------------------------------------------------------
 function buildMapCanvas(scale) {
   const c = document.createElement('canvas');
-  c.width = CONFIG.W * scale;
-  c.height = CONFIG.H * scale;
+  c.width = Math.round(CONFIG.W * scale);
+  c.height = Math.round(CONFIG.H * scale);
   const ctx = c.getContext('2d');
   ctx.scale(scale, scale);
-
-  ctx.fillStyle = '#4a7c3a';
-  ctx.fillRect(0, 0, CONFIG.W, CONFIG.H);
-  let seed = 7;
+  const W = CONFIG.W, H = CONFIG.H;
+  let seed = 11;
   const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-  for (let i = 0; i < 260; i++) {
-    ctx.fillStyle = rnd() < 0.5 ? '#548c42' : '#427035';
-    ctx.fillRect(rnd() * CONFIG.W, rnd() * CONFIG.H, 3, 6);
+
+  // cỏ: nền chuyển màu + mảng sáng tối
+  const g = ctx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, '#3f6b2f');
+  g.addColorStop(1, '#4f7f36');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, W, H);
+  for (let i = 0; i < 26; i++) {
+    ctx.fillStyle = rnd() < 0.5 ? 'rgba(255,255,160,0.05)' : 'rgba(0,40,0,0.08)';
+    ctx.beginPath();
+    ctx.ellipse(rnd() * W, rnd() * H, 40 + rnd() * 70, 25 + rnd() * 40, rnd() * 3, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  for (let i = 0; i < 420; i++) {
+    const x = rnd() * W, y = rnd() * H;
+    ctx.strokeStyle = rnd() < 0.5 ? '#5c8f3e' : '#355c27';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(x, y); ctx.lineTo(x + (rnd() - 0.5) * 3, y - 4 - rnd() * 3);
+    ctx.stroke();
   }
 
-  const strokePath = (w, color) => {
+  const strokePath = (w, color, dash) => {
     ctx.strokeStyle = color;
     ctx.lineWidth = w;
     ctx.lineJoin = 'round';
     ctx.lineCap = 'round';
+    ctx.setLineDash(dash || []);
     ctx.beginPath();
     CONFIG.path.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
     ctx.stroke();
+    ctx.setLineDash([]);
   };
-  strokePath(CONFIG.pathWidth + 8, '#6d5434');
-  strokePath(CONFIG.pathWidth, '#c8a46a');
-  strokePath(CONFIG.pathWidth - 22, '#d4b47e');
+  strokePath(CONFIG.pathWidth + 14, 'rgba(0,0,0,0.18)');
+  strokePath(CONFIG.pathWidth + 8, '#7a5a35');
+  strokePath(CONFIG.pathWidth, '#c9a56b');
+  strokePath(CONFIG.pathWidth - 18, '#d6b67f');
+  strokePath(3, 'rgba(120,85,45,0.35)', [6, 14]);
 
-  // cây trang trí (tránh đường đi và ô đặt tướng)
-  const near = (x, y) =>
-    CONFIG.slots.some(([sx, sy]) => Math.hypot(sx - x, sy - y) < 45) ||
-    distToPath(x, y) < CONFIG.pathWidth;
-  for (let i = 0; i < 40; i++) {
-    const x = rnd() * CONFIG.W, y = 80 + rnd() * (CONFIG.H - 80);
-    if (near(x, y)) continue;
-    circle(ctx, x, y + 6, 10, 'rgba(0,0,0,0.25)');
-    circle(ctx, x, y, 11, '#2d5a27');
-    circle(ctx, x - 3, y - 3, 6, '#3f7a36');
+  // sỏi trên đường
+  for (let i = 0; i < 160; i++) {
+    const x = rnd() * W, y = rnd() * H;
+    if (distToPath(x, y) > CONFIG.pathWidth / 2 - 4) continue;
+    circle(ctx, x, y, 1 + rnd() * 2, rnd() < 0.5 ? '#b08d58' : '#e2c896');
   }
 
-  // lâu đài cuối đường
-  const [ex] = CONFIG.path[CONFIG.path.length - 1];
-  rrect(ctx, ex - 40, CONFIG.H - 70, 80, 70, 4, '#7f8c8d');
-  rrect(ctx, ex - 14, CONFIG.H - 40, 28, 40, 12, '#3e2723');
-  for (let i = 0; i < 5; i++) ctx.fillRect(ex - 40 + i * 17, CONFIG.H - 80, 10, 10);
+  const blocked = (x, y, pad) =>
+    CONFIG.slots.some(([sx, sy]) => Math.hypot(sx - x, sy - y) < 42 + pad) ||
+    distToPath(x, y) < CONFIG.pathWidth / 2 + 14 + pad || y < 70 || y > H - 110;
+
+  // hoa & đá nhỏ
+  for (let i = 0; i < 70; i++) {
+    const x = rnd() * W, y = rnd() * H;
+    if (blocked(x, y, 0)) continue;
+    if (rnd() < 0.6) {
+      const col = ['#f7d794', '#f8a5c2', '#ffffff', '#a29bfe'][Math.floor(rnd() * 4)];
+      for (let k = 0; k < 3; k++) circle(ctx, x + k * 4 - 4, y + (k % 2) * 3, 1.8, col);
+    } else {
+      circle(ctx, x, y + 2, 5, 'rgba(0,0,0,0.2)');
+      circle(ctx, x, y, 5, '#8d8d8d');
+      circle(ctx, x - 1.5, y - 1.5, 2, '#b5b5b5');
+    }
+  }
+
+  // cây
+  const trees = [];
+  for (let i = 0; i < 60; i++) {
+    const x = rnd() * W, y = rnd() * H;
+    if (!blocked(x, y, 6)) trees.push([x, y, 10 + rnd() * 6]);
+  }
+  trees.sort((a, b) => a[1] - b[1]).forEach(([x, y, r]) => {
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    ctx.beginPath();
+    ctx.ellipse(x + 3, y + r * 0.8, r, r * 0.4, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x - 2, y, 4, r * 0.8);
+    circle(ctx, x, y - r * 0.2, r, '#2e5e2a');
+    circle(ctx, x - r * 0.35, y - r * 0.45, r * 0.6, '#3d7a35');
+    circle(ctx, x - r * 0.45, y - r * 0.6, r * 0.25, '#5a9a48');
+  });
+
+  drawCastle(ctx);
   return c;
+}
+
+function drawCastle(ctx) {
+  const [cx] = CONFIG.path[CONFIG.path.length - 1];
+  const H = CONFIG.H, top = H - 66;
+  const stone = '#9aa0a6', dark = '#6b7177';
+  ctx.fillStyle = 'rgba(0,0,0,0.3)';
+  ctx.fillRect(cx - 82, H - 8, 164, 8);
+  // tháp hai bên
+  for (const sx of [-1, 1]) {
+    const tx = cx + sx * 62;
+    rrect(ctx, tx - 18, top - 18, 36, 90, 3, stone);
+    for (let i = 0; i < 3; i++) ctx.fillRect(tx - 18 + i * 13, top - 27, 10, 11);
+    ctx.fillStyle = '#2c2c34';
+    rrect(ctx, tx - 4, top + 5, 8, 14, 4, '#2c2c34');
+    // cờ
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(tx - 1, top - 62, 2, 30);
+    ctx.fillStyle = '#c0392b';
+    ctx.beginPath();
+    ctx.moveTo(tx + 1, top - 62); ctx.lineTo(tx + 20, top - 55); ctx.lineTo(tx + 1, top - 48);
+    ctx.fill();
+  }
+  // tường giữa
+  rrect(ctx, cx - 50, top, 100, 66, 3, stone);
+  ctx.fillStyle = stone;
+  for (let i = 0; i < 5; i++) ctx.fillRect(cx - 48 + i * 21, top - 10, 12, 12);
+  ctx.strokeStyle = dark;
+  ctx.lineWidth = 1;
+  for (let row = 0; row < 4; row++) {
+    const y = top + 12 + row * 14;
+    ctx.beginPath(); ctx.moveTo(cx - 50, y); ctx.lineTo(cx + 50, y); ctx.stroke();
+  }
+  // cổng
+  ctx.fillStyle = '#3e2723';
+  ctx.beginPath();
+  ctx.moveTo(cx - 22, H);
+  ctx.lineTo(cx - 20, top + 34);
+  ctx.arc(cx, top + 34, 20, Math.PI, 0);
+  ctx.lineTo(cx + 22, H);
+  ctx.fill();
+  ctx.strokeStyle = '#2a1a15';
+  ctx.lineWidth = 2;
+  for (let i = -14; i <= 14; i += 7) {
+    ctx.beginPath(); ctx.moveTo(cx + i, top + 18); ctx.lineTo(cx + i, H); ctx.stroke();
+  }
+}
+
+// Cổng quỷ nơi quái xuất hiện (vẽ động mỗi khung hình)
+function drawPortal(ctx, t) {
+  const [, y] = CONFIG.path[0];
+  const x = 14;
+  ctx.save();
+  ctx.translate(x, y);
+  for (let i = 0; i < 3; i++) {
+    ctx.strokeStyle = `rgba(${170 + i * 30},${60 + i * 30},255,${0.7 - i * 0.2})`;
+    ctx.lineWidth = 4 - i;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 14 + i * 5 + Math.sin(t * 3 + i) * 2, 30 + i * 4, 0, -Math.PI / 2, Math.PI / 2);
+    ctx.stroke();
+  }
+  const g = ctx.createRadialGradient(0, 0, 2, 0, 0, 30);
+  g.addColorStop(0, 'rgba(220,160,255,0.8)');
+  g.addColorStop(1, 'rgba(90,30,160,0)');
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.ellipse(0, 0, 18, 32, 0, -Math.PI / 2, Math.PI / 2);
+  ctx.fill();
+  ctx.restore();
 }
 
 function distToPath(x, y) {
@@ -501,20 +624,35 @@ function distToPath(x, y) {
   return best;
 }
 
-function drawSlot(ctx, x, y, highlight) {
-  ctx.fillStyle = 'rgba(0,0,0,0.25)';
+// Bệ đá đặt tướng; `hint` = nhấp nháy gợi ý cho người mới
+function drawSlot(ctx, x, y, selected, hint, t) {
+  ctx.fillStyle = 'rgba(0,0,0,0.28)';
   ctx.beginPath();
-  ctx.ellipse(x, y + 4, 24, 10, 0, 0, Math.PI * 2);
+  ctx.ellipse(x, y + 5, 26, 11, 0, 0, Math.PI * 2);
   ctx.fill();
-  ctx.fillStyle = highlight ? '#f5e6a8' : '#9e9e9e';
+  ctx.fillStyle = '#7d756a';
   ctx.beginPath();
-  ctx.ellipse(x, y, 22, 9, 0, 0, Math.PI * 2);
+  ctx.ellipse(x, y + 2, 24, 10, 0, 0, Math.PI * 2);
   ctx.fill();
-  ctx.strokeStyle = '#616161';
-  ctx.lineWidth = 2;
+  ctx.fillStyle = selected ? '#efd9a0' : '#b3a998';
+  ctx.beginPath();
+  ctx.ellipse(x, y - 1, 24, 10, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = selected ? '#f1c40f' : '#d9cfbd';
+  ctx.lineWidth = 1.5;
   ctx.stroke();
-  ctx.fillStyle = 'rgba(255,255,255,0.7)';
-  ctx.font = 'bold 14px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('+', x, y + 5);
+  ctx.strokeStyle = 'rgba(80,70,55,0.7)';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(x - 6, y - 1); ctx.lineTo(x + 6, y - 1);
+  ctx.moveTo(x, y - 4.5); ctx.lineTo(x, y + 2.5);
+  ctx.stroke();
+  if (hint) {
+    const k = (t * 1.2) % 1;
+    ctx.strokeStyle = `rgba(241,196,15,${1 - k})`;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.ellipse(x, y - 1, 24 + k * 22, 10 + k * 9, 0, 0, Math.PI * 2);
+    ctx.stroke();
+  }
 }

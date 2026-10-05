@@ -120,6 +120,8 @@ class Game {
     this.waveActive = false;
     this.over = false;
     this.time = 0;
+    this.started = false;
+    this.flags = { equipped: false };
     // Đồ khởi đầu để thử ngay việc thay đổi hình dạng
     this.inventory = ['leather_cap', 'leather_armor', 'iron_sword', 'hunter_bow', 'oak_staff'];
   }
@@ -153,6 +155,7 @@ class Game {
     this.inventory.splice(invIndex, 1);
     if (h.equip[slot]) this.inventory.push(h.equip[slot]);
     h.equip[slot] = id;
+    this.flags.equipped = true;
     this.effects.push({ type: 'ring', x: h.x, y: h.y - 20, r: 35, color: RARITY[ITEMS[id].rarity].color, ttl: 0.5, max: 0.5 });
     return true;
   }

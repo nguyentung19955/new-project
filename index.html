@@ -5,44 +5,94 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#1b2a1d">
+  <meta name="theme-color" content="#16120d">
   <title>Thủ Thành Anh Hùng</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Be+Vietnam+Pro:wght@400;600;700&display=swap">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<!--BODY-->
   <div id="wrap">
     <canvas id="game"></canvas>
 
-    <div id="hud">
-      <div class="stat">❤️ <span id="lives"></span></div>
-      <div class="stat">💰 <span id="gold"></span></div>
-      <div class="stat">🌊 <span id="wave"></span></div>
+    <!-- HUD trên -->
+    <div id="hud" class="ingame">
+      <div class="pill" title="Máu thành"><span class="ico heart"></span><b id="lives">20</b></div>
+      <div class="pill" title="Vàng"><span class="ico coin"></span><b id="gold">0</b></div>
+      <div class="pill wave-pill" title="Đợt"><small>Đợt</small><b id="wave">0</b></div>
       <div class="spacer"></div>
-      <button id="btn-speed">x1</button>
-      <button id="btn-pause">⏸</button>
+      <button id="btn-speed" class="round" aria-label="Tốc độ">x1</button>
+      <button id="btn-pause" class="round" aria-label="Tạm dừng">❚❚</button>
     </div>
 
-    <div id="controls">
-      <button id="btn-bag">🎒 <span id="bag-count"></span></button>
-      <button id="btn-chest">🎁 Rương</button>
-      <button id="btn-wave" class="primary">▶ Đợt 1</button>
+    <!-- Thanh điều khiển dưới -->
+    <div id="controls" class="ingame">
+      <button id="btn-bag" class="tool"><span class="tool-ico">🎒</span><span>Túi đồ</span><i id="bag-count" class="badge">0</i></button>
+      <button id="btn-chest" class="tool"><span class="tool-ico">🎁</span><span>Rương <b id="chest-cost"></b></span></button>
+      <button id="btn-wave" class="go"><span id="wave-label">Gọi đợt 1</span><small id="wave-sub">Quái sẽ tràn tới</small></button>
     </div>
 
+    <div id="coach" hidden><span id="coach-text"></span></div>
     <div id="toasts"></div>
+    <div id="paused-tag" hidden>Tạm dừng</div>
 
-    <div id="sheet" class="hidden">
-      <div class="sheet-inner"><div id="sheet-body"></div></div>
-    </div>
-
-    <div id="overlay" class="hidden">
-      <div class="panel">
-        <h2>Thành đã thất thủ!</h2>
-        <p>Bạn trụ được tới đợt <b id="final-wave"></b></p>
-        <button id="btn-restart" class="primary">Chơi lại</button>
+    <!-- Bảng trượt -->
+    <div id="sheet" hidden>
+      <div class="sheet-inner">
+        <div class="grab"></div>
+        <div id="sheet-body"></div>
       </div>
     </div>
-  </div>
 
+    <!-- Màn hình bắt đầu -->
+    <div id="menu" class="screen">
+      <div class="menu-card">
+        <canvas id="menu-art" width="480" height="230"></canvas>
+        <h1><span class="t1">Thủ Thành</span><span class="t2">Anh Hùng</span></h1>
+        <p class="tagline">Đặt tướng giữ thành. Tướng càng diệt nhiều quái càng mạnh, mặc đồ là đổi dáng.</p>
+        <button id="btn-play" class="go big">Chơi ngay</button>
+        <button id="btn-howto" class="ghost">Cách chơi</button>
+        <p id="best" class="best"></p>
+      </div>
+    </div>
+
+    <!-- Hướng dẫn -->
+    <div id="howto" class="screen" hidden>
+      <div class="menu-card">
+        <h2>Cách chơi</h2>
+        <ol class="steps">
+          <li><b>Đặt tướng</b><span>Chạm vào bệ đá cạnh đường để chọn Hiệp Sĩ, Cung Thủ hoặc Pháp Sư.</span></li>
+          <li><b>Gọi đợt quái</b><span>Bấm nút xanh ở góc dưới. Đừng để quái lọt vào cổng thành.</span></li>
+          <li><b>Tướng mạnh dần</b><span>Mỗi con quái tướng hạ được giúp kỹ năng mạnh thêm và mở kỹ năng mới. Đủ 25, 75, 150 mạng tướng sẽ tiến hóa.</span></li>
+          <li><b>Mặc đồ, đổi dáng</b><span>Chạm vào tướng để mặc đồ nhặt được. Đồ đổi ngay hình dạng tướng. Đủ 3 món Bộ Rồng thì mọc cánh.</span></li>
+        </ol>
+        <button id="btn-howto-close" class="go big">Đã hiểu</button>
+      </div>
+    </div>
+
+    <!-- Thua -->
+    <div id="overlay" class="screen" hidden>
+      <div class="menu-card">
+        <h2>Thành đã thất thủ</h2>
+        <p>Bạn trụ được tới <b>đợt <span id="final-wave"></span></b></p>
+        <p id="final-best" class="best"></p>
+        <button id="btn-restart" class="go big">Chơi lại</button>
+      </div>
+    </div>
+
+    <div id="err" hidden></div>
+  </div>
+<!--/BODY-->
+  <script>
+    // Hiện lỗi ngay trên màn hình để dễ báo lỗi khi chơi trên điện thoại
+    window.addEventListener('error', function (e) {
+      var el = document.getElementById('err');
+      if (!el) return;
+      el.hidden = false;
+      el.textContent = 'Lỗi: ' + (e.message || e.error) + (e.filename ? ' (' + e.filename.split('/').pop() + ':' + e.lineno + ')' : '');
+    });
+  </script>
   <script src="js/data.js"></script>
   <script src="js/render.js"></script>
   <script src="js/game.js"></script>

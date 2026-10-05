@@ -12,24 +12,38 @@ const game = new Game((msg, color) => ui && ui.toast(msg, color));
 ui = new UI(game);
 game.speed = 1;
 game.paused = false;
+window.game = game;
 
 let view = { scale: 1, dpr: 1 };
 let mapCanvas = null;
 
+// Đọc kích thước màn hình; trong khung nhúng đôi khi lúc đầu trả về 0 -> thử lại
+function viewportSize() {
+  const vv = window.visualViewport;
+  const de = document.documentElement;
+  const w = (vv && vv.width) || window.innerWidth || de.clientWidth;
+  const h = (vv && vv.height) || window.innerHeight || de.clientHeight;
+  return [w, h];
+}
+
 function resize() {
-  const vw = window.innerWidth, vh = window.innerHeight;
+  const [vw, vh] = viewportSize();
+  if (!vw || !vh) return requestAnimationFrame(resize);
   const scale = Math.min(vw / CONFIG.W, vh / CONFIG.H);
   const w = Math.floor(CONFIG.W * scale), h = Math.floor(CONFIG.H * scale);
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   wrap.style.width = w + 'px';
   wrap.style.height = h + 'px';
   wrap.style.setProperty('--u', scale);
-  canvas.width = w * dpr;
-  canvas.height = h * dpr;
+  canvas.width = Math.round(w * dpr);
+  canvas.height = Math.round(h * dpr);
   view = { scale, dpr };
+  ui.scale = scale;
   mapCanvas = buildMapCanvas(Math.max(1, scale * dpr));
 }
 window.addEventListener('resize', resize);
+window.addEventListener('orientationchange', () => setTimeout(resize, 200));
+if (window.visualViewport) window.visualViewport.addEventListener('resize', resize);
 resize();
 
 canvas.addEventListener('pointerdown', (ev) => {
@@ -40,11 +54,13 @@ canvas.addEventListener('pointerdown', (ev) => {
 function render() {
   const t = performance.now() / 1000;
   ctx.setTransform(view.scale * view.dpr, 0, 0, view.scale * view.dpr, 0, 0);
+  if (!mapCanvas) return;
   ctx.drawImage(mapCanvas, 0, 0, CONFIG.W, CONFIG.H);
+  drawPortal(ctx, t);
 
   const selected = ui.sheet && ui.sheet.slot !== undefined ? ui.sheet.slot : -1;
   CONFIG.slots.forEach(([x, y], i) => {
-    if (!game.heroes[i]) drawSlot(ctx, x, y, i === selected);
+    if (!game.heroes[i]) drawSlot(ctx, x, y, i === selected, i === ui.coachSlot, t);
   });
 
   // vòng tầm đánh của tướng đang chọn
@@ -175,7 +191,8 @@ let last = performance.now();
 function loop(now) {
   const dt = Math.min(0.05, (now - last) / 1000);
   last = now;
-  if (!game.paused) {
+  // tạm dừng khi đang mở bảng để người chơi thong thả chọn tướng / mặc đồ
+  if (game.started && !game.paused && !ui.sheet) {
     // chia nhỏ bước khi tăng tốc để mô phỏng ổn định
     for (let i = 0; i < game.speed; i++) game.update(dt);
   }
