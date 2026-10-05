@@ -47,7 +47,7 @@ const GFX = {
   lv: 0, ema: 16, acc: 0, n: 0,
   mode() { return (ui && ui.save && ui.save.settings.gfx) || 'auto'; },
   level() { const m = this.mode(); return m === 'high' ? 0 : m === 'low' ? 2 : this.lv; },
-  dprCap() { return [2, 1.5, 1.1][this.level()]; },
+  dprCap() { return [3, 2, 1.5][this.level()]; },          // v47: máy ×3 (iPhone) vẽ nét đủ ×3
   apply() { if (typeof VFX !== 'undefined' && VFX.setMax) VFX.setMax([700, 380, 180][this.level()]); resize(); },
   sample(ms) {
     if (this.mode() !== 'auto' || this.lv >= 2 || document.hidden) return;
@@ -551,7 +551,7 @@ function drawHeroOnMap(h, t) {
   drawRankAura(h, t, false);
   drawHeroStates(h, st, t, false);
   const r = drawHeroSprite(ctx, h, h.x, h.y, {
-    scale: useAssets ? 0.285 : 0.33, t, dir: h.dir, swing: va.swing, castT: va.castT, castUlt: h.castUlt, hurt: h.hurtT, px: px(),
+    scale: (useAssets ? 0.285 : 0.33) * (HZ > 1 ? 1.12 : 1), t, dir: h.dir, swing: va.swing, castT: va.castT, castUlt: h.castUlt, hurt: h.hurtT, px: px(),
     bog: h.bogged, summon: h.summonT, fall: h.dead ? h.fallT : undefined,
     bounce: h.bounceT, evo: h.evoT, wingT: h.wingT, smooth: true, castColor: h.castColor, vector: !!(ui.save && ui.save.settings.vectorHeroes),
   });

@@ -826,3 +826,9 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - Dùng ở: nổ (vết cháy + vòng sóng + khói), cột lửa (lưỡi lửa), băng nổ (vòng băng + sao phép), sét (tia sét thật), đập khiên (vòng sóng đất + chớp sao), tung chiêu (vòng phép xoay dưới chân, chiêu tối thượng vòng lớn hơn), hồi máu (vòng phép xanh), khiên (vòng sáng), tiến hoá (quầng sáng + sao), triệu hồi (vòng sáng + sao), sóng / gió (xoáy), chém / vuốt (vết chém, 3 vệt vuốt), quái chết (khói), đạn trúng (vết cháy, sao băng, vòng phép, chớp).
 - Đòn đánh riêng của tướng cũng dùng ảnh này: vết chém / vuốt, xoáy gậy (Thánh Gióng, Thầy Mo), vòng sóng đất (Lực Sĩ, Kim Quy, Thạch Sanh), vòng phép bung (Âu Cơ…), vệt đâm (Thần Sương), chớp đầu nỏ.
 - Ảnh hiệu ứng luôn bật (không phụ thuộc công tắc "Dùng ảnh AI"); chưa tải xong thì dùng hạt tự vẽ như cũ.
+
+### Phiên bản 47 · tướng nét hơn trên điện thoại
+
+- Tướng vẽ nét được dựng ảnh ở đúng (hoặc lớn hơn) kích thước hiện trên màn hình, làm tròn lên theo bậc 0,15 — trước đây chỉ có 3 mức thô (0,36 / 0,6 / 1,2) nên trên iPhone ảnh bị phóng to và nhòe. Quái cũng vậy (bậc 0,25).
+- Đồ hoạ Tự động: độ nét canvas ×3 (iPhone) → ×2 → ×1,5 khi máy giật (trước: ×2 → ×1,5 → ×1,1).
+- Màn hình nhỏ (điện thoại): tướng to thêm 12%.

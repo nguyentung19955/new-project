@@ -503,8 +503,9 @@ function heroPartImage(type, part, q) {
   return img;
 }
 // chất lượng ảnh theo kích thước vẽ thực tế
+// v47: luôn dựng ảnh ≥ kích thước hiện thật (không phóng to ảnh nhỏ → nhòe), làm tròn lên theo bậc 0,15
 function heroQ(px) {
-  return px > 0.9 ? 1.2 : px > 0.45 ? 0.6 : 0.36;
+  return Math.min(2.4, Math.max(0.3, Math.ceil(px * 1.1 / 0.15) * 0.15));
 }
 
 function drawPart(ctx, img, glow, blur) {
@@ -1574,7 +1575,7 @@ function enemyImage(type, px) {
   const a = enemyArt(type);
   if (!a) return null;
   const w = ENEMY_W[type] || 40;
-  const q = px > 2.2 ? 3 : px > 1.2 ? 2 : 1.25;
+  const q = Math.min(4, Math.max(1, Math.ceil(px * 1.1 / 0.25) * 0.25));
   const pw = w * q, ph = (w * a.h / a.w) * q;
   return svgImage(`e|${type}|${q}`, sizedSvg(a.svg, pw, ph));
 }
