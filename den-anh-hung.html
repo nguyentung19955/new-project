@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"></head><body>
+<title>Đền Anh Hùng</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@700;800&family=Alegreya+Sans:wght@400;500;700;800&display=swap">
+<style>
+/* Layout: one battle stage on top, hero sheet + roster below (stacks on phones). Single dark game look. */
+:root{
+  --bg:#0F0C09; --panel:#1E1912; --panel2:#2A2219; --well:#0B0907; --line:#5C4620; --line2:#8C6A2E;
+  --gold:#F2D27A; --gold2:#FFD66B; --text:#ECE3CF; --muted:#B8AE96;
+  --r-com:#B8AE96; --r-epic:#B07CEB; --r-leg:#F0A030; --a-str:#E8664A; --a-agi:#86C653; --a-int:#AE92EC;
+  --f-display:'Alegreya SC', 'Palatino Linotype', Georgia, serif;
+  --f-body:'Alegreya Sans', 'Segoe UI', system-ui, sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{background:var(--bg);color:var(--text)}
+body{font-family:var(--f-body);font-size:15px;line-height:1.45;padding-inline:16px;padding-block:16px 32px}
+.wrap{max-width:1060px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+button{font-family:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
+.metal{background:linear-gradient(180deg,#3B3327 0%,#231E17 55%,#17130F 100%);border:1px solid var(--line2);box-shadow:inset 0 1px 0 #D9B25A55,inset 0 -2px 4px #00000088}
+.inset{background:var(--well);border:1px solid var(--line);box-shadow:inset 0 2px 6px #000000cc}
+
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.top h1{font-family:var(--f-display);font-weight:800;font-size:30px;line-height:1;margin:0;color:var(--gold);text-shadow:0 2px 3px #000;text-wrap:balance}
+.top p{margin:2px 0 0;color:var(--muted);font-size:14px}
+.top .grow{flex:1}
+.auto{display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:6px;font-weight:700;font-size:14px;min-height:40px}
+.auto input{width:18px;height:18px;accent-color:#D9A84E}
+
+.stage{position:relative;width:100%;aspect-ratio:2/1;border-radius:8px;overflow:hidden;border:2px solid var(--line2);box-shadow:0 8px 30px #000a;background:#1A2230}
+.stage svg,.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.stage canvas{pointer-events:none}
+#flash{position:absolute;inset:0;opacity:0;pointer-events:none;background:#fff}
+#banner{position:absolute;left:50%;top:9%;transform:translateX(-50%);pointer-events:none;opacity:0;text-align:center;white-space:nowrap}
+#banner b{display:block;font-family:var(--f-display);font-weight:800;font-size:clamp(22px,5vw,46px);color:var(--gold2);text-shadow:0 0 18px #FF9A3A,0 3px 0 #5A2A08,0 4px 10px #000}
+#banner span{font-size:clamp(11px,1.8vw,15px);font-weight:800;letter-spacing:.18em;color:#FFF1C4;text-shadow:0 2px 4px #000}
+.wv{stroke-dasharray:14 22;animation:flow 3s linear infinite}
+.wv2{stroke-dasharray:8 30;animation:flow 4.6s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-72}}
+
+.sheet{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;align-items:start}
+.card{border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.hname{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.hname h2{margin:0;font-family:var(--f-display);font-weight:800;font-size:26px;line-height:1.05;color:var(--gold);text-shadow:0 2px 3px #000}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{padding:2px 9px;border-radius:4px;font-size:12px;font-weight:800;letter-spacing:.02em;border:1px solid currentColor;background:#0008}
+.sig{border-radius:6px;padding:10px 12px;display:flex;gap:10px;align-items:flex-start}
+.sig .lbl{font-size:11px;font-weight:800;letter-spacing:.12em;color:var(--gold);text-transform:uppercase}
+.sig .t{font-weight:800}
+.sig p{margin:2px 0 0;color:var(--muted);font-size:14px}
+.skills{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.sk{position:relative;border-radius:6px;padding:8px 6px 7px;display:flex;flex-direction:column;align-items:center;gap:4px;min-height:92px;text-align:center}
+.sk .key{position:absolute;left:6px;top:4px;font-weight:800;color:var(--gold2);font-size:13px;text-shadow:0 1px 2px #000}
+.sk .ic{width:40px;height:40px;border-radius:6px;display:grid;place-items:center;border:2px solid var(--line2);background:radial-gradient(circle at 50% 35%,var(--c,#888) 0%,#120E0A 75%)}
+.sk .ic i{width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 0 12px 4px var(--c,#fff)}
+.sk .nm{font-size:13px;font-weight:800;line-height:1.15}
+.sk .ty{font-size:11px;color:var(--muted);font-weight:700}
+.sk.ult{border-color:var(--gold2)}
+.sk.on{outline:2px solid var(--gold2);box-shadow:0 0 14px #FFD66B66,inset 0 1px 0 #D9B25A55}
+.desc{border-radius:6px;padding:10px 12px;font-size:14px;min-height:44px}
+.desc b{color:var(--gold)}
+.roster{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.roster.base{grid-template-columns:repeat(6,minmax(0,1fr))}
+@media (max-width:560px){.roster{grid-template-columns:repeat(2,minmax(0,1fr))}.roster.base{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.states{display:flex;flex-direction:column;gap:6px}
+.states .lbl{font-size:11px;font-weight:800;letter-spacing:.12em;color:var(--gold);text-transform:uppercase}
+.stbtns{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.st{border-radius:6px;min-height:40px;padding:6px 4px;font-weight:800;font-size:13px;line-height:1.15}
+.st.on{outline:2px solid var(--gold2);box-shadow:0 0 14px #FFD66B66,inset 0 1px 0 #D9B25A55}
+.rc{border-radius:6px;padding:6px 6px 8px;display:flex;flex-direction:column;align-items:center;gap:2px;border-width:2px}
+.rc svg{width:76px;height:70px}
+.rc .n{font-size:13px;font-weight:800;line-height:1.1;text-align:center}
+.rc .s{font-size:11px;font-weight:700;color:var(--muted)}
+.rc.on{outline:2px solid var(--gold2);box-shadow:0 0 14px #FFD66B55}
+.rh{font-family:var(--f-display);font-weight:800;font-size:18px;color:var(--gold);margin:0}
+.note{color:var(--muted);font-size:13px;margin:0}
+@media (prefers-reduced-motion:reduce){.wv,.wv2{animation:none}}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+<div class="wrap">
+  <header class="top">
+    <svg width="54" height="54" viewBox="0 0 120 120" aria-hidden="true">
+      <circle cx="60" cy="60" r="57" fill="#1A1208" stroke="#8C6A2E" stroke-width="2"/>
+      <circle cx="60" cy="60" r="53" fill="#B8853A" stroke="#1A1208" stroke-width="1.5"/>
+      <circle cx="60" cy="60" r="44" fill="none" stroke="#5A3E10" stroke-width="3" stroke-dasharray="0.1 5" stroke-linecap="round"/>
+      <circle cx="60" cy="60" r="36" fill="none" stroke="#5A3E10" stroke-width="1.2"/>
+      <circle cx="60" cy="60" r="26" fill="#C8963E" stroke="#5A3E10" stroke-width="1.2"/>
+      <polygon points="60,36 64,52 78,46 68,58 82,62 66,66 72,80 60,70 48,80 54,66 38,62 52,58 42,46 56,52" fill="#3A2410"/>
+    </svg>
+    <div>
+      <h1>Đền Anh Hùng</h1>
+      <p>16 tướng của Núi Cao Nước Dâng: 10 huyền thoại, 6 cơ bản · bấm Q W E R để xem tướng ra chiêu</p>
+    </div>
+    <div class="grow"></div>
+    <label class="auto metal" for="autoplay"><input type="checkbox" id="autoplay" checked> Tự ra chiêu</label>
+  </header>
+
+  <div class="stage" id="stage">
+    <svg id="scene" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" aria-label="Sân đấu bên bờ sông">
+      <defs>
+        <linearGradient id="gSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1B2436"/><stop offset=".55" stop-color="#4A4A56"/><stop offset="1" stop-color="#9A6A4A"/></linearGradient>
+        <linearGradient id="gRiver" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2C6A86"/><stop offset="1" stop-color="#173E52"/></linearGradient>
+        <linearGradient id="gGround" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4A6030"/><stop offset="1" stop-color="#22301A"/></linearGradient>
+        <radialGradient id="gSun" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFD9A0" stop-opacity=".9"/><stop offset="1" stop-color="#FFB060" stop-opacity="0"/></radialGradient>
+        <radialGradient id="gPearl" cx="38%" cy="35%" r="70%"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".45" stop-color="#9EE8F8"/><stop offset="1" stop-color="#2A8AA8"/></radialGradient>
+        <radialGradient id="gOrb" cx="40%" cy="38%" r="70%"><stop offset="0" stop-color="#FFFBE0"/><stop offset=".5" stop-color="#FFD66B"/><stop offset="1" stop-color="#C8701E"/></radialGradient>
+        <filter id="fHit" x="-10%" y="-10%" width="120%" height="120%"><feFlood flood-color="#FF2A1A" flood-opacity=".7"/><feComposite in2="SourceGraphic" operator="in"/><feBlend in2="SourceGraphic" mode="normal"/></filter>
+        <filter id="fIce" x="-10%" y="-10%" width="120%" height="120%"><feFlood flood-color="#A8E0FF" flood-opacity=".62"/><feComposite in2="SourceGraphic" operator="in"/><feBlend in2="SourceGraphic" mode="normal"/></filter>
+        <g id="e-tom"><path d="M8 -14 q-14 -4 -16 6 q-1 6 6 8" fill="none" stroke="#4A1A08" stroke-width="9.5" stroke-linecap="round"/><path d="M8 -14 q-14 -4 -16 6 q-1 6 6 8" fill="none" stroke="#E8743E" stroke-width="7.5" stroke-linecap="round"/><path d="M2 -18 l-1 7 M-4 -16 l1 6 M-8 -11 l4 4" stroke="#B84A1E" stroke-width="1"/><path d="M-2 0 l-7 4 l6 1z" fill="#C85A2A" stroke="#4A1A08" stroke-width=".7"/><path d="M4 -4 L18 -22" stroke="#5A3A1A" stroke-width="1.6"/><path d="M18 -22 l3 -5 l-6 2z" fill="#D0D0D0"/><circle cx="9" cy="-15" r="5" fill="#F08A50" stroke="#4A1A08"/><circle cx="11" cy="-17" r="1.6" fill="#120804"/><path d="M12 -18 q8 -9 15 -5 M11 -19 q5 -10 13 -11" stroke="#F08A50" fill="none" stroke-width="1.1"/></g>
+        <g id="e-cs"><path d="M-28 -4 q8 -4 15 -2" stroke="#1A2A0E" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M-28 -4 q8 -4 15 -2" stroke="#3E5E26" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M-8 -1 l-3 5 M-3 -1 l1 5 M6 -1 l-1 5 M10 -1 l3 5" stroke="#3E5E26" stroke-width="3" stroke-linecap="round"/><ellipse cx="0" cy="-6" rx="15" ry="6.5" fill="#4E7A2E" stroke="#1A2A0E" stroke-width="1.1"/><path d="M-12 -12 l2 -3 2 3 2 -3 2 3 2 -3 2 3 2 -3 2 3 2 -3 2 3 2 -3 2 3" fill="#3E5E26" stroke="#1A2A0E" stroke-width=".6"/><path d="M-12 -2 q12 4 24 0" stroke="#B9D08A" stroke-width="2" fill="none"/><path d="M11 -11 L29 -9 L29 -4 L11 -2 Z" fill="#4E7A2E" stroke="#1A2A0E" stroke-width="1.1"/><path d="M15 -6.5 l1 2 1 -2 1 2 1 -2 1 2 1 -2 1 2 1 -2 1 2 1 -2" stroke="#fff" fill="none" stroke-width=".8"/><circle cx="13" cy="-11.5" r="2.6" fill="#F0C830" stroke="#1A2A0E"/></g>
+        <g id="e-rua"><ellipse cx="-11" cy="-1" rx="4" ry="3" fill="#7A8A5A" stroke="#1A2010" stroke-width=".8"/><ellipse cx="11" cy="-1" rx="4" ry="3" fill="#7A8A5A" stroke="#1A2010" stroke-width=".8"/><ellipse cx="18" cy="-8" rx="5.5" ry="4.2" fill="#7A8A5A" stroke="#1A2010"/><circle cx="20" cy="-9" r="1.1" fill="#120804"/><path d="M-17 -4 q0 -20 17 -20 q17 0 17 20 z" fill="#45553A" stroke="#1A2010" stroke-width="1.3"/><path d="M-6 -17 h12 l3 5 -3 5 h-12 l-3 -5z" fill="#5E7048" stroke="#C2B07A" stroke-width=".9"/><path d="M-9 -12 L-15 -7 M9 -12 L15 -7 M-6 -17 L-8 -22 M6 -17 L8 -22" stroke="#C2B07A" stroke-width=".9"/><path d="M-18 -4 h36" stroke="#C2B07A" stroke-width="2.6" stroke-linecap="round"/></g>
+        <g id="e-cb"><path d="M-4 -32 q-14 -14 -26 -8 q10 1 14 9 q-6 -1 -10 2 q8 0 14 3z" fill="#4E5E6A" stroke="#1E262C" stroke-width=".9"/><path d="M4 -32 q14 -14 26 -8 q-10 1 -14 9 q6 -1 10 2 q-8 0 -14 3z" fill="#4E5E6A" stroke="#1E262C" stroke-width=".9"/><circle cx="-7" cy="-28" r="7" fill="#7E8C96" stroke="#1E262C" stroke-width=".9"/><circle cx="7" cy="-28" r="7" fill="#7E8C96" stroke="#1E262C" stroke-width=".9"/><circle cx="0" cy="-32" r="9" fill="#A2AFB7" stroke="#1E262C" stroke-width=".9"/><circle cx="-3.5" cy="-33" r="1.8" fill="#FFE066"/><circle cx="3.5" cy="-33" r="1.8" fill="#FFE066"/><path d="M-1 -21 l-3 6 h4 l-3 7" stroke="#FFE066" stroke-width="1.8" fill="none"/></g>
+      </defs>
+
+      <rect width="800" height="400" fill="url(#gSky)"/>
+      <circle cx="640" cy="120" r="90" fill="url(#gSun)"/>
+      <polygon points="380,232 470,120 510,150 570,84 640,140 690,112 800,200 800,240 380,240" fill="#3A4256"/>
+      <polygon points="470,120 510,150 488,236 430,236" fill="#2E3446" opacity=".7"/>
+      <polygon points="0,236 60,168 120,196 190,140 270,200 330,170 420,236" fill="#2E3A44"/>
+      <path d="M0 214 Q200 196 400 216 T800 210 V250 H0 Z" fill="#26323A" opacity=".85"/>
+      <rect x="0" y="236" width="800" height="70" fill="url(#gRiver)"/>
+      <path class="wv" d="M0 252 Q40 248 80 252 T160 252 T240 252 T320 252 T400 252 T480 252 T560 252 T640 252 T720 252 T800 252" stroke="#9EDDF2" stroke-opacity=".45" stroke-width="2" fill="none"/>
+      <path class="wv2" d="M0 272 Q40 268 80 272 T160 272 T240 272 T320 272 T400 272 T480 272 T560 272 T640 272 T720 272 T800 272" stroke="#BFEAF8" stroke-opacity=".35" stroke-width="2" fill="none"/>
+      <path class="wv" d="M0 290 Q40 286 80 290 T160 290 T240 290 T320 290 T400 290 T480 290 T560 290 T640 290 T720 290 T800 290" stroke="#9EDDF2" stroke-opacity=".3" stroke-width="2" fill="none"/>
+      <path d="M0 304 Q90 296 180 306 Q260 314 330 304 Q420 292 520 310 Q640 324 800 306 V400 H0 Z" fill="url(#gGround)"/>
+      <path d="M0 304 Q90 296 180 306 Q260 314 330 304 Q420 292 520 310 Q640 324 800 306" stroke="#7A6A42" stroke-width="5" fill="none"/>
+      <g stroke="#6E8A3A" stroke-width="2.4" stroke-linecap="round" fill="none">
+        <path d="M30 360 q-4 -22 4 -40 M38 362 q2 -26 12 -34 M24 364 q-10 -18 -6 -30"/>
+        <path d="M770 372 q-4 -22 4 -40 M778 374 q2 -26 12 -34 M762 376 q-10 -18 -6 -30"/>
+        <path d="M400 380 q-3 -16 3 -28 M406 380 q2 -18 9 -24"/>
+      </g>
+      <ellipse cx="96" cy="372" rx="26" ry="10" fill="#5E584A"/><ellipse cx="110" cy="366" rx="14" ry="8" fill="#77705F"/>
+      <ellipse cx="680" cy="384" rx="22" ry="8" fill="#5E584A"/>
+
+      <g id="enemies"></g>
+      <g id="heroWrap">
+        <ellipse cx="100" cy="222" rx="44" ry="9" fill="#000" opacity=".35"/>
+        <g id="heroInner"></g>
+      </g>
+      <g id="fxLayer"></g>
+    </svg>
+    <canvas id="fx" aria-hidden="true"></canvas>
+    <div id="flash"></div>
+    <div id="banner"><b id="bannerT">Bay Về Trời</b><span id="bannerS">TỐI THƯỢNG</span></div>
+  </div>
+
+  <div class="sheet">
+    <section class="card metal" aria-label="Thông tin tướng">
+      <div class="hname"><h2 id="hName">Thánh Gióng</h2><div class="chips" id="hChips"></div></div>
+      <div class="sig inset">
+        <svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true" style="flex:none"><path d="M12 2l2.6 6.4L21 9l-5 4.4L17.6 20 12 16.6 6.4 20 8 13.4 3 9l6.4-.6z" fill="#F2D27A" stroke="#5A3E10" stroke-width="1.2"/></svg>
+        <div><div class="lbl">Đặc trưng riêng</div><div class="t" id="sigName"></div><p id="sigDesc"></p></div>
+      </div>
+      <div class="skills" id="skills"></div>
+      <div class="desc inset" id="skDesc" aria-live="polite"></div>
+      <div class="states"><span class="lbl">Trạng thái</span><div class="stbtns" id="states"></div></div>
+    </section>
+    <section class="card metal" aria-label="Danh sách tướng">
+      <h3 class="rh">Tướng huyền thoại</h3>
+      <div class="roster" id="roster"></div>
+      <h3 class="rh">Tướng cơ bản</h3>
+      <div class="roster base" id="rosterBase"></div>
+      <p class="note">Bản mẫu animation dựng bằng SVG, GSAP và canvas hạt. Trong game thật, tướng sẽ làm bằng Spine hoặc sprite sheet trên Phaser với cùng nhịp chuyển động này.</p>
+    </section>
+  </div>
+</div>
+
+<script>
+(function(){
+const OL='#2A1608', SK='#E8B98C', SKF='#F0C8A0';
+const RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- hero drawing kit (local coords: feet at y≈222, center x 100) ---------- */
+function legs(c){return `<rect x="84" y="178" width="13" height="40" rx="6" fill="${c}" stroke="${OL}" stroke-width="2"/><rect x="103" y="178" width="13" height="40" rx="6" fill="${c}" stroke="${OL}" stroke-width="2"/><ellipse cx="89" cy="220" rx="11" ry="5" fill="#2A1A0C"/><ellipse cx="111" cy="220" rx="11" ry="5" fill="#2A1A0C"/>`}
+function feet(c){return `<ellipse cx="90" cy="220" rx="9" ry="4.5" fill="${c}" stroke="${OL}" stroke-width="1.5"/><ellipse cx="110" cy="220" rx="9" ry="4.5" fill="${c}" stroke="${OL}" stroke-width="1.5"/>`}
+function arm(x1,y1,x2,y2,sleeve,skin){return `<path d="M${x1} ${y1} L${x2} ${y2}" stroke="${OL}" stroke-width="15" stroke-linecap="round"/><path d="M${x1} ${y1} L${x2} ${y2}" stroke="${sleeve}" stroke-width="11" stroke-linecap="round"/><circle cx="${x2}" cy="${y2+3}" r="7.5" fill="${skin}" stroke="${OL}" stroke-width="2"/>`}
+const armB=(s,k)=>arm(78,124,62,160,s,k), armF=(s,k)=>arm(122,124,138,160,s,k);
+function face(skin,blush=true){return `<circle cx="100" cy="84" r="30" fill="${skin}" stroke="${OL}" stroke-width="2.4"/><ellipse cx="89" cy="89" rx="3.8" ry="4.6" fill="#1A0C04"/><ellipse cx="111" cy="89" rx="3.8" ry="4.6" fill="#1A0C04"/><circle cx="90.4" cy="87.4" r="1.4" fill="#fff"/><circle cx="112.4" cy="87.4" r="1.4" fill="#fff"/><path d="M84 79 q5 -3 10 0 M106 79 q5 -3 10 0" stroke="${OL}" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M95 101 q5 4 10 0" stroke="#7A3A1A" stroke-width="2" fill="none" stroke-linecap="round"/>${blush?'<circle cx="82" cy="97" r="4" fill="#E86A5A" opacity=".35"/><circle cx="118" cy="97" r="4" fill="#E86A5A" opacity=".35"/>':''}`}
+const torso=c=>`<path d="M72 118 Q100 106 128 118 L134 182 Q100 194 66 182 Z" fill="${c}" stroke="${OL}" stroke-width="2.4"/>`;
+const dress=c=>`<path d="M74 118 Q100 106 126 118 L144 212 Q100 224 56 212 Z" fill="${c}" stroke="${OL}" stroke-width="2.4"/>`;
+
+function heroSVG(h){
+  return `<g class="pBack">${h.back||''}</g><g class="legs">${h.legs}</g><g class="pBob"><g class="armB">${h.armB}</g><g class="body">${h.body}</g><g class="pHead">${h.head}</g><g class="armF">${h.armF}</g></g>`;
+}
+
+/* ---------- roster ---------- */
+const HEROES=[
+{id:'giong',name:'Thánh Gióng',attr:'Sức mạnh',rar:'Huyền thoại',price:260,
+ sig:['Vươn Vai','Mỗi đợt đứng trên sân, Gióng to thêm: +5% máu và sát thương, tối đa 10 lần.'],
+ back:`<path d="M80 120 Q56 170 66 214 Q100 206 134 214 Q144 170 120 120 Z" fill="#B8301E" stroke="${OL}" stroke-width="2.2"/><path d="M72 172 Q100 180 128 172" stroke="#E0503A" stroke-width="2" fill="none"/>`,
+ legs:legs('#4A525C'),
+ body:torso('#6B7682')+`<path d="M74 138 H126 M72 158 H128" stroke="#A8B4C0" stroke-width="2.4"/><circle cx="80" cy="128" r="2.4" fill="#D8E0E8"/><circle cx="120" cy="128" r="2.4" fill="#D8E0E8"/><circle cx="80" cy="148" r="2.4" fill="#D8E0E8"/><circle cx="120" cy="148" r="2.4" fill="#D8E0E8"/><rect x="68" y="168" width="64" height="9" rx="3" fill="#C8A040" stroke="${OL}" stroke-width="2"/><circle cx="100" cy="172" r="5" fill="#E8C860" stroke="${OL}" stroke-width="1.5"/><ellipse cx="74" cy="120" rx="12" ry="9" fill="#7E8A96" stroke="${OL}" stroke-width="2"/><ellipse cx="126" cy="120" rx="12" ry="9" fill="#7E8A96" stroke="${OL}" stroke-width="2"/>`,
+ head:face(SK)+`<path d="M68 84 Q68 48 100 46 Q132 48 132 84 Q126 72 100 68 Q74 72 68 84 Z" fill="#5A6470" stroke="${OL}" stroke-width="2.4"/><path d="M70 74 Q100 62 130 74" stroke="#A8B4C0" stroke-width="2" fill="none"/><path d="M100 47 Q102 22 124 14 Q114 32 110 48 Z" fill="#E0402A" stroke="${OL}" stroke-width="1.8"/>`,
+ armB:armB('#6B7682',SK),
+ armF:`<path d="M150 30 L130 232" stroke="${OL}" stroke-width="11" stroke-linecap="round"/><path d="M150 30 L130 232" stroke="#D4DC70" stroke-width="7" stroke-linecap="round"/><path d="M142 72 l10 1 M138 112 l10 1 M134 152 l10 1 M130 192 l10 1" stroke="#7A9030" stroke-width="2.4"/>`+armF('#6B7682',SK),
+ skills:[
+  {k:'Q',n:'Gậy Tre Ngà',t:'Chủ động',d:'Quật gậy tre lan ra phía trước, làm quái choáng ngắn.',a:'swing',c:'#D4DC70',fx:'gQ'},
+  {k:'W',n:'Giáp Sắt',t:'Nội tại',d:'Giảm sát thương nhận vào.',a:'cast',c:'#C8D0D8',fx:'gW'},
+  {k:'E',n:'Ngựa Sắt Phun Lửa',t:'Chủ động',d:'Để lại vệt lửa cháy dọc đường quái đi.',a:'cast',c:'#FF8A2E',fx:'gE'},
+  {k:'R',n:'Bay Về Trời',t:'Tối thượng',d:'Lướt dọc dòng sông, đánh mọi quái trên đường bay.',a:'ult',c:'#FFB04A',fx:'gR'}]},
+{id:'llq',name:'Lạc Long Quân',attr:'Sức mạnh',rar:'Huyền thoại',price:260,
+ sig:['Con Rồng','Không bị sa lầy khi ô ngập nước; đứng trên ô ngập còn được +30% sát thương.'],
+ back:`<path d="M96 176 Q48 194 30 160 Q16 130 40 104 Q34 132 50 150 Q70 168 104 160 Z" fill="#2A8A78" stroke="${OL}" stroke-width="2.2"/><path d="M40 106 l-10 -4 6 10 Z M28 128 l-11 0 9 8 Z M32 152 l-9 6 11 2 Z M50 172 l-4 10 9 -6 Z" fill="#E0B030" stroke="${OL}" stroke-width="1.4"/>`,
+ legs:legs('#155A58'),
+ body:`<path d="M70 118 Q100 106 130 118 L140 204 Q100 214 60 204 Z" fill="#1F7A78" stroke="${OL}" stroke-width="2.4"/><path d="M78 142 q5 6 11 0 q5 6 11 0 q5 6 11 0 q5 6 11 0 M74 162 q5 6 11 0 q5 6 11 0 q5 6 11 0 q5 6 11 0 q5 6 11 0 M70 186 q5 6 12 0 q5 6 12 0 q5 6 12 0 q5 6 12 0 q5 6 12 0" stroke="#6ED0C0" stroke-width="1.8" fill="none"/><path d="M84 116 L100 140 L116 116" stroke="#E0B030" stroke-width="4" fill="none"/><rect x="68" y="170" width="64" height="7" rx="3" fill="#E0B030" stroke="${OL}" stroke-width="1.6"/>`,
+ head:`<path d="M80 62 L66 34 L58 42 M70 44 L60 28 M120 62 L134 34 L142 42 M130 44 L140 28" stroke="${OL}" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M80 62 L66 34 L58 42 M70 44 L60 28 M120 62 L134 34 L142 42 M130 44 L140 28" stroke="#E8C050" stroke-width="4" stroke-linecap="round" fill="none"/>`+face(SK,false)+`<path d="M70 80 Q72 52 100 52 Q128 52 130 80 Q118 66 100 66 Q82 66 70 80 Z" fill="#E8E4DC" stroke="${OL}" stroke-width="2"/><path d="M86 104 Q100 142 114 104 Q107 110 100 110 Q93 110 86 104 Z" fill="#F2F0EA" stroke="${OL}" stroke-width="1.6"/><path d="M90 100 Q70 104 60 124 M110 100 Q130 104 140 124" stroke="#F2F0EA" stroke-width="3" fill="none" stroke-linecap="round"/>`,
+ armB:armB('#1F7A78',SK),
+ armF:armF('#1F7A78',SK)+`<circle cx="146" cy="160" r="12" fill="url(#gPearl)" stroke="#BFF0FF" stroke-width="2"/>`,
+ skills:[
+  {k:'Q',n:'Vuốt Rồng',t:'Chủ động',d:'Cào hai đường vuốt nước vào quái phía trước.',a:'swing',c:'#7FE0F0',fx:'lQ'},
+  {k:'W',n:'Vảy Rồng',t:'Nội tại',d:'Tăng giáp và kháng phép.',a:'cast',c:'#6ED0C0',fx:'lW'},
+  {k:'E',n:'Gầm Biển',t:'Chủ động',d:'Sóng lớn cuốn qua đường, đẩy lùi quái.',a:'cast',c:'#5AB4D6',fx:'lE'},
+  {k:'R',n:'Hóa Rồng',t:'Tối thượng',d:'Phun cột nước kèm sét theo đường thẳng.',a:'ult',c:'#9EE8F8',fx:'lR'}]},
+{id:'kimquy',name:'Thần Kim Quy',attr:'Sức mạnh',rar:'Huyền thoại',price:260,
+ sig:['Mai Thần','Tướng đứng kề nhận ít hơn 30% sát thương.'],
+ back:`<ellipse cx="100" cy="150" rx="48" ry="56" fill="#C8902A" stroke="${OL}" stroke-width="2.6"/><path d="M100 104 l18 12 0 22 -18 12 -18 -12 0 -22 Z M64 128 l18 -4 0 26 -18 8 Z M136 128 l-18 -4 0 26 18 8 Z" fill="#E8B848" stroke="#7A5010" stroke-width="2"/>`,
+ legs:legs('#7A9048'),
+ body:`<path d="M74 118 Q100 108 126 118 L130 188 Q100 198 70 188 Z" fill="#F0D890" stroke="${OL}" stroke-width="2.4"/><path d="M74 140 H126 M72 164 H128 M100 112 V194" stroke="#B89040" stroke-width="2"/><path d="M72 124 L128 176" stroke="#C8302A" stroke-width="8"/>`,
+ head:face('#A8C070',false)+`<path d="M84 58 L92 44 L100 56 L108 44 L116 58 Z" fill="#E8C050" stroke="${OL}" stroke-width="1.8"/><circle cx="100" cy="52" r="3" fill="#C8302A"/><path d="M97 95 l3 3 3 -3" stroke="${OL}" stroke-width="1.6" fill="none"/>`,
+ armB:armB('#7A9048','#A8C070'),
+ armF:armF('#7A9048','#A8C070')+`<path d="M136 166 q10 -26 24 -30 q-6 8 -4 14 q6 -6 12 -6 q-6 6 -6 12 q6 -2 10 0 q-12 8 -26 14 Z" fill="#F2D27A" stroke="${OL}" stroke-width="1.8"/>`,
+ skills:[
+  {k:'Q',n:'Mai Vàng',t:'Chủ động',d:'Dựng khiên vàng cho các tướng đứng gần.',a:'cast',c:'#F2D27A',fx:'kQ'},
+  {k:'W',n:'Móng Thần',t:'Nội tại',d:'Tướng đứng gần xuyên thêm 20% giáp.',a:'cast',c:'#FFD66B',fx:'kW'},
+  {k:'E',n:'Địa Chấn',t:'Chủ động',d:'Dậm đất làm choáng mọi quái trong vùng.',a:'swing',c:'#C89A5A',fx:'kE'},
+  {k:'R',n:'Kim Quy Hộ Thành',t:'Tối thượng',d:'Mai thần che thành 5 giây: quái lọt vào không làm mất mạng.',a:'ult',c:'#FFD66B',fx:'kR'}]},
+{id:'thachsanh',name:'Thạch Sanh',attr:'Nhanh nhẹn',rar:'Huyền thoại',price:260,
+ sig:['Niêu Cơm Thần','Tướng đứng gần hồi năng lượng nhanh hơn.'],
+ back:`<path d="M70 100 Q36 150 72 200" stroke="${OL}" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M70 100 Q36 150 72 200" stroke="#F0C040" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M70 100 L72 200" stroke="#FFF1C4" stroke-width="1.2"/>`,
+ legs:legs('#C89060'),
+ body:`<path d="M72 118 Q100 106 128 118 L132 176 Q100 186 68 176 Z" fill="#D9A274" stroke="${OL}" stroke-width="2.4"/><path d="M84 136 q8 6 15 0 M101 136 q8 6 15 0 M92 152 h16 M92 162 h16" stroke="#A86A40" stroke-width="2" fill="none"/><path d="M66 170 Q100 184 134 170 L130 200 Q100 210 70 200 Z" fill="#7A4A22" stroke="${OL}" stroke-width="2.2"/><path d="M70 198 l6 8 6 -6 6 8 6 -6 6 8 6 -6 6 8 6 -6 6 8 6 -6" stroke="#4E7A2E" stroke-width="3" fill="none"/>`,
+ head:face('#D9A274')+`<path d="M68 86 Q62 50 100 48 Q138 50 132 86 L126 70 L118 78 L110 64 L100 74 L90 62 L84 76 L74 68 Z" fill="#1A120A" stroke="${OL}" stroke-width="2"/><path d="M70 76 Q100 66 130 76" stroke="#C8302A" stroke-width="6" fill="none"/><path d="M130 76 l14 6 -4 -12 Z" fill="#C8302A"/>`,
+ armB:armB('#D9A274','#D9A274'),
+ armF:`<path d="M134 172 L156 92" stroke="${OL}" stroke-width="9" stroke-linecap="round"/><path d="M134 172 L156 92" stroke="#8A5A2A" stroke-width="6" stroke-linecap="round"/><path d="M150 96 q26 -12 32 14 q-16 -6 -26 4 Z" fill="#C8CED4" stroke="${OL}" stroke-width="2"/>`+armF('#D9A274','#D9A274'),
+ skills:[
+  {k:'Q',n:'Rìu Đốn Củi',t:'Chủ động',d:'Bổ rìu xuống quái phía trước.',a:'swing',c:'#E0B070',fx:'tQ'},
+  {k:'W',n:'Cung Tên Vàng',t:'Nội tại',d:'Gây gấp đôi sát thương lên quái bay.',a:'shoot',c:'#FFD66B',fx:'tW'},
+  {k:'E',n:'Đàn Thần',t:'Chủ động',d:'Tiếng đàn làm quái đứng nghe, choáng 1,5 giây.',a:'cast',c:'#F2D27A',fx:'tE'},
+  {k:'R',n:'Diệt Chằn Tinh',t:'Tối thượng',d:'Nhảy lên bổ một đòn cực mạnh, gấp ba sát thương lên boss.',a:'jump',c:'#FF9A3A',fx:'tR'}]},
+{id:'caolo',name:'Cao Lỗ',attr:'Nhanh nhẹn',rar:'Sử thi',price:180,
+ sig:['Xuyên Giáp','Mọi đòn đánh bỏ qua 50% giáp của quái.'],
+ back:`<g transform="rotate(-24 100 130)"><rect x="104" y="92" width="20" height="66" rx="5" fill="#5A3A1A" stroke="${OL}" stroke-width="2"/><path d="M108 92 l-2 -14 M114 92 l0 -16 M120 92 l2 -14" stroke="#E8DDBF" stroke-width="2.4"/><path d="M104 104 h20 M104 146 h20" stroke="#B8853A" stroke-width="3"/></g>`,
+ legs:legs('#5A4028'),
+ body:torso('#7A5230')+`<path d="M76 132 h48 v14 h-48 Z" fill="#B8853A" stroke="${OL}" stroke-width="1.8"/><path d="M80 139 l4 -4 4 4 4 -4 4 4 4 -4 4 4 4 -4 4 4 4 -4 4 4" stroke="#5A3E10" stroke-width="1.4" fill="none"/><rect x="68" y="170" width="64" height="8" rx="3" fill="#3A2A14" stroke="${OL}" stroke-width="1.6"/>`,
+ head:face(SK)+`<path d="M68 84 Q66 46 100 44 Q134 46 132 84 Q100 70 68 84 Z" fill="#B8853A" stroke="${OL}" stroke-width="2.4"/><path d="M68 80 Q100 68 132 80" stroke="#E8C060" stroke-width="3" fill="none"/><circle cx="84" cy="74" r="1.8" fill="#5A3E10"/><circle cx="100" cy="71" r="1.8" fill="#5A3E10"/><circle cx="116" cy="74" r="1.8" fill="#5A3E10"/><path d="M100 45 V26" stroke="${OL}" stroke-width="6"/><path d="M100 45 V26" stroke="#B8853A" stroke-width="3.5"/><circle cx="100" cy="24" r="5" fill="#E8C060" stroke="${OL}" stroke-width="1.8"/>`,
+ armB:arm(78,124,104,156,'#7A5230',SK),
+ armF:`<rect x="110" y="155" width="80" height="10" rx="3" fill="#6A4420" stroke="${OL}" stroke-width="2"/><path d="M186 128 Q200 160 186 192" stroke="${OL}" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M186 128 Q200 160 186 192" stroke="#9A7038" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M186 128 L158 160 L186 192" stroke="#F2EEE0" stroke-width="1.4" fill="none"/><path d="M158 160 H204" stroke="#E0B030" stroke-width="3"/><path d="M206 160 l-7 -4 v8 Z" fill="#E0B030"/>`+armF('#7A5230',SK),
+ skills:[
+  {k:'Q',n:'Nỏ Liên Châu',t:'Chủ động',d:'Bắn 3 mũi tên cùng lúc vào 3 quái.',a:'shoot',c:'#E0B030',fx:'cQ'},
+  {k:'W',n:'Lẫy Thần',t:'Nội tại',d:'Tăng tốc bắn.',a:'shoot',c:'#F2D27A',fx:'cW'},
+  {k:'E',n:'Tên Móng Rùa',t:'Chủ động',d:'Mũi tên vàng xuyên giáp toàn phần, khắc chế Rùa Giáp.',a:'shoot',c:'#FFD66B',fx:'cE'},
+  {k:'R',n:'Nỏ Thần',t:'Tối thượng',d:'Một phát nỏ thần xuyên qua cả hàng quái.',a:'ult',c:'#FFE08A',fx:'cR'}]},
+{id:'antiem',name:'Mai An Tiêm',attr:'Nhanh nhẹn',rar:'Sử thi',price:180,
+ sig:['Đảo Trù Phú','Mỗi đợt nhận thêm 20 vàng.'],
+ back:`<path d="M78 120 L116 186" stroke="#8A6A3A" stroke-width="3"/><ellipse cx="62" cy="168" rx="14" ry="18" fill="#B8935A" stroke="${OL}" stroke-width="2"/><path d="M50 164 h24 M52 174 h20" stroke="#8A6A3A" stroke-width="1.6"/>`,
+ legs:legs('#A87040'),
+ body:torso('#C08050')+`<path d="M72 118 Q78 150 74 176 L90 170 Q86 140 88 116 Z M128 118 Q122 150 126 176 L110 170 Q114 140 112 116 Z" fill="#4E8A3A" stroke="${OL}" stroke-width="1.8"/><path d="M66 172 Q100 184 134 172 L130 196 Q100 204 70 196 Z" fill="#8A6030" stroke="${OL}" stroke-width="2"/>`,
+ head:face('#C08050')+`<path d="M70 78 Q70 52 100 50 Q130 52 130 78 Q100 66 70 78 Z" fill="#3E8A3A" stroke="${OL}" stroke-width="2.2"/><path d="M128 72 l14 4 -6 8 Z" fill="#3E8A3A" stroke="${OL}" stroke-width="1.6"/><path d="M78 66 l4 4 M92 60 l3 4 M108 60 l-3 4 M122 66 l-4 4" stroke="#8FD06A" stroke-width="2"/>`,
+ armB:armB('#C08050','#C08050'),
+ armF:armF('#C08050','#C08050')+`<circle cx="146" cy="156" r="17" fill="#3E8A3A" stroke="${OL}" stroke-width="2.2"/><path d="M134 146 q12 10 24 0 M131 156 q15 10 30 0 M134 166 q12 8 24 0" stroke="#1E5A1E" stroke-width="2.4" fill="none"/>`,
+ skills:[
+  {k:'Q',n:'Ném Dưa Hấu',t:'Chủ động',d:'Ném quả dưa vỡ tung, làm quái chậm lại.',a:'shoot',c:'#E8403A',fx:'mQ'},
+  {k:'W',n:'Hạt Giống Vàng',t:'Nội tại',d:'Thêm vàng mỗi khi hạ quái.',a:'cast',c:'#FFD66B',fx:'mW'},
+  {k:'E',n:'Chim Thần',t:'Chủ động',d:'Thả đàn chim bay đến mổ quái.',a:'cast',c:'#F2F2F2',fx:'mE'},
+  {k:'R',n:'Mưa Dưa',t:'Tối thượng',d:'Dưa hấu rơi như mưa khắp bản đồ.',a:'ult',c:'#7FC24A',fx:'mR'}]},
+{id:'auco',name:'Âu Cơ',attr:'Trí tuệ',rar:'Huyền thoại',price:260,
+ sig:['Mẹ Tiên','Hồi máu từ từ cho các tướng đứng xung quanh.'],
+ back:`<g class="wingL"><path d="M88 126 Q30 72 16 116 Q38 118 30 140 Q54 132 48 158 Q72 142 92 144 Z" fill="#F7F3FC" stroke="${OL}" stroke-width="2"/><path d="M84 132 Q50 108 30 118 M84 138 Q56 128 40 140" stroke="#C8B8E0" stroke-width="1.6" fill="none"/></g><g class="wingR"><path d="M112 126 Q170 72 184 116 Q162 118 170 140 Q146 132 152 158 Q128 142 108 144 Z" fill="#F7F3FC" stroke="${OL}" stroke-width="2"/><path d="M116 132 Q150 108 170 118 M116 138 Q144 128 160 140" stroke="#C8B8E0" stroke-width="1.6" fill="none"/></g>`,
+ legs:feet('#E87AA0'),
+ body:dress('#F7EEF2')+`<path d="M58 206 Q100 218 142 206" stroke="#E87AA0" stroke-width="5" fill="none"/><path d="M84 118 L100 140 L116 118" stroke="#E87AA0" stroke-width="3.5" fill="none"/><path d="M74 172 Q100 180 126 172" stroke="#D8A0C0" stroke-width="2" fill="none"/>`,
+ head:`<path d="M70 84 Q60 150 76 196 L124 196 Q140 150 130 84 Z" fill="#1A120A"/>`+face(SKF)+`<path d="M70 82 Q70 52 100 52 Q130 52 130 82 Q118 68 108 72 Q100 62 92 72 Q82 68 70 82 Z" fill="#1A120A" stroke="${OL}" stroke-width="2"/><circle cx="78" cy="64" r="5" fill="#F08AB0" stroke="${OL}" stroke-width="1.2"/><circle cx="90" cy="56" r="5" fill="#FFF" stroke="${OL}" stroke-width="1.2"/><circle cx="100" cy="53" r="6" fill="#F08AB0" stroke="${OL}" stroke-width="1.2"/><circle cx="110" cy="56" r="5" fill="#FFF" stroke="${OL}" stroke-width="1.2"/><circle cx="122" cy="64" r="5" fill="#F08AB0" stroke="${OL}" stroke-width="1.2"/>`,
+ armB:armB('#F7EEF2',SKF),
+ armF:`<path d="M146 66 L134 226" stroke="#4E8A3A" stroke-width="5" stroke-linecap="round"/><path d="M146 64 q-14 -4 -12 -20 q8 6 12 0 q4 6 12 0 q2 16 -12 20 Z" fill="#F08AB0" stroke="${OL}" stroke-width="1.8"/><circle cx="146" cy="56" r="3" fill="#FFE08A"/>`+armF('#F7EEF2',SKF),
+ skills:[
+  {k:'Q',n:'Hoa Tiên',t:'Chủ động',d:'Rải hoa hồi máu cho tướng quanh mình.',a:'cast',c:'#F08AB0',fx:'aQ'},
+  {k:'W',n:'Lông Vũ Tiên',t:'Nội tại',d:'Đòn đánh bắn ra lông vũ sắc.',a:'shoot',c:'#F7F3FC',fx:'aW'},
+  {k:'E',n:'Núi Mẹ',t:'Chủ động',d:'Đá trồi lên dưới chân quái, làm chậm.',a:'cast',c:'#C89A5A',fx:'aE'},
+  {k:'R',n:'Bọc Trăm Trứng',t:'Tối thượng',d:'Bọc trứng nở ra đàn Lạc Tử lao ra chặn đường.',a:'ult',c:'#FFE6A0',fx:'aR'}]},
+{id:'cdt',name:'Chử Đồng Tử',attr:'Trí tuệ',rar:'Sử thi',price:180,
+ sig:['Gậy Thần','Hồi sinh ngay một tướng vừa gục ở gần (hồi chiêu dài).'],
+ back:'',
+ legs:legs('#8A7048'),
+ body:torso('#B89A6A')+`<path d="M76 120 L124 176" stroke="#3E6A9A" stroke-width="9"/><rect x="68" y="170" width="64" height="8" rx="3" fill="#3E6A9A" stroke="${OL}" stroke-width="1.6"/>`,
+ head:face(SK)+`<path d="M72 76 Q74 56 100 56 Q126 56 128 76 Q114 68 100 70 Q86 68 72 76 Z" fill="#1A120A"/><path d="M50 72 L100 26 L150 72 Q100 82 50 72 Z" fill="#E8D49A" stroke="${OL}" stroke-width="2.4"/><path d="M75 49 Q100 56 125 49 M62 61 Q100 70 138 61" stroke="#B89A5A" stroke-width="1.8" fill="none"/><path d="M100 26 L100 76 M84 40 L76 74 M116 40 L124 74" stroke="#C8B070" stroke-width="1.2"/>`,
+ armB:armB('#B89A6A',SK),
+ armF:`<path d="M150 58 L134 228" stroke="${OL}" stroke-width="9" stroke-linecap="round"/><path d="M150 58 L134 228" stroke="#8A6A3A" stroke-width="6" stroke-linecap="round"/><circle cx="151" cy="50" r="11" fill="url(#gOrb)" stroke="#FFF1C4" stroke-width="2"/>`+armF('#B89A6A',SK),
+ skills:[
+  {k:'Q',n:'Gậy Thần',t:'Chủ động',d:'Ánh sáng từ gậy thần hồi máu và hồi sinh tướng.',a:'cast',c:'#FFD66B',fx:'dQ'},
+  {k:'W',n:'Nón Thần',t:'Nội tại',d:'Nón thần chặn đòn bắn từ xa.',a:'cast',c:'#E8D49A',fx:'dW'},
+  {k:'E',n:'Sóng Sông Hồng',t:'Chủ động',d:'Dòng nước phù sa cuốn qua, làm chậm quái.',a:'cast',c:'#D9824A',fx:'dE'},
+  {k:'R',n:'Thành Một Đêm',t:'Tối thượng',d:'Dựng tường thành chặn đường quái 6 giây.',a:'ult',c:'#F2D27A',fx:'dR'}]},
+{id:'tiendung',name:'Tiên Dung',attr:'Trí tuệ',rar:'Sử thi',price:180,
+ sig:['Đôi Uyên Ương','Đứng cạnh Chử Đồng Tử thì cả hai được +20% sát thương phép.'],
+ back:`<path d="M74 122 Q40 140 46 180 Q52 210 36 230" stroke="#F2A0C0" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M126 122 Q160 140 154 180 Q148 210 164 230" stroke="#F2A0C0" stroke-width="7" fill="none" stroke-linecap="round"/>`,
+ legs:feet('#C8302A'),
+ body:dress('#C8302A')+`<path d="M58 206 Q100 218 142 206" stroke="#F2D27A" stroke-width="5" fill="none"/><path d="M84 118 L100 142 L116 118" stroke="#F2D27A" stroke-width="3.5" fill="none"/><path d="M70 160 h60" stroke="#F2D27A" stroke-width="3"/><circle cx="100" cy="186" r="7" fill="none" stroke="#F2D27A" stroke-width="2"/>`,
+ head:`<circle cx="100" cy="46" r="14" fill="#1A120A" stroke="${OL}" stroke-width="2"/>`+face(SKF)+`<path d="M70 84 Q70 54 100 54 Q130 54 130 84 Q122 66 100 64 Q78 66 70 84 Z" fill="#1A120A" stroke="${OL}" stroke-width="2"/><path d="M84 40 L122 50" stroke="#F2D27A" stroke-width="3"/><circle cx="122" cy="50" r="4" fill="#E8403A" stroke="${OL}" stroke-width="1.2"/>`,
+ armB:armB('#C8302A',SKF),
+ armF:armF('#C8302A',SKF)+`<path d="M140 162 L116 124 A40 40 0 0 1 166 120 Z" fill="#F2D27A" stroke="${OL}" stroke-width="2"/><path d="M140 162 L124 122 M140 162 L134 118 M140 162 L146 118 M140 162 L157 119" stroke="#B8852A" stroke-width="1.4"/><path d="M118 126 A38 38 0 0 1 164 122" stroke="#C8302A" stroke-width="4" fill="none"/>`,
+ skills:[
+  {k:'Q',n:'Quạt Tiên',t:'Chủ động',d:'Phẩy quạt tạo gió mạnh đẩy lùi quái.',a:'swing',c:'#DDF4FB',fx:'eQ'},
+  {k:'W',n:'Ánh Ngọc',t:'Nội tại',d:'Tăng sát thương phép cho tướng đứng gần.',a:'cast',c:'#F2A0C0',fx:'eW'},
+  {k:'E',n:'Sen Hồng',t:'Chủ động',d:'Hoa sen nở, hồi máu cho tướng quanh mình.',a:'cast',c:'#F08AB0',fx:'eE'},
+  {k:'R',n:'Mưa Hoa Tiên',t:'Tối thượng',d:'Hoa rơi khắp nơi: gây sát thương quái và hồi máu tướng.',a:'ult',c:'#FFB0D0',fx:'eR'}]},
+{id:'langlieu',name:'Lang Liêu',attr:'Trí tuệ',rar:'Sử thi',price:180,
+ sig:['Lễ Vật Đất Trời','Tướng đứng gần được +10% máu tối đa.'],
+ back:'',
+ legs:legs('#5A4028'),
+ body:torso('#8A6A40')+`<path d="M100 112 V188" stroke="#5A4020" stroke-width="2"/><rect x="68" y="168" width="64" height="8" rx="3" fill="#C8302A" stroke="${OL}" stroke-width="1.6"/><path d="M90 126 h20 M88 146 h24" stroke="#B89A6A" stroke-width="2"/>`,
+ head:face(SK)+`<path d="M68 82 Q66 52 100 50 Q134 52 132 82 Q100 70 68 82 Z" fill="#4A3020" stroke="${OL}" stroke-width="2.4"/><path d="M70 74 Q100 60 130 74 M70 66 Q100 52 130 66" stroke="#6A4A30" stroke-width="2.2" fill="none"/>`,
+ armB:armB('#8A6A40',SK),
+ armF:armF('#8A6A40',SK)+`<g transform="rotate(-8 143 161)"><rect x="128" y="146" width="30" height="30" rx="3" fill="#3E8A3A" stroke="${OL}" stroke-width="2.2"/><path d="M143 146 V176 M128 161 H158" stroke="#E8DDBF" stroke-width="2.4"/></g>`,
+ skills:[
+  {k:'Q',n:'Bánh Chưng',t:'Chủ động',d:'Dựng khiên vuông cho tướng đứng gần.',a:'cast',c:'#6AB04A',fx:'nQ'},
+  {k:'W',n:'Bánh Giầy',t:'Nội tại',d:'Hồi máu từ từ cho tướng quanh mình.',a:'cast',c:'#F4F0E6',fx:'nW'},
+  {k:'E',n:'Ruộng Lúa',t:'Chủ động',d:'Lúa mọc kín đường, làm chậm quái.',a:'cast',c:'#E8C050',fx:'nE'},
+  {k:'R',n:'Lễ Tổ Tiên',t:'Tối thượng',d:'Toàn quân hồi đầy máu và bất tử 2 giây.',a:'ult',c:'#FFE08A',fx:'nR'}]},
+/* ---------- base heroes (Thường) ---------- */
+{id:'lactuong',name:'Lạc Tướng',attr:'Sức mạnh',rar:'Thường',price:70,
+ sig:['Chiến binh Văn Lang','Tướng cận chiến cơ bản, đánh lan.'],
+ back:'',
+ legs:legs('#D9A274'),
+ body:torso('#B8302A')+`<path d="M74 136 l6 -6 6 6 6 -6 6 6 6 -6 6 6 6 -6 6 6 6 -6" stroke="#F2D27A" stroke-width="2.2" fill="none"/><path d="M72 154 l6 -6 6 6 6 -6 6 6 6 -6 6 6 6 -6 6 6 6 -6 6 6" stroke="#F2D27A" stroke-width="2.2" fill="none"/><rect x="68" y="168" width="64" height="9" rx="3" fill="#B8853A" stroke="${OL}" stroke-width="1.8"/><path d="M68 178 l4 12 4 -12 4 12 4 -12 4 12 4 -12 4 12 4 -12 4 12 4 -12 4 12 4 -12 4 12 4 -12 4 12 4 -12" stroke="#8A2418" stroke-width="2" fill="#B8302A"/>`,
+ head:`<path d="M82 62 Q70 34 76 14 Q86 32 90 60 Z M94 58 Q90 28 98 8 Q104 30 102 58 Z M106 58 Q110 28 120 12 Q118 34 112 60 Z" fill="#F7F3EA" stroke="${OL}" stroke-width="1.8"/>`+face(SK)+`<path d="M70 82 Q70 58 100 56 Q130 58 130 82 Q100 70 70 82 Z" fill="#1A120A" stroke="${OL}" stroke-width="2"/><path d="M70 72 Q100 60 130 72" stroke="${OL}" stroke-width="9" fill="none"/><path d="M70 72 Q100 60 130 72" stroke="#B8853A" stroke-width="6" fill="none"/><path d="M76 70 l4 -4 4 4 4 -4 4 4 4 -4 4 4 4 -4 4 4 4 -4 4 4 4 -4 4 4" stroke="#5A3E10" stroke-width="1.2" fill="none"/>`,
+ armB:armB('#B8302A',SK)+`<circle cx="60" cy="164" r="24" fill="#B8853A" stroke="${OL}" stroke-width="2.4"/><circle cx="60" cy="164" r="19" fill="none" stroke="#5A3E10" stroke-width="2.4" stroke-dasharray="0.1 4.5" stroke-linecap="round"/><circle cx="60" cy="164" r="12" fill="#C8963E" stroke="#5A3E10" stroke-width="1.4"/><polygon points="60,155 62,161 68,159 64,164 68,169 62,167 60,173 58,167 52,169 56,164 52,159 58,161" fill="#5A3E10"/>`,
+ armF:`<path d="M136 178 L158 92" stroke="${OL}" stroke-width="9" stroke-linecap="round"/><path d="M136 178 L158 92" stroke="#6A4420" stroke-width="6" stroke-linecap="round"/><path d="M152 102 Q174 86 184 108 Q176 126 154 122 Z" fill="#C8963E" stroke="${OL}" stroke-width="2.2"/><path d="M174 96 Q182 108 176 120" stroke="#F2D27A" stroke-width="1.6" fill="none"/>`+armF('#B8302A',SK),
+ skills:[
+  {k:'Q',n:'Khiên Đồng',t:'Chủ động',d:'Đập khiên trống đồng vào quái, làm choáng 1 giây.',a:'swing',c:'#C8963E',fx:'lgQ'},
+  {k:'W',n:'Rìu Lốc Xoáy',t:'Chủ động',d:'Xoay rìu đồng chém lan các quái phía trước.',a:'cast',c:'#E0B070',fx:'lgW'},
+  {k:'E',n:'Hùng Khí',t:'Nội tại',d:'Khí thế Văn Lang: tăng tốc đánh cho bản thân.',a:'cast',c:'#FF7A3A',fx:'lgE'},
+  {k:'R',n:'Sấm Tản Viên',t:'Tối thượng',d:'Gọi sét từ trời đánh xuống quái còn nhiều máu nhất.',a:'ult',c:'#CFE0FF',fx:'lgR'}]},
+{id:'lucsi',name:'Lực Sĩ Núi',attr:'Sức mạnh',rar:'Thường',price:80,
+ sig:['Sức Núi','Tướng cận chiến chống chịu, giữ chân quái.'],
+ back:'',
+ legs:legs('#6A5032'),
+ body:`<path d="M62 118 Q100 102 138 118 L142 184 Q100 196 58 184 Z" fill="#C89060" stroke="${OL}" stroke-width="2.4"/><path d="M80 134 q10 8 19 0 M101 134 q10 8 19 0 M92 150 h16 M92 160 h16" stroke="#9A6438" stroke-width="2" fill="none"/><path d="M62 172 Q100 186 138 172 L134 200 Q100 210 66 200 Z" fill="#6A4A2A" stroke="${OL}" stroke-width="2.2"/><path d="M60 170 Q100 182 140 170" stroke="${OL}" stroke-width="9" fill="none"/><path d="M60 170 Q100 182 140 170" stroke="#5E9A3A" stroke-width="5" fill="none"/><path d="M72 172 q4 6 0 12 M100 178 q5 6 0 12 M128 172 q4 6 0 12" stroke="#2E5A1E" stroke-width="2.6" fill="none"/><ellipse cx="84" cy="177" rx="5" ry="2.6" fill="#7FC24A" stroke="#1E3A12"/><ellipse cx="116" cy="177" rx="5" ry="2.6" fill="#7FC24A" stroke="#1E3A12"/>`,
+ head:face('#C89060')+`<path d="M68 84 Q62 52 100 50 Q138 52 132 84 L126 72 L118 80 L112 66 L100 76 L88 66 L82 80 L74 72 Z" fill="#2A1A0E" stroke="${OL}" stroke-width="2"/><path d="M84 80 q-4 -4 -10 -2 M116 80 q4 -4 10 -2" stroke="${OL}" stroke-width="3" stroke-linecap="round"/>`,
+ armB:arm(78,124,72,66,'#C89060','#C89060'),
+ armF:arm(122,124,128,66,'#C89060','#C89060')+`<path d="M62 52 Q56 22 90 12 Q122 4 140 24 Q152 46 136 62 Q100 72 62 52 Z" fill="#8A8070" stroke="${OL}" stroke-width="2.6"/><path d="M76 36 q12 -10 26 -6 M112 44 l10 10 M90 52 l-8 -8" stroke="#5A5040" stroke-width="2.4" fill="none"/><path d="M72 28 q14 -14 34 -14" stroke="#B8AE98" stroke-width="3" fill="none" stroke-linecap="round"/>`,
+ skills:[
+  {k:'Q',n:'Dây Mây',t:'Chủ động',d:'Quăng dây mây trói quái đi xa nhất, kéo nó lùi lại.',a:'shoot',c:'#7FC24A',fx:'lsQ'},
+  {k:'W',n:'Gánh Núi',t:'Nội tại',d:'Nâng đá luyện sức: tăng sức mạnh.',a:'heave',c:'#C89A5A',fx:'lsW'},
+  {k:'E',n:'Bụi Đá',t:'Chủ động',d:'Dậm đá tung bụi, gây sát thương quanh mình.',a:'heave',c:'#A08458',fx:'lsE'},
+  {k:'R',n:'Vùi Đá',t:'Tối thượng',d:'Ném tảng đá lớn chôn sống một quái.',a:'heave',c:'#B8AE98',fx:'lsR'}]},
+{id:'xathu',name:'Xạ Thủ Văn Lang',attr:'Nhanh nhẹn',rar:'Thường',price:55,
+ sig:['Cung Thủ Văn Lang','Tướng đánh xa cơ bản, bắn nhanh.'],
+ back:`<g transform="rotate(-20 100 130)"><rect x="106" y="96" width="16" height="56" rx="4" fill="#6A4A2A" stroke="${OL}" stroke-width="2"/><path d="M110 96 l-2 -12 M115 96 l0 -14 M120 96 l2 -12" stroke="#E8DDBF" stroke-width="2.2"/></g>`,
+ legs:legs('#4E6A2E'),
+ body:torso('#4E8A3A')+`<path d="M74 120 L126 174" stroke="#6A4A2A" stroke-width="5"/><rect x="68" y="168" width="64" height="8" rx="3" fill="#6A4A2A" stroke="${OL}" stroke-width="1.6"/><path d="M80 140 h40" stroke="#8FD06A" stroke-width="2" stroke-dasharray="4 3"/>`,
+ head:face(SK)+`<path d="M70 82 Q70 54 100 52 Q130 54 130 82 Q118 68 100 68 Q82 68 70 82 Z" fill="#1A120A" stroke="${OL}" stroke-width="2"/><path d="M70 72 Q100 62 130 72" stroke="#4E8A3A" stroke-width="5" fill="none"/><path d="M78 68 Q66 44 74 24 Q84 44 84 66 Z M88 64 Q82 38 92 20 Q98 42 94 64 Z" fill="#F7F3EA" stroke="${OL}" stroke-width="1.6"/>`,
+ armB:arm(78,124,104,156,'#4E8A3A',SK),
+ armF:`<rect x="110" y="155" width="62" height="9" rx="3" fill="#6A4420" stroke="${OL}" stroke-width="2"/><path d="M170 132 Q182 160 170 188" stroke="${OL}" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M170 132 Q182 160 170 188" stroke="#7A9030" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M170 132 L148 160 L170 188" stroke="#F2EEE0" stroke-width="1.3" fill="none"/><path d="M148 160 H186" stroke="#E8DDBF" stroke-width="2.6"/><path d="M188 160 l-6 -4 v8 Z" fill="#C8CED4"/>`+armF('#4E8A3A',SK),
+ skills:[
+  {k:'Q',n:'Tên Xuyên Thấu',t:'Chủ động',d:'Mũi tên bay xuyên qua cả hàng quái.',a:'shoot',c:'#E8DDBF',fx:'xQ'},
+  {k:'W',n:'Đa Tiễn',t:'Chủ động',d:'Bắn một chùm tên xòe hình quạt.',a:'shoot',c:'#F2E6C8',fx:'xW'},
+  {k:'E',n:'Tên Tẩm Nhựa Độc',t:'Nội tại',d:'Tên tẩm nhựa cây độc, gây sát thương theo thời gian.',a:'shoot',c:'#7FD04A',fx:'xE'},
+  {k:'R',n:'Mưa Tên',t:'Tối thượng',d:'Tên trút xuống như mưa khắp đường quái.',a:'ult',c:'#E8DDBF',fx:'xR'}]},
+{id:'thosan',name:'Thợ Săn Rừng',attr:'Nhanh nhẹn',rar:'Thường',price:75,
+ sig:['Thợ Săn Rừng Sâu','Đánh đơn mục tiêu, sát thương chí mạng cao.'],
+ back:`<path d="M76 116 Q56 170 66 212 Q100 202 134 212 Q144 170 124 116 Z" fill="#1E3A22" stroke="${OL}" stroke-width="2.2"/>`,
+ legs:legs('#2A3A22'),
+ body:torso('#2E4A2A')+`<path d="M74 122 L126 172 M126 122 L74 172" stroke="#6A4A2A" stroke-width="4"/><circle cx="100" cy="147" r="4" fill="#B8853A" stroke="${OL}" stroke-width="1.2"/><rect x="68" y="170" width="64" height="8" rx="3" fill="#4A3220" stroke="${OL}" stroke-width="1.6"/>`,
+ head:face(SK,false)+`<path d="M64 94 Q58 40 100 36 Q120 34 132 46 Q142 60 136 94 Q132 66 100 64 Q70 66 64 94 Z" fill="#1E3A22" stroke="${OL}" stroke-width="2.4"/><path d="M128 44 Q142 34 150 40 Q140 44 136 54 Z" fill="#1E3A22" stroke="${OL}" stroke-width="2"/><path d="M70 74 Q100 58 132 74" stroke="#2E5A2E" stroke-width="2" fill="none"/>`,
+ armB:`<path d="M62 158 V170" stroke="#4A3220" stroke-width="4"/><path d="M59 170 L62 196 L65 170 Z" fill="#D0D8DC" stroke="${OL}" stroke-width="1.4"/>`+armB('#2E4A2A',SK),
+ armF:`<path d="M141 160 L166 132 L147 166 Z" fill="#D0D8DC" stroke="${OL}" stroke-width="1.4"/>`+armF('#2E4A2A',SK),
+ skills:[
+  {k:'Q',n:'Bước Lá Rừng',t:'Chủ động',d:'Lướt tới quái như lá bay, chém chữ X rồi lùi về.',a:'swing',c:'#9AE07A',fx:'hQ'},
+  {k:'W',n:'Dao Ẩn',t:'Chủ động',d:'Ẩn mình trong chớp mắt, phóng dao bất ngờ.',a:'shoot',c:'#B8C8B8',fx:'hW'},
+  {k:'E',n:'Đòn Chí Mạng',t:'Nội tại',d:'Thỉnh thoảng tung một đòn chí mạng cực mạnh.',a:'swing',c:'#FF5A3A',fx:'hE'},
+  {k:'R',n:'Săn Mồi',t:'Tối thượng',d:'Lao vào con mồi, chém liên tiếp gây x6 sát thương.',a:'ult',c:'#FF7A5A',fx:'hR'}]},
+{id:'thaymo',name:'Thầy Mo Lửa',attr:'Trí tuệ',rar:'Thường',price:85,
+ sig:['Lửa Thiêng','Phép lửa gây sát thương lan theo thời gian.'],
+ back:'',
+ legs:feet('#5A2A1E'),
+ body:dress('#5E3A8A')+`<path d="M58 206 Q100 218 142 206" stroke="#F2D27A" stroke-width="4" fill="none"/><path d="M84 118 L100 140 L116 118" stroke="#F2D27A" stroke-width="3" fill="none"/><path d="M68 166 Q100 176 132 166" stroke="#C8302A" stroke-width="7" fill="none"/><path d="M92 188 q8 -8 16 0 q-8 8 -16 0 M80 196 h-6 M120 196 h6" stroke="#B89AE0" stroke-width="2" fill="none"/>`,
+ head:[-62,-36,-12,12,36,62].map((a,j)=>`<ellipse cx="100" cy="30" rx="6.5" ry="22" fill="${j%2?'#E8602A':'#C8302A'}" stroke="${OL}" stroke-width="1.6" transform="rotate(${a} 100 66)"/>`).join('')+face(SK)+`<path d="M70 82 Q70 56 100 54 Q130 56 130 82 Q100 70 70 82 Z" fill="#1A120A" stroke="${OL}" stroke-width="2"/><path d="M70 72 Q100 60 130 72" stroke="${OL}" stroke-width="9" fill="none"/><path d="M70 72 Q100 60 130 72" stroke="#F2D27A" stroke-width="6" fill="none"/><circle cx="100" cy="65" r="4" fill="#C8302A" stroke="${OL}" stroke-width="1.2"/><path d="M84 92 l-4 6 M116 92 l4 6" stroke="#E8602A" stroke-width="2.2"/>`,
+ armB:armB('#5E3A8A',SK),
+ armF:`<path d="M150 70 L134 228" stroke="${OL}" stroke-width="9" stroke-linecap="round"/><path d="M150 70 L134 228" stroke="#5A3A1A" stroke-width="6" stroke-linecap="round"/><path d="M146 74 l10 2" stroke="#F2D27A" stroke-width="3"/><path d="M151 68 Q136 52 146 34 Q149 46 155 46 Q153 34 162 24 Q172 50 160 66 Z" fill="#FF8A2E" stroke="#7A2A08" stroke-width="1.6"/><path d="M152 64 Q146 54 152 44 Q155 54 158 52 Q162 58 156 64 Z" fill="#FFE08A"/>`+armF('#5E3A8A',SK),
+ skills:[
+  {k:'Q',n:'Cột Lửa',t:'Chủ động',d:'Gọi cột lửa phụt lên dưới chân quái.',a:'cast',c:'#FF7A2E',fx:'mfQ'},
+  {k:'W',n:'Đuốc Linh Hồn',t:'Nội tại',d:'Đòn đánh là những đốm lửa hồn bay lượn.',a:'shoot',c:'#C890FF',fx:'mfW'},
+  {k:'E',n:'Lửa Thiêu',t:'Chủ động',d:'Đốt cháy các quái trên đường, mất máu liên tục.',a:'cast',c:'#FF9A3A',fx:'mfE'},
+  {k:'R',n:'Hỏa Sơn',t:'Tối thượng',d:'Cầu lửa từ trời rơi xuống khắp đường quái.',a:'ult',c:'#FF5A2E',fx:'mfR'}]},
+{id:'thansuong',name:'Thần Sương Núi',attr:'Trí tuệ',rar:'Thường',price:80,
+ sig:['Sương Núi Tản','Làm chậm và khống chế quái bằng băng giá.'],
+ back:'',
+ legs:feet('#8AB0D0'),
+ body:dress('#BFD8EC')+`<path d="M58 206 Q100 218 142 206" stroke="#F4FAFF" stroke-width="5" fill="none"/><path d="M84 118 L100 140 L116 118" stroke="#6AA8D0" stroke-width="3" fill="none"/><path d="M70 166 Q100 174 130 166" stroke="#F4FAFF" stroke-width="6" fill="none"/><path d="M100 180 v16 M92 188 h16 M94 182 l12 12 M106 182 l-12 12" stroke="#6AA8D0" stroke-width="1.8"/>`,
+ head:`<path d="M70 84 Q58 150 72 202 L128 202 Q142 150 130 84 Z" fill="#F2F4F8" stroke="#8A9AAE" stroke-width="2"/><path d="M84 120 Q80 160 86 196 M116 120 Q120 160 114 196" stroke="#C8D2DE" stroke-width="1.6" fill="none"/>`+face(SKF)+`<path d="M70 82 Q70 52 100 52 Q130 52 130 82 Q120 66 108 70 Q100 60 92 70 Q80 66 70 82 Z" fill="#F2F4F8" stroke="#8A9AAE" stroke-width="2"/><path d="M90 54 L100 40 L110 54 Z" fill="#BFEFFF" stroke="#2A5A7A" stroke-width="1.6"/><path d="M80 58 L84 48 L90 56 M120 58 L116 48 L110 56" stroke="#2A5A7A" stroke-width="1.4" fill="#DDF4FB"/>`,
+ armB:armB('#BFD8EC',SKF),
+ armF:`<path d="M150 66 L134 228" stroke="${OL}" stroke-width="8" stroke-linecap="round"/><path d="M150 66 L134 228" stroke="#DDEFFF" stroke-width="5" stroke-linecap="round"/><path d="M150 28 L161 50 L150 72 L139 50 Z" fill="#BFEFFF" stroke="#2A5A7A" stroke-width="2"/><path d="M150 28 V72 M139 50 H161" stroke="#FFFFFF" stroke-width="1.2"/><path d="M140 62 l-8 -6 2 10 Z M160 62 l8 -6 -2 10 Z" fill="#DDF4FB" stroke="#2A5A7A" stroke-width="1.2"/>`+armF('#BFD8EC',SKF),
+ skills:[
+  {k:'Q',n:'Vòng Sương',t:'Chủ động',d:'Vòng sương lạnh tỏa ra, làm chậm quái 60%.',a:'cast',c:'#BFEFFF',fx:'tsQ'},
+  {k:'W',n:'Mũi Sương Giá',t:'Chủ động',d:'Bắn mũi băng nhọn vào quái.',a:'shoot',c:'#DDF4FB',fx:'tsW'},
+  {k:'E',n:'Hơi Lạnh Đỉnh Núi',t:'Nội tại',d:'Gió lạnh từ đỉnh núi thổi qua, làm chậm quái.',a:'cast',c:'#A8D8F0',fx:'tsE'},
+  {k:'R',n:'Mù Sương Tản Viên',t:'Tối thượng',d:'Sương mù phủ kín, đóng băng mọi quái 2 giây.',a:'ult',c:'#DDF4FB',fx:'tsR'}]}
+];
+const ATTR_C={'Sức mạnh':'var(--a-str)','Nhanh nhẹn':'var(--a-agi)','Trí tuệ':'var(--a-int)'};
+const RAR_C={'Thường':'var(--r-com)','Sử thi':'var(--r-epic)','Huyền thoại':'var(--r-leg)'};
+
+/* ---------- scene refs ---------- */
+const svgNS='http://www.w3.org/2000/svg';
+const stage=document.getElementById('stage'), canvas=document.getElementById('fx'), ctx=canvas.getContext('2d');
+const heroWrap=document.getElementById('heroWrap'), heroInner=document.getElementById('heroInner');
+const fxLayer=document.getElementById('fxLayer'), flashEl=document.getElementById('flash');
+const HX=140, HY=108; // hero local -> stage offset
+const HAND={x:278,y:271};
+const EN=[{x:520,y:332,use:'e-tom',s:2.4,ground:true},{x:625,y:336,use:'e-cs',s:2.1,ground:true},{x:725,y:332,use:'e-rua',s:2.3,ground:true},{x:610,y:200,use:'e-cb',s:1.9,fly:true}];
+const enG=document.getElementById('enemies');
+EN.forEach((e,i)=>{
+  const g=document.createElementNS(svgNS,'g'); g.setAttribute('transform',`translate(${e.x} ${e.y})`);
+  g.innerHTML=`${e.fly?'<ellipse cx="0" cy="130" rx="26" ry="5" fill="#000" opacity=".25"/>':'<ellipse cx="0" cy="2" rx="38" ry="7" fill="#000" opacity=".35"/>'}<g class="in"><use href="#${e.use}" transform="scale(${e.s})"/></g><rect x="-26" y="${e.fly?-108:-74}" width="52" height="6" rx="2" fill="#0A0A0A" stroke="#000"/><rect class="hp" x="-25" y="${e.fly?-107:-73}" width="50" height="4" rx="1" fill="#3EBE3E"/>`;
+  enG.appendChild(g); e.g=g; e.in=g.querySelector('.in'); e.hpEl=g.querySelector('.hp'); e.hp=1;
+  e.cy = e.fly? e.y-60 : e.y-30;
+  if(!RM) e.bob=gsap.to(e.in,{y:e.fly?-10:-2,duration:e.fly?.9:1.2+i*.2,yoyo:true,repeat:-1,ease:'sine.inOut'});
+});
+setInterval(()=>EN.forEach(e=>{if(e.hp<1){e.hp=Math.min(1,e.hp+.04);drawHP(e)}}),400);
+function drawHP(e){e.hpEl.setAttribute('width',(50*e.hp).toFixed(1));e.hpEl.setAttribute('fill',e.hp>.5?'#3EBE3E':e.hp>.25?'#E0B030':'#D84A2A')}
+
+/* ---------- canvas particle engine ---------- */
+let DPR=1;
+function resize(){const r=stage.getBoundingClientRect();DPR=Math.min(2,window.devicePixelRatio||1);canvas.width=Math.round(r.width*DPR);canvas.height=Math.round(r.height*DPR);
+  // svg uses xMidYMid slice on a 2:1 box -> uniform scale
+}
+window.addEventListener('resize',resize);resize();
+const P=[],S=[];
+const rnd=(a,b)=>a+Math.random()*(b-a);
+function add(p){P.push(Object.assign({x:0,y:0,vx:0,vy:0,g:0,life:.6,age:0,size:4,color:'#fff',type:'glow',rot:rnd(0,6.28),vr:0,drag:.97},p))}
+function burst(x,y,color,n,sp,type='glow',o={}){for(let i=0;i<n;i++){const a=o.up?rnd(-2.8,-0.35):rnd(0,6.283),s=rnd(.3,1)*sp;add(Object.assign({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:rnd(.35,.8),size:rnd(2,5),color,type,g:o.g??260,vr:rnd(-6,6)},o.p||{}))}}
+function shape(s){S.push(Object.assign({age:0,life:.5},s))}
+function frame(t){
+  const sc=canvas.width/800; ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,canvas.width,canvas.height); ctx.setTransform(sc,0,0,sc,0,(canvas.height-400*sc)/2);
+  const dt=Math.min(.05,(t-(frame.l||t))/1000); frame.l=t;
+  for(let i=S.length-1;i>=0;i--){const s=S[i];s.age+=dt;if(s.age>=s.life){S.splice(i,1);continue}drawShape(s,1-s.age/s.life,s.age/s.life)}
+  for(let i=P.length-1;i>=0;i--){const p=P[i];p.age+=dt;if(p.age>=p.life){P.splice(i,1);continue}
+    p.vx*=p.drag;p.vy=p.vy*p.drag+p.g*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.rot+=p.vr*dt;drawP(p,1-p.age/p.life)}
+  requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+function drawP(p,a){ctx.save();ctx.globalAlpha=Math.max(0,a);ctx.translate(p.x,p.y);ctx.rotate(p.rot);const s=p.size;
+  switch(p.type){
+  case 'glow':case 'ember':ctx.globalCompositeOperation='lighter';ctx.fillStyle=p.color;ctx.globalAlpha=a*.35;ctx.beginPath();ctx.arc(0,0,s*2.4,0,7);ctx.fill();ctx.globalAlpha=a;ctx.beginPath();ctx.arc(0,0,s*.9,0,7);ctx.fill();break;
+  case 'spark':ctx.globalCompositeOperation='lighter';ctx.rotate(-p.rot+Math.atan2(p.vy,p.vx));ctx.strokeStyle=p.color;ctx.lineWidth=s*.6;ctx.beginPath();ctx.moveTo(-s*3,0);ctx.lineTo(s*1.5,0);ctx.stroke();break;
+  case 'drop':ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(0,0,s,0,7);ctx.fill();ctx.fillStyle='#ffffffaa';ctx.beginPath();ctx.arc(-s*.3,-s*.3,s*.35,0,7);ctx.fill();break;
+  case 'leaf':case 'petal':case 'feather':ctx.fillStyle=p.color;ctx.beginPath();ctx.ellipse(0,0,s*(p.type==='feather'?2.4:1.6),s*.7,0,0,7);ctx.fill();if(p.type==='feather'){ctx.strokeStyle='#9A8AB8';ctx.lineWidth=.6;ctx.beginPath();ctx.moveTo(-s*2.4,0);ctx.lineTo(s*2.4,0);ctx.stroke()}break;
+  case 'note':ctx.rotate(-p.rot);ctx.fillStyle=p.color;ctx.font=`800 ${s*4}px serif`;ctx.textAlign='center';ctx.fillText('♪',0,s);break;
+  case 'coin':ctx.fillStyle='#E0B030';ctx.strokeStyle='#7A5A10';ctx.lineWidth=1;ctx.beginPath();ctx.arc(0,0,s,0,7);ctx.fill();ctx.stroke();ctx.fillStyle='#5A3E08';ctx.fillRect(-s*.3,-s*.3,s*.6,s*.6);break;
+  case 'rock':ctx.fillStyle=p.color;ctx.strokeStyle='#2A2016';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(-s,-s*.6);ctx.lineTo(s*.2,-s);ctx.lineTo(s,0);ctx.lineTo(s*.4,s*.9);ctx.lineTo(-s*.8,s*.6);ctx.closePath();ctx.fill();ctx.stroke();break;
+  case 'rice':ctx.strokeStyle=p.color;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,s*2);ctx.lineTo(0,-s*2);ctx.stroke();ctx.fillStyle='#F2D27A';ctx.beginPath();ctx.ellipse(0,-s*2,s*.6,s*1.2,0,0,7);ctx.fill();break;
+  case 'wind':ctx.globalCompositeOperation='lighter';ctx.rotate(-p.rot);ctx.strokeStyle=p.color;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-s*5,0);ctx.quadraticCurveTo(0,-s,s*5,0);ctx.stroke();break;
+  case 'plus':ctx.rotate(-p.rot);ctx.fillStyle=p.color;ctx.fillRect(-s*.3,-s,s*.6,s*2);ctx.fillRect(-s,-s*.3,s*2,s*.6);break;
+  }ctx.restore()}
+function drawHead(o,type,color,size){ctx.save();ctx.translate(o.x,o.y);
+  if(type==='melon'){ctx.rotate(o.r||0);ctx.fillStyle='#3E8A3A';ctx.strokeStyle='#1E3A12';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,size,0,7);ctx.fill();ctx.stroke();ctx.strokeStyle='#1E5A1E';ctx.beginPath();for(let k=-1;k<=1;k++){ctx.moveTo(-size,k*size*.45);ctx.quadraticCurveTo(0,k*size*.45+size*.3,size,k*size*.45)}ctx.stroke()}
+  else if(type==='bird'){ctx.rotate(o.r||0);ctx.strokeStyle=color;ctx.lineWidth=3;ctx.lineCap='round';const f=Math.sin(performance.now()/60)*size*.6;ctx.beginPath();ctx.moveTo(-size,-f);ctx.quadraticCurveTo(-size*.4,0,0,0);ctx.quadraticCurveTo(size*.4,0,size,-f);ctx.stroke()}
+  else if(type==='note'){ctx.fillStyle=color;ctx.font=`800 ${size*3}px serif`;ctx.textAlign='center';ctx.fillText('♪',0,size)}
+  else if(type==='feather'){ctx.rotate(o.r||0);ctx.fillStyle=color;ctx.beginPath();ctx.ellipse(0,0,size*2.2,size*.7,0,0,7);ctx.fill()}
+  else {ctx.rotate(o.r||0);ctx.globalCompositeOperation='lighter';ctx.fillStyle=color;ctx.globalAlpha=.4;ctx.beginPath();ctx.arc(0,0,size*2.2,0,7);ctx.fill();ctx.globalAlpha=1;ctx.fillStyle='#fff';ctx.beginPath();ctx.ellipse(0,0,size*1.6,size*.55,0,0,7);ctx.fill()}
+  ctx.restore()}
+function drawShape(s,a,k){ctx.save();ctx.globalAlpha=Math.max(0,a);
+  switch(s.kind){
+  case 'ring':{const r=s.r0+(s.r1-s.r0)*easeOut(k);ctx.globalCompositeOperation='lighter';ctx.strokeStyle=s.color;ctx.lineWidth=s.w*a+1;ctx.beginPath();ctx.ellipse(s.x,s.y,r,r*(s.flat||1),0,0,7);ctx.stroke();break}
+  case 'slash':{ctx.globalCompositeOperation='lighter';ctx.lineCap='round';const a1=s.a0+(s.a1-s.a0)*Math.min(1,k*2.5);for(let j=0;j<3;j++){ctx.strokeStyle=j?s.color:'#fff';ctx.lineWidth=(s.w-j*3)*a;ctx.beginPath();ctx.arc(s.x,s.y,s.r-j*7,s.a0,a1);ctx.stroke()}break}
+  case 'beam':{ctx.globalCompositeOperation='lighter';ctx.lineCap='round';const w=s.w*(k<.15?k/.15:a);ctx.strokeStyle=s.color;ctx.globalAlpha=.45;ctx.lineWidth=w*2;ctx.beginPath();ctx.moveTo(s.x1,s.y1);ctx.lineTo(s.x2,s.y2);ctx.stroke();ctx.globalAlpha=1;ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(s.x1,s.y1);ctx.lineTo(s.x2,s.y2);ctx.stroke();ctx.strokeStyle='#fff';ctx.lineWidth=w*.35;ctx.stroke();break}
+  case 'bolt':{ctx.globalCompositeOperation='lighter';ctx.strokeStyle=s.color;ctx.lineWidth=3;ctx.shadowColor=s.color;ctx.shadowBlur=12;ctx.beginPath();ctx.moveTo(s.x1,s.y1);const n=9;for(let j=1;j<=n;j++){const t=j/n;ctx.lineTo(s.x1+(s.x2-s.x1)*t+(j<n?rnd(-14,14):0),s.y1+(s.y2-s.y1)*t+(j<n?rnd(-14,14):0))}ctx.stroke();ctx.strokeStyle='#fff';ctx.lineWidth=1.2;ctx.stroke();break}
+  case 'dome':{const r=s.r*Math.min(1,easeOut(k*3));ctx.fillStyle=s.color;ctx.globalAlpha=a*.18;ctx.beginPath();ctx.ellipse(s.x,s.y,r,r*.95,0,Math.PI,0);ctx.closePath();ctx.fill();ctx.globalAlpha=a*.85;ctx.strokeStyle=s.color;ctx.lineWidth=3;ctx.stroke();ctx.globalAlpha=a*.35;ctx.lineWidth=1.2;for(let j=1;j<4;j++){ctx.beginPath();ctx.ellipse(s.x,s.y,r*j/4,r*.95,0,Math.PI,0);ctx.stroke()}ctx.beginPath();ctx.ellipse(s.x,s.y-r*.45,r*.86,r*.12,0,0,7);ctx.stroke();break}
+  case 'column':{ctx.globalCompositeOperation='lighter';const g=ctx.createLinearGradient(s.x-s.w,0,s.x+s.w,0);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(.5,s.color);g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.globalAlpha=a*.85;ctx.fillRect(s.x-s.w,-20,s.w*2,s.y+20);break}
+  case 'head':{drawHead(s.o,s.type,s.color,s.size);break}
+  }ctx.restore()}
+const easeOut=k=>1-Math.pow(1-Math.min(1,k),3);
+
+/* ---------- fx helpers ---------- */
+function proj(x1,y1,x2,y2,o){o=Object.assign({dur:.35,color:'#fff',type:'bolt',size:5,lob:0,trail:'glow'},o);const st={x:x1,y:y1,r:Math.atan2(y2-y1,x2-x1)};const sh={kind:'head',o:st,type:o.type,color:o.color,size:o.size,life:o.dur+.02};shape(sh);
+  const tw={t:0};gsap.to(tw,{t:1,duration:o.dur,ease:o.lob?'none':'power1.in',onUpdate(){const t=tw.t,px=st.x,py=st.y;st.x=x1+(x2-x1)*t;st.y=y1+(y2-y1)*t-(o.lob?Math.sin(Math.PI*t)*o.lob:0)+(o.wob?Math.sin(t*20)*o.wob:0);st.r=o.type==='melon'?st.r+.2:Math.atan2(st.y-py,st.x-px);if(o.trail)add({x:st.x,y:st.y,vx:rnd(-20,20),vy:rnd(-20,20),life:.3,size:o.size*.6,color:o.color,type:o.trail,g:0})},onComplete(){sh.life=0;o.onHit&&o.onHit()}})}
+function hit(i,o={}){const e=EN[i];if(!e)return;const kb=o.kb??10;gsap.fromTo(e.in,{x:0},{x:kb,duration:.09,yoyo:true,repeat:1,ease:'power1.out'});gsap.fromTo(e.in,{opacity:.3},{opacity:1,duration:.35});e.hp=Math.max(.06,e.hp-(o.dmg??.18));drawHP(e);burst(e.x,e.cy,o.color||'#fff',o.n??10,170,o.type||'spark');if(o.status)floatText(e.x,e.cy-(e.fly?40:44),o.status,o.sc||'#FFF1C4')}
+function hitAll(o={},gap=.08,ground=false){EN.forEach((e,i)=>{if(ground&&e.fly)return;gsap.delayedCall(i*gap,()=>hit(i,o))})}
+function floatText(x,y,txt,color){const t=document.createElementNS(svgNS,'text');t.setAttribute('x',x);t.setAttribute('y',y);t.setAttribute('text-anchor','middle');t.setAttribute('font-family','Alegreya Sans, sans-serif');t.setAttribute('font-weight','800');t.setAttribute('font-size','17');t.setAttribute('fill',color);t.setAttribute('stroke','#1A0C04');t.setAttribute('stroke-width','4');t.setAttribute('paint-order','stroke');t.textContent=txt;fxLayer.appendChild(t);gsap.fromTo(t,{y:8,opacity:0},{y:-22,opacity:1,duration:.35,ease:'back.out(2)'});gsap.to(t,{opacity:0,y:-40,delay:.9,duration:.4,onComplete:()=>t.remove()})}
+function ring(x,y,color,r0,r1,life=.6,w=6,flat=1){shape({kind:'ring',x,y,color,r0,r1,life,w,flat})}
+function shake(a=8,n=10){if(RM)return;gsap.to(stage,{x:`random(-${a},${a})`,y:`random(-${a*.6},${a*.6})`,duration:.035,repeat:n,yoyo:true,onComplete:()=>gsap.set(stage,{x:0,y:0})})}
+function flash(color='#fff',op=.6){flashEl.style.background=color;gsap.fromTo(flashEl,{opacity:op},{opacity:0,duration:.6})}
+function banner(t,s){document.getElementById('bannerT').textContent=t;document.getElementById('bannerS').textContent=s;const b=document.getElementById('banner');gsap.killTweensOf(b);gsap.fromTo(b,{opacity:0,scale:1.6,xPercent:-50,x:0},{opacity:1,scale:1,duration:.35,ease:'back.out(2)'});gsap.to(b,{opacity:0,delay:1.4,duration:.4})}
+function heal(color,type,txt){for(let i=0;i<26;i++)gsap.delayedCall(i*.025,()=>add({x:240+rnd(-50,50),y:rnd(250,330),vx:rnd(-10,10),vy:rnd(-140,-70),g:0,life:rnd(.6,1.1),size:rnd(3,6),color,type,vr:rnd(-3,3),drag:.99}));ring(240,328,color,20,90,.8,5,.3);if(txt)floatText(240,140,txt,color)}
+function aura(color,txt){[0,.18,.36].forEach(d=>gsap.delayedCall(d,()=>ring(240,326,color,30,110,.7,5,.32)));burst(240,250,color,16,120,'glow',{up:true,g:-60});if(txt)floatText(240,140,txt,color)}
+function dome(color,r=100,life=1.3,x=240,y=332){shape({kind:'dome',x,y,r,color,life});burst(x,y-r*.6,color,16,90,'glow',{g:-20})}
+function wave(color,type,o={}){const st={x:300};const done=new Set();gsap.to(st,{x:790,duration:o.dur||.8,ease:'power1.in',onUpdate(){for(let j=0;j<3;j++)add({x:st.x+rnd(-8,8),y:rnd(296,336),vx:rnd(40,120),vy:rnd(-160,-60),g:420,life:rnd(.3,.6),size:rnd(3,6),color,type});EN.forEach((e,i)=>{if(!e.fly&&!done.has(i)&&st.x>=e.x-20){done.add(i);hit(i,{kb:o.kb??34,status:o.status,sc:color,color})}})}})}
+function rain(type,color,o={}){const n=o.n||22;for(let i=0;i<n;i++){gsap.delayedCall(i*.045,()=>{const x=rnd(450,780),tx=x+rnd(-20,20),ty=rnd(300,340);proj(x-40,-20,tx,ty,{dur:.45,type:o.head||'bolt',color,size:o.size||5,trail:o.trail===undefined?'glow':o.trail,onHit(){burst(tx,ty,o.burst||color,8,150,type,{g:400})}})})}gsap.delayedCall(.5,()=>hitAll({status:o.status,sc:color,color},.12,true))}
+function columnFx(color,w=46){shape({kind:'column',x:240,y:330,w,color,life:1})}
+function wallFx(){const g=document.createElementNS(svgNS,'g');let s='';for(let r=0;r<5;r++)for(let c=0;c<4;c++){const x=402+c*18+(r%2?9:0),y=210+r*24;s+=`<rect x="${x}" y="${y}" width="18" height="24" fill="${(r+c)%2?'#8A7046':'#A08458'}" stroke="#2A1F12" stroke-width="2"/>`}
+  s+=`<rect x="398" y="196" width="84" height="16" fill="#C8A060" stroke="#2A1F12" stroke-width="2"/><path d="M398 196 v-12 h14 v12 M426 196 v-12 h14 v12 M454 196 v-12 h14 v12" fill="#C8A060" stroke="#2A1F12" stroke-width="2"/><circle cx="440" cy="240" r="13" fill="#B8853A" stroke="#2A1F12" stroke-width="2"/><circle cx="440" cy="240" r="7" fill="none" stroke="#2A1F12"/>`;
+  const cl=document.createElementNS(svgNS,'clipPath');cl.id='wc'+Date.now();cl.innerHTML='<rect x="380" y="0" width="120" height="335"/>';fxLayer.appendChild(cl);g.setAttribute('clip-path',`url(#${cl.id})`);const inner=document.createElementNS(svgNS,'g');inner.innerHTML=s;g.appendChild(inner);fxLayer.appendChild(g);
+  gsap.fromTo(inner,{y:160},{y:0,duration:.45,ease:'back.out(1.4)'});burst(440,330,'#C89A5A',30,220,'rock',{up:true,g:500});shake(7,8);
+  gsap.delayedCall(.35,()=>hitAll({kb:30,status:'BỊ CHẶN',sc:'#F2D27A',color:'#C89A5A'},.06,true));gsap.to(inner,{y:160,delay:1.9,duration:.5,ease:'power2.in',onComplete:()=>{g.remove();cl.remove()}})}
+function summonFx(){for(let i=0;i<9;i++){const g=document.createElementNS(svgNS,'g');const x0=250+rnd(-30,30),y0=322+rnd(-8,10);g.innerHTML=`<ellipse cx="0" cy="2" rx="7" ry="2.5" fill="#000" opacity=".35"/><rect x="-4" y="-14" width="8" height="12" rx="2" fill="#B8402A" stroke="#2A1608"/><circle cx="0" cy="-19" r="5.5" fill="#E8B98C" stroke="#2A1608"/><path d="M-4 -24 l-2 -6 M0 -25 l0 -7 M4 -24 l2 -6" stroke="#F2E6C8" stroke-width="1.6"/><path d="M5 -8 L12 -26" stroke="#5A3A1A" stroke-width="1.6"/><path d="M12 -26 l2 -4 -4 1z" fill="#D0D0D0"/>`;g.setAttribute('transform',`translate(${x0} ${y0})`);fxLayer.appendChild(g);
+  const tgt=EN[i%3];const st={x:x0,y:y0};burst(x0,y0-10,'#FFE6A0',8,90,'glow');
+  gsap.to(st,{x:tgt.x-30+rnd(-14,10),y:tgt.y-2+rnd(-6,6),duration:.6+rnd(0,.2),delay:.15+i*.05,ease:'power1.in',onUpdate:()=>g.setAttribute('transform',`translate(${st.x} ${st.y+Math.abs(Math.sin(st.x/9))*-4})`),onComplete(){burst(st.x+10,st.y-12,'#FFE6A0',6,120,'spark');gsap.to(g,{opacity:0,duration:.6,delay:.6,onComplete:()=>g.remove()})}})}
+  gsap.delayedCall(.85,()=>hitAll({status:'CHẶN ĐƯỜNG',sc:'#FFE6A0',color:'#FFE6A0'},.1,true))}
+
+/* ---------- per-skill effects ---------- */
+const FX={
+ gQ(){shape({kind:'slash',x:500,y:300,r:60,a0:-2.4,a1:.5,color:'#D4DC70',w:14,life:.35});burst(520,290,'#A8C040',18,200,'leaf');hit(0,{kb:18,status:'CHOÁNG',sc:'#D4DC70',color:'#D4DC70'});gsap.delayedCall(.06,()=>hit(1,{kb:12,color:'#D4DC70'}))},
+ gW(){dome('#C8D0D8',96,1.3);ring(240,260,'#E8F0F8',30,100,.6,5);floatText(240,138,'GIÁP SẮT','#E8F0F8')},
+ gE(){const st={x:290};gsap.to(st,{x:790,duration:.7,ease:'none',onUpdate(){for(let j=0;j<3;j++)add({x:st.x+rnd(-10,10),y:rnd(320,336),vx:rnd(-20,20),vy:rnd(-150,-60),g:-40,life:rnd(.5,.9),size:rnd(3,6),color:Math.random()<.5?'#FF8A2E':'#FFD060',type:'ember'})}});gsap.delayedCall(.25,()=>hitAll({status:'BỎNG',sc:'#FF9A3A',color:'#FF8A2E',type:'ember'},.12,true))},
+ gR(){banner('Bay Về Trời','TỐI THƯỢNG');flash('#FFB04A',.35);const tl=gsap.timeline();tl.to(heroWrap,{x:HX+540,y:HY-70,duration:.5,ease:'power2.in',onUpdate(){const x=gsap.getProperty(heroWrap,'x')+100,y=gsap.getProperty(heroWrap,'y')+180;for(let j=0;j<4;j++)add({x:x+rnd(-20,10),y:y+rnd(-20,30),vx:rnd(-160,-40),vy:rnd(-30,40),g:-30,life:rnd(.4,.8),size:rnd(3,7),color:Math.random()<.5?'#FF8A2E':'#FFE08A',type:'ember'})}})
+   .add(()=>{shake(10,12);hitAll({kb:24,dmg:.3,status:'TRÚNG ĐÒN',color:'#FFB04A',type:'ember'},.05)},'-=.25').to(heroWrap,{opacity:0,duration:.2}).set(heroWrap,{x:HX-140,y:HY-60}).to(heroWrap,{opacity:1,x:HX,y:HY,duration:.55,ease:'power2.out'});return tl},
+ lQ(){[0,1].forEach(j=>gsap.delayedCall(j*.1,()=>shape({kind:'slash',x:505+j*14,y:298+j*8,r:54,a0:-2.2,a1:.6,color:'#7FE0F0',w:12,life:.32})));burst(520,300,'#9EE8F8',20,200,'drop',{g:500});hit(0,{kb:14,color:'#7FE0F0',type:'drop'});gsap.delayedCall(.1,()=>hit(1,{kb:12,color:'#7FE0F0',type:'drop'}))},
+ lW(){dome('#6ED0C0',100,1.3);burst(240,250,'#9EF0E0',24,140,'spark');floatText(240,138,'VẢY RỒNG','#9EF0E0')},
+ lE(){wave('#5AB4D6','drop',{status:'ĐẨY LÙI',kb:40})},
+ lR(){banner('Hóa Rồng','TỐI THƯỢNG');flash('#9EE8F8',.35);gsap.delayedCall(.1,()=>{shape({kind:'beam',x1:286,y1:268,x2:810,y2:300,w:26,color:'#7FE0F0',life:1});for(let j=0;j<4;j++)gsap.delayedCall(j*.18,()=>shape({kind:'bolt',x1:rnd(300,500),y1:260,x2:rnd(560,780),y2:rnd(260,320),color:'#D8C8FF',life:.18}));shake(9,14);hitAll({kb:20,dmg:.32,status:'SÉT',sc:'#D8C8FF',color:'#9EE8F8',type:'drop'},.1)});const t=gsap.timeline({repeat:10});t.call(()=>burst(rnd(320,780),rnd(270,310),'#BFF0FF',6,160,'drop',{g:400})).to({},{duration:.06})},
+ kQ(){dome('#FFD66B',100,1.4);ring(240,326,'#FFD66B',30,110,.7,6,.32);floatText(240,138,'KHIÊN VÀNG','#FFD66B')},
+ kW(){aura('#FFD66B','XUYÊN GIÁP +20%')},
+ kE(){shake(6,8);EN.forEach((e,i)=>{if(e.fly)return;gsap.delayedCall(i*.07,()=>{ring(e.x,e.y,'#C89A5A',10,60,.5,6,.3);burst(e.x,e.y,'#8A7A5A',10,200,'rock',{up:true,g:600});hit(i,{kb:6,status:'CHOÁNG',sc:'#F2D27A',color:'#C89A5A'})})})},
+ kR(){banner('Kim Quy Hộ Thành','TỐI THƯỢNG');flash('#FFD66B',.45);shape({kind:'dome',x:420,y:338,r:330,color:'#FFD66B',life:2});shake(6,8);floatText(400,120,'5 GIÂY: QUÁI LỌT VÀO KHÔNG TRỪ MẠNG','#FFD66B');burst(420,200,'#FFE8A0',40,260,'glow',{g:-20})},
+ tQ(){shape({kind:'slash',x:500,y:300,r:56,a0:-2.6,a1:.3,color:'#E0B070',w:14,life:.35});burst(520,300,'#B88A50',14,220,'rock',{g:500});hit(0,{kb:16,color:'#E0B070'});gsap.delayedCall(.06,()=>hit(1,{kb:10,color:'#E0B070'}))},
+ tW(){proj(HAND.x,HAND.y-20,EN[3].x,EN[3].cy,{dur:.3,color:'#FFD66B',size:6,onHit:()=>hit(3,{kb:10,status:'x2 QUÁI BAY',sc:'#FFD66B',color:'#FFD66B'})})},
+ tE(){for(let j=0;j<8;j++)gsap.delayedCall(j*.07,()=>{const t=EN[j%4];proj(HAND.x,HAND.y-30,t.x+rnd(-10,10),t.cy,{dur:.7,type:'note',color:j%2?'#F2D27A':'#FFF1C4',size:7,wob:12,trail:false})});gsap.delayedCall(.75,()=>hitAll({kb:2,status:'CHOÁNG',sc:'#F2D27A',color:'#F2D27A',type:'glow',dmg:.08},.06))},
+ tR(){banner('Diệt Chằn Tinh','TỐI THƯỢNG');const tl=gsap.timeline();tl.to(heroInner,{y:-80,duration:.3,ease:'power2.out'}).to(heroInner,{y:0,duration:.16,ease:'power4.in'}).add(()=>{flash('#FF9A3A',.45);shake(12,14);shape({kind:'slash',x:560,y:300,r:120,a0:-2.8,a1:.6,color:'#FFB04A',w:22,life:.45});[0,.12].forEach(d=>gsap.delayedCall(d,()=>ring(600,334,'#FF9A3A',20,220,.7,8,.25)));burst(600,320,'#8A7A5A',30,320,'rock',{up:true,g:700});hitAll({kb:30,dmg:.4,status:'x3 LÊN BOSS',sc:'#FF9A3A',color:'#FFB04A',type:'ember'},.04)});return tl},
+ cQ(){[0,1,2].forEach(j=>gsap.delayedCall(j*.05,()=>proj(344,268,EN[j].x,EN[j].cy,{dur:.24,color:'#E0B030',size:5,onHit:()=>hit(j,{kb:8,color:'#E0B030'})})))},
+ cW(){[0,1,2].forEach(j=>gsap.delayedCall(j*.14,()=>proj(344,268,EN[0].x,EN[0].cy,{dur:.16,color:'#F2D27A',size:4,onHit:()=>hit(0,{kb:6,dmg:.08,color:'#F2D27A',status:j===2?'TỐC BẮN':null,sc:'#F2D27A'})})))},
+ cE(){proj(344,268,EN[2].x,EN[2].cy,{dur:.4,color:'#FFD66B',size:8,onHit:()=>{ring(EN[2].x,EN[2].cy,'#FFD66B',8,60,.5,6);hit(2,{kb:18,dmg:.3,status:'XUYÊN GIÁP',sc:'#FFD66B',color:'#FFD66B'})}})},
+ cR(){banner('Nỏ Thần','TỐI THƯỢNG');flash('#FFE08A',.4);gsap.delayedCall(.08,()=>{shape({kind:'beam',x1:344,y1:268,x2:820,y2:290,w:18,color:'#FFD66B',life:.8});burst(344,268,'#FFE08A',26,260,'spark');shake(8,10);hitAll({kb:26,dmg:.35,status:'XUYÊN HÀNG',sc:'#FFD66B',color:'#FFD66B'},.05,true)})},
+ mQ(){proj(HAND.x+8,HAND.y-10,EN[1].x,EN[1].cy,{dur:.6,lob:120,type:'melon',size:13,color:'#3E8A3A',trail:false,onHit:()=>{burst(EN[1].x,EN[1].cy,'#E8403A',22,220,'drop',{g:500});burst(EN[1].x,EN[1].cy,'#1A120A',10,200,'drop',{g:500,p:{size:2}});hit(1,{kb:12,status:'CHẬM',sc:'#FF8A7A',color:'#E8403A'})}})},
+ mW(){for(let i=0;i<18;i++)gsap.delayedCall(i*.03,()=>add({x:240+rnd(-30,30),y:250,vx:rnd(-90,90),vy:rnd(-260,-160),g:520,life:1,size:6,type:'coin'}));floatText(240,140,'+ VÀNG','#FFD66B')},
+ mE(){for(let j=0;j<6;j++)gsap.delayedCall(j*.08,()=>{const t=EN[j%4];proj(240,200,t.x,t.cy,{dur:.65,type:'bird',color:'#F4F4F4',size:9,lob:-60,trail:false,onHit:()=>hit(j%4,{kb:4,dmg:.08,color:'#fff',type:'feather'})})})},
+ mR(){banner('Mưa Dưa','TỐI THƯỢNG');shake(6,16);rain('drop','#E8403A',{head:'melon',size:11,trail:false,burst:'#E8403A',status:'TRÚNG DƯA',n:16})},
+ aQ(){heal('#F08AB0','petal','HỒI MÁU');burst(240,200,'#FFFFFF',10,60,'glow',{g:-30})},
+ aW(){[0,1,2,3].forEach(j=>gsap.delayedCall(j*.06,()=>proj(HAND.x,HAND.y-60,EN[j].x,EN[j].cy,{dur:.35,type:'feather',color:'#F7F3FC',size:6,trail:'glow',onHit:()=>hit(j,{kb:6,dmg:.1,color:'#F7F3FC',type:'feather'})})))},
+ aE(){EN.forEach((e,i)=>{if(e.fly)return;gsap.delayedCall(i*.1,()=>{burst(e.x,e.y,'#A08458',16,260,'rock',{up:true,g:700});ring(e.x,e.y,'#C89A5A',10,50,.5,5,.3);hit(i,{kb:4,dmg:.12,status:'CHẬM',sc:'#F2D27A',color:'#C89A5A'})})})},
+ aR(){banner('Bọc Trăm Trứng','TỐI THƯỢNG');flash('#FFE6A0',.4);burst(270,300,'#FFE6A0',30,160,'glow');summonFx()},
+ dQ(){columnFx('#FFD66B',40);heal('#FFD66B','plus','HỒI SINH');},
+ dW(){dome('#E8D49A',96,1.4);gsap.delayedCall(.1,()=>proj(EN[3].x,EN[3].cy,320,250,{dur:.4,color:'#FFE066',size:5,onHit:()=>{burst(330,250,'#FFE066',16,180,'spark');floatText(300,200,'CHẶN!','#E8D49A')}}))},
+ dE(){wave('#D9824A','drop',{status:'CHẬM',kb:14})},
+ dR(){banner('Thành Một Đêm','TỐI THƯỢNG');flash('#F2D27A',.3);wallFx()},
+ eQ(){for(let j=0;j<26;j++)gsap.delayedCall(j*.02,()=>add({x:290+rnd(0,40),y:rnd(250,330),vx:rnd(420,620),vy:rnd(-20,20),g:0,life:.9,size:rnd(3,5),color:'#DDF4FB',type:'wind',drag:1}));gsap.delayedCall(.22,()=>hitAll({kb:36,dmg:.1,status:'ĐẨY LÙI',sc:'#DDF4FB',color:'#DDF4FB'},.07))},
+ eW(){aura('#F2A0C0','+SÁT THƯƠNG PHÉP');burst(240,240,'#F08AB0',14,120,'petal',{g:60})},
+ eE(){heal('#F08AB0','petal','HỒI MÁU');ring(240,326,'#7FC24A',20,70,.8,4,.3)},
+ eR(){banner('Mưa Hoa Tiên','TỐI THƯỢNG');flash('#FFB0D0',.3);for(let i=0;i<70;i++)gsap.delayedCall(i*.02,()=>add({x:rnd(60,800),y:-10,vx:rnd(-40,40),vy:rnd(120,220),g:30,life:1.8,size:rnd(3,6),color:Math.random()<.6?'#F08AB0':'#FFE0EE',type:'petal',vr:rnd(-5,5),drag:.995}));gsap.delayedCall(.9,()=>{hitAll({kb:6,dmg:.18,status:'HOA TIÊN',sc:'#FFB0D0',color:'#F08AB0',type:'petal'},.08);heal('#7FC24A','plus')})},
+ nQ(){shape({kind:'dome',x:240,y:332,r:96,color:'#6AB04A',life:1.3});for(let j=0;j<4;j++)gsap.delayedCall(j*.08,()=>ring(240,250,'#6AB04A',30+j*12,40+j*12,.5,3));floatText(240,138,'KHIÊN BÁNH CHƯNG','#9AE07A')},
+ nW(){heal('#F4F0E6','glow','HỒI MÁU')},
+ nE(){EN.forEach((e,i)=>{if(e.fly)return;for(let j=0;j<14;j++)gsap.delayedCall(i*.08+j*.015,()=>add({x:e.x+rnd(-34,34),y:e.y,vx:0,vy:rnd(-90,-50),g:120,life:.9,size:rnd(3,5),color:'#8AB040',type:'rice',rot:0,vr:0}));gsap.delayedCall(i*.08+.15,()=>hit(i,{kb:3,dmg:.08,status:'CHẬM',sc:'#E8C050',color:'#E8C050',type:'glow'}))})},
+ nR(){banner('Lễ Tổ Tiên','TỐI THƯỢNG');flash('#FFE08A',.55);columnFx('#FFE08A',70);heal('#FFE08A','plus');ring(240,326,'#FFE08A',30,240,1,8,.3);gsap.delayedCall(.3,()=>floatText(240,110,'BẤT TỬ 2 GIÂY','#FFE08A'))},
+ /* --- base heroes --- */
+ lgQ(){ring(EN[0].x,EN[0].cy,'#C8963E',10,70,.45,8);shape({kind:'slash',x:500,y:300,r:50,a0:-1.6,a1:1.2,color:'#C8963E',w:12,life:.3});burst(EN[0].x,EN[0].cy,'#F2D27A',14,220,'spark');hit(0,{kb:22,status:'CHOÁNG 1 GIÂY',sc:'#F2D27A',color:'#C8963E'})},
+ lgW(){gsap.fromTo(heroInner,{scaleX:1},{scaleX:-1,svgOrigin:'100 222',duration:.1,repeat:3,yoyo:true,ease:'sine.inOut'});for(let j=0;j<4;j++)gsap.delayedCall(j*.09,()=>shape({kind:'slash',x:240,y:270,r:70+j*6,a0:j*1.6,a1:j*1.6+3.4,color:'#E0B070',w:12,life:.3}));gsap.delayedCall(.3,()=>{shape({kind:'slash',x:540,y:300,r:80,a0:-2.6,a1:.8,color:'#E0B070',w:14,life:.35});burst(560,300,'#E0B070',16,220,'spark');hitAll({kb:16,status:'CHÉM LAN',sc:'#E0B070',color:'#E0B070'},.06,true)})},
+ lgE(){aura('#FF7A3A','+TỐC ĐÁNH');burst(240,230,'#FFB060',18,140,'ember',{up:true,g:-80})},
+ lgR(){banner('Sấm Tản Viên','TỐI THƯỢNG');flash('#CFE0FF',.5);let ti=0;EN.forEach((e,i)=>{if(e.hp>EN[ti].hp)ti=i});const t=EN[ti];
+   for(let j=0;j<5;j++)gsap.delayedCall(j*.12,()=>{shape({kind:'bolt',x1:t.x+rnd(-60,60),y1:-20,x2:t.x+rnd(-6,6),y2:t.cy,color:'#CFE0FF',life:.2});burst(t.x,t.cy,'#E8F0FF',10,220,'spark')});
+   for(let j=0;j<3;j++)gsap.delayedCall(.2+j*.15,()=>{const e=EN[(ti+1+j)%4];shape({kind:'bolt',x1:e.x+rnd(-40,40),y1:-20,x2:e.x,y2:e.cy,color:'#B8C8FF',life:.16})});
+   gsap.delayedCall(.15,()=>{shake(10,12);ring(t.x,t.fly?t.cy+40:t.y,'#CFE0FF',10,120,.6,7,.3);hit(ti,{kb:20,dmg:.45,status:'SẤM SÉT',sc:'#CFE0FF',color:'#CFE0FF'})})},
+ lsQ(){const i=0,e=EN[i];proj(268,190,e.x,e.cy,{dur:.3,color:'#7FC24A',size:5,trail:'leaf',onHit(){shape({kind:'beam',x1:268,y1:190,x2:e.x+60,y2:e.cy,w:5,color:'#5E9A3A',life:.55});ring(e.x,e.cy,'#7FC24A',30,12,.5,5,.6);burst(e.x,e.cy,'#7FC24A',12,160,'leaf',{g:200});hit(i,{kb:0,dmg:.1,status:'KÉO LÙI',sc:'#9AE07A',color:'#7FC24A',type:'leaf'});gsap.to(e.in,{x:70,duration:.35,delay:.2,ease:'power2.out'});gsap.to(e.in,{x:0,duration:1.1,delay:1,ease:'sine.inOut'})}})},
+ lsW(){aura('#C89A5A','+SỨC MẠNH');burst(240,170,'#A08458',12,160,'rock',{up:true,g:500})},
+ lsE(){shake(6,8);[0,.12].forEach(d=>gsap.delayedCall(d,()=>ring(240,330,'#A08458',20,160,.6,7,.3)));burst(240,326,'#8A7A5A',22,260,'rock',{up:true,g:700});for(let j=0;j<20;j++)add({x:240+rnd(-70,70),y:rnd(310,334),vx:rnd(-80,80),vy:rnd(-60,-20),g:-10,life:rnd(.7,1.1),size:rnd(6,10),color:'#B8A888',type:'glow',drag:.95});gsap.delayedCall(.15,()=>hit(0,{kb:12,dmg:.14,status:'BỤI ĐÁ',sc:'#E8D8B0',color:'#A08458',type:'rock'}))},
+ lsR(){banner('Vùi Đá','TỐI THƯỢNG');const i=1,e=EN[i],g=document.createElementNS(svgNS,'g');g.innerHTML=`<path d="M-40 0 Q-48 -40 -14 -58 Q24 -70 44 -36 Q54 -6 34 4 Q0 12 -40 0 Z" fill="#8A8070" stroke="#2A2016" stroke-width="3"/><path d="M-20 -40 q14 -12 30 -8 M14 -18 l12 10 M-18 -14 l-8 -8" stroke="#5A5040" stroke-width="3" fill="none"/><path d="M-26 -48 q16 -14 38 -12" stroke="#B8AE98" stroke-width="4" fill="none" stroke-linecap="round"/>`;fxLayer.appendChild(g);
+   const st={y:-90};g.setAttribute('transform',`translate(${e.x} ${st.y})`);gsap.to(st,{y:e.y+4,duration:.42,ease:'power3.in',onUpdate:()=>g.setAttribute('transform',`translate(${e.x} ${st.y})`),onComplete(){shake(12,14);flash('#B8AE98',.25);burst(e.x,e.y-10,'#8A7A5A',30,320,'rock',{up:true,g:700});[0,.1].forEach(d=>gsap.delayedCall(d,()=>ring(e.x,e.y,'#C8B898',20,150,.6,8,.28)));hit(i,{kb:0,dmg:.5,status:'VÙI ĐÁ',sc:'#E8D8B0',color:'#A08458',type:'rock'});gsap.to(e.in,{opacity:.15,duration:.1,delay:.36});gsap.to(e.in,{opacity:1,duration:.3,delay:1.5});gsap.to(g,{opacity:0,y:30,delay:1.4,duration:.4,onComplete:()=>g.remove()})}})},
+ xQ(){shape({kind:'beam',x1:326,y1:268,x2:820,y2:300,w:7,color:'#E8DDBF',life:.45});proj(326,268,800,300,{dur:.3,color:'#FFF1C4',size:5});burst(326,268,'#FFF1C4',10,160,'spark');[0,1,2].forEach(j=>gsap.delayedCall(.06+j*.07,()=>hit(j,{kb:12,color:'#E8DDBF',status:j===2?'XUYÊN THẤU':null,sc:'#FFF1C4'})))},
+ xW(){for(let j=0;j<7;j++){const ty=170+j*28;gsap.delayedCall(j*.02,()=>proj(326,268,790,ty,{dur:.36,color:'#F2E6C8',size:4}))}gsap.delayedCall(.25,()=>hitAll({kb:8,dmg:.12,status:'ĐA TIỄN',sc:'#F2E6C8',color:'#F2E6C8'},.04))},
+ xE(){const e=EN[1];proj(326,268,e.x,e.cy,{dur:.3,color:'#7FD04A',size:5,trail:'glow',onHit(){hit(1,{kb:8,dmg:.08,status:'TRÚNG ĐỘC',sc:'#9AE07A',color:'#7FD04A',type:'glow'});for(let k=1;k<=3;k++)gsap.delayedCall(k*.3,()=>{burst(e.x,e.cy,'#7FD04A',10,70,'glow',{up:true,g:-60});e.hp=Math.max(.06,e.hp-.05);drawHP(e)})}})},
+ xR(){banner('Mưa Tên','TỐI THƯỢNG');rain('spark','#E8DDBF',{status:'MƯA TÊN',n:30,size:4})},
+ hQ(){const tl=gsap.timeline();tl.to(heroWrap,{x:HX+225,duration:.16,ease:'power2.in',onUpdate(){const x=gsap.getProperty(heroWrap,'x')+100;for(let j=0;j<2;j++)add({x:x+rnd(-20,0),y:rnd(250,320),vx:rnd(-120,-40),vy:rnd(-20,20),g:60,life:.5,size:rnd(3,5),color:'#7FC24A',type:'leaf'})}})
+   .add(()=>{shape({kind:'slash',x:520,y:300,r:44,a0:-2.4,a1:-.2,color:'#9AE07A',w:10,life:.3});shape({kind:'slash',x:520,y:300,r:44,a0:2.4,a1:.2,color:'#9AE07A',w:10,life:.3});burst(520,300,'#E8FFE0',14,200,'spark');hit(0,{kb:16,status:'CHÉM X',sc:'#9AE07A',color:'#9AE07A'})})
+   .to(heroWrap,{x:HX,duration:.3,delay:.12,ease:'power2.out'});return tl},
+ hW(){gsap.fromTo(heroInner,{opacity:.2},{opacity:1,duration:.5,ease:'power2.in'});burst(240,260,'#4A6A4A',14,80,'glow',{g:-20});[0,1,3].forEach((j,k)=>gsap.delayedCall(.08+k*.06,()=>proj(HAND.x,HAND.y-10,EN[j].x,EN[j].cy,{dur:.22,color:'#D0D8DC',size:4,trail:'spark',onHit:()=>hit(j,{kb:8,dmg:.1,color:'#D0D8DC',status:k===2?'DAO ẨN':null,sc:'#D0D8DC'})})))},
+ hE(){const e=EN[0];shape({kind:'slash',x:505,y:298,r:64,a0:-2.8,a1:.9,color:'#FF5A3A',w:18,life:.4});flash('#FF3A2A',.22);shake(8,8);burst(e.x,e.cy,'#FF7A5A',28,320,'spark');ring(e.x,e.cy,'#FF5A3A',10,90,.5,8);hit(0,{kb:26,dmg:.38,color:'#FF5A3A'});floatText(e.x,e.cy-60,'CHÍ MẠNG!','#FF6A4A')},
+ hR(){banner('Săn Mồi','TỐI THƯỢNG');flash('#FF7A5A',.3);const e=EN[1],tl=gsap.timeline();tl.to(heroWrap,{x:HX+340,duration:.22,ease:'power3.in'});
+   for(let j=0;j<6;j++)tl.add(()=>{const a=rnd(-3,0);shape({kind:'slash',x:e.x+rnd(-12,12),y:e.cy+rnd(-8,8),r:40,a0:a,a1:a+2.6,color:j%2?'#FF7A5A':'#FFD0C0',w:10,life:.22});burst(e.x,e.cy,'#FF9A7A',8,220,'spark');hit(1,{kb:6,dmg:.07,color:'#FF7A5A'})}).to({},{duration:.07});
+   tl.add(()=>{shake(8,8);floatText(e.x,e.cy-64,'x6 SÁT THƯƠNG','#FF7A5A')}).to(heroWrap,{x:HX,duration:.35,ease:'power2.out'});return tl},
+ mfQ(){const e=EN[1];ring(e.x,e.y,'#FF7A2E',10,60,.5,6,.3);for(let j=0;j<30;j++)gsap.delayedCall(j*.018,()=>add({x:e.x+rnd(-14,14),y:e.y,vx:rnd(-20,20),vy:rnd(-520,-340),g:200,life:rnd(.4,.7),size:rnd(4,8),color:Math.random()<.5?'#FF7A2E':'#FFD060',type:'ember'}));gsap.delayedCall(.15,()=>hit(1,{kb:6,dmg:.2,status:'CỘT LỬA',sc:'#FF9A3A',color:'#FF7A2E',type:'ember'}))},
+ mfW(){[0,3,2].forEach((j,k)=>gsap.delayedCall(k*.1,()=>proj(HAND.x+12,HAND.y-130,EN[j].x,EN[j].cy,{dur:.55,color:'#C890FF',size:6,wob:16,trail:'glow',onHit:()=>hit(j,{kb:6,dmg:.1,color:'#C890FF',type:'glow',status:k===2?'LỬA HỒN':null,sc:'#D8B8FF'})})))},
+ mfE(){EN.forEach((e,i)=>{if(e.fly)return;for(let j=0;j<16;j++)gsap.delayedCall(i*.08+j*.04,()=>add({x:e.x+rnd(-26,26),y:e.y-rnd(0,20),vx:rnd(-15,15),vy:rnd(-140,-60),g:-40,life:rnd(.4,.8),size:rnd(3,6),color:Math.random()<.5?'#FF9A3A':'#FFD060',type:'ember'}));gsap.delayedCall(i*.08+.1,()=>hit(i,{kb:3,dmg:.12,status:'BỎNG',sc:'#FF9A3A',color:'#FF9A3A',type:'ember'}))})},
+ mfR(){banner('Hỏa Sơn','TỐI THƯỢNG');flash('#FF5A2E',.4);shake(7,18);rain('ember','#FF7A2E',{status:'HỎA SƠN',n:18,size:9,trail:'ember',burst:'#FFD060'})},
+ tsQ(){[0,.15,.3].forEach(d=>gsap.delayedCall(d,()=>ring(240,328,'#BFEFFF',30,560,.9,6,.25)));for(let j=0;j<24;j++)add({x:240+rnd(-60,60),y:rnd(250,320),vx:rnd(60,260),vy:rnd(-30,10),g:20,life:rnd(.6,1),size:rnd(2,4),color:'#E8F8FF',type:'glow'});gsap.delayedCall(.3,()=>hitAll({kb:2,dmg:.06,status:'CHẬM 60%',sc:'#BFEFFF',color:'#BFEFFF',type:'glow'},.1,true))},
+ tsW(){const e=EN[3];proj(HAND.x+12,HAND.y-110,e.x,e.cy,{dur:.3,color:'#BFEFFF',size:6,trail:'glow',onHit(){burst(e.x,e.cy,'#E8F8FF',14,200,'spark');hit(3,{kb:10,dmg:.16,status:'BUỐT GIÁ',sc:'#BFEFFF',color:'#BFEFFF'})}})},
+ tsE(){for(let j=0;j<24;j++)gsap.delayedCall(j*.025,()=>add({x:290+rnd(0,40),y:rnd(230,330),vx:rnd(380,560),vy:rnd(-10,10),g:0,life:.95,size:rnd(3,5),color:'#A8D8F0',type:'wind',drag:1}));gsap.delayedCall(.25,()=>hitAll({kb:4,dmg:.05,status:'CHẬM',sc:'#A8D8F0',color:'#A8D8F0',type:'glow'},.07))},
+ tsR(){banner('Mù Sương Tản Viên','TỐI THƯỢNG');flash('#DDF4FB',.5);for(let i=0;i<46;i++)gsap.delayedCall(i*.015,()=>add({x:rnd(300,800),y:rnd(150,340),vx:rnd(-30,30),vy:rnd(-8,8),g:0,life:rnd(1.4,2.2),size:rnd(10,18),color:'#9ACCE8',type:'glow',drag:.99}));
+   gsap.delayedCall(.3,()=>{EN.forEach((e,i)=>{e.in.setAttribute('filter','url(#fIce)');if(e.bob&&e.bob.pause)e.bob.pause();burst(e.x,e.cy,'#E8F8FF',10,140,'spark');hit(i,{kb:0,dmg:.1,color:'#BFEFFF'})});floatText(560,120,'ĐÓNG BĂNG 2 GIÂY','#DDF4FB');
+     gsap.delayedCall(2,()=>EN.forEach(e=>{e.in.removeAttribute('filter');if(e.bob&&e.bob.resume)e.bob.resume();burst(e.x,e.cy,'#DDF4FB',8,120,'spark')}))})}
+};
+
+/* ---------- hero animation ---------- */
+let H=null, idle=null, busy=false, parts={};
+function setHero(h){
+  H=h; if(idle)idle.kill(); gsap.killTweensOf([heroInner,heroWrap]);
+  heroInner.innerHTML=heroSVG(h);
+  parts={bob:heroInner.querySelector('.pBob'),head:heroInner.querySelector('.pHead'),back:heroInner.querySelector('.pBack'),armF:heroInner.querySelector('.armF'),armB:heroInner.querySelector('.armB'),wL:heroInner.querySelector('.wingL'),wR:heroInner.querySelector('.wingR')};
+  gsap.set(heroWrap,{x:HX,y:HY,opacity:1});gsap.set(heroInner,{x:0,y:0,scale:1,svgOrigin:'100 222'});
+  gsap.set([parts.armF],{rotation:0,svgOrigin:'122 124'});gsap.set([parts.armB],{rotation:0,svgOrigin:'78 124'});
+  gsap.set(parts.head,{rotation:0,svgOrigin:'100 112'});gsap.set(parts.back,{rotation:0,svgOrigin:'100 124'});
+  if(parts.wL)gsap.set(parts.wL,{rotation:0,svgOrigin:'90 132'}); if(parts.wR)gsap.set(parts.wR,{rotation:0,svgOrigin:'110 132'});
+  if(!RM){
+    idle=gsap.timeline({repeat:-1,yoyo:true,defaults:{ease:'sine.inOut',duration:1.1}});
+    idle.to(parts.bob,{y:-3},0).to(parts.head,{rotation:3,y:-1},0).to(parts.back,{rotation:-4},0);
+    if(parts.wL){idle.to(parts.wL,{rotation:14,duration:.55,repeat:1,yoyo:true},0).to(parts.wR,{rotation:-14,duration:.55,repeat:1,yoyo:true},0)}
+  }
+  // entrance
+  gsap.fromTo(heroInner,{opacity:0,y:-30},{opacity:1,y:0,duration:.4,ease:'bounce.out',svgOrigin:'100 222'});
+  burst(240,330,'#FFE6A0',20,160,'glow',{up:true,g:200});
+  renderSheet();
+}
+function animate(sk){
+  const af=parts.armF, ab=parts.armB, tl=gsap.timeline();
+  const run=()=>{const r=FX[sk.fx]();return r};
+  if(sk.a==='swing'){tl.to(af,{rotation:-80,svgOrigin:'122 124',duration:.18,ease:'power2.out'}).to(heroInner,{x:16,duration:.12},'>-0.02').to(af,{rotation:50,svgOrigin:'122 124',duration:.11,ease:'power3.in'},'<').call(run).to(af,{rotation:0,svgOrigin:'122 124',duration:.4,ease:'power2.out'},'+=.05').to(heroInner,{x:0,duration:.35},'<')}
+  else if(sk.a==='shoot'){tl.to(af,{rotation:-10,svgOrigin:'122 124',duration:.16}).call(run).to(heroInner,{x:-9,duration:.06}).to(heroInner,{x:0,duration:.3,ease:'power2.out'}).to(af,{rotation:0,svgOrigin:'122 124',duration:.25},'<')}
+  else if(sk.a==='cast'){tl.to(af,{rotation:-115,svgOrigin:'122 124',duration:.25,ease:'back.out(2)'}).to(ab,{rotation:105,svgOrigin:'78 124',duration:.25,ease:'back.out(2)'},'<').to(heroInner,{y:-6,duration:.25},'<').call(()=>burst(240,180,sk.c,14,100,'glow',{g:-40})).call(run).to(af,{rotation:0,svgOrigin:'122 124',duration:.45,delay:.3}).to(ab,{rotation:0,svgOrigin:'78 124',duration:.45},'<').to(heroInner,{y:0,duration:.45},'<')}
+  else if(sk.a==='heave'){tl.to(heroInner,{y:5,scaleY:.93,svgOrigin:'100 222',duration:.18,ease:'power2.out'}).to(heroInner,{y:-12,scaleY:1.05,svgOrigin:'100 222',duration:.16,ease:'back.out(2)'}).call(()=>{if(sk.k==='R')ring(240,326,sk.c,20,120,.6,7,.32)}).call(run).to(heroInner,{y:0,scaleY:1,svgOrigin:'100 222',duration:.4,ease:'bounce.out'})}
+  else if(sk.a==='jump'){tl.to(af,{rotation:-120,svgOrigin:'122 124',duration:.2}).call(()=>{const r=run();}).to(af,{rotation:60,svgOrigin:'122 124',duration:.12,delay:.32}).to(af,{rotation:0,svgOrigin:'122 124',duration:.4,delay:.2})}
+  else if(sk.a==='ult'){tl.to(heroInner,{scale:1.14,svgOrigin:'100 222',duration:.3,ease:'back.out(2)'}).to(af,{rotation:-125,svgOrigin:'122 124',duration:.3,ease:'back.out(2)'},'<').to(ab,{rotation:110,svgOrigin:'78 124',duration:.3,ease:'back.out(2)'},'<')
+     .call(()=>{ring(240,326,sk.c,20,120,.6,7,.32);burst(240,200,sk.c,30,200,'glow',{g:-60})}).call(run).to(af,{rotation:0,svgOrigin:'122 124',duration:.5,delay:.7}).to(ab,{rotation:0,svgOrigin:'78 124',duration:.5},'<').to(heroInner,{scale:1,svgOrigin:'100 222',duration:.5},'<')}
+  return tl;
+}
+function play(i){
+  if(busy||!H)return; busy=true; const sk=H.skills[i];
+  document.querySelectorAll('.sk').forEach((b,j)=>b.classList.toggle('on',j===i));
+  descEl.innerHTML=`<b>${sk.k} · ${sk.n}</b> (${sk.t}): ${sk.d}`;
+  animate(sk);
+  setTimeout(()=>busy=false, sk.k==='R'?1900:950);
+}
+
+/* ---------- hero states (summon / hit / bog / fall) ---------- */
+const STATES=[
+ {n:'Xuất hiện',d:'Tướng được triệu hồi xuống sân: rơi từ trên cao, bụi tung và vòng sáng vàng.',f:stSummon,ms:1100},
+ {n:'Bị đánh',d:'Tướng trúng đòn: chớp đỏ, bị đẩy lùi và mất máu.',f:stHit,ms:800},
+ {n:'Sa lầy',d:'Nước dâng ngập chân: tướng lún xuống, chậm chạp, sau đó thoát ra.',f:stBog,ms:3000},
+ {n:'Gục',d:'Tướng ngã xuống và mờ dần, hồi sinh sau 1,2 giây trong cột sáng vàng.',f:stFall,ms:2700}];
+function resetHeroPose(){gsap.killTweensOf([heroInner,heroWrap]);gsap.set(heroWrap,{x:HX,y:HY,opacity:1});gsap.set(heroInner,{x:0,y:0,scale:1,rotation:0,opacity:1,svgOrigin:'100 222'});heroInner.removeAttribute('filter')}
+function stSummon(){resetHeroPose();
+  gsap.fromTo(heroInner,{y:-260,opacity:0},{y:0,opacity:1,duration:RM?.01:.45,ease:'power3.in',svgOrigin:'100 222',onComplete(){
+    if(!RM)gsap.fromTo(heroInner,{scaleY:.86,scaleX:1.1},{scaleY:1,scaleX:1,svgOrigin:'100 222',duration:.4,ease:'elastic.out(1,.5)'});
+    shake(5,6);burst(240,330,'#A08458',22,220,'rock',{up:true,g:600});for(let j=0;j<18;j++)add({x:240+rnd(-60,60),y:rnd(318,334),vx:rnd(-140,140),vy:rnd(-40,-10),g:-10,life:rnd(.6,1),size:rnd(6,10),color:'#B8A888',type:'glow',drag:.94});
+    [0,.12].forEach(d=>gsap.delayedCall(d,()=>ring(240,330,'#FFD66B',20,150,.7,7,.3)));burst(240,240,'#FFE6A0',18,140,'glow',{up:true,g:-40});floatText(240,140,'TRIỆU HỒI','#FFD66B')}})}
+function stHit(){resetHeroPose();heroInner.setAttribute('filter','url(#fHit)');
+  gsap.fromTo(heroInner,{x:0},{x:-18,duration:.08,ease:'power2.out',yoyo:true,repeat:1});
+  gsap.fromTo(heroInner,{rotation:0},{rotation:-6,svgOrigin:'100 222',duration:.08,yoyo:true,repeat:1});
+  gsap.delayedCall(.22,()=>heroInner.removeAttribute('filter'));
+  burst(268,250,'#FFE0C0',12,200,'spark');burst(268,250,'#FF5A3A',6,140,'glow');shake(4,4);floatText(240,150,'-'+Math.round(rnd(38,72))+' máu','#FF6A4A')}
+function stBog(){resetHeroPose();const g=document.createElementNS(svgNS,'g');
+  g.innerHTML=`<ellipse class="bw" cx="240" cy="330" rx="70" ry="13" fill="#2C6A86" opacity=".85" stroke="#9EDDF2" stroke-width="2"/><ellipse cx="240" cy="327" rx="46" ry="6" fill="#9EDDF2" opacity=".35"/>`;
+  fxLayer.appendChild(g);const w=g.firstElementChild;gsap.set(g,{opacity:0});
+  const tl=gsap.timeline({onComplete:()=>g.remove()});
+  tl.to(g,{opacity:1,duration:.2}).fromTo(w,{attr:{ry:4,rx:40}},{attr:{ry:16,rx:76},duration:.4,ease:'power2.out'},'<').to(heroInner,{y:20,svgOrigin:'100 222',duration:.5,ease:'power2.inOut'},'<')
+    .add(()=>{floatText(240,150,'SA LẦY','#9EDDF2');for(let j=0;j<5;j++)gsap.delayedCall(j*.35,()=>{ring(240,330,'#BFEAF8',20,90,.8,3,.22);burst(240+rnd(-40,40),328,'#9EE8F8',5,90,'drop',{up:true,g:400})})})
+    .to(heroInner,{y:14,duration:.6,ease:'sine.inOut',repeat:RM?0:2,yoyo:true})
+    .to(heroInner,{y:0,duration:.4,ease:'back.out(2)'}).to(g,{opacity:0,duration:.35},'<').add(()=>burst(240,326,'#9EE8F8',14,180,'drop',{up:true,g:500}),'<')}
+function stFall(){resetHeroPose();
+  const tl=gsap.timeline();
+  tl.to(heroInner,{rotation:-82,svgOrigin:'80 222',duration:.45,ease:'power2.in'}).add(()=>{shake(4,5);burst(200,330,'#A08458',14,160,'rock',{up:true,g:600})})
+    .to(heroInner,{opacity:0,duration:.5,delay:.1})
+    .add(()=>{columnFx('#FFE08A',44);floatText(240,140,'HỒI SINH','#FFE08A')},'+=1.2')
+    .set(heroInner,{rotation:0,svgOrigin:'100 222'}).to(heroInner,{opacity:1,duration:.4}).add(()=>{ring(240,328,'#FFE08A',20,120,.7,6,.3);burst(240,250,'#FFE6A0',20,140,'glow',{up:true,g:-40})})}
+function playState(i){
+  if(busy||!H)return; busy=true; const s=STATES[i];
+  stateBtns.forEach((b,j)=>b.classList.toggle('on',j===i));document.querySelectorAll('.sk').forEach(b=>b.classList.remove('on'));
+  descEl.innerHTML=`<b>Trạng thái · ${s.n}</b>: ${s.d}`;
+  if(idle&&idle.pause)idle.pause(); s.f();
+  setTimeout(()=>{busy=false;if(idle&&idle.resume)idle.resume()}, s.ms);
+}
+
+/* ---------- UI ---------- */
+const rosterEl=document.getElementById('roster'), rosterBaseEl=document.getElementById('rosterBase'), skillsEl=document.getElementById('skills'), descEl=document.getElementById('skDesc');
+const stateBtns=STATES.map((s,i)=>{const b=document.createElement('button');b.type='button';b.className='st metal';b.textContent=s.n;b.addEventListener('click',()=>{busy=false;clearInterval(autoTimer);playState(i);restartAuto()});document.getElementById('states').appendChild(b);return b});
+HEROES.forEach((h,i)=>{
+  const b=document.createElement('button');b.type='button';b.className='rc inset';b.style.borderColor=RAR_C[h.rar];b.setAttribute('aria-label',`${h.name}, ${h.rar}, ${h.attr}`);
+  b.innerHTML=`<svg viewBox="40 24 120 112" aria-hidden="true">${heroSVG(h)}</svg><span class="n">${h.name}</span><span class="s" style="color:${RAR_C[h.rar]}">${h.rar}</span>`;
+  b.addEventListener('click',()=>{if(H===h)return;busy=false;setHero(h);restartAuto()});
+  (h.rar==='Thường'?rosterBaseEl:rosterEl).appendChild(b);h.btn=b;
+});
+function renderSheet(){
+  document.getElementById('hName').textContent=H.name;
+  document.getElementById('hChips').innerHTML=`<span class="chip" style="color:${RAR_C[H.rar]}">${H.rar}</span><span class="chip" style="color:${ATTR_C[H.attr]}">${H.attr}</span><span class="chip" style="color:var(--gold2)">Triệu hồi ${H.price} vàng</span>`;
+  document.getElementById('sigName').textContent=H.sig[0];document.getElementById('sigDesc').textContent=H.sig[1];
+  skillsEl.innerHTML='';
+  H.skills.forEach((s,i)=>{const b=document.createElement('button');b.type='button';b.className='sk metal'+(s.k==='R'?' ult':'');b.style.setProperty('--c',s.c);
+    b.innerHTML=`<span class="key">${s.k}</span><span class="ic"><i></i></span><span class="nm">${s.n}</span><span class="ty">${s.t}</span>`;b.addEventListener('click',()=>{busy=false;play(i);restartAuto()});skillsEl.appendChild(b)});
+  descEl.innerHTML=`<b>${H.skills[0].k} · ${H.skills[0].n}</b> (${H.skills[0].t}): ${H.skills[0].d}`;
+  HEROES.forEach(x=>x.btn.classList.toggle('on',x===H));
+}
+window.addEventListener('keydown',e=>{const k='QWER'.indexOf(e.key.toUpperCase());if(k>=0&&!e.metaKey&&!e.ctrlKey&&!(e.target instanceof HTMLInputElement)){busy=false;play(k);restartAuto()}});
+
+/* autoplay */
+const autoEl=document.getElementById('autoplay');let autoTimer=null,autoIdx=0;
+if(RM)autoEl.checked=false;
+function restartAuto(){clearInterval(autoTimer);if(!autoEl.checked)return;autoIdx=0;autoTimer=setInterval(()=>{if(document.hidden)return;play(autoIdx%4);autoIdx++;if(autoIdx%8===0){const n=HEROES[(HEROES.indexOf(H)+1)%HEROES.length];busy=false;setHero(n)}},2300)}
+autoEl.addEventListener('change',restartAuto);
+
+setHero(HEROES[0]); restartAuto();
+})();
+</script>
+
+</body></html><a href="index.html" class="metal" style="display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:6px;color:#F2D27A;text-decoration:none;font-family:'Alegreya SC',serif;font-weight:800;font-size:16px">‹ Về game</a>
