@@ -1,0 +1,520 @@
+'use strict';
+
+// ============================================================
+//  VẼ: bản đồ, tướng (thay đổi theo trang bị), quái, hiệu ứng
+//  Toàn bộ vẽ bằng code (không cần ảnh) -> dễ thay bằng sprite sau.
+// ============================================================
+
+function shade(hex, pct) {
+  const n = parseInt(hex.slice(1), 16);
+  const f = (c) => Math.max(0, Math.min(255, Math.round(c + (pct < 0 ? c : 255 - c) * pct)));
+  const r = f(n >> 16), g = f((n >> 8) & 255), b = f(n & 255);
+  return '#' + ((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1);
+}
+
+function circle(ctx, x, y, r, color) {
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function rrect(ctx, x, y, w, h, r, color) {
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.roundRect(x, y, w, h, r);
+  ctx.fill();
+}
+
+function tierOf(kills) {
+  let t = 0;
+  CONFIG.tiers.forEach((need, i) => { if (kills >= need) t = i; });
+  return t;
+}
+
+function setCounts(equip) {
+  const counts = {};
+  for (const slot of SLOTS) {
+    const it = ITEMS[equip[slot]];
+    if (it && it.set) counts[it.set] = (counts[it.set] || 0) + 1;
+  }
+  return counts;
+}
+
+function activeSets(equip) {
+  const c = setCounts(equip);
+  return Object.keys(c).filter((k) => SETS[k] && c[k] >= SETS[k].pieces);
+}
+
+// Gộp ngoại hình gốc của tướng + trang bị + bậc tiến hóa + set -> "look"
+function computeLook(type, equip, kills) {
+  const base = HEROES[type].look;
+  const look = {
+    skin: base.skin, cloth: base.cloth, hair: base.hair,
+    helmet: base.helmet || null, armor: null, weapon: { ...base.weapon },
+    tier: tierOf(kills), aura: null, wings: null,
+  };
+  for (const slot of SLOTS) {
+    const it = ITEMS[equip[slot]];
+    if (it) look[slot] = it.look;
+  }
+  if (look.tier >= 2) look.aura = base.aura;
+  for (const set of activeSets(equip)) Object.assign(look, SETS[set].look);
+  return look;
+}
+
+// ------------------------------------------------------------
+//  TƯỚNG — tọa độ cục bộ: chân tại (0,0), hướng mặt sang phải
+// ------------------------------------------------------------
+function drawHero(ctx, look, x, y, o = {}) {
+  const t = o.t || 0;
+  const dir = o.dir || 1;
+  const s = (o.scale || 1) * (1 + look.tier * 0.1);
+  const bob = Math.sin(t * 4 + x) * 1;
+
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.fillStyle = 'rgba(0,0,0,0.3)';
+  ctx.beginPath();
+  ctx.ellipse(0, 0, 15 * s, 5 * s, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  if (look.aura) {
+    const a = 0.35 + Math.sin(t * 3) * 0.12;
+    const g = ctx.createRadialGradient(0, -22 * s, 4, 0, -22 * s, 34 * s);
+    g.addColorStop(0, look.aura + '00');
+    g.addColorStop(0.6, look.aura + Math.round(a * 255).toString(16).padStart(2, '0'));
+    g.addColorStop(1, look.aura + '00');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(0, -22 * s, 34 * s, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.scale(dir * s, s);
+  ctx.translate(0, bob);
+
+  if (look.wings) drawWings(ctx, look.wings, t);
+  if (look.armor && look.armor.cape) drawCape(ctx, look.armor.cape, t);
+
+  // chân
+  ctx.fillStyle = '#3b3b3b';
+  ctx.fillRect(-6, -11, 5, 11);
+  ctx.fillRect(1, -11, 5, 11);
+  ctx.fillStyle = '#2b1d0e';
+  ctx.fillRect(-7, -3, 6, 3);
+  ctx.fillRect(1, -3, 7, 3);
+
+  drawTorso(ctx, look);
+
+  // đầu
+  circle(ctx, 0, -34, 8, look.skin);
+  ctx.fillStyle = '#222';
+  ctx.fillRect(2, -36, 2, 2.5);
+  ctx.fillRect(5.5, -36, 2, 2.5);
+
+  drawHelmet(ctx, look);
+  drawWeapon(ctx, look.weapon, o.swing || 0, t);
+  ctx.restore();
+
+  // sao tiến hóa
+  for (let i = 0; i < look.tier; i++) {
+    drawStar(ctx, x + (i - (look.tier - 1) / 2) * 10 * s, y - 56 * s, 4 * s, '#f1c40f');
+  }
+}
+
+function drawStar(ctx, x, y, r, color) {
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  for (let i = 0; i < 10; i++) {
+    const a = -Math.PI / 2 + (i * Math.PI) / 5;
+    const rr = i % 2 ? r * 0.45 : r;
+    ctx.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr);
+  }
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawWings(ctx, color, t) {
+  const flap = Math.sin(t * 3) * 0.25;
+  for (const [off, col] of [[0.35, shade(color, -0.3)], [0, color]]) {
+    ctx.save();
+    ctx.translate(-4, -24);
+    ctx.rotate(-0.2 - flap - off);
+    ctx.fillStyle = col;
+    ctx.strokeStyle = shade(color, 0.4);
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(-10, -22);
+    ctx.lineTo(-30, -26);
+    ctx.quadraticCurveTo(-24, -16, -30, -10);
+    ctx.quadraticCurveTo(-22, -6, -24, 2);
+    ctx.quadraticCurveTo(-14, 0, -6, 8);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+
+function drawCape(ctx, color, t) {
+  const wave = Math.sin(t * 5) * 2;
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(-6, -27);
+  ctx.lineTo(4, -27);
+  ctx.lineTo(-6 + wave * 0.3, -2);
+  ctx.lineTo(-16 + wave, 0);
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawTorso(ctx, look) {
+  const a = look.armor;
+  if (!a) {
+    rrect(ctx, -8, -26, 16, 16, 3, look.cloth);
+    ctx.fillStyle = '#3e2723';
+    ctx.fillRect(-8, -14, 16, 2.5);
+    return;
+  }
+  if (a.type === 'leather') {
+    rrect(ctx, -8.5, -26.5, 17, 17, 3, a.color);
+    ctx.strokeStyle = shade(a.color, -0.35);
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(-6, -26); ctx.lineTo(6, -13);
+    ctx.stroke();
+    ctx.fillStyle = '#3e2723';
+    ctx.fillRect(-8.5, -14, 17, 3);
+    ctx.fillStyle = '#d4ac0d';
+    ctx.fillRect(-1.5, -14, 3, 3);
+  } else if (a.type === 'plate') {
+    rrect(ctx, -9.5, -27.5, 19, 18, 4, a.color);
+    rrect(ctx, -6, -25, 6, 10, 2, shade(a.color, 0.35));
+    ctx.fillStyle = shade(a.color, -0.3);
+    ctx.fillRect(-9.5, -13, 19, 3);
+    circle(ctx, -8, -25, 5, shade(a.color, -0.15));
+    circle(ctx, 8, -25, 5, shade(a.color, -0.15));
+    circle(ctx, 8, -26, 2, shade(a.color, 0.4));
+  } else if (a.type === 'robe') {
+    ctx.fillStyle = a.color;
+    ctx.beginPath();
+    ctx.moveTo(-8, -28); ctx.lineTo(8, -28); ctx.lineTo(12, -1); ctx.lineTo(-12, -1);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = a.trim || shade(a.color, 0.4);
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, -27); ctx.lineTo(0, -1);
+    ctx.moveTo(-12, -2); ctx.lineTo(12, -2);
+    ctx.stroke();
+  }
+}
+
+function drawHelmet(ctx, look) {
+  const h = look.helmet;
+  const hair = () => {
+    ctx.fillStyle = look.hair;
+    ctx.beginPath();
+    ctx.arc(0, -35, 8.6, Math.PI, 0);
+    ctx.fill();
+    ctx.fillRect(-8.6, -36, 5, 8);
+  };
+  if (!h) { hair(); return; }
+
+  switch (h.type) {
+    case 'cap':
+      hair();
+      ctx.fillStyle = h.color;
+      ctx.beginPath();
+      ctx.arc(0, -36, 8.8, Math.PI, 0);
+      ctx.fill();
+      ctx.fillRect(0, -37, 12, 2.5);
+      break;
+    case 'hood':
+      circle(ctx, -1, -35, 10.5, h.color);
+      ctx.fillStyle = h.color;
+      ctx.beginPath();
+      ctx.moveTo(-8, -40); ctx.lineTo(-16, -26); ctx.lineTo(-5, -28);
+      ctx.fill();
+      circle(ctx, 2, -33, 6.5, look.skin);
+      ctx.fillStyle = '#222';
+      ctx.fillRect(3, -35, 2, 2.5);
+      ctx.fillRect(6, -35, 2, 2.5);
+      break;
+    case 'helm':
+    case 'horned': {
+      ctx.fillStyle = h.color;
+      ctx.beginPath();
+      ctx.arc(0, -35, 9.6, Math.PI, 0);
+      ctx.fill();
+      ctx.fillRect(-9.6, -35, 19.2, 7);
+      ctx.fillStyle = '#111';
+      ctx.fillRect(1, -35, 9, 2.2);
+      ctx.fillStyle = shade(h.color, 0.35);
+      ctx.fillRect(-1, -44, 2.5, 9);
+      if (h.plume) {
+        ctx.fillStyle = h.plume;
+        ctx.beginPath();
+        ctx.ellipse(-4, -46, 7, 3, -0.4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      if (h.type === 'horned') {
+        ctx.fillStyle = '#ecf0f1';
+        for (const sx of [-1, 1]) {
+          ctx.beginPath();
+          ctx.moveTo(sx * 6, -41);
+          ctx.quadraticCurveTo(sx * 16, -44, sx * 15, -55);
+          ctx.quadraticCurveTo(sx * 11, -46, sx * 3, -43);
+          ctx.fill();
+        }
+      }
+      break;
+    }
+    case 'wizard':
+      hair();
+      ctx.fillStyle = h.color;
+      ctx.beginPath();
+      ctx.ellipse(0, -40, 13, 3.2, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(-8, -41); ctx.lineTo(8, -41);
+      ctx.quadraticCurveTo(2, -52, -10, -62);
+      ctx.closePath();
+      ctx.fill();
+      drawStar(ctx, 0, -48, 2.8, '#f1c40f');
+      break;
+    case 'crown':
+      hair();
+      ctx.fillStyle = h.color;
+      ctx.fillRect(-8, -46, 16, 5);
+      ctx.beginPath();
+      for (const cx of [-6, 0, 6]) {
+        ctx.moveTo(cx - 3, -46); ctx.lineTo(cx, -53); ctx.lineTo(cx + 3, -46);
+      }
+      ctx.fill();
+      circle(ctx, 0, -43.5, 1.8, h.gem || '#e74c3c');
+      circle(ctx, -5, -43.5, 1.2, h.gem || '#e74c3c');
+      circle(ctx, 5, -43.5, 1.2, h.gem || '#e74c3c');
+      break;
+  }
+}
+
+function drawWeapon(ctx, w, swing, t) {
+  ctx.save();
+  ctx.translate(9, -17);
+  if (w.glow) {
+    ctx.shadowColor = w.glow;
+    ctx.shadowBlur = 10 + Math.sin(t * 6) * 4;
+  }
+  switch (w.type) {
+    case 'sword':
+    case 'greatsword': {
+      const big = w.type === 'greatsword';
+      ctx.rotate(-0.5 + swing * 2.2);
+      const bw = big ? 5 : 3, bl = big ? 32 : 22;
+      ctx.fillStyle = w.color;
+      ctx.fillRect(-bw / 2, -bl - 2, bw, bl);
+      ctx.beginPath();
+      ctx.moveTo(-bw / 2, -bl - 2); ctx.lineTo(0, -bl - 7); ctx.lineTo(bw / 2, -bl - 2);
+      ctx.fill();
+      ctx.fillStyle = '#b7950b';
+      ctx.fillRect(big ? -7 : -5, -3, big ? 14 : 10, 2.5);
+      ctx.fillStyle = '#4a2c0a';
+      ctx.fillRect(-1, -1, 2, 6);
+      break;
+    }
+    case 'axe':
+      ctx.rotate(-0.5 + swing * 2.2);
+      ctx.fillStyle = '#5d4037';
+      ctx.fillRect(-1.2, -26, 2.4, 31);
+      ctx.fillStyle = w.color;
+      ctx.beginPath();
+      ctx.moveTo(1, -26);
+      ctx.quadraticCurveTo(14, -28, 13, -16);
+      ctx.quadraticCurveTo(8, -19, 1, -17);
+      ctx.fill();
+      break;
+    case 'bow':
+    case 'longbow': {
+      const r = w.type === 'longbow' ? 19 : 14;
+      ctx.strokeStyle = w.color;
+      ctx.lineWidth = 2.6;
+      ctx.beginPath();
+      ctx.arc(-3, 0, r, -1.15, 1.15);
+      ctx.stroke();
+      const ex = -3 + Math.cos(1.15) * r, ey = Math.sin(1.15) * r;
+      const pull = -swing * 9;
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = '#ecf0f1';
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(ex, -ey); ctx.lineTo(ex + pull, 0); ctx.lineTo(ex, ey);
+      ctx.stroke();
+      break;
+    }
+    case 'staff':
+      ctx.rotate(-0.15 + swing * 0.4);
+      ctx.fillStyle = w.color;
+      ctx.fillRect(-1.3, -30, 2.6, 38);
+      circle(ctx, 0, -33, 4.8 + swing * 1.5, w.orb || '#e67e22');
+      circle(ctx, -1.3, -34.5, 1.4, 'rgba(255,255,255,0.8)');
+      break;
+  }
+  ctx.restore();
+}
+
+// ------------------------------------------------------------
+//  QUÁI
+// ------------------------------------------------------------
+function drawEnemy(ctx, e, t) {
+  const d = e.def, r = d.size;
+  const wob = Math.sin(t * 12 + e.id) * 1.5;
+  let color = d.color;
+  if (e.slowT > 0) color = '#74b9ff';
+
+  ctx.save();
+  ctx.translate(e.x, e.y);
+  ctx.fillStyle = 'rgba(0,0,0,0.3)';
+  ctx.beginPath();
+  ctx.ellipse(0, r * 0.6, r, r * 0.35, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.scale(e.dir, 1);
+
+  if (e.type === 'runner') {
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.ellipse(0, -2 + wob * 0.5, r * 1.35, r * 0.75, 0, 0, Math.PI * 2);
+    ctx.fill();
+    circle(ctx, r * 1.1, -r * 0.6, r * 0.6, color);
+    ctx.beginPath();
+    ctx.moveTo(r * 0.9, -r * 1.1); ctx.lineTo(r * 1.1, -r * 1.7); ctx.lineTo(r * 1.35, -r * 1.0);
+    ctx.fill();
+    ctx.fillRect(-r * 1.7, -r * 0.5, r * 0.6, 3);
+    circle(ctx, r * 1.35, -r * 0.7, 1.8, '#c0392b');
+  } else if (e.type === 'tank') {
+    rrect(ctx, -r, -r * 1.6 + wob * 0.3, r * 2, r * 2, 6, color);
+    ctx.strokeStyle = shade(color, -0.35);
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(-r * 0.5, -r * 1.4); ctx.lineTo(-r * 0.1, -r * 0.8); ctx.lineTo(-r * 0.4, -r * 0.2);
+    ctx.stroke();
+    circle(ctx, r * 0.45, -r * 0.9, 3, '#f1c40f');
+  } else {
+    const boss = e.type === 'boss';
+    circle(ctx, 0, -r * 0.6 + wob, r, color);
+    if (boss) {
+      ctx.fillStyle = '#2d3436';
+      for (const sx of [-1, 1]) {
+        ctx.beginPath();
+        ctx.moveTo(sx * r * 0.4, -r * 1.4);
+        ctx.quadraticCurveTo(sx * r * 1.1, -r * 1.7, sx * r * 0.9, -r * 2.3);
+        ctx.lineTo(sx * r * 0.7, -r * 1.3);
+        ctx.fill();
+      }
+    } else {
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(-r * 0.7, -r); ctx.lineTo(-r * 1.4, -r * 1.4); ctx.lineTo(-r * 0.4, -r * 1.3);
+      ctx.fill();
+    }
+    circle(ctx, r * 0.35, -r * 0.75 + wob, r * 0.28, '#fff');
+    circle(ctx, r * 0.45, -r * 0.75 + wob, r * 0.14, boss ? '#e74c3c' : '#111');
+  }
+  ctx.restore();
+
+  if (e.poisonT > 0 && Math.random() < 0.3) {
+    circle(ctx, e.x + (Math.random() - 0.5) * r, e.y - r * 1.5, 2, '#2ecc71');
+  }
+
+  // thanh máu
+  const w = Math.max(24, r * 2);
+  const by = e.y - r * (e.type === 'boss' ? 2.6 : 2) - 6;
+  ctx.fillStyle = 'rgba(0,0,0,0.6)';
+  ctx.fillRect(e.x - w / 2 - 1, by - 1, w + 2, 5);
+  ctx.fillStyle = e.hp / e.maxHp > 0.4 ? '#2ecc71' : '#e74c3c';
+  ctx.fillRect(e.x - w / 2, by, w * Math.max(0, e.hp / e.maxHp), 3);
+}
+
+// ------------------------------------------------------------
+//  BẢN ĐỒ (vẽ 1 lần vào canvas phụ)
+// ------------------------------------------------------------
+function buildMapCanvas(scale) {
+  const c = document.createElement('canvas');
+  c.width = CONFIG.W * scale;
+  c.height = CONFIG.H * scale;
+  const ctx = c.getContext('2d');
+  ctx.scale(scale, scale);
+
+  ctx.fillStyle = '#4a7c3a';
+  ctx.fillRect(0, 0, CONFIG.W, CONFIG.H);
+  let seed = 7;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  for (let i = 0; i < 260; i++) {
+    ctx.fillStyle = rnd() < 0.5 ? '#548c42' : '#427035';
+    ctx.fillRect(rnd() * CONFIG.W, rnd() * CONFIG.H, 3, 6);
+  }
+
+  const strokePath = (w, color) => {
+    ctx.strokeStyle = color;
+    ctx.lineWidth = w;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    CONFIG.path.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
+    ctx.stroke();
+  };
+  strokePath(CONFIG.pathWidth + 8, '#6d5434');
+  strokePath(CONFIG.pathWidth, '#c8a46a');
+  strokePath(CONFIG.pathWidth - 22, '#d4b47e');
+
+  // cây trang trí (tránh đường đi và ô đặt tướng)
+  const near = (x, y) =>
+    CONFIG.slots.some(([sx, sy]) => Math.hypot(sx - x, sy - y) < 45) ||
+    distToPath(x, y) < CONFIG.pathWidth;
+  for (let i = 0; i < 40; i++) {
+    const x = rnd() * CONFIG.W, y = 80 + rnd() * (CONFIG.H - 80);
+    if (near(x, y)) continue;
+    circle(ctx, x, y + 6, 10, 'rgba(0,0,0,0.25)');
+    circle(ctx, x, y, 11, '#2d5a27');
+    circle(ctx, x - 3, y - 3, 6, '#3f7a36');
+  }
+
+  // lâu đài cuối đường
+  const [ex] = CONFIG.path[CONFIG.path.length - 1];
+  rrect(ctx, ex - 40, CONFIG.H - 70, 80, 70, 4, '#7f8c8d');
+  rrect(ctx, ex - 14, CONFIG.H - 40, 28, 40, 12, '#3e2723');
+  for (let i = 0; i < 5; i++) ctx.fillRect(ex - 40 + i * 17, CONFIG.H - 80, 10, 10);
+  return c;
+}
+
+function distToPath(x, y) {
+  let best = Infinity;
+  const p = CONFIG.path;
+  for (let i = 1; i < p.length; i++) {
+    const [ax, ay] = p[i - 1], [bx, by] = p[i];
+    const dx = bx - ax, dy = by - ay;
+    const tt = Math.max(0, Math.min(1, ((x - ax) * dx + (y - ay) * dy) / (dx * dx + dy * dy)));
+    best = Math.min(best, Math.hypot(ax + dx * tt - x, ay + dy * tt - y));
+  }
+  return best;
+}
+
+function drawSlot(ctx, x, y, highlight) {
+  ctx.fillStyle = 'rgba(0,0,0,0.25)';
+  ctx.beginPath();
+  ctx.ellipse(x, y + 4, 24, 10, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = highlight ? '#f5e6a8' : '#9e9e9e';
+  ctx.beginPath();
+  ctx.ellipse(x, y, 22, 9, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = '#616161';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('+', x, y + 5);
+}
