@@ -685,3 +685,9 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - 15 icon giao diện có trong prompt nhưng trước đây game chưa dùng, nay đã gắn vào: đồng xu (mọi giá tiền), đống vàng / mạng / mực nước (thanh trên), hũ báu / hũ đồng / Hũ Vua Hùng, kho lúa (thẻ thưởng boss), gọi sớm, ổ khóa (kỹ năng chưa mở), Tôi luyện / Tẩy luyện / Luyện thể, khung chân dung thường / vàng (tướng thần), dấu hiệu ứng ẩn chưa biết / đã khám phá. Chưa có ảnh thì vẫn dùng ký hiệu cũ.
 - 14 ảnh ghi "⚠ BỎ QUA" (dao găm `do_dao_*`, dao và huy hiệu của 5 bộ đồ): game không có ô / loại đồ đó, không cần vẽ. `logo.png`, `icon-app.png` không bắt buộc.
 - Hiệu ứng chiêu dạng dải khung hình (`vfx/*.png`) vẫn để hình vẽ bằng code: Fooocus không vẽ được dải khung hình đều nhau.
+
+### Phiên bản 31 · ảnh Fooocus đầu tiên vào game
+
+- Nhận 225 ảnh (`anh/NuiCaoNuocDang_anh/`, đặt tên đúng 100%). Đánh giá từng ảnh: **105 dùng được** (đã xoá nền, nén 256 màu, đưa vào `assets/`, tổng 7,5 MB), **106 cần làm lại**, 14 thuộc nhóm "BỎ QUA". Danh sách và lý do: `tools/anh-lam-lai.txt`; danh sách cần vẽ tiếp kèm prompt: `docs/ANH-CON-THIEU.txt`.
+- Lỗi chính: đồ, phụ kiện, đồ ghép, sính lễ, nhiều icon giao diện ra **đĩa trống đồng tròn** giống nhau; quái (cá sấu, tôm, rùa, nòng nọc, chim bão), Giao Long, chim Lạc ra **hình người**; vài tướng sai (Cao Lỗ thành người máy / rùa, Lạc Long Quân thường thành quỷ, Lạc Tướng thường da xanh). Nguyên nhân nằm ở prompt: cụm "bronze drum spiral patterns" + "game item icon" và tiền tố "chibi character" cho cả thú. Đã sửa 117 prompt đồ / icon, 16 prompt quái, 100 prompt tướng (cấm vòng tròn sau lưng) và thêm NEGATIVE riêng cho đồ / quái / tướng.
+- `tools/xoa-nen.py`: xoá được nền tối / màu / chuyển màu và ảnh có viền khung mảnh ở mép; nén PNG 256 màu (nhẹ ~5 lần). `tools/kiem-tra-anh.py`: tính cả ảnh cần làm lại, tách icon kỹ năng tuỳ chọn.

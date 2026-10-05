@@ -1,0 +1,135 @@
+# Ảnh đã gen nhưng CẦN LÀM LẠI (đánh giá ngày 05/10/2026). Mỗi dòng: tên file | lý do.
+# Vẽ lại xong thì xoá dòng tương ứng. tools/kiem-tra-anh.py tính các ảnh này là còn thiếu.
+au-co_huyen-thoai.png | nhân vật đen sì, mất mặt
+ban-do_nui-2.png | ra đĩa trống, không thấy núi
+bo-chim-lac_gay.png | ra đĩa trống tròn, không thấy hình món đồ
+bo-chim-lac_giap.png | ra đĩa trống tròn, không thấy hình món đồ
+bo-chim-lac_mu.png | ra đĩa trống tròn, không thấy hình món đồ
+bo-chim-lac_no.png | ra đĩa trống tròn, không thấy hình món đồ
+bo-chim-lac_riu.png | ra đĩa trống tròn, không thấy hình món đồ
+bo-lac-long_gay.png | ra đĩa trống tròn, không thấy hình món đồ
+bo-lac-long_giap.png | ra đĩa trống tròn, không thấy hình món đồ
+bo-lac-long_mu.png | ra đĩa trống tròn, không thấy hình món đồ
+bo-lac-long_no.png | ra đĩa trống tròn, không thấy hình món đồ
+bo-lac-long_riu.png | ra đĩa trống tròn, không thấy hình món đồ
+bo-ngua-sat_gay.png | ra đĩa trống tròn, không thấy hình món đồ
+bo-ngua-sat_giap.png | ra đĩa trống tròn, không thấy hình món đồ
+bo-ngua-sat_mu.png | ra đĩa trống tròn, không thấy hình món đồ
+bo-ngua-sat_no.png | ra đĩa trống tròn, không thấy hình món đồ
+bo-ngua-sat_riu.png | ra đĩa trống tròn, không thấy hình món đồ
+bo-son-tinh_gay.png | ra đĩa trống tròn, không thấy hình món đồ
+bo-son-tinh_giap.png | ra đĩa trống tròn, không thấy hình món đồ
+bo-son-tinh_mu.png | ra đĩa trống tròn, không thấy hình món đồ
+bo-son-tinh_no.png | ra đĩa trống tròn, không thấy hình món đồ
+bo-son-tinh_riu.png | ra đĩa trống tròn, không thấy hình món đồ
+bo-trong-dong_gay.png | ra đĩa trống tròn, không thấy hình món đồ
+bo-trong-dong_giap.png | ra đĩa trống tròn, không thấy hình món đồ
+bo-trong-dong_mu.png | ra đĩa trống tròn, không thấy hình món đồ
+bo-trong-dong_no.png | ra đĩa trống tròn, không thấy hình món đồ
+bo-trong-dong_riu.png | ra đĩa trống tròn, không thấy hình món đồ
+cao-lo_hiem.png | ra hình đeo mặt nạ, không giống Cao Lỗ
+cao-lo_huyen-thoai.png | ra con rùa xanh, không phải người
+cao-lo_su-thi.png | vẽ lại theo ảnh gốc Cao Lỗ mới cho đồng nhất
+cao-lo_thuong.png | ra người máy mặt vàng, không phải người (ảnh gốc của Cao Lỗ)
+do-ghep_ao-vay-ca.png | ra đĩa trống tròn, không thấy hình món đồ
+do-ghep_bua-chim-lac.png | ra đĩa trống tròn, không thấy hình món đồ
+do-ghep_cung-mat-chim.png | ra đĩa trống tròn, không thấy hình món đồ
+do-ghep_gay-tam-gioi.png | ra đĩa trống tròn, không thấy hình món đồ
+do-ghep_gay-thoi-khong.png | ra đĩa trống tròn, không thấy hình món đồ
+do-ghep_giap-dong-bat-diet.png | ra đĩa trống tròn, không thấy hình món đồ
+do-ghep_luoi-danh-ca.png | ra đĩa trống tròn, không thấy hình món đồ
+do-ghep_luoi-hai-chi-tu.png | ra đĩa trống tròn, không thấy hình món đồ
+do-ghep_mui-sung-pha-giap.png | ra đĩa trống tròn, không thấy hình món đồ
+do-ghep_ngoc-tran-thuy.png | ra đĩa trống tròn, không thấy hình món đồ
+do-ghep_riu-quet-song.png | ra đĩa trống tròn, không thấy hình món đồ
+do-ghep_song-riu-cuong-no.png | ra đĩa trống tròn, không thấy hình món đồ
+do-ghep_trong-dong.png | ra đĩa trống tròn, không thấy hình món đồ
+do_gay_hiem.png | ra đĩa trống tròn, không thấy hình món đồ
+do_gay_huyen-thoai.png | ra đĩa trống tròn, không thấy hình món đồ
+do_gay_su-thi.png | ra đĩa trống tròn, không thấy hình món đồ
+do_gay_thuong.png | ra đĩa trống tròn, không thấy hình món đồ
+do_giap_hiem.png | ra đĩa trống tròn, không thấy hình món đồ
+do_giap_huyen-thoai.png | ra đĩa trống tròn, không thấy hình món đồ
+do_giap_su-thi.png | ra đĩa trống tròn, không thấy hình món đồ
+do_giap_thuong.png | ra đĩa trống tròn, không thấy hình món đồ
+do_mu_hiem.png | ra đĩa trống tròn, không thấy hình món đồ
+do_mu_huyen-thoai.png | ra đĩa trống tròn, không thấy hình món đồ
+do_mu_su-thi.png | ra đĩa trống tròn, không thấy hình món đồ
+do_mu_thuong.png | ra đĩa trống tròn, không thấy hình món đồ
+do_no_hiem.png | ra đĩa trống tròn, không thấy hình món đồ
+do_no_huyen-thoai.png | ra đĩa trống tròn, không thấy hình món đồ
+do_no_su-thi.png | ra đĩa trống tròn, không thấy hình món đồ
+do_no_thuong.png | ra đĩa trống tròn, không thấy hình món đồ
+do_riu_hiem.png | ra đĩa trống tròn, không thấy hình món đồ
+do_riu_huyen-thoai.png | ra đĩa trống tròn, không thấy hình món đồ
+do_riu_su-thi.png | ra đĩa trống tròn, không thấy hình món đồ
+do_riu_thuong.png | ra đĩa trống tròn, không thấy hình món đồ
+giao-long_kim.png | ra em bé trong khung tròn, không phải rồng con
+giao-long_moc.png | 4 xoáy xanh, không thấy rồng con
+hanh_kim.png | thiếu ký hiệu hành, chỉ là đĩa trơn
+hanh_tho.png | thiếu ký hiệu hành, chỉ là đĩa trơn
+hanh_thuy.png | thiếu ký hiệu hành, chỉ là đĩa trơn
+lac-long-quan_thuong.png | ra quỷ xanh có sừng, không giống vua rồng
+phu-kien_dai.png | ra đĩa trống tròn / sai vật, không nhận ra món
+phu-kien_dep-co.png | ra đĩa trống tròn / sai vật, không nhận ra món
+phu-kien_dui-trong.png | ra đĩa trống tròn / sai vật, không nhận ra món
+phu-kien_gang-da.png | ra đĩa trống tròn / sai vật, không nhận ra món
+phu-kien_hat-lua.png | ra đĩa trống tròn / sai vật, không nhận ra món
+phu-kien_khan-hien-gia.png | ra đĩa trống tròn / sai vật, không nhận ra món
+phu-kien_khan.png | ra đĩa trống tròn / sai vật, không nhận ra món
+phu-kien_long-chim-lac.png | ra đĩa trống tròn / sai vật, không nhận ra món
+phu-kien_mat-ngoc.png | ra đĩa trống tròn / sai vật, không nhận ra món
+phu-kien_mat-trong.png | ra đĩa trống tròn / sai vật, không nhận ra món
+phu-kien_ngoc-sinh-luc.png | ra đĩa trống tròn / sai vật, không nhận ra món
+phu-kien_sung-te.png | ra đĩa trống tròn / sai vật, không nhận ra món
+phu-kien_vay-ca.png | ra đĩa trống tròn / sai vật, không nhận ra món
+phu-kien_vuot-ho.png | ra đĩa trống tròn / sai vật, không nhận ra món
+quai_ca-sau-hoa-dien.png | ra em bé hình người, không phải cá sấu
+quai_ca-sau.png | ra em bé hình người, không phải cá sấu
+quai_chim-bao.png | ra người ngồi trong nồi, không phải chim
+quai_nong-noc.png | ra hình người, không phải nòng nọc
+quai_rua-giap-tinh-anh.png | chỉ là khối tròn tối, không thấy con rùa
+quai_rua-giap.png | chỉ có cái mai, không thấy con rùa
+quai_tom-binh.png | ra em bé cầm khiên, không phải lính tôm
+sinh-le_ga-chin-cua.png | vật báu chỉ là hình nhỏ trên đĩa tròn
+sinh-le_ngua-chin-hong-mao.png | vật báu chỉ là hình nhỏ trên đĩa tròn
+sinh-le_voi-chin-nga.png | vật báu chỉ là hình nhỏ trên đĩa tròn
+thach-sanh_su-thi.png | có nhiều hình nhỏ quanh nhân vật (nhiều vật trong 1 ảnh)
+trieu-hoi_chim-lac.png | ra người bay trên nước, không phải chim Lạc
+trieu-hoi_chim-than.png | ra đĩa tròn, không phải chim
+ui_da-kham-pha.png | ra đĩa tròn, không thấy cuộn sách
+ui_dong-vang.png | ra đĩa tròn, không phải đống tiền
+ui_goi-som.png | ra đĩa tròn, không thấy tù và
+ui_hu-vua-hung.png | ra đĩa tròn, không phải hũ
+ui_kho-lua.png | ra đĩa tròn, không phải kho lúa
+ui_luyen-the.png | ra đĩa tròn, không thấy cánh tay
+ui_tay-luyen.png | ra đĩa tròn, không thấy ký hiệu xoay
+lac-tuong_thuong.png | da xanh lá như yêu tinh, không giống người Việt (ảnh gốc của Lạc Tướng)
+thay-mo-lua_hiem.png | nền tối chuyển màu, xoá nền để lại mảng xám dưới chân
+# Dòng bắt đầu bằng "~": dùng tạm được, NÊN làm lại khi rảnh (không tính là thiếu)
+~au-co_hiem.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+~au-co_thuong.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+~lac-tuong_hiem.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+~lac-tuong_su-thi.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+~lac-tuong_huyen-thoai.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+~lang-lieu_huyen-thoai.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+~lac-long-quan_su-thi.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+~lac-long-quan_huyen-thoai.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+~luc-si-nui_hiem.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+~mai-an-tiem_thuong.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+~mai-an-tiem_hiem.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+~mai-an-tiem_su-thi.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+~thach-sanh_thuong.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+~tho-san-rung_hiem.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+~tho-san-rung_huyen-thoai.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+~tien-dung_hiem.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+~tien-dung_su-thi.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+~xa-thu-van-lang_thuong.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+~xa-thu-van-lang_su-thi.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+~xa-thu-van-lang_huyen-thoai.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+~than-kim-quy_hiem.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+~than-kim-quy_su-thi.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+~thay-mo-lua_su-thi.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+~chu-dong-tu_hiem.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+~than-suong-nui_thuong.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+~than-suong-nui_su-thi.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker

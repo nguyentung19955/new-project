@@ -21,13 +21,21 @@ SINGLE_FILES = {s['file'] for s in M['singles']}
 
 def remove_bg(img):
     a = np.asarray(img.convert('RGB')).astype(int)
+    h, w = a.shape[:2]
     sat = a.max(2) - a.min(2)
-    edge = np.concatenate([a[0], a[-1], a[:, 0], a[:, -1]])
-    bg = np.median(edge, axis=0)
-    d = np.sqrt(((a - bg) ** 2).sum(2))
-    # nền xám có thể hơi loang: nới ngưỡng theo độ lệch ở mép
-    tol = max(22, float(np.percentile(np.sqrt(((edge - bg) ** 2).sum(1)), 90)) + 8)
-    cand = (d < tol) & (sat < 26)
+    # bỏ qua viền khung mảnh sát mép (một số ảnh có đường viền 1–3 px)
+    m = max(2, int(min(h, w) * 0.012))
+    sides = [a[m, m:w - m], a[h - 1 - m, m:w - m], a[m:h - m, m], a[m:h - m, w - 1 - m]]
+    # nền có thể chuyển màu (tối ở trên, sáng ở dưới…): mỗi cạnh một màu nền riêng, gộp lại
+    cand = np.zeros((h, w), bool)
+    for edge in sides + [np.concatenate(sides)]:
+        bg = np.median(edge, axis=0)
+        d = np.sqrt(((a - bg) ** 2).sum(2))
+        tol = min(70, max(22, float(np.percentile(np.sqrt(((edge - bg) ** 2).sum(1)), 90)) + 8))
+        bg_sat = float(np.median(edge.max(1) - edge.min(1)))
+        cand |= (d < tol) & (np.abs(sat - bg_sat) < 26)
+    cand[:m, :] = cand[-m:, :] = True
+    cand[:, :m] = cand[:, -m:] = True
     lab, _ = ndimage.label(cand)
     border = set(np.unique(np.concatenate([lab[0], lab[-1], lab[:, 0], lab[:, -1]]))) - {0}
     fg = ~np.isin(lab, list(border))
@@ -66,7 +74,10 @@ def main(src, dst):
         elif name in SHEET_FILES:
             # icon / giao diện chỉ hiện nhỏ: 256 px là đủ, nhẹ hơn 4 lần
             side = 256 if name.startswith(ICON_PREFIX) else 512
-            shrink(remove_bg(img), side).save(os.path.join(dst, name), optimize=True); print('xoá nền ', name)
+            out = shrink(remove_bg(img), side)
+            # nén bảng 256 màu (giữ trong suốt): nhẹ hơn ~5 lần, nhìn gần như không khác
+            out = out.quantize(colors=256, method=Image.Quantize.FASTOCTREE, dither=Image.Dither.FLOYDSTEINBERG)
+            out.save(os.path.join(dst, name), optimize=True); print('xoá nền ', name)
         else:
             print('bỏ qua (tên không có trong manifest):', f)
 

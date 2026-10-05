@@ -15,6 +15,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 PROMPT = os.path.join(ROOT, 'docs', 'PROMPT-FOOOCUS.txt')
 OUT = os.path.join(ROOT, 'docs', 'ANH-CON-THIEU.txt')
+REDO = os.path.join(HERE, 'anh-lam-lai.txt')    # ảnh đã có nhưng cần vẽ lại (tên | lý do)
 IMG = ('.png', '.jpg', '.jpeg', '.webp')
 
 
@@ -70,19 +71,32 @@ def collect(paths):
 def main(paths):
     items = read_prompt()
     found = collect(paths)
+    redo, soft = {}, {}
+    if os.path.exists(REDO):
+        for l in open(REDO, encoding='utf-8'):
+            if '|' in l and not l.startswith('#'):
+                f, why = l.split('|', 1)
+                if f.startswith('~'):
+                    soft[f[1:].strip()] = why.strip()
+                else:
+                    redo[f.strip()] = why.strip()
     need = [it for it in items if not it['skip'] and not it['optional']]
-    have = [it for it in need if it['file'] in found]
+    have = [it for it in need if it['file'] in found and it['file'] not in redo]
+    bad = [it for it in need if it['file'] in found and it['file'] in redo]
     miss = [it for it in need if it['file'] not in found]
+    # icon kỹ năng: tuỳ chọn (game đã có bản vector) — để cuối danh sách
+    opt = [it for it in miss if it['file'].startswith('ky-nang_')]
+    miss = [it for it in miss if not it['file'].startswith('ky-nang_')]
     known = {it['file'] for it in items}
     stray = sorted(f for f in found if f not in known)
 
     print(f'Ảnh tìm thấy: {len(found)} file')
-    print(f'Cần vẽ: {len(need)} mục  ·  ĐÃ CÓ: {len(have)}  ·  CÒN THIẾU: {len(miss)}')
+    print(f'Cần vẽ: {len(need)} mục  ·  DÙNG ĐƯỢC: {len(have)} (trong đó {sum(it["file"] in soft for it in have)} nên làm lại khi rảnh)  ·  CẦN LÀM LẠI: {len(bad)}  ·  CHƯA CÓ (bắt buộc): {len(miss)}  ·  icon kỹ năng tuỳ chọn chưa có: {len(opt)}')
     groups = {}
     for it in need:
         g = groups.setdefault(it['group'], [0, 0])
         g[0] += 1
-        g[1] += it['file'] in found
+        g[1] += it['file'] in found and it['file'] not in redo
     for g, (n, h) in groups.items():
         print(f'  {h:>3}/{n:<3} {g[:90]}')
     if stray:
@@ -92,15 +106,35 @@ def main(paths):
             near = difflib.get_close_matches(f, names, n=1, cutoff=0.6)
             print(f'  {f}' + (f'   → có phải {near[0]}?' if near else ''))
 
-    lines = ['NÚI CAO NƯỚC DÂNG · ẢNH CÒN THIẾU (gửi lại cho AI gen tiếp)',
-             f'Đã có {len(have)}/{len(need)} ảnh · còn thiếu {len(miss)} ảnh. Cài đặt Fooocus như mục A trong PROMPT-FOOOCUS.txt.',
-             'Mỗi mục: đặt tên file đúng dòng "File:".', '']
+    lines = ['NÚI CAO NƯỚC DÂNG · ẢNH CẦN VẼ TIẾP (gửi lại cho AI gen)',
+             f'Dùng được {len(have)}/{len(need)} ảnh · cần làm lại {len(bad)} · chưa có {len(miss)} · tổng cần vẽ {len(bad) + len(miss)}'
+             + (f' (+ {len(opt)} icon kỹ năng tuỳ chọn ở PHẦN 4)' if opt else '') + '.',
+             'Cài đặt Fooocus như mục A trong PROMPT-FOOOCUS.txt (nhớ dán thêm NEGATIVE THÊM cho đồ / quái).',
+             'Mỗi mục: đặt tên file đúng dòng "File:". Prompt đã sửa để không ra đĩa trống tròn / quái hình người.', '']
+    if bad:
+        lines += ['', '=' * 78, f'PHẦN 1 · CẦN LÀM LẠI ({len(bad)} ảnh đã gen nhưng sai)', '=' * 78]
+    cur = None
+    for it in bad:
+        if it['group'] != cur:
+            cur = it['group']
+            lines += ['', '### ' + cur, '']
+        lines += [it['head'] + '   ·   ⟲ LÀM LẠI: ' + redo[it['file']], it['prompt'], '']
+    lines += ['', '=' * 78, f'PHẦN 2 · CHƯA CÓ ({len(miss)} ảnh)', '=' * 78]
     cur = None
     for it in miss:
         if it['group'] != cur:
             cur = it['group']
             lines += ['', '### ' + cur, '']
         lines += [it['head'], it['prompt'], '']
+    nice = [it for it in have if it['file'] in soft]
+    if nice:
+        lines += ['', '=' * 78, f'PHẦN 3 · NÊN LÀM LẠI KHI RẢNH ({len(nice)} ảnh dùng tạm được, game đã dùng)', '=' * 78, '']
+        for it in nice:
+            lines += [it['head'] + '   ·   ~ NÊN LÀM LẠI: ' + soft[it['file']], it['prompt'], '']
+    if opt:
+        lines += ['', '=' * 78, f'PHẦN 4 · TUỲ CHỌN: icon kỹ năng ({len(opt)} ảnh, game đã có bản vector — vẽ sau cùng)', '=' * 78, '']
+        for it in opt:
+            lines += [it['head'], it['prompt'], '']
     open(OUT, 'w', encoding='utf-8').write('\n'.join(lines))
     print(f'\nĐã ghi danh sách còn thiếu kèm prompt: {os.path.relpath(OUT, ROOT)}')
 

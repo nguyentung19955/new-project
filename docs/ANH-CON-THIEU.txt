@@ -1,0 +1,940 @@
+NÚI CAO NƯỚC DÂNG · ẢNH CẦN VẼ TIẾP (gửi lại cho AI gen)
+Dùng được 105/374 ảnh · cần làm lại 106 · chưa có 83 · tổng cần vẽ 189 (+ 80 icon kỹ năng tuỳ chọn ở PHẦN 4).
+Cài đặt Fooocus như mục A trong PROMPT-FOOOCUS.txt (nhớ dán thêm NEGATIVE THÊM cho đồ / quái).
+Mỗi mục: đặt tên file đúng dòng "File:". Prompt đã sửa để không ra đĩa trống tròn / quái hình người.
+
+
+==============================================================================
+PHẦN 1 · CẦN LÀM LẠI (106 ảnh đã gen nhưng sai)
+==============================================================================
+
+### TƯỚNG · 4 BẬC ĐỒ  (64 ảnh)
+
+[001] File: lac-tuong_thuong.png   ·   Tỉ lệ: 896×1152   ·   Ảnh GỐC của tướng: vẽ trước, chọn bản ưng nhất   ·   ⟲ LÀM LẠI: da xanh lá như yêu tinh, không giống người Việt (ảnh gốc của Lạc Tướng)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, male bronze-axe warrior with round bronze shield, moss green and red cloth, wearing cloth head wrap and rough hemp tunic, holding stone axe with wooden handle, round bronze drum shield on other arm, common gear: plain wood, bamboo, rough hemp cloth and leather, dull brown-grey colors, no glow, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[018] File: thay-mo-lua_hiem.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ⟲ LÀM LẠI: nền tối chuyển màu, xoá nền để lại mảng xám dưới chân
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, old male fire shaman with burning spirit torch staff, wearing Dong Son style tall white feather crown on a bronze band and leather armor with bronze plates, holding bronze staff with round head and flame, rare gear: bright polished bronze and white feathers, thin blue glowing outline, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[029] File: lac-long-quan_thuong.png   ·   Tỉ lệ: 896×1152   ·   Ảnh GỐC của tướng: vẽ trước, chọn bản ưng nhất   ·   ⟲ LÀM LẠI: ra quỷ xanh có sừng, không giống vua rồng
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, male dragon lord in jade dragon-scale armor with dragon claw gauntlet and small dragon horns, keeping his or her signature items and silhouette, common gear: plain wood, bamboo, rough hemp cloth and leather, dull brown-grey colors, no glow, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[039] File: thach-sanh_su-thi.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ⟲ LÀM LẠI: có nhiều hình nhỏ quanh nhân vật (nhiều vật trong 1 ảnh)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, young male woodcutter hero with axe, golden bow on his back and a magic lute, keeping his or her signature items and silhouette, epic gear: bronze engraved with drum spirals, purple jade gems, soft purple glow, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[041] File: cao-lo_thuong.png   ·   Tỉ lệ: 896×1152   ·   Ảnh GỐC của tướng: vẽ trước, chọn bản ưng nhất   ·   ⟲ LÀM LẠI: ra người máy mặt vàng, không phải người (ảnh gốc của Cao Lỗ)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, male master crossbow maker (a human man with a Vietnamese face, NOT a robot, NOT a turtle, NOT a mask) holding a giant repeating crossbow with turtle-claw trigger, keeping his or her signature items and silhouette, common gear: plain wood, bamboo, rough hemp cloth and leather, dull brown-grey colors, no glow, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[042] File: cao-lo_hiem.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ⟲ LÀM LẠI: ra hình đeo mặt nạ, không giống Cao Lỗ
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, male master crossbow maker (a human man with a Vietnamese face, NOT a robot, NOT a turtle, NOT a mask) holding a giant repeating crossbow with turtle-claw trigger, keeping his or her signature items and silhouette, rare gear: bright polished bronze and white feathers, thin blue glowing outline, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[043] File: cao-lo_su-thi.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ⟲ LÀM LẠI: vẽ lại theo ảnh gốc Cao Lỗ mới cho đồng nhất
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, male master crossbow maker (a human man with a Vietnamese face, NOT a robot, NOT a turtle, NOT a mask) holding a giant repeating crossbow with turtle-claw trigger, keeping his or her signature items and silhouette, epic gear: bronze engraved with drum spirals, purple jade gems, soft purple glow, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[044] File: cao-lo_huyen-thoai.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ⟲ LÀM LẠI: ra con rùa xanh, không phải người
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, male master crossbow maker (a human man with a Vietnamese face, NOT a robot, NOT a turtle, NOT a mask) holding a giant repeating crossbow with turtle-claw trigger, keeping his or her signature items and silhouette, legendary gear: pure gold with Lac bird engravings and green jade, bright orange-gold aura, sparkles, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[052] File: au-co_huyen-thoai.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ⟲ LÀM LẠI: nhân vật đen sì, mất mặt
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, beautiful FEMALE fairy mother with long hair, white feather wings, flower crown, holding a glowing flower branch, keeping his or her signature items and silhouette, legendary gear: pure gold with Lac bird engravings and green jade, bright orange-gold aura, sparkles, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+
+### QUÁI · BOSS · TRIỆU HỒI · SÍNH LỄ  (25 ảnh)
+
+[081] File: quai_tom-binh.png   ·   Tỉ lệ: 896×1152   ·   ⟲ LÀM LẠI: ra em bé cầm khiên, không phải lính tôm
+cute chibi cartoon creature, big head, the animal itself (NOT a human, NO human face, NO human body, NOT a child), stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, shrimp soldier with spear, Water element, blue-teal, water army of the water god, side view facing right, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[082] File: quai_ca-sau.png   ·   Tỉ lệ: 896×1152   ·   ⟲ LÀM LẠI: ra em bé hình người, không phải cá sấu
+cute chibi cartoon creature, big head, the animal itself (NOT a human, NO human face, NO human body, NOT a child), stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, crocodile with shiny metallic bronze-silver scales (Metal element), water army of the water god, side view facing right, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[083] File: quai_ca-sau-hoa-dien.png   ·   Tỉ lệ: 896×1152   ·   ⟲ LÀM LẠI: ra em bé hình người, không phải cá sấu
+cute chibi cartoon creature, big head, the animal itself (NOT a human, NO human face, NO human body, NOT a child), stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, armored crocodile with metallic bronze-silver scales, enraged, red eyes, steam, water army of the water god, side view facing right, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[084] File: quai_rua-giap.png   ·   Tỉ lệ: 896×1152   ·   ⟲ LÀM LẠI: chỉ có cái mai, không thấy con rùa
+cute chibi cartoon creature, big head, the animal itself (NOT a human, NO human face, NO human body, NOT a child), stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, heavy turtle with earth-brown rocky spiked shell (Earth element), water army of the water god, side view facing right, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[085] File: quai_rua-giap-tinh-anh.png   ·   Tỉ lệ: 896×1152   ·   ⟲ LÀM LẠI: chỉ là khối tròn tối, không thấy con rùa
+cute chibi cartoon creature, big head, the animal itself (NOT a human, NO human face, NO human body, NOT a child), stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, giant elite version, glowing cracks on shell, water army of the water god, side view facing right, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[087] File: quai_chim-bao.png   ·   Tỉ lệ: 896×1152   ·   ⟲ LÀM LẠI: ra người ngồi trong nồi, không phải chim
+cute chibi cartoon creature, big head, the animal itself (NOT a human, NO human face, NO human body, NOT a child), stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, flying storm bird with green-teal wind feathers and gusts (Wood element), water army of the water god, side view facing right, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[089] File: quai_nong-noc.png   ·   Tỉ lệ: 896×1152   ·   ⟲ LÀM LẠI: ra hình người, không phải nòng nọc
+cute chibi cartoon creature, big head, the animal itself (NOT a human, NO human face, NO human body, NOT a child), stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, three small fast tadpoles, water army of the water god, side view facing right, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[096] File: trieu-hoi_chim-than.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa tròn, không phải chim
+cute chibi cartoon creature, big head, the animal itself (NOT a human, NO human face, NO human body, NOT a child), stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, flock of small magic birds, water army of the water god, side view facing right, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[097] File: trieu-hoi_chim-lac.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra người bay trên nước, không phải chim Lạc
+cute chibi cartoon creature, big head, the animal itself (NOT a human, NO human face, NO human body, NOT a child), stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, one white-gold Lạc bird diving to attack, water army of the water god, side view facing right, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[098] File: giao-long_kim.png   ·   Tỉ lệ: 1024×1024   ·   Giao Long Con: vẽ bản đầu, các màu sau dùng bản đầu làm Image Prompt   ·   ⟲ LÀM LẠI: ra em bé trong khung tròn, không phải rồng con
+cute chibi cartoon creature, big head, the animal itself (NOT a human, NO human face, NO human body, NOT a child), stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, small baby water dragon, silver-white scales, water army of the water god, side view facing right, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[099] File: giao-long_moc.png   ·   Tỉ lệ: 1024×1024   ·   Giao Long Con: vẽ bản đầu, các màu sau dùng bản đầu làm Image Prompt   ·   ⟲ LÀM LẠI: 4 xoáy xanh, không thấy rồng con
+cute chibi cartoon creature, big head, the animal itself (NOT a human, NO human face, NO human body, NOT a child), stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, small cute baby water dragon, green scales, water army of the water god, side view facing right, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[103] File: sinh-le_voi-chin-nga.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: vật báu chỉ là hình nhỏ trên đĩa tròn
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, legendary treasure: nine-tusked elephant treasure, ornate bronze and gold decorations, glowing, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[104] File: sinh-le_ga-chin-cua.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: vật báu chỉ là hình nhỏ trên đĩa tròn
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, legendary treasure: nine-spurred rooster treasure, ornate bronze and gold decorations, glowing, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[105] File: sinh-le_ngua-chin-hong-mao.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: vật báu chỉ là hình nhỏ trên đĩa tròn
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, legendary treasure: horse with nine red manes treasure, ornate bronze and gold decorations, glowing, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+
+### ĐỒ TRANG PHỤC · 4 ĐỘ HIẾM  (24 ảnh)
+
+[106] File: do_riu_thuong.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, stone axe with wooden handle, common gear: plain wood, bamboo, rough hemp cloth and leather, dull brown-grey colors, no glow, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[107] File: do_riu_hiem.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze axe, rare gear: bright polished bronze and white feathers, thin blue glowing outline, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[108] File: do_riu_su-thi.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze axe engraved with drum patterns, epic gear: bronze engraved with drum spirals, purple jade gems, soft purple glow, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[109] File: do_riu_huyen-thoai.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, golden thunder axe with lightning, legendary gear: pure gold with Lac bird engravings and green jade, bright orange-gold aura, sparkles, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[114] File: do_no_thuong.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, simple wooden crossbow, common gear: plain wood, bamboo, rough hemp cloth and leather, dull brown-grey colors, no glow, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[115] File: do_no_hiem.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze crossbow, rare gear: bright polished bronze and white feathers, thin blue glowing outline, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[116] File: do_no_su-thi.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, crossbow engraved with Lạc birds, epic gear: bronze engraved with drum spirals, purple jade gems, soft purple glow, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[117] File: do_no_huyen-thoai.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, golden crossbow with Lạc bird wings as arms, legendary gear: pure gold with Lac bird engravings and green jade, bright orange-gold aura, sparkles, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[118] File: do_gay_thuong.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, curved wooden stick, common gear: plain wood, bamboo, rough hemp cloth and leather, dull brown-grey colors, no glow, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[119] File: do_gay_hiem.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze staff with round head, rare gear: bright polished bronze and white feathers, thin blue glowing outline, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[120] File: do_gay_su-thi.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, staff topped with a small bronze drum, epic gear: bronze engraved with drum spirals, purple jade gems, soft purple glow, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[121] File: do_gay_huyen-thoai.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, golden staff with floating flame and ice crystal, legendary gear: pure gold with Lac bird engravings and green jade, bright orange-gold aura, sparkles, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[122] File: do_mu_thuong.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, cloth head wrap, common gear: plain wood, bamboo, rough hemp cloth and leather, dull brown-grey colors, no glow, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[123] File: do_mu_hiem.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, feathered headdress, rare gear: bright polished bronze and white feathers, thin blue glowing outline, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[124] File: do_mu_su-thi.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze horned helmet, epic gear: bronze engraved with drum spirals, purple jade gems, soft purple glow, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[125] File: do_mu_huyen-thoai.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, tall golden Lạc bird feather crown, legendary gear: pure gold with Lac bird engravings and green jade, bright orange-gold aura, sparkles, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[126] File: do_giap_thuong.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, rough hemp tunic, no body inside, common gear: plain wood, bamboo, rough hemp cloth and leather, dull brown-grey colors, no glow, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[127] File: do_giap_hiem.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, leather armor with bronze plates, no body inside, rare gear: bright polished bronze and white feathers, thin blue glowing outline, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[128] File: do_giap_su-thi.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, engraved bronze armor, no body inside, epic gear: bronze engraved with drum spirals, purple jade gems, soft purple glow, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[129] File: do_giap_huyen-thoai.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, golden armor inlaid with jade, Lạc bird head shoulders, no body inside, legendary gear: pure gold with Lac bird engravings and green jade, bright orange-gold aura, sparkles, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+
+### 5 BỘ ĐỒ  (40 ảnh)
+
+[130] File: bo-lac-long_riu.png   ·   Tỉ lệ: 1024×1024   ·   Vẽ món đầu của bộ, các món sau dùng nó làm Image Prompt để cùng kiểu   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, axe made of jade green and gold dragon scales, epic legendary equipment set piece, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[132] File: bo-lac-long_no.png   ·   Tỉ lệ: 1024×1024   ·   Vẽ món đầu của bộ, các món sau dùng nó làm Image Prompt để cùng kiểu   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, crossbow made of jade green and gold dragon scales, epic legendary equipment set piece, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[133] File: bo-lac-long_gay.png   ·   Tỉ lệ: 1024×1024   ·   Vẽ món đầu của bộ, các món sau dùng nó làm Image Prompt để cùng kiểu   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, magic staff made of jade green and gold dragon scales, epic legendary equipment set piece, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[134] File: bo-lac-long_mu.png   ·   Tỉ lệ: 1024×1024   ·   Vẽ món đầu của bộ, các món sau dùng nó làm Image Prompt để cùng kiểu   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, helmet made of jade green and gold dragon scales, epic legendary equipment set piece, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[135] File: bo-lac-long_giap.png   ·   Tỉ lệ: 1024×1024   ·   Vẽ món đầu của bộ, các món sau dùng nó làm Image Prompt để cùng kiểu   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, chest armor made of jade green and gold dragon scales, no body inside, epic legendary equipment set piece, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[138] File: bo-son-tinh_riu.png   ·   Tỉ lệ: 1024×1024   ·   Vẽ món đầu của bộ, các món sau dùng nó làm Image Prompt để cùng kiểu   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, axe made of mossy stone and earth-gold, rock textures, epic legendary equipment set piece, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[140] File: bo-son-tinh_no.png   ·   Tỉ lệ: 1024×1024   ·   Vẽ món đầu của bộ, các món sau dùng nó làm Image Prompt để cùng kiểu   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, crossbow made of mossy stone and earth-gold, rock textures, epic legendary equipment set piece, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[141] File: bo-son-tinh_gay.png   ·   Tỉ lệ: 1024×1024   ·   Vẽ món đầu của bộ, các món sau dùng nó làm Image Prompt để cùng kiểu   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, magic staff made of mossy stone and earth-gold, rock textures, epic legendary equipment set piece, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[142] File: bo-son-tinh_mu.png   ·   Tỉ lệ: 1024×1024   ·   Vẽ món đầu của bộ, các món sau dùng nó làm Image Prompt để cùng kiểu   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, helmet made of mossy stone and earth-gold, rock textures, epic legendary equipment set piece, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[143] File: bo-son-tinh_giap.png   ·   Tỉ lệ: 1024×1024   ·   Vẽ món đầu của bộ, các món sau dùng nó làm Image Prompt để cùng kiểu   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, chest armor made of mossy stone and earth-gold, rock textures, no body inside, epic legendary equipment set piece, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[146] File: bo-chim-lac_riu.png   ·   Tỉ lệ: 1024×1024   ·   Vẽ món đầu của bộ, các món sau dùng nó làm Image Prompt để cùng kiểu   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, axe made of silver-white and gold feathers, epic legendary equipment set piece, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[148] File: bo-chim-lac_no.png   ·   Tỉ lệ: 1024×1024   ·   Vẽ món đầu của bộ, các món sau dùng nó làm Image Prompt để cùng kiểu   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, crossbow made of silver-white and gold feathers, epic legendary equipment set piece, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[149] File: bo-chim-lac_gay.png   ·   Tỉ lệ: 1024×1024   ·   Vẽ món đầu của bộ, các món sau dùng nó làm Image Prompt để cùng kiểu   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, magic staff made of silver-white and gold feathers, epic legendary equipment set piece, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[150] File: bo-chim-lac_mu.png   ·   Tỉ lệ: 1024×1024   ·   Vẽ món đầu của bộ, các món sau dùng nó làm Image Prompt để cùng kiểu   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, helmet made of silver-white and gold feathers, epic legendary equipment set piece, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[151] File: bo-chim-lac_giap.png   ·   Tỉ lệ: 1024×1024   ·   Vẽ món đầu của bộ, các món sau dùng nó làm Image Prompt để cùng kiểu   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, chest armor made of silver-white and gold feathers, no body inside, epic legendary equipment set piece, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[154] File: bo-trong-dong_riu.png   ·   Tỉ lệ: 1024×1024   ·   Vẽ món đầu của bộ, các món sau dùng nó làm Image Prompt để cùng kiểu   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, axe made of dark bronze engraved with drum patterns, epic legendary equipment set piece, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[156] File: bo-trong-dong_no.png   ·   Tỉ lệ: 1024×1024   ·   Vẽ món đầu của bộ, các món sau dùng nó làm Image Prompt để cùng kiểu   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, crossbow made of dark bronze engraved with drum patterns, epic legendary equipment set piece, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[157] File: bo-trong-dong_gay.png   ·   Tỉ lệ: 1024×1024   ·   Vẽ món đầu của bộ, các món sau dùng nó làm Image Prompt để cùng kiểu   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, magic staff made of dark bronze engraved with drum patterns, epic legendary equipment set piece, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[158] File: bo-trong-dong_mu.png   ·   Tỉ lệ: 1024×1024   ·   Vẽ món đầu của bộ, các món sau dùng nó làm Image Prompt để cùng kiểu   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, helmet made of dark bronze engraved with drum patterns, epic legendary equipment set piece, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[159] File: bo-trong-dong_giap.png   ·   Tỉ lệ: 1024×1024   ·   Vẽ món đầu của bộ, các món sau dùng nó làm Image Prompt để cùng kiểu   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, chest armor made of dark bronze engraved with drum patterns, no body inside, epic legendary equipment set piece, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[162] File: bo-ngua-sat_riu.png   ·   Tỉ lệ: 1024×1024   ·   Vẽ món đầu của bộ, các món sau dùng nó làm Image Prompt để cùng kiểu   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, axe made of black iron glowing red, flame accents, epic legendary equipment set piece, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[164] File: bo-ngua-sat_no.png   ·   Tỉ lệ: 1024×1024   ·   Vẽ món đầu của bộ, các món sau dùng nó làm Image Prompt để cùng kiểu   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, crossbow made of black iron glowing red, flame accents, epic legendary equipment set piece, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[165] File: bo-ngua-sat_gay.png   ·   Tỉ lệ: 1024×1024   ·   Vẽ món đầu của bộ, các món sau dùng nó làm Image Prompt để cùng kiểu   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, magic staff made of black iron glowing red, flame accents, epic legendary equipment set piece, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[166] File: bo-ngua-sat_mu.png   ·   Tỉ lệ: 1024×1024   ·   Vẽ món đầu của bộ, các món sau dùng nó làm Image Prompt để cùng kiểu   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, helmet made of black iron glowing red, flame accents, epic legendary equipment set piece, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[167] File: bo-ngua-sat_giap.png   ·   Tỉ lệ: 1024×1024   ·   Vẽ món đầu của bộ, các món sau dùng nó làm Image Prompt để cùng kiểu   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, chest armor made of black iron glowing red, flame accents, no body inside, epic legendary equipment set piece, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+
+### PHỤ KIỆN & ĐỒ GHÉP  (28 ảnh)
+
+[170] File: phu-kien_vuot-ho.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn / sai vật, không nhận ra món
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, tiger claw, simple, no glow, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[171] File: phu-kien_gang-da.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn / sai vật, không nhận ra món
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, leather glove, simple, no glow, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[172] File: phu-kien_dai.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn / sai vật, không nhận ra món
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, belt with bronze buckle, simple, no glow, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[173] File: phu-kien_dep-co.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn / sai vật, không nhận ra món
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, woven grass sandals, simple, no glow, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[174] File: phu-kien_khan.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn / sai vật, không nhận ra món
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, cloth scarf, simple, no glow, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[175] File: phu-kien_khan-hien-gia.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn / sai vật, không nhận ra món
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, sage scarf with symbols, simple, no glow, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[176] File: phu-kien_mat-ngoc.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn / sai vật, không nhận ra món
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, jade eye gem, simple, no glow, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[177] File: phu-kien_ngoc-sinh-luc.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn / sai vật, không nhận ra món
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, red life jade, simple, no glow, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[178] File: phu-kien_mat-trong.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn / sai vật, không nhận ra món
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum face, simple, no glow, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[179] File: phu-kien_dui-trong.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn / sai vật, không nhận ra món
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, drumstick, simple, no glow, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[180] File: phu-kien_sung-te.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn / sai vật, không nhận ra món
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, rhino horn, simple, no glow, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[181] File: phu-kien_long-chim-lac.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn / sai vật, không nhận ra món
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, white-gold Lạc bird feather, simple, no glow, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[182] File: phu-kien_vay-ca.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn / sai vật, không nhận ra món
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, shimmering fish scale, simple, no glow, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[183] File: phu-kien_hat-lua.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn / sai vật, không nhận ra món
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bundle of golden rice grains, simple, no glow, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[184] File: do-ghep_song-riu-cuong-no.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, twin fury axes, powerful crafted item with its own colored magic aura, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[185] File: do-ghep_gay-tam-gioi.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, three-realm staff, powerful crafted item with its own colored magic aura, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[186] File: do-ghep_gay-thoi-khong.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, time staff with hourglass jade, powerful crafted item with its own colored magic aura, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[187] File: do-ghep_giap-dong-bat-diet.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, immortal bronze armor, powerful crafted item with its own colored magic aura, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[188] File: do-ghep_luoi-hai-chi-tu.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, death scythe, powerful crafted item with its own colored magic aura, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[189] File: do-ghep_trong-dong.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, small bronze drum with drumstick, powerful crafted item with its own colored magic aura, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[190] File: do-ghep_mui-sung-pha-giap.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, horn-tipped bronze spear point, powerful crafted item with its own colored magic aura, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[191] File: do-ghep_riu-quet-song.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, wide river-sweeping axe, powerful crafted item with its own colored magic aura, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[192] File: do-ghep_cung-mat-chim.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bird-eye bow with jade, powerful crafted item with its own colored magic aura, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[193] File: do-ghep_bua-chim-lac.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, Lạc bird feather amulet, powerful crafted item with its own colored magic aura, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[194] File: do-ghep_ao-vay-ca.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, fish-scale vest, powerful crafted item with its own colored magic aura, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[195] File: do-ghep_ngoc-tran-thuy.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, blue jade water-sealing orb, powerful crafted item with its own colored magic aura, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[196] File: do-ghep_luoi-danh-ca.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa trống tròn, không thấy hình món đồ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, glowing fishing net, powerful crafted item with its own colored magic aura, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+
+### NGŨ HÀNH · TIẾN HOÁ · GIAO DIỆN  (24 ảnh)
+
+[198] File: hanh_kim.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: thiếu ký hiệu hành, chỉ là đĩa trơn
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, game ui icon, round bronze-drum badge with silver-white axe blade symbol, single object, isolated on plain flat light grey background, centered, the symbol large, bold and clearly readable in the middle, simple thin bronze rim
+
+[200] File: hanh_thuy.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: thiếu ký hiệu hành, chỉ là đĩa trơn
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, game ui icon, round bronze drum badge with dark blue wave symbol, single object, isolated on plain flat light grey background, centered, the symbol large, bold and clearly readable in the middle, simple thin bronze rim
+
+[202] File: hanh_tho.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: thiếu ký hiệu hành, chỉ là đĩa trơn
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, game ui icon, round bronze drum badge with earth-gold mountain symbol, single object, isolated on plain flat light grey background, centered, the symbol large, bold and clearly readable in the middle, simple thin bronze rim
+
+[207] File: ui_dong-vang.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa tròn, không phải đống tiền
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, game ui icon, pile of bronze coins, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[211] File: ui_hu-vua-hung.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa tròn, không phải hũ
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, game ui icon, royal golden treasure jar, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[212] File: ui_kho-lua.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa tròn, không phải kho lúa
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, game ui icon, rice granary basket, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[213] File: ui_goi-som.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa tròn, không thấy tù và
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, game ui icon, bronze horn blowing, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[215] File: ui_da-kham-pha.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa tròn, không thấy cuộn sách
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, game ui icon, opened scroll with golden light, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[219] File: ui_luyen-the.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa tròn, không thấy cánh tay
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, game ui icon, muscular arm with golden aura, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[220] File: ui_tay-luyen.png   ·   Tỉ lệ: 1024×1024   ·   ⟲ LÀM LẠI: ra đĩa tròn, không thấy ký hiệu xoay
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, game ui icon, swirling dice-like jade cycle symbol, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+
+### BẢN ĐỒ · NÚI · THÀNH · Ô ĐẶT TƯỚNG  (10 ảnh)
+
+[223] File: ban-do_nui-2.png   ·   Tỉ lệ: 1024×1024   ·   Núi 1–5: vẽ núi 1, các bậc sau dùng nó làm Image Prompt   ·   ⟲ LÀM LẠI: ra đĩa trống, không thấy núi
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, top-down 3/4 view game map element, rocky hill, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+
+==============================================================================
+PHẦN 2 · CHƯA CÓ (83 ảnh)
+==============================================================================
+
+### BẢN ĐỒ · NÚI · THÀNH · Ô ĐẶT TƯỚNG  (10 ảnh)
+
+[226] File: ban-do_nui-5.png   ·   Tỉ lệ: 1024×1024   ·   Núi 1–5: vẽ núi 1, các bậc sau dùng nó làm Image Prompt
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, top-down 3/4 view game map element, giant sacred mountain with golden light at peak, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[227] File: ban-do_phong-chau.png   ·   Tỉ lệ: 1024×1024   ·   Núi 1–5: vẽ núi 1, các bậc sau dùng nó làm Image Prompt
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, top-down 3/4 view game map element, ancient walled citadel, wooden gates, bronze drums on towers, top-down 3/4 view, single object, isolated on plain flat light grey background, centered, game item icon
+
+[228] File: ban-do_o-thap.png   ·   Tỉ lệ: 1024×1024   ·   Núi 1–5: vẽ núi 1, các bậc sau dùng nó làm Image Prompt
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, top-down 3/4 view game map element, small grassy stone tile for placing a hero, low near river, top-down 3/4, single object, isolated on plain flat light grey background, centered, game item icon
+
+[229] File: ban-do_o-giua.png   ·   Tỉ lệ: 1024×1024   ·   Núi 1–5: vẽ núi 1, các bậc sau dùng nó làm Image Prompt
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, top-down 3/4 view game map element, small grassy stone tile for placing a hero on a raised earth step, single object, isolated on plain flat light grey background, centered, game item icon
+
+[230] File: ban-do_o-cao.png   ·   Tỉ lệ: 1024×1024   ·   Núi 1–5: vẽ núi 1, các bậc sau dùng nó làm Image Prompt
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, top-down 3/4 view game map element, small grassy stone tile for placing a hero on a high rocky hill top, single object, isolated on plain flat light grey background, centered, game item icon
+
+[231] File: ban-do_o-ngap.png   ·   Tỉ lệ: 1024×1024   ·   Núi 1–5: vẽ núi 1, các bậc sau dùng nó làm Image Prompt
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, top-down 3/4 view game map element, small grassy stone tile flooded with muddy water, single object, isolated on plain flat light grey background, centered, game item icon
+
+
+### ẢNH ĐƠN · BẢN ĐỒ · TRUYỆN · MENU  (10 ảnh)
+
+[296] File: nen_ai-1.png   ·   Tỉ lệ: 1344×768   ·   Dùng cho Ải 1, 5 (Bến Sông Đà, Chân Núi Tản). Sông chảy TRÁI → PHẢI, thành ở bên PHẢI (game vẽ lại dòng sông lên trên cho khớp đường quái đi)
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, top-down 3/4 tower defense game map, wide landscape, a single river enters at the LEFT edge at mid height and flows to the RIGHT in a gentle S-curve (rising to the upper third near the left quarter, dipping just below the middle at the center, rising again toward the right), ending at a walled bronze-age citadel Phong Châu with a gate standing at the RIGHT edge, upper-middle height, a band of rocky mountains along the top edge with the tall Tản Viên mountain peak at the top right, open grassy banks on both sides of the river, the bottom third of the image is plain open grassland with no important details, no stone tiles, no paths other than the river, no characters, no text, calm sunny day, lush green banks
+
+[297] File: nen_ai-2.png   ·   Tỉ lệ: 1344×768   ·   Dùng cho Ải 2, 6 (Thác Bờ, Đầm Lầy). Sông chảy TRÁI → PHẢI, thành ở bên PHẢI (game vẽ lại dòng sông lên trên cho khớp đường quái đi)
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, top-down 3/4 tower defense game map, wide landscape, a single river enters at the LEFT edge at mid height and flows to the RIGHT in a gentle S-curve (rising to the upper third near the left quarter, dipping just below the middle at the center, rising again toward the right), ending at a walled bronze-age citadel Phong Châu with a gate standing at the RIGHT edge, upper-middle height, a band of rocky mountains along the top edge with the tall Tản Viên mountain peak at the top right, open grassy banks on both sides of the river, the bottom third of the image is plain open grassland with no important details, no stone tiles, no paths other than the river, no characters, no text, river gorge with small waterfalls and cliffs on the banks, rice terraces, some flooded marshy patches
+
+[298] File: nen_ai-3.png   ·   Tỉ lệ: 1344×768   ·   Dùng cho Ải 3, 4, 7 (Rừng Lim, Bãi Phù Sa, Cửa Sông Hồng). Sông chảy TRÁI → PHẢI, thành ở bên PHẢI (game vẽ lại dòng sông lên trên cho khớp đường quái đi)
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, top-down 3/4 tower defense game map, wide landscape, a single river enters at the LEFT edge at mid height and flows to the RIGHT in a gentle S-curve (rising to the upper third near the left quarter, dipping just below the middle at the center, rising again toward the right), ending at a walled bronze-age citadel Phong Châu with a gate standing at the RIGHT edge, upper-middle height, a band of rocky mountains along the top edge with the tall Tản Viên mountain peak at the top right, open grassy banks on both sides of the river, the bottom third of the image is plain open grassland with no important details, no stone tiles, no paths other than the river, no characters, no text, wide river with bamboo forests, ironwood trees and stilt houses on the banks
+
+[299] File: nen_ai-4.png   ·   Tỉ lệ: 1344×768   ·   Dùng cho Ải 8 (Thành Phong Châu). Sông chảy TRÁI → PHẢI, thành ở bên PHẢI (game vẽ lại dòng sông lên trên cho khớp đường quái đi)
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, top-down 3/4 tower defense game map, wide landscape, a single river enters at the LEFT edge at mid height and flows to the RIGHT in a gentle S-curve (rising to the upper third near the left quarter, dipping just below the middle at the center, rising again toward the right), ending at a walled bronze-age citadel Phong Châu with a gate standing at the RIGHT edge, upper-middle height, a band of rocky mountains along the top edge with the tall Tản Viên mountain peak at the top right, open grassy banks on both sides of the river, the bottom third of the image is plain open grassland with no important details, no stone tiles, no paths other than the river, no characters, no text, stormy night, heavy rain and lightning, dramatic final battle mood, torches on the citadel walls
+
+[300] File: truyen_1.png   ·   Tỉ lệ: 1344×768
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, storybook painting: King Hùng on his throne announcing a contest to marry his daughter Mị Nương
+
+[301] File: truyen_2.png   ·   Tỉ lệ: 1344×768
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, storybook painting: Sơn Tinh and Thủy Tinh arriving with wedding gifts, mountain side versus sea side
+
+[302] File: truyen_3.png   ·   Tỉ lệ: 1344×768
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, storybook painting: Sơn Tinh raising mountains while Thủy Tinh summons a great flood with water monsters
+
+[303] File: nen_menu.png   ·   Tỉ lệ: 1344×768
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, epic scene, Sơn Tinh on a mountain facing Thủy Tinh on a giant wave, stormy sky, empty space in the center for buttons
+
+
+### Tướng 4 bậc đồ · chân dung · tranh lớn · dáng ra đòn · icon kỹ năng · sinh vật / hiệu ứng chiêu · giao diện thăng thần
+
+[306] File: lac-hau_thuong.png   ·   Tỉ lệ: 896×1152   ·   Ảnh GỐC của tướng: vẽ trước, chọn bản ưng nhất
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, stocky male Lac tribal chieftain with tall white feather headdress, tiger-hide armor with rhino-hide spikes, heavy stone war hammer and a bronze war drum on his back, keeping his or her signature items and silhouette, common gear: plain wood, bamboo, rough hemp cloth and leather, dull brown-grey colors, no glow, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[307] File: lac-hau_hiem.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, stocky male Lac tribal chieftain with tall white feather headdress, tiger-hide armor with rhino-hide spikes, heavy stone war hammer and a bronze war drum on his back, keeping his or her signature items and silhouette, rare gear: bright polished bronze and white feathers, thin blue glowing outline, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[308] File: lac-hau_su-thi.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, stocky male Lac tribal chieftain with tall white feather headdress, tiger-hide armor with rhino-hide spikes, heavy stone war hammer and a bronze war drum on his back, keeping his or her signature items and silhouette, epic gear: bronze engraved with drum spirals, purple jade gems, soft purple glow, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[309] File: lac-hau_huyen-thoai.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, stocky male Lac tribal chieftain with tall white feather headdress, tiger-hide armor with rhino-hide spikes, heavy stone war hammer and a bronze war drum on his back, keeping his or her signature items and silhouette, legendary gear: pure gold with Lac bird engravings and green jade, bright orange-gold aura, sparkles, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[310] File: than-san-ba-vi_thuong.png   ·   Tỉ lệ: 896×1152   ·   Ảnh GỐC của tướng: vẽ trước, chọn bản ưng nhất
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, agile male forest hunter god from Ba Vi mountain with deer antler headdress, tiger-claw gloves, twin leaf-shaped bronze daggers and a quiver of javelins, green and ochre hunter clothes, keeping his or her signature items and silhouette, common gear: plain wood, bamboo, rough hemp cloth and leather, dull brown-grey colors, no glow, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[311] File: than-san-ba-vi_hiem.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, agile male forest hunter god from Ba Vi mountain with deer antler headdress, tiger-claw gloves, twin leaf-shaped bronze daggers and a quiver of javelins, green and ochre hunter clothes, keeping his or her signature items and silhouette, rare gear: bright polished bronze and white feathers, thin blue glowing outline, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[312] File: than-san-ba-vi_su-thi.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, agile male forest hunter god from Ba Vi mountain with deer antler headdress, tiger-claw gloves, twin leaf-shaped bronze daggers and a quiver of javelins, green and ochre hunter clothes, keeping his or her signature items and silhouette, epic gear: bronze engraved with drum spirals, purple jade gems, soft purple glow, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[313] File: than-san-ba-vi_huyen-thoai.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, agile male forest hunter god from Ba Vi mountain with deer antler headdress, tiger-claw gloves, twin leaf-shaped bronze daggers and a quiver of javelins, green and ochre hunter clothes, keeping his or her signature items and silhouette, legendary gear: pure gold with Lac bird engravings and green jade, bright orange-gold aura, sparkles, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[314] File: an-duong-vuong_thuong.png   ·   Tỉ lệ: 896×1152   ·   Ảnh GỐC của tướng: vẽ trước, chọn bản ưng nhất
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, noble male king of Au Lac with a golden crown, red royal robe with bronze plates and the magic Linh Quang crossbow with golden turtle-claw trigger, keeping his or her signature items and silhouette, common gear: plain wood, bamboo, rough hemp cloth and leather, dull brown-grey colors, no glow, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[315] File: an-duong-vuong_hiem.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, noble male king of Au Lac with a golden crown, red royal robe with bronze plates and the magic Linh Quang crossbow with golden turtle-claw trigger, keeping his or her signature items and silhouette, rare gear: bright polished bronze and white feathers, thin blue glowing outline, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[316] File: an-duong-vuong_su-thi.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, noble male king of Au Lac with a golden crown, red royal robe with bronze plates and the magic Linh Quang crossbow with golden turtle-claw trigger, keeping his or her signature items and silhouette, epic gear: bronze engraved with drum spirals, purple jade gems, soft purple glow, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[317] File: an-duong-vuong_huyen-thoai.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, noble male king of Au Lac with a golden crown, red royal robe with bronze plates and the magic Linh Quang crossbow with golden turtle-claw trigger, keeping his or her signature items and silhouette, legendary gear: pure gold with Lac bird engravings and green jade, bright orange-gold aura, sparkles, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[318] File: mau-thuong-ngan_thuong.png   ·   Tỉ lệ: 896×1152   ·   Ảnh GỐC của tướng: vẽ trước, chọn bản ưng nhất
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, motherly female forest goddess of the mountains with a leaf and flower crown, long green flowing robe, leafy wing shapes and a flowering wooden staff, keeping his or her signature items and silhouette, common gear: plain wood, bamboo, rough hemp cloth and leather, dull brown-grey colors, no glow, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[319] File: mau-thuong-ngan_hiem.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, motherly female forest goddess of the mountains with a leaf and flower crown, long green flowing robe, leafy wing shapes and a flowering wooden staff, keeping his or her signature items and silhouette, rare gear: bright polished bronze and white feathers, thin blue glowing outline, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[320] File: mau-thuong-ngan_su-thi.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, motherly female forest goddess of the mountains with a leaf and flower crown, long green flowing robe, leafy wing shapes and a flowering wooden staff, keeping his or her signature items and silhouette, epic gear: bronze engraved with drum spirals, purple jade gems, soft purple glow, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[321] File: mau-thuong-ngan_huyen-thoai.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, motherly female forest goddess of the mountains with a leaf and flower crown, long green flowing robe, leafy wing shapes and a flowering wooden staff, keeping his or her signature items and silhouette, legendary gear: pure gold with Lac bird engravings and green jade, bright orange-gold aura, sparkles, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[322] File: chan-dung_lac-hau.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Thường của tướng làm Image Prompt
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, head and shoulders portrait of stocky male Lac tribal chieftain with tall white feather headdress, tiger-hide armor with rhino-hide spikes, heavy stone war hammer and a bronze war drum on his back, Vietnamese facial features, front view, inside an ornate round bronze drum frame, plain light grey background
+
+[323] File: chan-dung_than-san-ba-vi.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Thường của tướng làm Image Prompt
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, head and shoulders portrait of agile male forest hunter god from Ba Vi mountain with deer antler headdress, tiger-claw gloves, twin leaf-shaped bronze daggers and a quiver of javelins, green and ochre hunter clothes, Vietnamese facial features, front view, inside an ornate round bronze drum frame, plain light grey background
+
+[324] File: chan-dung_an-duong-vuong.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Thường của tướng làm Image Prompt
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, head and shoulders portrait of noble male king of Au Lac with a golden crown, red royal robe with bronze plates and the magic Linh Quang crossbow with golden turtle-claw trigger, Vietnamese facial features, front view, inside an ornate round bronze drum frame, plain light grey background
+
+[325] File: chan-dung_mau-thuong-ngan.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Thường của tướng làm Image Prompt
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, head and shoulders portrait of motherly female forest goddess of the mountains with a leaf and flower crown, long green flowing robe, leafy wing shapes and a flowering wooden staff, Vietnamese facial features, front view, inside an ornate round bronze drum frame, plain light grey background
+
+[326] File: lac-hau_ra-don.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt kiểu PyraCanny weight 0.4–0.5 để giữ mặt nhưng đổi dáng
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, stocky male Lac tribal chieftain with tall white feather headdress, tiger-hide armor with rhino-hide spikes, heavy stone war hammer and a bronze war drum on his back, swinging the stone war hammer down in a big overhead strike, dust and pebbles flying, dynamic action pose, motion lines, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[327] File: than-san-ba-vi_ra-don.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt kiểu PyraCanny weight 0.4–0.5 để giữ mặt nhưng đổi dáng
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, agile male forest hunter god from Ba Vi mountain with deer antler headdress, tiger-claw gloves, twin leaf-shaped bronze daggers and a quiver of javelins, green and ochre hunter clothes, throwing a green poisoned javelin forward in a dynamic lunge, leaves swirling, dynamic action pose, motion lines, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[328] File: an-duong-vuong_ra-don.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt kiểu PyraCanny weight 0.4–0.5 để giữ mặt nhưng đổi dáng
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, noble male king of Au Lac with a golden crown, red royal robe with bronze plates and the magic Linh Quang crossbow with golden turtle-claw trigger, firing the glowing magic crossbow, three golden bolts spreading in a fan, golden turtle-claw light, dynamic action pose, motion lines, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[329] File: mau-thuong-ngan_ra-don.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt kiểu PyraCanny weight 0.4–0.5 để giữ mặt nhưng đổi dáng
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, motherly female forest goddess of the mountains with a leaf and flower crown, long green flowing robe, leafy wing shapes and a flowering wooden staff, raising the flowering staff, green vines and leaves bursting from the ground around her, dynamic action pose, motion lines, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[330] File: anh-lon_lac-hau.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Huyền thoại của tướng làm Image Prompt
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, heroic splash art of stocky male Lac tribal chieftain with tall white feather headdress, tiger-hide armor with rhino-hide spikes, heavy stone war hammer and a bronze war drum on his back, swinging the stone war hammer down in a big overhead strike, dust and pebbles flying, dramatic lighting, misty Tan Vien mountains and Red River in the background, square composition
+
+[331] File: anh-lon_than-san-ba-vi.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Huyền thoại của tướng làm Image Prompt
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, heroic splash art of agile male forest hunter god from Ba Vi mountain with deer antler headdress, tiger-claw gloves, twin leaf-shaped bronze daggers and a quiver of javelins, green and ochre hunter clothes, throwing a green poisoned javelin forward in a dynamic lunge, leaves swirling, dramatic lighting, misty Tan Vien mountains and Red River in the background, square composition
+
+[332] File: anh-lon_an-duong-vuong.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Huyền thoại của tướng làm Image Prompt
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, heroic splash art of noble male king of Au Lac with a golden crown, red royal robe with bronze plates and the magic Linh Quang crossbow with golden turtle-claw trigger, firing the glowing magic crossbow, three golden bolts spreading in a fan, golden turtle-claw light, dramatic lighting, misty Tan Vien mountains and Red River in the background, square composition
+
+[333] File: anh-lon_mau-thuong-ngan.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Huyền thoại của tướng làm Image Prompt
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, heroic splash art of motherly female forest goddess of the mountains with a leaf and flower crown, long green flowing robe, leafy wing shapes and a flowering wooden staff, raising the flowering staff, green vines and leaves bursting from the ground around her, dramatic lighting, misty Tan Vien mountains and Red River in the background, square composition
+
+[350] File: trieu-hoi_ho-ba-vi.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, chibi striped tiger spirit of Ba Vi mountain leaping forward with claws out, green spirit flames on its tail, side view facing right, isolated on plain flat light grey background, centered, nothing else in the image
+
+[351] File: trieu-hoi_cay-da-than.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, small sacred banyan tree with glowing green leaves, hanging aerial roots and floating healing sparkles, front view, isolated on plain flat light grey background, centered, nothing else in the image, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[352] File: hieu-ung_da-lan.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, round mossy granite boulder with cracks and bronze drum spiral carving, rolling, dust puffs, isolated on plain flat light grey background, centered, nothing else in the image, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[353] File: ui_thang-than.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, game UI icon, golden star rising above a bronze drum with a purple jade ring and an orange-gold flame, symbol of ascension to godhood, no text, isolated on plain flat light grey background, centered, nothing else in the image, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[354] File: ui_than-tinh.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, game UI icon, single five-pointed star made of orange-red flame with a bronze drum spiral in the middle, no text, isolated on plain flat light grey background, centered, nothing else in the image, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+
+### Dáng ra đòn + tranh lớn cho 16 tướng cũ · cảnh thắng / thua · Ngọc Hồi Sinh · Hũ đồng
+
+[355] File: lac-tuong_ra-don.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường của tướng làm Image Prompt kiểu PyraCanny weight 0.4–0.5 để giữ mặt nhưng đổi dáng
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, male bronze-axe warrior with round bronze shield, feathered headdress, moss green and red cloth, spinning with the bronze axe in a wide whirlwind slash, shield raised, dynamic action pose, motion lines, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[356] File: luc-si-nui_ra-don.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường của tướng làm Image Prompt kiểu PyraCanny weight 0.4–0.5 để giữ mặt nhưng đổi dáng
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, huge muscular male mountain strongman, rattan rope on shoulder, hurling a big boulder overhead with both hands, rattan rope swinging, dynamic action pose, motion lines, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[357] File: xa-thu-van-lang_ra-don.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường của tướng làm Image Prompt kiểu PyraCanny weight 0.4–0.5 để giữ mặt nhưng đổi dáng
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, young male crossbow archer with arrow quiver, firing the bamboo crossbow, several arrows flying forward, dynamic action pose, motion lines, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[358] File: tho-san-rung_ra-don.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường của tướng làm Image Prompt kiểu PyraCanny weight 0.4–0.5 để giữ mặt nhưng đổi dáng
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, agile male jungle hunter with twin daggers and leaf cloak, dashing forward and slashing an X with twin daggers, leaves swirling, dynamic action pose, motion lines, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[359] File: thay-mo-lua_ra-don.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường của tướng làm Image Prompt kiểu PyraCanny weight 0.4–0.5 để giữ mặt nhưng đổi dáng
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, old male fire shaman with burning spirit torch staff, raising the torch staff and casting a big fireball, flames swirling, dynamic action pose, motion lines, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[360] File: than-suong-nui_ra-don.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường của tướng làm Image Prompt kiểu PyraCanny weight 0.4–0.5 để giữ mặt nhưng đổi dáng
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, female frost mountain spirit in pale blue robes with icy mist staff, casting a frost nova from the icy staff, snowflakes and mist bursting, dynamic action pose, motion lines, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[361] File: thanh-giong_ra-don.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường của tướng làm Image Prompt kiểu PyraCanny weight 0.4–0.5 để giữ mặt nhưng đổi dáng
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, giant heroic boy in black iron armor holding a flaming bamboo staff, iron helmet, sweeping the flaming bamboo staff in a huge arc, fire trail, dynamic action pose, motion lines, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[362] File: lac-long-quan_ra-don.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường của tướng làm Image Prompt kiểu PyraCanny weight 0.4–0.5 để giữ mặt nhưng đổi dáng
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, male dragon lord in jade dragon-scale armor with dragon claw gauntlet and small dragon horns, slashing with glowing dragon claws, water dragon spirit roaring behind him, dynamic action pose, motion lines, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[363] File: than-kim-quy_ra-don.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường của tướng làm Image Prompt kiểu PyraCanny weight 0.4–0.5 để giữ mặt nhưng đổi dáng
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, wise golden turtle god standing upright with glowing drum-pattern shell and golden claws, stomping the ground, golden shockwave and shield dome rising, dynamic action pose, motion lines, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[364] File: thach-sanh_ra-don.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường của tướng làm Image Prompt kiểu PyraCanny weight 0.4–0.5 để giữ mặt nhưng đổi dáng
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, young male woodcutter hero with axe, golden bow on his back and a magic lute, chopping down hard with the woodcutter axe, golden sparks, dynamic action pose, motion lines, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[365] File: cao-lo_ra-don.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường của tướng làm Image Prompt kiểu PyraCanny weight 0.4–0.5 để giữ mặt nhưng đổi dáng
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, male master crossbow maker (a human man with a Vietnamese face, NOT a robot, NOT a turtle, NOT a mask) holding a giant repeating crossbow with turtle-claw trigger, firing the giant repeating crossbow, three bolts at once, dynamic action pose, motion lines, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[366] File: mai-an-tiem_ra-don.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường của tướng làm Image Prompt kiểu PyraCanny weight 0.4–0.5 để giữ mặt nhưng đổi dáng
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, cheerful male island farmer with a basket of watermelons and a sling, conical hat, throwing a big watermelon with the sling, seeds splashing, dynamic action pose, motion lines, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[367] File: au-co_ra-don.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường của tướng làm Image Prompt kiểu PyraCanny weight 0.4–0.5 để giữ mặt nhưng đổi dáng
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, beautiful FEMALE fairy mother with long hair, white feather wings, flower crown, spreading white wings and casting a shower of healing feathers and petals, dynamic action pose, motion lines, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[368] File: chu-dong-tu_ra-don.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường của tướng làm Image Prompt kiểu PyraCanny weight 0.4–0.5 để giữ mặt nhưng đổi dáng
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, humble young male fisherman with magic staff and magic conical hat, raising the magic staff, a river wave rising and swirling, dynamic action pose, motion lines, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[369] File: tien-dung_ra-don.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường của tướng làm Image Prompt kiểu PyraCanny weight 0.4–0.5 để giữ mặt nhưng đổi dáng
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, graceful FEMALE princess in flowing silk dress with fairy fan and pink lotus, flower hairpin, waving the fairy fan, a gust of pink petals blowing forward, dynamic action pose, motion lines, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[370] File: lang-lieu_ra-don.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường của tướng làm Image Prompt kiểu PyraCanny weight 0.4–0.5 để giữ mặt nhưng đổi dáng
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, kind male prince in simple farmer clothes carrying square banh chung rice cakes, offering glowing banh chung rice cakes, golden rice stalks rising, dynamic action pose, motion lines, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[371] File: anh-lon_lac-tuong.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Huyền thoại của tướng làm Image Prompt
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, heroic splash art of male bronze-axe warrior with round bronze shield, feathered headdress, moss green and red cloth, spinning with the bronze axe in a wide whirlwind slash, shield raised, dramatic lighting, misty Tan Vien mountains and Red River in the background, square composition
+
+[372] File: anh-lon_luc-si-nui.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Huyền thoại của tướng làm Image Prompt
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, heroic splash art of huge muscular male mountain strongman, rattan rope on shoulder, hurling a big boulder overhead with both hands, rattan rope swinging, dramatic lighting, misty Tan Vien mountains and Red River in the background, square composition
+
+[373] File: anh-lon_xa-thu-van-lang.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Huyền thoại của tướng làm Image Prompt
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, heroic splash art of young male crossbow archer with arrow quiver, firing the bamboo crossbow, several arrows flying forward, dramatic lighting, misty Tan Vien mountains and Red River in the background, square composition
+
+[374] File: anh-lon_tho-san-rung.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Huyền thoại của tướng làm Image Prompt
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, heroic splash art of agile male jungle hunter with twin daggers and leaf cloak, dashing forward and slashing an X with twin daggers, leaves swirling, dramatic lighting, misty Tan Vien mountains and Red River in the background, square composition
+
+[375] File: anh-lon_thay-mo-lua.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Huyền thoại của tướng làm Image Prompt
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, heroic splash art of old male fire shaman with burning spirit torch staff, raising the torch staff and casting a big fireball, flames swirling, dramatic lighting, misty Tan Vien mountains and Red River in the background, square composition
+
+[376] File: anh-lon_than-suong-nui.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Huyền thoại của tướng làm Image Prompt
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, heroic splash art of female frost mountain spirit in pale blue robes with icy mist staff, casting a frost nova from the icy staff, snowflakes and mist bursting, dramatic lighting, misty Tan Vien mountains and Red River in the background, square composition
+
+[377] File: anh-lon_thanh-giong.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Huyền thoại của tướng làm Image Prompt
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, heroic splash art of giant heroic boy in black iron armor holding a flaming bamboo staff, iron helmet, sweeping the flaming bamboo staff in a huge arc, fire trail, dramatic lighting, misty Tan Vien mountains and Red River in the background, square composition
+
+[378] File: anh-lon_lac-long-quan.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Huyền thoại của tướng làm Image Prompt
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, heroic splash art of male dragon lord in jade dragon-scale armor with dragon claw gauntlet and small dragon horns, slashing with glowing dragon claws, water dragon spirit roaring behind him, dramatic lighting, misty Tan Vien mountains and Red River in the background, square composition
+
+[379] File: anh-lon_than-kim-quy.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Huyền thoại của tướng làm Image Prompt
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, heroic splash art of wise golden turtle god standing upright with glowing drum-pattern shell and golden claws, stomping the ground, golden shockwave and shield dome rising, dramatic lighting, misty Tan Vien mountains and Red River in the background, square composition
+
+[380] File: anh-lon_thach-sanh.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Huyền thoại của tướng làm Image Prompt
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, heroic splash art of young male woodcutter hero with axe, golden bow on his back and a magic lute, chopping down hard with the woodcutter axe, golden sparks, dramatic lighting, misty Tan Vien mountains and Red River in the background, square composition
+
+[381] File: anh-lon_cao-lo.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Huyền thoại của tướng làm Image Prompt
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, heroic splash art of male master crossbow maker (a human man with a Vietnamese face, NOT a robot, NOT a turtle, NOT a mask) holding a giant repeating crossbow with turtle-claw trigger, firing the giant repeating crossbow, three bolts at once, dramatic lighting, misty Tan Vien mountains and Red River in the background, square composition
+
+[382] File: anh-lon_mai-an-tiem.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Huyền thoại của tướng làm Image Prompt
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, heroic splash art of cheerful male island farmer with a basket of watermelons and a sling, conical hat, throwing a big watermelon with the sling, seeds splashing, dramatic lighting, misty Tan Vien mountains and Red River in the background, square composition
+
+[383] File: anh-lon_au-co.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Huyền thoại của tướng làm Image Prompt
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, heroic splash art of beautiful FEMALE fairy mother with long hair, white feather wings, flower crown, spreading white wings and casting a shower of healing feathers and petals, dramatic lighting, misty Tan Vien mountains and Red River in the background, square composition
+
+[384] File: anh-lon_chu-dong-tu.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Huyền thoại của tướng làm Image Prompt
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, heroic splash art of humble young male fisherman with magic staff and magic conical hat, raising the magic staff, a river wave rising and swirling, dramatic lighting, misty Tan Vien mountains and Red River in the background, square composition
+
+[385] File: anh-lon_tien-dung.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Huyền thoại của tướng làm Image Prompt
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, heroic splash art of graceful FEMALE princess in flowing silk dress with fairy fan and pink lotus, flower hairpin, waving the fairy fan, a gust of pink petals blowing forward, dramatic lighting, misty Tan Vien mountains and Red River in the background, square composition
+
+[386] File: anh-lon_lang-lieu.png   ·   Tỉ lệ: 1024×1024   ·   Dùng ảnh bậc Huyền thoại của tướng làm Image Prompt
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, heroic splash art of kind male prince in simple farmer clothes carrying square banh chung rice cakes, offering glowing banh chung rice cakes, golden rice stalks rising, dramatic lighting, misty Tan Vien mountains and Red River in the background, square composition
+
+[387] File: nen_thang.png   ·   Tỉ lệ: 1344×768   ·   Nền màn Chiến thắng (giữ nền)
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, victory celebration at the bronze-age citadel Phong Châu at sunrise, mountains rising high above calm receding flood water, Lac bird banners, bronze drums, festive villagers silhouettes, empty space in the center for text, no text
+
+[388] File: nen_thua.png   ·   Tỉ lệ: 1344×768   ·   Nền màn Thất bại (giữ nền)
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, the citadel Phong Châu flooded by a stormy dark sea, giant waves and water monsters silhouettes, broken banners, gloomy blue light, empty space in the center for text, no text
+
+[389] File: sinh-le_ngoc-hoi-sinh.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, glowing green-gold jade pearl of resurrection resting on a lotus, soft life aura, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+[390] File: ui_hu-dong.png   ·   Tỉ lệ: 1024×1024   ·   Hũ đồng (Lò đúc · tab Hũ báu)
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, game ui icon, bronze treasure jar with drum spiral engravings and blue glow, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+
+==============================================================================
+PHẦN 3 · NÊN LÀM LẠI KHI RẢNH (26 ảnh dùng tạm được, game đã dùng)
+==============================================================================
+
+[002] File: lac-tuong_hiem.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ~ NÊN LÀM LẠI: có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, male bronze-axe warrior with round bronze shield, moss green and red cloth, wearing Dong Son style tall white feather crown on a bronze band and leather armor with bronze plates, holding bronze axe, round bronze drum shield on other arm, rare gear: bright polished bronze and white feathers, thin blue glowing outline, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[003] File: lac-tuong_su-thi.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ~ NÊN LÀM LẠI: có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, male bronze-axe warrior with round bronze shield, moss green and red cloth, wearing bronze horned helmet with purple gem and engraved bronze armor, holding bronze axe engraved with drum spirals, round bronze drum shield on other arm, epic gear: bronze engraved with drum spirals, purple jade gems, soft purple glow, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[004] File: lac-tuong_huyen-thoai.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ~ NÊN LÀM LẠI: có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, male bronze-axe warrior with round bronze shield, moss green and red cloth, wearing tall golden Lac bird feather crown with green jade and golden armor with green jade and Lac bird shoulder pads, holding golden axe crackling with lightning, round bronze drum shield on other arm, legendary gear: pure gold with Lac bird engravings and green jade, bright orange-gold aura, sparkles, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[006] File: luc-si-nui_hiem.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ~ NÊN LÀM LẠI: có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, huge muscular male mountain strongman carrying a boulder, rattan rope on shoulder, wearing Dong Son style tall white feather crown on a bronze band and leather armor with bronze plates, holding bronze axe, also carrying a boulder on his shoulder, rare gear: bright polished bronze and white feathers, thin blue glowing outline, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[009] File: xa-thu-van-lang_thuong.png   ·   Tỉ lệ: 896×1152   ·   Ảnh GỐC của tướng: vẽ trước, chọn bản ưng nhất   ·   ~ NÊN LÀM LẠI: có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, young male crossbow archer with arrow quiver, wearing cloth head wrap and rough hemp tunic, holding simple wooden crossbow, common gear: plain wood, bamboo, rough hemp cloth and leather, dull brown-grey colors, no glow, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[011] File: xa-thu-van-lang_su-thi.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ~ NÊN LÀM LẠI: có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, young male crossbow archer with arrow quiver, wearing bronze horned helmet with purple gem and engraved bronze armor, holding crossbow engraved with Lac birds, epic gear: bronze engraved with drum spirals, purple jade gems, soft purple glow, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[012] File: xa-thu-van-lang_huyen-thoai.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ~ NÊN LÀM LẠI: có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, young male crossbow archer with arrow quiver, wearing tall golden Lac bird feather crown with green jade and golden armor with green jade and Lac bird shoulder pads, holding golden crossbow with bird-wing arms, legendary gear: pure gold with Lac bird engravings and green jade, bright orange-gold aura, sparkles, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[014] File: tho-san-rung_hiem.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ~ NÊN LÀM LẠI: có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, agile male jungle hunter with twin daggers and leaf cloak, wearing Dong Son style tall white feather crown on a bronze band and leather armor with bronze plates, holding twin bronze daggers, rare gear: bright polished bronze and white feathers, thin blue glowing outline, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[016] File: tho-san-rung_huyen-thoai.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ~ NÊN LÀM LẠI: có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, agile male jungle hunter with twin daggers and leaf cloak, wearing tall golden Lac bird feather crown with green jade and golden armor with green jade and Lac bird shoulder pads, holding twin golden daggers with glowing leaf blades, legendary gear: pure gold with Lac bird engravings and green jade, bright orange-gold aura, sparkles, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[019] File: thay-mo-lua_su-thi.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ~ NÊN LÀM LẠI: có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, old male fire shaman with burning spirit torch staff, wearing bronze horned helmet with purple gem and engraved bronze armor, holding staff topped with small bronze drum and flame, epic gear: bronze engraved with drum spirals, purple jade gems, soft purple glow, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[021] File: than-suong-nui_thuong.png   ·   Tỉ lệ: 896×1152   ·   Ảnh GỐC của tướng: vẽ trước, chọn bản ưng nhất   ·   ~ NÊN LÀM LẠI: có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, female frost mountain spirit in pale blue robes with icy mist staff, wearing cloth head wrap and rough hemp tunic, holding curved wooden staff with frost, common gear: plain wood, bamboo, rough hemp cloth and leather, dull brown-grey colors, no glow, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[023] File: than-suong-nui_su-thi.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ~ NÊN LÀM LẠI: có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, female frost mountain spirit in pale blue robes with icy mist staff, wearing bronze horned helmet with purple gem and engraved bronze armor, holding staff topped with small bronze drum and frost, epic gear: bronze engraved with drum spirals, purple jade gems, soft purple glow, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[031] File: lac-long-quan_su-thi.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ~ NÊN LÀM LẠI: có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, male dragon lord in jade dragon-scale armor with dragon claw gauntlet and small dragon horns, keeping his or her signature items and silhouette, epic gear: bronze engraved with drum spirals, purple jade gems, soft purple glow, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[032] File: lac-long-quan_huyen-thoai.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ~ NÊN LÀM LẠI: có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, male dragon lord in jade dragon-scale armor with dragon claw gauntlet and small dragon horns, keeping his or her signature items and silhouette, legendary gear: pure gold with Lac bird engravings and green jade, bright orange-gold aura, sparkles, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[034] File: than-kim-quy_hiem.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ~ NÊN LÀM LẠI: có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, wise golden turtle god standing upright with glowing drum-pattern shell and golden claws, keeping his or her signature items and silhouette, rare gear: bright polished bronze and white feathers, thin blue glowing outline, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[035] File: than-kim-quy_su-thi.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ~ NÊN LÀM LẠI: có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, wise golden turtle god standing upright with glowing drum-pattern shell and golden claws, keeping his or her signature items and silhouette, epic gear: bronze engraved with drum spirals, purple jade gems, soft purple glow, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[037] File: thach-sanh_thuong.png   ·   Tỉ lệ: 896×1152   ·   Ảnh GỐC của tướng: vẽ trước, chọn bản ưng nhất   ·   ~ NÊN LÀM LẠI: có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, young male woodcutter hero with axe, golden bow on his back and a magic lute, keeping his or her signature items and silhouette, common gear: plain wood, bamboo, rough hemp cloth and leather, dull brown-grey colors, no glow, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[045] File: mai-an-tiem_thuong.png   ·   Tỉ lệ: 896×1152   ·   Ảnh GỐC của tướng: vẽ trước, chọn bản ưng nhất   ·   ~ NÊN LÀM LẠI: có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, cheerful male island farmer with a basket of watermelons and a sling, conical hat, keeping his or her signature items and silhouette, common gear: plain wood, bamboo, rough hemp cloth and leather, dull brown-grey colors, no glow, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[046] File: mai-an-tiem_hiem.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ~ NÊN LÀM LẠI: có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, cheerful male island farmer with a basket of watermelons and a sling, conical hat, keeping his or her signature items and silhouette, rare gear: bright polished bronze and white feathers, thin blue glowing outline, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[047] File: mai-an-tiem_su-thi.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ~ NÊN LÀM LẠI: có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, cheerful male island farmer with a basket of watermelons and a sling, conical hat, keeping his or her signature items and silhouette, epic gear: bronze engraved with drum spirals, purple jade gems, soft purple glow, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[049] File: au-co_thuong.png   ·   Tỉ lệ: 896×1152   ·   Ảnh GỐC của tướng: vẽ trước, chọn bản ưng nhất   ·   ~ NÊN LÀM LẠI: có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, beautiful FEMALE fairy mother with long hair, white feather wings, flower crown, holding a glowing flower branch, keeping his or her signature items and silhouette, common gear: plain wood, bamboo, rough hemp cloth and leather, dull brown-grey colors, no glow, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[050] File: au-co_hiem.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ~ NÊN LÀM LẠI: có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, beautiful FEMALE fairy mother with long hair, white feather wings, flower crown, holding a glowing flower branch, keeping his or her signature items and silhouette, rare gear: bright polished bronze and white feathers, thin blue glowing outline, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[054] File: chu-dong-tu_hiem.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ~ NÊN LÀM LẠI: có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, humble young male fisherman with magic staff and magic conical hat, river water swirling, keeping his or her signature items and silhouette, rare gear: bright polished bronze and white feathers, thin blue glowing outline, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[058] File: tien-dung_hiem.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ~ NÊN LÀM LẠI: có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, graceful FEMALE princess in flowing silk dress with fairy fan and pink lotus, flower hairpin, keeping his or her signature items and silhouette, rare gear: bright polished bronze and white feathers, thin blue glowing outline, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[059] File: tien-dung_su-thi.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ~ NÊN LÀM LẠI: có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, graceful FEMALE princess in flowing silk dress with fairy fan and pink lotus, flower hairpin, keeping his or her signature items and silhouette, epic gear: bronze engraved with drum spirals, purple jade gems, soft purple glow, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+[064] File: lang-lieu_huyen-thoai.png   ·   Tỉ lệ: 896×1152   ·   Dùng ảnh bậc Thường làm Image Prompt (xem hướng dẫn)   ·   ~ NÊN LÀM LẠI: có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, bronze drum spiral patterns, gentle young male prince with folded turban holding a tray of square bánh chưng and round bánh giầy, rice stalks around, keeping his or her signature items and silhouette, legendary gear: pure gold with Lac bird engravings and green jade, bright orange-gold aura, sparkles, heroic standing pose, 3/4 front view, Vietnamese facial features, no halo, no circle or disc behind the character, no aura ring, isolated on plain flat light grey background, centered, full body, nothing else in the image
+
+
+==============================================================================
+PHẦN 4 · TUỲ CHỌN: icon kỹ năng (80 ảnh, game đã có bản vector — vẽ sau cùng)
+==============================================================================
+
+[232] File: ky-nang_lac-tuong_q.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, bronze shield bash with stun stars, single clear symbol, high contrast, square gold frame, filling the whole image
+
+[233] File: ky-nang_lac-tuong_w.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, spinning axe whirlwind, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[234] File: ky-nang_lac-tuong_e.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, red battle aura, speed lines, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[235] File: ky-nang_lac-tuong_r.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, lightning bolt from mountain sky, single clear symbol, high contrast, double gold glowing square frame, filling the whole image
+
+[236] File: ky-nang_luc-si-nui_q.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, rattan rope lasso pulling, single clear symbol, high contrast, square gold frame, filling the whole image
+
+[237] File: ky-nang_luc-si-nui_w.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, shoulders carrying a mountain, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[238] File: ky-nang_luc-si-nui_e.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, rock dust explosion ring, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[239] File: ky-nang_luc-si-nui_r.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, monster buried under boulders, single clear symbol, high contrast, double gold glowing square frame, filling the whole image
+
+[240] File: ky-nang_xa-thu-van-lang_q.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, arrow piercing through, single clear symbol, high contrast, square gold frame, filling the whole image
+
+[241] File: ky-nang_xa-thu-van-lang_w.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, fan of multiple arrows, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[242] File: ky-nang_xa-thu-van-lang_e.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, green poison-dripping arrow, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[243] File: ky-nang_xa-thu-van-lang_r.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, rain of arrows from sky, single clear symbol, high contrast, double gold glowing square frame, filling the whole image
+
+[244] File: ky-nang_tho-san-rung_q.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, X-shaped slash with leaves, single clear symbol, high contrast, square gold frame, filling the whole image
+
+[245] File: ky-nang_tho-san-rung_w.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, hidden dagger in shadow, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[246] File: ky-nang_tho-san-rung_e.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, critical strike burst, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[247] File: ky-nang_tho-san-rung_r.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, predator eye with crossed daggers, single clear symbol, high contrast, double gold glowing square frame, filling the whole image
+
+[248] File: ky-nang_thay-mo-lua_q.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, pillar of fire, single clear symbol, high contrast, square gold frame, filling the whole image
+
+[249] File: ky-nang_thay-mo-lua_w.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, spirit torch with soul flame, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[250] File: ky-nang_thay-mo-lua_e.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, burning embers, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[251] File: ky-nang_thay-mo-lua_r.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, flaming rocks falling from sky, single clear symbol, high contrast, double gold glowing square frame, filling the whole image
+
+[252] File: ky-nang_than-suong-nui_q.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, frost ring, single clear symbol, high contrast, square gold frame, filling the whole image
+
+[253] File: ky-nang_than-suong-nui_w.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, ice shard spear, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[254] File: ky-nang_than-suong-nui_e.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, cold wind from snowy peak, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[255] File: ky-nang_than-suong-nui_r.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, frozen mist dome, single clear symbol, high contrast, double gold glowing square frame, filling the whole image
+
+[256] File: ky-nang_thanh-giong_q.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, bamboo staff smash, single clear symbol, high contrast, square gold frame, filling the whole image
+
+[257] File: ky-nang_thanh-giong_w.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, iron armor plate, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[258] File: ky-nang_thanh-giong_e.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, iron horse breathing fire, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[259] File: ky-nang_thanh-giong_r.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, hero rising to the sky on horse, single clear symbol, high contrast, double gold glowing square frame, filling the whole image
+
+[260] File: ky-nang_lac-long-quan_q.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, dragon claw slash, single clear symbol, high contrast, square gold frame, filling the whole image
+
+[261] File: ky-nang_lac-long-quan_w.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, jade dragon scales, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[262] File: ky-nang_lac-long-quan_e.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, roaring sea wave, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[263] File: ky-nang_lac-long-quan_r.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, dragon breathing water and lightning, single clear symbol, high contrast, double gold glowing square frame, filling the whole image
+
+[264] File: ky-nang_than-kim-quy_q.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, golden shell shield, single clear symbol, high contrast, square gold frame, filling the whole image
+
+[265] File: ky-nang_than-kim-quy_w.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, golden turtle claw, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[266] File: ky-nang_than-kim-quy_e.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, earthquake crack, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[267] File: ky-nang_than-kim-quy_r.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, golden turtle guarding a citadel, single clear symbol, high contrast, double gold glowing square frame, filling the whole image
+
+[268] File: ky-nang_thach-sanh_q.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, woodcutter axe chop, single clear symbol, high contrast, square gold frame, filling the whole image
+
+[269] File: ky-nang_thach-sanh_w.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, golden bow and arrow, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[270] File: ky-nang_thach-sanh_e.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, magic lute with music notes, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[271] File: ky-nang_thach-sanh_r.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, giant slash slaying an ogre, single clear symbol, high contrast, double gold glowing square frame, filling the whole image
+
+[272] File: ky-nang_cao-lo_q.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, three arrows at once, single clear symbol, high contrast, square gold frame, filling the whole image
+
+[273] File: ky-nang_cao-lo_w.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, magic crossbow trigger, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[274] File: ky-nang_cao-lo_e.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, turtle-claw arrowhead, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[275] File: ky-nang_cao-lo_r.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, giant beam arrow piercing a line, single clear symbol, high contrast, double gold glowing square frame, filling the whole image
+
+[276] File: ky-nang_mai-an-tiem_q.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, flying watermelon, single clear symbol, high contrast, square gold frame, filling the whole image
+
+[277] File: ky-nang_mai-an-tiem_w.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, golden seeds, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[278] File: ky-nang_mai-an-tiem_e.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, flock of magic birds, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[279] File: ky-nang_mai-an-tiem_r.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, watermelons raining down, single clear symbol, high contrast, double gold glowing square frame, filling the whole image
+
+[280] File: ky-nang_au-co_q.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, healing fairy flower, single clear symbol, high contrast, square gold frame, filling the whole image
+
+[281] File: ky-nang_au-co_w.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, flying fairy feathers, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[282] File: ky-nang_au-co_e.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, rock spikes rising, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[283] File: ky-nang_au-co_r.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, glowing egg sack hatching, single clear symbol, high contrast, double gold glowing square frame, filling the whole image
+
+[284] File: ky-nang_chu-dong-tu_q.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, healing magic staff, single clear symbol, high contrast, square gold frame, filling the whole image
+
+[285] File: ky-nang_chu-dong-tu_w.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, magic conical hat shield, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[286] File: ky-nang_chu-dong-tu_e.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, red river wave, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[287] File: ky-nang_chu-dong-tu_r.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, citadel rising overnight, single clear symbol, high contrast, double gold glowing square frame, filling the whole image
+
+[288] File: ky-nang_tien-dung_q.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, fairy fan gust, single clear symbol, high contrast, square gold frame, filling the whole image
+
+[289] File: ky-nang_tien-dung_w.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, glowing jade light, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[290] File: ky-nang_tien-dung_e.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, pink lotus healing, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[291] File: ky-nang_tien-dung_r.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, rain of fairy flowers, single clear symbol, high contrast, double gold glowing square frame, filling the whole image
+
+[292] File: ky-nang_lang-lieu_q.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, square rice cake shield, single clear symbol, high contrast, square gold frame, filling the whole image
+
+[293] File: ky-nang_lang-lieu_w.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, round rice cake healing, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[294] File: ky-nang_lang-lieu_e.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, rice field growing, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[295] File: ky-nang_lang-lieu_r.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, ancestral altar with golden light, single clear symbol, high contrast, double gold glowing square frame, filling the whole image
+
+[334] File: ky-nang_lac-hau_q.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, bronze war drum being struck, red sound waves, single clear symbol, high contrast, square gold frame, filling the whole image
+
+[335] File: ky-nang_lac-hau_w.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, spiked rhino-hide armor plate, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[336] File: ky-nang_lac-hau_e.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, huge boulder rolling along a river bank, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[337] File: ky-nang_lac-hau_r.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, tribal warriors raising shields together under a golden oath light, single clear symbol, high contrast, double gold glowing square frame, filling the whole image
+
+[338] File: ky-nang_than-san-ba-vi_q.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, green poisoned javelin dripping venom, single clear symbol, high contrast, square gold frame, filling the whole image
+
+[339] File: ky-nang_than-san-ba-vi_w.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, tiger fang, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[340] File: ky-nang_than-san-ba-vi_e.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, striped tiger leaping with claws out, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[341] File: ky-nang_than-san-ba-vi_r.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, red hunter target mark over a beast, single clear symbol, high contrast, double gold glowing square frame, filling the whole image
+
+[342] File: ky-nang_an-duong-vuong_q.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, bronze arrow ricocheting between targets with golden trails, single clear symbol, high contrast, square gold frame, filling the whole image
+
+[343] File: ky-nang_an-duong-vuong_w.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, spiral citadel Co Loa walls, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[344] File: ky-nang_an-duong-vuong_e.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, rows of crossbowmen on a spiral citadel wall, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[345] File: ky-nang_an-duong-vuong_r.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, three golden light bolts spreading in a fan from a magic crossbow, single clear symbol, high contrast, double gold glowing square frame, filling the whole image
+
+[346] File: ky-nang_mau-thuong-ngan_q.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, green vines binding feet, single clear symbol, high contrast, square gold frame, filling the whole image
+
+[347] File: ky-nang_mau-thuong-ngan_w.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, ancient tree roots glowing, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[348] File: ky-nang_mau-thuong-ngan_e.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, sacred banyan tree with healing green light, single clear symbol, high contrast, dark square frame with inner border, filling the whole image
+
+[349] File: ky-nang_mau-thuong-ngan_r.png   ·   Tỉ lệ: 1024×1024
+stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, square game skill icon, forest roots erupting along a river, rain of sacred leaves, single clear symbol, high contrast, double gold glowing square frame, filling the whole image
