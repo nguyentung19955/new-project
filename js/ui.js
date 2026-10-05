@@ -431,11 +431,13 @@ class UI {
         ${tg('shake', 'Rung màn hình', 'Rung khi boss quẫy đuôi và khi tung chiêu tối thượng')}
         ${tg('skipStory', 'Bỏ qua cốt truyện', 'Không hiện màn Vua Hùng kén rể trước trận')}
         ${tg('vectorHeroes', 'Tướng vẽ nét (thấy từng món đồ)', 'Tắt: dùng ảnh vẽ tay, đồ mặc đổi theo bậc trang phục. Bật: hình vẽ nét, mũ / giáp / vũ khí hiện riêng từng món')}
+        <div class="tg metal"><div><b>Cỡ chữ & nút</b><small>Phóng to thanh trên, thanh tướng, nút và thông báo trong trận. Tự động: điện thoại to thêm 20%</small></div>
+          <div style="margin-left:auto;display:flex;gap:4px">${[['auto', 'Tự động'], ['s', 'Vừa'], ['m', 'To'], ['l', 'Rất to']].map(([k, n]) => `<button class="btn ${(st.uiSize || 'auto') === k ? 'btn-gold' : 'metal'}" style="height:34px;padding:0 10px;font-size:13px" data-act="set-uisize" data-k="${k}">${n}</button>`).join('')}</div></div>
         <div class="tg metal"><div><b>Đồ hoạ</b><small>Tự động: game tự giảm độ nét và hiệu ứng khi máy bị giật${typeof GFX !== 'undefined' && GFX.mode() === 'auto' && GFX.lv ? ` (đang giảm ${GFX.lv} bậc)` : ''}</small></div>
           <div style="margin-left:auto;display:flex;gap:4px">${[['auto', 'Tự động'], ['high', 'Đẹp'], ['low', 'Tiết kiệm']].map(([k, n]) => `<button class="btn ${(st.gfx || 'auto') === k ? 'btn-gold' : 'metal'}" style="height:34px;padding:0 10px;font-size:13px" data-act="set-gfx" data-k="${k}">${n}</button>`).join('')}</div></div>
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 40 · Tiến trình lưu trên trình duyệt của bạn</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 41 · Tiến trình lưu trên trình duyệt của bạn</div>
       </div></div>`;
   }
 
@@ -1015,18 +1017,21 @@ class UI {
   placeMore(h) {
     const el = $('#more');
     const c = canvas.getBoundingClientRect(), w = $('#ui').getBoundingClientRect();
-    const k = w.width / 932;
+    const k = w.width / UIW;
     const x = (c.left - w.left + h.x * view.scale) / k, y = (c.top - w.top + h.y * view.scale) / k;
     const head = (c.top - w.top + (h.y - 66) * view.scale) / k;
     const bw = el.offsetWidth || 260, bh = el.offsetHeight || 50;
+    // thanh được phóng --hz quanh mép dưới giữa (hoặc mép trên khi hiện dưới chân)
+    const hz = typeof HZ !== 'undefined' ? HZ : 1;
     let top = head - bh - 4;
-    if (top < 48) top = y + 10;              // sát mép trên thì hiện dưới chân
-    const left = Math.max(6, Math.min(932 - bw - 6, x - bw / 2));
+    if (head - bh * hz - 4 < 48 * hz) top = y + 10;              // sát mép trên thì hiện dưới chân
+    const cx = Math.max(6 + bw * hz / 2, Math.min(UIW - 6 - bw * hz / 2, x));
+    const left = cx - bw / 2;
     const L = `${left.toFixed(0)}px`, T = `${top.toFixed(0)}px`;
     if (el.style.left !== L) el.style.left = L;
     if (el.style.top !== T) el.style.top = T;
     el.classList.toggle('below', top > y);
-    const A = `${Math.max(14, Math.min(bw - 14, x - left)).toFixed(0)}px`;
+    const A = `${Math.max(14, Math.min(bw - 14, bw / 2 + (x - cx) / hz)).toFixed(0)}px`;
     if (el.style.getPropertyValue('--ax') !== A) el.style.setProperty('--ax', A);
   }
 
@@ -1063,8 +1068,8 @@ class UI {
     if (!pos) return;
     if (coach.textContent !== text) coach.textContent = text;
     const w = coach.offsetWidth;
-    coach.style.left = Math.max(4, Math.min(932 - w - 4, pos[0] - w / 2)) + 'px';
-    coach.style.top = Math.max(48, pos[1] - 30) + 'px';
+    coach.style.left = Math.max(4, Math.min(UIW - w - 4, pos[0] / UIZ - w / 2)) + 'px';
+    coach.style.top = Math.max(48, pos[1] / UIZ - 30) + 'px';
   }
 
   // ---------- Anh Hùng (20): xem 20 tướng, kỹ năng, đặc trưng
@@ -1386,6 +1391,11 @@ class UI {
         if (this.screen) this.renderScreen(true);
         break;
       }
+      case 'set-uisize':
+        this.save.settings.uiSize = d.k; writeSave(this.save);
+        window.dispatchEvent(new Event('resize'));
+        this.showSettings(!!this.game.started && !this.game.over);
+        break;
       case 'set-gfx':
         this.save.settings.gfx = d.k; writeSave(this.save);
         if (typeof GFX !== 'undefined') { GFX.lv = 0; GFX.apply(); }

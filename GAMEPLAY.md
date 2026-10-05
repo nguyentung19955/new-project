@@ -785,3 +785,9 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 
 - **Đồ hoạ: Tự động / Đẹp / Tiết kiệm** (Cài đặt). Tự động: game đo thời gian khung hình ngay trên máy người chơi; nếu trung bình chậm hơn ~42 khung/giây trong 3 giây thì hạ một bậc (tối đa 2 bậc): độ nét canvas ×2 → ×1,5 → ×1,1, hạt hiệu ứng 700 → 380 → 180, bậc 2 tắt hạt hào quang Tím / Vàng. Đẹp: luôn bậc cao nhất. Tiết kiệm: luôn bậc thấp nhất.
 - Đo trên máy test (không có GPU, vẽ bằng CPU): phần JavaScript của game chỉ chiếm ~8% thời gian mỗi khung, còn lại là trình duyệt tô điểm ảnh — trên điện thoại phần này do GPU làm nên nhanh hơn nhiều; vì vậy giảm độ nét là cách hiệu quả nhất khi máy yếu.
+
+### Phiên bản 41 · giao diện to hơn trên điện thoại
+
+- **Cỡ chữ & nút** (Cài đặt): Tự động / Vừa / To / Rất to (×1 / ×1,2 / ×1,35). Tự động: màn hình thấp (điện thoại xoay ngang, cao dưới 520 px) phóng ×1,2. Chỉ phóng các phần trong trận — thanh trên, thanh tướng (ô kỹ năng, nút lên cấp), thanh thao tác nổi, dải hợp thể, menu ≡, thông báo, máu boss, thùng hủy, bảng chỉ số. Các màn toàn trang (Túi đồ, Lò đúc, Bách khoa…) giữ cỡ cũ vì phóng lên sẽ tràn chữ.
+- Tướng trên bản đồ vẽ to hơn ~10%.
+- Menu ≡ cuộn được khi màn hình thấp.

@@ -32,6 +32,14 @@ function viewportSize() {
   return [Math.max(0, w), Math.max(0, h)];
 }
 
+// Cỡ chữ & nút: 'auto' = màn hình thấp (điện thoại xoay ngang, cao < 520 px) phóng to 1,2 lần
+const UIW = 932, UIZ = 1;
+let HZ = 1;
+function uiZoom(vh) {
+  const m = (ui && ui.save && ui.save.settings.uiSize) || 'auto';
+  if (m === 'auto') return vh < 520 ? 1.2 : 1;
+  return { s: 1, m: 1.2, l: 1.35 }[m] || 1;
+}
 // Đồ hoạ tự động: đo thời gian khung hình trên chính máy người chơi; giật (>24 ms trung bình
 // trong 3 giây) thì hạ một bậc: giảm độ nét canvas, bớt hạt sáng, tắt hạt hào quang. Có thể chọn tay trong Cài đặt.
 const GFX = {
@@ -58,8 +66,13 @@ function resize() {
   const dpr = Math.min(window.devicePixelRatio || 1, GFX.dprCap());
   wrap.style.width = w + 'px';
   wrap.style.height = h + 'px';
-  // giao diện dựng ở khung thiết kế 932×430 rồi phóng to theo màn hình
+  // giao diện dựng ở khung thiết kế 932×430 rồi phóng to theo màn hình.
+  // Cỡ giao diện (UIZ): khung thiết kế thu nhỏ lại 1/z rồi phóng to thêm z lần → chữ, nút to hơn z lần.
+  // Cỡ chữ & nút (--hz): chỉ phóng to phần trong trận (thanh trên, thanh tướng, nút nổi, thông báo…),
+  // các màn toàn trang (túi đồ, lò đúc…) giữ khung chuẩn để không tràn chữ.
   wrap.style.setProperty('--k', w / 932);
+  HZ = uiZoom(vh);
+  wrap.style.setProperty('--hz', HZ);
   canvas.width = Math.round(w * dpr);
   canvas.height = Math.round(h * dpr);
   view = { scale, dpr };
@@ -508,7 +521,7 @@ function drawHeroOnMap(h, t) {
   drawRankAura(h, t, false);
   drawHeroStates(h, st, t, false);
   const r = drawHeroSprite(ctx, h, h.x, h.y, {
-    t, dir: h.dir, swing: h.swing, castT: h.castT, castUlt: h.castUlt, hurt: h.hurtT, px: px(),
+    scale: 0.285, t, dir: h.dir, swing: h.swing, castT: h.castT, castUlt: h.castUlt, hurt: h.hurtT, px: px(),
     bog: h.bogged, summon: h.summonT, fall: h.dead ? h.fallT : undefined,
     bounce: h.bounceT, evo: h.evoT, wingT: h.wingT, smooth: true, castColor: h.castColor, vector: !!(ui.save && ui.save.settings.vectorHeroes),
   });
