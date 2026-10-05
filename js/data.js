@@ -27,15 +27,15 @@ const CONFIG = {
   maxLegends: 2,      // tối đa 2 tướng Huyền thoại trên sân
   // Vùng bị giao diện che (tọa độ thiết kế 932×430): không đặt tướng ở đây
   hudZones: [
-    [0, 0, 932, 84],          // thanh trên + chỗ cho đầu tướng
-    [0, 0, 120, 270],         // bảng Triệu hồi
+    [0, 0, 932, 104],         // thanh trên + dải gợi ý hợp thể + chỗ cho đầu tướng
+    [0, 0, 120, 140],         // (cũ: bảng Triệu hồi) — chừa góc trái trên
     [270, 46, 660, 80],       // dải "đợt sắp tới"
     [300, 330, 632, 430],     // hàng thẻ tướng dưới đáy
     [0, 340, 932, 430],       // mép dưới màn hình
     [846, 70, 932, 220],      // thành Phong Châu
   ],
   // Lưới ô đặt tướng (tọa độ thiết kế): khoảng cách ô, dải cách tim sông
-  buildGrid: { sx: 46, sy: 33, minD: 40, maxD: 98 },
+  buildGrid: { sx: 46, sy: 33, minD: 40, maxD: 98, spacing: 70 },   // spacing: khoảng cách tối thiểu giữa 2 ô (thiết kế)
   slots: [],      // [x, y] tọa độ logic (sinh trong game.js)
   slotTier: [],   // 0 = Thấp (sát sông), 1 = Giữa, 2 = Cao (sườn núi)
   tierCounts: [15, 16],     // số ô bậc Thấp, Giữa (còn lại là Cao)

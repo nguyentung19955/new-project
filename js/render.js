@@ -193,7 +193,12 @@ function heroPng(type, v, h) {
   const slug = heroSlug(type), code = HERO_CODE[type];
   if (v === 'B') return (assetAny([`chan-dung_${slug}.png`, `heroes/hero_${code}_B.png`]) || {}).img || null;
   const tier = GEAR_TIER_FILE[gearTier(h)];
-  const list = v === 'D' ? [`${slug}_ra-don.png`, `heroes/hero_${code}_D.png`] : [`${slug}_${tier}.png`, `${slug}_thuong.png`, `heroes/hero_${code}_C.png`];
+  // thiếu ảnh bậc này (ví dụ ảnh đang chờ vẽ lại) thì lấy bậc gần nhất có ảnh
+  // v35: ảnh trên bản đồ theo SAO (không theo đồ mặc) để dễ nhận ra 2 tướng giống nhau mà ghép:
+  // ★ → ảnh Thường, ★★ → Hiếm, ★★★ → Sử thi; tướng thần theo Thần tinh. Đồ mặc hiện bằng viền sáng màu độ hiếm.
+  const ti = !h || !h.equip ? 0 : h.from ? Math.min(3, h.tier || 0) : Math.max(0, Math.min(2, (h.tier || 1) - 1));
+  const near = [0, 1, 2, 3].sort((a, b) => Math.abs(a - ti) - Math.abs(b - ti) || a - b).map((k) => `${slug}_${GEAR_TIER_FILE[k]}.png`);
+  const list = v === 'D' ? [`${slug}_ra-don.png`, `heroes/hero_${code}_D.png`] : [...near, `heroes/hero_${code}_C.png`];
   return (assetAny(list) || {}).img || null;
 }
 const ENEMY_FILE = { tom: 'quai_tom-binh', casau: 'quai_ca-sau', rua: 'quai_rua-giap', phuthuy: 'quai_phu-thuy-nuoc',
@@ -573,7 +578,9 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
   const sway = Math.sin(t * 1.3 + seed) * 0.018;
   ctx.scale(dir * s * big * sqx, s * big * sqy);
   const hurtRot = o.hurt > 0 ? -0.12 * (o.hurt / 0.2) : 0;
-  const pngC = !o.vector && heroPng(h.type, 'C', h);
+  // ghép đồ từng món (v35): có ảnh thân trần <tên>_than.png thì dùng nó + vẽ mũ / vũ khí / giáp đang mặc lên trên
+  const dollBase = !o.vector && h.equip && asset(`${heroSlug(h.type)}_than.png`);
+  const pngC = dollBase || (!o.vector && heroPng(h.type, 'C', h));
   // ảnh vẽ tay: chân đứng yên, thân uốn (lean thành độ cong) — không xoay cứng cả tấm
   ctx.rotate(pngC ? (lean + hurtRot) * 0.25 : lean + sway + hurtRot);
   ctx.translate(-100 + (lunge + recoil + hurtX), -222 + drop + sink);
@@ -607,10 +614,15 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
     }
     // tung chiêu: thân phát sáng viền theo màu chiêu
     const glowK = o.castT > 0 ? Math.min(1, o.castT / 0.25) : 0;
+    const gt = !dollBase && h.equip ? gearTier(h) : 0;
     if (glowK > 0) { ctx.shadowColor = o.castColor || '#FFE08A'; ctx.shadowBlur = 22 * glowK * (o.castUlt ? 1.6 : 1); }
+    else if (gt > 0) { ctx.shadowColor = RAR_COLOR[RARITY_ORDER[gt]]; ctx.shadowBlur = 5 + gt * 3 + Math.sin(t * 3) * 2; }
+    // ảnh thân trần giữ khung chuẩn: chân nằm ở 96,5% chiều cao, hạ ảnh xuống cho chạm đất
+    if (dollBase) ctx.translate(0, hgt * 0.035);
     if (mixD < 1) drawBent(ctx, png, -w / 2, -hgt, w, hgt, bend, breath);
     ctx.globalAlpha = base;
-    if (glowK > 0) { ctx.shadowBlur = 0; ctx.shadowColor = 'transparent'; }
+    if (glowK > 0 || gt > 0) { ctx.shadowBlur = 0; ctx.shadowColor = 'transparent'; }
+    if (dollBase && mixD < 1) drawDollGear(ctx, h, -w / 2, -hgt, w, hgt, bend, t);
     if (mixD > 0) {
       const wd = hgt * pngD.naturalWidth / pngD.naturalHeight;
       ctx.globalAlpha = base * mixD;
@@ -688,6 +700,47 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
 
   if (o.bog) drawBogWater(ctx, x, y, s, t);
   return { top: y - 240 * s * big, s };
+}
+
+// ------------------------------------------------------------
+//  GHÉP ĐỒ TỪNG MÓN LÊN ẢNH VẼ TAY (v35, đang thử)
+//  Ảnh thân trần <tên>_than.png (dáng chuẩn docs/dang-chuan.png) + ảnh món đồ đang mặc
+//  (do_mu_*, do_riu_*, bộ đồ…) đặt theo điểm neo của từng tướng. Tọa độ neo tính theo
+//  khung ảnh (0..1): head = [x giữa, y đỉnh mũ, rộng], hand = [x, y, dài vũ khí, góc], chest = [x, y, rộng].
+// ------------------------------------------------------------
+const DOLL_ANCHOR = {
+  // theo docs/dang-chuan.png (khung 896×1152 giữ nguyên, chân ở 96,5% chiều cao)
+  _default: { head: [0.5, 0.035, 0.55], hand: [0.815, 0.6, 0.6, -0.55], chest: [0.5, 0.625, 0.42] },
+  'lac-tuong': {},
+};
+function gearImg(inst) {
+  if (!inst) return null;
+  const a = assetAny(itemPngPath(inst.id, inst.rarity));
+  if (a) return a.img;
+  const svg = (HAS_ART && ART.item[inst.id]) || '';
+  return svg ? svgImage('gi|' + inst.id, svg.includes('xmlns') ? svg : svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"')) : null;
+}
+function drawDollGear(ctx, h, x, y, w, hh, bend, t) {
+  const A = { ...DOLL_ANCHOR._default, ...(DOLL_ANCHOR[heroSlug(h.type)] || {}) };
+  const off = (fy) => bend * hh * Math.pow(1 - fy, 2);     // đồ uốn theo thân như drawBent
+  const put = (img, cx, cy, ww, rot = 0, glow = null) => {
+    if (!img || !(img.naturalWidth || img.width)) return;
+    const iw = img.naturalWidth || img.width, ih = img.naturalHeight || img.height;
+    const hw = ww * ih / iw;
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(rot);
+    if (glow) { ctx.shadowColor = glow.color; ctx.shadowBlur = glow.blur; }
+    ctx.drawImage(img, -ww / 2, -hw / 2, ww, hw);
+    ctx.restore();
+  };
+  const glowOf = (inst) => inst && rarityGlow(inst, t);
+  const ar = h.equip.armor, he = h.equip.helmet, wp = h.equip.weapon;
+  if (ar) { const [fx, fy, fw] = A.chest; put(gearImg(ar), x + w * fx + off(fy), y + hh * fy, w * fw, 0, glowOf(ar)); }
+  if (he) { const [fx, fy, fw] = A.head; const im = gearImg(he); const ww = w * fw;
+    const ih = im && (im.naturalHeight || im.height), iw = im && (im.naturalWidth || im.width);
+    put(im, x + w * fx + off(fy), y + hh * fy + (ih ? ww * ih / iw / 2 : 0), ww, 0, glowOf(he)); }
+  if (wp) { const [fx, fy, fl, rot] = A.hand; put(gearImg(wp), x + w * fx + off(fy), y + hh * fy, w * fl, rot + Math.sin(t * 1.7) * 0.03, glowOf(wp)); }
 }
 
 // ------------------------------------------------------------

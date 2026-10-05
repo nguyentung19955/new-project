@@ -2141,6 +2141,19 @@
      "file": "ui_hu-dong.png"
     }
    ]
+  },
+  {
+   "code": "S45",
+   "title": "Thử ghép đồ từng món · thân trần theo dáng chuẩn",
+   "rows": 1,
+   "cols": 1,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Lạc Tướng · thân trần",
+     "file": "lac-tuong_than.png"
+    }
+   ]
   }
  ],
  "singles": [

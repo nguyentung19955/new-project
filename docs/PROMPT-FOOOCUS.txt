@@ -1282,3 +1282,15 @@ stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown o
 
 [390] File: ui_hu-dong.png   ·   Tỉ lệ: 1024×1024   ·   Hũ đồng (Lò đúc · tab Hũ báu)
 stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, game ui icon, bronze treasure jar with drum spiral engravings and blue glow, single object, isolated on plain flat light grey background, centered, the whole object clearly visible and instantly recognizable by its shape, 3/4 view, NOT a round medallion, NOT a coin, NOT a badge, NOT a drum, no circular frame
+
+
+##############################################################################
+# G. THỬ GHÉP ĐỒ TỪNG MÓN (1 ảnh) — vẽ xong gửi để thử trước khi làm cho các tướng khác
+##############################################################################
+Cách vẽ: tick "Input Image" → tab "Image Prompt" → kéo file docs/dang-chuan.png vào ô đầu, bấm "Advanced",
+chọn kiểu "PyraCanny", Weight 0.8–1.0 (giữ ĐÚNG dáng: đầu to ở trên, tay phải đưa ra trước nắm rỗng, tay trái buông).
+Ô thứ hai (nếu muốn giữ mặt): kéo lac-tuong_hiem.png, kiểu "ImagePrompt", Weight 0.4.
+Tỉ lệ 896×1152. KHÔNG cắt, KHÔNG phóng to — nhân vật phải nằm đúng vị trí như hình nộm.
+
+[391] File: lac-tuong_than.png   ·   Tỉ lệ: 896×1152   ·   Image Prompt: docs/dang-chuan.png (PyraCanny, weight 0.9)
+chibi character, big head, stylized hand-painted fantasy game art, bold clean silhouette, soft dark brown outline, rich saturated colors, ancient Vietnamese Dong Son bronze age, young male Vietnamese Dong Son warrior, bare head with short black hair tied in a small knot (NO helmet, NO hat, NO headdress, NO feathers), simple plain red hemp tunic and loincloth, NO armor, NO shoulder pads, right hand held forward in an EMPTY loose fist (NOT holding anything), left arm relaxed at the side, NO weapon, NO shield, front 3/4 view, full body standing, no halo, no circle or disc behind the character, isolated on plain flat light grey background, centered, nothing else in the image

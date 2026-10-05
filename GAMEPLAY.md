@@ -714,3 +714,12 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
   - Thạch Sanh + Lạc Hầu → Thánh Gióng · Thần Săn Ba Vì + Chử Đồng Tử → Lạc Long Quân · Lạc Hầu + Cao Lỗ → Thần Kim Quy · Cao Lỗ + Mai An Tiêm → An Dương Vương · Tiên Dung + Lang Liêu → Âu Cơ · Thần Săn Ba Vì + Lang Liêu → Mẫu Thượng Ngàn
 - **Cân bằng:** tím mới hợp thể mạnh ≈ ×2,8 tổng 2 tướng ★★★ (Thần tinh ★★★ ≈ ×4,6); vàng mới hợp thể ≈ ×2,2 tổng 2 thần tím ★★★ (★★★ ≈ ×3,7) — chỉnh riêng từng thần (`FUSE_ADJ`, đo bằng `sim/cmp4.js`). Bot mới (triệu hồi + ghép + nâng cấp, không đồ): ải 3, 5, 8 thắng / thua tùy may rủi.
 - Giao diện: kéo tướng thì các tướng ghép / hợp thể được nhấp nháy vàng; bảng **Cây hợp thể** liệt kê 14 công thức; màn Tiến hoá có bảng Hợp thể (điều kiện ✓ / ✗, đối tác trên sân, lực chiến sau khi hợp thể).
+
+### Phiên bản 35 · hiệu ứng chiêu, ghép tự động, gợi ý hợp thể, bớt ô
+
+- **Hiệu ứng chiêu (hệ hạt, `js/vfx.js`):** đạn có vệt đuôi và quầng sáng cộng màu; trúng đích nổ tia / lửa / băng / nước bắn tuỳ loại đạn; chém có tia lửa; nổ lớn, cột lửa, sét, sương, sóng, hoa, khiên, hồi máu đều kèm hạt; tướng tung chiêu sáng viền theo màu chiêu. Ảnh hạt vẽ sẵn một lần, tối đa 700 hạt nên vẫn nhẹ.
+- **Ghép tự động:** nút ⇄ cạnh Triệu hồi (số đỏ = số cặp ghép được), gộp mọi cặp cùng loại cùng sao, ★ trước.
+- **Dải gợi ý hợp thể** trên cùng: 5 thần gần đạt nhất, ảnh mờ + vòng % tiến độ (sao của 2 tướng thành phần 70%, kỹ năng 30%; tướng Thường tính cả các con ★ đang có, ★★★ = 4 con ★). Đủ 100% (★★★ + kỹ năng tối đa + đủ vàng) thì sáng "HỢP!", bấm để hợp thể ngay.
+- **Ảnh tướng theo sao, không theo đồ:** ★ ảnh Thường, ★★ ảnh Hiếm, ★★★ ảnh Sử thi (tướng thần theo Thần tinh) để dễ nhận ra 2 con giống nhau mà ghép; đồ mặc hiện bằng viền sáng màu độ hiếm. Thiếu ảnh bậc nào thì lấy bậc gần nhất (sửa lỗi Lạc Tướng mất ảnh).
+- **Ít ô hơn:** 43 → 17 ô (6 Thấp, 6 Giữa, 5 Cao), cách nhau rộng; chừa dải trên cùng cho gợi ý hợp thể.
+- **Thử ghép đồ từng món lên ảnh vẽ tay:** có ảnh `lac-tuong_than.png` (thân trần vẽ theo `docs/dang-chuan.png`) thì game vẽ mũ / giáp / vũ khí đang mặc lên người theo điểm neo. Prompt mục G [391].

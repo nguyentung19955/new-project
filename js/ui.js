@@ -241,7 +241,7 @@ class UI {
       if (b) this.toast(`Gọi sớm: +${b} vàng`, '#F2D27A');
     };
     // ủy quyền sự kiện cho các vùng dựng lại liên tục
-    for (const id of ['#screen', '#deck', '#drawer', '#more', '#reward', '#result', '#story', '#campaign', '#settings', '#legends', '#roster', '#treasury']) {
+    for (const id of ['#fuse-strip', '#screen', '#deck', '#drawer', '#more', '#reward', '#result', '#story', '#campaign', '#settings', '#legends', '#roster', '#treasury']) {
       $(id).addEventListener('click', (ev) => {
         const el = ev.target.closest('[data-act]');
         if (el && !el.disabled) this.action(el.dataset, el);
@@ -617,6 +617,7 @@ class UI {
     if (!inGame) return;
     this.updateTopbar();
     this.updateNextWaves();
+    this.updateFuseStrip();
     this.updateBoss();
     this.updateDeck();
     this.updateCoach();
@@ -742,6 +743,25 @@ class UI {
     }
   }
 
+  // Dải gợi ý hợp thể (trên cùng): ảnh thần mờ + % tiến độ; đủ 100% thì sáng, bấm để hợp thể
+  updateFuseStrip() {
+    const g = this.game;
+    const el = $('#fuse-strip');
+    if (!g.started || g.over) { el.innerHTML = ''; return; }
+    if ((this.fsT = (this.fsT || 0) + 1) % 10) return;      // 6 lần / giây là đủ
+    const list = FUSION.map((f, i) => ({ f, i, ...g.fusionProgress(f) })).filter((x) => x.p > 0)
+      .sort((a, b) => b.p - a.p).slice(0, 5);
+    const key = list.map((x) => x.i + ':' + Math.floor(x.p * 100) + (x.p >= 1 && typeof g.canFuse(x.a, x.b) !== 'string' ? '!' : '')).join(',') + '|' + assetVersion;
+    if (this.sig.fuse === key) return;
+    this.sig.fuse = key;
+    el.innerHTML = list.map((x) => {
+      const d = HEROES[x.f.to], pct = Math.floor(x.p * 100);
+      const go = x.p >= 1 && typeof g.canFuse(x.a, x.b) !== 'string';
+      return `<button class="fz-card ${d.legend} ${go ? 'go' : ''}" data-act="fuse-strip" data-i="${x.i}" title="${esc(HEROES[x.f.a].name + ' + ' + HEROES[x.f.b].name + ' → ' + d.name)}" style="--p:${pct}%">
+        <img src="${heroImgUrl(x.f.to, 'head')}" alt=""><span class="pc">${go ? 'HỢP!' : pct + '%'}</span></button>`;
+    }).join('');
+  }
+
   // Một dải nhỏ dưới thanh trên: đợt kế (giữa hai đợt thì kèm nút Gọi sớm)
   updateNextWaves() {
     const g = this.game;
@@ -791,7 +811,10 @@ class UI {
       key = `s|${sc}|${can}|${g.freeSlots().length}|${assetVersion}`;
       // 6 chân dung nhỏ: tướng có thể ra khi triệu hồi
       const pool = BASIC_HEROES.map((t) => `<img src="${heroImgUrl(t, 'head')}" alt="" title="${HEROES[t].name}">`).join('');
-      html = `<button class="dk-summon ${can ? '' : 'poor'}" data-act="summon-rand" aria-label="Triệu hồi ngẫu nhiên, ${sc} vàng">
+      const pairs = g.heroes.filter((x) => x && g.heroes.some((y) => y && y !== x && g.canMerge(x, y) === true)).length;
+      key += `|${pairs}`;
+      html = `<button class="dk-auto metal ${pairs ? 'on' : ''}" data-act="auto-merge" ${pairs ? '' : 'disabled'} aria-label="Ghép tự động"><b>⇄</b>Ghép<br>tự động${pairs ? `<i>${Math.floor(pairs / 2)}</i>` : ''}</button>
+        <button class="dk-summon ${can ? '' : 'poor'}" data-act="summon-rand" aria-label="Triệu hồi ngẫu nhiên, ${sc} vàng">
           <span class="pool">${pool}</span><b>Triệu hồi</b><span class="cost">${coin(1)} ${sc}</span></button>
         <span class="dk-sep"></span><button class="dk-card legend" data-act="legend-open" aria-label="Cây hợp thể">${assetUrl('ui_thang-than.png') ? `<img class="asc-ic" src="${assetUrl('ui_thang-than.png')}" alt="">` : '<b>★</b>'}Hợp<br>thể</button>`;
     } else {
@@ -1193,6 +1216,13 @@ class UI {
       case 'reward': this.pickReward(+d.i); break;
       case 'summon': this.pickSummon(d.type); break;
       case 'summon-rand': this.summonRand(); break;
+      case 'auto-merge': { const n = g.autoMerge(); this.toast(n ? `Đã ghép ${n} lần` : 'Không có cặp nào ghép được', n ? '#F2D27A' : '#E25A3A'); break; }
+      case 'fuse-strip': {
+        const f = FUSION[+d.i]; const pr = g.fusionProgress(f);
+        if (pr.p < 1) { this.toast(`${HEROES[f.to].name}: ${Math.floor(pr.p * 100)}% — cần ${HEROES[f.a].name} và ${HEROES[f.b].name} ${HEROES[f.to].legend === 'epic' ? '★★★' : 'Thần tinh ★★★'}, kỹ năng tối đa`, '#F2D27A'); break; }
+        const r = g.fuse(pr.a.slot, pr.b.slot); if (r !== true) this.toast(r, '#E25A3A'); else this.sel = pr.b.slot;
+        break;
+      }
       case 'merge-any': this.mergeAny(); break;
       case 'fuse-with': this.fuseWith(+d.slot); break;
       case 'legend-open': $('#legends').hidden = !$('#legends').hidden; $('#drawer').hidden = true; this.renderLegends(); break;

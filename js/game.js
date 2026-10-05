@@ -48,7 +48,7 @@ function distToPolyline(pts, x, y) {
 }
 const distToPath = (x, y) => distToPolyline(CONFIG.path, x, y);
 
-// --- Sinh khoảng 43 ô đặt tướng dọc hai bờ sông, chia 3 bậc độ cao
+// --- Sinh khoảng 22 ô đặt tướng dọc hai bờ sông, chia 3 bậc độ cao
 (function buildSpots() {
   const { sx, sy, minD, maxD } = CONFIG.buildGrid;
   const out = [];
@@ -61,8 +61,19 @@ const distToPath = (x, y) => distToPolyline(CONFIG.path, x, y);
       out.push({ x: Math.round(x * DK), y: Math.round(y * DK), d });
     }
   }
+  // v35: thưa bớt ô (giữ ô cách nhau ≥ spacing) cho màn hình gọn — lượt ưu tiên xen kẽ gần / xa sông
+  if (CONFIG.buildGrid.spacing) {
+    const sp = CONFIG.buildGrid.spacing * DK;
+    const pick = [];
+    const cand = out.slice().sort((a, b) => (a.x - b.x) || (a.y - b.y));
+    for (const c of cand) if (pick.every((q) => Math.hypot(q.x - c.x, q.y - c.y) >= sp)) pick.push(c);
+    out.length = 0;
+    out.push(...pick);
+  }
   // bậc độ cao theo khoảng cách tới sông: gần nhất = Thấp
   const order = out.map((s, i) => i).sort((a, b) => out[a].d - out[b].d);
+  const nT = Math.round(out.length * 0.35), nM = Math.round(out.length * 0.37);
+  CONFIG.tierCounts = [nT, nM];
   const tier = [];
   order.forEach((idx, rank) => {
     tier[idx] = rank < CONFIG.tierCounts[0] ? 0 : rank < CONFIG.tierCounts[0] + CONFIG.tierCounts[1] ? 1 : 2;
@@ -1374,6 +1385,36 @@ class Game {
     b.notice.evo = b.tier >= 3;
     return true;
   }
+  // ghép tự động mọi cặp cùng loại cùng sao (★ trước), trả về số lần ghép
+  autoMerge() {
+    let n = 0, again = true;
+    while (again) {
+      again = false;
+      const hs = this.heroes.filter((h) => h && !h.from && (h.tier || 0) < 3).sort((a, b) => (a.tier || 0) - (b.tier || 0) || b.level - a.level);
+      for (const a of hs) {
+        const b = hs.find((o) => o !== a && this.canMerge(o, a) === true);
+        if (b) { this.merge(b.slot, a.slot); n++; again = true; break; }
+      }
+    }
+    return n;
+  }
+  // tiến độ một công thức hợp thể (0..1) và cặp tốt nhất hiện có
+  fusionProgress(f) {
+    const score = (type) => {
+      const hs = this.heroes.filter((h) => h && h.type === type);
+      if (!hs.length) return { p: 0, h: null };
+      const best = hs.slice().sort((x, y) => (y.tier || 0) - (x.tier || 0) || y.level - x.level)[0];
+      const need = this.ascendNeed(best);
+      // sao: tướng Thường cộng dồn theo số ★ quy đổi (★★★ = 4 con ★); tướng thần theo Thần tinh
+      const starP = best.from ? (best.tier || 0) / need : Math.min(1, hs.reduce((a, h) => a + Math.pow(2, Math.max(0, (h.tier || 1) - 1)), 0) / 4);
+      const sk = HEROES[type].skills.reduce((a, s, i) => a + Math.min(SKILL_MAX[i], skillLevel(best, i)), 0) / SKILL_MAX.reduce((a, b) => a + b, 0);
+      const ready = this.fusionReady(best) === true;
+      return { p: ready ? 1 : Math.min(0.99, starP * 0.7 + sk * 0.3), h: best };
+    };
+    const A = score(f.a), B = score(f.b);
+    return { p: (A.p + B.p) / 2, a: A.h, b: B.h };
+  }
+
   // 2 tướng ★★★ đúng công thức (đủ kỹ năng) → thần mới
   fusionReady(h) {
     if ((h.tier || 0) < this.ascendNeed(h)) return h.from ? `${HEROES[h.type].name} cần Thần tinh ${'★'.repeat(COSTS.ascendTier2)}` : `${HEROES[h.type].name} cần ★★★`;

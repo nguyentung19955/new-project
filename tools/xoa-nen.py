@@ -81,6 +81,18 @@ CHAR_RE = re.compile(r'^([a-z-]+_(thuong|hiem|su-thi|huyen-thoai|ra-don)|quai_[a
 ICON_PREFIX = ('ky-nang_', 'ui_', 'hanh_', 'phu-kien_', 'do-ghep_', 'sinh-le_')
 
 
+def remove_bg_nocrop(img):
+    """Xoá nền xám nhưng giữ nguyên khung ảnh."""
+    cut = remove_bg(img)
+    a = np.asarray(img.convert('RGB')).astype(int)
+    # tìm lại vị trí phần đã cắt: dựng mặt nạ cùng cỡ ảnh gốc
+    full = Image.new('RGBA', img.size, (0, 0, 0, 0))
+    bb = Image.fromarray(np.uint8(255 * (np.abs(a - np.median(np.concatenate([a[0], a[-1]]), axis=0)).sum(2) > 40))).getbbox()
+    if bb:
+        full.paste(cut, (bb[0], bb[1]))
+    return full
+
+
 def strip_backdrop(img, passes=3):
     """Gỡ đĩa tròn / vầng sáng / ô nền mà AI vẽ sau lưng nhân vật (lớp ngoài cùng còn sót sau
     khi xoá nền xám). Lấy màu ở viền ngoài phần còn lại, bỏ vùng cùng màu nối với viền; chỉ nhận
@@ -143,6 +155,19 @@ def main(src, dst):
             # icon / giao diện chỉ hiện nhỏ: 256 px là đủ, nhẹ hơn 4 lần
             side = 256 if name.startswith(ICON_PREFIX) else 512
             out = None
+            if name.endswith('_than.png'):
+                # ảnh thân trần để ghép đồ: giữ nguyên khung (không cắt sát) cho điểm neo khớp dáng chuẩn
+                cut = ai_cut(img) if _rembg_remove else None
+                full = Image.new('RGBA', img.size, (0, 0, 0, 0))
+                if cut is not None:
+                    a = np.asarray(_rembg_remove(img.convert('RGB'), session=_RB))
+                    full = Image.fromarray(a)
+                else:
+                    full = remove_bg_nocrop(img)
+                full.thumbnail((side * img.size[0] // max(img.size), side * img.size[1] // max(img.size)))
+                full.quantize(colors=256, method=Image.Quantize.FASTOCTREE).save(os.path.join(dst, name), optimize=True)
+                print('thân trần', name)
+                continue
             if CHAR_RE.match(name) and not name.startswith(('do_', 'bo-', 'ban-do_')):
                 # tướng / quái: tách nhân vật bằng AI (bỏ cả đĩa tròn, vầng sáng sau lưng)
                 out = ai_cut(img)
