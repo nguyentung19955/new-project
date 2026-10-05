@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"></head><body>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"></head><body><div id="rotbox">
 <title>Đền Anh Hùng</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@700;800&family=Alegreya+Sans:wght@400;500;700;800&display=swap">
 <style>
@@ -81,6 +81,8 @@ button:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
 <div class="wrap">
+<a href="index.html" class="metal" style="display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:6px;color:#F2D27A;text-decoration:none;font-family:'Alegreya SC',serif;font-weight:800;font-size:16px;align-self:flex-start">‹ Về game</a>
+
   <header class="top">
     <svg width="54" height="54" viewBox="0 0 120 120" aria-hidden="true">
       <circle cx="60" cy="60" r="57" fill="#1A1208" stroke="#8C6A2E" stroke-width="2"/>
@@ -467,10 +469,10 @@ function drawHP(e){e.hpEl.setAttribute('width',(50*e.hp).toFixed(1));e.hpEl.setA
 
 /* ---------- canvas particle engine ---------- */
 let DPR=1;
-function resize(){const r=stage.getBoundingClientRect();DPR=Math.min(2,window.devicePixelRatio||1);canvas.width=Math.round(r.width*DPR);canvas.height=Math.round(r.height*DPR);
+function resize(){const r={width:stage.clientWidth,height:stage.clientHeight};DPR=Math.min(2,window.devicePixelRatio||1);canvas.width=Math.round(r.width*DPR);canvas.height=Math.round(r.height*DPR);
   // svg uses xMidYMid slice on a 2:1 box -> uniform scale
 }
-window.addEventListener('resize',resize);resize();
+window.addEventListener('resize',resize);window.addEventListener('den-fit',resize);resize();
 const P=[],S=[];
 const rnd=(a,b)=>a+Math.random()*(b-a);
 function add(p){P.push(Object.assign({x:0,y:0,vx:0,vy:0,g:0,life:.6,age:0,size:4,color:'#fff',type:'glow',rot:rnd(0,6.28),vr:0,drag:.97},p))}
@@ -732,4 +734,28 @@ setHero(HEROES[0]); restartAuto();
 })();
 </script>
 
-</body></html><a href="index.html" class="metal" style="display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:6px;color:#F2D27A;text-decoration:none;font-family:'Alegreya SC',serif;font-weight:800;font-size:16px">‹ Về game</a>
+</div>
+<style>
+/* Tự xoay ngang khi cầm điện thoại dọc (giống trong game): cả trang xoay 90°, cuộn bên trong */
+html.rot, html.rot body { overflow: hidden; height: 100%; margin: 0; }
+html.rot body { padding: 0; }
+html.rot #rotbox { position: fixed; left: 0; top: 0; transform-origin: 0 0; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain; padding: 14px 16px 28px; box-sizing: border-box; background: var(--bg); }
+</style>
+<script>
+(function () {
+  var box = document.getElementById('rotbox');
+  function fit() {
+    var vv = window.visualViewport, w = (vv && vv.width) || innerWidth, h = (vv && vv.height) || innerHeight;
+    var rot = h > w;
+    document.documentElement.classList.toggle('rot', rot);
+    if (rot) { box.style.width = h + 'px'; box.style.height = w + 'px'; box.style.transform = 'translateX(' + w + 'px) rotate(90deg)'; }
+    else { box.style.width = box.style.height = box.style.transform = ''; }
+    window.dispatchEvent(new Event('den-fit'));
+  }
+  addEventListener('resize', fit); addEventListener('orientationchange', function () { setTimeout(fit, 200); });
+  if (window.visualViewport) visualViewport.addEventListener('resize', fit);
+  fit();
+})();
+</script>
+</body></html>

@@ -814,3 +814,8 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - **Đồ mặc giữ nét riêng của tướng:** giáp hẹp lại (vẫn thấy áo gốc hai bên) + giáp vai theo màu độ hiếm; mũ Sử thi thành vành đồng có sừng nhỏ (không trùm kín đầu, vẫn thấy tóc / lông chim).
 - **Kiểu đứng riêng:** lơ lửng (Thần Sương, Lạc Long Quân, Âu Cơ, Chử Đồng Tử, Mẫu Thượng Ngàn), thở nặng (Lực Sĩ, Thánh Gióng, Kim Quy), khom người (Thợ Săn, Thần Săn), đung đưa (Thầy Mo, An Tiêm, Lang Liêu), múa (Tiên Dung), ngắm (Xạ Thủ, Cao Lỗ, An Dương Vương), thủ thế (Lạc Tướng, Thạch Sanh, Lạc Hầu).
 - **Đòn đánh riêng + hiệu ứng riêng:** đẩy khiên rồi bổ rìu (Lạc Tướng, Lạc Hầu) · giơ cao đập xuống, sóng đất + đá văng (Lực Sĩ, Kim Quy; Thạch Sanh lao tới xa hơn) · hai nhát chéo (Thợ Săn, Thần Săn) · vuốt rồng 3 vệt (Lạc Long Quân) · xoay gậy một vòng (Thánh Gióng) · xoay gậy trên đầu rồi chỉ tới (Thầy Mo, Chử Đồng Tử) · đâm thẳng (Thần Sương) · vung tay ném (An Tiêm, Lang Liêu) · bay lên bung vòng phép (Âu Cơ, Tiên Dung, Mẫu Thượng Ngàn) · nỏ giật (Xạ Thủ, Cao Lỗ, An Dương Vương).
+
+### Phiên bản 45
+
+- **Đền Anh Hùng tự xoay ngang** khi cầm điện thoại dọc (giống trong game), cuộn được bên trong; khung hoạt ảnh tính theo kích thước bố cục nên không bị méo khi xoay. Nút "‹ Về game" chuyển lên đầu trang.
+- **Hoạt ảnh không giật khi tăng tốc:** ở x2 / x3, đòn đánh chiếu tối thiểu 0,3 giây thật và tung chiêu 0,38 giây (trước đây x3 chỉ còn vài khung, mất pha ra đòn); sát thương và tốc đánh vẫn theo đồng hồ game. Đo ở x3: pha ra đòn hiện trong số khung gấp ~2,2 lần trước.

@@ -538,7 +538,8 @@ function drawHeroOnMap(h, t) {
   }
   const st = heroStats(h);
   if (st.stench) drawDust(h, t);
-  if (h.castT > 0) drawCastGlow(h, t);
+  const va = visualAnim(h, t);
+  if (va.castT > 0) drawCastGlow(h, t, va.castT);
   if (h.shield > 0) {
     ctx.strokeStyle = 'rgba(242,210,122,0.8)';
     ctx.fillStyle = 'rgba(242,210,122,0.12)';
@@ -550,7 +551,7 @@ function drawHeroOnMap(h, t) {
   drawRankAura(h, t, false);
   drawHeroStates(h, st, t, false);
   const r = drawHeroSprite(ctx, h, h.x, h.y, {
-    scale: useAssets ? 0.285 : 0.33, t, dir: h.dir, swing: h.swing, castT: h.castT, castUlt: h.castUlt, hurt: h.hurtT, px: px(),
+    scale: useAssets ? 0.285 : 0.33, t, dir: h.dir, swing: va.swing, castT: va.castT, castUlt: h.castUlt, hurt: h.hurtT, px: px(),
     bog: h.bogged, summon: h.summonT, fall: h.dead ? h.fallT : undefined,
     bounce: h.bounceT, evo: h.evoT, wingT: h.wingT, smooth: true, castColor: h.castColor, vector: !!(ui.save && ui.save.settings.vectorHeroes),
   });
@@ -686,6 +687,27 @@ function drawRankAura(h, t, front) {
   ctx.restore();
 }
 
+// Hoạt ảnh tách khỏi tốc độ game (v45): ở x2 / x3 đòn đánh và tung chiêu vẫn chiếu tối thiểu
+// ANIM_MIN giây thật (không còn giật / mất pha ra đòn); sát thương vẫn theo đồng hồ game.
+const ANIM_MIN = { swing: 0.3, cast: 0.38 };
+function visualAnim(h, t) {
+  const sp = game.running ? game.speed || 1 : 1;
+  const v = h._va || (h._va = { sw: 0, ct: 0, sw0: -9, swDur: 1, ct0: -9, ctTot: 0, ctRate: 1 });
+  // đòn mới bắt đầu: game đặt swing = 1 (nhảy lên so với khung trước)
+  if (h.swing > v.sw + 0.05) {
+    v.sw0 = t;
+    const gameDur = 1 / ((h.swingRate || 2.6) * sp);        // thời gian thật nếu chạy theo game
+    v.swDur = Math.max(gameDur, Math.min(1 / (h.swingRate || 2.6), ANIM_MIN.swing));
+  }
+  v.sw = h.swing;
+  if (h.castT > v.ct + 0.05) { v.ct0 = t; v.ctTot = h.castT; v.ctRate = Math.min(sp, Math.max(1, h.castT / ANIM_MIN.cast)); }
+  v.ct = h.castT;
+  if (sp <= 1) return { swing: h.swing, castT: h.castT };
+  const swing = Math.max(0, 1 - (t - v.sw0) / v.swDur);
+  const castT = Math.max(0, v.ctTot - (t - v.ct0) * v.ctRate);
+  return { swing, castT };
+}
+
 function drawHeroStun(h, top, t) {
   if (!(h.stunT > 0)) return;
   for (let i = 0; i < 3; i++) {
@@ -793,9 +815,9 @@ function drawDust(h, t) {
 }
 
 // Tướng vừa tung chiêu: cột sáng + vòng hoa văn trống đồng dưới chân
-function drawCastGlow(h, t) {
+function drawCastGlow(h, t, ct = h.castT) {
   const dur = h.castUlt ? 0.9 : 0.5;
-  const k = h.castT / dur;
+  const k = ct / dur;
   const c = (h.castColor || '#ffffff').length === 4 ? '#ffffff' : h.castColor || '#ffffff';
   ctx.save();
   ctx.globalAlpha = k;
