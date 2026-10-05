@@ -672,10 +672,17 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
   const shellGlow = look.armor && look.armor.style === 'shell' ? rarityGlow(look.armor, t) || { color: '#C8B48A', blur: 3 } : null;
   drawPart(ctx, P('back'), shellGlow && shellGlow.color, shellGlow && shellGlow.blur);
   ctx.restore();
+  // v51: tướng có thú cưỡi (Thánh Gióng · ngựa sắt): vẽ ngựa, người ngồi cao hơn, chân buông qua sườn ngựa
+  const mounted = def.mount && !o.noMount && hasArt;
+  if (mounted) {
+    drawIronHorse(ctx, t, pose, !!(o.swing > 0 || o.castT > 0));
+    ctx.translate(0, -MOUNT_RIDE);
+  }
   if (!hasArt) {
     drawFallbackHero(ctx, def, look, t);
   } else {
-    drawPart(ctx, P('legs'));
+    if (mounted) { ctx.save(); ctx.translate(0, MOUNT_RIDE); drawRiderLeg(ctx); ctx.restore(); }
+    else drawPart(ctx, P('legs'));
     ctx.save();
     ctx.translate(0, breathe + lift);
     ctx.save(); ctx.translate(78, 124); ctx.rotate(armB); ctx.translate(-78, -124);
@@ -713,7 +720,7 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
   ctx.restore();
 
   if (o.bog) drawBogWater(ctx, x, y, s, t);
-  return { top: y - 240 * s * big, s };
+  return { top: y - (240 + (def.mount && !o.noMount ? MOUNT_RIDE : 0)) * s * big, s };
 }
 
 // ------------------------------------------------------------
@@ -1907,10 +1914,10 @@ function drawHeroPortrait(cv, h, t, o = {}) {
     c.drawImage(png, (W - png.naturalWidth * k) / 2, 0, png.naturalWidth * k, png.naturalHeight * k);
     return;
   }
-  const s = o.full ? H / 290 : H / 175;
+  const s = o.full ? H / (HEROES[h.type].mount ? 360 : 290) : H / 175;
   const look = computeLook({ ...h, grow: 0 });
   look.accAura = null;
   drawHeroSprite(c, { ...h, grow: 0 }, W / 2, o.full ? H * 0.9 : H * 1.32, {
-    t, dir: 1, scale: s, px: 1.2 / s * s, noShadow: !o.full, look: { ...look, tier: 0, bulk: 1 },
+    t, dir: 1, scale: s, px: 1.2 / s * s, noShadow: !o.full, noMount: !o.full, look: { ...look, tier: 0, bulk: 1 },
   });
 }

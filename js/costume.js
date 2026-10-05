@@ -342,3 +342,97 @@ function drawAscOrbit(ctx, look, asc, rarity, t, front) {
   }
   ctx.restore();
 }
+
+// ---------- NGỰA SẮT của Thánh Gióng (v51): vẽ trong khung 200×230 (chân ngựa chạm đất y = 222),
+// thân sắt, bờm và đuôi là lửa, phi nước kiệu; ra đòn thì phun lửa. Gióng ngồi cao hơn RIDE đơn vị.
+const MOUNT_RIDE = 86;
+const HORSE_K = [1.36, 1.3];      // ngựa to hơn khung người (người chibi đầu to)
+function drawIronHorse(ctx, t, P, moving) {
+  const g = Math.sin(t * (moving ? 9 : 3));                // nhịp phi
+  ctx.save();
+  ctx.translate(100, 222); ctx.scale(HORSE_K[0], HORSE_K[1]); ctx.translate(-100, -222);
+  const leg = (hx, hy, a, back) => {
+    ctx.save();
+    ctx.translate(hx, hy); ctx.rotate(a);
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = '#2A2F36'; ctx.lineWidth = 15;
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, 30); ctx.lineTo(back ? -4 : 4, 58); ctx.stroke();
+    ctx.strokeStyle = '#6E7A86'; ctx.lineWidth = 11;
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, 30); ctx.lineTo(back ? -4 : 4, 58); ctx.stroke();
+    ctx.fillStyle = '#2A2F36'; ctx.fillRect((back ? -4 : 4) - 8, 56, 16, 6);
+    ctx.restore();
+  };
+  ctx.save();
+  // chân phía xa (tối hơn) rồi đuôi lửa
+  ctx.globalAlpha = 0.75;
+  leg(146, 160, -g * 0.35, false); leg(58, 160, g * 0.35, true);
+  ctx.globalAlpha = 1;
+  // đuôi lửa
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < 3; i++) {
+    const w = Math.sin(t * 7 + i) * 6;
+    ctx.fillStyle = ['#FF6A2A', '#FF9A3A', '#FFE08A'][i];
+    ctx.beginPath(); ctx.moveTo(40, 138);
+    ctx.quadraticCurveTo(14 + w, 128 - i * 4, 2 + w * 1.4, 150 + i * 6);
+    ctx.quadraticCurveTo(22, 150, 40, 150); ctx.fill();
+  }
+  ctx.restore();
+  // thân
+  ctx.fillStyle = '#6E7A86'; ctx.strokeStyle = '#1A1E24'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.ellipse(100, 148, 64, 30, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  // cổ + đầu
+  ctx.beginPath();
+  ctx.moveTo(142, 132); ctx.quadraticCurveTo(160, 96, 176, 82); ctx.lineTo(196, 96); ctx.quadraticCurveTo(200, 106, 190, 110);
+  ctx.lineTo(176, 108); ctx.quadraticCurveTo(168, 130, 158, 152); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(176, 82); ctx.lineTo(172, 68); ctx.lineTo(182, 80); ctx.fill(); ctx.stroke();   // tai
+  // tấm giáp sắt: đinh tán, đường nối, ánh kim
+  ctx.strokeStyle = '#3E4650'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(60, 128); ctx.quadraticCurveTo(100, 118, 140, 128); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(70, 166); ctx.quadraticCurveTo(100, 176, 132, 166); ctx.stroke();
+  ctx.fillStyle = '#A8B4C0';
+  for (let i = 0; i < 6; i++) { ctx.beginPath(); ctx.arc(66 + i * 14, 140 + (i % 2) * 4, 2.2, 0, Math.PI * 2); ctx.fill(); }
+  ctx.globalAlpha = 0.35; ctx.fillStyle = '#E8F0F8';
+  ctx.beginPath(); ctx.ellipse(92, 132, 40, 8, -0.05, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1;
+  // yên ngựa đỏ viền vàng
+  ctx.fillStyle = '#B8301E'; ctx.strokeStyle = '#1A1E24'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.ellipse(98, 122, 26, 9, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.strokeStyle = '#F2D27A'; ctx.lineWidth = 1.6;
+  ctx.beginPath(); ctx.ellipse(98, 122, 22, 6, 0, Math.PI * 0.1, Math.PI * 0.9); ctx.stroke();
+  // mắt lửa + mũi
+  ctx.fillStyle = '#FF8A2E'; ctx.shadowColor = '#FF6A2A'; ctx.shadowBlur = 8;
+  ctx.beginPath(); ctx.arc(184, 92, 3.4, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
+  ctx.fillStyle = '#1A1E24'; ctx.beginPath(); ctx.arc(194, 104, 2, 0, Math.PI * 2); ctx.fill();
+  // bờm lửa dọc cổ
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < 6; i++) {
+    const bx = 146 + i * 6, by = 124 - i * 8, w = Math.sin(t * 9 + i) * 3;
+    ctx.fillStyle = i % 2 ? '#FF9A3A' : '#FFD66B';
+    ctx.beginPath(); ctx.moveTo(bx - 4, by + 4); ctx.quadraticCurveTo(bx - 12 + w, by - 8, bx - 6 + w, by - 18); ctx.quadraticCurveTo(bx, by - 6, bx + 4, by + 2); ctx.fill();
+  }
+  // phun lửa khi ra đòn
+  if (P && (P.phase === 'strike' || (P.phase === 'recover' && P.k < 0.4))) {
+    const k = P.phase === 'strike' ? P.k : 1 - P.k * 2.5;
+    const L = 30 + 60 * k;
+    const gr = ctx.createLinearGradient(198, 0, 198 + L, 0);
+    gr.addColorStop(0, '#FFF1C4'); gr.addColorStop(0.4, '#FF9A3A'); gr.addColorStop(1, 'rgba(255,90,40,0)');
+    ctx.fillStyle = gr;
+    ctx.beginPath(); ctx.moveTo(196, 104); ctx.quadraticCurveTo(198 + L * 0.5, 90 - 10 * k, 198 + L, 96); ctx.quadraticCurveTo(198 + L * 0.5, 122 + 10 * k, 196, 108); ctx.fill();
+  }
+  ctx.restore();
+  // chân phía gần
+  leg(140, 162, g * 0.4, false); leg(62, 162, -g * 0.4, true);
+  ctx.restore();
+  ctx.restore();
+}
+// chân người cưỡi buông qua sườn ngựa (thay cho chân đứng)
+function drawRiderLeg(ctx) {
+  // hông người cưỡi ở y = 178 trong khung người (đã nâng MOUNT_RIDE) → chân buông chéo qua sườn ngựa
+  const hy = 178 - MOUNT_RIDE;
+  const path = () => { ctx.beginPath(); ctx.moveTo(96, hy); ctx.lineTo(114, hy + 32); ctx.lineTo(108, hy + 60); };
+  ctx.save();
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.strokeStyle = '#1A1E24'; ctx.lineWidth = 15; path(); ctx.stroke();
+  ctx.strokeStyle = '#5A6470'; ctx.lineWidth = 11; path(); ctx.stroke();
+  ctx.fillStyle = '#2A2F36'; ctx.fillRect(100, hy + 58, 18, 7);
+  ctx.restore();
+}

@@ -219,7 +219,7 @@ const HEROES = {
 
   // ---------------- 10 TƯỚNG HUYỀN THOẠI (đề xuất, số liệu cần cân bằng) ----------------
   giong: {
-    legend: 'legendary', name: 'Thánh Gióng', attr: 'str', attack: 'melee', wclass: 'blade', dmgType: 'phys',
+    legend: 'legendary', name: 'Thánh Gióng', mount: 'ngua_sat', attr: 'str', attack: 'melee', wclass: 'blade', dmgType: 'phys',
     role: 'Vươn vai', title: 'Gậy tre ngà, ngựa sắt phun lửa', color: '#E25A3A',
     attrs: { str: 30, agi: 16, int: 12 }, gain: { str: 3.4, agi: 1.6, int: 1.2 },
     base: { damage: 14, range: 150, cooldown: 1.0 },

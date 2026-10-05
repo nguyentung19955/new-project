@@ -859,3 +859,8 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 ### Phiên bản 50
 
 - **Ô có tướng đứng không còn vòng tròn:** bỏ ô tròn, vòng chấm cấp sao, vòng nét đứt Thần tinh, vòng ấn và tia sáng dưới chân tướng Tím / Vàng, vòng phụ kiện. Ô trống vẫn hiện vòng; ô của tướng đang chọn và ô sáng lên khi kéo để ghép / hợp thể vẫn hiện để biết đang thao tác ô nào. Cấp sao / Thần tinh vẫn nhìn được qua trang phục và hào quang sau lưng.
+
+### Phiên bản 51
+
+- **Thánh Gióng cưỡi ngựa sắt** (hình tự vẽ, `drawIronHorse` trong `js/costume.js`): thân sắt đinh tán, bờm và đuôi là lửa, mắt lửa, yên đỏ viền vàng; phi nước kiệu (đứng thì chân đưa chậm); khi Gióng ra đòn ngựa **phun lửa**. Gióng ngồi trên yên, chân buông qua sườn ngựa. Chân dung đầu không vẽ ngựa; chân dung toàn thân thu nhỏ cho vừa ngựa.
+- Chỉnh lại máu quái theo ải sau lần chạy bot v50 (chương 1 khó hơn, các chương sau giảm vì quân giặc Ân / Triệu giáp dày): `[0,9 · 1 · 1,1 · 1,25 · 1,35 · 1,45 · 1,55 · 1,65 · 1,5 · 1,55 · 1,65 · 1,45 · 1,55 · 1,5 · 1,55 · 1,6 · 1,65]`.
