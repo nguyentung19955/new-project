@@ -232,6 +232,21 @@ class Game {
     return true;
   }
 
+  // Kéo tướng sang bệ khác: bệ trống thì chuyển, bệ có tướng thì đổi chỗ
+  moveHero(from, to) {
+    if (from === to || !this.heroes[from]) return false;
+    const a = this.heroes[from], b = this.heroes[to];
+    this.heroes[to] = a;
+    this.heroes[from] = b;
+    for (const [h, slot] of [[a, to], [b, from]]) {
+      if (!h) continue;
+      h.slot = slot;
+      [h.x, h.y] = CONFIG.slots[slot];
+      this.effects.push({ type: 'ring', x: h.x, y: h.y - 15, r: 34, color: '#9dffc4', ttl: 0.4, max: 0.4 });
+    }
+    return true;
+  }
+
   sellHero(slot) {
     const h = this.heroes[slot];
     if (!h) return;

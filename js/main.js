@@ -46,10 +46,47 @@ window.addEventListener('orientationchange', () => setTimeout(resize, 200));
 if (window.visualViewport) window.visualViewport.addEventListener('resize', resize);
 resize();
 
-canvas.addEventListener('pointerdown', (ev) => {
+// --- Chạm & kéo tướng: chạm nhanh = mở bảng, giữ và kéo = đổi bệ
+let drag = null;   // { from, sx, sy, x, y, moved, id }
+const toLogical = (ev) => {
   const r = canvas.getBoundingClientRect();
-  ui.tapMap((ev.clientX - r.left) / view.scale, (ev.clientY - r.top) / view.scale);
+  return [(ev.clientX - r.left) / view.scale, (ev.clientY - r.top) / view.scale];
+};
+
+canvas.addEventListener('pointerdown', (ev) => {
+  const [x, y] = toLogical(ev);
+  const slot = ui.slotAt(x, y);
+  if (game.started && !game.over && slot >= 0 && game.heroes[slot]) {
+    drag = { from: slot, sx: x, sy: y, x, y, moved: false, id: ev.pointerId };
+    try { canvas.setPointerCapture(ev.pointerId); } catch (e) { /* bỏ qua */ }
+    return;
+  }
+  ui.tapMap(x, y);
 });
+
+canvas.addEventListener('pointermove', (ev) => {
+  if (!drag || ev.pointerId !== drag.id) return;
+  [drag.x, drag.y] = toLogical(ev);
+  if (!drag.moved && Math.hypot(drag.x - drag.sx, drag.y - drag.sy) > 12) {
+    drag.moved = true;
+    ui.close();
+  }
+});
+
+canvas.addEventListener('pointerup', (ev) => {
+  if (!drag || ev.pointerId !== drag.id) return;
+  const d = drag;
+  drag = null;
+  if (!d.moved) return ui.tapMap(d.sx, d.sy);
+  const to = ui.slotAt(d.x, d.y);
+  if (to >= 0 && to !== d.from) {
+    const other = game.heroes[to];
+    const name = HEROES[game.heroes[d.from].type].name;
+    game.moveHero(d.from, to);
+    ui.toast(other ? `${name} đổi chỗ với ${HEROES[other.type].name}` : `${name} chuyển sang bệ mới`, '#9dffc4');
+  }
+});
+canvas.addEventListener('pointercancel', () => { drag = null; });
 
 function render() {
   const t = performance.now() / 1000;
@@ -59,13 +96,16 @@ function render() {
   drawPortal(ctx, t);
 
   const selected = ui.sheet && ui.sheet.slot !== undefined ? ui.sheet.slot : -1;
+  const dragging = drag && drag.moved ? drag : null;
+  const dropSlot = dragging ? ui.slotAt(dragging.x, dragging.y) : -1;
   CONFIG.slots.forEach(([x, y], i) => {
     const h = game.heroes[i];
-    drawSlot(ctx, x, y, i === selected, i === ui.coachSlot, t, !!h, h && ATTRS[HEROES[h.type].attr].color);
+    drawSlot(ctx, x, y, i === selected || i === dropSlot, i === ui.coachSlot || (dragging && i !== dragging.from), t,
+      !!h, h && ATTRS[HEROES[h.type].attr].color);
   });
 
   // vòng tầm đánh của tướng đang chọn
-  const sel = game.heroes[selected];
+  const sel = dragging ? null : game.heroes[selected];
   if (sel) {
     ctx.strokeStyle = 'rgba(255,255,255,0.6)';
     ctx.fillStyle = 'rgba(255,255,255,0.08)';
@@ -79,7 +119,8 @@ function render() {
   // vẽ theo trục y để vật thể phía dưới đè lên phía trên
   const drawables = [
     ...game.enemies.map((e) => ({ y: e.y, draw: () => drawEnemy(ctx, e, t) })),
-    ...game.heroes.filter(Boolean).map((h) => ({ y: h.y, draw: () => drawHeroOnMap(h, t) })),
+    ...game.heroes.filter((h) => h && !(dragging && h.slot === dragging.from))
+      .map((h) => ({ y: h.y, draw: () => drawHeroOnMap(h, t) })),
   ].sort((a, b) => a.y - b.y);
   drawables.forEach((d) => d.draw());
 
@@ -115,6 +156,27 @@ function render() {
   }
 
   drawEffects(t);
+  if (dragging) drawDragGhost(dragging, dropSlot, t);
+}
+
+// Tướng đang kéo: nổi lên trên ngón tay, kèm vòng tầm đánh tại bệ sẽ thả
+function drawDragGhost(d, dropSlot, t) {
+  const h = game.heroes[d.from];
+  if (!h) return;
+  const st = heroStats(h);
+  if (dropSlot >= 0) {
+    const [sx, sy] = CONFIG.slots[dropSlot];
+    ctx.strokeStyle = 'rgba(157,255,196,0.7)';
+    ctx.fillStyle = 'rgba(157,255,196,0.08)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(sx, sy, st.range, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 0.85;
+  drawHero(ctx, computeLook(h.type, h.equip, h.kills), d.x, d.y - 26, { t, dir: h.dir, scale: 1.15 });
+  ctx.globalAlpha = 1;
 }
 
 function drawHeroOnMap(h, t) {

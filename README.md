@@ -19,7 +19,7 @@ npx serve .          # hoặc: python3 -m http.server 8000
 
 Sau đó mở `http://<ip-máy-tính>:8000` trên điện thoại.
 
-**Cách chơi:** chạm vào bệ đá để đặt tướng. Chạm vào tướng để xem bảng tướng (chân dung, Q W E R, 6 ô đồ). Mua và ghép đồ ở **Cửa hàng**. Bấm **Gọi đợt** để quái tới.
+**Cách chơi:** chạm vào bệ rune (20 bệ) để đặt tướng. Giữ và kéo tướng sang bệ khác để chuyển chỗ hoặc đổi chỗ với tướng ở đó. Chạm vào tướng để xem bảng tướng (chân dung, Q W E R, 6 ô đồ). Mua và ghép đồ ở **Cửa hàng**. Bấm **Gọi đợt** để quái tới.
 
 ## Cấu trúc code
 

@@ -123,9 +123,14 @@ class UI {
   }
 
   // ---------- chạm vào bản đồ
+  // Bệ nằm dưới điểm chạm (tính cả thân tướng phía trên bệ)
+  slotAt(x, y) {
+    return CONFIG.slots.findIndex(([sx, sy]) => Math.hypot(sx - x, sy - (y + 14)) < 38);
+  }
+
   tapMap(x, y) {
     if (!this.game.started) return;
-    const slot = CONFIG.slots.findIndex(([sx, sy]) => Math.hypot(sx - x, sy - (y + 14)) < 38);
+    const slot = this.slotAt(x, y);
     if (slot < 0) return this.close();
     if (this.sheet && this.sheet.slot === slot) return this.close();
     this.open({ kind: this.game.heroes[slot] ? 'hero' : 'build', slot });
@@ -197,6 +202,10 @@ class UI {
       case 'build':
         if (g.placeHero(this.sheet.slot, d.type)) {
           this.toast(`${HEROES[d.type].name} đã vào vị trí`, '#7cc45f');
+          if (g.heroes.filter(Boolean).length === 2 && !g.flags.dragTip) {
+            g.flags.dragTip = true;
+            setTimeout(() => this.toast('Mẹo: giữ và kéo tướng sang bệ khác để đổi chỗ', '#9dffc4'), 900);
+          }
           this.close();
         } else {
           this.toast(`Cần ${HEROES[d.type].cost} vàng`, '#e58b74');
@@ -408,8 +417,8 @@ class UI {
     if (g.started && !g.over && !this.sheet) {
       const heroes = g.heroes.filter(Boolean);
       if (!heroes.length) {
-        this.coachSlot = 3;
-        const [x, y] = CONFIG.slots[3];
+        this.coachSlot = CONFIG.coachSlot;
+        const [x, y] = CONFIG.slots[CONFIG.coachSlot];
         pos = [x, y - 22];
         text = 'Chạm vào bệ đá để đặt tướng';
       } else if (g.wave === 0 && !g.waveActive) {
