@@ -767,3 +767,5 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - Sửa lỗi hiệu ứng hạt với màu viết tắt (#fff).
 - **Thanh thao tác trên tướng (thay bảng ⋯):** chạm tướng là hiện ngay một hàng nút nổi trên đầu tướng, mỗi việc một chạm: ⚔ Kỹ năng · ⇄ Ghép ★★ (có con giống thì ghép luôn) / ✦ Thần tinh · ▲ Mặc n món (có đồ tốt hơn thì mặc luôn, không thì mở Trang bị) · ✸ Hợp thể → tên thần (chỉ hiện khi đủ điều kiện, bấm là hợp) · 🗑 Hủy (chạm 2 lần). Đổi chỗ = giữ & kéo. Bỏ nút ⋯.
 - **Hũ Vua Hùng mạnh hơn:** Thuồng Luồng 2 món Sử thi; Hà Bá 1 món đồ bộ + 2 Sử thi; Thủy Tinh 2 món đồ bộ + 1 Sử thi. Mỗi món bốc 6 lần, giữ món tăng lực chiến nhiều nhất cho 3 tướng mạnh nhất trên sân; thẻ ghi sẵn từng món hợp với tướng nào, tăng bao nhiêu lực chiến.
+- **Sáng tướng thành phần:** bấm thẻ thần tím / vàng ở dải gợi ý thì 2 tướng cần nâng để hợp thể sáng lên trên sân (quầng màu + mũi tên nhún) trong 6 giây, kèm dòng báo mỗi tướng còn thiếu gì. Chọn một tướng có công thức hợp thể thì tướng đối tác trên sân cũng sáng lên.
+- Thông báo dời xuống để không đè hướng dẫn.

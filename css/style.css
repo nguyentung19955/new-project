@@ -1111,3 +1111,5 @@ button:disabled { cursor: default; }
 .sl-desc.jar-list div { display: flex; justify-content: space-between; gap: 6px; white-space: nowrap; }
 .sl-desc.jar-list span { font-weight: 800; overflow: hidden; text-overflow: ellipsis; }
 .sl-desc.jar-list small { color: #6AE06A; font-size: 11px; overflow: hidden; text-overflow: ellipsis; }
+/* v37: thông báo dời xuống để không đè hướng dẫn "Bấm ▶" */
+#toasts { top: 104px; }

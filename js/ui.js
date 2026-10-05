@@ -488,6 +488,7 @@ class UI {
     if (slot < 0) { this.sel = -1; this.spot = -1; this.armed = null; return; }
     if (g.heroes[slot]) {
       this.sel = slot;
+      this.fuseFocus = null;
       this.spot = -1;
       this.armed = null;
       this.sellArmed = false;
@@ -1291,7 +1292,12 @@ class UI {
       case 'auto-merge': { const n = g.autoMerge(); this.toast(n ? `Đã ghép ${n} lần` : 'Không có cặp nào ghép được', n ? '#F2D27A' : '#E25A3A'); break; }
       case 'fuse-strip': {
         const f = FUSION[+d.i]; const pr = g.fusionProgress(f);
-        if (pr.p < 1) { this.toast(`${HEROES[f.to].name}: ${Math.floor(pr.p * 100)}% — cần ${HEROES[f.a].name} và ${HEROES[f.b].name} ${HEROES[f.to].legend === 'epic' ? '★★★' : 'Thần tinh ★★★'}, kỹ năng tối đa`, '#F2D27A'); break; }
+        // sáng 2 tướng thành phần trên sân vài giây
+        this.fuseFocus = { i: +d.i, until: performance.now() + 6000 };
+        this.sel = -1;
+        if (pr.p < 1) {
+          const why = [[f.a, pr.a], [f.b, pr.b]].map(([type, h]) => (h ? (g.fusionReady(h) === true ? `${HEROES[type].name} ✓` : g.fusionReady(h)) : `chưa có ${HEROES[type].name} trên sân`));
+          this.toast(`<b>${HEROES[f.to].name} ${Math.floor(pr.p * 100)}%</b> · ${why.join(' · ')}`, RARITY[HEROES[f.to].legend].color); break; }
         const r = g.fuse(pr.a.slot, pr.b.slot); if (r !== true) this.toast(r, '#E25A3A'); else this.sel = pr.b.slot;
         break;
       }

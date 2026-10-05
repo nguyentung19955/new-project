@@ -140,6 +140,7 @@ function render() {
       o.mode = i === dropSlot ? 'target' : pair ? 'sel' : !h ? 'free' : '';
     }
     else if (ui.raising) o.mode = game.canRaise(i) && (o.flooded || o.soon) ? 'free' : '';
+    else if (h && fuseMarks().has(h)) o.mode = 'sel';
     else if (i === ui.spot) o.mode = 'target';
     else if (i === ui.sel && h) o.mode = 'sel';
     else if (!h && ui.armed && !o.flooded) o.mode = 'free';
@@ -192,6 +193,7 @@ function render() {
   drawEffects(t);
   VFX.draw(ctx);
   if (dragging) drawDragGhost(dragging, dropSlot, t);
+  else drawFuseMarks(t);
 }
 
 function drawProjectile(p, t) {
@@ -399,6 +401,45 @@ function drawGuard(t) {
 }
 
 // Tướng đang kéo: nổi lên trên ngón tay, kèm vòng tầm đánh tại ô sẽ thả
+// Tướng thành phần cần nâng để hợp thể: khi bấm thẻ thần ở dải gợi ý (ui.fuseFocus, vài giây)
+// hoặc khi chọn một tướng có công thức hợp thể (sáng đối tác trên sân).
+let fuseMarkCache = { key: '', set: new Map() };
+function fuseMarks() {
+  const ff = ui.fuseFocus && performance.now() < ui.fuseFocus.until ? ui.fuseFocus : null;
+  const sh = !ff && ui.sel >= 0 ? game.heroes[ui.sel] : null;
+  const key = ff ? 'f' + ff.i : sh ? 's' + sh.id + sh.type : '';
+  if (fuseMarkCache.key === key && key !== '') return fuseMarkCache.set;
+  const m = new Map();
+  const add = (type, color) => {
+    const best = game.heroes.filter((x) => x && x.type === type).sort((x, y) => (y.tier || 0) - (x.tier || 0) || y.level - x.level)[0];
+    if (best && !m.has(best)) m.set(best, color);
+  };
+  if (ff) { const f = FUSION[ff.i]; const c = RARITY[HEROES[f.to].legend].color; add(f.a, c); add(f.b, c); }
+  else if (sh) for (const to of ASCEND[sh.type] || []) add(fusionPartner(sh.type, to), RARITY[HEROES[to].legend].color);
+  fuseMarkCache = { key, set: m };
+  return m;
+}
+function drawFuseMarks(t) {
+  for (const [h, c] of fuseMarks()) {
+    if (h.dead) continue;
+    const bob = Math.sin(t * 6) * 4;
+    const y = h.y - 78 + bob;
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    const g = ctx.createRadialGradient(h.x, h.y - 30, 4, h.x, h.y - 30, 46);
+    g.addColorStop(0, c + 'aa'); g.addColorStop(1, c + '00');
+    ctx.fillStyle = g;
+    ctx.fillRect(h.x - 46, h.y - 76, 92, 92);
+    ctx.restore();
+    ctx.fillStyle = c;
+    ctx.strokeStyle = '#1A0F0A';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(h.x - 13, y - 14); ctx.lineTo(h.x + 13, y - 14); ctx.lineTo(h.x, y + 3); ctx.closePath();
+    ctx.fill(); ctx.stroke();
+  }
+}
+
 function drawDragGhost(d, dropSlot, t) {
   const h = game.heroes[d.from];
   if (!h) return;
