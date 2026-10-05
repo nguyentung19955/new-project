@@ -107,29 +107,14 @@ ui_tay-luyen.png | ra đĩa tròn, không thấy ký hiệu xoay
 lac-tuong_thuong.png | da xanh lá như yêu tinh, không giống người Việt (ảnh gốc của Lạc Tướng)
 thay-mo-lua_hiem.png | nền tối chuyển màu, xoá nền để lại mảng xám dưới chân
 # Dòng bắt đầu bằng "~": dùng tạm được, NÊN làm lại khi rảnh (không tính là thiếu)
-~au-co_hiem.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
-~au-co_thuong.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
-~lac-tuong_hiem.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
-~lac-tuong_su-thi.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
-~lac-tuong_huyen-thoai.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
-~lang-lieu_huyen-thoai.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
-~lac-long-quan_su-thi.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
-~lac-long-quan_huyen-thoai.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
-~luc-si-nui_hiem.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
-~mai-an-tiem_thuong.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
-~mai-an-tiem_hiem.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
-~mai-an-tiem_su-thi.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
-~thach-sanh_thuong.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
-~tho-san-rung_hiem.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
-~tho-san-rung_huyen-thoai.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
-~tien-dung_hiem.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
-~tien-dung_su-thi.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
-~xa-thu-van-lang_thuong.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
-~xa-thu-van-lang_su-thi.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
-~xa-thu-van-lang_huyen-thoai.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
-~than-kim-quy_hiem.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
-~than-kim-quy_su-thi.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
-~thay-mo-lua_su-thi.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
-~chu-dong-tu_hiem.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
-~than-suong-nui_thuong.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
-~than-suong-nui_su-thi.png | có đĩa tròn / vầng sáng sau lưng, trên bản đồ trông như dán sticker
+~chu-dong-tu_hiem.png | vòng khung tròn ôm quanh người (AI tách nền giữ lại)
+~lac-tuong_su-thi.png | đĩa tím sau lưng
+~lac-tuong_huyen-thoai.png | đĩa hoa văn sau lưng
+~luc-si-nui_su-thi.png | mảng tím sau lưng
+~than-kim-quy_su-thi.png | đĩa tím sau lưng
+~tho-san-rung_hiem.png | vòng khung tròn ôm quanh người
+~tien-dung_su-thi.png | đĩa hồng sau lưng
+~giao-long_hoa.png | nằm trong khung tròn, không phải con vật đứng tự do
+~giao-long_tho.png | nằm trong khung tròn
+~giao-long_thuy.png | nằm trong khung tròn
+~quai_phu-thuy-nuoc.png | vòng nước tròn bao quanh

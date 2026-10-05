@@ -2408,7 +2408,7 @@ class Game {
     const heal = ((h.buff.healPct || 0) / 100 + (h.hotT > 0 ? h.hotPct || 0 : 0) + (this.oathT > 0 ? 0.03 : 0)) * st.hpMax;
     h.hp = Math.min(st.hpMax, h.hp + (st.regen + heal) * dt);
     h.mana = Math.min(st.maxMana, h.mana + st.manaRegen * dt);
-    h.swing = Math.max(0, h.swing - dt * SWING_RATE);
+    h.swing = Math.max(0, h.swing - dt * (h.swingRate || SWING_RATE));
     // đòn đánh thường rơi đúng lúc hoạt ảnh ra đòn (sau pha lấy đà)
     if (h.strike) {
       h.strike.t -= dt;
@@ -2480,6 +2480,7 @@ class Game {
           }
         }
         h.swing = 1;
+        h.swingRate = SWING_RATE;
         const color = SKILL_COLOR[sk.active.cast] || '#fff';
         h.castT = i === 3 ? 0.9 : 0.5;
         h.castColor = color;
@@ -2497,8 +2498,10 @@ class Game {
     h.dir = target.x >= h.x ? 1 : -1;
     if (h.cd > 0 || h.strike) return;
     h.cd = st.cooldown;
+    // hoạt ảnh đánh co theo tốc đánh: đánh nhanh thì vung nhanh, không bị giật về tư thế lấy đà
+    h.swingRate = Math.max(SWING_RATE, 1 / (st.cooldown * 0.92));
     h.swing = 1;
-    h.strike = { t: STRIKE_DELAY[def.attack] || 0.12, fn: () => this.heroAttack(h, target) };
+    h.strike = { t: (STRIKE_DELAY[def.attack] || 0.12) * (SWING_RATE / h.swingRate), fn: () => this.heroAttack(h, target) };
   }
 
   // đòn đánh thường (gọi khi hoạt ảnh tới lúc ra đòn)
@@ -2768,6 +2771,8 @@ class Game {
       this.effects.push({ type: 'spark', x: e.x, y: e.y - 8, a: Math.random() * 6.28, color: e.def.color, ttl: 0.4, max: 0.4 });
     }
     this.effects.push({ type: 'die', x: e.x, y: e.y, etype: e.type, dir: e.dir, ttl: 0.4, max: 0.4 });
+    // xác quái: chớp trắng, ngã nghiêng, co lại và chìm xuống nước (0,45 giây) thay vì biến mất ngay
+    this.effects.push({ type: 'corpse', x: e.x, y: e.y, enemy: { ...e, hitT: 0, kbT: 0, stunT: 0, reviveT: 0 }, dir: (e.kbDir || e.dir || 1), ttl: 0.45, max: 0.45 });
     if (hero && this.heroes[hero.slot] === hero) {
       hero.kills++;
       this.onKillFx(e, hero);

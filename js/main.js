@@ -444,7 +444,7 @@ function drawHeroOnMap(h, t) {
   const r = drawHeroSprite(ctx, h, h.x, h.y, {
     t, dir: h.dir, swing: h.swing, castT: h.castT, castUlt: h.castUlt, hurt: h.hurtT, px: px(),
     bog: h.bogged, summon: h.summonT, fall: h.dead ? h.fallT : undefined,
-    bounce: h.bounceT, evo: h.evoT, wingT: h.wingT,
+    bounce: h.bounceT, evo: h.evoT, wingT: h.wingT, smooth: true, vector: !!(ui.save && ui.save.settings.vectorHeroes),
   });
   if (h.dead) return;
   drawHeroStates(h, st, t, true);
@@ -1370,6 +1370,18 @@ function drawEffects(t) {
         circle(ctx, f.x, yy, 4.5, '#B8852A');
         circle(ctx, f.x, yy, 3.5, '#F2D27A');
         ctx.fillStyle = '#7A5418'; ctx.fillRect(f.x - 1, yy - 1, 2, 2);
+        break;
+      }
+      case 'corpse': {
+        // xác quái ngã nghiêng, co lại, chìm và mờ dần
+        const e = f.enemy;
+        const q = 1 - k;                      // 0 → 1
+        const ease = q * q * (3 - 2 * q);
+        ctx.globalAlpha = Math.max(0, 1 - ease * 1.05);
+        ctx.translate(f.x, f.y + ease * 10);
+        ctx.rotate((f.dir || 1) * 0.9 * ease);
+        ctx.scale(1 - 0.35 * ease, 1 - 0.5 * ease);
+        drawEnemy(ctx, { ...e, x: 0, y: 0, hitT: q < 0.25 ? 0.12 * (1 - q / 0.25) : 0 }, t, { icon: true, px: px() });
         break;
       }
       case 'die':

@@ -2,13 +2,16 @@
 
 Cách chạy:  python3 tools/xoa-nen.py <thư mục ảnh Fooocus> assets
 Cần: pip install pillow numpy scipy
+Nên cài thêm (tách nhân vật bằng AI, gỡ được đĩa tròn / vầng sáng sau lưng):
+      pip install rembg onnxruntime   (lần chạy đầu tự tải mô hình isnet-anime ~176 MB)
+  Không có rembg thì công cụ vẫn chạy bằng cách xoá nền xám như cũ.
 - Ảnh phải đặt đúng tên như dòng "File:" trong prompt (ví dụ lac-tuong_thuong.png).
 - Nhân vật, quái, đồ: xoá nền xám (vùng xám nối với mép ảnh), cắt sát, thu nhỏ còn tối đa 512 px;
   icon kỹ năng / giao diện / phụ kiện còn 256 px (hiện nhỏ, đỡ nặng máy).
 - Ảnh nền (nen_*, truyen_*, logo, icon-app): giữ nguyên, chỉ thu nhỏ còn tối đa 1600 px.
 Ảnh không có trong tools/asset-manifest.json sẽ được bỏ qua (in ra để sửa tên).
 """
-import json, os, sys
+import json, os, re, sys
 import numpy as np
 from PIL import Image, ImageFilter
 from scipy import ndimage
@@ -52,7 +55,72 @@ def remove_bg(img):
     return out.crop(bb) if bb else out
 
 
+# tách nhân vật bằng AI (rembg, mô hình isnet-anime) cho tướng / quái / boss nếu đã cài
+try:
+    from rembg import remove as _rembg_remove, new_session as _rembg_session
+    _RB = None
+except Exception:
+    _rembg_remove = None
+
+
+def ai_cut(img):
+    global _RB
+    if _rembg_remove is None:
+        return None
+    if _RB is None:
+        _RB = _rembg_session('isnet-anime')
+    out = _rembg_remove(img.convert('RGB'), session=_RB)
+    a = np.asarray(out)[:, :, 3]
+    if (a > 128).mean() < 0.02:          # tách hỏng (gần như trống): bỏ
+        return None
+    bb = out.getbbox()
+    return out.crop(bb) if bb else out
+
+
+CHAR_RE = re.compile(r'^([a-z-]+_(thuong|hiem|su-thi|huyen-thoai|ra-don)|quai_[a-z-]+|boss_[a-z-]+|giao-long_[a-z]+|trieu-hoi_[a-z-]+)\.png$')
 ICON_PREFIX = ('ky-nang_', 'ui_', 'hanh_', 'phu-kien_', 'do-ghep_', 'sinh-le_')
+
+
+def strip_backdrop(img, passes=3):
+    """Gỡ đĩa tròn / vầng sáng / ô nền mà AI vẽ sau lưng nhân vật (lớp ngoài cùng còn sót sau
+    khi xoá nền xám). Lấy màu ở viền ngoài phần còn lại, bỏ vùng cùng màu nối với viền; chỉ nhận
+    kết quả nếu còn giữ được phần lớn nhân vật."""
+    out = img
+    for _ in range(passes):
+        a = np.asarray(out.convert('RGBA')).astype(int)
+        alpha = a[:, :, 3] > 40
+        if alpha.sum() < 500:
+            break
+        outside = ~alpha
+        ring = alpha & ndimage.binary_dilation(outside, iterations=3)
+        cols = a[:, :, :3][ring]
+        if len(cols) < 50:
+            break
+        bg = np.median(cols, axis=0)
+        dist = np.sqrt(((cols - bg) ** 2).sum(1))
+        if np.percentile(dist, 60) > 40:      # viền không đồng màu: không có đĩa nền rõ ràng
+            break
+        tol = min(55, max(20, float(np.percentile(dist, 80)) + 6))
+        d = np.sqrt(((a[:, :, :3] - bg) ** 2).sum(2))
+        cand = alpha & (d < tol)
+        lab, _ = ndimage.label(cand)
+        touch = set(np.unique(lab[ring & cand])) - {0}
+        rm = np.isin(lab, list(touch))
+        keep = alpha & ~rm
+        keep = ndimage.binary_opening(keep, iterations=1)
+        l2, n2 = ndimage.label(keep)
+        if n2:
+            sizes = ndimage.sum(keep, l2, range(1, n2 + 1))
+            keep = np.isin(l2, [i + 1 for i, v in enumerate(sizes) if v > max(80, sizes.max() * 0.03)])
+        frac = keep.sum() / alpha.sum()
+        if frac > 0.95 or frac < 0.3:         # gần như không đổi, hoặc ăn mất nhân vật: dừng
+            break
+        al = Image.fromarray((keep * 255).astype('uint8')).filter(ImageFilter.GaussianBlur(0.8))
+        rgb = out.convert('RGB')
+        rgb.putalpha(Image.fromarray(np.minimum(np.asarray(al), a[:, :, 3]).astype('uint8')))
+        bb = rgb.getbbox()
+        out = rgb.crop(bb) if bb else rgb
+    return out
 
 
 def shrink(img, maxside):
@@ -74,7 +142,15 @@ def main(src, dst):
         elif name in SHEET_FILES:
             # icon / giao diện chỉ hiện nhỏ: 256 px là đủ, nhẹ hơn 4 lần
             side = 256 if name.startswith(ICON_PREFIX) else 512
-            out = shrink(remove_bg(img), side)
+            out = None
+            if CHAR_RE.match(name) and not name.startswith(('do_', 'bo-', 'ban-do_')):
+                # tướng / quái: tách nhân vật bằng AI (bỏ cả đĩa tròn, vầng sáng sau lưng)
+                out = ai_cut(img)
+                if out is None:
+                    out = strip_backdrop(remove_bg(img))
+            if out is None:
+                out = remove_bg(img)
+            out = shrink(out, side)
             # nén bảng 256 màu (giữ trong suốt): nhẹ hơn ~5 lần, nhìn gần như không khác
             out = out.quantize(colors=256, method=Image.Quantize.FASTOCTREE, dither=Image.Dither.FLOYDSTEINBERG)
             out.save(os.path.join(dst, name), optimize=True); print('xoá nền ', name)

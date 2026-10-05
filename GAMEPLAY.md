@@ -697,3 +697,10 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - **Thăng thần cần đủ cả sao lẫn kỹ năng:** lên tím cần ★★★ và cả 4 kỹ năng đạt tối đa (Q W E 4/4, R 3/3); lên vàng cần Thần tinh ★★★ (trước là ★★) và cả 4 kỹ năng của thần tím đạt tối đa. Điểm thừa đổi chỉ số không bắt buộc. Bảng Thăng thần hiện ✓ / ✗ từng điều kiện và kỹ năng nào còn thiếu.
 - **Sửa thứ tự giá:** trước đây thần tím Thần tinh ★★ đã được lên vàng (650 vàng) rẻ hơn Thần tinh ★★★ (1000 vàng) nên dễ bỏ sót sao cuối. Nay lên vàng 1200 vàng và chỉ mở sau ★★★.
 - **Thần tinh của tướng vàng có mốc riêng:** cấp 21 / 23 / 25, giá 1500 / 2200 / 3200 vàng (tím vẫn cấp 16 / 18 / 20, 300 / 600 / 1000). Mỗi sao vàng mạnh gấp 1,5 lần sao tím và màn Thần tinh hiện đúng số (ví dụ ★★★ vàng +120% sát thương thay vì +80%).
+
+### Phiên bản 33 · hoạt ảnh mượt hơn, ảnh sạch nền hơn
+
+- **Hoạt ảnh tướng:** tư thế đuổi theo đích bằng "lò xo" theo thời gian thực, nên đòn sau bắt đầu từ chỗ đòn trước đang dừng (không còn giật về tư thế lấy đà). Thời lượng vung đòn co theo tốc đánh (tướng đánh nhanh vung nhanh, sát thương rơi đúng lúc ra đòn). Ảnh vẽ tay không còn xoay cứng cả tấm: chân đứng yên, thân **uốn cong** theo 14 lát (đung đưa, lấy đà, chém), ngực / đầu phồng nhẹ khi thở; có vệt mờ khi chém; đổi sang ảnh ra đòn và đổi bậc trang phục đều **mờ dần** thay vì bật.
+- **Quái chết** có hoạt ảnh: chớp trắng, ngã nghiêng, co lại, chìm xuống nước và mờ dần (0,45 giây) thay vì biến mất ngay.
+- **Mặc đồ với ảnh vẽ tay:** bậc ảnh trang phục làm tròn lên — mặc món Hiếm đầu tiên đã đổi sang ảnh bậc Hiếm. Cài đặt có thêm **"Tướng vẽ nét (thấy từng món đồ)"**: bật lên thì tướng dùng hình vẽ nét, mũ / giáp / vũ khí hiện riêng từng món.
+- **Tách nền bằng AI:** `tools/xoa-nen.py` dùng rembg (mô hình isnet-anime) cho ảnh tướng / quái / boss, gỡ được đĩa tròn và vầng sáng sau lưng (nếu chưa cài rembg vẫn chạy cách cũ). Ảnh "nên làm lại khi rảnh" giảm từ 26 xuống 11.

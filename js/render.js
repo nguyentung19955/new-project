@@ -185,7 +185,8 @@ const GEAR_TIER_FILE = ['thuong', 'hiem', 'su-thi', 'huyen-thoai'];
 function gearTier(h) {
   if (!h || !h.equip) return 0;
   const sum = GEAR_SLOTS.reduce((a, sl) => a + (h.equip[sl] ? RARITY_ORDER.indexOf(h.equip[sl].rarity) : 0), 0);
-  return Math.round(sum / GEAR_SLOTS.length);
+  // làm tròn LÊN: mặc món Hiếm đầu tiên là đã đổi sang ảnh bậc Hiếm (trước đây phải 2 món mới đổi)
+  return Math.min(3, Math.ceil(sum / GEAR_SLOTS.length));
 }
 // v: 'B' chân dung, 'C' đứng, 'D' ra đòn (bảng 4 bậc đồ chỉ có dáng đứng)
 function heroPng(type, v, h) {
@@ -544,7 +545,8 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
   const headRot = Math.sin(t * 1.9 + seed) * 0.05;
   const backRot = Math.sin(t * 2.2 + seed) * 0.07;
   // vung đòn / bắn / phép: 3 pha lấy đà → ra đòn → thu về (u: 0 → 1)
-  const pose = attackPose(def.attack, o.swing || 0, o.castT || 0, !!o.castUlt);
+  const pose = o.smooth ? smoothPose(h, attackPose(def.attack, o.swing || 0, o.castT || 0, !!o.castUlt), t)
+    : attackPose(def.attack, o.swing || 0, o.castT || 0, !!o.castUlt);
   const { armF, armB, lunge, lift, recoil, big, lean, sqx, sqy } = pose;
   let drop = 0, fallRot = 0, alpha = o.alpha ?? 1;
   if (o.summon > 0) drop = -60 * (o.summon / 0.5) * (o.summon / 0.5);
@@ -570,27 +572,59 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
   // nghiêng người + co giãn (squash & stretch) quanh bàn chân
   const sway = Math.sin(t * 1.3 + seed) * 0.018;
   ctx.scale(dir * s * big * sqx, s * big * sqy);
-  ctx.rotate(lean + sway + (o.hurt > 0 ? -0.12 * (o.hurt / 0.2) : 0));
+  const hurtRot = o.hurt > 0 ? -0.12 * (o.hurt / 0.2) : 0;
+  const pngC = !o.vector && heroPng(h.type, 'C', h);
+  // ảnh vẽ tay: chân đứng yên, thân uốn (lean thành độ cong) — không xoay cứng cả tấm
+  ctx.rotate(pngC ? (lean + hurtRot) * 0.25 : lean + sway + hurtRot);
   ctx.translate(-100 + (lunge + recoil + hurtX), -222 + drop + sink);
   if (fallRot) { ctx.translate(100, 222); ctx.rotate(fallRot); ctx.translate(-100, -222); }
 
   // ảnh vẽ tay (assets/): ảnh phẳng không thay được từng món đồ,
-  // nên đồ mặc hiện qua hào quang, cánh rồng và sao tiến hoá.
-  const png = !o.vector && (((o.castT > 0 || o.swing > 0.5) && heroPng(h.type, 'D', h)) || heroPng(h.type, 'C', h));
+  // nên đồ mặc hiện qua bậc trang phục (ảnh theo độ hiếm), hào quang, cánh rồng và sao tiến hoá.
+  const png = pngC;
   if (png) {
     if (tierShown >= 3) drawSunHalo(ctx, t);
     if (look.wings) withProc(ctx, () => drawWings(ctx, look, t, o.wingT));
     if (look.setFx) withProc(ctx, () => drawSetBack(ctx, look.setFx, t, o.wingT));
     const hgt = 236, w = hgt * png.naturalWidth / png.naturalHeight;
     ctx.translate(100, 222);
-    ctx.scale(1 + Math.sin(t * 2.85 + seed) * 0.012, 1 - Math.sin(t * 2.85 + seed) * 0.018 + lift * -0.004);
-    ctx.drawImage(png, -w / 2, -hgt, w, hgt);
+    // thở: phần trên phồng nhẹ; uốn: lean + đung đưa thành độ cong của thân (chân giữ nguyên)
+    const breath = Math.sin(t * 2.85 + seed) * 0.016 - lift * 0.004;
+    const bend = (lean + hurtRot) * 0.75 + sway * 1.4 + Math.sin(t * 1.7 + seed) * 0.012;
+    const pngD = (o.castT > 0 || o.swing > 0) && heroPng(h.type, 'D', h);
+    // đổi sang ảnh ra đòn mờ dần (không bật cái bụp)
+    const mixD = pngD ? (o.smooth ? smoothVal(h, 'mixD', o.castT > 0 || o.swing > 0.35 ? 1 : 0, t, 30) : 1) : 0;
+    const base = ctx.globalAlpha;
+    // mặc / tháo đồ đổi bậc trang phục: ảnh cũ mờ dần sang ảnh mới (0,35 giây)
+    const an = h._anim || (h._anim = {});
+    if (o.smooth && an.png !== png) { an.prevPng = an.png; an.png = png; an.swapT = t; }
+    const sw = o.smooth && an.prevPng && an.swapT !== undefined ? Math.min(1, Math.max(0, (t - an.swapT) / 0.35)) : 1;
+    if (sw < 1) {
+      const wp = hgt * an.prevPng.naturalWidth / an.prevPng.naturalHeight;
+      ctx.globalAlpha = base * (1 - sw);
+      drawBent(ctx, an.prevPng, -wp / 2, -hgt, wp, hgt, bend, breath);
+      ctx.globalAlpha = base * sw;
+    }
+    if (mixD < 1) drawBent(ctx, png, -w / 2, -hgt, w, hgt, bend, breath);
+    ctx.globalAlpha = base;
+    if (mixD > 0) {
+      const wd = hgt * pngD.naturalWidth / pngD.naturalHeight;
+      ctx.globalAlpha = base * mixD;
+      drawBent(ctx, pngD, -wd / 2, -hgt, wd, hgt, bend, breath);
+      ctx.globalAlpha = base;
+    }
+    // vệt mờ khi chém (ghost lùi sau thân)
+    if (pose.phase === 'strike' && def.attack === 'melee') {
+      ctx.globalAlpha = base * 0.22 * (1 - pose.k);
+      drawBent(ctx, mixD > 0.5 ? pngD : png, -w / 2 - 14, -hgt, w, hgt, bend * 0.5, breath);
+      ctx.globalAlpha = base;
+    }
     if (o.hurt > 0) {
       ctx.globalCompositeOperation = 'lighter';
-      ctx.globalAlpha = (o.hurt / 0.2) * 0.45;
-      ctx.drawImage(png, -w / 2, -hgt, w, hgt);
+      ctx.globalAlpha = base * (o.hurt / 0.2) * 0.45;
+      drawBent(ctx, mixD > 0.5 ? pngD : png, -w / 2, -hgt, w, hgt, bend, breath);
       ctx.globalCompositeOperation = 'source-over';
-      ctx.globalAlpha = 1;
+      ctx.globalAlpha = base;
     }
     ctx.translate(-100, -222);
     drawAttackFx(ctx, def, pose, look, t);
@@ -650,6 +684,50 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
 
   if (o.bog) drawBogWater(ctx, x, y, s, t);
   return { top: y - 240 * s * big, s };
+}
+
+// ------------------------------------------------------------
+//  LÀM MƯỢT (v33): tư thế đuổi theo đích bằng lò xo theo thời gian thực, nên đòn sau
+//  bắt đầu từ chỗ đòn trước đang dừng (không giật), đổi ảnh / đổi tư thế đều liền mạch.
+// ------------------------------------------------------------
+const POSE_KEYS = ['armF', 'armB', 'lunge', 'lift', 'recoil', 'big', 'lean', 'sqx', 'sqy'];
+function smoothVal(h, key, target, t, rate = 22) {
+  const st = h._anim || (h._anim = {});
+  const last = st['t_' + key];
+  st['t_' + key] = t;
+  if (last === undefined || st[key] === undefined || t - last > 0.5 || t < last) return (st[key] = target);
+  const a = 1 - Math.exp(-(t - last) * rate);
+  return (st[key] += (target - st[key]) * a);
+}
+function smoothPose(h, P, t) {
+  const st = h._anim || (h._anim = {});
+  const last = st.tPose;
+  st.tPose = t;
+  if (!st.pose || last === undefined || t - last > 0.5 || t < last) { st.pose = { ...P }; return P; }
+  const dt = t - last;
+  // ra đòn cần nhanh (đuổi gắt), lấy đà / thu về mềm hơn
+  const rate = P.phase === 'strike' ? 45 : P.phase === 'cast' ? 26 : 18;
+  const a = 1 - Math.exp(-dt * rate);
+  const out = { ...P };
+  for (const k of POSE_KEYS) out[k] = st.pose[k] += (P[k] - st.pose[k]) * a;
+  return out;
+}
+// Vẽ ảnh theo lát ngang: chân (đáy ảnh) đứng yên, càng lên cao càng lệch theo `bend`
+// (thân uốn như cây tre), `breath` phồng nhẹ phần ngực / đầu. Mượt hơn xoay cứng cả tấm.
+const BENT_SLICES = 14;
+function drawBent(ctx, img, x, y, w, h, bend, breath) {
+  if (!img) return;
+  const iw = img.naturalWidth, ih = img.naturalHeight;
+  if (Math.abs(bend) < 0.002 && Math.abs(breath) < 0.002) { ctx.drawImage(img, x, y, w, h); return; }
+  const n = BENT_SLICES;
+  for (let i = 0; i < n; i++) {
+    const v0 = i / n, v1 = (i + 1) / n;               // 0 = đỉnh, 1 = chân
+    const up = 1 - (v0 + v1) / 2;                      // độ cao giữa lát (0 ở chân)
+    const dx = bend * h * up * up;                     // cong dần lên trên
+    const sx = 1 + breath * Math.sin(Math.PI * Math.min(1, up * 1.4));
+    const sw = w * sx;
+    ctx.drawImage(img, 0, v0 * ih, iw, (v1 - v0) * ih + 1, x + (w - sw) / 2 + dx, y + v0 * h, sw, (v1 - v0) * h + 1);
+  }
 }
 
 // ------------------------------------------------------------

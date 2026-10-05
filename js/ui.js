@@ -160,7 +160,7 @@ const SAVE_KEY = 'nuicao.v1';
 function loadSave() {
   const def = { stars: LEVELS.map(() => 0), unlocked: 1, last: 0, best: {}, storySeen: false,
     lifeGold: 0, lifeKills: 0, lifeHerbs: 0, collected: [],
-    settings: { dmgText: true, shake: true, skipStory: false } };
+    settings: { dmgText: true, shake: true, skipStory: false, vectorHeroes: false } };
   try {
     const s = JSON.parse(localStorage.getItem(SAVE_KEY) || '{}');
     return { ...def, ...s, settings: { ...def.settings, ...(s.settings || {}) } };
@@ -422,9 +422,10 @@ class UI {
         ${tg('dmgText', 'Hiện số sát thương', 'Số bay lên khi tướng đánh trúng quái')}
         ${tg('shake', 'Rung màn hình', 'Rung khi boss quẫy đuôi và khi tung chiêu tối thượng')}
         ${tg('skipStory', 'Bỏ qua cốt truyện', 'Không hiện màn Vua Hùng kén rể trước trận')}
+        ${tg('vectorHeroes', 'Tướng vẽ nét (thấy từng món đồ)', 'Tắt: dùng ảnh vẽ tay, đồ mặc đổi theo bậc trang phục. Bật: hình vẽ nét, mũ / giáp / vũ khí hiện riêng từng món')}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 14 · Tiến trình lưu trên trình duyệt của bạn</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 33 · Tiến trình lưu trên trình duyệt của bạn</div>
       </div></div>`;
   }
 
