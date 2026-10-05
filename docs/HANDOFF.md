@@ -1,6 +1,13 @@
 # Núi Cao Nước Dâng · Tài liệu bàn giao thiết kế
 
-Dành cho người làm game tiếp theo (lập trình viên, họa sĩ, animator). Đọc kèm **GAMEPLAY.md (phiên bản 15)** — tài liệu luật chơi và số liệu.
+Dành cho người làm game tiếp theo (lập trình viên, họa sĩ, animator). Đọc kèm **GAMEPLAY.md** — tài liệu luật chơi và số liệu.
+
+> **Cập nhật phiên bản 35 (luật chơi đã đổi so với bản thiết kế gốc bên dưới):**
+> - **Triệu hồi ngẫu nhiên:** một nút Triệu hồi giữa thanh dưới, ra 1 trong 6 tướng Thường ★ vào ô trống ngẫu nhiên (60 vàng, +6 mỗi lần). Không còn bảng chọn tướng / chọn ô.
+> - **Ghép sao:** kéo tướng thả lên tướng cùng loại cùng sao → lên sao (★ → ★★ → ★★★); nút ⇄ Ghép tự động. Tướng Thường không mua sao bằng vàng nữa.
+> - **Hợp thể:** 2 tướng ★★★ đúng công thức + kỹ năng tối đa → 8 thần Sử thi; 2 thần tím Thần tinh ★★★ → 6 thần Huyền thoại. 20 tướng tổng cộng (thêm Lạc Hầu, Thần Săn Ba Vì, An Dương Vương, Mẫu Thượng Ngàn). Dải gợi ý hợp thể theo % ở trên cùng màn chơi.
+> - Bản đồ 17 ô. Màn "Tiến hoá" (#12) nay là Ghép sao / Thần tinh + bảng Hợp thể; bảng "Huyền thoại" nay là **Cây hợp thể**.
+> - Hình ảnh: ảnh vẽ tay theo `docs/PROMPT-FOOOCUS.txt`; danh sách ảnh còn thiếu `docs/ANH-CON-THIEU.txt`; xử lý ảnh `tools/xoa-nen.py`, kiểm tra `tools/kiem-tra-anh.py`.
 
 ---
 
@@ -8,11 +15,11 @@ Dành cho người làm game tiếp theo (lập trình viên, họa sĩ, animato
 
 | Đường dẫn | Nội dung |
 |---|---|
-| `GAMEPLAY.md` | Luật chơi v15: tướng, 16 tướng (6 cơ bản + 10 huyền thoại), kỹ năng, tiến hoá, đồ, quái, boss, Núi Tản Viên, Nước Dâng, animation |
+| `GAMEPLAY.md` | Luật chơi (cập nhật v35): 20 tướng (6 Thường + 8 Sử thi + 6 Huyền thoại, có từ ghép / hợp thể), kỹ năng, tiến hoá, đồ, quái, boss, Núi Tản Viên, Nước Dâng, animation |
 | `HANDOFF.md` | Tài liệu này |
 | `giao-dien/NuiCaoNuocDang-giao-dien.html` | Toàn bộ 21 màn hình trong một trang, mở bằng trình duyệt |
 | `giao-dien/png/*.png` | Ảnh chụp từng màn (độ phân giải gấp đôi, 1864×860) |
-| `animation/den-anh-hung.html` | Bản mẫu animation 16 tướng: đứng yên, 4 chiêu, xuất hiện, bị đánh, sa lầy, gục. Cần mạng để tải thư viện GSAP và font |
+| `animation/den-anh-hung.html` | Bản mẫu animation 20 tướng: đứng yên, 4 chiêu, xuất hiện, bị đánh, sa lầy, gục. Cần mạng để tải thư viện GSAP và font |
 | `nguon-thiet-ke/*.dc.html` | File nguồn từng màn (HTML + SVG), lấy được màu, kích thước, hình vẽ vector |
 
 Kích thước thiết kế: **932 × 430 px** (điện thoại cầm ngang). Màn nhắc xoay ngang là 390 × 844.
@@ -26,7 +33,7 @@ Kích thước thiết kế: **932 × 430 px** (điện thoại cầm ngang). M�
 | 1 | Menu chính | `MenuChinh` | Chơi tiếp, Chiến dịch, Đền Anh Hùng, Bách khoa, Cài đặt |
 | 2 | Mở đầu · Vua Hùng kén rể | `MoDau` | 3 khung truyện, Bỏ qua / Vào trận |
 | 3 | Bản đồ chiến dịch | `BanDo` | 8 ải dọc sông Đà (tên ải là đề xuất), điều kiện 1–3 sao |
-| 4 | Màn chơi | `Main` | Bản đồ, thanh trên, bảng triệu hồi (cơ bản + nút Huyền thoại), bảng điều khiển dưới: bản đồ nhỏ, chân dung, thông tin, 6 ô đồ, lưới lệnh 4×3 |
+| 4 | Màn chơi | `Main` | Bản đồ, thanh trên, dải gợi ý hợp thể, nút Triệu hồi ngẫu nhiên + Ghép tự động + Cây hợp thể, bảng điều khiển dưới: bản đồ nhỏ, chân dung, thông tin, 6 ô đồ, lưới lệnh 4×3 |
 | 5 | Chọn sính lễ (hạ boss) | `SinhLe` | Chọn 1 trong 3, cảnh báo nước dâng |
 | 6 | Lò đúc đồng · Công thức | `LoDucDong` | |
 | 7 | Lò đúc đồng · Cửa hàng | `CuaHang` | Giá từng món là đề xuất (100–130) |
@@ -34,7 +41,7 @@ Kích thước thiết kế: **932 × 430 px** (điện thoại cầm ngang). M�
 | 9 | Túi đồ | `TuiDo` | Cường hóa, thăng phẩm khi full +5, khóa, đổi vàng |
 | 10 | Đổi đồ ra vàng | `DoiVang` | Lọc theo chất lượng, xác nhận |
 | 11 | Cây kỹ năng | `CayKyNang` | Mở W/E/R bằng vàng |
-| 12 | Tiến hoá | `TienHoa` | Mua ★ bằng vàng, Bộ Lạc Long |
+| 12 | Tiến hoá | `TienHoa` | Tướng Thường: ghép sao; tướng thần: Thần tinh bằng vàng; bảng Hợp thể (điều kiện ✓/✗) |
 | 13 | Núi Tản Viên | `NuiTanVien` | 5 giai đoạn, Hái Linh Chi, Bồi đất |
 | 14 | Bách khoa · Quái | `BachKhoa` | Lịch 30 đợt |
 | 15 | Bách khoa · Boss | `BachKhoaBoss` | Thuồng Luồng, Hà Bá, Thủy Tinh |
@@ -130,4 +137,4 @@ Phong cách: bảng điều khiển game chiến thuật kiểu Warcraft 3 (khun
 - **Số liệu cần chơi thử để cân bằng:** giá nâng cấp tướng, mở kỹ năng, tiến hoá, cường hóa, thăng phẩm, đổi vàng, triệu hồi tướng huyền thoại (đều ghi "đề xuất" trong GAMEPLAY.md).
 - **Chưa có số liệu:** hiệu ứng của 3 sính lễ (`[hiệu ứng bảo vật]`), chỉ số từng món đồ, phần thưởng thắng trận (`[phần thưởng]`).
 - **Tên 8 ải** dọc sông Đà là đề xuất.
-- **Chưa thiết kế:** màn Cài đặt; tab Huyền thoại mở ra trong bảng triệu hồi (hiện chỉ có nút); thông báo / hướng dẫn chơi lần đầu.
+- **Đã làm trong code:** màn Cài đặt, Cây hợp thể, hướng dẫn chơi lần đầu (gợi ý bấm Triệu hồi, kéo ghép).

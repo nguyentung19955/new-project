@@ -1,8 +1,10 @@
-# Núi Cao Nước Dâng · Tóm tắt gameplay (phiên bản 15 · chủ đề Sơn Tinh Thủy Tinh)
+# Núi Cao Nước Dâng · Tóm tắt gameplay (cập nhật phiên bản 35 · chủ đề Sơn Tinh Thủy Tinh)
 
-> Tài liệu bàn giao thiết kế đầy đủ: `docs/HANDOFF.md`. Ghi chú những gì đã làm trong code: mục 15 ở cuối.
+> Tài liệu bàn giao thiết kế đầy đủ: `docs/HANDOFF.md`. Ghi chú từng phiên bản trong code: mục 15 ở cuối.
 
-Game thủ thành trên điện thoại, chơi **màn hình ngang**, lấy cảm hứng từ Dota 1 và truyền thuyết **Sơn Tinh Thủy Tinh**. Người chơi vào vai Sơn Tinh, triệu hồi các tướng Văn Lang đứng dọc đường đi để chặn đạo quân thủy quái của Thủy Tinh tràn vào **thành Phong Châu**. Người chơi dùng vàng để nâng cấp tướng, mở kỹ năng và tiến hoá, và mặc đồ sẽ làm thay đổi hình dạng tướng.
+Game thủ thành trên điện thoại, chơi **màn hình ngang**, lấy cảm hứng từ Dota 1, các game "triệu hồi ngẫu nhiên rồi ghép" và truyền thuyết **Sơn Tinh Thủy Tinh**. Người chơi vào vai Sơn Tinh, **triệu hồi ngẫu nhiên** các tướng Văn Lang dọc dòng sông, **ghép 2 tướng giống nhau** để lên sao và **hợp thể** 2 tướng đúng cặp thành thần Sử thi rồi Huyền thoại, chặn đạo quân thủy quái của Thủy Tinh tràn vào **thành Phong Châu**. Vàng dùng để triệu hồi, nâng cấp tướng, mở kỹ năng, hợp thể, Thần tinh và mua đồ.
+
+> **Thay đổi lớn ở phiên bản 34–35:** bỏ chọn tướng / chọn ô và tiến hoá bằng vàng của tướng Thường. Thay bằng **Triệu hồi ngẫu nhiên → Ghép sao → Hợp thể** (mục 1, 2, 4). Bản đồ còn 17 ô. Lịch sử thay đổi cũ giữ dưới đây để tham khảo.
 
 > **Thay đổi so với phiên bản 12:** giữ nguyên toàn bộ cơ chế và số liệu, đổi tên tướng / quái / boss / vật phẩm theo chủ đề, Cây Sự Sống thành **Núi Tản Viên**, thêm cơ chế mới **Nước Dâng** (mục 9).
 >
@@ -14,26 +16,28 @@ Game thủ thành trên điện thoại, chơi **màn hình ngang**, lấy cảm
 
 ## 1. Vòng chơi chính
 
-1. **Triệu hồi tướng:** chạm vào bãi cỏ sát đường rồi chọn tướng ở bảng **Triệu hồi** góc dưới phải. Cũng có thể chọn tướng trước rồi chạm vào ô trống.
-   - Bản đồ có khoảng **43 ô đặt tướng** xếp dày nhiều hàng, chia theo **3 bậc độ cao** (xem mục 9).
-   - Giữ và kéo một tướng để đổi chỗ.
-2. **Chạy / Dừng:** dùng một nút ▶ / ■ trên cùng bên phải.
+1. **Triệu hồi:** bấm nút lớn **Triệu hồi** giữa thanh dưới. Mỗi lần gọi ra **1 trong 6 tướng Thường ngẫu nhiên (★)** vào **1 ô trống ngẫu nhiên**.
+   - Giá **60 vàng**, mỗi lần sau **+6** (tối đa 220), tính lại từ đầu mỗi ải.
+   - Bản đồ có **17 ô** dọc hai bờ sông, chia **3 bậc độ cao** (6 Thấp, 6 Giữa, 5 Cao, xem mục 9). Hết ô trống thì phải ghép hoặc bán bớt.
+   - Giữ và kéo tướng để đổi chỗ.
+2. **Ghép sao:** kéo 1 tướng thả lên tướng **cùng loại, cùng sao** → lên 1 sao (★ + ★ → ★★, ★★ + ★★ → ★★★). Nút **⇄ Ghép tự động** gộp mọi cặp một lần. Xem mục 4.
+3. **Hợp thể:** 2 tướng ★★★ **đúng công thức**, đã nâng tối đa kỹ năng, kéo vào nhau → **thần Sử thi** (300 vàng). 2 thần Sử thi **Thần tinh ★★★**, kỹ năng tối đa → **thần Huyền thoại** (1200 vàng). Dải gợi ý trên cùng hiện % tiến độ các công thức, đủ 100% thì bấm để hợp thể. Xem mục 2.
+4. **Chạy / Dừng:** nút ▶ / ■ trên cùng bên phải.
    - Các đợt quái tự nối tiếp nhau, giữa hai đợt nghỉ 10 giây.
-   - **Gọi sớm** dùng được bất cứ lúc nào, kể cả giữa đợt, và cho thêm vàng.
-   - Nút **x1 / x2** đổi tốc độ game.
-3. **Quái** theo dòng sông đi vào thành. Mỗi con lọt vào thành Phong Châu làm mất mạng (khởi đầu 20 mạng, boss lấy 5 mạng). Hết mạng là thua: nước nhấn chìm Phong Châu.
-4. **Thắng:** trụ qua đủ **30 đợt** và đánh bại Thủy Tinh. Sau đó có thể chơi tiếp chế độ **vô tận** ("Năm nào cũng dâng nước"), cứ 10 đợt lại có boss.
-5. **Mở bảng không dừng game:** khi mở các màn hình (Cây kỹ năng, Lò đúc đồng, …), quái vẫn tiếp tục chạy.
+   - **Gọi sớm** dùng được bất cứ lúc nào và cho thêm vàng. Nút **x1 / x2 / x3** đổi tốc độ.
+5. **Quái** theo dòng sông đi vào thành. Mỗi con lọt vào làm mất mạng (khởi đầu 20, boss lấy 5). Hết mạng là thua.
+6. **Thắng:** trụ qua đủ số đợt của ải và đánh bại boss cuối. Có chế độ **vô tận**, cứ 10 đợt lại có boss.
+7. **Mở bảng không dừng game:** quái vẫn chạy khi mở Cây kỹ năng, Lò đúc đồng, Túi đồ…
 
-Vàng khởi đầu là 220. Vàng kiếm được từ hạ quái, gọi sớm, Núi Tản Viên và bán tướng (hoàn lại 60%). Vàng dùng để triệu hồi tướng, **nâng cấp tướng**, mua và ghép đồ.
+Vàng khởi đầu 220. Vàng kiếm từ hạ quái, gọi sớm, Núi Tản Viên, phần thưởng boss và bán tướng.
 
 ---
 
 ## 2. Tướng Văn Lang
 
-Có 6 tướng chia theo 3 thuộc tính, mỗi thuộc tính 2 tướng. Sát thương **vật lý** bị giáp giảm; sát thương **phép** bị kháng phép giảm.
+Có **6 tướng Thường** (chỉ có từ Triệu hồi), chia theo 3 thuộc tính, mỗi thuộc tính 2 tướng; cùng **8 thần Sử thi** và **6 thần Huyền thoại** chỉ có từ Hợp thể. Sát thương **vật lý** bị giáp giảm; sát thương **phép** bị kháng phép giảm.
 
-| Tướng | Thay cho | Hệ | Giá | Kiểu đánh | Sát thương |
+| Tướng | Thay cho | Hệ | Giá cũ (không dùng) | Kiểu đánh | Sát thương |
 |---|---|---|---|---|---|
 | Lạc Tướng | Hiệp Sĩ | Sức mạnh | 70 | Cận chiến, rìu đồng chém lan | Vật lý |
 | Lực Sĩ Núi | Đồ Tể | Sức mạnh | 80 | Cận chiến, trâu bò | Vật lý |
@@ -51,7 +55,8 @@ Có 6 tướng chia theo 3 thuộc tính, mỗi thuộc tính 2 tướng. Sát t
 - **Tướng cận chiến không đánh được quái bay.**
 - **Nâng cấp bằng vàng:** chọn tướng rồi bấm **Nâng cấp** để trả vàng lên 1 cấp, tối đa cấp 25. Mỗi cấp cho **1 điểm kỹ năng**. Tướng **không** nhận kinh nghiệm từ quái nữa.
   - Giá đề xuất: **20 + 10 × cấp hiện tại** (cấp 1→2: 30 vàng, cấp 9→10: 110 vàng, cấp 24→25: 260 vàng). *Cần chơi thử để cân bằng với thu nhập vàng.*
-  - Bán tướng hoàn 60% giá triệu hồi **cộng 60% số vàng đã nâng cấp** (đề xuất, để người chơi không sợ nâng cấp).
+  - Bán tướng hoàn 60% số vàng đã chi cho tướng đó (triệu hồi, nâng cấp, hợp thể…).
+  - Ghép / hợp thể: tướng còn lại giữ **cấp cao hơn** và điểm kỹ năng của bên đó.
   - Phần thưởng boss "Hội làng mừng thắng" (+2 cấp toàn quân) giữ nguyên.
 - **Luyện thể (khi tướng đã cấp 25)** *(mới · đề xuất)*: nút Nâng cấp đổi thành **Luyện thể**. Mỗi lần trả vàng được **+3 thuộc tính chính và +1 mỗi thuộc tính phụ**, không giới hạn số lần, để vàng cuối trận và chế độ vô tận vẫn có chỗ tiêu.
   - Giá: **200 + 50 × số lần đã luyện** (lần 1: 200, lần 10: 650).
@@ -61,24 +66,34 @@ Có 6 tướng chia theo 3 thuộc tính, mỗi thuộc tính 2 tướng. Sát t
 - **Hiệu ứng lên cấp** *(mới · đề xuất)*: lên cấp **không đổi ngoại hình** tướng. Ngoại hình chỉ đổi theo **đồ** (mục 5) và **tiến hoá** (mục 4), để người chơi nhìn là biết tướng mặc gì, tiến hoá mấy sao.
   - Khi bấm Nâng cấp: vòng hoa văn trống đồng màu vàng lóe dưới chân, tướng nảy lên 4px, chữ **"Cấp N"** vàng bay lên rồi mờ dần (0,6 giây). Không dừng đòn đánh.
   - Lên nhiều cấp liền (bấm nhanh, hoặc "Hội làng mừng thắng" +2 cấp): gộp thành một hiệu ứng, chữ hiện **"+2 cấp"**.
-  - Khi đạt cấp đủ điều kiện mới (cấp 3/6 mở E/R, cấp 5/10/15 tiến hoá): biểu tượng tương ứng trên nút Cây kỹ năng / Tiến hoá nhấp nháy để nhắc.
+  - Khi đạt cấp đủ điều kiện mới (cấp 3/6 mở E/R): nút Cây kỹ năng nhấp nháy để nhắc.
 
-### Tướng huyền thoại *(mới · đề xuất, số liệu cần cân bằng)*
+### Tướng thần · Hợp thể
 
-Ngoài 6 tướng cơ bản, có thêm 10 tướng lấy từ truyền thuyết Việt. Mỗi tướng có một **đặc trưng** riêng mà không tướng nào khác có. Triệu hồi trong trận bằng vàng: **Sử thi 180 vàng, Huyền thoại 260 vàng**; trên sân tối đa **2 tướng Huyền thoại** cùng lúc. Nâng cấp, mở kỹ năng, tiến hoá vẫn mua bằng vàng như tướng thường.
+Tướng thần **không triệu hồi được**, chỉ có bằng **Hợp thể** hai tướng đúng công thức (kéo 1 con thả lên con kia, chạm tướng → Hợp thể, hoặc bấm ảnh "HỢP!" trên dải gợi ý).
 
-| Tướng | Hệ | Bậc | Đặc trưng | Q | W | E | R |
-|---|---|---|---|---|---|---|---|
-| **Thánh Gióng** | Sức mạnh | Huyền thoại | **Vươn Vai:** mỗi đợt trên sân to thêm, +5% máu và sát thương (tối đa 10 lần) | Gậy Tre Ngà: quật lan, choáng ngắn | Giáp Sắt: giảm sát thương nhận vào | Ngựa Sắt Phun Lửa: vệt lửa dọc đường | Bay Về Trời: lướt dọc sông, đánh mọi quái trên đường |
-| **Lạc Long Quân** | Sức mạnh | Huyền thoại | **Con Rồng:** không bị sa lầy; đứng ô ngập +30% sát thương | Vuốt Rồng | Vảy Rồng: +giáp, +kháng phép | Gầm Biển: sóng đẩy lùi quái | Hóa Rồng: phun nước kèm sét theo đường thẳng |
-| **Thần Kim Quy** | Sức mạnh | Huyền thoại | **Mai Thần:** tướng đứng kề nhận ít hơn 30% sát thương | Mai Vàng: khiên cho tướng gần | Móng Thần: tướng gần xuyên 20% giáp | Địa Chấn: choáng vùng | Kim Quy Hộ Thành: 5 giây quái lọt vào thành không trừ mạng |
-| **Thạch Sanh** | Nhanh nhẹn | Huyền thoại | **Niêu Cơm Thần:** tướng đứng gần hồi năng lượng nhanh hơn | Rìu Đốn Củi | Cung Tên Vàng: x2 sát thương lên quái bay | Đàn Thần: quái đứng nghe nhạc, choáng 1,5 giây | Diệt Chằn Tinh: đòn cực mạnh, x3 lên boss |
-| **Cao Lỗ** | Nhanh nhẹn | Sử thi | **Xuyên Giáp:** đòn đánh bỏ qua 50% giáp | Nỏ Liên Châu: 3 mũi cùng lúc | Lẫy Thần: +tốc bắn | Tên Móng Rùa: xuyên giáp toàn phần | Nỏ Thần: một phát xuyên cả hàng quái |
-| **Mai An Tiêm** | Nhanh nhẹn | Sử thi | **Đảo Trù Phú:** +20 vàng mỗi đợt | Ném Dưa Hấu: làm chậm | Hạt Giống Vàng: thêm vàng khi hạ quái | Chim Thần: đàn chim mổ quái | Mưa Dưa: dưa rơi khắp bản đồ |
-| **Âu Cơ** | Trí tuệ | Huyền thoại | **Mẹ Tiên:** hồi máu từ từ cho tướng xung quanh | Hoa Tiên: hồi máu | Lông Vũ Tiên: bắn lông vũ | Núi Mẹ: đá trồi lên làm chậm | Bọc Trăm Trứng: nở đàn Lạc Tử chặn đường |
-| **Chử Đồng Tử** | Trí tuệ | Sử thi | **Gậy Thần:** hồi sinh ngay 1 tướng gục gần nhất (hồi chiêu dài) | Gậy Thần: hồi máu | Nón Thần: chặn đòn bắn từ xa | Sóng Sông Hồng: làm chậm | Thành Một Đêm: dựng thành chặn đường 6 giây |
-| **Tiên Dung** | Trí tuệ | Sử thi | **Đôi Uyên Ương:** đứng cạnh Chử Đồng Tử thì cả hai +20% sát thương phép | Quạt Tiên: gió đẩy lùi | Ánh Ngọc: +sát thương phép cho tướng gần | Sen Hồng: hồi máu | Mưa Hoa Tiên: hoa rơi vừa gây sát thương vừa hồi máu |
-| **Lang Liêu** | Trí tuệ | Sử thi | **Lễ Vật Đất Trời:** tướng gần +10% máu tối đa | Bánh Chưng: khiên cho tướng gần | Bánh Giầy: hồi máu | Ruộng Lúa: lúa mọc làm chậm | Lễ Tổ Tiên: toàn quân hồi đầy máu, bất tử 2 giây |
+- **Sử thi (tím):** 2 tướng Thường **★★★**, cả hai đã nâng **tối đa kỹ năng** (Q W E 4/4, R 3/3), **300 vàng**.
+- **Huyền thoại (vàng):** 2 thần Sử thi **Thần tinh ★★★**, kỹ năng tối đa, **1200 vàng**. Trên sân tối đa **2 Huyền thoại**.
+- Thần mới giữ **cấp, đồ, thuộc tính / tầm / sát thương gốc cao nhất và nội tại của cả hai** tướng đã ghép. Bộ kỹ năng mới học lại: Q cấp 1, mở W/E/R và nâng cấp **bằng vàng** (W 150 · E 300 · R 500; nâng Q/W/E 120 × cấp, R 300 × cấp).
+- Sức mạnh: tím mới hợp thể ≈ **×2,8** tổng 2 tướng ★★★ đã ghép; vàng mới hợp thể ≈ **×2,2** tổng 2 thần tím ★★★ (hệ số riêng từng thần `FUSE_ADJ`, đo bằng `sim/cmp4.js`).
+- **Thần tinh** (lên sao tướng thần, mua bằng vàng): tím cấp 16 / 18 / 20, 300 / 600 / 1000 vàng; vàng cấp 21 / 23 / 25, 1500 / 2200 / 3200 vàng, mỗi sao vàng mạnh gấp 1,5 lần sao tím.
+
+| Thần | Bậc | Hợp thể từ | Hệ · Hành | Đặc trưng | Q · W · E · R |
+|---|---|---|---|---|---|
+| **Chử Đồng Tử** | Sử thi | Thầy Mo Lửa + Thần Sương Núi | Trí tuệ · Thủy | **Gậy Thần:** Hồi sinh ngay 1 tướng gục gần nhất (hồi chiêu 40 giây) | Gậy Thần · Nón Thần · Sóng Sông Hồng · Thành Một Đêm |
+| **Lạc Hầu** | Sử thi | Lạc Tướng + Lực Sĩ Núi | Sức mạnh · Thổ | **Lệnh Lạc Hầu:** Tướng đứng kề nhận ít hơn 15% sát thương | Trống Hiệu Triệu · Giáp Da Tê Gai · Đá Lăn Phong Châu · Lời Thề Bộ Lạc |
+| **Thạch Sanh** | Sử thi | Lạc Tướng + Thợ Săn Rừng | Nhanh nhẹn · Mộc | **Niêu Cơm Thần:** Tướng đứng gần hồi năng lượng nhanh hơn 50% | Rìu Đốn Củi · Cung Tên Vàng · Đàn Thần · Diệt Chằn Tinh |
+| **Thần Săn Ba Vì** | Sử thi | Thợ Săn Rừng + Xạ Thủ Văn Lang | Nhanh nhẹn · Mộc | **Mắt Rừng:** Đánh quái đang bị làm chậm hoặc choáng: +25% sát thương | Lao Tẩm Độc · Nanh Hổ · Gọi Hổ Ba Vì · Cuộc Săn Lớn |
+| **Cao Lỗ** | Sử thi | Xạ Thủ Văn Lang + Lực Sĩ Núi | Nhanh nhẹn · Kim | **Xuyên Giáp:** Đòn đánh bỏ qua 50% giáp | Nỏ Liên Châu · Lẫy Thần · Tên Móng Rùa · Nỏ Thần |
+| **Mai An Tiêm** | Sử thi | Thợ Săn Rừng + Thầy Mo Lửa | Nhanh nhẹn · Mộc | **Đảo Trù Phú:** +20 vàng mỗi đợt | Ném Dưa Hấu · Hạt Giống Vàng · Chim Thần · Mưa Dưa |
+| **Tiên Dung** | Sử thi | Thần Sương Núi + Xạ Thủ Văn Lang | Trí tuệ · Hỏa | **Đôi Uyên Ương:** Đứng cạnh Chử Đồng Tử thì cả hai +20% sát thương phép | Quạt Tiên · Ánh Ngọc · Sen Hồng · Mưa Hoa Tiên |
+| **Lang Liêu** | Sử thi | Lực Sĩ Núi + Thầy Mo Lửa | Trí tuệ · Thổ | **Lễ Vật Đất Trời:** Tướng đứng gần +10% máu tối đa | Bánh Chưng · Bánh Giầy · Ruộng Lúa · Lễ Tổ Tiên |
+| **Thánh Gióng** | Huyền thoại | Thạch Sanh + Lạc Hầu | Sức mạnh · Hỏa | **Vươn Vai:** Mỗi đợt đứng trên sân, Gióng to thêm: +5% máu và sát thương (tối đa 10 lần) | Gậy Tre Ngà · Giáp Sắt · Ngựa Sắt Phun Lửa · Bay Về Trời |
+| **Lạc Long Quân** | Huyền thoại | Thần Săn Ba Vì + Chử Đồng Tử | Sức mạnh · Thủy | **Con Rồng:** Không bị sa lầy khi ô ngập nước; đứng trên ô ngập còn được +30% sát thương | Vuốt Rồng · Vảy Rồng · Gầm Biển · Hóa Rồng |
+| **Thần Kim Quy** | Huyền thoại | Lạc Hầu + Cao Lỗ | Sức mạnh · Kim | **Mai Thần:** Tướng đứng kề nhận ít hơn 30% sát thương | Mai Vàng · Móng Thần · Địa Chấn · Kim Quy Hộ Thành |
+| **An Dương Vương** | Huyền thoại | Cao Lỗ + Mai An Tiêm | Nhanh nhẹn · Kim | **Nỏ Linh Quang:** Mỗi phát bắn thứ 4 xuyên cả hàng quái, x2 sát thương | Tên Đồng Nảy · Thành Ốc Cổ Loa · Lũy Nỏ Cổ Loa · Linh Quang Thần Nỏ |
+| **Âu Cơ** | Huyền thoại | Tiên Dung + Lang Liêu | Trí tuệ · Thổ | **Mẹ Tiên:** Hồi máu từ từ cho tướng xung quanh (2% máu/giây) | Hoa Tiên · Lông Vũ Tiên · Núi Mẹ · Bọc Trăm Trứng |
+| **Mẫu Thượng Ngàn** | Huyền thoại | Thần Săn Ba Vì + Lang Liêu | Trí tuệ · Mộc | **Mẹ Rừng:** Tướng đứng gần +10% sát thương và +2 hồi máu/giây | Dây Rừng Trói · Rễ Ngàn Năm · Cây Đa Thần · Rừng Thiêng Nổi Giận |
 
 ---
 
@@ -115,15 +130,19 @@ Số quái đã hạ không còn ảnh hưởng tới kỹ năng.
 
 ---
 
-## 4. Tiến hoá
+## 4. Ghép sao (tướng Thường) và Thần tinh (tướng thần)
 
-Tiến hoá mua bằng vàng, lần lượt từng bậc (giá đề xuất, cần cân bằng):
+Tướng Thường **không mua sao bằng vàng** nữa. Kéo 1 tướng thả lên tướng **cùng loại, cùng sao** (hoặc chạm tướng → **Ghép sao**, hoặc nút **⇄ Ghép tự động**):
 
-| Bậc | Giá | Điều kiện | Thay đổi |
-|---|---|---|---|
-| ★ | 100 vàng | tướng cấp 5 | Tướng to hơn, có hào quang hoa văn trống đồng, +10% sát thương |
-| ★★ | 250 vàng | tướng cấp 10 | +20% sát thương |
-| ★★★ | 500 vàng | tướng cấp 15 | +30% sát thương |
+| Sao | Cách có | Sức mạnh (so với ★) |
+|---|---|---|
+| ★ | Triệu hồi ra | ×1 |
+| ★★ | ★ + ★ | sát thương ×1,8 · máu ×1,5 |
+| ★★★ | ★★ + ★★ (= 4 con ★) | sát thương ×3,2 · máu ×2,3 |
+
+- Tướng sau khi ghép giữ cấp cao hơn, kỹ năng cao hơn của hai bên, đồ của cả hai (thừa thì vào túi).
+- **Ảnh trên bản đồ theo sao**: ★ ảnh Thường, ★★ ảnh Hiếm, ★★★ ảnh Sử thi, để nhìn là biết 2 con nào ghép được. Đồ mặc hiện bằng viền sáng màu độ hiếm.
+- Tướng thần lên sao bằng **Thần tinh** mua bằng vàng (mục 2).
 
 **Ngoại hình theo bậc** *(mới · đề xuất)*. Mỗi bậc giữ nguyên hiệu ứng của bậc trước rồi thêm vào:
 
@@ -359,7 +378,7 @@ Núi cao thêm 1 bước sau mỗi đợt quái, có 5 giai đoạn: **Gò Đấ
 
 Đây là điểm làm game khác các game thủ thành khác, lấy thẳng từ truyền thuyết.
 
-- **Độ cao ô đặt tướng:** 43 ô chia 3 bậc: **Thấp** (sát sông, ~15 ô), **Giữa** (~16 ô), **Cao** (sườn núi, ~12 ô). Ô thấp gần đường nên đánh được nhiều quái hơn.
+- **Độ cao ô đặt tướng:** 17 ô chia 3 bậc: **Thấp** (sát sông, 6 ô), **Giữa** (6 ô), **Cao** (sườn núi, 5 ô). Ô thấp gần đường nên đánh được nhiều quái hơn.
 - **Nước dâng:** sau đợt boss 10 và 20 (vô tận: sau mỗi boss), mực nước lên 1 bậc.
   - Sau đợt 10: ngập bậc Thấp. Sau đợt 20: ngập thêm bậc Giữa.
   - Tướng đứng ô ngập bị **sa lầy**: −50% tốc đánh, không hồi năng lượng. Không triệu hồi tướng mới vào ô ngập.

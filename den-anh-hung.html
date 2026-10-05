@@ -92,7 +92,7 @@ button:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
     </svg>
     <div>
       <h1>Đền Anh Hùng</h1>
-      <p>16 tướng của Núi Cao Nước Dâng: 10 huyền thoại, 6 cơ bản · bấm Q W E R để xem tướng ra chiêu</p>
+      <p>20 tướng của Núi Cao Nước Dâng: 6 Thường (triệu hồi) · 8 Sử thi · 6 Huyền thoại (hợp thể) · bấm Q W E R để xem tướng ra chiêu</p>
     </div>
     <div class="grow"></div>
     <label class="auto metal" for="autoplay"><input type="checkbox" id="autoplay" checked> Tự ra chiêu</label>
@@ -159,9 +159,9 @@ button:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
       <div class="states"><span class="lbl">Trạng thái</span><div class="stbtns" id="states"></div></div>
     </section>
     <section class="card metal" aria-label="Danh sách tướng">
-      <h3 class="rh">Tướng huyền thoại</h3>
+      <h3 class="rh">Tướng thần (hợp thể)</h3>
       <div class="roster" id="roster"></div>
-      <h3 class="rh">Tướng cơ bản</h3>
+      <h3 class="rh">Tướng Thường (triệu hồi)</h3>
       <div class="roster base" id="rosterBase"></div>
       <p class="note">Bản mẫu animation dựng bằng SVG, GSAP và canvas hạt. Trong game thật, tướng sẽ làm bằng Spine hoặc sprite sheet trên Phaser với cùng nhịp chuyển động này.</p>
     </section>
@@ -399,6 +399,51 @@ const HEROES=[
   {k:'R',n:'Mù Sương Tản Viên',t:'Tối thượng',d:'Sương mù phủ kín, đóng băng mọi quái 2 giây.',a:'ult',c:'#DDF4FB',fx:'tsR'}]}
 ];
 const ATTR_C={'Sức mạnh':'var(--a-str)','Nhanh nhẹn':'var(--a-agi)','Trí tuệ':'var(--a-int)'};
+/* ---------- v35: cập nhật theo luật hợp thể + 4 tướng thần mới ---------- */
+(function(){
+  const by=(id)=>HEROES.find(h=>h.id===id);
+  const RECIPE={cdt:'Thầy Mo Lửa + Thần Sương Núi',lachau:'Lạc Tướng + Lực Sĩ Núi',thachsanh:'Lạc Tướng + Thợ Săn Rừng',thansan:'Thợ Săn Rừng + Xạ Thủ Văn Lang',
+    caolo:'Xạ Thủ Văn Lang + Lực Sĩ Núi',antiem:'Thợ Săn Rừng + Thầy Mo Lửa',tiendung:'Thần Sương Núi + Xạ Thủ Văn Lang',langlieu:'Lực Sĩ Núi + Thầy Mo Lửa',
+    giong:'Thạch Sanh + Lạc Hầu',llq:'Thần Săn Ba Vì + Chử Đồng Tử',kimquy:'Lạc Hầu + Cao Lỗ',adv:'Cao Lỗ + Mai An Tiêm',auco:'Tiên Dung + Lang Liêu',mau:'Thần Săn Ba Vì + Lang Liêu'};
+  by('thachsanh').rar='Sử thi';
+  const sk=(id,k)=>by(id).skills.find(x=>x.k===k);
+  Object.assign(sk('langlieu','Q'),{d:'Chia bánh cho tướng quanh mình: hồi máu và tăng 20% sát thương 6 giây.'});
+  Object.assign(sk('tiendung','E'),{d:'Sen nở trên tướng yếu nhất: hồi máu dần trong 5 giây.'});
+  Object.assign(sk('auco','E'),{d:'Đá núi trồi lên hất tung quái (choáng), để lại bãi đá làm chậm.'});
+  const recol=(str,map)=>Object.entries(map).reduce((a,[f,t])=>a.split(f).join(t),str||'');
+  const derive=(src,o,map,addHead='')=>{const b=by(src);const n={...b,...o};
+    for(const k of ['back','legs','armB','body','head','armF'])n[k]=recol(b[k],map);n.head+=addHead;return n;};
+  const feather=(x,r)=>`<path transform="rotate(${r} ${x} 60)" d="M${x-4} 62 Q${x-8} 30 ${x} 14 Q${x+8} 30 ${x+4} 62 Z" fill="#F2EEE0" stroke="${OL}" stroke-width="1.8"/>`;
+  const antler=(sx)=>`<path d="M${100+sx*16} 58 Q${100+sx*24} 34 ${100+sx*20} 14 M${100+sx*22} 38 Q${100+sx*34} 32 ${100+sx*38} 20" stroke="#C8A070" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+  HEROES.push(
+    derive('lucsi',{id:'lachau',name:'Lạc Hầu',attr:'Sức mạnh',rar:'Sử thi',sig:['Lệnh Lạc Hầu','Tướng đứng kề nhận ít hơn 15% sát thương.'],skills:[
+      {k:'Q',n:'Trống Hiệu Triệu',t:'Chủ động',d:'Gõ trống trận: tướng quanh mình tăng tốc đánh 5 giây.',a:'cast',c:'#FF7A3A',fx:'lgE'},
+      {k:'W',n:'Giáp Da Tê Gai',t:'Nội tại',d:'Bị đánh thì phản sát thương lại quái gần nhất.',a:'cast',c:'#C8A070',fx:'gW'},
+      {k:'E',n:'Đá Lăn Phong Châu',t:'Chủ động',d:'Lăn tảng đá ngược dòng, đè và đẩy lùi cả hàng quái.',a:'heave',c:'#B9A274',fx:'kE'},
+      {k:'R',n:'Lời Thề Bộ Lạc',t:'Tối thượng',d:'Toàn quân giảm 30% sát thương nhận và hồi máu 6 giây.',a:'ult',c:'#D9A84E',fx:'kQ'}]},
+      {'#5E9A3A':'#D9A84E','#6A4A2A':'#8A3A22','#6A5032':'#7A4A22'},feather(74,-38)+feather(126,38)),
+    derive('thosan',{id:'thansan',name:'Thần Săn Ba Vì',attr:'Nhanh nhẹn',rar:'Sử thi',sig:['Mắt Rừng','Đánh quái đang bị làm chậm hoặc choáng: +25% sát thương.'],skills:[
+      {k:'Q',n:'Lao Tẩm Độc',t:'Chủ động',d:'Phóng lao vào quái xa nhất: độc 6 giây, làm chậm.',a:'shoot',c:'#8BD44A',fx:'xE'},
+      {k:'W',n:'Nanh Hổ',t:'Nội tại',d:'Tăng chí mạng và tốc đánh.',a:'swing',c:'#FF5A3A',fx:'hE'},
+      {k:'E',n:'Gọi Hổ Ba Vì',t:'Chủ động',d:'Hổ thần vồ 3 quái yếu máu nhất; quái yếu chết ngay.',a:'swing',c:'#F2A23A',fx:'lQ'},
+      {k:'R',n:'Cuộc Săn Lớn',t:'Tối thượng',d:'Đánh dấu mọi quái: nhận thêm 25% sát thương, hạ được thêm vàng.',a:'ult',c:'#E25A3A',fx:'hR'}]},
+      {'#1E3A22':'#5A3A14','#2E4A2A':'#3E6A22'},antler(-1)+antler(1)),
+    derive('caolo',{id:'adv',name:'An Dương Vương',attr:'Nhanh nhẹn',rar:'Huyền thoại',sig:['Nỏ Linh Quang','Mỗi phát thứ 4 xuyên cả hàng quái, x2 sát thương.'],skills:[
+      {k:'Q',n:'Tên Đồng Nảy',t:'Chủ động',d:'Mũi tên nảy qua 5 quái liên tiếp.',a:'shoot',c:'#FFE08A',fx:'cQ'},
+      {k:'W',n:'Thành Ốc Cổ Loa',t:'Nội tại',d:'Bắn nhiều mũi, xuyên giáp, mạnh hơn với quái bay.',a:'shoot',c:'#F2D27A',fx:'cW'},
+      {k:'E',n:'Lũy Nỏ Cổ Loa',t:'Chủ động',d:'Tướng đánh xa quanh mình bắn thêm 1 mũi 6 giây.',a:'shoot',c:'#E8DDBF',fx:'xR'},
+      {k:'R',n:'Linh Quang Thần Nỏ',t:'Tối thượng',d:'Ba phát xuyên hàng xoè hình quạt.',a:'ult',c:'#FFF1C4',fx:'cR'}]},
+      {'#7A5230':'#A8281E','#5A3A1A':'#7A1410'},`<path d="M70 62 L74 34 L86 50 L100 26 L114 50 L126 34 L130 62 Q100 54 70 62 Z" fill="#F2C840" stroke="${OL}" stroke-width="2.2"/><circle cx="100" cy="46" r="4.5" fill="#E2483A" stroke="${OL}" stroke-width="1.4"/>`),
+    derive('auco',{id:'mau',name:'Mẫu Thượng Ngàn',attr:'Trí tuệ',rar:'Huyền thoại',sig:['Mẹ Rừng','Tướng đứng gần +10% sát thương và hồi máu.'],skills:[
+      {k:'Q',n:'Dây Rừng Trói',t:'Chủ động',d:'Dây leo trói 4 quái đi đầu.',a:'cast',c:'#5FD06A',fx:'nE'},
+      {k:'W',n:'Rễ Ngàn Năm',t:'Nội tại',d:'Làm chậm quái, tăng sát thương phép.',a:'cast',c:'#3E9A4A',fx:'tsE'},
+      {k:'E',n:'Cây Đa Thần',t:'Chủ động',d:'Trồng cây đa: quái quanh cây chậm, tướng gần hồi máu.',a:'cast',c:'#7FE07A',fx:'nW'},
+      {k:'R',n:'Rừng Thiêng Nổi Giận',t:'Tối thượng',d:'Rễ cây trói mọi quái dưới đất, toàn quân hồi máu.',a:'ult',c:'#5FD06A',fx:'aE'}]},
+      {'#E87AA0':'#3E8A3A','#D8A0C0':'#7FC24A','#F7EEF2':'#E2F2D0','#C8B8E0':'#8ACB6A','#F08AB0':'#FFC44A'},
+      `<path d="M88 50 Q86 36 100 30 Q114 36 112 50 Q100 44 88 50 Z" fill="#5FB84A" stroke="${OL}" stroke-width="1.6"/>`));
+  HEROES.forEach(h=>{h.recipe=RECIPE[h.id]||'';});
+  const ord={'Huyền thoại':0,'Sử thi':1,'Thường':2};HEROES.sort((a,b)=>ord[a.rar]-ord[b.rar]);
+})();
 const RAR_C={'Thường':'var(--r-com)','Sử thi':'var(--r-epic)','Huyền thoại':'var(--r-leg)'};
 
 /* ---------- scene refs ---------- */
@@ -667,7 +712,7 @@ HEROES.forEach((h,i)=>{
 });
 function renderSheet(){
   document.getElementById('hName').textContent=H.name;
-  document.getElementById('hChips').innerHTML=`<span class="chip" style="color:${RAR_C[H.rar]}">${H.rar}</span><span class="chip" style="color:${ATTR_C[H.attr]}">${H.attr}</span><span class="chip" style="color:var(--gold2)">Triệu hồi ${H.price} vàng</span>`;
+  document.getElementById('hChips').innerHTML=`<span class="chip" style="color:${RAR_C[H.rar]}">${H.rar}</span><span class="chip" style="color:${ATTR_C[H.attr]}">${H.attr}</span><span class="chip" style="color:var(--gold2)">${H.recipe?'Hợp thể: '+H.recipe:'Triệu hồi ngẫu nhiên'}</span>`;
   document.getElementById('sigName').textContent=H.sig[0];document.getElementById('sigDesc').textContent=H.sig[1];
   skillsEl.innerHTML='';
   H.skills.forEach((s,i)=>{const b=document.createElement('button');b.type='button';b.className='sk metal'+(s.k==='R'?' ult':'');b.style.setProperty('--c',s.c);
