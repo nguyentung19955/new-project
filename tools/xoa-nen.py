@@ -3,7 +3,8 @@
 Cách chạy:  python3 tools/xoa-nen.py <thư mục ảnh Fooocus> assets
 Cần: pip install pillow numpy scipy
 - Ảnh phải đặt đúng tên như dòng "File:" trong prompt (ví dụ lac-tuong_thuong.png).
-- Nhân vật, quái, đồ, icon: xoá nền xám (vùng xám nối với mép ảnh), cắt sát, thu nhỏ còn tối đa 512 px.
+- Nhân vật, quái, đồ: xoá nền xám (vùng xám nối với mép ảnh), cắt sát, thu nhỏ còn tối đa 512 px;
+  icon kỹ năng / giao diện / phụ kiện còn 256 px (hiện nhỏ, đỡ nặng máy).
 - Ảnh nền (nen_*, truyen_*, logo, icon-app): giữ nguyên, chỉ thu nhỏ còn tối đa 1600 px.
 Ảnh không có trong tools/asset-manifest.json sẽ được bỏ qua (in ra để sửa tên).
 """
@@ -43,6 +44,9 @@ def remove_bg(img):
     return out.crop(bb) if bb else out
 
 
+ICON_PREFIX = ('ky-nang_', 'ui_', 'hanh_', 'phu-kien_', 'do-ghep_', 'sinh-le_')
+
+
 def shrink(img, maxside):
     w, h = img.size
     k = maxside / max(w, h)
@@ -57,9 +61,12 @@ def main(src, dst):
         name = os.path.splitext(f)[0] + '.png'
         img = Image.open(os.path.join(src, f))
         if name in SINGLE_FILES:
-            shrink(img.convert('RGB'), 1600).save(os.path.join(dst, name)); print('ảnh nền ', name)
+            side = 1024 if name.startswith('anh-lon_') else 1600
+            shrink(img.convert('RGB'), side).save(os.path.join(dst, name), optimize=True); print('ảnh nền ', name)
         elif name in SHEET_FILES:
-            shrink(remove_bg(img), 512).save(os.path.join(dst, name)); print('xoá nền ', name)
+            # icon / giao diện chỉ hiện nhỏ: 256 px là đủ, nhẹ hơn 4 lần
+            side = 256 if name.startswith(ICON_PREFIX) else 512
+            shrink(remove_bg(img), side).save(os.path.join(dst, name), optimize=True); print('xoá nền ', name)
         else:
             print('bỏ qua (tên không có trong manifest):', f)
 

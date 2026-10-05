@@ -296,6 +296,26 @@ function drawZones(t) {
         ctx.beginPath(); ctx.moveTo(x, y); ctx.quadraticCurveTo(x + sw, y - 8, x + sw * 2, y - 14); ctx.stroke();
         circle(ctx, x + sw * 2, y - 15, 2, '#E8D070');
       }
+    } else if (z.kind === 'tree') {
+      // Cây Đa Thần: vòng lá chậm quái + vòng hồi máu
+      ctx.fillStyle = 'rgba(95,208,106,0.16)';
+      ctx.beginPath(); ctx.ellipse(z.x, z.y, z.r, z.r * 0.45, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = 'rgba(191,240,160,0.5)'; ctx.lineWidth = 1.5; ctx.setLineDash([6, 5]); ctx.lineDashOffset = -t * 20;
+      ctx.beginPath(); ctx.ellipse(z.x, z.y, z.heal.r, z.heal.r * 0.45, 0, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]);
+      const grow = Math.min(1, (z.max - z.ttl) / 0.5);
+      const timg = asset('trieu-hoi_cay-da-than.png');
+      if (timg) {
+        const hh = 110 * grow, ww = hh * timg.naturalWidth / timg.naturalHeight;
+        ctx.drawImage(timg, z.x - ww / 2, z.y - hh + 8, ww, hh);
+        ctx.restore();
+        continue;
+      }
+      ctx.fillStyle = '#6A4420'; ctx.fillRect(z.x - 5, z.y - 46 * grow, 10, 46 * grow);
+      for (const [dx, dy, r] of [[0, -58, 26], [-20, -48, 18], [20, -48, 18], [0, -74, 16]]) {
+        circle(ctx, z.x + dx * grow, z.y + dy * grow, r * grow, '#3E9A4A');
+        circle(ctx, z.x + dx * grow - 4, z.y + dy * grow - 4, r * grow * 0.5, '#5FD06A');
+      }
+      if (Math.random() < 0.15) game.effects.push({ type: 'spark', x: z.x + (Math.random() - 0.5) * z.r, y: z.y - 60 + Math.random() * 40, a: Math.random() * 6.28, color: '#BFF0A0', ttl: 0.5, max: 0.5 });
     } else if (z.kind === 'rock') {
       ctx.fillStyle = 'rgba(138,118,80,0.25)';
       ctx.beginPath(); ctx.ellipse(z.x, z.y, z.r, z.r * 0.45, 0, 0, Math.PI * 2); ctx.fill();
@@ -444,7 +464,12 @@ function drawHeroOnMap(h, t) {
   // sao mới hiện khi tướng hạ xuống (60% thời gian tiến hoá)
   const stars = (h.tier || 0) - (h.evoT > 0.48 ? 1 : 0);
   // tướng thần: sao Thần tinh màu cam đỏ, lớn hơn
-  for (let i = 0; i < stars; i++) drawStar(ctx, h.x - 8 * ((stars - 1) / 2) + i * 8, top - 11, h.from ? 4.8 : 4, h.from ? '#FF7A3A' : '#FFD66B');
+  const starImg = h.from && asset('ui_than-tinh.png');
+  for (let i = 0; i < stars; i++) {
+    const sx = h.x - 8 * ((stars - 1) / 2) + i * 8;
+    if (starImg) ctx.drawImage(starImg, sx - 6, top - 17, 12, 12);
+    else drawStar(ctx, sx, top - 11, h.from ? 4.8 : 4, h.from ? '#FF7A3A' : '#FFD66B');
+  }
   if (stars >= 3 || h.from) {
     // ★★★: tên tướng trên thanh máu chuyển chữ vàng
     ctx.font = '800 9px "Alegreya Sans", sans-serif';
@@ -590,7 +615,7 @@ function drawDust(h, t) {
 function drawCastGlow(h, t) {
   const dur = h.castUlt ? 0.9 : 0.5;
   const k = h.castT / dur;
-  const c = h.castColor || '#fff';
+  const c = (h.castColor || '#ffffff').length === 4 ? '#ffffff' : h.castColor || '#ffffff';
   ctx.save();
   ctx.globalAlpha = k;
   const g = ctx.createLinearGradient(h.x, h.y, h.x, h.y - 90);
@@ -1077,15 +1102,27 @@ function drawEffects(t) {
       }
       case 'skyride': {
         // Gióng bay dọc dòng sông
+        // (rock: tảng đá Lạc Hầu lăn ngược dòng, d1 > d2)
         const d = f.d1 + (f.d2 - f.d1) * Math.min(1, p * 1.3);
         const pts = [];
-        for (let dd = f.d1; dd <= d; dd += 12) { const q = PATH.at(dd); pts.push([q.x, q.y - 30]); }
+        const step = f.d2 >= f.d1 ? 12 : -12;
+        for (let dd = f.d1; step > 0 ? dd <= d : dd >= d; dd += step) { const q = PATH.at(dd); pts.push([q.x, q.y - (f.rock ? 6 : 30)]); }
         if (pts.length > 1) {
-          strokePath(ctx, pts, 22, 'rgba(255,176,74,0.35)');
-          strokePath(ctx, pts, 6, '#FFE0A0');
+          strokePath(ctx, pts, 22, f.rock ? 'rgba(138,118,80,0.35)' : 'rgba(255,176,74,0.35)');
+          strokePath(ctx, pts, 6, f.rock ? '#B9A274' : '#FFE0A0');
         }
         const q = PATH.at(d);
         ctx.globalAlpha = 1;
+        if (f.rock) {
+          ctx.save(); ctx.translate(q.x, q.y - 16); ctx.rotate(-t * 8);
+          const rimg = asset('hieu-ung_da-lan.png');
+          if (rimg) { ctx.drawImage(rimg, -22, -22, 44, 44); ctx.restore(); break; }
+          ctx.fillStyle = '#8A7650'; ctx.strokeStyle = '#2A2116'; ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.ellipse(0, 0, 18, 15, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(-8, -4); ctx.lineTo(6, 6); ctx.stroke();
+          ctx.restore();
+          break;
+        }
         circle(ctx, q.x, q.y - 34, 14, '#FFB04A');
         circle(ctx, q.x, q.y - 34, 7, '#FFF1C4');
         break;
@@ -1171,6 +1208,26 @@ function drawEffects(t) {
         ctx.fillStyle = 'rgba(224,72,72,0.3)';
         ctx.beginPath(); ctx.ellipse(f.x, f.y, f.r * 0.6, f.r * 0.25, 0, 0, Math.PI * 2); ctx.fill();
         break;
+      case 'tiger': {
+        // hổ Ba Vì vồ tới mục tiêu (ảnh trieu-hoi_ho-ba-vi.png nếu có)
+        const e = f.target;
+        if (!e) break;
+        ctx.globalAlpha = 1;
+        const q = Math.min(1, p * 1.15);
+        const x = f.x + (e.x - f.x) * q, y = f.y + (e.y - f.y) * q - Math.sin(q * Math.PI) * 26;
+        const img = asset('trieu-hoi_ho-ba-vi.png');
+        ctx.save(); ctx.translate(x, y); if (e.x < f.x) ctx.scale(-1, 1);
+        if (img) { const hh = 34, ww = hh * img.naturalWidth / img.naturalHeight; ctx.drawImage(img, -ww / 2, -hh, ww, hh); }
+        else {
+          ctx.fillStyle = '#F2A23A'; ctx.strokeStyle = '#2A1608'; ctx.lineWidth = 1.5;
+          ctx.beginPath(); ctx.ellipse(0, -10, 16, 8, -0.2, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+          ctx.beginPath(); ctx.arc(14, -16, 7, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+          ctx.strokeStyle = '#2A1608'; ctx.lineWidth = 2;
+          for (const sx of [-8, -2, 4]) { ctx.beginPath(); ctx.moveTo(sx, -17); ctx.lineTo(sx + 2, -9); ctx.stroke(); }
+        }
+        ctx.restore();
+        break;
+      }
       case 'bird': {
         const e = f.target;
         if (!e) break;

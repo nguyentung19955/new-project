@@ -87,12 +87,32 @@ function asset(path) {
   let a = assetMap.get(path);
   if (!a) {
     a = { img: new Image(), ok: null };
-    a.img.onload = () => { a.ok = true; assetVersion++; };
+    a.img.onload = () => { a.draw = shrinkForCanvas(path, a.img); a.ok = true; assetVersion++; };
     a.img.onerror = () => { a.ok = false; };
     a.img.src = ASSET_ROOT + path;
     assetMap.set(path, a);
   }
-  return a.ok ? a.img : null;
+  return a.ok ? a.draw || a.img : null;
+}
+// Ảnh vẽ tay to (Fooocus 512 px) mà trên bản đồ chỉ hiện vài chục px: thu nhỏ MỘT LẦN khi tải
+// vào canvas riêng, để mỗi khung hình không phải co ảnh lớn (đỡ giật trên điện thoại).
+// Ảnh nền / bản đồ / truyện giữ nguyên. Ảnh trong giao diện (thẻ <img>) vẫn dùng file gốc.
+const SHRINK_SIDE = 320;
+function shrinkForCanvas(path, img) {
+  if (/^(nen_|truyen_|ban-do_nui|logo|icon-app|maps\/|scenes\/)/.test(path)) return null;
+  const w = img.naturalWidth, h = img.naturalHeight;
+  const k = SHRINK_SIDE / Math.min(w, h);
+  if (k >= 0.9) return null;
+  try {
+    const c = document.createElement('canvas');
+    c.width = Math.round(w * k); c.height = Math.round(h * k);
+    const x = c.getContext('2d');
+    x.imageSmoothingQuality = 'high';
+    x.drawImage(img, 0, 0, c.width, c.height);
+    // giữ tên thuộc tính như ảnh để code vẽ dùng chung
+    c.naturalWidth = c.width; c.naturalHeight = c.height;
+    return c;
+  } catch (e) { return null; }
 }
 // nhận một đường dẫn hoặc danh sách (thử lần lượt, dùng ảnh đầu tiên đã có)
 function assetAny(paths) {
@@ -112,7 +132,8 @@ const HERO_CODE = { lactuong: 'h01', lucsi: 'h02', xathu: 'h03', thosan: 'h04', 
   cdt: 'h14', tiendung: 'h15', langlieu: 'h16', lachau: 'h17', thansan: 'h18', adv: 'h19', mau: 'h20' };
 const ENEMY_CODE = { tom: 'E01', casau: 'E02', rua: 'E03', phuthuy: 'E04', chimbao: 'E05', echme: 'E06',
   nongnoc: 'E07', giaolong: 'E08', thuongluong: 'B01', haba: 'B02', thuytinh: 'B03' };
-const heroSlug = (type) => slugify(HEROES[type].name);
+const slugCache = {};
+const heroSlug = (type) => slugCache[type] || (slugCache[type] = slugify(HEROES[type].name));
 
 // ---- Hình vector cho 4 tướng thần v27: phối lại màu từ tướng cùng dòng + thêm mũ / sừng / vương miện
 (function deriveArt() {
@@ -145,10 +166,10 @@ const heroSlug = (type) => slugify(HEROES[type].name);
   });
   // icon kỹ năng: mượn icon chiêu cùng loại của tướng khác (đổi tiền tố id để không trùng)
   const ICON_SRC = {
-    lachau: [['kimquy', 'E'], ['lucsi', 'W'], ['kimquy', 'Q'], ['lucsi', 'R']],
-    thansan: [['thosan', 'Q'], ['thosan', 'E'], ['llq', 'Q'], ['thosan', 'R']],
-    adv: [['caolo', 'Q'], ['caolo', 'W'], ['xathu', 'R'], ['caolo', 'R']],
-    mau: [['auco', 'Q'], ['thansuong', 'E'], ['langlieu', 'E'], ['tiendung', 'R']],
+    lachau: [['lactuong', 'E'], ['lucsi', 'W'], ['kimquy', 'E'], ['kimquy', 'R']],
+    thansan: [['xathu', 'E'], ['thosan', 'E'], ['llq', 'Q'], ['thosan', 'R']],
+    adv: [['caolo', 'Q'], ['caolo', 'W'], ['xathu', 'W'], ['caolo', 'R']],
+    mau: [['langlieu', 'E'], ['thansuong', 'E'], ['langlieu', 'W'], ['auco', 'E']],
   };
   for (const [to, list] of Object.entries(ICON_SRC)) {
     if (ART.skill[to]) continue;
@@ -171,7 +192,7 @@ function heroPng(type, v, h) {
   const slug = heroSlug(type), code = HERO_CODE[type];
   if (v === 'B') return (assetAny([`chan-dung_${slug}.png`, `heroes/hero_${code}_B.png`]) || {}).img || null;
   const tier = GEAR_TIER_FILE[gearTier(h)];
-  const list = v === 'D' ? [`heroes/hero_${code}_D.png`] : [`${slug}_${tier}.png`, `${slug}_thuong.png`, `heroes/hero_${code}_C.png`];
+  const list = v === 'D' ? [`${slug}_ra-don.png`, `heroes/hero_${code}_D.png`] : [`${slug}_${tier}.png`, `${slug}_thuong.png`, `heroes/hero_${code}_C.png`];
   return (assetAny(list) || {}).img || null;
 }
 const ENEMY_FILE = { tom: 'quai_tom-binh', casau: 'quai_ca-sau', rua: 'quai_rua-giap', phuthuy: 'quai_phu-thuy-nuoc',
@@ -1536,6 +1557,15 @@ function drawEnemy(ctx, e, t, o = {}) {
       ctx.rect(-box.w * 0.5, e.y - lift - box.h, box.w, box.h + 2);
       ctx.fill();
       ctx.stroke();
+    } else if (e.stunKind === 'root') {
+      // dây rừng trói chân
+      ctx.strokeStyle = '#3E9A4A'; ctx.lineWidth = 3;
+      for (let i = 0; i < 3; i++) {
+        const x0 = (i - 1) * box.w * 0.25;
+        ctx.beginPath(); ctx.moveTo(x0, e.y - lift + 2);
+        ctx.quadraticCurveTo(x0 + 8 * Math.sin(t * 4 + i), e.y - lift - box.h * 0.3, x0 - 4, e.y - lift - box.h * 0.55); ctx.stroke();
+        circle(ctx, x0 - 4, e.y - lift - box.h * 0.55, 3, '#5FD06A');
+      }
     } else if (e.stunKind === 'music') {
       ctx.fillStyle = '#FFE08A';
       ctx.font = 'bold 13px serif';
@@ -1550,6 +1580,12 @@ function drawEnemy(ctx, e, t, o = {}) {
         drawStar(ctx, Math.cos(a2) * box.w * 0.3, top - 6 + Math.sin(a2) * 3, 3.5, '#F2D27A');
       }
     }
+  }
+  if (e.huntT > 0) {
+    // dấu săn của Thần Săn Ba Vì
+    ctx.strokeStyle = 'rgba(226,90,58,0.9)'; ctx.lineWidth = 1.6;
+    const ry = top - 14;
+    ctx.beginPath(); ctx.arc(0, ry, 6, 0, Math.PI * 2); ctx.moveTo(-9, ry); ctx.lineTo(9, ry); ctx.moveTo(0, ry - 9); ctx.lineTo(0, ry + 9); ctx.stroke();
   }
   if (e.poisonT > 0 && Math.random() < 0.3) {
     circle(ctx, (Math.random() - 0.5) * box.w * 0.5, top + box.h * 0.3, 2, e.dotColor);

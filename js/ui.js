@@ -39,7 +39,20 @@ const RUN_CHIP = '<span class="chip run">Quái vẫn đang chạy</span>';
 function skillIcon(type, i) {
   const u = assetUrl(skillPngPath(type, i));
   if (u) return `<img src="${u}" alt="">`;
-  return HAS_ART && ART.skill[type] ? ART.skill[type][SKILL_KEYS[i]] : '';
+  return svgImg(HAS_ART && ART.skill[type] ? ART.skill[type][SKILL_KEYS[i]] : '');
+}
+// Icon vector nhiều chi tiết: đưa vào <img> (ảnh đệm sẵn) thay vì chèn thẳng thẻ <svg>,
+// trình duyệt chỉ vẽ một lần — dựng lại bảng / túi đồ nhẹ hơn hẳn, bấm đỡ giật.
+const svgImgCache = new Map();
+function svgImg(svg) {
+  if (!svg || svg.startsWith('<img')) return svg || '';
+  let u = svgImgCache.get(svg);
+  if (!u) {
+    const full = svg.includes('xmlns=') ? svg : svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+    u = svgUrl(full);
+    svgImgCache.set(svg, u);
+  }
+  return `<img src="${u}" alt="" draggable="false">`;
 }
 // Icon vector cho 4 phụ kiện và 8 đồ ghép mới (v15), cùng nét với ART.item
 const S24 = (body) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><g stroke="#1A1208" stroke-width="1" stroke-linejoin="round">${body}</g></svg>`;
@@ -75,9 +88,9 @@ function setItemIcon(id) {
 function itemIcon(id) {
   const u = assetUrl(itemPngPath(id));
   if (u) return `<img src="${u}" alt="">`;
-  if (HAS_ART && ART.item[id]) return ART.item[id];
-  if (NEW_ITEM_ART[id]) return NEW_ITEM_ART[id];
-  return ITEMS[id] && ITEMS[id].set ? setItemIcon(id) : '';
+  if (HAS_ART && ART.item[id]) return svgImg(ART.item[id]);
+  if (NEW_ITEM_ART[id]) return svgImg(NEW_ITEM_ART[id]);
+  return ITEMS[id] && ITEMS[id].set ? svgImg(setItemIcon(id)) : '';
 }
 function sceneArt(k) {
   const u = SCENE_FILE[k] && assetUrl(SCENE_FILE[k]);
@@ -712,7 +725,7 @@ class UI {
         const d = HEROES[t];
         return `<button class="dk-card ${g.gold < d.cost ? 'poor' : ''} ${this.armed === t ? 'armed' : ''}" data-act="summon" data-type="${t}" aria-label="${d.name}, ${d.cost} vàng" style="border-color:${ATTRS[d.attr].color}">
           <img src="${heroImgUrl(t, 'head')}" alt=""><span class="cost">${d.cost}</span></button>`;
-      }).join('') + `<span class="dk-sep"></span><button class="dk-card legend" data-act="legend-open" aria-label="Cây thăng thần"><b>★</b>Thăng<br>thần</button>`;
+      }).join('') + `<span class="dk-sep"></span><button class="dk-card legend" data-act="legend-open" aria-label="Cây thăng thần">${assetUrl('ui_thang-than.png') ? `<img class="asc-ic" src="${assetUrl('ui_thang-than.png')}" alt="">` : '<b>★</b>'}Thăng<br>thần</button>`;
     } else {
       const def = HEROES[h.type];
       const st = heroStats(h);
@@ -720,12 +733,15 @@ class UI {
       const skillKey = def.skills.map((sk, i) => {
         const lv = skillLevel(h, i);
         const cd = sk.active ? Math.ceil(Math.max(0, h.skillCd[sk.id] || 0)) : 0;
-        return `${lv}.${cd}.${sk.active && h.mana < sk.active.mana ? 1 : 0}`;
+        return `${lv}.${cd > 0 ? 1 : 0}.${sk.active && h.mana < sk.active.mana ? 1 : 0}`;
       }).join();
       const fresh = h.unlockFx && g.time - h.unlockFx.at < 0.5 ? h.unlockFx.i : -1;
       const notice = !!(h.notice && (h.notice.skills || h.notice.evo));
       const up = this.upCount(h) > 0;
-      key = `h|${h.id}|${h.level}|${h.train || 0}|${h.tier}|${h.skillPts}|${skillKey}|${g.gold >= lc}|${g.gold}|${h.dead}|${h.bogged}|${fresh}|${notice}|${up}|${assetVersion}`;
+      // chỉ dựng lại khi đủ / thiếu vàng cho một nút (không phải mỗi lần vàng đổi) — đỡ giật khi đánh
+      const afford = [lc, g.trainCost(h), ...def.skills.map((sk, i) => (skillLevel(h, i) ? (h.from ? COSTS.skillGold(i, skillLevel(h, i)) : 0) : unlockCost(h, i)))]
+        .map((c) => (g.gold >= c ? 1 : 0)).join('');
+      key = `h|${h.id}|${h.type}|${h.level}|${h.train || 0}|${h.tier}|${h.skillPts}|${skillKey}|${afford}|${h.dead}|${h.bogged}|${fresh}|${notice}|${up}|${assetVersion}`;
       const status = h.dead ? `Hồi sinh sau ${Math.ceil(h.respawnT)}s` : h.bogged ? 'Sa lầy · dùng Mọc Núi' : `${ATTRS[def.attr].name} · ô ${TIER_NAMES[CONFIG.slotTier[h.slot]]}`;
       const skills = def.skills.map((sk, i) => {
         const lv = skillLevel(h, i);
@@ -738,7 +754,7 @@ class UI {
         const canUp = (h.from ? g.gold >= COSTS.skillGold(i, lv) : h.skillPts > 0) && lv < SKILL_MAX[i] && h.level >= skillReqLevel(i, lv + 1);
         return `<button class="dk-sk metal ${sk.active && h.mana < sk.active.mana ? 'nomana' : ''} ${i === fresh ? 'fresh' : ''}" data-act="cmd-skill" data-i="${i}" aria-label="${SKILL_KEYS[i]} ${sk.name}">
           ${svgI(skillIcon(h.type, i))}<span class="hk">${SKILL_KEYS[i]}</span>${canUp ? '<span class="pt">+</span>' : ''}
-          ${cd > 0.4 ? `<span class="cdov" style="height:${Math.min(100, cd / max * 100)}%"></span><span class="cdn">${Math.ceil(cd)}</span>` : ''}</button>`;
+          ${sk.active ? `<span class="cdov" style="height:${cd > 0.4 ? Math.min(100, cd / max * 100) : 0}%"></span><span class="cdn">${cd > 0.4 ? Math.ceil(cd) : ''}</span>` : ''}</button>`;
       }).join('');
       const maxed = h.level >= CONFIG.maxLevel;
       const tc = g.trainCost(h);
@@ -760,6 +776,18 @@ class UI {
       const st = heroStats(h);
       $('#dk-hp').style.width = `${Math.max(0, h.hp / st.hpMax) * 100}%`;
       $('#dk-mp').style.width = `${Math.max(0, h.mana / st.maxMana) * 100}%`;
+      // đếm ngược hồi chiêu cập nhật tại chỗ (không dựng lại cả thanh)
+      deck.querySelectorAll('.dk-sk[data-i]').forEach((el) => {
+        const i = +el.dataset.i, sk = HEROES[h.type].skills[i];
+        const ov = el.querySelector('.cdov');
+        if (!ov || !sk.active) return;
+        const cd = Math.max(0, h.skillCd[sk.id] || 0), max = sk.active.cooldown * (1 - st.cdr / 100);
+        const hgt = cd > 0.4 ? `${Math.min(100, cd / max * 100)}%` : '0%';
+        if (ov.style.height !== hgt) ov.style.height = hgt;
+        const txt = cd > 0.4 ? String(Math.ceil(cd)) : '';
+        const cn = el.querySelector('.cdn');
+        if (cn.textContent !== txt) cn.textContent = txt;
+      });
     } else $('#more').hidden = true;
     // gợi ý ngắn trên hàng thẻ
     const hint = this.armed ? `Chạm vào ô trống để triệu hồi ${HEROES[this.armed].name}` : this.spot >= 0 && !h ? `Ô bậc ${TIER_NAMES[CONFIG.slotTier[this.spot]]}: chọn tướng để triệu hồi` : this.moving >= 0 ? 'Chạm ô muốn chuyển tướng tới' : '';
@@ -851,7 +879,7 @@ class UI {
     const t = this.rosterSel;
     const d = HEROES[t];
     const all = [...BASIC_HEROES, ...LEGEND_HEROES];
-    const splash = assetUrl(`heroes/hero_${HERO_CODE[t]}_A.png`);
+    const splash = assetUrl([`anh-lon_${heroSlug(t)}.png`, `heroes/hero_${HERO_CODE[t]}_A.png`]);
     const n = skillN(1);
     $('#roster').innerHTML = `<div class="screen" style="z-index:auto">
       <div class="scr-head metal"><button class="xbtn metal" data-act="ro-back" aria-label="Quay lại">${ICON.back}</button><h1 class="ttl">Anh Hùng Văn Lang</h1>
@@ -1322,13 +1350,21 @@ class UI {
     const h = g.heroes[this.sel];
     const heroKey = h ? `${h.id}|${h.type}|${h.level}|${h.skillPts}|${h.statPts || 0}|${h.tier}|${JSON.stringify(h.skillLv)}|${SLOTS.map((s) => h.equip[s] ? h.equip[s].uid + '.' + h.equip[s].plus + h.equip[s].rarity + h.equip[s].locked + (h.equip[s].temper || 0) + (h.equip[s].aff || []).join('') : '').join()}` : '';
     const invKey = g.inventory.map((i) => i.uid + '.' + i.plus + i.rarity + (i.locked ? 'L' : '') + (i.temper || 0) + (i.aff || []).join('')).join();
-    const key = [assetVersion, sc.kind, sc.tab, sc.skill, sc.pick, sc.recipe, sc.shop, sc.opened, sc.slot, g.gold, heroKey, invKey,
+    const key = [assetVersion, sc.kind, sc.tab, sc.skill, sc.pick, sc.recipe, sc.shop, sc.opened, sc.slot, heroKey, invKey,
       g.mountain.growth, g.mountain.herbs, g.mountain.soiled, g.wave, g.running, JSON.stringify(this.scrapFilter), Object.keys(g.seen).length,
       g.known.size, h ? h.train || 0 : 0].join('|');
-    if (!force && this.sig.screen === key) return;
+    // vàng đổi liên tục khi quái chết: chỉ dựng lại vì vàng tối đa 1 lần / 0,8 giây
+    const now = performance.now();
+    const goldOnly = this.sig.screen === key && this.sig.screenGold !== g.gold;
+    if (!force && this.sig.screen === key && (!goldOnly || now - (this.sig.screenT || 0) < 800)) return;
     this.sig.screen = key;
+    this.sig.screenGold = g.gold;
+    this.sig.screenT = now;
     const el = $('#screen');
+    // giữ vị trí cuộn của các vùng cuộn khi dựng lại
+    const scrolls = [...el.querySelectorAll('*')].map((x, i) => [i, x.scrollTop, x.scrollLeft]).filter(([, t, l]) => t || l);
     el.innerHTML = this['render_' + sc.kind]();
+    if (scrolls.length) { const all = el.querySelectorAll('*'); for (const [i, t, l] of scrolls) if (all[i]) { all[i].scrollTop = t; all[i].scrollLeft = l; } }
     if (sc.shake) { const j = el.querySelector('.jar-stage'); if (j) j.classList.add('shake'); }
     el.querySelectorAll('canvas[data-enemy]').forEach((cv) => drawEnemyIcon(cv, cv.dataset.enemy, +cv.dataset.pad || 0.1));
     this.liveScreen();

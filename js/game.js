@@ -206,7 +206,7 @@ function heroStats(h) {
     pierce: hasLine(h, 'caolo') ? 50 : 0, mpen: 0, canAir: def.attack !== 'melee', airMult: 1,
     goldOnKill: 0, stunChance: 0,
     hpPct: 0, rangePct: 0, skillPct: 0, bossPct: 0, floodPct: 0, shred: 0, spread: 0, magicRes: 0,
-    noHeal: 0, netSlow: 0, hitAir: 0, touchSlow: 0, drumAura: 0, fireTrail: 0, curve: 0, airPct: 0,
+    thorns: 0, noHeal: 0, netSlow: 0, hitAir: 0, touchSlow: 0, drumAura: 0, fireTrail: 0, curve: 0, airPct: 0,
     hid: {}, sets: {},
     ...line.reduce((o, a) => inheritBase(def, HEROES[a.type], o), null),
   };
@@ -278,7 +278,10 @@ function heroStats(h) {
   s.bonusDmgPct += (b.sinh || 0) * ELEM.sinh + (b.full ? ELEM.full : 0) + (b.drum || 0) - (b.llqPen ? 10 : 0);
   s.airMult += s.airPct / 100;
   if (s.hitAir) s.canAir = true;
-  if (h.huntT > 0) s.haste += 30;                          // ẩn Thần Săn Ba Vì
+  if (h.huntT > 0) s.haste += 30;
+  if (h.rallyT > 0) s.haste += h.rallyPct || 25;           // Trống Hiệu Triệu
+  if (h.feastT > 0) s.bonusDmgPct += 20;                   // Bánh Chưng
+  if (h.volleyT > 0 && def.attack !== 'melee') s.arrows = Math.min(6, s.arrows + 1);   // Lũy Nỏ Cổ Loa                          // ẩn Thần Săn Ba Vì
   if (h.type === 'xathu' && h.airKills) s.rangePct += Math.min(10, Math.floor(h.airKills / 10));
 
   // sao tiến hoá: tướng Thường theo bậc hiện tại; tướng thần giữ sao của mọi bậc trước + bậc Thần tinh
@@ -819,11 +822,15 @@ const SKILL_CASTS = {
     return true;
   },
   mothermountain(game, h, st, n) {
+    // đá núi trồi lên hất tung quái: choáng 1 giây, rồi để lại bãi đá làm chậm
     const t = game.findTarget(h.x, h.y, st.range * 1.2, false);
     if (!t) return false;
-    game.zones.push({ kind: 'rock', x: t.x, y: t.y, r: 75, ttl: 4, max: 4, slow: 50,
-      dps: (12 + n * 0.4) * st.skillPower, hero: h, dt: 'magic' });
-    game.shake = Math.max(game.shake, 3);
+    for (const e of game.enemiesInRange(t.x, t.y, 80, false)) {
+      game.stun(e, e.def.boss ? 0.4 : 1, 'stun');
+      game.hit(e, (st.damage * 2 + n) * st.skillPower, h, { color: '#C8A070' });
+    }
+    game.zones.push({ kind: 'rock', x: t.x, y: t.y, r: 80, ttl: 3.5, max: 3.5, slow: 35, dps: (6 + n * 0.2) * st.skillPower, hero: h, dt: 'magic' });
+    game.shake = Math.max(game.shake, 4);
     return true;
   },
   hundredeggs(game, h, st) {
@@ -881,9 +888,17 @@ const SKILL_CASTS = {
     return true;
   },
   lotus(game, h, st, n) {
-    if (!hurtNear(game, h.x, h.y, 180)) return false;
-    healHeroes(game, h.x, h.y, 180, (0.2 + n * 0.003) * skillMult(st.lv || 1), '#FF9EC4');
-    game.effects.push({ type: 'petals', x: h.x, y: h.y, r: 120, color: '#FF9EC4', ttl: 1, max: 1 });
+    // sen hồng nở trên tướng yếu nhất: hồi dần trong 5 giây
+    let best = null;
+    for (const o of game.heroes) {
+      if (!o || o.dead || Math.hypot(o.x - h.x, o.y - h.y) > 200) continue;
+      const r = o.hp / heroStats(o).hpMax;
+      if (r < 0.8 && (!best || r < best.r)) best = { o, r };
+    }
+    if (!best) return false;
+    best.o.hotT = 5;
+    best.o.hotPct = (0.06 + n * 0.0006) * skillMult(st.lv || 1);
+    game.effects.push({ type: 'petals', x: best.o.x, y: best.o.y, r: 40, color: '#FF9EC4', ttl: 1, max: 1 });
     return true;
   },
   flowerrain(game, h, st, n) {
@@ -899,6 +914,160 @@ const SKILL_CASTS = {
       hus.hp = Math.min(heroStats(hus).hpMax, hus.hp + heroStats(hus).hpMax * 0.3);
       game.discover('h.tiendung', hus.x, hus.y);
     }
+    return true;
+  },
+  // ===== v29: bộ chiêu riêng cho 4 tướng thần mới + tách các chiêu trùng =====
+  // ----- Lạc Hầu
+  rally(game, h, st, n) {
+    if (!game.enemiesInRange(h.x, h.y, st.range * 1.5).length) return false;
+    const pct = Math.round(25 + n * 0.15);
+    for (const o of game.heroes) {
+      if (!o || o.dead || Math.hypot(o.x - h.x, o.y - h.y) > 180) continue;
+      o.rallyT = 5; o.rallyPct = Math.max(o.rallyT > 0 ? o.rallyPct || 0 : 0, pct);
+      game.effects.push({ type: 'ring', x: o.x, y: o.y - 22, r: 28, color: '#E25A3A', ttl: 0.6, max: 0.6 });
+    }
+    game.effects.push({ type: 'ring', x: h.x, y: h.y - 10, r: 180, color: '#D9A84E', ttl: 0.7, max: 0.7 });
+    game.text(h.x, h.y - 80, 'Hiệu triệu!', '#FFB04A', 1, 14);
+    return true;
+  },
+  boulder(game, h, st, n) {
+    const t = game.findTarget(h.x, h.y, st.range * 1.3, false);
+    if (!t) return false;
+    // tảng đá lăn ngược dòng từ quái đầu tiên về phía cửa sông, đè và đẩy lùi cả hàng
+    const d2 = t.dist + 30, d1 = Math.max(0, t.dist - 300);
+    game.effects.push({ type: 'skyride', d1: d2, d2: d1, ttl: 0.7, max: 0.7, rock: true });
+    for (const e of game.enemies) {
+      if (e.dead || isFlying(e) || e.dist < d1 || e.dist > d2) continue;
+      game.effects.push({ type: 'none', ttl: 0.1 + 0.5 * (d2 - e.dist) / 330, max: 0.6, onEnd: () => {
+        if (e.dead) return;
+        knockback(e, 60);
+        game.hit(e, (st.damage * 2 + n) * st.skillPower, h, { color: '#C8A070' });
+      } });
+    }
+    game.shake = Math.max(game.shake, 5);
+    return true;
+  },
+  oath(game, h, st, n) {
+    const hurt = game.heroes.some((o) => o && !o.dead && o.hp < heroStats(o).hpMax * 0.8);
+    if (!hurt && game.enemies.filter((e) => !e.dead).length < 6) return false;
+    game.oathT = 6;
+    game.effects.push({ type: 'banner', str: st.skName || 'Lời Thề Bộ Lạc', color: '#D9A84E', ttl: 1.6, max: 1.6 });
+    for (const o of game.heroes) if (o && !o.dead) game.effects.push({ type: 'dome', x: o.x, y: o.y, r: 34, color: '#D9A84E', ttl: 0.8, max: 0.8 });
+    return true;
+  },
+  // ----- Thần Săn Ba Vì
+  venomspear(game, h, st, n) {
+    const list = game.enemiesInRange(h.x, h.y, st.range * 1.6);
+    if (!list.length) return false;
+    const e = list.reduce((a, b) => (b.dist > a.dist ? b : a));
+    game.effects.push({ type: 'streak', x: h.x, y: h.y - 30, x2: e.x, y2: e.y - 10, color: '#8BD44A', ttl: 0.3, max: 0.3 });
+    game.hit(e, (st.damage * 1.5 + n) * st.skillPower, h, { st, big: true, color: '#8BD44A' });
+    if (!e.dead) { game.dot(e, (6 + n * 0.25) * st.skillPower, h, '#7FC24A', 'phys', 6); game.slow(e, 35, 3); }
+    return true;
+  },
+  tiger(game, h, st, n) {
+    const list = game.enemiesInRange(h.x, h.y, st.range * 1.5, false).sort((a, b) => a.hp / a.maxHp - b.hp / b.maxHp).slice(0, 3);
+    if (!list.length) return false;
+    list.forEach((e, i) => game.effects.push({ type: 'tiger', x: h.x, y: h.y, target: e, ttl: 0.35 + i * 0.12, max: 0.35 + i * 0.12,
+      onEnd: () => {
+        if (e.dead) return;
+        game.effects.push({ type: 'claw', x: e.x, y: e.y - 10, color: '#F2A23A', ttl: 0.4, max: 0.4 });
+        // quái thường dưới 20% máu: hổ vồ chết ngay
+        if (!e.def.boss && !e.champion && e.hp < e.maxHp * 0.2) { game.text(e.x, e.y - 30, 'Hổ vồ!', '#F2A23A', 0.9, 15); game.hit(e, e.hp + (e.shield || 0) + 1, h, { dt: 'pure' }); }
+        else game.hit(e, (st.damage * 2 + n) * st.skillPower, h, { st, big: true, color: '#F2A23A' });
+      } }));
+    return true;
+  },
+  greathunt(game, h, st, n) {
+    const list = game.enemiesInRange(h.x, h.y, st.range * 2);
+    if (list.length < 2 && !list.some((e) => e.def.boss)) return false;
+    game.effects.push({ type: 'banner', str: st.skName || 'Cuộc Săn Lớn', color: '#E25A3A', ttl: 1.6, max: 1.6 });
+    for (const e of list) { e.huntT = 8; game.effects.push({ type: 'mark', target: e, ttl: 0.45, max: 0.45 }); }
+    return true;
+  },
+  // ----- An Dương Vương
+  ricochet(game, h, st, n) {
+    let e = game.findTarget(h.x, h.y, st.range);
+    if (!e) return false;
+    const hitList = [];
+    let x = h.x, y = h.y - 30, dmg = (st.damage * 1.3 + n * 0.5) * st.skillPower;
+    for (let i = 0; i < 5 && e; i++) {
+      const tgt = e, dd = dmg, delay = 0.08 + i * 0.09;
+      game.effects.push({ type: 'streak', x, y, x2: tgt.x, y2: tgt.y - 10, color: '#FFE08A', ttl: delay + 0.1, max: delay + 0.1,
+        onEnd: () => { if (!tgt.dead) game.hit(tgt, dd, h, { st, color: '#FFE08A' }); } });
+      hitList.push(e); x = e.x; y = e.y - 10; dmg *= 0.9;
+      const from = e;
+      e = game.enemies.filter((o) => !o.dead && !hitList.includes(o) && Math.hypot(o.x - from.x, o.y - from.y) <= 160)
+        .sort((a, b) => Math.hypot(a.x - from.x, a.y - from.y) - Math.hypot(b.x - from.x, b.y - from.y))[0];
+    }
+    return true;
+  },
+  volley(game, h, st, n) {
+    if (!game.enemiesInRange(h.x, h.y, st.range).length) return false;
+    for (const o of game.heroes) {
+      if (!o || o.dead || HEROES[o.type].attack === 'melee' || Math.hypot(o.x - h.x, o.y - h.y) > 220) continue;
+      o.volleyT = 6;
+      game.effects.push({ type: 'ring', x: o.x, y: o.y - 22, r: 30, color: '#FFE08A', ttl: 0.6, max: 0.6 });
+    }
+    game.effects.push({ type: 'volley', x: h.x, y: h.y - 30, ttl: 0.35, max: 0.35 });
+    game.text(h.x, h.y - 80, 'Lũy nỏ Cổ Loa!', '#FFE08A', 1, 14);
+    return true;
+  },
+  linhquang(game, h, st, n) {
+    const t = game.findTarget(h.x, h.y, st.range * 1.2);
+    if (!t) return false;
+    game.effects.push({ type: 'banner', str: st.skName || 'Linh Quang Thần Nỏ', color: '#FFF1C4', ttl: 1.6, max: 1.6 });
+    // ba phát xuyên hàng theo hình quạt
+    const a0 = Math.atan2(t.y - h.y, t.x - h.x);
+    for (const da of [-0.32, 0, 0.32]) {
+      const fake = { x: h.x + Math.cos(a0 + da) * 100, y: h.y + Math.sin(a0 + da) * 100 };
+      game.lineHit(h, fake, st.range * 2.4, (st.damage * 4 + n * 1.5) * st.skillPower, { color: '#FFF1C4', width: 16, dt: 'pure' });
+    }
+    game.shake = Math.max(game.shake, 6);
+    return true;
+  },
+  // ----- Mẫu Thượng Ngàn
+  vines(game, h, st, n) {
+    const list = game.enemiesInRange(h.x, h.y, st.range * 1.2, false).sort((a, b) => b.dist - a.dist).slice(0, 4);
+    if (!list.length) return false;
+    for (const e of list) {
+      game.stun(e, e.def.boss ? 0.5 : 1.6, 'root');
+      game.hit(e, (st.damage + n * 0.5) * st.skillPower, h, { color: '#5FD06A' });
+    }
+    return true;
+  },
+  sacredtree(game, h, st, n) {
+    const t = game.findTarget(h.x, h.y, st.range * 1.2, false);
+    if (!t && !hurtNear(game, h.x, h.y, 200)) return false;
+    const x = t ? (t.x + h.x) / 2 : h.x, y = t ? (t.y + h.y) / 2 : h.y;
+    game.zones.push({ kind: 'tree', x, y, r: 110, ttl: 6, max: 6, slow: 30, dps: (4 + n * 0.15) * st.skillPower, hero: h, dt: 'magic',
+      heal: { r: 170, pct: 0.03 + n * 0.0003 } });
+    return true;
+  },
+  forestwrath(game, h, st, n) {
+    const list = game.enemies.filter((e) => !e.dead && !isFlying(e));
+    if (list.length < 3 && !list.some((e) => e.def.boss)) return false;
+    game.effects.push({ type: 'banner', str: st.skName || 'Rừng Thiêng Nổi Giận', color: '#5FD06A', ttl: 1.6, max: 1.6 });
+    game.effects.push({ type: 'flash', color: '#BFF0A0', ttl: 0.3, max: 0.3 });
+    for (const e of list) {
+      game.stun(e, e.def.boss ? 0.6 : 1.8, 'root');
+      game.hit(e, (st.damage * 2 + n) * st.skillPower, h, { color: '#5FD06A' });
+    }
+    healHeroes(game, h.x, h.y, 2000, 0.2, '#5FD06A');
+    return true;
+  },
+  // ----- chiêu cũ tách cho khác nhau
+  feast(game, h, st, n) {
+    if (!game.enemiesInRange(h.x, h.y, 220).length && !hurtNear(game, h.x, h.y, 170)) return false;
+    const pct = (0.12 + n * 0.0015) * skillMult(st.lv || 1);
+    for (const o of game.heroes) {
+      if (!o || o.dead || Math.hypot(o.x - h.x, o.y - h.y) > 170) continue;
+      const mx = heroStats(o).hpMax;
+      o.hp = Math.min(mx, o.hp + mx * pct);
+      o.feastT = 6;
+      game.effects.push({ type: 'heal', x: o.x, y: o.y, r: 26, color: '#7FC24A', ttl: 0.7, max: 0.7 });
+    }
+    game.text(h.x, h.y - 80, 'Bánh chưng!', '#7FC24A', 1, 14);
     return true;
   },
   // ----- Lang Liêu
@@ -1006,6 +1175,7 @@ class Game {
     this.endless = false;
     this.won = false;
     this.guardT = 0;
+    this.oathT = 0;
     // Nước Dâng
     this.water = this.lv.water || 0;           // số bậc đã ngập (0..3)
     this.raised = CONFIG.slots.map(() => false);   // ô đã Mọc Núi (khô vĩnh viễn)
@@ -1817,6 +1987,7 @@ class Game {
     this.time += dt;
     this.shake = Math.max(0, this.shake - dt * 30);
     if (this.guardT > 0) this.guardT -= dt;
+    if (this.oathT > 0) this.oathT -= dt;
     if (!this.waveActive && (this.wave < this.levelWaves || this.endless)) {
       this.nextWaveT -= dt;
       if (this.nextWaveT <= 0) this.startWave();
@@ -1928,6 +2099,11 @@ class Game {
         this.hit(e, z.dps * dt, z.hero, { silent: true, dt: z.dt });
         if (z.slow) e.zoneSlow = Math.max(e.zoneSlow, z.slow);
       }
+      if (z.heal) for (const o of this.heroes) {
+        if (!o || o.dead || Math.hypot(o.x - z.x, o.y - z.y) > z.heal.r) continue;
+        const mx = heroStats(o).hpMax;
+        o.hp = Math.min(mx, o.hp + mx * z.heal.pct * dt);
+      }
     }
     this.zones = this.zones.filter((z) => z.ttl > 0);
   }
@@ -1954,6 +2130,7 @@ class Game {
       return;
     }
     if (e.noHealT > 0) e.noHealT -= dt;
+    if (e.huntT > 0) e.huntT -= dt;
     if (e.kbT > 0) e.kbT -= dt;
     if (e.groundT > 0) e.groundT -= dt;
     if (e.elite === 'regen' && !(e.noHealT > 0)) e.hp = Math.min(e.maxHp, e.hp + e.maxHp * 0.03 * dt);
@@ -2122,6 +2299,12 @@ class Game {
       this.discover('i.tho1', h.x, h.y);
     }
     if (h.earthT > 0) amount *= 0.7;
+    if (this.oathT > 0) amount *= 0.7;             // Lạc Hầu: Lời Thề Bộ Lạc
+    // Lạc Hầu: Giáp Da Tê Gai phản sát thương lên quái gần nhất
+    if (st.thorns && amount > 0) {
+      const foe = this.enemiesInRange(h.x, h.y, 260).sort((a, b) => Math.hypot(a.x - h.x, a.y - h.y) - Math.hypot(b.x - h.x, b.y - h.y))[0];
+      if (foe) { this.hit(foe, amount * st.thorns / 100 * (1 + st.str * 0.02), h, { dt: 'pure', color: '#C8A070', big: true }); this.proc(h, 'thorns', h.x, h.y - 26, '#C8A070', 26); }
+    }
     // ẩn đủ Bộ Sơn Tinh: mỗi đợt chặn hoàn toàn 1 đòn đánh gây chết
     if (st.hid['s.sontinh'] && !h.blockUsed && amount >= h.hp + (h.shield || 0)) {
       h.blockUsed = true;
@@ -2200,7 +2383,7 @@ class Game {
     }
     if (h.invulnT > 0) h.invulnT -= dt;
     if (h.shieldT > 0) { h.shieldT -= dt; if (h.shieldT <= 0) h.shield = 0; }
-    for (const k of ['huntT', 'rageT', 'warT', 'earthT', 'earthCd', 'drumBoostT', 'trailCd', 'breathCd']) if (h[k] > 0) h[k] -= dt;
+    for (const k of ['rallyT', 'feastT', 'hotT', 'volleyT', 'huntT', 'rageT', 'warT', 'earthT', 'earthCd', 'drumBoostT', 'trailCd', 'breathCd']) if (h[k] > 0) h[k] -= dt;
     if (!(h.rageT > 0)) h.rageN = 0;
     h.still = (h.still || 0) + dt;
     if (st.hid['r.ao_vay_ca'] && h.flooded) {
@@ -2209,7 +2392,7 @@ class Game {
     }
     // Bộ Sơn Tinh: quái chạm vào bị chậm
     if (st.touchSlow) for (const e of this.enemiesInRange(h.x, h.y, 60, false)) this.slow(e, st.touchSlow, 0.5);
-    const heal = (h.buff.healPct || 0) / 100 * st.hpMax;
+    const heal = ((h.buff.healPct || 0) / 100 + (h.hotT > 0 ? h.hotPct || 0 : 0) + (this.oathT > 0 ? 0.03 : 0)) * st.hpMax;
     h.hp = Math.min(st.hpMax, h.hp + (st.regen + heal) * dt);
     h.mana = Math.min(st.maxMana, h.mana + st.manaRegen * dt);
     h.swing = Math.max(0, h.swing - dt * SWING_RATE);
@@ -2455,6 +2638,7 @@ class Game {
     if (crit) dmg *= critMult;
     if (st && e.def.flying && st.airMult > 1) dmg *= st.airMult;
     if (st && e.def.boss && st.bossPct) dmg *= 1 + st.bossPct / 100;
+    if (e.huntT > 0) dmg *= 1.25;                  // Cuộc Săn Lớn
     // Thần Săn Ba Vì: Mắt Rừng
     if (hero && hero.type === 'thansan' && (e.slowT > 0 || e.stunT > 0 || e.zoneSlow > 0)) dmg *= 1.25;
     // Ngũ hành: khắc +30%, bị khắc −20% (hành của đòn đánh là hành của tướng)
@@ -2563,6 +2747,7 @@ class Game {
     const eliteMult = e.elite ? 2.5 : 1;
     let gold = Math.round(e.def.gold * (1 + this.wave * 0.04) * eliteMult);
     if (hero && this.heroes[hero.slot] === hero) gold += Math.round(heroStats(hero).goldOnKill);
+    if (e.huntT > 0) gold += 3;
     this.addGold(gold);
     this.stats.kills++;
     this.text(e.x, e.y - 20, '+' + gold, '#F2D27A', 0.7);

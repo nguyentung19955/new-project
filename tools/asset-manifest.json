@@ -1990,6 +1990,59 @@
      "file": "ky-nang_mau-thuong-ngan_r.png"
     }
    ]
+  },
+  {
+   "code": "S43",
+   "title": "Tướng thần v29 · dáng ra đòn, sinh vật chiêu, giao diện thăng thần",
+   "rows": 3,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Lạc Hầu · ra đòn",
+     "file": "lac-hau_ra-don.png"
+    },
+    {
+     "index": 2,
+     "name": "Thần Săn Ba Vì · ra đòn",
+     "file": "than-san-ba-vi_ra-don.png"
+    },
+    {
+     "index": 3,
+     "name": "An Dương Vương · ra đòn",
+     "file": "an-duong-vuong_ra-don.png"
+    },
+    {
+     "index": 4,
+     "name": "Mẫu Thượng Ngàn · ra đòn",
+     "file": "mau-thuong-ngan_ra-don.png"
+    },
+    {
+     "index": 5,
+     "name": "Hổ thần Ba Vì (Gọi Hổ Ba Vì)",
+     "file": "trieu-hoi_ho-ba-vi.png"
+    },
+    {
+     "index": 6,
+     "name": "Cây Đa Thần (Mẫu Thượng Ngàn E)",
+     "file": "trieu-hoi_cay-da-than.png"
+    },
+    {
+     "index": 7,
+     "name": "Tảng đá lăn (Lạc Hầu E)",
+     "file": "hieu-ung_da-lan.png"
+    },
+    {
+     "index": 8,
+     "name": "Nút Thăng thần (thanh tướng dưới đáy)",
+     "file": "ui_thang-than.png"
+    },
+    {
+     "index": 9,
+     "name": "Sao Thần tinh",
+     "file": "ui_than-tinh.png"
+    }
+   ]
   }
  ],
  "singles": [
@@ -2042,6 +2095,26 @@
    "code": "F10",
    "name": "Icon app",
    "file": "icon-app.png"
+  },
+  {
+   "code": "F15",
+   "name": "Lạc Hầu · tranh lớn",
+   "file": "anh-lon_lac-hau.png"
+  },
+  {
+   "code": "F16",
+   "name": "Thần Săn Ba Vì · tranh lớn",
+   "file": "anh-lon_than-san-ba-vi.png"
+  },
+  {
+   "code": "F17",
+   "name": "An Dương Vương · tranh lớn",
+   "file": "anh-lon_an-duong-vuong.png"
+  },
+  {
+   "code": "F18",
+   "name": "Mẫu Thượng Ngàn · tranh lớn",
+   "file": "anh-lon_mau-thuong-ngan.png"
   }
  ]
 }

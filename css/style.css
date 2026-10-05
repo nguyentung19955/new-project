@@ -1028,3 +1028,5 @@ button:disabled { cursor: default; }
 .ro-det { overflow-y: auto; }
 .ro-top .ro-pic { width: 128px; height: 128px; }
 .ro-top .ro-pic canvas, .ro-top .ro-pic img { width: 128px; height: 128px; }
+.dk-card.legend .asc-ic { width: 28px; height: 28px; object-fit: contain; display: block; margin: 0 auto 2px; }
+.svgi img { width: 100%; height: 100%; object-fit: contain; display: block; }
