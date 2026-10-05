@@ -34,12 +34,15 @@
   color-scheme: dark;
 }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { box-sizing: border-box; }   /* phần đệm vùng an toàn (nếu có) nằm trong 100% chiều cao */
 html, body {
   margin: 0; height: 100%; overflow: hidden; background: #0A0806;
   font-family: var(--body); color: var(--text);
   -webkit-user-select: none; user-select: none; touch-action: none;
 }
-body { display: flex; align-items: center; justify-content: center; }
+body { display: flex; align-items: center; justify-content: center; box-sizing: border-box;
+  /* cầm ngang: chừa tai thỏ / camera hai bên */
+  padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
 button { font-family: inherit; color: inherit; cursor: pointer; }
 button:disabled { cursor: default; }
 [hidden] { display: none !important; }

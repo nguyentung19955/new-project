@@ -17,12 +17,19 @@ window.game = game;
 let view = { scale: 1, dpr: 1 };
 let mapImg = null;
 
+// Diện tích thật sự dùng được: trừ phần đệm vùng an toàn của trang (tai thỏ, thanh home)
+// để khung game không tràn ra ngoài
 function viewportSize() {
   const vv = window.visualViewport;
   const de = document.documentElement;
-  const w = (vv && vv.width) || window.innerWidth || de.clientWidth;
-  const h = (vv && vv.height) || window.innerHeight || de.clientHeight;
-  return [w, h];
+  let w = (vv && vv.width) || window.innerWidth || de.clientWidth;
+  let h = (vv && vv.height) || window.innerHeight || de.clientHeight;
+  const px = (el, k) => parseFloat(getComputedStyle(el)[k]) || 0;
+  for (const el of [de, document.body]) {
+    w -= px(el, 'paddingLeft') + px(el, 'paddingRight') + px(el, 'borderLeftWidth') + px(el, 'borderRightWidth');
+    h -= px(el, 'paddingTop') + px(el, 'paddingBottom') + px(el, 'borderTopWidth') + px(el, 'borderBottomWidth');
+  }
+  return [Math.max(0, w), Math.max(0, h)];
 }
 
 function resize() {
