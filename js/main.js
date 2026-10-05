@@ -572,65 +572,58 @@ function showDetail() { return !!(ui && ui.save && ui.save.settings.detail); }
 // Hào quang tướng thần: Tím (sử thi) vòng ấn tím + hạt bay lên; Vàng (huyền thoại) to hơn,
 // tia sáng xoay dưới chân, cột sáng, hạt vàng bay vòng quanh. Vẽ cộng màu, không cần ảnh.
 const AURA = {
-  epic: { c: '168,108,224', hi: '225,190,255', r: 40, n: 7, ray: 0, col: 0.35 },
-  legendary: { c: '255,170,40', hi: '255,240,170', r: 46, n: 11, ray: 14, col: 0.55 },
+  epic: { c: '168,108,224', hi: '225,190,255', r: 38, n: 4, ray: 0, col: 0.16 },
+  legendary: { c: '255,180,60', hi: '255,236,170', r: 44, n: 6, ray: 8, col: 0.22 },
 };
 function drawRankAura(h, t, front) {
   const a = AURA[HEROES[h.type].legend];
   if (!a) return;
   const x = h.x, y = h.y, ph = (h.slot || 0) * 1.7;
-  const pulse = 0.75 + 0.25 * Math.sin(t * 3 + ph);
+  const pulse = 0.8 + 0.2 * Math.sin(t * 2 + ph);
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
   if (!front) {
-    // cột sáng sau lưng
-    const cg = ctx.createLinearGradient(0, y, 0, y - 110);
+    // cột sáng mảnh, mờ, chỉ sau lưng (không phủ lên người)
+    const cg = ctx.createLinearGradient(0, y, 0, y - 95);
     cg.addColorStop(0, `rgba(${a.c},${a.col * pulse})`);
     cg.addColorStop(1, `rgba(${a.c},0)`);
     ctx.fillStyle = cg;
     ctx.beginPath();
-    ctx.moveTo(x - a.r * 0.75, y); ctx.lineTo(x - a.r * 0.35, y - 110); ctx.lineTo(x + a.r * 0.35, y - 110); ctx.lineTo(x + a.r * 0.75, y);
+    ctx.moveTo(x - a.r * 0.55, y); ctx.lineTo(x - a.r * 0.3, y - 95); ctx.lineTo(x + a.r * 0.3, y - 95); ctx.lineTo(x + a.r * 0.55, y);
     ctx.fill();
-    // quầng sau người
-    const bg = ctx.createRadialGradient(x, y - 32, 4, x, y - 32, 44);
-    bg.addColorStop(0, `rgba(${a.c},${0.45 * pulse})`);
-    bg.addColorStop(1, `rgba(${a.c},0)`);
-    ctx.fillStyle = bg;
-    ctx.fillRect(x - 44, y - 76, 88, 88);
-    // tia sáng toả ra ngoài bệ (chỉ Vàng)
+    // tia sáng ngắn quanh bệ (chỉ Vàng), xoay chậm
     for (let i = 0; i < a.ray; i++) {
-      const an = t * 0.8 + (i * Math.PI * 2) / a.ray;
-      const l = a.r * (1.35 + 0.25 * Math.sin(t * 4 + i));
-      ctx.strokeStyle = `rgba(${a.hi},${0.5 * pulse})`;
-      ctx.lineWidth = 3;
+      const an = t * 0.4 + (i * Math.PI * 2) / a.ray;
+      ctx.strokeStyle = `rgba(${a.hi},${0.3 * pulse})`;
+      ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.moveTo(x + Math.cos(an) * a.r * 0.8, y + Math.sin(an) * a.r * 0.3);
-      ctx.lineTo(x + Math.cos(an) * l, y + Math.sin(an) * l * 0.38);
+      ctx.moveTo(x + Math.cos(an) * a.r * 0.85, y + Math.sin(an) * a.r * 0.32);
+      ctx.lineTo(x + Math.cos(an) * a.r * 1.25, y + Math.sin(an) * a.r * 0.47);
       ctx.stroke();
     }
+    // hạt sáng bay lên ở HAI BÊN người (sau lưng, không đè mặt)
+    for (let i = 0; i < a.n; i++) {
+      const k = (t * 0.3 + i / a.n + ph) % 1;
+      const side = i % 2 ? 1 : -1;
+      const px2 = x + side * a.r * (0.6 + 0.15 * Math.sin(t * 1.5 + i));
+      const py2 = y - 6 - k * 80;
+      const al = Math.sin(k * Math.PI);
+      ctx.fillStyle = `rgba(${a.c},${0.3 * al})`;
+      ctx.beginPath(); ctx.arc(px2, py2, 4, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = `rgba(${a.hi},${0.85 * al})`;
+      ctx.beginPath(); ctx.arc(px2, py2, 1.7, 0, Math.PI * 2); ctx.fill();
+    }
   } else {
-    // vòng ấn trên mặt bệ: một vòng liền + một vòng nét đứt xoay
-    ctx.lineWidth = 2.5;
-    ctx.strokeStyle = `rgba(${a.c},${0.9 * pulse})`;
-    ctx.beginPath(); ctx.ellipse(x, y, a.r * 0.8, a.r * 0.29, 0, 0, Math.PI * 2); ctx.stroke();
-    ctx.strokeStyle = `rgba(${a.hi},${0.95 * pulse})`;
+    // vòng ấn trên mặt bệ: một vòng liền + một vòng nét đứt xoay chậm
     ctx.lineWidth = 2;
+    ctx.strokeStyle = `rgba(${a.c},${0.75 * pulse})`;
+    ctx.beginPath(); ctx.ellipse(x, y, a.r * 0.8, a.r * 0.29, 0, 0, Math.PI * 2); ctx.stroke();
+    ctx.strokeStyle = `rgba(${a.hi},${0.7 * pulse})`;
+    ctx.lineWidth = 1.5;
     ctx.setLineDash([8, 6]);
-    ctx.lineDashOffset = -t * 20;
+    ctx.lineDashOffset = -t * 10;
     ctx.beginPath(); ctx.ellipse(x, y, a.r * 0.62, a.r * 0.22, 0, 0, Math.PI * 2); ctx.stroke();
     ctx.setLineDash([]);
-    // hạt sáng bay lên quanh người (Vàng: xoắn vòng quanh)
-    for (let i = 0; i < a.n; i++) {
-      const k = (t * 0.45 + i / a.n + ph) % 1;
-      const an = i * 2.4 + (a.ray ? t * 2.2 : 0);
-      const px2 = x + Math.cos(an) * a.r * (a.ray ? 0.6 : 0.4 + 0.2 * Math.sin(i * 7));
-      const py2 = y - 4 - k * 85 + (a.ray ? Math.sin(an) * 6 : 0);
-      const al = Math.sin(k * Math.PI);
-      ctx.fillStyle = `rgba(${a.c},${0.45 * al})`;
-      ctx.beginPath(); ctx.arc(px2, py2, a.ray ? 6 : 5, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = `rgba(${a.hi},${al})`;
-      ctx.beginPath(); ctx.arc(px2, py2, a.ray ? 2.6 : 2.2, 0, Math.PI * 2); ctx.fill();
-    }
   }
   ctx.restore();
 }
@@ -749,7 +742,7 @@ function drawCastGlow(h, t) {
   ctx.save();
   ctx.globalAlpha = k;
   const g = ctx.createLinearGradient(h.x, h.y, h.x, h.y - 90);
-  g.addColorStop(0, c + 'aa');
+  g.addColorStop(0, c + '55');
   g.addColorStop(1, c + '00');
   ctx.fillStyle = g;
   ctx.fillRect(h.x - 18, h.y - 90, 36, 90);

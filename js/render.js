@@ -615,13 +615,14 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
     // tung chiêu: thân phát sáng viền theo màu chiêu
     const glowK = o.castT > 0 ? Math.min(1, o.castT / 0.25) : 0;
     const gt = !dollBase && h.equip ? gearTier(h) : 0;
-    if (glowK > 0) { ctx.shadowColor = o.castColor || '#FFE08A'; ctx.shadowBlur = 22 * glowK * (o.castUlt ? 1.6 : 1); }
-    else if (gt > 0) { ctx.shadowColor = RAR_COLOR[RARITY_ORDER[gt]]; ctx.shadowBlur = 5 + gt * 3 + Math.sin(t * 3) * 2; }
     // ảnh thân trần giữ khung chuẩn: chân nằm ở 96,5% chiều cao, hạ ảnh xuống cho chạm đất
     if (dollBase) ctx.translate(0, hgt * 0.035);
+    // viền sáng (tung chiêu / đồ hiếm): vẽ RIÊNG phần bóng một lần, không bôi lên từng lát ảnh
+    // (trước đây 14 lát × shadowBlur → cả người loè thành khối màu và nặng máy)
+    if (glowK > 0) drawGlowOnly(ctx, mixD > 0.5 ? pngD : png, -w / 2, -hgt, w, hgt, o.castColor || '#FFE08A', 12 * glowK * (o.castUlt ? 1.4 : 1), 0.8 * glowK);
+    else if (gt > 0) drawGlowOnly(ctx, png, -w / 2, -hgt, w, hgt, RAR_COLOR[RARITY_ORDER[gt]], 4 + gt * 2, 0.55 + Math.sin(t * 3) * 0.1);
     if (mixD < 1) drawBent(ctx, png, -w / 2, -hgt, w, hgt, bend, breath);
     ctx.globalAlpha = base;
-    if (glowK > 0 || gt > 0) { ctx.shadowBlur = 0; ctx.shadowColor = 'transparent'; }
     if (dollBase && mixD < 1) drawDollGear(ctx, h, -w / 2, -hgt, w, hgt, bend, t);
     if (mixD > 0) {
       const wd = hgt * pngD.naturalWidth / pngD.naturalHeight;
@@ -631,13 +632,13 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
     }
     // vệt mờ khi chém (ghost lùi sau thân)
     if (pose.phase === 'strike' && def.attack === 'melee') {
-      ctx.globalAlpha = base * 0.22 * (1 - pose.k);
-      drawBent(ctx, mixD > 0.5 ? pngD : png, -w / 2 - 14, -hgt, w, hgt, bend * 0.5, breath);
+      ctx.globalAlpha = base * 0.12 * (1 - pose.k);
+      drawBent(ctx, mixD > 0.5 ? pngD : png, -w / 2 - 10, -hgt, w, hgt, bend * 0.5, breath);
       ctx.globalAlpha = base;
     }
     if (o.hurt > 0) {
       ctx.globalCompositeOperation = 'lighter';
-      ctx.globalAlpha = base * (o.hurt / 0.2) * 0.45;
+      ctx.globalAlpha = base * (o.hurt / 0.2) * 0.22;
       drawBent(ctx, mixD > 0.5 ? pngD : png, -w / 2, -hgt, w, hgt, bend, breath);
       ctx.globalCompositeOperation = 'source-over';
       ctx.globalAlpha = base;
@@ -772,6 +773,21 @@ function smoothPose(h, P, t) {
 // Vẽ ảnh theo lát ngang: chân (đáy ảnh) đứng yên, càng lên cao càng lệch theo `bend`
 // (thân uốn như cây tre), `breath` phồng nhẹ phần ngực / đầu. Mượt hơn xoay cứng cả tấm.
 const BENT_SLICES = 14;
+// chỉ vẽ quầng sáng bao quanh ảnh (không vẽ ảnh): vẽ ảnh ra ngoài màn hình, dịch bóng về đúng chỗ
+function drawGlowOnly(ctx, img, x, y, w, h, color, blur, alpha) {
+  if (!img || blur <= 0.5) return;
+  const inv = ctx.getTransform().inverse();
+  const D = 6000;
+  const p0 = inv.transformPoint({ x: 0, y: 0 }), p1 = inv.transformPoint({ x: D, y: 0 });
+  ctx.save();
+  ctx.globalAlpha *= Math.max(0, Math.min(1, alpha));
+  ctx.shadowColor = color;
+  ctx.shadowBlur = blur;
+  ctx.shadowOffsetX = D;
+  ctx.shadowOffsetY = 0;
+  ctx.drawImage(img, x - (p1.x - p0.x), y - (p1.y - p0.y), w, h);
+  ctx.restore();
+}
 function drawBent(ctx, img, x, y, w, h, bend, breath) {
   if (!img) return;
   const iw = img.naturalWidth, ih = img.naturalHeight;
