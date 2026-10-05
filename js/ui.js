@@ -842,25 +842,36 @@ class UI {
         .map((c) => (g.gold >= c ? 1 : 0)).join('');
       key = `h|${h.id}|${h.type}|${h.level}|${h.train || 0}|${h.tier}|${h.skillPts}|${skillKey}|${afford}|${h.dead}|${h.bogged}|${fresh}|${notice}|${up}|${assetVersion}`;
       const status = h.dead ? `Hồi sinh sau ${Math.ceil(h.respawnT)}s` : h.bogged ? 'Sa lầy · dùng Mọc Núi' : `${ATTRS[def.attr].name} · Hành ${ELEMENTS[def.el].name}`;
+      // 4 ô kỹ năng (v37): số trên ô = cấp kỹ năng; tag phía trên = giá nâng tiếp (+ điểm / + vàng / MAX).
+      // Chạm ô = nâng (hoặc mở khóa) luôn, không còn màn Kỹ năng riêng.
       const skills = def.skills.map((sk, i) => {
         const lv = skillLevel(h, i);
+        const max = SKILL_MAX[i];
         if (!lv) {
           const can = h.level >= COSTS.unlockReq[i];
-          return `<button class="dk-sk inset lock" data-act="cmd-skill" data-i="${i}" aria-label="${SKILL_KEYS[i]} ${sk.name}, khóa">${ICON.lock}<b class="${g.gold < unlockCost(h, i) || !can ? 'no' : ''}">${can ? unlockCost(h, i) : 'cấp ' + COSTS.unlockReq[i]}</b><span class="hk" style="color:#7A705C">${SKILL_KEYS[i]}</span></button>`;
+          const c = unlockCost(h, i);
+          return `<button class="dk-sk inset lock" data-act="cmd-skill" data-i="${i}" aria-label="${sk.name}, khóa">
+            <span class="sk-tag ${can && g.gold >= c ? 'ok' : 'no'}">+${coin(1)}${c}</span>
+            <span class="dim">${svgI(skillIcon(h.type, i))}</span>${ICON.lock}${can ? '' : `<b class="no">cấp ${COSTS.unlockReq[i]}</b>`}</button>`;
         }
         const cd = sk.active ? Math.max(0, h.skillCd[sk.id] || 0) : 0;
-        const max = sk.active ? sk.active.cooldown * (1 - st.cdr / 100) : 1;
-        const canUp = (h.from ? g.gold >= COSTS.skillGold(i, lv) : h.skillPts > 0) && lv < SKILL_MAX[i] && h.level >= skillReqLevel(i, lv + 1);
-        return `<button class="dk-sk metal ${sk.active && h.mana < sk.active.mana ? 'nomana' : ''} ${i === fresh ? 'fresh' : ''}" data-act="cmd-skill" data-i="${i}" aria-label="${SKILL_KEYS[i]} ${sk.name}">
-          ${svgI(skillIcon(h.type, i))}<span class="hk">${SKILL_KEYS[i]}</span>${canUp ? '<span class="pt">+</span>' : ''}
-          ${sk.active ? `<span class="cdov" style="height:${cd > 0.4 ? Math.min(100, cd / max * 100) : 0}%"></span><span class="cdn">${cd > 0.4 ? Math.ceil(cd) : ''}</span>` : ''}</button>`;
-      }).join('');
+        const mx = sk.active ? sk.active.cooldown * (1 - st.cdr / 100) : 1;
+        const lvOk = lv < max && h.level >= skillReqLevel(i, lv + 1);
+        const pay = h.from ? g.gold >= COSTS.skillGold(i, lv) : h.skillPts > 0;
+        const tag = lv >= max ? '<span class="sk-tag max">MAX</span>'
+          : `<span class="sk-tag ${lvOk && pay ? 'ok' : 'no'}">+${h.from ? `${coin(1)}${COSTS.skillGold(i, lv)}` : '1đ'}</span>`;
+        return `<button class="dk-sk metal ${sk.active && h.mana < sk.active.mana ? 'nomana' : ''} ${i === fresh ? 'fresh' : ''} ${lvOk && pay ? 'canup' : ''}" data-act="cmd-skill" data-i="${i}" aria-label="${sk.name} cấp ${lv}">
+          ${tag}${svgI(skillIcon(h.type, i))}<span class="lvn">${lv}</span>${lvOk ? '' : lv < max ? `<span class="req">cấp ${skillReqLevel(i, lv + 1)}</span>` : ''}
+          ${sk.active ? `<span class="cdov" style="height:${cd > 0.4 ? Math.min(100, cd / mx * 100) : 0}%"></span><span class="cdn">${cd > 0.4 ? Math.ceil(cd) : ''}</span>` : ''}</button>`;
+      }).join('') + (h.from ? '' : `<button class="dk-sk metal stat ${h.skillPts ? 'canup' : 'off'}" data-act="sk-stat-deck" aria-label="Cộng điểm dư vào chỉ số">
+          <span class="sk-tag ${h.skillPts ? 'ok' : 'no'}">+1đ</span><b style="color:${ATTRS[def.attr].color}">+${COSTS.statPt}</b><small>${ATTRS[def.attr].short}</small>${h.skillPts ? `<span class="badge">${h.skillPts}</span>` : ''}</button>`);
       const maxed = h.level >= CONFIG.maxLevel;
       const tc = g.trainCost(h);
       html = `<button class="dk-x metal" data-act="deck-close" aria-label="Bỏ chọn">${ICON.close}</button>
         <span class="dk-pt ${g.known.has('h.' + h.type) ? 'goldf' : ''}" ${assetUrl(`ui_khung-${h.from ? 'vang' : 'thuong'}.png`) ? `style="background-image:url('${assetUrl(`ui_khung-${h.from ? 'vang' : 'thuong'}.png`)}'),radial-gradient(circle at 50% 60%,#3A2416,#1A0F0A 75%);background-size:100% 100%,auto"` : ''}><canvas id="dk-portrait" width="108" height="116"></canvas><span class="lv">${h.level}${h.train ? `<i>✦${h.train}</i>` : ''}</span><span class="st" ${h.from ? 'style="color:#FF7A3A"' : ''}>${'★'.repeat(h.tier || 0)}</span></span>
-        <span class="dk-info"><span class="nm">${elIcon(def.el, 15)}${def.name}</span><span class="sub ${h.bogged || h.dead ? 'warn' : ''}">${status}</span>
+        <span class="dk-info" data-act="hero-stats" role="button" aria-label="Xem chỉ số"><span class="nm">${elIcon(def.el, 15)}${def.name}</span><span class="sub ${h.bogged || h.dead ? 'warn' : ''}">${status}</span>
           <span class="bar hp"><i id="dk-hp"></i></span><span class="bar mp"><i id="dk-mp"></i></span></span>
+        <button class="dk-stbtn metal ${this.statsOpen ? 'on' : ''}" data-act="hero-stats" aria-label="Chỉ số tướng">📊<small>Chỉ số</small></button>
         ${skills}
         ${maxed ? `<button class="dk-up btn-gold" data-act="train" ${g.gold < tc ? 'disabled' : ''} aria-label="Luyện thể"><b>${uiIc('luyen-the')}Luyện thể ✦${(h.train || 0) + 1}</b><span>${coin(1)}${tc}</span></button>`
           : `<button class="dk-up btn-gold" data-act="levelup" ${g.gold < lc ? 'disabled' : ''} aria-label="Nâng cấp tướng"><b>Lên cấp ${h.level + 1}</b><span>${coin(1)}${lc}</span></button>`}
@@ -887,13 +898,30 @@ class UI {
         const cn = el.querySelector('.cdn');
         if (cn.textContent !== txt) cn.textContent = txt;
       });
+      // bảng chỉ số tướng (nút 📊 trên thanh tướng)
+      const sp = $('#hero-stats');
+      if (this.statsOpen && !this.screen) {
+        const sk2 = `${h.id}|${h.level}|${h.tier}|${h.train}|${h.statPts}|${Object.values(h.skillLv).join()}|${SLOTS.map((x) => h.equip[x] ? h.equip[x].uid : '').join()}|${Math.round(h.hp)}`;
+        if (this.statsSig !== sk2 || sp.hidden) {
+          this.statsSig = sk2;
+          const S = heroStats(h);
+          const row = (k, v) => `<div><span>${k}</span><b>${v}</b></div>`;
+          sp.innerHTML = `<div class="hs-h">${HEROES[h.type].name} · cấp ${h.level} · ${'★'.repeat(h.tier || 0)} · lực chiến <b>${heroPower(h)}</b></div><div class="hs-g">`
+            + row('Sát thương', Math.round(S.damage)) + row('Tốc đánh', `${(1 / S.cooldown).toFixed(2)}/giây`) + row('Tầm đánh', Math.round(S.range))
+            + row('Máu', `${Math.round(h.hp)}/${Math.round(S.hpMax)}`) + row('Chí mạng', `${Math.round(S.crit)}% ×${S.critMult.toFixed(1)}`) + row('Giảm hồi chiêu', `${Math.round(S.cdr)}%`)
+            + row('Giảm s.thương', `${Math.round(S.dr)}%`) + row('Năng lượng', Math.round(S.maxMana))
+            + row(ATTRS.str.name, Math.round(S.str)) + row(ATTRS.agi.name, Math.round(S.agi)) + row(ATTRS.int.name, Math.round(S.int))
+            + row('Điểm đã cộng', h.statPts || 0) + '</div>';
+          sp.hidden = false;
+        }
+      } else if (!sp.hidden) sp.hidden = true;
       // thanh thao tác nổi trên tướng: tự hiện khi chọn tướng (ẩn khi mở màn khác / menu)
-      const show = !h.dead && !this.screen && $('#drawer').hidden && this.moving < 0;
+      const show = !h.dead && !this.screen && !this.statsOpen && $('#drawer').hidden && this.moving < 0;
       const mk = show ? this.moreKey(h) : '';
       if (show && (this.moreSig !== mk || $('#more').hidden)) { this.moreSig = mk; $('#more').hidden = false; this.renderMore(); }
       else if (show) this.placeMore(h);
       else if (!$('#more').hidden) $('#more').hidden = true;
-    } else $('#more').hidden = true;
+    } else { $('#more').hidden = true; $('#hero-stats').hidden = true; }
     // gợi ý ngắn trên hàng thẻ
     const hint = this.moving >= 0 ? 'Chạm ô muốn chuyển tướng tới (tướng cùng loại cùng sao: ghép)' : '';
     $('#deck-hint').hidden = !hint;
@@ -972,7 +1000,6 @@ class UI {
     const up = this.upCount(h);
     const b = (cls, act, ic, label, extra = '') => `<button class="ha ${cls}" data-act="${act}" ${extra}><span class="i">${ic}</span><span class="l">${label}</span></button>`;
     $('#more').innerHTML = [
-      b(h.skillPts || h.notice.skills ? 'notice' : '', 'open-skills', '⚔', h.skillPts ? `Kỹ năng <i>+${h.skillPts}</i>` : 'Kỹ năng'),
       h.from ? b(h.notice.evo ? 'notice' : '', 'open-evo', '✦', t < 3 ? `Thần tinh ★${t + 1}` : 'Thần tinh')
         : twin ? b('go', 'merge-any', '⇄', `Ghép ${'★'.repeat(t + 1)}`)
         : b('dim', 'open-evo', '★', t >= 3 ? '★★★ tối đa' : 'Ghép sao'),
@@ -1314,9 +1341,19 @@ class UI {
       case 'cmd-skill': {
         if (!h) break;
         const i = +d.i;
-        if (!skillLevel(h, i) && h.level >= COSTS.unlockReq[i] && g.gold >= unlockCost(h, i)) {
-          if (fail(g.unlockSkill(h, i))) this.toast(`Mở khóa [${SKILL_KEYS[i]}] ${HEROES[h.type].skills[i].name}!`, '#A86CE0');
-        } else this.openScreen('skills', { skill: i });
+        const sk = HEROES[h.type].skills[i];
+        const r = skillLevel(h, i) ? g.upgradeSkill(h, i) : g.unlockSkill(h, i);
+        if (r === true) this.toast(`<b>${sk.name}</b> cấp ${skillLevel(h, i)} · ${esc(sk.info(skillN(h.level)))}`, '#F2D27A');
+        else this.toast(`<b>${sk.name}</b> (cấp ${skillLevel(h, i)}/${SKILL_MAX[i]}): ${r}<br><small>${esc(sk.info(skillN(h.level)))}</small>`, '#C8BFA8');
+        this.sig.deck = null;
+        break;
+      }
+      case 'hero-stats': this.statsOpen = !this.statsOpen; this.sig.deck = null; break;
+      case 'sk-stat-deck': {
+        if (!h) break;
+        const r = g.spendStat(h);
+        if (r !== true) this.toast(`Cộng chỉ số: ${r}. Lên cấp tướng để có điểm`, '#C8BFA8');
+        this.sig.deck = null;
         break;
       }
       case 'moc':
@@ -1358,7 +1395,6 @@ class UI {
       }
       case 'temper': if (fail(g.temper(+d.uid))) { this.toast('Tôi luyện thành công!', '#FFD66B'); this.renderScreen(true); } break;
       case 'reroll': if (fail(g.reroll(+d.uid))) { this.toast('Tẩy luyện: đã rút lại dòng phụ', '#A86CE0'); this.renderScreen(true); } break;
-      case 'open-skills': $('#more').hidden = true; if (h) h.notice.skills = false; this.openScreen('skills', { skill: 0 }); break;
       case 'open-evo': $('#more').hidden = true; if (h) h.notice.evo = false; this.openScreen('evo'); break;
       case 'open-bag': $('#more').hidden = true; this.openScreen('bag', { slot: null }); break;
       case 'slot': this.openScreen('bag', { slot: d.slot }); break;
