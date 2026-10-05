@@ -87,7 +87,9 @@ class UI {
     $('#btn-restart').onclick = () => {
       game.reset();
       this.close();
+      this.nwKey = null;
       $('#overlay').hidden = true;
+      $('#reward').hidden = true;
       game.started = true;
       game.running = false;
     };
@@ -96,6 +98,17 @@ class UI {
       game.running = !game.running;
       if (game.running) this.closePicker();
     };
+    // chạm vào loại quái trong bảng đợt kế để xem cơ chế
+    $('#nw-list').addEventListener('click', (ev) => {
+      const el = ev.target.closest('[data-info]');
+      if (!el) return;
+      const d = ENEMIES[el.dataset.info];
+      this.toast(`<b>${d.name}</b> · Giáp ${d.armor || 0} · Kháng phép ${d.mr || 0}%<br>${d.desc}`, d.boss ? '#ff7043' : '#a29bfe');
+    });
+    $('#rw-list').addEventListener('click', (ev) => {
+      const el = ev.target.closest('[data-rw]');
+      if (el) this.pickReward(+el.dataset.rw);
+    });
     $('#btn-early').onclick = () => {
       const bonus = game.callEarly();
       game.running = true;
@@ -368,7 +381,12 @@ class UI {
     }
     while (g.events.length) {
       const ev = g.events.shift();
-      if (ev.type === 'boss') {
+      if (ev.type === 'newEnemy') {
+        const d = ENEMIES[ev.enemy];
+        this.toast(`<b>Quái mới: ${d.name}</b><br>${d.desc}`, d.boss ? '#ff7043' : '#a29bfe');
+      } else if (ev.type === 'reward') {
+        this.showReward(ev.options);
+      } else if (ev.type === 'boss') {
         $('#banner-text').textContent = ev.name;
         $('#banner').hidden = false;
         this.bannerT = 2.6;
@@ -474,16 +492,52 @@ class UI {
     });
   }
 
+  // Bảng thưởng boss: dừng game cho tới khi chọn xong
+  showReward(options) {
+    const g = this.game;
+    this.rewardOpts = options;
+    this.rewardWasRunning = g.running;
+    g.running = false;
+    this.close();
+    this.closePicker();
+    $('#rw-title').textContent = `Đợt ${g.wave}`;
+    $('#rw-list').innerHTML = options.map((o, i) => {
+      let body;
+      if (o.kind === 'item') {
+        body = itemCard(o.id);
+      } else if (o.kind === 'treasure') {
+        body = `<div class="item" style="--rc:#f1c40f"><span class="icon">💰</span><span class="meta"><b style="color:#f1c40f">+${o.gold} vàng</b><small>Sửa thành +${o.lives} máu</small></span></div>`;
+      } else {
+        body = `<div class="item" style="--rc:#b48cf0"><span class="icon">⬆</span><span class="meta"><b style="color:#b48cf0">+${o.levels} cấp</b><small>Cho tất cả tướng đang có</small></span></div>`;
+      }
+      return `<button class="rw-opt" data-rw="${i}"><span class="rw-name">${o.title}</span>${body}<span class="rw-pick">Chọn</span></button>`;
+    }).join('');
+    $('#reward').hidden = false;
+  }
+
+  pickReward(i) {
+    const g = this.game;
+    const o = this.rewardOpts[i];
+    g.claimReward(o);
+    $('#reward').hidden = true;
+    g.running = this.rewardWasRunning;
+    if (o.kind === 'item') this.toast(`Nhận <b>${ITEMS[o.id].name}</b>. Chạm vào tướng để mặc`, RARITY[ITEMS[o.id].rarity].color);
+    else if (o.kind === 'treasure') this.toast(`+${o.gold}💰 và +${o.lives} máu thành`, '#f1c40f');
+    else this.toast(`Toàn quân lên ${o.levels} cấp!`, '#b48cf0');
+  }
+
   // Bảng đợt kế tiếp (đếm ngược, quái sắp tới, gọi sớm), hiện giữa hai đợt
   updateNextWave() {
     const g = this.game;
     const panel = $('#nextwave');
     const show = g.started && !g.over && !g.waveActive && g.wave > 0;
     panel.hidden = !show;
-    $('#toasts').classList.toggle('below-boss', show || !!g.boss);
+    $('#toasts').classList.toggle('below-boss', !!g.boss);
+    // thông báo luôn nằm ngay dưới bảng đợt kế
+    $('#toasts').style.top = show ? panel.offsetTop + panel.offsetHeight + 6 + 'px' : '';
     if (!show) return;
     const n = g.wave + 1;
-    const boss = g.nextWave.some((x) => x.type === 'boss');
+    const boss = g.nextWave.some((x) => ENEMIES[x.type].boss);
     $('#nw-title').textContent = boss ? `ĐỢT ${n} · BOSS` : `ĐỢT ${n} SẮP TỚI`;
     $('#nw-title').classList.toggle('boss', boss);
     const left = Math.max(0, g.nextWaveT);
@@ -492,9 +546,16 @@ class UI {
     if (this.nwKey !== n) {
       this.nwKey = n;
       const counts = {};
-      for (const x of g.nextWave) counts[x.type] = (counts[x.type] || 0) + 1;
+      let elites = 0;
+      for (const x of g.nextWave) {
+        counts[x.type] = (counts[x.type] || 0) + 1;
+        if (x.elite) elites++;
+      }
       $('#nw-list').innerHTML = Object.entries(counts).map(([type, c]) =>
-        `<span class="nw-chip"><canvas data-enemy="${type}" width="40" height="40"></canvas><b>x${c}</b><small>${ENEMIES[type].name}</small></span>`).join('');
+        `<button class="nw-chip ${ENEMIES[type].boss ? 'boss' : ''}" data-info="${type}"><canvas data-enemy="${type}" width="40" height="40"></canvas><b>x${c}</b><small>${ENEMIES[type].name}</small></button>`).join('')
+        + (elites ? `<span class="nw-chip elite"><b>★${elites}</b><small>tinh anh</small></span>` : '');
+      // nhiều loại quái: chỉ hiện hình + số lượng cho gọn (chạm để xem tên)
+      $('#nw-list').classList.toggle('compact', Object.keys(counts).length > 3);
       document.querySelectorAll('canvas[data-enemy]').forEach((cv) => {
         const def = ENEMIES[cv.dataset.enemy];
         const cx = cv.getContext('2d');
@@ -658,7 +719,8 @@ class UI {
         <span class="chip"><i>Tầm</i> ${Math.round(st.range)}</span>
         <span class="chip"><i>Chí mạng</i> ${Math.round(st.crit)}%</span>
         <span class="chip"><i>Đã hạ</i> ${h.kills}</span>
-        <span class="chip"><i>Giảm hồi chiêu</i> ${Math.round(st.cdr)}%</span>${sets}`;
+        <span class="chip"><i>Giảm hồi chiêu</i> ${Math.round(st.cdr)}%</span>
+        <span class="chip"><i>Loại</i> ${def.dmgType === 'magic' ? 'Phép' : 'Vật lý'}${def.attack === 'melee' ? ' · không đánh được quái bay' : ''}</span>${sets}`;
     }
 
     const unlocked = def.skills.filter((sk) => h.kills >= sk.unlock).length;

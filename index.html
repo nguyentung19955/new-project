@@ -9,7 +9,7 @@
   <title>Thủ Thành Anh Hùng</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Be+Vietnam+Pro:wght@400;600;700&display=swap">
-  <link rel="stylesheet" href="css/style.css?v=10">
+  <link rel="stylesheet" href="css/style.css?v=11">
 </head>
 <body>
 <!--BODY-->
@@ -66,7 +66,7 @@
         <button id="btn-play" class="go big">Chơi ngay</button>
         <button id="btn-howto" class="ghost">Cách chơi</button>
         <p id="best" class="best"></p>
-        <p class="version">Phiên bản 10</p>
+        <p class="version">Phiên bản 11</p>
       </div>
     </div>
 
@@ -95,6 +95,16 @@
       </div>
     </div>
 
+    <!-- Thưởng sau khi hạ boss -->
+    <div id="reward" class="screen" hidden>
+      <div class="menu-card reward-card">
+        <small class="rw-kicker">Chiến thắng boss</small>
+        <h2 id="rw-title"></h2>
+        <p class="dim">Chọn 1 phần thưởng</p>
+        <div class="rw-list" id="rw-list"></div>
+      </div>
+    </div>
+
     <div id="err" hidden></div>
   </div>
 <!--/BODY-->
@@ -107,10 +117,10 @@
       el.textContent = 'Lỗi: ' + (e.message || e.error) + (e.filename ? ' (' + e.filename.split('/').pop() + ':' + e.lineno + ')' : '');
     });
   </script>
-  <script src="js/data.js?v=10"></script>
-  <script src="js/render.js?v=10"></script>
-  <script src="js/game.js?v=10"></script>
-  <script src="js/ui.js?v=10"></script>
-  <script src="js/main.js?v=10"></script>
+  <script src="js/data.js?v=11"></script>
+  <script src="js/render.js?v=11"></script>
+  <script src="js/game.js?v=11"></script>
+  <script src="js/ui.js?v=11"></script>
+  <script src="js/main.js?v=11"></script>
 </body>
 </html>

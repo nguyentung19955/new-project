@@ -624,6 +624,34 @@ function drawEffects(t) {
         }
         break;
       }
+      case 'heal': {
+        ctx.strokeStyle = '#55efc4';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.ellipse(f.x, f.y, f.r * p, f.r * 0.45 * p, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.fillStyle = '#55efc4';
+        ctx.fillRect(f.x - 2, f.y - 40 - p * 10, 4, 12);
+        ctx.fillRect(f.x - 6, f.y - 36 - p * 10, 12, 4);
+        break;
+      }
+      case 'revive': {
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = '#9be7ff';
+        ctx.lineWidth = 2;
+        for (let i = 0; i < 3; i++) {
+          const a = t * 4 + (i * Math.PI * 2) / 3;
+          ctx.beginPath();
+          ctx.arc(f.x, f.y - 30, 30 + i * 6, a, a + 1.4);
+          ctx.stroke();
+        }
+        for (let i = 0; i < 8; i++) {
+          const a = (i / 8) * Math.PI * 2 + t;
+          ctx.fillStyle = '#dfe6e9';
+          ctx.fillRect(f.x + Math.cos(a) * 40 * k - 4, f.y - 20 + Math.sin(a) * 16 * k, 8, 2.5);
+        }
+        break;
+      }
       case 'flash':
         ctx.fillStyle = 'rgba(231,76,60,0.35)';
         ctx.fillRect(0, 0, CONFIG.W, CONFIG.H);

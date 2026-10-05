@@ -68,6 +68,7 @@ const STAT_NAMES = {
 // ------------------------------------------------------------
 const HEROES = {
   knight: {
+    dmgType: 'phys',
     name: 'Hiệp Sĩ', cost: 70, attr: 'str', attack: 'melee', wclass: 'blade',
     role: 'Chém lan',
     attrs: { str: 22, agi: 14, int: 12 }, gain: { str: 2.6, agi: 1.4, int: 1.2 },
@@ -90,6 +91,7 @@ const HEROES = {
     ],
   },
   butcher: {
+    dmgType: 'phys',
     name: 'Đồ Tể', cost: 80, attr: 'str', attack: 'melee', wclass: 'blade',
     role: 'Móc kéo',
     attrs: { str: 25, agi: 11, int: 14 }, gain: { str: 3.0, agi: 1.0, int: 1.5 },
@@ -112,6 +114,7 @@ const HEROES = {
     ],
   },
   archer: {
+    dmgType: 'phys',
     name: 'Cung Thủ', cost: 55, attr: 'agi', attack: 'arrow', wclass: 'bow',
     role: 'Tầm xa',
     attrs: { str: 15, agi: 22, int: 14 }, gain: { str: 1.6, agi: 2.8, int: 1.4 },
@@ -135,6 +138,7 @@ const HEROES = {
     ],
   },
   assassin: {
+    dmgType: 'phys',
     name: 'Sát Thủ', cost: 75, attr: 'agi', attack: 'melee', wclass: 'blade',
     role: 'Chí mạng',
     attrs: { str: 16, agi: 24, int: 12 }, gain: { str: 1.8, agi: 3.0, int: 1.2 },
@@ -158,6 +162,7 @@ const HEROES = {
     ],
   },
   mage: {
+    dmgType: 'magic',
     name: 'Pháp Sư Lửa', cost: 85, attr: 'int', attack: 'magic', wclass: 'staff',
     role: 'Nổ lan',
     attrs: { str: 14, agi: 12, int: 24 }, gain: { str: 1.4, agi: 1.2, int: 3.0 },
@@ -181,6 +186,7 @@ const HEROES = {
     ],
   },
   frost: {
+    dmgType: 'magic',
     name: 'Pháp Sư Băng', cost: 80, attr: 'int', attack: 'frost', wclass: 'staff',
     role: 'Làm chậm',
     attrs: { str: 15, agi: 13, int: 22 }, gain: { str: 1.6, agi: 1.4, int: 2.8 },
@@ -297,6 +303,17 @@ const ITEMS = {
                   recipe: { parts: ['life_gem', 'power_belt'], cost: 150 },
                   stats: { str: 15, hp: 500, regen: 6 }, look: { aura: '#2ecc71' } },
 
+  // Bảo vật riêng của từng boss (chọn trong bảng thưởng sau khi hạ boss)
+  gorath_heart: { name: 'Tim Thạch Long', slot: 'acc', rarity: 'legendary', icon: '🪨', bossOnly: true,
+                  desc: 'Bảo vật của Thạch Long Gorath',
+                  stats: { str: 20, hp: 450, regen: 6 }, look: { aura: '#a0522d' } },
+  ash_crown:    { name: 'Vương Miện Tro Tàn', slot: 'helmet', rarity: 'legendary', bossOnly: true,
+                  desc: 'Bảo vật của Chúa Tể Tro Tàn',
+                  stats: { int: 15, damage: 15, cdr: 10 }, look: { type: 'crown', color: '#e67e22', gem: '#ff3b00' } },
+  bone_scythe:  { name: 'Lưỡi Hái Vua Xương', slot: 'acc', rarity: 'legendary', icon: '💀', bossOnly: true,
+                  desc: 'Bảo vật của Vua Xương',
+                  stats: { damage: 35, crit: 12, agi: 10 }, look: { aura: '#dfe6e9' } },
+
   // Chỉ rơi từ boss: gục sẽ hồi sinh ngay (dùng 1 lần)
   phoenix_badge:{ name: 'Huy Hiệu Phượng Hoàng', slot: 'acc', rarity: 'legendary', icon: '🔥',
                   stats: {}, revive: true, bossOnly: true,
@@ -315,33 +332,79 @@ const SETS = {
 
 // ------------------------------------------------------------
 //  QUÁI
-//  ranged: quái bắn tướng; slam/summon: chiêu của boss
+//  armor: giáp (giảm sát thương vật lý) · mr: % kháng phép
+//  Cơ chế: ranged (bắn tướng), heal (hồi máu đồng đội), enrage (hóa điên
+//  khi máu thấp), flying (chỉ tướng đánh xa bắn được), split (chết tách
+//  con), stunResist (giảm thời gian choáng). Boss: slam, summon, burnAura,
+//  phaseSummon (gọi quân mỗi khi mất 25% máu), reincarnate (hồi sinh 1 lần).
 // ------------------------------------------------------------
 const ENEMIES = {
-  grunt:  { name: 'Yêu Tinh', hp: 50,  speed: 48, gold: 4,  xp: 8,  size: 13, color: '#6ab04c', drop: 0.03 },
-  runner: { name: 'Sói Hoang', hp: 34, speed: 92, gold: 5,  xp: 8,  size: 12, color: '#a4b0be', drop: 0.03 },
-  tank:   { name: 'Quỷ Đá',   hp: 220, speed: 30, gold: 12, xp: 20, size: 19, color: '#786fa6', drop: 0.08 },
-  shaman: { name: 'Pháp Sư Quỷ', hp: 70, speed: 42, gold: 8, xp: 16, size: 13, color: '#8e44ad', drop: 0.06,
-            ranged: { range: 135, dmg: 10, cd: 2.4 } },
-  boss:   { name: 'Thạch Long Gorath', hp: 950, speed: 24, gold: 120, xp: 160, size: 30, color: '#7b3f2a',
-            drop: 1, boss: true, lives: 5,
-            slam: { range: 160, dmg: 55, cd: 6, stun: 1.2 },
-            summon: { cd: 9, count: 2, type: 'grunt' } },
+  grunt:  { name: 'Yêu Tinh', hp: 60, speed: 48, gold: 4, xp: 8, size: 13, color: '#6ab04c', drop: 0.03,
+            armor: 2, mr: 0, desc: 'Đi thành bầy đông. Dễ bị sát thương lan.' },
+  runner: { name: 'Sói Hoang', hp: 46, speed: 92, gold: 5, xp: 8, size: 12, color: '#a4b0be', drop: 0.03,
+            armor: 3, mr: 10, enrage: { below: 0.5, speed: 1.6 },
+            desc: 'Hóa điên khi máu dưới 50%: chạy nhanh gấp rưỡi. Nên làm chậm.' },
+  tank:   { name: 'Golem Đá', hp: 320, speed: 28, gold: 14, xp: 22, size: 19, color: '#7a6f60', drop: 0.08,
+            armor: 14, mr: 40, stunResist: 0.5,
+            desc: 'Giáp và kháng phép rất cao, bị choáng ngắn hơn. Cần sát thương lớn.' },
+  shaman: { name: 'Pháp Sư Quỷ', hp: 90, speed: 42, gold: 9, xp: 16, size: 13, color: '#8e44ad', drop: 0.06,
+            armor: 1, mr: 30, ranged: { range: 135, dmg: 12, cd: 2.4 }, heal: { cd: 4, pct: 0.12, radius: 110 },
+            desc: 'Bắn tướng từ xa và hồi máu cho quái xung quanh. Nên hạ trước.' },
+  bat:    { name: 'Dơi Độc', hp: 55, speed: 70, gold: 7, xp: 12, size: 12, color: '#6b5a8e', drop: 0.04,
+            armor: 0, mr: 25, flying: true,
+            desc: 'Bay trên không: chỉ Cung Thủ và Pháp Sư bắn được.' },
+  splitter: { name: 'Bọ Phân Thân', hp: 150, speed: 40, gold: 8, xp: 14, size: 16, color: '#c0a24a', drop: 0.05,
+            armor: 5, mr: 10, split: { type: 'mite', count: 3 },
+            desc: 'Chết thì tách thành 3 Bọ Con chạy rất nhanh.' },
+  mite:   { name: 'Bọ Con', hp: 30, speed: 80, gold: 2, xp: 4, size: 8, color: '#d4b860', drop: 0,
+            armor: 2, mr: 0, minion: true, desc: 'Nở ra từ Bọ Phân Thân.' },
+  imp:    { name: 'Quỷ Lửa Con', hp: 45, speed: 85, gold: 3, xp: 5, size: 10, color: '#e8590c', drop: 0,
+            armor: 2, mr: 60, minion: true, desc: 'Do Chúa Tể Tro Tàn gọi ra. Kháng phép cao.' },
+
+  // --- Boss: luân phiên mỗi 5 đợt
+  gorath: { name: 'Thạch Long Gorath', hp: 1300, speed: 24, gold: 150, xp: 180, size: 30, color: '#7b3f2a',
+            drop: 1, boss: true, lives: 5, armor: 12, mr: 25, reward: 'gorath_heart',
+            slam: { range: 160, dmg: 55, cd: 6, stun: 1.2 }, summon: { cd: 9, count: 2, type: 'grunt' },
+            enrage: { below: 0.5, speed: 1.3 },
+            desc: 'Dậm đất làm choáng tướng, gọi Yêu Tinh. Dưới 50% máu thì hóa điên.' },
+  ashlord: { name: 'Chúa Tể Tro Tàn', hp: 1200, speed: 26, gold: 170, xp: 200, size: 28, color: '#8a2a1a',
+            drop: 1, boss: true, lives: 5, armor: 6, mr: 50, reward: 'ash_crown',
+            burnAura: { radius: 150, dps: 10 }, phaseSummon: { type: 'imp', count: 4 }, slowResist: 0.5,
+            desc: 'Thiêu đốt tướng đứng gần. Mỗi khi mất 25% máu gọi 4 Quỷ Lửa Con.' },
+  boneking: { name: 'Vua Xương', hp: 1100, speed: 25, gold: 190, xp: 220, size: 28, color: '#d8d2c0',
+            drop: 1, boss: true, lives: 5, armor: 14, mr: 20, reward: 'bone_scythe',
+            reincarnate: { pct: 0.6, delay: 2.5 }, summon: { cd: 8, count: 3, type: 'grunt' },
+            desc: 'Gọi lính liên tục. Bị hạ lần đầu sẽ hồi sinh với 60% máu.' },
+};
+const BOSS_ORDER = ['gorath', 'ashlord', 'boneking'];
+
+// Quái tinh anh (từ đợt 6): máu x1.8, thưởng nhiều hơn, thêm một đặc tính
+const ELITE_MODS = {
+  armored: { name: 'Giáp Sắt', icon: '🛡', color: '#b2bec3', desc: '+10 giáp' },
+  regen:   { name: 'Hồi Máu', icon: '✚', color: '#55efc4', desc: 'Hồi 3% máu mỗi giây' },
+  swift:   { name: 'Thần Tốc', icon: '»', color: '#fdcb6e', desc: 'Chạy nhanh hơn 40%' },
+  shield:  { name: 'Khiên Phép', icon: '◈', color: '#74b9ff', desc: 'Khiên chặn sát thương bằng 40% máu' },
 };
 
-const waveHpMult = (n) => Math.pow(1.14, n - 1);
+const waveHpMult = (n) => Math.pow(1.165, n - 1);
 
 function buildWave(n) {
   const list = [];
-  const count = 6 + Math.floor(n * 1.8);
+  const count = 8 + Math.floor(n * 2);
+  const airWave = n >= 4 && n % 4 === 3;      // đợt bay: nhiều Dơi Độc
   for (let i = 0; i < count; i++) {
     const r = Math.random();
     let type = 'grunt';
-    if (n >= 3 && r < 0.12) type = 'shaman';
-    else if (n >= 4 && r < 0.28) type = 'tank';
-    else if (n >= 2 && r < 0.52) type = 'runner';
-    list.push({ type, gap: type === 'runner' ? 0.45 : 0.85 });
+    if (airWave && r < 0.5) type = 'bat';
+    else if (n >= 7 && r < 0.1) type = 'splitter';
+    else if (n >= 3 && r < 0.22) type = 'shaman';
+    else if (n >= 5 && r < 0.36) type = 'tank';
+    else if (n >= 4 && r < 0.44) type = 'bat';
+    else if (n >= 2 && r < 0.66) type = 'runner';
+    const elite = n >= 6 && Math.random() < 0.1 + n * 0.006
+      ? Object.keys(ELITE_MODS)[Math.floor(Math.random() * 4)] : null;
+    list.push({ type, elite, gap: type === 'runner' || type === 'bat' ? 0.45 : 0.8 });
   }
-  if (n % 5 === 0) list.push({ type: 'boss', gap: 3 });
+  if (n % 5 === 0) list.push({ type: BOSS_ORDER[(n / 5 - 1) % BOSS_ORDER.length], gap: 3 });
   return list;
 }

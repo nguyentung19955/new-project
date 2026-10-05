@@ -489,3 +489,27 @@ h2 { font-size: 1.8em; color: var(--brass); }
   color: #f0c46a; font-family: var(--display); font-weight: 800; font-size: 0.85em;
 }
 #toasts.below-boss { top: 10.5em; }
+
+/* chip quái trong bảng đợt kế là nút xem thông tin */
+button.nw-chip { font: inherit; color: var(--ink); cursor: pointer; }
+.nw-chip.boss { border-color: #e0563a; background: #2a1410; }
+.nw-chip.elite { border-color: #fdcb6e; }
+.nw-chip.elite b { color: #fdcb6e; }
+
+/* bảng thưởng boss */
+.reward-card { max-width: 24em; border-color: #f6c945; box-shadow: 0 12px 40px #000c, 0 0 40px #f6c94555, inset 0 0 0 4px var(--wood-2); }
+.rw-kicker { color: #ffb59e; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 700; font-size: 0.75em; }
+.reward-card .dim { margin: 0; }
+.rw-list { display: flex; flex-direction: column; gap: 0.55em; width: 100%; }
+.rw-opt {
+  display: flex; flex-direction: column; gap: 0.35em; text-align: left;
+  background: var(--wood-2); border: 2px solid var(--brass-dim); border-radius: 0.8em; padding: 0.5em;
+}
+.rw-opt:active { border-color: var(--brass); }
+.rw-name { font-family: var(--display); font-weight: 800; color: var(--brass); font-size: 1em; }
+.rw-opt .item { border-width: 1px; }
+.rw-pick { align-self: flex-end; font-weight: 800; color: #1a1408; background: var(--brass); border-radius: 0.5em; padding: 0.15em 0.9em; font-size: 0.85em; }
+
+.nw-list.compact small { display: none; }
+.nw-list.compact .nw-chip.elite small { display: inline; }
+.nw-list.compact { gap: 0.3em; }

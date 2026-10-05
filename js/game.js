@@ -101,7 +101,7 @@ function rollItem(minRarity) {
   const order = Object.keys(RARITY);
   const min = order.indexOf(minRarity || 'common');
   const pool = Object.keys(ITEMS).filter((id) =>
-    GEAR_SLOTS.includes(ITEMS[id].slot) && order.indexOf(ITEMS[id].rarity) >= min);
+    GEAR_SLOTS.includes(ITEMS[id].slot) && !ITEMS[id].bossOnly && order.indexOf(ITEMS[id].rarity) >= min);
   const total = pool.reduce((a, id) => a + RARITY[ITEMS[id].rarity].weight, 0);
   let r = Math.random() * total;
   for (const id of pool) {
@@ -122,7 +122,7 @@ const SKILL_COLOR = {
 
 const SKILL_CASTS = {
   bash(game, h, st, n) {
-    const e = game.findTarget(h.x, h.y, st.range);
+    const e = game.findTarget(h.x, h.y, st.range, false);
     if (!e) return false;
     game.effects.push({ type: 'bash', x: e.x, y: e.y - 8, ttl: 0.45, max: 0.45 });
     game.stun(e, e.def.boss ? 0.4 : 1, 'stun');
@@ -138,7 +138,7 @@ const SKILL_CASTS = {
     game.effects.push({ type: 'bolt', x: e.x, y: e.y, ttl: 0.45, max: 0.45 });
     game.effects.push({ type: 'scorch', x: e.x, y: e.y, ttl: 1.2, max: 1.2 });
     game.sparks(e.x, e.y - 8, '#f9e79f', 12);
-    game.hit(e, (st.damage * 4 + n * 2) * st.skillPower, h, { big: true, color: '#f1c40f' });
+    game.hit(e, (st.damage * 4 + n * 2) * st.skillPower, h, { big: true, color: '#f1c40f', dt: 'magic' });
     game.shake = Math.max(game.shake, 6);
     return true;
   },
@@ -183,7 +183,7 @@ const SKILL_CASTS = {
     game.effects.push({ type: 'pillar', x, y, ttl: 0.8, max: 0.8 });
     for (const e of game.enemiesInRange(x, y, 48)) {
       game.hit(e, (st.damage * 1.8 + n * 0.8) * st.skillPower, h, { big: true, color: '#ff7f50' });
-      if (!e.dead) game.dot(e, Math.max(st.poison, 5 + n * 0.1), h, '#e67e22');
+      if (!e.dead) game.dot(e, Math.max(st.poison, 5 + n * 0.1), h, '#e67e22', 'magic');
     }
     return true;
   },
@@ -207,7 +207,7 @@ const SKILL_CASTS = {
     return true;
   },
   hook(game, h, st, n) {
-    const e = game.findTarget(h.x, h.y, st.range * 1.8);
+    const e = game.findTarget(h.x, h.y, st.range * 1.8, false);
     if (!e) return false;
     game.effects.push({ type: 'hook', hero: h, target: e, ttl: 0.55, max: 0.55 });
     // móc trúng sau 0.2s, rồi kéo quái lùi lại dọc đường
@@ -222,7 +222,7 @@ const SKILL_CASTS = {
     return true;
   },
   devour(game, h, st, n) {
-    const list = game.enemiesInRange(h.x, h.y, st.range * 1.2);
+    const list = game.enemiesInRange(h.x, h.y, st.range * 1.2, false);
     if (!list.length) return false;
     const normal = list.filter((e) => !e.def.boss);
     game.effects.push({ type: 'vortex', x: h.x, y: h.y - 22, color: '#8bc34a', ttl: 0.6, max: 0.6 });
@@ -230,14 +230,14 @@ const SKILL_CASTS = {
       const e = normal.reduce((a, b) => (b.hp > a.hp ? b : a));
       game.effects.push({ type: 'swallow', x: e.x, y: e.y - 8, x2: h.x, y2: h.y - 26, r: e.def.size, color: e.def.color, ttl: 0.45, max: 0.45 });
       game.text(e.x, e.y - 30, 'NUỐT!', '#8bc34a', 0.9, 18);
-      game.hit(e, e.hp + 1, h, {});
+      game.hit(e, e.hp + (e.shield || 0) + 1, h, { dt: 'pure' });
     } else {
       game.hit(list[0], (st.damage * 6 + n * 2) * st.skillPower, h, { big: true, color: '#8bc34a' });
     }
     return true;
   },
   shadowstep(game, h, st, n) {
-    const e = game.findTarget(h.x, h.y, st.range * 2);
+    const e = game.findTarget(h.x, h.y, st.range * 2, false);
     if (!e) return false;
     game.effects.push({ type: 'afterimage', x: h.x, y: h.y, x2: e.x, y2: e.y, color: '#a55eea', ttl: 0.45, max: 0.45 });
     game.effects.push({ type: 'xslash', x: e.x, y: e.y - 10, color: '#c39bd3', ttl: 0.35, max: 0.35 });
@@ -245,7 +245,7 @@ const SKILL_CASTS = {
     return true;
   },
   assassinate(game, h, st, n) {
-    const list = game.enemiesInRange(h.x, h.y, st.range * 2.5);
+    const list = game.enemiesInRange(h.x, h.y, st.range * 2.5, false);
     if (!list.length) return false;
     const e = list.reduce((a, b) => (b.hp > a.hp ? b : a));
     game.effects.push({ type: 'mark', target: e, ttl: 0.45, max: 0.45,
@@ -309,6 +309,7 @@ class Game {
     this.nextWave = buildWave(1);
     this.shake = 0;
     this.bossesKilled = 0;
+    this.seen = {};         // loại quái đã gặp (báo "quái mới")
     this.events = [];   // sự kiện lớn cho giao diện (boss xuất hiện...)
     // Đồ khởi đầu để thử ngay việc thay đổi hình dạng
     this.inventory = ['leather_cap', 'leather_armor', 'iron_sword', 'hunter_bow', 'oak_staff'];
@@ -437,15 +438,16 @@ class Game {
   }
 
   // ---------- truy vấn
-  enemiesInRange(x, y, r) {
-    return this.enemies.filter((e) => !e.dead && Math.hypot(e.x - x, e.y - y) <= r);
+  // air = false: không tính quái bay (tướng cận chiến không với tới)
+  enemiesInRange(x, y, r, air = true) {
+    return this.enemies.filter((e) => !e.dead && (air || !e.def.flying) && Math.hypot(e.x - x, e.y - y) <= r);
   }
 
   // Ưu tiên quái đi xa nhất (gần lâu đài nhất)
-  findTarget(x, y, r) {
+  findTarget(x, y, r, air = true) {
     let best = null;
     for (const e of this.enemies) {
-      if (e.dead || Math.hypot(e.x - x, e.y - y) > r) continue;
+      if (e.dead || (!air && e.def.flying) || Math.hypot(e.x - x, e.y - y) > r) continue;
       if (!best || e.dist > best.dist) best = e;
     }
     return best;
@@ -480,16 +482,23 @@ class Game {
     }
   }
 
-  spawn(type, dist) {
+  spawn(type, dist, elite) {
     const def = ENEMIES[type];
-    const hp = def.hp * waveHpMult(this.wave) * (def.boss ? 1 + this.bossesKilled * 0.35 : 1);
+    let hp = def.hp * waveHpMult(this.wave) * (def.boss ? 1 + this.bossesKilled * 0.35 : 1);
+    if (elite) hp *= 1.8;
     const p = PATH.at(dist);
     const e = {
       id: nextId++, type, def, hp, maxHp: hp, dist, x: p.x, y: p.y, dir: 1,
-      slowT: 0, slowPct: 0, stunT: 0, poisonT: 0, poisonDps: 0, poisonBy: null, dotColor: '#2ecc71',
-      atkCd: 1, slamCd: 4, summonCd: 6, dead: false, stunKind: 'stun', pullT: 0, pullSpeed: 0,
+      slowT: 0, slowPct: 0, stunT: 0, poisonT: 0, poisonDps: 0, poisonBy: null, dotColor: '#2ecc71', dotType: 'pure',
+      atkCd: 1, slamCd: 4, summonCd: 6, healCd: 2, burnT: 0, dead: false, stunKind: 'stun', pullT: 0, pullSpeed: 0,
+      elite: elite || null, armor: (def.armor || 0) + (elite === 'armored' ? 10 : 0), mr: def.mr || 0,
+      shield: elite === 'shield' ? hp * 0.4 : 0, phase: 0, reborn: false, enraged: false,
     };
     this.enemies.push(e);
+    if (!def.minion && !this.seen[type]) {
+      this.seen[type] = true;
+      if (this.wave > 1 || def.boss) this.events.push({ type: 'newEnemy', enemy: type });
+    }
     return e;
   }
 
@@ -499,7 +508,7 @@ class Game {
     if (this.spawnTimer > 0) return;
     const next = this.spawnQueue.shift();
     this.spawnTimer = next.gap;
-    const e = this.spawn(next.type, 0);
+    const e = this.spawn(next.type, 0, next.elite);
     if (e.def.boss) this.events.push({ type: 'boss', name: e.def.name });
   }
 
@@ -509,8 +518,58 @@ class Game {
     if (e.slowT > 0) e.slowT -= dt;
     if (e.poisonT > 0) {
       e.poisonT -= dt;
-      this.hit(e, e.poisonDps * dt, e.poisonBy, { silent: true });
+      this.hit(e, e.poisonDps * dt, e.poisonBy, { silent: true, dt: e.dotType });
       if (e.dead) return;
+    }
+    if (e.reviveT > 0) {
+      // Vua Xương đang hồi sinh
+      e.reviveT -= dt;
+      e.hp = Math.min(e.maxHp * d.reincarnate.pct, e.hp + (e.maxHp * d.reincarnate.pct / d.reincarnate.delay) * dt);
+      return;
+    }
+    if (e.elite === 'regen') e.hp = Math.min(e.maxHp, e.hp + e.maxHp * 0.03 * dt);
+    // hóa điên khi máu thấp
+    if (d.enrage && !e.enraged && e.hp < e.maxHp * d.enrage.below) {
+      e.enraged = true;
+      this.text(e.x, e.y - 30, d.boss ? 'HÓA ĐIÊN!' : 'Điên!', '#ff4d4d', 0.9, d.boss ? 18 : 13);
+    }
+    // hồi máu đồng đội (Pháp Sư Quỷ)
+    if (d.heal) {
+      e.healCd -= dt;
+      if (e.healCd <= 0) {
+        e.healCd = d.heal.cd;
+        const hurt = this.enemies.filter((o) => !o.dead && o !== e && o.hp < o.maxHp && Math.hypot(o.x - e.x, o.y - e.y) <= d.heal.radius);
+        if (hurt.length) {
+          this.effects.push({ type: 'heal', x: e.x, y: e.y, r: d.heal.radius, ttl: 0.6, max: 0.6 });
+          for (const o of hurt) {
+            o.hp = Math.min(o.maxHp, o.hp + o.maxHp * d.heal.pct);
+            this.text(o.x, o.y - 26, '+', '#55efc4', 0.6, 16);
+          }
+        }
+      }
+    }
+    // thiêu đốt tướng đứng gần (Chúa Tể Tro Tàn)
+    if (d.burnAura) {
+      e.burnT -= dt;
+      if (e.burnT <= 0) {
+        e.burnT = 1;
+        for (const h of this.heroes) {
+          if (h && !h.dead && Math.hypot(h.x - e.x, h.y - e.y) <= d.burnAura.radius) {
+            this.damageHero(h, d.burnAura.dps * (1 + this.wave * 0.06));
+          }
+        }
+      }
+    }
+    // gọi quân mỗi khi mất 25% máu
+    if (d.phaseSummon) {
+      const ph = Math.floor((1 - e.hp / e.maxHp) / 0.25);
+      while (e.phase < Math.min(3, ph)) {
+        e.phase++;
+        for (let i = 0; i < d.phaseSummon.count; i++) this.spawn(d.phaseSummon.type, Math.max(0, e.dist - 8 - i * 16));
+        this.effects.push({ type: 'ring', x: e.x, y: e.y, r: 70, color: '#ff7043', ttl: 0.6, max: 0.6 });
+        this.text(e.x, e.y - 60, 'Trỗi dậy, lũ quỷ lửa!', '#ff7043', 1.2, 15);
+        this.shake = Math.max(this.shake, 4);
+      }
     }
 
     // quái tầm xa bắn tướng
@@ -527,11 +586,12 @@ class Game {
         }
       }
     }
-    // boss: dậm đất làm choáng tướng + gọi quái con
+    // boss: dậm đất làm choáng tướng
     if (d.slam) {
       e.slamCd -= dt;
       if (e.slamCd <= 0 && this.nearestHero(e.x, e.y, d.slam.range)) {
-        e.slamCd = d.slam.cd;
+        e.slamCd = d.slam.cd * (e.enraged ? 0.65 : 1);
+        this.shake = Math.max(this.shake, 4);
         this.effects.push({ type: 'ring', x: e.x, y: e.y, r: d.slam.range, color: '#e67e22', ttl: 0.6, max: 0.6 });
         for (const h of this.heroes) {
           if (!h || h.dead || Math.hypot(h.x - e.x, h.y - e.y) > d.slam.range) continue;
@@ -539,6 +599,9 @@ class Game {
           this.damageHero(h, d.slam.dmg * (1 + this.wave * 0.06));
         }
       }
+    }
+    // boss: gọi quân theo chu kỳ
+    if (d.summon) {
       e.summonCd -= dt;
       if (e.summonCd <= 0) {
         e.summonCd = d.summon.cd;
@@ -556,7 +619,8 @@ class Game {
       return;
     }
     if (e.stunT > 0) { e.stunT -= dt; return; }
-    const speed = d.speed * (e.slowT > 0 ? 1 - e.slowPct / 100 : 1);
+    const slow = e.slowT > 0 ? (e.slowPct / 100) * (1 - (d.slowResist || 0)) : 0;
+    const speed = d.speed * (1 - slow) * (e.enraged ? d.enrage.speed : 1) * (e.elite === 'swift' ? 1.4 : 1);
     e.dist += speed * dt;
     if (e.dist >= PATH.total) {
       e.dead = true;
@@ -643,7 +707,7 @@ class Game {
 
     // hào quang gây sát thương (Mùi Hôi Thối)
     if (st.stench) {
-      for (const e of this.enemiesInRange(h.x, h.y, 95)) this.hit(e, st.stench * dt, h, { silent: true });
+      for (const e of this.enemiesInRange(h.x, h.y, 95, false)) this.hit(e, st.stench * dt, h, { silent: true, dt: 'magic' });
     }
 
     for (const sk of def.skills) {
@@ -660,7 +724,8 @@ class Game {
       }
     }
 
-    const target = this.findTarget(h.x, h.y, st.range);
+    const air = def.attack !== 'melee';
+    const target = this.findTarget(h.x, h.y, st.range, air);
     if (!target) return;
     h.dir = target.x >= h.x ? 1 : -1;
     if (h.cd > 0) return;
@@ -671,7 +736,7 @@ class Game {
       this.effects.push({ type: 'slash', x: target.x, y: target.y - 10, dir: h.dir, ttl: 0.2, max: 0.2 });
       this.hit(target, st.damage, h, { st });
       if (st.cleave > 0) {
-        for (const e of this.enemiesInRange(h.x, h.y, st.range)) {
+        for (const e of this.enemiesInRange(h.x, h.y, st.range, false)) {
           if (e !== target) this.hit(e, st.damage * st.cleave, h, { st });
         }
       }
@@ -699,7 +764,7 @@ class Game {
     for (const p of this.projectiles) {
       if (!p.target.dead) {
         p.tx = p.target.x;
-        p.ty = p.target.y - (p.kind === 'evil' ? 20 : 8);
+        p.ty = p.target.y - (p.kind === 'evil' ? 20 : p.target.def && p.target.def.flying ? 30 : 8);
       }
       const dx = p.tx - p.x, dy = p.ty - p.y;
       const d = Math.hypot(dx, dy);
@@ -718,13 +783,13 @@ class Game {
         if (p.target.dead) continue;
         this.hit(p.target, st.damage, hero, { st });
         if (p.target.dead) continue;
-        if (st.poison > 0) this.dot(p.target, st.poison, hero, '#2ecc71');
+        if (st.poison > 0) this.dot(p.target, st.poison, hero, '#2ecc71', 'pure');
         if (st.slow > 0) { p.target.slowT = 1.5; p.target.slowPct = st.slow; }
       } else {
         this.effects.push({ type: 'ring', x: p.tx, y: p.ty, r: st.splash, color: '#e67e22', ttl: 0.3, max: 0.3 });
         for (const e of this.enemiesInRange(p.tx, p.ty, Math.max(st.splash, 14))) {
           this.hit(e, st.damage, hero, { st });
-          if (!e.dead && st.poison > 0) this.dot(e, st.poison, hero, '#e67e22');
+          if (!e.dead && st.poison > 0) this.dot(e, st.poison, hero, '#e67e22', 'magic');
         }
       }
     }
@@ -732,6 +797,7 @@ class Game {
   }
 
   stun(e, t, kind) {
+    t *= 1 - (e.def.stunResist || 0);
     e.stunT = Math.max(e.stunT, t);
     e.stunKind = kind;
   }
@@ -742,11 +808,12 @@ class Game {
     }
   }
 
-  dot(e, dps, hero, color) {
+  dot(e, dps, hero, color, type) {
     e.poisonT = 3;
     e.poisonDps = dps;
     e.poisonBy = hero;
     e.dotColor = color;
+    e.dotType = type || 'pure';
   }
 
   updateEffects(dt) {
@@ -760,22 +827,43 @@ class Game {
   }
 
   // ---------- sát thương & hạ gục
+  // Sát thương vật lý bị giáp giảm (như Dota), sát thương phép bị kháng phép giảm,
+  // sát thương chuẩn (pure) không bị giảm. Khiên phép hút sát thương trước.
   hit(e, amount, hero, o = {}) {
-    if (e.dead) return;
+    if (e.dead || e.reviveT > 0) return;
+    const type = o.dt || (hero ? HEROES[hero.type].dmgType : 'phys');
     let dmg = amount;
-    if (o.st && Math.random() * 100 < o.st.crit) {
-      dmg *= o.st.critMult || 2;
-      this.text(e.x, e.y - 30, Math.round(dmg) + '!', '#f1c40f', 0.7);
-    } else if (o.big) {
-      this.text(e.x, e.y - 30, Math.round(dmg), o.color || '#fff', 0.8);
+    const crit = o.st && Math.random() * 100 < o.st.crit;
+    if (crit) dmg *= o.st.critMult || 2;
+    if (type === 'phys') dmg *= 1 - (0.06 * e.armor) / (1 + 0.06 * e.armor);
+    else if (type === 'magic') dmg *= 1 - e.mr / 100;
+    if (crit) this.text(e.x, e.y - 30, Math.round(dmg) + '!', '#f1c40f', 0.7);
+    else if (o.big) this.text(e.x, e.y - 30, Math.round(dmg), o.color || '#fff', 0.8);
+    if (e.shield > 0) {
+      const a = Math.min(e.shield, dmg);
+      e.shield -= a;
+      dmg -= a;
+      if (e.shield <= 0) this.effects.push({ type: 'ring', x: e.x, y: e.y - 10, r: 26, color: '#74b9ff', ttl: 0.4, max: 0.4 });
     }
     e.hp -= dmg;
-    if (e.hp <= 0) this.kill(e, hero);
+    if (e.hp > 0) return;
+    if (e.def.reincarnate && !e.reborn) {
+      // Vua Xương hồi sinh một lần
+      e.reborn = true;
+      e.hp = 1;
+      e.reviveT = e.def.reincarnate.delay;
+      this.effects.push({ type: 'revive', x: e.x, y: e.y, ttl: e.def.reincarnate.delay, max: e.def.reincarnate.delay });
+      this.text(e.x, e.y - 70, 'VUA XƯƠNG HỒI SINH!', '#dfe6e9', 1.6, 18);
+      this.shake = Math.max(this.shake, 5);
+      return;
+    }
+    this.kill(e, hero);
   }
 
   kill(e, hero) {
     e.dead = true;
-    const gold = Math.round(e.def.gold * (1 + this.wave * 0.04));
+    const eliteMult = e.elite ? 2.5 : 1;
+    const gold = Math.round(e.def.gold * (1 + this.wave * 0.04) * eliteMult);
     this.gold += gold;
     this.text(e.x, e.y - 20, '+' + gold, '#f1c40f', 0.7);
     for (let i = 0; i < 6; i++) {
@@ -801,19 +889,55 @@ class Game {
     // Kinh nghiệm chia đều cho các tướng đứng gần (như Dota), người hạ luôn được chia
     const near = this.heroes.filter((h) => h && !h.dead && Math.hypot(h.x - e.x, h.y - e.y) <= 230);
     if (hero && !hero.dead && this.heroes[hero.slot] === hero && !near.includes(hero)) near.push(hero);
-    for (const h of near) this.gainXp(h, Math.round((e.def.xp * 1.5) / near.length));
+    for (const h of near) this.gainXp(h, Math.round((e.def.xp * 1.5 * (e.elite ? 2 : 1)) / near.length));
+
+    // tách con khi chết (Bọ Phân Thân)
+    if (e.def.split) {
+      for (let i = 0; i < e.def.split.count; i++) this.spawn(e.def.split.type, Math.max(0, e.dist - 6 + i * 8));
+      this.effects.push({ type: 'ring', x: e.x, y: e.y, r: 30, color: e.def.color, ttl: 0.4, max: 0.4 });
+    }
 
     if (e.def.boss) {
       this.bossesKilled++;
       this.inventory.push('phoenix_badge');
       this.notify(`Hạ ${e.def.name}! Nhận Huy Hiệu Phượng Hoàng`, '#f39c12');
+      this.shake = Math.max(this.shake, 8);
+      this.sparks(e.x, e.y - 20, '#f6c945', 24);
+      this.events.push({ type: 'reward', options: this.bossRewards(e.type) });
     }
-    if (Math.random() < e.def.drop) {
-      const id = rollItem(e.def.boss ? 'rare' : 'common');
+    if (Math.random() < e.def.drop * (e.elite ? 3 : 1)) {
+      const id = rollItem(e.def.boss ? 'rare' : e.elite ? 'rare' : 'common');
       this.inventory.push(id);
       const it = ITEMS[id];
       this.notify(`Rơi đồ: ${it.name} (${RARITY[it.rarity].name})`, RARITY[it.rarity].color);
       this.text(e.x, e.y - 40, '🎁', '#fff', 1);
+    }
+  }
+
+  // Ba lựa chọn thưởng sau khi hạ boss
+  bossRewards(bossType) {
+    const opts = [{ kind: 'item', id: ENEMIES[bossType].reward, title: 'Bảo vật Boss' }];
+    opts.push({ kind: 'item', id: rollItem('epic'), title: 'Rương Huyền Thoại' });
+    if (Math.random() < 0.5) {
+      opts.push({ kind: 'treasure', gold: 200 + this.wave * 15, lives: 3, title: 'Kho Báu & Sửa Thành' });
+    } else {
+      opts.push({ kind: 'levelup', levels: 2, title: 'Thăng Cấp Toàn Quân' });
+    }
+    return opts;
+  }
+
+  claimReward(o) {
+    if (o.kind === 'item') {
+      this.inventory.push(o.id);
+    } else if (o.kind === 'treasure') {
+      this.gold += o.gold;
+      this.lives += o.lives;
+    } else if (o.kind === 'levelup') {
+      for (const h of this.heroes) {
+        if (!h) continue;
+        const target = Math.min(CONFIG.maxLevel, h.level + o.levels);
+        if (target > h.level) this.gainXp(h, xpForLevel(target) - h.xp);
+      }
     }
   }
 

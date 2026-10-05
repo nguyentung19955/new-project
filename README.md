@@ -7,6 +7,8 @@ Game thủ thành màn hình dọc cho điện thoại. Lối chơi lấy cảm 
 - **Tiến hóa.** Đạt 25 / 75 / 150 quái thì tướng to hơn, có sao và hào quang.
 - **6 ô đồ.** 3 ô trang phục (vũ khí, mũ, giáp) đổi hình dạng tướng. 3 ô phụ kiện mua ở Cửa hàng và ghép thành đồ mạnh có hào quang riêng. Đủ 3 món Bộ Rồng thì tướng mọc cánh.
 - **Boss Thạch Long Gorath** xuất hiện mỗi 5 đợt: dậm đất làm choáng tướng, gọi quái con. Hạ boss nhận **Huy Hiệu Phượng Hoàng** giúp tướng hồi sinh ngay một lần.
+- **Quái có giáp và kháng phép.** Hiệp Sĩ, Đồ Tể, Sát Thủ, Cung Thủ gây sát thương vật lý (bị giáp giảm); hai Pháp Sư gây sát thương phép (bị kháng phép giảm). Cơ chế quái: Sói Hoang hóa điên khi máu thấp, Golem Đá giáp dày và kháng choáng, Pháp Sư Quỷ bắn tướng và hồi máu đồng đội, Dơi Độc bay (chỉ tướng đánh xa bắn được), Bọ Phân Thân chết tách thành 3 Bọ Con. Từ đợt 6 có quái tinh anh (Giáp Sắt, Hồi Máu, Thần Tốc, Khiên Phép). Chạm vào quái trong bảng đợt kế để xem cơ chế.
+- **3 boss luân phiên mỗi 5 đợt:** Thạch Long Gorath (dậm đất làm choáng, hóa điên), Chúa Tể Tro Tàn (thiêu tướng đứng gần, gọi quỷ lửa mỗi 25% máu), Vua Xương (gọi lính, hồi sinh một lần). Hạ boss được chọn 1 trong 3 phần thưởng: bảo vật riêng của boss, đồ Sử thi/Huyền thoại, hoặc kho báu/thăng cấp toàn quân.
 - **Tướng có máu.** Pháp Sư Quỷ bắn tướng, boss dậm đất. Tướng gục sẽ hồi sinh sau vài giây.
 
 ## Chạy thử
