@@ -714,6 +714,8 @@ const SKILL_CASTS = {
 // ------------------------------------------------------------
 //  TRẠNG THÁI TRẬN
 // ------------------------------------------------------------
+const IDLE_FX = new Set(['levelup', 'evolve', 'equipflash', 'promote', 'ring', 'summon', 'text']);
+
 class Game {
   constructor(notify) {
     this.notify = notify || (() => {});
@@ -819,7 +821,7 @@ class Game {
       dead: false, respawnT: 0, stunT: 0, hp: 0, mana: 0, skillLv: { [def.skills[0].id]: 1 }, skillPts: 0,
       tier: 0, spent: def.cost, grow: 0, shield: 0, shieldT: 0, invulnT: 0, reviveCd: 0,
       equip: { weapon: null, helmet: null, armor: null, acc1: null, acc2: null, acc3: null },
-      skillCd: {}, buff: {}, summonT: 0.5,
+      skillCd: {}, buff: {}, summonT: 0.5, notice: {},
     };
     this.heroes[slot] = h;
     this.updateAuras();
@@ -865,9 +867,29 @@ class Game {
     h.level++;
     h.skillPts++;
     if (!h.dead) h.hp += heroStats(h).hpMax - before;
-    this.text(h.x, h.y - 70, `CẤP ${h.level}`, '#F2D27A', 1.1);
-    this.effects.push({ type: 'levelup', x: h.x, y: h.y, ttl: 0.8, max: 0.8 });
+    this.levelFx(h, 1);
     return true;
+  }
+
+  // Hiệu ứng lên cấp: vòng trống đồng dưới chân, nảy 4px, chữ "Cấp N" (0,6 giây).
+  // Lên nhiều cấp liền thì gộp một hiệu ứng, chữ "+N cấp". Không dừng đòn đánh.
+  levelFx(h, n) {
+    h.bounceT = 0.3;
+    const f = this.effects.find((e) => e.type === 'levelup' && e.hero === h);
+    if (f) { f.count += n; f.lv = h.level; f.ttl = f.max; }
+    else this.effects.push({ type: 'levelup', hero: h, x: h.x, y: h.y, count: n, lv: h.level, ttl: 0.6, max: 0.6 });
+    // vừa đủ cấp mở E/R hoặc tiến hoá: nhắc trên nút ⋯
+    const from = h.level - n;
+    const hit = (lv) => lv > from && lv <= h.level;
+    if (COSTS.unlockReq.some((lv, i) => lv > 1 && hit(lv) && !skillLevel(h, i))) h.notice.skills = true;
+    const t = h.tier || 0;
+    if (t < 3 && hit(COSTS.evoReq[t])) h.notice.evo = true;
+  }
+
+  // Lóe sáng màu độ hiếm tại chỗ món đồ (tay, đầu, thân)
+  gearFx(h, slot, color, type) {
+    const at = slot === 'weapon' ? [h.x + 10 * (h.dir || 1), h.y - 34] : slot === 'helmet' ? [h.x, h.y - 60] : [h.x, h.y - 36];
+    this.effects.push({ type, hero: h, x: at[0], y: at[1], color, ttl: type === 'promote' ? 0.6 : 0.3, max: type === 'promote' ? 0.6 : 0.3 });
   }
 
   // Mở khóa kỹ năng W/E/R bằng vàng
@@ -879,6 +901,8 @@ class Game {
     this.gold -= COSTS.unlock[i];
     h.spent += COSTS.unlock[i];
     h.skillLv[sk.id] = 1;
+    h.unlockFx = { i, at: this.time };
+    if (i >= 2) h.notice.skills = false;
     this.effects.push({ type: 'ring', x: h.x, y: h.y - 20, r: 50, color: '#A86CE0', ttl: 0.6, max: 0.6 });
     return true;
   }
@@ -907,7 +931,9 @@ class Game {
     h.spent += COSTS.evo[t];
     h.tier = t + 1;
     this.notify(`${HEROES[h.type].name} tiến hoá lên ${'★'.repeat(h.tier)}!`, '#F2D27A');
-    this.effects.push({ type: 'evolve', x: h.x, y: h.y, ttl: 1.2, max: 1.2 });
+    h.evoT = 1.2;
+    h.notice.evo = false;
+    this.effects.push({ type: 'evolve', hero: h, x: h.x, y: h.y, color: ATTRS[HEROES[h.type].attr].color, ttl: 1.2, max: 1.2 });
     return true;
   }
 
@@ -938,12 +964,19 @@ class Game {
       if (!slot) return 'Hết ô phụ kiện. Tháo bớt một món trước';
     }
     const before = heroStats(h).hpMax;
+    const hadSet = activeSets(h.equip).includes('laclong');
     this.inventory.splice(idx, 1);
     if (h.equip[slot]) this.inventory.push(h.equip[slot]);
     h.equip[slot] = inst;
     if (!h.dead) h.hp += Math.max(0, heroStats(h).hpMax - before);
     this.flags.equipped = true;
-    this.effects.push({ type: 'ring', x: h.x, y: h.y - 20, r: 35, color: RARITY[inst.rarity].color, ttl: 0.5, max: 0.5 });
+    this.gearFx(h, slot, RARITY[inst.rarity].color, 'equipflash');
+    if (!hadSet && activeSets(h.equip).includes('laclong')) {
+      // đủ Bộ Lạc Long: cánh rồng bung ra, rung nhẹ, chữ giữa màn (1,5 giây)
+      h.wingT = 1.5;
+      this.shake = Math.max(this.shake, 4);
+      this.events.push({ type: 'setDone', name: SETS.laclong.name, hero: h });
+    }
     return true;
   }
 
@@ -993,6 +1026,7 @@ class Game {
     inst.spent += c;
     inst.rarity = nextR;
     inst.plus = 0;
+    if (f.hero) this.gearFx(f.hero, f.slot, RARITY[nextR].color, 'promote');
     return true;
   }
 
@@ -1542,6 +1576,9 @@ class Game {
     const st = heroStats(h);
     if (h.summonT > 0) h.summonT -= dt;
     if (h.hurtT > 0) h.hurtT -= dt;
+    if (h.bounceT > 0) h.bounceT -= dt;
+    if (h.evoT > 0) h.evoT -= dt;
+    if (h.wingT > 0) h.wingT -= dt;
     if (h.dead) {
       if (h.fallT > 0) h.fallT -= dt;
       h.respawnT -= dt;
@@ -1702,6 +1739,22 @@ class Game {
     e.dotType = type || 'pure';
   }
 
+  // Khi chưa bấm ▶ hoặc đang dừng: chỉ chạy hiệu ứng phản hồi thao tác của người chơi
+  // (lên cấp, tiến hoá, mặc đồ, triệu hồi...) để không bị đứng hình.
+  updateIdle(dt) {
+    this.shake = Math.max(0, this.shake - dt * 30);
+    for (const h of this.heroes) {
+      if (!h) continue;
+      for (const k of ['bounceT', 'evoT', 'wingT', 'summonT']) if (h[k] > 0) h[k] -= dt;
+    }
+    for (const f of this.effects) {
+      if (!IDLE_FX.has(f.type) || f.delay > 0) continue;
+      f.ttl -= dt;
+      if (f.vy) f.y += f.vy * dt;
+    }
+    this.effects = this.effects.filter((f) => f.ttl > 0);
+  }
+
   updateEffects(dt) {
     for (const f of this.effects.slice()) {
       if (f.delay > 0) { f.delay -= dt; continue; }
@@ -1812,13 +1865,15 @@ class Game {
     } else if (o.kind === 'levelup') {
       for (const h of this.heroes) {
         if (!h) continue;
+        let n = 0;
         for (let i = 0; i < o.levels && h.level < CONFIG.maxLevel; i++) {
           const before = heroStats(h).hpMax;
           h.level++;
           h.skillPts++;
+          n++;
           if (!h.dead) h.hp += heroStats(h).hpMax - before;
         }
-        this.effects.push({ type: 'levelup', x: h.x, y: h.y, ttl: 0.8, max: 0.8 });
+        if (n) this.levelFx(h, n);
       }
     }
   }

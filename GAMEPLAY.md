@@ -1,4 +1,4 @@
-# Núi Cao Nước Dâng · Tóm tắt gameplay (phiên bản 14 · chủ đề Sơn Tinh Thủy Tinh)
+# Núi Cao Nước Dâng · Tóm tắt gameplay (phiên bản 15 · chủ đề Sơn Tinh Thủy Tinh)
 
 > Tài liệu bàn giao thiết kế đầy đủ: `docs/HANDOFF.md`. Ghi chú những gì đã làm trong code: mục 14 ở cuối.
 
@@ -7,6 +7,8 @@ Game thủ thành trên điện thoại, chơi **màn hình ngang**, lấy cảm
 > **Thay đổi so với phiên bản 12:** giữ nguyên toàn bộ cơ chế và số liệu, đổi tên tướng / quái / boss / vật phẩm theo chủ đề, Cây Sự Sống thành **Núi Tản Viên**, thêm cơ chế mới **Nước Dâng** (mục 9).
 >
 > **Thay đổi ở phiên bản 14:** bỏ hẳn mọi tiến triển dựa trên số quái đã hạ. Người chơi **dùng vàng** để nâng cấp tướng (mục 2), mở khóa kỹ năng W/E/R (mục 3) và tiến hoá (mục 4). Thêm mục 12: các phần thiết kế còn phải làm.
+>
+> **Thay đổi ở phiên bản 15:** bổ sung phần hình ảnh còn thiếu: hiệu ứng lên cấp (mục 2), ngoại hình ba bậc tiến hoá (mục 4), ngoại hình đồ theo độ hiếm và vũ khí của tướng huyền thoại (mục 5), animation lên cấp / tiến hoá / mặc đồ (mục 13). Không đổi luật chơi hay số liệu.
 
 ---
 
@@ -51,6 +53,10 @@ Có 6 tướng chia theo 3 thuộc tính, mỗi thuộc tính 2 tướng. Sát t
   - Giá đề xuất: **20 + 10 × cấp hiện tại** (cấp 1→2: 30 vàng, cấp 9→10: 110 vàng, cấp 24→25: 260 vàng). *Cần chơi thử để cân bằng với thu nhập vàng.*
   - Bán tướng hoàn 60% giá triệu hồi **cộng 60% số vàng đã nâng cấp** (đề xuất, để người chơi không sợ nâng cấp).
   - Phần thưởng boss "Hội làng mừng thắng" (+2 cấp toàn quân) giữ nguyên.
+- **Hiệu ứng lên cấp** *(mới · đề xuất)*: lên cấp **không đổi ngoại hình** tướng. Ngoại hình chỉ đổi theo **đồ** (mục 5) và **tiến hoá** (mục 4), để người chơi nhìn là biết tướng mặc gì, tiến hoá mấy sao.
+  - Khi bấm Nâng cấp: vòng hoa văn trống đồng màu vàng lóe dưới chân, tướng nảy lên 4px, chữ **"Cấp N"** vàng bay lên rồi mờ dần (0,6 giây). Không dừng đòn đánh.
+  - Lên nhiều cấp liền (bấm nhanh, hoặc "Hội làng mừng thắng" +2 cấp): gộp thành một hiệu ứng, chữ hiện **"+2 cấp"**.
+  - Khi đạt cấp đủ điều kiện mới (cấp 3/6 mở E/R, cấp 5/10/15 tiến hoá): biểu tượng tương ứng trên nút Cây kỹ năng / Tiến hoá nhấp nháy để nhắc.
 
 ### Tướng huyền thoại *(mới · đề xuất, số liệu cần cân bằng)*
 
@@ -114,6 +120,16 @@ Tiến hoá mua bằng vàng, lần lượt từng bậc (giá đề xuất, c�
 | ★★ | 250 vàng | tướng cấp 10 | +20% sát thương |
 | ★★★ | 500 vàng | tướng cấp 15 | +30% sát thương |
 
+**Ngoại hình theo bậc** *(mới · đề xuất)*. Mỗi bậc giữ nguyên hiệu ứng của bậc trước rồi thêm vào:
+
+| Bậc | Kích thước | Hào quang dưới chân | Thêm |
+|---|---|---|---|
+| ★ | to hơn 10% | 1 vòng hoa văn trống đồng màu đồng, xoay chậm | — |
+| ★★ | to hơn 15% | 2 vòng, vòng trong ánh **màu hệ tướng** (Sức mạnh đỏ, Nhanh nhẹn xanh lá, Trí tuệ tím) | Mắt phát sáng, viền vũ khí ánh màu hệ |
+| ★★★ | to hơn 20% | 3 vòng + hạt sáng màu hệ bay lên | Sau lưng hiện **vầng ngôi sao 12 cánh** trống đồng; tên tướng trên thanh máu chuyển chữ vàng |
+
+Hào quang tiến hoá nằm **dưới** hào quang phụ kiện (mục 5) để hai loại không che nhau. Sao (★) hiện trên thanh máu tướng.
+
 Bán tướng cũng hoàn 60% số vàng đã chi cho kỹ năng và tiến hoá.
 
 ---
@@ -127,6 +143,48 @@ Mỗi tướng có **6 ô đồ**:
   - Độ hiếm: Thường, Hiếm, Sử thi, Huyền thoại.
   - Mặc đủ **Bộ Lạc Long** (Long Rìu / Long Nỏ / Long Trượng, Mũ Lạc Long, Giáp Vảy Rồng) được +30% sát thương, tướng **mọc cánh rồng**: dòng dõi Lạc Long Quân.
 - **3 ô phụ kiện:** mua ở Lò đúc đồng rồi **ghép** thành đồ mạnh có hào quang riêng.
+
+### Ngoại hình đồ theo độ hiếm *(mới · đề xuất)*
+
+Mỗi món trang phục có **4 phiên bản hình** theo độ hiếm. Đồ cùng độ hiếm dùng chung chất liệu và màu ánh, nên người chơi nhìn tướng là đoán được đồ mạnh hay yếu. Màu ánh trùng với màu khung độ hiếm của giao diện.
+
+| Độ hiếm | Chất liệu | Màu ánh | Hiệu ứng |
+|---|---|---|---|
+| Thường | gỗ, tre, vải gai, da thô | nâu xám `#8A8478` | không |
+| Hiếm | đồng thau sáng, lông chim | xanh lam `#4FA3D9` | viền sáng mảnh |
+| Sử thi | đồng khắc hoa văn trống đồng, ngọc | tím `#A86CE0` | ánh tím nhẹ, nhịp thở chậm |
+| Huyền thoại | đồng vàng ròng, hoa văn chim Lạc | cam vàng `#F0A030` | hào quang + hạt sáng bay lên |
+
+| Ô | Thường | Hiếm | Sử thi | Huyền thoại |
+|---|---|---|---|---|
+| Rìu (cận chiến Sức mạnh) | rìu đá cán gỗ | rìu đồng | rìu đồng khắc trống | rìu sấm vàng, lưỡi có tia sét |
+| Dao găm (cận chiến Nhanh nhẹn) | dao tre vót | dao găm đồng | dao găm đồng chuôi ngọc | song dao vàng, lưỡi lá rừng phát sáng |
+| Nỏ (Xạ Thủ) | nỏ gỗ | nỏ đồng | nỏ khắc chim Lạc | nỏ vàng cánh chim Lạc |
+| Gậy (Thầy Mo, Thần Sương Núi) | gậy gỗ cong | gậy đồng đầu tròn | gậy đầu trống đồng nhỏ | gậy vàng, đầu là ngọn lửa / tinh thể băng theo tướng |
+| Mũ | khăn vải quấn đầu | mũ lông chim | mũ sừng đồng | mũ lông chim Lạc vàng cao |
+| Giáp | áo vải gai | giáp da có tấm đồng | giáp đồng khắc hoa văn | giáp vàng khảm ngọc, vai hình đầu chim Lạc |
+
+- **Cường hóa +1 đến +5 không đổi hình.** Đồ đạt +5 có thêm một tia lấp lánh chạy dọc món đồ mỗi 3 giây, báo hiệu đã sẵn sàng thăng phẩm.
+- **Thăng phẩm** đổi sang hình của độ hiếm mới.
+- **Bộ Lạc Long:** Long Rìu / Long Nỏ / Long Trượng, Mũ Lạc Long, Giáp Vảy Rồng có màu xanh ngọc và vàng, vảy rồng. Mặc đủ bộ thì **mọc cánh rồng** sau lưng (vỗ chậm khi đứng yên). Lạc Long Quân vốn là rồng nên mặc đủ bộ thì cánh to gấp rưỡi và có ánh sét.
+- **Hào quang phụ kiện:** mỗi đồ ghép có một vòng sáng dưới chân, màu riêng theo món (ví dụ Trống Đồng: vòng vàng có sóng âm lan ra; Giáp Đồng Bất Diệt: vòng đồng đỏ). Tướng chỉ hiện hào quang của **1 món mạnh nhất** để màn hình đỡ rối.
+
+### Vũ khí và trang phục của tướng huyền thoại *(mới · đề xuất)*
+
+Tướng huyền thoại **giữ nguyên dáng vũ khí đặc trưng** để không mất nhận diện. Đồ mặc vào chỉ đổi **chất liệu, màu ánh và hiệu ứng** theo bảng độ hiếm ở trên, không thay hình dáng.
+
+| Tướng | Dùng loại vũ khí | Vũ khí đặc trưng giữ dáng | Ghi chú mũ / giáp |
+|---|---|---|---|
+| Thánh Gióng | Rìu | gậy tre ngà | giáp sắt luôn hiện; mũ là mũ sắt |
+| Lạc Long Quân | Rìu | vuốt rồng (găng) | mũ là vương miện sừng rồng |
+| Thần Kim Quy | Rìu | móng vàng | không đội mũ: ô mũ hiện thành **vương miện nhỏ**; ô giáp đổi **mai** |
+| Thạch Sanh | Dao găm | rìu đốn củi + cung vàng sau lưng | — |
+| Cao Lỗ | Nỏ | nỏ liên châu lẫy móng rùa | — |
+| Mai An Tiêm | Nỏ | ná / giỏ dưa hấu | mũ là nón lá |
+| Âu Cơ | Gậy | cành hoa tiên | ô giáp đổi **cánh lông vũ** |
+| Chử Đồng Tử | Gậy | gậy thần | ô mũ là **nón thần** |
+| Tiên Dung | Gậy | quạt tiên | mũ là trâm cài / hoa |
+| Lang Liêu | Gậy | gậy tre, khay bánh chưng | mũ là khăn xếp |
 
 **Lò đúc đồng** (thay Lò rèn) có 3 tab:
 
@@ -262,7 +320,7 @@ Lựa chọn chiến thuật: đặt tướng ở ô thấp để mạnh lúc đ
 
 ## 12. Thiết kế còn phải làm
 
-- **Hệ thống đồ:** vẽ icon cho từng món (vũ khí, mũ, giáp, phụ kiện, đồ ghép, Bộ Lạc Long, 3 sính lễ), khung theo độ hiếm (Thường / Hiếm / Sử thi / Huyền thoại), thẻ chi tiết món đồ, và hình tướng thay đổi khi mặc đồ.
+- **Hệ thống đồ:** quy cách ngoại hình đã có ở mục 5 (v15); còn phải vẽ icon cho từng món (vũ khí, mũ, giáp, phụ kiện, đồ ghép, Bộ Lạc Long, 3 sính lễ), khung theo độ hiếm (Thường / Hiếm / Sử thi / Huyền thoại), thẻ chi tiết món đồ, và hình tướng thay đổi khi mặc đồ.
 - **Kỹ năng:** vẽ icon riêng cho đủ 24 kỹ năng (6 tướng × Q W E R) và hiệu ứng khi tướng dùng kỹ năng.
 - ~~Chuyển các màn còn lại sang phong cách mới~~ (đã xong).
 
@@ -275,9 +333,19 @@ Lựa chọn chiến thuật: đặt tướng ở ô thấp để mạnh lúc đ
   - **Hoạt ảnh nhân vật:** Spine hoặc DragonBones (hoạt ảnh xương: chia tướng thành đầu, thân, tay, vũ khí rồi cho chuyển động, mượt và nhẹ hơn vẽ từng khung). Hoặc sprite sheet nếu thuê họa sĩ vẽ khung hình.
   - **Hiệu ứng:** hệ hạt (particle) của Phaser cho lửa, băng, sét, nước; rung màn hình và chớp sáng cho chiêu R.
 - **Mỗi tướng cần các hoạt ảnh:** đứng yên (lặp), đánh thường, ra chiêu Q, ra chiêu E (W là nội tại, chỉ cần hiệu ứng hào quang), chiêu tối thượng R (kèm rung màn hình, chớp sáng, tên chiêu hiện to), bị đánh, gục, xuất hiện khi triệu hồi, sa lầy khi ô ngập.
-- **Bản mẫu:** trang "Đền Anh Hùng" chạy thử animation cho 10 tướng huyền thoại (dựng bằng SVG + GSAP + canvas hạt), làm chuẩn tham khảo cho họa sĩ và lập trình viên.
+- **Hoạt ảnh tiến triển** *(mới · đề xuất)*, dùng chung cho mọi tướng (làm bằng hiệu ứng, không cần vẽ riêng từng tướng):
 
----
+| Sự kiện | Mô tả | Thời lượng gợi ý |
+|---|---|---|
+| Lên cấp | Vòng trống đồng vàng lóe dưới chân, thân nảy 4px, chữ "Cấp N" bay lên | 0,6 giây |
+| Mở kỹ năng W/E/R | Icon kỹ năng bay từ Cây kỹ năng xuống ô QWER, ô lóe vàng | 0,5 giây |
+| Tiến hoá | Tướng nhấc lên 10px, cột sáng màu đồng, nổ hạt hoa văn, hạ xuống với kích thước mới, sao mới hiện trên thanh máu | 1,2 giây |
+| Mặc / thay đồ trang phục | Lóe sáng màu độ hiếm tại vị trí món đồ (tay, đầu, thân), mảnh đồ mới hiện ra | 0,3 giây |
+| Thăng phẩm đồ | Món đồ đang mặc nhấp sáng 2 lần rồi đổi sang hình độ hiếm mới | 0,6 giây |
+| Mặc đủ Bộ Lạc Long | Cánh rồng bung ra từ sau lưng, rung màn hình nhẹ, chữ "Bộ Lạc Long" hiện giữa màn | 1,5 giây |
+
+- **Cách dựng đồ trên khung xương:** mỗi tướng có sẵn 3 khe gắn (tay cầm vũ khí, đầu, thân). Mỗi món trang phục là một mảnh ảnh riêng gắn vào khe; đổi đồ = đổi mảnh ảnh, không cần làm lại animation. Họa sĩ vẽ đồ cho **4 dáng người chung** (cận chiến, xạ thủ, pháp sư, tướng thân to) rồi chỉnh vị trí khe theo từng tướng.
+- **Bản mẫu:** trang "Đền Anh Hùng" chạy thử animation cho 10 tướng huyền thoại (dựng bằng SVG + GSAP + canvas hạt), làm chuẩn tham khảo cho họa sĩ và lập trình viên.
 
 ## 14. Ghi chú triển khai trong code (phiên bản 14)
 
@@ -334,3 +402,14 @@ Màn đánh quái chỉ hiện thứ cần ngay lúc đó:
 ### Phiên bản 17 · menu chính theo bản mẫu mobile
 
 Menu chính có 4 nút như bản mẫu: **Xuất Quân** (đỏ son; mở bản đồ chiến dịch, hoặc quay lại trận đang dở), **Anh Hùng (16 Tướng)**, **Kho Báu & Sính Lễ**, **Cài Đặt**. Bách khoa thủy quái là liên kết nhỏ bên dưới. Thêm dòng "Sơn Tinh • Thủy Tinh (~500 TCN)", chân trang "Phong Châu Thành • Đông Sơn Fantasy", nút lún nhẹ khi bấm.
+
+### Phiên bản 18 · hình ảnh theo bản giao v15
+
+Làm theo mục 2, 4, 5 và 13 của bản giao v15 (không đổi luật chơi, số liệu):
+- **Lên cấp:** vòng hoa văn trống đồng lóe dưới chân, tướng nảy 4px, chữ "Cấp N" bay lên (0,6 giây), đòn đánh không dừng. Bấm nhanh nhiều lần hoặc "Hội làng mừng thắng" gộp thành "+N cấp". Đủ cấp 3/6 (mở E/R) hoặc 5/10/15 (tiến hoá) thì nút **⋯** và mục Kỹ năng / Tiến hoá nhấp nháy tới khi mở xem.
+- **Mở kỹ năng:** ô Q/W/E/R vừa mở lóe vàng 0,5 giây.
+- **Tiến hoá (1,2 giây):** tướng nhấc 10px trong cột sáng màu đồng, nổ hạt hoa văn trống đồng, hạ xuống với kích thước mới (★ +10%, ★★ +15%, ★★★ +20%); sao mới hiện trên thanh máu lúc hạ xuống. Hào quang theo bậc (1–3 vòng, vòng trong màu hệ, hạt bay lên), ★★ mắt sáng và vũ khí ánh màu hệ, ★★★ vầng sao 12 cánh sau lưng và **tên tướng chữ vàng** trên thanh máu.
+- **Đồ theo độ hiếm:** chất liệu và màu ánh theo bảng mục 5 (Thường nâu xám, Hiếm xanh lam, Sử thi tím thở chậm, Huyền thoại cam vàng + hạt sáng); đồ +5 có tia lấp lánh mỗi 3 giây; tướng huyền thoại giữ dáng vũ khí đặc trưng, chỉ đổi màu ánh (Kim Quy: vương miện nhỏ + mai; Âu Cơ: cánh lông vũ). Chỉ hiện hào quang của 1 phụ kiện mạnh nhất.
+- **Mặc đồ:** lóe màu độ hiếm ở tay / đầu / thân 0,3 giây. **Thăng phẩm** đồ đang mặc: nhấp sáng 2 lần (0,6 giây) rồi đổi hình.
+- **Đủ Bộ Lạc Long:** cánh rồng bung ra 1,5 giây, rung màn nhẹ, chữ "Bộ Lạc Long" giữa màn; Lạc Long Quân cánh to gấp rưỡi, có ánh sét.
+- Các hiệu ứng trên vẫn chạy khi chưa bấm ▶ hoặc đang dừng, để thao tác lúc chuẩn bị vẫn thấy phản hồi.

@@ -365,6 +365,7 @@ function drawHeroOnMap(h, t) {
   const r = drawHeroSprite(ctx, h, h.x, h.y, {
     t, dir: h.dir, swing: h.swing, castT: h.castT, castUlt: h.castUlt, hurt: h.hurtT, px: px(),
     bog: h.bogged, summon: h.summonT, fall: h.dead ? h.fallT : undefined,
+    bounce: h.bounceT, evo: h.evoT, wingT: h.wingT,
   });
   if (h.dead) return;
   const top = r.top + 6;
@@ -380,7 +381,19 @@ function drawHeroOnMap(h, t) {
   ctx.fillRect(h.x - 16, top - 4, 32 * Math.max(0, h.hp / st.hpMax), 2.5);
   ctx.fillStyle = '#4A90E2';
   ctx.fillRect(h.x - 16, top - 1.2, 32 * Math.max(0, h.mana / st.maxMana), 1.6);
-  for (let i = 0; i < (h.tier || 0); i++) drawStar(ctx, h.x - 8 * ((h.tier - 1) / 2) + i * 8, top - 11, 4, '#FFD66B');
+  // sao mới hiện khi tướng hạ xuống (60% thời gian tiến hoá)
+  const stars = (h.tier || 0) - (h.evoT > 0.48 ? 1 : 0);
+  for (let i = 0; i < stars; i++) drawStar(ctx, h.x - 8 * ((stars - 1) / 2) + i * 8, top - 11, 4, '#FFD66B');
+  if (stars >= 3) {
+    // ★★★: tên tướng trên thanh máu chuyển chữ vàng
+    ctx.font = '800 9px "Alegreya Sans", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.lineWidth = 2.5;
+    ctx.strokeStyle = 'rgba(13,11,8,0.9)';
+    ctx.strokeText(HEROES[h.type].name, h.x, top - 18);
+    ctx.fillStyle = '#FFD66B';
+    ctx.fillText(HEROES[h.type].name, h.x, top - 18);
+  }
   // cấp tướng
   ctx.font = '800 10px "Alegreya Sans", sans-serif';
   ctx.textAlign = 'center';
@@ -458,6 +471,27 @@ function lightning(x1, y1, x2, y2, spread, width, color) {
     ctx.lineTo(x1 + (x2 - x1) * k + j, y1 + (y2 - y1) * k);
   }
   ctx.stroke();
+}
+
+// vòng hoa văn trống đồng dưới chân (lên cấp, tiến hoá)
+function drumRing(x, y, r, a, color) {
+  if (a <= 0) return;
+  ctx.save();
+  ctx.globalAlpha = a;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.ellipse(x, y, r, r * 0.34, 0, 0, Math.PI * 2); ctx.stroke();
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.ellipse(x, y, r * 0.72, r * 0.245, 0, 0, Math.PI * 2); ctx.stroke();
+  for (let i = 0; i < 12; i++) {
+    const g = (i / 12) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.moveTo(x + Math.cos(g) * r * 0.74, y + Math.sin(g) * r * 0.25);
+    ctx.lineTo(x + Math.cos(g) * r * 0.98, y + Math.sin(g) * r * 0.333);
+    ctx.stroke();
+  }
+  drawStar(ctx, x, y, r * 0.18, color);
+  ctx.restore();
 }
 
 function particles(x, y, n, color, spread, p, size = 2.5) {
@@ -1032,24 +1066,68 @@ function drawEffects(t) {
         break;
       }
       case 'levelup': {
-        ctx.strokeStyle = '#F2D27A';
-        ctx.lineWidth = 2;
-        for (let i = 0; i < 3; i++) {
-          const y = f.y - 10 - p * 50 - i * 12;
-          ctx.globalAlpha = k * (1 - i * 0.25);
-          ctx.beginPath(); ctx.moveTo(f.x - 9, y + 6); ctx.lineTo(f.x, y); ctx.lineTo(f.x + 9, y + 6); ctx.stroke();
-        }
+        // vòng hoa văn trống đồng vàng lóe dưới chân + chữ "Cấp N" / "+N cấp"
+        const x = f.hero ? f.hero.x : f.x, y = f.hero ? f.hero.y : f.y;
+        drumRing(x, y, 16 + p * 22, Math.min(1, k * 1.6), '#F2D27A');
+        const ty = y - 66 - p * 22;
+        ctx.globalAlpha = Math.min(1, k * 2.2);
+        ctx.font = '800 15px "Alegreya SC", serif';
+        ctx.textAlign = 'center';
+        ctx.lineWidth = 3.5;
+        ctx.strokeStyle = 'rgba(13,11,8,0.9)';
+        const str = f.count > 1 ? `+${f.count} cấp` : `Cấp ${f.lv}`;
+        ctx.strokeText(str, x, ty);
+        ctx.fillStyle = '#FFD66B';
+        ctx.fillText(str, x, ty);
         break;
       }
       case 'evolve': {
-        ctx.strokeStyle = '#FFD66B';
-        ctx.lineWidth = 2;
-        for (let i = 0; i < 3; i++) {
-          ctx.beginPath();
-          ctx.ellipse(f.x, f.y, 14 + p * 40 + i * 8, 5 + p * 14 + i * 3, 0, 0, Math.PI * 2);
-          ctx.stroke();
+        // nhấc lên, cột sáng màu đồng, nổ hạt hoa văn khi hạ xuống kích thước mới
+        const x = f.hero ? f.hero.x : f.x, y = f.hero ? f.hero.y : f.y;
+        const col = Math.sin(Math.PI * Math.min(1, p / 0.85));
+        const w = 30 * (0.6 + 0.4 * col);
+        const gr = ctx.createLinearGradient(0, y - 150, 0, y + 6);
+        gr.addColorStop(0, 'rgba(232,168,96,0)');
+        gr.addColorStop(0.5, 'rgba(232,168,96,0.45)');
+        gr.addColorStop(1, 'rgba(255,226,160,0.8)');
+        ctx.globalAlpha = col;
+        ctx.fillStyle = gr;
+        ctx.beginPath();
+        ctx.moveTo(x - w * 0.35, y - 150); ctx.lineTo(x + w * 0.35, y - 150);
+        ctx.lineTo(x + w, y + 4); ctx.lineTo(x - w, y + 4); ctx.closePath();
+        ctx.fill();
+        drumRing(x, y, 22 + col * 8, col, '#E8A860');
+        if (p > 0.55) {
+          // hạt hoa văn: hình thoi & vòng tròn chấm kiểu trống đồng
+          const q = (p - 0.55) / 0.45;
+          ctx.globalAlpha = 1 - q;
+          for (let i = 0; i < 14; i++) {
+            const a = (i / 14) * Math.PI * 2 + i;
+            const r = 12 + q * (40 + (i % 3) * 10);
+            const px2 = x + Math.cos(a) * r, py2 = y - 34 + Math.sin(a) * r * 0.7;
+            ctx.fillStyle = i % 2 ? '#FFD66B' : f.color || '#E8A860';
+            ctx.save(); ctx.translate(px2, py2); ctx.rotate(a);
+            if (i % 2) { ctx.beginPath(); ctx.moveTo(0, -4); ctx.lineTo(3, 0); ctx.lineTo(0, 4); ctx.lineTo(-3, 0); ctx.fill(); }
+            else { ctx.strokeStyle = ctx.fillStyle; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(0, 0, 3, 0, Math.PI * 2); ctx.stroke(); circle(ctx, 0, 0, 1, ctx.fillStyle); }
+            ctx.restore();
+          }
+          drumRing(x, y, 20 + q * 40, 1 - q, '#FFD66B');
         }
-        particles(f.x, f.y - 30, 14, '#FFF1C4', 50, p, 3);
+        break;
+      }
+      case 'equipflash':
+      case 'promote': {
+        // mặc đồ: lóe màu độ hiếm 1 lần; thăng phẩm: nhấp sáng 2 lần
+        const flash = f.type === 'promote' ? Math.abs(Math.sin(p * Math.PI * 2)) : Math.sin(p * Math.PI);
+        const r = f.type === 'promote' ? 20 : 14 + p * 10;
+        const gr = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, r);
+        gr.addColorStop(0, 'rgba(255,255,255,0.95)');
+        gr.addColorStop(0.35, f.color);
+        gr.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.globalAlpha = flash;
+        ctx.globalCompositeOperation = 'lighter';
+        ctx.fillStyle = gr;
+        ctx.beginPath(); ctx.arc(f.x, f.y, r, 0, Math.PI * 2); ctx.fill();
         break;
       }
       case 'die':
@@ -1078,7 +1156,7 @@ function loop(now) {
   // game vẫn chạy khi mở các bảng; chỉ dừng khi bấm nút dừng
   if (game.started && game.running) {
     for (let i = 0; i < game.speed; i++) game.update(dt);
-  }
+  } else if (game.started) game.updateIdle(dt);
   mapImg = mapImage(canvas.width, canvas.height, game.level);
   render();
   ui.tick(dt);

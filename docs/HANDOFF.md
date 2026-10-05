@@ -1,6 +1,6 @@
 # Núi Cao Nước Dâng · Tài liệu bàn giao thiết kế
 
-Dành cho người làm game tiếp theo (lập trình viên, họa sĩ, animator). Đọc kèm **GAMEPLAY.md (phiên bản 14)** — tài liệu luật chơi và số liệu.
+Dành cho người làm game tiếp theo (lập trình viên, họa sĩ, animator). Đọc kèm **GAMEPLAY.md (phiên bản 15)** — tài liệu luật chơi và số liệu.
 
 ---
 
@@ -8,7 +8,7 @@ Dành cho người làm game tiếp theo (lập trình viên, họa sĩ, animato
 
 | Đường dẫn | Nội dung |
 |---|---|
-| `GAMEPLAY.md` | Luật chơi v14: tướng, 16 tướng (6 cơ bản + 10 huyền thoại), kỹ năng, tiến hoá, đồ, quái, boss, Núi Tản Viên, Nước Dâng, animation |
+| `GAMEPLAY.md` | Luật chơi v15: tướng, 16 tướng (6 cơ bản + 10 huyền thoại), kỹ năng, tiến hoá, đồ, quái, boss, Núi Tản Viên, Nước Dâng, animation |
 | `HANDOFF.md` | Tài liệu này |
 | `giao-dien/NuiCaoNuocDang-giao-dien.html` | Toàn bộ 21 màn hình trong một trang, mở bằng trình duyệt |
 | `giao-dien/png/*.png` | Ảnh chụp từng màn (độ phân giải gấp đôi, 1864×860) |
@@ -86,7 +86,8 @@ Phong cách: bảng điều khiển game chiến thuật kiểu Warcraft 3 (khun
 | Nhóm | Số lượng | Ghi chú |
 |---|---|---|
 | Tướng | 16 (6 cơ bản + 10 huyền thoại) | Mỗi tướng: thân chia khớp (đầu, thân, 2 tay, vũ khí, phần sau lưng: áo choàng / cánh / đuôi / mai) để làm Spine; + chân dung |
-| Ngoại hình theo đồ | 3 ô trang phục × 4 độ hiếm + Bộ Lạc Long (cánh rồng) | Vũ khí, mũ, giáp thay được trên khung xương |
+| Ngoại hình theo đồ | 3 ô trang phục × 4 độ hiếm + Bộ Lạc Long (cánh rồng) | Vũ khí, mũ, giáp thay được trên khung xương. Bảng chất liệu / màu theo độ hiếm ở GAMEPLAY.md mục 5 |
+| Hiệu ứng tiến triển | Lên cấp, tiến hoá ★/★★/★★★, mặc đồ, thăng phẩm, Bộ Lạc Long | Xem GAMEPLAY.md mục 4 và 13 |
 | Quái | 6 + biến thể tinh anh | Tôm Binh, Cá Sấu, Rùa Giáp, Phù Thủy Nước, Chim Bão (bay), Ếch Mẹ + Nòng Nọc |
 | Boss | 3 | Thuồng Luồng, Hà Bá (2 giai đoạn), Thủy Tinh (+ Giao Long Con) |
 | Icon kỹ năng | 64 | Đã có bản vector trong `KyNang`, `KyNangHT1`, `KyNangHT2` |

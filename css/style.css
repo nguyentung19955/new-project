@@ -863,3 +863,9 @@ button:disabled { cursor: default; }
 #menu .mc-nav { width: 244px; }
 #menu .mc-btn { font-size: 16px; white-space: nowrap; padding: 0 12px; gap: 9px; }
 #menu .mc-btn.main { font-size: 19px; }
+
+/* v18: nhắc khi đủ cấp mở E/R hoặc tiến hoá; ô kỹ năng vừa mở lóe vàng */
+.dk-more.notice, #more button.notice { animation: noticeBlink 1s ease-in-out infinite; }
+@keyframes noticeBlink { 50% { border-color: var(--gold-hi); box-shadow: 0 0 12px #FFD66BAA, inset 0 0 8px #FFD66B55; } }
+.dk-sk.fresh::after { content: ''; position: absolute; inset: 0; z-index: 4; pointer-events: none; border-radius: 6px; animation: skFresh .5s ease-out forwards; }
+@keyframes skFresh { 0% { background: #FFE9A0; box-shadow: inset 0 0 0 2px #FFD66B; opacity: .95; } 100% { background: #FFE9A000; box-shadow: inset 0 0 0 2px #FFD66B00; opacity: 0; } }

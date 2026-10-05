@@ -484,6 +484,8 @@ class UI {
         if (ev.enemy) this.say(ev.enemy, BOSS_LINES[ev.enemy]);
       } else if (ev.type === 'flood') {
         this.say('thuytinh', ev.level >= 2 ? 'Nước dâng cao nữa! Xem núi của ngươi cao được bao nhiêu!' : 'Sơn Tinh! Ta dâng nước nhấn chìm Phong Châu!');
+      } else if (ev.type === 'setDone') {
+        this.banner(`${HEROES[ev.hero.type].name} mặc đủ bộ`, ev.name);
       } else if (ev.type === 'victory') {
         this.finishLevel(true);
       } else if (ev.type === 'defeat') {
@@ -622,7 +624,9 @@ class UI {
         const cd = sk.active ? Math.ceil(Math.max(0, h.skillCd[sk.id] || 0)) : 0;
         return `${lv}.${cd}.${sk.active && h.mana < sk.active.mana ? 1 : 0}`;
       }).join();
-      key = `h|${h.id}|${h.level}|${h.tier}|${h.skillPts}|${skillKey}|${g.gold >= lc}|${g.gold}|${h.dead}|${h.bogged}|${assetVersion}`;
+      const fresh = h.unlockFx && g.time - h.unlockFx.at < 0.5 ? h.unlockFx.i : -1;
+      const notice = !!(h.notice && (h.notice.skills || h.notice.evo));
+      key = `h|${h.id}|${h.level}|${h.tier}|${h.skillPts}|${skillKey}|${g.gold >= lc}|${g.gold}|${h.dead}|${h.bogged}|${fresh}|${notice}|${assetVersion}`;
       const status = h.dead ? `Hồi sinh sau ${Math.ceil(h.respawnT)}s` : h.bogged ? 'Sa lầy · dùng Mọc Núi' : `${ATTRS[def.attr].name} · ô ${TIER_NAMES[CONFIG.slotTier[h.slot]]}`;
       const skills = def.skills.map((sk, i) => {
         const lv = skillLevel(h, i);
@@ -633,7 +637,7 @@ class UI {
         const cd = sk.active ? Math.max(0, h.skillCd[sk.id] || 0) : 0;
         const max = sk.active ? sk.active.cooldown * (1 - st.cdr / 100) : 1;
         const canUp = h.skillPts > 0 && lv < SKILL_MAX[i] && h.level >= skillReqLevel(i, lv + 1);
-        return `<button class="dk-sk metal ${sk.active && h.mana < sk.active.mana ? 'nomana' : ''}" data-act="cmd-skill" data-i="${i}" aria-label="${SKILL_KEYS[i]} ${sk.name}">
+        return `<button class="dk-sk metal ${sk.active && h.mana < sk.active.mana ? 'nomana' : ''} ${i === fresh ? 'fresh' : ''}" data-act="cmd-skill" data-i="${i}" aria-label="${SKILL_KEYS[i]} ${sk.name}">
           ${svgI(skillIcon(h.type, i))}<span class="hk">${SKILL_KEYS[i]}</span>${canUp ? '<span class="pt">+</span>' : ''}
           ${cd > 0.4 ? `<span class="cdov" style="height:${Math.min(100, cd / max * 100)}%"></span><span class="cdn">${Math.ceil(cd)}</span>` : ''}</button>`;
       }).join('');
@@ -644,7 +648,7 @@ class UI {
           <span class="bar hp"><i id="dk-hp"></i></span><span class="bar mp"><i id="dk-mp"></i></span></span>
         ${skills}
         <button class="dk-up btn-gold" data-act="levelup" ${maxed || g.gold < lc ? 'disabled' : ''} aria-label="Nâng cấp tướng"><b>${maxed ? 'Tối đa' : `Lên cấp ${h.level + 1}`}</b>${maxed ? '' : `<span>${coin(1)}${lc}</span>`}</button>
-        <button class="dk-more metal" data-act="more" aria-label="Thêm">⋯${h.skillPts ? `<span class="badge">${h.skillPts}</span>` : ''}</button>`;
+        <button class="dk-more metal ${notice ? 'notice' : ''}" data-act="more" aria-label="Thêm">⋯${h.skillPts ? `<span class="badge">${h.skillPts}</span>` : ''}</button>`;
     }
     if (this.sig.deck !== key) {
       this.sig.deck = key;
@@ -676,8 +680,8 @@ class UI {
     if (!h) return;
     const t = h.tier || 0;
     $('#more').innerHTML = `
-      <button class="metal" data-act="open-skills">Kỹ năng<small>${h.skillPts ? `+${h.skillPts} điểm` : 'cây kỹ năng'}</small></button>
-      <button class="metal" data-act="open-evo">Tiến hoá<small>${t < 3 ? `★${t + 1} · ${COSTS.evo[t]} vàng` : 'tối đa'}</small></button>
+      <button class="metal ${h.notice.skills ? 'notice' : ''}" data-act="open-skills">Kỹ năng<small>${h.skillPts ? `+${h.skillPts} điểm` : 'cây kỹ năng'}</small></button>
+      <button class="metal ${h.notice.evo ? 'notice' : ''}" data-act="open-evo">Tiến hoá<small>${t < 3 ? `★${t + 1} · ${COSTS.evo[t]} vàng` : 'tối đa'}</small></button>
       <button class="metal" data-act="open-bag">Trang bị<small>đồ đổi hình dạng</small></button>
       <button class="metal ${this.moving >= 0 ? 'armed' : ''}" data-act="move">Đổi chỗ<small>hoặc giữ & kéo</small></button>
       <button class="metal danger ${this.sellArmed ? 'armed' : ''}" data-act="sell" style="grid-column:span 2">${this.sellArmed ? `Chạm lần nữa để bán · +${g.sellValue(h)} vàng` : `Bán tướng · hoàn ${g.sellValue(h)} vàng`}</button>`;
@@ -1011,8 +1015,8 @@ class UI {
         this.clearSel();
         break;
       case 'levelup': if (h) this.doLevelUp(h); break;
-      case 'open-skills': $('#more').hidden = true; this.openScreen('skills', { skill: 0 }); break;
-      case 'open-evo': $('#more').hidden = true; this.openScreen('evo'); break;
+      case 'open-skills': $('#more').hidden = true; if (h) h.notice.skills = false; this.openScreen('skills', { skill: 0 }); break;
+      case 'open-evo': $('#more').hidden = true; if (h) h.notice.evo = false; this.openScreen('evo'); break;
       case 'open-bag': $('#more').hidden = true; this.openScreen('bag', { slot: null }); break;
       case 'slot': this.openScreen('bag', { slot: d.slot }); break;
 
