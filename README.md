@@ -19,7 +19,7 @@ npx serve .          # hoặc: python3 -m http.server 8000
 
 Sau đó mở `http://<ip-máy-tính>:8000` trên điện thoại.
 
-**Cách chơi:** chạm vào bãi cỏ sát đường, bảng chọn tướng nhỏ hiện ngay tại chỗ (có khoảng 40 vị trí ẩn xếp nhiều hàng dọc hai bên đường; chạm lệch một chút vẫn bắt dính). Giữ và kéo tướng sang chỗ khác để chuyển hoặc đổi chỗ. Chạm vào tướng để mở bảng tướng. Mua và ghép đồ ở **Cửa hàng**. Bấm **Gọi đợt** để quái tới.
+**Cách chơi:** chạm vào bãi cỏ sát đường để đặt tướng. Bấm **▶ Bắt đầu**: các đợt quái tự nối tiếp nhau (nghỉ 10 giây giữa hai đợt, có bảng xem trước đợt kế và nút **Gọi sớm** để lấy thêm vàng). Bấm **■ Dừng** để dừng cả game. Tướng tự dùng kỹ năng Q ngay từ đầu, các kỹ năng W/E/R mở dần theo số quái hạ được. Giữ và kéo tướng để đổi chỗ, chạm vào tướng để mặc đồ, mua và ghép đồ ở **Cửa hàng**.
 
 Vị trí đặt tướng được sinh tự động theo `CONFIG.buildGrid` trong `js/data.js` (khoảng cách ô, dải cách đường).
 

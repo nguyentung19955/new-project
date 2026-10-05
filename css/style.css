@@ -461,3 +461,31 @@ h2 { font-size: 1.8em; color: var(--brass); }
 .pk-cost::after { content: ' 💰'; font-size: 0.8em; }
 .pk.poor { filter: grayscale(0.9) brightness(0.6); }
 .pk.poor .pk-cost { color: #e58b74; }
+
+/* nút Bắt đầu / Dừng */
+#btn-wave.stop { background: linear-gradient(#c0563c, #8f3423); border-color: #6b2618; box-shadow: 0 4px 0 #5a1f14, inset 0 1px 0 #ffffff44; }
+
+/* bảng đợt kế tiếp (đếm ngược, quái sắp tới, gọi sớm) */
+#nextwave {
+  position: absolute; top: 3.7em; left: 50%; transform: translateX(-50%); z-index: 3;
+  width: 78%; max-width: 22em;
+  background: #0b0f0de6; border: 1px solid #3a3426; border-radius: 0.7em;
+  padding: 0.45em 0.6em 0.5em; display: flex; flex-direction: column; gap: 0.35em;
+  box-shadow: 0 4px 14px #0008;
+}
+.nw-head { display: flex; justify-content: space-between; align-items: baseline; }
+.nw-head b { font-family: var(--display); letter-spacing: 0.06em; font-size: 0.95em; color: var(--brass); }
+.nw-head b.boss { color: #ff7043; }
+.nw-head span { font-size: 0.8em; color: var(--muted); font-variant-numeric: tabular-nums; }
+.nw-bar { height: 0.35em; background: #2a2620; border-radius: 1em; overflow: hidden; }
+.nw-bar i { display: block; height: 100%; background: var(--brass); transition: width 0.2s linear; }
+.nw-list { display: flex; gap: 0.4em; flex-wrap: wrap; }
+.nw-chip { display: flex; align-items: center; gap: 0.2em; background: #161c19; border: 1px solid #2f3a33; border-radius: 0.5em; padding: 0.1em 0.45em 0.1em 0.1em; }
+.nw-chip canvas { width: 1.7em; height: 1.7em; }
+.nw-chip b { font-family: var(--display); color: #f0c46a; font-size: 0.9em; }
+.nw-chip small { font-size: 0.68em; }
+.nw-early {
+  height: 2.2em; border-radius: 0.5em; border: 1px solid var(--brass); background: #2a2416;
+  color: #f0c46a; font-family: var(--display); font-weight: 800; font-size: 0.85em;
+}
+#toasts.below-boss { top: 10.5em; }

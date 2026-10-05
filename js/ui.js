@@ -89,15 +89,21 @@ class UI {
       this.close();
       $('#overlay').hidden = true;
       game.started = true;
+      game.running = false;
     };
-    $('#btn-wave').onclick = () => game.startWave();
+    // Một nút: chạy / dừng. Khi chạy, các đợt tự nối tiếp nhau
+    $('#btn-wave').onclick = () => {
+      game.running = !game.running;
+      if (game.running) this.closePicker();
+    };
+    $('#btn-early').onclick = () => {
+      const bonus = game.callEarly();
+      game.running = true;
+      if (bonus) this.toast(`Gọi sớm +${bonus}💰`, '#f1c40f');
+    };
     $('#btn-speed').onclick = () => {
       game.speed = game.speed === 1 ? 2 : game.speed === 2 ? 3 : 1;
       $('#btn-speed').textContent = 'x' + game.speed;
-    };
-    $('#btn-pause').onclick = () => {
-      game.paused = !game.paused;
-      $('#btn-pause').textContent = game.paused ? '▶' : '❚❚';
     };
     $('#btn-shop').onclick = () => {
       game.flags.shopOpened = true;
@@ -337,22 +343,24 @@ class UI {
     $('#gold').textContent = g.gold;
     $('#wave').textContent = g.wave;
     $('#bag-count').textContent = g.inventory.length;
-    $('#paused-tag').hidden = !(g.started && g.paused);
+    $('#paused-tag').hidden = !(g.started && !g.running && g.wave > 0 && !g.over);
 
     const bw = $('#btn-wave');
-    bw.disabled = g.waveActive;
-    if (g.waveActive) {
-      $('#wave-label').textContent = `Đợt ${g.wave}`;
-      $('#wave-sub').textContent = `Còn ${g.spawnQueue.length + g.enemies.length} quái`;
+    bw.classList.toggle('stop', g.running);
+    if (!g.running) {
+      $('#wave-label').textContent = g.wave === 0 ? '▶ Bắt đầu' : '▶ Tiếp tục';
+      $('#wave-sub').textContent = g.wave === 0 ? 'Quái sẽ tràn tới' : 'Game đang dừng';
     } else {
-      $('#wave-label').textContent = `Gọi đợt ${g.wave + 1}`;
-      $('#wave-sub').textContent = (g.wave + 1) % 5 === 0 ? 'Boss Thạch Long!' : `Qua đợt +${25 + g.wave * 5} vàng`;
+      $('#wave-label').textContent = '■ Dừng';
+      $('#wave-sub').textContent = g.waveActive
+        ? `Đợt ${g.wave} · còn ${g.spawnQueue.length + g.enemies.length} quái`
+        : `Đợt ${g.wave + 1} sau ${Math.ceil(Math.max(0, g.nextWaveT))}s`;
     }
+    this.updateNextWave();
 
     // thanh máu boss + biển báo boss xuất hiện
     const boss = g.boss;
     $('#bossbar').hidden = !boss;
-    $('#toasts').classList.toggle('below-boss', !!boss);
     if (boss) {
       $('#boss-name').textContent = boss.def.name;
       $('#boss-hp').textContent = `${Math.ceil(boss.hp)} / ${Math.ceil(boss.maxHp)}`;
@@ -466,6 +474,41 @@ class UI {
     });
   }
 
+  // Bảng đợt kế tiếp (đếm ngược, quái sắp tới, gọi sớm), hiện giữa hai đợt
+  updateNextWave() {
+    const g = this.game;
+    const panel = $('#nextwave');
+    const show = g.started && !g.over && !g.waveActive && g.wave > 0;
+    panel.hidden = !show;
+    $('#toasts').classList.toggle('below-boss', show || !!g.boss);
+    if (!show) return;
+    const n = g.wave + 1;
+    const boss = g.nextWave.some((x) => x.type === 'boss');
+    $('#nw-title').textContent = boss ? `ĐỢT ${n} · BOSS` : `ĐỢT ${n} SẮP TỚI`;
+    $('#nw-title').classList.toggle('boss', boss);
+    const left = Math.max(0, g.nextWaveT);
+    $('#nw-time').textContent = g.running ? `sau 0:${String(Math.ceil(left)).padStart(2, '0')}` : 'đang dừng';
+    $('#nw-fill').style.width = (100 - (left / CONFIG.waveBreak) * 100) + '%';
+    if (this.nwKey !== n) {
+      this.nwKey = n;
+      const counts = {};
+      for (const x of g.nextWave) counts[x.type] = (counts[x.type] || 0) + 1;
+      $('#nw-list').innerHTML = Object.entries(counts).map(([type, c]) =>
+        `<span class="nw-chip"><canvas data-enemy="${type}" width="40" height="40"></canvas><b>x${c}</b><small>${ENEMIES[type].name}</small></span>`).join('');
+      document.querySelectorAll('canvas[data-enemy]').forEach((cv) => {
+        const def = ENEMIES[cv.dataset.enemy];
+        const cx = cv.getContext('2d');
+        cx.save();
+        cx.translate(20, 30);
+        cx.scale(13 / def.size, 13 / def.size);
+        drawEnemy(cx, { x: 0, y: 0, def, type: cv.dataset.enemy, id: 1, dir: 1, hp: 1, maxHp: 1,
+          slowT: 0, stunT: 0, poisonT: 0, noBar: true }, 0);
+        cx.restore();
+      });
+    }
+    $('#btn-early').textContent = `Gọi sớm +${Math.round(left * 4)}💰`;
+  }
+
   // Gợi ý từng bước cho người mới
   updateCoach() {
     const g = this.game;
@@ -482,19 +525,18 @@ class UI {
         const [x, y] = CONFIG.slots[CONFIG.coachSlot];
         pos = [x, y - 22];
         text = 'Chạm vào bãi cỏ cạnh đường để đặt tướng';
-      } else if (g.wave === 0 && !g.waveActive) {
+      } else if (g.wave === 0 && !g.running) {
         bw.classList.add('pulse');
         pos = [CONFIG.W - 105, CONFIG.H - 92];
-        text = 'Bấm để gọi quái tới!';
-      } else if (g.wave >= 1 && !g.waveActive && !g.flags.equipped) {
-        const h = heroes.find((hh) => g.inventory.some((id) => canEquip(hh.type, id)));
-        if (h) {
-          pos = [h.x, h.y - 62];
-          text = 'Chạm vào tướng để mặc đồ. Tướng sẽ đổi dáng!';
-        }
-      } else if (g.wave >= 2 && !g.waveActive && !g.flags.shopOpened && g.gold >= 100) {
-        pos = [88, CONFIG.H - 92];
-        text = 'Mua và ghép đồ ở Cửa hàng';
+        text = 'Bấm Bắt đầu để quái tràn tới!';
+      }
+      // các gợi ý sau đợt đầu: hiện một lần dạng thông báo (không đè bảng đợt kế)
+      if (g.wave >= 1 && !g.waveActive && !g.flags.equipped && !g.flags.gearTip) {
+        g.flags.gearTip = true;
+        this.toast('Mẹo: chạm vào tướng để mặc đồ. Tướng sẽ đổi dáng!', '#9dffc4');
+      } else if (g.wave >= 2 && !g.waveActive && !g.flags.shopOpened && !g.flags.shopTip && g.gold >= 100) {
+        g.flags.shopTip = true;
+        this.toast('Mẹo: mua và ghép đồ ở Cửa hàng', '#9dffc4');
       }
     }
     coach.hidden = !pos;

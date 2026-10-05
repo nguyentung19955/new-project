@@ -9,7 +9,7 @@
   <title>Thủ Thành Anh Hùng</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Be+Vietnam+Pro:wght@400;600;700&display=swap">
-  <link rel="stylesheet" href="css/style.css?v=9">
+  <link rel="stylesheet" href="css/style.css?v=10">
 </head>
 <body>
 <!--BODY-->
@@ -23,14 +23,13 @@
       <div class="pill wave-pill" title="Đợt"><small>Đợt</small><b id="wave">0</b></div>
       <div class="spacer"></div>
       <button id="btn-speed" class="round" aria-label="Tốc độ">x1</button>
-      <button id="btn-pause" class="round" aria-label="Tạm dừng">❚❚</button>
     </div>
 
     <!-- Thanh điều khiển dưới -->
     <div id="controls" class="ingame">
       <button id="btn-shop" class="tool"><span class="tool-ico">🛒</span><span>Cửa hàng</span></button>
       <button id="btn-bag" class="tool"><span class="tool-ico">🎒</span><span>Túi đồ</span><i id="bag-count" class="badge">0</i></button>
-      <button id="btn-wave" class="go"><span id="wave-label">Gọi đợt 1</span><small id="wave-sub">Quái sẽ tràn tới</small></button>
+      <button id="btn-wave" class="go"><span id="wave-label">▶ Bắt đầu</span><small id="wave-sub">Quái sẽ tràn tới</small></button>
     </div>
 
     <div id="bossbar" hidden>
@@ -40,9 +39,15 @@
     <div id="banner" hidden><small>Boss xuất hiện</small><b id="banner-text"></b></div>
 
     <div id="picker" hidden></div>
+    <div id="nextwave" hidden>
+      <div class="nw-head"><b id="nw-title"></b><span id="nw-time"></span></div>
+      <div class="nw-bar"><i id="nw-fill"></i></div>
+      <div class="nw-list" id="nw-list"></div>
+      <button id="btn-early" class="nw-early"></button>
+    </div>
     <div id="coach" hidden><span id="coach-text"></span></div>
     <div id="toasts"></div>
-    <div id="paused-tag" hidden>Tạm dừng</div>
+    <div id="paused-tag" hidden>Đã dừng</div>
 
     <!-- Bảng trượt -->
     <div id="sheet" hidden>
@@ -61,7 +66,7 @@
         <button id="btn-play" class="go big">Chơi ngay</button>
         <button id="btn-howto" class="ghost">Cách chơi</button>
         <p id="best" class="best"></p>
-        <p class="version">Phiên bản 9</p>
+        <p class="version">Phiên bản 10</p>
       </div>
     </div>
 
@@ -71,8 +76,8 @@
         <h2>Cách chơi</h2>
         <ol class="steps">
           <li><b>Đặt tướng</b><span>Chạm vào bãi cỏ sát đường rồi chọn tướng. Có 6 tướng chia 3 hệ: <i class="a-str">Sức mạnh</i>, <i class="a-agi">Nhanh nhẹn</i>, <i class="a-int">Trí tuệ</i>. Giữ và kéo tướng sang chỗ khác để đổi vị trí.</span></li>
-          <li><b>Gọi đợt quái</b><span>Bấm nút xanh ở góc dưới. Đừng để quái lọt vào cổng thành.</span></li>
-          <li><b>Kỹ năng Q W E R</b><span>Tướng hạ càng nhiều quái thì kỹ năng càng mạnh và mở thêm kỹ năng mới. Diệt quái còn cho kinh nghiệm để lên cấp.</span></li>
+          <li><b>Bắt đầu / Dừng</b><span>Bấm nút xanh ở góc dưới để quái tràn tới, các đợt tự nối tiếp nhau. Bấm lần nữa để dừng. Bấm "Gọi sớm" giữa hai đợt để được thêm vàng.</span></li>
+          <li><b>Kỹ năng Q W E R</b><span>Tướng tự dùng kỹ năng. Tướng hạ càng nhiều quái thì kỹ năng càng mạnh và mở thêm kỹ năng mới. Diệt quái còn cho kinh nghiệm để lên cấp.</span></li>
           <li><b>Mặc đồ, ghép đồ</b><span>Đồ trang phục đổi hình dạng tướng. Mua phụ kiện ở Cửa hàng rồi ghép thành đồ mạnh có hào quang.</span></li>
           <li><b>Boss Thạch Long</b><span>Mỗi 5 đợt boss xuất hiện, dậm đất làm choáng tướng. Hạ boss nhận Huy Hiệu Phượng Hoàng giúp tướng hồi sinh ngay.</span></li>
         </ol>
@@ -102,10 +107,10 @@
       el.textContent = 'Lỗi: ' + (e.message || e.error) + (e.filename ? ' (' + e.filename.split('/').pop() + ':' + e.lineno + ')' : '');
     });
   </script>
-  <script src="js/data.js?v=9"></script>
-  <script src="js/render.js?v=9"></script>
-  <script src="js/game.js?v=9"></script>
-  <script src="js/ui.js?v=9"></script>
-  <script src="js/main.js?v=9"></script>
+  <script src="js/data.js?v=10"></script>
+  <script src="js/render.js?v=10"></script>
+  <script src="js/game.js?v=10"></script>
+  <script src="js/ui.js?v=10"></script>
+  <script src="js/main.js?v=10"></script>
 </body>
 </html>

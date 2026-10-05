@@ -11,7 +11,6 @@ let ui;
 const game = new Game((msg, color) => ui && ui.toast(msg, color));
 ui = new UI(game);
 game.speed = 1;
-game.paused = false;
 window.game = game;
 
 let view = { scale: 1, dpr: 1 };
@@ -93,6 +92,8 @@ function render() {
   const t = performance.now() / 1000;
   ctx.setTransform(view.scale * view.dpr, 0, 0, view.scale * view.dpr, 0, 0);
   if (!mapCanvas) return;
+  // rung màn hình khi tung chiêu mạnh
+  if (game.shake > 0.2) ctx.translate((Math.random() - 0.5) * game.shake, (Math.random() - 0.5) * game.shake);
   ctx.drawImage(mapCanvas, 0, 0, CONFIG.W, CONFIG.H);
   drawPortal(ctx, t);
 
@@ -209,8 +210,10 @@ function drawHeroOnMap(h, t) {
     return;
   }
   const look = computeLook(h.type, h.equip, h.kills);
-  drawHero(ctx, look, h.x, h.y, { t, dir: h.dir, swing: h.swing });
   const st = heroStats(h);
+  if (st.stench) drawStench(h, t);
+  if (h.castT > 0) drawCastGlow(h, t);
+  drawHero(ctx, look, h.x, h.y, { t, dir: h.dir, swing: h.swing });
   const top = h.y - 52 * (1 + look.tier * 0.1) * look.bulk;
   // thanh máu tướng (chỉ hiện khi mất máu) + cấp
   if (h.hp < st.hpMax - 0.5) {
@@ -235,13 +238,68 @@ function drawHeroOnMap(h, t) {
   }
 }
 
+// Mùi Hôi Thối: khí xanh lượn quanh Đồ Tể
+function drawStench(h, t) {
+  for (let i = 0; i < 5; i++) {
+    const a = t * 0.8 + i * 1.26;
+    const r = 30 + Math.sin(t * 2 + i) * 8;
+    ctx.fillStyle = `rgba(139,195,74,${0.13 + 0.05 * Math.sin(t * 3 + i)})`;
+    ctx.beginPath();
+    ctx.ellipse(h.x + Math.cos(a) * r, h.y - 10 + Math.sin(a) * r * 0.4, 16, 10, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+// Tướng vừa tung chiêu: cột sáng + vòng rune dưới chân
+function drawCastGlow(h, t) {
+  const k = h.castT / 0.5;
+  const c = h.castColor || '#fff';
+  ctx.save();
+  ctx.globalAlpha = k;
+  const g = ctx.createLinearGradient(h.x, h.y, h.x, h.y - 80);
+  g.addColorStop(0, c + 'aa');
+  g.addColorStop(1, c + '00');
+  ctx.fillStyle = g;
+  ctx.fillRect(h.x - 16, h.y - 80, 32, 80);
+  ctx.strokeStyle = c;
+  ctx.lineWidth = 2.5;
+  ctx.shadowColor = c;
+  ctx.shadowBlur = 12;
+  ctx.beginPath();
+  ctx.ellipse(h.x, h.y, 22 + (1 - k) * 10, 8 + (1 - k) * 4, 0, 0, Math.PI * 2);
+  ctx.stroke();
+  for (let i = 0; i < 6; i++) {
+    const a = t * 3 + (i * Math.PI) / 3;
+    circle(ctx, h.x + Math.cos(a) * 20, h.y - 10 - (1 - k) * 50 - i * 4, 2.2, c);
+  }
+  ctx.restore();
+}
+
+function lightning(x1, y1, x2, y2, spread, width, color) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = width;
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  const steps = 8;
+  for (let i = 1; i <= steps; i++) {
+    const k = i / steps;
+    const j = i === steps ? 0 : (Math.random() - 0.5) * spread;
+    ctx.lineTo(x1 + (x2 - x1) * k + j, y1 + (y2 - y1) * k);
+  }
+  ctx.stroke();
+}
+
 function drawEffects(t) {
   for (const f of game.effects) {
+    if (f.delay > 0 && f.type !== 'rain') continue;
     const k = f.ttl / f.max; // 1 -> 0
+    const p = 1 - k;         // 0 -> 1
+    ctx.save();
     ctx.globalAlpha = Math.max(0, Math.min(1, k * 1.5));
     switch (f.type) {
-      case 'text':
-        ctx.font = 'bold 15px sans-serif';
+      case 'text': {
+        const pop = p < 0.15 ? 0.7 + p * 2 : 1;
+        ctx.font = `bold ${Math.round((f.size || 15) * pop)}px sans-serif`;
         ctx.textAlign = 'center';
         ctx.lineWidth = 3;
         ctx.strokeStyle = '#000';
@@ -249,6 +307,7 @@ function drawEffects(t) {
         ctx.fillStyle = f.color;
         ctx.fillText(f.str, f.x, f.y);
         break;
+      }
       case 'ring':
         ctx.strokeStyle = f.color;
         ctx.lineWidth = 3;
@@ -256,74 +315,312 @@ function drawEffects(t) {
         ctx.arc(f.x, f.y, Math.max(1, f.r * (1 - k * 0.6)), 0, Math.PI * 2);
         ctx.stroke();
         break;
-      case 'slash':
+      case 'cast':
+        break; // vẽ cùng tướng (drawCastGlow)
+      case 'slash': {
         ctx.strokeStyle = '#fff';
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.arc(f.x - f.dir * 8, f.y, 16, -1.2 + (1 - k), 0.6 + (1 - k));
-        ctx.stroke();
-        break;
-      case 'spark': {
-        const d = (1 - k) * 22;
-        circle(ctx, f.x + Math.cos(f.a) * d, f.y + Math.sin(f.a) * d, 2.5, f.color);
-        break;
-      }
-      case 'bolt': {
-        ctx.strokeStyle = '#f9e79f';
-        ctx.lineWidth = 4;
-        ctx.shadowColor = '#f1c40f';
-        ctx.shadowBlur = 15;
-        ctx.beginPath();
-        let x = f.x + 10, y = f.y - 200;
-        ctx.moveTo(x, y);
-        while (y < f.y - 10) {
-          y += 25;
-          x = f.x + (Math.random() - 0.5) * 24;
-          ctx.lineTo(x, y);
-        }
-        ctx.stroke();
-        ctx.shadowBlur = 0;
-        break;
-      }
-      case 'rain':
-        ctx.strokeStyle = '#d5f5e3';
-        ctx.lineWidth = 2;
-        for (let i = 0; i < 14; i++) {
-          const ax = f.x + Math.cos(i * 2.4) * f.r * ((i % 5) / 5);
-          const ay = f.y + Math.sin(i * 2.4) * f.r * 0.5 * ((i % 5) / 5) - k * 120;
+        ctx.lineCap = 'round';
+        for (let i = 0; i < 3; i++) {
+          ctx.globalAlpha = Math.max(0, k - i * 0.25);
+          ctx.lineWidth = 4 - i;
           ctx.beginPath();
-          ctx.moveTo(ax, ay - 14); ctx.lineTo(ax, ay);
+          ctx.arc(f.x - f.dir * 8, f.y, 16 + i * 3, -1.4 + p * 1.2, 0.5 + p * 1.2);
           ctx.stroke();
         }
         break;
-      case 'meteor': {
-        const my = f.y - k * 300, mx = f.x + k * 120;
-        ctx.globalAlpha = 1;
-        ctx.shadowColor = '#e67e22';
-        ctx.shadowBlur = 20;
-        circle(ctx, mx, my, 14, '#d35400');
-        circle(ctx, mx - 3, my - 3, 7, '#f9e79f');
-        ctx.shadowBlur = 0;
+      }
+      case 'spark': {
+        const d = p * (f.d || 22);
+        circle(ctx, f.x + Math.cos(f.a) * d, f.y + Math.sin(f.a) * d + p * p * 10, 2.5 * k + 0.8, f.color);
         break;
       }
-      case 'line':
-        ctx.strokeStyle = f.color;
-        ctx.lineWidth = f.w || 3;
-        ctx.setLineDash(f.color === '#8d6e63' ? [5, 3] : []);
+      case 'dim':
+        ctx.globalAlpha = 0.35 * k;
+        ctx.fillStyle = '#0b0b1a';
+        ctx.fillRect(-20, -20, CONFIG.W + 40, CONFIG.H + 40);
+        break;
+      case 'bolt': {
+        ctx.globalAlpha = 1;
+        ctx.shadowColor = '#f1c40f';
+        ctx.shadowBlur = 18;
+        if (Math.random() < 0.8 || p < 0.3) {
+          lightning(f.x + 6, f.y - 260, f.x, f.y - 6, 30, 5 * k + 1, '#fffbe6');
+          lightning(f.x + 6, f.y - 260, f.x, f.y - 6, 50, 2, '#f9e79f');
+          lightning(f.x, f.y - 120, f.x - 40, f.y - 60, 20, 1.5, '#f9e79f');
+        }
+        ctx.globalAlpha = k;
+        const g = ctx.createRadialGradient(f.x, f.y - 6, 2, f.x, f.y - 6, 50);
+        g.addColorStop(0, 'rgba(255,255,220,0.95)');
+        g.addColorStop(1, 'rgba(241,196,15,0)');
+        ctx.fillStyle = g;
         ctx.beginPath();
-        ctx.moveTo(f.x, f.y); ctx.lineTo(f.x2, f.y2);
+        ctx.arc(f.x, f.y - 6, 50, 0, Math.PI * 2);
+        ctx.fill();
+        break;
+      }
+      case 'scorch':
+        ctx.globalAlpha = 0.5 * k;
+        ctx.fillStyle = '#1a120b';
+        ctx.beginPath();
+        ctx.ellipse(f.x, f.y + 2, f.r || 26, (f.r || 26) * 0.4, 0, 0, Math.PI * 2);
+        ctx.fill();
+        break;
+      case 'bash': {
+        ctx.strokeStyle = '#f6e58d';
+        ctx.lineWidth = 4 * k + 1;
+        ctx.beginPath();
+        ctx.ellipse(f.x, f.y + 8, 12 + p * 34, 5 + p * 13, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.fillStyle = '#fffbe6';
+        for (let i = 0; i < 8; i++) {
+          const a = (i / 8) * Math.PI * 2;
+          ctx.fillRect(f.x + Math.cos(a) * (10 + p * 26) - 1.5, f.y + Math.sin(a) * (6 + p * 12) - 1.5, 3, 3);
+        }
+        break;
+      }
+      case 'streak': {
+        ctx.lineCap = 'round';
+        ctx.shadowColor = f.color;
+        ctx.shadowBlur = 14;
+        const hx = f.x + (f.x2 - f.x) * Math.min(1, p * 2.2);
+        const hy = f.y + (f.y2 - f.y) * Math.min(1, p * 2.2);
+        ctx.strokeStyle = f.color;
+        ctx.lineWidth = 6 * k;
+        ctx.beginPath(); ctx.moveTo(f.x, f.y); ctx.lineTo(hx, hy); ctx.stroke();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(f.x, f.y); ctx.lineTo(hx, hy); ctx.stroke();
+        const a = Math.atan2(f.y2 - f.y, f.x2 - f.x);
+        ctx.translate(hx, hy);
+        ctx.rotate(a);
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath(); ctx.moveTo(10, 0); ctx.lineTo(-6, -6); ctx.lineTo(-6, 6); ctx.fill();
+        break;
+      }
+      case 'volley':
+        ctx.strokeStyle = '#d5f5e3';
+        ctx.lineWidth = 2;
+        for (let i = 0; i < 6; i++) {
+          const ox = (i - 2.5) * 6, oy = -p * 160 - i * 6;
+          ctx.beginPath(); ctx.moveTo(f.x + ox, f.y + oy); ctx.lineTo(f.x + ox, f.y + oy - 14); ctx.stroke();
+        }
+        break;
+      case 'warn': {
+        const pulse = 0.5 + Math.sin(t * 20) * 0.3;
+        ctx.globalAlpha = 0.35 + pulse * 0.4;
+        ctx.strokeStyle = f.color;
+        ctx.fillStyle = f.color + '22';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([8, 6]);
+        ctx.beginPath();
+        ctx.ellipse(f.x, f.y, f.r, f.r * 0.45, 0, 0, Math.PI * 2);
+        ctx.fill();
         ctx.stroke();
         ctx.setLineDash([]);
+        ctx.beginPath();
+        ctx.ellipse(f.x, f.y, f.r * p, f.r * 0.45 * p, 0, 0, Math.PI * 2);
+        ctx.stroke();
         break;
-      case 'snow': {
+      }
+      case 'rain': {
+        if (f.delay > 0) break;
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = '#d5f5e3';
+        ctx.lineWidth = 2;
+        for (let i = 0; i < 22; i++) {
+          const rr = f.r * (((i * 37) % 100) / 100);
+          const a = i * 2.4;
+          const tx = f.x + Math.cos(a) * rr, ty = f.y + Math.sin(a) * rr * 0.45;
+          const fall = Math.min(1, p * 1.6 + (i % 4) * 0.08);
+          const ay = ty - (1 - fall) * 160;
+          if (fall < 1) {
+            ctx.beginPath(); ctx.moveTo(tx + 3, ay - 16); ctx.lineTo(tx, ay); ctx.stroke();
+          } else {
+            ctx.globalAlpha = Math.max(0, k * 1.5);
+            ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(tx + 2, ty - 7); ctx.stroke();
+            circle(ctx, tx, ty + 1, 3 * k, 'rgba(213,245,227,0.5)');
+            ctx.globalAlpha = 1;
+          }
+        }
+        break;
+      }
+      case 'pillar': {
+        const h = 110 * Math.min(1, p * 3);
+        const g = ctx.createLinearGradient(f.x, f.y, f.x, f.y - h);
+        g.addColorStop(0, 'rgba(255,240,180,0.95)');
+        g.addColorStop(0.4, 'rgba(255,127,80,0.85)');
+        g.addColorStop(1, 'rgba(192,57,43,0)');
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.moveTo(f.x - 20, f.y);
+        for (let i = 0; i <= 6; i++) {
+          const yy = f.y - (h * i) / 6;
+          ctx.lineTo(f.x - 20 + i * 2 + Math.sin(t * 25 + i) * 4, yy);
+        }
+        for (let i = 6; i >= 0; i--) {
+          const yy = f.y - (h * i) / 6;
+          ctx.lineTo(f.x + 20 - i * 2 + Math.sin(t * 22 + i * 2) * 4, yy);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = 'rgba(255,127,80,0.35)';
+        ctx.beginPath();
+        ctx.ellipse(f.x, f.y, 48, 18, 0, 0, Math.PI * 2);
+        ctx.fill();
+        for (let i = 0; i < 6; i++) {
+          circle(ctx, f.x + Math.sin(t * 9 + i * 2) * 18, f.y - ((t * 120 + i * 20) % h), 2.5, '#ffd36e');
+        }
+        break;
+      }
+      case 'meteor': {
+        ctx.globalAlpha = 1;
+        const mx = f.x + k * 140, my = f.y - k * 320;
+        for (let i = 6; i >= 1; i--) {
+          circle(ctx, mx + i * 9, my - i * 20, 12 - i * 1.4, `rgba(255,${120 + i * 15},40,${0.5 - i * 0.06})`);
+        }
+        ctx.shadowColor = '#e67e22';
+        ctx.shadowBlur = 24;
+        circle(ctx, mx, my, 15, '#d35400');
+        circle(ctx, mx - 3, my - 3, 8, '#f9e79f');
+        break;
+      }
+      case 'explosion': {
+        ctx.globalAlpha = k;
+        const r = f.r * (0.3 + p * 0.8);
+        const g = ctx.createRadialGradient(f.x, f.y - 10, 4, f.x, f.y - 10, r);
+        g.addColorStop(0, 'rgba(255,250,210,1)');
+        g.addColorStop(0.35, 'rgba(255,170,60,0.9)');
+        g.addColorStop(0.75, 'rgba(192,57,43,0.6)');
+        g.addColorStop(1, 'rgba(60,20,10,0)');
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(f.x, f.y - 10, r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255,220,150,0.8)';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.ellipse(f.x, f.y, f.r * (0.4 + p), f.r * 0.45 * (0.4 + p), 0, 0, Math.PI * 2);
+        ctx.stroke();
+        break;
+      }
+      case 'hook': {
+        const h = f.hero, e = f.target;
+        if (!h || !e) break;
+        ctx.globalAlpha = 1;
+        // 0..0.35: phóng xích ra; sau đó thu về cùng quái
+        const out = Math.min(1, p / 0.35);
+        const ex = e.x, ey = e.y - 8;
+        const hx = h.x, hy = h.y - 22;
+        const tx = hx + (ex - hx) * out, ty = hy + (ey - hy) * out;
+        ctx.strokeStyle = '#3e2723';
+        ctx.lineWidth = 5;
+        ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(tx, ty); ctx.stroke();
+        ctx.strokeStyle = '#d7ccc8';
+        ctx.lineWidth = 3;
+        ctx.setLineDash([5, 3]);
+        ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(tx, ty); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.translate(tx, ty);
+        ctx.rotate(Math.atan2(ty - hy, tx - hx));
+        ctx.strokeStyle = '#eceff1';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.arc(2, 6, 8, -Math.PI / 2, Math.PI * 0.75);
+        ctx.stroke();
+        break;
+      }
+      case 'vortex': {
+        ctx.strokeStyle = f.color;
+        ctx.lineWidth = 2.5;
+        for (let i = 0; i < 3; i++) {
+          ctx.beginPath();
+          const a0 = t * 8 + i * 2.1;
+          ctx.arc(f.x, f.y, 10 + i * 8 * k, a0, a0 + 2.2);
+          ctx.stroke();
+        }
+        break;
+      }
+      case 'swallow': {
+        const x = f.x + (f.x2 - f.x) * p, y = f.y + (f.y2 - f.y) * p - Math.sin(p * Math.PI) * 30;
+        ctx.globalAlpha = 1;
+        circle(ctx, x, y, Math.max(1, f.r * k), f.color);
+        break;
+      }
+      case 'afterimage': {
+        for (let i = 0; i < 5; i++) {
+          const q = i / 4;
+          const x = f.x + (f.x2 - f.x) * q, y = f.y + (f.y2 - f.y) * q;
+          ctx.globalAlpha = k * (0.25 + q * 0.5);
+          ctx.fillStyle = f.color;
+          ctx.beginPath();
+          ctx.ellipse(x, y - 22, 7, 16, 0, 0, Math.PI * 2);
+          ctx.fill();
+          circle(ctx, x, y - 42, 6, f.color);
+        }
+        break;
+      }
+      case 'xslash': {
+        const s = (f.big ? 26 : 18) * Math.min(1, p * 3);
+        ctx.strokeStyle = f.color;
+        ctx.shadowColor = f.color;
+        ctx.shadowBlur = 10;
+        ctx.lineCap = 'round';
+        ctx.lineWidth = 4 * k + 1;
+        ctx.beginPath();
+        ctx.moveTo(f.x - s, f.y - s); ctx.lineTo(f.x + s, f.y + s);
+        ctx.moveTo(f.x + s, f.y - s); ctx.lineTo(f.x - s, f.y + s);
+        ctx.stroke();
+        break;
+      }
+      case 'mark': {
+        const e = f.target;
+        if (!e || e.dead) break;
+        ctx.globalAlpha = 1;
+        const r = 26 - p * 10;
+        ctx.strokeStyle = '#ff4d4d';
+        ctx.lineWidth = 2;
+        ctx.translate(e.x, e.y - 10);
+        ctx.rotate(p * 3);
+        ctx.beginPath();
+        ctx.arc(0, 0, r, 0, Math.PI * 2);
+        for (let i = 0; i < 4; i++) {
+          const a = (i * Math.PI) / 2;
+          ctx.moveTo(Math.cos(a) * (r - 6), Math.sin(a) * (r - 6));
+          ctx.lineTo(Math.cos(a) * (r + 6), Math.sin(a) * (r + 6));
+        }
+        ctx.stroke();
+        break;
+      }
+      case 'nova': {
+        const r = f.r * Math.min(1, p * 1.8);
         ctx.fillStyle = 'rgba(174,233,255,0.18)';
+        ctx.beginPath();
+        ctx.ellipse(f.x, f.y, r, r * 0.45, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#e8fbff';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        ctx.fillStyle = '#d6f6ff';
+        for (let i = 0; i < 12; i++) {
+          const a = (i / 12) * Math.PI * 2;
+          const sx = f.x + Math.cos(a) * r, sy = f.y + Math.sin(a) * r * 0.45;
+          ctx.beginPath();
+          ctx.moveTo(sx - 3, sy); ctx.lineTo(sx, sy - 14 * k - 4); ctx.lineTo(sx + 3, sy);
+          ctx.fill();
+        }
+        break;
+      }
+      case 'snow': {
+        ctx.globalAlpha = Math.min(1, k * 2);
+        ctx.fillStyle = 'rgba(116,185,255,0.15)';
         ctx.beginPath();
         ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
         ctx.fill();
-        for (let i = 0; i < 26; i++) {
-          const a = i * 2.4, rr = f.r * ((i * 37) % 100) / 100;
-          const fy = ((t * 60 + i * 23) % 40) - 20;
-          circle(ctx, f.x + Math.cos(a) * rr, f.y + Math.sin(a) * rr * 0.6 + fy, 2, '#ffffff');
+        for (let i = 0; i < 45; i++) {
+          const a = i * 2.4 + t * 1.5;
+          const rr = f.r * (((i * 37) % 100) / 100);
+          const fy = ((t * 70 + i * 23) % 50) - 25;
+          circle(ctx, f.x + Math.cos(a) * rr, f.y + Math.sin(a) * rr * 0.7 + fy, i % 5 ? 1.8 : 3, '#ffffff');
         }
         break;
       }
@@ -332,8 +629,8 @@ function drawEffects(t) {
         ctx.fillRect(0, 0, CONFIG.W, CONFIG.H);
         break;
     }
+    ctx.restore();
   }
-  ctx.globalAlpha = 1;
 }
 
 let last = performance.now();
@@ -341,7 +638,7 @@ function loop(now) {
   const dt = Math.min(0.05, (now - last) / 1000);
   last = now;
   // game vẫn chạy khi mở bảng tướng / đồ; chỉ dừng khi bấm nút tạm dừng
-  if (game.started && !game.paused) {
+  if (game.started && game.running) {
     // chia nhỏ bước khi tăng tốc để mô phỏng ổn định
     for (let i = 0; i < game.speed; i++) game.update(dt);
   }

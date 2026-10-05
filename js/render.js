@@ -480,7 +480,12 @@ function drawEnemy(ctx, e, t) {
     circle(ctx, r * 0.35, -r * 0.75 + wob, r * 0.28, '#fff');
     circle(ctx, r * 0.45, -r * 0.75 + wob, r * 0.14, '#111');
   }
-  if (e.stunT > 0) {
+  if (e.stunT > 0 && e.stunKind !== 'ice') {
+    for (let i = 0; i < 3; i++) {
+      const a = t * 6 + (i * Math.PI * 2) / 3;
+      drawStar(ctx, Math.cos(a) * r * 0.8, -r * 2 + Math.sin(a) * 3, 3.5, '#f6e58d');
+    }
+  } else if (e.stunT > 0) {
     ctx.fillStyle = 'rgba(174,233,255,0.45)';
     ctx.strokeStyle = '#e8fbff';
     ctx.lineWidth = 1.5;
@@ -495,6 +500,7 @@ function drawEnemy(ctx, e, t) {
     circle(ctx, e.x + (Math.random() - 0.5) * r, e.y - r * 1.5, 2, e.dotColor);
   }
 
+  if (e.noBar) return;
   // thanh máu
   const w = Math.max(24, r * 2);
   const by = e.y - r * (e.type === 'boss' ? 2.4 : e.type === 'shaman' ? 2.7 : 2) - 6;

@@ -111,23 +111,79 @@ function rollItem(minRarity) {
   return pool[pool.length - 1];
 }
 
-// --- Kỹ năng chủ động. Trả về true nếu đã dùng (để tính hồi chiêu)
+// --- Kỹ năng chủ động. Trả về true nếu đã dùng (để tính hồi chiêu).
+// Mỗi chiêu đẩy hiệu ứng vào game.effects (vẽ ở main.js); chiêu có thời gian
+// bay/rơi thì gây sát thương khi hiệu ứng kết thúc (onEnd) cho khớp hình ảnh.
+const SKILL_COLOR = {
+  bash: '#f6e58d', judgement: '#f1c40f', pierce: '#7bed9f', arrowrain: '#2ecc71',
+  firepillar: '#ff7f50', meteor: '#e67e22', hook: '#d7a985', devour: '#8bc34a',
+  shadowstep: '#a55eea', assassinate: '#e74c3c', nova: '#aee9ff', blizzard: '#74b9ff',
+};
+
 const SKILL_CASTS = {
+  bash(game, h, st, n) {
+    const e = game.findTarget(h.x, h.y, st.range);
+    if (!e) return false;
+    game.effects.push({ type: 'bash', x: e.x, y: e.y - 8, ttl: 0.45, max: 0.45 });
+    game.stun(e, e.def.boss ? 0.4 : 1, 'stun');
+    game.hit(e, (st.damage * 2 + n * 0.6) * st.skillPower, h, { big: true, color: '#f6e58d' });
+    game.shake = Math.max(game.shake, 3);
+    return true;
+  },
   judgement(game, h, st, n) {
     const list = game.enemiesInRange(h.x, h.y, st.range * 1.3);
     if (!list.length) return false;
     const e = list.reduce((a, b) => (b.hp > a.hp ? b : a));
-    game.effects.push({ type: 'bolt', x: e.x, y: e.y, ttl: 0.35, max: 0.35 });
+    game.effects.push({ type: 'dim', ttl: 0.35, max: 0.35 });
+    game.effects.push({ type: 'bolt', x: e.x, y: e.y, ttl: 0.45, max: 0.45 });
+    game.effects.push({ type: 'scorch', x: e.x, y: e.y, ttl: 1.2, max: 1.2 });
+    game.sparks(e.x, e.y - 8, '#f9e79f', 12);
     game.hit(e, (st.damage * 4 + n * 2) * st.skillPower, h, { big: true, color: '#f1c40f' });
+    game.shake = Math.max(game.shake, 6);
+    return true;
+  },
+  pierce(game, h, st, n) {
+    const t = game.findTarget(h.x, h.y, st.range);
+    if (!t) return false;
+    const len = st.range * 1.6;
+    const d = Math.hypot(t.x - h.x, t.y - h.y) || 1;
+    const dx = (t.x - h.x) / d, dy = (t.y - h.y) / d;
+    const x1 = h.x, y1 = h.y - 28, x2 = h.x + dx * len, y2 = h.y - 28 + dy * len;
+    game.effects.push({ type: 'streak', x: x1, y: y1, x2, y2, color: '#7bed9f', ttl: 0.4, max: 0.4 });
+    for (const e of game.enemies) {
+      if (e.dead) continue;
+      // khoảng cách từ quái tới đường bay
+      const k = Math.max(0, Math.min(1, ((e.x - x1) * (x2 - x1) + (e.y - 8 - y1) * (y2 - y1)) / (len * len)));
+      if (Math.hypot(x1 + (x2 - x1) * k - e.x, y1 + (y2 - y1) * k - (e.y - 8)) < 18) {
+        game.hit(e, (st.damage * 2 + n * 0.8) * st.skillPower, h, { big: true, color: '#7bed9f' });
+      }
+    }
     return true;
   },
   arrowrain(game, h, st, n) {
     const target = game.findTarget(h.x, h.y, st.range);
     if (!target) return false;
     const { x, y } = target;
-    game.effects.push({ type: 'rain', x, y, r: 90, ttl: 0.6, max: 0.6 });
-    for (const e of game.enemiesInRange(x, y, 90)) {
-      game.hit(e, (st.damage * 2 + n * 0.5) * st.skillPower, h, { color: '#2ecc71' });
+    game.effects.push({ type: 'volley', x: h.x, y: h.y - 30, ttl: 0.35, max: 0.35 });
+    game.effects.push({ type: 'warn', x, y, r: 90, color: '#2ecc71', ttl: 0.35, max: 0.35 });
+    game.effects.push({
+      type: 'rain', x, y, r: 90, ttl: 0.7, max: 0.7, delay: 0.3,
+      onEnd: () => {
+        for (const e of game.enemiesInRange(x, y, 90)) {
+          game.hit(e, (st.damage * 2 + n * 0.5) * st.skillPower, h, { color: '#2ecc71' });
+        }
+      },
+    });
+    return true;
+  },
+  firepillar(game, h, st, n) {
+    const t = game.findTarget(h.x, h.y, st.range);
+    if (!t) return false;
+    const { x, y } = t;
+    game.effects.push({ type: 'pillar', x, y, ttl: 0.8, max: 0.8 });
+    for (const e of game.enemiesInRange(x, y, 48)) {
+      game.hit(e, (st.damage * 1.8 + n * 0.8) * st.skillPower, h, { big: true, color: '#ff7f50' });
+      if (!e.dead) game.dot(e, Math.max(st.poison, 5 + n * 0.1), h, '#e67e22');
     }
     return true;
   },
@@ -135,10 +191,14 @@ const SKILL_CASTS = {
     const target = game.findTarget(h.x, h.y, st.range * 1.3);
     if (!target) return false;
     const { x, y } = target;
+    game.effects.push({ type: 'warn', x, y, r: 110, color: '#e74c3c', ttl: 0.8, max: 0.8 });
     game.effects.push({
-      type: 'meteor', x, y, ttl: 0.7, max: 0.7,
+      type: 'meteor', x, y, ttl: 0.8, max: 0.8,
       onEnd: () => {
-        game.effects.push({ type: 'ring', x, y, r: 110, color: '#e67e22', ttl: 0.5, max: 0.5 });
+        game.effects.push({ type: 'explosion', x, y, r: 110, ttl: 0.6, max: 0.6 });
+        game.effects.push({ type: 'scorch', x, y, r: 60, ttl: 1.6, max: 1.6 });
+        game.sparks(x, y - 10, '#ffbe76', 16);
+        game.shake = Math.max(game.shake, 9);
         for (const e of game.enemiesInRange(x, y, 110)) {
           game.hit(e, (st.damage * 5 + n * 2) * st.skillPower, h, { big: true, color: '#e67e22' });
         }
@@ -149,50 +209,61 @@ const SKILL_CASTS = {
   hook(game, h, st, n) {
     const e = game.findTarget(h.x, h.y, st.range * 1.8);
     if (!e) return false;
-    game.effects.push({ type: 'line', x: h.x, y: h.y - 20, x2: e.x, y2: e.y - 8, color: '#8d6e63', w: 3, ttl: 0.35, max: 0.35 });
-    if (!e.def.boss) {
-      e.dist = Math.max(0, e.dist - 120);
-      const p = PATH.at(e.dist);
-      e.x = p.x; e.y = p.y;
-    }
-    game.hit(e, (40 + n * 1.5) * st.skillPower, h, { big: true, color: '#d7a985' });
+    game.effects.push({ type: 'hook', hero: h, target: e, ttl: 0.55, max: 0.55 });
+    // móc trúng sau 0.2s, rồi kéo quái lùi lại dọc đường
+    game.effects.push({
+      type: 'none', ttl: 0.2, max: 0.2,
+      onEnd: () => {
+        if (e.dead) return;
+        if (!e.def.boss) { e.pullT = 0.3; e.pullSpeed = 120 / 0.3; }
+        game.hit(e, (40 + n * 1.5) * st.skillPower, h, { big: true, color: '#d7a985' });
+      },
+    });
     return true;
   },
   devour(game, h, st, n) {
     const list = game.enemiesInRange(h.x, h.y, st.range * 1.2);
     if (!list.length) return false;
     const normal = list.filter((e) => !e.def.boss);
-    game.effects.push({ type: 'ring', x: h.x, y: h.y - 20, r: 60, color: '#8bc34a', ttl: 0.5, max: 0.5 });
+    game.effects.push({ type: 'vortex', x: h.x, y: h.y - 22, color: '#8bc34a', ttl: 0.6, max: 0.6 });
     if (normal.length) {
       const e = normal.reduce((a, b) => (b.hp > a.hp ? b : a));
-      game.text(e.x, e.y - 30, 'NUỐT!', '#8bc34a', 0.9);
+      game.effects.push({ type: 'swallow', x: e.x, y: e.y - 8, x2: h.x, y2: h.y - 26, r: e.def.size, color: e.def.color, ttl: 0.45, max: 0.45 });
+      game.text(e.x, e.y - 30, 'NUỐT!', '#8bc34a', 0.9, 18);
       game.hit(e, e.hp + 1, h, {});
     } else {
       game.hit(list[0], (st.damage * 6 + n * 2) * st.skillPower, h, { big: true, color: '#8bc34a' });
     }
     return true;
   },
-  shadowstep(game, h, st) {
+  shadowstep(game, h, st, n) {
     const e = game.findTarget(h.x, h.y, st.range * 2);
     if (!e) return false;
-    game.effects.push({ type: 'line', x: h.x, y: h.y - 20, x2: e.x, y2: e.y - 8, color: '#9b59b6', w: 5, ttl: 0.3, max: 0.3 });
-    game.hit(e, st.damage * 2 * st.skillPower, h, { st, big: true, color: '#c39bd3' });
+    game.effects.push({ type: 'afterimage', x: h.x, y: h.y, x2: e.x, y2: e.y, color: '#a55eea', ttl: 0.45, max: 0.45 });
+    game.effects.push({ type: 'xslash', x: e.x, y: e.y - 10, color: '#c39bd3', ttl: 0.35, max: 0.35 });
+    game.hit(e, (st.damage * 2 + n * 0.5) * st.skillPower, h, { st, big: true, color: '#c39bd3' });
     return true;
   },
   assassinate(game, h, st, n) {
     const list = game.enemiesInRange(h.x, h.y, st.range * 2.5);
     if (!list.length) return false;
     const e = list.reduce((a, b) => (b.hp > a.hp ? b : a));
-    game.effects.push({ type: 'line', x: h.x, y: h.y - 20, x2: e.x, y2: e.y - 8, color: '#e74c3c', w: 4, ttl: 0.4, max: 0.4 });
-    game.effects.push({ type: 'ring', x: e.x, y: e.y - 8, r: 30, color: '#e74c3c', ttl: 0.4, max: 0.4 });
-    game.hit(e, (st.damage * 6 + n * 3) * st.skillPower, h, { big: true, color: '#e74c3c' });
+    game.effects.push({ type: 'mark', target: e, ttl: 0.45, max: 0.45,
+      onEnd: () => {
+        if (e.dead) return;
+        game.effects.push({ type: 'afterimage', x: h.x, y: h.y, x2: e.x, y2: e.y, color: '#e74c3c', ttl: 0.35, max: 0.35 });
+        game.effects.push({ type: 'xslash', x: e.x, y: e.y - 10, color: '#ff6b6b', ttl: 0.4, max: 0.4, big: true });
+        game.sparks(e.x, e.y - 8, '#c0392b', 12);
+        game.shake = Math.max(game.shake, 5);
+        game.hit(e, (st.damage * 6 + n * 3) * st.skillPower, h, { big: true, color: '#e74c3c' });
+      } });
     return true;
   },
   nova(game, h, st, n) {
     const target = game.findTarget(h.x, h.y, st.range);
     if (!target) return false;
     const { x, y } = target;
-    game.effects.push({ type: 'ring', x, y, r: 80, color: '#aee9ff', ttl: 0.45, max: 0.45 });
+    game.effects.push({ type: 'nova', x, y, r: 80, ttl: 0.55, max: 0.55 });
     for (const e of game.enemiesInRange(x, y, 80)) {
       game.hit(e, (60 + n) * st.skillPower, h, { color: '#aee9ff' });
       if (!e.dead) { e.slowT = 2.5; e.slowPct = Math.max(e.slowPct, 60); }
@@ -202,11 +273,12 @@ const SKILL_CASTS = {
   blizzard(game, h, st, n) {
     const list = game.enemiesInRange(h.x, h.y, st.range);
     if (!list.length) return false;
-    game.effects.push({ type: 'snow', x: h.x, y: h.y, r: st.range, ttl: 1.2, max: 1.2 });
+    game.effects.push({ type: 'snow', x: h.x, y: h.y, r: st.range, ttl: 2, max: 2 });
     for (const e of list) {
-      e.stunT = e.def.boss ? 1 : 2;
+      game.stun(e, e.def.boss ? 1 : 2, 'ice');
       game.hit(e, (st.damage * 3 + n) * st.skillPower, h, { color: '#aee9ff' });
     }
+    game.shake = Math.max(game.shake, 3);
     return true;
   },
 };
@@ -232,6 +304,10 @@ class Game {
     this.time = 0;
     this.started = false;
     this.flags = { equipped: false, shopOpened: false };
+    this.running = false;      // nút Bắt đầu/Dừng: đợt quái tự nối tiếp khi đang chạy
+    this.nextWaveT = 0;        // đếm ngược tới đợt kế
+    this.nextWave = buildWave(1);
+    this.shake = 0;
     this.bossesKilled = 0;
     this.events = [];   // sự kiện lớn cho giao diện (boss xuất hiện...)
     // Đồ khởi đầu để thử ngay việc thay đổi hình dạng
@@ -345,9 +421,19 @@ class Game {
   startWave() {
     if (this.waveActive || this.over) return;
     this.wave++;
-    this.spawnQueue = buildWave(this.wave);
+    this.spawnQueue = this.nextWave;
+    this.nextWave = buildWave(this.wave + 1);
     this.spawnTimer = 0;
     this.waveActive = true;
+  }
+
+  // Gọi đợt kế ngay trong lúc đếm ngược: thưởng vàng theo thời gian còn lại
+  callEarly() {
+    if (this.waveActive || this.over) return 0;
+    const bonus = this.wave > 0 ? Math.round(this.nextWaveT * 4) : 0;
+    this.gold += bonus;
+    this.startWave();
+    return bonus;
   }
 
   // ---------- truy vấn
@@ -373,6 +459,11 @@ class Game {
   update(dt) {
     if (this.over) return;
     this.time += dt;
+    this.shake = Math.max(0, this.shake - dt * 30);
+    if (!this.waveActive) {
+      this.nextWaveT -= dt;
+      if (this.nextWaveT <= 0) this.startWave();
+    }
     this.updateSpawns(dt);
     for (const e of this.enemies.slice()) this.updateEnemy(e, dt);
     for (const h of this.heroes) if (h) this.updateHero(h, dt);
@@ -382,6 +473,7 @@ class Game {
 
     if (this.waveActive && !this.spawnQueue.length && !this.enemies.length) {
       this.waveActive = false;
+      this.nextWaveT = CONFIG.waveBreak;
       const bonus = 20 + this.wave * 5;
       this.gold += bonus;
       this.notify(`Hoàn thành đợt ${this.wave}! +${bonus}💰`, '#f1c40f');
@@ -395,7 +487,7 @@ class Game {
     const e = {
       id: nextId++, type, def, hp, maxHp: hp, dist, x: p.x, y: p.y, dir: 1,
       slowT: 0, slowPct: 0, stunT: 0, poisonT: 0, poisonDps: 0, poisonBy: null, dotColor: '#2ecc71',
-      atkCd: 1, slamCd: 4, summonCd: 6, dead: false,
+      atkCd: 1, slamCd: 4, summonCd: 6, dead: false, stunKind: 'stun', pullT: 0, pullSpeed: 0,
     };
     this.enemies.push(e);
     return e;
@@ -455,6 +547,14 @@ class Game {
       }
     }
 
+    if (e.pullT > 0) {
+      // bị móc kéo lùi
+      e.pullT -= dt;
+      e.dist = Math.max(0, e.dist - e.pullSpeed * dt);
+      const p = PATH.at(e.dist);
+      e.x = p.x; e.y = p.y;
+      return;
+    }
     if (e.stunT > 0) { e.stunT -= dt; return; }
     const speed = d.speed * (e.slowT > 0 ? 1 - e.slowPct / 100 : 1);
     e.dist += speed * dt;
@@ -534,6 +634,7 @@ class Game {
     }
     h.hp = Math.min(st.hpMax, h.hp + st.regen * dt);
     h.swing = Math.max(0, h.swing - dt * 4);
+    if (h.castT > 0) h.castT -= dt;
     for (const sk of def.skills) {
       if (sk.active && h.kills >= sk.unlock) h.skillCd[sk.id] = (h.skillCd[sk.id] || 0) - dt;
     }
@@ -550,7 +651,12 @@ class Game {
       if (SKILL_CASTS[sk.active.cast](this, h, st, h.kills - sk.unlock)) {
         h.skillCd[sk.id] = sk.active.cooldown * (1 - st.cdr / 100);
         h.swing = 1;
-        this.text(h.x, h.y - 62, sk.name + '!', '#fff', 1);
+        const color = SKILL_COLOR[sk.active.cast] || '#fff';
+        h.castT = 0.5;
+        h.castColor = color;
+        this.effects.push({ type: 'cast', x: h.x, y: h.y, color, ttl: 0.5, max: 0.5 });
+        this.text(h.x, h.y - 66, sk.name + '!', color, 1.1, 17);
+        break;   // mỗi lần chỉ tung một chiêu
       }
     }
 
@@ -625,6 +731,17 @@ class Game {
     this.projectiles = this.projectiles.filter((p) => !p.done);
   }
 
+  stun(e, t, kind) {
+    e.stunT = Math.max(e.stunT, t);
+    e.stunKind = kind;
+  }
+
+  sparks(x, y, color, n) {
+    for (let i = 0; i < n; i++) {
+      this.effects.push({ type: 'spark', x, y, a: Math.random() * 6.28, color, ttl: 0.5, max: 0.5, d: 20 + Math.random() * 25 });
+    }
+  }
+
   dot(e, dps, hero, color) {
     e.poisonT = 3;
     e.poisonDps = dps;
@@ -634,6 +751,7 @@ class Game {
 
   updateEffects(dt) {
     for (const f of this.effects.slice()) {
+      if (f.delay > 0) { f.delay -= dt; continue; }
       f.ttl -= dt;
       if (f.vy) f.y += f.vy * dt;
       if (f.ttl <= 0 && f.onEnd) { f.onEnd(); f.onEnd = null; }
@@ -699,7 +817,7 @@ class Game {
     }
   }
 
-  text(x, y, str, color, ttl) {
-    this.effects.push({ type: 'text', x, y, str: String(str), color, ttl, max: ttl, vy: -40 });
+  text(x, y, str, color, ttl, size) {
+    this.effects.push({ type: 'text', x, y, str: String(str), color, ttl, max: ttl, vy: -40, size: size || 15 });
   }
 }
