@@ -1030,3 +1030,11 @@ button:disabled { cursor: default; }
 .ro-top .ro-pic canvas, .ro-top .ro-pic img { width: 128px; height: 128px; }
 .dk-card.legend .asc-ic { width: 28px; height: 28px; object-fit: contain; display: block; margin: 0 auto 2px; }
 .svgi img { width: 100%; height: 100%; object-fit: contain; display: block; }
+/* v30: icon giao diện vẽ tay (ui_*.png) */
+.coin-img { width: 18px; height: 18px; object-fit: contain; vertical-align: -4px; }
+.coin-img.sm { width: 14px; height: 14px; vertical-align: -2px; }
+.uiic { width: 16px; height: 16px; object-fit: contain; vertical-align: -3px; margin-right: 3px; }
+.jar-btn .uiic { width: 22px; height: 22px; position: absolute; left: 8px; top: 8px; margin: 0; }
+.jar-btn { position: relative; }
+.tb-ic { width: 20px; height: 20px; object-fit: contain; flex: none; }
+.dk-sk.lock .uiic { width: 14px; height: 14px; }

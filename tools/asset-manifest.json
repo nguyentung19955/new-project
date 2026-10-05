@@ -2043,6 +2043,104 @@
      "file": "ui_than-tinh.png"
     }
    ]
+  },
+  {
+   "code": "S44",
+   "title": "Bổ sung v30 · dáng ra đòn 16 tướng, Ngọc Hồi Sinh, Hũ đồng",
+   "rows": 5,
+   "cols": 4,
+   "cells": [
+    {
+     "index": 1,
+     "name": "Lạc Tướng · ra đòn",
+     "file": "lac-tuong_ra-don.png"
+    },
+    {
+     "index": 2,
+     "name": "Lực Sĩ Núi · ra đòn",
+     "file": "luc-si-nui_ra-don.png"
+    },
+    {
+     "index": 3,
+     "name": "Xạ Thủ Văn Lang · ra đòn",
+     "file": "xa-thu-van-lang_ra-don.png"
+    },
+    {
+     "index": 4,
+     "name": "Thợ Săn Rừng · ra đòn",
+     "file": "tho-san-rung_ra-don.png"
+    },
+    {
+     "index": 5,
+     "name": "Thầy Mo Lửa · ra đòn",
+     "file": "thay-mo-lua_ra-don.png"
+    },
+    {
+     "index": 6,
+     "name": "Thần Sương Núi · ra đòn",
+     "file": "than-suong-nui_ra-don.png"
+    },
+    {
+     "index": 7,
+     "name": "Thánh Gióng · ra đòn",
+     "file": "thanh-giong_ra-don.png"
+    },
+    {
+     "index": 8,
+     "name": "Lạc Long Quân · ra đòn",
+     "file": "lac-long-quan_ra-don.png"
+    },
+    {
+     "index": 9,
+     "name": "Thần Kim Quy · ra đòn",
+     "file": "than-kim-quy_ra-don.png"
+    },
+    {
+     "index": 10,
+     "name": "Thạch Sanh · ra đòn",
+     "file": "thach-sanh_ra-don.png"
+    },
+    {
+     "index": 11,
+     "name": "Cao Lỗ · ra đòn",
+     "file": "cao-lo_ra-don.png"
+    },
+    {
+     "index": 12,
+     "name": "Mai An Tiêm · ra đòn",
+     "file": "mai-an-tiem_ra-don.png"
+    },
+    {
+     "index": 13,
+     "name": "Âu Cơ · ra đòn",
+     "file": "au-co_ra-don.png"
+    },
+    {
+     "index": 14,
+     "name": "Chử Đồng Tử · ra đòn",
+     "file": "chu-dong-tu_ra-don.png"
+    },
+    {
+     "index": 15,
+     "name": "Tiên Dung · ra đòn",
+     "file": "tien-dung_ra-don.png"
+    },
+    {
+     "index": 16,
+     "name": "Lang Liêu · ra đòn",
+     "file": "lang-lieu_ra-don.png"
+    },
+    {
+     "index": 17,
+     "name": "Ngọc Hồi Sinh",
+     "file": "sinh-le_ngoc-hoi-sinh.png"
+    },
+    {
+     "index": 18,
+     "name": "Hũ đồng",
+     "file": "ui_hu-dong.png"
+    }
+   ]
   }
  ],
  "singles": [
@@ -2115,6 +2213,96 @@
    "code": "F18",
    "name": "Mẫu Thượng Ngàn · tranh lớn",
    "file": "anh-lon_mau-thuong-ngan.png"
+  },
+  {
+   "code": "F19",
+   "name": "Lạc Tướng · tranh lớn",
+   "file": "anh-lon_lac-tuong.png"
+  },
+  {
+   "code": "F20",
+   "name": "Lực Sĩ Núi · tranh lớn",
+   "file": "anh-lon_luc-si-nui.png"
+  },
+  {
+   "code": "F21",
+   "name": "Xạ Thủ Văn Lang · tranh lớn",
+   "file": "anh-lon_xa-thu-van-lang.png"
+  },
+  {
+   "code": "F22",
+   "name": "Thợ Săn Rừng · tranh lớn",
+   "file": "anh-lon_tho-san-rung.png"
+  },
+  {
+   "code": "F23",
+   "name": "Thầy Mo Lửa · tranh lớn",
+   "file": "anh-lon_thay-mo-lua.png"
+  },
+  {
+   "code": "F24",
+   "name": "Thần Sương Núi · tranh lớn",
+   "file": "anh-lon_than-suong-nui.png"
+  },
+  {
+   "code": "F25",
+   "name": "Thánh Gióng · tranh lớn",
+   "file": "anh-lon_thanh-giong.png"
+  },
+  {
+   "code": "F26",
+   "name": "Lạc Long Quân · tranh lớn",
+   "file": "anh-lon_lac-long-quan.png"
+  },
+  {
+   "code": "F27",
+   "name": "Thần Kim Quy · tranh lớn",
+   "file": "anh-lon_than-kim-quy.png"
+  },
+  {
+   "code": "F28",
+   "name": "Thạch Sanh · tranh lớn",
+   "file": "anh-lon_thach-sanh.png"
+  },
+  {
+   "code": "F29",
+   "name": "Cao Lỗ · tranh lớn",
+   "file": "anh-lon_cao-lo.png"
+  },
+  {
+   "code": "F30",
+   "name": "Mai An Tiêm · tranh lớn",
+   "file": "anh-lon_mai-an-tiem.png"
+  },
+  {
+   "code": "F31",
+   "name": "Âu Cơ · tranh lớn",
+   "file": "anh-lon_au-co.png"
+  },
+  {
+   "code": "F32",
+   "name": "Chử Đồng Tử · tranh lớn",
+   "file": "anh-lon_chu-dong-tu.png"
+  },
+  {
+   "code": "F33",
+   "name": "Tiên Dung · tranh lớn",
+   "file": "anh-lon_tien-dung.png"
+  },
+  {
+   "code": "F34",
+   "name": "Lang Liêu · tranh lớn",
+   "file": "anh-lon_lang-lieu.png"
+  },
+  {
+   "code": "F35",
+   "name": "Nền chiến thắng",
+   "file": "nen_thang.png"
+  },
+  {
+   "code": "F36",
+   "name": "Nền thất bại",
+   "file": "nen_thua.png"
   }
  ]
 }

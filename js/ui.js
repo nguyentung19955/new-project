@@ -24,8 +24,13 @@ const ICON = {
   stop: '<path d="M5 5 H15 V15 H5 Z" fill="currentColor"/>',
   play: '<path d="M6 4 L16 10 L6 16 Z" fill="currentColor"/>',
 };
+// ổ khóa vẽ tay (ui_khoa.png) nếu đã có
+{ const lockSvg = ICON.lock; Object.defineProperty(ICON, 'lock', { get: () => uiIc('khoa', lockSvg) }); }
+
 const svgI = (svg, cls = '') => `<span class="svgi ${cls}">${svg || ''}</span>`;
-const coin = (sm) => `<i class="coin${sm ? ' sm' : ''}"></i>`;
+const coin = (sm) => (assetUrl('ui_dong-xu.png') ? `<img class="coin-img${sm ? ' sm' : ''}" src="${assetUrl('ui_dong-xu.png')}" alt="">` : `<i class="coin${sm ? ' sm' : ''}"></i>`);
+// icon giao diện vẽ tay (ui_*.png) nếu đã có, không thì dùng ký hiệu dự phòng
+const uiIc = (name, fallback = '') => (assetUrl(`ui_${name}.png`) ? `<img class="uiic" src="${assetUrl(`ui_${name}.png`)}" alt="">` : fallback);
 const rarCls = (r) => ({ common: 'rt', rare: 'rh', epic: 'rs', legendary: 'rl' }[r]);
 const ATTR_CLS = { str: 'a-str', agi: 'a-agi', int: 'a-int' };
 const BOSS_LINES = {
@@ -95,6 +100,7 @@ function itemIcon(id) {
 function sceneArt(k) {
   const u = SCENE_FILE[k] && assetUrl(SCENE_FILE[k]);
   if (u) return `<img src="${u}" alt="">`;
+  if (k === 'huvua') return sceneArt('hubau');
   return HAS_ART && ART.scene[k] ? ART.scene[k] : '';
 }
 // Biểu tượng Ngũ hành trong khung tròn trống đồng
@@ -128,8 +134,8 @@ function secretLine(game, key) {
   const d = SECRETS[key];
   if (!d) return '';
   return game.known.has(key)
-    ? `<div class="hid ok"><b>✦ Hiệu ứng ẩn:</b> ${esc(d.desc)}</div>`
-    : `<div class="hid"><b>??? · Hiệu ứng ẩn</b> <i>“${esc(d.hint)}”</i></div>`;
+    ? `<div class="hid ok">${uiIc('da-kham-pha')}<b>✦ Hiệu ứng ẩn:</b> ${esc(d.desc)}</div>`
+    : `<div class="hid">${uiIc('an')}<b>??? · Hiệu ứng ẩn</b> <i>“${esc(d.hint)}”</i></div>`;
 }
 
 // Ảnh tướng ghép đủ các phần (để làm nút triệu hồi, chân dung nhỏ)
@@ -249,6 +255,19 @@ class UI {
       if (this.screen || !h) return;
       if (k === 'u') this.doLevelUp(h);
     });
+  }
+
+  // ảnh vẽ tay cho các icon cố định trên thanh trên (vàng, mạng, mực nước)
+  applyUiArt() {
+    const put = (sel, name) => {
+      const u = assetUrl(`ui_${name}.png`), el = $(sel);
+      if (!u || !el || el.dataset.art === u) return;
+      el.dataset.art = u;
+      el.outerHTML = `<img class="tb-ic" src="${u}" alt="" data-art="${u}">`;
+    };
+    put('#tb-gold > .coin, #tb-gold > .tb-ic', 'dong-vang');
+    put('#tb-lives > svg, #tb-lives > .tb-ic', 'mang');
+    put('#tb-water > svg, #tb-water > .tb-ic', 'muc-nuoc');
   }
 
   // ---------- luồng menu
@@ -532,6 +551,7 @@ class UI {
     if (this.assetSeen !== assetVersion) {
       // có ảnh vẽ tay mới tải xong: vẽ lại các phần dùng ảnh
       this.assetSeen = assetVersion;
+      this.applyUiArt();
       this.sig = {};
       this.buildSummon();
       if (!$('#menu').hidden) this.showMenu();
@@ -691,7 +711,7 @@ class UI {
     if (g.wave > 0 && g.wave + 1 <= lim) {
       if (!g.waveActive && g.running) {
         early = true;
-        html = `<b>Đợt ${g.wave + 1}</b> sau ${Math.ceil(Math.max(0, g.nextWaveT))}s ${kindTxt(g.wave + 1)}<span class="go">Gọi sớm +${g.earlyBonus()}</span>`;
+        html = `<b>Đợt ${g.wave + 1}</b> sau ${Math.ceil(Math.max(0, g.nextWaveT))}s ${kindTxt(g.wave + 1)}<span class="go">${uiIc('goi-som')}Gọi sớm +${g.earlyBonus()}</span>`;
       } else {
         const t = kindTxt(g.wave + 1);
         if (t) html = `<b>Đợt ${g.wave + 1}:</b> ${t}`;
@@ -759,11 +779,11 @@ class UI {
       const maxed = h.level >= CONFIG.maxLevel;
       const tc = g.trainCost(h);
       html = `<button class="dk-x metal" data-act="deck-close" aria-label="Bỏ chọn">${ICON.close}</button>
-        <span class="dk-pt ${g.known.has('h.' + h.type) ? 'goldf' : ''}"><canvas id="dk-portrait" width="108" height="116"></canvas><span class="lv">${h.level}${h.train ? `<i>✦${h.train}</i>` : ''}</span><span class="st" ${h.from ? 'style="color:#FF7A3A"' : ''}>${'★'.repeat(h.tier || 0)}</span></span>
+        <span class="dk-pt ${g.known.has('h.' + h.type) ? 'goldf' : ''}" ${assetUrl(`ui_khung-${h.from ? 'vang' : 'thuong'}.png`) ? `style="background-image:url('${assetUrl(`ui_khung-${h.from ? 'vang' : 'thuong'}.png`)}'),radial-gradient(circle at 50% 60%,#3A2416,#1A0F0A 75%);background-size:100% 100%,auto"` : ''}><canvas id="dk-portrait" width="108" height="116"></canvas><span class="lv">${h.level}${h.train ? `<i>✦${h.train}</i>` : ''}</span><span class="st" ${h.from ? 'style="color:#FF7A3A"' : ''}>${'★'.repeat(h.tier || 0)}</span></span>
         <span class="dk-info"><span class="nm">${elIcon(def.el, 15)}${def.name}</span><span class="sub ${h.bogged || h.dead ? 'warn' : ''}">${status}</span>
           <span class="bar hp"><i id="dk-hp"></i></span><span class="bar mp"><i id="dk-mp"></i></span></span>
         ${skills}
-        ${maxed ? `<button class="dk-up btn-gold" data-act="train" ${g.gold < tc ? 'disabled' : ''} aria-label="Luyện thể"><b>Luyện thể ✦${(h.train || 0) + 1}</b><span>${coin(1)}${tc}</span></button>`
+        ${maxed ? `<button class="dk-up btn-gold" data-act="train" ${g.gold < tc ? 'disabled' : ''} aria-label="Luyện thể"><b>${uiIc('luyen-the')}Luyện thể ✦${(h.train || 0) + 1}</b><span>${coin(1)}${tc}</span></button>`
           : `<button class="dk-up btn-gold" data-act="levelup" ${g.gold < lc ? 'disabled' : ''} aria-label="Nâng cấp tướng"><b>Lên cấp ${h.level + 1}</b><span>${coin(1)}${lc}</span></button>`}
         <button class="dk-more metal ${notice || up ? 'notice' : ''}" data-act="more" aria-label="Thêm">⋯${h.skillPts ? `<span class="badge">${h.skillPts}</span>` : ''}${up ? '<span class="upb">▲</span>' : ''}</button>`;
     }
@@ -968,7 +988,7 @@ class UI {
         <div class="sl-card gift"><div class="sl-well">${svgI(sceneArt(art))}<span class="sl-tag" style="left:6px;background:#0D0B08;border:1px solid #8C6A2E;color:#F2E6C8">SÍNH LỄ</span><span class="sl-tag" style="right:6px;background:#F0A030;color:#2A1A08">Huyền thoại</span></div>
           <div class="sl-name">${it.name}</div><div class="sl-desc">${esc(it.desc)}<br><b>${statLine(it.stats)}</b></div>
           <button class="sl-pick btn-gold" data-act="reward" data-i="0">Chọn</button></div>
-        <div class="sl-card jar"><div class="sl-well">${svgI(sceneArt('hubau'))}<span class="sl-tag" style="left:6px;background:#0D0B08;border:1px solid #8C6A2E;color:#F2E6C8">HŨ BÁU</span><span class="sl-tag" style="right:6px;background:#A86CE0;color:#1A0A28">Sử thi+</span></div>
+        <div class="sl-card jar"><div class="sl-well">${svgI(sceneArt('huvua'))}<span class="sl-tag" style="left:6px;background:#0D0B08;border:1px solid #8C6A2E;color:#F2E6C8">HŨ BÁU</span><span class="sl-tag" style="right:6px;background:#A86CE0;color:#1A0A28">Sử thi+</span></div>
           <div class="sl-name">Hũ Vua Hùng</div><div class="sl-desc">Mở ra ngẫu nhiên 1 món đồ <b style="color:#C8A0F0">Sử thi</b> hoặc <b>Huyền thoại</b>.<br>Lần này: <span class="c-${jit.rarity}">${jit.name}</span></div>
           <button class="sl-pick metal" style="color:#F2D27A" data-act="reward" data-i="1">Chọn</button></div>
         <div class="sl-card misc"><div class="sl-well">${svgI(sceneArt('kholua'))}<span class="sl-tag" style="left:6px;background:#0D0B08;border:1px solid #8C6A2E;color:#F2E6C8">${misc.kind === 'treasure' ? 'KHO LÚA' : 'HỘI LÀNG'}</span><span class="sl-tag" style="right:6px;background:#12301A;border:1px solid #3EDC4E;color:#6AE06A">Ngẫu nhiên</span></div>
@@ -1582,7 +1602,7 @@ class UI {
           <div style="display:flex;align-items:center;gap:10px"><div class="rar-chips" style="display:none"></div>
             </div>
           <div class="jars">${JARS.map((j) => `<button class="jar-btn ${j.id === 'small' ? 'metal' : j.id === 'big' ? 'metal rh' : 'metal rl'}" data-act="chest" data-k="${j.id}" ${g.gold < j.cost ? 'disabled' : ''}>
-            <b>${j.name}</b><small>${j.desc}</small><span>${coin(1)} ${j.cost}</span></button>`).join('')}</div>
+            ${uiIc(j.id === 'king' ? 'hu-vua-hung' : j.id === 'big' ? 'hu-dong' : 'hu-bau')}<b>${j.name}</b><small>${j.desc}</small><span>${coin(1)} ${j.cost}</span></button>`).join('')}</div>
           <div class="note" style="text-align:center">Mở thêm <b style="color:#C8A0F0">${Math.max(1, JAR_PITY - (g.jarCount || 0))}</b> hũ nữa: chắc chắn ra đồ Sử thi trở lên.</div>
         </div>
         <div class="panel metal" style="width:260px;flex:none"><div class="ttl" style="font-size:17px">Vừa mở được</div>
@@ -1668,11 +1688,11 @@ class UI {
         <div class="det-btns">
           ${inst.plus < 5 ? `<button class="btn btn-gold" data-act="enhance" data-uid="${inst.uid}" ${g.gold < enhanceCost(inst) ? 'disabled' : ''}>Cường hóa +${inst.plus + 1} · ${coin()} ${enhanceCost(inst)}</button>`
             : nextR ? `<button class="btn btn-gold" data-act="promote" data-uid="${inst.uid}" ${g.gold < promoteCost(inst) ? 'disabled' : ''}>Thăng phẩm · ${promoteCost(inst)} vàng</button>`
-            : `<button class="btn btn-gold" data-act="temper" data-uid="${inst.uid}" ${g.gold < temperC ? 'disabled' : ''}>Tôi luyện ✦${(inst.temper || 0) + 1} · ${temperC} vàng</button>`}
+            : `<button class="btn btn-gold" data-act="temper" data-uid="${inst.uid}" ${g.gold < temperC ? 'disabled' : ''}>${uiIc('toi-luyen')}Tôi luyện ✦${(inst.temper || 0) + 1} · ${temperC} vàng</button>`}
           ${onHero ? `<button class="btn metal" style="color:#F2D27A" data-act="unequip" data-slot="${f2.slot}">Tháo xuống túi</button>`
             : `<button class="btn metal" style="color:${canEq ? '#6AE06A' : '#7A705C'}" data-act="equip" data-uid="${inst.uid}" ${canEq ? '' : 'disabled'}>${h ? (canEq ? `Đeo cho ${def.name}` : `Không hợp ${def.name}`) : 'Chưa có tướng'}</button>`}
           <div class="r2"><button class="btn metal" data-act="lock" data-uid="${inst.uid}">${ICON.lock} ${inst.locked ? 'Mở khóa' : 'Khóa'}</button>
-            ${inst.aff && inst.aff.length ? `<button class="btn metal" style="color:#C8A0F0" data-act="reroll" data-uid="${inst.uid}" ${inst.locked || g.gold < rerollC ? 'disabled' : ''}>Tẩy luyện · ${rerollC}</button>` : ''}
+            ${inst.aff && inst.aff.length ? `<button class="btn metal" style="color:#C8A0F0" data-act="reroll" data-uid="${inst.uid}" ${inst.locked || g.gold < rerollC ? 'disabled' : ''}>${uiIc('tay-luyen')}Tẩy luyện · ${rerollC}</button>` : ''}
             ${onHero ? '' : `<button class="btn metal" style="color:#FFD66B" data-act="scrap" data-uid="${inst.uid}" ${inst.locked ? 'disabled' : ''}>Đổi ${scrapValue(inst)} vàng</button>`}</div>
         </div></div>`;
     } else {

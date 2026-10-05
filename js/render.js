@@ -232,7 +232,8 @@ function itemPngPath(id, rarity) {
 const skillPngPath = (type, i) => [`ky-nang_${heroSlug(type)}_${SKILL_KEYS[i].toLowerCase()}.png`, `skills/${HERO_CODE[type]}_${SKILL_KEYS[i]}.png`];
 const SCENE_FILE = { menu: ['nen_menu.png', 'key-art-menu.png'], story1: ['truyen_1.png', 'scenes/story-1.png'],
   story2: ['truyen_2.png', 'scenes/story-2.png'], story3: ['truyen_3.png', 'scenes/story-3.png'],
-  win: 'scenes/victory-bg.png', lose: 'scenes/defeat-bg.png',
+  win: ['nen_thang.png', 'scenes/victory-bg.png'], lose: ['nen_thua.png', 'scenes/defeat-bg.png'],
+  kholua: 'ui_kho-lua.png', huvua: 'ui_hu-vua-hung.png',
   mountain1: ['ban-do_nui-1.png', 'scenes/mountain-1.png'], mountain2: ['ban-do_nui-2.png', 'scenes/mountain-2.png'],
   mountain3: ['ban-do_nui-3.png', 'scenes/mountain-3.png'], mountain4: ['ban-do_nui-4.png', 'scenes/mountain-4.png'],
   mountain5: ['ban-do_nui-5.png', 'scenes/mountain-5.png'],
@@ -806,7 +807,7 @@ function drawEvoAura(ctx, tier, attrColor, s, t) {
   const k = s / 0.28;
   const rx = 24 * DK * k, ry = 8 * DK * k;
   // ảnh vẽ tay vòng hào quang (tien-hoa_1..3): vẽ dẹt theo phối cảnh, xoay chậm
-  const img = asset(`tien-hoa_${tier}.png`);
+  const img = tier > 0 && asset(`tien-hoa_${tier}.png`);
   if (img) {
     ctx.save();
     ctx.scale(1, ry / rx);
