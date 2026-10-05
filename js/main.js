@@ -60,7 +60,8 @@ function render() {
 
   const selected = ui.sheet && ui.sheet.slot !== undefined ? ui.sheet.slot : -1;
   CONFIG.slots.forEach(([x, y], i) => {
-    if (!game.heroes[i]) drawSlot(ctx, x, y, i === selected, i === ui.coachSlot, t);
+    const h = game.heroes[i];
+    drawSlot(ctx, x, y, i === selected, i === ui.coachSlot, t, !!h, h && ATTRS[HEROES[h.type].attr].color);
   });
 
   // vòng tầm đánh của tướng đang chọn

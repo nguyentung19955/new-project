@@ -554,125 +554,254 @@ function drawBoss(ctx, r, color, wob, t) {
 }
 
 // ------------------------------------------------------------
-//  BẢN ĐỒ (phần tĩnh vẽ 1 lần vào canvas phụ)
+//  BẢN ĐỒ kiểu bản đồ Dota 1 / Warcraft III (vẽ hoàn toàn bằng code)
+//  - Góc cổng quỷ: đất chết (giống phe Scourge), cây khô
+//  - Phía lâu đài: cỏ xanh (giống phe Sentinel), rừng thông dày
+//  - Đường lát đá cuội, sông chảy ngang có cầu gỗ
 // ------------------------------------------------------------
+const RIVER = [[-20, 506], [50, 502], [100, 498], [160, 490], [220, 498], [270, 510],
+               [330, 505], [390, 498], [450, 500], [560, 498]];
+const BLIGHT_CENTER = [10, 150];
+
+function distToPolyline(pts, x, y) {
+  let best = Infinity;
+  for (let i = 1; i < pts.length; i++) {
+    const [ax, ay] = pts[i - 1], [bx, by] = pts[i];
+    const dx = bx - ax, dy = by - ay;
+    const tt = Math.max(0, Math.min(1, ((x - ax) * dx + (y - ay) * dy) / (dx * dx + dy * dy)));
+    best = Math.min(best, Math.hypot(ax + dx * tt - x, ay + dy * tt - y));
+  }
+  return best;
+}
+const distToPath = (x, y) => distToPolyline(CONFIG.path, x, y);
+
+// 0 = cỏ xanh, 1 = đất chết hoàn toàn
+function blightAt(x, y) {
+  const d = Math.hypot(x - BLIGHT_CENTER[0], y - BLIGHT_CENTER[1]);
+  return Math.max(0, Math.min(1, 1.35 - d / 240));
+}
+
+function strokePoly(ctx, pts, w, color, dash) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = w;
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  ctx.setLineDash(dash || []);
+  ctx.beginPath();
+  pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
+  ctx.stroke();
+  ctx.setLineDash([]);
+}
+
 function buildMapCanvas(scale) {
   const c = document.createElement('canvas');
   c.width = Math.round(CONFIG.W * scale);
   c.height = Math.round(CONFIG.H * scale);
   const ctx = c.getContext('2d');
   ctx.scale(scale, scale);
-  const W = CONFIG.W, H = CONFIG.H;
-  let seed = 11;
+  const W = CONFIG.W, H = CONFIG.H, PW = CONFIG.pathWidth;
+  let seed = 23;
   const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
 
-  // cỏ: nền chuyển màu + mảng sáng tối
-  const g = ctx.createLinearGradient(0, 0, 0, H);
-  g.addColorStop(0, '#3f6b2f');
-  g.addColorStop(1, '#4f7f36');
-  ctx.fillStyle = g;
+  // --- nền cỏ kiểu Warcraft: xanh đậm, nhiều mảng sáng tối + đất trống
+  ctx.fillStyle = '#3b5426';
   ctx.fillRect(0, 0, W, H);
-  for (let i = 0; i < 26; i++) {
-    ctx.fillStyle = rnd() < 0.5 ? 'rgba(255,255,160,0.05)' : 'rgba(0,40,0,0.08)';
+  for (let i = 0; i < 90; i++) {
+    const x = rnd() * W, y = rnd() * H, r = 18 + rnd() * 50;
+    const pick = rnd();
+    ctx.fillStyle = pick < 0.4 ? 'rgba(86,120,52,0.35)' : pick < 0.8 ? 'rgba(30,48,22,0.35)' : 'rgba(104,86,52,0.3)';
     ctx.beginPath();
-    ctx.ellipse(rnd() * W, rnd() * H, 40 + rnd() * 70, 25 + rnd() * 40, rnd() * 3, 0, Math.PI * 2);
+    ctx.ellipse(x, y, r, r * (0.5 + rnd() * 0.4), rnd() * 3, 0, Math.PI * 2);
     ctx.fill();
   }
-  for (let i = 0; i < 420; i++) {
+  for (let i = 0; i < 900; i++) {
     const x = rnd() * W, y = rnd() * H;
-    ctx.strokeStyle = rnd() < 0.5 ? '#5c8f3e' : '#355c27';
-    ctx.lineWidth = 1.2;
+    ctx.fillStyle = rnd() < 0.5 ? 'rgba(120,160,70,0.35)' : 'rgba(20,35,15,0.35)';
+    ctx.fillRect(x, y, 1.5, 3 + rnd() * 2);
+  }
+
+  // --- đất chết quanh cổng quỷ: tím xám, mạch tím, xương
+  for (let i = 0; i < 520; i++) {
+    const x = rnd() * W, y = rnd() * H * 0.7;
+    const b = blightAt(x, y);
+    if (b <= 0 || rnd() > b) continue;
+    ctx.fillStyle = rnd() < 0.5 ? `rgba(58,44,66,${0.5 * b + 0.2})` : `rgba(78,58,72,${0.45 * b + 0.15})`;
     ctx.beginPath();
-    ctx.moveTo(x, y); ctx.lineTo(x + (rnd() - 0.5) * 3, y - 4 - rnd() * 3);
+    ctx.ellipse(x, y, 10 + rnd() * 26, 7 + rnd() * 16, rnd() * 3, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.strokeStyle = 'rgba(150,90,170,0.35)';
+  ctx.lineWidth = 1.2;
+  for (let i = 0; i < 40; i++) {
+    let x = rnd() * 260, y = 40 + rnd() * 260;
+    if (blightAt(x, y) < 0.5) continue;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    for (let k = 0; k < 4; k++) { x += (rnd() - 0.5) * 30; y += (rnd() - 0.5) * 30; ctx.lineTo(x, y); }
     ctx.stroke();
   }
 
-  const strokePath = (w, color, dash) => {
-    ctx.strokeStyle = color;
-    ctx.lineWidth = w;
-    ctx.lineJoin = 'round';
-    ctx.lineCap = 'round';
-    ctx.setLineDash(dash || []);
-    ctx.beginPath();
-    CONFIG.path.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
-    ctx.stroke();
-    ctx.setLineDash([]);
-  };
-  strokePath(CONFIG.pathWidth + 14, 'rgba(0,0,0,0.18)');
-  strokePath(CONFIG.pathWidth + 8, '#7a5a35');
-  strokePath(CONFIG.pathWidth, '#c9a56b');
-  strokePath(CONFIG.pathWidth - 18, '#d6b67f');
-  strokePath(3, 'rgba(120,85,45,0.35)', [6, 14]);
+  // --- sông
+  strokePoly(ctx, RIVER, 44, '#7d6c47');
+  strokePoly(ctx, RIVER, 36, '#1d4a63');
+  strokePoly(ctx, RIVER, 22, '#2a6a88');
+  strokePoly(ctx, RIVER, 2, 'rgba(170,220,240,0.45)', [10, 18]);
+  ctx.save();
+  ctx.translate(0, 7);
+  strokePoly(ctx, RIVER, 1.5, 'rgba(170,220,240,0.3)', [6, 22]);
+  ctx.restore();
 
-  // sỏi trên đường
-  for (let i = 0; i < 160; i++) {
+  // --- đường lát đá cuội
+  strokePoly(ctx, CONFIG.path, PW + 12, 'rgba(0,0,0,0.25)');
+  strokePoly(ctx, CONFIG.path, PW + 6, '#5b4a33');
+  strokePoly(ctx, CONFIG.path, PW, '#6f665a');
+  // từng viên đá
+  const stones = [];
+  for (let i = 0; i < 2600; i++) {
+    const x = rnd() * W, y = rnd() * (H + 40);
+    if (distToPath(x, y) > PW / 2 - 3) continue;
+    stones.push([x, y, 2.5 + rnd() * 3, rnd()]);
+  }
+  for (const [x, y, r, v] of stones) {
+    rrect(ctx, x - r, y - r * 0.8, r * 2, r * 1.6, 2, v < 0.33 ? '#817968' : v < 0.66 ? '#8e8574' : '#756d5e');
+  }
+  ctx.fillStyle = 'rgba(255,255,255,0.05)';
+  for (const [x, y, r] of stones) ctx.fillRect(x - r + 1, y - r * 0.8 + 1, r, 1);
+  // rêu/đất lấn mép đường
+  for (let i = 0; i < 300; i++) {
     const x = rnd() * W, y = rnd() * H;
-    if (distToPath(x, y) > CONFIG.pathWidth / 2 - 4) continue;
-    circle(ctx, x, y, 1 + rnd() * 2, rnd() < 0.5 ? '#b08d58' : '#e2c896');
+    const d = distToPath(x, y);
+    if (d < PW / 2 - 6 || d > PW / 2 + 2) continue;
+    ctx.fillStyle = blightAt(x, y) > 0.5 ? 'rgba(70,50,75,0.8)' : 'rgba(60,85,40,0.8)';
+    ctx.beginPath();
+    ctx.ellipse(x, y, 4 + rnd() * 5, 3, rnd() * 3, 0, Math.PI * 2);
+    ctx.fill();
   }
 
+  // --- cầu gỗ chỗ đường cắt sông (x = 100)
+  ctx.fillStyle = '#6d4c2f';
+  ctx.fillRect(100 - PW / 2, 478, PW, 44);
+  ctx.strokeStyle = '#4a321d';
+  ctx.lineWidth = 1.5;
+  for (let y = 481; y < 522; y += 6) {
+    ctx.beginPath(); ctx.moveTo(100 - PW / 2, y); ctx.lineTo(100 + PW / 2, y); ctx.stroke();
+  }
+  for (const sx of [-1, 1]) {
+    ctx.fillStyle = '#3e2a17';
+    ctx.fillRect(100 + sx * (PW / 2 + 1) - 2, 474, 4, 52);
+    for (const py of [474, 498, 522]) circle(ctx, 100 + sx * (PW / 2 + 1), py, 3.5, '#2e1f10');
+  }
+
+  // --- vật thể: đá, bụi, xương, rừng cây
   const blocked = (x, y, pad) =>
-    CONFIG.slots.some(([sx, sy]) => Math.hypot(sx - x, sy - y) < 42 + pad) ||
-    distToPath(x, y) < CONFIG.pathWidth / 2 + 14 + pad || y < 70 || y > H - 110;
+    CONFIG.slots.some(([sx, sy]) => Math.hypot(sx - x, sy - y) < 40 + pad) ||
+    distToPath(x, y) < PW / 2 + 10 + pad ||
+    distToPolyline(RIVER, x, y) < 22 + pad || y < 64 || y > H - 120;
 
-  // hoa & đá nhỏ
   for (let i = 0; i < 70; i++) {
     const x = rnd() * W, y = rnd() * H;
     if (blocked(x, y, 0)) continue;
-    if (rnd() < 0.6) {
-      const col = ['#f7d794', '#f8a5c2', '#ffffff', '#a29bfe'][Math.floor(rnd() * 4)];
-      for (let k = 0; k < 3; k++) circle(ctx, x + k * 4 - 4, y + (k % 2) * 3, 1.8, col);
+    const b = blightAt(x, y);
+    if (b > 0.5) {
+      // xương trên đất chết
+      ctx.strokeStyle = '#d8d2c0';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(x - 4, y); ctx.lineTo(x + 4, y - 2); ctx.stroke();
+      circle(ctx, x + 6, y - 3, 2.5, '#d8d2c0');
+    } else if (rnd() < 0.5) {
+      circle(ctx, x, y + 2, 5, 'rgba(0,0,0,0.25)');
+      circle(ctx, x, y, 5, '#6f6a62');
+      circle(ctx, x - 1.5, y - 1.5, 2, '#958f84');
     } else {
-      circle(ctx, x, y + 2, 5, 'rgba(0,0,0,0.2)');
-      circle(ctx, x, y, 5, '#8d8d8d');
-      circle(ctx, x - 1.5, y - 1.5, 2, '#b5b5b5');
+      for (let k = 0; k < 3; k++) circle(ctx, x + k * 4 - 4, y + (k % 2) * 2, 2, rnd() < 0.5 ? '#e8d27a' : '#d98fb0');
     }
   }
 
-  // cây
+  // rừng: dày ở mép bản đồ (như viền rừng của bản đồ Dota), thưa ở giữa
   const trees = [];
-  for (let i = 0; i < 60; i++) {
-    const x = rnd() * W, y = rnd() * H;
-    if (!blocked(x, y, 6)) trees.push([x, y, 10 + rnd() * 6]);
+  for (let i = 0; i < 900; i++) {
+    const x = rnd() * W, y = 60 + rnd() * (H - 60);
+    const edge = Math.min(x, W - x);
+    const keep = edge < 30 ? 0.9 : 0.22;
+    if (rnd() > keep || blocked(x, y, 4)) continue;
+    if (trees.some(([tx, ty]) => Math.hypot(tx - x, ty - y) < 15)) continue;
+    trees.push([x, y, 11 + rnd() * 6, blightAt(x, y) > 0.55]);
   }
-  trees.sort((a, b) => a[1] - b[1]).forEach(([x, y, r]) => {
-    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+  trees.sort((a, b) => a[1] - b[1]).forEach(([x, y, r, dead]) => {
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
     ctx.beginPath();
-    ctx.ellipse(x + 3, y + r * 0.8, r, r * 0.4, 0, 0, Math.PI * 2);
+    ctx.ellipse(x + 4, y + 2, r * 0.9, r * 0.35, 0, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = '#5d4037';
-    ctx.fillRect(x - 2, y, 4, r * 0.8);
-    circle(ctx, x, y - r * 0.2, r, '#2e5e2a');
-    circle(ctx, x - r * 0.35, y - r * 0.45, r * 0.6, '#3d7a35');
-    circle(ctx, x - r * 0.45, y - r * 0.6, r * 0.25, '#5a9a48');
+    if (dead) drawDeadTree(ctx, x, y, r);
+    else drawPineTree(ctx, x, y, r);
   });
 
   drawCastle(ctx);
+
+  // tối viền như sương mù chiến tranh
+  const v = ctx.createRadialGradient(W / 2, H / 2, H * 0.35, W / 2, H / 2, H * 0.75);
+  v.addColorStop(0, 'rgba(0,0,0,0)');
+  v.addColorStop(1, 'rgba(0,0,0,0.45)');
+  ctx.fillStyle = v;
+  ctx.fillRect(0, 0, W, H);
   return c;
 }
 
+function drawPineTree(ctx, x, y, r) {
+  ctx.fillStyle = '#4a3423';
+  ctx.fillRect(x - 1.5, y - 4, 3, 6);
+  const layers = [['#173521', 1, 0], ['#1f4529', 0.78, 0.38], ['#2a5a33', 0.55, 0.7]];
+  for (const [col, w, k] of layers) {
+    ctx.fillStyle = col;
+    ctx.beginPath();
+    ctx.moveTo(x - r * w, y - 2 - k * r * 1.1);
+    ctx.lineTo(x, y - 2 - r * 2.1 + k * r * 0.35);
+    ctx.lineTo(x + r * w, y - 2 - k * r * 1.1);
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.fillStyle = 'rgba(160,210,120,0.18)';
+  ctx.beginPath();
+  ctx.moveTo(x - r * 0.3, y - r * 1.1); ctx.lineTo(x, y - r * 1.9); ctx.lineTo(x - r * 0.05, y - r * 1.1);
+  ctx.fill();
+}
+
+function drawDeadTree(ctx, x, y, r) {
+  ctx.strokeStyle = '#3b2c35';
+  ctx.lineCap = 'round';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(x, y); ctx.lineTo(x + 1, y - r * 1.6);
+  ctx.stroke();
+  ctx.lineWidth = 1.6;
+  ctx.beginPath();
+  ctx.moveTo(x + 1, y - r); ctx.lineTo(x - r * 0.6, y - r * 1.5);
+  ctx.moveTo(x + 1, y - r * 1.3); ctx.lineTo(x + r * 0.6, y - r * 1.9);
+  ctx.moveTo(x - r * 0.3, y - r * 1.3); ctx.lineTo(x - r * 0.5, y - r * 1.8);
+  ctx.stroke();
+  ctx.lineCap = 'butt';
+}
+
+// Thành phe ánh sáng: tường đá, cờ xanh, pha lê phát sáng
 function drawCastle(ctx) {
   const [cx] = CONFIG.path[CONFIG.path.length - 1];
   const H = CONFIG.H, top = H - 66;
-  const stone = '#9aa0a6', dark = '#6b7177';
+  const stone = '#b3ab98', dark = '#7d7666';
   ctx.fillStyle = 'rgba(0,0,0,0.3)';
   ctx.fillRect(cx - 82, H - 8, 164, 8);
-  // tháp hai bên
   for (const sx of [-1, 1]) {
     const tx = cx + sx * 62;
     rrect(ctx, tx - 18, top - 18, 36, 90, 3, stone);
+    ctx.fillStyle = stone;
     for (let i = 0; i < 3; i++) ctx.fillRect(tx - 18 + i * 13, top - 27, 10, 11);
-    ctx.fillStyle = '#2c2c34';
     rrect(ctx, tx - 4, top + 5, 8, 14, 4, '#2c2c34');
-    // cờ
     ctx.fillStyle = '#5d4037';
-    ctx.fillRect(tx - 1, top - 62, 2, 30);
-    ctx.fillStyle = '#c0392b';
+    ctx.fillRect(tx - 1, top - 62, 2, 36);
+    ctx.fillStyle = '#2e8b57';
     ctx.beginPath();
     ctx.moveTo(tx + 1, top - 62); ctx.lineTo(tx + 20, top - 55); ctx.lineTo(tx + 1, top - 48);
     ctx.fill();
   }
-  // tường giữa
   rrect(ctx, cx - 50, top, 100, 66, 3, stone);
   ctx.fillStyle = stone;
   for (let i = 0; i < 5; i++) ctx.fillRect(cx - 48 + i * 21, top - 10, 12, 12);
@@ -682,85 +811,122 @@ function drawCastle(ctx) {
     const y = top + 12 + row * 14;
     ctx.beginPath(); ctx.moveTo(cx - 50, y); ctx.lineTo(cx + 50, y); ctx.stroke();
   }
-  // cổng
   ctx.fillStyle = '#3e2723';
   ctx.beginPath();
-  ctx.moveTo(cx - 22, H);
+  ctx.moveTo(cx - 20, H);
   ctx.lineTo(cx - 20, top + 34);
   ctx.arc(cx, top + 34, 20, Math.PI, 0);
-  ctx.lineTo(cx + 22, H);
+  ctx.lineTo(cx + 20, H);
   ctx.fill();
-  ctx.strokeStyle = '#2a1a15';
-  ctx.lineWidth = 2;
-  for (let i = -14; i <= 14; i += 7) {
-    ctx.beginPath(); ctx.moveTo(cx + i, top + 18); ctx.lineTo(cx + i, H); ctx.stroke();
-  }
+  ctx.shadowColor = '#7dffb0';
+  ctx.shadowBlur = 14;
+  ctx.fillStyle = '#9dffc4';
+  ctx.beginPath();
+  ctx.moveTo(cx, top - 30); ctx.lineTo(cx + 7, top - 18); ctx.lineTo(cx, top - 6); ctx.lineTo(cx - 7, top - 18);
+  ctx.closePath();
+  ctx.fill();
+  ctx.shadowBlur = 0;
 }
 
-// Cổng quỷ nơi quái xuất hiện (vẽ động mỗi khung hình)
+// Cổng quỷ phe bóng tối: hai cột đá gai + xoáy tím (vẽ động)
 function drawPortal(ctx, t) {
   const [, y] = CONFIG.path[0];
-  const x = 14;
+  const x = 16;
   ctx.save();
   ctx.translate(x, y);
-  for (let i = 0; i < 3; i++) {
-    ctx.strokeStyle = `rgba(${170 + i * 30},${60 + i * 30},255,${0.7 - i * 0.2})`;
-    ctx.lineWidth = 4 - i;
-    ctx.beginPath();
-    ctx.ellipse(0, 0, 14 + i * 5 + Math.sin(t * 3 + i) * 2, 30 + i * 4, 0, -Math.PI / 2, Math.PI / 2);
-    ctx.stroke();
-  }
-  const g = ctx.createRadialGradient(0, 0, 2, 0, 0, 30);
-  g.addColorStop(0, 'rgba(220,160,255,0.8)');
-  g.addColorStop(1, 'rgba(90,30,160,0)');
+  const g = ctx.createRadialGradient(0, 0, 2, 0, 0, 34);
+  g.addColorStop(0, 'rgba(230,170,255,0.9)');
+  g.addColorStop(0.5, 'rgba(140,60,200,0.55)');
+  g.addColorStop(1, 'rgba(60,20,90,0)');
   ctx.fillStyle = g;
   ctx.beginPath();
-  ctx.ellipse(0, 0, 18, 32, 0, -Math.PI / 2, Math.PI / 2);
+  ctx.ellipse(0, 0, 20, 34, 0, 0, Math.PI * 2);
   ctx.fill();
+  for (let i = 0; i < 3; i++) {
+    ctx.strokeStyle = `rgba(${190 + i * 20},${90 + i * 40},255,${0.75 - i * 0.2})`;
+    ctx.lineWidth = 3 - i * 0.6;
+    ctx.beginPath();
+    const a = t * (2 + i) + i;
+    ctx.ellipse(0, 0, 9 + i * 5, 22 + i * 4, 0, a, a + Math.PI * 1.3);
+    ctx.stroke();
+  }
+  for (const sy of [-1, 1]) {
+    ctx.fillStyle = '#2b2230';
+    ctx.beginPath();
+    ctx.moveTo(-8, sy * 30); ctx.lineTo(8, sy * 30); ctx.lineTo(5, sy * 44); ctx.lineTo(0, sy * 56); ctx.lineTo(-5, sy * 44);
+    ctx.closePath();
+    ctx.fill();
+    circle(ctx, 0, sy * 40, 2.2, `rgba(200,120,255,${0.6 + Math.sin(t * 4) * 0.3})`);
+  }
   ctx.restore();
 }
 
-function distToPath(x, y) {
-  let best = Infinity;
-  const p = CONFIG.path;
-  for (let i = 1; i < p.length; i++) {
-    const [ax, ay] = p[i - 1], [bx, by] = p[i];
-    const dx = bx - ax, dy = by - ay;
-    const tt = Math.max(0, Math.min(1, ((x - ax) * dx + (y - ay) * dy) / (dx * dx + dy * dy)));
-    best = Math.min(best, Math.hypot(ax + dx * tt - x, ay + dy * tt - y));
+// Bệ đặt tướng: vòng rune phát sáng kiểu "Circle of Power" của Warcraft III
+// occupied: đã có tướng (rune tối màu theo hệ của tướng)
+function drawSlot(ctx, x, y, selected, hint, t, occupied, color) {
+  const glow = occupied ? (color || '#d4a752') : '#f1c40f';
+  ctx.fillStyle = 'rgba(0,0,0,0.35)';
+  ctx.beginPath();
+  ctx.ellipse(x, y + 4, 29, 12, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#4a463f';
+  ctx.beginPath();
+  ctx.ellipse(x, y + 1.5, 28, 11.5, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = selected ? '#8a8270' : '#6b665c';
+  ctx.beginPath();
+  ctx.ellipse(x, y - 1, 27, 11, 0, 0, Math.PI * 2);
+  ctx.fill();
+  // khía đá
+  ctx.strokeStyle = 'rgba(30,28,24,0.6)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i < 8; i++) {
+    const a = (i / 8) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.moveTo(x + Math.cos(a) * 21, y - 1 + Math.sin(a) * 8.5);
+    ctx.lineTo(x + Math.cos(a) * 27, y - 1 + Math.sin(a) * 11);
+    ctx.stroke();
   }
-  return best;
-}
-
-// Bệ đá đặt tướng; `hint` = nhấp nháy gợi ý cho người mới
-function drawSlot(ctx, x, y, selected, hint, t) {
-  ctx.fillStyle = 'rgba(0,0,0,0.28)';
+  // vòng rune sáng
+  const pulse = occupied ? 0.45 : 0.65 + Math.sin(t * 3 + x) * 0.25;
+  ctx.save();
+  ctx.globalAlpha = pulse;
+  ctx.shadowColor = glow;
+  ctx.shadowBlur = 8;
+  ctx.strokeStyle = glow;
+  ctx.lineWidth = 1.8;
   ctx.beginPath();
-  ctx.ellipse(x, y + 5, 26, 11, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.fillStyle = '#7d756a';
-  ctx.beginPath();
-  ctx.ellipse(x, y + 2, 24, 10, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.fillStyle = selected ? '#efd9a0' : '#b3a998';
-  ctx.beginPath();
-  ctx.ellipse(x, y - 1, 24, 10, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = selected ? '#f1c40f' : '#d9cfbd';
-  ctx.lineWidth = 1.5;
+  ctx.ellipse(x, y - 1, 19, 7.6, 0, 0, Math.PI * 2);
   ctx.stroke();
-  ctx.strokeStyle = 'rgba(80,70,55,0.7)';
-  ctx.lineWidth = 2.5;
-  ctx.beginPath();
-  ctx.moveTo(x - 6, y - 1); ctx.lineTo(x + 6, y - 1);
-  ctx.moveTo(x, y - 4.5); ctx.lineTo(x, y + 2.5);
-  ctx.stroke();
+  ctx.lineWidth = 1.4;
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2 + t * 0.4;
+    const rx = x + Math.cos(a) * 14, ry = y - 1 + Math.sin(a) * 5.6;
+    ctx.beginPath();
+    ctx.moveTo(rx - 2, ry - 1.5); ctx.lineTo(rx, ry + 1.5); ctx.lineTo(rx + 2, ry - 1.5);
+    ctx.stroke();
+  }
+  if (!occupied) {
+    ctx.lineWidth = 2.2;
+    ctx.beginPath();
+    ctx.moveTo(x - 5, y - 1); ctx.lineTo(x + 5, y - 1);
+    ctx.moveTo(x, y - 4); ctx.lineTo(x, y + 2);
+    ctx.stroke();
+  }
+  ctx.restore();
+  if (selected) {
+    ctx.strokeStyle = '#f6e7b0';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.ellipse(x, y - 1, 28, 11.5, 0, 0, Math.PI * 2);
+    ctx.stroke();
+  }
   if (hint) {
     const k = (t * 1.2) % 1;
     ctx.strokeStyle = `rgba(241,196,15,${1 - k})`;
     ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.ellipse(x, y - 1, 24 + k * 22, 10 + k * 9, 0, 0, Math.PI * 2);
+    ctx.ellipse(x, y - 1, 27 + k * 22, 11 + k * 9, 0, 0, Math.PI * 2);
     ctx.stroke();
   }
 }
