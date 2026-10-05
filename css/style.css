@@ -1194,3 +1194,9 @@ body { overflow: hidden; }
 .cp-tab.lock { opacity: .5; }
 .cp-tab svg { width: 12px; height: 12px; }
 .cp-trail { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+/* v49: nút màn kết quả lên thanh trên; khoá nút 1,2 giây khi vừa hiện (chống bấm nhầm) */
+.scr-head .res-btns.top { margin-left: auto; height: 40px; gap: 8px; }
+.scr-head .res-btns.top button { flex: none; padding: 0 16px; font-size: 16px; }
+.guarded button[data-act] { opacity: .45; pointer-events: none; }
+.guarded::after { content: ''; position: fixed; left: 0; top: 0; height: 3px; background: #FFD66B; animation: guardBar 1.2s linear forwards; z-index: 99; }
+@keyframes guardBar { from { width: 0; } to { width: 100%; } }

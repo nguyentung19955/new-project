@@ -507,13 +507,15 @@ function heroPartImage(type, part, q) {
 // chất lượng ảnh theo kích thước vẽ thực tế
 // v47: luôn dựng ảnh ≥ kích thước hiện thật (không phóng to ảnh nhỏ → nhòe), làm tròn lên theo bậc 0,15
 function heroQ(px) {
-  return Math.min(2.4, Math.max(0.3, Math.ceil(px * 1.1 / 0.15) * 0.15));
+  // v49: dựng lớn hơn cỡ hiện 1,6 lần rồi thu nhỏ khi vẽ (thu nhỏ chất lượng cao → nét hơn phóng to / vừa khít)
+  return Math.min(3.6, Math.max(0.45, Math.ceil(px * 1.6 / 0.15) * 0.15));
 }
 
 function drawPart(ctx, img, glow, blur) {
   if (!ready(img)) return false;
   const [vx, vy, vw, vh] = HERO_VB;
   if (glow) { ctx.save(); ctx.shadowColor = glow; ctx.shadowBlur = blur || 8; }
+  ctx.imageSmoothingQuality = 'high';
   ctx.drawImage(img, vx, vy, vw, vh);
   if (glow) ctx.restore();
   return true;

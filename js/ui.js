@@ -477,7 +477,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px">${[['auto', 'Tự động'], ['high', 'Đẹp'], ['low', 'Tiết kiệm']].map(([k, n]) => `<button class="btn ${(st.gfx || 'auto') === k ? 'btn-gold' : 'metal'}" style="height:34px;padding:0 10px;font-size:13px" data-act="set-gfx" data-k="${k}">${n}</button>`).join('')}</div></div>
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 47 · Tiến trình lưu trên trình duyệt của bạn</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 49 · Tiến trình lưu trên trình duyệt của bạn</div>
       </div></div>`;
   }
 
@@ -1239,6 +1239,7 @@ class UI {
       ${flood ? `<div class="sl-warn"><span style="font-size:20px">💧</span><span style="flex:1"><b>Thủy Tinh dâng nước:</b> sau đợt này, các ô bậc <b>${TIER_NAMES[g.water]}</b> sẽ ngập và tướng đứng đó bị sa lầy. Dùng <span class="m">Mọc Núi</span> để cứu ô quan trọng.</span></div>` : ''}
     </div>`;
     $('#reward').hidden = false;
+    this.guard('#reward');
   }
 
   pickReward(i) {
@@ -1322,13 +1323,27 @@ class UI {
         </div></div></div>`;
     $('#result').innerHTML = html;
     $('#result').hidden = false;
+    // v49: nút kết quả lên thanh trên (xa nút Lên cấp ở đáy) + khoá 1,2 giây chống bấm nhầm
+    const rb = $('#result .res-btns'), hd = $('#result .scr-head');
+    if (rb && hd) { hd.appendChild(rb); rb.classList.add('top'); }
+    this.guard('#result');
   }
 
   // ============================================================
   //  HÀNH ĐỘNG (data-act)
   // ============================================================
+  // khoá nút một lúc khi màn kết quả / sính lễ vừa hiện (đang bấm dở nút khác không bị bấm nhầm)
+  guard(sel, ms = 1200) {
+    this.guardUntil = performance.now() + ms;
+    const el = $(sel);
+    el.classList.add('guarded');
+    clearTimeout(this.guardT);
+    this.guardT = setTimeout(() => el.classList.remove('guarded'), ms);
+  }
   action(d) {
     const g = this.game;
+    if (['reward', 'next-level', 'endless', 'restart', 'to-map', 'to-menu'].includes(d.act)
+      && (!$('#result').hidden || !$('#reward').hidden) && performance.now() < (this.guardUntil || 0)) return;
     const sc = this.screen;
     const h = g.heroes[this.sel];
     const fail = (r) => { if (r !== true && typeof r === 'string') this.toast(r, '#E25A3A'); return r === true; };

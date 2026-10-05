@@ -832,3 +832,26 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - Tướng vẽ nét được dựng ảnh ở đúng (hoặc lớn hơn) kích thước hiện trên màn hình, làm tròn lên theo bậc 0,15 — trước đây chỉ có 3 mức thô (0,36 / 0,6 / 1,2) nên trên iPhone ảnh bị phóng to và nhòe. Quái cũng vậy (bậc 0,25).
 - Đồ hoạ Tự động: độ nét canvas ×3 (iPhone) → ×2 → ×1,5 khi máy giật (trước: ×2 → ×1,5 → ×1,1).
 - Màn hình nhỏ (điện thoại): tướng to thêm 12%.
+
+### Phiên bản 48 · bản đồ mới, quái mới, 4 chương truyện dân gian
+
+- **Bản đồ theo ải** (`MAPS` trong data.js, vẽ ở `js/maps.js`): mỗi ải một đường đi riêng, ô đặt tướng sinh lại theo đường, nền tự vẽ theo chủ đề — sông, đầm sen, đường rừng (bản làng cuối đường), hang núi (miệng hang mắt đỏ), đồng lúa (cổng làng tre), bờ biển (dừa, thuyền), thành Cổ Loa (đường xoắn ốc vào thành ở giữa). 8 ải Sơn Tinh cũng được đổi sang 6 kiểu sông khác nhau. Gợn nước dưới chân quái chỉ hiện ở bản đồ có nước.
+- **13 quái + 6 boss mới, hình tự vẽ** (`js/enemies2.js`):
+  - Thạch Sanh: Yêu Tinh Rừng (bầy đông), Rắn Độc (rất nhanh, bị thương càng nhanh), Dơi Hang (bay), Thạch Tinh (giáp đá, vỡ ra 2 Đá Con). Boss **Chằn Tinh** (đập búa choáng, gọi Yêu Tinh, hoá điên), **Đại Bàng Tinh** (bay, gọi Dơi).
+  - Thánh Gióng / An Dương Vương: Lính Giáo, Cung Thủ (bắn tướng), Kỵ Binh (rất nhanh, giáp dày), Voi Chiến (rất trâu, giẫm choáng, lọt thành mất 3 mạng). Boss **Tướng Giặc Ân** (trống trận đốt tướng gần, gọi lính), **Triệu Đà** (giáp dày, gọi Kỵ Binh, mất 25% máu gọi 4 lính).
+  - Lạc Long Quân: Cá Mập Yêu, Mực Tinh (phun mực bắn tướng), Cua Khổng Lồ (giáp + kháng phép cao), Cáo Con. Boss **Ngư Tinh** (lặn hồi sinh 60%, gọi Cá Mập), **Hồ Tinh Chín Đuôi** (lửa ma tím, mất 25% máu hoá 4 Cáo Con, kháng phép cao).
+- **Bảng quân theo chương** (`ROSTERS`): mỗi chương quái thường, quái bay, quái tinh anh, tỉ lệ xuất hiện theo đợt riêng.
+- **5 chương, 17 ải** (`js/chapters.js`): Sơn Tinh – Thủy Tinh (8 ải) · Thạch Sanh (Miếu Chằn Tinh, Gốc Đa Cổ Thụ, Hang Đại Bàng) · Thánh Gióng (Làng Phù Đổng, Đồng Trâu) · Lạc Long Quân (Biển Đông, Đầm Xác Cáo) · An Dương Vương (Thành Ốc Cổ Loa, Biển Mộ Dạ). Mỗi chương có 3 khung truyện mở đầu (vẽ bằng chính hình tướng / quái trong game, nền theo truyện) và lời mở trận riêng. Bản đồ chiến dịch có thanh chọn chương; ải mở lần lượt nối tiếp nhau. Bản lưu cũ giữ nguyên sao, tự nới thêm ải mới.
+
+### Phiên bản 49 · ải dài dần, boss có cơ chế riêng, tướng nét hơn, chống bấm nhầm
+
+- **Số đợt tăng dần:** ải 1 → 17 lần lượt 15 · 20 · 20 · 25 · 25 · 30 · 30 · 30 · 25 · 30 · 30 · 30 · 35 · 35 · 35 · 35 · 35 đợt. Máu quái tăng dần ×0,8 → ×2,45. Boss xuất hiện mỗi 10 đợt (lần lượt theo chương) và boss cuối ở đợt cuối.
+- **Cơ chế boss mới (theo tích truyện):**
+  - Chằn Tinh **gầm**: tướng trong tầm 200 bị câm 3 giây (không dùng được chiêu; có bong bóng tím trên đầu).
+  - Đại Bàng Tinh **sà xuống cắp người**: tướng mạnh nhất trong tầm bị choáng 2,5 giây.
+  - Tướng Giặc Ân **thúc ngựa lao tới** (nhanh gấp 2,6 trong 1,2 giây) và **trống trận** làm quân quanh mình nhanh hơn 30%.
+  - Ngư Tinh **quẫy sóng lao tới**; chết thì **đứt làm 3 khúc** (3 Cá Mập Yêu).
+  - Hồ Tinh **hoá ảo ảnh** ở 70% và 40% máu: biến mất rồi hiện ra xa hơn 160 trên đường.
+  - Triệu Đà **tráo lẫy nỏ**: còn nửa máu thì tướng mạnh nhất trên sân bị choáng 6 giây; trống trận thúc quân nhanh hơn 25%.
+- **Tướng nét hơn:** ảnh tướng dựng lớn hơn cỡ hiện 1,6 lần rồi thu nhỏ chất lượng cao khi vẽ.
+- **Chống bấm nhầm:** nút màn kết quả (Ải tiếp theo / Chơi lại / Bản đồ) chuyển lên thanh tiêu đề trên cùng, xa nút Lên cấp ở đáy; màn kết quả và màn chọn sính lễ khoá nút 1,2 giây khi vừa hiện (có vạch vàng chạy trên cùng).

@@ -27,6 +27,29 @@ LEVELS.push(
     desc: 'An Dương Vương chạy về biển, Rùa Vàng rẽ nước đón vua. Trận cuối với quân Triệu Đà.', hint: ['xathu', 'lactuong', 'thansuong'] },
 );
 
+// v49: số đợt và máu quái tăng dần theo ải; boss mỗi 10 đợt (lần lượt theo chương) + boss cuối ở đợt cuối
+const LEVEL_WAVES = [15, 20, 20, 25, 25, 30, 30, 30, 25, 30, 30, 30, 35, 35, 35, 35, 35];
+const LEVEL_HP = [0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.45];
+const LEVEL_BOSS = [   // [boss giữa trận (lần lượt), boss cuối]
+  [['thuongluong'], 'thuongluong'], [['thuongluong'], 'haba'], [['thuongluong'], 'haba'], [['thuongluong', 'haba'], 'thuytinh'],
+  [['thuongluong', 'haba'], 'thuytinh'], [['haba', 'thuongluong'], 'thuytinh'], [['haba', 'thuytinh'], 'thuytinh'], [['thuongluong', 'haba'], 'thuytinh'],
+  [['chantinh'], 'chantinh'], [['chantinh'], 'chantinh'], [['chantinh', 'daibang'], 'daibang'],
+  [['anvuong'], 'anvuong'], [['anvuong'], 'anvuong'],
+  [['ngutinh'], 'ngutinh'], [['hotinh', 'chantinh'], 'hotinh'],
+  [['anvuong', 'trieuda'], 'trieuda'], [['ngutinh', 'trieuda'], 'trieuda'],
+];
+LEVELS.forEach((lv, i) => {
+  if (LEVEL_WAVES[i] === undefined) return;
+  lv.waves = LEVEL_WAVES[i];
+  lv.hp = LEVEL_HP[i];
+  const [mid, last] = LEVEL_BOSS[i];
+  lv.bosses = {};
+  for (let w = 10, k = 0; w < lv.waves; w += 10, k++) lv.bosses[w] = mid[k % mid.length];
+  lv.bosses[lv.waves] = last;
+});
+// Khó: hệ số máu theo ải (thêm cho các chương mới)
+HARD.table = [1.6, 1.7, 1.8, 1.75, 1.6, 1.45, 1.4, 1.35, 1.35, 1.35, 1.3, 1.3, 1.3, 1.25, 1.25, 1.25, 1.2];
+
 const CHAPTERS = [
   { id: 'sontinh', name: 'Sơn Tinh – Thủy Tinh', from: 0, to: 7, title: 'Vua Hùng kén rể', chip: 'Truyền thuyết Sơn Tinh – Thủy Tinh', classic: true },
   { id: 'thachsanh', name: 'Thạch Sanh', from: 8, to: 10, title: 'Thạch Sanh diệt yêu', chip: 'Truyện cổ tích Thạch Sanh', bg: 'rung',

@@ -2274,6 +2274,7 @@ class Game {
     this.updateAuras();
     this.updateSpawns(dt);
     this.updateZones(dt);
+    this.auraBosses = this.enemies.filter((e) => !e.dead && e.def.speedAura);
     for (const e of this.enemies.slice()) this.updateEnemy(e, dt);
     for (const h of this.heroes) if (h) this.updateHero(h, dt);
     this.updateProjectiles(dt);
@@ -2497,6 +2498,66 @@ class Game {
       }
     }
 
+    // ---------- v49: cơ chế boss mới
+    // gầm (roar): tướng trong tầm bị câm — không dùng được chiêu một lúc
+    if (d.roar) {
+      e.roarCd = (e.roarCd ?? d.roar.cd * 0.6) - dt;
+      if (e.roarCd <= 0 && this.nearestHero(e.x, e.y, d.roar.radius)) {
+        e.roarCd = d.roar.cd;
+        this.effects.push({ type: 'ring', x: e.x, y: e.y, r: d.roar.radius, color: '#C85AFF', ttl: 0.7, max: 0.7 });
+        this.text(e.x, e.y - 70, d.roar.name || 'GẦM!', '#C85AFF', 1.1, 17);
+        for (const h of this.heroes) if (h && !h.dead && Math.hypot(h.x - e.x, h.y - e.y) <= d.roar.radius) h.silenceT = d.roar.silence;
+      }
+    }
+    // lao tới (dash): chạy nhanh gấp nhiều lần trong chốc lát
+    if (d.dash) {
+      e.dashCd = (e.dashCd ?? d.dash.cd) - dt;
+      if (e.dashT > 0) e.dashT -= dt;
+      else if (e.dashCd <= 0) {
+        e.dashCd = d.dash.cd; e.dashT = d.dash.dur;
+        this.text(e.x, e.y - 60, d.dash.name || 'Xông lên!', '#FF8A3A', 0.9, 15);
+        this.effects.push({ type: 'gust', x: e.x, y: e.y, r: 60, color: '#FF8A3A', ttl: 0.4, max: 0.4 });
+      }
+    }
+    // sà xuống bắt người (swoop): tướng mạnh nhất trong tầm bị choáng
+    if (d.swoop) {
+      e.swoopCd = (e.swoopCd ?? d.swoop.cd) - dt;
+      if (e.swoopCd <= 0) {
+        const near = this.heroes.filter((h) => h && !h.dead && Math.hypot(h.x - e.x, h.y - e.y) <= d.swoop.range);
+        if (near.length) {
+          e.swoopCd = d.swoop.cd;
+          const h = near.sort((a, b) => heroPower(b) - heroPower(a))[0];
+          h.stunT = Math.max(h.stunT || 0, d.swoop.stun);
+          this.damageHero(h, d.swoop.dmg * (1 + this.wave * 0.06));
+          this.effects.push({ type: 'streak', x: e.x, y: e.y - 40, x2: h.x, y2: h.y - 30, color: '#E8B83A', ttl: 0.4, max: 0.4 });
+          this.text(h.x, h.y - 70, d.swoop.name || 'Bị cắp!', '#E8B83A', 1.1, 15);
+        }
+      }
+    }
+    // ảo ảnh (blink): mỗi mốc máu biến mất rồi hiện ra xa hơn trên đường
+    if (d.blink) {
+      e.blinkN = e.blinkN || 0;
+      const next = d.blink.at[e.blinkN];
+      if (next !== undefined && e.hp < e.maxHp * next) {
+        e.blinkN++;
+        this.effects.push({ type: 'ring', x: e.x, y: e.y, r: 50, color: '#C85AFF', ttl: 0.5, max: 0.5 });
+        e.dist = Math.min(PATH.total - 60, e.dist + d.blink.dist);
+        const p = PATH.at(e.dist); e.x = p.x; e.y = p.y;
+        this.effects.push({ type: 'ring', x: e.x, y: e.y, r: 50, color: '#C85AFF', ttl: 0.5, max: 0.5 });
+        this.text(e.x, e.y - 60, d.blink.name || 'Ảo ảnh!', '#C85AFF', 1.1, 16);
+      }
+    }
+    // tráo lẫy nỏ (disarm): một lần, khi còn nửa máu — tướng mạnh nhất trên sân bị choáng lâu
+    if (d.disarm && !e.disarmed && e.hp < e.maxHp * d.disarm.at) {
+      e.disarmed = true;
+      const h = this.heroes.filter((x) => x && !x.dead).sort((a, b) => heroPower(b) - heroPower(a))[0];
+      if (h) {
+        h.stunT = Math.max(h.stunT || 0, d.disarm.dur);
+        this.text(h.x, h.y - 70, d.disarm.name || 'Bị tráo vũ khí!', '#FF4D4D', 1.6, 16);
+        this.effects.push({ type: 'ring', x: h.x, y: h.y, r: 40, color: '#FF4D4D', ttl: 0.6, max: 0.6 });
+      }
+    }
+
     if (e.pullT > 0) {
       // bị kéo / đẩy lùi
       e.pullT -= dt;
@@ -2509,7 +2570,12 @@ class Game {
     const slowPct = Math.max(e.slowT > 0 ? e.slowPct : 0, e.zoneSlow);
     e.zoneSlow = 0;
     const slow = (slowPct / 100) * (1 - (d.slowResist || 0));
-    const speed = d.speed * (1 - slow) * (e.enraged ? d.enrage.speed : 1) * (e.elite === 'swift' ? 1.4 : 1);
+    let aura = 1;
+    if (!d.boss && this.auraBosses && this.auraBosses.length) {
+      for (const b of this.auraBosses) if (!b.dead && Math.hypot(b.x - e.x, b.y - e.y) <= b.def.speedAura.radius) { aura = 1 + b.def.speedAura.pct; break; }
+    }
+    const speed = d.speed * (1 - slow) * (e.enraged ? d.enrage.speed : 1) * (e.elite === 'swift' ? 1.4 : 1)
+      * (e.dashT > 0 ? d.dash.mult : 1) * aura;
     let nd = e.dist + speed * dt;
     // vật chặn đường (Lạc Tử, Thành Một Đêm): quái đi bộ phải dừng lại
     if (!d.flying) {
@@ -2704,6 +2770,7 @@ class Game {
         }
       }
     }
+    if (h.silenceT > 0) h.silenceT -= dt;
     if (h.stunT > 0) { h.stunT -= dt; return; }
     h.cd -= dt;
 
@@ -2721,7 +2788,7 @@ class Game {
     for (let i = 3; i >= 0; i--) {
       const sk = def.skills[i];
       const lv = skillLevel(h, i);
-      if (!sk.active || !lv || h.skillCd[sk.id] > 0 || h.mana < sk.active.mana) continue;
+      if (!sk.active || !lv || h.skillCd[sk.id] > 0 || h.mana < sk.active.mana || h.silenceT > 0) continue;
       if (sk.active.mana < reserve && h.mana - sk.active.mana < reserve) continue;
       const cst = { ...st, skillPower: st.skillPower * skillMult(lv), lv, skName: sk.name };
       this.ultCast = i === 3;

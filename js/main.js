@@ -709,6 +709,14 @@ function visualAnim(h, t) {
 }
 
 function drawHeroStun(h, top, t) {
+  // bị câm (Chằn Tinh gầm): bong bóng tím có dấu gạch — không dùng được chiêu
+  if (h.silenceT > 0 && !(h.stunT > 0)) {
+    const y = top - 18 + Math.sin(t * 4) * 1.5;
+    ctx.fillStyle = 'rgba(40,16,56,0.85)'; ctx.strokeStyle = '#C85AFF'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(h.x, y, 8, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle = '#F2D8FF'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(h.x - 4, y - 4); ctx.lineTo(h.x + 4, y + 4); ctx.moveTo(h.x + 4, y - 4); ctx.lineTo(h.x - 4, y + 4); ctx.stroke();
+  }
   if (!(h.stunT > 0)) return;
   for (let i = 0; i < 3; i++) {
     const a = t * 5 + (i * Math.PI * 2) / 3;
