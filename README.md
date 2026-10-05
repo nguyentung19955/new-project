@@ -21,6 +21,8 @@ Sau đó mở `http://<ip-máy-tính>:8000` trên điện thoại.
 
 **Cách chơi:** chạm vào bệ rune (20 bệ) để đặt tướng. Giữ và kéo tướng sang bệ khác để chuyển chỗ hoặc đổi chỗ với tướng ở đó. Chạm vào tướng để xem bảng tướng (chân dung, Q W E R, 6 ô đồ). Mua và ghép đồ ở **Cửa hàng**. Bấm **Gọi đợt** để quái tới.
 
+**Khi cập nhật game:** tăng số `?v=` của các file CSS/JS trong `index.html` (và dòng "Phiên bản" trên màn hình bắt đầu). Như vậy Safari trên điện thoại sẽ buộc phải tải bản mới thay vì dùng bản cũ trong bộ nhớ đệm.
+
 ## Cấu trúc code
 
 | File | Nội dung |
