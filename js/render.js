@@ -891,6 +891,7 @@ function drawAttackFx(ctx, def, P, look, t) {
     // chớp sáng đầu nỏ + vòng dây bật
     ctx.globalCompositeOperation = 'lighter';
     ctx.globalAlpha = 1 - P.k;
+    if (typeof fxImage === 'function') fxImage(ctx, 'muzzle_02', col, 196, 118, 30, Math.PI / 2, 1, 1);
     const g = ctx.createRadialGradient(178, 118, 0, 178, 118, 34);
     g.addColorStop(0, '#FFFFFF'); g.addColorStop(0.4, col); g.addColorStop(1, 'rgba(0,0,0,0)');
     ctx.fillStyle = g;

@@ -819,3 +819,10 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 
 - **Đền Anh Hùng tự xoay ngang** khi cầm điện thoại dọc (giống trong game), cuộn được bên trong; khung hoạt ảnh tính theo kích thước bố cục nên không bị méo khi xoay. Nút "‹ Về game" chuyển lên đầu trang.
 - **Hoạt ảnh không giật khi tăng tốc:** ở x2 / x3, đòn đánh chiếu tối thiểu 0,3 giây thật và tung chiêu 0,38 giây (trước đây x3 chỉ còn vài khung, mất pha ra đòn); sát thương và tốc đánh vẫn theo đồng hồ game. Đo ở x3: pha ra đòn hiện trong số khung gấp ~2,2 lần trước.
+
+### Phiên bản 46 · hiệu ứng Kenney Particle Pack
+
+- Thêm 32 ảnh hiệu ứng từ **Kenney Particle Pack** (CC0 — dùng tự do, cả thương mại; giấy phép ở `assets/fx/LICENSE-kenney.txt`), thu nhỏ 128–256 px, tổng ~400 KB. Ảnh trắng nền trong, game tô màu theo từng chiêu (tô 1 lần rồi lưu lại, không nặng thêm mỗi khung).
+- Dùng ở: nổ (vết cháy + vòng sóng + khói), cột lửa (lưỡi lửa), băng nổ (vòng băng + sao phép), sét (tia sét thật), đập khiên (vòng sóng đất + chớp sao), tung chiêu (vòng phép xoay dưới chân, chiêu tối thượng vòng lớn hơn), hồi máu (vòng phép xanh), khiên (vòng sáng), tiến hoá (quầng sáng + sao), triệu hồi (vòng sáng + sao), sóng / gió (xoáy), chém / vuốt (vết chém, 3 vệt vuốt), quái chết (khói), đạn trúng (vết cháy, sao băng, vòng phép, chớp).
+- Đòn đánh riêng của tướng cũng dùng ảnh này: vết chém / vuốt, xoáy gậy (Thánh Gióng, Thầy Mo), vòng sóng đất (Lực Sĩ, Kim Quy, Thạch Sanh), vòng phép bung (Âu Cơ…), vệt đâm (Thần Sương), chớp đầu nỏ.
+- Ảnh hiệu ứng luôn bật (không phụ thuộc công tắc "Dùng ảnh AI"); chưa tải xong thì dùng hạt tự vẽ như cũ.

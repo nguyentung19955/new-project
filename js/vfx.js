@@ -62,6 +62,42 @@ const VFX = (() => {
     return c;
   }
 
+  // ---------- ảnh hiệu ứng Kenney Particle Pack (CC0, assets/fx/): trắng trên nền trong,
+  // tô màu theo chiêu (giữ độ sáng / tối bên trong ảnh), mỗi cặp ảnh + màu tô một lần rồi lưu lại
+  const FX_ROOT = 'assets/fx/';
+  const fxImg = new Map(), fxTint = new Map();
+  function texBase(name) {
+    let a = fxImg.get(name);
+    if (!a) { a = new Image(); a.decoding = 'async'; a.src = FX_ROOT + name + '.png'; fxImg.set(name, a); }
+    return a.complete && a.naturalWidth ? a : null;
+  }
+  function tex(name, color = '#ffffff') {
+    const key = name + color;
+    let c = fxTint.get(key);
+    if (c) return c;
+    const img = texBase(name);
+    if (!img) return null;
+    c = document.createElement('canvas');
+    c.width = img.naturalWidth; c.height = img.naturalHeight;
+    const x = c.getContext('2d');
+    x.drawImage(img, 0, 0);
+    if (color.toLowerCase() !== '#ffffff') {
+      x.globalCompositeOperation = 'multiply'; x.fillStyle = color; x.fillRect(0, 0, c.width, c.height);
+      x.globalCompositeOperation = 'destination-in'; x.drawImage(img, 0, 0);
+    }
+    fxTint.set(key, c);
+    return c;
+  }
+  // nạp sẵn để lần đầu tung chiêu đã có ảnh
+  ['circle_02', 'circle_03', 'circle_05', 'dirt_01', 'fire_01', 'fire_02', 'flame_05', 'flame_06', 'flare_01', 'light_03', 'magic_01', 'magic_02',
+    'magic_03', 'magic_05', 'muzzle_02', 'scorch_01', 'scorch_02', 'scratch_01', 'slash_01', 'slash_03', 'smoke_03', 'smoke_07', 'smoke_09',
+    'spark_01', 'spark_06', 'star_04', 'star_06', 'star_08', 'star_09', 'trace_05', 'twirl_01', 'twirl_02'].forEach(texBase);
+  // một mảng ảnh lớn (vòng sóng, vết chém, vòng phép…): sy < 1 = nằm dẹt trên mặt đất
+  function decal(x, y, name, color, size, life, o = {}) {
+    emit({ x, y, vx: o.vx || 0, vy: o.vy || 0, life, size, color, kind: 'tex', tex: name, grow: o.grow || 0, drag: o.drag ?? 1,
+      spin: o.spin || 0, rot: o.rot ?? Math.random() * 6.28, sy: o.sy || 1, add: o.add ?? true, a: o.a });
+  }
+
   // o: { x, y, vx, vy, life, size, grow, color, kind, add (cộng sáng), grav, drag, spin, stretch }
   function emit(o) {
     if (parts.length >= MAX) { parts.shift(); if (parts.length >= MAX) return; }
@@ -118,8 +154,20 @@ const VFX = (() => {
       if (m !== mode) { ctx.globalCompositeOperation = mode = m; }
       const k = p.life / p.max;
       ctx.globalAlpha = Math.min(1, k * 1.6) * (p.add ? 0.9 : 0.75) * (p.a ?? 1);
-      const img = sprite(p.kind, p.color);
       const s = Math.max(0.5, p.size);
+      if (p.kind === 'tex') {
+        const im = tex(p.tex, p.color);
+        if (im) {
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          if (p.sy !== 1) ctx.scale(1, p.sy);
+          ctx.rotate(p.rot);
+          ctx.drawImage(im, -s, -s, s * 2, s * 2);
+          ctx.restore();
+        }
+        continue;
+      }
+      const img = sprite(p.kind, p.color);
       if (p.kind === 'spark' || p.stretch) {
         // tia: kéo dài theo hướng bay
         const sp = Math.hypot(p.vx, p.vy);
@@ -180,11 +228,11 @@ const VFX = (() => {
 
   // ---------- hiệu ứng theo sự kiện của game (gọi 1 lần khi hiệu ứng mới xuất hiện)
   const IMPACT = {
-    fireball: (x, y) => { flare(x, y, '#FF8A2E', 18); burst(x, y, 14, '#FFB04A', { speed: 140, grav: 120 }); burst(x, y, 4, '#A89A8A', { kind: 'soft', add: false, speed: 40, grow: 26, life: 0.6, a: 0.35 }); },
-    frostbolt: (x, y) => { flare(x, y, '#9EDDF2', 16); burst(x, y, 10, '#E8FBFF', { kind: 'spark', speed: 150 }); },
+    fireball: (x, y) => { decal(x, y, 'scorch_01', '#FF9A3A', 16, 0.3, { grow: 30 }); flare(x, y, '#FF8A2E', 18); burst(x, y, 14, '#FFB04A', { speed: 140, grav: 120 }); burst(x, y, 4, '#A89A8A', { kind: 'soft', add: false, speed: 40, grow: 26, life: 0.6, a: 0.35 }); },
+    frostbolt: (x, y) => { decal(x, y, 'star_08', '#BFF0FF', 14, 0.28, { spin: 4 }); flare(x, y, '#9EDDF2', 16); burst(x, y, 10, '#E8FBFF', { kind: 'spark', speed: 150 }); },
     arrow: (x, y) => burst(x, y, 5, '#F2E6C8', { kind: 'spark', speed: 120, life: 0.25 }),
-    bolt: (x, y) => { flare(x, y, '#FFE08A', 10, 0.18); burst(x, y, 6, '#FFE08A', { kind: 'spark', speed: 140, life: 0.25 }); },
-    orb: (x, y) => { flare(x, y, '#7FD8F2', 16); burst(x, y, 10, '#BFF0FF', { speed: 110 }); },
+    bolt: (x, y) => { decal(x, y, 'star_06', '#FFE08A', 10, 0.2); flare(x, y, '#FFE08A', 10, 0.18); burst(x, y, 6, '#FFE08A', { kind: 'spark', speed: 140, life: 0.25 }); },
+    orb: (x, y) => { decal(x, y, 'magic_05', '#7FD8F2', 14, 0.3, { grow: 20 }); flare(x, y, '#7FD8F2', 16); burst(x, y, 10, '#BFF0FF', { speed: 110 }); },
     melon: (x, y) => burst(x, y, 12, '#E04848', { add: false, kind: 'soft', speed: 120, grav: 260, size: 2.5 }),
     feather: (x, y) => burst(x, y, 6, '#FFF4F8', { kind: 'petal', add: false, speed: 60, spin: 4, life: 0.6 }),
     petal: (x, y) => burst(x, y, 8, '#FFB8D8', { kind: 'petal', add: false, speed: 70, spin: 5, life: 0.7 }),
@@ -195,31 +243,31 @@ const VFX = (() => {
     const x = f.x, y = f.y;
     switch (f.type) {
       case 'impact': (IMPACT[f.kind] || IMPACT.fireball)(x, y); break;
-      case 'slash': burst(x, y, 6, '#FFF1C4', { kind: 'spark', speed: 170, life: 0.22 }); break;
-      case 'xslash': case 'claw': flare(x, y, f.color || '#FFE08A', 18, 0.2); burst(x, y, 12, f.color || '#FFE08A', { kind: 'spark', speed: 220, life: 0.3 }); break;
-      case 'bash': flare(x, y, '#FFE08A', 20, 0.22); burst(x, y, 10, '#FFE08A', { kind: 'spark', speed: 200 }); burst(x, y + 6, 8, '#8A7650', { kind: 'soft', add: false, speed: 60, grow: 25, life: 0.6 }); break;
-      case 'explosion': flare(x, y, '#FF8A2E', 70, 0.45); burst(x, y, 40, '#FFB04A', { speed: 260, grav: 150, life: 0.7 }); burst(x, y, 10, '#A89A8A', { kind: 'soft', add: false, speed: 90, grow: 50, life: 1, a: 0.3 }); break;
-      case 'pillar': flare(x, y - 20, '#FF6B2A', 40, 0.5); rise(x, y, 30, '#FF8A2E', 30); break;
-      case 'nova': flare(x, y, '#9EDDF2', 60, 0.4); burst(x, y, 30, '#E8FBFF', { kind: 'spark', speed: 260 }); break;
+      case 'slash': decal(x, y, 'slash_03', '#FFF1C4', 16, 0.2, { rot: -0.6 + Math.random() * 1.2 }); burst(x, y, 6, '#FFF1C4', { kind: 'spark', speed: 170, life: 0.22 }); break;
+      case 'xslash': case 'claw': decal(x, y, 'scratch_01', f.color || '#FFE08A', 22, 0.28, { rot: Math.random() * 6.28 }); flare(x, y, f.color || '#FFE08A', 18, 0.2); burst(x, y, 12, f.color || '#FFE08A', { kind: 'spark', speed: 220, life: 0.3 }); break;
+      case 'bash': decal(x, y + 4, 'circle_03', '#FFE08A', 10, 0.35, { grow: 90, sy: 0.4, rot: 0 }); decal(x, y - 6, 'star_09', '#FFF1C4', 16, 0.22); flare(x, y, '#FFE08A', 20, 0.22); burst(x, y, 10, '#FFE08A', { kind: 'spark', speed: 200 }); burst(x, y + 6, 8, '#8A7650', { kind: 'soft', add: false, speed: 60, grow: 25, life: 0.6 }); break;
+      case 'explosion': decal(x, y, 'scorch_02', '#FF8A2E', 40, 0.4, { grow: 60 }); decal(x, y + 4, 'circle_02', '#FFB04A', 20, 0.45, { grow: 180, sy: 0.45, rot: 0 }); decal(x, y - 10, 'smoke_09', '#8A7A6A', 30, 0.9, { grow: 40, add: false, a: 0.5, spin: 0.5 }); flare(x, y, '#FF8A2E', 70, 0.45); burst(x, y, 40, '#FFB04A', { speed: 260, grav: 150, life: 0.7 }); burst(x, y, 10, '#A89A8A', { kind: 'soft', add: false, speed: 90, grow: 50, life: 1, a: 0.3 }); break;
+      case 'pillar': decal(x, y - 34, 'flame_05', '#FF8A2E', 40, 0.55, { rot: 0, grow: 20 }); decal(x, y, 'scorch_01', '#FF6B2A', 26, 0.5, { sy: 0.45, rot: 0 }); flare(x, y - 20, '#FF6B2A', 40, 0.5); rise(x, y, 30, '#FF8A2E', 30); break;
+      case 'nova': decal(x, y, 'circle_03', '#BFF0FF', 20, 0.45, { grow: 220, sy: 0.5, rot: 0 }); decal(x, y - 10, 'magic_03', '#E8FBFF', 30, 0.4, { spin: 2 }); flare(x, y, '#9EDDF2', 60, 0.4); burst(x, y, 30, '#E8FBFF', { kind: 'spark', speed: 260 }); break;
       case 'snow': for (let i = 0; i < 40; i++) emit({ x: x + R(-f.r, f.r), y: y + R(-f.r * 0.5, f.r * 0.3) - 60, vx: R(-15, 15), vy: R(30, 70), life: R(0.8, 1.6), size: R(1.5, 3), color: '#E8FBFF', kind: 'glow', drag: 0.99 }); break;
-      case 'bolt': flare(x, y - 10, '#E0D0FF', 60, 0.3); burst(x, y, 16, '#E0D0FF', { kind: 'spark', speed: 260 }); break;
-      case 'heal': rise(x, y - 10, 10, f.color || '#6AE06A', 18); break;
-      case 'dome': rise(x, y, 14, f.color || '#F2D27A', (f.r || 60) * 0.6); break;
-      case 'rockfall': burst(x, y, 12, '#8A7650', { kind: 'soft', add: false, speed: 110, grow: 30, life: 0.8 }); break;
-      case 'cracks': burst(x, y, 18, '#C8A040', { kind: 'soft', add: false, speed: 150, grow: 20, life: 0.6 }); break;
+      case 'bolt': decal(x, y - 60, 'spark_06', '#E0D0FF', 64, 0.25, { rot: 0 }); decal(x, y, 'scorch_01', '#C8B8FF', 20, 0.3, { sy: 0.45, rot: 0 }); flare(x, y - 10, '#E0D0FF', 60, 0.3); burst(x, y, 16, '#E0D0FF', { kind: 'spark', speed: 260 }); break;
+      case 'heal': decal(x, y + 2, 'magic_02', f.color || '#6AE06A', 32, 0.7, { sy: 0.4, spin: 2, rot: 0 }); rise(x, y - 10, 10, f.color || '#6AE06A', 18); break;
+      case 'dome': decal(x, y, 'circle_02', f.color || '#F2D27A', (f.r || 60) * 0.5, 0.6, { grow: (f.r || 60) * 0.8, sy: 0.45, rot: 0 }); rise(x, y, 14, f.color || '#F2D27A', (f.r || 60) * 0.6); break;
+      case 'rockfall': decal(x, y, 'dirt_01', '#B89A6A', 26, 0.6, { add: false, grow: 20 }); burst(x, y, 12, '#8A7650', { kind: 'soft', add: false, speed: 110, grow: 30, life: 0.8 }); break;
+      case 'cracks': decal(x, y, 'dirt_01', '#C8A040', 30, 0.5, { add: false, grow: 30, sy: 0.6 }); burst(x, y, 18, '#C8A040', { kind: 'soft', add: false, speed: 150, grow: 20, life: 0.6 }); break;
       case 'splat': burst(x, y, 14, '#E04848', { kind: 'soft', add: false, speed: 140, grav: 300, size: 2.5 }); break;
-      case 'wave': case 'gust': burst(x, y, 24, f.color || '#9EDDF2', { speed: (f.r || 120) * 1.6, life: 0.5, size: 2.5 }); break;
+      case 'wave': case 'gust': decal(x, y, 'twirl_02', f.color || '#9EDDF2', (f.r || 120) * 0.4, 0.5, { grow: (f.r || 120), spin: 3 }); burst(x, y, 24, f.color || '#9EDDF2', { speed: (f.r || 120) * 1.6, life: 0.5, size: 2.5 }); break;
       case 'petals': for (let i = 0; i < 18; i++) emit({ x: x + R(-(f.r || 60), f.r || 60), y: y - R(40, 90), vx: R(-20, 20), vy: R(20, 60), life: R(0.8, 1.4), size: R(3, 5), color: f.color || '#FFB8D8', kind: 'petal', add: false, spin: R(-5, 5), drag: 0.98 }); break;
       case 'beam': case 'streak': line(f.x, f.y, f.x2, f.y2, f.type === 'beam' ? 40 : 12, f.color || '#FFF1C4', { size: f.type === 'beam' ? 6 : 3 }); break;
-      case 'cast': flare(x, y - 30, f.color || '#FFE08A', f.ult ? 60 : 30, 0.35); rise(x, y - 20, f.ult ? 26 : 12, f.color || '#FFE08A', 26); break;
-      case 'evolve': flare(x, y - 30, f.color || '#FFE08A', f.big ? 90 : 55, 0.6); burst(x, y - 30, f.big ? 50 : 24, f.color || '#FFE08A', { speed: f.big ? 280 : 180, life: 0.8 }); rise(x, y, 20, '#FFF1C4', 30); break;
-      case 'summon': flare(x, y - 20, '#9dffc4', 30, 0.4); rise(x, y, 14, '#9dffc4', 20); break;
-      case 'die': burst(x, y - 6, 10, '#BFE8F5', { add: false, kind: 'soft', speed: 80, grav: 200, size: 2 }); break;
+      case 'cast': decal(x, y + 2, f.ult ? 'magic_01' : 'magic_02', f.color || '#FFE08A', f.ult ? 58 : 40, f.ult ? 0.9 : 0.65, { sy: 0.38, spin: 1.6, rot: 0 }); flare(x, y - 30, f.color || '#FFE08A', f.ult ? 60 : 30, 0.35); rise(x, y - 20, f.ult ? 26 : 12, f.color || '#FFE08A', 26); break;
+      case 'evolve': decal(x, y - 30, 'light_03', f.color || '#FFE08A', f.big ? 70 : 46, 0.7, { grow: 40, spin: 1 }); decal(x, y - 30, 'star_09', '#FFF1C4', f.big ? 50 : 34, 0.5); flare(x, y - 30, f.color || '#FFE08A', f.big ? 90 : 55, 0.6); burst(x, y - 30, f.big ? 50 : 24, f.color || '#FFE08A', { speed: f.big ? 280 : 180, life: 0.8 }); rise(x, y, 20, '#FFF1C4', 30); break;
+      case 'summon': decal(x, y, 'circle_03', '#9dffc4', 14, 0.5, { grow: 60, sy: 0.4, rot: 0 }); decal(x, y - 20, 'star_04', '#FFFFFF', 20, 0.35); flare(x, y - 20, '#9dffc4', 30, 0.4); rise(x, y, 14, '#9dffc4', 20); break;
+      case 'die': decal(x, y - 6, 'smoke_03', '#BFE8F5', 10, 0.5, { add: false, grow: 20, a: 0.6 }); burst(x, y - 6, 10, '#BFE8F5', { add: false, kind: 'soft', speed: 80, grav: 200, size: 2 }); break;
       case 'meteor': break;     // nổ do 'explosion'
       default: break;
     }
   }
 
-  return { emit, burst, flare, rise, line, update, draw, trail, projGlow, onEffect, sprite, count: () => parts.length,
+  return { emit, burst, flare, rise, line, update, draw, trail, projGlow, onEffect, sprite, tex, decal, count: () => parts.length,
     setMax: (n) => { MAX = n; if (parts.length > n) parts.splice(0, parts.length - n); } };
 })();

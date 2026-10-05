@@ -120,6 +120,17 @@ function styledAttackPose(style, swing, castT) {
 }
 
 // hiệu ứng riêng của từng kiểu đòn (khung 200×230, đã lật theo hướng)
+// ảnh hiệu ứng Kenney (assets/fx) nếu đã tải: vẽ quanh (cx, cy), cỡ r, xoay rot, dẹt sy
+function fxImage(ctx, name, color, cx, cy, r, rot = 0, sy = 1, alpha = 1) {
+  const im = typeof VFX !== 'undefined' && VFX.tex ? VFX.tex(name, color) : null;
+  if (!im) return false;
+  ctx.save();
+  ctx.globalAlpha *= alpha;
+  ctx.translate(cx, cy); if (sy !== 1) ctx.scale(1, sy); ctx.rotate(rot);
+  ctx.drawImage(im, -r, -r, r * 2, r * 2);
+  ctx.restore();
+  return true;
+}
 function drawStyleFx(ctx, P, look, t) {
   if (!P.phase || P.phase === 'wind') return;
   const col = look.weapon ? (look.weapon.set ? '#9EF2E0' : RAR_COLOR[look.weapon.rarity]) : look.attrColor;
@@ -127,6 +138,12 @@ function drawStyleFx(ctx, P, look, t) {
   if (fade <= 0) return;
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
+  // lớp ảnh Kenney: vết chém / vuốt, xoáy, vòng sóng đất, vòng phép
+  if (P.cut) fxImage(ctx, P.claw ? 'scratch_01' : 'slash_03', P.claw ? '#7FE0F0' : col, 160, 125, 70, P.cut === 1 ? 0.2 : 2.6, 1, 0.9 * fade);
+  if (P.spin && P.phase === 'strike') fxImage(ctx, 'twirl_01', col, 100, 140, 120, P.k * Math.PI * 2, 0.6, 0.85);
+  if (P.sqy < 0.95 || (P.phase === 'recover' && P.lift > 0)) fxImage(ctx, 'circle_03', '#E8C070', 150, 222, 40 + 80 * (P.phase === 'strike' ? P.k : 1), 0, 0.3, 0.8 * fade);
+  if (P.burst) fxImage(ctx, 'magic_03', look.attrColor, 150, 100, 30 + 50 * P.k, t, 1, 1 - P.k);
+  if (P.stab) fxImage(ctx, 'trace_05', col, 200, 120, 70, Math.PI / 2, 1, fade);
   if (P.sqy < 0.95 || (P.phase === 'recover' && P.lift > 0)) {
     // slam / cleave: sóng đất toả ra dưới chân phía trước
     const r = 30 + 70 * (P.phase === 'strike' ? P.k : 1);
@@ -190,6 +207,7 @@ function drawTwirlFx(ctx, P, look) {
   if (!P.twirl) return;
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
+  fxImage(ctx, 'twirl_02', look.attrColor, 122, 40, 70, P.k * Math.PI * 4, 0.35, 0.8 * Math.sin(P.k * Math.PI));
   ctx.globalAlpha = 0.6 * Math.sin(P.k * Math.PI);
   ctx.strokeStyle = look.attrColor; ctx.lineWidth = 10;
   ctx.beginPath(); ctx.ellipse(122, 40, 70, 22, 0, 0, Math.PI * 2); ctx.stroke();
