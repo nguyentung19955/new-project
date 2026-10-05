@@ -8,7 +8,7 @@ pip install pillow numpy scipy
 python3 tools/xoa-nen.py <thư mục ảnh Fooocus> assets
 ```
 Tên file giống hệt bảng dưới (305 ảnh khớp `tools/asset-manifest.json`). Lưu ý khi vẽ:
-- **Bản đồ ải (`nen_ai-*`) game chưa dùng**: bản đồ vẽ bằng code vì quái đi đúng theo đường sông. Prompt hiện ghi "sông chảy phải sang trái, thành ở đầu trái", ngược với game (quái đi từ trái sang, thành Phong Châu ở bên **phải**). Nếu muốn vẽ, sửa thành "river flows from left to right, citadel at the right end".
+- **Bản đồ ải (`nen_ai-1..4`)**: prompt đã sửa cho sông chảy từ trái sang phải, thành Phong Châu ở mép phải. Game dùng ảnh làm nền và vẽ lại dòng sông của mình lên trên (ải 1, 5 → ảnh 1; 2, 6 → 2; 3, 4, 7 → 3; 8 → 4). Khi vẽ bản đồ, truyện, menu: xoá "scenery" và "gradient background" khỏi Negative Prompt.
 - Không có ảnh **dáng ra đòn**: game tự làm động tác đánh bằng code (nghiêng, co giãn, vệt chém) nên chỉ cần ảnh đứng.
 - `do_dao_*` (dao găm) chưa dùng: đồ rìu / dao trong game là một loại; icon dùng `do_riu_*`. `bo-*_huy-hieu` và phần lớn `ui_*` cũng chưa dùng.
 - Tướng huyền thoại có được bằng **Thăng thần** từ tướng cơ bản (GAMEPLAY mục 15, v20), vẫn mặc đồ nên vẫn cần đủ 4 bậc ảnh.

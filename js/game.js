@@ -167,8 +167,14 @@ function heroAttrs(h) {
   const def = HEROES[h.type];
   const out = {};
   for (const a of Object.keys(ATTRS)) out[a] = def.attrs[a] + def.gain[a] * (h.level - 1);
+  // Thăng thần: kế thừa thuộc tính của tướng gốc (lấy bên cao hơn)
+  if (h.from) {
+    const fd = HEROES[h.from];
+    for (const a of Object.keys(ATTRS)) out[a] = Math.max(out[a], fd.attrs[a] + fd.gain[a] * (h.level - 1));
+  }
   // Luyện thể (cấp 25): mỗi lần +3 thuộc tính chính, +1 mỗi thuộc tính phụ
   if (h.train) for (const a of Object.keys(ATTRS)) out[a] += h.train * (a === def.attr ? 3 : 1);
+  if (h.statPts) out[def.attr] += h.statPts * COSTS.statPt;     // điểm kỹ năng thừa
   return out;
 }
 
@@ -187,14 +193,17 @@ function heroStats(h) {
     haste: 0, crit: 5, critMult: 2, cleave: 0, arrows: 1, poison: 0,
     splash: def.base.splash || 0, slow: def.base.slow || 0, stench: 0, bonusDmgPct: 0,
     str: base.str, agi: base.agi, int: base.int, hp: 0, regen: 0, cdr: 0, dr: 0,
-    pierce: h.type === 'caolo' ? 50 : 0, canAir: def.attack !== 'melee', airMult: 1,
+    pierce: h.type === 'caolo' ? 50 : 0, mpen: 0, canAir: def.attack !== 'melee', airMult: 1,
     goldOnKill: 0, stunChance: 0,
     hpPct: 0, rangePct: 0, skillPct: 0, bossPct: 0, floodPct: 0, shred: 0, spread: 0, magicRes: 0,
     noHeal: 0, netSlow: 0, hitAir: 0, touchSlow: 0, drumAura: 0, fireTrail: 0, curve: 0, airPct: 0,
     hid: {}, sets: {},
+    ...(h.from ? inheritBase(def, HEROES[h.from]) : {}),
   };
-  def.skills.forEach((sk, i) => {
-    const lv = skillLevel(h, i);
+  // Thăng thần: giữ nội tại của tướng gốc (cấp kỹ năng lúc hóa thân) rồi cộng nội tại tướng thần
+  const passives = def.skills.map((sk, i) => [sk, skillLevel(h, i)]);
+  if (h.from) HEROES[h.from].skills.forEach((sk) => { if (sk.apply) passives.unshift([sk, (h.skillLvFrom || {})[sk.id] || 0]); });
+  passives.forEach(([sk, lv]) => {
     if (!lv || !sk.apply) return;
     const before = { ...s };
     sk.apply(s, skillN(h.level));
@@ -225,6 +234,8 @@ function heroStats(h) {
       else if (a === 'flood') s.floodPct += v;
       else if (a === 'range') s.rangePct += v;
       else if (a === 'crit') s.crit += v;
+      else if (a === 'pen') s.pierce += v;
+      else if (a === 'mpen') s.mpen += v;
     }
     for (const k of itemHiddens(inst)) s.hid[k] = 1;
   }
@@ -264,10 +275,18 @@ function heroStats(h) {
   s.cdr = Math.min(50, s.cdr + s.int * 0.3);
   s.cleave = Math.min(1, s.cleave);
   s.pierce = Math.min(100, s.pierce + (b.pierce || 0));
+  s.mpen = Math.min(100, s.mpen);
   s.bonusDmgPct += (h.tier || 0) * 10;               // mỗi sao tiến hóa +10% sát thương
   if (h.type === 'llq' && h.flooded) s.bonusDmgPct += 30;   // Con Rồng
   if (def.dmgType === 'magic') s.bonusDmgPct += b.magicPct || 0;
   s.damage *= (1 + s.bonusDmgPct / 100) * grow;
+  // Thần lực: tướng đã thăng thần mạnh hơn hẳn tướng gốc
+  if (h.from) {
+    const k = ASCEND_POWER[def.legend] || 1;
+    s.damage *= k;
+    s.hpMax = Math.round(s.hpMax * k);
+    s.skillPower *= 1 + (k - 1) / 2;
+  }
   s.maxMana = Math.round(80 + s.int * 12);
   s.manaRegen = (1.5 + s.int * 0.08) * (1 + (b.manaPct || 0) / 100);
   s.dr = Math.min(80, s.dr);
@@ -310,6 +329,15 @@ function upgradeGain(h, inst) {
   if (!h || !canEquip(h.type, inst.id)) return 0;
   const slot = slotFor(h, inst);
   return Math.max(0, powerWith(h, slot, inst) - heroPower(h));
+}
+
+// chỉ số gốc của tướng thăng thần: lấy bên tốt hơn giữa tướng gốc và tướng thần
+function inheritBase(def, fd) {
+  const out = { damage: Math.max(def.base.damage, fd.base.damage), range: Math.max(def.base.range, fd.base.range),
+    baseCooldown: Math.min(def.base.cooldown, fd.base.cooldown) };
+  if (fd.base.splash && !def.base.splash) out.splash = fd.base.splash;
+  if (fd.base.slow && !def.base.slow) out.slow = fd.base.slow;
+  return out;
 }
 
 // quái bay (Bùa Chim Lạc đánh rơi xuống đất 1 giây)
@@ -872,6 +900,10 @@ const SKILL_CASTS = {
 // ------------------------------------------------------------
 //  TRẠNG THÁI TRẬN
 // ------------------------------------------------------------
+// chiêu tối thượng (R) xuyên thêm 30% giáp và kháng phép
+const ULT_PEN = 30;
+// mỗi 10 đợt: quái +1 giáp, +3% kháng phép (quái vốn có kháng phép), tối đa 80%
+const ENEMY_GROW = { every: 10, armor: 1, mr: 3, mrCap: 80 };
 // hoạt ảnh đánh: swing chạy 1 → 0 với tốc độ này (≈ 0,38 giây); sát thương rơi lúc ra đòn
 const SWING_RATE = 2.6;
 const STRIKE_DELAY = { melee: 0.13, arrow: 0.12, magic: 0.14, frost: 0.14 };
@@ -1125,9 +1157,10 @@ class Game {
     const sk = HEROES[h.type].skills[i];
     if (skillLevel(h, i)) return 'Kỹ năng đã mở';
     if (h.level < COSTS.unlockReq[i]) return `Cần tướng cấp ${COSTS.unlockReq[i]}`;
-    if (this.gold < COSTS.unlock[i]) return `Cần ${COSTS.unlock[i]} vàng`;
-    this.gold -= COSTS.unlock[i];
-    h.spent += COSTS.unlock[i];
+    const c = unlockCost(h, i);
+    if (this.gold < c) return `Cần ${c} vàng`;
+    this.gold -= c;
+    h.spent += c;
     h.skillLv[sk.id] = 1;
     h.unlockFx = { i, at: this.time };
     if (i >= 2) h.notice.skills = false;
@@ -1142,11 +1175,35 @@ class Game {
     if (!lv) return 'Mở khóa kỹ năng trước';
     if (lv >= SKILL_MAX[i]) return 'Kỹ năng đã đạt cấp tối đa';
     if (h.level < skillReqLevel(i, lv + 1)) return `Cần tướng cấp ${skillReqLevel(i, lv + 1)}`;
-    if (h.skillPts <= 0) return 'Chưa có điểm kỹ năng (nâng cấp tướng để nhận)';
-    h.skillPts--;
+    if (h.from) {
+      // tướng đã thăng thần: nâng kỹ năng bằng vàng
+      const c = COSTS.skillGold(i, lv);
+      if (this.gold < c) return `Cần ${c} vàng`;
+      this.gold -= c;
+      h.spent += c;
+    } else {
+      if (h.skillPts <= 0) return 'Chưa có điểm kỹ năng (nâng cấp tướng để nhận)';
+      h.skillPts--;
+    }
     h.skillLv[sk.id] = lv + 1;
     this.effects.push({ type: 'ring', x: h.x, y: h.y - 20, r: 40, color: '#F2D27A', ttl: 0.5, max: 0.5 });
     return true;
+  }
+
+  // Điểm kỹ năng thừa đổi thành thuộc tính chính (+2 mỗi điểm)
+  spendStat(h) {
+    if (h.skillPts <= 0) return 'Chưa có điểm kỹ năng';
+    const before = heroStats(h).hpMax;
+    h.skillPts--;
+    h.statPts = (h.statPts || 0) + 1;
+    if (!h.dead) h.hp += Math.max(0, heroStats(h).hpMax - before);
+    this.text(h.x, h.y - 70, `+${COSTS.statPt} ${ATTRS[HEROES[h.type].attr].short}`, ATTRS[HEROES[h.type].attr].color, 0.9, 14);
+    return true;
+  }
+  // còn kỹ năng nào nâng được bằng điểm không (để gợi ý dùng điểm vào chỉ số)
+  canSpendSkillPts(h) {
+    if (h.from) return false;
+    return HEROES[h.type].skills.some((sk, i) => { const lv = skillLevel(h, i); return lv && lv < SKILL_MAX[i] && h.level >= skillReqLevel(i, lv + 1); });
   }
 
   // Tiến hoá bằng vàng, lần lượt từng bậc
@@ -1176,6 +1233,12 @@ class Game {
     if (this.gold < c) return `Cần ${c} vàng`;
     return true;
   }
+  // lực chiến nếu thăng thần thành `to` (để so trước khi bấm)
+  ascendPreview(h, to) {
+    const d = HEROES[to];
+    const c = { ...h, type: to, from: h.type, skillLvFrom: { ...h.skillLv }, skillLv: { [d.skills[0].id]: 1 }, buff: h.buff || {} };
+    return heroPower(c);
+  }
   ascend(h, to) {
     const ok = this.canAscend(h, to);
     if (ok !== true) return ok;
@@ -1184,11 +1247,11 @@ class Game {
     const before = heroStats(h).hpMax;
     this.gold -= c;
     h.spent += c;
-    const lv = from.skills.map((sk) => h.skillLv[sk.id] || 0);
+    h.skillLvFrom = { ...h.skillLv };
     h.from = h.type;
     h.type = to;
-    h.skillLv = {};
-    d.skills.forEach((sk, i) => { if (lv[i]) h.skillLv[sk.id] = lv[i]; });
+    // bộ kỹ năng mới học lại từ đầu: Q cấp 1, W/E/R mở khóa và nâng bằng vàng
+    h.skillLv = { [d.skills[0].id]: 1 };
     h.skillCd = {};
     h.grow = 0;
     if (!h.dead) h.hp = Math.max(1, h.hp + heroStats(h).hpMax - before);
@@ -1704,6 +1767,10 @@ class Game {
       shield: elite === 'shield' ? hp * 0.4 : 0, phase: 0, reborn: false, enraged: false, hitT: 0, zoneSlow: 0,
       el: def.el || pick(EL_ORDER), el2: null, shredN: 0, noHealT: 0, groundT: 0,
     };
+    // giáp và kháng phép tăng dần theo đợt (xuyên giáp / xuyên kháng của tướng có đất dụng võ)
+    const gw = Math.floor(this.wave / ENEMY_GROW.every);
+    e.armor += gw * ENEMY_GROW.armor;
+    if (e.mr > 0) e.mr = Math.min(ENEMY_GROW.mrCap, e.mr + gw * ENEMY_GROW.mr);
     e.baseArmor = e.armor;
     if (type === 'giaolong') this.discover('e.giaolong');
     this.enemies.push(e);
@@ -2076,7 +2143,10 @@ class Game {
       if (!sk.active || !lv || h.skillCd[sk.id] > 0 || h.mana < sk.active.mana) continue;
       if (sk.active.mana < reserve && h.mana - sk.active.mana < reserve) continue;
       const cst = { ...st, skillPower: st.skillPower * skillMult(lv) };
-      if (SKILL_CASTS[sk.active.cast](this, h, cst, skillN(h.level))) {
+      this.ultCast = i === 3;
+      const castOk = SKILL_CASTS[sk.active.cast](this, h, cst, skillN(h.level));
+      this.ultCast = false;
+      if (castOk) {
         // ẩn Gậy Thời Không: 10% dùng chiêu không tốn năng lượng
         if (st.hid['r.gay_thoi_khong'] && Math.random() < 0.1) {
           this.text(h.x, h.y - 84, 'Không tốn năng lượng!', '#4a90e2', 1, 13);
@@ -2273,10 +2343,15 @@ class Game {
     }
     if (type === 'phys') {
       let pierce = st ? st.pierce : hero ? heroStats(hero).pierce : 0;
+      if (this.ultCast) pierce += ULT_PEN;     // chiêu tối thượng xuyên thêm
       if (hid['i.kim1'] && e.hp < e.maxHp * 0.3) { pierce = Math.min(100, pierce + 30); this.discover('i.kim1', hero.x, hero.y); }
-      const armor = e.armor * (1 - pierce / 100);
+      const armor = e.armor * (1 - Math.min(100, pierce) / 100);
       dmg *= 1 - (0.06 * armor) / (1 + 0.06 * armor);
-    } else if (type === 'magic') dmg *= 1 - e.mr / 100;
+    } else if (type === 'magic') {
+      // xuyên kháng phép: bỏ qua một phần kháng phép của quái
+      const mpen = (st ? st.mpen : hero ? heroStats(hero).mpen : 0) + (this.ultCast ? ULT_PEN : 0);
+      dmg *= 1 - (e.mr * (1 - Math.min(100, mpen) / 100)) / 100;
+    }
     if (st && st.stunChance && Math.random() * 100 < st.stunChance) { this.stun(e, 0.5, 'stun'); this.proc(e, 'tusk', e.x, e.y - 16, '#C8A040', 22); }
     if (st && !o.silent) this.onHitFx(e, hero, st, crit, dmg);
     if (!o.silent) {

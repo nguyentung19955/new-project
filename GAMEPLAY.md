@@ -613,3 +613,12 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - **Hiệu ứng đồ trên người mặc:** phụ kiện có hiệu ứng có quả cầu màu bay quanh người; trạng thái hiện rõ (lửa Song Rìu theo số tầng, sóng Trống Đồng đầu đợt, da đá, rễ cây, bong bóng, người bốc lửa khi máu thấp, bụi đá Bộ Sơn Tinh). Mỗi lần đồ kích hoạt có vòng chớp sáng màu của món; trên quái có dấu nứt giáp, lưới, băng, ấn cấm hồi máu, đồng vàng khi hạ quái có thưởng vàng.
 - **Mặc đồ dễ hơn:** chỉ số **Lực chiến** để so đồ; mũi tên ▲ xanh trên món trong túi làm tướng mạnh hơn và trên nút ⋯; nút **Tự mặc đồ tốt nhất** (trong túi đồ và menu ⋯); thẻ món đồ hiện Lực chiến trước → sau; chạm lần hai vào món đang chọn để đeo; đồ vừa rơi tốt hơn cho tướng nào thì hiện nút **▲ Đeo cho …** góc dưới phải.
 - **Ảnh Fooocus:** `tools/xoa-nen.py` xoá nền xám cho ảnh đơn; game dùng thêm `bo-*_sau-lung`, `tien-hoa_1..3`, `ban-do_o-*`, `ban-do_phong-chau`, `trieu-hoi_*`.
+
+### Phiên bản 21 · tướng thần mạnh hơn, kỹ năng học lại bằng vàng, xuyên giáp / xuyên kháng
+
+- **Thăng thần mạnh hơn:** tướng thần kế thừa thuộc tính và chỉ số gốc (lấy bên cao hơn) cùng **nội tại** của tướng gốc, cộng **Thần lực**: Sử thi ×1,3, Huyền thoại ×1,5 sát thương và máu (sức mạnh kỹ năng + một nửa mức đó). Ngay sau khi hóa thân Lực chiến tăng khoảng 1,4–1,7 lần; bảng Thăng thần hiện Lực chiến trước → sau.
+- **Kỹ năng sau Thăng thần học lại bằng vàng:** bộ kỹ năng mới bắt đầu từ Q cấp 1; mở khóa W 150 · E 300 · R 500 vàng; nâng cấp Q/W/E 120 × cấp hiện tại, R 300 × cấp hiện tại.
+- **Điểm kỹ năng thừa:** khi không còn kỹ năng nào nâng được bằng điểm (hoặc tướng đã thăng thần), nút **Nâng chỉ số**: 1 điểm → +2 thuộc tính chính.
+- **Giáp / kháng phép quái tăng theo đợt:** mỗi 10 đợt +1 giáp và +3% kháng phép (quái vốn có kháng phép, tối đa 80%). Bách khoa ghi mức giảm sát thương; thanh boss hiện giáp và kháng phép.
+- **Xuyên giáp / xuyên kháng phép:** vũ khí Hiếm trở lên (rìu, nỏ: xuyên giáp; gậy: xuyên kháng phép), Mũ Sừng, Nón Thầy Mo, Sừng Tê, Khăn Hiền Giả, Gậy Thời Không, Mũi Sừng Phá Giáp, Ngọc Trấn Thủy, vũ khí đồ bộ; 2 dòng phụ mới (+10% xuyên giáp, +10% xuyên kháng phép). Chiêu tối thượng R xuyên thêm 30% giáp và kháng phép. Cây kỹ năng và túi đồ hiện xuyên giáp / xuyên kháng của tướng.
+- **Bản đồ ải AI:** sửa prompt `nen_ai-1..4` (sông chảy trái → phải, thành ở mép phải, núi dọc mép trên, 1/3 dưới để trống); game dùng ảnh làm nền rồi vẽ lại dòng sông lên trên để đường quái đi luôn đúng. Ải 1, 5 → ảnh 1; ải 2, 6 → ảnh 2; ải 3, 4, 7 → ảnh 3; ải 8 → ảnh 4.

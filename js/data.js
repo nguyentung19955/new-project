@@ -80,7 +80,7 @@ const RARITY_ORDER = ['common', 'rare', 'epic', 'legendary'];
 
 const STAT_NAMES = {
   damage: 'Sát thương', range: 'Tầm', haste: '% Tốc đánh', crit: '% Chí mạng',
-  bonusDmgPct: '% Sát thương', str: 'Sức mạnh', agi: 'Nhanh nhẹn', int: 'Trí tuệ',
+  bonusDmgPct: '% Sát thương', pierce: '% Xuyên giáp', mpen: '% Xuyên kháng phép', str: 'Sức mạnh', agi: 'Nhanh nhẹn', int: 'Trí tuệ',
   hp: 'Máu', regen: 'Hồi máu/s', cleave: 'Chém lan', cdr: '% Giảm hồi chiêu', dr: '% Giảm sát thương nhận',
   goldOnKill: 'Vàng mỗi quái hạ',
 };
@@ -423,6 +423,15 @@ const ASCEND = {
 const ASCEND_FROM = {};
 for (const [b, list] of Object.entries(ASCEND)) for (const t of list) ASCEND_FROM[t] = b;
 Object.assign(COSTS, { ascend: { epic: 300, legendary: 450 }, ascendTier: 3 });
+// Thần lực: hệ số sát thương và máu của tướng đã thăng thần (kỹ năng +một nửa mức này)
+const ASCEND_POWER = { epic: 1.3, legendary: 1.5 };
+// Sau Thăng thần, bộ kỹ năng mới học lại bằng VÀNG: mở khóa W/E/R đắt hơn, nâng cấp trả vàng
+Object.assign(COSTS, {
+  unlockAsc: [0, 150, 300, 500],
+  skillGold: (i, lv) => (i === 3 ? 300 : 120) * lv,     // nâng từ cấp lv lên lv+1
+  statPt: 2,                                          // 1 điểm kỹ năng thừa = +2 thuộc tính chính
+});
+const unlockCost = (h, i) => (h.from ? COSTS.unlockAsc[i] : COSTS.unlock[i]);
 
 const SKILL_KEYS = ['Q', 'W', 'E', 'R'];
 const SKILL_MAX = [4, 4, 4, 3];
@@ -438,38 +447,38 @@ const ITEMS = {
   riu_dong:   { name: 'Rìu Đồng', slot: 'weapon', wclass: 'blade', rarity: 'common',
                 stats: { damage: 5 }, look: { type: 'axe', color: '#C89A4A' } },
   riu_chien:  { name: 'Rìu Chiến', slot: 'weapon', wclass: 'blade', rarity: 'rare',
-                stats: { damage: 12, haste: -10 }, look: { type: 'axe', color: '#9E9A90' } },
+                stats: { damage: 12, haste: -10, pierce: 8 }, look: { type: 'axe', color: '#9E9A90' } },
   riu_lua:    { name: 'Rìu Lửa', slot: 'weapon', wclass: 'blade', rarity: 'epic',
-                stats: { damage: 14, crit: 10 }, look: { type: 'axe', color: '#e67e22', glow: '#ff6b00' } },
+                stats: { damage: 14, crit: 10, pierce: 10 }, look: { type: 'axe', color: '#e67e22', glow: '#ff6b00' } },
   long_riu:   { name: 'Long Rìu', slot: 'weapon', wclass: 'blade', rarity: 'legendary', set: 'laclong',
-                stats: { damage: 24, crit: 10 }, look: { type: 'greataxe', color: '#2ecc71', glow: '#00ff88' } },
+                stats: { damage: 24, crit: 10, pierce: 20 }, look: { type: 'greataxe', color: '#2ecc71', glow: '#00ff88' } },
   // --- Nỏ
   no_tre:     { name: 'Nỏ Tre', slot: 'weapon', wclass: 'bow', rarity: 'common',
                 stats: { damage: 3, range: 15 }, look: { type: 'crossbow', color: '#C8A040' } },
   no_lim:     { name: 'Nỏ Gỗ Lim', slot: 'weapon', wclass: 'bow', rarity: 'rare',
                 stats: { damage: 6, range: 35 }, look: { type: 'crossbow', color: '#6A3A1A' } },
   no_bao:     { name: 'Nỏ Bão', slot: 'weapon', wclass: 'bow', rarity: 'epic',
-                stats: { damage: 9, haste: 20 }, look: { type: 'crossbow', color: '#3498db', glow: '#74b9ff' } },
+                stats: { damage: 9, haste: 20, pierce: 10 }, look: { type: 'crossbow', color: '#3498db', glow: '#74b9ff' } },
   long_no:    { name: 'Long Nỏ', slot: 'weapon', wclass: 'bow', rarity: 'legendary', set: 'laclong',
-                stats: { damage: 15, haste: 20, range: 30 }, look: { type: 'crossbow', color: '#2ecc71', glow: '#00ff88' } },
+                stats: { damage: 15, haste: 20, range: 30, pierce: 20 }, look: { type: 'crossbow', color: '#2ecc71', glow: '#00ff88' } },
   // --- Gậy
   gay_mo:     { name: 'Gậy Thầy Mo', slot: 'weapon', wclass: 'staff', rarity: 'common',
                 stats: { damage: 5 }, look: { type: 'staff', color: '#8d6e63', orb: '#9EDDF2' } },
   gay_ngoc:   { name: 'Gậy Ngọc', slot: 'weapon', wclass: 'staff', rarity: 'rare',
-                stats: { damage: 10, range: 20 }, look: { type: 'staff', color: '#b0bec5', orb: '#00cec9', glow: '#81ecec' } },
+                stats: { damage: 10, range: 20, mpen: 8 }, look: { type: 'staff', color: '#b0bec5', orb: '#00cec9', glow: '#81ecec' } },
   truong_hu_khong: { name: 'Trượng Hư Không', slot: 'weapon', wclass: 'staff', rarity: 'epic',
-                stats: { damage: 18, crit: 8 }, look: { type: 'staff', color: '#2d3436', orb: '#a29bfe', glow: '#6c5ce7' } },
+                stats: { damage: 18, crit: 8, mpen: 15 }, look: { type: 'staff', color: '#2d3436', orb: '#a29bfe', glow: '#6c5ce7' } },
   long_truong:{ name: 'Long Trượng', slot: 'weapon', wclass: 'staff', rarity: 'legendary', set: 'laclong',
-                stats: { damage: 28 }, look: { type: 'staff', color: '#145a32', orb: '#2ecc71', glow: '#00ff88' } },
+                stats: { damage: 28, mpen: 25 }, look: { type: 'staff', color: '#145a32', orb: '#2ecc71', glow: '#00ff88' } },
   // --- Mũ
   mu_long_chim: { name: 'Mũ Lông Chim', slot: 'helmet', rarity: 'common',
                 stats: { range: 5, agi: 2 }, look: { type: 'feather', color: '#B8402A' } },
   mu_dong:    { name: 'Mũ Đồng', slot: 'helmet', rarity: 'rare',
                 stats: { str: 5, hp: 60 }, look: { type: 'helm', color: '#B8853A', plume: '#c0392b' } },
   mu_sung:    { name: 'Mũ Sừng', slot: 'helmet', rarity: 'epic',
-                stats: { damage: 6, crit: 8 }, look: { type: 'horned', color: '#5A4632' } },
+                stats: { damage: 6, crit: 8, pierce: 8 }, look: { type: 'horned', color: '#5A4632' } },
   non_mo:     { name: 'Nón Thầy Mo', slot: 'helmet', rarity: 'rare',
-                stats: { int: 6, cdr: 8 }, look: { type: 'wizard', color: '#6c3fa0' } },
+                stats: { int: 6, cdr: 8, mpen: 8 }, look: { type: 'wizard', color: '#6c3fa0' } },
   mu_lac_long:{ name: 'Mũ Lạc Long', slot: 'helmet', rarity: 'legendary', set: 'laclong',
                 stats: { damage: 8, str: 5, agi: 5, int: 5 }, look: { type: 'crown', color: '#F2D27A', gem: '#2ecc71' } },
   // --- Giáp
@@ -497,7 +506,7 @@ const ITEMS = {
                 desc: 'Nguyên liệu: Gậy Tam Giới, Lưỡi Hái Chí Tử' },
   khan:       { name: 'Khăn', slot: 'acc', rarity: 'common', price: 100, stats: { int: 8 },
                 desc: 'Nguyên liệu: Gậy Tam Giới' },
-  khan_hien_gia: { name: 'Khăn Hiền Giả', slot: 'acc', rarity: 'common', price: 130, stats: { int: 10, cdr: 5 },
+  khan_hien_gia: { name: 'Khăn Hiền Giả', slot: 'acc', rarity: 'common', price: 130, stats: { int: 8, cdr: 5, mpen: 8 },
                 desc: 'Nguyên liệu: Gậy Thời Không' },
   mat_ngoc:   { name: 'Mắt Ngọc', slot: 'acc', rarity: 'common', price: 120, stats: { range: 25 },
                 desc: 'Nguyên liệu: Gậy Thời Không' },
@@ -520,7 +529,7 @@ const ITEMS = {
                 stats: { str: 15, agi: 15, int: 15 }, look: { aura: '#f1c40f' } },
   gay_thoi_khong: { name: 'Gậy Thời Không', slot: 'acc', rarity: 'epic',
                 recipe: { parts: ['khan_hien_gia', 'mat_ngoc'], cost: 150 },
-                stats: { int: 16, cdr: 20, range: 30 }, look: { aura: '#4a90e2' } },
+                stats: { int: 16, cdr: 20, range: 30, mpen: 12 }, look: { aura: '#4a90e2' } },
   giap_bat_diet: { name: 'Giáp Đồng Bất Diệt', slot: 'acc', rarity: 'epic',
                 recipe: { parts: ['ngoc_sinh_luc', 'dai'], cost: 150 },
                 stats: { str: 15, hp: 500, regen: 6 }, look: { aura: '#2ecc71' } },
@@ -547,7 +556,7 @@ const ITEMS = {
 //  Trống Đồng, Ngựa Sắt). fx: hiệu ứng đặc biệt cộng vào chỉ số tướng.
 // ------------------------------------------------------------
 Object.assign(ITEMS, {
-  sung_te:    { name: 'Sừng Tê', slot: 'acc', rarity: 'common', price: 120, stats: { damage: 8 },
+  sung_te:    { name: 'Sừng Tê', slot: 'acc', rarity: 'common', price: 120, stats: { damage: 6, pierce: 8 },
                 desc: 'Nguyên liệu: Mũi Sừng Phá Giáp, Rìu Quét Sông' },
   long_chim_lac: { name: 'Lông Chim Lạc', slot: 'acc', rarity: 'common', price: 110, stats: { range: 15, agi: 4 },
                 desc: 'Nguyên liệu: Cung Mắt Chim, Bùa Chim Lạc' },
@@ -557,7 +566,7 @@ Object.assign(ITEMS, {
                 desc: 'Nguyên liệu: Bồ Lúa Thần' },
 
   mui_sung:   { name: 'Mũi Sừng Phá Giáp', slot: 'acc', rarity: 'epic', counter: 'rua',
-                recipe: { parts: ['sung_te', 'vuot_ho'], cost: 150 }, stats: { damage: 18 }, fx: { shred: 5 },
+                recipe: { parts: ['sung_te', 'vuot_ho'], cost: 150 }, stats: { damage: 18, pierce: 15 }, fx: { shred: 5 },
                 desc: 'Đòn đánh giảm 5 giáp mục tiêu (cộng dồn 3 lần)', look: { aura: '#C8BFA8' } },
   riu_quet:   { name: 'Rìu Quét Sông', slot: 'acc', rarity: 'epic', counter: 'tom',
                 recipe: { parts: ['sung_te', 'gang_da'], cost: 150 }, stats: { damage: 10, haste: 10 }, fx: { spread: 35 },
@@ -572,7 +581,7 @@ Object.assign(ITEMS, {
                 recipe: { parts: ['vay_ca', 'ngoc_sinh_luc'], cost: 150 }, stats: { hp: 250 }, fx: { magicRes: 35 },
                 desc: 'Giảm 35% sát thương phép nhận vào (Phù Thủy Nước, mưa của Thủy Tinh)', look: { aura: '#5AB4D6' } },
   ngoc_tran_thuy: { name: 'Ngọc Trấn Thủy', slot: 'acc', rarity: 'epic', counter: 'phuthuy',
-                recipe: { parts: ['vay_ca', 'mat_ngoc'], cost: 150 }, stats: { range: 20, int: 6 }, fx: { noHeal: 3 },
+                recipe: { parts: ['vay_ca', 'mat_ngoc'], cost: 150 }, stats: { range: 20, int: 6, mpen: 15 }, fx: { noHeal: 3 },
                 desc: 'Quái bị đánh không được hồi máu trong 3 giây', look: { aura: '#2F6FB0' } },
   luoi_ca:    { name: 'Lưới Đánh Cá', slot: 'acc', rarity: 'epic', counter: 'casau',
                 recipe: { parts: ['vay_ca', 'dep_co'], cost: 150 }, stats: { agi: 8 }, fx: { netSlow: 20 },
@@ -596,9 +605,9 @@ const SET_ITEMS = {
 };
 for (const [set, d] of Object.entries(SET_ITEMS)) {
   const base = { rarity: 'epic', set };
-  ITEMS[set + '_riu'] = { ...base, name: d.names[0], slot: 'weapon', wclass: 'blade', stats: { damage: 16, crit: 5 }, look: { type: 'axe', color: d.color, glow: d.glow } };
-  ITEMS[set + '_no'] = { ...base, name: d.names[1], slot: 'weapon', wclass: 'bow', stats: { damage: 10, haste: 10, range: 15 }, look: { type: 'crossbow', color: d.color, glow: d.glow } };
-  ITEMS[set + '_gay'] = { ...base, name: d.names[2], slot: 'weapon', wclass: 'staff', stats: { damage: 18 }, look: { type: 'staff', color: d.color, orb: d.glow, glow: d.glow } };
+  ITEMS[set + '_riu'] = { ...base, name: d.names[0], slot: 'weapon', wclass: 'blade', stats: { damage: 16, crit: 5, pierce: 12 }, look: { type: 'axe', color: d.color, glow: d.glow } };
+  ITEMS[set + '_no'] = { ...base, name: d.names[1], slot: 'weapon', wclass: 'bow', stats: { damage: 10, haste: 10, range: 15, pierce: 10 }, look: { type: 'crossbow', color: d.color, glow: d.glow } };
+  ITEMS[set + '_gay'] = { ...base, name: d.names[2], slot: 'weapon', wclass: 'staff', stats: { damage: 18, mpen: 12 }, look: { type: 'staff', color: d.color, orb: d.glow, glow: d.glow } };
   ITEMS[set + '_mu'] = { ...base, name: d.names[3], slot: 'helmet', stats: d.helmet, look: { type: 'helm', color: d.color } };
   ITEMS[set + '_giap'] = { ...base, name: d.names[4], slot: 'armor', stats: d.armor, look: { type: 'plate', color: d.color } };
 }
@@ -687,6 +696,8 @@ const AFFIXES = {
   flood: { val: 10, label: (v) => `+${v}% sát thương khi đứng ô ngập` },
   range: { val: 10, label: (v) => `+${v}% tầm đánh` },
   crit:  { val: 5,  label: (v) => `+${v}% chí mạng` },
+  pen:   { val: 10, label: (v) => `+${v}% xuyên giáp` },
+  mpen:  { val: 10, label: (v) => `+${v}% xuyên kháng phép` },
 };
 const AFFIX_COUNT = { common: 0, rare: 1, epic: 1, legendary: 2 };
 Object.assign(COSTS, {

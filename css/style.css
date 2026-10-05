@@ -962,3 +962,6 @@ button:disabled { cursor: default; }
 #quick-eq b { display: block; color: #6AE06A; font-size: 13px; } #quick-eq small { display: block; font-size: 10.5px; color: var(--text-2); }
 @keyframes qeIn { from { transform: translateY(10px); opacity: 0; } }
 .bag-det .det-btns .r2 .btn { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.asc-pw { display: block; font-style: normal; font-size: 10.5px; color: var(--text-2); }
+.asc-pw b { color: #6AE06A; }
+.stat-btn { height: 34px; font-size: 13px; white-space: nowrap; }

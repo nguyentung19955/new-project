@@ -397,10 +397,10 @@ S37 Icon kỹ năng · Tiên Dung & Lang Liêu — grid 2 rows × 4 cols. Square
   7. Lang Liêu · E Ruộng Lúa: rice field growing
   8. Lang Liêu · R Lễ Tổ Tiên: ancestral altar with golden light
 
-F01 Bản đồ ải 1: top-down 3/4 game map, winding river from right to left, grassy banks with stone hero tiles on three height levels, walled citadel Phong Châu at the left end, Tản Viên mountain in background.
-F02 Bản đồ ải 2: same map style, river gorge with cliffs and rice terraces, flooded areas.
-F03 Bản đồ ải 3: same map style, wide river delta with bamboo forests and stilt houses.
-F04 Bản đồ ải 4: same map style, stormy night river with rain and lightning, final battle near Phong Châu.
+F01 Bản đồ ải 1: top-down 3/4 tower defense game map, wide landscape, a single river enters at the LEFT edge at mid height and flows to the RIGHT in a gentle S-curve (rising to the upper third near the left quarter, dipping just below the middle at the center, rising again toward the right), ending at a walled bronze-age citadel Phong Châu with a gate standing at the RIGHT edge, upper-middle height, a band of rocky mountains along the top edge with the tall Tản Viên mountain peak at the top right, open grassy banks on both sides of the river, the bottom third of the image is plain open grassland with no important details, no stone tiles, no paths other than the river, no characters, no text, calm sunny day, lush green banks.
+F02 Bản đồ ải 2: same map layout as F01 (river LEFT to RIGHT, citadel at the RIGHT edge, mountains along the top), river gorge with small waterfalls and cliffs, rice terraces, flooded marshy patches.
+F03 Bản đồ ải 3: same map layout as F01 (river LEFT to RIGHT, citadel at the RIGHT edge, mountains along the top), wide river with bamboo forests, ironwood trees and stilt houses.
+F04 Bản đồ ải 4: same map layout as F01 (river LEFT to RIGHT, citadel at the RIGHT edge, mountains along the top), stormy night, heavy rain and lightning, torches on the citadel walls.
 F05 Truyện 1: storybook painting: King Hùng on his throne announcing a contest to marry his daughter Mị Nương.
 F06 Truyện 2: storybook painting: Sơn Tinh and Thủy Tinh arriving with wedding gifts, mountain side versus sea side.
 F07 Truyện 3: storybook painting: Sơn Tinh raising mountains while Thủy Tinh summons a great flood with water monsters.

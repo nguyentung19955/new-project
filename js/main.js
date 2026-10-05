@@ -89,11 +89,30 @@ canvas.addEventListener('pointercancel', () => { drag = null; });
 
 const px = () => view.scale * view.dpr;
 
+// Bản đồ ải vẽ bằng AI (nen_ai-1..4, PROMPT-FOOOCUS): phủ kín khung rồi vẽ lại dòng sông
+// của game lên trên, để đường quái đi và ô đặt tướng luôn khớp dù ảnh lệch đôi chút.
+const NEN_AI = [1, 2, 3, 3, 1, 2, 3, 4];     // ải 1..8 → ảnh nền
+function drawAiMap(img) {
+  const k = Math.max(CONFIG.W / img.naturalWidth, CONFIG.H / img.naturalHeight);
+  const w = img.naturalWidth * k, h = img.naturalHeight * k;
+  ctx.drawImage(img, (CONFIG.W - w) / 2, (CONFIG.H - h) / 2, w, h);
+  ctx.save();
+  ctx.globalAlpha = 0.55;
+  strokePath(ctx, CONFIG.path, 70 * DK, '#6A5A3E');
+  ctx.globalAlpha = 0.85;
+  strokePath(ctx, CONFIG.path, 44 * DK, '#1F5670');
+  ctx.globalAlpha = 0.5;
+  strokePath(ctx, CONFIG.path, 20 * DK, '#3E89A8');
+  ctx.restore();
+}
+
 function render() {
   const t = performance.now() / 1000;
   ctx.setTransform(px(), 0, 0, px(), 0, 0);
   if (game.shake > 0.2) ctx.translate((Math.random() - 0.5) * game.shake, (Math.random() - 0.5) * game.shake);
-  if (ready(mapImg)) ctx.drawImage(mapImg, 0, 0, CONFIG.W, CONFIG.H);
+  const nen = !asset(`maps/map-0${game.level + 1}.png`) && asset(`nen_ai-${NEN_AI[game.level] || 1}.png`);
+  if (nen) drawAiMap(nen);
+  else if (ready(mapImg)) ctx.drawImage(mapImg, 0, 0, CONFIG.W, CONFIG.H);
   else drawMapFallback(ctx);
   // thành Phong Châu vẽ tay (khi bản đồ chưa có ảnh riêng)
   const castle = !asset(`maps/map-0${game.level + 1}.png`) && (assetAny(['ban-do_phong-chau.png', 'tiles/castle-phong-chau.png']) || {}).img;

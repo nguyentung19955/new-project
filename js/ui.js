@@ -688,7 +688,7 @@ class UI {
     $('#bossbar').hidden = !b;
     if (!b) return;
     this.setText('#bb-name', b.champion ? `${b.def.name} khổng lồ` : b.def.name);
-    this.setText('#bb-hp', `${fmt(Math.max(0, b.hp))} / ${fmt(b.maxHp)}${b.reviveT > 0 ? ' · đang lặn' : ''}`);
+    this.setText('#bb-hp', `${fmt(Math.max(0, b.hp))} / ${fmt(b.maxHp)} · giáp ${Math.round(b.armor)} · kháng phép ${Math.round(b.mr)}%${b.reviveT > 0 ? ' · đang lặn' : ''}`);
     $('#bb-fill').style.width = `${Math.max(0, b.hp / b.maxHp) * 100}%`;
   }
 
@@ -724,11 +724,11 @@ class UI {
         const lv = skillLevel(h, i);
         if (!lv) {
           const can = h.level >= COSTS.unlockReq[i];
-          return `<button class="dk-sk inset lock" data-act="cmd-skill" data-i="${i}" aria-label="${SKILL_KEYS[i]} ${sk.name}, khóa">${ICON.lock}<b class="${g.gold < COSTS.unlock[i] || !can ? 'no' : ''}">${can ? COSTS.unlock[i] : 'cấp ' + COSTS.unlockReq[i]}</b><span class="hk" style="color:#7A705C">${SKILL_KEYS[i]}</span></button>`;
+          return `<button class="dk-sk inset lock" data-act="cmd-skill" data-i="${i}" aria-label="${SKILL_KEYS[i]} ${sk.name}, khóa">${ICON.lock}<b class="${g.gold < unlockCost(h, i) || !can ? 'no' : ''}">${can ? unlockCost(h, i) : 'cấp ' + COSTS.unlockReq[i]}</b><span class="hk" style="color:#7A705C">${SKILL_KEYS[i]}</span></button>`;
         }
         const cd = sk.active ? Math.max(0, h.skillCd[sk.id] || 0) : 0;
         const max = sk.active ? sk.active.cooldown * (1 - st.cdr / 100) : 1;
-        const canUp = h.skillPts > 0 && lv < SKILL_MAX[i] && h.level >= skillReqLevel(i, lv + 1);
+        const canUp = (h.from ? g.gold >= COSTS.skillGold(i, lv) : h.skillPts > 0) && lv < SKILL_MAX[i] && h.level >= skillReqLevel(i, lv + 1);
         return `<button class="dk-sk metal ${sk.active && h.mana < sk.active.mana ? 'nomana' : ''} ${i === fresh ? 'fresh' : ''}" data-act="cmd-skill" data-i="${i}" aria-label="${SKILL_KEYS[i]} ${sk.name}">
           ${svgI(skillIcon(h.type, i))}<span class="hk">${SKILL_KEYS[i]}</span>${canUp ? '<span class="pt">+</span>' : ''}
           ${cd > 0.4 ? `<span class="cdov" style="height:${Math.min(100, cd / max * 100)}%"></span><span class="cdn">${Math.ceil(cd)}</span>` : ''}</button>`;
@@ -1088,7 +1088,7 @@ class UI {
       case 'cmd-skill': {
         if (!h) break;
         const i = +d.i;
-        if (!skillLevel(h, i) && h.level >= COSTS.unlockReq[i] && g.gold >= COSTS.unlock[i]) {
+        if (!skillLevel(h, i) && h.level >= COSTS.unlockReq[i] && g.gold >= unlockCost(h, i)) {
           if (fail(g.unlockSkill(h, i))) this.toast(`Mở khóa [${SKILL_KEYS[i]}] ${HEROES[h.type].skills[i].name}!`, '#A86CE0');
         } else this.openScreen('skills', { skill: i });
         break;
@@ -1144,6 +1144,7 @@ class UI {
       // Cây kỹ năng
       case 'sk-sel': sc.skill = +d.i; this.renderScreen(true); break;
       case 'sk-up': if (h && fail(g.upgradeSkill(h, +d.i))) this.renderScreen(true); break;
+      case 'sk-stat': if (h && fail(g.spendStat(h))) this.renderScreen(true); break;
       case 'sk-unlock': if (h && fail(g.unlockSkill(h, +d.i))) { this.toast(`Mở khóa [${SKILL_KEYS[+d.i]}] ${HEROES[h.type].skills[+d.i].name}!`, '#A86CE0'); this.renderScreen(true); } break;
       case 'sk-level': if (h) { this.doLevelUp(h); this.renderScreen(true); } break;
       // Tiến hoá
@@ -1290,7 +1291,7 @@ class UI {
     if (!sc) return;
     const g = this.game;
     const h = g.heroes[this.sel];
-    const heroKey = h ? `${h.id}|${h.level}|${h.skillPts}|${h.tier}|${JSON.stringify(h.skillLv)}|${SLOTS.map((s) => h.equip[s] ? h.equip[s].uid + '.' + h.equip[s].plus + h.equip[s].rarity + h.equip[s].locked + (h.equip[s].temper || 0) + (h.equip[s].aff || []).join('') : '').join()}` : '';
+    const heroKey = h ? `${h.id}|${h.type}|${h.level}|${h.skillPts}|${h.statPts || 0}|${h.tier}|${JSON.stringify(h.skillLv)}|${SLOTS.map((s) => h.equip[s] ? h.equip[s].uid + '.' + h.equip[s].plus + h.equip[s].rarity + h.equip[s].locked + (h.equip[s].temper || 0) + (h.equip[s].aff || []).join('') : '').join()}` : '';
     const invKey = g.inventory.map((i) => i.uid + '.' + i.plus + i.rarity + (i.locked ? 'L' : '') + (i.temper || 0) + (i.aff || []).join('')).join();
     const key = [assetVersion, sc.kind, sc.tab, sc.skill, sc.pick, sc.recipe, sc.shop, sc.opened, sc.slot, g.gold, heroKey, invKey,
       g.mountain.growth, g.mountain.herbs, g.mountain.soiled, g.wave, g.running, JSON.stringify(this.scrapFilter), Object.keys(g.seen).length,
@@ -1335,7 +1336,7 @@ class UI {
         if (L <= lv) { cls = 'done'; right = ICON.check; }
         else if (L === lv + 1 && lv > 0) {
           const okLv = h.level >= req;
-          cls = okLv && h.skillPts > 0 ? 'nxt metal' : 'fut';
+          cls = okLv && (h.from ? g.gold >= COSTS.skillGold(i, lv) : h.skillPts > 0) ? 'nxt metal' : 'fut';
           right = `<span class="req ${okLv ? 'ok' : ''}">${okLv ? ICON.check : ICON.lock}cấp ${req}</span>`;
         } else { cls = lv ? 'fut' : 'lck'; right = `<span class="req ${h.level >= req ? 'ok' : ''}">${h.level >= req ? ICON.check : ICON.lock}cấp ${req}</span>`; }
         nodes.push(`<div class="nd ${cls}"><span>${label}</span>${right}</div>`);
@@ -1345,13 +1346,14 @@ class UI {
       if (!lv) {
         const can = h.level >= COSTS.unlockReq[i];
         btn = `<div class="reqline ${can ? 'ok' : ''}">${can ? ICON.check : ICON.lock}<span>Cần tướng cấp ${COSTS.unlockReq[i]}${can ? ' · đã đạt' : ''}</span></div>
-          <button class="up unl ${can && g.gold >= COSTS.unlock[i] ? 'btn-gold' : 'btn-ghost'}" data-act="sk-unlock" data-i="${i}" ${can && g.gold >= COSTS.unlock[i] ? '' : 'disabled'}>
-            <span style="font-family:var(--title);font-size:15px">Mở khóa</span><span style="display:flex;align-items:center;gap:4px">${coin(1)}${COSTS.unlock[i]} vàng</span></button>`;
+          <button class="up unl ${can && g.gold >= unlockCost(h, i) ? 'btn-gold' : 'btn-ghost'}" data-act="sk-unlock" data-i="${i}" ${can && g.gold >= unlockCost(h, i) ? '' : 'disabled'}>
+            <span style="font-family:var(--title);font-size:15px">Mở khóa</span><span style="display:flex;align-items:center;gap:4px">${coin(1)}${unlockCost(h, i)} vàng</span></button>`;
       } else if (lv >= max) {
         btn = `<button class="up metal" disabled style="color:#FFD66B">Đã tối đa</button>`;
       } else {
-        const ok = h.skillPts > 0 && h.level >= skillReqLevel(i, lv + 1);
-        btn = `<button class="up metal ${ok ? 'ok' : ''}" data-act="sk-up" data-i="${i}" ${ok ? '' : 'disabled'}>${ICON.up}Nâng · 1 điểm</button>`;
+        const gc = COSTS.skillGold(i, lv);
+        const ok = (h.from ? g.gold >= gc : h.skillPts > 0) && h.level >= skillReqLevel(i, lv + 1);
+        btn = `<button class="up metal ${ok ? 'ok' : ''}" data-act="sk-up" data-i="${i}" ${ok ? '' : 'disabled'}>${ICON.up}Nâng · ${h.from ? coin(1) + gc : '1 điểm'}</button>`;
       }
       const status = !lv ? (i === 0 ? 'Có sẵn' : 'Chưa mở khóa') : i === 0 ? 'Có sẵn' : 'Đã mua';
       return `<div class="col metal ${si === i ? 'on' : ''} ${!lv ? 'lock' : ''}" data-act="sk-sel" data-i="${i}">
@@ -1374,20 +1376,25 @@ class UI {
         <div><span>Sức mạnh</span><b>${lv ? `+${(lv - 1) * 25}%` : '—'}${lv && lv < SKILL_MAX[si] ? ` → <span style="color:#6AE06A">+${lv * 25}%</span>` : ''}</b></div>
         ${sk.active ? `<div><span>Năng lượng · hồi chiêu</span><b>${sk.active.mana} · ${sk.active.cooldown}s</b></div>` : ''}
         ${lv && lv < SKILL_MAX[si] ? `<div><span>Cấp ${lv + 1} cần</span><b class="${nextOk ? 'ok' : 'no'}">Tướng cấp ${skillReqLevel(si, lv + 1)}</b></div>` : ''}
-        ${!lv ? `<div><span>Mở khóa</span><b class="${h.level >= COSTS.unlockReq[si] ? 'ok' : 'no'}">${COSTS.unlock[si]} vàng · cấp ${COSTS.unlockReq[si]}</b></div>` : ''}
-        <div><span>Chi phí</span><b>1 điểm (còn ${h.skillPts})</b></div>
+        ${!lv ? `<div><span>Mở khóa</span><b class="${h.level >= COSTS.unlockReq[si] ? 'ok' : 'no'}">${unlockCost(h, si)} vàng · cấp ${COSTS.unlockReq[si]}</b></div>` : ''}
+        <div><span>Chi phí nâng</span><b>${h.from ? `${lv ? COSTS.skillGold(si, lv) : '—'} vàng (đã thăng thần)` : `1 điểm (còn ${h.skillPts})`}</b></div>
       </div>
-      ${!lv ? `<button class="big-btn btn-gold" data-act="sk-unlock" data-i="${si}" ${h.level >= COSTS.unlockReq[si] && g.gold >= COSTS.unlock[si] ? '' : 'disabled'}>Mở khóa · ${coin(1)} ${COSTS.unlock[si]}</button>`
-        : lv < SKILL_MAX[si] ? `<button class="big-btn btn-gold" data-act="sk-up" data-i="${si}" ${nextOk && h.skillPts ? '' : 'disabled'}>${ICON.up} Nâng lên cấp ${lv + 1} · 1 điểm</button>`
+      ${!lv ? `<button class="big-btn btn-gold" data-act="sk-unlock" data-i="${si}" ${h.level >= COSTS.unlockReq[si] && g.gold >= unlockCost(h, si) ? '' : 'disabled'}>Mở khóa · ${coin(1)} ${unlockCost(h, si)}</button>`
+        : lv < SKILL_MAX[si] ? (h.from
+          ? `<button class="big-btn btn-gold" data-act="sk-up" data-i="${si}" ${nextOk && g.gold >= COSTS.skillGold(si, lv) ? '' : 'disabled'}>${ICON.up} Nâng lên cấp ${lv + 1} · ${coin(1)} ${COSTS.skillGold(si, lv)}</button>`
+          : `<button class="big-btn btn-gold" data-act="sk-up" data-i="${si}" ${nextOk && h.skillPts ? '' : 'disabled'}>${ICON.up} Nâng lên cấp ${lv + 1} · 1 điểm</button>`)
         : '<button class="big-btn metal" disabled style="color:#FFD66B">Đã tối đa</button>'}
+      ${h.skillPts && !g.canSpendSkillPts(h) ? `<button class="btn btn-gold stat-btn" data-act="sk-stat">Nâng chỉ số: 1 điểm → +${COSTS.statPt} ${ATTRS[def.attr].short}${h.statPts ? ` · đã +${h.statPts * COSTS.statPt}` : ''}</button>` : ''}
       ${!h.skillPts && h.level < CONFIG.maxLevel ? `<button class="btn metal" style="height:34px;color:#F2D27A" data-act="sk-level">Nâng cấp tướng · ${coin(1)} ${g.levelCost(h)} (+1 điểm)</button>` : ''}
     </div>`;
     const hk = 'h.' + h.type, hd = SECRETS[hk];
     const hidChip = `<span class="chip hidc ${g.known.has(hk) ? 'ok' : ''}" title="${esc(g.known.has(hk) ? hd.desc : hd.hint)}">${g.known.has(hk) ? '✦ ' + esc(hd.desc) : `??? “${esc(hd.hint)}”`}</span>`;
-    return `${this.head('Cây kỹ năng', `<span class="chip dark">${def.name} · Cấp ${h.level}${h.train ? ` ✦${h.train}` : ''}</span><span class="chip ${ATTR_CLS[def.attr]}">${ATTRS[def.attr].name}</span>${elChip(def.el)}${hidChip}
+    const pst = heroStats(h);
+    const penChip = `<span class="chip dark" title="Xuyên giáp / xuyên kháng phép (chiêu R xuyên thêm ${ULT_PEN}%)">⚔ ${Math.round(pst.pierce)}% · ✦ ${Math.round(pst.mpen)}%</span>`;
+    return `${this.head('Cây kỹ năng', `<span class="chip dark">${def.name} · Cấp ${h.level}${h.train ? ` ✦${h.train}` : ''}</span>${penChip}<span class="chip ${ATTR_CLS[def.attr]}">${ATTRS[def.attr].name}</span>${elChip(def.el)}${hidChip}
         ${h.skillPts ? `<span class="chip ok">Còn ${h.skillPts} điểm kỹ năng</span>` : ''}${this.runChip()}`)}
       <div class="scr-body" style="padding-bottom:4px"><div class="sk-cols">${cols}</div>${detail}</div>
-      <div class="foot">${coin(1)} Giá mở khóa: <b>W 60</b> · <b>E 150</b> (cấp 3) · <b>R 300</b> (cấp 6) vàng <span style="color:#5C4620">|</span> Mỗi cấp tướng +1 điểm · mỗi cấp kỹ năng +25% sức mạnh · kỹ năng mạnh dần theo cấp tướng</div>`;
+      <div class="foot">${h.from ? `${coin(1)} <b>Đã thăng thần:</b> mở khóa <b>W ${COSTS.unlockAsc[1]} · E ${COSTS.unlockAsc[2]} · R ${COSTS.unlockAsc[3]}</b>, nâng kỹ năng bằng vàng · điểm kỹ năng đổi thành chỉ số` : `${coin(1)} Giá mở khóa: <b>W 60</b> · <b>E 150</b> (cấp 3) · <b>R 300</b> (cấp 6) vàng`} <span style="color:#5C4620">|</span> Mỗi cấp tướng +1 điểm · mỗi cấp kỹ năng +25% sức mạnh · kỹ năng mạnh dần theo cấp tướng</div>`;
   }
 
   // ---------- Lò đúc đồng
@@ -1498,7 +1505,7 @@ class UI {
     };
     const left = `<div class="panel metal bag-hero">
       <div class="hsel"><button class="metal" data-act="hero-prev" aria-label="Tướng trước">‹</button><span class="ttl">${h ? def.name : 'Chưa có tướng'}</span><button class="metal" data-act="hero-next" aria-label="Tướng sau">›</button></div>
-      <div style="text-align:center;font-size:12px;color:#C8BFA8">${h ? `Cấp ${h.level}${h.tier ? ' · ' + '★'.repeat(h.tier) : ''} · <b style="color:#FFD66B">Lực chiến ${heroPower(h)}</b>` : 'Triệu hồi tướng để mặc đồ'}</div>
+      <div style="text-align:center;font-size:12px;color:#C8BFA8">${h ? `Cấp ${h.level}${h.tier ? ' · ' + '★'.repeat(h.tier) : ''} · <b style="color:#FFD66B">Lực chiến ${heroPower(h)}</b><br>Xuyên giáp ${Math.round(heroStats(h).pierce)}% · xuyên kháng phép ${Math.round(heroStats(h).mpen)}%` : 'Triệu hồi tướng để mặc đồ'}</div>
       <div class="eqwrap"><div class="eqcol"><small>Trang phục</small>${GEAR_SLOTS.map(slotBtn).join('')}</div>
         <div class="fig inset">${h ? '<canvas data-hero width="172" height="300"></canvas>' : ''}</div>
         <div class="eqcol"><small>Phụ kiện</small>${ACC_SLOTS.map(slotBtn).join('')}</div></div>
@@ -1659,10 +1666,11 @@ class UI {
         const ok = g.canAscend(h, t);
         return `<div class="asc-opt inset ${d.legend}"><img src="${heroImgUrl(t, 'head')}" alt="">
           <div class="tx"><b>${d.name}</b> ${elIcon(d.el, 13)}<small style="color:${RARITY[d.legend].color}">${RARITY[d.legend].name} · ${esc(d.trait.name)}</small>
+            <em class="asc-pw">Lực chiến ${heroPower(h)} → <b>${g.ascendPreview(h, t)}</b></em>
             <span title="${esc(d.trait.desc)}">${esc(d.trait.desc)}</span></div>
           <button class="btn ${ok === true ? 'btn-gold' : 'btn-ghost'}" data-act="ascend" data-to="${t}" ${ok === true ? '' : `disabled title="${esc(ok)}"`}>${coin(1)}${COSTS.ascend[d.legend]}</button></div>`;
       }).join('')}
-      <div class="note">Giữ cấp, kỹ năng, ★★★ và đồ đang mặc. Tối đa ${CONFIG.maxLegends} tướng Huyền thoại trên sân.</div></div>`;
+      <div class="note">Giữ cấp, ★★★, đồ và <b>nội tại của tướng gốc</b>; thêm Thần lực (Sử thi ×${ASCEND_POWER.epic}, Huyền thoại ×${ASCEND_POWER.legendary} sát thương và máu). Tối đa ${CONFIG.maxLegends} Huyền thoại trên sân.</div></div>`;
   }
 
   // ---------- Núi Tản Viên
@@ -1748,7 +1756,8 @@ class UI {
       body = `<div class="bk-cards">${cards}</div>
         <div class="panel metal bk-det"><div class="top"><div class="pic"><canvas data-enemy="${cur}" data-pad="0.1" width="280" height="212"></canvas></div>
           <div><div class="ttl">${d.name}</div><div class="bk-tags">${tags.join('')}</div>
-          <div class="bk-stat"><span>Hành ${elIcon(d.el, 14)} <b>${ELEMENTS[d.el].name}</b></span><span>Máu gốc <b>${d.hp}</b></span><span>Giáp <b>${d.armor}</b></span><span>Kháng phép <b>${d.mr}%</b></span><span>Vàng <b>${d.gold}</b></span></div></div></div>
+          <div class="bk-stat"><span>Hành ${elIcon(d.el, 14)} <b>${ELEMENTS[d.el].name}</b></span><span>Máu gốc <b>${d.hp}</b></span><span>Giáp <b>${d.armor}</b></span><span>Kháng phép <b>${d.mr}%</b></span><span>Vàng <b>${d.gold}</b></span></div>
+          <div class="note" style="font-size:11px">Mỗi ${ENEMY_GROW.every} đợt: +${ENEMY_GROW.armor} giáp${d.mr ? `, +${ENEMY_GROW.mr}% kháng phép (tối đa ${ENEMY_GROW.mrCap}%)` : ''}. Giáp ${d.armor} giảm ${Math.round(100 * 0.06 * d.armor / (1 + 0.06 * d.armor))}% sát thương vật lý · dùng đồ <b>xuyên giáp / xuyên kháng phép</b> để phá.</div></div></div>
           <div class="mech inset" style="color:#E8E0CC;font-size:14px">${d.desc}</div>${extra}</div>`;
     } else {
       const cur = BOSS_ORDER.includes(sc.pick) ? sc.pick : 'haba';
