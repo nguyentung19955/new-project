@@ -1569,6 +1569,7 @@ const ENEMY_W = {
   tom: 30, casau: 74, rua: 58, phuthuy: 46, chimbao: 56, echme: 50, nongnoc: 20, giaolong: 56,
   thuongluong: 150, haba: 104, thuytinh: 104,
 };
+if (typeof ENEMY_W_EXTRA !== 'undefined') Object.assign(ENEMY_W, ENEMY_W_EXTRA);
 function enemyArt(type) {
   if (!HAS_ART) return null;
   return ART.enemy[type] || ART.boss[type] || null;
@@ -1606,8 +1607,9 @@ function drawEnemy(ctx, e, t, o = {}) {
     ctx.beginPath();
     ctx.ellipse(0, 2, box.w * 0.36, box.w * 0.1 + 2, 0, 0, Math.PI * 2);
     ctx.fill();
-    // gợn nước quanh quái bơi
-    if (!d.flying) {
+    // gợn nước quanh quái bơi (chỉ bản đồ có sông / biển)
+    const wet = typeof MAP_ID === 'undefined' || !MAPS[MAP_ID] || (MAP_THEMES[MAPS[MAP_ID].theme] || {}).water;
+    if (!d.flying && wet) {
       ctx.strokeStyle = 'rgba(191,232,245,0.45)';
       ctx.lineWidth = 1.2;
       const p = (t * 1.2 + e.id * 0.3) % 1;
@@ -1626,7 +1628,28 @@ function drawEnemy(ctx, e, t, o = {}) {
       ctx.stroke();
       ctx.globalAlpha = 1;
     }
-    if (d.burnAura) {
+    if (d.burnAura && d.burnAura.kind) {
+      // v48: hào quang khác mưa — trống trận (sóng âm vàng đồng) / lửa ma (đốm lửa tím bay lên)
+      const R = d.burnAura.radius, c = d.burnAura.color;
+      ctx.fillStyle = hexA(c, '22');
+      ctx.beginPath(); ctx.ellipse(0, 0, R, R * 0.45, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = c; ctx.lineWidth = 2;
+      if (d.burnAura.kind === 'drum') {
+        for (let i = 0; i < 3; i++) {
+          const q = (t * 0.9 + i / 3) % 1;
+          ctx.globalAlpha = (1 - q) * 0.7;
+          ctx.beginPath(); ctx.ellipse(0, 0, R * q, R * q * 0.45, 0, 0, Math.PI * 2); ctx.stroke();
+        }
+      } else {
+        ctx.fillStyle = c;
+        for (let i = 0; i < 10; i++) {
+          const q = (t * 0.6 + i / 10) % 1, a = i * 2.4;
+          ctx.globalAlpha = (1 - q) * 0.8;
+          ctx.beginPath(); ctx.arc(Math.cos(a) * R * 0.7, Math.sin(a) * R * 0.3 - q * 50, 3 * (1 - q) + 1, 0, Math.PI * 2); ctx.fill();
+        }
+      }
+      ctx.globalAlpha = 1;
+    } else if (d.burnAura) {
       // Thủy Tinh: mưa gió quanh mình
       ctx.fillStyle = `rgba(90,180,214,${0.12 + Math.sin(t * 4) * 0.04})`;
       ctx.beginPath();

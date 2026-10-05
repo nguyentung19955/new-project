@@ -1185,3 +1185,12 @@ body { overflow: hidden; }
 .cp-act .cp-diff button { height: 23px; font-size: 12px; padding: 0 4px; }
 .cp-act .go { flex: 1; margin-top: 0; height: 50px; }
 .cp-hardnote { display: none; }
+/* v48: chương truyện trên bản đồ chiến dịch */
+.cp-tabs { display: flex; gap: 4px; margin-left: 10px; overflow-x: auto; scrollbar-width: none; min-width: 0; }
+.cp-tabs::-webkit-scrollbar { display: none; }
+.cp-tab { flex: none; height: 30px; padding: 0 10px; border-radius: 6px; font-size: 12px; font-weight: 800; white-space: nowrap; display: flex; align-items: center; gap: 4px;
+  background: linear-gradient(180deg, #3B3327, #17130F); border: 1px solid #8C6A2E; color: var(--text-2); }
+.cp-tab.on { background: linear-gradient(180deg, #F2D27A, #B8852A); color: #2A1A08; border-color: #FFF1C4; }
+.cp-tab.lock { opacity: .5; }
+.cp-tab svg { width: 12px; height: 12px; }
+.cp-trail { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }

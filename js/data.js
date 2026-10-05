@@ -1066,20 +1066,19 @@ function buildWave(n, level) {
   const list = [];
   const count = 8 + Math.floor(n * 1.6);
   const kind = waveKind(n, level);
+  // v48: quân theo chương (ROSTERS trong enemies2.js); mặc định quân Thủy Tinh
+  const ro = (typeof ROSTERS !== 'undefined' && ROSTERS[(LEVELS[level || 0] || {}).roster || 'thuy']) || null;
   for (let i = 0; i < count; i++) {
     const r = Math.random();
-    let type = 'tom';
-    if (kind === 'air' && r < 0.55) type = 'chimbao';
-    else if (n >= 8 && r < 0.1) type = 'echme';
-    else if (n >= 3 && r < 0.22) type = 'phuthuy';
-    else if (n >= 6 && r < 0.34) type = 'rua';
-    else if (n >= 9 && r < 0.42) type = 'chimbao';
-    else if (n >= 2 && r < 0.64) type = 'casau';
+    let type = ro ? ro.base : 'tom';
+    if (kind === 'air' && ro && ro.air && r < 0.55) type = ro.air;
+    else if (ro) { for (const [from, p, t] of ro.list) if (n >= from && r < p) { type = t; break; } }
     const elite = n >= 6 && Math.random() < 0.08 + n * 0.006
       ? Object.keys(ELITE_MODS)[Math.floor(Math.random() * 4)] : null;
-    list.push({ type, elite, gap: type === 'casau' || type === 'chimbao' ? 0.45 : 0.8 });
+    const fast = ro ? ro.fast.includes(type) : false;
+    list.push({ type, elite, gap: fast ? 0.45 : 0.8 });
   }
-  if (kind === 'champion') list.push({ type: 'rua', elite: 'armored', champion: true, gap: 2 });
+  if (kind === 'champion') list.push({ type: ro ? ro.champ : 'rua', elite: 'armored', champion: true, gap: 2 });
   if (kind === 'boss') list.push({ type: bossAt(n, level), gap: 3 });
   return list;
 }

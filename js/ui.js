@@ -163,7 +163,11 @@ function loadSave() {
     settings: { dmgText: true, shake: true, skipStory: false, vectorHeroes: false, detail: false, aiArt: false } };
   try {
     const s = JSON.parse(localStorage.getItem(SAVE_KEY) || '{}');
-    return { ...def, ...s, settings: { ...def.settings, ...(s.settings || {}) } };
+    const out = { ...def, ...s, settings: { ...def.settings, ...(s.settings || {}) } };
+    // v48: thêm chương / ải mới → nới mảng sao cho bản lưu cũ
+    while (out.stars.length < LEVELS.length) out.stars.push(0);
+    out.chSeen = out.chSeen || {};
+    return out;
   } catch (e) { return def; }
 }
 function writeSave(s) {
@@ -232,7 +236,8 @@ class UI {
       g.running = !g.running;
       if (g.running && g.wave === 0 && !g.waveActive) {
         g.startWave();
-        this.say('sontinh', 'Nước dâng bao nhiêu, núi cao bấy nhiêu! Các tướng Văn Lang, giữ lấy Phong Châu!');
+        const op = chapterOf(g.level).opener || ['sontinh', 'Nước dâng bao nhiêu, núi cao bấy nhiêu! Các tướng Văn Lang, giữ lấy Phong Châu!'];
+        this.say(op[0], op[1]);
       }
     };
     $('#btn-detail').onclick = () => {
@@ -310,7 +315,9 @@ class UI {
       this.setInGame(true);
       return;
     }
-    if (!this.save.storySeen && !this.save.settings.skipStory) return this.showStory(i);
+    const ch = chapterOf(i);
+    const seen = ch.classic ? this.save.storySeen : this.save.chSeen && this.save.chSeen[ch.id];
+    if (!seen && !this.save.settings.skipStory) return this.showStory(i);
     this.startLevel(i);
   }
 
@@ -343,6 +350,26 @@ class UI {
   }
   renderStory() {
     const st = this.storyStep;
+    const ch = chapterOf(this.storyLevel);
+    if (!ch.classic) {
+      const P = ch.panels;
+      $('#story').innerHTML = `<div class="screen" style="z-index:auto">
+        <div class="scr-head metal"><span class="ic">${svgI(sceneArt('drum'))}</span><h1 class="ttl">${ch.title}</h1>
+          <span class="chip dark">${ch.chip}</span><div class="sp"></div></div>
+        <div class="story-panels">${P.map((p, i) => `
+          <div class="st-card ${i <= st ? 'on' : ''} ${i === st && i === P.length - 1 ? 'cur' : ''}">
+            <div class="well">${svgI(storyScene(p))}<span class="num">${i + 1}</span></div>
+            <div class="cap inset">${p.cap}</div>
+          </div>`).join('')}</div>
+        <div class="story-foot metal">
+          <div class="dots">${P.map((_, i) => `<i class="${i === st ? 'on' : ''}"></i>`).join('')}</div>
+          <span class="cnt">${st + 1}/${P.length}</span>
+          <span class="lead">${P[st].lead}</span>
+          <button class="btn metal title" style="height:44px;font-size:18px;padding:0 20px" data-act="story-skip">Bỏ qua</button>
+          <button class="btn btn-gold" style="height:46px;font-family:var(--title);font-size:20px;padding:0 24px" data-act="story-next">${st < P.length - 1 ? 'Tiếp' : 'Vào trận'} ▸</button>
+        </div></div>`;
+      return;
+    }
     const caps = [
       '<b>Vua Hùng thứ 18</b> có con gái là công chúa <b>Mị Nương</b>, muốn kén cho nàng một người chồng xứng đáng.',
       '<b>Sơn Tinh</b> và <span class="w">Thủy Tinh</span> cùng đến cầu hôn. Vua ra sính lễ: <b>voi chín ngà, gà chín cựa, ngựa chín hồng mao</b>.',
@@ -378,16 +405,24 @@ class UI {
     const s = this.save;
     const i = this.cpSel;
     const lv = LEVELS[i];
-    const NODES = [[60, 330], [140, 286], [225, 246], [292, 182], [367, 200], [432, 140], [506, 102], [608, 62]];
+    const ch = chapterOf(i);
+    const n = ch.to - ch.from + 1;
+    // chương Sơn Tinh dùng bản đồ sông Đà vẽ sẵn; chương khác: các ải rải chéo trên nền truyện
+    const NODES = ch.classic ? [[60, 330], [140, 286], [225, 246], [292, 182], [367, 200], [432, 140], [506, 102], [608, 62]]
+      : Array.from({ length: n }, (_, k) => [110 + k * (420 / Math.max(1, n - 1)), k % 2 ? 150 : 270]);
     const total = s.stars.reduce((a, b) => a + b, 0);
     const bosses = [...new Set(Object.values(lv.bosses))].map((b) => ENEMIES[b].name).join(', ');
     const starsOf = (n) => '★'.repeat(n) + `<i>${'★'.repeat(3 - n)}</i>`;
     $('#campaign').innerHTML = `<div class="screen" style="z-index:auto">
       <div class="scr-head metal"><button class="xbtn metal" data-act="cp-back" aria-label="Quay lại">${ICON.back}</button>
-        <h1 class="ttl">Chiến dịch dọc sông Đà</h1><span class="chip dark">★ ${total} / ${LEVELS.length * 3}</span><div class="sp"></div></div>
+        <h1 class="ttl">Chiến dịch</h1><span class="chip dark">★ ${total} / ${LEVELS.length * 3}</span>
+        <div class="cp-tabs">${CHAPTERS.map((c, ci) => { const open = c.from < s.unlocked;
+          return `<button class="cp-tab ${c === ch ? 'on' : ''} ${open ? '' : 'lock'}" data-act="cp-ch" data-i="${ci}" ${open ? '' : 'disabled'}>${open ? '' : ICON.lock}${ci + 1}. ${c.name}</button>`; }).join('')}</div>
+        <div class="sp"></div></div>
       <div class="cp-body">
-        <div class="cp-map"><div class="bgart">${svgI(sceneArt('campaign'))}</div>
-          ${NODES.map(([x, y], k) => {
+        <div class="cp-map"><div class="bgart">${ch.classic ? svgI(sceneArt('campaign')) : svgI(storyScene({ bg: ch.bg }))}</div>
+          ${ch.classic ? '' : `<svg class="cp-trail" viewBox="0 0 640 382" preserveAspectRatio="none"><polyline points="${NODES.map(([x, y]) => `${x},${y}`).join(' ')}" fill="none" stroke="#F2D27A" stroke-width="4" stroke-dasharray="10 8" opacity="0.8"/></svg>`}
+          ${NODES.map(([x, y], kk) => { const k = ch.from + kk;
             const lock = k >= s.unlocked;
             return `<button class="cp-node ${lock ? 'lock' : ''} ${k === i ? 'sel' : ''}" style="left:${x / 640 * 100}%;top:${y / 382 * 100}%" data-act="cp-sel" data-i="${k}" ${lock ? 'disabled' : ''}>
               <span class="stars">${lock ? '' : starsOf(s.stars[k])}</span>
@@ -1299,12 +1334,20 @@ class UI {
     const fail = (r) => { if (r !== true && typeof r === 'string') this.toast(r, '#E25A3A'); return r === true; };
     switch (d.act) {
       // ----- menu, truyện, chiến dịch, cài đặt
-      case 'story-next':
-        if (this.storyStep < 2) { this.storyStep++; this.renderStory(); } else { this.save.storySeen = true; writeSave(this.save); this.startLevel(this.storyLevel); }
-        break;
-      case 'story-skip': this.save.storySeen = true; writeSave(this.save); this.startLevel(this.storyLevel); break;
+      case 'story-next': {
+        const ch = chapterOf(this.storyLevel);
+        const n = ch.classic ? 3 : ch.panels.length;
+        if (this.storyStep < n - 1) { this.storyStep++; this.renderStory(); break; }
+      }
+      // falls through: hết truyện → vào trận
+      case 'story-skip': {
+        const ch = chapterOf(this.storyLevel);
+        if (ch.classic) this.save.storySeen = true; else { this.save.chSeen = this.save.chSeen || {}; this.save.chSeen[ch.id] = true; }
+        writeSave(this.save); this.startLevel(this.storyLevel); break;
+      }
       case 'cp-back': this.showMenu(); break;
       case 'cp-sel': this.cpSel = +d.i; this.renderCampaign(); break;
+      case 'cp-ch': { const c = CHAPTERS[+d.i]; this.cpSel = Math.min(c.to, Math.max(c.from, this.save.unlocked - 1)); this.renderCampaign(); break; }
       case 'diff': this.save.settings.hard = d.k === '1'; writeSave(this.save); this.renderCampaign(); break;
       case 'cp-go': this.save.last = this.cpSel; this.playLevel(this.cpSel); break;
       case 'set':
