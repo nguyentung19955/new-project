@@ -41,7 +41,7 @@ function tierOf(kills) {
 
 function setCounts(equip) {
   const counts = {};
-  for (const slot of SLOTS) {
+  for (const slot of GEAR_SLOTS) {
     const it = ITEMS[equip[slot]];
     if (it && it.set) counts[it.set] = (counts[it.set] || 0) + 1;
   }
@@ -59,13 +59,18 @@ function computeLook(type, equip, kills) {
   const look = {
     skin: base.skin, cloth: base.cloth, hair: base.hair,
     helmet: base.helmet || null, armor: null, weapon: { ...base.weapon },
-    tier: tierOf(kills), aura: null, wings: null,
+    tier: tierOf(kills), aura: null, wings: null, bulk: base.bulk || 1,
   };
-  for (const slot of SLOTS) {
+  for (const slot of GEAR_SLOTS) {
     const it = ITEMS[equip[slot]];
     if (it) look[slot] = it.look;
   }
   if (look.tier >= 2) look.aura = base.aura;
+  // đồ ghép (phụ kiện) cho tướng hào quang riêng
+  for (const slot of ACC_SLOTS) {
+    const it = ITEMS[equip[slot]];
+    if (it && it.look && it.look.aura) look.aura = it.look.aura;
+  }
   for (const set of activeSets(equip)) Object.assign(look, SETS[set].look);
   return look;
 }
@@ -76,7 +81,7 @@ function computeLook(type, equip, kills) {
 function drawHero(ctx, look, x, y, o = {}) {
   const t = o.t || 0;
   const dir = o.dir || 1;
-  const s = (o.scale || 1) * (1 + look.tier * 0.1);
+  const s = (o.scale || 1) * (1 + look.tier * 0.1) * (look.bulk || 1);
   const bob = Math.sin(t * 4 + x) * 1;
 
   ctx.save();
@@ -222,6 +227,7 @@ function drawTorso(ctx, look) {
 function drawHelmet(ctx, look) {
   const h = look.helmet;
   const hair = () => {
+    if (!look.hair) return;
     ctx.fillStyle = look.hair;
     ctx.beginPath();
     ctx.arc(0, -35, 8.6, Math.PI, 0);
@@ -238,6 +244,19 @@ function drawHelmet(ctx, look) {
       ctx.arc(0, -36, 8.8, Math.PI, 0);
       ctx.fill();
       ctx.fillRect(0, -37, 12, 2.5);
+      break;
+    case 'mask':
+      circle(ctx, -1, -35, 10.5, h.color);
+      circle(ctx, 2, -33, 6.5, look.skin);
+      ctx.fillStyle = '#1b1b24';
+      ctx.fillRect(-4, -32, 13, 6);
+      ctx.fillStyle = '#ff4757';
+      ctx.fillRect(3, -36, 2.4, 2);
+      ctx.fillRect(6.5, -36, 2.4, 2);
+      ctx.fillStyle = h.color;
+      ctx.beginPath();
+      ctx.moveTo(-8, -40); ctx.lineTo(-17, -24); ctx.lineTo(-5, -28);
+      ctx.fill();
       break;
     case 'hood':
       circle(ctx, -1, -35, 10.5, h.color);
@@ -332,6 +351,35 @@ function drawWeapon(ctx, w, swing, t) {
       ctx.fillRect(-1, -1, 2, 6);
       break;
     }
+    case 'cleaver':
+      ctx.rotate(-0.5 + swing * 2.2);
+      ctx.fillStyle = '#4e342e';
+      ctx.fillRect(-1.5, -8, 3, 13);
+      ctx.fillStyle = w.color;
+      ctx.beginPath();
+      ctx.moveTo(-2, -8); ctx.lineTo(-2, -30); ctx.lineTo(10, -30); ctx.lineTo(12, -12); ctx.lineTo(6, -8);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = shade(w.color, -0.3);
+      ctx.fillRect(-2, -30, 2.5, 22);
+      circle(ctx, 6, -26, 1.6, shade(w.color, -0.5));
+      break;
+    case 'daggers':
+      for (const [ox, oy, rot] of [[-15, 3, 0.4], [0, 0, -0.4]]) {
+        ctx.save();
+        ctx.translate(ox, oy);
+        ctx.rotate(rot + swing * 1.8);
+        ctx.fillStyle = w.color;
+        ctx.beginPath();
+        ctx.moveTo(-1.5, -2); ctx.lineTo(-1.5, -14); ctx.lineTo(0, -18); ctx.lineTo(1.5, -14); ctx.lineTo(1.5, -2);
+        ctx.fill();
+        ctx.fillStyle = '#6c5ce7';
+        ctx.fillRect(-4, -3, 8, 2);
+        ctx.fillStyle = '#2d3436';
+        ctx.fillRect(-1, -1, 2, 5);
+        ctx.restore();
+      }
+      break;
     case 'axe':
       ctx.rotate(-0.5 + swing * 2.2);
       ctx.fillStyle = '#5d4037';
@@ -408,42 +456,102 @@ function drawEnemy(ctx, e, t) {
     ctx.moveTo(-r * 0.5, -r * 1.4); ctx.lineTo(-r * 0.1, -r * 0.8); ctx.lineTo(-r * 0.4, -r * 0.2);
     ctx.stroke();
     circle(ctx, r * 0.45, -r * 0.9, 3, '#f1c40f');
+  } else if (e.type === 'shaman') {
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(-r, 2); ctx.lineTo(r, 2); ctx.lineTo(r * 0.45, -r * 1.5 + wob); ctx.lineTo(-r * 0.45, -r * 1.5 + wob);
+    ctx.fill();
+    circle(ctx, 0, -r * 1.7 + wob, r * 0.6, shade(color, -0.3));
+    circle(ctx, r * 0.25, -r * 1.7 + wob, 2, '#f1c40f');
+    ctx.fillStyle = '#4e342e';
+    ctx.fillRect(r * 0.8, -r * 2.3, 2.5, r * 2.4);
+    ctx.shadowColor = '#e056fd';
+    ctx.shadowBlur = 10;
+    circle(ctx, r * 0.9, -r * 2.4, 3.5, '#e056fd');
+    ctx.shadowBlur = 0;
+  } else if (e.type === 'boss') {
+    drawBoss(ctx, r, color, wob, t);
   } else {
-    const boss = e.type === 'boss';
     circle(ctx, 0, -r * 0.6 + wob, r, color);
-    if (boss) {
-      ctx.fillStyle = '#2d3436';
-      for (const sx of [-1, 1]) {
-        ctx.beginPath();
-        ctx.moveTo(sx * r * 0.4, -r * 1.4);
-        ctx.quadraticCurveTo(sx * r * 1.1, -r * 1.7, sx * r * 0.9, -r * 2.3);
-        ctx.lineTo(sx * r * 0.7, -r * 1.3);
-        ctx.fill();
-      }
-    } else {
-      ctx.fillStyle = color;
-      ctx.beginPath();
-      ctx.moveTo(-r * 0.7, -r); ctx.lineTo(-r * 1.4, -r * 1.4); ctx.lineTo(-r * 0.4, -r * 1.3);
-      ctx.fill();
-    }
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(-r * 0.7, -r); ctx.lineTo(-r * 1.4, -r * 1.4); ctx.lineTo(-r * 0.4, -r * 1.3);
+    ctx.fill();
     circle(ctx, r * 0.35, -r * 0.75 + wob, r * 0.28, '#fff');
-    circle(ctx, r * 0.45, -r * 0.75 + wob, r * 0.14, boss ? '#e74c3c' : '#111');
+    circle(ctx, r * 0.45, -r * 0.75 + wob, r * 0.14, '#111');
+  }
+  if (e.stunT > 0) {
+    ctx.fillStyle = 'rgba(174,233,255,0.45)';
+    ctx.strokeStyle = '#e8fbff';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.rect(-r * 1.1, -r * 2.1, r * 2.2, r * 2.4);
+    ctx.fill();
+    ctx.stroke();
   }
   ctx.restore();
 
   if (e.poisonT > 0 && Math.random() < 0.3) {
-    circle(ctx, e.x + (Math.random() - 0.5) * r, e.y - r * 1.5, 2, '#2ecc71');
+    circle(ctx, e.x + (Math.random() - 0.5) * r, e.y - r * 1.5, 2, e.dotColor);
   }
 
   // thanh máu
   const w = Math.max(24, r * 2);
-  const by = e.y - r * (e.type === 'boss' ? 2.6 : 2) - 6;
+  const by = e.y - r * (e.type === 'boss' ? 2.4 : e.type === 'shaman' ? 2.7 : 2) - 6;
   ctx.fillStyle = 'rgba(0,0,0,0.6)';
   ctx.fillRect(e.x - w / 2 - 1, by - 1, w + 2, 5);
   ctx.fillStyle = e.hp / e.maxHp > 0.4 ? '#2ecc71' : '#e74c3c';
   ctx.fillRect(e.x - w / 2, by, w * Math.max(0, e.hp / e.maxHp), 3);
 }
 
+
+// Boss Thạch Long: thằn lằn đá khổng lồ, vết nứt dung nham, sừng và gai lưng
+function drawBoss(ctx, r, color, wob, t) {
+  const glow = 0.6 + Math.sin(t * 4) * 0.3;
+  // đuôi
+  ctx.fillStyle = shade(color, -0.2);
+  ctx.beginPath();
+  ctx.moveTo(-r * 0.8, -r * 0.5); ctx.quadraticCurveTo(-r * 1.8, -r * 0.2 + wob, -r * 2.1, -r * 0.9); ctx.lineTo(-r * 0.7, -r * 0.9);
+  ctx.fill();
+  // chân
+  ctx.fillStyle = shade(color, -0.35);
+  for (const lx of [-0.55, 0.35]) rrect(ctx, r * lx, -r * 0.4, r * 0.35, r * 0.5, 3, shade(color, -0.35));
+  // thân
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.ellipse(0, -r * 0.75 + wob * 0.5, r * 1.05, r * 0.7, 0, 0, Math.PI * 2);
+  ctx.fill();
+  // gai lưng
+  ctx.fillStyle = '#3e2723';
+  for (let i = 0; i < 5; i++) {
+    const x = -r * 0.7 + i * r * 0.32;
+    ctx.beginPath();
+    ctx.moveTo(x - 5, -r * 1.3 + wob * 0.5); ctx.lineTo(x, -r * 1.75 + wob * 0.5); ctx.lineTo(x + 5, -r * 1.3 + wob * 0.5);
+    ctx.fill();
+  }
+  // vết nứt dung nham
+  ctx.strokeStyle = `rgba(255,140,40,${glow})`;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(-r * 0.5, -r * 1.0); ctx.lineTo(-r * 0.2, -r * 0.7); ctx.lineTo(-r * 0.35, -r * 0.4);
+  ctx.moveTo(r * 0.2, -r * 1.1); ctx.lineTo(r * 0.4, -r * 0.75);
+  ctx.stroke();
+  // đầu
+  ctx.fillStyle = shade(color, 0.1);
+  ctx.beginPath();
+  ctx.ellipse(r * 1.05, -r * 1.05 + wob, r * 0.55, r * 0.42, 0.2, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#ecf0f1';
+  ctx.beginPath();
+  ctx.moveTo(r * 0.85, -r * 1.35 + wob); ctx.quadraticCurveTo(r * 0.6, -r * 2.1, r * 0.25, -r * 2.05); ctx.lineTo(r * 0.7, -r * 1.3 + wob);
+  ctx.fill();
+  ctx.shadowColor = '#ff9f43';
+  ctx.shadowBlur = 10;
+  circle(ctx, r * 1.25, -r * 1.12 + wob, r * 0.1, '#ffbe76');
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = '#2d1b14';
+  ctx.fillRect(r * 1.2, -r * 0.88 + wob, r * 0.35, 2);
+}
 
 // ------------------------------------------------------------
 //  BẢN ĐỒ (phần tĩnh vẽ 1 lần vào canvas phụ)

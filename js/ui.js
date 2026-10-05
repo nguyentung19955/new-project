@@ -1,51 +1,61 @@
 'use strict';
 
 // ============================================================
-//  GIAO DIỆN: menu, HUD, gợi ý người mới, bảng chọn tướng,
-//  bảng tướng (trang bị + kỹ năng), túi đồ
+//  GIAO DIỆN: menu, HUD, gợi ý người mới, chọn tướng,
+//  bảng tướng kiểu Dota (chân dung, QWER, 6 ô đồ), cửa hàng, túi đồ
 // ============================================================
 
 const $ = (s) => document.querySelector(s);
 
-const WEAPON_ICON = { knight: '⚔️', archer: '🏹', mage: '🪄' };
-const SLOT_ICON = { helmet: '⛑️', armor: '🛡️' };
-const ROLE = { knight: 'Cận chiến', archer: 'Tầm xa', mage: 'Phép nổ lan' };
+const WCLASS_ICON = { blade: '⚔️', bow: '🏹', staff: '🪄' };
+const SLOT_ICON = { helmet: '⛑️', armor: '🛡️', acc: '💍' };
 
-// Bộ đồ mẫu để màn hình bắt đầu khoe việc mặc đồ đổi dáng
+// Bộ đồ mẫu cho màn hình bắt đầu (theo loại vũ khí)
 const SHOWCASE = [
-  { knight: {}, archer: {}, mage: {}, kills: 0 },
-  { knight: { helmet: 'iron_helm', armor: 'chain_mail', weapon: 'iron_sword' },
-    archer: { helmet: 'leather_cap', armor: 'leather_armor', weapon: 'elven_bow' },
-    mage: { helmet: 'arcane_hat', armor: 'mage_robe', weapon: 'crystal_staff' }, kills: 30 },
-  { knight: { helmet: 'horned_helm', armor: 'royal_plate', weapon: 'flame_blade' },
-    archer: { helmet: 'iron_helm', armor: 'chain_mail', weapon: 'storm_bow' },
-    mage: { helmet: 'horned_helm', armor: 'mage_robe', weapon: 'void_staff' }, kills: 80 },
-  { knight: { helmet: 'dragon_crown', armor: 'dragon_armor', weapon: 'dragon_blade' },
-    archer: { helmet: 'dragon_crown', armor: 'dragon_armor', weapon: 'dragon_bow' },
-    mage: { helmet: 'dragon_crown', armor: 'dragon_armor', weapon: 'dragon_staff' }, kills: 160 },
+  { kills: 0, blade: {}, bow: {}, staff: {} },
+  { kills: 30,
+    blade: { helmet: 'iron_helm', armor: 'chain_mail', weapon: 'iron_sword' },
+    bow: { helmet: 'leather_cap', armor: 'leather_armor', weapon: 'elven_bow' },
+    staff: { helmet: 'arcane_hat', armor: 'mage_robe', weapon: 'crystal_staff' } },
+  { kills: 80,
+    blade: { helmet: 'horned_helm', armor: 'royal_plate', weapon: 'flame_blade' },
+    bow: { helmet: 'iron_helm', armor: 'chain_mail', weapon: 'storm_bow', acc1: 'twin_fury' },
+    staff: { helmet: 'horned_helm', armor: 'mage_robe', weapon: 'void_staff', acc1: 'time_rod' } },
+  { kills: 160,
+    blade: { helmet: 'dragon_crown', armor: 'dragon_armor', weapon: 'dragon_blade' },
+    bow: { helmet: 'dragon_crown', armor: 'dragon_armor', weapon: 'dragon_bow' },
+    staff: { helmet: 'dragon_crown', armor: 'dragon_armor', weapon: 'dragon_staff' } },
 ];
+const LINEUPS = [['archer', 'knight', 'mage'], ['assassin', 'butcher', 'frost']];
 
 function itemIcon(id) {
   const it = ITEMS[id];
-  return it.slot === 'weapon' ? WEAPON_ICON[it.for] : SLOT_ICON[it.slot];
+  if (it.icon) return it.icon;
+  return it.slot === 'weapon' ? WCLASS_ICON[it.wclass] : SLOT_ICON[it.slot];
 }
 
 function statText(stats) {
   return Object.entries(stats)
-    .map(([k, v]) => `${v > 0 ? '+' : ''}${v} ${STAT_NAMES[k] || k}`)
+    .map(([k, v]) => k === 'cleave' ? `Chém lan ${Math.round(v * 100)}%` : `${v > 0 ? '+' : ''}${v} ${STAT_NAMES[k] || k}`)
     .join(' · ');
 }
 
-function itemCard(id, attrs = '', hint = '') {
+function itemCard(id, attrs = '', hint = '', extra = '') {
   const it = ITEMS[id];
   const r = RARITY[it.rarity];
+  const sub = it.slot === 'weapon' ? `Vũ khí ${WCLASS_NAMES[it.wclass].toLowerCase()}` : SLOT_NAMES[it.slot];
   const setTxt = it.set ? `<span class="set">${SETS[it.set].name}</span>` : '';
   const tag = attrs ? 'button' : 'div';
   return `<${tag} class="item" style="--rc:${r.color}" ${attrs}>
     <span class="icon">${itemIcon(id)}</span>
     <span class="meta"><b style="color:${r.color}">${it.name}</b>
-      <small>${statText(it.stats)}</small>${setTxt}${hint ? `<small class="act-hint">${hint}</small>` : ''}</span>
+      <small>${sub}${it.desc ? ' · ' + it.desc : ''}</small>
+      <small>${statText(it.stats)}</small>${setTxt}${extra}${hint ? `<small class="act-hint">${hint}</small>` : ''}</span>
   </${tag}>`;
+}
+
+function attrBadge(attr) {
+  return `<span class="attr-dot" style="--ac:${ATTRS[attr].color}" title="${ATTRS[attr].name}"></span>`;
 }
 
 function loadBest() {
@@ -58,8 +68,9 @@ function saveBest(n) {
 class UI {
   constructor(game) {
     this.game = game;
-    this.sheet = null;        // { kind: 'build'|'hero'|'bag', slot }
-    this.tab = 'gear';
+    this.sheet = null;        // { kind: 'build'|'hero'|'bag'|'shop', slot }
+    this.skillSel = 0;
+    this.shopTab = 'basic';
     this.sellArmed = false;
     this.previewCanvas = null;
     this.sig = {};
@@ -67,8 +78,8 @@ class UI {
     this.scale = 1;
     this.best = loadBest();
     this.coachSlot = -1;
+    this.bannerT = 0;
 
-    $('#chest-cost').textContent = CONFIG.chestCost + '💰';
     $('#btn-play').onclick = () => this.startGame();
     $('#btn-howto').onclick = () => { $('#howto').hidden = false; };
     $('#btn-howto-close').onclick = () => { $('#howto').hidden = true; };
@@ -87,16 +98,14 @@ class UI {
       game.paused = !game.paused;
       $('#btn-pause').textContent = game.paused ? '▶' : '❚❚';
     };
-    $('#btn-chest').onclick = () => {
-      const id = game.buyChest();
-      if (!id) return this.toast(`Cần ${CONFIG.chestCost} vàng để mở rương`, '#e58b74');
-      const it = ITEMS[id];
-      this.toast(`Mở rương được <b>${it.name}</b> (${RARITY[it.rarity].name})`, RARITY[it.rarity].color);
+    $('#btn-shop').onclick = () => {
+      game.flags.shopOpened = true;
+      this.toggle({ kind: 'shop' });
     };
-    $('#btn-bag').onclick = () => (this.sheet && this.sheet.kind === 'bag' ? this.close() : this.open({ kind: 'bag' }));
+    $('#btn-bag').onclick = () => this.toggle({ kind: 'bag' });
     $('#sheet').addEventListener('click', (ev) => {
       const el = ev.target.closest('[data-act]');
-      if (el) this.action(el.dataset);
+      if (el && !el.disabled) this.action(el.dataset);
     });
     this.showMenu();
   }
@@ -122,6 +131,11 @@ class UI {
     this.open({ kind: this.game.heroes[slot] ? 'hero' : 'build', slot });
   }
 
+  toggle(sheet) {
+    if (this.sheet && this.sheet.kind === sheet.kind) this.close();
+    else this.open(sheet);
+  }
+
   open(sheet) {
     this.sheet = sheet;
     this.sellArmed = false;
@@ -129,16 +143,32 @@ class UI {
     $('#sheet').hidden = false;
     const body = $('#sheet-body');
     if (sheet.kind === 'hero') {
+      const h = this.game.heroes[sheet.slot];
+      const def = HEROES[h.type];
+      this.skillSel = def.skills.reduce((a, sk, i) => (h.kills >= sk.unlock ? i : a), 0);
       body.innerHTML = `
         <div class="hero-head">
-          <canvas id="preview" width="240" height="240"></canvas>
-          <div id="hs-info"></div>
+          <div class="portrait" style="--ac:${ATTRS[def.attr].color}">
+            <canvas id="preview" width="240" height="240"></canvas>
+            <span class="lv" id="hs-lv"></span>
+            <span class="dead-tag" id="hs-dead" hidden></span>
+          </div>
+          <div class="hero-main">
+            <div class="sheet-head">${attrBadge(def.attr)}<h3 id="hs-name"></h3>
+              <button class="x" data-act="close" aria-label="Đóng">✕</button></div>
+            <div class="vbar hp"><i id="hp-fill"></i><span id="hp-text"></span></div>
+            <div class="vbar xp"><i id="xp-fill"></i><span id="xp-text"></span></div>
+            <div class="attrs" id="hs-attrs"></div>
+          </div>
         </div>
-        <div class="tabs">
-          <button data-act="tab" data-tab="gear" class="${this.tab === 'gear' ? 'on' : ''}">Trang bị</button>
-          <button data-act="tab" data-tab="skills" class="${this.tab === 'skills' ? 'on' : ''}">Kỹ năng</button>
-        </div>
-        <div id="hs-tab"></div>`;
+        <div class="chips" id="hs-chips"></div>
+        <div class="skillbar" id="hs-skills"></div>
+        <div class="skilldesc" id="hs-desc"></div>
+        <h4>Đồ đang mặc <span class="dim">· chạm để tháo</span></h4>
+        <div class="slots6" id="hs-slots"></div>
+        <h4>Túi đồ <span class="dim">· chạm để mặc</span></h4>
+        <div class="items" id="hs-bag"></div>
+        <div class="hero-foot" id="hs-foot"></div>`;
       this.previewCanvas = $('#preview');
     } else {
       this.previewCanvas = null;
@@ -146,6 +176,7 @@ class UI {
     }
     $('.sheet-inner').scrollTop = 0;
     this.refresh(true);
+    this.tickLive();
   }
 
   close() {
@@ -168,13 +199,14 @@ class UI {
           this.toast(`Cần ${HEROES[d.type].cost} vàng`, '#e58b74');
         }
         return;
-      case 'tab':
-        this.tab = d.tab;
-        document.querySelectorAll('.tabs button').forEach((b) => b.classList.toggle('on', b.dataset.tab === d.tab));
+      case 'skill':
+        this.skillSel = +d.i;
         break;
       case 'equip': {
         const it = ITEMS[g.inventory[+d.idx]];
-        if (h && g.equip(h, +d.idx)) this.toast(`${HEROES[h.type].name} mặc <b>${it.name}</b>`, RARITY[it.rarity].color);
+        const res = h && g.equip(h, +d.idx);
+        if (res === true) this.toast(`${HEROES[h.type].name} mặc <b>${it.name}</b>`, RARITY[it.rarity].color);
+        else if (res) this.toast(res, '#e58b74');
         break;
       }
       case 'unequip':
@@ -189,6 +221,27 @@ class UI {
           return;
         }
         break;
+      case 'shoptab':
+        this.shopTab = d.tab;
+        break;
+      case 'buy': {
+        const it = ITEMS[d.id];
+        if (g.buy(d.id)) this.toast(`Đã mua <b>${it.name}</b>. Chạm vào tướng để mặc`, '#7cc45f');
+        else this.toast(`Cần ${it.price} vàng`, '#e58b74');
+        break;
+      }
+      case 'craft': {
+        const it = ITEMS[d.id];
+        if (g.craft(d.id)) this.toast(`Ghép thành công <b>${it.name}</b>!`, RARITY[it.rarity].color);
+        break;
+      }
+      case 'chest': {
+        const id = g.buyChest();
+        if (!id) { this.toast(`Cần ${CONFIG.chestCost} vàng để mở rương`, '#e58b74'); break; }
+        const it = ITEMS[id];
+        this.toast(`Mở rương được <b>${it.name}</b> (${RARITY[it.rarity].name})`, RARITY[it.rarity].color);
+        break;
+      }
     }
     this.refresh(true);
   }
@@ -222,7 +275,29 @@ class UI {
       $('#wave-sub').textContent = `Còn ${g.spawnQueue.length + g.enemies.length} quái`;
     } else {
       $('#wave-label').textContent = `Gọi đợt ${g.wave + 1}`;
-      $('#wave-sub').textContent = (g.wave + 1) % 5 === 0 ? 'Có boss!' : `Qua đợt +${25 + g.wave * 5} vàng`;
+      $('#wave-sub').textContent = (g.wave + 1) % 5 === 0 ? 'Boss Thạch Long!' : `Qua đợt +${25 + g.wave * 5} vàng`;
+    }
+
+    // thanh máu boss + biển báo boss xuất hiện
+    const boss = g.boss;
+    $('#bossbar').hidden = !boss;
+    $('#toasts').classList.toggle('below-boss', !!boss);
+    if (boss) {
+      $('#boss-name').textContent = boss.def.name;
+      $('#boss-hp').textContent = `${Math.ceil(boss.hp)} / ${Math.ceil(boss.maxHp)}`;
+      $('#boss-fill').style.width = (Math.max(0, boss.hp / boss.maxHp) * 100) + '%';
+    }
+    while (g.events.length) {
+      const ev = g.events.shift();
+      if (ev.type === 'boss') {
+        $('#banner-text').textContent = ev.name;
+        $('#banner').hidden = false;
+        this.bannerT = 2.6;
+      }
+    }
+    if (this.bannerT > 0) {
+      this.bannerT -= dt;
+      if (this.bannerT <= 0) $('#banner').hidden = true;
     }
 
     if (g.over && $('#overlay').hidden) {
@@ -240,21 +315,56 @@ class UI {
       this.refreshTimer = 0.25;
       this.refresh(false);
     }
+    this.tickLive();
+  }
 
-    if (this.previewCanvas && this.sheet) {
-      const h = g.heroes[this.sheet.slot];
-      if (!h) return this.close();
-      const ctx = this.previewCanvas.getContext('2d');
-      const grd = ctx.createRadialGradient(120, 160, 10, 120, 150, 140);
-      grd.addColorStop(0, '#4d6b3a');
-      grd.addColorStop(1, '#1e2a17');
-      ctx.fillStyle = grd;
-      ctx.fillRect(0, 0, 240, 240);
-      const look = computeLook(h.type, h.equip, h.kills);
-      drawHero(ctx, look, 120, 222, {
-        t: performance.now() / 1000, dir: 1, scale: 3.1 / (1 + look.tier * 0.1), swing: h.swing,
-      });
-    }
+  // Phần cập nhật liên tục của bảng tướng: máu, kinh nghiệm, hồi chiêu, chân dung
+  tickLive() {
+    if (!this.sheet || this.sheet.kind !== 'hero') return;
+    const g = this.game;
+    const h = g.heroes[this.sheet.slot];
+    if (!h) return this.close();
+    const def = HEROES[h.type];
+    const st = heroStats(h);
+
+    $('#hp-fill').style.width = (h.hp / st.hpMax) * 100 + '%';
+    $('#hp-text').textContent = `${Math.ceil(h.hp)} / ${st.hpMax}`;
+    const lo = xpForLevel(h.level), hi = xpForLevel(h.level + 1);
+    const maxed = h.level >= CONFIG.maxLevel;
+    $('#xp-fill').style.width = (maxed ? 100 : ((h.xp - lo) / (hi - lo)) * 100) + '%';
+    $('#xp-text').textContent = maxed ? 'Cấp tối đa' : `KN ${h.xp - lo} / ${hi - lo}`;
+    $('#hs-lv').textContent = h.level;
+    const dead = $('#hs-dead');
+    dead.hidden = !h.dead;
+    if (h.dead) dead.textContent = `Hồi sinh ${Math.ceil(h.respawnT)}s`;
+
+    def.skills.forEach((sk, i) => {
+      const el = document.getElementById('cd-' + i);
+      if (!el) return;
+      const left = h.skillCd[sk.id] || 0;
+      const total = sk.active.cooldown * (1 - st.cdr / 100);
+      if (left > 0) {
+        const pct = Math.min(100, (left / total) * 100);
+        el.style.background = `conic-gradient(rgba(10,8,6,0.72) ${pct}%, transparent 0)`;
+        el.textContent = Math.ceil(left);
+      } else {
+        el.style.background = 'none';
+        el.textContent = '';
+      }
+    });
+
+    const ctx = this.previewCanvas.getContext('2d');
+    const grd = ctx.createRadialGradient(120, 160, 10, 120, 150, 140);
+    grd.addColorStop(0, h.dead ? '#3a3a3a' : '#4d6b3a');
+    grd.addColorStop(1, '#1e2a17');
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, 240, 240);
+    const look = computeLook(h.type, h.equip, h.kills);
+    ctx.globalAlpha = h.dead ? 0.35 : 1;
+    drawHero(ctx, look, 120, 222, {
+      t: performance.now() / 1000, dir: 1, scale: 3 / ((1 + look.tier * 0.1) * look.bulk), swing: h.swing,
+    });
+    ctx.globalAlpha = 1;
   }
 
   drawMenuArt() {
@@ -272,11 +382,12 @@ class UI {
     ctx.beginPath();
     ctx.ellipse(240, 230, 300, 70, 0, Math.PI, 0);
     ctx.fill();
-    const stage = Math.floor(t / 2.2) % SHOWCASE.length;
-    const set = SHOWCASE[stage];
-    ['archer', 'knight', 'mage'].forEach((type, i) => {
+    const step = Math.floor(t / 2.2);
+    const set = SHOWCASE[step % SHOWCASE.length];
+    const lineup = LINEUPS[Math.floor(step / SHOWCASE.length) % LINEUPS.length];
+    lineup.forEach((type, i) => {
       const x = 105 + i * 135;
-      drawHero(ctx, computeLook(type, set[type], set.kills), x, 205 - (i === 1 ? 6 : 0), {
+      drawHero(ctx, computeLook(type, set[HEROES[type].wclass], set.kills), x, 205 - (i === 1 ? 6 : 0), {
         t: t + i, dir: i === 2 ? -1 : 1, scale: 1.75,
       });
     });
@@ -308,6 +419,9 @@ class UI {
           pos = [h.x, h.y - 62];
           text = 'Chạm vào tướng để mặc đồ. Tướng sẽ đổi dáng!';
         }
+      } else if (g.wave >= 2 && !g.waveActive && !g.flags.shopOpened && g.gold >= 100) {
+        pos = [88, CONFIG.H - 92];
+        text = 'Mua và ghép đồ ở Cửa hàng';
       }
     }
     coach.hidden = !pos;
@@ -328,95 +442,168 @@ class UI {
   refresh(force) {
     if (!this.sheet) return;
     if (force) this.sig = {};
+    const kind = this.sheet.kind;
+    if (kind === 'build') this.renderBuild();
+    else if (kind === 'bag') this.renderBag();
+    else if (kind === 'shop') this.renderShop();
+    else this.renderHero();
+  }
+
+  renderBuild() {
     const g = this.game;
-    const s = this.sheet;
+    if (!this.changed('build', g.gold)) return;
+    const card = ([type, def]) => `
+      <div class="hero-card ${g.gold < def.cost ? 'disabled' : ''}" style="--ac:${ATTRS[def.attr].color}">
+        <canvas data-hero="${type}" width="90" height="100"></canvas>
+        <b>${def.name}</b>
+        <span class="role">${def.role}</span>
+        <button class="go" data-act="build" data-type="${type}">${def.cost} 💰</button>
+      </div>`;
+    const groups = Object.keys(ATTRS).map((a) => `
+      <div class="attr-group">
+        <div class="attr-label" style="--ac:${ATTRS[a].color}"><b>${ATTRS[a].name}</b><small>${ATTRS[a].desc}</small></div>
+        <div class="build-list">${Object.entries(HEROES).filter(([, d]) => d.attr === a).map(card).join('')}</div>
+      </div>`).join('');
+    $('#sheet-dyn').innerHTML = `
+      <div class="sheet-head"><h3>Chọn tướng</h3><button class="x" data-act="close" aria-label="Đóng">✕</button></div>
+      ${groups}`;
+    document.querySelectorAll('canvas[data-hero]').forEach((c) => {
+      const look = computeLook(c.dataset.hero, {}, 0);
+      drawHero(c.getContext('2d'), look, 45, 94, { scale: 1.5 / look.bulk, t: 1 });
+    });
+  }
 
-    if (s.kind === 'build') {
-      if (!this.changed('build', g.gold)) return;
-      $('#sheet-dyn').innerHTML = `
-        <div class="sheet-head"><h3>Chọn tướng</h3><button class="x" data-act="close" aria-label="Đóng">✕</button></div>
-        <div class="build-list">${
-          Object.entries(HEROES).map(([type, def]) => `
-            <div class="hero-card ${g.gold < def.cost ? 'disabled' : ''}">
-              <canvas data-hero="${type}" width="90" height="100"></canvas>
-              <b>${def.name}</b>
-              <span class="role">${ROLE[type]}</span>
-              <button class="go" data-act="build" data-type="${type}">${def.cost} 💰</button>
-            </div>`).join('')
-        }</div>
-        <p class="dim build-note">Tướng nào diệt quái nhiều sẽ mạnh lên và mở thêm kỹ năng.</p>`;
-      document.querySelectorAll('canvas[data-hero]').forEach((c) => {
-        drawHero(c.getContext('2d'), computeLook(c.dataset.hero, {}, 0), 45, 92, { scale: 1.55, t: 1 });
-      });
-      return;
+  renderBag() {
+    const g = this.game;
+    if (!this.changed('bag', g.inventory.join())) return;
+    $('#sheet-dyn').innerHTML = `
+      <div class="sheet-head"><h3>Túi đồ <span class="dim">(${g.inventory.length})</span></h3>
+        <button class="x" data-act="close" aria-label="Đóng">✕</button></div>
+      <p class="dim">Chạm vào một tướng trên bản đồ để mặc đồ. Mua thêm và ghép đồ ở Cửa hàng.</p>
+      <div class="items">${g.inventory.map((id) => itemCard(id)).join('') || '<p class="dim">Túi đang trống. Diệt quái hoặc ghé Cửa hàng để có đồ.</p>'}</div>`;
+  }
+
+  renderShop() {
+    const g = this.game;
+    if (!this.changed('shop', `${g.gold}|${g.inventory.join()}|${this.shopTab}`)) return;
+    const tabs = [['basic', 'Cơ bản'], ['recipe', 'Ghép đồ'], ['chest', 'Rương']]
+      .map(([k, n]) => `<button data-act="shoptab" data-tab="${k}" class="${this.shopTab === k ? 'on' : ''}">${n}</button>`).join('');
+    let body = '';
+    if (this.shopTab === 'basic') {
+      body = `<div class="items">${Object.keys(ITEMS).filter((id) => ITEMS[id].price).map((id) => {
+        const it = ITEMS[id];
+        return itemCard(id, '', '', `<button class="buy go" data-act="buy" data-id="${id}" ${g.gold < it.price ? 'disabled' : ''}>${it.price} 💰</button>`);
+      }).join('')}</div>`;
+    } else if (this.shopTab === 'recipe') {
+      body = `<p class="dim">Gom đủ nguyên liệu trong túi rồi trả thêm vàng để ghép. Đồ ghép cho tướng hào quang riêng.</p>
+        <div class="recipes">${Object.keys(ITEMS).filter((id) => ITEMS[id].recipe).map((id) => {
+          const it = ITEMS[id];
+          const missing = g.missingParts(id).slice();
+          const ok = !missing.length && g.gold >= it.recipe.cost;
+          const parts = it.recipe.parts.map((p) => {
+            const i = missing.indexOf(p);
+            const has = i < 0;
+            if (!has) missing.splice(i, 1);
+            return `<span class="part ${has ? 'has' : ''}">${ITEMS[p].icon} ${ITEMS[p].name}</span>`;
+          }).join('<span class="plus">+</span>');
+          return `<div class="recipe" style="--rc:${RARITY[it.rarity].color}">
+            <div class="recipe-top"><span class="icon">${it.icon}</span>
+              <span class="meta"><b style="color:${RARITY[it.rarity].color}">${it.name}</b><small>${statText(it.stats)}</small></span></div>
+            <div class="parts">${parts}<span class="plus">+</span><span class="part ${g.gold >= it.recipe.cost ? 'has' : ''}">${it.recipe.cost} 💰</span></div>
+            <button class="go" data-act="craft" data-id="${id}" ${ok ? '' : 'disabled'}>${ok ? 'Ghép đồ' : 'Chưa đủ nguyên liệu'}</button>
+          </div>`;
+        }).join('')}</div>`;
+    } else {
+      const odds = Object.values(RARITY);
+      const total = odds.reduce((a, r) => a + r.weight, 0);
+      body = `<div class="chest-card">
+        <div class="chest-ico">🎁</div>
+        <p>Rương chứa ngẫu nhiên một món <b>vũ khí, mũ hoặc giáp</b>. Mặc vào là tướng đổi dáng.</p>
+        <div class="odds">${odds.map((r) => `<span style="color:${r.color}">${r.name} ${Math.round((r.weight / total) * 100)}%</span>`).join('')}</div>
+        <button class="go big" data-act="chest" ${g.gold < CONFIG.chestCost ? 'disabled' : ''}>Mở rương · ${CONFIG.chestCost} 💰</button>
+      </div>`;
     }
+    $('#sheet-dyn').innerHTML = `
+      <div class="sheet-head"><h3>Cửa hàng</h3><span class="gold-chip">${g.gold} 💰</span>
+        <button class="x" data-act="close" aria-label="Đóng">✕</button></div>
+      <div class="tabs">${tabs}</div>${body}`;
+  }
 
-    if (s.kind === 'bag') {
-      if (!this.changed('bag', g.inventory.join())) return;
-      $('#sheet-dyn').innerHTML = `
-        <div class="sheet-head"><h3>Túi đồ <span class="dim">(${g.inventory.length})</span></h3>
-          <button class="x" data-act="close" aria-label="Đóng">✕</button></div>
-        <p class="dim">Chạm vào một tướng trên bản đồ để mặc đồ. Đủ 3 món <span class="set">Bộ Rồng</span> thì tướng mọc cánh.</p>
-        <div class="items">${g.inventory.map((id) => itemCard(id)).join('') || '<p class="dim">Túi đang trống. Diệt quái hoặc mở rương để có đồ.</p>'}</div>`;
-      return;
-    }
-
-    // --- bảng tướng
-    const h = g.heroes[s.slot];
+  renderHero() {
+    const g = this.game;
+    const h = g.heroes[this.sheet.slot];
     if (!h) return;
     const def = HEROES[h.type];
     const st = heroStats(h);
     const tier = tierOf(h.kills);
-    const curTier = CONFIG.tiers[tier], nextTier = CONFIG.tiers[tier + 1];
-    const eqSig = `${h.equip.weapon}|${h.equip.helmet}|${h.equip.armor}`;
+    const eqSig = SLOTS.map((s) => h.equip[s]).join('|');
 
-    if (this.changed('info', `${h.kills}|${eqSig}|${this.sellArmed}`)) {
+    if (this.changed('stats', `${h.kills}|${h.level}|${eqSig}`)) {
+      $('#hs-name').innerHTML = `${def.name} <span class="stars">${'★'.repeat(tier)}</span>`;
+      const base = heroAttrs(h);
+      $('#hs-attrs').innerHTML = Object.keys(ATTRS).map((a) => {
+        const bonus = Math.round(st[a] - base[a]);
+        return `<span class="attr ${a === def.attr ? 'main' : ''}" style="--ac:${ATTRS[a].color}">
+          <i>${ATTRS[a].short}</i><b>${Math.round(base[a])}</b>${bonus ? `<em>+${bonus}</em>` : ''}</span>`;
+      }).join('');
       const sets = activeSets(h.equip).map((k) => `<span class="set">✦ ${SETS[k].name}: ${SETS[k].desc}</span>`).join('');
-      const pct = nextTier ? ((h.kills - curTier) / (nextTier - curTier)) * 100 : 100;
-      const refund = Math.floor(def.cost * CONFIG.sellRatio);
-      $('#hs-info').innerHTML = `
-        <div class="sheet-head" style="margin:0"><h3>${def.name} <span class="stars">${'★'.repeat(tier)}</span></h3>
-          <button class="x" data-act="close" aria-label="Đóng">✕</button></div>
-        <div class="kills"><span>Đã hạ <b>${h.kills}</b> quái</span><span>${nextTier ? `tiến hóa ở ${nextTier}` : 'tiến hóa tối đa'}</span></div>
-        <div class="bar"><i style="width:${pct}%"></i></div>
-        <div class="chips">
-          <span class="chip"><i>Sát thương</i> ${st.damage.toFixed(0)}</span>
-          <span class="chip"><i>Tầm</i> ${Math.round(st.range)}</span>
-          <span class="chip"><i>Đánh/giây</i> ${(1 / st.cooldown).toFixed(2)}</span>
-          <span class="chip"><i>Chí mạng</i> ${st.crit}%</span>
-        </div>${sets}
-        <button class="danger-link ${this.sellArmed ? 'confirm' : ''}" data-act="sell">${this.sellArmed ? `Chạm lần nữa để bán (+${refund}💰)` : `Bán tướng (+${refund}💰)`}</button>`;
+      $('#hs-chips').innerHTML = `
+        <span class="chip"><i>Sát thương</i> ${st.damage.toFixed(0)}</span>
+        <span class="chip"><i>Đánh/giây</i> ${(1 / st.cooldown).toFixed(2)}</span>
+        <span class="chip"><i>Tầm</i> ${Math.round(st.range)}</span>
+        <span class="chip"><i>Chí mạng</i> ${Math.round(st.crit)}%</span>
+        <span class="chip"><i>Đã hạ</i> ${h.kills}</span>
+        <span class="chip"><i>Giảm hồi chiêu</i> ${Math.round(st.cdr)}%</span>${sets}`;
     }
 
-    if (this.tab === 'skills' && this.changed('tab', `skills|${h.kills}`)) {
-      $('#hs-tab').innerHTML = def.skills.map((sk) => {
+    if (this.changed('skills', `${h.kills}|${this.skillSel}`)) {
+      const color = ATTRS[def.attr].color;
+      $('#hs-skills').innerHTML = def.skills.map((sk, i) => {
         const on = h.kills >= sk.unlock;
-        const pct = on ? 100 : Math.floor((h.kills / sk.unlock) * 100);
-        return `<div class="skill ${on ? 'on' : ''}">
-          <span class="lvl">${on ? '✓' : sk.unlock}</span>
-          <div><b>${sk.name}</b><span class="tag ${sk.active ? 'act' : ''}">${sk.active ? 'Chủ động' : 'Nội tại'}</span></div>
-          <small>${on ? sk.info(h.kills - sk.unlock) : `Mở khóa khi hạ ${sk.unlock} quái (còn ${sk.unlock - h.kills})`}</small>
-          ${on ? '' : `<div class="bar"><i style="width:${pct}%"></i></div>`}
-        </div>`;
+        return `<button class="skbtn ${on ? 'on' : ''} ${i === this.skillSel ? 'sel' : ''}" data-act="skill" data-i="${i}" style="--ac:${color}">
+          <span class="glyph">${sk.icon}</span><span class="key">${SKILL_KEYS[i]}</span>
+          ${on ? (sk.active ? `<i class="cd" id="cd-${i}"></i>` : '') : `<span class="lock">${sk.unlock}☠</span>`}
+        </button>`;
+      }).join('');
+      const sk = def.skills[this.skillSel];
+      const on = h.kills >= sk.unlock;
+      const cd = sk.active ? ` · hồi ${(sk.active.cooldown * (1 - st.cdr / 100)).toFixed(1)}s` : '';
+      $('#hs-desc').innerHTML = `
+        <div><b>[${SKILL_KEYS[this.skillSel]}] ${sk.name}</b><span class="tag ${sk.active ? 'act' : ''}">${sk.active ? 'Chủ động' + cd : 'Nội tại'}</span></div>
+        <small>${on ? sk.info(h.kills - sk.unlock) : `Mở khóa khi hạ ${sk.unlock} quái (còn ${sk.unlock - h.kills}). ${sk.info(0)}`}</small>
+        ${on ? '' : `<div class="bar"><i style="width:${Math.floor((h.kills / sk.unlock) * 100)}%"></i></div>`}`;
+    }
+
+    if (this.changed('slots', eqSig)) {
+      $('#hs-slots').innerHTML = SLOTS.map((slot) => {
+        const id = h.equip[slot];
+        const label = SLOT_NAMES[slot];
+        if (!id) {
+          const ico = slot === 'weapon' ? WCLASS_ICON[def.wclass] : SLOT_ICON[slot.indexOf('acc') === 0 ? 'acc' : slot];
+          return `<div class="slot empty"><span>${ico}</span><small>${label}</small></div>`;
+        }
+        const it = ITEMS[id];
+        return `<button class="slot" style="--rc:${RARITY[it.rarity].color}" data-act="unequip" data-slot="${slot}">
+          <span>${itemIcon(id)}</span><small>${it.name}</small></button>`;
       }).join('');
     }
 
-    if (this.tab === 'gear' && this.changed('tab', `gear|${eqSig}|${g.inventory.join()}`)) {
-      const slots = SLOTS.map((slot) => {
-        const id = h.equip[slot];
-        return id
-          ? itemCard(id, `data-act="unequip" data-slot="${slot}"`, 'Chạm để tháo')
-          : `<div class="item empty"><span class="icon">${slot === 'weapon' ? WEAPON_ICON[h.type] : SLOT_ICON[slot]}</span>
-             <span class="meta"><small>${SLOT_NAMES[slot]}: trống</small></span></div>`;
-      }).join('');
+    if (this.changed('bag', `${eqSig}|${g.inventory.join()}`)) {
       const inv = g.inventory
         .map((id, i) => ({ id, i }))
         .filter(({ id }) => canEquip(h.type, id))
-        .map(({ id, i }) => itemCard(id, `data-act="equip" data-idx="${i}"`, 'Chạm để mặc'))
+        .map(({ id, i }) => itemCard(id, `data-act="equip" data-idx="${i}"`))
         .join('');
-      $('#hs-tab').innerHTML = `
-        <h4>Đang mặc</h4><div class="items">${slots}</div>
-        <h4>Trong túi</h4><div class="items">${inv || '<p class="dim">Chưa có đồ hợp với tướng này. Diệt quái hoặc mở rương để có thêm.</p>'}</div>`;
+      $('#hs-bag').innerHTML = inv || '<p class="dim">Chưa có đồ hợp với tướng này. Ghé Cửa hàng hoặc diệt quái để có thêm.</p>';
+    }
+
+    if (this.changed('foot', `${h.kills}|${this.sellArmed}`)) {
+      const cur = CONFIG.tiers[tier], next = CONFIG.tiers[tier + 1];
+      const refund = Math.floor(def.cost * CONFIG.sellRatio);
+      $('#hs-foot').innerHTML = `
+        <div class="evo"><span>${next ? `Tiến hóa ${'★'.repeat(tier + 1)} khi hạ ${next} quái` : 'Đã tiến hóa tối đa'}</span>
+          <div class="bar"><i style="width:${next ? ((h.kills - cur) / (next - cur)) * 100 : 100}%"></i></div></div>
+        <button class="danger-link ${this.sellArmed ? 'confirm' : ''}" data-act="sell">${this.sellArmed ? `Chạm lần nữa để bán (+${refund}💰)` : `Bán tướng (+${refund}💰)`}</button>`;
     }
   }
 }

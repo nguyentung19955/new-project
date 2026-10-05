@@ -78,10 +78,7 @@ function render() {
   // vẽ theo trục y để vật thể phía dưới đè lên phía trên
   const drawables = [
     ...game.enemies.map((e) => ({ y: e.y, draw: () => drawEnemy(ctx, e, t) })),
-    ...game.heroes.filter(Boolean).map((h) => ({
-      y: h.y,
-      draw: () => drawHero(ctx, computeLook(h.type, h.equip, h.kills), h.x, h.y, { t, dir: h.dir, swing: h.swing }),
-    })),
+    ...game.heroes.filter(Boolean).map((h) => ({ y: h.y, draw: () => drawHeroOnMap(h, t) })),
   ].sort((a, b) => a.y - b.y);
   drawables.forEach((d) => d.draw());
 
@@ -89,7 +86,19 @@ function render() {
     ctx.save();
     ctx.translate(p.x, p.y);
     ctx.rotate(p.angle || 0);
-    if (p.kind === 'arrow') {
+    if (p.kind === 'evil') {
+      ctx.shadowColor = '#e056fd';
+      ctx.shadowBlur = 10;
+      circle(ctx, 0, 0, 5, '#be2edd');
+      circle(ctx, 0, 0, 2.5, '#f6d5ff');
+    } else if (p.kind === 'frostbolt') {
+      ctx.shadowColor = '#74b9ff';
+      ctx.shadowBlur = 10;
+      ctx.fillStyle = '#aee9ff';
+      ctx.beginPath();
+      ctx.moveTo(8, 0); ctx.lineTo(-6, -4); ctx.lineTo(-3, 0); ctx.lineTo(-6, 4);
+      ctx.fill();
+    } else if (p.kind === 'arrow') {
       ctx.strokeStyle = p.st.poison ? '#2ecc71' : '#ecf0f1';
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -105,6 +114,54 @@ function render() {
   }
 
   drawEffects(t);
+}
+
+function drawHeroOnMap(h, t) {
+  if (h.dead) {
+    // bia mộ + đếm ngược hồi sinh
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.beginPath();
+    ctx.ellipse(h.x, h.y, 14, 5, 0, 0, Math.PI * 2);
+    ctx.fill();
+    rrect(ctx, h.x - 10, h.y - 26, 20, 26, 8, '#8d8d8d');
+    ctx.fillStyle = '#5f5f5f';
+    ctx.fillRect(h.x - 1.5, h.y - 21, 3, 12);
+    ctx.fillRect(h.x - 5, h.y - 17, 10, 3);
+    ctx.font = 'bold 14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#000';
+    const txt = Math.ceil(h.respawnT) + 's';
+    ctx.strokeText(txt, h.x, h.y - 32);
+    ctx.fillStyle = '#ff8a80';
+    ctx.fillText(txt, h.x, h.y - 32);
+    return;
+  }
+  const look = computeLook(h.type, h.equip, h.kills);
+  drawHero(ctx, look, h.x, h.y, { t, dir: h.dir, swing: h.swing });
+  const st = heroStats(h);
+  const top = h.y - 52 * (1 + look.tier * 0.1) * look.bulk;
+  // thanh máu tướng (chỉ hiện khi mất máu) + cấp
+  if (h.hp < st.hpMax - 0.5) {
+    ctx.fillStyle = 'rgba(0,0,0,0.7)';
+    ctx.fillRect(h.x - 16, top - 4, 32, 5);
+    ctx.fillStyle = h.hp / st.hpMax > 0.35 ? '#5fd35a' : '#e74c3c';
+    ctx.fillRect(h.x - 15, top - 3, 30 * (h.hp / st.hpMax), 3);
+  }
+  ctx.font = 'bold 10px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(0,0,0,0.65)';
+  ctx.beginPath();
+  ctx.arc(h.x + 18, h.y - 6, 7, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = ATTRS[HEROES[h.type].attr].color;
+  ctx.fillText(h.level, h.x + 18, h.y - 2.5);
+  if (h.stunT > 0) {
+    for (let i = 0; i < 3; i++) {
+      const a = t * 5 + (i * Math.PI * 2) / 3;
+      drawStar(ctx, h.x + Math.cos(a) * 12, top - 10 + Math.sin(a) * 4, 3.5, '#f6e58d');
+    }
+  }
 }
 
 function drawEffects(t) {
@@ -176,6 +233,27 @@ function drawEffects(t) {
         circle(ctx, mx, my, 14, '#d35400');
         circle(ctx, mx - 3, my - 3, 7, '#f9e79f');
         ctx.shadowBlur = 0;
+        break;
+      }
+      case 'line':
+        ctx.strokeStyle = f.color;
+        ctx.lineWidth = f.w || 3;
+        ctx.setLineDash(f.color === '#8d6e63' ? [5, 3] : []);
+        ctx.beginPath();
+        ctx.moveTo(f.x, f.y); ctx.lineTo(f.x2, f.y2);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        break;
+      case 'snow': {
+        ctx.fillStyle = 'rgba(174,233,255,0.18)';
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+        ctx.fill();
+        for (let i = 0; i < 26; i++) {
+          const a = i * 2.4, rr = f.r * ((i * 37) % 100) / 100;
+          const fy = ((t * 60 + i * 23) % 40) - 20;
+          circle(ctx, f.x + Math.cos(a) * rr, f.y + Math.sin(a) * rr * 0.6 + fy, 2, '#ffffff');
+        }
         break;
       }
       case 'flash':

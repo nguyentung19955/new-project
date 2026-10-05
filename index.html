@@ -28,10 +28,16 @@
 
     <!-- Thanh điều khiển dưới -->
     <div id="controls" class="ingame">
+      <button id="btn-shop" class="tool"><span class="tool-ico">🛒</span><span>Cửa hàng</span></button>
       <button id="btn-bag" class="tool"><span class="tool-ico">🎒</span><span>Túi đồ</span><i id="bag-count" class="badge">0</i></button>
-      <button id="btn-chest" class="tool"><span class="tool-ico">🎁</span><span>Rương <b id="chest-cost"></b></span></button>
       <button id="btn-wave" class="go"><span id="wave-label">Gọi đợt 1</span><small id="wave-sub">Quái sẽ tràn tới</small></button>
     </div>
+
+    <div id="bossbar" hidden>
+      <div class="boss-name"><span id="boss-name"></span><span id="boss-hp"></span></div>
+      <div class="boss-track"><i id="boss-fill"></i></div>
+    </div>
+    <div id="banner" hidden><small>Boss xuất hiện</small><b id="banner-text"></b></div>
 
     <div id="coach" hidden><span id="coach-text"></span></div>
     <div id="toasts"></div>
@@ -62,10 +68,11 @@
       <div class="menu-card">
         <h2>Cách chơi</h2>
         <ol class="steps">
-          <li><b>Đặt tướng</b><span>Chạm vào bệ đá cạnh đường để chọn Hiệp Sĩ, Cung Thủ hoặc Pháp Sư.</span></li>
+          <li><b>Đặt tướng</b><span>Chạm vào bệ đá cạnh đường. Có 6 tướng chia 3 hệ: <i class="a-str">Sức mạnh</i>, <i class="a-agi">Nhanh nhẹn</i>, <i class="a-int">Trí tuệ</i>.</span></li>
           <li><b>Gọi đợt quái</b><span>Bấm nút xanh ở góc dưới. Đừng để quái lọt vào cổng thành.</span></li>
-          <li><b>Tướng mạnh dần</b><span>Mỗi con quái tướng hạ được giúp kỹ năng mạnh thêm và mở kỹ năng mới. Đủ 25, 75, 150 mạng tướng sẽ tiến hóa.</span></li>
-          <li><b>Mặc đồ, đổi dáng</b><span>Chạm vào tướng để mặc đồ nhặt được. Đồ đổi ngay hình dạng tướng. Đủ 3 món Bộ Rồng thì mọc cánh.</span></li>
+          <li><b>Kỹ năng Q W E R</b><span>Tướng hạ càng nhiều quái thì kỹ năng càng mạnh và mở thêm kỹ năng mới. Diệt quái còn cho kinh nghiệm để lên cấp.</span></li>
+          <li><b>Mặc đồ, ghép đồ</b><span>Đồ trang phục đổi hình dạng tướng. Mua phụ kiện ở Cửa hàng rồi ghép thành đồ mạnh có hào quang.</span></li>
+          <li><b>Boss Thạch Long</b><span>Mỗi 5 đợt boss xuất hiện, dậm đất làm choáng tướng. Hạ boss nhận Huy Hiệu Phượng Hoàng giúp tướng hồi sinh ngay.</span></li>
         </ol>
         <button id="btn-howto-close" class="go big">Đã hiểu</button>
       </div>

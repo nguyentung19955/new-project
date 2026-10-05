@@ -1,12 +1,13 @@
 # Thủ Thành Anh Hùng (prototype)
 
-Game thủ thành (tower defense) màn hình dọc cho điện thoại. Thay vì xây tháp, bạn đặt **tướng** vào các ô để giữ thành.
+Game thủ thành màn hình dọc cho điện thoại. Lối chơi lấy cảm hứng từ Dota 1; tên, hình và chỉ số là thiết kế riêng.
 
-- **Kỹ năng lớn dần theo số quái tiêu diệt.** Mỗi tướng đếm số mạng (☠) mình hạ được. Số mạng này vừa mở khóa kỹ năng mới, vừa làm các kỹ năng đã có mạnh thêm. Ví dụ Đa Tiễn của Cung Thủ được thêm 1 mũi tên sau mỗi 40 mạng.
-- **Tiến hóa.** Đạt 25 / 75 / 150 mạng thì tướng to hơn, có thêm sao và hào quang.
-- **Trang bị đổi hình dạng tướng.** Tướng có 3 ô đồ: vũ khí, mũ, giáp. Mỗi món đồ vừa tăng chỉ số vừa thay đổi cách vẽ tướng (mũ sắt, mũ sừng, nón phù thủy, vương miện, giáp tấm, áo choàng, áo khoác, kiếm, rìu, cung, trượng phát sáng...).
-- **Bộ đồ.** Mặc đủ 3 món **Bộ Rồng** thì tướng mọc cánh rồng, có hào quang xanh và được +30% sát thương.
-- **Kiếm đồ.** Đồ rơi ra khi diệt quái (boss luôn rơi đồ Hiếm trở lên) hoặc mua bằng rương ngẫu nhiên.
+- **6 tướng, 3 thuộc tính.** Sức mạnh (Hiệp Sĩ, Đồ Tể), Nhanh nhẹn (Cung Thủ, Sát Thủ), Trí tuệ (Pháp Sư Lửa, Pháp Sư Băng). Thuộc tính chính cộng vào sát thương. Sức mạnh tăng máu, Nhanh nhẹn tăng tốc đánh, Trí tuệ tăng sức mạnh kỹ năng và giảm hồi chiêu.
+- **Kỹ năng Q W E R mạnh dần theo số quái tiêu diệt.** Số quái hạ được mở khóa kỹ năng và làm kỹ năng mạnh thêm. Kinh nghiệm chia cho các tướng đứng gần giúp lên cấp (tối đa 25).
+- **Tiến hóa.** Đạt 25 / 75 / 150 quái thì tướng to hơn, có sao và hào quang.
+- **6 ô đồ.** 3 ô trang phục (vũ khí, mũ, giáp) đổi hình dạng tướng. 3 ô phụ kiện mua ở Cửa hàng và ghép thành đồ mạnh có hào quang riêng. Đủ 3 món Bộ Rồng thì tướng mọc cánh.
+- **Boss Thạch Long Gorath** xuất hiện mỗi 5 đợt: dậm đất làm choáng tướng, gọi quái con. Hạ boss nhận **Huy Hiệu Phượng Hoàng** giúp tướng hồi sinh ngay một lần.
+- **Tướng có máu.** Pháp Sư Quỷ bắn tướng, boss dậm đất. Tướng gục sẽ hồi sinh sau vài giây.
 
 ## Chạy thử
 
@@ -18,25 +19,32 @@ npx serve .          # hoặc: python3 -m http.server 8000
 
 Sau đó mở `http://<ip-máy-tính>:8000` trên điện thoại.
 
-**Cách chơi:** chạm vào ô `+` để đặt tướng. Chạm vào tướng để xem kỹ năng, mặc hoặc tháo đồ, hay bán tướng. Nhấn **▶ Đợt** để gọi đợt quái tiếp theo.
+**Cách chơi:** chạm vào bệ đá để đặt tướng. Chạm vào tướng để xem bảng tướng (chân dung, Q W E R, 6 ô đồ). Mua và ghép đồ ở **Cửa hàng**. Bấm **Gọi đợt** để quái tới.
 
 ## Cấu trúc code
 
 | File | Nội dung |
 |---|---|
-| `js/data.js` | **Toàn bộ dữ liệu**: bản đồ, tướng + kỹ năng, trang bị, bộ đồ, quái, đợt quái. Muốn cân bằng hoặc thêm nội dung thì sửa file này. |
+| `js/data.js` | **Toàn bộ dữ liệu**: bản đồ, tướng (thuộc tính + kỹ năng QWER), trang bị, phụ kiện & công thức ghép, bộ đồ, quái, boss, đợt quái. Muốn cân bằng hoặc thêm nội dung thì sửa file này. |
 | `js/render.js` | Vẽ bằng code: `computeLook()` gộp ngoại hình gốc + đồ + bậc tiến hóa + bộ đồ, rồi `drawHero()` vẽ theo kết quả đó. |
-| `js/game.js` | Logic: quái đi theo đường, tướng chọn mục tiêu và tấn công, kỹ năng chủ động (`SKILL_CASTS`), tính chỉ số `heroStats()`, rơi đồ. |
-| `js/ui.js` | HUD, bảng chọn tướng, bảng chi tiết tướng (có khung xem trước ngoại hình), túi đồ. |
+| `js/game.js` | Logic: quái đi theo đường, tướng tấn công, cấp & thuộc tính (`heroStats()`), kỹ năng chủ động (`SKILL_CASTS`), máu/gục/hồi sinh, boss, cửa hàng & ghép đồ, rơi đồ. |
+| `js/ui.js` | Menu, HUD, gợi ý người mới, chọn tướng, bảng tướng kiểu Dota, cửa hàng, túi đồ, thanh máu boss. |
 | `js/main.js` | Co giãn canvas theo màn hình, xử lý chạm, vòng lặp vẽ. |
 
 ### Thêm một kỹ năng mới
-Trong `HEROES.<tướng>.skills`, thêm một mục:
+Mỗi tướng có đúng 4 kỹ năng (Q W E R) trong `HEROES.<tướng>.skills`, dạng:
 ```js
-{ id: 'x', name: 'Tên', unlock: 50,                     // số mạng cần để mở
+{ id: 'x', name: 'Tên', icon: '🔥', unlock: 50,         // số quái cần hạ để mở
   info: (n) => `mô tả, n = số mạng kể từ khi mở`,
   apply: (s, n) => { s.damage += n * 0.3; } }           // kỹ năng nội tại, lớn theo n
 // hoặc kỹ năng chủ động: active: { cooldown: 10, cast: 'tenHam' } và thêm hàm vào SKILL_CASTS
+```
+
+### Thêm món ghép mới
+```js
+storm_blade: { name: 'Kiếm Sấm', slot: 'acc', rarity: 'epic', icon: '⚡',
+               recipe: { parts: ['iron_claws', 'war_gloves'], cost: 180 },
+               stats: { damage: 25, haste: 20 }, look: { aura: '#74b9ff' } },
 ```
 
 ### Thêm một món đồ mới
