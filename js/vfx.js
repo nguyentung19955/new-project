@@ -6,7 +6,7 @@
 //  Ảnh hạt là gradient vẽ sẵn một lần (cache), mỗi khung chỉ drawImage → nhẹ trên điện thoại.
 // ============================================================
 const VFX = (() => {
-  const MAX = 700;
+  let MAX = 700;          // hạ xuống khi máy yếu (đồ hoạ tự động)
   const parts = [];
   const spriteCache = new Map();
 
@@ -64,7 +64,7 @@ const VFX = (() => {
 
   // o: { x, y, vx, vy, life, size, grow, color, kind, add (cộng sáng), grav, drag, spin, stretch }
   function emit(o) {
-    if (parts.length >= MAX) parts.shift();
+    if (parts.length >= MAX) { parts.shift(); if (parts.length >= MAX) return; }
     parts.push({ grav: 0, drag: 0.9, grow: 0, add: true, kind: 'glow', spin: 0, rot: Math.random() * 6.28, ...o, max: o.life });
   }
   const R = (a, b) => a + Math.random() * (b - a);
@@ -220,5 +220,6 @@ const VFX = (() => {
     }
   }
 
-  return { emit, burst, flare, rise, line, update, draw, trail, projGlow, onEffect, sprite, count: () => parts.length };
+  return { emit, burst, flare, rise, line, update, draw, trail, projGlow, onEffect, sprite, count: () => parts.length,
+    setMax: (n) => { MAX = n; if (parts.length > n) parts.splice(0, parts.length - n); } };
 })();

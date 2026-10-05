@@ -780,3 +780,8 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 ### Phiên bản 39
 
 - Chọn một tướng trên sân **không còn** đánh dấu (mũi tên tím / vàng) tướng đối tác hợp thể. Chỉ khi bấm thẻ thần ở dải gợi ý trên cùng thì 2 tướng thành phần mới sáng lên (6 giây).
+
+### Phiên bản 40 · đồ hoạ tự động
+
+- **Đồ hoạ: Tự động / Đẹp / Tiết kiệm** (Cài đặt). Tự động: game đo thời gian khung hình ngay trên máy người chơi; nếu trung bình chậm hơn ~42 khung/giây trong 3 giây thì hạ một bậc (tối đa 2 bậc): độ nét canvas ×2 → ×1,5 → ×1,1, hạt hiệu ứng 700 → 380 → 180, bậc 2 tắt hạt hào quang Tím / Vàng. Đẹp: luôn bậc cao nhất. Tiết kiệm: luôn bậc thấp nhất.
+- Đo trên máy test (không có GPU, vẽ bằng CPU): phần JavaScript của game chỉ chiếm ~8% thời gian mỗi khung, còn lại là trình duyệt tô điểm ảnh — trên điện thoại phần này do GPU làm nên nhanh hơn nhiều; vì vậy giảm độ nét là cách hiệu quả nhất khi máy yếu.

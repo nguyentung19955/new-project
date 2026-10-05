@@ -431,9 +431,11 @@ class UI {
         ${tg('shake', 'Rung màn hình', 'Rung khi boss quẫy đuôi và khi tung chiêu tối thượng')}
         ${tg('skipStory', 'Bỏ qua cốt truyện', 'Không hiện màn Vua Hùng kén rể trước trận')}
         ${tg('vectorHeroes', 'Tướng vẽ nét (thấy từng món đồ)', 'Tắt: dùng ảnh vẽ tay, đồ mặc đổi theo bậc trang phục. Bật: hình vẽ nét, mũ / giáp / vũ khí hiện riêng từng món')}
+        <div class="tg metal"><div><b>Đồ hoạ</b><small>Tự động: game tự giảm độ nét và hiệu ứng khi máy bị giật${typeof GFX !== 'undefined' && GFX.mode() === 'auto' && GFX.lv ? ` (đang giảm ${GFX.lv} bậc)` : ''}</small></div>
+          <div style="margin-left:auto;display:flex;gap:4px">${[['auto', 'Tự động'], ['high', 'Đẹp'], ['low', 'Tiết kiệm']].map(([k, n]) => `<button class="btn ${(st.gfx || 'auto') === k ? 'btn-gold' : 'metal'}" style="height:34px;padding:0 10px;font-size:13px" data-act="set-gfx" data-k="${k}">${n}</button>`).join('')}</div></div>
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 39 · Tiến trình lưu trên trình duyệt của bạn</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 40 · Tiến trình lưu trên trình duyệt của bạn</div>
       </div></div>`;
   }
 
@@ -1384,6 +1386,11 @@ class UI {
         if (this.screen) this.renderScreen(true);
         break;
       }
+      case 'set-gfx':
+        this.save.settings.gfx = d.k; writeSave(this.save);
+        if (typeof GFX !== 'undefined') { GFX.lv = 0; GFX.apply(); }
+        this.showSettings(!!this.game.started && !this.game.over);
+        break;
       case 'auto-up-gear': {
         const r = g.autoUpgradeGear();
         this.toast(r.n ? `Nâng ${r.n} lần đồ đang mặc · −${fmt(r.spent)} vàng (tướng mạnh trước, chừa vàng triệu hồi)` : 'Chưa nâng được: thiếu vàng hoặc chưa mặc đồ', r.n ? '#6AE06A' : '#C8BFA8');

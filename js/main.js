@@ -32,13 +32,30 @@ function viewportSize() {
   return [Math.max(0, w), Math.max(0, h)];
 }
 
+// Đồ hoạ tự động: đo thời gian khung hình trên chính máy người chơi; giật (>24 ms trung bình
+// trong 3 giây) thì hạ một bậc: giảm độ nét canvas, bớt hạt sáng, tắt hạt hào quang. Có thể chọn tay trong Cài đặt.
+const GFX = {
+  lv: 0, ema: 16, acc: 0, n: 0,
+  mode() { return (ui && ui.save && ui.save.settings.gfx) || 'auto'; },
+  level() { const m = this.mode(); return m === 'high' ? 0 : m === 'low' ? 2 : this.lv; },
+  dprCap() { return [2, 1.5, 1.1][this.level()]; },
+  apply() { if (typeof VFX !== 'undefined' && VFX.setMax) VFX.setMax([700, 380, 180][this.level()]); resize(); },
+  sample(ms) {
+    if (this.mode() !== 'auto' || this.lv >= 2 || document.hidden) return;
+    this.ema += (Math.min(ms, 100) - this.ema) * 0.05;
+    this.acc += ms;
+    if (this.acc < 3000) return;
+    this.acc = 0;
+    if (this.ema > 24) { this.lv++; this.ema = 16; this.apply(); }
+  },
+};
 function resize() {
   const [vw, vh] = viewportSize();
   if (!vw || !vh) return requestAnimationFrame(resize);
   $('#rotate').hidden = !(vh > vw && vw < 900);
   const scale = Math.min(vw / CONFIG.W, vh / CONFIG.H);
   const w = Math.floor(CONFIG.W * scale), h = Math.floor(CONFIG.H * scale);
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const dpr = Math.min(window.devicePixelRatio || 1, GFX.dprCap());
   wrap.style.width = w + 'px';
   wrap.style.height = h + 'px';
   // giao diện dựng ở khung thiết kế 932×430 rồi phóng to theo màn hình
@@ -599,8 +616,9 @@ function drawRankAura(h, t, front) {
       ctx.lineTo(x + Math.cos(an) * a.r * 1.25, y + Math.sin(an) * a.r * 0.47);
       ctx.stroke();
     }
-    // hạt sáng bay lên ở HAI BÊN người (sau lưng, không đè mặt)
-    for (let i = 0; i < a.n; i++) {
+    // hạt sáng bay lên ở HAI BÊN người (sau lưng, không đè mặt); máy yếu thì bỏ
+    const nMotes = GFX.level() >= 2 ? 0 : a.n;
+    for (let i = 0; i < nMotes; i++) {
       const k = (t * 0.3 + i / a.n + ph) % 1;
       const side = i % 2 ? 1 : -1;
       const px2 = x + side * a.r * (0.6 + 0.15 * Math.sin(t * 1.5 + i));
@@ -1531,6 +1549,7 @@ function drawEffects(t) {
 let last = performance.now();
 function loop(now) {
   const dt = Math.min(0.05, (now - last) / 1000);
+  if (game.started && game.running) GFX.sample(now - last);
   last = now;
   // game vẫn chạy khi mở các bảng; chỉ dừng khi bấm nút dừng
   if (game.started && game.running) {
