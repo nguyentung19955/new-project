@@ -12,6 +12,9 @@ const VFX = (() => {
 
   // ảnh hạt: 'glow' (tâm trắng → màu → trong suốt), 'soft' (khói / bụi), 'spark' (tia dài), 'leaf', 'petal'
   function sprite(kind, color) {
+    // màu dạng #rgb → #rrggbb để ghép được độ trong suốt (#rrggbbaa)
+    if (/^#[0-9a-f]{3}$/i.test(color)) color = '#' + color[1] + color[1] + color[2] + color[2] + color[3] + color[3];
+    else if (!/^#[0-9a-f]{6}$/i.test(color)) color = '#ffffff';
     const key = kind + color;
     let c = spriteCache.get(key);
     if (c) return c;

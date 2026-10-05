@@ -1078,3 +1078,16 @@ button:disabled { cursor: default; }
 .fz-card.go img { filter: none; opacity: 1; }
 .fz-card.go { box-shadow: 0 0 14px #FFD66B; animation: mocPulse 1.2s infinite; }
 .fz-card.go .pc { color: #FFE08A; }
+
+/* v37: màn chơi gọn — máu boss ở góc dưới trái, nút 👁 bật chỉ số */
+#bossbar { left: 10px; right: auto; top: auto; bottom: 86px; transform: none; width: 230px; }
+#btn-detail { font-size: 17px; }
+#btn-detail.on { border-color: #9dffc4; box-shadow: 0 0 8px #9dffc466; }
+/* v37: nhãn rõ cho tổng vàng đã kiếm (không phải ví tiền dùng trong trận) */
+.pl-res .pr-l { font-size: 10px; font-weight: 700; color: #E8D8B0; opacity: .85; }
+/* v37: thùng hủy tướng (hiện khi kéo tướng) */
+#trash { position: absolute; right: 12px; bottom: 86px; width: 150px; padding: 8px 10px; border-radius: 12px; z-index: 30; pointer-events: none;
+  background: #3A1410e6; border: 2px dashed #E25A3A; color: #FFB8A8; display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; }
+#trash b { font-size: 15px; }
+#trash small { font-size: 11px; color: #F2D27A; display: flex; align-items: center; gap: 3px; }
+#trash.hot { background: #8A2A18f0; border-style: solid; color: #fff; transform: scale(1.08); box-shadow: 0 0 18px #E25A3A; }

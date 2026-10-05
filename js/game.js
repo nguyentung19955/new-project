@@ -1206,7 +1206,7 @@ class Game {
     this.moc = 1;                                   // lượt Mọc Núi còn lại
     // Núi Tản Viên
     this.mountain = { growth: 0, soiled: false, herbs: 0 };
-    this.stats = { kills: 0, goldEarned: 0 };
+    this.stats = { kills: 0, goldEarned: 0, goldRefund: 0 };
     this.events = [];
     // Đồ khởi đầu để thử ngay việc thay đổi hình dạng
     this.inventory = ['mu_long_chim', 'ao_vai', 'riu_dong', 'no_tre', 'gay_mo'].map((id) => makeItem(id));
@@ -1309,7 +1309,7 @@ class Game {
   freeSlots() { return CONFIG.slots.map((_, i) => i).filter((i) => !this.heroes[i] && !this.isFlooded(i)); }
   canSummon() {
     if (this.gold < this.summonCost()) return `Cần ${this.summonCost()} vàng`;
-    if (!this.freeSlots().length) return 'Hết ô trống: ghép hoặc bán bớt tướng';
+    if (!this.freeSlots().length) return 'Hết ô trống: ghép, hoặc kéo tướng vào 🗑 để hủy';
     return true;
   }
   // gọi 1 tướng Thường ngẫu nhiên (★) vào 1 ô trống ngẫu nhiên; trả về ô vừa đặt
@@ -1502,7 +1502,9 @@ class Game {
     const h = this.heroes[slot];
     if (!h) return;
     for (const s of SLOTS) if (h.equip[s]) this.addItem(h.equip[s], true);
-    this.gold += this.sellValue(h);
+    const back = this.sellValue(h);
+    this.gold += back;
+    this.stats.goldRefund += back;
     this.heroes[slot] = null;
   }
 
@@ -1694,7 +1696,7 @@ class Game {
     if (typeof inst === 'string') inst = makeItem(inst, null, { drop: true });
     if (this.inventory.length >= CONFIG.bagSize) {
       const v = scrapValue(inst);
-      this.gold += v;
+      this.addGold(v);
       if (!silent) this.notify(`Túi đầy: ${ITEMS[inst.id].name} tự đổi ra ${v} vàng`, '#E8E0CC');
       return null;
     }
@@ -1746,6 +1748,20 @@ class Game {
       changed++;
     }
     return changed;
+  }
+  // Mặc đồ cả đội: tướng mạnh trước (Vàng → Tím → nhiều sao → lực chiến cao) chọn món hợp nhất;
+  // đồ bị thay ra trả về túi để tướng yếu hơn dùng tiếp.
+  autoEquipAll() {
+    const rank = { legendary: 2, epic: 1 };
+    const list = this.heroes.filter((h) => h && !h.dead)
+      .sort((a, b) => (rank[HEROES[b.type].legend] || 0) - (rank[HEROES[a.type].legend] || 0)
+        || (b.tier || 0) - (a.tier || 0) || heroPower(b) - heroPower(a));
+    let items = 0, heroes = 0;
+    for (const h of list) {
+      const n = this.autoEquip(h);
+      if (n) { items += n; heroes++; }
+    }
+    return { items, heroes };
   }
   // tướng nào trên sân mặc món này lợi nhất
   bestHeroFor(inst) {
@@ -1853,7 +1869,7 @@ class Game {
     if (inst.locked) return 'Món đồ đang khóa';
     const v = scrapValue(inst);
     this.inventory.splice(idx, 1);
-    this.gold += v;
+    this.addGold(v);
     return v;
   }
 
@@ -1869,7 +1885,7 @@ class Game {
       total += scrapValue(inst);
       this.inventory.splice(this.inventory.indexOf(inst), 1);
     }
-    this.gold += total;
+    this.addGold(total);
     return { count: list.length, gold: total };
   }
 

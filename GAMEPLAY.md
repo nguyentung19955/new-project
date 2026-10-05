@@ -20,7 +20,7 @@ Game thủ thành trên điện thoại, chơi **màn hình ngang**, lấy cảm
 
 1. **Triệu hồi:** bấm nút lớn **Triệu hồi** giữa thanh dưới. Mỗi lần gọi ra **1 trong 6 tướng Thường ngẫu nhiên (★)** vào **1 ô trống ngẫu nhiên**.
    - Giá **60 vàng**, mỗi lần sau **+6** (tối đa 220), tính lại từ đầu mỗi ải.
-   - Bản đồ có **17 ô** dọc hai bờ sông, mọi ô như nhau. Hết ô trống thì phải ghép hoặc bán bớt.
+   - Bản đồ có **17 ô** dọc hai bờ sông, mọi ô như nhau. Hết ô trống thì phải ghép, hoặc kéo tướng vào thùng 🗑 (hiện khi kéo) để hủy.
    - Giữ và kéo tướng để đổi chỗ.
 2. **Ghép sao:** kéo 1 tướng thả lên tướng **cùng loại, cùng sao** → lên 1 sao (★ + ★ → ★★, ★★ + ★★ → ★★★). Nút **⇄ Ghép tự động** gộp mọi cặp một lần. Xem mục 4.
 3. **Hợp thể:** 2 tướng ★★★ **đúng công thức**, đã nâng tối đa kỹ năng, kéo vào nhau → **thần Sử thi** (300 vàng). 2 thần Sử thi **Thần tinh ★★★**, kỹ năng tối đa → **thần Huyền thoại** (1200 vàng). Dải gợi ý trên cùng hiện % tiến độ các công thức, đủ 100% thì bấm để hợp thể. Xem mục 2.
@@ -57,13 +57,13 @@ Có **6 tướng Thường** (chỉ có từ Triệu hồi), chia theo 3 thuộc
 - **Tướng cận chiến không đánh được quái bay.**
 - **Nâng cấp bằng vàng:** chọn tướng rồi bấm **Nâng cấp** để trả vàng lên 1 cấp, tối đa cấp 25. Mỗi cấp cho **1 điểm kỹ năng**. Tướng **không** nhận kinh nghiệm từ quái nữa.
   - Giá đề xuất: **20 + 10 × cấp hiện tại** (cấp 1→2: 30 vàng, cấp 9→10: 110 vàng, cấp 24→25: 260 vàng). *Cần chơi thử để cân bằng với thu nhập vàng.*
-  - Bán tướng hoàn 60% số vàng đã chi cho tướng đó (triệu hồi, nâng cấp, hợp thể…).
+  - Hủy tướng (🗑) hoàn 60% số vàng đã chi cho tướng đó (triệu hồi, nâng cấp, hợp thể…).
   - Ghép / hợp thể: tướng còn lại giữ **cấp cao hơn** và điểm kỹ năng của bên đó.
   - Phần thưởng boss "Hội làng mừng thắng" (+2 cấp toàn quân) giữ nguyên.
 - **Luyện thể (khi tướng đã cấp 25)** *(mới · đề xuất)*: nút Nâng cấp đổi thành **Luyện thể**. Mỗi lần trả vàng được **+3 thuộc tính chính và +1 mỗi thuộc tính phụ**, không giới hạn số lần, để vàng cuối trận và chế độ vô tận vẫn có chỗ tiêu.
   - Giá: **200 + 50 × số lần đã luyện** (lần 1: 200, lần 10: 650).
   - Hiển thị "Cấp 25 ✦N" trên thẻ tướng. Không cho thêm điểm kỹ năng.
-  - Bán tướng hoàn 60% số vàng đã luyện thể, như các khoản khác.
+  - Hủy tướng (🗑) hoàn 60% số vàng đã luyện thể, như các khoản khác.
 - **Hành (Ngũ hành):** mỗi tướng thuộc một hành và có **một hiệu ứng ẩn**. Xem mục 14.
 - **Hiệu ứng lên cấp** *(mới · đề xuất)*: lên cấp **không đổi ngoại hình** tướng. Ngoại hình chỉ đổi theo **đồ** (mục 5) và **tiến hoá** (mục 4), để người chơi nhìn là biết tướng mặc gì, tiến hoá mấy sao.
   - Khi bấm Nâng cấp: vòng hoa văn trống đồng màu vàng lóe dưới chân, tướng nảy lên 4px, chữ **"Cấp N"** vàng bay lên rồi mờ dần (0,6 giây). Không dừng đòn đánh.
@@ -754,3 +754,14 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
   - Đồ hành Thủy "Cá gặp nước": đứng kề tướng hành Thủy +10% sát thương. Đồ hành Thổ "Núi che chở": đứng yên 10 giây thì tướng kề giảm 10% sát thương nhận. Áo Vảy Cá: máu dưới 50% hồi 2%/giây. Đủ Bộ Lạc Long: 10% phóng sét lan (không cần ô ngập). Dòng phụ "nước" thành +6% sát thương.
   - Núi Tản Viên giai đoạn 4: Linh Chi mọc 2 cây / đợt (thay Mọc Núi 2 lượt).
 - Cân bằng: bot (triệu hồi + ghép + nâng cấp) ải 3, 4 thắng cả hai; ải 6, 8 thắng 1 / thua 1 — như trước khi bỏ, giữ nguyên máu quái.
+
+### Phiên bản 37 · màn chơi gọn
+
+- **Chế độ Gọn (mặc định):** ẩn tên tướng, huy hiệu cấp, chấm hệ, thanh mana, thanh máu đầy của tướng và quái, số sát thương / vàng bay lên (trừ chí mạng), chấm hệ của quái, thanh máu trên đầu boss. Tướng chỉ hiện thanh máu khi bị đánh hoặc đang chọn.
+- **Nút 👁 trên thanh trên:** bật / tắt xem chỉ số chi tiết như cũ, lưu theo người chơi.
+- **Máu boss** chuyển xuống góc dưới bên trái, trên thanh triệu hồi.
+- **Hủy tướng:** giữ và kéo một tướng thì hiện thùng **🗑 Hủy tướng** góc dưới phải, thả vào để hủy, hoàn 60% vàng đã chi. Nút trong menu tướng đổi tên thành "🗑 Hủy tướng". Hết ô khi triệu hồi sẽ nhắc cách này.
+- **Mặc đồ cả đội:** nút trong menu ≡, menu tướng và Túi đồ. Tướng mạnh chọn trước (Vàng → Tím → nhiều sao → lực chiến cao), mỗi tướng lấy món hợp nhất; đồ bị thay ra trả về túi cho tướng sau dùng.
+- **Hào quang tướng Tím / Vàng rõ hơn:** Tím có cột sáng tím, vòng ấn xoay trên bệ, hạt tím bay lên. Vàng có cột sáng vàng to hơn, tia sáng toả quanh bệ, hạt vàng xoắn quanh người.
+- **Vàng khớp nhau:** vàng đổi đồ ra cũng tính là vàng kiếm được. Màn thắng ghi rõ "Đầu trận 220 + kiếm X + hủy tướng Y − đã tiêu Z = còn lại" (khớp số trên thanh trên). Số vàng ở menu chính ghi rõ là **Tổng vàng đã kiếm** qua mọi trận (thống kê); vàng trong trận luôn bắt đầu từ 220.
+- Sửa lỗi hiệu ứng hạt với màu viết tắt (#fff).

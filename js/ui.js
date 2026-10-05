@@ -160,7 +160,7 @@ const SAVE_KEY = 'nuicao.v1';
 function loadSave() {
   const def = { stars: LEVELS.map(() => 0), unlocked: 1, last: 0, best: {}, storySeen: false,
     lifeGold: 0, lifeKills: 0, lifeHerbs: 0, collected: [],
-    settings: { dmgText: true, shake: true, skipStory: false, vectorHeroes: false } };
+    settings: { dmgText: true, shake: true, skipStory: false, vectorHeroes: false, detail: false } };
   try {
     const s = JSON.parse(localStorage.getItem(SAVE_KEY) || '{}');
     return { ...def, ...s, settings: { ...def.settings, ...(s.settings || {}) } };
@@ -233,6 +233,14 @@ class UI {
         this.say('sontinh', 'Nước dâng bao nhiêu, núi cao bấy nhiêu! Các tướng Văn Lang, giữ lấy Phong Châu!');
       }
     };
+    $('#btn-detail').onclick = () => {
+      const st = this.save.settings;
+      st.detail = !st.detail;
+      writeSave(this.save);
+      $('#btn-detail').classList.toggle('on', st.detail);
+      this.toast(st.detail ? 'Hiện chỉ số chi tiết (tên, cấp, máu, số sát thương)' : 'Chế độ gọn', '#9dffc4');
+    };
+    $('#btn-detail').classList.toggle('on', !!this.save.settings.detail);
     $('#btn-speed').onclick = () => { g.speed = g.speed === 1 ? 2 : g.speed === 2 ? 3 : 1; };
     $('#nextwaves').onclick = () => {
       if (!$('#nextwaves').classList.contains('early')) return;
@@ -279,7 +287,7 @@ class UI {
     const lv = 1 + Math.floor(Math.sqrt(s.lifeKills / 25));
     $('#menu-player').innerHTML = `<span class="av">${svgI(sceneArt('drum'))}</span><span><b>Sơn Tinh</b><small>Cấp ${lv} · ★ ${total}/${LEVELS.length * 3}</small></span>`;
     const short = (n) => (n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace('.', ',') + 'k' : n);
-    $('#menu-res').innerHTML = `<span title="Tổng vàng đã kiếm">${coin(1)} ${short(s.lifeGold)}</span><span title="Linh Chi đã hái">🌿 ${short(s.lifeHerbs)}</span>`;
+    $('#menu-res').innerHTML = `<span title="Tổng vàng đã kiếm qua mọi trận (vàng trong trận luôn bắt đầu từ ${CONFIG.startGold})"><small class="pr-l">Tổng vàng đã kiếm</small>${coin(1)} ${short(s.lifeGold)}</span><span title="Linh Chi đã hái">🌿 ${short(s.lifeHerbs)}</span>`;
     $('#menu-art').innerHTML = svgI(sceneArt('menu'));
     $('#continue-label').textContent = this.game.started && !this.game.over && !this.game.won ? `Chơi tiếp · Ải ${this.game.level + 1}` : 'Xuất Quân';
     this.setInGame(false);
@@ -425,7 +433,7 @@ class UI {
         ${tg('vectorHeroes', 'Tướng vẽ nét (thấy từng món đồ)', 'Tắt: dùng ảnh vẽ tay, đồ mặc đổi theo bậc trang phục. Bật: hình vẽ nét, mũ / giáp / vũ khí hiện riêng từng món')}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 36 · Tiến trình lưu trên trình duyệt của bạn</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 37 · Tiến trình lưu trên trình duyệt của bạn</div>
       </div></div>`;
   }
 
@@ -901,6 +909,37 @@ class UI {
     return this.upVal;
   }
 
+  // thùng hủy tướng: hiện khi đang kéo một tướng; thả vào = hủy, hoàn vàng
+  showTrash(slot) {
+    const h = this.game.heroes[slot];
+    if (!h) return;
+    const el = $('#trash');
+    el.innerHTML = `<b>🗑 Hủy tướng</b><small>thả vào đây · hoàn ${coin(1)} ${this.game.sellValue(h)}</small>`;
+    el.classList.remove('hot');
+    el.hidden = false;
+  }
+  overTrash(cx, cy) {
+    const el = $('#trash');
+    if (el.hidden || cx == null) return false;
+    const r = el.getBoundingClientRect();
+    return cx >= r.left - 8 && cx <= r.right + 8 && cy >= r.top - 8 && cy <= r.bottom + 8;
+  }
+  hoverTrash(cx, cy) { $('#trash').classList.toggle('hot', this.overTrash(cx, cy)); }
+  hideTrash(cx, cy) {
+    const hit = this.overTrash(cx, cy);
+    $('#trash').hidden = true;
+    return hit;
+  }
+  trashHero(slot) {
+    const g = this.game, h = g.heroes[slot];
+    if (!h) return;
+    const v = g.sellValue(h);
+    g.sellHero(slot);
+    if (this.sel === slot) this.clearSel();
+    $('#more').hidden = true;
+    this.toast(`Đã hủy ${HEROES[h.type].name}: +${v} vàng`, '#F2D27A');
+  }
+
   renderMore() {
     const g = this.game;
     const h = g.heroes[this.sel];
@@ -924,9 +963,10 @@ class UI {
         : `<button class="metal ${twin ? 'notice' : ''}" data-act="${twin ? 'merge-any' : 'open-evo'}">Ghép sao<small>${t >= 3 ? '★★★ tối đa' : twin ? `ghép thành ${'★'.repeat(t + 1)}` : `cần 1 ${HEROES[h.type].name} ${'★'.repeat(t)}`}</small></button>`}
       <button class="metal ${this.upCount(h) ? 'notice' : ''}" data-act="open-bag">Trang bị<small>${this.upCount(h) ? `▲ ${this.upCount(h)} món tốt hơn` : `lực chiến ${heroPower(h)}`}</small></button>
       <button class="metal" style="color:#6AE06A" data-act="auto-eq">Tự mặc đồ<small>chọn món tốt nhất</small></button>
+      <button class="metal" style="color:#6AE06A" data-act="auto-eq-all">Mặc cả đội<small>tướng mạnh chọn trước</small></button>
       <button class="metal ${this.moving >= 0 ? 'armed' : ''}" data-act="move">Đổi chỗ<small>hoặc giữ & kéo</small></button>
       ${fuseBtns}
-      <button class="metal danger ${this.sellArmed ? 'armed' : ''}" data-act="sell" style="grid-column:span 2">${this.sellArmed ? `Chạm lần nữa để bán · +${g.sellValue(h)} vàng` : `Bán tướng · hoàn ${g.sellValue(h)} vàng`}</button>`;
+      <button class="metal danger ${this.sellArmed ? 'armed' : ''}" data-act="sell" style="grid-column:span 2">${this.sellArmed ? `Chạm lần nữa để hủy · +${g.sellValue(h)} vàng` : `🗑 Hủy tướng · hoàn ${g.sellValue(h)} vàng`}</button>`;
     const r = $('#deck').getBoundingClientRect(), w = $('#ui').getBoundingClientRect();
     const k = w.width / 932;
     $('#more').style.left = `${Math.min(932 - 226, (r.right - w.left) / k - 220)}px`;
@@ -1039,7 +1079,7 @@ class UI {
     $('#treasury').innerHTML = `<div class="screen" style="z-index:auto">
       <div class="scr-head metal"><button class="xbtn metal" data-act="ro-back" aria-label="Quay lại">${ICON.back}</button><h1 class="ttl">Kho Báu &amp; Sính Lễ</h1>
         <span class="chip ok">Đã sưu tầm ${got} / ${ids.length}</span><div class="sp"></div>
-        <span class="chip dark">${coin(1)} Tổng vàng ${fmt(this.save.lifeGold)} · Quái đã hạ ${fmt(this.save.lifeKills)}</span></div>
+        <span class="chip dark">${coin(1)} Tổng vàng đã kiếm ${fmt(this.save.lifeGold)} · Quái đã hạ ${fmt(this.save.lifeKills)}</span></div>
       <div class="tr-body">${groups.map(([name, f]) => `<div class="tr-sec"><div class="h">${name}</div><div class="tr-row">${ids.filter((id) => f(ITEMS[id])).map((id) => {
         const it = ITEMS[id];
         return `<span class="slot ${rarCls(it.rarity)} ${have.has(id) ? '' : 'no'}" title="${it.name}${have.has(id) ? '' : ' (chưa có)'}">${svgI(itemIcon(id))}</span>`;
@@ -1122,7 +1162,8 @@ class UI {
     const rows = `<div><span>⚑ Đợt</span><b>${g.wave}/${g.levelWaves}</b></div>
       <div><span>♥ Mạng còn</span><b style="color:#FF8A6A">${g.lives}/${CONFIG.startLives}</b></div>
       <div><span>✕ Quái đã hạ</span><b>${fmt(g.stats.kills)}</b></div>
-      <div><span>${coin()} Vàng nhận</span><b style="color:#FFD66B">+${fmt(g.stats.goldEarned)}</b></div>
+      <div><span>${coin()} Vàng kiếm trong trận</span><b style="color:#FFD66B">+${fmt(g.stats.goldEarned)}</b></div>
+      <div><span>${coin()} Đầu trận ${fmt(CONFIG.startGold)} + kiếm ${fmt(g.stats.goldEarned)}${g.stats.goldRefund ? ` + hủy tướng ${fmt(g.stats.goldRefund)}` : ''} − đã tiêu ${fmt(Math.max(0, CONFIG.startGold + g.stats.goldEarned + (g.stats.goldRefund || 0) - g.gold))}</span><b style="color:#FFD66B">= ${fmt(g.gold)}</b></div>
       <div><span>Tướng trên sân</span><b>${g.heroes.filter(Boolean).length}</b></div>`;
     const name = `Ải ${lv + 1} · ${LEVELS[lv].name}`;
     const html = win ? `<div class="screen" style="z-index:auto">
@@ -1255,12 +1296,20 @@ class UI {
         if (!h) break;
         if (!this.sellArmed) { this.sellArmed = true; this.renderMore(); break; }
         $('#more').hidden = true;
-        this.toast(`Đã bán ${HEROES[h.type].name}: +${g.sellValue(h)} vàng`, '#F2D27A');
+        this.toast(`Đã hủy ${HEROES[h.type].name}: +${g.sellValue(h)} vàng`, '#F2D27A');
         g.sellHero(this.sel);
         this.clearSel();
         break;
       case 'levelup': if (h) this.doLevelUp(h); break;
       case 'train': if (h) fail(g.trainHero(h)); break;
+      case 'auto-eq-all': {
+        const r = g.autoEquipAll();
+        this.toast(r.items ? `Mặc ${r.items} món cho ${r.heroes} tướng (tướng mạnh chọn trước)` : 'Cả đội đã mặc đồ tốt nhất trong túi', r.items ? '#6AE06A' : '#C8BFA8');
+        $('#more').hidden = true; $('#drawer').hidden = true;
+        this.sig.deck = null;
+        if (this.screen) this.renderScreen(true);
+        break;
+      }
       case 'auto-eq': {
         if (!h) { this.toast('Chọn một tướng trước', '#E25A3A'); break; }
         const n = g.autoEquip(h);
@@ -1794,7 +1843,7 @@ class UI {
         <div class="note">Đồ trang phục làm <b style="color:#FFD66B">tướng đổi hình dạng</b> và mang 1 <b>hành</b>: cùng hành với tướng +10% chỉ số gốc, khắc mệnh −10%. Đồ rơi có dòng phụ; đồ Sử thi trở lên có hiệu ứng ẩn.</div></div>`;
     }
     return `${this.head('Túi đồ', `<span class="chip dark">${g.inventory.length} / ${CONFIG.bagSize} ô</span>${this.runChip()}`,
-      `${h ? '<button class="btn btn-gold" data-act="auto-eq">▲ Tự mặc đồ tốt nhất</button>' : ''}<button class="btn metal" data-act="sort">Sắp xếp</button>`)}<div class="scr-body">${left}${mid}${det}</div>`;
+      `${h ? '<button class="btn btn-gold" data-act="auto-eq">▲ Tự mặc đồ tốt nhất</button>' : ''}<button class="btn metal" style="color:#6AE06A" data-act="auto-eq-all">▲ Mặc cả đội</button><button class="btn metal" data-act="sort">Sắp xếp</button>`)}<div class="scr-body">${left}${mid}${det}</div>`;
   }
 
   // ---------- Đổi đồ ra vàng

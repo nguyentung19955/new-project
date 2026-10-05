@@ -1729,7 +1729,9 @@ function drawEnemy(ctx, e, t, o = {}) {
   ctx.restore();
 
   if (o.icon) return;
-  // thanh máu (+ khiên)
+  // thanh máu (+ khiên). Chế độ Gọn: boss xem ở góc dưới trái; quái thường chỉ hiện khi đã bị đánh
+  const detail = typeof showDetail === 'function' ? showDetail() : true;
+  if (!detail && (e.def.boss || e.hp >= e.maxHp * 0.999)) return;
   const w = Math.max(24, Math.min(60, box.w * 0.6));
   const by = top - 3;
   ctx.fillStyle = 'rgba(10,10,10,0.85)';
@@ -1738,7 +1740,7 @@ function drawEnemy(ctx, e, t, o = {}) {
   ctx.fillStyle = r > 0.5 ? '#3EBE3E' : r > 0.25 ? '#E0B030' : '#D84A2A';
   ctx.fillRect(e.x - w / 2, by, w * Math.max(0, r), 3);
   // chấm hành bên trái thanh máu (quái tinh anh có thể có hành phụ)
-  [e.el, e.el2].filter(Boolean).forEach((el, k) => {
+  if (detail) [e.el, e.el2].filter(Boolean).forEach((el, k) => {
     circle(ctx, e.x - w / 2 - 5 - k * 7, by + 1.5, 3.4, '#0D0B08');
     circle(ctx, e.x - w / 2 - 5 - k * 7, by + 1.5, 2.6, ELEMENTS[el].color);
   });

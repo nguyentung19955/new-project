@@ -75,7 +75,8 @@ canvas.addEventListener('pointerdown', (ev) => {
 canvas.addEventListener('pointermove', (ev) => {
   if (!drag || ev.pointerId !== drag.id) return;
   [drag.x, drag.y] = toLogical(ev);
-  if (!drag.moved && Math.hypot(drag.x - drag.sx, drag.y - drag.sy) > 12) drag.moved = true;
+  if (!drag.moved && Math.hypot(drag.x - drag.sx, drag.y - drag.sy) > 12) { drag.moved = true; ui.showTrash(drag.from); }
+  if (drag.moved) ui.hoverTrash(ev.clientX, ev.clientY);
 });
 
 canvas.addEventListener('pointerup', (ev) => {
@@ -83,11 +84,13 @@ canvas.addEventListener('pointerup', (ev) => {
   const d = drag;
   drag = null;
   if (!d.moved) return ui.tapMap(d.sx, d.sy);
+  // thả vào thùng 🗑: hủy tướng, hoàn vàng
+  if (ui.hideTrash(ev.clientX, ev.clientY)) return ui.trashHero(d.from);
   const to = ui.slotAt(d.x, d.y);
   // thả lên tướng cùng loại cùng sao: ghép; đúng công thức: hợp thể; còn lại: đổi chỗ
   if (to >= 0 && to !== d.from) ui.dropOn(d.from, to);
 });
-canvas.addEventListener('pointercancel', () => { drag = null; });
+canvas.addEventListener('pointercancel', () => { drag = null; ui.hideTrash(); });
 
 const px = () => view.scale * view.dpr;
 
@@ -446,6 +449,7 @@ function drawHeroOnMap(h, t) {
     ctx.ellipse(h.x, h.y - 30, 26, 38, 0, 0, Math.PI * 2);
     ctx.fill(); ctx.stroke();
   }
+  drawRankAura(h, t, false);
   drawHeroStates(h, st, t, false);
   const r = drawHeroSprite(ctx, h, h.x, h.y, {
     t, dir: h.dir, swing: h.swing, castT: h.castT, castUlt: h.castUlt, hurt: h.hurtT, px: px(),
@@ -453,6 +457,7 @@ function drawHeroOnMap(h, t) {
     bounce: h.bounceT, evo: h.evoT, wingT: h.wingT, smooth: true, castColor: h.castColor, vector: !!(ui.save && ui.save.settings.vectorHeroes),
   });
   if (h.dead) return;
+  drawRankAura(h, t, true);
   drawHeroStates(h, st, t, true);
   const top = r.top + 6;
   if (h.invulnT > 0) {
@@ -460,13 +465,15 @@ function drawHeroOnMap(h, t) {
     ctx.lineWidth = 2;
     ctx.beginPath(); ctx.ellipse(h.x, h.y - 30, 24, 40, 0, 0, Math.PI * 2); ctx.stroke();
   }
-  // thanh máu tướng + sao tiến hoá
-  ctx.fillStyle = 'rgba(10,10,10,0.85)';
-  ctx.fillRect(h.x - 17, top - 5, 34, 6);
-  ctx.fillStyle = h.hp / st.hpMax > 0.35 ? '#3EBE3E' : '#D84A2A';
-  ctx.fillRect(h.x - 16, top - 4, 32 * Math.max(0, h.hp / st.hpMax), 2.5);
-  ctx.fillStyle = '#4A90E2';
-  ctx.fillRect(h.x - 16, top - 1.2, 32 * Math.max(0, h.mana / st.maxMana), 1.6);
+  // thanh máu tướng + sao tiến hoá. Chế độ Gọn: chỉ hiện máu khi bị thương, không thanh năng lượng
+  const detail = showDetail();
+  if (detail || h.hp < st.hpMax * 0.99 || ui.sel === h.slot) {
+    ctx.fillStyle = 'rgba(10,10,10,0.85)';
+    ctx.fillRect(h.x - 17, top - 5, 34, detail ? 6 : 4);
+    ctx.fillStyle = h.hp / st.hpMax > 0.35 ? '#3EBE3E' : '#D84A2A';
+    ctx.fillRect(h.x - 16, top - 4, 32 * Math.max(0, h.hp / st.hpMax), 2.5);
+    if (detail) { ctx.fillStyle = '#4A90E2'; ctx.fillRect(h.x - 16, top - 1.2, 32 * Math.max(0, h.mana / st.maxMana), 1.6); }
+  }
   // sao mới hiện khi tướng hạ xuống (60% thời gian tiến hoá)
   const stars = (h.tier || 0) - (h.evoT > 0.48 ? 1 : 0);
   // tướng thần: sao Thần tinh màu cam đỏ, lớn hơn
@@ -476,6 +483,7 @@ function drawHeroOnMap(h, t) {
     if (starImg) ctx.drawImage(starImg, sx - 6, top - 17, 12, 12);
     else drawStar(ctx, sx, top - 11, h.from ? 4.8 : 4, h.from ? '#FF7A3A' : '#FFD66B');
   }
+  if (!detail) { drawHeroStun(h, top, t); return; }
   if (stars >= 3 || h.from) {
     // ★★★: tên tướng trên thanh máu chuyển chữ vàng
     ctx.font = '800 9px "Alegreya Sans", sans-serif';
@@ -518,6 +526,81 @@ function drawHeroOnMap(h, t) {
 // true: vẽ đè lên người (sau sprite)
 const ORB_ITEMS = (h) => ACC_SLOTS.map((s) => h.equip[s]).filter((i) => i && ITEMS[i.id].look && ITEMS[i.id].look.aura
   && (ITEMS[i.id].fx || ITEMS[i.id].stunChance || ITEMS[i.id].hasteAura || SECRETS['r.' + i.id] || ITEMS[i.id].bossOnly));
+// chế độ hiển thị: Gọn (mặc định) / Chi tiết (nút 👁 trên thanh trên)
+function showDetail() { return !!(ui && ui.save && ui.save.settings.detail); }
+// Hào quang tướng thần: Tím (sử thi) vòng ấn tím + hạt bay lên; Vàng (huyền thoại) to hơn,
+// tia sáng xoay dưới chân, cột sáng, hạt vàng bay vòng quanh. Vẽ cộng màu, không cần ảnh.
+const AURA = {
+  epic: { c: '168,108,224', hi: '225,190,255', r: 40, n: 7, ray: 0, col: 0.35 },
+  legendary: { c: '255,170,40', hi: '255,240,170', r: 46, n: 11, ray: 14, col: 0.55 },
+};
+function drawRankAura(h, t, front) {
+  const a = AURA[HEROES[h.type].legend];
+  if (!a) return;
+  const x = h.x, y = h.y, ph = (h.slot || 0) * 1.7;
+  const pulse = 0.75 + 0.25 * Math.sin(t * 3 + ph);
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  if (!front) {
+    // cột sáng sau lưng
+    const cg = ctx.createLinearGradient(0, y, 0, y - 110);
+    cg.addColorStop(0, `rgba(${a.c},${a.col * pulse})`);
+    cg.addColorStop(1, `rgba(${a.c},0)`);
+    ctx.fillStyle = cg;
+    ctx.beginPath();
+    ctx.moveTo(x - a.r * 0.75, y); ctx.lineTo(x - a.r * 0.35, y - 110); ctx.lineTo(x + a.r * 0.35, y - 110); ctx.lineTo(x + a.r * 0.75, y);
+    ctx.fill();
+    // quầng sau người
+    const bg = ctx.createRadialGradient(x, y - 32, 4, x, y - 32, 44);
+    bg.addColorStop(0, `rgba(${a.c},${0.45 * pulse})`);
+    bg.addColorStop(1, `rgba(${a.c},0)`);
+    ctx.fillStyle = bg;
+    ctx.fillRect(x - 44, y - 76, 88, 88);
+    // tia sáng toả ra ngoài bệ (chỉ Vàng)
+    for (let i = 0; i < a.ray; i++) {
+      const an = t * 0.8 + (i * Math.PI * 2) / a.ray;
+      const l = a.r * (1.35 + 0.25 * Math.sin(t * 4 + i));
+      ctx.strokeStyle = `rgba(${a.hi},${0.5 * pulse})`;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(x + Math.cos(an) * a.r * 0.8, y + Math.sin(an) * a.r * 0.3);
+      ctx.lineTo(x + Math.cos(an) * l, y + Math.sin(an) * l * 0.38);
+      ctx.stroke();
+    }
+  } else {
+    // vòng ấn trên mặt bệ: một vòng liền + một vòng nét đứt xoay
+    ctx.lineWidth = 2.5;
+    ctx.strokeStyle = `rgba(${a.c},${0.9 * pulse})`;
+    ctx.beginPath(); ctx.ellipse(x, y, a.r * 0.8, a.r * 0.29, 0, 0, Math.PI * 2); ctx.stroke();
+    ctx.strokeStyle = `rgba(${a.hi},${0.95 * pulse})`;
+    ctx.lineWidth = 2;
+    ctx.setLineDash([8, 6]);
+    ctx.lineDashOffset = -t * 20;
+    ctx.beginPath(); ctx.ellipse(x, y, a.r * 0.62, a.r * 0.22, 0, 0, Math.PI * 2); ctx.stroke();
+    ctx.setLineDash([]);
+    // hạt sáng bay lên quanh người (Vàng: xoắn vòng quanh)
+    for (let i = 0; i < a.n; i++) {
+      const k = (t * 0.45 + i / a.n + ph) % 1;
+      const an = i * 2.4 + (a.ray ? t * 2.2 : 0);
+      const px2 = x + Math.cos(an) * a.r * (a.ray ? 0.6 : 0.4 + 0.2 * Math.sin(i * 7));
+      const py2 = y - 4 - k * 85 + (a.ray ? Math.sin(an) * 6 : 0);
+      const al = Math.sin(k * Math.PI);
+      ctx.fillStyle = `rgba(${a.c},${0.45 * al})`;
+      ctx.beginPath(); ctx.arc(px2, py2, a.ray ? 6 : 5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = `rgba(${a.hi},${al})`;
+      ctx.beginPath(); ctx.arc(px2, py2, a.ray ? 2.6 : 2.2, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+  ctx.restore();
+}
+
+function drawHeroStun(h, top, t) {
+  if (!(h.stunT > 0)) return;
+  for (let i = 0; i < 3; i++) {
+    const a = t * 5 + (i * Math.PI * 2) / 3;
+    drawStar(ctx, h.x + Math.cos(a) * 12, top - 16 + Math.sin(a) * 4, 3.5, '#F2D27A');
+  }
+}
 function drawHeroStates(h, st, t, over) {
   const x = h.x, y = h.y;
   ctx.save();
@@ -708,6 +791,8 @@ function drawEffects(t) {
     }
     switch (f.type) {
       case 'text': {
+        // chế độ Gọn: bỏ số sát thương / vàng / chữ phụ, chỉ giữ đòn chí mạng
+        if (!showDetail() && !/^\d[\d.,]*!$/.test(String(f.str))) break;
         const pop = p < 0.15 ? 0.7 + p * 2 : 1;
         ctx.font = `800 ${Math.round((f.size || 15) * pop)}px "Alegreya Sans", sans-serif`;
         ctx.textAlign = 'center';
