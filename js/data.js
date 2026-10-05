@@ -431,6 +431,23 @@ Object.assign(COSTS, {
   skillGold: (i, lv) => (i === 3 ? 300 : 120) * lv,     // nâng từ cấp lv lên lv+1
   statPt: 2,                                          // 1 điểm kỹ năng thừa = +2 thuộc tính chính
 });
+// CỬA HÀNG (v24): 6 món đồ trang phục / phụ kiện ngẫu nhiên, làm mới miễn phí mỗi đợt,
+// làm mới tay tốn vàng (tăng dần trong đợt). Độ hiếm tốt dần theo đợt.
+const SHOP = {
+  slots: 6,
+  reroll: (n) => 20 + 10 * n,
+  price: { common: 70, rare: 170, epic: 400, legendary: 900 },
+  // trọng số độ hiếm theo đợt [Thường, Hiếm, Sử thi, Huyền thoại]
+  weights: (w) => [Math.max(10, 60 - w * 2.5), 30 + Math.min(10, w), Math.min(35, 4 + w * 1.4), Math.min(18, Math.max(0, w - 8) * 0.9)],
+  accChance: 0.3,       // tỉ lệ một ô là phụ kiện nguyên liệu (giá gốc)
+};
+// HŨ BÁU: 3 loại, hũ to chắc chắn ra đồ xịn hơn. Mở đủ 5 hũ bất kỳ thì hũ kế chắc chắn Sử thi trở lên.
+const JARS = [
+  { id: 'small', name: 'Hũ báu', cost: 90, min: 'common', desc: 'Đồ ngẫu nhiên, mọi độ hiếm' },
+  { id: 'big', name: 'Hũ đồng', cost: 240, min: 'rare', desc: 'Chắc chắn Hiếm trở lên' },
+  { id: 'king', name: 'Hũ Vua Hùng', cost: 600, min: 'epic', set: 0.35, desc: 'Sử thi trở lên, 35% ra đồ bộ' },
+];
+const JAR_PITY = 5;
 const unlockCost = (h, i) => (h.from ? COSTS.unlockAsc[i] : COSTS.unlock[i]);
 
 // TIẾN HOÁ: chỉ số mỗi bậc sao (cộng dồn sẵn, không cộng từng bậc).

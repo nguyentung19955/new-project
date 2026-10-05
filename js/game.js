@@ -989,6 +989,8 @@ class Game {
     this.events = [];
     // Đồ khởi đầu để thử ngay việc thay đổi hình dạng
     this.inventory = ['mu_long_chim', 'ao_vai', 'riu_dong', 'no_tre', 'gay_mo'].map((id) => makeItem(id));
+    this.jarCount = 0;
+    this.rollShop();
   }
 
   get levelWaves() { return this.lv.waves; }
@@ -1460,11 +1462,77 @@ class Game {
     this.inventory.sort((a, b) => r(a) - r(b) || s(a) - s(b) || b.plus - a.plus || a.id.localeCompare(b.id));
   }
 
-  buyChest() {
-    if (this.gold < CONFIG.chestCost) return null;
+  // Hũ báu: kind = 'small' | 'big' | 'king'. Mở đủ JAR_PITY hũ thì hũ kế chắc chắn Sử thi+
+  buyChest(kind = 'small') {
+    const j = JARS.find((x) => x.id === kind) || JARS[0];
+    if (this.gold < j.cost) return null;
     if (this.inventory.length >= CONFIG.bagSize) return null;
-    this.gold -= CONFIG.chestCost;
-    return this.addItem(makeItem(rollItem(), null, { drop: true }));
+    this.gold -= j.cost;
+    this.jarCount = (this.jarCount || 0) + 1;
+    let min = j.min;
+    if (this.jarCount >= JAR_PITY && RARITY_ORDER.indexOf(min) < 2) { min = 'epic'; }
+    const id = j.set && Math.random() < j.set ? rollSetItem() : rollItem(min);
+    const inst = makeItem(id, null, { drop: true });
+    if (RARITY_ORDER.indexOf(inst.rarity) >= 2) this.jarCount = 0;
+    return this.addItem(inst);
+  }
+
+  // ---------- Cửa hàng: 6 món, làm mới mỗi đợt
+  rollShop() {
+    const w = SHOP.weights(this.wave);
+    const total = w.reduce((a, b) => a + b, 0);
+    const out = [];
+    for (let i = 0; i < SHOP.slots; i++) {
+      if (Math.random() < SHOP.accChance) {
+        const accs = Object.keys(ITEMS).filter((id) => ITEMS[id].price);
+        const id = pick(accs);
+        out.push({ inst: makeItem(id), price: ITEMS[id].price });
+        continue;
+      }
+      let r = Math.random() * total, k = 0;
+      while (k < 3 && r > w[k]) { r -= w[k]; k++; }
+      const rar = RARITY_ORDER[k];
+      const pool = Object.keys(ITEMS).filter((id) => GEAR_SLOTS.includes(ITEMS[id].slot) && !ITEMS[id].set && !ITEMS[id].bossOnly
+        && RARITY_ORDER.indexOf(ITEMS[id].rarity) <= k);
+      const inst = makeItem(pick(pool), rar, { drop: true });
+      out.push({ inst, price: SHOP.price[rar] });
+    }
+    this.shop = out;
+    this.shopRerolls = 0;
+  }
+  rerollShop() {
+    const c = SHOP.reroll(this.shopRerolls || 0);
+    if (this.gold < c) return `Cần ${c} vàng`;
+    this.gold -= c;
+    const n = (this.shopRerolls || 0) + 1;
+    this.rollShop();
+    this.shopRerolls = n;
+    return true;
+  }
+  buyShop(i) {
+    const o = this.shop && this.shop[i];
+    if (!o || o.sold) return 'Món này đã bán';
+    if (this.gold < o.price) return `Cần ${o.price} vàng`;
+    if (this.inventory.length >= CONFIG.bagSize) return 'Túi đầy';
+    this.gold -= o.price;
+    o.sold = true;
+    return this.addItem(o.inst) || 'Túi đầy';
+  }
+
+  // Ghép nhanh: mua phụ kiện còn thiếu rồi đúc luôn
+  quickCraftCost(id) {
+    const miss = this.missingParts(id);
+    if (miss.some((p) => !ITEMS[p].price)) return null;
+    return miss.reduce((a, p) => a + ITEMS[p].price, 0) + ITEMS[id].recipe.cost;
+  }
+  quickCraft(id) {
+    const c = this.quickCraftCost(id);
+    if (c === null) return 'Thiếu nguyên liệu không mua được';
+    if (this.gold < c) return `Cần ${c} vàng`;
+    const miss = this.missingParts(id);
+    if (this.inventory.length + miss.length > CONFIG.bagSize) return 'Túi đầy';
+    for (const p of miss) this.buy(p);
+    return this.craft(id) || 'Không ghép được';
   }
 
   buy(id) {
@@ -1746,6 +1814,7 @@ class Game {
     }
     if (extra) this.addGold(extra);
     this.moc = this.mocMax();
+    this.rollShop();      // cửa hàng nhập hàng mới
     this.notify(`Hoàn thành đợt ${this.wave}! +${bonus + extra} vàng · Núi Tản Viên +${mGold}`, '#F2D27A');
     if (bossAt(this.wave, this.level)) this.riseWater();
     if (this.wave >= this.levelWaves && !this.endless && !this.won) {

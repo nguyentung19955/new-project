@@ -968,3 +968,36 @@ button:disabled { cursor: default; }
 .asc-pw { display: block; font-style: normal; font-size: 10.5px; color: var(--text-2); }
 .asc-pw b { color: #6AE06A; }
 .stat-btn { height: 34px; font-size: 13px; white-space: nowrap; }
+
+/* v24: cửa hàng hàng mới, hũ báu 3 loại */
+.sh-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; flex: 1; align-content: start; }
+.sh-card { height: 92px; border-radius: 5px; padding: 5px; display: grid; grid-template-columns: 40px 1fr; grid-template-rows: auto auto auto 1fr; column-gap: 6px; text-align: left; align-items: start; position: relative; }
+.sh-card .slot { grid-row: 1 / 4; width: 40px; height: 40px; }
+.sh-card .slot .svgi { width: 30px; height: 30px; }
+.sh-card .nm { font-size: 12px; font-weight: 800; color: var(--text); line-height: 1.15; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.sh-card small { font-size: 10px; font-weight: 700; }
+.sh-card .gn { font-size: 10px; font-weight: 800; color: #6AE06A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sh-card .pr { position: absolute; right: 6px; bottom: 5px; display: flex; align-items: center; gap: 3px; font-size: 13px; font-weight: 800; color: var(--gold-hi); }
+.sh-card.on { border: 1px solid var(--gold); background: linear-gradient(180deg, #4E3A18, #2A2116); box-shadow: 0 0 10px #F2D27A44; }
+.sh-card.sold { opacity: 0.45; }
+.sh-det { gap: 5px; }
+.sh-det .stat-list { font-size: 12px; }
+.bestf { font-size: 12px; font-weight: 700; color: #6AE06A; }
+.bestf.no { color: var(--text-2); font-weight: 500; }
+.jars { display: flex; gap: 8px; }
+.jar { flex: 1; height: 74px; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.jar b { font-family: var(--title); font-size: 15px; color: #F2D27A; }
+.jar small { font-size: 10px; color: var(--text-2); text-align: center; line-height: 1.15; }
+.jar span { display: flex; align-items: center; gap: 3px; font-weight: 800; color: var(--gold-hi); }
+.jar.rh { border-color: var(--r-rare) !important; } .jar.rl { border-color: var(--r-legend) !important; box-shadow: inset 0 0 14px #F0A03033; }
+.jar-stage .svgi { width: 220px; height: 170px; }
+.jar-stage { min-height: 0; }
+.ph small { margin-left: 8px; }
+.jar { height: 64px; }
+.craft-stage { padding: 6px; min-height: 0; gap: 12px; }
+.craft-part .slot { width: 48px; height: 48px; }
+.craft-part .slot .svgi { width: 34px; height: 34px; }
+.craft-out { width: 74px; height: 74px; }
+.craft-out .svgi { width: 52px; height: 52px; }
+.craft-part { font-size: 12px; }
+.panel .btn svg { width: 18px; height: 18px; flex: none; }

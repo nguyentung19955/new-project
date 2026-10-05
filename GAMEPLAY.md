@@ -627,3 +627,10 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 
 - **Sao tiến hoá mạnh hơn** (cộng dồn sẵn theo bậc): ★ +15% sát thương +10% máu · ★★ +30% sát thương +20% máu +10% tốc đánh · ★★★ +50% sát thương +35% máu +20% tốc đánh +10% kỹ năng.
 - **Thần tinh (sau Thăng thần):** tướng thần giữ chỉ số ★★★ của tướng gốc, rồi tiến hoá lại 3 bậc Thần tinh (sao cam đỏ, vòng lửa thần, mỗi bậc to thêm 4%): 300 / 600 / 1000 vàng, cần cấp 16 / 20 / 24. ★ +20% sát thương +15% máu +10% kỹ năng · ★★ +45% / +30% máu / +10% tốc đánh / +20% kỹ năng · ★★★ +80% / +50% máu / +20% tốc đánh / +35% kỹ năng.
+
+### Phiên bản 24 · Cửa hàng, ghép đồ, hũ báu
+
+- **Cửa hàng có hàng thật:** 6 món đồ trang phục / phụ kiện ngẫu nhiên, nhập hàng mới sau mỗi đợt; độ hiếm tốt dần theo đợt (đợt 12 đã có Sử thi, sau đợt 8 bắt đầu có Huyền thoại). Giá Thường 70 · Hiếm 170 · Sử thi 400 · Huyền thoại 900 (phụ kiện theo giá gốc). Đồ mua có hành và dòng phụ như đồ rơi. Mỗi ô ghi món đó làm tướng nào mạnh thêm bao nhiêu lực chiến; nút **Mua & đeo**. **Làm mới hàng** 20 vàng, mỗi lần sau trong cùng đợt +10. Nguyên liệu ghép vẫn bán đủ ở mục "Nguyên liệu".
+- **Ghép nhanh:** nút **Mua thiếu & ghép** mua luôn nguyên liệu còn thiếu rồi đúc; công thức hiện tướng hợp nhất.
+- **Đồ ghép khác gì đồ nâng cấp:** đeo ở 3 ô phụ kiện (không tranh chỗ vũ khí / mũ / giáp), có hiệu ứng riêng, hiệu ứng ẩn và hào quang; vẫn cường hóa +5 và thăng phẩm như đồ trang phục. Hai loại cộng dồn, không thay thế nhau.
+- **3 loại hũ:** Hũ báu 90 (mọi độ hiếm) · Hũ đồng 240 (Hiếm trở lên) · Hũ Vua Hùng 600 (Sử thi trở lên, 35% ra đồ bộ). Mở 5 hũ chưa ra Sử thi thì hũ kế chắc chắn Sử thi trở lên.

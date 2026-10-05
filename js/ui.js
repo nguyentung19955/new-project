@@ -1166,6 +1166,26 @@ class UI {
         this.renderScreen(true);
         break;
       case 'shop-sel': sc.shop = d.id; this.renderScreen(true); break;
+      case 'sh-tab': sc.shopTab = d.k; this.renderScreen(true); break;
+      case 'sh-sel': sc.si = +d.i; this.renderScreen(true); break;
+      case 'sh-reroll': if (fail(g.rerollShop())) { sc.si = 0; this.renderScreen(true); } break;
+      case 'sh-buy':
+      case 'sh-buy-eq': {
+        const o = g.shop[+d.i];
+        const r = g.buyShop(+d.i);
+        if (r && r.uid) {
+          this.toast(`Đã mua ${ITEMS[r.id].name}`, RARITY[r.rarity].color);
+          if (d.act === 'sh-buy-eq' && h && fail(g.equip(h, r.uid, slotFor(h, r)))) this.toast(`${HEROES[h.type].name} đã mặc ${ITEMS[o.inst.id].name}`, '#6AE06A');
+        } else fail(r);
+        this.renderScreen(true);
+        break;
+      }
+      case 'quick-craft': {
+        const r = g.quickCraft(d.id);
+        if (r && r.uid) { this.toast(`Đã đúc ${ITEMS[d.id].name}!`, RARITY[ITEMS[d.id].rarity].color); sc.opened = r.uid; } else fail(r);
+        this.renderScreen(true);
+        break;
+      }
       case 'buy': {
         const inst = g.buy(d.id);
         if (inst) { g.flags.shopOpened = true; this.toast(`Mua ${ITEMS[d.id].name}`, '#F2D27A'); }
@@ -1182,8 +1202,8 @@ class UI {
         break;
       }
       case 'chest': {
-        const inst = g.buyChest();
-        if (!inst) { this.toast(g.inventory.length >= CONFIG.bagSize ? 'Túi đầy' : `Cần ${CONFIG.chestCost} vàng`, '#E25A3A'); break; }
+        const inst = g.buyChest(d.k);
+        if (!inst) { this.toast(g.inventory.length >= CONFIG.bagSize ? 'Túi đầy' : 'Chưa đủ vàng', '#E25A3A'); break; }
         sc.opened = inst.uid;
         sc.shake = true;
         this.renderScreen(true);
@@ -1404,7 +1424,7 @@ class UI {
     const tabs = `<div class="tabs">
       <button class="tab ${sc.tab === 'recipe' ? 'on' : 'metal'}" data-act="tab" data-tab="recipe">📜 Công thức</button>
       <button class="tab ${sc.tab === 'shop' ? 'on' : 'metal'}" data-act="tab" data-tab="shop">🪙 Cửa hàng</button>
-      <button class="tab ${sc.tab === 'chest' ? 'on' : 'metal'}" data-act="tab" data-tab="chest">🏺 Hũ báu · ${CONFIG.chestCost}</button><span class="zig"></span></div>`;
+      <button class="tab ${sc.tab === 'chest' ? 'on' : 'metal'}" data-act="tab" data-tab="chest">🏺 Hũ báu</button><span class="zig"></span></div>`;
     let body = '';
     if (sc.tab === 'recipe') {
       const recipes = Object.keys(ITEMS).filter((id) => ITEMS[id].recipe);
@@ -1434,11 +1454,51 @@ class UI {
             <div class="craft-part"><span class="craft-out">${svgI(itemIcon(cur))}</span><span class="ttl" style="font-size:15px">${it.name}</span></div></div>
           <div class="aura-line inset">${it.hasteAura ? `<b>Hào quang:</b> ${esc(it.desc.replace('Hào quang: ', ''))}` : `<b>Chỉ số:</b> ${statLine(it.stats)}${it.desc ? ` · <b>Hiệu ứng:</b> ${esc(it.desc)}` : ''}`}
             ${it.counter ? `<br><b style="color:#FF8A6A">Khắc chế:</b> ${ENEMIES[it.counter].name}` : ''}</div>${secretLine(g, 'r.' + cur)}
+          <div class="note" style="font-size:11px;line-height:1.25">Đeo ở <b>ô phụ kiện</b> (không chiếm chỗ vũ khí, mũ, giáp) · hiệu ứng riêng + ẩn + hào quang · cường hóa, thăng phẩm được</div>
+          ${this.bestFor({ uid: -1, id: cur, rarity: it.rarity, plus: 0 })}
           <div style="display:flex;gap:10px;margin-top:auto">
-            ${firstMiss && ITEMS[firstMiss].price ? `<button class="btn btn-gold" style="flex:1;height:46px;font-size:15px" data-act="buy" data-id="${firstMiss}" ${g.gold < ITEMS[firstMiss].price ? 'disabled' : ''}>Mua ${ITEMS[firstMiss].name} · ${coin()} ${ITEMS[firstMiss].price} vàng</button>` : ''}
+            ${miss.length && g.quickCraftCost(cur) !== null ? `<button class="btn btn-gold" style="flex:1;height:46px;font-size:15px" data-act="quick-craft" data-id="${cur}" ${g.gold < g.quickCraftCost(cur) ? 'disabled' : ''}>Mua thiếu & ghép · ${coin()} ${g.quickCraftCost(cur)}</button>` : ''}
             <button class="btn ${miss.length ? 'btn-ghost' : 'btn-gold'}" style="flex:1;height:46px;font-size:15px" data-act="craft" data-id="${cur}" ${miss.length || g.gold < it.recipe.cost ? 'disabled' : ''}>
               ${miss.length ? `${ICON.lock} Ghép (thiếu ${miss.length} món)` : `Ghép · ${coin()} ${it.recipe.cost} vàng`}</button></div>
         </div></div>`;
+    } else if (sc.tab === 'shop' && sc.shopTab !== 'parts') {
+      // hàng mới mỗi đợt
+      const h = g.heroes[this.sel];
+      const shop = g.shop || [];
+      const si = Math.min(shop.length - 1, sc.si ?? 0);
+      const cur = shop[si];
+      const cards = shop.map((o, i) => {
+        const it = ITEMS[o.inst.id];
+        const gain = h && !o.sold ? upgradeGain(h, o.inst) : 0;
+        const best = !o.sold && !gain ? g.bestHeroFor(o.inst) : null;
+        return `<button class="sh-card ${i === si ? 'on' : 'metal'} ${o.sold ? 'sold' : ''}" data-act="sh-sel" data-i="${i}">
+          <span class="slot ${rarCls(o.inst.rarity)}">${svgI(itemIcon(o.inst.id))}${elDot(o.inst)}</span>
+          <span class="nm">${it.name}</span><small class="c-${o.inst.rarity}">${RARITY[o.inst.rarity].name} · ${SLOT_NAMES[it.slot]}</small>
+          <span class="gn">${o.sold ? 'Đã mua' : gain ? `▲ +${gain} ${HEROES[h.type].name}` : best ? `▲ hợp ${HEROES[best.hero.type].name}` : (o.inst.aff || []).length ? `${o.inst.aff.length} dòng phụ` : ''}</span>
+          <span class="pr">${o.sold ? '—' : coin(1) + o.price}</span></button>`;
+      }).join('');
+      let det = '<div class="note">Chọn một món để xem.</div>';
+      if (cur) {
+        const it = ITEMS[cur.inst.id];
+        const gain = h ? upgradeGain(h, cur.inst) : 0;
+        det = `<div class="it-head"><span class="slot ${rarCls(cur.inst.rarity)}">${svgI(itemIcon(cur.inst.id))}</span><div><div class="ttl">${it.name}</div><small class="c-${cur.inst.rarity}">${RARITY[cur.inst.rarity].name} · ${SLOT_NAMES[it.slot]}${it.wclass ? ' ' + WCLASS_NAMES[it.wclass].toLowerCase() : ''}</small></div></div>
+          <div class="stat-list">${statLine(itemStats(cur.inst, h && h.type), true)}</div>
+          ${cur.inst.el ? `<div class="elrow">${elChip(cur.inst.el)}</div>` : ''}
+          ${(cur.inst.aff || []).map((a) => `<div class="aff">◆ ${AFFIXES[a].label(affixVal(cur.inst, a))}</div>`).join('')}
+          ${itemHiddens(cur.inst).map((k) => secretLine(g, k)).join('')}
+          ${it.desc ? `<div class="note">${esc(it.desc)}</div>` : ''}
+          ${this.bestFor(cur.inst)}
+          <div style="display:flex;gap:6px;margin-top:auto">
+            <button class="btn btn-gold" style="flex:1;height:42px" data-act="sh-buy" data-i="${si}" ${cur.sold || g.gold < cur.price ? 'disabled' : ''}>Mua · ${coin()} ${cur.price}</button>
+            ${h && gain ? `<button class="btn metal" style="flex:1;height:42px;color:#6AE06A" data-act="sh-buy-eq" data-i="${si}" ${cur.sold || g.gold < cur.price ? 'disabled' : ''}>Mua & đeo</button>` : ''}</div>`;
+      }
+      const rc = SHOP.reroll(g.shopRerolls || 0);
+      body = `<div class="scr-body">
+        <div class="panel metal" style="flex:1"><div class="ph"><span class="ttl">Hàng mới</span><small>Nhập hàng mỗi đợt · đồ tốt dần theo đợt</small>
+            <div class="seg inset" style="margin-left:auto"><button class="on">Đồ</button><button data-act="sh-tab" data-k="parts">Nguyên liệu</button></div></div>
+          <div class="sh-grid">${cards}</div>
+          <button class="btn metal" style="height:38px;color:#F2D27A" data-act="sh-reroll" ${g.gold < rc ? 'disabled' : ''}>⟳ Làm mới hàng · ${coin(1)} ${rc}</button></div>
+        <div class="panel metal sh-det" style="width:260px;flex:none">${det}</div></div>`;
     } else if (sc.tab === 'shop') {
       const shop = Object.keys(ITEMS).filter((id) => ITEMS[id].price);
       const cur = sc.shop || shop[shop.length - 1];
@@ -1449,14 +1509,14 @@ class UI {
       const h = g.heroes[this.sel];
       const freeAcc = h ? ACC_SLOTS.filter((s) => !h.equip[s]).length : 0;
       body = `<div class="scr-body">
-        <div class="panel metal" style="flex:1"><div class="ph"><span class="ttl">Phụ kiện cơ bản</span><small>Món nguyên liệu để ghép</small></div>
+        <div class="panel metal" style="flex:1"><div class="ph"><span class="ttl">Nguyên liệu ghép</span><small>Phụ kiện cơ bản, luôn có bán</small>
+            <div class="seg inset" style="margin-left:auto"><button data-act="sh-tab" data-k="stock">Đồ</button><button class="on">Nguyên liệu</button></div></div>
           <div class="shop-grid inset">${shop.map((id) => {
             const own = g.countOwned(id);
             return `<button class="shop-it ${id === cur ? 'on' : 'metal'}" data-act="shop-sel" data-id="${id}">
               <span class="slot rt">${svgI(itemIcon(id))}${own ? '<span class="lv" style="color:#6AE06A">●</span>' : ''}</span><span class="nm">${ITEMS[id].name}</span>
               <span class="pr ${own && id !== cur ? 'own' : ''}">${own && id !== cur ? `Đã có ${own}` : coin(1) + ITEMS[id].price}</span></button>`;
-          }).join('')}</div>
-          <div class="note" style="text-align:center">Chạm vào món để xem chi tiết</div></div>
+          }).join('')}</div></div>
         <div class="panel metal" style="width:260px;flex:none">
           <div class="it-head"><span class="slot rt">${svgI(itemIcon(cur))}</span><div><div class="ttl">${it.name}</div><small>Phụ kiện · Thường</small></div></div>
           <div class="aura-line inset">${esc(it.desc || '')}${rec ? `${canCraftAfter ? ` Bạn đã có ${other.map((p) => ITEMS[p].name).join(', ')}.` : ''}` : ''}</div>
@@ -1474,18 +1534,20 @@ class UI {
       body = `<div class="scr-body">
         <div class="panel metal" style="flex:1">
           <div class="jar-stage inset"><div class="t"><div class="ttl">Hũ báu</div><div class="note">Mở để nhận một món ngẫu nhiên</div></div>${svgI(sceneArt('hubau'))}</div>
-          <div style="display:flex;align-items:center;gap:10px"><div class="rar-chips">Có thể ra:
-            <span style="border-color:#8A8478;color:#C8C0B0">◆ Thường</span><span style="border-color:#4FA3D9;color:#7FC4F0">◆ Hiếm</span><span style="border-color:#A86CE0;color:#C8A0F0">◆ Sử thi</span><span style="border-color:#F0A030;color:#FFB84A">◆ Huyền thoại</span></div>
-            <button class="btn btn-gold" style="margin-left:auto;height:46px;font-size:20px;padding:0 24px" data-act="chest" ${g.gold < CONFIG.chestCost ? 'disabled' : ''}>Mở hũ · ${coin()} ${CONFIG.chestCost}</button></div>
+          <div style="display:flex;align-items:center;gap:10px"><div class="rar-chips" style="display:none"></div>
+            </div>
+          <div class="jars">${JARS.map((j) => `<button class="jar ${j.id === 'small' ? 'metal' : j.id === 'big' ? 'metal rh' : 'metal rl'}" data-act="chest" data-k="${j.id}" ${g.gold < j.cost ? 'disabled' : ''}>
+            <b>${j.name}</b><small>${j.desc}</small><span>${coin(1)} ${j.cost}</span></button>`).join('')}</div>
+          <div class="note" style="text-align:center">Mở thêm <b style="color:#C8A0F0">${Math.max(1, JAR_PITY - (g.jarCount || 0))}</b> hũ nữa: chắc chắn ra đồ Sử thi trở lên.</div>
         </div>
         <div class="panel metal" style="width:260px;flex:none"><div class="ttl" style="font-size:17px">Vừa mở được</div>
           ${inst ? `<div class="inset" style="border-radius:6px;padding:10px;border-color:${RARITY[inst.rarity].color}"><div class="it-head"><span class="slot ${rarCls(inst.rarity)}">${svgI(itemIcon(inst.id))}</span>
             <div><div class="ttl">${ITEMS[inst.id].name}</div><small class="c-${inst.rarity}">${RARITY[inst.rarity].name} · ${SLOT_NAMES[ITEMS[inst.id].slot]}</small></div></div>
-            <div class="stat-list" style="margin-top:6px">${statLine(itemStats(inst), true)}</div></div>
+            <div class="stat-list" style="margin-top:6px">${statLine(itemStats(inst), true)}</div>${this.bestFor(inst)}</div>
             ${!op.hero ? `<button class="big-btn btn-gold" style="margin-top:0" data-act="equip-new" data-uid="${inst.uid}">Đeo cho tướng</button>
             <button class="btn metal" style="height:44px;font-size:14px" data-act="stash">${ICON.bag} Cất vào túi</button>` : '<div class="chip ok" style="text-align:center">Đã đeo</div>'}`
             : '<div class="note">Chưa mở hũ nào.</div>'}
-          <div class="inset" style="margin-top:auto;border-radius:6px;padding:10px;display:flex;gap:8px"><span style="color:#5AB4D6">≈</span><span class="note">Đồ còn rơi ra từ quái trên sông. Quái tinh anh và boss rơi đồ xịn hơn.</span></div>
+          <div class="note" style="margin-top:auto;font-size:11px">≈ Đồ còn rơi từ quái; quái tinh anh và boss rơi đồ xịn hơn.</div>
         </div></div>`;
     }
     return `${this.head('Lò đúc đồng', `<span class="chip dark">Đợt ${g.wave}</span>${this.runChip()}`, '', svgI(sceneArt('drum')))}${tabs}${body}`;
@@ -1656,6 +1718,14 @@ class UI {
             <div><b style="color:#F2D27A">2 món:</b> ${SD.p2}</div><div><b style="color:#F2D27A">Đủ bộ:</b> ${SD.p3}</div>
             <div style="color:#C8BFA8">${SD.look3}${SD.el === def.el ? ' · <b style="color:#FFD66B">Thiên mệnh: cùng hành, mạnh thêm 50%</b>' : ''}</div></div></div>`}
       </div>`;
+  }
+
+  // dòng "hợp nhất cho tướng nào" của một món (lực chiến tăng bao nhiêu)
+  bestFor(inst) {
+    const g = this.game;
+    const b = g.bestHeroFor(inst);
+    if (!b) return g.heroes.some(Boolean) ? '<div class="bestf no">Chưa làm tướng nào trên sân mạnh hơn</div>' : '';
+    return `<div class="bestf">▲ Hợp nhất: <b>${HEROES[b.hero.type].name}</b> +${b.gain} lực chiến</div>`;
   }
 
   // bảng Thăng thần trong màn Tiến hoá
