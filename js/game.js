@@ -266,7 +266,7 @@ class Game {
 
     for (const sk of def.skills) {
       if (!sk.active || h.kills < sk.unlock) continue;
-      h.skillCd[sk.id] = (h.skillCd[sk.id] ?? 0) - dt;
+      h.skillCd[sk.id] = (h.skillCd[sk.id] || 0) - dt;
       if (h.skillCd[sk.id] <= 0 && SKILL_CASTS[sk.active.cast](this, h, st, h.kills - sk.unlock)) {
         h.skillCd[sk.id] = sk.active.cooldown;
         h.swing = 1;
