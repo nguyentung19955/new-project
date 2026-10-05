@@ -401,13 +401,12 @@ function drawGuard(t) {
 }
 
 // Tướng đang kéo: nổi lên trên ngón tay, kèm vòng tầm đánh tại ô sẽ thả
-// Tướng thành phần cần nâng để hợp thể: khi bấm thẻ thần ở dải gợi ý (ui.fuseFocus, vài giây)
-// hoặc khi chọn một tướng có công thức hợp thể (sáng đối tác trên sân).
+// Tướng thành phần cần nâng để hợp thể: CHỈ khi bấm thẻ thần ở dải gợi ý trên cùng (ui.fuseFocus, vài giây).
+// Chọn một tướng trên sân thì không đánh dấu đối tác (tránh rối mắt).
 let fuseMarkCache = { key: '', set: new Map() };
 function fuseMarks() {
   const ff = ui.fuseFocus && performance.now() < ui.fuseFocus.until ? ui.fuseFocus : null;
-  const sh = !ff && ui.sel >= 0 ? game.heroes[ui.sel] : null;
-  const key = ff ? 'f' + ff.i : sh ? 's' + sh.id + sh.type : '';
+  const key = ff ? 'f' + ff.i : '';
   if (fuseMarkCache.key === key && key !== '') return fuseMarkCache.set;
   const m = new Map();
   const add = (type, color) => {
@@ -415,7 +414,6 @@ function fuseMarks() {
     if (best && !m.has(best)) m.set(best, color);
   };
   if (ff) { const f = FUSION[ff.i]; const c = RARITY[HEROES[f.to].legend].color; add(f.a, c); add(f.b, c); }
-  else if (sh) for (const to of ASCEND[sh.type] || []) add(fusionPartner(sh.type, to), RARITY[HEROES[to].legend].color);
   fuseMarkCache = { key, set: m };
   return m;
 }

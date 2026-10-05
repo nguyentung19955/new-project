@@ -776,3 +776,7 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - **Nâng đồ tự động** (menu ≡ và Túi đồ): dùng vàng cường hóa / thăng phẩm đồ **đang mặc**, mỗi bước chọn món tăng lực chiến nhiều nhất trên mỗi đồng vàng, ưu tiên tướng Vàng → Tím → nhiều sao; luôn chừa đủ vàng cho 1 lần triệu hồi.
 - (v38) Sửa lỗi văng game "st is not defined" khi Lang Liêu dùng **Lễ Tổ Tiên** và Thần Kim Quy dùng **Kim Quy Hộ Thành**. Thêm bài kiểm tra gọi thử mọi chiêu của mọi tướng.
 - Sửa triệt để lỗi màu "#fff66": mọi chỗ ghép màu + độ trong suốt đều qua hàm chuẩn hoá màu.
+
+### Phiên bản 39
+
+- Chọn một tướng trên sân **không còn** đánh dấu (mũi tên tím / vàng) tướng đối tác hợp thể. Chỉ khi bấm thẻ thần ở dải gợi ý trên cùng thì 2 tướng thành phần mới sáng lên (6 giây).
