@@ -30,7 +30,8 @@ const CONFIG = {
     [0, 0, 932, 84],          // thanh trên + chỗ cho đầu tướng
     [0, 0, 120, 270],         // bảng Triệu hồi
     [270, 46, 660, 80],       // dải "đợt sắp tới"
-    [0, 262, 932, 430],       // bảng điều khiển dưới
+    [300, 330, 632, 430],     // hàng thẻ tướng dưới đáy
+    [0, 340, 932, 430],       // mép dưới màn hình
     [846, 70, 932, 220],      // thành Phong Châu
   ],
   // Lưới ô đặt tướng (tọa độ thiết kế): khoảng cách ô, dải cách tim sông

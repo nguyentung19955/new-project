@@ -53,7 +53,7 @@ const distToPath = (x, y) => distToPolyline(CONFIG.path, x, y);
   const { sx, sy, minD, maxD } = CONFIG.buildGrid;
   const out = [];
   let row = 0;
-  for (let y = 60; y <= 270; y += sy, row++) {
+  for (let y = 60; y <= 336; y += sy, row++) {
     for (let x = 20 + (row % 2 ? sx / 2 : 0); x <= 912; x += sx) {
       const d = distToPath(x * DK, y * DK) / DK;
       if (d < minD || d > maxD) continue;

@@ -115,10 +115,12 @@ class UI {
     $('#btn-treasury').onclick = () => this.showTreasury();
     $('#btn-menu-codex').onclick = () => this.openScreen('codex', { top: true });
     $('#btn-settings').onclick = () => this.showSettings(false);
-    $('#btn-menu').onclick = () => this.showSettings(true);
-    $('#btn-codex').onclick = () => this.openScreen('codex');
-    $('#btn-forge').onclick = () => this.openScreen('forge');
-    $('#btn-mountain').onclick = () => this.openScreen('mountain');
+    $('#btn-menu').onclick = () => { $('#drawer').hidden = !$('#drawer').hidden; $('#more').hidden = true; $('#legends').hidden = true; };
+    $('#btn-moc').onclick = () => {
+      this.raising = !this.raising;
+      this.moving = -1;
+      if (this.raising) this.toast('Chạm vào ô ngập hoặc ô đang nhấp nháy xanh để Mọc Núi', '#F2D27A');
+    };
     $('#btn-run').onclick = () => {
       if (!g.started || g.over) return;
       if (g.won && !g.endless) return;
@@ -129,16 +131,14 @@ class UI {
       }
     };
     $('#btn-speed').onclick = () => { g.speed = g.speed === 1 ? 2 : g.speed === 2 ? 3 : 1; };
-    $('#btn-early').onclick = () => {
-      if (!g.started || g.over || g.wave === 0) return;
-      if (g.wave >= g.levelWaves && !g.endless) return;
+    $('#nextwaves').onclick = () => {
+      if (!$('#nextwaves').classList.contains('early')) return;
       const b = g.callEarly();
       g.running = true;
       if (b) this.toast(`Gọi sớm: +${b} vàng`, '#F2D27A');
     };
-    $('#btn-legend').onclick = () => { $('#legends').hidden = !$('#legends').hidden; this.renderLegends(); };
     // ủy quyền sự kiện cho các vùng dựng lại liên tục
-    for (const id of ['#screen', '#bt-cmds', '#bt-items', '#bt-info', '#reward', '#result', '#story', '#campaign', '#settings', '#legends', '#roster', '#treasury']) {
+    for (const id of ['#screen', '#deck', '#drawer', '#more', '#reward', '#result', '#story', '#campaign', '#settings', '#legends', '#roster', '#treasury']) {
       $(id).addEventListener('click', (ev) => {
         const el = ev.target.closest('[data-act]');
         if (el && !el.disabled) this.action(el.dataset, el);
@@ -173,7 +173,7 @@ class UI {
   }
   setInGame(on) {
     document.querySelectorAll('.ingame').forEach((el) => { el.hidden = !on; });
-    if (!on) { $('#legends').hidden = true; $('#bossbar').hidden = true; $('#coach').hidden = true; }
+    if (!on) for (const id of ['#legends', '#bossbar', '#coach', '#drawer', '#more', '#deck-hint', '#btn-moc', '#nextwaves']) $(id).hidden = true;
   }
 
   playLevel(i) {
@@ -320,8 +320,8 @@ class UI {
     el.style.borderLeftColor = color;
     el.innerHTML = msg;
     box.appendChild(el);
-    while (box.children.length > 4) box.firstChild.remove();
-    setTimeout(() => el.remove(), 3200);
+    while (box.children.length > 2) box.firstChild.remove();
+    setTimeout(() => el.remove(), 2600);
   }
 
   // ---------- chạm bản đồ
@@ -343,6 +343,8 @@ class UI {
     const g = this.game;
     if (!g.started) return;
     $('#legends').hidden = true;
+    $('#drawer').hidden = true;
+    $('#more').hidden = true;
     const slot = this.slotAt(x, y);
     if (this.raising) {
       if (slot >= 0 && g.canRaise(slot)) {
@@ -404,18 +406,14 @@ class UI {
 
   // ---------- bảng triệu hồi
   buildSummon() {
-    $('#sm-grid').innerHTML = BASIC_HEROES.map((t) => {
-      const d = HEROES[t];
-      return `<button class="sm-btn inset" data-type="${t}" style="border-color:${ATTRS[d.attr].color}" aria-label="${d.name}, ${d.cost} vàng">
-        <img src="${heroImgUrl(t, 'head')}" alt=""><span class="cost">${d.cost}</span></button>`;
-    }).join('');
-    $('#sm-grid').querySelectorAll('.sm-btn').forEach((b) => { b.onclick = () => this.pickSummon(b.dataset.type); });
+    // hàng thẻ dưới đáy dựng trong updateDeck; ở đây chỉ dựng bảng tướng huyền thoại
     $('#lg-grid').innerHTML = LEGEND_HEROES.map((t) => {
       const d = HEROES[t];
       return `<button class="lg-btn inset ${d.legend}" data-act="legend" data-type="${t}" aria-label="${d.name}, ${d.cost} vàng">
         <img src="${heroImgUrl(t)}" alt=""><span class="nm">${d.name}</span><span class="cost">${d.cost}</span></button>`;
     }).join('');
   }
+
   renderLegends() {
     const g = this.game;
     $('#lg-count').textContent = `Trên sân ${g.legendCount()}/${CONFIG.maxLegends} · Sử thi 180 · Huyền thoại 260`;
@@ -452,14 +450,12 @@ class UI {
       if (have.size !== n0) { this.save.collected = [...have]; writeSave(this.save); }
     }
     if (!g.started) return;
-    const inGame = $('#menu').hidden && $('#campaign').hidden && $('#story').hidden;
+    const inGame = $('#menu').hidden && $('#campaign').hidden && $('#story').hidden && $('#roster').hidden && $('#treasury').hidden;
     if (!inGame) return;
     this.updateTopbar();
     this.updateNextWaves();
     this.updateBoss();
-    this.updateSummon();
-    this.updateBottom();
-    this.drawMinimap();
+    this.updateDeck();
     this.updateCoach();
     if (!$('#legends').hidden) this.renderLegends();
     $('#paused-tag').hidden = g.running || g.wave === 0 || g.over || !!this.screen || !$('#settings').hidden;
@@ -546,47 +542,48 @@ class UI {
     }
     const fill = g.water >= 3 ? 1 : next ? Math.max(0, Math.min(1, (g.wave - prev) / (next - prev))) : 1;
     $('#tb-flood').style.width = `${fill * 100}%`;
-    this.setText('#btn-mountain', `Núi · ${g.mountainStage()}`);
     $('#btn-speed').textContent = 'x' + g.speed;
     $('#btn-speed').classList.toggle('on', g.speed > 1);
     const run = $('#btn-run');
     run.classList.toggle('go', !g.running);
     $('#run-icon').setAttribute('d', g.running ? 'M5 5 H15 V15 H5 Z' : 'M6 4 L16 10 L6 16 Z');
     run.setAttribute('aria-label', g.running ? 'Dừng' : 'Bắt đầu');
-    const b = g.earlyBonus();
-    const can = g.wave > 0 && !(g.wave >= g.levelWaves && !g.endless);
-    this.setHTML('#btn-early', `${can}|${b}`, can ? `Gọi sớm <small>+${b}</small>` : 'Gọi sớm');
-    $('#btn-early').disabled = !can;
+    // chấm xanh trên ≡ khi có việc nên làm (hái Linh Chi)
+    $('#menu-dot').hidden = !g.mountain.herbs;
+    if (!$('#drawer').hidden) {
+      this.setText('#dw-bag', `${g.inventory.length}/${CONFIG.bagSize} ô`);
+      const mt = $('#dw-mt');
+      mt.textContent = g.mountain.herbs ? `Hái ${g.mountain.herbs} Linh Chi!` : `Giai đoạn ${g.mountainStage()} · bồi đất`;
+      mt.className = g.mountain.herbs ? 'ok' : '';
+    }
   }
 
+  // Một dải nhỏ dưới thanh trên: đợt kế (giữa hai đợt thì kèm nút Gọi sớm)
   updateNextWaves() {
     const g = this.game;
-    const parts = [];
-    if (!g.waveActive && g.wave < g.levelWaves && g.nextWaveT > 0 && g.wave > 0 && g.running) {
-      parts.push(`<span><b>Đợt ${g.wave + 1}</b> sau <span class="cd">${Math.ceil(g.nextWaveT)}s</span></span>`);
-    }
-    // loại quái chính của đợt kế
-    const cnt = {};
-    for (const s of g.nextWave) cnt[s.type] = (cnt[s.type] || 0) + 1;
-    const main = Object.keys(cnt).sort((a, b) => cnt[b] - cnt[a])[0];
+    const el = $('#nextwaves');
+    const lim = g.endless ? Infinity : g.levelWaves;
+    let html = '', early = false;
     const kindTxt = (n) => {
       const k = waveKind(n, g.level);
-      const b = bossAt(n, g.level);
-      if (k === 'boss') return `<span class="boss">Boss ${ENEMIES[b].name}</span>`;
+      if (k === 'boss') return `<span class="boss">Boss ${ENEMIES[bossAt(n, g.level)].name}</span>`;
       if (k === 'air') return 'Chim Bão <span class="air">(bay)</span>';
       if (k === 'champion') return 'Rùa khổng lồ';
-      return null;
+      return '';
     };
-    const lim = g.endless ? Infinity : g.levelWaves;
-    if (g.wave + 1 <= lim && !parts.length) parts.push(`<span><b>Đợt ${g.wave + 1}</b> ${kindTxt(g.wave + 1) || (main ? ENEMIES[main].name : '')}</span>`);
-    for (let n = g.wave + 2; n <= Math.min(lim, g.wave + 12) && parts.length < 3; n++) {
-      const t = kindTxt(n);
-      if (t) parts.push(`<span><b>Đợt ${n}</b> ${t}</span>`);
+    if (g.wave > 0 && g.wave + 1 <= lim) {
+      if (!g.waveActive && g.running) {
+        early = true;
+        html = `<b>Đợt ${g.wave + 1}</b> sau ${Math.ceil(Math.max(0, g.nextWaveT))}s ${kindTxt(g.wave + 1)}<span class="go">Gọi sớm +${g.earlyBonus()}</span>`;
+      } else {
+        const t = kindTxt(g.wave + 1);
+        if (t) html = `<b>Đợt ${g.wave + 1}:</b> ${t}`;
+      }
     }
-    if (g.floodSoon() >= 0) parts.push(`<span class="flood">💧 Nước sắp dâng: ô bậc ${TIER_NAMES[g.floodSoon()]}</span>`);
-    const html = parts.join('');
+    if (g.floodSoon() >= 0) html += `${html ? ' · ' : ''}<span class="flood">💧 Nước sắp dâng: ô ${TIER_NAMES[g.floodSoon()]}</span>`;
+    el.classList.toggle('early', early);
     this.setHTML('#nextwaves', html, html);
-    $('#nextwaves').hidden = !html;
+    el.hidden = !html;
   }
 
   updateBoss() {
@@ -598,142 +595,91 @@ class UI {
     $('#bb-fill').style.width = `${Math.max(0, b.hp / b.maxHp) * 100}%`;
   }
 
-  updateSummon() {
-    const g = this.game;
-    document.querySelectorAll('.sm-btn').forEach((b) => {
-      const d = HEROES[b.dataset.type];
-      b.classList.toggle('poor', g.gold < d.cost);
-      b.classList.toggle('armed', this.armed === b.dataset.type);
-    });
-    $('#btn-legend').classList.toggle('on', !$('#legends').hidden);
-  }
-
-  // ---------- bảng điều khiển dưới
-  updateBottom() {
+  // ---------- hàng thẻ dưới đáy: thẻ triệu hồi, hoặc thẻ tướng đang chọn
+  updateDeck() {
     const g = this.game;
     const h = g.heroes[this.sel];
     if (!h) this.sel = -1;
-    const t = performance.now() / 1000;
-    // chân dung
-    const pc = $('#portrait');
-    if (h) drawHeroPortrait(pc, h, t);
-    else if (this.sig.portrait !== 'none') { pc.getContext('2d').clearRect(0, 0, pc.width, pc.height); }
-    this.sig.portrait = h ? h.id : 'none';
-    const st = h ? heroStats(h) : null;
-    $('#pt-hp').style.width = h ? `${Math.max(0, h.hp / st.hpMax) * 100}%` : '0';
-    $('#pt-mp').style.width = h ? `${Math.max(0, h.mana / st.maxMana) * 100}%` : '0';
-    this.setText('#pt-star', h ? '★'.repeat(h.tier || 0) : '');
-
-    // thông tin
-    let infoKey, info;
-    if (h) {
-      const def = HEROES[h.type];
-      const lc = g.levelCost(h);
-      const t2 = h.tier || 0;
-      const act = h.castT > 0 ? `Đang thi triển: ${def.skills.find((s, i) => SKILL_COLOR[s.active && s.active.cast] === h.castColor)?.name || ''}` :
-        h.dead ? `Hồi sinh sau ${Math.ceil(h.respawnT)} giây` : h.bogged ? 'Sa lầy: −50% tốc đánh, không hồi năng lượng' : h.stunT > 0 ? 'Đang bị choáng' : '';
-      infoKey = `h|${h.id}|${h.level}|${t2}|${g.gold >= lc}|${g.gold >= (COSTS.evo[t2] || 0)}|${act}|${this.sellArmed}`;
-      info = `<div class="nm"><span class="ttl">${def.name}</span><small>Cấp ${h.level}</small></div>
-        <div class="tags"><span class="${ATTR_CLS[def.attr]}">${ATTRS[def.attr].name}</span>
-          ${t2 ? `<span style="background:#3A2410;color:#FFD66B">★ Bậc ${t2}</span>` : ''}
-          ${def.legend ? `<span style="background:#3A2410;color:${RARITY[def.legend].color}">${RARITY[def.legend].name}</span>` : ''}
-          <span style="background:#2A1810;color:#FFB08A">${def.dmgType === 'magic' ? 'Phép' : 'Vật lý'}</span>
-          <span style="background:#1A1610;color:#C8BFA8">Ô ${TIER_NAMES[CONFIG.slotTier[h.slot]]}</span></div>
-        <div class="kv"><span class="k">Nâng cấp</span>${h.level < CONFIG.maxLevel ? `<span class="v">Cấp ${h.level + 1}:</span><span class="g ${g.gold < lc ? 'no' : ''}">${coin(1)}${lc}</span>` : '<span class="v">Đã tối đa</span>'}</div>
-        <div class="kv"><span class="k">Tiến hoá</span>${t2 < 3 ? `<span class="v">${'★'.repeat(t2 + 1)}:</span><span class="g ${g.gold < COSTS.evo[t2] ? 'no' : ''}">${coin(1)}${COSTS.evo[t2]}</span><span class="v" style="color:#C8BFA8">cần cấp ${COSTS.evoReq[t2]}</span>` : '<span class="v">★★★ cao nhất</span>'}</div>
-        ${def.trait ? `<div class="kv"><span class="k">Đặc trưng</span><span class="v" style="color:#FFD66B">${def.trait.name}</span></div>` : ''}
-        <div class="act">${act || `Sát thương ${Math.round(st.damage)} · Tầm ${Math.round(st.range)} · Đã hạ ${h.kills}`}</div>`;
-    } else if (this.spot >= 0) {
-      const s = this.spot;
-      infoKey = `s|${s}|${g.isFlooded(s)}|${g.raised[s]}`;
-      info = `<div class="nm"><span class="ttl">Ô bậc ${TIER_NAMES[CONFIG.slotTier[s]]}</span><small>${g.raised[s] ? 'Đã Mọc Núi' : g.isFlooded(s) ? 'Đang ngập' : 'Khô ráo'}</small></div>
-        <div class="empty">${g.isFlooded(s) ? 'Ô ngập nước: không triệu hồi được. Bấm <b style="color:#FFD66B">Mọc Núi</b> rồi chạm ô này để cứu.' :
-          'Chọn một tướng ở bảng <b style="color:#FFD66B">Triệu hồi</b> bên trái (hoặc ★ Huyền thoại).<br>' +
-          ['Ô Thấp sát sông đánh được nhiều quái nhưng ngập trước (sau đợt boss 10).', 'Ô Giữa ngập sau đợt boss 20.', 'Ô Cao trên sườn núi an toàn, xa đường quái hơn.'][CONFIG.slotTier[s]]}</div>`;
+    const deck = $('#deck');
+    let key, html;
+    if (!h) {
+      key = `s|${BASIC_HEROES.map((t) => g.gold >= HEROES[t].cost).join()}|${this.armed}|${assetVersion}`;
+      html = BASIC_HEROES.map((t) => {
+        const d = HEROES[t];
+        return `<button class="dk-card ${g.gold < d.cost ? 'poor' : ''} ${this.armed === t ? 'armed' : ''}" data-act="summon" data-type="${t}" aria-label="${d.name}, ${d.cost} vàng" style="border-color:${ATTRS[d.attr].color}">
+          <img src="${heroImgUrl(t, 'head')}" alt=""><span class="cost">${d.cost}</span></button>`;
+      }).join('') + `<span class="dk-sep"></span><button class="dk-card legend" data-act="legend-open" aria-label="Tướng huyền thoại"><b>★</b>Huyền<br>thoại</button>`;
     } else {
-      infoKey = 'none';
-      info = `<div class="nm"><span class="ttl">Sơn Tinh</span><small>giữ thành Phong Châu</small></div>
-        <div class="empty">Chạm vào bãi cỏ sát sông để chọn ô, rồi triệu hồi tướng.<br>Chạm vào tướng để nâng cấp, mở kỹ năng, mặc đồ.<br>Giữ và kéo tướng để đổi chỗ.</div>`;
-    }
-    this.setHTML('#bt-info', infoKey, info);
-
-    // 6 ô đồ
-    const itemsKey = h ? `${h.id}|${SLOTS.map((s) => h.equip[s] ? h.equip[s].uid + ':' + h.equip[s].plus + h.equip[s].rarity : '').join()}` : 'none';
-    const order = ['weapon', 'acc1', 'helmet', 'acc2', 'armor', 'acc3'];
-    this.setHTML('#bt-items', itemsKey, order.map((s) => {
-      const inst = h && h.equip[s];
-      const lab = { weapon: 'Vũ khí', helmet: 'Mũ', armor: 'Giáp' }[s] || '';
-      return `<button class="it-slot inset ${inst ? rarCls(inst.rarity) : ''}" data-act="slot" data-slot="${s}" ${h ? '' : 'disabled'} aria-label="${SLOT_NAMES[s]}${inst ? ': ' + ITEMS[inst.id].name : ' trống'}">
-        ${inst ? svgI(itemIcon(inst.id)) + (inst.plus ? `<span class="lv">+${inst.plus}</span>` : '') : `<span class="ph">${lab}</span>`}</button>`;
-    }).join(''));
-
-    // lưới lệnh 4×3
-    const mocMax = g.mocMax();
-    const cmdKey = h ? `${h.id}|${h.level}|${h.skillPts}|${JSON.stringify(h.skillLv)}|${g.gold}|${Math.ceil(h.mana / 10)}|${def0(h)}|${g.moc}|${this.raising}|${this.moving}|${this.sellArmed}|${t2cd(h)}|${h.dead}`
-      : `none|${g.moc}|${this.raising}`;
-    if (this.sig.cmds !== cmdKey) {
-      this.sig.cmds = cmdKey;
-      $('#bt-cmds').innerHTML = this.renderCmds(h, mocMax);
-    }
-  }
-
-  renderCmds(h, mocMax) {
-    const g = this.game;
-    const cells = [];
-    if (h) {
       const def = HEROES[h.type];
       const st = heroStats(h);
-      def.skills.forEach((sk, i) => {
+      const lc = g.levelCost(h);
+      const skillKey = def.skills.map((sk, i) => {
+        const lv = skillLevel(h, i);
+        const cd = sk.active ? Math.ceil(Math.max(0, h.skillCd[sk.id] || 0)) : 0;
+        return `${lv}.${cd}.${sk.active && h.mana < sk.active.mana ? 1 : 0}`;
+      }).join();
+      key = `h|${h.id}|${h.level}|${h.tier}|${h.skillPts}|${skillKey}|${g.gold >= lc}|${g.gold}|${h.dead}|${h.bogged}|${assetVersion}`;
+      const status = h.dead ? `Hồi sinh sau ${Math.ceil(h.respawnT)}s` : h.bogged ? 'Sa lầy · dùng Mọc Núi' : `${ATTRS[def.attr].name} · ô ${TIER_NAMES[CONFIG.slotTier[h.slot]]}`;
+      const skills = def.skills.map((sk, i) => {
         const lv = skillLevel(h, i);
         if (!lv) {
           const can = h.level >= COSTS.unlockReq[i];
-          cells.push(`<button class="cmd inset" data-act="cmd-skill" data-i="${i}" aria-label="${SKILL_KEYS[i]} ${sk.name}, khóa, mở bằng ${COSTS.unlock[i]} vàng">
-            <span class="lockp">${ICON.lock}<b class="${g.gold < COSTS.unlock[i] || !can ? 'no' : ''}">${can ? COSTS.unlock[i] : 'cấp ' + COSTS.unlockReq[i]}</b></span><span class="hk" style="color:#7A705C">${SKILL_KEYS[i]}</span></button>`);
-          return;
+          return `<button class="dk-sk inset lock" data-act="cmd-skill" data-i="${i}" aria-label="${SKILL_KEYS[i]} ${sk.name}, khóa">${ICON.lock}<b class="${g.gold < COSTS.unlock[i] || !can ? 'no' : ''}">${can ? COSTS.unlock[i] : 'cấp ' + COSTS.unlockReq[i]}</b><span class="hk" style="color:#7A705C">${SKILL_KEYS[i]}</span></button>`;
         }
         const cd = sk.active ? Math.max(0, h.skillCd[sk.id] || 0) : 0;
         const max = sk.active ? sk.active.cooldown * (1 - st.cdr / 100) : 1;
-        const noMana = sk.active && h.mana < sk.active.mana;
-        cells.push(`<button class="cmd metal ${i === 0 ? 'q' : ''} ${noMana ? 'nomana' : ''}" data-act="cmd-skill" data-i="${i}" aria-label="${SKILL_KEYS[i]} ${sk.name}">
-          ${svgI(skillIcon(h.type, i))}<span class="hk">${SKILL_KEYS[i]}</span>
-          ${cd > 0.4 ? `<span class="cdov" style="height:${Math.min(100, cd / max * 100)}%"></span><span class="cdn">${Math.ceil(cd)}</span>` : `<span class="cdn" style="font-size:10px">${lv}</span>`}</button>`);
-      });
-    } else {
-      for (let i = 0; i < 4; i++) cells.push(`<div class="cmd inset blank"><span class="hk" style="color:#5C4620">${SKILL_KEYS[i]}</span></div>`);
+        const canUp = h.skillPts > 0 && lv < SKILL_MAX[i] && h.level >= skillReqLevel(i, lv + 1);
+        return `<button class="dk-sk metal ${sk.active && h.mana < sk.active.mana ? 'nomana' : ''}" data-act="cmd-skill" data-i="${i}" aria-label="${SKILL_KEYS[i]} ${sk.name}">
+          ${svgI(skillIcon(h.type, i))}<span class="hk">${SKILL_KEYS[i]}</span>${canUp ? '<span class="pt">+</span>' : ''}
+          ${cd > 0.4 ? `<span class="cdov" style="height:${Math.min(100, cd / max * 100)}%"></span><span class="cdn">${Math.ceil(cd)}</span>` : ''}</button>`;
+      }).join('');
+      const maxed = h.level >= CONFIG.maxLevel;
+      html = `<button class="dk-x metal" data-act="deck-close" aria-label="Bỏ chọn">${ICON.close}</button>
+        <span class="dk-pt"><canvas id="dk-portrait" width="108" height="116"></canvas><span class="lv">${h.level}</span><span class="st">${'★'.repeat(h.tier || 0)}</span></span>
+        <span class="dk-info"><span class="nm">${def.name}</span><span class="sub ${h.bogged || h.dead ? 'warn' : ''}">${status}</span>
+          <span class="bar hp"><i id="dk-hp"></i></span><span class="bar mp"><i id="dk-mp"></i></span></span>
+        ${skills}
+        <button class="dk-up btn-gold" data-act="levelup" ${maxed || g.gold < lc ? 'disabled' : ''} aria-label="Nâng cấp tướng"><b>${maxed ? 'Tối đa' : `Lên cấp ${h.level + 1}`}</b>${maxed ? '' : `<span>${coin(1)}${lc}</span>`}</button>
+        <button class="dk-more metal" data-act="more" aria-label="Thêm">⋯${h.skillPts ? `<span class="badge">${h.skillPts}</span>` : ''}</button>`;
     }
-    cells.push(`<button class="cmd moc ${this.raising ? 'on' : ''}" data-act="moc" ${g.moc <= 0 ? 'disabled' : ''} aria-label="Mọc Núi, còn ${g.moc} lượt">${ICON.mount}<span class="cdn">${g.moc}/${mocMax}</span></button>`);
+    if (this.sig.deck !== key) {
+      this.sig.deck = key;
+      deck.innerHTML = html;
+    }
     if (h) {
-      cells.push(`<button class="cmd metal small ${this.moving >= 0 ? 'armed' : ''}" data-act="move" aria-label="Đổi chỗ">${ICON.swap}<span>Đổi chỗ</span></button>`);
-      cells.push(`<button class="cmd metal small ${this.sellArmed ? 'armed' : ''}" data-act="sell" aria-label="Bán tướng">${coin()}<span>${this.sellArmed ? `+${g.sellValue(h)}?` : 'Bán 60%'}</span></button>`);
-      cells.push(`<button class="cmd metal ${h.skillPts ? 'up' : ''}" data-act="open-skills" aria-label="Nâng kỹ năng, còn ${h.skillPts} điểm">${ICON.up}${h.skillPts ? `<span class="badge">${h.skillPts}</span>` : ''}</button>`);
-      const lc = g.levelCost(h);
-      cells.push(`<button class="cmd metal wide" data-act="levelup" ${h.level >= CONFIG.maxLevel ? 'disabled' : ''} aria-label="Nâng cấp tướng">${ICON.dup}
-        <span class="lab"><b>Nâng cấp</b><span>${h.level >= CONFIG.maxLevel ? 'Tối đa' : coin(1) + lc}</span></span><span class="hk">U</span></button>`);
-      cells.push(`<button class="cmd metal small" data-act="open-evo" aria-label="Tiến hoá"><span style="color:#FFD66B;font-size:15px;line-height:1">${'★'.repeat(Math.max(1, (h.tier || 0)))}</span><span>Tiến hoá</span></button>`);
-      cells.push(`<button class="cmd metal small" data-act="open-bag" aria-label="Túi đồ">${ICON.bag}<span>Túi ${g.inventory.length}</span></button>`);
-    } else {
-      cells.push('<div class="cmd inset blank"></div>', '<div class="cmd inset blank"></div>', '<div class="cmd inset blank"></div>');
-      cells.push(`<button class="cmd metal small" data-act="open-bag" style="grid-column:span 2" aria-label="Túi đồ">${ICON.bag}<span>Túi đồ ${g.inventory.length}/${CONFIG.bagSize}</span></button>`);
-      cells.push('<div class="cmd inset blank"></div>', '<div class="cmd inset blank"></div>');
-    }
-    return cells.join('');
+      drawHeroPortrait($('#dk-portrait'), h, performance.now() / 1000);
+      const st = heroStats(h);
+      $('#dk-hp').style.width = `${Math.max(0, h.hp / st.hpMax) * 100}%`;
+      $('#dk-mp').style.width = `${Math.max(0, h.mana / st.maxMana) * 100}%`;
+    } else $('#more').hidden = true;
+    // gợi ý ngắn trên hàng thẻ
+    const hint = this.armed ? `Chạm vào ô trống để triệu hồi ${HEROES[this.armed].name}` : this.spot >= 0 && !h ? `Ô bậc ${TIER_NAMES[CONFIG.slotTier[this.spot]]}: chọn tướng để triệu hồi` : this.moving >= 0 ? 'Chạm ô muốn chuyển tướng tới' : '';
+    $('#deck-hint').hidden = !hint;
+    if (hint) this.setText('#deck-hint', hint);
+    // Mọc Núi: chỉ hiện khi nước sắp dâng hoặc đã ngập
+    const moc = $('#btn-moc');
+    const need = g.moc > 0 && (g.floodSoon() >= 0 || g.water > 0 || g.tempFlood.some((t2) => t2 > g.time));
+    moc.hidden = !need;
+    if (need) {
+      moc.classList.toggle('on', this.raising);
+      this.setHTML('#btn-moc', `${g.moc}|${g.mocMax()}`, `${ICON.mount}Mọc Núi<span>${g.moc}/${g.mocMax()}</span>`);
+    } else this.raising = false;
   }
 
-  drawMinimap() {
-    const cv = $('#minimap');
-    const c = cv.getContext('2d');
+  renderMore() {
     const g = this.game;
-    const k = cv.width / CONFIG.W;
-    c.setTransform(1, 0, 0, 1, 0, 0);
-    if (ready(mapImg)) c.drawImage(mapImg, 0, 0, cv.width, cv.height);
-    else { c.fillStyle = '#2F4A22'; c.fillRect(0, 0, cv.width, cv.height); }
-    c.setTransform(k, 0, 0, cv.height / CONFIG.H, 0, 0);
-    if (g.water > 0) { c.globalAlpha = 0.35; strokePath(c, CONFIG.path, (104 + g.water * 70) * DK, '#2C6A86'); c.globalAlpha = 1; }
-    for (const e of g.enemies) circle(c, e.x, e.y, e.def.boss ? 26 : 13, e.def.boss ? '#FF4A2A' : '#E25A3A');
-    for (const h of g.heroes) if (h) circle(c, h.x, h.y, 13, h.slot === this.sel ? '#FFD66B' : '#3EDC4E');
-    c.strokeStyle = '#ffffff';
-    c.lineWidth = 8;
-    c.strokeRect(4, 60, CONFIG.W - 8, 320);
+    const h = g.heroes[this.sel];
+    if (!h) return;
+    const t = h.tier || 0;
+    $('#more').innerHTML = `
+      <button class="metal" data-act="open-skills">Kỹ năng<small>${h.skillPts ? `+${h.skillPts} điểm` : 'cây kỹ năng'}</small></button>
+      <button class="metal" data-act="open-evo">Tiến hoá<small>${t < 3 ? `★${t + 1} · ${COSTS.evo[t]} vàng` : 'tối đa'}</small></button>
+      <button class="metal" data-act="open-bag">Trang bị<small>đồ đổi hình dạng</small></button>
+      <button class="metal ${this.moving >= 0 ? 'armed' : ''}" data-act="move">Đổi chỗ<small>hoặc giữ & kéo</small></button>
+      <button class="metal danger ${this.sellArmed ? 'armed' : ''}" data-act="sell" style="grid-column:span 2">${this.sellArmed ? `Chạm lần nữa để bán · +${g.sellValue(h)} vàng` : `Bán tướng · hoàn ${g.sellValue(h)} vàng`}</button>`;
+    const r = $('#deck').getBoundingClientRect(), w = $('#ui').getBoundingClientRect();
+    const k = w.width / 932;
+    $('#more').style.left = `${Math.min(932 - 226, (r.right - w.left) / k - 220)}px`;
   }
 
   updateCoach() {
@@ -749,14 +695,14 @@ class UI {
         pos = [x / DK, y / DK - 30];
         text = 'Chạm vào ô cỏ sát sông để chọn chỗ đặt tướng';
       } else if (!heroes.length) {
-        pos = [180, 140];
-        text = '← Chọn một tướng ở bảng Triệu hồi';
+        pos = [466, 330];
+        text = 'Chọn một tướng ở hàng thẻ bên dưới ↓';
       } else if (g.wave === 0 && !g.running) {
-        pos = [800, 66];
-        text = 'Bấm ▶ để quân Thủy Tinh tràn tới';
+        pos = [800, 76];
+        text = 'Bấm ▶ (góc trên phải) để quân Thủy Tinh tràn tới';
       } else if (g.floodSoon() >= 0 && !g.flags.floodTip && g.moc > 0) {
         pos = [560, 250];
-        text = 'Nước sắp dâng! Bấm Mọc Núi rồi chạm ô nhấp nháy để cứu tướng';
+        text = 'Nước sắp dâng! Bấm Mọc Núi (góc dưới phải) rồi chạm ô nhấp nháy';
       }
       if (g.water > 0) g.flags.floodTip = true;
       if (g.wave >= 1 && !g.waveActive && !g.flags.gearTip && heroes.length) {
@@ -764,7 +710,7 @@ class UI {
         this.toast('Mẹo: chạm vào tướng, bấm <b>Nâng cấp</b> bằng vàng để lên cấp và có điểm kỹ năng', '#9dffc4');
       } else if (g.wave >= 3 && !g.waveActive && !g.flags.shopTip && g.gold >= 100) {
         g.flags.shopTip = true;
-        this.toast('Mẹo: mua nguyên liệu và đúc đồ ở <b>Lò đúc</b>; mặc đồ là tướng đổi hình dạng', '#9dffc4');
+        this.toast('Mẹo: mở <b>≡</b> → Lò đúc đồng để mua và đúc đồ; mặc đồ là tướng đổi hình dạng', '#9dffc4');
       }
     }
     coach.hidden = !pos;
@@ -1013,6 +959,15 @@ class UI {
         this.toast('Năm nào cũng dâng nước: quái mạnh dần, boss mỗi 10 đợt', '#5AB4D6');
         break;
       case 'reward': this.pickReward(+d.i); break;
+      case 'summon': this.pickSummon(d.type); break;
+      case 'legend-open': $('#legends').hidden = !$('#legends').hidden; $('#drawer').hidden = true; this.renderLegends(); break;
+      case 'deck-close': this.clearSel(); $('#more').hidden = true; break;
+      case 'more': $('#more').hidden = !$('#more').hidden; this.sellArmed = false; this.renderMore(); break;
+      case 'dw':
+        $('#drawer').hidden = true;
+        if (d.k === 'pause') this.showSettings(true);
+        else this.openScreen(d.k);
+        break;
       case 'legend': {
         const t = d.type;
         if (this.legendPick === t) {
@@ -1038,20 +993,22 @@ class UI {
         if (this.raising) this.toast('Chạm vào ô ngập (hoặc sắp ngập) để Mọc Núi', '#F2D27A');
         break;
       case 'move':
+        $('#more').hidden = true;
         this.moving = this.moving >= 0 ? -1 : this.sel;
         if (this.moving >= 0) this.toast('Chạm vào ô muốn chuyển tướng tới (ô có tướng thì đổi chỗ)', '#9dffc4');
         break;
       case 'sell':
         if (!h) break;
-        if (!this.sellArmed) { this.sellArmed = true; break; }
+        if (!this.sellArmed) { this.sellArmed = true; this.renderMore(); break; }
+        $('#more').hidden = true;
         this.toast(`Đã bán ${HEROES[h.type].name}: +${g.sellValue(h)} vàng`, '#F2D27A');
         g.sellHero(this.sel);
         this.clearSel();
         break;
       case 'levelup': if (h) this.doLevelUp(h); break;
-      case 'open-skills': this.openScreen('skills', { skill: 0 }); break;
-      case 'open-evo': this.openScreen('evo'); break;
-      case 'open-bag': this.openScreen('bag', { slot: null }); break;
+      case 'open-skills': $('#more').hidden = true; this.openScreen('skills', { skill: 0 }); break;
+      case 'open-evo': $('#more').hidden = true; this.openScreen('evo'); break;
+      case 'open-bag': $('#more').hidden = true; this.openScreen('bag', { slot: null }); break;
       case 'slot': this.openScreen('bag', { slot: d.slot }); break;
 
       // ----- màn hình chung

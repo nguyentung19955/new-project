@@ -321,3 +321,12 @@ Giữ màn hình **ngang**. Lấy từ bản thiết kế mobile những phần 
 - **Hộp thoại có ảnh nhân vật:** Sơn Tinh lúc bắt đầu trận, boss khi xuất hiện, Thủy Tinh khi dâng nước.
 
 **Ảnh vẽ tay (AI):** game tự nạp PNG trong `assets/` nếu đặt đúng tên file theo tài liệu prompt (H01–H16, E01–E08, B01–B03, `map-01`…, `tile-low`…, icon đồ, 64 icon kỹ năng, VFX). Danh sách đầy đủ và quy ước (chân ở giữa đáy ảnh, đường sông của bản đồ…) ở `docs/ASSETS.md`. Chưa có ảnh nào thì dùng hình vector như cũ.
+
+### Phiên bản 16 · màn chơi gọn
+
+Màn đánh quái chỉ hiện thứ cần ngay lúc đó:
+- **Thanh trên:** ≡ Menu, Đợt, vàng / mạng / mực nước, tốc độ, ▶/■. Lò đúc đồng, Túi đồ, Núi Tản Viên, Bách khoa và Tạm dừng nằm trong **≡** (có chấm xanh khi có Linh Chi để hái).
+- **Dải đợt kế:** hiện đợt đặc biệt sắp tới; giữa hai đợt thì kèm **Gọi sớm**, chạm vào dải để gọi.
+- **Hàng thẻ dưới đáy:** 6 thẻ tướng + ★ Huyền thoại để triệu hồi. Chạm vào tướng trên sân thì hàng thẻ đổi thành **thẻ tướng**: chân dung, Q W E R (chạm ô khóa để mở bằng vàng), **Lên cấp**, và **⋯** (Kỹ năng, Tiến hoá, Trang bị, Đổi chỗ, Bán).
+- **Mọc Núi:** nút nổi góc dưới phải, chỉ hiện khi nước sắp dâng hoặc đã ngập.
+- Bỏ bản đồ nhỏ và 6 ô đồ khỏi màn chơi (xem đồ trong Trang bị / Túi đồ). Phần dưới bản đồ được mở thêm 6 ô đặt tướng (tổng 50 ô).
