@@ -2722,6 +2722,8 @@ class Game {
         continue;
       }
       p.done = true;
+      // chỉ để vẽ: hạt nổ khi đạn trúng (js/vfx.js)
+      this.effects.push({ type: 'impact', kind: p.kind === 'fireball' || !p.kind ? 'fireball' : p.kind, x: p.tx, y: p.ty, ttl: 0.12, max: 0.12 });
       const { st, hero } = p;
       if (p.kind === 'evil') {
         if (!p.target.dead) this.damageHero(p.target, p.dmg, true, true);

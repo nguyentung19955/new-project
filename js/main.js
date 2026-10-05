@@ -180,8 +180,14 @@ function render() {
   drawables.forEach((d) => d.draw());
   drawGuard(t);
 
+  // hệ hạt: vệt đuôi + quầng sáng đạn, nổ khi trúng, hạt của chiêu
+  const vdt = Math.min(0.05, Math.max(0, t - (render.lastT || t)));
+  render.lastT = t;
+  VFX.update(vdt);
+  for (const p of game.projectiles) { if (p.kind !== 'evil' || Math.random() < 0.5) VFX.trail(p, vdt); VFX.projGlow(ctx, p); }
   for (const p of game.projectiles) drawProjectile(p, t);
   drawEffects(t);
+  VFX.draw(ctx);
   if (dragging) drawDragGhost(dragging, dropSlot, t);
 }
 
@@ -444,7 +450,7 @@ function drawHeroOnMap(h, t) {
   const r = drawHeroSprite(ctx, h, h.x, h.y, {
     t, dir: h.dir, swing: h.swing, castT: h.castT, castUlt: h.castUlt, hurt: h.hurtT, px: px(),
     bog: h.bogged, summon: h.summonT, fall: h.dead ? h.fallT : undefined,
-    bounce: h.bounceT, evo: h.evoT, wingT: h.wingT, smooth: true, vector: !!(ui.save && ui.save.settings.vectorHeroes),
+    bounce: h.bounceT, evo: h.evoT, wingT: h.wingT, smooth: true, castColor: h.castColor, vector: !!(ui.save && ui.save.settings.vectorHeroes),
   });
   if (h.dead) return;
   drawHeroStates(h, st, t, true);
@@ -684,6 +690,8 @@ function particles(x, y, n, color, spread, p, size = 2.5) {
 
 function drawEffects(t) {
   for (const f of game.effects) {
+    if (!f._vfx) { f._vfx = true; VFX.onEffect(f); }
+    if (f.type === 'impact') continue;
     if (f.delay > 0 && f.type !== 'rain') continue;
     const k = f.ttl / f.max; // 1 -> 0
     const p = 1 - k;         // 0 -> 1

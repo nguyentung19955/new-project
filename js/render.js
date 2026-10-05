@@ -605,8 +605,12 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
       drawBent(ctx, an.prevPng, -wp / 2, -hgt, wp, hgt, bend, breath);
       ctx.globalAlpha = base * sw;
     }
+    // tung chiêu: thân phát sáng viền theo màu chiêu
+    const glowK = o.castT > 0 ? Math.min(1, o.castT / 0.25) : 0;
+    if (glowK > 0) { ctx.shadowColor = o.castColor || '#FFE08A'; ctx.shadowBlur = 22 * glowK * (o.castUlt ? 1.6 : 1); }
     if (mixD < 1) drawBent(ctx, png, -w / 2, -hgt, w, hgt, bend, breath);
     ctx.globalAlpha = base;
+    if (glowK > 0) { ctx.shadowBlur = 0; ctx.shadowColor = 'transparent'; }
     if (mixD > 0) {
       const wd = hgt * pngD.naturalWidth / pngD.naturalHeight;
       ctx.globalAlpha = base * mixD;
