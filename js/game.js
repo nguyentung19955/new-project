@@ -3139,7 +3139,8 @@ class Game {
     // Hũ Vua Hùng (v37): nhiều món, chọn món hợp với các tướng mạnh nhất trên sân
     const lvl = { thuongluong: 0, haba: 1, thuytinh: 2 }[bossType] || 0;
     const plan = [['epic', 'epic'], ['set', 'epic', 'epic'], ['set', 'set', 'epic']][lvl];
-    const ids = plan.map((r) => this.jarPick(r));
+    const ids = [];
+    for (const r of plan) ids.push(this.jarPick(r, ids));
     opts.push({ kind: 'item', id: ids[0], ids, title: 'Hũ Vua Hùng', jar: true });
     if (Math.random() < 0.5) {
       opts.push({ kind: 'treasure', gold: 200 + this.wave * 15, lives: 3, title: 'Kho lúa · Đắp thành' });
@@ -3149,17 +3150,18 @@ class Game {
     return opts;
   }
 
-  // bốc 6 món cùng độ hiếm, lấy món tăng lực chiến nhiều nhất cho 3 tướng mạnh nhất
-  jarPick(rarity) {
+  // bốc tối đa 10 món cùng độ hiếm (bỏ món đã có trong hũ), lấy món tăng lực chiến nhiều nhất cho 3 tướng mạnh nhất
+  jarPick(rarity, taken = []) {
     const top = this.heroes.filter(Boolean).sort((a, b) => heroPower(b) - heroPower(a)).slice(0, 3);
     let best = null, bg = -1;
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 10; i++) {
       const id = rarity === 'set' || rarity === 'legendary' ? rollSetItem() : rollItem(rarity);
+      if (taken.includes(id)) continue;          // không ra 2 món trùng trong một hũ
       const inst = makeItem(id);
       const gain = top.reduce((m, h) => Math.max(m, upgradeGain(h, inst)), 0);
       if (gain > bg) { bg = gain; best = id; }
     }
-    return best;
+    return best || (rarity === 'set' || rarity === 'legendary' ? rollSetItem() : rollItem(rarity));
   }
 
   claimReward(o) {

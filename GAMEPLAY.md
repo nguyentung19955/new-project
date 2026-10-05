@@ -800,3 +800,9 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - **Cài đặt cuộn được** trên màn hình thấp.
 - **Chế độ Khó** (chọn ở bảng ải trên bản đồ chiến dịch, cạnh nút Vào trận): máu quái nhân theo bảng từng ải `HARD.table`. Thanh trên ghi "🔥 Khó"; sao ải Khó lưu riêng và hiện cạnh nút Khó. Chế độ Thường giữ nguyên.
 - Cân bằng Khó (bot triệu hồi + ghép + tự mặc / nâng đồ, **không hợp thể**, 4 trận mỗi ải): hệ số `[1,6 · 1,7 · 1,8 · 1,75 · 1,6 · 1,45 · 1,4 · 1,35]` cho ải 1→8. Ải 3: thắng 3/4 (còn 11–27 mạng); ải 4: 2/4; ải 6: 2/4; ải 8: 2/4 (còn 3–8 mạng). Khoảng một nửa số trận thắng với bot không biết hợp thể — người chơi biết hợp thể tướng Tím / Vàng sẽ có lợi thế rõ. (Bảng đầu tiên 1,25 + 0,07/ải bị lệch: ải 3–4 quá dễ, ải 6–8 thua gần hết.)
+
+### Phiên bản 43 · dùng hình tự vẽ
+
+- Mặc định **toàn bộ hình do game tự vẽ** (tướng, quái, bản đồ, chân dung, biểu tượng, truyện). Ảnh AI trong `assets/` vẫn giữ nguyên, bật lại ở Cài đặt → "Dùng ảnh AI (thử nghiệm)" (tải lại trang).
+- Tướng vẽ nét trên bản đồ to hơn (0,33 thay vì 0,285 như ảnh AI).
+- Hũ Vua Hùng không ra 2 món trùng nhau.

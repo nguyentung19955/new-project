@@ -550,7 +550,7 @@ function drawHeroOnMap(h, t) {
   drawRankAura(h, t, false);
   drawHeroStates(h, st, t, false);
   const r = drawHeroSprite(ctx, h, h.x, h.y, {
-    scale: 0.285, t, dir: h.dir, swing: h.swing, castT: h.castT, castUlt: h.castUlt, hurt: h.hurtT, px: px(),
+    scale: useAssets ? 0.285 : 0.33, t, dir: h.dir, swing: h.swing, castT: h.castT, castUlt: h.castUlt, hurt: h.hurtT, px: px(),
     bog: h.bogged, summon: h.summonT, fall: h.dead ? h.fallT : undefined,
     bounce: h.bounceT, evo: h.evoT, wingT: h.wingT, smooth: true, castColor: h.castColor, vector: !!(ui.save && ui.save.settings.vectorHeroes),
   });

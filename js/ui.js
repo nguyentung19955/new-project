@@ -160,7 +160,7 @@ const SAVE_KEY = 'nuicao.v1';
 function loadSave() {
   const def = { stars: LEVELS.map(() => 0), unlocked: 1, last: 0, best: {}, storySeen: false,
     lifeGold: 0, lifeKills: 0, lifeHerbs: 0, collected: [],
-    settings: { dmgText: true, shake: true, skipStory: false, vectorHeroes: false, detail: false } };
+    settings: { dmgText: true, shake: true, skipStory: false, vectorHeroes: false, detail: false, aiArt: false } };
   try {
     const s = JSON.parse(localStorage.getItem(SAVE_KEY) || '{}');
     return { ...def, ...s, settings: { ...def.settings, ...(s.settings || {}) } };
@@ -174,6 +174,8 @@ class UI {
   constructor(game) {
     this.game = game;
     this.save = loadSave();
+    // v43: mặc định dùng hình tự vẽ (vector); ảnh AI trong assets/ chỉ bật khi chọn trong Cài đặt
+    useAssets = !!this.save.settings.aiArt;
     this.scale = 1;
     this.sel = -1;          // ô có tướng đang chọn
     this.spot = -1;         // ô trống đang chọn
@@ -432,6 +434,7 @@ class UI {
         ${tg('dmgText', 'Hiện số sát thương', 'Số bay lên khi tướng đánh trúng quái')}
         ${tg('shake', 'Rung màn hình', 'Rung khi boss quẫy đuôi và khi tung chiêu tối thượng')}
         ${tg('skipStory', 'Bỏ qua cốt truyện', 'Không hiện màn Vua Hùng kén rể trước trận')}
+        ${tg('aiArt', 'Dùng ảnh AI (thử nghiệm)', 'Tắt: toàn bộ hình do game tự vẽ. Bật: dùng ảnh tạo bằng AI trong thư mục assets/ (tải lại trang)')}
         ${tg('vectorHeroes', 'Tướng vẽ nét (thấy từng món đồ)', 'Tắt: dùng ảnh vẽ tay, đồ mặc đổi theo bậc trang phục. Bật: hình vẽ nét, mũ / giáp / vũ khí hiện riêng từng món')}
         <div class="tg metal"><div><b>Cỡ chữ & nút</b><small>Phóng to thanh trên, thanh tướng, nút và thông báo trong trận. Tự động: điện thoại to thêm 20%</small></div>
           <div style="margin-left:auto;display:flex;gap:4px">${[['auto', 'Tự động'], ['s', 'Vừa'], ['m', 'To'], ['l', 'Rất to']].map(([k, n]) => `<button class="btn ${(st.uiSize || 'auto') === k ? 'btn-gold' : 'metal'}" style="height:34px;padding:0 10px;font-size:13px" data-act="set-uisize" data-k="${k}">${n}</button>`).join('')}</div></div>
@@ -439,7 +442,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px">${[['auto', 'Tự động'], ['high', 'Đẹp'], ['low', 'Tiết kiệm']].map(([k, n]) => `<button class="btn ${(st.gfx || 'auto') === k ? 'btn-gold' : 'metal'}" style="height:34px;padding:0 10px;font-size:13px" data-act="set-gfx" data-k="${k}">${n}</button>`).join('')}</div></div>
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 42 · Tiến trình lưu trên trình duyệt của bạn</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 43 · Tiến trình lưu trên trình duyệt của bạn</div>
       </div></div>`;
   }
 
@@ -1307,6 +1310,8 @@ class UI {
       case 'set':
         this.save.settings[d.k] = !this.save.settings[d.k];
         writeSave(this.save);
+        // đổi nguồn hình: tải lại trang cho mọi hình (cả thẻ <img> giao diện) đổi theo
+        if (d.k === 'aiArt') { location.reload(); break; }
         this.renderSettings();
         break;
       case 'set-close':
