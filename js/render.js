@@ -771,13 +771,13 @@ function drawBoneKing(ctx, r, color, wob, t) {
 //  BẢN ĐỒ kiểu bản đồ Dota 1 / Warcraft III (vẽ hoàn toàn bằng code)
 //  - Góc cổng quỷ: đất chết (giống phe Scourge), cây khô
 //  - Phía lâu đài: cỏ xanh (giống phe Sentinel), rừng thông dày
-//  - Đường lát đá cuội, sông chảy ngang có cầu gỗ
+//  - Đường lát đá cuội theo đường đi trong bản thiết kế
 // ------------------------------------------------------------
-const RIVER = [[-20, 506], [50, 502], [100, 498], [160, 490], [220, 498], [270, 510],
-               [330, 505], [390, 498], [450, 500], [560, 498]];
+const RIVER = [];   // bản đồ ngang theo thiết kế không có sông
 const BLIGHT_CENTER = [10, 150];
 
 function distToPolyline(pts, x, y) {
+  if (pts.length < 2) return Infinity;
   let best = Infinity;
   for (let i = 1; i < pts.length; i++) {
     const [ax, ay] = pts[i - 1], [bx, by] = pts[i];
@@ -855,23 +855,13 @@ function buildMapCanvas(scale) {
     ctx.stroke();
   }
 
-  // --- sông
-  strokePoly(ctx, RIVER, 44, '#7d6c47');
-  strokePoly(ctx, RIVER, 36, '#1d4a63');
-  strokePoly(ctx, RIVER, 22, '#2a6a88');
-  strokePoly(ctx, RIVER, 2, 'rgba(170,220,240,0.45)', [10, 18]);
-  ctx.save();
-  ctx.translate(0, 7);
-  strokePoly(ctx, RIVER, 1.5, 'rgba(170,220,240,0.3)', [6, 22]);
-  ctx.restore();
-
   // --- đường lát đá cuội
   strokePoly(ctx, CONFIG.path, PW + 12, 'rgba(0,0,0,0.25)');
   strokePoly(ctx, CONFIG.path, PW + 6, '#5b4a33');
   strokePoly(ctx, CONFIG.path, PW, '#6f665a');
   // từng viên đá
   const stones = [];
-  for (let i = 0; i < 2600; i++) {
+  for (let i = 0; i < 4200; i++) {
     const x = rnd() * W, y = rnd() * (H + 40);
     if (distToPath(x, y) > PW / 2 - 3) continue;
     stones.push([x, y, 2.5 + rnd() * 3, rnd()]);
@@ -892,25 +882,11 @@ function buildMapCanvas(scale) {
     ctx.fill();
   }
 
-  // --- cầu gỗ chỗ đường cắt sông (x = 100)
-  ctx.fillStyle = '#6d4c2f';
-  ctx.fillRect(100 - PW / 2, 478, PW, 44);
-  ctx.strokeStyle = '#4a321d';
-  ctx.lineWidth = 1.5;
-  for (let y = 481; y < 522; y += 6) {
-    ctx.beginPath(); ctx.moveTo(100 - PW / 2, y); ctx.lineTo(100 + PW / 2, y); ctx.stroke();
-  }
-  for (const sx of [-1, 1]) {
-    ctx.fillStyle = '#3e2a17';
-    ctx.fillRect(100 + sx * (PW / 2 + 1) - 2, 474, 4, 52);
-    for (const py of [474, 498, 522]) circle(ctx, 100 + sx * (PW / 2 + 1), py, 3.5, '#2e1f10');
-  }
-
   // --- vật thể: đá, bụi, xương, rừng cây
   const blocked = (x, y, pad) =>
     CONFIG.slots.some(([sx, sy]) => Math.hypot(sx - x, sy - y) < 40 + pad) ||
     distToPath(x, y) < PW / 2 + 10 + pad ||
-    distToPolyline(RIVER, x, y) < 22 + pad || y < 64 || y > H - 120;
+    (x > 1040 && x < 1200 && y > 380 && y < 560);
 
   for (let i = 0; i < 70; i++) {
     const x = rnd() * W, y = rnd() * H;
@@ -933,9 +909,9 @@ function buildMapCanvas(scale) {
 
   // rừng: dày ở mép bản đồ (như viền rừng của bản đồ Dota), thưa ở giữa
   const trees = [];
-  for (let i = 0; i < 900; i++) {
-    const x = rnd() * W, y = 60 + rnd() * (H - 60);
-    const edge = Math.min(x, W - x);
+  for (let i = 0; i < 1500; i++) {
+    const x = rnd() * W, y = 20 + rnd() * (H - 20);
+    const edge = Math.min(x, W - x, y, H - y);
     const keep = edge < 30 ? 0.9 : 0.22;
     if (rnd() > keep || blocked(x, y, 4)) continue;
     if (trees.some(([tx, ty]) => Math.hypot(tx - x, ty - y) < 15)) continue;
@@ -996,47 +972,51 @@ function drawDeadTree(ctx, x, y, r) {
   ctx.lineCap = 'butt';
 }
 
-// Thành phe ánh sáng: tường đá, cờ xanh, pha lê phát sáng
+// Thành phe ánh sáng ở cuối đường: tường đá, cờ xanh, pha lê phát sáng
 function drawCastle(ctx) {
-  const [cx] = CONFIG.path[CONFIG.path.length - 1];
-  const H = CONFIG.H, top = H - 66;
+  const [cx, end] = CONFIG.path[CONFIG.path.length - 1];
+  const base = end + 70, top = end - 40;
   const stone = '#b3ab98', dark = '#7d7666';
-  ctx.fillStyle = 'rgba(0,0,0,0.3)';
-  ctx.fillRect(cx - 82, H - 8, 164, 8);
+  ctx.fillStyle = 'rgba(0,0,0,0.35)';
+  ctx.beginPath();
+  ctx.ellipse(cx, base, 90, 16, 0, 0, Math.PI * 2);
+  ctx.fill();
   for (const sx of [-1, 1]) {
-    const tx = cx + sx * 62;
-    rrect(ctx, tx - 18, top - 18, 36, 90, 3, stone);
+    const tx = cx + sx * 58;
+    rrect(ctx, tx - 17, top - 20, 34, base - top + 20, 3, stone);
     ctx.fillStyle = stone;
-    for (let i = 0; i < 3; i++) ctx.fillRect(tx - 18 + i * 13, top - 27, 10, 11);
-    rrect(ctx, tx - 4, top + 5, 8, 14, 4, '#2c2c34');
+    for (let i = 0; i < 3; i++) ctx.fillRect(tx - 17 + i * 12.5, top - 29, 9, 10);
+    rrect(ctx, tx - 4, top + 4, 8, 14, 4, '#2c2c34');
     ctx.fillStyle = '#5d4037';
-    ctx.fillRect(tx - 1, top - 62, 2, 36);
+    ctx.fillRect(tx - 1, top - 62, 2, 34);
     ctx.fillStyle = '#2e8b57';
     ctx.beginPath();
     ctx.moveTo(tx + 1, top - 62); ctx.lineTo(tx + 20, top - 55); ctx.lineTo(tx + 1, top - 48);
     ctx.fill();
   }
-  rrect(ctx, cx - 50, top, 100, 66, 3, stone);
+  rrect(ctx, cx - 46, top, 92, base - top, 3, stone);
   ctx.fillStyle = stone;
-  for (let i = 0; i < 5; i++) ctx.fillRect(cx - 48 + i * 21, top - 10, 12, 12);
+  for (let i = 0; i < 5; i++) ctx.fillRect(cx - 44 + i * 19, top - 10, 11, 11);
   ctx.strokeStyle = dark;
   ctx.lineWidth = 1;
-  for (let row = 0; row < 4; row++) {
-    const y = top + 12 + row * 14;
-    ctx.beginPath(); ctx.moveTo(cx - 50, y); ctx.lineTo(cx + 50, y); ctx.stroke();
+  for (let y = top + 12; y < base; y += 14) {
+    ctx.beginPath(); ctx.moveTo(cx - 46, y); ctx.lineTo(cx + 46, y); ctx.stroke();
   }
+  ctx.strokeStyle = '#d9a441';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(cx - 46, top, 92, base - top);
   ctx.fillStyle = '#3e2723';
   ctx.beginPath();
-  ctx.moveTo(cx - 20, H);
-  ctx.lineTo(cx - 20, top + 34);
-  ctx.arc(cx, top + 34, 20, Math.PI, 0);
-  ctx.lineTo(cx + 20, H);
+  ctx.moveTo(cx - 20, base);
+  ctx.lineTo(cx - 20, top + 40);
+  ctx.arc(cx, top + 40, 20, Math.PI, 0);
+  ctx.lineTo(cx + 20, base);
   ctx.fill();
   ctx.shadowColor = '#7dffb0';
   ctx.shadowBlur = 14;
   ctx.fillStyle = '#9dffc4';
   ctx.beginPath();
-  ctx.moveTo(cx, top - 30); ctx.lineTo(cx + 7, top - 18); ctx.lineTo(cx, top - 6); ctx.lineTo(cx - 7, top - 18);
+  ctx.moveTo(cx, top - 32); ctx.lineTo(cx + 7, top - 20); ctx.lineTo(cx, top - 8); ctx.lineTo(cx - 7, top - 20);
   ctx.closePath();
   ctx.fill();
   ctx.shadowBlur = 0;

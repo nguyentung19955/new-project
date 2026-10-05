@@ -8,8 +8,8 @@
 // ============================================================
 
 const CONFIG = {
-  W: 540,            // kích thước logic (dọc, tỉ lệ 9:16)
-  H: 960,
+  W: 1280,           // kích thước logic (màn hình ngang 16:9, theo bản thiết kế)
+  H: 720,
   startGold: 220,
   startLives: 20,
   sellRatio: 0.6,    // bán tướng hoàn lại 60% giá
@@ -17,12 +17,20 @@ const CONFIG = {
   waveBreak: 10,     // giây nghỉ giữa hai đợt (tự gọi đợt kế)
   pathWidth: 46,
   maxLevel: 25,
-  // Đường đi của quái (các điểm gấp khúc)
-  path: [[-30, 150], [440, 150], [440, 350], [100, 350], [100, 550],
-         [440, 550], [440, 750], [270, 750], [270, 1000]],
+  totalWaves: 30,    // chiến dịch 30 đợt (sau đó có thể chơi vô tận)
+  // Đường đi của quái (theo bản thiết kế Gameplay HUD)
+  path: [[-20, 150], [360, 150], [360, 390], [820, 390], [820, 140], [1120, 140], [1120, 470]],
+  // Vùng bị giao diện che: không đặt tướng ở đây
+  hudZones: [
+    [0, 0, 1280, 112],        // thanh trên (cộng phần đầu tướng)
+    [0, 0, 250, 340],         // bảng đợt sắp tới
+    [1040, 0, 1280, 230],     // bản đồ nhỏ
+    [0, 540, 1280, 720],      // thanh điều khiển dưới
+    [1040, 400, 1210, 720],   // lâu đài
+  ],
   // Vị trí đặt tướng: lưới ẩn dọc hai bên đường (sinh trong game.js).
   // sx/sy: khoảng cách ô; minD/maxD: dải cách tim đường được phép đặt
-  buildGrid: { sx: 62, sy: 56, y0: 98, minY: 118, minD: 52, maxD: 108 },
+  buildGrid: { sx: 60, sy: 52, minD: 50, maxD: 108 },
   slots: [],
   // Bậc tiến hóa theo số mạng hạ gục -> tướng to hơn, có sao, hào quang
   tiers: [0, 25, 75, 150],
@@ -70,7 +78,7 @@ const HEROES = {
   knight: {
     dmgType: 'phys',
     name: 'Hiệp Sĩ', cost: 70, attr: 'str', attack: 'melee', wclass: 'blade',
-    role: 'Chém lan',
+    role: 'Chém lan', title: 'Kỵ Sĩ Thép',
     attrs: { str: 22, agi: 14, int: 12 }, gain: { str: 2.6, agi: 1.4, int: 1.2 },
     base: { damage: 6, range: 145, cooldown: 1.0 },
     look: { skin: '#f1c27d', cloth: '#7f8c8d', hair: '#5d4037', aura: '#e74c3c',
@@ -78,7 +86,7 @@ const HEROES = {
     skills: [
       { id: 'bash', name: 'Đập Khiên', icon: '🔰', unlock: 0,
         info: (n) => `Đập khiên làm choáng quái 1 giây, gây x2 sát thương +${(n * 0.6).toFixed(0)}`,
-        active: { cooldown: 6, cast: 'bash' } },
+        active: { cooldown: 6, cast: 'bash', mana: 45 } },
       { id: 'bloodlust', name: 'Huyết Chiến', icon: '🩸', unlock: 10,
         info: (n) => `Chém lan ${Math.round(Math.min(1, 0.5 + n * 0.005) * 100)}% lên mọi quái trong tầm · +${(n * 0.4).toFixed(1)} sát thương (mỗi quái +0.4)`,
         apply: (s, n) => { s.damage += n * 0.4; s.cleave += Math.min(1, 0.5 + n * 0.005); } },
@@ -87,13 +95,13 @@ const HEROES = {
         apply: (s, n) => { s.haste += Math.min(60, n * 0.5); } },
       { id: 'judgement', name: 'Phán Quyết', icon: '⚡', unlock: 90,
         info: (n) => `Giáng sét vào quái máu cao nhất: x4 sát thương +${n * 2}`,
-        active: { cooldown: 10, cast: 'judgement' } },
+        active: { cooldown: 10, cast: 'judgement', mana: 150 } },
     ],
   },
   butcher: {
     dmgType: 'phys',
     name: 'Đồ Tể', cost: 80, attr: 'str', attack: 'melee', wclass: 'blade',
-    role: 'Móc kéo',
+    role: 'Móc kéo', title: 'Đồ Tể Xích Sắt',
     attrs: { str: 25, agi: 11, int: 14 }, gain: { str: 3.0, agi: 1.0, int: 1.5 },
     base: { damage: 10, range: 140, cooldown: 1.25 },
     look: { skin: '#d7a985', cloth: '#6d4c41', hair: null, aura: '#8bc34a', bulk: 1.15,
@@ -101,7 +109,7 @@ const HEROES = {
     skills: [
       { id: 'hook', name: 'Móc Xích', icon: '🔗', unlock: 0,
         info: (n) => `Móc quái đi xa nhất kéo lùi về sau, gây ${40 + Math.round(n * 1.5)} sát thương`,
-        active: { cooldown: 7, cast: 'hook' } },
+        active: { cooldown: 7, cast: 'hook', mana: 50 } },
       { id: 'fleshheap', name: 'Chồng Thịt', icon: '🍖', unlock: 10,
         info: (n) => `+${Math.min(60, Math.floor(n / 2))} sức mạnh (mỗi 2 quái +1, tối đa 60)`,
         apply: (s, n) => { s.str += Math.min(60, Math.floor(n / 2)); } },
@@ -110,13 +118,13 @@ const HEROES = {
         apply: (s, n) => { s.stench = 8 + n * 0.15; } },
       { id: 'devour', name: 'Nuốt Chửng', icon: '👄', unlock: 90,
         info: (n) => `Nuốt sống quái thường máu cao nhất trong tầm. Với boss: x6 sát thương +${n * 2}`,
-        active: { cooldown: 18, cast: 'devour' } },
+        active: { cooldown: 18, cast: 'devour', mana: 160 } },
     ],
   },
   archer: {
     dmgType: 'phys',
     name: 'Cung Thủ', cost: 55, attr: 'agi', attack: 'arrow', wclass: 'bow',
-    role: 'Tầm xa',
+    role: 'Tầm xa', title: 'Xạ Thủ Rừng',
     attrs: { str: 15, agi: 22, int: 14 }, gain: { str: 1.6, agi: 2.8, int: 1.4 },
     base: { damage: 0, range: 170, cooldown: 1.0 },
     look: { skin: '#e0ac69', cloth: '#6b8e23', hair: '#3e2723', aura: '#2ecc71',
@@ -125,7 +133,7 @@ const HEROES = {
     skills: [
       { id: 'pierce', name: 'Tên Xuyên Thấu', icon: '💫', unlock: 0,
         info: (n) => `Bắn mũi tên xuyên qua mọi quái trên đường bay: x2 sát thương +${(n * 0.8).toFixed(0)}`,
-        active: { cooldown: 7, cast: 'pierce' } },
+        active: { cooldown: 7, cast: 'pierce', mana: 40 } },
       { id: 'multishot', name: 'Mắt Ưng · Đa Tiễn', icon: '🏹', unlock: 10,
         info: (n) => `Bắn ${Math.min(5, 2 + Math.floor(n / 40))} mũi tên · +${(n * 0.25).toFixed(1)} sát thương · +${Math.min(80, Math.round(n * 0.4))} tầm`,
         apply: (s, n) => { s.arrows = Math.min(5, 2 + Math.floor(n / 40)); s.damage += n * 0.25; s.range += Math.min(80, n * 0.4); } },
@@ -134,13 +142,13 @@ const HEROES = {
         apply: (s, n) => { s.poison = 3 + n * 0.12; } },
       { id: 'arrowrain', name: 'Mưa Tên', icon: '🌧', unlock: 80,
         info: (n) => `Trút mưa tên vùng rộng: x2 sát thương +${(n * 0.5).toFixed(0)}`,
-        active: { cooldown: 10, cast: 'arrowrain' } },
+        active: { cooldown: 10, cast: 'arrowrain', mana: 140 } },
     ],
   },
   assassin: {
     dmgType: 'phys',
     name: 'Sát Thủ', cost: 75, attr: 'agi', attack: 'melee', wclass: 'blade',
-    role: 'Chí mạng',
+    role: 'Chí mạng', title: 'Sát Thủ Bóng Đêm',
     attrs: { str: 16, agi: 24, int: 12 }, gain: { str: 1.8, agi: 3.0, int: 1.2 },
     base: { damage: 2, range: 140, cooldown: 0.85 },
     look: { skin: '#e0ac69', cloth: '#2c2c3e', hair: '#111111', aura: '#9b59b6',
@@ -149,7 +157,7 @@ const HEROES = {
     skills: [
       { id: 'shadowstep', name: 'Bước Bóng Đêm', icon: '👣', unlock: 0,
         info: (n) => `Lướt tới quái xa nhất trong tầm gấp đôi, chém chữ X: x2 sát thương +${(n * 0.5).toFixed(0)}`,
-        active: { cooldown: 6, cast: 'shadowstep' } },
+        active: { cooldown: 6, cast: 'shadowstep', mana: 45 } },
       { id: 'hiddenblade', name: 'Lưỡi Dao Ẩn', icon: '🗡', unlock: 10,
         info: (n) => `+${(n * 0.35).toFixed(1)} sát thương (mỗi quái +0.35)`,
         apply: (s, n) => { s.damage += n * 0.35; } },
@@ -158,13 +166,13 @@ const HEROES = {
         apply: (s, n) => { s.crit += 15 + Math.min(25, n * 0.1); s.critMult = 2.2 + Math.min(1.3, n * 0.008); } },
       { id: 'assassinate', name: 'Ám Sát', icon: '🎯', unlock: 90,
         info: (n) => `Đánh dấu rồi đâm lén quái máu cao nhất: x6 sát thương +${n * 3}`,
-        active: { cooldown: 14, cast: 'assassinate' } },
+        active: { cooldown: 14, cast: 'assassinate', mana: 170 } },
     ],
   },
   mage: {
     dmgType: 'magic',
     name: 'Pháp Sư Lửa', cost: 85, attr: 'int', attack: 'magic', wclass: 'staff',
-    role: 'Nổ lan',
+    role: 'Nổ lan', title: 'Hỏa Pháp Sư',
     attrs: { str: 14, agi: 12, int: 24 }, gain: { str: 1.4, agi: 1.2, int: 3.0 },
     base: { damage: 6, range: 140, cooldown: 1.6, splash: 35 },
     look: { skin: '#f5d0a9', cloth: '#5d1f1f', hair: '#ecf0f1', aura: '#e67e22',
@@ -173,7 +181,7 @@ const HEROES = {
     skills: [
       { id: 'firepillar', name: 'Cột Lửa', icon: '🔥', unlock: 0,
         info: (n) => `Phun cột lửa dưới chân quái: x1.8 sát thương +${(n * 0.8).toFixed(0)} và đốt cháy`,
-        active: { cooldown: 7, cast: 'firepillar' } },
+        active: { cooldown: 7, cast: 'firepillar', mana: 55 } },
       { id: 'soulsiphon', name: 'Hấp Thụ Linh Hồn', icon: '👻', unlock: 10,
         info: (n) => `+${(n * 0.5).toFixed(1)} sát thương phép · bán kính nổ ${Math.round(Math.min(110, 45 + n * 0.4))}`,
         apply: (s, n) => { s.damage += n * 0.5; s.splash = Math.min(110, 45 + n * 0.4); } },
@@ -182,13 +190,13 @@ const HEROES = {
         apply: (s, n) => { s.poison = 4 + n * 0.15; } },
       { id: 'meteor', name: 'Thiên Thạch', icon: '☄', unlock: 90,
         info: (n) => `Gọi thiên thạch: x5 sát thương +${n * 2} vùng lớn`,
-        active: { cooldown: 12, cast: 'meteor' } },
+        active: { cooldown: 12, cast: 'meteor', mana: 180 } },
     ],
   },
   frost: {
     dmgType: 'magic',
     name: 'Pháp Sư Băng', cost: 80, attr: 'int', attack: 'frost', wclass: 'staff',
-    role: 'Làm chậm',
+    role: 'Làm chậm', title: 'Băng Pháp Sư',
     attrs: { str: 15, agi: 13, int: 22 }, gain: { str: 1.6, agi: 1.4, int: 2.8 },
     base: { damage: 2, range: 150, cooldown: 1.2, slow: 15 },
     look: { skin: '#f1d3b3', cloth: '#1f4e79', hair: '#dfe6e9', aura: '#74b9ff',
@@ -197,7 +205,7 @@ const HEROES = {
     skills: [
       { id: 'nova', name: 'Vòng Băng', icon: '💠', unlock: 0,
         info: (n) => `Nổ băng quanh mục tiêu: ${60 + n} sát thương, làm chậm 60%`,
-        active: { cooldown: 8, cast: 'nova' } },
+        active: { cooldown: 8, cast: 'nova', mana: 55 } },
       { id: 'icebolt', name: 'Băng Tiễn', icon: '❄', unlock: 10,
         info: (n) => `+${(n * 0.45).toFixed(1)} sát thương (mỗi quái +0.45)`,
         apply: (s, n) => { s.damage += n * 0.45; } },
@@ -206,11 +214,16 @@ const HEROES = {
         apply: (s, n) => { s.slow = Math.max(s.slow, Math.min(50, 20 + n * 0.25)); } },
       { id: 'blizzard', name: 'Bão Tuyết', icon: '🌨', unlock: 90,
         info: (n) => `Đóng băng mọi quái trong tầm 2 giây, x3 sát thương +${n}`,
-        active: { cooldown: 16, cast: 'blizzard' } },
+        active: { cooldown: 16, cast: 'blizzard', mana: 190 } },
     ],
   },
 };
 const SKILL_KEYS = ['Q', 'W', 'E', 'R'];
+// Cấp kỹ năng: mở bằng số quái hạ được (cấp 1), nâng thêm bằng điểm kỹ năng (mỗi cấp tướng +1 điểm)
+const SKILL_MAX = [4, 4, 4, 3];
+const skillMult = (lv) => 1 + 0.25 * (Math.max(1, lv) - 1);   // mỗi cấp kỹ năng +25% hiệu lực
+// cấp tướng tối thiểu để nâng kỹ năng lên cấp L (R: cấp 6/11/16 như Dota)
+const skillReqLevel = (i, L) => (i === 3 ? [0, 0, 6, 11, 16][L] || 99 : [0, 0, 3, 5, 7][L] || 99);
 
 // ------------------------------------------------------------
 //  TRANG BỊ (3 ô trang phục) — `look` đổi hình dạng tướng khi mặc
@@ -386,25 +399,46 @@ const ELITE_MODS = {
   shield:  { name: 'Khiên Phép', icon: '◈', color: '#74b9ff', desc: 'Khiên chặn sát thương bằng 40% máu' },
 };
 
-const waveHpMult = (n) => Math.pow(1.165, n - 1);
+const waveHpMult = (n) => Math.pow(1.16, n - 1);
+
+// Lịch đợt (theo bản thiết kế): boss ở đợt 10/20/30, đợt bay 7/13/17/24/27,
+// Golem Đá khổng lồ ở đợt 5/15/25. Sau đợt 30 chơi vô tận, boss mỗi 10 đợt.
+const BOSS_WAVES = { 10: 'gorath', 20: 'boneking', 30: 'ashlord' };
+const AIR_WAVES = [7, 13, 17, 24, 27];
+const CHAMPION_WAVES = [5, 15, 25];
+const waveKind = (n) => (BOSS_WAVES[n] || (n > 30 && n % 10 === 0) ? 'boss'
+  : AIR_WAVES.includes(n) ? 'air' : CHAMPION_WAVES.includes(n) ? 'champion' : 'normal');
 
 function buildWave(n) {
   const list = [];
-  const count = 8 + Math.floor(n * 2);
-  const airWave = n >= 4 && n % 4 === 3;      // đợt bay: nhiều Dơi Độc
+  const count = 8 + Math.floor(n * 1.6);
+  const air = waveKind(n) === 'air';
   for (let i = 0; i < count; i++) {
     const r = Math.random();
     let type = 'grunt';
-    if (airWave && r < 0.5) type = 'bat';
-    else if (n >= 7 && r < 0.1) type = 'splitter';
+    if (air && r < 0.55) type = 'bat';
+    else if (n >= 8 && r < 0.1) type = 'splitter';
     else if (n >= 3 && r < 0.22) type = 'shaman';
-    else if (n >= 5 && r < 0.36) type = 'tank';
-    else if (n >= 4 && r < 0.44) type = 'bat';
-    else if (n >= 2 && r < 0.66) type = 'runner';
-    const elite = n >= 6 && Math.random() < 0.1 + n * 0.006
+    else if (n >= 6 && r < 0.34) type = 'tank';
+    else if (n >= 9 && r < 0.42) type = 'bat';
+    else if (n >= 2 && r < 0.64) type = 'runner';
+    const elite = n >= 6 && Math.random() < 0.08 + n * 0.006
       ? Object.keys(ELITE_MODS)[Math.floor(Math.random() * 4)] : null;
     list.push({ type, elite, gap: type === 'runner' || type === 'bat' ? 0.45 : 0.8 });
   }
-  if (n % 5 === 0) list.push({ type: BOSS_ORDER[(n / 5 - 1) % BOSS_ORDER.length], gap: 3 });
+  if (waveKind(n) === 'champion') list.push({ type: 'tank', elite: 'armored', champion: true, gap: 2 });
+  if (waveKind(n) === 'boss') {
+    const boss = BOSS_WAVES[n] || BOSS_ORDER[(n / 10) % BOSS_ORDER.length];
+    list.push({ type: boss, gap: 3 });
+  }
   return list;
 }
+
+// Cây Sự Sống: lớn dần qua các đợt, cho vàng, hồi mạng thành và quả
+const TREE = {
+  stageWaves: 5,               // mỗi 5 đợt lên một giai đoạn (tối đa 5)
+  stages: ['Mầm Non', 'Cây Non', 'Cây Trưởng Thành', 'Cây Cổ Thụ', 'Cây Thần'],
+  goldPerStage: 15,            // vàng mỗi đợt = giai đoạn × 15
+  waterCost: 80,               // tưới nước: lớn nhanh thêm 1 đợt (mỗi đợt 1 lần)
+  fruitGold: 40,               // mỗi quả thu hoạch được 40 vàng và hồi 25% máu cho tướng
+};

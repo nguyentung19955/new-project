@@ -9,16 +9,15 @@ let nextId = 1;
 
 // --- Sinh lưới vị trí đặt tướng (khoảng 40 ô) dọc hai bên đường, tránh sông & lâu đài
 (function buildSpots() {
-  const { sx, sy, y0, minY, minD, maxD } = CONFIG.buildGrid;
+  const { sx, sy, minD, maxD } = CONFIG.buildGrid;
   const out = [];
   let row = 0;
-  for (let y = y0; y <= 850; y += sy, row++) {
-    for (let x = 28 + (row % 2 ? sx / 2 : 0); x <= 516; x += sx) {
-      if (y < minY) continue;                              // dưới thanh HUD
+  for (let y = 40; y <= CONFIG.H - 20; y += sy, row++) {
+    for (let x = 30 + (row % 2 ? sx / 2 : 0); x <= CONFIG.W - 30; x += sx) {
       const d = distToPath(x, y);
       if (d < minD || d > maxD) continue;
-      if (distToPolyline(RIVER, x, y) < 34) continue;
-      if (Math.abs(x - 270) < 100 && y > 815) continue;   // lâu đài
+      // không đặt dưới các bảng giao diện
+      if (CONFIG.hudZones.some(([x1, y1, x2, y2]) => x >= x1 && x <= x2 && y >= y1 && y <= y2)) continue;
       out.push([Math.round(x), y]);
     }
   }
@@ -26,7 +25,7 @@ let nextId = 1;
   // ô gợi ý cho người mới: gần giữa bản đồ
   let best = 0;
   out.forEach(([x, y], i) => {
-    if (Math.hypot(x - 270, y - 440) < Math.hypot(out[best][0] - 270, out[best][1] - 440)) best = i;
+    if (Math.hypot(x - 590, y - 300) < Math.hypot(out[best][0] - 590, out[best][1] - 300)) best = i;
   });
   CONFIG.coachSlot = best;
 })();
@@ -68,9 +67,19 @@ function heroStats(h) {
     splash: def.base.splash || 0, slow: def.base.slow || 0, stench: 0, bonusDmgPct: 0,
     str: base.str, agi: base.agi, int: base.int, hp: 0, regen: 0, cdr: 0,
   };
-  for (const sk of def.skills) {
-    if (h.kills >= sk.unlock && sk.apply) sk.apply(s, h.kills - sk.unlock);
-  }
+  def.skills.forEach((sk, i) => {
+    if (h.kills < sk.unlock || !sk.apply) return;
+    // nội tại: hiệu lực nhân theo cấp kỹ năng
+    const before = { ...s };
+    sk.apply(s, h.kills - sk.unlock);
+    const m = skillMult(skillLevel(h, i));
+    if (m > 1) {
+      for (const k in s) {
+        if (typeof s[k] === 'number' && s[k] !== before[k]) s[k] += (s[k] - before[k]) * (m - 1);
+      }
+      s.arrows = Math.round(s.arrows);
+    }
+  });
   for (const slot of SLOTS) {
     const it = ITEMS[h.equip[slot]];
     if (it) for (const k in it.stats) s[k] += it.stats[k];
@@ -85,9 +94,19 @@ function heroStats(h) {
   s.skillPower = 1 + s.int * 0.015;                // trí tuệ -> sức mạnh kỹ năng
   s.cdr = Math.min(50, s.cdr + s.int * 0.3);       // trí tuệ -> giảm hồi chiêu
   s.cleave = Math.min(1, s.cleave);
+  s.bonusDmgPct += tierOf(h.kills) * 10;          // mỗi sao tiến hóa +10% sát thương
   s.damage *= 1 + s.bonusDmgPct / 100;
+  s.maxMana = Math.round(80 + s.int * 12);          // trí tuệ -> năng lượng
+  s.manaRegen = 1 + s.int * 0.06;
   s.cooldown = s.baseCooldown / Math.max(0.2, 1 + s.haste / 100);
   return s;
+}
+
+// Cấp hiện tại của kỹ năng thứ i (0 = chưa mở)
+function skillLevel(h, i) {
+  const sk = HEROES[h.type].skills[i];
+  if (h.kills < sk.unlock) return 0;
+  return 1 + ((h.skillLv && h.skillLv[sk.id]) || 0);
 }
 
 function canEquip(heroType, itemId) {
@@ -310,6 +329,9 @@ class Game {
     this.shake = 0;
     this.bossesKilled = 0;
     this.seen = {};         // loại quái đã gặp (báo "quái mới")
+    this.endless = false;   // chơi tiếp sau đợt 30
+    this.won = false;
+    this.tree = { growth: 0, watered: false, fruits: 0 };
     this.events = [];   // sự kiện lớn cho giao diện (boss xuất hiện...)
     // Đồ khởi đầu để thử ngay việc thay đổi hình dạng
     this.inventory = ['leather_cap', 'leather_armor', 'iron_sword', 'hunter_bow', 'oak_staff'];
@@ -323,11 +345,12 @@ class Game {
     const [x, y] = CONFIG.slots[slot];
     const h = {
       id: nextId++, type, slot, x, y, kills: 0, level: 1, xp: 0, cd: 0, swing: 0, dir: 1,
-      dead: false, respawnT: 0, stunT: 0, hp: 0,
+      dead: false, respawnT: 0, stunT: 0, hp: 0, mana: 0, skillLv: {}, skillPts: 0,
       equip: { weapon: null, helmet: null, armor: null, acc1: null, acc2: null, acc3: null },
       skillCd: {},
     };
     h.hp = heroStats(h).hpMax;
+    h.mana = heroStats(h).maxMana;
     this.heroes[slot] = h;
     this.effects.push({ type: 'ring', x, y: y - 15, r: 40, color: '#fff', ttl: 0.4, max: 0.4 });
     return true;
@@ -423,18 +446,83 @@ class Game {
     if (this.waveActive || this.over) return;
     this.wave++;
     this.spawnQueue = this.nextWave;
+    this.waveTotal = this.spawnQueue.length;
     this.nextWave = buildWave(this.wave + 1);
     this.spawnTimer = 0;
     this.waveActive = true;
   }
 
-  // Gọi đợt kế ngay trong lúc đếm ngược: thưởng vàng theo thời gian còn lại
+  // Gọi sớm: giữa hai đợt thì bắt đầu ngay; đang trong đợt thì dồn đợt kế vào luôn
+  earlyBonus() {
+    if (this.wave === 0) return 0;
+    return this.waveActive ? 30 + this.wave * 3 : 10 + Math.round(Math.max(0, this.nextWaveT) * 4);
+  }
+
   callEarly() {
-    if (this.waveActive || this.over) return 0;
-    const bonus = this.wave > 0 ? Math.round(this.nextWaveT * 4) : 0;
+    if (this.over || (this.wave >= CONFIG.totalWaves && !this.endless)) return 0;
+    const bonus = this.earlyBonus();
     this.gold += bonus;
-    this.startWave();
+    if (this.waveActive) {
+      this.wave++;
+      this.spawnQueue = this.spawnQueue.concat(this.nextWave);
+      this.waveTotal += this.nextWave.length;
+      this.nextWave = buildWave(this.wave + 1);
+    } else {
+      this.startWave();
+    }
     return bonus;
+  }
+
+  // Nâng kỹ năng bằng điểm kỹ năng. Trả về true hoặc câu báo lỗi
+  upgradeSkill(h, i) {
+    const sk = HEROES[h.type].skills[i];
+    const lv = skillLevel(h, i);
+    if (!lv) return `Cần hạ ${sk.unlock} quái để mở kỹ năng này`;
+    if (lv >= SKILL_MAX[i]) return 'Kỹ năng đã đạt cấp tối đa';
+    if (h.level < skillReqLevel(i, lv + 1)) return `Cần tướng cấp ${skillReqLevel(i, lv + 1)}`;
+    if (h.skillPts <= 0) return 'Chưa có điểm kỹ năng (lên cấp để nhận)';
+    h.skillPts--;
+    h.skillLv[sk.id] = (h.skillLv[sk.id] || 0) + 1;
+    this.effects.push({ type: 'ring', x: h.x, y: h.y - 20, r: 40, color: '#f0c46a', ttl: 0.5, max: 0.5 });
+    return true;
+  }
+
+  // ---------- Cây Sự Sống
+  treeStage() {
+    return Math.min(TREE.stages.length, 1 + Math.floor(this.tree.growth / TREE.stageWaves));
+  }
+
+  waterTree() {
+    if (this.tree.watered) return 'Hôm nay cây đã được tưới (mỗi đợt 1 lần)';
+    if (this.gold < TREE.waterCost) return `Cần ${TREE.waterCost} vàng`;
+    if (this.treeStage() >= TREE.stages.length) return 'Cây đã lớn tối đa';
+    this.gold -= TREE.waterCost;
+    this.tree.watered = true;
+    this.tree.growth++;
+    return true;
+  }
+
+  harvestTree() {
+    const n = this.tree.fruits;
+    if (!n) return 0;
+    this.tree.fruits = 0;
+    this.gold += n * TREE.fruitGold;
+    for (const h of this.heroes) {
+      if (h && !h.dead) h.hp = Math.min(heroStats(h).hpMax, h.hp + heroStats(h).hpMax * 0.25 * n);
+    }
+    return n;
+  }
+
+  growTree() {
+    const t = this.tree;
+    t.growth++;
+    t.watered = false;
+    const st = this.treeStage();
+    const gold = st * TREE.goldPerStage;
+    this.gold += gold;
+    if (st >= 2 && this.wave % 3 === 0) this.lives++;
+    if (st >= 3) t.fruits = Math.min(5, t.fruits + 1);
+    return gold;
   }
 
   // ---------- truy vấn
@@ -454,7 +542,7 @@ class Game {
   }
 
   get boss() {
-    return this.enemies.find((e) => e.def.boss && !e.dead) || null;
+    return this.enemies.find((e) => (e.def.boss || e.champion) && !e.dead) || null;
   }
 
   // ---------- vòng lặp
@@ -462,7 +550,7 @@ class Game {
     if (this.over) return;
     this.time += dt;
     this.shake = Math.max(0, this.shake - dt * 30);
-    if (!this.waveActive) {
+    if (!this.waveActive && (this.wave < CONFIG.totalWaves || this.endless)) {
       this.nextWaveT -= dt;
       if (this.nextWaveT <= 0) this.startWave();
     }
@@ -478,13 +566,19 @@ class Game {
       this.nextWaveT = CONFIG.waveBreak;
       const bonus = 20 + this.wave * 5;
       this.gold += bonus;
-      this.notify(`Hoàn thành đợt ${this.wave}! +${bonus}💰`, '#f1c40f');
+      const treeGold = this.growTree();
+      this.notify(`Hoàn thành đợt ${this.wave}! +${bonus}💰 · Cây Sự Sống +${treeGold}💰`, '#f1c40f');
+      if (this.wave >= CONFIG.totalWaves && !this.endless && !this.won) {
+        this.won = true;
+        this.events.push({ type: 'victory' });
+      }
     }
   }
 
   spawn(type, dist, elite) {
     const def = ENEMIES[type];
-    let hp = def.hp * waveHpMult(this.wave) * (def.boss ? 1 + this.bossesKilled * 0.35 : 1);
+    // boss tăng máu chậm hơn quái thường để không đột biến ở cuối chiến dịch
+    let hp = def.hp * (def.boss ? Math.pow(waveHpMult(this.wave), 0.85) : waveHpMult(this.wave));
     if (elite) hp *= 1.8;
     const p = PATH.at(dist);
     const e = {
@@ -509,7 +603,14 @@ class Game {
     const next = this.spawnQueue.shift();
     this.spawnTimer = next.gap;
     const e = this.spawn(next.type, 0, next.elite);
-    if (e.def.boss) this.events.push({ type: 'boss', name: e.def.name });
+    if (next.champion) {
+      // Golem khổng lồ đợt 5/15/25
+      e.champion = true;
+      e.hp = e.maxHp = e.maxHp * 3;
+      e.armor += 15;
+      this.events.push({ type: 'boss', name: `${e.def.name} khổng lồ`, armor: e.armor, champion: true });
+    }
+    if (e.def.boss) this.events.push({ type: 'boss', name: e.def.name, armor: e.armor });
   }
 
   updateEnemy(e, dt) {
@@ -675,6 +776,7 @@ class Game {
     while (h.level < CONFIG.maxLevel && h.xp >= xpForLevel(h.level + 1)) {
       const before = heroStats(h).hpMax;
       h.level++;
+      h.skillPts++;
       h.hp += heroStats(h).hpMax - before;
       up = true;
     }
@@ -697,6 +799,7 @@ class Game {
       return;
     }
     h.hp = Math.min(st.hpMax, h.hp + st.regen * dt);
+    h.mana = Math.min(st.maxMana, h.mana + st.manaRegen * dt);
     h.swing = Math.max(0, h.swing - dt * 4);
     if (h.castT > 0) h.castT -= dt;
     for (const sk of def.skills) {
@@ -710,9 +813,11 @@ class Game {
       for (const e of this.enemiesInRange(h.x, h.y, 95, false)) this.hit(e, st.stench * dt, h, { silent: true, dt: 'magic' });
     }
 
-    for (const sk of def.skills) {
-      if (!sk.active || h.kills < sk.unlock || h.skillCd[sk.id] > 0) continue;
-      if (SKILL_CASTS[sk.active.cast](this, h, st, h.kills - sk.unlock)) {
+    for (const [i, sk] of def.skills.entries()) {
+      if (!sk.active || h.kills < sk.unlock || h.skillCd[sk.id] > 0 || h.mana < sk.active.mana) continue;
+      const cst = { ...st, skillPower: st.skillPower * skillMult(skillLevel(h, i)) };
+      if (SKILL_CASTS[sk.active.cast](this, h, cst, h.kills - sk.unlock)) {
+        h.mana -= sk.active.mana;
         h.skillCd[sk.id] = sk.active.cooldown * (1 - st.cdr / 100);
         h.swing = 1;
         const color = SKILL_COLOR[sk.active.cast] || '#fff';
@@ -886,10 +991,11 @@ class Game {
       }
     }
 
-    // Kinh nghiệm chia đều cho các tướng đứng gần (như Dota), người hạ luôn được chia
+    // Kinh nghiệm cho các tướng đứng gần (như Dota), người hạ luôn được chia
     const near = this.heroes.filter((h) => h && !h.dead && Math.hypot(h.x - e.x, h.y - e.y) <= 230);
     if (hero && !hero.dead && this.heroes[hero.slot] === hero && !near.includes(hero)) near.push(hero);
-    for (const h of near) this.gainXp(h, Math.round((e.def.xp * 1.5 * (e.elite ? 2 : 1)) / near.length));
+    // mỗi tướng nhận một phần, giảm dần theo căn bậc hai số tướng cùng chia (tướng đứng sát nhau vẫn lên cấp đều)
+    for (const h of near) this.gainXp(h, Math.round((e.def.xp * 1.3 * (e.elite ? 2 : 1)) / Math.sqrt(near.length)));
 
     // tách con khi chết (Bọ Phân Thân)
     if (e.def.split) {

@@ -5,104 +5,133 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#16120d">
+  <meta name="theme-color" content="#0d1210">
   <title>Thủ Thành Anh Hùng</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Be+Vietnam+Pro:wght@400;600;700&display=swap">
-  <link rel="stylesheet" href="css/style.css?v=11">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Barlow+Condensed:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="css/style.css?v=12">
 </head>
 <body>
 <!--BODY-->
   <div id="wrap">
     <canvas id="game"></canvas>
 
-    <!-- HUD trên -->
-    <div id="hud" class="ingame">
-      <div class="pill" title="Máu thành"><span class="ico heart"></span><b id="lives">20</b></div>
-      <div class="pill" title="Vàng"><span class="ico coin"></span><b id="gold">0</b></div>
-      <div class="pill wave-pill" title="Đợt"><small>Đợt</small><b id="wave">0</b></div>
+    <!-- 1 · Gameplay HUD (theo bản thiết kế) -->
+    <div id="topbar" class="ingame">
+      <div class="tb-wave">
+        <span id="tb-wave">ĐỢT 0 / 30</span>
+        <span id="tb-sub">SẴN SÀNG</span>
+      </div>
+      <div class="tb-prog"><i id="tb-fill"></i></div>
       <div class="spacer"></div>
-      <button id="btn-speed" class="round" aria-label="Tốc độ">x1</button>
+      <div class="res"><span class="dia" style="--c:#d9a441"></span><b id="gold">0</b><small>Vàng</small></div>
+      <div class="res"><span class="dia" style="--c:#e0563a"></span><b id="lives">20</b><small>Mạng</small></div>
+      <button id="btn-codex" class="sq" aria-label="Bách khoa quái"><svg viewBox="0 0 20 20"><path d="M3 4 Q7 2 10 4 Q13 2 17 4 V16 Q13 14 10 16 Q7 14 3 16 Z M10 4 V16" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+      <button id="btn-forge" class="sq" aria-label="Lò rèn"><svg viewBox="0 0 20 20"><path d="M2 7 H15 Q18 7 18 10 H12 V12 Q12 15 9 15 H7 L6 18 H14 M5 15 Q5 12 7 12 V7" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+      <button id="btn-tree" class="sq" aria-label="Cây Sự Sống"><svg viewBox="0 0 20 20"><circle cx="10" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 12 V18 M7 18 H13" stroke="currentColor" stroke-width="1.8"/></svg></button>
+      <button id="btn-run" class="sq run" aria-label="Bắt đầu"><svg viewBox="0 0 18 18"><path id="run-icon" d="M5 3 L15 9 L5 15 Z" fill="currentColor"/></svg></button>
+      <button id="btn-speed" class="sq" aria-label="Tốc độ">x1</button>
     </div>
 
-    <!-- Thanh điều khiển dưới -->
-    <div id="controls" class="ingame">
-      <button id="btn-shop" class="tool"><span class="tool-ico">🛒</span><span>Cửa hàng</span></button>
-      <button id="btn-bag" class="tool"><span class="tool-ico">🎒</span><span>Túi đồ</span><i id="bag-count" class="badge">0</i></button>
-      <button id="btn-wave" class="go"><span id="wave-label">▶ Bắt đầu</span><small id="wave-sub">Quái sẽ tràn tới</small></button>
+    <div id="wavepanel" class="ingame">
+      <span class="wp-title" id="wp-title">ĐỢT 1 SẮP TỚI</span>
+      <div id="wp-list"></div>
+      <div class="wp-warn" id="wp-warn"></div>
+      <button id="btn-early" class="wp-early">GỌI SỚM</button>
     </div>
 
-    <div id="bossbar" hidden>
-      <div class="boss-name"><span id="boss-name"></span><span id="boss-hp"></span></div>
-      <div class="boss-track"><i id="boss-fill"></i></div>
-    </div>
-    <div id="banner" hidden><small>Boss xuất hiện</small><b id="banner-text"></b></div>
+    <div id="minimap" class="ingame"><canvas id="mm" width="364" height="210" aria-label="Bản đồ thu nhỏ"></canvas></div>
 
-    <div id="picker" hidden></div>
-    <div id="nextwave" hidden>
-      <div class="nw-head"><b id="nw-title"></b><span id="nw-time"></span></div>
-      <div class="nw-bar"><i id="nw-fill"></i></div>
-      <div class="nw-list" id="nw-list"></div>
-      <button id="btn-early" class="nw-early"></button>
+    <div id="bossbanner" hidden>
+      <span id="bb-text"></span>
+      <div class="bb-track"><i id="bb-fill"></i></div>
     </div>
+
+    <div id="bottom" class="ingame">
+      <div class="bt-hero" id="bt-hero">
+        <div class="bt-portrait" id="bt-portrait">
+          <canvas id="portrait" width="208" height="232"></canvas>
+          <span class="bt-lv" id="bt-lv"></span>
+          <span class="bt-pts" id="bt-pts" hidden></span>
+        </div>
+        <div class="bt-info">
+          <span class="bt-name" id="bt-name">Chưa chọn tướng</span>
+          <span class="bt-title" id="bt-title">Chạm vào một tướng trên bản đồ</span>
+          <div class="bar hp"><i id="bt-hp"></i><span id="bt-hp-t"></span></div>
+          <div class="bar mp"><i id="bt-mp"></i><span id="bt-mp-t"></span></div>
+          <div class="bar xp"><i id="bt-xp"></i></div>
+        </div>
+      </div>
+      <div class="bt-mid">
+        <div class="bt-skills" id="bt-skills"></div>
+        <div class="bt-items" id="bt-items"></div>
+      </div>
+      <div class="bt-build">
+        <div class="bb-head"><span>TRIỆU HỒI TƯỚNG</span><small id="build-hint">Chọn ô trống trên bản đồ</small></div>
+        <div class="bb-grid" id="build-grid"></div>
+      </div>
+    </div>
+
     <div id="coach" hidden><span id="coach-text"></span></div>
     <div id="toasts"></div>
-    <div id="paused-tag" hidden>Đã dừng</div>
 
-    <!-- Bảng trượt -->
-    <div id="sheet" hidden>
-      <div class="sheet-inner">
-        <div class="grab"></div>
-        <div id="sheet-body"></div>
-      </div>
-    </div>
+    <!-- 2–5 · Các màn hình lớn (Cây kỹ năng, Lò rèn, Tiến hoá & Cây Sự Sống, Bách khoa quái) -->
+    <div id="screen" hidden><div class="scr" id="screen-body"></div></div>
 
     <!-- Màn hình bắt đầu -->
-    <div id="menu" class="screen">
-      <div class="menu-card">
-        <canvas id="menu-art" width="480" height="230"></canvas>
+    <div id="menu" class="overlay">
+      <div class="card">
+        <canvas id="menu-art" width="640" height="230"></canvas>
         <h1><span class="t1">Thủ Thành</span><span class="t2">Anh Hùng</span></h1>
-        <p class="tagline">Đặt tướng giữ thành. Tướng càng diệt nhiều quái càng mạnh, mặc đồ là đổi dáng.</p>
-        <button id="btn-play" class="go big">Chơi ngay</button>
-        <button id="btn-howto" class="ghost">Cách chơi</button>
-        <p id="best" class="best"></p>
-        <p class="version">Phiên bản 11</p>
+        <p class="tagline">Đặt tướng giữ thành qua 30 đợt quái. Tướng càng diệt nhiều quái càng mạnh, mặc đồ là đổi dáng.</p>
+        <div class="row">
+          <button id="btn-play" class="gold big">CHƠI NGAY</button>
+          <button id="btn-howto" class="ghost big">Cách chơi</button>
+        </div>
+        <p id="best" class="muted"></p>
+        <p class="version">Phiên bản 12</p>
       </div>
     </div>
 
-    <!-- Hướng dẫn -->
-    <div id="howto" class="screen" hidden>
-      <div class="menu-card">
-        <h2>Cách chơi</h2>
+    <div id="howto" class="overlay" hidden>
+      <div class="card wide">
+        <h2>CÁCH CHƠI</h2>
         <ol class="steps">
-          <li><b>Đặt tướng</b><span>Chạm vào bãi cỏ sát đường rồi chọn tướng. Có 6 tướng chia 3 hệ: <i class="a-str">Sức mạnh</i>, <i class="a-agi">Nhanh nhẹn</i>, <i class="a-int">Trí tuệ</i>. Giữ và kéo tướng sang chỗ khác để đổi vị trí.</span></li>
-          <li><b>Bắt đầu / Dừng</b><span>Bấm nút xanh ở góc dưới để quái tràn tới, các đợt tự nối tiếp nhau. Bấm lần nữa để dừng. Bấm "Gọi sớm" giữa hai đợt để được thêm vàng.</span></li>
-          <li><b>Kỹ năng Q W E R</b><span>Tướng tự dùng kỹ năng. Tướng hạ càng nhiều quái thì kỹ năng càng mạnh và mở thêm kỹ năng mới. Diệt quái còn cho kinh nghiệm để lên cấp.</span></li>
-          <li><b>Mặc đồ, ghép đồ</b><span>Đồ trang phục đổi hình dạng tướng. Mua phụ kiện ở Cửa hàng rồi ghép thành đồ mạnh có hào quang.</span></li>
-          <li><b>Boss Thạch Long</b><span>Mỗi 5 đợt boss xuất hiện, dậm đất làm choáng tướng. Hạ boss nhận Huy Hiệu Phượng Hoàng giúp tướng hồi sinh ngay.</span></li>
+          <li><b>Triệu hồi tướng</b><span>Chạm vào bãi cỏ sát đường, rồi chọn tướng ở góc dưới phải (hoặc chọn tướng trước rồi chạm vào chỗ trống). 6 tướng chia 3 hệ <i class="a-str">Sức mạnh</i>, <i class="a-agi">Nhanh nhẹn</i>, <i class="a-int">Trí tuệ</i>.</span></li>
+          <li><b>Bắt đầu / Dừng</b><span>Nút ▶ trên cùng bên phải. Các đợt tự nối tiếp nhau; "Gọi sớm" để có thêm vàng. Trụ đủ 30 đợt là thắng.</span></li>
+          <li><b>Kỹ năng Q W E R</b><span>Tướng tự dùng kỹ năng khi đủ năng lượng. Hạ quái để mở kỹ năng, lên cấp để có điểm nâng kỹ năng.</span></li>
+          <li><b>Đồ &amp; Lò rèn</b><span>Đồ đổi hình dạng tướng. Mua nguyên liệu và rèn đồ mạnh ở Lò rèn.</span></li>
+          <li><b>Boss &amp; Cây Sự Sống</b><span>Boss ở đợt 10, 20, 30 có phần thưởng lớn. Cây Sự Sống lớn dần, cho vàng, hồi mạng thành và quả.</span></li>
         </ol>
-        <button id="btn-howto-close" class="go big">Đã hiểu</button>
+        <button id="btn-howto-close" class="gold big">ĐÃ HIỂU</button>
       </div>
     </div>
 
-    <!-- Thua -->
-    <div id="overlay" class="screen" hidden>
-      <div class="menu-card">
-        <h2>Thành đã thất thủ</h2>
-        <p>Bạn trụ được tới <b>đợt <span id="final-wave"></span></b></p>
-        <p id="final-best" class="best"></p>
-        <button id="btn-restart" class="go big">Chơi lại</button>
+    <div id="overlay" class="overlay" hidden>
+      <div class="card">
+        <h2 id="ov-title">THÀNH ĐÃ THẤT THỦ</h2>
+        <p id="ov-text"></p>
+        <p id="final-best" class="muted"></p>
+        <div class="row">
+          <button id="btn-endless" class="gold big" hidden>CHƠI TIẾP (VÔ TẬN)</button>
+          <button id="btn-restart" class="gold big">CHƠI LẠI</button>
+        </div>
       </div>
     </div>
 
-    <!-- Thưởng sau khi hạ boss -->
-    <div id="reward" class="screen" hidden>
-      <div class="menu-card reward-card">
-        <small class="rw-kicker">Chiến thắng boss</small>
+    <div id="reward" class="overlay" hidden>
+      <div class="card wide reward-card">
+        <small class="kicker">CHIẾN THẮNG BOSS</small>
         <h2 id="rw-title"></h2>
-        <p class="dim">Chọn 1 phần thưởng</p>
+        <p class="muted">Chọn 1 phần thưởng</p>
         <div class="rw-list" id="rw-list"></div>
       </div>
+    </div>
+
+    <div id="rotate" hidden>
+      <svg viewBox="0 0 64 64" width="64" height="64"><rect x="20" y="8" width="24" height="44" rx="4" fill="none" stroke="#d9a441" stroke-width="3"/><path d="M50 40 Q58 30 50 20 M50 20 L45 22 M50 20 L52 25" fill="none" stroke="#d9a441" stroke-width="3"/></svg>
+      <b>Xoay ngang điện thoại để chơi</b>
+      <span>Thủ Thành Anh Hùng được thiết kế cho màn hình ngang</span>
     </div>
 
     <div id="err" hidden></div>
@@ -117,10 +146,10 @@
       el.textContent = 'Lỗi: ' + (e.message || e.error) + (e.filename ? ' (' + e.filename.split('/').pop() + ':' + e.lineno + ')' : '');
     });
   </script>
-  <script src="js/data.js?v=11"></script>
-  <script src="js/render.js?v=11"></script>
-  <script src="js/game.js?v=11"></script>
-  <script src="js/ui.js?v=11"></script>
-  <script src="js/main.js?v=11"></script>
+  <script src="js/data.js?v=12"></script>
+  <script src="js/render.js?v=12"></script>
+  <script src="js/game.js?v=12"></script>
+  <script src="js/ui.js?v=12"></script>
+  <script src="js/main.js?v=12"></script>
 </body>
 </html>

@@ -14,6 +14,16 @@ game.speed = 1;
 window.game = game;
 
 let view = { scale: 1, dpr: 1 };
+// Tướng và quái vẽ to hơn trên bản đồ ngang cho dễ nhìn trên điện thoại
+const UNIT_SCALE = 1.3;
+function scaled(x, y, fn) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(UNIT_SCALE, UNIT_SCALE);
+  ctx.translate(-x, -y);
+  fn();
+  ctx.restore();
+}
 let mapCanvas = null;
 
 // Đọc kích thước màn hình; trong khung nhúng đôi khi lúc đầu trả về 0 -> thử lại
@@ -28,12 +38,16 @@ function viewportSize() {
 function resize() {
   const [vw, vh] = viewportSize();
   if (!vw || !vh) return requestAnimationFrame(resize);
+  // game thiết kế cho màn hình ngang: điện thoại cầm dọc thì nhắc xoay máy
+  $('#rotate').hidden = !(vh > vw && vw < 900);
   const scale = Math.min(vw / CONFIG.W, vh / CONFIG.H);
   const w = Math.floor(CONFIG.W * scale), h = Math.floor(CONFIG.H * scale);
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   wrap.style.width = w + 'px';
   wrap.style.height = h + 'px';
-  wrap.style.setProperty('--u', scale);
+  // --p: 1px thiết kế; --f: chữ to hơn bố cục trên màn hình nhỏ để vẫn đọc được
+  wrap.style.setProperty('--p', scale + 'px');
+  wrap.style.setProperty('--f', Math.max(scale, Math.min(1, scale * 1.45)) + 'px');
   canvas.width = Math.round(w * dpr);
   canvas.height = Math.round(h * dpr);
   view = { scale, dpr };
@@ -56,7 +70,6 @@ canvas.addEventListener('pointerdown', (ev) => {
   const [x, y] = toLogical(ev);
   const slot = ui.slotAt(x, y);
   if (game.started && !game.over && slot >= 0 && game.heroes[slot]) {
-    ui.closePicker();
     drag = { from: slot, sx: x, sy: y, x, y, moved: false, id: ev.pointerId };
     try { canvas.setPointerCapture(ev.pointerId); } catch (e) { /* bỏ qua */ }
     return;
@@ -67,10 +80,7 @@ canvas.addEventListener('pointerdown', (ev) => {
 canvas.addEventListener('pointermove', (ev) => {
   if (!drag || ev.pointerId !== drag.id) return;
   [drag.x, drag.y] = toLogical(ev);
-  if (!drag.moved && Math.hypot(drag.x - drag.sx, drag.y - drag.sy) > 12) {
-    drag.moved = true;
-    ui.close();
-  }
+  if (!drag.moved && Math.hypot(drag.x - drag.sx, drag.y - drag.sy) > 12) drag.moved = true;
 });
 
 canvas.addEventListener('pointerup', (ev) => {
@@ -83,6 +93,7 @@ canvas.addEventListener('pointerup', (ev) => {
     const other = game.heroes[to];
     const name = HEROES[game.heroes[d.from].type].name;
     game.moveHero(d.from, to);
+    ui.sel = to;
     ui.toast(other ? `${name} đổi chỗ với ${HEROES[other.type].name}` : `${name} chuyển sang bệ mới`, '#9dffc4');
   }
 });
@@ -97,7 +108,7 @@ function render() {
   ctx.drawImage(mapCanvas, 0, 0, CONFIG.W, CONFIG.H);
   drawPortal(ctx, t);
 
-  const selected = ui.sheet && ui.sheet.slot !== undefined ? ui.sheet.slot : -1;
+  const selected = ui.sel;
   const dragging = drag && drag.moved ? drag : null;
   const dropSlot = dragging ? ui.slotAt(dragging.x, dragging.y) : -1;
   CONFIG.slots.forEach(([x, y], i) => {
@@ -105,8 +116,10 @@ function render() {
     if (dragging) {
       if (i === dropSlot) drawSpot(ctx, x, y, 'target', t);
       else if (!h) drawSpot(ctx, x, y, 'free', t);
-    } else if (i === selected || i === ui.pickSlot) {
+    } else if (i === selected || i === ui.spot) {
       drawSpot(ctx, x, y, 'target', t);
+    } else if (!h && ui.armed) {
+      drawSpot(ctx, x, y, 'free', t);
     } else if (!h && i === ui.coachSlot) {
       drawSpot(ctx, x, y, 'hint', t);
     }
@@ -127,9 +140,9 @@ function render() {
 
   // vẽ theo trục y để vật thể phía dưới đè lên phía trên
   const drawables = [
-    ...game.enemies.map((e) => ({ y: e.y, draw: () => drawEnemy(ctx, e, t) })),
+    ...game.enemies.map((e) => ({ y: e.y, draw: () => scaled(e.x, e.y, () => drawEnemy(ctx, e, t)) })),
     ...game.heroes.filter((h) => h && !(dragging && h.slot === dragging.from))
-      .map((h) => ({ y: h.y, draw: () => drawHeroOnMap(h, t) })),
+      .map((h) => ({ y: h.y, draw: () => scaled(h.x, h.y, () => drawHeroOnMap(h, t)) })),
   ].sort((a, b) => a.y - b.y);
   drawables.forEach((d) => d.draw());
 
@@ -184,7 +197,7 @@ function drawDragGhost(d, dropSlot, t) {
     ctx.stroke();
   }
   ctx.globalAlpha = 0.85;
-  drawHero(ctx, computeLook(h.type, h.equip, h.kills), d.x, d.y - 26, { t, dir: h.dir, scale: 1.15 });
+  drawHero(ctx, computeLook(h.type, h.equip, h.kills), d.x, d.y - 26, { t, dir: h.dir, scale: UNIT_SCALE * 1.1 });
   ctx.globalAlpha = 1;
 }
 
