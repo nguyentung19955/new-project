@@ -1384,6 +1384,14 @@ class UI {
         if (this.screen) this.renderScreen(true);
         break;
       }
+      case 'auto-up-gear': {
+        const r = g.autoUpgradeGear();
+        this.toast(r.n ? `Nâng ${r.n} lần đồ đang mặc · −${fmt(r.spent)} vàng (tướng mạnh trước, chừa vàng triệu hồi)` : 'Chưa nâng được: thiếu vàng hoặc chưa mặc đồ', r.n ? '#6AE06A' : '#C8BFA8');
+        $('#more').hidden = true; $('#drawer').hidden = true;
+        this.sig.deck = null;
+        if (this.screen) this.renderScreen(true);
+        break;
+      }
       case 'auto-eq': {
         if (!h) { this.toast('Chọn một tướng trước', '#E25A3A'); break; }
         const n = g.autoEquip(h);
@@ -1916,7 +1924,7 @@ class UI {
         <div class="note">Đồ trang phục làm <b style="color:#FFD66B">tướng đổi hình dạng</b> và mang 1 <b>hành</b>: cùng hành với tướng +10% chỉ số gốc, khắc mệnh −10%. Đồ rơi có dòng phụ; đồ Sử thi trở lên có hiệu ứng ẩn.</div></div>`;
     }
     return `${this.head('Túi đồ', `<span class="chip dark">${g.inventory.length} / ${CONFIG.bagSize} ô</span>${this.runChip()}`,
-      `${h ? '<button class="btn btn-gold" data-act="auto-eq">▲ Tự mặc đồ tốt nhất</button>' : ''}<button class="btn metal" style="color:#6AE06A" data-act="auto-eq-all">▲ Mặc cả đội</button><button class="btn metal" data-act="sort">Sắp xếp</button>`)}<div class="scr-body">${left}${mid}${det}</div>`;
+      `${h ? '<button class="btn btn-gold" data-act="auto-eq">▲ Tự mặc đồ tốt nhất</button>' : ''}<button class="btn metal" style="color:#6AE06A" data-act="auto-eq-all">▲ Mặc cả đội</button><button class="btn metal" style="color:#FFD66B" data-act="auto-up-gear">⬆ Nâng đồ tự động</button><button class="btn metal" data-act="sort">Sắp xếp</button>`)}<div class="scr-body">${left}${mid}${det}</div>`;
   }
 
   // ---------- Đổi đồ ra vàng

@@ -721,7 +721,7 @@ const SKILL_CASTS = {
     }
     return true;
   },
-  guardcity(game, h) {
+  guardcity(game, h, st) {
     const danger = game.enemies.some((e) => !e.dead && e.dist > PATH.total - 170);
     if (!danger) return false;
     game.guardT = 5;
@@ -1103,7 +1103,7 @@ const SKILL_CASTS = {
       dps: (8 + n * 0.3) * st.skillPower, hero: h, dt: 'magic' });
     return true;
   },
-  ancestor(game, h) {
+  ancestor(game, h, st) {
     if (!game.heroes.some((o) => o && !o.dead && o.hp < heroStats(o).hpMax * 0.5)) return false;
     game.effects.push({ type: 'banner', str: st.skName || 'Lễ Tổ Tiên', color: '#FFE08A', ttl: 1.6, max: 1.6 });
     game.effects.push({ type: 'flash', color: '#FFF1C4', ttl: 0.4, max: 0.4 });
@@ -1762,6 +1762,42 @@ class Game {
       if (n) { items += n; heroes++; }
     }
     return { items, heroes };
+  }
+  // Nâng đồ tự động: dùng vàng cường hóa / thăng phẩm đồ đang mặc, ưu tiên tướng mạnh (Vàng → Tím → sao)
+  // và món tăng lực chiến nhiều nhất trên mỗi đồng vàng. Chừa lại đủ vàng cho 1 lần triệu hồi.
+  autoUpgradeGear(keep) {
+    const reserve = keep ?? COSTS.summon(this.summonN || 0);
+    const rank = { legendary: 3, epic: 2 };
+    let n = 0, spent = 0;
+    for (let guard = 0; guard < 60; guard++) {
+      let best = null, bs = 0;
+      for (const h of this.heroes) {
+        if (!h || h.dead) continue;
+        const pri = (rank[HEROES[h.type].legend] || 1) + (h.tier || 0) * 0.3;
+        const p0 = heroPower(h);
+        for (const sl of SLOTS) {
+          const inst = h.equip[sl];
+          if (!inst) continue;
+          let c, act;
+          if (inst.plus < 5) { c = enhanceCost(inst); act = 'enhance'; }
+          else if (RARITY_ORDER.indexOf(inst.rarity) < RARITY_ORDER.length - 1) { c = promoteCost(inst); act = 'promote'; }
+          else continue;
+          if (this.gold - c < reserve) continue;
+          // thử tạm để đo lực chiến tăng thêm
+          const save = [inst.plus, inst.rarity];
+          if (act === 'enhance') inst.plus++; else { inst.rarity = RARITY_ORDER[RARITY_ORDER.indexOf(inst.rarity) + 1]; inst.plus = 0; }
+          const gain = heroPower(h) - p0;
+          [inst.plus, inst.rarity] = save;
+          const score = (gain * pri) / c;
+          if (gain > 0 && score > bs) { bs = score; best = { inst, act, c }; }
+        }
+      }
+      if (!best) break;
+      const r = best.act === 'enhance' ? this.enhance(best.inst.uid) : this.promote(best.inst.uid);
+      if (r !== true) break;
+      n++; spent += best.c;
+    }
+    return { n, spent };
   }
   // tướng nào trên sân mặc món này lợi nhất
   bestHeroFor(inst) {

@@ -12,6 +12,12 @@
 // Bản thiết kế vẽ ở khung 932 × 430 (điện thoại cầm ngang). Game dùng hệ
 // tọa độ logic 1280 × 590 cùng tỉ lệ: tọa độ thiết kế × DK.
 const DK = 1280 / 932;
+// màu hex + độ trong suốt an toàn: '#fff' → '#ffffff' trước khi ghép 'aa' (tránh lỗi addColorStop)
+const hexA = (c, aa) => {
+  if (/^#[0-9a-f]{3}$/i.test(c)) c = '#' + c[1] + c[1] + c[2] + c[2] + c[3] + c[3];
+  else if (!/^#[0-9a-f]{6}$/i.test(c)) c = '#ffffff';
+  return c + aa;
+};
 
 const CONFIG = {
   W: 1280,

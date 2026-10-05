@@ -427,7 +427,7 @@ function drawFuseMarks(t) {
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';
     const g = ctx.createRadialGradient(h.x, h.y - 30, 4, h.x, h.y - 30, 46);
-    g.addColorStop(0, c + 'aa'); g.addColorStop(1, c + '00');
+    g.addColorStop(0, hexA(c, 'aa')); g.addColorStop(1, hexA(c, '00'));
     ctx.fillStyle = g;
     ctx.fillRect(h.x - 46, h.y - 76, 92, 92);
     ctx.restore();
@@ -742,8 +742,8 @@ function drawCastGlow(h, t) {
   ctx.save();
   ctx.globalAlpha = k;
   const g = ctx.createLinearGradient(h.x, h.y, h.x, h.y - 90);
-  g.addColorStop(0, c + '55');
-  g.addColorStop(1, c + '00');
+  g.addColorStop(0, hexA(c, '55'));
+  g.addColorStop(1, hexA(c, '00'));
   ctx.fillStyle = g;
   ctx.fillRect(h.x - 18, h.y - 90, 36, 90);
   ctx.strokeStyle = c;

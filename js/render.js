@@ -1013,9 +1013,9 @@ function drawAccAura(ctx, a, s, t) {
     }
   }
   const g = ctx.createRadialGradient(0, -30 * k, 2, 0, -30 * k, 40 * k);
-  g.addColorStop(0, color + '00');
-  g.addColorStop(0.7, color + '2a');
-  g.addColorStop(1, color + '00');
+  g.addColorStop(0, hexA(color, '00'));
+  g.addColorStop(0.7, hexA(color, '2a'));
+  g.addColorStop(1, hexA(color, '00'));
   ctx.globalAlpha = 1;
   ctx.fillStyle = g;
   ctx.beginPath();

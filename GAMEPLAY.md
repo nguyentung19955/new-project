@@ -773,3 +773,6 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - **Ô cộng chỉ số dư** cạnh 4 kỹ năng (tướng thường): chạm để đổi 1 điểm kỹ năng thành +2 thuộc tính chính, không cần nâng tối đa kỹ năng; số đỏ là số điểm đang có.
 - **Nút 📊 Chỉ số** trên thanh tướng (hoặc chạm vào tên tướng): bật / tắt bảng chỉ số của tướng đang chọn (sát thương, tốc đánh, tầm, máu, chí mạng, giảm hồi chiêu, giảm sát thương, năng lượng, Sức / Nhanh / Trí, lực chiến). Nút 👁 trên thanh trên vẫn bật / tắt tên, cấp, số sát thương trên bản đồ.
 - **Animation dịu mắt:** viền sáng tung chiêu / đồ hiếm chỉ vẽ một lần (hết loè cả người thành khối màu, nhẹ máy hơn); hào quang Tím / Vàng có hạt sáng ở hai bên sau lưng, không bay ngang mặt; loé trúng đòn và bóng mờ khi chém nhẹ hơn.
+- **Nâng đồ tự động** (menu ≡ và Túi đồ): dùng vàng cường hóa / thăng phẩm đồ **đang mặc**, mỗi bước chọn món tăng lực chiến nhiều nhất trên mỗi đồng vàng, ưu tiên tướng Vàng → Tím → nhiều sao; luôn chừa đủ vàng cho 1 lần triệu hồi.
+- Sửa lỗi văng game "st is not defined" khi Lang Liêu dùng **Lễ Tổ Tiên** và Thần Kim Quy dùng **Kim Quy Hộ Thành**. Thêm bài kiểm tra gọi thử mọi chiêu của mọi tướng.
+- Sửa triệt để lỗi màu "#fff66": mọi chỗ ghép màu + độ trong suốt đều qua hàm chuẩn hoá màu.
