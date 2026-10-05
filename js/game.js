@@ -202,8 +202,11 @@ function heroStats(h) {
   };
   // Thăng thần: giữ nội tại của tướng gốc (cấp kỹ năng lúc hóa thân) rồi cộng nội tại tướng thần
   const passives = def.skills.map((sk, i) => [sk, skillLevel(h, i)]);
-  if (h.from) HEROES[h.from].skills.forEach((sk) => { if (sk.apply) passives.unshift([sk, (h.skillLvFrom || {})[sk.id] || 0]); });
-  passives.forEach(([sk, lv]) => {
+  if (h.from) HEROES[h.from].skills.forEach((sk) => { if (sk.apply) passives.unshift([sk, (h.skillLvFrom || {})[sk.id] || 0, true]); });
+  let baseArrows = 1;
+  passives.forEach(([sk, lv, inherited], idx) => {
+    // số tia bắn: lấy bên nhiều hơn giữa tướng gốc và tướng thần, không cộng dồn
+    if (h.from && !inherited && idx > 0 && passives[idx - 1][2]) { baseArrows = s.arrows; s.arrows = 1; }
     if (!lv || !sk.apply) return;
     const before = { ...s };
     sk.apply(s, skillN(h.level));
@@ -216,6 +219,7 @@ function heroStats(h) {
       s.arrows = Math.round(s.arrows);
     }
   });
+  if (h.from) s.arrows = Math.max(s.arrows, baseArrows);
   for (const slot of SLOTS) {
     const inst = h.equip[slot];
     if (!inst) continue;
@@ -267,7 +271,10 @@ function heroStats(h) {
   // sao tiến hoá: tướng gốc theo bậc hiện tại; tướng thần giữ ★★★ gốc + bậc Thần tinh
   const evos = h.from ? [EVO_BONUS.base[h.baseTier ?? 3], EVO_BONUS.asc[h.tier || 0]] : [EVO_BONUS.base[h.tier || 0]];
   let evoHp = 0, evoSkill = 0;
-  for (const e of evos) { s.bonusDmgPct += e.dmg || 0; evoHp += e.hp || 0; s.haste += e.haste || 0; evoSkill += e.skill || 0; }
+  evos.forEach((e, i) => {
+    const m = h.from && i === 1 ? ASC_EVO_MULT[def.legend] || 1 : 1;     // Thần tinh Huyền thoại mạnh hơn
+    s.bonusDmgPct += (e.dmg || 0) * m; evoHp += (e.hp || 0) * m; s.haste += (e.haste || 0) * m; evoSkill += (e.skill || 0) * m;
+  });
   // quy đổi thuộc tính như Dota
   s.damage += s[def.attr];
   s.haste += s.agi + (b.haste || 0);
@@ -305,7 +312,7 @@ function heroStats(h) {
 function heroPower(h) {
   const st = heroStats(h);
   const dps = st.damage * (1 + (Math.min(100, st.crit) / 100) * ((st.critMult || 2) - 1)) / st.cooldown
-    * (1 + st.cleave * 0.6 + (st.arrows - 1) * 0.5 + (st.splash ? 0.5 : 0));
+    * (1 + st.cleave * 0.6 + Math.min(4, st.arrows - 1) * 0.2 + (st.splash ? 0.5 : 0));
   return Math.round(dps * 6 + st.hpMax / 8 * (1 + st.dr / 100) + (st.skillPower - 1) * 220 + st.range * 0.4 + st.regen * 4);
 }
 // lực chiến nếu mặc thử món inst vào ô slot (không đổi trạng thái thật)
@@ -337,8 +344,8 @@ function upgradeGain(h, inst) {
 
 // chỉ số gốc của tướng thăng thần: lấy bên tốt hơn giữa tướng gốc và tướng thần
 function inheritBase(def, fd) {
-  const out = { damage: Math.max(def.base.damage, fd.base.damage), range: Math.max(def.base.range, fd.base.range),
-    baseCooldown: Math.min(def.base.cooldown, fd.base.cooldown) };
+  // tốc đánh giữ theo tướng thần (nét riêng của tướng), sát thương / tầm lấy bên cao hơn
+  const out = { damage: Math.max(def.base.damage, fd.base.damage), range: Math.max(def.base.range, fd.base.range) };
   if (fd.base.splash && !def.base.splash) out.splash = fd.base.splash;
   if (fd.base.slow && !def.base.slow) out.slow = fd.base.slow;
   return out;

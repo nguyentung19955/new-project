@@ -301,8 +301,8 @@ const HEROES = {
       { id: 'c_q', name: 'Nỏ Liên Châu', active: { cooldown: 5, cast: 'triple', mana: 40 },
         info: (n) => `Bắn 3 mũi cùng lúc vào 3 quái: mỗi mũi x1.5 sát thương +${(n * 0.5).toFixed(0)}` },
       { id: 'c_w', name: 'Lẫy Thần',
-        info: (n) => `+${Math.round(20 + n * 0.4)}% tốc bắn`,
-        apply: (s, n) => { s.haste += 20 + n * 0.4; } },
+        info: (n) => `+${Math.round(15 + n * 0.2)}% tốc bắn`,
+        apply: (s, n) => { s.haste += 15 + n * 0.2; } },
       { id: 'c_e', name: 'Tên Móng Rùa', active: { cooldown: 8, cast: 'turtlearrow', mana: 70 },
         info: (n) => `Tên móng rùa xuyên giáp toàn phần: x3 sát thương chuẩn +${n}` },
       { id: 'c_r', name: 'Nỏ Thần', active: { cooldown: 14, cast: 'divinebow', mana: 100 },
@@ -422,9 +422,11 @@ const ASCEND = {
 };
 const ASCEND_FROM = {};
 for (const [b, list] of Object.entries(ASCEND)) for (const t of list) ASCEND_FROM[t] = b;
-Object.assign(COSTS, { ascend: { epic: 300, legendary: 450 }, ascendTier: 3 });
+Object.assign(COSTS, { ascend: { epic: 300, legendary: 550 }, ascendTier: 3 });
 // Thần lực: hệ số sát thương và máu của tướng đã thăng thần (kỹ năng +một nửa mức này)
-const ASCEND_POWER = { epic: 1.3, legendary: 1.5 };
+const ASCEND_POWER = { epic: 1.15, legendary: 2.0 };
+// Thần tinh của tướng thần Huyền thoại mạnh hơn Sử thi (nhân chỉ số mỗi bậc sao)
+const ASC_EVO_MULT = { epic: 1, legendary: 1.3 };
 // Sau Thăng thần, bộ kỹ năng mới học lại bằng VÀNG: mở khóa W/E/R đắt hơn, nâng cấp trả vàng
 Object.assign(COSTS, {
   unlockAsc: [0, 150, 300, 500],

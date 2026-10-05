@@ -634,3 +634,9 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - **Ghép nhanh:** nút **Mua thiếu & ghép** mua luôn nguyên liệu còn thiếu rồi đúc; công thức hiện tướng hợp nhất.
 - **Đồ ghép khác gì đồ nâng cấp:** đeo ở 3 ô phụ kiện (không tranh chỗ vũ khí / mũ / giáp), có hiệu ứng riêng, hiệu ứng ẩn và hào quang; vẫn cường hóa +5 và thăng phẩm như đồ trang phục. Hai loại cộng dồn, không thay thế nhau.
 - **3 loại hũ:** Hũ báu 90 (mọi độ hiếm) · Hũ đồng 240 (Hiếm trở lên) · Hũ Vua Hùng 600 (Sử thi trở lên, 35% ra đồ bộ). Mở 5 hũ chưa ra Sử thi thì hũ kế chắc chắn Sử thi trở lên.
+
+### Phiên bản 26 · thần Huyền thoại (vàng) mạnh hơn hẳn Sử thi (tím)
+
+- Thần lực: Sử thi ×1,15, **Huyền thoại ×2** sát thương và máu; Thần tinh của tướng Huyền thoại mạnh thêm 30% mỗi bậc. Giá Thăng thần Huyền thoại 550 vàng (Sử thi 300).
+- Kế thừa hợp lý hơn: tốc đánh giữ theo tướng thần; số tia bắn lấy bên nhiều hơn chứ không cộng dồn. Lẫy Thần của Cao Lỗ giảm còn +15% + 0,2 × sức mạnh kỹ năng.
+- Lực chiến ngay khi lên thần (so với tướng gốc ★★★, cấp 18): Huyền thoại ×2,0–2,35 (Âu Cơ ×3,4), Sử thi ×1,15–1,9.
