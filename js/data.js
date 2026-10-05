@@ -72,7 +72,7 @@ const HEROES = {
     name: 'Hiệp Sĩ', cost: 70, attr: 'str', attack: 'melee', wclass: 'blade',
     role: 'Chém lan',
     attrs: { str: 22, agi: 14, int: 12 }, gain: { str: 2.6, agi: 1.4, int: 1.2 },
-    base: { damage: 6, range: 110, cooldown: 1.0 },
+    base: { damage: 6, range: 145, cooldown: 1.0 },
     look: { skin: '#f1c27d', cloth: '#7f8c8d', hair: '#5d4037', aura: '#e74c3c',
             weapon: { type: 'sword', color: '#95a5a6' } },
     skills: [
@@ -94,7 +94,7 @@ const HEROES = {
     name: 'Đồ Tể', cost: 80, attr: 'str', attack: 'melee', wclass: 'blade',
     role: 'Móc kéo',
     attrs: { str: 25, agi: 11, int: 14 }, gain: { str: 3.0, agi: 1.0, int: 1.5 },
-    base: { damage: 10, range: 105, cooldown: 1.25 },
+    base: { damage: 10, range: 140, cooldown: 1.25 },
     look: { skin: '#d7a985', cloth: '#6d4c41', hair: null, aura: '#8bc34a', bulk: 1.15,
             weapon: { type: 'cleaver', color: '#b0bec5' } },
     skills: [
@@ -139,7 +139,7 @@ const HEROES = {
     name: 'Sát Thủ', cost: 75, attr: 'agi', attack: 'melee', wclass: 'blade',
     role: 'Chí mạng',
     attrs: { str: 16, agi: 24, int: 12 }, gain: { str: 1.8, agi: 3.0, int: 1.2 },
-    base: { damage: 2, range: 105, cooldown: 0.85 },
+    base: { damage: 2, range: 140, cooldown: 0.85 },
     look: { skin: '#e0ac69', cloth: '#2c2c3e', hair: '#111111', aura: '#9b59b6',
             helmet: { type: 'mask', color: '#3d2c5a' },
             weapon: { type: 'daggers', color: '#dfe6e9' } },
