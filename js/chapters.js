@@ -29,7 +29,7 @@ LEVELS.push(
 
 // v49: số đợt và máu quái tăng dần theo ải; boss mỗi 10 đợt (lần lượt theo chương) + boss cuối ở đợt cuối
 const LEVEL_WAVES = [15, 20, 20, 25, 25, 30, 30, 30, 25, 30, 30, 30, 35, 35, 35, 35, 35];
-const LEVEL_HP = [0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.45];
+const LEVEL_HP = [0.9, 1.0, 1.1, 1.25, 1.35, 1.45, 1.55, 1.65, 1.5, 1.55, 1.65, 1.45, 1.55, 1.5, 1.55, 1.6, 1.65];   // chỉnh theo bot v50 (quân mỗi chương mạnh yếu khác nhau)
 const LEVEL_BOSS = [   // [boss giữa trận (lần lượt), boss cuối]
   [['thuongluong'], 'thuongluong'], [['thuongluong'], 'haba'], [['thuongluong'], 'haba'], [['thuongluong', 'haba'], 'thuytinh'],
   [['thuongluong', 'haba'], 'thuytinh'], [['haba', 'thuongluong'], 'thuytinh'], [['haba', 'thuytinh'], 'thuytinh'], [['thuongluong', 'haba'], 'thuytinh'],
