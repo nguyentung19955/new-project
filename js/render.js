@@ -550,10 +550,15 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
   const headRot = Math.sin(t * 1.9 + seed) * 0.05;
   const backRot = Math.sin(t * 2.2 + seed) * 0.07;
   // vung đòn / bắn / phép: 3 pha lấy đà → ra đòn → thu về (u: 0 → 1)
-  const pose = o.smooth ? smoothPose(h, attackPose(def.attack, o.swing || 0, o.castT || 0, !!o.castUlt), t)
-    : attackPose(def.attack, o.swing || 0, o.castT || 0, !!o.castUlt);
+  // v44: mỗi tướng có kiểu đứng + đòn đánh riêng (js/costume.js); chiêu (castT) dùng dáng tung chiêu chung
+  const style = heroStyle(h.type);
+  const idle = o.noIdle ? { dy: 0, rot: 0 } : idlePose(style, t, seed);
+  const rawPose = styledAttackPose(style, o.swing || 0, o.castT || 0) || attackPose(def.attack, o.swing || 0, o.castT || 0, !!o.castUlt);
+  const pose = o.smooth ? smoothPose(h, rawPose, t) : rawPose;
+  const legendR = def.legend || null;
   const { armF, armB, lunge, lift, recoil, big, lean, sqx, sqy } = pose;
   let drop = 0, fallRot = 0, alpha = o.alpha ?? 1;
+  drop = idle.dy;
   if (o.summon > 0) drop = -60 * (o.summon / 0.5) * (o.summon / 0.5);
   if (o.bounce > 0) drop -= (4 * DK / s) * Math.sin(Math.PI * (1 - o.bounce / 0.3));   // nảy 4px khi lên cấp
   if (o.fall !== undefined) { fallRot = (1 - o.fall / 0.6) * 1.45; alpha *= Math.max(0.15, o.fall / 0.6); }
@@ -575,7 +580,7 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
   }
   ctx.translate(0, evoLift * DK * (o.scale || 0.26) / 0.26);
   // nghiêng người + co giãn (squash & stretch) quanh bàn chân
-  const sway = Math.sin(t * 1.3 + seed) * 0.018;
+  const sway = Math.sin(t * 1.3 + seed) * 0.018 + idle.rot;
   ctx.scale(dir * s * big * sqx, s * big * sqy);
   const hurtRot = o.hurt > 0 ? -0.12 * (o.hurt / 0.2) : 0;
   // ghép đồ từng món (v35): có ảnh thân trần <tên>_than.png thì dùng nó + vẽ mũ / vũ khí / giáp đang mặc lên trên
@@ -590,7 +595,7 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
   // nên đồ mặc hiện qua bậc trang phục (ảnh theo độ hiếm), hào quang, cánh rồng và sao tiến hoá.
   const png = pngC;
   if (png) {
-    if (tierShown >= 3) drawSunHalo(ctx, t);
+    if (look.legend ? ascShown >= 3 : tierShown >= 3) drawSunHalo(ctx, t);
     if (look.wings) withProc(ctx, () => drawWings(ctx, look, t, o.wingT));
     if (look.setFx) withProc(ctx, () => drawSetBack(ctx, look.setFx, t, o.wingT));
     const hgt = 236, w = hgt * png.naturalWidth / png.naturalHeight;
@@ -651,8 +656,10 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
   }
   const P = (part) => heroPartImage(h.type, part, q);
   const hasArt = !!P('body');
-  // sau lưng: vầng sao 12 cánh (★★★), cánh rồng, cánh lông vũ (Âu Cơ)
-  if (tierShown >= 3) drawSunHalo(ctx, t);
+  // sau lưng: vầng sao 12 cánh (★★★ / Thần tinh 3), cánh rồng, cánh lông vũ (Âu Cơ),
+  // áo choàng ★★★, vòng sáng Thần tinh, ngọc bay (nửa vòng sau)
+  if (look.legend ? ascShown >= 3 : tierShown >= 3) drawSunHalo(ctx, t);
+  withProc(ctx, () => { drawCostumeBack(ctx, look, t, tierShown); drawAscBack(ctx, look, ascShown, legendR, t); drawAscOrbit(ctx, look, ascShown, legendR, t, false); });
   if (look.wings) withProc(ctx, () => drawWings(ctx, look, t, o.wingT));
   if (look.setFx) withProc(ctx, () => drawSetBack(ctx, look.setFx, t, o.wingT));
   if (look.armor && look.armor.style === 'wings') withProc(ctx, () => drawFeatherWings(ctx, look.armor, t));
@@ -674,11 +681,13 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
     const armorTint = look.armor && (look.armor.style === 'tint') ? rarityGlow(look.armor, t) || { color: '#C8B48A', blur: 3 } : null;
     drawPart(ctx, P('body'), armorTint && armorTint.color, armorTint && armorTint.blur);
     if (look.armor && look.armor.style === 'rarity') withProc(ctx, () => drawGearArmor(ctx, look.armor, t));
+    withProc(ctx, () => drawCostumeBody(ctx, look, t, tierShown));
     // đầu
     ctx.save(); ctx.translate(100, 110); ctx.rotate(headRot); ctx.translate(-100, -110);
     drawPart(ctx, P('head'));
-    if (tierShown >= 2) drawGlowEyes(ctx, look.attrColor, t);
+    if (look.legend ? ascShown >= 2 : tierShown >= 3) drawGlowEyes(ctx, look.attrColor, t);
     if (look.helmet) withProc(ctx, () => drawGearHelmet(ctx, look.helmet, t));
+    withProc(ctx, () => drawCostumeHead(ctx, look, t, tierShown));
     ctx.restore();
     // tay trước + vũ khí
     ctx.save(); ctx.translate(122, 124); ctx.rotate(armF); ctx.translate(-122, -124);
@@ -693,10 +702,10 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
     }
     ctx.restore();
     ctx.restore();
-    drawAttackFx(ctx, def, pose, look, t);
+    if (style.atk && style.atk !== 'volley') { drawStyleFx(ctx, pose, look, t); drawTwirlFx(ctx, pose, look); }
+    else drawAttackFx(ctx, def, pose, look, t);
   }
-  // ★★★: hạt sáng màu hệ bay lên quanh người
-  if (tierShown >= 3) risingSparks(ctx, 100, 200, look.attrColor, t, 120);
+  withProc(ctx, () => drawAscOrbit(ctx, look, ascShown, legendR, t, true));
   ctx.restore();
 
   if (o.bog) drawBogWater(ctx, x, y, s, t);
@@ -943,13 +952,13 @@ function drawAscAura(ctx, asc, s, t) {
     ctx.beginPath(); ctx.ellipse(0, 0, rx * r, ry * r, 0, 0, Math.PI * 2); ctx.stroke();
   }
   ctx.setLineDash([]);
-  // tia lửa thần bốc lên
-  for (let i = 0; i < 4 + asc * 3; i++) {
+  // tia lửa thần bốc lên (v44: ít và nhỏ hơn, chỉ quanh chân)
+  for (let i = 0; i < 2 + asc; i++) {
     const a = i * 2.4 + t * 0.7;
-    const q = (t * 0.9 + i * 0.37) % 1;
-    const x = Math.cos(a) * rx * 0.9, y = Math.sin(a) * ry * 0.9 - q * 70 * k;
-    ctx.globalAlpha = (1 - q) * 0.8;
-    circle(ctx, x, y, 1.6 * k + 0.6, i % 2 ? '#FFB04A' : '#FF6A3A');
+    const q = (t * 0.7 + i * 0.37) % 1;
+    const x = Math.cos(a) * rx * 0.8, y = Math.sin(a) * ry * 0.8 - q * 34 * k;
+    ctx.globalAlpha = (1 - q) * 0.6;
+    circle(ctx, x, y, 1.1 * k + 0.4, i % 2 ? '#FFB04A' : '#FF6A3A');
   }
   ctx.restore();
 }
@@ -1268,7 +1277,18 @@ function drawFeatherWings(ctx, g, t) {
 
 function drawGearArmor(ctx, g, t) {
   const m = matOf(g);
+  // v44: giáp hẹp lại (78%) để vẫn thấy áo gốc của tướng hai bên; độ hiếm hiện ở giáp vai
+  if (g.rarity !== 'common' || g.set) {
+    ctx.save();
+    for (const sx of [-1, 1]) {
+      ctx.fillStyle = m.main;
+      ctx.beginPath(); ctx.ellipse(sx * 8.6, -25.2, 4.4, 2.8, sx * 0.3, Math.PI, 0); ctx.closePath(); ctx.fill(); outline(ctx, 0.5);
+      circle(ctx, sx * 8.6, -26, 0.7, m.gem || m.light);
+    }
+    ctx.restore();
+  }
   ctx.save();
+  ctx.scale(0.78, 1);
   applyGlow(ctx, g, t);
   if (g.set) {
     // giáp vảy rồng xanh ngọc + vàng
@@ -1370,17 +1390,18 @@ function drawGearHelmet(ctx, g, t) {
       ctx.restore();
     }
   } else if (st === 'rarity' && g.rarity === 'epic') {
-    // mũ sừng đồng
+    // v44: vành đồng có sừng nhỏ (không trùm kín đầu, vẫn thấy tóc / lông chim của tướng)
     ctx.fillStyle = m.main;
-    ctx.beginPath(); ctx.arc(0, -36, 9.4, Math.PI, 0); ctx.lineTo(9.4, -33); ctx.lineTo(-9.4, -33); ctx.closePath();
-    ctx.fill(); outline(ctx);
+    ctx.beginPath(); ctx.moveTo(-9, -38.4); ctx.lineTo(9, -38.4); ctx.lineTo(8.4, -41.6); ctx.lineTo(-8.4, -41.6); ctx.closePath();
+    ctx.fill(); outline(ctx, 0.5);
     ctx.shadowBlur = 0;
-    ctx.strokeStyle = m.light; ctx.lineWidth = 0.6;
-    ctx.beginPath(); ctx.arc(0, -36, 6.5, Math.PI * 1.1, Math.PI * 1.9); ctx.stroke();
+    ctx.strokeStyle = m.light; ctx.lineWidth = 0.4;
+    ctx.beginPath(); for (let i = 0; i < 9; i++) ctx.lineTo(-8 + i * 2, -39.3 - (i % 2) * 1.2); ctx.stroke();
+    circle(ctx, 0, -40, 1.1, m.gem);
     ctx.fillStyle = '#F2E6C8';
     for (const sx of [-1, 1]) {
-      ctx.beginPath(); ctx.moveTo(sx * 6, -41); ctx.quadraticCurveTo(sx * 16, -44, sx * 15, -55); ctx.quadraticCurveTo(sx * 11, -46, sx * 3, -43);
-      ctx.fill(); outline(ctx, 0.5);
+      ctx.beginPath(); ctx.moveTo(sx * 6.5, -41); ctx.quadraticCurveTo(sx * 12.5, -43, sx * 12, -50); ctx.quadraticCurveTo(sx * 9.5, -44, sx * 4.5, -41.6);
+      ctx.fill(); outline(ctx, 0.45);
     }
   } else if (st === 'rarity') {
     // mũ lông chim Lạc vàng cao

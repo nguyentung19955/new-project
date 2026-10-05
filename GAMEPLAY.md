@@ -806,3 +806,11 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - Mặc định **toàn bộ hình do game tự vẽ** (tướng, quái, bản đồ, chân dung, biểu tượng, truyện). Ảnh AI trong `assets/` vẫn giữ nguyên, bật lại ở Cài đặt → "Dùng ảnh AI (thử nghiệm)" (tải lại trang).
 - Tướng vẽ nét trên bản đồ to hơn (0,33 thay vì 0,285 như ảnh AI).
 - Hũ Vua Hùng không ra 2 món trùng nhau.
+
+### Phiên bản 44 · trang phục theo sao, Thần tinh, đòn đánh riêng (hình tự vẽ)
+
+- **Trang phục theo sao (6 tướng thường), file `js/costume.js`:** ★1 áo gốc · ★2 thêm giáp vai đồng, đai lưng, băng trán đồng cắm lông chim màu hệ · ★3 thêm áo choàng màu hệ viền răng cưa Đông Sơn (đung đưa), vương miện vàng 3 lông chim Lạc, mặt trống đồng + chuỗi hạt trước ngực, vầng trống đồng sau lưng, mắt sáng màu hệ.
+- **Thần tinh (tướng Tím / Vàng):** TT1 vòng sáng sau đầu · TT2 vòng có hạt xoay + 2 viên ngọc bay quanh hông, mắt sáng · TT3 thêm vầng trống đồng 12 cánh. Bớt hạt lửa dưới chân cho đỡ rối.
+- **Đồ mặc giữ nét riêng của tướng:** giáp hẹp lại (vẫn thấy áo gốc hai bên) + giáp vai theo màu độ hiếm; mũ Sử thi thành vành đồng có sừng nhỏ (không trùm kín đầu, vẫn thấy tóc / lông chim).
+- **Kiểu đứng riêng:** lơ lửng (Thần Sương, Lạc Long Quân, Âu Cơ, Chử Đồng Tử, Mẫu Thượng Ngàn), thở nặng (Lực Sĩ, Thánh Gióng, Kim Quy), khom người (Thợ Săn, Thần Săn), đung đưa (Thầy Mo, An Tiêm, Lang Liêu), múa (Tiên Dung), ngắm (Xạ Thủ, Cao Lỗ, An Dương Vương), thủ thế (Lạc Tướng, Thạch Sanh, Lạc Hầu).
+- **Đòn đánh riêng + hiệu ứng riêng:** đẩy khiên rồi bổ rìu (Lạc Tướng, Lạc Hầu) · giơ cao đập xuống, sóng đất + đá văng (Lực Sĩ, Kim Quy; Thạch Sanh lao tới xa hơn) · hai nhát chéo (Thợ Săn, Thần Săn) · vuốt rồng 3 vệt (Lạc Long Quân) · xoay gậy một vòng (Thánh Gióng) · xoay gậy trên đầu rồi chỉ tới (Thầy Mo, Chử Đồng Tử) · đâm thẳng (Thần Sương) · vung tay ném (An Tiêm, Lang Liêu) · bay lên bung vòng phép (Âu Cơ, Tiên Dung, Mẫu Thượng Ngàn) · nỏ giật (Xạ Thủ, Cao Lỗ, An Dương Vương).
