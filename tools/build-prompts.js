@@ -6,7 +6,7 @@ const ctx = { console, window: {}, document: { createElement: () => ({ getContex
 vm.createContext(ctx);
 for (const f of ['art', 'data', 'enemies2']) vm.runInContext(fs.readFileSync(path.join(ROOT, 'js', f + '.js'), 'utf8').replace(/^(const|let) /gm, 'var '), ctx);
 const { HEROES, ENEMIES, LEGACY, RUNES } = ctx;
-const packs = new Set(fs.readdirSync(path.join(ROOT, 'assets/packs')));
+const packs = new Set(fs.readdirSync(path.join(ROOT, 'assets/packs')).filter((d) => ['idle.png', 'walk1.png'].some((f) => fs.existsSync(path.join(ROOT, 'assets/packs', d, f)))));
 const md = fs.readFileSync(path.join(ROOT, 'docs/PROMPT_GEMINI_V94.md'), 'utf8');
 
 // mô tả nhân vật đã viết trong docs (dòng thứ 2 của khối HERO SHEET)
