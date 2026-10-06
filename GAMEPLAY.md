@@ -1063,3 +1063,7 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - Chỉ gợi ý tướng mà tài khoản đã mua (cả tím lẫn vàng), tối đa 6 ô.
 - Tướng tím: chỉ hiện khi tiến độ ghép đạt từ 75% trở lên.
 - Tướng vàng: hiện khi trên bản đồ đã có một thần tím nằm trong công thức ghép ra tướng vàng đó.
+
+## Phiên bản 89 — Một luật gợi ý chung
+- Mọi ô gợi ý hợp thể (tím và vàng) chỉ hiện khi tài khoản đã mua tướng đó và tiến độ ghép từ 75% trở lên.
+- Tướng vàng còn cần trên bản đồ có thần tím nằm trong công thức.
