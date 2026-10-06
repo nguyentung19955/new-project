@@ -1281,3 +1281,7 @@ body { overflow: hidden; }
 .login-rename .login-in { flex: 1; min-width: 0; }
 .login-rename .btn { height: 40px; padding: 0 12px; flex: none; }
 .dw-btn.quit { color: #FFB08A; border-color: #C8401E; }
+/* v86: tướng chưa sở hữu */
+.ro-card { position: relative; }
+.ro-card.lock img { filter: grayscale(0.85) brightness(0.6); }
+.ro-lock { position: absolute; top: 4px; right: 5px; font-size: 13px; z-index: 1; }

@@ -125,6 +125,8 @@ canvas.addEventListener('pointerdown', (ev) => {
     try { canvas.setPointerCapture(ev.pointerId); } catch (e) { /* bỏ qua */ }
     return;
   }
+  // v86: bấm vào boss → hiện thanh máu boss (góc dưới trái); bấm chỗ khác → ẩn
+  if (game.started && ui.tapBoss(x, y)) return;
   ui.tapMap(x, y);
 });
 

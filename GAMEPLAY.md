@@ -1045,3 +1045,9 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - **Đồ hoạ Vừa / Tiết kiệm tắt đổ bóng nhoè** trên canvas chính; bộ tự hạ đồ hoạ phản ứng sau 2 giây thay vì 3.
 - **Tải ít hơn lúc mở game**: chỉ tải sẵn dáng đứng + chân dung tướng và bước 1 của quái; các dáng khác tải khi cần.
 - Kết quả: Tiết kiệm 21 → 39 khung/giây, Tự động 3 → 19, Đẹp 9 → 11 (trên máy giả lập).
+
+### Phiên bản 86
+
+- **Tướng Tím / Vàng theo tài khoản**: mua vĩnh viễn ở **Anh Hùng** (menu chính) bằng Ngân khố — Tím 1.200, Vàng 3.000 (`OWN_COST`). Lưu trong bản lưu (`save.owned`, đồng bộ đám mây). Tướng chưa mua có ổ khoá, ảnh xám. Trong trận chỉ hợp thể / thăng thần ra được tướng đã mua; dải gợi ý hợp thể trên cùng chỉ hiện tướng đã mua. 6 tướng thường có sẵn.
+- Bỏ "Chiêu mộ tướng đặt sẵn trên sân" ở bảng Chuẩn bị xuất quân; thay bằng danh sách tướng đã sở hữu.
+- **Thanh máu boss chỉ hiện khi bấm vào boss / tướng địch** (góc dưới trái); bấm chỗ khác thì ẩn.

@@ -165,7 +165,7 @@ function heroImgUrl(type, crop) {
 const SAVE_KEY = 'nuicao.v1';
 function loadSave() {
   const def = { stars: LEVELS.map(() => 0), unlocked: 1, last: 0, best: {}, storySeen: false,
-    lifeGold: 0, lifeKills: 0, lifeHerbs: 0, collected: [], kho: 0, loginChosen: false,
+    lifeGold: 0, lifeKills: 0, lifeHerbs: 0, collected: [], kho: 0, loginChosen: false, owned: [],
     settings: { dmgText: true, shake: true, skipStory: false, vectorHeroes: false, detail: false, aiArt: false } };
   try {
     const s = JSON.parse(localStorage.getItem(SAVE_KEY) || '{}');
@@ -381,6 +381,7 @@ class UI {
     if (g.started) this.bankStats();
     g.hard = !!this.save.settings.hard;
     g.reset(i);
+    g.owned = new Set(this.save.owned || []);
     g.runId = Date.now();
     g.started = true;
     g.running = false;
@@ -420,9 +421,9 @@ class UI {
           ${card('king', 'Hũ Vua Hùng', 'Mở ngay 2 món Sử thi trở lên (35% đồ bộ)', PREP.kingCost, '👑', b.king)}
           ${card('lives', 'Đắp thành', `+${PREP.livesAmount} mạng`, PREP.livesCost, '🧱', b.lives)}
           <button class="prep-card metal" data-act="prep-forge"><span class="ic">⚒</span><b>Lò đúc đồng</b><small>Mua và đúc đồ bằng Ngân khố. Đồ Huyền thoại hiếm và đắt</small><span class="cost">Mở ›</span></button></div>
-        <div class="prep-col wide"><div class="h">Chiêu mộ tướng (1 tướng mỗi trận, đặt sẵn trên sân)</div>
-          <div class="sub">Tướng Vàng · ${coin()} ${fmt(PREP.heroCost.legendary)}</div><div class="prep-heroes">${legends.map(heroCard).join('')}</div>
-          <div class="sub">Tướng Tím · ${coin()} ${fmt(PREP.heroCost.epic)}</div><div class="prep-heroes">${epics.map(heroCard).join('')}</div></div>
+        <div class="prep-col wide"><div class="h">Tướng đã sở hữu (hợp thể được trong trận)</div>
+          <div class="prep-heroes">${LEGEND_HEROES.filter((t) => (this.save.owned || []).includes(t)).map((t) => `<span class="prep-hero metal ${HEROES[t].legend}"><img src="${heroImgUrl(t, 'head')}" alt=""><b>${HEROES[t].name}</b></span>`).join('')
+            || '<div class="note">Chưa có tướng Tím / Vàng nào. Mua ở <b>Anh Hùng</b> (menu chính) bằng Ngân khố để hợp thể được trong trận.</div>'}</div></div>
       </div>
       <div class="note" style="text-align:center;padding:4px 10px 8px">Thắng ải nhận Ngân khố: ${fmt(PREP.winBase)} + ${PREP.winPerLevel}×số ải + ${PREP.winPerStar}×sao (Khó ×1,5). Thua nhận ${PREP.losePerWave} mỗi đợt đã qua.</div></div>`;
     $('#prep').hidden = false;
@@ -469,7 +470,7 @@ class UI {
   resumeRun() {
     const r = this.save.run;
     if (!r || !LEVELS[r.level]) { this.clearRun(); return this.showCampaign(this.save.last); }
-    try { this.game.restore(r); } catch (e) { this.clearRun(); this.toast('Không nạp được màn đã lưu', '#E25A3A'); return this.showCampaign(this.save.last); }
+    try { this.game.restore(r); this.game.owned = new Set(this.save.owned || []); } catch (e) { this.clearRun(); this.toast('Không nạp được màn đã lưu', '#E25A3A'); return this.showCampaign(this.save.last); }
     this.sel = -1; this.spot = -1; this.armed = null; this.raising = false; this.moving = -1; this.screen = null;
     $('#screen').hidden = true;
     this.hideOverlays(); this.setInGame(true);
@@ -693,7 +694,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 85 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 86 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -727,6 +728,7 @@ class UI {
   tapMap(x, y) {
     const g = this.game;
     if (!g.started) return;
+    this.bossSel = null;
     $('#legends').hidden = true;
     $('#drawer').hidden = true;
     $('#more').hidden = true;
@@ -1021,7 +1023,7 @@ class UI {
     const el = $('#fuse-strip');
     if (!g.started || g.over) { el.innerHTML = ''; return; }
     if ((this.fsT = (this.fsT || 0) + 1) % 10) return;      // 6 lần / giây là đủ
-    const list = FUSION.map((f, i) => ({ f, i, ...g.fusionProgress(f) })).filter((x) => x.p > 0)
+    const list = FUSION.map((f, i) => ({ f, i, ...g.fusionProgress(f) })).filter((x) => x.p > 0 && g.ownsHero(x.f.to))
       .sort((a, b) => b.p - a.p).slice(0, 5);
     const key = list.map((x) => x.i + ':' + Math.floor(x.p * 100) + (x.p >= 1 && typeof g.canFuse(x.a, x.b) !== 'string' ? '!' : '')).join(',') + '|' + assetVersion;
     if (this.sig.fuse === key) return;
@@ -1062,8 +1064,23 @@ class UI {
     el.hidden = !html;
   }
 
+  tapBoss(x, y) {
+    const g = this.game;
+    let best = null, bd = 1e9;
+    for (const e of g.enemies) {
+      if (e.dead || !(e.def.boss || e.champion || e.def.general)) continue;
+      const box = enemyBox(e), lift = e.def.flying ? 24 : 0;
+      const cx = e.x, cy = e.y - lift - box.h * 0.45;
+      const dd = Math.hypot(x - cx, y - cy);
+      if (dd < Math.max(40, box.w * 0.6) && dd < bd) { best = e; bd = dd; }
+    }
+    this.bossSel = best;
+    return !!best;
+  }
   updateBoss() {
-    const b = this.game.boss;
+    // v86: chỉ hiện khi đã bấm vào boss / tướng địch
+    const b = this.bossSel && !this.bossSel.dead && this.game.enemies.includes(this.bossSel) ? this.bossSel : null;
+    if (!b) this.bossSel = null;
     $('#bossbar').hidden = !b;
     if (!b) return;
     this.setText('#bb-name', b.champion ? `${b.def.name} khổng lồ` : b.def.name);
@@ -1362,7 +1379,8 @@ class UI {
       <div class="scr-body">
         <div class="ro-grid">${all.map((k) => {
           const h = HEROES[k];
-          return `<button class="ro-card ${h.legend || ''} ${k === t ? 'on' : ''} ${this.game.known.has('h.' + k) ? 'goldf' : ''}" data-act="ro-sel" data-type="${k}">
+          const lock = h.legend && !(this.save.owned || []).includes(k);
+          return `<button class="ro-card ${h.legend || ''} ${k === t ? 'on' : ''} ${lock ? 'lock' : ''} ${this.game.known.has('h.' + k) ? 'goldf' : ''}" data-act="ro-sel" data-type="${k}">${lock ? '<span class="ro-lock">🔒</span>' : ''}
             <span class="tag" style="color:${ATTRS[h.attr].color}">${ATTRS[h.attr].short}</span>
             <img src="${heroImgUrl(k)}" alt=""><span class="nm">${h.name}</span></button>`;
         }).join('')}</div>
@@ -1370,7 +1388,9 @@ class UI {
           <div class="ro-top">
             <div class="ro-pic inset ${this.game.known.has('h.' + t) ? 'goldf' : ''}">${splash ? `<img src="${splash}" alt="">` : '<canvas id="ro-cv" width="300" height="300"></canvas>'}</div>
             <div style="display:flex;flex-direction:column;gap:5px;min-width:0">
-              <div class="ttl" style="font-size:26px;line-height:1">${d.name}</div>
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="ttl" style="font-size:26px;line-height:1">${d.name}</span>
+                ${!d.legend ? '<span class="chip ok">Có sẵn</span>' : (this.save.owned || []).includes(t) ? '<span class="chip ok">✓ Đã sở hữu</span>'
+                  : `<button class="btn btn-gold" style="height:32px;padding:0 12px;font-size:14px" data-act="ro-buy" data-type="${t}" ${(this.save.kho || 0) < OWN_COST[d.legend] ? 'disabled' : ''}>Mua · ${coin()} ${fmt(OWN_COST[d.legend])}</button><span class="chip dark">Ngân khố ${fmt(this.save.kho || 0)}</span>`}</div>
               <div class="note" style="font-style:italic">${esc(d.title)}</div>
               <div class="bt-info" style="padding:0;background:none;border:0;box-shadow:none"><div class="tags">
                 <span class="${ATTR_CLS[d.attr]}">${ATTRS[d.attr].name}</span>
@@ -1666,6 +1686,16 @@ class UI {
       case 'to-menu': $('#settings').hidden = true; if (g.started) this.bankStats(); this.showMenu(); break;
       case 'ro-sel': this.rosterSel = d.type; this.renderRoster(); break;
       case 'ro-back': this.showMenu(); break;
+      case 'ro-buy': {
+        const t = d.type, c = OWN_COST[HEROES[t].legend], s = this.save;
+        s.owned = s.owned || [];
+        if (s.owned.includes(t) || (s.kho || 0) < c) break;
+        s.kho -= c; s.owned.push(t); writeSave(s);
+        if (this.game.owned) this.game.owned.add(t);
+        this.toast(`Đã mua ${HEROES[t].name}! Giờ có thể hợp thể ra trong trận`, '#6AE06A');
+        this.renderRoster();
+        break;
+      }
       case 'ro-temple': location.href = 'den-anh-hung.html'; break;
       case 'next-level': this.save.last = Math.min(LEVELS.length - 1, g.level + 1); writeSave(this.save); this.showCampaign(this.save.last); break;
       case 'endless':

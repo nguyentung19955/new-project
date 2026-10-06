@@ -1442,10 +1442,13 @@ class Game {
     if (left.length) return `${HEROES[h.type].name} cần nâng tối đa kỹ năng: ${left.map(([k, lv, mx]) => `${k} ${lv}/${mx}`).join(', ')}`;
     return true;
   }
+  // tài khoản đã mua tướng này chưa (owned = null: không giới hạn, ví dụ bot mô phỏng)
+  ownsHero(t) { return !this.owned || !HEROES[t].legend || this.owned.has(t); }
   canFuse(a, b) {
     if (!a || !b || a === b) return 'Chọn 2 tướng';
     const f = fusionFor(a.type, b.type);
     if (!f) return 'Hai tướng này không có công thức hợp thể';
+    if (!this.ownsHero(f.to)) return `Chưa sở hữu ${HEROES[f.to].name} — mua ở Anh Hùng (menu chính)`;
     for (const h of [a, b]) { const r = this.fusionReady(h); if (r !== true) return r; }
     const d = HEROES[f.to];
     const c = COSTS.ascend[d.legend];
@@ -1664,6 +1667,7 @@ class Game {
   }
   canAscend(h, to) {
     if (!(ASCEND[h.type] || []).includes(to)) return 'Không thể thăng thần theo nhánh này';
+    if (!this.ownsHero(to)) return `Chưa sở hữu ${HEROES[to].name} — mua ở Anh Hùng (menu chính)`;
     const ready = this.ascendReady(h);
     if (ready !== true) return ready;
     const d = HEROES[to];

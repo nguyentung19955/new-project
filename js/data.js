@@ -541,6 +541,8 @@ Object.assign(COSTS, {
 });
 // CỬA HÀNG (v24): 6 món đồ trang phục / phụ kiện ngẫu nhiên, làm mới miễn phí mỗi đợt,
 // làm mới tay tốn vàng (tăng dần trong đợt). Độ hiếm tốt dần theo đợt.
+// v86: tướng Tím / Vàng phải MUA bằng Ngân khố (lưu theo tài khoản) mới hợp thể / thăng thần ra được trong trận
+const OWN_COST = { epic: 1200, legendary: 3000 };
 // v66: Ngân khố — thưởng sau trận, tiêu trước trận
 const PREP = {
   winBase: 120, winPerLevel: 25, winPerStar: 40, losePerWave: 4, minShow: 1,
