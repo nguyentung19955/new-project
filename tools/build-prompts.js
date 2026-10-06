@@ -139,6 +139,37 @@ ${UI_SHEETS[k].map((x, i) => `[${i + 1}] ${x}`).join('  ')}.
 ${DRUM}. Each icon: one bold centered symbol, readable at 40 px, no text, no letters, no numbers.
 ${BG}`;
 for (const k of Object.keys(UI_SHEETS).filter((x) => !fs.existsSync(path.join(ROOT, 'assets/ui', `${x}-1.png`)))) items.push({ group: '9. Nút giao diện (trống đồng)', file: `${k}.png`, title: `Nút · ${k}`, text: uiPrompt(k) });
+// v121: quái / boss cũ chỉ có 1 dáng (đi không cử động) → gen lại đủ dáng theo phong cách chung.
+// Bản đổi màu (camapden, thietky, chanlua, tuongthuy) tự sinh lại từ ảnh gốc bằng tools/make-variants.py.
+const sameFrames = (k) => { try { return fs.readFileSync(path.join(ROOT, 'assets/packs', k, 'walk1.png')).equals(fs.readFileSync(path.join(ROOT, 'assets/packs', k, 'walk2.png'))); } catch (e) { return true; } };
+const REDO_ENEMY = {
+  camap: 'Cá Mập: grey river shark monster swimming upright on its tail fin, toothy grin, bronze ring on the fin',
+  cao: 'Cáo: sly orange fox spirit standing on hind legs, fluffy tail with a white tip, little bronze bell collar',
+  cua: 'Cua: big red river crab soldier walking sideways, huge claws, tiny bronze helmet',
+  kybinh: 'Kỵ Binh giặc Ân: enemy horseman in dark leather armor riding a small brown horse, long spear',
+  voichien: 'Voi Chiến: grey war elephant with a red and gold saddle tower, bronze tusk caps, small banner',
+};
+const REDO_BOSS = {
+  anvuong: 'Ân Vương: tyrant king of the Ân invaders in black and gold armor riding a black warhorse, crown helmet with red plume, big halberd',
+  chantinh: 'Chằn Tinh: big green ogre demon of the banyan forest, tusks, horn, loincloth, huge stone club',
+  haba: 'Hà Bá: old river god with a long green beard and blue robe, coral crown, trident',
+  ngutinh: 'Ngư Tinh: monstrous blue-green fish demon of the East Sea rising from waves, many sharp teeth, fin spikes',
+  thuongluong: 'Thuồng Luồng: long green water dragon serpent coiling out of the river, horns, whiskers, bronze scales on the belly',
+  thuytinh: 'Thủy Tinh: water god warlord in silver-blue armor and fish-scale cape, crown of waves, trident',
+  trieuda: 'Triệu Đà: enemy general in dark red and black armor, topknot, long beard, big curved sword',
+};
+const redoEnemyPrompt = (k) => `Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.
+CREATURE: ${REDO_ENEMY[k]}. Cute-but-mischievous chibi monster facing RIGHT.
+CELLS (same creature, same size): [1] walk step A [2] walk step B (opposite legs) [3] attack.
+${STYLE}
+${BG}`;
+const redoBossPrompt = (k) => `Create ONE image: a 512x512 boss sprite sheet for a cute mobile tower-defense game based on Vietnamese folk legends, an invisible 2x2 grid of four equal 256x256 cells.
+BOSS: ${REDO_BOSS[k]}. Big, menacing but still cute chibi boss facing RIGHT.
+CELLS (same character, same size, left to right, top to bottom): [1] walk step A [2] walk step B (opposite legs) [3] attack swing [4] rage: body glowing red-orange, roaring.
+${STYLE}
+${BG}`;
+for (const k of Object.keys(REDO_ENEMY).filter(sameFrames)) items.push({ group: '10. Quái gen lại (đủ dáng)', file: `${k}.png`, title: `Quái · ${ENEMIES[k].name}`, text: redoEnemyPrompt(k) });
+for (const k of Object.keys(REDO_BOSS).filter(sameFrames)) items.push({ group: '11. Boss gen lại (đủ dáng)', file: `${k}.png`, title: `Boss · ${ENEMIES[k].name}`, text: redoBossPrompt(k) });
 items.forEach((it, i) => { it.n = i + 1; });
 const noIcon = need.filter((x) => !ICONS[x]);  // tướng mới chưa có mô tả icon
 if (noIcon.length) console.error('Chưa có mô tả icon:', noIcon.join(', '));

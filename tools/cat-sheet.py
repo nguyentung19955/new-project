@@ -14,7 +14,8 @@ from PIL import Image
 
 NAMES = {'hero': (3, 2, ['idle', 'wind', 'strike', 'cast', 'front', 'head']),
          'enemy': (3, 1, ['walk1', 'walk2', 'attack']),
-         'boss': (2, 2, ['idle', 'attack', 'skill', 'rage'])}
+         'boss': (2, 2, ['idle', 'attack', 'skill', 'rage']),
+         'boss4': (2, 2, ['walk1', 'walk2', 'attack', 'rage'])}
 
 
 def key_magenta(im):

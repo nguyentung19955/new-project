@@ -103,5 +103,89 @@
   "title": "Nút · ui-tai-nguyen",
   "text": "Create ONE image: a 512x128 row of four equal 128x128 square game UI icons, one per cell, left to right:\n[1] round bronze coin with square hole (gold)  [2] red heart with bronze rim (lives)  [3] silver ingot boat shape (treasury silver)  [4] yin-yang disc in bronze ring (cultivation).\nDong Son bronze drum art style (Vietnamese trong dong): engraved bronze surfaces, concentric rings, a sun-star with pointed rays, flying Lac birds, zigzag and circle-dot bands, warm bronze gold #C9963A with dark green patina #2F6B5E accents, thick dark-brown outline #2A1608, flat cartoon shading for a cute mobile game. Each icon: one bold centered symbol, readable at 40 px, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
   "n": 15
+ },
+ {
+  "group": "10. Quái gen lại (đủ dáng)",
+  "file": "camap.png",
+  "title": "Quái · Cá Mập Yêu",
+  "text": "Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.\nCREATURE: Cá Mập: grey river shark monster swimming upright on its tail fin, toothy grin, bronze ring on the fin. Cute-but-mischievous chibi monster facing RIGHT.\nCELLS (same creature, same size): [1] walk step A [2] walk step B (opposite legs) [3] attack.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 16
+ },
+ {
+  "group": "10. Quái gen lại (đủ dáng)",
+  "file": "cao.png",
+  "title": "Quái · Cáo Con",
+  "text": "Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.\nCREATURE: Cáo: sly orange fox spirit standing on hind legs, fluffy tail with a white tip, little bronze bell collar. Cute-but-mischievous chibi monster facing RIGHT.\nCELLS (same creature, same size): [1] walk step A [2] walk step B (opposite legs) [3] attack.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 17
+ },
+ {
+  "group": "10. Quái gen lại (đủ dáng)",
+  "file": "cua.png",
+  "title": "Quái · Cua Khổng Lồ",
+  "text": "Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.\nCREATURE: Cua: big red river crab soldier walking sideways, huge claws, tiny bronze helmet. Cute-but-mischievous chibi monster facing RIGHT.\nCELLS (same creature, same size): [1] walk step A [2] walk step B (opposite legs) [3] attack.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 18
+ },
+ {
+  "group": "10. Quái gen lại (đủ dáng)",
+  "file": "kybinh.png",
+  "title": "Quái · Kỵ Binh",
+  "text": "Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.\nCREATURE: Kỵ Binh giặc Ân: enemy horseman in dark leather armor riding a small brown horse, long spear. Cute-but-mischievous chibi monster facing RIGHT.\nCELLS (same creature, same size): [1] walk step A [2] walk step B (opposite legs) [3] attack.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 19
+ },
+ {
+  "group": "10. Quái gen lại (đủ dáng)",
+  "file": "voichien.png",
+  "title": "Quái · Voi Chiến",
+  "text": "Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.\nCREATURE: Voi Chiến: grey war elephant with a red and gold saddle tower, bronze tusk caps, small banner. Cute-but-mischievous chibi monster facing RIGHT.\nCELLS (same creature, same size): [1] walk step A [2] walk step B (opposite legs) [3] attack.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 20
+ },
+ {
+  "group": "11. Boss gen lại (đủ dáng)",
+  "file": "anvuong.png",
+  "title": "Boss · Tướng Giặc Ân",
+  "text": "Create ONE image: a 512x512 boss sprite sheet for a cute mobile tower-defense game based on Vietnamese folk legends, an invisible 2x2 grid of four equal 256x256 cells.\nBOSS: Ân Vương: tyrant king of the Ân invaders in black and gold armor riding a black warhorse, crown helmet with red plume, big halberd. Big, menacing but still cute chibi boss facing RIGHT.\nCELLS (same character, same size, left to right, top to bottom): [1] walk step A [2] walk step B (opposite legs) [3] attack swing [4] rage: body glowing red-orange, roaring.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 21
+ },
+ {
+  "group": "11. Boss gen lại (đủ dáng)",
+  "file": "chantinh.png",
+  "title": "Boss · Chằn Tinh",
+  "text": "Create ONE image: a 512x512 boss sprite sheet for a cute mobile tower-defense game based on Vietnamese folk legends, an invisible 2x2 grid of four equal 256x256 cells.\nBOSS: Chằn Tinh: big green ogre demon of the banyan forest, tusks, horn, loincloth, huge stone club. Big, menacing but still cute chibi boss facing RIGHT.\nCELLS (same character, same size, left to right, top to bottom): [1] walk step A [2] walk step B (opposite legs) [3] attack swing [4] rage: body glowing red-orange, roaring.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 22
+ },
+ {
+  "group": "11. Boss gen lại (đủ dáng)",
+  "file": "haba.png",
+  "title": "Boss · Hà Bá",
+  "text": "Create ONE image: a 512x512 boss sprite sheet for a cute mobile tower-defense game based on Vietnamese folk legends, an invisible 2x2 grid of four equal 256x256 cells.\nBOSS: Hà Bá: old river god with a long green beard and blue robe, coral crown, trident. Big, menacing but still cute chibi boss facing RIGHT.\nCELLS (same character, same size, left to right, top to bottom): [1] walk step A [2] walk step B (opposite legs) [3] attack swing [4] rage: body glowing red-orange, roaring.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 23
+ },
+ {
+  "group": "11. Boss gen lại (đủ dáng)",
+  "file": "ngutinh.png",
+  "title": "Boss · Ngư Tinh",
+  "text": "Create ONE image: a 512x512 boss sprite sheet for a cute mobile tower-defense game based on Vietnamese folk legends, an invisible 2x2 grid of four equal 256x256 cells.\nBOSS: Ngư Tinh: monstrous blue-green fish demon of the East Sea rising from waves, many sharp teeth, fin spikes. Big, menacing but still cute chibi boss facing RIGHT.\nCELLS (same character, same size, left to right, top to bottom): [1] walk step A [2] walk step B (opposite legs) [3] attack swing [4] rage: body glowing red-orange, roaring.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 24
+ },
+ {
+  "group": "11. Boss gen lại (đủ dáng)",
+  "file": "thuongluong.png",
+  "title": "Boss · Thuồng Luồng",
+  "text": "Create ONE image: a 512x512 boss sprite sheet for a cute mobile tower-defense game based on Vietnamese folk legends, an invisible 2x2 grid of four equal 256x256 cells.\nBOSS: Thuồng Luồng: long green water dragon serpent coiling out of the river, horns, whiskers, bronze scales on the belly. Big, menacing but still cute chibi boss facing RIGHT.\nCELLS (same character, same size, left to right, top to bottom): [1] walk step A [2] walk step B (opposite legs) [3] attack swing [4] rage: body glowing red-orange, roaring.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 25
+ },
+ {
+  "group": "11. Boss gen lại (đủ dáng)",
+  "file": "thuytinh.png",
+  "title": "Boss · Thủy Tinh",
+  "text": "Create ONE image: a 512x512 boss sprite sheet for a cute mobile tower-defense game based on Vietnamese folk legends, an invisible 2x2 grid of four equal 256x256 cells.\nBOSS: Thủy Tinh: water god warlord in silver-blue armor and fish-scale cape, crown of waves, trident. Big, menacing but still cute chibi boss facing RIGHT.\nCELLS (same character, same size, left to right, top to bottom): [1] walk step A [2] walk step B (opposite legs) [3] attack swing [4] rage: body glowing red-orange, roaring.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 26
+ },
+ {
+  "group": "11. Boss gen lại (đủ dáng)",
+  "file": "trieuda.png",
+  "title": "Boss · Triệu Đà",
+  "text": "Create ONE image: a 512x512 boss sprite sheet for a cute mobile tower-defense game based on Vietnamese folk legends, an invisible 2x2 grid of four equal 256x256 cells.\nBOSS: Triệu Đà: enemy general in dark red and black armor, topknot, long beard, big curved sword. Big, menacing but still cute chibi boss facing RIGHT.\nCELLS (same character, same size, left to right, top to bottom): [1] walk step A [2] walk step B (opposite legs) [3] attack swing [4] rage: body glowing red-orange, roaring.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 27
  }
 ]
