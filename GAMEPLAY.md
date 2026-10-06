@@ -925,3 +925,8 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - **Thêm 5 tướng vẽ tay**: Mai An Tiêm (nón lá, ném dưa hấu), Mẫu Thượng Ngàn (áo xanh, khăn đỏ vòng hoa lá, cành cây quả đỏ, hổ nằm cạnh), Thánh Gióng (cưỡi ngựa sắt bờm lửa, gậy tre, ngựa phun lửa khi tung chiêu), Chử Đồng Tử (áo vá, gậy ngọc xanh), Cao Lỗ (tạp dề da, kính bảo hộ, nỏ lớn). **Đủ 20/20 tướng.**
 - Ảnh Chử Đồng Tử nền hồng tím xỉn: xoá thêm bóng tím dưới chân.
 - Chưa dùng: tấm ghép boss (bố cục không theo ô, có ô lẫn nhân vật khác) và tấm "tướng phụ / quái phụ" (nhân vật ngoài danh sách).
+
+### Phiên bản 63
+
+- **Thêm 7 quái vẽ tay** cắt tay từ tấm ghép Gemini (`tools/cat-collage.py`, toạ độ từng ô ghi trong file): Cung Thủ Giặc, Mực Tinh, Cáo Con (3 dáng); Kỵ Binh, Voi Chiến, Cá Mập Yêu, Cua Khổng Lồ (chỉ 1 dáng — dùng chung cho đi và đánh, vẫn nhún theo nhịp). Tổng 18/21 quái.
+- Còn thiếu: Yêu Tinh Rừng, Đá Con, Lính Giáo và 9 boss (`docs/PROMPT_GEMINI_CON_THIEU.md`). Các con trong tấm ghép không có trong game (Rết, Bọ Cạp, Dơi Quỷ, Trăn, Bọ Cánh Cứng) chưa dùng.
