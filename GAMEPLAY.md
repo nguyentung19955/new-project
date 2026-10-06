@@ -969,3 +969,8 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 ### Phiên bản 71
 
 - **Bỏ giới hạn 2 tướng Vàng trên sân** (theo yêu cầu): hợp thể, thăng thần và chiêu mộ trước trận không còn chặn khi đã có tướng Huyền thoại. Dòng trên sân chỉ còn hiện số tướng Vàng đang có.
+
+### Phiên bản 72
+
+- **Bảng xếp hạng** (menu chính → 🏆): tab **Vô tận** (xếp theo đợt đã vượt, hoà thì nhiều mạng hơn) và từng **ải** (Khó > sao > mạng còn > nhanh hơn). Top 50, dòng của mình viền xanh, khách ghi "(khách)". Đổi tên hiển thị bằng nút ✎. Tự ghi điểm khi thua ở vô tận, khi rời trận vô tận, khi thắng ải; chỉ ghi khi phá kỷ lục cũ.
+- Firestore `boards/{bảng}/scores/{uid}`; luật mới trong `firestore.rules` (ai cũng xem được, chỉ ghi dòng của mình, điểm chỉ được tăng) — cần dán lại luật và Publish.

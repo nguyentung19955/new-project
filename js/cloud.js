@@ -94,5 +94,24 @@ const CLOUD = {
       this._emit();
     } catch (e) { this._fail(e); }
   },
+  // ---------- v72: bảng xếp hạng — boards/{bảng}/scores/{uid}; chỉ ghi khi điểm cao hơn điểm cũ
+  async submitScore(board, score, info) {
+    if (!this.ready || !this.user) return false;
+    const ref = this.db.collection('boards').doc(board).collection('scores').doc(this.user.uid);
+    try {
+      const old = await ref.get();
+      if (old.exists && (old.data().score || 0) >= score) return false;
+      await ref.set({ score, name: String(info.name || 'Khách').slice(0, 24), detail: String(info.detail || '').slice(0, 60),
+        at: Date.now(), google: !this.user.isAnonymous });
+      return true;
+    } catch (e) { this._fail(e); return false; }
+  },
+  async topScores(board, n = 50) {
+    if (!this.ready) return null;
+    try {
+      const q = await this.db.collection('boards').doc(board).collection('scores').orderBy('score', 'desc').limit(n).get();
+      return q.docs.map((d) => ({ uid: d.id, ...d.data() }));
+    } catch (e) { this._fail(e); return null; }
+  },
   async signOut() { if (this.ready) { await this.auth.signOut(); this._emit(); } },
 };

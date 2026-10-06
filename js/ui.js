@@ -246,6 +246,7 @@ class UI {
     };
     $('#btn-heroes').onclick = () => this.showRoster();
     $('#btn-treasury').onclick = () => this.showTreasury();
+    $('#btn-ranks').onclick = () => this.showRanks('endless');
     $('#btn-menu-codex').onclick = () => this.openScreen('codex', { top: true });
     $('#btn-settings').onclick = () => this.showSettings(false);
     $('#btn-menu').onclick = () => { $('#drawer').hidden = !$('#drawer').hidden; $('#more').hidden = true; $('#legends').hidden = true; };
@@ -290,7 +291,7 @@ class UI {
       if (b) this.toast(`Gọi sớm: +${b} vàng`, '#F2D27A');
     };
     // ủy quyền sự kiện cho các vùng dựng lại liên tục
-    for (const id of ['#fuse-strip', '#auto-btns', '#screen', '#deck', '#drawer', '#more', '#reward', '#result', '#story', '#campaign', '#settings', '#legends', '#roster', '#treasury', '#prep', '#login']) {
+    for (const id of ['#fuse-strip', '#auto-btns', '#screen', '#deck', '#drawer', '#more', '#reward', '#result', '#story', '#campaign', '#settings', '#legends', '#roster', '#treasury', '#prep', '#login', '#ranks']) {
       $(id).addEventListener('click', (ev) => {
         const el = ev.target.closest('[data-act]');
         if (el && !el.disabled) this.action(el.dataset, el);
@@ -336,7 +337,7 @@ class UI {
     this.setInGame(false);
   }
   hideOverlays() {
-    for (const id of ['#menu', '#story', '#campaign', '#settings', '#result', '#reward', '#roster', '#treasury', '#prep', '#login']) $(id).hidden = true;
+    for (const id of ['#menu', '#story', '#campaign', '#settings', '#result', '#reward', '#roster', '#treasury', '#prep', '#login', '#ranks']) $(id).hidden = true;
   }
   setInGame(on) {
     document.querySelectorAll('.ingame').forEach((el) => { el.hidden = !on; });
@@ -424,6 +425,48 @@ class UI {
     const h = g.spawnHero(slot, t, {});
     h.from = t; h.lineage = []; h.summonT = 0;
     writeSave(s); this.showPrep();
+  }
+
+  // ---------- v72: Bảng xếp hạng (vô tận + từng ải)
+  playerName() {
+    const u = typeof CLOUD !== 'undefined' && CLOUD.user;
+    if (this.save.nick) return this.save.nick;
+    if (u && !u.isAnonymous && u.displayName) return u.displayName;
+    return 'Khách ' + (u ? u.uid.slice(0, 4).toUpperCase() : '');
+  }
+  submitScores(win, stars) {
+    if (typeof CLOUD === 'undefined' || !CLOUD.ready) return;
+    const g = this.game, name = this.playerName();
+    if (g.endless) {
+      // vô tận: điểm = đợt đã vượt; hoà thì ai còn nhiều mạng hơn
+      const wave = Math.max(0, g.wave - 1);
+      CLOUD.submitScore('endless', wave * 100 + Math.max(0, g.lives), { name, detail: `Đợt ${wave} · Ải ${g.level + 1}${g.hard ? ' · Khó' : ''}` });
+    } else if (win) {
+      // từng ải: Khó > sao > mạng còn > nhanh hơn
+      const sec = Math.round(g.time || 0);
+      const score = (g.hard ? 1e7 : 0) + stars * 1e6 + Math.max(0, g.lives) * 1e4 + Math.max(0, 9999 - sec);
+      CLOUD.submitScore('lv' + (g.level + 1), score, { name, detail: `${'★'.repeat(stars)} · ${g.lives} mạng · ${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}${g.hard ? ' · Khó' : ''}` });
+    }
+  }
+  async showRanks(board) {
+    this.ranksBoard = board;
+    const opts = [['endless', '♾ Vô tận'], ...LEVELS.map((l, i) => ['lv' + (i + 1), `Ải ${i + 1} · ${l.name}`])];
+    const head = `<div class="scr-head metal"><button class="xbtn metal" data-act="ro-back" aria-label="Quay lại">${ICON.back}</button><h1 class="ttl">Bảng xếp hạng</h1>
+      <div class="cp-tabs">${opts.map(([k, n]) => `<button class="cp-tab ${k === board ? 'on' : ''}" data-act="rank-tab" data-k="${k}">${n}</button>`).join('')}</div><div class="sp"></div>
+      <button class="btn metal" style="height:34px;padding:0 10px;font-size:13px;flex:none" data-act="rank-nick">✎ ${esc(this.playerName())}</button></div>`;
+    const ok = typeof CLOUD !== 'undefined' && CLOUD.enabled;
+    $('#ranks').innerHTML = `<div class="screen" style="z-index:auto">${head}<div class="rk-body"><div class="note" style="text-align:center;padding:20px">${ok ? 'Đang tải…' : 'Bảng xếp hạng cần kết nối mạng (lưu đám mây).'}</div></div></div>`;
+    $('#ranks').hidden = false;
+    if (!ok) return;
+    for (let i = 0; i < 20 && !CLOUD.ready && CLOUD.status !== 'error'; i++) await new Promise((r) => setTimeout(r, 300));
+    const rows = await CLOUD.topScores(board, 50);
+    if (this.ranksBoard !== board || $('#ranks').hidden) return;
+    const me = CLOUD.user && CLOUD.user.uid;
+    const medal = (i) => (i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : i + 1);
+    const body = !rows ? `<div class="note" style="text-align:center;padding:20px">Không tải được bảng xếp hạng (${esc(CLOUD.error || 'mất mạng')}).</div>`
+      : !rows.length ? `<div class="note" style="text-align:center;padding:20px">Chưa có ai ghi tên. ${board === 'endless' ? 'Thắng một ải rồi chọn <b>Chơi vô tận</b> để lên bảng!' : 'Thắng ải này để lên bảng!'}</div>`
+      : `<div class="rk-list">${rows.map((r, i) => `<div class="rk-row inset ${r.uid === me ? 'me' : ''}"><span class="rk-n">${medal(i)}</span><b class="rk-name">${esc(r.name || 'Khách')}${r.google ? '' : ' <small>(khách)</small>'}</b><span class="rk-d">${esc(r.detail || '')}</span></div>`).join('')}</div>`;
+    $('#ranks .rk-body').innerHTML = body;
   }
 
   // ---------- v66: Đăng nhập
@@ -582,7 +625,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 71 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 72 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1368,6 +1411,7 @@ class UI {
     b.kills = g.stats.kills; b.gold = g.stats.goldEarned; b.herbs = g.stats.herbs || 0;
     this.banked = b;
     writeSave(s);
+    if (g.endless && g.wave > g.levelWaves) this.submitScores(false, 0);   // rời trận vô tận giữa chừng vẫn ghi điểm
   }
 
   finishLevel(win) {
@@ -1386,6 +1430,7 @@ class UI {
     const khoGain = win ? Math.round((PREP.winBase + PREP.winPerLevel * (lv + 1) + PREP.winPerStar * stars) * (g.hard ? 1.5 : 1))
       : PREP.losePerWave * Math.max(0, g.wave - 1);
     s.kho = (s.kho || 0) + khoGain;
+    this.submitScores(win, stars);
     this.bankStats();
     this.closeScreen();
     $('#reward').hidden = true;
@@ -1486,6 +1531,16 @@ class UI {
       case 'login-guest': this.save.loginChosen = true; writeSave(this.save); $('#login').hidden = true; break;
       case 'login-close': this.save.loginChosen = true; writeSave(this.save); $('#login').hidden = true; this.showMenu(); break;
       case 'prep-buy': this.prepBuy(d.id); break;
+      case 'rank-tab': this.showRanks(d.k); break;
+      case 'rank-nick': {
+        const box = $('#ranks .rk-body');
+        box.insertAdjacentHTML('afterbegin', `<div class="rk-nick inset"><span>Tên trên bảng xếp hạng:</span><input id="rk-nick-in" maxlength="20" value="${esc(this.playerName())}"><button class="btn btn-gold" data-act="rank-nick-ok" style="height:32px;padding:0 12px">Lưu</button></div>`);
+        break;
+      }
+      case 'rank-nick-ok': {
+        const v = ($('#rk-nick-in').value || '').trim().slice(0, 20);
+        this.save.nick = v || null; writeSave(this.save); this.showRanks(this.ranksBoard); break;
+      }
       case 'prep-hero': this.prepHero(d.id); break;
       case 'prep-go': $('#prep').hidden = true; break;
       case 'cloud-sync': CLOUD.push(this.save, true); break;
