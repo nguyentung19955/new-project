@@ -1512,3 +1512,11 @@ body { overflow: hidden; }
 .md-card .md-ic img { width: 64px; height: 64px; display: block; }
 /* v129: chữ tựa menu dễ đọc trên tranh nền */
 #menu-art:has(img.keyart)::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 48% 38% at 36% 42%, #0D0B08b0, transparent 70%), linear-gradient(90deg, transparent 60%, #0D0B0880); pointer-events: none; }
+/* v130: bảng bên chọn ải — phần nội dung cuộn riêng, nút Vào trận / Thường / Khó cố định dưới đáy, không che chữ hay avatar */
+#campaign .cp-side { overflow: hidden; padding-bottom: 8px; }
+#campaign .cp-side .cp-scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; gap: 8px; padding-bottom: 4px; }
+#campaign .cp-side .cp-act { position: static; flex: none; margin-top: 0; padding: 6px 0 0; border-top: 1px solid #3A2A18; }
+@media (max-height: 400px) { #campaign .ch-av { width: 44px; } #campaign .ch-av img { width: 36px; height: 36px; } }
+/* nhãn ải sát mép bản đồ không bị cắt */
+.cp-node.edge-r .lb { position: relative; transform: translateX(-34%); }
+.cp-node.edge-l .lb { position: relative; transform: translateX(30%); }

@@ -733,14 +733,14 @@ class UI {
           ${ch.classic ? '' : `<svg class="cp-trail" viewBox="0 0 640 382" preserveAspectRatio="none"><polyline points="${NODES.map(([x, y]) => `${x},${y}`).join(' ')}" fill="none" stroke="#F2D27A" stroke-width="4" stroke-dasharray="10 8" opacity="0.8"/></svg>`}
           ${NODES.map(([x, y], kk) => { const k = ch.from + kk;
             const lock = k >= s.unlocked;
-            return `<button class="cp-node ${lock ? 'lock' : ''} ${k === i ? 'sel' : ''}" style="left:${x / 640 * 100}%;top:${y / 382 * 100}%" data-act="cp-sel" data-i="${k}" ${lock ? 'disabled' : ''}>
+            return `<button class="cp-node ${lock ? 'lock' : ''} ${k === i ? 'sel' : ''} ${x > 560 ? 'edge-r' : x < 80 ? 'edge-l' : ''}" style="left:${x / 640 * 100}%;top:${y / 382 * 100}%" data-act="cp-sel" data-i="${k}" ${lock ? 'disabled' : ''}>
               <span class="stars">${lock ? '' : starsOf(s.stars[k])}</span>
               <span class="c">${lock ? ICON.lock : k + 1}</span>
               <span class="lb">${k + 1} · ${LEVELS[k].name}</span></button>`;
           }).join('')}
         </div>
         <div class="cp-side">
-          <div class="hd"><span class="no">Ải ${i + 1}</span><span class="ttl">${lv.name}</span><span class="op">${s.stars[i] ? '★'.repeat(s.stars[i]) : 'Đang mở'}</span></div>
+          <div class="cp-scroll"><div class="hd"><span class="no">Ải ${i + 1}</span><span class="ttl">${lv.name}</span><span class="op">${s.stars[i] ? '★'.repeat(s.stars[i]) : 'Đang mở'}</span></div>
           ${endl ? `<div class="sub">Vô tận · quái mạnh dần mãi · boss mỗi 10 đợt</div>
           <div class="desc">Sau ${lv.waves} đợt, cứ 10 đợt đổi bộ quái mới. Hết mạng là thua; ghi điểm bảng xếp hạng.</div>
           <div class="cp-rec">♾ Kỷ lục bản đồ này: <b>đợt ${(s.bestEndless || {})[i] || 0}</b></div>`
@@ -748,7 +748,7 @@ class UI {
           <div class="desc">${lv.desc}</div>
           <div class="cond inset"><div class="h">ĐIỀU KIỆN SAO</div>
             ${STAR_RULES.map((r, k) => `<div class="${s.stars[i] > k ? 'got' : ''}"><span>${'★'.repeat(k + 1)}</span><span>${r}</span></div>`).join('')}</div>`}
-          ${this.counterHtml(i)}
+          ${this.counterHtml(i)}</div>
           <div class="cp-act"><div class="cp-diff"><button class="${this.save.settings.hard ? 'metal' : 'btn-gold'}" data-act="diff" data-k="0">Thường</button><button class="${this.save.settings.hard ? 'on' : 'metal'}" data-act="diff" data-k="1" title="Máu quái ×${HARD.hp(i).toFixed(2)}">🔥 Khó${(s.hardStars || [])[i] ? ` <small>${'★'.repeat(s.hardStars[i])}</small>` : ` <small>×${HARD.hp(i).toFixed(2).replace('.', ',')}</small>`}</button></div>
           <button class="go btn-gold" data-act="cp-go">${endl ? '♾ Vào vô tận' : '⚔ Vào trận'}</button></div>
         </div>
@@ -789,7 +789,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 129 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 130 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 

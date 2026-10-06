@@ -1290,3 +1290,6 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 129
 - Sửa nút chọn Phó bản / Vô tận, Thường / Khó bị vỡ trên điện thoại (ảnh nút kéo giãn, chữ đè lên hoa văn): dùng nút bo tròn vàng / bạc vẽ bằng CSS.
 - Tựa game ở menu có lớp tối nhẹ phía sau cho dễ đọc trên tranh nền.
+
+## Phiên bản 130
+- Màn chọn ải (Phó bản / Vô tận): nút Thường / Khó / Vào trận không còn đè lên avatar tướng khắc chế — phần nội dung bảng bên cuộn riêng, nút cố định dưới đáy. Nhãn ải sát mép bản đồ (Thành Phong Châu) không còn bị cắt.
