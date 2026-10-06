@@ -1253,3 +1253,6 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Danh sách Anh Hùng: chọn tướng không còn nhảy danh sách về đầu; bảng chi tiết tướng cuộn được trên màn thấp (trước bị cắt mất hàng kỹ năng).
 - Màn chọn ải Vô Tận / Phó Bản: nút "Khó ×1,60" không còn xuống dòng bị cắt.
 - Prompt mới: 7 nền bản đồ + 7 bộ nút giao diện theo phong cách trống đồng Đông Sơn.
+
+## Phiên bản 122
+- Màn Anh Hùng: số Ngân khố chuyển lên thanh tiêu đề trên cùng (cạnh nút Đền Anh Hùng), luôn thấy khi xem / mua tướng.

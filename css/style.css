@@ -1477,3 +1477,6 @@ body { overflow: hidden; }
 #sk-tip .st-lock { color: #FF9A7A; }
 #sk-tip .st-hint { opacity: .6; margin-top: 2px; }
 .dk-sk { -webkit-touch-callout: none; user-select: none; }
+/* v122: Ngân khố trên thanh tiêu đề màn Anh Hùng */
+#roster .scr-head .ro-kho { margin-left: auto; white-space: nowrap; }
+#roster .scr-head .ro-kho + .btn { margin-left: 6px; }
