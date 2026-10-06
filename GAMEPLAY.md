@@ -946,3 +946,7 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - **Đăng nhập**: màn đăng nhập (Google / Chơi ngay khách). Tự hiện lần đầu khi Firebase đã cấu hình; luôn mở được bằng cách bấm khung người chơi ở menu chính (hiện ảnh + tên tài khoản Google khi đã đăng nhập).
 - **Ngân khố** (`save.kho`, bảng `PREP` trong `js/data.js`): thắng ải nhận 120 + 25×số ải + 40×sao (Khó ×1,5), thua nhận 4 mỗi đợt đã qua. Hiện ở menu chính và bảng kết quả.
 - **Chuẩn bị xuất quân**: vào ải mà Ngân khố > 0 thì hiện bảng mua trước trận — Lương thảo +150 vàng (150), Hũ đồng 2 món Hiếm+ (250), Hũ Vua Hùng 2 món Sử thi+ (700), Đắp thành +5 mạng (200), chiêu mộ 1 tướng đặt sẵn trên sân: Tướng Tím 900, Tướng Vàng 2.000. Mỗi món mua 1 lần mỗi trận.
+
+### Phiên bản 67
+
+- **Bản app Android** (Capacitor, `docs/APP.md`): toàn màn hình, khoá ngang, icon Lạc Tướng, màn khởi động. GitHub Actions tự build APK mỗi lần đẩy code (tab Actions → Artifacts). Đăng nhập Google trong app chưa bật (cần `google-services.json`); khách + lưu đám mây vẫn chạy.

@@ -1,0 +1,6 @@
+{
+  "appId": "vn.nuicao.game",
+  "appName": "Núi Cao Nước Dâng",
+  "webDir": "www",
+  "android": { "backgroundColor": "#17130F" }
+}

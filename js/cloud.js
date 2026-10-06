@@ -10,6 +10,8 @@
 const FB_VER = '10.12.2';
 const CLOUD = {
   enabled: typeof FIREBASE_CONFIG !== 'undefined' && !!FIREBASE_CONFIG.apiKey,
+  // chạy trong app Android / iOS (Capacitor): Google chặn đăng nhập bằng cửa sổ bật lên trong WebView
+  native: !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()),
   ready: false, user: null, status: 'off', lastSync: 0, error: '',
   _timer: null, _pending: null, _listeners: [],
   onChange(fn) { this._listeners.push(fn); },
@@ -79,6 +81,7 @@ const CLOUD = {
   // đăng nhập Google: nối tài khoản khách hiện tại (giữ tiến trình); tài khoản đã có dữ liệu thì chuyển sang nó
   async google(getLocal, applyCloud) {
     if (!this.ready) return;
+    if (this.native) { this.status = 'error'; this.error = 'Đăng nhập Google trong app sẽ bật ở bản sau (cần thêm google-services.json)'; this._emit(); return; }
     const prov = new firebase.auth.GoogleAuthProvider();
     try {
       if (this.user && this.user.isAnonymous) {
