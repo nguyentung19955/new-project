@@ -2421,6 +2421,8 @@ class Game {
         }
         if (t === 'trongdong') b.haste = Math.max(b.haste || 0, 10);                    // Hồi Trống Thiêng
         if (t === 'mauthoai') b.manaPct = Math.max(b.manaPct || 0, 15);                 // Thủy Cung Thánh Mẫu
+        if (t === 'thocong') b.dr = Math.max(b.dr || 0, 10);                            // Giữ Đất Giữ Nhà
+        if (t === 'maudia') b.hpPct = Math.max(b.hpPct || 0, 10);                       // Địa Tiên Thánh Mẫu
         if (t === 'longnu') { b.magicPct = Math.max(b.magicPct || 0, 10); b.manaPct = Math.max(b.manaPct || 0, 10); }   // Ngọc Long Nữ
         if (t === 'caong' && o !== src && near(src, o, ELEM.adj)) b.dr = Math.max(b.dr || 0, 10);   // Hộ Ngư Dân
         if (own.pierceAura) b.pierce = Math.max(b.pierce || 0, own.pierceAura);
@@ -3235,6 +3237,7 @@ class Game {
     if (e.huntT > 0) dmg *= 1.25;                  // Cuộc Săn Lớn
     if (st && st.execPct && e.hp < e.maxHp * 0.3) dmg *= 1 + st.execPct / 100;   // Chúa Sơn Lâm
     if (st && st.burnAmp && e.poisonT > 0) dmg *= 1 + st.burnAmp / 100;              // Bà Hỏa: Hỏa Hoạn
+    if (st && st.vsThuy && (e.el === 'thuy' || e.el2 === 'thuy')) dmg *= 1 + st.vsThuy / 100;   // Sơn Tinh: Núi Cao Nước Dâng
     if (RF) {
       if (RF.fx.eliteDmg && (e.elite || e.champion || e.def.general)) dmg *= 1 + RF.fx.eliteDmg / 100;
       if (RF.fx.ccDmg && (e.slowT > 0 || e.stunT > 0)) dmg *= 1 + RF.fx.ccDmg / 100;

@@ -346,3 +346,74 @@ Long Nữ Động Đình (Dragon Princess, mother of Lạc Long Quân): graceful
 |---|---|
 | halong | jade dragon scale · pearl island · Ha Long bay with limestone islets |
 | longnu | dragon pearl · Dong Dinh lake · pearl silk robe |
+
+---
+
+# BỔ SUNG v100 — 6 tướng hành Thổ (đủ 4 mỗi bậc)
+
+## B+. Bảng tướng 6 ô
+
+### Người Đắp Đê (`dapde`) · Thường · Thổ · cận chiến
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle holding weapon [2] wind-up [3] strike with one short pale swoosh [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Người Đắp Đê: sturdy villager building river dikes, brown shirt, rolled trousers, conical hat, mud on legs, a woven basket of earth on the back. Weapon: wide iron hoe. Element EARTH, glow #C99A3C. Cast effect: a small earth wall rising. Rarity: common.
+```
+
+### Trẻ Chăn Trâu (`chantrau`) · Thường · Thổ · đánh xa
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle holding a slingshot [2] pulling the slingshot back [3] pebble flying forward [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Trẻ Chăn Trâu: cheeky buffalo-herding kid, brown shorts, bare chest, ochre headband, bamboo flute tucked in the belt. Weapon: wooden slingshot with river pebbles. Element EARTH, glow #E8C27A. Cast effect: many pebbles bouncing. Rarity: common.
+```
+
+### Ông Đùng (`ongdung`) · Tím · Thổ · cận chiến
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle holding weapon [2] wind-up [3] strike with one short pale swoosh [4] cast skill, small effect around feet [5] front view [6] portrait head+shoulders.
+Ông Đùng (folk giant who carried earth to build mountains): huge friendly giant, brown skin, straw loincloth, big carrying pole with two baskets of earth, bushy eyebrows. Weapon: the carrying pole. Element EARTH, glow #C99A3C. Cast effect: giant footprint cracking the ground. Rarity: epic.
+```
+
+### Thổ Công (`thocong`) · Tím · Thổ · đánh xa
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle holding weapon [2] wind-up [3] casting a golden orb forward [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Thổ Công (household earth god): kind round-bellied old man with long white beard, yellow-brown robe, black scholar hat, smiling. Weapon: wooden staff with a golden earth orb. Element EARTH, glow #F2D27A. Cast effect: golden earth shield dome. Rarity: epic.
+```
+
+### Sơn Tinh (`tanvien`) · Vàng · Thổ · cận chiến
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle holding weapon [2] wind-up [3] strike with one short pale swoosh [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Sơn Tinh (Mountain God of Tản Viên): heroic young god in green and gold bronze armor with mountain patterns, green cape, gold crown with three peaks, confident smile. Weapon: magic staff that moves mountains. Element EARTH, glow #7FC24A with gold. Cast effect: a small mountain rising from the ground. Rarity: legendary.
+```
+
+### Mẫu Địa (`maudia`) · Vàng · Thổ · đánh xa
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle holding weapon [2] wind-up [3] casting an earth orb forward [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Mẫu Địa (Holy Mother of Earth): serene goddess in an ochre-gold and brown robe with root patterns, gold crown, small flowers and roots in her hair. Weapon: staff of twisted roots with a glowing amber orb. Element EARTH, glow #E8C27A. Cast effect: roots and rocks rising. Rarity: legendary.
+```
+
+## C+. Động tác 4 khung
+
+| Mã | Đánh (attack) | Chiêu (cast) |
+|---|---|---|
+| dapde | 1 ready · 2 hoe raised · 3 hoe slams ground · 4 recover | 1 hoe up · 2 earth gathers · 3 earth wall rises · 4 lower |
+| chantrau | 1 aim · 2 pull back · 3 pebble flies · 4 recover | 1 load many pebbles · 2 pull · 3 bouncing pebbles · 4 lower |
+| ongdung | 1 ready · 2 pole raised · 3 pole slam · 4 recover | 1 lift foot · 2 stomp · 3 ground cracks into a pond · 4 settle |
+| thocong | 1 ready · 2 staff back · 3 orb forward · 4 recover | 1 raise staff · 2 golden glow · 3 earth dome · 4 lower |
+| tanvien | 1 ready · 2 staff raised · 3 staff strike with rocks · 4 recover | 1 raise staff · 2 ground shakes · 3 mountain rises · 4 lower |
+| maudia | 1 ready · 2 staff back · 3 amber orb forward · 4 recover | 1 raise staff · 2 roots gather · 3 roots and rocks burst up · 4 lower |
+
+## D+. Icon kỹ năng (Q · W · E · R)
+
+| Mã | 4 icon |
+|---|---|
+| dapde | hoe hitting the ground · earthen dike · earth shield wall · cracked broken dike |
+| chantrau | bouncing pebble · pebble hitting a head with stars · bamboo flute on a buffalo · many kids with slingshots |
+| ongdung | carrying pole with stone baskets · giant body · giant footprint pond · rising mountain |
+| thocong | blessing hand · incense pot · earth dome shield · glowing earth god shrine |
+| tanvien | moving hill · Tan Vien mountain · rising mountain wall · mountain peaks rising from water |
+| maudia | cracked earth · underground spring · sacred roots · mother mountain |
+
+## E+. Icon Thần Khí
+
+| Mã | 3 thần khí |
+|---|---|
+| tanvien | Tan Vien mountain · mountain-moving staff · nine-tusk elephant wedding gift |
+| maudia | earth vein lava · sacred roots · underground jade |

@@ -1156,3 +1156,11 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Màn bản đồ có nút gạt "⚔ Phó bản | ♾ Vô tận"; ở chế độ Vô tận hiện kỷ lục đợt của từng bản đồ và nút "♾ Vào vô tận" (vào thẳng vô tận từ đợt 1, không cần thắng ải trước).
 - Kỷ lục vô tận lưu theo bản đồ (cả khi thua lẫn khi dừng trận).
 - Khung bên phải màn bản đồ cuộn được, nút vào trận luôn nằm dưới cùng.
+
+## Phiên bản 100 — Đợt hành Thổ: đủ 4 tướng mỗi bậc, ghép cùng hành
+- Thêm **Người Đắp Đê** (Thường, gần), **Trẻ Chăn Trâu** (Thường, xa), **Ông Đùng** (Tím, gần), **Thổ Công** (Tím, xa), **Sơn Tinh** (Vàng, gần), **Mẫu Địa** (Vàng, xa).
+- Hành Thổ: 4 Thường (Lực Sĩ, Thợ Gốm, Đắp Đê, Chăn Trâu) · 4 Tím (Lạc Hầu, Lang Liêu, Ông Đùng, Thổ Công) · 4 Vàng (Âu Cơ, Thần Trụ Trời, Sơn Tinh, Mẫu Địa).
+- **Ghép cùng hành (Thổ):** Lực Sĩ + Đắp Đê → Lạc Hầu · Thợ Gốm + Lực Sĩ → Lang Liêu · Đắp Đê + Chăn Trâu → Ông Đùng · Thợ Gốm + Chăn Trâu → Thổ Công · Lang Liêu + Thổ Công → Âu Cơ · Ông Đùng + Lạc Hầu → Thần Trụ Trời · Lạc Hầu + Lang Liêu → Sơn Tinh · Thổ Công + Ông Đùng → Mẫu Địa. Bỏ công thức chéo hành cũ ra Lạc Hầu, Lang Liêu, Âu Cơ, Thần Trụ Trời.
+- Nội tại: Ông Đùng (+20% máu, mỗi đòn thứ 5 choáng), Thổ Công (tướng gần −10% sát thương nhận), Sơn Tinh (+25% máu, đánh quái hành Thủy +30%), Mẫu Địa (tướng gần +10% máu). Thần Khí: Sơn Tinh (Núi Tản Viên · Gậy Thần Dời Non · Sính Lễ Vua Hùng), Mẫu Địa (Mạch Đất · Rễ Thiêng · Ngọc Địa Phủ).
+- Quân triệu hồi xoay 4 nhóm theo ải: Hỏa · Thủy · Thổ (Thợ Gốm, Đắp Đê, Chăn Trâu) · Mộc mới (Thầy Lang).
+- Còn lại cho đủ 60 tướng: hành Kim và Mộc (mỗi hành 6 tướng).
