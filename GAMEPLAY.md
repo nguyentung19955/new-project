@@ -1266,3 +1266,6 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Nút nổi Nâng đồ (đe + mũi tên) và Mặc đồ (khiên mặt trời), ô Hủy tướng (hũ gốm vỡ) dùng icon vẽ tay trống đồng (`assets/ui/`).
 - Icon kỹ năng vẽ tay cho Lý Ngư Tướng Quân (đủ icon kỹ năng cho mọi tướng có prompt).
 - Nền Sông (ảnh gửi) có vẽ sẵn đường đi nên không dùng — prompt đã nhấn mạnh "không vẽ đường".
+
+## Phiên bản 125
+- Đền Anh Hùng (xem toàn bộ tướng): khi cầm điện thoại dọc trang tự xoay ngang — trước đây vuốt cuộn bị lệch hướng / giật; giờ tự cuộn theo ngón tay, có quán tính.

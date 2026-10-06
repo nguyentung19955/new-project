@@ -750,7 +750,7 @@ setHero(HEROES[0]); restartAuto();
 /* Tự xoay ngang khi cầm điện thoại dọc (giống trong game): cả trang xoay 90°, cuộn bên trong */
 html.rot, html.rot body { overflow: hidden; height: 100%; margin: 0; }
 html.rot body { padding: 0; }
-html.rot #rotbox { position: fixed; left: 0; top: 0; transform-origin: 0 0; overflow-y: auto; -webkit-overflow-scrolling: touch;
+html.rot #rotbox { position: fixed; left: 0; top: 0; transform-origin: 0 0; overflow-y: auto; touch-action: none;
   overscroll-behavior: contain; padding: 14px 16px 28px; box-sizing: border-box; background: var(--bg); }
 </style>
 <script>
@@ -764,6 +764,19 @@ html.rot #rotbox { position: fixed; left: 0; top: 0; transform-origin: 0 0; over
     else { box.style.width = box.style.height = box.style.transform = ''; }
     window.dispatchEvent(new Event('den-fit'));
   }
+  // v125: trang đã xoay 90° thì cuộn gốc của trình duyệt bị lệch hướng (vuốt dọc thành ngang, giật) → tự cuộn theo ngón tay
+  var ty = null, tx = 0, v = 0, lt = 0, raf = 0;
+  box.addEventListener('touchstart', function (e) { if (!document.documentElement.classList.contains('rot')) return; cancelAnimationFrame(raf); var t = e.touches[0]; tx = t.clientX; ty = t.clientY; v = 0; lt = Date.now(); }, { passive: true });
+  box.addEventListener('touchmove', function (e) {
+    if (ty === null || !document.documentElement.classList.contains('rot')) return;
+    var t = e.touches[0], dx = t.clientX - tx, now = Date.now();
+    box.scrollTop += dx; v = dx / Math.max(1, now - lt); tx = t.clientX; ty = t.clientY; lt = now;
+    e.preventDefault();
+  }, { passive: false });
+  box.addEventListener('touchend', function () {
+    if (ty === null) return; ty = null;
+    (function glide() { if (Math.abs(v) < 0.02) return; box.scrollTop += v * 16; v *= 0.94; raf = requestAnimationFrame(glide); })();
+  });
   addEventListener('resize', fit); addEventListener('orientationchange', function () { setTimeout(fit, 200); });
   if (window.visualViewport) visualViewport.addEventListener('resize', fit);
   fit();
