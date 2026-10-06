@@ -10,15 +10,17 @@ Mỗi khối dưới đây là **một prompt tự đủ**: dán nguyên khối 
 
 **Mẹo khi gen:**
 - Nếu Gemini vẽ thiếu ô hoặc dính chữ, gõ thêm: *“Regenerate following the SHEET LAYOUT exactly: N cells, one pose per cell, no text.”*
-- Gen xong một tướng, muốn tướng sau cùng nét vẽ thì đính kèm ảnh Lạc Tướng (hoặc ảnh vừa gen) và thêm câu: *“Use the attached image as the style reference.”*
+- **Muốn mọi nhân vật cùng nét vẽ:** mỗi lần gen, đính kèm ảnh Lạc Tướng (hoặc một ảnh vừa gen ưng ý). Prompt đã có sẵn câu bảo Gemini chỉ học nét vẽ từ ảnh đính kèm, không chép trang phục.
+- **Thứ tự nên gen:** Lạc Tướng trước (đính kèm ảnh Lạc Tướng cũ để giữ đúng trang phục), rồi dùng chính ảnh Lạc Tướng mới làm mẫu cho các nhân vật còn lại.
 
 # Tướng
 
 ## Lạc Tướng (Thường · `lactuong`)
 
-*Đã có bộ ảnh trong game. Chỉ gen lại nếu muốn thêm ô tung chiêu hoặc đổi nét cho đồng bộ với các tướng sau.*
+*Gen lại cho cùng nét với các tướng mới: **đính kèm ảnh Lạc Tướng cũ** (front.png hoặc ảnh cả bộ) rồi dán khối dưới. Có thêm ô tung chiêu.*
 
 ```
+Use the attached image as the character and style reference: keep exactly the same costume, colors, feathers, headband and axe, but redraw it following the rules below.
 Create a character sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CHARACTER: Lạc Tướng - Young Lac Viet warrior general. Bronze breastplate and shoulder guards engraved with sun-star and meander patterns, dark-green cloth loincloth panel with a golden Lac bird, green arm wraps, barefoot. Green headband with a bronze triangle plate and a tall crown of brown-white feathers.
 MAIN WEAPON: double-headed bronze battle axe on a wooden haft.
@@ -36,6 +38,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF in every cell and between cells.
 ## Lực Sĩ Núi (Thường · `lucsi`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading, proportions); do NOT copy its costume, colors or weapon.
 Create a character sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CHARACTER: Lực Sĩ Núi - Huge muscular mountain strongman, very broad shoulders, bare tanned chest, brown short beard, simple brown loincloth with rope belt, stone bracers, barefoot.
 MAIN WEAPON: a big grey boulder lifted over his head (idle: boulder resting on one shoulder; wind-up: boulder held high with both hands; strike: hurling the boulder forward).
@@ -53,6 +56,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF in every cell and between cells.
 ## Xạ Thủ Văn Lang (Thường · `xathu`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading, proportions); do NOT copy its costume, colors or weapon.
 Create a character sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CHARACTER: Xạ Thủ Văn Lang - Slim young archer of Van Lang, light-green tunic with bronze belt, white feathers on a green headband, quiver of arrows on the back, leather arm guard.
 MAIN WEAPON: a curved wooden longbow (wind-up: bow fully drawn with an arrow; strike: arrow just released flying forward with a small trail).
@@ -70,6 +74,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF in every cell and between cells.
 ## Thợ Săn Rừng (Thường · `thosan`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading, proportions); do NOT copy its costume, colors or weapon.
 Create a character sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CHARACTER: Thợ Săn Rừng - Forest hunter, dark-green hooded cloak, brown leather vest, fur boots, a small wolf-tooth necklace, alert eyes.
 MAIN WEAPON: a long wooden hunting spear with a stone tip.
@@ -87,6 +92,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF in every cell and between cells.
 ## Thầy Mo Lửa (Thường · `thaymo`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading, proportions); do NOT copy its costume, colors or weapon.
 Create a character sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CHARACTER: Thầy Mo Lửa - Village fire shaman, long purple-and-indigo robe with orange zigzag hem, red-orange feather headdress, white face paint lines on the cheeks, bead necklace.
 MAIN WEAPON: a gnarled wooden staff topped with a burning flame.
@@ -104,6 +110,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF in every cell and between cells.
 ## Thần Sương Núi (Thường · `thansuong`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading, proportions); do NOT copy its costume, colors or weapon.
 Create a character sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CHARACTER: Thần Sương Núi - Mountain frost spirit, flowing white and pale-blue robe, long silver-white hair, small ice crystal crown, calm expression.
 MAIN WEAPON: a long ice spear/staff with a pale-blue crystal tip.
@@ -121,6 +128,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF in every cell and between cells.
 ## Thạch Sanh (Sử thi · `thachsanh`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading, proportions); do NOT copy its costume, colors or weapon.
 Create a character sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CHARACTER: Thạch Sanh - Kind young woodcutter hero, bare chest, simple brown cloth loincloth, rope belt, messy black hair tied back, strong arms.
 MAIN WEAPON: a heavy woodcutter axe; a small golden bow is slung on his back.
@@ -138,6 +146,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF in every cell and between cells.
 ## Lạc Hầu (Sử thi · `lachau`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading, proportions); do NOT copy its costume, colors or weapon.
 Create a character sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CHARACTER: Lạc Hầu - Noble Lac court lord, ochre and dark-red robe with bronze plates, gold forehead band with four tall white feathers, small bronze drum hanging at the hip, dignified.
 MAIN WEAPON: a short bronze ceremonial mace (strike: mace hits the small drum, sending sound rings).
@@ -155,6 +164,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF in every cell and between cells.
 ## Thần Săn Ba Vì (Sử thi · `thansan`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading, proportions); do NOT copy its costume, colors or weapon.
 Create a character sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CHARACTER: Thần Săn Ba Vì - Hunter god of Ba Vi mountain, tall deer antlers on the head, tiger-skin cloak over a green tunic, dark tan skin with stripe face paint. A friendly orange tiger cub stands at his feet in every full-body cell.
 MAIN WEAPON: a long hunting spear with a jade tip.
@@ -172,6 +182,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF in every cell and between cells.
 ## Cao Lỗ (Sử thi · `caolo`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading, proportions); do NOT copy its costume, colors or weapon.
 Create a character sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CHARACTER: Cao Lỗ - Master crossbow engineer, brown leather apron over a dark tunic, bronze goggles pushed up on the forehead, tool belt, short beard.
 MAIN WEAPON: a large wooden-and-bronze crossbow (wind-up: cranking/aiming; strike: bolt fired with a small trail).
@@ -189,6 +200,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF in every cell and between cells.
 ## Mai An Tiêm (Sử thi · `antiem`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading, proportions); do NOT copy its costume, colors or weapon.
 Create a character sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CHARACTER: Mai An Tiêm - Cheerful island farmer, straw conical hat (nón lá), light-brown farmer clothes rolled at the sleeves, red scarf around the neck.
 MAIN WEAPON: a big round green-striped watermelon held in both arms (strike: throwing a watermelon); a small sickle at the belt.
@@ -206,6 +218,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF in every cell and between cells.
 ## Tiên Dung (Sử thi · `tiendung`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading, proportions); do NOT copy its costume, colors or weapon.
 Create a character sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CHARACTER: Tiên Dung - Graceful princess, long red ao tu than dress with gold trim, black hair in a high bun with a gold hairpin and red flower, pink silk ribbon floating behind the shoulders.
 MAIN WEAPON: a golden folding fan (strike: fan swept open sending a gust).
@@ -223,6 +236,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF in every cell and between cells.
 ## Lang Liêu (Sử thi · `langlieu`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading, proportions); do NOT copy its costume, colors or weapon.
 Create a character sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CHARACTER: Lang Liêu - Gentle humble prince, simple ochre-yellow tunic with brown sash, small gold headband, kind smile.
 MAIN WEAPON: a square green banh chung rice cake wrapped in leaves and tied with bamboo string (strike: tossing the cake which bursts into light).
@@ -240,6 +254,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF in every cell and between cells.
 ## Chử Đồng Tử (Sử thi · `cdt`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading, proportions); do NOT copy its costume, colors or weapon.
 Create a character sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CHARACTER: Chử Đồng Tử - Poor young fisherman turned immortal, plain blue-grey tunic patched at the knees, barefoot, wet hair, honest face.
 MAIN WEAPON: a magic wooden staff with a blue glowing tip; a conical hat (nón) hangs on his back.
@@ -257,6 +272,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF in every cell and between cells.
 ## Thánh Gióng (Huyền thoại · `giong`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading, proportions); do NOT copy its costume, colors or weapon.
 Create a character sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CHARACTER: Thánh Gióng - Legendary giant-boy hero, iron armor and iron helmet, red cape, RIDING a black IRON HORSE with rivets, a mane and tail made of flames and fiery eyes. Keep the horse in every full-body cell (cells 1-5) and keep the whole horse inside the cell; the rider sits on the saddle.
 MAIN WEAPON: a long green bamboo pole (uprooted, with roots at one end) used as a staff.
@@ -274,6 +290,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF in every cell and between cells.
 ## Lạc Long Quân (Huyền thoại · `llq`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading, proportions); do NOT copy its costume, colors or weapon.
 Create a character sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CHARACTER: Lạc Long Quân - Dragon lord of the sea, teal-blue dragon-scale armor, golden dragon-head crown with small horns, long flowing dark hair, sea-green cape with wave pattern.
 MAIN WEAPON: a straight bronze sword with a dragon guard.
@@ -291,6 +308,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF in every cell and between cells.
 ## Thần Kim Quy (Huyền thoại · `kimquy`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading, proportions); do NOT copy its costume, colors or weapon.
 Create a character sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CHARACTER: Thần Kim Quy - Golden turtle deity in human form: wise old sage with a long white beard, teal robe, a large shiny golden turtle shell worn on the back like a backpack shield.
 MAIN WEAPON: a glowing white-blue pearl held in the front hand, and a short gnarled staff in the other.
@@ -308,6 +326,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF in every cell and between cells.
 ## An Dương Vương (Huyền thoại · `adv`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading, proportions); do NOT copy its costume, colors or weapon.
 Create a character sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CHARACTER: An Dương Vương - King of Au Lac, deep-red royal robe with gold dragon trim, gold crown with points and a red gem, confident expression.
 MAIN WEAPON: the legendary magic crossbow, golden with a turtle-claw trigger (strike: bolt of white-gold light fired).
@@ -325,6 +344,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF in every cell and between cells.
 ## Âu Cơ (Huyền thoại · `auco`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading, proportions); do NOT copy its costume, colors or weapon.
 Create a character sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CHARACTER: Âu Cơ - Mother fairy of the Vietnamese, long white dress with soft pink trim, long straight black hair with a crown of pink flowers, large white feathered wings on the back.
 MAIN WEAPON: a long green lotus stem topped with a pink lotus flower.
@@ -342,6 +362,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF in every cell and between cells.
 ## Mẫu Thượng Ngàn (Huyền thoại · `mau`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading, proportions); do NOT copy its costume, colors or weapon.
 Create a character sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CHARACTER: Mẫu Thượng Ngàn - Mother Goddess of the forests, forest-green ao tu than dress with gold trim, black hair in a bun under a RED khan van headwrap crowned with a ring of green leaves, white and pink wild flowers. A friendly orange tiger lies at her feet in every full-body cell. NO wings.
 MAIN WEAPON: a leafy tree branch with small red fruits.
@@ -361,6 +382,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF in every cell and between cells.
 ## Tôm Binh (`tom`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create an enemy sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CREATURE: Tôm Binh - Shrimp soldier of the Water God: small orange shrimp walking upright on little legs, bronze helmet, tiny shield.
 ATTACK (cell 3): pokes forward with a small trident.
@@ -375,6 +397,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Cá Sấu (`casau`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create an enemy sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CREATURE: Cá Sấu - Green crocodile running low on four legs, armored back plates, yellow eyes.
 ATTACK (cell 3): snapping its jaws wide open.
@@ -389,6 +412,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Rùa Giáp (`rua`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create an enemy sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CREATURE: Rùa Giáp - Big slow armored turtle with a thick dark-green spiked shell and bronze plates bolted on.
 ATTACK (cell 3): headbutts forward, shell glints.
@@ -403,6 +427,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Phù Thủy Nước (`phuthuy`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create an enemy sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CREATURE: Phù Thủy Nước - Water witch: small hunched figure in a teal hooded robe made of seaweed, glowing cyan eyes, coral staff.
 ATTACK (cell 3): casts a water orb from the coral staff.
@@ -417,6 +442,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Chim Bão (flying) (`chimbao`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create an enemy sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CREATURE: Chim Bão (flying) - Storm bird: grey-blue bird with lightning-shaped tail feathers, wide wings.
 ATTACK (cell 3): dives with crackling lightning.
@@ -431,6 +457,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Ếch Mẹ (`echme`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create an enemy sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CREATURE: Ếch Mẹ - Big fat mother frog, green with yellow belly, warts, a few tadpoles clinging to her back.
 ATTACK (cell 3): long sticky tongue lash.
@@ -445,6 +472,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Nòng Nọc (`nongnoc`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create an enemy sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CREATURE: Nòng Nọc - Tiny dark tadpole swimming upright on its tail, big eyes.
 ATTACK (cell 3): quick dash bite.
@@ -459,6 +487,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Giao Long Con (`giaolong`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create an enemy sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CREATURE: Giao Long Con - Small young water dragon, serpentine green body, little horns and fins.
 ATTACK (cell 3): spits a water jet.
@@ -473,6 +502,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Yêu Tinh Rừng (`yeutinh`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create an enemy sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CREATURE: Yêu Tinh Rừng - Small green forest goblin with pointy ears, yellow eyes, leaf loincloth, wooden club.
 ATTACK (cell 3): swings the club.
@@ -487,6 +517,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Rắn Độc (`ran`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create an enemy sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CREATURE: Rắn Độc - Venomous green snake slithering, darker stripes, red forked tongue.
 ATTACK (cell 3): lunging bite with venom drops.
@@ -501,6 +532,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Dơi Hang (flying) (`doi`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create an enemy sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CREATURE: Dơi Hang (flying) - Purple cave bat, big leathery wings, red eyes, small fangs.
 ATTACK (cell 3): screeching dive.
@@ -515,6 +547,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Thạch Tinh (`thachtinh`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create an enemy sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CREATURE: Thạch Tinh - Rock golem made of grey cracked stone blocks, glowing orange eyes, moss patches, short stubby legs.
 ATTACK (cell 3): ground slam with both fists.
@@ -529,6 +562,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Đá Con (`dacon`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create an enemy sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CREATURE: Đá Con - Tiny grey rock creature, one stone chunk with small legs and orange eyes.
 ATTACK (cell 3): rolls forward.
@@ -543,6 +577,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Lính Giáo (`linhan`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create an enemy sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CREATURE: Lính Giáo - Enemy foot soldier, dark-red tunic, bronze helmet, round wooden shield, long spear.
 ATTACK (cell 3): spear thrust.
@@ -557,6 +592,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Cung Thủ Giặc (`cungan`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create an enemy sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CREATURE: Cung Thủ Giặc - Enemy archer, olive-green tunic, leather cap, bow and quiver.
 ATTACK (cell 3): shoots an arrow.
@@ -571,6 +607,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Kỵ Binh (`kybinh`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create an enemy sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CREATURE: Kỵ Binh - Enemy cavalry: soldier with helmet and spear riding a brown war horse with red saddle cloth.
 ATTACK (cell 3): charging spear thrust while the horse gallops.
@@ -585,6 +622,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Voi Chiến (`voichien`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create an enemy sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CREATURE: Voi Chiến - Grey war elephant wearing a red-and-gold saddle tower (howdah) with a tiny soldier inside, bronze tusk caps.
 ATTACK (cell 3): stomps the ground raising dust.
@@ -599,6 +637,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Cá Mập Yêu (`camap`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create an enemy sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CREATURE: Cá Mập Yêu - Demon shark, blue-grey, angry eyes, rows of sharp teeth, swimming on the surface.
 ATTACK (cell 3): big bite lunge.
@@ -613,6 +652,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Mực Tinh (`muc`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create an enemy sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CREATURE: Mực Tinh - Pink-purple squid demon floating upright, big eyes, curling tentacles (use pink-red, not magenta).
 ATTACK (cell 3): sprays black ink.
@@ -627,6 +667,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Cua Khổng Lồ (`cua`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create an enemy sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CREATURE: Cua Khổng Lồ - Giant red-orange crab with a very thick shell and huge claws.
 ATTACK (cell 3): claw pinch.
@@ -641,6 +682,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Cáo Con (`cao`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create an enemy sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 CREATURE: Cáo Con - Small orange fox spirit with a white-tipped tail.
 ATTACK (cell 3): pounce bite.
@@ -657,6 +699,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Thuồng Luồng (`thuongluong`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create a BOSS sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 BOSS: Thuồng Luồng - Huge green water serpent-dragon rising from water, scales, fins, long whiskers.
 ATTACK (cell 2): tail slam that stuns.
@@ -672,6 +715,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Hà Bá (`haba`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create a BOSS sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 BOSS: Hà Bá - River lord: big fat blue-skinned old man with a long beard made of seaweed, crown of shells, robe of water, holding a trident.
 ATTACK (cell 2): trident thrust.
@@ -687,6 +731,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Thủy Tinh (`thuytinh`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create a BOSS sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 BOSS: Thủy Tinh - The Water God: tall warrior in blue-and-silver wave armor, flowing blue hair, crown shaped like breaking waves, holding a storm trident.
 ATTACK (cell 2): trident strike with lightning.
@@ -702,6 +747,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Chằn Tinh (`chantinh`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create a BOSS sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 BOSS: Chằn Tinh - Giant green ogre with horns, tusks, brown loincloth, carrying a huge stone hammer.
 ATTACK (cell 2): smashes the stone hammer down.
@@ -717,6 +763,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Đại Bàng Tinh (flying) (`daibang`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create a BOSS sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 BOSS: Đại Bàng Tinh (flying) - Giant brown eagle demon with golden beak, sharp talons, huge wings.
 ATTACK (cell 2): swoops down grabbing with talons.
@@ -732,6 +779,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Tướng Giặc Ân (`anvuong`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create a BOSS sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 BOSS: Tướng Giặc Ân - Enemy general in black armor riding a black war horse, war drum on the saddle, plumed helmet.
 ATTACK (cell 2): charging horse dash.
@@ -747,6 +795,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Ngư Tinh (`ngutinh`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create a BOSS sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 BOSS: Ngư Tinh - Gigantic demon fish, blue-teal scales, huge mouth full of teeth, spiky fins, leaping out of the waves.
 ATTACK (cell 2): swallowing bite.
@@ -762,6 +811,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Hồ Tinh Chín Đuôi (`hotinh`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create a BOSS sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 BOSS: Hồ Tinh Chín Đuôi - White nine-tailed fox spirit, nine fluffy tails fanned out, glowing violet eyes, small ghost flames floating around (violet-blue, not magenta).
 ATTACK (cell 2): claw slash with ghost fire.
@@ -777,6 +827,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No gradient, no floo
 ## Triệu Đà (`trieuda`)
 
 ```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading); do NOT copy the character.
 Create a BOSS sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
 BOSS: Triệu Đà - Enemy king of Nam Viet, dark-blue armor with gold trim, long black beard, imperial hat, holding a long halberd.
 ATTACK (cell 2): halberd sweep.
