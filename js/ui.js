@@ -367,7 +367,7 @@ class UI {
     for (const e of ['pointerup', 'pointercancel', 'pointerleave', 'scroll']) $('#ui').addEventListener(e, () => { clearTimeout(tip2); if (!this.tipShown || e !== 'pointerup') return; const t = $('#sk-tip'); if (t) t.hidden = true; }, true);
     $('#ui').addEventListener('pointerup', () => setTimeout(() => { const t = $('#sk-tip'); if (t && this.tipShown) t.hidden = true; }, 0), true);
     $('#ui').addEventListener('contextmenu', (ev) => { if (ev.target.closest('[data-tip]')) ev.preventDefault(); });
-    for (const id of ['#roster', '#runes']) $(id).addEventListener('click', (ev) => { if (this.tipShown) { this.tipShown = false; ev.stopPropagation(); ev.preventDefault(); } }, true);
+    for (const id of ['#roster', '#runes', '#prep']) $(id).addEventListener('click', (ev) => { if (this.tipShown) { this.tipShown = false; ev.stopPropagation(); ev.preventDefault(); } }, true);
     window.addEventListener('keydown', (ev) => {
       if (!g.started) return;
       const k = ev.key.toLowerCase();
@@ -445,6 +445,7 @@ class UI {
     g.reset(i);
     g.endless = !!this.nextEndless; this.nextEndless = false;
     g.owned = new Set(this.save.owned || []);
+    g.deck = validDeck(this.save.deck) ? [...this.save.deck] : suggestDeck(i, this.save.owned);   // v133: đội triệu hồi 6 tướng
     setRunes(this.save.heroRunes || {});
     setLegacy(this.save.legacy || {});
     g.runId = Date.now();
@@ -465,6 +466,22 @@ class UI {
   }
 
   // ---------- v66: Chuẩn bị xuất quân — tiêu Ngân khố mua đồ / vàng / tướng Tím, Vàng trước trận
+  // v133: bảng chọn đội triệu hồi (20 tướng Thường, chia theo hành)
+  deckPicker() {
+    const g = this.game, sel = this.deckSel || [];
+    const ctr = new Set(); try { const lv = LEVELS[g.level], R = ROSTERS[lv.roster || 'thuy']; for (const c of rosterCounters(R, Object.values(lv.bosses || {}), BASIC_HEROES, lv.hint).list) ctr.add(c.t); } catch (e) { /* bỏ qua */ }
+    const ing = deckIngredients(this.save.owned || []);
+    const card = (t) => { const d = HEROES[t], on = sel.includes(t);
+      return `<button class="dk-pick metal ${on ? 'on' : ''}" data-act="deck-tog" data-id="${t}" style="--c:${ELEMENTS[d.el].color}" data-tip="${esc(`<b>${esc(d.name)}</b><small>Hành ${ELEMENTS[d.el].name} · ${d.attack === 'ranged' ? 'Đánh xa' : 'Cận chiến'}</small><p>${esc(d.title || '')}</p>`)}">
+        <img src="${heroImgUrl(t, 'head')}" alt=""><b>${esc(d.name)}</b>
+        <span class="tg">${ctr.has(t) ? '<i class="c">khắc chế</i>' : ''}${ing.has(t) ? '<i class="h">hợp thể</i>' : ''}</span>${on ? `<span class="no">${sel.indexOf(t) + 1}</span>` : ''}</button>`; };
+    const els = EL_ORDER.map((el) => `<div class="dk-el"><div class="dk-eh" style="color:${ELEMENTS[el].color}">${elIcon(el, 13)} ${ELEMENTS[el].name}</div>${BASIC_HEROES.filter((t) => HEROES[t].el === el).map(card).join('')}</div>`).join('');
+    return `<div class="dk-modal"><div class="dk-box metal">
+      <div class="dk-head"><b class="ttl">Chọn đội triệu hồi</b><span class="chip ${sel.length === DECK_SIZE ? 'ok' : 'dark'}">${sel.length} / ${DECK_SIZE}</span>
+        <small>Chạm để chọn / bỏ · <i class="c">khắc chế</i> quái ải này · <i class="h">hợp thể</i> ra tướng Tím / Vàng bạn có</small><div class="sp"></div>
+        <button class="btn metal" data-act="deck-suggest">Gợi ý</button><button class="btn btn-gold" data-act="deck-done" ${sel.length === DECK_SIZE ? '' : 'disabled'}>Xong</button></div>
+      <div class="dk-grid">${els}</div></div></div>`;
+  }
   showPrep() {
     const s = this.save, g = this.game, b = this.prepBought || {};
     const kho = s.kho || 0;
@@ -490,10 +507,13 @@ class UI {
           <div class="prep-heroes">${LEGEND_HEROES.filter((t) => (this.save.owned || []).includes(t)).map((t) => `<span class="prep-hero metal ${HEROES[t].legend}"><img src="${heroImgUrl(t, 'head')}" alt=""><b>${HEROES[t].name}</b></span>`).join('')
             || '<div class="note">Chưa có tướng Tím / Vàng nào. Mua ở <b>Anh Hùng</b> (menu chính) bằng Ngân khố để hợp thể được trong trận.</div>'}</div></div>
         <div class="prep-col cp-side prep-counter">${this.counterHtml(g.level)}
-          <div class="hint-h">QUÂN TRIỆU HỒI ẢI NÀY</div>
-          <div class="ch-row">${summonPool(g.level).map((t) => `<span class="ch-av" style="--c:${ELEMENTS[HEROES[t].el].color}" title="${esc(HEROES[t].name)}"><img src="${heroImgUrl(t, 'head')}" alt="${esc(HEROES[t].name)}"><i>${elIcon(HEROES[t].el, 11)}</i></span>`).join('')}</div></div>
+          <div class="hint-h">ĐỘI TRIỆU HỒI · ${DECK_SIZE} TƯỚNG</div>
+          <div class="note" style="font-size:11.5px">Triệu hồi chỉ ra trong ${DECK_SIZE} tướng này — dễ ghép sao và hợp thể hơn.</div>
+          <div class="ch-row deck-row">${g.summonList().map((t) => `<span class="ch-av" style="--c:${ELEMENTS[HEROES[t].el].color}" title="${esc(HEROES[t].name)}"><img src="${heroImgUrl(t, 'head')}" alt=""><small>${esc(HEROES[t].name.split(' ').slice(-2).join(' '))}</small></span>`).join('')}</div>
+          <button class="btn btn-gold" style="height:36px;font-size:14px" data-act="deck-open">✎ Chọn đội</button></div>
       </div>
 </div>`;
+    if (this.deckOpen) $('#prep .screen').insertAdjacentHTML('beforeend', this.deckPicker());
     $('#prep').hidden = false;
   }
   prepBuy(id) {
@@ -790,7 +810,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 132 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 133 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1223,7 +1243,7 @@ class UI {
       const sc = g.summonCost(), can = g.canSummon() === true;
       key = `s|${sc}|${can}|${g.freeSlots().length}|${assetVersion}`;
       // 6 chân dung nhỏ: tướng có thể ra khi triệu hồi
-      const pool = summonPool(g.level).map((t) => `<img src="${heroImgUrl(t, 'head')}" alt="" title="${HEROES[t].name}">`).join('');
+      const pool = g.summonList().map((t) => `<img src="${heroImgUrl(t, 'head')}" alt="" title="${HEROES[t].name}">`).join('');
       const pairs = g.heroes.filter((x) => x && g.heroes.some((y) => y && y !== x && g.canMerge(x, y) === true)).length;
       key += `|${pairs}`;
       html = `${pairs ? `<button class="dk-auto metal on" data-act="auto-merge" aria-label="Ghép tự động"><b>⇄</b>Ghép<br>tự động<i>${Math.floor(pairs / 2)}</i></button>` : ''}
@@ -1499,7 +1519,7 @@ class UI {
     if (!g.endless || !key) return;
     const bosses = [];
     for (let w = n; w < n + 10; w++) { const b = bossAt(w, g.level); if (b) bosses.push(b); }
-    const pool = [...summonPool(g.level), ...LEGEND_HEROES.filter((t) => (this.save.owned || []).includes(t))];
+    const pool = [...g.summonList(), ...LEGEND_HEROES.filter((t) => (this.save.owned || []).includes(t))];
     const c = rosterCounters(ROSTERS[key], bosses, pool, []);
     const el = $('#roster-hint');
     el.innerHTML = `<div class="rh-h"><small>Đợt ${n} · bộ quái mới</small><b>${ROSTER_NAMES[key] || key}</b></div>
@@ -1971,6 +1991,13 @@ class UI {
       }
       case 'prep-hero': this.prepHero(d.id); break;
       case 'prep-go': $('#prep').hidden = true; this.saveRun(); break;
+      case 'deck-open': this.deckOpen = true; this.deckSel = [...this.game.summonList()]; this.showPrep(); break;
+      case 'deck-tog': { const sel = this.deckSel || (this.deckSel = []); const k = sel.indexOf(d.id);
+        if (k >= 0) sel.splice(k, 1); else if (sel.length < DECK_SIZE) sel.push(d.id); else { sel.shift(); sel.push(d.id); }
+        this.showPrep(); break; }
+      case 'deck-suggest': this.deckSel = suggestDeck(this.game.level, this.save.owned); this.showPrep(); break;
+      case 'deck-done': if (validDeck(this.deckSel)) { this.game.deck = [...this.deckSel]; this.save.deck = [...this.deckSel]; writeSave(this.save); this.saveRun(); }
+        this.deckOpen = false; this.showPrep(); this.sig.deck = null; break;
       case 'prep-forge': {
         // v78: Lò đúc trước trận trả bằng Ngân khố (đổi tạm vàng trong trận ↔ Ngân khố khi mở / đóng)
         $('#prep').hidden = true; this.prepForge = true; KHO_MODE = true;

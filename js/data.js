@@ -1252,6 +1252,31 @@ const BASIC_HEROES = ['lactuong', 'lucsi', 'xathu', 'thosan', 'thaymo', 'thansuo
 const NEW_GROUPS = [['thoren', 'dotnuong', 'denroi'], ['nguphu', 'chodo', 'haisen'], ['thogom', 'dapde', 'chantrau'], ['giaodong', 'chuongdong'], ['thaylang', 'tre', 'ongthoi']];
 const NEW_BASICS = NEW_GROUPS.flat();
 const summonPool = (level) => [...BASIC_HEROES.slice(0, 6), ...NEW_GROUPS[(level || 0) % NEW_GROUPS.length]];
+// v133: ĐỘI TRIỆU HỒI — người chơi tự chọn 6 tướng Thường trước trận; Triệu hồi chỉ ra trong 6 tướng này
+// (20 tướng ngẫu nhiên quá khó ghép). Thiếu / sai thì dùng đội gợi ý.
+const DECK_SIZE = 6;
+const validDeck = (d) => Array.isArray(d) && d.length === DECK_SIZE && new Set(d).size === DECK_SIZE && d.every((t) => BASIC_HEROES.includes(t));
+// tướng Thường là nguyên liệu (trực tiếp hoặc qua tướng Tím) của các tướng Tím / Vàng đã sở hữu
+function deckIngredients(owned) {
+  const out = new Set(), seen = new Set();
+  const walk = (t) => { if (seen.has(t)) return; seen.add(t);
+    for (const f of (typeof FUSION !== 'undefined' ? FUSION : [])) if (f.to === t) for (const x of [f.a, f.b]) { if (BASIC_HEROES.includes(x)) out.add(x); else walk(x); } };
+  for (const t of owned || []) walk(t);
+  return out;
+}
+// đội gợi ý: tướng khắc chế quái của ải → nguyên liệu hợp thể tướng đã sở hữu → quân mặc định của ải
+function suggestDeck(level, owned) {
+  const out = [];
+  const add = (t) => { if (out.length < DECK_SIZE && BASIC_HEROES.includes(t) && !out.includes(t)) out.push(t); };
+  try {
+    const lv = LEVELS[level] || {}, R = typeof ROSTERS !== 'undefined' ? ROSTERS[lv.roster || 'thuy'] : null;
+    for (const c of rosterCounters(R, Object.values(lv.bosses || {}), BASIC_HEROES, lv.hint).list) add(c.t);
+  } catch (e) { /* bỏ qua */ }
+  for (const t of deckIngredients(owned)) add(t);
+  for (const t of summonPool(level)) add(t);
+  for (const t of BASIC_HEROES) add(t);
+  return out;
+}
 const LEGEND_HEROES = ['thachsanh', 'lachau', 'thansan', 'caolo', 'antiem', 'tiendung', 'langlieu', 'cdt', 'trongdong', 'caong', 'ongtao', 'potaoapui', 'baahoa', 'lyngu', 'truongchi', 'ongdung', 'thocong', 'nghedong', 'mychau', 'sodua',
   'giong', 'llq', 'kimquy', 'adv', 'auco', 'mau', 'matroi', 'mauthoai', 'trutroi', 'ongho', 'kinhduong', 'viemde', 'halong', 'longnu', 'tanvien', 'maudia', 'kylan', 'thienloi', 'cuoi', 'melua'];
 for (const id of LEGEND_HEROES) HEROES[id].cost = COSTS.legend[HEROES[id].legend];

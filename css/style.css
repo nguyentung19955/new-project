@@ -1522,3 +1522,24 @@ body { overflow: hidden; }
 .cp-node.edge-l .lb { position: relative; transform: translateX(30%); }
 /* v131: chữ trên nút vàng có kiểu tựa (Vào game…) bị trùng màu vàng nên gần như không đọc được */
 .btn.btn-gold.title { color: #2A1A08; text-shadow: 0 1px 0 #FFF1C4; }
+/* v133: đội triệu hồi */
+.deck-row { gap: 4px; }
+.deck-row .ch-av small { font-size: 9.5px; line-height: 1.1; text-align: center; color: var(--text-2); }
+.dk-modal { position: absolute; inset: 0; z-index: 40; background: #0D0B08cc; display: flex; align-items: center; justify-content: center; padding: 8px; }
+.dk-box { width: 100%; max-width: 900px; max-height: 100%; display: flex; flex-direction: column; border-radius: 10px; padding: 10px; gap: 8px; background: #17130F; }
+.dk-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.dk-head .ttl { font-family: var(--title); font-size: 19px; color: var(--gold); }
+.dk-head small { font-size: 11px; color: var(--text-2); }
+.dk-head .btn { height: 34px; padding: 0 14px; font-size: 14px; }
+.dk-grid { flex: 1; min-height: 0; overflow-y: auto; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; overscroll-behavior: contain; }
+.dk-el { display: flex; flex-direction: column; gap: 5px; }
+.dk-eh { font-weight: 800; font-size: 13px; display: flex; align-items: center; gap: 4px; justify-content: center; }
+.dk-pick { position: relative; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 5px 3px 4px; border-radius: 8px; border: 2px solid #5A4228; -webkit-touch-callout: none; user-select: none; }
+.dk-pick img { width: 46px; height: 46px; border-radius: 50%; border: 2px solid var(--c); background: #0D0B08; object-fit: cover; object-position: 50% 0; }
+.dk-pick b { font-size: 11px; line-height: 1.15; text-align: center; color: var(--text); }
+.dk-pick.on { border-color: var(--gold-hi); background: #4A3212; box-shadow: 0 0 10px #FFD66B88; }
+.dk-pick .no { position: absolute; top: 3px; right: 4px; width: 18px; height: 18px; border-radius: 50%; background: var(--gold-hi); color: #2A1608; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+.dk-pick .tg { display: flex; gap: 2px; min-height: 13px; }
+.dk-pick .tg i, .dk-head small i { font-style: normal; font-size: 9px; font-weight: 800; padding: 0 4px; border-radius: 3px; }
+i.c { background: #1F4A2A; color: #8AE09A; } i.h { background: #4A2A5A; color: #E0B0FF; }
+@media (max-height: 430px) { .dk-pick { padding: 3px 2px; } .dk-pick img { width: 38px; height: 38px; } .dk-pick b { font-size: 10.5px; } .dk-box { padding: 8px; gap: 6px; } .dk-head small { display: none; } }

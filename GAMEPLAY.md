@@ -1302,3 +1302,8 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Trận lưu đúng lúc tướng đang vung đòn: khi nạp lại, đòn đó mất phần xử lý → game báo lỗi "f is not a function" và đứng. Giờ không lưu đòn đang vung.
 - Trận lưu có hoạt ảnh tung chiêu dở: sau khi tải lại trang, đồng hồ hoạt ảnh lệch → lỗi vẽ "radius is negative" và đứng. Giờ không lưu đồng hồ hoạt ảnh, vòng sáng tung chiêu cũng được chặn trong khoảng hợp lệ.
 - Kiểm thử Tiếp tục (Phó bản + Vô tận): về menu → Tiếp tục; tải lại trang → Tiếp tục; chơi tiếp sau khi nạp; Dừng chơi / thua thì xoá trận dở — đều đúng.
+
+## Phiên bản 133 — Đội triệu hồi 6 tướng
+- Trước trận (bảng Chuẩn bị xuất quân) chọn **đội triệu hồi 6 tướng Thường** trong 20 tướng: Triệu hồi chỉ ra trong 6 tướng này → dễ ghép sao, dễ hợp thể, có chiến thuật.
+- Bảng chọn chia theo 5 hành; nhãn **khắc chế** (hợp quái của ải) và **hợp thể** (nguyên liệu ra tướng Tím / Vàng bạn đã sở hữu); nút **Gợi ý** tự chọn đội phù hợp; giữ tay lên tướng để xem mô tả.
+- Đội được nhớ cho các trận sau (lưu tài khoản) và lưu cùng trận đang dở (Tiếp tục vẫn đúng đội). Chưa chọn thì dùng đội gợi ý theo ải.

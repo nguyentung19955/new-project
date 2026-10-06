@@ -1493,13 +1493,15 @@ class Game {
     if (!this.freeSlots().length) return 'Hết ô trống: ghép, hoặc kéo tướng vào 🗑 để hủy';
     return true;
   }
+  // v133: quân triệu hồi = đội 6 tướng người chơi chọn (thiếu thì quân mặc định của ải)
+  summonList() { return validDeck(this.deck) ? this.deck : summonPool(this.level); }
   // gọi 1 tướng Thường ngẫu nhiên (★) vào 1 ô trống ngẫu nhiên; trả về ô vừa đặt
   summonRandom(rng = Math.random) {
     const ok = this.canSummon();
     if (ok !== true) return ok;
     const free = this.freeSlots();
     const slot = free[Math.floor(rng() * free.length)];
-    const pool = summonPool(this.level);
+    const pool = this.summonList();
     const type = pool[Math.floor(rng() * pool.length)];
     const c = this.summonCost();
     this.gold -= c;
@@ -2513,7 +2515,7 @@ class Game {
     const heroes = JSON.parse(JSON.stringify(this.heroes, (k, v) => (skip.has(k) ? undefined : v)));
     const o = { v: 1, at: Date.now(), heroes };
     for (const k of ['level', 'hard', 'endless', 'won', 'gold', 'lives', 'wave', 'summonN', 'bossesKilled', 'seen', 'water', 'raised', 'moc',
-      'mountain', 'stats', 'inventory', 'jarCount', 'shop', 'time', 'flags', 'runId', 'guardT', 'oathT', 'xpLog']) o[k] = this[k];
+      'mountain', 'stats', 'inventory', 'jarCount', 'shop', 'time', 'flags', 'runId', 'guardT', 'oathT', 'xpLog', 'deck']) o[k] = this[k];
     return JSON.parse(JSON.stringify(o));
   }
   restore(o) {
