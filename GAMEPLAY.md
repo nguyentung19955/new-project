@@ -869,3 +869,7 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 ### Phiên bản 52
 
 - **Mẫu Thượng Ngàn vẽ lại**, không còn giống Âu Cơ: dựng trên dáng Tiên Dung (tóc búi), mặc **áo xanh rừng**, đội **khăn vấn đỏ** cài vòng lá xanh và hoa rừng, tay cầm **cành cây có lá và quả đỏ**, có **ông Hổ** nằm cạnh chân. Bỏ đôi cánh (cánh giờ chỉ Âu Cơ có). Trang Đền Anh Hùng dùng cùng thiết kế.
+
+### Phiên bản 53
+
+- **Bách khoa quái thú** (trước là "Bách khoa thủy quái") nay có đủ quái và boss của cả 5 chương truyện. Hàng nút chương ở trên (Sơn Tinh – Thủy Tinh · Thạch Sanh · Thánh Gióng · Lạc Long Quân · An Dương Vương), mở sẵn chương của ải đang chơi. Thẻ quái lấy theo bảng quân của các ải trong chương; thẻ boss ghi ải và đợt boss xuất hiện lần đầu. Thêm nhãn mới: Bắn tướng, Giẫm choáng tướng, Lọt thành −N mạng; Thạch Tinh có ghi chú Đá Con.

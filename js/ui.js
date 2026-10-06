@@ -477,7 +477,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px">${[['auto', 'Tự động'], ['high', 'Đẹp'], ['low', 'Tiết kiệm']].map(([k, n]) => `<button class="btn ${(st.gfx || 'auto') === k ? 'btn-gold' : 'metal'}" style="height:34px;padding:0 10px;font-size:13px" data-act="set-gfx" data-k="${k}">${n}</button>`).join('')}</div></div>
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 52 · Tiến trình lưu trên trình duyệt của bạn</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 53 · Tiến trình lưu trên trình duyệt của bạn</div>
       </div></div>`;
   }
 
@@ -1640,6 +1640,7 @@ class UI {
       }
       // Bách khoa
       case 'bk-sel': sc.pick = d.id; this.renderScreen(true); break;
+      case 'bk-ch': sc.ch = +d.i; sc.pick = null; this.renderScreen(true); break;
     }
   }
 
@@ -2206,9 +2207,25 @@ class UI {
     const seg = `<div class="seg inset"><button class="${sc.tab === 'enemy' ? 'on' : ''}" data-act="tab" data-tab="enemy">Quái</button><button class="${isBoss ? 'on' : ''}" data-act="tab" data-tab="boss">Boss</button><button class="${sc.tab === 'secret' ? 'on' : ''}" data-act="tab" data-tab="secret">Bí truyền</button></div>`;
     let body;
     if (sc.tab === 'secret') return this.render_secrets(seg);
+    // v53: chọn chương truyện → quái / boss của các ải trong chương đó
+    const lvNow = g.started ? g.level : this.save.last;
+    if (sc.ch == null) sc.ch = Math.max(0, CHAPTERS.findIndex((c) => lvNow >= c.from && lvNow <= c.to));
+    const chap = CHAPTERS[sc.ch] || CHAPTERS[0];
+    const chLv = [];
+    for (let i = chap.from; i <= chap.to && i < LEVELS.length; i++) chLv.push(i);
+    const chTabs = `<div class="cp-tabs bk-ch">${CHAPTERS.map((c, ci) => `<button class="cp-tab ${ci === sc.ch ? 'on' : ''}" data-act="bk-ch" data-i="${ci}">${ci + 1}. ${c.name}</button>`).join('')}</div>`;
+    const where = (id) => {   // ải + đợt đầu tiên boss xuất hiện trong chương
+      for (const i of chLv) { const w = Object.keys(LEVELS[i].bosses || {}).map(Number).sort((a, b) => a - b).find((n) => LEVELS[i].bosses[n] === id); if (w) return `Ải ${i + 1} · Đợt ${w}`; }
+      return '';
+    };
     if (!isBoss) {
-      const list = ['tom', 'casau', 'rua', 'phuthuy', 'chimbao', 'echme'];
-      const cur = list.includes(sc.pick) ? sc.pick : 'rua';
+      const list = [];
+      for (const i of chLv) {
+        const ro = ROSTERS[LEVELS[i].roster || 'thuy'];
+        if (!ro) continue;
+        for (const id of [ro.base, ...ro.list.map((x) => x[2]), ro.air, ro.champ]) if (id && ENEMIES[id] && !ENEMIES[id].minion && !list.includes(id)) list.push(id);
+      }
+      const cur = list.includes(sc.pick) ? sc.pick : list.includes('rua') ? 'rua' : list[0];
       const d = ENEMIES[cur];
       const cards = list.map((id) => `<button class="bk-card ${id === cur ? 'on' : ''} metal" data-act="bk-sel" data-id="${id}">
         <div class="well inset"><canvas data-enemy="${id}" data-pad="0.08" width="200" height="80"></canvas></div>
@@ -2221,36 +2238,39 @@ class UI {
       if (d.enrage) tags.push('<span class="bk-tag d">Hóa điên</span>');
       if (d.heal) tags.push('<span class="bk-tag d">Hồi máu đồng đội</span>');
       if (d.split) tags.push('<span class="bk-tag d">Tách con</span>');
+      if (d.ranged) tags.push('<span class="bk-tag d">Bắn tướng</span>');
+      if (d.slam) tags.push('<span class="bk-tag d">Giẫm choáng tướng</span>');
+      if (d.lives > 1) tags.push(`<span class="bk-tag d">Lọt thành −${d.lives} mạng</span>`);
       const extra = cur === 'rua' ? `<div class="tipbox inset" style="display:flex;gap:12px;align-items:center"><canvas data-enemy="rua" width="64" height="40" style="width:44px;height:28px"></canvas><span style="font-size:15px"><b>Bản khổng lồ (tinh anh):</b> đợt 5, 15, 25</span></div>`
         : cur === 'chimbao' ? '<div class="tipbox inset"><b>Đợt bay:</b> 7, 13, 17, 24, 27 · chỉ Xạ Thủ, Cao Lỗ, An Tiêm, tướng phép và Thạch Sanh (Cung Tên Vàng) bắn được</div>'
+        : cur === 'thachtinh' ? `<div class="tipbox inset" style="display:flex;gap:12px;align-items:center"><canvas data-enemy="dacon" width="64" height="40" style="width:44px;height:28px"></canvas><span><b>Đá Con:</b> ${ENEMIES.dacon.hp} máu, giáp ${ENEMIES.dacon.armor}. Vỡ ra khi Thạch Tinh bị hạ.</span></div>`
         : cur === 'echme' ? `<div class="tipbox inset" style="display:flex;gap:12px;align-items:center"><canvas data-enemy="nongnoc" width="64" height="30" style="width:44px;height:20px"></canvas><span><b>Nòng Nọc:</b> ${ENEMIES.nongnoc.hp} máu, bơi rất nhanh. Dùng sát thương lan.</span></div>` : '';
-      body = `<div class="bk-cards">${cards}</div>
+      body = `${chTabs}<div class="bk-row"><div class="bk-cards">${cards}</div>
         <div class="panel metal bk-det"><div class="top"><div class="pic"><canvas data-enemy="${cur}" data-pad="0.1" width="280" height="212"></canvas></div>
           <div><div class="ttl">${d.name}</div><div class="bk-tags">${tags.join('')}</div>
           <div class="bk-stat"><span>Hành ${elIcon(d.el, 14)} <b>${ELEMENTS[d.el].name}</b></span><span>Máu gốc <b>${d.hp}</b></span><span>Giáp <b>${d.armor}</b></span><span>Kháng phép <b>${d.mr}%</b></span><span>Vàng <b>${d.gold}</b></span></div>
           <div class="note" style="font-size:11px">Mỗi ${ENEMY_GROW.every} đợt: +${ENEMY_GROW.armor} giáp${d.mr ? `, +${ENEMY_GROW.mr}% kháng phép (tối đa ${ENEMY_GROW.mrCap}%)` : ''}. Giáp ${d.armor} giảm ${Math.round(100 * 0.06 * d.armor / (1 + 0.06 * d.armor))}% sát thương vật lý · dùng đồ <b>xuyên giáp / xuyên kháng phép</b> để phá.</div></div></div>
-          <div class="mech inset" style="color:#E8E0CC;font-size:14px">${d.desc}</div>${extra}</div>`;
+          <div class="mech inset" style="color:#E8E0CC;font-size:14px">${d.desc}</div>${extra}</div></div>`;
     } else {
-      const cur = BOSS_ORDER.includes(sc.pick) ? sc.pick : 'haba';
+      const blist = [];
+      for (const i of chLv) for (const n of Object.keys(LEVELS[i].bosses || {}).map(Number).sort((a, b) => a - b)) { const id = LEVELS[i].bosses[n]; if (ENEMIES[id] && !blist.includes(id)) blist.push(id); }
+      const cur = blist.includes(sc.pick) ? sc.pick : blist.includes('haba') ? 'haba' : blist[0];
       const d = ENEMIES[cur];
-      const wave = { thuongluong: 10, haba: 20, thuytinh: 30 }[cur];
-      const giftArt = { voi_chin_nga: 'voi_chin_nga', ga_chin_cua: 'ga_chin_cua', ngua_hong_mao: 'ngua_hong_mao' };
-      const cards = BOSS_ORDER.map((id) => {
-        const w = { thuongluong: 10, haba: 20, thuytinh: 30 }[id];
+      const cards = blist.map((id) => {
         const b = ENEMIES[id];
         return `<button class="boss-card metal ${id === cur ? 'on' : ''}" data-act="bk-sel" data-id="${id}">
-          <div class="well inset"><canvas data-enemy="${id}" data-pad="0.06" width="220" height="300"></canvas><span class="wv">Đợt ${w}</span></div>
+          <div class="well inset"><canvas data-enemy="${id}" data-pad="0.06" width="220" height="300"></canvas><span class="wv">${where(id)}</span></div>
           <span class="nm">${b.name}</span><span class="ds">${b.short}</span>
-          <span class="gift inset">${svgI(itemIcon(giftArt[b.reward]))}<span>Sính lễ<br><b>${ITEMS[b.reward].name}</b></span></span></button>`;
+          <span class="gift inset">${svgI(itemIcon(b.reward))}<span>Sính lễ<br><b>${ITEMS[b.reward].name}</b></span></span></button>`;
       }).join('');
-      body = `<div class="boss-cards">${cards}</div>
+      body = `${chTabs}<div class="bk-row"><div class="boss-cards">${cards}</div>
         <div class="panel metal bk-det"><div class="top"><div class="pic" style="height:110px"><canvas data-enemy="${cur}" data-pad="0.05" width="280" height="220" style="height:110px"></canvas></div>
-          <div><div style="display:flex;align-items:center;gap:10px"><span class="ttl" style="font-size:30px">${d.name}</span><span class="chip run" style="font-size:13px">Boss · Đợt ${wave}</span></div>
+          <div><div style="display:flex;align-items:center;gap:10px"><span class="ttl" style="font-size:30px">${d.name}</span><span class="chip run" style="font-size:13px">Boss · ${where(cur)}</span></div>
             <div class="bk-tags">${d.tags.map((t, k) => `<span class="bk-tag ${k % 2 ? 's' : 'd'}">${t}</span>`).join('')}</div>
             <div class="bk-stat"><span>Hành ${elIcon(d.el, 14)} <b>${ELEMENTS[d.el].name}${cur === 'haba' && g.known.has('e.haba') ? ' → Kim' : ''}</b></span><span>Máu <b>${d.hp}+</b></span><span>Giáp <b>${d.armor}</b></span><span>Kháng phép <b>${d.mr}%</b></span><span>Lọt thành <b>−${d.lives} mạng</b></span></div></div></div>
           <div class="mech inset">${esc(d.desc)}</div>
           <div class="tipbox inset">🎁 <b>Hạ được:</b> chọn sính lễ <b>${ITEMS[d.reward].name}</b></div>
-          <div class="tipbox inset">💡 <b>Mẹo:</b> ${esc(d.tip)}</div></div>`;
+          <div class="tipbox inset">💡 <b>Mẹo:</b> ${esc(d.tip)}</div></div></div>`;
     }
     // lịch 30 đợt
     const lv = g.started ? g.level : this.save.last;
@@ -2260,8 +2280,8 @@ class UI {
       const k = waveKind(n, lv);
       cells.push(`<span class="cell ${k === 'boss' ? 'boss' : k === 'air' ? 'air' : k === 'champion' ? 'champ' : ''} ${g.started && n < g.wave + (g.waveActive ? 0 : 1) ? 'past' : ''} ${g.started && n === g.wave ? 'cur' : ''}">${n}${k === 'boss' && n < N ? '<i class="fl"></i>' : ''}</span>`);
     }
-    return `${this.head('Bách khoa thủy quái', this.runChip(), seg, '<svg viewBox="0 0 24 24" width="26" height="26"><rect x="4" y="3" width="16" height="18" rx="2" fill="none" stroke="#F2D27A" stroke-width="1.8"/><circle cx="12" cy="10" r="3" fill="none" stroke="#F2D27A" stroke-width="1.6"/></svg>')}
-      <div class="scr-body" style="padding-bottom:6px">${body}</div>
+    return `${this.head('Bách khoa quái thú', this.runChip(), seg, '<svg viewBox="0 0 24 24" width="26" height="26"><rect x="4" y="3" width="16" height="18" rx="2" fill="none" stroke="#F2D27A" stroke-width="1.8"/><circle cx="12" cy="10" r="3" fill="none" stroke="#F2D27A" stroke-width="1.6"/></svg>')}
+      <div class="scr-body bk-body" style="padding-bottom:6px">${body}</div>
       <div class="sched metal" style="margin:0 10px 10px"><div class="hd"><span class="ttl">Lịch ${N} đợt · Ải ${lv + 1}</span>
         <div class="lg"><span><i style="background:#8A2A12;border:1px solid #C8401E"></i>Boss</span><span><i style="background:#3A4A5A;border:1px solid #5A7088"></i>Bay</span><span><i style="background:#5A4E30;border:1px solid #8C7A5A"></i>Rùa khổng lồ</span><span><i style="background:#5AB4D6;width:4px"></i>Nước dâng</span><span><i style="border:2px solid #FFD66B"></i>Đợt hiện tại</span></div></div>
         <div class="cells">${cells.join('')}</div></div>`;

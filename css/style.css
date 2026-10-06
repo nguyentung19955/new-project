@@ -1200,3 +1200,14 @@ body { overflow: hidden; }
 .guarded button[data-act] { opacity: .45; pointer-events: none; }
 .guarded::after { content: ''; position: fixed; left: 0; top: 0; height: 3px; background: #FFD66B; animation: guardBar 1.2s linear forwards; z-index: 99; }
 @keyframes guardBar { from { width: 0; } to { width: 100%; } }
+/* v53: Bách khoa theo chương truyện */
+.bk-body { flex-direction: column; }
+.bk-body .bk-ch { margin-left: 0; flex: none; }
+.bk-body .cp-tab { height: 26px; }
+.bk-row { display: flex; gap: 10px; flex: 1; min-height: 0; }
+.bk-row .bk-det { min-height: 0; overflow-y: auto; scrollbar-width: thin; }
+.bk-row .bk-cards, .bk-row .boss-cards { min-height: 0; overflow-y: auto; scrollbar-width: none; align-content: start; }
+.bk-row .boss-card .well, .bk-row .boss-card .well canvas { height: 104px; }
+.bk-row .bk-card .ds, .bk-row .boss-card .ds { max-height: 2.45em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.bk-row .boss-card .nm { font-size: 15px; line-height: 1.1; }
+.bk-row .boss-card .gift { display: none; }
