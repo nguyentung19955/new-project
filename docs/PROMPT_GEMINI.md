@@ -9,6 +9,7 @@ Mỗi khối dưới đây là **một prompt tự đủ**: dán nguyên khối 
 **Ảnh nhẹ:** prompt yêu cầu khung nhỏ, màu phẳng, ít màu (khoảng 20–30 màu), không chuyển màu, không nhiễu hạt, nên PNG thường chỉ còn vài trăm KB. Tải về đúng kích thước Gemini cho, không phóng to; nếu Gemini vẫn trả ảnh to hơn thì cũng không sao, công cụ cắt sẽ tự thu nhỏ và nén lại (ảnh trong game mỗi dáng chỉ khoảng 30–80 KB). Gửi mỗi tướng một ảnh, hoặc gom vài ảnh vào một zip. Không cần tự tách nền hay cắt ô: nền hồng tím `#FF00FF` để mình tự cắt và nạp vào game.
 
 **Mẹo khi gen:**
+- **Kiểm tra trước khi gửi:** nền phải cùng **một màu hồng tím đậm** ở mọi ô. Ô nào nền hồng nhạt hoặc trắng thì gen lại (không tách nền được). Vạch trắng giữa các ô thì không sao.
 - Nếu Gemini vẽ thiếu ô hoặc dính chữ, gõ thêm: *“Regenerate following the SHEET LAYOUT exactly: N cells, one pose per cell, no text.”*
 - **Muốn mọi nhân vật cùng nét vẽ:** mỗi lần gen, đính kèm ảnh Lạc Tướng (hoặc một ảnh vừa gen ưng ý). Prompt đã có sẵn câu bảo Gemini chỉ học nét vẽ từ ảnh đính kèm, không chép trang phục.
 - **Thứ tự nên gen:** Lạc Tướng trước (đính kèm ảnh Lạc Tướng cũ để giữ đúng trang phục), rồi dùng chính ảnh Lạc Tướng mới làm mẫu cho các nhân vật còn lại.
@@ -17,7 +18,7 @@ Mỗi khối dưới đây là **một prompt tự đủ**: dán nguyên khối 
 
 ## Lạc Tướng (Thường · `lactuong`)
 
-*Gen lại cho cùng nét với các tướng mới: **đính kèm ảnh Lạc Tướng cũ** (front.png hoặc ảnh cả bộ) rồi dán khối dưới. Có thêm ô tung chiêu.*
+*Đã gen lại theo prompt này (bản 58). Dùng ảnh Lạc Tướng mới (`docs/mau-lac-tuong.png`) làm mẫu nét vẽ cho các nhân vật khác.*
 
 ```
 Use the attached image as the character and style reference: keep exactly the same costume, colors, feathers, headband and axe, but redraw it following the rules below.

@@ -896,3 +896,9 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 
 - **Prompt gen hình nhẹ hơn** (`docs/PROMPT_GEMINI.md`): khung nhỏ hơn (tướng 1020×680, quái 768×256, boss 768×768), thêm mục *LIGHT FILE* yêu cầu màu phẳng, khoảng 20–30 màu, không chuyển màu, không nhiễu hạt, không loé sáng — PNG chỉ còn vài trăm KB.
 - `tools/cat-sheet.py` không phóng to ảnh nhỏ và lưu PNG 256 màu có trong suốt (mỗi dáng 20–40 KB). Bộ ảnh Lạc Tướng nén lại theo cách này: 904 KB → khoảng 200 KB, nhìn không khác.
+
+### Phiên bản 58
+
+- **Lạc Tướng gen lại theo prompt mới** (cùng nét với các tướng sẽ gen sau): dáng đứng cầm rìu sẵn (không phải ghép), lấy đà, chém có vệt sáng, **tung chiêu** (tay đưa ra, quầng sáng vàng), chính diện, chân dung. Cả bộ 6 ảnh khoảng 170 KB.
+- `tools/cat-sheet.py`: bỏ 8 px sát mép mỗi ô (Gemini hay vẽ vạch trắng ngăn ô), khử ám hồng tím mạnh hơn ở viền và quầng sáng.
+- Prompt: thêm bước kiểm tra trước khi gửi — nền phải cùng một màu hồng tím đậm ở mọi ô.

@@ -32,8 +32,18 @@ def key_magenta(im):
                 k = (m - 60) / 90       # 0..1 phần nền lẫn vào
                 na = int(a * (1 - k))
                 # bỏ phần hồng tím đã trộn: kéo r, b về mức g
-                nr = int(max(0, r - (r - g) * k)); nb = int(max(0, b - (b - g) * k))
+                nr = max(0, r - m); nb = max(0, b - m)   # bỏ hẳn phần hồng tím, giữ sắc còn lại (vàng / trắng)
                 px[x, y] = (nr, g, nb, na)
+            elif m > 20:
+                # khử ám hồng tím còn sót (quầng sáng, viền): hạ r, b về gần g
+                ex = m - 20
+                px[x, y] = (r - ex, g, b - ex, a)
+    # viền nửa trong suốt còn ánh hồng (quầng sáng Gemini vẽ lẫn nền): đổi về cam / vàng
+    for y in range(H):
+        for x in range(W):
+            r, g, b, a = px[x, y]
+            if 0 < a < 255 and r > 150 and b > g + 8:
+                px[x, y] = (r, g, g, a)
     return im
 
 
@@ -50,7 +60,8 @@ def main():
     sheet = key_magenta(Image.open(src))
     W, H = sheet.size
     cw, ch = W // cols, H // rows
-    cells = [sheet.crop((c * cw, r * ch, (c + 1) * cw, (r + 1) * ch)) for r in range(rows) for c in range(cols)]
+    ins = 8   # bỏ vài px sát mép ô (Gemini hay vẽ vạch trắng ngăn ô)
+    cells = [sheet.crop((c * cw + ins, r * ch + ins, (c + 1) * cw - ins, (r + 1) * ch - ins)) for r in range(rows) for c in range(cols)]
     out = os.path.join(os.path.dirname(__file__), '..', 'assets', 'packs', code)
     os.makedirs(out, exist_ok=True)
     body = [i for i, n in enumerate(names) if n != 'head']
