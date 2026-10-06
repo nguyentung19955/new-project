@@ -172,8 +172,10 @@ function loadSave() {
     return out;
   } catch (e) { return def; }
 }
-function writeSave(s) {
+function writeSave(s, fromCloud) {
+  if (!fromCloud) s.savedAt = Date.now();
   try { localStorage.setItem(SAVE_KEY, JSON.stringify(s)); } catch (e) { /* bỏ qua */ }
+  if (!fromCloud && typeof CLOUD !== 'undefined') CLOUD.push(s);   // v65: lưu đám mây (nếu đã cấu hình Firebase)
 }
 
 class UI {
@@ -201,7 +203,32 @@ class UI {
     $('#rotate-art').innerHTML = sceneArt('rotate');
     $('#loading').hidden = true;
     this.showMenu();
+    // v65: lưu đám mây — bản trên mây mới hơn thì nạp lại
+    if (typeof CLOUD !== 'undefined') {
+      CLOUD.onChange(() => { if (!$('#settings').hidden) this.showSettings && this.renderSettingsCloud(); });
+      CLOUD.init(() => this.save, (cs) => this.applyCloudSave(cs));
+    }
   }
+  applyCloudSave(cs) {
+    const keep = this.save.settings;
+    localStorage.setItem(SAVE_KEY, JSON.stringify(cs));
+    this.save = loadSave();
+    this.save.settings = { ...this.save.settings, ...keep };   // cài đặt máy này giữ nguyên
+    writeSave(this.save, true);
+    this.game.known = new Set(this.save.secrets || []);
+    if (!this.game.started) this.showMenu();
+    this.toast && this.toast('Đã tải tiến trình từ đám mây');
+  }
+  cloudRow() {
+    if (typeof CLOUD === 'undefined') return '';
+    const u = CLOUD.user;
+    const btn = !CLOUD.enabled ? '' : !u ? '' : u.isAnonymous
+      ? '<button class="btn btn-gold" style="height:34px;padding:0 12px;font-size:13px" data-act="cloud-google">Đăng nhập Google</button>'
+      : '<button class="btn metal" style="height:34px;padding:0 10px;font-size:13px" data-act="cloud-sync">Đồng bộ ngay</button><button class="btn metal" style="height:34px;padding:0 10px;font-size:13px" data-act="cloud-out">Đăng xuất</button>';
+    return `<div class="tg metal" id="cloud-row"><div><b>Lưu đám mây</b><small>${esc(CLOUD.label())}${CLOUD.enabled && u && u.isAnonymous ? ' · Đăng nhập Google để chơi tiếp trên máy khác' : ''}</small></div>
+      <div style="margin-left:auto;display:flex;gap:4px">${btn}</div></div>`;
+  }
+  renderSettingsCloud() { const r = $('#cloud-row'); if (r) r.outerHTML = this.cloudRow(); }
 
   // ---------- gắn sự kiện
   bind() {
@@ -477,9 +504,10 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px">${[['auto', 'Tự động'], ['s', 'Vừa'], ['m', 'To'], ['l', 'Rất to']].map(([k, n]) => `<button class="btn ${(st.uiSize || 'auto') === k ? 'btn-gold' : 'metal'}" style="height:34px;padding:0 10px;font-size:13px" data-act="set-uisize" data-k="${k}">${n}</button>`).join('')}</div></div>
         <div class="tg metal"><div><b>Đồ hoạ</b><small>Tự động: game tự giảm độ nét và hiệu ứng khi máy bị giật${typeof GFX !== 'undefined' && GFX.mode() === 'auto' && GFX.lv ? ` (đang giảm ${GFX.lv} bậc)` : ''}</small></div>
           <div style="margin-left:auto;display:flex;gap:4px">${[['auto', 'Tự động'], ['high', 'Đẹp'], ['low', 'Tiết kiệm']].map(([k, n]) => `<button class="btn ${(st.gfx || 'auto') === k ? 'btn-gold' : 'metal'}" style="height:34px;padding:0 10px;font-size:13px" data-act="set-gfx" data-k="${k}">${n}</button>`).join('')}</div></div>
+        ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 64 · Tiến trình lưu trên trình duyệt của bạn</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 65 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1374,6 +1402,9 @@ class UI {
         if (d.k === 'aiArt') { location.reload(); break; }
         this.renderSettings();
         break;
+      case 'cloud-google': CLOUD.google(() => this.save, (cs) => this.applyCloudSave(cs)); break;
+      case 'cloud-sync': CLOUD.push(this.save, true); break;
+      case 'cloud-out': CLOUD.signOut(); break;
       case 'set-close':
         $('#settings').hidden = true;
         if (this.settingsInGame && this.pauseWasRunning) g.running = true;

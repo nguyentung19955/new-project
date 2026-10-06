@@ -1,0 +1,95 @@
+'use strict';
+
+// ============================================================
+//  LƯU ĐÁM MÂY (Firebase): Auth ẩn danh + đăng nhập Google, Firestore users/{uid}
+//  - Máy vẫn lưu localStorage như cũ; có mạng thì đẩy bản lưu lên mây (gộp nhiều lần ghi trong 4 giây).
+//  - Mở game: bản trên mây mới hơn bản trên máy thì dùng bản trên mây.
+//  - Đăng nhập Google: chơi tiếp trên máy khác / sau khi xoá dữ liệu trình duyệt.
+//  Chưa điền js/firebase-config.js → CLOUD.enabled = false, game chạy như cũ.
+// ============================================================
+const FB_VER = '10.12.2';
+const CLOUD = {
+  enabled: typeof FIREBASE_CONFIG !== 'undefined' && !!FIREBASE_CONFIG.apiKey,
+  ready: false, user: null, status: 'off', lastSync: 0, error: '',
+  _timer: null, _pending: null, _listeners: [],
+  onChange(fn) { this._listeners.push(fn); },
+  _emit() { for (const f of this._listeners) try { f(this); } catch (e) { /* bỏ qua */ } },
+  label() {
+    if (!this.enabled) return 'Chưa bật (chỉ lưu trên máy này)';
+    if (this.status === 'error') return 'Lỗi: ' + this.error;
+    if (!this.user) return 'Đang kết nối…';
+    const who = this.user.isAnonymous ? 'Khách (chỉ máy này)' : (this.user.displayName || this.user.email || 'Tài khoản Google');
+    const t = this.lastSync ? ` · đồng bộ lúc ${new Date(this.lastSync).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}` : '';
+    return who + t;
+  },
+  _load(src) {
+    return new Promise((ok, bad) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = bad; document.head.appendChild(s); });
+  },
+  async init(getLocal, applyCloud) {
+    if (!this.enabled) return;
+    this.status = 'loading'; this._emit();
+    try {
+      const base = `https://www.gstatic.com/firebasejs/${FB_VER}/`;
+      await this._load(base + 'firebase-app-compat.js');
+      await Promise.all([this._load(base + 'firebase-auth-compat.js'), this._load(base + 'firebase-firestore-compat.js')]);
+      firebase.initializeApp(FIREBASE_CONFIG);
+      this.auth = firebase.auth();
+      this.db = firebase.firestore();
+      this.auth.onAuthStateChanged(async (u) => {
+        this.user = u;
+        if (!u) { this.auth.signInAnonymously().catch((e) => this._fail(e)); return; }
+        this.ready = true; this.status = 'ok';
+        await this.pull(getLocal, applyCloud);
+        this._emit();
+      });
+    } catch (e) { this._fail(e); }
+  },
+  _fail(e) { this.status = 'error'; this.error = (e && (e.code || e.message)) || 'không kết nối được'; this._emit(); },
+  _doc() { return this.db.collection('users').doc(this.user.uid); },
+  // lấy bản trên mây; mới hơn bản trên máy thì dùng (applyCloud nạp lại giao diện)
+  async pull(getLocal, applyCloud) {
+    if (!this.ready) return;
+    try {
+      const snap = await this._doc().get();
+      const local = getLocal();
+      if (snap.exists) {
+        const d = snap.data();
+        if ((d.updatedAt || 0) > (local.savedAt || 0) && d.save) { applyCloud(JSON.parse(d.save)); this.lastSync = Date.now(); return; }
+      }
+      await this.push(local, true);
+    } catch (e) { this._fail(e); }
+  },
+  // đẩy bản lưu (gộp các lần ghi liên tiếp trong 4 giây)
+  push(save, now) {
+    if (!this.ready) return Promise.resolve();
+    this._pending = save;
+    clearTimeout(this._timer);
+    const go = async () => {
+      const s = this._pending; this._pending = null;
+      try {
+        await this._doc().set({ save: JSON.stringify(s), updatedAt: s.savedAt || Date.now(), v: 1,
+          name: this.user.isAnonymous ? '' : (this.user.displayName || '') });
+        this.lastSync = Date.now(); this.status = 'ok'; this._emit();
+      } catch (e) { this._fail(e); }
+    };
+    if (now) return go();
+    this._timer = setTimeout(go, 4000);
+    return Promise.resolve();
+  },
+  // đăng nhập Google: nối tài khoản khách hiện tại (giữ tiến trình); tài khoản đã có dữ liệu thì chuyển sang nó
+  async google(getLocal, applyCloud) {
+    if (!this.ready) return;
+    const prov = new firebase.auth.GoogleAuthProvider();
+    try {
+      if (this.user && this.user.isAnonymous) {
+        try { await this.user.linkWithPopup(prov); this.user = this.auth.currentUser || this.user; await this.push(getLocal(), true); }
+        catch (e) {
+          if (e.code !== 'auth/credential-already-in-use') throw e;
+          await this.auth.signInWithCredential(e.credential);   // onAuthStateChanged sẽ kéo bản lưu của tài khoản đó
+        }
+      } else await this.auth.signInWithPopup(prov);
+      this._emit();
+    } catch (e) { this._fail(e); }
+  },
+  async signOut() { if (this.ready) { await this.auth.signOut(); this._emit(); } },
+};

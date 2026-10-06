@@ -934,3 +934,9 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 ### Phiên bản 64
 
 - **Avatar trong giao diện dùng hình vẽ tay**: nút triệu hồi, vòng tiến độ hợp thể, thanh tướng đang chọn, danh sách tướng, bảng thăng thần, Bí truyền… (`heroImgUrl` trong `js/ui.js` lấy `head.png` / `front.png` của bộ ảnh). Bật "Tướng vẽ nét" thì quay về hình vẽ nét.
+
+### Phiên bản 65
+
+- **Lưu đám mây bằng Firebase** (`js/cloud.js`, cấu hình `js/firebase-config.js`, hướng dẫn `docs/FIREBASE.md`): tự đăng nhập khách ẩn danh, bản lưu đẩy lên Firestore `users/{uid}` (gộp các lần ghi trong 4 giây), mở game thì bản trên mây mới hơn được dùng. Cài đặt → **Lưu đám mây**: Đăng nhập Google (nối tài khoản khách, không mất tiến trình), Đồng bộ ngay, Đăng xuất. Cài đặt giao diện giữ theo từng máy.
+- `firestore.rules`: mỗi người chỉ đọc / ghi bản lưu của mình (tối đa 400 KB). `firebase.json` sẵn cho Firebase Hosting.
+- Chưa điền cấu hình thì game lưu trên máy như cũ. Đã thử bằng Firebase giả lập: kéo bản mới hơn về, đẩy bản lưu lên, nối Google.
