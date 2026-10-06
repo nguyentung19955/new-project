@@ -2029,7 +2029,8 @@ let RUNE_MAP = null;
 function setRunes(map) {
   if (!map) { RUNE_MAP = null; return; }
   RUNE_MAP = {};
-  for (const t in map) RUNE_MAP[t] = runeFxOf(map[t]);
+  // v123: chỉ tướng Vàng mới có Ấn Phù (ấn đã khắc cho tướng Thường / Tím bỏ qua)
+  for (const t in map) if (HEROES[t] && HEROES[t].legend === 'legendary') RUNE_MAP[t] = runeFxOf(map[t]);
 }
 const runeFx = (h) => (RUNE_MAP && h ? RUNE_MAP[h.type] || null : null);
 

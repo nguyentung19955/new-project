@@ -1256,3 +1256,7 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 122
 - Màn Anh Hùng: số Ngân khố chuyển lên thanh tiêu đề trên cùng (cạnh nút Đền Anh Hùng), luôn thấy khi xem / mua tướng.
+
+## Phiên bản 123
+- **Ấn Phù chỉ dành cho tướng Vàng** đã sở hữu: màn Ấn Phù chỉ liệt kê tướng Vàng; nút Ấn Phù chỉ hiện ở tướng Vàng; ấn đã khắc trước đây cho tướng Thường / Tím không còn tác dụng. Chưa có tướng Vàng thì báo mua ở Anh Hùng.
+- Túi đồ: bỏ 3 nút nhanh (Tự mặc đồ tốt nhất, Mặc cả đội, Nâng đồ tự động); giữ Sắp xếp. Hai nút nổi Nâng đồ / Mặc đồ ngoài trận vẫn giữ.

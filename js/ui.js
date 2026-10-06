@@ -759,7 +759,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 122 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 123 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1534,11 +1534,15 @@ class UI {
   }
 
   // ---------- v95: Bảng Ấn Phù RIÊNG TỪNG TƯỚNG — khắc bằng điểm Tu Vi
-  runeHeroes() { return [...BASIC_HEROES, ...LEGEND_HEROES.filter((t) => (this.save.owned || []).includes(t))]; }
+  // v123: Ấn Phù chỉ dành cho tướng Vàng (Huyền thoại) đã sở hữu
+  runeHeroes() { return LEGEND_HEROES.filter((t) => HEROES[t].legend === 'legendary' && (this.save.owned || []).includes(t)); }
   showRunes(inGame, type) {
     this.runesInGame = !!inGame;
     const sel = this.game.heroes[this.sel];
-    this.runeHero = type || (inGame && sel ? sel.type : null) || this.runeHero || 'lactuong';
+    const list = this.runeHeroes();
+    if (!list.length) { this.runesFromRoster = false; this.toast('Ấn Phù chỉ dành cho <b>tướng Vàng</b>. Mua tướng Vàng ở <b>Anh Hùng</b> (bằng Ngân khố) để khắc ấn.', '#F2D27A'); return; }
+    const pick = [type, inGame && sel ? sel.type : null, this.runeHero].find((x) => x && list.includes(x));
+    this.runeHero = pick || list[0];
     this.runeSel = this.runeSel || 'n_dmg';
     this.runeResetArm = false;
     if (inGame) { if (!this.runesFromRoster) { this.runesWasRunning = this.game.running; this.game.running = false; } }
@@ -1644,7 +1648,7 @@ class UI {
                   : `<button class="btn btn-gold" style="height:32px;padding:0 12px;font-size:14px" data-act="ro-buy" data-type="${t}" ${(this.save.kho || 0) < OWN_COST[d.legend] ? 'disabled' : ''}>Mua · ${bac()} ${fmt(OWN_COST[d.legend])}</button>`}</div>
               <div class="note" style="font-style:italic">${esc(d.title)}</div>
               ${!d.legend || (this.save.owned || []).includes(t) ? `<div class="ro-tv"><span>☯ Tu Vi ${tuviLevel((this.save.tuvi || {})[t] || 0)} · ${tuviRank((this.save.tuvi || {})[t] || 0)}</span>
-                <button class="btn metal" data-act="ro-runes" data-type="${t}">🔯 Ấn Phù${this.runePtsLeft(t) > 0 ? ` <b class="rn-dot">${this.runePtsLeft(t)}</b>` : ''}</button></div>` : ''}
+                ${d.legend === 'legendary' ? `<button class="btn metal" data-act="ro-runes" data-type="${t}">🔯 Ấn Phù${this.runePtsLeft(t) > 0 ? ` <b class="rn-dot">${this.runePtsLeft(t)}</b>` : ''}</button>` : ''}</div>` : ''}
               <div class="bt-info" style="padding:0;background:none;border:0;box-shadow:none"><div class="tags">
                 <span style="background:#1A1208;color:${ELEMENTS[d.el].color};display:inline-flex;align-items:center;gap:3px">${elIcon(d.el, 13)} Hành ${ELEMENTS[d.el].name} · ${ELEM_TRAIT[d.el].name}</span>
                 <span style="background:#1A1208;color:#E8D8B0">${ELEM_TRAIT[d.el].fx}</span>
@@ -2649,7 +2653,7 @@ class UI {
         <div class="note">Đồ trang phục làm <b style="color:#FFD66B">tướng đổi hình dạng</b> và mang 1 <b>hành</b>: cùng hành với tướng +10% chỉ số gốc, khắc mệnh −10%. Đồ rơi có dòng phụ; đồ Sử thi trở lên có hiệu ứng ẩn.</div></div>`;
     }
     return `${this.head('Túi đồ', `<span class="chip dark">${g.inventory.length} / ${CONFIG.bagSize} ô</span>${this.runChip()}`,
-      `${h ? '<button class="btn btn-gold" data-act="auto-eq">▲ Tự mặc đồ tốt nhất</button>' : ''}<button class="btn metal" style="color:#6AE06A" data-act="auto-eq-all">▲ Mặc cả đội</button><button class="btn metal" style="color:#FFD66B" data-act="auto-up-gear">⬆ Nâng đồ tự động</button><button class="btn metal" data-act="sort">Sắp xếp</button>`)}<div class="scr-body">${left}${mid}${det}</div>`;
+      `<button class="btn metal" data-act="sort">Sắp xếp</button>`)}<div class="scr-body">${left}${mid}${det}</div>`;
   }
 
   // ---------- Đổi đồ ra vàng
