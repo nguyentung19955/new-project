@@ -1959,15 +1959,15 @@ class Game {
   }
 
   // ---------- Cửa hàng: 6 món, làm mới mỗi đợt
-  rollShop() {
-    const w = SHOP.weights(this.wave);
+  rollShop(prep) {
+    const w = prep ? SHOP.prepWeights : SHOP.weights(this.wave);
     const total = w.reduce((a, b) => a + b, 0);
     const out = [];
     for (let i = 0; i < SHOP.slots; i++) {
       if (Math.random() < SHOP.accChance) {
         const accs = Object.keys(ITEMS).filter((id) => ITEMS[id].price);
         const id = pick(accs);
-        out.push({ inst: makeItem(id), price: ITEMS[id].price });
+        out.push({ inst: makeItem(id), price: ITEMS[id].price * (prep ? 2 : 1) });
         continue;
       }
       let r = Math.random() * total, k = 0;
@@ -1976,7 +1976,7 @@ class Game {
       const pool = Object.keys(ITEMS).filter((id) => GEAR_SLOTS.includes(ITEMS[id].slot) && !ITEMS[id].set && !ITEMS[id].bossOnly
         && RARITY_ORDER.indexOf(ITEMS[id].rarity) <= k);
       const inst = makeItem(pick(pool), rar, { drop: true });
-      out.push({ inst, price: SHOP.price[rar] });
+      out.push({ inst, price: (prep ? SHOP.prepPrice : SHOP.price)[rar] });
     }
     this.shop = out;
     this.shopRerolls = 0;

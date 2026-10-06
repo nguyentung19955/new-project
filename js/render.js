@@ -648,7 +648,8 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
   // nên đồ mặc hiện qua bậc trang phục (ảnh theo độ hiếm), hào quang, cánh rồng và sao tiến hoá.
   const png = pngC;
   if (png) {
-    if (look.legend ? ascShown >= 3 : tierShown >= 3) drawSunHalo(ctx, t);
+    if (pack) drawPackBack(ctx, h, look, def, t, tierShown, ascShown);
+    else if (look.legend ? ascShown >= 3 : tierShown >= 3) drawSunHalo(ctx, t);
     if (look.wings) withProc(ctx, () => drawWings(ctx, look, t, o.wingT));
     if (look.setFx) withProc(ctx, () => drawSetBack(ctx, look.setFx, t, o.wingT));
     const hgt = 236, w = hgt * png.naturalWidth / png.naturalHeight;
@@ -680,7 +681,7 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
     if (glowK > 0) drawGlowOnly(ctx, mixD > 0.5 ? pngD : png, -w / 2, -hgt, w, hgt, o.castColor || '#FFE08A', 12 * glowK * (o.castUlt ? 1.4 : 1), 0.8 * glowK);
     else if (gt > 0) drawGlowOnly(ctx, png, -w / 2, -hgt, w, hgt, RAR_COLOR[RARITY_ORDER[gt]], 4 + gt * 2, 0.55 + Math.sin(t * 3) * 0.1);
     // bộ ảnh riêng: ★★ trở lên viền sáng màu hệ (★★★ có thêm vầng mặt trời phía sau)
-    else if (pack && tierShown >= 2) drawGlowOnly(ctx, png, -w / 2, -hgt, w, hgt, look.attrColor, 5 + tierShown * 2, 0.5 + Math.sin(t * 3) * 0.12);
+    else if (pack) packGlow(ctx, png, w, hgt, h, look, def, t, tierShown, ascShown);
     if (mixD < 1) drawBent(ctx, png, -w / 2, -hgt, w, hgt, bend, breath);
     ctx.globalAlpha = base;
     if (dollBase && mixD < 1) drawDollGear(ctx, h, -w / 2, -hgt, w, hgt, bend, t);
@@ -703,6 +704,7 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
       ctx.globalCompositeOperation = 'source-over';
       ctx.globalAlpha = base;
     }
+    if (pack) drawPackFront(ctx, h, def, t, hgt, ascShown);
     ctx.translate(-100, -222);
     drawAttackFx(ctx, def, pose, look, t);
     ctx.restore();
@@ -1104,6 +1106,88 @@ function drawAccAura(ctx, a, s, t, glowOnly) {
 }
 
 // ★★★: vầng ngôi sao 12 cánh trống đồng sau lưng (khung 200×230)
+// ------------------------------------------------------------
+//  v78: hào quang rõ theo bậc cho tướng vẽ tay
+//  Thường: ★★ viền màu hệ, ★★★ vầng mặt trời · Tím (Sử thi): viền tím + quầng tím + bụi tím bay lên
+//  Vàng (Huyền thoại): viền vàng + vầng mặt trời + tia sáng + lửa vàng · Thần tinh: thêm ngôi sao bay quanh (1–3)
+//  Mặc đồ Huyền thoại: thêm lửa vàng + viền vàng đậm
+// ------------------------------------------------------------
+const AURA_C = { epic: '#C77DFF', legendary: '#FFD23A' };
+const hasLegendGear = (h) => !!(h && h.equip && Object.values(h.equip).some((it) => it && it.rarity === 'legendary'));
+function drawPackBack(ctx, h, look, def, t, tier, asc) {
+  const L = def.legend;
+  if (L === 'legendary') {
+    // tia sáng xoay sau lưng + vầng mặt trời
+    ctx.save(); ctx.translate(100, 120); ctx.rotate(t * 0.25);
+    ctx.globalAlpha = 0.35 + 0.1 * asc;
+    ctx.fillStyle = '#FFE08A';
+    for (let i = 0; i < 12; i++) { ctx.rotate(Math.PI / 6); ctx.beginPath(); ctx.moveTo(-6, 0); ctx.lineTo(0, -(120 + asc * 12)); ctx.lineTo(6, 0); ctx.fill(); }
+    ctx.restore();
+    drawSunHalo(ctx, t);
+  } else if (L === 'epic') {
+    ctx.save(); ctx.translate(100, 125);
+    const r = 95 + asc * 8 + Math.sin(t * 2.4) * 5;
+    const g = ctx.createRadialGradient(0, 0, 10, 0, 0, r);
+    g.addColorStop(0, 'rgba(199,125,255,0.55)'); g.addColorStop(1, 'rgba(199,125,255,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    if (asc >= 3) drawSunHalo(ctx, t);
+  } else if (tier >= 3) drawSunHalo(ctx, t);
+  if (asc > 0) drawAscStars(ctx, t, asc, L, false);
+}
+function packGlow(ctx, png, w, hgt, h, look, def, t, tier, asc) {
+  const L = def.legend, pulse = Math.sin(t * 3) * 0.12;
+  if (L) drawGlowOnly(ctx, png, -w / 2, -hgt, w, hgt, AURA_C[L], 10 + asc * 4 + (L === 'legendary' ? 4 : 0), 0.85 + pulse);
+  else if (tier >= 2) drawGlowOnly(ctx, png, -w / 2, -hgt, w, hgt, look.attrColor, 5 + tier * 2, 0.55 + pulse);
+  if (hasLegendGear(h)) drawGlowOnly(ctx, png, -w / 2, -hgt, w, hgt, '#FFB01E', 14, 0.6 + pulse);
+}
+function drawPackFront(ctx, h, def, t, hgt, asc) {
+  const L = def.legend;
+  if (L) {
+    // bụi sáng bay lên quanh người (Vàng nhiều hơn Tím, Thần tinh càng nhiều)
+    ctx.save();
+    const n = (L === 'legendary' ? 10 : 7) + asc * 3, col = AURA_C[L];
+    ctx.fillStyle = col;
+    for (let i = 0; i < n; i++) {
+      const p = (t * 0.45 + i / n) % 1;
+      ctx.globalAlpha = Math.sin(p * Math.PI) * 0.9;
+      ctx.beginPath(); ctx.arc(Math.sin(i * 2.7 + t * 0.8) * 70, -p * hgt * 1.05, 4 * (1 - p) + 1.5, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.restore();
+  }
+  if (hasLegendGear(h)) {
+    // lửa vàng của đồ Huyền thoại bốc quanh chân
+    ctx.save();
+    for (let i = 0; i < 9; i++) {
+      const p = (t * 1.1 + i / 9) % 1, x = (i - 4) * 16 + Math.sin(t * 5 + i) * 4;
+      ctx.globalAlpha = (1 - p) * 0.85;
+      ctx.fillStyle = p < 0.4 ? '#FFF1A8' : '#FF9A1E';
+      ctx.beginPath(); ctx.ellipse(x, -8 - p * 60, 6 * (1 - p) + 2, 11 * (1 - p) + 3, 0, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.restore();
+  }
+  if (asc > 0) { ctx.save(); ctx.translate(-100, -222); drawAscStars(ctx, t, asc, L, true); ctx.restore(); }
+}
+// ngôi sao Thần tinh bay vòng quanh người (nửa sau vẽ trước, nửa trước vẽ sau)
+function drawAscStars(ctx, t, asc, L, front) {
+  const col = L === 'epic' ? '#E6B8FF' : '#FFF1A8';
+  for (let i = 0; i < asc; i++) {
+    const a = t * 1.6 + i * (Math.PI * 2 / asc);
+    const z = Math.sin(a);
+    if ((z > 0) !== front) continue;
+    const x = 100 + Math.cos(a) * 78, y = 130 + z * 18;
+    ctx.save(); ctx.translate(x, y); ctx.rotate(t * 2 + i);
+    const r = 10 + z * 3;
+    ctx.globalAlpha = 0.95;
+    ctx.shadowColor = col; ctx.shadowBlur = 12;
+    ctx.fillStyle = col; ctx.strokeStyle = '#7A5418'; ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    for (let k = 0; k < 10; k++) { const rr = k % 2 ? r * 0.45 : r; const aa = k * Math.PI / 5 - Math.PI / 2; ctx.lineTo(Math.cos(aa) * rr, Math.sin(aa) * rr); }
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.restore();
+  }
+}
+
 function drawSunHalo(ctx, t) {
   ctx.save();
   ctx.translate(100, 112);

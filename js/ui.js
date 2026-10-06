@@ -62,6 +62,10 @@ function svgImg(svg) {
 // Icon vector cho 4 phụ kiện và 8 đồ ghép mới (v15), cùng nét với ART.item
 const S24 = (body) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><g stroke="#1A1208" stroke-width="1" stroke-linejoin="round">${body}</g></svg>`;
 const NEW_ITEM_ART = {
+  ngoc_minh_chau: S24('<circle cx="12" cy="12" r="10" fill="#1E4050"/><circle cx="12" cy="12" r="6.5" fill="#BFF0FF"/><circle cx="10" cy="10" r="2.2" fill="#FFF"/><path d="M12 1.5 v3 M12 19.5 v3 M1.5 12 h3 M19.5 12 h3" stroke="#9EDDF2" stroke-width="1.4"/>'),
+  vuot_kim_quy: S24('<path d="M5 20 C7 12 11 6 18 3 C16 9 15 14 9 21 Z" fill="#F2C840"/><path d="M8 19 C10 13 13 9 17 5" stroke="#8C6A2E" fill="none"/><path d="M4 22 l4 -3" stroke="#3EDCC0" stroke-width="2.2" stroke-linecap="round"/>'),
+  rui_than:   S24('<path d="M6 22 L15 6" stroke="#1A1208" stroke-width="3.4" stroke-linecap="round"/><path d="M6 22 L15 6" stroke="#B8853A" stroke-width="1.6" stroke-linecap="round"/><path d="M11.5 8.5 C12 3.5 17 1 22 2.5 C23 7.5 21 11.5 17 13.2 C16.2 10.6 14.2 9 11.5 8.5 Z" fill="#FFD66B" stroke="#7A5418"/><path d="M2 16 l3 -1 M3 12 l2.6 0.4" stroke="#FF9A3A" stroke-width="1.4"/>'),
+  ao_long_vu: S24('<path d="M12 3 C7 5 4 9 4 15 C7 14 9 16 12 21 C15 16 17 14 20 15 C20 9 17 5 12 3 Z" fill="#F7EEF2" stroke="#C8A0C0"/><path d="M12 5 V19 M8 9 l4 3 l4 -3 M7 13 l5 3 l5 -3" stroke="#E8A0C0" fill="none" stroke-width="1.1"/>'),
   sung_te: S24('<path d="M4.5 20.5 C9 20 15 15.5 18.5 3.5 C20.5 10 18.5 17.5 12.5 21.5 Z" fill="#E2D2A8"/><path d="M7 19.6 C11 18.6 15 14 17.6 7" fill="none" stroke="#B8A27A"/><path d="M4 21.5 L12.8 21.5" stroke="#8C6A2E" stroke-width="2.2" stroke-linecap="round"/>'),
   long_chim_lac: S24('<path d="M5 21 C6.5 13 12 6 20.5 2.5 C20 10 14.5 16.5 5 21 Z" fill="#F2E6C8"/><path d="M5 21 L18.5 5" stroke="#C8943A" stroke-width="1.3"/><path d="M9 15.5 l-2.5 -1.5 M11.5 12.5 l-2.5 -1.5 M14 9.6 l-2.2 -1.4 M10.5 16.2 l2.2 0.8 M13 13.2 l2.2 0.8" stroke="#B8A27A" stroke-width="0.8"/>'),
   vay_ca: S24('<path d="M12 2.5 C17 4 20 5 20 11 C20 16.5 16 20 12 21.5 C8 20 4 16.5 4 11 C4 5 7 4 12 2.5 Z" fill="#4FA3D9"/><path d="M6 9 q3 3 6 0 q3 3 6 0 M6 13 q3 3 6 0 q3 3 6 0 M8 17 q2 2.4 4 0 q2 2.4 4 0" fill="none" stroke="#BFE8F5" stroke-width="1.1"/>'),
@@ -389,7 +393,7 @@ class UI {
     this.hideOverlays();
     this.setInGame(true);
     this.toast(`Ải ${i + 1} · ${LEVELS[i].name}: giữ thành Phong Châu qua ${LEVELS[i].waves} đợt`, '#F2D27A');
-    this.prepBought = {};
+    this.prepBought = {}; this.prepShopRolled = false;
     this.saveRun();
     this.showPrep();   // v77: luôn hiện (có Lò đúc đồng trước trận)
   }
@@ -415,7 +419,7 @@ class UI {
           ${card('jar', 'Hũ đồng', 'Mở ngay 2 món Hiếm trở lên vào túi', PREP.jarCost, '🏺', b.jar)}
           ${card('king', 'Hũ Vua Hùng', 'Mở ngay 2 món Sử thi trở lên (35% đồ bộ)', PREP.kingCost, '👑', b.king)}
           ${card('lives', 'Đắp thành', `+${PREP.livesAmount} mạng`, PREP.livesCost, '🧱', b.lives)}
-          <button class="prep-card metal" data-act="prep-forge"><span class="ic">⚒</span><b>Lò đúc đồng</b><small>Mua đồ, ghép và đúc đồ bằng vàng đầu trận (${coin()} ${fmt(g.gold)})</small><span class="cost">Mở ›</span></button></div>
+          <button class="prep-card metal" data-act="prep-forge"><span class="ic">⚒</span><b>Lò đúc đồng</b><small>Mua và đúc đồ bằng Ngân khố. Đồ Huyền thoại hiếm và đắt</small><span class="cost">Mở ›</span></button></div>
         <div class="prep-col wide"><div class="h">Chiêu mộ tướng (1 tướng mỗi trận, đặt sẵn trên sân)</div>
           <div class="sub">Tướng Vàng · ${coin()} ${fmt(PREP.heroCost.legendary)}</div><div class="prep-heroes">${legends.map(heroCard).join('')}</div>
           <div class="sub">Tướng Tím · ${coin()} ${fmt(PREP.heroCost.epic)}</div><div class="prep-heroes">${epics.map(heroCard).join('')}</div></div>
@@ -689,7 +693,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 77 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 78 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1633,7 +1637,14 @@ class UI {
       }
       case 'prep-hero': this.prepHero(d.id); break;
       case 'prep-go': $('#prep').hidden = true; this.saveRun(); break;
-      case 'prep-forge': $('#prep').hidden = true; this.prepForge = true; this.openScreen('forge'); break;
+      case 'prep-forge': {
+        // v78: Lò đúc trước trận trả bằng Ngân khố (đổi tạm vàng trong trận ↔ Ngân khố khi mở / đóng)
+        $('#prep').hidden = true; this.prepForge = true;
+        this.prepGold = g.gold; g.gold = this.save.kho || 0;
+        if (!this.prepShopRolled) { g.rollShop(true); this.prepShopRolled = true; }
+        this.openScreen('forge');
+        break;
+      }
       case 'cloud-sync': CLOUD.push(this.save, true); break;
       case 'cloud-out': this.loginFromMenu = false; CLOUD.signOut(); break;
       case 'set-close':
@@ -1943,7 +1954,11 @@ class UI {
   closeScreen() {
     this.screen = null;
     $('#screen').hidden = true;
-    if (this.prepForge) { this.prepForge = false; this.showPrep(); }   // đóng Lò đúc mở từ bảng chuẩn bị → quay lại bảng
+    if (this.prepForge) {
+      const g = this.game;
+      this.prepForge = false; this.save.kho = g.gold; g.gold = this.prepGold; writeSave(this.save);
+      this.showPrep();
+    }   // đóng Lò đúc mở từ bảng chuẩn bị → quay lại bảng
   }
 
   head(title, chips, right, icon) {
@@ -2205,7 +2220,7 @@ class UI {
           <div class="note" style="margin-top:auto;font-size:11px">≈ Đồ còn rơi từ quái; quái tinh anh và boss rơi đồ xịn hơn.</div>
         </div></div>`;
     }
-    return `${this.head('Lò đúc đồng', `<span class="chip dark">Đợt ${g.wave}</span>${this.runChip()}`, '', svgI(sceneArt('drum')))}${tabs}${body}`;
+    return `${this.head('Lò đúc đồng', this.prepForge ? '<span class="chip ok">Trả bằng Ngân khố</span>' : `<span class="chip dark">Đợt ${g.wave}</span>${this.runChip()}`, '', svgI(sceneArt('drum')))}${tabs}${body}`;
   }
 
   // ---------- Túi đồ

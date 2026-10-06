@@ -1003,3 +1003,10 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 
 - **Dừng chơi**: menu ≡ trong trận có nút 🏳 Dừng chơi (bấm 2 lần để chắc chắn) — bỏ trận, không giữ để Tiếp tục, cộng thành tích, ghi điểm vô tận nếu đang vô tận, về menu.
 - **Lò đúc đồng (cửa hàng + đúc đồ) đưa ra ngoài trận**: bỏ khỏi menu ≡ trong trận; mở từ bảng **Chuẩn bị xuất quân** trước khi vào trận (dùng vàng đầu trận), đóng thì quay lại bảng. Bảng chuẩn bị giờ luôn hiện khi vào ải.
+
+### Phiên bản 78
+
+- **Lò đúc đồng trả bằng Ngân khố** (vàng thưởng sau trận), mở từ bảng Chuẩn bị xuất quân. Cửa hàng trước trận: Thường 80 · Hiếm 240 · Sử thi 800 · **Huyền thoại 3.500 (chỉ ~2% ô hàng)**; phụ kiện nguyên liệu giá ×2.
+- **Thêm 4 đồ Huyền thoại** (chỉ đúc từ 2 món Sử thi đã đúc + 1.800): Ngọc Minh Châu (phép), Vuốt Kim Quy (chí mạng / xuyên giáp), Rìu Thần Thạch Sanh (chém lan), Áo Lông Vũ Âu Cơ (trâu, hồi máu). Trống Đồng và Gậy Tam Giới đúc khó hơn (cần thêm 1 món Sử thi, 1.200).
+- **Hào quang theo bậc rõ hơn** (tướng vẽ tay): Tím — viền + quầng tím, bụi tím bay lên; Vàng — viền vàng, vầng mặt trời + tia sáng xoay, bụi vàng; **Thần tinh** — 1–3 ngôi sao bay vòng quanh người, quầng to hơn; ★★★ thường vẫn có vầng mặt trời.
+- **Mặc đồ Huyền thoại**: viền cam vàng + lửa vàng bốc quanh chân.
