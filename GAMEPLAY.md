@@ -1222,3 +1222,6 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 112 — Icon kỹ năng + Thần Khí vẽ tay
 - Icon kỹ năng vẽ tay cho 34 tướng (cắt lại cả 6 bộ Thường đầu tiên theo đúng prompt).
 - Thần Khí vẽ tay cho 12 tướng Vàng (Thánh Gióng, Lạc Long Quân, Âu Cơ, Mẫu Thượng Ngàn, Kinh Dương Vương, Sơn Tinh, Long Nữ, Hạ Long, Viêm Đế, Chúa Sơn Lâm, Trụ Trời, Mẫu Thoải): `assets/packs/<tướng>/tk-1…3.png`, hiện trong bảng Thần Khí.
+
+## Phiên bản 113 — Sọ Dừa
+- Nạp ảnh vẽ tay cho Sọ Dừa: đủ 60/60 tướng có ảnh.

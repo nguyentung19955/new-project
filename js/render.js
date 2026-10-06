@@ -339,7 +339,7 @@ const HERO_PACK = Object.fromEntries(['lactuong', 'lucsi', 'xathu', 'thosan', 't
   // v107: ảnh Gemini đợt 3 (tướng Vàng)
   'kinhduong', 'longnu', 'halong', 'maudia', 'tanvien', 'melua', 'matroi', 'thienloi', 'cuoi', 'ongho',
   // v109
-  'trutroi', 'mauthoai',
+  'trutroi', 'mauthoai', 'sodua',
 ].map((k) => [k, `packs/${k}/`]));
 const packImg = (type, name) => (HERO_PACK[type] ? asset(HERO_PACK[type] + name + '.png', true) : null);
 // v60: quái vẽ tay (assets/packs/<quái>/walk1 · walk2 · attack): bước đi luân phiên, ra đòn khi tấn công
