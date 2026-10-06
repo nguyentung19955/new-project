@@ -69,7 +69,7 @@ const WCLASS_NAMES = { blade: 'Rìu / dao', bow: 'Nỏ', staff: 'Gậy' };
 
 const ATTRS = {
   str: { name: 'Sức mạnh',   short: 'SỨC', color: '#E25A3A', desc: '+máu, +hồi máu' },
-  agi: { name: 'Nhanh nhẹn', short: 'NHA', color: '#7FC24A', desc: '+tốc đánh' },
+  agi: { name: 'Nhanh nhẹn', short: 'TỐC', color: '#7FC24A', desc: '+tốc đánh' },
   int: { name: 'Trí tuệ',    short: 'TRÍ', color: '#A88CE8', desc: '+sức mạnh kỹ năng, -hồi chiêu, +năng lượng' },
 };
 
@@ -108,8 +108,8 @@ const HEROES = {
     base: { damage: 6, range: 145, cooldown: 1.0 },
     look: { aura: '#e74c3c', weapon: { type: 'axe', color: '#D9A84E' } },
     skills: [
-      { id: 'bash', name: 'Khiên Đồng', active: { cooldown: 6, cast: 'bash', mana: 45 },
-        info: (n) => `Đập khiên đồng làm choáng quái 1 giây, x2 sát thương +${(n * 0.6).toFixed(0)}` },
+      { id: 'bash', name: 'Bổ Rìu Đồng', active: { cooldown: 6, cast: 'bash', mana: 45 },
+        info: (n) => `Bổ rìu đồng xuống làm choáng quái 1 giây, x2 sát thương +${(n * 0.6).toFixed(0)}` },
       { id: 'bloodlust', name: 'Rìu Lốc Xoáy',
         info: (n) => `Chém lan ${Math.round(Math.min(1, 0.5 + n * 0.005) * 100)}% lên mọi quái trong tầm · +${(n * 0.4).toFixed(1)} sát thương`,
         apply: (s, n) => { s.damage += n * 0.4; s.cleave += Math.min(1, 0.5 + n * 0.005); } },
@@ -127,8 +127,8 @@ const HEROES = {
     base: { damage: 10, range: 140, cooldown: 1.25 },
     look: { aura: '#8bc34a', bulk: 1.12, weapon: { type: 'cleaver', color: '#9E9A90' } },
     skills: [
-      { id: 'hook', name: 'Dây Mây', active: { cooldown: 7, cast: 'hook', mana: 50 },
-        info: (n) => `Quăng dây mây kéo quái đi xa nhất lùi lại, gây ${40 + Math.round(n * 1.5)} sát thương` },
+      { id: 'hook', name: 'Ném Đá Tảng', active: { cooldown: 7, cast: 'hook', mana: 50 },
+        info: (n) => `Ném tảng đá trúng quái đi xa nhất, hất nó lùi lại, gây ${40 + Math.round(n * 1.5)} sát thương` },
       { id: 'fleshheap', name: 'Gánh Núi',
         info: (n) => `+${Math.min(60, Math.floor(n / 2))} sức mạnh`,
         apply: (s, n) => { s.str += Math.min(60, Math.floor(n / 2)); } },
@@ -166,8 +166,8 @@ const HEROES = {
     look: { aura: '#9b59b6', weapon: { type: 'daggers', color: '#dfe6e9' } },
     skills: [
       { id: 'shadowstep', name: 'Bước Lá Rừng', active: { cooldown: 6, cast: 'shadowstep', mana: 45 },
-        info: (n) => `Lướt tới quái xa nhất trong tầm gấp đôi, chém chữ X: x2 sát thương +${(n * 0.5).toFixed(0)}` },
-      { id: 'hiddenblade', name: 'Dao Ẩn',
+        info: (n) => `Lướt tới quái xa nhất trong tầm gấp đôi, đâm giáo: x2 sát thương +${(n * 0.5).toFixed(0)}` },
+      { id: 'hiddenblade', name: 'Giáo Ẩn',
         info: (n) => `+${(n * 0.35).toFixed(1)} sát thương`,
         apply: (s, n) => { s.damage += n * 0.35; } },
       { id: 'critical', name: 'Đòn Chí Mạng',
@@ -884,7 +884,7 @@ Object.assign(COSTS, {
 // ------------------------------------------------------------
 const SECRETS = {
   // tướng
-  'h.lactuong':  { hero: 'lactuong', hint: 'Rìu cần người gánh núi', desc: 'Đứng kề Lực Sĩ Núi: Khiên Đồng choáng thêm 0,5 giây' },
+  'h.lactuong':  { hero: 'lactuong', hint: 'Rìu cần người gánh núi', desc: 'Đứng kề Lực Sĩ Núi: Bổ Rìu Đồng choáng thêm 0,5 giây' },
   'h.lucsi':     { hero: 'lucsi', hint: 'Hai người khỏe gánh được núi', desc: 'Đứng kề Lạc Tướng: Vùi Đá chôn 2 quái' },
   'h.xathu':     { hero: 'xathu', hint: 'Mắt quen trời', desc: 'Mỗi 10 quái bay bị hạ: +1% tầm, tối đa +10% trong trận' },
   'h.thosan':    { hero: 'thosan', hint: 'Thú săn được nuôi thợ săn', desc: 'Săn Mồi hạ gục mục tiêu: hồi ngay 50% năng lượng' },

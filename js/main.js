@@ -579,10 +579,12 @@ function drawHeroOnMap(h, t) {
   const stars = (h.tier || 0) - (h.evoT > 0.48 ? 1 : 0);
   // tướng thần: sao Thần tinh màu cam đỏ, lớn hơn
   const starImg = h.from && asset('ui_than-tinh.png');
+  // v81: sao to hơn, có viền tối để nổi trên mọi nền
+  const sr = h.from ? 6.8 : 6, gap = sr * 2.05;
   for (let i = 0; i < stars; i++) {
-    const sx = h.x - 8 * ((stars - 1) / 2) + i * 8;
-    if (starImg) ctx.drawImage(starImg, sx - 6, top - 17, 12, 12);
-    else drawStar(ctx, sx, top - 11, h.from ? 4.8 : 4, h.from ? '#FF7A3A' : '#FFD66B');
+    const sx = h.x - gap * ((stars - 1) / 2) + i * gap;
+    if (starImg) ctx.drawImage(starImg, sx - sr * 1.3, top - 13 - sr * 1.3, sr * 2.6, sr * 2.6);
+    else drawStar(ctx, sx, top - 13, sr, h.from ? '#FF7A3A' : '#FFD66B', '#2A1608', 1.8);
   }
   if (!detail) { drawHeroStun(h, top, t); return; }
   if (stars >= 3 || h.from) {

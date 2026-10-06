@@ -31,10 +31,12 @@ function rrect(ctx, x, y, w, h, r, color) {
   ctx.arcTo(x, y + h, x, y, r);
   ctx.arcTo(x, y, x + w, y, r);
   ctx.closePath();
+  if (stroke) { ctx.save(); ctx.lineJoin = 'round'; ctx.strokeStyle = stroke; ctx.lineWidth = lw || 1.5; ctx.stroke(); ctx.restore(); }
   ctx.fill();
+  if (stroke) { ctx.save(); ctx.globalAlpha *= 0.55; ctx.fillStyle = '#FFF8D8'; ctx.beginPath(); ctx.arc(x - r * 0.2, y - r * 0.25, r * 0.22, 0, Math.PI * 2); ctx.fill(); ctx.restore(); }
 }
 
-function drawStar(ctx, x, y, r, color) {
+function drawStar(ctx, x, y, r, color, stroke, lw) {
   ctx.fillStyle = color;
   ctx.beginPath();
   for (let i = 0; i < 10; i++) {
@@ -235,7 +237,8 @@ const HERO_PACK = Object.fromEntries(['lactuong', 'lucsi', 'xathu', 'thosan', 't
 const packImg = (type, name) => (HERO_PACK[type] ? asset(HERO_PACK[type] + name + '.png', true) : null);
 // v60: quái vẽ tay (assets/packs/<quái>/walk1 · walk2 · attack): bước đi luân phiên, ra đòn khi tấn công
 const ENEMY_PACK = new Set(['thachtinh', 'doi', 'ran', 'giaolong', 'tom', 'casau', 'rua', 'phuthuy', 'chimbao', 'echme', 'nongnoc', 'cungan', 'kybinh', 'voichien', 'camap', 'muc', 'cua', 'cao',
-  'thuongluong', 'haba', 'thuytinh', 'chantinh', 'daibang', 'anvuong', 'ngutinh', 'hotinh', 'trieuda']);
+  'thuongluong', 'haba', 'thuytinh', 'chantinh', 'daibang', 'anvuong', 'ngutinh', 'hotinh', 'trieuda',
+  'tomlua', 'ranbang', 'doima', 'thachvang', 'thietky', 'camapden', 'mucdoc', 'cungtlua', 'tuongthuy', 'chanlua', 'hoden']);
 const enemyPackRef = (type) => (ENEMY_PACK.has(type) ? asset(`packs/${type}/walk1.png`, true) : null);
 function enemyPackImg(e, t) {
   const ref = enemyPackRef(e.type);
@@ -1863,7 +1866,11 @@ function drawEnemy(ctx, e, t, o = {}) {
     // ảnh vẽ tay: chân ở giữa đáy ảnh, rộng theo ENEMY_W (bộ ảnh quái: cao theo ảnh bước 1 để đổi khung không đổi cỡ)
     const h2 = packRef ? box.w * packRef.naturalHeight / packRef.naturalWidth : box.w * png.naturalHeight / png.naturalWidth;
     const w2 = packRef ? h2 * png.naturalWidth / png.naturalHeight : box.w;
+    const fxc = d.fx && ENEMY_FX[d.fx];
+    if (fxc) drawEnemyFxBack(ctx, d.fx, fxc, w2, h2, t, e.id || 0, d.flying);
+    if (fxc) { ctx.save(); ctx.shadowColor = fxc.glow; ctx.shadowBlur = fxc.blur; if (d.fx === 'ghost') ctx.globalAlpha *= 0.72 + Math.sin(t * 3 + (e.id || 0)) * 0.12; }
     ctx.drawImage(png, -w2 / 2, -h2 + (d.flying ? h2 * 0.5 : 0), w2, h2);
+    if (fxc) ctx.restore();
     if (e.hitT > 0) {
       ctx.globalCompositeOperation = 'lighter';
       ctx.globalAlpha = e.hitT / 0.12 * 0.55;
@@ -1978,6 +1985,30 @@ function drawEnemy(ctx, e, t, o = {}) {
 
 // Dấu trạng thái trên quái do kỹ năng / đồ gây ra: đóng băng, mắc lưới,
 // nứt giáp (Mũi Sừng Phá Giáp), cấm hồi máu (Ngọc Trấn Thủy), bị đánh rơi xuống đất
+// v81: hiệu ứng riêng của quân biến thể (lửa, băng, ma, vàng, sắt, bóng tối, độc, nước)
+const ENEMY_FX = {
+  fire: { glow: '#FF7A1E', blur: 14, p: '#FFB04A' }, frost: { glow: '#9EDDF2', blur: 12, p: '#E8F8FF' },
+  ghost: { glow: '#C8B8FF', blur: 16, p: '#E6DCFF' }, gold: { glow: '#FFD23A', blur: 14, p: '#FFF1A8' },
+  steel: { glow: '#C8D4E8', blur: 8, p: null }, shadow: { glow: '#5A2A8A', blur: 16, p: '#2A1440' },
+  poison: { glow: '#5FD06A', blur: 12, p: '#8BF07A' }, water: { glow: '#3EDCC0', blur: 12, p: '#BFF0FF' },
+};
+function drawEnemyFxBack(ctx, kind, c, w, h, t, id, fly) {
+  if (!c.p) return;
+  const base = fly ? h * 0.5 : 0;
+  ctx.save();
+  ctx.fillStyle = c.p;
+  const n = 7;
+  for (let i = 0; i < n; i++) {
+    const p = (t * (kind === 'fire' ? 1.1 : 0.6) + i / n + id * 0.13) % 1;
+    const x = Math.sin(i * 2.3 + t + id) * w * 0.35;
+    const y = base - p * h * (kind === 'shadow' ? 0.8 : 1.1);
+    ctx.globalAlpha = Math.sin(p * Math.PI) * (kind === 'shadow' ? 0.5 : 0.8);
+    const r = kind === 'shadow' || kind === 'ghost' ? (6 + p * 10) : (2.5 * (1 - p) + 1.2);
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.restore();
+}
+
 function drawEnemyStatus(ctx, e, box, lift, t) {
   const cx = e.x, cy = e.y - lift - box.h * 0.4;
   ctx.save();
