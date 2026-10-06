@@ -190,7 +190,7 @@ function heroSVG(h){
 
 /* ---------- roster ---------- */
 const HEROES=[
-{id:'giong',name:'Thánh Gióng',attr:'Sức mạnh',rar:'Huyền thoại',price:260,
+{id:'giong',name:'Thánh Gióng',attr:'Hành Hỏa',rar:'Huyền thoại',price:260,
  sig:['Vươn Vai','Mỗi đợt đứng trên sân, Gióng to thêm: +5% máu và sát thương, tối đa 10 lần.'],
  back:`<path d="M80 120 Q56 170 66 214 Q100 206 134 214 Q144 170 120 120 Z" fill="#B8301E" stroke="${OL}" stroke-width="2.2"/><path d="M72 172 Q100 180 128 172" stroke="#E0503A" stroke-width="2" fill="none"/>`,
  legs:legs('#4A525C'),
@@ -203,7 +203,7 @@ const HEROES=[
   {k:'W',n:'Giáp Sắt',t:'Nội tại',d:'Giảm sát thương nhận vào.',a:'cast',c:'#C8D0D8',fx:'gW'},
   {k:'E',n:'Ngựa Sắt Phun Lửa',t:'Chủ động',d:'Để lại vệt lửa cháy dọc đường quái đi.',a:'cast',c:'#FF8A2E',fx:'gE'},
   {k:'R',n:'Bay Về Trời',t:'Tối thượng',d:'Lướt dọc dòng sông, đánh mọi quái trên đường bay.',a:'ult',c:'#FFB04A',fx:'gR'}]},
-{id:'llq',name:'Lạc Long Quân',attr:'Sức mạnh',rar:'Huyền thoại',price:260,
+{id:'llq',name:'Lạc Long Quân',attr:'Hành Thủy',rar:'Huyền thoại',price:260,
  sig:['Con Rồng','Không bị sa lầy khi ô ngập nước; đứng trên ô ngập còn được +30% sát thương.'],
  back:`<path d="M96 176 Q48 194 30 160 Q16 130 40 104 Q34 132 50 150 Q70 168 104 160 Z" fill="#2A8A78" stroke="${OL}" stroke-width="2.2"/><path d="M40 106 l-10 -4 6 10 Z M28 128 l-11 0 9 8 Z M32 152 l-9 6 11 2 Z M50 172 l-4 10 9 -6 Z" fill="#E0B030" stroke="${OL}" stroke-width="1.4"/>`,
  legs:legs('#155A58'),
@@ -216,7 +216,7 @@ const HEROES=[
   {k:'W',n:'Vảy Rồng',t:'Nội tại',d:'Tăng giáp và kháng phép.',a:'cast',c:'#6ED0C0',fx:'lW'},
   {k:'E',n:'Gầm Biển',t:'Chủ động',d:'Sóng lớn cuốn qua đường, đẩy lùi quái.',a:'cast',c:'#5AB4D6',fx:'lE'},
   {k:'R',n:'Hóa Rồng',t:'Tối thượng',d:'Phun cột nước kèm sét theo đường thẳng.',a:'ult',c:'#9EE8F8',fx:'lR'}]},
-{id:'kimquy',name:'Thần Kim Quy',attr:'Sức mạnh',rar:'Huyền thoại',price:260,
+{id:'kimquy',name:'Thần Kim Quy',attr:'Hành Kim',rar:'Huyền thoại',price:260,
  sig:['Mai Thần','Tướng đứng kề nhận ít hơn 30% sát thương.'],
  back:`<ellipse cx="100" cy="150" rx="48" ry="56" fill="#C8902A" stroke="${OL}" stroke-width="2.6"/><path d="M100 104 l18 12 0 22 -18 12 -18 -12 0 -22 Z M64 128 l18 -4 0 26 -18 8 Z M136 128 l-18 -4 0 26 18 8 Z" fill="#E8B848" stroke="#7A5010" stroke-width="2"/>`,
  legs:legs('#7A9048'),
@@ -229,7 +229,7 @@ const HEROES=[
   {k:'W',n:'Móng Thần',t:'Nội tại',d:'Tướng đứng gần xuyên thêm 20% giáp.',a:'cast',c:'#FFD66B',fx:'kW'},
   {k:'E',n:'Địa Chấn',t:'Chủ động',d:'Dậm đất làm choáng mọi quái trong vùng.',a:'swing',c:'#C89A5A',fx:'kE'},
   {k:'R',n:'Kim Quy Hộ Thành',t:'Tối thượng',d:'Mai thần che thành 5 giây: quái lọt vào không làm mất mạng.',a:'ult',c:'#FFD66B',fx:'kR'}]},
-{id:'thachsanh',name:'Thạch Sanh',attr:'Nhanh nhẹn',rar:'Huyền thoại',price:260,
+{id:'thachsanh',name:'Thạch Sanh',attr:'Hành Mộc',rar:'Huyền thoại',price:260,
  sig:['Niêu Cơm Thần','Tướng đứng gần hồi năng lượng nhanh hơn.'],
  back:`<path d="M70 100 Q36 150 72 200" stroke="${OL}" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M70 100 Q36 150 72 200" stroke="#F0C040" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M70 100 L72 200" stroke="#FFF1C4" stroke-width="1.2"/>`,
  legs:legs('#C89060'),
@@ -242,7 +242,7 @@ const HEROES=[
   {k:'W',n:'Cung Tên Vàng',t:'Nội tại',d:'Gây gấp đôi sát thương lên quái bay.',a:'shoot',c:'#FFD66B',fx:'tW'},
   {k:'E',n:'Đàn Thần',t:'Chủ động',d:'Tiếng đàn làm quái đứng nghe, choáng 1,5 giây.',a:'cast',c:'#F2D27A',fx:'tE'},
   {k:'R',n:'Diệt Chằn Tinh',t:'Tối thượng',d:'Nhảy lên bổ một đòn cực mạnh, gấp ba sát thương lên boss.',a:'jump',c:'#FF9A3A',fx:'tR'}]},
-{id:'caolo',name:'Cao Lỗ',attr:'Nhanh nhẹn',rar:'Sử thi',price:180,
+{id:'caolo',name:'Cao Lỗ',attr:'Hành Kim',rar:'Sử thi',price:180,
  sig:['Xuyên Giáp','Mọi đòn đánh bỏ qua 50% giáp của quái.'],
  back:`<g transform="rotate(-24 100 130)"><rect x="104" y="92" width="20" height="66" rx="5" fill="#5A3A1A" stroke="${OL}" stroke-width="2"/><path d="M108 92 l-2 -14 M114 92 l0 -16 M120 92 l2 -14" stroke="#E8DDBF" stroke-width="2.4"/><path d="M104 104 h20 M104 146 h20" stroke="#B8853A" stroke-width="3"/></g>`,
  legs:legs('#5A4028'),
@@ -255,7 +255,7 @@ const HEROES=[
   {k:'W',n:'Lẫy Thần',t:'Nội tại',d:'Tăng tốc bắn.',a:'shoot',c:'#F2D27A',fx:'cW'},
   {k:'E',n:'Tên Móng Rùa',t:'Chủ động',d:'Mũi tên vàng xuyên giáp toàn phần, khắc chế Rùa Giáp.',a:'shoot',c:'#FFD66B',fx:'cE'},
   {k:'R',n:'Nỏ Thần',t:'Tối thượng',d:'Một phát nỏ thần xuyên qua cả hàng quái.',a:'ult',c:'#FFE08A',fx:'cR'}]},
-{id:'antiem',name:'Mai An Tiêm',attr:'Nhanh nhẹn',rar:'Sử thi',price:180,
+{id:'antiem',name:'Mai An Tiêm',attr:'Hành Mộc',rar:'Sử thi',price:180,
  sig:['Đảo Trù Phú','Mỗi đợt nhận thêm 20 vàng.'],
  back:`<path d="M78 120 L116 186" stroke="#8A6A3A" stroke-width="3"/><ellipse cx="62" cy="168" rx="14" ry="18" fill="#B8935A" stroke="${OL}" stroke-width="2"/><path d="M50 164 h24 M52 174 h20" stroke="#8A6A3A" stroke-width="1.6"/>`,
  legs:legs('#A87040'),
@@ -268,7 +268,7 @@ const HEROES=[
   {k:'W',n:'Hạt Giống Vàng',t:'Nội tại',d:'Thêm vàng mỗi khi hạ quái.',a:'cast',c:'#FFD66B',fx:'mW'},
   {k:'E',n:'Chim Thần',t:'Chủ động',d:'Thả đàn chim bay đến mổ quái.',a:'cast',c:'#F2F2F2',fx:'mE'},
   {k:'R',n:'Mưa Dưa',t:'Tối thượng',d:'Dưa hấu rơi như mưa khắp bản đồ.',a:'ult',c:'#7FC24A',fx:'mR'}]},
-{id:'auco',name:'Âu Cơ',attr:'Trí tuệ',rar:'Huyền thoại',price:260,
+{id:'auco',name:'Âu Cơ',attr:'Hành Thổ',rar:'Huyền thoại',price:260,
  sig:['Mẹ Tiên','Hồi máu từ từ cho các tướng đứng xung quanh.'],
  back:`<g class="wingL"><path d="M88 126 Q30 72 16 116 Q38 118 30 140 Q54 132 48 158 Q72 142 92 144 Z" fill="#F7F3FC" stroke="${OL}" stroke-width="2"/><path d="M84 132 Q50 108 30 118 M84 138 Q56 128 40 140" stroke="#C8B8E0" stroke-width="1.6" fill="none"/></g><g class="wingR"><path d="M112 126 Q170 72 184 116 Q162 118 170 140 Q146 132 152 158 Q128 142 108 144 Z" fill="#F7F3FC" stroke="${OL}" stroke-width="2"/><path d="M116 132 Q150 108 170 118 M116 138 Q144 128 160 140" stroke="#C8B8E0" stroke-width="1.6" fill="none"/></g>`,
  legs:feet('#E87AA0'),
@@ -281,7 +281,7 @@ const HEROES=[
   {k:'W',n:'Lông Vũ Tiên',t:'Nội tại',d:'Đòn đánh bắn ra lông vũ sắc.',a:'shoot',c:'#F7F3FC',fx:'aW'},
   {k:'E',n:'Núi Mẹ',t:'Chủ động',d:'Đá trồi lên dưới chân quái, làm chậm.',a:'cast',c:'#C89A5A',fx:'aE'},
   {k:'R',n:'Bọc Trăm Trứng',t:'Tối thượng',d:'Bọc trứng nở ra đàn Lạc Tử lao ra chặn đường.',a:'ult',c:'#FFE6A0',fx:'aR'}]},
-{id:'cdt',name:'Chử Đồng Tử',attr:'Trí tuệ',rar:'Sử thi',price:180,
+{id:'cdt',name:'Chử Đồng Tử',attr:'Hành Thủy',rar:'Sử thi',price:180,
  sig:['Gậy Thần','Hồi sinh ngay một tướng vừa gục ở gần (hồi chiêu dài).'],
  back:'',
  legs:legs('#8A7048'),
@@ -294,7 +294,7 @@ const HEROES=[
   {k:'W',n:'Nón Thần',t:'Nội tại',d:'Nón thần chặn đòn bắn từ xa.',a:'cast',c:'#E8D49A',fx:'dW'},
   {k:'E',n:'Sóng Sông Hồng',t:'Chủ động',d:'Dòng nước phù sa cuốn qua, làm chậm quái.',a:'cast',c:'#D9824A',fx:'dE'},
   {k:'R',n:'Thành Một Đêm',t:'Tối thượng',d:'Dựng tường thành chặn đường quái 6 giây.',a:'ult',c:'#F2D27A',fx:'dR'}]},
-{id:'tiendung',name:'Tiên Dung',attr:'Trí tuệ',rar:'Sử thi',price:180,
+{id:'tiendung',name:'Tiên Dung',attr:'Hành Hỏa',rar:'Sử thi',price:180,
  sig:['Đôi Uyên Ương','Đứng cạnh Chử Đồng Tử thì cả hai được +20% sát thương phép.'],
  back:`<path d="M74 122 Q40 140 46 180 Q52 210 36 230" stroke="#F2A0C0" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M126 122 Q160 140 154 180 Q148 210 164 230" stroke="#F2A0C0" stroke-width="7" fill="none" stroke-linecap="round"/>`,
  legs:feet('#C8302A'),
@@ -307,7 +307,7 @@ const HEROES=[
   {k:'W',n:'Ánh Ngọc',t:'Nội tại',d:'Tăng sát thương phép cho tướng đứng gần.',a:'cast',c:'#F2A0C0',fx:'eW'},
   {k:'E',n:'Sen Hồng',t:'Chủ động',d:'Hoa sen nở, hồi máu cho tướng quanh mình.',a:'cast',c:'#F08AB0',fx:'eE'},
   {k:'R',n:'Mưa Hoa Tiên',t:'Tối thượng',d:'Hoa rơi khắp nơi: gây sát thương quái và hồi máu tướng.',a:'ult',c:'#FFB0D0',fx:'eR'}]},
-{id:'langlieu',name:'Lang Liêu',attr:'Trí tuệ',rar:'Sử thi',price:180,
+{id:'langlieu',name:'Lang Liêu',attr:'Hành Thổ',rar:'Sử thi',price:180,
  sig:['Lễ Vật Đất Trời','Tướng đứng gần được +10% máu tối đa.'],
  back:'',
  legs:legs('#5A4028'),
@@ -321,7 +321,7 @@ const HEROES=[
   {k:'E',n:'Ruộng Lúa',t:'Chủ động',d:'Lúa mọc kín đường, làm chậm quái.',a:'cast',c:'#E8C050',fx:'nE'},
   {k:'R',n:'Lễ Tổ Tiên',t:'Tối thượng',d:'Toàn quân hồi đầy máu và bất tử 2 giây.',a:'ult',c:'#FFE08A',fx:'nR'}]},
 /* ---------- base heroes (Thường) ---------- */
-{id:'lactuong',name:'Lạc Tướng',attr:'Sức mạnh',rar:'Thường',price:70,
+{id:'lactuong',name:'Lạc Tướng',attr:'Hành Kim',rar:'Thường',price:70,
  sig:['Chiến binh Văn Lang','Tướng cận chiến cơ bản, đánh lan.'],
  back:'',
  legs:legs('#D9A274'),
@@ -334,7 +334,7 @@ const HEROES=[
   {k:'W',n:'Rìu Lốc Xoáy',t:'Chủ động',d:'Xoay rìu đồng chém lan các quái phía trước.',a:'cast',c:'#E0B070',fx:'lgW'},
   {k:'E',n:'Hùng Khí',t:'Nội tại',d:'Khí thế Văn Lang: tăng tốc đánh cho bản thân.',a:'cast',c:'#FF7A3A',fx:'lgE'},
   {k:'R',n:'Sấm Tản Viên',t:'Tối thượng',d:'Gọi sét từ trời đánh xuống quái còn nhiều máu nhất.',a:'ult',c:'#CFE0FF',fx:'lgR'}]},
-{id:'lucsi',name:'Lực Sĩ Núi',attr:'Sức mạnh',rar:'Thường',price:80,
+{id:'lucsi',name:'Lực Sĩ Núi',attr:'Hành Thổ',rar:'Thường',price:80,
  sig:['Sức Núi','Tướng cận chiến chống chịu, giữ chân quái.'],
  back:'',
  legs:legs('#6A5032'),
@@ -347,7 +347,7 @@ const HEROES=[
   {k:'W',n:'Gánh Núi',t:'Nội tại',d:'Nâng đá luyện sức: tăng sức mạnh.',a:'heave',c:'#C89A5A',fx:'lsW'},
   {k:'E',n:'Bụi Đá',t:'Chủ động',d:'Dậm đá tung bụi, gây sát thương quanh mình.',a:'heave',c:'#A08458',fx:'lsE'},
   {k:'R',n:'Vùi Đá',t:'Tối thượng',d:'Ném tảng đá lớn chôn sống một quái.',a:'heave',c:'#B8AE98',fx:'lsR'}]},
-{id:'xathu',name:'Xạ Thủ Văn Lang',attr:'Nhanh nhẹn',rar:'Thường',price:55,
+{id:'xathu',name:'Xạ Thủ Văn Lang',attr:'Hành Kim',rar:'Thường',price:55,
  sig:['Cung Thủ Văn Lang','Tướng đánh xa cơ bản, bắn nhanh.'],
  back:`<g transform="rotate(-20 100 130)"><rect x="106" y="96" width="16" height="56" rx="4" fill="#6A4A2A" stroke="${OL}" stroke-width="2"/><path d="M110 96 l-2 -12 M115 96 l0 -14 M120 96 l2 -12" stroke="#E8DDBF" stroke-width="2.2"/></g>`,
  legs:legs('#4E6A2E'),
@@ -360,7 +360,7 @@ const HEROES=[
   {k:'W',n:'Đa Tiễn',t:'Chủ động',d:'Bắn một chùm tên xòe hình quạt.',a:'shoot',c:'#F2E6C8',fx:'xW'},
   {k:'E',n:'Tên Tẩm Nhựa Độc',t:'Nội tại',d:'Tên tẩm nhựa cây độc, gây sát thương theo thời gian.',a:'shoot',c:'#7FD04A',fx:'xE'},
   {k:'R',n:'Mưa Tên',t:'Tối thượng',d:'Tên trút xuống như mưa khắp đường quái.',a:'ult',c:'#E8DDBF',fx:'xR'}]},
-{id:'thosan',name:'Thợ Săn Rừng',attr:'Nhanh nhẹn',rar:'Thường',price:75,
+{id:'thosan',name:'Thợ Săn Rừng',attr:'Hành Mộc',rar:'Thường',price:75,
  sig:['Thợ Săn Rừng Sâu','Đánh đơn mục tiêu, sát thương chí mạng cao.'],
  back:`<path d="M76 116 Q56 170 66 212 Q100 202 134 212 Q144 170 124 116 Z" fill="#1E3A22" stroke="${OL}" stroke-width="2.2"/>`,
  legs:legs('#2A3A22'),
@@ -373,7 +373,7 @@ const HEROES=[
   {k:'W',n:'Giáo Ẩn',t:'Chủ động',d:'Ẩn mình trong chớp mắt, phóng giáo bất ngờ.',a:'shoot',c:'#B8C8B8',fx:'hW'},
   {k:'E',n:'Đòn Chí Mạng',t:'Nội tại',d:'Thỉnh thoảng tung một đòn chí mạng cực mạnh.',a:'swing',c:'#FF5A3A',fx:'hE'},
   {k:'R',n:'Săn Mồi',t:'Tối thượng',d:'Lao vào con mồi, chém liên tiếp gây x6 sát thương.',a:'ult',c:'#FF7A5A',fx:'hR'}]},
-{id:'thaymo',name:'Thầy Mo Lửa',attr:'Trí tuệ',rar:'Thường',price:85,
+{id:'thaymo',name:'Thầy Mo Lửa',attr:'Hành Hỏa',rar:'Thường',price:85,
  sig:['Lửa Thiêng','Phép lửa gây sát thương lan theo thời gian.'],
  back:'',
  legs:feet('#5A2A1E'),
@@ -386,7 +386,7 @@ const HEROES=[
   {k:'W',n:'Đuốc Linh Hồn',t:'Nội tại',d:'Đòn đánh là những đốm lửa hồn bay lượn.',a:'shoot',c:'#C890FF',fx:'mfW'},
   {k:'E',n:'Lửa Thiêu',t:'Chủ động',d:'Đốt cháy các quái trên đường, mất máu liên tục.',a:'cast',c:'#FF9A3A',fx:'mfE'},
   {k:'R',n:'Hỏa Sơn',t:'Tối thượng',d:'Cầu lửa từ trời rơi xuống khắp đường quái.',a:'ult',c:'#FF5A2E',fx:'mfR'}]},
-{id:'thansuong',name:'Thần Sương Núi',attr:'Trí tuệ',rar:'Thường',price:80,
+{id:'thansuong',name:'Thần Sương Núi',attr:'Hành Thủy',rar:'Thường',price:80,
  sig:['Sương Núi Tản','Làm chậm và khống chế quái bằng băng giá.'],
  back:'',
  legs:feet('#8AB0D0'),
@@ -400,7 +400,7 @@ const HEROES=[
   {k:'E',n:'Hơi Lạnh Đỉnh Núi',t:'Nội tại',d:'Gió lạnh từ đỉnh núi thổi qua, làm chậm quái.',a:'cast',c:'#A8D8F0',fx:'tsE'},
   {k:'R',n:'Mù Sương Tản Viên',t:'Tối thượng',d:'Sương mù phủ kín, đóng băng mọi quái 2 giây.',a:'ult',c:'#DDF4FB',fx:'tsR'}]}
 ];
-const ATTR_C={'Sức mạnh':'var(--a-str)','Nhanh nhẹn':'var(--a-agi)','Trí tuệ':'var(--a-int)'};
+const ATTR_C={'Hành Kim':'#D9DDE0','Hành Mộc':'#5FB84A','Hành Thủy':'#5A9AE0','Hành Hỏa':'#E0452C','Hành Thổ':'#C99A3C'};
 /* ---------- v35: cập nhật theo luật hợp thể + 4 tướng thần mới ---------- */
 (function(){
   const by=(id)=>HEROES.find(h=>h.id===id);
@@ -418,25 +418,25 @@ const ATTR_C={'Sức mạnh':'var(--a-str)','Nhanh nhẹn':'var(--a-agi)','Trí 
   const feather=(x,r)=>`<path transform="rotate(${r} ${x} 60)" d="M${x-4} 62 Q${x-8} 30 ${x} 14 Q${x+8} 30 ${x+4} 62 Z" fill="#F2EEE0" stroke="${OL}" stroke-width="1.8"/>`;
   const antler=(sx)=>`<path d="M${100+sx*16} 58 Q${100+sx*24} 34 ${100+sx*20} 14 M${100+sx*22} 38 Q${100+sx*34} 32 ${100+sx*38} 20" stroke="#C8A070" stroke-width="5" fill="none" stroke-linecap="round"/>`;
   HEROES.push(
-    derive('lucsi',{id:'lachau',name:'Lạc Hầu',attr:'Sức mạnh',rar:'Sử thi',sig:['Lệnh Lạc Hầu','Tướng đứng kề nhận ít hơn 15% sát thương.'],skills:[
+    derive('lucsi',{id:'lachau',name:'Lạc Hầu',attr:'Hành Thổ',rar:'Sử thi',sig:['Lệnh Lạc Hầu','Tướng đứng kề nhận ít hơn 15% sát thương.'],skills:[
       {k:'Q',n:'Trống Hiệu Triệu',t:'Chủ động',d:'Gõ trống trận: tướng quanh mình tăng tốc đánh 5 giây.',a:'cast',c:'#FF7A3A',fx:'lgE'},
       {k:'W',n:'Giáp Da Tê Gai',t:'Nội tại',d:'Bị đánh thì phản sát thương lại quái gần nhất.',a:'cast',c:'#C8A070',fx:'gW'},
       {k:'E',n:'Đá Lăn Phong Châu',t:'Chủ động',d:'Lăn tảng đá ngược dòng, đè và đẩy lùi cả hàng quái.',a:'heave',c:'#B9A274',fx:'kE'},
       {k:'R',n:'Lời Thề Bộ Lạc',t:'Tối thượng',d:'Toàn quân giảm 30% sát thương nhận và hồi máu 6 giây.',a:'ult',c:'#D9A84E',fx:'kQ'}]},
       {'#5E9A3A':'#D9A84E','#6A4A2A':'#8A3A22','#6A5032':'#7A4A22'},feather(74,-38)+feather(126,38)),
-    derive('thosan',{id:'thansan',name:'Thần Săn Ba Vì',attr:'Nhanh nhẹn',rar:'Sử thi',sig:['Mắt Rừng','Đánh quái đang bị làm chậm hoặc choáng: +25% sát thương.'],skills:[
+    derive('thosan',{id:'thansan',name:'Thần Săn Ba Vì',attr:'Hành Mộc',rar:'Sử thi',sig:['Mắt Rừng','Đánh quái đang bị làm chậm hoặc choáng: +25% sát thương.'],skills:[
       {k:'Q',n:'Lao Tẩm Độc',t:'Chủ động',d:'Phóng lao vào quái xa nhất: độc 6 giây, làm chậm.',a:'shoot',c:'#8BD44A',fx:'xE'},
       {k:'W',n:'Nanh Hổ',t:'Nội tại',d:'Tăng chí mạng và tốc đánh.',a:'swing',c:'#FF5A3A',fx:'hE'},
       {k:'E',n:'Gọi Hổ Ba Vì',t:'Chủ động',d:'Hổ thần vồ 3 quái yếu máu nhất; quái yếu chết ngay.',a:'swing',c:'#F2A23A',fx:'lQ'},
       {k:'R',n:'Cuộc Săn Lớn',t:'Tối thượng',d:'Đánh dấu mọi quái: nhận thêm 25% sát thương, hạ được thêm vàng.',a:'ult',c:'#E25A3A',fx:'hR'}]},
       {'#1E3A22':'#5A3A14','#2E4A2A':'#3E6A22'},antler(-1)+antler(1)),
-    derive('caolo',{id:'adv',name:'An Dương Vương',attr:'Nhanh nhẹn',rar:'Huyền thoại',sig:['Nỏ Linh Quang','Mỗi phát thứ 4 xuyên cả hàng quái, x2 sát thương.'],skills:[
+    derive('caolo',{id:'adv',name:'An Dương Vương',attr:'Hành Kim',rar:'Huyền thoại',sig:['Nỏ Linh Quang','Mỗi phát thứ 4 xuyên cả hàng quái, x2 sát thương.'],skills:[
       {k:'Q',n:'Tên Đồng Nảy',t:'Chủ động',d:'Mũi tên nảy qua 5 quái liên tiếp.',a:'shoot',c:'#FFE08A',fx:'cQ'},
       {k:'W',n:'Thành Ốc Cổ Loa',t:'Nội tại',d:'Bắn nhiều mũi, xuyên giáp, mạnh hơn với quái bay.',a:'shoot',c:'#F2D27A',fx:'cW'},
       {k:'E',n:'Lũy Nỏ Cổ Loa',t:'Chủ động',d:'Tướng đánh xa quanh mình bắn thêm 1 mũi 6 giây.',a:'shoot',c:'#E8DDBF',fx:'xR'},
       {k:'R',n:'Linh Quang Thần Nỏ',t:'Tối thượng',d:'Ba phát xuyên hàng xoè hình quạt.',a:'ult',c:'#FFF1C4',fx:'cR'}]},
       {'#7A5230':'#A8281E','#5A3A1A':'#7A1410'},`<path d="M70 62 L74 34 L86 50 L100 26 L114 50 L126 34 L130 62 Q100 54 70 62 Z" fill="#F2C840" stroke="${OL}" stroke-width="2.2"/><circle cx="100" cy="46" r="4.5" fill="#E2483A" stroke="${OL}" stroke-width="1.4"/>`),
-    derive('tiendung',{id:'mau',name:'Mẫu Thượng Ngàn',attr:'Trí tuệ',rar:'Huyền thoại',sig:['Mẹ Rừng','Tướng đứng gần +10% sát thương và hồi máu.'],skills:[
+    derive('tiendung',{id:'mau',name:'Mẫu Thượng Ngàn',attr:'Hành Mộc',rar:'Huyền thoại',sig:['Mẹ Rừng','Tướng đứng gần +10% sát thương và hồi máu.'],skills:[
       {k:'Q',n:'Dây Rừng Trói',t:'Chủ động',d:'Dây leo trói 4 quái đi đầu.',a:'cast',c:'#5FD06A',fx:'nE'},
       {k:'W',n:'Rễ Ngàn Năm',t:'Nội tại',d:'Làm chậm quái, tăng sát thương phép.',a:'cast',c:'#3E9A4A',fx:'tsE'},
       {k:'E',n:'Cây Đa Thần',t:'Chủ động',d:'Trồng cây đa: quái quanh cây chậm, tướng gần hồi máu.',a:'cast',c:'#7FE07A',fx:'nW'},

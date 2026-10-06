@@ -527,7 +527,7 @@ const TIER_SCALE = [1, 1.10, 1.15, 1.20];
 function computeLook(h) {
   const def = HEROES[h.type];
   const look = {
-    helmet: null, armor: null, weapon: null, tier: h.from ? (h.baseTier ?? 3) : h.tier || 0, asc: h.from ? h.tier || 0 : 0, attrColor: ATTRS[def.attr].color,
+    helmet: null, armor: null, weapon: null, tier: h.from ? (h.baseTier ?? 3) : h.tier || 0, asc: h.from ? h.tier || 0 : 0, attrColor: ELEMENTS[def.el].color,
     legend: !!def.legend, bulk: (def.look.bulk || 1) * (1 + (h.grow || 0) * 0.025),
     accAura: null, wings: null, wingScale: 1, sparkWings: false,
   };

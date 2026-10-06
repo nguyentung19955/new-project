@@ -618,7 +618,7 @@ function drawHeroOnMap(h, t) {
   ctx.strokeStyle = HEROES[h.type].legend ? '#F0A030' : '#8C6A2E';
   ctx.lineWidth = 1.2;
   ctx.stroke();
-  ctx.fillStyle = ATTRS[HEROES[h.type].attr].color;
+  ctx.fillStyle = ELEMENTS[HEROES[h.type].el].color;
   ctx.fillText(h.level, h.x + 22, h.y - 2.5);
   // chấm hành
   circle(ctx, h.x + 28.5, h.y - 12, 3.2, '#0D0B08');

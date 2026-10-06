@@ -1081,3 +1081,23 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
   - Tẩy ấn hoàn lại 100% Ngân khố.
 - Nút ≡ chuyển sang góc phải, ngăn kéo mở bên phải.
 - Bấm vào bất kỳ quái nào: bảng thông tin góc trái (máu, giáp, kháng phép, tốc, vàng, hành và hành khắc, đặc điểm). Bấm chỗ khác để ẩn.
+
+## Phiên bản 92 — Ngũ hành thay Sức/Tốc/Trí, Thần Khí tướng Vàng, gợi ý khắc chế
+- **Bỏ phân loại Sức / Tốc / Trí.** Tướng chỉ còn chia theo ngũ hành; mỗi hành có hệ riêng cộng sẵn:
+  - Kim · Sắc bén: +10% xuyên giáp, +5% chí mạng
+  - Mộc · Sinh sôi: +8% máu, +1 hồi máu / giây
+  - Thủy · Nhu thủy: +15% hồi năng lượng, −5% hồi chiêu
+  - Hỏa · Bùng cháy: +8% sát thương, chí mạng thiêu đốt 2 giây
+  - Thổ · Vững chãi: +10% máu, −5% sát thương nhận
+  - Ba thuộc tính vẫn là chỉ số thân thể; sát thương cộng theo thuộc tính cao nhất của tướng (giữ cân bằng cũ).
+  - Rà soát hành 20 tướng: Kim 5 (Lạc Tướng, Xạ Thủ, Cao Lỗ, Kim Quy, An Dương Vương), Mộc 5 (Thợ Săn, Thạch Sanh, An Tiêm, Thần Săn, Mẫu Thượng Ngàn), Thủy 3 (Thần Sương, Chử Đồng Tử, Lạc Long Quân), Hỏa 3 (Thầy Mo, Tiên Dung, Thánh Gióng), Thổ 4 (Lực Sĩ, Lạc Hầu, Lang Liêu, Âu Cơ).
+  - Gậy Tam Giới: điều kiện đổi thành "tướng của 3 hành khác nhau trên sân".
+- **Thần Khí** (Anh Hùng → chọn tướng Vàng đã mua → ⚜ Thần Khí): mỗi tướng Vàng có 3 hệ, mỗi hệ 5 cấp (400 / 700 / 1.100 / 1.600 / 2.400 Ngân khố). Cấp nào cũng cộng chỉ số; cấp 3 và 5 mở hiệu ứng riêng. Lưu theo tài khoản (đồng bộ đám mây).
+  - Thánh Gióng: Giáp Sắt · Gậy Tre Đằng Ngà · Ngựa Sắt
+  - Lạc Long Quân: Vảy Rồng · Kiếm Thủy Long · Thủy Cung
+  - Thần Kim Quy: Mai Thần · Móng Vàng · Linh Khí Hồ Gươm
+  - An Dương Vương: Nỏ Liên Châu · Thành Ốc Cổ Loa · Long Bào Âu Lạc
+  - Âu Cơ: Bọc Trăm Trứng · Cánh Tiên · Núi Mẹ
+  - Mẫu Thượng Ngàn: Rừng Thiêng · Dây Leo Ngàn Năm · Hoa Trái Sơn Lâm
+- **Tướng khắc chế** ở màn chọn ải và màn chuẩn bị: hiện ảnh đại diện (tối đa 4) kèm lý do — khắc hành quái chủ đạo, bắn quái bay, phép xuyên giáp dày, làm chậm quái nhanh.
+- **Bỏ màn Núi Tản Viên** khỏi menu ≡. Núi vẫn tự cao theo đợt (vàng mỗi đợt, thêm lượt Mọc Núi), bỏ Linh Chi và Bồi đất.

@@ -73,6 +73,18 @@ const ATTRS = {
   int: { name: 'Trí tuệ',    short: 'TRÍ', color: '#A88CE8', desc: '+sức mạnh kỹ năng, -hồi chiêu, +năng lượng' },
 };
 
+// v92: tướng không chia Sức/Tốc/Trí nữa — bản sắc theo NGŨ HÀNH.
+// Ba thuộc tính (sức mạnh / nhanh nhẹn / trí tuệ) vẫn là chỉ số thân thể; sát thương cộng theo thuộc tính cao nhất của tướng.
+const heroMain = (def) => (def._main ||= Object.keys(ATTRS).reduce((a, b) => (def.attrs[b] > def.attrs[a] ? b : a)));
+// hệ của mỗi hành: cộng sẵn cho mọi tướng thuộc hành đó
+const ELEM_TRAIT = {
+  kim:  { name: 'Sắc bén',   desc: '+10% xuyên giáp, +5% chí mạng', apply: (s) => { s.pierce += 10; s.crit += 5; } },
+  moc:  { name: 'Sinh sôi',  desc: '+8% máu, +1 hồi máu / giây', apply: (s) => { s.hpPct += 8; s.regen += 1; } },
+  thuy: { name: 'Nhu thủy',  desc: '+15% hồi năng lượng, −5% hồi chiêu', apply: (s) => { s.elMana += 15; s.cdr += 5; } },
+  hoa:  { name: 'Bùng cháy', desc: '+8% sát thương, chí mạng thiêu đốt 2 giây', apply: (s) => { s.bonusDmgPct += 8; s.critBurn = 1; } },
+  tho:  { name: 'Vững chãi', desc: '+10% máu, −5% sát thương nhận', apply: (s) => { s.hpPct += 10; s.dr += 5; } },
+};
+
 const RARITY = {
   common:    { name: 'Thường',      color: '#8A8478', weight: 60, mult: 1 },
   rare:      { name: 'Hiếm',        color: '#4FA3D9', weight: 28, mult: 1.5 },
@@ -102,7 +114,7 @@ const skillN = (level) => 15 + 10 * level;
 // ------------------------------------------------------------
 const HEROES = {
   lactuong: {
-    name: 'Lạc Tướng', cost: 70, attr: 'str', attack: 'melee', wclass: 'blade', dmgType: 'phys',
+    name: 'Lạc Tướng', cost: 70, attack: 'melee', wclass: 'blade', dmgType: 'phys',
     role: 'Chém lan', title: 'Tướng giữ làng, rìu đồng chém lan', color: '#E25A3A',
     attrs: { str: 24, agi: 14, int: 12 }, gain: { str: 2.8, agi: 1.4, int: 1.2 },
     base: { damage: 6, range: 145, cooldown: 1.0 },
@@ -121,7 +133,7 @@ const HEROES = {
     ],
   },
   lucsi: {
-    name: 'Lực Sĩ Núi', cost: 80, attr: 'str', attack: 'melee', wclass: 'blade', dmgType: 'phys',
+    name: 'Lực Sĩ Núi', cost: 80, attack: 'melee', wclass: 'blade', dmgType: 'phys',
     role: 'Trâu bò', title: 'Người gánh núi, kéo quái về bằng dây mây', color: '#E25A3A',
     attrs: { str: 25, agi: 11, int: 14 }, gain: { str: 3.0, agi: 1.0, int: 1.5 },
     base: { damage: 10, range: 140, cooldown: 1.25 },
@@ -140,7 +152,7 @@ const HEROES = {
     ],
   },
   xathu: {
-    name: 'Xạ Thủ Văn Lang', cost: 55, attr: 'agi', attack: 'arrow', proj: 'arrow', wclass: 'bow', dmgType: 'phys',
+    name: 'Xạ Thủ Văn Lang', cost: 55, attack: 'arrow', proj: 'arrow', wclass: 'bow', dmgType: 'phys',
     role: 'Tầm xa', title: 'Nỏ tre bắn được quái bay', color: '#7FC24A',
     attrs: { str: 15, agi: 22, int: 14 }, gain: { str: 1.6, agi: 2.8, int: 1.4 },
     base: { damage: 0, range: 175, cooldown: 1.0 },
@@ -159,7 +171,7 @@ const HEROES = {
     ],
   },
   thosan: {
-    name: 'Thợ Săn Rừng', cost: 75, attr: 'agi', attack: 'melee', wclass: 'blade', dmgType: 'phys',
+    name: 'Thợ Săn Rừng', cost: 75, attack: 'melee', wclass: 'blade', dmgType: 'phys',
     role: 'Chí mạng', title: 'Dao găm lá rừng, đòn chí mạng', color: '#7FC24A',
     attrs: { str: 16, agi: 24, int: 12 }, gain: { str: 1.8, agi: 3.0, int: 1.2 },
     base: { damage: 2, range: 140, cooldown: 0.85 },
@@ -178,7 +190,7 @@ const HEROES = {
     ],
   },
   thaymo: {
-    name: 'Thầy Mo Lửa', cost: 85, attr: 'int', attack: 'magic', proj: 'fireball', wclass: 'staff', dmgType: 'magic',
+    name: 'Thầy Mo Lửa', cost: 85, attack: 'magic', proj: 'fireball', wclass: 'staff', dmgType: 'magic',
     role: 'Nổ lan', title: 'Gọi lửa thiêng, nổ lan và đốt cháy', color: '#A88CE8',
     attrs: { str: 14, agi: 12, int: 24 }, gain: { str: 1.4, agi: 1.2, int: 3.0 },
     base: { damage: 6, range: 145, cooldown: 1.6, splash: 35 },
@@ -197,7 +209,7 @@ const HEROES = {
     ],
   },
   thansuong: {
-    name: 'Thần Sương Núi', cost: 80, attr: 'int', attack: 'frost', proj: 'frostbolt', wclass: 'staff', dmgType: 'magic',
+    name: 'Thần Sương Núi', cost: 80, attack: 'frost', proj: 'frostbolt', wclass: 'staff', dmgType: 'magic',
     role: 'Làm chậm', title: 'Sương lạnh đỉnh núi, làm chậm và đóng băng', color: '#A88CE8',
     attrs: { str: 15, agi: 13, int: 22 }, gain: { str: 1.6, agi: 1.4, int: 2.8 },
     base: { damage: 2, range: 155, cooldown: 1.2, slow: 15 },
@@ -218,7 +230,7 @@ const HEROES = {
 
   // ---------------- 10 TƯỚNG HUYỀN THOẠI (đề xuất, số liệu cần cân bằng) ----------------
   giong: {
-    legend: 'legendary', name: 'Thánh Gióng', mount: 'ngua_sat', attr: 'str', attack: 'melee', wclass: 'blade', dmgType: 'phys',
+    legend: 'legendary', name: 'Thánh Gióng', mount: 'ngua_sat', attack: 'melee', wclass: 'blade', dmgType: 'phys',
     role: 'Vươn vai', title: 'Gậy tre ngà, ngựa sắt phun lửa', color: '#E25A3A',
     attrs: { str: 30, agi: 16, int: 12 }, gain: { str: 3.4, agi: 1.6, int: 1.2 },
     base: { damage: 14, range: 150, cooldown: 1.0 },
@@ -237,7 +249,7 @@ const HEROES = {
     ],
   },
   llq: {
-    legend: 'legendary', name: 'Lạc Long Quân', attr: 'str', attack: 'melee', wclass: 'blade', dmgType: 'phys',
+    legend: 'legendary', name: 'Lạc Long Quân', attack: 'melee', wclass: 'blade', dmgType: 'phys',
     role: 'Con Rồng', title: 'Vua rồng biển, không sợ nước dâng', color: '#E25A3A',
     attrs: { str: 28, agi: 16, int: 16 }, gain: { str: 3.2, agi: 1.6, int: 1.6 },
     base: { damage: 12, range: 150, cooldown: 1.0 },
@@ -256,7 +268,7 @@ const HEROES = {
     ],
   },
   kimquy: {
-    legend: 'legendary', name: 'Thần Kim Quy', attr: 'str', attack: 'melee', wclass: 'blade', dmgType: 'phys',
+    legend: 'legendary', name: 'Thần Kim Quy', attack: 'melee', wclass: 'blade', dmgType: 'phys',
     role: 'Che chắn', title: 'Rùa vàng hộ thành, che chở đồng đội', color: '#E25A3A',
     attrs: { str: 30, agi: 10, int: 18 }, gain: { str: 3.2, agi: 1.0, int: 1.8 },
     base: { damage: 8, range: 140, cooldown: 1.3 },
@@ -275,7 +287,7 @@ const HEROES = {
     ],
   },
   thachsanh: {
-    legend: 'epic', name: 'Thạch Sanh', attr: 'agi', attack: 'melee', wclass: 'blade', dmgType: 'phys',
+    legend: 'epic', name: 'Thạch Sanh', attack: 'melee', wclass: 'blade', dmgType: 'phys',
     role: 'Diệt boss', title: 'Rìu đốn củi, đàn thần và niêu cơm', color: '#7FC24A',
     attrs: { str: 20, agi: 28, int: 14 }, gain: { str: 2.0, agi: 3.2, int: 1.4 },
     base: { damage: 10, range: 150, cooldown: 0.9 },
@@ -294,7 +306,7 @@ const HEROES = {
     ],
   },
   caolo: {
-    legend: 'epic', name: 'Cao Lỗ', attr: 'agi', attack: 'arrow', proj: 'bolt', wclass: 'bow', dmgType: 'phys',
+    legend: 'epic', name: 'Cao Lỗ', attack: 'arrow', proj: 'bolt', wclass: 'bow', dmgType: 'phys',
     role: 'Xuyên giáp', title: 'Người chế nỏ thần, tên xuyên giáp', color: '#7FC24A',
     attrs: { str: 16, agi: 26, int: 14 }, gain: { str: 1.6, agi: 3.0, int: 1.4 },
     base: { damage: 6, range: 185, cooldown: 0.95 },
@@ -313,7 +325,7 @@ const HEROES = {
     ],
   },
   antiem: {
-    legend: 'epic', name: 'Mai An Tiêm', attr: 'agi', attack: 'arrow', proj: 'melon', wclass: 'bow', dmgType: 'phys',
+    legend: 'epic', name: 'Mai An Tiêm', attack: 'arrow', proj: 'melon', wclass: 'bow', dmgType: 'phys',
     role: 'Kiếm vàng', title: 'Ném dưa hấu, đảo trù phú', color: '#7FC24A',
     attrs: { str: 18, agi: 22, int: 16 }, gain: { str: 1.8, agi: 2.6, int: 1.6 },
     base: { damage: 4, range: 170, cooldown: 1.15, splash: 30 },
@@ -332,7 +344,7 @@ const HEROES = {
     ],
   },
   auco: {
-    legend: 'legendary', name: 'Âu Cơ', attr: 'int', attack: 'magic', proj: 'feather', wclass: 'staff', dmgType: 'magic',
+    legend: 'legendary', name: 'Âu Cơ', attack: 'magic', proj: 'feather', wclass: 'staff', dmgType: 'magic',
     role: 'Hồi máu', title: 'Mẹ Tiên, bọc trăm trứng', color: '#A88CE8',
     attrs: { str: 16, agi: 14, int: 28 }, gain: { str: 1.6, agi: 1.4, int: 3.2 },
     base: { damage: 10, range: 160, cooldown: 1.3 },
@@ -351,7 +363,7 @@ const HEROES = {
     ],
   },
   cdt: {
-    legend: 'epic', name: 'Chử Đồng Tử', attr: 'int', attack: 'magic', proj: 'orb', wclass: 'staff', dmgType: 'magic',
+    legend: 'epic', name: 'Chử Đồng Tử', attack: 'magic', proj: 'orb', wclass: 'staff', dmgType: 'magic',
     role: 'Hồi sinh', title: 'Gậy thần, nón thần, thành một đêm', color: '#A88CE8',
     attrs: { str: 16, agi: 14, int: 26 }, gain: { str: 1.6, agi: 1.4, int: 3.0 },
     base: { damage: 8, range: 160, cooldown: 1.3 },
@@ -370,7 +382,7 @@ const HEROES = {
     ],
   },
   tiendung: {
-    legend: 'epic', name: 'Tiên Dung', attr: 'int', attack: 'magic', proj: 'petal', wclass: 'staff', dmgType: 'magic',
+    legend: 'epic', name: 'Tiên Dung', attack: 'magic', proj: 'petal', wclass: 'staff', dmgType: 'magic',
     role: 'Đẩy lùi', title: 'Công chúa quạt tiên, mưa hoa', color: '#A88CE8',
     attrs: { str: 14, agi: 16, int: 26 }, gain: { str: 1.4, agi: 1.6, int: 3.0 },
     base: { damage: 9, range: 160, cooldown: 1.2 },
@@ -389,7 +401,7 @@ const HEROES = {
     ],
   },
   langlieu: {
-    legend: 'epic', name: 'Lang Liêu', attr: 'int', attack: 'magic', proj: 'rice', wclass: 'staff', dmgType: 'magic',
+    legend: 'epic', name: 'Lang Liêu', attack: 'magic', proj: 'rice', wclass: 'staff', dmgType: 'magic',
     role: 'Hỗ trợ', title: 'Bánh chưng bánh giầy, lễ vật đất trời', color: '#A88CE8',
     attrs: { str: 18, agi: 12, int: 24 }, gain: { str: 1.8, agi: 1.2, int: 2.8 },
     base: { damage: 8, range: 155, cooldown: 1.3 },
@@ -409,7 +421,7 @@ const HEROES = {
   },
   // ---------------- 4 TƯỚNG THẦN MỚI (v27): đủ chuỗi Thường → Sử thi → Huyền thoại ----------------
   lachau: {
-    legend: 'epic', name: 'Lạc Hầu', attr: 'str', attack: 'melee', wclass: 'blade', dmgType: 'phys',
+    legend: 'epic', name: 'Lạc Hầu', attack: 'melee', wclass: 'blade', dmgType: 'phys',
     role: 'Giữ trận', title: 'Thủ lĩnh bộ Lạc, búa đá và khiên đồng', color: '#E25A3A',
     attrs: { str: 28, agi: 12, int: 15 }, gain: { str: 3.2, agi: 1.1, int: 1.5 },
     base: { damage: 11, range: 145, cooldown: 1.2 },
@@ -428,7 +440,7 @@ const HEROES = {
     ],
   },
   thansan: {
-    legend: 'epic', name: 'Thần Săn Ba Vì', attr: 'agi', attack: 'melee', wclass: 'blade', dmgType: 'phys',
+    legend: 'epic', name: 'Thần Săn Ba Vì', attack: 'melee', wclass: 'blade', dmgType: 'phys',
     role: 'Săn mồi', title: 'Thợ săn được núi Ba Vì truyền phép, vuốt hổ dao lá', color: '#7FC24A',
     attrs: { str: 18, agi: 28, int: 13 }, gain: { str: 1.9, agi: 3.3, int: 1.3 },
     base: { damage: 6, range: 145, cooldown: 0.8 },
@@ -447,7 +459,7 @@ const HEROES = {
     ],
   },
   adv: {
-    legend: 'legendary', name: 'An Dương Vương', attr: 'agi', attack: 'arrow', proj: 'bolt', wclass: 'bow', dmgType: 'phys',
+    legend: 'legendary', name: 'An Dương Vương', attack: 'arrow', proj: 'bolt', wclass: 'bow', dmgType: 'phys',
     role: 'Nỏ thần', title: 'Vua Âu Lạc, thành Cổ Loa và nỏ Linh Quang', color: '#7FC24A',
     attrs: { str: 18, agi: 30, int: 16 }, gain: { str: 1.8, agi: 3.4, int: 1.6 },
     base: { damage: 10, range: 190, cooldown: 0.9 },
@@ -466,7 +478,7 @@ const HEROES = {
     ],
   },
   mau: {
-    legend: 'legendary', name: 'Mẫu Thượng Ngàn', attr: 'int', attack: 'magic', proj: 'petal', wclass: 'staff', dmgType: 'magic',
+    legend: 'legendary', name: 'Mẫu Thượng Ngàn', attack: 'magic', proj: 'petal', wclass: 'staff', dmgType: 'magic',
     role: 'Mẹ rừng', title: 'Bà chúa núi rừng, cây lá nghe lời', color: '#A88CE8',
     attrs: { str: 17, agi: 14, int: 30 }, gain: { str: 1.7, agi: 1.4, int: 3.4 },
     base: { damage: 11, range: 165, cooldown: 1.25, slow: 15 },
@@ -919,7 +931,7 @@ const SECRETS = {
   'i.tho2':  { el: 'tho', hint: 'Núi che chở', desc: 'Đứng yên 10 giây: tướng đứng kề giảm 10% sát thương nhận vào' },
   // đồ ghép: hiệu ứng ẩn cố định
   'r.song_riu':      { item: 'song_riu', hint: 'Máu càng nóng, tay càng nhanh', desc: 'Hạ quái: +5% tốc đánh 3 giây, cộng dồn 5 lần' },
-  'r.gay_tam_gioi':  { item: 'gay_tam_gioi', hint: 'Ba cõi hợp một', desc: 'Có đủ 3 hệ tướng trên sân: +5 mọi thuộc tính nữa' },
+  'r.gay_tam_gioi':  { item: 'gay_tam_gioi', hint: 'Ba cõi hợp một', desc: 'Có tướng của 3 hành khác nhau trên sân: +5 mọi thuộc tính nữa' },
   'r.gay_thoi_khong':{ item: 'gay_thoi_khong', hint: 'Thời gian đứng lại', desc: '10% dùng chiêu không tốn năng lượng' },
   'r.giap_bat_diet': { item: 'giap_bat_diet', hint: 'Đồng không gãy', desc: 'Gục lần đầu mỗi đợt: hồi sinh ngay với 30% máu' },
   'r.luoi_hai':      { item: 'luoi_hai', hint: 'Hái kẻ mạnh trước', desc: 'Chí mạng lên quái tinh anh: x3' },
@@ -1214,3 +1226,94 @@ function setRunes(lvs) {
   }
   RUNE_FX = fx;
 }
+
+// v92: gợi ý tướng khắc chế cho mỗi ải (theo hành của quái, quái bay, giáp dày, quái nhanh)
+function levelCounters(i, owned) {
+  const lv = LEVELS[i] || {};
+  const R = typeof ROSTERS !== 'undefined' ? ROSTERS[lv.roster || 'thuy'] : null;
+  const foes = [...new Set([...Object.values(lv.bosses || {}), ...(R ? [R.base, R.air, R.champ, ...(R.fast || []), ...R.list.map((x) => x[2])] : [])])]
+    .filter((k) => k && ENEMIES[k]);
+  const tally = {};
+  for (const k of foes) { const el = ENEMIES[k].el; if (el) tally[el] = (tally[el] || 0) + (ENEMIES[k].boss ? 3 : 1); }
+  const main = Object.keys(tally).sort((a, b) => tally[b] - tally[a])[0] || null;
+  const ce = main ? EL_ORDER.find((c) => EL_KHAC[c] === main) : null;
+  const pool = [...BASIC_HEROES, ...LEGEND_HEROES.filter((t) => !owned || owned.has(t))];
+  const out = [];
+  const add = (t, why) => { if (t && !out.some((o) => o.t === t) && out.length < 4) out.push({ t, why }); };
+  if (ce) {
+    const els = pool.filter((t) => HEROES[t].el === ce);
+    add(els.find((t) => !HEROES[t].legend), `khắc hành ${ELEMENTS[main].name}`);
+    add(els.find((t) => HEROES[t].legend), `khắc hành ${ELEMENTS[main].name}`);
+  }
+  if (foes.some((k) => ENEMIES[k].flying)) add(pool.find((t) => HEROES[t].legend && HEROES[t].attack === 'arrow') || 'xathu', 'bắn quái bay');
+  if (foes.some((k) => ENEMIES[k].armor >= 10)) add(pool.find((t) => HEROES[t].legend && HEROES[t].dmgType === 'magic') || 'thaymo', 'phép xuyên giáp dày');
+  if (R && R.fast && R.fast.length) add('thansuong', 'làm chậm quái nhanh');
+  for (const t of lv.hint || []) add(t, 'hợp bản đồ');
+  return { main, ce, list: out };
+}
+
+// ===== v92: THẦN KHÍ — mỗi tướng Vàng có 3 hệ thống nâng cấp riêng mang bản sắc hành của mình =====
+// Mỗi hệ 5 cấp: cấp nào cũng cộng chỉ số; cấp 3 và cấp 5 mở hiệu ứng riêng. Mua bằng Ngân khố, lưu theo tài khoản.
+// Hiệu ứng (fx): burnHit đốt · splashHit đòn lan · stunEvery choáng mỗi n đòn · chainHit sét lan · slowHit làm chậm ·
+// manaOnHit hồi năng lượng mỗi đòn · lowHpDr giảm sát thương khi máu thấp · reviveOnce hồi sinh mỗi đợt ·
+// waveShield khiên đầu đợt · healAura hồi máu đồng đội mỗi 5 giây. (stat: cộng thẳng vào chỉ số)
+const LEGACY_COST = [400, 700, 1100, 1600, 2400];
+const LEGACY_MAX = 5;
+const LEGACY = {
+  giong: [
+    { id: 'giap', name: 'Giáp Sắt', ic: '🛡', desc: 'Bộ giáp sắt vua Hùng rèn cho cậu bé làng Phù Đổng',
+      per: { hpPct: 8, dr: 2 }, ms: [{ lv: 3, fx: 'lowHpDr', v: 25, t: 'Máu dưới 40%: giảm thêm 25% sát thương nhận' }, { lv: 5, fx: 'reviveOnce', v: 40, t: 'Gục lần đầu mỗi đợt: đứng dậy với 40% máu' }] },
+    { id: 'gay', name: 'Gậy Tre Đằng Ngà', ic: '🎋', desc: 'Roi sắt gãy, nhổ bụi tre làng quật giặc',
+      per: { bonusDmgPct: 6, cleave: 0.04 }, ms: [{ lv: 3, fx: 'stunEvery', v: 6, t: 'Mỗi đòn thứ 6 choáng mục tiêu 0,8 giây' }, { lv: 5, fx: 'splashHit', v: 40, t: 'Quét tre: mỗi đòn lan 40% sát thương quanh mục tiêu' }] },
+    { id: 'ngua', name: 'Ngựa Sắt', ic: '🐎', desc: 'Ngựa sắt phun lửa, vó in thành ao hồ',
+      per: { haste: 5, rangePct: 3 }, ms: [{ lv: 3, fx: 'burnHit', v: 20, t: 'Ngựa phun lửa: đòn đánh thiêu đốt 20% sát thương/giây trong 3 giây' }, { lv: 5, stat: 'fireTrail', v: 0.3, t: 'Vó lửa: đòn đánh để lại vệt lửa trên sông' }] },
+  ],
+  llq: [
+    { id: 'vay', name: 'Vảy Rồng', ic: '🐉', desc: 'Vảy rồng Lạc Việt, sóng nào cũng không xuyên thủng',
+      per: { hpPct: 8, magicRes: 3 }, ms: [{ lv: 3, fx: 'waveShield', v: 20, t: 'Đầu mỗi đợt nhận khiên 20% máu' }, { lv: 5, fx: 'reviveOnce', v: 30, t: 'Gục lần đầu mỗi đợt: hóa rồng đứng dậy với 30% máu' }] },
+    { id: 'kiem', name: 'Kiếm Thủy Long', ic: '🗡', desc: 'Thanh kiếm chém Ngư Tinh nơi biển Đông',
+      per: { bonusDmgPct: 6, crit: 2 }, ms: [{ lv: 3, fx: 'chainHit', v: 15, t: '15% mỗi đòn: sóng sét lan 3 quái' }, { lv: 5, stat: 'critMult', v: 0.5, t: '+50% sát thương chí mạng' }] },
+    { id: 'cung', name: 'Thủy Cung', ic: '🌊', desc: 'Long cung dưới biển, nơi rồng thiêng ngự',
+      per: { skillPct: 5, cdr: 2 }, ms: [{ lv: 3, fx: 'slowHit', v: 20, t: 'Đòn đánh làm chậm 20% trong 1 giây' }, { lv: 5, fx: 'healAura', v: 4, t: 'Mỗi 5 giây hồi 4% máu cho tướng quanh mình' }] },
+  ],
+  kimquy: [
+    { id: 'mai', name: 'Mai Thần', ic: '🐢', desc: 'Mai rùa vàng che chở thành Cổ Loa',
+      per: { hpPct: 10, dr: 2 }, ms: [{ lv: 3, fx: 'waveShield', v: 25, t: 'Đầu mỗi đợt nhận khiên 25% máu' }, { lv: 5, stat: 'thorns', v: 30, t: 'Phản 30% sát thương nhận' }] },
+    { id: 'mong', name: 'Móng Vàng', ic: '🪝', desc: 'Móng rùa thần trao làm lẫy nỏ',
+      per: { pierce: 5, bonusDmgPct: 4 }, ms: [{ lv: 3, fx: 'stunEvery', v: 5, t: 'Mỗi đòn thứ 5 choáng mục tiêu 0,8 giây' }, { lv: 5, stat: 'bossPct', v: 30, t: '+30% sát thương lên boss' }] },
+    { id: 'ho', name: 'Linh Khí Hồ Gươm', ic: '💠', desc: 'Linh khí hồ Tả Vọng, nơi rùa thần trở về',
+      per: { skillPct: 5, regen: 1 }, ms: [{ lv: 3, fx: 'healAura', v: 3, t: 'Mỗi 5 giây hồi 3% máu cho tướng quanh mình' }, { lv: 5, fx: 'manaOnHit', v: 3, t: 'Mỗi đòn hồi 3 năng lượng' }] },
+  ],
+  adv: [
+    { id: 'no', name: 'Nỏ Liên Châu', ic: '🏹', desc: 'Nỏ bắn một phát mười mũi tên',
+      per: { haste: 5, bonusDmgPct: 4 }, ms: [{ lv: 3, stat: 'arrows', v: 1, t: 'Bắn thêm 1 mũi tên mỗi đòn' }, { lv: 5, stat: 'critMult', v: 0.4, t: '+40% sát thương chí mạng' }] },
+    { id: 'thanh', name: 'Thành Ốc Cổ Loa', ic: '🏯', desc: 'Chín vòng thành xoắn ốc giữ nước Âu Lạc',
+      per: { rangePct: 4, pierce: 4 }, ms: [{ lv: 3, fx: 'slowHit', v: 15, t: 'Đòn đánh làm chậm 15% trong 1 giây' }, { lv: 5, stat: 'airPct', v: 40, t: '+40% sát thương lên quái bay' }] },
+    { id: 'ao', name: 'Long Bào Âu Lạc', ic: '👘', desc: 'Áo vua dựng nước, quân dân một lòng',
+      per: { hpPct: 8, goldOnKill: 0.5 }, ms: [{ lv: 3, fx: 'waveShield', v: 15, t: 'Đầu mỗi đợt nhận khiên 15% máu' }, { lv: 5, stat: 'bossPct', v: 25, t: '+25% sát thương lên boss' }] },
+  ],
+  auco: [
+    { id: 'boc', name: 'Bọc Trăm Trứng', ic: '🥚', desc: 'Bọc trứng nở trăm con, tổ tiên người Việt',
+      per: { hpPct: 8, regen: 1 }, ms: [{ lv: 3, fx: 'healAura', v: 4, t: 'Mỗi 5 giây hồi 4% máu cho tướng quanh mình' }, { lv: 5, fx: 'reviveOnce', v: 35, t: 'Gục lần đầu mỗi đợt: đứng dậy với 35% máu' }] },
+    { id: 'canh', name: 'Cánh Tiên', ic: '🪽', desc: 'Đôi cánh tiên nữ dòng Thần Nông',
+      per: { skillPct: 6, cdr: 2 }, ms: [{ lv: 3, fx: 'manaOnHit', v: 2, t: 'Mỗi đòn hồi 2 năng lượng' }, { lv: 5, fx: 'chainHit', v: 20, t: '20% mỗi đòn: phấn tiên lan 3 quái' }] },
+    { id: 'nui', name: 'Núi Mẹ', ic: '⛰', desc: 'Năm mươi con theo mẹ lên núi',
+      per: { dr: 2, magicRes: 3 }, ms: [{ lv: 3, fx: 'stunEvery', v: 7, t: 'Mỗi đòn thứ 7 choáng mục tiêu 0,8 giây' }, { lv: 5, fx: 'splashHit', v: 35, t: 'Đòn đánh lan 35% sát thương quanh mục tiêu' }] },
+  ],
+  mau: [
+    { id: 'rung', name: 'Rừng Thiêng', ic: '🌳', desc: 'Đại ngàn ba miền, nơi Mẫu cai quản',
+      per: { hpPct: 6, regen: 1.2 }, ms: [{ lv: 3, fx: 'healAura', v: 5, t: 'Mỗi 5 giây hồi 5% máu cho tướng quanh mình' }, { lv: 5, fx: 'waveShield', v: 25, t: 'Đầu mỗi đợt nhận khiên 25% máu' }] },
+    { id: 'day', name: 'Dây Leo Ngàn Năm', ic: '🌿', desc: 'Dây rừng quấn chặt chân giặc',
+      per: { bonusDmgPct: 5, skillPct: 3 }, ms: [{ lv: 3, fx: 'slowHit', v: 25, t: 'Đòn đánh làm chậm 25% trong 1 giây' }, { lv: 5, fx: 'stunEvery', v: 6, t: 'Mỗi đòn thứ 6 trói chân mục tiêu 0,8 giây' }] },
+    { id: 'hoa', name: 'Hoa Trái Sơn Lâm', ic: '🍃', desc: 'Hoa trái nuôi muôn dân, độc dược trị giặc',
+      per: { goldOnKill: 0.5, skillPct: 3 }, ms: [{ lv: 3, fx: 'manaOnHit', v: 2, t: 'Mỗi đòn hồi 2 năng lượng' }, { lv: 5, fx: 'burnHit', v: 25, t: 'Độc hoa: đòn đánh gây độc 25% sát thương/giây trong 3 giây' }] },
+  ],
+};
+const LEGACY_STAT = { hpPct: '% máu', dr: '% giảm sát thương nhận', bonusDmgPct: '% sát thương', cleave: ' lan đòn', haste: '% tốc đánh',
+  rangePct: '% tầm đánh', magicRes: '% kháng phép', crit: '% chí mạng', skillPct: '% sức mạnh kỹ năng', cdr: '% giảm hồi chiêu',
+  pierce: '% xuyên giáp', regen: ' hồi máu / giây', goldOnKill: ' vàng mỗi quái hạ' };
+const legacyPerText = (sys, lv) => Object.entries(sys.per).map(([k, v]) => {
+  const x = v * lv; return k === 'cleave' ? `+${Math.round(x * 100)}% lan đòn` : `+${+x.toFixed(1)}${LEGACY_STAT[k]}`; }).join(', ');
+// cấp thần khí trong trận (null = không áp: bot mô phỏng)
+let LEGACY_LV = null;
+function setLegacy(map) { LEGACY_LV = map || null; }
