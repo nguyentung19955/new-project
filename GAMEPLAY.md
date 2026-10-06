@@ -1228,3 +1228,6 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 114
 - Icon kỹ năng vẽ tay cho Thợ Rèn Đông Sơn (35 tướng có icon vẽ tay).
+
+## Phiên bản 115
+- Thần Khí vẽ tay cho Chú Cuội (13 tướng Vàng có Thần Khí vẽ tay).
