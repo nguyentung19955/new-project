@@ -1460,3 +1460,5 @@ body { overflow: hidden; }
 .rn-node .ri .rimg { width: 2.05em; height: 2.05em; display: block; }
 .rn-big .rimg { width: 48px; height: 48px; display: block; }
 .rn-big:has(.rimg) { border: 0; background: none; }
+/* v112: Thần Khí vẽ tay */
+.lg-ic img { width: 36px; height: 36px; display: block; }

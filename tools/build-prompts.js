@@ -108,7 +108,7 @@ for (const t of ['yeutinh', 'dacon', 'linhan'].filter((x) => !packs.has(x))) ite
 for (const t of need.filter((x) => tier(x) === 1)) items.push({ group: '3. Tướng Tím', file: `${t}.png`, title: `${HEROES[t].name} · Tím · ${EL[HEROES[t].el][0]}`, text: heroPrompt(t) });
 for (const t of need.filter((x) => tier(x) === 2)) items.push({ group: '4. Tướng Vàng', file: `${t}.png`, title: `${HEROES[t].name} · Vàng · ${EL[HEROES[t].el][0]}`, text: heroPrompt(t) });
 for (const t of Object.keys(ICONS).filter((x) => HEROES[x] && !fs.existsSync(path.join(ROOT, 'assets/packs', x, 'sk-q.png'))).sort((a, b) => tier(a) - tier(b))) items.push({ group: '5. Icon kỹ năng (tùy chọn)', file: `icon-${t}.png`, title: `Icon kỹ năng ${HEROES[t].name}`, text: iconPrompt(t) });
-for (const t of Object.keys(LEGACY).filter((x) => RELICS[x])) items.push({ group: '6. Icon Thần Khí (tùy chọn)', file: `than-khi-${t}.png`, title: `Thần Khí ${HEROES[t].name}`, text: relicPrompt(t) });
+for (const t of Object.keys(LEGACY).filter((x) => RELICS[x] && !fs.existsSync(path.join(ROOT, 'assets/packs', x, 'tk-1.png')))) items.push({ group: '6. Icon Thần Khí (tùy chọn)', file: `than-khi-${t}.png`, title: `Thần Khí ${HEROES[t].name}`, text: relicPrompt(t) });
 for (const k of Object.keys(RUNE_SYM).filter((b) => !fs.existsSync(path.join(ROOT, 'assets/runes', `${b[0]}_${{ nui: 'dmg', gio: 'haste', sam: 'power' }[b]}.png`)))) items.push({ group: '7. Icon Ấn Phù (tùy chọn)', file: `an-phu-${k}.png`, title: `Ấn Phù nhánh ${k}`, text: runePrompt(k) });
 items.forEach((it, i) => { it.n = i + 1; });
 const noIcon = need.filter((x) => !ICONS[x]);  // tướng mới chưa có mô tả icon

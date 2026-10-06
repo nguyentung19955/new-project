@@ -3,6 +3,7 @@
 
   python3 tools/cat-icons.py <ảnh.png> <mã tướng>
 Rồi thêm mã vào SKILL_PACK trong js/render.js.
+  python3 tools/cat-icons.py <ảnh.png> <mã tướng> 3   → dải 3 icon Thần Khí: tk-1.png … tk-3.png
 """
 import os, sys, importlib.util
 import numpy as np
@@ -27,12 +28,14 @@ def clean_mark(im):
 
 def main():
     src, code = sys.argv[1], sys.argv[2]
+    n = int(sys.argv[3]) if len(sys.argv) > 3 else 4
+    names = [f'tk-{i + 1}' for i in range(n)] if n == 3 else [f'sk-{k}' for k in 'qwer']
     raw = Image.open(src).convert('RGB')
     sheet = cs.key_magenta(raw)
     W, H = sheet.size
-    xs = cs.cut_lines(sheet, 4, W, axis=0)
+    xs = cs.cut_lines(sheet, n, W, axis=0)
     out = os.path.join(here, '..', 'assets', 'packs', code); os.makedirs(out, exist_ok=True)
-    for i, k in enumerate('qwer'):
+    for i, k in enumerate(names):
         ins = 8
         c = cs.drop_specks(cs.drop_lines(sheet.crop((xs[i] + ins, ins, xs[i + 1] - ins, H - ins))))
         c = clean_mark(c)
@@ -41,8 +44,8 @@ def main():
         c = c.crop(bb); side = int(max(c.size) * 1.08)
         sq = Image.new('RGBA', (side, side), (0, 0, 0, 0))
         sq.paste(c, ((side - c.width) // 2, (side - c.height) // 2))
-        cs.save_light(sq.resize((128, 128), Image.LANCZOS), os.path.join(out, f'sk-{k}.png'))
-    print(f"Thêm '{code}' vào SKILL_PACK trong js/render.js.")
+        cs.save_light(sq.resize((128, 128), Image.LANCZOS), os.path.join(out, f'{k}.png'))
+    print(f"{code}: {', '.join(names)}")
 
 if __name__ == '__main__':
     main()

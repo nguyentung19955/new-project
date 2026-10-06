@@ -416,8 +416,9 @@ function itemPngPath(id, rarity) {
   return list;
 }
 // v107: icon kỹ năng vẽ tay cắt bằng tools/cat-icons.py → assets/packs/<tướng>/sk-q.png … sk-r.png
-const SKILL_PACK = new Set(['dapde', 'chantrau', 'giaodong', 'tre', 'chuongdong', 'ongthoi',
-  'halong', 'viemde', 'kinhduong', 'trutroi', 'mauthoai', 'longnu', 'chodo', 'haisen', 'cuoi', 'kylan', 'maudia', 'tanvien']);
+const SKILL_PACK = new Set(['baahoa', 'caong', 'chantrau', 'chodo', 'chuongdong', 'cuoi', 'dapde', 'denroi', 'dotnuong', 'giaodong', 'haisen', 'halong', 'kinhduong', 'kylan', 'longnu', 'matroi', 'maudia', 'mauthoai', 'melua', 'mychau', 'nghedong', 'ongdung', 'ongho', 'ongtao', 'ongthoi', 'potaoapui', 'sodua', 'tanvien', 'thocong', 'tre', 'trongdong', 'truongchi', 'trutroi', 'viemde']);
+// v112: icon Thần Khí vẽ tay (cat-icons.py … 3) → assets/packs/<tướng>/tk-1 … tk-3.png theo thứ tự LEGACY[tướng]
+const RELIC_PACK = new Set(['auco', 'giong', 'halong', 'kinhduong', 'llq', 'longnu', 'mau', 'mauthoai', 'ongho', 'tanvien', 'trutroi', 'viemde']);
 const skillPngPath = (type, i) => [...(SKILL_PACK.has(type) ? [`packs/${type}/sk-${SKILL_KEYS[i].toLowerCase()}.png`] : []), `ky-nang_${heroSlug(type)}_${SKILL_KEYS[i].toLowerCase()}.png`, `skills/${HERO_CODE[type]}_${SKILL_KEYS[i]}.png`];
 const SCENE_FILE = { menu: ['nen_menu.png', 'key-art-menu.png'], story1: ['truyen_1.png', 'scenes/story-1.png'],
   story2: ['truyen_2.png', 'scenes/story-2.png'], story3: ['truyen_3.png', 'scenes/story-3.png'],

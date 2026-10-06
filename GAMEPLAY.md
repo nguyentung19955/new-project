@@ -1218,3 +1218,7 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 111 — Ấn Phù vẽ tay
 - 36 Ấn Phù (Núi / Gió / Sấm) dùng ảnh vẽ tay thay ký hiệu emoji (`assets/runes/<mã ấn>.png`, cắt bằng `tools/cat-runes.py`). Thiếu ảnh thì tự quay về ký hiệu cũ.
+
+## Phiên bản 112 — Icon kỹ năng + Thần Khí vẽ tay
+- Icon kỹ năng vẽ tay cho 34 tướng (cắt lại cả 6 bộ Thường đầu tiên theo đúng prompt).
+- Thần Khí vẽ tay cho 12 tướng Vàng (Thánh Gióng, Lạc Long Quân, Âu Cơ, Mẫu Thượng Ngàn, Kinh Dương Vương, Sơn Tinh, Long Nữ, Hạ Long, Viêm Đế, Chúa Sơn Lâm, Trụ Trời, Mẫu Thoải): `assets/packs/<tướng>/tk-1…3.png`, hiện trong bảng Thần Khí.

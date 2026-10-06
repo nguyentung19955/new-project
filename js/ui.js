@@ -747,7 +747,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 111 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 112 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1482,11 +1482,11 @@ class UI {
   renderLegacy() {
     const t = this.legacyHero, d = HEROES[t], L = (this.save.legacy || {})[t] || {}, kho = this.save.kho || 0;
     const elc = ELEMENTS[d.el].color;
-    const col = (sys) => {
+    const col = (sys, si) => {
       const lv = L[sys.id] || 0, c = LEGACY_COST[lv];
       const pips = Array.from({ length: LEGACY_MAX }, (_, i) => `<i class="${i < lv ? 'on' : ''} ${sys.ms.some((m) => m.lv === i + 1) ? 'ms' : ''}"></i>`).join('');
       return `<div class="lg-sys">
-        <div class="lg-h"><span class="lg-ic">${sys.ic}</span><div><b>${sys.name}</b><small>${esc(sys.desc)}</small></div></div>
+        <div class="lg-h"><span class="lg-ic">${RELIC_PACK.has(t) ? `<img src="${ASSET_ROOT}packs/${t}/tk-${si + 1}.png" alt="">` : sys.ic}</span><div><b>${sys.name}</b><small>${esc(sys.desc)}</small></div></div>
         <div class="lg-pips">${pips}<span>${lv}/${LEGACY_MAX}</span></div>
         <div class="lg-now">${lv ? legacyPerText(sys, lv) : 'Chưa nâng'}${lv < LEGACY_MAX ? `<br><small>Cấp ${lv + 1}: ${legacyPerText(sys, lv + 1)}</small>` : ''}</div>
         ${sys.ms.map((m) => `<div class="lg-ms ${lv >= m.lv ? 'got' : ''}"><span>Cấp ${m.lv}</span>${esc(m.t)}</div>`).join('')}
