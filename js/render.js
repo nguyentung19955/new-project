@@ -336,6 +336,8 @@ const HERO_PACK = Object.fromEntries(['lactuong', 'lucsi', 'xathu', 'thosan', 't
   'langlieu', 'nghedong', 'mychau', 'trongdong', 'caong', 'lyngu', 'truongchi', 'ongtao', 'potaoapui', 'baahoa', 'ongdung', 'thocong', 'kylan', 'viemde',
   // v107: ảnh Gemini đợt 3 (tướng Vàng)
   'kinhduong', 'longnu', 'halong', 'maudia', 'tanvien', 'melua', 'matroi', 'thienloi', 'cuoi', 'ongho',
+  // v109
+  'trutroi', 'mauthoai',
 ].map((k) => [k, `packs/${k}/`]));
 const packImg = (type, name) => (HERO_PACK[type] ? asset(HERO_PACK[type] + name + '.png', true) : null);
 // v60: quái vẽ tay (assets/packs/<quái>/walk1 · walk2 · attack): bước đi luân phiên, ra đòn khi tấn công
@@ -415,7 +417,7 @@ function itemPngPath(id, rarity) {
 }
 // v107: icon kỹ năng vẽ tay cắt bằng tools/cat-icons.py → assets/packs/<tướng>/sk-q.png … sk-r.png
 const SKILL_PACK = new Set(['dapde', 'chantrau', 'giaodong', 'tre', 'chuongdong', 'ongthoi',
-  'halong', 'viemde', 'kinhduong', 'trutroi', 'mauthoai', 'longnu']);
+  'halong', 'viemde', 'kinhduong', 'trutroi', 'mauthoai', 'longnu', 'chodo', 'haisen']);
 const skillPngPath = (type, i) => [...(SKILL_PACK.has(type) ? [`packs/${type}/sk-${SKILL_KEYS[i].toLowerCase()}.png`] : []), `ky-nang_${heroSlug(type)}_${SKILL_KEYS[i].toLowerCase()}.png`, `skills/${HERO_CODE[type]}_${SKILL_KEYS[i]}.png`];
 const SCENE_FILE = { menu: ['nen_menu.png', 'key-art-menu.png'], story1: ['truyen_1.png', 'scenes/story-1.png'],
   story2: ['truyen_2.png', 'scenes/story-2.png'], story3: ['truyen_3.png', 'scenes/story-3.png'],
