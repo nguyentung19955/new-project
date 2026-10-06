@@ -1146,3 +1146,7 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - **Ghép cùng hành (Thủy):** Thần Sương + Chèo Đò → Chử Đồng Tử · Ngư Phủ + Thần Sương → Cá Ông · Ngư Phủ + Chèo Đò → Lý Ngư · Hái Sen + Ngư Phủ → Trương Chi · Lý Ngư + Cá Ông → Lạc Long Quân · Lý Ngư + Chử Đồng Tử → Rồng Mẹ Hạ Long · Trương Chi + Cá Ông → Long Nữ · Cá Ông + Chử Đồng Tử → Mẫu Thoải. Bỏ công thức chéo hành cũ ra Chử Đồng Tử và Lạc Long Quân.
 - Nội tại: Lý Ngư (máu dưới 50% +25% tốc đánh), Trương Chi (đòn đánh chậm 30%, 10% mê đứng), Rồng Mẹ (+30% máu, đánh lan 30%), Long Nữ (tướng gần +10% sát thương phép, +10% hồi năng lượng). Thần Khí cho Rồng Mẹ và Long Nữ.
 - Quân triệu hồi xoay 3 nhóm theo ải: Hỏa (Thợ Rèn, Đốt Nương, Đèn Trời) · Thủy (Ngư Phủ, Chèo Đò, Hái Sen) · Thổ + Mộc (Thợ Gốm, Thầy Lang) — cộng 6 tướng gốc.
+
+## Phiên bản 98 — Gợi ý khi sang bộ quái mới (chơi vô tận)
+- Chơi vô tận: khi đợt kế tiếp đổi sang bộ quái mới (sau đợt cuối ải, rồi mỗi 10 đợt), hiện thẻ "Đợt N · bộ quái mới: <tên bộ>" với hành chủ đạo của quái → hành nên dùng, danh sách quái / boss sắp gặp, và 4 ảnh đại diện tướng khắc chế (theo quân triệu hồi ải này + tướng Tím / Vàng đã mua). Tự tắt sau 9 giây hoặc chạm để đóng.
+- Tên bộ quái: Thủy quân Thủy Tinh · Yêu tinh rừng Chằn Tinh · Hang Đại Bàng · Giặc Ân · Thủy quái Biển Đông · Quân Triệu Đà.

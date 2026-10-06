@@ -2486,7 +2486,7 @@ class Game {
     if (extra) this.addGold(extra);
     this.moc = this.mocMax();
     this.rollShop();      // cửa hàng nhập hàng mới
-    this.notify(`Hoàn thành đợt ${this.wave}! +${bonus + extra} vàng · Núi Tản Viên +${mGold}`, '#F2D27A');
+    this.notify(`Hoàn thành đợt ${this.wave}! +${bonus + extra} vàng · núi cao +${mGold} vàng`, '#F2D27A');
     if (bossAt(this.wave, this.level)) this.riseWater();
     this.events.push({ type: 'checkpoint' });   // v74: lưu màn đang chơi giữa hai đợt
     if (this.wave >= this.levelWaves && !this.endless && !this.won) {

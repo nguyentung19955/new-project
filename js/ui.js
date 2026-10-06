@@ -363,6 +363,7 @@ class UI {
     const lvN = live ? g0.level : run ? run.level : 0, wN = live ? g0.wave : run ? run.wave : 0, endl = live ? g0.endless : run && run.endless;
     $('#continue-label').textContent = live || run ? `Tiếp tục · Ải ${lvN + 1} · Đợt ${wN}${endl ? ' ♾' : ''}` : 'Xuất Quân';
     $('#btn-newgame').hidden = !(live || run);
+    $('#roster-hint').onclick = () => { $('#roster-hint').hidden = true; };
     this.setInGame(false);
   }
   hideOverlays() {
@@ -710,7 +711,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 97 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 98 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -907,6 +908,7 @@ class UI {
     this.updateNextWaves();
     this.updateFuseStrip();
     this.updateBoss();
+    this.checkRosterHint();
     this.updateDeck();
     this.updateCoach();
     if (!$('#legends').hidden) this.renderLegends();
@@ -1395,6 +1397,35 @@ class UI {
     const w = coach.offsetWidth;
     coach.style.left = Math.max(4, Math.min(UIW - w - 4, pos[0] / UIZ - w / 2)) + 'px';
     coach.style.top = Math.max(48, pos[1] / UIZ - 30) + 'px';
+  }
+
+  // v98: chế độ vô tận — sắp sang bộ quái mới thì hiện gợi ý tướng khắc chế (ảnh đại diện)
+  checkRosterHint() {
+    const g = this.game;
+    if (!g.started || g.over) return;
+    const n = g.wave + 1;
+    // ngoài vô tận: chỉ nhớ bộ quái đang đánh; vào vô tận rồi mới báo khi đợt kế đổi bộ
+    if (!g.endless || this.rosterLevel !== g.level) {
+      this.rosterKey = rosterKeyOf(rosterFor(Math.max(1, g.wave), g.level)); this.rosterLevel = g.level;
+      if (!g.endless) return;
+    }
+    const key = rosterKeyOf(rosterFor(n, g.level));
+    if (key === this.rosterKey) return;
+    this.rosterKey = key;
+    if (!g.endless || !key) return;
+    const bosses = [];
+    for (let w = n; w < n + 10; w++) { const b = bossAt(w, g.level); if (b) bosses.push(b); }
+    const pool = [...summonPool(g.level), ...LEGEND_HEROES.filter((t) => (this.save.owned || []).includes(t))];
+    const c = rosterCounters(ROSTERS[key], bosses, pool, []);
+    const el = $('#roster-hint');
+    el.innerHTML = `<div class="rh-h"><small>Đợt ${n} · bộ quái mới</small><b>${ROSTER_NAMES[key] || key}</b></div>
+      ${c.main ? `<div class="ch-sum">Quái chủ yếu hành <b style="color:${ELEMENTS[c.main].color}">${ELEMENTS[c.main].name}</b> → dùng hành <b style="color:${ELEMENTS[c.ce].color}">${ELEMENTS[c.ce].name}</b></div>` : ''}
+      <div class="rh-foes">${c.foes.slice(0, 7).map((k) => `<span title="${esc(ENEMIES[k].name)}">${esc(ENEMIES[k].name)}${ENEMIES[k].boss ? ' 👑' : ''}</span>`).join('')}</div>
+      <div class="ch-row">${c.list.map((x) => `<span class="ch-av ${HEROES[x.t].legend || ''}" style="--c:${ELEMENTS[HEROES[x.t].el].color}"><img src="${heroImgUrl(x.t, 'head')}" alt="${esc(HEROES[x.t].name)}"><i>${elIcon(HEROES[x.t].el, 11)}</i><small>${x.why}</small></span>`).join('')}</div>
+      <div class="rh-x">Chạm để đóng</div>`;
+    el.hidden = false;
+    clearTimeout(this.rosterHintT);
+    this.rosterHintT = setTimeout(() => { el.hidden = true; }, 9000);
   }
 
   // v92: tướng nên có để khắc chế quái của ải — hiện ảnh đại diện

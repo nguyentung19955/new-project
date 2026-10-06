@@ -1713,16 +1713,17 @@ const tuviPoints = (xp) => tuviLevel(xp) * TUVI_PTS;
 const tuviNext = (xp) => { const l = tuviLevel(xp); return l >= TUVI_XP.length ? null : TUVI_XP[l]; };
 
 // v92: gợi ý tướng khắc chế cho mỗi ải (theo hành của quái, quái bay, giáp dày, quái nhanh)
-function levelCounters(i, owned) {
-  const lv = LEVELS[i] || {};
-  const R = typeof ROSTERS !== 'undefined' ? ROSTERS[lv.roster || 'thuy'] : null;
-  const foes = [...new Set([...Object.values(lv.bosses || {}), ...(R ? [R.base, R.air, R.champ, ...(R.fast || []), ...R.list.map((x) => x[2])] : [])])]
+// v98: tách phần tính theo bộ quái để dùng cả cho chế độ vô tận (khi sang bộ quái mới)
+const ROSTER_NAMES = { thuy: 'Thủy quân Thủy Tinh', rung: 'Yêu tinh rừng Chằn Tinh', hang: 'Hang Đại Bàng', an: 'Giặc Ân',
+  bien: 'Thủy quái Biển Đông', trieu: 'Quân Triệu Đà' };
+const rosterKeyOf = (R) => (typeof ROSTERS === 'undefined' ? null : Object.keys(ROSTERS).find((k) => ROSTERS[k] === R) || null);
+function rosterCounters(R, bosses, pool, hint) {
+  const foes = [...new Set([...(bosses || []), ...(R ? [R.base, R.air, R.champ, ...(R.fast || []), ...R.list.map((x) => x[2])] : [])])]
     .filter((k) => k && ENEMIES[k]);
   const tally = {};
   for (const k of foes) { const el = ENEMIES[k].el; if (el) tally[el] = (tally[el] || 0) + (ENEMIES[k].boss ? 3 : 1); }
   const main = Object.keys(tally).sort((a, b) => tally[b] - tally[a])[0] || null;
   const ce = main ? EL_ORDER.find((c) => EL_KHAC[c] === main) : null;
-  const pool = [...summonPool(i), ...LEGEND_HEROES.filter((t) => !owned || owned.has(t))];
   const out = [];
   const add = (t, why) => { if (t && !out.some((o) => o.t === t) && out.length < 4) out.push({ t, why }); };
   if (ce) {
@@ -1733,8 +1734,14 @@ function levelCounters(i, owned) {
   if (foes.some((k) => ENEMIES[k].flying)) add(pool.find((t) => HEROES[t].legend && HEROES[t].attack === 'arrow') || 'xathu', 'bắn quái bay');
   if (foes.some((k) => ENEMIES[k].armor >= 10)) add(pool.find((t) => HEROES[t].legend && HEROES[t].dmgType === 'magic') || 'thaymo', 'phép xuyên giáp dày');
   if (R && R.fast && R.fast.length) add('thansuong', 'làm chậm quái nhanh');
-  for (const t of lv.hint || []) add(t, 'hợp bản đồ');
-  return { main, ce, list: out };
+  for (const t of hint || []) add(t, 'hợp bản đồ');
+  return { main, ce, list: out, foes };
+}
+function levelCounters(i, owned) {
+  const lv = LEVELS[i] || {};
+  const R = typeof ROSTERS !== 'undefined' ? ROSTERS[lv.roster || 'thuy'] : null;
+  const pool = [...summonPool(i), ...LEGEND_HEROES.filter((t) => !owned || owned.has(t))];
+  return rosterCounters(R, Object.values(lv.bosses || {}), pool, lv.hint);
 }
 
 // ===== v92: THẦN KHÍ — mỗi tướng Vàng có 3 hệ thống nâng cấp riêng mang bản sắc hành của mình =====
