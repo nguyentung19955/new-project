@@ -1164,3 +1164,13 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Nội tại: Ông Đùng (+20% máu, mỗi đòn thứ 5 choáng), Thổ Công (tướng gần −10% sát thương nhận), Sơn Tinh (+25% máu, đánh quái hành Thủy +30%), Mẫu Địa (tướng gần +10% máu). Thần Khí: Sơn Tinh (Núi Tản Viên · Gậy Thần Dời Non · Sính Lễ Vua Hùng), Mẫu Địa (Mạch Đất · Rễ Thiêng · Ngọc Địa Phủ).
 - Quân triệu hồi xoay 4 nhóm theo ải: Hỏa · Thủy · Thổ (Thợ Gốm, Đắp Đê, Chăn Trâu) · Mộc mới (Thầy Lang).
 - Còn lại cho đủ 60 tướng: hành Kim và Mộc (mỗi hành 6 tướng).
+
+## Phiên bản 101 — Đợt Kim + Mộc: đủ 60 tướng, mọi hợp thể đều cùng hành
+- Kim mới: **Dũng Sĩ Giáo Đồng** (Thường, gần), **Thầy Chuông Đồng** (Thường, xa), **Nghê Đồng** (Tím, gần), **Mỵ Châu** (Tím, xa), **Kỳ Lân Vàng** (Vàng, gần), **Thiên Lôi** (Vàng, xa).
+- Mộc mới: **Dũng Sĩ Tre Làng** (Thường, gần), **Thợ Săn Ống Thổi** (Thường, xa), **Sọ Dừa** (Tím, xa), **Chú Cuội** (Vàng, gần), **Mẹ Lúa** (Vàng, xa).
+- 60 tướng = 5 hành × (4 Thường + 4 Tím + 4 Vàng), mỗi ô hành / bậc có 2 cận chiến + 2 đánh xa. 40 công thức hợp thể, tất cả ghép cùng hành (không còn công thức chéo hành).
+- Kim: Chuông Đồng + Lạc Tướng → Trống Đồng · Xạ Thủ + Giáo Đồng → Cao Lỗ · Lạc Tướng + Giáo Đồng → Nghê Đồng · Xạ Thủ + Chuông Đồng → Mỵ Châu · Cao Lỗ + Trống Đồng → Kim Quy · Cao Lỗ + Mỵ Châu → An Dương Vương · Nghê Đồng + Trống Đồng → Kỳ Lân · Nghê Đồng + Mỵ Châu → Thiên Lôi.
+- Mộc: Thợ Săn + Tre Làng → Thạch Sanh · Thợ Săn + Ống Thổi → Thần Săn · Thầy Lang + Thợ Săn → An Tiêm · Tre Làng + Ống Thổi → Sọ Dừa · Thần Săn + An Tiêm → Mẫu Thượng Ngàn · Thần Săn + Thạch Sanh → Chúa Sơn Lâm · Thạch Sanh + Sọ Dừa → Chú Cuội · An Tiêm + Sọ Dừa → Mẹ Lúa.
+- Nội tại mới: Nghê Đồng (−10% sát thương nhận, phản 20%), Mỵ Châu (lông ngỗng đánh dấu: quái nhận +25% sát thương 2 giây), Kỳ Lân (toàn quân +15% xuyên giáp), Thiên Lôi (20% sét lan 3 quái), Sọ Dừa (−10% sát thương nhận, tướng gần hồi máu), Chú Cuội (hồi máu đồng đội, sống lại mỗi đợt), Mẹ Lúa (+1 vàng mỗi quái, tướng gần +10% sát thương). Thần Khí cho Kỳ Lân, Thiên Lôi, Chú Cuội, Mẹ Lúa.
+- **Màu chủ đạo của mọi tướng = màu hành** (Kim bạc trắng, Mộc xanh lá, Thủy xanh nước, Hỏa đỏ cam, Thổ vàng đất).
+- Quân triệu hồi xoay 5 nhóm theo ải (mỗi nhóm bù đủ 4 tướng Thường của một hành): Hỏa · Thủy · Thổ · Kim · Mộc.

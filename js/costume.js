@@ -61,6 +61,17 @@ const HERO_STYLE = {
   thocong:   { idle: 'sway', atk: 'twirl' },
   tanvien:   { idle: 'heavy', atk: 'spin' },
   maudia:    { idle: 'float', atk: 'float' },
+  giaodong:  { idle: 'guard', atk: 'thrust' },
+  chuongdong: { idle: 'sway', atk: 'twirl' },
+  nghedong:  { idle: 'crouch', atk: 'claw' },
+  mychau:    { idle: 'dance', atk: 'float' },
+  kylan:     { idle: 'heavy', atk: 'claw' },
+  thienloi:  { idle: 'float', atk: 'twirl' },
+  tre:       { idle: 'guard', atk: 'spin' },
+  ongthoi:   { idle: 'aim', atk: 'volley' },
+  sodua:     { idle: 'sway', atk: 'toss' },
+  cuoi:      { idle: 'guard', atk: 'cleave' },
+  melua:     { idle: 'float', atk: 'float' },
 };
 const heroStyle = (type) => HERO_STYLE[type] || { idle: 'guard', atk: null };
 

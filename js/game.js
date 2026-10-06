@@ -2405,6 +2405,7 @@ class Game {
         // Trống Đồng: +20% tốc đánh cho tướng xung quanh (cả bản thân)
         if (own.hasteAura && (o === src || near(src, o, 170))) b.haste = Math.max(b.haste || 0, own.hasteAura);
         if (t === 'kinhduong') b.drum = Math.max(b.drum || 0, 8);                       // Vua Xích Quỷ: toàn quân +8% sát thương
+        if (t === 'kylan') b.pierce = Math.max(b.pierce || 0, 15);                      // Điềm Lành: toàn quân +15% xuyên giáp
         if (!near(src, o, 170)) continue;
         if (t === 'kimquy' && near(src, o, 110)) b.dr = Math.max(b.dr || 0, 30);
         if (t === 'lachau' && near(src, o, ELEM.adj)) {
@@ -2422,6 +2423,7 @@ class Game {
         if (t === 'trongdong') b.haste = Math.max(b.haste || 0, 10);                    // Hồi Trống Thiêng
         if (t === 'mauthoai') b.manaPct = Math.max(b.manaPct || 0, 15);                 // Thủy Cung Thánh Mẫu
         if (t === 'thocong') b.dr = Math.max(b.dr || 0, 10);                            // Giữ Đất Giữ Nhà
+        if (t === 'melua') b.forest = Math.max(b.forest || 0, 10);                      // Mùa Vàng
         if (t === 'maudia') b.hpPct = Math.max(b.hpPct || 0, 10);                       // Địa Tiên Thánh Mẫu
         if (t === 'longnu') { b.magicPct = Math.max(b.magicPct || 0, 10); b.manaPct = Math.max(b.manaPct || 0, 10); }   // Ngọc Long Nữ
         if (t === 'caong' && o !== src && near(src, o, ELEM.adj)) b.dr = Math.max(b.dr || 0, 10);   // Hộ Ngư Dân
@@ -3238,6 +3240,7 @@ class Game {
     if (st && st.execPct && e.hp < e.maxHp * 0.3) dmg *= 1 + st.execPct / 100;   // Chúa Sơn Lâm
     if (st && st.burnAmp && e.poisonT > 0) dmg *= 1 + st.burnAmp / 100;              // Bà Hỏa: Hỏa Hoạn
     if (st && st.vsThuy && (e.el === 'thuy' || e.el2 === 'thuy')) dmg *= 1 + st.vsThuy / 100;   // Sơn Tinh: Núi Cao Nước Dâng
+    if (st && st.markHit && !o.silent) e.huntT = Math.max(e.huntT || 0, st.markHit);            // Mỵ Châu: lông ngỗng đánh dấu
     if (RF) {
       if (RF.fx.eliteDmg && (e.elite || e.champion || e.def.general)) dmg *= 1 + RF.fx.eliteDmg / 100;
       if (RF.fx.ccDmg && (e.slowT > 0 || e.stunT > 0)) dmg *= 1 + RF.fx.ccDmg / 100;
