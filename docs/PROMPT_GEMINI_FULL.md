@@ -1,4 +1,4 @@
-# Prompt Gemini đầy đủ — mỗi ảnh một prompt (67 ảnh)
+# Prompt Gemini đầy đủ — mỗi ảnh một prompt (61 ảnh)
 
 Mỗi khối dán **riêng một lần** vào Gemini (đính kèm `docs/mau-lac-tuong.png` làm mẫu nét vẽ nếu được), tải ảnh về và đặt **đúng tên file** ghi trên khối. Gen theo thứ tự từ trên xuống: phần 1–4 là cần thiết, phần 5–7 là tùy chọn.
 
@@ -103,55 +103,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 12. Icon kỹ năng Người Đắp Đê → `icon-dapde.png`
-```
-Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Người Đắp Đê, one icon per cell, left to right:
-[1] hoe hitting the ground  [2] earthen dike  [3] earth shield wall  [4] cracked broken dike.
-Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, flat colors with the element color earth ochre #C99A3C with brown accents, no character body, no text.
-BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
-```
-
-### 13. Icon kỹ năng Trẻ Chăn Trâu → `icon-chantrau.png`
-```
-Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Trẻ Chăn Trâu, one icon per cell, left to right:
-[1] bouncing pebble  [2] pebble hitting a head with stars  [3] bamboo flute on a buffalo  [4] many kids with slingshots.
-Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, flat colors with the element color earth ochre #C99A3C with brown accents, no character body, no text.
-BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
-```
-
-### 14. Icon kỹ năng Dũng Sĩ Giáo Đồng → `icon-giaodong.png`
-```
-Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Dũng Sĩ Giáo Đồng, one icon per cell, left to right:
-[1] bronze spear thrust  [2] bronze spear tip  [3] spear stance silhouette  [4] spinning spear.
-Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, flat colors with the element color silver-white #D9DDE0 with bronze-gold accents, no character body, no text.
-BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
-```
-
-### 15. Icon kỹ năng Thầy Chuông Đồng → `icon-chuongdong.png`
-```
-Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Thầy Chuông Đồng, one icon per cell, left to right:
-[1] ringing bronze bell with sound waves  [2] bell sound wave rings  [3] bronze talisman  [4] temple bell with golden light.
-Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, flat colors with the element color silver-white #D9DDE0 with bronze-gold accents, no character body, no text.
-BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
-```
-
-### 16. Icon kỹ năng Dũng Sĩ Tre Làng → `icon-tre.png`
-```
-Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Dũng Sĩ Tre Làng, one icon per cell, left to right:
-[1] bamboo staff hitting  [2] ivory bamboo stalk  [3] green bamboo hedge  [4] bamboo grove sweeping.
-Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, flat colors with the element color leaf green #5FB84A with brown wood accents, no character body, no text.
-BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
-```
-
-### 17. Icon kỹ năng Thợ Săn Ống Thổi → `icon-ongthoi.png`
-```
-Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Thợ Săn Ống Thổi, one icon per cell, left to right:
-[1] poison dart  [2] sticky poison sap  [3] hunter eye in the forest  [4] rain of darts.
-Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, flat colors with the element color leaf green #5FB84A with brown wood accents, no character body, no text.
-BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
-```
-
-### 18. Icon kỹ năng Thần Trống Đồng → `icon-trongdong.png`
+### 12. Icon kỹ năng Thần Trống Đồng → `icon-trongdong.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Thần Trống Đồng, one icon per cell, left to right:
 [1] drum mallet hitting a drum  [2] sound wave rings  [3] bronze drum sun face  [4] lightning over a bronze drum.
@@ -159,7 +111,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 19. Icon kỹ năng Thần Cá Ông → `icon-caong.png`
+### 13. Icon kỹ năng Thần Cá Ông → `icon-caong.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Thần Cá Ông, one icon per cell, left to right:
 [1] water spout  [2] shield over a small boat  [3] whale skin with spikes  [4] giant tidal wave.
@@ -167,7 +119,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 20. Icon kỹ năng Ông Táo → `icon-ongtao.png`
+### 14. Icon kỹ năng Ông Táo → `icon-ongtao.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Ông Táo, one icon per cell, left to right:
 [1] fire tongs holding a coal  [2] three hearth stones with fire  [3] scroll to heaven  [4] fire carp turning into a dragon.
@@ -175,7 +127,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 21. Icon kỹ năng Vua Lửa Pơtao Apui → `icon-potaoapui.png`
+### 15. Icon kỹ năng Vua Lửa Pơtao Apui → `icon-potaoapui.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Vua Lửa Pơtao Apui, one icon per cell, left to right:
 [1] flaming sword  [2] volcano oath stone  [3] ring of fire  [4] erupting volcano.
@@ -183,7 +135,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 22. Icon kỹ năng Bà Hỏa → `icon-baahoa.png`
+### 16. Icon kỹ năng Bà Hỏa → `icon-baahoa.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Bà Hỏa, one icon per cell, left to right:
 [1] small flame  [2] spreading fire  [3] black smoke cloud  [4] sea of fire.
@@ -191,7 +143,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 23. Icon kỹ năng Lý Ngư Tướng Quân → `icon-lyngu.png`
+### 17. Icon kỹ năng Lý Ngư Tướng Quân → `icon-lyngu.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Lý Ngư Tướng Quân, one icon per cell, left to right:
 [1] trident  [2] golden carp scale  [3] carp tail splash  [4] carp turning into a dragon.
@@ -199,7 +151,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 24. Icon kỹ năng Trương Chi → `icon-truongchi.png`
+### 18. Icon kỹ năng Trương Chi → `icon-truongchi.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Trương Chi, one icon per cell, left to right:
 [1] bamboo flute with notes  [2] singing mouth with notes  [3] river mist  [4] last song note over waves.
@@ -207,7 +159,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 25. Icon kỹ năng Ông Đùng → `icon-ongdung.png`
+### 19. Icon kỹ năng Ông Đùng → `icon-ongdung.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Ông Đùng, one icon per cell, left to right:
 [1] carrying pole with stone baskets  [2] giant body  [3] giant footprint pond  [4] rising mountain.
@@ -215,7 +167,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 26. Icon kỹ năng Thổ Công → `icon-thocong.png`
+### 20. Icon kỹ năng Thổ Công → `icon-thocong.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Thổ Công, one icon per cell, left to right:
 [1] blessing hand  [2] incense pot  [3] earth dome shield  [4] glowing earth god shrine.
@@ -223,7 +175,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 27. Icon kỹ năng Lang Liêu → `icon-langlieu.png`
+### 21. Icon kỹ năng Lang Liêu → `icon-langlieu.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Lang Liêu, one icon per cell, left to right:
 [1] square banh chung rice cake  [2] round white banh giay  [3] rice field with water  [4] ancestor altar with incense.
@@ -231,7 +183,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 28. Icon kỹ năng Nghê Đồng → `icon-nghedong.png`
+### 22. Icon kỹ năng Nghê Đồng → `icon-nghedong.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Nghê Đồng, one icon per cell, left to right:
 [1] guardian lion pounce  [2] bronze shield  [3] bronze claw  [4] temple roof shaking with a roar.
@@ -239,7 +191,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 29. Icon kỹ năng Mỵ Châu → `icon-mychau.png`
+### 23. Icon kỹ năng Mỵ Châu → `icon-mychau.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Mỵ Châu, one icon per cell, left to right:
 [1] white feathers flying like birds  [2] goose-feather cloak  [3] jade well with water  [4] crossbow with a turtle-claw trigger.
@@ -247,7 +199,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 30. Icon kỹ năng Sọ Dừa → `icon-sodua.png`
+### 24. Icon kỹ năng Sọ Dừa → `icon-sodua.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Sọ Dừa, one icon per cell, left to right:
 [1] exploding green coconut  [2] bamboo flute with notes  [3] coconut shell opening with light  [4] coconuts raining.
@@ -255,7 +207,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 31. Icon kỹ năng Nữ Thần Mặt Trời → `icon-matroi.png`
+### 25. Icon kỹ năng Nữ Thần Mặt Trời → `icon-matroi.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Nữ Thần Mặt Trời, one icon per cell, left to right:
 [1] sun pillar beam  [2] summer sun  [3] three-legged fire crow  [4] solar eclipse.
@@ -263,7 +215,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 32. Icon kỹ năng Mẫu Thoải → `icon-mauthoai.png`
+### 26. Icon kỹ năng Mẫu Thoải → `icon-mauthoai.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Mẫu Thoải, one icon per cell, left to right:
 [1] silver wave  [2] holy water lotus  [3] ice pearl  [4] underwater palace gate opening.
@@ -271,7 +223,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 33. Icon kỹ năng Thần Trụ Trời → `icon-trutroi.png`
+### 27. Icon kỹ năng Thần Trụ Trời → `icon-trutroi.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Thần Trụ Trời, one icon per cell, left to right:
 [1] foot stomp crack  [2] stone pillar  [3] stone body  [4] giant rock lifted by hands.
@@ -279,7 +231,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 34. Icon kỹ năng Chúa Sơn Lâm → `icon-ongho.png`
+### 28. Icon kỹ năng Chúa Sơn Lâm → `icon-ongho.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Chúa Sơn Lâm, one icon per cell, left to right:
 [1] tiger pounce claw  [2] roar  [3] tiger paw print with leaves  [4] hunting horn with tiger.
@@ -287,7 +239,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 35. Icon kỹ năng Kinh Dương Vương → `icon-kinhduong.png`
+### 29. Icon kỹ năng Kinh Dương Vương → `icon-kinhduong.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Kinh Dương Vương, one icon per cell, left to right:
 [1] red-gold sword  [2] rice and leaf crest  [3] royal command banner  [4] fire dragon.
@@ -295,7 +247,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 36. Icon kỹ năng Viêm Đế Thần Nông → `icon-viemde.png`
+### 30. Icon kỹ năng Viêm Đế Thần Nông → `icon-viemde.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Viêm Đế Thần Nông, one icon per cell, left to right:
 [1] first flame on a torch  [2] herb bundle  [3] fire plough  [4] falling fire sun.
@@ -303,7 +255,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 37. Icon kỹ năng Rồng Mẹ Hạ Long → `icon-halong.png`
+### 31. Icon kỹ năng Rồng Mẹ Hạ Long → `icon-halong.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Rồng Mẹ Hạ Long, one icon per cell, left to right:
 [1] bay wave  [2] jade scale shield  [3] pearl becoming an island  [4] dragon flock.
@@ -311,7 +263,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 38. Icon kỹ năng Long Nữ Động Đình → `icon-longnu.png`
+### 32. Icon kỹ năng Long Nữ Động Đình → `icon-longnu.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Long Nữ Động Đình, one icon per cell, left to right:
 [1] dragon pearl  [2] lake water drop  [3] ice dragon  [4] underwater palace waves.
@@ -319,7 +271,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 39. Icon kỹ năng Sơn Tinh → `icon-tanvien.png`
+### 33. Icon kỹ năng Sơn Tinh → `icon-tanvien.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Sơn Tinh, one icon per cell, left to right:
 [1] moving hill  [2] Tan Vien mountain  [3] rising mountain wall  [4] mountain peaks rising from water.
@@ -327,7 +279,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 40. Icon kỹ năng Mẫu Địa → `icon-maudia.png`
+### 34. Icon kỹ năng Mẫu Địa → `icon-maudia.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Mẫu Địa, one icon per cell, left to right:
 [1] cracked earth  [2] underground spring  [3] sacred roots  [4] mother mountain.
@@ -335,7 +287,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 41. Icon kỹ năng Kỳ Lân Vàng → `icon-kylan.png`
+### 35. Icon kỹ năng Kỳ Lân Vàng → `icon-kylan.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Kỳ Lân Vàng, one icon per cell, left to right:
 [1] golden qilin horn  [2] golden scales  [3] auspicious clouds with a banner  [4] qilin breathing golden fire.
@@ -343,7 +295,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 42. Icon kỹ năng Thiên Lôi → `icon-thienloi.png`
+### 36. Icon kỹ năng Thiên Lôi → `icon-thienloi.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Thiên Lôi, one icon per cell, left to right:
 [1] lightning strike  [2] thunder axe  [3] axe smashing down  [4] sky lightning storm.
@@ -351,7 +303,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 43. Icon kỹ năng Chú Cuội → `icon-cuoi.png`
+### 37. Icon kỹ năng Chú Cuội → `icon-cuoi.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Chú Cuội, one icon per cell, left to right:
 [1] woodcutter axe chop  [2] magic banyan leaf  [3] flying banyan tree  [4] moon with wind swirls.
@@ -359,7 +311,7 @@ Each icon: one bold simple symbol, centered, thick dark-brown outline #2A1608, f
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 44. Icon kỹ năng Mẹ Lúa → `icon-melua.png`
+### 38. Icon kỹ năng Mẹ Lúa → `icon-melua.png`
 ```
 Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero Mẹ Lúa, one icon per cell, left to right:
 [1] golden rice field  [2] bowl of new rice  [3] golden straw rope  [4] shower of golden grain.
@@ -369,7 +321,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers,
 
 ## 6. Icon Thần Khí (tùy chọn)
 
-### 45. Thần Khí Thánh Gióng → `than-khi-giong.png`
+### 39. Thần Khí Thánh Gióng → `than-khi-giong.png`
 ```
 Create ONE image: a 384x128 row of three equal 128x128 square treasure icons for Thánh Gióng, one per cell, left to right:
 [1] iron armor  [2] bamboo staff of golden bamboo  [3] iron horse head breathing fire.
@@ -377,7 +329,7 @@ Each icon: one bold simple object, centered, gold rim, thick dark-brown outline 
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 46. Thần Khí Lạc Long Quân → `than-khi-llq.png`
+### 40. Thần Khí Lạc Long Quân → `than-khi-llq.png`
 ```
 Create ONE image: a 384x128 row of three equal 128x128 square treasure icons for Lạc Long Quân, one per cell, left to right:
 [1] dragon scale  [2] water-dragon sword  [3] underwater palace.
@@ -385,7 +337,7 @@ Each icon: one bold simple object, centered, gold rim, thick dark-brown outline 
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 47. Thần Khí Thần Kim Quy → `than-khi-kimquy.png`
+### 41. Thần Khí Thần Kim Quy → `than-khi-kimquy.png`
 ```
 Create ONE image: a 384x128 row of three equal 128x128 square treasure icons for Thần Kim Quy, one per cell, left to right:
 [1] golden turtle shell  [2] golden turtle claw (crossbow trigger)  [3] glowing lake with a sword.
@@ -393,7 +345,7 @@ Each icon: one bold simple object, centered, gold rim, thick dark-brown outline 
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 48. Thần Khí An Dương Vương → `than-khi-adv.png`
+### 42. Thần Khí An Dương Vương → `than-khi-adv.png`
 ```
 Create ONE image: a 384x128 row of three equal 128x128 square treasure icons for An Dương Vương, one per cell, left to right:
 [1] repeating crossbow  [2] spiral citadel walls  [3] royal Au Lac robe.
@@ -401,7 +353,7 @@ Each icon: one bold simple object, centered, gold rim, thick dark-brown outline 
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 49. Thần Khí Âu Cơ → `than-khi-auco.png`
+### 43. Thần Khí Âu Cơ → `than-khi-auco.png`
 ```
 Create ONE image: a 384x128 row of three equal 128x128 square treasure icons for Âu Cơ, one per cell, left to right:
 [1] egg sac with a hundred eggs  [2] fairy wings  [3] mother mountain.
@@ -409,7 +361,7 @@ Each icon: one bold simple object, centered, gold rim, thick dark-brown outline 
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 50. Thần Khí Mẫu Thượng Ngàn → `than-khi-mau.png`
+### 44. Thần Khí Mẫu Thượng Ngàn → `than-khi-mau.png`
 ```
 Create ONE image: a 384x128 row of three equal 128x128 square treasure icons for Mẫu Thượng Ngàn, one per cell, left to right:
 [1] sacred forest tree  [2] thousand-year vines  [3] forest fruits and flowers.
@@ -417,7 +369,7 @@ Each icon: one bold simple object, centered, gold rim, thick dark-brown outline 
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 51. Thần Khí Nữ Thần Mặt Trời → `than-khi-matroi.png`
+### 45. Thần Khí Nữ Thần Mặt Trời → `than-khi-matroi.png`
 ```
 Create ONE image: a 384x128 row of three equal 128x128 square treasure icons for Nữ Thần Mặt Trời, one per cell, left to right:
 [1] sun disk  [2] three-legged crow  [3] sunset-cloud robe.
@@ -425,7 +377,7 @@ Each icon: one bold simple object, centered, gold rim, thick dark-brown outline 
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 52. Thần Khí Mẫu Thoải → `than-khi-mauthoai.png`
+### 46. Thần Khí Mẫu Thoải → `than-khi-mauthoai.png`
 ```
 Create ONE image: a 384x128 row of three equal 128x128 square treasure icons for Mẫu Thoải, one per cell, left to right:
 [1] sea pearl  [2] holy wave  [3] white lotus throne.
@@ -433,7 +385,7 @@ Each icon: one bold simple object, centered, gold rim, thick dark-brown outline 
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 53. Thần Khí Thần Trụ Trời → `than-khi-trutroi.png`
+### 47. Thần Khí Thần Trụ Trời → `than-khi-trutroi.png`
 ```
 Create ONE image: a 384x128 row of three equal 128x128 square treasure icons for Thần Trụ Trời, one per cell, left to right:
 [1] stone sky pillar  [2] giant hands holding the sky  [3] earth mound.
@@ -441,7 +393,7 @@ Each icon: one bold simple object, centered, gold rim, thick dark-brown outline 
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 54. Thần Khí Chúa Sơn Lâm → `than-khi-ongho.png`
+### 48. Thần Khí Chúa Sơn Lâm → `than-khi-ongho.png`
 ```
 Create ONE image: a 384x128 row of three equal 128x128 square treasure icons for Chúa Sơn Lâm, one per cell, left to right:
 [1] tiger claw  [2] tiger stripes with leaves  [3] northwest mountain forest.
@@ -449,7 +401,7 @@ Each icon: one bold simple object, centered, gold rim, thick dark-brown outline 
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 55. Thần Khí Kinh Dương Vương → `than-khi-kinhduong.png`
+### 49. Thần Khí Kinh Dương Vương → `than-khi-kinhduong.png`
 ```
 Create ONE image: a 384x128 row of three equal 128x128 square treasure icons for Kinh Dương Vương, one per cell, left to right:
 [1] red demon-realm sword  [2] golden throne  [3] lake with a dragon princess silhouette.
@@ -457,7 +409,7 @@ Each icon: one bold simple object, centered, gold rim, thick dark-brown outline 
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 56. Thần Khí Viêm Đế Thần Nông → `than-khi-viemde.png`
+### 50. Thần Khí Viêm Đế Thần Nông → `than-khi-viemde.png`
 ```
 Create ONE image: a 384x128 row of three equal 128x128 square treasure icons for Viêm Đế Thần Nông, one per cell, left to right:
 [1] sacred farming fire  [2] divine plough  [3] hundred herbs bundle.
@@ -465,7 +417,7 @@ Each icon: one bold simple object, centered, gold rim, thick dark-brown outline 
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 57. Thần Khí Rồng Mẹ Hạ Long → `than-khi-halong.png`
+### 51. Thần Khí Rồng Mẹ Hạ Long → `than-khi-halong.png`
 ```
 Create ONE image: a 384x128 row of three equal 128x128 square treasure icons for Rồng Mẹ Hạ Long, one per cell, left to right:
 [1] jade dragon scale  [2] pearl island  [3] Ha Long bay with limestone islets.
@@ -473,7 +425,7 @@ Each icon: one bold simple object, centered, gold rim, thick dark-brown outline 
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 58. Thần Khí Long Nữ Động Đình → `than-khi-longnu.png`
+### 52. Thần Khí Long Nữ Động Đình → `than-khi-longnu.png`
 ```
 Create ONE image: a 384x128 row of three equal 128x128 square treasure icons for Long Nữ Động Đình, one per cell, left to right:
 [1] dragon pearl  [2] Dong Dinh lake  [3] pearl silk robe.
@@ -481,7 +433,7 @@ Each icon: one bold simple object, centered, gold rim, thick dark-brown outline 
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 59. Thần Khí Sơn Tinh → `than-khi-tanvien.png`
+### 53. Thần Khí Sơn Tinh → `than-khi-tanvien.png`
 ```
 Create ONE image: a 384x128 row of three equal 128x128 square treasure icons for Sơn Tinh, one per cell, left to right:
 [1] Tan Vien mountain  [2] mountain-moving staff  [3] nine-tusk elephant wedding gift.
@@ -489,7 +441,7 @@ Each icon: one bold simple object, centered, gold rim, thick dark-brown outline 
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 60. Thần Khí Mẫu Địa → `than-khi-maudia.png`
+### 54. Thần Khí Mẫu Địa → `than-khi-maudia.png`
 ```
 Create ONE image: a 384x128 row of three equal 128x128 square treasure icons for Mẫu Địa, one per cell, left to right:
 [1] earth vein lava  [2] sacred roots  [3] underground jade.
@@ -497,7 +449,7 @@ Each icon: one bold simple object, centered, gold rim, thick dark-brown outline 
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 61. Thần Khí Kỳ Lân Vàng → `than-khi-kylan.png`
+### 55. Thần Khí Kỳ Lân Vàng → `than-khi-kylan.png`
 ```
 Create ONE image: a 384x128 row of three equal 128x128 square treasure icons for Kỳ Lân Vàng, one per cell, left to right:
 [1] golden qilin horn  [2] golden scale  [3] five-color auspicious cloud.
@@ -505,7 +457,7 @@ Each icon: one bold simple object, centered, gold rim, thick dark-brown outline 
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 62. Thần Khí Thiên Lôi → `than-khi-thienloi.png`
+### 56. Thần Khí Thiên Lôi → `than-khi-thienloi.png`
 ```
 Create ONE image: a 384x128 row of three equal 128x128 square treasure icons for Thiên Lôi, one per cell, left to right:
 [1] stone thunder axe  [2] storm cloud  [3] heavenly silver armor.
@@ -513,7 +465,7 @@ Each icon: one bold simple object, centered, gold rim, thick dark-brown outline 
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 63. Thần Khí Chú Cuội → `than-khi-cuoi.png`
+### 57. Thần Khí Chú Cuội → `than-khi-cuoi.png`
 ```
 Create ONE image: a 384x128 row of three equal 128x128 square treasure icons for Chú Cuội, one per cell, left to right:
 [1] magic banyan tree  [2] woodcutter axe  [3] crescent moon palace.
@@ -521,7 +473,7 @@ Each icon: one bold simple object, centered, gold rim, thick dark-brown outline 
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 64. Thần Khí Mẹ Lúa → `than-khi-melua.png`
+### 58. Thần Khí Mẹ Lúa → `than-khi-melua.png`
 ```
 Create ONE image: a 384x128 row of three equal 128x128 square treasure icons for Mẹ Lúa, one per cell, left to right:
 [1] golden rice ear  [2] ripe rice field  [3] pot of new rice.
@@ -531,7 +483,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers,
 
 ## 7. Icon Ấn Phù (tùy chọn)
 
-### 65. Ấn Phù nhánh nui → `an-phu-nui.png`
+### 59. Ấn Phù nhánh nui → `an-phu-nui.png`
 ```
 Create ONE image: a 512x384 sheet, invisible 4x3 grid of twelve equal 128x128 cells, one round carved stone-and-bronze rune seal per cell, rim color #D9844A, symbol carved in the middle, left to right, top to bottom:
 crossed swords · heart · spring water · pickaxe · bronze shield · demon mask · cactus spikes · sledgehammer · skull · falling mountain · stone shield · volcano.
@@ -539,7 +491,7 @@ Thick dark-brown outline #2A1608, flat colors, no text.
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 66. Ấn Phù nhánh gio → `an-phu-gio.png`
+### 60. Ấn Phù nhánh gio → `an-phu-gio.png`
 ```
 Create ONE image: a 512x384 sheet, invisible 4x3 grid of twelve equal 128x128 cells, one round carved stone-and-bronze rune seal per cell, rim color #6FCB8A, symbol carved in the middle, left to right, top to bottom:
 wind swirl · four-point star · target · burst · eagle · spiral · coin · blood drop · trap · tornado · lightning bolt · eye.
@@ -547,7 +499,7 @@ Thick dark-brown outline #2A1608, flat colors, no text.
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```
 
-### 67. Ấn Phù nhánh sam → `an-phu-sam.png`
+### 61. Ấn Phù nhánh sam → `an-phu-sam.png`
 ```
 Create ONE image: a 512x384 sheet, invisible 4x3 grid of twelve equal 128x128 cells, one round carved stone-and-bronze rune seal per cell, rim color #7FA8F0, symbol carved in the middle, left to right, top to bottom:
 radiant sun · hourglass · water drop · crystal ball · amulet eye · bottle · flame · crescent moon · wind chime · thunder cloud · skull spirit · bell.
