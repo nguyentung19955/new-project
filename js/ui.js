@@ -248,9 +248,11 @@ class UI {
     // Xuất Quân: đang có trận dở thì quay lại trận, không thì mở bản đồ chiến dịch
     $('#btn-continue').onclick = () => {
       const g = this.game;
-      if (g.started && !g.over && !g.won) return this.playLevel(g.level);
+      if (g.started && !g.over && (!g.won || g.endless)) return this.playLevel(g.level);
+      if (this.save.run) return this.resumeRun();
       this.showCampaign(this.save.last);
     };
+    $('#btn-newgame').onclick = () => this.showCampaign(this.save.last);
     $('#btn-heroes').onclick = () => this.showRoster();
     $('#btn-treasury').onclick = () => this.showTreasury();
     $('#btn-ranks').onclick = () => this.showRanks('endless');
@@ -340,7 +342,11 @@ class UI {
     const short = (n) => (n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace('.', ',') + 'k' : n);
     $('#menu-res').innerHTML = `<span title="Tổng vàng đã kiếm qua mọi trận (vàng trong trận luôn bắt đầu từ ${CONFIG.startGold})"><small class="pr-l">Tổng vàng đã kiếm</small>${coin(1)} ${short(s.lifeGold)}</span><span title="Linh Chi đã hái">🌿 ${short(s.lifeHerbs)}</span><span title="Ngân khố: vàng thưởng sau mỗi trận thắng, dùng mua đồ / tướng trước trận"><small class="pr-l">Ngân khố</small>${coin(1)} <b style="color:#FFD66B">${fmt(s.kho || 0)}</b></span>`;
     $('#menu-art').innerHTML = svgI(sceneArt('menu'));
-    $('#continue-label').textContent = this.game.started && !this.game.over && !this.game.won ? `Chơi tiếp · Ải ${this.game.level + 1}` : 'Xuất Quân';
+    const g0 = this.game, live = g0.started && !g0.over && (!g0.won || g0.endless);
+    const run = !live && s.run;
+    const lvN = live ? g0.level : run ? run.level : 0, wN = live ? g0.wave : run ? run.wave : 0, endl = live ? g0.endless : run && run.endless;
+    $('#continue-label').textContent = live || run ? `Tiếp tục · Ải ${lvN + 1} · Đợt ${wN}${endl ? ' ♾' : ''}` : 'Xuất Quân';
+    $('#btn-newgame').hidden = !(live || run);
     this.setInGame(false);
   }
   hideOverlays() {
@@ -384,6 +390,7 @@ class UI {
     this.setInGame(true);
     this.toast(`Ải ${i + 1} · ${LEVELS[i].name}: giữ thành Phong Châu qua ${LEVELS[i].waves} đợt`, '#F2D27A');
     this.prepBought = {};
+    this.saveRun();
     if ((this.save.kho || 0) >= PREP.minShow) this.showPrep();
   }
 
@@ -433,6 +440,24 @@ class UI {
     const h = g.spawnHero(slot, t, {});
     h.from = t; h.lineage = []; h.summonT = 0;
     writeSave(s); this.showPrep();
+  }
+
+  // ---------- v74: Tiếp tục / Chơi mới — lưu màn đang chơi vào bản lưu (đồng bộ đám mây)
+  saveRun() {
+    const g = this.game;
+    if (!g.started || g.over || (g.won && !g.endless)) return;
+    this.save.run = g.snapshot();
+    writeSave(this.save);
+  }
+  clearRun() { if (this.save.run) { delete this.save.run; writeSave(this.save); } }
+  resumeRun() {
+    const r = this.save.run;
+    if (!r || !LEVELS[r.level]) { this.clearRun(); return this.showCampaign(this.save.last); }
+    try { this.game.restore(r); } catch (e) { this.clearRun(); this.toast('Không nạp được màn đã lưu', '#E25A3A'); return this.showCampaign(this.save.last); }
+    this.sel = -1; this.spot = -1; this.armed = null; this.raising = false; this.moving = -1; this.screen = null;
+    $('#screen').hidden = true;
+    this.hideOverlays(); this.setInGame(true);
+    this.toast(`Tiếp tục Ải ${r.level + 1} · ${LEVELS[r.level].name} — từ đợt ${r.wave + 1}`, '#F2D27A');
   }
 
   // ---------- v72: Bảng xếp hạng (vô tận + từng ải)
@@ -649,7 +674,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 73 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 74 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -891,6 +916,8 @@ class UI {
         this.sig.deck = null;
       } else if (ev.type === 'setDone') {
         this.banner(`${HEROES[ev.hero.type].name} mặc đủ bộ`, ev.name);
+      } else if (ev.type === 'checkpoint') {
+        this.saveRun();
       } else if (ev.type === 'victory') {
         this.finishLevel(true);
       } else if (ev.type === 'defeat') {
@@ -1418,6 +1445,7 @@ class UI {
     const o = this.rewardOpts[i];
     this.game.claimReward(o);
     $('#reward').hidden = true;
+    if (!this.game.waveActive) this.saveRun();
     if (o.kind === 'item' && o.ids) this.toast(`Nhận ${o.ids.length} món từ Hũ Vua Hùng · bấm ≡ → Mặc đồ cả đội`, '#C8A0F0');
     else if (o.kind === 'item') this.toast(`Nhận ${ITEMS[o.id].name}! Mở Túi đồ để đeo cho tướng`, RARITY[ITEMS[o.id].rarity].color);
     else if (o.kind === 'treasure') this.toast(`+${o.gold} vàng, +${o.lives} mạng`, '#F2D27A');
@@ -1455,6 +1483,7 @@ class UI {
       : PREP.losePerWave * Math.max(0, g.wave - 1);
     s.kho = (s.kho || 0) + khoGain;
     this.submitScores(win, stars);
+    this.clearRun();
     this.bankStats();
     this.closeScreen();
     $('#reward').hidden = true;
@@ -1579,7 +1608,7 @@ class UI {
         this.save.nick = v || null; writeSave(this.save); this.showRanks(this.ranksBoard); break;
       }
       case 'prep-hero': this.prepHero(d.id); break;
-      case 'prep-go': $('#prep').hidden = true; break;
+      case 'prep-go': $('#prep').hidden = true; this.saveRun(); break;
       case 'cloud-sync': CLOUD.push(this.save, true); break;
       case 'cloud-out': this.loginFromMenu = false; CLOUD.signOut(); break;
       case 'set-close':
@@ -1607,6 +1636,7 @@ class UI {
         g.endless = true;
         g.running = true;
         $('#result').hidden = true;
+        this.saveRun();
         this.toast('Năm nào cũng dâng nước: quái mạnh dần, boss mỗi 10 đợt', '#5AB4D6');
         break;
       case 'reward': this.pickReward(+d.i); break;

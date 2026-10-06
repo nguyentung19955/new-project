@@ -1271,3 +1271,9 @@ body { overflow: hidden; }
 .login-or { font-size: 12px; color: var(--text-2); }
 .login-err { font-size: 13px; color: #FFB08A; }
 .login-link { background: none; border: 0; color: #9EDDF2; font-size: 13px; text-decoration: underline; }
+/* v74: có thêm nút Chơi mới → thu gọn menu */
+.mc-nav:has(#btn-newgame:not([hidden])) .mc-btn { height: 36px; font-size: 15px; }
+.mc-nav:has(#btn-newgame:not([hidden])) .mc-btn.main { height: 42px; font-size: 15px; }
+.mc-nav:has(#btn-newgame:not([hidden])) { gap: 6px; }
+#continue-label { overflow: hidden; text-overflow: ellipsis; }
+.mc-subs { min-width: 0; } .mc-subs .mc-sub { min-width: 0; overflow: hidden; text-overflow: ellipsis; font-size: 13px; }

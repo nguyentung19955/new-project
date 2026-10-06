@@ -2305,11 +2305,38 @@ class Game {
     this.rollShop();      // cửa hàng nhập hàng mới
     this.notify(`Hoàn thành đợt ${this.wave}! +${bonus + extra} vàng · Núi Tản Viên +${mGold}`, '#F2D27A');
     if (bossAt(this.wave, this.level)) this.riseWater();
+    this.events.push({ type: 'checkpoint' });   // v74: lưu màn đang chơi giữa hai đợt
     if (this.wave >= this.levelWaves && !this.endless && !this.won) {
       this.won = true;
       this.running = false;
       this.events.push({ type: 'victory' });
     }
+  }
+
+  // v74: lưu / nạp màn đang chơi (giữa hai đợt). Bỏ trạng thái tạm (hiệu ứng, đạn, quái đang đi).
+  snapshot() {
+    const skip = new Set(['_anim', 'target', 'tgt', 'notice', 'unlockFx', 'procT']);
+    const heroes = JSON.parse(JSON.stringify(this.heroes, (k, v) => (skip.has(k) ? undefined : v)));
+    const o = { v: 1, at: Date.now(), heroes };
+    for (const k of ['level', 'hard', 'endless', 'won', 'gold', 'lives', 'wave', 'summonN', 'bossesKilled', 'seen', 'water', 'raised', 'moc',
+      'mountain', 'stats', 'inventory', 'jarCount', 'shop', 'time', 'flags', 'runId', 'guardT', 'oathT']) o[k] = this[k];
+    return JSON.parse(JSON.stringify(o));
+  }
+  restore(o) {
+    this.reset(o.level);
+    for (const k of Object.keys(o)) if (k !== 'heroes' && k !== 'v' && k !== 'at') this[k] = o[k];
+    this.heroes = CONFIG.slots.map((_, i) => {
+      const h = o.heroes && o.heroes[i];
+      if (!h) return null;
+      const [x, y] = CONFIG.slots[i];
+      return Object.assign(h, { slot: i, x, y, _anim: {}, notice: {}, procT: {}, summonT: 0, swing: 0, cd: 0, dead: false, respawnT: 0, stunT: 0 });
+    });
+    for (const h of this.heroes) if (h) h.hp = heroStats(h).hpMax;
+    this.started = true; this.running = false; this.over = false;
+    this.waveActive = false; this.enemies = []; this.spawnQueue = [];
+    this.nextWaveT = 0;
+    this.nextWave = buildWave(this.wave + 1, this.level);
+    this.updateAuras();
   }
 
   stars() {

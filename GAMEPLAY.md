@@ -982,3 +982,8 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - Tài khoản khách cũ được nối vào tài khoản mới (giữ tiến trình). Đổi tài khoản trên cùng máy thì không trộn bản lưu (`save.owner`).
 - Mất mạng lúc mở game: nút Thử lại hoặc Chơi ngoại tuyến (không lưu xếp hạng).
 - Cần bật **Email/Password** trong Firebase Authentication.
+
+### Phiên bản 74
+
+- **Tiếp tục / Chơi mới**: màn đang chơi được lưu sau mỗi đợt (và lúc vào trận, mua đồ trước trận, nhận sính lễ, bắt đầu vô tận) vào bản lưu → đồng bộ đám mây. Menu hiện **Tiếp tục · Ải N · Đợt W** (♾ nếu đang vô tận) và **Chơi mới (chọn ải)**. Tiếp tục nạp lại tướng (cấp, sao, đồ, kỹ năng), túi đồ, vàng, mạng, cửa hàng, núi Tản Viên và chơi tiếp từ đợt kế. Thắng / thua thì xoá màn đã lưu. Đang giữa đợt mà thoát thì nạp lại từ đầu đợt đó.
+- `Game.snapshot()` / `Game.restore()` trong `js/game.js`.
