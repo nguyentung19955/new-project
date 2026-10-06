@@ -1015,3 +1015,8 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 
 - **Bỏ vầng mặt trời sau lưng**, thay bằng **khói màu bốc lên** (`drawSmokeAura`): Vàng — khói vàng dày, Tím — khói tím, Thần tinh — khói dày hơn + sao bay quanh, Thường ★★★ — khói nhạt màu hệ.
 - **Tiên Dung có hình vẽ tay** (ảnh cô gái áo đỏ cầm quạt gửi trước đó). Còn **Lang Liêu** chưa có ảnh (thêm vào `docs/PROMPT_GEMINI_CON_THIEU.md`).
+
+### Phiên bản 80
+
+- **9 boss vẽ tay** cắt tay từ tấm ghép (`tools/cat-boss-collage.py`): Thuồng Luồng, Hà Bá, Thủy Tinh, Chằn Tinh, Đại Bàng Tinh, Tướng Giặc Ân, Ngư Tinh, Hồ Tinh Chín Đuôi, Triệu Đà. Dáng đứng / tấn công / **nổi giận** (boss hoá điên dùng ảnh nổi giận). Chỉnh lại độ rộng boss cho hợp hình.
+- Còn thiếu ảnh: Lang Liêu, Yêu Tinh Rừng, Đá Con, Lính Giáo.

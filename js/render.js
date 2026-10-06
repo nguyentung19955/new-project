@@ -234,7 +234,8 @@ const HERO_PACK = Object.fromEntries(['lactuong', 'lucsi', 'xathu', 'thosan', 't
   'auco', 'adv', 'kimquy', 'llq', 'antiem', 'mau', 'giong', 'cdt', 'caolo', 'tiendung'].map((k) => [k, `packs/${k}/`]));
 const packImg = (type, name) => (HERO_PACK[type] ? asset(HERO_PACK[type] + name + '.png', true) : null);
 // v60: quái vẽ tay (assets/packs/<quái>/walk1 · walk2 · attack): bước đi luân phiên, ra đòn khi tấn công
-const ENEMY_PACK = new Set(['thachtinh', 'doi', 'ran', 'giaolong', 'tom', 'casau', 'rua', 'phuthuy', 'chimbao', 'echme', 'nongnoc', 'cungan', 'kybinh', 'voichien', 'camap', 'muc', 'cua', 'cao']);
+const ENEMY_PACK = new Set(['thachtinh', 'doi', 'ran', 'giaolong', 'tom', 'casau', 'rua', 'phuthuy', 'chimbao', 'echme', 'nongnoc', 'cungan', 'kybinh', 'voichien', 'camap', 'muc', 'cua', 'cao',
+  'thuongluong', 'haba', 'thuytinh', 'chantinh', 'daibang', 'anvuong', 'ngutinh', 'hotinh', 'trieuda']);
 const enemyPackRef = (type) => (ENEMY_PACK.has(type) ? asset(`packs/${type}/walk1.png`, true) : null);
 function enemyPackImg(e, t) {
   const ref = enemyPackRef(e.type);
@@ -244,10 +245,12 @@ function enemyPackImg(e, t) {
   const flourish = ((t + id * 0.73) % 3) < 0.35;
   const atk = e.atkT > 0 || flourish || (e.enraged && Math.floor(t * 4 + id) % 2 === 0);
   const step = Math.floor(t * (e.enraged ? 8 : 5) + id * 0.37) % 2;
+  // boss hoá điên: ảnh nổi giận (nếu có)
+  if (e.enraged) { const r = asset(`packs/${e.type}/rage.png`, true); if (r && !e.atkT) return r; }
   return (atk && asset(`packs/${e.type}/attack.png`, true)) || (step && asset(`packs/${e.type}/walk2.png`, true)) || ref;
 }
 const vectorHeroesOn = () => typeof ui !== 'undefined' && !!(ui && ui.save && ui.save.settings.vectorHeroes);
-if (typeof Image !== 'undefined') for (const k of ENEMY_PACK) for (const n of ['walk1', 'walk2', 'attack']) asset(`packs/${k}/${n}.png`, true);
+if (typeof Image !== 'undefined') for (const k of ENEMY_PACK) for (const n of ['walk1', 'walk2', 'attack', 'rage']) asset(`packs/${k}/${n}.png`, true);
 if (typeof Image !== 'undefined') for (const k in HERO_PACK) for (const n of ['idle', 'wind', 'strike', 'cast', 'front', 'head']) packImg(k, n);   // tải sẵn
 const ENEMY_FILE = { tom: 'quai_tom-binh', casau: 'quai_ca-sau', rua: 'quai_rua-giap', phuthuy: 'quai_phu-thuy-nuoc',
   chimbao: 'quai_chim-bao', echme: 'quai_ech-me', nongnoc: 'quai_nong-noc',
@@ -1724,7 +1727,7 @@ function drawGearWeapon(ctx, g, t) {
 // chiều rộng vẽ (đơn vị logic) cho từng loại
 const ENEMY_W = {
   tom: 40, casau: 74, rua: 62, phuthuy: 44, chimbao: 58, echme: 54, nongnoc: 30, giaolong: 56,   // v61: theo hình vẽ tay
-  thuongluong: 150, haba: 104, thuytinh: 104,
+  thuongluong: 140, haba: 92, thuytinh: 84,   // v80: theo ảnh vẽ tay
 };
 if (typeof ENEMY_W_EXTRA !== 'undefined') Object.assign(ENEMY_W, ENEMY_W_EXTRA);
 function enemyArt(type) {

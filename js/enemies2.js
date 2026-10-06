@@ -84,7 +84,7 @@ Object.assign(ENEMY_EL, { yeutinh: 'moc', ran: 'moc', doi: 'thuy', thachtinh: 't
 for (const id in ENEMY_EL) if (ENEMIES[id]) ENEMIES[id].el = ENEMY_EL[id];
 // độ rộng vẽ (render.js gộp vào ENEMY_W)
 const ENEMY_W_EXTRA = { yeutinh: 34, ran: 60, doi: 66, thachtinh: 56, dacon: 24, linhan: 38, cungan: 38, kybinh: 64, voichien: 86,
-  camap: 66, muc: 42, cua: 58, cao: 40, chantinh: 130, daibang: 140, anvuong: 110, ngutinh: 160, hotinh: 120, trieuda: 104 };
+  camap: 66, muc: 42, cua: 58, cao: 40, chantinh: 104, daibang: 150, anvuong: 112, ngutinh: 140, hotinh: 112, trieuda: 60 };
 
 // ---------- bảng quân theo chương: base = quái thường; list = [đợt từ, ngưỡng xác suất cộng dồn, loại];
 // air = quái bay cho đợt bay (null: đợt bay thành đợt thường); champ = quái tinh anh đợt 5/15/25; fast = quái đi nhanh (giãn cách ngắn)
