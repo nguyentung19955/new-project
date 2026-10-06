@@ -1231,3 +1231,6 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 115
 - Thần Khí vẽ tay cho Chú Cuội (13 tướng Vàng có Thần Khí vẽ tay).
+
+## Phiên bản 116
+- Thần Khí vẽ tay cho Mẫu Địa, An Dương Vương, Thiên Lôi, Kỳ Lân (17/20 tướng Vàng).
