@@ -5,6 +5,9 @@ on:
     branches: [claude/mobile-tower-defense-game-k5oxzo, main]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   apk:
     runs-on: ubuntu-latest
@@ -30,3 +33,14 @@ jobs:
         with:
           name: nui-cao-nuoc-dang-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
+      # link tải thẳng trên điện thoại (không cần đăng nhập GitHub):
+      # https://github.com/<chủ repo>/<repo>/releases/download/apk-latest/nui-cao-nuoc-dang.apk
+      - run: cp android/app/build/outputs/apk/debug/app-debug.apk nui-cao-nuoc-dang.apk
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: apk-latest
+          name: Bản cài Android mới nhất
+          body: Bản thử (debug) build tự động từ nhánh ${{ github.ref_name }}, commit ${{ github.sha }}.
+          prerelease: true
+          make_latest: false
+          files: nui-cao-nuoc-dang.apk
