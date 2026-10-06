@@ -1035,3 +1035,13 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 ### Phiên bản 84
 
 - **Sẵn sàng cho chuyển động 4 khung** (ảnh gen theo `docs/LUAT_GEN_ANIMATION.md` / `docs/PROMPT_LEONARDO.md`): `tools/cat-strip.py <ảnh> <mã> <động tác>` cắt dải 4 ô thành `<động tác>_1..4.png`, chung đường chân, căn giữa theo thân. Game (`FRAME_ANIMS` trong `js/render.js`): tướng đứng thở lặp 4 khung, đánh theo pha (chuẩn bị → lấy đà → ra đòn → thu về), tung chiêu lặp nhanh; quái đi lặp 4 khung, đánh theo thời gian ra đòn. Đổi khung không bị mờ chồng. Đã thử bằng dải giả lập.
+
+### Phiên bản 85 — tối ưu hiệu năng
+
+Đo bằng trình duyệt giả lập không có card đồ hoạ (số tuyệt đối thấp hơn điện thoại thật, chỉ để so sánh), trận 12 tướng + ~30 quái + boss:
+- **Quầng sáng tướng / quái dựng sẵn**: mỗi (ảnh, màu, độ nhoè) chỉ làm mờ một lần vào canvas riêng rồi vẽ lại (trước đây đổ bóng nhoè mỗi khung hình cho từng tướng).
+- **Khói hào quang** dùng chấm mờ dựng sẵn thay vì tạo dải màu mới cho từng hạt mỗi khung.
+- **Uốn thân tướng vẽ tay**: số lát theo cỡ trên màn hình (tướng nhỏ trên bản đồ 4–9 lát thay vì 14); bậc Tiết kiệm vẽ 1 lần.
+- **Đồ hoạ Vừa / Tiết kiệm tắt đổ bóng nhoè** trên canvas chính; bộ tự hạ đồ hoạ phản ứng sau 2 giây thay vì 3.
+- **Tải ít hơn lúc mở game**: chỉ tải sẵn dáng đứng + chân dung tướng và bước 1 của quái; các dáng khác tải khi cần.
+- Kết quả: Tiết kiệm 21 → 39 khung/giây, Tự động 3 → 19, Đẹp 9 → 11 (trên máy giả lập).

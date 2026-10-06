@@ -7,6 +7,15 @@
 
 const canvas = $('#game');
 const ctx = canvas.getContext('2d');
+// v85: đổ bóng nhoè (shadowBlur) rất nặng trên điện thoại — đồ hoạ bậc Vừa / Tiết kiệm tắt hẳn trên canvas chính
+// (quầng sáng tướng dùng ảnh dựng sẵn nên vẫn còn)
+{
+  const d = Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype, 'shadowBlur');
+  Object.defineProperty(ctx, 'shadowBlur', {
+    get() { return d.get.call(this); },
+    set(v) { d.set.call(this, typeof GFX !== 'undefined' && GFX.level() >= 1 ? 0 : v); },
+  });
+}
 const wrap = $('#wrap');
 let ui;
 const game = new Game((msg, color) => ui && ui.toast(msg, color));
@@ -53,7 +62,7 @@ const GFX = {
     if (this.mode() !== 'auto' || this.lv >= 2 || document.hidden) return;
     this.ema += (Math.min(ms, 100) - this.ema) * 0.05;
     this.acc += ms;
-    if (this.acc < 3000) return;
+    if (this.acc < 2000) return;
     this.acc = 0;
     if (this.ema > 24) { this.lv++; this.ema = 16; this.apply(); }
   },

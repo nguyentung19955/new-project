@@ -268,13 +268,14 @@ function enemyPackImg(e, t) {
   return (atk && asset(`packs/${e.type}/attack.png`, true)) || (step && asset(`packs/${e.type}/walk2.png`, true)) || ref;
 }
 const vectorHeroesOn = () => typeof ui !== 'undefined' && !!(ui && ui.save && ui.save.settings.vectorHeroes);
-if (typeof Image !== 'undefined') for (const k of ENEMY_PACK) for (const n of ['walk1', 'walk2', 'attack', 'rage']) asset(`packs/${k}/${n}.png`, true);
+// v85: chỉ tải sẵn ảnh chính (đứng / bước 1); các dáng khác tải khi cần — đỡ ~4 MB lúc mở game trên 4G
+if (typeof Image !== 'undefined') for (const k of ENEMY_PACK) asset(`packs/${k}/walk1.png`, true);
 function registerFrames(type, anims) {   // gọi khi thêm dải khung mới
   FRAME_ANIMS[type] = anims;
   for (const a of anims) for (let i = 1; i <= FRAME_N; i++) asset(`packs/${type}/${a}_${i}.png`, true);
 }
 for (const [k, v] of Object.entries(FRAME_ANIMS)) registerFrames(k, v);
-if (typeof Image !== 'undefined') for (const k in HERO_PACK) for (const n of ['idle', 'wind', 'strike', 'cast', 'front', 'head']) packImg(k, n);   // tải sẵn
+if (typeof Image !== 'undefined') for (const k in HERO_PACK) for (const n of ['idle', 'head']) packImg(k, n);   // tải sẵn
 const ENEMY_FILE = { tom: 'quai_tom-binh', casau: 'quai_ca-sau', rua: 'quai_rua-giap', phuthuy: 'quai_phu-thuy-nuoc',
   chimbao: 'quai_chim-bao', echme: 'quai_ech-me', nongnoc: 'quai_nong-noc',
   thuongluong: 'boss_thuong-luong', haba: 'boss_ha-ba', thuytinh: 'boss_thuy-tinh' };
@@ -876,25 +877,47 @@ function smoothPose(h, P, t) {
 // (thân uốn như cây tre), `breath` phồng nhẹ phần ngực / đầu. Mượt hơn xoay cứng cả tấm.
 const BENT_SLICES = 14;
 // chỉ vẽ quầng sáng bao quanh ảnh (không vẽ ảnh): vẽ ảnh ra ngoài màn hình, dịch bóng về đúng chỗ
+// v85: quầng sáng dựng sẵn — mỗi (ảnh, màu, độ nhoè) chỉ làm mờ MỘT lần vào canvas riêng, sau đó chỉ drawImage
+// (trước đây đổ bóng nhoè mỗi khung hình cho mỗi tướng: rất nặng trên điện thoại)
+const glowCache = new Map();
+function glowSprite(img, color, blurPx) {
+  const key = color + '|' + blurPx;
+  let m = img.__glow || (img.__glow = new Map());
+  let c = m.get(key);
+  if (c) return c;
+  const iw = img.naturalWidth || img.width, ih = img.naturalHeight || img.height;
+  const pad = Math.ceil(blurPx * 2.2);
+  c = document.createElement('canvas'); c.width = iw + pad * 2; c.height = ih + pad * 2;
+  const x = c.getContext('2d');
+  x.shadowColor = color; x.shadowBlur = blurPx; x.shadowOffsetX = c.width + 50;
+  x.drawImage(img, pad - c.width - 50, pad, iw, ih);
+  c.__pad = pad;
+  if (m.size > 12) m.clear();
+  m.set(key, c);
+  return c;
+}
 function drawGlowOnly(ctx, img, x, y, w, h, color, blur, alpha) {
-  if (!img || blur <= 0.5) return;
-  const inv = ctx.getTransform().inverse();
-  const D = 6000;
-  const p0 = inv.transformPoint({ x: 0, y: 0 }), p1 = inv.transformPoint({ x: D, y: 0 });
+  if (!img || blur <= 0.5 || GFX_LEVEL() >= 2) return;
+  const tr = ctx.getTransform();
+  const dev = Math.hypot(tr.a, tr.b) * w / (img.naturalWidth || img.width || 1);   // điểm ảnh màn hình / điểm ảnh gốc
+  const bpx = Math.max(2, Math.min(48, Math.round(blur / Math.max(0.05, dev) / 3) * 3));   // làm tròn để ít bản sao
+  const g = glowSprite(img, color, bpx);
+  const k = w / (img.naturalWidth || img.width);
   ctx.save();
   ctx.globalAlpha *= Math.max(0, Math.min(1, alpha));
-  ctx.shadowColor = color;
-  ctx.shadowBlur = blur;
-  ctx.shadowOffsetX = D;
-  ctx.shadowOffsetY = 0;
-  ctx.drawImage(img, x - (p1.x - p0.x), y - (p1.y - p0.y), w, h);
+  ctx.drawImage(g, x - g.__pad * k, y - g.__pad * k, g.width * k, g.height * k);
   ctx.restore();
 }
+const GFX_LEVEL = () => (typeof GFX !== 'undefined' ? GFX.level() : 0);
 function drawBent(ctx, img, x, y, w, h, bend, breath) {
   if (!img) return;
   const iw = img.naturalWidth, ih = img.naturalHeight;
   if (Math.abs(bend) < 0.002 && Math.abs(breath) < 0.002) { ctx.drawImage(img, x, y, w, h); return; }
-  const n = BENT_SLICES;
+  // v85: số lát theo cỡ trên màn hình và bậc đồ hoạ (tướng nhỏ trên bản đồ không cần 14 lát)
+  const tr = ctx.getTransform(), scr = Math.hypot(tr.c, tr.d) * h;
+  const lv = GFX_LEVEL();
+  if (lv >= 2 || scr < 40) { const sw = w * (1 + breath * 0.6); ctx.drawImage(img, x + (w - sw) / 2 + bend * h * 0.25, y, sw, h); return; }
+  const n = Math.max(4, Math.min(BENT_SLICES, Math.round(scr / (lv === 1 ? 18 : 10))));
   for (let i = 0; i < n; i++) {
     const v0 = i / n, v1 = (i + 1) / n;               // 0 = đỉnh, 1 = chân
     const up = 1 - (v0 + v1) / 2;                      // độ cao giữa lát (0 ở chân)
@@ -1153,21 +1176,31 @@ function drawPackBack(ctx, h, look, def, t, tier, asc) {
 }
 const hexRgb = (c) => { const m = /^#?([0-9a-f]{6})/i.exec(c || ''); const n = m ? parseInt(m[1], 16) : 0xF2D27A; return [n >> 16, (n >> 8) & 255, n & 255]; };
 // các cụm khói tròn mềm bốc lên từ dưới chân, phình ra và mờ dần, đung đưa qua lại
+const dotCache = new Map();
+function softDot(rgb) {
+  const key = rgb.join(',');
+  let c = dotCache.get(key);
+  if (c) return c;
+  c = document.createElement('canvas'); c.width = c.height = 64;
+  const x = c.getContext('2d'), g = x.createRadialGradient(32, 32, 0, 32, 32, 32);
+  g.addColorStop(0, `rgba(${key},1)`); g.addColorStop(1, `rgba(${key},0)`);
+  x.fillStyle = g; x.fillRect(0, 0, 64, 64);
+  dotCache.set(key, c);
+  return c;
+}
 function drawSmokeAura(ctx, t, rgb, k, h) {
   const seed = ((h && h.id) || 0) * 1.37;
-  const n = Math.round(9 + 5 * k);
+  const lv = GFX_LEVEL();
+  const n = Math.round((9 + 5 * k) * (lv >= 2 ? 0.4 : lv === 1 ? 0.65 : 1));
+  const dot = softDot(rgb);
   ctx.save();
   for (let i = 0; i < n; i++) {
     const p = (t * 0.32 + i / n + seed) % 1;
     const x = 100 + Math.sin(i * 2.1 + t * 0.9 + seed) * (26 + p * 40);
     const y = 215 - p * (170 + 30 * k);
     const r = (16 + p * 34) * (0.8 + 0.25 * k);
-    const a = Math.sin(p * Math.PI) * 0.3 * Math.min(1.7, k);
-    const g = ctx.createRadialGradient(x, y, 0, x, y, r);
-    g.addColorStop(0, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${a})`);
-    g.addColorStop(1, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},0)`);
-    ctx.fillStyle = g;
-    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = Math.sin(p * Math.PI) * 0.3 * Math.min(1.7, k);
+    ctx.drawImage(dot, x - r, y - r, r * 2, r * 2);
   }
   ctx.restore();
 }
@@ -1891,7 +1924,7 @@ function drawEnemy(ctx, e, t, o = {}) {
     const w2 = packRef ? h2 * png.naturalWidth / png.naturalHeight : box.w;
     const fxc = d.fx && ENEMY_FX[d.fx];
     if (fxc) drawEnemyFxBack(ctx, d.fx, fxc, w2, h2, t, e.id || 0, d.flying);
-    if (fxc) { ctx.save(); ctx.shadowColor = fxc.glow; ctx.shadowBlur = fxc.blur; if (d.fx === 'ghost') ctx.globalAlpha *= 0.72 + Math.sin(t * 3 + (e.id || 0)) * 0.12; }
+    if (fxc) { drawGlowOnly(ctx, png, -w2 / 2, -h2 + (d.flying ? h2 * 0.5 : 0), w2, h2, fxc.glow, fxc.blur, 0.9); ctx.save(); if (d.fx === 'ghost') ctx.globalAlpha *= 0.72 + Math.sin(t * 3 + (e.id || 0)) * 0.12; }
     ctx.drawImage(png, -w2 / 2, -h2 + (d.flying ? h2 * 0.5 : 0), w2, h2);
     if (fxc) ctx.restore();
     if (e.hitT > 0) {
