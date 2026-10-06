@@ -950,3 +950,7 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 ### Phiên bản 67
 
 - **Bản app Android** (Capacitor, `docs/APP.md`): toàn màn hình, khoá ngang, icon Lạc Tướng, màn khởi động. GitHub Actions tự build APK mỗi lần đẩy code (tab Actions → Artifacts). Đăng nhập Google trong app chưa bật (cần `google-services.json`); khách + lưu đám mây vẫn chạy.
+
+### Phiên bản 68
+
+- **Cài lên iPhone không qua App Store (PWA)**: `manifest.webmanifest`, icon `icons/`, `sw.js` (lưu sẵn game, mở lại không cần mạng). Mở trang game bằng Safari → Chia sẻ → "Thêm vào Màn hình chính" → biểu tượng như app, chạy toàn màn hình. Đổi `VERSION` trong `sw.js` mỗi lần phát hành.
