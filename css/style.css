@@ -1520,3 +1520,5 @@ body { overflow: hidden; }
 /* nhãn ải sát mép bản đồ không bị cắt */
 .cp-node.edge-r .lb { position: relative; transform: translateX(-34%); }
 .cp-node.edge-l .lb { position: relative; transform: translateX(30%); }
+/* v131: chữ trên nút vàng có kiểu tựa (Vào game…) bị trùng màu vàng nên gần như không đọc được */
+.btn.btn-gold.title { color: #2A1A08; text-shadow: 0 1px 0 #FFF1C4; }

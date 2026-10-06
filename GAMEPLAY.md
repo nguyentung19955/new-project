@@ -1293,3 +1293,7 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 130
 - Màn chọn ải (Phó bản / Vô tận): nút Thường / Khó / Vào trận không còn đè lên avatar tướng khắc chế — phần nội dung bảng bên cuộn riêng, nút cố định dưới đáy. Nhãn ải sát mép bản đồ (Thành Phong Châu) không còn bị cắt.
+
+## Phiên bản 131 — Sửa lỗi Tiếp tục + màn đăng nhập
+- **Tiếp tục trận vô tận bị chơi lại từ đầu**: đang chơi vô tận, về menu rồi bấm "Tiếp tục" thì game hiểu nhầm là trận Phó bản mới (không truyền chế độ vô tận) → mở lại ải từ đợt 1. Giờ quay lại đúng trận đang dở (đã thử cả vô tận và phó bản; tải lại trang rồi tiếp tục cũng đúng).
+- Màn đăng nhập: chữ "Vào game" trên nút vàng bị cùng màu vàng nên gần như không đọc được → chữ nâu đậm. Nền màn đăng nhập dùng tranh menu mới.

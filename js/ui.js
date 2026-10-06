@@ -266,7 +266,8 @@ class UI {
     // Xuất Quân: đang có trận dở thì quay lại trận, không thì mở bản đồ chiến dịch
     $('#btn-continue').onclick = () => {
       const g = this.game;
-      if (g.started && !g.over && (!g.won || g.endless)) return this.playLevel(g.level);
+      // v131: trận vô tận đang dở phải truyền đúng chế độ, không thì playLevel tưởng là trận mới và chơi lại từ đầu
+      if (g.started && !g.over && (!g.won || g.endless)) return this.playLevel(g.level, g.endless);
       if (this.save.run) return this.resumeRun();
       this.showModes();
     };
@@ -426,7 +427,7 @@ class UI {
     const g = this.game;
     this.nextEndless = !!endless;    // v99: vào thẳng chế độ vô tận từ ngoài
     // đang chơi dở đúng ải này (cùng chế độ) thì quay lại trận
-    if (g.started && !g.over && !g.won && g.level === i && !!g.endless === !!endless) {
+    if (g.started && !g.over && (!g.won || g.endless) && g.level === i && !!g.endless === !!endless) {
       this.hideOverlays();
       this.setInGame(true);
       return;
@@ -621,7 +622,7 @@ class UI {
         ${err}
         <button class="btn btn-gold title login-btn" data-act="login-email" ${this.loginBusy ? 'disabled' : ''}>${this.loginBusy ? 'Đang xử lý…' : mode === 'up' ? 'Tạo tài khoản' : 'Đăng nhập'}</button>
         ${mode === 'in' ? '<button class="login-link" data-act="login-reset">Quên mật khẩu?</button>' : ''}`;
-    $('#login').innerHTML = `<div class="bgart">${svgI(sceneArt('menu'))}</div><div class="login-box metal">
+    $('#login').innerHTML = `<div class="bgart"><img src="${assetSrc('ui/nen-menu.jpg')}" alt="" style="object-fit:cover" onerror="this.outerHTML=''"></div><div class="login-box metal">
       <div class="login-logo">Núi Cao Nước Dâng</div>${inner}
       ${fromMenu && signed ? '<button class="xbtn metal login-x" data-act="login-close" aria-label="Đóng">' + ICON.close + '</button>' : ''}</div>`;
     $('#login').hidden = false;
@@ -789,7 +790,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 130 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 131 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
