@@ -1122,3 +1122,4 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Mỗi tướng 4 kỹ năng (10 chiêu mới: Búa Nung Đỏ, Nổ Lò Rèn, Quăng Chài, Bình Gốm Nổ, Thuốc Nam, Sấm Đồng, Phun Vòi Nước, Long Cung Mở Cửa, Cột Đá, Tiếng Gầm Rừng). Tướng Tím / Vàng có nội tại riêng; 4 tướng Vàng mới có Thần Khí 3 hệ (Vầng Dương · Quạ Lửa Ba Chân · Xiêm Y Ráng Chiều / Ngọc Thủy Cung · Sóng Thánh · Đài Sen Trắng / Cột Đá Chống Trời · Tay Đội Trời · Đất Mẹ / Vuốt Hổ · Vằn Rừng · Núi Rừng Tây Bắc).
 - Quân triệu hồi mỗi ải: 6 tướng gốc + 2 tướng thường mới (ải lẻ: Thợ Rèn, Ngư Phủ; ải chẵn: Thợ Gốm, Thầy Lang) — hiện ở màn chuẩn bị. Giữ tỉ lệ ghép sao không giảm nhiều.
 - Hình tạm: vector phối màu + mũ / vương miện / vầng mặt trời; thay bằng ảnh Gemini theo PROMPT_GEMINI_V94.md.
+- Prompt Gemini cho tướng mới, động tác, icon kỹ năng / Thần Khí / Ấn Phù và quái còn thiếu: `docs/PROMPT_GEMINI_V94.md` (luật dán một lần, mỗi ảnh một khối ngắn, ô 128–256 px cho nhẹ và nhanh).

@@ -1,0 +1,205 @@
+# Prompt Gemini v94 — gen nhẹ, nhanh, đúng
+
+Gồm: **11 tướng mới** (+ Lang Liêu còn thiếu), **động tác (action) của tướng mới**, **icon kỹ năng**, **icon Thần Khí**, **icon Ấn Phù**, **3 quái còn thiếu**. Boss: đã đủ 9, không cần gen.
+
+## Cách dùng (nhanh nhất)
+1. Mở **một cuộc trò chuyện Gemini mới**, dán **KHỐI LUẬT** (mục A) một lần, đính kèm `docs/mau-lac-tuong.png` (nét vẽ) và `docs/mau-quai.png` (nền hồng tím). Gemini trả lời "OK" là xong.
+2. Sau đó **mỗi lần chỉ dán một khối ngắn** (mục B → G). Không cần dán lại luật — prompt ngắn nên gen nhanh và ít sai.
+3. Khoảng 10–12 ảnh thì Gemini hay "quên" luật → mở cuộc trò chuyện mới, dán lại KHỐI LUẬT.
+4. Ảnh sai (thiếu ô, nền không phải hồng tím, có chữ) → gõ: `Regenerate following the RULES exactly.`
+5. Tải về, **đặt tên file đúng mã trong ngoặc** (ví dụ `thoren.png`, `thoren-attack.png`, `icon-thoren.png`), gửi lại cho mình để cắt và nạp.
+
+Ảnh nhỏ (ô 256 px, icon 128 px, khoảng 20–30 màu phẳng) nên file nhẹ, Gemini vẽ nhanh, mình cắt nền sạch.
+
+---
+
+## A. KHỐI LUẬT (dán một lần đầu mỗi cuộc trò chuyện)
+
+```
+RULES for every image I ask for in this chat (game art for a mobile tower-defense game based on Vietnamese folk legends):
+STYLE: match the attached style reference only (line weight, eyes, shading), never copy its character. Cute chibi, head about 1/3 of body height, big round dark-brown eyes with two white highlights, small smile. Thick clean dark-brown outline #2A1608, flat cel shading (one shadow tone, one highlight), warm saturated colors, Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac bird). Clean vector look, crisp edges.
+LIGHT FILE: small image, flat fills, about 20-30 colors, no gradients, no texture, no noise, no glow halos except the small effect asked, no scattered sparkles.
+GRID: invisible grid of equal square cells exactly as I specify, ONE subject/pose per cell, same character same size in every cell, at least 8% empty margin inside each cell, nothing crosses into another cell, feet on the same baseline 8% above the cell bottom, characters face RIGHT in 3/4 view unless I say FRONT or PORTRAIT.
+BACKGROUND: perfectly flat pure magenta #FF00FF everywhere (cells and gaps). No floor, no shadow, no grid lines, no borders, no text, no numbers, no labels, no watermark. Never use magenta or pink-purple on the subject.
+Reply only "OK" now; for each next message generate exactly one image following these rules.
+```
+
+---
+
+## B. TƯỚNG — bảng 6 ô (ảnh 768×512, lưới 3×2, ô 256)
+Thứ tự ô: **[1] đứng cầm vũ khí · [2] lấy đà · [3] ra đòn (1 vệt chém nhạt) · [4] tung chiêu (hiệu ứng nhỏ màu hành quanh tay) · [5] chính diện · [6] chân dung vai trở lên (chiếm 80% ô).**
+
+Mẫu chung (mỗi tướng dưới đây đã điền sẵn, chỉ việc dán):
+
+### Thợ Rèn Đông Sơn (`thoren`) · Thường · Hỏa · cận chiến
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle holding weapon [2] wind-up [3] strike with one short pale swoosh [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Thợ Rèn Đông Sơn: stocky young bronze-smith, bare muscular arms, leather apron over red-brown loincloth, orange headband, soot on cheeks. Weapon: heavy bronze forging hammer glowing orange at the head. Element FIRE, glow #FF7A3A. Cast effect: sparks and small flames from the hammer. Rarity: common (simple costume).
+```
+
+### Ngư Phủ Sông Đà (`nguphu`) · Thường · Thủy · cận chiến
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle holding weapon [2] wind-up [3] strike with one short pale swoosh [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Ngư Phủ Sông Đà: lean river fisherman, conical palm-leaf hat (nón lá), rolled-up indigo trousers, rope belt with a small fish basket. Weapon: three-prong bamboo fishing spear, a folded fishing net on the shoulder. Element WATER, glow #5AB4D6. Cast effect: net thrown open with water drops. Rarity: common.
+```
+
+### Thợ Gốm Phù Lãng (`thogom`) · Thường · Thổ · đánh xa
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle holding weapon [2] wind-up (arm back to throw) [3] throw, a clay pot flying forward [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Thợ Gốm Phù Lãng: cheerful potter girl, ochre-brown tunic, clay-stained apron, hair tied with a brown cloth. Weapon: round glazed brown clay pot held in one hand (thrown, bursts into dust). Element EARTH, glow #C99A3C. Cast effect: swirling clay dust and pottery shards. Rarity: common.
+```
+
+### Thầy Lang Lá Thuốc (`thaylang`) · Thường · Mộc · đánh xa
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle holding weapon [2] wind-up [3] casting a leaf bolt forward [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Thầy Lang Lá Thuốc: old village herbalist, white beard, green tunic, woven herb bag across the chest. Weapon: wooden walking staff topped with a bundle of medicinal leaves glowing green. Element WOOD, glow #5FD06A. Cast effect: green healing leaves spiraling. Rarity: common.
+```
+
+### Thần Trống Đồng (`trongdong`) · Tím · Kim · cận chiến
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle holding weapon [2] wind-up [3] strike with one short pale swoosh [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Thần Trống Đồng: powerful bronze-drum spirit, golden bronze armor engraved with sun-star, feather crown of Lac birds, a small Dong Son bronze drum on his back. Weapon: big bronze drum mallet. Element METAL, glow #F2D27A. Cast effect: golden sound rings expanding from the mallet. Rarity: epic (richer costume, purple-gold trim).
+```
+
+### Thần Cá Ông (`caong`) · Tím · Thủy · cận chiến
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle [2] wind-up [3] strike with one short pale swoosh [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Thần Cá Ông: big gentle whale-god guardian of fishermen, humanoid with whale-blue skin and white belly, fin-like shoulder plates, kind old face with a short white beard, small pearl necklace. Weapon: none, fights with heavy fin-fists. Element WATER, glow #9EDDF2. Cast effect: a water spout shooting from his back. Rarity: epic.
+```
+
+### Ông Táo (`ongtao`) · Tím · Hỏa · cận chiến
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle holding weapon [2] wind-up [3] strike with one short pale swoosh [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Ông Táo (Kitchen God): jolly man in a black scholar hat and red-orange robe, golden carp motif on the belt. Weapon: pair of long iron fire tongs holding a glowing coal. Element FIRE, glow #FF8A3A. Cast effect: a small golden carp of fire jumping from the tongs. Rarity: epic.
+```
+
+### Nữ Thần Mặt Trời (`matroi`) · Vàng · Hỏa · đánh xa
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle holding weapon [2] wind-up [3] casting a fireball forward [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Nữ Thần Mặt Trời: radiant sun goddess, golden-orange áo dài-style robe with flame hem, sun-disk halo with 12 short rays behind her head, gold crown. Weapon: golden staff topped with a small sun orb. Element FIRE, glow #FFB04A. Cast effect: a three-legged golden crow of fire. Rarity: legendary (most ornate, gold trim).
+```
+
+### Mẫu Thoải (`mauthoai`) · Vàng · Thủy · đánh xa
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle holding weapon [2] wind-up [3] casting a water orb forward [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Mẫu Thoải (Holy Mother of Waters): serene goddess in a white and pale-blue robe, silver crown, white lotus at the chest, long black hair with pearl pins. Weapon: pearl-white staff with a blue water orb. Element WATER, glow #9EDDF2. Cast effect: a swirling water wave ring. Rarity: legendary.
+```
+
+### Thần Trụ Trời (`trutroi`) · Vàng · Thổ · cận chiến
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle holding weapon [2] wind-up [3] strike with one short pale swoosh [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Thần Trụ Trời (giant who built the sky pillar): huge stocky giant, stone-grey skin with ochre earth patterns, loincloth of woven rope, rocks on shoulders like armor. Weapon: a stone pillar club. Element EARTH, glow #C99A3C. Cast effect: rock pillars bursting from the ground. Rarity: legendary.
+```
+
+### Chúa Sơn Lâm (`ongho`) · Vàng · Mộc · cận chiến
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle [2] wind-up crouch [3] pounce strike with claw swoosh [4] cast skill (roar), small effect around mouth [5] front view [6] portrait head+shoulders.
+Chúa Sơn Lâm (Ông Ba Mươi, the tiger lord): tiger-headed warrior with orange and black stripes, green leaf mantle, bronze arm rings. Weapon: big claws. Element WOOD, glow #5FD06A. Cast effect: green roar wave. Rarity: legendary.
+```
+
+### Lang Liêu (`langlieu`) · Tím · Thổ · đánh xa (còn thiếu từ trước)
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle holding weapon [2] wind-up [3] toss forward [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Lang Liêu: gentle humble prince, ochre-yellow tunic with brown sash, small gold headband. Weapon: square green banh chung rice cake tied with bamboo string. Element EARTH, glow #D9A84E. Cast effect: golden rice grains swirling. Rarity: epic.
+```
+
+---
+
+## C. ĐỘNG TÁC (action) 4 khung — chỉ gen khi đã có bảng 6 ô ở trên
+Đính kèm ảnh bảng 6 ô của tướng đó. Ảnh **1024×256, 4 ô một hàng**. Tên file `<mã>-attack.png`, `<mã>-cast.png`.
+
+```
+ACTION STRIP 1024x256, 4 cells in one row, same character as the attached sheet: {ACTION}.
+```
+Thay `{ACTION}` bằng một dòng:
+
+| Mã | Đánh (attack) | Chiêu (cast) |
+|---|---|---|
+| thoren | 1 ready · 2 hammer raised high · 3 hammer slams down, orange sparks · 4 recover | 1 raise hammer · 2 hammer glows · 3 forge explodes in flames around him · 4 lower |
+| nguphu | 1 ready · 2 spear pulled back · 3 thrust forward · 4 recover | 1 hold net · 2 spin net · 3 net flies open with drops · 4 lower |
+| thogom | 1 hold pot · 2 arm back · 3 pot thrown forward · 4 recover | 1 pot raised · 2 dust swirls · 3 big clay boulder rolls forward · 4 lower |
+| thaylang | 1 ready · 2 staff back · 3 leaf bolt forward · 4 recover | 1 raise staff · 2 leaves gather · 3 green leaves burst outward · 4 lower |
+| trongdong | 1 ready · 2 mallet back · 3 mallet strike with gold ring · 4 recover | 1 raise mallet · 2 drum glows · 3 golden shock rings · 4 lower |
+| caong | 1 ready · 2 fin-fist back · 3 punch with water splash · 4 recover | 1 inhale · 2 back spout rises · 3 big water spout · 4 settle |
+| ongtao | 1 ready · 2 tongs back · 3 tongs jab with coal sparks · 4 recover | 1 tongs raised · 2 coal glows · 3 fire carp leaps forward · 4 lower |
+| matroi | 1 ready · 2 staff back · 3 fireball forward · 4 recover | 1 halo brightens · 2 hands raised · 3 fire crow flies out · 4 lower |
+| mauthoai | 1 ready · 2 staff back · 3 water orb forward · 4 recover | 1 raise staff · 2 water ring forms · 3 wave ring bursts · 4 lower |
+| trutroi | 1 ready · 2 pillar club raised · 3 ground slam · 4 recover | 1 raise arms · 2 ground cracks · 3 rock pillars burst up · 4 lower |
+| ongho | 1 crouch · 2 leap · 3 claw slash · 4 land | 1 inhale · 2 mouth open · 3 roar wave · 4 settle |
+
+---
+
+## D. ICON KỸ NĂNG — 4 icon / tướng (ảnh 512×128, 4 ô một hàng, ô 128)
+Tên file `icon-<mã>.png`. Thứ tự Q · W · E · R.
+
+```
+ICON ROW 512x128, 4 square cells, one bold simple skill icon per cell, centered, no character body, thick #2A1608 outline: {4 ICONS}.
+```
+
+| Mã | 4 icon (Q · W · E · R) |
+|---|---|
+| thoren | glowing red-hot hammer · forge fire · bronze chest armor · exploding furnace |
+| nguphu | thrown fishing net · three-prong fish spear · splashing wave on a boat side · bamboo basket boat on a wave |
+| thogom | clay pot bursting · fired clay brick · cracked glaze pattern shield · rolling clay boulder |
+| thaylang | herb bundle with a green cross · poison leaf · fragrant forest leaves · glowing healing leaf circle |
+| trongdong | drum mallet hitting a drum · sound wave rings · bronze drum sun face · lightning over a bronze drum |
+| caong | water spout · shield over a small boat · whale skin with spikes · giant tidal wave |
+| ongtao | fire tongs holding a coal · three hearth stones with fire · scroll to heaven · fire carp turning into a dragon |
+| matroi | sun pillar beam · summer sun · three-legged fire crow · solar eclipse |
+| mauthoai | silver wave · holy water lotus · ice pearl · underwater palace gate opening |
+| trutroi | foot stomp crack · stone pillar · stone body · giant rock lifted by hands |
+| ongho | tiger pounce claw · roar · tiger paw print with leaves · hunting horn with tiger |
+
+---
+
+## E. ICON THẦN KHÍ — 3 icon / tướng Vàng (ảnh 384×128, 3 ô một hàng)
+Tên file `than-khi-<mã>.png`, thứ tự theo bảng.
+
+```
+ICON ROW 384x128, 3 square cells, one bold simple treasure icon per cell, centered, gold rim: {3 ICONS}.
+```
+
+| Mã | 3 thần khí |
+|---|---|
+| giong | iron armor · bamboo staff of golden bamboo · iron horse head breathing fire |
+| llq | dragon scale · water-dragon sword · underwater palace |
+| kimquy | golden turtle shell · golden turtle claw (crossbow trigger) · glowing lake with a sword |
+| adv | repeating crossbow · spiral citadel walls · royal Au Lac robe |
+| auco | egg sac with a hundred eggs · fairy wings · mother mountain |
+| mau | sacred forest tree · thousand-year vines · forest fruits and flowers |
+| matroi | sun disk · three-legged crow · sunset-cloud robe |
+| mauthoai | sea pearl · holy wave · white lotus throne |
+| trutroi | stone sky pillar · giant hands holding the sky · earth mound |
+| ongho | tiger claw · tiger stripes with leaves · northwest mountain forest |
+
+---
+
+## F. ICON ẤN PHÙ — 3 tấm, mỗi tấm 12 icon (ảnh 512×384, lưới 4×3, ô 128)
+Tên file `an-phu-nui.png`, `an-phu-gio.png`, `an-phu-sam.png`. Icon là một **viên ấn tròn bằng đá / đồng**, ký hiệu khắc nổi, viền màu nhánh.
+
+```
+RUNE SHEET 512x384, 4x3 square cells, one round carved stone-bronze rune seal per cell, rim color {COLOR}, symbol carved in the middle: {12 SYMBOLS, left to right, top to bottom}.
+```
+
+| Tấm | Màu viền | 12 ký hiệu |
+|---|---|---|
+| nui | #D9844A | crossed swords · heart · spring water · pickaxe · bronze shield · demon mask · cactus spikes · sledgehammer · skull · falling mountain · stone shield · volcano |
+| gio | #6FCB8A | wind swirl · four-point star · target · burst · eagle · spiral · coin · blood drop · trap · tornado · lightning bolt · eye |
+| sam | #7FA8F0 | radiant sun · hourglass · water drop · crystal ball · amulet eye · bottle · flame · crescent moon · wind chime · thunder cloud · skull spirit · bell |
+
+---
+
+## G. QUÁI CÒN THIẾU — 3 ô (ảnh 576×192, 3 ô một hàng, ô 192)
+Thứ tự ô: **[1] bước A · [2] bước B · [3] tấn công.** Tên file theo mã.
+
+```
+ENEMY ROW 576x192, 3 cells: [1] walk step A [2] walk step B (opposite legs) [3] attack. Cute-mischievous chibi monster facing right: {CREATURE}.
+```
+
+| Mã | Quái |
+|---|---|
+| yeutinh | Yêu Tinh Rừng: small green forest goblin, pointy ears, yellow eyes, leaf loincloth, wooden club (attack: club swing) |
+| dacon | Đá Con: tiny grey rock creature with small legs and orange eyes (attack: rolls forward) |
+| linhan | Lính Giáo: enemy foot soldier, dark-red tunic, bronze helmet, round wooden shield, long spear (attack: spear thrust) |
+
+**Boss:** đã đủ ảnh cho 9 boss — không cần gen. Muốn thêm động tác cho boss thì dùng mục C với `{ACTION}` = *1 stand · 2 raise · 3 attack slam · 4 roar*.
