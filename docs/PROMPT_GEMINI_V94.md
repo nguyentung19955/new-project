@@ -275,3 +275,74 @@ Viêm Đế Thần Nông (Flame Emperor, god of farming): wise old god with long
 |---|---|
 | kinhduong | red demon-realm sword · golden throne · lake with a dragon princess silhouette |
 | viemde | sacred farming fire · divine plough · hundred herbs bundle |
+
+---
+
+# BỔ SUNG v97 — 6 tướng hành Thủy (đủ 4 mỗi bậc)
+
+## B+. Bảng tướng 6 ô
+
+### Chàng Chèo Đò (`chodo`) · Thường · Thủy · cận chiến
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle holding weapon [2] wind-up [3] strike with one short pale swoosh [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Chàng Chèo Đò: sturdy young ferryman, blue-grey shirt with rolled sleeves, black trousers, blue headband, tanned skin. Weapon: long wooden boat oar. Element WATER, glow #5AB4D6. Cast effect: a wave rolling from the oar. Rarity: common.
+```
+
+### Cô Hái Sen (`haisen`) · Thường · Thủy · đánh xa
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle holding a lotus [2] wind-up [3] tossing lotus seeds forward [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Cô Hái Sen: gentle girl in a pale pink áo bà ba and green trousers, conical hat on her back, pink lotus flower in her hair. Weapon: a big pink lotus with a seed pod. Element WATER, glow #FF9EC4 with blue water drops. Cast effect: lotus petals and rain drops. Rarity: common.
+```
+
+### Lý Ngư Tướng Quân (`lyngu`) · Tím · Thủy · cận chiến
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle holding weapon [2] wind-up [3] spear thrust with one short pale swoosh [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Lý Ngư Tướng Quân (Carp General who leapt the Dragon Gate): young warrior with golden-orange carp-scale armor, fin-shaped shoulder guards, carp-tail cape, small gold crown. Weapon: golden trident spear. Element WATER, glow #FFB04A with blue water. Cast effect: a jumping golden carp of water. Rarity: epic.
+```
+
+### Trương Chi (`truongchi`) · Tím · Thủy · đánh xa
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle playing a flute [2] wind-up [3] sending a music note orb forward [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Trương Chi: humble fisherman singer, simple indigo shirt, conical hat, kind sad smile. Weapon: bamboo flute. Element WATER, glow #9EDDF2. Cast effect: floating blue music notes and river mist. Rarity: epic.
+```
+
+### Rồng Mẹ Hạ Long (`halong`) · Vàng · Thủy · cận chiến
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle [2] wind-up [3] claw strike with one short pale swoosh [4] cast skill, small effect around mouth [5] front view [6] portrait head+shoulders.
+Rồng Mẹ Hạ Long (Mother Dragon of Ha Long Bay): cute chibi Vietnamese dragon standing upright, jade-teal scales with pearl-white belly, golden horns and whiskers, small pearl crown. Element WATER, glow #7FE8E0. Cast effect: spitting jade pearls that turn into tiny islands. Rarity: legendary.
+```
+
+### Long Nữ Động Đình (`longnu`) · Vàng · Thủy · đánh xa
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle holding weapon [2] wind-up [3] casting a water orb forward [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Long Nữ Động Đình (Dragon Princess, mother of Lạc Long Quân): graceful princess in a teal and white silk robe with wave patterns, small dragon horns, pearl crown, long black hair. Weapon: staff topped with a glowing dragon pearl. Element WATER, glow #5AD6C8. Cast effect: a small water dragon circling the pearl. Rarity: legendary.
+```
+
+## C+. Động tác 4 khung
+
+| Mã | Đánh (attack) | Chiêu (cast) |
+|---|---|---|
+| chodo | 1 ready · 2 oar back · 3 wide oar sweep with splash · 4 recover | 1 raise oar · 2 water swirls · 3 wave rolls forward · 4 lower |
+| haisen | 1 hold lotus · 2 lift · 3 seeds fly forward · 4 recover | 1 lotus up · 2 petals gather · 3 lotus rain · 4 lower |
+| lyngu | 1 ready · 2 trident back · 3 thrust with water trail · 4 recover | 1 crouch · 2 leap · 3 golden carp turns into water dragon · 4 land |
+| truongchi | 1 flute ready · 2 inhale · 3 note orb flies · 4 lower | 1 play flute · 2 notes swirl · 3 mist and notes burst · 4 lower |
+| halong | 1 ready · 2 claw raised · 3 claw swipe with sea spray · 4 recover | 1 inhale · 2 pearls glow in mouth · 3 pearls spat out · 4 settle |
+| longnu | 1 ready · 2 staff back · 3 water orb forward · 4 recover | 1 raise staff · 2 water dragon forms · 3 dragon wave bursts · 4 lower |
+
+## D+. Icon kỹ năng (Q · W · E · R)
+
+| Mã | 4 icon |
+|---|---|
+| chodo | oar hitting · sweeping oar arc · sturdy body with water drops · ferry boat on a wave |
+| haisen | pink lotus · lotus seed pod · lotus scent swirl · rain over a lotus pond |
+| lyngu | trident · golden carp scale · carp tail splash · carp turning into a dragon |
+| truongchi | bamboo flute with notes · singing mouth with notes · river mist · last song note over waves |
+| halong | bay wave · jade scale shield · pearl becoming an island · dragon flock |
+| longnu | dragon pearl · lake water drop · ice dragon · underwater palace waves |
+
+## E+. Icon Thần Khí
+
+| Mã | 3 thần khí |
+|---|---|
+| halong | jade dragon scale · pearl island · Ha Long bay with limestone islets |
+| longnu | dragon pearl · Dong Dinh lake · pearl silk robe |

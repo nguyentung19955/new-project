@@ -2421,6 +2421,7 @@ class Game {
         }
         if (t === 'trongdong') b.haste = Math.max(b.haste || 0, 10);                    // Hồi Trống Thiêng
         if (t === 'mauthoai') b.manaPct = Math.max(b.manaPct || 0, 15);                 // Thủy Cung Thánh Mẫu
+        if (t === 'longnu') { b.magicPct = Math.max(b.magicPct || 0, 10); b.manaPct = Math.max(b.manaPct || 0, 10); }   // Ngọc Long Nữ
         if (t === 'caong' && o !== src && near(src, o, ELEM.adj)) b.dr = Math.max(b.dr || 0, 10);   // Hộ Ngư Dân
         if (own.pierceAura) b.pierce = Math.max(b.pierce || 0, own.pierceAura);
         if (t === 'thachsanh') b.manaPct = Math.max(b.manaPct || 0, 50);

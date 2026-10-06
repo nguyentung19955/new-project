@@ -49,6 +49,12 @@ const HERO_STYLE = {
   baahoa:    { idle: 'float', atk: 'twirl' },
   kinhduong: { idle: 'heavy', atk: 'cleave' },
   viemde:    { idle: 'sway', atk: 'twirl' },
+  chodo:     { idle: 'guard', atk: 'spin' },
+  haisen:    { idle: 'dance', atk: 'toss' },
+  lyngu:     { idle: 'crouch', atk: 'thrust' },
+  truongchi: { idle: 'sway', atk: 'float' },
+  halong:    { idle: 'float', atk: 'claw' },
+  longnu:    { idle: 'float', atk: 'twirl' },
 };
 const heroStyle = (type) => HERO_STYLE[type] || { idle: 'guard', atk: null };
 

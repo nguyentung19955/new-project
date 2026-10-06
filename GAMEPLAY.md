@@ -1139,3 +1139,10 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Thần Khí cho Kinh Dương Vương (Kiếm Xích Quỷ · Ngai Vàng Xích Quỷ · Hồ Động Đình) và Viêm Đế (Lửa Thần Nông · Cày Thần · Bách Thảo).
 - Quân triệu hồi: ải chẵn = 6 tướng gốc + Thợ Rèn, Đốt Nương, Đèn Trời (đủ 4 Hỏa); ải lẻ = 6 tướng gốc + Ngư Phủ, Thợ Gốm, Thầy Lang.
 - Prompt Gemini cho 6 tướng: cuối `docs/PROMPT_GEMINI_V94.md`.
+
+## Phiên bản 97 — Đợt hành Thủy: đủ 4 tướng mỗi bậc, ghép cùng hành
+- Thêm **Chàng Chèo Đò** (Thường, gần), **Cô Hái Sen** (Thường, xa), **Lý Ngư Tướng Quân** (Tím, gần), **Trương Chi** (Tím, xa), **Rồng Mẹ Hạ Long** (Vàng, gần), **Long Nữ Động Đình** (Vàng, xa).
+- Hành Thủy: 4 Thường (Thần Sương, Ngư Phủ, Chèo Đò, Hái Sen) · 4 Tím (Chử Đồng Tử, Cá Ông, Lý Ngư, Trương Chi) · 4 Vàng (Lạc Long Quân, Mẫu Thoải, Rồng Mẹ Hạ Long, Long Nữ).
+- **Ghép cùng hành (Thủy):** Thần Sương + Chèo Đò → Chử Đồng Tử · Ngư Phủ + Thần Sương → Cá Ông · Ngư Phủ + Chèo Đò → Lý Ngư · Hái Sen + Ngư Phủ → Trương Chi · Lý Ngư + Cá Ông → Lạc Long Quân · Lý Ngư + Chử Đồng Tử → Rồng Mẹ Hạ Long · Trương Chi + Cá Ông → Long Nữ · Cá Ông + Chử Đồng Tử → Mẫu Thoải. Bỏ công thức chéo hành cũ ra Chử Đồng Tử và Lạc Long Quân.
+- Nội tại: Lý Ngư (máu dưới 50% +25% tốc đánh), Trương Chi (đòn đánh chậm 30%, 10% mê đứng), Rồng Mẹ (+30% máu, đánh lan 30%), Long Nữ (tướng gần +10% sát thương phép, +10% hồi năng lượng). Thần Khí cho Rồng Mẹ và Long Nữ.
+- Quân triệu hồi xoay 3 nhóm theo ải: Hỏa (Thợ Rèn, Đốt Nương, Đèn Trời) · Thủy (Ngư Phủ, Chèo Đò, Hái Sen) · Thổ + Mộc (Thợ Gốm, Thầy Lang) — cộng 6 tướng gốc.

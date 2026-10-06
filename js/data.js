@@ -425,6 +425,117 @@ const HEROES = {
         info: () => 'Khi có tướng dưới 50% máu: toàn quân hồi đầy máu, bất tử 2 giây' },
     ],
   },
+  // ================= v97: ĐỢT HÀNH THỦY — đủ 4 tướng mỗi bậc, ghép CÙNG HÀNH =================
+  chodo: {
+    name: 'Chàng Chèo Đò', cost: 70, attack: 'melee', wclass: 'blade', dmgType: 'phys',
+    role: 'Quét lan', title: 'Mái chèo đò ngang, quét sóng quét quân', color: '#5AB4D6',
+    attrs: { str: 21, agi: 16, int: 13 }, gain: { str: 2.3, agi: 1.8, int: 1.3 },
+    base: { damage: 7, range: 140, cooldown: 1.05 },
+    look: { aura: '#5AB4D6', weapon: { type: 'staff', color: '#7A5232' } },
+    skills: [
+      { id: 'cd_q', name: 'Mái Chèo Đập', active: { cooldown: 7, cast: 'bash', mana: 45 },
+        info: (n) => `Đập mái chèo: choáng mục tiêu, x2 sát thương +${(n * 0.6).toFixed(0)}` },
+      { id: 'cd_w', name: 'Quét Chèo',
+        info: (n) => `Quét lan ${Math.round(25 + n * 0.4)}% sát thương`, apply: (s, n) => { s.cleave += 0.25 + n * 0.004; } },
+      { id: 'cd_e', name: 'Thân Sông Nước',
+        info: (n) => `+5% máu, −${(3 + n * 0.06).toFixed(1)}% sát thương nhận`, apply: (s, n) => { s.hpPct += 5; s.dr += 3 + n * 0.06; } },
+      { id: 'cd_r', name: 'Đò Ngang Vượt Sóng', active: { cooldown: 16, cast: 'seawave', mana: 110 },
+        info: (n) => `Sóng cuộn quanh mình đẩy lùi quái, x3 sát thương +${n}` },
+    ],
+  },
+  haisen: {
+    name: 'Cô Hái Sen', cost: 75, attack: 'magic', proj: 'petal', wclass: 'staff', dmgType: 'magic',
+    role: 'Hồi máu', title: 'Thuyền thúng giữa đầm sen, hạt sen ngọt lành', color: '#F2A0C0',
+    attrs: { str: 14, agi: 15, int: 22 }, gain: { str: 1.4, agi: 1.5, int: 2.9 },
+    base: { damage: 5, range: 165, cooldown: 1.25 },
+    look: { aura: '#FF9EC4', weapon: { type: 'none' } },
+    skills: [
+      { id: 'hs_q', name: 'Sen Thơm', active: { cooldown: 10, cast: 'lotus', mana: 50 },
+        info: (n) => `Sen nở trên tướng yếu nhất, hồi dần ${Math.round(30 + n * 0.3)}% máu` },
+      { id: 'hs_w', name: 'Hạt Sen',
+        info: (n) => `+${(n * 0.35).toFixed(1)} sát thương · đòn đánh làm chậm ${Math.round(15 + n * 0.15)}%`,
+        apply: (s, n) => { s.damage += n * 0.35; s.netSlow = Math.max(s.netSlow, 15 + n * 0.15); } },
+      { id: 'hs_e', name: 'Hương Sen',
+        info: (n) => `Tướng đứng gần +${(1.2 + n * 0.05).toFixed(1)} hồi máu/giây`, apply: (s, n) => { s.regenAura = 1.2 + n * 0.05; } },
+      { id: 'hs_r', name: 'Mưa Đầm Sen', active: { cooldown: 16, cast: 'blizzard', mana: 110 },
+        info: (n) => `Mưa lạnh quanh mình: làm chậm, đóng băng quái, x2 sát thương +${n}` },
+    ],
+  },
+  lyngu: {
+    legend: 'epic', name: 'Lý Ngư Tướng Quân', attack: 'melee', wclass: 'blade', dmgType: 'phys',
+    role: 'Vượt Vũ Môn', title: 'Cá chép vượt Vũ Môn, thành tướng giữ sông', color: '#E8843A',
+    attrs: { str: 25, agi: 20, int: 13 }, gain: { str: 2.7, agi: 2.2, int: 1.3 },
+    base: { damage: 11, range: 145, cooldown: 0.95 },
+    look: { aura: '#FFB04A', weapon: { type: 'staff', color: '#E0B030' } },
+    trait: { name: 'Vượt Vũ Môn', desc: 'Máu dưới 50%: +25% tốc đánh' },
+    traitApply: (s, h) => { if (h && h.hp < (h.hpMaxLast || 1) * 0.5) s.haste += 25; },
+    skills: [
+      { id: 'ly_q', name: 'Ngọn Giáo Vũ Môn', active: { cooldown: 12, cast: 'judgement', mana: 60 },
+        info: (n) => `Đâm quái nhiều máu nhất: x4 sát thương +${n * 2}` },
+      { id: 'ly_w', name: 'Vảy Chép Vàng',
+        info: (n) => `+${(5 + n * 0.1).toFixed(1)}% chí mạng, +25% sát thương chí mạng`, apply: (s, n) => { s.crit += 5 + n * 0.1; s.critMult += 0.25; } },
+      { id: 'ly_e', name: 'Quẫy Đuôi', active: { cooldown: 10, cast: 'whalespout', mana: 60 },
+        info: (n) => `Quẫy nước: quái trong tầm chậm 40% 2 giây, x1.6 sát thương +${(n * 0.6).toFixed(0)}` },
+      { id: 'ly_r', name: 'Hóa Rồng', active: { cooldown: 18, cast: 'dragonbeam', mana: 120 },
+        info: (n) => `Cá chép hóa rồng phun nước một dải: x5 sát thương +${n * 2}` },
+    ],
+  },
+  truongchi: {
+    legend: 'epic', name: 'Trương Chi', attack: 'magic', proj: 'orb', wclass: 'staff', dmgType: 'magic',
+    role: 'Mê hoặc', title: 'Chàng đánh cá hát hay, tiếng sáo vang mặt sông', color: '#7FA8F0',
+    attrs: { str: 14, agi: 16, int: 27 }, gain: { str: 1.4, agi: 1.6, int: 3.1 },
+    base: { damage: 9, range: 170, cooldown: 1.2 },
+    look: { aura: '#9EDDF2', weapon: { type: 'staff', color: '#8a6a3a', orb: '#BFE8F8' } },
+    trait: { name: 'Tiếng Sáo Sông Thao', desc: 'Đòn đánh làm chậm 30%, 10% làm quái mê đứng yên' },
+    traitApply: (s) => { s.el.slow = Math.max(s.el.slow || 0, 30); s.el.stun = Math.max(s.el.stun || 0, 10); },
+    skills: [
+      { id: 'tc_q', name: 'Khúc Sáo Mê Hồn', active: { cooldown: 12, cast: 'lute', mana: 60 },
+        info: () => 'Tiếng sáo làm quái quanh mình đứng mê 1,5 giây (boss 0,6 giây)' },
+      { id: 'tc_w', name: 'Lời Ca Sông Nước',
+        info: (n) => `+${(6 + n * 0.15).toFixed(1)}% sức mạnh kỹ năng`, apply: (s, n) => { s.skillPct += 6 + n * 0.15; } },
+      { id: 'tc_e', name: 'Sương Khói Mặt Sông', active: { cooldown: 12, cast: 'blizzard', mana: 80 },
+        info: (n) => `Sương lạnh quanh mình: làm chậm, đóng băng quái, x2 sát thương +${n}` },
+      { id: 'tc_r', name: 'Khúc Ca Cuối', active: { cooldown: 22, cast: 'tidegate', mana: 130 },
+        info: (n) => `Tiếng hát cuốn ngược quái trong tầm, chậm 50% 3 giây, x3 sát thương +${n * 2}` },
+    ],
+  },
+  halong: {
+    legend: 'legendary', name: 'Rồng Mẹ Hạ Long', attack: 'melee', wclass: 'blade', dmgType: 'phys',
+    role: 'Rồng giữ biển', title: 'Rồng Mẹ dẫn đàn rồng con phun ngọc thành đảo giữ biển', color: '#5AD6C8',
+    attrs: { str: 31, agi: 15, int: 15 }, gain: { str: 3.3, agi: 1.5, int: 1.5 },
+    base: { damage: 14, range: 150, cooldown: 1.1 },
+    look: { aura: '#7FE8E0', bulk: 1.15, weapon: { type: 'none' } },
+    trait: { name: 'Đàn Rồng Hạ Long', desc: '+30% máu, đòn đánh lan 30% sát thương' },
+    traitApply: (s) => { s.hpPct += 30; s.cleave += 0.3; },
+    skills: [
+      { id: 'hl_q', name: 'Sóng Vịnh', active: { cooldown: 8, cast: 'seawave', mana: 55 },
+        info: (n) => `Sóng vịnh đẩy lùi quái quanh mình, x3 sát thương +${n}` },
+      { id: 'hl_w', name: 'Vảy Ngọc',
+        info: (n) => `+${(10 + n * 0.2).toFixed(1)}% máu, phản 15% sát thương`, apply: (s, n) => { s.hpPct += 10 + n * 0.2; s.thorns += 15; } },
+      { id: 'hl_e', name: 'Phun Ngọc Thành Đảo', active: { cooldown: 14, cast: 'boulder', mana: 80 },
+        info: (n) => `Phun ngọc hóa đảo đá lăn đè hàng quái, x4 sát thương +${n * 2}` },
+      { id: 'hl_r', name: 'Đàn Rồng Giáng Hạ', active: { cooldown: 20, cast: 'dragonbeam', mana: 130 },
+        info: (n) => `Đàn rồng phun nước một dải: x5 sát thương +${n * 2}` },
+    ],
+  },
+  longnu: {
+    legend: 'legendary', name: 'Long Nữ Động Đình', attack: 'magic', proj: 'orb', wclass: 'staff', dmgType: 'magic',
+    role: 'Long châu', title: 'Long Nữ hồ Động Đình, mẹ của Lạc Long Quân', color: '#5AB4D6',
+    attrs: { str: 16, agi: 15, int: 31 }, gain: { str: 1.6, agi: 1.5, int: 3.5 },
+    base: { damage: 12, range: 175, cooldown: 1.2, slow: 15 },
+    look: { aura: '#9EDDF2', weapon: { type: 'staff', color: '#E8F4FF', orb: '#5AD6C8', glow: '#5AB4D6' } },
+    trait: { name: 'Ngọc Long Nữ', desc: 'Tướng đứng gần +10% sát thương phép, +10% hồi năng lượng' },
+    skills: [
+      { id: 'ln_q', name: 'Long Châu', active: { cooldown: 7, cast: 'nova', mana: 55 },
+        info: (n) => `Ngọc rồng nổ giữa bầy quái: x2.5 sát thương +${n}` },
+      { id: 'ln_w', name: 'Nước Động Đình', active: { cooldown: 12, cast: 'lotus', mana: 60 },
+        info: (n) => `Nước hồ hồi dần ${Math.round(30 + n * 0.3)}% máu cho tướng yếu nhất` },
+      { id: 'ln_e', name: 'Băng Long', active: { cooldown: 12, cast: 'blizzard', mana: 80 },
+        info: (n) => `Hơi rồng lạnh quanh mình: làm chậm, đóng băng quái, x2 sát thương +${n}` },
+      { id: 'ln_r', name: 'Long Cung Nổi Sóng', active: { cooldown: 22, cast: 'tidegate', mana: 130 },
+        info: (n) => `Sóng long cung cuốn ngược mọi quái trong tầm, chậm 50% 3 giây, x3 sát thương +${n * 2}` },
+    ],
+  },
   // ================= v96: ĐỢT HÀNH HỎA — đủ 4 tướng mỗi bậc (2 cận chiến + 2 đánh xa), ghép CÙNG HÀNH =================
   dotnuong: {
     name: 'Chàng Đốt Nương', cost: 70, attack: 'melee', wclass: 'blade', dmgType: 'phys',
@@ -823,14 +934,14 @@ const HEROES = {
     ],
   },
 };
-const BASIC_HEROES = ['lactuong', 'lucsi', 'xathu', 'thosan', 'thaymo', 'thansuong', 'thoren', 'nguphu', 'thogom', 'thaylang', 'dotnuong', 'denroi'];
+const BASIC_HEROES = ['lactuong', 'lucsi', 'xathu', 'thosan', 'thaymo', 'thansuong', 'thoren', 'nguphu', 'thogom', 'thaylang', 'dotnuong', 'denroi', 'chodo', 'haisen'];
 // v94: quân triệu hồi mỗi ải = 6 tướng gốc + 2 trong 4 tướng thường mới (đổi theo ải) — giữ tỉ lệ ghép sao không quá thấp
-// v96: 2 nhóm luân phiên theo ải — ải chẵn đủ 4 tướng Hỏa (ghép cùng hành), ải lẻ thêm tướng Thủy / Thổ / Mộc mới
-const NEW_GROUPS = [['thoren', 'dotnuong', 'denroi'], ['nguphu', 'thogom', 'thaylang']];
+// v97: 3 nhóm luân phiên theo ải — nhóm Hỏa / nhóm Thủy (đủ 4 tướng để ghép cùng hành) / nhóm Thổ + Mộc mới
+const NEW_GROUPS = [['thoren', 'dotnuong', 'denroi'], ['nguphu', 'chodo', 'haisen'], ['thogom', 'thaylang']];
 const NEW_BASICS = NEW_GROUPS.flat();
-const summonPool = (level) => [...BASIC_HEROES.slice(0, 6), ...NEW_GROUPS[(level || 0) % 2]];
-const LEGEND_HEROES = ['thachsanh', 'lachau', 'thansan', 'caolo', 'antiem', 'tiendung', 'langlieu', 'cdt', 'trongdong', 'caong', 'ongtao', 'potaoapui', 'baahoa',
-  'giong', 'llq', 'kimquy', 'adv', 'auco', 'mau', 'matroi', 'mauthoai', 'trutroi', 'ongho', 'kinhduong', 'viemde'];
+const summonPool = (level) => [...BASIC_HEROES.slice(0, 6), ...NEW_GROUPS[(level || 0) % 3]];
+const LEGEND_HEROES = ['thachsanh', 'lachau', 'thansan', 'caolo', 'antiem', 'tiendung', 'langlieu', 'cdt', 'trongdong', 'caong', 'ongtao', 'potaoapui', 'baahoa', 'lyngu', 'truongchi',
+  'giong', 'llq', 'kimquy', 'adv', 'auco', 'mau', 'matroi', 'mauthoai', 'trutroi', 'ongho', 'kinhduong', 'viemde', 'halong', 'longnu'];
 for (const id of LEGEND_HEROES) HEROES[id].cost = COSTS.legend[HEROES[id].legend];
 
 // HỢP THỂ (v34): hai tướng ★★★ đúng công thức kéo vào nhau → một thần mới.
@@ -838,7 +949,6 @@ for (const id of LEGEND_HEROES) HEROES[id].cost = COSTS.legend[HEROES[id].legend
 // Thần mới giữ cấp, đồ, thuộc tính và nội tại của CẢ HAI bên (cây phả hệ h.lineage).
 const FUSION = [
   // Thường → Sử thi
-  { a: 'thaymo', b: 'thansuong', to: 'cdt', why: 'lửa gặp sương thành mây mưa sông Hồng' },
   { a: 'lactuong', b: 'lucsi', to: 'lachau', why: 'hai dũng sĩ hợp thành thủ lĩnh bộ Lạc' },
   { a: 'lactuong', b: 'thosan', to: 'thachsanh', why: 'rìu đồng + tay rừng thành chàng tiều phu' },
   { a: 'thosan', b: 'xathu', to: 'thansan', why: 'thợ săn + cung thủ thành thần săn Ba Vì' },
@@ -846,7 +956,6 @@ const FUSION = [
   { a: 'thosan', b: 'thaymo', to: 'antiem', why: 'đốt rẫy làm nương, đảo hoang thành vườn' },
   { a: 'lucsi', b: 'thaymo', to: 'langlieu', why: 'sức trai + lửa bếp nấu bánh chưng' },
   // Sử thi → Huyền thoại
-  { a: 'thansan', b: 'cdt', to: 'llq', why: 'núi rừng gặp sông biển: Lạc Long Quân' },
   { a: 'lachau', b: 'caolo', to: 'kimquy', why: 'giữ thành + nỏ thần: Thần Kim Quy' },
   { a: 'caolo', b: 'antiem', to: 'adv', why: 'nỏ thần + đất trù phú dựng nước Âu Lạc' },
   { a: 'tiendung', b: 'langlieu', to: 'auco', why: 'tiên nữ + lễ vật đất trời: Mẹ Âu Cơ' },
@@ -864,6 +973,13 @@ const FUSION = [
   { a: 'potaoapui', b: 'baahoa', to: 'giong', why: 'gươm lửa + hỏa hoạn hun đúc Thánh Gióng' },
   { a: 'potaoapui', b: 'ongtao', to: 'kinhduong', why: 'vua lửa + thần bếp: Kinh Dương Vương' },
   { a: 'baahoa', b: 'tiendung', to: 'viemde', why: 'lửa trời + tiên nữ: Viêm Đế Thần Nông' },
+  // v97: HÀNH THỦY ghép cùng hành
+  { a: 'thansuong', b: 'chodo', to: 'cdt', why: 'sương sớm + chàng chèo đò nghèo: Chử Đồng Tử' },
+  { a: 'nguphu', b: 'chodo', to: 'lyngu', why: 'lưới chài + mái chèo vớt được cá chép vượt Vũ Môn' },
+  { a: 'haisen', b: 'nguphu', to: 'truongchi', why: 'đầm sen + thuyền chài: chàng Trương Chi' },
+  { a: 'lyngu', b: 'caong', to: 'llq', why: 'cá chép hóa rồng + thần biển: Lạc Long Quân' },
+  { a: 'lyngu', b: 'cdt', to: 'halong', why: 'rồng chép + đầm Nhất Dạ: Rồng Mẹ Hạ Long' },
+  { a: 'truongchi', b: 'caong', to: 'longnu', why: 'tiếng hát + biển cả: Long Nữ Động Đình' },
   { a: 'caong', b: 'cdt', to: 'mauthoai', why: 'cá thần + đầm Nhất Dạ: Mẫu Thoải' },
   { a: 'trongdong', b: 'lachau', to: 'trutroi', why: 'trống trời + sức bộ Lạc: Thần Trụ Trời' },
   { a: 'thansan', b: 'thachsanh', to: 'ongho', why: 'thần săn + dũng sĩ rừng: Chúa Sơn Lâm' },
@@ -1209,7 +1325,8 @@ const HERO_EL = { lactuong: 'kim', lucsi: 'tho', xathu: 'kim', thosan: 'moc', th
   auco: 'tho', cdt: 'thuy', tiendung: 'hoa', langlieu: 'tho', lachau: 'tho', thansan: 'moc', adv: 'kim', mau: 'moc',
   thoren: 'hoa', nguphu: 'thuy', thogom: 'tho', thaylang: 'moc', trongdong: 'kim', caong: 'thuy', ongtao: 'hoa',
   matroi: 'hoa', mauthoai: 'thuy', trutroi: 'tho', ongho: 'moc',
-  dotnuong: 'hoa', denroi: 'hoa', potaoapui: 'hoa', baahoa: 'hoa', kinhduong: 'hoa', viemde: 'hoa' };
+  dotnuong: 'hoa', denroi: 'hoa', potaoapui: 'hoa', baahoa: 'hoa', kinhduong: 'hoa', viemde: 'hoa',
+  chodo: 'thuy', haisen: 'thuy', lyngu: 'thuy', truongchi: 'thuy', halong: 'thuy', longnu: 'thuy' };
 for (const id in HERO_EL) HEROES[id].el = HERO_EL[id];
 // hành "rủi ro" của đồ so với tướng: 'same' | 'sinh' | 'khac' | null
 function itemRelation(itemEl, heroEl) {
@@ -1727,6 +1844,24 @@ Object.assign(LEGACY, {
       per: { rangePct: 4, goldOnKill: 0.5 }, ms: [{ lv: 3, fx: 'slowHit', v: 20, t: 'Đòn đánh làm chậm 20% trong 1 giây' }, { lv: 5, stat: 'bossPct', v: 30, t: '+30% sát thương lên boss' }] },
     { id: 'thao', name: 'Bách Thảo', ic: '🌿', desc: 'Trăm thứ cỏ thuốc Thần Nông đã nếm',
       per: { hpPct: 8, regen: 1 }, ms: [{ lv: 3, fx: 'healAura', v: 4, t: 'Mỗi 5 giây hồi 4% máu cho tướng quanh mình' }, { lv: 5, fx: 'manaOnHit', v: 3, t: 'Mỗi đòn hồi 3 năng lượng' }] },
+  ],
+});
+Object.assign(LEGACY, {
+  halong: [
+    { id: 'vay', name: 'Vảy Ngọc Rồng', ic: '💎', desc: 'Vảy rồng mẹ lấp lánh như ngọc',
+      per: { hpPct: 10, dr: 2 }, ms: [{ lv: 3, fx: 'waveShield', v: 25, t: 'Đầu mỗi đợt nhận khiên 25% máu' }, { lv: 5, stat: 'thorns', v: 30, t: 'Phản 30% sát thương nhận' }] },
+    { id: 'dao', name: 'Ngọc Thành Đảo', ic: '🏝', desc: 'Ngọc rồng phun ra hóa nghìn hòn đảo',
+      per: { bonusDmgPct: 6, cleave: 0.05 }, ms: [{ lv: 3, fx: 'stunEvery', v: 6, t: 'Mỗi đòn thứ 6 choáng mục tiêu 0,8 giây' }, { lv: 5, fx: 'splashHit', v: 40, t: 'Mỗi đòn lan 40% sát thương quanh mục tiêu' }] },
+    { id: 'vinh', name: 'Vịnh Hạ Long', ic: '🌊', desc: 'Nơi rồng mẹ hạ xuống giữ biển',
+      per: { regen: 1.2, magicRes: 3 }, ms: [{ lv: 3, fx: 'slowHit', v: 20, t: 'Đòn đánh làm chậm 20% trong 1 giây' }, { lv: 5, fx: 'reviveOnce', v: 35, t: 'Gục lần đầu mỗi đợt: đứng dậy với 35% máu' }] },
+  ],
+  longnu: [
+    { id: 'chau', name: 'Long Châu', ic: '🔮', desc: 'Viên ngọc rồng của Long Nữ',
+      per: { skillPct: 6, cdr: 2 }, ms: [{ lv: 3, fx: 'manaOnHit', v: 2, t: 'Mỗi đòn hồi 2 năng lượng' }, { lv: 5, fx: 'chainHit', v: 20, t: '20% mỗi đòn: nước lan 3 quái' }] },
+    { id: 'dong', name: 'Hồ Động Đình', ic: '🌊', desc: 'Hồ lớn nơi Long Nữ gặp Kinh Dương Vương',
+      per: { bonusDmgPct: 5, rangePct: 3 }, ms: [{ lv: 3, fx: 'slowHit', v: 25, t: 'Đòn đánh làm chậm 25% trong 1 giây' }, { lv: 5, fx: 'stunEvery', v: 6, t: 'Mỗi đòn thứ 6 đóng băng mục tiêu 0,8 giây' }] },
+    { id: 'mang', name: 'Xiêm Ngọc Long Cung', ic: '🐚', desc: 'Áo dệt từ ngọc trai dưới long cung',
+      per: { hpPct: 8, regen: 1 }, ms: [{ lv: 3, fx: 'healAura', v: 4, t: 'Mỗi 5 giây hồi 4% máu cho tướng quanh mình' }, { lv: 5, fx: 'waveShield', v: 25, t: 'Đầu mỗi đợt nhận khiên 25% máu' }] },
   ],
 });
 const LEGACY_STAT = { hpPct: '% máu', dr: '% giảm sát thương nhận', bonusDmgPct: '% sát thương', cleave: ' lan đòn', haste: '% tốc đánh',
