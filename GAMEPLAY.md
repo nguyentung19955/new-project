@@ -987,3 +987,9 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 
 - **Tiếp tục / Chơi mới**: màn đang chơi được lưu sau mỗi đợt (và lúc vào trận, mua đồ trước trận, nhận sính lễ, bắt đầu vô tận) vào bản lưu → đồng bộ đám mây. Menu hiện **Tiếp tục · Ải N · Đợt W** (♾ nếu đang vô tận) và **Chơi mới (chọn ải)**. Tiếp tục nạp lại tướng (cấp, sao, đồ, kỹ năng), túi đồ, vàng, mạng, cửa hàng, núi Tản Viên và chơi tiếp từ đợt kế. Thắng / thua thì xoá màn đã lưu. Đang giữa đợt mà thoát thì nạp lại từ đầu đợt đó.
 - `Game.snapshot()` / `Game.restore()` trong `js/game.js`.
+
+### Phiên bản 75
+
+- Thử thật với Firebase `sontinhthuytinh`: tạo tài khoản email → vào game; lưu màn dở → đóng / mở lại vẫn đăng nhập (nhớ phiên) và hiện "Tiếp tục · Ải 1 · Đợt 4"; xoá dữ liệu trình duyệt rồi mở lại → màn dở kéo từ mây về; ghi và đọc bảng xếp hạng được.
+- Sửa: tạo tài khoản / đăng nhập email xong màn đăng nhập không tự đóng.
+- `firestore.rules`: cho người chơi xoá dòng xếp hạng của chính mình.

@@ -10,6 +10,7 @@ service cloud.firestore {
     // bảng xếp hạng: ai cũng xem được; mỗi người chỉ ghi dòng của mình, chỉ được tăng điểm
     match /boards/{board}/scores/{uid} {
       allow read: if true;
+      allow delete: if request.auth != null && request.auth.uid == uid;
       allow create, update: if request.auth != null && request.auth.uid == uid
         && request.resource.data.score is number
         && request.resource.data.name is string && request.resource.data.name.size() <= 24

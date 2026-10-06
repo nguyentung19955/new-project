@@ -216,7 +216,7 @@ class UI {
         else if (!$('#login').hidden) this.showLogin(this.loginFromMenu);
         if (!$('#menu').hidden) this.showMenu();
       });
-      CLOUD.init(() => this.save, (cs) => this.applyCloudSave(cs));
+      CLOUD.init(() => this.save, (cs, o) => this.applyCloudSave(cs, o));
     }
   }
   applyCloudSave(cs, owner) {
@@ -674,7 +674,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 74 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 75 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1592,7 +1592,8 @@ class UI {
         const m = d.act === 'login-reset' ? 'reset' : this.loginMode || 'in';
         if (m === 'reset' && !this.loginEmail) { this.loginErr = 'Nhập email trước rồi bấm Quên mật khẩu'; this.showLogin(this.loginFromMenu); break; }
         this.loginBusy = true; this.loginErr = ''; this.showLogin(this.loginFromMenu);
-        CLOUD.email(m, this.loginEmail, pass, name).then((msg) => { this.loginBusy = false; this.loginErr = msg; if (name) { this.save.nick = name; writeSave(this.save); } this.showLogin(this.loginFromMenu); })
+        CLOUD.email(m, this.loginEmail, pass, name).then((msg) => { this.loginBusy = false; this.loginErr = msg; if (name) { this.save.nick = name; writeSave(this.save); }
+          if (CLOUD.signedIn && !this.loginFromMenu) { $('#login').hidden = true; this.showMenu(); } else this.showLogin(this.loginFromMenu); })
           .catch((e) => { this.loginBusy = false; this.loginErr = e.message; this.showLogin(this.loginFromMenu); });
         break;
       }
