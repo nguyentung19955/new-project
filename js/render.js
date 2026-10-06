@@ -238,8 +238,7 @@ const packImg = (type, name) => (HERO_PACK[type] ? asset(HERO_PACK[type] + name 
 // v60: quái vẽ tay (assets/packs/<quái>/walk1 · walk2 · attack): bước đi luân phiên, ra đòn khi tấn công
 const ENEMY_PACK = new Set(['thachtinh', 'doi', 'ran', 'giaolong', 'tom', 'casau', 'rua', 'phuthuy', 'chimbao', 'echme', 'nongnoc', 'cungan', 'kybinh', 'voichien', 'camap', 'muc', 'cua', 'cao',
   'thuongluong', 'haba', 'thuytinh', 'chantinh', 'daibang', 'anvuong', 'ngutinh', 'hotinh', 'trieuda',
-  'tomlua', 'ranbang', 'doima', 'thachvang', 'thietky', 'camapden', 'mucdoc', 'cungtlua', 'tuongthuy', 'chanlua', 'hoden',
-  'ranbay', 'camapcanh', 'tomcang', 'echmai']);
+  'tomlua', 'ranbang', 'doima', 'thachvang', 'thietky', 'camapden', 'mucdoc', 'cungtlua', 'tuongthuy', 'chanlua', 'hoden']);
 const enemyPackRef = (type) => (ENEMY_PACK.has(type) ? asset(`packs/${type}/walk1.png`, true) : null);
 function enemyPackImg(e, t) {
   const ref = enemyPackRef(e.type);

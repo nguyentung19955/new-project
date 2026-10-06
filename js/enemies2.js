@@ -97,15 +97,6 @@ Object.assign(ENEMIES, {
     ranged: { range: 160, dmg: 16, cd: 2 }, heal: { cd: 4, pct: 0.06, radius: 90 }, short: 'Phun độc bắn tướng, hồi máu quái quanh mình', desc: 'Mực tinh nhiễm độc: phun mực xanh bắn tướng, hơi độc hồi máu đồng bọn.' }),
   cungtlua: E2({ name: 'Cung Thủ Lửa', variant: true, hp: 95, speed: 36, gold: 9, color: '#E2483A', armor: 3, mr: 10, drop: 0.05, fx: 'fire',
     ranged: { range: 180, dmg: 20, cd: 2 }, short: 'Bắn tên lửa xa và đau', desc: 'Cung thủ giặc tẩm dầu đầu tên, bắn tướng từ rất xa.' }),
-  // v82: quái ghép (bộ phận của nhiều quái — tools/make-chimeras.py)
-  ranbay: E2({ name: 'Giao Xà Cánh Dơi', hp: 85, speed: 64, gold: 8, color: '#7FC24A', armor: 2, mr: 25, drop: 0.045, flying: true, fx: 'poison', chimera: true,
-    short: 'Rắn mọc cánh dơi: bay, nhỏ dãi độc', desc: 'Rắn độc nuốt phải tinh dơi trong hang, mọc đôi cánh tím. Chỉ tướng đánh xa và tướng phép bắn được.' }),
-  camapcanh: E2({ name: 'Cá Mập Bay', hp: 115, speed: 70, gold: 9, color: '#6A8A9A', armor: 4, mr: 15, drop: 0.045, flying: true, fx: 'water', chimera: true,
-    enrage: { below: 0.5, speed: 1.4 }, short: 'Cá mập mọc cánh: bay qua đầu tướng cận chiến', desc: 'Ngư Tinh ban cánh dơi cho đàn cá mập để vượt qua núi.' }),
-  tomcang: E2({ name: 'Tôm Càng Sắt', hp: 150, speed: 36, gold: 8, color: '#D8603A', armor: 12, mr: 10, drop: 0.045, fx: 'steel', chimera: true, stunResist: 0.3,
-    short: 'Tôm mang càng cua: giáp dày, khó choáng', desc: 'Tôm binh lắp càng của Cua Khổng Lồ, kẹp gãy cả giáo.' }),
-  echmai: E2({ name: 'Cóc Mai Rùa', hp: 300, speed: 26, gold: 15, color: '#7AAA3A', armor: 14, mr: 25, drop: 0.08, size: 18, fx: 'water', chimera: true,
-    split: { type: 'nongnoc', count: 3 }, stunResist: 0.3, short: 'Ếch mẹ đội mai rùa: rất cứng, chết tách 3 Nòng Nọc', desc: 'Ếch mẹ chui vào mai rùa bỏ lại, vừa cứng vừa đẻ nòng nọc.' }),
   // tướng địch (tinh anh lớn)
   tuongthuy: E2({ name: 'Tướng Thủy Quân', general: true, hp: 900, speed: 22, gold: 60, color: '#3EB08A', armor: 10, mr: 30, drop: 0.5, size: 24, lives: 3, fx: 'water',
     summon: { cd: 8, count: 3, type: 'tom' }, stunResist: 0.4, short: 'Tướng địch: gọi Tôm Binh, lọt thành mất 3 mạng', desc: 'Phó tướng của Hà Bá, cầm đinh ba chỉ huy đạo quân tôm cá.' }),
@@ -117,13 +108,13 @@ Object.assign(ENEMIES, {
     short: 'Tướng địch: kháng phép cao, lẩn bóng nhảy xa, hoá Cáo Con', desc: 'Con cáo đen hầu cận Hồ Tinh, chuyên lẩn trong bóng tối.' }),
 });
 Object.assign(ENEMY_EL, { tomlua: 'hoa', ranbang: 'thuy', doima: 'thuy', thachvang: 'kim', thietky: 'kim', camapden: 'thuy', mucdoc: 'moc',
-  cungtlua: 'hoa', tuongthuy: 'thuy', chanlua: 'hoa', hoden: 'hoa', ranbay: 'moc', camapcanh: 'thuy', tomcang: 'kim', echmai: 'tho' });
+  cungtlua: 'hoa', tuongthuy: 'thuy', chanlua: 'hoa', hoden: 'hoa' });
 Object.assign(ENEMY_EL, { yeutinh: 'moc', ran: 'moc', doi: 'thuy', thachtinh: 'tho', dacon: 'tho', linhan: 'kim', cungan: 'moc', kybinh: 'hoa',
   voichien: 'tho', camap: 'thuy', muc: 'thuy', cua: 'kim', cao: 'hoa', chantinh: 'moc', daibang: 'kim', anvuong: 'kim', ngutinh: 'thuy', hotinh: 'hoa', trieuda: 'kim' });
 for (const id in ENEMY_EL) if (ENEMIES[id]) ENEMIES[id].el = ENEMY_EL[id];
 // độ rộng vẽ (render.js gộp vào ENEMY_W)
 const ENEMY_W_EXTRA_V81 = { tomlua: 44, ranbang: 62, doima: 68, thachvang: 64, thietky: 70, camapden: 72, mucdoc: 46, cungtlua: 42,
-  tuongthuy: 78, chanlua: 84, hoden: 92, ranbay: 70, camapcanh: 82, tomcang: 50, echmai: 62 };
+  tuongthuy: 78, chanlua: 84, hoden: 92 };
 const ENEMY_W_EXTRA = { yeutinh: 34, ran: 60, doi: 66, thachtinh: 56, dacon: 24, linhan: 38, cungan: 38, kybinh: 64, voichien: 86,
   camap: 66, muc: 42, cua: 58, cao: 40, chantinh: 104, daibang: 150, anvuong: 112, ngutinh: 140, hotinh: 112, trieuda: 60, ...ENEMY_W_EXTRA_V81 };
 
@@ -131,15 +122,15 @@ const ENEMY_W_EXTRA = { yeutinh: 34, ran: 60, doi: 66, thachtinh: 56, dacon: 24,
 // air = quái bay cho đợt bay (null: đợt bay thành đợt thường); champ = quái tinh anh đợt 5/15/25; fast = quái đi nhanh (giãn cách ngắn)
 const ROSTERS = {
   thuy:  { base: 'tom', air: 'chimbao', champ: 'rua', fast: ['casau', 'chimbao'],
-    list: [[16, 0.012, 'tuongthuy'], [12, 0.12, 'tomlua'], [10, 0.2, 'tomcang'], [18, 0.25, 'echmai'], [8, 0.1, 'echme'], [3, 0.22, 'phuthuy'], [6, 0.34, 'rua'], [9, 0.42, 'chimbao'], [2, 0.64, 'casau']] },
+    list: [[16, 0.012, 'tuongthuy'], [12, 0.12, 'tomlua'], [8, 0.1, 'echme'], [3, 0.22, 'phuthuy'], [6, 0.34, 'rua'], [9, 0.42, 'chimbao'], [2, 0.64, 'casau']] },
   rung:  { base: 'yeutinh', air: 'doi', champ: 'thachtinh', fast: ['ran', 'doi'],
-    list: [[12, 0.08, 'ranbang'], [16, 0.13, 'doima'], [20, 0.16, 'thachvang'], [15, 0.2, 'ranbay'], [6, 0.1, 'thachtinh'], [3, 0.3, 'ran'], [8, 0.4, 'doi'], [2, 0.5, 'ran']] },
+    list: [[12, 0.08, 'ranbang'], [16, 0.13, 'doima'], [20, 0.16, 'thachvang'], [6, 0.1, 'thachtinh'], [3, 0.3, 'ran'], [8, 0.4, 'doi'], [2, 0.5, 'ran']] },
   hang:  { base: 'yeutinh', air: 'doi', champ: 'thachtinh', fast: ['ran', 'doi'],
-    list: [[24, 0.012, 'chanlua'], [10, 0.08, 'doima'], [14, 0.12, 'ranbang'], [18, 0.15, 'thachvang'], [12, 0.2, 'ranbay'], [3, 0.16, 'thachtinh'], [2, 0.36, 'doi'], [2, 0.52, 'ran']] },
+    list: [[24, 0.012, 'chanlua'], [10, 0.08, 'doima'], [14, 0.12, 'ranbang'], [18, 0.15, 'thachvang'], [3, 0.16, 'thachtinh'], [2, 0.36, 'doi'], [2, 0.52, 'ran']] },
   an:    { base: 'linhan', air: null, champ: 'voichien', fast: ['kybinh'],
     list: [[24, 0.012, 'chanlua'], [12, 0.07, 'thietky'], [16, 0.12, 'cungtlua'], [9, 0.06, 'voichien'], [3, 0.28, 'cungan'], [5, 0.45, 'kybinh']] },
   bien:  { base: 'tom', air: 'chimbao', champ: 'cua', fast: ['camap', 'chimbao'],
-    list: [[22, 0.012, 'tuongthuy'], [10, 0.08, 'camapden'], [14, 0.13, 'mucdoc'], [12, 0.19, 'camapcanh'], [16, 0.23, 'echmai'], [3, 0.18, 'muc'], [6, 0.3, 'cua'], [2, 0.55, 'camap'], [8, 0.62, 'echme']] },
+    list: [[22, 0.012, 'tuongthuy'], [10, 0.08, 'camapden'], [14, 0.13, 'mucdoc'], [3, 0.18, 'muc'], [6, 0.3, 'cua'], [2, 0.55, 'camap'], [8, 0.62, 'echme']] },
   trieu: { base: 'linhan', air: null, champ: 'voichien', fast: ['kybinh'],
     list: [[22, 0.012, 'hoden'], [10, 0.08, 'thietky'], [14, 0.13, 'cungtlua'], [8, 0.08, 'voichien'], [3, 0.3, 'cungan'], [4, 0.5, 'kybinh']] },
 };

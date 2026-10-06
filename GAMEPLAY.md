@@ -1027,3 +1027,7 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - Thuộc tính Nhanh nhẹn viết tắt **TỐC** (thay NHA).
 - **Rà kỹ năng theo hình mới**: Lạc Tướng (cầm rìu, không khiên) Q → **Bổ Rìu Đồng**; Lực Sĩ Núi (vác đá) Q → **Ném Đá Tảng**; Thợ Săn Rừng (cầm giáo) Q đâm giáo, W → **Giáo Ẩn**. Trang Đền Anh Hùng sửa theo.
 - **11 quân địch mới dựng từ hình sẵn có** (`tools/make-variants.py` đổi màu + hiệu ứng động `ENEMIES[x].fx`): Tôm Lửa (lửa đốt tướng gần), Rắn Băng (gần như không bị làm chậm), Dơi Ma (bay, kháng phép 50%, mờ ảo), Thạch Tinh Vàng (giáp 24, vỡ 3 Đá Con, nhiều vàng), Thiết Kỵ (giáp sắt), Cá Mập Bóng Đêm (hóa điên sớm), Mực Độc (bắn độc + hồi máu đồng bọn), Cung Thủ Lửa (bắn xa). **Tướng địch** (hiếm, lọt thành −3 mạng): Tướng Thủy Quân (gọi Tôm Binh), Chằn Lửa (đập choáng + lửa), Hồ Ly Bóng Đêm (lẩn bóng nhảy xa, hoá Cáo Con). Xuất hiện ở đợt muộn theo từng chương và trong chơi vô tận; có trong Bách khoa.
+
+### Phiên bản 83
+
+- Gỡ bỏ 4 quái ghép bộ phận (Giao Xà Cánh Dơi, Cá Mập Bay, Tôm Càng Sắt, Cóc Mai Rùa) theo yêu cầu. Giữ quái đổi màu và việc quái biến thể rơi đồ từ Hiếm trở lên.
