@@ -30,7 +30,6 @@ const CONFIG = {
   maxLevel: 25,
   totalWaves: 30,
   bagSize: 40,        // sức chứa túi đồ
-  maxLegends: 2,      // tối đa 2 tướng Huyền thoại trên sân
   // Vùng bị giao diện che (tọa độ thiết kế 932×430): không đặt tướng ở đây
   hudZones: [
     [0, 0, 932, 104],         // thanh trên + dải gợi ý hợp thể + chỗ cho đầu tướng

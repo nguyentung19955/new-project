@@ -1290,7 +1290,7 @@ class Game {
 
   // ---------- hành động của người chơi
   legendCount() {
-    return this.heroes.filter((h) => h && HEROES[h.type].legend === 'legendary').length;   // chỉ tướng Vàng (Huyền thoại), khớp giới hạn maxLegends
+    return this.heroes.filter((h) => h && HEROES[h.type].legend === 'legendary').length;   // số tướng Vàng (Huyền thoại) trên sân — không giới hạn
   }
   canPlace(slot, type) {
     const def = HEROES[type];
@@ -1448,8 +1448,6 @@ class Game {
     if (!f) return 'Hai tướng này không có công thức hợp thể';
     for (const h of [a, b]) { const r = this.fusionReady(h); if (r !== true) return r; }
     const d = HEROES[f.to];
-    if (d.legend === 'legendary' && this.heroes.filter((o) => o && o !== a && o !== b && HEROES[o.type].legend === 'legendary').length >= CONFIG.maxLegends)
-      return `Tối đa ${CONFIG.maxLegends} tướng Huyền thoại trên sân`;
     const c = COSTS.ascend[d.legend];
     if (this.gold < c) return `Cần ${c} vàng`;
     return f;
@@ -1669,8 +1667,6 @@ class Game {
     const ready = this.ascendReady(h);
     if (ready !== true) return ready;
     const d = HEROES[to];
-    if (d.legend === 'legendary' && this.heroes.filter((o) => o && o !== h && HEROES[o.type].legend === 'legendary').length >= CONFIG.maxLegends)
-      return `Tối đa ${CONFIG.maxLegends} tướng Huyền thoại trên sân`;
     const c = COSTS.ascend[d.legend];
     if (this.gold < c) return `Cần ${c} vàng`;
     return true;

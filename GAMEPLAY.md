@@ -965,3 +965,7 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - **Giới hạn 2 tướng Vàng (Huyền thoại) trên sân**: đã có từ trước ở hợp thể và thăng thần (`CONFIG.maxLegends = 2`), kiểm tra lại chạy đúng. Sửa `legendCount()` chỉ đếm tướng Vàng (trước đếm cả tướng Tím nên dòng "Huyền thoại trên sân x/2" hiện sai). Chiêu mộ tướng Vàng trước trận cũng tôn trọng giới hạn này. Tướng Tím không giới hạn.
 - **Chơi vô tận đổi quân theo chương**: sau đợt cuối, cứ mỗi 10 đợt đổi sang quân của chương kế tiếp (Thủy Tinh → rừng Thạch Sanh → hang → giặc Ân → biển → quân Triệu → …), boss mỗi 10 đợt lấy lần lượt từ tất cả boss của mọi chương (`rosterFor`, `endlessBosses` trong `js/data.js`).
 - Luật Firestore mới đã đăng (Publish). Thử thật với dự án `sontinhthuytinh`: game tự đăng nhập khách, đẩy bản lưu lên rồi đọc lại đúng; đọc / ghi bản lưu của người khác bị chặn (PERMISSION_DENIED). Tài khoản và dữ liệu thử đã xoá.
+
+### Phiên bản 71
+
+- **Bỏ giới hạn 2 tướng Vàng trên sân** (theo yêu cầu): hợp thể, thăng thần và chiêu mộ trước trận không còn chặn khi đã có tướng Huyền thoại. Dòng trên sân chỉ còn hiện số tướng Vàng đang có.

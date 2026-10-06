@@ -420,7 +420,6 @@ class UI {
     const s = this.save, g = this.game, b = this.prepBought || (this.prepBought = {});
     const cost = PREP.heroCost[HEROES[t].legend], slot = g.freeSlots()[0];
     if (b.hero || (s.kho || 0) < cost || slot === undefined) return;
-    if (HEROES[t].legend === 'legendary' && g.legendCount() >= CONFIG.maxLegends) return this.toast(`Tối đa ${CONFIG.maxLegends} tướng Huyền thoại trên sân`, '#E25A3A');
     s.kho -= cost; b.hero = t;
     const h = g.spawnHero(slot, t, {});
     h.from = t; h.lineage = []; h.summonT = 0;
@@ -583,7 +582,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 70 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 71 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -743,7 +742,7 @@ class UI {
 
   renderLegends() {
     const g = this.game;
-    $('#lg-count').textContent = `Huyền thoại trên sân ${g.legendCount()}/${CONFIG.maxLegends}`;
+    $('#lg-count').textContent = `Huyền thoại trên sân ${g.legendCount()}`;
     $('#lg-info').innerHTML = 'Triệu hồi ra tướng ★ ngẫu nhiên. <b>Kéo 2 tướng cùng loại cùng sao vào nhau</b> để lên ★★, ★★★. Hai tướng ★★★ đúng công thức, kỹ năng tối đa, <b>kéo vào nhau để hợp thể</b> (hoặc chạm tướng → Hợp thể). Thần mới giữ cấp, đồ và nội tại của cả hai.';
   }
 
@@ -2261,7 +2260,7 @@ class UI {
             <span title="${esc(f.why)}">${esc(f.why)}</span></div>
           <button class="btn ${typeof ok !== 'string' ? 'btn-gold' : 'btn-ghost'}" data-act="fuse-with" data-slot="${o ? o.slot : ''}" ${typeof ok !== 'string' ? '' : 'disabled'}>${coin(1)}${COSTS.ascend[d.legend]}</button></div>`;
       }).join('')}
-      <div class="note">Cách khác: kéo tướng này thả lên tướng đối tác. Giữ cấp, đồ và <b>nội tại của cả hai</b>; thêm Thần lực (Sử thi ×${ASCEND_POWER.epic}, Huyền thoại ×${ASCEND_POWER.legendary}). Tối đa ${CONFIG.maxLegends} Huyền thoại trên sân.</div></div>`;
+      <div class="note">Cách khác: kéo tướng này thả lên tướng đối tác. Giữ cấp, đồ và <b>nội tại của cả hai</b>; thêm Thần lực (Sử thi ×${ASCEND_POWER.epic}, Huyền thoại ×${ASCEND_POWER.legendary}).</div></div>`;
   }
 
 
