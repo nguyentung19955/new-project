@@ -472,7 +472,7 @@ class UI {
     const ctr = new Set(); try { const lv = LEVELS[g.level], R = ROSTERS[lv.roster || 'thuy']; for (const c of rosterCounters(R, Object.values(lv.bosses || {}), BASIC_HEROES, lv.hint).list) ctr.add(c.t); } catch (e) { /* bỏ qua */ }
     const ing = deckIngredients(this.save.owned || []);
     const card = (t) => { const d = HEROES[t], on = sel.includes(t);
-      return `<button class="dk-pick metal ${on ? 'on' : ''}" data-act="deck-tog" data-id="${t}" style="--c:${ELEMENTS[d.el].color}" data-tip="${esc(`<b>${esc(d.name)}</b><small>Hành ${ELEMENTS[d.el].name} · ${d.attack === 'ranged' ? 'Đánh xa' : 'Cận chiến'}</small><p>${esc(d.title || '')}</p>`)}">
+      return `<button class="dk-pick metal ${on ? 'on' : ''}" data-act="deck-tog" data-id="${t}" style="--c:${ELEMENTS[d.el].color}" data-tip="${esc(`<b>${esc(d.name)}</b><small>Hành ${ELEMENTS[d.el].name} · ${d.attack === 'melee' ? 'Cận chiến' : 'Đánh xa'}</small><p>${esc(d.title || '')}</p>`)}">
         <img src="${heroImgUrl(t, 'head')}" alt=""><b>${esc(d.name)}</b>
         <span class="tg">${ctr.has(t) ? '<i class="c">khắc chế</i>' : ''}${ing.has(t) ? '<i class="h">hợp thể</i>' : ''}</span>${on ? `<span class="no">${sel.indexOf(t) + 1}</span>` : ''}</button>`; };
     const els = EL_ORDER.map((el) => `<div class="dk-el"><div class="dk-eh" style="color:${ELEMENTS[el].color}">${elIcon(el, 13)} ${ELEMENTS[el].name}</div>${BASIC_HEROES.filter((t) => HEROES[t].el === el).map(card).join('')}</div>`).join('');
@@ -810,7 +810,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 133 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 134 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -880,8 +880,16 @@ class UI {
   // ---------- v34: triệu hồi ngẫu nhiên · ghép · hợp thể
   summonRand() {
     const g = this.game;
-    const r = g.summonRandom();
+    const r = g.summonOffer();
     if (typeof r === 'string') return this.toast(r, '#E25A3A');
+    this.sig.deck = null;
+    if (!g.flags.offerTip) { g.flags.offerTip = true; this.toast('Chọn 1 trong 3 tướng · <b>Đổi</b> để ra 3 tướng khác', '#F2D27A'); }
+  }
+  pickOffer(i) {
+    const g = this.game;
+    const r = g.pickOffer(i);
+    if (typeof r === 'string') return this.toast(r, '#E25A3A');
+    this.sig.deck = null;
     const h = g.heroes[r];
     this.toast(`Triệu hồi: ${HEROES[h.type].name} ★`, '#6AE06A');
     this.spot = -1;
@@ -1246,10 +1254,22 @@ class UI {
       const pool = g.summonList().map((t) => `<img src="${heroImgUrl(t, 'head')}" alt="" title="${HEROES[t].name}">`).join('');
       const pairs = g.heroes.filter((x) => x && g.heroes.some((y) => y && y !== x && g.canMerge(x, y) === true)).length;
       key += `|${pairs}`;
+      if (g.offer) {
+        const o = g.offer, rc = g.rerollCost();
+        key = `o|${o.types.join(',')}|${o.rr}|${g.gold >= rc}|${g.freeSlots().length}|${assetVersion}`;
+        const tag = (t) => { const same = g.heroes.find((x) => x && x.type === t && (x.tier || 1) === 1 && !x.from);
+          if (same) return '<i class="ok">ghép ★★</i>';
+          const part = g.heroes.find((x) => x && fusionFor(x.type, t));
+          return part ? `<i class="fu">hợp thể</i>` : ''; };
+        html = `<div class="dk-offer">${o.types.map((t, i) => `<button class="of-card metal" data-act="offer-pick" data-i="${i}" style="--c:${ELEMENTS[HEROES[t].el].color}" aria-label="Chọn ${esc(HEROES[t].name)}">
+            <img src="${heroImgUrl(t, 'head')}" alt=""><span><b>${esc(HEROES[t].name)}</b><small>${elIcon(HEROES[t].el, 10)} ${ELEMENTS[HEROES[t].el].name} · ${HEROES[t].attack === 'melee' ? 'Cận chiến' : 'Đánh xa'}</small>${tag(t)}</span></button>`).join('')}
+          <button class="of-rr metal ${g.gold >= rc ? '' : 'poor'}" data-act="offer-reroll" aria-label="Đổi 3 tướng khác, ${rc} vàng"><b>↻ Đổi</b><span>${coin(1)} ${rc}</span></button></div>`;
+      } else {
       html = `${pairs ? `<button class="dk-auto metal on" data-act="auto-merge" aria-label="Ghép tự động"><b>⇄</b>Ghép<br>tự động<i>${Math.floor(pairs / 2)}</i></button>` : ''}
         <button class="dk-summon ${can ? '' : 'poor'}" data-act="summon-rand" aria-label="Triệu hồi ngẫu nhiên, ${sc} vàng">
           ${this.uiImg ? this.uiImg('ui-tran-3-1', '', 'uimg sm') : ''}<b>Triệu hồi</b><span class="cost">${coin(1)} ${sc}</span></button>
         <span class="dk-sep"></span><button class="dk-card legend" data-act="legend-open" aria-label="Cây hợp thể">${`<img class="asc-ic" src="${assetSrc('ui/ui-tran-3-2.png')}" alt="★">`}Hợp<br>thể</button>`;
+      }
     } else {
       const def = HEROES[h.type];
       const st = heroStats(h);
@@ -2091,6 +2111,8 @@ class UI {
       case 'reward': this.pickReward(+d.i); break;
       case 'summon': this.pickSummon(d.type); break;
       case 'summon-rand': this.summonRand(); break;
+      case 'offer-pick': this.pickOffer(+d.i); break;
+      case 'offer-reroll': { const r = this.game.rerollOffer(); if (typeof r === 'string') this.toast(r, '#E25A3A'); this.sig.deck = null; break; }
       case 'auto-merge': { const n = g.autoMerge(); this.toast(n ? `Đã ghép ${n} lần` : 'Không có cặp nào ghép được', n ? '#F2D27A' : '#E25A3A'); break; }
       case 'fuse-strip': {
         const f = FUSION[+d.i]; const pr = g.fusionProgress(f);

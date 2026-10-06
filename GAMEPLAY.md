@@ -1307,3 +1307,10 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Trước trận (bảng Chuẩn bị xuất quân) chọn **đội triệu hồi 6 tướng Thường** trong 20 tướng: Triệu hồi chỉ ra trong 6 tướng này → dễ ghép sao, dễ hợp thể, có chiến thuật.
 - Bảng chọn chia theo 5 hành; nhãn **khắc chế** (hợp quái của ải) và **hợp thể** (nguyên liệu ra tướng Tím / Vàng bạn đã sở hữu); nút **Gợi ý** tự chọn đội phù hợp; giữ tay lên tướng để xem mô tả.
 - Đội được nhớ cho các trận sau (lưu tài khoản) và lưu cùng trận đang dở (Tiếp tục vẫn đúng đội). Chưa chọn thì dùng đội gợi ý theo ải.
+
+## Phiên bản 134 — Triệu hồi chọn 1 trong 3
+- Bấm **Triệu hồi** (trả vàng như cũ) → hiện **3 tướng** trong đội 6 tướng; chạm 1 tướng để đặt vào ô trống.
+- Nhãn trên thẻ: **ghép ★★** (đã có tướng ★ cùng loại trên sân), **hợp thể** (ghép được với tướng đang có).
+- **↻ Đổi**: ra 3 tướng khác, giá 10 vàng rồi tăng 10 mỗi lần đổi trong cùng lượt.
+- Lượt đang chọn dở được lưu cùng trận (Tiếp tục vẫn còn 3 thẻ).
+- Đền Anh Hùng: sửa nhãn đánh xa / cận chiến của tướng mới.

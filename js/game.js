@@ -1348,6 +1348,7 @@ class Game {
   }
 
   reset(level) {
+    this.offer = null;
     this.level = level || 0;
     this.lv = LEVELS[this.level];
     setMap(this.lv.map || 'song1');
@@ -1495,6 +1496,41 @@ class Game {
   }
   // v133: quân triệu hồi = đội 6 tướng người chơi chọn (thiếu thì quân mặc định của ải)
   summonList() { return validDeck(this.deck) ? this.deck : summonPool(this.level); }
+  // v134: TRIỆU HỒI CHỌN 1 TRONG 3 — trả vàng, hiện 3 tướng (trong đội), chọn 1 đặt vào ô trống; Đổi lượt mới tốn ít vàng
+  rollOffer(rng = Math.random) {
+    const pool = [...this.summonList()], out = [];
+    while (out.length < 3 && pool.length) out.push(pool.splice(Math.floor(rng() * pool.length), 1)[0]);
+    return out;
+  }
+  rerollCost() { return 10 + 10 * ((this.offer && this.offer.rr) || 0); }
+  summonOffer(rng = Math.random) {
+    if (this.offer) return true;
+    const ok = this.canSummon();
+    if (ok !== true) return ok;
+    const c = this.summonCost();
+    this.gold -= c;
+    this.summonN = (this.summonN || 0) + 1;
+    this.offer = { types: this.rollOffer(rng), cost: c, rr: 0 };
+    return true;
+  }
+  rerollOffer(rng = Math.random) {
+    if (!this.offer) return 'Chưa triệu hồi';
+    const c = this.rerollCost();
+    if (this.gold < c) return `Cần ${c} vàng để đổi`;
+    this.gold -= c;
+    this.offer.rr++; this.offer.cost += c;
+    this.offer.types = this.rollOffer(rng);
+    return true;
+  }
+  pickOffer(i, rng = Math.random) {
+    const o = this.offer; if (!o || !o.types[i]) return 'Chưa triệu hồi';
+    const free = this.freeSlots();
+    if (!free.length) return 'Hết ô trống: ghép, hoặc kéo tướng vào 🗑 để hủy';
+    const slot = free[Math.floor(rng() * free.length)];
+    this.offer = null;
+    this.spawnHero(slot, o.types[i], { tier: 1, spent: o.cost });
+    return slot;
+  }
   // gọi 1 tướng Thường ngẫu nhiên (★) vào 1 ô trống ngẫu nhiên; trả về ô vừa đặt
   summonRandom(rng = Math.random) {
     const ok = this.canSummon();
@@ -2515,7 +2551,7 @@ class Game {
     const heroes = JSON.parse(JSON.stringify(this.heroes, (k, v) => (skip.has(k) ? undefined : v)));
     const o = { v: 1, at: Date.now(), heroes };
     for (const k of ['level', 'hard', 'endless', 'won', 'gold', 'lives', 'wave', 'summonN', 'bossesKilled', 'seen', 'water', 'raised', 'moc',
-      'mountain', 'stats', 'inventory', 'jarCount', 'shop', 'time', 'flags', 'runId', 'guardT', 'oathT', 'xpLog', 'deck']) o[k] = this[k];
+      'mountain', 'stats', 'inventory', 'jarCount', 'shop', 'time', 'flags', 'runId', 'guardT', 'oathT', 'xpLog', 'deck', 'offer']) o[k] = this[k];
     return JSON.parse(JSON.stringify(o));
   }
   restore(o) {

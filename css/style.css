@@ -1543,3 +1543,19 @@ body { overflow: hidden; }
 .dk-pick .tg i, .dk-head small i { font-style: normal; font-size: 9px; font-weight: 800; padding: 0 4px; border-radius: 3px; }
 i.c { background: #1F4A2A; color: #8AE09A; } i.h { background: #4A2A5A; color: #E0B0FF; }
 @media (max-height: 430px) { .dk-pick { padding: 3px 2px; } .dk-pick img { width: 38px; height: 38px; } .dk-pick b { font-size: 10.5px; } .dk-box { padding: 8px; gap: 6px; } .dk-head small { display: none; } }
+/* v134: triệu hồi chọn 1 trong 3 */
+.dk-offer { display: flex; gap: 6px; align-items: stretch; }
+.of-card { display: flex; align-items: center; gap: 6px; width: 178px; height: 58px; padding: 3px 8px 3px 4px; border-radius: 8px; border: 2px solid var(--c); text-align: left; animation: ofIn .25s ease-out both; }
+.of-card:nth-child(2) { animation-delay: .05s; } .of-card:nth-child(3) { animation-delay: .1s; }
+@keyframes ofIn { from { transform: translateY(14px) scale(.9); opacity: 0; } }
+.of-card img { width: 46px; height: 46px; border-radius: 50%; border: 2px solid var(--c); background: #0D0B08; object-fit: cover; object-position: 50% 0; flex: none; }
+.of-card span { display: flex; flex-direction: column; min-width: 0; line-height: 1.15; }
+.of-card b { font-size: 12.5px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.of-card small { font-size: 10px; color: var(--text-2); display: flex; align-items: center; gap: 2px; }
+.of-card i { font-style: normal; font-size: 9.5px; font-weight: 800; padding: 0 4px; border-radius: 3px; align-self: flex-start; margin-top: 2px; }
+.of-card i.ok { background: #1F4A2A; color: #8AE09A; } .of-card i.fu { background: #4A2A5A; color: #E0B0FF; }
+.of-card:active { transform: scale(.96); }
+.of-rr { width: 62px; height: 58px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 13px; color: var(--gold); }
+.of-rr span { font-size: 11px; display: flex; align-items: center; gap: 2px; }
+.of-rr.poor { filter: grayscale(.7) brightness(.7); }
+@media (max-width: 760px) { .of-card { width: 150px; } .of-card small { display: none; } }

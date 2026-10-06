@@ -13,7 +13,7 @@ const EL = { kim: ['Hành Kim', '#D9DDE0', 'spark'], moc: ['Hành Mộc', '#5FB8
 const RAR = { legendary: 'Huyền thoại', epic: 'Sử thi' };
 const recipeOf = (t) => (FUSION || []).filter((f) => f.to === t).map((f) => `${HEROES[f.a].name} + ${HEROES[f.b].name}`).join(' / ');
 const list = Object.keys(HEROES).filter((t) => !have.has(t) && fs.existsSync(path.join(ROOT, 'assets/packs', t, 'idle.png'))).map((t) => {
-  const d = HEROES[t], e = EL[d.el] || EL.kim, ranged = d.attack === 'ranged' || /bow|ranged|staff|cross|blow|sling/.test(d.wclass || '');
+  const d = HEROES[t], e = EL[d.el] || EL.kim, ranged = d.attack !== 'melee';
   return { id: t, name: d.name, attr: e[0], rar: RAR[d.legend] || 'Thường', pack: 1, ranged: ranged ? 1 : 0, el: e[2], col: e[1],
     sig: d.trait ? [d.trait.name, d.trait.desc] : [d.title || '', ''], recipe: recipeOf(t),
     skills: d.skills.map((s, i) => ({ k: 'QWER'[i], n: s.name, t: i === 3 ? 'Tối thượng' : s.active ? 'Chủ động' : 'Nội tại', d: s.info(5), c: e[1] })) };
