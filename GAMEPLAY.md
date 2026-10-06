@@ -1051,3 +1051,10 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - **Tướng Tím / Vàng theo tài khoản**: mua vĩnh viễn ở **Anh Hùng** (menu chính) bằng Ngân khố — Tím 1.200, Vàng 3.000 (`OWN_COST`). Lưu trong bản lưu (`save.owned`, đồng bộ đám mây). Tướng chưa mua có ổ khoá, ảnh xám. Trong trận chỉ hợp thể / thăng thần ra được tướng đã mua; dải gợi ý hợp thể trên cùng chỉ hiện tướng đã mua. 6 tướng thường có sẵn.
 - Bỏ "Chiêu mộ tướng đặt sẵn trên sân" ở bảng Chuẩn bị xuất quân; thay bằng danh sách tướng đã sở hữu.
 - **Thanh máu boss chỉ hiện khi bấm vào boss / tướng địch** (góc dưới trái); bấm chỗ khác thì ẩn.
+
+## Phiên bản 87 — Gọn giao diện
+- Hội thoại nhỏ gọn ở giữa trên, tự tắt sau 3 giây.
+- Nút tự động (Nâng đồ / Mặc đồ) chỉ còn biểu tượng; nút tự ghép chỉ hiện khi có cặp ghép được.
+- Bỏ dãy mặt tướng trong ô chiêu mộ, bỏ nút 📊 trùng lặp; ô cộng điểm chỉ hiện khi còn điểm.
+- Bỏ dòng công thức thưởng ở màn chuẩn bị; menu chính chỉ hiện Ngân khố; ngăn kéo ≡ bỏ chú thích phụ.
+- Hai nút phụ menu (Bách khoa / Xếp hạng) không còn bị cắt chữ.

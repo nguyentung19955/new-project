@@ -1285,3 +1285,16 @@ body { overflow: hidden; }
 .ro-card { position: relative; }
 .ro-card.lock img { filter: grayscale(0.85) brightness(0.6); }
 .ro-lock { position: absolute; top: 4px; right: 5px; font-size: 13px; z-index: 1; }
+/* v87: gọn giao diện trong trận (theo rà soát) */
+#dialogue { width: auto; max-width: 340px; padding: 5px 10px 5px 6px; bottom: auto; top: 58px; left: 50%; transform: translateX(-50%); gap: 8px; }
+#dialogue .dav, #dialogue .dav canvas, #dialogue .dav img { width: 34px; height: 38px; }
+#dialogue h4 { font-size: 12px; margin: 0; }
+#dialogue p { font-size: 12px; line-height: 1.25; }
+#auto-btns .ab .l { display: none; }
+#auto-btns .ab { width: 46px; height: 46px; min-height: 0; padding: 0; justify-content: center; }
+#auto-btns .ab .i { font-size: 20px; }
+#drawer .dw-btn small { display: none; }
+#drawer .dw-btn { height: 38px; grid-template-rows: auto; }
+.mc-tag-hide, #menu .mc-foot { display: none; }
+/* v87: hai nút phụ menu không bị cắt chữ */
+.mc-subs .mc-sub { overflow: visible; text-overflow: clip; font-size: 12px; padding: 0 2px; letter-spacing: -.2px; }

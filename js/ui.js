@@ -344,7 +344,8 @@ class UI {
     $('#menu-player').innerHTML = `<span class="av">${acc && acc.photoURL ? `<img src="${esc(acc.photoURL)}" alt="" referrerpolicy="no-referrer">` : svgI(sceneArt('drum'))}</span><span><b>${esc(acc ? this.playerName() : 'Sơn Tinh')}</b><small>Cấp ${lv} · ★ ${total}/${LEVELS.length * 3} · ${acc ? 'Đã đăng nhập' : 'Khách'}</small></span>`;
     $('#menu-player').onclick = () => this.showLogin(true);
     const short = (n) => (n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace('.', ',') + 'k' : n);
-    $('#menu-res').innerHTML = `<span title="Tổng vàng đã kiếm qua mọi trận (vàng trong trận luôn bắt đầu từ ${CONFIG.startGold})"><small class="pr-l">Tổng vàng đã kiếm</small>${coin(1)} ${short(s.lifeGold)}</span><span title="Linh Chi đã hái">🌿 ${short(s.lifeHerbs)}</span><span title="Ngân khố: vàng thưởng sau mỗi trận thắng, dùng mua đồ / tướng trước trận"><small class="pr-l">Ngân khố</small>${coin(1)} <b style="color:#FFD66B">${fmt(s.kho || 0)}</b></span>`;
+    $('#menu-res').innerHTML = `<span title="Ngân khố: vàng thưởng sau mỗi trận thắng, dùng mua tướng / đồ"><small class="pr-l">Ngân khố</small>${coin(1)} <b style="color:#FFD66B">${fmt(s.kho || 0)}</b></span>`;
+    if (0) $('#menu-res').innerHTML = `<span title="Tổng vàng đã kiếm qua mọi trận (vàng trong trận luôn bắt đầu từ ${CONFIG.startGold})"><small class="pr-l">Tổng vàng đã kiếm</small>${coin(1)} ${short(s.lifeGold)}</span><span title="Linh Chi đã hái">🌿 ${short(s.lifeHerbs)}</span><span title="Ngân khố: vàng thưởng sau mỗi trận thắng, dùng mua đồ / tướng trước trận"><small class="pr-l">Ngân khố</small>${coin(1)} <b style="color:#FFD66B">${fmt(s.kho || 0)}</b></span>`;
     $('#menu-art').innerHTML = svgI(sceneArt('menu'));
     const g0 = this.game, live = g0.started && !g0.over && (!g0.won || g0.endless);
     const run = !live && s.run;
@@ -425,7 +426,7 @@ class UI {
           <div class="prep-heroes">${LEGEND_HEROES.filter((t) => (this.save.owned || []).includes(t)).map((t) => `<span class="prep-hero metal ${HEROES[t].legend}"><img src="${heroImgUrl(t, 'head')}" alt=""><b>${HEROES[t].name}</b></span>`).join('')
             || '<div class="note">Chưa có tướng Tím / Vàng nào. Mua ở <b>Anh Hùng</b> (menu chính) bằng Ngân khố để hợp thể được trong trận.</div>'}</div></div>
       </div>
-      <div class="note" style="text-align:center;padding:4px 10px 8px">Thắng ải nhận Ngân khố: ${fmt(PREP.winBase)} + ${PREP.winPerLevel}×số ải + ${PREP.winPerStar}×sao (Khó ×1,5). Thua nhận ${PREP.losePerWave} mỗi đợt đã qua.</div></div>`;
+</div>`;
     $('#prep').hidden = false;
   }
   prepBuy(id) {
@@ -694,7 +695,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 86 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 87 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -959,7 +960,7 @@ class UI {
     if (foe) drawEnemyIcon(box.querySelector('canvas'), who, 0.04);
     box.hidden = false;
     clearTimeout(this.sayT);
-    this.sayT = setTimeout(() => { box.hidden = true; }, 4200);
+    this.sayT = setTimeout(() => { box.hidden = true; }, 3000);
   }
 
   banner(sub, text) {
@@ -1102,9 +1103,9 @@ class UI {
       const pool = BASIC_HEROES.map((t) => `<img src="${heroImgUrl(t, 'head')}" alt="" title="${HEROES[t].name}">`).join('');
       const pairs = g.heroes.filter((x) => x && g.heroes.some((y) => y && y !== x && g.canMerge(x, y) === true)).length;
       key += `|${pairs}`;
-      html = `<button class="dk-auto metal ${pairs ? 'on' : ''}" data-act="auto-merge" ${pairs ? '' : 'disabled'} aria-label="Ghép tự động"><b>⇄</b>Ghép<br>tự động${pairs ? `<i>${Math.floor(pairs / 2)}</i>` : ''}</button>
+      html = `${pairs ? `<button class="dk-auto metal on" data-act="auto-merge" aria-label="Ghép tự động"><b>⇄</b>Ghép<br>tự động<i>${Math.floor(pairs / 2)}</i></button>` : ''}
         <button class="dk-summon ${can ? '' : 'poor'}" data-act="summon-rand" aria-label="Triệu hồi ngẫu nhiên, ${sc} vàng">
-          <span class="pool">${pool}</span><b>Triệu hồi</b><span class="cost">${coin(1)} ${sc}</span></button>
+          <b>Triệu hồi</b><span class="cost">${coin(1)} ${sc}</span></button>
         <span class="dk-sep"></span><button class="dk-card legend" data-act="legend-open" aria-label="Cây hợp thể">${assetUrl('ui_thang-than.png') ? `<img class="asc-ic" src="${assetUrl('ui_thang-than.png')}" alt="">` : '<b>★</b>'}Hợp<br>thể</button>`;
     } else {
       const def = HEROES[h.type];
@@ -1144,7 +1145,7 @@ class UI {
         return `<button class="dk-sk metal ${sk.active && h.mana < sk.active.mana ? 'nomana' : ''} ${i === fresh ? 'fresh' : ''} ${lvOk && pay ? 'canup' : ''}" data-act="cmd-skill" data-i="${i}" aria-label="${sk.name} cấp ${lv}">
           ${tag}${svgI(skillIcon(h.type, i))}<span class="lvn">${lv}</span>${lvOk ? '' : lv < max ? `<span class="req">cấp ${skillReqLevel(i, lv + 1)}</span>` : ''}
           ${sk.active ? `<span class="cdov" style="height:${cd > 0.4 ? Math.min(100, cd / mx * 100) : 0}%"></span><span class="cdn">${cd > 0.4 ? Math.ceil(cd) : ''}</span>` : ''}</button>`;
-      }).join('') + (h.from ? '' : `<button class="dk-sk metal stat ${h.skillPts ? 'canup' : 'off'}" data-act="sk-stat-deck" aria-label="Cộng điểm dư vào chỉ số">
+      }).join('') + (h.from || !h.skillPts ? '' : `<button class="dk-sk metal stat ${h.skillPts ? 'canup' : 'off'}" data-act="sk-stat-deck" aria-label="Cộng điểm dư vào chỉ số">
           <span class="sk-tag ${h.skillPts ? 'ok' : 'no'}">+1đ</span><b style="color:${ATTRS[def.attr].color}">+${COSTS.statPt}</b><small>${ATTRS[def.attr].short}</small>${h.skillPts ? `<span class="badge">${h.skillPts}</span>` : ''}</button>`);
       const maxed = h.level >= CONFIG.maxLevel;
       const tc = g.trainCost(h);
@@ -1152,7 +1153,7 @@ class UI {
         <span class="dk-pt ${g.known.has('h.' + h.type) ? 'goldf' : ''}" ${assetUrl(`ui_khung-${h.from ? 'vang' : 'thuong'}.png`) ? `style="background-image:url('${assetUrl(`ui_khung-${h.from ? 'vang' : 'thuong'}.png`)}'),radial-gradient(circle at 50% 60%,#3A2416,#1A0F0A 75%);background-size:100% 100%,auto"` : ''}><canvas id="dk-portrait" width="108" height="116"></canvas><span class="lv">${h.level}${h.train ? `<i>✦${h.train}</i>` : ''}</span><span class="st" ${h.from ? 'style="color:#FF7A3A"' : ''}>${'★'.repeat(h.tier || 0)}</span></span>
         <span class="dk-info" data-act="hero-stats" role="button" aria-label="Xem chỉ số"><span class="nm">${elIcon(def.el, 15)}${def.name}</span><span class="sub ${h.bogged || h.dead ? 'warn' : ''}">${status}</span>
           <span class="bar hp"><i id="dk-hp"></i></span><span class="bar mp"><i id="dk-mp"></i></span></span>
-        <button class="dk-stbtn metal ${this.statsOpen ? 'on' : ''}" data-act="hero-stats" aria-label="Chỉ số tướng">📊<small>Chỉ số</small></button>
+
         ${skills}
         ${maxed ? `<button class="dk-up btn-gold" data-act="train" ${g.gold < tc ? 'disabled' : ''} aria-label="Luyện thể"><b>${uiIc('luyen-the')}Luyện thể ✦${(h.train || 0) + 1}</b><span>${coin(1)}${tc}</span></button>`
           : `<button class="dk-up btn-gold" data-act="levelup" ${g.gold < lc ? 'disabled' : ''} aria-label="Nâng cấp tướng"><b>Lên cấp ${h.level + 1}</b><span>${coin(1)}${lc}</span></button>`}
