@@ -1212,3 +1212,6 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 109 — Ảnh Gemini: Trụ Trời, Mẫu Thoải
 - Nạp ảnh vẽ tay cho Thần Trụ Trời và Mẫu Thoải; icon kỹ năng vẽ tay cho Chèo Đò và Hái Sen.
 - Còn thiếu ảnh tướng: Sọ Dừa.
+
+## Phiên bản 110 — Icon kỹ năng vẽ tay
+- Thêm icon kỹ năng cho Chú Cuội, Kỳ Lân Vàng, Mẫu Địa, Sơn Tinh (tổng 18 tướng có icon vẽ tay).
