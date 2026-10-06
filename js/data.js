@@ -77,12 +77,18 @@ const ATTRS = {
 // Ba thuộc tính (sức mạnh / nhanh nhẹn / trí tuệ) vẫn là chỉ số thân thể; sát thương cộng theo thuộc tính cao nhất của tướng.
 const heroMain = (def) => (def._main ||= Object.keys(ATTRS).reduce((a, b) => (def.attrs[b] > def.attrs[a] ? b : a)));
 // hệ của mỗi hành: cộng sẵn cho mọi tướng thuộc hành đó
+// v93: mỗi hành còn có hiệu ứng trạng thái riêng khi đánh thường (el: thiêu đốt, đóng băng, làm chậm, choáng, chặn, hồi máu, câm lặng)
 const ELEM_TRAIT = {
-  kim:  { name: 'Sắc bén',   desc: '+10% xuyên giáp, +5% chí mạng', apply: (s) => { s.pierce += 10; s.crit += 5; } },
-  moc:  { name: 'Sinh sôi',  desc: '+8% máu, +1 hồi máu / giây', apply: (s) => { s.hpPct += 8; s.regen += 1; } },
-  thuy: { name: 'Nhu thủy',  desc: '+15% hồi năng lượng, −5% hồi chiêu', apply: (s) => { s.elMana += 15; s.cdr += 5; } },
-  hoa:  { name: 'Bùng cháy', desc: '+8% sát thương, chí mạng thiêu đốt 2 giây', apply: (s) => { s.bonusDmgPct += 8; s.critBurn = 1; } },
-  tho:  { name: 'Vững chãi', desc: '+10% máu, −5% sát thương nhận', apply: (s) => { s.hpPct += 10; s.dr += 5; } },
+  kim:  { name: 'Sắc bén',   fx: 'Câm lặng', desc: '+10% xuyên giáp, +5% chí mạng · 12% câm lặng quái 2 giây (không dùng được kỹ năng)',
+    apply: (s) => { s.pierce += 10; s.crit += 5; s.el.silence = 12; } },
+  moc:  { name: 'Sinh sôi',  fx: 'Hồi máu', desc: '+8% máu, +1 hồi máu / giây · 20% mỗi đòn hồi 2% máu cho mình và tướng kề',
+    apply: (s) => { s.hpPct += 8; s.regen += 1; s.el.heal = 20; } },
+  thuy: { name: 'Nhu thủy',  fx: 'Làm chậm · Đóng băng', desc: '+15% hồi năng lượng, −5% hồi chiêu · đòn đánh làm chậm 15%, 8% đóng băng 1 giây',
+    apply: (s) => { s.elMana += 15; s.cdr += 5; s.el.slow = 15; s.el.freeze = 8; } },
+  hoa:  { name: 'Bùng cháy', fx: 'Thiêu đốt', desc: '+8% sát thương · 25% thiêu đốt 3 giây (30% sát thương mỗi giây)',
+    apply: (s) => { s.bonusDmgPct += 8; s.el.burn = 25; } },
+  tho:  { name: 'Vững chãi', fx: 'Choáng · Chặn', desc: '+10% máu, −5% sát thương nhận · 8% choáng 0,6 giây, 15% chặn hẳn đòn đánh vào mình',
+    apply: (s) => { s.hpPct += 10; s.dr += 5; s.el.stun = 8; s.el.block = 15; } },
 };
 
 const RARITY = {

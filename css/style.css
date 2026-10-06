@@ -1395,3 +1395,4 @@ body { overflow: hidden; }
 .ro-card .tag.el { display: inline-flex; align-items: center; gap: 2px; font-size: 10px; padding: 0 4px 0 2px; border-radius: 8px; background: #0D0B08d0; line-height: 16px; }
 .ro-card .tag.el svg { flex: none; }
 .ro-card .tag.el { z-index: 2; }
+#bb-info .fc .fst { color: #FFE08A; background: #3A2410; border-radius: 3px; padding: 0 4px; }

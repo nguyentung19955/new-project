@@ -228,7 +228,7 @@ function heroStats(h) {
     goldOnKill: 0, stunChance: 0,
     hpPct: 0, rangePct: 0, skillPct: 0, bossPct: 0, floodPct: 0, shred: 0, spread: 0, magicRes: 0,
     thorns: 0, noHeal: 0, netSlow: 0, hitAir: 0, touchSlow: 0, drumAura: 0, fireTrail: 0, curve: 0, airPct: 0,
-    hid: {}, sets: {}, elMana: 0, critBurn: 0, lg: {},
+    hid: {}, sets: {}, elMana: 0, el: {}, lg: {},
     ...line.reduce((o, a) => inheritBase(def, HEROES[a.type], o), null),
   };
   // Thăng thần: giữ nội tại của mọi bậc trước (cấp kỹ năng lúc hóa thân) rồi cộng nội tại bậc hiện tại.
@@ -2464,6 +2464,8 @@ class Game {
       return;
     }
     if (e.noHealT > 0) e.noHealT -= dt;
+    if (e.silenceT > 0) e.silenceT -= dt;
+    const mute = e.silenceT > 0;          // v93: câm lặng — không dùng được kỹ năng
     if (e.huntT > 0) e.huntT -= dt;
     if (e.kbT > 0) e.kbT -= dt;
     if (e.groundT > 0) e.groundT -= dt;
@@ -2473,7 +2475,7 @@ class Game {
       this.text(e.x, e.y - 30, d.boss ? 'HÓA ĐIÊN!' : 'Điên!', '#ff4d4d', 0.9, d.boss ? 18 : 13);
     }
     // hồi máu đồng đội (Phù Thủy Nước)
-    if (d.heal) {
+    if (d.heal && !mute) {
       e.healCd -= dt;
       if (e.healCd <= 0) {
         e.healCd = d.heal.cd;
@@ -2488,7 +2490,7 @@ class Game {
       }
     }
     // hô mưa gọi gió: gây sát thương tướng đứng gần (Thủy Tinh)
-    if (d.burnAura) {
+    if (d.burnAura && !mute) {
       e.burnT -= dt;
       if (e.burnT <= 0) {
         e.burnT = 1;
@@ -2513,7 +2515,7 @@ class Game {
     }
 
     // quái tầm xa phun nước bắn tướng
-    if (d.ranged) {
+    if (d.ranged && !mute) {
       e.atkCd -= dt;
       if (e.atkCd <= 0) {
         const h = this.nearestHero(e.x, e.y, d.ranged.range);
@@ -2527,7 +2529,7 @@ class Game {
       }
     }
     // boss: quẫy đuôi làm choáng tướng
-    if (d.slam) {
+    if (d.slam && !mute) {
       e.slamCd -= dt;
       if (e.slamCd <= 0 && this.nearestHero(e.x, e.y, d.slam.range)) {
         e.slamCd = d.slam.cd * (e.enraged ? 0.65 : 1); e.atkT = 0.45;
@@ -2542,7 +2544,7 @@ class Game {
       }
     }
     // boss: gọi quân theo chu kỳ
-    if (d.summon) {
+    if (d.summon && !mute) {
       e.summonCd -= dt;
       if (e.summonCd <= 0) {
         e.summonCd = d.summon.cd;
@@ -2553,7 +2555,7 @@ class Game {
 
     // ---------- v49: cơ chế boss mới
     // gầm (roar): tướng trong tầm bị câm — không dùng được chiêu một lúc
-    if (d.roar) {
+    if (d.roar && !mute) {
       e.roarCd = (e.roarCd ?? d.roar.cd * 0.6) - dt;
       if (e.roarCd <= 0 && this.nearestHero(e.x, e.y, d.roar.radius)) {
         e.roarCd = d.roar.cd;
@@ -2563,7 +2565,7 @@ class Game {
       }
     }
     // lao tới (dash): chạy nhanh gấp nhiều lần trong chốc lát
-    if (d.dash) {
+    if (d.dash && !mute) {
       e.dashCd = (e.dashCd ?? d.dash.cd) - dt;
       if (e.dashT > 0) e.dashT -= dt;
       else if (e.dashCd <= 0) {
@@ -2573,7 +2575,7 @@ class Game {
       }
     }
     // sà xuống bắt người (swoop): tướng mạnh nhất trong tầm bị choáng
-    if (d.swoop) {
+    if (d.swoop && !mute) {
       e.swoopCd = (e.swoopCd ?? d.swoop.cd) - dt;
       if (e.swoopCd <= 0) {
         const near = this.heroes.filter((h) => h && !h.dead && Math.hypot(h.x - e.x, h.y - e.y) <= d.swoop.range);
@@ -2588,7 +2590,7 @@ class Game {
       }
     }
     // ảo ảnh (blink): mỗi mốc máu biến mất rồi hiện ra xa hơn trên đường
-    if (d.blink) {
+    if (d.blink && !mute) {
       e.blinkN = e.blinkN || 0;
       const next = d.blink.at[e.blinkN];
       if (next !== undefined && e.hp < e.maxHp * next) {
@@ -2690,6 +2692,8 @@ class Game {
       return;
     }
     const st = heroStats(h);
+    // hệ Thổ: chặn hẳn đòn đánh
+    if (st.el.block && Math.random() * 100 < st.el.block) { this.text(h.x, h.y - 50, 'Chặn!', '#E8C27A', 0.6, 13); return; }
     amount *= (1 - st.dr / 100) * (1 - (b.dr || 0) / 100);
     if (magic && st.magicRes) { amount *= 1 - st.magicRes / 100; this.proc(h, 'scale', h.x, h.y - 26, '#5AB4D6', 26); }
     // ẩn đồ hành Thổ "Đất lành chim đậu": máu dưới 30% thì giảm 30% sát thương 4 giây (hồi 20 giây)
@@ -3168,8 +3172,7 @@ class Game {
       this.proc(e, 'ground', e.x, e.y - 30, '#FFE08A', 20);
       this.discover('r.bua_chim_lac', hero.x, hero.y);
     }
-    // hệ Hỏa: chí mạng thiêu đốt 2 giây
-    if (crit && st.critBurn && !(e.poisonT > 0)) this.dot(e, dmg * 0.1, hero, '#E0452C', 'magic', 2);
+    if (st.el) this.elemOnHit(e, hero, st);
     if (crit && hid['i.hoa1']) {
       this.proc(e, 'burn', e.x, e.y - 14, '#E0452C', 18); this.dot(e, dmg * 0.2, hero, '#E0452C', 'magic', 2); this.discover('i.hoa1', hero.x, hero.y); }
     // ẩn đủ Bộ Lạc Long: đứng ô ngập, 10% phóng sét lan 3 quái
@@ -3188,6 +3191,24 @@ class Game {
       hero.trailCd = 0.5;
       this.zones.push({ kind: 'fire', d1: Math.max(0, e.dist - 30), d2: e.dist + 30, ttl: 2, max: 2,
         dps: st.damage * st.fireTrail, hero, dt: 'magic' });
+    }
+  }
+
+  // v93: hiệu ứng trạng thái theo hành của tướng (đòn đánh thường)
+  elemOnHit(e, hero, st) {
+    const E = st.el, R = () => Math.random() * 100;
+    if (E.burn && !(e.poisonT > 0) && R() < E.burn) { this.dot(e, st.damage * 0.3, hero, '#E0452C', 'magic', 3); this.proc(e, 'burn', e.x, e.y - 14, '#E0452C', 16); }
+    if (E.slow) this.slow(e, E.slow, 1.5);
+    if (E.freeze && R() < E.freeze && !e.def.boss) { this.stun(e, 1, 'ice'); this.proc(e, 'ice', e.x, e.y - 14, '#BFEFFF', 18); }
+    if (E.stun && R() < E.stun) { this.stun(e, e.def.boss ? 0.3 : 0.6, 'stun'); this.proc(e, 'tusk', e.x, e.y - 16, '#C99A3C', 18); }
+    if (E.silence && R() < E.silence) {
+      if (!(e.silenceT > 0)) this.text(e.x, e.y - 34, 'Câm!', '#C8C8D8', 0.6, 12);
+      e.silenceT = Math.max(e.silenceT || 0, e.def.boss ? 1 : 2);
+    }
+    if (E.heal && R() < E.heal) {
+      const amt = (hero.hpMaxLast || 0) * 0.02;
+      for (const o of this.heroes) if (o && !o.dead && Math.hypot(o.x - hero.x, o.y - hero.y) <= 120) o.hp = Math.min(o.hpMaxLast || o.hp, o.hp + amt);
+      this.proc(hero, 'moc1', hero.x, hero.y - 24, '#5FB84A', 16);
     }
   }
 

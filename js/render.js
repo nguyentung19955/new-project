@@ -2015,6 +2015,14 @@ function drawEnemy(ctx, e, t, o = {}) {
   if (e.poisonT > 0 && Math.random() < 0.3) {
     circle(ctx, (Math.random() - 0.5) * box.w * 0.5, top + box.h * 0.3, 2, e.dotColor);
   }
+  // v93: câm lặng — mây xám trên đầu, không dùng được kỹ năng
+  if (e.silenceT > 0) {
+    const sy = top - 12;
+    ctx.fillStyle = 'rgba(60,60,72,0.85)';
+    ctx.beginPath(); ctx.ellipse(-4, sy, 7, 5, 0, 0, Math.PI * 2); ctx.ellipse(4, sy - 1, 7, 5.5, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = '#D8D8E8'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(-4, sy - 3); ctx.lineTo(4, sy + 3); ctx.moveTo(4, sy - 3); ctx.lineTo(-4, sy + 3); ctx.stroke();
+  }
   ctx.restore();
 
   if (o.icon) return;

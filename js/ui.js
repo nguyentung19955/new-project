@@ -698,7 +698,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 92 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 93 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1090,7 +1090,8 @@ class UI {
     $('#ui').classList.toggle('foe-on', !!b);
     if (!b) return;
     const d = b.def;
-    const key = b.id + '|' + (b.enraged ? 1 : 0) + (b.el || '') + Math.round(b.armor) + '|' + Math.round(b.mr);
+    const st = [b.poisonT > 0 && 'Thiêu đốt', b.stunT > 0 && (b.stunKind === 'ice' ? 'Đóng băng' : 'Choáng'), (b.slowT > 0 || b.zoneSlow > 0) && 'Chậm', b.silenceT > 0 && 'Câm lặng'].filter(Boolean);
+    const key = b.id + '|' + (b.enraged ? 1 : 0) + (b.el || '') + Math.round(b.armor) + '|' + Math.round(b.mr) + st.join();
     if (this.sig.foe !== key) {
       this.sig.foe = key;
       const tag = d.boss ? 'Boss' : d.general ? 'Tướng địch' : b.champion ? 'Khổng lồ' : b.elite ? 'Tinh anh' : d.variant ? 'Biến thể' : d.flying ? 'Bay' : '';
@@ -1104,6 +1105,7 @@ class UI {
         `<span>👣 Tốc <b>${Math.round(d.speed)}</b></span>`, `<span>🪙 <b>${d.gold}</b></span>`,
         el ? `<span style="color:${el.color}">Hành <b>${el.name}</b>${by ? ` · bị ${ELEMENTS[by].name} khắc` : ''}</span>` : '',
         b.enraged ? '<span style="color:#FF8A6A">Đang hóa điên</span>' : '',
+        ...st.map((x) => `<span class="fst">${x}</span>`),
       ].filter(Boolean).join('');
       $('#bb-info').innerHTML = `<div class="fc">${chips}</div>${d.short ? `<div class="fs">${esc(d.short)}</div>` : ''}`;
     }
@@ -1500,6 +1502,7 @@ class UI {
               <div class="note" style="font-style:italic">${esc(d.title)}</div>
               <div class="bt-info" style="padding:0;background:none;border:0;box-shadow:none"><div class="tags">
                 <span style="background:#1A1208;color:${ELEMENTS[d.el].color};display:inline-flex;align-items:center;gap:3px">${elIcon(d.el, 13)} Hành ${ELEMENTS[d.el].name} · ${ELEM_TRAIT[d.el].name}</span>
+                <span style="background:#1A1208;color:#E8D8B0">${ELEM_TRAIT[d.el].fx}</span>
                 <span style="background:#3A2410;color:${d.legend ? RARITY[d.legend].color : '#C8BFA8'}">${d.legend ? RARITY[d.legend].name : 'Cơ bản'}</span>
                 <span style="background:#2A1810;color:#FFB08A">${d.dmgType === 'magic' ? 'Phép' : 'Vật lý'} · ${d.attack === 'melee' ? 'Cận chiến' : 'Đánh xa'}</span>
                 <span style="background:#1A1610;color:#C8BFA8">${d.role}</span></div></div>

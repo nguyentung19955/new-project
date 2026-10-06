@@ -1101,3 +1101,12 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
   - Mẫu Thượng Ngàn: Rừng Thiêng · Dây Leo Ngàn Năm · Hoa Trái Sơn Lâm
 - **Tướng khắc chế** ở màn chọn ải và màn chuẩn bị: hiện ảnh đại diện (tối đa 4) kèm lý do — khắc hành quái chủ đạo, bắn quái bay, phép xuyên giáp dày, làm chậm quái nhanh.
 - **Bỏ màn Núi Tản Viên** khỏi menu ≡. Núi vẫn tự cao theo đợt (vàng mỗi đợt, thêm lượt Mọc Núi), bỏ Linh Chi và Bồi đất.
+
+## Phiên bản 93 — Hiệu ứng trạng thái theo ngũ hành
+Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
+- **Kim · Câm lặng:** 12% làm quái câm 2 giây (boss 1 giây) — không hồi máu, không bắn xa, không gọi quân, không gầm, không lướt… Mây xám trên đầu quái.
+- **Mộc · Hồi máu:** 20% mỗi đòn hồi 2% máu cho mình và tướng đứng gần.
+- **Thủy · Làm chậm + Đóng băng:** mọi đòn làm chậm 15% (1,5 giây); 8% đóng băng 1 giây (không áp lên boss).
+- **Hỏa · Thiêu đốt:** 25% thiêu đốt 3 giây, 30% sát thương mỗi giây.
+- **Thổ · Choáng + Chặn:** 8% choáng 0,6 giây (boss 0,3 giây); 15% chặn hẳn một đòn đánh vào mình.
+- Bảng thông tin quái hiện trạng thái đang dính: Thiêu đốt / Đóng băng / Choáng / Chậm / Câm lặng.
