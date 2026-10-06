@@ -695,7 +695,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 89 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 90 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1365,8 +1365,11 @@ class UI {
   }
 
   // ---------- Anh Hùng (20): xem 20 tướng, kỹ năng, đặc trưng
-  showRoster(sel) {
+  showRoster(sel, inGame) {
     this.rosterSel = sel || this.rosterSel || 'lactuong';
+    // v90: mở từ menu ≡ trong trận → tạm dừng, đóng lại thì về trận
+    this.rosterInGame = !!inGame;
+    if (inGame) { this.rosterWasRunning = this.game.running; this.game.running = false; $('#roster').hidden = false; this.renderRoster(); return; }
     this.hideOverlays();
     $('#roster').hidden = false;
     this.renderRoster();
@@ -1380,7 +1383,7 @@ class UI {
     $('#roster').innerHTML = `<div class="screen" style="z-index:auto">
       <div class="scr-head metal"><button class="xbtn metal" data-act="ro-back" aria-label="Quay lại">${ICON.back}</button><h1 class="ttl">Anh Hùng Văn Lang</h1>
         <span class="chip dark">20 tướng · 6 Thường · 8 Sử thi · 6 Huyền thoại · ghép & hợp thể</span><div class="sp"></div>
-        <button class="btn metal title" data-act="ro-temple">Đền Anh Hùng · xem hoạt ảnh</button></div>
+        ${this.rosterInGame ? "" : `<button class="btn metal title" data-act="ro-temple">Đền Anh Hùng · xem hoạt ảnh</button>`}</div>
       <div class="scr-body">
         <div class="ro-grid">${all.map((k) => {
           const h = HEROES[k];
@@ -1690,7 +1693,9 @@ class UI {
       case 'to-map': this.showCampaign(g.level); break;
       case 'to-menu': $('#settings').hidden = true; if (g.started) this.bankStats(); this.showMenu(); break;
       case 'ro-sel': this.rosterSel = d.type; this.renderRoster(); break;
-      case 'ro-back': this.showMenu(); break;
+      case 'ro-back':
+        if (this.rosterInGame && $('#ranks').hidden && $('#treasury').hidden) { this.rosterInGame = false; $('#roster').hidden = true; if (this.rosterWasRunning) g.running = true; this.sig.fuse = ''; break; }
+        this.showMenu(); break;
       case 'ro-buy': {
         const t = d.type, c = OWN_COST[HEROES[t].legend], s = this.save;
         s.owned = s.owned || [];
@@ -1738,6 +1743,7 @@ class UI {
       case 'dw':
         $('#drawer').hidden = true;
         if (d.k === 'pause') this.showSettings(true);
+        else if (d.k === 'heroes') this.showRoster(null, true);
         else this.openScreen(d.k);
         break;
       // ----- bảng điều khiển dưới

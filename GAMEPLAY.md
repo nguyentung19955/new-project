@@ -1067,3 +1067,7 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 ## Phiên bản 89 — Một luật gợi ý chung
 - Mọi ô gợi ý hợp thể (tím và vàng) chỉ hiện khi tài khoản đã mua tướng đó và tiến độ ghép từ 75% trở lên.
 - Tướng vàng còn cần trên bản đồ có thần tím nằm trong công thức.
+
+## Phiên bản 90 — Mua tướng ngay trong trận
+- Menu ≡ trong trận có mục **👑 Anh Hùng**: mở danh sách tướng, mua tướng tím / vàng bằng Ngân khố.
+- Khi mở thì trận tạm dừng; bấm quay lại là về trận và chạy tiếp. Tướng vừa mua ghép được ngay.

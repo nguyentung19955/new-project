@@ -1448,7 +1448,7 @@ class Game {
     if (!a || !b || a === b) return 'Chọn 2 tướng';
     const f = fusionFor(a.type, b.type);
     if (!f) return 'Hai tướng này không có công thức hợp thể';
-    if (!this.ownsHero(f.to)) return `Chưa sở hữu ${HEROES[f.to].name} — mua ở Anh Hùng (menu chính)`;
+    if (!this.ownsHero(f.to)) return `Chưa sở hữu ${HEROES[f.to].name} — mua ở Anh Hùng (menu ≡)`;
     for (const h of [a, b]) { const r = this.fusionReady(h); if (r !== true) return r; }
     const d = HEROES[f.to];
     const c = COSTS.ascend[d.legend];
@@ -1667,7 +1667,7 @@ class Game {
   }
   canAscend(h, to) {
     if (!(ASCEND[h.type] || []).includes(to)) return 'Không thể thăng thần theo nhánh này';
-    if (!this.ownsHero(to)) return `Chưa sở hữu ${HEROES[to].name} — mua ở Anh Hùng (menu chính)`;
+    if (!this.ownsHero(to)) return `Chưa sở hữu ${HEROES[to].name} — mua ở Anh Hùng (menu ≡)`;
     const ready = this.ascendReady(h);
     if (ready !== true) return ready;
     const d = HEROES[to];
