@@ -1462,3 +1462,18 @@ body { overflow: hidden; }
 .rn-big:has(.rimg) { border: 0; background: none; }
 /* v112: Thần Khí vẽ tay */
 .lg-ic img { width: 36px; height: 36px; display: block; }
+/* v121: sửa giao diện — bảng chi tiết tướng cuộn được trên màn thấp; nút Khó không xuống dòng */
+.ro-det { overflow-y: auto; overscroll-behavior: contain; }
+.ro-grid { overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+.cp-act .cp-diff button { white-space: nowrap; overflow: hidden; }
+.cp-act .cp-diff small { font-size: 10px; }
+/* v121: mô tả kỹ năng khi giữ tay */
+#sk-tip { position: absolute; z-index: 60; width: 270px; padding: 8px 10px; border-radius: 8px; border: 1px solid #D4AF37; background: #17130Ff2; box-shadow: 0 6px 18px #000a; pointer-events: none; }
+#sk-tip .st-h { display: flex; gap: 8px; align-items: center; }
+#sk-tip .st-h img, #sk-tip .st-h svg { width: 34px; height: 34px; flex: none; }
+#sk-tip b { display: block; color: #F2D27A; font-size: 14px; }
+#sk-tip small { display: block; color: #C8BFA8; font-size: 11px; }
+#sk-tip p { margin: 6px 0 4px; font-size: 13px; line-height: 1.35; color: #FDF6E2; }
+#sk-tip .st-lock { color: #FF9A7A; }
+#sk-tip .st-hint { opacity: .6; margin-top: 2px; }
+.dk-sk { -webkit-touch-callout: none; user-select: none; }

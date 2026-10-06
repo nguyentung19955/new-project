@@ -110,6 +110,35 @@ for (const t of need.filter((x) => tier(x) === 2)) items.push({ group: '4. Tư�
 for (const t of Object.keys(ICONS).filter((x) => HEROES[x] && !fs.existsSync(path.join(ROOT, 'assets/packs', x, 'sk-q.png'))).sort((a, b) => tier(a) - tier(b))) items.push({ group: '5. Icon kỹ năng (tùy chọn)', file: `icon-${t}.png`, title: `Icon kỹ năng ${HEROES[t].name}`, text: iconPrompt(t) });
 for (const t of Object.keys(LEGACY).filter((x) => RELICS[x] && !fs.existsSync(path.join(ROOT, 'assets/packs', x, 'tk-1.png')))) items.push({ group: '6. Icon Thần Khí (tùy chọn)', file: `than-khi-${t}.png`, title: `Thần Khí ${HEROES[t].name}`, text: relicPrompt(t) });
 for (const k of Object.keys(RUNE_SYM).filter((b) => !fs.existsSync(path.join(ROOT, 'assets/runes', `${b[0]}_${{ nui: 'dmg', gio: 'haste', sam: 'power' }[b]}.png`)))) items.push({ group: '7. Icon Ấn Phù (tùy chọn)', file: `an-phu-${k}.png`, title: `Ấn Phù nhánh ${k}`, text: runePrompt(k) });
+// v121: bản đồ + nút giao diện phong cách trống đồng Đông Sơn
+const DRUM = 'Dong Son bronze drum art style (Vietnamese trong dong): engraved bronze surfaces, concentric rings, a sun-star with pointed rays, flying Lac birds, zigzag and circle-dot bands, warm bronze gold #C9963A with dark green patina #2F6B5E accents, thick dark-brown outline #2A1608, flat cartoon shading for a cute mobile game';
+const MAP_DESC = {
+  song: 'a calm riverside of the Da river: grass fields, a wide blue river along the top edge with sandy banks, scattered reeds',
+  dam: 'a lotus marsh: shallow green water patches, lotus leaves and pink lotus flowers, reeds, muddy islets',
+  rung: 'an ancient ironwood forest floor: dark green moss, roots, ferns, fallen leaves, small mushrooms',
+  hang: 'a deep cave floor: brown-grey stone, cracks, glowing crystals, stalagmites, small bones',
+  dong: 'golden rice paddies of the Red River delta: rice field plots with earthen dikes, a few water buffalo tracks',
+  bien: 'a tropical East Sea shore: warm sand, turquoise sea along the top edge, shells, palm shadows',
+  thanh: 'grounds of an ancient Au Lac citadel: packed earth, grass, low earthen walls, bronze banners at the edges',
+};
+const mapPrompt = (k) => `Create ONE image: a 1792x832 top-down game map background (bird's-eye view, slightly tilted) for a cute mobile tower-defense game, ${MAP_DESC[k]}.
+The middle of the image must stay EMPTY open ground with even texture (no road, no path, no buildings, no characters, no big objects) — the game draws its own winding road on top. Put details only near the four edges.
+Subtle Dong Son bronze-drum motifs (sun-star, Lac birds, zigzag bands) worked softly into the ground texture or carved stones at the corners. Soft daylight, gentle colors, no text, no watermark, no frame, full bleed.`;
+for (const k of Object.keys(MAP_DESC).filter((x) => !fs.existsSync(path.join(ROOT, 'assets/maps', `nen-${x}.png`)))) items.push({ group: '8. Nền bản đồ (trống đồng)', file: `nen-${k}.png`, title: `Nền bản đồ · ${k}`, text: mapPrompt(k) });
+const UI_SHEETS = {
+  'ui-nen-nut': ['round bronze drum-face button plate with a sun-star center and ring of Lac birds (empty center)', 'wide rectangular bronze button plate with zigzag border (empty middle for text)', 'square bronze panel corner frame with circle-dot border (empty middle)', 'small round bronze coin-shaped badge (empty center)'],
+  'ui-tran-1': ['play triangle carved in a bronze drum disc', 'pause (two bars) carved in a bronze drum disc', 'fast-forward double arrow carved in a bronze drum disc', 'open eye carved in a bronze drum disc'],
+  'ui-tran-2': ['menu (three bronze bars) on a drum disc', 'upward arrow over a bronze anvil (auto upgrade)', 'bronze shield with a small sun (auto equip)', 'cracked clay jar (sell / trash)'],
+  'ui-tran-3': ['bronze drum with a mallet (summon hero)', 'two hands joining over a glowing star (fusion)', 'green mountain rising from water (raise mountain)', 'bronze left arrow (back)'],
+  'ui-menu-1': ['crossed bronze spear and axe (march out)', 'three warrior helmets (heroes)', 'carved round stone seal (runes)', 'bronze treasure chest (treasury)'],
+  'ui-menu-2': ['bronze gear wheel (settings)', 'rolled bamboo scroll book (encyclopedia)', 'small bronze drum trophy (ranking)', 'woven cloth bag (inventory)'],
+  'ui-tai-nguyen': ['round bronze coin with square hole (gold)', 'red heart with bronze rim (lives)', 'silver ingot boat shape (treasury silver)', 'yin-yang disc in bronze ring (cultivation)'],
+};
+const uiPrompt = (k) => `Create ONE image: a 512x128 row of four equal 128x128 square game UI icons, one per cell, left to right:
+${UI_SHEETS[k].map((x, i) => `[${i + 1}] ${x}`).join('  ')}.
+${DRUM}. Each icon: one bold centered symbol, readable at 40 px, no text, no letters, no numbers.
+${BG}`;
+for (const k of Object.keys(UI_SHEETS).filter((x) => !fs.existsSync(path.join(ROOT, 'assets/ui', `${x}-1.png`)))) items.push({ group: '9. Nút giao diện (trống đồng)', file: `${k}.png`, title: `Nút · ${k}`, text: uiPrompt(k) });
 items.forEach((it, i) => { it.n = i + 1; });
 const noIcon = need.filter((x) => !ICONS[x]);  // tướng mới chưa có mô tả icon
 if (noIcon.length) console.error('Chưa có mô tả icon:', noIcon.join(', '));

@@ -1247,3 +1247,9 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 120
 - Icon kỹ năng vẽ tay cho Thiên Lôi và Lang Liêu; Thần Khí vẽ tay cho Nữ Thần Mặt Trời và Thần Kim Quy (đủ 20/20 tướng Vàng).
 - Còn thiếu duy nhất: icon kỹ năng Lý Ngư.
+
+## Phiên bản 121 — Sửa giao diện + mô tả kỹ năng
+- **Giữ tay** (~0,5 giây) lên ô kỹ năng của tướng đang chọn → hiện bảng mô tả: chủ động / nội tại, năng lượng, hồi chiêu, cấp, tác dụng. Thả tay để đóng; chạm nhanh vẫn nâng kỹ năng như cũ.
+- Danh sách Anh Hùng: chọn tướng không còn nhảy danh sách về đầu; bảng chi tiết tướng cuộn được trên màn thấp (trước bị cắt mất hàng kỹ năng).
+- Màn chọn ải Vô Tận / Phó Bản: nút "Khó ×1,60" không còn xuống dòng bị cắt.
+- Prompt mới: 7 nền bản đồ + 7 bộ nút giao diện theo phong cách trống đồng Đông Sơn.
