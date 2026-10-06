@@ -230,7 +230,7 @@ function heroPng(type, v, h) {
 // v55: bộ ảnh vẽ tay riêng từng tướng (assets/packs/<tướng>/): idle · wind (lấy đà) · strike (chém) · cast (tung chiêu, tuỳ có) · front · head.
 // Cắt từ ảnh ghép gen theo docs/PROMPT_GEMINI.md bằng tools/cat-sheet.py.
 // Luôn dùng (không phụ thuộc tuỳ chọn "ảnh AI"); tắt bằng "Tướng vẽ nét".
-const HERO_PACK = { lactuong: 'packs/lactuong/' };
+const HERO_PACK = Object.fromEntries(['lactuong', 'lucsi', 'xathu', 'thosan', 'thaymo'].map((k) => [k, `packs/${k}/`]));
 const packImg = (type, name) => (HERO_PACK[type] ? asset(HERO_PACK[type] + name + '.png', true) : null);
 const vectorHeroesOn = () => typeof ui !== 'undefined' && !!(ui && ui.save && ui.save.settings.vectorHeroes);
 if (typeof Image !== 'undefined') for (const k in HERO_PACK) for (const n of ['idle', 'wind', 'strike', 'cast', 'front', 'head']) packImg(k, n);   // tải sẵn

@@ -902,3 +902,8 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - **Lạc Tướng gen lại theo prompt mới** (cùng nét với các tướng sẽ gen sau): dáng đứng cầm rìu sẵn (không phải ghép), lấy đà, chém có vệt sáng, **tung chiêu** (tay đưa ra, quầng sáng vàng), chính diện, chân dung. Cả bộ 6 ảnh khoảng 170 KB.
 - `tools/cat-sheet.py`: bỏ 8 px sát mép mỗi ô (Gemini hay vẽ vạch trắng ngăn ô), khử ám hồng tím mạnh hơn ở viền và quầng sáng.
 - Prompt: thêm bước kiểm tra trước khi gửi — nền phải cùng một màu hồng tím đậm ở mọi ô.
+
+### Phiên bản 59
+
+- **Thêm 4 tướng vẽ tay** (gen theo `docs/PROMPT_GEMINI.md`): Lực Sĩ Núi (vác tảng đá, ném đá, tay rực sáng đất), Xạ Thủ Văn Lang (giương cung, bắn tên, ba mũi tên vàng), Thợ Săn Rừng (áo choàng mũ trùm, giáo, khói độc xanh), Thầy Mo Lửa (áo tím viền cam, gậy lửa, cầu lửa). Mỗi tướng 6 ảnh, khoảng 140–170 KB.
+- `tools/cat-sheet.py` chắc hơn: xoá chữ nhãn "[1] IDLE"… Gemini hay ghi ở góc ô; chỉ khử ám hồng ở dải 3 px sát nền (áo tím bên trong giữ nguyên màu); xoá mảnh rời nhỏ trước khi cắt.
