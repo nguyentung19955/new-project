@@ -1225,3 +1225,6 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 113 — Sọ Dừa
 - Nạp ảnh vẽ tay cho Sọ Dừa: đủ 60/60 tướng có ảnh.
+
+## Phiên bản 114
+- Icon kỹ năng vẽ tay cho Thợ Rèn Đông Sơn (35 tướng có icon vẽ tay).
