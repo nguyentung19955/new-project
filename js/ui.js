@@ -355,6 +355,18 @@ class UI {
     });
     for (const e of ['pointerup', 'pointercancel', 'pointerleave']) $('#deck').addEventListener(e, hideTip);
     $('#deck').addEventListener('contextmenu', (ev) => { if (ev.target.closest('[data-act=cmd-skill]')) ev.preventDefault(); });
+    // v128: giữ tay lên mọi ô có data-tip (kỹ năng ở màn Anh Hùng, Ấn Phù, thẻ tướng…) → hiện mô tả
+    let tip2 = 0;
+    $('#ui').addEventListener('pointerdown', (ev) => {
+      const el = ev.target.closest('[data-tip]');
+      if (!el) return;
+      clearTimeout(tip2);
+      tip2 = setTimeout(() => { this.tipShown = true; this.showTip(el.dataset.tip, el); }, 450);
+    });
+    for (const e of ['pointerup', 'pointercancel', 'pointerleave', 'scroll']) $('#ui').addEventListener(e, () => { clearTimeout(tip2); if (!this.tipShown || e !== 'pointerup') return; const t = $('#sk-tip'); if (t) t.hidden = true; }, true);
+    $('#ui').addEventListener('pointerup', () => setTimeout(() => { const t = $('#sk-tip'); if (t && this.tipShown) t.hidden = true; }, 0), true);
+    $('#ui').addEventListener('contextmenu', (ev) => { if (ev.target.closest('[data-tip]')) ev.preventDefault(); });
+    for (const id of ['#roster', '#runes']) $(id).addEventListener('click', (ev) => { if (this.tipShown) { this.tipShown = false; ev.stopPropagation(); ev.preventDefault(); } }, true);
     window.addEventListener('keydown', (ev) => {
       if (!g.started) return;
       const k = ev.key.toLowerCase();
@@ -777,7 +789,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 127 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 128 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1579,7 +1591,7 @@ class UI {
     const open = this.runeOpen(r), cost = runePt(r);
     const node = (x) => {
       const l = lvs[x.id] || 0, op = this.runeOpen(x);
-      return `<button class="rn-node ${x.skill ? 'sk' : ''} ${l ? 'has' : ''} ${l >= x.max ? 'full' : ''} ${op ? '' : 'lock'} ${x.id === r.id ? 'on' : ''}" data-act="rn-sel" data-k="${x.id}" title="${esc(x.name)}">
+      return `<button class="rn-node ${x.skill ? 'sk' : ''} ${l ? 'has' : ''} ${l >= x.max ? 'full' : ''} ${op ? '' : 'lock'} ${x.id === r.id ? 'on' : ''}" data-act="rn-sel" data-k="${x.id}" title="${esc(x.name)}" data-tip="${esc(`<b>${esc(x.name)}</b><small>${x.skill ? 'Ấn kỹ năng · 3 điểm / cấp' : 'Ấn chỉ số · 1 điểm / cấp'} · cấp ${l}/${x.max}</small><p>${esc(x.fmt(runeVal(x, Math.max(1, l))))}</p>`)}">
         <span class="ri">${runeIc(x)}</span><span class="rl">${l}/${x.max}</span></button>`;
     };
     const col = (b) => {
@@ -1621,6 +1633,17 @@ class UI {
     this.hideOverlays();
     $('#roster').hidden = false;
     this.renderRoster();
+  }
+  showTip(html, el) {
+    let t = $('#sk-tip');
+    if (!t) { t = document.createElement('div'); t.id = 'sk-tip'; t.className = 'metal'; $('#ui').appendChild(t); }
+    t.innerHTML = html + '<small class="st-hint">Thả tay để đóng</small>';
+    t.hidden = false;
+    const r = el.getBoundingClientRect(), u = $('#ui').getBoundingClientRect(), sc = u.width / $('#ui').offsetWidth || 1;
+    const w = t.offsetWidth, ht = t.offsetHeight, W = $('#ui').offsetWidth, Hh = $('#ui').offsetHeight;
+    const x = Math.max(6, Math.min(W - w - 6, (r.left + r.width / 2 - u.left) / sc - w / 2));
+    let y = (r.top - u.top) / sc - ht - 8; if (y < 6) y = Math.min(Hh - ht - 6, (r.bottom - u.top) / sc + 8);
+    t.style.left = x + 'px'; t.style.top = y + 'px';
   }
   showSkillTip(i, el) {
     const h = this.game.heroes[this.sel]; if (!h) return;
@@ -1683,7 +1706,7 @@ class UI {
               ${d.trait ? `<div class="tipbox inset" style="font-size:12px">★ <b>${d.trait.name}:</b> ${esc(d.trait.desc)}</div>` : ''}
               ${secretLine(this.game, 'h.' + t)}
             </div></div>
-          <div class="ro-sk">${d.skills.map((sk, i) => `<div class="inset">${svgI(skillIcon(t, i))}<b style="color:#F2D27A">${SKILL_KEYS[i]} · ${sk.name}</b><span style="color:#C8BFA8;font-weight:500">${esc(sk.info(n))}</span></div>`).join('')}</div>
+          <div class="ro-sk">${d.skills.map((sk, i) => `<div class="inset" data-tip="${esc(`<div class='st-h'>${svgI(skillIcon(t, i))}<div><b>${SKILL_KEYS[i]} · ${esc(sk.name)}</b><small>${sk.active ? `Chủ động · ${sk.active.mana} năng lượng · hồi ${sk.active.cooldown}s` : 'Nội tại (luôn có hiệu lực)'}</small></div></div><p>${esc(sk.info(n))}</p>`)}">${svgI(skillIcon(t, i))}<b style="color:#F2D27A">${SKILL_KEYS[i]} · ${sk.name}</b><span style="color:#C8BFA8;font-weight:500">${esc(sk.info(n))}</span></div>`).join('')}</div>
         </div></div></div>`;
     for (const [q, y] of keep) { const el = $('#roster').querySelector(q); if (el && q === '.ro-grid') el.scrollTop = y; }
     // ảnh vector tải không đồng bộ: vẽ lại vài lần cho chắc

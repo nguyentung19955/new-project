@@ -1281,3 +1281,8 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Thanh tiến độ đợt trên thanh trận dùng khung đồng hai ngọc xanh.
 - Màn Chọn chế độ: thẻ Phó Bản / Vô Tận có tranh nền bản đồ và icon vẽ tay.
 - Ảnh tướng lớn ở màn Anh Hùng có khung đồng chạm trổ.
+
+## Phiên bản 128 — Đền Anh Hùng đủ 60 tướng · giữ tay xem mô tả khắp nơi
+- **Đền Anh Hùng** (xem tướng ra chiêu) thêm 40 tướng mới — dùng bộ ảnh vẽ tay (đứng / chém / tung chiêu), icon kỹ năng vẽ tay, hiệu ứng theo hành; công thức hợp thể, đặc trưng và mô tả kỹ năng lấy thẳng từ game (`node tools/build-den.js` để cập nhật lại).
+- **Giữ tay xem mô tả** giờ có ở: ô kỹ năng trong trận, hàng kỹ năng ở màn Anh Hùng, từng ô Ấn Phù.
+- Đã kiểm tra màn Xếp hạng với dữ liệu giả (10 người, đợt / ải / Khó): hiển thị đúng ở 844×390 và 667×375.
