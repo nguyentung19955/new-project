@@ -954,3 +954,8 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 ### Phiên bản 68
 
 - **Cài lên iPhone không qua App Store (PWA)**: `manifest.webmanifest`, icon `icons/`, `sw.js` (lưu sẵn game, mở lại không cần mạng). Mở trang game bằng Safari → Chia sẻ → "Thêm vào Màn hình chính" → biểu tượng như app, chạy toàn màn hình. Đổi `VERSION` trong `sw.js` mỗi lần phát hành.
+
+### Phiên bản 69
+
+- **Nối Firebase thật** (dự án `sontinhthuytinh`, `js/firebase-config.js`, `.firebaserc`). Đã thử với dự án thật: đăng nhập ẩn danh chạy, ghi bản lưu của mình được, đọc bản lưu người khác bị chặn.
+- Sửa `firestore.rules`: luật cũ chặn cả việc đọc bản lưu của chính mình (do tham chiếu `request.resource` khi đọc). Tách quyền đọc / xoá và tạo / sửa.
