@@ -998,3 +998,8 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 
 - Menu chính hiện **tên người đăng nhập** (tên đã đặt → tên Google → phần trước @ của email) thay vì "Sơn Tinh".
 - **Đổi tên**: bấm khung người chơi ở góc trên trái → ô Tên hiển thị + nút Đổi tên (lưu vào bản lưu, tài khoản Firebase và dùng trên bảng xếp hạng).
+
+### Phiên bản 77
+
+- **Dừng chơi**: menu ≡ trong trận có nút 🏳 Dừng chơi (bấm 2 lần để chắc chắn) — bỏ trận, không giữ để Tiếp tục, cộng thành tích, ghi điểm vô tận nếu đang vô tận, về menu.
+- **Lò đúc đồng (cửa hàng + đúc đồ) đưa ra ngoài trận**: bỏ khỏi menu ≡ trong trận; mở từ bảng **Chuẩn bị xuất quân** trước khi vào trận (dùng vàng đầu trận), đóng thì quay lại bảng. Bảng chuẩn bị giờ luôn hiện khi vào ải.

@@ -1280,3 +1280,4 @@ body { overflow: hidden; }
 .login-rename { display: flex; gap: 6px; }
 .login-rename .login-in { flex: 1; min-width: 0; }
 .login-rename .btn { height: 40px; padding: 0 12px; flex: none; }
+.dw-btn.quit { color: #FFB08A; border-color: #C8401E; }

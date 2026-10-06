@@ -391,7 +391,7 @@ class UI {
     this.toast(`Ải ${i + 1} · ${LEVELS[i].name}: giữ thành Phong Châu qua ${LEVELS[i].waves} đợt`, '#F2D27A');
     this.prepBought = {};
     this.saveRun();
-    if ((this.save.kho || 0) >= PREP.minShow) this.showPrep();
+    this.showPrep();   // v77: luôn hiện (có Lò đúc đồng trước trận)
   }
 
   // ---------- v66: Chuẩn bị xuất quân — tiêu Ngân khố mua đồ / vàng / tướng Tím, Vàng trước trận
@@ -414,7 +414,8 @@ class UI {
           ${card('gold', 'Lương thảo', `+${PREP.goldAmount} vàng đầu trận`, PREP.goldCost, '🌾', b.gold)}
           ${card('jar', 'Hũ đồng', 'Mở ngay 2 món Hiếm trở lên vào túi', PREP.jarCost, '🏺', b.jar)}
           ${card('king', 'Hũ Vua Hùng', 'Mở ngay 2 món Sử thi trở lên (35% đồ bộ)', PREP.kingCost, '👑', b.king)}
-          ${card('lives', 'Đắp thành', `+${PREP.livesAmount} mạng`, PREP.livesCost, '🧱', b.lives)}</div>
+          ${card('lives', 'Đắp thành', `+${PREP.livesAmount} mạng`, PREP.livesCost, '🧱', b.lives)}
+          <button class="prep-card metal" data-act="prep-forge"><span class="ic">⚒</span><b>Lò đúc đồng</b><small>Mua đồ, ghép và đúc đồ bằng vàng đầu trận (${coin()} ${fmt(g.gold)})</small><span class="cost">Mở ›</span></button></div>
         <div class="prep-col wide"><div class="h">Chiêu mộ tướng (1 tướng mỗi trận, đặt sẵn trên sân)</div>
           <div class="sub">Tướng Vàng · ${coin()} ${fmt(PREP.heroCost.legendary)}</div><div class="prep-heroes">${legends.map(heroCard).join('')}</div>
           <div class="sub">Tướng Tím · ${coin()} ${fmt(PREP.heroCost.epic)}</div><div class="prep-heroes">${epics.map(heroCard).join('')}</div></div>
@@ -448,6 +449,17 @@ class UI {
     if (!g.started || g.over || (g.won && !g.endless)) return;
     this.save.run = g.snapshot();
     writeSave(this.save);
+  }
+  // v77: dừng chơi — bỏ trận đang chơi (không lưu để tiếp tục), ghi điểm vô tận nếu có, về menu
+  quitRun() {
+    const g = this.game;
+    if (g.started) this.bankStats();
+    if (g.endless) this.submitScores(false, 0);
+    g.running = false; g.over = true; g.started = false;
+    this.clearRun();
+    this.closeScreen && this.closeScreen();
+    this.showMenu();
+    this.toast('Đã dừng trận', '#C8BFA8');
   }
   clearRun() { if (this.save.run) { delete this.save.run; writeSave(this.save); } }
   resumeRun() {
@@ -677,7 +689,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 76 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 77 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1315,7 +1327,7 @@ class UI {
         this.toast('Mẹo: chạm vào tướng, bấm <b>Nâng cấp</b> bằng vàng để lên cấp và có điểm kỹ năng', '#9dffc4');
       } else if (g.wave >= 3 && !g.waveActive && !g.flags.shopTip && g.gold >= 100) {
         g.flags.shopTip = true;
-        this.toast('Mẹo: mở <b>≡</b> → Lò đúc đồng để mua và đúc đồ; mặc đồ là tướng đổi hình dạng', '#9dffc4');
+        this.toast('Mẹo: mua và đúc đồ ở bảng Chuẩn bị xuất quân trước trận; mặc đồ là tướng đổi hình dạng', '#9dffc4');
       }
     }
     coach.hidden = !pos;
@@ -1621,6 +1633,7 @@ class UI {
       }
       case 'prep-hero': this.prepHero(d.id); break;
       case 'prep-go': $('#prep').hidden = true; this.saveRun(); break;
+      case 'prep-forge': $('#prep').hidden = true; this.prepForge = true; this.openScreen('forge'); break;
       case 'cloud-sync': CLOUD.push(this.save, true); break;
       case 'cloud-out': this.loginFromMenu = false; CLOUD.signOut(); break;
       case 'set-close':
@@ -1670,6 +1683,12 @@ class UI {
       case 'fuse-with': this.fuseWith(+d.slot); break;
       case 'legend-open': $('#legends').hidden = !$('#legends').hidden; $('#drawer').hidden = true; this.renderLegends(); break;
       case 'deck-close': this.clearSel(); $('#more').hidden = true; break;
+      case 'quit-run':
+        if (!this.quitArmed) { this.quitArmed = true; $('#quit-label').textContent = 'Bấm lần nữa để bỏ trận'; setTimeout(() => { this.quitArmed = false; const q = $('#quit-label'); if (q) q.textContent = 'Dừng chơi'; }, 3000); break; }
+        this.quitArmed = false; $('#quit-label').textContent = 'Dừng chơi';
+        $('#drawer').hidden = true;
+        this.quitRun();
+        break;
       case 'dw':
         $('#drawer').hidden = true;
         if (d.k === 'pause') this.showSettings(true);
@@ -1924,6 +1943,7 @@ class UI {
   closeScreen() {
     this.screen = null;
     $('#screen').hidden = true;
+    if (this.prepForge) { this.prepForge = false; this.showPrep(); }   // đóng Lò đúc mở từ bảng chuẩn bị → quay lại bảng
   }
 
   head(title, chips, right, icon) {
