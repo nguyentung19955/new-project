@@ -31,6 +31,7 @@ LEVELS.push(
 const LEVEL_WAVES_V49 = [15, 20, 20, 25, 25, 30, 30, 30, 25, 30, 30, 30, 35, 35, 35, 35, 35];
 // v54: thêm 10 đợt mỗi ải để có thời gian / vàng nâng tướng; máu quái kéo giãn theo waveScale nên đợt cuối mạnh như cũ
 const LEVEL_WAVES = LEVEL_WAVES_V49.map((w) => w + 10);
+const LONG_HP = 1.3;   // ải dài hơn → nhiều vàng hơn → tăng máu quái để giữ độ khó (chạy bot v54)
 const LEVEL_HP = [1.0, 1.0, 1.1, 1.25, 1.35, 1.6, 1.6, 1.65, 1.5, 1.55, 1.65, 1.45, 1.7, 1.35, 1.4, 1.55, 1.45];   // chỉnh theo bot v51 (quân mỗi chương mạnh yếu khác nhau)
 const LEVEL_BOSS = [   // [boss giữa trận (lần lượt), boss cuối]
   [['thuongluong'], 'thuongluong'], [['thuongluong'], 'haba'], [['thuongluong'], 'haba'], [['thuongluong', 'haba'], 'thuytinh'],
@@ -44,7 +45,7 @@ LEVELS.forEach((lv, i) => {
   if (LEVEL_WAVES[i] === undefined) return;
   lv.waves = LEVEL_WAVES[i];
   lv.waveScale = (LEVEL_WAVES_V49[i] - 1) / (LEVEL_WAVES[i] - 1);
-  lv.hp = LEVEL_HP[i];
+  lv.hp = LEVEL_HP[i] * LONG_HP;
   const [mid, last] = LEVEL_BOSS[i];
   lv.bosses = {};
   for (let w = 10, k = 0; w < lv.waves; w += 10, k++) lv.bosses[w] = mid[k % mid.length];
