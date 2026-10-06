@@ -1243,3 +1243,7 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 119
 - Icon kỹ năng vẽ tay cho Thầy Lang (39 tướng).
+
+## Phiên bản 120
+- Icon kỹ năng vẽ tay cho Thiên Lôi và Lang Liêu; Thần Khí vẽ tay cho Nữ Thần Mặt Trời và Thần Kim Quy (đủ 20/20 tướng Vàng).
+- Còn thiếu duy nhất: icon kỹ năng Lý Ngư.
