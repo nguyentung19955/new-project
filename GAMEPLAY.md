@@ -913,3 +913,9 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - **Quái vẽ tay** (`assets/packs/<quái>/walk1 · walk2 · attack`): Thạch Tinh, Dơi Hang, Rắn Độc, Giao Long Con. Hai ảnh bước đi luân phiên (hoá điên thì nhanh gấp đôi); ảnh ra đòn hiện khi quái bắn / đập (`e.atkT`) và thỉnh thoảng 0,35 giây mỗi ~3 giây cho sinh động. Cỡ quái giữ theo ảnh bước 1 nên đổi khung không bị phình / co. Bách khoa dùng ảnh bước 1 làm hình đại diện. Dơi Hang to hơn một chút (rộng 66).
 - `tools/cat-sheet.py`: ảnh không có vạch ngăn ô mà hình lấn sang ô bên (cánh dơi) thì tự dời đường cắt tới khe trống gần nhất.
 - Bật "Tướng vẽ nét" trong Cài đặt thì cả tướng lẫn quái quay về hình vẽ nét.
+
+### Phiên bản 61
+
+- **Thêm 8 tướng vẽ tay**: Thần Sương Núi, Thạch Sanh, Lạc Hầu, Thần Săn Ba Vì (có hổ con đi cùng), Âu Cơ, An Dương Vương, Thần Kim Quy, Lạc Long Quân. Tổng cộng 13/20 tướng đã có hình vẽ tay.
+- **Thêm 7 quái vẽ tay**: Tôm Binh, Cá Sấu, Rùa Giáp, Phù Thủy Nước, Chim Bão, Ếch Mẹ, Nòng Nọc. Tổng cộng 11 quái. Chỉnh lại độ rộng (`ENEMY_W`) cho hợp hình mới: Tôm Binh 40, Rùa 62, Phù Thủy 44, Chim Bão 58, Ếch Mẹ 54, Nòng Nọc 30.
+- `tools/cat-sheet.py`: ảnh nền ô caro giả trong suốt (không phải hồng tím) thì lấy màu viền ảnh làm màu nền và loang từ mép vào; xoá vạch kẻ tối chạy suốt ô; xoá dấu ✦ của Gemini ở góc dưới phải.

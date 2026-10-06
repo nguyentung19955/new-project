@@ -230,10 +230,11 @@ function heroPng(type, v, h) {
 // v55: bộ ảnh vẽ tay riêng từng tướng (assets/packs/<tướng>/): idle · wind (lấy đà) · strike (chém) · cast (tung chiêu, tuỳ có) · front · head.
 // Cắt từ ảnh ghép gen theo docs/PROMPT_GEMINI.md bằng tools/cat-sheet.py.
 // Luôn dùng (không phụ thuộc tuỳ chọn "ảnh AI"); tắt bằng "Tướng vẽ nét".
-const HERO_PACK = Object.fromEntries(['lactuong', 'lucsi', 'xathu', 'thosan', 'thaymo'].map((k) => [k, `packs/${k}/`]));
+const HERO_PACK = Object.fromEntries(['lactuong', 'lucsi', 'xathu', 'thosan', 'thaymo', 'thansuong', 'thachsanh', 'lachau', 'thansan',
+  'auco', 'adv', 'kimquy', 'llq'].map((k) => [k, `packs/${k}/`]));
 const packImg = (type, name) => (HERO_PACK[type] ? asset(HERO_PACK[type] + name + '.png', true) : null);
 // v60: quái vẽ tay (assets/packs/<quái>/walk1 · walk2 · attack): bước đi luân phiên, ra đòn khi tấn công
-const ENEMY_PACK = new Set(['thachtinh', 'doi', 'ran', 'giaolong']);
+const ENEMY_PACK = new Set(['thachtinh', 'doi', 'ran', 'giaolong', 'tom', 'casau', 'rua', 'phuthuy', 'chimbao', 'echme', 'nongnoc']);
 const enemyPackRef = (type) => (ENEMY_PACK.has(type) ? asset(`packs/${type}/walk1.png`, true) : null);
 function enemyPackImg(e, t) {
   const ref = enemyPackRef(e.type);
@@ -1631,7 +1632,7 @@ function drawGearWeapon(ctx, g, t) {
 // ------------------------------------------------------------
 // chiều rộng vẽ (đơn vị logic) cho từng loại
 const ENEMY_W = {
-  tom: 30, casau: 74, rua: 58, phuthuy: 46, chimbao: 56, echme: 50, nongnoc: 20, giaolong: 56,
+  tom: 40, casau: 74, rua: 62, phuthuy: 44, chimbao: 58, echme: 54, nongnoc: 30, giaolong: 56,   // v61: theo hình vẽ tay
   thuongluong: 150, haba: 104, thuytinh: 104,
 };
 if (typeof ENEMY_W_EXTRA !== 'undefined') Object.assign(ENEMY_W, ENEMY_W_EXTRA);

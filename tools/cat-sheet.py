@@ -58,6 +58,50 @@ def wipe_labels(sheet, cols, rows):
     return Image.fromarray(a, 'RGB')
 
 
+def drop_lines(im):
+    """Xoá vạch kẻ chạy gần suốt bề ngang / dọc ô (vạch đáy, vạch ngăn ô Gemini vẽ thêm)."""
+    import numpy as np
+    a = np.asarray(im).copy()
+    op = a[..., 3] > 20
+    H, W = op.shape
+    dark = (a[..., :3].astype(int).sum(-1) < 200) & op       # vạch kẻ là nét tối
+    rows = (op.sum(1) > 0.85 * W) & (dark.sum(1) > 0.8 * W)
+    cols = (op.sum(0) > 0.85 * H) & (dark.sum(0) > 0.8 * H)
+    a[rows, :, 3] = 0
+    a[:, cols, 3] = 0
+    return Image.fromarray(a, 'RGBA')
+
+
+def key_border(im):
+    """Nền không phải hồng tím (ví dụ ô caro giả trong suốt): lấy các màu ở viền ảnh làm màu nền,
+    loang từ mép vào và xoá mọi điểm gần màu nền liền với mép."""
+    import numpy as np
+    from collections import deque
+    a = np.asarray(im.convert('RGB')).astype(np.int32)
+    H, W = a.shape[:2]
+    border = np.concatenate([a[:6].reshape(-1, 3), a[-6:].reshape(-1, 3), a[:, :6].reshape(-1, 3), a[:, -6:].reshape(-1, 3)])
+    q = (border // 16)
+    keys, cnt = np.unique(q, axis=0, return_counts=True)
+    order = np.argsort(-cnt); tot = cnt.sum(); acc = 0; pal = []
+    for i in order:
+        pal.append(keys[i] * 16 + 8); acc += cnt[i]
+        if acc > 0.97 * tot or len(pal) >= 6: break
+    pal = np.array(pal)
+    dist = np.min(np.sqrt(((a[:, :, None, :] - pal[None, None]) ** 2).sum(-1)), axis=-1)
+    like = dist < 34
+    bg = np.zeros((H, W), bool)
+    dq = deque([(y, x) for y in range(H) for x in (0, W - 1)] + [(y, x) for x in range(W) for y in (0, H - 1)])
+    for y, x in dq: bg[y, x] = like[y, x]
+    dq = deque([(y, x) for y, x in dq if bg[y, x]])
+    while dq:
+        y, x = dq.popleft()
+        for ny, nx in ((y + 1, x), (y - 1, x), (y, x + 1), (y, x - 1)):
+            if 0 <= ny < H and 0 <= nx < W and not bg[ny, nx] and like[ny, nx]:
+                bg[ny, nx] = True; dq.append((ny, nx))
+    out = np.dstack([a, np.where(bg, 0, 255)]).astype(np.uint8)
+    return Image.fromarray(out, 'RGBA')
+
+
 def drop_specks(im, min_px=40):
     """Xoá mảnh rời nhỏ (sót chữ nhãn, vạch ô, nhiễu) để khung cắt không bị kéo rộng."""
     import numpy as np
@@ -111,13 +155,21 @@ def main():
     src, code = sys.argv[1], sys.argv[2]
     kind = sys.argv[3] if len(sys.argv) > 3 else 'hero'
     cols, rows, names = NAMES[kind]
-    sheet = key_magenta(wipe_labels(Image.open(src), cols, rows))
+    raw = Image.open(src).convert('RGB')
+    r0, g0, b0 = raw.getpixel((raw.width // 2, 3))
+    magenta = r0 > 180 and b0 > 180 and g0 < 90
+    sheet = key_magenta(wipe_labels(raw, cols, rows)) if magenta else key_border(raw)
+    # dấu ✦ của Gemini ở góc dưới phải ảnh
+    import numpy as np
+    sa = np.asarray(sheet).copy(); wm = max(40, raw.width // 24)
+    sa[-wm:, -wm:, 3] = 0
+    sheet = Image.fromarray(sa, 'RGBA')
     W, H = sheet.size
     cw, ch = W // cols, H // rows
     ins = 8   # bỏ vài px sát mép ô (Gemini hay vẽ vạch trắng ngăn ô)
     xs = cut_lines(sheet, cols, W, axis=0)
     ys = cut_lines(sheet, rows, H, axis=1)
-    cells = [drop_specks(sheet.crop((xs[c] + ins, ys[r] + ins, xs[c + 1] - ins, ys[r + 1] - ins))) for r in range(rows) for c in range(cols)]
+    cells = [drop_specks(drop_lines(sheet.crop((xs[c] + ins, ys[r] + ins, xs[c + 1] - ins, ys[r + 1] - ins)))) for r in range(rows) for c in range(cols)]
     out = os.path.join(os.path.dirname(__file__), '..', 'assets', 'packs', code)
     os.makedirs(out, exist_ok=True)
     body = [i for i, n in enumerate(names) if n != 'head']
