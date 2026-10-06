@@ -919,3 +919,9 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - **Thêm 8 tướng vẽ tay**: Thần Sương Núi, Thạch Sanh, Lạc Hầu, Thần Săn Ba Vì (có hổ con đi cùng), Âu Cơ, An Dương Vương, Thần Kim Quy, Lạc Long Quân. Tổng cộng 13/20 tướng đã có hình vẽ tay.
 - **Thêm 7 quái vẽ tay**: Tôm Binh, Cá Sấu, Rùa Giáp, Phù Thủy Nước, Chim Bão, Ếch Mẹ, Nòng Nọc. Tổng cộng 11 quái. Chỉnh lại độ rộng (`ENEMY_W`) cho hợp hình mới: Tôm Binh 40, Rùa 62, Phù Thủy 44, Chim Bão 58, Ếch Mẹ 54, Nòng Nọc 30.
 - `tools/cat-sheet.py`: ảnh nền ô caro giả trong suốt (không phải hồng tím) thì lấy màu viền ảnh làm màu nền và loang từ mép vào; xoá vạch kẻ tối chạy suốt ô; xoá dấu ✦ của Gemini ở góc dưới phải.
+
+### Phiên bản 62
+
+- **Thêm 5 tướng vẽ tay**: Mai An Tiêm (nón lá, ném dưa hấu), Mẫu Thượng Ngàn (áo xanh, khăn đỏ vòng hoa lá, cành cây quả đỏ, hổ nằm cạnh), Thánh Gióng (cưỡi ngựa sắt bờm lửa, gậy tre, ngựa phun lửa khi tung chiêu), Chử Đồng Tử (áo vá, gậy ngọc xanh), Cao Lỗ (tạp dề da, kính bảo hộ, nỏ lớn). **Đủ 20/20 tướng.**
+- Ảnh Chử Đồng Tử nền hồng tím xỉn: xoá thêm bóng tím dưới chân.
+- Chưa dùng: tấm ghép boss (bố cục không theo ô, có ô lẫn nhân vật khác) và tấm "tướng phụ / quái phụ" (nhân vật ngoài danh sách).

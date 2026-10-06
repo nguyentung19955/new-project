@@ -231,7 +231,7 @@ function heroPng(type, v, h) {
 // Cắt từ ảnh ghép gen theo docs/PROMPT_GEMINI.md bằng tools/cat-sheet.py.
 // Luôn dùng (không phụ thuộc tuỳ chọn "ảnh AI"); tắt bằng "Tướng vẽ nét".
 const HERO_PACK = Object.fromEntries(['lactuong', 'lucsi', 'xathu', 'thosan', 'thaymo', 'thansuong', 'thachsanh', 'lachau', 'thansan',
-  'auco', 'adv', 'kimquy', 'llq'].map((k) => [k, `packs/${k}/`]));
+  'auco', 'adv', 'kimquy', 'llq', 'antiem', 'mau', 'giong', 'cdt', 'caolo'].map((k) => [k, `packs/${k}/`]));
 const packImg = (type, name) => (HERO_PACK[type] ? asset(HERO_PACK[type] + name + '.png', true) : null);
 // v60: quái vẽ tay (assets/packs/<quái>/walk1 · walk2 · attack): bước đi luân phiên, ra đòn khi tấn công
 const ENEMY_PACK = new Set(['thachtinh', 'doi', 'ran', 'giaolong', 'tom', 'casau', 'rua', 'phuthuy', 'chimbao', 'echme', 'nongnoc']);
