@@ -81,6 +81,26 @@ def drop_specks(im, min_px=40):
     return Image.fromarray(a, 'RGBA')
 
 
+def cut_lines(sheet, n, size, axis):
+    """Ranh giới ô: mặc định chia đều; nếu hình lấn qua ranh giới (ảnh không có vạch ngăn),
+    dời đường cắt tới khe trống gần nhất (trong khoảng ±25% bề rộng ô)."""
+    import numpy as np
+    al = np.asarray(sheet)[..., 3] > 20
+    prof = al.sum(axis=axis)                      # số điểm có hình trên mỗi cột (axis=0) / hàng (axis=1)
+    step = size / n
+    lines = [0]
+    for i in range(1, n):
+        c = int(round(i * step)); w = int(step * 0.25)
+        full = al.shape[axis]                     # chiều dài một cột / hàng
+        near = prof[max(0, c - 4):c + 5]
+        if prof[c] == 0 or near.max() > 0.6 * full:   # khe trống sẵn, hoặc có vạch ngăn ô
+            lines.append(c); continue
+        zeros = [j for j in range(c - w, c + w + 1) if 0 <= j < len(prof) and prof[j] == 0]
+        lines.append(min(zeros, key=lambda j: abs(j - c)) if zeros else c)
+    lines.append(size)
+    return lines
+
+
 def save_light(im, path):
     """Lưu PNG nhẹ: bảng 256 màu có kênh trong suốt (ảnh nét phẳng gần như không đổi), nén tối đa."""
     q = im.quantize(colors=256, method=Image.FASTOCTREE, dither=Image.NONE)
@@ -95,7 +115,9 @@ def main():
     W, H = sheet.size
     cw, ch = W // cols, H // rows
     ins = 8   # bỏ vài px sát mép ô (Gemini hay vẽ vạch trắng ngăn ô)
-    cells = [drop_specks(sheet.crop((c * cw + ins, r * ch + ins, (c + 1) * cw - ins, (r + 1) * ch - ins))) for r in range(rows) for c in range(cols)]
+    xs = cut_lines(sheet, cols, W, axis=0)
+    ys = cut_lines(sheet, rows, H, axis=1)
+    cells = [drop_specks(sheet.crop((xs[c] + ins, ys[r] + ins, xs[c + 1] - ins, ys[r + 1] - ins))) for r in range(rows) for c in range(cols)]
     out = os.path.join(os.path.dirname(__file__), '..', 'assets', 'packs', code)
     os.makedirs(out, exist_ok=True)
     body = [i for i, n in enumerate(names) if n != 'head']

@@ -907,3 +907,9 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 
 - **Thêm 4 tướng vẽ tay** (gen theo `docs/PROMPT_GEMINI.md`): Lực Sĩ Núi (vác tảng đá, ném đá, tay rực sáng đất), Xạ Thủ Văn Lang (giương cung, bắn tên, ba mũi tên vàng), Thợ Săn Rừng (áo choàng mũ trùm, giáo, khói độc xanh), Thầy Mo Lửa (áo tím viền cam, gậy lửa, cầu lửa). Mỗi tướng 6 ảnh, khoảng 140–170 KB.
 - `tools/cat-sheet.py` chắc hơn: xoá chữ nhãn "[1] IDLE"… Gemini hay ghi ở góc ô; chỉ khử ám hồng ở dải 3 px sát nền (áo tím bên trong giữ nguyên màu); xoá mảnh rời nhỏ trước khi cắt.
+
+### Phiên bản 60
+
+- **Quái vẽ tay** (`assets/packs/<quái>/walk1 · walk2 · attack`): Thạch Tinh, Dơi Hang, Rắn Độc, Giao Long Con. Hai ảnh bước đi luân phiên (hoá điên thì nhanh gấp đôi); ảnh ra đòn hiện khi quái bắn / đập (`e.atkT`) và thỉnh thoảng 0,35 giây mỗi ~3 giây cho sinh động. Cỡ quái giữ theo ảnh bước 1 nên đổi khung không bị phình / co. Bách khoa dùng ảnh bước 1 làm hình đại diện. Dơi Hang to hơn một chút (rộng 66).
+- `tools/cat-sheet.py`: ảnh không có vạch ngăn ô mà hình lấn sang ô bên (cánh dơi) thì tự dời đường cắt tới khe trống gần nhất.
+- Bật "Tướng vẽ nét" trong Cài đặt thì cả tướng lẫn quái quay về hình vẽ nét.

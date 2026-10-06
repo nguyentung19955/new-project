@@ -2399,6 +2399,7 @@ class Game {
     if (e.dead) return;
     const d = e.def;
     if (e.hitT > 0) e.hitT -= dt;
+    if (e.atkT > 0) e.atkT -= dt;
     if (e.slowT > 0) e.slowT -= dt; else e.slowPct = 0;
     if (e.poisonT > 0) {
       e.poisonT -= dt;
@@ -2466,7 +2467,7 @@ class Game {
       if (e.atkCd <= 0) {
         const h = this.nearestHero(e.x, e.y, d.ranged.range);
         if (h) {
-          e.atkCd = d.ranged.cd;
+          e.atkCd = d.ranged.cd; e.atkT = 0.4;
           this.projectiles.push({
             kind: 'evil', x: e.x, y: e.y - 14, target: h, tx: h.x, ty: h.y - 20, speed: 260,
             dmg: d.ranged.dmg * (1 + effWave(this.wave, this.level) * 0.08),
@@ -2478,7 +2479,7 @@ class Game {
     if (d.slam) {
       e.slamCd -= dt;
       if (e.slamCd <= 0 && this.nearestHero(e.x, e.y, d.slam.range)) {
-        e.slamCd = d.slam.cd * (e.enraged ? 0.65 : 1);
+        e.slamCd = d.slam.cd * (e.enraged ? 0.65 : 1); e.atkT = 0.45;
         this.shake = Math.max(this.shake, 4);
         this.effects.push({ type: 'ring', x: e.x, y: e.y, r: d.slam.range, color: '#5AB4D6', ttl: 0.6, max: 0.6 });
         this.effects.push({ type: 'wave', x: e.x, y: e.y, r: d.slam.range, color: '#5AB4D6', ttl: 0.6, max: 0.6 });
