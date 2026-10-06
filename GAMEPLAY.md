@@ -891,3 +891,8 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - **`docs/PROMPT_GEMINI.md`**: prompt gen hình cho từng nhân vật (20 tướng, 21 quái, 9 boss). Mỗi prompt tự đủ, gen một lần ra một ảnh ghép nhỏ: tướng 6 dáng (đứng · lấy đà · ra đòn · tung chiêu · chính diện · chân dung), quái 3 dáng (2 bước đi + tấn công), boss 4 dáng (đứng · tấn công · chiêu · nổi giận). Nền hồng tím `#FF00FF`, cùng phong cách chibi viền nâu, hoa văn trống đồng như bộ Lạc Tướng.
 - **`tools/cat-sheet.py`**: xoá nền hồng tím, cắt ảnh ghép thành từng dáng, giữ chung đường chân, thu nhỏ về 480 px → `assets/packs/<mã>/`.
 - Tướng có ảnh `cast.png` dùng ảnh đó khi tung chiêu.
+
+### Phiên bản 57
+
+- **Prompt gen hình nhẹ hơn** (`docs/PROMPT_GEMINI.md`): khung nhỏ hơn (tướng 1020×680, quái 768×256, boss 768×768), thêm mục *LIGHT FILE* yêu cầu màu phẳng, khoảng 20–30 màu, không chuyển màu, không nhiễu hạt, không loé sáng — PNG chỉ còn vài trăm KB.
+- `tools/cat-sheet.py` không phóng to ảnh nhỏ và lưu PNG 256 màu có trong suốt (mỗi dáng 20–40 KB). Bộ ảnh Lạc Tướng nén lại theo cách này: 904 KB → khoảng 200 KB, nhìn không khác.

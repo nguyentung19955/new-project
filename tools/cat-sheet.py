@@ -6,7 +6,8 @@
 - Tướng (1536×1024, 3×2 ô): idle · wind · strike / cast · front · head → assets/packs/<mã>/
 - Quái (1536×512, 3 ô): walk1 · walk2 · attack;  Boss (1024×1024, 2×2): idle · attack · skill · rage
 Nền hồng tím #FF00FF được xoá (kể cả viền ám hồng). Các dáng toàn thân cắt cùng chiều cao
-và giữ nguyên đường chân để đổi dáng không bị nhảy; ảnh thu về cao 480 px (chân dung 240 px).
+và giữ nguyên đường chân để đổi dáng không bị nhảy; ảnh thu về cao tối đa 480 px (chân dung 240 px)
+và nén thành PNG 256 màu (mỗi dáng chỉ vài chục KB).
 """
 import os, sys
 from PIL import Image
@@ -36,6 +37,12 @@ def key_magenta(im):
     return im
 
 
+def save_light(im, path):
+    """Lưu PNG nhẹ: bảng 256 màu có kênh trong suốt (ảnh nét phẳng gần như không đổi), nén tối đa."""
+    q = im.quantize(colors=256, method=Image.FASTOCTREE, dither=Image.NONE)
+    q.save(path, optimize=True)
+
+
 def main():
     src, code = sys.argv[1], sys.argv[2]
     kind = sys.argv[3] if len(sys.argv) > 3 else 'hero'
@@ -59,9 +66,10 @@ def main():
             im = cells[i].crop(bb); hh = 240
         else:
             im = cells[i].crop((bb[0], top, bb[2], bot)); hh = 480
+        hh = min(hh, im.height)          # không phóng to ảnh nhỏ
         k = hh / im.height
         im = im.resize((max(1, round(im.width * k)), hh), Image.LANCZOS)
-        im.save(os.path.join(out, n + '.png'), optimize=True)
+        save_light(im, os.path.join(out, n + '.png'))
         print(n, im.size)
     if kind == 'hero':
         print(f"Thêm '{code}' vào HERO_PACK trong js/render.js để game dùng bộ ảnh này.")
