@@ -1174,3 +1174,4 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Nội tại mới: Nghê Đồng (−10% sát thương nhận, phản 20%), Mỵ Châu (lông ngỗng đánh dấu: quái nhận +25% sát thương 2 giây), Kỳ Lân (toàn quân +15% xuyên giáp), Thiên Lôi (20% sét lan 3 quái), Sọ Dừa (−10% sát thương nhận, tướng gần hồi máu), Chú Cuội (hồi máu đồng đội, sống lại mỗi đợt), Mẹ Lúa (+1 vàng mỗi quái, tướng gần +10% sát thương). Thần Khí cho Kỳ Lân, Thiên Lôi, Chú Cuội, Mẹ Lúa.
 - **Màu chủ đạo của mọi tướng = màu hành** (Kim bạc trắng, Mộc xanh lá, Thủy xanh nước, Hỏa đỏ cam, Thổ vàng đất).
 - Quân triệu hồi xoay 5 nhóm theo ải (mỗi nhóm bù đủ 4 tướng Thường của một hành): Hỏa · Thủy · Thổ · Kim · Mộc.
+- Prompt Gemini đầy đủ cho mọi ảnh còn thiếu (41 tướng, 3 quái, icon kỹ năng / Thần Khí / Ấn Phù — 108 ảnh, mỗi ảnh một prompt tự đủ, xếp theo ưu tiên): `docs/PROMPT_GEMINI_FULL.md`, sinh bằng `node tools/build-prompts.js` (dữ liệu: `docs/prompts.json`).
