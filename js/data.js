@@ -1437,23 +1437,43 @@ const RUNES = [
 ];
 const RUNE_BY = Object.fromEntries(RUNES.map((r) => [r.id, r]));
 const runeVal = (r, lv) => !lv ? 0 : Array.isArray(r.per) ? r.per[lv - 1] : +(r.per * lv).toFixed(2);
-const runeCost = (r, lv) => r.skill ? RUNE_SKILL_COST[lv - 1] : RUNE_ROW_COST[r.row] * lv;   // giá lên cấp lv
+const runeCost = (r, lv) => r.skill ? RUNE_SKILL_COST[lv - 1] : RUNE_ROW_COST[r.row] * lv;   // giá cũ (bằng Ngân khố, v91) — chỉ dùng để hoàn tiền
 const runeBranchPts = (lvs, br) => RUNES.reduce((a, r) => a + (r.br === br ? lvs[r.id] || 0 : 0), 0);
-// hiệu lực ấn trong trận (null = không có ấn: bot mô phỏng, chế độ thử)
-let RUNE_FX = null;
-function setRunes(lvs) {
-  if (!lvs) { RUNE_FX = null; return; }
+// v95: Ấn Phù RIÊNG TỪNG TƯỚNG, khắc bằng điểm Tu Vi (không dùng Ngân khố). Ấn chỉ số 1 điểm / cấp, ấn kỹ năng 3 điểm / cấp.
+const runePt = (r) => (r.skill ? 3 : 1);
+const runeSpent = (lvs) => RUNES.reduce((a, r) => a + (lvs && lvs[r.id] || 0) * runePt(r), 0);
+function runeFxOf(lvs) {
   const fx = { stat: {}, fx: {}, sk: {} };
   for (const r of RUNES) {
-    const lv = lvs[r.id] || 0;
+    const lv = (lvs && lvs[r.id]) || 0;
     if (!lv) continue;
     const v = runeVal(r, lv);
     if (r.skill) fx.sk[r.id] = v;
     else if (r.stat) fx.stat[r.stat] = (fx.stat[r.stat] || 0) + v * (r.mul || 1);
     else fx.fx[r.fx] = (fx.fx[r.fx] || 0) + v;
   }
-  RUNE_FX = fx;
+  return fx;
 }
+// hiệu lực ấn trong trận theo loại tướng (null = không có ấn: bot mô phỏng, chế độ thử)
+let RUNE_MAP = null;
+function setRunes(map) {
+  if (!map) { RUNE_MAP = null; return; }
+  RUNE_MAP = {};
+  for (const t in map) RUNE_MAP[t] = runeFxOf(map[t]);
+}
+const runeFx = (h) => (RUNE_MAP && h ? RUNE_MAP[h.type] || null : null);
+
+// ===== v95: TU VI — cấp tướng ngoài trận (theo tài khoản), lên bằng số quái tướng đó hạ =====
+// "Cấp" trong trận vẫn như cũ (mất khi hết trận); Tu Vi giữ mãi, mỗi bậc cho 3 điểm Ấn Phù cho chính tướng đó.
+const TUVI_RANKS = ['Tân Binh', 'Dũng Sĩ', 'Hiệp Sĩ', 'Tráng Sĩ', 'Tướng Quân', 'Đại Tướng', 'Danh Tướng', 'Thần Tướng', 'Thánh Tướng', 'Bất Tử'];
+const TUVI_XP = [0, 30, 80, 160, 280, 450, 680, 980, 1380, 1900];      // Tu Vi tích lũy để đạt bậc 1..10
+const TUVI_PTS = 3;                                                      // điểm Ấn mỗi bậc
+const TUVI_KILL = { normal: 1, elite: 3, big: 8, boss: 25 };            // Tu Vi mỗi quái hạ (tướng ghép chia 50% cho tướng nguyên liệu)
+const TUVI_LOSE = 0.6;                                                   // thua / bỏ trận: nhận 60%
+const tuviLevel = (xp) => TUVI_XP.reduce((a, need, i) => ((xp || 0) >= need ? i + 1 : a), 1);
+const tuviRank = (xp) => TUVI_RANKS[tuviLevel(xp) - 1];
+const tuviPoints = (xp) => tuviLevel(xp) * TUVI_PTS;
+const tuviNext = (xp) => { const l = tuviLevel(xp); return l >= TUVI_XP.length ? null : TUVI_XP[l]; };
 
 // v92: gợi ý tướng khắc chế cho mỗi ải (theo hành của quái, quái bay, giáp dày, quái nhanh)
 function levelCounters(i, owned) {

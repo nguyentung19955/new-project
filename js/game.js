@@ -299,9 +299,10 @@ function heroStats(h) {
     for (const m of sys.ms) if (lv >= m.lv) { if (m.stat) s[m.stat] += m.v; else s.lg[m.fx] = Math.max(s.lg[m.fx] || 0, m.v); }
   }
   // v91: Ấn Phù tài khoản
-  if (RUNE_FX) {
-    for (const k in RUNE_FX.stat) s[k] += RUNE_FX.stat[k];
-    if (h.windT > 0 && RUNE_FX.sk.g_frenzy) s.haste += RUNE_FX.sk.g_frenzy * (h.windN || 0);
+  const RFX = runeFx(h);           // v95: ấn riêng của loại tướng này
+  if (RFX) {
+    for (const k in RFX.stat) s[k] += RFX.stat[k];
+    if (h.windT > 0 && RFX.sk.g_frenzy) s.haste += RFX.sk.g_frenzy * (h.windN || 0);
   }
   // hiệu ứng ẩn và hào quang có điều kiện
   if (s.hid['r.gay_tam_gioi'] && b.tamGioi) { s.str += 5; s.agi += 5; s.int += 5; }
@@ -365,8 +366,8 @@ function heroStats(h) {
     s.hpMax = Math.round(s.hpMax * k);
     s.skillPower *= 1 + (k - 1) / 2;
   }
-  s.maxMana = Math.round(80 + s.int * 12 + (RUNE_FX ? RUNE_FX.fx.maxMana || 0 : 0));
-  s.manaRegen = (1.5 + s.int * 0.08) * (1 + ((b.manaPct || 0) + s.elMana + (RUNE_FX ? RUNE_FX.fx.manaRegen || 0 : 0)) / 100);
+  s.maxMana = Math.round(80 + s.int * 12 + (RFX ? RFX.fx.maxMana || 0 : 0));
+  s.manaRegen = (1.5 + s.int * 0.08) * (1 + ((b.manaPct || 0) + s.elMana + (RFX ? RFX.fx.manaRegen || 0 : 0)) / 100);
   s.dr = Math.min(80, s.dr);
   s.cooldown = s.baseCooldown / Math.max(0.2, 1 + s.haste / 100);
   if (h.bogged) { s.cooldown *= 2; s.manaRegen = 0; }   // sa lầy: -50% tốc đánh, không hồi năng lượng
@@ -1346,6 +1347,7 @@ class Game {
     this.moc = 1;                                   // lượt Mọc Núi còn lại
     // Núi Tản Viên
     this.mountain = { growth: 0, soiled: false, herbs: 0 };
+    this.xpLog = {};          // v95: Tu Vi kiếm trong trận này (theo loại tướng)
     this.stats = { kills: 0, goldEarned: 0, goldRefund: 0 };
     this.events = [];
     // Đồ khởi đầu để thử ngay việc thay đổi hình dạng
@@ -2199,8 +2201,8 @@ class Game {
       if (st.lg.waveShield) { h.shield = Math.max(h.shield || 0, st.hpMax * st.lg.waveShield / 100); h.shieldT = 8; }
     }
     // Ấn Giáp Đá: khiên đầu đợt
-    if (RUNE_FX && RUNE_FX.sk.n_shield) for (const h of this.heroes) if (h && !h.dead) {
-      h.shield = Math.max(h.shield || 0, heroStats(h).hpMax * RUNE_FX.sk.n_shield / 100); h.shieldT = 8;
+    for (const h of this.heroes) if (h && !h.dead && runeFx(h) && runeFx(h).sk.n_shield) {
+      h.shield = Math.max(h.shield || 0, heroStats(h).hpMax * runeFx(h).sk.n_shield / 100); h.shieldT = 8;
       this.effects.push({ type: 'ring', x: h.x, y: h.y - 22, r: 30, color: '#D9844A', ttl: 0.6, max: 0.6 });
     }
   }
@@ -2460,7 +2462,7 @@ class Game {
     const heroes = JSON.parse(JSON.stringify(this.heroes, (k, v) => (skip.has(k) ? undefined : v)));
     const o = { v: 1, at: Date.now(), heroes };
     for (const k of ['level', 'hard', 'endless', 'won', 'gold', 'lives', 'wave', 'summonN', 'bossesKilled', 'seen', 'water', 'raised', 'moc',
-      'mountain', 'stats', 'inventory', 'jarCount', 'shop', 'time', 'flags', 'runId', 'guardT', 'oathT']) o[k] = this[k];
+      'mountain', 'stats', 'inventory', 'jarCount', 'shop', 'time', 'flags', 'runId', 'guardT', 'oathT', 'xpLog']) o[k] = this[k];
     return JSON.parse(JSON.stringify(o));
   }
   restore(o) {
@@ -2990,11 +2992,11 @@ class Game {
         if (st.hid['r.gay_thoi_khong'] && Math.random() < 0.1) {
           this.text(h.x, h.y - 84, 'Không tốn năng lượng!', '#4a90e2', 1, 13);
           this.discover('r.gay_thoi_khong', h.x, h.y);
-        } else if (RUNE_FX && RUNE_FX.fx.freeCast && Math.random() * 100 < RUNE_FX.fx.freeCast) {
+        } else if (runeFx(h) && runeFx(h).fx.freeCast && Math.random() * 100 < runeFx(h).fx.freeCast) {
           this.text(h.x, h.y - 84, 'Phúc Thần!', '#7FA8F0', 1, 13);
         } else {
           h.mana -= sk.active.mana;
-          if (RUNE_FX && RUNE_FX.sk.s_echo && Math.random() * 100 < RUNE_FX.sk.s_echo) { h.mana += sk.active.mana * 0.5; this.text(h.x, h.y - 84, 'Vang Vọng!', '#7FA8F0', 0.8, 12); }
+          if (runeFx(h) && runeFx(h).sk.s_echo && Math.random() * 100 < runeFx(h).sk.s_echo) { h.mana += sk.active.mana * 0.5; this.text(h.x, h.y - 84, 'Vang Vọng!', '#7FA8F0', 0.8, 12); }
         }
         h.skillCd[sk.id] = sk.active.cooldown * (1 - st.cdr / 100);
         // ẩn Lang Liêu: đợt có Thủy Tinh, Lễ Tổ Tiên giảm 50% hồi chiêu
@@ -3139,7 +3141,7 @@ class Game {
       e.poisonT *= 2;
       this.discover('h.thaymo', hero.x, hero.y);
     }
-    e.poisonDps = dps * (hero && RUNE_FX && RUNE_FX.fx.dot ? 1 + RUNE_FX.fx.dot / 100 : 1);
+    e.poisonDps = dps * (runeFx(hero) && runeFx(hero).fx.dot ? 1 + runeFx(hero).fx.dot / 100 : 1);
     e.poisonBy = hero;
     e.dotColor = color;
     e.dotType = type || 'pure';
@@ -3183,7 +3185,7 @@ class Game {
     const hid = st ? st.hid : {};
     let crit = st && Math.random() * 100 < st.crit;
     let critMult = st ? st.critMult || 2 : 2;
-    const RF = st && hero ? RUNE_FX : null;
+    const RF = st && hero ? runeFx(hero) : null;
     // Ấn Mắt Ưng: đòn đầu tiên trúng mỗi quái luôn chí mạng
     if (RF && RF.sk.g_eye !== undefined && !o.silent && !e.eyeHit) { e.eyeHit = 1; crit = true; critMult += RF.sk.g_eye / 100; }
     if (crit && e.elite && hid['r.luoi_hai']) { critMult = 3; this.discover('r.luoi_hai', hero.x, hero.y); }
@@ -3298,7 +3300,7 @@ class Game {
       }
       if (near.length) this.discover('s.laclong', hero.x, hero.y);
     }
-    if (RUNE_FX) this.runeOnHit(e, hero, st, crit);
+    if (runeFx(hero)) this.runeOnHit(e, hero, st, crit);
     if (st.lg) this.legacyOnHit(e, hero, st);
     // Bộ Ngựa Sắt: đòn đánh để lại vệt lửa trên sông 2 giây
     if (st.fireTrail && !isFlying(e) && !(hero.trailCd > 0)) {
@@ -3351,7 +3353,7 @@ class Game {
 
   // v91: Ấn Phù kỹ năng khi đánh trúng
   runeOnHit(e, hero, st, crit) {
-    const RF = RUNE_FX;
+    const RF = runeFx(hero);
     if (RF.fx.slow) this.slow(e, RF.fx.slow, 1);
     if (crit && RF.sk.g_storm) {
       const near = this.enemiesInRange(e.x, e.y, 150).filter((o) => o !== e && !o.dead).slice(0, RF.sk.g_storm);
@@ -3396,8 +3398,13 @@ class Game {
     this.effects.push({ type: 'corpse', x: e.x, y: e.y, enemy: { ...e, hitT: 0, kbT: 0, stunT: 0, reviveT: 0 }, dir: (e.kbDir || e.dir || 1), ttl: 0.45, max: 0.45 });
     if (hero && this.heroes[hero.slot] === hero) {
       hero.kills++;
+      // v95: Tu Vi — ghi công cho loại tướng (tướng ghép chia 50% cho tướng nguyên liệu)
+      const xp = e.def.boss ? TUVI_KILL.boss : e.champion || e.def.general ? TUVI_KILL.big : e.elite ? TUVI_KILL.elite : TUVI_KILL.normal;
+      const log = this.xpLog || (this.xpLog = {});
+      log[hero.type] = (log[hero.type] || 0) + xp;
+      for (const a of heroLineage(hero)) log[a.type] = (log[a.type] || 0) + xp * 0.5;
       this.onKillFx(e, hero);
-      const RF = RUNE_FX;
+      const RF = runeFx(hero);
       if (RF) {
         if (RF.fx.killMana) hero.mana = Math.min(heroStats(hero).maxMana, hero.mana + RF.fx.killMana);
         if (RF.sk.g_frenzy) { hero.windN = hero.windT > 0 ? Math.min(5, (hero.windN || 0) + 1) : 1; hero.windT = 3; }

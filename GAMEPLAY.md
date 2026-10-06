@@ -1123,3 +1123,10 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Quân triệu hồi mỗi ải: 6 tướng gốc + 2 tướng thường mới (ải lẻ: Thợ Rèn, Ngư Phủ; ải chẵn: Thợ Gốm, Thầy Lang) — hiện ở màn chuẩn bị. Giữ tỉ lệ ghép sao không giảm nhiều.
 - Hình tạm: vector phối màu + mũ / vương miện / vầng mặt trời; thay bằng ảnh Gemini theo PROMPT_GEMINI_V94.md.
 - Prompt Gemini cho tướng mới, động tác, icon kỹ năng / Thần Khí / Ấn Phù và quái còn thiếu: `docs/PROMPT_GEMINI_V94.md` (luật dán một lần, mỗi ảnh một khối ngắn, ô 128–256 px cho nhẹ và nhanh).
+
+## Phiên bản 95 — Tách Ngân khố khỏi vàng trận · Tu Vi · Ấn Phù riêng từng tướng
+- **Hai loại tiền tách hẳn:** vàng trận (đồng vàng, chỉ trong trận) và **Ngân khố** (nén bạc, tài khoản — mua tướng Tím / Vàng, Thần Khí, đồ trước trận). Mọi giá bằng Ngân khố hiện nén bạc; Lò đúc trước trận ghi rõ "Trả bằng Ngân khố — không phải vàng trận", thanh trên đổi thành "Ngân khố".
+- **Tu Vi** (cấp tướng ngoài trận, giữ mãi): tướng hạ quái được Tu Vi cho loại tướng đó — quái thường 1, tinh anh 3, khổng lồ / tướng địch 8, boss 25; tướng ghép chia 50% cho các tướng nguyên liệu. Thắng nhận đủ, thua / bỏ trận nhận 60%. 10 bậc: Tân Binh → Dũng Sĩ → Hiệp Sĩ → Tráng Sĩ → Tướng Quân → Đại Tướng → Danh Tướng → Thần Tướng → Thánh Tướng → Bất Tử (mốc 0 / 30 / 80 / 160 / 280 / 450 / 680 / 980 / 1.380 / 1.900). "Cấp" trong trận giữ nguyên như cũ.
+- **Ấn Phù riêng từng tướng:** mỗi bậc Tu Vi cho 3 điểm Ấn của chính tướng đó (tối đa 30). Ấn chỉ số 1 điểm / cấp, ấn kỹ năng 3 điểm / cấp; tẩy ấn miễn phí. Mở từ menu chính (chọn tướng ở dải ảnh trên cùng), từ Anh Hùng (nút 🔯 Ấn Phù cạnh Tu Vi) hoặc menu ≡ trong trận (mặc định tướng đang chọn).
+- Ấn cũ mua bằng Ngân khố được hoàn tiền 100% khi mở game.
+- Màn kết quả trận hiện Tu Vi nhận được và các lần lên bậc.

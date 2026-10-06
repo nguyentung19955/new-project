@@ -28,7 +28,10 @@ const ICON = {
 { const lockSvg = ICON.lock; Object.defineProperty(ICON, 'lock', { get: () => uiIc('khoa', lockSvg) }); }
 
 const svgI = (svg, cls = '') => `<span class="svgi ${cls}">${svg || ''}</span>`;
-const coin = (sm) => (assetUrl('ui_dong-xu.png') ? `<img class="coin-img${sm ? ' sm' : ''}" src="${assetUrl('ui_dong-xu.png')}" alt="">` : `<i class="coin${sm ? ' sm' : ''}"></i>`);
+// v95: Ngân khố (tài khoản) dùng nén BẠC, khác hẳn đồng VÀNG trong trận
+let KHO_MODE = false;       // đang mở Lò đúc đồng trước trận: giá hiện bằng bạc Ngân khố
+const bac = (sm) => `<i class="bac${sm ? ' sm' : ''}"></i>`;
+const coin = (sm) => KHO_MODE ? bac(sm) : (assetUrl('ui_dong-xu.png') ? `<img class="coin-img${sm ? ' sm' : ''}" src="${assetUrl('ui_dong-xu.png')}" alt="">` : `<i class="coin${sm ? ' sm' : ''}"></i>`);
 // icon giao diện vẽ tay (ui_*.png) nếu đã có, không thì dùng ký hiệu dự phòng
 const uiIc = (name, fallback = '') => (assetUrl(`ui_${name}.png`) ? `<img class="uiic" src="${assetUrl(`ui_${name}.png`)}" alt="">` : fallback);
 const rarCls = (r) => ({ common: 'rt', rare: 'rh', epic: 'rs', legendary: 'rl' }[r]);
@@ -165,7 +168,7 @@ function heroImgUrl(type, crop) {
 const SAVE_KEY = 'nuicao.v1';
 function loadSave() {
   const def = { stars: LEVELS.map(() => 0), unlocked: 1, last: 0, best: {}, storySeen: false,
-    lifeGold: 0, lifeKills: 0, lifeHerbs: 0, collected: [], kho: 0, loginChosen: false, owned: [], runes: {}, legacy: {},
+    lifeGold: 0, lifeKills: 0, lifeHerbs: 0, collected: [], kho: 0, loginChosen: false, owned: [], runes: {}, legacy: {}, heroRunes: {}, tuvi: {},
     settings: { dmgText: true, shake: true, skipStory: false, vectorHeroes: false, detail: false, aiArt: false } };
   try {
     const s = JSON.parse(localStorage.getItem(SAVE_KEY) || '{}');
@@ -173,6 +176,12 @@ function loadSave() {
     // v48: thêm chương / ải mới → nới mảng sao cho bản lưu cũ
     while (out.stars.length < LEVELS.length) out.stars.push(0);
     out.chSeen = out.chSeen || {};
+    // v95: Ấn Phù cũ (chung tài khoản, mua bằng Ngân khố) → hoàn lại Ngân khố; ấn giờ riêng từng tướng, khắc bằng điểm Tu Vi
+    if (out.runes && Object.keys(out.runes).length) {
+      let back = 0;
+      for (const r of RUNES) for (let l = 1; l <= (out.runes[r.id] || 0); l++) back += runeCost(r, l);
+      out.kho = (out.kho || 0) + back; out.runeRefund = (out.runeRefund || 0) + back; out.runes = {};
+    }
     return out;
   } catch (e) { return def; }
 }
@@ -344,8 +353,9 @@ class UI {
     const acc = typeof CLOUD !== 'undefined' && CLOUD.user && !CLOUD.user.isAnonymous ? CLOUD.user : null;
     $('#menu-player').innerHTML = `<span class="av">${acc && acc.photoURL ? `<img src="${esc(acc.photoURL)}" alt="" referrerpolicy="no-referrer">` : svgI(sceneArt('drum'))}</span><span><b>${esc(acc ? this.playerName() : 'Sơn Tinh')}</b><small>Cấp ${lv} · ★ ${total}/${LEVELS.length * 3} · ${acc ? 'Đã đăng nhập' : 'Khách'}</small></span>`;
     $('#menu-player').onclick = () => this.showLogin(true);
+    if (s.runeRefund) { this.toast(`Ấn Phù giờ riêng từng tướng, khắc bằng điểm Tu Vi. Đã hoàn ${fmt(s.runeRefund)} Ngân khố đã tiêu cho ấn cũ.`, '#E4ECF4'); delete s.runeRefund; writeSave(s); }
     const short = (n) => (n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace('.', ',') + 'k' : n);
-    $('#menu-res').innerHTML = `<span title="Ngân khố: vàng thưởng sau mỗi trận thắng, dùng mua tướng / đồ"><small class="pr-l">Ngân khố</small>${coin(1)} <b style="color:#FFD66B">${fmt(s.kho || 0)}</b></span>`;
+    $('#menu-res').innerHTML = `<span title="Ngân khố: bạc thưởng sau mỗi trận, dùng mua tướng Tím / Vàng, Thần Khí, đồ trước trận — không dùng được trong trận"><small class="pr-l">Ngân khố</small>${bac(1)} <b style="color:#E4ECF4">${fmt(s.kho || 0)}</b></span>`;
     if (0) $('#menu-res').innerHTML = `<span title="Tổng vàng đã kiếm qua mọi trận (vàng trong trận luôn bắt đầu từ ${CONFIG.startGold})"><small class="pr-l">Tổng vàng đã kiếm</small>${coin(1)} ${short(s.lifeGold)}</span><span title="Linh Chi đã hái">🌿 ${short(s.lifeHerbs)}</span><span title="Ngân khố: vàng thưởng sau mỗi trận thắng, dùng mua đồ / tướng trước trận"><small class="pr-l">Ngân khố</small>${coin(1)} <b style="color:#FFD66B">${fmt(s.kho || 0)}</b></span>`;
     $('#menu-art').innerHTML = svgI(sceneArt('menu'));
     const g0 = this.game, live = g0.started && !g0.over && (!g0.won || g0.endless);
@@ -384,7 +394,7 @@ class UI {
     g.hard = !!this.save.settings.hard;
     g.reset(i);
     g.owned = new Set(this.save.owned || []);
-    setRunes(this.save.runes || {});
+    setRunes(this.save.heroRunes || {});
     setLegacy(this.save.legacy || {});
     g.runId = Date.now();
     g.started = true;
@@ -408,15 +418,15 @@ class UI {
     const s = this.save, g = this.game, b = this.prepBought || {};
     const kho = s.kho || 0;
     const card = (id, title, desc, cost, icon, done) => `<button class="prep-card metal ${done ? 'done' : ''}" data-act="prep-buy" data-id="${id}" ${done || kho < cost ? 'disabled' : ''}>
-        <span class="ic">${icon}</span><b>${title}</b><small>${desc}</small><span class="cost">${done ? '✓ Đã mua' : `${coin()} ${fmt(cost)}`}</span></button>`;
+        <span class="ic">${icon}</span><b>${title}</b><small>${desc}</small><span class="cost">${done ? '✓ Đã mua' : `${bac()} ${fmt(cost)}`}</span></button>`;
     const heroCard = (t) => { const d = HEROES[t], cost = PREP.heroCost[d.legend]; const done = b.hero;
       return `<button class="prep-hero metal ${d.legend} ${b.hero === t ? 'on' : ''}" data-act="prep-hero" data-id="${t}" ${done || kho < cost || !g.freeSlots().length ? 'disabled' : ''}>
-        <img src="${heroImgUrl(t, 'head')}" alt=""><b>${d.name}</b><span class="cost">${b.hero === t ? '✓' : `${coin()} ${fmt(cost)}`}</span></button>`; };
+        <img src="${heroImgUrl(t, 'head')}" alt=""><b>${d.name}</b><span class="cost">${b.hero === t ? '✓' : `${bac()} ${fmt(cost)}`}</span></button>`; };
     const legends = Object.keys(HEROES).filter((t) => HEROES[t].legend === 'legendary');
     const epics = Object.keys(HEROES).filter((t) => HEROES[t].legend === 'epic');
     $('#prep').innerHTML = `<div class="screen" style="z-index:auto">
       <div class="scr-head metal"><h1 class="ttl">Chuẩn bị xuất quân</h1><span class="chip dark">Ải ${g.level + 1} · ${LEVELS[g.level].name}</span><div class="sp"></div>
-        <span class="chip ok">Ngân khố ${coin(1)} ${fmt(kho)}</span>
+        <span class="chip kho">Ngân khố ${bac(1)} ${fmt(kho)}</span>
         <button class="btn btn-gold title" style="height:40px;padding:0 18px;font-size:17px" data-act="prep-go">Vào trận ▶</button></div>
       <div class="prep-body">
         <div class="prep-col"><div class="h">Hậu cần</div>
@@ -465,7 +475,7 @@ class UI {
   // v77: dừng chơi — bỏ trận đang chơi (không lưu để tiếp tục), ghi điểm vô tận nếu có, về menu
   quitRun() {
     const g = this.game;
-    if (g.started) this.bankStats();
+    if (g.started) { this.bankStats(); const tv = this.bankTuvi(TUVI_LOSE); if (tv.up.length) this.toast(tv.up.join('<br>'), '#FFD66B'); }
     if (g.endless) this.submitScores(false, 0);
     g.running = false; g.over = true; g.started = false;
     this.clearRun();
@@ -477,7 +487,7 @@ class UI {
   resumeRun() {
     const r = this.save.run;
     if (!r || !LEVELS[r.level]) { this.clearRun(); return this.showCampaign(this.save.last); }
-    try { this.game.restore(r); this.game.owned = new Set(this.save.owned || []); setRunes(this.save.runes || {}); setLegacy(this.save.legacy || {}); } catch (e) { this.clearRun(); this.toast('Không nạp được màn đã lưu', '#E25A3A'); return this.showCampaign(this.save.last); }
+    try { this.game.restore(r); this.game.owned = new Set(this.save.owned || []); setRunes(this.save.heroRunes || {}); setLegacy(this.save.legacy || {}); } catch (e) { this.clearRun(); this.toast('Không nạp được màn đã lưu', '#E25A3A'); return this.showCampaign(this.save.last); }
     this.sel = -1; this.spot = -1; this.armed = null; this.raising = false; this.moving = -1; this.screen = null;
     $('#screen').hidden = true;
     this.hideOverlays(); this.setInGame(true);
@@ -700,7 +710,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 94 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 95 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -997,6 +1007,7 @@ class UI {
     const prog = g.waveActive && g.waveTotal ? 1 - (g.spawnQueue.length + g.enemies.length * 0.5) / (g.waveTotal * 1.5) : 0;
     $('#tb-fill').style.width = `${Math.max(0, Math.min(1, ((g.wave - 1 + Math.max(0, prog)) / total))) * 100}%`;
     this.setText('#tb-gold b', fmt(g.gold));
+    $('#tb-gold').classList.toggle('kho', !!this.prepForge);     // v95: đang tiêu Ngân khố (bạc), không phải vàng trận
     this.setText('#tb-lives b', g.lives);
     this.setText('#tb-water b', `${g.water}/3`);
     // thanh mực nước: tiến tới lần dâng nước kế (sau đợt boss tiếp theo)
@@ -1409,33 +1420,57 @@ class UI {
         <div class="lg-now">${lv ? legacyPerText(sys, lv) : 'Chưa nâng'}${lv < LEGACY_MAX ? `<br><small>Cấp ${lv + 1}: ${legacyPerText(sys, lv + 1)}</small>` : ''}</div>
         ${sys.ms.map((m) => `<div class="lg-ms ${lv >= m.lv ? 'got' : ''}"><span>Cấp ${m.lv}</span>${esc(m.t)}</div>`).join('')}
         ${lv >= LEGACY_MAX ? '<div class="chip ok" style="text-align:center;margin-top:auto">Đã tối đa</div>'
-          : `<button class="btn btn-gold lg-buy" data-act="lg-buy" data-k="${sys.id}" ${kho < c ? 'disabled' : ''}>Nâng cấp ${lv + 1} · ${coin()} ${fmt(c)}</button>`}
+          : `<button class="btn btn-gold lg-buy" data-act="lg-buy" data-k="${sys.id}" ${kho < c ? 'disabled' : ''}>Nâng cấp ${lv + 1} · ${bac()} ${fmt(c)}</button>`}
       </div>`;
     };
     $('#roster').innerHTML = `<div class="screen" style="z-index:auto;--elc:${elc}">
       <div class="scr-head metal"><button class="xbtn metal" data-act="lg-close" aria-label="Quay lại">${ICON.back}</button>
         <img class="lg-av" src="${heroImgUrl(t, 'head')}" alt=""><h1 class="ttl">Thần Khí · ${d.name}</h1>${elChip(d.el)}
         <span class="chip dark">${this.legacyPts(t)}/${LEGACY_MAX * 3} cấp</span><div class="sp"></div>
-        <span class="chip goldc">Ngân khố ${coin()} ${fmt(kho)}</span></div>
+        <span class="chip kho">Ngân khố ${bac()} ${fmt(kho)}</span></div>
       <div class="scr-body lg-body">${LEGACY[t].map(col).join('')}</div></div>`;
   }
 
-  // ---------- v91: Bảng Ấn Phù (rune tài khoản, mua bằng Ngân khố)
-  showRunes(inGame) {
+  // ---------- v95: Tu Vi — cộng Tu Vi trận này vào tài khoản; trả về dòng tóm tắt + các lần lên bậc
+  bankTuvi(mult) {
+    const g = this.game, sv = this.save, log = g.xpLog || {};
+    sv.tuvi = sv.tuvi || {};
+    const rows = [], up = [];
+    for (const t of Object.keys(log).sort((a, b) => log[b] - log[a])) {
+      const add = Math.round(log[t] * mult);
+      if (!add || !HEROES[t]) continue;
+      const before = tuviLevel(sv.tuvi[t] || 0);
+      sv.tuvi[t] = (sv.tuvi[t] || 0) + add;
+      const after = tuviLevel(sv.tuvi[t]);
+      rows.push(`${HEROES[t].name} +${add}`);
+      if (after > before) up.push(`☯ ${HEROES[t].name} lên ${TUVI_RANKS[after - 1]} (Tu Vi ${after}) · +${(after - before) * TUVI_PTS} điểm Ấn Phù`);
+    }
+    g.xpLog = {};
+    writeSave(sv);
+    return { rows: rows.slice(0, 6), up };
+  }
+
+  // ---------- v95: Bảng Ấn Phù RIÊNG TỪNG TƯỚNG — khắc bằng điểm Tu Vi
+  runeHeroes() { return [...BASIC_HEROES, ...LEGEND_HEROES.filter((t) => (this.save.owned || []).includes(t))]; }
+  showRunes(inGame, type) {
     this.runesInGame = !!inGame;
+    const sel = this.game.heroes[this.sel];
+    this.runeHero = type || (inGame && sel ? sel.type : null) || this.runeHero || 'lactuong';
     this.runeSel = this.runeSel || 'n_dmg';
     this.runeResetArm = false;
-    if (inGame) { this.runesWasRunning = this.game.running; this.game.running = false; }
-    else this.hideOverlays();
+    if (inGame) { if (!this.runesFromRoster) { this.runesWasRunning = this.game.running; this.game.running = false; } }
+    else if (!this.runesFromRoster) this.hideOverlays();
     $('#runes').hidden = false;
     this.renderRunes();
   }
-  runeOpen(r) { return runeBranchPts(this.save.runes || {}, r.br) >= RUNE_ROW_NEED[r.row]; }
+  heroRuneLv(t) { const m = this.save.heroRunes || (this.save.heroRunes = {}); return m[t] || (m[t] = {}); }
+  runeOpen(r) { return runeBranchPts(this.heroRuneLv(this.runeHero), r.br) >= RUNE_ROW_NEED[r.row]; }
+  runePtsLeft(t) { const xp = (this.save.tuvi || {})[t] || 0; return tuviPoints(xp) - runeSpent(this.heroRuneLv(t)); }
   renderRunes() {
-    const lvs = this.save.runes || {}, kho = this.save.kho || 0;
+    const t = this.runeHero, d = HEROES[t], lvs = this.heroRuneLv(t);
+    const xp = (this.save.tuvi || {})[t] || 0, tl = tuviLevel(xp), nx = tuviNext(xp), left = this.runePtsLeft(t);
     const r = RUNE_BY[this.runeSel], lv = lvs[r.id] || 0, br = RUNE_BRANCHES.find((b) => b.id === r.br);
-    const total = RUNES.reduce((a, x) => a + (lvs[x.id] || 0), 0), maxAll = RUNES.reduce((a, x) => a + x.max, 0);
-    const open = this.runeOpen(r), cost = lv < r.max ? runeCost(r, lv + 1) : 0;
+    const open = this.runeOpen(r), cost = runePt(r);
     const node = (x) => {
       const l = lvs[x.id] || 0, op = this.runeOpen(x);
       return `<button class="rn-node ${x.skill ? 'sk' : ''} ${l ? 'has' : ''} ${l >= x.max ? 'full' : ''} ${op ? '' : 'lock'} ${x.id === r.id ? 'on' : ''}" data-act="rn-sel" data-k="${x.id}" title="${esc(x.name)}">
@@ -1443,24 +1478,29 @@ class UI {
     };
     const col = (b) => {
       const pts = runeBranchPts(lvs, b.id);
-      return `<div class="rn-col" style="--rc:${b.color}"><div class="rn-bh"><b>${b.name}</b><small>${b.sub} · ${pts} điểm</small></div>
+      return `<div class="rn-col" style="--rc:${b.color}"><div class="rn-bh"><b>${b.name}</b><small>${b.sub} · ${pts} cấp</small></div>
         ${[0, 1, 2, 3].map((row) => `<div class="rn-row ${row === 3 ? 'skrow' : ''}">${pts < RUNE_ROW_NEED[row] ? `<span class="rn-need">${RUNE_ROW_NEED[row]}</span>` : ''}${RUNES.filter((x) => x.br === b.id && x.row === row).map(node).join('')}</div>`).join('')}</div>`;
     };
     const lines = [];
     for (let l = 1; l <= r.max; l++) lines.push(`<div class="rn-lv ${l <= lv ? 'got' : l === lv + 1 ? 'next' : ''}"><span>Cấp ${l}</span>${esc(r.fmt(runeVal(r, l)))}</div>`);
+    const picker = this.runeHeroes().map((h) => { const hx = (this.save.tuvi || {})[h] || 0, pl = this.runePtsLeft(h);
+      return `<button class="rn-hero ${h === t ? 'on' : ''} ${HEROES[h].legend || ''}" data-act="rn-hero" data-k="${h}" title="${esc(HEROES[h].name)}" style="--c:${ELEMENTS[HEROES[h].el].color}">
+        <img src="${heroImgUrl(h, 'head')}" alt=""><span class="tl">${tuviLevel(hx)}</span>${pl > 0 ? `<span class="pt">${pl}</span>` : ''}</button>`; }).join('');
+    const bar = nx ? Math.max(0, Math.min(1, (xp - TUVI_XP[tl - 1]) / (nx - TUVI_XP[tl - 1]))) : 1;
     $('#runes').innerHTML = `<div class="screen" style="z-index:auto">
-      <div class="scr-head metal"><button class="xbtn metal" data-act="rn-back" aria-label="Quay lại">${ICON.back}</button><h1 class="ttl">Bảng Ấn Phù</h1>
-        <span class="chip dark">${total}/${maxAll} cấp · áp cho mọi tướng</span><div class="sp"></div>
-        <button class="btn ${this.runeResetArm ? 'btn-gold' : 'metal'}" style="height:32px;padding:0 12px;font-size:13px" data-act="rn-reset" ${total ? '' : 'disabled'}>${this.runeResetArm ? 'Bấm lần nữa để tẩy' : 'Tẩy ấn (hoàn 100%)'}</button>
-        <span class="chip goldc">Ngân khố ${coin()} ${fmt(kho)}</span></div>
+      <div class="scr-head metal"><button class="xbtn metal" data-act="rn-back" aria-label="Quay lại">${ICON.back}</button><h1 class="ttl">Ấn Phù</h1>
+        <div class="rn-pick">${picker}</div></div>
       <div class="scr-body rn-body">
         <div class="rn-board">${RUNE_BRANCHES.map(col).join('')}</div>
         <div class="panel metal rn-det" style="--rc:${br.color}">
-          <div class="rn-dh"><span class="rn-big">${r.ic}</span><div><b>${r.name}</b><small>${br.name} · ${r.skill ? 'Ấn kỹ năng' : 'Ấn chỉ số'} · cấp ${lv}/${r.max}</small></div></div>
+          <div class="rn-tv"><img src="${heroImgUrl(t, 'head')}" alt=""><div><b>${d.name}</b><small>☯ Tu Vi ${tl} · ${tuviRank(xp)}</small>
+            <div class="rn-xp"><i style="width:${bar * 100}%"></i></div><small>${nx ? `${fmt(Math.floor(xp))} / ${fmt(nx)} — hạ quái bằng tướng này để lên bậc` : 'Đã đạt bậc cao nhất'}</small></div></div>
+          <div class="rn-pts">Điểm Ấn còn <b>${left}</b> / ${tuviPoints(xp)} <button class="btn ${this.runeResetArm ? 'btn-gold' : 'metal'}" data-act="rn-reset" ${runeSpent(lvs) ? '' : 'disabled'}>${this.runeResetArm ? 'Bấm lần nữa' : 'Tẩy ấn'}</button></div>
+          <div class="rn-dh"><span class="rn-big">${r.ic}</span><div><b>${r.name}</b><small>${br.name} · ${r.skill ? 'Ấn kỹ năng · 3 điểm / cấp' : 'Ấn chỉ số · 1 điểm / cấp'} · cấp ${lv}/${r.max}</small></div></div>
           <div class="rn-lvs">${lines.join('')}</div>
           ${lv >= r.max ? '<div class="chip ok" style="text-align:center">Đã tối đa</div>'
-            : !open ? `<div class="rn-lockmsg">🔒 Cần ${RUNE_ROW_NEED[r.row]} điểm trong ${br.name} (đang có ${runeBranchPts(lvs, r.br)})</div>`
-            : `<button class="btn btn-gold rn-buy" data-act="rn-buy" data-k="${r.id}" ${kho < cost ? 'disabled' : ''}>${lv ? 'Nâng' : 'Khắc'} cấp ${lv + 1} · ${coin()} ${fmt(cost)}</button>`}
+            : !open ? `<div class="rn-lockmsg">🔒 Cần ${RUNE_ROW_NEED[r.row]} cấp trong ${br.name} (đang có ${runeBranchPts(lvs, r.br)})</div>`
+            : `<button class="btn btn-gold rn-buy" data-act="rn-buy" data-k="${r.id}" ${left < cost ? 'disabled' : ''}>${lv ? 'Nâng' : 'Khắc'} cấp ${lv + 1} · ${cost} điểm Ấn</button>`}
         </div>
       </div></div>`;
   }
@@ -1500,8 +1540,10 @@ class UI {
             <div style="display:flex;flex-direction:column;gap:5px;min-width:0">
               <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="ttl" style="font-size:26px;line-height:1">${d.name}</span>
                 ${!d.legend ? '<span class="chip ok">Có sẵn</span>' : (this.save.owned || []).includes(t) ? `<span class="chip ok">✓ Đã sở hữu</span>${LEGACY[t] ? `<button class="btn btn-gold" style="height:32px;padding:0 12px;font-size:14px" data-act="lg-open" data-type="${t}">⚜ Thần Khí · ${this.legacyPts(t)}/${LEGACY_MAX * 3}</button>` : ''}`
-                  : `<button class="btn btn-gold" style="height:32px;padding:0 12px;font-size:14px" data-act="ro-buy" data-type="${t}" ${(this.save.kho || 0) < OWN_COST[d.legend] ? 'disabled' : ''}>Mua · ${coin()} ${fmt(OWN_COST[d.legend])}</button><span class="chip dark">Ngân khố ${fmt(this.save.kho || 0)}</span>`}</div>
+                  : `<button class="btn btn-gold" style="height:32px;padding:0 12px;font-size:14px" data-act="ro-buy" data-type="${t}" ${(this.save.kho || 0) < OWN_COST[d.legend] ? 'disabled' : ''}>Mua · ${bac()} ${fmt(OWN_COST[d.legend])}</button><span class="chip dark">Ngân khố ${fmt(this.save.kho || 0)}</span>`}</div>
               <div class="note" style="font-style:italic">${esc(d.title)}</div>
+              ${!d.legend || (this.save.owned || []).includes(t) ? `<div class="ro-tv"><span>☯ Tu Vi ${tuviLevel((this.save.tuvi || {})[t] || 0)} · ${tuviRank((this.save.tuvi || {})[t] || 0)}</span>
+                <button class="btn metal" data-act="ro-runes" data-type="${t}">🔯 Ấn Phù${this.runePtsLeft(t) > 0 ? ` <b class="rn-dot">${this.runePtsLeft(t)}</b>` : ''}</button></div>` : ''}
               <div class="bt-info" style="padding:0;background:none;border:0;box-shadow:none"><div class="tags">
                 <span style="background:#1A1208;color:${ELEMENTS[d.el].color};display:inline-flex;align-items:center;gap:3px">${elIcon(d.el, 13)} Hành ${ELEMENTS[d.el].name} · ${ELEM_TRAIT[d.el].name}</span>
                 <span style="background:#1A1208;color:#E8D8B0">${ELEM_TRAIT[d.el].fx}</span>
@@ -1631,6 +1673,7 @@ class UI {
     const khoGain = win ? Math.round((PREP.winBase + PREP.winPerLevel * (lv + 1) + PREP.winPerStar * stars) * (g.hard ? 1.5 : 1))
       : PREP.losePerWave * Math.max(0, g.wave - 1);
     s.kho = (s.kho || 0) + khoGain;
+    const tv = this.bankTuvi(win ? 1 : TUVI_LOSE);
     this.submitScores(win, stars);
     this.clearRun();
     this.bankStats();
@@ -1642,7 +1685,9 @@ class UI {
       <div><span>${coin()} Vàng kiếm trong trận</span><b style="color:#FFD66B">+${fmt(g.stats.goldEarned)}</b></div>
       <div><span>${coin()} Đầu trận ${fmt(CONFIG.startGold)} + kiếm ${fmt(g.stats.goldEarned)}${g.stats.goldRefund ? ` + hủy tướng ${fmt(g.stats.goldRefund)}` : ''} − đã tiêu ${fmt(Math.max(0, CONFIG.startGold + g.stats.goldEarned + (g.stats.goldRefund || 0) - g.gold))}</span><b style="color:#FFD66B">= ${fmt(g.gold)}</b></div>
       <div><span>Tướng trên sân</span><b>${g.heroes.filter(Boolean).length}</b></div>
-      <div><span>🏦 Ngân khố nhận (mua đồ / tướng trước trận)</span><b style="color:#6AE06A">+${fmt(khoGain)} → ${fmt(s.kho)}</b></div>`;
+      <div><span>🏦 Ngân khố nhận (mua đồ / tướng trước trận)</span><b style="color:#E4ECF4">${bac(1)} +${fmt(khoGain)} → ${fmt(s.kho)}</b></div>
+      ${tv.rows.length ? `<div><span>☯ Tu Vi${win ? '' : ' (60%)'}</span><b style="color:#C8A0F0">${tv.rows.join(' · ')}</b></div>` : ''}
+      ${tv.up.map((u) => `<div><span></span><b style="color:#FFD66B">${u}</b></div>`).join('')}`;
     const name = `Ải ${lv + 1} · ${LEVELS[lv].name}`;
     const html = win ? `<div class="screen" style="z-index:auto">
       <div class="scr-head metal"><h1 class="ttl">${name}</h1><span class="chip ok">✓ Đã giữ thành</span><div class="sp"></div></div>
@@ -1769,7 +1814,7 @@ class UI {
       case 'prep-go': $('#prep').hidden = true; this.saveRun(); break;
       case 'prep-forge': {
         // v78: Lò đúc trước trận trả bằng Ngân khố (đổi tạm vàng trong trận ↔ Ngân khố khi mở / đóng)
-        $('#prep').hidden = true; this.prepForge = true;
+        $('#prep').hidden = true; this.prepForge = true; KHO_MODE = true;
         this.prepGold = g.gold; g.gold = this.save.kho || 0;
         if (!this.prepShopRolled) { g.rollShop(true); this.prepShopRolled = true; }
         this.openScreen('forge');
@@ -1822,32 +1867,32 @@ class UI {
         break;
       }
       case 'rn-sel': this.runeSel = d.k; this.renderRunes(); break;
+      case 'rn-hero': this.runeHero = d.k; this.runeResetArm = false; this.renderRunes(); break;
       case 'rn-buy': {
-        const r = RUNE_BY[d.k], sv = this.save, lvs = sv.runes = sv.runes || {};
-        const lv = lvs[r.id] || 0, c = runeCost(r, lv + 1);
-        if (lv >= r.max || (sv.kho || 0) < c || !this.runeOpen(r)) break;
-        sv.kho -= c; lvs[r.id] = lv + 1; writeSave(sv);
-        setRunes(lvs);
-        this.toast(`${r.name} cấp ${lv + 1}: ${esc(r.fmt(runeVal(r, lv + 1)))}`, RUNE_BRANCHES.find((b) => b.id === r.br).color);
+        const r = RUNE_BY[d.k], t = this.runeHero, lvs = this.heroRuneLv(t);
+        const lv = lvs[r.id] || 0;
+        if (lv >= r.max || this.runePtsLeft(t) < runePt(r) || !this.runeOpen(r)) break;
+        lvs[r.id] = lv + 1; writeSave(this.save);
+        setRunes(this.save.heroRunes);
+        this.toast(`${HEROES[t].name} · ${r.name} cấp ${lv + 1}: ${esc(r.fmt(runeVal(r, lv + 1)))}`, RUNE_BRANCHES.find((b) => b.id === r.br).color);
         this.renderRunes();
         break;
       }
       case 'rn-reset': {
         if (!this.runeResetArm) { this.runeResetArm = true; this.renderRunes(); break; }
-        const sv = this.save, lvs = sv.runes || {};
-        let back = 0;
-        for (const r of RUNES) for (let l = 1; l <= (lvs[r.id] || 0); l++) back += runeCost(r, l);
-        sv.kho = (sv.kho || 0) + back; sv.runes = {}; writeSave(sv); setRunes({});
+        this.save.heroRunes[this.runeHero] = {}; writeSave(this.save); setRunes(this.save.heroRunes);
         this.runeResetArm = false;
-        this.toast(`Đã tẩy ấn, hoàn lại ${fmt(back)} Ngân khố`, '#F2D27A');
+        this.toast(`Đã tẩy ấn ${HEROES[this.runeHero].name} — hoàn lại toàn bộ điểm`, '#F2D27A');
         this.renderRunes();
         break;
       }
       case 'rn-back':
         $('#runes').hidden = true; this.runeResetArm = false;
+        if (this.runesFromRoster) { this.runesFromRoster = false; this.rosterSel = this.runeHero; this.renderRoster(); break; }
         if (this.runesInGame) { this.runesInGame = false; if (this.runesWasRunning) g.running = true; }
         else this.showMenu();
         break;
+      case 'ro-runes': this.runesFromRoster = true; this.showRunes(this.rosterInGame, d.type); break;
       case 'ro-temple': location.href = 'den-anh-hung.html'; break;
       case 'next-level': this.save.last = Math.min(LEVELS.length - 1, g.level + 1); writeSave(this.save); this.showCampaign(this.save.last); break;
       case 'endless':
@@ -2140,7 +2185,7 @@ class UI {
     $('#screen').hidden = true;
     if (this.prepForge) {
       const g = this.game;
-      this.prepForge = false; this.save.kho = g.gold; g.gold = this.prepGold; writeSave(this.save);
+      this.prepForge = false; KHO_MODE = false; this.save.kho = g.gold; g.gold = this.prepGold; writeSave(this.save);
       this.showPrep();
     }   // đóng Lò đúc mở từ bảng chuẩn bị → quay lại bảng
   }
@@ -2404,7 +2449,7 @@ class UI {
           <div class="note" style="margin-top:auto;font-size:11px">≈ Đồ còn rơi từ quái; quái tinh anh và boss rơi đồ xịn hơn.</div>
         </div></div>`;
     }
-    return `${this.head('Lò đúc đồng', this.prepForge ? '<span class="chip ok">Trả bằng Ngân khố</span>' : `<span class="chip dark">Đợt ${g.wave}</span>${this.runChip()}`, '', svgI(sceneArt('drum')))}${tabs}${body}`;
+    return `${this.head('Lò đúc đồng', this.prepForge ? `<span class="chip kho">Trả bằng Ngân khố ${bac(1)} — không phải vàng trận</span>` : `<span class="chip dark">Đợt ${g.wave}</span>${this.runChip()}`, '', svgI(sceneArt('drum')))}${tabs}${body}`;
   }
 
   // ---------- Túi đồ
