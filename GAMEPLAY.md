@@ -930,3 +930,7 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 
 - **Thêm 7 quái vẽ tay** cắt tay từ tấm ghép Gemini (`tools/cat-collage.py`, toạ độ từng ô ghi trong file): Cung Thủ Giặc, Mực Tinh, Cáo Con (3 dáng); Kỵ Binh, Voi Chiến, Cá Mập Yêu, Cua Khổng Lồ (chỉ 1 dáng — dùng chung cho đi và đánh, vẫn nhún theo nhịp). Tổng 18/21 quái.
 - Còn thiếu: Yêu Tinh Rừng, Đá Con, Lính Giáo và 9 boss (`docs/PROMPT_GEMINI_CON_THIEU.md`). Các con trong tấm ghép không có trong game (Rết, Bọ Cạp, Dơi Quỷ, Trăn, Bọ Cánh Cứng) chưa dùng.
+
+### Phiên bản 64
+
+- **Avatar trong giao diện dùng hình vẽ tay**: nút triệu hồi, vòng tiến độ hợp thể, thanh tướng đang chọn, danh sách tướng, bảng thăng thần, Bí truyền… (`heroImgUrl` trong `js/ui.js` lấy `head.png` / `front.png` của bộ ảnh). Bật "Tướng vẽ nét" thì quay về hình vẽ nét.
