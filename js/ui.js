@@ -203,19 +203,26 @@ class UI {
     $('#rotate-art').innerHTML = sceneArt('rotate');
     $('#loading').hidden = true;
     this.showMenu();
-    if (!this.save.loginChosen && typeof CLOUD !== 'undefined' && CLOUD.enabled) this.showLogin(false);
+    // v73: bắt buộc đăng nhập — màn đăng nhập che game tới khi có tài khoản (phiên được nhớ, lần sau vào thẳng)
+    if (typeof CLOUD !== 'undefined' && CLOUD.enabled) this.showLogin(false);
     // v65: lưu đám mây — bản trên mây mới hơn thì nạp lại
     if (typeof CLOUD !== 'undefined') {
       CLOUD.onChange(() => {
         if (!$('#settings').hidden) this.renderSettingsCloud();
-        if (!$('#login').hidden) { if (CLOUD.user && !CLOUD.user.isAnonymous && !this.save.loginChosen) { this.save.loginChosen = true; writeSave(this.save); $('#login').hidden = true; this.toast('Đã đăng nhập: ' + (CLOUD.user.displayName || 'Google'), '#6AE06A'); } else this.showLogin(!!this.save.loginChosen); }
+        if (CLOUD.signedIn && !$('#login').hidden && !this.loginFromMenu) {
+          $('#login').hidden = true;
+          this.toast('Xin chào ' + (CLOUD.user.displayName || CLOUD.user.email || ''), '#6AE06A');
+        } else if (CLOUD.authKnown && !CLOUD.signedIn && !this.offline) this.showLogin(false);
+        else if (!$('#login').hidden) this.showLogin(this.loginFromMenu);
         if (!$('#menu').hidden) this.showMenu();
       });
       CLOUD.init(() => this.save, (cs) => this.applyCloudSave(cs));
     }
   }
-  applyCloudSave(cs) {
+  applyCloudSave(cs, owner) {
     const keep = this.save.settings;
+    if (!cs) { cs = {}; this.game.started = false; }   // tài khoản mới trên máy đã có tài khoản khác: bắt đầu từ đầu
+    cs.owner = owner || cs.owner;
     localStorage.setItem(SAVE_KEY, JSON.stringify(cs));
     this.save = loadSave();
     this.save.settings = { ...this.save.settings, ...keep };   // cài đặt máy này giữ nguyên
@@ -338,6 +345,7 @@ class UI {
   }
   hideOverlays() {
     for (const id of ['#menu', '#story', '#campaign', '#settings', '#result', '#reward', '#roster', '#treasury', '#prep', '#login', '#ranks']) $(id).hidden = true;
+    if (this.needLogin()) this.showLogin(false);   // v73: chưa đăng nhập thì luôn che game
   }
   setInGame(on) {
     document.querySelectorAll('.ingame').forEach((el) => { el.hidden = !on; });
@@ -470,22 +478,38 @@ class UI {
   }
 
   // ---------- v66: Đăng nhập
+  needLogin() { return typeof CLOUD !== 'undefined' && CLOUD.enabled && !CLOUD.signedIn && !this.offline; }
   showLogin(fromMenu) {
-    const ok = typeof CLOUD !== 'undefined' && CLOUD.enabled;
-    const u = ok && CLOUD.user;
-    const signed = u && !u.isAnonymous;
-    $('#login').innerHTML = `<div class="bgart">${svgI(sceneArt('menu'))}</div><div class="login-box metal">
-      <div class="login-logo">Núi Cao Nước Dâng</div>
-      ${signed ? `<div class="login-who">${u.photoURL ? `<img src="${esc(u.photoURL)}" alt="" referrerpolicy="no-referrer">` : ''}<b>${esc(u.displayName || u.email || 'Tài khoản Google')}</b><small>Tiến trình đang lưu trên đám mây</small></div>
+    this.loginFromMenu = !!fromMenu;
+    const C = typeof CLOUD !== 'undefined' ? CLOUD : null;
+    const u = C && C.user;
+    const signed = C && C.signedIn;
+    const mode = this.loginMode || 'in';
+    const err = this.loginErr ? `<div class="login-err">${esc(this.loginErr)}</div>` : '';
+    let inner;
+    if (!C || !C.enabled) inner = '<div class="login-sub">Chưa cấu hình đăng nhập.</div><button class="btn btn-gold title login-btn" data-act="login-offline">Vào game</button>';
+    else if (signed) inner = `<div class="login-who">${u.photoURL ? `<img src="${esc(u.photoURL)}" alt="" referrerpolicy="no-referrer">` : ''}<b>${esc(u.displayName || u.email || 'Tài khoản')}</b><small>${esc(u.email || '')} · tiến trình lưu trên đám mây</small></div>
         <button class="btn btn-gold title login-btn" data-act="login-close">Vào game</button>
-        <button class="btn metal login-btn" data-act="cloud-out">Đăng xuất</button>`
-      : `<div class="login-sub">Đăng nhập để lưu tiến trình và chơi tiếp trên máy khác</div>
-        <button class="btn login-btn login-g" data-act="cloud-google" ${ok ? '' : 'disabled'}><span class="g">G</span> Đăng nhập bằng Google</button>
-        <button class="btn metal title login-btn" data-act="login-guest">Chơi ngay (khách)</button>
-        <small class="login-note">${ok ? 'Chơi khách: tiến trình lưu trên máy này, đăng nhập sau vẫn giữ nguyên.' : 'Đăng nhập Google chưa bật (cần cấu hình Firebase, xem docs/FIREBASE.md). Tiến trình đang lưu trên máy này.'}</small>`}
-      ${fromMenu ? '<button class="xbtn metal login-x" data-act="login-close" aria-label="Đóng">' + ICON.close + '</button>' : ''}</div>`;
+        <button class="btn metal login-btn" data-act="cloud-out">Đăng xuất</button>`;
+    else if (C.status === 'error' && !C.auth) inner = `<div class="login-sub">Không kết nối được máy chủ đăng nhập (${esc(C.error)}).</div>
+        <button class="btn btn-gold title login-btn" data-act="login-retry">Thử lại</button>
+        <button class="btn metal login-btn" data-act="login-offline">Chơi ngoại tuyến (không lưu xếp hạng)</button>`;
+    else if (!C.authKnown) inner = '<div class="login-sub">Đang kiểm tra đăng nhập…</div>';
+    else inner = `<div class="login-sub">${u && u.isAnonymous ? 'Đăng nhập để giữ tiến trình đang chơi và vào bảng xếp hạng' : 'Đăng nhập để chơi — tiến trình lưu trên đám mây, chơi tiếp trên máy khác'}</div>
+        ${C.native ? '' : `<button class="btn login-btn login-g" data-act="cloud-google"><span class="g">G</span> Đăng nhập bằng Google</button><div class="login-or">hoặc dùng email</div>`}
+        <div class="login-tabs"><button class="${mode === 'in' ? 'on' : ''}" data-act="login-mode" data-k="in">Đăng nhập</button><button class="${mode === 'up' ? 'on' : ''}" data-act="login-mode" data-k="up">Tạo tài khoản</button></div>
+        ${mode === 'up' ? '<input id="lg-name" class="login-in" maxlength="20" placeholder="Tên hiển thị" autocomplete="nickname">' : ''}
+        <input id="lg-email" class="login-in" type="email" placeholder="Email" autocomplete="email" value="${esc(this.loginEmail || '')}">
+        <input id="lg-pass" class="login-in" type="password" placeholder="Mật khẩu (ít nhất 6 ký tự)" autocomplete="${mode === 'up' ? 'new-password' : 'current-password'}">
+        ${err}
+        <button class="btn btn-gold title login-btn" data-act="login-email" ${this.loginBusy ? 'disabled' : ''}>${this.loginBusy ? 'Đang xử lý…' : mode === 'up' ? 'Tạo tài khoản' : 'Đăng nhập'}</button>
+        ${mode === 'in' ? '<button class="login-link" data-act="login-reset">Quên mật khẩu?</button>' : ''}`;
+    $('#login').innerHTML = `<div class="bgart">${svgI(sceneArt('menu'))}</div><div class="login-box metal">
+      <div class="login-logo">Núi Cao Nước Dâng</div>${inner}
+      ${fromMenu && signed ? '<button class="xbtn metal login-x" data-act="login-close" aria-label="Đóng">' + ICON.close + '</button>' : ''}</div>`;
     $('#login').hidden = false;
   }
+
 
   // ---------- Mở đầu: Vua Hùng kén rể
   showStory(level) {
@@ -625,7 +649,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 72 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 73 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1527,9 +1551,22 @@ class UI {
         if (d.k === 'aiArt') { location.reload(); break; }
         this.renderSettings();
         break;
-      case 'cloud-google': if (!CLOUD.enabled) { this.toast('Chưa cấu hình Firebase', '#E25A3A'); break; } CLOUD.google(() => this.save, (cs) => this.applyCloudSave(cs)); break;
-      case 'login-guest': this.save.loginChosen = true; writeSave(this.save); $('#login').hidden = true; break;
-      case 'login-close': this.save.loginChosen = true; writeSave(this.save); $('#login').hidden = true; this.showMenu(); break;
+      case 'cloud-google': if (!CLOUD.enabled) break;
+        this.loginErr = ''; CLOUD.google(() => this.save, (cs, o) => this.applyCloudSave(cs, o)).catch((e) => { this.loginErr = e.message; this.showLogin(this.loginFromMenu); }); break;
+      case 'login-close': $('#login').hidden = true; this.loginFromMenu = false; this.showMenu(); break;
+      case 'login-mode': this.loginMode = d.k; this.loginErr = ''; this.showLogin(this.loginFromMenu); break;
+      case 'login-offline': this.offline = true; $('#login').hidden = true; break;
+      case 'login-retry': location.reload(); break;
+      case 'login-email': case 'login-reset': {
+        const email = ($('#lg-email') || {}).value || '', pass = ($('#lg-pass') || {}).value || '', name = (($('#lg-name') || {}).value || '').trim();
+        this.loginEmail = email.trim();
+        const m = d.act === 'login-reset' ? 'reset' : this.loginMode || 'in';
+        if (m === 'reset' && !this.loginEmail) { this.loginErr = 'Nhập email trước rồi bấm Quên mật khẩu'; this.showLogin(this.loginFromMenu); break; }
+        this.loginBusy = true; this.loginErr = ''; this.showLogin(this.loginFromMenu);
+        CLOUD.email(m, this.loginEmail, pass, name).then((msg) => { this.loginBusy = false; this.loginErr = msg; if (name) { this.save.nick = name; writeSave(this.save); } this.showLogin(this.loginFromMenu); })
+          .catch((e) => { this.loginBusy = false; this.loginErr = e.message; this.showLogin(this.loginFromMenu); });
+        break;
+      }
       case 'prep-buy': this.prepBuy(d.id); break;
       case 'rank-tab': this.showRanks(d.k); break;
       case 'rank-nick': {
@@ -1544,7 +1581,7 @@ class UI {
       case 'prep-hero': this.prepHero(d.id); break;
       case 'prep-go': $('#prep').hidden = true; break;
       case 'cloud-sync': CLOUD.push(this.save, true); break;
-      case 'cloud-out': CLOUD.signOut(); break;
+      case 'cloud-out': this.loginFromMenu = false; CLOUD.signOut(); break;
       case 'set-close':
         $('#settings').hidden = true;
         if (this.settingsInGame && this.pauseWasRunning) g.running = true;

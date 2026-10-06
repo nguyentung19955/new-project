@@ -1262,3 +1262,12 @@ body { overflow: hidden; }
 .rk-nick { display: flex; gap: 8px; align-items: center; padding: 8px 10px; border-radius: 6px; margin: 0 auto 8px; max-width: 720px; }
 .rk-nick input { flex: 1; min-width: 0; height: 32px; border-radius: 4px; border: 1px solid #8C6A2E; background: #17130F; color: var(--text); padding: 0 8px; font-size: 15px; }
 .mc-subs .mc-sub { white-space: nowrap; font-size: 14px; }
+/* v73: đăng nhập bắt buộc (email / Google) */
+.login-box { max-height: 96%; overflow-y: auto; gap: 8px; }
+.login-in { height: 40px; border-radius: 6px; border: 1px solid #8C6A2E; background: #17130F; color: var(--text); padding: 0 10px; font-size: 16px; }
+.login-tabs { display: flex; gap: 4px; }
+.login-tabs button { flex: 1; height: 32px; border-radius: 6px; border: 1px solid #8C6A2E; background: linear-gradient(180deg, #3B3327, #17130F); color: var(--text-2); font-weight: 800; }
+.login-tabs button.on { background: linear-gradient(180deg, #F2D27A, #B8852A); color: #2A1A08; }
+.login-or { font-size: 12px; color: var(--text-2); }
+.login-err { font-size: 13px; color: #FFB08A; }
+.login-link { background: none; border: 0; color: #9EDDF2; font-size: 13px; text-decoration: underline; }

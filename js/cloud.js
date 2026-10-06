@@ -37,11 +37,14 @@ const CLOUD = {
       firebase.initializeApp(FIREBASE_CONFIG);
       this.auth = firebase.auth();
       this.db = firebase.firestore();
+      // v73: bắt buộc đăng nhập (Google / email). Phiên đăng nhập được Firebase nhớ trên máy (LOCAL),
+      // mở lại game là vào thẳng. Tài khoản khách cũ (ẩn danh) vẫn được nối khi đăng nhập để giữ tiến trình.
+      await this.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
       this.auth.onAuthStateChanged(async (u) => {
         this.user = u;
-        if (!u) { this.auth.signInAnonymously().catch((e) => this._fail(e)); return; }
-        this.ready = true; this.status = 'ok';
-        await this.pull(getLocal, applyCloud);
+        this.signedIn = !!(u && !u.isAnonymous);
+        this.ready = !!u; this.status = u ? 'ok' : 'signedout'; this.authKnown = true;
+        if (u) await this.pull(getLocal, applyCloud);
         this._emit();
       });
     } catch (e) { this._fail(e); }
@@ -54,11 +57,14 @@ const CLOUD = {
     try {
       const snap = await this._doc().get();
       const local = getLocal();
+      // bản lưu trên máy thuộc tài khoản khác (đổi tài khoản trên cùng máy) → không trộn
+      const other = local.owner && local.owner !== this.user.uid;
       if (snap.exists) {
         const d = snap.data();
-        if ((d.updatedAt || 0) > (local.savedAt || 0) && d.save) { applyCloud(JSON.parse(d.save)); this.lastSync = Date.now(); return; }
-      }
-      await this.push(local, true);
+        if ((other || (d.updatedAt || 0) > (local.savedAt || 0)) && d.save) { applyCloud(JSON.parse(d.save), this.user.uid); this.lastSync = Date.now(); return; }
+      } else if (other) { applyCloud(null, this.user.uid); }
+      const cur = getLocal(); cur.owner = this.user.uid;
+      await this.push(cur, true);
     } catch (e) { this._fail(e); }
   },
   // đẩy bản lưu (gộp các lần ghi liên tiếp trong 4 giây)
@@ -79,20 +85,49 @@ const CLOUD = {
     return Promise.resolve();
   },
   // đăng nhập Google: nối tài khoản khách hiện tại (giữ tiến trình); tài khoản đã có dữ liệu thì chuyển sang nó
+  _err(e) {
+    const m = { 'auth/invalid-email': 'Email không hợp lệ', 'auth/missing-password': 'Chưa nhập mật khẩu',
+      'auth/weak-password': 'Mật khẩu cần ít nhất 6 ký tự', 'auth/email-already-in-use': 'Email này đã có tài khoản — chọn Đăng nhập',
+      'auth/invalid-credential': 'Sai email hoặc mật khẩu', 'auth/wrong-password': 'Sai email hoặc mật khẩu', 'auth/user-not-found': 'Chưa có tài khoản với email này',
+      'auth/too-many-requests': 'Thử sai nhiều lần, đợi một lát', 'auth/network-request-failed': 'Mất mạng, thử lại',
+      'auth/operation-not-allowed': 'Đăng nhập bằng email chưa được bật trong Firebase', 'auth/popup-blocked': 'Trình duyệt chặn cửa sổ đăng nhập',
+      'auth/popup-closed-by-user': 'Đã đóng cửa sổ đăng nhập', 'auth/unauthorized-domain': 'Tên miền chưa được cho phép trong Firebase' };
+    return m[e && e.code] || (e && (e.code || e.message)) || 'Lỗi';
+  },
+  // đăng nhập / đăng ký bằng email (dùng được cả trong app Android)
+  async email(mode, email, pass, name) {
+    if (!this.auth) throw new Error('Chưa kết nối');
+    try {
+      if (mode === 'reset') { await this.auth.sendPasswordResetEmail(email); return 'Đã gửi email đặt lại mật khẩu'; }
+      if (mode === 'up') {
+        const cred = firebase.auth.EmailAuthProvider.credential(email, pass);
+        const r = this.user && this.user.isAnonymous ? await this.user.linkWithCredential(cred) : await this.auth.createUserWithEmailAndPassword(email, pass);
+        if (name) await r.user.updateProfile({ displayName: name });
+        this.user = this.auth.currentUser; this.signedIn = true; this._emit();
+        return '';
+      }
+      await this.auth.signInWithEmailAndPassword(email, pass);
+      return '';
+    } catch (e) { throw new Error(this._err(e)); }
+  },
   async google(getLocal, applyCloud) {
-    if (!this.ready) return;
-    if (this.native) { this.status = 'error'; this.error = 'Đăng nhập Google trong app sẽ bật ở bản sau (cần thêm google-services.json)'; this._emit(); return; }
+    if (!this.auth) return;
+    if (!this.user) {
+      if (this.native) throw new Error('Trong app hãy đăng nhập bằng email');
+      try { await this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); return; } catch (e) { throw new Error(this._err(e)); }
+    }
+    if (this.native) throw new Error('Trong app hãy đăng nhập bằng email');
     const prov = new firebase.auth.GoogleAuthProvider();
     try {
-      if (this.user && this.user.isAnonymous) {
-        try { await this.user.linkWithPopup(prov); this.user = this.auth.currentUser || this.user; await this.push(getLocal(), true); }
+      if (this.user.isAnonymous) {
+        try { await this.user.linkWithPopup(prov); this.user = this.auth.currentUser || this.user; this.signedIn = true; await this.push(getLocal(), true); }
         catch (e) {
           if (e.code !== 'auth/credential-already-in-use') throw e;
           await this.auth.signInWithCredential(e.credential);   // onAuthStateChanged sẽ kéo bản lưu của tài khoản đó
         }
       } else await this.auth.signInWithPopup(prov);
       this._emit();
-    } catch (e) { this._fail(e); }
+    } catch (e) { throw new Error(this._err(e)); }
   },
   // ---------- v72: bảng xếp hạng — boards/{bảng}/scores/{uid}; chỉ ghi khi điểm cao hơn điểm cũ
   async submitScore(board, score, info) {
@@ -113,5 +148,5 @@ const CLOUD = {
       return q.docs.map((d) => ({ uid: d.id, ...d.data() }));
     } catch (e) { this._fail(e); return null; }
   },
-  async signOut() { if (this.ready) { await this.auth.signOut(); this._emit(); } },
+  async signOut() { if (this.auth) { clearTimeout(this._timer); await this.auth.signOut(); } },
 };

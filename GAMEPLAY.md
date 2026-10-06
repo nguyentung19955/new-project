@@ -974,3 +974,11 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 
 - **Bảng xếp hạng** (menu chính → 🏆): tab **Vô tận** (xếp theo đợt đã vượt, hoà thì nhiều mạng hơn) và từng **ải** (Khó > sao > mạng còn > nhanh hơn). Top 50, dòng của mình viền xanh, khách ghi "(khách)". Đổi tên hiển thị bằng nút ✎. Tự ghi điểm khi thua ở vô tận, khi rời trận vô tận, khi thắng ải; chỉ ghi khi phá kỷ lục cũ.
 - Firestore `boards/{bảng}/scores/{uid}`; luật mới trong `firestore.rules` (ai cũng xem được, chỉ ghi dòng của mình, điểm chỉ được tăng) — cần dán lại luật và Publish.
+
+### Phiên bản 73
+
+- **Bắt buộc đăng nhập**: màn đăng nhập che game tới khi có tài khoản — Google (web) hoặc email + mật khẩu (dùng được cả trong app Android), có Tạo tài khoản và Quên mật khẩu. Không còn chơi khách.
+- **Nhớ phiên**: Firebase lưu phiên trên máy (persistence LOCAL), mở lại game là vào thẳng; chỉ hiện màn đăng nhập khi đã Đăng xuất.
+- Tài khoản khách cũ được nối vào tài khoản mới (giữ tiến trình). Đổi tài khoản trên cùng máy thì không trộn bản lưu (`save.owner`).
+- Mất mạng lúc mở game: nút Thử lại hoặc Chơi ngoại tuyến (không lưu xếp hạng).
+- Cần bật **Email/Password** trong Firebase Authentication.
