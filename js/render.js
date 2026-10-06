@@ -81,6 +81,8 @@ const ready = (img) => img && img.complete && img.naturalWidth > 0;
 //  Ảnh được thử tải khi cần lần đầu (không cần danh sách trước).
 // ------------------------------------------------------------
 const ASSET_ROOT = 'assets/';
+// bản thử gói ảnh vào window.ASSET_DATA (đường dẫn → data URL) để khỏi vượt giới hạn số file; bản thường để trống
+const assetSrc = (path) => (window.ASSET_DATA && window.ASSET_DATA[path]) || ASSET_ROOT + path;
 const assetMap = new Map();      // đường dẫn -> { img, ok: null | true | false }
 let assetVersion = 0;            // tăng mỗi khi có ảnh mới tải xong (để giao diện vẽ lại)
 let useAssets = true;
@@ -91,7 +93,7 @@ function asset(path, force) {
     a = { img: new Image(), ok: null };
     a.img.onload = () => { a.draw = shrinkForCanvas(path, a.img); a.ok = true; assetVersion++; };
     a.img.onerror = () => { a.ok = false; };
-    a.img.src = ASSET_ROOT + path;
+    a.img.src = assetSrc(path);
     assetMap.set(path, a);
   }
   return a.ok ? a.draw || a.img : null;
@@ -122,7 +124,7 @@ function assetAny(paths) {
   for (const p of paths) { const img = asset(p); if (img) return { img, path: p }; }
   return null;
 }
-const assetUrl = (paths) => { const a = assetAny(paths); return a ? ASSET_ROOT + a.path : ''; };
+const assetUrl = (paths) => { const a = assetAny(paths); return a ? assetSrc(a.path) : ''; };
 
 // Tên file theo asset-manifest.json của bản giao v15 (ảnh cắt từ bảng S01–S37
 // bằng tools/cat-anh.py, để phẳng trong assets/). Tên cũ (heroes/hero_h01_C.png…)

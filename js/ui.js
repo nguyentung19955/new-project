@@ -44,12 +44,12 @@ const BOSS_LINES = {
 const RUN_CHIP = '<span class="chip run">Quái vẫn đang chạy</span>';
 
 // v111: Ấn Phù vẽ tay (assets/runes/<mã ấn>.png, cắt bằng tools/cat-runes.py); thiếu ảnh thì hiện ký hiệu cũ
-const runeIc = (r) => `<img class="rimg" src="${ASSET_ROOT}runes/${r.id}.png" alt="${r.ic}" onerror="this.replaceWith(this.alt)">`;
+const runeIc = (r) => `<img class="rimg" src="${assetSrc(`runes/${r.id}.png`)}" alt="${r.ic}" onerror="this.replaceWith(this.alt)">`;
 
 // Icon: ưu tiên ảnh vẽ tay trong assets/ (nếu đã có), không thì dùng hình vector
 function skillIcon(type, i) {
   // v107: icon vẽ tay trong bộ ảnh tướng → luôn dùng (như ảnh tướng), trừ khi bật "Tướng vẽ nét"
-  if (SKILL_PACK.has(type) && !vectorHeroesOn()) return `<img src="${ASSET_ROOT}packs/${type}/sk-${SKILL_KEYS[i].toLowerCase()}.png" alt="">`;
+  if (SKILL_PACK.has(type) && !vectorHeroesOn()) return `<img src="${assetSrc(`packs/${type}/sk-${SKILL_KEYS[i].toLowerCase()}.png`)}" alt="">`;
   const u = assetUrl(skillPngPath(type, i));
   if (u) return `<img src="${u}" alt="">`;
   return svgImg(HAS_ART && ART.skill[type] ? ART.skill[type][SKILL_KEYS[i]] : '');
@@ -154,7 +154,7 @@ function secretLine(game, key) {
 const heroUrlCache = {};
 function heroImgUrl(type, crop) {
   // v64: tướng có bộ ảnh vẽ tay → chân dung / dáng đứng từ assets/packs
-  if (HERO_PACK[type] && !vectorHeroesOn()) return ASSET_ROOT + HERO_PACK[type] + (crop === 'head' ? 'head.png' : 'front.png');
+  if (HERO_PACK[type] && !vectorHeroesOn()) return assetSrc(HERO_PACK[type] + (crop === 'head' ? 'head.png' : 'front.png'));
   const slug = heroSlug(type);
   const png = assetUrl(crop === 'head' ? [`chan-dung_${slug}.png`, `heroes/hero_${HERO_CODE[type]}_B.png`]
     : [`${slug}_thuong.png`, `heroes/hero_${HERO_CODE[type]}_C.png`]);
@@ -1486,7 +1486,7 @@ class UI {
       const lv = L[sys.id] || 0, c = LEGACY_COST[lv];
       const pips = Array.from({ length: LEGACY_MAX }, (_, i) => `<i class="${i < lv ? 'on' : ''} ${sys.ms.some((m) => m.lv === i + 1) ? 'ms' : ''}"></i>`).join('');
       return `<div class="lg-sys">
-        <div class="lg-h"><span class="lg-ic">${RELIC_PACK.has(t) ? `<img src="${ASSET_ROOT}packs/${t}/tk-${si + 1}.png" alt="">` : sys.ic}</span><div><b>${sys.name}</b><small>${esc(sys.desc)}</small></div></div>
+        <div class="lg-h"><span class="lg-ic">${RELIC_PACK.has(t) ? `<img src="${assetSrc(`packs/${t}/tk-${si + 1}.png`)}" alt="">` : sys.ic}</span><div><b>${sys.name}</b><small>${esc(sys.desc)}</small></div></div>
         <div class="lg-pips">${pips}<span>${lv}/${LEGACY_MAX}</span></div>
         <div class="lg-now">${lv ? legacyPerText(sys, lv) : 'Chưa nâng'}${lv < LEGACY_MAX ? `<br><small>Cấp ${lv + 1}: ${legacyPerText(sys, lv + 1)}</small>` : ''}</div>
         ${sys.ms.map((m) => `<div class="lg-ms ${lv >= m.lv ? 'got' : ''}"><span>Cấp ${m.lv}</span>${esc(m.t)}</div>`).join('')}
