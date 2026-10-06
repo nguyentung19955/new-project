@@ -1630,10 +1630,11 @@ class Game {
       const best = hs.slice().sort((x, y) => (y.tier || 0) - (x.tier || 0) || y.level - x.level)[0];
       const need = this.ascendNeed(best);
       // sao: tướng Thường cộng dồn theo số ★ quy đổi (★★★ = 4 con ★); tướng thần theo Thần tinh
-      const starP = best.from ? (best.tier || 0) / need : Math.min(1, hs.reduce((a, h) => a + Math.pow(2, Math.max(0, (h.tier || 1) - 1)), 0) / 4);
+      const starP = best.from ? (best.tier || 0) / need : Math.min(1, hs.reduce((a, h) => a + Math.pow(2, Math.max(0, (h.tier || 1) - 1)), 0) / Math.pow(2, need - 1));
       const sk = HEROES[type].skills.reduce((a, s, i) => a + Math.min(SKILL_MAX[i], skillLevel(best, i)), 0) / SKILL_MAX.reduce((a, b) => a + b, 0);
       const ready = this.fusionReady(best) === true;
-      return { p: ready ? 1 : Math.min(0.99, starP * 0.7 + sk * 0.3), h: best };
+      // v136: tướng Thường chỉ cần đủ sao (không tính kỹ năng)
+      return { p: ready ? 1 : Math.min(0.99, best.from ? starP * 0.7 + sk * 0.3 : starP), h: best };
     };
     const A = score(f.a), B = score(f.b);
     return { p: (A.p + B.p) / 2, a: A.h, b: B.h };
@@ -1641,7 +1642,8 @@ class Game {
 
   // 2 tướng ★★★ đúng công thức (đủ kỹ năng) → thần mới
   fusionReady(h) {
-    if ((h.tier || 0) < this.ascendNeed(h)) return h.from ? `${HEROES[h.type].name} cần Thần tinh ${'★'.repeat(COSTS.ascendTier2)}` : `${HEROES[h.type].name} cần ★★★`;
+    if ((h.tier || 0) < this.ascendNeed(h)) return h.from ? `${HEROES[h.type].name} cần Thần tinh ${'★'.repeat(COSTS.ascendTier2)}` : `${HEROES[h.type].name} cần ${'★'.repeat(COSTS.ascendTier)}`;
+    if (!h.from) return true;   // v136: tướng Thường → tướng Tím không cần kỹ năng tối đa
     const left = this.skillsLeft(h);
     if (left.length) return `${HEROES[h.type].name} cần nâng tối đa kỹ năng: ${left.map(([k, lv, mx]) => `${k} ${lv}/${mx}`).join(', ')}`;
     return true;
@@ -1864,7 +1866,7 @@ class Game {
   // đủ sao + đủ kỹ năng để thăng thần (chưa tính vàng / giới hạn Huyền thoại)
   ascendReady(h) {
     if (!ASCEND[h.type]) return 'Đã là bậc cao nhất';
-    if ((h.tier || 0) < this.ascendNeed(h)) return h.from ? `Cần Thần tinh ${'★'.repeat(COSTS.ascendTier2)} trước` : 'Cần tiến hoá ★★★ trước';
+    if ((h.tier || 0) < this.ascendNeed(h)) return h.from ? `Cần Thần tinh ${'★'.repeat(COSTS.ascendTier2)} trước` : `Cần tiến hoá ${'★'.repeat(COSTS.ascendTier)} trước`;
     const left = this.skillsLeft(h);
     if (left.length) return `Cần nâng tối đa kỹ năng: ${left.map(([k, lv, mx]) => `${k} ${lv}/${mx}`).join(', ')}`;
     return true;

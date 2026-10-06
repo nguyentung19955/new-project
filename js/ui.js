@@ -810,7 +810,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 135 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 136 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -973,14 +973,14 @@ class UI {
     // công thức hợp thể: 2 tướng ★★★ → thần Sử thi; 2 thần tím Thần tinh ★★★ → Huyền thoại
     const card = (t, cls = '') => `<span class="asc-to ${HEROES[t].legend || 'base'} ${cls}"><img src="${heroImgUrl(t, 'head')}" alt=""><b>${HEROES[t].name}</b></span>`;
     const row = (f) => `<div class="asc-row fz">${card(f.a)}<span class="asc-plus">+</span>${card(f.b)}<span class="asc-arr ${HEROES[f.to].legend === 'legendary' ? 'leg' : ''}">➜<small>${COSTS.ascend[HEROES[f.to].legend]}</small></span>${card(f.to, 'res')}</div>`;
-    $('#lg-grid').innerHTML = `<div class="fz-col"><div class="fz-h">Thường ★★★ + Thường ★★★ → <b style="color:${RARITY.epic.color}">Sử thi</b></div>${FUSION.filter((f) => HEROES[f.to].legend === 'epic').map(row).join('')}</div>
+    $('#lg-grid').innerHTML = `<div class="fz-col"><div class="fz-h">Thường ★★ + Thường ★★ → <b style="color:${RARITY.epic.color}">Sử thi</b></div>${FUSION.filter((f) => HEROES[f.to].legend === 'epic').map(row).join('')}</div>
       <div class="fz-col"><div class="fz-h">Thần tinh ★★★ + Thần tinh ★★★ → <b style="color:${RARITY.legendary.color}">Huyền thoại</b></div>${FUSION.filter((f) => HEROES[f.to].legend === 'legendary').map(row).join('')}</div>`;
   }
 
   renderLegends() {
     const g = this.game;
     $('#lg-count').textContent = `Huyền thoại trên sân ${g.legendCount()}`;
-    $('#lg-info').innerHTML = 'Triệu hồi: chọn 1 trong 3 tướng ★ của đội 6 tướng. <b>Kéo 2 tướng cùng loại cùng sao vào nhau</b> để lên ★★, ★★★. Hai tướng ★★★ đúng công thức, kỹ năng tối đa, <b>kéo vào nhau để hợp thể</b> (hoặc chạm tướng → Hợp thể). Thần mới giữ cấp, đồ và nội tại của cả hai.';
+    $('#lg-info').innerHTML = 'Triệu hồi: chọn 1 trong 3 tướng ★ của đội 6 tướng. <b>Kéo 2 tướng cùng loại cùng sao vào nhau</b> để lên ★★, ★★★. Hai tướng Thường ★★ đúng công thức (hoặc hai tướng Tím Thần tinh ★★★, kỹ năng tối đa) <b>kéo vào nhau để hợp thể</b> (hoặc chạm tướng → Hợp thể). Thần mới giữ cấp, đồ và nội tại của cả hai.';
   }
 
   // ============================================================
@@ -1740,7 +1740,7 @@ class UI {
                 <span style="background:#1A1610;color:#C8BFA8">${d.role}</span></div></div>
               <div class="kvt inset" style="font-size:12px">${d.legend
                 ? `<div><span>Ghép từ</span><b style="text-align:right">${ascendSources(t).map((x) => HEROES[x].name).join(' + ')}</b></div>
-                  <div><span>Cần</span><b style="color:#FFD66B">${d.legend === 'epic' ? '★★★' : `Thần tinh ${'★'.repeat(COSTS.ascendTier2)}`} · kỹ năng tối đa · ${COSTS.ascend[d.legend]} vàng</b></div>`
+                  <div><span>Cần</span><b style="color:#FFD66B">${d.legend === 'epic' ? `2 tướng ${'★'.repeat(COSTS.ascendTier)}` : `Thần tinh ${'★'.repeat(COSTS.ascendTier2)} · kỹ năng tối đa`} · ${COSTS.ascend[d.legend]} vàng</b></div>`
                 : `<div><span>Có từ</span><b style="color:#FFD66B">Triệu hồi ★ (đội 6 tướng)</b></div>`}
                 ${ASCEND[t] ? `<div><span>Hợp thể ra</span><b style="text-align:right;color:${RARITY[d.legend ? 'legendary' : 'epic'].color}">${ASCEND[t].map((x) => HEROES[x].name).join(' / ')}</b></div>` : ''}
                 <div><span>Tầm · Tốc đánh</span><b>${d.base.range} · ${d.base.cooldown}s</b></div></div>
@@ -2858,7 +2858,7 @@ class UI {
         const f = FUSION.find((x) => x.to === t);
         const pt = fusionPartner(h.type, t);
         const o = g.heroes.filter((x) => x && x !== h && x.type === pt).sort((x, y) => (y.tier || 0) - (x.tier || 0))[0];
-        const ok = o ? g.canFuse(o, h) : `Cần thêm ${HEROES[pt].name} ${h.from ? 'Thần tinh ★★★' : '★★★'} trên sân`;
+        const ok = o ? g.canFuse(o, h) : `Cần thêm ${HEROES[pt].name} ${h.from ? 'Thần tinh ★★★' : '★★'} trên sân`;
         return `<div class="asc-opt inset ${d.legend}"><img src="${heroImgUrl(t, 'head')}" alt="">
           <div class="tx"><b>${d.name}</b> ${elIcon(d.el, 13)}<small style="color:${RARITY[d.legend].color}">${RARITY[d.legend].name} · ${esc(d.trait.name)}</small>
             <em class="asc-pw">= ${HEROES[h.type].name} + <b>${HEROES[pt].name}</b>${o ? ` <small>(ô ${o.slot + 1}, ${'★'.repeat(o.tier || 0)})</small>` : ''}</em>

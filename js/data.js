@@ -1351,7 +1351,8 @@ const FUSE_MULT = { epic: 1.3, legendary: 2.0 };
 // cân bằng riêng từng thần (vì mỗi cặp ghép gộp nội tại khác nhau): đo bằng sim/cmp4.js
 const FUSE_ADJ = { cdt: 1.069, lachau: 0.96, thachsanh: 0.45, thansan: 0.516, caolo: 0.969, antiem: 0.692, tiendung: 1.068, langlieu: 1.54, giong: 0.904, llq: 0.755, kimquy: 1.371, adv: 0.599, auco: 1.398, mau: 0.416 };
 // lên vàng cần thần tím Thần tinh ★★★ (đủ sao rồi mới hóa thân), giá cao hơn bậc sao cuối
-Object.assign(COSTS, { ascend: { epic: 300, legendary: 1200 }, ascendTier: 3, ascendTier2: 3 });
+// v136: hợp thể ra tướng Tím chỉ cần 2 tướng ★★ (không cần kỹ năng tối đa) — người mới hợp thể được sớm; tướng Vàng giữ điều kiện cũ
+Object.assign(COSTS, { ascend: { epic: 300, legendary: 1200 }, ascendTier: 2, ascendTier2: 3 });
 // Thần lực: hệ số sát thương và máu của tướng đã thăng thần (kỹ năng +một nửa mức này)
 const ASCEND_POWER = { epic: 1.15, legendary: 1.6 };
 // Thần tinh của tướng thần Huyền thoại mạnh hơn Sử thi (nhân chỉ số mỗi bậc sao)
