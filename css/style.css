@@ -1480,3 +1480,6 @@ body { overflow: hidden; }
 /* v122: Ngân khố trên thanh tiêu đề màn Anh Hùng */
 #roster .scr-head .ro-kho { margin-left: auto; white-space: nowrap; }
 #roster .scr-head .ro-kho + .btn { margin-left: 6px; }
+/* v124: icon nút vẽ tay trống đồng */
+.ab .i .uimg { width: 30px; height: 30px; display: block; }
+#trash b .uimg { width: 26px; height: 26px; vertical-align: middle; }

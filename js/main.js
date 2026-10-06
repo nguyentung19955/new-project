@@ -186,6 +186,8 @@ function render() {
   ctx.setTransform(px(), 0, 0, px(), view.ox * px(), view.oy * px());
   if (game.shake > 0.2) ctx.translate((Math.random() - 0.5) * game.shake, (Math.random() - 0.5) * game.shake);
   const nen = !asset(`maps/map-0${game.level + 1}.png`) && asset(`nen_ai-${NEN_AI[game.level] || 1}.png`);
+  const bg = !nen && mapBg();
+  if (bg) { if (bg.img) ctx.drawImage(bg.img, 0, 0, CONFIG.W, CONFIG.H); else { ctx.fillStyle = MAP_THEMES[bg.theme].ground; ctx.fillRect(0, 0, CONFIG.W, CONFIG.H); } }
   if (nen) drawAiMap(nen);
   else if (ready(mapImg)) ctx.drawImage(mapImg, 0, 0, CONFIG.W, CONFIG.H);
   else drawMapFallback(ctx);

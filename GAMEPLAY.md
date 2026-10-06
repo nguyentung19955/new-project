@@ -1260,3 +1260,9 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 123
 - **Ấn Phù chỉ dành cho tướng Vàng** đã sở hữu: màn Ấn Phù chỉ liệt kê tướng Vàng; nút Ấn Phù chỉ hiện ở tướng Vàng; ấn đã khắc trước đây cho tướng Thường / Tím không còn tác dụng. Chưa có tướng Vàng thì báo mua ở Anh Hùng.
 - Túi đồ: bỏ 3 nút nhanh (Tự mặc đồ tốt nhất, Mặc cả đội, Nâng đồ tự động); giữ Sắp xếp. Hai nút nổi Nâng đồ / Mặc đồ ngoài trận vẫn giữ.
+
+## Phiên bản 124 — Nền bản đồ + nút trống đồng (ảnh Pippit)
+- Nền bản đồ vẽ tay cho chủ đề **Đầm sen** (ải Bãi Phù Sa…) và **Hang** (Hang Đại Bàng…): `assets/maps/nen-<chủ đề>.jpg`, khai báo trong `MAP_BG`. Đường quái, ô đặt tướng, thành vẫn do game vẽ lên trên; bản đồ chưa có ảnh vẫn dùng nền vẽ code.
+- Nút nổi Nâng đồ (đe + mũi tên) và Mặc đồ (khiên mặt trời), ô Hủy tướng (hũ gốm vỡ) dùng icon vẽ tay trống đồng (`assets/ui/`).
+- Icon kỹ năng vẽ tay cho Lý Ngư Tướng Quân (đủ icon kỹ năng cho mọi tướng có prompt).
+- Nền Sông (ảnh gửi) có vẽ sẵn đường đi nên không dùng — prompt đã nhấn mạnh "không vẽ đường".

@@ -122,9 +122,9 @@ const MAP_DESC = {
   thanh: 'grounds of an ancient Au Lac citadel: packed earth, grass, low earthen walls, bronze banners at the edges',
 };
 const mapPrompt = (k) => `Create ONE image: a 1792x832 top-down game map background (bird's-eye view, slightly tilted) for a cute mobile tower-defense game, ${MAP_DESC[k]}.
-The middle of the image must stay EMPTY open ground with even texture (no road, no path, no buildings, no characters, no big objects) — the game draws its own winding road on top. Put details only near the four edges.
+IMPORTANT: draw NO road, NO path, NO trail, NO dashed lines anywhere. The middle of the image must stay EMPTY open ground with even texture (no buildings, no characters, no big objects) — the game draws its own winding road on top. Put details only near the four edges.
 Subtle Dong Son bronze-drum motifs (sun-star, Lac birds, zigzag bands) worked softly into the ground texture or carved stones at the corners. Soft daylight, gentle colors, no text, no watermark, no frame, full bleed.`;
-for (const k of Object.keys(MAP_DESC).filter((x) => !fs.existsSync(path.join(ROOT, 'assets/maps', `nen-${x}.png`)))) items.push({ group: '8. Nền bản đồ (trống đồng)', file: `nen-${k}.png`, title: `Nền bản đồ · ${k}`, text: mapPrompt(k) });
+for (const k of Object.keys(MAP_DESC).filter((x) => !fs.existsSync(path.join(ROOT, 'assets/maps', `nen-${x}.jpg`)))) items.push({ group: '8. Nền bản đồ (trống đồng)', file: `nen-${k}.png`, title: `Nền bản đồ · ${k}`, text: mapPrompt(k) });
 const UI_SHEETS = {
   'ui-nen-nut': ['round bronze drum-face button plate with a sun-star center and ring of Lac birds (empty center)', 'wide rectangular bronze button plate with zigzag border (empty middle for text)', 'square bronze panel corner frame with circle-dot border (empty middle)', 'small round bronze coin-shaped badge (empty center)'],
   'ui-tran-1': ['play triangle carved in a bronze drum disc', 'pause (two bars) carved in a bronze drum disc', 'fast-forward double arrow carved in a bronze drum disc', 'open eye carved in a bronze drum disc'],

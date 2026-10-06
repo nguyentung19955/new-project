@@ -115,7 +115,8 @@ function buildMapSvg(id) {
     }
   }
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 932 430" width="932" height="430"><defs><pattern id="mg-${id}" width="24" height="24" patternUnits="userSpaceOnUse"><rect width="24" height="24" fill="${t.ground}"/><path d="M3 6l1-3 1 3M14 15l1-3 1 3M20 5l1-2 1 2M8 20l1-3 1 3" stroke="${t.grass}" stroke-width="1" fill="none"/><circle cx="18" cy="19" r="1" fill="${t.dot}"/><circle cx="6" cy="13" r="1" fill="${t.dot}"/></pattern></defs>`
-    + `<rect width="932" height="430" fill="url(#mg-${id})"/>${mapTopBand(m.theme)}${mapPathSvg(m.d, t)}<g>${deco}</g>${mapGate(t.gate, ex, ey)}</svg>`;
+    + (MAP_BG.has(m.theme) ? `${mapPathSvg(m.d, t)}${mapGate(t.gate, ex, ey)}</svg>`   // v124: có nền vẽ tay → chỉ vẽ đường + cổng thành lên trên
+      : `<rect width="932" height="430" fill="url(#mg-${id})"/>${mapTopBand(m.theme)}${mapPathSvg(m.d, t)}<g>${deco}</g>${mapGate(t.gate, ex, ey)}</svg>`);
   mapSvgCache.set(id, svg);
   return svg;
 }

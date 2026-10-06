@@ -273,6 +273,11 @@ class UI {
     $('#btn-newgame').onclick = () => this.showModes();
     $('#btn-heroes').onclick = () => this.showRoster();
     $('#btn-runes').onclick = () => this.showRunes(false);
+    // v124: icon nút vẽ tay phong cách trống đồng (assets/ui/); thiếu ảnh thì giữ ký hiệu cũ
+    for (const [q, f] of [['[data-act=auto-up-gear] .i', 'ui-tran-2-2'], ['[data-act=auto-eq-all] .i', 'ui-tran-2-3']]) {
+      const el = document.querySelector(q);
+      if (el) el.innerHTML = `<img class="uimg" src="${assetSrc(`ui/${f}.png`)}" alt="${el.textContent}" onerror="this.replaceWith(this.alt)">`;
+    }
     $('#btn-treasury').onclick = () => this.showTreasury();
     $('#btn-ranks').onclick = () => this.showRanks('endless');
     $('#btn-menu-codex').onclick = () => this.openScreen('codex', { top: true });
@@ -759,7 +764,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 123 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 124 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1334,7 +1339,7 @@ class UI {
     const h = this.game.heroes[slot];
     if (!h) return;
     const el = $('#trash');
-    el.innerHTML = `<b>🗑 Hủy tướng</b><small>thả vào đây · hoàn ${coin(1)} ${this.game.sellValue(h)}</small>`;
+    el.innerHTML = `<b><img class="uimg" src="${assetSrc('ui/ui-tran-2-4.png')}" alt="🗑" onerror="this.replaceWith(this.alt)"> Hủy tướng</b><small>thả vào đây · hoàn ${coin(1)} ${this.game.sellValue(h)}</small>`;
     el.classList.remove('hot');
     el.hidden = false;
   }

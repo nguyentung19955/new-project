@@ -9,12 +9,13 @@ root = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets')
 out, cap = sys.argv[1], float(sys.argv[2]) * 1e6 if len(sys.argv) > 2 else 12e6
 os.makedirs(out, exist_ok=True)
 items = []
-for sub in ('packs', 'runes'):
+for sub in ('packs', 'runes', 'ui', 'maps'):
     for dp, _, fs in sorted(os.walk(os.path.join(root, sub))):
         for f in sorted(fs):
-            if f.endswith('.png'):
+            if f.endswith(('.png', '.jpg')):
                 p = os.path.join(dp, f)
-                items.append((os.path.relpath(p, root).replace(os.sep, '/'), 'data:image/png;base64,' + base64.b64encode(open(p, 'rb').read()).decode()))
+                mime = 'image/jpeg' if f.endswith('.jpg') else 'image/png'
+                items.append((os.path.relpath(p, root).replace(os.sep, '/'), f'data:{mime};base64,' + base64.b64encode(open(p, 'rb').read()).decode()))
 chunks, cur, size = [], {}, 0
 for k, v in items:
     if size + len(v) > cap and cur: chunks.append(cur); cur, size = {}, 0
