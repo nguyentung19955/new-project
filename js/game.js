@@ -1290,7 +1290,7 @@ class Game {
 
   // ---------- hành động của người chơi
   legendCount() {
-    return this.heroes.filter((h) => h && HEROES[h.type].legend).length;
+    return this.heroes.filter((h) => h && HEROES[h.type].legend === 'legendary').length;   // chỉ tướng Vàng (Huyền thoại), khớp giới hạn maxLegends
   }
   canPlace(slot, type) {
     const def = HEROES[type];

@@ -1064,8 +1064,24 @@ const STAR_RULES = ['Thắng ải', 'Còn ≥ 15 mạng', 'Không mất mạng']
 function bossAt(n, level) {
   const lv = LEVELS[level || 0];
   if (lv.bosses[n]) return lv.bosses[n];
-  if (n > lv.waves && n % 10 === 0) return BOSS_ORDER[(n / 10) % BOSS_ORDER.length];
+  if (n > lv.waves && n % 10 === 0) { const B = endlessBosses(); return B[(n / 10 + (level || 0)) % B.length]; }
   return null;
+}
+// v70: chơi vô tận — mỗi 10 đợt đổi sang quân của một chương khác, boss lấy từ mọi chương
+function endlessBosses() {
+  if (typeof ROSTERS === 'undefined') return BOSS_ORDER;
+  const out = [];
+  for (const lv of LEVELS) for (const id of Object.values(lv.bosses || {})) if (!out.includes(id)) out.push(id);
+  return out.length ? out : BOSS_ORDER;
+}
+function rosterFor(n, level) {
+  const lv = LEVELS[level || 0] || {};
+  const own = lv.roster || 'thuy';
+  if (typeof ROSTERS === 'undefined') return null;
+  if (!lv.waves || n <= lv.waves) return ROSTERS[own];
+  const keys = Object.keys(ROSTERS);
+  const k = Math.floor((n - lv.waves - 1) / 10) + 1;          // đợt vô tận 1–10: chương kế tiếp, 11–20: chương sau nữa…
+  return ROSTERS[keys[(keys.indexOf(own) + k) % keys.length]];
 }
 const waveKind = (n, level) => (bossAt(n, level) ? 'boss'
   : AIR_WAVES.includes(n) || (n > 27 && (n % 10 === 4 || n % 10 === 7)) ? 'air' : n % 10 === 5 ? 'champion' : 'normal');
@@ -1076,7 +1092,7 @@ function buildWave(n, level) {
   const count = 8 + Math.floor(e * 1.6);
   const kind = waveKind(n, level);
   // v48: quân theo chương (ROSTERS trong enemies2.js); mặc định quân Thủy Tinh
-  const ro = (typeof ROSTERS !== 'undefined' && ROSTERS[(LEVELS[level || 0] || {}).roster || 'thuy']) || null;
+  const ro = rosterFor(n, level);
   for (let i = 0; i < count; i++) {
     const r = Math.random();
     let type = ro ? ro.base : 'tom';
