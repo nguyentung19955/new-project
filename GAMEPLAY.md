@@ -1071,3 +1071,13 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 ## Phiên bản 90 — Mua tướng ngay trong trận
 - Menu ≡ trong trận có mục **👑 Anh Hùng**: mở danh sách tướng, mua tướng tím / vàng bằng Ngân khố.
 - Khi mở thì trận tạm dừng; bấm quay lại là về trận và chạy tiếp. Tướng vừa mua ghép được ngay.
+
+## Phiên bản 91 — Bảng Ấn Phù, bảng thông tin quái
+- **Bảng Ấn Phù** (menu chính cạnh Anh Hùng, hoặc menu ≡ trong trận): 36 ấn chia 3 nhánh, mua bằng Ngân khố, áp cho mọi tướng.
+  - **Ấn Núi** (sức mạnh, bền bỉ), **Ấn Gió** (tốc độ, chí mạng), **Ấn Sấm** (phép, năng lượng).
+  - Mỗi nhánh có 9 ấn chỉ số (tối đa 5 cấp, giá 40/70/110 × cấp theo hàng) và 3 ấn kỹ năng (tối đa 3 cấp, giá 700 / 1.400 / 2.400).
+  - Hàng 2, 3, 4 mở khi nhánh có 4, 10, 18 điểm.
+  - Ấn kỹ năng: Núi Đè (trảm quái thường ít máu), Giáp Đá (khiên đầu đợt), Đất Rung (chấn động), Gió Lốc (chí mạng bắn thêm lưỡi gió), Nhanh Như Gió (hạ quái tăng tốc đánh), Mắt Ưng (đòn đầu luôn chí mạng), Sấm Truyền (sét lan), Hồn Nổ (quái chết nổ), Vang Vọng (hoàn năng lượng).
+  - Tẩy ấn hoàn lại 100% Ngân khố.
+- Nút ≡ chuyển sang góc phải, ngăn kéo mở bên phải.
+- Bấm vào bất kỳ quái nào: bảng thông tin góc trái (máu, giáp, kháng phép, tốc, vàng, hành và hành khắc, đặc điểm). Bấm chỗ khác để ẩn.

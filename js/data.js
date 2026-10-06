@@ -1133,3 +1133,84 @@ const MOUNTAIN = {
   soilCost: 80,                // Bồi đất: núi cao nhanh thêm 1 bước (mỗi đợt 1 lần)
   herbGold: 40,                // mỗi cây Linh Chi: 40 vàng + hồi 25% máu tướng
 };
+
+// ===== v91: BẢNG ẤN PHÙ (rune tài khoản) =====
+// 3 nhánh × 12 ấn = 36. Mỗi nhánh: 3 hàng chỉ số (tối đa 5 cấp) + 1 hàng 3 ấn kỹ năng (tối đa 3 cấp).
+// Mua bằng Ngân khố, áp cho mọi tướng trong mọi trận. Hàng sau mở khi nhánh đã đủ điểm.
+const RUNE_BRANCHES = [
+  { id: 'nui', name: 'Ấn Núi', sub: 'sức mạnh · bền bỉ', color: '#D9844A' },
+  { id: 'gio', name: 'Ấn Gió', sub: 'tốc độ · chí mạng', color: '#6FCB8A' },
+  { id: 'sam', name: 'Ấn Sấm', sub: 'phép thuật · năng lượng', color: '#7FA8F0' },
+];
+const RUNE_ROW_NEED = [0, 4, 10, 18];          // điểm đã đặt trong nhánh để mở hàng 1..4
+const RUNE_ROW_COST = [40, 70, 110];           // giá mỗi cấp ấn chỉ số = giá hàng × cấp
+const RUNE_SKILL_COST = [700, 1400, 2400];     // giá 3 cấp ấn kỹ năng
+const RUNES = [
+  // --- Ấn Núi
+  { id: 'n_dmg', br: 'nui', row: 0, ic: '⚔', name: 'Lực Núi', max: 5, per: 2, stat: 'bonusDmgPct', fmt: (v) => `+${v}% sát thương` },
+  { id: 'n_hp', br: 'nui', row: 0, ic: '❤', name: 'Gân Đá', max: 5, per: 3, stat: 'hpPct', fmt: (v) => `+${v}% máu tối đa` },
+  { id: 'n_regen', br: 'nui', row: 0, ic: '✚', name: 'Suối Nguồn', max: 5, per: 0.4, stat: 'regen', fmt: (v) => `+${v.toFixed(1)} hồi máu / giây` },
+  { id: 'n_pen', br: 'nui', row: 1, ic: '⛏', name: 'Phá Giáp', max: 5, per: 3, stat: 'pierce', fmt: (v) => `+${v}% xuyên giáp` },
+  { id: 'n_dr', br: 'nui', row: 1, ic: '🛡', name: 'Da Đồng', max: 5, per: 1.5, stat: 'dr', fmt: (v) => `−${v}% sát thương nhận` },
+  { id: 'n_boss', br: 'nui', row: 1, ic: '👹', name: 'Diệt Chúa', max: 5, per: 3, stat: 'bossPct', fmt: (v) => `+${v}% sát thương lên boss` },
+  { id: 'n_thorn', br: 'nui', row: 2, ic: '🌵', name: 'Gai Đá', max: 5, per: 4, stat: 'thorns', fmt: (v) => `phản ${v}% sát thương nhận` },
+  { id: 'n_stun', br: 'nui', row: 2, ic: '💫', name: 'Búa Tạ', max: 5, per: 1, stat: 'stunChance', fmt: (v) => `${v}% choáng 0,5 giây mỗi đòn` },
+  { id: 'n_elite', br: 'nui', row: 2, ic: '☠', name: 'Săn Tướng', max: 5, per: 4, fx: 'eliteDmg', fmt: (v) => `+${v}% sát thương lên tinh anh, tướng địch` },
+  { id: 'n_exec', br: 'nui', row: 3, ic: '🪨', name: 'Núi Đè', max: 3, per: [6, 9, 12], skill: true,
+    fmt: (v) => `Đòn đánh hạ gục ngay quái thường còn dưới ${v}% máu` },
+  { id: 'n_shield', br: 'nui', row: 3, ic: '⛰', name: 'Giáp Đá', max: 3, per: [10, 15, 20], skill: true,
+    fmt: (v) => `Đầu mỗi đợt, mọi tướng nhận khiên ${v}% máu tối đa (8 giây)` },
+  { id: 'n_quake', br: 'nui', row: 3, ic: '🌋', name: 'Đất Rung', max: 3, per: [8, 7, 6], skill: true,
+    fmt: (v) => `Mỗi đòn thứ ${v}: chấn động quanh mục tiêu, 60% sát thương và làm chậm 30%` },
+  // --- Ấn Gió
+  { id: 'g_haste', br: 'gio', row: 0, ic: '💨', name: 'Gió Lướt', max: 5, per: 3, stat: 'haste', fmt: (v) => `+${v}% tốc đánh` },
+  { id: 'g_crit', br: 'gio', row: 0, ic: '✦', name: 'Mắt Sắc', max: 5, per: 1, stat: 'crit', fmt: (v) => `+${v}% tỉ lệ chí mạng` },
+  { id: 'g_range', br: 'gio', row: 0, ic: '🎯', name: 'Tầm Xa', max: 5, per: 2, stat: 'rangePct', fmt: (v) => `+${v}% tầm đánh` },
+  { id: 'g_critd', br: 'gio', row: 1, ic: '💥', name: 'Đòn Hiểm', max: 5, per: 8, stat: 'critMult', mul: 0.01, fmt: (v) => `+${v}% sát thương chí mạng` },
+  { id: 'g_air', br: 'gio', row: 1, ic: '🦅', name: 'Bắt Chim', max: 5, per: 4, stat: 'airPct', fmt: (v) => `+${v}% sát thương lên quái bay` },
+  { id: 'g_slow', br: 'gio', row: 1, ic: '🌀', name: 'Gió Ngược', max: 5, per: 3, fx: 'slow', fmt: (v) => `đòn đánh làm chậm ${v}% trong 1 giây` },
+  { id: 'g_gold', br: 'gio', row: 2, ic: '🪙', name: 'Gió Lộc', max: 5, per: 0.4, stat: 'goldOnKill', fmt: (v) => `+${v.toFixed(1)} vàng mỗi quái hạ` },
+  { id: 'g_leech', br: 'gio', row: 2, ic: '🩸', name: 'Hút Sinh Lực', max: 5, per: 1.5, fx: 'leech', fmt: (v) => `hồi máu bằng ${v}% sát thương gây ra` },
+  { id: 'g_cc', br: 'gio', row: 2, ic: '🪤', name: 'Thừa Thắng', max: 5, per: 4, fx: 'ccDmg', fmt: (v) => `+${v}% sát thương lên quái đang chậm / choáng` },
+  { id: 'g_storm', br: 'gio', row: 3, ic: '🌪', name: 'Gió Lốc', max: 3, per: [1, 2, 3], skill: true,
+    fmt: (v) => `Đòn chí mạng bắn thêm ${v} lưỡi gió vào quái gần (60% sát thương)` },
+  { id: 'g_frenzy', br: 'gio', row: 3, ic: '⚡', name: 'Nhanh Như Gió', max: 3, per: [4, 6, 8], skill: true,
+    fmt: (v) => `Hạ quái: +${v}% tốc đánh 3 giây, cộng dồn 5 lần` },
+  { id: 'g_eye', br: 'gio', row: 3, ic: '👁', name: 'Mắt Ưng', max: 3, per: [0, 25, 50], skill: true,
+    fmt: (v) => `Đòn đầu tiên trúng mỗi quái luôn chí mạng${v ? ` (+${v}% sát thương chí mạng)` : ''}` },
+  // --- Ấn Sấm
+  { id: 's_power', br: 'sam', row: 0, ic: '✺', name: 'Linh Lực', max: 5, per: 3, stat: 'skillPct', fmt: (v) => `+${v}% sức mạnh kỹ năng` },
+  { id: 's_cdr', br: 'sam', row: 0, ic: '⏳', name: 'Thời Khắc', max: 5, per: 2, stat: 'cdr', fmt: (v) => `−${v}% hồi chiêu` },
+  { id: 's_mregen', br: 'sam', row: 0, ic: '💧', name: 'Mạch Linh', max: 5, per: 6, fx: 'manaRegen', fmt: (v) => `+${v}% hồi năng lượng` },
+  { id: 's_mpen', br: 'sam', row: 1, ic: '🔮', name: 'Xuyên Phép', max: 5, per: 3, stat: 'mpen', fmt: (v) => `+${v}% xuyên kháng phép` },
+  { id: 's_mres', br: 'sam', row: 1, ic: '🧿', name: 'Bùa Hộ Mệnh', max: 5, per: 3, stat: 'magicRes', fmt: (v) => `−${v}% sát thương phép nhận` },
+  { id: 's_mmax', br: 'sam', row: 1, ic: '🔋', name: 'Bình Linh', max: 5, per: 12, fx: 'maxMana', fmt: (v) => `+${v} năng lượng tối đa` },
+  { id: 's_dot', br: 'sam', row: 2, ic: '🔥', name: 'Lửa Độc', max: 5, per: 6, fx: 'dot', fmt: (v) => `+${v}% sát thương thiêu đốt / độc` },
+  { id: 's_kmana', br: 'sam', row: 2, ic: '🌙', name: 'Hút Hồn', max: 5, per: 2, fx: 'killMana', fmt: (v) => `hạ quái hồi ${v} năng lượng` },
+  { id: 's_free', br: 'sam', row: 2, ic: '🎐', name: 'Phúc Thần', max: 5, per: 2, fx: 'freeCast', fmt: (v) => `${v}% dùng chiêu không tốn năng lượng` },
+  { id: 's_chain', br: 'sam', row: 3, ic: '🌩', name: 'Sấm Truyền', max: 3, per: [8, 11, 14], skill: true,
+    fmt: (v) => `${v}% mỗi đòn phóng sét lan 3 quái (50% sát thương phép)` },
+  { id: 's_soul', br: 'sam', row: 3, ic: '💀', name: 'Hồn Nổ', max: 3, per: [8, 12, 16], skill: true,
+    fmt: (v) => `Quái bị hạ nổ tung, gây ${v}% máu tối đa của nó lên quái xung quanh` },
+  { id: 's_echo', br: 'sam', row: 3, ic: '🔔', name: 'Vang Vọng', max: 3, per: [15, 22, 30], skill: true,
+    fmt: (v) => `${v}% dùng chiêu được hoàn lại 50% năng lượng` },
+];
+const RUNE_BY = Object.fromEntries(RUNES.map((r) => [r.id, r]));
+const runeVal = (r, lv) => !lv ? 0 : Array.isArray(r.per) ? r.per[lv - 1] : +(r.per * lv).toFixed(2);
+const runeCost = (r, lv) => r.skill ? RUNE_SKILL_COST[lv - 1] : RUNE_ROW_COST[r.row] * lv;   // giá lên cấp lv
+const runeBranchPts = (lvs, br) => RUNES.reduce((a, r) => a + (r.br === br ? lvs[r.id] || 0 : 0), 0);
+// hiệu lực ấn trong trận (null = không có ấn: bot mô phỏng, chế độ thử)
+let RUNE_FX = null;
+function setRunes(lvs) {
+  if (!lvs) { RUNE_FX = null; return; }
+  const fx = { stat: {}, fx: {}, sk: {} };
+  for (const r of RUNES) {
+    const lv = lvs[r.id] || 0;
+    if (!lv) continue;
+    const v = runeVal(r, lv);
+    if (r.skill) fx.sk[r.id] = v;
+    else if (r.stat) fx.stat[r.stat] = (fx.stat[r.stat] || 0) + v * (r.mul || 1);
+    else fx.fx[r.fx] = (fx.fx[r.fx] || 0) + v;
+  }
+  RUNE_FX = fx;
+}

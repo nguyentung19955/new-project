@@ -287,6 +287,11 @@ function heroStats(h) {
     if (n >= 3) s.hid['s.' + set] = 1;
     if (k > 1) s.thienMenh = set;
   }
+  // v91: Ấn Phù tài khoản
+  if (RUNE_FX) {
+    for (const k in RUNE_FX.stat) s[k] += RUNE_FX.stat[k];
+    if (h.windT > 0 && RUNE_FX.sk.g_frenzy) s.haste += RUNE_FX.sk.g_frenzy * (h.windN || 0);
+  }
   // hiệu ứng ẩn và hào quang có điều kiện
   if (s.hid['r.gay_tam_gioi'] && b.tamGioi) { s.str += 5; s.agi += 5; s.int += 5; }
   if (s.hid['i.hoa2'] && h.hp < (h.hpMaxLast || 1) * 0.5) s.haste += 20;
@@ -349,8 +354,8 @@ function heroStats(h) {
     s.hpMax = Math.round(s.hpMax * k);
     s.skillPower *= 1 + (k - 1) / 2;
   }
-  s.maxMana = Math.round(80 + s.int * 12);
-  s.manaRegen = (1.5 + s.int * 0.08) * (1 + (b.manaPct || 0) / 100);
+  s.maxMana = Math.round(80 + s.int * 12 + (RUNE_FX ? RUNE_FX.fx.maxMana || 0 : 0));
+  s.manaRegen = (1.5 + s.int * 0.08) * (1 + ((b.manaPct || 0) + (RUNE_FX ? RUNE_FX.fx.manaRegen || 0 : 0)) / 100);
   s.dr = Math.min(80, s.dr);
   s.cooldown = s.baseCooldown / Math.max(0.2, 1 + s.haste / 100);
   if (h.bogged) { s.cooldown *= 2; s.manaRegen = 0; }   // sa lầy: -50% tốc đánh, không hồi năng lượng
@@ -2068,6 +2073,11 @@ class Game {
       this.discover('r.trong_dong', drummer.x, drummer.y);
     }
     for (const h of this.heroes) if (h) { h.blockUsed = false; h.gbdUsed = false; }
+    // Ấn Giáp Đá: khiên đầu đợt
+    if (RUNE_FX && RUNE_FX.sk.n_shield) for (const h of this.heroes) if (h && !h.dead) {
+      h.shield = Math.max(h.shield || 0, heroStats(h).hpMax * RUNE_FX.sk.n_shield / 100); h.shieldT = 8;
+      this.effects.push({ type: 'ring', x: h.x, y: h.y - 22, r: 30, color: '#D9844A', ttl: 0.6, max: 0.6 });
+    }
   }
 
   // Gọi sớm: giữa hai đợt thì bắt đầu ngay; đang trong đợt thì dồn đợt kế vào luôn
@@ -2759,7 +2769,7 @@ class Game {
     }
     if (h.invulnT > 0) h.invulnT -= dt;
     if (h.shieldT > 0) { h.shieldT -= dt; if (h.shieldT <= 0) h.shield = 0; }
-    for (const k of ['rallyT', 'feastT', 'hotT', 'volleyT', 'huntT', 'rageT', 'warT', 'earthT', 'earthCd', 'drumBoostT', 'trailCd', 'breathCd']) if (h[k] > 0) h[k] -= dt;
+    for (const k of ['rallyT', 'feastT', 'hotT', 'volleyT', 'huntT', 'rageT', 'warT', 'earthT', 'earthCd', 'drumBoostT', 'trailCd', 'breathCd', 'windT']) if (h[k] > 0) h[k] -= dt;
     if (!(h.rageT > 0)) h.rageN = 0;
     h.still = (h.still || 0) + dt;
     if (st.hid['r.ao_vay_ca'] && h.hp < st.hpMax * 0.5) {
@@ -2828,7 +2838,12 @@ class Game {
         if (st.hid['r.gay_thoi_khong'] && Math.random() < 0.1) {
           this.text(h.x, h.y - 84, 'Không tốn năng lượng!', '#4a90e2', 1, 13);
           this.discover('r.gay_thoi_khong', h.x, h.y);
-        } else h.mana -= sk.active.mana;
+        } else if (RUNE_FX && RUNE_FX.fx.freeCast && Math.random() * 100 < RUNE_FX.fx.freeCast) {
+          this.text(h.x, h.y - 84, 'Phúc Thần!', '#7FA8F0', 1, 13);
+        } else {
+          h.mana -= sk.active.mana;
+          if (RUNE_FX && RUNE_FX.sk.s_echo && Math.random() * 100 < RUNE_FX.sk.s_echo) { h.mana += sk.active.mana * 0.5; this.text(h.x, h.y - 84, 'Vang Vọng!', '#7FA8F0', 0.8, 12); }
+        }
         h.skillCd[sk.id] = sk.active.cooldown * (1 - st.cdr / 100);
         // ẩn Lang Liêu: đợt có Thủy Tinh, Lễ Tổ Tiên giảm 50% hồi chiêu
         if (sk.active.cast === 'ancestor' && this.enemies.some((e) => !e.dead && e.type === 'thuytinh')) {
@@ -2972,7 +2987,7 @@ class Game {
       e.poisonT *= 2;
       this.discover('h.thaymo', hero.x, hero.y);
     }
-    e.poisonDps = dps;
+    e.poisonDps = dps * (hero && RUNE_FX && RUNE_FX.fx.dot ? 1 + RUNE_FX.fx.dot / 100 : 1);
     e.poisonBy = hero;
     e.dotColor = color;
     e.dotType = type || 'pure';
@@ -3014,13 +3029,20 @@ class Game {
     let dmg = amount;
     const st = o.st;
     const hid = st ? st.hid : {};
-    const crit = st && Math.random() * 100 < st.crit;
+    let crit = st && Math.random() * 100 < st.crit;
     let critMult = st ? st.critMult || 2 : 2;
+    const RF = st && hero ? RUNE_FX : null;
+    // Ấn Mắt Ưng: đòn đầu tiên trúng mỗi quái luôn chí mạng
+    if (RF && RF.sk.g_eye !== undefined && !o.silent && !e.eyeHit) { e.eyeHit = 1; crit = true; critMult += RF.sk.g_eye / 100; }
     if (crit && e.elite && hid['r.luoi_hai']) { critMult = 3; this.discover('r.luoi_hai', hero.x, hero.y); }
     if (crit) dmg *= critMult;
     if (st && e.def.flying && st.airMult > 1) dmg *= st.airMult;
     if (st && e.def.boss && st.bossPct) dmg *= 1 + st.bossPct / 100;
     if (e.huntT > 0) dmg *= 1.25;                  // Cuộc Săn Lớn
+    if (RF) {
+      if (RF.fx.eliteDmg && (e.elite || e.champion || e.def.general)) dmg *= 1 + RF.fx.eliteDmg / 100;
+      if (RF.fx.ccDmg && (e.slowT > 0 || e.stunT > 0)) dmg *= 1 + RF.fx.ccDmg / 100;
+    }
     // Thần Săn Ba Vì: Mắt Rừng
     if (hero && hero.type === 'thansan' && (e.slowT > 0 || e.stunT > 0 || e.zoneSlow > 0)) dmg *= 1.25;
     // Ngũ hành: khắc +30%, bị khắc −20% (hành của đòn đánh là hành của tướng)
@@ -3059,6 +3081,12 @@ class Game {
       dmg -= a;
       if (e.shield <= 0) this.effects.push({ type: 'ring', x: e.x, y: e.y - 10, r: 26, color: '#5AB4D6', ttl: 0.4, max: 0.4 });
     }
+    // Ấn Núi Đè: hạ gục ngay quái thường còn ít máu
+    if (RF && RF.sk.n_exec && !e.def.boss && !e.elite && !e.champion && !e.def.general && e.hp - dmg > 0 && e.hp - dmg < e.maxHp * RF.sk.n_exec / 100) {
+      dmg = e.hp; this.text(e.x, e.y - 40, 'Trảm!', '#D9844A', 0.6, 13);
+    }
+    // Ấn Hút Sinh Lực
+    if (RF && RF.fx.leech && !hero.dead && dmg > 0) hero.hp = Math.min(hero.hpMaxLast || hero.hp, hero.hp + Math.min(dmg, e.hp) * RF.fx.leech / 100);
     e.hp -= dmg;
     if (e.hp > 0) return;
     if (e.def.reincarnate && !e.reborn) {
@@ -3116,11 +3144,42 @@ class Game {
       }
       if (near.length) this.discover('s.laclong', hero.x, hero.y);
     }
+    if (RUNE_FX) this.runeOnHit(e, hero, st, crit);
     // Bộ Ngựa Sắt: đòn đánh để lại vệt lửa trên sông 2 giây
     if (st.fireTrail && !isFlying(e) && !(hero.trailCd > 0)) {
       hero.trailCd = 0.5;
       this.zones.push({ kind: 'fire', d1: Math.max(0, e.dist - 30), d2: e.dist + 30, ttl: 2, max: 2,
         dps: st.damage * st.fireTrail, hero, dt: 'magic' });
+    }
+  }
+
+  // v91: Ấn Phù kỹ năng khi đánh trúng
+  runeOnHit(e, hero, st, crit) {
+    const RF = RUNE_FX;
+    if (RF.fx.slow) this.slow(e, RF.fx.slow, 1);
+    if (crit && RF.sk.g_storm) {
+      const near = this.enemiesInRange(e.x, e.y, 150).filter((o) => o !== e && !o.dead).slice(0, RF.sk.g_storm);
+      for (const o of near) {
+        this.effects.push({ type: 'streak', x: e.x, y: e.y - 14, x2: o.x, y2: o.y - 14, color: '#B8F0C8', w: 3, ttl: 0.25, max: 0.25 });
+        this.hit(o, st.damage * 0.6, hero, { silent: true });
+      }
+    }
+    if (RF.sk.n_quake) {
+      hero.quakeN = (hero.quakeN || 0) + 1;
+      if (hero.quakeN >= RF.sk.n_quake) {
+        hero.quakeN = 0;
+        this.effects.push({ type: 'ring', x: e.x, y: e.y, r: 80, color: '#D9844A', ttl: 0.4, max: 0.4 });
+        for (const o of this.enemiesInRange(e.x, e.y, 80)) { if (o !== e) this.hit(o, st.damage * 0.6, hero, { silent: true }); this.slow(o, 30, 1.5); }
+      }
+    }
+    if (RF.sk.s_chain && Math.random() * 100 < RF.sk.s_chain) {
+      const near = this.enemiesInRange(e.x, e.y, 140).filter((o) => o !== e && !o.dead).slice(0, 3);
+      let px = e.x, py = e.y - 14;
+      for (const o of near) {
+        this.effects.push({ type: 'streak', x: px, y: py, x2: o.x, y2: o.y - 14, color: '#BFD8FF', w: 4, ttl: 0.3, max: 0.3 });
+        this.hit(o, st.damage * 0.5, hero, { dt: 'magic', silent: true });
+        px = o.x; py = o.y - 14;
+      }
     }
   }
 
@@ -3142,6 +3201,18 @@ class Game {
     if (hero && this.heroes[hero.slot] === hero) {
       hero.kills++;
       this.onKillFx(e, hero);
+      const RF = RUNE_FX;
+      if (RF) {
+        if (RF.fx.killMana) hero.mana = Math.min(heroStats(hero).maxMana, hero.mana + RF.fx.killMana);
+        if (RF.sk.g_frenzy) { hero.windN = hero.windT > 0 ? Math.min(5, (hero.windN || 0) + 1) : 1; hero.windT = 3; }
+        if (RF.sk.s_soul) {
+          const near = this.enemiesInRange(e.x, e.y, 80).filter((o) => o !== e && !o.dead);
+          if (near.length) {
+            this.effects.push({ type: 'nova', x: e.x, y: e.y, r: 80, ttl: 0.4, max: 0.4 });
+            for (const o of near) this.hit(o, e.maxHp * RF.sk.s_soul / 100, hero, { dt: 'magic', silent: true });
+          }
+        }
+      }
     }
     // ẩn Thần Sương Núi: quái chết khi đang đóng băng thì vỡ băng, làm chậm quái xung quanh
     if (e.stunT > 0 && e.stunKind === 'ice') {

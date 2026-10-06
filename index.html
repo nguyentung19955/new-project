@@ -13,7 +13,7 @@
   <title>Núi Cao Nước Dâng</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@700;800&family=Alegreya+Sans:wght@400;500;700;800&display=swap">
-  <link rel="stylesheet" href="css/style.css?v=90">
+  <link rel="stylesheet" href="css/style.css?v=91">
 </head>
 <body>
 <!--BODY-->
@@ -22,7 +22,6 @@
     <div id="ui">
       <!-- ===== Màn chơi ===== -->
       <div id="topbar" class="metal ingame">
-        <button id="btn-menu" class="sq metal" aria-label="Menu"><svg viewBox="0 0 20 20"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><i class="dot" id="menu-dot" hidden></i></button>
         <div class="tb-center">
           <span id="tb-wave">Đợt 0 / 30</span>
           <div class="tb-prog inset"><i id="tb-fill"></i></div>
@@ -35,6 +34,7 @@
         <button id="btn-detail" class="sq metal" aria-label="Hiện / ẩn chỉ số" title="Hiện / ẩn chỉ số">👁</button>
         <button id="btn-speed" class="sq metal" aria-label="Tốc độ">x1</button>
         <button id="btn-run" class="sq metal go" aria-label="Bắt đầu"><svg viewBox="0 0 20 20"><path id="run-icon" d="M6 4 L16 10 L6 16 Z" fill="currentColor"/></svg></button>
+        <button id="btn-menu" class="sq metal" aria-label="Menu"><svg viewBox="0 0 20 20"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><i class="dot" id="menu-dot" hidden></i></button>
       </div>
 
       <button id="nextwaves" class="ingame" hidden></button>
@@ -45,7 +45,7 @@
         <button class="ab metal" data-act="auto-eq-all" aria-label="Mặc đồ cả đội"><span class="i">🛡</span><span class="l">Mặc đồ</span><i class="dot" hidden></i></button>
       </div>
       <div id="hero-stats" class="metal" hidden></div>
-      <div id="bossbar" hidden><div class="bn"><span id="bb-name"></span><span id="bb-hp"></span></div><div class="tr"><i id="bb-fill"></i></div></div>
+      <div id="bossbar" hidden><div class="bn"><span id="bb-name"></span><span id="bb-tag"></span></div><div class="tr"><i id="bb-fill"></i></div><div id="bb-hp"></div><div id="bb-info"></div></div>
       <div id="banner" hidden><small id="banner-sub">Boss xuất hiện</small><b id="banner-text"></b></div>
       <div id="paused-tag" hidden>Đã dừng</div>
 
@@ -54,6 +54,7 @@
         <button class="dw-btn" data-act="dw" data-k="bag"><span class="ic">🎒</span>Túi đồ<small id="dw-bag"></small></button>
         <button class="dw-btn" data-act="dw" data-k="mountain"><span class="ic">⛰</span>Núi Tản Viên<small id="dw-mt"></small></button>
         <button class="dw-btn" data-act="dw" data-k="heroes"><span class="ic">👑</span>Anh Hùng<small>mua tướng tím, vàng</small></button>
+        <button class="dw-btn" data-act="dw" data-k="runes"><span class="ic">🔯</span>Ấn Phù<small>khắc ấn tăng chỉ số</small></button>
         <button class="dw-btn" data-act="dw" data-k="codex"><span class="ic">📖</span>Bách khoa<small>quái, boss, lịch đợt</small></button>
         <button class="dw-btn" data-act="dw" data-k="pause"><span class="ic">⏸</span>Tạm dừng & cài đặt<small>chơi lại, bản đồ, menu</small></button>
         <button class="dw-btn quit" data-act="quit-run"><span class="ic">🏳</span><span id="quit-label">Dừng chơi</span><small>bỏ trận này, về menu</small></button>
@@ -89,18 +90,19 @@
           <div class="orn2"></div>
           <button id="btn-continue" class="mc-btn main"><svg viewBox="0 0 20 20"><path d="M3 17 L13 7 M10 4 L16 10 M13 7 L17 3 M4 4 L9 9 M11 11 L17 17 M3 17 L6 14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg><span id="continue-label">Xuất Quân</span></button>
           <button id="btn-newgame" class="mc-btn metal" hidden><svg viewBox="0 0 20 20"><path d="M10 3v14M3 10h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Chơi mới (chọn ải)</button>
-          <button id="btn-heroes" class="mc-btn metal"><svg viewBox="0 0 20 20"><circle cx="7" cy="7" r="3" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="14" cy="7.5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M1.5 17 Q7 10 12.5 17 M12 12 Q16 10 18.5 15" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>Anh Hùng (20 Tướng)</button>
+          <div class="mc-row"><button id="btn-heroes" class="mc-btn metal"><svg viewBox="0 0 20 20"><circle cx="7" cy="7" r="3" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="14" cy="7.5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M1.5 17 Q7 10 12.5 17 M12 12 Q16 10 18.5 15" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>Anh Hùng</button><button id="btn-runes" class="mc-btn metal"><span class="mc-ic">🔯</span>Ấn Phù</button></div>
           <button id="btn-treasury" class="mc-btn metal"><svg viewBox="0 0 20 20"><path d="M4 7 H16 L15 17 H5 Z M7 7 V5 A3 3 0 0 1 13 5 V7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>Kho Báu &amp; Sính Lễ</button>
           <button id="btn-settings" class="mc-btn metal"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 2v3M10 15v3M2 10h3M15 10h3M4.3 4.3l2.1 2.1M13.6 13.6l2.1 2.1M4.3 15.7l2.1-2.1M13.6 6.4l2.1-2.1" stroke="currentColor" stroke-width="1.8"/></svg>Cài Đặt</button>
           <div class="mc-subs"><button id="btn-menu-codex" class="mc-sub">📖 Bách khoa</button><button id="btn-ranks" class="mc-sub">🏆 Xếp hạng</button></div>
         </nav>
-        <div class="ver">Phiên bản 90</div>
+        <div class="ver">Phiên bản 91</div>
       </div>
 
       <div id="story" class="overlay" hidden></div>
       <div id="campaign" class="overlay" hidden></div>
       <div id="settings" class="overlay" hidden></div>
       <div id="roster" class="overlay" hidden></div>
+      <div id="runes" class="overlay" hidden></div>
       <div id="treasury" class="overlay" hidden></div>
       <div id="prep" class="overlay prep-ov" hidden></div>
       <div id="login" class="overlay" hidden></div>
@@ -128,19 +130,19 @@
       el.textContent = 'Lỗi: ' + (e.message || e.error) + (e.filename ? ' (' + e.filename.split('/').pop() + ':' + e.lineno + ')' : '');
     });
   </script>
-  <script src="js/art.js?v=90"></script>
-  <script src="js/data.js?v=90"></script>
-  <script src="js/enemies2.js?v=90"></script>
-  <script src="js/game.js?v=90"></script>
-  <script src="js/render.js?v=90"></script>
-  <script src="js/costume.js?v=90"></script>
-  <script src="js/maps.js?v=90"></script>
-  <script src="js/chapters.js?v=90"></script>
-  <script src="js/firebase-config.js?v=90"></script>
-  <script src="js/cloud.js?v=90"></script>
-  <script src="js/ui.js?v=90"></script>
-  <script src="js/vfx.js?v=90"></script>
+  <script src="js/art.js?v=91"></script>
+  <script src="js/data.js?v=91"></script>
+  <script src="js/enemies2.js?v=91"></script>
+  <script src="js/game.js?v=91"></script>
+  <script src="js/render.js?v=91"></script>
+  <script src="js/costume.js?v=91"></script>
+  <script src="js/maps.js?v=91"></script>
+  <script src="js/chapters.js?v=91"></script>
+  <script src="js/firebase-config.js?v=91"></script>
+  <script src="js/cloud.js?v=91"></script>
+  <script src="js/ui.js?v=91"></script>
+  <script src="js/vfx.js?v=91"></script>
   <script>if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});</script>
-  <script src="js/main.js?v=90"></script>
+  <script src="js/main.js?v=91"></script>
 </body>
 </html>
