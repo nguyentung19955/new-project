@@ -885,3 +885,9 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 
 - **Lạc Tướng có bộ hình vẽ tay mới** (ảnh Gemini do người chơi gửi, tách nền) trong `assets/packs/lactuong/`: `idle` (đứng nghiêng, đã ghép rìu vào tay), `wind` (giơ rìu lấy đà), `strike` (chém, có vệt chém), `front` (chân dung toàn thân), `head` (chân dung đầu). Luôn dùng, không phụ thuộc tuỳ chọn "Dùng ảnh AI"; bật "Tướng vẽ nét" để quay về hình vẽ nét.
 - Cách thêm tướng khác: bỏ ảnh cùng tên vào `assets/packs/<mã tướng>/` rồi thêm vào `HERO_PACK` trong `js/render.js`. Cấp sao với ảnh vẽ tay: ★ ảnh gốc · ★★ viền sáng màu hệ · ★★★ thêm vầng mặt trời sau lưng. Đồ mặc hiện bằng viền sáng màu độ hiếm (ảnh phẳng không thay được từng món).
+
+### Phiên bản 56
+
+- **`docs/PROMPT_GEMINI.md`**: prompt gen hình cho từng nhân vật (20 tướng, 21 quái, 9 boss). Mỗi prompt tự đủ, gen một lần ra một ảnh ghép nhỏ: tướng 6 dáng (đứng · lấy đà · ra đòn · tung chiêu · chính diện · chân dung), quái 3 dáng (2 bước đi + tấn công), boss 4 dáng (đứng · tấn công · chiêu · nổi giận). Nền hồng tím `#FF00FF`, cùng phong cách chibi viền nâu, hoa văn trống đồng như bộ Lạc Tướng.
+- **`tools/cat-sheet.py`**: xoá nền hồng tím, cắt ảnh ghép thành từng dáng, giữ chung đường chân, thu nhỏ về 480 px → `assets/packs/<mã>/`.
+- Tướng có ảnh `cast.png` dùng ảnh đó khi tung chiêu.

@@ -227,12 +227,13 @@ function heroPng(type, v, h) {
   const list = v === 'D' ? [`${slug}_ra-don.png`, `heroes/hero_${code}_D.png`] : [...near, `heroes/hero_${code}_C.png`];
   return (assetAny(list) || {}).img || null;
 }
-// v55: bộ ảnh vẽ tay riêng từng tướng (assets/packs/<tướng>/): idle · wind (lấy đà) · strike (chém) · front · head.
+// v55: bộ ảnh vẽ tay riêng từng tướng (assets/packs/<tướng>/): idle · wind (lấy đà) · strike (chém) · cast (tung chiêu, tuỳ có) · front · head.
+// Cắt từ ảnh ghép gen theo docs/PROMPT_GEMINI.md bằng tools/cat-sheet.py.
 // Luôn dùng (không phụ thuộc tuỳ chọn "ảnh AI"); tắt bằng "Tướng vẽ nét".
 const HERO_PACK = { lactuong: 'packs/lactuong/' };
 const packImg = (type, name) => (HERO_PACK[type] ? asset(HERO_PACK[type] + name + '.png', true) : null);
 const vectorHeroesOn = () => typeof ui !== 'undefined' && !!(ui && ui.save && ui.save.settings.vectorHeroes);
-if (typeof Image !== 'undefined') for (const k in HERO_PACK) for (const n of ['idle', 'wind', 'strike', 'front', 'head']) packImg(k, n);   // tải sẵn
+if (typeof Image !== 'undefined') for (const k in HERO_PACK) for (const n of ['idle', 'wind', 'strike', 'cast', 'front', 'head']) packImg(k, n);   // tải sẵn
 const ENEMY_FILE = { tom: 'quai_tom-binh', casau: 'quai_ca-sau', rua: 'quai_rua-giap', phuthuy: 'quai_phu-thuy-nuoc',
   chimbao: 'quai_chim-bao', echme: 'quai_ech-me', nongnoc: 'quai_nong-noc',
   thuongluong: 'boss_thuong-luong', haba: 'boss_ha-ba', thuytinh: 'boss_thuy-tinh' };
@@ -640,7 +641,7 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
     // thở: phần trên phồng nhẹ; uốn: lean + đung đưa thành độ cong của thân (chân giữ nguyên)
     const breath = Math.sin(t * 2.85 + seed) * 0.016 - lift * 0.004;
     const bend = (lean + hurtRot) * 0.75 + sway * 1.4 + Math.sin(t * 1.7 + seed) * 0.012;
-    const pngD = (o.castT > 0 || o.swing > 0) && (pack ? packImg(h.type, pose.phase === 'wind' ? 'wind' : 'strike') || packImg(h.type, 'strike') : heroPng(h.type, 'D', h));
+    const pngD = (o.castT > 0 || o.swing > 0) && (pack ? (o.castT > 0 && packImg(h.type, 'cast')) || packImg(h.type, pose.phase === 'wind' ? 'wind' : 'strike') || packImg(h.type, 'strike') : heroPng(h.type, 'D', h));
     // đổi sang ảnh ra đòn mờ dần (không bật cái bụp)
     const mixD = pngD ? (o.smooth ? smoothVal(h, 'mixD', o.castT > 0 || o.swing > 0.35 ? 1 : 0, t, 30) : 1) : 0;
     const base = ctx.globalAlpha;
