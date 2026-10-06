@@ -1286,3 +1286,7 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - **Đền Anh Hùng** (xem tướng ra chiêu) thêm 40 tướng mới — dùng bộ ảnh vẽ tay (đứng / chém / tung chiêu), icon kỹ năng vẽ tay, hiệu ứng theo hành; công thức hợp thể, đặc trưng và mô tả kỹ năng lấy thẳng từ game (`node tools/build-den.js` để cập nhật lại).
 - **Giữ tay xem mô tả** giờ có ở: ô kỹ năng trong trận, hàng kỹ năng ở màn Anh Hùng, từng ô Ấn Phù.
 - Đã kiểm tra màn Xếp hạng với dữ liệu giả (10 người, đợt / ải / Khó): hiển thị đúng ở 844×390 và 667×375.
+
+## Phiên bản 129
+- Sửa nút chọn Phó bản / Vô tận, Thường / Khó bị vỡ trên điện thoại (ảnh nút kéo giãn, chữ đè lên hoa văn): dùng nút bo tròn vàng / bạc vẽ bằng CSS.
+- Tựa game ở menu có lớp tối nhẹ phía sau cho dễ đọc trên tranh nền.

@@ -1499,8 +1499,9 @@ body { overflow: hidden; }
 #menu-art img.keyart + .svgi { display: none; }
 .mc-btn.main { background: url('../assets/ui/khung-nut-chinh.png') center / 100% 100% no-repeat; border: 0; color: #3A1A06; text-shadow: 0 1px 0 #FFE9A8; justify-content: center; }
 .mc-btn.main .uimg.mc { display: none; }
-.seg button { background: url('../assets/ui/nut-bac.png') center / 100% 100% no-repeat; border: 0; color: #3A2A1A; }
-.seg button.on { background: url('../assets/ui/nut-vang.png') center / 100% 100% no-repeat; border: 0; color: #3A1A06; }
+.seg button { background: linear-gradient(180deg, #F4F4F6, #B8BCC4 55%, #8E929C); border: 2px solid #5A2A14; border-radius: 999px; color: #3A2A1A; box-shadow: inset 0 1px 0 #FFFFFF, 0 1px 0 #2A1608; }
+.seg button.on { background: linear-gradient(180deg, #FFE08A, #E8A93A 55%, #B8741E); border-color: #5A2A14; color: #3A1A06; box-shadow: inset 0 1px 0 #FFF4C8, 0 0 8px #FFD66B88; }
+.seg { gap: 4px; background: transparent; }
 .tb-prog { width: 170px; height: 18px; border-radius: 0; overflow: visible; position: relative; background: url('../assets/ui/thanh-tien-do.png') center / 100% 100% no-repeat; box-shadow: none; border: 0; }
 .tb-prog i { position: absolute; left: 14.5%; top: 31%; height: 38%; border-radius: 4px; max-width: 71%; }
 .pl-box { background: url('../assets/ui/khung-nguoi-choi.png') left center / 100% 100% no-repeat; border: 0; box-shadow: none; height: 56px; min-width: 240px; padding: 0 26px 0 10px; gap: 30px; border-radius: 0; }
@@ -1509,3 +1510,5 @@ body { overflow: hidden; }
 .ro-pic::after { content: ''; position: absolute; inset: -9px -8px -12px; background: url('../assets/ui/khung-the.png') center / 100% 100% no-repeat; pointer-events: none; }
 .md-card { position: relative; overflow: hidden; background-size: cover; background-position: center; }
 .md-card .md-ic img { width: 64px; height: 64px; display: block; }
+/* v129: chữ tựa menu dễ đọc trên tranh nền */
+#menu-art:has(img.keyart)::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 48% 38% at 36% 42%, #0D0B08b0, transparent 70%), linear-gradient(90deg, transparent 60%, #0D0B0880); pointer-events: none; }
