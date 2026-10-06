@@ -1175,3 +1175,7 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - **Màu chủ đạo của mọi tướng = màu hành** (Kim bạc trắng, Mộc xanh lá, Thủy xanh nước, Hỏa đỏ cam, Thổ vàng đất).
 - Quân triệu hồi xoay 5 nhóm theo ải (mỗi nhóm bù đủ 4 tướng Thường của một hành): Hỏa · Thủy · Thổ · Kim · Mộc.
 - Prompt Gemini đầy đủ cho mọi ảnh còn thiếu (41 tướng, 3 quái, icon kỹ năng / Thần Khí / Ấn Phù — 108 ảnh, mỗi ảnh một prompt tự đủ, xếp theo ưu tiên): `docs/PROMPT_GEMINI_FULL.md`, sinh bằng `node tools/build-prompts.js` (dữ liệu: `docs/prompts.json`).
+
+## Phiên bản 102 — Sửa lỗi "stroke is not defined"
+- Lỗi từ v81: hai dòng vẽ viền ngôi sao bị chèn nhầm vào hàm vẽ ô bo góc. Game bị dừng khi vẽ bia mộ tướng gục, bức tường chắn, hoặc hiệu ứng ngựa sắt Thánh Gióng. Đã trả hai dòng về đúng hàm vẽ ngôi sao.
+- Thêm bài kiểm tra chạy đủ 17 bản đồ có tướng gục để bắt lỗi này.

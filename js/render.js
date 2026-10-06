@@ -31,9 +31,7 @@ function rrect(ctx, x, y, w, h, r, color) {
   ctx.arcTo(x, y + h, x, y, r);
   ctx.arcTo(x, y, x + w, y, r);
   ctx.closePath();
-  if (stroke) { ctx.save(); ctx.lineJoin = 'round'; ctx.strokeStyle = stroke; ctx.lineWidth = lw || 1.5; ctx.stroke(); ctx.restore(); }
   ctx.fill();
-  if (stroke) { ctx.save(); ctx.globalAlpha *= 0.55; ctx.fillStyle = '#FFF8D8'; ctx.beginPath(); ctx.arc(x - r * 0.2, y - r * 0.25, r * 0.22, 0, Math.PI * 2); ctx.fill(); ctx.restore(); }
 }
 
 function drawStar(ctx, x, y, r, color, stroke, lw) {
@@ -45,7 +43,9 @@ function drawStar(ctx, x, y, r, color, stroke, lw) {
     ctx.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr);
   }
   ctx.closePath();
+  if (stroke) { ctx.save(); ctx.lineJoin = 'round'; ctx.strokeStyle = stroke; ctx.lineWidth = lw || 1.5; ctx.stroke(); ctx.restore(); }
   ctx.fill();
+  if (stroke) { ctx.save(); ctx.globalAlpha *= 0.55; ctx.fillStyle = '#FFF8D8'; ctx.beginPath(); ctx.arc(x - r * 0.2, y - r * 0.25, r * 0.22, 0, Math.PI * 2); ctx.fill(); ctx.restore(); }
 }
 
 // ------------------------------------------------------------
