@@ -263,9 +263,9 @@ class UI {
       const g = this.game;
       if (g.started && !g.over && (!g.won || g.endless)) return this.playLevel(g.level);
       if (this.save.run) return this.resumeRun();
-      this.showCampaign(this.save.last);
+      this.showModes();
     };
-    $('#btn-newgame').onclick = () => this.showCampaign(this.save.last);
+    $('#btn-newgame').onclick = () => this.showModes();
     $('#btn-heroes').onclick = () => this.showRoster();
     $('#btn-runes').onclick = () => this.showRunes(false);
     $('#btn-treasury').onclick = () => this.showTreasury();
@@ -314,7 +314,7 @@ class UI {
       if (b) this.toast(`Gọi sớm: +${b} vàng`, '#F2D27A');
     };
     // ủy quyền sự kiện cho các vùng dựng lại liên tục
-    for (const id of ['#fuse-strip', '#auto-btns', '#screen', '#deck', '#drawer', '#more', '#reward', '#result', '#story', '#campaign', '#settings', '#legends', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks']) {
+    for (const id of ['#fuse-strip', '#auto-btns', '#screen', '#deck', '#drawer', '#more', '#reward', '#result', '#story', '#campaign', '#settings', '#legends', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks', '#modes']) {
       $(id).addEventListener('click', (ev) => {
         const el = ev.target.closest('[data-act]');
         if (el && !el.disabled) this.action(el.dataset, el);
@@ -367,7 +367,7 @@ class UI {
     this.setInGame(false);
   }
   hideOverlays() {
-    for (const id of ['#menu', '#story', '#campaign', '#settings', '#result', '#reward', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks']) $(id).hidden = true;
+    for (const id of ['#menu', '#story', '#campaign', '#settings', '#result', '#reward', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks', '#modes']) $(id).hidden = true;
     if (this.needLogin()) this.showLogin(false);   // v73: chưa đăng nhập thì luôn che game
   }
   setInGame(on) {
@@ -375,10 +375,11 @@ class UI {
     if (!on) for (const id of ['#legends', '#bossbar', '#coach', '#drawer', '#more', '#deck-hint', '#btn-moc', '#nextwaves', '#quick-eq']) $(id).hidden = true;
   }
 
-  playLevel(i) {
+  playLevel(i, endless) {
     const g = this.game;
-    // đang chơi dở đúng ải này thì quay lại trận
-    if (g.started && !g.over && !g.won && g.level === i) {
+    this.nextEndless = !!endless;    // v99: vào thẳng chế độ vô tận từ ngoài
+    // đang chơi dở đúng ải này (cùng chế độ) thì quay lại trận
+    if (g.started && !g.over && !g.won && g.level === i && !!g.endless === !!endless) {
       this.hideOverlays();
       this.setInGame(true);
       return;
@@ -394,6 +395,7 @@ class UI {
     if (g.started) this.bankStats();
     g.hard = !!this.save.settings.hard;
     g.reset(i);
+    g.endless = !!this.nextEndless; this.nextEndless = false;
     g.owned = new Set(this.save.owned || []);
     setRunes(this.save.heroRunes || {});
     setLegacy(this.save.legacy || {});
@@ -408,7 +410,7 @@ class UI {
     writeSave(this.save);
     this.hideOverlays();
     this.setInGame(true);
-    this.toast(`Ải ${i + 1} · ${LEVELS[i].name}: giữ thành Phong Châu qua ${LEVELS[i].waves} đợt`, '#F2D27A');
+    this.toast(g.endless ? `Vô tận · ${LEVELS[i].name}: giữ thành càng lâu càng tốt — boss mỗi 10 đợt` : `Ải ${i + 1} · ${LEVELS[i].name}: giữ thành Phong Châu qua ${LEVELS[i].waves} đợt`, '#F2D27A');
     this.prepBought = {}; this.prepShopRolled = false;
     this.saveRun();
     this.showPrep();   // v77: luôn hiện (có Lò đúc đồng trước trận)
@@ -477,7 +479,7 @@ class UI {
   quitRun() {
     const g = this.game;
     if (g.started) { this.bankStats(); const tv = this.bankTuvi(TUVI_LOSE); if (tv.up.length) this.toast(tv.up.join('<br>'), '#FFD66B'); }
-    if (g.endless) this.submitScores(false, 0);
+    if (g.endless) { this.submitScores(false, 0); const sv = this.save; sv.bestEndless = sv.bestEndless || {}; sv.bestEndless[g.level] = Math.max(sv.bestEndless[g.level] || 0, g.wave); writeSave(sv); }
     g.running = false; g.over = true; g.started = false;
     this.clearRun();
     this.closeScreen && this.closeScreen();
@@ -628,6 +630,24 @@ class UI {
   }
 
   // ---------- Bản đồ chiến dịch dọc sông Đà
+  // v99: chọn chế độ từ ngoài — Phó bản (chiến dịch theo ải) hoặc Vô tận (chọn bản đồ, chơi mãi)
+  showModes() {
+    this.hideOverlays();
+    this.setInGame(false);
+    const s = this.save, total = s.stars.reduce((a, b) => a + b, 0);
+    const best = Math.max(0, ...Object.values(s.bestEndless || {}));
+    $('#modes').innerHTML = `<div class="screen" style="z-index:auto">
+      <div class="scr-head metal"><button class="xbtn metal" data-act="mode-close" aria-label="Quay lại">${ICON.back}</button><h1 class="ttl">Chọn chế độ</h1><div class="sp"></div></div>
+      <div class="md-body">
+        <button class="md-card metal" data-act="mode-pick" data-k="camp"><span class="md-ic">⚔</span><b>Phó Bản</b>
+          <small>Chiến dịch theo chương truyền thuyết. Mỗi ải số đợt cố định, có boss, đạt 1–3 sao, thắng nhận Ngân khố.</small>
+          <span class="md-st">★ ${total} / ${LEVELS.length * 3} · đã mở ${s.unlocked}/${LEVELS.length} ải</span></button>
+        <button class="md-card metal endl" data-act="mode-pick" data-k="endless"><span class="md-ic">♾</span><b>Vô Tận</b>
+          <small>Chọn một bản đồ đã mở, giữ thành mãi mãi. Quái mạnh dần, boss mỗi 10 đợt, đổi bộ quái liên tục. Đua bảng xếp hạng.</small>
+          <span class="md-st">Kỷ lục: đợt ${best}</span></button>
+      </div></div>`;
+    $('#modes').hidden = false;
+  }
   showCampaign(sel) {
     this.cpSel = Math.min(sel ?? this.save.last, this.save.unlocked - 1);
     this.hideOverlays();
@@ -647,9 +667,12 @@ class UI {
     const total = s.stars.reduce((a, b) => a + b, 0);
     const bosses = [...new Set(Object.values(lv.bosses))].map((b) => ENEMIES[b].name).join(', ');
     const starsOf = (n) => '★'.repeat(n) + `<i>${'★'.repeat(3 - n)}</i>`;
+    const endl = this.cpMode === 'endless';
     $('#campaign').innerHTML = `<div class="screen" style="z-index:auto">
       <div class="scr-head metal"><button class="xbtn metal" data-act="cp-back" aria-label="Quay lại">${ICON.back}</button>
-        <h1 class="ttl">Chiến dịch</h1><span class="chip dark">★ ${total} / ${LEVELS.length * 3}</span>
+        <h1 class="ttl">${endl ? 'Vô Tận' : 'Phó Bản'}</h1>
+        <div class="seg inset cp-mode"><button class="${endl ? '' : 'on'}" data-act="cp-mode" data-k="camp">⚔ Phó bản</button><button class="${endl ? 'on' : ''}" data-act="cp-mode" data-k="endless">♾ Vô tận</button></div>
+        ${endl ? '' : `<span class="chip dark">★ ${total} / ${LEVELS.length * 3}</span>`}
         <div class="cp-tabs">${CHAPTERS.map((c, ci) => { const open = c.from < s.unlocked;
           return `<button class="cp-tab ${c === ch ? 'on' : ''} ${open ? '' : 'lock'}" data-act="cp-ch" data-i="${ci}" ${open ? '' : 'disabled'}>${open ? '' : ICON.lock}${ci + 1}. ${c.name}</button>`; }).join('')}</div>
         <div class="sp"></div></div>
@@ -666,13 +689,16 @@ class UI {
         </div>
         <div class="cp-side">
           <div class="hd"><span class="no">Ải ${i + 1}</span><span class="ttl">${lv.name}</span><span class="op">${s.stars[i] ? '★'.repeat(s.stars[i]) : 'Đang mở'}</span></div>
-          <div class="sub">${lv.waves} đợt · boss <b>${bosses}</b></div>
+          ${endl ? `<div class="sub">Vô tận · quái mạnh dần mãi · boss mỗi 10 đợt</div>
+          <div class="desc">Sau ${lv.waves} đợt, cứ 10 đợt đổi bộ quái mới. Hết mạng là thua; ghi điểm bảng xếp hạng.</div>
+          <div class="cp-rec">♾ Kỷ lục bản đồ này: <b>đợt ${(s.bestEndless || {})[i] || 0}</b></div>`
+          : `<div class="sub">${lv.waves} đợt · boss <b>${bosses}</b></div>
           <div class="desc">${lv.desc}</div>
           <div class="cond inset"><div class="h">ĐIỀU KIỆN SAO</div>
-            ${STAR_RULES.map((r, k) => `<div class="${s.stars[i] > k ? 'got' : ''}"><span>${'★'.repeat(k + 1)}</span><span>${r}</span></div>`).join('')}</div>
+            ${STAR_RULES.map((r, k) => `<div class="${s.stars[i] > k ? 'got' : ''}"><span>${'★'.repeat(k + 1)}</span><span>${r}</span></div>`).join('')}</div>`}
           ${this.counterHtml(i)}
           <div class="cp-act"><div class="cp-diff"><button class="${this.save.settings.hard ? 'metal' : 'btn-gold'}" data-act="diff" data-k="0">Thường</button><button class="${this.save.settings.hard ? 'on' : 'metal'}" data-act="diff" data-k="1" title="Máu quái ×${HARD.hp(i).toFixed(2)}">🔥 Khó${(s.hardStars || [])[i] ? ` <small>${'★'.repeat(s.hardStars[i])}</small>` : ` <small>×${HARD.hp(i).toFixed(2).replace('.', ',')}</small>`}</button></div>
-          <button class="go btn-gold" data-act="cp-go">⚔ Vào trận</button></div>
+          <button class="go btn-gold" data-act="cp-go">${endl ? '♾ Vào vô tận' : '⚔ Vào trận'}</button></div>
         </div>
       </div></div>`;
   }
@@ -711,7 +737,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 98 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 99 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -902,7 +928,7 @@ class UI {
       if (have.size !== n0) { this.save.collected = [...have]; writeSave(this.save); }
     }
     if (!g.started) return;
-    const inGame = $('#menu').hidden && $('#campaign').hidden && $('#story').hidden && $('#roster').hidden && $('#runes').hidden && $('#treasury').hidden;
+    const inGame = $('#menu').hidden && $('#campaign').hidden && $('#story').hidden && $('#roster').hidden && $('#runes').hidden && $('#treasury').hidden && $('#modes').hidden;
     if (!inGame) return;
     this.updateTopbar();
     this.updateNextWaves();
@@ -1700,6 +1726,7 @@ class UI {
       s.unlocked = Math.max(s.unlocked, Math.min(LEVELS.length, lv + 2));
     }
     s.best[lv] = Math.max(s.best[lv] || 0, g.wave);
+    if (g.endless) { s.bestEndless = s.bestEndless || {}; s.bestEndless[lv] = Math.max(s.bestEndless[lv] || 0, g.wave); }
     // v66: Ngân khố
     const khoGain = win ? Math.round((PREP.winBase + PREP.winPerLevel * (lv + 1) + PREP.winPerStar * stars) * (g.hard ? 1.5 : 1))
       : PREP.losePerWave * Math.max(0, g.wave - 1);
@@ -1797,7 +1824,10 @@ class UI {
       case 'cp-sel': this.cpSel = +d.i; this.renderCampaign(); break;
       case 'cp-ch': { const c = CHAPTERS[+d.i]; this.cpSel = Math.min(c.to, Math.max(c.from, this.save.unlocked - 1)); this.renderCampaign(); break; }
       case 'diff': this.save.settings.hard = d.k === '1'; writeSave(this.save); this.renderCampaign(); break;
-      case 'cp-go': this.save.last = this.cpSel; this.playLevel(this.cpSel); break;
+      case 'cp-go': this.save.last = this.cpSel; this.playLevel(this.cpSel, this.cpMode === 'endless'); break;
+      case 'cp-mode': this.cpMode = d.k; this.renderCampaign(); break;
+      case 'mode-pick': $('#modes').hidden = true; this.cpMode = d.k; this.showCampaign(this.save.last); break;
+      case 'mode-close': $('#modes').hidden = true; this.showMenu(); break;
       case 'set':
         this.save.settings[d.k] = !this.save.settings[d.k];
         writeSave(this.save);

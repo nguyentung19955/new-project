@@ -1150,3 +1150,9 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 98 — Gợi ý khi sang bộ quái mới (chơi vô tận)
 - Chơi vô tận: khi đợt kế tiếp đổi sang bộ quái mới (sau đợt cuối ải, rồi mỗi 10 đợt), hiện thẻ "Đợt N · bộ quái mới: <tên bộ>" với hành chủ đạo của quái → hành nên dùng, danh sách quái / boss sắp gặp, và 4 ảnh đại diện tướng khắc chế (theo quân triệu hồi ải này + tướng Tím / Vàng đã mua). Tự tắt sau 9 giây hoặc chạm để đóng.
 - Tên bộ quái: Thủy quân Thủy Tinh · Yêu tinh rừng Chằn Tinh · Hang Đại Bàng · Giặc Ân · Thủy quái Biển Đông · Quân Triệu Đà.
+
+## Phiên bản 99 — Chọn chế độ Phó Bản / Vô Tận từ ngoài
+- Menu chính → **Xuất Quân** (hoặc "Chơi mới") mở màn **Chọn chế độ**: **Phó Bản** (chiến dịch theo chương, số đợt cố định, 1–3 sao, thắng nhận Ngân khố) hoặc **Vô Tận** (chọn bản đồ đã mở, chơi mãi, boss mỗi 10 đợt, đổi bộ quái liên tục, đua bảng xếp hạng).
+- Màn bản đồ có nút gạt "⚔ Phó bản | ♾ Vô tận"; ở chế độ Vô tận hiện kỷ lục đợt của từng bản đồ và nút "♾ Vào vô tận" (vào thẳng vô tận từ đợt 1, không cần thắng ải trước).
+- Kỷ lục vô tận lưu theo bản đồ (cả khi thua lẫn khi dừng trận).
+- Khung bên phải màn bản đồ cuộn được, nút vào trận luôn nằm dưới cùng.
