@@ -879,3 +879,9 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - **Mỗi ải dài thêm 10 đợt** để người chơi có thêm thời gian và vàng nâng tướng lên Tím / Vàng: ải 1 có 25 đợt, ải 2–3 có 30, ải 4–5 có 35, ải 6–8 có 40, chương Thạch Sanh 35–40, Thánh Gióng 40–45, Lạc Long Quân và An Dương Vương 45.
 - Quái **mạnh lên chậm hơn** theo tỉ lệ (`waveScale`, đợt "hiệu dụng" `effWave` trong `js/data.js`): đợt cuối vẫn mạnh như bản cũ, các đợt giữa nhẹ hơn. Số quái mỗi đợt, giáp / kháng phép tăng dần và sát thương chiêu quái cũng tính theo đợt hiệu dụng. Vàng mỗi đợt và vàng hạ quái vẫn tính theo đợt thật, nên tổng vàng cả ải nhiều hơn rõ.
 - Boss vẫn ra mỗi 10 đợt và ở đợt cuối. Đợt bay thêm 34, 37, 44, 47; quái tinh anh ở mọi đợt tận cùng bằng 5.
+- Máu quái nhân thêm cho ải dài (`LONG_HP` trong `js/chapters.js`): ải 1–3 ×1,2 · ải 4–8 ×1,7 · ải 9–15 ×1,55 · ải 16–17 ×1,35. Bot (không hợp thể chủ động): ải 1 còn 27 mạng · ải 6 còn 23 · ải 8 còn 24 · ải 9 còn 24 · ải 13 còn 14 · ải 14 còn 28 · ải 17 dao động mạnh (một lần thắng còn 31 mạng, một lần thua ở đợt 20 khi gặp Triệu Đà). Bot giờ kịp hợp thể 1–3 tướng thần mỗi ải (trước 0–1).
+
+### Phiên bản 55
+
+- **Lạc Tướng có bộ hình vẽ tay mới** (ảnh Gemini do người chơi gửi, tách nền) trong `assets/packs/lactuong/`: `idle` (đứng nghiêng, đã ghép rìu vào tay), `wind` (giơ rìu lấy đà), `strike` (chém, có vệt chém), `front` (chân dung toàn thân), `head` (chân dung đầu). Luôn dùng, không phụ thuộc tuỳ chọn "Dùng ảnh AI"; bật "Tướng vẽ nét" để quay về hình vẽ nét.
+- Cách thêm tướng khác: bỏ ảnh cùng tên vào `assets/packs/<mã tướng>/` rồi thêm vào `HERO_PACK` trong `js/render.js`. Cấp sao với ảnh vẽ tay: ★ ảnh gốc · ★★ viền sáng màu hệ · ★★★ thêm vầng mặt trời sau lưng. Đồ mặc hiện bằng viền sáng màu độ hiếm (ảnh phẳng không thay được từng món).

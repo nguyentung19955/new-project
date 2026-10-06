@@ -82,8 +82,8 @@ const ASSET_ROOT = 'assets/';
 const assetMap = new Map();      // đường dẫn -> { img, ok: null | true | false }
 let assetVersion = 0;            // tăng mỗi khi có ảnh mới tải xong (để giao diện vẽ lại)
 let useAssets = true;
-function asset(path) {
-  if (!useAssets) return null;
+function asset(path, force) {
+  if (!useAssets && !force) return null;
   let a = assetMap.get(path);
   if (!a) {
     a = { img: new Image(), ok: null };
@@ -227,6 +227,12 @@ function heroPng(type, v, h) {
   const list = v === 'D' ? [`${slug}_ra-don.png`, `heroes/hero_${code}_D.png`] : [...near, `heroes/hero_${code}_C.png`];
   return (assetAny(list) || {}).img || null;
 }
+// v55: bộ ảnh vẽ tay riêng từng tướng (assets/packs/<tướng>/): idle · wind (lấy đà) · strike (chém) · front · head.
+// Luôn dùng (không phụ thuộc tuỳ chọn "ảnh AI"); tắt bằng "Tướng vẽ nét".
+const HERO_PACK = { lactuong: 'packs/lactuong/' };
+const packImg = (type, name) => (HERO_PACK[type] ? asset(HERO_PACK[type] + name + '.png', true) : null);
+const vectorHeroesOn = () => typeof ui !== 'undefined' && !!(ui && ui.save && ui.save.settings.vectorHeroes);
+if (typeof Image !== 'undefined') for (const k in HERO_PACK) for (const n of ['idle', 'wind', 'strike', 'front', 'head']) packImg(k, n);   // tải sẵn
 const ENEMY_FILE = { tom: 'quai_tom-binh', casau: 'quai_ca-sau', rua: 'quai_rua-giap', phuthuy: 'quai_phu-thuy-nuoc',
   chimbao: 'quai_chim-bao', echme: 'quai_ech-me', nongnoc: 'quai_nong-noc',
   thuongluong: 'boss_thuong-luong', haba: 'boss_ha-ba', thuytinh: 'boss_thuy-tinh' };
@@ -615,7 +621,8 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
   const hurtRot = o.hurt > 0 ? -0.12 * (o.hurt / 0.2) : 0;
   // ghép đồ từng món (v35): có ảnh thân trần <tên>_than.png thì dùng nó + vẽ mũ / vũ khí / giáp đang mặc lên trên
   const dollBase = !o.vector && h.equip && asset(`${heroSlug(h.type)}_than.png`);
-  const pngC = dollBase || (!o.vector && heroPng(h.type, 'C', h));
+  const pack = !o.vector && packImg(h.type, 'idle');
+  const pngC = dollBase || pack || (!o.vector && heroPng(h.type, 'C', h));
   // ảnh vẽ tay: chân đứng yên, thân uốn (lean thành độ cong) — không xoay cứng cả tấm
   ctx.rotate(pngC ? (lean + hurtRot) * 0.25 : lean + sway + hurtRot);
   ctx.translate(-100 + (lunge + recoil + hurtX), -222 + drop + sink);
@@ -633,7 +640,7 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
     // thở: phần trên phồng nhẹ; uốn: lean + đung đưa thành độ cong của thân (chân giữ nguyên)
     const breath = Math.sin(t * 2.85 + seed) * 0.016 - lift * 0.004;
     const bend = (lean + hurtRot) * 0.75 + sway * 1.4 + Math.sin(t * 1.7 + seed) * 0.012;
-    const pngD = (o.castT > 0 || o.swing > 0) && heroPng(h.type, 'D', h);
+    const pngD = (o.castT > 0 || o.swing > 0) && (pack ? packImg(h.type, pose.phase === 'wind' ? 'wind' : 'strike') || packImg(h.type, 'strike') : heroPng(h.type, 'D', h));
     // đổi sang ảnh ra đòn mờ dần (không bật cái bụp)
     const mixD = pngD ? (o.smooth ? smoothVal(h, 'mixD', o.castT > 0 || o.swing > 0.35 ? 1 : 0, t, 30) : 1) : 0;
     const base = ctx.globalAlpha;
@@ -656,6 +663,8 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
     // (trước đây 14 lát × shadowBlur → cả người loè thành khối màu và nặng máy)
     if (glowK > 0) drawGlowOnly(ctx, mixD > 0.5 ? pngD : png, -w / 2, -hgt, w, hgt, o.castColor || '#FFE08A', 12 * glowK * (o.castUlt ? 1.4 : 1), 0.8 * glowK);
     else if (gt > 0) drawGlowOnly(ctx, png, -w / 2, -hgt, w, hgt, RAR_COLOR[RARITY_ORDER[gt]], 4 + gt * 2, 0.55 + Math.sin(t * 3) * 0.1);
+    // bộ ảnh riêng: ★★ trở lên viền sáng màu hệ (★★★ có thêm vầng mặt trời phía sau)
+    else if (pack && tierShown >= 2) drawGlowOnly(ctx, png, -w / 2, -hgt, w, hgt, look.attrColor, 5 + tierShown * 2, 0.5 + Math.sin(t * 3) * 0.12);
     if (mixD < 1) drawBent(ctx, png, -w / 2, -hgt, w, hgt, bend, breath);
     ctx.globalAlpha = base;
     if (dollBase && mixD < 1) drawDollGear(ctx, h, -w / 2, -hgt, w, hgt, bend, t);
@@ -1934,6 +1943,18 @@ function drawHeroPortrait(cv, h, t, o = {}) {
   const c = cv.getContext('2d');
   const W = cv.width, H = cv.height;
   c.clearRect(0, 0, W, H);
+  const front = o.full && !vectorHeroesOn() && packImg(h.type, 'front');
+  if (front) {
+    const k = Math.min(W / front.naturalWidth, H * 0.94 / front.naturalHeight);
+    c.drawImage(front, (W - front.naturalWidth * k) / 2, H * 0.97 - front.naturalHeight * k, front.naturalWidth * k, front.naturalHeight * k);
+    return;
+  }
+  const head = !o.full && !vectorHeroesOn() && packImg(h.type, 'head');
+  if (head) {   // đầu vẽ tay: vừa khung, sát đáy
+    const k = Math.min(W / head.naturalWidth, H / head.naturalHeight) * 1.08;
+    c.drawImage(head, (W - head.naturalWidth * k) / 2, H - head.naturalHeight * k, head.naturalWidth * k, head.naturalHeight * k);
+    return;
+  }
   const png = !o.full && heroPng(h.type, 'B');
   if (png) {
     const k = Math.max(W / png.naturalWidth, H / png.naturalHeight);
