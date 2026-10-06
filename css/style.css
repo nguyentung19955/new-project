@@ -1211,3 +1211,39 @@ body { overflow: hidden; }
 .bk-row .bk-card .ds, .bk-row .boss-card .ds { max-height: 2.45em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .bk-row .boss-card .nm { font-size: 15px; line-height: 1.1; }
 .bk-row .boss-card .gift { display: none; }
+/* v66: Chuẩn bị xuất quân + đăng nhập */
+.prep-ov { z-index: 30; }
+.prep-body { flex: 1; min-height: 0; display: flex; gap: 10px; padding: 10px; overflow: auto; }
+.prep-col { display: flex; flex-direction: column; gap: 6px; width: 260px; flex: none; }
+.prep-col.wide { flex: 1; width: auto; min-width: 0; }
+.prep-col .h { font-family: var(--title); color: var(--gold); font-size: 15px; font-weight: 800; }
+.prep-col .sub { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+.prep-card { display: grid; grid-template-columns: 34px 1fr auto; grid-template-rows: auto auto; column-gap: 8px; align-items: center; padding: 6px 8px; border-radius: 6px; text-align: left; }
+.prep-card .ic { grid-row: 1 / 3; font-size: 24px; text-align: center; }
+.prep-card b { font-size: 14px; color: var(--gold); }
+.prep-card small { grid-column: 2; font-size: 11px; color: var(--text-2); line-height: 1.2; }
+.prep-card .cost, .prep-hero .cost { grid-row: 1 / 3; grid-column: 3; font-weight: 800; color: #FFD66B; font-size: 13px; white-space: nowrap; }
+.prep-card:disabled, .prep-hero:disabled { opacity: .55; }
+.prep-card.done, .prep-hero.on { opacity: 1; border-color: #6AE06A; }
+.prep-heroes { display: flex; flex-wrap: wrap; gap: 6px; }
+.prep-hero { width: 92px; padding: 4px; border-radius: 6px; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.prep-hero img { width: 56px; height: 56px; object-fit: cover; object-position: top; border-radius: 50%; background: #1A140C; }
+.prep-hero.legendary img { box-shadow: 0 0 0 2px #F2C840; }
+.prep-hero.epic img { box-shadow: 0 0 0 2px #B070F0; }
+.prep-hero b { font-size: 11px; line-height: 1.1; text-align: center; color: var(--text); }
+.prep-hero .cost { font-size: 11px; }
+#login { z-index: 40; display: flex; align-items: center; justify-content: center; }
+#login:not([hidden]) { display: flex; }
+.login-box { position: relative; width: min(380px, 90%); padding: 18px 20px; border-radius: 10px; display: flex; flex-direction: column; gap: 10px; align-items: stretch; text-align: center; }
+.login-logo { font-family: var(--title); font-size: 28px; font-weight: 800; color: var(--gold); text-shadow: 0 2px 3px #000; }
+.login-sub { font-size: 14px; color: var(--text-2); }
+.login-btn { height: 46px; font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.login-g { background: #fff; color: #222; border: 1px solid #ccc; font-weight: 700; }
+.login-g .g { font-weight: 900; color: #4285F4; font-size: 20px; }
+.login-g:disabled { opacity: .5; }
+.login-note { font-size: 11px; color: var(--text-2); line-height: 1.3; }
+.login-who { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.login-who img { width: 56px; height: 56px; border-radius: 50%; }
+.login-x { position: absolute; top: 8px; right: 8px; }
+#menu-player { cursor: pointer; }
+#menu-player .av img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }

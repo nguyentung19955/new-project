@@ -161,7 +161,7 @@ function heroImgUrl(type, crop) {
 const SAVE_KEY = 'nuicao.v1';
 function loadSave() {
   const def = { stars: LEVELS.map(() => 0), unlocked: 1, last: 0, best: {}, storySeen: false,
-    lifeGold: 0, lifeKills: 0, lifeHerbs: 0, collected: [],
+    lifeGold: 0, lifeKills: 0, lifeHerbs: 0, collected: [], kho: 0, loginChosen: false,
     settings: { dmgText: true, shake: true, skipStory: false, vectorHeroes: false, detail: false, aiArt: false } };
   try {
     const s = JSON.parse(localStorage.getItem(SAVE_KEY) || '{}');
@@ -203,9 +203,14 @@ class UI {
     $('#rotate-art').innerHTML = sceneArt('rotate');
     $('#loading').hidden = true;
     this.showMenu();
+    if (!this.save.loginChosen && typeof CLOUD !== 'undefined' && CLOUD.enabled) this.showLogin(false);
     // v65: lưu đám mây — bản trên mây mới hơn thì nạp lại
     if (typeof CLOUD !== 'undefined') {
-      CLOUD.onChange(() => { if (!$('#settings').hidden) this.showSettings && this.renderSettingsCloud(); });
+      CLOUD.onChange(() => {
+        if (!$('#settings').hidden) this.renderSettingsCloud();
+        if (!$('#login').hidden) { if (CLOUD.user && !CLOUD.user.isAnonymous && !this.save.loginChosen) { this.save.loginChosen = true; writeSave(this.save); $('#login').hidden = true; this.toast('Đã đăng nhập: ' + (CLOUD.user.displayName || 'Google'), '#6AE06A'); } else this.showLogin(!!this.save.loginChosen); }
+        if (!$('#menu').hidden) this.showMenu();
+      });
       CLOUD.init(() => this.save, (cs) => this.applyCloudSave(cs));
     }
   }
@@ -285,7 +290,7 @@ class UI {
       if (b) this.toast(`Gọi sớm: +${b} vàng`, '#F2D27A');
     };
     // ủy quyền sự kiện cho các vùng dựng lại liên tục
-    for (const id of ['#fuse-strip', '#auto-btns', '#screen', '#deck', '#drawer', '#more', '#reward', '#result', '#story', '#campaign', '#settings', '#legends', '#roster', '#treasury']) {
+    for (const id of ['#fuse-strip', '#auto-btns', '#screen', '#deck', '#drawer', '#more', '#reward', '#result', '#story', '#campaign', '#settings', '#legends', '#roster', '#treasury', '#prep', '#login']) {
       $(id).addEventListener('click', (ev) => {
         const el = ev.target.closest('[data-act]');
         if (el && !el.disabled) this.action(el.dataset, el);
@@ -321,15 +326,17 @@ class UI {
     const s = this.save;
     const total = s.stars.reduce((a, b) => a + b, 0);
     const lv = 1 + Math.floor(Math.sqrt(s.lifeKills / 25));
-    $('#menu-player').innerHTML = `<span class="av">${svgI(sceneArt('drum'))}</span><span><b>Sơn Tinh</b><small>Cấp ${lv} · ★ ${total}/${LEVELS.length * 3}</small></span>`;
+    const acc = typeof CLOUD !== 'undefined' && CLOUD.user && !CLOUD.user.isAnonymous ? CLOUD.user : null;
+    $('#menu-player').innerHTML = `<span class="av">${acc && acc.photoURL ? `<img src="${esc(acc.photoURL)}" alt="" referrerpolicy="no-referrer">` : svgI(sceneArt('drum'))}</span><span><b>${esc(acc ? acc.displayName || 'Sơn Tinh' : 'Sơn Tinh')}</b><small>Cấp ${lv} · ★ ${total}/${LEVELS.length * 3} · ${acc ? 'Đã đăng nhập' : 'Khách'}</small></span>`;
+    $('#menu-player').onclick = () => this.showLogin(true);
     const short = (n) => (n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace('.', ',') + 'k' : n);
-    $('#menu-res').innerHTML = `<span title="Tổng vàng đã kiếm qua mọi trận (vàng trong trận luôn bắt đầu từ ${CONFIG.startGold})"><small class="pr-l">Tổng vàng đã kiếm</small>${coin(1)} ${short(s.lifeGold)}</span><span title="Linh Chi đã hái">🌿 ${short(s.lifeHerbs)}</span>`;
+    $('#menu-res').innerHTML = `<span title="Tổng vàng đã kiếm qua mọi trận (vàng trong trận luôn bắt đầu từ ${CONFIG.startGold})"><small class="pr-l">Tổng vàng đã kiếm</small>${coin(1)} ${short(s.lifeGold)}</span><span title="Linh Chi đã hái">🌿 ${short(s.lifeHerbs)}</span><span title="Ngân khố: vàng thưởng sau mỗi trận thắng, dùng mua đồ / tướng trước trận"><small class="pr-l">Ngân khố</small>${coin(1)} <b style="color:#FFD66B">${fmt(s.kho || 0)}</b></span>`;
     $('#menu-art').innerHTML = svgI(sceneArt('menu'));
     $('#continue-label').textContent = this.game.started && !this.game.over && !this.game.won ? `Chơi tiếp · Ải ${this.game.level + 1}` : 'Xuất Quân';
     this.setInGame(false);
   }
   hideOverlays() {
-    for (const id of ['#menu', '#story', '#campaign', '#settings', '#result', '#reward', '#roster', '#treasury']) $(id).hidden = true;
+    for (const id of ['#menu', '#story', '#campaign', '#settings', '#result', '#reward', '#roster', '#treasury', '#prep', '#login']) $(id).hidden = true;
   }
   setInGame(on) {
     document.querySelectorAll('.ingame').forEach((el) => { el.hidden = !on; });
@@ -367,6 +374,74 @@ class UI {
     this.hideOverlays();
     this.setInGame(true);
     this.toast(`Ải ${i + 1} · ${LEVELS[i].name}: giữ thành Phong Châu qua ${LEVELS[i].waves} đợt`, '#F2D27A');
+    this.prepBought = {};
+    if ((this.save.kho || 0) >= PREP.minShow) this.showPrep();
+  }
+
+  // ---------- v66: Chuẩn bị xuất quân — tiêu Ngân khố mua đồ / vàng / tướng Tím, Vàng trước trận
+  showPrep() {
+    const s = this.save, g = this.game, b = this.prepBought || {};
+    const kho = s.kho || 0;
+    const card = (id, title, desc, cost, icon, done) => `<button class="prep-card metal ${done ? 'done' : ''}" data-act="prep-buy" data-id="${id}" ${done || kho < cost ? 'disabled' : ''}>
+        <span class="ic">${icon}</span><b>${title}</b><small>${desc}</small><span class="cost">${done ? '✓ Đã mua' : `${coin()} ${fmt(cost)}`}</span></button>`;
+    const heroCard = (t) => { const d = HEROES[t], cost = PREP.heroCost[d.legend]; const done = b.hero;
+      return `<button class="prep-hero metal ${d.legend} ${b.hero === t ? 'on' : ''}" data-act="prep-hero" data-id="${t}" ${done || kho < cost || !g.freeSlots().length ? 'disabled' : ''}>
+        <img src="${heroImgUrl(t, 'head')}" alt=""><b>${d.name}</b><span class="cost">${b.hero === t ? '✓' : `${coin()} ${fmt(cost)}`}</span></button>`; };
+    const legends = Object.keys(HEROES).filter((t) => HEROES[t].legend === 'legendary');
+    const epics = Object.keys(HEROES).filter((t) => HEROES[t].legend === 'epic');
+    $('#prep').innerHTML = `<div class="screen" style="z-index:auto">
+      <div class="scr-head metal"><h1 class="ttl">Chuẩn bị xuất quân</h1><span class="chip dark">Ải ${g.level + 1} · ${LEVELS[g.level].name}</span><div class="sp"></div>
+        <span class="chip ok">Ngân khố ${coin(1)} ${fmt(kho)}</span>
+        <button class="btn btn-gold title" style="height:40px;padding:0 18px;font-size:17px" data-act="prep-go">Vào trận ▶</button></div>
+      <div class="prep-body">
+        <div class="prep-col"><div class="h">Hậu cần</div>
+          ${card('gold', 'Lương thảo', `+${PREP.goldAmount} vàng đầu trận`, PREP.goldCost, '🌾', b.gold)}
+          ${card('jar', 'Hũ đồng', 'Mở ngay 2 món Hiếm trở lên vào túi', PREP.jarCost, '🏺', b.jar)}
+          ${card('king', 'Hũ Vua Hùng', 'Mở ngay 2 món Sử thi trở lên (35% đồ bộ)', PREP.kingCost, '👑', b.king)}
+          ${card('lives', 'Đắp thành', `+${PREP.livesAmount} mạng`, PREP.livesCost, '🧱', b.lives)}</div>
+        <div class="prep-col wide"><div class="h">Chiêu mộ tướng (1 tướng mỗi trận, đặt sẵn trên sân)</div>
+          <div class="sub">Tướng Vàng · ${coin()} ${fmt(PREP.heroCost.legendary)}</div><div class="prep-heroes">${legends.map(heroCard).join('')}</div>
+          <div class="sub">Tướng Tím · ${coin()} ${fmt(PREP.heroCost.epic)}</div><div class="prep-heroes">${epics.map(heroCard).join('')}</div></div>
+      </div>
+      <div class="note" style="text-align:center;padding:4px 10px 8px">Thắng ải nhận Ngân khố: ${fmt(PREP.winBase)} + ${PREP.winPerLevel}×số ải + ${PREP.winPerStar}×sao (Khó ×1,5). Thua nhận ${PREP.losePerWave} mỗi đợt đã qua.</div></div>`;
+    $('#prep').hidden = false;
+  }
+  prepBuy(id) {
+    const s = this.save, g = this.game, b = this.prepBought || (this.prepBought = {});
+    const cost = { gold: PREP.goldCost, jar: PREP.jarCost, king: PREP.kingCost, lives: PREP.livesCost }[id];
+    if (b[id] || (s.kho || 0) < cost) return;
+    s.kho -= cost; b[id] = true;
+    if (id === 'gold') g.gold += PREP.goldAmount;
+    if (id === 'lives') g.lives += PREP.livesAmount;
+    if (id === 'jar' || id === 'king') for (let k = 0; k < 2; k++) g.addItem(makeItem(id === 'king' && Math.random() < 0.35 ? rollSetItem() : rollItem(id === 'king' ? 'epic' : 'rare')), true);
+    writeSave(s); this.showPrep();
+  }
+  prepHero(t) {
+    const s = this.save, g = this.game, b = this.prepBought || (this.prepBought = {});
+    const cost = PREP.heroCost[HEROES[t].legend], slot = g.freeSlots()[0];
+    if (b.hero || (s.kho || 0) < cost || slot === undefined) return;
+    s.kho -= cost; b.hero = t;
+    const h = g.spawnHero(slot, t, {});
+    h.from = t; h.lineage = []; h.summonT = 0;
+    writeSave(s); this.showPrep();
+  }
+
+  // ---------- v66: Đăng nhập
+  showLogin(fromMenu) {
+    const ok = typeof CLOUD !== 'undefined' && CLOUD.enabled;
+    const u = ok && CLOUD.user;
+    const signed = u && !u.isAnonymous;
+    $('#login').innerHTML = `<div class="bgart">${svgI(sceneArt('menu'))}</div><div class="login-box metal">
+      <div class="login-logo">Núi Cao Nước Dâng</div>
+      ${signed ? `<div class="login-who">${u.photoURL ? `<img src="${esc(u.photoURL)}" alt="" referrerpolicy="no-referrer">` : ''}<b>${esc(u.displayName || u.email || 'Tài khoản Google')}</b><small>Tiến trình đang lưu trên đám mây</small></div>
+        <button class="btn btn-gold title login-btn" data-act="login-close">Vào game</button>
+        <button class="btn metal login-btn" data-act="cloud-out">Đăng xuất</button>`
+      : `<div class="login-sub">Đăng nhập để lưu tiến trình và chơi tiếp trên máy khác</div>
+        <button class="btn login-btn login-g" data-act="cloud-google" ${ok ? '' : 'disabled'}><span class="g">G</span> Đăng nhập bằng Google</button>
+        <button class="btn metal title login-btn" data-act="login-guest">Chơi ngay (khách)</button>
+        <small class="login-note">${ok ? 'Chơi khách: tiến trình lưu trên máy này, đăng nhập sau vẫn giữ nguyên.' : 'Đăng nhập Google chưa bật (cần cấu hình Firebase, xem docs/FIREBASE.md). Tiến trình đang lưu trên máy này.'}</small>`}
+      ${fromMenu ? '<button class="xbtn metal login-x" data-act="login-close" aria-label="Đóng">' + ICON.close + '</button>' : ''}</div>`;
+    $('#login').hidden = false;
   }
 
   // ---------- Mở đầu: Vua Hùng kén rể
@@ -507,7 +582,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 65 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 66 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1307,6 +1382,10 @@ class UI {
       s.unlocked = Math.max(s.unlocked, Math.min(LEVELS.length, lv + 2));
     }
     s.best[lv] = Math.max(s.best[lv] || 0, g.wave);
+    // v66: Ngân khố
+    const khoGain = win ? Math.round((PREP.winBase + PREP.winPerLevel * (lv + 1) + PREP.winPerStar * stars) * (g.hard ? 1.5 : 1))
+      : PREP.losePerWave * Math.max(0, g.wave - 1);
+    s.kho = (s.kho || 0) + khoGain;
     this.bankStats();
     this.closeScreen();
     $('#reward').hidden = true;
@@ -1315,7 +1394,8 @@ class UI {
       <div><span>✕ Quái đã hạ</span><b>${fmt(g.stats.kills)}</b></div>
       <div><span>${coin()} Vàng kiếm trong trận</span><b style="color:#FFD66B">+${fmt(g.stats.goldEarned)}</b></div>
       <div><span>${coin()} Đầu trận ${fmt(CONFIG.startGold)} + kiếm ${fmt(g.stats.goldEarned)}${g.stats.goldRefund ? ` + hủy tướng ${fmt(g.stats.goldRefund)}` : ''} − đã tiêu ${fmt(Math.max(0, CONFIG.startGold + g.stats.goldEarned + (g.stats.goldRefund || 0) - g.gold))}</span><b style="color:#FFD66B">= ${fmt(g.gold)}</b></div>
-      <div><span>Tướng trên sân</span><b>${g.heroes.filter(Boolean).length}</b></div>`;
+      <div><span>Tướng trên sân</span><b>${g.heroes.filter(Boolean).length}</b></div>
+      <div><span>🏦 Ngân khố nhận (mua đồ / tướng trước trận)</span><b style="color:#6AE06A">+${fmt(khoGain)} → ${fmt(s.kho)}</b></div>`;
     const name = `Ải ${lv + 1} · ${LEVELS[lv].name}`;
     const html = win ? `<div class="screen" style="z-index:auto">
       <div class="scr-head metal"><h1 class="ttl">${name}</h1><span class="chip ok">✓ Đã giữ thành</span><div class="sp"></div></div>
@@ -1402,7 +1482,12 @@ class UI {
         if (d.k === 'aiArt') { location.reload(); break; }
         this.renderSettings();
         break;
-      case 'cloud-google': CLOUD.google(() => this.save, (cs) => this.applyCloudSave(cs)); break;
+      case 'cloud-google': if (!CLOUD.enabled) { this.toast('Chưa cấu hình Firebase', '#E25A3A'); break; } CLOUD.google(() => this.save, (cs) => this.applyCloudSave(cs)); break;
+      case 'login-guest': this.save.loginChosen = true; writeSave(this.save); $('#login').hidden = true; break;
+      case 'login-close': this.save.loginChosen = true; writeSave(this.save); $('#login').hidden = true; this.showMenu(); break;
+      case 'prep-buy': this.prepBuy(d.id); break;
+      case 'prep-hero': this.prepHero(d.id); break;
+      case 'prep-go': $('#prep').hidden = true; break;
       case 'cloud-sync': CLOUD.push(this.save, true); break;
       case 'cloud-out': CLOUD.signOut(); break;
       case 'set-close':

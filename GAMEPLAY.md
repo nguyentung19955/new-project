@@ -940,3 +940,9 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - **Lưu đám mây bằng Firebase** (`js/cloud.js`, cấu hình `js/firebase-config.js`, hướng dẫn `docs/FIREBASE.md`): tự đăng nhập khách ẩn danh, bản lưu đẩy lên Firestore `users/{uid}` (gộp các lần ghi trong 4 giây), mở game thì bản trên mây mới hơn được dùng. Cài đặt → **Lưu đám mây**: Đăng nhập Google (nối tài khoản khách, không mất tiến trình), Đồng bộ ngay, Đăng xuất. Cài đặt giao diện giữ theo từng máy.
 - `firestore.rules`: mỗi người chỉ đọc / ghi bản lưu của mình (tối đa 400 KB). `firebase.json` sẵn cho Firebase Hosting.
 - Chưa điền cấu hình thì game lưu trên máy như cũ. Đã thử bằng Firebase giả lập: kéo bản mới hơn về, đẩy bản lưu lên, nối Google.
+
+### Phiên bản 66
+
+- **Đăng nhập**: màn đăng nhập (Google / Chơi ngay khách). Tự hiện lần đầu khi Firebase đã cấu hình; luôn mở được bằng cách bấm khung người chơi ở menu chính (hiện ảnh + tên tài khoản Google khi đã đăng nhập).
+- **Ngân khố** (`save.kho`, bảng `PREP` trong `js/data.js`): thắng ải nhận 120 + 25×số ải + 40×sao (Khó ×1,5), thua nhận 4 mỗi đợt đã qua. Hiện ở menu chính và bảng kết quả.
+- **Chuẩn bị xuất quân**: vào ải mà Ngân khố > 0 thì hiện bảng mua trước trận — Lương thảo +150 vàng (150), Hũ đồng 2 món Hiếm+ (250), Hũ Vua Hùng 2 món Sử thi+ (700), Đắp thành +5 mạng (200), chiêu mộ 1 tướng đặt sẵn trên sân: Tướng Tím 900, Tướng Vàng 2.000. Mỗi món mua 1 lần mỗi trận.

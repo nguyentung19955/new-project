@@ -542,6 +542,12 @@ Object.assign(COSTS, {
 });
 // CỬA HÀNG (v24): 6 món đồ trang phục / phụ kiện ngẫu nhiên, làm mới miễn phí mỗi đợt,
 // làm mới tay tốn vàng (tăng dần trong đợt). Độ hiếm tốt dần theo đợt.
+// v66: Ngân khố — thưởng sau trận, tiêu trước trận
+const PREP = {
+  winBase: 120, winPerLevel: 25, winPerStar: 40, losePerWave: 4, minShow: 1,
+  goldCost: 150, goldAmount: 150, jarCost: 250, kingCost: 700, livesCost: 200, livesAmount: 5,
+  heroCost: { epic: 900, legendary: 2000 },
+};
 const SHOP = {
   slots: 6,
   reroll: (n) => 20 + 10 * n,
