@@ -1205,3 +1205,6 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Nạp ảnh vẽ tay cho 10 tướng Vàng: Kinh Dương Vương, Long Nữ, Rồng Mẹ Hạ Long, Mẫu Địa, Sơn Tinh, Mẹ Lúa, Nữ Thần Mặt Trời, Thiên Lôi, Chú Cuội, Chúa Sơn Lâm.
 - Icon kỹ năng vẽ tay cho 6 tướng Thường: Đắp Đê, Chăn Trâu, Giáo Đồng, Tre Làng, Chuông Đồng, Ống Thổi (cắt bằng `tools/cat-icons.py` → `assets/packs/<tướng>/sk-q…r.png`, khai báo trong `SKILL_PACK`).
 - Còn thiếu ảnh tướng: Sọ Dừa, Mẫu Thoải, Thần Trụ Trời.
+
+## Phiên bản 108 — Icon kỹ năng vẽ tay (tướng Vàng)
+- Thêm icon kỹ năng vẽ tay cho 6 tướng Vàng: Rồng Mẹ Hạ Long, Viêm Đế Thần Nông, Kinh Dương Vương, Thần Trụ Trời, Mẫu Thoải, Long Nữ Động Đình.

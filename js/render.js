@@ -414,7 +414,8 @@ function itemPngPath(id, rarity) {
   return list;
 }
 // v107: icon kỹ năng vẽ tay cắt bằng tools/cat-icons.py → assets/packs/<tướng>/sk-q.png … sk-r.png
-const SKILL_PACK = new Set(['dapde', 'chantrau', 'giaodong', 'tre', 'chuongdong', 'ongthoi']);
+const SKILL_PACK = new Set(['dapde', 'chantrau', 'giaodong', 'tre', 'chuongdong', 'ongthoi',
+  'halong', 'viemde', 'kinhduong', 'trutroi', 'mauthoai', 'longnu']);
 const skillPngPath = (type, i) => [...(SKILL_PACK.has(type) ? [`packs/${type}/sk-${SKILL_KEYS[i].toLowerCase()}.png`] : []), `ky-nang_${heroSlug(type)}_${SKILL_KEYS[i].toLowerCase()}.png`, `skills/${HERO_CODE[type]}_${SKILL_KEYS[i]}.png`];
 const SCENE_FILE = { menu: ['nen_menu.png', 'key-art-menu.png'], story1: ['truyen_1.png', 'scenes/story-1.png'],
   story2: ['truyen_2.png', 'scenes/story-2.png'], story3: ['truyen_3.png', 'scenes/story-3.png'],
