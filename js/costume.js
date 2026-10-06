@@ -43,6 +43,12 @@ const HERO_STYLE = {
   mauthoai:  { idle: 'float', atk: 'twirl' },
   trutroi:   { idle: 'heavy', atk: 'slam' },
   ongho:     { idle: 'crouch', atk: 'flurry' },
+  dotnuong:  { idle: 'crouch', atk: 'cleave' },
+  denroi:    { idle: 'dance', atk: 'toss' },
+  potaoapui: { idle: 'guard', atk: 'cleave' },
+  baahoa:    { idle: 'float', atk: 'twirl' },
+  kinhduong: { idle: 'heavy', atk: 'cleave' },
+  viemde:    { idle: 'sway', atk: 'twirl' },
 };
 const heroStyle = (type) => HERO_STYLE[type] || { idle: 'guard', atk: null };
 

@@ -425,6 +425,118 @@ const HEROES = {
         info: () => 'Khi có tướng dưới 50% máu: toàn quân hồi đầy máu, bất tử 2 giây' },
     ],
   },
+  // ================= v96: ĐỢT HÀNH HỎA — đủ 4 tướng mỗi bậc (2 cận chiến + 2 đánh xa), ghép CÙNG HÀNH =================
+  dotnuong: {
+    name: 'Chàng Đốt Nương', cost: 70, attack: 'melee', wclass: 'blade', dmgType: 'phys',
+    role: 'Vệt lửa', title: 'Dao phát rẫy, lửa đốt nương làm rẫy trên núi', color: '#E25A3A',
+    attrs: { str: 21, agi: 17, int: 12 }, gain: { str: 2.3, agi: 2.0, int: 1.2 },
+    base: { damage: 7, range: 140, cooldown: 0.95 },
+    look: { aura: '#FF7A3A', weapon: { type: 'axe', color: '#9E9A90' } },
+    skills: [
+      { id: 'dn_q', name: 'Dao Phát Rẫy', active: { cooldown: 7, cast: 'forgehammer', mana: 50 },
+        info: (n) => `Chém mạnh: x2.2 sát thương +${(n * 0.8).toFixed(0)}, đốt mục tiêu 3 giây` },
+      { id: 'dn_w', name: 'Lửa Nương',
+        info: (n) => `Đòn đánh để lại vệt lửa trên sông, ${Math.round(15 + n * 0.3)}% sát thương mỗi giây`, apply: (s, n) => { s.fireTrail += 0.15 + n * 0.003; } },
+      { id: 'dn_e', name: 'Khói Rẫy',
+        info: (n) => `+${(6 + n * 0.15).toFixed(1)}% tốc đánh`, apply: (s, n) => { s.haste += 6 + n * 0.15; } },
+      { id: 'dn_r', name: 'Cháy Rừng', active: { cooldown: 14, cast: 'forgeblast', mana: 110 },
+        info: (n) => `Lửa bùng quanh mình: x4 sát thương +${n * 2}, đốt mọi quái trúng` },
+    ],
+  },
+  denroi: {
+    name: 'Cô Thả Đèn Trời', cost: 75, attack: 'magic', proj: 'fireball', wclass: 'staff', dmgType: 'magic',
+    role: 'Mưa lửa', title: 'Thả đèn trời ước nguyện, đèn rơi thành mưa lửa', color: '#FFB04A',
+    attrs: { str: 14, agi: 15, int: 22 }, gain: { str: 1.4, agi: 1.5, int: 2.9 },
+    base: { damage: 5, range: 165, cooldown: 1.25, splash: 25 },
+    look: { aura: '#FFB04A', weapon: { type: 'staff', color: '#8a6a3a', orb: '#FFD66B' } },
+    skills: [
+      { id: 'dr_q', name: 'Đèn Trời Rơi', active: { cooldown: 7, cast: 'lanterns', mana: 50 },
+        info: (n) => `3 đèn trời rơi xuống 3 quái: x1.5 sát thương +${(n * 0.6).toFixed(0)}, thiêu đốt` },
+      { id: 'dr_w', name: 'Bấc Đèn',
+        info: (n) => `+${(n * 0.4).toFixed(1)} sát thương · vùng nổ ${Math.round(Math.min(80, 30 + n * 0.35))}`,
+        apply: (s, n) => { s.damage += n * 0.4; s.splash = Math.min(80, 30 + n * 0.35); } },
+      { id: 'dr_e', name: 'Ước Nguyện',
+        info: (n) => `+${(6 + n * 0.15).toFixed(1)}% sức mạnh kỹ năng`, apply: (s, n) => { s.skillPct += 6 + n * 0.15; } },
+      { id: 'dr_r', name: 'Ngàn Đèn Bay', active: { cooldown: 16, cast: 'birds', mana: 110 },
+        info: (n) => `Ngàn đèn lửa lao xuống quái quanh mình, x2 sát thương +${n}` },
+    ],
+  },
+  potaoapui: {
+    legend: 'epic', name: 'Vua Lửa Pơtao Apui', attack: 'melee', wclass: 'blade', dmgType: 'phys',
+    role: 'Xuyên giáp', title: 'Vua Lửa Gia Rai giữ gươm thần trên cao nguyên', color: '#E0452C',
+    attrs: { str: 26, agi: 16, int: 14 }, gain: { str: 2.8, agi: 1.7, int: 1.4 },
+    base: { damage: 11, range: 145, cooldown: 1.1 },
+    look: { aura: '#FF6A3A', bulk: 1.08, weapon: { type: 'axe', color: '#E0B030' } },
+    trait: { name: 'Gươm Thần Gia Rai', desc: '+20% xuyên giáp, 35% mỗi đòn thiêu đốt' },
+    traitApply: (s) => { s.pierce += 20; s.el.burn = Math.max(s.el.burn || 0, 35); },
+    skills: [
+      { id: 'pa_q', name: 'Gươm Lửa', active: { cooldown: 12, cast: 'judgement', mana: 60 },
+        info: (n) => `Chém quái nhiều máu nhất: x4 sát thương +${n * 2}` },
+      { id: 'pa_w', name: 'Lời Thề Núi Lửa',
+        info: (n) => `+${(6 + n * 0.15).toFixed(1)}% sát thương, +5% máu`, apply: (s, n) => { s.bonusDmgPct += 6 + n * 0.15; s.hpPct += 5; } },
+      { id: 'pa_e', name: 'Vòng Lửa', active: { cooldown: 12, cast: 'forgeblast', mana: 80 },
+        info: (n) => `Vòng lửa quanh mình: x4 sát thương +${n * 2}, đốt` },
+      { id: 'pa_r', name: 'Núi Lửa Thức Giấc', active: { cooldown: 20, cast: 'meteor', mana: 120 },
+        info: (n) => `Đá lửa từ núi lửa rơi xuống: x5 sát thương +${n * 2}` },
+    ],
+  },
+  baahoa: {
+    legend: 'epic', name: 'Bà Hỏa', attack: 'magic', proj: 'fireball', wclass: 'staff', dmgType: 'magic',
+    role: 'Hỏa hoạn', title: 'Bà Hỏa đi đến đâu, lửa bén đến đó', color: '#C8302A',
+    attrs: { str: 15, agi: 15, int: 27 }, gain: { str: 1.5, agi: 1.5, int: 3.1 },
+    base: { damage: 9, range: 165, cooldown: 1.2, splash: 30 },
+    look: { aura: '#E0452C', weapon: { type: 'staff', color: '#3A1A10', orb: '#FF6A3A', glow: '#E0452C' } },
+    trait: { name: 'Hỏa Hoạn', desc: 'Quái đang bị thiêu đốt nhận thêm 20% sát thương' },
+    traitApply: (s) => { s.burnAmp = 20; },
+    skills: [
+      { id: 'bh_q', name: 'Đốm Lửa', active: { cooldown: 6, cast: 'firepillar', mana: 55 },
+        info: (n) => `Cột lửa thiêu quái: x1.8 sát thương +${(n * 0.8).toFixed(0)}` },
+      { id: 'bh_w', name: 'Lửa Lan',
+        info: (n) => `Quái trúng nổ bị đốt ${(4 + n * 0.2).toFixed(1)} máu/giây · vùng nổ ${Math.round(Math.min(90, 35 + n * 0.4))}`,
+        apply: (s, n) => { s.poison = 4 + n * 0.2; s.splash = Math.min(90, 35 + n * 0.4); } },
+      { id: 'bh_e', name: 'Khói Mù', active: { cooldown: 12, cast: 'smokecloud', mana: 70 },
+        info: (n) => `Khói đen quanh mục tiêu: chậm 30%, câm lặng 2 giây, x1.5 sát thương +${n}` },
+      { id: 'bh_r', name: 'Biển Lửa', active: { cooldown: 20, cast: 'firestorm', mana: 120 },
+        info: (n) => `Biển lửa trong tầm: x2 sát thương +${n * 2}, thiêu 4 giây` },
+    ],
+  },
+  kinhduong: {
+    legend: 'legendary', name: 'Kinh Dương Vương', attack: 'melee', wclass: 'blade', dmgType: 'phys',
+    role: 'Vua Xích Quỷ', title: 'Vua nước Xích Quỷ, cha của Lạc Long Quân', color: '#E0452C',
+    attrs: { str: 30, agi: 16, int: 16 }, gain: { str: 3.3, agi: 1.7, int: 1.6 },
+    base: { damage: 14, range: 150, cooldown: 1.0 },
+    look: { aura: '#FF6A3A', bulk: 1.1, weapon: { type: 'axe', color: '#E0B030' } },
+    trait: { name: 'Vua Xích Quỷ', desc: 'Toàn quân +8% sát thương khi Kinh Dương Vương trên sân' },
+    skills: [
+      { id: 'kd_q', name: 'Kiếm Xích Quỷ', active: { cooldown: 7, cast: 'chop', mana: 55 },
+        info: (n) => `Chém một nhát rực lửa: x3 sát thương +${n}` },
+      { id: 'kd_w', name: 'Dòng Dõi Thần Nông',
+        info: (n) => `+${(10 + n * 0.2).toFixed(1)}% máu, +${(1 + n * 0.04).toFixed(1)} hồi máu/giây`, apply: (s, n) => { s.hpPct += 10 + n * 0.2; s.regen += 1 + n * 0.04; } },
+      { id: 'kd_e', name: 'Lệnh Vua', active: { cooldown: 14, cast: 'rally', mana: 70 },
+        info: (n) => `Tướng xung quanh +${Math.round(25 + n * 0.15)}% tốc đánh 5 giây` },
+      { id: 'kd_r', name: 'Hỏa Long Giáng Thế', active: { cooldown: 20, cast: 'dragonbeam', mana: 130 },
+        info: (n) => `Rồng lửa phun một dải: x5 sát thương +${n * 2}` },
+    ],
+  },
+  viemde: {
+    legend: 'legendary', name: 'Viêm Đế Thần Nông', attack: 'magic', proj: 'fireball', wclass: 'staff', dmgType: 'magic',
+    role: 'Lửa nuôi dân', title: 'Vua Lửa dạy dân cày cấy, nếm trăm thứ cỏ', color: '#FFB04A',
+    attrs: { str: 16, agi: 14, int: 31 }, gain: { str: 1.6, agi: 1.4, int: 3.5 },
+    base: { damage: 12, range: 175, cooldown: 1.25, splash: 35 },
+    look: { aura: '#FFB04A', weapon: { type: 'staff', color: '#7A5232', orb: '#FFB04A', glow: '#FF8A3A' } },
+    trait: { name: 'Lửa Nuôi Muôn Dân', desc: 'Mỗi quái Viêm Đế hạ: mọi tướng hồi 2% máu' },
+    skills: [
+      { id: 'vd_q', name: 'Ngọn Lửa Đầu Tiên', active: { cooldown: 6, cast: 'firepillar', mana: 55 },
+        info: (n) => `Cột lửa thiêu quái: x1.8 sát thương +${(n * 0.8).toFixed(0)}` },
+      { id: 'vd_w', name: 'Bách Thảo',
+        info: (n) => `+${(6 + n * 0.15).toFixed(1)}% sức mạnh kỹ năng · tướng đứng gần +${(1.5 + n * 0.05).toFixed(1)} hồi máu/giây`,
+        apply: (s, n) => { s.skillPct += 6 + n * 0.15; s.regenAura = 1.5 + n * 0.05; } },
+      { id: 'vd_e', name: 'Cày Lửa', active: { cooldown: 14, cast: 'firestorm', mana: 80 },
+        info: (n) => `Lửa cày qua quái trong tầm: x2 sát thương +${n * 2}, thiêu 4 giây` },
+      { id: 'vd_r', name: 'Viêm Đế Giáng Hỏa', active: { cooldown: 22, cast: 'meteor', mana: 130 },
+        info: (n) => `Mặt trời lửa rơi xuống: x5 sát thương +${n * 2} vùng lớn` },
+    ],
+  },
   // ================= v94: 11 TƯỚNG DÂN GIAN MỚI — mỗi hành đủ cận chiến + đánh xa ở cả 3 bậc =================
   // ---- Thường
   thoren: {
@@ -711,12 +823,14 @@ const HEROES = {
     ],
   },
 };
-const BASIC_HEROES = ['lactuong', 'lucsi', 'xathu', 'thosan', 'thaymo', 'thansuong', 'thoren', 'nguphu', 'thogom', 'thaylang'];
+const BASIC_HEROES = ['lactuong', 'lucsi', 'xathu', 'thosan', 'thaymo', 'thansuong', 'thoren', 'nguphu', 'thogom', 'thaylang', 'dotnuong', 'denroi'];
 // v94: quân triệu hồi mỗi ải = 6 tướng gốc + 2 trong 4 tướng thường mới (đổi theo ải) — giữ tỉ lệ ghép sao không quá thấp
-const NEW_BASICS = ['thoren', 'nguphu', 'thogom', 'thaylang'];
-const summonPool = (level) => { const k = ((level || 0) % 2) * 2; return [...BASIC_HEROES.slice(0, 6), NEW_BASICS[k], NEW_BASICS[k + 1]]; };
-const LEGEND_HEROES = ['thachsanh', 'lachau', 'thansan', 'caolo', 'antiem', 'tiendung', 'langlieu', 'cdt', 'trongdong', 'caong', 'ongtao',
-  'giong', 'llq', 'kimquy', 'adv', 'auco', 'mau', 'matroi', 'mauthoai', 'trutroi', 'ongho'];
+// v96: 2 nhóm luân phiên theo ải — ải chẵn đủ 4 tướng Hỏa (ghép cùng hành), ải lẻ thêm tướng Thủy / Thổ / Mộc mới
+const NEW_GROUPS = [['thoren', 'dotnuong', 'denroi'], ['nguphu', 'thogom', 'thaylang']];
+const NEW_BASICS = NEW_GROUPS.flat();
+const summonPool = (level) => [...BASIC_HEROES.slice(0, 6), ...NEW_GROUPS[(level || 0) % 2]];
+const LEGEND_HEROES = ['thachsanh', 'lachau', 'thansan', 'caolo', 'antiem', 'tiendung', 'langlieu', 'cdt', 'trongdong', 'caong', 'ongtao', 'potaoapui', 'baahoa',
+  'giong', 'llq', 'kimquy', 'adv', 'auco', 'mau', 'matroi', 'mauthoai', 'trutroi', 'ongho', 'kinhduong', 'viemde'];
 for (const id of LEGEND_HEROES) HEROES[id].cost = COSTS.legend[HEROES[id].legend];
 
 // HỢP THỂ (v34): hai tướng ★★★ đúng công thức kéo vào nhau → một thần mới.
@@ -730,10 +844,8 @@ const FUSION = [
   { a: 'thosan', b: 'xathu', to: 'thansan', why: 'thợ săn + cung thủ thành thần săn Ba Vì' },
   { a: 'xathu', b: 'lucsi', to: 'caolo', why: 'tay nỏ + sức khỏe thành người chế nỏ thần' },
   { a: 'thosan', b: 'thaymo', to: 'antiem', why: 'đốt rẫy làm nương, đảo hoang thành vườn' },
-  { a: 'thansuong', b: 'xathu', to: 'tiendung', why: 'sương mỏng + gió tên thành quạt tiên' },
   { a: 'lucsi', b: 'thaymo', to: 'langlieu', why: 'sức trai + lửa bếp nấu bánh chưng' },
   // Sử thi → Huyền thoại
-  { a: 'thachsanh', b: 'lachau', to: 'giong', why: 'sức người cả làng hun đúc Thánh Gióng' },
   { a: 'thansan', b: 'cdt', to: 'llq', why: 'núi rừng gặp sông biển: Lạc Long Quân' },
   { a: 'lachau', b: 'caolo', to: 'kimquy', why: 'giữ thành + nỏ thần: Thần Kim Quy' },
   { a: 'caolo', b: 'antiem', to: 'adv', why: 'nỏ thần + đất trù phú dựng nước Âu Lạc' },
@@ -742,9 +854,16 @@ const FUSION = [
   // v94: tướng dân gian mới
   { a: 'lactuong', b: 'thoren', to: 'trongdong', why: 'tướng Lạc + thợ đúc đồng gọi Thần Trống Đồng' },
   { a: 'nguphu', b: 'thansuong', to: 'caong', why: 'ngư phủ gặp sương biển: Cá Ông cứu thuyền' },
-  { a: 'thaymo', b: 'thogom', to: 'ongtao', why: 'lửa thiêng + đất nung thành ba ông đầu rau' },
   { a: 'thaylang', b: 'thosan', to: 'antiem', why: 'lá thuốc + tay rừng trồng được dưa hấu' },
   { a: 'ongtao', b: 'tiendung', to: 'matroi', why: 'lửa bếp + tiên nữ: Nữ Thần Mặt Trời' },
+  // v96: HÀNH HỎA ghép cùng hành — 4 Thường → 4 Tím → 4 Vàng
+  { a: 'thaymo', b: 'denroi', to: 'tiendung', why: 'lửa thiêng + đèn trời thành tiên nữ' },
+  { a: 'thoren', b: 'thaymo', to: 'ongtao', why: 'lửa lò rèn + lửa thiêng thành ba ông đầu rau' },
+  { a: 'dotnuong', b: 'thoren', to: 'potaoapui', why: 'lửa rẫy + lò rèn đúc gươm thần Vua Lửa' },
+  { a: 'denroi', b: 'dotnuong', to: 'baahoa', why: 'đèn trời + lửa rẫy: Bà Hỏa' },
+  { a: 'potaoapui', b: 'baahoa', to: 'giong', why: 'gươm lửa + hỏa hoạn hun đúc Thánh Gióng' },
+  { a: 'potaoapui', b: 'ongtao', to: 'kinhduong', why: 'vua lửa + thần bếp: Kinh Dương Vương' },
+  { a: 'baahoa', b: 'tiendung', to: 'viemde', why: 'lửa trời + tiên nữ: Viêm Đế Thần Nông' },
   { a: 'caong', b: 'cdt', to: 'mauthoai', why: 'cá thần + đầm Nhất Dạ: Mẫu Thoải' },
   { a: 'trongdong', b: 'lachau', to: 'trutroi', why: 'trống trời + sức bộ Lạc: Thần Trụ Trời' },
   { a: 'thansan', b: 'thachsanh', to: 'ongho', why: 'thần săn + dũng sĩ rừng: Chúa Sơn Lâm' },
@@ -1089,7 +1208,8 @@ const HERO_EL = { lactuong: 'kim', lucsi: 'tho', xathu: 'kim', thosan: 'moc', th
   giong: 'hoa', llq: 'thuy', kimquy: 'kim', thachsanh: 'moc', caolo: 'kim', antiem: 'moc',
   auco: 'tho', cdt: 'thuy', tiendung: 'hoa', langlieu: 'tho', lachau: 'tho', thansan: 'moc', adv: 'kim', mau: 'moc',
   thoren: 'hoa', nguphu: 'thuy', thogom: 'tho', thaylang: 'moc', trongdong: 'kim', caong: 'thuy', ongtao: 'hoa',
-  matroi: 'hoa', mauthoai: 'thuy', trutroi: 'tho', ongho: 'moc' };
+  matroi: 'hoa', mauthoai: 'thuy', trutroi: 'tho', ongho: 'moc',
+  dotnuong: 'hoa', denroi: 'hoa', potaoapui: 'hoa', baahoa: 'hoa', kinhduong: 'hoa', viemde: 'hoa' };
 for (const id in HERO_EL) HEROES[id].el = HERO_EL[id];
 // hành "rủi ro" của đồ so với tướng: 'same' | 'sinh' | 'khac' | null
 function itemRelation(itemEl, heroEl) {
@@ -1589,6 +1709,24 @@ Object.assign(LEGACY, {
       per: { haste: 5, regen: 1 }, ms: [{ lv: 3, fx: 'slowHit', v: 20, t: 'Đòn đánh làm chậm 20% trong 1 giây' }, { lv: 5, fx: 'manaOnHit', v: 3, t: 'Mỗi đòn hồi 3 năng lượng' }] },
     { id: 'nui', name: 'Núi Rừng Tây Bắc', ic: '⛰', desc: 'Lãnh địa ngàn dặm của Ông Ba Mươi',
       per: { hpPct: 8, dr: 2 }, ms: [{ lv: 3, fx: 'lowHpDr', v: 25, t: 'Máu dưới 40%: giảm thêm 25% sát thương nhận' }, { lv: 5, fx: 'reviveOnce', v: 35, t: 'Gục lần đầu mỗi đợt: đứng dậy với 35% máu' }] },
+  ],
+});
+Object.assign(LEGACY, {
+  kinhduong: [
+    { id: 'kiem', name: 'Kiếm Xích Quỷ', ic: '⚔', desc: 'Thanh kiếm đỏ rực của vua nước Xích Quỷ',
+      per: { bonusDmgPct: 6, crit: 2 }, ms: [{ lv: 3, fx: 'burnHit', v: 20, t: 'Đòn đánh thiêu đốt 20% sát thương/giây trong 3 giây' }, { lv: 5, fx: 'splashHit', v: 35, t: 'Mỗi đòn lan 35% sát thương quanh mục tiêu' }] },
+    { id: 'ngai', name: 'Ngai Vàng Xích Quỷ', ic: '👑', desc: 'Ngai vua phương Nam, con cháu Thần Nông',
+      per: { hpPct: 8, dr: 2 }, ms: [{ lv: 3, fx: 'waveShield', v: 20, t: 'Đầu mỗi đợt nhận khiên 20% máu' }, { lv: 5, fx: 'reviveOnce', v: 35, t: 'Gục lần đầu mỗi đợt: đứng dậy với 35% máu' }] },
+    { id: 'ho', name: 'Hồ Động Đình', ic: '🌊', desc: 'Nơi vua gặp Long Nữ, mẹ của Lạc Long Quân',
+      per: { regen: 1.2, skillPct: 5 }, ms: [{ lv: 3, fx: 'healAura', v: 4, t: 'Mỗi 5 giây hồi 4% máu cho tướng quanh mình' }, { lv: 5, fx: 'stunEvery', v: 6, t: 'Mỗi đòn thứ 6 choáng mục tiêu 0,8 giây' }] },
+  ],
+  viemde: [
+    { id: 'lua', name: 'Lửa Thần Nông', ic: '🔥', desc: 'Ngọn lửa đầu tiên dạy dân nấu chín',
+      per: { bonusDmgPct: 6, skillPct: 3 }, ms: [{ lv: 3, fx: 'burnHit', v: 25, t: 'Đòn đánh thiêu đốt 25% sát thương/giây trong 3 giây' }, { lv: 5, fx: 'chainHit', v: 20, t: '20% mỗi đòn: lửa lan 3 quái' }] },
+    { id: 'cay', name: 'Cày Thần', ic: '🌾', desc: 'Lưỡi cày đầu tiên của người trồng lúa',
+      per: { rangePct: 4, goldOnKill: 0.5 }, ms: [{ lv: 3, fx: 'slowHit', v: 20, t: 'Đòn đánh làm chậm 20% trong 1 giây' }, { lv: 5, stat: 'bossPct', v: 30, t: '+30% sát thương lên boss' }] },
+    { id: 'thao', name: 'Bách Thảo', ic: '🌿', desc: 'Trăm thứ cỏ thuốc Thần Nông đã nếm',
+      per: { hpPct: 8, regen: 1 }, ms: [{ lv: 3, fx: 'healAura', v: 4, t: 'Mỗi 5 giây hồi 4% máu cho tướng quanh mình' }, { lv: 5, fx: 'manaOnHit', v: 3, t: 'Mỗi đòn hồi 3 năng lượng' }] },
   ],
 });
 const LEGACY_STAT = { hpPct: '% máu', dr: '% giảm sát thương nhận', bonusDmgPct: '% sát thương', cleave: ' lan đòn', haste: '% tốc đánh',

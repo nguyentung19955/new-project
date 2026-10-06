@@ -1130,3 +1130,12 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - **Ấn Phù riêng từng tướng:** mỗi bậc Tu Vi cho 3 điểm Ấn của chính tướng đó (tối đa 30). Ấn chỉ số 1 điểm / cấp, ấn kỹ năng 3 điểm / cấp; tẩy ấn miễn phí. Mở từ menu chính (chọn tướng ở dải ảnh trên cùng), từ Anh Hùng (nút 🔯 Ấn Phù cạnh Tu Vi) hoặc menu ≡ trong trận (mặc định tướng đang chọn).
 - Ấn cũ mua bằng Ngân khố được hoàn tiền 100% khi mở game.
 - Màn kết quả trận hiện Tu Vi nhận được và các lần lên bậc.
+
+## Phiên bản 96 — Đợt hành Hỏa: đủ 4 tướng mỗi bậc, ghép cùng hành
+- Thêm **Chàng Đốt Nương** (Thường, gần), **Cô Thả Đèn Trời** (Thường, xa), **Vua Lửa Pơtao Apui** (Tím, gần), **Bà Hỏa** (Tím, xa), **Kinh Dương Vương** (Vàng, gần), **Viêm Đế Thần Nông** (Vàng, xa).
+- Hành Hỏa giờ có 4 Thường (Thầy Mo, Thợ Rèn, Đốt Nương, Đèn Trời) · 4 Tím (Tiên Dung, Ông Táo, Pơtao Apui, Bà Hỏa) · 4 Vàng (Thánh Gióng, Nữ Thần Mặt Trời, Kinh Dương Vương, Viêm Đế), mỗi bậc 2 cận chiến + 2 đánh xa.
+- **Ghép cùng hành (Hỏa):** Thầy Mo + Đèn Trời → Tiên Dung · Thợ Rèn + Thầy Mo → Ông Táo · Đốt Nương + Thợ Rèn → Pơtao Apui · Đèn Trời + Đốt Nương → Bà Hỏa · Pơtao Apui + Bà Hỏa → Thánh Gióng · Pơtao Apui + Ông Táo → Kinh Dương Vương · Bà Hỏa + Tiên Dung → Viêm Đế · Ông Táo + Tiên Dung → Nữ Thần Mặt Trời. Bỏ các công thức chéo hành cũ ra Tiên Dung, Ông Táo, Thánh Gióng. Các hành khác vẫn ghép chéo cho tới đợt của hành đó.
+- Nội tại mới: Pơtao Apui (+20% xuyên giáp, đốt 35%), Bà Hỏa (quái đang cháy nhận +20% sát thương), Kinh Dương Vương (toàn quân +8% sát thương), Viêm Đế (mỗi quái hạ: mọi tướng hồi 2% máu). 3 chiêu mới: Đèn Trời Rơi, Khói Mù (chậm + câm lặng), Biển Lửa.
+- Thần Khí cho Kinh Dương Vương (Kiếm Xích Quỷ · Ngai Vàng Xích Quỷ · Hồ Động Đình) và Viêm Đế (Lửa Thần Nông · Cày Thần · Bách Thảo).
+- Quân triệu hồi: ải chẵn = 6 tướng gốc + Thợ Rèn, Đốt Nương, Đèn Trời (đủ 4 Hỏa); ải lẻ = 6 tướng gốc + Ngư Phủ, Thợ Gốm, Thầy Lang.
+- Prompt Gemini cho 6 tướng: cuối `docs/PROMPT_GEMINI_V94.md`.

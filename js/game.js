@@ -514,6 +514,44 @@ function knockback(e, dist) {
 
 const SKILL_CASTS = {
 
+  // ===== v96: chiêu hành Hỏa mới =====
+  // Cô Thả Đèn Trời: 3 đèn trời rơi xuống 3 quái
+  lanterns(game, h, st, n) {
+    const list = game.enemiesInRange(h.x, h.y, st.range * 1.2).sort((a, b) => b.hp - a.hp).slice(0, 3);
+    if (!list.length) return false;
+    for (const e of list) {
+      game.effects.push({ type: 'lob', x: e.x, y: e.y - 120, x2: e.x, y2: e.y, color: '#FFD66B', ttl: 0.4, max: 0.4 });
+      game.effects.push({ type: 'ring', x: e.x, y: e.y, r: 34, color: '#FFB04A', ttl: 0.4, max: 0.4 });
+      game.hit(e, (st.damage * 1.5 + n * 0.6) * st.skillPower, h, { big: true, color: '#FFD66B' });
+      if (!e.dead) game.dot(e, st.damage * 0.4 * st.skillPower, h, '#E0452C', 'magic', 3);
+    }
+    return true;
+  },
+  // Bà Hỏa: khói mù — chậm + câm lặng
+  smokecloud(game, h, st, n) {
+    const t = game.findTarget(h.x, h.y, st.range * 1.1);
+    if (!t) return false;
+    game.effects.push({ type: 'nova', x: t.x, y: t.y, r: 80, ttl: 0.6, max: 0.6 });
+    game.effects.push({ type: 'ring', x: t.x, y: t.y, r: 80, color: '#4A4040', ttl: 0.7, max: 0.7 });
+    for (const e of game.enemiesInRange(t.x, t.y, 80)) {
+      game.slow(e, 30, 2.5); e.silenceT = Math.max(e.silenceT || 0, e.def.boss ? 1 : 2);
+      game.hit(e, (st.damage * 1.5 + n) * st.skillPower, h, { color: '#C8A090' });
+    }
+    return true;
+  },
+  // Bà Hỏa / Viêm Đế: biển lửa trong tầm
+  firestorm(game, h, st, n) {
+    const r = st.range * 1.3, list = game.enemiesInRange(h.x, h.y, r, false);
+    if (!list.length) return false;
+    game.effects.push({ type: 'banner', str: st.skName || 'Biển Lửa', color: '#FF8A3A', ttl: 1.4, max: 1.4 });
+    game.effects.push({ type: 'wave', x: h.x, y: h.y, r, color: '#FF6A3A', ttl: 0.8, max: 0.8 });
+    for (const e of list) {
+      game.hit(e, (st.damage * 2 + n * 2) * st.skillPower, h, { big: true, color: '#FF8A3A' });
+      if (!e.dead) game.dot(e, st.damage * 0.8 * st.skillPower, h, '#E0452C', 'magic', 4);
+    }
+    return true;
+  },
+
   // ===== v94: chiêu của tướng dân gian mới =====
   // Thợ Rèn / Ông Táo: búa (kẹp) nung đỏ — đòn lớn + thiêu đốt
   forgehammer(game, h, st, n) {
@@ -2366,6 +2404,7 @@ class Game {
         const b = o.buff;
         // Trống Đồng: +20% tốc đánh cho tướng xung quanh (cả bản thân)
         if (own.hasteAura && (o === src || near(src, o, 170))) b.haste = Math.max(b.haste || 0, own.hasteAura);
+        if (t === 'kinhduong') b.drum = Math.max(b.drum || 0, 8);                       // Vua Xích Quỷ: toàn quân +8% sát thương
         if (!near(src, o, 170)) continue;
         if (t === 'kimquy' && near(src, o, 110)) b.dr = Math.max(b.dr || 0, 30);
         if (t === 'lachau' && near(src, o, ELEM.adj)) {
@@ -3194,6 +3233,7 @@ class Game {
     if (st && e.def.boss && st.bossPct) dmg *= 1 + st.bossPct / 100;
     if (e.huntT > 0) dmg *= 1.25;                  // Cuộc Săn Lớn
     if (st && st.execPct && e.hp < e.maxHp * 0.3) dmg *= 1 + st.execPct / 100;   // Chúa Sơn Lâm
+    if (st && st.burnAmp && e.poisonT > 0) dmg *= 1 + st.burnAmp / 100;              // Bà Hỏa: Hỏa Hoạn
     if (RF) {
       if (RF.fx.eliteDmg && (e.elite || e.champion || e.def.general)) dmg *= 1 + RF.fx.eliteDmg / 100;
       if (RF.fx.ccDmg && (e.slowT > 0 || e.stunT > 0)) dmg *= 1 + RF.fx.ccDmg / 100;
@@ -3404,6 +3444,7 @@ class Game {
       log[hero.type] = (log[hero.type] || 0) + xp;
       for (const a of heroLineage(hero)) log[a.type] = (log[a.type] || 0) + xp * 0.5;
       this.onKillFx(e, hero);
+      if (hero.type === 'viemde') healHeroes(this, hero.x, hero.y, 9999, 0.02, '#FFB04A');   // Lửa Nuôi Muôn Dân
       const RF = runeFx(hero);
       if (RF) {
         if (RF.fx.killMana) hero.mana = Math.min(heroStats(hero).maxMana, hero.mana + RF.fx.killMana);

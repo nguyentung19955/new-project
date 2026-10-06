@@ -133,7 +133,8 @@ const HERO_CODE = { lactuong: 'h01', lucsi: 'h02', xathu: 'h03', thosan: 'h04', 
   giong: 'h07', llq: 'h08', kimquy: 'h09', thachsanh: 'h10', auco: 'h11', caolo: 'h12', antiem: 'h13',
   cdt: 'h14', tiendung: 'h15', langlieu: 'h16', lachau: 'h17', thansan: 'h18', adv: 'h19', mau: 'h20',
   thoren: 'h21', nguphu: 'h22', thogom: 'h23', thaylang: 'h24', trongdong: 'h25', caong: 'h26', ongtao: 'h27',
-  matroi: 'h28', mauthoai: 'h29', trutroi: 'h30', ongho: 'h31' };
+  matroi: 'h28', mauthoai: 'h29', trutroi: 'h30', ongho: 'h31',
+  dotnuong: 'h32', denroi: 'h33', potaoapui: 'h34', baahoa: 'h35', kinhduong: 'h36', viemde: 'h37' };
 const ENEMY_CODE = { tom: 'E01', casau: 'E02', rua: 'E03', phuthuy: 'E04', chimbao: 'E05', echme: 'E06',
   nongnoc: 'E07', giaolong: 'E08', thuongluong: 'B01', haba: 'B02', thuytinh: 'B03' };
 const slugCache = {};
@@ -209,6 +210,13 @@ const heroSlug = (type) => slugCache[type] || (slugCache[type] = slugify(HEROES[
   derive('matroi', 'tiendung', { '#C8302A': '#E8842A', '#F2A0C0': '#FFD66B' }, { back: { pre: halo('#FFB04A', 46) }, head: crown('#FFD66B') });
   derive('mauthoai', 'tiendung', { '#C8302A': '#E8F4FF', '#F2A0C0': '#9EDDF2', '#F2D27A': '#BFE8F8' }, { head: crown('#E8F4FF') });
   derive('trutroi', 'lucsi', { '#C89060': '#9A8A78', '#7FC24A': '#C99A3C', '#1E3A12': '#4A4038', '#6A5032': '#5A5040' }, { head: band('#C99A3C') });
+  // v96: hành Hỏa
+  derive('dotnuong', 'thosan', { '#1E3A22': '#5A1A0A', '#2E4A2A': '#8A3A1A', '#2A3A22': '#4A1A0A', '#4A3220': '#5A2A14' }, { head: band('#E0452C') });
+  derive('denroi', 'tiendung', { '#C8302A': '#E8842A', '#F2A0C0': '#FFE08A' }, { head: '<g transform="translate(140 40)"><rect x="-10" y="-14" width="20" height="26" rx="6" fill="#FFB04A" stroke="#2A1608" stroke-width="2"/><path d="M-6 -4 H6 M-6 4 H6" stroke="#E0452C" stroke-width="1.6"/><circle cx="0" cy="0" r="3" fill="#FFF1C4"/></g>' });
+  derive('potaoapui', 'lachau', { '#D9A84E': '#E0452C', '#7A4A22': '#8A2A12', '#8A3A22': '#C8401E' }, { head: crown('#E0452C') });
+  derive('baahoa', 'tiendung', { '#C8302A': '#7A1410', '#F2A0C0': '#E0452C', '#F2D27A': '#FF8A3A' }, { back: { pre: halo('#E0452C', 40) } });
+  derive('kinhduong', 'lucsi', { '#C89060': '#C8804A', '#7FC24A': '#E0452C', '#1E3A12': '#7A1410', '#6A5032': '#8A2A12' }, { head: crown('#FFD66B') });
+  derive('viemde', 'thaylang', { '#2E6A2E': '#8A4A1A', '#C8E8B0': '#FFE0A8', '#7FC24A': '#FFB04A', '#5FB84A': '#E8842A', '#EEF8E4': '#FFF4E0' }, { back: { pre: halo('#FFB04A', 42) }, head: crown('#FFB04A') });
   derive('ongho', 'thansan', { '#B8782A': '#E8843A', '#5A3A14': '#C8642A', '#3E6A22': '#8A4A1A' }, {});
   // icon kỹ năng: mượn icon chiêu cùng loại của tướng khác (đổi tiền tố id để không trùng)
   const ICON_SRC = {
@@ -227,6 +235,12 @@ const heroSlug = (type) => slugCache[type] || (slugCache[type] = slugify(HEROES[
     mauthoai: [['llq', 'Q'], ['cdt', 'W'], ['thansuong', 'R'], ['llq', 'E']],
     trutroi: [['lucsi', 'Q'], ['lucsi', 'R'], ['kimquy', 'E'], ['giong', 'E']],
     ongho: [['thosan', 'Q'], ['thansan', 'W'], ['thosan', 'W'], ['thansan', 'R']],
+    dotnuong: [['lactuong', 'Q'], ['thaymo', 'W'], ['thosan', 'W'], ['thaymo', 'R']],
+    denroi: [['thaymo', 'Q'], ['thaymo', 'W'], ['auco', 'W'], ['auco', 'R']],
+    potaoapui: [['thachsanh', 'Q'], ['thaymo', 'W'], ['thaymo', 'R'], ['giong', 'R']],
+    baahoa: [['thaymo', 'Q'], ['thaymo', 'W'], ['tiendung', 'W'], ['thaymo', 'R']],
+    kinhduong: [['thachsanh', 'Q'], ['lucsi', 'E'], ['lactuong', 'E'], ['llq', 'R']],
+    viemde: [['thaymo', 'Q'], ['langlieu', 'W'], ['thaymo', 'W'], ['thaymo', 'R']],
   };
   for (const [to, list] of Object.entries(ICON_SRC)) {
     if (ART.skill[to]) continue;
@@ -549,7 +563,8 @@ const WEAPON_KIND = { lactuong: 'axe', lucsi: 'axe', thosan: 'daggers', xathu: '
 // tướng huyền thoại giữ dáng vũ khí đặc trưng; mũ / giáp đổi kiểu riêng
 const LEGEND_HELM = { giong: 'helm', llq: 'horncrown', kimquy: 'crownSmall', cdt: 'conical', antiem: 'conical', tiendung: 'flower', langlieu: 'turban',
   lachau: 'helm', adv: 'crownSmall', mau: 'flower', trongdong: 'crownSmall', caong: 'horncrown', ongtao: 'conical',
-  matroi: 'flower', mauthoai: 'flower', trutroi: 'helm', ongho: 'horncrown' };
+  matroi: 'flower', mauthoai: 'flower', trutroi: 'helm', ongho: 'horncrown',
+  potaoapui: 'crownSmall', baahoa: 'flower', kinhduong: 'crownSmall', viemde: 'turban' };
 const LEGEND_ARMOR = { kimquy: 'shell', auco: 'wings' };
 const ACC_AURA_KIND = { trong_dong: 'drum', giap_bat_diet: 'copper' };
 const TIER_SCALE = [1, 1.10, 1.15, 1.20];

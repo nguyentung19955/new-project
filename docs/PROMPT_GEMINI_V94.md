@@ -203,3 +203,75 @@ ENEMY ROW 576x192, 3 cells: [1] walk step A [2] walk step B (opposite legs) [3] 
 | linhan | Lính Giáo: enemy foot soldier, dark-red tunic, bronze helmet, round wooden shield, long spear (attack: spear thrust) |
 
 **Boss:** đã đủ ảnh cho 9 boss — không cần gen. Muốn thêm động tác cho boss thì dùng mục C với `{ACTION}` = *1 stand · 2 raise · 3 attack slam · 4 roar*.
+
+---
+
+# BỔ SUNG v96 — 6 tướng hành Hỏa (đủ 4 mỗi bậc)
+Dùng đúng KHỐI LUẬT ở mục A. Mỗi khối dưới đây là một ảnh.
+
+## B+. Bảng tướng 6 ô
+
+### Chàng Đốt Nương (`dotnuong`) · Thường · Hỏa · cận chiến
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle holding weapon [2] wind-up [3] strike with one short pale swoosh [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Chàng Đốt Nương: young highland farmer, dark-red loincloth and sleeveless brown vest, red headband, bare feet, ember-smudged arms. Weapon: long curved slash-and-burn machete. Element FIRE, glow #FF7A3A. Cast effect: ring of field fire around him. Rarity: common.
+```
+
+### Cô Thả Đèn Trời (`denroi`) · Thường · Hỏa · đánh xa
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle holding weapon [2] wind-up [3] releasing a glowing lantern forward [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Cô Thả Đèn Trời: cheerful village girl in an orange áo tứ thân and yellow sash, hair in a bun with a red ribbon. Weapon: a glowing paper sky lantern held up with both hands. Element FIRE, glow #FFB04A. Cast effect: several small sky lanterns rising. Rarity: common.
+```
+
+### Vua Lửa Pơtao Apui (`potaoapui`) · Tím · Hỏa · cận chiến
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle holding weapon [2] wind-up [3] strike with one short pale swoosh [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Vua Lửa Pơtao Apui (Fire King of the Jarai highlands): strong chieftain in a red and black brocade loincloth with highland zigzag patterns, bronze arm rings, red feather headdress. Weapon: sacred long sword glowing with fire. Element FIRE, glow #FF6A3A. Cast effect: a ring of flame rising from the ground. Rarity: epic.
+```
+
+### Bà Hỏa (`baahoa`) · Tím · Hỏa · đánh xa
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle holding weapon [2] wind-up [3] casting a fireball forward [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Bà Hỏa (Lady of Fire, folk spirit): mysterious woman in a deep-red robe with black flame patterns, long black hair floating like smoke, small fire crown. Weapon: dark staff topped with a red flame orb. Element FIRE, glow #E0452C. Cast effect: black smoke with red embers. Rarity: epic.
+```
+
+### Kinh Dương Vương (`kinhduong`) · Vàng · Hỏa · cận chiến
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle holding weapon [2] wind-up [3] strike with one short pale swoosh [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Kinh Dương Vương (King of Xích Quỷ, father of Lạc Long Quân): majestic king in red and gold royal armor, gold crown with a sun-star, red cape, short black beard. Weapon: broad red-gold sword. Element FIRE, glow #FF6A3A. Cast effect: a small fire dragon coiling around the sword. Rarity: legendary.
+```
+
+### Viêm Đế Thần Nông (`viemde`) · Vàng · Hỏa · đánh xa
+```
+HERO SHEET 768x512, 3x2 cells: [1] idle holding weapon [2] wind-up [3] casting a fireball forward [4] cast skill, small effect around hands [5] front view [6] portrait head+shoulders.
+Viêm Đế Thần Nông (Flame Emperor, god of farming): wise old god with long white beard, leaf-and-straw cape over an orange robe, sun halo behind the head, small rice-ear crown. Weapon: wooden staff with a flame at the top and herbs tied to it. Element FIRE, glow #FFB04A. Cast effect: flaming rice ears and herbs swirling. Rarity: legendary.
+```
+
+## C+. Động tác 4 khung
+
+| Mã | Đánh (attack) | Chiêu (cast) |
+|---|---|---|
+| dotnuong | 1 ready · 2 machete back · 3 wide slash with embers · 4 recover | 1 raise machete · 2 fire spreads on ground · 3 field fire ring · 4 lower |
+| denroi | 1 hold lantern · 2 lift lantern · 3 lantern flies forward · 4 recover | 1 hands together · 2 lanterns appear · 3 lanterns rise and fall as fire · 4 lower |
+| potaoapui | 1 ready · 2 sword raised · 3 fiery slash · 4 recover | 1 sword down · 2 ground glows · 3 flame ring erupts · 4 lower |
+| baahoa | 1 ready · 2 staff back · 3 fireball forward · 4 recover | 1 raise staff · 2 smoke gathers · 3 smoke cloud with embers · 4 lower |
+| kinhduong | 1 ready · 2 sword raised · 3 heavy slash with fire trail · 4 recover | 1 sword up · 2 dragon forms · 3 fire dragon breath · 4 lower |
+| viemde | 1 ready · 2 staff back · 3 fireball forward · 4 recover | 1 raise staff · 2 halo brightens · 3 rain of flaming rice ears · 4 lower |
+
+## D+. Icon kỹ năng (Q · W · E · R)
+
+| Mã | 4 icon |
+|---|---|
+| dotnuong | machete with ember · fire line on a river · smoke over a field · burning forest |
+| denroi | sky lantern falling · lantern wick flame · wishing lantern with a star · many flying lanterns |
+| potaoapui | flaming sword · volcano oath stone · ring of fire · erupting volcano |
+| baahoa | small flame · spreading fire · black smoke cloud · sea of fire |
+| kinhduong | red-gold sword · rice and leaf crest · royal command banner · fire dragon |
+| viemde | first flame on a torch · herb bundle · fire plough · falling fire sun |
+
+## E+. Icon Thần Khí
+
+| Mã | 3 thần khí |
+|---|---|
+| kinhduong | red demon-realm sword · golden throne · lake with a dragon princess silhouette |
+| viemde | sacred farming fire · divine plough · hundred herbs bundle |
