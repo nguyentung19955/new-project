@@ -1269,3 +1269,8 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 125
 - Đền Anh Hùng (xem toàn bộ tướng): khi cầm điện thoại dọc trang tự xoay ngang — trước đây vuốt cuộn bị lệch hướng / giật; giờ tự cuộn theo ngón tay, có quán tính.
+
+## Phiên bản 126 — Gói ảnh Pippit (quái, boss, nền, nút)
+- Quái gen lại đủ dáng đi + đánh: Cua, Cá Mập, Voi Chiến, Cáo, Kỵ Binh. Boss đủ 4 dáng (đi A/B, đánh, nổi giận): Thuồng Luồng, Ngư Tinh, Chằn Tinh, Hà Bá, Ân Vương, Thủy Tinh. Bản đổi màu (Cá Mập Đen, Thiết Kỵ, Chằn Lửa, Tướng Thủy) sinh lại từ ảnh mới (`tools/make-variants.py <mã>`).
+- Nền bản đồ vẽ tay thêm: Rừng, Đồng lúa, Thành, Biển (còn thiếu Sông).
+- Nút trống đồng: Bắt đầu / Dừng, Xem chỉ số, Triệu hồi (trống), Hợp thể; menu chính (Xuất Quân, Anh Hùng, Ấn Phù, Kho Báu, Cài Đặt, Bách khoa, Xếp hạng).

@@ -273,10 +273,23 @@ class UI {
     $('#btn-newgame').onclick = () => this.showModes();
     $('#btn-heroes').onclick = () => this.showRoster();
     $('#btn-runes').onclick = () => this.showRunes(false);
-    // v124: icon nút vẽ tay phong cách trống đồng (assets/ui/); thiếu ảnh thì giữ ký hiệu cũ
+    // v124–126: icon nút vẽ tay phong cách trống đồng (assets/ui/); thiếu ảnh thì giữ ký hiệu cũ
+    const uiImg = (f, alt, cls = 'uimg') => `<img class="${cls}" src="${assetSrc(`ui/${f}.png`)}" alt="${alt}" onerror="this.replaceWith(this.alt)">`;
+    this.uiImg = uiImg;
     for (const [q, f] of [['[data-act=auto-up-gear] .i', 'ui-tran-2-2'], ['[data-act=auto-eq-all] .i', 'ui-tran-2-3']]) {
       const el = document.querySelector(q);
-      if (el) el.innerHTML = `<img class="uimg" src="${assetSrc(`ui/${f}.png`)}" alt="${el.textContent}" onerror="this.replaceWith(this.alt)">`;
+      if (el) el.innerHTML = uiImg(f, el.textContent);
+    }
+    // nút trên thanh trận: mắt (chỉ số), menu ≡ giữ nguyên hình vẽ; Bắt đầu / Dừng dùng mặt trống
+    $('#btn-detail').innerHTML = uiImg('ui-tran-1-4', '👁', 'uimg tb');
+    $('#btn-run').insertAdjacentHTML('beforeend', uiImg('ui-tran-1-1', '', 'uimg tb run-play') + uiImg('ui-tran-1-2', '', 'uimg tb run-pause'));
+    // menu chính: thay hình vẽ nét bằng icon vẽ tay
+    for (const [id, f] of [['#btn-continue', 'ui-menu-1-1'], ['#btn-heroes', 'ui-menu-1-2'], ['#btn-treasury', 'ui-menu-1-3'], ['#btn-settings', 'ui-menu-2-1'], ['#btn-runes', 'ui-menu-1-4']]) {
+      const b = $(id); if (!b) continue;
+      const old = b.querySelector('svg, .mc-ic'); if (old) old.outerHTML = uiImg(f, '', 'uimg mc');
+    }
+    for (const [id, f] of [['#btn-menu-codex', 'ui-menu-2-2'], ['#btn-ranks', 'ui-menu-2-3']]) {
+      const b = $(id); if (b) b.innerHTML = uiImg(f, '', 'uimg sub') + b.textContent.replace(/^\S+\s*/, '');
     }
     $('#btn-treasury').onclick = () => this.showTreasury();
     $('#btn-ranks').onclick = () => this.showRanks('endless');
@@ -764,7 +777,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 125 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 126 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1082,6 +1095,7 @@ class UI {
     const run = $('#btn-run');
     run.classList.toggle('go', !g.running);
     $('#run-icon').setAttribute('d', g.running ? 'M5 5 H15 V15 H5 Z' : 'M6 4 L16 10 L6 16 Z');
+    run.classList.toggle('playing', g.running);
     run.setAttribute('aria-label', g.running ? 'Dừng' : 'Bắt đầu');
     // chấm xanh trên ≡ khi có việc nên làm (hái Linh Chi)
     $('#menu-dot').hidden = true;      // v92: bỏ Núi Tản Viên (không còn Linh Chi để hái)
@@ -1201,8 +1215,8 @@ class UI {
       key += `|${pairs}`;
       html = `${pairs ? `<button class="dk-auto metal on" data-act="auto-merge" aria-label="Ghép tự động"><b>⇄</b>Ghép<br>tự động<i>${Math.floor(pairs / 2)}</i></button>` : ''}
         <button class="dk-summon ${can ? '' : 'poor'}" data-act="summon-rand" aria-label="Triệu hồi ngẫu nhiên, ${sc} vàng">
-          <b>Triệu hồi</b><span class="cost">${coin(1)} ${sc}</span></button>
-        <span class="dk-sep"></span><button class="dk-card legend" data-act="legend-open" aria-label="Cây hợp thể">${assetUrl('ui_thang-than.png') ? `<img class="asc-ic" src="${assetUrl('ui_thang-than.png')}" alt="">` : '<b>★</b>'}Hợp<br>thể</button>`;
+          ${this.uiImg ? this.uiImg('ui-tran-3-1', '', 'uimg sm') : ''}<b>Triệu hồi</b><span class="cost">${coin(1)} ${sc}</span></button>
+        <span class="dk-sep"></span><button class="dk-card legend" data-act="legend-open" aria-label="Cây hợp thể">${`<img class="asc-ic" src="${assetSrc('ui/ui-tran-3-2.png')}" alt="★">`}Hợp<br>thể</button>`;
     } else {
       const def = HEROES[h.type];
       const st = heroStats(h);

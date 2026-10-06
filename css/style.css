@@ -1483,3 +1483,13 @@ body { overflow: hidden; }
 /* v124: icon nút vẽ tay trống đồng */
 .ab .i .uimg { width: 30px; height: 30px; display: block; }
 #trash b .uimg { width: 26px; height: 26px; vertical-align: middle; }
+/* v126: nút trống đồng */
+.uimg.tb { width: 30px; height: 30px; display: block; margin: auto; }
+#btn-run .uimg.tb { position: absolute; inset: 0; margin: auto; }
+#btn-run:has(.uimg.tb) svg { display: none; }
+#btn-run .run-pause, #btn-run.playing .run-play { display: none; }
+#btn-run.playing .run-pause { display: block; }
+.mc-btn .uimg.mc { width: 30px; height: 30px; flex: none; }
+.mc-sub .uimg.sub { width: 20px; height: 20px; vertical-align: -5px; margin-right: 4px; }
+.dk-summon .uimg.sm { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 42px; height: 42px; }
+.dk-card.legend img.asc-ic { position: static; width: 26px; height: 26px; object-fit: contain; margin: 0 auto 1px; }

@@ -3,7 +3,7 @@
 Hiệu ứng động (lửa, băng, khói ma…) do game vẽ thêm lúc chơi (ENEMIES[x].fx).
   python3 tools/make-variants.py
 """
-import os, numpy as np
+import os, sys, numpy as np
 from PIL import Image
 
 ROOT = os.path.join(os.path.dirname(__file__), '..', 'assets', 'packs')
@@ -56,7 +56,9 @@ def apply(im, o):
     rgb = np.where(dark, a[..., :3], rgb)
     return Image.fromarray(np.concatenate([rgb, al], -1).astype(np.uint8), 'RGBA')
 
+ONLY = set(sys.argv[1:])   # tùy chọn: chỉ sinh lại các mã này, vd. python3 tools/make-variants.py camapden thietky
 for code, (src, o) in VARIANTS.items():
+    if ONLY and code not in ONLY: continue
     os.makedirs(os.path.join(ROOT, code), exist_ok=True)
     for n in ['walk1', 'walk2', 'attack', 'rage']:
         f = os.path.join(ROOT, src, n + '.png')

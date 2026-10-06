@@ -453,7 +453,7 @@ function drawVfx(ctx, img, p, x, y, size) {
 // ------------------------------------------------------------
 let mapImgKey = '';
 // v124: nền bản đồ vẽ tay theo chủ đề (assets/maps/nen-<chủ đề>.jpg); đường đi, ô tướng, thành vẫn do game vẽ lên trên
-const MAP_BG = new Set(['dam', 'hang']);
+const MAP_BG = new Set(['dam', 'hang', 'rung', 'dong', 'thanh', 'bien']);
 function mapBg() {
   const m = typeof MAP_ID !== 'undefined' && MAPS[MAP_ID];
   return m && MAP_BG.has(m.theme) ? { img: asset(`maps/nen-${m.theme}.jpg`, true), theme: m.theme } : null;
