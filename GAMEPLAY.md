@@ -1200,3 +1200,8 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 106 — Ảnh Gemini đợt 2
 - Nạp ảnh vẽ tay cho 14 tướng Tím / Vàng: Lang Liêu, Nghê Đồng, Mỵ Châu, Trống Đồng, Cá Ông, Lý Ngư, Trương Chi, Ông Táo, Pơtao Apui, Bà Hỏa, Ông Đùng, Thổ Công, Kỳ Lân, Viêm Đế; và quái Lính Giáo. Đã xoá dấu ✦ và đĩa nền hồng phía sau Thổ Công / Lang Liêu.
 - Còn thiếu ảnh: Sọ Dừa và 12 tướng Vàng (Ma Trời, Mẫu Thoải, Trụ Trời, Ông Hổ, Kình Dương, Hạ Long, Long Nữ, Tản Viên, Mẫu Địa, Thiên Lôi, Cuội, Mẹ Lúa).
+
+## Phiên bản 107 — Ảnh Gemini đợt 3
+- Nạp ảnh vẽ tay cho 10 tướng Vàng: Kinh Dương Vương, Long Nữ, Rồng Mẹ Hạ Long, Mẫu Địa, Sơn Tinh, Mẹ Lúa, Nữ Thần Mặt Trời, Thiên Lôi, Chú Cuội, Chúa Sơn Lâm.
+- Icon kỹ năng vẽ tay cho 6 tướng Thường: Đắp Đê, Chăn Trâu, Giáo Đồng, Tre Làng, Chuông Đồng, Ống Thổi (cắt bằng `tools/cat-icons.py` → `assets/packs/<tướng>/sk-q…r.png`, khai báo trong `SKILL_PACK`).
+- Còn thiếu ảnh tướng: Sọ Dừa, Mẫu Thoải, Thần Trụ Trời.
