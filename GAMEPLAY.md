@@ -1196,3 +1196,7 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Nạp ảnh vẽ tay cho 14 tướng Thường mới (Giáo Đồng, Chuông Đồng, Tre Làng, Ống Thổi, Đắp Đê, Chăn Trâu, Chèo Đò, Hái Sen, Đèn Trời, Thợ Rèn, Đốt Nương, Ngư Phủ, Thầy Lang, Thợ Gốm) và 2 quái (Đá Con, Yêu Tinh Rừng). Đã xoá nhãn "[1]…[6]" và dấu ✦ của Gemini khi cắt.
 - Sửa icon hành trong nhãn thẻ tướng (Anh Hùng) bị lệch khi bật ảnh vẽ tay.
 - Danh sách prompt còn lại: 27 tướng Tím / Vàng + Lính Giáo + icon (`docs/PROMPT_GEMINI_FULL.md`).
+
+## Phiên bản 106 — Ảnh Gemini đợt 2
+- Nạp ảnh vẽ tay cho 14 tướng Tím / Vàng: Lang Liêu, Nghê Đồng, Mỵ Châu, Trống Đồng, Cá Ông, Lý Ngư, Trương Chi, Ông Táo, Pơtao Apui, Bà Hỏa, Ông Đùng, Thổ Công, Kỳ Lân, Viêm Đế; và quái Lính Giáo. Đã xoá dấu ✦ và đĩa nền hồng phía sau Thổ Công / Lang Liêu.
+- Còn thiếu ảnh: Sọ Dừa và 12 tướng Vàng (Ma Trời, Mẫu Thoải, Trụ Trời, Ông Hổ, Kình Dương, Hạ Long, Long Nữ, Tản Viên, Mẫu Địa, Thiên Lôi, Cuội, Mẹ Lúa).
