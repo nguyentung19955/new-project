@@ -810,7 +810,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 134 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 135 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -980,7 +980,7 @@ class UI {
   renderLegends() {
     const g = this.game;
     $('#lg-count').textContent = `Huyền thoại trên sân ${g.legendCount()}`;
-    $('#lg-info').innerHTML = 'Triệu hồi ra tướng ★ ngẫu nhiên. <b>Kéo 2 tướng cùng loại cùng sao vào nhau</b> để lên ★★, ★★★. Hai tướng ★★★ đúng công thức, kỹ năng tối đa, <b>kéo vào nhau để hợp thể</b> (hoặc chạm tướng → Hợp thể). Thần mới giữ cấp, đồ và nội tại của cả hai.';
+    $('#lg-info').innerHTML = 'Triệu hồi: chọn 1 trong 3 tướng ★ của đội 6 tướng. <b>Kéo 2 tướng cùng loại cùng sao vào nhau</b> để lên ★★, ★★★. Hai tướng ★★★ đúng công thức, kỹ năng tối đa, <b>kéo vào nhau để hợp thể</b> (hoặc chạm tướng → Hợp thể). Thần mới giữ cấp, đồ và nội tại của cả hai.';
   }
 
   // ============================================================
@@ -1266,7 +1266,7 @@ class UI {
           <button class="of-rr metal ${g.gold >= rc ? '' : 'poor'}" data-act="offer-reroll" aria-label="Đổi 3 tướng khác, ${rc} vàng"><b>↻ Đổi</b><span>${coin(1)} ${rc}</span></button></div>`;
       } else {
       html = `${pairs ? `<button class="dk-auto metal on" data-act="auto-merge" aria-label="Ghép tự động"><b>⇄</b>Ghép<br>tự động<i>${Math.floor(pairs / 2)}</i></button>` : ''}
-        <button class="dk-summon ${can ? '' : 'poor'}" data-act="summon-rand" aria-label="Triệu hồi ngẫu nhiên, ${sc} vàng">
+        <button class="dk-summon ${can ? '' : 'poor'}" data-act="summon-rand" aria-label="Triệu hồi, chọn 1 trong 3, ${sc} vàng">
           ${this.uiImg ? this.uiImg('ui-tran-3-1', '', 'uimg sm') : ''}<b>Triệu hồi</b><span class="cost">${coin(1)} ${sc}</span></button>
         <span class="dk-sep"></span><button class="dk-card legend" data-act="legend-open" aria-label="Cây hợp thể">${`<img class="asc-ic" src="${assetSrc('ui/ui-tran-3-2.png')}" alt="★">`}Hợp<br>thể</button>`;
       }
@@ -1495,7 +1495,7 @@ class UI {
       const heroes = g.heroes.filter(Boolean);
       if (!heroes.length) {
         pos = [466, 330];
-        text = 'Bấm Triệu hồi ↓ để gọi một tướng ngẫu nhiên';
+        text = 'Bấm Triệu hồi ↓ rồi chọn 1 trong 3 tướng';
       } else if (heroes.length === 1 && g.wave === 0 && g.gold >= g.summonCost()) {
         pos = [466, 330];
         text = 'Gọi thêm tướng: 2 tướng giống nhau kéo vào nhau sẽ lên sao';
@@ -1741,7 +1741,7 @@ class UI {
               <div class="kvt inset" style="font-size:12px">${d.legend
                 ? `<div><span>Ghép từ</span><b style="text-align:right">${ascendSources(t).map((x) => HEROES[x].name).join(' + ')}</b></div>
                   <div><span>Cần</span><b style="color:#FFD66B">${d.legend === 'epic' ? '★★★' : `Thần tinh ${'★'.repeat(COSTS.ascendTier2)}`} · kỹ năng tối đa · ${COSTS.ascend[d.legend]} vàng</b></div>`
-                : `<div><span>Có từ</span><b style="color:#FFD66B">Triệu hồi ngẫu nhiên ★</b></div>`}
+                : `<div><span>Có từ</span><b style="color:#FFD66B">Triệu hồi ★ (đội 6 tướng)</b></div>`}
                 ${ASCEND[t] ? `<div><span>Hợp thể ra</span><b style="text-align:right;color:${RARITY[d.legend ? 'legendary' : 'epic'].color}">${ASCEND[t].map((x) => HEROES[x].name).join(' / ')}</b></div>` : ''}
                 <div><span>Tầm · Tốc đánh</span><b>${d.base.range} · ${d.base.cooldown}s</b></div></div>
               ${d.trait ? `<div class="tipbox inset" style="font-size:12px">★ <b>${d.trait.name}:</b> ${esc(d.trait.desc)}</div>` : ''}

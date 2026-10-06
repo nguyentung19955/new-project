@@ -1314,3 +1314,6 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - **↻ Đổi**: ra 3 tướng khác, giá 10 vàng rồi tăng 10 mỗi lần đổi trong cùng lượt.
 - Lượt đang chọn dở được lưu cùng trận (Tiếp tục vẫn còn 3 thẻ).
 - Đền Anh Hùng: sửa nhãn đánh xa / cận chiến của tướng mới.
+
+## Phiên bản 135
+- Cập nhật chữ hướng dẫn còn ghi "triệu hồi ngẫu nhiên" (mẹo đầu trận, Cây hợp thể, nguồn gốc tướng) theo cách triệu hồi mới: chọn 1 trong 3 từ đội 6 tướng.
