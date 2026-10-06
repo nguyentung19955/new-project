@@ -873,3 +873,9 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 ### Phiên bản 53
 
 - **Bách khoa quái thú** (trước là "Bách khoa thủy quái") nay có đủ quái và boss của cả 5 chương truyện. Hàng nút chương ở trên (Sơn Tinh – Thủy Tinh · Thạch Sanh · Thánh Gióng · Lạc Long Quân · An Dương Vương), mở sẵn chương của ải đang chơi. Thẻ quái lấy theo bảng quân của các ải trong chương; thẻ boss ghi ải và đợt boss xuất hiện lần đầu. Thêm nhãn mới: Bắn tướng, Giẫm choáng tướng, Lọt thành −N mạng; Thạch Tinh có ghi chú Đá Con.
+
+### Phiên bản 54
+
+- **Mỗi ải dài thêm 10 đợt** để người chơi có thêm thời gian và vàng nâng tướng lên Tím / Vàng: ải 1 có 25 đợt, ải 2–3 có 30, ải 4–5 có 35, ải 6–8 có 40, chương Thạch Sanh 35–40, Thánh Gióng 40–45, Lạc Long Quân và An Dương Vương 45.
+- Quái **mạnh lên chậm hơn** theo tỉ lệ (`waveScale`, đợt "hiệu dụng" `effWave` trong `js/data.js`): đợt cuối vẫn mạnh như bản cũ, các đợt giữa nhẹ hơn. Số quái mỗi đợt, giáp / kháng phép tăng dần và sát thương chiêu quái cũng tính theo đợt hiệu dụng. Vàng mỗi đợt và vàng hạ quái vẫn tính theo đợt thật, nên tổng vàng cả ải nhiều hơn rõ.
+- Boss vẫn ra mỗi 10 đợt và ở đợt cuối. Đợt bay thêm 34, 37, 44, 47; quái tinh anh ở mọi đợt tận cùng bằng 5.

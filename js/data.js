@@ -988,6 +988,8 @@ const ELITE_MODS = {
 };
 
 const waveHpMult = (n) => Math.pow(1.16, n - 1);
+// v54: đợt "hiệu dụng" — ải dài hơn thì quái mạnh lên chậm hơn (đợt cuối vẫn mạnh như bản cũ)
+const effWave = (n, level) => { const lv = LEVELS[level || 0]; const sc = (lv && lv.waveScale) || 1; return 1 + (n - 1) * sc; };
 
 // Lịch đợt mặc định: boss ở đợt 10/20/30, đợt bay 7/13/17/24/27,
 // Rùa Giáp khổng lồ ở 5/15/25. Nước dâng sau đợt boss 10 và 20.
@@ -1060,11 +1062,12 @@ function bossAt(n, level) {
   return null;
 }
 const waveKind = (n, level) => (bossAt(n, level) ? 'boss'
-  : AIR_WAVES.includes(n) ? 'air' : CHAMPION_WAVES.includes(n) ? 'champion' : 'normal');
+  : AIR_WAVES.includes(n) || (n > 27 && (n % 10 === 4 || n % 10 === 7)) ? 'air' : n % 10 === 5 ? 'champion' : 'normal');
 
 function buildWave(n, level) {
   const list = [];
-  const count = 8 + Math.floor(n * 1.6);
+  const e = effWave(n, level);
+  const count = 8 + Math.floor(e * 1.6);
   const kind = waveKind(n, level);
   // v48: quân theo chương (ROSTERS trong enemies2.js); mặc định quân Thủy Tinh
   const ro = (typeof ROSTERS !== 'undefined' && ROSTERS[(LEVELS[level || 0] || {}).roster || 'thuy']) || null;
@@ -1072,8 +1075,8 @@ function buildWave(n, level) {
     const r = Math.random();
     let type = ro ? ro.base : 'tom';
     if (kind === 'air' && ro && ro.air && r < 0.55) type = ro.air;
-    else if (ro) { for (const [from, p, t] of ro.list) if (n >= from && r < p) { type = t; break; } }
-    const elite = n >= 6 && Math.random() < 0.08 + n * 0.006
+    else if (ro) { for (const [from, p, t] of ro.list) if (e >= from && r < p) { type = t; break; } }
+    const elite = e >= 6 && Math.random() < 0.08 + e * 0.006
       ? Object.keys(ELITE_MODS)[Math.floor(Math.random() * 4)] : null;
     const fast = ro ? ro.fast.includes(type) : false;
     list.push({ type, elite, gap: fast ? 0.45 : 0.8 });

@@ -2324,7 +2324,8 @@ class Game {
   spawn(type, dist, elite) {
     const def = ENEMIES[type];
     // boss tăng máu chậm hơn quái thường để không đột biến ở cuối chiến dịch
-    let hp = def.hp * (def.boss ? Math.pow(waveHpMult(this.wave), 0.85) : waveHpMult(this.wave)) * this.lv.hp;
+    const ew = effWave(this.wave, this.level);
+    let hp = def.hp * (def.boss ? Math.pow(waveHpMult(ew), 0.85) : waveHpMult(ew)) * this.lv.hp;
     if (elite) hp *= 1.8;
     if (this.hard) hp *= HARD.hp(this.level);
     const p = PATH.at(dist);
@@ -2337,7 +2338,7 @@ class Game {
       el: def.el || pick(EL_ORDER), el2: null, shredN: 0, noHealT: 0, groundT: 0,
     };
     // giáp và kháng phép tăng dần theo đợt (xuyên giáp / xuyên kháng của tướng có đất dụng võ)
-    const gw = Math.floor(this.wave / ENEMY_GROW.every);
+    const gw = Math.floor(ew / ENEMY_GROW.every);
     e.armor += gw * ENEMY_GROW.armor;
     if (e.mr > 0) e.mr = Math.min(ENEMY_GROW.mrCap, e.mr + gw * ENEMY_GROW.mr);
     e.baseArmor = e.armor;
@@ -2441,7 +2442,7 @@ class Game {
         e.burnT = 1;
         for (const h of this.heroes) {
           if (h && !h.dead && Math.hypot(h.x - e.x, h.y - e.y) <= d.burnAura.radius) {
-            this.damageHero(h, d.burnAura.dps * (1 + this.wave * 0.06), false, true);
+            this.damageHero(h, d.burnAura.dps * (1 + effWave(this.wave, this.level) * 0.06), false, true);
           }
         }
       }
@@ -2468,7 +2469,7 @@ class Game {
           e.atkCd = d.ranged.cd;
           this.projectiles.push({
             kind: 'evil', x: e.x, y: e.y - 14, target: h, tx: h.x, ty: h.y - 20, speed: 260,
-            dmg: d.ranged.dmg * (1 + this.wave * 0.08),
+            dmg: d.ranged.dmg * (1 + effWave(this.wave, this.level) * 0.08),
           });
         }
       }
@@ -2484,7 +2485,7 @@ class Game {
         for (const h of this.heroes) {
           if (!h || h.dead || Math.hypot(h.x - e.x, h.y - e.y) > d.slam.range) continue;
           h.stunT = d.slam.stun;
-          this.damageHero(h, d.slam.dmg * (1 + this.wave * 0.06));
+          this.damageHero(h, d.slam.dmg * (1 + effWave(this.wave, this.level) * 0.06));
         }
       }
     }
@@ -2528,7 +2529,7 @@ class Game {
           e.swoopCd = d.swoop.cd;
           const h = near.sort((a, b) => heroPower(b) - heroPower(a))[0];
           h.stunT = Math.max(h.stunT || 0, d.swoop.stun);
-          this.damageHero(h, d.swoop.dmg * (1 + this.wave * 0.06));
+          this.damageHero(h, d.swoop.dmg * (1 + effWave(this.wave, this.level) * 0.06));
           this.effects.push({ type: 'streak', x: e.x, y: e.y - 40, x2: h.x, y2: h.y - 30, color: '#E8B83A', ttl: 0.4, max: 0.4 });
           this.text(h.x, h.y - 70, d.swoop.name || 'Bị cắp!', '#E8B83A', 1.1, 15);
         }
