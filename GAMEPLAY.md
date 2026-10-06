@@ -1058,3 +1058,8 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - Bỏ dãy mặt tướng trong ô chiêu mộ, bỏ nút 📊 trùng lặp; ô cộng điểm chỉ hiện khi còn điểm.
 - Bỏ dòng công thức thưởng ở màn chuẩn bị; menu chính chỉ hiện Ngân khố; ngăn kéo ≡ bỏ chú thích phụ.
 - Hai nút phụ menu (Bách khoa / Xếp hạng) không còn bị cắt chữ.
+
+## Phiên bản 88 — Ô gợi ý hợp thể
+- Chỉ gợi ý tướng mà tài khoản đã mua (cả tím lẫn vàng), tối đa 6 ô.
+- Tướng tím: chỉ hiện khi tiến độ ghép đạt từ 75% trở lên.
+- Tướng vàng: hiện khi trên bản đồ đã có một thần tím nằm trong công thức ghép ra tướng vàng đó.

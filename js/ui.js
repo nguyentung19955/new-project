@@ -695,7 +695,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 87 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 88 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1024,8 +1024,13 @@ class UI {
     const el = $('#fuse-strip');
     if (!g.started || g.over) { el.innerHTML = ''; return; }
     if ((this.fsT = (this.fsT || 0) + 1) % 10) return;      // 6 lần / giây là đủ
-    const list = FUSION.map((f, i) => ({ f, i, ...g.fusionProgress(f) })).filter((x) => x.p > 0 && g.ownsHero(x.f.to))
-      .sort((a, b) => b.p - a.p).slice(0, 5);
+    // v88: chỉ gợi ý tướng tài khoản đã mua. Tím: tiến độ ≥ 75%. Vàng: trên bản đồ đã có một thần tím trong công thức.
+    const onMap = new Set(g.heroes.filter(Boolean).map((h) => h.type));
+    const list = FUSION.map((f, i) => ({ f, i, ...g.fusionProgress(f) })).filter((x) => {
+      if (!g.ownsHero(x.f.to)) return false;
+      if (HEROES[x.f.to].legend === 'legendary') return onMap.has(x.f.a) || onMap.has(x.f.b);
+      return x.p >= 0.75;
+    }).sort((a, b) => b.p - a.p).slice(0, 6);
     const key = list.map((x) => x.i + ':' + Math.floor(x.p * 100) + (x.p >= 1 && typeof g.canFuse(x.a, x.b) !== 'string' ? '!' : '')).join(',') + '|' + assetVersion;
     if (this.sig.fuse === key) return;
     this.sig.fuse = key;
