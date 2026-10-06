@@ -1179,3 +1179,9 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 102 — Sửa lỗi "stroke is not defined"
 - Lỗi từ v81: hai dòng vẽ viền ngôi sao bị chèn nhầm vào hàm vẽ ô bo góc. Game bị dừng khi vẽ bia mộ tướng gục, bức tường chắn, hoặc hiệu ứng ngựa sắt Thánh Gióng. Đã trả hai dòng về đúng hàm vẽ ngôi sao.
 - Thêm bài kiểm tra chạy đủ 17 bản đồ có tướng gục để bắt lỗi này.
+
+## Phiên bản 103 — Thêm nguồn Ngân khố
+- **Vô tận:** mỗi 10 đợt hoàn thành +150 Ngân khố (từ đợt 50 +225, đợt 100 +300…), mỗi boss hạ +100; cộng ngay vào tài khoản giữa trận (Khó ×1,5).
+- **Dừng chơi giữa trận:** vẫn nhận 4 Ngân khố mỗi đợt đã qua (như khi thua).
+- **Thắng trận đầu tiên trong ngày (Phó bản):** thêm +300.
+- Màn kết quả hiện thêm các dòng thưởng ngày và Ngân khố đã nhận giữa trận.

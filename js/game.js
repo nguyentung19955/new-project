@@ -1387,6 +1387,7 @@ class Game {
     this.mountain = { growth: 0, soiled: false, herbs: 0 };
     this.xpLog = {};          // v95: Tu Vi kiếm trong trận này (theo loại tướng)
     this.stats = { kills: 0, goldEarned: 0, goldRefund: 0 };
+    this.khoRun = 0;          // v103: Ngân khố nhận giữa trận (vô tận)
     this.events = [];
     // Đồ khởi đầu để thử ngay việc thay đổi hình dạng
     this.inventory = ['mu_long_chim', 'ao_vai', 'riu_dong', 'no_tre', 'gay_mo'].map((id) => makeItem(id));
@@ -2491,6 +2492,8 @@ class Game {
     this.moc = this.mocMax();
     this.rollShop();      // cửa hàng nhập hàng mới
     this.notify(`Hoàn thành đợt ${this.wave}! +${bonus + extra} vàng · núi cao +${mGold} vàng`, '#F2D27A');
+    // v103: Vô tận — mỗi 10 đợt cộng Ngân khố (tài khoản) ngay
+    if (this.endless && this.wave % PREP.endlessEvery === 0) this.events.push({ type: 'kho', n: Math.round(PREP.endlessMilestone * (1 + Math.floor(this.wave / 50) * 0.5) * (this.hard ? 1.5 : 1)), why: `mốc đợt ${this.wave}` });
     if (bossAt(this.wave, this.level)) this.riseWater();
     this.events.push({ type: 'checkpoint' });   // v74: lưu màn đang chơi giữa hai đợt
     if (this.wave >= this.levelWaves && !this.endless && !this.won) {
@@ -3481,6 +3484,7 @@ class Game {
       this.effects.push({ type: 'ring', x: e.x, y: e.y, r: 30, color: e.def.color, ttl: 0.4, max: 0.4 });
     }
 
+    if (e.def.boss && this.endless) this.events.push({ type: 'kho', n: Math.round(PREP.endlessBoss * (this.hard ? 1.5 : 1)), why: `hạ ${e.def.name}` });   // v103
     if (e.def.boss) {
       this.bossesKilled++;
       this.notify(`Đã hạ ${e.def.name}!`, '#F0A030');

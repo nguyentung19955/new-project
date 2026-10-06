@@ -1344,6 +1344,8 @@ const OWN_COST = { epic: 1200, legendary: 3000 };
 // v66: Ngân khố — thưởng sau trận, tiêu trước trận
 const PREP = {
   winBase: 120, winPerLevel: 25, winPerStar: 40, losePerWave: 4, minShow: 1,
+  // v103: Vô tận mỗi 10 đợt / mỗi boss hạ được Ngân khố ngay; thắng trận đầu mỗi ngày thưởng thêm
+  endlessEvery: 10, endlessMilestone: 150, endlessBoss: 100, dailyWin: 300,
   goldCost: 150, goldAmount: 150, jarCost: 250, kingCost: 700, livesCost: 200, livesAmount: 5,
   heroCost: { epic: 900, legendary: 2000 },
 };

@@ -478,7 +478,12 @@ class UI {
   // v77: dừng chơi — bỏ trận đang chơi (không lưu để tiếp tục), ghi điểm vô tận nếu có, về menu
   quitRun() {
     const g = this.game;
-    if (g.started) { this.bankStats(); const tv = this.bankTuvi(TUVI_LOSE); if (tv.up.length) this.toast(tv.up.join('<br>'), '#FFD66B'); }
+    if (g.started) {
+      this.bankStats(); const tv = this.bankTuvi(TUVI_LOSE); if (tv.up.length) this.toast(tv.up.join('<br>'), '#FFD66B');
+      // v103: dừng trận vẫn nhận Ngân khố như khi thua (4 mỗi đợt đã qua)
+      const k = PREP.losePerWave * Math.max(0, g.wave - 1);
+      if (k && !g.over) { this.save.kho = (this.save.kho || 0) + k; writeSave(this.save); this.toast(`Ngân khố ${bac(1)} +${fmt(k)} (dừng ở đợt ${g.wave})`, '#E4ECF4'); }
+    }
     if (g.endless) { this.submitScores(false, 0); const sv = this.save; sv.bestEndless = sv.bestEndless || {}; sv.bestEndless[g.level] = Math.max(sv.bestEndless[g.level] || 0, g.wave); writeSave(sv); }
     g.running = false; g.over = true; g.started = false;
     this.clearRun();
@@ -737,7 +742,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 102 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 103 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -953,6 +958,10 @@ class UI {
       if (ev.type === 'newEnemy') {
         const d = ENEMIES[ev.enemy];
         this.toast(`<b>Quái mới: ${d.name}</b> · ${d.short || d.desc}`, d.boss ? '#E25A3A' : '#5AB4D6');
+      } else if (ev.type === 'kho') {
+        // v103: Ngân khố kiếm giữa trận (Vô tận) — cộng thẳng vào tài khoản
+        this.save.kho = (this.save.kho || 0) + ev.n; g.khoRun = (g.khoRun || 0) + ev.n; writeSave(this.save);
+        this.toast(`Ngân khố ${bac(1)} +${fmt(ev.n)} · ${esc(ev.why)}`, '#E4ECF4');
       } else if (ev.type === 'reward') {
         this.showReward(ev);
       } else if (ev.type === 'boss') {
@@ -1730,7 +1739,11 @@ class UI {
     // v66: Ngân khố
     const khoGain = win ? Math.round((PREP.winBase + PREP.winPerLevel * (lv + 1) + PREP.winPerStar * stars) * (g.hard ? 1.5 : 1))
       : PREP.losePerWave * Math.max(0, g.wave - 1);
-    s.kho = (s.kho || 0) + khoGain;
+    // v103: thắng trận đầu tiên trong ngày (Phó bản) thưởng thêm
+    const today = new Date().toISOString().slice(0, 10);
+    const daily = win && s.dailyWin !== today ? PREP.dailyWin : 0;
+    if (daily) s.dailyWin = today;
+    s.kho = (s.kho || 0) + khoGain + daily;
     const tv = this.bankTuvi(win ? 1 : TUVI_LOSE);
     this.submitScores(win, stars);
     this.clearRun();
@@ -1743,7 +1756,9 @@ class UI {
       <div><span>${coin()} Vàng kiếm trong trận</span><b style="color:#FFD66B">+${fmt(g.stats.goldEarned)}</b></div>
       <div><span>${coin()} Đầu trận ${fmt(CONFIG.startGold)} + kiếm ${fmt(g.stats.goldEarned)}${g.stats.goldRefund ? ` + hủy tướng ${fmt(g.stats.goldRefund)}` : ''} − đã tiêu ${fmt(Math.max(0, CONFIG.startGold + g.stats.goldEarned + (g.stats.goldRefund || 0) - g.gold))}</span><b style="color:#FFD66B">= ${fmt(g.gold)}</b></div>
       <div><span>Tướng trên sân</span><b>${g.heroes.filter(Boolean).length}</b></div>
-      <div><span>🏦 Ngân khố nhận (mua đồ / tướng trước trận)</span><b style="color:#E4ECF4">${bac(1)} +${fmt(khoGain)} → ${fmt(s.kho)}</b></div>
+      <div><span>🏦 Ngân khố nhận (mua đồ / tướng trước trận)</span><b style="color:#E4ECF4">${bac(1)} +${fmt(khoGain + daily)} → ${fmt(s.kho)}</b></div>
+      ${daily ? `<div><span>☀ Thắng trận đầu trong ngày</span><b style="color:#FFE08A">${bac(1)} +${fmt(daily)}</b></div>` : ''}
+      ${g.khoRun ? `<div><span>♾ Đã nhận giữa trận (mốc đợt / boss)</span><b style="color:#E4ECF4">${bac(1)} +${fmt(g.khoRun)}</b></div>` : ''}
       ${tv.rows.length ? `<div><span>☯ Tu Vi${win ? '' : ' (60%)'}</span><b style="color:#C8A0F0">${tv.rows.join(' · ')}</b></div>` : ''}
       ${tv.up.map((u) => `<div><span></span><b style="color:#FFD66B">${u}</b></div>`).join('')}`;
     const name = `Ải ${lv + 1} · ${LEVELS[lv].name}`;
