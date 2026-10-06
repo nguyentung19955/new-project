@@ -428,7 +428,9 @@ class UI {
         <div class="prep-col wide"><div class="h">Tướng đã sở hữu (hợp thể được trong trận)</div>
           <div class="prep-heroes">${LEGEND_HEROES.filter((t) => (this.save.owned || []).includes(t)).map((t) => `<span class="prep-hero metal ${HEROES[t].legend}"><img src="${heroImgUrl(t, 'head')}" alt=""><b>${HEROES[t].name}</b></span>`).join('')
             || '<div class="note">Chưa có tướng Tím / Vàng nào. Mua ở <b>Anh Hùng</b> (menu chính) bằng Ngân khố để hợp thể được trong trận.</div>'}</div></div>
-        <div class="prep-col cp-side prep-counter">${this.counterHtml(g.level)}</div>
+        <div class="prep-col cp-side prep-counter">${this.counterHtml(g.level)}
+          <div class="hint-h">QUÂN TRIỆU HỒI ẢI NÀY</div>
+          <div class="ch-row">${summonPool(g.level).map((t) => `<span class="ch-av" style="--c:${ELEMENTS[HEROES[t].el].color}" title="${esc(HEROES[t].name)}"><img src="${heroImgUrl(t, 'head')}" alt="${esc(HEROES[t].name)}"><i>${elIcon(HEROES[t].el, 11)}</i></span>`).join('')}</div></div>
       </div>
 </div>`;
     $('#prep').hidden = false;
@@ -698,7 +700,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 93 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 94 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1124,7 +1126,7 @@ class UI {
       const sc = g.summonCost(), can = g.canSummon() === true;
       key = `s|${sc}|${can}|${g.freeSlots().length}|${assetVersion}`;
       // 6 chân dung nhỏ: tướng có thể ra khi triệu hồi
-      const pool = BASIC_HEROES.map((t) => `<img src="${heroImgUrl(t, 'head')}" alt="" title="${HEROES[t].name}">`).join('');
+      const pool = summonPool(g.level).map((t) => `<img src="${heroImgUrl(t, 'head')}" alt="" title="${HEROES[t].name}">`).join('');
       const pairs = g.heroes.filter((x) => x && g.heroes.some((y) => y && y !== x && g.canMerge(x, y) === true)).length;
       key += `|${pairs}`;
       html = `${pairs ? `<button class="dk-auto metal on" data-act="auto-merge" aria-label="Ghép tự động"><b>⇄</b>Ghép<br>tự động<i>${Math.floor(pairs / 2)}</i></button>` : ''}
@@ -1482,7 +1484,7 @@ class UI {
     const n = skillN(1);
     $('#roster').innerHTML = `<div class="screen" style="z-index:auto">
       <div class="scr-head metal"><button class="xbtn metal" data-act="ro-back" aria-label="Quay lại">${ICON.back}</button><h1 class="ttl">Anh Hùng Văn Lang</h1>
-        <span class="chip dark">20 tướng · 6 Thường · 8 Sử thi · 6 Huyền thoại · ghép & hợp thể</span><div class="sp"></div>
+        <span class="chip dark">${all.length} tướng · ${BASIC_HEROES.length} Thường · ${LEGEND_HEROES.filter((x) => HEROES[x].legend === 'epic').length} Sử thi · ${LEGEND_HEROES.filter((x) => HEROES[x].legend === 'legendary').length} Huyền thoại</span><div class="sp"></div>
         ${this.rosterInGame ? "" : `<button class="btn metal title" data-act="ro-temple">Đền Anh Hùng · xem hoạt ảnh</button>`}</div>
       <div class="scr-body">
         <div class="ro-grid">${all.map((k) => {

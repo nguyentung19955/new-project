@@ -32,6 +32,17 @@ const HERO_STYLE = {
   thansan:   { idle: 'crouch', atk: 'flurry' },
   adv:       { idle: 'aim', atk: 'volley' },
   mau:       { idle: 'float', atk: 'float' },
+  thoren:    { idle: 'heavy', atk: 'slam' },
+  nguphu:    { idle: 'crouch', atk: 'thrust' },
+  thogom:    { idle: 'sway', atk: 'toss' },
+  thaylang:  { idle: 'sway', atk: 'twirl' },
+  trongdong: { idle: 'heavy', atk: 'bash' },
+  caong:     { idle: 'heavy', atk: 'slam' },
+  ongtao:    { idle: 'guard', atk: 'flurry' },
+  matroi:    { idle: 'float', atk: 'float' },
+  mauthoai:  { idle: 'float', atk: 'twirl' },
+  trutroi:   { idle: 'heavy', atk: 'slam' },
+  ongho:     { idle: 'crouch', atk: 'flurry' },
 };
 const heroStyle = (type) => HERO_STYLE[type] || { idle: 'guard', atk: null };
 

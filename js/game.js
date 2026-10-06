@@ -289,6 +289,7 @@ function heroStats(h) {
   }
   // v92: hệ ngũ hành của tướng
   if (ELEM_TRAIT[def.el]) ELEM_TRAIT[def.el].apply(s);
+  if (def.traitApply) def.traitApply(s, h);          // v94: nội tại riêng của tướng mới
   // v92: Thần khí của tướng Vàng (3 hệ, mỗi hệ 5 cấp)
   const LG = LEGACY_LV && LEGACY[h.type] && LEGACY_LV[h.type];
   if (LG) for (const sys of LEGACY[h.type]) {
@@ -511,6 +512,114 @@ function knockback(e, dist) {
 }
 
 const SKILL_CASTS = {
+
+  // ===== v94: chiêu của tướng dân gian mới =====
+  // Thợ Rèn / Ông Táo: búa (kẹp) nung đỏ — đòn lớn + thiêu đốt
+  forgehammer(game, h, st, n) {
+    const e = game.findTarget(h.x, h.y, st.range * 1.1, false);
+    if (!e) return false;
+    game.effects.push({ type: 'bash', x: e.x, y: e.y - 8, ttl: 0.45, max: 0.45 });
+    game.effects.push({ type: 'ring', x: e.x, y: e.y - 8, r: 30, color: '#FF7A3A', ttl: 0.4, max: 0.4 });
+    game.hit(e, (st.damage * 2.2 + n * 0.8) * st.skillPower, h, { big: true, color: '#FF9A4A' });
+    if (!e.dead) game.dot(e, st.damage * 0.5 * st.skillPower, h, '#E0452C', 'magic', 3);
+    return true;
+  },
+  forgeblast(game, h, st, n) {
+    const list = game.enemiesInRange(h.x, h.y, 130, false);
+    if (!list.length) return false;
+    game.effects.push({ type: 'nova', x: h.x, y: h.y, r: 130, ttl: 0.5, max: 0.5 });
+    game.effects.push({ type: 'ring', x: h.x, y: h.y, r: 130, color: '#FF7A3A', ttl: 0.6, max: 0.6 });
+    game.shake = Math.max(game.shake, 4);
+    for (const e of list) { game.hit(e, (st.damage * 4 + n * 2) * st.skillPower, h, { big: true, color: '#FF7A3A' }); if (!e.dead) game.dot(e, st.damage * 0.6 * st.skillPower, h, '#E0452C', 'magic', 3); }
+    return true;
+  },
+  // Ngư Phủ: quăng chài trói chân
+  netthrow(game, h, st, n) {
+    const list = game.enemiesInRange(h.x, h.y, st.range * 1.3, false).sort((a, b) => b.dist - a.dist).slice(0, n >= 15 ? 5 : 4);
+    if (!list.length) return false;
+    for (const e of list) {
+      game.effects.push({ type: 'lob', x: h.x, y: h.y - 30, x2: e.x, y2: e.y, color: '#D8C8A0', ttl: 0.35, max: 0.35 });
+      game.stun(e, 1.2, 'net');
+      game.hit(e, (st.damage * 1.2 + n * 0.5) * st.skillPower, h, { color: '#D8C8A0' });
+    }
+    return true;
+  },
+  // Thợ Gốm: bình gốm nổ, choáng
+  potbomb(game, h, st, n) {
+    const t = game.findTarget(h.x, h.y, st.range * 1.1);
+    if (!t) return false;
+    game.effects.push({ type: 'lob', x: h.x, y: h.y - 30, x2: t.x, y2: t.y, color: '#C99A3C', ttl: 0.45, max: 0.45 });
+    game.effects.push({ type: 'ring', x: t.x, y: t.y, r: 70, color: '#C99A3C', ttl: 0.5, max: 0.5 });
+    for (const e of game.enemiesInRange(t.x, t.y, 70)) { game.hit(e, (st.damage * 2 + n * 0.8) * st.skillPower, h, { big: true, color: '#E8C27A' }); game.stun(e, 0.6, 'stun'); }
+    return true;
+  },
+  // Thầy Lang: thuốc nam
+  herbheal(game, h, st, n) {
+    let best = null;
+    for (const o of game.heroes) {
+      if (!o || o.dead || Math.hypot(o.x - h.x, o.y - h.y) > 220) continue;
+      const r = o.hp / heroStats(o).hpMax;
+      if (r < 0.9 && (!best || r < best.r)) best = { o, r };
+    }
+    if (!best) return false;
+    const pct = (0.2 + n * 0.003) * skillMult(st.lv || 1);
+    const om = heroStats(best.o).hpMax;
+    best.o.hp = Math.min(om, best.o.hp + om * pct);
+    game.text(best.o.x, best.o.y - 60, '+' + Math.round(om * pct), '#6AE06A', 0.8, 14);
+    healHeroes(game, best.o.x, best.o.y, 120, 0.08, '#7FE07A');
+    return true;
+  },
+  // Thần Trống Đồng: sấm đồng — choáng diện rộng
+  drumquake(game, h, st, n) {
+    const r = st.range * 1.4, list = game.enemiesInRange(h.x, h.y, r, false);
+    if (!list.length) return false;
+    game.effects.push({ type: 'banner', str: st.skName || 'Sấm Đồng', color: '#F2D27A', ttl: 1.4, max: 1.4 });
+    game.effects.push({ type: 'ring', x: h.x, y: h.y, r, color: '#F2D27A', ttl: 0.7, max: 0.7 });
+    game.effects.push({ type: 'wave', x: h.x, y: h.y, r, color: '#F2D27A', ttl: 0.7, max: 0.7 });
+    game.shake = Math.max(game.shake, 6);
+    for (const e of list) { game.stun(e, 1.5, 'stun'); game.hit(e, (st.damage * 3 + n * 2) * st.skillPower, h, { big: true, color: '#F2D27A' }); }
+    return true;
+  },
+  // Thần Cá Ông: phun vòi nước
+  whalespout(game, h, st, n) {
+    const list = game.enemiesInRange(h.x, h.y, st.range * 1.2, false);
+    if (!list.length) return false;
+    game.effects.push({ type: 'gust', x: h.x, y: h.y - 30, r: st.range * 1.2, color: '#9EDDF2', ttl: 0.6, max: 0.6 });
+    for (const e of list) { game.slow(e, 40, 2); game.hit(e, (st.damage * 1.6 + n * 0.6) * st.skillPower, h, { color: '#9EDDF2' }); }
+    return true;
+  },
+  // Mẫu Thoải: mở cửa Thủy Cung — cuốn ngược quái
+  tidegate(game, h, st, n) {
+    const r = st.range * 1.5, list = game.enemiesInRange(h.x, h.y, r, false);
+    if (!list.length) return false;
+    game.effects.push({ type: 'banner', str: st.skName || 'Long Cung Mở Cửa', color: '#9EDDF2', ttl: 1.6, max: 1.6 });
+    game.effects.push({ type: 'wave', x: h.x, y: h.y, r, color: '#5AB4D6', ttl: 0.9, max: 0.9 });
+    for (const e of list) {
+      if (!e.def.boss) e.dist = Math.max(0, e.dist - 60);
+      game.slow(e, 50, 3);
+      game.hit(e, (st.damage * 3 + n * 2) * st.skillPower, h, { big: true, color: '#9EDDF2' });
+    }
+    return true;
+  },
+  // Thần Trụ Trời: cột đá trồi lên
+  pillar(game, h, st, n) {
+    const t = game.findTarget(h.x, h.y, st.range * 1.3, false);
+    if (!t) return false;
+    game.effects.push({ type: 'ring', x: t.x, y: t.y, r: 70, color: '#C99A3C', ttl: 0.6, max: 0.6 });
+    game.effects.push({ type: 'bash', x: t.x, y: t.y - 8, ttl: 0.45, max: 0.45 });
+    game.shake = Math.max(game.shake, 4);
+    for (const e of game.enemiesInRange(t.x, t.y, 70, false)) { game.stun(e, 1.5, 'stun'); game.hit(e, (st.damage * 3 + n * 2) * st.skillPower, h, { big: true, color: '#E8C27A' }); }
+    return true;
+  },
+  // Chúa Sơn Lâm: tiếng gầm — choáng + câm lặng
+  tigerroar(game, h, st, n) {
+    const list = game.enemiesInRange(h.x, h.y, st.range * 1.3);
+    if (!list.length) return false;
+    game.effects.push({ type: 'ring', x: h.x, y: h.y, r: st.range * 1.3, color: '#E8843A', ttl: 0.7, max: 0.7 });
+    game.text(h.x, h.y - 80, 'GẦM!', '#FFB04A', 1, 18);
+    for (const e of list) { game.stun(e, e.def.boss ? 0.4 : 1, 'stun'); e.silenceT = Math.max(e.silenceT || 0, e.def.boss ? 1.5 : 3); }
+    return true;
+  },
   // ----- 6 tướng cơ bản
   bash(game, h, st, n) {
     const e = game.findTarget(h.x, h.y, st.range, false);
@@ -1349,7 +1458,8 @@ class Game {
     if (ok !== true) return ok;
     const free = this.freeSlots();
     const slot = free[Math.floor(rng() * free.length)];
-    const type = BASIC_HEROES[Math.floor(rng() * BASIC_HEROES.length)];
+    const pool = summonPool(this.level);
+    const type = pool[Math.floor(rng() * pool.length)];
     const c = this.summonCost();
     this.gold -= c;
     this.summonN = (this.summonN || 0) + 1;
@@ -2268,6 +2378,9 @@ class Game {
           b.forest = Math.max(b.forest || 0, 10 * k);
           b.regen = Math.max(b.regen || 0, 2 * k);
         }
+        if (t === 'trongdong') b.haste = Math.max(b.haste || 0, 10);                    // Hồi Trống Thiêng
+        if (t === 'mauthoai') b.manaPct = Math.max(b.manaPct || 0, 15);                 // Thủy Cung Thánh Mẫu
+        if (t === 'caong' && o !== src && near(src, o, ELEM.adj)) b.dr = Math.max(b.dr || 0, 10);   // Hộ Ngư Dân
         if (own.pierceAura) b.pierce = Math.max(b.pierce || 0, own.pierceAura);
         if (t === 'thachsanh') b.manaPct = Math.max(b.manaPct || 0, 50);
         if (t === 'auco') b.healPct = Math.max(b.healPct || 0, 2);
@@ -3078,6 +3191,7 @@ class Game {
     if (st && e.def.flying && st.airMult > 1) dmg *= st.airMult;
     if (st && e.def.boss && st.bossPct) dmg *= 1 + st.bossPct / 100;
     if (e.huntT > 0) dmg *= 1.25;                  // Cuộc Săn Lớn
+    if (st && st.execPct && e.hp < e.maxHp * 0.3) dmg *= 1 + st.execPct / 100;   // Chúa Sơn Lâm
     if (RF) {
       if (RF.fx.eliteDmg && (e.elite || e.champion || e.def.general)) dmg *= 1 + RF.fx.eliteDmg / 100;
       if (RF.fx.ccDmg && (e.slowT > 0 || e.stunT > 0)) dmg *= 1 + RF.fx.ccDmg / 100;

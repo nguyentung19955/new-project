@@ -1110,3 +1110,15 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - **Hỏa · Thiêu đốt:** 25% thiêu đốt 3 giây, 30% sát thương mỗi giây.
 - **Thổ · Choáng + Chặn:** 8% choáng 0,6 giây (boss 0,3 giây); 15% chặn hẳn một đòn đánh vào mình.
 - Bảng thông tin quái hiện trạng thái đang dính: Thiêu đốt / Đóng băng / Choáng / Chậm / Câm lặng.
+
+## Phiên bản 94 — 11 tướng dân gian mới (đủ cận chiến + đánh xa mỗi hành, cả 3 bậc)
+| Bậc | Kim | Mộc | Thủy | Hỏa | Thổ |
+|---|---|---|---|---|---|
+| Thường | Lạc Tướng (gần) · Xạ Thủ (xa) | Thợ Săn (gần) · **Thầy Lang Lá Thuốc** (xa) | **Ngư Phủ Sông Đà** (gần) · Thần Sương (xa) | **Thợ Rèn Đông Sơn** (gần) · Thầy Mo (xa) | Lực Sĩ (gần) · **Thợ Gốm Phù Lãng** (xa) |
+| Tím | **Thần Trống Đồng** (gần) · Cao Lỗ (xa) | Thạch Sanh, Thần Săn (gần) · An Tiêm (xa) | **Thần Cá Ông** (gần) · Chử Đồng Tử (xa) | **Ông Táo** (gần) · Tiên Dung (xa) | Lạc Hầu (gần) · Lang Liêu (xa) |
+| Vàng | Kim Quy (gần) · An Dương Vương (xa) | **Chúa Sơn Lâm** (gần) · Mẫu Thượng Ngàn (xa) | Lạc Long Quân (gần) · **Mẫu Thoải** (xa) | Thánh Gióng (gần) · **Nữ Thần Mặt Trời** (xa) | **Thần Trụ Trời** (gần) · Âu Cơ (xa) |
+
+- Công thức mới: Lạc Tướng + Thợ Rèn → Thần Trống Đồng · Ngư Phủ + Thần Sương → Thần Cá Ông · Thầy Mo + Thợ Gốm → Ông Táo · Thầy Lang + Thợ Săn → Mai An Tiêm (công thức thứ hai) · Ông Táo + Tiên Dung → Nữ Thần Mặt Trời · Cá Ông + Chử Đồng Tử → Mẫu Thoải · Trống Đồng + Lạc Hầu → Thần Trụ Trời · Thần Săn + Thạch Sanh → Chúa Sơn Lâm.
+- Mỗi tướng 4 kỹ năng (10 chiêu mới: Búa Nung Đỏ, Nổ Lò Rèn, Quăng Chài, Bình Gốm Nổ, Thuốc Nam, Sấm Đồng, Phun Vòi Nước, Long Cung Mở Cửa, Cột Đá, Tiếng Gầm Rừng). Tướng Tím / Vàng có nội tại riêng; 4 tướng Vàng mới có Thần Khí 3 hệ (Vầng Dương · Quạ Lửa Ba Chân · Xiêm Y Ráng Chiều / Ngọc Thủy Cung · Sóng Thánh · Đài Sen Trắng / Cột Đá Chống Trời · Tay Đội Trời · Đất Mẹ / Vuốt Hổ · Vằn Rừng · Núi Rừng Tây Bắc).
+- Quân triệu hồi mỗi ải: 6 tướng gốc + 2 tướng thường mới (ải lẻ: Thợ Rèn, Ngư Phủ; ải chẵn: Thợ Gốm, Thầy Lang) — hiện ở màn chuẩn bị. Giữ tỉ lệ ghép sao không giảm nhiều.
+- Hình tạm: vector phối màu + mũ / vương miện / vầng mặt trời; thay bằng ảnh Gemini theo PROMPT_GEMINI_V94.md.
