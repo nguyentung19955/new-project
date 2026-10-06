@@ -5,7 +5,10 @@
 **Đã có (không cần gen):** antiem, caolo, cdt, giong, mau, adv, auco, casau, chimbao, doi, echme, giaolong, kimquy, lachau, lactuong, llq, lucsi, nongnoc, phuthuy, ran, rua, thachsanh, thachtinh, thansan, thansuong, thaymo, thosan, tom, xathu.
 
 **Lưu ý khi gen:**
-- Đính kèm ảnh `docs/mau-lac-tuong.png` mỗi lần để Gemini giữ cùng nét vẽ (prompt đã dặn chỉ học nét, không chép trang phục).
+- **Ảnh mẫu đính kèm mỗi lần gen** (prompt đã dặn chỉ học nét vẽ, không chép nhân vật):
+  - Quái: đính kèm `mau-quai.png` (Tôm Binh 3 ô — đúng bố cục, nền, cỡ cần có).
+  - Boss: đính kèm `mau-lac-tuong.png` (nét vẽ) và `mau-quai.png` (nền hồng tím phẳng).
+- Gen **từng nhân vật một** (mỗi lần dán một khối), không gộp nhiều nhân vật vào một ảnh.
 - Nền phải là **một màu hồng tím đậm `#FF00FF`** ở mọi ô (không phải ô caro, không hồng nhạt). Chữ nhãn "[1] IDLE…" hay vạch ngăn ô thì không sao, mình tự xoá.
 - Tướng 6 ô (đứng · lấy đà · ra đòn · tung chiêu · chính diện · chân dung), quái 3 ô (bước A · bước B · tấn công), boss 4 ô (đứng · tấn công · chiêu · nổi giận).
 - **Boss: mỗi boss một ảnh riêng, đúng 4 ô vuông bằng nhau 2×2** (đứng · tấn công · chiêu · nổi giận), không gộp nhiều boss vào một tấm, không vẽ thêm nhân vật khác vào ô.
