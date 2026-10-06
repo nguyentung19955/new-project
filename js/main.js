@@ -700,8 +700,8 @@ function visualAnim(h, t) {
   if (h.castT > v.ct + 0.05) { v.ct0 = t; v.ctTot = h.castT; v.ctRate = Math.min(sp, Math.max(1, h.castT / ANIM_MIN.cast)); }
   v.ct = h.castT;
   if (sp <= 1) return { swing: h.swing, castT: h.castT };
-  const swing = Math.max(0, 1 - (t - v.sw0) / v.swDur);
-  const castT = Math.max(0, v.ctTot - (t - v.ct0) * v.ctRate);
+  const swing = Math.min(1, Math.max(0, 1 - (t - v.sw0) / v.swDur));
+  const castT = Math.min(v.ctTot, Math.max(0, v.ctTot - (t - v.ct0) * v.ctRate));
   return { swing, castT };
 }
 
@@ -822,7 +822,7 @@ function drawDust(h, t) {
 // Tướng vừa tung chiêu: cột sáng + vòng hoa văn trống đồng dưới chân
 function drawCastGlow(h, t, ct = h.castT) {
   const dur = h.castUlt ? 0.9 : 0.5;
-  const k = ct / dur;
+  const k = Math.max(0, Math.min(1, ct / dur));
   const c = (h.castColor || '#ffffff').length === 4 ? '#ffffff' : h.castColor || '#ffffff';
   ctx.save();
   ctx.globalAlpha = k;

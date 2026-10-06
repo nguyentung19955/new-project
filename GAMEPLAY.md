@@ -1297,3 +1297,8 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 131 — Sửa lỗi Tiếp tục + màn đăng nhập
 - **Tiếp tục trận vô tận bị chơi lại từ đầu**: đang chơi vô tận, về menu rồi bấm "Tiếp tục" thì game hiểu nhầm là trận Phó bản mới (không truyền chế độ vô tận) → mở lại ải từ đợt 1. Giờ quay lại đúng trận đang dở (đã thử cả vô tận và phó bản; tải lại trang rồi tiếp tục cũng đúng).
 - Màn đăng nhập: chữ "Vào game" trên nút vàng bị cùng màu vàng nên gần như không đọc được → chữ nâu đậm. Nền màn đăng nhập dùng tranh menu mới.
+
+## Phiên bản 132 — Sửa 2 lỗi treo game khi Tiếp tục trận đã lưu
+- Trận lưu đúng lúc tướng đang vung đòn: khi nạp lại, đòn đó mất phần xử lý → game báo lỗi "f is not a function" và đứng. Giờ không lưu đòn đang vung.
+- Trận lưu có hoạt ảnh tung chiêu dở: sau khi tải lại trang, đồng hồ hoạt ảnh lệch → lỗi vẽ "radius is negative" và đứng. Giờ không lưu đồng hồ hoạt ảnh, vòng sáng tung chiêu cũng được chặn trong khoảng hợp lệ.
+- Kiểm thử Tiếp tục (Phó bản + Vô tận): về menu → Tiếp tục; tải lại trang → Tiếp tục; chơi tiếp sau khi nạp; Dừng chơi / thua thì xoá trận dở — đều đúng.

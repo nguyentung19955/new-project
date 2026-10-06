@@ -2509,7 +2509,7 @@ class Game {
 
   // v74: lưu / nạp màn đang chơi (giữa hai đợt). Bỏ trạng thái tạm (hiệu ứng, đạn, quái đang đi).
   snapshot() {
-    const skip = new Set(['_anim', 'target', 'tgt', 'notice', 'unlockFx', 'procT']);
+    const skip = new Set(['_anim', 'target', 'tgt', 'notice', 'unlockFx', 'procT', 'strike', '_va']);   // v131: strike giữ hàm (đòn đang vung) — không lưu được
     const heroes = JSON.parse(JSON.stringify(this.heroes, (k, v) => (skip.has(k) ? undefined : v)));
     const o = { v: 1, at: Date.now(), heroes };
     for (const k of ['level', 'hard', 'endless', 'won', 'gold', 'lives', 'wave', 'summonN', 'bossesKilled', 'seen', 'water', 'raised', 'moc',
@@ -2523,7 +2523,7 @@ class Game {
       const h = o.heroes && o.heroes[i];
       if (!h) return null;
       const [x, y] = CONFIG.slots[i];
-      return Object.assign(h, { slot: i, x, y, _anim: {}, notice: {}, procT: {}, summonT: 0, swing: 0, cd: 0, dead: false, respawnT: 0, stunT: 0 });
+      return Object.assign(h, { slot: i, x, y, _anim: {}, notice: {}, procT: {}, summonT: 0, swing: 0, cd: 0, dead: false, respawnT: 0, stunT: 0, strike: null, castT: 0, _va: null });
     });
     for (const h of this.heroes) if (h) h.hp = heroStats(h).hpMax;
     this.started = true; this.running = false; this.over = false;
