@@ -3163,9 +3163,9 @@ class Game {
       this.events.push({ type: 'reward', boss: e.type, options: this.bossRewards(e.type) });
     }
     if (Math.random() < e.def.drop * (e.elite ? 3 : 1)) {
-      // quái tinh anh và boss: 25% rơi một món đồ bộ
-      const id = (e.elite || e.def.boss || e.champion) && Math.random() < 0.25 ? rollSetItem()
-        : rollItem(e.def.boss ? 'rare' : e.elite ? 'rare' : 'common');
+      // quái tinh anh, boss, tướng địch: 25% rơi một món đồ bộ. v82: quái biến thể / ghép rơi từ Hiếm trở lên
+      const id = (e.elite || e.def.boss || e.champion || e.def.general) && Math.random() < 0.25 ? rollSetItem()
+        : rollItem(e.def.boss || e.elite || e.def.variant || e.def.chimera || e.def.general ? 'rare' : 'common');
       const inst = this.addItem(makeItem(id, null, { drop: true }));
       if (inst) {
         const it = ITEMS[id];
