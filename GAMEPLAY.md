@@ -1237,3 +1237,6 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 117
 - Icon kỹ năng vẽ tay cho Thợ Gốm và Ngư Phủ.
+
+## Phiên bản 118
+- Thần Khí vẽ tay cho Mẹ Lúa (18/20 tướng Vàng).
