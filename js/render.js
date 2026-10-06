@@ -329,12 +329,15 @@ function heroPng(type, v, h) {
 // Cắt từ ảnh ghép gen theo docs/PROMPT_GEMINI.md bằng tools/cat-sheet.py.
 // Luôn dùng (không phụ thuộc tuỳ chọn "ảnh AI"); tắt bằng "Tướng vẽ nét".
 const HERO_PACK = Object.fromEntries(['lactuong', 'lucsi', 'xathu', 'thosan', 'thaymo', 'thansuong', 'thachsanh', 'lachau', 'thansan',
-  'auco', 'adv', 'kimquy', 'llq', 'antiem', 'mau', 'giong', 'cdt', 'caolo', 'tiendung'].map((k) => [k, `packs/${k}/`]));
+  'auco', 'adv', 'kimquy', 'llq', 'antiem', 'mau', 'giong', 'cdt', 'caolo', 'tiendung',
+  // v105: ảnh Gemini cho 14 tướng Thường mới
+  'giaodong', 'chuongdong', 'tre', 'ongthoi', 'dapde', 'chantrau', 'chodo', 'haisen', 'denroi', 'thoren', 'dotnuong', 'nguphu', 'thaylang', 'thogom',
+].map((k) => [k, `packs/${k}/`]));
 const packImg = (type, name) => (HERO_PACK[type] ? asset(HERO_PACK[type] + name + '.png', true) : null);
 // v60: quái vẽ tay (assets/packs/<quái>/walk1 · walk2 · attack): bước đi luân phiên, ra đòn khi tấn công
 const ENEMY_PACK = new Set(['thachtinh', 'doi', 'ran', 'giaolong', 'tom', 'casau', 'rua', 'phuthuy', 'chimbao', 'echme', 'nongnoc', 'cungan', 'kybinh', 'voichien', 'camap', 'muc', 'cua', 'cao',
   'thuongluong', 'haba', 'thuytinh', 'chantinh', 'daibang', 'anvuong', 'ngutinh', 'hotinh', 'trieuda',
-  'tomlua', 'ranbang', 'doima', 'thachvang', 'thietky', 'camapden', 'mucdoc', 'cungtlua', 'tuongthuy', 'chanlua', 'hoden']);
+  'tomlua', 'ranbang', 'doima', 'thachvang', 'thietky', 'camapden', 'mucdoc', 'cungtlua', 'tuongthuy', 'chanlua', 'hoden', 'dacon', 'yeutinh']);
 const enemyPackRef = (type) => (ENEMY_PACK.has(type) ? asset(`packs/${type}/walk1.png`, true) : null);
 // v84: dải 4 khung (tools/cat-strip.py) — mã → các động tác đã có <động tác>_1..4.png
 const FRAME_ANIMS = {};

@@ -1191,3 +1191,8 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Tu Vi: mỗi đợt xong, **mọi tướng đang trên sân +1 Tu Vi** (tướng ghép chia nửa cho tướng nguyên liệu) — tướng hồi máu / hỗ trợ ít hạ quái vẫn lên bậc.
 - Núi cao thêm mạng (mỗi 3 đợt từ giai đoạn 2) giờ có thông báo "+1 mạng" thay vì cộng âm thầm.
 - Đã kiểm tra lưu trữ: mọi tài nguyên tài khoản nằm trong bản lưu và được đẩy lên Firestore (`users/{uid}`) mỗi lần ghi — Ngân khố, tướng đã mua, Tu Vi, Ấn Phù từng tướng, Thần Khí, sao / ải đã mở / kỷ lục, kỷ lục vô tận, thưởng ngày, hiệu ứng ẩn đã khám phá, đồ đã sưu tầm, tên, trận đang chơi dở. Bản kéo từ mây cũng đi qua bước bổ sung mặc định + chuyển đổi bản cũ.
+
+## Phiên bản 105 — Ảnh Gemini đợt 1
+- Nạp ảnh vẽ tay cho 14 tướng Thường mới (Giáo Đồng, Chuông Đồng, Tre Làng, Ống Thổi, Đắp Đê, Chăn Trâu, Chèo Đò, Hái Sen, Đèn Trời, Thợ Rèn, Đốt Nương, Ngư Phủ, Thầy Lang, Thợ Gốm) và 2 quái (Đá Con, Yêu Tinh Rừng). Đã xoá nhãn "[1]…[6]" và dấu ✦ của Gemini khi cắt.
+- Sửa icon hành trong nhãn thẻ tướng (Anh Hùng) bị lệch khi bật ảnh vẽ tay.
+- Danh sách prompt còn lại: 27 tướng Tím / Vàng + Lính Giáo + icon (`docs/PROMPT_GEMINI_FULL.md`).

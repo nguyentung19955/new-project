@@ -1454,3 +1454,5 @@ body { overflow: hidden; }
 .cp-side .cp-act { position: sticky; bottom: -12px; background: #17130F; padding: 6px 0 4px; margin-top: auto; z-index: 1; }
 .cp-rec { font-size: 14px; color: #BFE8F8; background: #102A3A; border: 1px solid #5AB4D6; border-radius: 4px; padding: 5px 8px; }
 .cp-rec b { color: #FFE08A; }
+/* v105: icon hành trong nhãn thẻ tướng không bị kiểu ảnh chân dung đè */
+.ro-card .tag.el img.eli { position: static; width: 12px; height: 12px; max-width: none; inset: auto; transform: none; margin: 0; object-fit: contain; filter: none; opacity: 1; }
