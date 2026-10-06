@@ -337,7 +337,7 @@ class UI {
     const total = s.stars.reduce((a, b) => a + b, 0);
     const lv = 1 + Math.floor(Math.sqrt(s.lifeKills / 25));
     const acc = typeof CLOUD !== 'undefined' && CLOUD.user && !CLOUD.user.isAnonymous ? CLOUD.user : null;
-    $('#menu-player').innerHTML = `<span class="av">${acc && acc.photoURL ? `<img src="${esc(acc.photoURL)}" alt="" referrerpolicy="no-referrer">` : svgI(sceneArt('drum'))}</span><span><b>${esc(acc ? acc.displayName || 'Sơn Tinh' : 'Sơn Tinh')}</b><small>Cấp ${lv} · ★ ${total}/${LEVELS.length * 3} · ${acc ? 'Đã đăng nhập' : 'Khách'}</small></span>`;
+    $('#menu-player').innerHTML = `<span class="av">${acc && acc.photoURL ? `<img src="${esc(acc.photoURL)}" alt="" referrerpolicy="no-referrer">` : svgI(sceneArt('drum'))}</span><span><b>${esc(acc ? this.playerName() : 'Sơn Tinh')}</b><small>Cấp ${lv} · ★ ${total}/${LEVELS.length * 3} · ${acc ? 'Đã đăng nhập' : 'Khách'}</small></span>`;
     $('#menu-player').onclick = () => this.showLogin(true);
     const short = (n) => (n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace('.', ',') + 'k' : n);
     $('#menu-res').innerHTML = `<span title="Tổng vàng đã kiếm qua mọi trận (vàng trong trận luôn bắt đầu từ ${CONFIG.startGold})"><small class="pr-l">Tổng vàng đã kiếm</small>${coin(1)} ${short(s.lifeGold)}</span><span title="Linh Chi đã hái">🌿 ${short(s.lifeHerbs)}</span><span title="Ngân khố: vàng thưởng sau mỗi trận thắng, dùng mua đồ / tướng trước trận"><small class="pr-l">Ngân khố</small>${coin(1)} <b style="color:#FFD66B">${fmt(s.kho || 0)}</b></span>`;
@@ -465,6 +465,7 @@ class UI {
     const u = typeof CLOUD !== 'undefined' && CLOUD.user;
     if (this.save.nick) return this.save.nick;
     if (u && !u.isAnonymous && u.displayName) return u.displayName;
+    if (u && !u.isAnonymous && u.email) return u.email.split('@')[0];
     return 'Khách ' + (u ? u.uid.slice(0, 4).toUpperCase() : '');
   }
   submitScores(win, stars) {
@@ -513,7 +514,9 @@ class UI {
     const err = this.loginErr ? `<div class="login-err">${esc(this.loginErr)}</div>` : '';
     let inner;
     if (!C || !C.enabled) inner = '<div class="login-sub">Chưa cấu hình đăng nhập.</div><button class="btn btn-gold title login-btn" data-act="login-offline">Vào game</button>';
-    else if (signed) inner = `<div class="login-who">${u.photoURL ? `<img src="${esc(u.photoURL)}" alt="" referrerpolicy="no-referrer">` : ''}<b>${esc(u.displayName || u.email || 'Tài khoản')}</b><small>${esc(u.email || '')} · tiến trình lưu trên đám mây</small></div>
+    else if (signed) inner = `<div class="login-who">${u.photoURL ? `<img src="${esc(u.photoURL)}" alt="" referrerpolicy="no-referrer">` : ''}<b>${esc(this.playerName())}</b><small>${esc(u.email || '')} · tiến trình lưu trên đám mây</small></div>
+        <div class="login-rename"><input id="lg-nick" class="login-in" maxlength="20" placeholder="Tên hiển thị" value="${esc(this.playerName())}"><button class="btn metal" data-act="login-rename">Đổi tên</button></div>
+        ${err}
         <button class="btn btn-gold title login-btn" data-act="login-close">Vào game</button>
         <button class="btn metal login-btn" data-act="cloud-out">Đăng xuất</button>`;
     else if (C.status === 'error' && !C.auth) inner = `<div class="login-sub">Không kết nối được máy chủ đăng nhập (${esc(C.error)}).</div>
@@ -674,7 +677,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 75 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 76 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1583,6 +1586,14 @@ class UI {
       case 'cloud-google': if (!CLOUD.enabled) break;
         this.loginErr = ''; CLOUD.google(() => this.save, (cs, o) => this.applyCloudSave(cs, o)).catch((e) => { this.loginErr = e.message; this.showLogin(this.loginFromMenu); }); break;
       case 'login-close': $('#login').hidden = true; this.loginFromMenu = false; this.showMenu(); break;
+      case 'login-rename': {
+        const v = (($('#lg-nick') || {}).value || '').trim().slice(0, 20);
+        if (!v) { this.loginErr = 'Tên không được để trống'; this.showLogin(this.loginFromMenu); break; }
+        this.save.nick = v; writeSave(this.save); this.loginErr = 'Đã đổi tên thành ' + v;
+        if (CLOUD.user && CLOUD.user.updateProfile) CLOUD.user.updateProfile({ displayName: v }).catch(() => {});
+        this.showLogin(this.loginFromMenu); this.showMenu(); $('#login').hidden = false;
+        break;
+      }
       case 'login-mode': this.loginMode = d.k; this.loginErr = ''; this.showLogin(this.loginFromMenu); break;
       case 'login-offline': this.offline = true; $('#login').hidden = true; break;
       case 'login-retry': location.reload(); break;

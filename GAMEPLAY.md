@@ -993,3 +993,8 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - Thử thật với Firebase `sontinhthuytinh`: tạo tài khoản email → vào game; lưu màn dở → đóng / mở lại vẫn đăng nhập (nhớ phiên) và hiện "Tiếp tục · Ải 1 · Đợt 4"; xoá dữ liệu trình duyệt rồi mở lại → màn dở kéo từ mây về; ghi và đọc bảng xếp hạng được.
 - Sửa: tạo tài khoản / đăng nhập email xong màn đăng nhập không tự đóng.
 - `firestore.rules`: cho người chơi xoá dòng xếp hạng của chính mình.
+
+### Phiên bản 76
+
+- Menu chính hiện **tên người đăng nhập** (tên đã đặt → tên Google → phần trước @ của email) thay vì "Sơn Tinh".
+- **Đổi tên**: bấm khung người chơi ở góc trên trái → ô Tên hiển thị + nút Đổi tên (lưu vào bản lưu, tài khoản Firebase và dùng trên bảng xếp hạng).
