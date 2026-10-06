@@ -1031,3 +1031,7 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 ### Phiên bản 83
 
 - Gỡ bỏ 4 quái ghép bộ phận (Giao Xà Cánh Dơi, Cá Mập Bay, Tôm Càng Sắt, Cóc Mai Rùa) theo yêu cầu. Giữ quái đổi màu và việc quái biến thể rơi đồ từ Hiếm trở lên.
+
+### Phiên bản 84
+
+- **Sẵn sàng cho chuyển động 4 khung** (ảnh gen theo `docs/LUAT_GEN_ANIMATION.md` / `docs/PROMPT_LEONARDO.md`): `tools/cat-strip.py <ảnh> <mã> <động tác>` cắt dải 4 ô thành `<động tác>_1..4.png`, chung đường chân, căn giữa theo thân. Game (`FRAME_ANIMS` trong `js/render.js`): tướng đứng thở lặp 4 khung, đánh theo pha (chuẩn bị → lấy đà → ra đòn → thu về), tung chiêu lặp nhanh; quái đi lặp 4 khung, đánh theo thời gian ra đòn. Đổi khung không bị mờ chồng. Đã thử bằng dải giả lập.
