@@ -1,4 +1,4 @@
-# Prompt Gemini đầy đủ — mỗi ảnh một prompt (47 ảnh)
+# Prompt Gemini đầy đủ — mỗi ảnh một prompt (44 ảnh)
 
 Mỗi khối dán **riêng một lần** vào Gemini (đính kèm `docs/mau-lac-tuong.png` làm mẫu nét vẽ nếu được), tải ảnh về và đặt **đúng tên file** ghi trên khối. Gen theo thứ tự từ trên xuống: phần 1–4 là cần thiết, phần 5–7 là tùy chọn.
 
@@ -360,31 +360,5 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers,
 Create ONE image: a 384x128 row of three equal 128x128 square treasure icons for Mẹ Lúa, one per cell, left to right:
 [1] golden rice ear  [2] ripe rice field  [3] pot of new rice.
 Each icon: one bold simple object, centered, gold rim, thick dark-brown outline #2A1608, flat colors in leaf green #5FB84A with brown wood accents, no text.
-BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
-```
-
-## 7. Icon Ấn Phù (tùy chọn)
-
-### 45. Ấn Phù nhánh nui → `an-phu-nui.png`
-```
-Create ONE image: a 512x384 sheet, invisible 4x3 grid of twelve equal 128x128 cells, one round carved stone-and-bronze rune seal per cell, rim color #D9844A, symbol carved in the middle, left to right, top to bottom:
-crossed swords · heart · spring water · pickaxe · bronze shield · demon mask · cactus spikes · sledgehammer · skull · falling mountain · stone shield · volcano.
-Thick dark-brown outline #2A1608, flat colors, no text.
-BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
-```
-
-### 46. Ấn Phù nhánh gio → `an-phu-gio.png`
-```
-Create ONE image: a 512x384 sheet, invisible 4x3 grid of twelve equal 128x128 cells, one round carved stone-and-bronze rune seal per cell, rim color #6FCB8A, symbol carved in the middle, left to right, top to bottom:
-wind swirl · four-point star · target · burst · eagle · spiral · coin · blood drop · trap · tornado · lightning bolt · eye.
-Thick dark-brown outline #2A1608, flat colors, no text.
-BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
-```
-
-### 47. Ấn Phù nhánh sam → `an-phu-sam.png`
-```
-Create ONE image: a 512x384 sheet, invisible 4x3 grid of twelve equal 128x128 cells, one round carved stone-and-bronze rune seal per cell, rim color #7FA8F0, symbol carved in the middle, left to right, top to bottom:
-radiant sun · hourglass · water drop · crystal ball · amulet eye · bottle · flame · crescent moon · wind chime · thunder cloud · skull spirit · bell.
-Thick dark-brown outline #2A1608, flat colors, no text.
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```

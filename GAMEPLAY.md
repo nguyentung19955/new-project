@@ -1215,3 +1215,6 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 110 — Icon kỹ năng vẽ tay
 - Thêm icon kỹ năng cho Chú Cuội, Kỳ Lân Vàng, Mẫu Địa, Sơn Tinh (tổng 18 tướng có icon vẽ tay).
+
+## Phiên bản 111 — Ấn Phù vẽ tay
+- 36 Ấn Phù (Núi / Gió / Sấm) dùng ảnh vẽ tay thay ký hiệu emoji (`assets/runes/<mã ấn>.png`, cắt bằng `tools/cat-runes.py`). Thiếu ảnh thì tự quay về ký hiệu cũ.

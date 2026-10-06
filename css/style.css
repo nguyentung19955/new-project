@@ -1456,3 +1456,7 @@ body { overflow: hidden; }
 .cp-rec b { color: #FFE08A; }
 /* v105: icon hành trong nhãn thẻ tướng không bị kiểu ảnh chân dung đè */
 .ro-card .tag.el img.eli { position: static; width: 12px; height: 12px; max-width: none; inset: auto; transform: none; margin: 0; object-fit: contain; filter: none; opacity: 1; }
+/* v111: Ấn Phù vẽ tay */
+.rn-node .ri .rimg { width: 2.05em; height: 2.05em; display: block; }
+.rn-big .rimg { width: 48px; height: 48px; display: block; }
+.rn-big:has(.rimg) { border: 0; background: none; }

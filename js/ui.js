@@ -43,6 +43,9 @@ const BOSS_LINES = {
 };
 const RUN_CHIP = '<span class="chip run">Quái vẫn đang chạy</span>';
 
+// v111: Ấn Phù vẽ tay (assets/runes/<mã ấn>.png, cắt bằng tools/cat-runes.py); thiếu ảnh thì hiện ký hiệu cũ
+const runeIc = (r) => `<img class="rimg" src="${ASSET_ROOT}runes/${r.id}.png" alt="${r.ic}" onerror="this.replaceWith(this.alt)">`;
+
 // Icon: ưu tiên ảnh vẽ tay trong assets/ (nếu đã có), không thì dùng hình vector
 function skillIcon(type, i) {
   // v107: icon vẽ tay trong bộ ảnh tướng → luôn dùng (như ảnh tướng), trừ khi bật "Tướng vẽ nét"
@@ -744,7 +747,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 110 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 111 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1542,7 +1545,7 @@ class UI {
     const node = (x) => {
       const l = lvs[x.id] || 0, op = this.runeOpen(x);
       return `<button class="rn-node ${x.skill ? 'sk' : ''} ${l ? 'has' : ''} ${l >= x.max ? 'full' : ''} ${op ? '' : 'lock'} ${x.id === r.id ? 'on' : ''}" data-act="rn-sel" data-k="${x.id}" title="${esc(x.name)}">
-        <span class="ri">${x.ic}</span><span class="rl">${l}/${x.max}</span></button>`;
+        <span class="ri">${runeIc(x)}</span><span class="rl">${l}/${x.max}</span></button>`;
     };
     const col = (b) => {
       const pts = runeBranchPts(lvs, b.id);
@@ -1564,7 +1567,7 @@ class UI {
           <div class="rn-tv"><img src="${heroImgUrl(t, 'head')}" alt=""><div><b>${d.name}</b><small>☯ Tu Vi ${tl} · ${tuviRank(xp)}</small>
             <div class="rn-xp"><i style="width:${bar * 100}%"></i></div><small>${nx ? `${fmt(Math.floor(xp))} / ${fmt(nx)} — hạ quái bằng tướng này để lên bậc` : 'Đã đạt bậc cao nhất'}</small></div></div>
           <div class="rn-pts">Điểm Ấn còn <b>${left}</b> / ${tuviPoints(xp)} <button class="btn ${this.runeResetArm ? 'btn-gold' : 'metal'}" data-act="rn-reset" ${runeSpent(lvs) ? '' : 'disabled'}>${this.runeResetArm ? 'Bấm lần nữa' : 'Tẩy ấn'}</button></div>
-          <div class="rn-dh"><span class="rn-big">${r.ic}</span><div><b>${r.name}</b><small>${br.name} · ${r.skill ? 'Ấn kỹ năng · 3 điểm / cấp' : 'Ấn chỉ số · 1 điểm / cấp'} · cấp ${lv}/${r.max}</small></div></div>
+          <div class="rn-dh"><span class="rn-big">${runeIc(r)}</span><div><b>${r.name}</b><small>${br.name} · ${r.skill ? 'Ấn kỹ năng · 3 điểm / cấp' : 'Ấn chỉ số · 1 điểm / cấp'} · cấp ${lv}/${r.max}</small></div></div>
           <div class="rn-lvs">${lines.join('')}</div>
           ${lv >= r.max ? '<div class="chip ok" style="text-align:center">Đã tối đa</div>'
             : !open ? `<div class="rn-lockmsg">🔒 Cần ${RUNE_ROW_NEED[r.row]} cấp trong ${br.name} (đang có ${runeBranchPts(lvs, r.br)})</div>`
