@@ -1274,3 +1274,10 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Quái gen lại đủ dáng đi + đánh: Cua, Cá Mập, Voi Chiến, Cáo, Kỵ Binh. Boss đủ 4 dáng (đi A/B, đánh, nổi giận): Thuồng Luồng, Ngư Tinh, Chằn Tinh, Hà Bá, Ân Vương, Thủy Tinh. Bản đổi màu (Cá Mập Đen, Thiết Kỵ, Chằn Lửa, Tướng Thủy) sinh lại từ ảnh mới (`tools/make-variants.py <mã>`).
 - Nền bản đồ vẽ tay thêm: Rừng, Đồng lúa, Thành, Biển (còn thiếu Sông).
 - Nút trống đồng: Bắt đầu / Dừng, Xem chỉ số, Triệu hồi (trống), Hợp thể; menu chính (Xuất Quân, Anh Hùng, Ấn Phù, Kho Báu, Cài Đặt, Bách khoa, Xếp hạng).
+
+## Phiên bản 127 — Khung giao diện trống đồng (ảnh Pippit)
+- Menu chính: nền tranh vẽ tay (mặt trời trống đồng, thành Phong Châu, sóng); nút Xuất Quân dùng khung đồng có mặt trời + rìu; bảng người chơi dùng khung đồng mặt trời.
+- Nút chọn (Phó bản / Vô tận, Thường / Khó): nút vàng khi chọn, nút bạc khi không chọn.
+- Thanh tiến độ đợt trên thanh trận dùng khung đồng hai ngọc xanh.
+- Màn Chọn chế độ: thẻ Phó Bản / Vô Tận có tranh nền bản đồ và icon vẽ tay.
+- Ảnh tướng lớn ở màn Anh Hùng có khung đồng chạm trổ.

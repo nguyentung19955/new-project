@@ -1493,3 +1493,19 @@ body { overflow: hidden; }
 .mc-sub .uimg.sub { width: 20px; height: 20px; vertical-align: -5px; margin-right: 4px; }
 .dk-summon .uimg.sm { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 42px; height: 42px; }
 .dk-card.legend img.asc-ic { position: static; width: 26px; height: 26px; object-fit: contain; margin: 0 auto 1px; }
+/* v127: khung & nền vẽ tay trống đồng (ảnh Pippit) */
+#menu-art { background: #0D0B08; }
+#menu-art img.keyart { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#menu-art img.keyart + .svgi { display: none; }
+.mc-btn.main { background: url('../assets/ui/khung-nut-chinh.png') center / 100% 100% no-repeat; border: 0; color: #3A1A06; text-shadow: 0 1px 0 #FFE9A8; justify-content: center; }
+.mc-btn.main .uimg.mc { display: none; }
+.seg button { background: url('../assets/ui/nut-bac.png') center / 100% 100% no-repeat; border: 0; color: #3A2A1A; }
+.seg button.on { background: url('../assets/ui/nut-vang.png') center / 100% 100% no-repeat; border: 0; color: #3A1A06; }
+.tb-prog { width: 170px; height: 18px; border-radius: 0; overflow: visible; position: relative; background: url('../assets/ui/thanh-tien-do.png') center / 100% 100% no-repeat; box-shadow: none; border: 0; }
+.tb-prog i { position: absolute; left: 14.5%; top: 31%; height: 38%; border-radius: 4px; max-width: 71%; }
+.pl-box { background: url('../assets/ui/khung-nguoi-choi.png') left center / 100% 100% no-repeat; border: 0; box-shadow: none; height: 56px; min-width: 240px; padding: 0 26px 0 10px; gap: 30px; border-radius: 0; }
+.pl-box .av { width: 38px; height: 38px; border: 0; background: transparent; }
+.ro-pic { position: relative; overflow: visible; background: radial-gradient(circle at 50% 60%, #6A3A18, #2A160A 75%); }
+.ro-pic::after { content: ''; position: absolute; inset: -9px -8px -12px; background: url('../assets/ui/khung-the.png') center / 100% 100% no-repeat; pointer-events: none; }
+.md-card { position: relative; overflow: hidden; background-size: cover; background-position: center; }
+.md-card .md-ic img { width: 64px; height: 64px; display: block; }

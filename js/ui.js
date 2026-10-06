@@ -217,7 +217,7 @@ class UI {
     game.known = new Set(this.save.secrets || []);
     this.bind();
     this.buildSummon();
-    $('#menu-art').innerHTML = svgI(sceneArt('menu'));
+    $('#menu-art').innerHTML = `<img class="keyart" src="${assetSrc('ui/nen-menu.jpg')}" alt="" onerror="this.outerHTML=''">` + svgI(sceneArt('menu'));
     $('#rotate-art').innerHTML = sceneArt('rotate');
     $('#loading').hidden = true;
     this.showMenu();
@@ -392,7 +392,7 @@ class UI {
     const short = (n) => (n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace('.', ',') + 'k' : n);
     $('#menu-res').innerHTML = `<span title="Ngân khố: bạc thưởng sau mỗi trận, dùng mua tướng Tím / Vàng, Thần Khí, đồ trước trận — không dùng được trong trận"><small class="pr-l">Ngân khố</small>${bac(1)} <b style="color:#E4ECF4">${fmt(s.kho || 0)}</b></span>`;
     if (0) $('#menu-res').innerHTML = `<span title="Tổng vàng đã kiếm qua mọi trận (vàng trong trận luôn bắt đầu từ ${CONFIG.startGold})"><small class="pr-l">Tổng vàng đã kiếm</small>${coin(1)} ${short(s.lifeGold)}</span><span title="Linh Chi đã hái">🌿 ${short(s.lifeHerbs)}</span><span title="Ngân khố: vàng thưởng sau mỗi trận thắng, dùng mua đồ / tướng trước trận"><small class="pr-l">Ngân khố</small>${coin(1)} <b style="color:#FFD66B">${fmt(s.kho || 0)}</b></span>`;
-    $('#menu-art').innerHTML = svgI(sceneArt('menu'));
+    $('#menu-art').innerHTML = `<img class="keyart" src="${assetSrc('ui/nen-menu.jpg')}" alt="" onerror="this.outerHTML=''">` + svgI(sceneArt('menu'));
     const g0 = this.game, live = g0.started && !g0.over && (!g0.won || g0.endless);
     const run = !live && s.run;
     const lvN = live ? g0.level : run ? run.level : 0, wN = live ? g0.wave : run ? run.wave : 0, endl = live ? g0.endless : run && run.endless;
@@ -679,10 +679,10 @@ class UI {
     $('#modes').innerHTML = `<div class="screen" style="z-index:auto">
       <div class="scr-head metal"><button class="xbtn metal" data-act="mode-close" aria-label="Quay lại">${ICON.back}</button><h1 class="ttl">Chọn chế độ</h1><div class="sp"></div></div>
       <div class="md-body">
-        <button class="md-card metal" data-act="mode-pick" data-k="camp"><span class="md-ic">⚔</span><b>Phó Bản</b>
+        <button class="md-card metal" data-act="mode-pick" data-k="camp" style="background-image:linear-gradient(90deg,#1A1008f0 35%,#1A100855),url('${assetSrc('maps/nen-thanh.jpg')}')"><span class="md-ic"><img src="${assetSrc('ui/ui-menu-1-1.png')}" alt="⚔"></span><b>Phó Bản</b>
           <small>Chiến dịch theo chương truyền thuyết. Mỗi ải số đợt cố định, có boss, đạt 1–3 sao, thắng nhận Ngân khố.</small>
           <span class="md-st">★ ${total} / ${LEVELS.length * 3} · đã mở ${s.unlocked}/${LEVELS.length} ải</span></button>
-        <button class="md-card metal endl" data-act="mode-pick" data-k="endless"><span class="md-ic">♾</span><b>Vô Tận</b>
+        <button class="md-card metal endl" data-act="mode-pick" data-k="endless" style="background-image:linear-gradient(90deg,#0A1A24f0 35%,#0A1A2455),url('${assetSrc('maps/nen-bien.jpg')}')"><span class="md-ic"><img src="${assetSrc('ui/ui-tran-1-3.png')}" alt="♾"></span><b>Vô Tận</b>
           <small>Chọn một bản đồ đã mở, giữ thành mãi mãi. Quái mạnh dần, boss mỗi 10 đợt, đổi bộ quái liên tục. Đua bảng xếp hạng.</small>
           <span class="md-st">Kỷ lục: đợt ${best}</span></button>
       </div></div>`;
@@ -777,7 +777,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 126 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 127 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1077,7 +1077,7 @@ class UI {
     const total = g.levelWaves;
     this.setText('#tb-wave', (g.endless ? `Đợt ${g.wave} · Vô tận` : `Đợt ${g.wave} / ${total}`) + (g.hard ? ' · 🔥 Khó' : ''));
     const prog = g.waveActive && g.waveTotal ? 1 - (g.spawnQueue.length + g.enemies.length * 0.5) / (g.waveTotal * 1.5) : 0;
-    $('#tb-fill').style.width = `${Math.max(0, Math.min(1, ((g.wave - 1 + Math.max(0, prog)) / total))) * 100}%`;
+    $('#tb-fill').style.width = `${Math.max(0, Math.min(1, ((g.wave - 1 + Math.max(0, prog)) / total))) * 71}%`;
     this.setText('#tb-gold b', fmt(g.gold));
     $('#tb-gold').classList.toggle('kho', !!this.prepForge);     // v95: đang tiêu Ngân khố (bạc), không phải vàng trận
     this.setText('#tb-lives b', g.lives);
