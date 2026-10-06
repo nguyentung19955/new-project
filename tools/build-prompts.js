@@ -157,7 +157,9 @@ const REDO_BOSS = {
   thuongluong: 'Thuồng Luồng: long green water dragon serpent coiling out of the river, horns, whiskers, bronze scales on the belly',
   thuytinh: 'Thủy Tinh: water god warlord in silver-blue armor and fish-scale cape, crown of waves, trident',
   trieuda: 'Triệu Đà: enemy general in dark red and black armor, topknot, long beard, big curved sword',
+  daibang: 'Đại Bàng Tinh: giant golden-brown eagle demon of the cave, spread wings, sharp talons, fierce red eyes, flying',
 };
+const REDO_FORCE = new Set(['daibang']);   // có 2 dáng nhưng nét cũ, nhỏ, lệch phong cách chung
 const redoEnemyPrompt = (k) => `Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.
 CREATURE: ${REDO_ENEMY[k]}. Cute-but-mischievous chibi monster facing RIGHT.
 CELLS (same creature, same size): [1] walk step A [2] walk step B (opposite legs) [3] attack.
@@ -169,7 +171,7 @@ CELLS (same character, same size, left to right, top to bottom): [1] walk step A
 ${STYLE}
 ${BG}`;
 for (const k of Object.keys(REDO_ENEMY).filter(sameFrames)) items.push({ group: '10. Quái gen lại (đủ dáng)', file: `${k}.png`, title: `Quái · ${ENEMIES[k].name}`, text: redoEnemyPrompt(k) });
-for (const k of Object.keys(REDO_BOSS).filter(sameFrames)) items.push({ group: '11. Boss gen lại (đủ dáng)', file: `${k}.png`, title: `Boss · ${ENEMIES[k].name}`, text: redoBossPrompt(k) });
+for (const k of Object.keys(REDO_BOSS).filter((x) => REDO_FORCE.has(x) ? !fs.existsSync(path.join(ROOT, 'assets/packs', x, '.redo')) : sameFrames(x))) items.push({ group: '11. Boss gen lại (đủ dáng)', file: `${k}.png`, title: `Boss · ${ENEMIES[k].name}`, text: redoBossPrompt(k) });
 items.forEach((it, i) => { it.n = i + 1; });
 const noIcon = need.filter((x) => !ICONS[x]);  // tướng mới chưa có mô tả icon
 if (noIcon.length) console.error('Chưa có mô tả icon:', noIcon.join(', '));
