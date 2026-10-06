@@ -16,6 +16,26 @@
 
 
 
+# Tướng còn thiếu (1)
+
+## Lang Liêu (Sử thi · `langlieu`)
+
+```
+If an image is attached, use it ONLY as the drawing-style reference (line weight, eye style, shading, proportions); do NOT copy its costume, colors or weapon.
+Create a character sprite sheet for a mobile tower-defense game based on Vietnamese folk legends.
+CHARACTER: Lang Liêu - Gentle humble prince, simple ochre-yellow tunic with brown sash, small gold headband, kind smile.
+MAIN WEAPON: a square green banh chung rice cake wrapped in leaves and tied with bamboo string (strike: tossing the cake which bursts into light).
+ELEMENT: EARTH (ochre yellow-brown, glow color #D9A84E). Use this element color for the cast glow and for small accent details.
+CAST SKILL EFFECT (cell 4): golden rice grains swirling.
+RARITY FEEL: Sử thi (richer costume, more gold trim).
+STYLE (match exactly): cute chibi mobile-game character, head about 1/3 of total height, big round dark-brown eyes with two white highlights, small smile, pink blush cheeks. Thick clean dark-brown outline (#2A1608) around every shape, flat cel shading with one soft shadow tone and one highlight, warm saturated colors. Costume details inspired by ancient Vietnamese Dong Son bronze drums: meander/zigzag bands, sun-star motif, Lac bird motif, bronze and woven-cloth textures. Clean vector-like illustration, crisp edges, no painterly texture, no blur.
+LIGHT FILE: keep the image small and simple so the PNG file stays light (under about 500 KB): flat solid color fills with a limited palette of about 20-30 colors, at most one flat shadow tone per color, no gradients, no airbrush or soft shading, no noise, grain, paper texture or tiny repeated detail, no glow halos or bloom (except the small effect asked for), no sparkles scattered in the background. Bold simple shapes that read clearly at small size.
+SHEET LAYOUT: one SMALL landscape image 1020x680 px, an invisible 3x2 grid of six equal 340x340 cells. Exactly ONE pose per cell, the same character in every cell, same size and same proportions in cells 1-5. Leave at least 16 px of empty margin inside every cell; nothing may cross into another cell. Feet of cells 1-5 sit on the same baseline about 20 px above the bottom of the cell.
+Row 1: [1] IDLE - side view facing RIGHT (3/4 toward the viewer), standing relaxed, holding the main weapon ready in the front hand (weapon fully visible, not cut off). [2] WIND-UP - same side view facing right, body pulled back, weapon raised behind the head ready to strike. [3] STRIKE - same side view facing right, lunging forward, weapon swung through to the front, with ONE short curved motion-trail swoosh in a pale tint of the main color.
+Row 2: [4] CAST SKILL - side view facing right, both arms raised, a compact magic glow of the element color around the hands (glow stays small, inside the cell). [5] FRONT - full body facing the viewer, standing, holding the weapon. [6] PORTRAIT - head and shoulders only, facing the viewer slightly turned right, big and centered, filling about 80% of the cell.
+BACKGROUND: perfectly flat pure magenta #FF00FF in every cell and between cells. No gradient, no floor, no cast shadow, no grid lines, no borders, no text, no numbers, no labels, no watermark. Do not use magenta or pink-purple anywhere on the character (use other shades instead) so the background can be cut out cleanly.
+```
+
 # Quái còn thiếu (3)
 
 ## Yêu Tinh Rừng (`yeutinh`)

@@ -231,7 +231,7 @@ function heroPng(type, v, h) {
 // Cắt từ ảnh ghép gen theo docs/PROMPT_GEMINI.md bằng tools/cat-sheet.py.
 // Luôn dùng (không phụ thuộc tuỳ chọn "ảnh AI"); tắt bằng "Tướng vẽ nét".
 const HERO_PACK = Object.fromEntries(['lactuong', 'lucsi', 'xathu', 'thosan', 'thaymo', 'thansuong', 'thachsanh', 'lachau', 'thansan',
-  'auco', 'adv', 'kimquy', 'llq', 'antiem', 'mau', 'giong', 'cdt', 'caolo'].map((k) => [k, `packs/${k}/`]));
+  'auco', 'adv', 'kimquy', 'llq', 'antiem', 'mau', 'giong', 'cdt', 'caolo', 'tiendung'].map((k) => [k, `packs/${k}/`]));
 const packImg = (type, name) => (HERO_PACK[type] ? asset(HERO_PACK[type] + name + '.png', true) : null);
 // v60: quái vẽ tay (assets/packs/<quái>/walk1 · walk2 · attack): bước đi luân phiên, ra đòn khi tấn công
 const ENEMY_PACK = new Set(['thachtinh', 'doi', 'ran', 'giaolong', 'tom', 'casau', 'rua', 'phuthuy', 'chimbao', 'echme', 'nongnoc', 'cungan', 'kybinh', 'voichien', 'camap', 'muc', 'cua', 'cao']);
@@ -1115,25 +1115,32 @@ function drawAccAura(ctx, a, s, t, glowOnly) {
 const AURA_C = { epic: '#C77DFF', legendary: '#FFD23A' };
 const hasLegendGear = (h) => !!(h && h.equip && Object.values(h.equip).some((it) => it && it.rarity === 'legendary'));
 function drawPackBack(ctx, h, look, def, t, tier, asc) {
+  // v79: khói / sương màu bốc lên sau lưng thay cho vầng mặt trời
   const L = def.legend;
-  if (L === 'legendary') {
-    // tia sáng xoay sau lưng + vầng mặt trời
-    ctx.save(); ctx.translate(100, 120); ctx.rotate(t * 0.25);
-    ctx.globalAlpha = 0.35 + 0.1 * asc;
-    ctx.fillStyle = '#FFE08A';
-    for (let i = 0; i < 12; i++) { ctx.rotate(Math.PI / 6); ctx.beginPath(); ctx.moveTo(-6, 0); ctx.lineTo(0, -(120 + asc * 12)); ctx.lineTo(6, 0); ctx.fill(); }
-    ctx.restore();
-    drawSunHalo(ctx, t);
-  } else if (L === 'epic') {
-    ctx.save(); ctx.translate(100, 125);
-    const r = 95 + asc * 8 + Math.sin(t * 2.4) * 5;
-    const g = ctx.createRadialGradient(0, 0, 10, 0, 0, r);
-    g.addColorStop(0, 'rgba(199,125,255,0.55)'); g.addColorStop(1, 'rgba(199,125,255,0)');
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fill();
-    ctx.restore();
-    if (asc >= 3) drawSunHalo(ctx, t);
-  } else if (tier >= 3) drawSunHalo(ctx, t);
+  if (L === 'legendary') drawSmokeAura(ctx, t, [255, 200, 60], 1.5 + asc * 0.3, h);
+  else if (L === 'epic') drawSmokeAura(ctx, t, [190, 110, 255], 1.1 + asc * 0.3, h);
+  else if (tier >= 3) drawSmokeAura(ctx, t, hexRgb(look.attrColor), 0.55, h);
   if (asc > 0) drawAscStars(ctx, t, asc, L, false);
+}
+const hexRgb = (c) => { const m = /^#?([0-9a-f]{6})/i.exec(c || ''); const n = m ? parseInt(m[1], 16) : 0xF2D27A; return [n >> 16, (n >> 8) & 255, n & 255]; };
+// các cụm khói tròn mềm bốc lên từ dưới chân, phình ra và mờ dần, đung đưa qua lại
+function drawSmokeAura(ctx, t, rgb, k, h) {
+  const seed = ((h && h.id) || 0) * 1.37;
+  const n = Math.round(9 + 5 * k);
+  ctx.save();
+  for (let i = 0; i < n; i++) {
+    const p = (t * 0.32 + i / n + seed) % 1;
+    const x = 100 + Math.sin(i * 2.1 + t * 0.9 + seed) * (26 + p * 40);
+    const y = 215 - p * (170 + 30 * k);
+    const r = (16 + p * 34) * (0.8 + 0.25 * k);
+    const a = Math.sin(p * Math.PI) * 0.3 * Math.min(1.7, k);
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+    g.addColorStop(0, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${a})`);
+    g.addColorStop(1, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},0)`);
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.restore();
 }
 function packGlow(ctx, png, w, hgt, h, look, def, t, tier, asc) {
   const L = def.legend, pulse = Math.sin(t * 3) * 0.12;

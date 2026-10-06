@@ -1010,3 +1010,8 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - **Thêm 4 đồ Huyền thoại** (chỉ đúc từ 2 món Sử thi đã đúc + 1.800): Ngọc Minh Châu (phép), Vuốt Kim Quy (chí mạng / xuyên giáp), Rìu Thần Thạch Sanh (chém lan), Áo Lông Vũ Âu Cơ (trâu, hồi máu). Trống Đồng và Gậy Tam Giới đúc khó hơn (cần thêm 1 món Sử thi, 1.200).
 - **Hào quang theo bậc rõ hơn** (tướng vẽ tay): Tím — viền + quầng tím, bụi tím bay lên; Vàng — viền vàng, vầng mặt trời + tia sáng xoay, bụi vàng; **Thần tinh** — 1–3 ngôi sao bay vòng quanh người, quầng to hơn; ★★★ thường vẫn có vầng mặt trời.
 - **Mặc đồ Huyền thoại**: viền cam vàng + lửa vàng bốc quanh chân.
+
+### Phiên bản 79
+
+- **Bỏ vầng mặt trời sau lưng**, thay bằng **khói màu bốc lên** (`drawSmokeAura`): Vàng — khói vàng dày, Tím — khói tím, Thần tinh — khói dày hơn + sao bay quanh, Thường ★★★ — khói nhạt màu hệ.
+- **Tiên Dung có hình vẽ tay** (ảnh cô gái áo đỏ cầm quạt gửi trước đó). Còn **Lang Liêu** chưa có ảnh (thêm vào `docs/PROMPT_GEMINI_CON_THIEU.md`).
