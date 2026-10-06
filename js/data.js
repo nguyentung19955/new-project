@@ -2038,7 +2038,7 @@ const runeFx = (h) => (RUNE_MAP && h ? RUNE_MAP[h.type] || null : null);
 const TUVI_RANKS = ['Tân Binh', 'Dũng Sĩ', 'Hiệp Sĩ', 'Tráng Sĩ', 'Tướng Quân', 'Đại Tướng', 'Danh Tướng', 'Thần Tướng', 'Thánh Tướng', 'Bất Tử'];
 const TUVI_XP = [0, 30, 80, 160, 280, 450, 680, 980, 1380, 1900];      // Tu Vi tích lũy để đạt bậc 1..10
 const TUVI_PTS = 3;                                                      // điểm Ấn mỗi bậc
-const TUVI_KILL = { normal: 1, elite: 3, big: 8, boss: 25 };            // Tu Vi mỗi quái hạ (tướng ghép chia 50% cho tướng nguyên liệu)
+const TUVI_KILL = { normal: 1, elite: 3, big: 8, boss: 25 };            // Tu Vi mỗi quái hạ (tướng ghép chia 50% cho tướng nguyên liệu); +1 mỗi đợt cho mọi tướng trên sân
 const TUVI_LOSE = 0.6;                                                   // thua / bỏ trận: nhận 60%
 const tuviLevel = (xp) => TUVI_XP.reduce((a, need, i) => ((xp || 0) >= need ? i + 1 : a), 1);
 const tuviRank = (xp) => TUVI_RANKS[tuviLevel(xp) - 1];

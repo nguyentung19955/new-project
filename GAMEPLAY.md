@@ -1185,3 +1185,9 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - **Dừng chơi giữa trận:** vẫn nhận 4 Ngân khố mỗi đợt đã qua (như khi thua).
 - **Thắng trận đầu tiên trong ngày (Phó bản):** thêm +300.
 - Màn kết quả hiện thêm các dòng thưởng ngày và Ngân khố đã nhận giữa trận.
+
+## Phiên bản 104 — Rà soát tài nguyên
+- Vô tận: Ngân khố hạ boss giờ trả khi **xong đợt** (trước đây trả ngay → tải lại game giữa đợt có thể hạ boss lần nữa để nhận lại).
+- Tu Vi: mỗi đợt xong, **mọi tướng đang trên sân +1 Tu Vi** (tướng ghép chia nửa cho tướng nguyên liệu) — tướng hồi máu / hỗ trợ ít hạ quái vẫn lên bậc.
+- Núi cao thêm mạng (mỗi 3 đợt từ giai đoạn 2) giờ có thông báo "+1 mạng" thay vì cộng âm thầm.
+- Đã kiểm tra lưu trữ: mọi tài nguyên tài khoản nằm trong bản lưu và được đẩy lên Firestore (`users/{uid}`) mỗi lần ghi — Ngân khố, tướng đã mua, Tu Vi, Ấn Phù từng tướng, Thần Khí, sao / ải đã mở / kỷ lục, kỷ lục vô tận, thưởng ngày, hiệu ứng ẩn đã khám phá, đồ đã sưu tầm, tên, trận đang chơi dở. Bản kéo từ mây cũng đi qua bước bổ sung mặc định + chuyển đổi bản cũ.

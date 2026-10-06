@@ -2310,7 +2310,7 @@ class Game {
     const st = this.mountainStage();
     const gold = st * MOUNTAIN.goldPerStage;
     this.addGold(gold);
-    if (st >= 2 && this.wave % 3 === 0) this.lives++;
+    if (st >= 2 && this.wave % 3 === 0) { this.lives++; this.notify('Núi cao che thành: +1 mạng', '#6AE06A'); }
     // v92: bỏ màn Núi Tản Viên — núi tự cao theo đợt (vàng, mạng, thêm lượt Mọc Núi), không còn Linh Chi
     return gold;
   }
@@ -2492,6 +2492,10 @@ class Game {
     this.moc = this.mocMax();
     this.rollShop();      // cửa hàng nhập hàng mới
     this.notify(`Hoàn thành đợt ${this.wave}! +${bonus + extra} vàng · núi cao +${mGold} vàng`, '#F2D27A');
+    if (this.bossKho) { this.events.push({ type: 'kho', n: this.bossKho, why: `hạ ${this.bossKhoName}` }); this.bossKho = 0; }
+    // v104: Tu Vi cho mọi tướng còn trên sân mỗi đợt (tướng hỗ trợ / hồi máu ít hạ quái vẫn lên bậc)
+    const log = this.xpLog || (this.xpLog = {});
+    for (const h of this.heroes) if (h) { log[h.type] = (log[h.type] || 0) + 1; for (const a of heroLineage(h)) log[a.type] = (log[a.type] || 0) + 0.5; }
     // v103: Vô tận — mỗi 10 đợt cộng Ngân khố (tài khoản) ngay
     if (this.endless && this.wave % PREP.endlessEvery === 0) this.events.push({ type: 'kho', n: Math.round(PREP.endlessMilestone * (1 + Math.floor(this.wave / 50) * 0.5) * (this.hard ? 1.5 : 1)), why: `mốc đợt ${this.wave}` });
     if (bossAt(this.wave, this.level)) this.riseWater();
@@ -3484,7 +3488,8 @@ class Game {
       this.effects.push({ type: 'ring', x: e.x, y: e.y, r: 30, color: e.def.color, ttl: 0.4, max: 0.4 });
     }
 
-    if (e.def.boss && this.endless) this.events.push({ type: 'kho', n: Math.round(PREP.endlessBoss * (this.hard ? 1.5 : 1)), why: `hạ ${e.def.name}` });   // v103
+    // v103/v104: Vô tận — hạ boss được Ngân khố, trả khi XONG ĐỢT (tải lại giữa đợt không nhận lại được)
+    if (e.def.boss && this.endless) { this.bossKho = (this.bossKho || 0) + Math.round(PREP.endlessBoss * (this.hard ? 1.5 : 1)); this.bossKhoName = e.def.name; }
     if (e.def.boss) {
       this.bossesKilled++;
       this.notify(`Đã hạ ${e.def.name}!`, '#F0A030');
