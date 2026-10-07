@@ -82,3 +82,41 @@ Khớp game: anvuong, giaodong, giong, haba, denroi (đèn lồng → phép), la
 ## Rig phải chỉnh tay
 Rig tự đoán của engine bắt nhầm dải băng / tóc / đuôi ở hầu hết ảnh → cả 48 rig có tay (đợt 2–3) và 19 rig phần 1 đều đặt tay (tools/rig-dung-xuong.txt).
 Phải sửa lại sau khi xem khung động: dapde (đầu gậy sót lại → nới khối), caolo, anvuong (khối giáo ăn vào áo choàng), cua (đổi sang nguyên khối), hotinh (đầu giáo rộng hơn khối rig), thansuong (lệch cán giáo), ngutinh (khối đinh ba ăn vào tóc), kinhduong (viền trắng sót → thêm hút mảnh viền), các cán dài dựng đứng (thêm `amp`).
+
+## Cần GEN LẠI (ảnh vẽ sai — game đang loại trừ bằng `CD_SKIP` trong js/tu-cu-dong.js, giữ hiển thị cũ)
+Rig trong js/rigs.js của các mã này vẫn để đó (vô hại vì `CD_SKIP` chặn ảnh đơn); gen lại ảnh thì soát lại rig.
+
+| Mã | Đúng ra (docs/PROMPT-DUNG-XUONG) | Ảnh hiện tại | Lý do |
+|---|---|---|---|
+| cao | Cáo Con | rồng con hồng có sừng | sai loài |
+| camap | Cá Mập Yêu | rồng con xanh vây cá | sai loài |
+| cua | Cua | rồng con đỏ có 1 càng | sai loài |
+| chimbao | Chim Báo | rồng con hồng có cánh | sai loài |
+| rua | Rùa | rồng con xanh mai rùa | sai loài |
+| ran | Rắn Độc | rồng con xanh lá | sai loài |
+| dacon | Đá Con | rồng con xanh | sai loài |
+| nongnoc | Nòng Nọc | rồng con xanh | sai loài |
+| phuthuy | Phù Thuỷ (gậy phép) | rồng con xanh, không gậy | sai loài + thiếu vũ khí |
+| thachtinh | Thạch Tinh | người có sừng, không vũ khí | sai loài |
+| voichien | Voi Chiến | người có sừng | sai loài |
+| linhan | Lính Ấn (giáo) | người có sừng, không giáo | sai loài + thiếu vũ khí |
+| cungan | Sói Cung Thủ (cung) | rồng/người có sừng, không cung | sai loài + thiếu vũ khí |
+| hotinh | Hồ Tinh Chín Đuôi (boss) | rồng nhiều tay cầm giáo | sai loài |
+| chantinh | Chằn Tinh (boss, rìu) | người-rồng cầm giáo | sai loài + sai vũ khí |
+| nguphu | Ngư Phủ (tướng, giáo) | tiên cá cầm đinh ba | sai loài |
+| tre | Thánh Gióng tre (giáo) | kiếm cắm đất bên cạnh, tay không cầm | vũ khí rời |
+| dotnuong | Đốt Nương (kiếm) | kiểu 3D bóng, cầm giáo | lệch phong cách + sai vũ khí |
+
+### Nên gen lại thêm (chưa trong `CD_SKIP`, tôi soát thấy khi làm rig)
+| Mã | Đúng ra | Ảnh hiện tại | Lý do |
+|---|---|---|---|
+| casau | Cá Sấu | rồng con hồng mõm cá sấu, có sừng | sai loài (lai rồng) |
+| doi | Dơi Hang | rồng con có cánh dơi | sai loài (lai rồng) |
+| echme | Ếch Mẹ | ếch có đuôi rồng, đội mũ | lệch loài nhẹ |
+| kybinh | Quỷ Cưỡi Lợn (giáo) | người đầu lợn rừng, không cưỡi, không giáo | sai mô tả + thiếu vũ khí |
+| xathu | Xạ Thủ (cung) | cầm đao, không có cung | sai vũ khí (lớp cung thủ) |
+| thosan | Thợ Săn (kiếm) | cầm cung | sai vũ khí |
+| yeutinh | Yêu Tinh Rừng (rìu) | không vũ khí | thiếu vũ khí |
+| haisen, melua | gậy phép | không gậy (lư đồng / quang gánh lúa) | thiếu vũ khí |
+| cuoi | rìu | vác đòn gánh | sai vũ khí |
+Các tướng cầm giáo/kiếm/đao thay vì gậy phép / tay không (bảng ở trên) chạy được bình thường; chỉ cần gen lại nếu muốn hình khớp kiểu đánh trong game.
