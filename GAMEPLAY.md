@@ -2201,6 +2201,7 @@ Test: cập nhật `cho-tuong` (màn Chuẩn bị không còn chọn đội, sau
 | 3 | đợt 22.3 (4/4) | đợt 22.0 (4/4) | đợt 19.0 (2/4) | đợt 19.0 (2/4) |
 | 5 | đợt 19.0 (2/4) | đợt 19.5 (2/4) | đợt 19.7 (3/4) | đợt 17.7 (3/4) |
 
+  Sau khi gộp v202 (chợ 6 thẻ), luật `own1` (tài khoản đã mở mọi tướng Thường + 1 tướng Tím; `RREQ=6,11,16` vs `RREQ=6,9,12`): ải 1 đợt 21.3 → **19.0** · ải 3 20.8 → **19.5** · ải 5 20.3 → **19.3** (3/4 ván). Lưu ý `own1` chạy với ★★★ lên cấp nguyên giá (`lvDisc3 = 1`) như bản gốc của luật.
   Độ khó (nhánh chính, chơi đến 4000 s): mạng còn TB ải 1: 27.8 → 34.8 · ải 3: 22.3 → 12.5 (1 ván thua đ68) · ải 5: 8.8 (3 thua) → 16.3 (2 thua) — dao động lớn, không thấy xu hướng dễ hẳn.
 - **Nhận xét:** hạ R3 xuống cấp 12 chỉ sớm Tím 0–2 đợt; với bot này điểm nghẽn chính là gom đủ hai tướng ★★★ (vàng mua thẻ / ghép), không phải cấp R. Game không dễ hơn rõ rệt → **không bù** (không đổi sức mạnh R hay giá nâng). Muốn Tím ở đợt 12–16 cần thêm thay đổi khác (vd ★★★ rẻ hơn / chợ ra đúng nguyên liệu hơn).
 - Test: `hop-the` thêm kiểm tra R cần tướng cấp 6/9/12, cấp 11 bị chặn R3 ("Cần tướng cấp 12"), cấp 12 nâng được. Ảnh đã xem: `docs/r-cap-12/skills-844x390.png`, `docs/r-cap-12/skills-1920x934.png`.
