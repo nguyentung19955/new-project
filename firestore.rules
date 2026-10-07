@@ -17,5 +17,65 @@ service cloud.firestore {
         && request.resource.data.detail is string && request.resource.data.detail.size() <= 60
         && (resource == null || request.resource.data.score >= resource.data.score);
     }
+    // v141: CHƠI NHÓM — phòng rooms/{mã 6 ký tự}: chỉ 2 thành viên đọc / ghi, hết hạn sau ~12 giờ (expiresAt)
+    function signedIn() { return request.auth != null; }
+    function roomOf(code) { return get(/databases/$(database)/documents/rooms/$(code)).data; }
+    function liveRoom(d) { return d.expiresAt > request.time; }
+    function inRoom(code) { return signedIn() && request.auth.uid in roomOf(code).members && liveRoom(roomOf(code)); }
+    function isAuth(code) { return roomOf(code).auth == request.auth.uid; }
+    function ttlOk(d) { return d.expiresAt is timestamp && d.expiresAt < request.time + duration.value(13, 'h'); }
+    match /rooms/{code} {
+      allow get: if signedIn() && request.auth.uid in resource.data.members && liveRoom(resource.data);
+      allow list: if false;
+      allow create: if signedIn() && code.size() == 6
+        && request.resource.data.keys().hasOnly(['host', 'members', 'names', 'meta', 'level', 'state', 'auth', 'epoch', 'away', 'expiresAt'])
+        && request.resource.data.host == request.auth.uid
+        && request.resource.data.members == [request.auth.uid]
+        && request.resource.data.auth == request.auth.uid
+        && request.resource.data.state == 'lobby'
+        && request.resource.data.names.size() <= 2 && request.resource.data.meta.size() <= 2
+        && ttlOk(request.resource.data);
+      allow update: if signedIn() && liveRoom(resource.data)
+        && request.resource.data.host == resource.data.host
+        && request.resource.data.expiresAt == resource.data.expiresAt
+        && request.resource.data.names.size() <= 2 && request.resource.data.meta.size() <= 2
+        && request.resource.data.keys().hasOnly(['host', 'members', 'names', 'meta', 'level', 'state', 'auth', 'epoch', 'away', 'expiresAt', 'seed', 'own'])
+        && (
+          // thành viên: chọn ải, bắt đầu, chuyển quyền điều phối, rời phòng (không thêm người)
+          (request.auth.uid in resource.data.members && request.resource.data.members.hasOnly(resource.data.members))
+          // người thứ hai vào phòng đang chờ
+          || (!(request.auth.uid in resource.data.members) && resource.data.state == 'lobby' && resource.data.members.size() == 1
+              && request.resource.data.members == resource.data.members.concat([request.auth.uid])
+              && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['members', 'names', 'meta']))
+        );
+      allow delete: if signedIn() && request.auth.uid == resource.data.host;
+      // lô lệnh của người điều phối (chỉ tạo mới, không sửa — số thứ tự trùng bị từ chối)
+      match /cmds/{id} {
+        allow read: if inRoom(code);
+        allow create: if inRoom(code) && isAuth(code)
+          && request.resource.data.keys().hasOnly(['seq', 'by', 'd', 'expiresAt'])
+          && request.resource.data.by == request.auth.uid && request.resource.data.seq is int
+          && request.resource.data.d is string && request.resource.data.d.size() < 20000
+          && ttlOk(request.resource.data);
+      }
+      // yêu cầu của người chơi gửi người điều phối (lệnh, tín hiệu còn sống, xin đồng bộ)
+      match /reqs/{id} {
+        allow read: if inRoom(code);
+        allow create: if inRoom(code)
+          && request.resource.data.keys().hasOnly(['by', 'd', 'expiresAt'])
+          && request.resource.data.by == request.auth.uid
+          && request.resource.data.d is string && request.resource.data.d.size() < 4000
+          && ttlOk(request.resource.data);
+      }
+      // ảnh chụp trạng thái để đồng bộ lại / vào lại phòng
+      match /snap/{id} {
+        allow read: if inRoom(code);
+        allow create, update: if inRoom(code) && isAuth(code) && id == 'last'
+          && request.resource.data.keys().hasOnly(['by', 'tick', 'd', 'expiresAt'])
+          && request.resource.data.by == request.auth.uid && request.resource.data.tick is int
+          && request.resource.data.d is string && request.resource.data.d.size() < 900000
+          && ttlOk(request.resource.data);
+      }
+    }
   }
 }

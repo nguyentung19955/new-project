@@ -1337,3 +1337,16 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - **Màn 1–3 (chủ đề Sông)** chưa có tranh nền riêng nên tạm dùng nền Đầm sen vẽ tay; có tranh Sông thì đổi lại.
 - Menu: hàng nút Anh Hùng / Ấn Phù gọn hơn để chữ không chạm mép trên máy nhỏ.
 - Prompt mới: 16 quái + 3 boss nét cũ gen lại, 80 icon đồ vật (19 tấm), 3 tấm nút giao diện thêm; cắt bằng `tools/cat-items.py <ảnh> <mã tấm>`.
+
+## Phiên bản 141 — Chơi nhóm "Cùng Giữ Thành" (2 người)
+- **Lối vào:** Xuất Quân → Chọn chế độ → thẻ thứ ba **Cùng Giữ Thành**. Cả hai cần đăng nhập (Google / email / khách).
+- **Phòng:** chủ phòng bấm *Tạo phòng* → được mã 6 ký tự; người kia nhập mã → *Vào phòng*. Màn chờ hiện 2 người; chủ phòng chọn ải trong các ải **Phó bản đã mở của chủ phòng** rồi bấm *Bắt đầu*.
+- **Chung:** bản đồ, mạng thành, đợt quái, túi đồ, cửa hàng Lò đúc. **Riêng:** ví vàng, lượt triệu hồi (giá tăng theo từng người), đội triệu hồi 6 tướng, tướng Tím / Vàng đã sở hữu (để hợp thể), Ấn Phù và Thần Khí của tướng trên ô mình.
+- **Chia ô:** xếp các ô theo dọc dòng sông, chia từng cặp 2 ô xen kẽ (mỗi người có ô ở đầu, giữa và cuối sông; chênh nhau tối đa 1 ô). Ô của đồng đội có **viền xanh nét đứt**. Chỉ thao tác được tướng / ô của mình (xem được tướng đồng đội). Lệnh "cả đội" (Ghép tự động, Mặc đồ cả đội, Nâng đồ) chỉ áp cho tướng của người bấm.
+- **Vàng:** mỗi người bắt đầu với 220 vàng. Vàng do trận sinh ra (hạ quái, thưởng xong đợt, núi Tản Viên, sính lễ boss) **chia đôi** (đồng lẻ luân phiên); vàng từ thao tác (bán tướng / đồ, gọi sớm) về người bấm. Thanh bên phải dưới thanh trên hiện vàng của đồng đội và nút **Gửi 50 / Gửi 200**.
+- **Sính lễ boss:** cả hai thấy bảng chọn, ai chọn trước thì nhận (vàng trong sính lễ vẫn chia đôi).
+- **Không tạm dừng** trong chơi nhóm; nút ▶ chỉ để bắt đầu đợt 1 (ai bấm cũng được). Đổi tốc độ x1/x2/x3 áp cho cả hai.
+- **Mất kết nối:** im lặng 15 giây (chủ phòng mất thì 8 giây) → người còn lại nhận thông báo, **điều khiển cả hai nửa** và nhận luôn vàng của đồng đội. Đồng đội có mạng lại / tải lại trang → *Vào lại phòng* → nhận ảnh chụp trận, vàng của người đang giữ chia đôi lại.
+- **Kết thúc trận:** cả hai nhận **Ngân khố** như Phó bản (thắng: theo ải + sao, kèm thưởng thắng đầu ngày; thua / bỏ: 4 mỗi đợt đã qua) và Tu Vi. Chơi nhóm không tính sao, không mở ải, không ghi bảng xếp hạng.
+- **Kỹ thuật (js/coop.js):** đồng bộ kiểu *lockstep* bằng lệnh — chỉ gửi thao tác, mô phỏng chạy **bước cố định 30 bước/giây** trên cả hai máy với bộ sinh số **có seed chung** (`srand()` trong data.js; chơi đơn vẫn dùng `Math.random`). Người điều phối (chủ phòng) xếp mỗi lệnh vào bước = bước hiện tại + ~0,8 giây, gửi theo lô qua Firestore `rooms/{mã}/cmds` (khách gửi yêu cầu qua `reqs`). Mỗi 60 bước băm trạng thái (máu quái, vàng, mạng, tướng, bộ sinh số); lệch thì điều phối chụp toàn bộ trạng thái (`rooms/{mã}/snap`) và cả hai máy nạp lại cùng một ảnh. Kiểm thử: `node tests/coop/run-all.js`.
+- **Cần làm:** deploy lại `firestore.rules` (thêm luật `rooms/…`), xem docs/FIREBASE.md.
