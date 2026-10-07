@@ -1718,3 +1718,12 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 181 — Gộp sửa thẻ chợ + bỏ lọc Hợp thể + nút ẩn giao diện
 
 - Gộp sua-the-cho (icon hệ không còn bị phóng to lòi ra sau avatar; bỏ thanh lọc bảng Hợp thể) và an-giao-dien (bỏ bong bóng Hủy trên tướng; nút ẩn giao diện, phím H).
+
+## Phiên bản 182 — Rê chuột / giữ tay lên ô kỹ năng để đọc mô tả
+
+- Góp ý người chơi (Mac, Chrome 1018×612): "hover vào kỹ năng để đọc kỹ năng". Nay **rê chuột** (máy tính, ~0,15 giây) hoặc **giữ tay ~0,35 giây** (điện thoại; trước là 0,45 giây và chỉ có ở vài chỗ) lên ô kỹ năng → hiện khung mô tả: tên + loại (chủ động / nội tại / tối thượng), mô tả có số liệu theo cấp tướng, **hiệu lực cấp này ➜ cấp sau** (mỗi cấp kỹ năng +25%), **hồi chiêu** (đã trừ giảm hồi chiêu của tướng, kèm năng lượng và số giây còn lại), **điều kiện** mở / lên cấp kế (cần tướng cấp mấy ✓/✗), **giá** mở (vàng) hoặc nâng (1 điểm kỹ năng / vàng sau thăng thần), "Đã tối đa" khi max.
+- Có ở: thanh thông tin tướng trong trận (4 ô Q/W/E/R kể cả ô khoá), Cây kỹ năng (đầu cột + icon bảng chi tiết), Anh Hùng (4 ô kỹ năng — thêm dòng "Các cấp" cần tướng cấp mấy), Ấn Phù (cấp hiện tại ➜ cấp kế, điều kiện mở hàng, giá điểm Ấn; bỏ `title` gốc để không hiện 2 khung), Thần Khí (đầu mỗi hệ: hiện tại, cấp kế, giá Ngân khố, các mốc). Màn Tiến hoá và Bách khoa không có ô kỹ năng nên không đổi; thẻ tướng màn Chuẩn bị (data-tip cũ) cũng rê chuột là thấy.
+- Khung đặt sát ô, **không che ô đang chỉ** (tính cả nhãn giá lòi lên trên ô): ưu tiên phía trên, hết chỗ thì phía dưới, rồi phải / trái; luôn nằm gọn trong màn, màn quá chật thì cho cuộn trong khung. Ô bị dựng lại (hồi chiêu đếm, vừa nâng) thì khung tự cập nhật; rời chuột / thả tay / cuộn thì ẩn.
+- **Chạm / bấm nhanh giữ nguyên** (nâng / mở kỹ năng); bấm chuột khi đang rê vẫn nâng. Giữ tay xem mô tả rồi thả không nâng; kéo ngón tay đi (cuộn) thì không hiện. Game **không dừng** khi xem.
+- Kỹ thuật: một bộ xử lý chung cho mọi ô `[data-tip]`, `[data-skt]` (kỹ năng thứ i của tướng đang chọn), `[data-skr="loại:i"]` (màn Anh Hùng) — thay 2 bộ giữ tay cũ (v121 thanh tướng, v128 data-tip). Nội dung kỹ năng do `ui.skillTipHtml()` dựng.
+- Test: `tests/mo-ta-ky-nang/mo-ta-ky-nang.test.js` (1920×934, 1018×612, 844×390, 667×375): rê chuột ở 5 màn, giữ tay (cảm ứng thật qua CDP), chạm nhanh vẫn nâng, kéo không hiện, khung trong màn / không che ô / tự đổi phía, game vẫn chạy. Ảnh đã xem: `tests/mo-ta-ky-nang/shots/*-{deck-hover,deck-giu-tay,cay-ky-nang,anh-hung,than-khi,an-phu}.png`.

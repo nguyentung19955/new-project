@@ -138,6 +138,8 @@ const RUN_CHIP = '<span class="chip run">Quái vẫn đang chạy</span>';
 const runeIc = (r) => `<img class="rimg" src="${assetSrc(`runes/${r.id}.png`)}" alt="${r.ic}" onerror="this.replaceWith(this.alt)">`;
 
 // Icon: ưu tiên ảnh vẽ tay trong assets/ (nếu đã có), không thì dùng hình vector
+// v182: ô có mô tả khi rê chuột / giữ tay (data-skt = kỹ năng thứ i của tướng đang chọn, data-skr = "loại:i" ở màn Anh Hùng)
+const TIP_SEL = '[data-tip], [data-skt], [data-skr]';
 function skillIcon(type, i) {
   // v107: icon vẽ tay trong bộ ảnh tướng → luôn dùng (như ảnh tướng), trừ khi bật "Tướng vẽ nét"
   if (SKILL_PACK.has(type) && !vectorHeroesOn()) return `<img src="${assetSrc(`packs/${type}/sk-${SKILL_KEYS[i].toLowerCase()}.png`)}" alt="">`;
@@ -498,17 +500,6 @@ class UI {
     $('#menu').addEventListener('pointerdown', (ev) => {
       if (this.plPop && !ev.target.closest('#pl-pop, #menu-player')) { this.plPop = false; this.outArm = false; this.renderPlPop(); }
     });
-    // v121: giữ tay ~0,45 giây trên ô kỹ năng → hiện mô tả kỹ năng hoạt động ra sao; nhấc tay là ẩn
-    let tipT = 0;
-    const hideTip = () => { clearTimeout(tipT); const t = $('#sk-tip'); if (t) t.hidden = true; };
-    $('#deck').addEventListener('pointerdown', (ev) => {
-      const el = ev.target.closest('[data-act=cmd-skill]');
-      hideTip(); this.tipShown = false;
-      if (!el) return;
-      tipT = setTimeout(() => { this.tipShown = true; this.showSkillTip(+el.dataset.i, el); }, 450);
-    });
-    for (const e of ['pointerup', 'pointercancel', 'pointerleave']) $('#deck').addEventListener(e, hideTip);
-    $('#deck').addEventListener('contextmenu', (ev) => { if (ev.target.closest('[data-act=cmd-skill]')) ev.preventDefault(); });
     // v154: giữ tay ~0,35 giây lên chân dung ở thanh đáy → hiện bảng chỉ số tướng; thả tay là ẩn.
     // Chạm nhanh không mở bảng (lần đầu nhắc "Giữ ảnh để xem chỉ số").
     let stT = 0, stP = null;
@@ -528,18 +519,45 @@ class UI {
     for (const e of ['pointerup', 'pointercancel']) window.addEventListener(e, stEnd, true);
     window.addEventListener('blur', () => { stP = stP || { id: undefined }; stEnd(); });
     $('#deck').addEventListener('contextmenu', (ev) => { if (ev.target.closest('.dk-pt')) ev.preventDefault(); });
-    // v128: giữ tay lên mọi ô có data-tip (kỹ năng ở màn Anh Hùng, Ấn Phù, thẻ tướng…) → hiện mô tả
-    let tip2 = 0;
-    $('#ui').addEventListener('pointerdown', (ev) => {
-      const el = ev.target.closest('[data-tip]');
-      if (!el) return;
-      clearTimeout(tip2);
-      tip2 = setTimeout(() => { this.tipShown = true; this.showTip(el.dataset.tip, el); }, 450);
+    // v182: mô tả khi RÊ CHUỘT (máy tính) hoặc GIỮ TAY ~0,35 giây (điện thoại) lên ô kỹ năng / ô có data-tip
+    // (thanh tướng trong trận, Cây kỹ năng, Anh Hùng, Ấn Phù, Thần Khí, thẻ tướng…). Chạm / bấm nhanh giữ hành vi cũ.
+    let hovEl = null, hovT = 0, prT = 0, pr = null;
+    document.addEventListener('pointerover', (ev) => {
+      if (ev.pointerType !== 'mouse') return;
+      const el = ev.target.closest && ev.target.closest(TIP_SEL);
+      if (el === hovEl) return;
+      hovEl = el; clearTimeout(hovT);
+      if (!el) return this.hideTip();
+      hovT = setTimeout(() => { if (hovEl === el && el.isConnected) this.openTip(el, 'hover'); }, 150);
     });
-    for (const e of ['pointerup', 'pointercancel', 'pointerleave', 'scroll']) $('#ui').addEventListener(e, () => { clearTimeout(tip2); if (!this.tipShown || e !== 'pointerup') return; const t = $('#sk-tip'); if (t) t.hidden = true; }, true);
-    $('#ui').addEventListener('pointerup', () => setTimeout(() => { const t = $('#sk-tip'); if (t && this.tipShown) t.hidden = true; }, 0), true);
-    $('#ui').addEventListener('contextmenu', (ev) => { if (ev.target.closest('[data-tip]')) ev.preventDefault(); });
+    document.addEventListener('pointerout', (ev) => { if (ev.pointerType === 'mouse' && !ev.relatedTarget) { hovEl = null; clearTimeout(hovT); this.hideTip(); } });
+    $('#ui').addEventListener('pointerdown', (ev) => {
+      this.tipShown = false;
+      clearTimeout(prT); pr = null;
+      if (ev.pointerType === 'mouse') return;   // chuột: rê là thấy, bấm vẫn nâng như cũ
+      this.hideTip();
+      const el = ev.target.closest(TIP_SEL);
+      if (!el) return;
+      pr = { id: ev.pointerId, x: ev.clientX, y: ev.clientY };
+      prT = setTimeout(() => { if (pr && el.isConnected) { this.tipShown = true; this.openTip(el, 'press'); } }, 350);
+    }, true);
+    window.addEventListener('pointermove', (ev) => { if (pr && ev.pointerId === pr.id && !this.tipShown && Math.hypot(ev.clientX - pr.x, ev.clientY - pr.y) > 12) { clearTimeout(prT); pr = null; } });
+    const prEnd = (ev) => {
+      if (!pr || ev.pointerId !== pr.id) return;
+      clearTimeout(prT); pr = null;
+      if (this.tipShown) setTimeout(() => this.hideTip(), 0);
+    };
+    for (const e of ['pointerup', 'pointercancel']) window.addEventListener(e, prEnd, true);
+    $('#ui').addEventListener('scroll', () => { if (this.tip) this.hideTip(); }, true);
+    $('#ui').addEventListener('contextmenu', (ev) => { if (ev.target.closest(TIP_SEL)) ev.preventDefault(); });
     for (const id of ['#roster', '#runes', '#prep']) $(id).addEventListener('click', (ev) => { if (this.tipShown) { this.tipShown = false; ev.stopPropagation(); ev.preventDefault(); } }, true);
+    // ô đang chỉ bị dựng lại (hồi chiêu đếm, vừa nâng cấp…): tìm ô mới cùng chỗ để cập nhật nội dung, mất hẳn thì ẩn
+    setInterval(() => {
+      const tp = this.tip; if (!tp) return;
+      if (tp.el.isConnected && tp.el.offsetParent) { if (tp.el.dataset.skt !== undefined) this.openTip(tp.el, tp.mode); return; }
+      const nx = document.elementFromPoint(tp.cx, tp.cy), el = nx && nx.closest(TIP_SEL);
+      if (el && (tp.mode === 'press' || hovEl)) { if (tp.mode === 'hover') hovEl = el; this.openTip(el, tp.mode); } else this.hideTip();
+    }, 250);
     window.addEventListener('keydown', (ev) => {
       if (ev.target && /^(INPUT|TEXTAREA)$/.test(ev.target.tagName)) return;   // đang gõ chữ (góp ý, đổi tên): không bắt phím tắt
       if (ev.key === 'Escape' && !$('#feedback').hidden) return this.fbClose();
@@ -1242,7 +1260,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 181</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 182</div>
       </div></div>`;
   }
 
@@ -2074,7 +2092,7 @@ class UI {
         if (!lv) {
           const can = h.level >= COSTS.unlockReq[i];
           const c = unlockCost(h, i);
-          return `<button class="dk-sk inset lock" data-act="cmd-skill" data-i="${i}" aria-label="${sk.name}, khóa">
+          return `<button class="dk-sk inset lock" data-act="cmd-skill" data-i="${i}" data-skt="${i}" aria-label="${sk.name}, khóa">
             <span class="sk-tag ${can && g.gold >= c ? 'ok' : 'no'}">+${coin(1)}${c}</span>
             <span class="dim">${svgI(skillIcon(h.type, i))}</span>${ICON.lock}${can ? '' : `<b class="no">cấp ${COSTS.unlockReq[i]}</b>`}</button>`;
         }
@@ -2084,7 +2102,7 @@ class UI {
         const pay = h.from ? g.gold >= COSTS.skillGold(i, lv) : h.skillPts > 0;
         const tag = lv >= max ? '<span class="sk-tag max">MAX</span>'
           : `<span class="sk-tag ${lvOk && pay ? 'ok' : 'no'}">+${h.from ? `${coin(1)}${COSTS.skillGold(i, lv)}` : '1đ'}</span>`;
-        return `<button class="dk-sk metal ${sk.active && h.mana < sk.active.mana ? 'nomana' : ''} ${i === fresh ? 'fresh' : ''} ${lvOk && pay ? 'canup' : ''}" data-act="cmd-skill" data-i="${i}" aria-label="${sk.name} cấp ${lv}">
+        return `<button class="dk-sk metal ${sk.active && h.mana < sk.active.mana ? 'nomana' : ''} ${i === fresh ? 'fresh' : ''} ${lvOk && pay ? 'canup' : ''}" data-act="cmd-skill" data-i="${i}" data-skt="${i}" aria-label="${sk.name} cấp ${lv}">
           ${tag}${svgI(skillIcon(h.type, i))}<span class="lvn">${lv}</span>${lvOk ? '' : lv < max ? `<span class="req">cấp ${skillReqLevel(i, lv + 1)}</span>` : ''}
           ${sk.active ? `<span class="cdov" style="height:${cd > 0.4 ? Math.min(100, cd / mx * 100) : 0}%"></span><span class="cdn">${cd > 0.4 ? Math.ceil(cd) : ''}</span>` : ''}</button>`;
       }).join('') + (h.from || !h.skillPts ? '' : `<button class="dk-sk metal stat ${h.skillPts ? 'canup' : 'off'}" data-act="sk-stat-deck" aria-label="Cộng điểm dư vào chỉ số">
@@ -2359,7 +2377,7 @@ class UI {
       const lv = L[sys.id] || 0, c = LEGACY_COST[lv];
       const pips = Array.from({ length: LEGACY_MAX }, (_, i) => `<i class="${i < lv ? 'on' : ''} ${sys.ms.some((m) => m.lv === i + 1) ? 'ms' : ''}"></i>`).join('');
       return `<div class="lg-sys">
-        <div class="lg-h"><span class="lg-ic">${RELIC_PACK.has(t) ? `<img src="${assetSrc(`packs/${t}/tk-${si + 1}.png`)}" alt="">` : sys.ic}</span><div><b>${sys.name}</b><small>${esc(sys.desc)}</small></div></div>
+        <div class="lg-h" data-tip="${esc(`<b>${esc(sys.name)}</b><small>Thần Khí · cấp ${lv}/${LEGACY_MAX}</small><p>${esc(sys.desc)}</p><div class='st-rows'><div class='st-r'><span>Hiện tại</span><b>${lv ? legacyPerText(sys, lv) : 'Chưa nâng'}</b></div>${lv < LEGACY_MAX ? `<div class='st-r'><span>Cấp ${lv + 1}</span><b><em>${legacyPerText(sys, lv + 1)}</em></b></div><div class='st-r'><span>Giá nâng</span><b>${fmt(c)} Ngân khố</b></div>` : ''}${sys.ms.map((m) => `<div class='st-r ${lv >= m.lv ? 'ok' : ''}'><span>Mốc cấp ${m.lv}</span><b>${esc(m.t)}</b></div>`).join('')}</div>`)}"><span class="lg-ic">${RELIC_PACK.has(t) ? `<img src="${assetSrc(`packs/${t}/tk-${si + 1}.png`)}" alt="">` : sys.ic}</span><div><b>${sys.name}</b><small>${esc(sys.desc)}</small></div></div>
         <div class="lg-pips">${pips}<span>${lv}/${LEGACY_MAX}</span></div>
         <div class="lg-now">${lv ? legacyPerText(sys, lv) : 'Chưa nâng'}${lv < LEGACY_MAX ? `<br><small>Cấp ${lv + 1}: ${legacyPerText(sys, lv + 1)}</small>` : ''}</div>
         ${sys.ms.map((m) => `<div class="lg-ms ${lv >= m.lv ? 'got' : ''}"><span>Cấp ${m.lv}</span>${esc(m.t)}</div>`).join('')}
@@ -2430,7 +2448,7 @@ class UI {
     const open = this.runeOpen(r), cost = runePt(r);
     const node = (x) => {
       const l = lvs[x.id] || 0, op = this.runeOpen(x);
-      return `<button class="rn-node ${x.skill ? 'sk' : ''} ${l ? 'has' : ''} ${l >= x.max ? 'full' : ''} ${op ? '' : 'lock'} ${x.id === r.id ? 'on' : ''}" data-act="rn-sel" data-k="${x.id}" title="${esc(x.name)}" data-tip="${esc(`<b>${esc(x.name)}</b><small>${x.skill ? 'Ấn kỹ năng · 3 điểm / cấp' : 'Ấn chỉ số · 1 điểm / cấp'} · cấp ${l}/${x.max}</small><p>${esc(x.fmt(runeVal(x, Math.max(1, l))))}</p>`)}">
+      return `<button class="rn-node ${x.skill ? 'sk' : ''} ${l ? 'has' : ''} ${l >= x.max ? 'full' : ''} ${op ? '' : 'lock'} ${x.id === r.id ? 'on' : ''}" data-act="rn-sel" data-k="${x.id}" aria-label="${esc(x.name)}" data-tip="${esc(`<b>${esc(x.name)}</b><small>${x.skill ? 'Ấn kỹ năng · 3 điểm / cấp' : 'Ấn chỉ số · 1 điểm / cấp'} · cấp ${l}/${x.max}</small><p>${l ? `Cấp ${l}: ${esc(x.fmt(runeVal(x, l)))}` : 'Chưa khắc'}</p>${l < x.max ? `<div class='st-rows'><div class='st-r'><span>Cấp ${l + 1}</span><b><em>${esc(x.fmt(runeVal(x, l + 1)))}</em></b></div><div class='st-r ${op ? 'ok' : 'no'}'><span>Điều kiện</span><b>${op ? 'Đã mở ✓' : `${RUNE_ROW_NEED[x.row]} cấp trong nhánh`}</b></div><div class='st-r'><span>Giá</span><b>${runePt(x)} điểm Ấn</b></div></div>` : '<small>Đã tối đa</small>'}`)}">
         <span class="ri">${runeIc(x)}</span><span class="rl">${l}/${x.max}</span></button>`;
     };
     const col = (b) => {
@@ -2491,32 +2509,77 @@ class UI {
     if (sp.style.left !== L) sp.style.left = L;
     if (sp.style.bottom !== B) sp.style.bottom = B;
   }
+  // v182: khung mô tả chung — đặt sát ô đang chỉ, KHÔNG che ô đó: ưu tiên phía trên, hết chỗ thì phía dưới,
+  // rồi sang phải / trái; luôn nằm gọn trong màn (thu chiều rộng / cao nếu màn quá nhỏ).
+  openTip(el, mode) {
+    const d = el.dataset;
+    let html = d.tip || '';
+    if (d.skt !== undefined) html = this.skillTipHtml(null, +d.skt, this.game.heroes[this.sel], mode, !!el.closest('[data-act=cmd-skill]'));
+    else if (d.skr) { const [ty, i] = d.skr.split(':'); html = this.skillTipHtml(ty, +i, null, mode); }
+    if (!html) return this.hideTip();
+    const r = el.getBoundingClientRect();
+    this.tip = { el, mode, cx: r.left + r.width / 2, cy: r.top + r.height / 2 };
+    this.showTip(html, el);
+  }
+  hideTip() { this.tip = null; const t = $('#sk-tip'); if (t) t.hidden = true; }
   showTip(html, el) {
     let t = $('#sk-tip');
-    if (!t) { t = document.createElement('div'); t.id = 'sk-tip'; t.className = 'metal'; $('#ui').appendChild(t); }
-    t.innerHTML = html;
+    if (!t) { t = document.createElement('div'); t.id = 'sk-tip'; t.className = 'metal'; t.setAttribute('role', 'tooltip'); $('#ui').appendChild(t); }
+    if (t.innerHTML !== html) t.innerHTML = html;
     t.hidden = false;
-    const r = el.getBoundingClientRect(), u = $('#ui').getBoundingClientRect(), sc = u.width / $('#ui').offsetWidth || 1;
-    const w = t.offsetWidth, ht = t.offsetHeight, W = $('#ui').offsetWidth, Hh = $('#ui').offsetHeight;
-    const x = Math.max(6, Math.min(W - w - 6, (r.left + r.width / 2 - u.left) / sc - w / 2));
-    let y = (r.top - u.top) / sc - ht - 8; if (y < 6) y = Math.min(Hh - ht - 6, (r.bottom - u.top) / sc + 8);
+    const ui = $('#ui'), u = ui.getBoundingClientRect(), sc = u.width / ui.offsetWidth || 1, W = ui.offsetWidth, H = ui.offsetHeight, M = 6, G = 8;
+    // khung bao cả phần lòi ra ngoài ô (nhãn giá +1đ / +60 phía trên ô kỹ năng)
+    const b = [el, ...el.children].map((x) => x.getBoundingClientRect()).filter((x) => x.width && x.height).reduce((m, x) => ({ left: Math.min(m.left, x.left), top: Math.min(m.top, x.top), right: Math.max(m.right, x.right), bottom: Math.max(m.bottom, x.bottom) }));
+    const r = { l: (b.left - u.left) / sc, t: (b.top - u.top) / sc, r: (b.right - u.left) / sc, b: (b.bottom - u.top) / sc };
+    t.style.maxWidth = (W - 2 * M) + 'px'; t.style.maxHeight = (H - 2 * M) + 'px';
+    const w = t.offsetWidth, ht = t.offsetHeight;
+    const cx = (r.l + r.r) / 2, cy = (r.t + r.b) / 2;
+    const clampX = (x) => Math.max(M, Math.min(W - w - M, x)), clampY = (y) => Math.max(M, Math.min(H - ht - M, y));
+    let x, y, side;
+    if (r.t - G - ht >= M) { side = 'top'; y = r.t - G - ht; x = clampX(cx - w / 2); }
+    else if (r.b + G + ht <= H - M) { side = 'bottom'; y = r.b + G; x = clampX(cx - w / 2); }
+    else if (r.r + G + w <= W - M) { side = 'right'; x = r.r + G; y = clampY(cy - ht / 2); }
+    else if (r.l - G - w >= M) { side = 'left'; x = r.l - G - w; y = clampY(cy - ht / 2); }
+    else {   // màn quá chật: bên nào rộng hơn thì đặt, cho cuộn trong khung
+      side = r.t > H - r.b ? 'top' : 'bottom';
+      const room = Math.max(40, (side === 'top' ? r.t : H - r.b) - G - M);
+      t.style.maxHeight = room + 'px';
+      x = clampX(cx - w / 2); y = side === 'top' ? r.t - G - Math.min(ht, room) : r.b + G;
+    }
+    t.dataset.side = side;
     t.style.left = x + 'px'; t.style.top = y + 'px';
   }
-  showSkillTip(i, el) {
-    const h = this.game.heroes[this.sel]; if (!h) return;
-    const def = HEROES[h.type], sk = def.skills[i]; if (!sk) return;
-    const lv = skillLevel(h, i), a = sk.active;
-    let t = $('#sk-tip');
-    if (!t) { t = document.createElement('div'); t.id = 'sk-tip'; t.className = 'metal'; $('#ui').appendChild(t); }
-    const kind = a ? `Chủ động · ${a.mana} năng lượng · hồi ${a.cooldown}s` : 'Nội tại (luôn có hiệu lực)';
-    t.innerHTML = `<div class="st-h">${svgI(skillIcon(h.type, i))}<div><b>${SKILL_KEYS[i]} · ${esc(sk.name)}</b><small>${kind} · cấp ${lv}/${SKILL_MAX[i]}</small></div></div>
-      <p>${esc(sk.info(skillN(h.level)))}</p>${lv ? '' : `<small class="st-lock">Chưa mở · ${h.level >= COSTS.unlockReq[i] ? `chạm nhanh để mở (${unlockCost(h, i)} vàng)` : `cần tướng cấp ${COSTS.unlockReq[i]}`}</small>`}<small class="st-hint">Thả tay để đóng · chạm nhanh để nâng</small>`;
-    t.hidden = false;
-    const r = el.getBoundingClientRect(), u = $('#ui').getBoundingClientRect();
-    const sc = u.width / $('#ui').offsetWidth || 1;
-    const w = t.offsetWidth, ht = t.offsetHeight;
-    const x = Math.max(6, Math.min($('#ui').offsetWidth - w - 6, (r.left + r.width / 2 - u.left) / sc - w / 2));
-    t.style.left = x + 'px'; t.style.top = Math.max(6, (r.top - u.top) / sc - ht - 8) + 'px';
+  // v182: nội dung mô tả kỹ năng: tên, loại, mô tả có số liệu, hiệu lực cấp này → cấp sau, hồi chiêu, điều kiện mở, giá nâng.
+  // h = tướng trên sân (thanh tướng, Cây kỹ năng); không có h (màn Anh Hùng) thì xem như tướng cấp 1, kỹ năng chưa học.
+  skillTipHtml(type, i, h, mode, deck) {
+    type = h ? h.type : type;
+    const def = HEROES[type], sk = def && def.skills[i]; if (!sk) return '';
+    const a = sk.active, max = SKILL_MAX[i], hl = h ? h.level : 1, lv = h ? skillLevel(h, i) : 0;
+    const pct = (L) => `${Math.round(skillMult(L) * 100)}%`;
+    const row = (k, v, c = '') => `<div class="st-r ${c}"><span>${k}</span><b>${v}</b></div>`;
+    const rows = [];
+    // hiệu lực: mỗi cấp kỹ năng +25%
+    rows.push(row('Hiệu lực', lv >= max ? `cấp ${lv}: ${pct(lv)} · tối đa` : lv ? `cấp ${lv}: ${pct(lv)} <i>➜</i> cấp ${lv + 1}: <em>${pct(lv + 1)}</em>` : `cấp 1: ${pct(1)} <i>➜</i> cấp 2: <em>${pct(2)}</em>`));
+    if (a) {
+      let cd = a.cooldown;
+      if (h) { try { cd = a.cooldown * (1 - (heroStats(h).cdr || 0) / 100); } catch (e) { /* bỏ qua */ } }
+      const left = h ? Math.max(0, h.skillCd[sk.id] || 0) : 0;
+      rows.push(row('Hồi chiêu', `${+cd.toFixed(1)} giây · ${a.mana} năng lượng${left > 0 ? ` · <span class="no">còn ${Math.ceil(left)}s</span>` : ''}`));
+    }
+    const needOpen = COSTS.unlockReq[i];
+    if (!lv) rows.push(row('Mở khóa', `tướng cấp ${needOpen}${h ? (hl >= needOpen ? ' ✓' : ` (đang ${hl})`) : ''}`, h ? (hl >= needOpen ? 'ok' : 'no') : ''));
+    else if (lv < max) { const rq = skillReqLevel(i, lv + 1); rows.push(row(`Lên cấp ${lv + 1}`, `tướng cấp ${rq}${hl >= rq ? ' ✓' : ` (đang ${hl})`}`, hl >= rq ? 'ok' : 'no')); }
+    let cost;
+    if (lv >= max) cost = 'Đã tối đa';
+    else if (!lv) cost = h ? (unlockCost(h, i) ? `${unlockCost(h, i)} vàng` : 'Miễn phí') : (COSTS.unlock[i] ? `${COSTS.unlock[i]} vàng` : 'Có sẵn');
+    else cost = h.from ? `${COSTS.skillGold(i, lv)} vàng` : `1 điểm kỹ năng (còn ${h.skillPts || 0})`;
+    rows.push(row(lv ? 'Giá nâng' : 'Giá mở', cost));
+    if (!h) rows.push(row('Các cấp', Array.from({ length: max }, (_, k) => `${k + 1}: cấp ${skillReqLevel(i, k + 1)}`).join(' · ')));
+    const kind = i === 3 ? 'Tối thượng' : a ? 'Chủ động' : 'Nội tại (luôn có hiệu lực)';
+    const hint = !deck ? '' : mode === 'press' ? 'Thả tay để đóng · chạm nhanh để nâng' : 'Bấm để nâng / mở khóa';
+    return `<div class="st-h">${svgI(skillIcon(type, i))}<div><b>${SKILL_KEYS[i]} · ${esc(sk.name)}</b><small>${kind} · cấp ${lv}/${max}</small></div></div>
+      <p>${esc(sk.info(skillN(hl)))}</p><small class="st-n">Số liệu ở cấp tướng ${hl}, hiệu lực 100% · mỗi cấp kỹ năng +25%</small>
+      <div class="st-rows">${rows.join('')}</div>${hint ? `<small class="st-hint">${hint}</small>` : ''}`;
   }
   renderRoster() {
     const t = this.rosterSel;
@@ -2562,7 +2625,7 @@ class UI {
               ${d.trait ? `<div class="tipbox inset" style="font-size:12px">★ <b>${d.trait.name}:</b> ${esc(d.trait.desc)}</div>` : ''}
               ${secretLine(this.game, 'h.' + t)}
             </div></div>
-          <div class="ro-sk">${d.skills.map((sk, i) => `<div class="inset" data-tip="${esc(`<div class='st-h'>${svgI(skillIcon(t, i))}<div><b>${SKILL_KEYS[i]} · ${esc(sk.name)}</b><small>${sk.active ? `Chủ động · ${sk.active.mana} năng lượng · hồi ${sk.active.cooldown}s` : 'Nội tại (luôn có hiệu lực)'}</small></div></div><p>${esc(sk.info(n))}</p>`)}">${svgI(skillIcon(t, i))}<b style="color:#F2D27A">${SKILL_KEYS[i]} · ${sk.name}</b><span style="color:#C8BFA8;font-weight:500">${esc(sk.info(n))}</span></div>`).join('')}</div>
+          <div class="ro-sk">${d.skills.map((sk, i) => `<div class="inset" data-skr="${t}:${i}">${svgI(skillIcon(t, i))}<b style="color:#F2D27A">${SKILL_KEYS[i]} · ${sk.name}</b><span style="color:#C8BFA8;font-weight:500">${esc(sk.info(n))}</span></div>`).join('')}</div>
           ${this.evolveTree(t)}
         </div></div></div>`;
     for (const [q, y] of keep) { const el = $('#roster').querySelector(q); if (el && q === '.ro-grid') el.scrollTop = y; }
@@ -3349,7 +3412,7 @@ class UI {
       }
       const status = !lv ? (i === 0 ? 'Có sẵn' : 'Chưa mở khóa') : i === 0 ? 'Có sẵn' : 'Đã mua';
       return `<div class="col metal ${si === i ? 'on' : ''} ${!lv ? 'lock' : ''}" data-act="sk-sel" data-i="${i}">
-        <div class="hd"><div class="ico inset" style="${si === i ? 'border-color:#FFD66B' : ''}">${svgI(skillIcon(h.type, i))}</div>
+        <div class="hd" data-skt="${i}"><div class="ico inset" style="${si === i ? 'border-color:#FFD66B' : ''}">${svgI(skillIcon(h.type, i))}</div>
           <div style="display:flex;flex-direction:column;flex:1;min-width:0"><span class="hk">${SKILL_KEYS[i]} · ${type}</span><span class="st ${lv && i ? 'ok' : ''}">${status}</span></div></div>
         <span class="nmx">${sk.name} <span>${lv}/${max}</span></span>
         ${nodes.join('')}
@@ -3360,7 +3423,7 @@ class UI {
     const n = skillN(h.level);
     const nextOk = lv && lv < SKILL_MAX[si] && h.level >= skillReqLevel(si, lv + 1);
     const detail = `<div class="sk-detail panel metal">
-      <div class="dh"><div class="ico inset">${svgI(skillIcon(h.type, si))}</div><div><div class="ttl">${sk.name}</div>
+      <div class="dh"><div class="ico inset" data-skt="${si}">${svgI(skillIcon(h.type, si))}</div><div><div class="ttl">${sk.name}</div>
         <small>${SKILL_KEYS[si]} · ${sk.active ? 'Chủ động · tốn năng lượng' : 'Nội tại'}</small></div></div>
       <div class="desc">${esc(sk.info(n))}${sk.active ? '. Tướng tự dùng khi đủ năng lượng.' : '.'}</div>
       <div class="kvt inset">
