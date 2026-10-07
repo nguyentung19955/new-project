@@ -1618,3 +1618,13 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Chạm tướng trên sân: bảng nổi phía trên tướng **bỏ nút Ghép sao (★+ / Ghép ★★) và Trang bị / Mặc N món**; chỉ còn nút **Hủy** nhỏ (vẫn bấm 2 lần "Chắc chắn? +vàng"), cùng nút **Hợp thể** khi đủ điều kiện và **Thần tinh** cho thần Sử thi/Huyền thoại.
 - Ghép sao: **kéo tướng thả lên tướng cùng loại cùng sao** (mẹo khi có cặp đầu tiên đã chỉ cách này) hoặc nút **⇄ Ghép tự động** ở thanh đáy. Mặc đồ: nút **Tự mặc đồ** / **Túi đồ** ở cột phải.
 - Test: `tests/bo-nut-tren-tuong/bo-nut-tren-tuong.test.js` (bảng nổi chỉ còn Hủy, Hủy 2 bước hoạt động, kéo thả ghép được, không lỗi trang ở 844×390 / 667×375).
+
+## Phiên bản 172 — Thanh tiến độ đợt không còn bị kéo dãn
+- Thanh tiến độ đợt trên thanh trên cùng (ảnh `thanh-tien-do.png` 800×163) trước bị nền `100% 100%` ép vào khung 170×18 nên kéo ngang gấp đôi, hai viên ngọc bè ra. Nay cắt 9 mảnh bằng `border-image`: hai đầu ngọc (x 0–131 và 667–800 trên ảnh) giữ đúng tỉ lệ, chỉ rãnh giữa giãn ngang; thanh 140×20 (co giãn theo `--hz` như cả thanh trên).
+- Phần lấp đầy nằm gọn trong lòng rãnh (y 33–122 trên ảnh); JS đặt chiều rộng 0–100% của rãnh (trước là 0–71% của cả thanh).
+- Đã kiểm các khung ảnh khác dùng `100% 100%`: khung người chơi đúng tỉ lệ (aspect-ratio 700/241), nút chính menu lệch ~8% — không méo rõ, giữ nguyên.
+- Test: `tests/thanh-dot/thanh-dot.test.js` đo tỉ lệ đầu ngọc, phần lấp đầy ở 0/50/100% nằm trong rãnh, chụp ảnh trước/sau ở 1920×1000, 844×390, 667×375 và màn dọc.
+
+## Phiên bản 173 — Gộp bỏ chữ thừa, bỏ nút trên tướng, sửa thanh đợt
+
+- Gộp ba nhánh bo-chu-thua, bo-nut-tren-tuong, thanh-dot về nhánh chính.
