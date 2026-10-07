@@ -2081,3 +2081,13 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 ## Phiên bản 195 — Dùng ảnh có sẵn thay hình vẽ code (tester đạt)
 
 - Gộp claude/dung-anh-co-san: đồng xu, nén bạc, tim mạng, icon ngăn kéo, Lò đúc, Bách khoa, rương rơi đồ… dùng ảnh thật.
+
+## claude/tat-anh-moi — Tạm tắt ảnh tướng mới, quay về toàn bộ hình cũ
+
+- Người dùng: "Trước mắt cứ revert về toàn bộ hình ảnh tướng cũ, sau khi có đủ hết ảnh thì sẽ dùng cái mới sau."
+- **Một công tắc duy nhất** ở đầu `js/tu-cu-dong.js`: `const CD_BAT = false;` — **bật lại = đổi thành `true`** khi đủ 90 ảnh mới. Không xoá code / ảnh nào.
+- Khi tắt: `cdBat()` trả false → `cdSoloImg` trả null cho mọi mã (không dùng `assets/<mã>.png` dựng xương, không dùng `packs/<mã>/idle.png` làm ảnh đơn), `cdBuildRig` trả null → tướng / quái / boss vẽ đúng đường cũ (bộ nhiều khung · ảnh vẽ tay · vector) ở trận, thanh Chợ, Anh Hùng, Bách khoa, hợp thể… (chỉ hệ tự cử động đọc ảnh mới, đã soát bằng grep).
+- **Nhánh khác gộp vào** (chân dung mới / `cdUiImg`, `CD_SKIP` mở rộng…): mọi chỗ đọc ảnh mới phải hỏi `cdBat()` (hoặc đi qua `cdSoloImg` / `cdBuildRig` vốn đã hỏi).
+- Ép bật để thử khi đang tắt: `window.CD_BAT_EP = true` (Playwright `page.addInitScript`), hoặc tham số `?cd=1`; trang thử `?xem-cu-dong` và `?solo=1` tự bật.
+- Test `tests/tu-cu-dong`: các phần thử ảnh mới mở trang với `CD_BAT_EP`; thêm phần "Công tắc tắt" (CD_BAT = false trong mã nguồn, 90 mã có ảnh nhưng 0 mã dùng ảnh đơn, `cdBuildRig` null, trong trận 0 lượt vẽ ảnh đơn, không lỗi trang).
+- Ảnh đã xem: `docs/tat-anh-moi/tat-tran-*.jpg`, `tat-anh-hung-*.jpg` (1920×934, 844×390, 667×375 — toàn hình cũ); so sánh khi bật: `bat-tran-1920x934.jpg`.
