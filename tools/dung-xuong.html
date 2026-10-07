@@ -1031,8 +1031,11 @@ function doanXuong(it) {
   for (let i = 0; i < N; i++) if (lab[i]) { const s = st[lab[i]], x = i % w, y = (i - x) / w; s.n++; if (x < s.x0) s.x0 = x; if (x > s.x1) s.x1 = x; if (y < s.y0) s.y0 = y; if (y > s.y1) s.y1 = y; }
   let cx = 0, cy = 0, cn = 0; for (let i = 0; i < N; i++) if (core[i]) { cx += i % w; cy += Math.floor(i / w); cn++; }
   cx /= cn; cy /= cn;
+  // cham[k]: mẩu chạm vào thân; vũ khí phải chạm thân và xuống tới tầm tay (vòng hào quang, mũ lông trên đầu không phải vũ khí)
+  const cham = new Uint8Array(n + 1);
+  for (let i = 0; i < N; i++) if (lab[i] && !cham[lab[i]]) { const x = i % w; for (const j of [i - 1, i + 1, i - w, i + w]) if (j >= 0 && j < N && Math.abs(j % w - x) <= 1 && bodyD[j] && m[j]) { cham[lab[i]] = 1; break; } }
   let best = 0, bestL = 0.2 * H;
-  for (let k = 1; k <= n; k++) { const s = st[k]; const L = Math.hypot(s.x1 - s.x0, s.y1 - s.y0); if (s.n > 0.0015 * N && L > bestL) { bestL = L; best = k; } }
+  for (let k = 1; k <= n; k++) { const s = st[k]; const L = Math.hypot(s.x1 - s.x0, s.y1 - s.y0); if (cham[k] && s.y1 > yt + 0.35 * H && s.n > 0.0015 * N && L > bestL) { bestL = L; best = k; } }
   const wm = new Uint8Array(N);
   let vkGoc = null, vkDau = null;
   if (best) {
@@ -1044,17 +1047,47 @@ function doanXuong(it) {
     // gốc = điểm của vũ khí gần thân nhất (chỗ bàn tay nắm)
     const bd = distTo(core, w, h);
     for (let i = 0; i < N; i++) if (lab[i] === best && bd[i] < near) { near = bd[i]; const x = i % w; vkGoc = [x, (i - x) / w]; }
-    // gộp các mẩu vũ khí khác nằm trên cùng đường thẳng (cán gậy bị bàn tay che chia đôi)
+    // gộp các mẩu vũ khí khác: cùng màu vũ khí và nằm dọc theo trục vũ khí (cán gậy / giáo bị bàn tay che chia đôi,
+    // đoạn cán dưới tay chạm đất); mũi giày chìa ra (khác màu, không nằm trên trục) thì không
     const dir = V.sub(vkDau, vkGoc), L = V.len(dir) || 1;
+    const bm = new Uint8Array(N); for (let i = 0; i < N; i++) bm[i] = lab[i] === best ? 1 : 0;
+    const like = bangMau(bm, d, N);
+    const lk = new Float32Array(n + 1), ln = new Float32Array(n + 1);
+    for (let i = 0; i < N; i++) { const k = lab[i]; if (!k || k === best) continue; const x = i % w, y = (i - x) / w;
+      if (like(i)) lk[k]++;
+      if (Math.abs((x - vkGoc[0]) * dir[1] - (y - vkGoc[1]) * dir[0]) / L < 0.03 * H) ln[k]++; }
     for (let k = 1; k <= n; k++) {
-      if (k !== best && st[k].n > 0.0005 * N) {
-        const c = [(st[k].x0 + st[k].x1) / 2, (st[k].y0 + st[k].y1) / 2];
-        const t = ((c[0] - vkGoc[0]) * dir[0] + (c[1] - vkGoc[1]) * dir[1]) / L;
-        const off = Math.abs((c[0] - vkGoc[0]) * dir[1] - (c[1] - vkGoc[1]) * dir[0]) / L;
-        if ((t < 0.3 * L && off < 0.15 * H) || off < 0.05 * H) st[k].gop = true;
-      }
+      if (k === best || st[k].n <= 0.0005 * N) continue;
+      const fl = lk[k] / st[k].n, fn = ln[k] / st[k].n;
+      const chan = cham[k] && st[k].y0 > yb - 0.15 * H && st[k].y1 - st[k].y0 < 0.12 * H;
+      const c = [(st[k].x0 + st[k].x1) / 2, (st[k].y0 + st[k].y1) / 2];
+      const t = ((c[0] - vkGoc[0]) * dir[0] + (c[1] - vkGoc[1]) * dir[1]) / L;
+      const off = Math.abs((c[0] - vkGoc[0]) * dir[1] - (c[1] - vkGoc[1]) * dir[0]) / L;
+      if ((fn > 0.7 && fl > 0.6 && st[k].n < 0.01 * N) || (!chan && fl > 0.4 && ((t < 0.3 * L && off < 0.15 * H) || off < 0.05 * H))) st[k].gop = true;
     }
     for (let i = 0; i < N; i++) if (lab[i] === best || (lab[i] && st[lab[i]].gop)) wm[i] = 1;
+    // lần 2: trục thật của vũ khí (PCA trên phần đã gộp) — gậy dài bị tay chia đôi thì đầu gậy là mẩu lớn nhất, đốc gậy nằm trên trục này
+    let gx = 0, gy = 0, gn = 0; for (let i = 0; i < N; i++) if (wm[i]) { gx += i % w; gy += Math.floor(i / w); gn++; }
+    gx /= gn; gy /= gn; let sxx = 0, syy = 0, sxy = 0;
+    for (let i = 0; i < N; i++) if (wm[i]) { const dx = i % w - gx, dy = Math.floor(i / w) - gy; sxx += dx * dx; syy += dy * dy; sxy += dx * dy; }
+    const th = 0.5 * Math.atan2(2 * sxy, sxx - syy), ax = [Math.cos(th), Math.sin(th)];
+    const tr = (sxx + syy) / gn, de = Math.sqrt(((sxx - syy) / gn) ** 2 / 4 + (sxy / gn) ** 2), dai = (tr / 2 + de) / Math.max(1e-6, tr / 2 - de);
+    if (dai > 6) {
+      const on = new Float32Array(n + 1);
+      for (let i = 0; i < N; i++) { const k = lab[i]; if (!k || wm[i]) continue; const x = i % w, y = (i - x) / w; if (Math.abs((x - gx) * ax[1] - (y - gy) * ax[0]) < 0.03 * H) on[k]++; }
+      for (let k = 1; k <= n; k++) if (!st[k].gop && k !== best && st[k].n > 0.0003 * N && st[k].n < 0.01 * N && on[k] / st[k].n > 0.7 && lk[k] / st[k].n > 0.5) { st[k].gop = true; for (let i = 0; i < N; i++) if (lab[i] === k) wm[i] = 1; }
+    }
+    // lần 3: mẩu MẢNH, dài (đốc gậy / cán dưới bàn tay) cùng màu vũ khí, trục của nó kéo dài đi qua chỗ cầm → gộp
+    const ps = Array.from({ length: n + 1 }, () => [0, 0, 0, 0, 0, 0]);   // n, sx, sy, sxx, syy, sxy
+    for (let i = 0; i < N; i++) { const k = lab[i]; if (!k || wm[i]) continue; const x = i % w, y = (i - x) / w, q = ps[k]; q[0]++; q[1] += x; q[2] += y; q[3] += x * x; q[4] += y * y; q[5] += x * y; }
+    for (let k = 1; k <= n; k++) {
+      const q = ps[k]; if (st[k].gop || k === best || q[0] < 0.0002 * N || q[0] > 0.01 * N || lk[k] / q[0] < 0.5) continue;
+      const mx = q[1] / q[0], my = q[2] / q[0], a = q[3] / q[0] - mx * mx, c = q[4] / q[0] - my * my, b = q[5] / q[0] - mx * my;
+      const t2 = 0.5 * Math.atan2(2 * b, a - c), u = [Math.cos(t2), Math.sin(t2)], dd = Math.sqrt(((a - c) / 2) ** 2 + b * b);
+      const l1 = (a + c) / 2 + dd, l2 = Math.max(1e-6, (a + c) / 2 - dd);
+      if (l1 / l2 < 12 || Math.sqrt(l1) < 0.02 * H) continue;
+      if (Math.abs((vkGoc[0] - mx) * u[1] - (vkGoc[1] - my) * u[0]) < 0.04 * H) { st[k].gop = true; for (let i = 0; i < N; i++) if (lab[i] === k) wm[i] = 1; }
+    }
   }
   const rowRuns = (y, msk) => { const rr = []; let x = 0; while (x < w) { if (msk[y * w + x]) { let e = x; while (e < w && msk[y * w + e]) e++; rr.push([x, e]); x = e; } else x++; } return rr; };
   const bodyM = new Uint8Array(N); for (let i = 0; i < N; i++) bodyM[i] = m[i] && !wm[i] ? 1 : 0;
@@ -1123,8 +1156,10 @@ function doanXuong(it) {
   let tayT = handSearch(-1), tayP = handSearch(1), tay = 'P';
   if (vkGoc) {
     tay = vkGoc[0] < neckX ? 'T' : 'P';
-    const g = tamGan(vkGoc, 0.06 * H);
-    if (tay === 'T') tayT = g; else tayP = g;
+    // tay cầm: chỗ vũ khí chạm thân, trừ khi chỗ đó ở trên vai (cán to lẫn vào thân) — khi đó lấy đầu tay dò được
+    const g = tamGan(vkGoc, 0.06 * H), cu = tay === 'T' ? tayT : tayP;
+    const gg = g[1] < shY && cu[1] > shY ? cu : g;   // chỗ chạm ở trên vai (đầu búa / rìu vác) → tay thật ở dưới
+    if (tay === 'T') tayT = gg; else tayP = gg;
   }
   const elbow = (s, hd, side) => { const mid = V.lerp(s, hd, 0.5); return [mid[0] + side * 0.02 * H, mid[1]]; };
   const J = {
@@ -1135,15 +1170,19 @@ function doanXuong(it) {
     vkGoc: vkGoc || V.add(tay === 'T' ? tayT : tayP, [0, -0.02 * H]), vkDau: vkDau || V.add(tay === 'T' ? tayT : tayP, [0, -0.12 * H]),
   };
   for (const k in J) J[k] = [Math.round(J[k][0] * 10) / 10, Math.round(J[k][1] * 10) / 10];
-  if (best) loangVk(wm, d, w, h, H, m);
+  if (best) loangVk(wm, d, w, h, H, m, [J.banT, J.banP], tay === 'T' ? J.tayT : J.tayP, J.vkGoc);
   return { joints: J, tay, coVk: !!best, wm, H, footY };
 }
 // vũ khí lấn vào chỗ đè lên người (cán cung / gậy sau bàn tay, mép vũ khí sát thân): loang từ vùng vũ khí qua điểm cùng màu vũ khí, tối đa ~7% chiều cao
-function loangVk(wm, d, w, h, H, m) {
-  const N = w * h, hist = new Map();
+// bảng màu vũ khí (tối đa 10 màu chính) → like(i): 1 cùng màu vũ khí · 2 viền tối · 0 khác
+function bangMau(wm, d, N) {
+  const hist = new Map();
   for (let i = 0; i < N; i++) if (wm[i]) { const r = d[i * 4], g = d[i * 4 + 1], b = d[i * 4 + 2]; if (r + g + b < 150) continue; const k = (r >> 4) << 8 | (g >> 4) << 4 | (b >> 4); hist.set(k, (hist.get(k) || 0) + 1); }
   const tot = [...hist.values()].reduce((a, b) => a + b, 0), pal = [...hist.entries()].sort((a, b) => b[1] - a[1]).filter((e) => e[1] > 0.02 * tot).slice(0, 10).map(([k]) => [((k >> 8) & 15) * 16 + 8, ((k >> 4) & 15) * 16 + 8, (k & 15) * 16 + 8]);
-  const like = (i) => { const r = d[i * 4], g = d[i * 4 + 1], b = d[i * 4 + 2]; if (r + g + b < 150) return 2; for (const p of pal) if (Math.abs(r - p[0]) + Math.abs(g - p[1]) + Math.abs(b - p[2]) < 40) return 1; return 0; };
+  return (i) => { const r = d[i * 4], g = d[i * 4 + 1], b = d[i * 4 + 2]; if (r + g + b < 150) return 2; for (const p of pal) if (Math.abs(r - p[0]) + Math.abs(g - p[1]) + Math.abs(b - p[2]) < 40) return 1; return 0; };
+}
+function loangVk(wm, d, w, h, H, m, feet, hand, grip) {
+  const N = w * h, like = bangMau(wm, d, N);
   let front = []; for (let i = 0; i < N; i++) if (wm[i]) front.push(i);
   const steps = Math.max(3, Math.round(0.07 * H));
   for (let s = 0; s < steps && front.length; s++) {
@@ -1152,6 +1191,55 @@ function loangVk(wm, d, w, h, H, m) {
     front = nx.filter((j) => wm[j] === 1);   // viền tối chỉ lấy 1 lớp, không loang tiếp qua viền
   }
   for (let i = 0; i < N; i++) if (wm[i] === 2) wm[i] = 1;
+  // phần MẢNH (bề dày < ~3% chiều cao) nối liền vũ khí, màu giống vũ khí hoặc viền tối → cũng là vũ khí (thân cung / cán gậy khuất sau chân, tay)
+  const body = new Uint8Array(N); for (let i = 0; i < N; i++) body[i] = m[i] && !wm[i] ? 1 : 0;
+  const r2 = Math.max(2, Math.round(0.015 * H)), thick = dilSq(erodeSq(body, w, h, r2), w, h, r2 + 1);
+  // cán nối từ chỗ chạm tới bàn tay (cán búa / rìu lẫn vào thân): điểm sát đoạn tay–chỗ chạm, màu giống vũ khí
+  if (V.len(V.sub(hand, grip)) > 0.04 * H) {
+    const rr = 0.022 * H, x0 = Math.max(0, Math.floor(Math.min(hand[0], grip[0]) - rr)), x1 = Math.min(w - 1, Math.ceil(Math.max(hand[0], grip[0]) + rr));
+    const y0 = Math.max(0, Math.floor(Math.min(hand[1], grip[1]) - rr)), y1 = Math.min(h - 1, Math.ceil(Math.max(hand[1], grip[1]) + rr));
+    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) { const j = y * w + x; if (m[j] && !wm[j] && segDist([x, y], hand, grip) < rr && like(j)) wm[j] = 1; }
+  }
+  // không loang vào bàn chân (giày / ủng hay cùng màu gỗ, mảnh như cán)
+  const nearFoot = (j) => { const x = j % w, y = (j - x) / w; return feet.some((f) => Math.hypot(x - f[0], y - f[1]) < 0.07 * H); };
+  front = []; for (let i = 0; i < N; i++) if (wm[i]) front.push(i);
+  const add = [];
+  for (let s = 0; s < Math.round(0.25 * H) && front.length; s++) {
+    const nx = [];
+    for (const i of front) { const x = i % w; for (const j of [i - 1, i + 1, i - w, i + w]) { if (j < 0 || j >= N || wm[j] || !body[j] || thick[j] || Math.abs(j % w - x) > 1 || nearFoot(j)) continue; const l = like(j); if (l === 1) { wm[j] = 1; nx.push(j); add.push(j); } } }
+    front = nx;
+  }
+  // thêm 1 lớp viền tối quanh phần vừa loang
+  for (const i of add) { const x = i % w; for (const j of [i - 1, i + 1, i - w, i + w]) if (j >= 0 && j < N && !wm[j] && body[j] && Math.abs(j % w - x) <= 1 && like(j) === 2) wm[j] = 3; }
+  for (let i = 0; i < N; i++) if (wm[i] === 3) wm[i] = 1;
+  noiTruc(wm, m, w, h, H);
+}
+// vũ khí thẳng (gậy, giáo): đi tiếp dọc trục ra hai đầu, lấy dải hình mảnh liền mạch (đốc / khâu đồng khác màu cán vẫn được tính)
+function noiTruc(wm, m, w, h, H) {
+  const N = w * h; let gx = 0, gy = 0, gn = 0;
+  for (let i = 0; i < N; i++) if (wm[i]) { gx += i % w; gy += Math.floor(i / w); gn++; }
+  if (gn < 20) return; gx /= gn; gy /= gn;
+  let a = 0, c = 0, b = 0; for (let i = 0; i < N; i++) if (wm[i]) { const dx = i % w - gx, dy = Math.floor(i / w) - gy; a += dx * dx; c += dy * dy; b += dx * dy; }
+  a /= gn; c /= gn; b /= gn; const dd = Math.sqrt(((a - c) / 2) ** 2 + b * b), l1 = (a + c) / 2 + dd, l2 = Math.max(1e-6, (a + c) / 2 - dd);
+  if (l1 / l2 < 25) return;
+  const th = 0.5 * Math.atan2(2 * b, a - c), u = [Math.cos(th), Math.sin(th)], nv = [-u[1], u[0]];
+  let t0 = 1e9, t1 = -1e9; for (let i = 0; i < N; i++) if (wm[i]) { const t = (i % w - gx) * u[0] + (Math.floor(i / w) - gy) * u[1]; if (t < t0) t0 = t; if (t > t1) t1 = t; }
+  const half = Math.max(4, Math.round(0.05 * H)), maxW = 0.045 * H;
+  for (const [t, step] of [[t1, 1], [t0, -1]]) {
+    let off = 0, sw = 0, sn = 0;   // tâm dải lệch dần theo hình (cán hơi cong); bề ngang trung bình
+    for (let s = 1; s < 0.4 * H; s++) {
+      const tt = t + step * s, cx = gx + u[0] * tt, cy = gy + u[1] * tt;
+      const run = []; for (let k = -half; k <= half; k++) { const x = Math.round(cx + nv[0] * (off + k)), y = Math.round(cy + nv[1] * (off + k)); run.push(x >= 0 && y >= 0 && x < w && y < h && m[y * w + x] ? y * w + x : -1); }
+      // đoạn liền chứa (gần) tâm
+      let c0 = half; while (c0 > 0 && run[c0] < 0 && run[2 * half - c0] < 0) c0--; if (run[c0] < 0) c0 = 2 * half - c0;
+      if (run[c0] < 0) break;
+      let l = c0, r = c0; while (l > 0 && run[l - 1] >= 0) l--; while (r < 2 * half && run[r + 1] >= 0) r++;
+      if (l === 0 || r === 2 * half || r - l + 1 > Math.max(maxW, sn ? 1.6 * sw / sn : 0)) break;   // chạm mép dải = lẫn vào thân / áo → dừng
+      for (let k = l; k <= r; k++) wm[run[k]] = 1;
+      sw += r - l + 1; sn++;
+      off += ((l + r) / 2 - half) * 0.5;
+    }
+  }
 }
 function distTo(m, w, h) {                    // khoảng cách (xấp xỉ chamfer 3-4) tới điểm thuộc m
   const INF = 1e9, d = new Float32Array(w * h);
@@ -1221,7 +1309,23 @@ function dungLop(it) {
     const grow = dilSq(own, w, h, 2);
     for (let i = 0; i < N; i++) if (own[i] || (grow[i] && lab[i] && gi[lab[i]] < oi)) { tex[i * 4] = d[i * 4]; tex[i * 4 + 1] = d[i * 4 + 1]; tex[i * 4 + 2] = d[i * 4 + 2]; tex[i * 4 + 3] = d[i * 4 + 3]; }
     // vá: chỗ bị lớp vẽ sau che, nằm trong "bao" của lớp này → tô màu lân cận + kẻ viền (khi lớp che xoay đi không lộ lỗ)
-    if (G.bone !== 'vk') {
+    if (G.bone === 'vk') {
+      // vũ khí: phần cán khuất sau bàn tay / cánh tay (vẽ sau) → nối lại bằng phép đóng, vá màu lân cận
+      const R = Math.max(2, Math.round(0.06 * it.rig.H)), shut = erodeSq(dilSq(own, w, h, R), w, h, R), hole = new Uint8Array(N); let nh = 0;
+      // + đoạn cán từ chỗ chạm tới bàn tay (khuất sau cánh tay)
+      //   (đi từ bàn tay về phía khối chính của vũ khí — đầu búa, lưỡi rìu, mũi giáo)
+      const Jr = it.rig.joints, hand = Jr['tay' + it.rig.tay], rr = 0.018 * it.rig.H;
+      let gx = 0, gy = 0, gn = 0; for (let i = 0; i < N; i++) if (own[i]) { gx += i % w; gy += Math.floor(i / w); gn++; }
+      const grip = [gx / gn, gy / gn];
+      // vũ khí thẳng dài (gậy, giáo, kiếm — trục chính dài gấp ≥ 4 lần bề ngang): nối cả đoạn cán khuất sau bàn tay dọc theo trục
+      let sxx = 0, syy = 0, sxy = 0; for (let i = 0; i < N; i++) if (own[i]) { const dx = i % w - grip[0], dy = Math.floor(i / w) - grip[1]; sxx += dx * dx; syy += dy * dy; sxy += dx * dy; }
+      const tr = (sxx + syy) / gn, de = Math.sqrt(Math.max(0, ((sxx - syy) / gn) ** 2 / 4 + (sxy / gn) ** 2)), l1 = tr / 2 + de, l2 = Math.max(1e-6, tr / 2 - de);
+      const th = 0.5 * Math.atan2(2 * sxy, sxx - syy), ax = [Math.cos(th), Math.sin(th)];
+      let tmin = 1e9, tmax = -1e9; for (let i = 0; i < N; i++) if (own[i]) { const t = (i % w - grip[0]) * ax[0] + (Math.floor(i / w) - grip[1]) * ax[1]; if (t < tmin) tmin = t; if (t > tmax) tmax = t; }
+      const thang = it.rig.kieu !== 'cung' && l1 / l2 > 16, A0 = V.add(grip, V.mul(ax, tmin)), A1 = V.add(grip, V.mul(ax, tmax));
+      for (let i = 0; i < N; i++) if (!own[i] && lab[i] && gi[lab[i]] > oi) { const x = i % w, q = [x, (i - x) / w]; if (shut[i] || segDist(q, hand, grip) < rr || (thang && segDist(q, A0, A1) < rr)) { hole[i] = 1; nh++; } }
+      if (nh) vaMau(tex, own, hole, w, h, it.rig.H);
+    } else {
       const rx0 = new Int32Array(h).fill(w), rx1 = new Int32Array(h).fill(-1), cy0 = new Int32Array(w).fill(h), cy1 = new Int32Array(w).fill(-1);
       for (let i = 0; i < N; i++) if (own[i]) { const x = i % w, y = (i - x) / w; if (x < rx0[y]) rx0[y] = x; if (x > rx1[y]) rx1[y] = x; if (y < cy0[x]) cy0[x] = y; if (y > cy1[x]) cy1[x] = y; }
       // "bao": khoảng hàng × khoảng cột, hợp phép đóng (lấp chỗ khuyết do tay che mất mép thân), hợp dải 2% quanh mép
@@ -1288,7 +1392,8 @@ function dungLuoi(it) {
       if (L.bone === 'body') { wts.push(trongSoMem(it, p, L.parts)); continue; }
       const b = L.bone, wt = { [b]: 1 };
       const up = HOA_LEN[b];
-      if (up) { const t = kk(along(p, b), blendR(b)); wt[b] = t; wt[up] = (wt[up] || 0) + 1 - t; }
+      // khớp nối với thân (vai, cổ): mép cắt bám chặt thân, xoay tăng dần ra xa khớp → vai / cổ uốn liền, không gãy, không lộ mép cắt
+      if (up) { const r = blendR(b), t = up === 'than' ? kk(along(p, b) - 1.2 * r, 1.2 * r) : kk(along(p, b), r); wt[b] = t; wt[up] = (wt[up] || 0) + 1 - t; }
       if (b === 'chanT' || b === 'chanP') {     // bàn chân giữ phẳng trên đất: cuối cẳng chân hoà sang "xương bàn chân" chỉ tịnh tiến
         const bb = BONE[b], len = V.len(V.sub(J[bb[3]], J[bb[2]])), rf = Math.max(2, 0.18 * len), t = kk(along(p, b) - (len - 0.6 * rf), rf * 0.6);
         const fb = 'ban' + b.slice(-1); for (const k in wt) wt[k] *= 1 - t; wt[fb] = t;
@@ -1344,8 +1449,10 @@ function giaiTuThe(it, p, A) {
   M.than = mat.mul(M.goc, mat.rotAt(J.hong, loc.than, 1 + ((p.sy || 1) - 1) * A));
   loc.dau = (p.dau || 0) * A; M.dau = mat.mul(M.than, mat.rotAt(J.co, loc.dau));
   const worldThan = rotG + loc.than;
-  for (const [side, q] of [[Wt, p.W || {}], [Ot, p.O || {}]]) {
+  for (let [side, q] of [[Wt, p.W || {}], [Ot, p.O || {}]]) {
     const cb = 'canh' + side, fb = 'cang' + side, r0 = restAng(J, cb), f0 = restAng(J, fb);
+    // ngoai: giơ tay về phía NGOÀI đầu (tay ở bên trái cổ thì lật góc qua trục dọc) — nắm tay không che mặt
+    if (q.ngoai && J['vai' + side][0] < J.co[0]) q = Object.assign({}, q, { u: q.u != null ? wrap(180 - q.u) : q.u, f: q.f != null ? wrap(180 - q.f) : q.f });
     let lu = q.u != null ? wrap(q.u - r0) * A - (worldThan) : (q.du || 0) * A;
     if (q.u != null) lu = wrap(r0 + wrap(q.u - r0) * A - r0 - worldThan);
     const wu = worldThan + lu;
@@ -1361,7 +1468,13 @@ function giaiTuThe(it, p, A) {
   if (vk.abs != null) lv = wrap(w0 + wrap(vk.abs - w0) * A - w0 - parentW);
   else if (vk.keep) lv = wrap(-parentW + (vk.d || 0) * A);
   else lv = (vk.d || 0) * A;
-  loc.vk = lv; M.vk = mat.mul(M[vkCha(rig)], mat.rotAt(J.vkGoc, lv));
+  // cổ tay gập tối đa ~30°: phần dư dồn vào cẳng tay → bàn tay và vũ khí luôn đi liền nhau (chuôi, đốc, khiên không bị tách lệch)
+  const LIM = 30, du = Math.abs(lv) > LIM ? lv - Math.sign(lv) * LIM : 0;
+  if (du) {
+    const fb = 'cang' + Wt; loc[fb] += du; lv -= du;
+    M[fb] = mat.mul(M['canh' + Wt], mat.rotAt(J['khuyu' + Wt], loc[fb]));
+  }
+  loc.vk = lv; M.vk = mat.mul(M[vkCha(rig)], mat.rotAt(J['tay' + Wt], lv));   // xoay quanh bàn tay: vũ khí không rời tay
   // chân: IK 2 khớp, bàn chân bám đất (hoặc nhấc theo p.feet)
   const ft = p.feet || {};
   for (const s of ['T', 'P']) {
@@ -1459,8 +1572,8 @@ function veHieuUng(im, fx, pts, H, it) {
   for (const f of fx) {
     if (f.t === 'vet') {                         // MỘT vệt chém mờ ngắn theo cung của đầu vũ khí
       const c = pts.tayW, a1 = Math.atan2(pts.vkDau[1] - c[1], pts.vkDau[0] - c[0]), R = V.len(V.sub(pts.vkDau, c)), a0 = a1 - (f.goc || 60) * RAD;
-      g.save();
-      for (let k = 0; k < 3; k++) { g.strokeStyle = `rgba(255,250,225,${0.5 - k * 0.14})`; g.lineWidth = R * (0.16 - k * 0.04); g.lineCap = 'round'; g.beginPath(); g.arc(c[0], c[1], R * (0.86 - k * 0.04), a0, a1); g.stroke(); }
+      g.save(); g.globalCompositeOperation = 'destination-over';   // vệt nằm SAU người (không phủ mờ lên mặt)
+      for (let k = 0; k < 3; k++) { g.strokeStyle = `rgba(255,250,225,${0.7 - k * 0.18})`; g.lineWidth = R * (0.16 - k * 0.04); g.lineCap = 'round'; g.beginPath(); g.arc(c[0], c[1], R * (0.86 - k * 0.04), a0, a1); g.stroke(); }
       g.restore();
     } else if (f.t === 'ten') {                  // mũi tên: từ tay kéo dây tới quá cung (bay: lệch ra trước)
       const from = f.bay ? V.add(f.tu === 'vk' ? pts.vkDau : pts.tayW, [0.12 * H, 0]) : pts.tayO, len = f.bay ? 0.32 * H : Math.max(0.2 * H, V.len(V.sub(pts.tayW, pts.tayO)) + 0.1 * H);
@@ -1505,7 +1618,7 @@ const TT = {
 };
 const DANH = {
   vung: [
-    { than: -9, dau: -4, x: -0.03, W: { u: -150, f: -120 }, O: { du: -10, df: -12 }, vk: { abs: -130 } },
+    { than: -9, dau: -4, x: -0.03, W: { u: -35, f: -95, ngoai: true }, O: { du: -10, df: -12 }, vk: { abs: -130 } },
     { than: 5, dau: 2, x: 0.01, W: { u: -55, f: -25 }, O: { du: 8, df: 10 }, vk: { abs: -15 }, fx: [{ t: 'vet', goc: 75 }] },
     { than: 12, dau: 5, x: 0.05, y: 0.015, W: { u: 15, f: 35 }, O: { du: 10, df: 10 }, vk: { abs: 45 }, fx: [{ t: 'dam', o: 'vk' }] },
     { than: 4, dau: 1, x: 0.02, W: { u: 55, f: 65 }, O: { du: 5, df: 5 }, vk: { abs: 75 } },
