@@ -1,4 +1,4 @@
-// Test v183: sửa các lỗi trong docs/BAO-CAO-TEST.md (báo cáo QA bản 180) — mỗi lỗi một nhóm kiểm tra,
+// Test v186: sửa các lỗi trong docs/BAO-CAO-TEST.md (báo cáo QA bản 180) — mỗi lỗi một nhóm kiểm tra,
 // ở 1920×934, 844×390, 667×375. Ảnh sau khi sửa: tests/sua-loi-tester/shots/ (đã xem bằng mắt khi sửa).
 // Chạy: node tests/sua-loi-tester/sua-loi-tester.test.js
 const path = require('path');
@@ -114,7 +114,9 @@ const bossWave = (page) => page.evaluate(() => { const g = ui.game; g.wave = 9; 
       const t1 = await page.evaluate(() => ({ txt: [...document.querySelectorAll('#toasts .toast')].map((t) => t.textContent), ov: document.getElementById('toasts').classList.contains('ov') }));
       ok(!t1.txt.some((x) => /hủy/.test(x)) && t1.txt.some((x) => /ghép/.test(x)), `L05 mở Hợp thể: thông báo cũ bị xoá, thông báo mới còn (${t1.txt.join(' | ')})`);
       const lr = await rect(page, '#toasts .toast');
-      ok(t1.ov && lr && lr.b >= h * 0.8 && Math.abs((lr.l + lr.r) / 2 - w / 2) < 8, 'L05 trong lớp phủ: thông báo ở đáy giữa, không đè tiêu đề');
+      const hit = await page.evaluate(() => { const t = document.querySelector('#toasts .toast').getBoundingClientRect(); return [...document.querySelectorAll('#legends button, #legends [data-act], #legends h1, #legends .ttl')].filter((e) => { const r = e.getBoundingClientRect(); return r.width && Math.min(r.right, t.right) - Math.max(r.left, t.left) > 2 && Math.min(r.bottom, t.bottom) - Math.max(r.top, t.top) > 2; }).map((e) => e.textContent.trim().slice(0, 20)); });
+      ok(t1.ov && lr && lr.t >= 0 && lr.b <= h && lr.l >= 0 && lr.r <= w, 'L05 trong lớp phủ: thông báo nằm trong màn');
+      ok(hit.length <= 1, `L05 trong lớp phủ: thông báo không đè nút / tiêu đề (đè: ${hit.join(' | ') || 'không'})`);
       await page.screenshot({ path: path.join(SHOT, `L05-hop-the-${tag}.png`) });
       await page.evaluate(() => { document.getElementById('legends').hidden = true; });
       await sleep(200);
@@ -125,6 +127,14 @@ const bossWave = (page) => page.evaluate(() => { const g = ui.game; g.wave = 9; 
       ok(await page.evaluate(() => ![...document.querySelectorAll('#toasts .toast')].some((t) => /Túi đồ/.test(t.textContent))), 'L05 đổi Túi đồ → Bách khoa: thông báo của Túi đồ bị xoá');
       await page.evaluate(() => ui.closeScreen()); await sleep(200);
       ok(await page.evaluate(() => !document.getElementById('toasts').classList.contains('ov')), 'L05 đóng màn: thông báo về lại vị trí trong trận');
+    }
+    // ---------- banner Thăng thần gọn 1 dòng chữ to
+    {
+      await page.evaluate(() => ui.banner('Thăng thần', 'Lạc Tướng hóa thân Lý Ngư Tướng Quân')); await sleep(600);
+      const b = await page.evaluate(() => { const e = document.getElementById('banner-text'); return { h: e.getBoundingClientRect().height, lh: parseFloat(getComputedStyle(e).fontSize) * (e.getBoundingClientRect().height / e.offsetHeight) }; });
+      ok(b.h < b.lh * 1.6, `Banner "Thăng thần" 1 dòng (cao ${b.h.toFixed(0)}px, cỡ chữ ${b.lh.toFixed(0)}px)`);
+      await page.screenshot({ path: path.join(SHOT, `thang-than-${tag}.png`) });
+      await sleep(2300);
     }
     // ---------- L16: chữ "Đợt" không vượt mép trên
     {
@@ -173,8 +183,10 @@ const bossWave = (page) => page.evaluate(() => { const g = ui.game; g.wave = 9; 
     }
     // ---------- L04 + L17: màn kết quả cuộn được tới dòng cuối; icon Mạng còn là trái tim
     {
-      await page.evaluate(() => { const g = ui.game; g.heroes.forEach((x) => x); g.gold = 999; for (let i = 0; i < 6; i++) g.summonRandom(); g.wave = 23; g.lives = 0; ui.finishLevel(); });
+      await page.evaluate(() => { const g = ui.game; g.gold = 999; for (let i = 0; i < 6; i++) g.summonRandom(); g.xpLog = { lactuong: 420, thosan: 380, xathu: 300, thaymo: 250 }; g.wave = 23; g.lives = 0; ui.finishLevel(); });
       await sleep(500);
+      const tv = await page.evaluate(() => { const d = [...document.querySelectorAll('#result .res-table > div')].find((x) => /Tu Vi/.test(x.querySelector('span').textContent)); const sp = d && d.querySelector('span'); return sp ? sp.getBoundingClientRect().height / parseFloat(getComputedStyle(sp).fontSize) / (sp.getBoundingClientRect().height / sp.offsetHeight) : 9; });
+      ok(tv < 1.7, `Kết quả: nhãn "Tu Vi" nằm 1 dòng (không ngắt "Tu / Vi")`);
       const m = await page.evaluate(() => { const r = document.querySelector('#result .res-main'); const cs = getComputedStyle(r); return { sh: r.scrollHeight, ch: r.clientHeight, oy: cs.overflowY }; });
       ok(/auto|scroll/.test(m.oy), `L04 cột kết quả cuộn được (overflow-y ${m.oy}, nội dung ${m.sh} / khung ${m.ch})`);
       await page.evaluate(() => { const r = document.querySelector('#result .res-main'); r.scrollTop = r.scrollHeight; }); await sleep(200);
@@ -193,6 +205,21 @@ const bossWave = (page) => page.evaluate(() => { const g = ui.game; g.wave = 9; 
     ok(page.errors.length === 0, 'không lỗi JS ' + page.errors.join(' | '));
     await page.context().close();
 
+    // ---------- L05: Anh Hùng — mở khoá tướng: thông báo không đè nút / thẻ; chọn tướng khác thì thông báo tắt
+    {
+      const p3 = await open(browser, w, h, { save: { unlocked: 5, storySeen: true, settings: { skipStory: true }, kho: 50000 } });
+      await p3.evaluate(() => document.getElementById('btn-heroes').click()); await sleep(400);
+      await p3.evaluate(() => document.querySelector('#roster .ro-card.lock').click()); await sleep(250);
+      await p3.evaluate(() => document.querySelector('#roster [data-act=ro-buy]').click()); await sleep(300);
+      const hit = await p3.evaluate(() => { const t = document.querySelector('#toasts .toast'); if (!t) return null; const q = t.getBoundingClientRect(); return [...document.querySelectorAll('#roster button, #roster [data-act], #roster [data-tip], #roster h1, #roster .chip')].filter((e) => { const r = e.getBoundingClientRect(); return r.width && Math.min(r.right, q.right) - Math.max(r.left, q.left) > 2 && Math.min(r.bottom, q.bottom) - Math.max(r.top, q.top) > 2; }).map((e) => e.textContent.trim().slice(0, 16)); });
+      ok(hit && hit.length === 0, `L05 Anh Hùng: thông báo "Đã mở khoá" không đè nút / thẻ (đè: ${hit ? hit.join(' | ') || 'không' : 'không có thông báo'})`);
+      await p3.screenshot({ path: path.join(SHOT, `L05-anh-hung-${tag}.png`) });
+      await sleep(350);
+      const c = await p3.evaluate(() => { const r = document.querySelectorAll('#roster .ro-card')[2].getBoundingClientRect(); return [r.x + r.width / 2, r.y + r.height / 2]; });
+      await p3.mouse.click(c[0], c[1]); await sleep(200);
+      ok(await p3.evaluate(() => document.querySelectorAll('#toasts .toast').length === 0), 'L05 Anh Hùng: chọn tướng khác → thông báo cũ tắt');
+      await p3.context().close();
+    }
     // ---------- L11: đăng nhập bắt buộc (Firebase bật, chưa đăng nhập) có lối ra
     {
       const p2 = await open(browser, w, h, { fb: "const FIREBASE_CONFIG={apiKey:'x'};" });

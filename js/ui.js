@@ -65,7 +65,7 @@ const UIE = { star: () => uiE('ui-tran-4-1', '★'), equip: () => uiE('ui-tran-4
 const uiIc = (name, fallback = '') => (assetUrl(`ui_${name}.png`) ? `<img class="uiic" src="${assetUrl(`ui_${name}.png`)}" alt="">` : fallback);
 // v163: icon nhỏ (chỉ số, trạng thái, tiền tệ…) — ảnh assets/ui/ic-<tên>.png (cắt bằng tools/cat-items.py ic-…),
 // chưa có ảnh thì vẽ SVG nội tuyến (KHÔNG dùng emoji: điện thoại thiếu font sẽ hiện ô vuông). Bảng kê: docs/ICON-NHO.md
-// v183 (L17): "mạng" dùng trái tim đỏ trước (giống thanh trên); khiên đồng ui_mang.png trông như đồng xu, dễ nhầm với vàng
+// v186 (L17): "mạng" dùng trái tim đỏ trước (giống thanh trên); khiên đồng ui_mang.png trông như đồng xu, dễ nhầm với vàng
 const IC_ALT = { vang: ['ui_dong-xu.png', 'ui/ui-tai-nguyen-1.png'], mang: ['ui/ui-tai-nguyen-2.png', 'ui_mang.png'], bac: ['ui/ui-tai-nguyen-3.png'],
   'tu-vi': ['ui/ui-tai-nguyen-4.png'], 'hu-bau': ['ui_hu-bau.png'], 'nuoc-dang': ['ui_muc-nuoc.png'] };
 const IC_O = 'stroke="#2A1608" stroke-width="1.5" stroke-linejoin="round"';
@@ -226,6 +226,11 @@ function elIcon(el, size = 16) {
   if (png) return `<img class="eli" src="${png}" width="${size}" height="${size}" style="width:${size}px;height:${size}px" alt="Hành ${e.name}">`;
   return `<svg class="eli" viewBox="0 0 24 24" width="${size}" height="${size}" aria-label="Hành ${e.name}"><circle cx="12" cy="12" r="11" fill="#1A1208" stroke="${e.color}" stroke-width="1.6"/><circle cx="12" cy="12" r="8.6" fill="none" stroke="${e.color}" stroke-width="0.6" stroke-dasharray="1.2 1.4" opacity=".7"/><g fill="none" stroke="${e.color}" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">${EL_PATH[el]}</g></svg>`;
 }
+// v182: tên ngắn dưới chân dung ở Bách khoa · Vai trò (tránh hai tướng cùng hiện "Dương Vương")
+const VT_SHORT = { adv: 'An Dương', kinhduong: 'Kinh Dương', lyngu: 'Lý Ngư', mau: 'Thượng Ngàn', trongdong: 'Trống Đồng', potaoapui: 'Pơtao Apui' };
+const vtShort = (k) => VT_SHORT[k] || CARD_NAME[k] || HEROES[k].name.split(' ').slice(-2).join(' ');
+// v182: hàng nút lọc vai trò (Tất cả + 7 vai)
+const roleFilter = (cur, act) => `<button class="rl-f ${cur ? '' : 'on'}" data-act="${act}" data-r="">Tất cả</button>${ROLE_KEYS.map((r) => `<button class="rl-f ${cur === r ? 'on' : ''}" data-act="${act}" data-r="${r}" style="--rc:${ROLES[r].color}" title="${ROLES[r].name}: ${ROLES[r].desc}">${roleIcon(r, 15)}<span>${ROLES[r].name}</span></button>`).join('')}`;
 const elChip = (el) => (el ? `<span class="chip elc" style="border-color:${ELEMENTS[el].color};color:${ELEMENTS[el].color}">${elIcon(el, 14)} ${ELEMENTS[el].name}</span>` : '');
 // tên ngắn của một hiệu ứng ẩn (để hiện trong thông báo / Bí truyền)
 function secretTitle(key) {
@@ -298,6 +303,12 @@ function loadSave() {
       for (const k of Object.keys(out.best || {})) out.bestEndless[k] = Math.max(out.bestEndless[k] || 0, out.best[k] || 0);
       if (stars) { out.kho = (out.kho || 0) + stars * CAMP_STAR_KHO; out.campGift = stars * CAMP_STAR_KHO; }
       out.campConv = 1;
+    }
+    // v182: Ngân khố mở khoá mọi tướng — bản lưu đã có từ trước v182 giữ đủ 20 tướng Thường (không mất tiến trình);
+    // người chơi mới (chưa có bản lưu) có sẵn STARTER_HEROES. owned = mọi tướng đã mở (Thường + Tím + Vàng).
+    if (!out.heroOpenV) {
+      out.owned = [...new Set([...(out.owned || []), ...(Object.keys(s).some((k) => k !== 'owner') ? BASIC_HEROES : STARTER_HEROES)])];
+      out.heroOpenV = 1;
     }
     // v95: Ấn Phù cũ (chung tài khoản, mua bằng Ngân khố) → hoàn lại Ngân khố; ấn giờ riêng từng tướng, khắc bằng điểm Tu Vi
     if (out.runes && Object.keys(out.runes).length) {
@@ -640,7 +651,7 @@ class UI {
     g.reset(i);
     g.endless = true;
     g.owned = new Set(this.save.owned || []);
-    g.deck = validDeck(this.save.deck) ? [...this.save.deck] : suggestDeck(i, this.save.owned);   // v133: đội triệu hồi 6 tướng
+    g.deck = validDeck(this.save.deck) && this.save.deck.every((t) => this.heroOpen(t)) ? [...this.save.deck] : suggestDeck(i, this.save.owned);   // v133: đội triệu hồi 6 tướng (v182: chỉ tướng đã mở)
     setRunes(this.save.heroRunes || {});
     setLegacy(this.save.legacy || {});
     g.runId = Date.now();
@@ -660,6 +671,42 @@ class UI {
     this.showPrep();   // v77: luôn hiện (có Lò đúc đồng trước trận)
   }
 
+  // ---------- v182: mở khoá tướng bằng Ngân khố + nhiệm vụ ngày
+  heroOpen(t) { return (this.save.owned || []).includes(t); }
+  openCount() { const all = [...BASIC_HEROES, ...LEGEND_HEROES]; return { n: all.filter((t) => this.heroOpen(t)).length, all: all.length }; }
+  // thẻ tướng Thường chưa mở trong bảng chọn đội / Nghỉ chân: mờ, ổ khoá + giá, chạm thì nhắc đi mở ở Anh Hùng
+  lockedPick(t) {
+    const d = HEROES[t];
+    return `<button class="dk-pick metal common lock" data-act="dk-locked" data-id="${t}" style="--c:${ELEMENTS[d.el].color}" aria-label="${esc(d.name)} chưa mở khoá">
+      <img src="${heroImgUrl(t, 'head')}" alt=""><b>${esc(d.name)}</b><span class="tg"><i class="lk">${UIE.lock()}${fmt(OWN_COST.common)}</i></span></button>`;
+  }
+  // nhiệm vụ ngày (QUESTS): s.quest = { d: ngày, boss, waves, got: { id: true } } — sang ngày mới thì đặt lại
+  questDay() {
+    const s = this.save, today = new Date().toISOString().slice(0, 10);
+    if (!s.quest || s.quest.d !== today) s.quest = { d: today, boss: 0, waves: 0, got: {} };
+    if (s.dailyWin === today) s.quest.got.first = true;     // thưởng trận đầu ngày (v103) tính là nhiệm vụ 'first'
+    return s.quest;
+  }
+  questProg(q, id) { return id === 'first' ? (q.got.first ? 1 : 0) : Math.min(QUESTS.find((x) => x.id === id).need, q[id] || 0); }
+  // cộng tiến độ một trận (đợt đã qua, boss đã hạ) → trả về [{ q, kho }] nhiệm vụ vừa xong (đã cộng Ngân khố)
+  questAdd(waves, boss) {
+    const q = this.questDay(), done = [];
+    q.waves += Math.max(0, waves); q.boss += Math.max(0, boss);
+    for (const x of QUESTS) if (x.id !== 'first' && !q.got[x.id] && q[x.id] >= x.need) { q.got[x.id] = true; this.save.kho = (this.save.kho || 0) + x.kho; done.push(x); }
+    return done;
+  }
+  // màn kết quả: tướng rẻ nhất chưa mở — đủ tiền thì mời mở ngay, chưa đủ thì báo còn thiếu bao nhiêu
+  unlockHint() {
+    const left = [...BASIC_HEROES, ...LEGEND_HEROES].filter((t) => !this.heroOpen(t));
+    if (!left.length) return `<div class="res-unl"><span>Anh Hùng</span><b style="color:#6AE06A">${UIE.done()} Đã mở đủ ${this.openCount().all} tướng</b></div>`;
+    const t = left.sort((a, b) => OWN_COST[heroTier(a)] - OWN_COST[heroTier(b)])[0], c = OWN_COST[heroTier(t)], kho = this.save.kho || 0, oc = this.openCount();
+    return `<div class="res-unl"><span>Anh Hùng · đã mở ${oc.n}/${oc.all}</span><b>${kho >= c ? `<button class="btn btn-gold" data-act="res-heroes" data-type="${t}">${UIE.lock()} Mở ${esc(HEROES[t].name)} · ${bac(1)}${fmt(c)}</button>` : `Mở ${esc(HEROES[t].name)}: còn thiếu ${bac(1)} ${fmt(c - kho)}`}</b></div>`;
+  }
+  questLine() {
+    const q = this.questDay();
+    return QUESTS.map((x) => `<span class="qd ${q.got[x.id] ? 'ok' : ''}">${q.got[x.id] ? UIE.done() : '◻'} ${esc(x.name)}${x.need > 1 && !q.got[x.id] ? ` ${this.questProg(q, x.id)}/${x.need}` : ''} · ${bac(1)}${fmt(x.kho)}</span>`).join('');
+  }
+
   // ---------- v66: Chuẩn bị xuất quân — tiêu Ngân khố mua đồ / vàng / tướng Tím, Vàng trước trận
   // v133: bảng chọn đội triệu hồi (20 tướng Thường, chia theo hành)
   deckPicker() {
@@ -667,13 +714,14 @@ class UI {
     const ctr = new Set(); try { const lv = LEVELS[g.level], R = ROSTERS[lv.roster || 'thuy']; for (const c of rosterCounters(R, Object.values(lv.bosses || {}), BASIC_HEROES, lv.hint).list) ctr.add(c.t); } catch (e) { /* bỏ qua */ }
     const ing = deckIngredients(this.save.owned || []);
     const card = (t) => { const d = HEROES[t], on = sel.includes(t);
+      if (!this.heroOpen(t)) return this.lockedPick(t);
       return `<button class="dk-pick metal ${d.legend || 'common'} ${on ? 'on' : ''}" data-act="deck-tog" data-id="${t}" style="--c:${ELEMENTS[d.el].color}" data-tip="${esc(`<b>${esc(d.name)}</b><small>Hành ${ELEMENTS[d.el].name} · ${d.attack === 'melee' ? 'Cận chiến' : 'Đánh xa'}</small><p>${esc(d.title || '')}</p>${FUSION.filter((f) => f.a === t || f.b === t).map((f) => `<small>Hợp thể: + ${esc(HEROES[f.a === t ? f.b : f.a].name)} ➜ ${esc(HEROES[f.to].name)}</small>`).join('')}`)}">
         <img src="${heroImgUrl(t, 'head')}" alt=""><b>${esc(d.name)}</b>
         <span class="tg">${ctr.has(t) ? '<i class="c">khắc chế</i>' : ''}${ing.has(t) ? '<i class="h">hợp thể</i>' : ''}</span>${on ? `<span class="no">${sel.indexOf(t) + 1}</span>` : ''}</button>`; };
     const els = EL_ORDER.map((el) => `<div class="dk-el"><div class="dk-eh" style="color:${ELEMENTS[el].color}">${elIcon(el, 13)} ${ELEMENTS[el].name}</div>${BASIC_HEROES.filter((t) => HEROES[t].el === el).map(card).join('')}</div>`).join('');
     return `<div class="dk-modal"><div class="dk-box metal">
-      <div class="dk-head"><b class="ttl">Chọn đội triệu hồi</b><span class="chip ${sel.length === DECK_SIZE ? 'ok' : 'dark'}">${sel.length} / ${DECK_SIZE}</span>
-        <small><i class="c">khắc chế</i> quái bản đồ này · <i class="h">hợp thể</i> ra tướng Tím / Vàng</small><div class="sp"></div>
+      <div class="dk-head"><b class="ttl">Chọn đội ưu tiên</b><span class="chip ${sel.length === DECK_SIZE ? 'ok' : 'dark'}">${sel.length} / ${DECK_SIZE}</span>
+        <small>Chợ ra mọi tướng Thường, đội này ra nhiều gấp đôi · <i class="c">khắc chế</i> quái bản đồ này · <i class="h">hợp thể</i> ra tướng Tím / Vàng</small><div class="sp"></div>
         <button class="btn metal" data-act="deck-suggest">Gợi ý</button><button class="btn btn-gold" data-act="deck-done" ${sel.length === DECK_SIZE ? '' : 'disabled'}>Xong</button></div>
       <div class="dk-grid">${els}</div></div></div>`;
   }
@@ -702,7 +750,7 @@ class UI {
           <div class="prep-heroes">${LEGEND_HEROES.filter((t) => (this.save.owned || []).includes(t)).map((t) => `<span class="prep-hero metal ${HEROES[t].legend}"><img src="${heroImgUrl(t, 'head')}" alt=""><b>${HEROES[t].name}</b></span>`).join('')
             || '<div class="note">Chưa có tướng Tím / Vàng nào.</div>'}</div></div>
         <div class="prep-col cp-side prep-counter">${this.counterHtml(g.level)}
-          <div class="hint-h">ĐỘI TRIỆU HỒI · ${DECK_SIZE} TƯỚNG</div>
+          <div class="hint-h">ĐỘI ƯU TIÊN · ${DECK_SIZE} TƯỚNG</div>
           <div class="ch-row deck-row">${g.summonList().map((t) => `<span class="ch-av" style="--c:${ELEMENTS[HEROES[t].el].color}" title="${esc(HEROES[t].name)}"><img src="${heroImgUrl(t, 'head')}" alt=""><small>${esc(HEROES[t].name.split(' ').slice(-2).join(' '))}</small></span>`).join('')}</div>
           <button class="btn btn-gold" style="height:36px;font-size:14px" data-act="deck-open">✎ Chọn đội</button></div>
       </div>
@@ -742,6 +790,7 @@ class UI {
     const added = sel.filter((t) => !orig.includes(t)).length;
     const ing = deckIngredients(this.save.owned || []);
     const card = (t) => { const d = HEROES[t], on = sel.includes(t), nu = on && !orig.includes(t), gone = !on && orig.includes(t);
+      if (!this.heroOpen(t) && !on) return this.lockedPick(t);
       return `<button class="dk-pick metal ${d.legend || 'common'} ${on ? 'on' : ''} ${gone ? 'gone' : ''}" data-act="rest-tog" data-id="${t}" style="--c:${ELEMENTS[d.el].color}">
         <img src="${heroImgUrl(t, 'head')}" alt=""><b>${esc(d.name)}</b>
         <span class="tg">${nu ? '<i class="c">mới</i>' : gone ? '<i class="x">bỏ</i>' : ''}${ing.has(t) ? '<i class="h">hợp thể</i>' : ''}</span></button>`; };
@@ -749,7 +798,7 @@ class UI {
     $('#rest').innerHTML = `<div class="dk-modal"><div class="dk-box metal rest-box">
       <div class="dk-head"><b class="ttl">⛺ Nghỉ chân · sau đợt ${g.rest.wave}</b><span class="chip ${added ? 'ok' : 'dark'}">Đổi ${added} / ${REST_SWAPS}</span><span class="chip dark">Đội ${sel.length} / ${DECK_SIZE}</span>
         ${coop ? `<span class="chip run" id="rest-left">còn ${Math.max(0, Math.ceil(REST_COOP_T - (g.rest.t || 0)))} giây</span>` : ''}
-        <small>Đã hạ boss! Bỏ tối đa ${REST_SWAPS} tướng khỏi đội rồi chọn tướng mới thay vào — miễn phí. Tướng trên sân giữ nguyên, chợ tướng làm mới theo đội mới.${coop ? ' Chơi nhóm: mỗi người đổi đội của mình; trận chạy tiếp khi cả hai xong hoặc hết giờ.' : ''}</small><div class="sp"></div>
+        <small>Đã hạ boss! Bỏ tối đa ${REST_SWAPS} tướng khỏi đội rồi chọn tướng mới thay vào — miễn phí. Tướng trên sân giữ nguyên, chợ tướng làm mới và ưu tiên đội mới.${coop ? ' Chơi nhóm: mỗi người đổi đội của mình; trận chạy tiếp khi cả hai xong hoặc hết giờ.' : ''}</small><div class="sp"></div>
         <button class="btn metal" data-act="rest-skip">Bỏ qua</button><button class="btn btn-gold" data-act="rest-done" ${sel.length === DECK_SIZE ? '' : 'disabled'}>Xong</button></div>
       <div class="dk-grid">${els}</div></div></div>`;
     $('#rest').hidden = false;
@@ -801,7 +850,11 @@ class UI {
       this.bankStats(); const tv = this.bankTuvi(TUVI_LOSE); if (tv.up.length) this.toast(tv.up.join('<br>'), '#FFD66B');
       // v103: dừng trận vẫn nhận Ngân khố như khi thua (4 mỗi đợt đã qua)
       const k = PREP.losePerWave * Math.max(0, g.wave - 1);
-      if (k && !g.over) { this.save.kho = (this.save.kho || 0) + k; writeSave(this.save); this.toast(`Ngân khố ${bac(1)} +${fmt(k)} (dừng ở đợt ${g.wave})`, '#E4ECF4'); }
+      if (k && !g.over) {
+        const qd = this.questAdd(g.wave - 1, g.bossesKilled || 0);      // v182: dừng trận vẫn tính nhiệm vụ ngày
+        this.save.kho = (this.save.kho || 0) + k; writeSave(this.save);
+        this.toast(`Ngân khố ${bac(1)} +${fmt(k)} (dừng ở đợt ${g.wave})${qd.map((x) => `<br>☀ ${esc(x.name)} +${fmt(x.kho)}`).join('')}`, '#E4ECF4');
+      }
     }
     if (g.endless) { this.submitScores(); const sv = this.save; sv.bestEndless = sv.bestEndless || {}; sv.bestEndless[g.level] = Math.max(sv.bestEndless[g.level] || 0, g.wave); writeSave(sv); }
     g.running = false; g.over = true; g.started = false;
@@ -844,7 +897,7 @@ class UI {
     const wave = Math.max(0, g.wave - 1);
     CLOUD.submitScore('endless', wave * 100 + Math.max(0, g.lives), { name, detail: `Đợt ${wave} · ${LEVELS[g.level].name}${g.hard ? ' · Khó' : ''}` });
   }
-  // v183 (L12): không có mạng → hình minh hoạ + nút Thử lại + kỷ lục của chính mình lưu trên máy (thay cho một dòng chữ trên nền đen)
+  // v186 (L12): không có mạng → hình minh hoạ + nút Thử lại + kỷ lục của chính mình lưu trên máy (thay cho một dòng chữ trên nền đen)
   rankEmpty(msg, retry) {
     const best = this.save.bestEndless || {};
     const mine = LEVELS.map((lv, i) => [lv.name, best[i] || 0]).filter((x) => x[1] > 0).sort((a, b) => b[1] - a[1]);
@@ -1254,7 +1307,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 183</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 186</div>
       </div></div>`;
   }
 
@@ -1267,11 +1320,13 @@ class UI {
     el.innerHTML = msg;
     el.born = performance.now();
     box.appendChild(el);
-    while (box.children.length > 2) box.firstChild.remove();
+    // v186: trong lớp phủ / màn hình chỉ giữ thông báo mới nhất (không chồng 2 cái lên nội dung)
+    const ovNow = !!this.toastView && !this.toastView.startsWith('|');
+    while (box.children.length > (ovNow ? 1 : 2)) box.firstChild.remove();
     setTimeout(() => el.remove(), 2600);
     this.placeToasts();
   }
-  // v183 (L05): thông báo không sống qua chuyển màn (đổi màn/lớp phủ thì xoá thông báo cũ, giữ cái vừa tạo cùng lúc mở màn),
+  // v186 (L05): thông báo không sống qua chuyển màn (đổi màn/lớp phủ thì xoá thông báo cũ, giữ cái vừa tạo cùng lúc mở màn),
   // không đè nội dung: đang mở lớp phủ / màn hình → hiện ở đáy giữa; trong trận → né thành (đích của quái) và bảng boss
   watchToasts() {
     const ids = ['#screen', '#legends', '#reward', '#rest', '#menu', '#campaign', '#modes', '#coop', '#settings', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks', '#result', '#feedback', '#fbadmin'];
@@ -1285,6 +1340,12 @@ class UI {
       for (const t of [...$('#toasts').children]) if (now - (t.born || 0) > 250) t.remove();
       this.placeToasts();
     };
+    // đổi lựa chọn trong lớp phủ (bấm tướng khác, tab khác…) thì thông báo của lựa chọn trước tắt luôn
+    $('#ui').addEventListener('pointerdown', (ev) => {
+      if (!this.toastView || this.toastView.startsWith('|') || ev.target.closest('#toasts')) return;
+      const now = performance.now();
+      for (const t of [...$('#toasts').children]) if (now - (t.born || 0) > 300) t.remove();
+    }, true);
     const mo = new MutationObserver(this.checkToasts);
     for (const id of ids) mo.observe($(id), { attributes: true, attributeFilter: ['hidden'] });
   }
@@ -1319,9 +1380,36 @@ class UI {
         if (best.tt !== 104 * hz) top0 = `${Math.round(best.tt)}px`;
       }
     }
+    let left = '', width = '';
+    if (ov && box.children.length) {
+      // lớp phủ / màn hình: thử đáy giữa, dưới tiêu đề, đáy trái, đáy phải — chọn chỗ đè ít nút / ô nhập nhất
+      const ur = $('#ui').getBoundingClientRect(), k = ur.height / UIH || 1;
+      let w = Math.min(440, UIW - 24), h = Math.max(30, box.offsetHeight);
+      const R = [];
+      for (const e of $('#ui').querySelectorAll('button, input, textarea, select, .btn, [data-act], [data-tip], .chip, h1, .ttl')) {
+        if (e.closest('[hidden]') || e.closest('#toasts')) continue;
+        const d = e.getBoundingClientRect();
+        if (d.width > 1 && d.height > 1) R.push([(d.left - ur.left) / k, (d.top - ur.top) / k, (d.right - ur.left) / k, (d.bottom - ur.top) / k]);
+      }
+      const area = (x0, y0) => R.reduce((a, [l, t, r, b]) => a + Math.max(0, Math.min(r, x0 + w) - Math.max(l, x0)) * Math.max(0, Math.min(b, y0 + h) - Math.max(t, y0)), 0);
+      const C = [[(UIW - w) / 2, UIH - 10 - h], [(UIW - w) / 2, 52], [12, UIH - 10 - h], [UIW - 12 - w, UIH - 10 - h]];
+      let best = null;
+      C.forEach(([x0, y0], i) => { const sc = area(x0, y0) + i; if (!best || sc < best.sc) best = { sc, x0, y0, w }; });
+      // ưu tiên chỗ trống trên thanh tiêu đề (giữa tên màn và các nút bên phải) nếu thông báo vừa 1–2 dòng
+      const w0 = w, h0 = h;
+      for (const ww of [380, 330, 290, 250]) {
+        w = Math.min(ww, UIW - 24);
+        box.style.width = `${w}px`; h = Math.max(24, box.offsetHeight); box.style.width = '';
+        if (h <= 42) for (let x0 = 12; x0 + w <= UIW - 12; x0 += 10) { const sc = area(x0, 2) * 2 + Math.abs(x0 + w / 2 - UIW / 2) * 0.01 + (380 - ww) * 0.01; if (sc < best.sc) best = { sc, x0, y0: 2, w }; }
+      }
+      w = w0; h = h0;
+      left = `${Math.round(best.x0)}px`; top0 = `${Math.round(best.y0)}px`; width = best.w === w ? '' : `${Math.round(best.w)}px`;
+    }
     box.classList.toggle('ov', ov);
     if (box.style.right !== right) box.style.right = right;
     if (box.style.top !== top0) box.style.top = top0;
+    if (box.style.left !== left) box.style.left = left;
+    if (box.style.width !== width) box.style.width = width;
   }
 
   // ---------- v149: Góp ý — chọn loại, nội dung, ảnh chụp trận (tuỳ chọn), liên hệ (tuỳ chọn)
@@ -1895,7 +1983,7 @@ class UI {
       if (ev.type === 'newEnemy') {
         const d = ENEMIES[ev.enemy];
         const msg = `<b>Quái mới: ${d.name}</b> · ${d.short || d.desc}`, col = d.boss ? '#E25A3A' : '#5AB4D6';
-        // v183 (L07): boss — banner + hội thoại + thông báo từng chồng 3 lớp chữ; thông báo đợi banner tắt
+        // v186 (L07): boss — banner + hội thoại + thông báo từng chồng 3 lớp chữ; thông báo đợi banner tắt
         // (sự kiện quái mới đến trước sự kiện boss trong cùng khung hình, nên boss thì luôn chờ hết thời gian banner)
         const wait = d.boss ? 2650 : !$('#banner').hidden ? (this.bannerEnd || 0) - performance.now() + 50 : 0;
         if (wait > 0) setTimeout(() => this.toast(msg, col), wait); else this.toast(msg, col);
@@ -1936,7 +2024,7 @@ class UI {
   say(who, text) {
     if (!text) return;
     const box = $('#dialogue');
-    // v183 (L07): banner "Boss xuất hiện" đang hiện thì chờ banner tắt rồi mới nói — trước đây hộp thoại đè lên banner
+    // v186 (L07): banner "Boss xuất hiện" đang hiện thì chờ banner tắt rồi mới nói — trước đây hộp thoại đè lên banner
     clearTimeout(this.sayWait);
     const wait = !$('#banner').hidden ? (this.bannerEnd || 0) - performance.now() : 0;
     if (wait > 0) { this.sayWait = setTimeout(() => this.say(who, text), wait + 50); return; }
@@ -2096,7 +2184,7 @@ class UI {
         `<span title="Tốc chạy">${ic('toc-chay', 'Tốc chạy')}Tốc <b>${Math.round(d.speed)}</b></span>`, `<span title="Vàng rơi khi hạ">${ic('tui-vang', 'Vàng rơi')}<b>${d.gold}</b></span>`,
         el ? `<span style="color:${el.color}">${elIcon(b.el, 13)} Hành <b>${el.name}</b>${by ? ` · ${ic('khac-che')}bị ${ELEMENTS[by].name} khắc` : ''}</span>` : '',
       ].filter(Boolean).join('');
-      // v183 (L06): hiệu ứng đang dính (choáng, câm lặng…) nằm trên một dòng riêng luôn chừa sẵn → bảng không giật cao/thấp theo hiệu ứng
+      // v186 (L06): hiệu ứng đang dính (choáng, câm lặng…) nằm trên một dòng riêng luôn chừa sẵn → bảng không giật cao/thấp theo hiệu ứng
       const fx = [b.enraged ? `<span style="color:#FF8A6A">${ic('noi-gian')}Đang hóa điên</span>` : '', ...st.map(([n, x]) => `<span class="fst">${ic(n)}${x}</span>`)].join('');
       $('#bb-info').innerHTML = `<div class="fc">${chips}</div><div class="fx">${fx}</div>${d.short ? `<div class="fs">${esc(d.short)}</div>` : ''}`;
     }
@@ -2104,7 +2192,7 @@ class UI {
     $('#bb-fill').style.width = `${Math.max(0, b.hp / b.maxHp) * 100}%`;
     this.placeBossbar(b);
   }
-  // v183 (L06): bảng nằm góc trên trái — đúng chỗ quái đi vào nên hay che chính con boss đang xem.
+  // v186 (L06): bảng nằm góc trên trái — đúng chỗ quái đi vào nên hay che chính con boss đang xem.
   // Boss lọt vào vùng bảng thì dời bảng xuống góc dưới trái (ngay trên thanh chợ), boss sang vùng dưới thì về lại trên.
   placeBossbar(b) {
     const bar = $('#bossbar'), hz = typeof HZ !== 'undefined' ? HZ : 1;
@@ -2143,8 +2231,8 @@ class UI {
       key = `m|${m.types.join(',')}|${sc}|${ok.join()}|${twins.join()}|${hops.join()}|${!!m.lock}|${g.gold >= rc}|${rc}|${pairs}|${assetVersion}`;
       const short = (t) => CARD_NAME[t] || HEROES[t].name.split(' ').slice(-2).join(' ');
       html = `${pairs ? `<button class="dk-auto metal on" data-act="auto-merge" aria-label="Ghép tự động"><b>⇄</b>Ghép<br>tự động<i>${Math.floor(pairs / 2)}</i></button>` : ''}
-        <div class="mk-row">${m.types.map((t, i) => `<button class="mk-card ${ok[i] ? '' : 'poor'} ${twins[i] ? 'twin' : ''} ${hops[i] ? 'hop' : ''}" data-mk="${i}" style="--c:${ELEMENTS[HEROES[t].el].color}" aria-label="Mua ${esc(HEROES[t].name)}${twins[i] ? ' (ghép được)' : ''}${hops[i] ? ' (nguyên liệu hợp thể)' : ''}, ${sc} vàng">
-          <img src="${heroImgUrl(t, 'head')}" alt="" draggable="false"><span class="el">${elIcon(HEROES[t].el, 11)}</span>${twins[i] ? '<i class="tw">ghép</i>' : ''}${hops[i] ? '<i class="hp">hợp thể</i>' : ''}
+        <div class="mk-row">${m.types.map((t, i) => `<button class="mk-card ${ok[i] ? '' : 'poor'} ${twins[i] ? 'twin' : ''} ${hops[i] ? 'hop' : ''}" data-mk="${i}" style="--c:${ELEMENTS[HEROES[t].el].color}" aria-label="Mua ${esc(HEROES[t].name)}${heroRole(t) ? ` (${ROLES[heroRole(t)].name})` : ''}${twins[i] ? ' (ghép được)' : ''}${hops[i] ? ' (nguyên liệu hợp thể)' : ''}, ${sc} vàng" title="${heroRole(t) ? `Vai trò: ${ROLES[heroRole(t)].name}` : ''}">
+          <img src="${heroImgUrl(t, 'head')}" alt="" draggable="false"><span class="el">${elIcon(HEROES[t].el, 11)}</span>${heroRole(t) ? `<span class="rl">${roleIcon(heroRole(t), 13)}</span>` : ''}${twins[i] ? '<i class="tw">ghép</i>' : ''}${hops[i] ? '<i class="hp">hợp thể</i>' : ''}
           <b class="nm">${esc(short(t))}</b><span class="cost">${coin(1)}${sc}</span></button>`).join('')}
           <span class="mk-rrw"><button class="mk-rr metal ${g.gold >= rc ? '' : 'poor'}" data-act="mk-reroll" aria-label="Đổi cả hàng, ${rc} vàng"><b>${UIE.redo()}</b><span>${coin(1)}${rc}</span></button>
           <button class="mk-lk ${m.lock ? 'on' : ''}" data-act="mk-lock" aria-pressed="${!!m.lock}" aria-label="${m.lock ? 'Bỏ khoá chợ' : 'Khoá chợ: giữ 4 thẻ sang đợt sau'}" title="${m.lock ? 'Đang khoá: đợt sau giữ nguyên 4 thẻ' : 'Khoá chợ: giữ 4 thẻ sang đợt sau'}">${UIE.lock()}</button></span></div>
@@ -2165,7 +2253,8 @@ class UI {
       const afford = [lc, g.trainCost(h), ...def.skills.map((sk, i) => (skillLevel(h, i) ? (h.from ? COSTS.skillGold(i, skillLevel(h, i)) : 0) : unlockCost(h, i)))]
         .map((c) => (g.gold >= c ? 1 : 0)).join('');
       key = `h|${h.id}|${h.type}|${h.level}|${h.train || 0}|${h.tier}|${h.skillPts}|${skillKey}|${afford}|${h.dead}|${h.bogged}|${fresh}|${notice}|${up}|${this.moving < 0}|${assetVersion}`;
-      const status = h.dead ? `Hồi sinh sau ${Math.ceil(h.respawnT)}s` : h.bogged ? 'Sa lầy · dùng Mọc Núi' : `Hành ${ELEMENTS[def.el].name} · ${ELEM_TRAIT[def.el].name}`;
+      const vt = heroRole(h.type);
+      const status = h.dead ? `Hồi sinh sau ${Math.ceil(h.respawnT)}s` : h.bogged ? 'Sa lầy · dùng Mọc Núi' : `${vt ? `${roleIcon(vt, 12)}<b style="color:${ROLES[vt].color}">${ROLES[vt].name}</b> · ` : ''}Hành ${ELEMENTS[def.el].name}`;
       // 4 ô kỹ năng (v37): số trên ô = cấp kỹ năng; tag phía trên = giá nâng tiếp (+ điểm / + vàng / MAX).
       // Chạm ô = nâng (hoặc mở khóa) luôn, không còn màn Kỹ năng riêng.
       const skills = def.skills.map((sk, i) => {
@@ -2229,12 +2318,12 @@ class UI {
       // bảng chỉ số tướng: chỉ hiện khi đang giữ tay lên chân dung (v154)
       const sp = $('#hero-stats');
       if (this.statsOpen && !this.screen) {
-        const sk2 = `${h.id}|${h.level}|${h.tier}|${h.train}|${h.statPts}|${Object.values(h.skillLv).join()}|${SLOTS.map((x) => h.equip[x] ? h.equip[x].uid : '').join()}|${Math.round(h.hp)}|${Math.round(h.shield || 0)}|${h.bogged ? 1 : 0}`;
+        const sk2 = `${h.id}|${h.level}|${h.tier}|${h.train}|${h.statPts}|${Object.values(h.skillLv).join()}|${SLOTS.map((x) => h.equip[x] ? h.equip[x].uid : '').join()}|${Math.round(h.hp)}|${Math.round(h.shield || 0)}|${h.bogged ? 1 : 0}|${JSON.stringify(g.vtTiers || {})}`;
         if (this.statsSig !== sk2 || sp.hidden) {
           this.statsSig = sk2;
           const S = heroStats(h);
           const row = (k, v, n) => `<div><span>${n ? ic(n) : ''}${k}</span><b>${v}</b></div>`;
-          sp.innerHTML = `<div class="hs-h">${HEROES[h.type].name} · cấp ${h.level} · ${'★'.repeat(h.tier || 0)} · ${ic('luc-chien')}lực chiến <b>${heroPower(h)}</b>${h.shield > 0 ? ` · ${ic('khien')}khiên <b>${Math.round(h.shield)}</b>` : ''}${h.bogged ? ` · ${ic('sa-lay')}sa lầy` : ''}</div><div class="hs-g">`
+          sp.innerHTML = `<div class="hs-h">${HEROES[h.type].name} · cấp ${h.level} · ${'★'.repeat(h.tier || 0)} · ${ic('luc-chien')}lực chiến <b>${heroPower(h)}</b>${h.shield > 0 ? ` · ${ic('khien')}khiên <b>${Math.round(h.shield)}</b>` : ''}${h.bogged ? ` · ${ic('sa-lay')}sa lầy` : ''}</div>${this.roleLine(h)}<div class="hs-g">`
             + row('Sát thương', Math.round(S.damage), 'sat-thuong') + row('Tốc đánh', `${(1 / S.cooldown).toFixed(2)}/giây`, 'toc-danh') + row('Tầm đánh', Math.round(S.range), 'tam-danh')
             + row('Máu', `${Math.round(h.hp)}/${Math.round(S.hpMax)}`, 'mau') + row('Chí mạng', `${Math.round(S.crit)}% ×${S.critMult.toFixed(1)}`, 'chi-mang') + row('Giảm hồi chiêu', `${Math.round(S.cdr)}%`, 'hoi-chieu')
             + row('Giảm s.thương', `${Math.round(S.dr)}%`, 'giam-sat-thuong') + row('Năng lượng', Math.round(S.maxMana), 'nang-luong')
@@ -2619,24 +2708,36 @@ class UI {
     const x = Math.max(6, Math.min($('#ui').offsetWidth - w - 6, (r.left + r.width / 2 - u.left) / sc - w / 2));
     t.style.left = x + 'px'; t.style.top = Math.max(6, (r.top - u.top) / sc - ht - 8) + 'px';
   }
+  // v182: dòng vai trò + cộng hưởng đang bật trong bảng chỉ số tướng
+  roleLine(h) {
+    const rs = heroRoles(h.type), tiers = this.game.vtTiers || {}, cnt = roleCounts(this.game.heroes.filter((x) => x && !x.dead));
+    if (!rs.length) return '';
+    const syn = ROLE_KEYS.filter((r) => tiers[r] && (ROLE_SYN[r].all || rs.includes(r))).map((r) => `<span style="color:${ROLES[r].color}">${roleIcon(r, 11)}${ROLE_SYN[r].t[tiers[r] - 1]}</span>`).join(' ');
+    return `<div class="hs-vt">${roleChip(h.type)}<small>${rs.map((r) => `${ROLES[r].name} ${cnt[r] || 0}/${(cnt[r] || 0) >= 2 ? 4 : 2}`).join(' · ')}</small>${syn ? `<div class="hs-syn">${syn}</div>` : ''}</div>`;
+  }
   renderRoster() {
     const t = this.rosterSel;
     const d = HEROES[t];
     const all = [...BASIC_HEROES, ...LEGEND_HEROES];
+    // v182: lọc theo vai trò (vai chính trước, vai phụ sau)
+    const vf = ROLES[this.rosterRole] ? this.rosterRole : '';
+    const shown = vf ? [...all.filter((k) => heroRole(k) === vf), ...all.filter((k) => heroRoles(k)[1] === vf)] : all;
     const splash = assetUrl([`anh-lon_${heroSlug(t)}.png`, `heroes/hero_${HERO_CODE[t]}_A.png`]);
     const n = skillN(1);
+    const oc = this.openCount(), own = this.heroOpen(t), oCost = OWN_COST[heroTier(t)], kho = this.save.kho || 0;
     // giữ vị trí cuộn danh sách tướng / bảng chi tiết khi chọn tướng khác (trước đây nhảy về đầu)
     const keep = ['.ro-grid', '.ro-det'].map((q) => [q, ($('#roster').querySelector(q) || {}).scrollTop || 0]);
     $('#roster').innerHTML = `<div class="screen" style="z-index:auto">
       <div class="scr-head metal"><button class="xbtn metal" data-act="ro-back" aria-label="Quay lại">${ICON.back}</button><h1 class="ttl">Anh Hùng Văn Lang</h1>
-        <span class="chip dark" title="${BASIC_HEROES.length} Thường · ${LEGEND_HEROES.filter((x) => HEROES[x].legend === 'epic').length} Sử thi · ${LEGEND_HEROES.filter((x) => HEROES[x].legend === 'legendary').length} Huyền thoại">${all.length} tướng</span><div class="sp"></div>
+        <span class="chip dark ro-cnt" title="${BASIC_HEROES.length} Thường · ${LEGEND_HEROES.filter((x) => HEROES[x].legend === 'epic').length} Sử thi · ${LEGEND_HEROES.filter((x) => HEROES[x].legend === 'legendary').length} Huyền thoại">Đã mở <b>${oc.n}/${oc.all}</b></span><div class="sp"></div>
         <span class="chip kho ro-kho">Ngân khố ${bac()} ${fmt(this.save.kho || 0)}</span>${this.rosterInGame ? "" : `<button class="btn metal title" data-act="ro-temple">Đền Anh Hùng</button>`}</div>
       <div class="scr-body">
-        <div class="ro-grid">${all.map((k) => {
+        <div class="ro-grid"><div class="rl-filter">${roleFilter(vf, 'ro-role')}</div>${shown.map((k) => {
           const h = HEROES[k];
-          const lock = h.legend && !(this.save.owned || []).includes(k);
-          return `<button class="ro-card ${h.legend || 'common'} ${k === t ? 'on' : ''} ${lock ? 'lock' : ''}" data-act="ro-sel" data-type="${k}">${lock ? `<span class="ro-lock">${UIE.lock()}</span>` : ''}
-            <span class="tag el" style="color:${ELEMENTS[h.el].color}">${elIcon(h.el, 11)}${ELEMENTS[h.el].name}</span>
+          const rk = vf || heroRole(k);
+          const lock = !this.heroOpen(k), c = OWN_COST[heroTier(k)];
+          return `<button class="ro-card ${h.legend || 'common'} ${k === t ? 'on' : ''} ${lock ? 'lock' : ''} ${lock && kho >= c ? 'can' : ''}" data-act="ro-sel" data-type="${k}">${lock ? `<span class="ro-lock">${UIE.lock()}</span><span class="ro-price">${bac(1)}${fmt(c)}</span>` : ''}
+            <span class="tag el" style="color:${ELEMENTS[h.el].color}">${elIcon(h.el, 11)}${ELEMENTS[h.el].name}</span>${rk ? `<span class="tag rl ${vf && heroRole(k) !== vf ? 'sub' : ''}" title="${ROLES[rk].name}${heroRole(k) !== rk ? ' (phụ)' : ''}">${roleIcon(rk, 14)}</span>` : ''}
             <img src="${heroImgUrl(k)}" alt=""><span class="nm">${h.name}</span></button>`;
         }).join('')}</div>
         <div class="panel metal ro-det">
@@ -2644,21 +2745,24 @@ class UI {
             <div class="ro-pic inset ${d.legend || 'common'}">${splash ? `<img src="${splash}" alt="">` : '<canvas id="ro-cv" width="300" height="300"></canvas>'}</div>
             <div style="display:flex;flex-direction:column;gap:5px;min-width:0">
               <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="ttl" style="font-size:26px;line-height:1">${d.name}</span>
-                ${!d.legend ? '<span class="chip ok">Có sẵn</span>' : (this.save.owned || []).includes(t) ? `<span class="chip ok">${UIE.done()} Đã sở hữu</span>${LEGACY[t] ? `<button class="btn btn-gold" style="height:32px;padding:0 12px;font-size:14px" data-act="lg-open" data-type="${t}">⚜ Thần Khí · ${this.legacyPts(t)}/${LEGACY_MAX * 3}</button>` : ''}`
-                  : `<button class="btn btn-gold" style="height:32px;padding:0 12px;font-size:14px" data-act="ro-buy" data-type="${t}" ${(this.save.kho || 0) < OWN_COST[d.legend] ? 'disabled' : ''}>Mua · ${bac()} ${fmt(OWN_COST[d.legend])}</button>`}</div>
+                ${own ? `<span class="chip ok">${UIE.done()} Đã mở</span>${d.legend && LEGACY[t] ? `<button class="btn btn-gold" style="height:32px;padding:0 12px;font-size:14px" data-act="lg-open" data-type="${t}">⚜ Thần Khí · ${this.legacyPts(t)}/${LEGACY_MAX * 3}</button>` : ''}`
+                  : `<button class="btn btn-gold ro-open" style="height:32px;padding:0 12px;font-size:14px" data-act="ro-buy" data-type="${t}" ${kho < oCost ? 'disabled' : ''}>${UIE.lock()} Mở khoá · ${bac()} ${fmt(oCost)}</button>${kho < oCost ? `<small class="ro-need">còn thiếu ${bac(1)} ${fmt(oCost - kho)}</small>` : ''}`}</div>
               <div class="note" style="font-style:italic">${esc(d.title)}</div>
-              ${!d.legend || (this.save.owned || []).includes(t) ? `<div class="ro-tv"><span>${ic('tu-vi')}Tu Vi ${tuviLevel((this.save.tuvi || {})[t] || 0)} · ${tuviRank((this.save.tuvi || {})[t] || 0)}</span>
+              ${own ? '' : `<div class="tipbox inset ro-earn"><b>${d.legend ? 'Mở khoá để hợp thể ra trong trận' : 'Mở khoá để chọn vào đội triệu hồi (ra trong chợ trận)'}.</b> Kiếm Ngân khố ở <b>Vô tận</b>: ${PREP.endWave} mỗi đợt · mốc 10 đợt +${PREP.endlessMilestone} · boss +${PREP.endlessBoss} · kỷ lục mới +${PREP.recordWave}/đợt · Khó ×1,5
+                <div class="ro-qd">Nhiệm vụ ngày: ${this.questLine()}</div></div>`}
+              ${own ? `<div class="ro-tv"><span>${ic('tu-vi')}Tu Vi ${tuviLevel((this.save.tuvi || {})[t] || 0)} · ${tuviRank((this.save.tuvi || {})[t] || 0)}</span>
                 ${d.legend === 'legendary' ? `<button class="btn metal" data-act="ro-runes" data-type="${t}">🔯 Ấn Phù${this.runePtsLeft(t) > 0 ? ` <b class="rn-dot">${this.runePtsLeft(t)}</b>` : ''}</button>` : ''}</div>` : ''}
               <div class="bt-info" style="padding:0;background:none;border:0;box-shadow:none"><div class="tags">
                 <span style="background:#1A1208;color:${ELEMENTS[d.el].color};display:inline-flex;align-items:center;gap:3px">${elIcon(d.el, 13)} Hành ${ELEMENTS[d.el].name} · ${ELEM_TRAIT[d.el].name}</span>
                 <span style="background:#1A1208;color:#E8D8B0">${ELEM_TRAIT[d.el].fx}</span>
                 <span style="background:#3A2410;color:${d.legend ? RARITY[d.legend].color : '#C8BFA8'}">${d.legend ? RARITY[d.legend].name : 'Cơ bản'}</span>
                 <span style="background:#2A1810;color:#FFB08A">${d.dmgType === 'magic' ? 'Phép' : 'Vật lý'} · ${d.attack === 'melee' ? 'Cận chiến' : 'Đánh xa'}</span>
-                <span style="background:#1A1610;color:#C8BFA8">${d.role}</span></div></div>
+                ${ROLES[heroRole(t)] && ROLES[heroRole(t)].name === d.role ? '' : `<span style="background:#1A1610;color:#C8BFA8">${d.role}</span>`}</div>
+                <div class="tags rl-tags">${roleChip(t)}</div></div>
               <div class="kvt inset" style="font-size:12px">${d.legend
                 ? `<div><span>Ghép từ</span><b style="text-align:right">${ascendSources(t).map((x) => HEROES[x].name).join(' + ')}</b></div>
                   <div><span>Cần</span><b style="color:#FFD66B">${d.legend === 'epic' ? `2 tướng ${'★'.repeat(COSTS.ascendTier)}` : `Thần tinh ${'★'.repeat(COSTS.ascendTier2)} · kỹ năng tối đa`} · ${COSTS.ascend[d.legend]} vàng</b></div>`
-                : `<div><span>Có từ</span><b style="color:#FFD66B">Triệu hồi ★ (đội 6 tướng)</b></div>`}
+                : `<div><span>Có từ</span><b style="color:#FFD66B">Chợ tướng ★</b></div>`}
                 <div><span>Tầm · Tốc đánh</span><b>${d.base.range} · ${d.base.cooldown}s</b></div></div>
               ${d.trait ? `<div class="tipbox inset" style="font-size:12px">★ <b>${d.trait.name}:</b> ${esc(d.trait.desc)}</div>` : ''}
               ${secretLine(this.game, 'h.' + t)}
@@ -2711,15 +2815,19 @@ class UI {
     const gift = ev.options[0], jar = ev.options[1], misc = ev.options[2];
     const art = { voi_chin_nga: 'voi', ga_chin_cua: 'ga', ngua_hong_mao: 'ngua' }[gift.id];
     const it = ITEMS[gift.id];
+    // v181: sính lễ ngẫu nhiên — hiện rõ ảnh + tên + độ hiếm sính lễ (và tỉ lệ ra ở mốc này)
+    const sl = SINH_LE[gift.id], tier = SL_TIER[sl ? sl.tier : 'thuong'];
+    const ws = sinhLeWeights({ big: gift.big }), pct = Math.round(100 * ws[gift.id] / Object.values(ws).reduce((a, b) => a + b, 0));
+    const giftArt = (art && sceneArt(art)) || itemIcon(gift.id);
     const jit = ITEMS[jar.id];
     $('#reward').innerHTML = `<div class="screen" style="z-index:auto">
       <div class="scr-head metal"><h1 class="ttl">${th.rewardHead || 'Chọn phần thưởng'}</h1><span class="chip dark">Đợt ${g.wave}</span>
-        <span class="chip ok">${UIE.done()} Đã hạ ${ENEMIES[ev.boss].name}</span><span class="chip goldc">Chọn 1 trong 3</span><div class="sp"></div>
+        <span class="chip ok">${UIE.done()} Đã hạ ${ENEMIES[ev.boss].name}</span><span class="chip goldc">Chọn 1 trong 3</span>${gift.big ? '<span class="chip sl-big">★ Mốc lớn: sính lễ hiếm dễ ra hơn</span>' : ''}<div class="sp"></div>
         <div class="goldbox inset">${coin()}${fmt(g.gold)}</div></div>
       <div class="sl-title">${th.reward || 'Phần thưởng hạ boss'}</div>
       <div class="sl-cards">
-        <div class="sl-card gift"><div class="sl-well">${svgI(sceneArt(art))}<span class="sl-tag" style="left:6px;background:#0D0B08;border:1px solid #8C6A2E;color:#F2E6C8">SÍNH LỄ</span><span class="sl-tag" style="right:6px;background:#F0A030;color:#2A1A08">Huyền thoại</span></div>
-          <div class="sl-name">${it.name}</div><div class="sl-desc">${esc(it.desc)}<br><b>${statLine(it.stats)}</b></div>
+        <div class="sl-card gift sl-${sl ? sl.tier : 'thuong'}"><div class="sl-well${art ? '' : ' sl-icon'}">${svgI(giftArt)}<span class="sl-tag" style="left:6px;background:#0D0B08;border:1px solid #8C6A2E;color:#F2E6C8">SÍNH LỄ</span><span class="sl-tag sl-tier" style="right:6px;background:${tier.bg};border:1px solid ${tier.color};color:${tier.color}">${tier.name}</span></div>
+          <div class="sl-name">${it.name}</div><div class="sl-rar"><span style="color:${tier.color}">● Sính lễ ${tier.name}</span> · <span class="c-legendary">Huyền thoại</span> · ngẫu nhiên ~${pct}%</div><div class="sl-desc">${esc(it.desc)}${statLine(it.stats) ? `<br><b>${statLine(it.stats)}</b>` : ''}</div>
           <button class="sl-pick btn-gold" data-act="reward" data-i="0">Chọn</button></div>
         <div class="sl-card jar"><div class="sl-well">${svgI(sceneArt('huvua'))}<span class="sl-tag" style="left:6px;background:#0D0B08;border:1px solid #8C6A2E;color:#F2E6C8">HŨ BÁU</span><span class="sl-tag" style="right:6px;background:#A86CE0;color:#1A0A28">${(jar.ids || []).length} món</span></div>
           <div class="sl-name">Hũ Vua Hùng · ${(jar.ids || [jar.id]).length} món</div><div class="sl-desc jar-list">${(jar.ids || [jar.id]).map((id) => {
@@ -2753,6 +2861,7 @@ class UI {
   }
   rewardToast(o) {
     if (o.kind === 'item' && o.ids) this.toast(`Nhận ${o.ids.length} món từ Hũ Vua Hùng · bấm ≡ → Mặc đồ cả đội`, '#C8A0F0');
+    else if (o.kind === 'item' && o.sinhLe) this.toast(`Nhận sính lễ ${ITEMS[o.id].name} (${SL_TIER[SINH_LE[o.id].tier].name})! Mở Túi đồ để đeo cho tướng`, SL_TIER[SINH_LE[o.id].tier].color);
     else if (o.kind === 'item') this.toast(`Nhận ${ITEMS[o.id].name}! Mở Túi đồ để đeo cho tướng`, RARITY[ITEMS[o.id].rarity].color);
     else if (o.kind === 'treasure') this.toast(`+${o.gold} vàng, +${o.lives} mạng`, '#F2D27A');
     else this.toast('Mọi tướng +2 cấp!', '#6AE06A');
@@ -2788,7 +2897,11 @@ class UI {
     const today = new Date().toISOString().slice(0, 10);
     const daily = g.wave > PREP.dailyWave && s.dailyWin !== today ? PREP.dailyWin : 0;
     if (daily) s.dailyWin = today;
-    s.kho = (s.kho || 0) + khoGain + daily;
+    // v182: kỷ lục mới của bản đồ: +recordWave mỗi đợt vượt kỷ lục cũ (tính theo đợt đã qua; chơi nhóm không tính)
+    const recGain = newBest ? Math.round(PREP.recordWave * (g.wave - Math.max(prevBest, 1)) * (g.hard ? 1.5 : 1)) : 0;
+    s.kho = (s.kho || 0) + khoGain + daily + recGain;
+    const qDone = this.questAdd(g.wave - 1, g.bossesKilled || 0);      // v182: nhiệm vụ ngày (đã cộng Ngân khố)
+    const khoAll = (g.khoRun || 0) + khoGain + daily + recGain + qDone.reduce((a, x) => a + x.kho, 0);
     // Tu Vi đủ 100% khi đã qua đợt boss đầu (dưới đó 60% như bỏ trận)
     const fullTv = g.wave > PREP.dailyWave;
     const tv = this.bankTuvi(fullTv ? 1 : TUVI_LOSE);
@@ -2804,8 +2917,12 @@ class UI {
       <div><span>${coin()} Vàng kiếm trong trận</span><b style="color:#FFD66B">+${fmt(g.stats.goldEarned)}</b></div>
       <div><span>Tướng trên sân</span><b>${g.heroes.filter(Boolean).length}</b></div>
       ${g.khoRun ? `<div><span>${UIE.endless()} Ngân khố giữa trận (mốc đợt / boss)</span><b style="color:#E4ECF4">${bac(1)} +${fmt(g.khoRun)}</b></div>` : ''}
-      <div><span>${ic('bac')}Ngân khố cuối trận (${PREP.endWave} mỗi đợt${g.hard ? ' · Khó ×1,5' : ''})</span><b style="color:#E4ECF4">${bac(1)} +${fmt(khoGain + daily)} → ${fmt(s.kho)}</b></div>
-      ${daily ? `<div><span>☀ Trận đầu trong ngày qua đợt ${PREP.dailyWave}</span><b style="color:#FFE08A">${bac(1)} +${fmt(daily)}</b></div>` : ''}
+      <div><span>${ic('bac')}Ngân khố cuối trận (${PREP.endWave} mỗi đợt${g.hard ? ' · Khó ×1,5' : ''})</span><b style="color:#E4ECF4">${bac(1)} +${fmt(khoGain)}</b></div>
+      ${recGain ? `<div><span>★ Kỷ lục mới (+${PREP.recordWave} mỗi đợt vượt kỷ lục cũ)</span><b style="color:#FFE08A">${bac(1)} +${fmt(recGain)}</b></div>` : ''}
+      ${daily ? `<div><span>☀ Nhiệm vụ ngày: trận đầu qua đợt ${PREP.dailyWave}</span><b style="color:#FFE08A">${bac(1)} +${fmt(daily)}</b></div>` : ''}
+      ${qDone.map((x) => `<div><span>☀ Nhiệm vụ ngày: ${esc(x.name)}</span><b style="color:#FFE08A">${bac(1)} +${fmt(x.kho)}</b></div>`).join('')}
+      <div class="res-qd"><span>Nhiệm vụ ngày</span><b>${this.questLine()}</b></div>
+      ${this.unlockHint()}
       ${tv.rows.length ? `<div><span>${ic('tu-vi')}Tu Vi${fullTv ? '' : ' (60% · chưa qua đợt ' + PREP.dailyWave + ')'}</span><b style="color:#C8A0F0">${tv.rows.join(' · ')}</b></div>` : ''}
       ${tv.up.map((u) => `<div><span></span><b style="color:#FFD66B">${u}</b></div>`).join('')}`;
     const name = `${coop ? '🤝 Cùng giữ thành · ' : UIE.endless() + ' Vô tận · '}${LEVELS[lv].name}${coop ? ` · cùng ${esc(mate)}` : ''}`;
@@ -2826,7 +2943,8 @@ class UI {
           <div class="res-title lose${th.loseTitle.length > 18 ? ' long' : ''}">${th.id === 'sontinh' ? ic('nuoc-dang') : `<span class="res-ic">${th.ic}</span> `}${th.loseTitle}</div>
           <div style="display:flex;gap:12px;align-items:center"><div class="inset" style="padding:8px 16px;border-radius:6px;font-size:15px;white-space:nowrap">Giữ được tới đợt <b style="font-family:var(--title);font-size:34px;color:${th.hi}">${g.wave}</b></div>
             <div style="flex:1">${newBest ? '<div class="chip ok" style="display:inline-block">★ Kỷ lục mới!</div>' : `<div class="inset" style="height:12px;border-radius:4px;overflow:hidden"><i style="display:block;height:100%;width:${Math.min(1, g.wave / (endBest || 1)) * 100}%;background:linear-gradient(90deg,${th.bar[0]},${th.bar[1]})"></i></div>`}
-            <div class="note" style="margin-top:4px">${coop ? 'Chơi nhóm' : `Kỷ lục bản đồ này: đợt ${s.bestEndless[lv]}`}</div></div></div>
+            <div class="note" style="margin-top:4px">${coop ? 'Chơi nhóm' : `Kỷ lục bản đồ này: đợt ${s.bestEndless[lv]}`}</div></div>
+            <div class="res-khobox inset"><small>Ngân khố cả trận</small><b>${bac()} +${fmt(khoAll)}</b><small>còn ${fmt(s.kho)} · đã mở ${this.openCount().n}/${this.openCount().all} tướng</small></div></div>
           <div class="res-table inset">${rows}</div>
           <div class="res-tips"><div class="h">${UIE.tip()} MẸO LẦN SAU</div>
             <div class="t"><i>1</i><span><b>Ghép</b> 2 tướng cùng loại cùng sao và <b>hợp thể</b> đúng cặp để có tướng thần mạnh hơn hẳn.</span></div>
@@ -2858,7 +2976,7 @@ class UI {
   }
   action(d) {
     const g = this.game;
-    if (['reward', 'restart', 'to-map', 'to-menu'].includes(d.act)
+    if (['reward', 'restart', 'to-map', 'to-menu', 'res-heroes'].includes(d.act)
       && (!$('#result').hidden || !$('#reward').hidden) && performance.now() < (this.guardUntil || 0)) return;
     const sc = this.screen;
     const h = g.heroes[this.sel];
@@ -2922,10 +3040,11 @@ class UI {
       }
       case 'prep-hero': this.prepHero(d.id); break;
       case 'prep-go': $('#prep').hidden = true; this.saveRun();
-        // v183 (L05): mục tiêu bản đồ báo khi vào trận (trước đây hiện lúc mở màn Chuẩn bị, đè lên "Tướng khắc chế")
+        // v186 (L05): mục tiêu bản đồ báo khi vào trận (trước đây hiện lúc mở màn Chuẩn bị, đè lên "Tướng khắc chế")
         this.toast(`Vô tận · ${LEVELS[this.game.level].name}: ${themeOf(this.game.level).goal} càng lâu càng tốt — boss mỗi 10 đợt`, '#F2D27A'); break;
       case 'deck-open': this.deckOpen = true; this.deckSel = [...this.game.summonList()]; this.showPrep(); break;
-      case 'deck-tog': { const sel = this.deckSel || (this.deckSel = []); const k = sel.indexOf(d.id);
+      case 'dk-locked': this.toast(`<b>${HEROES[d.id].name}</b> chưa mở khoá — mở ở <b>Anh Hùng</b> (menu) bằng ${bac(1)} ${fmt(OWN_COST.common)} Ngân khố`, '#E4ECF4'); break;
+      case 'deck-tog': { if (!this.heroOpen(d.id)) break; const sel = this.deckSel || (this.deckSel = []); const k = sel.indexOf(d.id);
         if (k >= 0) sel.splice(k, 1); else if (sel.length < DECK_SIZE) sel.push(d.id); else { sel.shift(); sel.push(d.id); }
         this.showPrep(); break; }
       case 'deck-suggest': this.deckSel = suggestDeck(this.game.level, this.save.owned); this.showPrep(); break;
@@ -2996,6 +3115,10 @@ class UI {
       case 'restart': if (this.coopDone) { this.coopDone = false; this.showCoop(); break; } this.startLevel(g.level); break;
       case 'to-map': if (this.coopDone) { this.coopDone = false; this.showCoop(); break; } this.showCampaign(g.level); break;
       case 'to-menu': $('#settings').hidden = true; if (g.started) this.bankStats(); this.showMenu(); break;
+      case 'res-heroes': if (g.started) this.bankStats(); this.showMenu(); this.showRoster(d.type); break;     // v182: kết quả trận → mở khoá tướng
+      case 'ro-role': this.rosterRole = this.rosterRole === d.r ? '' : d.r; this.renderRoster(); break;
+      case 'vt-hero': this.toast(`${HEROES[d.type].name}: ${heroRoles(d.type).map((r) => ROLES[r].name).join(' · ')}`, ROLES[heroRole(d.type)].color); break;
+      case 'vt-f': sc.role = sc.role === d.r ? '' : d.r; this.renderScreen(true); break;
       case 'ro-sel': {
         this.rosterSel = d.type; this.renderRoster();
         // v147: chạm chân dung trong cây phát triển → cuộn danh sách tới tướng đó
@@ -3006,12 +3129,13 @@ class UI {
         if (this.rosterInGame && $('#ranks').hidden && $('#treasury').hidden) { this.rosterInGame = false; $('#roster').hidden = true; if (this.rosterWasRunning) g.running = true; this.sig.fuse = ''; break; }
         this.showMenu(); break;
       case 'ro-buy': {
-        const t = d.type, c = OWN_COST[HEROES[t].legend], s = this.save;
+        const t = d.type, c = OWN_COST[heroTier(t)], s = this.save;
         s.owned = s.owned || [];
         if (s.owned.includes(t) || (s.kho || 0) < c) break;
         s.kho -= c; s.owned.push(t); writeSave(s);
         if (this.game.owned && !COOP.on) this.game.owned.add(t);   // chơi nhóm: dùng được từ trận sau
-        this.toast(`Đã mua ${HEROES[t].name}! Giờ có thể hợp thể ra trong trận`, '#6AE06A');
+        const oc = this.openCount();
+        this.toast(`Đã mở khoá ${HEROES[t].name} (${oc.n}/${oc.all})! ${HEROES[t].legend ? 'Giờ có thể hợp thể ra trong trận' : 'Chọn vào đội triệu hồi ở màn Chuẩn bị'}`, '#6AE06A');
         this.renderRoster();
         break;
       }
@@ -3353,7 +3477,7 @@ class UI {
     const el = $('#screen');
     el.style.zIndex = o.top ? 30 : '';
     el.hidden = false;
-    if (this.checkToasts) this.checkToasts();   // v183: đổi từ màn này sang màn khác (#screen vẫn hiện)
+    if (this.checkToasts) this.checkToasts();   // v186: đổi từ màn này sang màn khác (#screen vẫn hiện)
     this.sig.screen = null;
     this.renderScreen(true);
   }
@@ -3935,14 +4059,32 @@ class UI {
       <div class="scr-body bt-body">${cols}</div>`;
   }
 
+  // ---------- Bách khoa · Vai trò tướng (v182): 7 vai trò, cộng hưởng 2/4, tướng theo vai
+  render_roles(seg) {
+    const sc = this.screen, vf = ROLES[sc.role] ? sc.role : '';
+    const all = [...BASIC_HEROES, ...LEGEND_HEROES], owned = new Set(this.save.owned || []);
+    const pic = (k, sub) => `<button class="vt-h ${HEROES[k].legend || 'common'} ${sub ? 'sub' : ''} ${HEROES[k].legend && !owned.has(k) ? 'lock' : ''}" data-act="vt-hero" data-type="${k}" title="${esc(HEROES[k].name)}${sub ? ' (vai phụ)' : ''}"><img src="${heroImgUrl(k, 'head')}" alt=""><span ${vtShort(k).length > 9 ? 'class="lg"' : ''}>${esc(vtShort(k))}</span></button>`;
+    const cols = ROLE_KEYS.filter((r) => !vf || r === vf).map((r) => {
+      const d = ROLES[r], syn = ROLE_SYN[r];
+      const main = all.filter((k) => heroRole(k) === r), sub = all.filter((k) => heroRoles(k)[1] === r);
+      return `<div class="vt-col inset" style="--rc:${d.color}"><div class="vt-hd">${roleIcon(r, 26)}<div><b>${d.name}</b><small>${esc(d.desc)}</small></div><i>${main.length}</i></div>
+        <div class="vt-syn"><span><b>2</b> ${syn.t[0]}</span><span><b>4</b> ${syn.t[1]}</span></div>
+        <div class="vt-list">${main.map((k) => pic(k)).join('')}${vf ? sub.map((k) => pic(k, true)).join('') : ''}</div></div>`;
+    }).join('');
+    return `${this.head('Bách khoa · Vai trò', this.runChip(), seg, '<svg viewBox="0 0 24 24" width="26" height="26"><rect x="4" y="3" width="16" height="18" rx="2" fill="none" stroke="#F2D27A" stroke-width="1.8"/><circle cx="12" cy="10" r="3" fill="none" stroke="#F2D27A" stroke-width="1.6"/></svg>')}
+      <div class="bt-top metal vt-top"><div class="rl-filter">${roleFilter(vf, 'vt-f')}</div><span class="note">Cộng hưởng: đủ <b>2</b> / <b>4</b> tướng <b>khác loại</b> cùng vai trò chính trên sân → tướng mang vai trò đó (chính hoặc phụ) nhận buff; Hỗ trợ buff toàn quân.</span></div>
+      <div class="scr-body vt-body ${vf ? 'one' : ''}">${cols}</div>`;
+  }
+
   // ---------- Bách khoa thủy quái
   render_codex() {
     const g = this.game;
     const sc = this.screen;
     const isBoss = sc.tab === 'boss';
-    const seg = `<div class="seg inset"><button class="${sc.tab === 'enemy' ? 'on' : ''}" data-act="tab" data-tab="enemy">Quái</button><button class="${isBoss ? 'on' : ''}" data-act="tab" data-tab="boss">Boss</button><button class="${sc.tab === 'secret' ? 'on' : ''}" data-act="tab" data-tab="secret">Bí truyền</button></div>`;
+    const seg = `<div class="seg inset"><button class="${sc.tab === 'enemy' ? 'on' : ''}" data-act="tab" data-tab="enemy">Quái</button><button class="${isBoss ? 'on' : ''}" data-act="tab" data-tab="boss">Boss</button><button class="${sc.tab === 'secret' ? 'on' : ''}" data-act="tab" data-tab="secret">Bí truyền</button><button class="${sc.tab === 'role' ? 'on' : ''}" data-act="tab" data-tab="role">Vai trò</button></div>`;
     let body;
     if (sc.tab === 'secret') return this.render_secrets(seg);
+    if (sc.tab === 'role') return this.render_roles(seg);
     // v53: chọn chương truyện → quái / boss của các bản đồ trong chương đó
     const lvNow = g.started ? g.level : this.save.last;
     if (sc.ch == null) sc.ch = Math.max(0, CHAPTERS.findIndex((c) => lvNow >= c.from && lvNow <= c.to));

@@ -57,7 +57,7 @@ const GFX = {
   mode() { return (ui && ui.save && ui.save.settings.gfx) || 'auto'; },
   level() { const m = this.mode(); return m === 'high' ? 0 : m === 'low' ? 2 : this.lv; },
   dprCap() { return [3, 2, 1.5][this.level()]; },          // v47: máy ×3 (iPhone) vẽ nét đủ ×3
-  // v183 (L15): bậc thấp còn giới hạn tổng số điểm ảnh canvas (màn to 1920×934 vẽ ~1,8 triệu điểm mỗi khung — chậm gấp 2–3 lần 844×390)
+  // v186 (L15): bậc thấp còn giới hạn tổng số điểm ảnh canvas (màn to 1920×934 vẽ ~1,8 triệu điểm mỗi khung — chậm gấp 2–3 lần 844×390)
   pxCap(w, h) { const m = [Infinity, 2.2e6, 1.1e6][this.level()]; return Math.sqrt(m / Math.max(1, w * h)); },
   apply() { if (typeof VFX !== 'undefined' && VFX.setMax) VFX.setMax([700, 380, 180][this.level()]); resize(); },
   sample(ms) {
@@ -226,9 +226,9 @@ function drawMateSpot(x, y, hero) {
   ctx.restore();
 }
 
-// v183 (L15): nền tĩnh (lề tối quanh bản đồ + bản đồ + thành) trước đây vẽ lại MỖI khung: một lần phóng ảnh phủ kín màn có
+// v186 (L15): nền tĩnh (lề tối quanh bản đồ + bản đồ + thành) trước đây vẽ lại MỖI khung: một lần phóng ảnh phủ kín màn có
 // độ mờ (lề) + một ảnh bản đồ cỡ màn hình. Nay vẽ sẵn một lần vào canvas đệm cùng cỡ, mỗi khung chỉ chép 1:1
-// (đo Chromium không GPU 1920×934, ~110 quái: xem GAMEPLAY.md v183). Rung màn (shake) thì vẽ trực tiếp như cũ.
+// (đo Chromium không GPU 1920×934, ~110 quái: xem GAMEPLAY.md v186). Rung màn (shake) thì vẽ trực tiếp như cũ.
 function backdropSrc() {
   const map = asset(`maps/map-0${game.level + 1}.png`);
   // v163: ảnh nền nen_ai-*.png là bản đồ sông Đà (chương Sơn Tinh – Thủy Tinh) — không dùng cho ải chương khác

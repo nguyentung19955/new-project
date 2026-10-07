@@ -1,4 +1,4 @@
-// v183: sinh js/asset-list.js — danh sách ảnh CÓ THẬT trong assets/ (trừ assets/chua-dung/).
+// v186: sinh js/asset-list.js — danh sách ảnh CÓ THẬT trong assets/ (trừ assets/chua-dung/).
 // Game chỉ tải ảnh có trong danh sách: ảnh tuỳ chọn chưa vẽ (ui/khung-bang.png, ic-*.png…) không còn gửi request rồi chờ 404
 // (trước đây ~40 request 404 mỗi lần mở game). Thêm / xoá / đổi tên ảnh trong assets/ thì chạy lại:
 //   node tools/build-asset-list.js
