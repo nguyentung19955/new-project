@@ -19,7 +19,6 @@ async function run(browser) {
     out.running = g.running;
     for (let i = 0; i < 9000 && !g.over && g.wave < 6; i++) {
       if (i % 30 === 0) {
-        if (g.rest) ui.restDone(false);
         if (g.gold >= g.summonCost() && g.freeSlots().length) ui.buyCard(0);
         const h = g.heroes.find((x) => x && g.gold > g.levelCost(x) + 40);
         if (h) ui.doLevelUp(h);

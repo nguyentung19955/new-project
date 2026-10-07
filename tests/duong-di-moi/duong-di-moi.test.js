@@ -1,9 +1,11 @@
-// Dạng đường mới + Vô tận đổi đường (claude/duong-di-moi). Chạy: node tests/duong-di-moi/duong-di-moi.test.js
+// Dạng đường mới + Vô tận theo màn (claude/duong-di-moi). Chạy: node tests/duong-di-moi/duong-di-moi.test.js
 // 1) hình học: mọi bản đồ gốc + mọi dạng đường liền mạch, nhánh dài gần bằng nhau, đường mới nằm trong vùng an toàn,
-//    đủ ô đặt tướng, ô không nằm trên đường
+//    đủ ô đặt tướng, ô không nằm trên đường; thứ tự màn vô tận
 // 2) quái đi hết đường tới thành ở mọi dạng (mọi nhánh đều có quái, bám đường)
-// 3) Vô tận: tua đợt 1 → 200 ở vài bản đồ — đổi đường đúng mốc (60, 70, … 200), giữ tướng / hoàn vàng khi hết ô,
-//    chạy thật một đợt ở mỗi mốc, lưu / nạp giữa trận giữ đúng đường, chơi nhóm không đổi đường
+// 3) Vô tận: tua đợt 1 → 200 — sang màn mới đúng sau mỗi đợt boss (bản đồ + bộ quái + boss của màn), giữ tướng / hoàn vàng
+//    khi hết ô, chạy thật đợt boss, lưu / nạp giữa trận giữ đúng màn, chơi nhóm không đổi màn
+// 3b) giao diện: chọn Vô tận → vào màn đầu luôn (không chọn bản đồ); chơi qua boss → sang màn → TẢI LẠI TRANG → Tiếp tục
+//     → cùng bản đồ / bộ quái / đợt / ô tướng; bản lưu cũ (không có trường màn) vẫn tiếp tục được
 // 4) cân bằng: mô phỏng trận (đội 8 tướng cố định) — dạng thường không quá dễ / khó so với đường gốc, dạng khó khó hơn có giới hạn
 // 5) không đè giao diện ở 1920×934, 844×390, 667×375 (thanh trên, cột nút phải, hàng thẻ) + chụp từng dạng (cả màn dọc 390×844)
 const path = require('path');
@@ -50,24 +52,31 @@ fs.mkdirSync(SHOT, { recursive: true });
         }
         info[id] = { slots: CONFIG.slots.length, len: Math.round(PATH.total / DK), lanes: PATH.lanes.length };
       }
-      // thứ tự đổi đường vô tận: đúng mốc, hai mốc liền nhau khác dạng, dạng khó chỉ từ đợt 130
+      // thứ tự màn vô tận: đổi đúng sau đợt boss, hai màn liền nhau khác bản đồ, dạng khó chỉ từ đợt hardFrom
       const seq = [];
-      for (const lv of [0, 5, 10, 16]) for (let w = 1; w <= 260; w++) {
-        const s = endlessPathFor(w, lv), s0 = endlessPathFor(w - 1, lv);
-        if (w < 60 && s) bad.push(`đợt ${w}: đã đổi đường`);
-        if (w >= 60 && !PATH_SHAPES[s]) bad.push(`đợt ${w}: dạng ${s} không có`);
-        if (s !== s0 && w >= 61 && (w - 60) % 10) bad.push(`đổi đường lệch mốc ở đợt ${w}`);
-        if (w >= 70 && (w - 60) % 10 === 0 && s === s0) bad.push(`bản đồ ${lv} đợt ${w}: trùng dạng mốc trước`);
-        if (s && PATH_SHAPES[s].diff > 1 && w < 130) bad.push(`dạng khó ${s} ở đợt ${w}`);
-        if (lv === 0 && w >= 60 && (w - 60) % 10 === 0) seq.push(`${w}:${s}`);
+      for (const lv of [0, 5, 10, 16]) {
+        let prev = endlessStageAt(0, lv);
+        if (prev.k || prev.lv !== lv || prev.shape) bad.push(`ải ${lv}: màn đầu sai`);
+        for (let w = 1; w <= 260; w++) {
+          const st = endlessStageAt(w, lv);
+          if (st.k !== prev.k) {
+            if (!bossAt(w, lv)) bad.push(`ải ${lv}: đổi màn ở đợt ${w} không phải đợt boss`);
+            if (st.k !== prev.k + 1) bad.push(`ải ${lv}: nhảy màn ở đợt ${w}`);
+            if (stageMapId(st) === stageMapId(prev)) bad.push(`ải ${lv}: màn ${st.k} trùng bản đồ màn trước`);
+            if (st.shape && PATH_SHAPES[st.shape].diff > 1 && w < ENDLESS_STAGES.hardFrom) bad.push(`dạng khó ${st.shape} ở đợt ${w}`);
+            if (lv === 0) seq.push(`${w}:${LEVELS[st.lv].map}${st.shape ? '~' + st.shape : ''}`);
+          } else if (bossAt(w, lv)) bad.push(`ải ${lv}: qua boss đợt ${w} mà không đổi màn`);
+          prev = st;
+        }
       }
-      return { bad, info, seq, n: shapes.length, stage: [endlessPathStage(59), endlessPathStage(60), endlessPathStage(79)] };
+      const used = new Set(); for (let w = 1; w <= 400; w++) { const st = endlessStageAt(w, 0); if (st.shape) used.add(st.shape); }
+      for (const sh of shapes) if (!used.has(sh)) bad.push(`dạng ${sh} không xuất hiện trong 400 đợt`);
+      return { bad, info, seq, n: shapes.length };
     });
     console.log('  ' + Object.entries(geo.info).map(([k, v]) => `${k}=${v.slots}ô/${v.len}${v.lanes > 1 ? '/' + v.lanes + 'nhánh' : ''}`).join(' '));
-    console.log('  thứ tự (bản đồ 1): ' + geo.seq.join(' '));
+    console.log('  thứ tự màn (sau đợt boss): ' + geo.seq.join(' '));
     ok(geo.n >= 9, `${geo.n} dạng đường mới`);
-    ok(geo.stage.join() === '-1,0,1', 'endlessPathStage: đợt 59 → -1, 60 → 0, 79 → 1');
-    ok(!geo.bad.length, `hình học + thứ tự đổi đường ${geo.bad.slice(0, 6).join(' | ')}`);
+    ok(!geo.bad.length, `hình học + thứ tự màn vô tận ${geo.bad.slice(0, 6).join(' | ')}`);
 
     // ---- 2. quái đi hết đường ở mọi dạng (không tướng: mọi quái tới thành)
     for (const lv of [0, 8]) {
@@ -75,8 +84,8 @@ fs.mkdirSync(SHOT, { recursive: true });
         const out = [];
         for (const sh of Object.keys(PATH_SHAPES)) {
           game.reset(lv); game.started = true; game.running = true;
-          game.setPathShape(sh); game.events.length = 0;
-          game.endlessPathTick = () => {};   // đợt 1: giữ dạng đường đang thử
+          game.setStage({ k: 1, lv, shape: sh, at: 0 }); game.events.length = 0;
+          game.stageTick = () => {};   // đợt 1: giữ màn đang thử
           game.lives = 9999;
           const geoms = CONFIG.paths, need = PATH.lanes.length, id = MAP_ID;
           let maxOff = 0, n = 0, seen = new Set(), lanes = new Set(), endOk = true;
@@ -90,7 +99,7 @@ fs.mkdirSync(SHOT, { recursive: true });
             }
             for (const e of before) if (e.dead && e.hp > 0 && e.dist < PATH.total) endOk = false;   // biến mất giữa đường
           }
-          delete game.endlessPathTick;
+          delete game.stageTick;
           out.push({ sh, id, lost: 9999 - game.lives, spawned: seen.size, lanes: lanes.size, need, maxOff, n, done: !game.waveActive, endOk });
         }
         return out;
@@ -99,8 +108,8 @@ fs.mkdirSync(SHOT, { recursive: true });
         `bản đồ ${lv + 1} · ${x.sh}: ${x.spawned} quái đi hết đường tới thành (mất ${x.lost} mạng), dùng ${x.lanes}/${x.need} nhánh, lệch tối đa ${x.maxOff.toFixed(1)}`);
     }
 
-    // ---- 3. Vô tận: tua 1 → 200, đổi đường đúng mốc, giữ tướng, chạy thật một đợt ở mỗi mốc
-    for (const lv of [0, 10, 15]) {
+    // ---- 3. Vô tận: tua 1 → 200, sang màn mới sau mỗi đợt boss, giữ tướng, chạy thật mỗi đợt boss
+    for (const lv of [0, 10]) {
       const r = await page.evaluate((lv) => {
         const bad = [], log = [];
         game.reset(lv); game.endless = true; game.started = true; game.running = true;
@@ -108,39 +117,50 @@ fs.mkdirSync(SHOT, { recursive: true });
         const types = Object.keys(HEROES).filter((t) => !HEROES[t].legend).slice(0, 6);
         types.forEach((t, k) => game.placeHero([1, 4, 7, 10, 3, 8][k], t));
         const ids0 = game.heroes.filter(Boolean).map((h) => h.id).sort().join();
+        let k0 = 0;
         for (let w = 1; w <= 200; w++) {
+          const boss = bossAt(w, lv);
+          // đợt boss: chạy thật (quái + boss của màn đang chơi đi trên đường của màn)
+          if (boss && w % 20 === 0) {
+            game.wave = w - 1; game.lives = 9999; game.nextWaveT = 0; game.waveActive = false;
+            game.nextWave = buildWave(w, lv, game.stLv());
+            const want = bossAt(w, lv, game.stLv()), ro = rosterKeyOf(rosterFor(w, lv, game.stLv()));
+            const got = game.nextWave.slice(-1)[0].type;
+            if (got !== want) bad.push(`đợt ${w}: boss ${got} ≠ ${want}`);
+            if (game.stage.k && ro !== (LEVELS[game.stage.lv].roster || 'thuy')) bad.push(`đợt ${w}: bộ quái ${ro} ≠ màn ${LEVELS[game.stage.lv].roster}`);
+            game.startWave();
+            let maxOff = 0;
+            for (let s = 0; s < 1500 && game.waveActive; s++) {
+              game.update(0.05);
+              for (const e of game.enemies) if (!e.def.flying && e.x > 0 && e.x < CONFIG.W) maxOff = Math.max(maxOff, Math.min(...CONFIG.paths.map((p) => distToPolyline(p, e.x, e.y))));
+            }
+            if (maxOff > 45) bad.push(`đợt ${w}: quái lệch đường ${maxOff.toFixed(0)}`);
+            game.enemies = []; game.spawnQueue = [];
+          }
           game.wave = w; game.waveActive = true; game.spawnQueue = []; game.enemies = [];
           game.waveComplete();
-          if (game.rest) game.skipRest();
-          const want = endlessPathFor(w + 1, lv);
-          if (game.pathShape !== want) bad.push(`sau đợt ${w}: đường ${game.pathShape} ≠ ${want}`);
-          if (want && MAP_ID !== `${LEVELS[lv].map}~${want}`) bad.push(`sau đợt ${w}: MAP_ID ${MAP_ID}`);
+          const want = endlessStageAt(w, lv);
+          if (game.stage.k !== want.k || MAP_ID !== stageMapId(want)) bad.push(`sau đợt ${w}: màn ${game.stage.k}/${MAP_ID} ≠ ${want.k}/${stageMapId(want)}`);
+          if (boss && game.stage.k !== k0 + 1) bad.push(`sau đợt boss ${w}: không sang màn mới`);
+          if (!boss && game.stage.k !== k0) bad.push(`sau đợt ${w}: đổi màn khi không có boss`);
+          if (game.stage.k !== k0) {
+            const ev = game.events.find((e) => e.type === 'stage');
+            if (!ev) bad.push(`đợt ${w}: thiếu sự kiện màn mới`);
+            log.push(`${w}:${MAP_ID}×${game.pathHp}`);
+          }
+          k0 = game.stage.k;
+          game.events.length = 0;
           const hs = game.heroes.filter(Boolean);
           if (hs.map((h) => h.id).sort().join() !== ids0) bad.push(`sau đợt ${w}: mất / thừa tướng`);
           for (const h of hs) { const s = CONFIG.slots[h.slot]; if (!s || game.heroes[h.slot] !== h || s[0] !== h.x || s[1] !== h.y) { bad.push(`sau đợt ${w}: tướng lệch ô`); break; } }
           if (game.heroes.length !== CONFIG.slots.length) bad.push(`sau đợt ${w}: mảng tướng ${game.heroes.length} ≠ ${CONFIG.slots.length} ô`);
-          // mốc đổi đường: chạy thật đợt kế (quái đi trên đường mới, không lỗi)
-          if (w + 1 >= 60 && (w + 1 - 60) % 10 === 0) {
-            game.lives = 9999; game.nextWaveT = 0;
-            game.startWave();
-            let maxOff = 0;
-            for (let s = 0; s < 1200 && game.waveActive; s++) {
-              game.update(0.05);
-              if (game.rest) game.skipRest();
-              for (const e of game.enemies) if (!e.def.flying && e.x > 0 && e.x < CONFIG.W) maxOff = Math.max(maxOff, Math.min(...CONFIG.paths.map((p) => distToPolyline(p, e.x, e.y))));
-            }
-            if (maxOff > 45) bad.push(`đợt ${w + 1}: quái lệch đường ${maxOff.toFixed(0)}`);
-            log.push(`${w + 1}:${game.pathShape}×${game.pathHp}`);
-            game.enemies = []; game.spawnQueue = []; game.waveActive = false; game.wave = w + 1;
-            w++;
-          }
         }
-        return { bad, log, gold: game.gold };
+        return { bad, log };
       }, lv);
-      console.log(`  bản đồ ${lv + 1}: ${r.log.join(' ')}`);
-      ok(!r.bad.length, `bản đồ ${lv + 1}: tua tới đợt 200 đổi đường đúng mốc, giữ đủ tướng đúng ô ${r.bad.slice(0, 4).join(' | ')}`);
+      console.log(`  ải ${lv + 1}: ${r.log.join(' ')}`);
+      ok(!r.bad.length, `ải ${lv + 1}: tua tới đợt 200 — sang màn mới sau mỗi boss, đúng bộ quái + boss, giữ đủ tướng đúng ô ${r.bad.slice(0, 4).join(' | ')}`);
     }
-    // hết ô → hoàn vàng + đồ về túi; quay lại đường gốc khi reset
+    // hết ô → hoàn vàng + đồ về túi; trận mới về màn đầu
     const full = await page.evaluate(() => {
       game.reset(0); game.endless = true; game.started = true;
       game.gold = 1e7;
@@ -151,43 +171,44 @@ fs.mkdirSync(SHOT, { recursive: true });
       const h0 = game.heroes.find(Boolean); if (it) { h0.equip.weapon = it; game.inventory = game.inventory.filter((x) => x !== it); }
       const spent = game.heroes.filter(Boolean).reduce((s, h) => s + h.spent, 0);
       const g0 = game.gold, bag0 = game.inventory.length;
-      game.setPathShape('xoanoc');
+      game.setStage({ k: 1, lv: 0, shape: 'xoanoc', at: 10 });
       const n1 = game.heroes.filter(Boolean).length, slots = CONFIG.slots.length;
       const kept = game.heroes.filter(Boolean).reduce((s, h) => s + h.spent, 0);
       const r = { n0, n1, slots, refund: game.gold - g0, lostSpent: spent - kept, bag: game.inventory.length - bag0, hadItem: !!it, kept0: game.heroes.includes(h0) };
       game.reset(0);
-      r.back = MAP_ID; r.hp = game.pathHp;
+      r.back = MAP_ID; r.hp = game.pathHp; r.k = game.stage.k;
       return r;
     });
     ok(full.n1 === Math.min(full.n0, full.slots) && full.refund === full.lostSpent && full.refund > 0,
       `đầy sân ${full.n0} tướng → Xoắn ốc ${full.slots} ô: giữ ${full.n1}, hoàn đủ ${full.refund} vàng tướng hết chỗ`);
     if (full.hadItem && !full.kept0) ok(full.bag === 1, 'đồ của tướng hết chỗ trả về túi');
-    ok(full.back === 'song1' && full.hp === 1, 'vào trận mới: về đường gốc, máu quái ×1');
-    // lưu / nạp giữa trận giữ đúng đường + ô tướng
+    ok(full.back === 'song1' && full.hp === 1 && full.k === 0, 'vào trận mới: về màn đầu, máu quái ×1');
+    // lưu / nạp giữa trận giữ đúng màn + ô tướng
     const sv = await page.evaluate(() => {
-      game.reset(3); game.endless = true; game.started = true; game.gold = 1e6;
+      game.reset(0); game.endless = true; game.started = true; game.gold = 1e6;
       game.placeHero(2, Object.keys(HEROES)[0]); game.placeHero(5, Object.keys(HEROES)[1]);
-      for (let w = 1; w <= 75; w++) { game.wave = w; game.waveActive = true; game.spawnQueue = []; game.enemies = []; game.waveComplete(); if (game.rest) game.skipRest(); }
-      const before = { id: MAP_ID, shape: game.pathShape, hp: game.pathHp, pos: game.heroes.map((h, i) => h && `${i}:${h.type}@${h.x},${h.y}`).filter(Boolean).join(' ') };
+      for (let w = 1; w <= 33; w++) { game.wave = w; game.waveActive = true; game.spawnQueue = []; game.enemies = []; game.waveComplete(); }
+      const pick = () => ({ id: MAP_ID, k: game.stage.k, hp: game.pathHp, ro: rosterKeyOf(rosterFor(game.wave + 1, 0, game.stLv())), next: game.nextWave.map((e) => e.type).join(','), pos: game.heroes.map((h, i) => h && `${i}:${h.type}@${h.x},${h.y}`).filter(Boolean).join(' ') });
+      const before = pick();
       const snap = JSON.parse(JSON.stringify(game.snapshot()));
-      game.reset(0);
+      game.reset(3);
       game.restore(snap);
-      const after = { id: MAP_ID, shape: game.pathShape, hp: game.pathHp, pos: game.heroes.map((h, i) => h && `${i}:${h.type}@${h.x},${h.y}`).filter(Boolean).join(' ') };
-      // đợt kế tiếp sau khi nạp: vẫn đường đó (không đổi lại)
-      game.wave = 76; game.waveActive = true; game.spawnQueue = []; game.enemies = []; game.waveComplete();
-      return { before, after, still: game.pathShape };
+      const after = pick();
+      before.next = after.next = '';   // đợt kế rút lại ngẫu nhiên — chỉ so bộ quái
+      game.wave = 34; game.waveActive = true; game.spawnQueue = []; game.enemies = []; game.waveComplete();
+      return { before, after, still: game.stage.k };
     });
-    ok(JSON.stringify(sv.before) === JSON.stringify(sv.after) && sv.after.shape && sv.still === sv.after.shape,
-      `lưu / nạp ở đợt 75 giữ đường ${sv.after.shape} (máu ×${sv.after.hp}) và đúng ô tướng (${sv.after.pos})`);
-    // chơi nhóm: không đổi đường (ô chia theo người chơi)
+    ok(JSON.stringify(sv.before) === JSON.stringify(sv.after) && sv.after.k > 0 && sv.still === sv.after.k,
+      `lưu / nạp ở đợt 33 giữ màn ${sv.after.k} (${sv.after.id}, quân ${sv.after.ro}, máu ×${sv.after.hp}) và đúng ô tướng`);
+    // chơi nhóm: không đổi màn (ô chia theo người chơi)
     ok(await page.evaluate(() => {
       game.reset(0); game.endless = true; game.co = { canAct: () => true };
-      game.wave = 59; game.waveActive = true; game.spawnQueue = []; game.enemies = [];
+      game.wave = 10; game.waveActive = true; game.spawnQueue = []; game.enemies = [];
       try { game.waveComplete(); } catch (e) { /* bảng co-op giả */ }
-      const r = game.pathShape === null && MAP_ID === 'song1';
+      const r = game.stage.k === 0 && MAP_ID === 'song1';
       game.co = null; game.reset(0);
       return r;
-    }), 'chơi nhóm: giữ đường gốc');
+    }), 'chơi nhóm: giữ bản đồ của phòng');
 
     // ---- 4. cân bằng: mô phỏng trận (đội 8 tướng ★3 cấp 20 đặt vào 8 ô phủ đường tốt nhất, 3 đợt)
     const bal = await page.evaluate(() => {
@@ -197,8 +218,8 @@ fs.mkdirSync(SHOT, { recursive: true });
       const run = (lv, w0, shape) => {
         seed = 777;
         game.reset(lv); game.endless = true; game.started = true; game.running = true;
-        game.wave = w0; game.endlessPathTick = () => {};
-        if (shape) game.setPathShape(shape);
+        game.wave = w0; game.stageTick = () => {};
+        if (shape) game.setStage({ k: 1, lv, shape, at: 0 });
         const cov = CONFIG.slots.map(([x, y], i) => { let c = 0; PATH.lanes.forEach((_, li) => { for (let d = 0; d < PATH.total; d += 8) { const p = PATH.at(d, li); if (Math.hypot(p.x - x, p.y - y) <= 190) c += 8; } }); return [c / PATH.lanes.length, i]; }).sort((a, b) => b[0] - a[0]);
         game.gold = 1e9;
         ARMY.forEach((t, k) => { const slot = cov[k][1]; game.placeHero(slot, t); const h = game.heroes[slot]; h.tier = 3; for (let i = 1; i < 20; i++) game.levelUp(h); h.hp = heroStats(h).hpMax; });
@@ -214,7 +235,7 @@ fs.mkdirSync(SHOT, { recursive: true });
             if (game.rest) game.rest = null;
           }
         }
-        delete game.endlessPathTick;
+        delete game.stageTick;
         return Math.round(hpLeak / hpIn * 1000) / 10;
       };
       const out = [];
@@ -234,6 +255,66 @@ fs.mkdirSync(SHOT, { recursive: true });
     await browser.close();
   }
 
+  // ---------- 3b. giao diện: vào Vô tận không chọn bản đồ → qua boss sang màn → tải lại trang → Tiếp tục
+  {
+    const { browser, page, errors } = await open(844, 390, { unlocked: 17 });
+    await page.click('#btn-continue');
+    await page.waitForSelector('#modes:not([hidden])');
+    await page.click('#modes .md-card.endl');
+    await page.waitForSelector('#prep:not([hidden])');
+    ok(await page.evaluate(() => $('#campaign').hidden && game.level === 0 && game.stage.k === 0 && MAP_ID === 'song1'), 'chọn Vô tận → vào màn đầu (Bến Sông Đà) luôn, không qua màn chọn bản đồ');
+    await page.screenshot({ path: path.join(SHOT, 'chuan-bi-844x390.png') });
+    // nút Khó trong màn Chuẩn bị
+    await page.click('[data-act=prep-diff]');
+    ok(await page.evaluate(() => game.hard && ui.save.settings.hard && /Bật/.test($('[data-act=prep-diff]').textContent)), 'màn Chuẩn bị: bật Khó');
+    await page.click('[data-act=prep-diff]');
+    await page.click('[data-act=prep-go]');
+    await page.waitForTimeout(300);
+    // chơi tới hết đợt boss 10: đặt tướng, tua đợt 1–9, đợt 10 chạy thật tới khi hạ / lọt boss
+    const r1 = await page.evaluate(() => {
+      game.gold = 5000;
+      game.placeHero(2, 'xathu'); game.placeHero(6, 'lactuong'); game.placeHero(9, 'thaymo');
+      for (let w = 1; w <= 9; w++) { game.wave = w; game.waveActive = true; game.spawnQueue = []; game.enemies = []; game.waveComplete(); }
+      game.lives = 999; game.nextWaveT = 0; game.running = true;
+      game.startWave();
+      for (let s = 0; s < 4000 && game.waveActive; s++) { game.update(0.05); if (game.rest) game.rest = null; }
+      return { wave: game.wave, k: game.stage.k, id: MAP_ID, active: game.waveActive };
+    });
+    ok(!r1.active && r1.wave === 10 && r1.k === 1 && r1.id !== 'song1', `qua đợt boss 10 → sang màn 2 (${r1.id})`);
+    await page.waitForTimeout(800);   // ui xử lý sự kiện: Sính lễ (nếu hạ boss) + lưu trận
+    if (await page.evaluate(() => !$('#reward').hidden)) { await page.click('#reward [data-act=reward][data-i="2"]'); await page.waitForTimeout(300); }
+    await page.waitForTimeout(3000);
+    await page.screenshot({ path: path.join(SHOT, 'sang-man-844x390.png') });
+    const before = await page.evaluate(() => ({ id: MAP_ID, k: game.stage.k, lv: game.stage.lv, wave: game.wave, ro: rosterKeyOf(rosterFor(game.wave + 1, game.level, game.stLv())), hp: game.pathHp,
+      heroes: game.heroes.map((h, i) => h && `${i}:${h.type}`).filter(Boolean).join(' '), saved: ui.save.run && ui.save.run.mapId, savedStage: ui.save.run && ui.save.run.stage && ui.save.run.stage.k }));
+    ok(before.saved === before.id && before.savedStage === before.k, `bản lưu ghi màn hiện tại (${before.saved}, màn ${before.savedStage})`);
+    await page.reload();
+    await page.waitForTimeout(1200);
+    ok(await page.evaluate(() => /Tiếp tục/.test($('#continue-label').textContent)), 'tải lại trang: nút Tiếp tục');
+    await page.click('#btn-continue');
+    await page.waitForTimeout(600);
+    const after = await page.evaluate(() => ({ id: MAP_ID, k: game.stage.k, lv: game.stage.lv, wave: game.wave, ro: rosterKeyOf(rosterFor(game.wave + 1, game.level, game.stLv())), hp: game.pathHp,
+      heroes: game.heroes.map((h, i) => h && `${i}:${h.type}`).filter(Boolean).join(' '), saved: ui.save.run && ui.save.run.mapId, savedStage: ui.save.run && ui.save.run.stage && ui.save.run.stage.k }));
+    ok(JSON.stringify(after) === JSON.stringify(before), `Tiếp tục: cùng bản đồ ${after.id}, bộ quái ${after.ro}, đợt ${after.wave}, ô tướng ${after.heroes}`);
+    await page.screenshot({ path: path.join(SHOT, 'tiep-tuc-844x390.png') });
+    // bản lưu cũ (không có trường màn): đợt 35, tướng trên bản đồ gốc → suy ra màn từ số đợt, không lỗi
+    await page.evaluate(() => {
+      game.reset(0); game.endless = true; game.started = true; game.gold = 1e5;
+      game.placeHero(1, 'xathu'); game.placeHero(4, 'thaymo'); game.wave = 35;
+      const o = game.snapshot(); delete o.stage; delete o.mapId; delete o.pathHp;
+      game.started = false; game.over = true;
+      ui.save.run = o; writeSave(ui.save);
+    });
+    await page.reload();
+    await page.waitForTimeout(1200);
+    await page.click('#btn-continue');
+    await page.waitForTimeout(600);
+    const old = await page.evaluate(() => { const st = endlessStageAt(35, 0); return { k: game.stage.k, want: st.k, id: MAP_ID, wid: stageMapId(st), n: game.heroes.filter(Boolean).length, wave: game.wave, started: game.started }; });
+    ok(old.started && old.wave === 35 && old.k === old.want && old.id === old.wid && old.n === 2, `bản lưu cũ đợt 35: suy ra màn ${old.k} (${old.id}), giữ 2 tướng`);
+    ok(!errors.length, `không lỗi trang ${errors.slice(0, 3).join(' | ')}`);
+    await browser.close();
+  }
+
   // ---------- 5. không đè giao diện + ảnh từng dạng
   for (const [w, h] of [[1920, 934], [844, 390], [667, 375], [390, 844]]) {
     const { browser, page, errors } = await open(w, h, { unlocked: 17 });
@@ -244,7 +325,7 @@ fs.mkdirSync(SHOT, { recursive: true });
       if (lv) { await enter(page, lv); await page.waitForTimeout(400); }
       for (const sh of list) {
         const r = await page.evaluate((sh) => {
-          game.setPathShape(sh); game.events.length = 0; game.effects = game.effects.filter((f) => f.type !== 'summon');
+          game.setStage({ k: 1, lv: game.level, shape: sh, at: 0 }); game.events.length = 0; game.effects = game.effects.filter((f) => f.type !== 'summon');
           ui.toasts && (document.querySelector('#toasts').innerHTML = '');
           if (ROT) return { rot: true };
           const rects = ['.topbar', '.auto-btns', '#deck, .deck'].map((s) => { const el = document.querySelector(s); const b = el && el.getBoundingClientRect(); return b && { s, l: b.left, t: b.top, r: b.right, b: b.bottom }; }).filter(Boolean);
@@ -272,9 +353,9 @@ fs.mkdirSync(SHOT, { recursive: true });
     // chuyển cảnh: đổi đường giữa trận → nền cũ mờ dần (pathFade) rồi tắt
     if (w === 844) {
       const fade = await page.evaluate(async () => {
-        game.setPathShape('zigzag'); render();
+        game.setStage({ k: 1, lv: game.level, shape: 'zigzag', at: 0 }); render();
         await new Promise((r) => setTimeout(r, 1900)); render();
-        game.setPathShape('uonkhuc'); render();
+        game.setStage({ k: 2, lv: game.level, shape: 'uonkhuc', at: 0 }); render();
         const on = !!pathFade;
         await new Promise((r) => setTimeout(r, 1800)); render();
         return { on, off: !pathFade };

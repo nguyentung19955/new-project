@@ -1,14 +1,18 @@
 // Mô phỏng tỉ lệ chợ tướng (v180, chợ ra mọi tướng Thường, đội 6 tướng là đội ưu tiên): đổi chợ N lần ở các tình huống, đo tỉ lệ ra tướng ghép được.
 // Dùng chung cho test (ti-le.test.js) và in số liệu: node tests/cho-tuong/ti-le-sim.js
 // Chỉ dùng API chung của mọi phiên bản chợ (rerollMarket / market.types / spawnHero) để so được trước / sau.
+// claude/bo-chon-doi: bỏ đội ưu tiên — DECK chỉ còn dùng để đếm "thẻ ngoài 6 tướng cũ" (so với trước); owned = đủ 20 tướng Thường
+// + tướng Tím của tình huống (owned: null = sở hữu MỌI tướng Tím / Vàng — đo độ loãng khi nhiều công thức cùng gần xong).
 const { open, enter } = require('./helpers');
 
 const DECK = ['nguphu', 'thansuong', 'lactuong', 'lucsi', 'xathu', 'thaymo'];
 // [loại, sao] trên sân
+const GIUA = [['lactuong', 2], ['lactuong', 1], ['lucsi', 1], ['xathu', 2], ['thaymo', 1], ['thansuong', 1], ['lucsi', 1]];
 const CASES = {
-  'dau-tran': { name: 'Đầu trận (1 tướng ★ trên sân)', board: [['lactuong', 1]] },
-  'giua-tran': { name: 'Giữa trận (7 tướng: 5 loại, sao lẫn lộn)', board: [['lactuong', 2], ['lactuong', 1], ['lucsi', 1], ['xathu', 2], ['thaymo', 1], ['thansuong', 1], ['lucsi', 1]] },
-  'thieu-hop-the': { name: 'Thiếu 1 nguyên liệu hợp thể (Ngư Phủ ★★, chưa có Thần Sương → Cá Ông)', board: [['nguphu', 2], ['lactuong', 2], ['lucsi', 1], ['xathu', 1], ['thaymo', 2]], need: 'thansuong' },
+  'dau-tran': { name: 'Đầu trận (1 tướng ★ trên sân)', board: [['lactuong', 1]], owned: [] },
+  'giua-tran': { name: 'Giữa trận (7 tướng: 5 loại, sao lẫn lộn)', board: GIUA, owned: [] },
+  'thieu-hop-the': { name: 'Thiếu 1 nguyên liệu hợp thể (Ngư Phủ ★★, chưa có Thần Sương → Cá Ông)', board: [['nguphu', 2], ['lactuong', 2], ['lucsi', 1], ['xathu', 1], ['thaymo', 2]], need: 'thansuong', owned: ['caong'] },
+  'giua-tran-moi-tim': { name: 'Giữa trận, sở hữu MỌI tướng Tím / Vàng', board: GIUA, owned: null },
 };
 
 // seed: Math.random cố định (mulberry32) trong lúc mô phỏng → kết quả lặp lại được, test không chập chờn; null = ngẫu nhiên thật
@@ -19,8 +23,8 @@ async function simulate(page, key, n = 1000, seed = 12345) {
     if (seed != null) { let a = seed >>> 0; Math.random = () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
     try {
     game.running = false;
-    game.deck = [...DECK];
-    game.owned = null;
+    game.deck = [...DECK];      // bản trước claude/bo-chon-doi: đội ưu tiên; bản sau: bỏ qua
+    game.owned = c.owned ? new Set([...BASIC_HEROES, ...c.owned]) : null;
     for (let s = 0; s < game.heroes.length; s++) game.heroes[s] = null;
     c.board.forEach(([t, tier]) => game.spawnHero(game.freeSlots()[0], t, { tier, spent: 60 }));
     game.freshMarket();

@@ -169,10 +169,10 @@ function exposureOf(id) {
   if (!exposureCache.has(id)) { setMap(id); exposureCache.set(id, mapExposure()); }
   return exposureCache.get(id);
 }
-// hệ số máu quái khi bản đồ gốc `base` đổi sang dạng đường `shape`
-function pathHpFor(base, shape) {
-  if (!shape) return 1;
-  const E = ENDLESS_PATH, r = Math.pow(exposureOf(mapVariant(base, shape)) / exposureOf(base), E.alpha) * (PATH_SHAPES[shape].diff || 1);
+// hệ số máu quái của màn vô tận `st` so với màn đầu của trận (ải `start`): (độ phơi màn / màn đầu)^alpha × độ khó dạng
+function stageHpFor(st, start) {
+  if (!st || !st.k) return 1;
+  const E = ENDLESS_STAGES, r = Math.pow(exposureOf(stageMapId(st)) / exposureOf(LEVELS[start || 0].map || 'song1'), E.alpha) * ((st.shape && PATH_SHAPES[st.shape].diff) || 1);
   return Math.round(Math.max(E.hpMin, Math.min(E.hpMax, r)) * 100) / 100;
 }
 
@@ -459,8 +459,10 @@ function upgradeGain(h, inst) {
 }
 
 // chỉ số gốc của tướng thăng thần: lấy bên tốt hơn giữa tướng gốc và tướng thần
-function inheritBase(def, fd, prev) {
+function inheritBase(def, fd0, prev) {
   // tốc đánh giữ theo tướng thần (nét riêng của tướng), sát thương / tầm lấy bên cao hơn
+  // base.heir: chỉ số truyền lại cho tướng hợp thể (tướng đổi kiểu đánh theo ảnh vẫn truyền như cũ — không đổi cân bằng tướng con)
+  const fd = fd0.base.heir ? { base: { ...fd0.base, ...fd0.base.heir } } : fd0;
   const p = prev || { damage: def.base.damage, range: def.base.range };
   const out = { ...p, damage: Math.max(p.damage, fd.base.damage), range: Math.max(p.range, fd.base.range) };
   if (fd.base.splash && !def.base.splash) out.splash = Math.max(out.splash || 0, fd.base.splash);
@@ -1351,7 +1353,6 @@ const FLOOD_PER_RISE = 2;
 // ------------------------------------------------------------
 // chiêu tối thượng (R) xuyên thêm 30% giáp và kháng phép
 const ULT_PEN = 30;
-const REST_COOP_T = 20;     // v153: chơi nhóm — Nghỉ chân dài tối đa 20 giây
 // mỗi 10 đợt: quái +1 giáp, +3% kháng phép (quái vốn có kháng phép), tối đa 80%
 const ENEMY_GROW = { every: 10, armor: 1, mr: 3, mrCap: 80 };
 // hoạt ảnh đánh: swing chạy 1 → 0 với tốc độ này (≈ 0,38 giây); sát thương rơi lúc ra đòn
@@ -1399,13 +1400,11 @@ class Game {
   reset(level) {
     this.offer = null;
     this.market = null;     // v143: chợ tướng (4 thẻ)
-    this.rest = null;       // v143: đang nghỉ chân sau đợt boss (đổi đội)
-    this.restWave = 0;
     this.level = level || 0;
     this.lv = LEVELS[this.level];
     setMap(this.lv.map || 'song1');
-    this.pathShape = null;    // dạng đường vô tận đang dùng (null = đường gốc của bản đồ)
-    this.pathHp = 1;
+    this.stage = endlessStage(0, 0, this.level);   // màn vô tận đang chơi { k, lv: ải nguồn, shape: dạng đường | null }
+    this.pathHp = 1;          // hệ số máu quái của màn
     this.laneN = 0;
     this.gold = CONFIG.startGold;
     this.lives = CONFIG.startLives;
@@ -1427,7 +1426,7 @@ class Game {
     this.flags = { equipped: false, shopOpened: false };
     this.running = false;
     this.nextWaveT = 0;
-    this.nextWave = buildWave(1, this.level);
+    this.nextWave = buildWave(1, this.level, this.stLv());
     this.shake = 0;
     this.bossesKilled = 0;
     this.slHist = [];         // v181: sính lễ đã ra trong trận (chống trùng liên tiếp)
@@ -1489,7 +1488,7 @@ class Game {
   }
   // lần dâng nước sắp tới (đợt boss) hoặc -1
   floodSoon() {
-    const boss = this.waveActive ? bossAt(this.wave, this.level) : bossAt(this.wave + 1, this.level);
+    const boss = this.waveActive ? bossAt(this.wave, this.level, this.stLv()) : bossAt(this.wave + 1, this.level, this.stLv());
     return -1;
   }
   mocMax() { return this.mountainStage() >= 4 ? 2 : 1; }
@@ -1556,9 +1555,7 @@ class Game {
     if (!this.freeSlots().length) return 'Hết ô trống: ghép, hoặc kéo tướng vào 🗑 để hủy';
     return true;
   }
-  // v133: quân triệu hồi = đội 6 tướng người chơi chọn (thiếu thì quân mặc định của ải)
-  summonList() { return validDeck(this.deck) ? this.deck : summonPool(this.level); }
-  // v143: CHỢ TƯỚNG — luôn mở 4 thẻ (v180: rút từ mọi tướng Thường, đội 6 tướng được ưu tiên). Chạm thẻ = mua & đặt ngay, kéo thẻ = đặt đúng ô.
+  // v143: CHỢ TƯỚNG — luôn mở 4 thẻ (v180: rút từ mọi tướng Thường đã mở; claude/bo-chon-doi: bỏ đội ưu tiên). Chạm thẻ = mua & đặt ngay, kéo thẻ = đặt đúng ô.
   // Mua thẻ nào thì chỗ đó ra thẻ mới; đầu mỗi đợt cả hàng làm mới miễn phí (trừ khi đang 🔒 khoá); ↻ đổi cả hàng tốn vàng (tăng dần trong đợt).
   // v180: rút có trọng số theo nhu cầu (xem MARKET_W / MARKET_PITY / MARKET_CAP trong data.js).
   // số bản sao ★ quy đổi của loại t trên sân người đang chơi (★ = 1, ★★ = 2, ★★★ = 4)
@@ -1568,23 +1565,29 @@ class Game {
     return n;
   }
   // nhu cầu từng loại: ghep = đang có trên sân, chưa đủ bản sao; hop = nguyên liệu còn thiếu của công thức hợp thể
-  // gần xong (bên kia đã đủ ★★ quy đổi, đã sở hữu tướng đích, nguyên liệu nằm trong đội ưu tiên hoặc đã có trên sân —
-  // không thì 20 tướng ra quá nhiều công thức "gần xong", loãng); top = loại bảo hiểm nhắm tới
-  // v180: chợ rút từ mọi tướng Thường; đội 6 tướng thành đội ưu tiên (ra nhiều hơn)
+  // gần xong (bên kia đã đủ ★★ quy đổi, đã sở hữu tướng đích); top = loại bảo hiểm nhắm tới
+  // claude/bo-chon-doi: hết đội ưu tiên để lọc → chỉ giữ MARKET_HOP.max công thức gần xong nhất (không thì nhiều công thức
+  // "gần xong" cùng lúc, loãng): bên thiếu đã có trên sân → bên kia nhiều bản sao hơn → bên thiếu nhiều bản sao hơn → thứ tự trong FUSION
   // v185: chỉ tướng Thường đã mở khoá bằng Ngân khố (owned = null: bot mô phỏng → mọi tướng)
   marketPool() { return openCommons(this.owned); }
   marketNeeds() {
-    const pool = this.marketPool(), doi = new Set(this.summonList()), cp = {}, ghep = new Set(), hop = new Set();
+    const pool = this.marketPool(), cp = {}, ghep = new Set(), hop = new Set(), cand = [];
     for (const t of pool) cp[t] = this.marketCopies(t);
     for (const t of pool) if (cp[t] > 0 && cp[t] < MARKET_CAP) ghep.add(t);
     // v186: hợp thể cần ★★★ (4 bản sao) — vẫn bắt đầu ưu tiên khi bên kia đã ★★ (2 bản sao), ưu tiên bên thiếu tới khi đủ ★★★
     const need = Math.pow(2, COSTS.ascendTier - 1), half = Math.min(2, need);
     for (const f of FUSION) {
       if (!pool.includes(f.a) || !pool.includes(f.b) || !this.ownsHero(f.to)) continue;
-      for (const [x, y] of [[f.a, f.b], [f.b, f.a]]) if (cp[x] >= half && cp[y] < need && cp[y] <= cp[x] && (doi.has(y) || cp[y] > 0)) hop.add(y);
+      for (const [x, y] of [[f.a, f.b], [f.b, f.a]]) if (cp[x] >= half && cp[y] < need && cp[y] <= cp[x]) cand.push({ y, k: (cp[y] > 0 ? 100 : 0) + cp[x] * 8 + cp[y], i: cand.length });
+    }
+    cand.sort((a, b) => b.k - a.k || a.i - b.i);
+    let off = 0;
+    for (const c of cand) {
+      if (hop.size >= MARKET_HOP.max || hop.has(c.y) || (cp[c.y] === 0 && off >= MARKET_HOP.off)) continue;
+      hop.add(c.y); if (cp[c.y] === 0) off++;
     }
     const w = {};
-    for (const t of pool) w[t] = cp[t] >= MARKET_CAP ? 0 : hop.has(t) ? MARKET_W.hop : ghep.has(t) ? MARKET_W.ghep : doi.has(t) ? MARKET_W.doi : 1;
+    for (const t of pool) w[t] = cp[t] >= MARKET_CAP ? 0 : hop.has(t) ? MARKET_W.hop : ghep.has(t) ? MARKET_W.ghep : 1;
     if (pool.every((t) => !w[t])) for (const t of pool) w[t] = 1;     // đủ hết bản sao: rút đều như cũ
     const top = hop.size ? hop : ghep;
     return { pool, w, ghep, hop, top };
@@ -1623,7 +1626,7 @@ class Game {
       if (m && m.lock && Array.isArray(m.types) && m.types.length === MARKET_SIZE && m.types.every((t) => pool.includes(t))) { m.lock = false; m.rr = 0; return; }
       this.rollMarket(); this.market.rr = 0;
     };
-    // co-op: mỗi người một hàng chợ riêng (rút từ đội của mình) — làm mới cả hai
+    // co-op: mỗi người một hàng chợ riêng (rút theo tướng đã mở và sân của mình) — làm mới cả hai
     if (this.co) {
       const a = this.co.actor;
       for (let p = 0; p < this.co.pl.length; p++) { this.co.actor = p; one(); }
@@ -1680,35 +1683,13 @@ class Game {
     m.types[i] = this.rollCard(rng);     // thẻ bù rút theo sân mới (vừa mua xong)
     return target.slot;
   }
-  // v143: Nghỉ chân — sau đợt boss được đổi tối đa REST_SWAPS tướng trong đội (miễn phí)
-  restDeck(sel) {
-    if (!this.rest) return 'Không ở lúc nghỉ chân';
-    const old = this.summonList();
-    if (!validDeck(sel)) return `Đội cần đủ ${DECK_SIZE} tướng khác nhau`;
-    if (this.owned && sel.some((t) => !openCommons(this.owned).includes(t))) return 'Tướng chưa mở khoá — mở ở Anh Hùng bằng Ngân khố';   // v182
-    if (sel.filter((t) => !old.includes(t)).length > REST_SWAPS) return `Chỉ đổi tối đa ${REST_SWAPS} tướng`;
-    this.deck = [...sel];
-    if (this.co) { this.market = null; this.rollMarket(); this.market.rr = 0; this.skipRest(); return true; }
-    this.rest = null;
-    this.freshMarket();
-    return true;
-  }
-  // co-op: mỗi người xong phần mình; trận chạy tiếp khi cả hai xong (hoặc hết REST_COOP_T giây — xem update)
-  skipRest() {
-    if (!this.co || !this.rest) { this.rest = null; return true; }
-    const r = this.rest;
-    r.done = r.done || [false, false];
-    r.done[this.co.actor] = true;
-    if (this.co.alone >= 0 ? r.done[this.co.alone] : r.done.every(Boolean)) this.rest = null;
-    return true;
-  }
   // gọi 1 tướng Thường ngẫu nhiên (★) vào 1 ô trống ngẫu nhiên; trả về ô vừa đặt
   summonRandom(rng = srand) {
     const ok = this.canSummon();
     if (ok !== true) return ok;
     const free = this.freeSlots();
     const slot = free[Math.floor(rng() * free.length)];
-    const pool = this.summonList();
+    const pool = this.marketPool();
     const type = pool[Math.floor(rng() * pool.length)];
     const c = this.summonCost();
     this.gold -= c;
@@ -2437,7 +2418,7 @@ class Game {
     this.freshMarket();   // v143: đầu đợt mới chợ tướng làm mới miễn phí
     this.spawnQueue = this.nextWave;
     this.waveTotal = this.spawnQueue.length;
-    this.nextWave = buildWave(this.wave + 1, this.level);
+    this.nextWave = buildWave(this.wave + 1, this.level, this.stLv());
     this.spawnTimer = 0;
     this.waveActive = true;
     // ẩn Trống Đồng: gõ trống đầu đợt, mọi tướng +20% tốc đánh 5 giây
@@ -2475,7 +2456,7 @@ class Game {
       this.freshMarket();
       this.spawnQueue = this.spawnQueue.concat(this.nextWave);
       this.waveTotal += this.nextWave.length;
-      this.nextWave = buildWave(this.wave + 1, this.level);
+      this.nextWave = buildWave(this.wave + 1, this.level, this.stLv());
     } else {
       this.startWave();
     }
@@ -2592,7 +2573,7 @@ class Game {
     const tiers = typeof roleTiers === 'function' ? roleTiers(roleCounts(alive)) : {};
     for (const r in tiers) if (tiers[r] > ((this.vtTiers || {})[r] || 0)) this.notify(`Cộng hưởng ${ROLES[r].name} ${tiers[r] * 2}: ${ROLE_SYN[r].t[tiers[r] - 1]}`, ROLES[r].color);
     this.vtTiers = tiers;
-    const airWave = this.waveActive && waveKind(this.wave, this.level) === 'air';
+    const airWave = this.waveActive && waveKind(this.wave, this.level, this.stLv()) === 'air';
     for (const h of alive) {
       const el = HEROES[h.type].el;
       h.buff.sinh = Math.min(ELEM.sinhMax, alive.filter((o) => near(h, o, ELEM.adj) && EL_SINH[HEROES[o.type].el] === el).length);
@@ -2671,12 +2652,7 @@ class Game {
 
   // ---------- vòng lặp
   update(dt) {
-    if (this.rest && this.co) {
-      // co-op: Nghỉ chân tối đa REST_COOP_T giây rồi trận tự chạy tiếp
-      this.rest.t = (this.rest.t || 0) + dt;
-      if (this.rest.t >= REST_COOP_T || (this.co.alone >= 0 && this.rest.done && this.rest.done[this.co.alone])) this.rest = null;
-    }
-    if (this.over || this.rest) return;   // v143: đang Nghỉ chân (bảng đổi đội mở) thì trận đứng yên
+    if (this.over) return;
     this.time += dt;
     this.shake = Math.max(0, this.shake - dt * 30);
     if (this.guardT > 0) this.guardT -= dt;
@@ -2729,12 +2705,7 @@ class Game {
     // v103: Vô tận — mỗi 10 đợt cộng Ngân khố (tài khoản) ngay
     if (this.endless && this.wave % PREP.endlessEvery === 0) this.events.push({ type: 'kho', n: Math.round(PREP.endlessMilestone * (1 + Math.floor(this.wave / 50) * 0.5) * (this.hard ? 1.5 : 1)), why: `mốc đợt ${this.wave}` });
     if (bossAt(this.wave, this.level)) this.riseWater();
-    this.endlessPathTick();
-    // v143: Nghỉ chân sau đợt boss: đổi tối đa 2 tướng trong đội
-    let bossDone = false;
-    for (let w = (this.restWave || 0) + 1; w <= this.wave; w++) if (bossAt(w, this.level)) bossDone = true;
-    this.restWave = this.wave;
-    if (bossDone && (this.endless || this.wave < this.levelWaves)) { this.rest = { wave: this.wave }; this.events.push({ type: 'rest' }); }
+    this.stageTick();
     this.events.push({ type: 'checkpoint' });   // v74: lưu màn đang chơi giữa hai đợt
     if (this.wave >= this.levelWaves && !this.endless && !this.won) {
       this.won = true;
@@ -2743,25 +2714,24 @@ class Game {
     }
   }
 
-  // ---------- Vô tận đổi đường (claude/duong-di-moi): từ đợt 60, mỗi 10 đợt một dạng đường (endlessPathFor, data.js).
-  // Gọi khi xong đợt (sân đã hết quái). Chơi nhóm giữ nguyên đường (ô chia theo người chơi).
-  endlessPathTick() {
-    if (!this.endless || this.co || typeof endlessPathFor !== 'function') return;
-    const want = endlessPathFor(this.wave + 1, this.level);
-    if (want !== this.pathShape) return this.setPathShape(want);
-    // báo trước một đợt
-    const soon = endlessPathFor(this.wave + 2, this.level);
-    if (soon !== this.pathShape && soon) this.notify(`Hết đợt ${this.wave + 1} quân giặc sẽ đổi đường: ${PATH_SHAPES[soon].name}`, '#9EDDF2');
+  // ---------- Vô tận theo màn (claude/duong-di-moi): sau mỗi đợt boss sang màn mới (endlessStageAt, data.js) —
+  // bản đồ + nền + bộ quái + dạng đường. Gọi khi xong đợt (sân đã hết quái). Chơi nhóm giữ nguyên bản đồ (ô chia theo người).
+  stLv() { return this.stage && this.stage.k > 0 ? this.stage.lv : undefined; }   // ải nguồn của màn (bộ quái, boss)
+  placeName() { return LEVELS[this.stage ? this.stage.lv : this.level].name; }
+  stageTick() {
+    if (!this.endless || this.co || typeof endlessStageAt !== 'function') return;
+    const want = endlessStageAt(this.wave, this.level);
+    if (!this.stage || want.k !== this.stage.k) this.setStage(want);
   }
-  // đổi sang dạng đường `shape` (null = đường gốc): tướng giữ ô gần nhất còn trống (đi theo), hết ô thì hoàn vàng + trả đồ vào túi
-  setPathShape(shape) {
-    const base = this.lv.map || 'song1';
-    const id = shape ? mapVariant(base, shape) : base;
-    if (!id || id === MAP_ID) { this.pathShape = shape; return false; }
+  // sang màn `st`: tướng giữ ô gần nhất còn trống (đi theo), hết ô thì hoàn trọn vàng + trả đồ vào túi
+  setStage(st, quiet) {
+    const id = stageMapId(st), cur = MAP_ID;
     const old = this.heroes.map((h) => h && { h, x: h.x, y: h.y });
-    this.pathHp = pathHpFor(base, shape);   // (dựng tạm bản đồ để đo độ phơi, rồi mới dựng bản đồ mới)
+    this.pathHp = stageHpFor(st, this.level);   // (dựng tạm bản đồ để đo độ phơi, rồi mới dựng bản đồ mới)
+    this.stage = st;
+    this.nextWave = buildWave(this.wave + 1, this.level, this.stLv());   // quân của màn mới
+    if (id === cur) { setMap(id); return false; }
     setMap(id);
-    this.pathShape = shape;
     this.laneN = 0;
     this.zones = []; this.blocks = [];
     const n = CONFIG.slots.length;
@@ -2777,8 +2747,8 @@ class Game {
       const { h } = old[i];
       heroes[j] = h; h.slot = j;
       [h.x, h.y] = CONFIG.slots[j];
-      if (d > 6) { moved++; this.effects.push({ type: 'streak', x: old[i].x, y: old[i].y - 20, x2: h.x, y2: h.y - 20, color: '#9dffc4', ttl: 0.6, max: 0.6 }); }
-      this.effects.push({ type: 'summon', x: h.x, y: h.y, ttl: 0.6, max: 0.6 });
+      if (d > 6) { moved++; if (!quiet) this.effects.push({ type: 'streak', x: old[i].x, y: old[i].y - 20, x2: h.x, y2: h.y - 20, color: '#9dffc4', ttl: 0.6, max: 0.6 }); }
+      if (!quiet) this.effects.push({ type: 'summon', x: h.x, y: h.y, ttl: 0.6, max: 0.6 });
     }
     // không còn ô: hoàn trọn số vàng đã bỏ vào tướng, đồ đang mặc về túi
     let refund = 0, lost = 0;
@@ -2791,11 +2761,12 @@ class Game {
     this.heroes = heroes;
     this.raised = CONFIG.slots.map(() => false);
     this.tempFlood = CONFIG.slots.map(() => 0);
-    this.nextWaveT = Math.max(this.nextWaveT, CONFIG.waveBreak + 5);   // thêm thời gian xếp lại tướng
     this.updateAuras();
-    const name = shape ? PATH_SHAPES[shape].name : 'đường cũ';
-    this.notify(`Quân giặc đổi đường: ${name}${moved ? ` · ${moved} tướng dời sang ô gần nhất` : ''}${lost ? ` · ${lost} tướng hết chỗ, hoàn ${refund} vàng` : ''}`, '#9EDDF2');
-    this.events.push({ type: 'path', shape, moved, lost, refund });
+    if (quiet) return true;
+    this.nextWaveT = Math.max(this.nextWaveT, CONFIG.waveBreak + 10);   // thêm thời gian xếp lại tướng (kéo đổi ô miễn phí)
+    const name = this.placeName() + (st.shape ? ` · ${PATH_SHAPES[st.shape].name}` : '');
+    this.notify(`Sang vùng đất mới: ${name}${moved ? ` · ${moved} tướng dời sang ô gần nhất` : ''}${lost ? ` · ${lost} tướng hết chỗ, hoàn ${refund} vàng` : ''}`, '#9EDDF2');
+    this.events.push({ type: 'stage', stage: st, name, moved, lost, refund });
     return true;
   }
 
@@ -2805,21 +2776,27 @@ class Game {
     const heroes = JSON.parse(JSON.stringify(this.heroes, (k, v) => (skip.has(k) ? undefined : v)));
     const o = { v: 1, at: Date.now(), heroes };
     for (const k of ['level', 'hard', 'endless', 'won', 'gold', 'lives', 'maxLives', 'wave', 'summonN', 'bossesKilled', 'slHist', 'seen', 'water', 'raised', 'moc',
-      'mountain', 'stats', 'inventory', 'jarCount', 'shop', 'time', 'flags', 'runId', 'guardT', 'oathT', 'xpLog', 'deck', 'market', 'rest', 'restWave', 'pathShape', 'pathHp']) o[k] = this[k];
+      'mountain', 'stats', 'inventory', 'jarCount', 'shop', 'time', 'flags', 'runId', 'guardT', 'oathT', 'xpLog', 'market', 'stage', 'pathHp']) o[k] = this[k];
+    o.mapId = MAP_ID;   // màn vô tận: bản đồ đang chơi (ô tướng đánh số theo bản đồ này)
     return JSON.parse(JSON.stringify(o));
   }
   restore(o) {
     this.reset(o.level);
-    for (const k of Object.keys(o)) if (k !== 'heroes' && k !== 'v' && k !== 'at' && k !== 'offer') this[k] = o[k];
+    // claude/bo-chon-doi: bản lưu cũ còn đội ưu tiên / Nghỉ chân (deck, rest, restWave) — bỏ qua
+    const old = new Set(['heroes', 'v', 'at', 'offer', 'deck', 'rest', 'restWave']);
+    for (const k of Object.keys(o)) if (!old.has(k)) this[k] = o[k];
     // v143: bản lưu cũ đang mở bảng chọn 1 trong 3 (đã trả vàng) → hoàn lại vàng, chuyển sang chợ tướng
     if (o.offer && o.offer.cost) { this.gold += o.offer.cost; this.summonN = Math.max(0, (this.summonN || 0) - 1); }
     this.offer = null;
-    if (!('restWave' in o)) this.restWave = this.wave;
     this.maxLives = Math.max(o.maxLives || CONFIG.startLives, this.lives);   // v169: bản lưu cũ chưa có mạng tối đa
-    // vô tận đổi đường: dựng lại đúng bản đồ lúc lưu (ô đặt tướng đánh số theo đường đó)
-    this.pathShape = o.pathShape && typeof PATH_SHAPES !== 'undefined' && PATH_SHAPES[o.pathShape] ? o.pathShape : null;
-    this.pathHp = this.pathShape ? o.pathHp || pathHpFor(this.lv.map || 'song1', this.pathShape) : 1;
-    if (this.pathShape) { setMap(mapVariant(this.lv.map || 'song1', this.pathShape)); this.raised = CONFIG.slots.map((_, i) => !!(o.raised && o.raised[i])); this.tempFlood = CONFIG.slots.map(() => 0); }
+    // vô tận theo màn: dựng lại đúng màn lúc lưu (ô tướng đánh số theo bản đồ đó); bản lưu cũ chưa có màn → suy ra sau
+    const okStage = (st) => st && Number.isInteger(st.k) && LEVELS[st.lv] && (!st.shape || PATH_SHAPES[st.shape]);
+    this.stage = okStage(o.stage) ? o.stage : endlessStage(0, 0, this.level);
+    if (okStage(o.stage)) {
+      this.pathHp = o.pathHp || stageHpFor(this.stage, this.level);
+      setMap(stageMapId(this.stage));
+      this.raised = CONFIG.slots.map((_, i) => !!(o.raised && o.raised[i])); this.tempFlood = CONFIG.slots.map(() => 0);
+    } else this.pathHp = 1;
     this.ensureMarket();
     this.heroes = CONFIG.slots.map((_, i) => {
       const h = o.heroes && o.heroes[i];
@@ -2830,8 +2807,10 @@ class Game {
     for (const h of this.heroes) if (h) h.hp = heroStats(h).hpMax;
     this.started = true; this.running = false; this.over = false;
     this.waveActive = false; this.enemies = []; this.spawnQueue = [];
+    // bản lưu cũ (chưa ghi màn): suy ra màn từ số đợt, dời tướng sang bản đồ của màn (im lặng)
+    if (!o.stage && this.endless && !this.co) { const st = endlessStageAt(this.wave, this.level); if (st.k) this.setStage(st, true); }
     this.nextWaveT = 0;
-    this.nextWave = buildWave(this.wave + 1, this.level);
+    this.nextWave = buildWave(this.wave + 1, this.level, this.stLv());
     this.updateAuras();
   }
 

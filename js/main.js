@@ -230,7 +230,7 @@ function drawMateSpot(x, y, hero) {
 function backdropSrc() {
   const map = asset(`maps/map-0${game.level + 1}.png`);
   // v163: ảnh nền nen_ai-*.png là bản đồ sông Đà (chương Sơn Tinh – Thủy Tinh) — không dùng cho ải chương khác
-  const nen = !map && NEN_AI[game.level] && asset(`nen_ai-${NEN_AI[game.level]}.png`);
+  const nen = !map && !(game.stage && game.stage.k) && NEN_AI[game.level] && asset(`nen_ai-${NEN_AI[game.level]}.png`);
   const bg = !nen && mapBg();
   const margin = view.ox > 0.5 || view.oy > 0.5;
   const back = margin && (typeof mapLayerCache !== 'undefined' && mapLayerCache.key.startsWith(MAP_ID + '|') ? mapLayerCache.c : ready(mapImg) && mapImg);
@@ -238,7 +238,7 @@ function backdropSrc() {
   const layer = bg && typeof mapLayer === 'function' && !map
     && mapLayer(MAP_ID, bg.img, mapImg, Math.round(CONFIG.W * px()), Math.round(CONFIG.H * px()));
   // thành Phong Châu vẽ tay (khi bản đồ chưa có ảnh riêng) — v163: chỉ ở chương Sơn Tinh – Thủy Tinh
-  const castle = !map && chapterOf(game.level).id === 'sontinh' && (assetAny(['ban-do_phong-chau.png', 'tiles/castle-phong-chau.png']) || {}).img;
+  const castle = !map && chapterOf(game.stage ? game.stage.lv : game.level).id === 'sontinh' && (assetAny(['ban-do_phong-chau.png', 'tiles/castle-phong-chau.png']) || {}).img;
   return { nen, bg, margin, back, layer, castle };
 }
 function drawBackdrop(c, s, shake) {
@@ -271,10 +271,9 @@ function cachedBackdrop(s) {
   const refs = [s.layer, s.bg && s.bg.img, s.nen, s.castle, s.back, s.layer ? null : mapImg];
   const key = `${canvas.width}x${canvas.height}|${view.ox}|${view.oy}|${px()}|${MAP_ID}|${game.level}`;
   if (bgCache.key !== key || refs.some((r, i) => r !== bgCache.refs[i])) {
-    // vô tận đổi đường (cùng bản đồ gốc, cùng cỡ màn): giữ nền cũ để mờ dần sang nền mới
+    // vô tận sang màn mới (cùng trận, cùng cỡ màn): giữ nền cũ để mờ dần sang nền mới
     const pk = bgCache.key.split('|');
-    if (bgCache.c && pk[4] && pk[4] !== MAP_ID && pk[5] === String(game.level) && pk[0] === `${canvas.width}x${canvas.height}`
-      && pk[4].split('~')[0] === MAP_ID.split('~')[0]) startPathFade();
+    if (bgCache.c && pk[4] && pk[4] !== MAP_ID && pk[5] === String(game.level) && pk[0] === `${canvas.width}x${canvas.height}` && game.started) startPathFade();
     const c = bgCache.c || (bgCache.c = document.createElement('canvas'));
     c.width = canvas.width; c.height = canvas.height;
     drawBackdrop(c.getContext('2d'), s, false);
@@ -1829,7 +1828,12 @@ function drawEffects(t) {
         ctx.globalAlpha = k;
         // dùng ảnh có sẵn: đồng xu lỗ vuông (ui-tai-nguyen-1); chưa có / chưa tải xong thì vẽ tròn như cũ
         const ci = asset('ui/ui-tai-nguyen-1.png', true);
-        if (ci) ctx.drawImage(ci, f.x - 6, yy - 6, 12, 12);
+        if (ci) {
+          // cỡ theo màn: ~16 px CSS trên điện thoại (không nhỏ hơn 12 đơn vị bản đồ), chỉ mờ dần ở 40% cuối
+          const cs = Math.max(12, 16 / view.scale);
+          ctx.globalAlpha = Math.min(1, k / 0.4);
+          ctx.drawImage(ci, f.x - cs / 2, yy - cs / 2, cs, cs);
+        }
         else {
           circle(ctx, f.x, yy, 4.5, '#B8852A');
           circle(ctx, f.x, yy, 3.5, '#F2D27A');
@@ -1858,8 +1862,18 @@ function drawEffects(t) {
         // dùng ảnh có sẵn: rương đồng (ui-menu-1-3), quầng màu theo độ hiếm; chưa có ảnh thì hộp + sao như cũ
         const bi = asset('ui/ui-menu-1-3.png', true);
         if (bi) {
-          ctx.shadowColor = f.color; ctx.shadowBlur = 10;
-          ctx.drawImage(bi, f.x - 11, y - 11, 22, 22);
+          // ~30 px CSS trên điện thoại (không nhỏ hơn 26 đơn vị bản đồ), quầng tròn đậm màu độ hiếm phía sau, chỉ mờ ở 30% cuối
+          const bs = Math.max(26, 30 / view.scale), a = Math.min(1, k / 0.3);
+          const gr = ctx.createRadialGradient(f.x, y, bs * 0.15, f.x, y, bs * 0.85);
+          gr.addColorStop(0, f.color); gr.addColorStop(0.55, f.color + 'AA'); gr.addColorStop(1, f.color + '00');
+          ctx.globalAlpha = a * (0.75 + 0.25 * Math.sin(t * 8));
+          ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(f.x, y, bs * 0.85, 0, Math.PI * 2); ctx.fill();
+          // viền vòng đậm màu độ hiếm (quầng vàng huyền thoại dễ chìm trên nền cát)
+          ctx.strokeStyle = f.color; ctx.lineWidth = Math.max(2, 2.5 / view.scale);
+          ctx.beginPath(); ctx.arc(f.x, y, bs * 0.62, 0, Math.PI * 2); ctx.stroke();
+          ctx.globalAlpha = a;
+          ctx.shadowColor = f.color; ctx.shadowBlur = 14 * px();
+          ctx.drawImage(bi, f.x - bs / 2, y - bs / 2, bs, bs);
           break;
         }
         ctx.strokeStyle = f.color;

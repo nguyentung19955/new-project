@@ -196,22 +196,22 @@ const HEROES = {
     ],
   },
   thosan: {
-    name: 'Thợ Săn Rừng', cost: 75, attack: 'melee', wclass: 'blade', dmgType: 'phys',
-    role: 'Chí mạng', title: 'Dao găm lá rừng, đòn chí mạng', color: '#7FC24A',
+    name: 'Thợ Săn Rừng', cost: 75, attack: 'arrow', proj: 'arrow', wclass: 'bow', dmgType: 'phys',
+    role: 'Chí mạng', title: 'Cung săn lá rừng, mũi tên chí mạng', color: '#7FC24A',
     attrs: { str: 16, agi: 24, int: 12 }, gain: { str: 1.8, agi: 3.0, int: 1.2 },
-    base: { damage: 2, range: 140, cooldown: 0.85 },
-    look: { aura: '#9b59b6', weapon: { type: 'daggers', color: '#dfe6e9' } },
+    base: { damage: 2, range: 145, cooldown: 0.9, heir: { damage: 2, range: 140 } },
+    look: { aura: '#9b59b6', weapon: { type: 'bow', color: '#8e5a2b' } },
     skills: [
       { id: 'shadowstep', name: 'Bước Lá Rừng', active: { cooldown: 6, cast: 'shadowstep', mana: 45 },
-        info: (n) => `Lướt tới quái xa nhất trong tầm gấp đôi, đâm giáo: x2 sát thương +${(n * 0.5).toFixed(0)}` },
-      { id: 'hiddenblade', name: 'Giáo Ẩn',
+        info: (n) => `Lướt tới quái xa nhất trong tầm gấp đôi, bắn tên sát mặt: x2 sát thương +${(n * 0.5).toFixed(0)}` },
+      { id: 'hiddenblade', name: 'Tên Ẩn',
         info: (n) => `+${(n * 0.35).toFixed(1)} sát thương`,
         apply: (s, n) => { s.damage += n * 0.35; } },
       { id: 'critical', name: 'Đòn Chí Mạng',
         info: (n) => `+${Math.round(15 + Math.min(25, n * 0.1))}% cơ hội chí mạng, chí mạng x${(2.2 + Math.min(1.3, n * 0.008)).toFixed(1)}`,
         apply: (s, n) => { s.crit += 15 + Math.min(25, n * 0.1); s.critMult = 2.2 + Math.min(1.3, n * 0.008); } },
       { id: 'assassinate', name: 'Săn Mồi', active: { cooldown: 14, cast: 'assassinate', mana: 100 },
-        info: (n) => `Đánh dấu rồi vồ quái máu cao nhất: x6 sát thương +${n * 3}` },
+        info: (n) => `Đánh dấu rồi bắn mũi tên săn vào quái máu cao nhất: x6 sát thương +${n * 3}` },
     ],
   },
   thaymo: {
@@ -278,7 +278,7 @@ const HEROES = {
     role: 'Con Rồng', title: 'Vua rồng biển, không sợ nước dâng', color: '#E25A3A',
     attrs: { str: 28, agi: 16, int: 16 }, gain: { str: 3.2, agi: 1.6, int: 1.6 },
     base: { damage: 12, range: 150, cooldown: 1.0 },
-    look: { aura: '#5AB4D6', weapon: { type: 'none' } },
+    look: { aura: '#5AB4D6', weapon: { type: 'spear', color: '#5AB4D6' } },
     trait: { name: 'Con Rồng', desc: 'Khi máu dưới 50%: rồng nổi giận, +30% sát thương' },
     skills: [
       { id: 'l_q', name: 'Vuốt Rồng', active: { cooldown: 5, cast: 'claw', mana: 40 },
@@ -615,12 +615,12 @@ const HEROES = {
     role: 'Cây đa thần', title: 'Chú Cuội ôm cây đa thần bay lên cung trăng', color: '#5FB84A',
     attrs: { str: 30, agi: 18, int: 15 }, gain: { str: 3.3, agi: 1.9, int: 1.5 },
     base: { damage: 14, range: 150, cooldown: 1.0 },
-    look: { aura: '#7FE07A', weapon: { type: 'axe', color: '#9E9A90' } },
+    look: { aura: '#7FE07A', weapon: { type: 'pole', color: '#8A6A40' } },
     trait: { name: 'Lá Đa Cải Tử', desc: 'Mỗi 5 giây hồi 4% máu tướng quanh mình; gục lần đầu mỗi đợt sống lại với 30% máu' },
     traitApply: (s) => { s.lg.healAura = Math.max(s.lg.healAura || 0, 4); s.lg.reviveOnce = Math.max(s.lg.reviveOnce || 0, 30); },
     skills: [
-      { id: 'cu_q', name: 'Rìu Đốn Củi', active: { cooldown: 7, cast: 'chop', mana: 55 },
-        info: (n) => `Bổ rìu một nhát: x3 sát thương +${n}` },
+      { id: 'cu_q', name: 'Đòn Gánh Quật', active: { cooldown: 7, cast: 'chop', mana: 55 },
+        info: (n) => `Quật đòn gánh một nhát: x3 sát thương +${n}` },
       { id: 'cu_w', name: 'Lá Đa Thần',
         info: (n) => `+10% máu, +${(1.5 + n * 0.05).toFixed(1)} hồi máu/giây`, apply: (s, n) => { s.hpPct += 10; s.regen += 1.5 + n * 0.05; } },
       { id: 'cu_e', name: 'Cây Đa Bay', active: { cooldown: 14, cast: 'sacredtree', mana: 80 },
@@ -634,7 +634,7 @@ const HEROES = {
     role: 'Mùa vàng', title: 'Thần Lúa nuôi người Việt, mùa vàng no ấm', color: '#5FB84A',
     attrs: { str: 16, agi: 15, int: 31 }, gain: { str: 1.6, agi: 1.5, int: 3.5 },
     base: { damage: 11, range: 175, cooldown: 1.25, splash: 30 },
-    look: { aura: '#F2D27A', weapon: { type: 'staff', color: '#7A5232', orb: '#F2D27A', glow: '#C8E070' } },
+    look: { aura: '#F2D27A', weapon: { type: 'sickle', color: '#C8C8C0', glow: '#C8E070' } },
     trait: { name: 'Mùa Vàng', desc: 'Mỗi quái hạ +1 vàng; tướng đứng gần +10% sát thương' },
     traitApply: (s) => { s.goldOnKill += 1; },
     skills: [
@@ -667,15 +667,15 @@ const HEROES = {
     ],
   },
   chantrau: {
-    name: 'Trẻ Chăn Trâu', cost: 65, attack: 'arrow', proj: 'bolt', wclass: 'bow', dmgType: 'phys',
-    role: 'Choáng xa', title: 'Ná cao su, sỏi bờ đê, sáo trúc lưng trâu', color: '#C99A3C',
+    name: 'Trẻ Chăn Trâu', cost: 65, attack: 'melee', wclass: 'blade', dmgType: 'phys',
+    role: 'Gõ choáng', title: 'Gậy chăn trâu đầu trâu, sỏi bờ đê, sáo trúc lưng trâu', color: '#C99A3C',
     attrs: { str: 15, agi: 21, int: 13 }, gain: { str: 1.5, agi: 2.6, int: 1.3 },
-    base: { damage: 5, range: 170, cooldown: 0.95 },
-    look: { aura: '#E8C27A', weapon: { type: 'crossbow', color: '#7A5232' } },
+    base: { damage: 8, range: 145, cooldown: 0.9, heir: { damage: 5, range: 170 } },
+    look: { aura: '#E8C27A', weapon: { type: 'club', color: '#7A5232' } },
     skills: [
       { id: 'ct_q', name: 'Sỏi Nảy', active: { cooldown: 6, cast: 'ricochet', mana: 45 },
-        info: (n) => `Viên sỏi nảy qua 5 quái, x1.3 sát thương +${(n * 0.5).toFixed(0)}` },
-      { id: 'ct_w', name: 'Sỏi Trúng Đầu',
+        info: (n) => `Ném viên sỏi nảy qua 5 quái, x1.3 sát thương +${(n * 0.5).toFixed(0)}` },
+      { id: 'ct_w', name: 'Gậy Gõ Đầu',
         info: (n) => `${(4 + n * 0.06).toFixed(1)}% choáng 0,5 giây mỗi đòn`, apply: (s, n) => { s.stunChance += 4 + n * 0.06; } },
       { id: 'ct_e', name: 'Sáo Trúc Lưng Trâu',
         info: (n) => `+${(8 + n * 0.15).toFixed(1)}% tốc đánh`, apply: (s, n) => { s.haste += 8 + n * 0.15; } },
@@ -725,7 +725,7 @@ const HEROES = {
     role: 'Dời non', title: 'Tản Viên Sơn Thánh, nước dâng bao nhiêu núi cao bấy nhiêu', color: '#5FB84A',
     attrs: { str: 33, agi: 15, int: 18 }, gain: { str: 3.5, agi: 1.5, int: 1.8 },
     base: { damage: 15, range: 150, cooldown: 1.05 },
-    look: { aura: '#7FC24A', bulk: 1.1, weapon: { type: 'staff', color: '#D9A84E' } },
+    look: { aura: '#7FC24A', bulk: 1.1, weapon: { type: 'spear', color: '#D9A84E' } },
     trait: { name: 'Núi Cao Nước Dâng', desc: '+25% máu, đánh quái hành Thủy +30% sát thương' },
     traitApply: (s) => { s.hpPct += 25; s.vsThuy = 30; },
     skills: [
@@ -948,10 +948,10 @@ const HEROES = {
     role: 'Vua Xích Quỷ', title: 'Vua nước Xích Quỷ, cha của Lạc Long Quân', color: '#E0452C',
     attrs: { str: 30, agi: 16, int: 16 }, gain: { str: 3.3, agi: 1.7, int: 1.6 },
     base: { damage: 14, range: 150, cooldown: 1.0 },
-    look: { aura: '#FF6A3A', bulk: 1.1, weapon: { type: 'axe', color: '#E0B030' } },
+    look: { aura: '#FF6A3A', bulk: 1.1, weapon: { type: 'glaive', color: '#E0B030' } },
     trait: { name: 'Vua Xích Quỷ', desc: 'Toàn quân +8% sát thương khi Kinh Dương Vương trên sân' },
     skills: [
-      { id: 'kd_q', name: 'Kiếm Xích Quỷ', active: { cooldown: 7, cast: 'chop', mana: 55 },
+      { id: 'kd_q', name: 'Đao Xích Quỷ', active: { cooldown: 7, cast: 'chop', mana: 55 },
         info: (n) => `Chém một nhát rực lửa: x3 sát thương +${n}` },
       { id: 'kd_w', name: 'Dòng Dõi Thần Nông',
         info: (n) => `+${(10 + n * 0.2).toFixed(1)}% máu, +${(1 + n * 0.04).toFixed(1)} hồi máu/giây`, apply: (s, n) => { s.hpPct += 10 + n * 0.2; s.regen += 1 + n * 0.04; } },
@@ -1210,14 +1210,14 @@ const HEROES = {
   },
   thansan: {
     legend: 'epic', name: 'Thần Săn Ba Vì', attack: 'melee', wclass: 'blade', dmgType: 'phys',
-    role: 'Săn mồi', title: 'Thợ săn được núi Ba Vì truyền phép, vuốt hổ dao lá', color: '#7FC24A',
+    role: 'Săn mồi', title: 'Thợ săn được núi Ba Vì truyền phép, vuốt hổ đao rừng', color: '#7FC24A',
     attrs: { str: 18, agi: 28, int: 13 }, gain: { str: 1.9, agi: 3.3, int: 1.3 },
     base: { damage: 6, range: 145, cooldown: 0.8 },
-    look: { aura: '#5FB84A', weapon: { type: 'daggers', color: '#E8E0C0' } },
+    look: { aura: '#5FB84A', weapon: { type: 'saber', color: '#E8E0C0' } },
     trait: { name: 'Mắt Rừng', desc: 'Đánh quái đang bị làm chậm hoặc choáng: +25% sát thương' },
     skills: [
-      { id: 's_q', name: 'Lao Tẩm Độc', active: { cooldown: 6, cast: 'venomspear', mana: 40 },
-        info: (n) => `Phóng lao vào quái xa nhất (tầm x1.6): x1.5 sát thương +${n}, độc ${(6 + n * 0.25).toFixed(0)}/giây trong 6 giây, chậm 35%` },
+      { id: 's_q', name: 'Phi Đao Tẩm Độc', active: { cooldown: 6, cast: 'venomspear', mana: 40 },
+        info: (n) => `Phi đao vào quái xa nhất (tầm x1.6): x1.5 sát thương +${n}, độc ${(6 + n * 0.25).toFixed(0)}/giây trong 6 giây, chậm 35%` },
       { id: 's_w', name: 'Nanh Hổ',
         info: (n) => `+${Math.round(10 + Math.min(20, n * 0.1))}% chí mạng, +${Math.min(40, Math.round(n * 0.3))}% tốc đánh`,
         apply: (s, n) => { s.crit += 10 + Math.min(20, n * 0.1); s.haste += Math.min(40, n * 0.3); } },
@@ -1272,41 +1272,19 @@ const BASIC_HEROES = ['lactuong', 'lucsi', 'xathu', 'thosan', 'thaymo', 'thansuo
 const NEW_GROUPS = [['thoren', 'dotnuong', 'denroi'], ['nguphu', 'chodo', 'haisen'], ['thogom', 'dapde', 'chantrau'], ['giaodong', 'chuongdong'], ['thaylang', 'tre', 'ongthoi']];
 const NEW_BASICS = NEW_GROUPS.flat();
 const summonPool = (level) => [...BASIC_HEROES.slice(0, 6), ...NEW_GROUPS[(level || 0) % NEW_GROUPS.length]];
-// v133: ĐỘI TRIỆU HỒI — người chơi tự chọn 6 tướng Thường trước trận; Triệu hồi chỉ ra trong 6 tướng này
-// (20 tướng ngẫu nhiên quá khó ghép). Thiếu / sai thì dùng đội gợi ý.
-const DECK_SIZE = 6;
+// v133–v194: từng có ĐỘI TRIỆU HỒI 6 tướng (chọn trước trận, đổi ở Nghỉ chân) — đã bỏ: chợ rút từ mọi tướng Thường đã mở.
+const MIN_COMMONS = 6;     // ít hơn số này tướng Thường đã mở (bản lưu lạ) thì chợ ra đủ 20 tướng
 const MARKET_SIZE = 4;     // v143: chợ tướng — số thẻ luôn mở ở thanh đáy
-// v180: chợ có chủ đích — chợ ra MỌI tướng Thường (như TFT), trọng số rút thẻ: thường ×1 · trong đội ưu tiên 6 tướng ×2 ·
-// đang ghép dở trên sân ×5 · nguyên liệu còn thiếu của công thức hợp thể gần xong ×12; đủ MARKET_CAP bản sao (= một ★★★)
+// v180: chợ có chủ đích — chợ ra MỌI tướng Thường đã mở (như TFT), trọng số rút thẻ: thường ×1 ·
+// đang ghép dở trên sân ×W.ghep · nguyên liệu còn thiếu của công thức hợp thể gần xong ×W.hop; đủ MARKET_CAP bản sao (= một ★★★)
 // thì loại đó không ra nữa. Bảo hiểm: MARKET_PITY lần làm mới cả hàng liền không ra tướng cần nhất (nguyên liệu hợp thể,
 // không có thì tướng đang có) → lần sau chắc chắn có 1 thẻ.
-const MARKET_W = { doi: 2, ghep: 5, hop: 12 };
+// claude/bo-chon-doi: bỏ đội ưu tiên (×2) — xem bảng tỉ lệ trước / sau trong GAMEPLAY.md
+const MARKET_W = { ghep: 5, hop: 12 };
 const MARKET_PITY = 2;
 const MARKET_CAP = 4;
-const REST_SWAPS = 2;      // v143: Nghỉ chân sau đợt boss — đổi tối đa 2 tướng trong đội
-const validDeck = (d) => Array.isArray(d) && d.length === DECK_SIZE && new Set(d).size === DECK_SIZE && d.every((t) => BASIC_HEROES.includes(t));
-// tướng Thường là nguyên liệu (trực tiếp hoặc qua tướng Tím) của các tướng Tím / Vàng đã sở hữu
-function deckIngredients(owned) {
-  const out = new Set(), seen = new Set();
-  const walk = (t) => { if (seen.has(t)) return; seen.add(t);
-    for (const f of (typeof FUSION !== 'undefined' ? FUSION : [])) if (f.to === t) for (const x of [f.a, f.b]) { if (BASIC_HEROES.includes(x)) out.add(x); else walk(x); } };
-  for (const t of owned || []) walk(t);
-  return out;
-}
-// đội gợi ý: tướng khắc chế quái của ải → nguyên liệu hợp thể tướng đã sở hữu → quân mặc định của ải
-function suggestDeck(level, owned) {
-  const out = [];
-  const open = openCommons(owned);
-  const add = (t) => { if (out.length < DECK_SIZE && open.includes(t) && !out.includes(t)) out.push(t); };
-  try {
-    const lv = LEVELS[level] || {}, R = typeof ROSTERS !== 'undefined' ? ROSTERS[lv.roster || 'thuy'] : null;
-    for (const c of rosterCounters(R, Object.values(lv.bosses || {}), BASIC_HEROES, lv.hint).list) add(c.t);
-  } catch (e) { /* bỏ qua */ }
-  for (const t of deckIngredients(owned)) add(t);
-  for (const t of summonPool(level)) add(t);
-  for (const t of BASIC_HEROES) add(t);
-  return out;
-}
+// claude/bo-chon-doi: tối đa max nguyên liệu hợp thể được ưu tiên cùng lúc, trong đó tối đa off loại chưa có trên sân
+const MARKET_HOP = { max: 2, off: 1 };
 const LEGEND_HEROES = ['thachsanh', 'lachau', 'thansan', 'caolo', 'antiem', 'tiendung', 'langlieu', 'cdt', 'trongdong', 'caong', 'ongtao', 'potaoapui', 'baahoa', 'lyngu', 'truongchi', 'ongdung', 'thocong', 'nghedong', 'mychau', 'sodua',
   'giong', 'llq', 'kimquy', 'adv', 'auco', 'mau', 'matroi', 'mauthoai', 'trutroi', 'ongho', 'kinhduong', 'viemde', 'halong', 'longnu', 'tanvien', 'maudia', 'kylan', 'thienloi', 'cuoi', 'melua'];
 for (const id of LEGEND_HEROES) HEROES[id].cost = COSTS.legend[HEROES[id].legend];
@@ -1398,8 +1376,8 @@ Object.assign(COSTS, {
 // CỬA HÀNG (v24): 6 món đồ trang phục / phụ kiện ngẫu nhiên, làm mới miễn phí mỗi đợt,
 // làm mới tay tốn vàng (tăng dần trong đợt). Độ hiếm tốt dần theo đợt.
 // v86: tướng Tím / Vàng phải MUA bằng Ngân khố (lưu theo tài khoản) mới hợp thể / thăng thần ra được trong trận
-// v182: Ngân khố mở khoá MỌI tướng (Thường / Tím / Vàng), giá theo bậc. Tướng Thường chưa mở không vào được đội triệu hồi
-// (nên không ra trong chợ trận). Người mới có sẵn STARTER_HEROES; bản lưu cũ (trước v182) giữ đủ 20 tướng Thường.
+// v182: Ngân khố mở khoá MỌI tướng (Thường / Tím / Vàng), giá theo bậc. Tướng Thường chưa mở không ra trong chợ trận
+//. Người mới có sẵn STARTER_HEROES; bản lưu cũ (trước v182) giữ đủ 20 tướng Thường.
 const OWN_COST = { common: 300, epic: 900, legendary: 2000 };
 const STARTER_HEROES = ['lactuong', 'lucsi', 'xathu', 'thosan', 'thaymo', 'thansuong', 'nguphu', 'thoren'];
 const heroTier = (t) => HEROES[t].legend || 'common';
@@ -1408,7 +1386,7 @@ function openCommons(owned) {
   if (!owned) return BASIC_HEROES;
   const has = (t) => (owned.has ? owned.has(t) : owned.includes(t));
   const out = BASIC_HEROES.filter(has);
-  return out.length >= DECK_SIZE ? out : BASIC_HEROES;
+  return out.length >= MIN_COMMONS ? out : BASIC_HEROES;
 }
 // v66: Ngân khố — thưởng sau trận, tiêu trước trận
 const PREP = {
@@ -1994,7 +1972,7 @@ const MAP_THEMES = {
 //  lanes: một hoặc nhiều nhánh (quái chia lượt đi từng nhánh), end: chỗ đặt thành / cổng.
 //  Vùng an toàn (không đè giao diện ở 1920×934, 844×390, 667×375 và màn dọc tự xoay):
 //    tim đường y ∈ [125, 312] (thanh trên / hàng thẻ tướng), không vào cột nút phải x > 865 & y > 235.
-//  Cân bằng (game.js mapExposure): khi đổi đường, máu quái nhân theo "độ phơi" của đường mới so với đường gốc
+//  Cân bằng (game.js mapExposure): khi đổi màn, máu quái nhân theo "độ phơi" của đường mới so với màn đầu
 //    (10 ô phủ đường tốt nhất, tầm 190: tổng quãng đường quái đi trong tầm) → đường dài / vòng gần nhau (tướng đánh
 //    được nhiều lần) thì quái dày máu hơn, đường ngắn / hai cửa thì mỏng hơn. diff: dạng khó (dùng cho đợt cao) khó hơn ~12%.
 // ============================================================
@@ -2032,31 +2010,37 @@ const PATH_SHAPES = {
   duongtat: { name: 'Đường tắt hang ngầm', desc: 'Quái chui ra từ hang ngầm giữa đồng, đường tới thành rất ngắn: ít thời gian bắn.', r: 70, diff: 1.12,
     lanes: [[[170, 300], [420, 300], [560, 185], [880, 165]]], end: [899, 161], hole: true },
 };
-// Vô tận: từ đợt ENDLESS_PATH.from, mỗi ENDLESS_PATH.every đợt đổi sang một dạng đường (cùng mốc với sự kiện thử thách).
-// Đợt 60–99: dạng dễ / vừa; 100–129: chia nhánh, xoắn ốc, bậc thang; từ 130: xen kẽ dạng khó (hai cửa, đường tắt) với dạng khác.
-const ENDLESS_PATH = {
-  from: 60, every: 10,
-  early: ['zigzag', 'uonkhuc', 'caucheo', 'vongve'],
-  mid: ['chianhanh', 'xoanoc', 'bacthang'],
+// ============================================================
+//  VÔ TẬN THEO MÀN (claude/duong-di-moi): vào Vô tận không chọn bản đồ — bắt đầu ở màn đầu (Bến Sông Đà),
+//  SAU MỖI ĐỢT BOSS sang màn mới: bản đồ + nền chủ đề + bộ quái của một ải khác (ENDLESS_STAGES.order)
+//  + một dạng đường (đường gốc của ải đó hoặc PATH_SHAPES). Dạng khó (hai cửa, đường tắt) chỉ từ đợt hardFrom.
+//  Màn là hàm của số đợt (endlessStageAt) → bản lưu cũ không có trường màn vẫn suy ra được.
+// ============================================================
+const ENDLESS_STAGES = {
+  // thứ tự ải nguồn: chủ đề xen nhau (sông → rừng → đồng → biển → hang → đầm → thành …)
+  order: [0, 8, 11, 13, 10, 3, 15, 9, 12, 16, 2, 6, 14, 1, 4, 5, 7],
+  normal: ['zigzag', 'uonkhuc', 'caucheo', 'vongve', 'bacthang', 'chianhanh', 'xoanoc'],
   hard: ['haicong', 'duongtat'],
-  alpha: 0.5,       // máu quái × (độ phơi đường mới / đường gốc)^alpha — alpha chỉnh bằng mô phỏng trận (tests/duong-di-moi)
+  hardFrom: 60,     // đợt cao: màn lẻ dùng dạng khó
+  alpha: 0.5,       // máu quái × (độ phơi màn / màn đầu)^alpha — chỉnh bằng mô phỏng trận (tests/duong-di-moi)
   hpMin: 0.8, hpMax: 1.4,
 };
-// mốc đổi đường thứ mấy (0 = đợt 60–69…), -1 = còn đường gốc của bản đồ
-function endlessPathStage(wave) {
-  return wave >= ENDLESS_PATH.from ? Math.floor((wave - ENDLESS_PATH.from) / ENDLESS_PATH.every) : -1;
+// màn thứ k (0 = màn đầu = bản đồ gốc của ải start), mở sau đợt boss `wave`
+function endlessStage(k, wave, start = 0) {
+  const E = ENDLESS_STAGES, o = E.order, i0 = Math.max(0, o.indexOf(start));
+  const lv = k ? o[(i0 + k) % o.length] : start;
+  let shape = null;
+  if (k > 0 && k % 3 !== 0) shape = wave >= E.hardFrom && k % 2 ? E.hard[(k >> 1) % E.hard.length] : E.normal[(k - 1 - Math.floor(k / 3)) % E.normal.length];
+  return { k, lv, shape, at: k ? wave : 0 };
 }
-// dạng đường cho đợt `wave` của bản đồ `level` (null = đường gốc). Dùng chung mốc cho sự kiện thử thách.
-function endlessPathFor(wave, level = 0) {
-  const k = endlessPathStage(wave), E = ENDLESS_PATH, lv = level || 0;
-  if (k < 0) return null;
-  if (k < 4) return E.early[(k + lv) % 4];
-  if (k < 7) return E.mid[(k - 4 + lv) % 3];
-  const j = k - 7;
-  if (j % 2 === 0) return E.hard[(j / 2 + lv) % 2];
-  const all = E.early.concat(E.mid);
-  return all[(Math.floor(j / 2) * 3 + lv) % all.length];
+// màn đang chơi khi đã XONG đợt `wave` của trận bắt đầu ở ải `start` (đếm số đợt boss đã qua)
+function endlessStageAt(wave, start = 0) {
+  let st = endlessStage(0, 0, start);
+  for (let w = 1; w <= wave; w++) if (bossAt(w, start)) st = endlessStage(st.k + 1, w, start);
+  return st;
 }
+// mã bản đồ của màn
+const stageMapId = (st) => (st.shape ? mapVariant(LEVELS[st.lv].map || 'song1', st.shape) : LEVELS[st.lv].map || 'song1');
 // bản đồ "gốc~dạng": chủ đề của bản đồ gốc + đường của dạng (đăng ký vào MAPS khi cần)
 function mapVariant(base, shape) {
   const id = `${base}~${shape}`;
@@ -2089,11 +2073,13 @@ const LEVELS = [
 ];
 
 // Đợt có boss không (theo ải đang chơi; vô tận: boss mỗi 10 đợt)
-function bossAt(n, level) {
+// st: ải nguồn của màn vô tận đang chơi (claude/duong-di-moi) — đợt boss vẫn theo ải của trận, boss là boss của màn
+function bossAt(n, level, st) {
   const lv = LEVELS[level || 0];
-  if (lv.bosses[n]) return lv.bosses[n];
-  if (n > lv.waves && n % 10 === 0) { const B = endlessBosses(); return B[(n / 10 + (level || 0)) % B.length]; }
-  return null;
+  const b = lv.bosses[n] || (n > lv.waves && n % 10 === 0 ? endlessBosses()[(n / 10 + (level || 0)) % endlessBosses().length] : null);
+  if (!b || st == null || !LEVELS[st]) return b;
+  const B = [...new Set(Object.values(LEVELS[st].bosses))];
+  return B[Math.floor(n / 10) % B.length];
 }
 // v70: chơi vô tận — mỗi 10 đợt đổi sang quân của một chương khác, boss lấy từ mọi chương
 function endlessBosses() {
@@ -2102,25 +2088,26 @@ function endlessBosses() {
   for (const lv of LEVELS) for (const id of Object.values(lv.bosses || {})) if (!out.includes(id)) out.push(id);
   return out.length ? out : BOSS_ORDER;
 }
-function rosterFor(n, level) {
+function rosterFor(n, level, st) {
   const lv = LEVELS[level || 0] || {};
   const own = lv.roster || 'thuy';
   if (typeof ROSTERS === 'undefined') return null;
+  if (st != null && LEVELS[st]) return ROSTERS[LEVELS[st].roster || 'thuy'];   // màn vô tận: quân của ải nguồn
   if (!lv.waves || n <= lv.waves) return ROSTERS[own];
   const keys = Object.keys(ROSTERS);
   const k = Math.floor((n - lv.waves - 1) / 10) + 1;          // đợt vô tận 1–10: chương kế tiếp, 11–20: chương sau nữa…
   return ROSTERS[keys[(keys.indexOf(own) + k) % keys.length]];
 }
-const waveKind = (n, level) => (bossAt(n, level) ? 'boss'
+const waveKind = (n, level, st) => (bossAt(n, level, st) ? 'boss'
   : AIR_WAVES.includes(n) || (n > 27 && (n % 10 === 4 || n % 10 === 7)) ? 'air' : n % 10 === 5 ? 'champion' : 'normal');
 
-function buildWave(n, level) {
+function buildWave(n, level, st) {
   const list = [];
   const e = effWave(n, level);
   const count = 8 + Math.floor(e * 1.6);
-  const kind = waveKind(n, level);
+  const kind = waveKind(n, level, st);
   // v48: quân theo chương (ROSTERS trong enemies2.js); mặc định quân Thủy Tinh
-  const ro = rosterFor(n, level);
+  const ro = rosterFor(n, level, st);
   for (let i = 0; i < count; i++) {
     const r = srand();
     let type = ro ? ro.base : 'tom';
@@ -2132,7 +2119,7 @@ function buildWave(n, level) {
     list.push({ type, elite, gap: fast ? 0.45 : 0.8 });
   }
   if (kind === 'champion') list.push({ type: ro ? ro.champ : 'rua', elite: 'armored', champion: true, gap: 2 });
-  if (kind === 'boss') list.push({ type: bossAt(n, level), gap: 3 });
+  if (kind === 'boss') list.push({ type: bossAt(n, level, st), gap: 3 });
   return list;
 }
 
