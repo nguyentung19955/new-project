@@ -1944,6 +1944,12 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 
 - Ra Tím cần 2 tướng Thường ★★★ + kỹ năng tối đa; ★★★ lên cấp nửa giá; lý do khoá hiện dưới tiêu đề bảng, huy hiệu ⚡−N, ổ khoá SVG.
 
+### (nhánh tang-toc-quy-trinh) — Quy trình test nhanh hơn (không đổi game, không tăng phiên bản)
+- `node tests/run-all.js`: chạy mọi `tests/*/*.test.js` + `tests/coop/run-all.js` song song 4 luồng (`--j N`), lọc `node tests/run-all.js hop-the cho-tuong`, in bảng thời gian, mã thoát ≠ 0 khi có lỗi; test lâu chạy trước (nhớ thời gian ở `tests/.thoi-gian.json`, không commit). Test thiếu môi trường in `SKIP` → BỎ QUA, không đỏ.
+- Đủ bộ: tuần tự ~808 giây → song song 4 luồng ~340 giây.
+- Ảnh test tự chụp (`tests/**/shots/`, ảnh của menu-nut) bỏ khỏi git (.gitignore), giữ trên đĩa; ảnh minh hoạ `tests/<tên>/truoc-sau.png`, `docs/` giữ nguyên. Không test nào so ảnh với ảnh gốc đã commit nên không cần `ref/`.
+- `.gitattributes`: `GAMEPLAY.md merge=union` — các nhánh cùng thêm ghi chú cuối file không còn xung đột.
+- Sửa test: duong-quai (ảnh giả qua `page.route` + thư mục tạm, không còn xoá/cất `assets/tiles/duong-nuoc.jpg` thật); cat-anh (thiếu scipy → tự `pip install --user`, không được thì SKIP; animation chờ theo điều kiện thay 400 ms cố định); xem-gop-y/rules-emulator (thiếu thư viện / Java / emulator → SKIP); cho-tuong/ti-le (mô phỏng chợ seed Math.random); hop-the, tui-do (chờ phần tử hiện thay đợi cố định — trước hay đỏ khi máy bận); menu-nut (ảnh ghi vào shots/). `helpers.open()` nhận thêm `prep(page)` chạy trước khi mở trang.
 ## Phiên bản 186 — Sửa 3 lỗi tester ở chợ tướng (khoá chợ, nhãn thẻ, dòng giải thích)
 - **🔒 Khoá chợ rõ hơn:** bỏ nút tròn 26px chồm lên viền thanh chợ; thay bằng nút riêng cạnh ↻ (36×60, vùng chạm ~39×65 sau phóng to), ổ khoá SVG vẽ bằng code (mở khi chưa khoá, đóng khi khoá) + chữ "Khoá" / "Đã khoá". Đang khoá: nút nền vàng, chữ nâu đậm, và 4 thẻ có viền vàng (tắt nhấp nháy "ghép" để viền khoá dễ thấy).
 - **Nhãn thẻ không che mặt:** nhãn "ghép" (xanh) và "hợp" (tím, rút gọn từ "hợp thể"; đọc màn hình vẫn đọc đủ "nguyên liệu hợp thể") chuyển xuống thanh giá ở đáy thẻ: "ghép" bên trái, giá ở giữa, "hợp" bên phải. Không còn đè vương miện / icon hệ / icon vai trò, thẻ có cả hai nhãn cũng không chồng nhau.
@@ -2017,3 +2023,7 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 - **Trang thử**: `tools/xem-cu-dong.html` → `index.html?xem-cu-dong` (js/xem-cu-dong.js): lưới mọi tướng / quái / boss bằng ảnh đơn (khung idle / walk1 hiện có làm ảnh đơn), tự đổi trạng thái hoặc chọn một trạng thái, hiện FPS; `&ma=…` lọc mã, `&nhieu=1` so với bộ cũ. Chơi thật với ảnh đơn: `index.html?solo=1`.
 - Thêm ảnh mới: lưu `assets/<mã>.png` rồi chạy `node tools/build-asset-list.js`.
 - Test: `node tests/tu-cu-dong/tu-cu-dong.test.js` (đo ảnh, chọn ảnh, biên độ tư thế, chân không trôi ≤ 2 px khi thở, trang thử 3 cỡ màn, chơi thật `?solo=1` + FPS). Ảnh: `tests/tu-cu-dong/shots/`.
+
+## Phiên bản 193 — Tăng tốc quy trình test
+
+- Gộp claude/tang-toc-quy-trinh: tests/run-all.js song song 4 luồng (808s → ~345s), ảnh test ra khỏi git, GAMEPLAY.md merge=union, sửa test chập chờn.

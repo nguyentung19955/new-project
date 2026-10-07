@@ -4,7 +4,8 @@ const { chromium } = require('/opt/node-tools/node_modules/playwright');
 const ROOT = path.resolve(__dirname, '../..');
 const URL = 'file://' + path.join(ROOT, 'index.html');
 
-async function open(w = 844, h = 390, save = {}) {
+// prep(page): chạy trước khi mở trang (vd page.route thay ảnh assets bằng ảnh giả, không đụng file thật)
+async function open(w = 844, h = 390, save = {}, prep = null) {
   const browser = await chromium.launch({ args: ['--allow-file-access-from-files'] });
   const ctx = await browser.newContext({ viewport: { width: w, height: h }, hasTouch: false });
   const page = await ctx.newPage();
@@ -14,6 +15,7 @@ async function open(w = 844, h = 390, save = {}) {
   await page.route('**/firebase-config.js*', (r) => r.fulfill({ contentType: 'application/javascript', body: "const FIREBASE_CONFIG={apiKey:''};" }));
   // v189: test giả ảnh chưa có (page.route / file tạm) thì bỏ qua danh sách ảnh js/asset-list.js
   if (global.ASSET_ALL_TEST) await page.addInitScript(() => { window.ASSET_ALL = true; });
+  if (prep) await prep(page);
   const init = Object.assign({ unlocked: 5, storySeen: true, settings: { skipStory: true } }, save);
   await page.addInitScript((s) => { if (!sessionStorage.getItem('seeded')) { localStorage.setItem('nuicao.v1', JSON.stringify(s)); sessionStorage.setItem('seeded', '1'); } }, init);
   await page.goto(URL);

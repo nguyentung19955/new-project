@@ -2,7 +2,13 @@
 // Cài một lần ở thư mục tạm:  npm i firebase-tools @firebase/rules-unit-testing firebase
 // Chạy:  NODE_PATH=<thư mục tạm>/node_modules npx --prefix <thư mục tạm> firebase emulators:exec --only firestore --project demo-tt "node tests/xem-gop-y/rules-emulator.test.js"
 const fs = require('fs'), path = require('path');
-const { initializeTestEnvironment, assertSucceeds, assertFails } = require('@firebase/rules-unit-testing');
+// thiếu thư viện / Java / emulator chưa chạy → bỏ qua (SKIP), không tính lỗi khi chạy tests/run-all.js
+const skip = (why) => { console.log('SKIP: ' + why + ' (xem cách chạy ở đầu file)'); process.exit(0); };
+let rut;
+try { rut = require('@firebase/rules-unit-testing'); } catch (e) { skip('thiếu @firebase/rules-unit-testing'); }
+try { require('child_process').execFileSync('java', ['-version'], { stdio: 'ignore' }); } catch (e) { skip('thiếu Java'); }
+if (!process.env.FIRESTORE_EMULATOR_HOST) skip('Firestore emulator chưa chạy (thiếu FIRESTORE_EMULATOR_HOST — chạy qua firebase emulators:exec)');
+const { initializeTestEnvironment, assertSucceeds, assertFails } = rut;
 const ok = (c, m) => { if (!c) throw new Error('FAIL: ' + m); console.log('  ✓ ' + m); };
 
 (async () => {

@@ -19,6 +19,8 @@ fs.mkdirSync(SHOT, { recursive: true });
     ok(hasHero, `${name}: có tướng trên sân`);
     await page.evaluate(() => { for (const id of ['riu_dong', 'ao_vai', 'mu_long_chim']) game.addItem(id); });
     await page.waitForTimeout(700);
+    // giao diện cập nhật theo khung hình: máy bận / chạy song song thì 700 ms chưa chắc đủ → chờ chấm báo hiện (tối đa 5 giây)
+    await page.waitForFunction(() => { const d = document.querySelector('#auto-btns [data-act=open-bag] .dot'); return d && !d.hidden; }, null, { timeout: 5000 }).catch(() => {});
     // nút Túi đồ: hiện, nằm trong màn hình, không đè 2 nút kia, có chấm báo đồ mới
     const m = await page.evaluate(() => {
       const bs = [...document.querySelectorAll('#auto-btns .ab')].map((b) => b.getBoundingClientRect());
