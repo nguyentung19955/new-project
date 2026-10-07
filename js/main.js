@@ -208,11 +208,9 @@ function drawAiMap(img, ctx = canvas.getContext('2d')) {
   ctx.drawImage(img, (CONFIG.W - w) / 2, (CONFIG.H - h) / 2, w, h);
   ctx.save();
   ctx.globalAlpha = 0.55;
-  strokePath(ctx, CONFIG.path, 70 * DK, '#6A5A3E');
-  ctx.globalAlpha = 0.85;
-  strokePath(ctx, CONFIG.path, 44 * DK, '#1F5670');
-  ctx.globalAlpha = 0.5;
-  strokePath(ctx, CONFIG.path, 20 * DK, '#3E89A8');
+  for (const p of CONFIG.paths) { ctx.globalAlpha = 0.55; strokePath(ctx, p, 70 * DK, '#6A5A3E'); }
+  for (const p of CONFIG.paths) { ctx.globalAlpha = 0.85; strokePath(ctx, p, 44 * DK, '#1F5670'); }
+  for (const p of CONFIG.paths) { ctx.globalAlpha = 0.5; strokePath(ctx, p, 20 * DK, '#3E89A8'); }
   ctx.restore();
 }
 
@@ -265,7 +263,7 @@ function drawBackdrop(c, s, shake) {
     else if (ready(mapImg)) c.drawImage(mapImg, 0, 0, CONFIG.W, CONFIG.H);
     else drawMapFallback(c);
   }
-  if (s.castle) c.drawImage(s.castle, 838 * DK, 70 * DK, 110 * DK, 150 * DK);
+  if (s.castle) { const [ex, ey] = (MAPS[MAP_ID] || MAPS.song1).end; c.drawImage(s.castle, (ex - 61) * DK, (ey - 86) * DK, 110 * DK, 150 * DK); }
 }
 const bgCache = { c: null, key: '', refs: [], builds: 0 };
 function cachedBackdrop(s) {
@@ -273,12 +271,36 @@ function cachedBackdrop(s) {
   const refs = [s.layer, s.bg && s.bg.img, s.nen, s.castle, s.back, s.layer ? null : mapImg];
   const key = `${canvas.width}x${canvas.height}|${view.ox}|${view.oy}|${px()}|${MAP_ID}|${game.level}`;
   if (bgCache.key !== key || refs.some((r, i) => r !== bgCache.refs[i])) {
+    // vô tận đổi đường (cùng bản đồ gốc, cùng cỡ màn): giữ nền cũ để mờ dần sang nền mới
+    const pk = bgCache.key.split('|');
+    if (bgCache.c && pk[4] && pk[4] !== MAP_ID && pk[5] === String(game.level) && pk[0] === `${canvas.width}x${canvas.height}`
+      && pk[4].split('~')[0] === MAP_ID.split('~')[0]) startPathFade();
     const c = bgCache.c || (bgCache.c = document.createElement('canvas'));
     c.width = canvas.width; c.height = canvas.height;
     drawBackdrop(c.getContext('2d'), s, false);
     bgCache.key = key; bgCache.refs = refs; bgCache.builds++;
   }
   return bgCache.c;
+}
+
+// Vô tận đổi đường: chụp nền cũ, vài khung sau phủ lên nền mới rồi mờ dần (1,6 giây)
+let pathFade = null;
+function startPathFade() {
+  if (!bgCache.c || !bgCache.c.width) return;
+  const c = document.createElement('canvas');
+  c.width = bgCache.c.width; c.height = bgCache.c.height;
+  c.getContext('2d').drawImage(bgCache.c, 0, 0);
+  pathFade = { c, t0: performance.now(), dur: 1600 };
+}
+function drawPathFade() {
+  if (!pathFade) return;
+  const k = 1 - (performance.now() - pathFade.t0) / pathFade.dur;
+  if (k <= 0 || pathFade.c.width !== canvas.width || pathFade.c.height !== canvas.height) { pathFade = null; return; }
+  ctx.save();
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.globalAlpha = k * k * (3 - 2 * k);
+  ctx.drawImage(pathFade.c, 0, 0);
+  ctx.restore();
 }
 
 function render() {
@@ -290,6 +312,7 @@ function render() {
     ctx.drawImage(cached, 0, 0);
     ctx.setTransform(px(), 0, 0, px(), view.ox * px(), view.oy * px());
   } else drawBackdrop(ctx, s, shake);
+  drawPathFade();
   if (s.layer) drawPathFx(ctx, MAP_ID, t);
   drawWaterLevel(ctx, game.water, t);
   drawZones(t);
@@ -472,8 +495,9 @@ function drawZones(t) {
     ctx.save();
     ctx.globalAlpha = Math.max(0, k);
     if (z.kind === 'fire') {
+      for (const ln of PATH.lanesAt((z.d1 + z.d2) / 2)) {   // nhiều nhánh: vệt lửa cháy trên mọi nhánh
       const pts = [];
-      for (let d = z.d1; d <= z.d2; d += 12) { const p = PATH.at(d); pts.push([p.x, p.y]); }
+      for (let d = z.d1; d <= z.d2; d += 12) { const p = PATH.at(d, ln); pts.push([p.x, p.y]); }
       strokePath(ctx, pts, 30, 'rgba(242,138,46,0.35)');
       strokePath(ctx, pts, 12, 'rgba(255,224,138,0.5)');
       pts.forEach(([x, y], i) => {
@@ -485,6 +509,7 @@ function drawZones(t) {
         ctx.fill();
         circle(ctx, x, y - 6, 3, '#FFE08A');
       });
+      }
     } else if (z.kind === 'rice') {
       ctx.fillStyle = 'rgba(232,208,112,0.18)';
       ctx.beginPath(); ctx.ellipse(z.x, z.y, z.r, z.r * 0.45, 0, 0, Math.PI * 2); ctx.fill();
@@ -536,8 +561,8 @@ function drawZones(t) {
 
 // Vật chặn đường: đàn Lạc Tử / Thành Một Đêm
 function drawBlocks(t) {
-  for (const b of game.blocks) {
-    const p = PATH.at(b.dist);
+  for (const b of game.blocks) for (const ln of PATH.lanesAt(b.dist)) {   // vật chặn chặn mọi nhánh ở cùng quãng đường
+    const p = PATH.at(b.dist, ln);
     const k = Math.min(1, b.ttl / 0.4, (b.max - b.ttl) / 0.3);
     ctx.save();
     ctx.globalAlpha = Math.max(0, k);
@@ -572,7 +597,7 @@ function drawBlocks(t) {
 // Kim Quy Hộ Thành: mai rùa vàng che thành (cuối đường)
 function drawGuard(t) {
   if (game.guardT <= 0) return;
-  const [x, y] = [899 * DK, 160 * DK];
+  const [x, y] = CONFIG.mapEnd || [899 * DK, 160 * DK];
   ctx.save();
   ctx.globalAlpha = Math.min(1, game.guardT) * (0.6 + Math.sin(t * 6) * 0.15);
   ctx.strokeStyle = '#FFD66B';

@@ -1986,6 +1986,89 @@ const MAP_THEMES = {
   thanh:{ ground: '#4A5A2E', grass: '#5E7038', dot: '#36441E', water: true, bank: '#7E6A48', deco: ['tree', 'rock', 'hut', 'banner'], gate: 'citadel' },
 };
 
+// ============================================================
+//  DẠNG ĐƯỜNG MỚI (claude/duong-di-moi): ngoài các khúc sông cong mềm của từng ải, thêm các dạng
+//  đường khác hẳn — zíc-zắc gấp, uốn khúc, vòng chéo qua cầu tre, chữ U quay về, chia hai nhánh,
+//  xoắn ốc vào giữa, ruộng bậc thang, hai cửa giặc, đường tắt hang ngầm.
+//  Toạ độ thiết kế 932 × 430 như MAPS. Mỗi dạng là danh sách điểm gấp (rpath bo tròn góc → M / L / C);
+//  lanes: một hoặc nhiều nhánh (quái chia lượt đi từng nhánh), end: chỗ đặt thành / cổng.
+//  Vùng an toàn (không đè giao diện ở 1920×934, 844×390, 667×375 và màn dọc tự xoay):
+//    tim đường y ∈ [125, 312] (thanh trên / hàng thẻ tướng), không vào cột nút phải x > 865 & y > 235.
+//  Cân bằng (game.js mapExposure): khi đổi đường, máu quái nhân theo "độ phơi" của đường mới so với đường gốc
+//    (10 ô phủ đường tốt nhất, tầm 190: tổng quãng đường quái đi trong tầm) → đường dài / vòng gần nhau (tướng đánh
+//    được nhiều lần) thì quái dày máu hơn, đường ngắn / hai cửa thì mỏng hơn. diff: dạng khó (dùng cho đợt cao) khó hơn ~12%.
+// ============================================================
+// bo tròn góc một đường gấp khúc: điểm → chuỗi SVG (M, L, C)
+function rpath(pts, r = 40) {
+  const f = (v) => +v.toFixed(1);
+  let d = `M ${pts[0][0]} ${pts[0][1]}`;
+  for (let i = 1; i < pts.length - 1; i++) {
+    const [ax, ay] = pts[i - 1], [px, py] = pts[i], [bx, by] = pts[i + 1];
+    const la = Math.hypot(ax - px, ay - py), lb = Math.hypot(bx - px, by - py);
+    const rr = Math.min(r, la / 2, lb / 2);
+    const p1 = [px + (ax - px) / la * rr, py + (ay - py) / la * rr], p2 = [px + (bx - px) / lb * rr, py + (by - py) / lb * rr];
+    d += ` L ${f(p1[0])} ${f(p1[1])} C ${f(p1[0] + (px - p1[0]) * 0.55)} ${f(p1[1] + (py - p1[1]) * 0.55)} ${f(p2[0] + (px - p2[0]) * 0.55)} ${f(p2[1] + (py - p2[1]) * 0.55)} ${f(p2[0])} ${f(p2[1])}`;
+  }
+  const [lx, ly] = pts[pts.length - 1];
+  return d + ` L ${lx} ${ly}`;
+}
+const PATH_SHAPES = {
+  zigzag: { name: 'Đê zíc-zắc', desc: 'Đường gấp khúc zíc-zắc như đê ngăn lũ: ô trong mỗi khúc gấp đánh được cả hai phía.', r: 16,
+    lanes: [[[-20, 140], [120, 140], [215, 305], [310, 140], [405, 305], [500, 140], [595, 305], [690, 140], [880, 150]]], end: [899, 146] },
+  uonkhuc: { name: 'Đê uốn khúc', desc: 'Con đê uốn lên xuống như khúc ruột: quái đi dọc, tướng đặt giữa hai khúc.', r: 62,
+    lanes: [[[-20, 140], [100, 140], [100, 305], [290, 305], [290, 135], [480, 135], [480, 305], [670, 305], [670, 150], [880, 150]]], end: [899, 146] },
+  caucheo: { name: 'Cầu tre bắc chéo', desc: 'Đường vòng một vòng rồi đi qua cầu tre bắc ngang chính nó: ô trong vòng đánh được hai lần.', r: 46,
+    lanes: [[[-20, 205], [560, 205], [560, 128], [300, 128], [300, 308], [740, 308], [740, 160], [880, 160]]], end: [899, 156], bridge: true },
+  vongve: { name: 'Khúc quanh chữ U', desc: 'Quái đi hết bờ trên rồi vòng chữ U quay về bến bên trái: ô ở dải giữa đánh được cả lượt đi lẫn lượt về.', r: 70,
+    lanes: [[[-20, 135], [800, 135], [800, 305], [70, 305]]], end: [52, 300] },
+  chianhanh: { name: 'Ngã ba chia nhánh', desc: 'Đường tách hai nhánh vòng quanh cồn đất rồi nhập lại: quái chia nhau đi hai ngả.', r: 46, diff: 0.85,
+    lanes: [[[-20, 222], [170, 222], [260, 135], [600, 135], [690, 222], [880, 180]], [[-20, 222], [170, 222], [260, 308], [600, 308], [690, 222], [880, 180]]], end: [899, 176] },
+  xoanoc: { name: 'Xoắn ốc Cổ Loa', desc: 'Đường xoắn ốc như thành Cổ Loa, cuộn dần vào thành ở giữa: rất dài nhưng quái dày máu.', r: 52,
+    lanes: [[[-20, 130], [830, 130], [830, 308], [110, 308], [110, 220], [370, 220]]], end: [405, 218], center: true },
+  bacthang: { name: 'Ruộng bậc thang', desc: 'Đường leo hai bậc như ruộng bậc thang lên đồi, góc gấp vuông: ô ở góc bậc đánh được cả hai đoạn.', r: 18,
+    lanes: [[[-20, 305], [260, 305], [260, 218], [540, 218], [540, 135], [880, 140]]], end: [899, 136] },
+  haicong: { name: 'Hai cửa giặc', desc: 'Giặc tràn vào từ HAI cửa cùng lúc rồi nhập một đường: phải chia tướng giữ cả hai ngả.', r: 50, diff: 1.12,
+    lanes: [[[-20, 135], [360, 135], [480, 222], [880, 170]], [[-20, 308], [360, 308], [480, 222], [880, 170]]], end: [899, 166] },
+  duongtat: { name: 'Đường tắt hang ngầm', desc: 'Quái chui ra từ hang ngầm giữa đồng, đường tới thành rất ngắn: ít thời gian bắn.', r: 70, diff: 1.12,
+    lanes: [[[170, 300], [420, 300], [560, 185], [880, 165]]], end: [899, 161], hole: true },
+};
+// Vô tận: từ đợt ENDLESS_PATH.from, mỗi ENDLESS_PATH.every đợt đổi sang một dạng đường (cùng mốc với sự kiện thử thách).
+// Đợt 60–99: dạng dễ / vừa; 100–129: chia nhánh, xoắn ốc, bậc thang; từ 130: xen kẽ dạng khó (hai cửa, đường tắt) với dạng khác.
+const ENDLESS_PATH = {
+  from: 60, every: 10,
+  early: ['zigzag', 'uonkhuc', 'caucheo', 'vongve'],
+  mid: ['chianhanh', 'xoanoc', 'bacthang'],
+  hard: ['haicong', 'duongtat'],
+  alpha: 0.5,       // máu quái × (độ phơi đường mới / đường gốc)^alpha — alpha chỉnh bằng mô phỏng trận (tests/duong-di-moi)
+  hpMin: 0.8, hpMax: 1.4,
+};
+// mốc đổi đường thứ mấy (0 = đợt 60–69…), -1 = còn đường gốc của bản đồ
+function endlessPathStage(wave) {
+  return wave >= ENDLESS_PATH.from ? Math.floor((wave - ENDLESS_PATH.from) / ENDLESS_PATH.every) : -1;
+}
+// dạng đường cho đợt `wave` của bản đồ `level` (null = đường gốc). Dùng chung mốc cho sự kiện thử thách.
+function endlessPathFor(wave, level = 0) {
+  const k = endlessPathStage(wave), E = ENDLESS_PATH, lv = level || 0;
+  if (k < 0) return null;
+  if (k < 4) return E.early[(k + lv) % 4];
+  if (k < 7) return E.mid[(k - 4 + lv) % 3];
+  const j = k - 7;
+  if (j % 2 === 0) return E.hard[(j / 2 + lv) % 2];
+  const all = E.early.concat(E.mid);
+  return all[(Math.floor(j / 2) * 3 + lv) % all.length];
+}
+// bản đồ "gốc~dạng": chủ đề của bản đồ gốc + đường của dạng (đăng ký vào MAPS khi cần)
+function mapVariant(base, shape) {
+  const id = `${base}~${shape}`;
+  const b = MAPS[base], sh = PATH_SHAPES[shape];
+  if (!b || !sh) return null;
+  if (!MAPS[id]) {
+    const [d, ...lanes] = sh.lanes.map((pts) => rpath(pts, sh.r));
+    MAPS[id] = { theme: b.theme, d, lanes, end: sh.end.slice(), center: !!sh.center, shape, base, bridge: !!sh.bridge, hole: !!sh.hole };
+  }
+  return id;
+}
+
 const LEVELS = [
   { name: 'Bến Sông Đà', map: 'song1', waves: 10, hp: 0.75, bosses: { 10: 'thuongluong' },
     desc: 'Bến sông yên bình nơi Thủy Tinh thử quân lần đầu. Bản đồ dễ nhất, hợp để làm quen.', hint: ['xathu', 'lactuong', 'thaymo'] },

@@ -538,9 +538,9 @@ function mapImage(pw, ph, level) {
 function drawMapFallback(ctx) {
   ctx.fillStyle = '#3A5A28';
   ctx.fillRect(0, 0, CONFIG.W, CONFIG.H);
-  strokePath(ctx, CONFIG.path, 104 * DK, 'rgba(44,106,134,0.5)');
-  strokePath(ctx, CONFIG.path, 54 * DK, '#8A7650');
-  strokePath(ctx, CONFIG.path, 42 * DK, '#1F5670');
+  for (const p of CONFIG.paths) strokePath(ctx, p, 104 * DK, 'rgba(44,106,134,0.5)');
+  for (const p of CONFIG.paths) strokePath(ctx, p, 54 * DK, '#8A7650');
+  for (const p of CONFIG.paths) strokePath(ctx, p, 42 * DK, '#1F5670');
 }
 
 function strokePath(ctx, pts, w, color, dash) {
@@ -561,9 +561,9 @@ function drawWaterLevel(ctx, water, t) {
   const w = (104 + water * 70) * DK;
   ctx.save();
   ctx.globalAlpha = 0.28 + Math.sin(t * 1.5) * 0.03;
-  strokePath(ctx, CONFIG.path, w, '#2C6A86');
+  for (const p of CONFIG.paths) strokePath(ctx, p, w, '#2C6A86');
   ctx.globalAlpha = 0.35;
-  strokePath(ctx, CONFIG.path, w, 'rgba(158,221,242,0.5)', [6, 18]);
+  for (const p of CONFIG.paths) strokePath(ctx, p, w, 'rgba(158,221,242,0.5)', [6, 18]);
   ctx.restore();
 }
 

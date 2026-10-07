@@ -2061,6 +2061,11 @@ class UI {
         this.banner(`${HEROES[ev.hero.type].name} mặc đủ bộ`, ev.name);
       } else if (ev.type === 'rest') {
         this.showRest();
+      } else if (ev.type === 'path') {
+        // vô tận đổi đường (bản đồ cũ tự mờ dần sang bản đồ mới: main.js cachedBackdrop): banner tên đường + mô tả
+        const sh = ev.shape && PATH_SHAPES[ev.shape];
+        this.banner('Quân giặc đổi đường', sh ? sh.name : 'Đường cũ');
+        if (sh) setTimeout(() => this.toast(`<b>${esc(sh.name)}</b> · ${esc(sh.desc)}`, '#9EDDF2'), 2700);
       } else if (ev.type === 'checkpoint') {
         this.saveRun();
       } else if (ev.type === 'victory') {
