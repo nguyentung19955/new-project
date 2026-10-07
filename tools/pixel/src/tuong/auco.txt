@@ -223,12 +223,6 @@ XXQQqqQQXXQQeekkffFFFFffkkkk
 XXQQqqQQXXQQeekkffFFFFffkkkk
 end
 
-# chân dung riêng: đầu phóng ×2 (cắt 14×14 từ khung đứng đầu tiên, giữ nét; 28×28 đặt ở 2,2 để không chạm mép)
-anim portrait fps=1 once
-frame portrait
-  use chan_dung 2 2
-  outline
-end
 
 anim idle fps=3 loop
 frame idle
@@ -400,4 +394,11 @@ frame die
   swap z e
   swap y d
   swap r m
+end
+
+# chân dung riêng: đầu phóng ×2 (cắt 14×14 từ khung đứng đầu tiên, giữ nét; 28×28 đặt ở 2,2 để không chạm mép)
+anim portrait fps=1 once
+frame portrait
+  use chan_dung 2 2
+  outline
 end

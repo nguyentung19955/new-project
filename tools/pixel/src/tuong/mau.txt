@@ -204,12 +204,6 @@ ssHHyynnNNyyFFFFyyNNnnNNnn
 ssHHyynnNNyyFFFFyyNNnnNNnn
 end
 
-# chân dung riêng: đầu + vai phóng ×2 (cắt từ khung đứng): vương miện hoa, tóc tán lá, chim vàng đậu vai
-anim portrait fps=1 once
-frame portrait
-  use chan_dung 3 2
-  outline
-end
 
 anim idle fps=3 loop
 frame idle
@@ -349,4 +343,11 @@ frame die
   swap s G
   swap p r
   swap Y y
+end
+
+# chân dung riêng: đầu + vai phóng ×2 (cắt từ khung đứng): vương miện hoa, tóc tán lá, chim vàng đậu vai
+anim portrait fps=1 once
+frame portrait
+  use chan_dung 3 2
+  outline
 end

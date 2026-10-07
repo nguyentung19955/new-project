@@ -237,11 +237,6 @@ zzYYYYYYYYyyYYYYYYYYccjjkkkkGG
 zzYYYYYYYYyyYYYYYYYYccjjkkkkGG
 end
 
-anim portrait fps=1 once
-frame portrait
-  use chan_dung 1 1
-  outline
-end
 
 anim idle fps=3 loop
 frame idle
@@ -411,4 +406,10 @@ frame die
   swap L l
   swap P L
   swap y d
+end
+
+anim portrait fps=1 once
+frame portrait
+  use chan_dung 1 1
+  outline
 end

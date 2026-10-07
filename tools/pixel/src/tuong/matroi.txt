@@ -218,12 +218,6 @@ YyRaahhFFKKKKFFFFFFKKKKFFry.
 ...nnaa......ffFFFFff.......
 end
 
-# chân dung riêng: đầu phóng ×2 + vương miện, đĩa mặt trời son–đồng 12 tia toả quanh đầu
-anim portrait fps=1 once
-frame portrait
-  use chan_dung 2 2
-  outline
-end
 
 anim idle fps=3 loop
 frame idle
@@ -358,4 +352,11 @@ frame die
   swap o O
   swap Y n
   swap l O
+end
+
+# chân dung riêng: đầu phóng ×2 + vương miện, đĩa mặt trời son–đồng 12 tia toả quanh đầu
+anim portrait fps=1 once
+frame portrait
+  use chan_dung 2 2
+  outline
 end
