@@ -284,7 +284,7 @@ anim hurt fps=8 once
 frame hurt
   use @idle.0
   shift -1 0
-  use mat_nham 14 8
+  use mat_nham 15 8
   swap F h
 end
 
@@ -297,13 +297,13 @@ frame die
   swap y d
   use chan 0 24
   use tren 0 3
-  use mat_nham 14 11
+  use mat_nham 15 11
   outline
 end
 frame die
   use vay 0 24
   use tren 0 3
-  use mat_nham 14 11
+  use mat_nham 15 11
   rot 90
   shift 0 1
   use truong_ngang 6 25

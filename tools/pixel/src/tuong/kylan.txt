@@ -114,16 +114,15 @@ deeeeeeeeeeeeEEd
 end
 
 part co
-.jY.....
-jYyy....
-Yyyyd...
-Yyyyyd..
-.yyyyed.
-..yyeeed
-...yeeEd
-....eeEd
-....eEd.
-.....Ed.
+.jY....
+jYy....
+Yyyd...
+Yyyed..
+yyyeed.
+.yyeeEd
+..yeeEd
+...eEd.
+...eEd.
 end
 
 part bom
@@ -139,22 +138,21 @@ eEeE...
 end
 
 part dau
-.......w....
-......Yw....
-.....jY.....
-.jYYjY......
-jYYYYYd.....
-YeeeyyyYYd..
-yyewKyyyyYYo
-dyyooyyyyyyo
+........w...
+.......Yw...
+.jYYY.jY....
+jYYYYjY.....
+YeeeyYYYYd..
+yowKyyyyyYYo
+dyddyyyyyyyo
 .ddyyKKKKKKK
-..dyyRRRwK.e
-...dyyyyo..e
+..dyRRRwK..e
+...dyyyo...e
 ...eEe....eE
 end
 
 part mat_nham
-ydd
+odd
 end
 
 part sung_sang
@@ -265,7 +263,7 @@ frame attack
   use co 15 8
   use bom 11 6
   use dau 18 4
-  use sang 24 4
+  use sang 25 3
   outline
 end
 
@@ -286,7 +284,7 @@ frame cast
   use co 15 6
   use bom 11 4
   use dau 18 2
-  use sung_sang 22 2
+  use sung_sang 23 2
   outline
 end
 
@@ -299,7 +297,7 @@ frame cast
   use co 15 7
   use bom 11 4
   use dau 18 2
-  use sung_sang 22 2
+  use sung_sang 23 2
   use lua1 27 10
   outline
 end
@@ -313,7 +311,7 @@ frame cast
   use co 15 7
   use bom 11 4
   use dau 18 2
-  use sung_sang 22 2
+  use sung_sang 23 2
   use lua2 24 10
   outline
 end
@@ -331,7 +329,7 @@ frame hurt
   use co 14 7
   use bom 10 4
   use dau 17 2
-  use mat_nham 19 8
+  use mat_nham 18 7
   swap Y w
   swap y Y
   outline
@@ -350,7 +348,7 @@ frame die
   use co 15 11
   use bom 11 10
   use dau 18 8
-  use mat_nham 20 14
+  use mat_nham 19 13
   outline
 end
 
@@ -361,7 +359,7 @@ frame die
   use co 15 16
   use bom 11 16
   use dau 18 15
-  use mat_nham 20 21
+  use mat_nham 19 20
   outline
 end
 
