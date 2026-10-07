@@ -180,7 +180,7 @@ function coopHashStr(s) {
 }
 function coopStateLine(game, tick) {
   const c = game.co, f = (x, d = 3) => (Number.isFinite(x) ? x.toFixed(d) : String(x));
-  const parts = [tick, SIM.seed, nextId, game.lives, game.wave, game.time.toFixed(4), c.pl.map((p) => f(p.gold, 2)).join('/'), c.alone,
+  const parts = [tick, SIM.seed, nextId, game.lives, game.maxLives, game.wave, game.time.toFixed(4), c.pl.map((p) => f(p.gold, 2)).join('/'), c.alone,
     c.pl.map((p) => (p.market ? p.market.types.join(',') : '-') + ':' + (p.deck || []).join(',')).join('/'), game.rest ? 'R' + (game.rest.done || []).join('') : ''];
   for (const e of game.enemies) parts.push(`e${e.id}:${e.type}:${f(e.hp)}:${f(e.dist, 2)}`);
   game.heroes.forEach((h, i) => { if (h) parts.push(`h${i}:${h.type}:${h.level}:${h.tier || 0}:${f(h.hp, 2)}:${f(h.mana, 1)}:${h.dead ? 1 : 0}`); });
@@ -535,6 +535,7 @@ const COOP = {
       for (const k of Object.keys(g)) if (!COOP_SKIP.has(k)) delete g[k];
       Object.assign(g, W.fields);
       g.lv = LEVELS[g.level];
+      if (g.maxLives == null) g.maxLives = Math.max(CONFIG.startLives, g.lives);   // v169: ảnh chụp cũ
       g.events = [];
       g.auraBosses = [];
       const co = new CoopState();

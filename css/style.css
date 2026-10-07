@@ -117,6 +117,11 @@ button:disabled { cursor: default; }
 .tb-res svg { width: 16px; height: 16px; }
 #tb-gold { color: var(--gold-hi); }
 #tb-lives { color: #FF8A6A; }
+#tb-lives b { color: #FFE9B0; }
+#tb-lives b small { font-size: 11px; font-weight: 700; color: #FFB08A; opacity: .85; }
+#tb-lives.lv-mid b { color: #FFA040; }
+#tb-lives.lv-low b { color: #FF4A3A; animation: livesLow 1.2s ease-in-out infinite; }
+@keyframes livesLow { 50% { opacity: .55; } }
 #tb-water { color: var(--water-t); }
 #btn-speed.on { color: var(--gold-hi); border-color: var(--gold-hi); }
 #btn-run.go { background: linear-gradient(180deg, #F2D27A, #B8852A); border: 2px solid var(--gold-pale); color: #2A1A08; box-shadow: 0 0 10px #FFD66B88; }
