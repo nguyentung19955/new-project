@@ -1904,7 +1904,7 @@ svg.icn { overflow: visible; }
 .hx-m img { width: 100%; height: 100%; object-fit: contain; display: block; border-radius: 6px; }
 .hx-m.no img { filter: grayscale(1) brightness(.5); }
 .hx-m.part img { filter: grayscale(.4) brightness(.8); }
-.hx-m i { position: absolute; right: -4px; top: -5px; min-width: 15px; height: 15px; padding: 0 2px; border-radius: 8px; font-style: normal; font-size: 9px; font-weight: 900; line-height: 15px; text-align: center; background: #3A3226; color: #FFD66B; letter-spacing: -1px; }
+.hx-m i { position: absolute; right: -4px; top: -5px; min-width: 15px; height: 15px; padding: 0 2px; border-radius: 8px; font-style: normal; font-size: 9px; font-weight: 900; line-height: 15px; text-align: center; background: #3A3226; color: #FFD66B; letter-spacing: -.3px; white-space: nowrap; }
 .hx-m i:empty { display: none; }
 .hx-m.ok i { background: #2E9E3E; color: #fff; font-size: 10px; letter-spacing: 0; }
 .hx-m small { position: absolute; left: 0; right: 0; bottom: -2px; text-align: center; font-size: 8.5px; line-height: 10px; color: var(--muted); text-shadow: 0 1px 1px #000, 0 0 2px #000; letter-spacing: -1px; }
@@ -1913,8 +1913,7 @@ svg.icn { overflow: visible; }
 .hx-go:disabled { filter: grayscale(.7) brightness(.7); box-shadow: none; }
 .hx-go.off { filter: grayscale(.8) brightness(.62); box-shadow: none; }   /* v180: khoá (chưa đủ sao / kỹ năng) — chạm vẫn ra toast lý do */
 .hx-go .uie { width: 13px; height: 13px; }
-.hx-sk { position: absolute; left: -5px; top: -5px; height: 13px; padding: 0 2px; border-radius: 4px; font-size: 8px; font-weight: 900; line-height: 13px; letter-spacing: -.3px; white-space: nowrap; color: #fff; }
-.hx-sk.y { background: #2E7A3A; } .hx-sk.n { background: #A8452A; }
+.hx-sk { position: absolute; left: 50%; bottom: -6px; transform: translateX(-50%); height: 13px; padding: 0 2px; border-radius: 4px; font-size: 8px; font-weight: 900; line-height: 13px; letter-spacing: -.3px; white-space: nowrap; color: #fff; background: #A8452A; }
 .hx-go .coin-img, .hx-go .coin { margin-left: 2px; }
 .hx-st { font-size: 12px; font-weight: 800; color: var(--muted); white-space: nowrap; display: flex; align-items: center; gap: 3px; }
 .hx-st.lock { color: #C8BFA8; font-size: 11px; }

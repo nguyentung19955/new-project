@@ -51,8 +51,8 @@ async function legendsCase(w, h) {
   await page.click('#legends [data-act=hx-close]'); await page.waitForTimeout(80);
   ok(await page.evaluate(() => document.querySelector('#legends').hidden && getComputedStyle(document.querySelector('#deck')).visibility === 'visible'), `${tag}: nút ✕ đóng bảng, thanh chợ hiện lại`);
 
-  // --- có nguyên liệu: Lạc Tướng ★★ + Thầy Chuông Đồng ★★ (→ Thần Trống Đồng), Thầy Mo ★★ (thiếu Đèn Rồi)
-  await put(page, 'lactuong', 2); await put(page, 'chuongdong', 2); await put(page, 'thaymo', 2); await put(page, 'denroi', 1);
+  // --- có nguyên liệu: Lạc Tướng ★★★ + Thầy Chuông Đồng ★★★ (→ Thần Trống Đồng), Thầy Mo ★★★ (thiếu Đèn Rồi)
+  await put(page, 'lactuong', 3); await put(page, 'chuongdong', 3); await put(page, 'thaymo', 3); await put(page, 'denroi', 1);
   await page.click('#deck [data-act=legend-open]'); await page.waitForTimeout(200);
   const first = await page.evaluate(() => { const c = document.querySelector('#legends .hx-card'); return { to: FUSION[+c.dataset.i].to, ready: c.classList.contains('ready'), btn: !!c.querySelector('[data-act=hx-fuse]'), oks: c.querySelectorAll('.hx-m.ok').length }; });
   ok(first.to === 'trongdong' && first.ready && first.btn && first.oks === 2, `${tag}: thẻ làm được lên đầu (Thần Trống Đồng, 2 ✓, nút Hợp thể)`);
@@ -64,6 +64,10 @@ async function legendsCase(w, h) {
   ok(ones.length >= 2 && ones.every((n) => n === 1), `${tag}: lọc "Thiếu 1" → ${ones.length} thẻ, mỗi thẻ đúng 1 ✓`);
   await page.click('#legends [data-act=hx-tab][data-k=legendary]'); await page.waitForTimeout(80);
   ok(await page.evaluate(() => [...document.querySelectorAll('#legends .hx-card')].every((c) => HEROES[FUSION[+c.dataset.i].to].legend === 'legendary') && document.querySelectorAll('#legends .hx-card').length > 5), `${tag}: tab Vàng chỉ có tướng Vàng`);
+  await page.click('#legends [data-act=hx-tab][data-k=epic]'); await page.waitForTimeout(80);
+  const marks = await page.evaluate(() => [...document.querySelectorAll('#legends .hx-m')].map((m) => m.querySelector('i').textContent).filter(Boolean));
+  ok(marks.length >= 4 && marks.every((t) => t === '✓' || /^\d\/3★$/.test(t)), `${tag}: tab Tím nguyên liệu hiện ✓ hoặc sao hiện tại/cần (${[...new Set(marks)].join(' ')})`);
+  await page.click('#legends [data-act=hx-tab][data-k=legendary]'); await page.waitForTimeout(80);
   await page.click('#legends [data-act=hx-help]'); await page.waitForTimeout(60);
   ok((await page.locator('#legends .hx-sub').innerText()).includes('Kéo 2 tướng'), `${tag}: nút ? hiện giải thích ngắn`);
   const ov = await overflow(page, '#legends');
@@ -90,18 +94,20 @@ async function skillCase(w, h) {
   await enter(page, 0);
   await page.evaluate(() => { game.running = false; game.gold = 5000; });
   const tag = `${w}x${h}`;
-  const a = await put(page, 'lactuong', 2, { noSkill: true }), b = await put(page, 'chuongdong', 2);
+  const a = await put(page, 'lactuong', 3, { noSkill: true }), b = await put(page, 'chuongdong', 3);
   let r = await page.evaluate(([a, b]) => ({ c: game.canFuse(game.heroes[a], game.heroes[b]), gap: game.skillGap(game.heroes[a]), f: game.fuse(a, b), still: game.heroes[a] && game.heroes[a].type }), [a, b]);
-  ok(typeof r.c === 'string' && /Lạc Tướng còn thiếu \d+ cấp kỹ năng/.test(r.c) && r.gap > 0, `${tag}: Lạc Tướng ★★ chưa nâng kỹ năng → canFuse báo "${r.c.slice(0, 40)}…"`);
+  ok(typeof r.c === 'string' && /Lạc Tướng còn thiếu \d+ cấp kỹ năng/.test(r.c) && r.gap > 0, `${tag}: Lạc Tướng ★★★ chưa nâng kỹ năng → canFuse báo "${r.c.slice(0, 40)}…"`);
   ok(typeof r.f === 'string' && r.still === 'lactuong', `${tag}: game.fuse bị chặn, tướng vẫn còn`);
   ok(await page.evaluate(() => game.fusionProgress(FUSION.find((f) => f.to === 'trongdong')).p < 1), `${tag}: tiến độ (dải gợi ý) < 100% khi thiếu kỹ năng`);
+  r = await page.evaluate(([a, b]) => { const h = game.heroes[b]; h.tier = 2; const c = game.canFuse(h, game.heroes[a]); h.tier = 3; return c; }, [a, b]);
+  ok(typeof r === 'string' && /Thầy Chuông Đồng cần ★★★/.test(r), `${tag}: ★★ dù đủ kỹ năng vẫn chưa hợp thể được ("${r}")`);
   // bảng Hợp thể: thẻ Thần Trống Đồng có huy hiệu KN, nút khoá, chạm → toast nêu rõ tướng thiếu
   await page.click('#deck [data-act=legend-open]'); await page.waitForTimeout(200);
   const iTD = await page.evaluate(() => FUSION.findIndex((f) => f.to === 'trongdong'));
   const card = page.locator(`#legends .hx-card[data-i="${iTD}"]`);
-  const info = await card.evaluate((c) => ({ ready: c.classList.contains('ready'), lock: !!c.querySelector('.hx-go.off'), sk: [...c.querySelectorAll('.hx-sk')].map((x) => x.textContent) }));
+  const info = await card.evaluate((c) => ({ ready: c.classList.contains('ready'), lock: !!c.querySelector('.hx-go.off'), sk: [...c.querySelectorAll('.hx-sk')].map((x) => x.textContent), oks: c.querySelectorAll('.hx-m.ok').length }));
   ok(!info.ready && info.lock, `${tag}: thẻ không "ready", nút Hợp thể bị khoá`);
-  ok(info.sk.length === 2 && info.sk.some((t) => /^KN-\d+$/.test(t)) && info.sk.includes('KN✓'), `${tag}: huy hiệu kỹ năng từng nguyên liệu ${info.sk.join(' / ')}`);
+  ok(info.sk.length === 1 && /^KN-\d+$/.test(info.sk[0]) && info.oks === 1, `${tag}: nguyên liệu đủ hiện ✓, nguyên liệu thiếu kỹ năng hiện ${info.sk[0]}`);
   await page.evaluate(() => { document.querySelector('#toasts').innerHTML = ''; });
   await card.locator('.hx-go.off').click({ force: true }); await page.waitForTimeout(150);
   const t = await page.evaluate(() => ({ txt: document.querySelector('#toasts').textContent, open: !document.querySelector('#legends').hidden, td: game.heroes.some((h) => h && h.type === 'trongdong') }));
@@ -131,13 +137,13 @@ async function evoCase(w, h) {
   await enter(page, 0);
   await page.evaluate(() => { game.running = false; game.gold = 5000; });
   const tag = `${w}x${h}`;
-  const s1 = await put(page, 'lactuong', 2); await put(page, 'chuongdong', 2);
+  const s1 = await put(page, 'lactuong', 3); await put(page, 'chuongdong', 3);
   const openEvo = async (slot) => { await page.evaluate((s) => { ui.closeScreen && ui.screen && ui.closeScreen(); ui.sel = s; ui.openScreen('evo'); }, slot); await page.waitForTimeout(250); };
   // --- Thường
   await openEvo(s1);
   let n = await page.evaluate(() => ({ cv: document.querySelectorAll('#screen canvas[data-hero]').length, steps: document.querySelectorAll('#screen .es').length, ho: document.querySelectorAll('#screen .ho').length, done: document.querySelectorAll('#screen .es.done').length }));
   ok(n.cv === 1 && n.steps === 3, `${tag} Thường: ảnh tướng 1 lần, 3 mốc sao`);
-  ok(n.done === 2 && n.ho >= 2, `${tag} Thường: ★ ★★ "Đã đạt", ${n.ho} thẻ hợp thể`);
+  ok(n.done === 3 && n.ho >= 2, `${tag} Thường: ★ ★★ ★★★ "Đã đạt", ${n.ho} thẻ hợp thể`);
   ok(await page.locator('#screen .note').count() === 0, `${tag}: bỏ đoạn "Cách khác…" dài`);
   let ov = await overflow(page, '#screen .ev2-body');
   ok(!ov.length, `${tag} Thường: không chữ tràn ${ov.slice(0, 3).join(' | ')}`);

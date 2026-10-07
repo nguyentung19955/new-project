@@ -1,5 +1,6 @@
-// Mô phỏng cân bằng (v180): thời điểm trung bình có tướng Tím đầu tiên, luật cũ (v136: ra Tím chỉ cần ★★)
-// so với luật mới (ra Tím phải nâng hết kỹ năng). Bot tham lam giống nhau ở cả hai luật, chỉ đổi điều kiện hợp thể.
+// Mô phỏng cân bằng (v180): thời điểm trung bình có tướng Tím đầu tiên theo từng luật hợp thể:
+//   cu  = v136: 2 tướng Thường ★★, không cần kỹ năng · kn2 = ★★ + kỹ năng tối đa · moi = v180: ★★★ + kỹ năng tối đa.
+// Bot tham lam giống nhau ở mọi luật (đội 6 tướng = 3 cặp hợp thể Tím), chỉ đổi điều kiện hợp thể.
 // Chạy: node tests/hop-the/mo-phong.js [số ván mỗi ải=6]   (không thuộc bộ test, chỉ để đo)
 const { open, enter } = require('../cho-tuong/helpers');
 const N = +process.argv[2] || 6, LEVELS = [0, 2, 4];
@@ -8,8 +9,12 @@ async function run(level, rule, seed) {
   const { browser, page } = await open(844, 390, {});
   await enter(page, level);
   const r = await page.evaluate(([rule, seed]) => {
-    // luật cũ: tướng Thường → Tím không cần kỹ năng tối đa
+    if (rule !== 'moi') COSTS.ascendTier = 2;
     if (rule === 'cu') { const orig = game.fusionReady.bind(game); game.fusionReady = (h) => ((h.tier || 0) >= game.ascendNeed(h) && !h.from ? true : orig(h)); }
+    // đội = 3 cặp hợp thể ra Tím (tướng Thường, không trùng)
+    const deck = [];
+    for (const f of FUSION) if (HEROES[f.to].legend === 'epic' && BASIC_HEROES.includes(f.a) && BASIC_HEROES.includes(f.b) && !deck.includes(f.a) && !deck.includes(f.b) && deck.length < 6) deck.push(f.a, f.b);
+    game.deck = deck; game.market = null;
     let s = seed; Math.random = () => ((s = (s * 16807) % 2147483647) / 2147483647);
     game.running = false; game.owned = null;
     const g = game, DT = 1 / 20, recipes = FUSION.filter((f) => HEROES[f.to].legend === 'epic');
@@ -37,11 +42,11 @@ async function run(level, rule, seed) {
       const tgt = hs.filter((h) => (h.tier || 0) >= 2 && partnerOn(h)).sort((a, b) => a.level - b.level)[0] || hs.sort((a, b) => a.level - b.level)[0];
       if (tgt && g.gold >= g.levelCost(tgt) + (tgt.tier >= 2 ? 0 : g.summonCost())) g.levelUp(tgt);
     };
-    while (!g.over && !first && g.time < 3600) {
+    while (!g.over && !first && g.time < 1800) {
       g.update(DT); t += DT;
       if (t >= 0.5) { t = 0; for (let k = 0; k < 6; k++) think(); }
     }
-    return { first, over: g.over, win: g.won, wave: g.wave, time: Math.round(g.time) };
+    return { first, over: g.over, win: g.won, wave: g.wave, time: Math.round(g.time), deck };
   }, [rule, seed]);
   await browser.close();
   return r;
@@ -49,12 +54,12 @@ async function run(level, rule, seed) {
 
 (async () => {
   const out = {};
-  for (const lv of LEVELS) for (const rule of ['cu', 'moi']) {
+  for (const lv of LEVELS) for (const rule of ['cu', 'kn2', 'moi']) {
     const rs = [];
     for (let k = 0; k < N; k++) rs.push(await run(lv, rule, 1234 + k * 977));
     const got = rs.filter((x) => x.first);
     const avg = (f) => (got.length ? (got.reduce((a, x) => a + f(x), 0) / got.length).toFixed(1) : '-');
     out[`${lv}/${rule}`] = { coTim: `${got.length}/${N}`, giay: avg((x) => x.first.t), dot: avg((x) => x.first.wave), thua: rs.filter((x) => !x.first && x.over).length };
-    console.log(`ải ${lv + 1} · luật ${rule === 'cu' ? 'cũ (v136)' : 'mới (v180)'}: có Tím ${got.length}/${N} ván · TB ${avg((x) => x.first.t)} s · đợt ${avg((x) => x.first.wave)} · ${rs.map((x) => (x.first ? `đ${x.first.wave}` : x.over ? 'thua/hết' : '—')).join(' ')}`);
+    console.log(`ải ${lv + 1} · luật ${{ cu: 'v136 ★★', kn2: '★★+KN', moi: 'v180 ★★★+KN' }[rule]}: có Tím ${got.length}/${N} ván · TB ${avg((x) => x.first.t)} s · đợt ${avg((x) => x.first.wave)} · ${rs.map((x) => (x.first ? `đ${x.first.wave}` : x.over ? 'thua/hết' : '—')).join(' ')}`);
   }
 })();

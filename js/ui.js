@@ -653,7 +653,7 @@ class UI {
     const ctr = new Set(); try { const lv = LEVELS[g.level], R = ROSTERS[lv.roster || 'thuy']; for (const c of rosterCounters(R, Object.values(lv.bosses || {}), BASIC_HEROES, lv.hint).list) ctr.add(c.t); } catch (e) { /* bỏ qua */ }
     const ing = deckIngredients(this.save.owned || []);
     const card = (t) => { const d = HEROES[t], on = sel.includes(t);
-      return `<button class="dk-pick metal ${d.legend || 'common'} ${on ? 'on' : ''}" data-act="deck-tog" data-id="${t}" style="--c:${ELEMENTS[d.el].color}" data-tip="${esc(`<b>${esc(d.name)}</b><small>Hành ${ELEMENTS[d.el].name} · ${d.attack === 'melee' ? 'Cận chiến' : 'Đánh xa'}</small><p>${esc(d.title || '')}</p>${FUSION.filter((f) => f.a === t || f.b === t).map((f) => `<small>Hợp thể: + ${esc(HEROES[f.a === t ? f.b : f.a].name)} ➜ ${esc(HEROES[f.to].name)} (cả 2 ★★ + kỹ năng tối đa)</small>`).join('')}`)}">
+      return `<button class="dk-pick metal ${d.legend || 'common'} ${on ? 'on' : ''}" data-act="deck-tog" data-id="${t}" style="--c:${ELEMENTS[d.el].color}" data-tip="${esc(`<b>${esc(d.name)}</b><small>Hành ${ELEMENTS[d.el].name} · ${d.attack === 'melee' ? 'Cận chiến' : 'Đánh xa'}</small><p>${esc(d.title || '')}</p>${FUSION.filter((f) => f.a === t || f.b === t).map((f) => `<small>Hợp thể: + ${esc(HEROES[f.a === t ? f.b : f.a].name)} ➜ ${esc(HEROES[f.to].name)} (cả 2 ★★★ + kỹ năng tối đa)</small>`).join('')}`)}">
         <img src="${heroImgUrl(t, 'head')}" alt=""><b>${esc(d.name)}</b>
         <span class="tg">${ctr.has(t) ? '<i class="c">khắc chế</i>' : ''}${ing.has(t) ? '<i class="h">hợp thể</i>' : ''}</span>${on ? `<span class="no">${sel.indexOf(t) + 1}</span>` : ''}</button>`; };
     const els = EL_ORDER.map((el) => `<div class="dk-el"><div class="dk-eh" style="color:${ELEMENTS[el].color}">${elIcon(el, 13)} ${ELEMENTS[el].name}</div>${BASIC_HEROES.filter((t) => HEROES[t].el === el).map(card).join('')}</div>`).join('');
@@ -1732,7 +1732,7 @@ class UI {
     const R = (t) => RARITY[HEROES[t].legend];
     const NEED = lg.tab === 'epic' ? `Tím = 2 tướng Thường ${'★'.repeat(COSTS.ascendTier)} đúng cặp · kỹ năng tối đa` : `Vàng = 2 tướng Tím Thần tinh ${'★'.repeat(COSTS.ascendTier2)} · kỹ năng tối đa`;
     const mat = (m) => `<span class="hx-m ${m.ok ? 'ok' : m.h ? 'part' : 'no'} ${HEROES[m.type].legend || 'common'}" title="${esc(HEROES[m.type].name + (m.ok ? ' ✓' : ' — ' + m.why))}">
-        <img src="${heroImgUrl(m.type, 'head')}" alt=""><i>${m.ok ? '✓' : m.h ? '★'.repeat(m.h.tier || 0) || '·' : ''}</i><small>${'★'.repeat(m.need)}</small>${m.h ? `<b class="hx-sk ${m.gap ? 'n' : 'y'}">KN${m.gap ? '-' + m.gap : '✓'}</b>` : ''}</span>`;
+        <img src="${heroImgUrl(m.type, 'head')}" alt=""><i>${m.ok ? '✓' : m.h ? `${m.h.tier || 0}/${m.need}★` : ''}</i>${m.h && !m.ok && m.gap ? `<b class="hx-sk">KN-${m.gap}</b>` : `<small>${m.ok ? '' : '★'.repeat(m.need)}</small>`}</span>`;
     const card = (x) => { const t = x.f.to, d = HEROES[t];
       const st = !x.own ? `<span class="hx-st lock">${UIE.lock()} Chưa có</span>`
         : x.ready ? `<button class="hx-go" data-act="hx-fuse" data-i="${x.i}" ${x.poor ? `disabled title="Cần ${x.cost} vàng"` : ''}>Hợp thể · ${coin(1)}${x.cost}</button>`
