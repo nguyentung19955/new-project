@@ -39,6 +39,11 @@ let KHO_MODE = false;       // đang mở Lò đúc đồng trước trận: gi�
 const bac = (sm) => `<i class="bac${sm ? ' sm' : ''}"></i>`;
 const coin = (sm) => KHO_MODE ? bac(sm) : (assetUrl('ui_dong-xu.png') ? `<img class="coin-img${sm ? ' sm' : ''}" src="${assetUrl('ui_dong-xu.png')}" alt="">` : `<i class="coin${sm ? ' sm' : ''}"></i>`);
 // icon giao diện vẽ tay (ui_*.png) nếu đã có, không thì dùng ký hiệu dự phòng
+// v155: nút vẽ tay thay ký hiệu (ui-tran-4/5, huy chương); thiếu ảnh thì quay về ký hiệu cũ
+const uiE = (f, emo, cls = 'uie') => `<img class="${cls}" src="${assetSrc(`ui/${f}.png`)}" alt="${emo}" onerror="this.replaceWith(this.alt)">`;
+const UIE = { star: () => uiE('ui-tran-4-1', '★'), equip: () => uiE('ui-tran-4-2', '▲'), lock: () => uiE('ui-tran-4-3', '🔒'), redo: () => uiE('ui-tran-4-4', '↻'),
+  tip: () => uiE('ui-tran-5-1', '💡'), endless: () => uiE('ui-tran-5-2', '♾'), battle: () => uiE('ui-tran-5-3', '⚔'), done: () => uiE('ui-tran-5-4', '✓'),
+  medal: (i) => uiE(`ui-huy-chuong-${i + 1}`, ['🥇', '🥈', '🥉', '👑'][i]) };
 const uiIc = (name, fallback = '') => (assetUrl(`ui_${name}.png`) ? `<img class="uiic" src="${assetUrl(`ui_${name}.png`)}" alt="">` : fallback);
 const rarCls = (r) => ({ common: 'rt', rare: 'rh', epic: 'rs', legendary: 'rl' }[r]);
 const ATTR_CLS = { str: 'a-str', agi: 'a-agi', int: 'a-int' };
@@ -109,6 +114,9 @@ function setItemIcon(id) {
   return (setIconCache[id] = src && pal ? src.replace(/#[0-9A-Fa-f]{6}/g, (c) => (c.toUpperCase() in LL_COLORS ? pal[LL_COLORS[c.toUpperCase()]] : c)) : '');
 }
 function itemIcon(id) {
+  // v155: bộ icon đồ vẽ tay mới (file đầu danh sách, tools/cat-items.py) luôn dùng như ảnh quái; ảnh AI cũ vẫn theo Cài đặt
+  const p = itemPngPath(id)[0];
+  if (asset(p, true)) return `<img src="${assetSrc(p)}" alt="">`;
   const u = assetUrl(itemPngPath(id));
   if (u) return `<img src="${u}" alt="">`;
   if (HAS_ART && ART.item[id]) return svgImg(ART.item[id]);
@@ -293,6 +301,7 @@ class UI {
     // v124–126: icon nút vẽ tay phong cách trống đồng (assets/ui/); thiếu ảnh thì giữ ký hiệu cũ
     const uiImg = (f, alt, cls = 'uimg') => `<img class="${cls}" src="${assetSrc(`ui/${f}.png`)}" alt="${alt}" onerror="this.replaceWith(this.alt)">`;
     this.uiImg = uiImg;
+    { const dw = document.querySelector('[data-act=dw][data-k=heroes] .ic'); if (dw) dw.innerHTML = UIE.medal(3); }
     for (const [q, f] of [['[data-act=auto-up-gear] .i', 'ui-tran-2-2'], ['[data-act=auto-eq-all] .i', 'ui-tran-2-3']]) {
       const el = document.querySelector(q);
       if (el) el.innerHTML = uiImg(f, el.textContent);
@@ -533,21 +542,21 @@ class UI {
     const s = this.save, g = this.game, b = this.prepBought || {};
     const kho = s.kho || 0;
     const card = (id, title, desc, cost, icon, done) => `<button class="prep-card metal ${done ? 'done' : ''}" data-act="prep-buy" data-id="${id}" ${done || kho < cost ? 'disabled' : ''}>
-        <span class="ic">${icon}</span><b>${title}</b><small>${desc}</small><span class="cost">${done ? '✓ Đã mua' : `${bac()} ${fmt(cost)}`}</span></button>`;
+        <span class="ic">${icon}</span><b>${title}</b><small>${desc}</small><span class="cost">${done ? UIE.done() + ' Đã mua' : `${bac()} ${fmt(cost)}`}</span></button>`;
     const heroCard = (t) => { const d = HEROES[t], cost = PREP.heroCost[d.legend]; const done = b.hero;
       return `<button class="prep-hero metal ${d.legend} ${b.hero === t ? 'on' : ''}" data-act="prep-hero" data-id="${t}" ${done || kho < cost || !g.freeSlots().length ? 'disabled' : ''}>
-        <img src="${heroImgUrl(t, 'head')}" alt=""><b>${d.name}</b><span class="cost">${b.hero === t ? '✓' : `${bac()} ${fmt(cost)}`}</span></button>`; };
+        <img src="${heroImgUrl(t, 'head')}" alt=""><b>${d.name}</b><span class="cost">${b.hero === t ? UIE.done() : `${bac()} ${fmt(cost)}`}</span></button>`; };
     const legends = Object.keys(HEROES).filter((t) => HEROES[t].legend === 'legendary');
     const epics = Object.keys(HEROES).filter((t) => HEROES[t].legend === 'epic');
     $('#prep').innerHTML = `<div class="screen" style="z-index:auto">
-      <div class="scr-head metal"><h1 class="ttl">Chuẩn bị xuất quân</h1><span class="chip dark">${g.endless ? '♾ Vô tận' : 'Ải ' + (g.level + 1)} · ${LEVELS[g.level].name}</span><div class="sp"></div>
+      <div class="scr-head metal"><h1 class="ttl">Chuẩn bị xuất quân</h1><span class="chip dark">${g.endless ? UIE.endless() + ' Vô tận' : 'Ải ' + (g.level + 1)} · ${LEVELS[g.level].name}</span><div class="sp"></div>
         <span class="chip kho">Ngân khố ${bac(1)} ${fmt(kho)}</span>
         <button class="btn btn-gold title" style="height:40px;padding:0 18px;font-size:17px" data-act="prep-go">Vào trận ▶</button></div>
       <div class="prep-body">
         <div class="prep-col"><div class="h">Hậu cần</div>
           ${card('gold', 'Lương thảo', `+${PREP.goldAmount} vàng đầu trận`, PREP.goldCost, '🌾', b.gold)}
           ${card('jar', 'Hũ đồng', 'Mở ngay 2 món Hiếm trở lên vào túi', PREP.jarCost, '🏺', b.jar)}
-          ${card('king', 'Hũ Vua Hùng', 'Mở ngay 2 món Sử thi trở lên (35% đồ bộ)', PREP.kingCost, '👑', b.king)}
+          ${card('king', 'Hũ Vua Hùng', 'Mở ngay 2 món Sử thi trở lên (35% đồ bộ)', PREP.kingCost, UIE.medal(3), b.king)}
           ${card('lives', 'Đắp thành', `+${PREP.livesAmount} mạng`, PREP.livesCost, '🧱', b.lives)}
           <button class="prep-card metal" data-act="prep-forge"><span class="ic">⚒</span><b>Lò đúc đồng</b><small>Mua và đúc đồ bằng Ngân khố. Đồ Huyền thoại hiếm và đắt</small><span class="cost">Mở ›</span></button></div>
         <div class="prep-col wide"><div class="h">Tướng đã sở hữu (hợp thể được trong trận)</div>
@@ -702,7 +711,7 @@ class UI {
     const rows = await CLOUD.topScores(board, 50);
     if (this.ranksBoard !== board || $('#ranks').hidden) return;
     const me = CLOUD.user && CLOUD.user.uid;
-    const medal = (i) => (i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : i + 1);
+    const medal = (i) => (i < 3 ? UIE.medal(i) : i + 1);
     const body = !rows ? `<div class="note" style="text-align:center;padding:20px">Không tải được bảng xếp hạng (${esc(CLOUD.error || 'mất mạng')}).</div>`
       : !rows.length ? `<div class="note" style="text-align:center;padding:20px">Chưa có ai ghi tên. ${board === 'endless' ? 'Thắng một ải rồi chọn <b>Chơi vô tận</b> để lên bảng!' : 'Thắng ải này để lên bảng!'}</div>`
       : `<div class="rk-list">${rows.map((r, i) => `<div class="rk-row inset ${r.uid === me ? 'me' : ''}"><span class="rk-n">${medal(i)}</span><b class="rk-name">${esc(r.name || 'Khách')}${r.google ? '' : ' <small>(khách)</small>'}</b><span class="rk-d">${esc(r.detail || '')}</span></div>`).join('')}</div>`;
@@ -840,7 +849,7 @@ class UI {
     $('#campaign').innerHTML = `<div class="screen" style="z-index:auto">
       <div class="scr-head metal"><button class="xbtn metal" data-act="cp-back" aria-label="Quay lại">${ICON.back}</button>
         <h1 class="ttl">${endl ? 'Vô Tận' : 'Phó Bản'}</h1>
-        <div class="seg inset cp-mode"><button class="${endl ? '' : 'on'}" data-act="cp-mode" data-k="camp">⚔ Phó bản</button><button class="${endl ? 'on' : ''}" data-act="cp-mode" data-k="endless">♾ Vô tận</button></div>
+        <div class="seg inset cp-mode"><button class="${endl ? '' : 'on'}" data-act="cp-mode" data-k="camp">${UIE.battle()} Phó bản</button><button class="${endl ? 'on' : ''}" data-act="cp-mode" data-k="endless">${UIE.endless()} Vô tận</button></div>
         ${endl ? '' : `<span class="chip dark">★ ${total} / ${LEVELS.length * 3}</span>`}
         <div class="cp-tabs">${CHAPTERS.map((c, ci) => { const open = c.from < s.unlocked;
           return `<button class="cp-tab ${c === ch ? 'on' : ''} ${open ? '' : 'lock'}" data-act="cp-ch" data-i="${ci}" ${open ? '' : 'disabled'}>${open ? '' : ICON.lock}${ci + 1}. ${c.name}</button>`; }).join('')}</div>
@@ -860,14 +869,14 @@ class UI {
           <div class="cp-scroll"><div class="hd"><span class="no">Ải ${i + 1}</span><span class="ttl">${lv.name}</span><span class="op">${s.stars[i] ? '★'.repeat(s.stars[i]) : 'Đang mở'}</span></div>
           ${endl ? `<div class="sub">Vô tận · quái mạnh dần mãi · boss mỗi 10 đợt</div>
           <div class="desc">Sau ${lv.waves} đợt, cứ 10 đợt đổi bộ quái mới. Hết mạng là thua; ghi điểm bảng xếp hạng.</div>
-          <div class="cp-rec">♾ Kỷ lục bản đồ này: <b>đợt ${(s.bestEndless || {})[i] || 0}</b></div>`
+          <div class="cp-rec">${UIE.endless()} Kỷ lục bản đồ này: <b>đợt ${(s.bestEndless || {})[i] || 0}</b></div>`
           : `<div class="sub">${lv.waves} đợt · boss <b>${bosses}</b></div>
           <div class="desc">${lv.desc}</div>
           <div class="cond inset"><div class="h">ĐIỀU KIỆN SAO</div>
             ${STAR_RULES.map((r, k) => `<div class="${s.stars[i] > k ? 'got' : ''}"><span>${'★'.repeat(k + 1)}</span><span>${r}</span></div>`).join('')}</div>`}
           ${this.counterHtml(i)}</div>
           <div class="cp-act"><div class="cp-diff"><button class="${this.save.settings.hard ? 'metal' : 'btn-gold'}" data-act="diff" data-k="0">Thường</button><button class="${this.save.settings.hard ? 'on' : 'metal'}" data-act="diff" data-k="1" title="Máu quái ×${HARD.hp(i).toFixed(2)}">🔥 Khó${(s.hardStars || [])[i] ? ` <small>${'★'.repeat(s.hardStars[i])}</small>` : ` <small>×${HARD.hp(i).toFixed(2).replace('.', ',')}</small>`}</button></div>
-          <button class="go btn-gold" data-act="cp-go">${endl ? '♾ Vào vô tận' : '⚔ Vào trận'}</button></div>
+          <button class="go btn-gold" data-act="cp-go">${endl ? UIE.endless() + ' Vào vô tận' : UIE.battle() + ' Vào trận'}</button></div>
         </div>
       </div></div>`;
   }
@@ -908,7 +917,7 @@ class UI {
           <button class="btn metal" style="margin-left:auto" data-act="set-feedback">✉ Góp ý</button></div>
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 154 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 155 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1236,6 +1245,8 @@ class UI {
       this.sig = {};
       this.buildSummon();
       if (!$('#menu').hidden) this.showMenu();
+      // v155: Kho Báu vẽ một lần — icon PNG tải xong sau thì vẽ lại (giữ chỗ cuộn), không thì kẹt hình vẽ code
+      if (!$('#treasury').hidden) { const b = $('#treasury .tr-body'), y = b ? b.scrollTop : 0; this.showTreasury(); const b2 = $('#treasury .tr-body'); if (b2) b2.scrollTop = y; }
     }
     this.collectT = (this.collectT || 0) - dt;
     if (g.started && this.collectT <= 0) {
@@ -1499,7 +1510,7 @@ class UI {
         <div class="mk-row">${m.types.map((t, i) => `<button class="mk-card ${ok[i] ? '' : 'poor'} ${twins[i] ? 'twin' : ''}" data-mk="${i}" style="--c:${ELEMENTS[HEROES[t].el].color}" aria-label="Mua ${esc(HEROES[t].name)}${twins[i] ? ' (ghép được)' : ''}, ${sc} vàng">
           <img src="${heroImgUrl(t, 'head')}" alt="" draggable="false"><span class="el">${elIcon(HEROES[t].el, 11)}</span>${twins[i] ? '<i class="tw">ghép</i>' : ''}
           <b class="nm">${esc(short(t))}</b><span class="cost">${coin(1)}${sc}</span></button>`).join('')}
-          <button class="mk-rr metal ${g.gold >= rc ? '' : 'poor'}" data-act="mk-reroll" aria-label="Đổi cả hàng, ${rc} vàng"><b>↻</b><span>${coin(1)}${rc}</span></button></div>
+          <button class="mk-rr metal ${g.gold >= rc ? '' : 'poor'}" data-act="mk-reroll" aria-label="Đổi cả hàng, ${rc} vàng"><b>${UIE.redo()}</b><span>${coin(1)}${rc}</span></button></div>
         <span class="dk-sep"></span><button class="dk-card legend" data-act="legend-open" aria-label="Cây hợp thể">${`<img class="asc-ic" src="${assetSrc('ui/ui-tran-3-2.png')}" alt="★">`}Hợp<br>thể</button>`;
     } else {
       const def = HEROES[h.type];
@@ -1698,8 +1709,8 @@ class UI {
     $('#more').innerHTML = [
       h.from ? b(h.notice.evo ? 'notice' : '', 'open-evo', '✦', t < 3 ? `Thần tinh ★${t + 1}` : 'Thần tinh')
         : twin ? b('go', 'merge-any', '⇄', `Ghép ${'★'.repeat(t + 1)}`)
-        : b('dim', 'open-evo', '★', t >= 3 ? '★★★ tối đa' : 'Ghép sao'),
-      up ? b('go', 'auto-eq', '▲', `Mặc ${up} món`) : b('', 'open-bag', '🛡', 'Trang bị'),
+        : b('dim', 'open-evo', UIE.star(), t >= 3 ? '★★★ tối đa' : 'Ghép sao'),
+      up ? b('go', 'auto-eq', UIE.equip(), `Mặc ${up} món`) : b('', 'open-bag', '🛡', 'Trang bị'),
       ...readyF.map((f) => b('fuse', 'fuse-with', '✸', `→ ${HEROES[f.to].name}`, `data-slot="${f.o.slot}" style="color:${RARITY[HEROES[f.to].legend].color}"`)),
       b(`danger ${this.sellArmed ? 'armed' : ''}`, 'sell', '🗑', this.sellArmed ? `Chắc chắn? +${g.sellValue(h)}` : 'Hủy'),
     ].join('');
@@ -1783,7 +1794,7 @@ class UI {
     const el = $('#roster-hint');
     el.innerHTML = `<div class="rh-h"><small>Đợt ${n} · bộ quái mới</small><b>${ROSTER_NAMES[key] || key}</b></div>
       ${c.main ? `<div class="ch-sum">Quái chủ yếu hành <b style="color:${ELEMENTS[c.main].color}">${ELEMENTS[c.main].name}</b> → dùng hành <b style="color:${ELEMENTS[c.ce].color}">${ELEMENTS[c.ce].name}</b></div>` : ''}
-      <div class="rh-foes">${c.foes.slice(0, 7).map((k) => `<span title="${esc(ENEMIES[k].name)}">${esc(ENEMIES[k].name)}${ENEMIES[k].boss ? ' 👑' : ''}</span>`).join('')}</div>
+      <div class="rh-foes">${c.foes.slice(0, 7).map((k) => `<span title="${esc(ENEMIES[k].name)}">${esc(ENEMIES[k].name)}${ENEMIES[k].boss ? ' ' + UIE.medal(3) : ''}</span>`).join('')}</div>
       <div class="ch-row">${c.list.map((x) => `<span class="ch-av ${HEROES[x.t].legend || ''}" style="--c:${ELEMENTS[HEROES[x.t].el].color}"><img src="${heroImgUrl(x.t, 'head')}" alt="${esc(HEROES[x.t].name)}"><i>${elIcon(HEROES[x.t].el, 11)}</i><small>${x.why}</small></span>`).join('')}</div>
       <div class="rh-x">Chạm để đóng</div>`;
     el.hidden = false;
@@ -1897,7 +1908,7 @@ class UI {
           <div class="rn-dh"><span class="rn-big">${runeIc(r)}</span><div><b>${r.name}</b><small>${br.name} · ${r.skill ? 'Ấn kỹ năng · 3 điểm / cấp' : 'Ấn chỉ số · 1 điểm / cấp'} · cấp ${lv}/${r.max}</small></div></div>
           <div class="rn-lvs">${lines.join('')}</div>
           ${lv >= r.max ? '<div class="chip ok" style="text-align:center">Đã tối đa</div>'
-            : !open ? `<div class="rn-lockmsg">🔒 Cần ${RUNE_ROW_NEED[r.row]} cấp trong ${br.name} (đang có ${runeBranchPts(lvs, r.br)})</div>`
+            : !open ? `<div class="rn-lockmsg">${UIE.lock()} Cần ${RUNE_ROW_NEED[r.row]} cấp trong ${br.name} (đang có ${runeBranchPts(lvs, r.br)})</div>`
             : `<button class="btn btn-gold rn-buy" data-act="rn-buy" data-k="${r.id}" ${left < cost ? 'disabled' : ''}>${lv ? 'Nâng' : 'Khắc'} cấp ${lv + 1} · ${cost} điểm Ấn</button>`}
         </div>
       </div></div>`;
@@ -1975,7 +1986,7 @@ class UI {
         <div class="ro-grid">${all.map((k) => {
           const h = HEROES[k];
           const lock = h.legend && !(this.save.owned || []).includes(k);
-          return `<button class="ro-card ${h.legend || 'common'} ${k === t ? 'on' : ''} ${lock ? 'lock' : ''} ${this.game.known.has('h.' + k) ? 'known' : ''}" data-act="ro-sel" data-type="${k}">${lock ? '<span class="ro-lock">🔒</span>' : ''}${this.game.known.has('h.' + k) ? '<i class="kn" title="Đã khám phá hiệu ứng ẩn">✦</i>' : ''}
+          return `<button class="ro-card ${h.legend || 'common'} ${k === t ? 'on' : ''} ${lock ? 'lock' : ''} ${this.game.known.has('h.' + k) ? 'known' : ''}" data-act="ro-sel" data-type="${k}">${lock ? `<span class="ro-lock">${UIE.lock()}</span>` : ''}${this.game.known.has('h.' + k) ? '<i class="kn" title="Đã khám phá hiệu ứng ẩn">✦</i>' : ''}
             <span class="tag el" style="color:${ELEMENTS[h.el].color}">${elIcon(h.el, 11)}${ELEMENTS[h.el].name}</span>
             <img src="${heroImgUrl(k)}" alt=""><span class="nm">${h.name}</span></button>`;
         }).join('')}</div>
@@ -1984,7 +1995,7 @@ class UI {
             <div class="ro-pic inset ${d.legend || 'common'} ${this.game.known.has('h.' + t) ? 'known' : ''}">${this.game.known.has('h.' + t) ? '<i class="kn" title="Đã khám phá hiệu ứng ẩn">✦</i>' : ''}${splash ? `<img src="${splash}" alt="">` : '<canvas id="ro-cv" width="300" height="300"></canvas>'}</div>
             <div style="display:flex;flex-direction:column;gap:5px;min-width:0">
               <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="ttl" style="font-size:26px;line-height:1">${d.name}</span>
-                ${!d.legend ? '<span class="chip ok">Có sẵn</span>' : (this.save.owned || []).includes(t) ? `<span class="chip ok">✓ Đã sở hữu</span>${LEGACY[t] ? `<button class="btn btn-gold" style="height:32px;padding:0 12px;font-size:14px" data-act="lg-open" data-type="${t}">⚜ Thần Khí · ${this.legacyPts(t)}/${LEGACY_MAX * 3}</button>` : ''}`
+                ${!d.legend ? '<span class="chip ok">Có sẵn</span>' : (this.save.owned || []).includes(t) ? `<span class="chip ok">${UIE.done()} Đã sở hữu</span>${LEGACY[t] ? `<button class="btn btn-gold" style="height:32px;padding:0 12px;font-size:14px" data-act="lg-open" data-type="${t}">⚜ Thần Khí · ${this.legacyPts(t)}/${LEGACY_MAX * 3}</button>` : ''}`
                   : `<button class="btn btn-gold" style="height:32px;padding:0 12px;font-size:14px" data-act="ro-buy" data-type="${t}" ${(this.save.kho || 0) < OWN_COST[d.legend] ? 'disabled' : ''}>Mua · ${bac()} ${fmt(OWN_COST[d.legend])}</button>`}</div>
               <div class="note" style="font-style:italic">${esc(d.title)}</div>
               ${!d.legend || (this.save.owned || []).includes(t) ? `<div class="ro-tv"><span>☯ Tu Vi ${tuviLevel((this.save.tuvi || {})[t] || 0)} · ${tuviRank((this.save.tuvi || {})[t] || 0)}</span>
@@ -2053,7 +2064,7 @@ class UI {
     const jit = ITEMS[jar.id];
     $('#reward').innerHTML = `<div class="screen" style="z-index:auto">
       <div class="scr-head metal"><h1 class="ttl">Chọn sính lễ</h1><span class="chip dark">Đợt ${g.wave}</span>
-        <span class="chip ok">✓ Đã hạ ${ENEMIES[ev.boss].name}</span><span class="chip goldc">Chọn 1 trong 3</span><div class="sp"></div>
+        <span class="chip ok">${UIE.done()} Đã hạ ${ENEMIES[ev.boss].name}</span><span class="chip goldc">Chọn 1 trong 3</span><div class="sp"></div>
         <div class="goldbox inset">${coin()}${fmt(g.gold)}</div></div>
       <div class="sl-title">Vua Hùng ban thưởng</div>
       <div class="sl-cards">
@@ -2138,12 +2149,12 @@ class UI {
       <div><span>Tướng trên sân</span><b>${g.heroes.filter(Boolean).length}</b></div>
       <div><span>🏦 Ngân khố nhận (mua đồ / tướng trước trận)</span><b style="color:#E4ECF4">${bac(1)} +${fmt(khoGain + daily)} → ${fmt(s.kho)}</b></div>
       ${daily ? `<div><span>☀ Thắng trận đầu trong ngày</span><b style="color:#FFE08A">${bac(1)} +${fmt(daily)}</b></div>` : ''}
-      ${g.khoRun ? `<div><span>♾ Đã nhận giữa trận (mốc đợt / boss)</span><b style="color:#E4ECF4">${bac(1)} +${fmt(g.khoRun)}</b></div>` : ''}
+      ${g.khoRun ? `<div><span>${UIE.endless()} Đã nhận giữa trận (mốc đợt / boss)</span><b style="color:#E4ECF4">${bac(1)} +${fmt(g.khoRun)}</b></div>` : ''}
       ${tv.rows.length ? `<div><span>☯ Tu Vi${win ? '' : ' (60%)'}</span><b style="color:#C8A0F0">${tv.rows.join(' · ')}</b></div>` : ''}
       ${tv.up.map((u) => `<div><span></span><b style="color:#FFD66B">${u}</b></div>`).join('')}`;
     const name = `Ải ${lv + 1} · ${LEVELS[lv].name}`;
     const html = win ? `<div class="screen" style="z-index:auto">
-      <div class="scr-head metal"><h1 class="ttl">${name}</h1><span class="chip ok">✓ Đã giữ thành</span><div class="sp"></div></div>
+      <div class="scr-head metal"><h1 class="ttl">${name}</h1><span class="chip ok">${UIE.done()} Đã giữ thành</span><div class="sp"></div></div>
       <div class="res-body">
         <div class="res-art">${svgI(sceneArt('win'))}<span class="tg2">NƯỚC RÚT</span></div>
         <div class="res-main">
@@ -2155,7 +2166,7 @@ class UI {
           <div class="res-btns">
             ${lv + 1 < LEVELS.length ? '<button class="btn-gold" data-act="next-level">Ải tiếp theo ›</button>' : '<button class="btn-gold" data-act="endless">Năm nào cũng dâng nước ›</button>'}
             <button class="metal" style="color:#F2D27A" data-act="endless">Chơi vô tận</button>
-            <button class="metal" style="color:#F2D27A" data-act="restart">↻ Chơi lại</button>
+            <button class="metal" style="color:#F2D27A" data-act="restart">${UIE.redo()} Chơi lại</button>
             <button class="metal" style="color:#F2D27A" data-act="to-map">Bản đồ</button></div>
         </div></div></div>`
       : `<div class="screen" style="z-index:auto">
@@ -2167,12 +2178,12 @@ class UI {
           <div style="display:flex;gap:12px;align-items:center"><div class="inset" style="padding:8px 16px;border-radius:6px;font-size:15px">Dừng ở đợt <b style="font-family:var(--title);font-size:34px;color:#9EDDF2">${g.wave}</b><span style="font-family:var(--title);font-size:20px;color:#9EDDF2">/${g.levelWaves}</span></div>
             <div style="flex:1"><div class="inset" style="height:12px;border-radius:4px;overflow:hidden"><i style="display:block;height:100%;width:${g.wave / g.levelWaves * 100}%;background:linear-gradient(90deg,#2C6A86,#5AB4D6)"></i></div>
             <div class="note" style="margin-top:4px">Kỷ lục ải này: đợt ${s.best[lv]}</div></div></div>
-          <div class="res-tips"><div class="h">💡 MẸO LẦN SAU</div>
+          <div class="res-tips"><div class="h">${UIE.tip()} MẸO LẦN SAU</div>
             <div class="t"><i>1</i><span><b>Ghép</b> 2 tướng cùng loại cùng sao và <b>hợp thể</b> đúng cặp để có tướng thần mạnh hơn hẳn.</span></div>
             <div class="t"><i>2</i><span>Đặt tướng <b>đánh xa</b> cho đợt <b style="color:#9EDDF2">Chim Bão</b> (quái bay).</span></div>
             <div class="t"><i>3</i><span>Nâng cấp tướng bằng <b>vàng</b> giữa các đợt; mở khóa W, E, R trong Cây kỹ năng.</span></div></div>
           <div class="res-btns">
-            <button class="btn-gold" data-act="restart">↻ Chơi lại</button>
+            <button class="btn-gold" data-act="restart">${UIE.redo()} Chơi lại</button>
             <button class="metal" style="color:#F2D27A" data-act="to-map">Bản đồ</button>
             <button class="metal" style="color:#F2D27A" data-act="to-menu">Menu chính</button></div>
         </div></div></div>`;
@@ -3292,7 +3303,7 @@ class UI {
             <div class="bk-stat"><span>Hành ${elIcon(d.el, 14)} <b>${ELEMENTS[d.el].name}${cur === 'haba' && g.known.has('e.haba') ? ' → Kim' : ''}</b></span><span>Máu <b>${d.hp}+</b></span><span>Giáp <b>${d.armor}</b></span><span>Kháng phép <b>${d.mr}%</b></span><span>Lọt thành <b>−${d.lives} mạng</b></span></div></div></div>
           <div class="mech inset">${esc(d.desc)}</div>
           <div class="tipbox inset">🎁 <b>Hạ được:</b> chọn sính lễ <b>${ITEMS[d.reward].name}</b></div>
-          <div class="tipbox inset">💡 <b>Mẹo:</b> ${esc(d.tip)}</div></div></div>`;
+          <div class="tipbox inset">${UIE.tip()} <b>Mẹo:</b> ${esc(d.tip)}</div></div></div>`;
     }
     // lịch 30 đợt
     const lv = g.started ? g.level : this.save.last;
