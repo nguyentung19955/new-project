@@ -132,7 +132,11 @@ async function skillCase(w, h) {
   await page.evaluate(() => { document.querySelector('#toasts').innerHTML = ''; });   // toast của lần kéo thả ở trên
   // chờ màn Tiến hoá dựng xong (nút hiện thật) rồi mới bấm — đợi cố định 250 ms đôi khi chưa đủ (chập chờn)
   const lockBtn = page.locator('#screen .ho .hx-go.off').first();
-  await lockBtn.waitFor({ state: 'visible' }); await lockBtn.click({ force: true }); await page.waitForTimeout(150);
+  // màn Tiến hoá có thể vẽ lại đúng lúc bấm (nút cũ bị thay) → bấm lại, tối đa 5 lần
+  for (let k = 0; ; k++) {
+    try { await lockBtn.waitFor({ state: 'visible' }); await lockBtn.click({ force: true, timeout: 2000 }); break; } catch (e) { if (k >= 4) throw e; await page.waitForTimeout(200); }
+  }
+  await page.waitForTimeout(150);
   const ew = await page.evaluate(() => ({ why: (document.querySelector('#screen .ho-why.err') || {}).textContent || '', toast: document.querySelector('#toasts').textContent }));
   ok(/còn thiếu \d+ cấp kỹ năng/.test(ew.why) && !ew.toast, `${tag}: chạm nút khoá ở Tiến hoá → lý do ngay trong thẻ "${ew.why.trim().slice(0, 40)}…", không toast`);
   // nâng hết kỹ năng → hợp thể được
