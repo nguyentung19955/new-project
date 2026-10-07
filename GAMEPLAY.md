@@ -1869,8 +1869,37 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 
 - Gộp cho-bot-ngau-nhien và vai-tro-tuong sau khi tester báo đạt; ghép tay thẻ chợ (nhãn hợp thể + icon vai trò) và thẻ Anh Hùng (giá mở khoá + icon vai trò).
 
+## Phiên bản 186 — Rê chuột / giữ tay lên ô kỹ năng để đọc mô tả
+
+- Góp ý người chơi (Mac, Chrome 1018×612): "hover vào kỹ năng để đọc kỹ năng". Nay **rê chuột** (máy tính, ~0,15 giây) hoặc **giữ tay ~0,35 giây** (điện thoại; trước là 0,45 giây và chỉ có ở vài chỗ) lên ô kỹ năng → hiện khung mô tả: tên + loại (chủ động / nội tại / tối thượng), mô tả có số liệu theo cấp tướng, **hiệu lực cấp này ➜ cấp sau** (mỗi cấp kỹ năng +25%), **hồi chiêu** (đã trừ giảm hồi chiêu của tướng, kèm năng lượng và số giây còn lại), **điều kiện** mở / lên cấp kế (cần tướng cấp mấy ✓/✗), **giá** mở (vàng) hoặc nâng (1 điểm kỹ năng / vàng sau thăng thần), "Đã tối đa" khi max.
+- Có ở: thanh thông tin tướng trong trận (4 ô Q/W/E/R kể cả ô khoá), Cây kỹ năng (đầu cột + icon bảng chi tiết), Anh Hùng (4 ô kỹ năng — thêm dòng "Các cấp" cần tướng cấp mấy), Ấn Phù (cấp hiện tại ➜ cấp kế, điều kiện mở hàng, giá điểm Ấn; bỏ `title` gốc để không hiện 2 khung), Thần Khí (đầu mỗi hệ: hiện tại, cấp kế, giá Ngân khố, các mốc). Màn Tiến hoá và Bách khoa không có ô kỹ năng nên không đổi; thẻ tướng màn Chuẩn bị (data-tip cũ) cũng rê chuột là thấy.
+- Khung đặt sát ô, **không che ô đang chỉ** (tính cả nhãn giá lòi lên trên ô): ưu tiên phía trên, hết chỗ thì phía dưới, rồi phải / trái; luôn nằm gọn trong màn, màn quá chật thì cho cuộn trong khung. Ô bị dựng lại (hồi chiêu đếm, vừa nâng) thì khung tự cập nhật; rời chuột / thả tay / cuộn thì ẩn.
+- **Chạm / bấm nhanh giữ nguyên** (nâng / mở kỹ năng); bấm chuột khi đang rê vẫn nâng. Giữ tay xem mô tả rồi thả không nâng; kéo ngón tay đi (cuộn) thì không hiện. Game **không dừng** khi xem.
+- Kỹ thuật: một bộ xử lý chung cho mọi ô `[data-tip]`, `[data-skt]` (kỹ năng thứ i của tướng đang chọn), `[data-skr="loại:i"]` (màn Anh Hùng) — thay 2 bộ giữ tay cũ (v121 thanh tướng, v128 data-tip). Nội dung kỹ năng do `ui.skillTipHtml()` dựng.
+- Test: `tests/mo-ta-ky-nang/mo-ta-ky-nang.test.js` (1920×934, 1018×612, 844×390, 667×375): rê chuột ở 5 màn, giữ tay (cảm ứng thật qua CDP), chạm nhanh vẫn nâng, kéo không hiện, khung trong màn / không che ô / tự đổi phía, game vẫn chạy. Ảnh đã xem: `tests/mo-ta-ky-nang/shots/*-{deck-hover,deck-giu-tay,cay-ky-nang,anh-hung,than-khi,an-phu}.png`.
+- Sửa theo báo cáo tester (sau khi gộp v185):
+  - **(Cao) Màn dọc 390×844** (cả `#wrap` xoay 90°): khung mô tả bị đặt ra ngoài màn ở thanh tướng / Anh Hùng vì tính toạ độ bằng `getBoundingClientRect` theo màn hình. Nay đổi toạ độ màn hình về hệ trong `#ui` theo chiều xoay (và tỉ lệ thu phóng) trước khi đặt khung — đúng ở mọi màn.
+  - **Cây kỹ năng:** khung không còn đè các dòng cấp của chính cột (tránh cả cột `.col`, đặt sang cột bên).
+  - **Ấn Phù:** khung tránh cả bảng ấn (đặt lên bảng chi tiết bên phải); hẹp quá thì tránh cả cột nhánh — không đè hàng ấn bên dưới.
+  - **Thần Khí:** khung tránh cả thẻ hệ; bỏ phần trùng với thẻ (hiện tại, cấp kế, mốc) — chỉ còn mức khi **tối đa**, **Ngân khố còn cần** đến tối đa và **đang có / còn thiếu**.
+  - Cơ chế chung: `data-tip-avoid="sel1|sel2"` = vùng nên tránh che, thử lần lượt rồi mới đến chính ô; hai bên hẹp thì thu khung (≥ 180px).
+- Test thêm cỡ dọc 390×844, kiểm khung không đè cột / thẻ / nhánh chứa ô; ảnh đã xem: `tests/mo-ta-ky-nang/shots/{1920x934,1018x612,844x390,667x375,390x844}-*.png`.
+## Phiên bản 186 — Vai trò: sửa 3 lỗi tester báo
+- **Icon Đỡ đòn ở thẻ chợ như chấm đen (667×375, 11px):** icon vai trò trên thẻ chợ đổi sang dạng **đặc** (nền màu vai trò, nét tối, viền sáng, bóng đen), cỡ 16px gốc → ≥13,7px ở 667×375. Icon hệ nhích lên 1px để icon vai trò không chạm tên tướng dài (ở 1920 trước đây chạm "Thần Sương").
+- **Hàng lọc vai trò chỉ có icon (màn thấp):** nút đang chọn luôn hiện tên vai trò; mọi nút có `title` (rê chuột) + `data-tip` (giữ tay → mô tả + cộng hưởng 2/4).
+- **Anh Hùng sau khi lọc vẫn hiện tướng không thuộc bộ lọc:** lọc xong mà tướng đang xem không có vai đó thì tự chọn tướng đầu danh sách đã lọc.
+- Test `tests/vai-tro` thêm: icon thẻ chợ dạng đặc ≥13px, không đè tên; nút lọc đang chọn có tên + tooltip; lọc Hỗ trợ tự chọn tướng đầu.
+
+## Phiên bản 187 — Gộp sửa vai trò tướng (tester đạt)
+
+- Icon vai trò dạng đặc rõ ở màn nhỏ, hàng lọc hiện tên vai đang chọn, Anh Hùng lọc tự chọn tướng đầu danh sách.
+
 ## Phiên bản 186 — Sửa 3 lỗi tester ở chợ tướng (khoá chợ, nhãn thẻ, dòng giải thích)
 - **🔒 Khoá chợ rõ hơn:** bỏ nút tròn 26px chồm lên viền thanh chợ; thay bằng nút riêng cạnh ↻ (36×60, vùng chạm ~39×65 sau phóng to), ổ khoá SVG vẽ bằng code (mở khi chưa khoá, đóng khi khoá) + chữ "Khoá" / "Đã khoá". Đang khoá: nút nền vàng, chữ nâu đậm, và 4 thẻ có viền vàng (tắt nhấp nháy "ghép" để viền khoá dễ thấy).
 - **Nhãn thẻ không che mặt:** nhãn "ghép" (xanh) và "hợp" (tím, rút gọn từ "hợp thể"; đọc màn hình vẫn đọc đủ "nguyên liệu hợp thể") chuyển xuống thanh giá ở đáy thẻ: "ghép" bên trái, giá ở giữa, "hợp" bên phải. Không còn đè vương miện / icon hệ / icon vai trò, thẻ có cả hai nhãn cũng không chồng nhau.
 - **Dòng giải thích ở Chọn đội ưu tiên** hiện cả ở 844×390 / 667×375 bằng bản ngắn "Chợ ra mọi tướng đã mở · đội này ra ×2" (máy tính vẫn hiện bản đầy đủ).
 - Test: `node tests/cho-tuong/ti-le.test.js` thêm bảo hiểm với rng cố định (rng luôn 0.9999 → trượt, trượt, lần 3 chắc chắn ra tướng cần, bộ đếm 1-2-0 lặp lại; rng có seed 2000 lần ↻ không lần nào thủng bảo hiểm), kiểm tra vùng chạm nút khoá ≥ 36, viền khoá trên hàng thẻ, 2 nhãn nằm dưới ảnh mặt và không chồng nhau. Ảnh đã xem: thanh chợ mở / khoá và bảng chọn đội ở 1920×934, 844×390, 667×375, dọc 390×844.
+
+## Phiên bản 188 — Sửa test bảo hiểm chợ chạy chập chờn, gộp nhánh chính v187
+- Tester: `tests/cho-tuong/ti-le.test.js` FAIL 2/4 lần ở bước "rng cố định" (chuỗi lệch trượt, TRÚNG, …). Nguyên nhân ở test: đặt `game.market = null` rồi `rerollMarket(rng)` → `ensureMarket()` rút trước một hàng bằng `srand` ngẫu nhiên, trượt thì bộ đếm `dry` đã là 1. Sửa: gán sẵn chợ hợp lệ `{ types, rr: 0, dry: 0, lock: false }` trước vòng lặp. Chạy 10 lần liên tiếp: 10/10 đạt, chuỗi luôn trượt, trượt, TRÚNG ×3.
+- Gộp nhánh chính v187 (icon vai trò thẻ chợ 16px): giữ bố cục chợ v186 (nút khoá riêng, nhãn ghép / hợp ở thanh giá) + icon vai trò mới.

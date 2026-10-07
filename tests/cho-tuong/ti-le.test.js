@@ -53,7 +53,8 @@ async function main() {
     for (let s = 0; s < game.heroes.length; s++) game.heroes[s] = null;
     game.owned = null; game.gold = 1e6;
     game.spawnHero(game.freeSlots()[0], 'nguphu', { tier: 2 });       // cần Thần Sương (Cá Ông)
-    game.market = null;
+    // chợ hợp lệ, bộ đếm trượt = 0 (không để ensureMarket() rút ngẫu nhiên bằng srand trước vòng lặp → lệch bộ đếm)
+    game.market = { types: ['xathu', 'xathu', 'xathu', 'xathu'], rr: 0, dry: 0, lock: false };
     const nd = game.marketNeeds(), list = nd.pool.filter((t) => nd.w[t] > 0);
     const hi = () => 0.9999, seq = [];
     for (let i = 0; i < 9; i++) { game.rerollMarket(hi); seq.push({ hit: game.market.types.includes('thansuong'), dry: game.market.dry }); }
