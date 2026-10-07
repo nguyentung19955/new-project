@@ -1712,4 +1712,4 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
   | 5 | 2/3 · 868 s · đợt 16 | 0/3 | 0/3 |
 
   Nút thắt là **kỹ năng**: nâng 1 tướng từ cấp 1 → 16 tốn ~1.500 vàng + mở W/E/R, nhân 2 tướng; ★★★ gần như không làm chậm thêm. Ải thường có ~25 đợt nên với luật mới gần như **không ra được Tím trong một ải** (trừ vô tận). Nếu thấy quá khó: giảm giá lên cấp cho tướng ★★★, hạ yêu cầu cấp của R3, hoặc tặng điểm kỹ năng khi ghép lên ★★★ — chờ người dùng quyết.
-- Test toàn bộ: đạt hết trừ `icon-nho`, `ra-chu-de-cu` (lỗi y hệt trên nhánh gốc 8796d08, có sẵn), `xem-gop-y/rules-emulator` (máy thiếu `@firebase/rules-unit-testing`); `cat-anh` đạt sau khi cài `scipy`.
+- Test toàn bộ: đạt hết trừ `icon-nho`, `ra-chu-de-cu` (lỗi y hệt trên nhánh gốc 8796d08, có sẵn), `xem-gop-y/rules-emulator` (máy thiếu `@firebase/rules-unit-testing`); `cat-anh` (cần `scipy`) còn 1 lỗi "khung xem trước đang chạy animation (9)" — nhánh gốc 8796d08 cũng lỗi y hệt (có sẵn, đo theo thời gian).
