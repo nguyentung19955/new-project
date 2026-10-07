@@ -1517,3 +1517,11 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 162 — Sửa luật Firestore cho chơi nhóm
 - Lần gộp nhánh trước làm khối luật `feedback` (Góp ý) thiếu dấu đóng `}`, khiến toàn bộ luật phòng chơi nhóm (`rooms/…`, `cmds`, `reqs`, `snap`, `chat`) bị lồng nhầm vào trong `feedback/{id}` → không tạo được phòng. Đã sửa; thêm `tests/coop/test-rules.js` kiểm tra ngoặc cân bằng và các khối `match` nằm đúng cấp (chạy trong `node tests/coop/run-all.js`).
 - **Cần làm:** dán lại `firestore.rules` vào Firebase console → Firestore → Rules → Publish (hoặc để workflow tự đăng khi khoá GitHub đủ quyền Firebase Rules Admin + Service Usage Consumer).
+
+## Phiên bản 163 — Xem góp ý trong game (chỉ tài khoản quản trị)
+- **📥 Góp ý nhận được** (Cài đặt → dòng Góp ý) chỉ hiện với tài khoản **ly230595@gmail.com** đã đăng nhập và đã xác minh email (`CLOUD.isAdmin()`, danh sách `ADMIN_EMAILS` trong `js/cloud.js`). Khách / tài khoản khác / email chưa xác minh không thấy gì; email quản trị chưa xác minh thấy nút **Xác minh email**.
+- Màn danh sách: mới nhất trước, 20 mục / lần + **Tải thêm**; loại có màu, giờ Việt Nam, nội dung, liên hệ, phiên bản, màn / ải / đợt, cỡ màn hình, máy, khách hay đã đăng nhập; ảnh thu nhỏ chạm để xem to. Lọc theo loại + trạng thái (Mới / Đã xem / Đã xử lý), đổi trạng thái, ghi chú, xoá có hỏi lại ngay trong mục. Chấm đỏ trên nút (và trên nút Cài Đặt ở menu) = số góp ý Mới.
+- `js/cloud.js`: `isAdmin()`, `listFeedback(opts)`, `setFeedbackStatus(id, status, note)`, `deleteFeedback(id)`; bị từ chối → "Tài khoản này không có quyền xem góp ý" / "Máy chủ chưa đăng luật mới".
+- `firestore.rules`: thêm hàm `isAdmin()` trong khối `feedback/{id}` — chỉ quản trị đọc, đổi `status` / `note`, xoá; luật tạo góp ý giữ nguyên; không đụng luật phòng chơi nhóm.
+- **Cần làm:** dán lại `firestore.rules` vào Firebase console → Firestore → Rules → Publish.
+- Test: `node tests/xem-gop-y/xem-gop-y.test.js` (giao diện, CLOUD.db giả, 844×390 / 667×375 / xoay dọc) và `tests/xem-gop-y/rules-emulator.test.js` (luật trên Firestore emulator, cách chạy trong `docs/FIREBASE.md`).
