@@ -293,7 +293,7 @@ class UI {
     // v124–126: icon nút vẽ tay phong cách trống đồng (assets/ui/); thiếu ảnh thì giữ ký hiệu cũ
     const uiImg = (f, alt, cls = 'uimg') => `<img class="${cls}" src="${assetSrc(`ui/${f}.png`)}" alt="${alt}" onerror="this.replaceWith(this.alt)">`;
     this.uiImg = uiImg;
-    for (const [q, f] of [['[data-act=auto-up-gear] .i', 'ui-tran-2-2'], ['[data-act=auto-eq-all] .i', 'ui-tran-2-3']]) {
+    for (const [q, f] of [['#auto-btns [data-act=open-bag] .i', 'ui-menu-2-4'], ['[data-act=auto-up-gear] .i', 'ui-tran-2-2'], ['[data-act=auto-eq-all] .i', 'ui-tran-2-3']]) {
       const el = document.querySelector(q);
       if (el) el.innerHTML = uiImg(f, el.textContent);
     }
@@ -317,16 +317,6 @@ class UI {
     window.addEventListener('online', () => this.fbFlush());
     if (typeof CLOUD !== 'undefined') CLOUD.onChange(() => { if (CLOUD.ready) this.fbFlush(); });
     $('#btn-menu').onclick = () => { $('#drawer').hidden = !$('#drawer').hidden; $('#more').hidden = true; $('#legends').hidden = true; };
-    $('#quick-eq').onclick = () => {
-      const q = this.quickEq;
-      $('#quick-eq').hidden = true;
-      if (!q || !g.heroes.includes(q.hero)) return;
-      const inst = g.inventory.find((i) => i.uid === q.uid);
-      if (!inst) return;
-      const r = g.equip(q.hero, inst.uid, slotFor(q.hero, inst));
-      if (r === true) this.toast(`${HEROES[q.hero.type].name} đã mặc ${ITEMS[inst.id].name}`, '#6AE06A');
-      else this.toast(r, '#E25A3A');
-    };
     $('#btn-moc').onclick = () => {
       this.raising = !this.raising;
       this.moving = -1;
@@ -447,7 +437,7 @@ class UI {
   }
   setInGame(on) {
     document.querySelectorAll('.ingame').forEach((el) => { el.hidden = !on; });
-    if (!on) for (const id of ['#legends', '#bossbar', '#coach', '#drawer', '#more', '#deck-hint', '#btn-moc', '#nextwaves', '#quick-eq']) $(id).hidden = true;
+    if (!on) for (const id of ['#legends', '#bossbar', '#coach', '#drawer', '#more', '#deck-hint', '#btn-moc', '#nextwaves']) $(id).hidden = true;
   }
 
   playLevel(i, endless) {
@@ -889,7 +879,7 @@ class UI {
           <button class="btn metal" style="margin-left:auto" data-act="set-feedback">✉ Góp ý</button></div>
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 153 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 157 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1268,17 +1258,6 @@ class UI {
         this.save.secrets = [...g.known];
         writeSave(this.save);
         this.toast(`<b>Đã khám phá!</b> ${secretTitle(ev.key)}: ${esc(SECRETS[ev.key].desc)}`, '#FFD66B');
-      } else if (ev.type === 'upgrade') {
-        // đồ vừa rơi tốt hơn cho một tướng: hiện nút đeo nhanh vài giây
-        const inst = g.inventory.find((i) => i.uid === ev.uid);
-        if (inst && g.heroes.includes(ev.hero)) {
-          this.quickEq = { uid: ev.uid, hero: ev.hero };
-          const b = $('#quick-eq');
-          b.innerHTML = `<span class="slot ${rarCls(inst.rarity)}">${svgI(itemIcon(inst.id))}</span><span><b>▲ Đeo cho ${HEROES[ev.hero.type].name}</b><small>${ITEMS[inst.id].name} · +${ev.gain} lực chiến</small></span>`;
-          b.hidden = false;
-          clearTimeout(this.quickT);
-          this.quickT = setTimeout(() => { b.hidden = true; }, 9000);
-        }
       } else if (ev.type === 'ascend') {
         this.banner('Thăng thần', `${ev.from} hóa thân ${ev.to}`);
         this.toast(`<b>${ev.to}</b>: ${esc(HEROES[ev.hero.type].trait.name)} · ${esc(HEROES[ev.hero.type].trait.desc)}`, '#F0A030');
@@ -1617,7 +1596,11 @@ class UI {
     const eq = g.inventory.some((i) => { const b = g.bestHeroFor(i); return b && b.gain > 0; });
     const reserve = COSTS.summon(g.summonN || 0);
     const up = g.heroes.some((h) => h && SLOTS.some((sl) => { const i = h.equip[sl]; return i && i.plus < 5 && g.gold - enhanceCost(i) >= reserve; }));
-    const [bu, be] = el.querySelectorAll('.dot');
+    // v157: nút Túi đồ chấm xanh khi có món mới chưa xem (so với lần mở túi gần nhất trong trận này)
+    if (!this.bagSeen || this.bagSeen.run !== g.runId) this.bagSeen = { run: g.runId, uids: new Set(g.inventory.map((i) => i.uid)) };
+    const nw = g.inventory.some((i) => !this.bagSeen.uids.has(i.uid));
+    const [bb, bu, be] = el.querySelectorAll('.dot');
+    if (bb.hidden === nw) bb.hidden = !nw;
     if (bu.hidden === up) bu.hidden = !up;
     if (be.hidden === eq) be.hidden = !eq;
   }
@@ -2618,6 +2601,7 @@ class UI {
       if (first < 0) return this.toast('Chưa có tướng nào trên sân', '#E25A3A');
       this.sel = first;
     }
+    if (kind === 'bag') this.bagSeen = { run: g.runId, uids: new Set(g.inventory.map((i) => i.uid)) };
     if (kind === 'bag' && !g.heroes[this.sel]) {
       const first = g.heroes.findIndex(Boolean);
       if (first >= 0) this.sel = first;

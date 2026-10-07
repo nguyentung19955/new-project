@@ -1433,3 +1433,8 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 153 — Gộp khung theo độ hiếm
 - Gộp nhánh khung theo độ hiếm (v151) vào sau v152.
+
+## Phiên bản 157 — Bỏ ô gợi ý đeo đồ, thêm nút Túi đồ trong trận
+- Bỏ hẳn ô gợi ý đồ nổi trong trận (ô viền xanh "▲ Đeo cho …" hiện vài giây khi rơi đồ tốt hơn): đã có nút **Mặc đồ** (tự mặc cả đội) và **Nâng đồ** ở góc phải dưới. Gỡ HTML/CSS/JS liên quan và sự kiện `upgrade` lúc rơi đồ (không còn ai dùng).
+- Thêm nút **Túi đồ** (icon túi vải `ui-menu-2-4`, thiếu ảnh thì hiện 🎒) ở đầu cột nút góc phải dưới, luôn hiện trong trận, mở bảng Túi đồ có sẵn (như mục Túi đồ trong menu ☰). Chấm xanh trên nút khi trong túi có món mới chưa xem kể từ lần mở túi gần nhất của trận này.
+- Test: `node tests/tui-do/tui-do.test.js` (không còn `#quick-eq`; 3 nút hiện, trong màn hình, không đè nhau; chấm đồ mới; bấm mở Túi đồ; nút Mặc đồ vẫn mặc; kéo tướng hiện thùng Hủy; 844×390 / 667×375 / xoay dọc). Ảnh `tests/tui-do/shots/` không commit.

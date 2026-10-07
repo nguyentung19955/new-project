@@ -14,7 +14,7 @@
   <meta name="description" content="Thần Thoại Việt — game thủ thành truyền thuyết Văn Lang – Âu Lạc: Sơn Tinh – Thủy Tinh, Thánh Gióng, Thạch Sanh, Lạc Long Quân, An Dương Vương.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@700;800&family=Alegreya+Sans:wght@400;500;700;800&display=swap">
-  <link rel="stylesheet" href="css/style.css?v=153">
+  <link rel="stylesheet" href="css/style.css?v=157">
 </head>
 <body>
 <!--BODY-->
@@ -42,6 +42,7 @@
       <div id="fuse-strip" class="ingame"></div>
       <div id="trash" hidden></div>
       <div id="auto-btns" class="ingame">
+        <button class="ab metal" data-act="open-bag" aria-label="Túi đồ"><span class="i">🎒</span><span class="l">Túi đồ</span><i class="dot" hidden></i></button>
         <button class="ab metal" data-act="auto-up-gear" aria-label="Nâng đồ tự động"><span class="i">⬆</span><span class="l">Nâng đồ</span><i class="dot" hidden></i></button>
         <button class="ab metal" data-act="auto-eq-all" aria-label="Mặc đồ cả đội"><span class="i">🛡</span><span class="l">Mặc đồ</span><i class="dot" hidden></i></button>
       </div>
@@ -71,7 +72,6 @@
       <div id="deck-hint" hidden></div>
       <div id="deck" class="metal ingame"></div>
       <button id="btn-moc" hidden aria-label="Mọc Núi"></button>
-      <button id="quick-eq" class="metal" hidden></button>
 
       <div id="coach" hidden></div>
       <div id="roster-hint" class="metal" hidden></div>
@@ -97,7 +97,7 @@
           <button id="btn-settings" class="mc-btn metal"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 2v3M10 15v3M2 10h3M15 10h3M4.3 4.3l2.1 2.1M13.6 13.6l2.1 2.1M4.3 15.7l2.1-2.1M13.6 6.4l2.1-2.1" stroke="currentColor" stroke-width="1.8"/></svg>Cài Đặt</button>
           <div class="mc-subs"><button id="btn-menu-codex" class="mc-sub">📖 Bách khoa</button><button id="btn-ranks" class="mc-sub">🏆 Xếp hạng</button><button id="btn-feedback" class="mc-sub">✉ Góp ý</button></div>
         </nav>
-        <div class="ver">Phiên bản 153</div>
+        <div class="ver">Phiên bản 157</div>
       </div>
 
       <div id="story" class="overlay" hidden></div>
@@ -135,19 +135,19 @@
       el.textContent = 'Lỗi: ' + (e.message || e.error) + (e.filename ? ' (' + e.filename.split('/').pop() + ':' + e.lineno + ')' : '');
     });
   </script>
-  <script src="js/art.js?v=153"></script>
-  <script src="js/data.js?v=153"></script>
-  <script src="js/enemies2.js?v=153"></script>
-  <script src="js/game.js?v=153"></script>
-  <script src="js/render.js?v=153"></script>
-  <script src="js/costume.js?v=153"></script>
-  <script src="js/maps.js?v=153"></script>
-  <script src="js/chapters.js?v=153"></script>
-  <script src="js/firebase-config.js?v=153"></script>
-  <script src="js/cloud.js?v=153"></script>
-  <script src="js/ui.js?v=153"></script>
-  <script src="js/vfx.js?v=153"></script>
+  <script src="js/art.js?v=157"></script>
+  <script src="js/data.js?v=157"></script>
+  <script src="js/enemies2.js?v=157"></script>
+  <script src="js/game.js?v=157"></script>
+  <script src="js/render.js?v=157"></script>
+  <script src="js/costume.js?v=157"></script>
+  <script src="js/maps.js?v=157"></script>
+  <script src="js/chapters.js?v=157"></script>
+  <script src="js/firebase-config.js?v=157"></script>
+  <script src="js/cloud.js?v=157"></script>
+  <script src="js/ui.js?v=157"></script>
+  <script src="js/vfx.js?v=157"></script>
   <script>if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});</script>
-  <script src="js/main.js?v=153"></script>
+  <script src="js/main.js?v=157"></script>
 </body>
 </html>
