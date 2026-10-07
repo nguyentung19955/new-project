@@ -1545,8 +1545,40 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 164 — Gộp rà chủ đề cũ + bảng chỉ số gọn + hiệu ứng vẽ tay
 - Gộp: màn thắng/thua theo chương (v163, rà chủ đề cũ + 24 prompt khung/nút/tranh nhóm 18–21), bảng chỉ số tướng thu nhỏ, chuẩn animation + prompt hiệu ứng (game dùng ảnh assets/fx, assets/vfx khi có; đạn quả dưa dùng srand để chơi nhóm vẫn đồng bộ).
 
-## Phiên bản 167 — Bỏ chữ thừa / gợi ý không cần thiết
+## Phiên bản 163 — Báo lỗi rõ khi tạo / vào phòng chơi nhóm
+- Tạo phòng / vào phòng bị lỗi giờ báo đúng nguyên nhân kèm mã lỗi ngắn và nút **↻ Thử lại**: máy chủ từ chối (`permission-denied` — luật chơi nhóm chưa đăng lên Firebase), mất mạng (`unavailable`), phiên đăng nhập hết hạn (`unauthenticated`), sai mã (`not-found`). Chi tiết ghi vào console. Trước đây lỗi luật bị nuốt sau 5 lần thử mã và chỉ báo "Không tạo được phòng, thử lại"; nay chỉ thử mã khác 1 lần.
+- Thông báo chơi nhóm (đồng đội rời / vào lại, đồng bộ lại) được giữ 20 dòng gần nhất (`ui.coopLog`); test chơi nhóm đọc từ đó thay vì từ toast (toast chỉ giữ 2 dòng nên dễ bị đẩy mất).
+- Test mới: luật chưa đăng → báo rõ + Thử lại; mất mạng khi tạo phòng → báo mất mạng.
+
+## Phiên bản 163 — Xem góp ý trong game (chỉ tài khoản quản trị)
+- **📥 Góp ý nhận được** (Cài đặt → dòng Góp ý) chỉ hiện với tài khoản **ly230595@gmail.com** đã đăng nhập và đã xác minh email (`CLOUD.isAdmin()`, danh sách `ADMIN_EMAILS` trong `js/cloud.js`). Khách / tài khoản khác / email chưa xác minh không thấy gì; email quản trị chưa xác minh thấy nút **Xác minh email**.
+- Màn danh sách: mới nhất trước, 20 mục / lần + **Tải thêm**; loại có màu, giờ Việt Nam, nội dung, liên hệ, phiên bản, màn / ải / đợt, cỡ màn hình, máy, khách hay đã đăng nhập; ảnh thu nhỏ chạm để xem to. Lọc theo loại + trạng thái (Mới / Đã xem / Đã xử lý), đổi trạng thái, ghi chú, xoá có hỏi lại ngay trong mục. Chấm đỏ trên nút (và trên nút Cài Đặt ở menu) = số góp ý Mới.
+- `js/cloud.js`: `isAdmin()`, `listFeedback(opts)`, `setFeedbackStatus(id, status, note)`, `deleteFeedback(id)`; bị từ chối → "Tài khoản này không có quyền xem góp ý" / "Máy chủ chưa đăng luật mới".
+- `firestore.rules`: thêm hàm `isAdmin()` trong khối `feedback/{id}` — chỉ quản trị đọc, đổi `status` / `note`, xoá; luật tạo góp ý giữ nguyên; không đụng luật phòng chơi nhóm.
+- **Cần làm:** dán lại `firestore.rules` vào Firebase console → Firestore → Rules → Publish.
+- Test: `node tests/xem-gop-y/xem-gop-y.test.js` (giao diện, CLOUD.db giả, 844×390 / 667×375 / xoay dọc) và `tests/xem-gop-y/rules-emulator.test.js` (luật trên Firestore emulator, cách chạy trong `docs/FIREBASE.md`).
+
+## Phiên bản 165 — Gộp màn xem góp ý (quản trị) + báo lỗi chơi nhóm rõ ràng
+- Gộp: màn "📥 Góp ý nhận được" chỉ cho tài khoản quản trị (luật Firestore isAdmin), chơi nhóm báo đúng nguyên nhân khi tạo/vào phòng lỗi + nút Thử lại.
+## Phiên bản 164 — Bảng cảm ơn sau khi gửi góp ý
+- Bấm **Gửi** trong bảng Góp ý → thay toast bằng **bảng cảm ơn**: biểu tượng mặt trống đồng (SVG), "Cảm ơn góp ý của bạn!", "Đội ngũ Thần Thoại Việt sẽ đọc và hoàn thiện game để mang lại trải nghiệm tốt hơn." và dòng trạng thái: *✓ Góp ý đã được gửi tới đội làm game* hoặc *Đang không có mạng — góp ý đã được lưu và sẽ tự gửi khi có mạng*.
+- Bảng không tự đóng; **Đóng** (hoặc Esc) → về lại menu / Cài đặt / trận; đang trong trận thì trận vẫn tạm dừng tới khi bấm Đóng rồi chạy tiếp như trước.
+- Test: `tests/gop-y/gop-y.test.js` thêm kiểm tra bảng cảm ơn (gửi được / ngoại tuyến / Firestore lỗi), không tự đóng, Đóng thì trận chạy tiếp, không tràn ở 844×390 / 667×375 / xoay dọc.
+
+## Phiên bản 165 — Sửa nút Ấn Phù, bỏ dấu ✦ thẻ tướng, thêm Đăng xuất dễ thấy
+- **Lỗi "ấn vào Ấn Phù không vào được màn nào":** khi chưa sở hữu tướng Vàng, `showRunes` chỉ hiện một thông báo (toast) rồi thoát. Khung thông báo `#toasts` nằm *dưới* lớp phủ menu (`.overlay` z-index 20, `#toasts` không có z-index) nên người chơi không thấy gì — bấm như nút chết. Sửa: màn Ấn Phù luôn mở; chưa có tướng Vàng thì hiện giải thích + nút **Đến Anh Hùng**. `#toasts` nay nổi trên mọi lớp phủ (z-index 55), nên các thông báo khác ở menu cũng hiện được.
+- Rà mọi nút menu chính (Xuất Quân/Tiếp tục, Chơi mới, Anh Hùng, Ấn Phù, Kho Báu, Cài đặt, Bách khoa, Xếp hạng, Góp ý) và ngăn kéo ≡ trong trận (Túi đồ, Anh Hùng, Ấn Phù, Bách khoa, Tạm dừng, Góp ý): đều mở đúng màn, không bị phần tử khác che. Test mới `tests/menu-nut/menu-nut.test.js`.
+- Bỏ dấu tròn xanh ngọc ✦ "đã khám phá hiệu ứng ẩn" ở góc thẻ tướng, ảnh chi tiết và chân dung trong trận (thừa). Hiệu ứng ẩn vẫn xem ở bảng chi tiết tướng.
+- **Đăng xuất:** chạm khung người chơi góc trên trái menu → bảng nhỏ (tên, đổi biệt danh, **Đăng xuất**; khách / chưa đăng nhập thì là **Đăng nhập**; đám mây tắt thì không có). Đăng xuất (ở bảng này, Cài đặt hay màn tài khoản) đều hỏi xác nhận ngay trong giao diện rồi mới gọi `CLOUD.signOut()` và về màn đăng nhập; tiến trình trên máy giữ nguyên, đăng nhập lại thì kéo bản trên đám mây.
+
+## Phiên bản 166 — Gộp bảng cảm ơn góp ý + sửa Ấn Phù + Đăng xuất
+- Gộp: bảng cảm ơn sau khi gửi góp ý; nút Ấn Phù luôn mở (chưa có tướng Vàng thì giải thích + nút Đến Anh Hùng; toast nổi trên lớp phủ); bỏ dấu ✦; nút Đăng xuất (chạm khung người chơi / Cài đặt, có xác nhận).
+
+## Phiên bản 166 — Chơi nhóm "Sắp ra mắt"
+- Thẻ **Cùng Giữ Thành** trong màn Chọn chế độ hiện mờ, nhãn **Sắp ra mắt**, không bấm được (`COOP.visible = false` trong `js/coop.js`). Mã, luật Firestore và test chơi nhóm vẫn giữ nguyên; đổi thành `true` là mở lại.
+
+## Phiên bản 168 — Bỏ chữ thừa / gợi ý không cần thiết
 - Rà toàn bộ giao diện, xoá câu giải thích kỹ thuật ("Lưu đám mây", "Tiến trình lưu trên trình duyệt / máy và đám mây", "(chỉ máy này)", "đồng bộ lúc …", toast "Đã tải tiến trình từ đám mây", "Thả tay để đóng", "chạm chân dung để xem tướng"…) và rút gọn chú thích dài ở Cài đặt, Chuẩn bị xuất quân, chọn đội, Túi đồ, Kho báu, chợ Hũ báu, kết quả trận.
-- Cài đặt: dòng cuối chỉ còn "Thần Thoại Việt · Phiên bản N"; hàng tài khoản đổi tên **Tài khoản**, chỉ hiện tên (Khách / tên Google / "Chưa đăng nhập").
+- Cài đặt: dòng cuối chỉ còn "Thần Thoại Việt · Phiên bản N"; hàng tài khoản đổi tên **Tài khoản** (bảng nhỏ ở khung người chơi cũng bỏ "lưu trên đám mây"), chỉ hiện tên (Khách / tên Google / "Chưa đăng nhập").
 - Hướng dẫn trong trận (khung "Chạm 1 thẻ tướng…", "Bấm ▶ (góc trên phải)…") và toast "Mẹo:" chỉ hiện cho người mới (chưa qua ải 1).
 - Danh sách đầy đủ (chỗ, chữ, quyết định): `docs/CHU-THUA.md`; ảnh trước/sau: `docs/chu-thua-truoc-sau.png`.

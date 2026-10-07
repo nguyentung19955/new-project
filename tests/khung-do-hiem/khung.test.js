@@ -39,9 +39,9 @@ async function rosterCase(w, h, tag) {
   ok(!isGold(c.bc) && !glows(c.sh), `[${tag}] thẻ Thường không vàng, không phát sáng (${c.bc}; ${c.sh})`);
   ok(near(e.bc, R.epic) && glows(e.sh), `[${tag}] thẻ Tím viền ${R.epic} + quầng`);
   ok(near(l.bc, R.leg) && glows(l.sh), `[${tag}] thẻ Vàng viền ${R.leg} + quầng`);
-  // Lạc Tướng: đang chọn + đã khám phá ẩn → vẫn không vàng, không phát sáng ra ngoài, có dấu ✦
+  // Lạc Tướng: đang chọn + đã khám phá ẩn → vẫn không vàng, không phát sáng ra ngoài; v165: không còn dấu ✦
   ok(!isGold(ck.bc) && !glows(ck.sh), `[${tag}] Thường đang chọn + đã khám phá: vẫn không vàng/không sáng (${ck.bc}; ${ck.sh})`);
-  ok(await page.locator(card('lactuong') + ' .kn').count() === 1, `[${tag}] dấu ✦ đã khám phá hiệu ứng ẩn ở góc thẻ`);
+  ok(await page.locator('#roster .kn').count() === 0 && !(await page.locator('#roster .ro-grid, #roster .ro-pic').allInnerTexts()).join('').includes('✦'), `[${tag}] v165: không còn dấu ✦ ở thẻ / ảnh chi tiết`);
   ok(ck.bw > c.bw || ck.sh !== c.sh, `[${tag}] thẻ đang chọn khác thẻ thường (viền dày/vòng trong)`);
   // ảnh chi tiết
   const pc = await look(page, '#roster .ro-pic');

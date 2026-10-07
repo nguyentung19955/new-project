@@ -272,6 +272,10 @@ const SAVE_KEY = 'nuicao.v1';
 // v149: góp ý — giới hạn gửi + hàng đợi khi chưa có mạng (lưu riêng, không lẫn vào bản lưu đồng bộ đám mây)
 const FB_KEY = 'nuicao.feedback';
 const FB_KINDS = [['bug', '🐞 Lỗi'], ['idea', '💡 Ý tưởng'], ['balance', '⚖ Cân bằng'], ['other', '💬 Khác']];
+// v163: màn "Góp ý nhận được" (chỉ tài khoản quản trị): màu từng loại, trạng thái, số mục mỗi trang
+const FBA_KIND = { bug: ['Lỗi', '#FF7A5C'], idea: ['Ý tưởng', '#7FD0FF'], balance: ['Cân bằng', '#F2D27A'], other: ['Khác', '#B9B0A0'] };
+const FBA_ST = [['new', 'Mới'], ['seen', 'Đã xem'], ['done', 'Đã xử lý']];
+const FBA_PAGE = 20;
 const FB_GAP = 60000, FB_DAY = 10, FB_QUEUE = 5, FB_MIN = 10, FB_MAX = 1000, FB_SHOT = 150000;
 function loadSave() {
   const def = { stars: LEVELS.map(() => 0), unlocked: 1, last: 0, best: {}, storySeen: false,
@@ -358,9 +362,29 @@ class UI {
     const u = CLOUD.user;
     const btn = !CLOUD.enabled ? '' : !u ? '' : u.isAnonymous
       ? '<button class="btn btn-gold" style="height:34px;padding:0 12px;font-size:13px" data-act="cloud-google">Đăng nhập Google</button>'
+      : this.outArm ? this.outConfirm()
       : '<button class="btn metal" style="height:34px;padding:0 10px;font-size:13px" data-act="cloud-sync">Đồng bộ ngay</button><button class="btn metal" style="height:34px;padding:0 10px;font-size:13px" data-act="cloud-out">Đăng xuất</button>';
     return `<div class="tg metal" id="cloud-row"><div><b>Tài khoản</b><small>${esc(CLOUD.label())}</small></div>
       <div style="margin-left:auto;display:flex;gap:4px">${btn}</div></div>`;
+  }
+  // v165: đăng xuất có bước xác nhận ngay trong giao diện (Cài đặt, bảng tài khoản ở khung người chơi, màn đăng nhập)
+  outConfirm() {
+    return '<span class="out-ask">Đăng xuất? Tiến trình trên máy vẫn giữ.</span><button class="btn btn-gold" style="height:34px;padding:0 10px;font-size:13px" data-act="cloud-out-ok">Đăng xuất</button><button class="btn metal" style="height:34px;padding:0 10px;font-size:13px" data-act="cloud-out-no">Huỷ</button>';
+  }
+  // v165: chạm khung người chơi ở menu → bảng nhỏ: tên, đổi biệt danh, Đăng xuất (đã đăng nhập) / Đăng nhập (khách)
+  renderPlPop() {
+    const pop = $('#pl-pop');
+    if (!this.plPop) { pop.hidden = true; return; }
+    const C = typeof CLOUD !== 'undefined' ? CLOUD : null, u = C && C.user, signed = !!(C && C.enabled && C.signedIn);
+    const nick = this.nickName();
+    const acc = !C || !C.enabled ? 'Chơi ngoại tuyến'
+      : signed ? esc(u.email || u.displayName || 'Tài khoản') : 'Khách · chưa đăng nhập';
+    pop.innerHTML = `<div class="pp-who"><b>${nick ? esc(nick) : 'Khách'}</b><small>${acc}</small></div>
+      <div class="pp-nick"><input id="pl-nick" maxlength="20" placeholder="Đặt biệt danh" value="${esc(nick)}"><button class="btn metal" data-act="pl-rename">Đổi tên</button></div>
+      ${this.plMsg ? `<div class="pp-msg">${esc(this.plMsg)}</div>` : ''}
+      <div class="pp-act">${signed ? (this.outArm ? this.outConfirm() : '<button class="btn metal" data-act="cloud-out">Đăng xuất</button>')
+        : C && C.enabled ? '<button class="btn btn-gold" data-act="pl-login">Đăng nhập</button>' : ''}</div>`;
+    pop.hidden = false;
   }
   renderSettingsCloud() { const r = $('#cloud-row'); if (r) r.outerHTML = this.cloudRow(); }
 
@@ -404,7 +428,7 @@ class UI {
     $('#btn-feedback').onclick = () => this.showFeedback('menu');
     // góp ý còn trong hàng đợi: gửi lại khi có mạng / khi vừa kết nối được Firebase
     window.addEventListener('online', () => this.fbFlush());
-    if (typeof CLOUD !== 'undefined') CLOUD.onChange(() => { if (CLOUD.ready) this.fbFlush(); });
+    if (typeof CLOUD !== 'undefined') CLOUD.onChange(() => { if (CLOUD.ready) this.fbFlush(); this.fbaCheck(); });
     // v153: trò chuyện trong trận nhóm (💬 trên thanh trên; Enter để gửi)
     $('#btn-chat').onclick = () => this.chatToggle();
     $('#chat').addEventListener('keydown', (ev) => { if (ev.key === 'Enter' && ev.target.id === 'chat-in') { ev.preventDefault(); this.chatAct({ act: 'chat-send' }); } });
@@ -448,13 +472,17 @@ class UI {
       });
     };
     // ủy quyền sự kiện cho các vùng dựng lại liên tục
-    for (const id of ['#fuse-strip', '#auto-btns', '#screen', '#deck', '#drawer', '#more', '#reward', '#result', '#story', '#campaign', '#settings', '#legends', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks', '#modes', '#rest', '#feedback', '#coop', '#coop-bar', '#chat']) {
+    for (const id of ['#fuse-strip', '#auto-btns', '#screen', '#deck', '#drawer', '#more', '#reward', '#result', '#story', '#campaign', '#settings', '#legends', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks', '#modes', '#rest', '#feedback', '#fbadmin', '#coop', '#coop-bar', '#chat', '#pl-pop']) {
       $(id).addEventListener('click', (ev) => {
         const el = ev.target.closest('[data-act]');
         if (this.tipShown) { this.tipShown = false; ev.preventDefault(); return; }   // vừa giữ tay xem mô tả: không nâng kỹ năng
         if (el && !el.disabled) this.action(el.dataset, el);
       });
     }
+    // v165: chạm ra ngoài bảng tài khoản thì đóng
+    $('#menu').addEventListener('pointerdown', (ev) => {
+      if (this.plPop && !ev.target.closest('#pl-pop, #menu-player')) { this.plPop = false; this.outArm = false; this.renderPlPop(); }
+    });
     // v121: giữ tay ~0,45 giây trên ô kỹ năng → hiện mô tả kỹ năng hoạt động ra sao; nhấc tay là ẩn
     let tipT = 0;
     const hideTip = () => { clearTimeout(tipT); const t = $('#sk-tip'); if (t) t.hidden = true; };
@@ -500,6 +528,7 @@ class UI {
     window.addEventListener('keydown', (ev) => {
       if (ev.target && /^(INPUT|TEXTAREA)$/.test(ev.target.tagName)) return;   // đang gõ chữ (góp ý, đổi tên): không bắt phím tắt
       if (ev.key === 'Escape' && !$('#feedback').hidden) return this.fbClose();
+      if (ev.key === 'Escape' && !$('#fbadmin').hidden) return this.fbaKey();
       if (!g.started) return;
       const k = ev.key.toLowerCase();
       const h = g.heroes[this.sel];
@@ -536,7 +565,8 @@ class UI {
     $('#menu-player').innerHTML = `${acc && acc.photoURL ? `<span class="av"><img src="${esc(acc.photoURL)}" alt="" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></span>` : ''}<span class="pl-txt"><b>${nick ? esc(nick) : 'Khách <i class="pl-hint">✎ đặt tên</i>'}</b><small>Cấp ${lv} · ★ ${total}/${LEVELS.length * 3}</small></span>`;
     $('#menu-player').title = nick ? 'Tài khoản & đổi tên' : 'Chạm để đặt biệt danh';
     for (const el of $('#menu-player').querySelectorAll('b, small')) fitText(el, el.tagName === 'B' ? 10 : 8);
-    $('#menu-player').onclick = () => this.showLogin(true);
+    $('#menu-player').onclick = () => { this.plPop = !this.plPop; this.outArm = false; this.plMsg = ''; this.renderPlPop(); };
+    this.renderPlPop();
     if (s.runeRefund) { this.toast(`Ấn Phù giờ riêng từng tướng, khắc bằng điểm Tu Vi. Đã hoàn ${fmt(s.runeRefund)} Ngân khố đã tiêu cho ấn cũ.`, '#E4ECF4'); delete s.runeRefund; writeSave(s); }
     const short = (n) => (n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace('.', ',') + 'k' : n);
     $('#menu-res').innerHTML = `<span title="Ngân khố: bạc thưởng sau mỗi trận, dùng mua tướng Tím / Vàng, Thần Khí, đồ trước trận — không dùng được trong trận"><small class="pr-l">Ngân khố</small>${bac(1)} <b style="color:#E4ECF4">${fmt(s.kho || 0)}</b></span>`;
@@ -551,7 +581,8 @@ class UI {
     this.setInGame(false);
   }
   hideOverlays() {
-    for (const id of ['#menu', '#story', '#campaign', '#settings', '#result', '#reward', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks', '#modes', '#rest', '#coop']) $(id).hidden = true;
+    this.plPop = false; this.outArm = false; $('#pl-pop').hidden = true;
+    for (const id of ['#menu', '#story', '#campaign', '#settings', '#result', '#reward', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks', '#modes', '#rest', '#coop', '#fbadmin']) $(id).hidden = true;
     if (this.needLogin()) this.showLogin(false);   // v73: chưa đăng nhập thì luôn che game
   }
   setInGame(on) {
@@ -830,7 +861,7 @@ class UI {
         <div class="login-rename"><input id="lg-nick" class="login-in" maxlength="20" placeholder="Đặt biệt danh" value="${esc(this.nickName())}"><button class="btn metal" data-act="login-rename">Đổi tên</button></div>
         ${err}
         <button class="btn btn-gold title login-btn" data-act="login-close">Vào game</button>
-        <button class="btn metal login-btn" data-act="cloud-out">Đăng xuất</button>`;
+        ${this.outArm ? `<div class="login-out">${this.outConfirm()}</div>` : '<button class="btn metal login-btn" data-act="cloud-out">Đăng xuất</button>'}`;
     else if (C.status === 'error' && !C.auth) inner = `<div class="login-sub">Không kết nối được máy chủ đăng nhập (${esc(C.error)}).</div>
         <button class="btn btn-gold title login-btn" data-act="login-retry">Thử lại</button>
         <button class="btn metal login-btn" data-act="login-offline">Chơi ngoại tuyến (không lưu xếp hạng)</button>`;
@@ -920,9 +951,9 @@ class UI {
         <button class="md-card metal endl" data-act="mode-pick" data-k="endless" style="background-image:linear-gradient(90deg,#0A1A24f0 35%,#0A1A2455),url('${assetSrc('maps/nen-bien.jpg')}')"><span class="md-ic"><img src="${assetSrc('ui/ui-tran-1-3.png')}" alt="♾"></span><b>Vô Tận</b>
           <small>Chọn một bản đồ đã mở, giữ thành mãi mãi. Quái mạnh dần, boss mỗi 10 đợt, đổi bộ quái liên tục. Đua bảng xếp hạng.</small>
           <span class="md-st">Kỷ lục: đợt ${best}</span></button>
-        <button class="md-card metal coop" data-act="mode-pick" data-k="coop" style="background-image:linear-gradient(90deg,#14240Ef0 35%,#14240E55),url('${assetSrc('maps/nen-thanh.jpg')}')"><span class="md-ic">🤝</span><b>Cùng Giữ Thành</b>
+        <button class="md-card metal coop ${COOP.visible ? '' : 'soon'}" ${COOP.visible ? 'data-act="mode-pick" data-k="coop"' : 'disabled aria-disabled="true"'} style="background-image:linear-gradient(90deg,#14240Ef0 35%,#14240E55),url('${assetSrc('maps/nen-thanh.jpg')}')"><span class="md-ic">🤝</span><b>Cùng Giữ Thành</b>
           <small>Chơi nhóm 2 người: chung bản đồ, chung mạng, mỗi người giữ một nửa số ô và ví vàng riêng. Tạo phòng lấy mã 6 ký tự, bạn bè nhập mã để vào.</small>
-          <span class="md-st">${COOP.saved() ? `Đang có phòng ${COOP.saved()}` : 'Cần đăng nhập'}</span></button>
+          ${COOP.visible ? `<span class="md-st">${COOP.saved() ? `Đang có phòng ${COOP.saved()}` : 'Cần đăng nhập'}</span>` : '<span class="md-soon">Sắp ra mắt</span>'}</button>
       </div></div>`;
     $('#modes').hidden = false;
   }
@@ -974,7 +1005,7 @@ class UI {
         <div class="co-row"><button class="btn btn-gold title" data-act="coop-create">＋ Tạo phòng</button></div>
         <div class="co-row"><input id="co-code" class="login-in co-code" maxlength="6" placeholder="Mã phòng" autocapitalize="characters" autocomplete="off" value="${esc(this.coopCode || '')}"><button class="btn metal title" data-act="coop-join">Vào phòng</button></div>
         ${saved ? `<div class="co-row"><button class="btn metal" data-act="coop-rejoin">↻ Vào lại phòng ${esc(saved)}</button></div>` : ''}
-        ${this.coopErr ? `<div class="login-err">${esc(this.coopErr)}</div>` : ''}</div>`;
+        ${this.coopErr ? `<div class="login-err">${esc(this.coopErr)}${this.coopRetry ? ' <button class="btn metal co-retry" data-act="coop-retry">↻ Thử lại</button>' : ''}</div>` : ''}</div>`;
     } else {
       const host = r && r.host === me, members = r ? r.members : [];
       const lv = r ? r.level || 0 : 0;
@@ -989,16 +1020,18 @@ class UI {
         <div class="hint-h">ẢI (PHÓ BẢN ĐÃ MỞ CỦA CHỦ PHÒNG)</div>${lvList}
         <div class="co-row">${host ? `<button class="btn btn-gold title" data-act="coop-start" ${members.length === 2 ? '' : 'disabled'}>⚔ Bắt đầu</button>` : '<span class="note">Chờ chủ phòng bấm Bắt đầu…</span>'}
           <button class="btn metal" data-act="coop-leave">Rời phòng</button></div>
-        ${this.coopErr ? `<div class="login-err">${esc(this.coopErr)}</div>` : ''}</div>`;
+        ${this.coopErr ? `<div class="login-err">${esc(this.coopErr)}${this.coopRetry ? ' <button class="btn metal co-retry" data-act="coop-retry">↻ Thử lại</button>' : ''}</div>` : ''}</div>`;
     }
     $('#coop').innerHTML = `<div class="screen" style="z-index:auto">${head}<div class="co-body">${body}</div></div>`;
   }
   async coopAct(d) {
     const g = this.game;
     this.coopErr = '';
+    if (d.act === 'coop-retry') { const last = this.coopRetry; this.coopRetry = null; if (last) return this.coopAct(last); return; }
     const busy = async (msg, fn) => {
       this.coopBusy = msg; this.renderCoop();
-      try { await fn(); } catch (e) { this.coopErr = e.message || String(e); } finally { this.coopBusy = ''; if (!$('#coop').hidden) this.renderCoop(); }
+      this.coopRetry = null;
+      try { await fn(); } catch (e) { this.coopErr = e.message || String(e); this.coopRetry = { ...d }; } finally { this.coopBusy = ''; if (!$('#coop').hidden) this.renderCoop(); }
     };
     switch (d.act) {
       case 'coop-back': this.showMenu(); break;
@@ -1141,7 +1174,11 @@ class UI {
     if (r !== true) return this.toast(r, '#E25A3A');
     if (d.act === 'chat-send') { const i = $('#chat-in'); if (i) i.value = ''; }
   }
-  coopNote(msg) { this.toast(esc(msg), '#5AB4D6'); }
+  // thông báo chơi nhóm (đồng đội rời / vào lại, đồng bộ lại…): hiện toast và giữ 20 dòng gần nhất (xem lại / kiểm thử)
+  coopNote(msg) {
+    this.coopLog = (this.coopLog || []).concat([{ at: Date.now(), msg }]).slice(-20);
+    this.toast(esc(msg), '#5AB4D6');
+  }
   updateCoopBar() {
     const g = this.game, co = g.co, bar = $('#coop-bar');
     $('#btn-chat').hidden = !COOP.on;
@@ -1248,10 +1285,10 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px">${[['auto', 'Tự động'], ['high', 'Đẹp'], ['low', 'Tiết kiệm']].map(([k, n]) => `<button class="btn ${(st.gfx || 'auto') === k ? 'btn-gold' : 'metal'}" style="height:34px;padding:0 10px;font-size:13px" data-act="set-gfx" data-k="${k}">${n}</button>`).join('')}</div></div>
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Góp ý</b></div>
-          <button class="btn metal" style="margin-left:auto" data-act="set-feedback">✉ Góp ý</button></div>
+          <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 167</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 168</div>
       </div></div>`;
   }
 
@@ -1384,11 +1421,22 @@ class UI {
     const sent = await this.fbTry(item);
     if (!sent) { const s2 = this.fbStore(); s2.queue.push(item); while (s2.queue.length > FB_QUEUE) s2.queue.shift(); this.fbWrite(s2); }
     this.fb = null;
-    $('#feedback').hidden = true;
-    if (this.fbResume && this.game.started && !this.game.over && $('#settings').hidden) this.game.running = true;
-    this.fbResume = false;
-    if (sent) { this.toast('<b>Cảm ơn bạn đã góp ý!</b> Đội làm game sẽ đọc sớm 💌', '#6AE06A'); this.fbFlush(); }
-    else this.toast('<b>Đã lưu góp ý</b>, sẽ gửi khi có mạng', '#F2D27A');
+    this.fbThanks(sent);   // v164: bảng cảm ơn (trận vẫn tạm dừng tới khi bấm Đóng)
+    if (sent) this.fbFlush();
+  }
+  // v164: bảng cảm ơn sau khi gửi — không tự đóng; Đóng / Esc → fbClose() (trận đang chạy thì chạy tiếp như trước)
+  fbThanks(sent) {
+    const drum = `<svg class="fb-ty-ic" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#5A3A14" stroke="#F2D27A" stroke-width="2"/>
+      <circle cx="32" cy="32" r="22" fill="none" stroke="#D9B25A" stroke-width="1.5"/><circle cx="32" cy="32" r="15" fill="none" stroke="#B8852A" stroke-width="1.2" stroke-dasharray="2 2"/>
+      <path d="${Array.from({ length: 12 }, (_, i) => { const a = i * Math.PI / 6, b = a + Math.PI / 12; return `M32 32L${(32 + 10 * Math.cos(a - Math.PI / 12)).toFixed(1)} ${(32 + 10 * Math.sin(a - Math.PI / 12)).toFixed(1)}L${(32 + 4 * Math.cos(b)).toFixed(1)} ${(32 + 4 * Math.sin(b)).toFixed(1)}Z`; }).join('')}" fill="#FFE29A"/>
+      <circle cx="32" cy="32" r="3" fill="#FFF1C4"/></svg>`;
+    $('#feedback').innerHTML = `<div class="fb-box fb-thanks metal" role="dialog" aria-label="Cảm ơn góp ý">
+      ${drum}<b class="ttl">Cảm ơn góp ý của bạn!</b>
+      <p>Đội ngũ Thần Thoại Việt sẽ đọc và hoàn thiện game để mang lại trải nghiệm tốt hơn.</p>
+      <small class="fb-ty-st ${sent ? 'ok' : 'off'}">${sent ? '✓ Góp ý đã được gửi tới đội làm game' : 'Đang không có mạng — góp ý đã được lưu và sẽ tự gửi khi có mạng'}</small>
+      <button class="btn btn-gold title" data-act="fb-close">Đóng</button></div>`;
+    $('#feedback').hidden = false;
+    const b = $('#feedback [data-act=fb-close]'); if (b) b.focus();
   }
   // gửi 1 góp ý; quá 12 giây chưa xong thì coi như chưa gửi (nếu sau đó gửi được thì tự gỡ khỏi hàng đợi)
   fbTry(item) {
@@ -1409,6 +1457,160 @@ class UI {
       for (const item of q) { if (await this.fbTry(item)) { this.fbDrop(item.at); n++; } else break; }
     } finally { this.fbFlushing = false; }
     if (n) this.toast(`Đã gửi ${n} góp ý đang chờ. Cảm ơn bạn! 💌`, '#6AE06A');
+  }
+
+  // ---------- v163: "Góp ý nhận được" — chỉ hiện với tài khoản quản trị (CLOUD.isAdmin(): đăng nhập, email trong ADMIN_EMAILS, đã xác minh).
+  // Ẩn nút chỉ là giao diện; luật Firestore isAdmin() mới chặn thật. Lọc loại / trạng thái làm trên máy (không cần chỉ mục ghép).
+  fbaIsAdmin() { return typeof CLOUD !== 'undefined' && !!CLOUD.isAdmin && CLOUD.isAdmin(); }
+  fbaBtn() {
+    if (typeof CLOUD !== 'undefined' && CLOUD.adminUnverified && CLOUD.adminUnverified())
+      return '<button class="btn metal" data-act="fba-verify" title="Email quản trị chưa xác minh">📥 Xác minh email</button>';
+    if (!this.fbaIsAdmin()) return '';
+    const n = this.fbaNew || 0;
+    return `<button class="btn metal fba-open" data-act="fba-open">📥 Góp ý nhận được${n ? `<span class="fba-dot">${n > 49 ? '50+' : n}</span>` : ''}</button>`;
+  }
+  // đổi tài khoản / vừa đăng nhập: đếm góp ý "Mới" (50 mục gần nhất) làm chấm báo trên nút Cài Đặt + nút trong Cài đặt
+  fbaCheck() {
+    const uid = this.fbaIsAdmin() && CLOUD.ready ? CLOUD.user.uid : '';
+    if (uid === this.fbaUid) return;
+    this.fbaUid = uid; this.fbaNew = 0; this.fbaDot();
+    if (!uid) { this.fba = null; if (!$('#fbadmin').hidden) $('#fbadmin').hidden = true; return; }
+    CLOUD.listFeedback({ limit: 50 }).then((r) => { if (this.fbaUid !== uid) return; this.fbaNew = r.items.filter((f) => (f.status || 'new') === 'new').length; this.fbaDot(); }, () => {});
+  }
+  fbaDot() {
+    const b = $('#btn-settings');
+    if (b) b.classList.toggle('fba-has', !!(this.fbaIsAdmin() && this.fbaNew));
+    if (!$('#settings').hidden) this.renderSettings();
+  }
+  // ảnh do người chơi gửi: chỉ nhận đúng dạng JPEG base64 (chuỗi lạ có thể chèn thuộc tính HTML vào <img>)
+  fbaShotOk(u) { return typeof u === 'string' && /^data:image\/jpeg;base64,[A-Za-z0-9+/]+=*$/.test(u); }
+  fbaTime(at) {
+    try { return new Date(at).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh', hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' }); } catch (e) { return String(at); }
+  }
+  async showFbAdmin() {
+    if (!this.fbaIsAdmin()) return;
+    this.fba = { items: [], cursor: null, more: true, kind: 'all', st: 'all', err: '', busy: false, big: '', note: '', del: '' };
+    $('#fbadmin').hidden = false;
+    this.renderFbAdmin();
+    await this.fbaLoad();
+  }
+  async fbaLoad() {
+    const a = this.fba;
+    if (!a || a.busy || !a.more) return;
+    a.busy = true; a.err = ''; this.renderFbAdmin();
+    try {
+      const r = await CLOUD.listFeedback({ limit: FBA_PAGE, after: a.cursor });
+      if (this.fba !== a) return;
+      const have = new Set(a.items.map((f) => f.id));
+      a.items.push(...r.items.filter((f) => !have.has(f.id)));
+      a.cursor = r.cursor || a.cursor; a.more = r.more;
+    } catch (e) { if (this.fba === a) a.err = e.message; }
+    a.busy = false;
+    if (this.fba === a) { this.fbaCount(); this.renderFbAdmin(); }
+  }
+  // số góp ý "Mới" cho chấm báo: tải hết danh sách thì đếm chính xác, chưa hết thì không thấp hơn số đã đếm lúc đầu
+  fbaCount(delta) {
+    const a = this.fba;
+    if (delta) this.fbaNew = Math.max(0, (this.fbaNew || 0) + delta);
+    else if (a) { const k = a.items.filter((f) => (f.status || 'new') === 'new').length; this.fbaNew = a.more ? Math.max(this.fbaNew || 0, k) : k; }
+    this.fbaDot();
+  }
+  renderFbAdmin() {
+    const a = this.fba;
+    if (!a) return;
+    const box = $('#fbadmin .fba-list');
+    const scroll = box ? box.scrollTop : 0;
+    const stOf = (f) => f.status || 'new';
+    const n = (fn) => a.items.filter(fn).length;
+    const kinds = [['all', 'Tất cả'], ...Object.entries(FBA_KIND).map(([k, v]) => [k, v[0]])];
+    const sts = [['all', 'Mọi trạng thái'], ...FBA_ST];
+    const list = a.items.filter((f) => (a.kind === 'all' || f.kind === a.kind) && (a.st === 'all' || stOf(f) === a.st));
+    const card = (f) => {
+      const [kn, kc] = FBA_KIND[f.kind] || FBA_KIND.other;
+      const st = stOf(f);
+      const meta = [f.ver, f.where, f.scr, f.ua].filter(Boolean).map(esc).join(' · ');
+      return `<div class="fba-item inset st-${st}" data-id="${esc(f.id)}">
+        <div class="fba-top"><span class="fba-kind" style="--kc:${kc}">${kn}</span><span class="fba-time">${esc(this.fbaTime(f.at))}</span>
+          <span class="fba-who">${f.guest ? 'Khách' : 'Đã đăng nhập'}</span>
+          <div class="fba-st">${FBA_ST.map(([k, l]) => `<button class="${st === k ? 'on' : ''}" data-act="fba-st" data-id="${esc(f.id)}" data-k="${k}" aria-pressed="${st === k}">${l}</button>`).join('')}</div></div>
+        <div class="fba-mid">
+          <div class="fba-txt">${esc(f.text || '')}${f.contact ? `<div class="fba-contact">Liên hệ: <b>${esc(f.contact)}</b></div>` : ''}</div>
+          ${this.fbaShotOk(f.shot) ? `<button class="fba-thumb" data-act="fba-big" data-id="${esc(f.id)}" aria-label="Xem ảnh to"><img src="${f.shot}" alt="Ảnh chụp" loading="lazy"></button>` : ''}
+        </div>
+        <div class="fba-meta">${meta}</div>
+        ${a.note === f.id ? `<div class="fba-note-ed"><input id="fba-note-in" maxlength="300" placeholder="Ghi chú (chỉ quản trị thấy)" value="${esc(f.note || '')}" autocomplete="off"><button class="btn btn-gold" data-act="fba-note-ok" data-id="${esc(f.id)}">Lưu</button><button class="btn metal" data-act="fba-note-x">Huỷ</button></div>`
+          : `<div class="fba-act">${f.note ? `<span class="fba-note">📝 ${esc(f.note)}</span>` : '<span class="fba-note"></span>'}
+          <button class="btn metal" data-act="fba-note" data-id="${esc(f.id)}">✎ Ghi chú</button>
+          ${a.del === f.id ? `<span class="fba-ask">Xoá hẳn góp ý này?</span><button class="btn metal fba-danger" data-act="fba-del-ok" data-id="${esc(f.id)}">Xoá</button><button class="btn metal" data-act="fba-del-x">Không</button>`
+            : `<button class="btn metal fba-danger" data-act="fba-del" data-id="${esc(f.id)}">🗑 Xoá</button>`}</div>`}
+      </div>`;
+    };
+    const big = a.big && a.items.find((f) => f.id === a.big && this.fbaShotOk(f.shot));
+    const empty = a.busy && !a.items.length ? 'Đang tải…' : a.err && !a.items.length ? '' : !a.items.length ? 'Chưa có góp ý nào.' : !list.length ? `Không có góp ý khớp bộ lọc${a.more ? ' trong số đã tải — bấm Tải thêm' : ''}.` : '';
+    $('#fbadmin').innerHTML = `<div class="screen" style="z-index:auto">
+      <div class="scr-head metal"><button class="xbtn metal" data-act="fba-close" aria-label="Quay lại">${ICON.back}</button><h1 class="ttl">📥 Góp ý nhận được</h1>
+        <span class="chip dark">${a.items.length}${a.more ? '+' : ''} góp ý · ${this.fbaNew || 0} mới</span><div class="sp"></div>
+        <button class="btn metal" style="height:34px;padding:0 10px;font-size:13px;flex:none" data-act="fba-reload" ${a.busy ? 'disabled' : ''}>↻ Tải lại</button></div>
+      <div class="fba-filters">
+        <div class="cp-tabs">${kinds.map(([k, l]) => `<button class="cp-tab ${a.kind === k ? 'on' : ''}" data-act="fba-kind" data-k="${k}">${k === 'all' ? '' : `<i class="fba-sw" style="--kc:${FBA_KIND[k][1]}"></i>`}${l} <small>${k === 'all' ? a.items.length : n((f) => f.kind === k)}</small></button>`).join('')}</div>
+        <div class="cp-tabs">${sts.map(([k, l]) => `<button class="cp-tab ${a.st === k ? 'on' : ''}" data-act="fba-stf" data-k="${k}">${l}${k === 'all' ? '' : ` <small>${n((f) => stOf(f) === k)}</small>`}</button>`).join('')}</div>
+      </div>
+      <div class="fba-list">
+        ${a.err ? `<div class="login-err fba-err">${esc(a.err)}</div>` : ''}
+        ${empty ? `<div class="note" style="text-align:center;padding:16px">${empty}</div>` : ''}
+        ${list.map(card).join('')}
+        ${a.more && a.items.length ? `<button class="btn metal fba-more" data-act="fba-more" ${a.busy ? 'disabled' : ''}>${a.busy ? 'Đang tải…' : 'Tải thêm'}</button>` : ''}
+      </div>
+      ${big ? `<div class="fba-big" data-act="fba-big-x"><img src="${big.shot}" alt="Ảnh chụp trận"><small>Chạm để đóng</small></div>` : ''}
+    </div>`;
+    const nb = $('#fbadmin .fba-list');
+    if (nb) nb.scrollTop = scroll;
+    const ni = $('#fba-note-in');
+    if (ni) { ni.focus(); ni.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); this.fbaAct({ act: 'fba-note-ok', id: a.note }); } }); }
+  }
+  fbaKey() {
+    const a = this.fba;
+    if (a && (a.big || a.del || a.note)) { a.big = a.del = a.note = ''; this.renderFbAdmin(); return; }
+    this.fbaAct({ act: 'fba-close' });
+  }
+  async fbaAct(d) {
+    const a = this.fba;
+    if (!a) return;
+    const f = d.id && a.items.find((x) => x.id === d.id);
+    switch (d.act) {
+      case 'fba-close': $('#fbadmin').hidden = true; this.fba = null; if (!$('#settings').hidden) this.renderSettings(); break;
+      case 'fba-reload': this.fba = null; this.showFbAdmin(); break;
+      case 'fba-more': this.fbaLoad(); break;
+      case 'fba-kind': a.kind = d.k; this.renderFbAdmin(); break;
+      case 'fba-stf': a.st = d.k; this.renderFbAdmin(); break;
+      case 'fba-big': a.big = d.id; this.renderFbAdmin(); break;
+      case 'fba-big-x': a.big = ''; this.renderFbAdmin(); break;
+      case 'fba-note': a.note = d.id; a.del = ''; this.renderFbAdmin(); break;
+      case 'fba-note-x': a.note = ''; this.renderFbAdmin(); break;
+      case 'fba-del': a.del = d.id; a.note = ''; this.renderFbAdmin(); break;
+      case 'fba-del-x': a.del = ''; this.renderFbAdmin(); break;
+      case 'fba-st': case 'fba-note-ok': {
+        if (!f) break;
+        const status = d.act === 'fba-st' ? d.k : (f.status || 'new');
+        const note = d.act === 'fba-note-ok' ? (($('#fba-note-in') || {}).value || '').trim().slice(0, 300) : undefined;
+        const was = (f.status || 'new') === 'new';
+        try {
+          await CLOUD.setFeedbackStatus(f.id, status, note);
+          f.status = status; if (note !== undefined) f.note = note;
+          a.note = ''; a.err = '';
+          this.fbaCount((status === 'new') - was);
+        } catch (e) { a.err = e.message; this.toast(esc(e.message), '#FF7A5C'); }
+        this.renderFbAdmin(); break;
+      }
+      case 'fba-del-ok': {
+        if (!f) break;
+        try {
+          await CLOUD.deleteFeedback(f.id); a.items = a.items.filter((x) => x !== f); a.del = ''; a.err = ''; this.toast('Đã xoá góp ý', '#C8BFA8');
+          if ((f.status || 'new') === 'new') this.fbaCount(-1);
+        } catch (e) { a.err = e.message; this.toast(esc(e.message), '#FF7A5C'); }
+        this.renderFbAdmin(); break;
+      }
+    }
   }
 
   // ---------- chạm bản đồ
@@ -1888,7 +2090,7 @@ class UI {
       const maxed = h.level >= CONFIG.maxLevel;
       const tc = g.trainCost(h);
       html = `<button class="dk-x metal" data-act="deck-close" aria-label="Bỏ chọn">${ICON.close}</button>
-        <span class="dk-pt ${def.legend || 'common'} ${g.known.has('h.' + h.type) ? 'known' : ''}" ${assetUrl(`ui_khung-${def.legend === 'legendary' ? 'vang' : 'thuong'}.png`) ? `style="background-image:url('${assetUrl(`ui_khung-${def.legend === 'legendary' ? 'vang' : 'thuong'}.png`)}'),radial-gradient(circle at 50% 60%,#3A2416,#1A0F0A 75%);background-size:100% 100%,auto"` : ''}><canvas id="dk-portrait" width="108" height="116" title="Giữ để xem chỉ số"></canvas>${g.known.has('h.' + h.type) ? '<i class="kn" title="Đã khám phá hiệu ứng ẩn">✦</i>' : ''}<span class="lv">${h.level}${h.train ? `<i>✦${h.train}</i>` : ''}</span><span class="st" ${h.from ? 'style="color:#FF7A3A"' : ''}>${'★'.repeat(h.tier || 0)}</span></span>
+        <span class="dk-pt ${def.legend || 'common'}" ${assetUrl(`ui_khung-${def.legend === 'legendary' ? 'vang' : 'thuong'}.png`) ? `style="background-image:url('${assetUrl(`ui_khung-${def.legend === 'legendary' ? 'vang' : 'thuong'}.png`)}'),radial-gradient(circle at 50% 60%,#3A2416,#1A0F0A 75%);background-size:100% 100%,auto"` : ''}><canvas id="dk-portrait" width="108" height="116" title="Giữ để xem chỉ số"></canvas><span class="lv">${h.level}${h.train ? `<i>✦${h.train}</i>` : ''}</span><span class="st" ${h.from ? 'style="color:#FF7A3A"' : ''}>${'★'.repeat(h.tier || 0)}</span></span>
         <span class="dk-info"><span class="nm">${elIcon(def.el, 15)}${def.name}</span><span class="sub ${h.bogged || h.dead ? 'warn' : ''}">${status}</span>
           <span class="bar hp"><i id="dk-hp"></i></span><span class="bar mp"><i id="dk-mp"></i></span></span>
 
@@ -2200,9 +2402,10 @@ class UI {
     this.runesInGame = !!inGame;
     const sel = this.game.heroes[this.sel];
     const list = this.runeHeroes();
-    if (!list.length) { this.runesFromRoster = false; this.toast('Ấn Phù chỉ dành cho <b>tướng Vàng</b>. Mua tướng Vàng ở <b>Anh Hùng</b> (bằng Ngân khố) để khắc ấn.', '#F2D27A'); return; }
+    // v165: chưa có tướng Vàng vẫn mở màn Ấn Phù (trước chỉ hiện toast — bị lớp menu che nên bấm như không có gì xảy ra)
+    if (!list.length) this.runesFromRoster = false;
     const pick = [type, inGame && sel ? sel.type : null, this.runeHero].find((x) => x && list.includes(x));
-    this.runeHero = pick || list[0];
+    this.runeHero = pick || list[0] || null;
     this.runeSel = this.runeSel || 'n_dmg';
     this.runeResetArm = false;
     if (inGame) { if (!this.runesFromRoster) { this.runesWasRunning = this.game.running; this.game.running = false; } }
@@ -2214,6 +2417,14 @@ class UI {
   runeOpen(r) { return runeBranchPts(this.heroRuneLv(this.runeHero), r.br) >= RUNE_ROW_NEED[r.row]; }
   runePtsLeft(t) { const xp = (this.save.tuvi || {})[t] || 0; return tuviPoints(xp) - runeSpent(this.heroRuneLv(t)); }
   renderRunes() {
+    if (!this.runeHero) {
+      $('#runes').innerHTML = `<div class="screen" style="z-index:auto">
+        <div class="scr-head metal"><button class="xbtn metal" data-act="rn-back" aria-label="Quay lại">${ICON.back}</button><h1 class="ttl">Ấn Phù</h1></div>
+        <div class="scr-body rn-empty"><div class="panel metal"><b class="rn-eh">Chưa có tướng Vàng</b>
+          <p>Ấn Phù chỉ dành cho <b>tướng Vàng</b>. Mua tướng Vàng ở <b>Anh Hùng</b> (bằng Ngân khố), rồi hạ quái bằng tướng đó để tích Tu Vi và khắc ấn.</p>
+          <button class="btn btn-gold" data-act="rn-roster">Đến Anh Hùng</button></div></div></div>`;
+      return;
+    }
     const t = this.runeHero, d = HEROES[t], lvs = this.heroRuneLv(t);
     const xp = (this.save.tuvi || {})[t] || 0, tl = tuviLevel(xp), nx = tuviNext(xp), left = this.runePtsLeft(t);
     const r = RUNE_BY[this.runeSel], lv = lvs[r.id] || 0, br = RUNE_BRANCHES.find((b) => b.id === r.br);
@@ -2324,13 +2535,13 @@ class UI {
         <div class="ro-grid">${all.map((k) => {
           const h = HEROES[k];
           const lock = h.legend && !(this.save.owned || []).includes(k);
-          return `<button class="ro-card ${h.legend || 'common'} ${k === t ? 'on' : ''} ${lock ? 'lock' : ''} ${this.game.known.has('h.' + k) ? 'known' : ''}" data-act="ro-sel" data-type="${k}">${lock ? `<span class="ro-lock">${UIE.lock()}</span>` : ''}${this.game.known.has('h.' + k) ? '<i class="kn" title="Đã khám phá hiệu ứng ẩn">✦</i>' : ''}
+          return `<button class="ro-card ${h.legend || 'common'} ${k === t ? 'on' : ''} ${lock ? 'lock' : ''}" data-act="ro-sel" data-type="${k}">${lock ? `<span class="ro-lock">${UIE.lock()}</span>` : ''}
             <span class="tag el" style="color:${ELEMENTS[h.el].color}">${elIcon(h.el, 11)}${ELEMENTS[h.el].name}</span>
             <img src="${heroImgUrl(k)}" alt=""><span class="nm">${h.name}</span></button>`;
         }).join('')}</div>
         <div class="panel metal ro-det">
           <div class="ro-top">
-            <div class="ro-pic inset ${d.legend || 'common'} ${this.game.known.has('h.' + t) ? 'known' : ''}">${this.game.known.has('h.' + t) ? '<i class="kn" title="Đã khám phá hiệu ứng ẩn">✦</i>' : ''}${splash ? `<img src="${splash}" alt="">` : '<canvas id="ro-cv" width="300" height="300"></canvas>'}</div>
+            <div class="ro-pic inset ${d.legend || 'common'}">${splash ? `<img src="${splash}" alt="">` : '<canvas id="ro-cv" width="300" height="300"></canvas>'}</div>
             <div style="display:flex;flex-direction:column;gap:5px;min-width:0">
               <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="ttl" style="font-size:26px;line-height:1">${d.name}</span>
                 ${!d.legend ? '<span class="chip ok">Có sẵn</span>' : (this.save.owned || []).includes(t) ? `<span class="chip ok">${UIE.done()} Đã sở hữu</span>${LEGACY[t] ? `<button class="btn btn-gold" style="height:32px;padding:0 12px;font-size:14px" data-act="lg-open" data-type="${t}">⚜ Thần Khí · ${this.legacyPts(t)}/${LEGACY_MAX * 3}</button>` : ''}`
@@ -2660,11 +2871,44 @@ class UI {
         break;
       }
       case 'cloud-sync': CLOUD.push(this.save, true); break;
-      case 'cloud-out': this.loginFromMenu = false; CLOUD.signOut(); break;
+      case 'cloud-out': case 'cloud-out-no':   // v165: bấm Đăng xuất → hỏi lại ngay tại chỗ
+        this.outArm = d.act === 'cloud-out';
+        if (!$('#settings').hidden) this.renderSettingsCloud();
+        if (!$('#login').hidden) this.showLogin(this.loginFromMenu);
+        this.renderPlPop();
+        break;
+      case 'cloud-out-ok': {
+        this.outArm = false; this.plPop = false; this.renderPlPop(); this.loginFromMenu = false;
+        // tiến trình trên máy giữ nguyên; đăng nhập lại thì kéo bản trên mây về (CLOUD.pull)
+        Promise.resolve(CLOUD.signOut()).catch(() => {}).then(() => { if (!CLOUD.signedIn) { $('#settings').hidden = true; this.showLogin(false); } });
+        break;
+      }
+      case 'pl-login': this.plPop = false; this.renderPlPop(); this.showLogin(true); break;
+      case 'pl-rename': {
+        const v = (($('#pl-nick') || {}).value || '').trim().slice(0, 20);
+        if (!v) { this.plMsg = 'Tên không được để trống'; this.renderPlPop(); break; }
+        this.save.nick = v; writeSave(this.save);
+        if (typeof CLOUD !== 'undefined' && CLOUD.user && !CLOUD.user.isAnonymous && CLOUD.user.updateProfile) CLOUD.user.updateProfile({ displayName: v }).catch(() => {});
+        this.showMenu(); this.plPop = true; this.plMsg = 'Đã đổi tên thành ' + v; this.renderPlPop();
+        break;
+      }
       case 'fb-kind': this.fbRead(); this.fb.kind = d.k; this.fb.err = ''; this.renderFeedback(); break;
       case 'fb-shot': this.fbRead(); this.fb.useShot = !this.fb.useShot; this.renderFeedback(); break;
       case 'fb-close': this.fbClose(); break;
       case 'fb-send': this.fbSend(); break;
+      case 'fba-open': this.showFbAdmin(); break;
+      case 'fba-verify': {
+        const u = CLOUD.user;
+        CLOUD.verifyAdminEmail(this.fbaMailSent).then((v) => {
+          if (this.fbaMailSent && !v) this.toast('Email chưa được xác minh — mở thư trong hộp thư rồi bấm lại', '#F2D27A');
+          else if (!this.fbaMailSent) { this.fbaMailSent = true; this.toast('Đã gửi thư xác minh tới ' + esc(u.email) + '. Xác minh xong bấm lại nút này', '#6AE06A'); }
+          this.renderSettings();
+        }, (e) => this.toast(esc(e.message), '#FF7A5C'));
+        break;
+      }
+      case 'fba-close': case 'fba-reload': case 'fba-more': case 'fba-kind': case 'fba-stf': case 'fba-big': case 'fba-big-x':
+      case 'fba-note': case 'fba-note-x': case 'fba-note-ok': case 'fba-del': case 'fba-del-x': case 'fba-del-ok': case 'fba-st':
+        this.fbaAct(d); break;
       case 'set-feedback': this.showFeedback(this.settingsInGame ? 'tam-dung' : 'cai-dat'); break;
       case 'set-close':
         $('#settings').hidden = true;
@@ -2741,6 +2985,13 @@ class UI {
         if (this.runesInGame) { this.runesInGame = false; if (this.runesWasRunning) g.running = true; }
         else this.showMenu();
         break;
+      case 'rn-roster': {
+        $('#runes').hidden = true;
+        const ig = this.runesInGame; this.runesInGame = false;
+        if (ig && this.runesWasRunning) g.running = true;
+        this.showRoster(null, ig);
+        break;
+      }
       case 'ro-runes': this.runesFromRoster = true; this.showRunes(this.rosterInGame, d.type); break;
       case 'ro-temple': location.href = 'den-anh-hung.html'; break;
       case 'next-level': this.save.last = Math.min(LEVELS.length - 1, g.level + 1); writeSave(this.save); this.showCampaign(this.save.last); break;

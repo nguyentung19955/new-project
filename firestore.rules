@@ -17,10 +17,21 @@ service cloud.firestore {
         && request.resource.data.detail is string && request.resource.data.detail.size() <= 60
         && (resource == null || request.resource.data.score >= resource.data.score);
     }
-    // góp ý: ai đã đăng nhập (kể cả khách ẩn danh) chỉ được tạo; không ai đọc / sửa / xoá từ máy người chơi
-    // (xem trong Firebase console → Firestore → feedback)
+    // góp ý: ai đã đăng nhập (kể cả khách ẩn danh) chỉ được tạo.
+    // v163: chỉ tài khoản quản trị (email đã xác minh) được đọc, đổi trạng thái / ghi chú, xoá — màn "Góp ý nhận được" trong game.
     match /feedback/{id} {
-      allow read, update, delete: if false;
+      // email quản trị đặt ở MỘT chỗ này (game: ADMIN_EMAILS trong js/cloud.js chỉ để hiện nút)
+      function isAdmin() {
+        return request.auth != null
+          && request.auth.token.get('email', '').lower() == 'ly230595@gmail.com'
+          && request.auth.token.get('email_verified', false) == true;
+      }
+      allow get, list: if isAdmin();
+      allow delete: if isAdmin();
+      allow update: if isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'note'])
+        && request.resource.data.get('status', 'new') in ['new', 'seen', 'done']
+        && request.resource.data.get('note', '') is string && request.resource.data.get('note', '').size() <= 300;
       allow create: if request.auth != null
         && request.resource.data.keys().hasOnly(['kind', 'text', 'contact', 'shot', 'ver', 'where', 'scr', 'ua', 'at', 'uid', 'guest'])
         && request.resource.data.keys().hasAll(['kind', 'text', 'ver', 'uid', 'at'])

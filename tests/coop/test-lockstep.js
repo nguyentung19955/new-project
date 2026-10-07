@@ -80,9 +80,23 @@ async function run(browser) {
 
   // ---- phòng chờ bằng giao diện
   await A.evaluate(() => { ui.save.unlocked = Math.max(ui.save.unlocked || 1, 2); });
-  await A.evaluate(() => ui.showModes());
+  const soon = await A.evaluate(() => { ui.showModes(); const c = document.querySelector('.md-card.coop'); c.click(); return { dis: c.disabled, txt: c.textContent, open: !document.querySelector('#coop').hidden }; });
+  check(soon.dis && /Sắp ra mắt/.test(soon.txt) && !soon.open, 'mặc định thẻ Cùng Giữ Thành khoá, ghi "Sắp ra mắt", bấm không mở (COOP.visible = false)');
+  await A.evaluate(() => { COOP.visible = true; ui.showModes(); });
   await click(A, '.md-card.coop');
+  // luật chưa đăng → báo rõ + nút Thử lại; mất mạng → báo mất mạng
+  relay.noRules = true;
   await click(A, '[data-act=coop-create]');
+  await waitFor(() => A.evaluate(() => !!document.querySelector('[data-act=coop-retry]')), 5000, 'báo lỗi tạo phòng');
+  const e1 = await A.evaluate(() => document.querySelector('#coop .login-err').textContent);
+  check(/luật chơi nhóm/.test(e1) && /permission-denied/.test(e1), `luật chưa đăng: "${e1.replace(/\s+/g, ' ').slice(0, 90)}…" + nút Thử lại`);
+  relay.noRules = false; relay.setOffline('chuPhong');
+  await click(A, '[data-act=coop-retry]');
+  await waitFor(() => A.evaluate(() => /Mất mạng/.test((document.querySelector('#coop .login-err') || {}).textContent || '')), 5000, 'báo mất mạng');
+  check(true, 'mất mạng khi tạo phòng: báo "Mất mạng…" (unavailable)');
+  relay.setOnline('chuPhong');
+  await click(A, '[data-act=coop-retry]');
+  for (let i = errors.length - 1; i >= 0; i--) if (/\[chơi nhóm\] Tạo phòng lỗi/.test(errors[i])) errors.splice(i, 1);   // lỗi cố ý ở trên (đã ghi console.error)
   const code = await waitFor(() => A.evaluate(() => ui.lobby && ui.lobby.code), 5000, 'tạo phòng');
   check(/^[A-Z0-9]{6}$/.test(code), `tạo phòng, mã ${code}`);
   await B.evaluate(() => ui.showCoop());
@@ -154,11 +168,9 @@ async function run(browser) {
   // ---- mất mạng giữa chừng
   if (!a.over && !a.won) {
     await stopBot(B);
-    // ghi lại mọi thông báo: hộp toast chỉ giữ 2 cái, bot chủ phòng có thể đẩy thông báo mất kết nối ra trước khi kịp đọc
-    await A.evaluate(() => { window.__tl = []; const o = ui.toast.bind(ui); ui.toast = (m, c) => { window.__tl.push(m); return o(m, c); }; });
     relay.setOffline('khach');
     await waitFor(async () => (await state(A)).alone === 0, 20000, 'chủ phòng thấy đồng đội rời');
-    const tA = await A.evaluate(() => window.__tl.join(' | '));
+    const tA = await A.evaluate(() => (ui.coopLog || []).map((x) => x.msg).join(' | '));
     check(/mất kết nối/i.test(tA) || /rời/i.test(tA), 'chủ phòng thấy thông báo mất kết nối');
     const solo = await A.evaluate(() => { const s = game.co.own.findIndex((o, i) => o === 1); return game.co.canAct(COOP.me, s); });
     check(solo, 'chơi tiếp một mình, điều khiển được cả nửa của đồng đội');

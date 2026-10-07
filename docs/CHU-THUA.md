@@ -1,4 +1,4 @@
-# Rà chữ thừa trong giao diện (phiên bản 167)
+# Rà chữ thừa trong giao diện (phiên bản 168)
 
 Nguyên tắc: **XOÁ** chữ chỉ giải thích kỹ thuật hoặc lặp lại · **RÚT GỌN** hướng dẫn cần thiết (chỉ hiện cho người mới) · **GIỮ** thông tin để ra quyết định (giá, chỉ số, cảnh báo lỗi, xác nhận xoá…).
 
@@ -9,6 +9,8 @@ Nguyên tắc: **XOÁ** chữ chỉ giải thích kỹ thuật hoặc lặp lạ
 | Cài đặt — dòng cuối (`js/ui.js` renderSettings) | "Thần Thoại Việt · Phiên bản N · Tiến trình lưu trên máy và đám mây / trên trình duyệt của bạn" | Rút gọn → "Thần Thoại Việt · Phiên bản N" |
 | Cài đặt — hàng tài khoản (`cloudRow`) | Tiêu đề "Lưu đám mây" + " · Đăng nhập Google để chơi tiếp trên máy khác" | Đổi tiêu đề "Tài khoản", xoá câu phụ (nút "Đăng nhập Google" vẫn còn) |
 | `js/cloud.js` label() | "Chưa bật (chỉ lưu trên máy này)", "Khách (chỉ máy này)", " · đồng bộ lúc HH:MM" | Rút gọn → "Chưa đăng nhập", "Khách", bỏ giờ đồng bộ |
+| Bảng nhỏ khung người chơi (menu) | "… · lưu trên đám mây", "Chơi ngoại tuyến · tiến trình lưu trên máy này" | Rút gọn → chỉ email / "Chơi ngoại tuyến" |
+| Xác nhận Đăng xuất | "Đăng xuất? Tiến trình trên máy vẫn giữ." | Giữ — xác nhận |
 | Toast khi nạp bản lưu | "Đã tải tiến trình từ đám mây" | Xoá (kỹ thuật, hiện mỗi lần mở game) |
 | Màn đăng nhập | "<email> · tiến trình lưu trên đám mây" | Xoá phần sau email |
 | Màn đăng nhập | "Đăng nhập để chơi — tiến trình lưu trên đám mây, chơi tiếp trên máy khác" | Rút gọn → "Đăng nhập để chơi" |
