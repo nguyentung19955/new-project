@@ -1990,7 +1990,7 @@ img.eli { position: static !important; inset: auto !important; transform: none !
 /* v180: khối "Đợt N · Vô tận" đứng yên — trước đây .tb-center là flex:1 (chiếm phần trống còn lại) và căn giữa chữ trong đó,
    nên mỗi khi ô tiền/mạng đổi số chữ số, hiện ô nước, nút chat… phần trống co giãn và cả khối trượt ngang; ký hiệu "Khó" làm dòng cao lên.
    Nay: rộng/cao cố định, lề trái tính theo bề ngang thanh trên (không phụ thuộc phần tử khác), chữ số đều nhau, biểu tượng cao đúng 1 dòng. */
-.tb-center { flex: none; width: 184px; height: 40px; justify-content: center; margin: 0 auto 0 clamp(0px, calc(50% - 320px), 400px); }
+.tb-center { flex: none; width: 200px; height: 40px; justify-content: center; margin: 0 auto 0 clamp(0px, calc(50% - 320px), 400px); }
 #tb-wave { font-variant-numeric: tabular-nums; height: 17px; }
 #tb-wave .icn { height: 1em; width: auto; vertical-align: top; }
 /* /v180 */
