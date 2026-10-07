@@ -95,7 +95,7 @@ function cdPrepare(img) {
   c.naturalWidth = c.width; c.naturalHeight = c.height;
   const fx = Math.min(0.85, Math.max(0.15, (fk * (x1 - x0) / k + (x0 / k - sx)) / sw));
   c.__fk = fx;   // footK() của render.js đọc giá trị này
-  p = { c, ar: c.width / c.height, fx, tint: new Map() };
+  p = { c, ar: c.width / c.height, fx, tint: new Map(), geo: { sx, sy, sw, sh, iw, ih, q: c.width / sw } };
   cdPrep.set(img, p);
   return p;
 }
@@ -171,7 +171,7 @@ function cdPose(st) {
   }
   if (st.win && !(st.swing > 0) && !(st.castT > 0)) {   // ăn mừng: nhảy nhót
     const j = Math.abs(Math.sin(t * 5 + sd));
-    P.dy -= 0.08 * j; P.sy *= 1 + 0.05 * (j - 0.4);
+    P.dy -= 0.08 * j; P.hop = -0.08 * j; P.sy *= 1 + 0.05 * (j - 0.4);
   }
   if (st.fall !== undefined) {    // chết: ngã nghiêng + chìm + mờ dần
     const q = cdInOut(Math.min(1, Math.max(0, 1 - st.fall / 0.6)));
@@ -307,6 +307,295 @@ function cdDust(ctx, H, t, rate, seed) {
   ctx.restore();
 }
 
+// ============================================================
+//  RIG 3 LỚP (vung tay vũ khí, CHÂN ĐỨNG YÊN): ảnh đơn tách thành
+//    chân (dưới đường hông — không bao giờ biến dạng) · thân trên (uốn / ngả / nhún quanh HÔNG)
+//    · tay cầm vũ khí (xoay quanh điểm vai, vẽ trên thân). Rig chỉnh tay: js/rigs.js (tools/rig-tay.html);
+//    không có thì tự đoán từ ảnh; đoán không ra tay thì vẫn tách chân / thân (tay đi theo thân).
+// ============================================================
+const cdOp = (A, W, x, y) => A[(y * W + x) * 4 + 3] > 40;
+// tự đoán: đường hông, vùng tay cầm vũ khí (phần nhô xa thân nhất ở nửa trên, nối thân ở một chỗ hẹp), vai, đầu vũ khí
+function cdAutoRig(A, W, H, fxPx) {
+  // hông: đi từ bàn chân lên, hết đoạn thấy 2 ống chân tách nhau (đáy háng) thì hông cao hơn một chút
+  const xl = Math.max(0, Math.round(fxPx - 0.3 * H)), xr = Math.min(W - 1, Math.round(fxPx + 0.3 * H));
+  let seen = 0, crotch = -1;
+  for (let y = Math.round(H * 0.97); y > H * 0.42; y--) {
+    let runs = 0, len = 0;
+    for (let x = xl; x <= xr + 1; x++) {
+      if (x <= xr && cdOp(A, W, x, y)) len++;
+      else { if (len >= 2) runs++; len = 0; }
+    }
+    if (runs >= 2) seen++;
+    else if (runs === 1 && seen >= H * 0.06) { crotch = y; break; }
+  }
+  const hip = Math.round(Math.min(H * 0.8, Math.max(H * 0.5, crotch > 0 ? crotch - H * 0.04 : H * 0.66)));
+  const out = { hip };
+  // thân ở eo: đoạn có hình chứa (hoặc gần nhất) tâm chân
+  const yw = Math.max(0, hip - Math.round(H * 0.06));
+  let L = -1, R = -1, best = 1e9;
+  for (let x = 0; x < W;) {
+    if (!cdOp(A, W, x, yw)) { x++; continue; }
+    let e = x; while (e + 1 < W && cdOp(A, W, e + 1, yw)) e++;
+    const dd = fxPx < x ? x - fxPx : fxPx > e ? fxPx - e : 0;
+    if (dd < best) { best = dd; L = x; R = e; }
+    x = e + 1;
+  }
+  if (L < 0) return out;
+  const m = Math.round(H * 0.05), core = Math.round(H * 0.28);
+  if (R - L > 2 * core) { L = Math.max(L, Math.round(fxPx - core)); R = Math.min(R, Math.round(fxPx + core)); }
+  const nOp = (() => { let n = 0; for (let i = 3; i < A.length; i += 4) if (A[i] > 40) n++; return n; })();
+  let pick = null;
+  for (const side of [1, -1]) {
+    const bx = side > 0 ? R + m : L - m;            // cột ranh giới thân / tay
+    if (bx <= 0 || bx >= W - 1) continue;
+    const lab = new Int32Array(W * H), inSide = (x) => (side > 0 ? x > bx : x < bx);
+    let id = 0;
+    for (let y0 = 0; y0 < hip; y0++) for (let x0 = 0; x0 < W; x0++) {
+      if (!inSide(x0) || lab[y0 * W + x0] || !cdOp(A, W, x0, y0)) continue;
+      id++;
+      const st = [y0 * W + x0]; lab[st[0]] = id;
+      const c = { id, n: 0, att: [], far: 0 };
+      while (st.length) {
+        const i = st.pop(), x = i % W, y = (i - x) / W;
+        c.n++; c.far = Math.max(c.far, Math.abs(x - bx));
+        if (x === bx + side && cdOp(A, W, bx, y)) c.att.push(y);
+        for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+          const nx = x + dx, ny = y + dy;
+          if (nx < 0 || ny < 0 || nx >= W || ny >= hip || !inSide(nx)) continue;
+          const j = ny * W + nx;
+          if (!lab[j] && cdOp(A, W, nx, ny)) { lab[j] = id; st.push(j); }
+        }
+      }
+      // tay: nối thân ở nửa trên (không phải đầu / mũ), đủ lớn, chìa đủ xa
+      if (c.att.length < 2) continue;
+      const aTop = Math.min(...c.att), aBot = Math.max(...c.att);
+      if (aBot < H * 0.3 || aTop > hip - H * 0.04) continue;
+      if (c.n < nOp * 0.012 || c.n > nOp * 0.45 || c.far < H * 0.07) continue;
+      const score = c.n * (side > 0 ? 1.25 : 1);
+      if (!pick || score > pick.score) pick = { score, side, bx, lab, id, aTop, aBot };
+    }
+  }
+  if (!pick) return out;
+  const mask = new Uint8Array(W * H);
+  for (let i = 0; i < mask.length; i++) if (pick.lab[i] === pick.id) mask[i] = 1;
+  const pv = [pick.bx, Math.round(pick.aTop + Math.min(pick.aBot - pick.aTop, H * 0.06) * 0.5)];
+  out.mask = mask; out.pivot = pv; out.side = pick.side; out.tip = cdFarthest(mask, W, H, pv);
+  return out;
+}
+// đầu vũ khí: điểm xa vai nhất; nếu phía trên vai có điểm gần xa bằng thì lấy điểm đó (đầu búa / đầu gậy, không phải cán chống đất)
+function cdFarthest(mask, W, H, pv) {
+  let b = 0, tip = pv, bu = 0, tu = null;
+  for (let i = 0; i < mask.length; i++) if (mask[i]) {
+    const x = i % W, y = (i - x) / W, d = (x - pv[0]) ** 2 + (y - pv[1]) ** 2;
+    if (d > b) { b = d; tip = [x, y]; }
+    if (y < pv[1] && d > bu) { bu = d; tu = [x, y]; }
+  }
+  return tu && bu >= b * 0.36 ? tu : tip;
+}
+// dựng rig từ ảnh đã cắt (p = cdPrepare) + rig chỉnh tay (toạ độ 0..1 theo ẢNH GỐC: hip, pivot, tip, poly, noArm)
+function cdBuildRig(p, man) {
+  const c = p.c, W = c.width, H = c.height, g = p.geo;
+  const src = c.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, W, H), A = src.data;
+  const auto = cdAutoRig(A, W, H, p.fx * W);
+  const cx = (n) => (n * g.iw - g.sx) * g.q, cy = (n) => (n * g.ih - g.sy) * g.q;
+  const P2 = (v) => v && [cx(v[0]), cy(v[1])];
+  const hip = Math.round(man && man.hip != null ? Math.min(H - 2, Math.max(4, cy(man.hip))) : auto.hip);
+  let mask = null, pivot = null, tip = null;
+  if (man && man.poly && man.poly.length > 2) {
+    const t = document.createElement('canvas'); t.width = W; t.height = H;
+    const x = t.getContext('2d', { willReadFrequently: true });
+    x.beginPath(); man.poly.forEach((v, i) => (i ? x.lineTo(cx(v[0]), cy(v[1])) : x.moveTo(cx(v[0]), cy(v[1])))); x.closePath(); x.fill();
+    const d = x.getImageData(0, 0, W, H).data;
+    mask = new Uint8Array(W * H);
+    for (let i = 0; i < mask.length; i++) if (d[i * 4 + 3] > 127 && A[i * 4 + 3] > 40) mask[i] = 1;
+  } else if (!(man && man.noArm)) mask = auto.mask || null;
+  if (mask) {
+    pivot = P2(man && man.pivot) || auto.pivot;
+    if (!pivot) { let sx = 0, sy = 0, n = 0, my = H; for (let i = 0; i < mask.length; i++) if (mask[i]) { const x = i % W, y = (i - x) / W; if (y < my) my = y; } for (let i = 0; i < mask.length; i++) if (mask[i]) { const x = i % W, y = (i - x) / W; if (y < my + 4) { sx += x; sy += y; n++; } } pivot = [sx / n, sy / n]; }
+    tip = P2(man && man.tip) || cdFarthest(mask, W, H, pivot);
+  }
+  const f = Math.max(2, Math.round(H * 0.025));     // dải chuyển tiếp mềm dưới hông
+  const rc2 = (H * 0.045) ** 2;                     // giữ "mũ vai" trên thân cho khỏi hở khớp
+  const lay = (h0, h1) => new ImageData(W, Math.max(1, h1 - h0));
+  const legs = lay(0, H), up = lay(0, Math.min(H, hip + f));
+  let ax0 = W, ay0 = H, ax1 = -1, ay1 = -1;
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const i = y * W + x, j = i * 4, a = A[j + 3];
+    if (!a) continue;
+    const arm = mask && mask[i];
+    if (arm) { if (x < ax0) ax0 = x; if (x > ax1) ax1 = x; if (y < ay0) ay0 = y; if (y > ay1) ay1 = y; }
+    const cap = arm && (x - pivot[0]) ** 2 + (y - pivot[1]) ** 2 < rc2;
+    if (y >= hip && !arm) { legs.data.set(A.subarray(j, j + 4), j); }
+    if (y < hip + f && (!arm || cap)) {
+      up.data.set(A.subarray(j, j + 4), j);
+      if (y >= hip) up.data[j + 3] = a * (1 - (y - hip + 1) / (f + 1));
+    }
+  }
+  const toC = (im) => { const k = document.createElement('canvas'); k.width = im.width; k.height = im.height; k.getContext('2d').putImageData(im, 0, 0); k.naturalWidth = k.width; k.naturalHeight = k.height; return k; };
+  const R = { W, H, hip, f, legs: toC(legs), upper: toC(up), arm: null, pivot, tip, side: 1, len: 0, auto: !(man && (man.poly || man.pivot)) };
+  if (mask && ax1 >= ax0) {
+    const am = new ImageData(ax1 - ax0 + 1, ay1 - ay0 + 1);
+    for (let y = ay0; y <= ay1; y++) for (let x = ax0; x <= ax1; x++) { const i = y * W + x; if (mask[i]) am.data.set(A.subarray(i * 4, i * 4 + 4), ((y - ay0) * am.width + (x - ax0)) * 4); }
+    R.arm = toC(am); R.ax0 = ax0; R.ay0 = ay0;
+    R.side = tip[0] >= pivot[0] ? 1 : -1; R.len = Math.max(4, Math.hypot(tip[0] - pivot[0], tip[1] - pivot[1]));
+  }
+  return R;
+}
+function cdRig(p, type) {
+  if (CD.noRig) return null;
+  const m = p.rigs || (p.rigs = new Map());
+  if (m.has(type)) return m.get(type);
+  let R = null;
+  try { R = cdBuildRig(p, (typeof RIGS !== 'undefined' && RIGS[type]) || null); } catch (e) { R = null; }   // ảnh khác nguồn (file://) → không đọc được điểm ảnh
+  m.set(type, R);
+  return R;
+}
+
+// tay theo loại vũ khí: a = góc xoay (rad, + = chém xuống với tay chìa phải), d = dịch theo trục tay (phần chiều dài tay)
+function cdArm(kind, swing, castT, hurt, t, seed) {
+  let a = Math.sin(t * 1.7 + seed) * 0.035, d = 0;
+  if (swing > 0) {
+    const u = 1 - swing;
+    const ph = u < 0.3 ? 0 : u < 0.46 ? 1 : 2, k = ph === 0 ? cdOut(u / 0.3) : ph === 1 ? cdOut((u - 0.3) / 0.16) : cdInOut((u - 0.46) / 0.54);
+    const curve = (w, s) => (ph === 0 ? w * k : ph === 1 ? w + (s - w) * k : s * (1 - k));   // lấy đà w → ra đòn s → về 0
+    if (kind === 'slash') a += curve(-1.25, 0.9);
+    else if (kind === 'chop') a += curve(-1.5, 1.05);
+    else if (kind === 'orb') a += curve(-0.95, 0.25);
+    else if (kind === 'thrust') { a += curve(-0.12, 0.02); d += curve(-0.16, 0.26); }
+    else if (kind === 'punch') { a += curve(-0.18, 0); d += curve(-0.12, 0.3); }
+    else { a += curve(-0.05, 0.02); d += curve(-0.07, 0.03); }   // cung / nỏ: kéo lùi rồi bật
+  }
+  if (castT > 0) a += (kind === 'orb' ? -1.1 : -0.85) * cdInOut(Math.min(1, castT / 0.3));
+  if (hurt > 0) { const k = Math.min(1, hurt / 0.2); a += 0.18 * k; d -= 0.04 * k; }
+  return { a, d };
+}
+// điểm (x, y) của thân trên sau khi uốn (bend) + nhún (sy) quanh hông
+function cdUpMap(R, x, y, bend, sy) {
+  const up = (R.hip - y) / R.hip;
+  if (up <= 0) return [x, y];
+  return [x + bend * R.hip * up * up, R.hip - (R.hip - y) * sy];
+}
+function cdArmTip(R, st, kind, bend, sy) {
+  const A = cdArm(kind, st.swing || 0, st.castT || 0, st.hurt || 0, st.t, st.seed);
+  const pv = cdUpMap(R, R.pivot[0], R.pivot[1], bend, sy), up = Math.max(0, (R.hip - R.pivot[1]) / R.hip);
+  const ang = A.a * R.side + 2 * bend * up;
+  const vx = R.tip[0] - R.pivot[0], vy = R.tip[1] - R.pivot[1], k = 1 + A.d;
+  const c = Math.cos(ang), s = Math.sin(ang);
+  return { pv, ang, d: A.d, tip: [pv[0] + (vx * k) * c - (vy * k) * s, pv[1] + (vx * k) * s + (vy * k) * c] };
+}
+const cdRigBend = (P) => (P.bend + P.dx + P.rot * 0.9) * 0.6;
+const cdTintC = (c, color) => { const m = c.__tint || (c.__tint = new Map()); let t = m.get(color); if (!t) { t = document.createElement('canvas'); t.width = c.width; t.height = c.height; const x = t.getContext('2d'); x.drawImage(c, 0, 0); x.globalCompositeOperation = 'source-atop'; x.fillStyle = color; x.fillRect(0, 0, t.width, t.height); t.naturalWidth = t.width; t.naturalHeight = t.height; m.set(color, t); } return t; };
+// vẽ thân trên theo lát ngang: lát dưới hông giữ nguyên, càng lên cao càng lệch (cong mềm, không gãy ở hông)
+function cdDrawUpper(ctx, R, img, bend, sy) {
+  const hip = R.hip, w = img.width;
+  if (img.height > hip) ctx.drawImage(img, 0, hip, w, img.height - hip, 0, hip, w, img.height - hip);
+  const tr = ctx.getTransform(), scr = Math.hypot(tr.c, tr.d) * hip;
+  const lv = typeof GFX_LEVEL === 'function' ? GFX_LEVEL() : 0;
+  const n = Math.abs(bend) < 0.002 ? 1 : lv >= 2 || scr < 30 ? 3 : Math.max(4, Math.min(12, Math.round(scr / (lv === 1 ? 16 : 9))));
+  for (let i = 0; i < n; i++) {
+    const y0 = hip * i / n, y1 = hip * (i + 1) / n, um = 1 - (y0 + y1) / 2 / hip;
+    const dx = n === 1 ? 0 : bend * hip * um * um;
+    const Y0 = hip - (hip - y0) * sy, Y1 = hip - (hip - y1) * sy;
+    ctx.drawImage(img, 0, y0, w, y1 - y0 + (i < n - 1 ? 0.7 : 0), dx, Y0, w, Y1 - Y0 + (i < n - 1 ? 0.7 * sy : 0));
+  }
+}
+// một khung của nhân vật có rig (toạ độ = điểm ảnh của ảnh cắt; gốc = góc trên trái). st: như cdPose; o: { kind, col, glow:[màu, mờ, độ đậm],
+//   flash, flashC, noArm, noFx, gfxBlur(k) }
+function cdRigFrame(ctx, R, P, st, o) {
+  const bend = cdRigBend(P), sy = P.sy;
+  const base = ctx.globalAlpha;
+  const T = R.arm ? cdArmTip(R, st, o.kind, bend, sy) : null;
+  const glow = o.glow && typeof drawGlowOnly === 'function' ? o.glow : null;
+  const armDraw = (img) => {
+    if (!R.arm || o.noArm) return;
+    ctx.save(); ctx.translate(T.pv[0], T.pv[1]); ctx.rotate(T.ang);
+    const ux = (R.tip[0] - R.pivot[0]) / R.len, uy = (R.tip[1] - R.pivot[1]) / R.len;
+    ctx.translate(ux * T.d * R.len, uy * T.d * R.len);
+    if (img === 'glow') drawGlowOnly(ctx, R.arm, R.ax0 - R.pivot[0], R.ay0 - R.pivot[1], R.arm.width, R.arm.height, glow[0], glow[1], glow[2]);
+    else ctx.drawImage(img, R.ax0 - R.pivot[0], R.ay0 - R.pivot[1]);
+    ctx.restore();
+  };
+  if (glow) {
+    drawGlowOnly(ctx, R.legs, 0, 0, R.W, R.H, glow[0], glow[1], glow[2]);
+    drawGlowOnly(ctx, R.upper, cdRigBend(P) * R.hip * 0.3, 0, R.W, R.upper.height, glow[0], glow[1], glow[2]);
+    armDraw('glow');
+  }
+  ctx.drawImage(R.legs, 0, 0);
+  cdDrawUpper(ctx, R, R.upper, bend, sy);
+  if (R.arm && !o.noArm) armDraw(R.arm);
+  if (P.flash > 0) {
+    const fc = o.flashC || P.flashC;
+    ctx.globalAlpha = base * P.flash;
+    ctx.drawImage(cdTintC(R.legs, fc), 0, 0);
+    cdDrawUpper(ctx, R, cdTintC(R.upper, fc), bend, sy);
+    if (R.arm && !o.noArm) armDraw(cdTintC(R.arm, fc));
+    ctx.globalAlpha = base;
+  }
+  if (!o.noFx && R.arm && !o.noArm) cdRigFx(ctx, R, P, st, o, bend, sy, T);
+  return T;
+}
+// vệt theo ĐẦU VŨ KHÍ (lấy vị trí đầu vũ khí ở các thời điểm trước → dải mờ dần), tia lửa, mũi tên / quả cầu ở đầu vũ khí
+function cdRigFx(ctx, R, P, st, o, bend, sy, T) {
+  const kind = o.kind, col = o.col || '#FFF1C4', Hc = R.H;
+  if (!P.phase || P.phase === 'cast') return;
+  const strike = P.phase === 'strike', rec = P.phase === 'recover';
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  if ((kind === 'slash' || kind === 'chop' || kind === 'thrust' || kind === 'punch') && (strike || (rec && P.k < 0.35))) {
+    const fade = strike ? 1 : 1 - P.k / 0.35, pts = [];
+    for (let j = 0; j <= 9; j++) {
+      const sw = Math.min(1, st.swing + j * 0.022);
+      const Pj = cdPose({ ...st, swing: sw });
+      pts.push(cdArmTip(R, { ...st, swing: sw }, kind, cdRigBend(Pj), Pj.sy).tip);
+    }
+    for (let pass = 0; pass < 2; pass++) for (let j = 1; j < pts.length; j++) {
+      const age = j / pts.length;
+      ctx.globalAlpha = fade * (1 - age) * (pass ? 0.95 : 0.4);
+      ctx.strokeStyle = pass ? '#FFFFFF' : col;
+      ctx.lineWidth = Hc * (pass ? 0.022 : 0.06) * (1 - age * 0.7);
+      ctx.beginPath(); ctx.moveTo(pts[j - 1][0], pts[j - 1][1]); ctx.lineTo(pts[j][0], pts[j][1]); ctx.stroke();
+    }
+    if (strike && P.k > 0.6 || rec && P.k < 0.2) {   // tia lửa ở đầu vũ khí lúc trúng
+      const q = strike ? (P.k - 0.6) / 0.4 * 0.4 : 0.4 + P.k / 0.2 * 0.6, [sx, sy2] = T.tip;
+      ctx.globalAlpha = 1 - q; ctx.strokeStyle = '#FFF1A8'; ctx.lineWidth = Hc * 0.012;
+      for (let i = 0; i < 7; i++) { const a = st.seed + i * 0.9, r0 = q * 0.1 * Hc, r1 = r0 + 0.05 * Hc * (1 - q); ctx.beginPath(); ctx.moveTo(sx + Math.cos(a) * r0, sy2 + Math.sin(a) * r0); ctx.lineTo(sx + Math.cos(a) * r1, sy2 + Math.sin(a) * r1); ctx.stroke(); }
+      if (typeof fxImage === 'function') fxImage(ctx, 'spark_01', col, sx, sy2, 0.14 * Hc, st.seed, 1, (1 - q) * 0.8);
+    }
+  } else if (kind === 'shot') {
+    const [hx, hy] = T.tip, dirx = Math.cos(T.ang) * R.side, diry = Math.sin(T.ang) * R.side;
+    if (P.phase === 'wind') { ctx.globalAlpha = 0.5 * P.k; ctx.fillStyle = col; ctx.beginPath(); ctx.arc(hx, hy, 0.03 * Hc * (1 + P.k), 0, Math.PI * 2); ctx.fill(); }
+    else if (strike || (rec && P.k < 0.4)) {
+      const d = (strike ? P.k : 1 + P.k * 2) * 0.6 * Hc, fade = strike ? 1 : 1 - P.k / 0.4;
+      const ex = hx + dirx * d, ey = hy + diry * d * 0.3;
+      ctx.globalAlpha = fade; ctx.strokeStyle = col; ctx.lineWidth = Hc * 0.018;
+      ctx.beginPath(); ctx.moveTo(ex - dirx * 0.25 * Hc, ey); ctx.lineTo(ex, ey); ctx.stroke();
+      ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = '#F6EFD8';
+      ctx.beginPath(); ctx.moveTo(ex + dirx * 0.05 * Hc, ey); ctx.lineTo(ex - dirx * 0.01 * Hc, ey - 0.025 * Hc); ctx.lineTo(ex - dirx * 0.01 * Hc, ey + 0.025 * Hc); ctx.fill();
+      ctx.globalCompositeOperation = 'lighter';
+      if (strike) { ctx.globalAlpha = 1 - P.k; ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.arc(hx, hy, 0.05 * Hc, 0, Math.PI * 2); ctx.fill(); }
+    }
+  } else if (kind === 'orb') {
+    const [ox, oy] = T.tip, fade = strike ? 1 : rec ? Math.max(0, 1 - P.k * 2.2) : 0.95;
+    const r = P.phase === 'wind' ? (0.05 + 0.07 * P.k) * Hc : strike ? (0.12 + 0.1 * P.k) * Hc : 0.12 * Hc * fade;
+    if (r > 0.5) {
+      ctx.globalAlpha = strike ? 1 - P.k * 0.6 : fade;
+      const g = ctx.createRadialGradient(ox, oy, 0, ox, oy, r);
+      g.addColorStop(0, '#FFFFFF'); g.addColorStop(0.35, col); g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(ox, oy, r, 0, Math.PI * 2); ctx.fill();
+      if (strike) { ctx.strokeStyle = col; ctx.lineWidth = Hc * 0.022; ctx.globalAlpha = 1 - P.k; ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(ox + R.side * 0.7 * Hc * P.k, oy + 0.25 * Hc * P.k); ctx.stroke(); }
+    }
+  }
+  ctx.restore();
+}
+
+// viền sáng theo bậc (như packGlow của bộ vẽ tay) → [màu, độ mờ, độ đậm] hoặc null
+function cdTierGlow(h, look, def, t, tier, asc) {
+  const L = def.legend, pulse = Math.sin(t * 3) * 0.12;
+  if (L && typeof AURA_C !== 'undefined') return [AURA_C[L], 10 + asc * 4 + (L === 'legendary' ? 4 : 0), 0.85 + pulse];
+  if (tier >= 2) return [look.attrColor, 5 + tier * 2, 0.55 + pulse];
+  if (typeof hasLegendGear === 'function' && hasLegendGear(h)) return ['#FFB01E', 14, 0.6 + pulse];
+  return null;
+}
 // ---- TƯỚNG (gọi từ drawHeroSprite khi có ảnh đơn)
 const CD_HERO_H = 228;   // chiều cao hình trong khung 200×230 (như bộ ảnh vẽ tay)
 function cdDrawHero(ctx, h, x, y, o, s, look, def, img, tierShown, ascShown) {
@@ -318,6 +607,7 @@ function cdDrawHero(ctx, h, x, y, o, s, look, def, img, tierShown, ascShown) {
   const P = cdPose({ t, seed, swing: o.swing || 0, castT: o.castT || 0, castUlt: !!o.castUlt, hurt: o.hurt || 0, fall: o.fall, win: o.win,
     melee: def.attack === 'melee' });
   if (o.noIdle) { P.sy = 1; P.sx = 1; }
+  const R = cdRig(p, h.type);
   const H = CD_HERO_H;
   let lift = 0;
   if (o.summon > 0) lift = -60 * (o.summon / 0.5) * (o.summon / 0.5);
@@ -327,10 +617,10 @@ function cdDrawHero(ctx, h, x, y, o, s, look, def, img, tierShown, ascShown) {
   ctx.translate(x, y);
   if (!o.noShadow) {
     // bóng co lại khi nhún lên / nhảy
-    const up = Math.min(1, Math.max(0, -(P.dy * H + lift) / 40));
+    const up = Math.min(1, Math.max(0, -((R ? P.hop || 0 : P.dy) * H + lift) / 40));
     ctx.fillStyle = 'rgba(0,0,0,0.35)';
     ctx.beginPath();
-    ctx.ellipse(P.dx * H * s * dir * 0.5, 0, 13 * DK * (s / 0.28) * (1 - 0.3 * up), 4 * DK * (s / 0.28) * (1 - 0.3 * up), 0, 0, Math.PI * 2);
+    ctx.ellipse(R ? 0 : P.dx * H * s * dir * 0.5, 0, 13 * DK * (s / 0.28) * (1 - 0.3 * up), 4 * DK * (s / 0.28) * (1 - 0.3 * up), 0, 0, Math.PI * 2);
     ctx.fill();
     if (look.accAura) drawAccAura(ctx, look.accAura, s, t, true);
   }
@@ -343,6 +633,23 @@ function cdDrawHero(ctx, h, x, y, o, s, look, def, img, tierShown, ascShown) {
   if (look.wings) withProc(ctx, () => drawWings(ctx, look, t, o.wingT));
   if (look.setFx) withProc(ctx, () => drawSetBack(ctx, look.setFx, t, o.wingT));
   ctx.restore();
+  if (R) {
+    // rig 3 lớp: chân đứng yên tuyệt đối, chỉ thân trên ngả / nhún quanh hông, tay cầm vũ khí vung quanh vai
+    ctx.save();
+    if (dying) cdApply(ctx, P, H); else ctx.translate(0, (P.hop || 0) * H);
+    const k = H / R.H;
+    ctx.scale(k, k); ctx.translate(-p.fx * R.W, -R.H);
+    const st = { t, seed, swing: dying ? 0 : o.swing || 0, castT: dying ? 0 : o.castT || 0, castUlt: !!o.castUlt, hurt: o.hurt || 0, melee: def.attack === 'melee' };
+    const PP = dying ? { ...P, bend: 0, dx: 0, rot: 0, sy: 1, phase: '' } : P;
+    const tg = P.glow > 0 ? [o.castColor || look.attrColor || '#FFE08A', 12 * P.glow * (o.castUlt ? 1.4 : 1), 0.85 * P.glow] : !dying && cdTierGlow(h, look, def, t, tierShown, ascShown);
+    cdRigFrame(ctx, R, PP, st, { kind, col: look.attrColor, glow: tg ? [tg[0], tg[1] / k, tg[2]] : null,
+      flashC: o.hurt > 0 ? (Math.floor(t * 30) % 2 ? '#FFFFFF' : '#FF5A4A') : null, noArm: CD.noArm, noFx: CD.noFx || dying });
+    ctx.restore();
+    if (!dying) drawPackFront(ctx, h, def, t, H, ascShown);
+    ctx.restore();
+    if (o.bog) drawBogWater(ctx, x, y, s, t);
+    return { top: y - (H + 12 - lift) * s * Math.max(1, P.sy), s };
+  }
   ctx.save();
   cdApply(ctx, P, H);
   const w = H * p.ar, base = ctx.globalAlpha;
