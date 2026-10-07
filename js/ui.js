@@ -225,6 +225,11 @@ function elIcon(el, size = 16) {
   if (png) return `<img class="eli" src="${png}" width="${size}" height="${size}" style="width:${size}px;height:${size}px" alt="Hành ${e.name}">`;
   return `<svg class="eli" viewBox="0 0 24 24" width="${size}" height="${size}" aria-label="Hành ${e.name}"><circle cx="12" cy="12" r="11" fill="#1A1208" stroke="${e.color}" stroke-width="1.6"/><circle cx="12" cy="12" r="8.6" fill="none" stroke="${e.color}" stroke-width="0.6" stroke-dasharray="1.2 1.4" opacity=".7"/><g fill="none" stroke="${e.color}" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">${EL_PATH[el]}</g></svg>`;
 }
+// v182: tên ngắn dưới chân dung ở Bách khoa · Vai trò (tránh hai tướng cùng hiện "Dương Vương")
+const VT_SHORT = { adv: 'An Dương', kinhduong: 'Kinh Dương', lyngu: 'Lý Ngư', mau: 'Thượng Ngàn', trongdong: 'Trống Đồng', potaoapui: 'Pơtao Apui' };
+const vtShort = (k) => VT_SHORT[k] || CARD_NAME[k] || HEROES[k].name.split(' ').slice(-2).join(' ');
+// v182: hàng nút lọc vai trò (Tất cả + 7 vai)
+const roleFilter = (cur, act) => `<button class="rl-f ${cur ? '' : 'on'}" data-act="${act}" data-r="">Tất cả</button>${ROLE_KEYS.map((r) => `<button class="rl-f ${cur === r ? 'on' : ''}" data-act="${act}" data-r="${r}" style="--rc:${ROLES[r].color}" title="${ROLES[r].name}: ${ROLES[r].desc}">${roleIcon(r, 15)}<span>${ROLES[r].name}</span></button>`).join('')}`;
 const elChip = (el) => (el ? `<span class="chip elc" style="border-color:${ELEMENTS[el].color};color:${ELEMENTS[el].color}">${elIcon(el, 14)} ${ELEMENTS[el].name}</span>` : '');
 // tên ngắn của một hiệu ứng ẩn (để hiện trong thông báo / Bí truyền)
 function secretTitle(key) {
@@ -1290,7 +1295,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 181</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 185</div>
       </div></div>`;
   }
 
@@ -2093,8 +2098,8 @@ class UI {
       key = `m|${m.types.join(',')}|${sc}|${ok.join()}|${twins.join()}|${hops.join()}|${!!m.lock}|${g.gold >= rc}|${rc}|${pairs}|${assetVersion}`;
       const short = (t) => CARD_NAME[t] || HEROES[t].name.split(' ').slice(-2).join(' ');
       html = `${pairs ? `<button class="dk-auto metal on" data-act="auto-merge" aria-label="Ghép tự động"><b>⇄</b>Ghép<br>tự động<i>${Math.floor(pairs / 2)}</i></button>` : ''}
-        <div class="mk-row">${m.types.map((t, i) => `<button class="mk-card ${ok[i] ? '' : 'poor'} ${twins[i] ? 'twin' : ''} ${hops[i] ? 'hop' : ''}" data-mk="${i}" style="--c:${ELEMENTS[HEROES[t].el].color}" aria-label="Mua ${esc(HEROES[t].name)}${twins[i] ? ' (ghép được)' : ''}${hops[i] ? ' (nguyên liệu hợp thể)' : ''}, ${sc} vàng">
-          <img src="${heroImgUrl(t, 'head')}" alt="" draggable="false"><span class="el">${elIcon(HEROES[t].el, 11)}</span>${twins[i] ? '<i class="tw">ghép</i>' : ''}${hops[i] ? '<i class="hp">hợp thể</i>' : ''}
+        <div class="mk-row">${m.types.map((t, i) => `<button class="mk-card ${ok[i] ? '' : 'poor'} ${twins[i] ? 'twin' : ''} ${hops[i] ? 'hop' : ''}" data-mk="${i}" style="--c:${ELEMENTS[HEROES[t].el].color}" aria-label="Mua ${esc(HEROES[t].name)}${heroRole(t) ? ` (${ROLES[heroRole(t)].name})` : ''}${twins[i] ? ' (ghép được)' : ''}${hops[i] ? ' (nguyên liệu hợp thể)' : ''}, ${sc} vàng" title="${heroRole(t) ? `Vai trò: ${ROLES[heroRole(t)].name}` : ''}">
+          <img src="${heroImgUrl(t, 'head')}" alt="" draggable="false"><span class="el">${elIcon(HEROES[t].el, 11)}</span>${heroRole(t) ? `<span class="rl">${roleIcon(heroRole(t), 13)}</span>` : ''}${twins[i] ? '<i class="tw">ghép</i>' : ''}${hops[i] ? '<i class="hp">hợp thể</i>' : ''}
           <b class="nm">${esc(short(t))}</b><span class="cost">${coin(1)}${sc}</span></button>`).join('')}
           <span class="mk-rrw"><button class="mk-rr metal ${g.gold >= rc ? '' : 'poor'}" data-act="mk-reroll" aria-label="Đổi cả hàng, ${rc} vàng"><b>${UIE.redo()}</b><span>${coin(1)}${rc}</span></button>
           <button class="mk-lk ${m.lock ? 'on' : ''}" data-act="mk-lock" aria-pressed="${!!m.lock}" aria-label="${m.lock ? 'Bỏ khoá chợ' : 'Khoá chợ: giữ 4 thẻ sang đợt sau'}" title="${m.lock ? 'Đang khoá: đợt sau giữ nguyên 4 thẻ' : 'Khoá chợ: giữ 4 thẻ sang đợt sau'}">${UIE.lock()}</button></span></div>
@@ -2115,7 +2120,8 @@ class UI {
       const afford = [lc, g.trainCost(h), ...def.skills.map((sk, i) => (skillLevel(h, i) ? (h.from ? COSTS.skillGold(i, skillLevel(h, i)) : 0) : unlockCost(h, i)))]
         .map((c) => (g.gold >= c ? 1 : 0)).join('');
       key = `h|${h.id}|${h.type}|${h.level}|${h.train || 0}|${h.tier}|${h.skillPts}|${skillKey}|${afford}|${h.dead}|${h.bogged}|${fresh}|${notice}|${up}|${this.moving < 0}|${assetVersion}`;
-      const status = h.dead ? `Hồi sinh sau ${Math.ceil(h.respawnT)}s` : h.bogged ? 'Sa lầy · dùng Mọc Núi' : `Hành ${ELEMENTS[def.el].name} · ${ELEM_TRAIT[def.el].name}`;
+      const vt = heroRole(h.type);
+      const status = h.dead ? `Hồi sinh sau ${Math.ceil(h.respawnT)}s` : h.bogged ? 'Sa lầy · dùng Mọc Núi' : `${vt ? `${roleIcon(vt, 12)}<b style="color:${ROLES[vt].color}">${ROLES[vt].name}</b> · ` : ''}Hành ${ELEMENTS[def.el].name}`;
       // 4 ô kỹ năng (v37): số trên ô = cấp kỹ năng; tag phía trên = giá nâng tiếp (+ điểm / + vàng / MAX).
       // Chạm ô = nâng (hoặc mở khóa) luôn, không còn màn Kỹ năng riêng.
       const skills = def.skills.map((sk, i) => {
@@ -2179,12 +2185,12 @@ class UI {
       // bảng chỉ số tướng: chỉ hiện khi đang giữ tay lên chân dung (v154)
       const sp = $('#hero-stats');
       if (this.statsOpen && !this.screen) {
-        const sk2 = `${h.id}|${h.level}|${h.tier}|${h.train}|${h.statPts}|${Object.values(h.skillLv).join()}|${SLOTS.map((x) => h.equip[x] ? h.equip[x].uid : '').join()}|${Math.round(h.hp)}|${Math.round(h.shield || 0)}|${h.bogged ? 1 : 0}`;
+        const sk2 = `${h.id}|${h.level}|${h.tier}|${h.train}|${h.statPts}|${Object.values(h.skillLv).join()}|${SLOTS.map((x) => h.equip[x] ? h.equip[x].uid : '').join()}|${Math.round(h.hp)}|${Math.round(h.shield || 0)}|${h.bogged ? 1 : 0}|${JSON.stringify(g.vtTiers || {})}`;
         if (this.statsSig !== sk2 || sp.hidden) {
           this.statsSig = sk2;
           const S = heroStats(h);
           const row = (k, v, n) => `<div><span>${n ? ic(n) : ''}${k}</span><b>${v}</b></div>`;
-          sp.innerHTML = `<div class="hs-h">${HEROES[h.type].name} · cấp ${h.level} · ${'★'.repeat(h.tier || 0)} · ${ic('luc-chien')}lực chiến <b>${heroPower(h)}</b>${h.shield > 0 ? ` · ${ic('khien')}khiên <b>${Math.round(h.shield)}</b>` : ''}${h.bogged ? ` · ${ic('sa-lay')}sa lầy` : ''}</div><div class="hs-g">`
+          sp.innerHTML = `<div class="hs-h">${HEROES[h.type].name} · cấp ${h.level} · ${'★'.repeat(h.tier || 0)} · ${ic('luc-chien')}lực chiến <b>${heroPower(h)}</b>${h.shield > 0 ? ` · ${ic('khien')}khiên <b>${Math.round(h.shield)}</b>` : ''}${h.bogged ? ` · ${ic('sa-lay')}sa lầy` : ''}</div>${this.roleLine(h)}<div class="hs-g">`
             + row('Sát thương', Math.round(S.damage), 'sat-thuong') + row('Tốc đánh', `${(1 / S.cooldown).toFixed(2)}/giây`, 'toc-danh') + row('Tầm đánh', Math.round(S.range), 'tam-danh')
             + row('Máu', `${Math.round(h.hp)}/${Math.round(S.hpMax)}`, 'mau') + row('Chí mạng', `${Math.round(S.crit)}% ×${S.critMult.toFixed(1)}`, 'chi-mang') + row('Giảm hồi chiêu', `${Math.round(S.cdr)}%`, 'hoi-chieu')
             + row('Giảm s.thương', `${Math.round(S.dr)}%`, 'giam-sat-thuong') + row('Năng lượng', Math.round(S.maxMana), 'nang-luong')
@@ -2568,10 +2574,20 @@ class UI {
     const x = Math.max(6, Math.min($('#ui').offsetWidth - w - 6, (r.left + r.width / 2 - u.left) / sc - w / 2));
     t.style.left = x + 'px'; t.style.top = Math.max(6, (r.top - u.top) / sc - ht - 8) + 'px';
   }
+  // v182: dòng vai trò + cộng hưởng đang bật trong bảng chỉ số tướng
+  roleLine(h) {
+    const rs = heroRoles(h.type), tiers = this.game.vtTiers || {}, cnt = roleCounts(this.game.heroes.filter((x) => x && !x.dead));
+    if (!rs.length) return '';
+    const syn = ROLE_KEYS.filter((r) => tiers[r] && (ROLE_SYN[r].all || rs.includes(r))).map((r) => `<span style="color:${ROLES[r].color}">${roleIcon(r, 11)}${ROLE_SYN[r].t[tiers[r] - 1]}</span>`).join(' ');
+    return `<div class="hs-vt">${roleChip(h.type)}<small>${rs.map((r) => `${ROLES[r].name} ${cnt[r] || 0}/${(cnt[r] || 0) >= 2 ? 4 : 2}`).join(' · ')}</small>${syn ? `<div class="hs-syn">${syn}</div>` : ''}</div>`;
+  }
   renderRoster() {
     const t = this.rosterSel;
     const d = HEROES[t];
     const all = [...BASIC_HEROES, ...LEGEND_HEROES];
+    // v182: lọc theo vai trò (vai chính trước, vai phụ sau)
+    const vf = ROLES[this.rosterRole] ? this.rosterRole : '';
+    const shown = vf ? [...all.filter((k) => heroRole(k) === vf), ...all.filter((k) => heroRoles(k)[1] === vf)] : all;
     const splash = assetUrl([`anh-lon_${heroSlug(t)}.png`, `heroes/hero_${HERO_CODE[t]}_A.png`]);
     const n = skillN(1);
     const oc = this.openCount(), own = this.heroOpen(t), oCost = OWN_COST[heroTier(t)], kho = this.save.kho || 0;
@@ -2582,11 +2598,12 @@ class UI {
         <span class="chip dark ro-cnt" title="${BASIC_HEROES.length} Thường · ${LEGEND_HEROES.filter((x) => HEROES[x].legend === 'epic').length} Sử thi · ${LEGEND_HEROES.filter((x) => HEROES[x].legend === 'legendary').length} Huyền thoại">Đã mở <b>${oc.n}/${oc.all}</b></span><div class="sp"></div>
         <span class="chip kho ro-kho">Ngân khố ${bac()} ${fmt(this.save.kho || 0)}</span>${this.rosterInGame ? "" : `<button class="btn metal title" data-act="ro-temple">Đền Anh Hùng</button>`}</div>
       <div class="scr-body">
-        <div class="ro-grid">${all.map((k) => {
+        <div class="ro-grid"><div class="rl-filter">${roleFilter(vf, 'ro-role')}</div>${shown.map((k) => {
           const h = HEROES[k];
+          const rk = vf || heroRole(k);
           const lock = !this.heroOpen(k), c = OWN_COST[heroTier(k)];
           return `<button class="ro-card ${h.legend || 'common'} ${k === t ? 'on' : ''} ${lock ? 'lock' : ''} ${lock && kho >= c ? 'can' : ''}" data-act="ro-sel" data-type="${k}">${lock ? `<span class="ro-lock">${UIE.lock()}</span><span class="ro-price">${bac(1)}${fmt(c)}</span>` : ''}
-            <span class="tag el" style="color:${ELEMENTS[h.el].color}">${elIcon(h.el, 11)}${ELEMENTS[h.el].name}</span>
+            <span class="tag el" style="color:${ELEMENTS[h.el].color}">${elIcon(h.el, 11)}${ELEMENTS[h.el].name}</span>${rk ? `<span class="tag rl ${vf && heroRole(k) !== vf ? 'sub' : ''}" title="${ROLES[rk].name}${heroRole(k) !== rk ? ' (phụ)' : ''}">${roleIcon(rk, 14)}</span>` : ''}
             <img src="${heroImgUrl(k)}" alt=""><span class="nm">${h.name}</span></button>`;
         }).join('')}</div>
         <div class="panel metal ro-det">
@@ -2606,7 +2623,8 @@ class UI {
                 <span style="background:#1A1208;color:#E8D8B0">${ELEM_TRAIT[d.el].fx}</span>
                 <span style="background:#3A2410;color:${d.legend ? RARITY[d.legend].color : '#C8BFA8'}">${d.legend ? RARITY[d.legend].name : 'Cơ bản'}</span>
                 <span style="background:#2A1810;color:#FFB08A">${d.dmgType === 'magic' ? 'Phép' : 'Vật lý'} · ${d.attack === 'melee' ? 'Cận chiến' : 'Đánh xa'}</span>
-                <span style="background:#1A1610;color:#C8BFA8">${d.role}</span></div></div>
+                ${ROLES[heroRole(t)] && ROLES[heroRole(t)].name === d.role ? '' : `<span style="background:#1A1610;color:#C8BFA8">${d.role}</span>`}</div>
+                <div class="tags rl-tags">${roleChip(t)}</div></div>
               <div class="kvt inset" style="font-size:12px">${d.legend
                 ? `<div><span>Ghép từ</span><b style="text-align:right">${ascendSources(t).map((x) => HEROES[x].name).join(' + ')}</b></div>
                   <div><span>Cần</span><b style="color:#FFD66B">${d.legend === 'epic' ? `2 tướng ${'★'.repeat(COSTS.ascendTier)}` : `Thần tinh ${'★'.repeat(COSTS.ascendTier2)} · kỹ năng tối đa`} · ${COSTS.ascend[d.legend]} vàng</b></div>`
@@ -2962,6 +2980,9 @@ class UI {
       case 'to-map': if (this.coopDone) { this.coopDone = false; this.showCoop(); break; } this.showCampaign(g.level); break;
       case 'to-menu': $('#settings').hidden = true; if (g.started) this.bankStats(); this.showMenu(); break;
       case 'res-heroes': if (g.started) this.bankStats(); this.showMenu(); this.showRoster(d.type); break;     // v182: kết quả trận → mở khoá tướng
+      case 'ro-role': this.rosterRole = this.rosterRole === d.r ? '' : d.r; this.renderRoster(); break;
+      case 'vt-hero': this.toast(`${HEROES[d.type].name}: ${heroRoles(d.type).map((r) => ROLES[r].name).join(' · ')}`, ROLES[heroRole(d.type)].color); break;
+      case 'vt-f': sc.role = sc.role === d.r ? '' : d.r; this.renderScreen(true); break;
       case 'ro-sel': {
         this.rosterSel = d.type; this.renderRoster();
         // v147: chạm chân dung trong cây phát triển → cuộn danh sách tới tướng đó
@@ -3901,14 +3922,32 @@ class UI {
       <div class="scr-body bt-body">${cols}</div>`;
   }
 
+  // ---------- Bách khoa · Vai trò tướng (v182): 7 vai trò, cộng hưởng 2/4, tướng theo vai
+  render_roles(seg) {
+    const sc = this.screen, vf = ROLES[sc.role] ? sc.role : '';
+    const all = [...BASIC_HEROES, ...LEGEND_HEROES], owned = new Set(this.save.owned || []);
+    const pic = (k, sub) => `<button class="vt-h ${HEROES[k].legend || 'common'} ${sub ? 'sub' : ''} ${HEROES[k].legend && !owned.has(k) ? 'lock' : ''}" data-act="vt-hero" data-type="${k}" title="${esc(HEROES[k].name)}${sub ? ' (vai phụ)' : ''}"><img src="${heroImgUrl(k, 'head')}" alt=""><span ${vtShort(k).length > 9 ? 'class="lg"' : ''}>${esc(vtShort(k))}</span></button>`;
+    const cols = ROLE_KEYS.filter((r) => !vf || r === vf).map((r) => {
+      const d = ROLES[r], syn = ROLE_SYN[r];
+      const main = all.filter((k) => heroRole(k) === r), sub = all.filter((k) => heroRoles(k)[1] === r);
+      return `<div class="vt-col inset" style="--rc:${d.color}"><div class="vt-hd">${roleIcon(r, 26)}<div><b>${d.name}</b><small>${esc(d.desc)}</small></div><i>${main.length}</i></div>
+        <div class="vt-syn"><span><b>2</b> ${syn.t[0]}</span><span><b>4</b> ${syn.t[1]}</span></div>
+        <div class="vt-list">${main.map((k) => pic(k)).join('')}${vf ? sub.map((k) => pic(k, true)).join('') : ''}</div></div>`;
+    }).join('');
+    return `${this.head('Bách khoa · Vai trò', this.runChip(), seg, '<svg viewBox="0 0 24 24" width="26" height="26"><rect x="4" y="3" width="16" height="18" rx="2" fill="none" stroke="#F2D27A" stroke-width="1.8"/><circle cx="12" cy="10" r="3" fill="none" stroke="#F2D27A" stroke-width="1.6"/></svg>')}
+      <div class="bt-top metal vt-top"><div class="rl-filter">${roleFilter(vf, 'vt-f')}</div><span class="note">Cộng hưởng: đủ <b>2</b> / <b>4</b> tướng <b>khác loại</b> cùng vai trò chính trên sân → tướng mang vai trò đó (chính hoặc phụ) nhận buff; Hỗ trợ buff toàn quân.</span></div>
+      <div class="scr-body vt-body ${vf ? 'one' : ''}">${cols}</div>`;
+  }
+
   // ---------- Bách khoa thủy quái
   render_codex() {
     const g = this.game;
     const sc = this.screen;
     const isBoss = sc.tab === 'boss';
-    const seg = `<div class="seg inset"><button class="${sc.tab === 'enemy' ? 'on' : ''}" data-act="tab" data-tab="enemy">Quái</button><button class="${isBoss ? 'on' : ''}" data-act="tab" data-tab="boss">Boss</button><button class="${sc.tab === 'secret' ? 'on' : ''}" data-act="tab" data-tab="secret">Bí truyền</button></div>`;
+    const seg = `<div class="seg inset"><button class="${sc.tab === 'enemy' ? 'on' : ''}" data-act="tab" data-tab="enemy">Quái</button><button class="${isBoss ? 'on' : ''}" data-act="tab" data-tab="boss">Boss</button><button class="${sc.tab === 'secret' ? 'on' : ''}" data-act="tab" data-tab="secret">Bí truyền</button><button class="${sc.tab === 'role' ? 'on' : ''}" data-act="tab" data-tab="role">Vai trò</button></div>`;
     let body;
     if (sc.tab === 'secret') return this.render_secrets(seg);
+    if (sc.tab === 'role') return this.render_roles(seg);
     // v53: chọn chương truyện → quái / boss của các bản đồ trong chương đó
     const lvNow = g.started ? g.level : this.save.last;
     if (sc.ch == null) sc.ch = Math.max(0, CHAPTERS.findIndex((c) => lvNow >= c.from && lvNow <= c.to));

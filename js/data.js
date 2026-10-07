@@ -457,7 +457,8 @@ const HEROES = {
       { id: 'gd_w', name: 'Mũi Giáo Đồng',
         info: (n) => `+${(8 + n * 0.2).toFixed(1)}% xuyên giáp`, apply: (s, n) => { s.pierce += 8 + n * 0.2; } },
       { id: 'gd_e', name: 'Thế Giáo',
-        info: (n) => `+${(3 + n * 0.08).toFixed(1)}% chí mạng`, apply: (s, n) => { s.crit += 3 + n * 0.08; } },
+        // v182: vai trò Diệt boss — thêm % sát thương lên boss
+        info: (n) => `+${(3 + n * 0.08).toFixed(1)}% chí mạng · +${Math.round(Math.min(30, 10 + n * 0.1))}% sát thương lên boss`, apply: (s, n) => { s.crit += 3 + n * 0.08; s.bossPct += Math.min(30, 10 + n * 0.1); } },
       { id: 'gd_r', name: 'Giáo Xoáy', active: { cooldown: 14, cast: 'chop', mana: 100 },
         info: (n) => `Xoáy giáo một nhát: x3 sát thương +${n}` },
     ],
