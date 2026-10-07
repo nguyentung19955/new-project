@@ -14,7 +14,7 @@
   <meta name="description" content="Thần Thoại Việt — game thủ thành truyền thuyết Văn Lang – Âu Lạc: Sơn Tinh – Thủy Tinh, Thánh Gióng, Thạch Sanh, Lạc Long Quân, An Dương Vương.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@700;800&family=Alegreya+Sans:wght@400;500;700;800&display=swap">
-  <link rel="stylesheet" href="css/style.css?v=170">
+  <link rel="stylesheet" href="css/style.css?v=168">
 </head>
 <body>
 <!--BODY-->
@@ -58,12 +58,12 @@
       <!-- menu ≡: các màn phụ gom vào đây cho màn chơi gọn -->
       <div id="drawer" class="metal" hidden>
         <button class="dw-btn" data-act="dw" data-k="bag"><span class="ic">🎒</span>Túi đồ<small id="dw-bag"></small></button>
-        <button class="dw-btn" data-act="dw" data-k="heroes"><span class="ic">👑</span>Anh Hùng<small>mua tướng tím, vàng</small></button>
-        <button class="dw-btn" data-act="dw" data-k="runes"><span class="ic">🔯</span>Ấn Phù<small>khắc ấn cho tướng Vàng</small></button>
-        <button class="dw-btn" data-act="dw" data-k="codex"><span class="ic">📖</span>Bách khoa<small>quái, boss, lịch đợt</small></button>
-        <button class="dw-btn" data-act="dw" data-k="pause"><span class="ic">⏸</span>Tạm dừng & cài đặt<small>chơi lại, bản đồ, menu</small></button>
-        <button class="dw-btn" data-act="dw" data-k="feedback"><span class="ic">✉</span>Góp ý<small>báo lỗi, gửi ý tưởng</small></button>
-        <button class="dw-btn quit" data-act="quit-run"><span class="ic">🏳</span><span id="quit-label">Dừng chơi</span><small>bỏ trận này, về menu</small></button>
+        <button class="dw-btn" data-act="dw" data-k="heroes"><span class="ic">👑</span>Anh Hùng</button>
+        <button class="dw-btn" data-act="dw" data-k="runes"><span class="ic">🔯</span>Ấn Phù</button>
+        <button class="dw-btn" data-act="dw" data-k="codex"><span class="ic">📖</span>Bách khoa</button>
+        <button class="dw-btn" data-act="dw" data-k="pause"><span class="ic">⏸</span>Tạm dừng & cài đặt</button>
+        <button class="dw-btn" data-act="dw" data-k="feedback"><span class="ic">✉</span>Góp ý</button>
+        <button class="dw-btn quit" data-act="quit-run"><span class="ic">🏳</span><span id="quit-label">Dừng chơi</span></button>
       </div>
 
       <div id="legends" class="metal" hidden>
@@ -102,7 +102,7 @@
           <button id="btn-settings" class="mc-btn metal"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 2v3M10 15v3M2 10h3M15 10h3M4.3 4.3l2.1 2.1M13.6 13.6l2.1 2.1M4.3 15.7l2.1-2.1M13.6 6.4l2.1-2.1" stroke="currentColor" stroke-width="1.8"/></svg>Cài Đặt</button>
           <div class="mc-subs"><button id="btn-menu-codex" class="mc-sub">📖 Bách khoa</button><button id="btn-ranks" class="mc-sub">🏆 Xếp hạng</button><button id="btn-feedback" class="mc-sub">✉ Góp ý</button></div>
         </nav>
-        <div class="ver">Phiên bản 170</div>
+        <div class="ver">Phiên bản 168</div>
       </div>
 
       <div id="campaign" class="overlay" hidden></div>
@@ -141,20 +141,20 @@
       el.textContent = 'Lỗi: ' + (e.message || e.error) + (e.filename ? ' (' + e.filename.split('/').pop() + ':' + e.lineno + ')' : '');
     });
   </script>
-  <script src="js/art.js?v=170"></script>
-  <script src="js/data.js?v=170"></script>
-  <script src="js/enemies2.js?v=170"></script>
-  <script src="js/game.js?v=170"></script>
-  <script src="js/render.js?v=170"></script>
-  <script src="js/costume.js?v=170"></script>
-  <script src="js/maps.js?v=170"></script>
-  <script src="js/chapters.js?v=170"></script>
-  <script src="js/firebase-config.js?v=170"></script>
-  <script src="js/cloud.js?v=170"></script>
-  <script src="js/coop.js?v=170"></script>
-  <script src="js/ui.js?v=170"></script>
-  <script src="js/vfx.js?v=170"></script>
+  <script src="js/art.js?v=168"></script>
+  <script src="js/data.js?v=168"></script>
+  <script src="js/enemies2.js?v=168"></script>
+  <script src="js/game.js?v=168"></script>
+  <script src="js/render.js?v=168"></script>
+  <script src="js/costume.js?v=168"></script>
+  <script src="js/maps.js?v=168"></script>
+  <script src="js/chapters.js?v=168"></script>
+  <script src="js/firebase-config.js?v=168"></script>
+  <script src="js/cloud.js?v=168"></script>
+  <script src="js/coop.js?v=168"></script>
+  <script src="js/ui.js?v=168"></script>
+  <script src="js/vfx.js?v=168"></script>
   <script>if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});</script>
-  <script src="js/main.js?v=170"></script>
+  <script src="js/main.js?v=168"></script>
 </body>
 </html>

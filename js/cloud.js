@@ -19,12 +19,11 @@ const CLOUD = {
   onChange(fn) { this._listeners.push(fn); },
   _emit() { for (const f of this._listeners) try { f(this); } catch (e) { /* bỏ qua */ } },
   label() {
-    if (!this.enabled) return 'Chưa bật (chỉ lưu trên máy này)';
+    if (!this.enabled) return 'Chưa đăng nhập';
     if (this.status === 'error') return 'Lỗi: ' + this.error;
     if (!this.user) return 'Đang kết nối…';
-    const who = this.user.isAnonymous ? 'Khách (chỉ máy này)' : (this.user.displayName || this.user.email || 'Tài khoản Google');
-    const t = this.lastSync ? ` · đồng bộ lúc ${new Date(this.lastSync).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}` : '';
-    return who + t;
+    const who = this.user.isAnonymous ? 'Khách' : (this.user.displayName || this.user.email || 'Tài khoản Google');
+    return who;
   },
   _load(src) {
     return new Promise((ok, bad) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = bad; document.head.appendChild(s); });
