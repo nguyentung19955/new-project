@@ -1718,3 +1718,8 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 181 — Gộp sửa thẻ chợ + bỏ lọc Hợp thể + nút ẩn giao diện
 
 - Gộp sua-the-cho (icon hệ không còn bị phóng to lòi ra sau avatar; bỏ thanh lọc bảng Hợp thể) và an-giao-dien (bỏ bong bóng Hủy trên tướng; nút ẩn giao diện, phím H).
+## Phiên bản 180 — Khối "Đợt N · Vô tận" đứng yên một chỗ
+
+- Nguyên nhân khối đợt (chữ + thanh tiến độ, góc trên trái) thỉnh thoảng nhảy: `.tb-center` là `flex: 1` — chiếm toàn bộ phần trống còn lại của thanh trên rồi căn giữa nội dung trong đó. Mỗi khi ô tiền/mạng đổi số chữ số (99→100→1000→123.456, mạng 20/20→100/100), hiện ô mực nước, hiện nút chat (chơi nhóm), phần trống co giãn và cả khối trượt ngang theo (đo được tới 50–120px). Thêm: chữ đổi số chữ số làm chữ trượt, biểu tượng "Khó" làm dòng cao lên đẩy khối lệch dọc 2–4px. Đổi tốc độ, ẩn/hiện chỉ số 👁, thanh boss, thanh tướng không ảnh hưởng.
+- Sửa (chỉ CSS, khối /v180 cuối style.css): `.tb-center` rộng 184px, cao 40px, không co giãn; lề trái tính theo bề ngang thanh trên (`clamp(0px, 50% - 320px, 400px)`) nên không phụ thuộc phần tử khác; chữ số đều nhau (tabular-nums); biểu tượng trong chữ cao đúng 1 dòng. Chữ "Đợt 9999 · Vô tận · Khó" vẫn nằm gọn trong khối.
+- Test mới `tests/dot-co-dinh/dot-co-dinh.test.js`: 22 tình huống × 3 cỡ màn (1920×1000, 844×390, 667×375), lệch ≤1px (đo được 0px), chữ không tràn khối, không đè ô tiền; ảnh trước/sau trong `tests/dot-co-dinh/shots/`.
