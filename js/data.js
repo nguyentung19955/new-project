@@ -1274,16 +1274,16 @@ const NEW_BASICS = NEW_GROUPS.flat();
 const summonPool = (level) => [...BASIC_HEROES.slice(0, 6), ...NEW_GROUPS[(level || 0) % NEW_GROUPS.length]];
 // v133–v194: từng có ĐỘI TRIỆU HỒI 6 tướng (chọn trước trận, đổi ở Nghỉ chân) — đã bỏ: chợ rút từ mọi tướng Thường đã mở.
 const MIN_COMMONS = 6;     // ít hơn số này tướng Thường đã mở (bản lưu lạ) thì chợ ra đủ 20 tướng
-const MARKET_SIZE = 4;     // v143: chợ tướng — số thẻ luôn mở ở thanh đáy
+const MARKET_SIZE = 6;     // v143: chợ tướng — số thẻ luôn mở ở thanh đáy (cho-6-the: 4 → 6)
 // v180: chợ có chủ đích — chợ ra MỌI tướng Thường đã mở (như TFT), trọng số rút thẻ: thường ×1 ·
-// đang ghép dở trên sân ×W.ghep · nguyên liệu còn thiếu của công thức hợp thể gần xong ×W.hop; đủ MARKET_CAP bản sao (= một ★★★)
-// thì loại đó không ra nữa. Bảo hiểm: MARKET_PITY lần làm mới cả hàng liền không ra tướng cần nhất (nguyên liệu hợp thể,
-// không có thì tướng đang có) → lần sau chắc chắn có 1 thẻ.
-// claude/bo-chon-doi: bỏ đội ưu tiên (×2) — xem bảng tỉ lệ trước / sau trong GAMEPLAY.md
-const MARKET_W = { ghep: 5, hop: 12 };
+// đang ghép dở trên sân ×W.ghep · nguyên liệu còn thiếu của công thức hợp thể đang theo ×W.hop; đủ MARKET_CAP bản sao (= một ★★★)
+// thì loại đó không ra nữa. Bảo hiểm ghép: MARKET_PITY lần làm mới cả hàng liền không ra tướng đang có → lần sau chắc chắn có.
+// claude/bo-chon-doi: bỏ đội ưu tiên (×2). cho-6-the: chợ 6 thẻ → ghép dở 5 → 3.5, hợp thể 12 → 8, nhưng MỖI lần rút cả hàng
+// chắc chắn có ≥1 nguyên liệu thiếu nhất của công thức đang theo (bảo hiểm hợp thể) — xem GAMEPLAY.md
+const MARKET_W = { ghep: 3.5, hop: 8 };
 const MARKET_PITY = 2;
 const MARKET_CAP = 4;
-// claude/bo-chon-doi: tối đa max nguyên liệu hợp thể được ưu tiên cùng lúc, trong đó tối đa off loại chưa có trên sân
+// claude/bo-chon-doi: tối đa max công thức hợp thể được ưu tiên cùng lúc (cho-6-the: tính theo công thức đang theo; off không dùng nữa)
 const MARKET_HOP = { max: 2, off: 1 };
 const LEGEND_HEROES = ['thachsanh', 'lachau', 'thansan', 'caolo', 'antiem', 'tiendung', 'langlieu', 'cdt', 'trongdong', 'caong', 'ongtao', 'potaoapui', 'baahoa', 'lyngu', 'truongchi', 'ongdung', 'thocong', 'nghedong', 'mychau', 'sodua',
   'giong', 'llq', 'kimquy', 'adv', 'auco', 'mau', 'matroi', 'mauthoai', 'trutroi', 'ongho', 'kinhduong', 'viemde', 'halong', 'longnu', 'tanvien', 'maudia', 'kylan', 'thienloi', 'cuoi', 'melua'];
