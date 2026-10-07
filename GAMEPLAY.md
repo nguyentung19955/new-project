@@ -1,4 +1,4 @@
-# Núi Cao Nước Dâng · Tóm tắt gameplay (cập nhật phiên bản 35 · chủ đề Sơn Tinh Thủy Tinh)
+# Thần Thoại Việt (tên cũ: Núi Cao Nước Dâng) · Tóm tắt gameplay (cập nhật phiên bản 35 · chủ đề Sơn Tinh Thủy Tinh)
 
 > Tài liệu bàn giao thiết kế đầy đủ: `docs/HANDOFF.md`. Ghi chú từng phiên bản trong code: mục 15 ở cuối.
 
@@ -1370,3 +1370,12 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 144 — Gộp 4 nhánh
 - Gộp: kéo tướng ẩn thanh đáy (141), quái hình người → quái vật (142), Firebase Hosting + tự deploy, Chợ tướng + Nghỉ chân (143).
 - Tên dài trên thẻ chợ tướng tự thu nhỏ chữ cho vừa thẻ (trước bị cắt khi xoay dọc).
+
+## Phiên bản 145 — Đổi tên game: "Thần Thoại Việt"
+- Game giờ gồm nhiều truyền thuyết (Sơn Tinh – Thủy Tinh, Thạch Sanh, Thánh Gióng, Lạc Long Quân, An Dương Vương) nên đổi tên từ **Núi Cao Nước Dâng** thành **Thần Thoại Việt**.
+- Tựa menu: "Thần Thoại Việt", dòng phụ "Truyền thuyết Văn Lang – Âu Lạc", khẩu hiệu "Con Rồng cháu Tiên, giữ vững non sông". Đổi cả tiêu đề trang, màn đăng nhập, dòng phiên bản trong Cài đặt, thông báo xoay màn hình, Đền Anh Hùng, manifest (cài lên màn hình chính), tên app Android, README và tài liệu.
+- Có ảnh `assets/ui/logo-tua.png` thì menu hiện logo ảnh thay chữ; không có hoặc lỗi thì giữ chữ HTML.
+- **Giữ nguyên** để không mất tiến trình / không vỡ bản cài: khóa lưu `nuicao.v1`, mã app `vn.nuicao.game`, dự án Firebase, tên gói npm, tên chương "Sơn Tinh – Thủy Tinh", nội tại "Núi Cao Nước Dâng" của Sơn Tinh.
+- APK: bản phát hành `apk-latest` đăng thêm `than-thoai-viet.apk`, vẫn giữ `nui-cao-nuoc-dang.apk` (cùng file) để link cũ không chết.
+- Ảnh nền menu `assets/ui/nen-menu.jpg` (thành Phong Châu + sóng nước) dùng tạm; prompt ảnh nền mới nhiều truyền thuyết + logo chữ ở **phần 0** của `docs/PROMPT_GEMINI_FULL.md` (`node tools/build-prompts.js`).
+- Test: `node tests/ten-game/ten-game.test.js` (ảnh chụp trong `tests/ten-game/shots/`).

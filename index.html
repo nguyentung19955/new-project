@@ -7,13 +7,14 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#14110D">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Núi Cao">
+  <meta name="apple-mobile-web-app-title" content="Thần Thoại Việt">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icons/icon-180.png">
-  <title>Núi Cao Nước Dâng</title>
+  <title>Thần Thoại Việt</title>
+  <meta name="description" content="Thần Thoại Việt — game thủ thành truyền thuyết Văn Lang – Âu Lạc: Sơn Tinh – Thủy Tinh, Thánh Gióng, Thạch Sanh, Lạc Long Quân, An Dương Vương.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@700;800&family=Alegreya+Sans:wght@400;500;700;800&display=swap">
-  <link rel="stylesheet" href="css/style.css?v=144">
+  <link rel="stylesheet" href="css/style.css?v=145">
 </head>
 <body>
 <!--BODY-->
@@ -81,7 +82,7 @@
       <!-- ===== Lớp phủ ===== -->
       <div id="menu" class="overlay">
         <div class="bgart" id="menu-art"></div>
-        <div class="title"><h1>Núi Cao Nước Dâng</h1><div class="orn"></div><p class="sub">Sơn Tinh • Thủy Tinh (~500 TCN)</p><p>“Nước dâng bao nhiêu, núi cao bấy nhiêu”</p></div>
+        <div class="title"><h1 id="menu-logo"><span class="logo-txt">Thần Thoại Việt</span></h1><div class="orn"></div><p class="sub">Truyền thuyết Văn Lang – Âu Lạc</p><p>“Con Rồng cháu Tiên, giữ vững non sông”</p></div>
         <div class="mc-foot">Phong Châu Thành • Đông Sơn Fantasy</div>
         <div class="pl-box metal" id="menu-player"></div>
         <div class="pl-res" id="menu-res"></div>
@@ -95,7 +96,7 @@
           <button id="btn-settings" class="mc-btn metal"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 2v3M10 15v3M2 10h3M15 10h3M4.3 4.3l2.1 2.1M13.6 13.6l2.1 2.1M4.3 15.7l2.1-2.1M13.6 6.4l2.1-2.1" stroke="currentColor" stroke-width="1.8"/></svg>Cài Đặt</button>
           <div class="mc-subs"><button id="btn-menu-codex" class="mc-sub">📖 Bách khoa</button><button id="btn-ranks" class="mc-sub">🏆 Xếp hạng</button></div>
         </nav>
-        <div class="ver">Phiên bản 144</div>
+        <div class="ver">Phiên bản 145</div>
       </div>
 
       <div id="story" class="overlay" hidden></div>
@@ -119,7 +120,7 @@
     <div id="rotate" hidden>
       <span class="svgi" id="rotate-art"></span>
       <b>Xoay ngang điện thoại để chơi</b>
-      <span>Núi Cao Nước Dâng được thiết kế cho màn hình ngang</span>
+      <span>Thần Thoại Việt được thiết kế cho màn hình ngang</span>
     </div>
   </div>
 <!--/BODY-->
@@ -132,19 +133,19 @@
       el.textContent = 'Lỗi: ' + (e.message || e.error) + (e.filename ? ' (' + e.filename.split('/').pop() + ':' + e.lineno + ')' : '');
     });
   </script>
-  <script src="js/art.js?v=144"></script>
-  <script src="js/data.js?v=144"></script>
-  <script src="js/enemies2.js?v=144"></script>
-  <script src="js/game.js?v=144"></script>
-  <script src="js/render.js?v=144"></script>
-  <script src="js/costume.js?v=144"></script>
-  <script src="js/maps.js?v=144"></script>
-  <script src="js/chapters.js?v=144"></script>
-  <script src="js/firebase-config.js?v=144"></script>
-  <script src="js/cloud.js?v=144"></script>
-  <script src="js/ui.js?v=144"></script>
-  <script src="js/vfx.js?v=144"></script>
+  <script src="js/art.js?v=145"></script>
+  <script src="js/data.js?v=145"></script>
+  <script src="js/enemies2.js?v=145"></script>
+  <script src="js/game.js?v=145"></script>
+  <script src="js/render.js?v=145"></script>
+  <script src="js/costume.js?v=145"></script>
+  <script src="js/maps.js?v=145"></script>
+  <script src="js/chapters.js?v=145"></script>
+  <script src="js/firebase-config.js?v=145"></script>
+  <script src="js/cloud.js?v=145"></script>
+  <script src="js/ui.js?v=145"></script>
+  <script src="js/vfx.js?v=145"></script>
   <script>if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});</script>
-  <script src="js/main.js?v=144"></script>
+  <script src="js/main.js?v=145"></script>
 </body>
 </html>

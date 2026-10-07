@@ -1,4 +1,4 @@
-# Núi Cao Nước Dâng · Tài liệu bàn giao thiết kế
+# Thần Thoại Việt (tên cũ: Núi Cao Nước Dâng) · Tài liệu bàn giao thiết kế
 
 Dành cho người làm game tiếp theo (lập trình viên, họa sĩ, animator). Đọc kèm **GAMEPLAY.md** — tài liệu luật chơi và số liệu.
 
