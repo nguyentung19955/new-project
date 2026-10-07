@@ -1,6 +1,6 @@
 # Thánh Gióng — mẫu pixel 32×32 (tướng Vàng · hành Hỏa), phong cách sử thi (docs/pixel/QUY-CHUAN.md mục 0).
-# Đặc trưng (PROMPT-DUNG-XUONG.txt:896–905 + mẫu người dùng duyệt): chàng trai khổng lồ, tóc đen dựng, KHĂN VÀNG, GIÁP SẮT
-# (đai đồng hoa văn Đông Sơn), ÁO CHOÀNG ĐỎ, GẬY SẮT; mặt nghiêm, mắt nhỏ có thần; chiêu: đầu gậy bốc lửa (hành Hỏa).
+# Đặc trưng (PROMPT-DUNG-XUONG.txt:896–905 + mẫu người dùng duyệt): chàng trai khổng lồ, tóc đen dựng, KHĂN VÀNG, GIÁP SẮT ĐEN
+# (đường nối giáp cháy lửa — phá cách: giáp như vừa ra lò), ÁO CHOÀNG ĐỎ, GẬY SẮT TO; mặt nghiêm; chiêu: đầu gậy bốc lửa (Hỏa).
 # Ngựa sắt / khóm tre không vẽ trong 32×32 (để hiệu ứng / triệu hồi).
 name: Thánh Gióng
 size: 32x32
@@ -9,10 +9,10 @@ colors:
   k = vien
   K = khoi
   t = toi
-  x = sat-toi
-  s = sat
-  S = sat-sang
-  w = bac
+  x = khoi
+  s = sat-toi
+  S = sat
+  w = sat-sang
   f = da-toi
   F = da
   h = da-sang
@@ -43,10 +43,10 @@ part tren
 ...........ffFFFFFffFf..........
 ............ffFFFFFFff..........
 ..............fffff.............
-.......mr.xwSSDDDDSSSx..........
+.......mr.xwlSDDDDSlSx..........
 ......mrrxwSSSdDdSSSsx..........
 ......RrrxSSsssssssssx..........
-......mrrxDdDdDdDdDdDx..........
+......mrrxlLlLlLlLlLlx..........
 ......mrrxSSsssssssssx..........
 ......mmrxSsssssssssxx..........
 ......mmrdDDDDDYDDDDDd..........
@@ -57,7 +57,7 @@ end
 part chan
 ...........Ssx..Ssx.............
 ...........Ssx..Ssx.............
-...........SDx..SDx.............
+...........Slx..Slx.............
 ...........Ssx..Ssx.............
 ...........Ssx..Ssx.............
 ...........Ssx..Ssx.............
@@ -68,33 +68,34 @@ part chan
 end
 
 part gay
-wY
-yy
-Ss
-Ss
-Ss
-Ss
-Ss
-Ss
-Ss
-Ss
-Ss
-Ss
-Ss
-Ss
-Ss
-Ss
-Ss
-Ss
-Ss
-Ss
-Ss
-Ss
-xx
+wYw
+yyy
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+xxx
 end
 
 part gay_ngang
 xSSSSSSSSSSSyY
+xwwwwwwwwwwwyY
 xssssssssssyyw
 end
 
@@ -245,9 +246,10 @@ end
 anim hurt fps=8 once
 frame hurt
   use @idle.0
-  shift -1 0
-  use mat_nham 14 8
+  shift -2 0
+  use mat_nham 13 8
   swap F h
+  swap s S
 end
 frame hurt
   use @idle.0
