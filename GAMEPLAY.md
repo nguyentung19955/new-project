@@ -1695,3 +1695,10 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 179 — Tool cắt ảnh nhận ảnh dáng rời, tấm icon tự tách
 
 - Gộp nhánh tool-cat-anh: ảnh <mã>_pose01..04 mỗi ảnh một khung, tấm nhiều icon tự tách theo vùng có hình, bảng cat-anh-them.json cho ảnh lẻ trong D:\ảnh game; ảnh chưa có chỗ dùng vào assets/chua-dung/.
+
+## Phiên bản 180 — Bỏ nút Hủy nổi trên tướng, thêm nút Ẩn giao diện
+
+- Chạm tướng không còn bong bóng "🗑 Hủy" trên đầu. Hủy tướng: giữ-kéo tướng thả vào thùng **🗑 Hủy tướng** ở dưới (hoàn vàng như cũ). Bong bóng chỉ còn hiện khi tướng có nút Thần tinh / Hợp thể.
+- Thanh trên có nút mới **Ẩn giao diện** (con mắt gạch chéo, cạnh nút 👁 chỉ số): ẩn hết thanh trên, chợ tướng, túi / nâng đồ / mặc đồ, thanh thông tin tướng, dải hợp thể, nút đợt tiếp, toast, thanh máu boss… chỉ còn bản đồ + tướng + quái. Góc trên trái còn một nút nhỏ mờ (con mắt) để **hiện lại**; trên máy tính bấm phím **H** để ẩn / hiện (Esc cũng hiện lại).
+- Khi ẩn: game vẫn chạy; chạm bản đồ không chọn / kéo tướng (chế độ chỉ xem). Hết trận, rời trận hoặc mở màn khác thì giao diện tự hiện lại.
+- Test: `tests/an-giao-dien/an-giao-dien.test.js` (1920×1000, 844×390, 667×375), `tests/bo-nut-tren-tuong` cập nhật (không còn nút Hủy, hủy bằng kéo vào thùng).
