@@ -1695,3 +1695,21 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 179 — Tool cắt ảnh nhận ảnh dáng rời, tấm icon tự tách
 
 - Gộp nhánh tool-cat-anh: ảnh <mã>_pose01..04 mỗi ảnh một khung, tấm nhiều icon tự tách theo vùng có hình, bảng cat-anh-them.json cho ảnh lẻ trong D:\ảnh game; ảnh chưa có chỗ dùng vào assets/chua-dung/.
+
+## Phiên bản 180 — Hợp thể bắt buộc ★★★ + nâng hết kỹ năng (bỏ ngoại lệ v136)
+- Người dùng: "sao lại cho hợp thể khi chưa nâng hết skill?" → ra **Tím** cần **cả 2 tướng Thường ★★★ VÀ kỹ năng tối đa** (`COSTS.ascendTier` 2 → 3, bỏ dòng `if (!h.from) return true` trong `fusionReady`); ra **Vàng** giữ như cũ (2 tướng Tím Thần tinh ★★★ + kỹ năng tối đa). Ghép sao ★→★★→★★★ không đổi. Mọi đường hợp thể (nút trên thẻ bảng Hợp thể, màn Tiến hoá, kéo thả, dải gợi ý / fuseFocus, nút → trên tướng, chơi nhóm lockstep) đều đi qua `canFuse` → `fusionReady` nên bị chặn như nhau.
+- Thông báo lỗi nêu rõ: "*Lạc Tướng còn thiếu 14 cấp kỹ năng: Q 1/4, W 0/4, E 0/4, R 0/3*" (`game.skillGap(h)` = số cấp kỹ năng còn thiếu). Kỹ năng tối đa = cấp tướng ≥ 16 (R3 cần cấp 16).
+- `fusionProgress`: tướng Thường cũng tính kỹ năng (sao 70% + kỹ năng 30%) → dải gợi ý và sắp xếp "gần xong" phản ánh kỹ năng.
+- Bảng Hợp thể (tab Tím và Vàng giống nhau): mỗi ô nguyên liệu ✓ xanh khi đủ; có trên sân nhưng chưa đủ thì góc trên hiện *sao hiện tại/cần★* (vd `2/3★`) và đáy ô hiện `KN-12` (thiếu kỹ năng); chưa có thì mờ. Bỏ chấm `·` vô nghĩa (tướng Tím Thần tinh 0). Dòng đầu: "Tím = 2 tướng Thường ★★★ đúng cặp · kỹ năng tối đa". Khi đủ 2 nguyên liệu trên sân mà chưa đủ điều kiện: nút **🔒 Hợp thể** khoá, chạm → toast nêu tướng nào thiếu gì (bảng vẫn mở).
+- Màn Tiến hoá: hàng điều kiện có ✓/✗ *Kỹ năng tối đa (còn N)* cho tướng này và cho nguyên liệu kia; nút khoá chạm ra toast lý do. Cây phát triển / chi tiết tướng / gợi ý ở màn chọn đội ghi "★★★ + kỹ năng tối đa".
+- Test: `node tests/hop-the/hop-the.test.js` (thêm: ★★★ thiếu kỹ năng → `canFuse`/`fuse`/kéo thả bị chặn, tiến độ < 100%, nút khoá + toast; ★★ dù đủ kỹ năng vẫn chặn; nâng hết → hợp thể được; tab Tím hiện ✓ hoặc n/3★). Ảnh đã xem: bảng Tím/Vàng, toast, Tiến hoá ở 1920×934, 844×390, 667×375.
+- **Cân bằng (mô phỏng `node tests/hop-the/mo-phong.js 3`, bot tham lam, đội = 3 cặp hợp thể, dồn vàng vào 1 cặp, tối đa 30 phút):**
+
+  | Ải | v136 (★★, không KN) | ★★ + KN | v180 (★★★ + KN) |
+  |---|---|---|---|
+  | 1 | 3/3 ván · TB 547 s · đợt 14 | 3/3 · 1408 s · đợt 33 | 3/3 · 1408 s · đợt 33 |
+  | 3 | 3/3 · 581 s · đợt 13 | 0/3 (thua / hết giờ) | 0/3 |
+  | 5 | 2/3 · 868 s · đợt 16 | 0/3 | 0/3 |
+
+  Nút thắt là **kỹ năng**: nâng 1 tướng từ cấp 1 → 16 tốn ~1.500 vàng + mở W/E/R, nhân 2 tướng; ★★★ gần như không làm chậm thêm. Ải thường có ~25 đợt nên với luật mới gần như **không ra được Tím trong một ải** (trừ vô tận). Nếu thấy quá khó: giảm giá lên cấp cho tướng ★★★, hạ yêu cầu cấp của R3, hoặc tặng điểm kỹ năng khi ghép lên ★★★ — chờ người dùng quyết.
+- Test toàn bộ: đạt hết trừ `icon-nho`, `ra-chu-de-cu` (lỗi y hệt trên nhánh gốc 8796d08, có sẵn), `xem-gop-y/rules-emulator` (máy thiếu `@firebase/rules-unit-testing`); `cat-anh` đạt sau khi cài `scipy`.
