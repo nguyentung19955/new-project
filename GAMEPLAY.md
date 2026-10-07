@@ -2101,3 +2101,4 @@ Test: toàn bộ `node tests/run-all.js` đạt (cat-fx: thêm prompt 2 loại �
 ## Phiên bản 194 — 90 ảnh tĩnh mới + game tự cử động (tester đạt)
 
 - Gộp claude/tu-cu-dong + claude/tu-cu-dong-anh: 90 ảnh mới (72 dùng, 18 chờ gen lại trong CD_SKIP), rig 90 mã (67 vung tay), chân đứng yên, boss ×2, nhún lấy đà, vệt chém đúng phía.
+- Theo tester: nhãn trang thử `?xem-cu-dong` (js/xem-cu-dong.js) trước suy tên vũ khí từ động tác (giáo bổ → "rìu", gậy → "rìu/cung") — giờ hiện **vũ khí theo `CD_WEAPON` · động tác** (vd `thansuong · giáo · bổ`, `chantrau · gậy · bổ`, `dapde · gậy · bổ`, `cuoi · gậy · bổ`). Xạ Thủ hiện `cung · chém` vì ảnh cầm đao trong khi game giữ cung — chờ gen lại. Người Đắp Đê: "gậy chĩa đầu thú". Đã xem ảnh trang thử 1920×934, 667×375.

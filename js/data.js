@@ -651,13 +651,13 @@ const HEROES = {
   // ================= v100: ĐỢT HÀNH THỔ — đủ 4 tướng mỗi bậc, ghép CÙNG HÀNH =================
   dapde: {
     name: 'Người Đắp Đê', cost: 75, attack: 'melee', wclass: 'blade', dmgType: 'phys',
-    role: 'Chắn lũ', title: 'Gậy đầu thú đắp đê, giữ làng trước mùa lũ', color: '#C99A3C',
+    role: 'Chắn lũ', title: 'Gậy chĩa đầu thú đắp đê, giữ làng trước mùa lũ', color: '#C99A3C',
     attrs: { str: 24, agi: 11, int: 13 }, gain: { str: 2.7, agi: 1.1, int: 1.3 },
     base: { damage: 8, range: 140, cooldown: 1.25 },
     look: { aura: '#C99A3C', bulk: 1.08, weapon: { type: 'club', color: '#8A8070' } },
     skills: [
       { id: 'dd_q', name: 'Nện Gậy', active: { cooldown: 7, cast: 'bash', mana: 45 },
-        info: (n) => `Nện gậy đầu thú xuống: choáng mục tiêu, x2 sát thương +${(n * 0.6).toFixed(0)}` },
+        info: (n) => `Nện gậy chĩa đầu thú xuống: choáng mục tiêu, x2 sát thương +${(n * 0.6).toFixed(0)}` },
       { id: 'dd_w', name: 'Đê Vững',
         info: (n) => `+6% máu, −${(4 + n * 0.08).toFixed(1)}% sát thương nhận`, apply: (s, n) => { s.hpPct += 6; s.dr += 4 + n * 0.08; } },
       { id: 'dd_e', name: 'Đắp Đê Chắn Lũ', active: { cooldown: 14, cast: 'goldshell', mana: 70 },
