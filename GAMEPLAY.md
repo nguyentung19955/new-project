@@ -2060,3 +2060,7 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 - **Phần 1 (30 ảnh, incoming/dung-xuong-1 trên nhánh claude/tu-cu-dong)**: thêm rig cho cả 30 → js/rigs.js đủ 90 mã (67 tách tay, 23 nguyên khối). Tách lại cao, casau, chimbao, cungan, cua bằng `tools/tach-nen-hong.py --strict <mã…> --shadow chimbao` (bản cũ mất chân / hở người vì thân trùng màu nền); 25 ảnh còn lại giữ bản tách của nhánh tu-cu-dong. Xem trước + tổng hợp + README cập nhật đủ 90.
 - Gộp `claude/tu-cu-dong-anh` (bản 2: 60 ảnh tách nền lại bằng `tools/tach-nen-hong.py` + 60 rig soát tay trong js/rigs.js, `RIGS[mã].kind/amp`, `cdAbsorbSlivers`, `cdFillBehind`) — giữ ảnh + rig của bản 2 cho 60 mã đó; `kinhduong.png` = ảnh bản 2 đã bóc viền trắng (cùng khung, rig vẫn khớp). Nhánh này là nhánh gộp cuối đưa tester.
 - **Quái / boss dùng rig** (`cdDrawEnemy`): mã có rig tách tay thì cả người vẫn đi / nhún như cũ, riêng tay cầm vũ khí vung khi đánh, vệt theo đầu vũ khí; không có rig thì cử động nguyên khối.
+
+## Phiên bản 194 — 90 ảnh tĩnh mới + game tự cử động (tester đạt)
+
+- Gộp claude/tu-cu-dong + claude/tu-cu-dong-anh: 90 ảnh mới (72 dùng, 18 chờ gen lại trong CD_SKIP), rig 90 mã (67 vung tay), chân đứng yên, boss ×2, nhún lấy đà, vệt chém đúng phía.
