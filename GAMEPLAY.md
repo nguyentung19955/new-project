@@ -2077,3 +2077,7 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
   - Trên bản đồ: đồng xu bay khi hạ quái → `ui-tai-nguyen-1` (12 px); hộp rơi đồ → rương `ui-menu-1-3` có quầng màu độ hiếm.
 - **Không dùng (ảnh kém / sai nội dung):** `ui_dong-xu`, `ui_an`, `ui_khoa`, `ui_mang`, `ui_muc-nuoc`, `ui_hu-bau`, `ui_toi-luyen`, `ui_khung-thuong/vang` (đĩa đồng chung chung, khó phân biệt — vẫn chỉ hiện khi bật "Dùng ảnh AI"); `ui-tran-2-1` (có chữ "MENU" tiếng Anh) cho nút ≡; `ui-tran-4-1` (huy chương tròn, nhỏ thì nhoè) cho sao ★ bậc tướng; `ui-tran-4-3` / `ai-khoa` cho ổ khoá nhỏ (đã thử ở v181: chỉ còn chấm xám); `ui-tran-1-3` (◁▷) cho x1/x2; `ui-tran-1-4` (mắt mở) cho nút ẩn giao diện (dễ nhầm với nút chỉ số).
 - **Còn vẽ code vì chưa có ảnh:** icon vai trò 7 màu, ✕ đóng, ‹ quay lại, ✓, 💬, ✉ Góp ý, 🏳 Dừng chơi, ⛺ Nghỉ chân, ☀ nhiệm vụ ngày, 🤝 Cùng giữ thành, ⚜ Thần Khí, 🍄 Linh Chi, 👹 / 🏹 icon chương, x1/x2, mắt gạch; đế ô, thanh máu, đạn, hiệu ứng trúng đòn, icon trạng thái trên quái (danh sách gen: docs/PROMPT-THAY-HINH-CODE.txt).
+
+## Phiên bản 195 — Dùng ảnh có sẵn thay hình vẽ code (tester đạt)
+
+- Gộp claude/dung-anh-co-san: đồng xu, nén bạc, tim mạng, icon ngăn kéo, Lò đúc, Bách khoa, rương rơi đồ… dùng ảnh thật.
