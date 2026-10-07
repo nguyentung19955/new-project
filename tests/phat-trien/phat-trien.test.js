@@ -56,35 +56,48 @@ async function rosterCase(w, h, tag) {
   await browser.close();
 }
 
-async function battleCase(w, h, tag) {
+// v154: trong trận KHÔNG còn gợi ý phát triển; bảng chỉ số chỉ hiện khi GIỮ chân dung ở thanh đáy
+async function battleCase(w, h, tag, touch = false) {
   const { browser, page, errors } = await open(w, h, { owned: ['lachau'] });
   await enter(page, 0);
-  // đặt Lực Sĩ ★★ (Lạc Hầu = Lực Sĩ + Người Đắp Đê) lên sân, chưa có Người Đắp Đê
   await page.evaluate(() => {
-    game.running = false; game.gold = 5000;
+    game.running = false; game.gold = 999;
     const s = game.freeSlots()[0]; const h = game.spawnHero(s, 'lucsi'); h.tier = 2; ui.sel = s; ui.sig.deck = null;
   });
-  await page.waitForTimeout(200);
-  const txt = await page.evaluate(() => { const e = document.querySelector('#deck .dk-evo'); return e && e.textContent.replace(/\s+/g, ' ').trim(); });
-  ok(txt && /Phát triển/.test(txt) && /Lạc Hầu|cần/.test(txt), `[${tag}] trong trận thấy dòng gợi ý: "${txt}"`);
-  ok(/cần Người Đắp Đê/.test(txt), `[${tag}] nói rõ còn thiếu Người Đắp Đê`);
-  const geo = await page.evaluate(() => {
-    const e = document.querySelector('#deck .dk-evo').getBoundingClientRect(), d = document.querySelector('#deck').getBoundingClientRect();
-    const g = document.querySelector('#game').getBoundingClientRect();
-    const el = document.querySelector('#deck .dk-evo');
-    return { inside: e.left >= g.left - 1 && e.right <= g.right + 1 && e.top >= g.top, above: e.bottom <= d.top + 1, deckFits: d.left >= g.left - 1 && d.right <= g.right + 1, clip: el.scrollWidth - el.clientWidth };
-  });
-  ok(geo.inside && geo.above && geo.deckFits, `[${tag}] gợi ý nằm trên thanh đáy, không lệch khỏi màn ${JSON.stringify(geo)}`);
-  await page.screenshot({ path: path.join(SHOT, `${tag}-tran.png`) });
-  await page.click('#deck .dk-evo'); await page.waitForTimeout(200);
-  const st = await page.evaluate(() => ({ leg: !document.querySelector('#legends').hidden, hl: (document.querySelector('#lg-grid .asc-row.hl') || {}).dataset, ff: ui.fuseFocus && FUSION[ui.fuseFocus.i].to }));
-  ok(st.leg && st.hl && st.ff === 'lachau', `[${tag}] chạm gợi ý → mở Cây hợp thể, sáng công thức ${st.ff}`);
-  await page.screenshot({ path: path.join(SHOT, `${tag}-cay.png`) });
-  // bảng chỉ số
-  await page.evaluate(() => { document.querySelector('#legends').hidden = true; });
+  await page.waitForTimeout(250);
+  const vis = () => page.evaluate(() => { const e = document.querySelector('#hero-stats'); return !e.hidden && e.offsetHeight > 0 ? e.textContent : null; });
+  ok(await page.locator('#deck .dk-pt').count() === 1, `[${tag}] chọn tướng → thanh đáy hiện chân dung`);
+  ok(!(await vis()), `[${tag}] chọn tướng: chưa có bảng chỉ số`);
+  ok(!/Phát triển/.test(await page.evaluate(() => document.querySelector('#game').innerText)) && await page.locator('.dk-evo, .hs-evo').count() === 0, `[${tag}] không còn dòng "Phát triển" trong trận`);
   await page.click('#deck .dk-info'); await page.waitForTimeout(250);
-  ok(await page.locator('#hero-stats .hs-evo').count() >= 1 && await page.locator('#deck .dk-evo').count() === 0, `[${tag}] bảng chỉ số có dòng Phát triển (pill ẩn để khỏi đè)`);
-  await page.screenshot({ path: path.join(SHOT, `${tag}-chiso.png`) });
+  ok(!(await vis()), `[${tag}] chạm ô tên tướng không mở bảng`);
+  const box = await page.locator('#dk-portrait').boundingBox();
+  const cx = box.x + box.width / 2, cy = box.y + box.height / 2;
+  const cdp = touch ? await page.context().newCDPSession(page) : null;
+  const down = () => (cdp ? cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: cx, y: cy }] }) : page.mouse.move(cx, cy).then(() => page.mouse.down()));
+  const up = () => (cdp ? cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }) : page.mouse.up());
+  // chạm nhanh chân dung: không mở
+  await down(); await page.waitForTimeout(80); await up(); await page.waitForTimeout(250);
+  ok(!(await vis()), `[${tag}] chạm nhanh chân dung → không hiện bảng`);
+  // giữ 500ms: hiện
+  await down(); await page.waitForTimeout(500);
+  const txt = await vis();
+  ok(txt && /lực chiến/.test(txt) && /Sát thương/.test(txt) && !/Phát triển/.test(txt), `[${tag}] giữ chân dung 0,5s → bảng chỉ số có "lực chiến", không có "Phát triển"`);
+  await page.screenshot({ path: path.join(SHOT, `${tag}-giu-chiso${touch ? '-cham' : ''}.png`) });
+  const geo = await page.evaluate(() => {
+    // xoay dọc (#wrap.rot quay 90°): đổi về toạ độ trong màn chơi
+    const rot = document.querySelector('#wrap').classList.contains('rot');
+    const R = (q) => { const r = document.querySelector(q).getBoundingClientRect();
+      return rot ? { left: r.top, right: r.bottom, top: -r.right, bottom: -r.left, height: r.width } : r; };
+    const s = R('#hero-stats'), d = R('#deck'), p = R('#dk-portrait'), g = R('#game');
+    return { rot, above: s.bottom <= d.top + 1, inside: s.left >= g.left - 1 && s.right <= g.right + 1 && s.top >= g.top - 1, nearPt: Math.abs(s.left - p.left) < 40 || s.right >= g.right - 8, h: Math.round(s.height), gh: Math.round(g.height) };
+  });
+  ok(geo.above && geo.inside && geo.nearPt && geo.h < geo.gh * 0.5, `[${tag}] bảng nằm trên thanh đáy, căn theo chân dung, gọn ${JSON.stringify(geo)}`);
+  ok(await page.evaluate(() => !document.querySelector('#more') || document.querySelector('#more').hidden), `[${tag}] khi giữ: thanh thao tác nổi tạm ẩn`);
+  await up(); await page.waitForTimeout(200);
+  ok(!(await vis()), `[${tag}] thả tay → bảng ẩn`);
+  ok(await page.evaluate(() => !String(getSelection())), `[${tag}] giữ không bôi đen chữ`);
+  await page.screenshot({ path: path.join(SHOT, `${tag}-tran.png`) });
   ok(!errors.length, `[${tag}] không lỗi trang ${errors.join(' | ')}`);
   await browser.close();
 }
@@ -95,5 +108,7 @@ async function battleCase(w, h, tag) {
   await rosterCase(390, 844, 'doc-390x844');
   await battleCase(844, 390, '844x390');
   await battleCase(667, 375, '667x375');
+  await battleCase(844, 390, '844x390', true);
+  await battleCase(390, 844, 'doc-390x844');
   console.log('\nTẤT CẢ ĐẠT');
 })().catch((e) => { console.error(e); process.exit(1); });

@@ -71,6 +71,9 @@ const GFX = {
 // người chơi chỉ việc cầm ngang — không cần bật xoay màn hình của máy.
 let ROT = false;
 function resize() {
+  // v153: bàn phím điện thoại mở khi gõ chat (hoặc góp ý) làm khung nhìn co lại — giữ nguyên bố cục, gõ xong mới co giãn lại
+  const ae = document.activeElement;
+  if (ae && ae.id === 'chat-in') { if (!resize.hooked) { resize.hooked = true; ae.addEventListener('blur', () => { resize.hooked = false; setTimeout(resize, 150); }, { once: true }); } return; }
   let [vw, vh] = viewportSize();
   if (!vw || !vh) return requestAnimationFrame(resize);
   ROT = vh > vw;
@@ -210,6 +213,16 @@ function drawAiMap(img) {
   ctx.restore();
 }
 
+function drawMateSpot(x, y, hero) {
+  ctx.save();
+  ctx.strokeStyle = 'rgba(110,200,240,0.95)';
+  ctx.fillStyle = 'rgba(90,180,214,0.16)';
+  ctx.lineWidth = 3;
+  ctx.setLineDash([8, 5]);
+  ctx.beginPath(); ctx.ellipse(x, y, 15 * DK * (hero ? 1.45 : 1.2), 10 * DK * (hero ? 1.3 : 1.2), 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.restore();
+}
+
 function render() {
   const t = performance.now() / 1000;
   // phần màn hình ngoài bản đồ: ảnh bản đồ phóng phủ kín, tối đi (chỉ khi có lề)
@@ -262,9 +275,11 @@ function render() {
     else if (i === ui.spot && !h) o.mode = 'target';
     else if (!h && ui.armed && !o.flooded) o.mode = 'free';
     else if (!h && i === ui.coachSlot) o.mode = 'hint';
+    // v141: chơi nhóm — ô của đồng đội viền xanh nét đứt (cả khi có tướng đứng trên)
+    const mate = COOP.on && game.co && !game.co.canAct(COOP.me, i);
     // v138: ô đã có tướng không vẽ vòng (kể cả khi chọn tướng — đã có vòng tầm đánh); chỉ hiện lúc đang kéo để ghép
-    if (h && !o.mode) return;
-    drawSpot(ctx, x, y, o, t);
+    if (!(h && !o.mode)) drawSpot(ctx, x, y, o, t);
+    if (mate) drawMateSpot(x, y, !!h);
   });
 
   // vòng tầm đánh của tướng đang chọn
@@ -1667,11 +1682,14 @@ function drawEffects(t) {
 
 let last = performance.now();
 function loop(now) {
-  const dt = Math.min(0.05, (now - last) / 1000);
+  const raw = Math.max(0, (now - last) / 1000);
+  const dt = Math.min(0.05, raw);
   if (game.started && game.running) GFX.sample(now - last);
   last = now;
+  // v141: chơi nhóm — mô phỏng bước cố định theo lệnh đồng bộ (js/coop.js), không theo khung hình
+  if (COOP.on) COOP.frame(raw);
   // game vẫn chạy khi mở các bảng; chỉ dừng khi bấm nút dừng
-  if (game.started && game.running) {
+  else if (game.started && game.running) {
     for (let i = 0; i < game.speed; i++) game.update(dt);
   } else if (game.started) game.updateIdle(dt);
   mapImg = mapImage(Math.round(CONFIG.W * view.scale * view.dpr), Math.round(CONFIG.H * view.scale * view.dpr), game.level);

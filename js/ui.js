@@ -310,7 +310,7 @@ class UI {
     // v124–126: icon nút vẽ tay phong cách trống đồng (assets/ui/); thiếu ảnh thì giữ ký hiệu cũ
     const uiImg = (f, alt, cls = 'uimg') => `<img class="${cls}" src="${assetSrc(`ui/${f}.png`)}" alt="${alt}" onerror="this.replaceWith(this.alt)">`;
     this.uiImg = uiImg;
-    for (const [q, f] of [['[data-act=auto-up-gear] .i', 'ui-tran-2-2'], ['[data-act=auto-eq-all] .i', 'ui-tran-2-3']]) {
+    for (const [q, f] of [['#auto-btns [data-act=open-bag] .i', 'ui-menu-2-4'], ['[data-act=auto-up-gear] .i', 'ui-tran-2-2'], ['[data-act=auto-eq-all] .i', 'ui-tran-2-3']]) {
       const el = document.querySelector(q);
       if (el) el.innerHTML = uiImg(f, el.textContent);
     }
@@ -333,17 +333,10 @@ class UI {
     // góp ý còn trong hàng đợi: gửi lại khi có mạng / khi vừa kết nối được Firebase
     window.addEventListener('online', () => this.fbFlush());
     if (typeof CLOUD !== 'undefined') CLOUD.onChange(() => { if (CLOUD.ready) this.fbFlush(); });
+    // v153: trò chuyện trong trận nhóm (💬 trên thanh trên; Enter để gửi)
+    $('#btn-chat').onclick = () => this.chatToggle();
+    $('#chat').addEventListener('keydown', (ev) => { if (ev.key === 'Enter' && ev.target.id === 'chat-in') { ev.preventDefault(); this.chatAct({ act: 'chat-send' }); } });
     $('#btn-menu').onclick = () => { $('#drawer').hidden = !$('#drawer').hidden; $('#more').hidden = true; $('#legends').hidden = true; };
-    $('#quick-eq').onclick = () => {
-      const q = this.quickEq;
-      $('#quick-eq').hidden = true;
-      if (!q || !g.heroes.includes(q.hero)) return;
-      const inst = g.inventory.find((i) => i.uid === q.uid);
-      if (!inst) return;
-      const r = g.equip(q.hero, inst.uid, slotFor(q.hero, inst));
-      if (r === true) this.toast(`${HEROES[q.hero.type].name} đã mặc ${ITEMS[inst.id].name}`, '#6AE06A');
-      else this.toast(r, '#E25A3A');
-    };
     $('#btn-moc').onclick = () => {
       this.raising = !this.raising;
       this.moving = -1;
@@ -351,6 +344,8 @@ class UI {
     };
     $('#btn-run').onclick = () => {
       if (!g.started || g.over) return;
+      // v141: chơi nhóm không tạm dừng; nút chỉ để bắt đầu đợt 1 (cả hai đều bấm được)
+      if (COOP.on) { if (g.co && !g.co.started) COOP.issue('start'); else this.toast('Chơi nhóm không tạm dừng được', '#C8BFA8'); return; }
       if (g.won && !g.endless) return;
       g.running = !g.running;
       if (g.running && g.wave === 0 && !g.waveActive) {
@@ -367,15 +362,21 @@ class UI {
       this.toast(st.detail ? 'Hiện chỉ số chi tiết (tên, cấp, máu, số sát thương)' : 'Chế độ gọn', '#9dffc4');
     };
     $('#btn-detail').classList.toggle('on', !!this.save.settings.detail);
-    $('#btn-speed').onclick = () => { g.speed = g.speed === 1 ? 2 : g.speed === 2 ? 3 : 1; };
+    $('#btn-speed').onclick = () => {
+      const v = g.speed === 1 ? 2 : g.speed === 2 ? 3 : 1;
+      if (COOP.on) { COOP.issue('speed', [v]); this.toast(`Tốc độ x${v} (đổi cho cả hai người)`, '#C8BFA8'); return; }
+      g.speed = v;
+    };
     $('#nextwaves').onclick = () => {
       if (!$('#nextwaves').classList.contains('early')) return;
-      const b = g.callEarly();
-      g.running = true;
-      if (b) this.toast(`Gọi sớm: +${b} vàng`, '#F2D27A');
+      if (COOP.on && g.co && !g.co.started) return COOP.issue('start');
+      this.cmd('callEarly', [], (b) => {
+        if (!COOP.on) g.running = true;
+        if (b) this.toast(`Gọi sớm: +${b} vàng`, '#F2D27A');
+      });
     };
     // ủy quyền sự kiện cho các vùng dựng lại liên tục
-    for (const id of ['#fuse-strip', '#auto-btns', '#screen', '#deck', '#drawer', '#more', '#reward', '#result', '#story', '#campaign', '#settings', '#legends', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks', '#modes', '#rest', '#feedback']) {
+    for (const id of ['#fuse-strip', '#auto-btns', '#screen', '#deck', '#drawer', '#more', '#reward', '#result', '#story', '#campaign', '#settings', '#legends', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks', '#modes', '#rest', '#feedback', '#coop', '#coop-bar', '#chat']) {
       $(id).addEventListener('click', (ev) => {
         const el = ev.target.closest('[data-act]');
         if (this.tipShown) { this.tipShown = false; ev.preventDefault(); return; }   // vừa giữ tay xem mô tả: không nâng kỹ năng
@@ -393,6 +394,25 @@ class UI {
     });
     for (const e of ['pointerup', 'pointercancel', 'pointerleave']) $('#deck').addEventListener(e, hideTip);
     $('#deck').addEventListener('contextmenu', (ev) => { if (ev.target.closest('[data-act=cmd-skill]')) ev.preventDefault(); });
+    // v154: giữ tay ~0,35 giây lên chân dung ở thanh đáy → hiện bảng chỉ số tướng; thả tay là ẩn.
+    // Chạm nhanh không mở bảng (lần đầu nhắc "Giữ ảnh để xem chỉ số").
+    let stT = 0, stP = null;
+    const stEnd = (ev) => {
+      if (!stP || (ev && ev.pointerId !== undefined && ev.pointerId !== stP.id)) return;
+      clearTimeout(stT);
+      if (!this.statsOpen && ev && ev.type === 'pointerup' && !this.statsHinted) { this.statsHinted = true; this.toast('Giữ ảnh để xem chỉ số'); }
+      stP = null;
+      if (this.statsOpen) { this.statsOpen = false; $('#hero-stats').hidden = true; }
+    };
+    $('#deck').addEventListener('pointerdown', (ev) => {
+      if (!ev.target.closest('.dk-pt') || (ev.pointerType === 'mouse' && ev.button !== 0)) return;
+      stEnd(); stP = { id: ev.pointerId, x: ev.clientX, y: ev.clientY };
+      stT = setTimeout(() => { if (stP && this.game.heroes[this.sel]) { this.statsOpen = true; this.statsSig = null; } }, 350);
+    });
+    window.addEventListener('pointermove', (ev) => { if (stP && !this.statsOpen && ev.pointerId === stP.id && Math.hypot(ev.clientX - stP.x, ev.clientY - stP.y) > 12) { clearTimeout(stT); stP = null; } });
+    for (const e of ['pointerup', 'pointercancel']) window.addEventListener(e, stEnd, true);
+    window.addEventListener('blur', () => { stP = stP || { id: undefined }; stEnd(); });
+    $('#deck').addEventListener('contextmenu', (ev) => { if (ev.target.closest('.dk-pt')) ev.preventDefault(); });
     // v128: giữ tay lên mọi ô có data-tip (kỹ năng ở màn Anh Hùng, Ấn Phù, thẻ tướng…) → hiện mô tả
     let tip2 = 0;
     $('#ui').addEventListener('pointerdown', (ev) => {
@@ -459,12 +479,13 @@ class UI {
     this.setInGame(false);
   }
   hideOverlays() {
-    for (const id of ['#menu', '#story', '#campaign', '#settings', '#result', '#reward', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks', '#modes', '#rest']) $(id).hidden = true;
+    for (const id of ['#menu', '#story', '#campaign', '#settings', '#result', '#reward', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks', '#modes', '#rest', '#coop']) $(id).hidden = true;
     if (this.needLogin()) this.showLogin(false);   // v73: chưa đăng nhập thì luôn che game
   }
   setInGame(on) {
     document.querySelectorAll('.ingame').forEach((el) => { el.hidden = !on; });
-    if (!on) for (const id of ['#legends', '#bossbar', '#coach', '#drawer', '#more', '#deck-hint', '#btn-moc', '#nextwaves', '#quick-eq']) $(id).hidden = true;
+    if (!on) for (const id of ['#legends', '#bossbar', '#coach', '#drawer', '#more', '#deck-hint', '#btn-moc', '#nextwaves', '#coop-bar']) $(id).hidden = true;
+    if (on) $('#coop-bar').hidden = !COOP.on;
   }
 
   playLevel(i, endless) {
@@ -485,6 +506,7 @@ class UI {
 
   startLevel(i) {
     const g = this.game;
+    if (COOP.on) return this.toast('Đang chơi nhóm: thoát trận nhóm trước (≡ → Dừng chơi)', '#E25A3A');
     if (g.started) this.bankStats();
     g.hard = !!this.save.settings.hard;
     g.reset(i);
@@ -586,8 +608,10 @@ class UI {
   showRest() {
     const g = this.game;
     if (!g.rest) return;
+    const coop = COOP.on;
+    if (coop && g.rest.done && g.rest.done[COOP.me]) return;      // chơi nhóm: mình xong rồi, chờ đồng đội
     if (!this.restSel || this.restFor !== g.rest.wave) { this.restSel = [...g.summonList()]; this.restFor = g.rest.wave; this.restWasRunning = g.running !== false; }
-    g.running = false;
+    if (!coop) g.running = false;
     const orig = g.summonList(), sel = this.restSel;
     const added = sel.filter((t) => !orig.includes(t)).length;
     const ing = deckIngredients(this.save.owned || []);
@@ -598,7 +622,8 @@ class UI {
     const els = EL_ORDER.map((el) => `<div class="dk-el"><div class="dk-eh" style="color:${ELEMENTS[el].color}">${elIcon(el, 13)} ${ELEMENTS[el].name}</div>${BASIC_HEROES.filter((t) => HEROES[t].el === el).map(card).join('')}</div>`).join('');
     $('#rest').innerHTML = `<div class="dk-modal"><div class="dk-box metal rest-box">
       <div class="dk-head"><b class="ttl">⛺ Nghỉ chân · sau đợt ${g.rest.wave}</b><span class="chip ${added ? 'ok' : 'dark'}">Đổi ${added} / ${REST_SWAPS}</span><span class="chip dark">Đội ${sel.length} / ${DECK_SIZE}</span>
-        <small>Đã hạ boss! Bỏ tối đa ${REST_SWAPS} tướng khỏi đội rồi chọn tướng mới thay vào — miễn phí. Tướng trên sân giữ nguyên, chợ tướng làm mới theo đội mới.</small><div class="sp"></div>
+        ${coop ? `<span class="chip run" id="rest-left">còn ${Math.max(0, Math.ceil(REST_COOP_T - (g.rest.t || 0)))} giây</span>` : ''}
+        <small>Đã hạ boss! Bỏ tối đa ${REST_SWAPS} tướng khỏi đội rồi chọn tướng mới thay vào — miễn phí. Tướng trên sân giữ nguyên, chợ tướng làm mới theo đội mới.${coop ? ' Chơi nhóm: mỗi người đổi đội của mình; trận chạy tiếp khi cả hai xong hoặc hết giờ.' : ''}</small><div class="sp"></div>
         <button class="btn metal" data-act="rest-skip">Bỏ qua</button><button class="btn btn-gold" data-act="rest-done" ${sel.length === DECK_SIZE ? '' : 'disabled'}>Xong</button></div>
       <div class="dk-grid">${els}</div></div></div>`;
     $('#rest').hidden = false;
@@ -615,6 +640,15 @@ class UI {
   restDone(apply) {
     const g = this.game;
     if (!g.rest) { $('#rest').hidden = true; return; }
+    if (COOP.on) {
+      const sel = this.restSel || g.summonList();
+      if (apply) this.cmd('restDeck', [[...sel]], (r) => { if (typeof r === 'string') this.toast(r, '#E25A3A'); else this.toast('Đã đổi đội · chợ tướng làm mới', '#6AE06A'); this.sig.deck = null; });
+      else this.cmd('skipRest', []);
+      $('#rest').hidden = true;
+      this.restSel = null;
+      if (g.rest) this.toast('Chờ đồng đội đổi đội xong (tối đa 20 giây)…', '#9dffc4');
+      return;
+    }
     if (apply) {
       const r = g.restDeck(this.restSel || g.summonList());
       if (typeof r === 'string') return this.toast(r, '#E25A3A');
@@ -629,6 +663,7 @@ class UI {
   // ---------- v74: Tiếp tục / Chơi mới — lưu màn đang chơi vào bản lưu (đồng bộ đám mây)
   saveRun() {
     const g = this.game;
+    if (COOP.on || g.co) return;     // v141: trận nhóm không lưu để tiếp tục một mình
     if (!g.started || g.over || (g.won && !g.endless)) return;
     this.save.run = g.snapshot();
     writeSave(this.save);
@@ -644,7 +679,8 @@ class UI {
     }
     if (g.endless) { this.submitScores(false, 0); const sv = this.save; sv.bestEndless = sv.bestEndless || {}; sv.bestEndless[g.level] = Math.max(sv.bestEndless[g.level] || 0, g.wave); writeSave(sv); }
     g.running = false; g.over = true; g.started = false;
-    this.clearRun();
+    if (COOP.on || g.co) { COOP.end(true); this.lobby = null; }
+    else this.clearRun();
     this.closeScreen && this.closeScreen();
     this.showMenu();
     this.toast('Đã dừng trận', '#C8BFA8');
@@ -813,8 +849,245 @@ class UI {
         <button class="md-card metal endl" data-act="mode-pick" data-k="endless" style="background-image:linear-gradient(90deg,#0A1A24f0 35%,#0A1A2455),url('${assetSrc('maps/nen-bien.jpg')}')"><span class="md-ic"><img src="${assetSrc('ui/ui-tran-1-3.png')}" alt="♾"></span><b>Vô Tận</b>
           <small>Chọn một bản đồ đã mở, giữ thành mãi mãi. Quái mạnh dần, boss mỗi 10 đợt, đổi bộ quái liên tục. Đua bảng xếp hạng.</small>
           <span class="md-st">Kỷ lục: đợt ${best}</span></button>
+        <button class="md-card metal coop" data-act="mode-pick" data-k="coop" style="background-image:linear-gradient(90deg,#14240Ef0 35%,#14240E55),url('${assetSrc('maps/nen-thanh.jpg')}')"><span class="md-ic">🤝</span><b>Cùng Giữ Thành</b>
+          <small>Chơi nhóm 2 người: chung bản đồ, chung mạng, mỗi người giữ một nửa số ô và ví vàng riêng. Tạo phòng lấy mã 6 ký tự, bạn bè nhập mã để vào.</small>
+          <span class="md-st">${COOP.saved() ? `Đang có phòng ${COOP.saved()}` : 'Cần đăng nhập'}</span></button>
       </div></div>`;
     $('#modes').hidden = false;
+  }
+  // ============================================================
+  //  v141: CHƠI NHÓM "CÙNG GIỮ THÀNH" — phòng chờ, vào trận, thanh đồng đội
+  // ============================================================
+  // thao tác lên trận: chơi đơn gọi thẳng; chơi nhóm gửi lệnh (then chạy khi lệnh thực thi ở bước hẹn)
+  cmd(name, args = [], then) {
+    if (COOP.on) return COOP.issue(name, args, then);
+    const r = this.game[name](...args);
+    if (then) then(r);
+    return r;
+  }
+  coopMember() {
+    const s = this.save;
+    return { name: this.playerName(), meta: { deck: validDeck(s.deck) ? [...s.deck] : null, owned: [...(s.owned || [])], runes: s.heroRunes || {}, legacy: s.legacy || {} } };
+  }
+  showCoop() {
+    this.hideOverlays();
+    this.setInGame(false);
+    $('#coop').hidden = false;
+    this.renderCoop();
+  }
+  coopLobbyWatch(code) {
+    if (this.lobby && this.lobby.unsub) this.lobby.unsub();
+    this.lobby = { code, room: null, unsub: null };
+    this.lobby.unsub = COOP.watchLobby(code, (r) => {
+      if (!this.lobby || this.lobby.code !== code) return;
+      if (!r) { this.lobbyClose(); this.toast('Phòng đã đóng', '#E25A3A'); if (!$('#coop').hidden) this.renderCoop(); return; }
+      this.lobby.room = { ...r, code };
+      if (r.state === 'play' && !COOP.on && r.members.length === 2) return this.coopBegin(this.lobby.room);
+      if (!$('#coop').hidden) this.renderCoop();
+    });
+  }
+  lobbyClose() { if (this.lobby && this.lobby.unsub) this.lobby.unsub(); this.lobby = null; }
+  renderCoop() {
+    const L = this.lobby, r = L && L.room, me = COOP.getNet() && COOP.net.uid;
+    const head = `<div class="scr-head metal"><button class="xbtn metal" data-act="coop-back" aria-label="Quay lại">${ICON.back}</button><h1 class="ttl">Cùng Giữ Thành</h1><span class="chip dark">Chơi nhóm 2 người</span><div class="sp"></div></div>`;
+    let body;
+    if (!COOP.available()) {
+      body = `<div class="co-box metal"><b>Cần đăng nhập để chơi nhóm</b><p>Chơi nhóm truyền tin qua máy chủ (Firebase). Hãy đăng nhập (Google, email hoặc tài khoản khách) rồi quay lại.</p>
+        <button class="btn btn-gold" data-act="coop-login">Đăng nhập</button></div>`;
+    } else if (this.coopBusy) {
+      body = `<div class="co-box metal"><b>${esc(this.coopBusy)}</b><p>Đợi một chút…</p></div>`;
+    } else if (!L) {
+      const saved = COOP.saved();
+      body = `<div class="co-box metal">
+        <div class="co-how"><b>Cách chơi</b><p>Chung bản đồ, chung <b>mạng thành</b>, chung đợt quái. Mỗi người giữ <b>một nửa số ô</b> (ô viền <span class="co-mate">xanh</span> là của đồng đội) và có <b>ví vàng riêng</b>: vàng hạ quái, xong đợt, sính lễ chia đôi; bán đồ / gọi sớm thì về người bấm. Gửi vàng cho đồng đội ở thanh trên. Không tạm dừng được.</p></div>
+        <div class="co-row"><button class="btn btn-gold title" data-act="coop-create">＋ Tạo phòng</button></div>
+        <div class="co-row"><input id="co-code" class="login-in co-code" maxlength="6" placeholder="Mã phòng" autocapitalize="characters" autocomplete="off" value="${esc(this.coopCode || '')}"><button class="btn metal title" data-act="coop-join">Vào phòng</button></div>
+        ${saved ? `<div class="co-row"><button class="btn metal" data-act="coop-rejoin">↻ Vào lại phòng ${esc(saved)}</button></div>` : ''}
+        ${this.coopErr ? `<div class="login-err">${esc(this.coopErr)}</div>` : ''}</div>`;
+    } else {
+      const host = r && r.host === me, members = r ? r.members : [];
+      const lv = r ? r.level || 0 : 0;
+      const pl = [0, 1].map((k) => { const u = members[k];
+        return `<div class="co-pl metal ${u ? '' : 'empty'}"><span class="co-dot" style="background:${k ? '#5AB4D6' : '#F2D27A'}"></span><b>${u ? esc((r.names || {})[u] || 'Người chơi') : 'Đang chờ…'}</b><small>${!u ? 'Gửi mã phòng cho bạn' : u === r.host ? 'Chủ phòng' : 'Khách'}${u === me ? ' · bạn' : ''}</small></div>`; }).join('');
+      const unlocked = Math.max(1, this.save.unlocked || 1);
+      const lvList = host ? `<div class="co-lv">${LEVELS.slice(0, unlocked).map((l, i) => `<button class="${i === lv ? 'btn-gold' : 'metal'}" data-act="coop-lv" data-i="${i}">${i + 1}. ${esc(l.name)}</button>`).join('')}</div>`
+        : `<div class="note">Chủ phòng chọn ải: <b>Ải ${lv + 1} · ${esc(LEVELS[lv].name)}</b></div>`;
+      body = `<div class="co-box metal wide">
+        <div class="co-code-big">Mã phòng <b>${esc(L.code)}</b></div>
+        <div class="co-pls">${pl}</div>
+        <div class="hint-h">ẢI (PHÓ BẢN ĐÃ MỞ CỦA CHỦ PHÒNG)</div>${lvList}
+        <div class="co-row">${host ? `<button class="btn btn-gold title" data-act="coop-start" ${members.length === 2 ? '' : 'disabled'}>⚔ Bắt đầu</button>` : '<span class="note">Chờ chủ phòng bấm Bắt đầu…</span>'}
+          <button class="btn metal" data-act="coop-leave">Rời phòng</button></div>
+        ${this.coopErr ? `<div class="login-err">${esc(this.coopErr)}</div>` : ''}</div>`;
+    }
+    $('#coop').innerHTML = `<div class="screen" style="z-index:auto">${head}<div class="co-body">${body}</div></div>`;
+  }
+  async coopAct(d) {
+    const g = this.game;
+    this.coopErr = '';
+    const busy = async (msg, fn) => {
+      this.coopBusy = msg; this.renderCoop();
+      try { await fn(); } catch (e) { this.coopErr = e.message || String(e); } finally { this.coopBusy = ''; if (!$('#coop').hidden) this.renderCoop(); }
+    };
+    switch (d.act) {
+      case 'coop-back': this.showMenu(); break;
+      case 'coop-login': this.showLogin(true); break;
+      case 'coop-create':
+        await busy('Đang tạo phòng', async () => { const code = await COOP.createRoom(this.coopMember()); this.coopLobbyWatch(code); });
+        break;
+      case 'coop-join': {
+        const code = (($('#co-code') || {}).value || '').trim().toUpperCase();
+        this.coopCode = code;
+        await busy('Đang vào phòng', async () => { const c = await COOP.joinRoom(code, this.coopMember()); this.coopLobbyWatch(c); });
+        break;
+      }
+      case 'coop-rejoin': {
+        const code = COOP.saved();
+        await busy('Đang vào lại phòng', async () => {
+          const net = COOP.getNet();
+          const r = await net.getRoom(code).catch(() => null);
+          if (!r) { COOP.forget(); throw new Error('Phòng không còn'); }
+          if (r.state === 'lobby') return this.coopLobbyWatch(code);
+          if (r.state !== 'play') { COOP.forget(); throw new Error('Trận nhóm đã kết thúc'); }
+          if (COOP.on) return this.coopEnter(false);
+          await COOP.rejoin(g, this, code);
+          this.coopBusy = 'Đang tải trận từ đồng đội';
+        });
+        if (COOP.on && COOP.waitSnap) { this.coopBusy = 'Đang tải trận từ đồng đội (đồng đội cần đang chơi)'; this.renderCoop(); }
+        break;
+      }
+      case 'coop-leave': {
+        const L = this.lobby, host = L && L.room && L.room.host === COOP.net.uid;
+        this.lobbyClose();
+        await busy('Đang rời phòng', () => COOP.leaveRoom(L && L.code, host));
+        break;
+      }
+      case 'coop-lv': if (this.lobby) COOP.net.updateRoom(this.lobby.code, { level: +d.i }).catch((e) => { this.coopErr = e.message; this.renderCoop(); }); break;
+      case 'coop-start': {
+        const L = this.lobby;
+        if (!L || !L.room || L.room.members.length < 2) break;
+        if (g.started && !g.over && !g.won && !COOP.on) { this.bankStats(); this.saveRun(); }   // trận đơn dở: lưu lại để Tiếp tục sau
+        await busy('Đang bắt đầu', () => COOP.startRoom(L.code, L.room.level || 0));
+        break;
+      }
+      case 'coop-gift': {
+        const v = +d.v, co = g.co;
+        if (!COOP.on || !co) break;
+        if (co.alone >= 0) { this.toast('Đồng đội đã rời trận', '#E25A3A'); break; }
+        if (g.gold < v) { this.toast(`Cần ${v} vàng`, '#E25A3A'); break; }
+        COOP.issue('gift', [v], (r) => { if (r !== true) this.toast(r, '#E25A3A'); });
+        break;
+      }
+    }
+  }
+  coopBegin(room) {
+    this.lobbyClose();
+    if (this.game.started && !this.game.over && !this.game.won && !this.game.co) { this.bankStats(); this.saveRun(); }
+    COOP.begin(this.game, this, room);
+    this.coopEnter(false);
+  }
+  coopEnter(rejoin) {
+    const g = this.game;
+    this.coopBusy = '';
+    this.clearSel();
+    this.screen = null;
+    $('#screen').hidden = true;
+    this.hideOverlays();
+    this.setInGame(true);
+    this.sig = {};
+    this.coopDone = false;
+    const co = g.co, mate = co.names[1 - COOP.me];
+    this.toast(rejoin ? `Đã vào lại trận cùng ${esc(mate)}` : `Cùng giữ thành với <b>${esc(mate)}</b> · Ải ${g.level + 1} · ${LEVELS[g.level].name}. Ô viền xanh là của đồng đội.`, '#9dffc4');
+  }
+  // mỗi lệnh thực thi xong (cả hai máy): báo cho người chơi biết việc của đồng đội
+  coopExec(c, r, mine) {
+    const g = this.game, co = g.co;
+    if (!co) return;
+    const mate = esc(co.names[1 - COOP.me]);
+    if (c.n === 'start' && r === true && !this.coopSaid) {
+      this.coopSaid = true;
+      const op = chapterOf(g.level).opener || ['sontinh', 'Nước dâng bao nhiêu, núi cao bấy nhiêu! Các tướng Văn Lang, giữ lấy Phong Châu!'];
+      this.say(op[0], op[1]);
+    } else if (c.n === 'gift' && r === true) {
+      this.toast(mine ? `Đã gửi ${fmt(c.a[0])} vàng cho ${mate}` : `${mate} gửi bạn ${fmt(c.a[0])} vàng`, '#F2D27A');
+    } else if (c.n === 'reward') {
+      if (r === true) {
+        $('#reward').hidden = true;
+        const o = co.reward && co.reward.options[c.a[0]];
+        if (!mine && o) this.toast(`${mate} đã chọn sính lễ: ${esc(o.title)}`, '#C8A0F0');
+        if (mine && o) this.rewardToast(o);
+      } else if (mine) this.toast(r, '#E25A3A');
+    } else if (c.n === 'speed' && !mine) this.toast(`${mate} đổi tốc độ x${co.speed}`, '#C8BFA8');
+    else if (c.n === 'back') this.toast('Hai người lại cùng giữ thành: vàng chia đôi lại', '#9dffc4');
+  }
+  // ---------- v153: TRÒ CHUYỆN trong trận nhóm (không đi qua lockstep, không tạm dừng trận)
+  chatToggle(open) {
+    this.chatOpen = open === undefined ? !this.chatOpen : !!open;
+    const el = $('#chat');
+    if (this.chatOpen && !el.firstChild) {
+      el.innerHTML = `<div class="ch-head"><b>💬 Trò chuyện</b><small id="chat-mate"></small><button class="ch-x" data-act="chat-close" aria-label="Đóng">✕</button></div>
+        <div class="ch-in"><input id="chat-in" maxlength="${COOP_CHAT.max}" placeholder="Nhắn đồng đội… (Enter để gửi)" autocomplete="off" enterkeyhint="send"><button class="btn btn-gold" data-act="chat-send">Gửi</button></div>
+        <div class="ch-quick">${COOP_CHAT.quick.map((q, i) => `<button class="metal" data-act="chat-quick" data-i="${i}">${esc(q)}</button>`).join('')}</div>
+        <div class="ch-list" id="chat-list"></div>`;
+    }
+    el.hidden = !this.chatOpen;
+    if (this.chatOpen) { this.chatUnread = 0; $('#chat-bubbles').innerHTML = ''; this.chatRender(0); }
+    else { const i = $('#chat-in'); if (i) i.blur(); }
+    $('#chat-dot').hidden = !this.chatUnread;
+  }
+  chatRender(fresh) {
+    if (!this.chatOpen) {
+      this.chatUnread = (this.chatUnread || 0) + (fresh || 0);
+      $('#chat-dot').hidden = !this.chatUnread;
+      return;
+    }
+    const list = $('#chat-list');
+    if (!list) return;
+    const co = this.game.co, me = COOP.uid;
+    const mate = $('#chat-mate'); if (mate && co) mate.textContent = 'với ' + co.names[1 - COOP.me];
+    const t2 = (ms) => new Date(ms).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+    list.innerHTML = COOP.chatList.map((m) => `<div class="ch-msg ${m.by === me ? 'me' : ''}"><small>${m.by === me ? 'Bạn' : esc(m.name || 'Đồng đội')} · ${t2(m.at)}</small><span>${esc(m.text)}</span></div>`).join('')
+      || '<div class="note">Chưa có tin nào. Chạm câu nhanh ở trên hoặc gõ tin nhắn.</div>';
+    list.scrollTop = list.scrollHeight;
+  }
+  // tin của đồng đội khi khung chat đóng: bong bóng nổi 4 giây ở góc + chấm chưa đọc
+  chatIncoming(m) {
+    if (this.chatOpen) return;
+    const box = $('#chat-bubbles');
+    const el = document.createElement('div');
+    el.className = 'ch-bub';
+    el.innerHTML = `<b>${esc(m.name || 'Đồng đội')}</b>${esc(m.text)}`;
+    box.appendChild(el);
+    while (box.children.length > 3) box.firstChild.remove();
+    setTimeout(() => el.remove(), 4000);
+  }
+  async chatAct(d) {
+    if (d.act === 'chat-close') return this.chatToggle(false);
+    let text = '';
+    if (d.act === 'chat-quick') text = COOP_CHAT.quick[+d.i] || '';
+    else if (d.act === 'chat-send') { const i = $('#chat-in'); text = i ? i.value : ''; if (!text.trim()) return; }
+    const r = await COOP.say(text, this.playerName());
+    if (r !== true) return this.toast(r, '#E25A3A');
+    if (d.act === 'chat-send') { const i = $('#chat-in'); if (i) i.value = ''; }
+  }
+  coopNote(msg) { this.toast(esc(msg), '#5AB4D6'); }
+  updateCoopBar() {
+    const g = this.game, co = g.co, bar = $('#coop-bar');
+    $('#btn-chat').hidden = !COOP.on;
+    if (!COOP.on || !co) {
+      bar.hidden = true;
+      if (this.chatOpen) this.chatToggle(false);
+      this.chatUnread = 0; $('#chat-dot').hidden = true;
+      return;
+    }
+    bar.hidden = false;
+    const mate = co.names[1 - COOP.me], mg = co.pl[1 - COOP.me].gold;
+    const st = COOP.waitSnap ? 'đang đồng bộ…' : co.alone === COOP.me ? 'đã rời · bạn giữ cả hai nửa' : co.alone >= 0 ? 'đang giữ cả hai nửa' : COOP.isAuth() ? '' : COOP.bound - COOP.tick > 3 * COOP.delayTicks() ? 'mạng chậm' : '';
+    const key = [mate, Math.floor(mg), st, co.alone].join('|');
+    if (this.sig.coop === key) return;
+    this.sig.coop = key;
+    bar.innerHTML = `<span class="co-dot" style="background:#5AB4D6"></span><b>${esc(mate)}</b><span class="cg">${coin(1)} ${fmt(mg)}</span>${st ? `<small>${esc(st)}</small>` : ''}
+      ${co.alone < 0 ? '<button class="metal" data-act="coop-gift" data-v="50">Gửi 50</button><button class="metal" data-act="coop-gift" data-v="200">Gửi 200</button>' : ''}`;
   }
   showCampaign(sel) {
     this.cpSel = Math.min(sel ?? this.save.last, this.save.unlocked - 1);
@@ -875,7 +1148,7 @@ class UI {
   showSettings(inGame) {
     const g = this.game;
     this.pauseWasRunning = inGame && g.running;
-    if (inGame) g.running = false;
+    if (inGame && !COOP.on) g.running = false;
     $('#settings').hidden = false;
     this.settingsInGame = inGame;
     this.renderSettings();
@@ -890,8 +1163,8 @@ class UI {
       <div class="set-list">
         ${inGame ? `<div style="display:flex;gap:10px">
           <button class="btn btn-gold" style="flex:1.3;height:48px;font-family:var(--title);font-size:18px" data-act="set-close">▶ Tiếp tục</button>
-          <button class="btn metal title" style="flex:1;height:48px;font-size:16px" data-act="restart">Chơi lại</button>
-          <button class="btn metal title" style="flex:1;height:48px;font-size:16px" data-act="to-map">Bản đồ</button>
+          ${COOP.on ? '<span class="note" style="flex:2;align-self:center">Chơi nhóm: trận vẫn chạy khi mở bảng này</span>' : `<button class="btn metal title" style="flex:1;height:48px;font-size:16px" data-act="restart">Chơi lại</button>
+          <button class="btn metal title" style="flex:1;height:48px;font-size:16px" data-act="to-map">Bản đồ</button>`}
           <button class="btn metal title" style="flex:1;height:48px;font-size:16px" data-act="to-menu">Menu chính</button></div>` : ''}
         ${tg('dmgText', 'Hiện số sát thương', 'Số bay lên khi tướng đánh trúng quái')}
         ${tg('shake', 'Rung màn hình', 'Rung khi boss quẫy đuôi và khi tung chiêu tối thượng')}
@@ -907,7 +1180,7 @@ class UI {
           <button class="btn metal" style="margin-left:auto" data-act="set-feedback">✉ Góp ý</button></div>
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 153 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 159 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1092,9 +1365,10 @@ class UI {
     const slot = this.slotAt(x, y);
     if (this.raising) {
       if (slot >= 0 && g.canRaise(slot)) {
-        const r = g.raiseSpot(slot);
-        if (r !== true) this.toast(r, '#E25A3A');
-        else this.toast('Mọc Núi! Ô này khô ráo vĩnh viễn', '#F2D27A');
+        this.cmd('raiseSpot', [slot], (r) => {
+          if (r !== true) this.toast(r, '#E25A3A');
+          else this.toast('Mọc Núi! Ô này khô ráo vĩnh viễn', '#F2D27A');
+        });
       }
       this.raising = false;
       return;
@@ -1123,10 +1397,14 @@ class UI {
   buyCard(i, slot) {
     const g = this.game;
     if (!g.started || g.over) return;
-    const r = g.buyCard(i, slot);
+    this.cmd('buyCard', [i, slot == null ? -1 : slot], (r) => this.boughtCard(r));
+  }
+  boughtCard(r) {
+    const g = this.game;
     this.sig.deck = null;
     if (typeof r === 'string') return this.toast(r, '#E25A3A');
     const h = g.heroes[r];
+    if (!h) return;
     this.toast(`Triệu hồi: ${HEROES[h.type].name} ${'★'.repeat(h.tier || 1)}`, '#6AE06A');
     this.spot = -1;
     if (!g.flags.marketTip) { g.flags.marketTip = true; setTimeout(() => this.toast('Mẹo: <b>kéo</b> thẻ tướng thả vào ô muốn đặt · ↻ đổi cả hàng · đầu mỗi đợt chợ tự làm mới', '#F2D27A'), 900); }
@@ -1142,20 +1420,23 @@ class UI {
     const g = this.game;
     const a = g.heroes[from], b = g.heroes[to];
     if (!a) return;
+    const fail = (r) => { if (typeof r === 'string') this.toast(r, '#E25A3A'); };
     if (b) {
-      if (g.canMerge(a, b) === true) { g.merge(from, to); this.sel = to; return; }
+      if (g.canMerge(a, b) === true) { this.cmd('merge', [from, to], fail); this.sel = to; return; }
       const f = fusionFor(a.type, b.type);
       if (f) {
         const ok = g.canFuse(a, b);
         if (typeof ok === 'string') return this.toast(`Hợp thể ${HEROES[f.to].name}: ${ok}`, '#E25A3A');
-        g.fuse(from, to); this.sel = to; return;
+        this.cmd('fuse', [from, to], fail); this.sel = to; return;
       }
       if (a.type === b.type && !a.from) return this.toast(g.canMerge(a, b), '#E25A3A');
     }
-    const name = HEROES[a.type].name;
-    g.moveHero(from, to);
+    const name = HEROES[a.type].name, bn = b && HEROES[b.type].name;
+    this.cmd('moveHero', [from, to], (r) => {
+      if (typeof r === 'string') return this.toast(r, '#E25A3A');
+      this.toast(bn ? `${name} đổi chỗ với ${bn}` : `${name} chuyển sang ô mới`, '#9dffc4');
+    });
     this.sel = to;
-    this.toast(b ? `${name} đổi chỗ với ${HEROES[b.type].name}` : `${name} chuyển sang ô mới`, '#9dffc4');
   }
   // nút "Ghép" trong menu tướng: tìm 1 tướng cùng loại cùng sao, gộp vào tướng đang chọn
   mergeAny() {
@@ -1164,15 +1445,14 @@ class UI {
     if (!h) return;
     const o = g.heroes.find((x) => x && x !== h && g.canMerge(x, h) === true);
     if (!o) return this.toast('Chưa có tướng cùng loại cùng sao để ghép', '#E25A3A');
-    g.merge(o.slot, h.slot);
+    this.cmd('merge', [o.slot, h.slot], (r) => { if (typeof r === 'string') this.toast(r, '#E25A3A'); });
     $('#more').hidden = true;
   }
   fuseWith(slot) {
     const g = this.game;
     const h = g.heroes[this.sel];
     if (!h || !g.heroes[slot]) return;
-    const r = g.fuse(slot, h.slot);
-    if (r !== true) return this.toast(r, '#E25A3A');
+    this.cmd('fuse', [slot, h.slot], (r) => { if (r !== true) this.toast(r, '#E25A3A'); });
     $('#more').hidden = true;
     if (this.screen) this.closeScreen();
   }
@@ -1187,8 +1467,7 @@ class UI {
     const g = this.game;
     const ok = g.canPlace(slot, type);
     if (ok !== true) return this.toast(ok, '#E25A3A');
-    g.placeHero(slot, type);
-    this.toast(`${HEROES[type].name} đã vào vị trí`, '#6AE06A');
+    this.cmd('placeHero', [slot, type], (r) => { if (r) this.toast(`${HEROES[type].name} đã vào vị trí`, '#6AE06A'); });
     this.spot = -1;
     this.armed = null;
     this.sel = slot;
@@ -1200,8 +1479,7 @@ class UI {
   }
 
   doLevelUp(h) {
-    const r = this.game.levelUp(h);
-    if (r !== true) this.toast(r, '#E25A3A');
+    this.cmd('levelUp', [h], (r) => { if (r !== true) this.toast(r, '#E25A3A'); });
   }
 
   // ---------- bảng triệu hồi
@@ -1249,6 +1527,11 @@ class UI {
     const inGame = $('#menu').hidden && $('#campaign').hidden && $('#story').hidden && $('#roster').hidden && $('#runes').hidden && $('#treasury').hidden && $('#modes').hidden;
     if (!inGame) return;
     this.updateTopbar();
+    this.updateCoopBar();
+    if (COOP.on && !$('#rest').hidden) {
+      if (!g.rest) { $('#rest').hidden = true; this.restSel = null; }
+      else { const el = $('#rest-left'); if (el) el.textContent = `còn ${Math.max(0, Math.ceil(REST_COOP_T - (g.rest.t || 0)))} giây`; }
+    }
     this.updateNextWaves();
     this.updateFuseStrip();
     this.updateBoss();
@@ -1286,17 +1569,6 @@ class UI {
         this.save.secrets = [...g.known];
         writeSave(this.save);
         this.toast(`<b>Đã khám phá!</b> ${secretTitle(ev.key)}: ${esc(SECRETS[ev.key].desc)}`, '#FFD66B');
-      } else if (ev.type === 'upgrade') {
-        // đồ vừa rơi tốt hơn cho một tướng: hiện nút đeo nhanh vài giây
-        const inst = g.inventory.find((i) => i.uid === ev.uid);
-        if (inst && g.heroes.includes(ev.hero)) {
-          this.quickEq = { uid: ev.uid, hero: ev.hero };
-          const b = $('#quick-eq');
-          b.innerHTML = `<span class="slot ${rarCls(inst.rarity)}">${svgI(itemIcon(inst.id))}</span><span><b>▲ Đeo cho ${HEROES[ev.hero.type].name}</b><small>${ITEMS[inst.id].name} · +${ev.gain} lực chiến</small></span>`;
-          b.hidden = false;
-          clearTimeout(this.quickT);
-          this.quickT = setTimeout(() => { b.hidden = true; }, 9000);
-        }
       } else if (ev.type === 'ascend') {
         this.banner('Thăng thần', `${ev.from} hóa thân ${ev.to}`);
         this.toast(`<b>${ev.to}</b>: ${esc(HEROES[ev.hero.type].trait.name)} · ${esc(HEROES[ev.hero.type].trait.desc)}`, '#F0A030');
@@ -1515,9 +1787,7 @@ class UI {
       // chỉ dựng lại khi đủ / thiếu vàng cho một nút (không phải mỗi lần vàng đổi) — đỡ giật khi đánh
       const afford = [lc, g.trainCost(h), ...def.skills.map((sk, i) => (skillLevel(h, i) ? (h.from ? COSTS.skillGold(i, skillLevel(h, i)) : 0) : unlockCost(h, i)))]
         .map((c) => (g.gold >= c ? 1 : 0)).join('');
-      // v147: gợi ý phát triển 1 dòng (nổi phía trên ô tên tướng)
-      const ev = this.evolveHint(h)[0];
-      key = `h|${h.id}|${h.type}|${h.level}|${h.train || 0}|${h.tier}|${h.skillPts}|${skillKey}|${afford}|${h.dead}|${h.bogged}|${fresh}|${notice}|${up}|${ev ? ev.i + ev.need : ''}|${this.moving < 0}|${assetVersion}`;
+      key = `h|${h.id}|${h.type}|${h.level}|${h.train || 0}|${h.tier}|${h.skillPts}|${skillKey}|${afford}|${h.dead}|${h.bogged}|${fresh}|${notice}|${up}|${this.moving < 0}|${assetVersion}`;
       const status = h.dead ? `Hồi sinh sau ${Math.ceil(h.respawnT)}s` : h.bogged ? 'Sa lầy · dùng Mọc Núi' : `Hành ${ELEMENTS[def.el].name} · ${ELEM_TRAIT[def.el].name}`;
       // 4 ô kỹ năng (v37): số trên ô = cấp kỹ năng; tag phía trên = giá nâng tiếp (+ điểm / + vàng / MAX).
       // Chạm ô = nâng (hoặc mở khóa) luôn, không còn màn Kỹ năng riêng.
@@ -1545,11 +1815,9 @@ class UI {
       const maxed = h.level >= CONFIG.maxLevel;
       const tc = g.trainCost(h);
       html = `<button class="dk-x metal" data-act="deck-close" aria-label="Bỏ chọn">${ICON.close}</button>
-        <span class="dk-pt ${def.legend || 'common'} ${g.known.has('h.' + h.type) ? 'known' : ''}" ${assetUrl(`ui_khung-${def.legend === 'legendary' ? 'vang' : 'thuong'}.png`) ? `style="background-image:url('${assetUrl(`ui_khung-${def.legend === 'legendary' ? 'vang' : 'thuong'}.png`)}'),radial-gradient(circle at 50% 60%,#3A2416,#1A0F0A 75%);background-size:100% 100%,auto"` : ''}><canvas id="dk-portrait" width="108" height="116"></canvas>${g.known.has('h.' + h.type) ? '<i class="kn" title="Đã khám phá hiệu ứng ẩn">✦</i>' : ''}<span class="lv">${h.level}${h.train ? `<i>✦${h.train}</i>` : ''}</span><span class="st" ${h.from ? 'style="color:#FF7A3A"' : ''}>${'★'.repeat(h.tier || 0)}</span></span>
-        <span class="dk-info" data-act="hero-stats" role="button" aria-label="Xem chỉ số"><span class="nm">${elIcon(def.el, 15)}${def.name}</span><span class="sub ${h.bogged || h.dead ? 'warn' : ''}">${status}</span>
+        <span class="dk-pt ${def.legend || 'common'} ${g.known.has('h.' + h.type) ? 'known' : ''}" ${assetUrl(`ui_khung-${def.legend === 'legendary' ? 'vang' : 'thuong'}.png`) ? `style="background-image:url('${assetUrl(`ui_khung-${def.legend === 'legendary' ? 'vang' : 'thuong'}.png`)}'),radial-gradient(circle at 50% 60%,#3A2416,#1A0F0A 75%);background-size:100% 100%,auto"` : ''}><canvas id="dk-portrait" width="108" height="116" title="Giữ để xem chỉ số"></canvas>${g.known.has('h.' + h.type) ? '<i class="kn" title="Đã khám phá hiệu ứng ẩn">✦</i>' : ''}<span class="lv">${h.level}${h.train ? `<i>✦${h.train}</i>` : ''}</span><span class="st" ${h.from ? 'style="color:#FF7A3A"' : ''}>${'★'.repeat(h.tier || 0)}</span></span>
+        <span class="dk-info"><span class="nm">${elIcon(def.el, 15)}${def.name}</span><span class="sub ${h.bogged || h.dead ? 'warn' : ''}">${status}</span>
           <span class="bar hp"><i id="dk-hp"></i></span><span class="bar mp"><i id="dk-mp"></i></span></span>
-        ${ev && !this.statsOpen && this.moving < 0 ? `<button class="dk-evo ${HEROES[ev.f.to].legend} ${ev.need ? '' : 'go'}" data-act="evo-focus" data-i="${ev.i}" title="${esc(`${def.name} + ${HEROES[ev.pt].name} → ${HEROES[ev.f.to].name}${ev.need ? ' · ' + ev.need : ''}`)}">
-          <span class="lb">Phát triển:</span>+<img src="${heroImgUrl(ev.pt, 'head')}" alt="">➜<img src="${heroImgUrl(ev.f.to, 'head')}" alt=""><b>${esc(HEROES[ev.f.to].name)}</b><span class="nd">${ev.need ? esc(ev.need) : 'Đủ điều kiện!'}</span></button>` : ''}
 
         ${skills}
         ${maxed ? `<button class="dk-up btn-gold" data-act="train" ${g.gold < tc ? 'disabled' : ''} aria-label="Luyện thể"><b>${uiIc('luyen-the')}Luyện thể ✦${(h.train || 0) + 1}</b><span>${coin(1)}${tc}</span></button>`
@@ -1581,10 +1849,10 @@ class UI {
         const cn = el.querySelector('.cdn');
         if (cn.textContent !== txt) cn.textContent = txt;
       });
-      // bảng chỉ số tướng (nút 📊 trên thanh tướng)
+      // bảng chỉ số tướng: chỉ hiện khi đang giữ tay lên chân dung (v154)
       const sp = $('#hero-stats');
       if (this.statsOpen && !this.screen) {
-        const sk2 = `${h.id}|${h.level}|${h.tier}|${h.train}|${h.statPts}|${Object.values(h.skillLv).join()}|${SLOTS.map((x) => h.equip[x] ? h.equip[x].uid : '').join()}|${Math.round(h.hp)}|${this.evolveHint(h).map((o) => o.need).join()}`;
+        const sk2 = `${h.id}|${h.level}|${h.tier}|${h.train}|${h.statPts}|${Object.values(h.skillLv).join()}|${SLOTS.map((x) => h.equip[x] ? h.equip[x].uid : '').join()}|${Math.round(h.hp)}`;
         if (this.statsSig !== sk2 || sp.hidden) {
           this.statsSig = sk2;
           const S = heroStats(h);
@@ -1594,10 +1862,10 @@ class UI {
             + row('Máu', `${Math.round(h.hp)}/${Math.round(S.hpMax)}`) + row('Chí mạng', `${Math.round(S.crit)}% ×${S.critMult.toFixed(1)}`) + row('Giảm hồi chiêu', `${Math.round(S.cdr)}%`)
             + row('Giảm s.thương', `${Math.round(S.dr)}%`) + row('Năng lượng', Math.round(S.maxMana))
             + row(ATTRS.str.name, Math.round(S.str)) + row(ATTRS.agi.name, Math.round(S.agi)) + row(ATTRS.int.name, Math.round(S.int))
-            + row('Điểm đã cộng', h.statPts || 0) + '</div>'
-            + this.evolveHint(h).map((o) => `<button class="hs-evo" data-act="evo-focus" data-i="${o.i}">Phát triển: + <b>${esc(HEROES[o.pt].name)}</b> ➜ <b style="color:${RARITY[HEROES[o.f.to].legend].color}">${esc(HEROES[o.f.to].name)}</b> <small class="${o.need ? '' : 'ok'}">${o.need ? esc(o.need) : 'Đủ điều kiện!'}</small></button>`).join('');
+            + row('Điểm đã cộng', h.statPts || 0) + '</div>';
           sp.hidden = false;
         }
+        this.placeStats(sp);
       } else if (!sp.hidden) sp.hidden = true;
       // thanh thao tác nổi trên tướng: tự hiện khi chọn tướng (ẩn khi mở màn khác / menu)
       const show = !h.dead && !this.screen && !this.statsOpen && $('#drawer').hidden && this.moving < 0;
@@ -1605,7 +1873,7 @@ class UI {
       if (show && (this.moreSig !== mk || $('#more').hidden)) { this.moreSig = mk; $('#more').hidden = false; this.renderMore(); }
       else if (show) this.placeMore(h);
       else if (!$('#more').hidden) $('#more').hidden = true;
-    } else { $('#more').hidden = true; $('#hero-stats').hidden = true; }
+    } else { $('#more').hidden = true; $('#hero-stats').hidden = true; this.statsOpen = false; }
     // gợi ý ngắn trên hàng thẻ
     const hint = this.moving >= 0 ? 'Chạm ô muốn chuyển tướng tới (tướng cùng loại cùng sao: ghép)' : '';
     $('#deck-hint').hidden = !hint;
@@ -1635,7 +1903,11 @@ class UI {
     const eq = g.inventory.some((i) => { const b = g.bestHeroFor(i); return b && b.gain > 0; });
     const reserve = COSTS.summon(g.summonN || 0);
     const up = g.heroes.some((h) => h && SLOTS.some((sl) => { const i = h.equip[sl]; return i && i.plus < 5 && g.gold - enhanceCost(i) >= reserve; }));
-    const [bu, be] = el.querySelectorAll('.dot');
+    // v157: nút Túi đồ chấm xanh khi có món mới chưa xem (so với lần mở túi gần nhất trong trận này)
+    if (!this.bagSeen || this.bagSeen.run !== g.runId) this.bagSeen = { run: g.runId, uids: new Set(g.inventory.map((i) => i.uid)) };
+    const nw = g.inventory.some((i) => !this.bagSeen.uids.has(i.uid));
+    const [bb, bu, be] = el.querySelectorAll('.dot');
+    if (bb.hidden === nw) bb.hidden = !nw;
     if (bu.hidden === up) bu.hidden = !up;
     if (be.hidden === eq) be.hidden = !eq;
   }
@@ -1668,7 +1940,8 @@ class UI {
     const g = this.game, h = g.heroes[slot];
     if (!h) return;
     const v = g.sellValue(h);
-    g.sellHero(slot);
+    if (COOP.on && !g.co.canAct(COOP.me, slot)) return this.toast('Đây là tướng của đồng đội', '#E25A3A');
+    this.cmd('sellHero', [slot]);
     if (this.sel === slot) this.clearSel();
     $('#more').hidden = true;
     this.toast(`Đã hủy ${HEROES[h.type].name}: +${v} vàng`, '#F2D27A');
@@ -1917,6 +2190,24 @@ class UI {
     $('#roster').hidden = false;
     this.renderRoster();
   }
+  // v154: bảng chỉ số nổi ngay trên thanh đáy, mép trái căn theo chân dung, không tràn khỏi màn
+  placeStats(sp) {
+    const pt = $('#dk-portrait'), ui = $('#ui');
+    if (!pt) return;
+    // đổi toạ độ màn hình → toạ độ trong #ui (máy xoay dọc: #wrap.rot quay 90°)
+    const u = ui.getBoundingClientRect(), rot = $('#wrap').classList.contains('rot');
+    const sc = (rot ? u.height : u.width) / ui.offsetWidth || 1;
+    const loc = (e) => { const r = e.getBoundingClientRect();
+      return rot ? { left: (r.top - u.top) / sc, top: (u.right - r.right) / sc } : { left: (r.left - u.left) / sc, top: (r.top - u.top) / sc }; };
+    const r = loc(pt), d = loc($('#deck'));
+    const hz = parseFloat(getComputedStyle($('#wrap')).getPropertyValue('--hz')) || 1;
+    const W = ui.offsetWidth, w = sp.offsetWidth * hz;
+    const x = Math.max(6, Math.min(W - w - 6, r.left - 4));
+    const bottom = ui.offsetHeight - d.top + 6;
+    const L = x + 'px', B = bottom + 'px';
+    if (sp.style.left !== L) sp.style.left = L;
+    if (sp.style.bottom !== B) sp.style.bottom = B;
+  }
   showTip(html, el) {
     let t = $('#sk-tip');
     if (!t) { t = document.createElement('div'); t.id = 'sk-tip'; t.className = 'metal'; $('#ui').appendChild(t); }
@@ -2028,6 +2319,7 @@ class UI {
   // ============================================================
   showReward(ev) {
     this.rewardOpts = ev.options;
+    this.rewardId = ev.id;
     this.rewardBoss = ev.boss;
     this.closeScreen();
     const g = this.game;
@@ -2066,9 +2358,17 @@ class UI {
 
   pickReward(i) {
     const o = this.rewardOpts[i];
+    if (COOP.on) {
+      $('#reward').hidden = true;
+      COOP.issue('reward', [i, this.rewardId]);
+      return;
+    }
     this.game.claimReward(o);
     $('#reward').hidden = true;
     if (!this.game.waveActive) this.saveRun();
+    this.rewardToast(o);
+  }
+  rewardToast(o) {
     if (o.kind === 'item' && o.ids) this.toast(`Nhận ${o.ids.length} món từ Hũ Vua Hùng · bấm ≡ → Mặc đồ cả đội`, '#C8A0F0');
     else if (o.kind === 'item') this.toast(`Nhận ${ITEMS[o.id].name}! Mở Túi đồ để đeo cho tướng`, RARITY[ITEMS[o.id].rarity].color);
     else if (o.kind === 'treasure') this.toast(`+${o.gold} vàng, +${o.lives} mạng`, '#F2D27A');
@@ -2093,14 +2393,16 @@ class UI {
     const g = this.game;
     const s = this.save;
     const lv = g.level;
+    const coop = !!g.co;      // v141: chơi nhóm — chỉ nhận Ngân khố + Tu Vi như Phó bản (không tính sao / mở ải / xếp hạng)
     let stars = 0;
-    if (win) {
+    if (win && coop) stars = g.stars();
+    else if (win) {
       stars = g.stars();
       s.stars[lv] = Math.max(s.stars[lv], stars);
       if (g.hard) { s.hardStars = s.hardStars || LEVELS.map(() => 0); s.hardStars[lv] = Math.max(s.hardStars[lv] || 0, stars); }
       s.unlocked = Math.max(s.unlocked, Math.min(LEVELS.length, lv + 2));
     }
-    s.best[lv] = Math.max(s.best[lv] || 0, g.wave);
+    if (!coop) s.best[lv] = Math.max(s.best[lv] || 0, g.wave);
     if (g.endless) { s.bestEndless = s.bestEndless || {}; s.bestEndless[lv] = Math.max(s.bestEndless[lv] || 0, g.wave); }
     // v66: Ngân khố
     const khoGain = win ? Math.round((PREP.winBase + PREP.winPerLevel * (lv + 1) + PREP.winPerStar * stars) * (g.hard ? 1.5 : 1))
@@ -2111,9 +2413,10 @@ class UI {
     if (daily) s.dailyWin = today;
     s.kho = (s.kho || 0) + khoGain + daily;
     const tv = this.bankTuvi(win ? 1 : TUVI_LOSE);
-    this.submitScores(win, stars);
-    this.clearRun();
+    if (!coop) { this.submitScores(win, stars); this.clearRun(); }
     this.bankStats();
+    const mate = coop ? g.co.names[1 - COOP.me] : '';
+    if (coop) { COOP.end(false); this.coopDone = true; this.coopSaid = false; }
     this.closeScreen();
     $('#reward').hidden = true;
     const rows = `<div><span>⚑ Đợt</span><b>${g.wave}/${g.levelWaves}</b></div>
@@ -2127,7 +2430,7 @@ class UI {
       ${g.khoRun ? `<div><span>♾ Đã nhận giữa trận (mốc đợt / boss)</span><b style="color:#E4ECF4">${bac(1)} +${fmt(g.khoRun)}</b></div>` : ''}
       ${tv.rows.length ? `<div><span>☯ Tu Vi${win ? '' : ' (60%)'}</span><b style="color:#C8A0F0">${tv.rows.join(' · ')}</b></div>` : ''}
       ${tv.up.map((u) => `<div><span></span><b style="color:#FFD66B">${u}</b></div>`).join('')}`;
-    const name = `${g.endless ? '♾ Vô tận' : 'Ải ' + (lv + 1)} · ${LEVELS[lv].name}`;
+    const name = `${coop ? '🤝 ' : g.endless ? '♾ Vô tận · ' : ''}${g.endless && !coop ? '' : 'Ải ' + (lv + 1) + ' · '}${LEVELS[lv].name}${coop ? ` · cùng ${esc(mate)}` : ''}`;
     // v159: chữ, tranh, màu theo chương (trước gắn cứng Sơn Tinh – Thủy Tinh: "Phong Châu thất thủ / Nước ngập thành")
     const th = themeOf(lv, g.endless);
     const art = (w) => { const u = resultImg(th.id, w); return u ? `<img src="${u}" alt="">` : th.id === 'sontinh' ? sceneArt(w ? 'win' : 'lose') : resultScene(lv, w); };
@@ -2148,10 +2451,11 @@ class UI {
             <div class="res-tips"><div class="h" style="color:#D9B25A">ĐIỀU KIỆN SAO</div>
               ${STAR_RULES.map((r, k) => `<div class="t"><i style="border-color:${stars > k ? '#3EDC4E' : '#5C4620'};color:${stars > k ? '#6AE06A' : '#7A705C'}">${k + 1}</i><span>${r}</span></div>`).join('')}</div></div>
           <div class="res-btns">
+            ${coop ? '<button class="btn-gold" data-act="restart">🤝 Chơi nhóm tiếp</button><button class="metal" style="color:#F2D27A" data-act="to-menu">Menu chính</button>' : `
             ${lv + 1 < LEVELS.length ? '<button class="btn-gold" data-act="next-level">Ải tiếp theo ›</button>' : '<button class="btn-gold" data-act="endless">♾ Chơi vô tận ›</button>'}
             ${lv + 1 < LEVELS.length ? '<button class="metal" style="color:#F2D27A" data-act="endless">Chơi vô tận</button>' : ''}
             <button class="metal" style="color:#F2D27A" data-act="restart">↻ Chơi lại</button>
-            <button class="metal" style="color:#F2D27A" data-act="to-map">Bản đồ</button></div>
+            <button class="metal" style="color:#F2D27A" data-act="to-map">Bản đồ</button>`}</div>
         </div></div></div>`
       : `<div class="screen" style="z-index:auto">
       <div class="scr-head metal" style="border-color:#C8401E"><h1 class="ttl">${name}</h1><span class="chip run">${th.lost}</span><div class="sp"></div></div>
@@ -2161,13 +2465,13 @@ class UI {
           <div class="res-title lose${th.loseTitle.length > 18 ? ' long' : ''}"><span class="res-ic">${th.ic}</span> ${th.loseTitle}</div>
           <div style="display:flex;gap:12px;align-items:center"><div class="inset" style="padding:8px 16px;border-radius:6px;font-size:15px;white-space:nowrap">${g.endless ? 'Trụ được' : 'Dừng ở đợt'} <b style="font-family:var(--title);font-size:34px;color:${th.hi}">${g.wave}</b><span style="font-family:var(--title);font-size:20px;color:${th.hi}">${g.endless ? ' đợt' : '/' + g.levelWaves}</span></div>
             <div style="flex:1"><div class="inset" style="height:12px;border-radius:4px;overflow:hidden"><i style="display:block;height:100%;width:${Math.min(1, g.wave / (g.endless ? endBest || 1 : g.levelWaves)) * 100}%;background:linear-gradient(90deg,${th.bar[0]},${th.bar[1]})"></i></div>
-            <div class="note" style="margin-top:4px">${g.endless ? `Kỷ lục vô tận ải này: đợt ${endBest}` : `Kỷ lục ải này: đợt ${s.best[lv]}`}</div></div></div>
+            <div class="note" style="margin-top:4px">${coop ? 'Chơi nhóm' : g.endless ? `Kỷ lục vô tận ải này: đợt ${endBest}` : `Kỷ lục ải này: đợt ${s.best[lv]}`}</div></div></div>
           <div class="res-tips"><div class="h">💡 MẸO LẦN SAU</div>
             <div class="t"><i>1</i><span><b>Ghép</b> 2 tướng cùng loại cùng sao và <b>hợp thể</b> đúng cặp để có tướng thần mạnh hơn hẳn.</span></div>
             <div class="t"><i>2</i><span>${tip2}</span></div>
             <div class="t"><i>3</i><span>Nâng cấp tướng bằng <b>vàng</b> giữa các đợt; mở khóa W, E, R trong Cây kỹ năng.</span></div></div>
           <div class="res-btns">
-            <button class="btn-gold" data-act="restart">↻ Chơi lại</button>
+            <button class="btn-gold" data-act="restart">${coop ? '🤝 Chơi nhóm tiếp' : '↻ Chơi lại'}</button>
             <button class="metal" style="color:#F2D27A" data-act="to-map">Bản đồ</button>
             <button class="metal" style="color:#F2D27A" data-act="to-menu">Menu chính</button></div>
         </div></div></div>`;
@@ -2197,6 +2501,11 @@ class UI {
     const sc = this.screen;
     const h = g.heroes[this.sel];
     const fail = (r) => { if (r !== true && typeof r === 'string') this.toast(r, '#E25A3A'); return r === true; };
+    // v141: thao tác lên trận đi qua this.cmd (chơi nhóm: gửi lệnh, kết quả về sau độ trễ)
+    const C = (name, args, then) => this.cmd(name, args, then);
+    const rs = () => { if (this.screen) this.renderScreen(true); };
+    if (d.act.startsWith('coop-')) { this.coopAct(d); return; }
+    if (d.act.startsWith('chat-')) { this.chatAct(d); return; }
     switch (d.act) {
       // ----- menu, truyện, chiến dịch, cài đặt
       case 'story-next': {
@@ -2216,7 +2525,7 @@ class UI {
       case 'diff': this.save.settings.hard = d.k === '1'; writeSave(this.save); this.renderCampaign(); break;
       case 'cp-go': this.save.last = this.cpSel; this.playLevel(this.cpSel, this.cpMode === 'endless'); break;
       case 'cp-mode': this.cpMode = d.k; this.renderCampaign(); break;
-      case 'mode-pick': $('#modes').hidden = true; this.cpMode = d.k; this.showCampaign(this.save.last); break;
+      case 'mode-pick': $('#modes').hidden = true; if (d.k === 'coop') { this.showCoop(); break; } this.cpMode = d.k; this.showCampaign(this.save.last); break;
       case 'mode-close': $('#modes').hidden = true; this.showMenu(); break;
       case 'set':
         this.save.settings[d.k] = !this.save.settings[d.k];
@@ -2299,8 +2608,8 @@ class UI {
         this.toast('Đã xoá tiến trình', '#E25A3A');
         this.renderSettings();
         break;
-      case 'restart': this.startLevel(g.level); break;
-      case 'to-map': this.showCampaign(g.level); break;
+      case 'restart': if (this.coopDone) { this.coopDone = false; this.showCoop(); break; } this.startLevel(g.level); break;
+      case 'to-map': if (this.coopDone) { this.coopDone = false; this.showCoop(); break; } this.showCampaign(g.level); break;
       case 'to-menu': $('#settings').hidden = true; if (g.started) this.bankStats(); this.showMenu(); break;
       case 'ro-sel': {
         this.rosterSel = d.type; this.renderRoster();
@@ -2316,7 +2625,7 @@ class UI {
         s.owned = s.owned || [];
         if (s.owned.includes(t) || (s.kho || 0) < c) break;
         s.kho -= c; s.owned.push(t); writeSave(s);
-        if (this.game.owned) this.game.owned.add(t);
+        if (this.game.owned && !COOP.on) this.game.owned.add(t);   // chơi nhóm: dùng được từ trận sau
         this.toast(`Đã mua ${HEROES[t].name}! Giờ có thể hợp thể ra trong trận`, '#6AE06A');
         this.renderRoster();
         break;
@@ -2364,19 +2673,20 @@ class UI {
       case 'ro-temple': location.href = 'den-anh-hung.html'; break;
       case 'next-level': this.save.last = Math.min(LEVELS.length - 1, g.level + 1); writeSave(this.save); this.showCampaign(this.save.last); break;
       case 'endless':
+        if (this.coopDone) break;
         g.endless = true;
         g.running = true;
         $('#result').hidden = true;
         this.saveRun();
-        this.toast('Năm nào cũng dâng nước: quái mạnh dần, boss mỗi 10 đợt', '#5AB4D6');
+        this.toast('♾ Vô tận: quái mạnh dần, boss mỗi 10 đợt, quân địch đổi chương mỗi 10 đợt', '#F2D27A');   // v159: trước "Năm nào cũng dâng nước" (chỉ hợp Sơn Tinh)
         break;
       case 'reward': this.pickReward(+d.i); break;
       case 'summon': this.pickSummon(d.type); break;
-      case 'mk-reroll': { const r = this.game.rerollMarket(); if (typeof r === 'string') this.toast(r, '#E25A3A'); this.sig.deck = null; break; }
+      case 'mk-reroll': C('rerollMarket', [], (r) => { if (typeof r === 'string') this.toast(r, '#E25A3A'); this.sig.deck = null; }); break;
       case 'rest-tog': this.restTog(d.id); break;
       case 'rest-done': this.restDone(true); break;
       case 'rest-skip': this.restDone(false); break;
-      case 'auto-merge': { const n = g.autoMerge(); this.toast(n ? `Đã ghép ${n} lần` : 'Không có cặp nào ghép được', n ? '#F2D27A' : '#E25A3A'); break; }
+      case 'auto-merge': C('autoMerge', [], (n) => this.toast(n ? `Đã ghép ${n} lần` : 'Không có cặp nào ghép được', n ? '#F2D27A' : '#E25A3A')); break;
       case 'fuse-strip': {
         const f = FUSION[+d.i]; const pr = g.fusionProgress(f);
         // sáng 2 tướng thành phần trên sân vài giây
@@ -2385,20 +2695,12 @@ class UI {
         if (pr.p < 1) {
           const why = [[f.a, pr.a], [f.b, pr.b]].map(([type, h]) => (h ? (g.fusionReady(h) === true ? `${HEROES[type].name} ✓` : g.fusionReady(h)) : `chưa có ${HEROES[type].name} trên sân`));
           this.toast(`<b>${HEROES[f.to].name} ${Math.floor(pr.p * 100)}%</b> · ${why.join(' · ')}`, RARITY[HEROES[f.to].legend].color); break; }
-        const r = g.fuse(pr.a.slot, pr.b.slot); if (r !== true) this.toast(r, '#E25A3A'); else this.sel = pr.b.slot;
+        const bs = pr.b.slot;
+        C('fuse', [pr.a.slot, bs], (r) => { if (r !== true) this.toast(r, '#E25A3A'); else this.sel = bs; });
         break;
       }
       case 'merge-any': this.mergeAny(); break;
       case 'fuse-with': this.fuseWith(+d.slot); break;
-      case 'evo-focus': {
-        // v147: đánh dấu 2 tướng thành phần trên sân + mở Cây hợp thể, sáng dòng công thức
-        const f = FUSION[+d.i]; if (!f) break;
-        this.fuseFocus = { i: +d.i, until: performance.now() + 6000 };
-        $('#legends').hidden = false; $('#drawer').hidden = true; this.renderLegends();
-        for (const r of $('#lg-grid').querySelectorAll('.asc-row')) r.classList.toggle('hl', +r.dataset.i === +d.i);
-        const hl = $('#lg-grid').querySelector('.asc-row.hl'); if (hl) hl.scrollIntoView({ block: 'nearest' });
-        break;
-      }
       case 'legend-open': for (const r of $('#lg-grid').querySelectorAll('.asc-row.hl')) r.classList.remove('hl'); $('#legends').hidden = !$('#legends').hidden; $('#drawer').hidden = true; this.renderLegends(); break;
       case 'deck-close': this.clearSel(); $('#more').hidden = true; break;
       case 'quit-run':
@@ -2420,18 +2722,19 @@ class UI {
         if (!h) break;
         const i = +d.i;
         const sk = HEROES[h.type].skills[i];
-        const r = skillLevel(h, i) ? g.upgradeSkill(h, i) : g.unlockSkill(h, i);
-        if (r === true) this.toast(`<b>${sk.name}</b> cấp ${skillLevel(h, i)} · ${esc(sk.info(skillN(h.level)))}`, '#F2D27A');
-        else this.toast(`<b>${sk.name}</b> (cấp ${skillLevel(h, i)}/${SKILL_MAX[i]}): ${r}<br><small>${esc(sk.info(skillN(h.level)))}</small>`, '#C8BFA8');
-        this.sig.deck = null;
+        C(skillLevel(h, i) ? 'upgradeSkill' : 'unlockSkill', [h, i], (r) => {
+          if (r === true) this.toast(`<b>${sk.name}</b> cấp ${skillLevel(h, i)} · ${esc(sk.info(skillN(h.level)))}`, '#F2D27A');
+          else this.toast(`<b>${sk.name}</b> (cấp ${skillLevel(h, i)}/${SKILL_MAX[i]}): ${r}<br><small>${esc(sk.info(skillN(h.level)))}</small>`, '#C8BFA8');
+          this.sig.deck = null;
+        });
         break;
       }
-      case 'hero-stats': this.statsOpen = !this.statsOpen; this.sig.deck = null; break;
       case 'sk-stat-deck': {
         if (!h) break;
-        const r = g.spendStat(h);
-        if (r !== true) this.toast(`Cộng chỉ số: ${r}. Lên cấp tướng để có điểm`, '#C8BFA8');
-        this.sig.deck = null;
+        C('spendStat', [h], (r) => {
+          if (r !== true) this.toast(`Cộng chỉ số: ${r}. Lên cấp tướng để có điểm`, '#C8BFA8');
+          this.sig.deck = null;
+        });
         break;
       }
       case 'moc':
@@ -2448,18 +2751,19 @@ class UI {
         if (!h) break;
         if (!this.sellArmed) { this.sellArmed = true; this.renderMore(); break; }
         $('#more').hidden = true;
+        if (COOP.on && !g.co.canAct(COOP.me, this.sel)) { this.toast('Đây là tướng của đồng đội', '#E25A3A'); break; }
         this.toast(`Đã hủy ${HEROES[h.type].name}: +${g.sellValue(h)} vàng`, '#F2D27A');
-        g.sellHero(this.sel);
+        C('sellHero', [this.sel]);
         this.clearSel();
         break;
       case 'levelup': if (h) this.doLevelUp(h); break;
-      case 'train': if (h) fail(g.trainHero(h)); break;
+      case 'train': if (h) C('trainHero', [h], fail); break;
       case 'auto-eq-all': {
-        const r = g.autoEquipAll();
-        this.toast(r.items ? `Mặc ${r.items} món cho ${r.heroes} tướng (tướng mạnh chọn trước)` : 'Cả đội đã mặc đồ tốt nhất trong túi', r.items ? '#6AE06A' : '#C8BFA8');
+        C('autoEquipAll', [], (r) => {
+          this.toast(r.items ? `Mặc ${r.items} món cho ${r.heroes} tướng (tướng mạnh chọn trước)` : 'Cả đội đã mặc đồ tốt nhất trong túi', r.items ? '#6AE06A' : '#C8BFA8');
+          this.sig.deck = null; rs();
+        });
         $('#more').hidden = true; $('#drawer').hidden = true;
-        this.sig.deck = null;
-        if (this.screen) this.renderScreen(true);
         break;
       }
       case 'set-uisize':
@@ -2473,24 +2777,25 @@ class UI {
         this.showSettings(!!this.game.started && !this.game.over);
         break;
       case 'auto-up-gear': {
-        const r = g.autoUpgradeGear();
-        this.toast(r.n ? `Nâng ${r.n} lần đồ đang mặc · −${fmt(r.spent)} vàng (tướng mạnh trước, chừa vàng triệu hồi)` : 'Chưa nâng được: thiếu vàng hoặc chưa mặc đồ', r.n ? '#6AE06A' : '#C8BFA8');
+        C('autoUpgradeGear', [], (r) => {
+          this.toast(r.n ? `Nâng ${r.n} lần đồ đang mặc · −${fmt(r.spent)} vàng (tướng mạnh trước, chừa vàng triệu hồi)` : 'Chưa nâng được: thiếu vàng hoặc chưa mặc đồ', r.n ? '#6AE06A' : '#C8BFA8');
+          this.sig.deck = null; rs();
+        });
         $('#more').hidden = true; $('#drawer').hidden = true;
-        this.sig.deck = null;
-        if (this.screen) this.renderScreen(true);
         break;
       }
       case 'auto-eq': {
         if (!h) { this.toast('Chọn một tướng trước', '#E25A3A'); break; }
-        const n = g.autoEquip(h);
-        this.toast(n ? `${HEROES[h.type].name} đã mặc ${n} món tốt hơn · lực chiến ${heroPower(h)}` : 'Đồ đang mặc đã là tốt nhất trong túi', n ? '#6AE06A' : '#C8BFA8');
+        C('autoEquip', [h], (n) => {
+          if (typeof n === 'string') return this.toast(n, '#E25A3A');
+          this.toast(n ? `${HEROES[h.type].name} đã mặc ${n} món tốt hơn · lực chiến ${heroPower(h)}` : 'Đồ đang mặc đã là tốt nhất trong túi', n ? '#6AE06A' : '#C8BFA8');
+          this.sig.deck = null; rs();
+        });
         $('#more').hidden = true;
-        this.sig.deck = null;
-        if (this.screen) this.renderScreen(true);
         break;
       }
-      case 'temper': if (fail(g.temper(+d.uid))) { this.toast('Tôi luyện thành công!', '#FFD66B'); this.renderScreen(true); } break;
-      case 'reroll': if (fail(g.reroll(+d.uid))) { this.toast('Tẩy luyện: đã rút lại dòng phụ', '#A86CE0'); this.renderScreen(true); } break;
+      case 'temper': C('temper', [+d.uid], (r) => { if (fail(r)) { this.toast('Tôi luyện thành công!', '#FFD66B'); rs(); } }); break;
+      case 'reroll': C('reroll', [+d.uid], (r) => { if (fail(r)) { this.toast('Tẩy luyện: đã rút lại dòng phụ', '#A86CE0'); rs(); } }); break;
       case 'open-evo': $('#more').hidden = true; if (h) h.notice.evo = false; this.openScreen('evo'); break;
       case 'open-bag': $('#more').hidden = true; this.openScreen('bag', { slot: null }); break;
       case 'slot': this.openScreen('bag', { slot: d.slot }); break;
@@ -2509,77 +2814,88 @@ class UI {
       }
       // Cây kỹ năng
       case 'sk-sel': sc.skill = +d.i; this.renderScreen(true); break;
-      case 'sk-up': if (h && fail(g.upgradeSkill(h, +d.i))) this.renderScreen(true); break;
-      case 'sk-stat': if (h && fail(g.spendStat(h))) this.renderScreen(true); break;
-      case 'sk-unlock': if (h && fail(g.unlockSkill(h, +d.i))) { this.toast(`Mở khóa [${SKILL_KEYS[+d.i]}] ${HEROES[h.type].skills[+d.i].name}!`, '#A86CE0'); this.renderScreen(true); } break;
+      case 'sk-up': if (h) C('upgradeSkill', [h, +d.i], (r) => { if (fail(r)) rs(); }); break;
+      case 'sk-stat': if (h) C('spendStat', [h], (r) => { if (fail(r)) rs(); }); break;
+      case 'sk-unlock': if (h) { const i = +d.i, nm = HEROES[h.type].skills[i].name; C('unlockSkill', [h, i], (r) => { if (fail(r)) { this.toast(`Mở khóa [${SKILL_KEYS[i]}] ${nm}!`, '#A86CE0'); rs(); } }); } break;
       case 'sk-level': if (h) { this.doLevelUp(h); this.renderScreen(true); } break;
       // Tiến hoá
-      case 'evolve': if (h && fail(g.evolve(h))) this.renderScreen(true); break;
-      case 'ascend': if (h && fail(g.ascend(h, d.to))) this.renderScreen(true); break;
+      case 'evolve': if (h) C('evolve', [h], (r) => { if (fail(r)) rs(); }); break;
+      case 'ascend': if (h) C('ascend', [h, d.to], (r) => { if (fail(r)) rs(); }); break;
       // Núi Tản Viên
-      case 'soil': if (fail(g.soilMountain())) { this.toast('Bồi đất: núi cao thêm!', '#F2D27A'); this.renderScreen(true); } break;
+      case 'soil': C('soilMountain', [], (r) => { if (fail(r)) { this.toast('Bồi đất: núi cao thêm!', '#F2D27A'); rs(); } }); break;
       case 'harvest': {
-        const n = g.harvestHerbs();
-        if (n) this.toast(`Hái ${n} Linh Chi: +${n * MOUNTAIN.herbGold} vàng, tướng hồi máu`, '#6AE06A');
-        this.renderScreen(true);
+        C('harvestHerbs', [], (n) => {
+          if (n) this.toast(`Hái ${n} Linh Chi: +${n * MOUNTAIN.herbGold} vàng, tướng hồi máu`, '#6AE06A');
+          rs();
+        });
         break;
       }
       // Lò đúc
       case 'recipe': sc.recipe = d.id; this.renderScreen(true); break;
       case 'craft':
-        if (g.craft(d.id)) { this.toast(`Đã đúc ${ITEMS[d.id].name}!`, RARITY[ITEMS[d.id].rarity].color); sc.justCrafted = d.id; }
-        else this.toast(g.inventory.length >= CONFIG.bagSize ? 'Túi đầy' : 'Thiếu nguyên liệu hoặc vàng', '#E25A3A');
-        this.renderScreen(true);
+        C('craft', [d.id], (r) => {
+          if (r) { this.toast(`Đã đúc ${ITEMS[d.id].name}!`, RARITY[ITEMS[d.id].rarity].color); if (this.screen) this.screen.justCrafted = d.id; }
+          else this.toast(g.inventory.length >= CONFIG.bagSize ? 'Túi đầy' : 'Thiếu nguyên liệu hoặc vàng', '#E25A3A');
+          rs();
+        });
         break;
       case 'shop-sel': sc.shop = d.id; this.renderScreen(true); break;
       case 'sh-tab': sc.shopTab = d.k; this.renderScreen(true); break;
       case 'sh-sel': sc.si = +d.i; this.renderScreen(true); break;
-      case 'sh-reroll': if (fail(g.rerollShop())) { sc.si = 0; this.renderScreen(true); } break;
+      case 'sh-reroll': C('rerollShop', [], (r) => { if (fail(r)) { if (this.screen) this.screen.si = 0; rs(); } }); break;
       case 'sh-buy':
       case 'sh-buy-eq': {
-        const o = g.shop[+d.i];
-        const r = g.buyShop(+d.i);
-        if (r && r.uid) {
-          this.toast(`Đã mua ${ITEMS[r.id].name}`, RARITY[r.rarity].color);
-          if (d.act === 'sh-buy-eq' && h && fail(g.equip(h, r.uid, slotFor(h, r)))) this.toast(`${HEROES[h.type].name} đã mặc ${ITEMS[o.inst.id].name}`, '#6AE06A');
-        } else fail(r);
-        this.renderScreen(true);
+        const eq = d.act === 'sh-buy-eq' && h;
+        C('buyShop', [+d.i], (r) => {
+          if (r && r.uid) {
+            this.toast(`Đã mua ${ITEMS[r.id].name}`, RARITY[r.rarity].color);
+            if (eq) C('equip', [h, r.uid, slotFor(h, r)], (e) => { if (fail(e)) this.toast(`${HEROES[h.type].name} đã mặc ${ITEMS[r.id].name}`, '#6AE06A'); rs(); });
+          } else fail(r);
+          rs();
+        });
         break;
       }
       case 'quick-craft': {
-        const r = g.quickCraft(d.id);
-        if (r && r.uid) { this.toast(`Đã đúc ${ITEMS[d.id].name}!`, RARITY[ITEMS[d.id].rarity].color); sc.opened = r.uid; } else fail(r);
-        this.renderScreen(true);
+        C('quickCraft', [d.id], (r) => {
+          if (r && r.uid) { this.toast(`Đã đúc ${ITEMS[d.id].name}!`, RARITY[ITEMS[d.id].rarity].color); if (this.screen) this.screen.opened = r.uid; } else fail(r);
+          rs();
+        });
         break;
       }
       case 'buy': {
-        const inst = g.buy(d.id);
-        if (inst) { g.flags.shopOpened = true; this.toast(`Mua ${ITEMS[d.id].name}`, '#F2D27A'); }
-        else this.toast(g.inventory.length >= CONFIG.bagSize ? 'Túi đầy' : `Cần ${ITEMS[d.id].price} vàng`, '#E25A3A');
-        this.renderScreen(true);
+        C('buy', [d.id], (inst) => {
+          if (inst && inst !== true && typeof inst !== 'string') { g.flags.shopOpened = true; this.toast(`Mua ${ITEMS[d.id].name}`, '#F2D27A'); }
+          else this.toast(typeof inst === 'string' ? inst : g.inventory.length >= CONFIG.bagSize ? 'Túi đầy' : `Cần ${ITEMS[d.id].price} vàng`, '#E25A3A');
+          rs();
+        });
         break;
       }
       case 'buy-craft': {
         const r = Object.keys(ITEMS).find((id) => ITEMS[id].recipe && ITEMS[id].recipe.parts.includes(d.id));
-        if (g.buy(d.id) && r && !g.missingParts(r).length) {
-          if (g.craft(r)) this.toast(`Đã đúc ${ITEMS[r].name}!`, RARITY[ITEMS[r].rarity].color);
-        } else this.toast('Chưa đủ để ghép', '#E25A3A');
-        this.renderScreen(true);
+        C('buy', [d.id], (inst) => {
+          if (inst && typeof inst === 'object' && r && !g.missingParts(r).length) {
+            C('craft', [r], (ok) => { if (ok && typeof ok !== 'string') this.toast(`Đã đúc ${ITEMS[r].name}!`, RARITY[ITEMS[r].rarity].color); rs(); });
+          } else this.toast('Chưa đủ để ghép', '#E25A3A');
+          rs();
+        });
         break;
       }
       case 'chest': {
-        const inst = g.buyChest(d.k);
-        if (!inst) { this.toast(g.inventory.length >= CONFIG.bagSize ? 'Túi đầy' : 'Chưa đủ vàng', '#E25A3A'); break; }
-        sc.opened = inst.uid;
-        sc.shake = true;
-        this.renderScreen(true);
-        sc.shake = false;
+        C('buyChest', [d.k], (inst) => {
+          if (!inst || typeof inst !== 'object') { this.toast(typeof inst === 'string' ? inst : g.inventory.length >= CONFIG.bagSize ? 'Túi đầy' : 'Chưa đủ vàng', '#E25A3A'); return; }
+          const s2 = this.screen;
+          if (!s2) return;
+          s2.opened = inst.uid;
+          s2.shake = true;
+          this.renderScreen(true);
+          s2.shake = false;
+        });
         break;
       }
       case 'equip-new': {
         if (!h) { this.toast('Chọn một tướng trên bản đồ trước', '#E25A3A'); break; }
-        if (fail(g.equip(h, +d.uid))) { this.toast(`${HEROES[h.type].name} đã đeo ${ITEMS[g.findItem(+d.uid).inst.id].name}`, '#6AE06A'); sc.opened = null; }
-        this.renderScreen(true);
+        const it = g.findItem(+d.uid), nm = it && ITEMS[it.inst.id].name;
+        C('equip', [h, +d.uid], (r) => { if (fail(r)) { this.toast(`${HEROES[h.type].name} đã đeo ${nm}`, '#6AE06A'); if (this.screen) this.screen.opened = null; } rs(); });
         break;
       }
       case 'stash': sc.opened = null; this.renderScreen(true); break;
@@ -2588,7 +2904,7 @@ class UI {
         // chạm lần hai vào món đang chọn: đeo luôn cho tướng
         const inst = g.inventory.find((i) => i.uid === +d.uid);
         if (sc.pick === +d.uid && h && inst && canEquip(h.type, inst.id)) {
-          if (fail(g.equip(h, inst.uid, slotFor(h, inst)))) this.toast(`Đã đeo ${ITEMS[inst.id].name}`, '#6AE06A');
+          C('equip', [h, inst.uid, slotFor(h, inst)], (r) => { if (fail(r)) this.toast(`Đã đeo ${ITEMS[inst.id].name}`, '#6AE06A'); rs(); });
         } else sc.pick = +d.uid;
         this.renderScreen(true);
         break;
@@ -2601,18 +2917,19 @@ class UI {
         this.renderScreen(true);
         break;
       }
-      case 'equip': if (h && fail(g.equip(h, +d.uid))) this.renderScreen(true); break;
-      case 'unequip': if (h && fail(g.unequip(h, d.slot))) this.renderScreen(true); break;
-      case 'enhance': if (fail(g.enhance(+d.uid))) { this.toast('Cường hóa thành công!', '#FFD66B'); this.renderScreen(true); } break;
-      case 'promote': if (fail(g.promote(+d.uid))) { this.toast('Thăng phẩm!', '#A86CE0'); this.renderScreen(true); } break;
-      case 'lock': g.toggleLock(+d.uid); this.renderScreen(true); break;
+      case 'equip': if (h) C('equip', [h, +d.uid], (r) => { if (fail(r)) rs(); }); break;
+      case 'unequip': if (h) C('unequip', [h, d.slot], (r) => { if (fail(r)) rs(); }); break;
+      case 'enhance': C('enhance', [+d.uid], (r) => { if (fail(r)) { this.toast('Cường hóa thành công!', '#FFD66B'); rs(); } }); break;
+      case 'promote': C('promote', [+d.uid], (r) => { if (fail(r)) { this.toast('Thăng phẩm!', '#A86CE0'); rs(); } }); break;
+      case 'lock': C('toggleLock', [+d.uid], rs); break;
       case 'scrap': {
-        const v = g.scrap(+d.uid);
-        if (typeof v === 'number') { this.toast(`Đổi ra ${v} vàng`, '#F2D27A'); sc.pick = null; } else this.toast(v, '#E25A3A');
-        this.renderScreen(true);
+        C('scrap', [+d.uid], (v) => {
+          if (typeof v === 'number') { this.toast(`Đổi ra ${v} vàng`, '#F2D27A'); if (this.screen) this.screen.pick = null; } else this.toast(v, '#E25A3A');
+          rs();
+        });
         break;
       }
-      case 'sort': g.sortBag(); this.renderScreen(true); break;
+      case 'sort': C('sortBag', [], rs); break;
       case 'flt': {
         const f = this.scrapFilter;
         f.rarities = f.rarities.includes(d.r) ? f.rarities.filter((x) => x !== d.r) : [...f.rarities, d.r];
@@ -2623,8 +2940,7 @@ class UI {
       case 'open-scrap': sc.kind = 'scrap'; this.renderScreen(true); break;
       case 'back-bag': sc.kind = 'bag'; this.renderScreen(true); break;
       case 'scrap-go': {
-        const r = g.scrapMany(this.scrapFilter);
-        this.toast(`Đã đổi ${r.count} món: +${fmt(r.gold)} vàng`, '#F2D27A');
+        C('scrapMany', [{ ...this.scrapFilter }], (r) => { if (r && r.count !== undefined) this.toast(`Đã đổi ${r.count} món: +${fmt(r.gold)} vàng`, '#F2D27A'); rs(); });
         sc.kind = 'bag';
         sc.pick = null;
         this.renderScreen(true);
@@ -2646,6 +2962,7 @@ class UI {
       if (first < 0) return this.toast('Chưa có tướng nào trên sân', '#E25A3A');
       this.sel = first;
     }
+    if (kind === 'bag') this.bagSeen = { run: g.runId, uids: new Set(g.inventory.map((i) => i.uid)) };
     if (kind === 'bag' && !g.heroes[this.sel]) {
       const first = g.heroes.findIndex(Boolean);
       if (first >= 0) this.sel = first;
@@ -3108,7 +3425,7 @@ class UI {
       </div>`;
   }
 
-  // v147: CÂY PHÁT TRIỂN — tướng này ghép từ đâu / sẽ hợp thể thành tướng nào (dùng chung: Anh Hùng, chọn đội, trong trận)
+  // v147: CÂY PHÁT TRIỂN — tướng này ghép từ đâu / sẽ hợp thể thành tướng nào (dùng chung: Anh Hùng, chọn đội)
   evolveTree(t) {
     const owned = new Set(this.save.owned || []);
     const NEED = { epic: `2 tướng ${'★'.repeat(COSTS.ascendTier)}`, legendary: `Thần tinh ${'★'.repeat(COSTS.ascendTier2)} + kỹ năng tối đa` };
@@ -3138,22 +3455,6 @@ class UI {
     if (!body) return '';
     return `<div class="ev-tree inset" style="--rc:${d.legend ? RARITY[d.legend].color : '#C8BFA8'}"><div class="ev-h">${title}<small>chạm chân dung để xem tướng</small></div>${body}</div>`;
   }
-  // gợi ý 1 dòng trong trận: hợp thể gần nhất của tướng h (đối tác trên sân, điều kiện còn thiếu)
-  evolveHint(h) {
-    const g = this.game;
-    const opts = FUSION.map((f, i) => ({ f, i })).filter(({ f }) => f.a === h.type || f.b === h.type).map((o) => {
-      const pt = o.f.a === h.type ? o.f.b : o.f.a;
-      const mate = g.heroes.filter((x) => x && x !== h && x.type === pt).sort((x, y) => (y.tier || 0) - (x.tier || 0) || y.level - x.level)[0];
-      const mr = mate ? g.fusionReady(mate) : null, sr = g.fusionReady(h);
-      const star = HEROES[o.f.to].legend === 'legendary' ? `Thần tinh ${'★'.repeat(COSTS.ascendTier2)}` : '★'.repeat(COSTS.ascendTier);
-      const need = !g.ownsHero(o.f.to) ? `chưa có ${HEROES[o.f.to].name}` : sr !== true ? sr.replace(HEROES[h.type].name + ' ', '')
-        : !mate ? `cần ${HEROES[pt].name} ${star}` : mr !== true ? mr : '';
-      const score = (g.ownsHero(o.f.to) ? 4 : 0) + (mate ? 2 : 0) + (sr === true ? 1 : 0) + (mate && mr === true ? 1 : 0);
-      return { ...o, pt, need, score };
-    }).sort((a, b) => b.score - a.score);
-    return opts;
-  }
-
   // dòng "hợp nhất cho tướng nào" của một món (lực chiến tăng bao nhiêu)
   bestFor(inst) {
     const g = this.game;
