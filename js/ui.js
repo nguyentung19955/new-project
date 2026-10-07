@@ -160,7 +160,11 @@ const BOSS_LINES = {
 const RUN_CHIP = '<span class="chip run">Quái vẫn đang chạy</span>';
 
 // v111: Ấn Phù vẽ tay (assets/runes/<mã ấn>.png, cắt bằng tools/cat-runes.py); thiếu ảnh thì hiện ký hiệu cũ
-const runeIc = (r) => !hasAsset(`runes/${r.id}.png`) ? r.ic : `<img class="rimg" src="${assetSrc(`runes/${r.id}.png`)}" alt="${r.ic}" onerror="this.replaceWith(this.alt)">`;
+// pixel art (?pixel=1, js/pixel.js): tra mã → ảnh pixel ấn phù (an-phu/n-dmg) / thần khí (than-khi/giong-giap); '' = chưa có → hình cũ
+const pxRuneUrl = (r) => (typeof pxUrl === 'function' && pxUrl('an-phu', r.id.replace(/_/g, '-'))) || '';
+const pxRelicUrl = (t, sys) => (typeof pxUrl === 'function' && pxUrl('than-khi', `${t}-${sys.id}`)) || '';
+const pxTipIc = (u) => (u ? `<img class='tip-px' src='${u}' alt=''>` : '');
+const runeIc = (r) => pxRuneUrl(r) ? `<img class="rimg px" src="${pxRuneUrl(r)}" alt="${r.ic}">` : !hasAsset(`runes/${r.id}.png`) ? r.ic : `<img class="rimg" src="${assetSrc(`runes/${r.id}.png`)}" alt="${r.ic}" onerror="this.replaceWith(this.alt)">`;
 
 // Icon: ưu tiên ảnh vẽ tay trong assets/ (nếu đã có), không thì dùng hình vector
 // v182: ô có mô tả khi rê chuột / giữ tay (data-skt = kỹ năng thứ i của tướng đang chọn, data-skr = "loại:i" ở màn Anh Hùng)
@@ -2546,7 +2550,7 @@ class UI {
       const lv = L[sys.id] || 0, c = LEGACY_COST[lv];
       const pips = Array.from({ length: LEGACY_MAX }, (_, i) => `<i class="${i < lv ? 'on' : ''} ${sys.ms.some((m) => m.lv === i + 1) ? 'ms' : ''}"></i>`).join('');
       return `<div class="lg-sys">
-        <div class="lg-h" data-tip-avoid=".lg-sys" data-tip="${esc(`<b>${esc(sys.name)}</b><small>Thần Khí · cấp ${lv}/${LEGACY_MAX}</small><div class='st-rows'><div class='st-r'><span>Tối đa (cấp ${LEGACY_MAX})</span><b><em>${legacyPerText(sys, LEGACY_MAX)}</em></b></div>${lv < LEGACY_MAX ? `<div class='st-r'><span>Còn cần</span><b>${fmt(LEGACY_COST.slice(lv).reduce((x, y) => x + y, 0))} Ngân khố (${LEGACY_MAX - lv} cấp)</b></div><div class='st-r ${kho >= c ? 'ok' : 'no'}'><span>Đang có</span><b>${fmt(kho)}${kho >= c ? ' · đủ nâng cấp kế ✓' : ` · thiếu ${fmt(c - kho)} cho cấp ${lv + 1}`}</b></div>` : '<small>Đã tối đa</small>'}</div>`)}"><span class="lg-ic">${RELIC_PACK.has(t) ? `<img src="${assetSrc(`packs/${t}/tk-${si + 1}.png`)}" alt="">` : emoArt(sys.ic)}</span><div><b>${sys.name}</b><small>${esc(sys.desc)}</small></div></div>
+        <div class="lg-h" data-tip-avoid=".lg-sys" data-tip="${esc(`<b>${pxTipIc(pxRelicUrl(t, sys))}${esc(sys.name)}</b><small>Thần Khí · cấp ${lv}/${LEGACY_MAX}</small><div class='st-rows'><div class='st-r'><span>Tối đa (cấp ${LEGACY_MAX})</span><b><em>${legacyPerText(sys, LEGACY_MAX)}</em></b></div>${lv < LEGACY_MAX ? `<div class='st-r'><span>Còn cần</span><b>${fmt(LEGACY_COST.slice(lv).reduce((x, y) => x + y, 0))} Ngân khố (${LEGACY_MAX - lv} cấp)</b></div><div class='st-r ${kho >= c ? 'ok' : 'no'}'><span>Đang có</span><b>${fmt(kho)}${kho >= c ? ' · đủ nâng cấp kế ✓' : ` · thiếu ${fmt(c - kho)} cho cấp ${lv + 1}`}</b></div>` : '<small>Đã tối đa</small>'}</div>`)}"><span class="lg-ic">${pxRelicUrl(t, sys) ? `<img class="px" src="${pxRelicUrl(t, sys)}" alt="">` : RELIC_PACK.has(t) ? `<img src="${assetSrc(`packs/${t}/tk-${si + 1}.png`)}" alt="">` : emoArt(sys.ic)}</span><div><b>${sys.name}</b><small>${esc(sys.desc)}</small></div></div>
         <div class="lg-pips">${pips}<span>${lv}/${LEGACY_MAX}</span></div>
         <div class="lg-now">${lv ? legacyPerText(sys, lv) : 'Chưa nâng'}${lv < LEGACY_MAX ? `<br><small>Cấp ${lv + 1}: ${legacyPerText(sys, lv + 1)}</small>` : ''}</div>
         ${sys.ms.map((m) => `<div class="lg-ms ${lv >= m.lv ? 'got' : ''}"><span>Cấp ${m.lv}</span>${esc(m.t)}</div>`).join('')}
@@ -2617,7 +2621,7 @@ class UI {
     const open = this.runeOpen(r), cost = runePt(r);
     const node = (x) => {
       const l = lvs[x.id] || 0, op = this.runeOpen(x);
-      return `<button class="rn-node ${x.skill ? 'sk' : ''} ${l ? 'has' : ''} ${l >= x.max ? 'full' : ''} ${op ? '' : 'lock'} ${x.id === r.id ? 'on' : ''}" data-act="rn-sel" data-k="${x.id}" data-tip-avoid=".rn-board|.rn-col" aria-label="${esc(x.name)}" data-tip="${esc(`<b>${esc(x.name)}</b><small>${x.skill ? 'Ấn kỹ năng · 3 điểm / cấp' : 'Ấn chỉ số · 1 điểm / cấp'} · cấp ${l}/${x.max}</small><p>${l ? `Cấp ${l}: ${esc(x.fmt(runeVal(x, l)))}` : 'Chưa khắc'}</p>${l < x.max ? `<div class='st-rows'><div class='st-r'><span>Cấp ${l + 1}</span><b><em>${esc(x.fmt(runeVal(x, l + 1)))}</em></b></div><div class='st-r ${op ? 'ok' : 'no'}'><span>Điều kiện</span><b>${op ? 'Đã mở ✓' : `${RUNE_ROW_NEED[x.row]} cấp trong nhánh`}</b></div><div class='st-r'><span>Giá</span><b>${runePt(x)} điểm Ấn</b></div></div>` : '<small>Đã tối đa</small>'}`)}">
+      return `<button class="rn-node ${x.skill ? 'sk' : ''} ${l ? 'has' : ''} ${l >= x.max ? 'full' : ''} ${op ? '' : 'lock'} ${x.id === r.id ? 'on' : ''}" data-act="rn-sel" data-k="${x.id}" data-tip-avoid=".rn-board|.rn-col" aria-label="${esc(x.name)}" data-tip="${esc(`<b>${pxTipIc(pxRuneUrl(x))}${esc(x.name)}</b><small>${x.skill ? 'Ấn kỹ năng · 3 điểm / cấp' : 'Ấn chỉ số · 1 điểm / cấp'} · cấp ${l}/${x.max}</small><p>${l ? `Cấp ${l}: ${esc(x.fmt(runeVal(x, l)))}` : 'Chưa khắc'}</p>${l < x.max ? `<div class='st-rows'><div class='st-r'><span>Cấp ${l + 1}</span><b><em>${esc(x.fmt(runeVal(x, l + 1)))}</em></b></div><div class='st-r ${op ? 'ok' : 'no'}'><span>Điều kiện</span><b>${op ? 'Đã mở ✓' : `${RUNE_ROW_NEED[x.row]} cấp trong nhánh`}</b></div><div class='st-r'><span>Giá</span><b>${runePt(x)} điểm Ấn</b></div></div>` : '<small>Đã tối đa</small>'}`)}">
         <span class="ri">${runeIc(x)}</span><span class="rl">${l}/${x.max}</span></button>`;
     };
     const col = (b) => {

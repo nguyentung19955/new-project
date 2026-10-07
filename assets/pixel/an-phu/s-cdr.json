@@ -1,0 +1,25 @@
+{
+ "code": "s-cdr",
+ "group": "an-phu",
+ "name": "Thời Khắc",
+ "w": 24,
+ "h": 24,
+ "ax": 12,
+ "ay": 23,
+ "bbox": [
+  1,
+  1,
+  22,
+  22
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": true
+  }
+ },
+ "sheet": "s-cdr.png"
+}

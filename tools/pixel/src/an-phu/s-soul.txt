@@ -1,0 +1,47 @@
+# Ấn phù Hồn Nổ (Ấn Sấm, hàng 4 — ấn kỹ năng: viền đôi vàng răng cưa) — con dấu đồng tròn, vành màu nhánh #7FA8F0, mặt lõm,
+# ký hiệu khảm vàng: hồn đầu lâu lửa ma — quái nổ. Chấm vòng tròn Đông Sơn trên vành. Nguồn: docs/pixel/DANH-SACH.md Lô 39–40 · js/data.js RUNES (s_soul)
+name: Hồn Nổ
+size: 24x24
+anchor: 12,23
+colors:
+  a = vang-sang
+  b = dong
+  c = nuoc-sang
+  d = cham
+  e = cham-toi
+  f = ngoc-sang
+  g = ngoc
+  k = vien
+  h = trang
+  i = sang
+part o
+........................
+.........abbbba.........
+......abbbcddcbbba......
+.....abceddeeddecba.....
+....abddeeeeeeeeddba....
+...abdeeeeeeeeeeeedba...
+..abceeeeeeeeeeeeeecba..
+..acdeeeeefeeefeeeddca..
+..beeeeeefgkfegfeeeeeb..
+.abceeeeegffgffgkeedcba.
+.acdeeeeehhhhhhhkeeddca.
+.aceeeeehiiiiiihheeeeca.
+.aceeeeehgkiikghhkeedca.
+.adceeeehgkiikghhkedcda.
+.baceeeeehiikihhkkedcab.
+..beeeeeehkhkhkhkeedeb..
+..adceeeeehhhhhekedcda..
+..badeeeeeekkkkkeeddab..
+...badedeeeeeeeedddab...
+....badceddeedddcdab....
+.....badedcedcdedab.....
+......bbbaddddabbb......
+.........bbbbbb.........
+........................
+end
+anim main fps=1 loop
+frame main
+  use o
+  outline
+end

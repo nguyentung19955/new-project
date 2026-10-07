@@ -2141,3 +2141,12 @@ html.pixel img[src*="pixel/"], html.pixel canvas:not(#game) { image-rendering: p
 html.pixel { --title: 'Handjet', 'Alegreya SC', 'Palatino Linotype', Georgia, serif; }
 html.pixel .ttl, html.pixel #tb-wave, html.pixel #banner b, html.pixel #bossbar .bn span:first-child { font-weight: 700; letter-spacing: .02em; }
 html.pixel .tb-res b, html.pixel #tb-wave { font-family: 'VT323', var(--body); font-weight: 400; font-size: 1.2em; line-height: 1; }
+/* claude/pixel-anphu-thankhi: ấn phù / thần khí pixel 24×24 (js/ui.js pxRuneUrl · pxRelicUrl) — con dấu tròn phủ kín ô */
+.rn-node .ri .rimg.px { width: 40px; height: 40px; }
+.rn-node.sk .ri .rimg.px { width: 38px; height: 38px; }
+.rn-big .rimg.px { width: 48px; height: 48px; }
+.rn-node:not(.has) .ri:has(.rimg.px) { filter: grayscale(.5) brightness(.85); }
+.lg-ic:has(img.px) { width: 52px; height: 52px; }
+.lg-ic img.px { width: 48px; height: 48px; }
+#sk-tip img.tip-px { display: inline-block; width: 32px; height: 32px; vertical-align: middle; margin: -4px 6px -4px 0; }
+@media (max-height: 400px) { .rn-node .ri .rimg.px { width: 34px; height: 34px; } .rn-node.sk .ri .rimg.px { width: 32px; height: 32px; } }

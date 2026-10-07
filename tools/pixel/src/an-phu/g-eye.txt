@@ -1,0 +1,48 @@
+# Ấn phù Mắt Ưng (Ấn Gió, hàng 4 — ấn kỹ năng: viền đôi vàng răng cưa) — con dấu đồng tròn, vành màu nhánh #6FCB8A, mặt lõm,
+# ký hiệu khảm vàng: mắt ưng — đòn đầu chí mạng. Chấm vòng tròn Đông Sơn trên vành. Nguồn: docs/pixel/DANH-SACH.md Lô 39–40 · js/data.js RUNES (g_eye)
+name: Mắt Ưng
+size: 24x24
+anchor: 12,23
+colors:
+  a = vang-sang
+  b = dong
+  c = reu-sang
+  d = reu-toi
+  e = la-toi
+  f = vang-nghe
+  g = reu
+  k = vien
+  h = ngoc
+  i = trang
+  j = nuoc
+part o
+........................
+.........abbbba.........
+......abbbcddcbbba......
+.....abcdddeedddcba.....
+....abddeeeddeeeddba....
+...abdeeddddddddeedba...
+..abceddddddddddddecba..
+..acdeddddfffffdddgdca..
+..bdedddffdkkkkffddedb..
+.abceddfdkfffffdkfdgcba.
+.acdedddkfhhhhhfddkgdca.
+.acedddfdfhijjhfkfddeca.
+.acedddfkfhjjjhfkfkdgca.
+.adcedddkfhhhhhfkdkgcda.
+.baceddfddfffffkkfdgcab.
+..bdedddffdkkkkffdkgdb..
+..adcedddkfffffdkkgcda..
+..badedddddkkkkkddgdab..
+...badegddddddddggdab...
+....badceggddgggcdab....
+.....badddcegcdddab.....
+......bbbaddddabbb......
+.........bbbbbb.........
+........................
+end
+anim main fps=1 loop
+frame main
+  use o
+  outline
+end

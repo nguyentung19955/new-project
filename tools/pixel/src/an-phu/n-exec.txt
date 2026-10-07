@@ -1,0 +1,48 @@
+# Ấn phù Núi Đè (Ấn Núi, hàng 4 — ấn kỹ năng: viền đôi vàng răng cưa) — con dấu đồng tròn, vành màu nhánh #D9844A, mặt lõm,
+# ký hiệu khảm vàng: núi đổ đè quân giặc — hạ gục quái thấp máu. Chấm vòng tròn Đông Sơn trên vành. Nguồn: docs/pixel/DANH-SACH.md Lô 39–40 · js/data.js RUNES (n_exec)
+name: Núi Đè
+size: 24x24
+anchor: 12,23
+colors:
+  a = vang-sang
+  b = dong
+  c = dong-sang
+  d = dong-toi
+  e = toi
+  f = dat-toi
+  g = dat
+  h = vang-nghe
+  k = vien
+  i = son
+  j = son-sang
+part o
+........................
+.........abbbba.........
+......abbbcddcbbba......
+.....abcdddeedddcba.....
+....abddeeeffeeeddba....
+...abdeeffffffffeedba...
+..abceffffffffffffecba..
+..acdefffffaffffffgdca..
+..bdefffffahhffffffedb..
+.abceffffahhhhffaffgcba.
+.acdeffffahbhhhahhfgdca.
+.aceffffahhbbhhhhbkfeca.
+.acefffahhbbbhhhbbkfgca.
+.adceffhhbbbbbhbbbkgcda.
+.bacefffkkkkkkkkkkkgcab.
+..bdeffbfbfijfbffbfgdb..
+..adcefbbijjjjiibbkcda..
+..badeffkkkkkkkkkkkdab..
+...badegffffffffggdab...
+....badceggffgggcdab....
+.....badddcegcdddab.....
+......bbbaddddabbb......
+.........bbbbbb.........
+........................
+end
+anim main fps=1 loop
+frame main
+  use o
+  outline
+end
