@@ -71,16 +71,8 @@ async function rosterCase(w, h, tag) {
 async function deckCase(w, h, tag) {
   const { browser, page, errors } = await open(w, h, { secrets: ['h.lactuong'] });
   await page.evaluate(() => ui.playLevel(0, false)); await page.waitForSelector('#prep:not([hidden])');
-  await page.click('[data-act=deck-open]'); await page.waitForTimeout(250);
-  const on = await look(page, '.dk-pick.on'), off = await look(page, '.dk-pick:not(.on)');
-  ok(on && off, `[${tag}] bảng chọn đội có thẻ chọn / chưa chọn`);
-  ok(!isGold(on.bc) && !glows(on.sh) && !isGold(off.bc), `[${tag}] chọn đội: thẻ Thường (cả đang chọn) không vàng, không sáng (${on.bc}; ${on.sh})`);
-  ok(on.bc !== off.bc, `[${tag}] chọn đội: thẻ đang chọn vẫn phân biệt được`);
-  const bad = await page.evaluate(() => [...document.querySelectorAll('.dk-box, .dk-grid')].filter((x) => x.scrollWidth > x.clientWidth + 1).length);
-  ok(!bad, `[${tag}] chọn đội không tràn ngang`);
-  await page.screenshot({ path: path.join(SHOT, `chon-doi-${tag}.png`) });
+  // claude/bo-chon-doi: không còn bảng chọn đội — chỉ kiểm tra chân dung tướng trong trận
   // trong trận: chân dung tướng đang chọn (.dk-pt) theo bậc
-  await page.click('[data-act=deck-done]').catch(() => {}); await page.waitForTimeout(150);
   await page.click('[data-act=prep-go]'); await page.waitForTimeout(300);
   for (const [t, kind] of [['lactuong', 'thuong'], ['lyngu', 'tim'], ['llq', 'vang']]) {
     await page.evaluate(([t, i]) => { const g = game; const s = g.freeSlots()[0]; const hh = g.spawnHero(s, t, {}); if (HEROES[t].legend) { hh.from = t; hh.lineage = []; } hh.summonT = 0; ui.sel = s; ui.spot = -1; ui.armed = null; ui.updateDeck(); }, [t, kind]);
@@ -98,7 +90,7 @@ async function deckCase(w, h, tag) {
 (async () => {
   for (const [w, h, tag] of [[844, 390, '844x390'], [667, 375, '667x375'], [390, 844, 'doc-390x844']]) {
     console.log(`— Anh Hùng ${tag}`); await rosterCase(w, h, tag);
-    console.log(`— Chọn đội ${tag}`); await deckCase(w, h, tag);
+    console.log(`— Chân dung trong trận ${tag}`); await deckCase(w, h, tag);
   }
   console.log('XONG: tất cả đạt');
 })().catch((e) => { console.error(e.message); process.exit(1); });

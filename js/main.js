@@ -1802,9 +1802,14 @@ function drawEffects(t) {
         // vàng thêm khi hạ quái (Bồ Lúa Thần, dòng phụ vàng)
         const yy = f.y - 18 * Math.sin(Math.min(1, p * 1.5) * Math.PI * 0.5);
         ctx.globalAlpha = k;
-        circle(ctx, f.x, yy, 4.5, '#B8852A');
-        circle(ctx, f.x, yy, 3.5, '#F2D27A');
-        ctx.fillStyle = '#7A5418'; ctx.fillRect(f.x - 1, yy - 1, 2, 2);
+        // dùng ảnh có sẵn: đồng xu lỗ vuông (ui-tai-nguyen-1); chưa có / chưa tải xong thì vẽ tròn như cũ
+        const ci = asset('ui/ui-tai-nguyen-1.png', true);
+        if (ci) ctx.drawImage(ci, f.x - 6, yy - 6, 12, 12);
+        else {
+          circle(ctx, f.x, yy, 4.5, '#B8852A');
+          circle(ctx, f.x, yy, 3.5, '#F2D27A');
+          ctx.fillStyle = '#7A5418'; ctx.fillRect(f.x - 1, yy - 1, 2, 2);
+        }
         break;
       }
       case 'corpse': {
@@ -1825,6 +1830,13 @@ function drawEffects(t) {
       case 'drop': {
         ctx.globalAlpha = k;
         const y = f.y - 20 - Math.sin(Math.min(1, p * 2) * Math.PI) * 24;
+        // dùng ảnh có sẵn: rương đồng (ui-menu-1-3), quầng màu theo độ hiếm; chưa có ảnh thì hộp + sao như cũ
+        const bi = asset('ui/ui-menu-1-3.png', true);
+        if (bi) {
+          ctx.shadowColor = f.color; ctx.shadowBlur = 10;
+          ctx.drawImage(bi, f.x - 11, y - 11, 22, 22);
+          break;
+        }
         ctx.strokeStyle = f.color;
         ctx.fillStyle = '#2A1F12';
         ctx.lineWidth = 2;

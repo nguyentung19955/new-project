@@ -45,7 +45,7 @@ function coopClean(text) {
 
 // tham số lệnh: h = tướng (gửi số ô), s = ô, t = ô hoặc -1 (tự chọn), u = uid đồ, v = giá trị, * = áp cho cả đội của người ra lệnh
 const COOP_CMDS = {
-  buyCard: ['v', 't'], rerollMarket: [], toggleMarketLock: [], restDeck: ['v'], skipRest: [], summonRandom: [],
+  buyCard: ['v', 't'], rerollMarket: [], toggleMarketLock: [], summonRandom: [],
   placeHero: ['s', 'v'], merge: ['s', 's'], fuse: ['s', 's'], moveHero: ['s', 's'], sellHero: ['s'],
   levelUp: ['h'], trainHero: ['h'], unlockSkill: ['h', 'v'], upgradeSkill: ['h', 'v'], spendStat: ['h'],
   evolve: ['h'], ascend: ['h', 'v'], equip: ['h', 'u', 'v'], unequip: ['h', 'v'], autoEquip: ['h'],
@@ -59,7 +59,7 @@ const COOP_SPECIAL = new Set(['start', 'speed', 'gift', 'reward', 'leave', 'back
 // trạng thái riêng của trận co-op (nằm trong game.co, lưu cùng ảnh chụp)
 class CoopState {
   constructor() {
-    this.pl = [];          // [{ gold, market, deck, owned, summonN }] theo người 0 / 1 (mỗi người một hàng chợ tướng)
+    this.pl = [];          // [{ gold, market, owned, summonN }] theo người 0 / 1 (mỗi người một hàng chợ tướng)
     this.own = [];         // own[ô] = 0 | 1
     this.alone = -1;       // ≥ 0: người này đang điều khiển cả hai nửa (đồng đội rời trận)
     this.odd = 0;          // ai nhận đồng lẻ khi chia vàng lần tới
@@ -80,7 +80,7 @@ class CoopState {
     if (a !== b) this.odd = 1 - this.odd;
   }
 }
-const CO_KEYS = ['gold', 'market', 'deck', 'owned', 'summonN'];
+const CO_KEYS = ['gold', 'market', 'owned', 'summonN'];
 function coopBind(game) {
   for (const k of CO_KEYS) {
     Object.defineProperty(game, k, {
@@ -181,7 +181,7 @@ function coopHashStr(s) {
 function coopStateLine(game, tick) {
   const c = game.co, f = (x, d = 3) => (Number.isFinite(x) ? x.toFixed(d) : String(x));
   const parts = [tick, SIM.seed, nextId, game.lives, game.maxLives, game.wave, game.time.toFixed(4), c.pl.map((p) => f(p.gold, 2)).join('/'), c.alone,
-    c.pl.map((p) => (p.market ? p.market.types.join(',') : '-') + ':' + (p.deck || []).join(',')).join('/'), game.rest ? 'R' + (game.rest.done || []).join('') : ''];
+    c.pl.map((p) => (p.market ? p.market.types.join(',') : '-')).join('/')];
   for (const e of game.enemies) parts.push(`e${e.id}:${e.type}:${f(e.hp)}:${f(e.dist, 2)}`);
   game.heroes.forEach((h, i) => { if (h) parts.push(`h${i}:${h.type}:${h.level}:${h.tier || 0}:${f(h.hp, 2)}:${f(h.mana, 1)}:${h.dead ? 1 : 0}`); });
   parts.push('inv' + game.inventory.map((it) => it.uid).join(','));
@@ -433,8 +433,7 @@ const COOP = {
       co.own = room.own.slice();
       co.names = room.members.map((u) => (room.names && room.names[u]) || 'Người chơi');
       co.meta = { runes: players.map((p) => p.runes || {}), legacy: players.map((p) => p.legacy || {}) };
-      co.pl = players.map((p) => ({ gold: CONFIG.startGold, market: null,
-        deck: validDeck(p.deck) ? [...p.deck] : suggestDeck(room.level, p.owned || []), owned: new Set(p.owned || []), summonN: 0 }));
+      co.pl = players.map((p) => ({ gold: CONFIG.startGold, market: null, owned: new Set(p.owned || []), summonN: 0 }));
       game.co = co;
       coopBind(game);
       game.freshMarket();      // chợ tướng của từng người, rút bằng seed chung
