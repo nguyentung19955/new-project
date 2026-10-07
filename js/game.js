@@ -1382,6 +1382,7 @@ class Game {
     this.nextWave = buildWave(1, this.level);
     this.shake = 0;
     this.bossesKilled = 0;
+    this.slHist = [];         // v181: sính lễ đã ra trong trận (chống trùng liên tiếp)
     this.seen = {};
     this.endless = true;      // v166: chỉ còn chế độ vô tận (đơn và nhóm)
     this.won = false;
@@ -2632,7 +2633,7 @@ class Game {
     const skip = new Set(['_anim', 'target', 'tgt', 'notice', 'unlockFx', 'procT', 'strike', '_va']);   // v131: strike giữ hàm (đòn đang vung) — không lưu được
     const heroes = JSON.parse(JSON.stringify(this.heroes, (k, v) => (skip.has(k) ? undefined : v)));
     const o = { v: 1, at: Date.now(), heroes };
-    for (const k of ['level', 'hard', 'endless', 'won', 'gold', 'lives', 'maxLives', 'wave', 'summonN', 'bossesKilled', 'seen', 'water', 'raised', 'moc',
+    for (const k of ['level', 'hard', 'endless', 'won', 'gold', 'lives', 'maxLives', 'wave', 'summonN', 'bossesKilled', 'slHist', 'seen', 'water', 'raised', 'moc',
       'mountain', 'stats', 'inventory', 'jarCount', 'shop', 'time', 'flags', 'runId', 'guardT', 'oathT', 'xpLog', 'deck', 'market', 'rest', 'restWave']) o[k] = this[k];
     return JSON.parse(JSON.stringify(o));
   }
@@ -3701,7 +3702,14 @@ class Game {
 
   // Vua Hùng ban thưởng: chọn 1 trong 3
   bossRewards(bossType) {
-    const opts = [{ kind: 'item', id: ENEMIES[bossType].reward, title: 'Sính lễ' }];
+    // v181: sính lễ bốc ngẫu nhiên có trọng số (rollSinhLe trong data.js), mốc lớn tăng tỉ lệ món hiếm
+    const big = slBigWave(this.wave);
+    const owned = this.inventory.map((i) => i.id);
+    for (const h of this.heroes) if (h) for (const s of SLOTS) if (h.equip[s]) owned.push(h.equip[s].id);
+    this.slHist = this.slHist || [];
+    const sl = rollSinhLe({ hist: this.slHist, owned, big });
+    this.slHist = this.slHist.concat(sl).slice(-6);
+    const opts = [{ kind: 'item', id: sl, title: `Sính lễ ${ITEMS[sl].name}`, sinhLe: true, big }];
     // Hũ Vua Hùng (v37): nhiều món, chọn món hợp với các tướng mạnh nhất trên sân
     const lvl = { thuongluong: 0, haba: 1, thuytinh: 2 }[bossType] || 0;
     const plan = [['epic', 'epic'], ['set', 'epic', 'epic'], ['set', 'set', 'epic']][lvl];

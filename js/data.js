@@ -1562,6 +1562,43 @@ const ITEMS = {
                 stats: {}, desc: 'Khi gục sẽ hồi sinh ngay với đầy máu (dùng 1 lần)' },
 };
 
+// v181: SÍNH LỄ NGẪU NHIÊN. Bảng thưởng boss không còn tặng cố định món của boss đó mà bốc ngẫu nhiên
+// theo trọng số độ hiếm sính lễ (Thường nhiều, Quý hiếm ít). Mốc lớn (đợt 20, 40, 60…) nhân trọng số món hiếm.
+// Chống trùng: không ra một món quá 2 lần liền (lịch sử theo trận), món đã có trong túi / trên tướng giảm trọng số.
+// rng mặc định srand → co-op ra giống hệt trên 2 máy (seed chung của trận).
+const SL_TIER = {
+  thuong: { name: 'Thường', color: '#E8E0CC', bg: '#3A3226', big: 1 },
+  hiem:   { name: 'Hiếm', color: '#7FC8FF', bg: '#123048', big: 1.8 },
+  quy:    { name: 'Quý hiếm', color: '#FFD66B', bg: '#5A3A08', big: 3 },
+};
+const SINH_LE = {
+  voi_chin_nga:  { tier: 'thuong', w: 34 },
+  ga_chin_cua:   { tier: 'thuong', w: 34 },
+  ngua_hong_mao: { tier: 'hiem', w: 22 },
+  ngoc_hoi_sinh: { tier: 'quy', w: 10 },
+};
+const SL_OWNED_MUL = 0.35;          // món đã có: trọng số × 0.35 (ưu tiên món chưa có)
+const slBigWave = (wave) => wave > 0 && wave % 20 === 0;
+// trọng số từng món ở lần bốc này: { id: w }
+function sinhLeWeights({ hist = [], owned = [], big = false } = {}) {
+  const out = {};
+  const n = hist.length, rep = n >= 2 && hist[n - 1] === hist[n - 2] ? hist[n - 1] : null;
+  for (const id of Object.keys(SINH_LE)) {
+    let w = SINH_LE[id].w * (big ? SL_TIER[SINH_LE[id].tier].big : 1);
+    if (owned.includes(id)) w *= SL_OWNED_MUL;
+    if (id === rep) w = 0;          // đã ra 2 lần liền → lần này không ra nữa
+    out[id] = w;
+  }
+  return out;
+}
+function rollSinhLe(opt = {}, rng = srand) {
+  const ws = sinhLeWeights(opt);
+  const ids = Object.keys(ws);
+  let r = rng() * ids.reduce((a, id) => a + ws[id], 0);
+  for (const id of ids) { r -= ws[id]; if (r < 0 && ws[id] > 0) return id; }
+  return ids.filter((id) => ws[id] > 0).pop();
+}
+
 // ------------------------------------------------------------
 //  ĐỒ MỚI (v15): 4 phụ kiện, 8 đồ ghép, 4 bộ đồ (Sơn Tinh, Chim Lạc,
 //  Trống Đồng, Ngựa Sắt). fx: hiệu ứng đặc biệt cộng vào chỉ số tướng.
