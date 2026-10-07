@@ -181,6 +181,10 @@ function heroImgUrl(type, crop) {
 
 // ---------- lưu tiến trình (chỉ trên máy người chơi)
 const SAVE_KEY = 'nuicao.v1';
+// v149: góp ý — giới hạn gửi + hàng đợi khi chưa có mạng (lưu riêng, không lẫn vào bản lưu đồng bộ đám mây)
+const FB_KEY = 'nuicao.feedback';
+const FB_KINDS = [['bug', '🐞 Lỗi'], ['idea', '💡 Ý tưởng'], ['balance', '⚖ Cân bằng'], ['other', '💬 Khác']];
+const FB_GAP = 60000, FB_DAY = 10, FB_QUEUE = 5, FB_MIN = 10, FB_MAX = 1000, FB_SHOT = 150000;
 function loadSave() {
   const def = { stars: LEVELS.map(() => 0), unlocked: 1, last: 0, best: {}, storySeen: false,
     lifeGold: 0, lifeKills: 0, lifeHerbs: 0, collected: [], kho: 0, loginChosen: false, owned: [], runes: {}, legacy: {}, heroRunes: {}, tuvi: {},
@@ -308,6 +312,10 @@ class UI {
     $('#btn-ranks').onclick = () => this.showRanks('endless');
     $('#btn-menu-codex').onclick = () => this.openScreen('codex', { top: true });
     $('#btn-settings').onclick = () => this.showSettings(false);
+    $('#btn-feedback').onclick = () => this.showFeedback('menu');
+    // góp ý còn trong hàng đợi: gửi lại khi có mạng / khi vừa kết nối được Firebase
+    window.addEventListener('online', () => this.fbFlush());
+    if (typeof CLOUD !== 'undefined') CLOUD.onChange(() => { if (CLOUD.ready) this.fbFlush(); });
     $('#btn-menu').onclick = () => { $('#drawer').hidden = !$('#drawer').hidden; $('#more').hidden = true; $('#legends').hidden = true; };
     $('#quick-eq').onclick = () => {
       const q = this.quickEq;
@@ -350,7 +358,7 @@ class UI {
       if (b) this.toast(`Gọi sớm: +${b} vàng`, '#F2D27A');
     };
     // ủy quyền sự kiện cho các vùng dựng lại liên tục
-    for (const id of ['#fuse-strip', '#auto-btns', '#screen', '#deck', '#drawer', '#more', '#reward', '#result', '#story', '#campaign', '#settings', '#legends', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks', '#modes', '#rest']) {
+    for (const id of ['#fuse-strip', '#auto-btns', '#screen', '#deck', '#drawer', '#more', '#reward', '#result', '#story', '#campaign', '#settings', '#legends', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks', '#modes', '#rest', '#feedback']) {
       $(id).addEventListener('click', (ev) => {
         const el = ev.target.closest('[data-act]');
         if (this.tipShown) { this.tipShown = false; ev.preventDefault(); return; }   // vừa giữ tay xem mô tả: không nâng kỹ năng
@@ -381,6 +389,8 @@ class UI {
     $('#ui').addEventListener('contextmenu', (ev) => { if (ev.target.closest('[data-tip]')) ev.preventDefault(); });
     for (const id of ['#roster', '#runes', '#prep']) $(id).addEventListener('click', (ev) => { if (this.tipShown) { this.tipShown = false; ev.stopPropagation(); ev.preventDefault(); } }, true);
     window.addEventListener('keydown', (ev) => {
+      if (ev.target && /^(INPUT|TEXTAREA)$/.test(ev.target.tagName)) return;   // đang gõ chữ (góp ý, đổi tên): không bắt phím tắt
+      if (ev.key === 'Escape' && !$('#feedback').hidden) return this.fbClose();
       if (!g.started) return;
       const k = ev.key.toLowerCase();
       const h = g.heroes[this.sel];
@@ -875,9 +885,11 @@ class UI {
         <div class="tg metal"><div><b>Đồ hoạ</b><small>Tự động: game tự giảm độ nét và hiệu ứng khi máy bị giật${typeof GFX !== 'undefined' && GFX.mode() === 'auto' && GFX.lv ? ` (đang giảm ${GFX.lv} bậc)` : ''}</small></div>
           <div style="margin-left:auto;display:flex;gap:4px">${[['auto', 'Tự động'], ['high', 'Đẹp'], ['low', 'Tiết kiệm']].map(([k, n]) => `<button class="btn ${(st.gfx || 'auto') === k ? 'btn-gold' : 'metal'}" style="height:34px;padding:0 10px;font-size:13px" data-act="set-gfx" data-k="${k}">${n}</button>`).join('')}</div></div>
         ${this.cloudRow()}
+        <div class="tg metal"><div><b>Góp ý</b><small>Báo lỗi, gửi ý tưởng hay góp ý cân bằng cho đội làm game</small></div>
+          <button class="btn metal" style="margin-left:auto" data-act="set-feedback">✉ Góp ý</button></div>
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 146 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 149 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -891,6 +903,150 @@ class UI {
     box.appendChild(el);
     while (box.children.length > 2) box.firstChild.remove();
     setTimeout(() => el.remove(), 2600);
+  }
+
+  // ---------- v149: Góp ý — chọn loại, nội dung, ảnh chụp trận (tuỳ chọn), liên hệ (tuỳ chọn)
+  // Gửi lên Firestore 'feedback' (CLOUD.sendFeedback); chưa có mạng / Firebase tắt / gửi lỗi → hàng đợi trong localStorage.
+  fbStore() {
+    let s; try { s = JSON.parse(localStorage.getItem(FB_KEY)); } catch (e) { s = null; }
+    s = s && typeof s === 'object' ? s : {};
+    if (!Array.isArray(s.queue)) s.queue = [];
+    const day = new Date().toDateString();
+    if (s.day !== day) { s.day = day; s.n = 0; }
+    return s;
+  }
+  fbWrite(s) {
+    // bộ nhớ trình duyệt đầy (ảnh chụp ~150KB mỗi cái) → bỏ ảnh của góp ý cũ trước, rồi mới bỏ góp ý cũ
+    for (let i = 0; i <= s.queue.length + 1; i++) {
+      try { localStorage.setItem(FB_KEY, JSON.stringify(s)); return true; } catch (e) {
+        const w = s.queue.find((q) => q.shot);
+        if (w) w.shot = ''; else s.queue.shift();
+      }
+    }
+    return false;
+  }
+  fbVer() {
+    const sc = document.querySelector('script[src*="js/ui.js"]');
+    const m = sc && sc.getAttribute('src').match(/v=(\d+)/);
+    return m ? 'v' + m[1] : '?';
+  }
+  fbUa() {
+    const u = navigator.userAgent || '';
+    const os = (u.match(/Android [\d.]+|iPhone OS [\d_]+|iPad; CPU OS [\d_]+|Windows NT [\d.]+|Mac OS X [\d_]+|CrOS|Linux/) || ['?'])[0].replace(/_/g, '.');
+    const br = (u.match(/(Edg|OPR|SamsungBrowser|Firefox|CriOS|Chrome|Version)\/[\d]+/) || ['?'])[0].replace('Version', 'Safari');
+    const app = typeof CLOUD !== 'undefined' && CLOUD.native ? ' · app' : / wv\)/.test(u) ? ' · webview' : '';
+    return (os + ' · ' + br + app).slice(0, 160);
+  }
+  fbWhere(from) {
+    const g = this.game;
+    const name = { menu: 'Menu', 'cai-dat': 'Cài đặt', 'tam-dung': 'Tạm dừng', tran: 'Trong trận' }[from] || from;
+    if (!this.fbInRun()) return name;
+    const lv = LEVELS[g.level];
+    return `${name} · ${g.endless ? 'Vô tận' : 'Ải'} ${g.level + 1}${lv ? ' ' + lv.name : ''} · Đợt ${g.wave}${g.over ? ' · đã kết thúc' : ''}`.slice(0, 120);
+  }
+  fbInRun() { return !!(this.game.started && $('#menu').hidden); }
+  // chụp màn hình trận: thu nhỏ ≤ 640px rộng, JPEG ~0.6, hạ chất lượng tới khi ≤ 150KB
+  fbShot() {
+    try {
+      const c = $('#game');
+      if (!c || !c.width || !c.height) return '';
+      const w = Math.min(640, c.width), h = Math.max(1, Math.round(c.height * w / c.width));
+      const t = document.createElement('canvas'); t.width = w; t.height = h;
+      t.getContext('2d').drawImage(c, 0, 0, w, h);
+      for (let q = 0.6; q > 0.15; q -= 0.1) { const u = t.toDataURL('image/jpeg', q); if (u.startsWith('data:image/jpeg') && u.length <= FB_SHOT) return u; }
+    } catch (e) { /* canvas bị khoá (ảnh khác nguồn) → không đính kèm */ }
+    return '';
+  }
+  showFeedback(from) {
+    const g = this.game;
+    const shot = this.fbInRun() ? this.fbShot() : '';   // chụp trước khi bảng che màn hình
+    this.fbResume = g.started && g.running;
+    if (this.fbResume) g.running = false;               // dừng trận trong lúc gõ góp ý
+    $('#drawer').hidden = true;
+    this.fb = { from, kind: (this.fb && this.fb.kind) || 'bug', text: (this.fb && this.fb.text) || '', contact: (this.fb && this.fb.contact) || '',
+      shot, useShot: !!shot, err: '', busy: false };
+    $('#feedback').hidden = false;
+    this.renderFeedback();
+    this.fbFlush();
+  }
+  fbRead() {
+    const t = $('#fb-text'), c = $('#fb-contact');
+    if (t) this.fb.text = t.value.slice(0, FB_MAX);
+    if (c) this.fb.contact = c.value.slice(0, 120);
+  }
+  renderFeedback() {
+    const f = this.fb, st = this.fbStore();
+    const off = typeof CLOUD === 'undefined' || !CLOUD.ready;
+    $('#feedback').innerHTML = `<div class="fb-box metal" role="dialog" aria-label="Góp ý">
+      <div class="fb-head"><b class="ttl">✉ Góp ý</b><small>Báo lỗi, ý tưởng, cân bằng — đội làm game đọc từng góp ý</small>
+        <button class="xbtn metal" data-act="fb-close" aria-label="Đóng">${ICON.close}</button></div>
+      <div class="fb-kinds">${FB_KINDS.map(([k, n]) => `<button class="btn ${f.kind === k ? 'btn-gold' : 'metal'}" data-act="fb-kind" data-k="${k}" aria-pressed="${f.kind === k}">${n}</button>`).join('')}</div>
+      <div class="fb-tw"><textarea id="fb-text" maxlength="${FB_MAX}" placeholder="${f.kind === 'bug' ? 'Lỗi gì, xảy ra lúc nào, làm sao để gặp lại…' : f.kind === 'balance' ? 'Tướng / quái / ải nào quá mạnh hay quá yếu…' : 'Bạn muốn góp ý điều gì…'}">${esc(f.text)}</textarea><span id="fb-count"></span></div>
+      <div class="fb-row">
+        <input id="fb-contact" class="login-in" maxlength="120" placeholder="Liên hệ (không bắt buộc): Zalo, Facebook…" value="${esc(f.contact)}" autocomplete="off">
+        ${f.shot ? `<button class="fb-shot ${f.useShot ? 'on' : ''}" data-act="fb-shot" aria-pressed="${f.useShot}"><img src="${f.shot}" alt="Ảnh chụp trận"><span class="sw ${f.useShot ? 'on' : ''}"></span><small>${f.useShot ? 'Kèm ảnh trận' : 'Không kèm ảnh'}</small></button>` : ''}
+      </div>
+      ${f.err ? `<div class="login-err" id="fb-err">${esc(f.err)}</div>` : ''}
+      <div class="fb-foot"><small class="fb-note">Tự gửi kèm: phiên bản ${esc(this.fbVer())}, màn đang mở, cỡ màn hình, loại máy. Không gửi email tài khoản.${off ? ' <b>Đang ngoại tuyến: góp ý được lưu lại, tự gửi khi có mạng.</b>' : ''}${st.queue.length ? ` · ${st.queue.length} góp ý đang chờ gửi` : ''}</small>
+        <button class="btn metal" data-act="fb-close">Huỷ</button>
+        <button class="btn btn-gold title" data-act="fb-send" ${f.busy ? 'disabled' : ''}>${f.busy ? 'Đang gửi…' : 'Gửi'}</button></div>
+    </div>`;
+    const t = $('#fb-text');
+    const count = () => { const n = t.value.trim().length; const el = $('#fb-count'); el.textContent = `${t.value.length}/${FB_MAX}`; el.classList.toggle('low', n < FB_MIN); };
+    t.addEventListener('input', () => { this.fb.text = t.value; count(); });
+    $('#fb-contact').addEventListener('input', (e) => { this.fb.contact = e.target.value; });
+    count();
+  }
+  fbClose() {
+    if (this.fb) this.fbRead();
+    $('#feedback').hidden = true;
+    if (this.fbResume && this.game.started && !this.game.over && $('#settings').hidden) this.game.running = true;
+    this.fbResume = false;
+  }
+  fbErr(m) { this.fb.err = m; this.renderFeedback(); }
+  async fbSend() {
+    const f = this.fb;
+    if (!f || f.busy) return;
+    this.fbRead();
+    const text = f.text.trim();
+    if (text.length < FB_MIN) return this.fbErr(`Viết thêm chút nữa (ít nhất ${FB_MIN} ký tự)`);
+    const st = this.fbStore(), now = Date.now();
+    if (now - (st.last || 0) < FB_GAP) return this.fbErr(`Vừa gửi xong — đợi ${Math.ceil((FB_GAP - (now - st.last)) / 1000)} giây rồi gửi tiếp nhé`);
+    if ((st.n || 0) >= FB_DAY) return this.fbErr(`Hôm nay đã gửi ${FB_DAY} góp ý, mai gửi tiếp nhé. Cảm ơn bạn!`);
+    const item = { kind: f.kind, text: text.slice(0, FB_MAX), contact: f.contact.trim().slice(0, 120), shot: f.useShot && f.shot.length <= FB_SHOT ? f.shot : '',
+      ver: this.fbVer(), where: this.fbWhere(f.from), scr: `${innerWidth}x${innerHeight}@${(devicePixelRatio || 1).toFixed(1)}${$('#wrap').classList.contains('rot') ? ' doc' : ''}`.slice(0, 40),
+      ua: this.fbUa(), at: now };
+    st.last = now; st.n = (st.n || 0) + 1;
+    this.fbWrite(st);
+    f.busy = true; f.err = ''; this.renderFeedback();
+    const sent = await this.fbTry(item);
+    if (!sent) { const s2 = this.fbStore(); s2.queue.push(item); while (s2.queue.length > FB_QUEUE) s2.queue.shift(); this.fbWrite(s2); }
+    this.fb = null;
+    $('#feedback').hidden = true;
+    if (this.fbResume && this.game.started && !this.game.over && $('#settings').hidden) this.game.running = true;
+    this.fbResume = false;
+    if (sent) { this.toast('<b>Cảm ơn bạn đã góp ý!</b> Đội làm game sẽ đọc sớm 💌', '#6AE06A'); this.fbFlush(); }
+    else this.toast('<b>Đã lưu góp ý</b>, sẽ gửi khi có mạng', '#F2D27A');
+  }
+  // gửi 1 góp ý; quá 12 giây chưa xong thì coi như chưa gửi (nếu sau đó gửi được thì tự gỡ khỏi hàng đợi)
+  fbTry(item) {
+    if (typeof CLOUD === 'undefined' || !CLOUD.ready || !CLOUD.sendFeedback || navigator.onLine === false) return Promise.resolve(false);
+    let p;
+    try { p = CLOUD.sendFeedback(item); } catch (e) { return Promise.resolve(false); }
+    p.then(() => this.fbDrop(item.at), () => {});
+    return Promise.race([p.then(() => true, () => false), new Promise((r) => setTimeout(() => r(false), 12000))]);
+  }
+  fbDrop(at) { const s = this.fbStore(); const n = s.queue.length; s.queue = s.queue.filter((q) => q.at !== at); if (s.queue.length !== n) this.fbWrite(s); }
+  async fbFlush() {
+    if (this.fbFlushing) return;
+    const q = this.fbStore().queue;
+    if (!q.length || typeof CLOUD === 'undefined' || !CLOUD.ready) return;
+    this.fbFlushing = true;
+    let n = 0;
+    try {
+      for (const item of q) { if (await this.fbTry(item)) { this.fbDrop(item.at); n++; } else break; }
+    } finally { this.fbFlushing = false; }
+    if (n) this.toast(`Đã gửi ${n} góp ý đang chờ. Cảm ơn bạn! 💌`, '#6AE06A');
   }
 
   // ---------- chạm bản đồ
@@ -2091,6 +2247,11 @@ class UI {
       }
       case 'cloud-sync': CLOUD.push(this.save, true); break;
       case 'cloud-out': this.loginFromMenu = false; CLOUD.signOut(); break;
+      case 'fb-kind': this.fbRead(); this.fb.kind = d.k; this.fb.err = ''; this.renderFeedback(); break;
+      case 'fb-shot': this.fbRead(); this.fb.useShot = !this.fb.useShot; this.renderFeedback(); break;
+      case 'fb-close': this.fbClose(); break;
+      case 'fb-send': this.fbSend(); break;
+      case 'set-feedback': this.showFeedback(this.settingsInGame ? 'tam-dung' : 'cai-dat'); break;
       case 'set-close':
         $('#settings').hidden = true;
         if (this.settingsInGame && this.pauseWasRunning) g.running = true;
@@ -2204,6 +2365,7 @@ class UI {
         if (d.k === 'pause') this.showSettings(true);
         else if (d.k === 'heroes') this.showRoster(null, true);
         else if (d.k === 'runes') this.showRunes(true);
+        else if (d.k === 'feedback') this.showFeedback('tran');
         else this.openScreen(d.k);
         break;
       // ----- bảng điều khiển dưới

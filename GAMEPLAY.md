@@ -1384,3 +1384,13 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Tên + dòng phụ đặt theo % trong ô tối của khung (đo bằng PIL), chữ tự co (`fitText`) và cắt bằng dấu … khi quá dài. Dòng phụ gọn: "Cấp N · ★ x/y" (bỏ "Đã đăng nhập" / "Khách").
 - Không còn lấy phần trước @ của email làm tên (cả menu lẫn bảng xếp hạng). Chưa đặt biệt danh thì hiện "Khách ✎ đặt tên"; chạm khung để mở ô đổi tên. Ô đổi tên để trống kèm gợi ý "Đặt biệt danh" thay vì điền sẵn tên tạm.
 - Test: `node tests/khung-nguoi-choi/khung.test.js` (844×390, 667×375, 932×430, xoay dọc 390×844; khách / email / tên dài / có ảnh; ảnh trong `tests/khung-nguoi-choi/shots/`).
+
+## Phiên bản 149 — Nút Góp ý
+- Nút **✉ Góp ý** ở: hàng liên kết nhỏ cạnh "Bách khoa / Xếp hạng" trên menu chính, một dòng trong **Cài đặt** (cả màn Tạm dừng), và mục **Góp ý** trong menu ☰ trong trận.
+- Bảng góp ý: chọn loại (Lỗi / Ý tưởng / Cân bằng / Khác), ô nội dung 10–1000 ký tự có đếm ký tự, ô liên hệ không bắt buộc. Mở trong trận thì tự chụp màn hình trận (thu nhỏ ≤ 640px rộng, JPEG ≤ 150KB) và kèm theo — bấm ô ảnh để bỏ. Trận tạm dừng trong lúc gõ, gửi / đóng thì chạy tiếp.
+- Tự gửi kèm: phiên bản, màn đang mở / ải / đợt, cỡ màn hình, hệ điều hành + trình duyệt rút gọn, mã tài khoản ẩn danh. **Không** gửi email.
+- Gửi vào Firestore `feedback` (luật mới trong `firestore.rules`: chỉ được tạo, không ai đọc/sửa/xoá từ máy người chơi). Giới hạn 1 góp ý / 60 giây, 10 / ngày.
+- Không có mạng / chưa bật Firebase / gửi lỗi: lưu hàng đợi trên máy (tối đa 5), báo "Đã lưu góp ý, sẽ gửi khi có mạng", tự gửi lại khi có mạng. Gửi được thì cảm ơn bằng thông báo.
+- Cách xem góp ý và đăng luật: `docs/FIREBASE.md` mục "Xem góp ý của người chơi".
+- Dòng phiên bản trên menu chính cập nhật (trước còn ghi 145).
+- Test: `node tests/gop-y/gop-y.test.js` (CLOUD giả ghi lại dữ liệu gửi; hàng đợi, gửi lại, giới hạn, bố cục 844×390 / 667×375 / xoay dọc; ảnh `tests/gop-y/shots/` không commit, ảnh mẫu `tests/gop-y/gop-y-tran.png`).

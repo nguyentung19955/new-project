@@ -8,3 +8,4 @@ android/.gradle/
 android/local.properties
 *.apk
 firebase-debug.log
+tests/gop-y/shots/

@@ -148,5 +148,14 @@ const CLOUD = {
       return q.docs.map((d) => ({ uid: d.id, ...d.data() }));
     } catch (e) { this._fail(e); return null; }
   },
+  // ---------- v149: góp ý — feedback/{tự sinh}; chỉ được tạo, không ai đọc / sửa / xoá từ máy người chơi.
+  // Không gửi email; uid là mã ẩn danh của Firebase Auth. Lỗi → ném ra để giao diện xếp vào hàng đợi gửi lại.
+  async sendFeedback(f) {
+    if (!this.ready || !this.user || !this.db) throw new Error('offline');
+    const doc = { kind: f.kind, text: f.text, contact: f.contact || '', shot: f.shot || '', ver: f.ver, where: f.where,
+      scr: f.scr, ua: f.ua, at: f.at, uid: this.user.uid, guest: !!this.user.isAnonymous };
+    await this.db.collection('feedback').add(doc);
+    return true;
+  },
   async signOut() { if (this.auth) { clearTimeout(this._timer); await this.auth.signOut(); } },
 };

@@ -42,6 +42,22 @@ Cách khác cho bước 2–3 (dành cho người quen dòng lệnh): `npm i -g 
 ### Đăng tay (nếu cần)
 Trên máy có Node.js: `npm i -g firebase-tools` → `firebase login` → trong thư mục game chạy `firebase deploy` (tự gom `dist-web/` trước khi đăng, đăng cả luật Firestore). Chỉ đăng game: `firebase deploy --only hosting`. Xem thử trên máy: `npm run build:hosting` rồi `firebase emulators:start --only hosting` → mở http://localhost:5000.
 
+## Xem góp ý của người chơi (v149)
+Nút **✉ Góp ý** (menu chính, Cài đặt, menu ☰ trong trận) gửi vào Firestore, collection **`feedback`**.
+
+- **Xem**: [Firebase console](https://console.firebase.google.com/project/sontinhthuytinh/firestore/data/~2Ffeedback) → **Firestore Database** → **Data** → `feedback`. Mỗi góp ý là một tài liệu:
+  - `kind`: `bug` (Lỗi) / `idea` (Ý tưởng) / `balance` (Cân bằng) / `other` (Khác); `text`: nội dung (10–1000 ký tự); `contact`: liên hệ người chơi tự để lại (có thể trống).
+  - `ver` (phiên bản game), `where` (màn đang mở, ải, đợt), `scr` (cỡ màn hình), `ua` (hệ điều hành + trình duyệt rút gọn), `at` (thời điểm viết, mili-giây), `uid` (mã tài khoản ẩn danh), `guest` (true = khách).
+  - `shot`: ảnh chụp trận dạng `data:image/jpeg;base64,…` (≤ 150KB, có thể trống). Xem ảnh: chép cả chuỗi, dán vào thanh địa chỉ trình duyệt.
+  - **Không** gửi email người dùng. Cần biết ai gửi thì tra `uid` trong **Authentication → Users**.
+- Sắp xếp: trong tab Data bấm biểu tượng lọc cạnh tên collection, chọn sắp theo `at` giảm dần. Xem xong có thể xoá tài liệu ngay trong console.
+- **Luật**: ai đã đăng nhập (kể cả khách ẩn danh) chỉ được **tạo** góp ý; không ai đọc / sửa / xoá được từ máy người chơi. Luật kiểm tra loại, độ dài từng trường (ảnh ≤ 200000 ký tự), `uid` phải đúng người gửi.
+- **Phải đăng luật mới** (`firestore.rules` có thêm mục `feedback`) — chưa đăng thì mọi góp ý bị từ chối và nằm trong hàng đợi trên máy người chơi:
+  - Workflow `.github/workflows/firebase-hosting.yml` tự đăng luật khi `firestore.rules` đổi trong lần đẩy code lên nhánh chính (cần secret `FIREBASE_SERVICE_ACCOUNT_SONTINHTHUYTINH` có quyền Firestore). Xem bước **Đăng luật Firestore** trong tab Actions; bị vàng/cảnh báo thì làm tay bên dưới.
+  - Làm tay: Firestore → **Rules** → dán nội dung `firestore.rules` → **Publish**. Hoặc Actions → *Deploy Firebase Hosting* → **Run workflow** và tick *Đăng cả luật Firestore*.
+- Giới hạn phía máy người chơi: 1 góp ý / 60 giây, 10 góp ý / ngày. Không có mạng, chưa bật Firebase hoặc gửi lỗi → lưu tối đa 5 góp ý trong `localStorage` (`nuicao.feedback`), tự gửi lại khi có mạng / khi mở game hoặc mở bảng góp ý lần sau.
+- Gói miễn phí: mỗi góp ý là 1 lượt ghi (20.000 lượt/ngày miễn phí); ảnh ~40–150KB mỗi cái — 1GB lưu trữ đủ cho hàng nghìn góp ý có ảnh.
+
 ## Giới hạn gói miễn phí
 50.000 lượt đọc + 20.000 lượt ghi Firestore mỗi ngày. Mỗi người chơi ghi tối đa khoảng 1 lần / 4 giây khi đang thay đổi tiến trình — đủ cho vài trăm người chơi mỗi ngày.
 
