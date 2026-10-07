@@ -154,6 +154,48 @@ print(json.dumps([list(m.nhan_dien(f)) for f in ['Thaymo (1).PNG', 'trung-kim.pn
   fs.mkdirSync(path.join(__dirname, 'shots'), { recursive: true });
   await page.setViewportSize({ width: 1100, height: 900 });
   await page.screenshot({ path: path.join(__dirname, 'shots', 'cat-anh.png'), fullPage: false });
+  // ── thư mục giống thư mục thật của người dùng (07/10): dáng tách ảnh, tên mã băm, icon 2×2 / nền tím / có chữ, kết cấu, ảnh một vật ──
+  console.log('ảnh kiểu thư mục thật (tests/cat-anh/tao-anh-mau-2.py):');
+  const VAO2 = path.join(TMP, 'that', 'ảnh game');
+  py([path.join(__dirname, 'tao-anh-mau-2.py'), VAO2]);
+  const out2 = py(['tools/cat_anh.py', VAO2]);
+  const RA2 = path.join(VAO2, 'da-cat'), f2 = walk(path.join(RA2, 'assets')).sort();
+  const want = ['packs/daibang/walk1.png', 'packs/daibang/walk2.png', 'packs/daibang/attack.png', 'packs/daibang/rage.png', 'do-ghep_cung-mat-chim.png', 'do-ghep_ngoc-tran-thuy.png', 'do-ghep_trong-dong.png', 'do-ghep_gay-thoi-khong.png', 'ui/ic-hanh-moc.png', 'ui/ic-hanh-thuy.png', 'tiles/duong-dat.jpg', 'chua-dung/clean-button-hover.png', 'chua-dung/thap-phong-thu_v2/thap-phong-thu_v2-6.png', 'chua-dung/thap-phong-thu_v3/thap-phong-thu_v3-5.png'];
+  ok(want.every((f) => f2.includes(f)) && f2.length === 30 && !f2.some((f) => /walk_|rage_|idle/.test(f)), `ra đúng ${f2.length} file: 4 dáng boss (không chia lưới ảnh một dáng), đồ ghép 2×2, icon ngũ hành, kết cấu JPG, ảnh chưa dùng vào chua-dung/`);
+  ok(/daibang_pose01\.png, daibang_pose02\.png, daibang_pose03\.png, daibang_pose04\.png → daibang \(boss4 \(từng dáng\)/.test(out2) && /127e45df08[^\n]*bỏ qua/.test(out2), 'gom daibang_pose01..04 thành một bộ dáng; ảnh ghi "bỏ" thì bỏ qua');
+  const px = JSON.parse(py(['-c', `
+import json, sys
+from PIL import Image
+d = sys.argv[1]
+def col(f):
+    im = Image.open(d + '/' + f).convert('RGBA'); return im.getpixel((im.width // 2, im.height // 2))
+fr = [Image.open(d + '/packs/daibang/' + n + '.png').convert('RGBA') for n in ('walk1', 'walk2', 'attack', 'rage')]
+bottoms = [im.getbbox()[3] - im.height for im in fr]
+from scipy import ndimage
+import numpy as np
+def nho(im):
+    m = np.asarray(im)[..., 3] > 20; lab, n = ndimage.label(m); sz = np.bincount(lab.ravel())[1:]
+    return int((sz < 0.01 * sz.max()).sum())
+tl = [nho(im) for im in fr]
+print(json.dumps({'moc': col('ui/ic-hanh-moc.png'), 'kim': col('ui/ic-hanh-kim.png'), 'thuy': col('ui/ic-hanh-thuy.png'), 'h': [im.height for im in fr], 'bot': bottoms, 'tl': tl,
+  'cap': Image.open(d + '/do-ghep_trong-dong.png').convert('RGBA').getbbox(), 'jpg': Image.open(d + '/tiles/duong-dat.jpg').size}))`, path.join(RA2, 'assets')]));
+  ok(px.moc[1] > 150 && px.moc[0] < 120 && px.kim[0] > 190 && px.kim[2] > 190 && px.thuy[2] > 200 && px.thuy[0] < 80, 'icon ngũ hành AI vẽ lệch thứ tự (Mộc Hỏa Thổ Kim Thủy) vẫn gán đúng tên theo ghi chú');
+  ok(px.h.every((h) => h === 480) && px.tl.every((n) => n === 0) && new Set(px.bot.slice(0, 3)).size === 1, `dáng boss: cao 480, chân cùng đường đáy, chữ "Pippit" / dấu AI đã xoá (mảnh vụn ${px.tl})`);
+  ok(px.cap[3] < 128 && px.jpg[0] === 512 && px.jpg[1] === 512, 'chữ chú thích dưới icon bị bỏ; kết cấu đường cắt vuông 512 JPG');
+  const p2 = await browser.newPage();
+  await p2.goto('file://' + path.join(ROOT, 'tools', 'cat-anh.html'));
+  await p2.setInputFiles('#chon-anh', fs.readdirSync(VAO2).filter((f) => f.endsWith('.png')).sort().map((f) => ({ name: f, mimeType: 'image/png', buffer: fs.readFileSync(path.join(VAO2, f)) })));
+  await p2.waitForFunction(() => window.__xong === true && window.__catAnh.ITEMS.every((i) => i.done), null, { timeout: 120000 });
+  const z2 = await p2.evaluate(() => { const d = window.__catAnh.zipParts()[0].data; let s = ''; for (let i = 0; i < d.length; i += 32768) s += String.fromCharCode(...d.subarray(i, i + 32768)); return btoa(s); });
+  const H2 = path.join(TMP, 'html2'); fs.mkdirSync(H2); fs.writeFileSync(path.join(H2, 'z.zip'), Buffer.from(z2, 'base64'));
+  py(['-c', 'import zipfile, sys; zipfile.ZipFile(sys.argv[1]).extractall(sys.argv[2])', path.join(H2, 'z.zip'), H2]);
+  const h2 = walk(path.join(H2, 'assets')).sort();
+  ok(JSON.stringify(h2) === JSON.stringify(f2), `bản HTML ra cùng ${h2.length} file với bản Python`);
+  const png2 = f2.filter((f) => f.endsWith('.png'));
+  const r2 = cmpAll(png2.map((f) => [path.join(RA2, 'assets', f), path.join(H2, 'assets', f)]));
+  const bad2 = r2.map((r, i) => [png2[i], r]).filter(([, r]) => JSON.stringify(r.size[0]) !== JSON.stringify(r.size[1]) || r.alphaDiff > 0.01 || r.meanDiff > 3);
+  ok(bad2.length === 0, 'ảnh bản HTML cùng cỡ, gần trùng bản Python ' + JSON.stringify(bad2.slice(0, 3)));
+  await p2.close();
   ok(errs.length === 0, 'không lỗi JS ' + errs.join(' | '));
   await browser.close();
   // bat + đường dẫn mặc định

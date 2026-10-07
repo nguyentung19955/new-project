@@ -32,6 +32,8 @@ for (const f of ['PROMPT-CAN-GEN.txt', 'PROMPT-HIEU-UNG.txt']) {
     else D[stem] = [m[1], names[0], label[m[2]] || 'Hiệu ứng · ' + names[0]];
   }
 }
+// ảnh đã xem tay (tên mã băm, tên tự đặt): tools/cat-anh-them.json
+for (const [k, v] of Object.entries(JSON.parse(fs.readFileSync(path.join(__dirname, 'cat-anh-them.json'), 'utf8')))) if (!k.startsWith('_')) D[k] = v;
 const json = JSON.stringify(Object.fromEntries(Object.entries(D).sort()));
 const put = (file, a, b) => {
   const p = path.join(ROOT, 'tools', file);
