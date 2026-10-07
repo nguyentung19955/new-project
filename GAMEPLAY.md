@@ -2097,3 +2097,20 @@ Test: `node tests/run-all.js` đạt (tu-cu-dong: mẫu trang thử đổi xathu
 
 - Gộp claude/tu-cu-dong + claude/tu-cu-dong-anh: 90 ảnh mới (72 dùng, 18 chờ gen lại trong CD_SKIP), rig 90 mã (67 vung tay), chân đứng yên, boss ×2, nhún lấy đà, vệt chém đúng phía.
 - Theo tester: nhãn trang thử `?xem-cu-dong` (js/xem-cu-dong.js) trước suy tên vũ khí từ động tác (giáo bổ → "rìu", gậy → "rìu/cung") — giờ hiện **vũ khí theo `CD_WEAPON` · động tác** (vd `thansuong · giáo · bổ`, `chantrau · gậy · bổ`, `dapde · gậy · bổ`, `cuoi · gậy · bổ`). Xạ Thủ hiện `cung · chém` vì ảnh cầm đao trong khi game giữ cung — chờ gen lại. Người Đắp Đê: "gậy chĩa đầu thú". Đã xem ảnh trang thử 1920×934, 667×375.
+
+## claude/dung-anh-co-san — Dùng ảnh có sẵn thay hình vẽ bằng code / emoji
+
+- **Luôn dùng khi có file** (không phụ thuộc "Dùng ảnh AI"), thiếu file thì giữ hình code / ký hiệu cũ:
+  - Đồng xu vàng (thanh trên, giá, mọi `coin()`, ô "Vàng mỗi đợt" Núi Tản Viên) → `ui/ui-tai-nguyen-1.png` (đồng xu lỗ vuông; đĩa đồng `ui_dong-xu.png` cũ xuống dự phòng). Nén bạc Ngân khố (`bac()`) → `ui/ui-tai-nguyen-3.png`. Trái tim mạng trên thanh trên → `ui/ui-tai-nguyen-2.png`; mực nước dâng → `ui/ic-nuoc-dang.png`.
+  - Ngăn kéo ≡ trong trận: 🎒 → `ui-menu-2-4`, 🔯 → `ui-menu-1-4`, 📖 → `ui-menu-2-2`, ⏸ → `ui-tran-1-2` (giống icon menu chính).
+  - ⚒ Lò đúc (thẻ chuẩn bị + đầu màn Lò đúc) → `ui-tran-2-2` (đe); đầu màn Bách khoa (3 tab) → `ui-menu-2-2`; ⛰ Mọc Núi / đầu màn Núi Tản Viên / ô Bồi đất → `ui-tran-3-3`; ↑ nút Nâng kỹ năng → `ic-nang-cap`.
+  - ↻ Thử lại / Vào lại / Tải lại → `ui-tran-4-4`; ⚔ Bắt đầu (Cùng giữ thành) → `ui-tran-5-3`; 🔯 Ấn Phù (màn Anh Hùng) → `ui-menu-1-4`; 📜 tab Công thức → `ui-menu-2-2`; 🎁 sính lễ boss (Bách khoa) → `ui-menu-1-3`.
+  - Icon chương khi thua: 🔥 → `ic-hanh-hoa`, 🌊 → `ic-hanh-thuy`, ♾ → `ui-tran-5-2`; icon hệ Thần Khí dự phòng (khi chưa có `packs/<mã>/tk-N.png`) đi qua cùng bảng `EMO_ART`.
+  - Trống đồng ở bảng "Cảm ơn góp ý" → `ui-tran-3-1`.
+  - Trên bản đồ: đồng xu bay khi hạ quái → `ui-tai-nguyen-1` (12 px); hộp rơi đồ → rương `ui-menu-1-3` có quầng màu độ hiếm.
+- **Không dùng (ảnh kém / sai nội dung):** `ui_dong-xu`, `ui_an`, `ui_khoa`, `ui_mang`, `ui_muc-nuoc`, `ui_hu-bau`, `ui_toi-luyen`, `ui_khung-thuong/vang` (đĩa đồng chung chung, khó phân biệt — vẫn chỉ hiện khi bật "Dùng ảnh AI"); `ui-tran-2-1` (có chữ "MENU" tiếng Anh) cho nút ≡; `ui-tran-4-1` (huy chương tròn, nhỏ thì nhoè) cho sao ★ bậc tướng; `ui-tran-4-3` / `ai-khoa` cho ổ khoá nhỏ (đã thử ở v181: chỉ còn chấm xám); `ui-tran-1-3` (◁▷) cho x1/x2; `ui-tran-1-4` (mắt mở) cho nút ẩn giao diện (dễ nhầm với nút chỉ số).
+- **Còn vẽ code vì chưa có ảnh:** icon vai trò 7 màu, ✕ đóng, ‹ quay lại, ✓, 💬, ✉ Góp ý, 🏳 Dừng chơi, ⛺ Nghỉ chân, ☀ nhiệm vụ ngày, 🤝 Cùng giữ thành, ⚜ Thần Khí, 🍄 Linh Chi, 👹 / 🏹 icon chương, x1/x2, mắt gạch; đế ô, thanh máu, đạn, hiệu ứng trúng đòn, icon trạng thái trên quái (danh sách gen: docs/PROMPT-THAY-HINH-CODE.txt).
+
+## Phiên bản 195 — Dùng ảnh có sẵn thay hình vẽ code (tester đạt)
+
+- Gộp claude/dung-anh-co-san: đồng xu, nén bạc, tim mạng, icon ngăn kéo, Lò đúc, Bách khoa, rương rơi đồ… dùng ảnh thật.
