@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Cắt một tấm icon (1 hàng × 4–5 ô, nền hồng tím) thành từng file theo tools/item-sheets.json (128 px).
+"""Cắt một tấm icon (1 hàng × 4–5 ô, nền hồng tím) thành từng file theo tools/item-sheets.json (128 px;
+tấm icon nhỏ ic-… ghi "size": 64 trong item-sheets.json).
 
-  python3 tools/cat-items.py <ảnh.png> <mã tấm>      vd. do-riu, bo-son-tinh, phu-kien-1, ui-tran-4
+  python3 tools/cat-items.py <ảnh.png> <mã tấm> [cỡ px]     vd. do-riu, bo-son-tinh, phu-kien-1, ui-tran-4, ic-chi-so-1
 Mã tấm và tên file từng ô do tools/build-prompts.js sinh ra (đúng thứ tự ô trong prompt).
 """
 import os, sys, json, importlib.util
@@ -19,6 +20,7 @@ def main():
     sheets = json.load(open(os.path.join(here, 'item-sheets.json'), encoding='utf8'))
     if code not in sheets: sys.exit(f'Không có tấm {code}. Có: {", ".join(sheets)}')
     files = sheets[code]['files']; n = len(files)
+    size = int(sys.argv[3]) if len(sys.argv) > 3 else sheets[code].get('size', 128)
     out = os.path.join(here, '..', 'assets', sheets[code]['dir']); os.makedirs(out, exist_ok=True)
     sheet = cs.key_magenta(Image.open(src).convert('RGB'))
     W, H = sheet.size
@@ -31,8 +33,8 @@ def main():
         c = c.crop(bb); side = int(max(c.size) * 1.08)
         sq = Image.new('RGBA', (side, side), (0, 0, 0, 0))
         sq.paste(c, ((side - c.width) // 2, (side - c.height) // 2))
-        cs.save_light(sq.resize((128, 128), Image.LANCZOS), os.path.join(out, f))
-    print(f"{code}: {', '.join(files)}")
+        cs.save_light(sq.resize((size, size), Image.LANCZOS), os.path.join(out, f))
+    print(f"{code} ({size} px): {', '.join(files)}")
 
 if __name__ == '__main__':
     main()

@@ -830,5 +830,77 @@
   "title": "Đồ ghép 4",
   "text": "Create ONE image: a 640x128 row of 5 equal 128x128 square game item icons, one per cell, left to right:\n[1] folded fishing net with floats, rare magical crafted item, slightly glowing  [2] radiant white sea pearl on a shell, rare magical crafted item, slightly glowing  [3] golden turtle claw crossbow trigger, rare magical crafted item, slightly glowing  [4] heavenly golden axe of Thạch Sanh with light rays, rare magical crafted item, slightly glowing  [5] white feather cloak of Âu Cơ with a golden clasp, rare magical crafted item, slightly glowing.\ncute mobile-game item icon, chunky readable shape, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, circle-dots). Each icon: one bold centered object, readable at 40 px, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
   "n": 107
+ },
+ {
+  "group": "14. Icon nhỏ (chỉ số, trạng thái, tiền tệ)",
+  "file": "ic-chi-so-1.png",
+  "title": "Icon nhỏ · ic-chi-so-1",
+  "text": "Create ONE image: a 640x128 row of 5 equal 128x128 square TINY game UI icons (status / stat icons), one per cell, left to right:\n[1] armor: a sturdy bronze kite shield  [2] magic resistance: a glowing purple orb inside a bronze ring  [3] move speed: one green-brown straw sandal with three speed lines  [4] attack speed: a yellow lightning bolt  [5] damage: a short bronze sword pointing up-right.\nDong Son bronze-drum style kept minimal: warm bronze gold #C9963A and dark green patina #2F6B5E accents, flat cartoon shading for a cute mobile game, at most one tiny zigzag or circle-dot accent (no rings, no birds, no busy engraving). These icons are shown VERY SMALL (16-20 px on a phone): one big simple silhouette that fills about 80% of the cell, VERY thick dark-brown outline #2A1608, at most 2-3 flat colors, no thin lines, no tiny details, no background shapes unless described, high contrast, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "cut": "python3 tools/cat-items.py <ảnh> ic-chi-so-1",
+  "n": 108
+ },
+ {
+  "group": "14. Icon nhỏ (chỉ số, trạng thái, tiền tệ)",
+  "file": "ic-chi-so-2.png",
+  "title": "Icon nhỏ · ic-chi-so-2",
+  "text": "Create ONE image: a 640x128 row of 5 equal 128x128 square TINY game UI icons (status / stat icons), one per cell, left to right:\n[1] health: a big red blood drop  [2] critical hit: an orange-red spiky burst star  [3] attack range: a red and cream round target with an arrow in the center  [4] cooldown: a bronze hourglass with blue sand  [5] energy / mana: a big blue water drop with a white sparkle.\nDong Son bronze-drum style kept minimal: warm bronze gold #C9963A and dark green patina #2F6B5E accents, flat cartoon shading for a cute mobile game, at most one tiny zigzag or circle-dot accent (no rings, no birds, no busy engraving). These icons are shown VERY SMALL (16-20 px on a phone): one big simple silhouette that fills about 80% of the cell, VERY thick dark-brown outline #2A1608, at most 2-3 flat colors, no thin lines, no tiny details, no background shapes unless described, high contrast, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "cut": "python3 tools/cat-items.py <ảnh> ic-chi-so-2",
+  "n": 109
+ },
+ {
+  "group": "14. Icon nhỏ (chỉ số, trạng thái, tiền tệ)",
+  "file": "ic-chi-so-3.png",
+  "title": "Icon nhỏ · ic-chi-so-3",
+  "text": "Create ONE image: a 640x128 row of 5 equal 128x128 square TINY game UI icons (status / stat icons), one per cell, left to right:\n[1] strength: a clenched orange fist  [2] agility: a green Lac bird feather  [3] intelligence: an open blue bamboo scroll book  [4] damage reduction: a teal shield with a white downward arrow  [5] armor penetration: a bronze spear tip cracking through a small shield.\nDong Son bronze-drum style kept minimal: warm bronze gold #C9963A and dark green patina #2F6B5E accents, flat cartoon shading for a cute mobile game, at most one tiny zigzag or circle-dot accent (no rings, no birds, no busy engraving). These icons are shown VERY SMALL (16-20 px on a phone): one big simple silhouette that fills about 80% of the cell, VERY thick dark-brown outline #2A1608, at most 2-3 flat colors, no thin lines, no tiny details, no background shapes unless described, high contrast, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "cut": "python3 tools/cat-items.py <ảnh> ic-chi-so-3",
+  "n": 110
+ },
+ {
+  "group": "14. Icon nhỏ (chỉ số, trạng thái, tiền tệ)",
+  "file": "ic-trang-thai-1.png",
+  "title": "Icon nhỏ · ic-trang-thai-1",
+  "text": "Create ONE image: a 640x128 row of 5 equal 128x128 square TINY game UI icons (status / stat icons), one per cell, left to right:\n[1] slowed: a small brown snail  [2] stunned: three yellow stars circling in a ring  [3] burning: an orange-red flame  [4] poisoned: a green poison drop with a tiny skull  [5] frozen: a light-blue ice crystal snowflake.\nDong Son bronze-drum style kept minimal: warm bronze gold #C9963A and dark green patina #2F6B5E accents, flat cartoon shading for a cute mobile game, at most one tiny zigzag or circle-dot accent (no rings, no birds, no busy engraving). These icons are shown VERY SMALL (16-20 px on a phone): one big simple silhouette that fills about 80% of the cell, VERY thick dark-brown outline #2A1608, at most 2-3 flat colors, no thin lines, no tiny details, no background shapes unless described, high contrast, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "cut": "python3 tools/cat-items.py <ảnh> ic-trang-thai-1",
+  "n": 111
+ },
+ {
+  "group": "14. Icon nhỏ (chỉ số, trạng thái, tiền tệ)",
+  "file": "ic-trang-thai-2.png",
+  "title": "Icon nhỏ · ic-trang-thai-2",
+  "text": "Create ONE image: a 640x128 row of 5 equal 128x128 square TINY game UI icons (status / stat icons), one per cell, left to right:\n[1] stuck in mud: brown mud puddle with two bubbles  [2] shield: a glowing cyan bubble dome  [3] healing: a green plus cross with a glow  [4] enraged: a red angry vein mark (four curved strokes)  [5] flying: one white feathered wing.\nDong Son bronze-drum style kept minimal: warm bronze gold #C9963A and dark green patina #2F6B5E accents, flat cartoon shading for a cute mobile game, at most one tiny zigzag or circle-dot accent (no rings, no birds, no busy engraving). These icons are shown VERY SMALL (16-20 px on a phone): one big simple silhouette that fills about 80% of the cell, VERY thick dark-brown outline #2A1608, at most 2-3 flat colors, no thin lines, no tiny details, no background shapes unless described, high contrast, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "cut": "python3 tools/cat-items.py <ảnh> ic-trang-thai-2",
+  "n": 112
+ },
+ {
+  "group": "14. Icon nhỏ (chỉ số, trạng thái, tiền tệ)",
+  "file": "ic-trang-thai-3.png",
+  "title": "Icon nhỏ · ic-trang-thai-3",
+  "text": "Create ONE image: a 512x128 row of 4 equal 128x128 square TINY game UI icons (status / stat icons), one per cell, left to right:\n[1] boss: a red demon crown with two small horns  [2] silenced: a cream speech bubble crossed by a red slash  [3] elite: a purple faceted gem  [4] diving underwater: two blue wave lines with bubbles.\nDong Son bronze-drum style kept minimal: warm bronze gold #C9963A and dark green patina #2F6B5E accents, flat cartoon shading for a cute mobile game, at most one tiny zigzag or circle-dot accent (no rings, no birds, no busy engraving). These icons are shown VERY SMALL (16-20 px on a phone): one big simple silhouette that fills about 80% of the cell, VERY thick dark-brown outline #2A1608, at most 2-3 flat colors, no thin lines, no tiny details, no background shapes unless described, high contrast, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "cut": "python3 tools/cat-items.py <ảnh> ic-trang-thai-3",
+  "n": 113
+ },
+ {
+  "group": "14. Icon nhỏ (chỉ số, trạng thái, tiền tệ)",
+  "file": "ic-tien-te.png",
+  "title": "Icon nhỏ · ic-tien-te",
+  "text": "Create ONE image: a 640x128 row of 5 equal 128x128 square TINY game UI icons (status / stat icons), one per cell, left to right:\n[1] gold reward: a small cloth pouch with a gold coin on it  [2] skill point: a yellow star on a dark-green bronze disc  [3] rune point: a small grey carved stone seal with a golden sun mark  [4] combat power: two crossed bronze swords  [5] level up: two green upward chevrons.\nDong Son bronze-drum style kept minimal: warm bronze gold #C9963A and dark green patina #2F6B5E accents, flat cartoon shading for a cute mobile game, at most one tiny zigzag or circle-dot accent (no rings, no birds, no busy engraving). These icons are shown VERY SMALL (16-20 px on a phone): one big simple silhouette that fills about 80% of the cell, VERY thick dark-brown outline #2A1608, at most 2-3 flat colors, no thin lines, no tiny details, no background shapes unless described, high contrast, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "cut": "python3 tools/cat-items.py <ảnh> ic-tien-te",
+  "n": 114
+ },
+ {
+  "group": "14. Icon nhỏ (chỉ số, trạng thái, tiền tệ)",
+  "file": "ic-khac.png",
+  "title": "Icon nhỏ · ic-khac",
+  "text": "Create ONE image: a 640x128 row of 5 equal 128x128 square TINY game UI icons (status / stat icons), one per cell, left to right:\n[1] hard mode: a cream skull with red glowing eyes  [2] flood rising: blue water waves with an upward arrow  [3] element counter: an orange arrow hitting a small yellow spark  [4] upgrade: a fat green upward arrow  [5] magic penetration: a purple glowing spear tip piercing a ring.\nDong Son bronze-drum style kept minimal: warm bronze gold #C9963A and dark green patina #2F6B5E accents, flat cartoon shading for a cute mobile game, at most one tiny zigzag or circle-dot accent (no rings, no birds, no busy engraving). These icons are shown VERY SMALL (16-20 px on a phone): one big simple silhouette that fills about 80% of the cell, VERY thick dark-brown outline #2A1608, at most 2-3 flat colors, no thin lines, no tiny details, no background shapes unless described, high contrast, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "cut": "python3 tools/cat-items.py <ảnh> ic-khac",
+  "n": 115
+ },
+ {
+  "group": "14. Icon nhỏ (chỉ số, trạng thái, tiền tệ)",
+  "file": "ic-ngu-hanh.png",
+  "title": "Icon nhỏ · ic-ngu-hanh",
+  "text": "Create ONE image: a 640x128 row of 5 equal 128x128 square TINY game UI icons (status / stat icons), one per cell, left to right:\n[1] Metal element: a silver-white bronze axe blade on a round grey disc  [2] Wood element: a green sprouting leaf on a round green disc  [3] Water element: two blue waves on a round blue disc  [4] Fire element: an orange flame on a round red disc  [5] Earth element: a brown mountain peak on a round ochre disc.\nDong Son bronze-drum style kept minimal: warm bronze gold #C9963A and dark green patina #2F6B5E accents, flat cartoon shading for a cute mobile game, at most one tiny zigzag or circle-dot accent (no rings, no birds, no busy engraving). These icons are shown VERY SMALL (16-20 px on a phone): one big simple silhouette that fills about 80% of the cell, VERY thick dark-brown outline #2A1608, at most 2-3 flat colors, no thin lines, no tiny details, no background shapes unless described, high contrast, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "cut": "python3 tools/cat-items.py <ảnh> ic-ngu-hanh",
+  "n": 116
  }
 ]

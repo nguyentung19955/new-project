@@ -325,6 +325,27 @@ for (const [k, v] of Object.entries(ITEM_SHEETS)) {
   sheetsJson[k] = { dir: '', files: v.cells.map((c) => c[0]) };
   if (!v.cells.every((c) => done(c[0]))) items.push({ group: '13. Icon đồ vật', file: `${k}.png`, title: v.title, text: sheetPrompt(v.cells.map((c) => c[1]), 'game item icons') });
 }
+// v159: icon NHỎ (chỉ số, trạng thái, tiền tệ, ngũ hành…) đang vẽ bằng SVG/emoji — hiện ở 13–20 px nên nét phải rất to, ít chi tiết.
+// Cắt: python3 tools/cat-items.py <ảnh> <mã tấm>  → assets/ui/ic-<tên>.png (64 px). Bảng kê chỗ dùng: docs/ICON-NHO.md
+const IC_SHEETS = {
+  'ic-chi-so-1': [['giap', 'armor: a sturdy bronze kite shield'], ['khang-phep', 'magic resistance: a glowing purple orb inside a bronze ring'], ['toc-chay', 'move speed: one green-brown straw sandal with three speed lines'], ['toc-danh', 'attack speed: a yellow lightning bolt'], ['sat-thuong', 'damage: a short bronze sword pointing up-right']],
+  'ic-chi-so-2': [['mau', 'health: a big red blood drop'], ['chi-mang', 'critical hit: an orange-red spiky burst star'], ['tam-danh', 'attack range: a red and cream round target with an arrow in the center'], ['hoi-chieu', 'cooldown: a bronze hourglass with blue sand'], ['nang-luong', 'energy / mana: a big blue water drop with a white sparkle']],
+  'ic-chi-so-3': [['suc-manh', 'strength: a clenched orange fist'], ['nhanh-nhen', 'agility: a green Lac bird feather'], ['tri-tue', 'intelligence: an open blue bamboo scroll book'], ['giam-sat-thuong', 'damage reduction: a teal shield with a white downward arrow'], ['xuyen-giap', 'armor penetration: a bronze spear tip cracking through a small shield']],
+  'ic-trang-thai-1': [['cham', 'slowed: a small brown snail'], ['choang', 'stunned: three yellow stars circling in a ring'], ['dot', 'burning: an orange-red flame'], ['doc', 'poisoned: a green poison drop with a tiny skull'], ['dong-bang', 'frozen: a light-blue ice crystal snowflake']],
+  'ic-trang-thai-2': [['sa-lay', 'stuck in mud: brown mud puddle with two bubbles'], ['khien', 'shield: a glowing cyan bubble dome'], ['hoi-mau', 'healing: a green plus cross with a glow'], ['noi-gian', 'enraged: a red angry vein mark (four curved strokes)'], ['bay', 'flying: one white feathered wing']],
+  'ic-trang-thai-3': [['boss', 'boss: a red demon crown with two small horns'], ['cam-lang', 'silenced: a cream speech bubble crossed by a red slash'], ['tinh-anh', 'elite: a purple faceted gem'], ['lan', 'diving underwater: two blue wave lines with bubbles']],
+  'ic-tien-te': [['tui-vang', 'gold reward: a small cloth pouch with a gold coin on it'], ['diem-ky-nang', 'skill point: a yellow star on a dark-green bronze disc'], ['diem-an-phu', 'rune point: a small grey carved stone seal with a golden sun mark'], ['luc-chien', 'combat power: two crossed bronze swords'], ['cap-do', 'level up: two green upward chevrons']],
+  'ic-khac': [['kho', 'hard mode: a cream skull with red glowing eyes'], ['nuoc-dang', 'flood rising: blue water waves with an upward arrow'], ['khac-che', 'element counter: an orange arrow hitting a small yellow spark'], ['nang-cap', 'upgrade: a fat green upward arrow'], ['xuyen-phep', 'magic penetration: a purple glowing spear tip piercing a ring']],
+  'ic-ngu-hanh': [['hanh-kim', 'Metal element: a silver-white bronze axe blade on a round grey disc'], ['hanh-moc', 'Wood element: a green sprouting leaf on a round green disc'], ['hanh-thuy', 'Water element: two blue waves on a round blue disc'], ['hanh-hoa', 'Fire element: an orange flame on a round red disc'], ['hanh-tho', 'Earth element: a brown mountain peak on a round ochre disc']],
+};
+const icPrompt = (cells) => `Create ONE image: a ${cells.length * 128}x128 row of ${cells.length} equal 128x128 square TINY game UI icons (status / stat icons), one per cell, left to right:
+${cells.map(([, d], i) => `[${i + 1}] ${d}`).join('  ')}.
+Dong Son bronze-drum style kept minimal: warm bronze gold #C9963A and dark green patina #2F6B5E accents, flat cartoon shading for a cute mobile game, at most one tiny zigzag or circle-dot accent (no rings, no birds, no busy engraving). These icons are shown VERY SMALL (16-20 px on a phone): one big simple silhouette that fills about 80% of the cell, VERY thick dark-brown outline #2A1608, at most 2-3 flat colors, no thin lines, no tiny details, no background shapes unless described, high contrast, no text, no letters, no numbers.
+${BG}`;
+for (const [k, v] of Object.entries(IC_SHEETS)) {
+  sheetsJson[k] = { dir: 'ui', size: 64, files: v.map(([n]) => `ic-${n}.png`) };
+  if (!v.every(([n]) => done(`ui/ic-${n}.png`))) items.push({ group: '14. Icon nhỏ (chỉ số, trạng thái, tiền tệ)', file: `${k}.png`, title: `Icon nhỏ · ${k}`, text: icPrompt(v), cut: `python3 tools/cat-items.py <ảnh> ${k}` });
+}
 fs.writeFileSync(path.join(ROOT, 'tools/item-sheets.json'), JSON.stringify(sheetsJson, null, 1));
 items.forEach((it, i) => { it.n = i + 1; });
 const noIcon = need.filter((x) => !ICONS[x]);  // tướng mới chưa có mô tả icon
