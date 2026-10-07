@@ -273,6 +273,10 @@ const SAVE_KEY = 'nuicao.v1';
 const FB_KEY = 'nuicao.feedback';
 const FB_KINDS = [['bug', '🐞 Lỗi'], ['idea', '💡 Ý tưởng'], ['balance', '⚖ Cân bằng'], ['other', '💬 Khác']];
 const CAMP_STAR_KHO = 40;    // v166: quy đổi sao Phó bản cũ → Ngân khố (một lần)
+// v163: màn "Góp ý nhận được" (chỉ tài khoản quản trị): màu từng loại, trạng thái, số mục mỗi trang
+const FBA_KIND = { bug: ['Lỗi', '#FF7A5C'], idea: ['Ý tưởng', '#7FD0FF'], balance: ['Cân bằng', '#F2D27A'], other: ['Khác', '#B9B0A0'] };
+const FBA_ST = [['new', 'Mới'], ['seen', 'Đã xem'], ['done', 'Đã xử lý']];
+const FBA_PAGE = 20;
 const FB_GAP = 60000, FB_DAY = 10, FB_QUEUE = 5, FB_MIN = 10, FB_MAX = 1000, FB_SHOT = 150000;
 function loadSave() {
   // stars / unlocked / best: tiến trình Phó bản cũ (v166 bỏ Phó bản) — vẫn giữ trong bản lưu, chỉ dùng để quy đổi một lần
@@ -415,7 +419,7 @@ class UI {
     $('#btn-feedback').onclick = () => this.showFeedback('menu');
     // góp ý còn trong hàng đợi: gửi lại khi có mạng / khi vừa kết nối được Firebase
     window.addEventListener('online', () => this.fbFlush());
-    if (typeof CLOUD !== 'undefined') CLOUD.onChange(() => { if (CLOUD.ready) this.fbFlush(); });
+    if (typeof CLOUD !== 'undefined') CLOUD.onChange(() => { if (CLOUD.ready) this.fbFlush(); this.fbaCheck(); });
     // v153: trò chuyện trong trận nhóm (💬 trên thanh trên; Enter để gửi)
     $('#btn-chat').onclick = () => this.chatToggle();
     $('#chat').addEventListener('keydown', (ev) => { if (ev.key === 'Enter' && ev.target.id === 'chat-in') { ev.preventDefault(); this.chatAct({ act: 'chat-send' }); } });
@@ -459,7 +463,7 @@ class UI {
       });
     };
     // ủy quyền sự kiện cho các vùng dựng lại liên tục
-    for (const id of ['#fuse-strip', '#auto-btns', '#screen', '#deck', '#drawer', '#more', '#reward', '#result', '#campaign', '#settings', '#legends', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks', '#modes', '#rest', '#feedback', '#coop', '#coop-bar', '#chat']) {
+    for (const id of ['#fuse-strip', '#auto-btns', '#screen', '#deck', '#drawer', '#more', '#reward', '#result', '#campaign', '#settings', '#legends', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks', '#modes', '#rest', '#feedback', '#coop', '#coop-bar', '#chat', '#fbadmin']) {
       $(id).addEventListener('click', (ev) => {
         const el = ev.target.closest('[data-act]');
         if (this.tipShown) { this.tipShown = false; ev.preventDefault(); return; }   // vừa giữ tay xem mô tả: không nâng kỹ năng
@@ -511,6 +515,7 @@ class UI {
     window.addEventListener('keydown', (ev) => {
       if (ev.target && /^(INPUT|TEXTAREA)$/.test(ev.target.tagName)) return;   // đang gõ chữ (góp ý, đổi tên): không bắt phím tắt
       if (ev.key === 'Escape' && !$('#feedback').hidden) return this.fbClose();
+      if (ev.key === 'Escape' && !$('#fbadmin').hidden) return this.fbaKey();
       if (!g.started) return;
       const k = ev.key.toLowerCase();
       const h = g.heroes[this.sel];
@@ -563,7 +568,7 @@ class UI {
     this.setInGame(false);
   }
   hideOverlays() {
-    for (const id of ['#menu', '#campaign', '#settings', '#result', '#reward', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks', '#modes', '#rest', '#coop']) $(id).hidden = true;
+    for (const id of ['#menu', '#campaign', '#settings', '#result', '#reward', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks', '#modes', '#rest', '#coop', '#fbadmin']) $(id).hidden = true;
     if (this.needLogin()) this.showLogin(false);   // v73: chưa đăng nhập thì luôn che game
   }
   setInGame(on) {
@@ -922,7 +927,7 @@ class UI {
         <div class="co-row"><button class="btn btn-gold title" data-act="coop-create">＋ Tạo phòng</button></div>
         <div class="co-row"><input id="co-code" class="login-in co-code" maxlength="6" placeholder="Mã phòng" autocapitalize="characters" autocomplete="off" value="${esc(this.coopCode || '')}"><button class="btn metal title" data-act="coop-join">Vào phòng</button></div>
         ${saved ? `<div class="co-row"><button class="btn metal" data-act="coop-rejoin">↻ Vào lại phòng ${esc(saved)}</button></div>` : ''}
-        ${this.coopErr ? `<div class="login-err">${esc(this.coopErr)}</div>` : ''}</div>`;
+        ${this.coopErr ? `<div class="login-err">${esc(this.coopErr)}${this.coopRetry ? ' <button class="btn metal co-retry" data-act="coop-retry">↻ Thử lại</button>' : ''}</div>` : ''}</div>`;
     } else {
       const host = r && r.host === me, members = r ? r.members : [];
       const lv = r ? r.level || 0 : 0;
@@ -937,16 +942,18 @@ class UI {
         <div class="hint-h">BẢN ĐỒ VÔ TẬN (CHỦ PHÒNG CHỌN)</div>${lvList}
         <div class="co-row">${host ? `<button class="btn btn-gold title" data-act="coop-start" ${members.length === 2 ? '' : 'disabled'}>⚔ Bắt đầu</button>` : '<span class="note">Chờ chủ phòng bấm Bắt đầu…</span>'}
           <button class="btn metal" data-act="coop-leave">Rời phòng</button></div>
-        ${this.coopErr ? `<div class="login-err">${esc(this.coopErr)}</div>` : ''}</div>`;
+        ${this.coopErr ? `<div class="login-err">${esc(this.coopErr)}${this.coopRetry ? ' <button class="btn metal co-retry" data-act="coop-retry">↻ Thử lại</button>' : ''}</div>` : ''}</div>`;
     }
     $('#coop').innerHTML = `<div class="screen" style="z-index:auto">${head}<div class="co-body">${body}</div></div>`;
   }
   async coopAct(d) {
     const g = this.game;
     this.coopErr = '';
+    if (d.act === 'coop-retry') { const last = this.coopRetry; this.coopRetry = null; if (last) return this.coopAct(last); return; }
     const busy = async (msg, fn) => {
       this.coopBusy = msg; this.renderCoop();
-      try { await fn(); } catch (e) { this.coopErr = e.message || String(e); } finally { this.coopBusy = ''; if (!$('#coop').hidden) this.renderCoop(); }
+      this.coopRetry = null;
+      try { await fn(); } catch (e) { this.coopErr = e.message || String(e); this.coopRetry = { ...d }; } finally { this.coopBusy = ''; if (!$('#coop').hidden) this.renderCoop(); }
     };
     switch (d.act) {
       case 'coop-back': this.showMenu(); break;
@@ -1089,7 +1096,11 @@ class UI {
     if (r !== true) return this.toast(r, '#E25A3A');
     if (d.act === 'chat-send') { const i = $('#chat-in'); if (i) i.value = ''; }
   }
-  coopNote(msg) { this.toast(esc(msg), '#5AB4D6'); }
+  // thông báo chơi nhóm (đồng đội rời / vào lại, đồng bộ lại…): hiện toast và giữ 20 dòng gần nhất (xem lại / kiểm thử)
+  coopNote(msg) {
+    this.coopLog = (this.coopLog || []).concat([{ at: Date.now(), msg }]).slice(-20);
+    this.toast(esc(msg), '#5AB4D6');
+  }
   updateCoopBar() {
     const g = this.game, co = g.co, bar = $('#coop-bar');
     $('#btn-chat').hidden = !COOP.on;
@@ -1189,7 +1200,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px">${[['auto', 'Tự động'], ['high', 'Đẹp'], ['low', 'Tiết kiệm']].map(([k, n]) => `<button class="btn ${(st.gfx || 'auto') === k ? 'btn-gold' : 'metal'}" style="height:34px;padding:0 10px;font-size:13px" data-act="set-gfx" data-k="${k}">${n}</button>`).join('')}</div></div>
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Góp ý</b><small>Báo lỗi, gửi ý tưởng hay góp ý cân bằng cho đội làm game</small></div>
-          <button class="btn metal" style="margin-left:auto" data-act="set-feedback">✉ Góp ý</button></div>
+          <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
         <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 166 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
@@ -1350,6 +1361,160 @@ class UI {
       for (const item of q) { if (await this.fbTry(item)) { this.fbDrop(item.at); n++; } else break; }
     } finally { this.fbFlushing = false; }
     if (n) this.toast(`Đã gửi ${n} góp ý đang chờ. Cảm ơn bạn! 💌`, '#6AE06A');
+  }
+
+  // ---------- v163: "Góp ý nhận được" — chỉ hiện với tài khoản quản trị (CLOUD.isAdmin(): đăng nhập, email trong ADMIN_EMAILS, đã xác minh).
+  // Ẩn nút chỉ là giao diện; luật Firestore isAdmin() mới chặn thật. Lọc loại / trạng thái làm trên máy (không cần chỉ mục ghép).
+  fbaIsAdmin() { return typeof CLOUD !== 'undefined' && !!CLOUD.isAdmin && CLOUD.isAdmin(); }
+  fbaBtn() {
+    if (typeof CLOUD !== 'undefined' && CLOUD.adminUnverified && CLOUD.adminUnverified())
+      return '<button class="btn metal" data-act="fba-verify" title="Email quản trị chưa xác minh">📥 Xác minh email</button>';
+    if (!this.fbaIsAdmin()) return '';
+    const n = this.fbaNew || 0;
+    return `<button class="btn metal fba-open" data-act="fba-open">📥 Góp ý nhận được${n ? `<span class="fba-dot">${n > 49 ? '50+' : n}</span>` : ''}</button>`;
+  }
+  // đổi tài khoản / vừa đăng nhập: đếm góp ý "Mới" (50 mục gần nhất) làm chấm báo trên nút Cài Đặt + nút trong Cài đặt
+  fbaCheck() {
+    const uid = this.fbaIsAdmin() && CLOUD.ready ? CLOUD.user.uid : '';
+    if (uid === this.fbaUid) return;
+    this.fbaUid = uid; this.fbaNew = 0; this.fbaDot();
+    if (!uid) { this.fba = null; if (!$('#fbadmin').hidden) $('#fbadmin').hidden = true; return; }
+    CLOUD.listFeedback({ limit: 50 }).then((r) => { if (this.fbaUid !== uid) return; this.fbaNew = r.items.filter((f) => (f.status || 'new') === 'new').length; this.fbaDot(); }, () => {});
+  }
+  fbaDot() {
+    const b = $('#btn-settings');
+    if (b) b.classList.toggle('fba-has', !!(this.fbaIsAdmin() && this.fbaNew));
+    if (!$('#settings').hidden) this.renderSettings();
+  }
+  // ảnh do người chơi gửi: chỉ nhận đúng dạng JPEG base64 (chuỗi lạ có thể chèn thuộc tính HTML vào <img>)
+  fbaShotOk(u) { return typeof u === 'string' && /^data:image\/jpeg;base64,[A-Za-z0-9+/]+=*$/.test(u); }
+  fbaTime(at) {
+    try { return new Date(at).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh', hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' }); } catch (e) { return String(at); }
+  }
+  async showFbAdmin() {
+    if (!this.fbaIsAdmin()) return;
+    this.fba = { items: [], cursor: null, more: true, kind: 'all', st: 'all', err: '', busy: false, big: '', note: '', del: '' };
+    $('#fbadmin').hidden = false;
+    this.renderFbAdmin();
+    await this.fbaLoad();
+  }
+  async fbaLoad() {
+    const a = this.fba;
+    if (!a || a.busy || !a.more) return;
+    a.busy = true; a.err = ''; this.renderFbAdmin();
+    try {
+      const r = await CLOUD.listFeedback({ limit: FBA_PAGE, after: a.cursor });
+      if (this.fba !== a) return;
+      const have = new Set(a.items.map((f) => f.id));
+      a.items.push(...r.items.filter((f) => !have.has(f.id)));
+      a.cursor = r.cursor || a.cursor; a.more = r.more;
+    } catch (e) { if (this.fba === a) a.err = e.message; }
+    a.busy = false;
+    if (this.fba === a) { this.fbaCount(); this.renderFbAdmin(); }
+  }
+  // số góp ý "Mới" cho chấm báo: tải hết danh sách thì đếm chính xác, chưa hết thì không thấp hơn số đã đếm lúc đầu
+  fbaCount(delta) {
+    const a = this.fba;
+    if (delta) this.fbaNew = Math.max(0, (this.fbaNew || 0) + delta);
+    else if (a) { const k = a.items.filter((f) => (f.status || 'new') === 'new').length; this.fbaNew = a.more ? Math.max(this.fbaNew || 0, k) : k; }
+    this.fbaDot();
+  }
+  renderFbAdmin() {
+    const a = this.fba;
+    if (!a) return;
+    const box = $('#fbadmin .fba-list');
+    const scroll = box ? box.scrollTop : 0;
+    const stOf = (f) => f.status || 'new';
+    const n = (fn) => a.items.filter(fn).length;
+    const kinds = [['all', 'Tất cả'], ...Object.entries(FBA_KIND).map(([k, v]) => [k, v[0]])];
+    const sts = [['all', 'Mọi trạng thái'], ...FBA_ST];
+    const list = a.items.filter((f) => (a.kind === 'all' || f.kind === a.kind) && (a.st === 'all' || stOf(f) === a.st));
+    const card = (f) => {
+      const [kn, kc] = FBA_KIND[f.kind] || FBA_KIND.other;
+      const st = stOf(f);
+      const meta = [f.ver, f.where, f.scr, f.ua].filter(Boolean).map(esc).join(' · ');
+      return `<div class="fba-item inset st-${st}" data-id="${esc(f.id)}">
+        <div class="fba-top"><span class="fba-kind" style="--kc:${kc}">${kn}</span><span class="fba-time">${esc(this.fbaTime(f.at))}</span>
+          <span class="fba-who">${f.guest ? 'Khách' : 'Đã đăng nhập'}</span>
+          <div class="fba-st">${FBA_ST.map(([k, l]) => `<button class="${st === k ? 'on' : ''}" data-act="fba-st" data-id="${esc(f.id)}" data-k="${k}" aria-pressed="${st === k}">${l}</button>`).join('')}</div></div>
+        <div class="fba-mid">
+          <div class="fba-txt">${esc(f.text || '')}${f.contact ? `<div class="fba-contact">Liên hệ: <b>${esc(f.contact)}</b></div>` : ''}</div>
+          ${this.fbaShotOk(f.shot) ? `<button class="fba-thumb" data-act="fba-big" data-id="${esc(f.id)}" aria-label="Xem ảnh to"><img src="${f.shot}" alt="Ảnh chụp" loading="lazy"></button>` : ''}
+        </div>
+        <div class="fba-meta">${meta}</div>
+        ${a.note === f.id ? `<div class="fba-note-ed"><input id="fba-note-in" maxlength="300" placeholder="Ghi chú (chỉ quản trị thấy)" value="${esc(f.note || '')}" autocomplete="off"><button class="btn btn-gold" data-act="fba-note-ok" data-id="${esc(f.id)}">Lưu</button><button class="btn metal" data-act="fba-note-x">Huỷ</button></div>`
+          : `<div class="fba-act">${f.note ? `<span class="fba-note">📝 ${esc(f.note)}</span>` : '<span class="fba-note"></span>'}
+          <button class="btn metal" data-act="fba-note" data-id="${esc(f.id)}">✎ Ghi chú</button>
+          ${a.del === f.id ? `<span class="fba-ask">Xoá hẳn góp ý này?</span><button class="btn metal fba-danger" data-act="fba-del-ok" data-id="${esc(f.id)}">Xoá</button><button class="btn metal" data-act="fba-del-x">Không</button>`
+            : `<button class="btn metal fba-danger" data-act="fba-del" data-id="${esc(f.id)}">🗑 Xoá</button>`}</div>`}
+      </div>`;
+    };
+    const big = a.big && a.items.find((f) => f.id === a.big && this.fbaShotOk(f.shot));
+    const empty = a.busy && !a.items.length ? 'Đang tải…' : a.err && !a.items.length ? '' : !a.items.length ? 'Chưa có góp ý nào.' : !list.length ? `Không có góp ý khớp bộ lọc${a.more ? ' trong số đã tải — bấm Tải thêm' : ''}.` : '';
+    $('#fbadmin').innerHTML = `<div class="screen" style="z-index:auto">
+      <div class="scr-head metal"><button class="xbtn metal" data-act="fba-close" aria-label="Quay lại">${ICON.back}</button><h1 class="ttl">📥 Góp ý nhận được</h1>
+        <span class="chip dark">${a.items.length}${a.more ? '+' : ''} góp ý · ${this.fbaNew || 0} mới</span><div class="sp"></div>
+        <button class="btn metal" style="height:34px;padding:0 10px;font-size:13px;flex:none" data-act="fba-reload" ${a.busy ? 'disabled' : ''}>↻ Tải lại</button></div>
+      <div class="fba-filters">
+        <div class="cp-tabs">${kinds.map(([k, l]) => `<button class="cp-tab ${a.kind === k ? 'on' : ''}" data-act="fba-kind" data-k="${k}">${k === 'all' ? '' : `<i class="fba-sw" style="--kc:${FBA_KIND[k][1]}"></i>`}${l} <small>${k === 'all' ? a.items.length : n((f) => f.kind === k)}</small></button>`).join('')}</div>
+        <div class="cp-tabs">${sts.map(([k, l]) => `<button class="cp-tab ${a.st === k ? 'on' : ''}" data-act="fba-stf" data-k="${k}">${l}${k === 'all' ? '' : ` <small>${n((f) => stOf(f) === k)}</small>`}</button>`).join('')}</div>
+      </div>
+      <div class="fba-list">
+        ${a.err ? `<div class="login-err fba-err">${esc(a.err)}</div>` : ''}
+        ${empty ? `<div class="note" style="text-align:center;padding:16px">${empty}</div>` : ''}
+        ${list.map(card).join('')}
+        ${a.more && a.items.length ? `<button class="btn metal fba-more" data-act="fba-more" ${a.busy ? 'disabled' : ''}>${a.busy ? 'Đang tải…' : 'Tải thêm'}</button>` : ''}
+      </div>
+      ${big ? `<div class="fba-big" data-act="fba-big-x"><img src="${big.shot}" alt="Ảnh chụp trận"><small>Chạm để đóng</small></div>` : ''}
+    </div>`;
+    const nb = $('#fbadmin .fba-list');
+    if (nb) nb.scrollTop = scroll;
+    const ni = $('#fba-note-in');
+    if (ni) { ni.focus(); ni.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); this.fbaAct({ act: 'fba-note-ok', id: a.note }); } }); }
+  }
+  fbaKey() {
+    const a = this.fba;
+    if (a && (a.big || a.del || a.note)) { a.big = a.del = a.note = ''; this.renderFbAdmin(); return; }
+    this.fbaAct({ act: 'fba-close' });
+  }
+  async fbaAct(d) {
+    const a = this.fba;
+    if (!a) return;
+    const f = d.id && a.items.find((x) => x.id === d.id);
+    switch (d.act) {
+      case 'fba-close': $('#fbadmin').hidden = true; this.fba = null; if (!$('#settings').hidden) this.renderSettings(); break;
+      case 'fba-reload': this.fba = null; this.showFbAdmin(); break;
+      case 'fba-more': this.fbaLoad(); break;
+      case 'fba-kind': a.kind = d.k; this.renderFbAdmin(); break;
+      case 'fba-stf': a.st = d.k; this.renderFbAdmin(); break;
+      case 'fba-big': a.big = d.id; this.renderFbAdmin(); break;
+      case 'fba-big-x': a.big = ''; this.renderFbAdmin(); break;
+      case 'fba-note': a.note = d.id; a.del = ''; this.renderFbAdmin(); break;
+      case 'fba-note-x': a.note = ''; this.renderFbAdmin(); break;
+      case 'fba-del': a.del = d.id; a.note = ''; this.renderFbAdmin(); break;
+      case 'fba-del-x': a.del = ''; this.renderFbAdmin(); break;
+      case 'fba-st': case 'fba-note-ok': {
+        if (!f) break;
+        const status = d.act === 'fba-st' ? d.k : (f.status || 'new');
+        const note = d.act === 'fba-note-ok' ? (($('#fba-note-in') || {}).value || '').trim().slice(0, 300) : undefined;
+        const was = (f.status || 'new') === 'new';
+        try {
+          await CLOUD.setFeedbackStatus(f.id, status, note);
+          f.status = status; if (note !== undefined) f.note = note;
+          a.note = ''; a.err = '';
+          this.fbaCount((status === 'new') - was);
+        } catch (e) { a.err = e.message; this.toast(esc(e.message), '#FF7A5C'); }
+        this.renderFbAdmin(); break;
+      }
+      case 'fba-del-ok': {
+        if (!f) break;
+        try {
+          await CLOUD.deleteFeedback(f.id); a.items = a.items.filter((x) => x !== f); a.del = ''; a.err = ''; this.toast('Đã xoá góp ý', '#C8BFA8');
+          if ((f.status || 'new') === 'new') this.fbaCount(-1);
+        } catch (e) { a.err = e.message; this.toast(esc(e.message), '#FF7A5C'); }
+        this.renderFbAdmin(); break;
+      }
+    }
   }
 
   // ---------- chạm bản đồ
@@ -2573,6 +2738,19 @@ class UI {
       case 'fb-shot': this.fbRead(); this.fb.useShot = !this.fb.useShot; this.renderFeedback(); break;
       case 'fb-close': this.fbClose(); break;
       case 'fb-send': this.fbSend(); break;
+      case 'fba-open': this.showFbAdmin(); break;
+      case 'fba-verify': {
+        const u = CLOUD.user;
+        CLOUD.verifyAdminEmail(this.fbaMailSent).then((v) => {
+          if (this.fbaMailSent && !v) this.toast('Email chưa được xác minh — mở thư trong hộp thư rồi bấm lại', '#F2D27A');
+          else if (!this.fbaMailSent) { this.fbaMailSent = true; this.toast('Đã gửi thư xác minh tới ' + esc(u.email) + '. Xác minh xong bấm lại nút này', '#6AE06A'); }
+          this.renderSettings();
+        }, (e) => this.toast(esc(e.message), '#FF7A5C'));
+        break;
+      }
+      case 'fba-close': case 'fba-reload': case 'fba-more': case 'fba-kind': case 'fba-stf': case 'fba-big': case 'fba-big-x':
+      case 'fba-note': case 'fba-note-x': case 'fba-note-ok': case 'fba-del': case 'fba-del-x': case 'fba-del-ok': case 'fba-st':
+        this.fbaAct(d); break;
       case 'set-feedback': this.showFeedback(this.settingsInGame ? 'tam-dung' : 'cai-dat'); break;
       case 'set-close':
         $('#settings').hidden = true;

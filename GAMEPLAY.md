@@ -1545,6 +1545,22 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 164 — Gộp rà chủ đề cũ + bảng chỉ số gọn + hiệu ứng vẽ tay
 - Gộp: màn thắng/thua theo chương (v163, rà chủ đề cũ + 24 prompt khung/nút/tranh nhóm 18–21), bảng chỉ số tướng thu nhỏ, chuẩn animation + prompt hiệu ứng (game dùng ảnh assets/fx, assets/vfx khi có; đạn quả dưa dùng srand để chơi nhóm vẫn đồng bộ).
 
+## Phiên bản 163 — Báo lỗi rõ khi tạo / vào phòng chơi nhóm
+- Tạo phòng / vào phòng bị lỗi giờ báo đúng nguyên nhân kèm mã lỗi ngắn và nút **↻ Thử lại**: máy chủ từ chối (`permission-denied` — luật chơi nhóm chưa đăng lên Firebase), mất mạng (`unavailable`), phiên đăng nhập hết hạn (`unauthenticated`), sai mã (`not-found`). Chi tiết ghi vào console. Trước đây lỗi luật bị nuốt sau 5 lần thử mã và chỉ báo "Không tạo được phòng, thử lại"; nay chỉ thử mã khác 1 lần.
+- Thông báo chơi nhóm (đồng đội rời / vào lại, đồng bộ lại) được giữ 20 dòng gần nhất (`ui.coopLog`); test chơi nhóm đọc từ đó thay vì từ toast (toast chỉ giữ 2 dòng nên dễ bị đẩy mất).
+- Test mới: luật chưa đăng → báo rõ + Thử lại; mất mạng khi tạo phòng → báo mất mạng.
+
+## Phiên bản 163 — Xem góp ý trong game (chỉ tài khoản quản trị)
+- **📥 Góp ý nhận được** (Cài đặt → dòng Góp ý) chỉ hiện với tài khoản **ly230595@gmail.com** đã đăng nhập và đã xác minh email (`CLOUD.isAdmin()`, danh sách `ADMIN_EMAILS` trong `js/cloud.js`). Khách / tài khoản khác / email chưa xác minh không thấy gì; email quản trị chưa xác minh thấy nút **Xác minh email**.
+- Màn danh sách: mới nhất trước, 20 mục / lần + **Tải thêm**; loại có màu, giờ Việt Nam, nội dung, liên hệ, phiên bản, màn / ải / đợt, cỡ màn hình, máy, khách hay đã đăng nhập; ảnh thu nhỏ chạm để xem to. Lọc theo loại + trạng thái (Mới / Đã xem / Đã xử lý), đổi trạng thái, ghi chú, xoá có hỏi lại ngay trong mục. Chấm đỏ trên nút (và trên nút Cài Đặt ở menu) = số góp ý Mới.
+- `js/cloud.js`: `isAdmin()`, `listFeedback(opts)`, `setFeedbackStatus(id, status, note)`, `deleteFeedback(id)`; bị từ chối → "Tài khoản này không có quyền xem góp ý" / "Máy chủ chưa đăng luật mới".
+- `firestore.rules`: thêm hàm `isAdmin()` trong khối `feedback/{id}` — chỉ quản trị đọc, đổi `status` / `note`, xoá; luật tạo góp ý giữ nguyên; không đụng luật phòng chơi nhóm.
+- **Cần làm:** dán lại `firestore.rules` vào Firebase console → Firestore → Rules → Publish.
+- Test: `node tests/xem-gop-y/xem-gop-y.test.js` (giao diện, CLOUD.db giả, 844×390 / 667×375 / xoay dọc) và `tests/xem-gop-y/rules-emulator.test.js` (luật trên Firestore emulator, cách chạy trong `docs/FIREBASE.md`).
+
+## Phiên bản 165 — Gộp màn xem góp ý (quản trị) + báo lỗi chơi nhóm rõ ràng
+- Gộp: màn "📥 Góp ý nhận được" chỉ cho tài khoản quản trị (luật Firestore isAdmin), chơi nhóm báo đúng nguyên nhân khi tạo/vào phòng lỗi + nút Thử lại.
+
 ## Phiên bản 166 — Chỉ còn Vô tận (bỏ Phó bản / ải)
 - **Bỏ Phó bản** (chiến dịch 17 ải, sao 1–3, mở khoá tuần tự, điều kiện sao, màn kể chuyện mở đầu ải, bảng xếp hạng từng ải, nút *Ải tiếp theo*). Còn 2 chế độ ở màn **Chọn chế độ**: **Vô Tận** (chơi đơn) và **Cùng Giữ Thành** (chơi nhóm 2 người, cũng là vô tận).
 - **Chọn bản đồ vô tận:** đủ **17 bản đồ**, chia theo 5 nhóm truyền thuyết (Sơn Tinh – Thủy Tinh, Thạch Sanh, Thánh Gióng, Lạc Long Quân, An Dương Vương), **mở hết** từ đầu. Mỗi bản đồ: lời dẫn truyền thuyết ngắn, quân + boss đặc trưng, độ khó (Dễ / Vừa / Khó / Rất khó), **kỷ lục đợt** cá nhân, tướng khắc chế, Thường / Khó. Quân vô tận: quân + boss của chính bản đồ suốt 25–45 đợt đầu (như ải cũ), sau đó cứ 10 đợt đổi sang quân truyền thuyết khác, boss mỗi 10 đợt (giữ như trước).

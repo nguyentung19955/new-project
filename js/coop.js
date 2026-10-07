@@ -337,16 +337,41 @@ const COOP = {
     for (let i = 0; i < 6; i++) s += A[Math.floor(Math.random() * A.length)];
     return s;
   },
+  // v163: lỗi Firestore → câu báo rõ ràng + mã lỗi ngắn (ghi đủ vào console)
+  errCode(e) {
+    const c = (e && e.code) || '';
+    if (c) return String(c).replace(/^firestore\//, '');
+    const m = String((e && e.message) || e || '').match(/permission-denied|unavailable|unauthenticated|not-found|deadline-exceeded|offline/);
+    return m ? m[0] : 'unknown';
+  },
+  fail(what, e, extra) {
+    const code = this.errCode(e);
+    console.error(`[chơi nhóm] ${what} lỗi (${code})`, e);
+    const msg = code === 'permission-denied' ? (extra || 'Máy chủ từ chối: luật chơi nhóm (firestore.rules) chưa được đăng lên Firebase — chủ game cần đăng luật')
+      : code === 'unavailable' || code === 'deadline-exceeded' || code === 'offline' ? 'Mất mạng hoặc máy chủ không phản hồi — kiểm tra kết nối rồi thử lại'
+      : code === 'unauthenticated' ? 'Phiên đăng nhập đã hết — đăng nhập lại rồi thử lại'
+      : code === 'not-found' ? 'Không có phòng nào mã này'
+      : 'Lỗi không rõ';
+    const err = new Error(`${msg} (${code})`);
+    err.code = code;
+    return err;
+  },
   async createRoom(member) {
     const net = this.getNet();
     if (!net) throw new Error('Cần đăng nhập để chơi nhóm');
-    for (let k = 0; k < 5; k++) {
+    // mã trùng phòng của người khác cũng bị luật trả về permission-denied; 32^6 mã nên trùng 2 lần liền gần như không thể
+    // → thử tối đa 2 mã, vẫn bị từ chối thì là luật chưa đăng / sai
+    let last = null;
+    for (let k = 0; k < 2; k++) {
       const code = this.newCode();
       const data = { host: net.uid, members: [net.uid], names: { [net.uid]: member.name }, meta: { [net.uid]: member.meta },
         level: 0, state: 'lobby', auth: net.uid, epoch: 0, away: null, exp: Date.now() + 12 * 3600e3 };
-      try { await net.createRoom(code, data); this.remember(code); return code; } catch (e) { /* mã trùng: thử mã khác */ }
+      try { await net.createRoom(code, data); this.remember(code); return code; } catch (e) {
+        last = e;
+        if (this.errCode(e) !== 'permission-denied') break;
+      }
     }
-    throw new Error('Không tạo được phòng, thử lại');
+    throw this.fail('Tạo phòng', last);
   },
   async joinRoom(code, member) {
     const net = this.getNet();
@@ -356,7 +381,9 @@ const COOP = {
     let r = null;
     try { r = await net.getRoom(code); } catch (e) { /* chưa là thành viên: chưa đọc được */ }
     if (r && r.members.includes(net.uid)) { this.remember(code); return code; }
-    try { await net.joinRoom(code, member); } catch (e) { throw new Error('Không vào được: sai mã, phòng đủ người hoặc đã bắt đầu'); }
+    try { await net.joinRoom(code, member); } catch (e) {
+      throw this.fail('Vào phòng', e, 'Không vào được: sai mã, phòng đủ 2 người hoặc đã bắt đầu (nếu chắc mã đúng: luật chơi nhóm trên Firebase có thể chưa được đăng)');
+    }
     this.remember(code);
     return code;
   },

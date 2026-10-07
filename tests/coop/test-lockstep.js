@@ -82,7 +82,19 @@ async function run(browser) {
   await A.evaluate(() => ui.showModes());
   check(await A.evaluate(() => document.querySelectorAll('#modes .md-card').length === 2 && !/Phó Bản/.test(document.querySelector('#modes').innerText)), 'màn Chọn chế độ: chỉ Vô Tận + Cùng Giữ Thành');
   await click(A, '.md-card.coop');
+  // luật chưa đăng → báo rõ + nút Thử lại; mất mạng → báo mất mạng
+  relay.noRules = true;
   await click(A, '[data-act=coop-create]');
+  await waitFor(() => A.evaluate(() => !!document.querySelector('[data-act=coop-retry]')), 5000, 'báo lỗi tạo phòng');
+  const e1 = await A.evaluate(() => document.querySelector('#coop .login-err').textContent);
+  check(/luật chơi nhóm/.test(e1) && /permission-denied/.test(e1), `luật chưa đăng: "${e1.replace(/\s+/g, ' ').slice(0, 90)}…" + nút Thử lại`);
+  relay.noRules = false; relay.setOffline('chuPhong');
+  await click(A, '[data-act=coop-retry]');
+  await waitFor(() => A.evaluate(() => /Mất mạng/.test((document.querySelector('#coop .login-err') || {}).textContent || '')), 5000, 'báo mất mạng');
+  check(true, 'mất mạng khi tạo phòng: báo "Mất mạng…" (unavailable)');
+  relay.setOnline('chuPhong');
+  await click(A, '[data-act=coop-retry]');
+  for (let i = errors.length - 1; i >= 0; i--) if (/\[chơi nhóm\] Tạo phòng lỗi/.test(errors[i])) errors.splice(i, 1);   // lỗi cố ý ở trên (đã ghi console.error)
   const code = await waitFor(() => A.evaluate(() => ui.lobby && ui.lobby.code), 5000, 'tạo phòng');
   check(/^[A-Z0-9]{6}$/.test(code), `tạo phòng, mã ${code}`);
   await B.evaluate(() => ui.showCoop());
@@ -158,7 +170,7 @@ async function run(browser) {
     await stopBot(B);
     relay.setOffline('khach');
     await waitFor(async () => (await state(A)).alone === 0, 20000, 'chủ phòng thấy đồng đội rời');
-    const tA = await A.evaluate(() => [...document.querySelectorAll('#toasts .toast')].map((e) => e.textContent).join(' | '));
+    const tA = await A.evaluate(() => (ui.coopLog || []).map((x) => x.msg).join(' | '));
     check(/mất kết nối/i.test(tA) || /rời/i.test(tA), 'chủ phòng thấy thông báo mất kết nối');
     const solo = await A.evaluate(() => { const s = game.co.own.findIndex((o, i) => o === 1); return game.co.canAct(COOP.me, s); });
     check(solo, 'chơi tiếp một mình, điều khiển được cả nửa của đồng đội');

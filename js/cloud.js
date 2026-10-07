@@ -8,6 +8,8 @@
 //  Chưa điền js/firebase-config.js → CLOUD.enabled = false, game chạy như cũ.
 // ============================================================
 const FB_VER = '10.12.2';
+// v163: tài khoản được xem màn "Góp ý nhận được" (phải khớp hàm isAdmin() trong firestore.rules — bảo mật thật nằm ở luật)
+const ADMIN_EMAILS = ['ly230595@gmail.com'];
 const CLOUD = {
   enabled: typeof FIREBASE_CONFIG !== 'undefined' && !!FIREBASE_CONFIG.apiKey,
   // chạy trong app Android / iOS (Capacitor): Google chặn đăng nhập bằng cửa sổ bật lên trong WebView
@@ -148,7 +150,7 @@ const CLOUD = {
       return q.docs.map((d) => ({ uid: d.id, ...d.data() }));
     } catch (e) { this._fail(e); return null; }
   },
-  // ---------- v149: góp ý — feedback/{tự sinh}; chỉ được tạo, không ai đọc / sửa / xoá từ máy người chơi.
+  // ---------- v149: góp ý — feedback/{tự sinh}; người chơi chỉ được tạo; chỉ tài khoản quản trị (v163) đọc / đổi trạng thái / xoá.
   // Không gửi email; uid là mã ẩn danh của Firebase Auth. Lỗi → ném ra để giao diện xếp vào hàng đợi gửi lại.
   async sendFeedback(f) {
     if (!this.ready || !this.user || !this.db) throw new Error('offline');
@@ -156,6 +158,51 @@ const CLOUD = {
       scr: f.scr, ua: f.ua, at: f.at, uid: this.user.uid, guest: !!this.user.isAnonymous };
     await this.db.collection('feedback').add(doc);
     return true;
+  },
+  // ---------- v163: xem góp ý (chỉ tài khoản quản trị — luật Firestore isAdmin() mới là chốt chặn thật)
+  // Ẩn nút chỉ là giao diện; tài khoản khác gọi các hàm này sẽ bị máy chủ từ chối (permission-denied).
+  isAdmin() {
+    const u = this.user;
+    return !!(u && !u.isAnonymous && u.emailVerified && u.email && ADMIN_EMAILS.includes(String(u.email).toLowerCase()));
+  },
+  // email quản trị nhưng chưa xác minh (đăng ký bằng email/mật khẩu) → giao diện nhắc xác minh
+  adminUnverified() {
+    const u = this.user;
+    return !!(u && !u.isAnonymous && !u.emailVerified && u.email && ADMIN_EMAILS.includes(String(u.email).toLowerCase()));
+  },
+  async verifyAdminEmail(check) {
+    if (!this.user) throw new Error('Chưa đăng nhập');
+    try {
+      if (check) { await this.user.reload(); this.user = (this.auth && this.auth.currentUser) || this.user; if (this.user.emailVerified) await this.user.getIdToken(true); this._emit(); return this.user.emailVerified; }
+      await this.user.sendEmailVerification(); return true;
+    } catch (e) { throw new Error(this._err(e)); }
+  },
+  _fbAdminErr(e) {
+    if (e && e.code === 'permission-denied') return new Error(this.isAdmin() ? 'Máy chủ chưa đăng luật mới (Firestore → Rules → dán firestore.rules → Publish)' : 'Tài khoản này không có quyền xem góp ý');
+    return new Error((e && e.message === 'offline') ? 'Chưa kết nối máy chủ' : (e && (e.code || e.message)) || 'Lỗi');
+  },
+  // mới nhất trước; opts.limit (mặc định 20), opts.after = con trỏ trả về từ lần trước → trang kế tiếp
+  async listFeedback(opts = {}) {
+    if (!this.ready || !this.db) throw this._fbAdminErr(new Error('offline'));
+    const n = opts.limit || 20;
+    try {
+      let q = this.db.collection('feedback').orderBy('at', 'desc');
+      if (opts.after) q = q.startAfter(opts.after);
+      const snap = await q.limit(n).get();
+      const docs = snap.docs;
+      return { items: docs.map((d) => ({ id: d.id, ...d.data() })), cursor: docs.length ? docs[docs.length - 1] : null, more: docs.length === n };
+    } catch (e) { throw this._fbAdminErr(e); }
+  },
+  // status: 'new' | 'seen' | 'done'; note ≤ 300 ký tự (luật chỉ cho đổi 2 trường này)
+  async setFeedbackStatus(id, status, note) {
+    if (!this.ready || !this.db) throw this._fbAdminErr(new Error('offline'));
+    const d = { status };
+    if (note !== undefined) d.note = String(note).slice(0, 300);
+    try { await this.db.collection('feedback').doc(id).update(d); return true; } catch (e) { throw this._fbAdminErr(e); }
+  },
+  async deleteFeedback(id) {
+    if (!this.ready || !this.db) throw this._fbAdminErr(new Error('offline'));
+    try { await this.db.collection('feedback').doc(id).delete(); return true; } catch (e) { throw this._fbAdminErr(e); }
   },
   async signOut() { if (this.auth) { clearTimeout(this._timer); await this.auth.signOut(); } },
 };
