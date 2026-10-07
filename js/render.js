@@ -2217,6 +2217,8 @@ function drawEnemy(ctx, e, t, o = {}) {
 
   const top = e.y - lift - box.ay - 4;
   if (!o.icon) drawEnemyStatus(ctx, e, box, lift, t);
+  // trạng thái bằng ảnh hạt assets/vfx/ (js/vfx.js); ảnh chưa có / hết hạn mức → cờ false → vẽ bằng code như cũ bên dưới
+  const vs = !o.icon && typeof VFX !== 'undefined' && VFX.status ? VFX.status(ctx, e, box, lift, t) : {};
   ctx.save();
   ctx.translate(e.x, 0);
   // bị làm chậm: phủ sương xanh
@@ -2261,7 +2263,7 @@ function drawEnemy(ctx, e, t, o = {}) {
         const a2 = t * 3 + i * Math.PI;
         ctx.fillText('♪', Math.cos(a2) * box.w * 0.3, top - 6 + Math.sin(a2 * 2) * 4);
       }
-    } else {
+    } else if (!vs.stun) {
       for (let i = 0; i < 3; i++) {
         const a2 = t * 6 + (i * Math.PI * 2) / 3;
         drawStar(ctx, Math.cos(a2) * box.w * 0.3, top - 6 + Math.sin(a2) * 3, 3.5, '#F2D27A');
@@ -2274,7 +2276,7 @@ function drawEnemy(ctx, e, t, o = {}) {
     const ry = top - 14;
     ctx.beginPath(); ctx.arc(0, ry, 6, 0, Math.PI * 2); ctx.moveTo(-9, ry); ctx.lineTo(9, ry); ctx.moveTo(0, ry - 9); ctx.lineTo(0, ry + 9); ctx.stroke();
   }
-  if (e.poisonT > 0 && Math.random() < 0.3) {
+  if (e.poisonT > 0 && !vs.dot && Math.random() < 0.3) {
     circle(ctx, (Math.random() - 0.5) * box.w * 0.5, top + box.h * 0.3, 2, e.dotColor);
   }
   // v93: câm lặng — mây xám trên đầu, không dùng được kỹ năng

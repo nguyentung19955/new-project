@@ -1,0 +1,20 @@
+Ảnh hạt hiệu ứng trong thư mục này (assets/vfx/*.png, trừ ảnh vẽ tay đặt tên theo docs/PROMPT-CAN-GEN.txt)
+lấy từ hai gói miễn phí của Kenney (www.kenney.nl), giấy phép Creative Commons Zero (CC0 1.0):
+  http://creativecommons.org/publicdomain/zero/1.0/
+Được dùng cho dự án cá nhân lẫn thương mại; ghi công Kenney là tuỳ chọn — cảm ơn Kenney!
+
+  - Particle Pack (1.1) — Kenney Vleugels (Kenney.nl); thêm công tạo bộ lọc: Indigo Ray, Craig Nisbet,
+    Zoltan Erdokovy, Heliagon, ThreeDee, Killst4r, Tim2501.
+  - Smoke Particles — Kenney Vleugels (Kenney.nl).
+
+Đã cắt sát viền, thu nhỏ (48–128 px), ảnh xám đổi sang PNG xám + alpha để game tô màu lúc chạy (js/vfx.js):
+  lua-1  ← muzzle_03      lua-2 ← muzzle_05     lua-3 ← flame_02      (lửa, bỏng)
+  khoi-1 ← smoke_04       khoi-2 ← smoke_08                            (khói)
+  choang-sao ← star_06    sao-lap-lanh ← star_07                       (choáng, lấp lánh)
+  bang-1 ← magic_04       bang-2 ← trace_06                            (bông tuyết, mảnh băng)
+  tia-set ← spark_02      vong-1 ← circle_04    anh-sang ← light_01    manh-vo ← dirt_02
+  khoi-trang-1/2 ← White puff/whitePuff00, whitePuff12                 (khói trắng, tô màu được)
+Ảnh có màu sẵn (giảm còn 64 màu):
+  no-1/2/3 ← Explosion/explosion00, 04, 08   doc-1/2 ← Fart/fart00, 04 (độc)
+  chop-1 ← Flash/flash02                     khoi-den ← Black smoke/blackSmoke00
+Bản gốc đầy đủ nằm trong lịch sử git (commit "Thêm nguyên liệu hiệu ứng Kenney…", thư mục incoming/kenney-vfx/).

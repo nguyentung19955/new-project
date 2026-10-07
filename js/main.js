@@ -352,6 +352,7 @@ function render() {
   }
 
   // vẽ theo trục y để vật thể phía dưới đè lên phía trên
+  if (VFX.frame) VFX.frame();   // hạn mức ảnh trạng thái mỗi khung
   const drawables = [
     ...game.enemies.map((e) => ({ y: e.y + (e.def.flying ? 40 : 0), draw: () => drawEnemy(ctx, e, t, { px: px() }) })),
     ...game.heroes.filter((h) => h && !(dragging && h.slot === dragging.from))

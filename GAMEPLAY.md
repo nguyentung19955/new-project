@@ -2081,3 +2081,15 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 ## Phiên bản 195 — Dùng ảnh có sẵn thay hình vẽ code (tester đạt)
 
 - Gộp claude/dung-anh-co-san: đồng xu, nén bạc, tim mạng, icon ngăn kéo, Lò đúc, Bách khoa, rương rơi đồ… dùng ảnh thật.
+
+## claude/vfx-kenney — Hiệu ứng hạt bằng ảnh Kenney (lửa, độc, choáng, băng, nổ, quái / boss chết)
+
+- **Ảnh mới `assets/vfx/` (22 ảnh, ~95 KB):** chọn lọc từ 2 gói miễn phí CC0 của Kenney (Particle Pack + Smoke Particles), cắt sát viền, thu nhỏ 48–128 px. Ảnh xám (`lua-1/2/3`, `khoi-1/2`, `khoi-trang-1/2`, `choang-sao`, `sao-lap-lanh`, `bang-1/2`, `tia-set`, `vong-1`, `anh-sang`, `manh-vo`) được **tô màu lúc chạy** theo hệ / trạng thái (không nhân bản file màu); ảnh có màu sẵn: `no-1/2/3` (mây nổ lửa), `doc-1/2` (mây độc xanh), `chop-1` (chớp vàng), `khoi-den`. Nguồn + giấy phép: `assets/vfx/NGUON-KENNEY.txt`. Gói gốc `incoming/kenney-vfx/` đã xoá khỏi nhánh (còn trong lịch sử git).
+- **Trạng thái trên quái (vẽ trước thanh máu, không vượt đỉnh hình → không che thanh máu):**
+  - Bỏng (DOT màu đỏ / cam): 2–3 ngọn lửa bốc lên từ thân + tàn lửa. Độc (DOT xanh / tím): mây độc mờ quanh thân + bong bóng nổi lên.
+  - Choáng: 3 ngôi sao vàng xoay vòng quanh đầu. Đóng băng: khối băng cũ + ánh lấp lánh + mảnh băng. Làm chậm: sương lạnh dưới chân + bông tuyết rơi (giữ lớp phủ xanh cũ).
+  - Mỗi khung có **hạn mức ảnh trạng thái** (180, máy yếu tối thiểu 100); hết hạn mức hoặc ảnh chưa tải → vẽ cách cũ bằng code (sao vẽ tay, chấm độc…).
+- **Hiệu ứng sự kiện thêm ảnh:** trúng đòn theo **ngũ hành** của tướng bắn (Kim lấp lánh, Mộc lá bay, Thủy vòng nước + giọt, Hỏa tàn lửa, Thổ mảnh vỡ); đạn nổ lan có mây nổ / khói theo hệ; vụ nổ lớn có mây lửa + khói đen + mảnh vỡ; cột lửa, đất cháy (`scorch`) có ngọn lửa; băng (nova / tuyết) có bông tuyết xoay; sét có tia sét; đòn nặng có chớp vàng; tung chiêu có sao lấp lánh. **Quái chết**: phụt khói trắng chibi + ánh sao; **boss chết**: nổ lớn + vòng sáng + khói đen bốc lên + tàn lửa.
+- **Hệ hạt (js/vfx.js):** có **pool** dùng lại object hạt (xoá bằng đổi chỗ O(1), không tạo rác mỗi khung); đầy MAX (700 / 380 / 180 theo mức đồ hoạ) thì bỏ hạt mới, hạt quan trọng (`must`: nổ lớn, boss chết) thế chỗ. Hạt ảnh `vfx/` chưa tải được thì vẽ quầng gradient dự phòng.
+- **Đo FPS sơ bộ** (máy test không GPU, 120 quái, ¾ dính trạng thái): ~36 FPS khi có ảnh trạng thái so với ~37 FPS khi tắt — gần như không tốn thêm.
+- Test: `tests/hieu-ung/hat-vfx.test.js` (không lỗi console, số hạt bị giới hạn, pool dùng lại, hạn mức ảnh trạng thái, ảnh không lên thanh máu, thiếu ảnh → vẽ cách cũ; chụp 1920×934, 844×390, 667×375 vào `tests/hieu-ung/shots/`).
