@@ -1,0 +1,304 @@
+# Kinh Dương Vương (mã kinhduong) — pixel 32×32 (tướng Vàng · hành Hỏa). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:89 + PROMPT-DUNG-XUONG.txt:1152): NAM vua ~50, vạm vỡ ngực thùng, RÂU QUĂN RẬM; VƯƠNG MIỆN MẶT TRỜI tròn tia nhọn;
+# giáp đỏ tươi + vàng, áo choàng đỏ sau lưng, viền vàng; cầm ĐẠI ĐAO LƯỠI LÁ đồng bản rộng cán đỏ (game look = glaive); chiêu: lưỡi đao bốc lửa (Hỏa).
+name: Kinh Dương Vương
+size: 32x32
+anchor: 14,30
+colors:
+  k = vien
+  K = khoi
+  G = sat-toi
+  F = da
+  h = da-sang
+  f = da-toi
+  e = trang
+  B = khoi
+  b = dat
+  R = son-sang
+  r = son
+  m = son-toi
+  L = lua
+  l = lua-sang
+  y = vang-nghe
+  Y = vang-sang
+  j = dong-sang
+  a = vang-sang
+  c = dong-toi
+  d = dong
+  z = sang
+
+part tren
+................................
+...........Y..Y..Y..............
+............yYlYy...............
+..........YyYlllYyY.............
+.........jyyyyyyyyyyj...........
+........KKKKKKKKKKKKKK..........
+.......KGKKKKKKKKKKKKKK.........
+.......KGKKKKhhFFFFFFFFF........
+.......KKKKKhFFFFFFFFFFF........
+.......KGKKKFKKKFFFKKKFF........
+.......KKKKKFFekFFFFekFF........
+.......KKKKfFFFFFFFFFFFFF.......
+.......KKKKfFFFFFFFFFFFF........
+........KKKfFFFFFFFFFFf.........
+.........KKffffffffffff.........
+....mr.yYyLRRRyFFyRRRyYy........
+...mrryjyLRRRRyyRRRRRyjy........
+...mrr.LLRRRRRRRRRRRRRRr........
+...mrr.LRRRYRRRRRRRYRRrr........
+...mrr.LRRRRRRRRRRRRRRrr........
+...mrr.yyyyyyyyjjyyyyyyY........
+...mrr.LRrRRrRRrRRrRRrrr........
+....mr.LRrRRrRRrRRrRRrrr........
+....mr.yLyyyyyyyyyyyyyyy........
+end
+
+part chan
+....mr..yyyyyyyyyyyyyyy.........
+....mm...rRRr...rRRr............
+.........rRRr...rRRr............
+.........jyyj...jyyj............
+.........KGKK...KGKK............
+........KKKKK...KKKKKK..........
+................................
+................................
+end
+
+part rau
+..............bBBBBBB...
+.........BbBBbBBbBBbBB..
+..........BbBBbBBbBBbB..
+...........bBBbBBbBB....
+............BbBBbBB.....
+.............bBBb.......
+end
+
+part tay
+yR..
+RRr.
+.FFh
+.Ffh
+end
+
+part dao
+..a.
+.ajd
+.ajd
+aajd
+ajjd
+ajjd
+.ajd
+.ajc
+yccy
+yyyy
+.Rr.
+.Rr.
+.Rr.
+.Rr.
+.Rr.
+.Rr.
+.Rr.
+.Rr.
+.Rr.
+.Rr.
+.Rr.
+.Rr.
+.Rr.
+.Rr.
+.yy.
+.cc.
+end
+
+part dao_ngang
+..............y.aaaaa..
+cRRRRRRRRRRRRyyjjjjjjja
+crrrrrrrrrrrrycdddddd..
+end
+
+part dao_cheo
+.........aa.
+........ajja
+.......ajjdd
+......ajjdc.
+.....yjjdc..
+.....yy.....
+....Rr......
+...Rr.......
+..Rr........
+.Rr.........
+Rr..........
+c...........
+end
+
+part dao_xuong
+Rr..........
+.Rr.........
+..Rr........
+...Rr.......
+....yy......
+.....ajj....
+......ajjd..
+.......ajjd.
+........addc
+.........dc.
+end
+
+part tay_len
+.FF
+.Fh
+.R.
+yR.
+yr.
+end
+
+part tay_dam
+yRFF
+.RFh
+end
+
+part lua_dao
+..l..
+.lLl.
+lLzLl
+LlLLl
+.L.L.
+end
+
+part lua_nho
+.l.
+lLl
+.L.
+end
+
+part mat_nham
+FFFFFFFFFF
+FKKFFFFKKF
+end
+
+anim idle fps=3 loop
+frame idle
+  use chan 0 24
+  use tren
+  use rau 0 12
+  use dao 23 4
+  use tay 22 16
+  outline
+end
+frame idle
+  use chan 0 24
+  use tren 0 1
+  use rau 0 13
+  use dao 23 4
+  use tay 22 17
+  outline
+end
+frame idle
+  use @idle.0
+end
+
+# đánh: vung đao ra sau đầu (lấy đà) → giơ cao → chém ngang → thu về
+anim attack fps=10 once
+frame attack
+  use dao_cheo 19 2
+  use chan 0 24
+  use tren
+  use rau 0 12
+  use tay_len 22 12
+  outline
+end
+frame attack
+  use chan 0 24
+  use tren
+  use rau 0 12
+  use dao 23 1
+  use tay_len 23 13
+  outline
+end
+frame attack
+  use chan 0 24
+  use tren 1 0
+  use rau 1 12
+  use dao_ngang 8 17
+  use tay_dam 21 17
+  outline
+end
+frame attack
+  use chan 0 24
+  use tren
+  use rau 0 12
+  use dao_xuong 19 18
+  use tay 22 16
+  outline
+end
+
+# chiêu (Hỏa): giơ đao, lưỡi đao bốc lửa, vương miện mặt trời rực
+anim cast fps=8 loop
+frame cast
+  use chan 0 24
+  use tren
+  use rau 0 12
+  use dao 23 4
+  use lua_nho 24 2
+  use tay_len 23 14
+  outline
+end
+frame cast
+  use chan 0 24
+  use tren
+  use rau 0 12
+  use dao 23 4
+  use lua_dao 23 1
+  use tay_len 23 14
+  set 14 3 l
+  outline
+end
+frame cast
+  use chan 0 24
+  use tren 0 1
+  use rau 0 13
+  use dao 23 4
+  use lua_dao 23 1
+  use tay_len 23 14
+  set 9 1 z
+  set 20 1 z
+  set 29 6 L
+  outline
+end
+
+# trúng đòn: giật lùi, nhắm mắt, nháy sáng da
+anim hurt fps=8 once
+frame hurt
+  use @idle.0
+  shift -1 0
+  use mat_nham 11 9
+  swap F h
+end
+
+# chết: khuỵu gối → ngã nằm → tối dần
+anim die fps=5 once
+frame die
+  use dao_xuong 19 18
+  use chan 0 24
+  use tren 0 3
+  use rau 0 15
+  use mat_nham 12 12
+  outline
+end
+frame die
+  use chan 0 24
+  use tren 0 3
+  use rau 0 15
+  use mat_nham 12 12
+  rot 90
+  shift 0 1
+  use dao_ngang 6 28
+  outline
+end
+frame die
+  use @die.1
+  swap y j
+  swap R r
+  swap L R
+  swap a j
+end

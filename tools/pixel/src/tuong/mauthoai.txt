@@ -1,0 +1,308 @@
+# Mẫu Thoải (mã mauthoai) — pixel 32×32 (tướng Vàng · hành Thủy). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:1284–1289 ưu tiên + PROMPT-DUNG-XUONG.txt:1215): NỮ Thánh Mẫu sông nước ~50, NGỒI xếp bằng trên
+# ĐÀI SEN TRẮNG nổi trên sóng; áo trắng + xanh hoàng gia, VƯƠNG MIỆN BẠC có MẠNG che dài, viền vàng; cầm GẬY GÁO NƯỚC bạc (không giáo).
+name: Mẫu Thoải
+size: 32x32
+anchor: 16,30
+colors:
+  k = vien
+  K = toi
+  H = khoi
+  x = cham-toi
+  b = cham
+  B = cham-sang
+  n = nuoc
+  N = nuoc-sang
+  t = troi
+  w = trang-xam
+  W = trang
+  z = sang
+  s = sat
+  S = sat-sang
+  a = bac
+  f = da-toi
+  F = da
+  h = da-sang
+  e = trang
+  y = vang-nghe
+  Y = vang-sang
+  j = dong-sang
+  p = hong
+  g = ngoc
+  G = ngoc-sang
+
+# thân trên + vạt áo ngồi xếp bằng (dòng 0–21)
+part than
+................................
+.............a..S..a............
+............aSa.a.aSa...........
+...........wySSaSaSSSy..........
+..........wwyyyyYyyyyyy.........
+.........wwHHHHHHHHHHHHH........
+.........wWHHHHhhFFFFFFF........
+........wWHHHHhFFFFFFFFF........
+........wWHHHHFFKKFFFKKF........
+........wWHHHHFFekFFFekF........
+........wWHHHHFFFFFFFFFF........
+........wWHHHHhFFFFFFfFf........
+........wwHHHHHfFFFFFFf.........
+........wwHHHHHH.ffff...........
+.......wwHHHnBBBWWyBBBbb........
+.......wwHHnBBBBBWWyBBbbx.......
+......wwHHBnBBBBBBWWybBbbx......
+......wwHHBnBBBBBBBWWybbbx......
+.......wwHBBBBBBByyyyyyybx......
+........wbnBBBBBBBBbbbbbbbx.....
+......xbnnBBBBBBBBBbbbbbbbbx....
+.....xbnBBBBBBBBBBBbbbbbbbbbx...
+end
+
+# đài sen trắng + sóng cuộn (dòng 20–30)
+part sen
+................................
+....p....................p......
+...zWpbbpbbbbbbbbbbpbbbbzWp.....
+...zWWwzWpbbbpbbpbbbzWpbzWWw....
+....zWWwWWwzWpzWpzWwWWwzWWw.....
+.....zWWWWWwWWwWWwWWWWWWWw......
+......wWWWWWWWWWWWWWWWWWww......
+..tN...wwwwwwwwwwwwwwwww....Nt..
+.tNnNt..tNNt..tNNt..tNNt..tNnNt.
+.bnnnnNnnnnnNnnnnnNnnnnnNnnnnnb.
+..xbbbbbbbbbbbbbbbbbbbbbbbbbbx..
+end
+
+part song2
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+.tN....wwwwwwwwwwwwwwwww...tN...
+.NnNt.tNNt..tNNt..tNNt..tNNt.tN.
+.bnnNnnnnnNnnnnnNnnnnnNnnnnnNnb.
+..xbbbbbbbbbbbbbbbbbbbbbbbbbbx..
+end
+
+# gậy gáo nước bạc (đứng)
+part gay
+.SaS
+.sSs
+.SSs
+..aS
+..Ss
+..Ss
+..Ss
+..Ss
+..Ss
+..Ss
+..Ss
+..Ss
+..Ss
+..Ss
+..Ss
+..Ss
+..Ss
+..Ss
+..yy
+..ss
+end
+
+# gậy chúc ra trước (đòn đánh)
+part gay_ngang
+sssssssssssyaSa
+SSSSSSSSSSSySSs
+...........ysSs
+end
+
+part gay_cheo
+.........SaS
+........sSSs
+........aS..
+.......Ss...
+......Ss....
+.....Ss.....
+....Ss......
+...yy.......
+..Ss........
+.Ss.........
+end
+
+part tay
+FFh
+fFF
+end
+
+part tay_len
+.Fh
+.FF
+BB.
+Bb.
+end
+
+part giot
+.n.
+nNn
+.n.
+end
+
+part te_nuoc
+...t....N..
+.tNNt..tNn.
+NnnNNtNnNNt
+.nNNnNnnNn.
+..n..N..n..
+end
+
+part ngoc_nho
+.G.
+GgG
+.g.
+end
+
+part xoay
+...tNNt...
+.tN....Nt.
+tN......Nt
+N...GG...N
+N...Gg...N
+tN......Nt
+.tN....Nt.
+...tNNt...
+end
+
+part mat_nham
+FkkFFFkk
+FFFFFFFF
+end
+
+anim idle fps=3 loop
+frame idle
+  use sen 0 20
+  use gay 22 1
+  use than
+  use tay 23 16
+  outline
+end
+frame idle
+  use sen 0 20
+  use gay 22 2
+  use than 0 1
+  use sen 0 20
+  use tay 23 17
+  outline
+end
+frame idle
+  use song2 0 20
+  use sen 0 20
+  use gay 22 2
+  use than 0 1
+  use sen 0 20
+  use song2 0 20
+  use tay 23 17
+  outline
+end
+
+# đánh: gậy ngả ra sau → chúc tới → gáo hất nước trúng → thu về
+anim attack fps=10 once
+frame attack
+  use sen 0 20
+  use gay_cheo 13 1
+  use than
+  use tay_len 22 11
+  outline
+end
+frame attack
+  use sen 0 20
+  use gay 22 1
+  use than
+  use tay_len 23 12
+  outline
+end
+frame attack
+  use sen 0 20
+  use than 1 0
+  use gay_ngang 16 16
+  use tay 23 16
+  use giot 28 13
+  outline
+end
+frame attack
+  use sen 0 20
+  use than 1 0
+  use gay_ngang 16 16
+  use tay 23 16
+  use te_nuoc 20 10
+  outline
+end
+
+# chiêu: giơ gậy, ngọc nước + sóng xoáy quanh gáo (hành Thủy)
+anim cast fps=6 loop
+frame cast
+  use sen 0 20
+  use gay 22 1
+  use than
+  use tay_len 23 12
+  use ngoc_nho 27 2
+  outline
+end
+frame cast
+  use sen 0 20
+  use gay 22 3
+  use than
+  use tay_len 23 15
+  use xoay 19 0
+  outline
+end
+frame cast
+  use song2 0 20
+  use sen 0 20
+  use song2 0 20
+  use gay 22 3
+  use than 0 1
+  use tay_len 23 16
+  use xoay 19 0
+  set 18 4 z
+  set 30 6 z
+  outline
+end
+
+# trúng đòn: giật lùi, nhắm mắt, nháy sáng
+anim hurt fps=8 once
+frame hurt
+  use sen 0 20
+  use gay 21 1
+  use than -1 0
+  use tay 22 16
+  outline
+  use mat_nham 14 9
+  swap F h
+  swap B N
+end
+
+# chết: gục xuống → ngả lún vào đài sen (gậy rơi ngang) → mờ tối
+anim die fps=5 once
+frame die
+  use gay_cheo 18 10
+  use than 0 3
+  use mat_nham 15 12
+  use sen 0 20
+  outline
+end
+frame die
+  use than 2 7
+  use mat_nham 17 16
+  use sen 0 20
+  use gay_ngang 3 25
+  outline
+end
+frame die
+  use @die.1
+  swap y j
+  swap B b
+  swap W w
+  swap n b
+  swap F f
+end
