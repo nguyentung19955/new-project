@@ -1968,3 +1968,26 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 ## Phiên bản 190 — File prompt ảnh tĩnh cho tool dựng xương
 
 - Gộp claude/prompt-dung-xuong: docs/PROMPT-DUNG-XUONG.txt (90 ảnh tĩnh A-pose quay phải).
+## Phiên bản 189 — Sửa lỗi báo cáo test toàn bộ (docs/BAO-CAO-TEST.md)
+
+- Tái hiện lại 17 lỗi trên v182: **L01, L03, L08, L13 đã hết** (sửa ở sua-the-cho, gan-anh-moi, an-giao-dien, dot-co-dinh); 13 lỗi còn lại sửa ở bản này. Bảng trong báo cáo có thêm cột trạng thái + ảnh sau khi sửa (`docs/bao-cao-test/sau-*.webp`).
+- **L04 Màn kết quả** cuộn được (cột phải tự cuộn) — trước đây 844×390 nội dung cao 563 px trên màn 390 px, dòng Tu Vi bị cắt hẳn.
+- **L02 Tướng khắc chế**: icon hành 15 px nằm đúng góc dưới phải ảnh (theo cỡ ảnh `--av`), không lấn dòng lý do ở 844×390 / 667×375.
+- **L05 Thông báo nổi (toast)**: đổi màn / mở lớp phủ thì xoá thông báo cũ (giữ cái tạo cùng lúc mở màn); trong lớp phủ / màn hình hiện ở **đáy giữa**; trong trận chọn chỗ ít đè nhất trong vài vị trí — né **thành** (cuối đường quái), hội thoại boss, khung "bộ quái mới", bảng boss, banner, thanh chợ, cột nút phải. Thông báo "Vô tận · …: giữ thành…" chuyển sang lúc bấm Vào trận (không đè "Tướng khắc chế" ở màn Chuẩn bị).
+- **L06 Bảng boss**: dòng hiệu ứng (choáng, câm lặng, hóa điên…) là một dòng riêng chừa sẵn → bảng không giật cao/thấp. Bảng ở góc trên trái (chỗ quái đi vào, gần ô tướng hàng trái): bảng đầy đủ đè lên boss đang xem **hoặc tướng** thì thu gọn 1 dòng (tên + thanh máu), bản gọn vẫn đè thì mờ 60%. (Bản đầu dời bảng xuống góc dưới trái — tester báo che tướng ô hàng trái, đã bỏ.)
+- **L07 Boss xuất hiện**: hội thoại boss và thông báo "Quái mới: …" đợi banner tắt (2,6 giây) rồi mới hiện → hết 3 lớp chữ chồng nhau.
+- **L09** nút Ấn Phù ở menu chính có lề phải; **L16** chữ "Đợt N" không còn bị đẩy quá mép trên (khối Đợt cao 38 px = phần trong thanh trên); **L17** icon "mạng" dùng trái tim đỏ như thanh trên (khiên đồng `ui_mang.png` dễ nhầm đồng xu).
+- **L10** vá vết ô vuông mờ ở góc phải dưới `assets/ui/nen-menu.jpg`.
+- **L11 Đăng nhập** (người dùng quyết: **giữ bắt buộc đăng nhập như v73**, không có nút chơi khách / ✕ khi chưa đăng nhập): không còn kẹt — đang kiểm tra đăng nhập quá 12 giây thì báo "Kết nối máy chủ đăng nhập quá lâu" + ↻ Thử lại; bấm Đăng nhập / Tạo tài khoản mà máy chủ không trả lời 20 giây thì hết "Đang xử lý…", báo lỗi, bấm lại được.
+- **L12 Xếp hạng khi không có mạng**: hình minh hoạ, nút ↻ Thử lại, kỷ lục của chính mình lưu trên máy.
+- **L14 Ảnh 404**: thêm `js/asset-list.js` (sinh bởi `node tools/build-asset-list.js`, `build-web.js` tự chạy) — danh sách ảnh có thật trong `assets/` (trừ `chua-dung/`). Game chỉ tải ảnh có tên trong danh sách (`hasAsset()` trong render.js; dùng ở `asset()`, khung UI_SKIN, logo, nút `ui-tran-*`, ấn phù, tranh chương, ảnh hiệu ứng fx). Trước: 40 request 404 lúc vào trận, 61 khi đi qua các màn → nay 0. **Thêm / xoá / đổi tên ảnh trong assets/ thì chạy lại `node tools/build-asset-list.js`** (test `sua-loi-tester` báo nếu danh sách lệch thư mục).
+- **L15 Hiệu năng** (đo trong Chromium không GPU, đợt 30 nhân 3 lượt quái, x3, ~70–110 quái): JS chỉ ~11% thời gian khung, còn lại là vẽ canvas theo diện tích điểm ảnh. Sửa: (1) nền tĩnh (lề mờ quanh bản đồ + bản đồ + thành) vẽ sẵn một lần vào canvas đệm, mỗi khung chỉ chép 1:1 (trước: mỗi khung phóng một ảnh phủ kín màn có độ mờ + một ảnh bản đồ); (2) ảnh quái thu nhỏ sẵn theo cỡ thật trên màn (`fitSprite`, chất lượng cao, dùng lại) thay vì co ảnh 320 px mỗi khung cho từng con; (3) bậc đồ hoạ tự hạ (Đồ hoạ: Tự động) giới hạn thêm tổng điểm ảnh canvas: bậc 1 ≤ 2,2 triệu, bậc 2 ≤ 1,1 triệu. Đo A/B với v185 (2 lần): 1920×934 15–16 → 30–32 FPS (gấp đôi), 1280×720 30–31 → 29–36 (trong biên dao động), 844×390 ~45 → ~45 (không đổi). Chi tiết trong BAO-CAO-TEST.md (mục Hiệu năng).
+- **Lỗi bổ sung từ tester:** (L18) trong lớp phủ / màn hình chỉ giữ 1 thông báo mới nhất, bấm chọn khác (tướng, tab…) thì thông báo cũ tắt, vị trí chọn chỗ ít đè nút/thẻ nhất — ưu tiên khoảng trống trên thanh tiêu đề (vd. "Đã mở khoá…" ở Anh Hùng không còn đè nút Mở khoá); (L19) màn kết quả: nhãn cột trái ("Tu Vi"…) không ngắt dòng; (L20) banner "Thăng thần" / "Boss xuất hiện" 1 dòng chữ to (22 px ở màn thấp, cắt "…" nếu dài) + 1 dòng nhỏ.
+- Sửa lỗi phát sinh: thông báo tạo lúc khởi động (trước khi main.js chạy) không còn làm vỡ khởi tạo giao diện; test giả ảnh chưa có (hieu-ung, icon-nho, khung-chuyen-dong, ra-chu-de-cu, duong-quai) đặt `window.ASSET_ALL = true` để bỏ qua danh sách ảnh.
+- **Tester báo thêm (v189):** chữ "Đợt N" không nhích khi số đợt thêm chữ số (số trong ô rộng cố định); bong bóng "Thần tinh" đặt theo đỉnh hình tướng vẽ thật (tướng Tím/Vàng to hơn — trước đè lên đầu tướng vừa hoá thân).
+- Gộp nhánh chính v185 trước khi sửa tiếp (v185 đã có cột kết quả cuộn được — L04 trùng, giữ cả hai quy tắc CSS, không xung đột).
+- Test: `node tests/sua-loi-tester/sua-loi-tester.test.js` (từng lỗi ở 1920×934, 844×390, 667×375 + L14/L15). Ảnh đã xem: `tests/sua-loi-tester/shots/*.png`, `docs/bao-cao-test/sau-*.webp`.
+
+## Phiên bản 191 — Gộp sửa lỗi báo cáo tester (tester đạt)
+
+- Gộp claude/sua-loi-tester: toast, kết quả cuộn, 404=0, FPS, bảng boss gọn, Đợt không nhích, bong bóng Thần tinh, đăng nhập bắt buộc không kẹt.
