@@ -1,5 +1,5 @@
 // Sinh bộ prompt Gemini (mỗi ảnh một prompt tự đủ) từ dữ liệu game + mô tả trong docs/PROMPT_GEMINI_V94.md.
-// Chạy: node tools/build-prompts.js  →  docs/PROMPT_GEMINI_FULL.md + (tùy chọn) trang HTML có nút sao chép.
+// Chạy: node tools/build-prompts.js  →  docs/PROMPT_GEMINI_FULL.md (+ .txt) + (tùy chọn) trang HTML có nút sao chép.
 const fs = require('fs'), vm = require('vm'), path = require('path');
 const ROOT = path.join(__dirname, '..');
 const ctx = { console, window: {}, document: { createElement: () => ({ getContext: () => ({}) }) }, Image: function () {}, localStorage: { getItem() {}, setItem() {} }, navigator: {} };
@@ -265,5 +265,14 @@ for (const it of items) {
   out += `\n### ${it.n}. ${it.title} → \`${it.file}\`\n\`\`\`\n${it.text}\n\`\`\`\n`;
 }
 fs.writeFileSync(path.join(ROOT, 'docs/PROMPT_GEMINI_FULL.md'), out);
+// Văn bản thường (.txt): không ký hiệu Markdown, mỗi prompt kẹp giữa hai đường kẻ để dễ chép
+let txt = `PROMPT GEMINI ĐẦY ĐỦ — MỖI ẢNH MỘT PROMPT (${items.length} ảnh)\n`;
+txt += 'Mỗi khối dán riêng một lần vào Gemini (đính kèm docs/mau-lac-tuong.png làm mẫu nét vẽ nếu được), tải ảnh về và đặt đúng tên file ghi trên khối.\n';
+g = '';
+for (const it of items) {
+  if (it.group !== g) { g = it.group; txt += `\n\n${'='.repeat(60)}\n${g.toUpperCase()}\n${'='.repeat(60)}\n`; }
+  txt += `\n${it.n}. ${it.title}  ->  Tên file: ${it.file}\n${'-'.repeat(60)}\n${it.text}\n${'-'.repeat(60)}\n`;
+}
+fs.writeFileSync(path.join(ROOT, 'docs/PROMPT_GEMINI_FULL.txt'), txt);
 fs.writeFileSync(path.join(ROOT, 'docs/prompts.json'), JSON.stringify(items, null, 1));
 console.log('items', items.length, 'heroes', need.length);
