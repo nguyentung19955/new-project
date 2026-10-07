@@ -1,0 +1,282 @@
+# Sói Cung Lửa (mã cungtlua) — biến thể của Sói Cung Thủ (cungan), quái 32×32 (hành Hỏa · bắn xa). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (DANH-SACH Lô 10 · js/enemies2.js:98 · tools/make-variants.py:19): giữ y dáng cungan (sói đứng 2 chân, bờm lá khô, cung,
+# ống tên) nhưng LÔNG ĐỎ, bờm + đuôi lá khô đang cháy đỏ cam, áo da nâu sẫm, đầu tên tẩm dầu cháy.
+name: Sói Cung Lửa
+size: 32x32
+anchor: 16,29
+colors:
+  k = vien
+  t = toi
+  s = son-toi
+  G = son
+  H = son-sang
+  w = trang-xam
+  u = dat-toi
+  v = dat
+  V = dat-sang
+  y = vang-nghe
+  j = dong-toi
+  D = vang-sang
+  n = dat-toi
+  c = lua
+  C = lua-sang
+  a = vang-nghe
+  b = dat
+  B = dat-sang
+  z = dong-sang
+  l = lua
+  L = lua-sang
+  E = trang-xam
+  r = son
+  R = son-sang
+
+part than
+................................
+................................
+.............H...H..............
+............HGs.HGs.............
+..........D.GtsGGts.............
+.........DCaHHHHGGGs............
+........DCcaHHGGGtttGs..........
+.........aCcHGGGGGyGGGHs........
+........DCcaGGGGGGGGGGGHHHt.....
+.........DCcsGGGGGGGGtttts......
+........DCcaCsGGGGwwwwws........
+.........DcaCcssGwwwws..........
+..........cCCaGVVwwwVVu.........
+.........HcaGVVvvwwvvvuG........
+.........GGGVvvvwwvvuuG.........
+.........sGGvvvvwwvvuuG.........
+.........sGGvvvvvvvvuus.........
+..........nznznznznznn..........
+..........uvvvvvvvvvuu..........
+..........uvvuuvvuuvvu..........
+end
+
+part duoi
+.....cCD.
+...cCaDDc
+..cCaaCDc
+.cCaCCDc.
+cCCaCcc..
+cDcccc...
+ccc......
+end
+
+part ong
+R..R..
+rR.rR.
+.rr.rr
+..nbBn
+..nbBn
+.nbBn.
+.nbbn.
+.jzjn.
+nbBn..
+nbbn..
+nnn...
+end
+
+part chanA
+...sGGs.sGGs...
+...sGGs..sGGs..
+..sGGs....sGGs.
+..sGs......sGs.
+...sGs.....sGs.
+...sGs....sGs..
+..sGs.....sGs..
+.sGGG....sGGG..
+end
+
+part chanB
+....sGGssGGs...
+....sGGs.sGGs..
+....sGs..sGs...
+....sGs..sGs...
+.....sGs.sGs...
+.....sGs.sGs...
+....sGs.sGs....
+...sGGGsGGG....
+end
+
+part chanC
+...sGGs.sGGs...
+....sGGssGs....
+.....sGGsGs....
+.....sGssGs....
+....sGs.sGs....
+....sGs..sGs...
+...sGs...sGs...
+..sGGG..sGGG...
+end
+
+part cung
+B.....
+bB....
+EbB...
+E.bB..
+E..bB.
+E...B.
+E...b.
+E...b.
+E...B.
+E..bB.
+E.bB..
+EbB...
+bB....
+B.....
+end
+
+part day_keo
+....B.....
+...EbB....
+...E.bB...
+..E...bB..
+..E....bB.
+.E......B.
+E.......b.
+E.......b.
+.E......B.
+..E....bB.
+..E...bB..
+...E.bB...
+...EbB....
+....B.....
+end
+
+part day
+E
+E
+E
+E
+E
+E
+end
+
+part ten
+.........lL
+rRaaaaaaaLy
+.........l.
+end
+
+part tay
+HGGHs
+sGGGs
+end
+
+part mat_x
+t.t
+.t.
+end
+
+anim walk fps=6 loop
+frame walk
+  use duoi 3 15
+  use ong 7 8
+  use than
+  use chanA 7 20
+  use cung 23 9
+  use ten 18 14
+  use tay 23 15
+  outline
+end
+frame walk
+  use duoi 3 14
+  use ong 7 7
+  use than 0 -1
+  use chanB 7 20
+  use cung 23 8
+  use ten 18 13
+  use tay 23 14
+  outline
+end
+frame walk
+  use duoi 2 15
+  use ong 7 8
+  use than
+  use chanC 7 20
+  use cung 23 9
+  use ten 18 14
+  use tay 23 15
+  outline
+end
+frame walk
+  use duoi 3 14
+  use ong 7 7
+  use than 0 -1
+  use chanB 7 20
+  use cung 23 8
+  use ten 18 13
+  use tay 23 14
+  outline
+end
+
+# bắn: kéo căng dây → buông tên (tên bay do game vẽ) → hạ cung
+anim attack fps=8 once
+frame attack
+  use duoi 2 15
+  use ong 6 8
+  use than -1 0
+  use chanA 6 20
+  use day_keo 19 9
+  use ten 19 15
+  use tay 23 15
+  set 18 15 H
+  set 18 16 s
+  outline
+end
+frame attack
+  use duoi 3 15
+  use ong 7 8
+  use than
+  use chanA 7 20
+  use cung 23 9
+  use tay 23 15
+  outline
+end
+frame attack
+  use @walk.0
+end
+
+anim hurt fps=8 once
+frame hurt
+  use @walk.0
+  shift -1 0
+  swap G H
+  swap v V
+  set 17 7 t
+end
+
+# chết: khuỵu → đổ nghiêng → nằm sẫm màu
+anim die fps=5 once
+frame die
+  use duoi 3 18
+  use ong 7 11
+  use than 0 3
+  use chanB 7 22
+  use cung 23 12
+  use tay 23 18
+  use mat_x 17 9
+  outline
+end
+frame die
+  use ong 7 8
+  use than
+  use chanA 7 20
+  use mat_x 17 6
+  rot 90
+  shift 0 5
+  use duoi 0 24
+  use cung 17 18
+  outline
+end
+frame die
+  use @die.1
+  swap G s
+  swap H G
+  swap w H
+  swap v u
+  swap V v
+  swap D C
+  swap a c
+end

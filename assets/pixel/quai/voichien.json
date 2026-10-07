@@ -1,29 +1,29 @@
 {
- "code": "daibang",
- "group": "boss",
- "name": "Đại Bàng Tinh",
- "w": 64,
- "h": 64,
- "ax": 31,
- "ay": 61,
+ "code": "voichien",
+ "group": "quai",
+ "name": "Voi Chiến",
+ "w": 32,
+ "h": 32,
+ "ax": 14,
+ "ay": 30,
  "bbox": [
-  2,
-  11,
-  59,
-  51
+  0,
+  1,
+  31,
+  30
  ],
- "n": 13,
+ "n": 11,
  "anims": {
   "walk": {
    "start": 0,
    "n": 4,
-   "fps": 6,
+   "fps": 5,
    "loop": true
   },
   "attack": {
    "start": 4,
    "n": 3,
-   "fps": 8,
+   "fps": 7,
    "loop": false
   },
   "hurt": {
@@ -37,14 +37,8 @@
    "n": 3,
    "fps": 5,
    "loop": false
-  },
-  "rage": {
-   "start": 11,
-   "n": 2,
-   "fps": 8,
-   "loop": true
   }
  },
  "cd": 1,
- "sheet": "daibang.png"
+ "sheet": "voichien.png"
 }

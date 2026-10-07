@@ -1,0 +1,217 @@
+# Quỷ Lợn Rừng (mã kybinh) — quỷ binh giặc phương Bắc, quái thường 32×32 (hành Hỏa · hoá điên). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng gốc (PROMPT-GEN-LAI.txt:95 · PROMPT-DUNG-XUONG.txt:1372 · DANH-SACH Lô 9): quỷ ĐẦU LỢN RỪNG chạy 2 chân, nâu sẫm, mắt đỏ,
+# nanh cong trắng, bờm dựng; GIÁO đồng ngắn. PHÁ CÁCH (DANH-SACH): LỢN ĐẤT NUNG — thân đất nung nâu cháy, vết nứt nung còn đỏ lửa
+# (hành Hỏa), bờm lông đen dựng, khố son + đai thừng; dáng gù bè ngang để khác hẳn Quỷ Giáo (cao) và Sói Cung (gầy).
+name: Quỷ Lợn Rừng
+size: 32x32
+anchor: 13,28
+colors:
+  k = vien
+  t = toi
+  K = khoi
+  H = dat-sang
+  G = dat
+  g = dat-toi
+  l = lua
+  L = lua-sang
+  o = lua-sang
+  e = trang
+  E = trang-xam
+  a = cat
+  r = son
+  m = son-toi
+  R = son-sang
+  D = dong-sang
+  d = dong
+  j = dong-toi
+
+part than
+................................
+................................
+................................
+...........K.K..................
+.........K.KKKK.Gg..............
+........KKKKKKKKGHg.............
+......KKKKKKKKKHHGg.............
+.....KKHHHHHHKHHHHGg............
+....KKHHHHHHHgHHHHHGGg..........
+....KHHHHHGGGgHHGtttGGg.........
+....KHHHHGGGGgHGGGotGGGGGg......
+...KHHHGGGGGGgGGGGGGGGGGHHHg....
+...KHHtlGGGGGgGGGGGGGGGGHaatg...
+...KHGtlGGGGGgGGGggggggggaaHg...
+...KHGGtlGGGGGgGGgtttttgggg.....
+...KHGGGGGGtlGGgggggggg.........
+...KHGGGGGGGtlGGGgg.............
+...KgGGGGGGGGtlGGgg.............
+...KgGGGGGGGGGGGggg.............
+....gaHaHaHaHaHaHag.............
+....gmrrmrrmrrmrrmg.............
+.....mrm.mrm..mrm...............
+end
+
+part nanh
+..E
+.e.
+ee.
+end
+
+part tay
+.HGg..
+HGGGHg
+gggGGg
+end
+
+part giao
+.D.
+DDd
+DDd
+DDd
+.j.
+.a.
+.E.
+.a.
+.E.
+.a.
+.E.
+.a.
+.E.
+.a.
+.E.
+.a.
+.E.
+.g.
+end
+
+part giao_ngang
+gaEaEaEaEaEjdDD.
+aEaEaEaEaEajDDDD
+............dd..
+end
+
+part chanA
+...gGGg.gGGg...
+...gGGg..gGGg..
+..gGGg....gGGg.
+..gGg......gGg.
+..gGg......gGg.
+.KKKK.....KKKK.
+end
+
+part chanB
+....gGGgGGg....
+....gGGgGGg....
+....gGGgGGg....
+....gGg.gGg....
+....gGg.gGg....
+...KKKKKKKK....
+end
+
+part chanC
+...gGGg.gGGg...
+....gGGgGGg....
+....gGGggGg....
+...gGg..gGg....
+..gGg....gGg...
+.KKKK...KKKK...
+end
+
+part mat_x
+t.t
+.t.
+end
+
+anim walk fps=7 loop
+frame walk
+  use than
+  use nanh 20 11
+  use chanA 4 22
+  use giao 23 6
+  use tay 19 14
+  outline
+end
+frame walk
+  use than 0 -1
+  use nanh 20 10
+  use chanB 4 22
+  use giao 23 5
+  use tay 19 13
+  outline
+end
+frame walk
+  use than
+  use nanh 20 11
+  use chanC 4 22
+  use giao 23 6
+  use tay 19 14
+  outline
+end
+frame walk
+  use than 0 -1
+  use nanh 20 10
+  use chanB 4 22
+  use giao 23 5
+  use tay 19 13
+  outline
+end
+
+# đánh: cúi đầu lấy đà → húc + đâm giáo → thu về
+anim attack fps=8 once
+frame attack
+  use than -1 1
+  use nanh 19 12
+  use chanB 3 22
+  use giao 20 6
+  use tay 17 15
+  outline
+end
+frame attack
+  use than 2 1
+  use nanh 22 12
+  use chanA 5 22
+  use giao_ngang 15 17
+  use tay 20 16
+  outline
+end
+frame attack
+  use @walk.0
+end
+
+anim hurt fps=8 once
+frame hurt
+  use @walk.0
+  shift -1 0
+  swap G H
+  swap l L
+  set 17 10 t
+end
+
+# chết: khuỵu → đổ sấp, vỡ nứt → nằm nguội màu (vết nứt tắt lửa)
+anim die fps=5 once
+frame die
+  use than 0 3
+  use nanh 20 14
+  use chanB 4 23
+  use giao 23 9
+  use tay 19 17
+  use mat_x 17 12
+  outline
+end
+frame die
+  use than
+  use nanh 20 11
+  use chanA 4 22
+  use mat_x 17 9
+  rot 90
+  shift 0 2
+  use giao_ngang 4 28
+  outline
+end
+frame die
+  use @die.1
+  swap G g
+  swap H G
+  swap l t
+  swap r m
+  swap e E
+end

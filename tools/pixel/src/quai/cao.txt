@@ -1,0 +1,229 @@
+# Cáo Con (mã cao) — lính con do Hồ Tinh / Hồ Ly Bóng Đêm hoá ra, quái thường 32×32 (hành Hỏa). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng gốc (PROMPT-GEN-LAI.txt:311 · PROMPT-DUNG-XUONG.txt:1340 · DANH-SACH Lô 9): cáo THẬT đứng 2 chân sau, lông cam, tai nhọn
+# to, đuôi xù, chuông đồng ở cổ, vuốt; không rồng, không hồng. PHÁ CÁCH (DANH-SACH): CÁO MA TRƠI — đuôi là ngọn lửa ma trơi xanh
+# ngọc (gốc đuôi vẫn lông cam), mắt xếch vàng, dáng nhỏ thấp (lính con) để khác hẳn các quái cao lớn.
+name: Cáo Con
+size: 32x32
+anchor: 17,29
+colors:
+  k = vien
+  t = toi
+  K = khoi
+  H = lua-sang
+  G = lua
+  g = son-sang
+  m = son
+  e = trang
+  E = trang-xam
+  y = vang-nghe
+  j = dong-toi
+  D = dong-sang
+  Y = vang-sang
+  n = ngoc
+  N = ngoc-sang
+  w = troi
+  s = sat
+  S = sat-sang
+
+part than
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+...............K....K...........
+..............KG...KG...........
+..............GHg.GHg...........
+.............GHtHGHtg...........
+.............GHHHHHHHg..........
+............GHHHGGtttGg.........
+............GHHGGGGyKGGg........
+............gGGGGGGGeeeeKk......
+.............gGGeeeeeeeg........
+..............gEeeeeEEg.........
+..............gjDYDjg...........
+.............gGjDDjGg...........
+............gGGEejjeGGg.........
+............gGGeeeeeeGGg........
+............gGGeeeeeeGGg........
+.............gGGeeeeGGg.........
+.............gGGGGGGGGg.........
+end
+
+part duoi
+....N.......
+...NN...N...
+...Nn..NN...
+..NNn..Nn.N.
+..NwN.NNn.N.
+.NNwNNNwnNn.
+.NwwNNwwNn..
+.NwwwNwwNn..
+.NNwwwwNnn..
+..NNwwNNn...
+..nNNNNnn...
+...nnnGGg...
+....gGGGGg..
+.....ggGGGg.
+.........gg.
+end
+
+part duoi2
+.......N....
+..N....NN...
+..NN..NnN...
+.NNn..NNn...
+.NwN.NNn.N..
+.NwNNNwnNN..
+NNwwNwwNNn..
+NwwwNwwNn...
+NNwwwwwNnn..
+.NNwwwNNn...
+..nNNNNnn...
+...nnnGGg...
+....gGGGGg..
+.....ggGGGg.
+.........gg.
+end
+
+part duoi_tat
+.......n...n....
+..n...nn..nn....
+.nnn.nNn.nNn....
+nnNnnnNnnnnnggGg
+.nnnnnnnnnngGGg.
+end
+
+part tay
+GHtt
+gGt.
+end
+
+part tay_cao
+..t.t
+.tGtt
+gHG..
+gG...
+end
+
+part chanA
+...gGg.gGg..
+..gGg...gGg.
+..gGg...gGg.
+..mgg....mg.
+.KKK....KKK.
+end
+
+part chanB
+....gGggGg..
+....gGggGg..
+....gGgGg...
+....mgmmg...
+...KKKKKK...
+end
+
+part chanC
+...gGg.gGg..
+...gGggGg...
+....gGgGg...
+...mg..mg...
+..KKK.KKK...
+end
+
+part mat_x
+t.t
+.t.
+end
+
+anim walk fps=8 loop
+frame walk
+  use duoi 3 10
+  use than
+  use chanA 11 24
+  use tay 22 19
+  outline
+end
+frame walk
+  use duoi2 3 9
+  use than 0 -1
+  use chanB 11 24
+  use tay 22 18
+  outline
+end
+frame walk
+  use duoi 2 10
+  use than
+  use chanC 11 24
+  use tay 22 19
+  outline
+end
+frame walk
+  use duoi2 3 9
+  use than 0 -1
+  use chanB 11 24
+  use tay 22 18
+  outline
+end
+
+# đánh: giơ vuốt → vồ tới cào → thu về
+anim attack fps=9 once
+frame attack
+  use duoi 2 10
+  use than -1 0
+  use chanA 10 24
+  use tay_cao 21 15
+  outline
+end
+frame attack
+  use duoi 4 11
+  use than 2 1
+  use chanA 12 24
+  use tay 25 20
+  set 28 19 t
+  set 29 20 t
+  outline
+end
+frame attack
+  use @walk.0
+end
+
+anim hurt fps=8 once
+frame hurt
+  use @walk.0
+  shift -1 0
+  swap G H
+  swap n N
+  set 19 13 t
+end
+
+# chết: khuỵu → ngã nghiêng, lửa đuôi tàn → nằm, lửa tắt
+anim die fps=5 once
+frame die
+  use duoi 3 13
+  use than 0 3
+  use chanB 11 25
+  use tay 22 22
+  use mat_x 19 15
+  outline
+end
+frame die
+  use than
+  use chanA 11 24
+  use tay 22 19
+  use mat_x 19 12
+  rot 90
+  shift 0 3
+  use duoi_tat 0 25
+  outline
+end
+frame die
+  use @die.1
+  swap n s
+  swap N S
+  swap w S
+  swap G g
+  swap H G
+  swap D j
+end
