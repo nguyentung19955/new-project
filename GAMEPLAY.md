@@ -2173,3 +2173,14 @@ Test: cập nhật `cho-tuong` (màn Chuẩn bị không còn chọn đội, sau
 - Người dùng thấy hạt Kenney cho choáng / băng "chưa đẹp" → thêm **prompt phần E** trong `docs/PROMPT-HIEU-UNG.txt`: 5 ảnh kiểu sticker chibi (viền nâu đậm, màu phẳng 2 tông, không quầng sáng mờ, nền hồng tím): `tt-choang` (vòng sao xoay trên đầu), `tt-bang` (khối băng bọc quái), `tt-cham` (vòng sương lạnh dưới chân), `tt-bong` (cụm lửa trên thân), `tt-doc` (bong bóng độc). Cắt: `python3 tools/cat-fx.py dai <ảnh> <tên>` → `assets/vfx/<tên>.png`, rồi `node tools/build-asset-list.js`.
 - Game (js/vfx.js `VFX.status`) ưu tiên: ảnh vẽ tay `tt-*.png` (dải khung chạy lặp) → hạt Kenney → vẽ bằng code. Có `tt-bang.png` thì tắt khối băng vẽ bằng code. Mọi ảnh trạng thái đặt sao cho nội dung không lên tới thanh máu.
 - Test `tests/hieu-ung/hat-vfx.test.js` thêm phần ảnh vẽ tay giả (phục vụ qua route, không ghi vào assets/).
+## claude/sua-thoat-than-khi — Sửa lỗi vào màn Thần Khí không thoát ra được
+
+- **Nguyên nhân:** từ v170 (làm lại bảng Hợp thể), nút Quay lại ở đầu màn Thần Khí bị đổi nhầm `data-act="lg-close"` → `hx-close` (lệnh đóng bảng Hợp thể). Bấm nút chỉ ẩn bảng Hợp thể, màn Thần Khí đứng yên → kẹt (cả trong trận lẫn ngoài menu; trong trận game còn bị tạm dừng). Phím Esc ngoài trận không làm gì, nút Back trình duyệt thì rời luôn trang.
+- **Sửa:** nút Quay lại về đúng `lg-close` (Thần Khí → Anh Hùng → trận/menu, game chạy tiếp).
+- **Esc** đóng màn phụ trên cùng ở mọi nơi (trong và ngoài trận), đúng như bấm nút quay lại / ✕ của màn đó: khung mô tả → Xếp hạng / Ngân khố / Ấn Phù / Anh Hùng (Thần Khí) / Cài đặt / Chơi nhóm / Chế độ / Bản đồ → bảng #screen (Cây kỹ năng, Tiến hoá, Bách khoa, Túi đồ, Lò đúc…) → Hợp thể → bảng tướng (#more) → menu ≡.
+- **Nút Back trình duyệt / vuốt back trên điện thoại:** khi có màn phụ đang mở, game gài một mục lịch sử; bấm Back thì đóng màn phụ đó thay vì rời trang (không có gì để đóng thì Back hoạt động như cũ).
+- **Lỗi kẹt thứ hai tìm thấy khi rà:** 40 tướng (Đốt Nương, Thổ Rèn, Kỳ Lân, Tản Viên…) chưa có bí ẩn riêng `SECRETS['h.<tướng>']` → mở **Cây kỹ năng** của họ là lỗi JS giữa chừng, #screen hiện trống không có nút ✕ chặn cả màn. Sửa: thiếu bí ẩn thì bỏ ô bí ẩn; và `openScreen` dựng bảng lỗi thì tự đóng #screen + báo "Không mở được bảng này" thay vì để màn trống.
+- Test mới `tests/thoat-man-phu`: mở / đóng Thần Khí (cả sau khi nâng cấp), Anh Hùng, Ấn Phù, Cây kỹ năng, Tiến hoá, Bách khoa, Túi đồ, Hợp thể, menu ≡, Cây kỹ năng / Tiến hoá của tướng không có bí ẩn, bằng nút / Esc / Back ở 1920×934, 844×390, 667×375, dọc 390×844; sau khi đóng không còn lớp phủ, giữa sân chạm tới được, game chạy tiếp.
+
+## Phiên bản 201 — quy tắc hình mới phải có bản pixel
+- CLAUDE.md: thêm quy tắc "Đang chuyển sang pixel art: hình mới phải có bản pixel" — session thêm/đổi hình (kể cả vẽ bằng code) vẽ luôn bản pixel theo docs/pixel/QUY-CHUAN.md hoặc ghi vào docs/pixel/DANH-SACH.md mục "Bổ sung"; giữ đường vẽ dự phòng.
