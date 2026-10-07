@@ -1374,6 +1374,8 @@ const FUSE_ADJ = { cdt: 1.069, lachau: 0.96, thachsanh: 0.45, thansan: 0.516, ca
 // lên vàng cần thần tím Thần tinh ★★★ (đủ sao rồi mới hóa thân), giá cao hơn bậc sao cuối
 // v180: hợp thể ra tướng Tím cần 2 tướng Thường ★★★ ĐÃ NÂNG HẾT KỸ NĂNG (bỏ ngoại lệ v136); ra Vàng cần 2 thần Tím Thần tinh ★★★ + kỹ năng tối đa
 Object.assign(COSTS, { ascend: { epic: 300, legendary: 1200 }, ascendTier: 3, ascendTier2: 3 });
+// v181: nới cân bằng cho luật v180 — ghép sao tặng thêm cấp (kèm điểm kỹ năng), tướng Thường ★★★ lên cấp rẻ hơn
+Object.assign(COSTS, { mergeLv: [0, 0, 0, 0], lvDisc3: 1 });
 // Thần lực: hệ số sát thương và máu của tướng đã thăng thần (kỹ năng +một nửa mức này)
 const ASCEND_POWER = { epic: 1.15, legendary: 1.6 };
 // Thần tinh của tướng thần Huyền thoại mạnh hơn Sử thi (nhân chỉ số mỗi bậc sao)

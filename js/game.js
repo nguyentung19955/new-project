@@ -1664,6 +1664,8 @@ class Game {
     this.absorbGear(b, a);
     this.heroes[fromSlot] = null;
     b.tier = (b.tier || 0) + 1;
+    // v181: ghép sao tặng cấp + điểm kỹ năng (đỡ phần nâng kỹ năng tối đa để hợp thể)
+    for (let i = 0; i < (COSTS.mergeLv[b.tier] || 0) && b.level < CONFIG.maxLevel; i++) { b.level++; b.skillPts++; }
     b.evoT = 1.2;
     if (!b.dead) b.hp = Math.min(heroStats(b).hpMax, b.hp + heroStats(b).hpMax - before + heroStats(b).hpMax * 0.3);
     this.effects.push({ type: 'evolve', hero: b, x: b.x, y: b.y, color: ELEMENTS[HEROES[b.type].el].color, ttl: 1.2, max: 1.2 });
@@ -1797,7 +1799,7 @@ class Game {
   }
 
   // Nâng cấp tướng bằng vàng: +1 cấp, +1 điểm kỹ năng
-  levelCost(h) { return COSTS.level(h.level); }
+  levelCost(h) { return Math.round(COSTS.level(h.level) * (!h.from && (h.tier || 0) >= 3 ? COSTS.lvDisc3 : 1)); }
   levelUp(h) {
     if (h.level >= CONFIG.maxLevel) return 'Tướng đã đạt cấp tối đa';
     const c = this.levelCost(h);

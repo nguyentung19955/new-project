@@ -1,7 +1,7 @@
 // Mô phỏng cân bằng (v180): thời điểm trung bình có tướng Tím đầu tiên theo từng luật hợp thể:
 //   cu  = v136: 2 tướng Thường ★★, không cần kỹ năng · kn2 = ★★ + kỹ năng tối đa · moi = v180: ★★★ + kỹ năng tối đa.
 // Bot tham lam giống nhau ở mọi luật (đội 6 tướng = 3 cặp hợp thể Tím), chỉ đổi điều kiện hợp thể.
-// Chạy: node tests/hop-the/mo-phong.js [số ván mỗi ải=6]   (không thuộc bộ test, chỉ để đo)
+// Chạy: node tests/hop-the/mo-phong.js [số ván mỗi ải=6] [luật,… = cu,kn2,moi | vA,vB,vC]   (không thuộc bộ test, chỉ để đo)
 const { open, enter } = require('../cho-tuong/helpers');
 const N = +process.argv[2] || 6, LEVELS = [0, 2, 4];
 
@@ -9,7 +9,10 @@ async function run(level, rule, seed) {
   const { browser, page } = await open(844, 390, {});
   await enter(page, level);
   const r = await page.evaluate(([rule, seed]) => {
-    if (rule !== 'moi') COSTS.ascendTier = 2;
+    if (rule !== 'moi' && rule[0] !== 'v') COSTS.ascendTier = 2;
+    // phương án nới (luật v180 + ...): vA = ★★★ lên cấp nửa giá · vB = ghép tặng cấp · vC = cả hai
+    if (rule === 'vA' || rule === 'vC') COSTS.lvDisc3 = 0.5;
+    if (rule === 'vB' || rule === 'vC') COSTS.mergeLv = [0, 0, 2, 4];
     if (rule === 'cu') { const orig = game.fusionReady.bind(game); game.fusionReady = (h) => ((h.tier || 0) >= game.ascendNeed(h) && !h.from ? true : orig(h)); }
     // đội = 3 cặp hợp thể ra Tím (tướng Thường, không trùng)
     const deck = [];
@@ -57,12 +60,12 @@ async function run(level, rule, seed) {
 
 (async () => {
   const out = {};
-  for (const lv of LEVELS) for (const rule of ['cu', 'kn2', 'moi']) {
+  for (const lv of LEVELS) for (const rule of (process.argv[3] || 'cu,kn2,moi').split(',')) {
     const rs = [];
     for (let k = 0; k < N; k++) rs.push(await run(lv, rule, 1234 + k * 977));
     const got = rs.filter((x) => x.first);
     const avg = (f) => (got.length ? (got.reduce((a, x) => a + f(x), 0) / got.length).toFixed(1) : '-');
     out[`${lv}/${rule}`] = { coTim: `${got.length}/${N}`, giay: avg((x) => x.first.t), dot: avg((x) => x.first.wave), thua: rs.filter((x) => !x.first && x.over).length };
-    console.log(`ải ${lv + 1} · luật ${{ cu: 'v136 ★★', kn2: '★★+KN', moi: 'v180 ★★★+KN' }[rule]}: có Tím ${got.length}/${N} ván · TB ${avg((x) => x.first.t)} s · đợt ${avg((x) => x.first.wave)} · ${rs.map((x) => (x.first ? `đ${x.first.wave}` : x.over ? 'thua/hết' : '—')).join(' ')}`);
+    console.log(`ải ${lv + 1} · luật ${{ cu: 'v136 ★★', kn2: '★★+KN', moi: 'v180 ★★★+KN', vA: 'v180 + ★★★ lên cấp ½ giá', vB: 'v180 + ghép tặng cấp', vC: 'v180 + cả hai' }[rule] || rule}: có Tím ${got.length}/${N} ván · TB ${avg((x) => x.first.t)} s · đợt ${avg((x) => x.first.wave)} · ${rs.map((x) => (x.first ? `đ${x.first.wave}` : x.over ? 'thua/hết' : '—')).join(' ')}`);
   }
 })();
