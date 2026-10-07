@@ -10,7 +10,7 @@ Thay cho `docs/LUAT_GEN_ANIMATION.md` (luật cũ: dải 4 ô, mỗi ảnh một
 
 | File | Dùng để |
 |---|---|
-| `docs/CHUAN-ANIMATION.md` | Tài liệu này: phong cách, quy cách từng loại ảnh, nhịp phát, mẫu prompt, cách giao nộp |
+| `docs/CHUAN-ANIMATION.md` (+ bản chữ thường `.txt`) | Tài liệu này: phong cách, quy cách từng loại ảnh, nhịp phát, mẫu prompt, cách giao nộp |
 | `docs/mau-luoi/hero12.png` · `enemy6.png` · `enemy6-bay.png` · `boss9.png` · `icon4.png` | Ảnh lưới trống có số ô + đường đáy chân — **đính kèm cho AI làm mẫu bố cục** |
 | `docs/mau-luoi/vi-du-hero12-lactuong.png` | Ví dụ một tấm tướng đã xếp đúng lưới (ghép từ ảnh Lạc Tướng hiện có) |
 | `docs/prompts-tuong.csv` | 60 tướng, mỗi dòng: mã · tên · bậc · hệ · cỡ ảnh · tên file · lệnh cắt · **prompt đầy đủ** |
