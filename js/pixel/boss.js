@@ -2,4 +2,7 @@
 // Sprite pixel nhóm "boss": "<nhóm>/<mã>" → dải khung assets/pixel/<nhóm>/<mã>.png. Game dùng khi bật pixel (js/pixel.js).
 window.PIXEL_MANIFEST = window.PIXEL_MANIFEST || {};
 Object.assign(window.PIXEL_MANIFEST, {
+"boss/anvuong": {"name":"Quỷ Vương Ân","w":64,"h":64,"ax":31,"ay":62,"bbox":[5,2,57,61],"n":13,"anims":{"walk":{"start":0,"n":4,"fps":6,"loop":true},"attack":{"start":4,"n":3,"fps":8,"loop":false},"hurt":{"start":7,"n":1,"fps":8,"loop":false},"die":{"start":8,"n":3,"fps":5,"loop":false},"rage":{"start":11,"n":2,"fps":8,"loop":true}},"cd":1},
+"boss/chantinh": {"name":"Chằn Tinh","w":64,"h":64,"ax":30,"ay":62,"bbox":[7,2,54,61],"n":13,"anims":{"walk":{"start":0,"n":4,"fps":6,"loop":true},"attack":{"start":4,"n":3,"fps":8,"loop":false},"hurt":{"start":7,"n":1,"fps":8,"loop":false},"die":{"start":8,"n":3,"fps":5,"loop":false},"rage":{"start":11,"n":2,"fps":6,"loop":true}},"cd":1},
+"boss/daibang": {"name":"Đại Bàng Tinh","w":64,"h":64,"ax":31,"ay":61,"bbox":[9,5,45,57],"n":13,"anims":{"walk":{"start":0,"n":4,"fps":6,"loop":true},"attack":{"start":4,"n":3,"fps":8,"loop":false},"hurt":{"start":7,"n":1,"fps":8,"loop":false},"die":{"start":8,"n":3,"fps":5,"loop":false},"rage":{"start":11,"n":2,"fps":8,"loop":true}},"cd":1},
 });

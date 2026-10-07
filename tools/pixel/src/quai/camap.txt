@@ -1,0 +1,239 @@
+# Cá Mập Yêu (mã camap) — quái thường 32×32, hành Thủy, [hoá điên]. Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:292 FIX: cá mập THẬT thân thoi xám, vây lưng to, đứng trên vây đuôi khuyết, nhe răng cười — không tay chân;
+# PROMPT-DUNG-XUONG.txt:1324 vòng đồng ở vây). Phá cách (DANH-SACH): "cá mập thuyền đắm" — mảnh ván thuyền vỡ cắm lưng, dây neo quấn thân.
+name: Cá Mập Yêu
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  G = sat-sang
+  g = sat
+  t = sat-toi
+  b = trang
+  B = trang-xam
+  h = trang
+  m = son-toi
+  D = toi
+  e = vang-sang
+  w = dong
+  W = vang-nghe
+  p = dat-sang
+  P = dat
+  q = dat-toi
+  r = cat
+  R = dong-toi
+
+part than
+................................
+................................
+...................gt...........
+.................GGggt..........
+...............GGGgggtt.........
+..............GGgDDggggt........
+.............GGgggeDgggggt......
+............GGgggggggggggg......
+............GGgggggtmmmmmm......
+...........GGgggggtmhmhmhm......
+...........GGggggtBmmhmhmB......
+...........GGgggtgbbBBBBB.......
+..........GGgggtgtbbbbbB........
+..........GGgggtgtbbbB..........
+.........GGggggtgtbbbB..........
+.........GGgggggtbbbbB..........
+.........GGggggggtbbB...........
+.........GGgggggtbbbB...........
+.........GGgggggtbbB............
+.........GGggggttbbB............
+..........Gggggttbb.............
+..........GGgggtbbB.............
+...........Ggggtbb..............
+...........GGggtbB..............
+............Gggtb...............
+.............Ggt................
+................................
+................................
+................................
+................................
+................................
+................................
+end
+
+# vây lưng to (sau lưng, chĩa lên-trái) + vòng đồng
+part vay_lung
+......G
+.....GG
+....GGg
+...GGgg
+..GGggg
+.GGgggg
+GGggWwt
+GgggwRt
+..ggtt.
+end
+
+# vây đuôi khuyết nằm trên đất (đứng trên đuôi)
+part duoi
+GG..........GG
+GGg........Ggt
+.GGg......Ggt.
+..GGggggggggt.
+...GGggggggt..
+....tttttt....
+end
+
+part vay_nguc
+Ggg..
+.gggt
+..gtt
+...t.
+end
+
+part vay_nguc2
+Gggt
+.gtt
+end
+
+# mảnh ván thuyền vỡ cắm trên lưng
+part van
+....pP
+...ppP
+..pPPq
+.pPPq.
+pPPq..
+.Pq...
+end
+
+# dây neo quấn thân
+part day
+rrRrrRr.
+.RrrRrrR
+end
+
+part mat_nham
+DD
+end
+
+part ha
+tmmmmmmm
+mhmhmhmh
+mmmmmmmm
+mmmmmmmm
+BhmhmhmB
+.bbbbBB.
+end
+
+part duoi_ep
+GGg........GGt
+.GGggggggggggt
+..GGgggggggtt.
+...tttttttt...
+end
+
+# nhún trên vây đuôi: thân nhấc lên, vây ngực vẫy
+anim walk fps=6 loop
+frame walk
+  use vay_lung 3 8
+  use van 3 15
+  use than 0 0
+  use vay_nguc 20 15
+  use day 10 19
+  use duoi 8 24
+  outline
+end
+frame walk
+  use vay_lung 3 7
+  use van 3 14
+  use than 0 -1
+  use vay_nguc2 20 14
+  use day 10 18
+  use duoi 8 24
+  outline
+end
+frame walk
+  use vay_lung 3 8
+  use van 3 15
+  use than 0 0
+  use vay_nguc 20 15
+  use day 10 19
+  use duoi_ep 8 25
+  outline
+end
+frame walk
+  use vay_lung 4 7
+  use van 4 14
+  use than 1 -1
+  use vay_nguc2 21 14
+  use day 11 18
+  use duoi 8 24
+  outline
+end
+
+# đánh: ngả ra sau lấy đà → lao tới há hàm đớp → về
+anim attack fps=8 once
+frame attack
+  use vay_lung 2 9
+  use van 2 16
+  use than -1 1
+  use vay_nguc2 19 16
+  use day 9 20
+  use duoi_ep 8 25
+  outline
+end
+frame attack
+  use vay_lung 5 7
+  use van 5 14
+  use than 2 -1
+  use vay_nguc 22 14
+  use day 12 18
+  use ha 20 7
+  use duoi 8 24
+  outline
+end
+frame attack
+  use @walk.0
+end
+
+anim hurt fps=8 once
+frame hurt
+  use vay_lung 2 8
+  use van 2 15
+  use than -1 0
+  use vay_nguc2 19 15
+  use day 9 19
+  use mat_nham 17 6
+  use duoi 8 24
+  outline
+  swap g G
+  swap t g
+end
+
+# chết: ngửa ra sau → đổ nằm nghiêng → mờ tối
+anim die fps=5 once
+frame die
+  use vay_lung 2 9
+  use van 2 16
+  use than -1 1
+  use vay_nguc2 19 16
+  use day 9 20
+  use mat_nham 17 7
+  use duoi_ep 8 25
+  outline
+end
+frame die
+  use vay_lung 3 8
+  use van 3 15
+  use than 0 0
+  use vay_nguc2 20 15
+  use day 10 19
+  use mat_nham 18 6
+  use duoi 8 24
+  rot 90
+  shift 0 3
+  outline
+end
+frame die
+  use @die.1
+  swap g t
+  swap G g
+  swap b B
+end

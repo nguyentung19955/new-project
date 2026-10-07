@@ -1,0 +1,193 @@
+# Sứa Tinh (mã phuthuy — tên cũ Phù Thuỷ) — quái thường 32×32, hành Thủy, bắn xa + hồi máu. Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:406 · PROMPT-DUNG-XUONG.txt:1452 · DANH-SACH Lô 8): đầu chuông sứa trong suốt xanh mòng két, 2 mắt xanh
+# phát sáng, miệng cau; xúc tu thay chân quấn rong; 1 xúc tu cầm CÀNH SAN HÔ ĐỎ. Phá cách (DANH-SACH "ma da"): xúc tu lẫn TÓC RONG dài
+# rủ như hồn đuối nước — chuông như mặt ma trong suốt, lơ lửng sát đất. Quay mặt sang PHẢI.
+name: Sứa Tinh
+size: 32x32
+anchor: 15,28
+colors:
+  k = vien
+  T = troi
+  N = ngoc-sang
+  n = ngoc
+  c = cham-sang
+  C = cham
+  m = cham-toi
+  e = sang
+  E = nuoc-sang
+  g = la-ma
+  G = la
+  q = la-toi
+  r = son-sang
+  R = son
+  M = son-toi
+  y = hong
+
+part chuong
+.....TTTTTT......
+...TTNNNNNNTT....
+..TNNnNNnNNNNn...
+.TNNnnNnnmnnnnnnm
+.TNnnNnnnnmmnnmmc
+TNNnnNnnnnEennEec
+TNnnnNnnnnnnnnnnc
+TNnnnnnnnnnmmmmnc
+.nnnnnnnnnmnnnnmc
+.cnnnnnnnnnnnnnc.
+..cTcTcTcTcTcTc..
+end
+
+part toc1
+..gG.nN..gG..nN..
+..gG.nN..gG..nN..
+..gG..nN.gG...nN.
+.gG...nN..gG..nN.
+.gG..nN...gG..Nn.
+gG...nN....gG.Nn.
+gG..nN.....gG.nN.
+.gG.nN....gG..nN.
+.gG..nN...gG...n.
+gG...nN..gG......
+gG....n..gG......
+gG.......Gq......
+.q.......q.......
+end
+
+part toc2
+..gG.nN..gG..nN..
+..gG..nN.gG..nN..
+.gG...nN..gG.nN..
+.gG..nN...gG.Nn..
+gG...nN...gG..Nn.
+gG..nN...gG...Nn.
+.gG.nN...gG...nN.
+.gG..nN...gG..nN.
+gG...nN...gG.nN..
+gG....nN.gG......
+.gG...n..gG......
+.gG.....gG.......
+..q.....q........
+end
+
+part tay
+nNNN..
+.nnNN.
+...nNN
+....nN
+end
+
+part sanho
+r..r..
+rR.rR.
+.rRRr.
+.r.RMr
+..RRM.
+..RM..
+..RM..
+..RM..
+end
+
+part sanho_len
+.e.r..
+r..rR.
+rR.rRr
+.rRRM.
+..rRM.
+..RM..
+..RM..
+..RM..
+end
+
+part mat_nham
+mm.mm
+end
+
+part mat_x
+kk..kk
+end
+
+anim walk fps=5 loop
+frame walk
+  use toc1 6 14
+  use chuong 6 3
+  use tay 21 12
+  use sanho 24 8
+  outline
+end
+frame walk
+  use toc2 6 13
+  use chuong 6 2
+  use tay 21 11
+  use sanho 24 7
+  outline
+end
+frame walk
+  use toc1 6 12
+  use chuong 6 1
+  use tay 21 10
+  use sanho 24 6
+  outline
+end
+frame walk
+  use toc2 6 13
+  use chuong 6 2
+  use tay 21 11
+  use sanho 24 7
+  outline
+end
+
+# đánh (bắn xa): giơ cành san hô lên → chĩa tới, đầu cành loé sáng → về
+anim attack fps=7 once
+frame attack
+  use toc2 6 13
+  use chuong 6 2
+  use tay 21 9
+  use sanho_len 23 3
+  outline
+end
+frame attack
+  use toc1 6 14
+  use chuong 6 3
+  use tay 22 12
+  use sanho_len 25 7
+  set 26 7 e
+  set 27 6 E
+  outline
+end
+frame attack
+  use @walk.0
+end
+
+anim hurt fps=8 once
+frame hurt
+  use @walk.0
+  shift -1 0
+  swap n N
+  swap g q
+  use mat_nham 16 8
+end
+
+# chết: nhắm mắt, rủ xuống → chuông xẹp nằm trên đất → tan mờ
+anim die fps=5 once
+frame die
+  use toc2 6 17
+  use chuong 6 6
+  use tay 21 15
+  use sanho 24 11
+  use mat_x 16 11
+  outline
+end
+frame die
+  use toc1 6 18
+  use chuong 6 13
+  use sanho 24 21
+  use mat_x 16 18
+  outline
+end
+frame die
+  use @die.1
+  swap N n
+  swap n c
+  swap T N
+  swap g G
+end

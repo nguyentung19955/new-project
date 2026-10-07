@@ -1,0 +1,165 @@
+# Mực Độc (mã mucdoc) — biến thể của muc (chép y part, đổi colors: + vết nứt chum rỉ hơi độc xanh). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (js/enemies2.js:96 · tools/make-variants.py:18): mực trong chum, thân XANH LÁ ĐỘC, chum phủ rêu, giọt mực xanh;
+# vết nứt chum sáng xanh rỉ giọt độc. Hành Mộc, [bắn xa, hồi máu].
+name: Mực Độc
+size: 32x32
+anchor: 16,29
+colors:
+  k = vien
+  P = la-sang
+  p = la-ma
+  q = la
+  Q = la-toi
+  J = reu
+  j = dat
+  z = dat-toi
+  c = reu-sang
+  D = toi
+  e = vang-sang
+  i = la
+  I = la-sang
+  x = la-sang
+  X = la-ma
+
+part dau
+......P......
+.....PPp.....
+....PPppq....
+...PPpppqq...
+PP.PPpppqq.qq
+PPPPPppppqqqq
+.PPPpppppqqq.
+...Ppppppppq.
+...Ppppppppq.
+..PPpppppppqq
+..PpDDppqDDpq
+..PpeDppqeDpq
+..Pppppppppqq
+end
+
+part chum
+.cccccccccccc.
+cJJjjjjjjjjjzc
+.zzzzzzzzzzzz.
+.JJjjjjjjjjzz.
+JJjjjxjjjjjjzz
+Jjjjjjxjjjjjjz
+Jjjjjjxjjjjjjz
+.JjjjjjXjjjzz.
+..jj.jjX.jzz..
+end
+
+part tua1
+........PpPpqPpqqpq.........
+......PPp.Pp.pq.pq.qqq......
+....PPp..Pp..pq..pq..qqq....
+...Pp...Pp...pq...pq...qq...
+..Pp...Pp....pq....pq...qq..
+..p.P..p.....pq.....q..q.q..
+..pPp..pP...pq......qQ.qQq..
+...p....pp..qq.......Q..q...
+end
+
+part tua2
+........PpPpqPpqqpq.........
+.......Pp.Pp.pq.pq.qq.......
+.....PPp..Pp.pq..pq..qq.....
+....Pp...Pp..pq...pq..qq....
+...Pp....Pp...pq..pq...qq...
+...p.P...p....pq..q...q.q...
+...pPp...pP..pq...qQ..qQq...
+....p.....p..qq....Q...q....
+end
+
+part muc_giot
+.I.
+Iii
+iii
+.i.
+end
+
+part mat_nham
+DDp.qDD
+end
+
+# lơ lửng: chum + đầu nhấp nhô, xúc tu uốn so le
+anim walk fps=6 loop
+frame walk
+  use tua1 2 21
+  use dau 10 2
+  use chum 9 14
+  outline
+end
+frame walk
+  use tua2 2 21
+  use dau 10 1
+  use chum 9 13
+  outline
+end
+frame walk
+  use tua1 2 20
+  use dau 10 1
+  use chum 9 13
+  outline
+end
+frame walk
+  use tua2 2 22
+  use dau 10 2
+  use chum 9 14
+  outline
+end
+
+# đánh (bắn xa): rụt đầu vào chum → vươn lên phun giọt mực đen → về
+anim attack fps=8 once
+frame attack
+  use tua2 2 22
+  use dau 10 4
+  use chum 9 15
+  outline
+end
+frame attack
+  use tua1 2 20
+  use dau 10 1
+  use chum 9 13
+  use muc_giot 25 10
+  set 23 12 i
+  set 24 12 i
+  outline
+end
+frame attack
+  use @walk.0
+end
+
+anim hurt fps=8 once
+frame hurt
+  use tua2 2 21
+  use dau 10 3
+  use mat_nham 13 13
+  use chum 9 14
+  outline
+  swap P p
+  swap p P
+  swap q p
+end
+
+# chết: đầu rụt hẳn vào chum → chum đổ nghiêng → xúc tu rũ, mờ tối
+anim die fps=5 once
+frame die
+  use tua2 2 22
+  use dau 10 5
+  use mat_nham 13 16
+  use chum 9 15
+  outline
+end
+frame die
+  use @die.0
+  rot 90
+  shift 0 1
+end
+frame die
+  use @die.1
+  swap P p
+  swap p q
+  swap J j
+  swap j z
+end

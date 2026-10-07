@@ -120,7 +120,8 @@ async function setup(page) {
       sm: pxSmoothOff() }));
     ok(s.on && /pixel/.test(s.cls), `[${tag}] bật pixel bằng ?pixel=1`);
     for (const k of ['tuong/giong', 'tuong/tanvien', 'tuong/chodo', 'quai/tom', 'nen/co', 'nen/nuoc']) ok(s.seen.includes(k), `[${tag}] vẽ pixel: ${k}`);
-    ok(!s.seen.includes('tuong/lactuong') && !s.seen.includes('quai/casau'), `[${tag}] mã chưa có pixel (lactuong, casau) giữ hình cũ`);
+    ok(!s.seen.includes('tuong/lactuong'), `[${tag}] mã chưa có pixel (lactuong) giữ hình cũ`);
+    ok(s.seen.includes('quai/casau'), `[${tag}] quái lô 8 (casau) vẽ pixel`);
     ok(/pixel\/tuong\/giong-chan-dung\.png/.test(s.head) && !/pixel\//.test(s.headOld), `[${tag}] chân dung giao diện: giong pixel, lactuong hình cũ`);
     ok(/pixel\/icon\/hanh-kim\.png/.test(s.kim) && !/pixel\//.test(s.hoa), `[${tag}] icon ngũ hành: Kim pixel, Hỏa (chưa vẽ) hình cũ`);
     ok(s.sm, `[${tag}] ảnh pixel vẽ không làm mịn (nearest-neighbor)`);

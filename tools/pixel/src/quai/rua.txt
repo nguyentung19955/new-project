@@ -1,0 +1,242 @@
+# Rùa Giáp (mã rua) — quái thường 32×32, hành Thổ, chương Sơn Tinh – Thủy Tinh (thủy quân). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:387 · PROMPT-DUNG-XUONG.txt:1436 · DANH-SACH Lô 8): rùa cạn THẬT, MAI VÒM xanh rêu đậm có GAI ĐỒNG
+# + viền răng cưa đồng, 4 chân to như chân voi, đầu rùa có mỏ, lông mày nghiêm — không rồng. Quay mặt sang PHẢI.
+# Phá cách (DANH-SACH "rùa đá đội bia"): giữ mai vòm rêu + gai đồng + viền răng cưa, thêm TẤM BIA ĐÁ NỨT khắc chữ trên lưng
+# như rùa đội bia Văn Miếu — dáng cao, dễ phân biệt trên sân.
+name: Rùa Giáp
+size: 32x32
+anchor: 15,25
+colors:
+  k = vien
+  R = reu-sang
+  r = reu
+  q = reu-toi
+  j = dong-toi
+  d = dong
+  D = dong-sang
+  Y = vang-nghe
+  h = cat
+  s = dat-sang
+  x = dat
+  X = dat-toi
+  n = trang-xam
+  e = trang
+  w = bac
+  S = sat-sang
+  z = sat
+  Z = sat-toi
+
+part mai
+.....RRRRRRRRRRRR......
+...RRRrrrrRRrrrrrrq....
+..RRrrrrrqrrrrrrqrrq...
+.RRrrdrrrqrrrdrrqrrDq..
+.RrrdYdrqrrrrdYdqrrrq..
+RrrrrdrrqrrrrrdrqrrrDq.
+RrrrrrrqqqqqqqqqqrrdqqX
+Rrrrrrqrrrrrrrrrrrqrrqq
+jDdDdDdDdDdDdDdDdDdDdj.
+.j.jj.jj.jj.jj.jj.jj...
+end
+
+part gai
+.Y.
+DYd
+end
+
+part dau
+..xxxx...
+.xhhssx..
+xhXXXssx.
+xsekssYYd
+xssssxYdd
+.xsssxdd.
+..xsssx..
+..xssx...
+end
+
+part dau_ha
+..xxxx....
+.xhhssxYY.
+xhXXXssYdd
+xsekssx...
+xssssxk...
+.xsssxYdd.
+..xsssxd..
+..xssx....
+end
+
+part bia
+..wSS..
+.wSSSz.
+wSZSZSz
+SSZSZzz
+SZSSkzz
+SSZkZzz
+SZSkSzz
+SSSSzzZ
+jdDDDdj
+end
+
+part chan
+hssx..
+hssxx.
+sssxx.
+hsssxx
+nsnsnx
+end
+
+part chan_len
+hssx..
+hssxx.
+hsssxx
+nsnsnx
+end
+
+part chan_xa
+xxX..
+xxXX.
+xxXX.
+xnxnX
+end
+
+part duoi
+.xx
+xX.
+end
+
+part mat_x
+k.k
+.k.
+end
+
+anim walk fps=4 loop
+frame walk
+  use chan_xa 10 20
+  use chan_xa 22 20
+  use duoi 2 19
+  use dau 22 13
+  use mai 2 11
+  use bia 10 3
+  use gai 5 11
+  use gai 19 11
+  use chan 4 20
+  use chan 16 20
+  outline
+end
+frame walk
+  use chan_xa 10 20
+  use chan_xa 22 19
+  use duoi 2 19
+  use dau 22 12
+  use mai 2 11
+  use bia 10 3
+  use gai 5 11
+  use gai 19 11
+  use chan_len 4 19
+  use chan 16 20
+  outline
+end
+frame walk
+  use chan_xa 10 20
+  use chan_xa 22 20
+  use duoi 2 19
+  use dau 22 13
+  use mai 2 11
+  use bia 10 3
+  use gai 5 11
+  use gai 19 11
+  use chan 4 20
+  use chan 16 20
+  outline
+end
+frame walk
+  use chan_xa 10 19
+  use chan_xa 22 20
+  use duoi 2 19
+  use dau 22 14
+  use mai 2 11
+  use bia 10 3
+  use gai 5 11
+  use gai 19 11
+  use chan 4 20
+  use chan_len 16 19
+  outline
+end
+
+# đánh: rụt đầu → vươn cổ há mỏ cắn → về
+anim attack fps=7 once
+frame attack
+  use chan_xa 10 20
+  use chan_xa 22 20
+  use duoi 2 19
+  use dau 20 14
+  use mai 2 11
+  use bia 10 3
+  use gai 5 11
+  use gai 19 11
+  use chan 4 20
+  use chan 16 20
+  outline
+end
+frame attack
+  use chan_xa 10 20
+  use chan_xa 22 20
+  use duoi 2 19
+  use dau_ha 21 12
+  use mai 2 11
+  use bia 10 3
+  use gai 5 11
+  use gai 19 11
+  use chan 4 20
+  use chan 16 20
+  set 22 20 s
+  outline
+end
+frame attack
+  use @walk.0
+end
+
+anim hurt fps=8 once
+frame hurt
+  use @walk.0
+  shift -1 0
+  swap r R
+  swap s h
+  swap q r
+end
+
+# chết: rụt đầu mắt X → mai sập xuống đất, chân thu → sẫm màu
+anim die fps=5 once
+frame die
+  use chan_xa 10 20
+  use chan_xa 22 20
+  use duoi 2 19
+  use dau 21 15
+  use mai 2 11
+  use bia 10 3
+  use gai 5 11
+  use gai 19 11
+  use chan 4 20
+  use chan 16 20
+  use mat_x 23 18
+  outline
+end
+frame die
+  use duoi 2 22
+  use dau 21 18
+  use mai 2 15
+  use bia 10 7
+  use gai 5 15
+  use gai 19 15
+  use mat_x 23 21
+  set 23 22 s
+  outline
+end
+frame die
+  use @die.1
+  swap R r
+  swap r q
+  swap D d
+  swap s x
+end

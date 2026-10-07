@@ -1,0 +1,133 @@
+# Nòng Nọc (mã nongnoc) — lính con 32×32 (game vẽ cỡ 8 → hình nhỏ ~13px giữa khung), hành Thủy. Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:463 · PROMPT-DUNG-XUONG.txt:1500 · DANH-SACH Lô 8): cục tròn ĐEN BÓNG ánh rêu (không xanh lá),
+# 1 MẮT TO bóng, đuôi lượn — không tay chân. Phá cách (DANH-SACH): như giọt mực tàu đen bóng, đuôi là nét bút lông
+# (đầu đậm, đuôi xơ, tách sợi). Quay mặt sang PHẢI.
+name: Nòng Nọc
+size: 32x32
+anchor: 18,23
+colors:
+  k = vien
+  K = khoi
+  t = toi
+  r = reu-toi
+  Z = sat-toi
+  s = sat
+  w = sat-sang
+  e = trang
+  E = trang-xam
+  m = son-toi
+
+part dau
+...rrrr..
+.rZwsKKK.
+rZsZKkEeK
+rZKKKEeek
+rKKKKEkeK
+.KKKKKKK.
+..KKKKK..
+end
+
+part dau_ha
+...rrrr..
+.rZwsKKK.
+rZsZKkEeK
+rZKKKEeek
+rKKKKKKm.
+.KKKKmmm.
+..KKKKK..
+end
+
+part duoi1
+..........
+Z.....ZZKK
+.ZK..ZKKKK
+..rKKKKKK.
+.r........
+end
+
+part duoi2
+......ZZKK
+..ZK.ZKKKK
+.Z.KKKKKK.
+Z.r.......
+end
+
+part duoi3
+Z.........
+.ZK...ZZKK
+..rKKZKKKK
+...r..KKK.
+end
+
+part mat_x
+k.k
+.k.
+k.k
+end
+
+anim walk fps=8 loop
+frame walk
+  use duoi1 8 17
+  use dau 16 16
+  outline
+end
+frame walk
+  use duoi2 8 16
+  use dau 16 15
+  outline
+end
+frame walk
+  use duoi3 8 17
+  use dau 16 16
+  outline
+end
+frame walk
+  use duoi2 8 16
+  use dau 16 15
+  outline
+end
+
+# đánh: co mình → lao tới đớp → về
+anim attack fps=8 once
+frame attack
+  use duoi3 7 17
+  use dau 15 16
+  outline
+end
+frame attack
+  use duoi2 10 16
+  use dau_ha 18 15
+  outline
+end
+frame attack
+  use @walk.0
+end
+
+anim hurt fps=8 once
+frame hurt
+  use @walk.0
+  shift -1 0
+  swap K Z
+  swap r s
+end
+
+# chết: mắt X → lật ngửa → nhạt màu tan như mực loang
+anim die fps=5 once
+frame die
+  use duoi1 8 18
+  use dau 16 17
+  use mat_x 21 18
+  outline
+end
+frame die
+  use @die.0
+  rot 180
+  flipx
+  shift 0 7
+  outline
+end
+frame die
+  use @die.1
+  swap K t
+  swap Z r
+end

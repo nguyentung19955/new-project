@@ -1,0 +1,223 @@
+# Giao Long Con (mã giaolong) — lính con 32×32, hành Thủy, Thủy Tinh gọi ra. Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:97 "giao long — hợp · giữ"; PROMPT-DUNG-XUONG.txt:1516): rồng nước con trườn uốn sóng,
+# đầu ngẩng, SỪNG nhỏ + RÂU vàng, vây lưng nhỏ, bụng vảy ngà, đuôi cuộn có vây. Quay mặt sang PHẢI (game tự lật).
+# Phá cách (DANH-SACH): "rồng sành" — vảy men sành xanh ngọc có VẾT NỨT sành; chết thì vỡ thành mảnh sành.
+name: Giao Long Con
+size: 32x32
+anchor: 16,30
+colors:
+  k = vien
+  G = ngoc-sang
+  g = ngoc
+  t = cham
+  T = cham-toi
+  b = cat
+  B = vang-sang
+  c = dat-sang
+  f = nuoc-sang
+  F = nuoc
+  h = trang
+  H = trang-xam
+  w = vang-nghe
+  e = vang-sang
+  D = toi
+  m = son-toi
+
+part dau
+..H...H.......
+..Hh..Hh......
+...hGGhGG.....
+..fGGGGGGGg...
+.fGGGGDDgGGg..
+.fGggggeDgggGg
+fGgggggggggggg
+fgggggtmmhmmhm
+.ggggtBBBBBBBw
+..gtttbbbbbbw.
+...........w..
+end
+
+part than
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+...................F.tb.........
+...................fggtb........
+......f...........FGggtbb.......
+.....fFf...........GGggtb.......
+....fFfF.....Ff..fF.Gggtbb......
+......bt.......GG...GGggtb......
+....btgt.....GGGGGG..GggDbb.....
+...bgg......GGDgggGG.GgDttb.....
+..btg.......GggDgggGG.GDgtb.....
+..bgt......GggtDttggg.Gggtbb....
+.Btgt.....GGggtbbtggggGGgtbb....
+.btgg.....Gggtbbbbtggg.Gggtb....
+.btgg.....Gggtb..btggg.Gggtb....
+.Btggg....Gggtb..btggg.Gggtb....
+..btgGG..GDggtb..btggg.Gggtb....
+..btggGGgDggtbb..BbtggGGgtbb....
+...btgggGDgttb...Bbtgggggtbb....
+...bbtgggggtb.....bttgggttb.....
+....bbtttttbb.....bbttttbb......
+......bbbbbb.......bbbbbb.......
+.....................bb.........
+................................
+................................
+end
+
+part tay1
+.gGG.
+tggGh
+..t.h
+end
+
+part tay2
+.gG...
+tgggGh
+.t..h.
+end
+
+part chan1
+gt.
+gt.
+.gt
+hh.
+end
+
+part chan2
+.Gg
+.gt
+gt.
+hh.
+end
+
+part dau_mo
+..H...H.......
+..Hh..Hh......
+...hGGhGG.....
+..fGGGGGGGg...
+.fGGGGDDgGGg..
+.fGggggeDgggGg
+fGgggggggggggg
+fgggggtmmhmmhm
+.gggtmmmmmmm..
+.ggtmmmmmmhm..
+..gtBBBBBBBBw.
+...tbbbbbbbw..
+..........w...
+end
+
+part mat_nham
+DDD
+end
+
+# vỡ sành: mảnh vỡ nằm trên đất
+part manh
+..........................
+...........gG.............
+..........GggD..hH........
+.....GG...gtb..GggG.......
+....Gggt.........gtB..f...
+...DgtbbD..GgG...DbbB.fF..
+..btgggb..GgttD.Ggt..GgtD.
+.Fbbtttb..btbbbDggtb.gtbb.
+.ffbbbbb...bbbb.bbbb..bb..
+end
+
+# trườn: đầu nhấp nhô, chân + vuốt bước so le, thân nhích lên xuống
+anim walk fps=6 loop
+frame walk
+  use than
+  use dau 17 2
+  use tay1 26 18
+  use chan1 14 25
+  outline
+end
+frame walk
+  use than 0 -1
+  use dau 17 1
+  use tay2 25 18
+  use chan2 14 25
+  outline
+end
+frame walk
+  use than
+  use dau 17 2
+  use tay1 26 19
+  use chan1 14 25
+  outline
+end
+frame walk
+  use than 0 -1
+  use dau 17 3
+  use tay2 25 19
+  use chan2 14 25
+  outline
+end
+
+# đánh: rụt đầu lấy đà → lao tới há miệng cắn → về
+anim attack fps=8 once
+frame attack
+  use than 0 -1
+  use dau 16 3
+  use tay2 25 19
+  use chan2 14 25
+  outline
+end
+frame attack
+  use than
+  use dau_mo 17 3
+  use tay1 26 19
+  use chan1 14 25
+  outline
+end
+frame attack
+  use @walk.0
+end
+
+anim hurt fps=8 once
+frame hurt
+  use than
+  use dau 16 3
+  use mat_nham 22 8
+  use tay2 25 19
+  use chan2 14 25
+  outline
+  swap g G
+  swap t g
+end
+
+# chết: sành nứt toác → mờ màu, gục đầu → vỡ thành mảnh
+anim die fps=5 once
+frame die
+  use than 0 1
+  use dau 17 5
+  use mat_nham 22 11
+  use chan2 14 26
+  outline
+  set 12 18 D
+  set 13 19 D
+  set 19 21 D
+  set 20 22 D
+  set 4 21 D
+  set 5 22 D
+end
+frame die
+  use @die.0
+  swap g t
+  swap G g
+  swap b c
+end
+frame die
+  use manh 3 21
+  swap g t
+  swap G g
+  outline
+end

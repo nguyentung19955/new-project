@@ -1,0 +1,268 @@
+# Cua Khổng Lồ (mã cua) — quái thường 32×32, hành Kim, [mai cứng: giáp + kháng phép cao]. Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:330 FIX: cua THẬT mai tròn rộng, HAI càng to, 8 chân khớp, mắt cuống, không đuôi; PROMPT-DUNG-XUONG.txt:1356 đỏ, mũ đồng nhỏ).
+# Phá cách (DANH-SACH): "cua đồng gỉ" — MAI là chiếc CHIÊNG ĐỒNG gỉ xanh có NÚM giữa, càng đỏ to như kìm rèn; thân bè ngang.
+name: Cua Khổng Lồ
+size: 32x32
+anchor: 16,29
+colors:
+  k = vien
+  S = dong-sang
+  s = dong
+  z = dong-toi
+  y = vang-nghe
+  Y = vang-sang
+  n = ngoc
+  N = ngoc-sang
+  L = lua-sang
+  R = son-sang
+  r = son
+  m = son-toi
+  e = vang-sang
+  D = toi
+
+part mai
+.....zSSSSSSSSSz.....
+...zSSssssssssssNz...
+..SSsszzzzzzzzzsnSz..
+.SSszsssssSssssszNsz.
+SSsszssssYYysssszssSz
+Snssszsssyyyzssszsssz
+.snszssssszzsssszssz.
+..zssszzzzzzzzzzssnz.
+...zzsssssnNssssszz..
+.....zzzzzzzzzzzz....
+end
+
+part cang_phai
+...RRRr...
+..RLm.Rr..
+.RLRm..rm.
+.RRr..Rrm.
+.RRrr.rrm.
+..RRrrrrm.
+..RRrrrmm.
+...Rrrmm..
+....rmm...
+....rm....
+...rm.....
+end
+
+# càng trái: há (đánh)
+part cang_phai_ha
+.RRr...Rr.
+RLRm...rrm
+RRr....rrm
+RRr...Rrm.
+.RRr.Rrrm.
+.RRrrrrrm.
+..RRrrrmm.
+...Rrrmm..
+....rmm...
+....rm....
+...rm.....
+end
+
+part cang_trai
+...rrrm...
+..rr.mrm..
+.rr..mrrm.
+.rrm..rrm.
+.rrrm.rrm.
+.mrrrrrm..
+.mmrrrrm..
+..mmrrm...
+...mmr....
+....mr....
+.....mr...
+end
+
+part mat
+R..R
+e..e
+r..r
+r..r
+end
+
+part mieng
+.rDDDDr.
+..mmmm..
+end
+
+# 4 chân khớp mỗi bên (trái), chân sau xoè xa
+part chan_t
+...RrrrrR..
+..Rm.......
+.Rm..RrrrrR
+.r..Rm.....
+r..Rm..Rrrr
+r..r..Rm...
+...r..r..Rr
+...r..r.Rm.
+......r.r..
+........r..
+end
+
+part chan_t2
+...RrrrrR..
+..Rm.......
+..Rm.RrrrrR
+..r..Rm....
+.r..Rm.Rrrr
+.r..r..Rm..
+....r..r.Rr
+....r..r.Rm
+.......r.r.
+.........r.
+end
+
+part chan_p
+..RrrrrR...
+.......mR..
+RrrrrR..mR.
+.....mR..r.
+rrrR..mR..r
+...mR..r..r
+rR..r..r...
+.mR.r..r...
+..r.r......
+..r........
+end
+
+part chan_p2
+..RrrrrR...
+.......mR..
+RrrrrR.mR..
+....mR..r..
+rrrR.mR..r.
+..mR..r..r.
+rR.r..r....
+mR.r..r....
+.r.r.......
+.r.........
+end
+
+# bò ngang: 8 chân bước so le, mai nhún, càng nhấp
+anim walk fps=6 loop
+frame walk
+  use chan_t 1 19
+  use chan_p 20 19
+  use cang_trai 0 5
+  use mat 14 8
+  use mieng 12 20
+  use mai 5 11
+  use cang_phai 22 4
+  set 23 14 r
+  set 22 15 m
+  outline
+end
+frame walk
+  use chan_t2 1 18
+  use chan_p2 20 18
+  use cang_trai 0 4
+  use mat 14 7
+  use mieng 12 19
+  use mai 5 10
+  use cang_phai 22 3
+  set 23 13 r
+  set 22 14 m
+  outline
+end
+frame walk
+  use chan_t 1 19
+  use chan_p 20 19
+  use cang_trai 0 4
+  use mat 14 8
+  use mieng 12 20
+  use mai 5 11
+  use cang_phai 22 5
+  set 23 14 r
+  set 22 15 m
+  outline
+end
+frame walk
+  use chan_t2 1 18
+  use chan_p2 20 18
+  use cang_trai 0 5
+  use mat 14 7
+  use mieng 12 19
+  use mai 5 10
+  use cang_phai 22 2
+  set 23 13 r
+  set 22 14 m
+  outline
+end
+
+# đánh: giơ cao càng há → kẹp mạnh xuống → về
+anim attack fps=8 once
+frame attack
+  use chan_t 1 19
+  use chan_p 20 19
+  use cang_trai 0 3
+  use mat 14 8
+  use mieng 12 20
+  use mai 5 11
+  use cang_phai_ha 22 2
+  set 23 14 r
+  set 22 15 m
+  outline
+end
+frame attack
+  use chan_t2 2 20
+  use chan_p2 21 20
+  use cang_trai 1 8
+  use mat 15 9
+  use mieng 13 21
+  use mai 6 12
+  use cang_phai 22 7
+  set 24 15 r
+  set 23 16 m
+  outline
+end
+frame attack
+  use @walk.0
+end
+
+anim hurt fps=8 once
+frame hurt
+  use chan_t 1 19
+  use chan_p 20 19
+  use cang_trai 0 6
+  use mat 14 10
+  use mieng 12 20
+  use mai 5 11
+  use cang_phai 22 6
+  set 23 14 r
+  set 22 15 m
+  outline
+  swap S s
+  swap s S
+  swap r R
+  swap m r
+end
+
+# chết: rụt mắt, càng rũ → lật ngửa chân chổng lên → mờ tối
+anim die fps=5 once
+frame die
+  use chan_t2 1 20
+  use chan_p2 20 20
+  use cang_trai 0 10
+  use mat 14 12
+  use mieng 12 21
+  use mai 5 12
+  use cang_phai 22 10
+  set 23 15 r
+  set 22 16 m
+  outline
+end
+frame die
+  use @die.0
+  rot 180
+  shift 0 3
+end
+frame die
+  use @die.1
+  swap s z
+  swap S s
+  swap r m
+  swap R r
+end
