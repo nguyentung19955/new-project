@@ -45,6 +45,8 @@ async function boss(page) {
     ui.tapBoss(b.x, b.y - enemyBox(b).h * 0.45);
   });
   await page.waitForTimeout(500);
+  // máy bận: chờ ảnh icon tải xong (tối đa 5 giây) thay vì tin 500 ms là đủ
+  await page.waitForFunction(() => [...document.querySelectorAll('#bossbar img.icn')].every((i) => i.complete && i.naturalWidth > 0), null, { timeout: 5000 }).catch(() => {});
   return page.evaluate(() => {
     const bb = document.querySelector('#bossbar'), r = bb.getBoundingClientRect(), fc = bb.querySelector('.fc');
     return { hidden: bb.hidden, text: bb.textContent, html: bb.innerHTML, svg: bb.querySelectorAll('svg.icn').length, img: bb.querySelectorAll('img.icn').length,
@@ -74,6 +76,7 @@ async function boss(page) {
         return null;
       });
       await page.waitForTimeout(500);
+      await page.waitForFunction(() => { const s = document.querySelector('#hero-stats'); return s && !s.hidden && s.querySelectorAll('.hs-g .icn').length >= 12; }, null, { timeout: 5000 }).catch(() => {});
       const H = await page.evaluate(() => { const s = document.querySelector('#hero-stats'); const r = s.getBoundingClientRect();
         return { hidden: s.hidden, text: s.textContent, n: s.querySelectorAll('.hs-g .icn').length, r: { l: r.left, ri: r.right, t: r.top }, vw: innerWidth }; });
       ok(!S && !H.hidden && H.n >= 12, `[${tag}] bảng chỉ số tướng có icon mỗi dòng (${H.n}) ${S ? S.err : ''}`);
@@ -82,6 +85,7 @@ async function boss(page) {
       // bách khoa quái
       await page.evaluate(() => { ui.statsOpen = false; ui.openScreen('codex'); });
       await page.waitForTimeout(400);
+      await page.waitForSelector('.bk-stat', { timeout: 5000 }).catch(() => {});
       const K = await page.evaluate(() => { const s = document.querySelector('.bk-stat'); return s ? { text: s.textContent, n: s.querySelectorAll('.icn').length, over: s.scrollWidth > s.clientWidth + 1 } : null; });
       ok(K && K.n >= 4 && !EMOJI.test(K.text) && !K.over, `[${tag}] thẻ quái bách khoa có icon, không emoji, không tràn (${K && K.n})`);
       if (tag === 'ngang') await page.screenshot({ path: path.join(SHOT, 'bach-khoa.png') });
