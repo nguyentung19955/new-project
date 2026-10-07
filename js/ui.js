@@ -78,6 +78,10 @@ const EMO_ART = { '🔥': 'ic-hanh-hoa', '🌊': 'ic-hanh-thuy', '⛰': 'ui-tran
 const CODEX_SVG = '<svg viewBox="0 0 24 24" width="26" height="26"><rect x="4" y="3" width="16" height="18" rx="2" fill="none" stroke="#F2D27A" stroke-width="1.8"/><circle cx="12" cy="10" r="3" fill="none" stroke="#F2D27A" stroke-width="1.6"/></svg>';
 const artOr = (f, fallback) => (hasAsset(`ui/${f}.png`) ? `<img class="icart" src="${assetSrc(`ui/${f}.png`)}" alt="">` : fallback);
 const codexIc = () => artOr('ui-menu-2-2', CODEX_SVG);
+// thua chương Sơn Tinh: cổng thành Phong Châu (tiles/cong-phong-chau) chìm trong sóng (ic-hanh-thuy); thiếu ảnh thì icon nước dâng cũ
+const floodIc = () => (hasAsset('tiles/cong-phong-chau.png') && hasAsset('ui/ic-hanh-thuy.png')
+  ? `<span class="res-flood"><img src="${assetSrc('tiles/cong-phong-chau.png')}" alt=""><img class="wv" src="${assetSrc('ui/ic-hanh-thuy.png')}" alt=""><img class="wv w2" src="${assetSrc('ui/ic-hanh-thuy.png')}" alt=""></span> `
+  : ic('nuoc-dang'));
 const emoArt = (emo, cls = 'uie') => (EMO_ART[emo] ? uiE(EMO_ART[emo], emo, cls) : emo);
 // v181: ổ khoá / tia kỹ năng vẽ SVG (ảnh ui-tran-4-3 thu nhỏ chỉ còn chấm xám)
 const SVG_LOCK = '<svg class="svlk" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="8" rx="1.6" fill="currentColor"/><path d="M5.2 7V5.2a2.8 2.8 0 0 1 5.6 0V7" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>';
@@ -1266,7 +1270,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 197</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 199</div>
       </div></div>`;
   }
 
@@ -2965,7 +2969,7 @@ class UI {
       <div class="res-body" style="--ch-e:${th.edge};--ch-a:${th.bar[1]};--ch-t:${th.hi}">
         <div class="res-art" style="border-color:${th.edge}" data-ch="${th.id}">${svgI(art(false))}<span class="tg2" style="border-color:${th.bar[1]};color:${th.hi}">${th.loseTag.toUpperCase()}</span></div>
         <div class="res-main">
-          <div class="res-title lose${th.loseTitle.length > 18 ? ' long' : ''}">${th.id === 'sontinh' ? ic('nuoc-dang') : `<span class="res-ic">${emoArt(th.ic)}</span> `}${th.loseTitle}</div>
+          <div class="res-title lose${th.loseTitle.length > 18 ? ' long' : ''}">${th.id === 'sontinh' ? floodIc() : `<span class="res-ic">${emoArt(th.ic)}</span> `}${th.loseTitle}</div>
           <div style="display:flex;gap:12px;align-items:center"><div class="inset" style="padding:8px 16px;border-radius:6px;font-size:15px;white-space:nowrap">Giữ được tới đợt <b style="font-family:var(--title);font-size:34px;color:${th.hi}">${g.wave}</b></div>
             <div style="flex:1">${newBest ? '<div class="chip ok" style="display:inline-block">★ Kỷ lục mới!</div>' : `<div class="inset" style="height:12px;border-radius:4px;overflow:hidden"><i style="display:block;height:100%;width:${Math.min(1, g.wave / (endBest || 1)) * 100}%;background:linear-gradient(90deg,${th.bar[0]},${th.bar[1]})"></i></div>`}
             <div class="note" style="margin-top:4px">${coop ? 'Chơi nhóm' : `Kỷ lục bản đồ này: đợt ${s.bestEndless[lv]}`}</div></div>
