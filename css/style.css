@@ -1583,6 +1583,42 @@ i.c { background: #1F4A2A; color: #8AE09A; } i.h { background: #4A2A5A; color: #
 #rest { background: transparent; z-index: 32; }
 .dk-pick.gone { opacity: .6; border-style: dashed; border-color: #E25A3A; }
 .dk-pick .tg i.x { background: #5A1E14; color: #FFB08A; }
+/* v147: CÂY PHÁT TRIỂN (Anh Hùng) + gợi ý phát triển trong trận */
+.ev-tree { margin-top: 8px; border-radius: 6px; padding: 6px 8px; display: flex; flex-direction: column; gap: 4px; border-left: 3px solid var(--rc); }
+.ev-h { font-family: var(--title); font-size: 15px; font-weight: 800; color: var(--gold); display: flex; align-items: baseline; gap: 8px; }
+.ev-h small { font-family: var(--body); font-size: 10.5px; font-weight: 600; color: var(--text-2); }
+.ev-lb { font-size: 11px; font-weight: 800; color: var(--text-2); margin-top: 2px; }
+.ev-lb b { font-size: 10.5px; }
+.ev-br { display: flex; flex-direction: column; gap: 3px; padding-bottom: 4px; border-bottom: 1px solid #ffffff10; }
+.ev-br:last-child { border-bottom: 0; }
+.ev-row { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; min-width: 0; }
+.ev-row.sub { margin-left: 22px; padding-left: 6px; border-left: 2px dashed #8C6A2E; }
+.ev-sl { margin-left: 22px; padding-left: 8px; border-left: 2px dashed #8C6A2E; font-size: 10px; font-weight: 800; color: var(--r-legend); }
+.ev-row.sub::before { content: '↳'; color: #FFD66B; font-size: 13px; margin-right: 2px; }
+.ev-p { display: inline-flex; align-items: center; gap: 4px; height: 32px; padding: 0 6px 0 2px; border-radius: 16px; background: #1A120C; border: 1.5px solid #8C6A2E; color: var(--text); font-size: 11.5px; font-weight: 800; position: relative; min-width: 0; max-width: 150px; }
+.ev-p img { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; object-position: 50% 10%; background: #3B2313; flex: none; }
+.ev-p b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.ev-p.epic { border-color: var(--r-epic); }
+.ev-p.legendary { border-color: var(--r-legend); }
+.ev-p.me { background: #54331D; box-shadow: 0 0 6px #FFD66B88; }
+.ev-p.lock img, .ev-p.lock b { opacity: .45; filter: grayscale(.6); }
+.ev-p.lock i { position: absolute; right: -2px; top: -7px; padding: 0 4px; border-radius: 6px; background: #3A2410; border: 1px solid #8C6A2E; color: #FFB08A; font-size: 8.5px; font-style: normal; font-weight: 800; line-height: 12px; white-space: nowrap; }
+.ev-op { color: var(--gold-pale); font-weight: 900; font-size: 13px; flex: none; }
+.ev-op.ar.epic { color: var(--r-epic); }
+.ev-op.ar.legendary { color: var(--r-legend); }
+.ev-top { font-size: 12px; font-weight: 800; text-align: center; padding-top: 2px; }
+.dk-evo { position: absolute; left: 6px; bottom: calc(100% + 18px); max-width: calc(100% - 12px); height: 22px; padding: 0 7px 0 5px; border-radius: 11px; display: flex; align-items: center; gap: 3px; background: #1A120Ce8; border: 1.5px solid var(--r-epic); color: var(--text); font-size: 10.5px; font-weight: 800; white-space: nowrap; overflow: hidden; box-shadow: 0 2px 8px #000a; }
+.dk-evo.legendary { border-color: var(--r-legend); }
+.dk-evo.go { box-shadow: 0 0 8px #6AE06A88; border-color: #6AE06A; }
+.dk-evo .lb { color: var(--gold); }
+.dk-evo img { width: 16px; height: 16px; border-radius: 50%; object-fit: cover; object-position: 50% 10%; flex: none; }
+.dk-evo b { color: var(--gold-hi); flex: none; }
+.dk-evo .nd { color: #FFB08A; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.dk-evo.go .nd { color: #9DFFC4; }
+.hs-evo { display: block; width: 100%; text-align: left; margin-top: 4px; padding: 3px 6px; border-radius: 5px; background: #0D0B08aa; border: 1px solid #5C4620; color: var(--text-2); font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hs-evo small { color: #FFB08A; font-weight: 800; }
+.hs-evo small.ok { color: #9DFFC4; }
+.asc-row.hl { border-color: #FFD66B; box-shadow: 0 0 8px #FFD66B88; background: #3A2818; }
 /* v149: Góp ý */
 #feedback { z-index: 45; background: #000b; display: flex; align-items: center; justify-content: center; }
 #feedback[hidden] { display: none; }
