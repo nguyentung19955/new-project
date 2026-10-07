@@ -1664,13 +1664,11 @@ class Game {
     this.absorbGear(b, a);
     this.heroes[fromSlot] = null;
     b.tier = (b.tier || 0) + 1;
-    // v181: ghép sao tặng cấp + điểm kỹ năng (đỡ phần nâng kỹ năng tối đa để hợp thể)
-    for (let i = 0; i < (COSTS.mergeLv[b.tier] || 0) && b.level < CONFIG.maxLevel; i++) { b.level++; b.skillPts++; }
     b.evoT = 1.2;
     if (!b.dead) b.hp = Math.min(heroStats(b).hpMax, b.hp + heroStats(b).hpMax - before + heroStats(b).hpMax * 0.3);
     this.effects.push({ type: 'evolve', hero: b, x: b.x, y: b.y, color: ELEMENTS[HEROES[b.type].el].color, ttl: 1.2, max: 1.2 });
     this.effects.push({ type: 'streak', x: a.x, y: a.y - 30, x2: b.x, y2: b.y - 30, color: '#FFE08A', ttl: 0.35, max: 0.35 });
-    this.notify(`${HEROES[b.type].name} lên ${'★'.repeat(b.tier)}!`, '#F2D27A');
+    this.notify(`${HEROES[b.type].name} lên ${'★'.repeat(b.tier)}!${b.tier >= 3 && COSTS.lvDisc3 < 1 ? ` Lên cấp giảm ${Math.round((1 - COSTS.lvDisc3) * 100)}%` : ''}`, '#F2D27A');
     b.notice.evo = b.tier >= 3;
     return true;
   }

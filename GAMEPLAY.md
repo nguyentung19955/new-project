@@ -1713,3 +1713,19 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
   Nút thắt là **kỹ năng**: nâng 1 tướng từ cấp 1 → 16 tốn ~1.500 vàng + mở W/E/R, nhân 2 tướng; ★★★ gần như không làm chậm thêm. Ải thường có ~25 đợt nên với luật mới gần như **không ra được Tím trong một ải** (trừ vô tận). Nếu thấy quá khó: giảm giá lên cấp cho tướng ★★★, hạ yêu cầu cấp của R3, hoặc tặng điểm kỹ năng khi ghép lên ★★★ — chờ người dùng quyết.
 - Test toàn bộ: đạt hết trừ `icon-nho`, `ra-chu-de-cu` (lỗi y hệt trên nhánh gốc 8796d08, có sẵn), `xem-gop-y/rules-emulator` (máy thiếu `@firebase/rules-unit-testing`); `cat-anh` (cần `scipy`) còn 1 lỗi "khung xem trước đang chạy animation (9)" — nhánh gốc 8796d08 cũng lỗi y hệt (có sẵn, đo theo thời gian).
+
+## Phiên bản 181 — Nới nhẹ: tướng Thường ★★★ lên cấp nửa giá
+- Người dùng chọn "nới nhẹ kỹ năng", giữ điều kiện hợp thể ★★★ + kỹ năng tối đa (cả Tím và Vàng). Mục tiêu: tướng Tím đầu tiên quanh đợt 18–22 ở ải 1, ải 3 và 5 vẫn ra được trước khi thua.
+- Chọn: **tướng Thường ★★★ lên cấp nửa giá** (`COSTS.lvDisc3 = 0.5` trong `levelCost`; ★/★★ và tướng thần giữ nguyên giá). Vàng tiết kiệm dồn vào đúng chỗ đang kẹt (lên cấp 16 để mở R3), lại thưởng cho việc ghép đủ ★★★. Lên ★★★ hiện toast "*… lên ★★★! Lên cấp giảm 50%*"; nút Lên cấp hiện giá đã giảm.
+- `skillReqLevel` đọc bảng `SKILL_REQ` / `R_REQ` (giá trị không đổi) để mô phỏng thử phương án R3 ở cấp 12.
+- Sửa bot mô phỏng: trước đây bot ưu tiên mua thẻ trước khi mở kỹ năng → cặp đã cấp 16 vẫn kẹt chưa mở R hàng trăm giây, làm số liệu v180 ở trên (đợt 33, ải 3/5 không ra) bi quan quá mức. Bot mới: hợp thể → ghép → mở/nâng kỹ năng → mua thẻ → lên cấp cặp hợp thể tốt nhất.
+- **Mô phỏng** (`node tests/hop-the/mo-phong.js 3 cu,v180,v181,r12`, 3 ván mỗi ô, tối đa 30 phút; "đợt" = đợt TB có Tím đầu tiên):
+
+  | Ải | v136 (★★, không KN) | v180 (★★★ + KN) | **v181 (v180 + ★★★ lên cấp ½ giá)** | thử: R3 cấp 12 | thử: R3 cấp 12 + ghép tặng cấp | thử: ghép tặng cấp | thử: ½ giá + ghép tặng cấp |
+  |---|---|---|---|---|---|---|---|
+  | 1 | 3/3 · đợt 16 | 3/3 · đợt 25 | **3/3 · đợt 21** | 3/3 · đợt 22 | 3/3 · đợt 20 | 3/3 · đợt 23 | 3/3 · đợt 25 |
+  | 3 | 3/3 · đợt 15 | 3/3 · đợt 21 | **3/3 · đợt 20** | 3/3 · đợt 20 | 3/3 · đợt 19 | 3/3 · đợt 24 | 3/3 · đợt 26 |
+  | 5 | 2/3 · đợt 13 | 2/3 · đợt 21 | **3/3 · đợt 20** | 2/3 · đợt 19 | 2/3 · đợt 18 | 2/3 · đợt 22 | 3/3 · đợt 21 |
+
+  v181 là phương án duy nhất ra Tím ở cả 9/9 ván, quanh đợt 20 (v136: đợt 13–16). "Ghép tặng cấp" (★★ +1–2 cấp, ★★★ +2–4 cấp kèm điểm) gần như không giúp nên bỏ.
+- Test: `node tests/hop-the/hop-the.test.js` (thêm: ★★★ lên cấp ½ giá, ★★ nguyên giá). Ảnh đã xem: toast lên ★★★ + nút Lên cấp 15 vàng ở 1920×934, 844×390, 667×375.
