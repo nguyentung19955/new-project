@@ -1390,9 +1390,12 @@ Object.assign(COSTS, {
 const OWN_COST = { epic: 1200, legendary: 3000 };
 // v66: Ngân khố — thưởng sau trận, tiêu trước trận
 const PREP = {
-  winBase: 120, winPerLevel: 25, winPerStar: 40, losePerWave: 4, minShow: 1,
-  // v103: Vô tận mỗi 10 đợt / mỗi boss hạ được Ngân khố ngay; thắng trận đầu mỗi ngày thưởng thêm
-  endlessEvery: 10, endlessMilestone: 150, endlessBoss: 100, dailyWin: 300,
+  losePerWave: 4, minShow: 1,
+  // v103: Vô tận mỗi 10 đợt / mỗi boss hạ được Ngân khố ngay
+  endlessEvery: 10, endlessMilestone: 150, endlessBoss: 100,
+  // v166: bỏ Phó bản (trước: thắng ải 120 + 25 × ải + 40 × sao) — cuối trận vô tận nhận endWave mỗi đợt đã qua;
+  // trận đầu mỗi ngày giữ qua đợt dailyWave thưởng thêm dailyWin
+  endWave: 4, dailyWave: 10, dailyWin: 300,
   goldCost: 150, goldAmount: 150, jarCost: 250, kingCost: 700, livesCost: 200, livesAmount: 5,
   heroCost: { epic: 900, legendary: 2000 },
 };
@@ -1916,7 +1919,7 @@ const MAP_THEMES = {
 
 const LEVELS = [
   { name: 'Bến Sông Đà', map: 'song1', waves: 10, hp: 0.75, bosses: { 10: 'thuongluong' },
-    desc: 'Bến sông yên bình nơi Thủy Tinh thử quân lần đầu. Mười đợt để làm quen.', hint: ['xathu', 'lactuong', 'thaymo'] },
+    desc: 'Bến sông yên bình nơi Thủy Tinh thử quân lần đầu. Bản đồ dễ nhất, hợp để làm quen.', hint: ['xathu', 'lactuong', 'thaymo'] },
   { name: 'Thác Bờ', map: 'song2', waves: 20, hp: 0.85, bosses: { 10: 'thuongluong', 20: 'haba' },
     desc: 'Thác nước đổ mạnh, quân Thủy Tinh xuôi dòng nhanh hơn.', hint: ['thansuong', 'xathu', 'lucsi'] },
   { name: 'Rừng Lim', map: 'song3', waves: 30, hp: 1, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'haba' },
@@ -1932,7 +1935,6 @@ const LEVELS = [
   { name: 'Thành Phong Châu', map: 'song1', waves: 30, hp: 1.4, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'thuytinh' },
     desc: 'Trận cuối giữ kinh đô Văn Lang. Thủy Tinh đích thân dâng nước.', hint: ['lactuong', 'lucsi', 'thaymo'] },
 ];
-const STAR_RULES = ['Thắng ải', 'Còn ≥ 15 mạng', 'Không mất mạng'];
 
 // Đợt có boss không (theo ải đang chơi; vô tận: boss mỗi 10 đợt)
 function bossAt(n, level) {

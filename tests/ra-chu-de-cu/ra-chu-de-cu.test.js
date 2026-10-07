@@ -1,3 +1,4 @@
+// v166: chỉ còn Vô tận — màn kết quả (hết mạng) theo chương của bản đồ; không còn màn thắng ải
 // v163: rà chủ đề cũ — màn thắng / thua, lời nhắc đầu trận, phần thưởng hạ boss theo CHƯƠNG (không còn gắn cứng
 // "Phong Châu thất thủ / Nước ngập thành" cho mọi ải), Vô tận chữ trung tính; khung / nút / tranh vẽ tay dùng khi có file.
 const path = require('path');
@@ -14,7 +15,7 @@ async function result(page, lv, win, endless) {
   await enter(page, lv, endless);
   return page.evaluate(([w, e]) => {
     game.wave = e ? 47 : w ? game.levelWaves : 18;
-    ui.finishLevel(w);
+    ui.finishLevel();
     const r = document.querySelector('#result');
     const t = r.querySelector('.res-title'), body = r.querySelector('.res-body'), main = r.querySelector('.res-main');
     const over = [...r.querySelectorAll('.res-title, .res-main > div, .scr-head .ttl')].filter((el) => el.scrollWidth > el.clientWidth + 2).map((el) => el.className);
@@ -31,7 +32,7 @@ async function result(page, lv, win, endless) {
     for (const [lv, id, lose] of CASES) {
       const { browser, page, errors } = await open(w, h, { unlocked: 17 });
       const r = await result(page, lv, false, false);
-      ok(r.title.includes(lose), `Ải ${lv + 1} (${id}) thua: "${r.title}"`);
+      ok(r.title.includes(lose), `bản đồ ${lv + 1} (${id}) thua: "${r.title}"`);
       if (id !== 'sontinh') ok(!/Phong Châu|NƯỚC NGẬP|💧/.test(r.text), `  không còn "Phong Châu / Nước ngập / 💧" ở chương ${id}`);
       else ok(r.tag === 'NƯỚC NGẬP THÀNH', '  chương Sơn Tinh – Thủy Tinh giữ "Nước ngập thành"');
       ok(r.art && !r.over.length && !r.mainOut, '  có tranh, chữ không tràn' + (r.over.length ? ': ' + r.over.join(',') : ''));
@@ -39,17 +40,13 @@ async function result(page, lv, win, endless) {
       ok(!errors.length, '  không lỗi trang' + (errors.length ? ': ' + errors.join(' | ') : ''));
       await browser.close();
     }
-    // thắng (một ải chương mới) + Vô tận
+    // v166: qua đợt cuối cũ không thắng ải; giữ tới đợt 47 rồi thua → kết quả vô tận theo chương của bản đồ
     {
       const { browser, page, errors } = await open(w, h, { unlocked: 17 });
-      const r = await result(page, 15, true, false);
-      ok(/Chiến thắng/.test(r.title) && r.tag === 'NỎ THẦN GIỮ THÀNH' && !/NƯỚC RÚT/.test(r.text), `thắng Ải 16: nhãn tranh "${r.tag}"`);
-      ok(!r.over.length && !r.mainOut, '  chữ không tràn');
-      if (w === 844) await page.screenshot({ path: path.join(SHOTS, 'thang-adv.png') });
-      await page.evaluate(() => { document.querySelector('#result').hidden = true; });
       const e = await result(page, 4, false, true);
-      ok(e.title.includes('Thành đã thất thủ') && /Vô tận/.test(e.head) && !/47\/|Phong Châu thất thủ/.test(e.text), `Vô tận: "${e.title}", đầu "${e.head.trim().slice(0, 30)}"`);
-      ok(/Trụ được/.test(e.text) && !e.over.length, '  "Trụ được N đợt", không tràn');
+      const nm = await page.evaluate(() => LEVELS[4].name);
+      ok(e.title.includes("Phong Châu thất thủ") && e.head.includes(nm) && /Vô tận · /.test(e.head) && !/47\/|Chiến thắng|Ải /.test(e.text), `Vô tận: "${e.title}", đầu "${e.head.trim().slice(0, 30)}"`);
+      ok(/Giữ được tới đợt\s*47/.test(e.text) && !e.over.length && !e.mainOut, '  "Giữ được tới đợt 47", không tràn');
       if (w === 844) await page.screenshot({ path: path.join(SHOTS, 'thua-vo-tan.png') });
       ok(!errors.length, '  không lỗi trang' + (errors.length ? ': ' + errors.join(' | ') : ''));
       await browser.close();
@@ -67,7 +64,7 @@ async function result(page, lv, win, endless) {
       ui.renderScreen && 0;
       return { toasts, rw, coach, sched: (ui.render_bestiary ? '' : '') };
     });
-    ok(/giữ làng Phù Đổng/.test(r.toasts) && !/Phong Châu/.test(r.toasts), 'lời nhắc đầu trận Ải 12: "giữ làng Phù Đổng"');
+    ok(/giữ làng Phù Đổng/.test(r.toasts) && !/Phong Châu/.test(r.toasts), 'lời nhắc đầu trận bản đồ Làng Phù Đổng: "giữ làng Phù Đổng"');
     ok(/Chọn phần thưởng/.test(r.rw) && !/Chọn sính lễ/.test(r.rw), 'màn phần thưởng hạ boss chương Gióng: "Chọn phần thưởng"');
     ok(r.coach === 'giặc Ân', 'hướng dẫn "Bấm ▶ để giặc Ân tràn tới"');
     await page.screenshot({ path: path.join(SHOTS, 'phan-thuong-giong.png') });
@@ -101,7 +98,7 @@ async function result(page, lv, win, endless) {
     await page.evaluate(() => ui.showCampaign(9));
     await page.waitForTimeout(400);
     const cp = await page.evaluate(() => { const im = document.querySelector('.cp-bgimg'); return im && im.complete && im.naturalWidth > 0 && /chuong-thachsanh/.test(im.src); });
-    ok(cp, 'màn chọn ải chương Thạch Sanh dùng scenes/chuong-thachsanh.png');
+    ok(cp, 'màn chọn bản đồ chương Thạch Sanh dùng scenes/chuong-thachsanh.png');
     await page.screenshot({ path: path.join(SHOTS, 'gia-lap-chon-ai.png') });
     await page.evaluate(() => ui.playLevel(11, false));
     await page.waitForSelector('#prep:not([hidden])');

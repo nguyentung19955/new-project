@@ -180,22 +180,23 @@ async function main() {
   ok(errors.length === 0, 'không lỗi trang (Vô tận) ' + errors.join(' | '));
   await browser.close();
 
-  // ---------- Phó bản: nghỉ chân sau boss đợt 10, bỏ qua; đợt cuối thắng ải không nghỉ
+  // ---------- v166 (chỉ còn vô tận): nghỉ chân sau boss đợt 10, bỏ qua; đợt boss cuối của bản đồ không thắng ải mà nghỉ chân, chạy tiếp
   ({ browser, page, errors } = await open(844, 390));
-  await enter(page, 1);   // ải 2: boss đợt 10, 20, đợt cuối
+  await enter(page, 1);   // bản đồ 2: boss đợt 10, 20, đợt cuối
   await page.evaluate(() => { game.running = true; game.wave = 10; game.waveActive = true; game.waveComplete(); });
   await page.waitForSelector('#rest:not([hidden])');
   const d0 = await page.evaluate(() => [...game.deck]);
   await page.click('#rest [data-act=rest-skip]'); await page.waitForTimeout(100);
-  ok(await page.evaluate((d) => !game.rest && game.running && JSON.stringify(game.deck) === JSON.stringify(d), d0), 'Phó bản: Nghỉ chân sau đợt 10, Bỏ qua giữ đội và chạy tiếp');
+  ok(await page.evaluate((d) => !game.rest && game.running && JSON.stringify(game.deck) === JSON.stringify(d), d0), 'Nghỉ chân sau đợt 10, Bỏ qua giữ đội và chạy tiếp');
   await page.evaluate(() => { game.wave = game.levelWaves; game.waveActive = true; game.spawnQueue = []; game.enemies = []; game.waveComplete(); });
   await page.waitForTimeout(200);
   const fin = await page.evaluate(() => ({ rest: game.rest, won: game.won, w: game.wave, lw: game.levelWaves, over: game.over }));
-  ok(!fin.rest && fin.won, 'đợt boss cuối thắng ải: không Nghỉ chân ' + JSON.stringify(fin));
+  ok(fin.rest && !fin.won && !fin.over, 'đợt boss cuối của bản đồ: không thắng ải (vô tận), có Nghỉ chân ' + JSON.stringify(fin));
+  await page.click('#rest [data-act=rest-skip]'); await page.waitForTimeout(100);
   // bản lưu cũ còn bảng chọn 1 trong 3 (đã trả vàng) → hoàn vàng
   const old = await page.evaluate(() => { const o = game.snapshot(); delete o.market; delete o.rest; delete o.restWave; o.won = false; o.wave = 4; o.gold = 100; o.summonN = 3; o.offer = { types: game.deck.slice(0, 3), cost: 72, rr: 0 }; game.restore(o); return { gold: game.gold, n: game.summonN, m: game.market && game.market.types.length, rw: game.restWave, offer: game.offer }; });
   ok(old.gold === 172 && old.n === 2 && old.m === 4 && old.rw === 4 && !old.offer, 'bản lưu cũ có offer: hoàn vàng, chuyển sang chợ tướng');
-  ok(errors.length === 0, 'không lỗi trang (Phó bản) ' + errors.join(' | '));
+  ok(errors.length === 0, 'không lỗi trang (bản đồ 2) ' + errors.join(' | '));
   await browser.close();
   console.log('\nTẤT CẢ ĐẠT');
 }

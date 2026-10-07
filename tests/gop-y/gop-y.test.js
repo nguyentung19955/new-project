@@ -176,7 +176,7 @@ const THANKS = /Cảm ơn góp ý của bạn![\s\S]*Đội ngũ Thần Thoại 
     ok(/^data:image\/jpeg;base64,/.test(d.shot) && d.shot.length <= 150000, `ảnh chụp JPEG ≤ 150KB (${Math.round(d.shot.length / 1024)}KB)`);
     const dim = await page.evaluate((src) => new Promise((r) => { const i = new Image(); i.onload = () => r([i.width, i.height]); i.src = src; }), d.shot);
     ok(dim[0] <= 640 && dim[0] > 100, `ảnh thu nhỏ ≤ 640px rộng (${dim.join('x')})`);
-    ok(/^Trong trận · Ải 1 .* · Đợt \d+/.test(d.where), 'ghi màn / ải / đợt: ' + d.where);
+    ok(/^Trong trận · Vô tận · Bến Sông Đà · Đợt \d+/.test(d.where), 'ghi màn / bản đồ / đợt: ' + d.where);
     ok(await page.evaluate(() => game.running), 'bấm Đóng bảng cảm ơn → trận chạy tiếp');
     // bỏ chọn ảnh
     await unlimit(page);

@@ -428,7 +428,7 @@ const COOP = {
     try {
       game.hard = false;
       game.reset(room.level);
-      game.endless = false;
+      game.endless = true;     // v166: chơi nhóm cũng là vô tận — chỉ kết thúc khi hết mạng
       const co = new CoopState();
       co.own = room.own.slice();
       co.names = room.members.map((u) => (room.names && room.names[u]) || 'Người chơi');
