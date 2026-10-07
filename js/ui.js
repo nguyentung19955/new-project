@@ -222,7 +222,7 @@ function elIcon(el, size = 16) {
   if (!e) return '';
   // v163: bộ 5 icon ngũ hành mới (ui/ic-hanh-*.png, tấm ic-ngu-hanh) luôn dùng khi có; ảnh hanh_*.png cũ chỉ khi bật ảnh AI
   const png = (asset(`ui/ic-hanh-${el}.png`, true) && assetSrc(`ui/ic-hanh-${el}.png`)) || assetUrl(`hanh_${el}.png`);
-  if (png) return `<img class="eli" src="${png}" width="${size}" height="${size}" alt="Hành ${e.name}">`;
+  if (png) return `<img class="eli" src="${png}" width="${size}" height="${size}" style="width:${size}px;height:${size}px" alt="Hành ${e.name}">`;
   return `<svg class="eli" viewBox="0 0 24 24" width="${size}" height="${size}" aria-label="Hành ${e.name}"><circle cx="12" cy="12" r="11" fill="#1A1208" stroke="${e.color}" stroke-width="1.6"/><circle cx="12" cy="12" r="8.6" fill="none" stroke="${e.color}" stroke-width="0.6" stroke-dasharray="1.2 1.4" opacity=".7"/><g fill="none" stroke="${e.color}" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">${EL_PATH[el]}</g></svg>`;
 }
 const elChip = (el) => (el ? `<span class="chip elc" style="border-color:${ELEMENTS[el].color};color:${ELEMENTS[el].color}">${elIcon(el, 14)} ${ELEMENTS[el].name}</span>` : '');
@@ -1719,15 +1719,13 @@ class UI {
 
   renderLegends() {
     const g = this.game, el = $('#legends');
-    const lg = this.lg || (this.lg = { tab: null, flt: 'all', help: false });
+    const lg = this.lg || (this.lg = { tab: null, help: false });
     const all = FUSION.map((f) => this.fusionState(f));
     const of = (tab) => all.filter((x) => HEROES[x.f.to].legend === tab);
     if (!lg.tab) lg.tab = !of('epic').some((x) => x.ready) && of('legendary').some((x) => x.ready) ? 'legendary' : 'epic';
     const inTab = of(lg.tab);
-    const cnt = { ready: inTab.filter((x) => x.ready).length, one: inTab.filter((x) => x.own && x.n === 1).length, all: inTab.length };
-    const list = inTab.filter((x) => lg.flt === 'all' || (lg.flt === 'ready' ? x.ready : x.own && x.n === 1))
-      .sort((x, y) => y.own - x.own || y.n - x.n || y.p - x.p || x.i - y.i);
-    const key = [lg.tab, lg.flt, lg.help, assetVersion, ...list.map((x) => `${x.i}:${x.m.map((m) => (m.h ? (m.ok ? 2 : 1) : 0)).join('')}${x.own ? '' : 'L'}${x.ready && x.poor ? 'P' : ''}`)].join('|');
+    const list = inTab.slice().sort((x, y) => y.own - x.own || y.n - x.n || y.p - x.p || x.i - y.i);
+    const key = [lg.tab, lg.help, assetVersion, ...list.map((x) => `${x.i}:${x.m.map((m) => (m.h ? (m.ok ? 2 : 1) : 0)).join('')}${x.own ? '' : 'L'}${x.ready && x.poor ? 'P' : ''}`)].join('|');
     if (this.sig.lg === key && el.firstElementChild && el.firstElementChild.classList.contains('hx-hd')) return;
     this.sig.lg = key;
     const R = (t) => RARITY[HEROES[t].legend];
@@ -1744,12 +1742,11 @@ class UI {
         <span class="hx-mats">${mat(x.m[0])}<em>+</em>${mat(x.m[1])}</span>${st}</div>`; };
     const tab = (k, lab) => { const n = of(k).filter((x) => x.ready).length;
       return `<button class="hx-tab ${k} ${lg.tab === k ? 'on' : ''}" data-act="hx-tab" data-k="${k}" style="--rc:${RARITY[k].color}">${lab}${n ? `<i>${n}</i>` : ''}</button>`; };
-    const flt = (k, lab) => `<button class="hx-f ${lg.flt === k ? 'on' : ''}" data-act="hx-flt" data-k="${k}">${lab} <small>${cnt[k]}</small></button>`;
     el.innerHTML = `<div class="hx-hd"><span class="ttl">Hợp thể</span>${tab('epic', 'Tím')}${tab('legendary', 'Vàng')}
-        <span class="hx-fs">${flt('ready', 'Làm được')}${flt('one', 'Thiếu 1')}${flt('all', 'Tất cả')}</span>
+
         <button class="hx-q ${lg.help ? 'on' : ''}" data-act="hx-help" aria-label="Cách hợp thể">?</button><button class="hx-x" data-act="hx-close" aria-label="Đóng">✕</button></div>
       <div class="hx-sub">${lg.help ? 'Kéo 2 tướng nguyên liệu vào nhau, hoặc bấm <b>Hợp thể</b>. Tướng mới giữ cấp, đồ và nội tại của cả hai.' : `${NEED} · chạm thẻ để đánh dấu tướng trên sân`}</div>
-      <div class="hx-list">${list.map(card).join('') || `<div class="hx-empty">${lg.flt === 'ready' ? 'Chưa có công thức nào đủ nguyên liệu' : 'Chưa có công thức nào thiếu đúng 1 nguyên liệu'}</div>`}</div>`;
+      <div class="hx-list">${list.map(card).join('')}</div>`;
   }
   openLegends(on) {
     const el = $('#legends');
@@ -2972,8 +2969,7 @@ class UI {
       case 'fuse-with': this.fuseWith(+d.slot); break;
       case 'legend-open': this.openLegends($('#legends').hidden); break;
       case 'hx-close': this.openLegends(false); break;
-      case 'hx-tab': this.lg.tab = d.k; this.lg.flt = 'all'; this.renderLegends(); $('#legends .hx-list').scrollTop = 0; break;
-      case 'hx-flt': this.lg.flt = d.k; this.renderLegends(); $('#legends .hx-list').scrollTop = 0; break;
+      case 'hx-tab': this.lg.tab = d.k; this.renderLegends(); $('#legends .hx-list').scrollTop = 0; break;
       case 'hx-help': this.lg.help = !this.lg.help; this.renderLegends(); break;
       case 'hx-card': case 'hx-fuse': {
         // chạm thẻ: đánh dấu tướng nguyên liệu trên sân (có ít nhất 1 con thì đóng bảng cho thấy dấu); nút Hợp thể: hợp luôn
