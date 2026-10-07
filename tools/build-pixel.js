@@ -216,9 +216,13 @@ function buildSprite(src, pal, group, draft) {
       } else if (op === 'flipx') {
         g = g.map((row) => row.slice().reverse());
       } else if (op === 'rot') {
-        const k = ((+a[0] || 0) / 90) % 4;
-        if (w !== h && k % 2) { E(line, 'rot 90/270 chỉ dùng cho khung vuông'); continue; }
-        for (let r = 0; r < (k + 4) % 4; r++) { const n = blank(); for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) n[x][w - 1 - y] = g[y][x]; g = n; }
+        // xoay theo chiều kim đồng hồ: 90 / 180 / 270 (âm = ngược chiều); 90 / 270 chỉ cho khung vuông (đổi rộng ↔ cao)
+        const deg = Number(a[0]);
+        if (!Number.isInteger(deg) || deg % 90) { E(line, `rot ${a[0] ?? ''}: góc phải là bội của 90 (90 · 180 · 270)`); continue; }
+        const k = ((deg / 90) % 4 + 4) % 4;
+        if (k % 2 && w !== h) { E(line, `rot ${deg}: khung ${w}x${h} không vuông — chỉ xoay 180 được (90 / 270 đổi rộng ↔ cao)`); continue; }
+        if (k === 2) g = g.slice().reverse().map((row) => row.slice().reverse());
+        else for (let r = 0; r < k; r++) { const n = blank(); for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) n[x][w - 1 - y] = g[y][x]; g = n; }
       } else if (op === 'outline') {
         const c = a[0] || Object.keys(src.colors).find((k) => src.colors[k].name === 'vien');
         if (!c || !src.colors[c]) { E(line, 'outline: cần ký tự màu viền (khai báo "k = vien" ở colors:)'); continue; }
