@@ -1274,6 +1274,8 @@ const summonPool = (level) => [...BASIC_HEROES.slice(0, 6), ...NEW_GROUPS[(level
 // v133: ĐỘI TRIỆU HỒI — người chơi tự chọn 6 tướng Thường trước trận; Triệu hồi chỉ ra trong 6 tướng này
 // (20 tướng ngẫu nhiên quá khó ghép). Thiếu / sai thì dùng đội gợi ý.
 const DECK_SIZE = 6;
+const MARKET_SIZE = 4;     // v143: chợ tướng — số thẻ luôn mở ở thanh đáy
+const REST_SWAPS = 2;      // v143: Nghỉ chân sau đợt boss — đổi tối đa 2 tướng trong đội
 const validDeck = (d) => Array.isArray(d) && d.length === DECK_SIZE && new Set(d).size === DECK_SIZE && d.every((t) => BASIC_HEROES.includes(t));
 // tướng Thường là nguyên liệu (trực tiếp hoặc qua tướng Tím) của các tướng Tím / Vàng đã sở hữu
 function deckIngredients(owned) {
@@ -1585,7 +1587,7 @@ Object.assign(ITEMS, {
                 desc: 'Tướng cận chiến đánh được quái bay', look: { aura: '#FFE08A' } },
   ao_vay_ca:  { name: 'Áo Vảy Cá', slot: 'acc', rarity: 'epic', counter: 'phuthuy',
                 recipe: { parts: ['vay_ca', 'ngoc_sinh_luc'], cost: 150 }, stats: { hp: 250 }, fx: { magicRes: 35 },
-                desc: 'Giảm 35% sát thương phép nhận vào (Phù Thủy Nước, mưa của Thủy Tinh)', look: { aura: '#5AB4D6' } },
+                desc: 'Giảm 35% sát thương phép nhận vào (Sứa Tinh, mưa của Thủy Tinh)', look: { aura: '#5AB4D6' } },
   ngoc_tran_thuy: { name: 'Ngọc Trấn Thủy', slot: 'acc', rarity: 'epic', counter: 'phuthuy',
                 recipe: { parts: ['vay_ca', 'mat_ngoc'], cost: 150 }, stats: { range: 20, int: 6, mpen: 15 }, fx: { noHeal: 3 },
                 desc: 'Quái bị đánh không được hồi máu trong 3 giây', look: { aura: '#2F6FB0' } },
@@ -1784,7 +1786,7 @@ const SECRETS = {
   'r.cung_mat_chim': { item: 'cung_mat_chim', hint: 'Mắt chim nhìn xa', desc: 'Đợt bay: +20% tốc bắn' },
   'r.bua_chim_lac':  { item: 'bua_chim_lac', hint: 'Chim sa cánh', desc: 'Quái bay bị đánh rơi xuống đất 1 giây' },
   'r.ao_vay_ca':     { item: 'ao_vay_ca', hint: 'Vảy cá gặp nước', desc: 'Khi máu dưới 50%: hồi 2% máu mỗi giây' },
-  'r.ngoc_tran_thuy':{ item: 'ngoc_tran_thuy', hint: 'Trấn thầy phù thủy', desc: 'Hạ Phù Thủy Nước: quái quanh nó mất 10% máu' },
+  'r.ngoc_tran_thuy':{ item: 'ngoc_tran_thuy', hint: 'Trấn yêu sứa', desc: 'Hạ Sứa Tinh: quái quanh nó mất 10% máu' },
   'r.luoi_ca':       { item: 'luoi_ca', hint: 'Cá sấu mắc lưới', desc: 'Cá Sấu hóa điên bị lưới giữ chân 1 giây' },
   'r.bo_lua':        { item: 'bo_lua', hint: 'Được mùa', desc: 'Sau đợt 20: mỗi đợt 10% ra "bồ lúa vàng" +100 vàng' },
   // đồ bộ: hiệu ứng ẩn khi đủ bộ
@@ -1813,10 +1815,10 @@ const ENEMIES = {
   rua:     { name: 'Rùa Giáp', hp: 320, speed: 23, gold: 14, size: 18, color: '#6A7A4A', drop: 0.08,
              armor: 14, mr: 40, stunResist: 0.5, short: 'Giáp và kháng phép rất cao, kháng choáng',
              desc: 'Mai rất cứng nên cả sát thương vật lý lẫn phép đều bị giảm mạnh. Bị choáng ngắn hơn.' },
-  phuthuy: { name: 'Phù Thủy Nước', hp: 90, speed: 34, gold: 9, size: 13, color: '#3A8A9A', drop: 0.06,
+  phuthuy: { name: 'Sứa Tinh', hp: 90, speed: 34, gold: 9, size: 13, color: '#3A8A9A', drop: 0.06,
              armor: 1, mr: 30, ranged: { range: 135, dmg: 12, cd: 2.4 }, heal: { cd: 4, pct: 0.12, radius: 110 },
              short: 'Bắn tướng từ xa, hồi máu quái xung quanh',
-             desc: 'Phun nước bắn tướng từ xa và hồi máu cho quái xung quanh. Nên hạ trước.' },
+             desc: 'Sứa thành tinh, mình trong xanh quấn rong biển, mắt sáng xanh: phun nước bắn tướng từ xa và hồi máu cho quái xung quanh. Nên hạ trước.' },
   chimbao: { name: 'Chim Bão', hp: 55, speed: 56, gold: 7, size: 13, color: '#8A9AAA', drop: 0.04,
              armor: 0, mr: 25, flying: true, short: 'Bay: chỉ tướng đánh xa và tướng phép bắn được',
              desc: 'Bay trên không: chỉ tướng đánh xa và tướng phép bắn được.' },
@@ -1841,14 +1843,14 @@ const ENEMIES = {
             reincarnate: { pct: 0.6, delay: 2.5 }, summon: { cd: 8, count: 3, type: 'tom' },
             tags: ['Gọi lính liên tục', 'Hồi sinh 1 lần'],
             short: 'Gọi lính liên tục; bị hạ lần đầu sẽ lặn xuống nước rồi trồi lên với 60% máu',
-            desc: 'Chúa sông già: áo vảy cá, mũ kết vỏ sò, tay cầm đinh ba. Gọi lính liên tục; bị hạ lần đầu sẽ lặn xuống nước rồi trồi lên với 60% máu.',
+            desc: 'Chúa sông già: cá trê tinh râu dài, áo vảy cá, mũ kết vỏ sò, tay cầm đinh ba. Gọi lính liên tục; bị hạ lần đầu sẽ lặn xuống nước rồi trồi lên với 60% máu.',
             tip: 'Giữ chiêu R cho lần Hà Bá trồi lên với 60% máu.' },
   thuytinh:{ name: 'Thủy Tinh', hp: 1200, speed: 22, gold: 170, size: 28, color: '#3A6AB0',
             drop: 1, boss: true, lives: 5, armor: 6, mr: 50, reward: 'ngua_hong_mao',
             burnAura: { radius: 150, dps: 10 }, phaseSummon: { type: 'giaolong', count: 4 }, slowResist: 0.5,
             tempFlood: { count: 3, time: 8 }, tags: ['Hô mưa gọi gió', 'Gọi Giao Long'],
             short: 'Hô mưa gọi gió gây sát thương tướng đứng gần; mỗi lần mất 25% máu gọi 4 Giao Long Con và làm ngập tạm 3 ô trong 8 giây',
-            desc: 'Thần nước nổi giận. Hô mưa gọi gió gây sát thương tướng đứng gần. Mỗi lần mất 25% máu gọi 4 Giao Long Con (kháng phép cao) và làm ngập tạm 3 ô trong 8 giây.',
+            desc: 'Thần nước đầu rồng vảy bạc, vây cá sau lưng nổi giận. Hô mưa gọi gió gây sát thương tướng đứng gần. Mỗi lần mất 25% máu gọi 4 Giao Long Con (kháng phép cao) và làm ngập tạm 3 ô trong 8 giây.',
             tip: 'Đặt tướng vật lý chặn Giao Long Con: chúng kháng phép rất cao.' },
 };
 const BOSS_ORDER = ['thuongluong', 'haba', 'thuytinh'];
@@ -2096,8 +2098,8 @@ const tuviNext = (xp) => { const l = tuviLevel(xp); return l >= TUVI_XP.length ?
 
 // v92: gợi ý tướng khắc chế cho mỗi ải (theo hành của quái, quái bay, giáp dày, quái nhanh)
 // v98: tách phần tính theo bộ quái để dùng cả cho chế độ vô tận (khi sang bộ quái mới)
-const ROSTER_NAMES = { thuy: 'Thủy quân Thủy Tinh', rung: 'Yêu tinh rừng Chằn Tinh', hang: 'Hang Đại Bàng', an: 'Giặc Ân',
-  bien: 'Thủy quái Biển Đông', trieu: 'Quân Triệu Đà' };
+const ROSTER_NAMES = { thuy: 'Thủy quân Thủy Tinh', rung: 'Yêu tinh rừng Chằn Tinh', hang: 'Hang Đại Bàng', an: 'Quỷ binh giặc Ân',
+  bien: 'Thủy quái Biển Đông', trieu: 'Quỷ binh Triệu Đà' };
 const rosterKeyOf = (R) => (typeof ROSTERS === 'undefined' ? null : Object.keys(ROSTERS).find((k) => ROSTERS[k] === R) || null);
 function rosterCounters(R, bosses, pool, hint) {
   const foes = [...new Set([...(bosses || []), ...(R ? [R.base, R.air, R.champ, ...(R.fast || []), ...R.list.map((x) => x[2])] : [])])]

@@ -4,7 +4,8 @@ Game web được đóng gói thành app bằng Capacitor (`android/`, `capacito
 
 ## Lấy file APK
 Mỗi lần đẩy code lên nhánh, GitHub Actions (`.github/workflows/android.yml`) tự build:
-GitHub → repo → tab **Actions** → lượt chạy mới nhất "Build Android APK" → mục **Artifacts** → tải `nui-cao-nuoc-dang-apk` (file zip chứa `app-debug.apk`).
+GitHub → repo → tab **Actions** → lượt chạy mới nhất "Build Android APK" → mục **Artifacts** → tải `than-thoai-viet-apk` (file zip chứa `app-debug.apk`).
+Link tải thẳng: `…/releases/download/apk-latest/than-thoai-viet.apk` (link cũ `nui-cao-nuoc-dang.apk` vẫn chạy, cùng một file).
 Cài lên điện thoại: chép file APK sang máy → mở → cho phép "Cài ứng dụng không rõ nguồn gốc".
 
 ## App đã có

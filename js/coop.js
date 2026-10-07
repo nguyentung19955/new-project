@@ -27,10 +27,25 @@ const COOP_CFG = {
 const COOP_DT = 1 / COOP_CFG.tps;
 const COOP_PENDING = { pending: true };
 const COOP_KEY = 'nuicao.coop';
+// v153: trò chuyện trong trận nhóm
+const COOP_CHAT = {
+  max: 120, keep: 50, gap: 1000,
+  quick: ['Giúp mình với!', 'Gửi vàng cho mình', 'Để mình ghép', 'Boss tới!', 'Giữ cửa thành!', 'Mình đổi đội nhé', 'Cảm ơn!', 'Tuyệt!'],
+  // từ thô tục cơ bản (so cả từ, không phân biệt hoa thường) → ***
+  bad: ['địt', 'đụ', 'đéo', 'đếch', 'lồn', 'buồi', 'cặc', 'đĩ', 'đm', 'đmm', 'dm', 'dmm', 'đcm', 'dcm', 'cmm', 'clm', 'vcl', 'vkl', 'vl', 'clgt', 'cđm', 'óc chó', 'ngu như chó', 'mẹ mày', 'má mày', 'bố mày'],
+};
+function coopClean(text) {
+  let t = String(text || '').replace(/[\u0000-\u001f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, COOP_CHAT.max);
+  for (const w of COOP_CHAT.bad) {
+    const re = new RegExp(`(^|[^\\p{L}\\p{N}])(${w.replace(/ /g, '\\s+')})(?=$|[^\\p{L}\\p{N}])`, 'giu');
+    t = t.replace(re, (m, a) => a + '***');
+  }
+  return t.slice(0, COOP_CHAT.max);     // '***' có thể dài hơn từ gốc
+}
 
-// tham số lệnh: h = tướng (gửi số ô), s = ô, u = uid đồ, v = giá trị, * = áp cho cả đội của người ra lệnh
+// tham số lệnh: h = tướng (gửi số ô), s = ô, t = ô hoặc -1 (tự chọn), u = uid đồ, v = giá trị, * = áp cho cả đội của người ra lệnh
 const COOP_CMDS = {
-  summonOffer: [], rerollOffer: [], pickOffer: ['v'], summonRandom: [],
+  buyCard: ['v', 't'], rerollMarket: [], restDeck: ['v'], skipRest: [], summonRandom: [],
   placeHero: ['s', 'v'], merge: ['s', 's'], fuse: ['s', 's'], moveHero: ['s', 's'], sellHero: ['s'],
   levelUp: ['h'], trainHero: ['h'], unlockSkill: ['h', 'v'], upgradeSkill: ['h', 'v'], spendStat: ['h'],
   evolve: ['h'], ascend: ['h', 'v'], equip: ['h', 'u', 'v'], unequip: ['h', 'v'], autoEquip: ['h'],
@@ -44,7 +59,7 @@ const COOP_SPECIAL = new Set(['start', 'speed', 'gift', 'reward', 'leave', 'back
 // trạng thái riêng của trận co-op (nằm trong game.co, lưu cùng ảnh chụp)
 class CoopState {
   constructor() {
-    this.pl = [];          // [{ gold, offer, deck, owned, summonN }] theo người 0 / 1
+    this.pl = [];          // [{ gold, market, deck, owned, summonN }] theo người 0 / 1 (mỗi người một hàng chợ tướng)
     this.own = [];         // own[ô] = 0 | 1
     this.alone = -1;       // ≥ 0: người này đang điều khiển cả hai nửa (đồng đội rời trận)
     this.odd = 0;          // ai nhận đồng lẻ khi chia vàng lần tới
@@ -65,7 +80,7 @@ class CoopState {
     if (a !== b) this.odd = 1 - this.odd;
   }
 }
-const CO_KEYS = ['gold', 'offer', 'deck', 'owned', 'summonN'];
+const CO_KEYS = ['gold', 'market', 'deck', 'owned', 'summonN'];
 function coopBind(game) {
   for (const k of CO_KEYS) {
     Object.defineProperty(game, k, {
@@ -165,7 +180,8 @@ function coopHashStr(s) {
 }
 function coopStateLine(game, tick) {
   const c = game.co, f = (x, d = 3) => (Number.isFinite(x) ? x.toFixed(d) : String(x));
-  const parts = [tick, SIM.seed, nextId, game.lives, game.wave, game.time.toFixed(4), c.pl.map((p) => f(p.gold, 2)).join('/'), c.alone];
+  const parts = [tick, SIM.seed, nextId, game.lives, game.wave, game.time.toFixed(4), c.pl.map((p) => f(p.gold, 2)).join('/'), c.alone,
+    c.pl.map((p) => (p.market ? p.market.types.join(',') : '-') + ':' + (p.deck || []).join(',')).join('/'), game.rest ? 'R' + (game.rest.done || []).join('') : ''];
   for (const e of game.enemies) parts.push(`e${e.id}:${e.type}:${f(e.hp)}:${f(e.dist, 2)}`);
   game.heroes.forEach((h, i) => { if (h) parts.push(`h${i}:${h.type}:${h.level}:${h.tier || 0}:${f(h.hp, 2)}:${f(h.mana, 1)}:${h.dead ? 1 : 0}`); });
   parts.push('inv' + game.inventory.map((it) => it.uid).join(','));
@@ -233,6 +249,19 @@ class CoopFireNet {
   async putSnap(code, o) {
     await this.ref(code).collection('snap').doc('last').set({ by: this.uid, tick: o.tick, d: o.d, expiresAt: this.exp(Date.now() + 12 * 3600e3) });
   }
+  // trò chuyện: rooms/{mã}/chat — 50 tin gần nhất, không đi qua lockstep
+  async putChat(code, o) {
+    await this.ref(code).collection('chat').add({ by: this.uid, name: String(o.name || '').slice(0, 24), text: o.text,
+      at: this.FV.serverTimestamp(), expiresAt: this.exp(Date.now() + 12 * 3600e3) });
+  }
+  watchChat(code, cb) {
+    return this.ref(code).collection('chat').orderBy('at').limitToLast(COOP_CHAT.keep).onSnapshot((s) => {
+      cb(s.docChanges().filter((ch) => ch.type === 'added').map((ch) => {
+        const d = ch.doc.data({ serverTimestamps: 'estimate' });
+        return { id: ch.doc.id, by: d.by, name: d.name, text: d.text, at: d.at && d.at.toMillis ? d.at.toMillis() : Date.now() };
+      }));
+    }, (e) => console.warn('coop chat', e));
+  }
   watchSnap(code, cb) {
     return this.ref(code).collection('snap').doc('last').onSnapshot((s) => { if (s.exists) cb({ tick: s.data().tick, d: s.data().d }); }, (e) => console.warn('coop snap', e));
   }
@@ -266,6 +295,39 @@ const COOP = {
     const c = this.game && this.game.co;
     if (c && c.alone >= 0) return 1;
     return Math.max(2, Math.ceil(COOP_CFG.delay * COOP_CFG.tps * ((c && c.speed) || 1) * COOP_CFG.timeScale));
+  },
+
+  // ---------- TRÒ CHUYỆN (độc lập với lockstep: không ảnh hưởng mô phỏng)
+  chatList: [], chatIds: new Set(), chatUnsub: null, chatLast: 0,
+  chatStart() {
+    if (this.chatUnsub || !this.net || !this.code) return;
+    this.chatList = []; this.chatIds = new Set();
+    const code = this.code;
+    this.chatUnsub = this.net.watchChat(code, (msgs) => { if (this.code === code) this.onChat(msgs); });
+  },
+  chatStop() { if (this.chatUnsub) try { this.chatUnsub(); } catch (e) { /* bỏ qua */ } this.chatUnsub = null; },
+  onChat(msgs) {
+    let fresh = 0;
+    for (const m of msgs) {
+      if (!m || this.chatIds.has(m.id)) continue;
+      this.chatIds.add(m.id);
+      m.text = coopClean(m.text);              // lọc cả tin nhận được (máy kia có thể là bản cũ)
+      this.chatList.push(m);
+      if (m.by !== this.uid) { fresh++; if (this.ui) this.ui.chatIncoming(m); }
+    }
+    this.chatList.sort((a, b) => a.at - b.at);
+    while (this.chatList.length > COOP_CHAT.keep) this.chatIds.delete(this.chatList.shift().id);
+    if (this.ui) this.ui.chatRender(fresh);
+  },
+  // gửi tin: tối đa 120 ký tự, 1 tin / giây, lọc từ thô tục
+  async say(text, name) {
+    const t = coopClean(text);
+    if (!t) return 'Chưa nhập gì';
+    if (!this.on || !this.net) return 'Không ở trong trận nhóm';
+    const now = Date.now();
+    if (now - this.chatLast < COOP_CHAT.gap) return 'Gửi chậm lại một chút';
+    this.chatLast = now;
+    try { await this.net.putChat(this.code, { text: t, name }); return true; } catch (e) { return 'Mất mạng: chưa gửi được'; }
   },
 
   // ---------- PHÒNG CHỜ
@@ -342,10 +404,11 @@ const COOP = {
       co.own = room.own.slice();
       co.names = room.members.map((u) => (room.names && room.names[u]) || 'Người chơi');
       co.meta = { runes: players.map((p) => p.runes || {}), legacy: players.map((p) => p.legacy || {}) };
-      co.pl = players.map((p) => ({ gold: CONFIG.startGold, offer: null,
+      co.pl = players.map((p) => ({ gold: CONFIG.startGold, market: null,
         deck: validDeck(p.deck) ? [...p.deck] : suggestDeck(room.level, p.owned || []), owned: new Set(p.owned || []), summonN: 0 }));
       game.co = co;
       coopBind(game);
+      game.freshMarket();      // chợ tướng của từng người, rút bằng seed chung
     } finally { SIM.active = false; }
     this.afterState();
     game.started = true; game.running = false; game.speed = 1; game.runId = Date.now();
@@ -357,6 +420,8 @@ const COOP = {
     const now = this.now();
     for (const k in this.t) this.t[k] = now;
     this.listen();
+    this.chatStop();
+    this.chatStart();
     if (this.isAuth()) this.flush();
   },
   // vào lại phòng đang chơi (tải lại trang / bị coi là mất kết nối): chờ ảnh chụp từ điều phối
@@ -368,7 +433,9 @@ const COOP = {
     this.game = game; this.ui = ui; this.room = room; this.code = code;
     this.uid = net.uid; this.me = room.members.indexOf(net.uid); this.partnerUid = room.members[1 - this.me];
     this.epoch = room.epoch || 0;
+    this.chatStop();
     this.becomeFollowerWaiting(await net.maxSeq(code));
+    this.chatStart();
   },
   becomeFollowerWaiting(fromSeq) {
     this.stopListeners();
@@ -406,6 +473,7 @@ const COOP = {
       else if (wasAuth) { if (this.partnerLive) this.flush(); net.updateRoom(code, { state: 'end' }).catch(() => {}); }
     }
     this.stop();
+    this.chatStop();
     this.forget();
     SIM.coop = false; SIM.active = false; SIM.runes = null; SIM.legacy = null; SIM.owner = null;
     if (this.game) coopUnbind(this.game);
@@ -471,7 +539,8 @@ const COOP = {
     const g = this.game, co = g.co;
     for (let i = 0; i < spec.length; i++) {
       const k = spec[i], v = a[i];
-      if (k === 's' || k === 'h') {
+      if (k === 't' && v === -1) continue;
+      if (k === 's' || k === 'h' || k === 't') {
         if (!Number.isInteger(v) || v < 0 || v >= CONFIG.slots.length) return 'Ô không hợp lệ';
         if (!co.canAct(p, v)) return 'Đây là ô của đồng đội';
         if (k === 'h' && !g.heroes[v]) return 'Không còn tướng ở ô này';

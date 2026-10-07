@@ -7,13 +7,14 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#14110D">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Núi Cao">
+  <meta name="apple-mobile-web-app-title" content="Thần Thoại Việt">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icons/icon-180.png">
-  <title>Núi Cao Nước Dâng</title>
+  <title>Thần Thoại Việt</title>
+  <meta name="description" content="Thần Thoại Việt — game thủ thành truyền thuyết Văn Lang – Âu Lạc: Sơn Tinh – Thủy Tinh, Thánh Gióng, Thạch Sanh, Lạc Long Quân, An Dương Vương.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@700;800&family=Alegreya+Sans:wght@400;500;700;800&display=swap">
-  <link rel="stylesheet" href="css/style.css?v=141">
+  <link rel="stylesheet" href="css/style.css?v=153">
 </head>
 <body>
 <!--BODY-->
@@ -34,10 +35,13 @@
         <button id="btn-detail" class="sq metal" aria-label="Hiện / ẩn chỉ số" title="Hiện / ẩn chỉ số">👁</button>
         <button id="btn-speed" class="sq metal" aria-label="Tốc độ">x1</button>
         <button id="btn-run" class="sq metal go" aria-label="Bắt đầu"><svg viewBox="0 0 20 20"><path id="run-icon" d="M6 4 L16 10 L6 16 Z" fill="currentColor"/></svg></button>
+        <button id="btn-chat" class="sq metal" hidden aria-label="Trò chuyện" title="Trò chuyện với đồng đội">💬<i class="dot" id="chat-dot" hidden></i></button>
         <button id="btn-menu" class="sq metal" aria-label="Menu"><svg viewBox="0 0 20 20"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><i class="dot" id="menu-dot" hidden></i></button>
       </div>
 
       <div id="coop-bar" class="metal" hidden></div>
+      <div id="chat" class="metal" hidden></div>
+      <div id="chat-bubbles" class="passthru"></div>
       <button id="nextwaves" class="ingame" hidden></button>
       <div id="fuse-strip" class="ingame"></div>
       <div id="trash" hidden></div>
@@ -57,6 +61,7 @@
         <button class="dw-btn" data-act="dw" data-k="runes"><span class="ic">🔯</span>Ấn Phù<small>khắc ấn cho tướng Vàng</small></button>
         <button class="dw-btn" data-act="dw" data-k="codex"><span class="ic">📖</span>Bách khoa<small>quái, boss, lịch đợt</small></button>
         <button class="dw-btn" data-act="dw" data-k="pause"><span class="ic">⏸</span>Tạm dừng & cài đặt<small>chơi lại, bản đồ, menu</small></button>
+        <button class="dw-btn" data-act="dw" data-k="feedback"><span class="ic">✉</span>Góp ý<small>báo lỗi, gửi ý tưởng</small></button>
         <button class="dw-btn quit" data-act="quit-run"><span class="ic">🏳</span><span id="quit-label">Dừng chơi</span><small>bỏ trận này, về menu</small></button>
       </div>
 
@@ -82,7 +87,7 @@
       <!-- ===== Lớp phủ ===== -->
       <div id="menu" class="overlay">
         <div class="bgart" id="menu-art"></div>
-        <div class="title"><h1>Núi Cao Nước Dâng</h1><div class="orn"></div><p class="sub">Sơn Tinh • Thủy Tinh (~500 TCN)</p><p>“Nước dâng bao nhiêu, núi cao bấy nhiêu”</p></div>
+        <div class="title"><h1 id="menu-logo"><span class="logo-txt">Thần Thoại Việt</span></h1><div class="orn"></div><p class="sub">Truyền thuyết Văn Lang – Âu Lạc</p><p>“Con Rồng cháu Tiên, giữ vững non sông”</p></div>
         <div class="mc-foot">Phong Châu Thành • Đông Sơn Fantasy</div>
         <div class="pl-box metal" id="menu-player"></div>
         <div class="pl-res" id="menu-res"></div>
@@ -94,9 +99,9 @@
           <div class="mc-row"><button id="btn-heroes" class="mc-btn metal"><svg viewBox="0 0 20 20"><circle cx="7" cy="7" r="3" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="14" cy="7.5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M1.5 17 Q7 10 12.5 17 M12 12 Q16 10 18.5 15" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>Anh Hùng</button><button id="btn-runes" class="mc-btn metal"><span class="mc-ic">🔯</span>Ấn Phù</button></div>
           <button id="btn-treasury" class="mc-btn metal"><svg viewBox="0 0 20 20"><path d="M4 7 H16 L15 17 H5 Z M7 7 V5 A3 3 0 0 1 13 5 V7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>Kho Báu &amp; Sính Lễ</button>
           <button id="btn-settings" class="mc-btn metal"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 2v3M10 15v3M2 10h3M15 10h3M4.3 4.3l2.1 2.1M13.6 13.6l2.1 2.1M4.3 15.7l2.1-2.1M13.6 6.4l2.1-2.1" stroke="currentColor" stroke-width="1.8"/></svg>Cài Đặt</button>
-          <div class="mc-subs"><button id="btn-menu-codex" class="mc-sub">📖 Bách khoa</button><button id="btn-ranks" class="mc-sub">🏆 Xếp hạng</button></div>
+          <div class="mc-subs"><button id="btn-menu-codex" class="mc-sub">📖 Bách khoa</button><button id="btn-ranks" class="mc-sub">🏆 Xếp hạng</button><button id="btn-feedback" class="mc-sub">✉ Góp ý</button></div>
         </nav>
-        <div class="ver">Phiên bản 141</div>
+        <div class="ver">Phiên bản 153</div>
       </div>
 
       <div id="story" class="overlay" hidden></div>
@@ -108,11 +113,13 @@
       <div id="runes" class="overlay" hidden></div>
       <div id="treasury" class="overlay" hidden></div>
       <div id="prep" class="overlay prep-ov" hidden></div>
+      <div id="rest" class="overlay" hidden></div>
       <div id="login" class="overlay" hidden></div>
       <div id="ranks" class="overlay" hidden></div>
       <div id="dialogue" hidden></div>
       <div id="result" class="overlay" hidden></div>
       <div id="reward" class="overlay" hidden></div>
+      <div id="feedback" class="overlay" hidden></div>
 
       <div id="loading">Đang tải…</div>
       <div id="err" hidden></div>
@@ -120,7 +127,7 @@
     <div id="rotate" hidden>
       <span class="svgi" id="rotate-art"></span>
       <b>Xoay ngang điện thoại để chơi</b>
-      <span>Núi Cao Nước Dâng được thiết kế cho màn hình ngang</span>
+      <span>Thần Thoại Việt được thiết kế cho màn hình ngang</span>
     </div>
   </div>
 <!--/BODY-->
@@ -133,20 +140,20 @@
       el.textContent = 'Lỗi: ' + (e.message || e.error) + (e.filename ? ' (' + e.filename.split('/').pop() + ':' + e.lineno + ')' : '');
     });
   </script>
-  <script src="js/art.js?v=141"></script>
-  <script src="js/data.js?v=141"></script>
-  <script src="js/enemies2.js?v=141"></script>
-  <script src="js/game.js?v=141"></script>
-  <script src="js/render.js?v=141"></script>
-  <script src="js/costume.js?v=141"></script>
-  <script src="js/maps.js?v=141"></script>
-  <script src="js/chapters.js?v=141"></script>
-  <script src="js/firebase-config.js?v=141"></script>
-  <script src="js/cloud.js?v=141"></script>
-  <script src="js/coop.js?v=141"></script>
-  <script src="js/ui.js?v=141"></script>
-  <script src="js/vfx.js?v=141"></script>
+  <script src="js/art.js?v=153"></script>
+  <script src="js/data.js?v=153"></script>
+  <script src="js/enemies2.js?v=153"></script>
+  <script src="js/game.js?v=153"></script>
+  <script src="js/render.js?v=153"></script>
+  <script src="js/costume.js?v=153"></script>
+  <script src="js/maps.js?v=153"></script>
+  <script src="js/chapters.js?v=153"></script>
+  <script src="js/firebase-config.js?v=153"></script>
+  <script src="js/cloud.js?v=153"></script>
+  <script src="js/coop.js?v=153"></script>
+  <script src="js/ui.js?v=153"></script>
+  <script src="js/vfx.js?v=153"></script>
   <script>if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});</script>
-  <script src="js/main.js?v=141"></script>
+  <script src="js/main.js?v=153"></script>
 </body>
 </html>

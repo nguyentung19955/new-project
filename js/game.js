@@ -1306,6 +1306,7 @@ const FLOOD_PER_RISE = 2;
 // ------------------------------------------------------------
 // chiêu tối thượng (R) xuyên thêm 30% giáp và kháng phép
 const ULT_PEN = 30;
+const REST_COOP_T = 20;     // v153: chơi nhóm — Nghỉ chân dài tối đa 20 giây
 // mỗi 10 đợt: quái +1 giáp, +3% kháng phép (quái vốn có kháng phép), tối đa 80%
 const ENEMY_GROW = { every: 10, armor: 1, mr: 3, mrCap: 80 };
 // hoạt ảnh đánh: swing chạy 1 → 0 với tốc độ này (≈ 0,38 giây); sát thương rơi lúc ra đòn
@@ -1352,6 +1353,9 @@ class Game {
 
   reset(level) {
     this.offer = null;
+    this.market = null;     // v143: chợ tướng (4 thẻ)
+    this.rest = null;       // v143: đang nghỉ chân sau đợt boss (đổi đội)
+    this.restWave = 0;
     this.level = level || 0;
     this.lv = LEVELS[this.level];
     setMap(this.lv.map || 'song1');
@@ -1499,40 +1503,90 @@ class Game {
   }
   // v133: quân triệu hồi = đội 6 tướng người chơi chọn (thiếu thì quân mặc định của ải)
   summonList() { return validDeck(this.deck) ? this.deck : summonPool(this.level); }
-  // v134: TRIỆU HỒI CHỌN 1 TRONG 3 — trả vàng, hiện 3 tướng (trong đội), chọn 1 đặt vào ô trống; Đổi lượt mới tốn ít vàng
-  rollOffer(rng = srand) {
-    const pool = [...this.summonList()], out = [];
-    while (out.length < 3 && pool.length) out.push(pool.splice(Math.floor(rng() * pool.length), 1)[0]);
-    return out;
+  // v143: CHỢ TƯỚNG — luôn mở 4 thẻ rút ngẫu nhiên từ đội 6 tướng. Chạm thẻ = mua & đặt ngay, kéo thẻ = đặt đúng ô.
+  // Mua thẻ nào thì chỗ đó ra thẻ mới; đầu mỗi đợt cả hàng làm mới miễn phí; ↻ đổi cả hàng tốn vàng (tăng dần trong đợt).
+  rollCard(rng = srand) { const pool = this.summonList(); return pool[Math.floor(rng() * pool.length)]; }
+  rollMarket(rng = srand) {
+    this.market = { types: Array.from({ length: MARKET_SIZE }, () => this.rollCard(rng)), rr: (this.market && this.market.rr) || 0 };
+    return this.market;
   }
-  rerollCost() { return 10 + 10 * ((this.offer && this.offer.rr) || 0); }
-  summonOffer(rng = srand) {
-    if (this.offer) return true;
-    const ok = this.canSummon();
-    if (ok !== true) return ok;
-    const c = this.summonCost();
-    this.gold -= c;
-    this.summonN = (this.summonN || 0) + 1;
-    this.offer = { types: this.rollOffer(rng), cost: c, rr: 0 };
-    return true;
+  ensureMarket() {
+    const m = this.market, pool = this.summonList();
+    if (SIM.coop && !SIM.active && m) return m;     // co-op: giao diện không được tự rút lại chợ (lệch seed)
+    if (!m || !Array.isArray(m.types) || m.types.length !== MARKET_SIZE || m.types.some((t) => !pool.includes(t))) this.rollMarket();
+    return this.market;
   }
-  rerollOffer(rng = srand) {
-    if (!this.offer) return 'Chưa triệu hồi';
+  // đầu đợt mới: làm mới cả hàng miễn phí, giá ↻ về lại từ đầu
+  freshMarket() {
+    // co-op: mỗi người một hàng chợ riêng (rút từ đội của mình) — làm mới cả hai
+    if (this.co) {
+      const a = this.co.actor;
+      for (let p = 0; p < this.co.pl.length; p++) { this.co.actor = p; this.market = null; this.rollMarket(); this.market.rr = 0; }
+      this.co.actor = a;
+      return;
+    }
+    this.market = null; this.rollMarket(); this.market.rr = 0;
+  }
+  rerollCost() { return 10 + 10 * ((this.market && this.market.rr) || 0); }
+  rerollMarket(rng = srand) {
+    this.ensureMarket();
     const c = this.rerollCost();
     if (this.gold < c) return `Cần ${c} vàng để đổi`;
     this.gold -= c;
-    this.offer.rr++; this.offer.cost += c;
-    this.offer.types = this.rollOffer(rng);
+    this.market.rr++;
+    this.market.types = Array.from({ length: MARKET_SIZE }, () => this.rollCard(rng));
     return true;
   }
-  pickOffer(i, rng = srand) {
-    const o = this.offer; if (!o || !o.types[i]) return 'Chưa triệu hồi';
-    const free = this.freeSlots();
-    if (!free.length) return 'Hết ô trống: ghép, hoặc kéo tướng vào 🗑 để hủy';
-    const slot = free[Math.floor(rng() * free.length)];
-    this.offer = null;
-    this.spawnHero(slot, o.types[i], { tier: 1, spent: o.cost });
-    return slot;
+  // tướng ★ trên sân ghép được với thẻ loại `type` (mua về là ghép ngay được)
+  marketTwin(type) { return this.heroes.find((h) => h && h.type === type && (h.tier || 0) === 1 && !h.from && !HEROES[h.type].legend && (!this.co || this.co.canAct(this.co.actor, h.slot))) || null; }
+  // mua thẻ i: slot bỏ trống = tự chọn ô trống ngẫu nhiên (hết ô thì ghép vào tướng ★ cùng loại nếu có).
+  // slot là ô trống = đặt đúng ô; slot có tướng ★ cùng loại = ghép luôn. Trả về ô của tướng nhận, hoặc chuỗi lỗi.
+  buyCard(i, slot, rng = srand) {
+    const m = this.ensureMarket(), type = m.types[i];
+    if (!type) return 'Không có thẻ';
+    const c = this.summonCost();
+    if (this.gold < c) return `Cần ${c} vàng`;
+    let target = null;
+    if (slot == null || slot < 0) {
+      const free = this.freeSlots();
+      if (free.length) slot = free[Math.floor(rng() * free.length)];
+      else { target = this.marketTwin(type); if (!target) return 'Hết ô trống: ghép, hoặc kéo tướng vào 🗑 để hủy'; slot = target.slot; }
+    } else if (this.heroes[slot]) {
+      target = this.heroes[slot];
+      if (!(target.type === type && (target.tier || 0) === 1 && !target.from)) return target.type === type ? 'Chỉ ghép thẻ ★ với tướng ★ cùng loại' : 'Ô đã có tướng';
+    } else if (this.isFlooded(slot) || !CONFIG.slots[slot]) return 'Không đặt được ở ô này';
+    this.gold -= c;
+    this.summonN = (this.summonN || 0) + 1;
+    m.types[i] = this.rollCard(rng);
+    if (!target) { this.spawnHero(slot, type, { tier: 1, spent: c }); return slot; }
+    // ghép thẳng vào tướng ★ cùng loại: tạo tướng tạm ở chỗ thừa cuối mảng rồi ghép như kéo thả
+    const k = this.heroes.length;
+    const a = this.spawnHero(k, type, { tier: 1, spent: c }, target);
+    this.merge(k, target.slot);
+    this.heroes.length = CONFIG.slots.length;
+    this.updateAuras();
+    return target.slot;
+  }
+  // v143: Nghỉ chân — sau đợt boss được đổi tối đa REST_SWAPS tướng trong đội (miễn phí)
+  restDeck(sel) {
+    if (!this.rest) return 'Không ở lúc nghỉ chân';
+    const old = this.summonList();
+    if (!validDeck(sel)) return `Đội cần đủ ${DECK_SIZE} tướng khác nhau`;
+    if (sel.filter((t) => !old.includes(t)).length > REST_SWAPS) return `Chỉ đổi tối đa ${REST_SWAPS} tướng`;
+    this.deck = [...sel];
+    if (this.co) { this.market = null; this.rollMarket(); this.market.rr = 0; this.skipRest(); return true; }
+    this.rest = null;
+    this.freshMarket();
+    return true;
+  }
+  // co-op: mỗi người xong phần mình; trận chạy tiếp khi cả hai xong (hoặc hết REST_COOP_T giây — xem update)
+  skipRest() {
+    if (!this.co || !this.rest) { this.rest = null; return true; }
+    const r = this.rest;
+    r.done = r.done || [false, false];
+    r.done[this.co.actor] = true;
+    if (this.co.alone >= 0 ? r.done[this.co.alone] : r.done.every(Boolean)) this.rest = null;
+    return true;
   }
   // gọi 1 tướng Thường ngẫu nhiên (★) vào 1 ô trống ngẫu nhiên; trả về ô vừa đặt
   summonRandom(rng = srand) {
@@ -1549,9 +1603,9 @@ class Game {
     return slot;
   }
   // tạo tướng ở ô (không trừ vàng)
-  spawnHero(slot, type, o = {}) {
+  spawnHero(slot, type, o = {}, at = null) {
     const def = HEROES[type];
-    const [x, y] = CONFIG.slots[slot];
+    const [x, y] = at ? [at.x, at.y] : CONFIG.slots[slot];
     const h = {
       id: newId(), type, slot, x, y, kills: 0, level: 1, cd: 0, swing: 0, dir: 1,
       dead: false, respawnT: 0, stunT: 0, hp: 0, mana: 0, skillLv: { [def.skills[0].id]: 1 }, skillPts: 0,
@@ -2264,6 +2318,7 @@ class Game {
   startWave() {
     if (this.waveActive || this.over) return;
     this.wave++;
+    this.freshMarket();   // v143: đầu đợt mới chợ tướng làm mới miễn phí
     this.spawnQueue = this.nextWave;
     this.waveTotal = this.spawnQueue.length;
     this.nextWave = buildWave(this.wave + 1, this.level);
@@ -2301,6 +2356,7 @@ class Game {
     this.addGold(bonus);
     if (this.waveActive) {
       this.wave++;
+      this.freshMarket();
       this.spawnQueue = this.spawnQueue.concat(this.nextWave);
       this.waveTotal += this.nextWave.length;
       this.nextWave = buildWave(this.wave + 1, this.level);
@@ -2491,7 +2547,12 @@ class Game {
 
   // ---------- vòng lặp
   update(dt) {
-    if (this.over) return;
+    if (this.rest && this.co) {
+      // co-op: Nghỉ chân tối đa REST_COOP_T giây rồi trận tự chạy tiếp
+      this.rest.t = (this.rest.t || 0) + dt;
+      if (this.rest.t >= REST_COOP_T || (this.co.alone >= 0 && this.rest.done && this.rest.done[this.co.alone])) this.rest = null;
+    }
+    if (this.over || this.rest) return;   // v143: đang Nghỉ chân (bảng đổi đội mở) thì trận đứng yên
     this.time += dt;
     this.shake = Math.max(0, this.shake - dt * 30);
     if (this.guardT > 0) this.guardT -= dt;
@@ -2544,6 +2605,11 @@ class Game {
     // v103: Vô tận — mỗi 10 đợt cộng Ngân khố (tài khoản) ngay
     if (this.endless && this.wave % PREP.endlessEvery === 0) this.events.push({ type: 'kho', n: Math.round(PREP.endlessMilestone * (1 + Math.floor(this.wave / 50) * 0.5) * (this.hard ? 1.5 : 1)), why: `mốc đợt ${this.wave}` });
     if (bossAt(this.wave, this.level)) this.riseWater();
+    // v143: Nghỉ chân sau đợt boss (cả Vô tận và Phó bản, trừ đợt cuối thắng ải): đổi tối đa 2 tướng trong đội
+    let bossDone = false;
+    for (let w = (this.restWave || 0) + 1; w <= this.wave; w++) if (bossAt(w, this.level)) bossDone = true;
+    this.restWave = this.wave;
+    if (bossDone && (this.endless || this.wave < this.levelWaves)) { this.rest = { wave: this.wave }; this.events.push({ type: 'rest' }); }
     this.events.push({ type: 'checkpoint' });   // v74: lưu màn đang chơi giữa hai đợt
     if (this.wave >= this.levelWaves && !this.endless && !this.won) {
       this.won = true;
@@ -2558,12 +2624,17 @@ class Game {
     const heroes = JSON.parse(JSON.stringify(this.heroes, (k, v) => (skip.has(k) ? undefined : v)));
     const o = { v: 1, at: Date.now(), heroes };
     for (const k of ['level', 'hard', 'endless', 'won', 'gold', 'lives', 'wave', 'summonN', 'bossesKilled', 'seen', 'water', 'raised', 'moc',
-      'mountain', 'stats', 'inventory', 'jarCount', 'shop', 'time', 'flags', 'runId', 'guardT', 'oathT', 'xpLog', 'deck', 'offer']) o[k] = this[k];
+      'mountain', 'stats', 'inventory', 'jarCount', 'shop', 'time', 'flags', 'runId', 'guardT', 'oathT', 'xpLog', 'deck', 'market', 'rest', 'restWave']) o[k] = this[k];
     return JSON.parse(JSON.stringify(o));
   }
   restore(o) {
     this.reset(o.level);
-    for (const k of Object.keys(o)) if (k !== 'heroes' && k !== 'v' && k !== 'at') this[k] = o[k];
+    for (const k of Object.keys(o)) if (k !== 'heroes' && k !== 'v' && k !== 'at' && k !== 'offer') this[k] = o[k];
+    // v143: bản lưu cũ đang mở bảng chọn 1 trong 3 (đã trả vàng) → hoàn lại vàng, chuyển sang chợ tướng
+    if (o.offer && o.offer.cost) { this.gold += o.offer.cost; this.summonN = Math.max(0, (this.summonN || 0) - 1); }
+    this.offer = null;
+    if (!('restWave' in o)) this.restWave = this.wave;
+    this.ensureMarket();
     this.heroes = CONFIG.slots.map((_, i) => {
       const h = o.heroes && o.heroes[i];
       if (!h) return null;
@@ -2685,7 +2756,7 @@ class Game {
       e.enraged = true;
       this.text(e.x, e.y - 30, d.boss ? 'HÓA ĐIÊN!' : 'Điên!', '#ff4d4d', 0.9, d.boss ? 18 : 13);
     }
-    // hồi máu đồng đội (Phù Thủy Nước)
+    // hồi máu đồng đội (Sứa Tinh)
     if (d.heal && !mute) {
       e.healCd -= dt;
       if (e.healCd <= 0) {

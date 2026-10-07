@@ -31,11 +31,14 @@ jobs:
         run: chmod +x gradlew && ./gradlew assembleDebug --no-daemon
       - uses: actions/upload-artifact@v4
         with:
-          name: nui-cao-nuoc-dang-apk
+          name: than-thoai-viet-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
       # link tải thẳng trên điện thoại (không cần đăng nhập GitHub):
-      # https://github.com/<chủ repo>/<repo>/releases/download/apk-latest/nui-cao-nuoc-dang.apk
-      - run: cp android/app/build/outputs/apk/debug/app-debug.apk nui-cao-nuoc-dang.apk
+      # https://github.com/<chủ repo>/<repo>/releases/download/apk-latest/than-thoai-viet.apk
+      # (v145 đổi tên game; vẫn đăng kèm nui-cao-nuoc-dang.apk để link cũ không chết)
+      - run: |
+          cp android/app/build/outputs/apk/debug/app-debug.apk than-thoai-viet.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk nui-cao-nuoc-dang.apk
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: apk-latest
@@ -43,4 +46,6 @@ jobs:
           body: Bản thử (debug) build tự động từ nhánh ${{ github.ref_name }}, commit ${{ github.sha }}.
           prerelease: true
           make_latest: false
-          files: nui-cao-nuoc-dang.apk
+          files: |
+            than-thoai-viet.apk
+            nui-cao-nuoc-dang.apk

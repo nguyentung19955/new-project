@@ -200,7 +200,7 @@ ENEMY ROW 576x192, 3 cells: [1] walk step A [2] walk step B (opposite legs) [3] 
 |---|---|
 | yeutinh | Yêu Tinh Rừng: small green forest goblin, pointy ears, yellow eyes, leaf loincloth, wooden club (attack: club swing) |
 | dacon | Đá Con: tiny grey rock creature with small legs and orange eyes (attack: rolls forward) |
-| linhan | Lính Giáo: enemy foot soldier, dark-red tunic, bronze helmet, round wooden shield, long spear (attack: spear thrust) |
+| linhan | Quỷ Giáo: grey-green goblin soldier with small horns and tusks, dark-red vest, leather cap, round wooden shield, long bronze spear (attack: spear thrust) |
 
 **Boss:** đã đủ ảnh cho 9 boss — không cần gen. Muốn thêm động tác cho boss thì dùng mục C với `{ACTION}` = *1 stand · 2 raise · 3 attack slam · 4 roar*.
 

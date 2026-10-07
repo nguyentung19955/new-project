@@ -1,4 +1,4 @@
-# Núi Cao Nước Dâng · Tóm tắt gameplay (cập nhật phiên bản 35 · chủ đề Sơn Tinh Thủy Tinh)
+# Thần Thoại Việt (tên cũ: Núi Cao Nước Dâng) · Tóm tắt gameplay (cập nhật phiên bản 35 · chủ đề Sơn Tinh Thủy Tinh)
 
 > Tài liệu bàn giao thiết kế đầy đủ: `docs/HANDOFF.md`. Ghi chú từng phiên bản trong code: mục 15 ở cuối.
 
@@ -18,7 +18,7 @@ Game thủ thành trên điện thoại, chơi **màn hình ngang**, lấy cảm
 
 ## 1. Vòng chơi chính
 
-1. **Triệu hồi:** bấm nút lớn **Triệu hồi** giữa thanh dưới. Mỗi lần gọi ra **1 trong 6 tướng Thường ngẫu nhiên (★)** vào **1 ô trống ngẫu nhiên**.
+1. **Triệu hồi (Chợ tướng, từ phiên bản 143):** thanh dưới luôn mở **4 thẻ tướng ★** rút ngẫu nhiên từ đội 6 tướng. **Chạm thẻ** = mua và đặt vào 1 ô trống ngẫu nhiên; **kéo thẻ** thả vào ô = đặt đúng ô (thả lên tướng ★ cùng loại = ghép luôn). ↻ đổi cả hàng (10 vàng, +10 mỗi lần trong đợt); đầu mỗi đợt chợ tự làm mới miễn phí. Xem ghi chú phiên bản 143.
    - Giá **60 vàng**, mỗi lần sau **+6** (tối đa 220), tính lại từ đầu mỗi ải.
    - Bản đồ có **17 ô** dọc hai bờ sông, mọi ô như nhau. Hết ô trống thì phải ghép, hoặc kéo tướng vào thùng 🗑 (hiện khi kéo) để hủy.
    - Giữ và kéo tướng để đổi chỗ.
@@ -1338,15 +1338,100 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Menu: hàng nút Anh Hùng / Ấn Phù gọn hơn để chữ không chạm mép trên máy nhỏ.
 - Prompt mới: 16 quái + 3 boss nét cũ gen lại, 80 icon đồ vật (19 tấm), 3 tấm nút giao diện thêm; cắt bằng `tools/cat-items.py <ảnh> <mã tấm>`.
 
-## Phiên bản 141 — Chơi nhóm "Cùng Giữ Thành" (2 người)
-- **Lối vào:** Xuất Quân → Chọn chế độ → thẻ thứ ba **Cùng Giữ Thành**. Cả hai cần đăng nhập (Google / email / khách).
+## Phiên bản 141 — Kéo tướng: ẩn thanh Triệu hồi, hiện nút Hủy ở đáy
+- Giữ và kéo một tướng: thanh dưới cùng (nút Triệu hồi, Hợp thể, Ghép tự động, bảng chọn 1 trong 3 hoặc bảng tướng đang chọn) ẩn đi, thùng **Hủy tướng** hiện đúng chỗ đó với cỡ bằng thanh, dễ thả trúng trên điện thoại.
+- Thả ra (hủy, đổi chỗ, ghép hay bị ngắt kéo) thì thanh dưới cùng hiện lại ngay. Thả trúng một ô vẫn ưu tiên đổi chỗ / ghép, chỉ thả vào thùng mới hủy.
+
+## Phiên bản 142 — Quái hình người đổi thành quái vật
+- Mọi quái / boss hình người đổi thành quái vật, **giữ nguyên mã, chỉ số, kỹ năng, hành, bay / không bay**:
+  - Lính Giáo → **Quỷ Giáo** (yêu tinh da xám xanh, sừng nhỏ, nanh, cầm giáo đồng).
+  - Cung Thủ Giặc → **Sói Cung Thủ** (sói tinh đứng hai chân, đeo ống tên); bản đổi màu Cung Thủ Lửa → **Sói Cung Lửa**.
+  - Kỵ Binh → **Quỷ Cưỡi Lợn** (yêu tinh cưỡi lợn rừng ma); bản đổi màu Thiết Kỵ → **Lợn Giáp Sắt**.
+  - Tướng Giặc Ân → **Quỷ Vương Ân** (quỷ vương da xanh thẫm, sừng trâu, giáp đen, cưỡi quỷ mã bờm lửa).
+  - Triệu Đà → **Hổ Vương Triệu Đà** (tướng quỷ đầu hổ vằn lửa, giáp đỏ đen).
+  - Phù Thủy Nước → **Sứa Tinh** (sứa thành tinh quấn rong biển, mắt sáng xanh).
+  - Giữ tên Hà Bá, Thủy Tinh (nhân vật truyền thuyết) nhưng đổi hình: Hà Bá là cá trê tinh râu dài, Thủy Tinh là thần nước đầu rồng vảy bạc; Tướng Thủy Quân (đổi màu từ ảnh Hà Bá) thành cá trê tinh phó tướng.
+- Đổi chữ theo: kỹ năng boss (gọi Quỷ Giáo / Quỷ Cưỡi Lợn, "Quỷ mã xông lên!"), tên bộ quái trong cảnh báo đợt (Quỷ binh giặc Ân / Quỷ binh Triệu Đà), mô tả ải Đồng Trâu, cảnh kể chuyện Cổ Loa, đồ khắc chế Sứa Tinh.
+- Hình vẽ dự phòng (SVG, dùng trong cảnh kể chuyện và khi thiếu ảnh) của Quỷ Giáo, Sói Cung Thủ, Quỷ Cưỡi Lợn, Quỷ Vương Ân, Hổ Vương Triệu Đà vẽ lại thành quái vật.
+- Prompt gen lại ảnh (`tools/build-prompts.js`): mô tả quái vật mới cho linhan, cungan, kybinh, phuthuy (quái) và anvuong, trieuda, haba, thuytinh (boss); kybinh, anvuong, haba, thuytinh thêm vào danh sách bắt buộc gen lại. Ảnh cũ vẫn dùng cho tới khi có ảnh mới; cắt xong thì chạy `python3 tools/make-variants.py thietky cungtlua tuongthuy` để sinh lại bản đổi màu, và tạo `assets/packs/<mã>/.redo`.
+## Phiên bản 143 — Chợ tướng luôn mở + Nghỉ chân đổi đội
+- **Chợ tướng** thay nút Triệu hồi và bảng chọn 1 trong 3: thanh đáy luôn hiện **4 thẻ tướng** rút ngẫu nhiên (có thể trùng) từ đội 6 tướng. Mỗi thẻ có chân dung, tên ngắn, biểu tượng hành, giá vàng.
+  - **Chạm 1 lần** = mua và đặt ngay vào một ô trống ngẫu nhiên. Hết ô trống mà thẻ là tướng đang có ★ trên sân thì ghép thẳng vào tướng đó.
+  - **Kéo thẻ** thả vào một ô trống = đặt đúng ô đó; thả lên tướng ★ cùng loại = ghép luôn thành ★★. Trong lúc kéo, ô trống sáng lên, tướng ghép được nhấp nháy.
+  - Mua thẻ nào thì chỗ đó ra thẻ mới. **Đầu mỗi đợt** cả hàng làm mới miễn phí. Nút **↻** đổi cả hàng: 10 vàng, mỗi lần đổi sau +10 trong cùng đợt (về 10 khi sang đợt mới).
+  - Thẻ trùng loại với một tướng ★ trên sân (mua về là ghép được) có **viền xanh sáng + nhãn "ghép"**. Thẻ mờ khi thiếu vàng hoặc hết ô.
+  - Giá giữ nguyên công thức cũ (60, +6 mỗi lần, tối đa 220, tính lại mỗi ải) — bỏ bước chọn 1/3 nên tổng chi phí tương đương. Nút **Ghép tự động** và **Hợp thể** giữ nguyên cạnh chợ.
+  - Đang kéo tướng trên sân: chợ tướng ẩn, **thùng Hủy** nằm đúng chỗ thanh đáy (cùng ý với nhánh kéo-tướng-ẩn-triệu-hồi).
+- **Đội 6 tướng cho cả Vô tận**: vào Vô tận cũng qua màn Chuẩn bị xuất quân (có ghi ♾ Vô tận) với bảng **Chọn đội** và nút **Gợi ý**.
+- **Nghỉ chân**: sau mỗi đợt boss (cứ 10 đợt) ở cả Vô tận và Phó bản (trừ đợt cuối thắng ải), trận tạm dừng và hiện bảng **Nghỉ chân**: bỏ tối đa **2 tướng** khỏi đội và chọn tướng mới thay vào, miễn phí; **Bỏ qua** được. Tướng đang trên sân giữ nguyên, chợ làm mới theo đội mới.
+- Lưu trận (tiếp tục giữa chừng) giữ cả chợ tướng, đội và bảng Nghỉ chân đang mở. Bản lưu cũ còn bảng chọn 1 trong 3 đã trả vàng thì được hoàn lại vàng.
+- Test: `node tests/cho-tuong/cho-tuong.test.js` (ảnh chụp trong `tests/cho-tuong/shots/`). Repo không có công cụ máy chơi thử nên không có gì để cập nhật.
+
+## Phiên bản 144 — Gộp 4 nhánh
+- Gộp: kéo tướng ẩn thanh đáy (141), quái hình người → quái vật (142), Firebase Hosting + tự deploy, Chợ tướng + Nghỉ chân (143).
+- Tên dài trên thẻ chợ tướng tự thu nhỏ chữ cho vừa thẻ (trước bị cắt khi xoay dọc).
+
+## Phiên bản 145 — Đổi tên game: "Thần Thoại Việt"
+- Game giờ gồm nhiều truyền thuyết (Sơn Tinh – Thủy Tinh, Thạch Sanh, Thánh Gióng, Lạc Long Quân, An Dương Vương) nên đổi tên từ **Núi Cao Nước Dâng** thành **Thần Thoại Việt**.
+- Tựa menu: "Thần Thoại Việt", dòng phụ "Truyền thuyết Văn Lang – Âu Lạc", khẩu hiệu "Con Rồng cháu Tiên, giữ vững non sông". Đổi cả tiêu đề trang, màn đăng nhập, dòng phiên bản trong Cài đặt, thông báo xoay màn hình, Đền Anh Hùng, manifest (cài lên màn hình chính), tên app Android, README và tài liệu.
+- Có ảnh `assets/ui/logo-tua.png` thì menu hiện logo ảnh thay chữ; không có hoặc lỗi thì giữ chữ HTML.
+- **Giữ nguyên** để không mất tiến trình / không vỡ bản cài: khóa lưu `nuicao.v1`, mã app `vn.nuicao.game`, dự án Firebase, tên gói npm, tên chương "Sơn Tinh – Thủy Tinh", nội tại "Núi Cao Nước Dâng" của Sơn Tinh.
+- APK: bản phát hành `apk-latest` đăng thêm `than-thoai-viet.apk`, vẫn giữ `nui-cao-nuoc-dang.apk` (cùng file) để link cũ không chết.
+- Ảnh nền menu `assets/ui/nen-menu.jpg` (thành Phong Châu + sóng nước) dùng tạm; prompt ảnh nền mới nhiều truyền thuyết + logo chữ ở **phần 0** của `docs/PROMPT_GEMINI_FULL.md` (`node tools/build-prompts.js`).
+- Test: `node tests/ten-game/ten-game.test.js` (ảnh chụp trong `tests/ten-game/shots/`).
+## Phiên bản 146 — Sửa khung người chơi trên menu
+- Khung `khung-nguoi-choi.png` giữ đúng tỉ lệ ảnh (700×241, `aspect-ratio`), không còn kéo méo. Ảnh đại diện Google (nếu có) cắt tròn, nằm đúng lòng huy hiệu mặt trời; không có ảnh thì để nguyên huy hiệu của khung (bỏ SVG trống đồng đè lệch).
+- Tên + dòng phụ đặt theo % trong ô tối của khung (đo bằng PIL), chữ tự co (`fitText`) và cắt bằng dấu … khi quá dài. Dòng phụ gọn: "Cấp N · ★ x/y" (bỏ "Đã đăng nhập" / "Khách").
+- Không còn lấy phần trước @ của email làm tên (cả menu lẫn bảng xếp hạng). Chưa đặt biệt danh thì hiện "Khách ✎ đặt tên"; chạm khung để mở ô đổi tên. Ô đổi tên để trống kèm gợi ý "Đặt biệt danh" thay vì điền sẵn tên tạm.
+- Test: `node tests/khung-nguoi-choi/khung.test.js` (844×390, 667×375, 932×430, xoay dọc 390×844; khách / email / tên dài / có ảnh; ảnh trong `tests/khung-nguoi-choi/shots/`).
+## Phiên bản 147 — Gợi ý phát triển (cây hợp thể của từng tướng)
+- **Màn Anh Hùng Văn Lang:** dưới phần kỹ năng có khối **Phát triển thành** (hàm dùng chung `ui.evolveTree(type)`, dựng thẳng từ `FUSION`):
+  - Tướng Thường: mọi tướng Tím ghép ra được (`[tướng này] + [tướng ghép] ➜ [Tím]`, cần 2 tướng ★★), mỗi nhánh nối tiếp ↳ `+ [tướng ghép] ➜ [Vàng]` (Thần tinh ★★★ + kỹ năng tối đa).
+  - Tướng Tím: ghép từ 2 tướng Thường nào, và hợp thể với ai ra tướng Vàng nào.
+  - Tướng Vàng: **Nguồn gốc** (2 tướng Tím, và 2 tướng Thường của mỗi tướng Tím), ghi "Bậc cao nhất".
+  - Tướng Tím/Vàng chưa sở hữu hiện mờ + nhãn "Chưa có". Chạm chân dung bất kỳ → bảng chi tiết chuyển sang tướng đó (danh sách tự cuộn tới). Bỏ dòng chữ "Hợp thể ra" cũ.
+- **Trong trận:** chọn tướng → một dòng nổi trên thanh đáy `Phát triển: + [tướng ghép] ➜ [tướng đích] · cần …` (ưu tiên tướng đích đã sở hữu, đối tác đã có trên sân; nói rõ thiếu gì, ví dụ "cần Người Đắp Đê ★★", "chưa có Lang Liêu"; đủ thì "Đủ điều kiện!" viền xanh). Chạm → mở Cây hợp thể, sáng dòng công thức, đánh dấu 2 tướng thành phần trên sân (fuseFocus). Bảng chỉ số tướng liệt kê mọi hướng phát triển. Dòng gợi ý ẩn khi mở bảng chỉ số / đang chuyển tướng / kéo tướng.
+- **Chọn đội:** giữ tay lên thẻ tướng → tooltip có thêm "Hợp thể: + X ➜ Y".
+- Test: `node tests/phat-trien/phat-trien.test.js` (ảnh trong `tests/phat-trien/shots/`).
+
+## Phiên bản 149 — Nút Góp ý
+- Nút **✉ Góp ý** ở: hàng liên kết nhỏ cạnh "Bách khoa / Xếp hạng" trên menu chính, một dòng trong **Cài đặt** (cả màn Tạm dừng), và mục **Góp ý** trong menu ☰ trong trận.
+- Bảng góp ý: chọn loại (Lỗi / Ý tưởng / Cân bằng / Khác), ô nội dung 10–1000 ký tự có đếm ký tự, ô liên hệ không bắt buộc. Mở trong trận thì tự chụp màn hình trận (thu nhỏ ≤ 640px rộng, JPEG ≤ 150KB) và kèm theo — bấm ô ảnh để bỏ. Trận tạm dừng trong lúc gõ, gửi / đóng thì chạy tiếp.
+- Tự gửi kèm: phiên bản, màn đang mở / ải / đợt, cỡ màn hình, hệ điều hành + trình duyệt rút gọn, mã tài khoản ẩn danh. **Không** gửi email.
+- Gửi vào Firestore `feedback` (luật mới trong `firestore.rules`: chỉ được tạo, không ai đọc/sửa/xoá từ máy người chơi). Giới hạn 1 góp ý / 60 giây, 10 / ngày.
+- Không có mạng / chưa bật Firebase / gửi lỗi: lưu hàng đợi trên máy (tối đa 5), báo "Đã lưu góp ý, sẽ gửi khi có mạng", tự gửi lại khi có mạng. Gửi được thì cảm ơn bằng thông báo.
+- Cách xem góp ý và đăng luật: `docs/FIREBASE.md` mục "Xem góp ý của người chơi".
+- Dòng phiên bản trên menu chính cập nhật (trước còn ghi 145).
+- Test: `node tests/gop-y/gop-y.test.js` (CLOUD giả ghi lại dữ liệu gửi; hàng đợi, gửi lại, giới hạn, bố cục 844×390 / 667×375 / xoay dọc; ảnh `tests/gop-y/shots/` không commit, ảnh mẫu `tests/gop-y/gop-y-tran.png`).
+
+## Phiên bản 150 — Gộp nút Góp ý
+- Gộp nhánh nút Góp ý (v149).
+- Menu: 3 liên kết nhỏ Bách khoa · Xếp hạng · Góp ý thu nhỏ biểu tượng và chữ để không đè lên nhau.
+
+## Prompt ảnh — vẽ lại tướng cho dễ phân biệt (không đổi phiên bản game)
+- Vấn đề: nhiều tướng cùng khuôn chibi (đầu 1/3, mặt tròn mắt to, cùng tư thế, khăn đỏ/áo nâu) nên khó phân biệt. Ảnh so sánh 9 nhóm dễ nhầm (ảnh + bóng đen): `docs/tuong-de-nham.png` — khăn đầu + vũ khí cán dài; nón lá / dân làng áo nâu; cụ già râu trắng chống gậy; nữ thần áo dài + gậy + hào quang; vua / tướng mũ vàng mặc giáp; cô gái thôn quê; thú giáp bạc / tướng đi kèm hổ; thợ săn trùm mũ cầm giáo; áo nâu-vàng đứng thẳng.
+- Thẻ nhận diện cho cả 60 tướng: `tools/hero-id.js` (`HERO_ID`: loại thân người / thú / thần, tuổi + vóc dáng + tỉ lệ đầu/thân, mảng hình đặc trưng lớn, 3 màu riêng, nét mặt riêng, tư thế idle, hiệu ứng chiêu; `CONFUSE`: các nhóm dễ nhầm). `node tools/build-prompts.js` dừng nếu thiếu thẻ hoặc hai tướng trùng màu chính / mảng hình.
+- Prompt mới nhấn mạnh bóng đen đọc được ở 40 px, tỉ lệ cơ thể theo thẻ (không ép đầu 1/3), không dùng lại mặt chibi chung; vẫn giữ viền nâu #2A1608, đổ bóng phẳng, họa tiết trống đồng, nền magenta. Vì `tools/cat-sheet.py` đưa mọi tướng về cùng chiều cao, "to / nhỏ" thể hiện bằng tỉ lệ (vai rộng, đầu nhỏ…).
+- Nhóm prompt **"0B. Tướng vẽ lại cho dễ phân biệt"** (60 prompt, nhóm dễ nhầm trước, rồi Thường → Tím → Vàng), tên file giữ `<mã>.png`. Cắt bằng `python3 tools/cat-sheet.py <ảnh> <mã>`, rồi **tạo file trống `assets/packs/<mã>/.v2`** để ẩn prompt tướng đó khỏi danh sách, và chạy lại `node tools/build-prompts.js`.
+
+## Phiên bản 152 — Tướng / quái / boss nhiều khung chuyển động hơn
+- **Prompt tướng (nhóm 0B) đổi sang tấm 4×3 = 12 ô, mỗi ô 192 px (ảnh 768×576)**, mỗi hàng là một động tác: hàng 1 thở ×3 + chân dung · hàng 2 đánh ×4 (chuẩn bị → vung → trúng → thu về) · hàng 3 chiêu ×3 + bị đánh. Lý do: 12 ô là mức nhiều nhất Gemini còn giữ nhân vật giống nhau (nhiều hơn thì hay vẽ trùng / lệch ô); mỗi hàng một động tác giúp AI hiểu thứ tự khung; ô 192 px vẫn đủ nét vì game chỉ vẽ tướng cao ~70 px. Giữ ô chân dung vì giao diện dùng `head.png` ở hơn 10 chỗ; khung "ăn mừng" bỏ ra để không quá 12 ô — khi thắng trận game dùng khung tung chiêu (có `win.png` thì dùng `win.png`). Prompt thêm luật: same character identical in every cell, consistent size and outfit, feet on the same baseline, smooth motion between consecutive frames, clear gaps between cells.
+- **Quái gen lại: 3×2 = 6 ô** (đi 4 khung + đánh 2; quái bay: vỗ cánh 4 + lao 2). **Boss gen lại: 3×3 = 9 ô** (đi 4 + đánh 3 + nổi giận 2).
+- **Lệnh cắt mới:** `python3 tools/cat-sheet.py <ảnh> <mã> hero12` (tướng) · `… enemy6` (quái) · `… boss9` (boss); lệnh cắt ghi ngay dưới tên mỗi khối prompt. Lệnh cắt tự: chép khung đại diện sang tên cũ (`idle`, `front`, `wind`, `strike`, `cast`; `walk1`, `walk2`, `attack`, `rage`) để mọi chỗ cũ vẫn chạy; ghi số khung vào dòng `PACK_FRAMES` trong `js/render.js` (sau đó tăng phiên bản game); với `hero12` tạo `assets/packs/<mã>/.v2` để ẩn prompt vẽ lại. Bộ cũ (`hero`, `enemy`, `boss`, `boss4`) vẫn dùng được.
+- **Game phát khung** (`js/render.js`): tướng đứng thở đi qua lại 1-2-3-2 (~5,5 khung/giây), đánh theo pha đòn (chuẩn bị → vung → trúng → thu về), tung chiêu lặp 3 khung, trúng đòn hiện khung bị đánh, thắng trận hiện khung ăn mừng / tung chiêu; quái đi 4 khung, đánh theo thời điểm ra đòn, boss nổi giận 2 khung. Mỗi khung căn chân riêng (footK v137). Khung tải lười (lần đầu cần động tác nào mới tải động tác đó), có cache; thiếu khung nào thì dùng ảnh cũ như trước.
+- Test: `node tests/khung-chuyen-dong/khung-chuyen-dong.test.js` (tạo tấm giả bằng PIL → cắt bằng `hero12` / `enemy6` / `boss9` vào thư mục tạm → game phát đúng thứ tự khung, thiếu khung thì dùng bộ cũ, chơi thật vài giây không lỗi trang).
+## Phiên bản 153 — Chơi nhóm "Cùng Giữ Thành" (2 người) + trò chuyện
+- **Lối vào:** Xuất Quân → Chọn chế độ → thẻ thứ ba **Cùng Giữ Thành**. Cả hai cần đăng nhập (Google / email / khách). Tên trong phòng lấy theo tên người chơi (biệt danh / tên tài khoản, không lấy email).
 - **Phòng:** chủ phòng bấm *Tạo phòng* → được mã 6 ký tự; người kia nhập mã → *Vào phòng*. Màn chờ hiện 2 người; chủ phòng chọn ải trong các ải **Phó bản đã mở của chủ phòng** rồi bấm *Bắt đầu*.
-- **Chung:** bản đồ, mạng thành, đợt quái, túi đồ, cửa hàng Lò đúc. **Riêng:** ví vàng, lượt triệu hồi (giá tăng theo từng người), đội triệu hồi 6 tướng, tướng Tím / Vàng đã sở hữu (để hợp thể), Ấn Phù và Thần Khí của tướng trên ô mình.
+- **Chung:** bản đồ, mạng thành, đợt quái, túi đồ, cửa hàng Lò đúc. **Riêng:** ví vàng, **hàng chợ tướng** (4 thẻ rút từ đội 6 tướng của mỗi người, giá mua tăng theo số tướng mỗi người đã mua, ↻ đổi hàng tốn vàng của người bấm, đầu mỗi đợt cả hai hàng làm mới miễn phí), tướng Tím / Vàng đã sở hữu (để hợp thể), Ấn Phù và Thần Khí của tướng trên ô mình.
+- **Chợ tướng trong chơi nhóm:** chạm thẻ = mua vào một ô trống **của mình**; kéo thẻ thả vào ô của mình (hoặc lên tướng ★ cùng loại của mình để ghép). Hết ô trống thì thẻ tự ghép vào tướng ★ cùng loại của chính mình, không bao giờ vào ô đồng đội.
+- **Nghỉ chân (sau đợt boss):** cả hai cùng thấy bảng đổi đội; mỗi người đổi tối đa 2 tướng trong đội **của mình** (hoặc Bỏ qua). Trận chạy tiếp khi cả hai xong **hoặc hết 20 giây** (đếm ngược trên bảng). Chơi nhóm vẫn không tạm dừng ở chỗ khác.
 - **Chia ô:** xếp các ô theo dọc dòng sông, chia từng cặp 2 ô xen kẽ (mỗi người có ô ở đầu, giữa và cuối sông; chênh nhau tối đa 1 ô). Ô của đồng đội có **viền xanh nét đứt**. Chỉ thao tác được tướng / ô của mình (xem được tướng đồng đội). Lệnh "cả đội" (Ghép tự động, Mặc đồ cả đội, Nâng đồ) chỉ áp cho tướng của người bấm.
 - **Vàng:** mỗi người bắt đầu với 220 vàng. Vàng do trận sinh ra (hạ quái, thưởng xong đợt, núi Tản Viên, sính lễ boss) **chia đôi** (đồng lẻ luân phiên); vàng từ thao tác (bán tướng / đồ, gọi sớm) về người bấm. Thanh bên phải dưới thanh trên hiện vàng của đồng đội và nút **Gửi 50 / Gửi 200**.
 - **Sính lễ boss:** cả hai thấy bảng chọn, ai chọn trước thì nhận (vàng trong sính lễ vẫn chia đôi).
 - **Không tạm dừng** trong chơi nhóm; nút ▶ chỉ để bắt đầu đợt 1 (ai bấm cũng được). Đổi tốc độ x1/x2/x3 áp cho cả hai.
+- **Trò chuyện:** nút **💬** trên thanh trên (chỉ trong trận nhóm). Khung chat gọn bên phải (≤ 1/3 màn hình, không tạm dừng trận), ô nhập ở trên cùng để bàn phím điện thoại không che; tối đa **120 ký tự**, Enter hoặc nút Gửi; 8 câu nhanh bấm một chạm (Giúp mình với!, Gửi vàng cho mình, Để mình ghép, Boss tới!, Giữ cửa thành!, Mình đổi đội nhé, Cảm ơn!, Tuyệt!). Tin của đồng đội khi khung đóng hiện **bong bóng 4 giây** ở góc phải + chấm báo chưa đọc trên 💬. Giữ 50 tin gần nhất; tối đa 1 tin / giây; từ ngữ thô tục cơ bản tự đổi thành `***`. Đang gõ chat thì game không co giãn lại khi bàn phím bật lên (kể cả khi cầm dọc, khung game xoay ngang). Chat đi đường riêng (Firestore `rooms/{mã}/chat`), không qua lockstep nên không ảnh hưởng mô phỏng.
 - **Mất kết nối:** im lặng 15 giây (chủ phòng mất thì 8 giây) → người còn lại nhận thông báo, **điều khiển cả hai nửa** và nhận luôn vàng của đồng đội. Đồng đội có mạng lại / tải lại trang → *Vào lại phòng* → nhận ảnh chụp trận, vàng của người đang giữ chia đôi lại.
-- **Kết thúc trận:** cả hai nhận **Ngân khố** như Phó bản (thắng: theo ải + sao, kèm thưởng thắng đầu ngày; thua / bỏ: 4 mỗi đợt đã qua) và Tu Vi. Chơi nhóm không tính sao, không mở ải, không ghi bảng xếp hạng.
-- **Kỹ thuật (js/coop.js):** đồng bộ kiểu *lockstep* bằng lệnh — chỉ gửi thao tác, mô phỏng chạy **bước cố định 30 bước/giây** trên cả hai máy với bộ sinh số **có seed chung** (`srand()` trong data.js; chơi đơn vẫn dùng `Math.random`). Người điều phối (chủ phòng) xếp mỗi lệnh vào bước = bước hiện tại + ~0,8 giây, gửi theo lô qua Firestore `rooms/{mã}/cmds` (khách gửi yêu cầu qua `reqs`). Mỗi 60 bước băm trạng thái (máu quái, vàng, mạng, tướng, bộ sinh số); lệch thì điều phối chụp toàn bộ trạng thái (`rooms/{mã}/snap`) và cả hai máy nạp lại cùng một ảnh. Kiểm thử: `node tests/coop/run-all.js`.
-- **Cần làm:** deploy lại `firestore.rules` (thêm luật `rooms/…`), xem docs/FIREBASE.md.
+- **Kết thúc trận:** cả hai nhận **Ngân khố** như Phó bản (thắng: theo ải + sao, kèm thưởng thắng đầu ngày; thua / bỏ: 4 mỗi đợt đã qua) và Tu Vi. Chơi nhóm không tính sao, không mở ải, không ghi bảng xếp hạng. Trận đơn đang dở được lưu lại để *Tiếp tục* sau.
+- **Kỹ thuật (js/coop.js):** đồng bộ kiểu *lockstep* bằng lệnh — chỉ gửi thao tác (mua thẻ = số thẻ + ô đích, ↻ đổi hàng, đổi đội Nghỉ chân, ghép, mặc đồ…), mô phỏng chạy **bước cố định 30 bước/giây** trên cả hai máy với bộ sinh số **có seed chung** (`srand()` trong data.js — cả chợ tướng; chơi đơn vẫn dùng `Math.random`). Người điều phối (chủ phòng) xếp mỗi lệnh vào bước = bước hiện tại + ~0,8 giây, gửi theo lô qua Firestore `rooms/{mã}/cmds` (khách gửi yêu cầu qua `reqs`). Mỗi 60 bước băm trạng thái (máu quái, vàng, mạng, tướng, chợ + đội của từng người, bộ sinh số); lệch thì điều phối chụp toàn bộ trạng thái (`rooms/{mã}/snap`) và cả hai máy nạp lại cùng một ảnh. Kiểm thử: `node tests/coop/run-all.js`.
+- **Cần làm:** deploy lại `firestore.rules` (luật `rooms/…` + `rooms/{mã}/chat`), xem docs/FIREBASE.md.

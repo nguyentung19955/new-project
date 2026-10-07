@@ -12,7 +12,7 @@ CÁCH DÙNG
 
 ===== BẮT ĐẦU COPY =====
 
-Tạo các BẢNG ASSET cho game mobile "Núi Cao Nước Dâng" (thủ thành, truyền thuyết Sơn Tinh Thủy Tinh). Hãy tạo LẦN LƯỢT TỪNG ẢNH MỘT theo danh sách bên dưới, mỗi lượt chỉ 1 ảnh. Sau mỗi ảnh, ghi mã và tên ảnh vừa tạo (ví dụ "S01 - Tướng · Lạc Tướng & Lực Sĩ Núi") rồi hỏi tôi: "Tạo tiếp ảnh [mã tiếp theo] (tên) không? Trả lời 'tiếp' để tạo tiếp, 'vẽ lại' để vẽ lại ảnh này, hoặc nói điều cần sửa." Chỉ tạo ảnh tiếp theo khi tôi trả lời. Giữ cùng một phong cách cho mọi ảnh, dùng S01 làm chuẩn; nhân vật xuất hiện lại phải giữ đúng gương mặt và dáng người.
+Tạo các BẢNG ASSET cho game mobile "Thần Thoại Việt" (thủ thành, truyền thuyết Văn Lang – Âu Lạc). Hãy tạo LẦN LƯỢT TỪNG ẢNH MỘT theo danh sách bên dưới, mỗi lượt chỉ 1 ảnh. Sau mỗi ảnh, ghi mã và tên ảnh vừa tạo (ví dụ "S01 - Tướng · Lạc Tướng & Lực Sĩ Núi") rồi hỏi tôi: "Tạo tiếp ảnh [mã tiếp theo] (tên) không? Trả lời 'tiếp' để tạo tiếp, 'vẽ lại' để vẽ lại ảnh này, hoặc nói điều cần sửa." Chỉ tạo ảnh tiếp theo khi tôi trả lời. Giữ cùng một phong cách cho mọi ảnh, dùng S01 làm chuẩn; nhân vật xuất hiện lại phải giữ đúng gương mặt và dáng người.
 
 PHONG CÁCH CHUNG: hand-painted stylized fantasy game art, Warcraft 3 style, chibi-heroic proportions (about 2.5 heads tall), bold readable silhouette, soft dark-brown outline, Đông Sơn bronze-drum motifs (concentric circles, 12-point star, Lạc birds), ancient Vietnamese Văn Lang era.
 
@@ -405,7 +405,7 @@ F05 Truyện 1: storybook painting: King Hùng on his throne announcing a contes
 F06 Truyện 2: storybook painting: Sơn Tinh and Thủy Tinh arriving with wedding gifts, mountain side versus sea side.
 F07 Truyện 3: storybook painting: Sơn Tinh raising mountains while Thủy Tinh summons a great flood with water monsters.
 F08 Nền menu: epic scene, Sơn Tinh on a mountain facing Thủy Tinh on a giant wave, stormy sky, empty space in the center for buttons.
-F09 Logo: title "Núi Cao Nước Dâng" in bold bronze carved letters with correct Vietnamese diacritics, mountain left, rising wave right, Đông Sơn drum circle behind, dark background.
+F09 Logo: title "Thần Thoại Việt" in bold bronze carved letters with correct Vietnamese diacritics, mountain and rising wave, iron horse and Lac bird, Đông Sơn drum circle behind, dark background.
 F10 Icon app: square app icon, bronze mountain peak above a crashing blue wave inside a round bronze drum frame, no text.
 
 Bắt đầu với S01.

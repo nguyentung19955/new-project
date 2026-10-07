@@ -1,5 +1,17 @@
 {
   "projects": {
     "default": "sontinhthuytinh"
+  },
+  "targets": {
+    "sontinhthuytinh": {
+      "hosting": {
+        "main": [
+          "sontinhthuytinh"
+        ],
+        "thanthoaiviet": [
+          "thanthoaiviet"
+        ]
+      }
+    }
   }
 }

@@ -350,20 +350,36 @@ const enemyPackRef = (type) => (ENEMY_PACK.has(type) ? asset(`packs/${type}/walk
 // v84: dải 4 khung (tools/cat-strip.py) — mã → các động tác đã có <động tác>_1..4.png
 const FRAME_ANIMS = {};
 const FRAME_N = 4;
+// v151: bộ nhiều khung cắt từ một tấm (tools/cat-sheet.py hero12 / enemy6 / boss9): mã → { động tác: số khung }.
+// Tướng: idle_1..3 · attack_1..4 · cast_1..3 · hurt (· win nếu có); quái / boss: walk_1..4 · attack_1..3 · rage_1..2.
+// Dòng dưới do tools/cat-sheet.py tự cập nhật — giữ trên MỘT dòng.
+const PACK_FRAMES = {};
+const frameCount = (type, anim) => (PACK_FRAMES[type] && PACK_FRAMES[type][anim]) || ((FRAME_ANIMS[type] || []).includes(anim) ? FRAME_N : 0);
+const framePreloaded = new Set();
+const FRAME_SINGLE = new Set(['hurt', 'win']);   // động tác một khung: hurt.png, win.png
+// khung thứ k (vòng lặp) của động tác; chưa tải xong / không có thì null → nơi gọi dùng ảnh cũ
 function animFrame(type, anim, k) {
-  if (!(FRAME_ANIMS[type] || []).includes(anim)) return null;
-  const img = asset(`packs/${type}/${anim}_${(k % FRAME_N) + 1}.png`, true);
-  if (img) img.__grp = type + '/' + anim;
+  const n = frameCount(type, anim);
+  if (!n) return null;
+  const file = (i) => `packs/${type}/${anim}${FRAME_SINGLE.has(anim) ? '' : '_' + (i + 1)}.png`;
+  const grp = type + '/' + anim;
+  // tải lười: lần đầu cần động tác nào mới tải đủ các khung của động tác đó
+  if (!framePreloaded.has(grp)) { framePreloaded.add(grp); for (let i = 0; i < n; i++) asset(file(i), true); }
+  const img = asset(file(((k % n) + n) % n), true);
+  if (img) img.__grp = grp;
   return img;
 }
+// đi qua lại 1-2-3-2-1… (thở / nhún không bị giật về khung đầu)
+const pingPong = (k, n) => { if (n < 2) return 0; const p = 2 * n - 2, m = ((k % p) + p) % p; return m < n ? m : p - m; };
 function enemyPackImg(e, t) {
   const ref = enemyPackRef(e.type);
   if (!ref) return null;
-  const fr = FRAME_ANIMS[e.type];
-  if (fr) {
+  if (PACK_FRAMES[e.type] || FRAME_ANIMS[e.type]) {
     const id0 = e.id || 0;
-    if (e.atkT > 0 && fr.includes('attack')) { const a = animFrame(e.type, 'attack', Math.min(3, Math.floor((1 - e.atkT / 0.45) * 4))); if (a) return a; }
-    if (fr.includes('walk')) { const w = animFrame(e.type, 'walk', Math.floor(t * (e.enraged ? 12 : 8) + id0 * 0.37)); if (w) return w; }
+    const na = frameCount(e.type, 'attack');
+    if (e.atkT > 0 && na) { const a = animFrame(e.type, 'attack', Math.min(na - 1, Math.floor((1 - e.atkT / 0.45) * na))); if (a) return a; }
+    if (e.enraged && frameCount(e.type, 'rage')) { const r = animFrame(e.type, 'rage', Math.floor(t * 8 + id0)); if (r) return r; }
+    if (frameCount(e.type, 'walk')) { const w = animFrame(e.type, 'walk', Math.floor(t * (e.enraged ? 12 : 8) + id0 * 0.37)); if (w) return w; }
   }
   const id = e.id || 0;
   // ra đòn: khi vừa tấn công, hoặc thỉnh thoảng nhe nanh / vung tay (0,35 giây mỗi ~3 giây); hoá điên thì liên tục
@@ -382,7 +398,7 @@ function registerFrames(type, anims) {   // gọi khi thêm dải khung mới
   for (const a of anims) for (let i = 1; i <= FRAME_N; i++) asset(`packs/${type}/${a}_${i}.png`, true);
 }
 for (const [k, v] of Object.entries(FRAME_ANIMS)) registerFrames(k, v);
-if (typeof Image !== 'undefined') for (const k in HERO_PACK) for (const n of ['idle', 'head']) packImg(k, n);   // tải sẵn
+if (typeof Image !== 'undefined') for (const k in HERO_PACK) for (const n of ['idle', 'head']) packImg(k, n);   // tải sẵn (khung chuyển động tải lười)
 const ENEMY_FILE = { tom: 'quai_tom-binh', casau: 'quai_ca-sau', rua: 'quai_rua-giap', phuthuy: 'quai_phu-thuy-nuoc',
   chimbao: 'quai_chim-bao', echme: 'quai_ech-me', nongnoc: 'quai_nong-noc',
   thuongluong: 'boss_thuong-luong', haba: 'boss_ha-ba', thuytinh: 'boss_thuy-tinh' };
@@ -808,7 +824,8 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
   const hurtRot = o.hurt > 0 ? -0.12 * (o.hurt / 0.2) : 0;
   // ghép đồ từng món (v35): có ảnh thân trần <tên>_than.png thì dùng nó + vẽ mũ / vũ khí / giáp đang mặc lên trên
   const dollBase = !o.vector && h.equip && asset(`${heroSlug(h.type)}_than.png`);
-  const idleK = Math.floor((o.t || 0) * 3.2 + (h.id || 0) * 0.71);
+  // v151: bộ nhiều khung — thở đi qua lại 1-2-3-2 (~5,5 khung/giây); dải 4 khung cũ lặp 3,2 khung/giây
+  const idleK = PACK_FRAMES[h.type] ? pingPong(Math.floor(t * 5.5 + (h.id || 0) * 0.71), frameCount(h.type, 'idle')) : Math.floor(t * 3.2 + (h.id || 0) * 0.71);
   const pack = !o.vector && (animFrame(h.type, 'idle', idleK) || packImg(h.type, 'idle'));
   const pngC = dollBase || pack || (!o.vector && heroPng(h.type, 'C', h));
   // ảnh vẽ tay: chân đứng yên, thân uốn (lean thành độ cong) — không xoay cứng cả tấm
@@ -829,11 +846,21 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
     // thở: phần trên phồng nhẹ; uốn: lean + đung đưa thành độ cong của thân (chân giữ nguyên)
     const breath = Math.sin(t * 2.85 + seed) * 0.016 - lift * 0.004;
     const bend = (lean + hurtRot) * 0.75 + sway * 1.4 + Math.sin(t * 1.7 + seed) * 0.012;
-    const atkK = pose.phase === 'wind' ? 1 : pose.phase === 'strike' ? 2 : pose.phase === 'recover' ? 3 : 0;
-    const pngD = (o.castT > 0 || o.swing > 0) && (pack ? (o.castT > 0 && (animFrame(h.type, 'cast', Math.floor(t * 9)) || packImg(h.type, 'cast')))
+    let atkK = pose.phase === 'wind' ? 1 : pose.phase === 'strike' ? 2 : pose.phase === 'recover' ? 3 : 0;
+    // v151: bộ nhiều khung — chuẩn bị → vung → trúng → thu về theo pha đòn đánh (chia đều nếu ít / nhiều hơn 4 khung)
+    if (PACK_FRAMES[h.type]) {
+      const i4 = pose.phase === 'wind' ? (pose.k < 0.6 ? 0 : 1) : pose.phase === 'strike' ? 2 : pose.phase === 'recover' ? 3 : 0;
+      const na = frameCount(h.type, 'attack') || 4;
+      atkK = Math.min(na - 1, Math.floor(i4 * na / 4));
+    }
+    const busy = o.castT > 0 || o.swing > 0;
+    let pngD = busy && (pack ? (o.castT > 0 && (animFrame(h.type, 'cast', Math.floor(t * 9)) || packImg(h.type, 'cast')))
       || (o.swing > 0 && animFrame(h.type, 'attack', atkK)) || packImg(h.type, pose.phase === 'wind' ? 'wind' : 'strike') || packImg(h.type, 'strike') : heroPng(h.type, 'D', h));
+    // v151: trúng đòn → khung bị đánh; thắng trận → khung ăn mừng (không có thì dùng khung tung chiêu, chậm)
+    if (!busy && pack && o.hurt > 0) pngD = animFrame(h.type, 'hurt', 0);
+    else if (!busy && pack && o.win) pngD = animFrame(h.type, 'win', 0) || animFrame(h.type, 'cast', pingPong(Math.floor(t * 4 + (h.id || 0)), frameCount(h.type, 'cast')));
     // đổi sang ảnh ra đòn mờ dần (không bật cái bụp)
-    const mixD = pngD ? (o.smooth ? smoothVal(h, 'mixD', o.castT > 0 || o.swing > 0.35 ? 1 : 0, t, 30) : 1) : 0;
+    const mixD = pngD ? (o.smooth ? smoothVal(h, 'mixD', o.castT > 0 || o.swing > 0.35 || !busy ? 1 : 0, t, 30) : 1) : 0;
     const base = ctx.globalAlpha;
     // mặc / tháo đồ đổi bậc trang phục: ảnh cũ mờ dần sang ảnh mới (0,35 giây)
     const an = h._anim || (h._anim = {});

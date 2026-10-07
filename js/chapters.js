@@ -16,7 +16,7 @@ LEVELS.push(
   { name: 'Làng Phù Đổng', map: 'dong1', roster: 'an', waves: 15, hp: 1.1, bosses: { 15: 'anvuong' },
     desc: 'Giặc Ân tràn vào làng. Cậu bé Gióng vươn vai thành tráng sĩ.', hint: ['lactuong', 'lucsi', 'xathu'] },
   { name: 'Đồng Trâu', map: 'dong2', roster: 'an', waves: 20, hp: 1.15, bosses: { 10: 'anvuong', 20: 'anvuong' },
-    desc: 'Kỵ binh và voi chiến giặc Ân dàn trận giữa đồng. Nhổ tre quật giặc!', hint: ['thaymo', 'lucsi', 'thansuong'] },
+    desc: 'Quỷ cưỡi lợn rừng và voi chiến giặc Ân dàn trận giữa đồng. Nhổ tre quật giặc!', hint: ['thaymo', 'lucsi', 'thansuong'] },
   { name: 'Biển Đông', map: 'bien1', roster: 'bien', waves: 20, hp: 1.2, bosses: { 10: 'ngutinh', 20: 'ngutinh' },
     desc: 'Ngư Tinh nuốt thuyền bè ngoài khơi. Cá Mập Yêu bơi rất nhanh, Cua Khổng Lồ mai cứng.', hint: ['thansuong', 'xathu', 'thosan'] },
   { name: 'Đầm Xác Cáo', map: 'song4', roster: 'rung', waves: 20, hp: 1.25, bosses: { 10: 'hotinh', 20: 'hotinh' },
@@ -106,7 +106,7 @@ const CHAPTERS = [
         cap: 'Kim Quy tặng vuốt làm lẫy <b>nỏ thần</b>, bắn một phát chết hàng nghìn giặc. <span class="w">Triệu Đà</span> thua mãi, cho con là Trọng Thủy sang cầu hôn Mỵ Châu.',
         lead: 'Triệu Đà nuôi mưu đánh tráo lẫy nỏ.' },
       { bg: 'thanh', heroes: [['adv', 80, 0.8]], foes: [['kybinh', 190, 0.55], ['voichien', 260, 0.5]],
-        cap: 'Trọng Thủy lén đánh tráo lẫy nỏ thần. <span class="w">Quân Triệu Đà</span> kéo đến chân thành — hãy giữ Cổ Loa trước khi quá muộn!',
+        cap: 'Trọng Thủy lén đánh tráo lẫy nỏ thần. <span class="w">Quỷ binh Triệu Đà</span> kéo đến chân thành — hãy giữ Cổ Loa trước khi quá muộn!',
         lead: 'Giữ lấy thành Cổ Loa!' },
     ] },
 ];

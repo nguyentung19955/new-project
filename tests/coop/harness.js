@@ -30,6 +30,7 @@ class RelayServer {
       const r = this.rooms[sub.code];
       if (sub.kind === 'room') this.push(sub, r ? r.data : null);
       if (sub.kind === 'snap' && r && r.snap) this.push(sub, r.snap);
+      if (sub.kind === 'chat' && r && r.chat.length) this.push(sub, r.chat.slice(-50));
       if (sub.kind === 'cmds' && r) { const list = [...r.cmds.values()].filter((b) => b.seq > sub.after).sort((x, y) => x.seq - y.seq); if (list.length) this.push(sub, list); }
     }
   }
@@ -59,7 +60,7 @@ class RelayServer {
     switch (m) {
       case 'createRoom': {
         if (this.rooms[code]) throw new Error('permission-denied');
-        this.rooms[code] = { data: JSON.parse(JSON.stringify(a[1])), cmds: new Map(), snap: null };
+        this.rooms[code] = { data: JSON.parse(JSON.stringify(a[1])), cmds: new Map(), snap: null, chat: [] };
         return null;
       }
       case 'joinRoom': {
@@ -95,6 +96,15 @@ class RelayServer {
       }
       case 'maxSeq': { const r = this.room(code); return r.cmds.size ? Math.max(...r.cmds.keys()) : 0; }
       case 'putReq': { this.room(code); this.notify(code, 'reqs', () => ({ o: a[1], by: uid }), (s) => s.uid !== uid); return null; }
+      case 'putChat': {
+        const r = this.room(code); this.member(r, uid);
+        const o = a[1];
+        if (typeof o.text !== 'string' || !o.text.length || o.text.length > 120) throw new Error('permission-denied (chat)');
+        const m = { id: 'c' + (++this.n), by: uid, name: String(o.name || '').slice(0, 24), text: o.text, at: Date.now() };
+        r.chat.push(m); if (r.chat.length > 50) r.chat.shift();
+        this.notify(code, 'chat', () => [m]);
+        return null;
+      }
       case 'putSnap': { const r = this.room(code); if (r.data.auth !== uid) throw new Error('permission-denied'); r.snap = a[1]; this.notify(code, 'snap', () => r.snap); return null; }
       case 'sub': {
         const [, id, kind, after] = a;
@@ -104,6 +114,7 @@ class RelayServer {
         if (kind === 'room') this.push(sub, r ? r.data : null);
         if (kind === 'cmds' && r) { const list = [...r.cmds.values()].filter((b) => b.seq > after).sort((x, y) => x.seq - y.seq); if (list.length) this.push(sub, list); }
         if (kind === 'snap' && r && r.snap) this.push(sub, r.snap);
+        if (kind === 'chat' && r && r.chat.length) this.push(sub, r.chat.slice(-50));
         return null;
       }
       case 'unsub': this.subs.delete(a[0]); return null;
@@ -132,6 +143,8 @@ class RelayNet {
   watchReqs(code, cb) { return this.sub('reqs', code, 0, (x) => cb(x.o, x.by)); }
   putSnap(code, o) { return this.call('putSnap', code, o); }
   watchSnap(code, cb) { return this.sub('snap', code, 0, cb); }
+  putChat(code, o) { return this.call('putChat', code, o); }
+  watchChat(code, cb) { return this.sub('chat', code, 0, cb); }
 }
 window.RelayNet = RelayNet;`;
 

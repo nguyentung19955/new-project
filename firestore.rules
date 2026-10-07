@@ -17,6 +17,24 @@ service cloud.firestore {
         && request.resource.data.detail is string && request.resource.data.detail.size() <= 60
         && (resource == null || request.resource.data.score >= resource.data.score);
     }
+    // góp ý: ai đã đăng nhập (kể cả khách ẩn danh) chỉ được tạo; không ai đọc / sửa / xoá từ máy người chơi
+    // (xem trong Firebase console → Firestore → feedback)
+    match /feedback/{id} {
+      allow read, update, delete: if false;
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly(['kind', 'text', 'contact', 'shot', 'ver', 'where', 'scr', 'ua', 'at', 'uid', 'guest'])
+        && request.resource.data.keys().hasAll(['kind', 'text', 'ver', 'uid', 'at'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.kind in ['bug', 'idea', 'balance', 'other']
+        && request.resource.data.text is string && request.resource.data.text.size() >= 10 && request.resource.data.text.size() <= 1000
+        && request.resource.data.get('contact', '') is string && request.resource.data.get('contact', '').size() <= 120
+        && request.resource.data.get('shot', '') is string && request.resource.data.get('shot', '').size() <= 200000
+        && request.resource.data.ver is string && request.resource.data.ver.size() <= 20
+        && request.resource.data.get('where', '') is string && request.resource.data.get('where', '').size() <= 120
+        && request.resource.data.get('scr', '') is string && request.resource.data.get('scr', '').size() <= 40
+        && request.resource.data.get('ua', '') is string && request.resource.data.get('ua', '').size() <= 160
+        && request.resource.data.at is number
+        && request.resource.data.get('guest', false) is bool;
     // v141: CHƠI NHÓM — phòng rooms/{mã 6 ký tự}: chỉ 2 thành viên đọc / ghi, hết hạn sau ~12 giờ (expiresAt)
     function signedIn() { return request.auth != null; }
     function roomOf(code) { return get(/databases/$(database)/documents/rooms/$(code)).data; }
@@ -74,6 +92,17 @@ service cloud.firestore {
           && request.resource.data.keys().hasOnly(['by', 'tick', 'd', 'expiresAt'])
           && request.resource.data.by == request.auth.uid && request.resource.data.tick is int
           && request.resource.data.d is string && request.resource.data.d.size() < 900000
+          && ttlOk(request.resource.data);
+      }
+      // v153: trò chuyện trong trận — chỉ 2 thành viên đọc / gửi; tin ≤ 120 ký tự, thời điểm là giờ máy chủ, không sửa / xoá
+      match /chat/{id} {
+        allow read: if inRoom(code);
+        allow create: if inRoom(code)
+          && request.resource.data.keys().hasOnly(['by', 'name', 'text', 'at', 'expiresAt'])
+          && request.resource.data.by == request.auth.uid
+          && request.resource.data.name is string && request.resource.data.name.size() <= 24
+          && request.resource.data.text is string && request.resource.data.text.size() >= 1 && request.resource.data.text.size() <= 120
+          && request.resource.data.at == request.time
           && ttlOk(request.resource.data);
       }
     }

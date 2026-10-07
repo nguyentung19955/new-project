@@ -23,12 +23,12 @@ Object.assign(ENEMIES, {
     desc: 'Đá núi thành tinh: giáp rất dày, bị choáng ngắn hơn; vỡ ra 2 Đá Con khi bị hạ. Dùng sát thương phép.' }),
   dacon: E2({ name: 'Đá Con', hp: 50, speed: 40, gold: 2, color: '#9A9280', armor: 6, drop: 0, minion: true, desc: 'Vỡ ra từ Thạch Tinh.' }),
   // Thánh Gióng / An Dương Vương
-  linhan: E2({ name: 'Lính Giáo', hp: 80, speed: 40, gold: 5, color: '#8A3A2A', armor: 6, mr: 5, drop: 0.03,
-    short: 'Giáp vừa, đi hàng đông', desc: 'Bộ binh cầm giáo, mặc giáp đồng.' }),
-  cungan: E2({ name: 'Cung Thủ Giặc', hp: 70, speed: 36, gold: 7, color: '#5A6A3A', armor: 2, mr: 10, drop: 0.05,
-    ranged: { range: 150, dmg: 14, cd: 2.2 }, short: 'Bắn tên vào tướng từ xa', desc: 'Đứng xa bắn tên vào tướng. Nên hạ trước.' }),
-  kybinh: E2({ name: 'Kỵ Binh', hp: 120, speed: 70, gold: 8, color: '#7A5232', armor: 8, mr: 5, drop: 0.05, size: 16,
-    enrage: { below: 0.5, speed: 1.4 }, short: 'Phi ngựa rất nhanh, giáp dày', desc: 'Phi ngựa xông thẳng vào thành; dưới 50% máu thúc ngựa nhanh hơn.' }),
+  linhan: E2({ name: 'Quỷ Giáo', hp: 80, speed: 40, gold: 5, color: '#8A3A2A', armor: 6, mr: 5, drop: 0.03,
+    short: 'Giáp vừa, đi hàng đông', desc: 'Yêu tinh da xám xanh, nanh nhọn, sừng nhỏ, đội mũ da cầm giáo đồng, kéo đến thành hàng.' }),
+  cungan: E2({ name: 'Sói Cung Thủ', hp: 70, speed: 36, gold: 7, color: '#5A6A3A', armor: 2, mr: 10, drop: 0.05,
+    ranged: { range: 150, dmg: 14, cd: 2.2 }, short: 'Bắn tên vào tướng từ xa', desc: 'Sói tinh đứng hai chân, mắt vàng, đeo ống tên sau lưng; đứng xa bắn tên vào tướng. Nên hạ trước.' }),
+  kybinh: E2({ name: 'Quỷ Cưỡi Lợn', hp: 120, speed: 70, gold: 8, color: '#7A5232', armor: 8, mr: 5, drop: 0.05, size: 16,
+    enrage: { below: 0.5, speed: 1.4 }, short: 'Cưỡi lợn rừng lao rất nhanh, giáp dày', desc: 'Yêu tinh nhỏ cưỡi lợn rừng ma nanh cong, xông thẳng vào thành; dưới 50% máu lợn lồng lên chạy nhanh hơn.' }),
   voichien: E2({ name: 'Voi Chiến', hp: 520, speed: 20, gold: 20, color: '#8A847E', armor: 16, mr: 20, drop: 0.12, size: 24, lives: 3,
     stunResist: 0.6, slowResist: 0.4, slam: { range: 90, dmg: 30, cd: 7, stun: 0.8 },
     short: 'Rất trâu, giẫm làm choáng tướng, lọt thành mất 3 mạng',
@@ -54,11 +54,11 @@ Object.assign(ENEMIES, {
     tags: ['Bay', 'Gọi Dơi Hang'], short: 'Bay; sà xuống cắp tướng mạnh nhất (choáng 2,5 giây); gọi Dơi Hang',
     desc: 'Chim khổng lồ cắp công chúa Quỳnh Nga về hang. Bay trên trời nên tướng cận chiến không với tới.',
     tip: 'Mang nhiều tướng bắn xa (Xạ Thủ, Cao Lỗ, An Dương Vương) và tướng phép.' }),
-  anvuong: E2({ name: 'Tướng Giặc Ân', hp: 1400, speed: 22, gold: 190, size: 30, color: '#2A2A2A', drop: 1, boss: true, lives: 5, armor: 12, mr: 25,
+  anvuong: E2({ name: 'Quỷ Vương Ân', hp: 1400, speed: 22, gold: 190, size: 30, color: '#2A2A2A', drop: 1, boss: true, lives: 5, armor: 12, mr: 25,
     reward: 'ngua_hong_mao', summon: { cd: 7, count: 3, type: 'linhan' }, burnAura: { radius: 140, dps: 9, kind: 'drum', color: '#E8B83A' },
-    speedAura: { radius: 170, pct: 0.3 }, dash: { cd: 10, mult: 2.6, dur: 1.2, name: 'Thúc ngựa xông lên!' },
-    tags: ['Trống trận', 'Gọi Lính Giáo'], short: 'Trống trận đốt tướng gần và thúc quân quanh mình chạy nhanh hơn 30%; thúc ngựa lao tới; gọi Lính Giáo',
-    desc: 'Tướng giặc Ân cưỡi ngựa đen, thúc trống trận tràn vào đất Văn Lang. Tướng đứng gần mất máu theo nhịp trống.',
+    speedAura: { radius: 170, pct: 0.3 }, dash: { cd: 10, mult: 2.6, dur: 1.2, name: 'Quỷ mã xông lên!' },
+    tags: ['Trống trận', 'Gọi Quỷ Giáo'], short: 'Trống trận đốt tướng gần và thúc quân quanh mình chạy nhanh hơn 30%; thúc quỷ mã lao tới; gọi Quỷ Giáo',
+    desc: 'Quỷ vương sừng trâu khoác giáp đen viền vàng, cưỡi quỷ mã bờm lửa, thúc trống trận dẫn quỷ binh giặc Ân tràn vào đất Văn Lang. Tướng đứng gần mất máu theo nhịp trống.',
     tip: 'Thánh Gióng nhổ tre đánh giặc: đặt Thánh Gióng giữa đường để quét quân.' }),
   ngutinh: E2({ name: 'Ngư Tinh', hp: 1200, speed: 22, gold: 180, size: 30, color: '#3A7A8A', drop: 1, boss: true, lives: 5, armor: 10, mr: 30,
     reward: 'voi_chin_nga', reincarnate: { pct: 0.6, delay: 2.5 }, summon: { cd: 8, count: 2, type: 'camap' },
@@ -72,11 +72,11 @@ Object.assign(ENEMIES, {
     tags: ['Lửa ma', 'Hoá Cáo Con'], short: 'Lửa ma đốt tướng gần; ở 70% và 40% máu hoá ảo ảnh nhảy xa trên đường; mất 25% máu hoá 4 Cáo Con',
     desc: 'Cáo trắng chín đuôi nghìn năm tuổi ở đầm Xác Cáo (Hồ Tây). Kháng phép cao.',
     tip: 'Dùng sát thương vật lý; tướng cận chiến chặn Cáo Con.' }),
-  trieuda: E2({ name: 'Triệu Đà', hp: 1500, speed: 22, gold: 200, size: 30, color: '#2A3A5A', drop: 1, boss: true, lives: 5, armor: 16, mr: 20,
+  trieuda: E2({ name: 'Hổ Vương Triệu Đà', hp: 1500, speed: 22, gold: 200, size: 30, color: '#2A3A5A', drop: 1, boss: true, lives: 5, armor: 16, mr: 20,
     reward: 'ngua_hong_mao', summon: { cd: 7, count: 2, type: 'kybinh' }, phaseSummon: { type: 'linhan', count: 4 },
     speedAura: { radius: 170, pct: 0.25 }, disarm: { at: 0.5, dur: 6, name: 'Lẫy nỏ thần bị tráo!' },
-    tags: ['Gọi Kỵ Binh', 'Giáp dày'], short: 'Giáp dày, thúc quân quanh mình nhanh hơn; còn nửa máu thì tráo vũ khí tướng mạnh nhất (choáng 6 giây); gọi Kỵ Binh và Lính Giáo',
-    desc: 'Vua nước Nam Việt đem quân đánh Âu Lạc. Thua mãi vì nỏ thần, bèn cho con là Trọng Thủy sang ở rể dò la.',
+    tags: ['Gọi Quỷ Cưỡi Lợn', 'Giáp dày'], short: 'Giáp dày, thúc quân quanh mình nhanh hơn; còn nửa máu thì tráo vũ khí tướng mạnh nhất (choáng 6 giây); gọi Quỷ Cưỡi Lợn và Quỷ Giáo',
+    desc: 'Triệu Đà hóa hổ quỷ: đầu hổ vằn lửa, nanh dài, giáp đỏ đen, đem quỷ binh Nam Việt đánh Âu Lạc. Thua mãi vì nỏ thần, bèn cho con là Trọng Thủy sang ở rể dò la.',
     tip: 'Trong thành xoắn ốc Cổ Loa đường quái rất dài: đặt tướng ở các vòng trong để đánh nhiều lần.' }),
 });
 // v81: quân địch biến thể — dựng lại từ hình vẽ tay sẵn có (đổi màu bằng tools/make-variants.py) + hiệu ứng riêng (fx)
@@ -89,17 +89,17 @@ Object.assign(ENEMIES, {
     short: 'Bay, kháng phép rất cao', desc: 'Hồn dơi trong hang tối, phép thuật xuyên qua như sương.' }),
   thachvang: E2({ name: 'Thạch Tinh Vàng', variant: true, hp: 420, speed: 22, gold: 22, color: '#E8C050', armor: 24, mr: 15, drop: 0.12, size: 20, fx: 'gold',
     stunResist: 0.5, split: { type: 'dacon', count: 3 }, short: 'Giáp vàng cực dày, vỡ ra 3 Đá Con, rơi nhiều vàng', desc: 'Đá núi lẫn quặng vàng thành tinh. Hạ được rơi nhiều vàng.' }),
-  thietky: E2({ name: 'Thiết Kỵ', variant: true, hp: 200, speed: 64, gold: 14, color: '#8A96A8', armor: 16, mr: 10, drop: 0.06, size: 17, fx: 'steel',
-    enrage: { below: 0.5, speed: 1.4 }, short: 'Kỵ binh giáp sắt: nhanh và rất cứng', desc: 'Kỵ binh tinh nhuệ khoác giáp sắt từ đầu tới vó ngựa.' }),
+  thietky: E2({ name: 'Lợn Giáp Sắt', variant: true, hp: 200, speed: 64, gold: 14, color: '#8A96A8', armor: 16, mr: 10, drop: 0.06, size: 17, fx: 'steel',
+    enrage: { below: 0.5, speed: 1.4 }, short: 'Lợn rừng ma giáp sắt: nhanh và rất cứng', desc: 'Yêu tinh cưỡi lợn rừng ma khoác giáp sắt từ đầu tới móng.' }),
   camapden: E2({ name: 'Cá Mập Bóng Đêm', variant: true, hp: 120, speed: 86, gold: 10, drop: 0.045, color: '#6A4A9A', armor: 5, mr: 20, fx: 'shadow',
     enrage: { below: 0.6, speed: 1.6 }, short: 'Bơi cực nhanh, hóa điên sớm', desc: 'Lặn trong bóng tối dưới đáy biển, ngoi lên là lao thẳng vào thành.' }),
   mucdoc: E2({ name: 'Mực Độc', variant: true, hp: 130, speed: 30, gold: 12, color: '#5FD06A', armor: 2, mr: 35, drop: 0.07, fx: 'poison',
     ranged: { range: 160, dmg: 16, cd: 2 }, heal: { cd: 4, pct: 0.06, radius: 90 }, short: 'Phun độc bắn tướng, hồi máu quái quanh mình', desc: 'Mực tinh nhiễm độc: phun mực xanh bắn tướng, hơi độc hồi máu đồng bọn.' }),
-  cungtlua: E2({ name: 'Cung Thủ Lửa', variant: true, hp: 95, speed: 36, gold: 9, color: '#E2483A', armor: 3, mr: 10, drop: 0.05, fx: 'fire',
-    ranged: { range: 180, dmg: 20, cd: 2 }, short: 'Bắn tên lửa xa và đau', desc: 'Cung thủ giặc tẩm dầu đầu tên, bắn tướng từ rất xa.' }),
+  cungtlua: E2({ name: 'Sói Cung Lửa', variant: true, hp: 95, speed: 36, gold: 9, color: '#E2483A', armor: 3, mr: 10, drop: 0.05, fx: 'fire',
+    ranged: { range: 180, dmg: 20, cd: 2 }, short: 'Bắn tên lửa xa và đau', desc: 'Sói tinh lông đỏ tẩm dầu đầu tên, bắn tướng từ rất xa.' }),
   // tướng địch (tinh anh lớn)
   tuongthuy: E2({ name: 'Tướng Thủy Quân', general: true, hp: 900, speed: 22, gold: 60, color: '#3EB08A', armor: 10, mr: 30, drop: 0.5, size: 24, lives: 3, fx: 'water',
-    summon: { cd: 8, count: 3, type: 'tom' }, stunResist: 0.4, short: 'Tướng địch: gọi Tôm Binh, lọt thành mất 3 mạng', desc: 'Phó tướng của Hà Bá, cầm đinh ba chỉ huy đạo quân tôm cá.' }),
+    summon: { cd: 8, count: 3, type: 'tom' }, stunResist: 0.4, short: 'Tướng địch: gọi Tôm Binh, lọt thành mất 3 mạng', desc: 'Cá trê tinh phó tướng của Hà Bá, cầm đinh ba chỉ huy đạo quân tôm cá.' }),
   chanlua: E2({ name: 'Chằn Lửa', general: true, hp: 1000, speed: 20, gold: 70, color: '#C8402A', armor: 14, mr: 15, drop: 0.5, size: 26, lives: 3, fx: 'fire',
     slam: { range: 110, dmg: 40, cd: 6, stun: 0.8 }, burnAura: { radius: 100, dps: 6, kind: 'fire', color: '#FF7A3A' }, stunResist: 0.5,
     short: 'Tướng địch: đập búa choáng tướng, lửa đốt quanh mình', desc: 'Anh em của Chằn Tinh, da đỏ như than hồng.' }),
@@ -175,22 +175,28 @@ const ENEMY_ART2 = {
   linhan: svgOf(36, 46, 16, 44,
     leg(-4, '#5A4A3A', 9) + leg(4, '#5A4A3A', 9)
     + `<path d="M-8 -9 L-9 -26 L9 -26 L8 -9 Z" fill="#8A3A2A" stroke="${O}"/><path d="M-8 -20 h17" stroke="#C8A040" stroke-width="2"/>`
-    + `<circle cx="0" cy="-32" r="7.5" fill="#E8B88A" stroke="${O}"/><path d="M-8 -34 q8 -12 16 0 l-2 -1 h-12 z" fill="#5A5A62" stroke="${O}"/><path d="M0 -44 v-5" stroke="#C8401E" stroke-width="2.4"/>`
-    + eye(2, -32, 1.6) + `<path d="M3 -28 h3" stroke="${O}"/>`
+    + `<path d="M-6 -36 l-9 -2 l6 6 z" fill="#7E9E5A" stroke="${O}" stroke-width="0.7"/><circle cx="0" cy="-32" r="7.5" fill="#7E9E5A" stroke="${O}"/>`
+    + `<path d="M-8 -34 q8 -10 16 0 l-2 -1 h-12 z" fill="#5A3A2A" stroke="${O}"/><path d="M-4 -40 l-2 -6 l4 4 M4 -40 l3 -6 l0 5" fill="#F2E6C8" stroke="${O}" stroke-width="0.7"/>`
+    + eye(2, -32, 1.7, '#FFD66B') + `<path d="M1 -27 q3 1 6 0" stroke="${O}" fill="none"/><path d="M3 -27 l1 2.4 l1 -2.4" fill="#FFF" stroke="${O}" stroke-width="0.4"/>`
     + `<path d="M10 -4 L16 -44" stroke="#6A4A2A" stroke-width="2"/><path d="M14 -44 l2 -7 l2 7 z" fill="#D0D0D0" stroke="${O}" stroke-width="0.6"/>`
     + `<ellipse cx="-9" cy="-18" rx="5" ry="8" fill="#6A5A3A" stroke="${O}"/>`),
   cungan: svgOf(36, 46, 16, 44,
     leg(-4, '#4A4A3A', 9) + leg(4, '#4A4A3A', 9)
     + `<path d="M-8 -9 L-9 -26 L9 -26 L8 -9 Z" fill="#5A6A3A" stroke="${O}"/><path d="M-8 -20 h17" stroke="#8A7A3A" stroke-width="2"/>`
-    + `<circle cx="0" cy="-32" r="7.5" fill="#E8B88A" stroke="${O}"/><path d="M-8 -35 q8 -8 16 0 z" fill="#3A3A2A" stroke="${O}"/>`
-    + eye(2, -32, 1.6) + `<path d="M12 -40 q8 12 0 24" fill="none" stroke="#7A5A2A" stroke-width="2"/><path d="M12 -40 v24" stroke="#D8D0B8" stroke-width="0.7"/>`
+    + `<path d="M-9 -12 q-9 -4 -8 -14 q4 6 9 6 z" fill="#8A8A92" stroke="${O}"/>`
+    + `<path d="M-5 -37 l-1 -9 l5 5 z M2 -38 l3 -8 l2 7 z" fill="#8A8A92" stroke="${O}" stroke-width="0.8"/><circle cx="0" cy="-32" r="7.5" fill="#9A9AA2" stroke="${O}"/>`
+    + `<path d="M4 -34 l9 2 q1 4 -2 5 l-8 1 z" fill="#B8B8C0" stroke="${O}"/><circle cx="12.5" cy="-32" r="1.2" fill="${O}"/><path d="M6 -28 l1 2 l1 -2 M9 -28 l0.8 1.8 l0.8 -1.8" fill="#FFF" stroke="${O}" stroke-width="0.4"/>`
+    + eye(1, -34, 1.7, '#FFD66B') + `<path d="M12 -40 q8 12 0 24" fill="none" stroke="#7A5A2A" stroke-width="2"/><path d="M12 -40 v24" stroke="#D8D0B8" stroke-width="0.7"/>`
     + `<path d="M-10 -26 l-4 -12" stroke="#7A5A2A" stroke-width="3"/><path d="M-14 -38 l-1 -4 M-12 -38 l0 -4" stroke="#E8DCC0" stroke-width="1"/>`),
   kybinh: svgOf(60, 52, 28, 50,
     `<path d="M-18 0 v-12 M-10 0 v-12 M12 0 v-12 M20 0 v-12" stroke="${O}" stroke-width="4.5" stroke-linecap="round"/><path d="M-18 0 v-12 M-10 0 v-12 M12 0 v-12 M20 0 v-12" stroke="#6A4A2A" stroke-width="3" stroke-linecap="round"/>`
-    + `<ellipse cx="0" cy="-16" rx="22" ry="9" fill="#7A5232" stroke="${O}"/><path d="M18 -20 q8 -6 10 -16 l4 2 q0 10 -8 18 z" fill="#7A5232" stroke="${O}"/><ellipse cx="28" cy="-36" rx="6" ry="4" fill="#7A5232" stroke="${O}"/>`
-    + `<path d="M24 -40 l2 -4 l2 4" fill="#5A3A1A"/><path d="M-22 -16 q-8 2 -10 10" stroke="#3A2A16" stroke-width="3" fill="none"/>`
-    + `<path d="M-6 -24 L-7 -36 L7 -36 L6 -24 Z" fill="#8A3A2A" stroke="${O}"/><circle cx="0" cy="-41" r="6" fill="#E8B88A" stroke="${O}"/><path d="M-7 -43 q7 -10 14 0 z" fill="#5A5A62" stroke="${O}"/>`
-    + eye(2, -41, 1.4) + `<path d="M6 -32 L24 -48" stroke="#6A4A2A" stroke-width="2"/><path d="M22 -50 l5 -3 l-2 6 z" fill="#D0D0D0" stroke="${O}" stroke-width="0.6"/>`),
+    + `<path d="M-20 -22 l3 -6 l3 5 l3 -7 l3 6 l3 -6 l3 5 l3 -6 l3 5" fill="#3A2A1A" stroke="${O}" stroke-width="0.8"/><ellipse cx="0" cy="-16" rx="23" ry="10" fill="#5A3E2A" stroke="${O}"/>`
+    + `<path d="M16 -24 q12 -4 16 4 l4 4 q-2 5 -8 4 q-8 2 -14 -2 z" fill="#5A3E2A" stroke="${O}"/><ellipse cx="34" cy="-15" rx="3.5" ry="3" fill="#C88A7A" stroke="${O}"/>`
+    + `<path d="M28 -13 q4 -2 3 -9" stroke="${O}" stroke-width="2.6" fill="none"/><path d="M28 -13 q4 -2 3 -9" stroke="#F2E6C8" stroke-width="1.6" fill="none"/>`
+    + eye(24, -20, 1.6, '#FF5A3A') + `<path d="M18 -26 l1 -6 l4 4 z" fill="#5A3E2A" stroke="${O}"/><path d="M-23 -16 q-6 0 -6 6" stroke="#3A2A16" stroke-width="2" fill="none"/>`
+    + `<path d="M-6 -24 L-7 -36 L7 -36 L6 -24 Z" fill="#8A3A2A" stroke="${O}"/><circle cx="0" cy="-41" r="6" fill="#7E9E5A" stroke="${O}"/>`
+    + `<path d="M-4 -46 l-2 -5 l4 3 M3 -46 l3 -5 l-1 5" fill="#F2E6C8" stroke="${O}" stroke-width="0.7"/><path d="M-5 -42 l-7 -2 l5 5 z" fill="#7E9E5A" stroke="${O}" stroke-width="0.7"/>`
+    + eye(2, -41, 1.5, '#FFD66B') + `<path d="M2 -37 l1 2 l1 -2" fill="#FFF"/><path d="M6 -32 L24 -48" stroke="#6A4A2A" stroke-width="2"/><path d="M22 -50 l5 -3 l-2 6 z" fill="#D0D0D0" stroke="${O}" stroke-width="0.6"/>`),
   voichien: svgOf(78, 62, 36, 60,
     `<path d="M-22 0 v-14 M-10 0 v-14 M10 0 v-14 M22 0 v-14" stroke="${O}" stroke-width="9" stroke-linecap="round"/><path d="M-22 0 v-14 M-10 0 v-14 M10 0 v-14 M22 0 v-14" stroke="#7A7470" stroke-width="7" stroke-linecap="round"/>`
     + `<ellipse cx="0" cy="-24" rx="30" ry="16" fill="#8A847E" stroke="${O}" stroke-width="1.2"/>`
@@ -237,10 +243,12 @@ const ENEMY_ART2 = {
   anvuong: svgOf(96, 104, 44, 102,
     `<path d="M-22 0 v-16 M-10 0 v-16 M14 0 v-16 M26 0 v-16" stroke="${O}" stroke-width="7" stroke-linecap="round"/><path d="M-22 0 v-16 M-10 0 v-16 M14 0 v-16 M26 0 v-16" stroke="#3A3A3A" stroke-width="5" stroke-linecap="round"/>`
     + `<ellipse cx="2" cy="-24" rx="32" ry="13" fill="#2A2A2A" stroke="${O}"/><path d="M30 -30 q12 -8 14 -24 l6 4 q-2 16 -12 26 z" fill="#2A2A2A" stroke="${O}"/><ellipse cx="44" cy="-56" rx="8" ry="5" fill="#2A2A2A" stroke="${O}"/>`
-    + `<path d="M-30 -24 q-10 0 -14 12" stroke="#1A1A1A" stroke-width="4" fill="none"/>`
+    + `<path d="M-30 -24 q-10 0 -14 12" stroke="#E2483A" stroke-width="4" fill="none"/><path d="M32 -40 q-6 -6 -2 -14 q2 6 6 6 q-2 -8 4 -12 q0 8 4 10 l-4 14 z" fill="#E8603A" stroke="${O}" stroke-width="0.8"/>`
+    + `<circle cx="46" cy="-58" r="1.8" fill="#FF5A3A"/>`
     + `<path d="M-10 -36 L-12 -62 L14 -62 L12 -36 Z" fill="#6A1A1A" stroke="${O}" stroke-width="1.2"/><path d="M-12 -52 h26" stroke="#C8A040" stroke-width="3"/><path d="M-14 -62 q-10 10 -6 26 l6 -4 z" fill="#8A1A1A" stroke="${O}"/>`
-    + `<circle cx="1" cy="-70" r="10" fill="#D8A878" stroke="${O}"/><path d="M-11 -72 q12 -18 24 0 l-2 -2 h-20 z" fill="#C8A040" stroke="${O}"/><path d="M1 -86 v-8" stroke="#C8401E" stroke-width="3"/>`
-    + eye(4, -71, 1.8, '#FFF') + `<path d="M-2 -64 q4 3 8 0" stroke="${O}" fill="none"/><path d="M-6 -66 q-4 2 -4 6 M8 -66 q4 2 4 6" stroke="#3A2A16" stroke-width="1.6"/>`
+    + `<path d="M-6 -76 q-16 -2 -18 -18 q8 8 16 6 z M8 -76 q16 -2 18 -18 q-8 8 -16 6 z" fill="#F2E6C8" stroke="${O}"/>`
+    + `<circle cx="1" cy="-70" r="10" fill="#4A5A8A" stroke="${O}"/><path d="M-10 -73 q11 -12 22 0 l-2 -2 h-18 z" fill="#2A2A2A" stroke="${O}"/><path d="M1 -82 l-3 -4 h6 z" fill="#C8A040" stroke="${O}"/>`
+    + eye(5, -71, 2, '#FFD66B') + `<path d="M-1 -64 q5 3 10 0" stroke="${O}" fill="none"/><path d="M1 -64 l1 3 l1 -3 M6 -64 l1 3 l1 -3" fill="#FFF" stroke="${O}" stroke-width="0.5"/>`
     + `<path d="M14 -56 L40 -96" stroke="#6A4A2A" stroke-width="3"/><path d="M36 -100 l10 -8 l-2 12 z" fill="#D0D0D0" stroke="${O}"/>`),
   ngutinh: svgOf(150, 70, 72, 52,
     `<path d="M-60 -18 l-14 -16 l2 30 z" fill="#2A5A6A" stroke="${O}" stroke-width="1.2"/><ellipse cx="0" cy="-18" rx="60" ry="22" fill="#3A7A8A" stroke="${O}" stroke-width="1.4"/>`
@@ -258,8 +266,11 @@ const ENEMY_ART2 = {
     leg(-8, '#3A2A1A', 16) + leg(8, '#3A2A1A', 16)
     + `<path d="M-18 -14 L-20 -54 L20 -54 L18 -14 Z" fill="#2A3A5A" stroke="${O}" stroke-width="1.3"/><path d="M-20 -40 h40" stroke="#C8A040" stroke-width="3"/><circle cx="0" cy="-40" r="4" fill="#C8A040" stroke="${O}"/>`
     + `<path d="M-22 -54 q-14 18 -8 40 l8 -6 z M22 -54 q14 18 8 40 l-8 -6 z" fill="#4A1A1A" stroke="${O}"/>`
-    + `<circle cx="0" cy="-66" r="12" fill="#D8A878" stroke="${O}"/><path d="M-14 -68 q14 -22 28 0 l-3 -3 h-22 z" fill="#3A3A3A" stroke="${O}"/><path d="M-6 -86 l6 -10 l6 10 z" fill="#C8A040" stroke="${O}"/>`
-    + eye(4, -67, 2) + `<path d="M-6 -58 q6 8 12 0 q-6 4 -12 0" fill="#2A1A0A"/>`
+    + `<path d="M-18 -20 q-14 4 -14 -12 q4 6 10 4" stroke="${O}" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M-18 -20 q-14 4 -14 -12 q4 6 10 4" stroke="#E8843A" stroke-width="3.4" fill="none" stroke-linecap="round"/>`
+    + `<path d="M-10 -74 l-2 -10 l8 5 z M8 -76 l5 -9 l1 10 z" fill="#E8843A" stroke="${O}"/><circle cx="0" cy="-66" r="12" fill="#E8843A" stroke="${O}"/>`
+    + `<path d="M-6 -77 l2 5 M0 -78 v5 M-11 -66 l5 1 M-11 -61 l5 0" stroke="#2A1A0A" stroke-width="1.6"/>`
+    + `<ellipse cx="7" cy="-61" rx="7" ry="5" fill="#F2E6C8" stroke="${O}"/><path d="M9 -64 l3 0 l-1.5 2 z" fill="#2A1A0A"/><path d="M4 -57 l1 4 l1.5 -4 M9 -57 l1 4 l1.5 -4" fill="#FFF" stroke="${O}" stroke-width="0.5"/>`
+    + eye(3, -69, 2, '#FFD66B')
     + `<path d="M20 -44 L36 -90" stroke="#6A4A2A" stroke-width="3"/><path d="M30 -92 q6 -10 14 -4 q-4 8 -12 8 z" fill="#D0D0D0" stroke="${O}"/>`),
 };
 for (const k in ENEMY_ART2) {

@@ -600,6 +600,9 @@ button:disabled { cursor: default; }
   background: linear-gradient(180deg, #FFF1C4, #F2D27A 45%, #B8852A); -webkit-background-clip: text; background-clip: text; color: transparent;
   filter: drop-shadow(0 3px 0 #1A0E04) drop-shadow(0 0 16px #F0A03088);
 }
+#menu .title h1 .logo-img { display: block; width: 380px; max-width: 100%; height: auto; margin: -22px auto -18px; filter: drop-shadow(0 3px 0 #1A0E04) drop-shadow(0 0 12px #F0A03066); }
+#menu .title h1.has-img { background: none; filter: none; }
+#menu .title h1.has-img .logo-txt { display: none; }
 #menu .title p { margin: 10px 0 0; font-size: 17px; font-weight: 700; color: #F4ECD6; text-shadow: 0 0 4px #0D0B08, 0 2px 3px #0D0B08; }
 #menu .title .orn { width: 380px; height: 14px; margin: 8px auto 0; background: linear-gradient(90deg, transparent, #F2D27A 30%, #F2D27A 70%, transparent); clip-path: polygon(0 45%, 47% 45%, 50% 0, 53% 45%, 100% 45%, 100% 55%, 53% 55%, 50% 100%, 47% 55%, 0 55%); }
 .mc-nav {
@@ -1041,16 +1044,7 @@ button:disabled { cursor: default; }
 .asc-req { display: flex; flex-wrap: wrap; gap: 4px 12px; padding: 5px 8px; border-radius: 6px; font-size: 12px; font-weight: 700; }
 .asc-req small { color: var(--text-2); font-weight: 500; }
 
-/* v34: triệu hồi ngẫu nhiên + cây hợp thể */
-.dk-summon { position: relative; flex: none; width: 250px; height: 58px; border-radius: 8px; border: 2px solid #FFD66B; cursor: pointer;
-  background: linear-gradient(180deg, #F2C64A, #C8902A 60%, #8C5A1A); color: #2A1608; box-shadow: 0 0 12px #FFD66B66, inset 0 1px 0 #FFF1C4;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; padding: 0 8px; }
-.dk-summon b { font-family: var(--title); font-size: 21px; line-height: 1; text-shadow: 0 1px 0 #FFF1C4; }
-.dk-summon .cost { font-size: 13px; font-weight: 800; display: flex; align-items: center; gap: 3px; }
-.dk-summon .pool { position: absolute; left: 6px; right: 6px; top: -16px; display: flex; justify-content: center; gap: 2px; pointer-events: none; }
-.dk-summon .pool img { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; object-position: 50% 0; background: #2A1608; border: 1px solid #FFD66B; }
-.dk-summon.poor { filter: grayscale(.6) brightness(.75); box-shadow: none; }
-.dk-summon:active { transform: translateY(1px); }
+/* v34: cây hợp thể */
 #legends { width: 820px; }
 .lg-grid { display: flex; flex-direction: row; gap: 8px; }
 .fz-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
@@ -1491,7 +1485,6 @@ body { overflow: hidden; }
 #btn-run.playing .run-pause { display: block; }
 .mc-btn .uimg.mc { width: 30px; height: 30px; flex: none; }
 .mc-sub .uimg.sub { width: 20px; height: 20px; vertical-align: -5px; margin-right: 4px; }
-.dk-summon .uimg.sm { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 42px; height: 42px; }
 .dk-card.legend img.asc-ic { position: static; width: 26px; height: 26px; object-fit: contain; margin: 0 auto 1px; }
 /* v127: khung & nền vẽ tay trống đồng (ảnh Pippit) */
 #menu-art { background: #0D0B08; }
@@ -1504,8 +1497,17 @@ body { overflow: hidden; }
 .seg { gap: 4px; background: transparent; }
 .tb-prog { width: 170px; height: 18px; border-radius: 0; overflow: visible; position: relative; background: url('../assets/ui/thanh-tien-do.png') center / 100% 100% no-repeat; box-shadow: none; border: 0; }
 .tb-prog i { position: absolute; left: 14.5%; top: 31%; height: 38%; border-radius: 4px; max-width: 71%; }
-.pl-box { background: url('../assets/ui/khung-nguoi-choi.png') left center / 100% 100% no-repeat; border: 0; box-shadow: none; height: 56px; min-width: 240px; padding: 0 26px 0 10px; gap: 30px; border-radius: 0; }
-.pl-box .av { width: 38px; height: 38px; border: 0; background: transparent; }
+/* v146: khung người chơi giữ đúng tỉ lệ ảnh 700×241; toạ độ % đo trên ảnh: lòng huy hiệu tâm (117,118) r≈45,
+   ô tối x 230–628, y 48–190 (mép phải bo tròn) — ảnh đại diện và chữ đặt tuyệt đối theo % nên không lệch khi co giãn */
+.pl-box { background: url('../assets/ui/khung-nguoi-choi.png') 0 0 / 100% 100% no-repeat; border: 0; box-shadow: none; border-radius: 0;
+  width: 192px; height: auto; aspect-ratio: 700 / 241; padding: 0; display: block; }
+.pl-box .av { position: absolute; left: 11%; top: 32.37%; width: 11.43%; height: 33.2%; border: 0; border-radius: 50%; background: #4A2C18;
+  box-shadow: 0 0 0 1px #6A3E1A; overflow: hidden; }
+.pl-box .pl-txt { position: absolute; left: 35%; right: 12.5%; top: 21%; bottom: 22%; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+.pl-box .pl-txt b, .pl-box .pl-txt small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 1px 2px #0008; }
+.pl-box .pl-txt b { font-size: 14px; line-height: 1.2; }
+.pl-box .pl-txt small { font-size: 10.5px; line-height: 1.25; margin-top: 1px; }
+.pl-box .pl-hint { font: italic 700 9.5px var(--body); color: #E8D8B0; opacity: .85; margin-left: 3px; }
 .ro-pic { position: relative; background: radial-gradient(circle at 50% 60%, #6A3A18, #2A160A 75%); border: 2px solid #8A5A2A; border-radius: 10px; box-shadow: inset 0 0 0 1px #2A160A, 0 2px 8px #0008; }
 .md-card { position: relative; overflow: hidden; background-size: cover; background-position: center; }
 .md-card .md-ic img { width: 64px; height: 64px; display: block; }
@@ -1542,22 +1544,6 @@ body { overflow: hidden; }
 .dk-pick .tg i, .dk-head small i { font-style: normal; font-size: 9px; font-weight: 800; padding: 0 4px; border-radius: 3px; }
 i.c { background: #1F4A2A; color: #8AE09A; } i.h { background: #4A2A5A; color: #E0B0FF; }
 @media (max-height: 430px) { .dk-pick { padding: 3px 2px; } .dk-pick img { width: 38px; height: 38px; } .dk-pick b { font-size: 10.5px; } .dk-box { padding: 8px; gap: 6px; } .dk-head small { display: none; } }
-/* v134: triệu hồi chọn 1 trong 3 */
-.dk-offer { display: flex; gap: 6px; align-items: stretch; }
-.of-card { display: flex; align-items: center; gap: 6px; width: 178px; height: 58px; padding: 3px 8px 3px 4px; border-radius: 8px; border: 2px solid var(--c); text-align: left; animation: ofIn .25s ease-out both; }
-.of-card:nth-child(2) { animation-delay: .05s; } .of-card:nth-child(3) { animation-delay: .1s; }
-@keyframes ofIn { from { transform: translateY(14px) scale(.9); opacity: 0; } }
-.of-card img { width: 46px; height: 46px; border-radius: 50%; border: 2px solid var(--c); background: #0D0B08; object-fit: cover; object-position: 50% 0; flex: none; }
-.of-card span { display: flex; flex-direction: column; min-width: 0; line-height: 1.15; }
-.of-card b { font-size: 12.5px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.of-card small { font-size: 10px; color: var(--text-2); display: flex; align-items: center; gap: 2px; }
-.of-card i { font-style: normal; font-size: 9.5px; font-weight: 800; padding: 0 4px; border-radius: 3px; align-self: flex-start; margin-top: 2px; }
-.of-card i.ok { background: #1F4A2A; color: #8AE09A; } .of-card i.fu { background: #4A2A5A; color: #E0B0FF; }
-.of-card:active { transform: scale(.96); }
-.of-rr { width: 62px; height: 58px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 13px; color: var(--gold); }
-.of-rr span { font-size: 11px; display: flex; align-items: center; gap: 2px; }
-.of-rr.poor { filter: grayscale(.7) brightness(.7); }
-@media (max-width: 760px) { .of-card { width: 150px; } .of-card small { display: none; } }
 /* v140: thùng hủy tướng chuyển xuống giữa đáy (đè lên thanh Triệu hồi lúc đang kéo) — không còn nằm sát các ô cạnh thành */
 #trash { left: 50%; right: auto; bottom: calc(10px * var(--hz, 1)); width: 220px; transform: translateX(-50%) scale(var(--hz, 1)); transform-origin: 50% 100%; }
 #trash.hot { transform: translateX(-50%) scale(calc(var(--hz, 1) * 1.08)); }
@@ -1565,6 +1551,111 @@ i.c { background: #1F4A2A; color: #8AE09A; } i.h { background: #4A2A5A; color: #
 .mc-row .mc-btn { padding: 0 6px; gap: 5px; justify-content: center; }
 .mc-row .mc-btn .uimg.mc { width: 26px; height: 26px; }
 .mc-row .mc-btn:last-child { flex: 0 0 40%; }
+/* v143: CHỢ TƯỚNG — 4 thẻ luôn mở ở đáy (chạm = mua, kéo = đặt đúng ô) + ↻ đổi hàng */
+.mk-row { display: flex; gap: 5px; align-items: center; flex: none; }
+.mk-card { position: relative; flex: none; width: 76px; height: 60px; padding: 0; border-radius: 8px; overflow: hidden; cursor: pointer; touch-action: none; -webkit-touch-callout: none; user-select: none;
+  border: 2px solid var(--c); background: radial-gradient(circle at 50% 35%, #3A2416, #160E08 80%); box-shadow: inset 0 0 0 1px #0008; }
+.mk-card img { position: absolute; left: 50%; top: 1px; width: 42px; height: 42px; transform: translateX(-50%); border-radius: 50%; object-fit: cover; object-position: 50% 0; pointer-events: none; }
+.mk-card .el { position: absolute; left: 2px; top: 2px; line-height: 0; pointer-events: none; }
+.mk-card .nm { position: absolute; left: 0; right: 0; bottom: 13px; font-size: 10.5px; font-weight: 800; line-height: 11px; color: var(--text); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 2px; text-shadow: 0 1px 2px #000; pointer-events: none; }
+.mk-card .cost { position: absolute; left: 0; right: 0; bottom: 0; height: 13px; display: flex; align-items: center; justify-content: center; gap: 2px; background: #C8302A; color: #fff; font-size: 10px; font-weight: 800; line-height: 13px; pointer-events: none; }
+.mk-card .cost .coin, .mk-card .cost img { width: 10px; height: 10px; }
+.mk-card .tw { position: absolute; right: 1px; top: 1px; padding: 0 3px; border-radius: 4px; background: #1F6A2A; color: #CFFFC8; font-style: normal; font-size: 9px; font-weight: 800; line-height: 12px; pointer-events: none; }
+.mk-card.twin { border-color: #9DFFC4; box-shadow: 0 0 10px #6AE06A, inset 0 0 8px #6AE06A66; animation: mkTwin 1.3s ease-in-out infinite; }
+@keyframes mkTwin { 50% { box-shadow: 0 0 4px #6AE06A, inset 0 0 3px #6AE06A44; } }
+.mk-card.poor img { filter: grayscale(.7) brightness(.55); }
+.mk-card.poor .cost { background: #5A3A2A; color: #FFB08A; }
+.mk-card.poor .nm { color: #9A8E78; }
+.mk-card:active { transform: scale(.96); }
+.mk-rr { flex: none; width: 52px; height: 60px; padding: 0; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--gold); }
+.mk-rr b { font-size: 20px; line-height: 1; }
+.mk-rr span { display: flex; align-items: center; gap: 1px; font-size: 10.5px; font-weight: 800; }
+.mk-rr span .coin, .mk-rr span img { width: 10px; height: 10px; }
+.mk-rr.poor { filter: grayscale(.7) brightness(.7); }
+#mk-ghost { position: fixed; z-index: 100; width: 56px; height: 56px; margin: -46px 0 0 -28px; border-radius: 50%; border: 3px solid var(--c, #FFD66B); background: #0D0B08; overflow: hidden; pointer-events: none; box-shadow: 0 4px 14px #000c, 0 0 12px var(--c, #FFD66B); opacity: .92; }
+#mk-ghost.rot { transform: rotate(90deg); margin: -28px 0 0 -10px; }
+#mk-ghost img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; }
+/* v143: đang kéo tướng → ẩn chợ tướng / thanh đáy, thùng Hủy chiếm đúng chỗ đó (cùng ý với nhánh kéo-tướng-ẩn-triệu-hồi) */
+#wrap.dragging-hero #deck, #wrap.dragging-hero #deck-hint, #wrap.dragging-hero #quick-eq { visibility: hidden; pointer-events: none; }
+#wrap.dragging-hero #trash { left: 50%; right: auto; bottom: calc(6px * var(--hz, 1)); width: 320px; height: 70px; justify-content: center; transform: translateX(-50%) scale(var(--hz, 1)); transform-origin: 50% 100%; }
+#wrap.dragging-hero #trash.hot { transform: translateX(-50%) scale(calc(var(--hz, 1) * 1.08)); }
+/* v143: Nghỉ chân sau đợt boss */
+#rest { background: transparent; z-index: 32; }
+.dk-pick.gone { opacity: .6; border-style: dashed; border-color: #E25A3A; }
+.dk-pick .tg i.x { background: #5A1E14; color: #FFB08A; }
+/* v147: CÂY PHÁT TRIỂN (Anh Hùng) + gợi ý phát triển trong trận */
+.ev-tree { margin-top: 8px; border-radius: 6px; padding: 6px 8px; display: flex; flex-direction: column; gap: 4px; border-left: 3px solid var(--rc); }
+.ev-h { font-family: var(--title); font-size: 15px; font-weight: 800; color: var(--gold); display: flex; align-items: baseline; gap: 8px; }
+.ev-h small { font-family: var(--body); font-size: 10.5px; font-weight: 600; color: var(--text-2); }
+.ev-lb { font-size: 11px; font-weight: 800; color: var(--text-2); margin-top: 2px; }
+.ev-lb b { font-size: 10.5px; }
+.ev-br { display: flex; flex-direction: column; gap: 3px; padding-bottom: 4px; border-bottom: 1px solid #ffffff10; }
+.ev-br:last-child { border-bottom: 0; }
+.ev-row { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; min-width: 0; }
+.ev-row.sub { margin-left: 22px; padding-left: 6px; border-left: 2px dashed #8C6A2E; }
+.ev-sl { margin-left: 22px; padding-left: 8px; border-left: 2px dashed #8C6A2E; font-size: 10px; font-weight: 800; color: var(--r-legend); }
+.ev-row.sub::before { content: '↳'; color: #FFD66B; font-size: 13px; margin-right: 2px; }
+.ev-p { display: inline-flex; align-items: center; gap: 4px; height: 32px; padding: 0 6px 0 2px; border-radius: 16px; background: #1A120C; border: 1.5px solid #8C6A2E; color: var(--text); font-size: 11.5px; font-weight: 800; position: relative; min-width: 0; max-width: 150px; }
+.ev-p img { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; object-position: 50% 10%; background: #3B2313; flex: none; }
+.ev-p b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.ev-p.epic { border-color: var(--r-epic); }
+.ev-p.legendary { border-color: var(--r-legend); }
+.ev-p.me { background: #54331D; box-shadow: 0 0 6px #FFD66B88; }
+.ev-p.lock img, .ev-p.lock b { opacity: .45; filter: grayscale(.6); }
+.ev-p.lock i { position: absolute; right: -2px; top: -7px; padding: 0 4px; border-radius: 6px; background: #3A2410; border: 1px solid #8C6A2E; color: #FFB08A; font-size: 8.5px; font-style: normal; font-weight: 800; line-height: 12px; white-space: nowrap; }
+.ev-op { color: var(--gold-pale); font-weight: 900; font-size: 13px; flex: none; }
+.ev-op.ar.epic { color: var(--r-epic); }
+.ev-op.ar.legendary { color: var(--r-legend); }
+.ev-top { font-size: 12px; font-weight: 800; text-align: center; padding-top: 2px; }
+.dk-evo { position: absolute; left: 6px; bottom: calc(100% + 18px); max-width: calc(100% - 12px); height: 22px; padding: 0 7px 0 5px; border-radius: 11px; display: flex; align-items: center; gap: 3px; background: #1A120Ce8; border: 1.5px solid var(--r-epic); color: var(--text); font-size: 10.5px; font-weight: 800; white-space: nowrap; overflow: hidden; box-shadow: 0 2px 8px #000a; }
+.dk-evo.legendary { border-color: var(--r-legend); }
+.dk-evo.go { box-shadow: 0 0 8px #6AE06A88; border-color: #6AE06A; }
+.dk-evo .lb { color: var(--gold); }
+.dk-evo img { width: 16px; height: 16px; border-radius: 50%; object-fit: cover; object-position: 50% 10%; flex: none; }
+.dk-evo b { color: var(--gold-hi); flex: none; }
+.dk-evo .nd { color: #FFB08A; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.dk-evo.go .nd { color: #9DFFC4; }
+.hs-evo { display: block; width: 100%; text-align: left; margin-top: 4px; padding: 3px 6px; border-radius: 5px; background: #0D0B08aa; border: 1px solid #5C4620; color: var(--text-2); font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hs-evo small { color: #FFB08A; font-weight: 800; }
+.hs-evo small.ok { color: #9DFFC4; }
+.asc-row.hl { border-color: #FFD66B; box-shadow: 0 0 8px #FFD66B88; background: #3A2818; }
+/* v149: Góp ý */
+#feedback { z-index: 45; background: #000b; display: flex; align-items: center; justify-content: center; }
+#feedback[hidden] { display: none; }
+.fb-box { position: relative; width: min(600px, calc(100% - 16px)); max-height: calc(100% - 12px); overflow-y: auto; box-sizing: border-box; padding: 10px 14px; border-radius: 10px;
+  display: flex; flex-direction: column; gap: 7px; box-shadow: 0 8px 30px #000c; overscroll-behavior: contain; }
+.fb-head { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.fb-head .ttl { font-family: var(--title); font-size: 20px; color: var(--gold); white-space: nowrap; }
+.fb-head small { flex: 1; min-width: 0; font-size: 12px; color: var(--text-2); line-height: 1.2; }
+.fb-head .xbtn { height: 34px; width: 40px; margin-left: auto; }
+.fb-kinds { display: flex; gap: 6px; }
+.fb-kinds .btn { flex: 1; min-width: 0; height: 34px; padding: 0 6px; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fb-tw { position: relative; }
+#fb-text { display: block; width: 100%; box-sizing: border-box; height: 92px; resize: none; border-radius: 6px; border: 1px solid #8C6A2E; background: #17130F; color: var(--text);
+  padding: 8px 10px 18px; font: 15px/1.35 var(--body); }
+#fb-text:focus, #fb-contact:focus { outline: 2px solid #D9B25A; outline-offset: -1px; }
+#fb-count { position: absolute; right: 8px; bottom: 4px; font-size: 11px; color: var(--text-2); pointer-events: none; font-variant-numeric: tabular-nums; }
+#fb-count.low { color: #FFB08A; }
+.fb-row { display: flex; gap: 8px; align-items: stretch; min-width: 0; }
+.fb-row .login-in { flex: 1; min-width: 0; height: 40px; font-size: 14px; box-sizing: border-box; }
+.fb-shot { flex: none; display: flex; align-items: center; gap: 6px; height: 40px; padding: 0 8px 0 3px; border-radius: 6px; border: 1px solid #8C6A2E; background: #17130F; color: var(--text-2); }
+.fb-shot img { height: 32px; width: auto; max-width: 64px; border-radius: 3px; object-fit: cover; }
+.fb-shot:not(.on) img { filter: grayscale(1) brightness(.5); }
+.fb-shot .sw { position: relative; width: 34px; height: 20px; border-radius: 10px; background: #3A3226; flex: none; }
+.fb-shot .sw::after { content: ''; position: absolute; left: 3px; top: 3px; width: 14px; height: 14px; border-radius: 50%; background: #8A8478; transition: left .15s; }
+.fb-shot .sw.on { background: #2E9E3E; } .fb-shot .sw.on::after { left: 17px; background: #fff; }
+.fb-shot small { font-size: 12px; font-weight: 700; white-space: nowrap; }
+.fb-foot { display: flex; align-items: center; gap: 8px; }
+.fb-note { flex: 1; min-width: 0; font-size: 11px; color: var(--text-2); line-height: 1.25; }
+.fb-note b { color: #F2D27A; font-weight: 700; }
+.fb-foot .btn { height: 40px; padding: 0 16px; font-size: 15px; flex: none; }
+.fb-foot .btn-gold { min-width: 96px; font-size: 17px; }
+.mc-subs:has(#btn-feedback) { gap: 2px; }
+.mc-subs:has(#btn-feedback) .mc-sub { flex: 1 1 auto; padding: 0 2px; }
+/* v150: 3 liên kết nhỏ dưới bảng nút menu (Bách khoa · Xếp hạng · Góp ý) không đè chữ lên nhau */
+.mc-subs:has(#btn-feedback) { justify-content: space-between; gap: 4px; }
+.mc-subs:has(#btn-feedback) .mc-sub { flex: 0 1 auto; min-width: 0; overflow: visible; font-size: 11.5px; letter-spacing: -.3px; padding: 0 1px; white-space: nowrap; }
+.mc-subs:has(#btn-feedback) .mc-sub .uimg.sub { width: 15px; height: 15px; margin-right: 2px; vertical-align: -3px; }
 /* v141: chơi nhóm "Cùng Giữ Thành" — thẻ chế độ, phòng chờ, thanh đồng đội */
 .md-body:has(.md-card.coop) { grid-template-columns: 1fr 1fr 1fr; }
 .md-card.coop { border-color: #6AB04A; background: linear-gradient(180deg, #1C3414, #10160C); }
@@ -1597,3 +1688,28 @@ i.c { background: #1F4A2A; color: #8AE09A; } i.h { background: #4A2A5A; color: #
 #coop-bar small { color: #FFB08A; font-size: 11px; }
 #coop-bar button { height: 24px; padding: 0 8px; border-radius: 12px; font-size: 11.5px; font-weight: 800; color: var(--gold); }
 @media (max-width: 700px) { .md-body:has(.md-card.coop) { grid-template-columns: 1fr; overflow-y: auto; } }
+/* v153: trò chuyện trong trận nhóm — khung gọn bên phải (≤ 1/3 màn), ô nhập ở trên để bàn phím không che */
+#btn-chat { position: relative; font-size: 18px; }
+#chat { position: absolute; right: 8px; top: calc(78px * var(--hz, 1)); bottom: calc(96px * var(--hz, 1)); width: min(300px, 32%); z-index: 6;
+  display: flex; flex-direction: column; gap: 6px; padding: 8px; border-radius: 10px; border-color: #5AB4D6; background: #0D0B08ee; }
+#chat[hidden] { display: none; }
+#chat .ch-head { display: flex; align-items: center; gap: 6px; }
+#chat .ch-head b { font-family: var(--title); color: #BFE8F8; font-size: 15px; }
+#chat .ch-head small { flex: 1; min-width: 0; font-size: 11.5px; color: var(--text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#chat .ch-x { width: 26px; height: 26px; border-radius: 50%; border: 1px solid #5C4620; background: #17130F; color: var(--text); font-size: 13px; padding: 0; }
+#chat .ch-in { display: flex; gap: 4px; }
+#chat .ch-in input { flex: 1; min-width: 0; height: 32px; border-radius: 6px; border: 1px solid #8C6A2E; background: #17130F; color: var(--text); padding: 0 8px; font-size: 14px; }
+#chat .ch-in .btn { height: 32px; padding: 0 10px; font-size: 13px; }
+#chat .ch-quick { display: flex; flex-wrap: nowrap; gap: 4px; overflow-x: auto; flex: none; padding-bottom: 2px; scrollbar-width: none; }
+#chat .ch-quick::-webkit-scrollbar { display: none; }
+#chat .ch-quick button { flex: none; white-space: nowrap; height: 24px; padding: 0 7px; border-radius: 12px; font-size: 11.5px; font-weight: 700; color: var(--gold); }
+#chat .ch-list { flex: 1; min-height: 60px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; padding-right: 2px; }
+#chat .ch-msg { align-self: flex-start; max-width: 92%; background: #13283A; border: 1px solid #2C6A86; border-radius: 8px 8px 8px 2px; padding: 3px 7px; }
+#chat .ch-msg.me { align-self: flex-end; background: #2A1F12; border-color: #8C6A2E; border-radius: 8px 8px 2px 8px; }
+#chat .ch-msg small { display: block; font-size: 10px; color: var(--text-2); }
+#chat .ch-msg span { font-size: 13px; color: var(--text); word-break: break-word; }
+#chat-bubbles { position: absolute; right: 10px; top: calc(80px * var(--hz, 1)); z-index: 6; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; max-width: 32%; }
+.ch-bub { background: #13283Aee; border: 1px solid #5AB4D6; border-radius: 10px 10px 2px 10px; padding: 4px 9px; font-size: 13px; color: var(--text);
+  box-shadow: 0 2px 8px #000a; animation: chbub 4s ease forwards; word-break: break-word; }
+.ch-bub b { color: #BFE8F8; margin-right: 5px; }
+@keyframes chbub { 0% { opacity: 0; transform: translateY(-6px); } 8%, 85% { opacity: 1; transform: none; } 100% { opacity: 0; } }

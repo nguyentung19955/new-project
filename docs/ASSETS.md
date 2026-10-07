@@ -1,4 +1,4 @@
-# Ảnh vẽ tay (AI) cho Núi Cao Nước Dâng
+# Ảnh vẽ tay (AI) cho Thần Thoại Việt
 
 ## Tạo bằng Fooocus (ảnh đơn): `docs/PROMPT-FOOOCUS.txt`
 
@@ -64,6 +64,8 @@ Tên file và mã (H01–H16, E01–E08, B01–B03) theo tài liệu prompt. M�
 | File | Kích thước | Dùng ở |
 |---|---|---|
 | `assets/key-art-menu.png` | 1920×1080 | Nền menu chính (chừa trống phía trên giữa cho tên game) |
+| `assets/ui/nen-menu.jpg` | 1792×832 | Nền menu chính đang dùng (v145: ảnh cũ chủ đề Sơn Tinh – Thủy Tinh, dùng tạm; prompt ảnh mới ở nhóm 0 của `docs/PROMPT_GEMINI_FULL.md`) |
+| `assets/ui/logo-tua.png` | 1024×384, nền trong suốt | Logo chữ "Thần Thoại Việt" trên menu (tùy chọn; không có thì game hiện chữ HTML) |
 | `assets/scenes/story-1.png`, `story-2.png`, `story-3.png` | ~1120×760 | 3 khung truyện Vua Hùng kén rể |
 | `assets/scenes/victory-bg.png`, `defeat-bg.png` | ~650×720 (dọc) | Tranh bên trái màn thắng / thua |
 | `assets/scenes/mountain-1.png` … `mountain-5.png` | ~640×400 | 5 giai đoạn Núi Tản Viên |

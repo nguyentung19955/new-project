@@ -1,10 +1,17 @@
 #!/usr/bin/env python3
 """Cắt ảnh ghép (sprite sheet) gen theo docs/PROMPT_GEMINI.md thành bộ ảnh game.
 
-  python3 tools/cat-sheet.py <ảnh.png> <mã> [hero|enemy|boss]
+  python3 tools/cat-sheet.py <ảnh.png> <mã> [hero|enemy|boss|boss4|hero12|enemy6|boss9]
 
 - Tướng (3×2 ô, cỡ ảnh tuỳ ý): idle · wind · strike / cast · front · head → assets/packs/<mã>/
 - Quái (3 ô): walk1 · walk2 · attack;  Boss (2×2): idle · attack · skill · rage
+- v151 bộ nhiều khung (prompt nhóm 0B / 10 / 11 trong docs/PROMPT_GEMINI_FULL.md):
+  hero12 (4×3): idle_1..3 · head / attack_1..4 / cast_1..3 · hurt
+  enemy6 (3×2): walk_1..3 / walk_4 · attack_1..2
+  boss9  (3×3): walk_1..3 / walk_4 · attack_1..2 / attack_3 · rage_1..2
+  Cắt xong tự ghi số khung vào PACK_FRAMES (js/render.js), tự chép khung đại diện sang tên cũ
+  (idle / wind / strike / cast / front; walk1 / walk2 / attack / rage) để chỗ cũ vẫn chạy,
+  và với hero12 tự tạo assets/packs/<mã>/.v2 (ẩn prompt vẽ lại).
 Nền hồng tím #FF00FF được xoá (kể cả viền ám hồng). Các dáng toàn thân cắt cùng chiều cao
 và giữ nguyên đường chân để đổi dáng không bị nhảy; ảnh thu về cao tối đa 480 px (chân dung 240 px)
 và nén thành PNG 256 màu (mỗi dáng chỉ vài chục KB).
@@ -15,7 +22,35 @@ from PIL import Image
 NAMES = {'hero': (3, 2, ['idle', 'wind', 'strike', 'cast', 'front', 'head']),
          'enemy': (3, 1, ['walk1', 'walk2', 'attack']),
          'boss': (2, 2, ['idle', 'attack', 'skill', 'rage']),
-         'boss4': (2, 2, ['walk1', 'walk2', 'attack', 'rage'])}
+         'boss4': (2, 2, ['walk1', 'walk2', 'attack', 'rage']),
+         'hero12': (4, 3, ['idle_1', 'idle_2', 'idle_3', 'head', 'attack_1', 'attack_2', 'attack_3', 'attack_4', 'cast_1', 'cast_2', 'cast_3', 'hurt']),
+         'enemy6': (3, 2, ['walk_1', 'walk_2', 'walk_3', 'walk_4', 'attack_1', 'attack_2']),
+         'boss9': (3, 3, ['walk_1', 'walk_2', 'walk_3', 'walk_4', 'attack_1', 'attack_2', 'attack_3', 'rage_1', 'rage_2'])}
+# bộ nhiều khung: tên cũ ← khung đại diện (để mọi chỗ dùng ảnh cũ vẫn chạy, cùng nét với bộ mới)
+ALIAS = {'hero12': {'idle': 'idle_1', 'front': 'idle_1', 'wind': 'attack_2', 'strike': 'attack_3', 'cast': 'cast_2'},
+         'enemy6': {'walk1': 'walk_1', 'walk2': 'walk_3', 'attack': 'attack_2'},
+         'boss9': {'idle': 'walk_1', 'walk1': 'walk_1', 'walk2': 'walk_3', 'attack': 'attack_2', 'skill': 'attack_3', 'rage': 'rage_1'}}
+# CAT_SHEET_PACKS / CAT_SHEET_RENDER: thư mục ra và file render.js khác (dùng cho test, không đụng bản thật)
+RENDER_JS = os.environ.get('CAT_SHEET_RENDER') or os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'js', 'render.js')
+
+
+def register_frames(code, names):
+    """Ghi số khung từng động tác vào dòng PACK_FRAMES trong js/render.js (giữ các mã khác)."""
+    import re, json
+    cnt = {}
+    for n in names:
+        if n == 'head': continue
+        if '_' not in n: cnt[n] = 1; continue      # hurt / win: một khung
+        a = n.rsplit('_', 1)[0]
+        while f'{a}_{cnt.get(a, 0) + 1}' in names: cnt[a] = cnt.get(a, 0) + 1   # chỉ đếm khung liền nhau từ _1
+    src = open(RENDER_JS, encoding='utf8').read()
+    m = re.search(r'^const PACK_FRAMES = (\{.*\});', src, re.M)
+    if not m:
+        print('Không thấy dòng PACK_FRAMES trong js/render.js'); return
+    data = json.loads(m.group(1)); data[code] = cnt
+    line = 'const PACK_FRAMES = ' + json.dumps(dict(sorted(data.items())), separators=(',', ':'), ensure_ascii=False) + ';'
+    open(RENDER_JS, 'w', encoding='utf8').write(src[:m.start()] + line + src[m.end():])
+    print('PACK_FRAMES', code, cnt)
 
 
 def key_magenta(im):
@@ -171,7 +206,7 @@ def main():
     xs = cut_lines(sheet, cols, W, axis=0)
     ys = cut_lines(sheet, rows, H, axis=1)
     cells = [drop_specks(drop_lines(sheet.crop((xs[c] + ins, ys[r] + ins, xs[c + 1] - ins, ys[r + 1] - ins)))) for r in range(rows) for c in range(cols)]
-    out = os.path.join(os.path.dirname(__file__), '..', 'assets', 'packs', code)
+    out = os.path.join(os.environ.get('CAT_SHEET_PACKS') or os.path.join(os.path.dirname(__file__), '..', 'assets', 'packs'), code)
     os.makedirs(out, exist_ok=True)
     body = [i for i, n in enumerate(names) if n != 'head']
     boxes = {i: cells[i].getbbox() for i in range(len(cells))}
@@ -191,8 +226,15 @@ def main():
         im = im.resize((max(1, round(im.width * k)), hh), Image.LANCZOS)
         save_light(im, os.path.join(out, n + '.png'))
         print(n, im.size)
-    if kind == 'hero':
-        print(f"Thêm '{code}' vào HERO_PACK trong js/render.js để game dùng bộ ảnh này.")
+    if kind in ALIAS:
+        import shutil
+        for old, new in ALIAS[kind].items():
+            if os.path.exists(os.path.join(out, new + '.png')): shutil.copyfile(os.path.join(out, new + '.png'), os.path.join(out, old + '.png'))
+        register_frames(code, [n for i, n in enumerate(names) if boxes[i]])
+        if kind == 'hero12': open(os.path.join(out, '.v2'), 'w').close()
+        print('Nhớ tăng phiên bản game (CLAUDE.md) vì js/render.js vừa đổi.')
+    if kind in ('hero', 'hero12'):
+        print(f"Tướng mới: thêm '{code}' vào HERO_PACK trong js/render.js (nếu chưa có).")
 
 
 if __name__ == '__main__':

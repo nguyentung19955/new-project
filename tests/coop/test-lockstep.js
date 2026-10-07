@@ -22,11 +22,17 @@ async function startBot(page, seed) {
       if (!COOP.on || COOP.waitSnap || !game.co) return;
       const g = game, me = COOP.me, co = g.co;
       if (!co.started) { if (me === 0) COOP.issue('start'); return; }
+      // Nghỉ chân: người 1 đổi 1 tướng trong đội, người 0 bỏ qua
+      if (g.rest && !document.querySelector('#rest').hidden) {
+        if (me === 1) { const sel = [...g.summonList()], nu = BASIC_HEROES.find((t) => !sel.includes(t)); sel[0] = nu; ui.restSel = sel; ui.restDone(true); window.__restSwap = nu; }
+        else ui.restDone(false);
+        return;
+      }
       if (window.__botBusy > 0) { window.__botBusy--; return; }
       const mine = g.heroes.filter((h) => h && co.canAct(me, h.slot));
       const r = rnd();
-      if (g.offer) ui.pickOffer(Math.floor(rnd() * g.offer.types.length));
-      else if (mine.length < 5 && g.canSummon() === true) ui.summonRand();
+      if (mine.length < 5 && g.gold >= g.summonCost() && g.freeSlots().length) ui.buyCard(Math.floor(rnd() * 4));
+      else if (r < 0.1 && g.gold > g.rerollCost() + 80) ui.action({ act: 'mk-reroll' });
       else if (r < 0.35 && mine.length) { const h = mine[Math.floor(rnd() * mine.length)]; if (g.gold > g.levelCost(h)) ui.doLevelUp(h); }
       else if (r < 0.5) ui.action({ act: 'auto-merge' });
       else if (r < 0.6) ui.action({ act: 'auto-eq-all' });
@@ -73,6 +79,7 @@ async function run(browser) {
   for (const p of [A, B]) await setCfg(p);
 
   // ---- phòng chờ bằng giao diện
+  await A.evaluate(() => { ui.save.unlocked = Math.max(ui.save.unlocked || 1, 2); });
   await A.evaluate(() => ui.showModes());
   await click(A, '.md-card.coop');
   await click(A, '[data-act=coop-create]');
@@ -84,7 +91,8 @@ async function run(browser) {
   await waitFor(() => A.evaluate(() => ui.lobby && ui.lobby.room && ui.lobby.room.members.length === 2), 5000, 'khách vào phòng');
   const lobbyTxt = await A.evaluate(() => document.querySelector('#coop').innerText);
   check(/Chủ phòng/.test(lobbyTxt) && /Khách/.test(lobbyTxt), 'màn chờ hiện 2 người');
-  await click(A, '[data-act=coop-lv][data-i="0"]');
+  await click(A, '[data-act=coop-lv][data-i="1"]');
+  await waitFor(() => B.evaluate(() => ui.lobby && ui.lobby.room && ui.lobby.room.level === 1), 5000, 'khách thấy ải đã chọn');
   await click(A, '[data-act=coop-start]');
   await waitFor(async () => (await A.evaluate(() => COOP.on)) && (await B.evaluate(() => COOP.on)), 5000, 'vào trận');
   const own = await A.evaluate(() => [game.co.own.filter((x) => x === 0).length, game.co.own.filter((x) => x === 1).length]);
@@ -92,13 +100,33 @@ async function run(browser) {
   await waitFor(async () => (await B.evaluate(() => COOP.hashes.has(60))), 10000, 'mốc hash đầu tiên');
   const same0 = await Promise.all([A, B].map((p) => p.evaluate(() => COOP.hashes.get(60))));
   check(same0[0] === same0[1], 'cùng seed → trạng thái ở bước 60 giống hệt (' + same0.join(' / ') + ')');
+  const mk = await Promise.all([A, B].map((p) => p.evaluate(() => game.co.pl.map((x) => ({ m: x.market.types.join(','), ok: x.market.types.every((t) => x.deck.includes(t)) })))));
+  check(JSON.stringify(mk[0]) === JSON.stringify(mk[1]) && mk[0].every((x) => x.ok) && mk[0][0].m !== undefined,
+    `chợ tướng riêng mỗi người, rút từ đội của mình, giống nhau trên hai máy (${mk[0].map((x) => x.m).join(' | ')})`);
+
+  // ---- trò chuyện (không đi qua lockstep)
+  await A.evaluate(() => ui.chatAct({ act: 'chat-quick', i: '0' }));
+  await waitFor(() => B.evaluate(() => COOP.chatList.some((m) => m.text === 'Giúp mình với!')), 5000, 'khách nhận tin chat');
+  const bub = await B.evaluate(() => ({ dot: !document.querySelector('#chat-dot').hidden, bub: document.querySelector('#chat-bubbles').textContent, btn: !document.querySelector('#btn-chat').hidden }));
+  check(bub.btn && bub.dot && /Giúp mình với/.test(bub.bub), 'tin đồng đội hiện bong bóng + chấm chưa đọc khi khung chat đóng');
+  await B.evaluate(() => { ui.chatToggle(true); document.querySelector('#chat-in').value = 'đm boss mạnh quá ' + 'x'.repeat(200); });
+  await B.evaluate(() => ui.chatAct({ act: 'chat-send' }));
+  const fast = await B.evaluate(() => COOP.say('tin thứ hai ngay lập tức', 'B'));
+  check(/chậm/.test(String(fast)), 'giới hạn 1 tin / giây');
+  await waitFor(() => A.evaluate(() => COOP.chatList.some((m) => /boss mạnh/.test(m.text))), 5000, 'chủ phòng nhận tin');
+  const got = await A.evaluate(() => COOP.chatList.find((m) => /boss mạnh/.test(m.text)).text);
+  check(got.startsWith('*** boss') && got.length <= 120, `lọc từ thô tục + tối đa 120 ký tự ("${got.slice(0, 24)}…", ${got.length} ký tự)`);
+  const panel = await B.evaluate(() => { const r = document.querySelector('#chat').getBoundingClientRect(), w = document.querySelector('#wrap').getBoundingClientRect(); return { frac: r.width / w.width, list: document.querySelector('#chat-list').textContent }; });
+  check(panel.frac <= 0.34 && /Giúp mình với/.test(panel.list), `khung chat gọn (${Math.round(panel.frac * 100)}% chiều ngang), hiện lịch sử tin`);
+  await B.evaluate(() => ui.chatToggle(false));
+
   const denied = await B.evaluate(() => { const s = game.co.own.findIndex((o) => o === 0); return COOP.issue('raiseSpot', [s]); });
   check(/đồng đội/.test(String(denied)), 'không thao tác được ô của đồng đội');
 
   // ---- chạy nhiều đợt với 2 "người chơi máy"
   await A.evaluate(() => COOP.issue('speed', [3]));
   await startBot(A, 7); await startBot(B, 99);
-  await waitFor(async () => { const s = await state(B); return s.wave >= 7 || s.over; }, 240000, 'chơi tới đợt 7');
+  await waitFor(async () => { const s = await state(B); return s.wave >= 12 || s.over; }, 420000, 'chơi tới đợt 12 (qua boss đợt 10 + Nghỉ chân)');
   let a = await state(A), b = await state(B);
   let cmp = compareHashes(a, b);
   console.log(`    đợt ${b.wave}, bước ${a.tick}/${b.tick}, tướng ${a.heroes}, vàng ${a.gold}, mạng ${a.lives}`);
@@ -106,6 +134,11 @@ async function run(browser) {
   check(cmp.same >= 20 && cmp.diff === 0, `hash giống nhau ở ${cmp.same} mốc chung, lệch ${cmp.diff}`);
   check(b.stats.ok >= 20 && b.stats.bad === 0 && b.stats.resync === 0, `máy khách so ${b.stats.ok} hash với chủ phòng, không lệch`);
   check(a.heroes >= 4 && a.gold[0] >= 0 && a.gold[1] >= 0, 'cả hai người đều có tướng và ví riêng');
+  if (!a.over) {
+    const rest = await Promise.all([A, B].map((p) => p.evaluate(() => ({ rest: !!game.rest, deck1: game.co.pl[1].deck.join(','), swap: window.__restSwap || null }))));
+    check(!rest[0].rest && !rest[1].rest && rest[1].swap && rest[0].deck1 === rest[1].deck1 && rest[0].deck1.includes(rest[1].swap),
+      `Nghỉ chân sau boss: khách đổi đội (thêm ${rest[1].swap}), cả hai máy cùng đội mới, trận chạy tiếp`);
+  }
 
   // ---- làm lệch một trang → phát hiện + tự sửa
   await B.evaluate(() => { game.co.pl[0].gold += 1234; game.lives += 1; });

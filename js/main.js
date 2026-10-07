@@ -71,6 +71,9 @@ const GFX = {
 // người chơi chỉ việc cầm ngang — không cần bật xoay màn hình của máy.
 let ROT = false;
 function resize() {
+  // v153: bàn phím điện thoại mở khi gõ chat (hoặc góp ý) làm khung nhìn co lại — giữ nguyên bố cục, gõ xong mới co giãn lại
+  const ae = document.activeElement;
+  if (ae && ae.id === 'chat-in') { if (!resize.hooked) { resize.hooked = true; ae.addEventListener('blur', () => { resize.hooked = false; setTimeout(resize, 150); }, { once: true }); } return; }
   let [vw, vh] = viewportSize();
   if (!vw || !vh) return requestAnimationFrame(resize);
   ROT = vh > vw;
@@ -150,6 +153,47 @@ canvas.addEventListener('pointerup', (ev) => {
 });
 canvas.addEventListener('pointercancel', () => { drag = null; ui.hideTrash(); });
 
+// --- v143: CHỢ TƯỚNG — chạm thẻ = mua & đặt vào ô trống; kéo thẻ thả vào một ô = đặt đúng ô (lên tướng ★ cùng loại = ghép)
+let cardDrag = null;
+const cardGhost = document.createElement('div');
+cardGhost.id = 'mk-ghost'; cardGhost.hidden = true;
+document.body.appendChild(cardGhost);
+$('#deck').addEventListener('pointerdown', (ev) => {
+  const b = ev.target.closest('[data-mk]');
+  if (!b || !game.started || game.over || cardDrag) return;
+  const i = +b.dataset.mk, type = game.market && game.market.types[i];
+  if (!type) return;
+  ev.preventDefault();
+  cardDrag = { i, type, id: ev.pointerId, sx: ev.clientX, sy: ev.clientY, moved: false, x: -9999, y: -9999 };
+});
+window.addEventListener('pointermove', (ev) => {
+  const d = cardDrag;
+  if (!d || ev.pointerId !== d.id) return;
+  if (!d.moved && Math.hypot(ev.clientX - d.sx, ev.clientY - d.sy) > 10) {
+    d.moved = true;
+    cardGhost.innerHTML = `<img src="${heroImgUrl(d.type, 'head')}" alt="">`;
+    cardGhost.style.setProperty('--c', ELEMENTS[HEROES[d.type].el].color);
+    cardGhost.classList.toggle('rot', ROT);
+    cardGhost.hidden = false;
+  }
+  if (!d.moved) return;
+  [d.x, d.y] = toLogical(ev);
+  cardGhost.style.left = ev.clientX + 'px';
+  cardGhost.style.top = ev.clientY + 'px';
+});
+const endCardDrag = (ev, cancel) => {
+  const d = cardDrag;
+  if (!d || (ev && ev.pointerId !== d.id)) return;
+  cardDrag = null;
+  cardGhost.hidden = true;
+  if (cancel) return;
+  if (!d.moved) return ui.buyCard(d.i);
+  const slot = ui.slotAt(d.x, d.y);
+  if (slot >= 0) ui.buyCard(d.i, slot);
+};
+window.addEventListener('pointerup', (ev) => endCardDrag(ev, false));
+window.addEventListener('pointercancel', (ev) => endCardDrag(ev, true));
+
 const px = () => view.scale * view.dpr;
 
 // Bản đồ ải vẽ bằng AI (nen_ai-1..4, PROMPT-FOOOCUS): phủ kín khung rồi vẽ lại dòng sông
@@ -220,6 +264,11 @@ function render() {
       const dh = game.heroes[dragging.from];
       const pair = h && dh && h !== dh && (game.canMerge(dh, h) === true || fusionFor(dh.type, h.type));
       o.mode = i === dropSlot ? 'target' : pair ? 'sel' : !h ? 'free' : '';
+    }
+    else if (cardDrag && cardDrag.moved) {
+      // v143: đang kéo thẻ chợ tướng: ô trống sáng, tướng ★ cùng loại (ghép được) nhấp nháy, ô dưới tay là ô đích
+      const tw = h && h.type === cardDrag.type && (h.tier || 0) === 1 && !h.from;
+      o.mode = i === ui.slotAt(cardDrag.x, cardDrag.y) && (!h || tw) && !o.flooded ? 'target' : tw ? 'sel' : !h && !o.flooded ? 'free' : '';
     }
     else if (ui.raising) o.mode = game.canRaise(i) && (o.flooded || o.soon) ? 'free' : '';
     else if (i === ui.spot && !h) o.mode = 'target';
@@ -578,7 +627,7 @@ function drawHeroOnMap(h, t) {
   const r = drawHeroSprite(ctx, h, h.x, h.y, {
     scale: (useAssets ? 0.285 : 0.33) * (HZ > 1 ? 1.12 : 1), t, dir: h.dir, swing: va.swing, castT: va.castT, castUlt: h.castUlt, hurt: h.hurtT, px: px(),
     bog: h.bogged, summon: h.summonT, fall: h.dead ? h.fallT : undefined,
-    bounce: h.bounceT, evo: h.evoT, wingT: h.wingT, smooth: true, castColor: h.castColor, vector: !!(ui.save && ui.save.settings.vectorHeroes),
+    bounce: h.bounceT, evo: h.evoT, wingT: h.wingT, smooth: true, castColor: h.castColor, win: !!game.won, vector: !!(ui.save && ui.save.settings.vectorHeroes),
   });
   if (h.dead) return;
   drawRankAura(h, t, true);
