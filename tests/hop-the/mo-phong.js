@@ -13,6 +13,9 @@ async function run(level, rule, seed) {
     // phương án nới (luật v180 + ...): vA = ★★★ lên cấp nửa giá · vB = ghép tặng cấp · vC = cả hai
     if (rule === 'vA' || rule === 'vC') COSTS.lvDisc3 = 0.5;
     if (rule === 'vB' || rule === 'vC') COSTS.mergeLv = [0, 0, 2, 4];
+    // vD = R3 ở cấp 12 (R2 cấp 9) · vE = vD + ghép lên ★★/★★★ tặng 1/2 cấp
+    if (rule === 'vD' || rule === 'vE') R_REQ.splice(0, 4, 0, 6, 9, 12);
+    if (rule === 'vE') COSTS.mergeLv = [0, 0, 1, 2];
     if (rule === 'cu') { const orig = game.fusionReady.bind(game); game.fusionReady = (h) => ((h.tier || 0) >= game.ascendNeed(h) && !h.from ? true : orig(h)); }
     // đội = 3 cặp hợp thể ra Tím (tướng Thường, không trùng)
     const deck = [];
@@ -66,6 +69,6 @@ async function run(level, rule, seed) {
     const got = rs.filter((x) => x.first);
     const avg = (f) => (got.length ? (got.reduce((a, x) => a + f(x), 0) / got.length).toFixed(1) : '-');
     out[`${lv}/${rule}`] = { coTim: `${got.length}/${N}`, giay: avg((x) => x.first.t), dot: avg((x) => x.first.wave), thua: rs.filter((x) => !x.first && x.over).length };
-    console.log(`ải ${lv + 1} · luật ${{ cu: 'v136 ★★', kn2: '★★+KN', moi: 'v180 ★★★+KN', vA: 'v180 + ★★★ lên cấp ½ giá', vB: 'v180 + ghép tặng cấp', vC: 'v180 + cả hai' }[rule] || rule}: có Tím ${got.length}/${N} ván · TB ${avg((x) => x.first.t)} s · đợt ${avg((x) => x.first.wave)} · ${rs.map((x) => (x.first ? `đ${x.first.wave}` : x.over ? 'thua/hết' : '—')).join(' ')}`);
+    console.log(`ải ${lv + 1} · luật ${{ cu: 'v136 ★★', kn2: '★★+KN', moi: 'v180 ★★★+KN', vA: 'v180 + ★★★ lên cấp ½ giá', vB: 'v180 + ghép tặng cấp', vC: 'v180 + cả hai', vD: 'v180 + R3 cấp 12', vE: 'v180 + R3 cấp 12 + ghép tặng cấp' }[rule] || rule}: có Tím ${got.length}/${N} ván · TB ${avg((x) => x.first.t)} s · đợt ${avg((x) => x.first.wave)} · ${rs.map((x) => (x.first ? `đ${x.first.wave}` : x.over ? 'thua/hết' : '—')).join(' ')}`);
   }
 })();
