@@ -1490,3 +1490,16 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 159 — Gộp đường quái + đế ô đặt tướng
 - Gộp nhánh đường quái đi theo chủ đề + đế ô đặt tướng bằng ảnh (v156) vào sau v158.
+## Phiên bản 155 — Gắn đợt ảnh Pippit 07/10 (đồ vật, quái, boss, nền Sông, nút)
+- **Tách nền hồng sen:** ảnh Pippit đợt này nền hồng (~#DC3C78, có vân, góc tối) chứ không phải #FF00FF. `tools/cat-sheet.py` thêm `key_pink` (so điểm với màu nền theo hướng màu nên bỏ được cả vân, góc tối và bóng đổ cùng sắc; khe kín rộng như lòng vòng dây cũng xoá; dải viền 3 px gỡ ám hồng), `wipe_ai_mark` (xoá dấu "AI" góc dưới phải), `drop_below` (xoá chữ nhãn "Walk A"… dưới chân). `key_magenta` tự chuyển sang `key_pink` khi viền ảnh là hồng sen nên `cat-items.py`, `cat-icons.py`… dùng chung. `cat-items.py` thêm tuỳ chọn `lap=4` (lấp lỗ kín của ô 4 — giữ thẻ nền hồng sau vương miện).
+- **Icon đồ (cắt bằng `tools/cat-items.py`):** 5 bộ đồ (Lạc Long, Chim Lạc, Ngựa Sắt, Sơn Tinh, Trống Đồng), rìu / nỏ / gậy / mũ / giáp × 4 độ hiếm, phụ kiện 1–3, đồ ghép 4, sính lễ. Bộ icon mới (file đầu danh sách `itemPngPath`) **luôn hiện** ở túi đồ / Kho Báu / cửa hàng như ảnh quái, không cần bật "Dùng ảnh AI"; ảnh AI cũ vẫn theo Cài đặt. Kho Báu vẽ lại khi ảnh tải xong (giữ chỗ cuộn). Còn thiếu ảnh: đồ ghép 1–3 (12 món vẫn hình vẽ code).
+- **Nút mới (`uiE` / `UIE` trong js/ui.js, lỗi ảnh thì quay về ký hiệu cũ):** ★ Ghép sao, ▲ Mặc đồ (ui-tran-4-1/2), 🔒 khoá (ô tướng chưa có, nhánh Ấn chưa mở — 4-3), ↻ đổi hàng chợ / Chơi lại (4-4), 💡 mẹo (5-1), ♾ vô tận, ⚔ Phó bản / Vào trận (5-2/3), ✓ đã mua / đã giữ thành / đã sở hữu / đã hạ (5-4), 🥇🥈🥉 bảng xếp hạng và 👑 boss / Hũ Vua Hùng / nút Anh Hùng (ui-huy-chuong-1..4).
+- **Quái & boss nét mới (dải 3 ô / lưới 2×2):** cá sấu, lính ăn, giao long, thạch tinh, kỵ binh, rắn, cung ăn (sói), phù thủy nước (sứa), chim bão, ếch me, tôm, mực, dơi, nòng nọc, rùa, đá con, yêu tinh; boss Hồ Tinh, Ăn Vương, Hà Bá, Thủy Tinh, Đại Bàng. Sinh lại bản đổi màu (tomlua, ranbang, doima, thachvang, thietky, mucdoc, cungtlua, tuongthuy, hoden). Có `assets/packs/<mã>/.redo` → prompt gen lại tương ứng tự ẩn.
+- **Nền Sông riêng:** `assets/maps/nen-song.jpg` (1600×738 như các nền khác, cắt bỏ dải dưới có dấu AI); bỏ ánh xạ tạm `song → dam`.
+- **Khung giao diện:** `thanh-tien-do`, `nut-vang`, `nut-bac`, `khung-nut-chinh` cắt lại từ ảnh gốc cùng mẫu — hết viền / bóng ám hồng, nhẹ hơn nhiều (khung-nut-chinh 250 → 45 KB). Nền menu gửi kèm trùng ảnh đang dùng → giữ nguyên; khung thẻ vàng và khung người chơi có chữ → không dùng.
+- `tools/build-bundle.py` gói thêm icon đồ theo `tools/item-sheets.json` cho bản thử. Ảnh trước/sau: `docs/anh-dot-0710.png`.
+
+## Phiên bản 159 — Sửa màu dáng nổi giận của Tướng Thủy và Hồ Đen
+- `tools/make-variants.py`: mỗi bản đổi màu có thể có công thức riêng cho `rage.png` (khoá `'rage'`), và tuỳ chọn `keep_warm` giữ nguyên điểm đỏ-cam-vàng rực (lửa).
+- **Tướng Thủy** (`tuongthuy`, đổi sắc từ Hà Bá): dáng nổi giận giữ lửa cam như bản gốc, chỉ thân đổi màu như dáng thường (trước đây lửa bị xoay thành hồng tím).
+- **Hồ Đen** (`hoden`, từ Hồ Tinh): dáng nổi giận chuyển lửa đỏ cam sang **lửa tím sáng** (xoay sắc, không nhuộm) — hợp với dáng thường màu tím, hết bị đục.

@@ -55,8 +55,10 @@ def register_frames(code, names):
 
 def key_magenta(im):
     """Xoá nền hồng tím. Nền = điểm gần #FF00FF; chỉ dải 3 px sát nền mới được làm trong một phần
-    và khử ám hồng (bên trong nhân vật giữ nguyên màu, kể cả áo tím)."""
+    và khử ám hồng (bên trong nhân vật giữ nguyên màu, kể cả áo tím).
+    Ảnh Pippit nền hồng sen (không phải #FF00FF) → chuyển sang key_pink."""
     import numpy as np
+    if is_pink(border_color(im)): return key_pink(im)
     from PIL import ImageFilter
     a = np.asarray(im.convert('RGBA')).astype(np.int32)
     r, g, b = a[..., 0], a[..., 1], a[..., 2]
@@ -77,6 +79,69 @@ def key_magenta(im):
     nb = np.where(rim, g, nb)
     out = np.stack([nr, g, nb, alpha.round()], -1).clip(0, 255).astype(np.uint8)
     return Image.fromarray(out, 'RGBA')
+
+
+def border_color(im):
+    """Màu nền ước lượng = trung vị các điểm sát mép ảnh."""
+    import numpy as np
+    a = np.asarray(im.convert('RGB')).astype(np.int32)
+    e = np.concatenate([a[:6].reshape(-1, 3), a[-6:].reshape(-1, 3), a[:, :6].reshape(-1, 3), a[:, -6:].reshape(-1, 3)])
+    return np.median(e, axis=0)
+
+
+def is_pink(c):
+    """Nền hồng sen của Pippit (~#DC3C78, có vân và tối dần ở góc) — không phải hồng tím chuẩn #FF00FF."""
+    r, g, b = c
+    return r > 150 and g < 120 and b > 60 and r > b + 40 and b > g + 20
+
+
+def key_pink(im):
+    """Xoá nền hồng sen có vân (Pippit). Mỗi điểm được so với màu nền theo HƯỚNG màu (cho phép sáng/tối
+    hơn: vân nền, góc tối, bóng đổ dưới chân cùng sắc hồng): p ≈ s·nền. Điểm gần hướng nền và nối với mép
+    ảnh → nền; điểm rất sát nền ở bất cứ đâu (khe giữa tay chân) → nền. Dải 3 px sát nền: trong một phần
+    và gỡ ám hồng (chia lại màu theo độ trong)."""
+    import numpy as np
+    from PIL import ImageFilter
+    from scipy import ndimage
+    a = np.asarray(im.convert('RGB')).astype(np.float64)
+    c = border_color(im).astype(np.float64)
+    s = (a @ c) / (c @ c)
+    res = np.sqrt(((a - s[..., None] * c) ** 2).sum(-1))
+    loose = (res < 34) & (s > 0.55) & (s < 1.18)
+    strict = (res < 18) & (s > 0.75) & (s < 1.12)
+    lab, _ = ndimage.label(loose)
+    edge_ids = np.unique(np.concatenate([lab[0], lab[-1], lab[:, 0], lab[:, -1]]))
+    bg = np.isin(lab, edge_ids[edge_ids > 0]) | strict
+    # khe kín khá rộng (lòng vòng dây, giữa tay và thân) mà gần hết là màu nền → cũng là nền
+    n = lab.max()
+    if n:
+        sizes = ndimage.sum(loose, lab, range(1, n + 1)); mres = ndimage.mean(res, lab, range(1, n + 1))
+        big = [i + 1 for i in range(n) if sizes[i] >= 3e-4 * loose.size and mres[i] < 22]
+        bg |= np.isin(lab, big)
+    near = np.asarray(Image.fromarray((bg * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(7))) > 0
+    band = near & ~bg
+    # độ đục trong dải viền: càng xa hướng màu nền càng đục
+    k = np.clip((res - 14) / 60.0, 0, 1)
+    alpha = np.where(bg, 0.0, np.where(band, np.maximum(k, 0.0), 1.0))
+    alpha = np.where(band & (k < 0.25), 0.0, alpha)
+    sc = np.clip(s, 0.5, 1.2)[..., None] * c
+    al = np.maximum(alpha, 1e-3)[..., None]
+    fix = np.clip((a - (1 - alpha[..., None]) * sc) / al, 0, 255)
+    rgb = np.where(band[..., None], fix, a)
+    out = np.dstack([rgb, alpha * 255]).round().clip(0, 255).astype(np.uint8)
+    return Image.fromarray(out, 'RGBA')
+
+
+def wipe_ai_mark(sheet):
+    """Dấu "AI" (khung bo tròn hồng nhạt) góc dưới phải ảnh Pippit: xoá điểm hồng nhạt trong góc đó
+    (lửa / vật cam vàng lấn vào góc vẫn giữ)."""
+    import numpy as np
+    a = np.asarray(sheet).copy(); H, W = a.shape[:2]
+    y0, x0 = int(H * 0.83), int(W * 0.92)
+    c = a[y0:, x0:].astype(np.int32); r, g, b = c[..., 0], c[..., 1], c[..., 2]
+    mark = (r > 170) & (b > 120) & (r > g + 30) & (b > g + 10)
+    a[y0:, x0:, 3][mark] = 0
+    return Image.fromarray(a, 'RGBA')
 
 
 def wipe_labels(sheet, cols, rows):
@@ -161,6 +226,20 @@ def drop_specks(im, min_px=40):
     return Image.fromarray(a, 'RGBA')
 
 
+def drop_below(im):
+    """Pippit hay ghi nhãn ("Walk A"…) dưới chân nhân vật: xoá mảnh nằm hẳn dưới đáy khối lớn nhất."""
+    import numpy as np
+    from scipy import ndimage
+    a = np.asarray(im).copy(); m = a[..., 3] > 20
+    lab, n = ndimage.label(m)
+    if n < 2: return im
+    sizes = ndimage.sum(m, lab, range(1, n + 1)); big = int(np.argmax(sizes)) + 1
+    bottom = np.where(lab == big)[0].max()
+    for i, sl in enumerate(ndimage.find_objects(lab), 1):
+        if i != big and sl[0].start > bottom - 2: a[lab == i, 3] = 0
+    return Image.fromarray(a, 'RGBA')
+
+
 def cut_lines(sheet, n, size, axis):
     """Ranh giới ô: mặc định chia đều; nếu hình lấn qua ranh giới (ảnh không có vạch ngăn),
     dời đường cắt tới khe trống gần nhất (trong khoảng ±25% bề rộng ô)."""
@@ -193,8 +272,9 @@ def main():
     cols, rows, names = NAMES[kind]
     raw = Image.open(src).convert('RGB')
     r0, g0, b0 = raw.getpixel((raw.width // 2, 3))
-    magenta = r0 > 180 and b0 > 180 and g0 < 90
-    sheet = key_magenta(wipe_labels(raw, cols, rows)) if magenta else key_border(raw)
+    magenta = (r0 > 180 and b0 > 180 and g0 < 90) or is_pink(border_color(raw))
+    pink = is_pink(border_color(raw))
+    sheet = drop_specks(wipe_ai_mark(key_pink(raw)), 400) if pink else key_magenta(wipe_labels(raw, cols, rows)) if magenta else key_border(raw)
     # dấu ✦ của Gemini ở góc dưới phải ảnh
     import numpy as np
     sa = np.asarray(sheet).copy(); wm = max(40, raw.width // 24)
@@ -206,6 +286,7 @@ def main():
     xs = cut_lines(sheet, cols, W, axis=0)
     ys = cut_lines(sheet, rows, H, axis=1)
     cells = [drop_specks(drop_lines(sheet.crop((xs[c] + ins, ys[r] + ins, xs[c + 1] - ins, ys[r + 1] - ins)))) for r in range(rows) for c in range(cols)]
+    if pink: cells = [drop_below(c) for c in cells]
     out = os.path.join(os.environ.get('CAT_SHEET_PACKS') or os.path.join(os.path.dirname(__file__), '..', 'assets', 'packs'), code)
     os.makedirs(out, exist_ok=True)
     body = [i for i, n in enumerate(names) if n != 'head']

@@ -1468,6 +1468,13 @@ body { overflow: hidden; }
 #roster .scr-head .ro-kho + .btn { margin-left: 6px; }
 /* v124: icon nút vẽ tay trống đồng */
 .ab .i .uimg { width: 30px; height: 30px; display: block; }
+/* v155: nút vẽ tay thay ký hiệu ★ ▲ 🔒 ↻ 💡 ♾ ⚔ ✓ 🥇🥈🥉👑 (uiE trong js/ui.js) */
+.uie { width: 1.3em; height: 1.3em; object-fit: contain; vertical-align: -0.3em; display: inline-block; }
+#more .ha .i .uie { width: 24px; height: 24px; vertical-align: middle; }
+.mk-rr b .uie { width: 28px; height: 28px; display: block; }
+.rk-n .uie { width: 30px; height: 30px; vertical-align: middle; }
+.dw-btn .ic .uie, .prep-card .ic .uie { width: 30px; height: 30px; display: block; margin: auto; }
+.ro-lock .uie { width: 18px; height: 18px; }
 #trash b .uimg { width: 26px; height: 26px; vertical-align: middle; }
 /* v126: nút trống đồng */
 .uimg.tb { width: 30px; height: 30px; display: block; margin: auto; }
