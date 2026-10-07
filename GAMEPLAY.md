@@ -2211,6 +2211,10 @@ Session này dựng khung để nhiều session vẽ song song không xung độ
   3 tướng mẫu vẽ lại theo hướng này (đai đồng hoa văn trống đồng trên giáp Gióng / Sơn Tinh).
 - **Phá cách** (chỉ đạo người dùng, QUY-CHUAN mục 0b): được diễn giải lại táo bạo (pháp sư bộ xương, hình nhân giấy, hồn ma…) nhưng giữ vai trò / vũ khí / ngũ hành; nhân vật huyền thoại có danh tính chỉ phá cách tạo hình. Mẫu: `chodo` thành **hồn lái đò sông Âm** (da xanh tái, nón lá, chân tan thành sương, vẫn cầm mái chèo). DANH-SACH thêm cột "Hướng phá cách". Không vẽ đồ trang bị lên tướng 32px.
 - Quyết định điều phối: Thánh Gióng cầm **gậy sắt** (nhổ tre / lửa ở chiêu), Cuội đòn gánh, Triệu Đà kích; không vẽ đồ lên tướng 32px. Đã gộp nhánh chính v202 (chợ 6 thẻ: chân dung qua `marketPortrait` → `heroImgUrl` đã móc pixel).
+- Sửa theo tester (sau v203): khung trúng đòn rõ hơn (lùi 2px + da / giáp sáng, game thêm nháy trắng 0,2 giây); Gióng và Sơn Tinh
+  khác dáng — Gióng **giáp sắt đen, đường nối cháy lửa, gậy sắt to 3px**, Sơn Tinh **áo bào dài loe chân (chữ A), gấu hoa văn Đông
+  Sơn**; font pixel không còn đổi `--title` toàn cục: logo menu, nút ("Xuất quân"…), "Đợt N · …" giữ font cũ, chỉ tiêu đề bảng /
+  banner / tên boss dùng Handjet (đậm, viền tối), số vàng / mạng dùng VT323. Test pixel thêm kiểm tra font menu + ảnh `pixel-menu-*`.
 - Nhóm hiệu ứng là `vfx` (nhánh vfx-kenney; cho phép `tools/pixel/src/vfx/palette.txt` tạm hoặc `KHONG-BUILD`).
 
 Test mới `tests/pixel` (tool: nguồn thật hợp lệ --strict, 5 kiểu nguồn lỗi bị chặn, dựng ra thư mục tạm khớp file trong repo;

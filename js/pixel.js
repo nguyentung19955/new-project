@@ -123,7 +123,8 @@ function pxDrawHero(ctx, h, x, y, o) {
   const glowK = o.castT > 0 ? Math.min(1, o.castT / 0.25) : 0;
   const glow = glowK > 0 ? { color: o.castColor || '#FFE08A', blur: 10 * glowK * (o.castUlt ? 1.4 : 1), alpha: 0.8 * glowK }
     : tier >= 2 || asc > 0 ? { color: look.attrColor || '#FFE08A', blur: 5 + tier, alpha: 0.5 + Math.sin(t * 3) * 0.1 } : null;
-  const u = pxBlit(ctx, img, e, x, y + lift, unit, (o.dir || 1) < 0, { glow });
+  // trúng đòn: ngoài khung hurt (lùi + sáng da) thêm nháy trắng ngắn để không lẫn với khung đứng
+  const u = pxBlit(ctx, img, e, x, y + lift, unit, (o.dir || 1) < 0, { glow, flash: o.hurt > 0 ? Math.min(1, o.hurt / 0.2) * 0.6 : 0 });
   ctx.restore();
   if (o.bog) drawBogWater(ctx, x, y, s, t);
   PX.seen.add(e.key);
