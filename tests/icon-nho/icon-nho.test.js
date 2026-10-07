@@ -61,7 +61,7 @@ async function boss(page) {
     await page.screenshot({ path: path.join(SHOT, `${OLD ? 'truoc' : 'sau'}-${tag}.png`), clip: { x: 0, y: 0, width: Math.min(w, 420), height: Math.min(h, 260) } });
     ok(!B.hidden, `[${tag}] thanh máu boss mở khi bấm Hà Bá`);
     ok(!EMOJI.test(B.text), `[${tag}] thanh máu boss không còn emoji (${(B.text.match(EMOJI) || [''])[0]})`);
-    ok(B.svg >= 6, `[${tag}] dùng icon SVG dự phòng (${B.svg})`);
+    ok(B.svg + B.img >= 6 && B.imgOk, `[${tag}] mỗi chỉ số có icon: ảnh ic-*.png thật hoặc SVG dự phòng (${B.img} ảnh + ${B.svg} SVG)`);
     ok(/Giáp/.test(B.text) && /Kháng phép/.test(B.text) && /Chậm/.test(B.text) && /Thiêu đốt/.test(B.text), `[${tag}] đủ chỉ số + trạng thái`);
     ok(B.r.l >= 0 && B.r.t >= 0 && B.r.ri <= B.vw && B.r.b <= B.vh && !B.over, `[${tag}] thanh máu boss không tràn (${JSON.stringify(B.r)})`);
     if (!OLD) {
