@@ -1,4 +1,5 @@
 # Lý Ngư Tướng Quân (mã lyngu) — pixel 32×32 (tướng Tím · hành Thủy). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# PHÁ CÁCH (DANH-SACH): NGƯỜI CÁ CHÉP — đầu cá chép râu dài đội mũ trụ, thân người giáp vảy (đang hoá rồng).
 # Đặc trưng (PROMPT-GEN-LAI.txt:86 ưu tiên + PROMPT-DUNG-XUONG.txt:707): tướng trẻ ~25 (NGƯỜI — cá chép hoá tướng, không vẽ cá),
 # 2 sợi râu chép dài; GIÁP VẢY CHÉP cam + trắng, giáp vai hình vây, đai viền tím (Tím); MÀO MŨ hình ĐUÔI CÁ CHÉP cong to;
 # cầm ĐAO CÁN DÀI lưỡi hình vây cá. Chiêu (Quẫy Đuôi / Hóa Rồng): xoay đao — sóng nước cuộn lên.
@@ -46,17 +47,18 @@ sLs....sLs
 end
 
 part dau
-..yYYYYYYy..
-.yYlLLLLlYy.
-yYlLLLLLLlYy
-yoooooooooYy
-KKfFTTFFFTTF
-.KfFekFFFekF
-.KfFFFFFFFFh
-..fFFFFFFfFF
-..fFFTTTTFTF
-...fffffffT.
-..........T.
+..yYYYYYYy....
+.yYlLLLLlYy...
+yYlLLLLLLlYy..
+yoooooooooYy..
+lLLLLLLLLLLLl.
+lLsLLLLeeLLLLl
+lLsLlLLeTLLLLL
+llsLLLLLLLLLmm
+.lsLlLLLLLLmee
+..llLLLLLLLLmm
+...lllllllTlT.
+..........T..T
 end
 
 part than
@@ -163,7 +165,7 @@ NnnnNn
 end
 
 part mat_nham
-TT...TT
+TT
 end
 
 anim idle fps=3 loop
@@ -172,8 +174,8 @@ frame idle
   use chan 8 24
   use than 8 16
   use dau 9 5
-  use dao 20 7
-  use tay 19 18
+  use dao 23 7
+  use tay 22 18
   outline
 end
 frame idle
@@ -181,8 +183,8 @@ frame idle
   use chan 8 24
   use than 8 17
   use dau 9 6
-  use dao 20 7
-  use tay 19 19
+  use dao 23 7
+  use tay 22 19
   outline
 end
 frame idle
@@ -190,9 +192,9 @@ frame idle
   use chan 8 24
   use than 8 16
   use dau 9 5
-  use dao 20 7
-  use tay 19 18
-  set 21 8 W
+  use dao 23 7
+  use tay 22 18
+  set 24 8 W
   outline
 end
 
@@ -204,7 +206,7 @@ frame attack
   use chan 8 24
   use than 8 16
   use dau 9 5
-  use tay_len 19 14
+  use tay_len 21 14
   outline
 end
 frame attack
@@ -222,7 +224,7 @@ frame attack
   use than 8 16
   use dau 9 5
   use dao_xuong 17 19
-  use tay 19 18
+  use tay 22 18
   outline
 end
 frame attack
@@ -230,8 +232,8 @@ frame attack
   use chan 8 24
   use than 8 16
   use dau 9 5
-  use dao 20 7
-  use tay 19 18
+  use dao 23 7
+  use tay 22 18
   outline
 end
 
@@ -242,8 +244,8 @@ frame cast
   use chan 8 24
   use than 8 16
   use dau 9 5
-  use dao 21 1
-  use tay_len 19 14
+  use dao 24 1
+  use tay_len 21 14
   use song 0 26
   outline
 end
@@ -252,8 +254,8 @@ frame cast
   use chan 8 24
   use than 8 16
   use dau 9 5
-  use dao 21 1
-  use tay_len 19 14
+  use dao 24 1
+  use tay_len 21 14
   use song 0 24
   use song 25 26
   outline
@@ -263,11 +265,11 @@ frame cast
   use chan 8 24
   use than 8 16
   use dau 9 5
-  use dao 21 1
-  use tay_len 19 14
+  use dao 24 1
+  use tay_len 21 14
   use song 1 22
   use song 25 23
-  set 26 0 W
+  set 29 1 W
   outline
 end
 
@@ -275,7 +277,7 @@ anim hurt fps=8 once
 frame hurt
   use @idle.0
   shift -1 0
-  use mat_nham 12 10
+  use mat_nham 15 11
   swap F h
 end
 
@@ -286,7 +288,7 @@ frame die
   use chan 8 24
   use than 8 19
   use dau 9 8
-  use mat_nham 13 13
+  use mat_nham 16 14
   outline
 end
 frame die
@@ -294,7 +296,7 @@ frame die
   use chan 8 24
   use than 8 19
   use dau 9 8
-  use mat_nham 13 13
+  use mat_nham 16 14
   rot 90
   shift 0 1
   outline

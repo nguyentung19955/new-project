@@ -1,4 +1,5 @@
 # Lạc Hầu (mã lachau) — pixel 32×32 (tướng Tím · hành Thổ). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# PHÁ CÁCH (DANH-SACH): TƯỢNG ĐÁ ONG — lão cố vấn bằng đá ong vàng lỗ chỗ, râu đá, rêu ở khớp cổ.
 # Đặc trưng (PROMPT-GEN-LAI.txt:93 ưu tiên + PROMPT-DUNG-XUONG.txt:854 + js/data.js "búa đá và khiên đồng"): cố vấn bộ Lạc ~55, gầy,
 # lưng thẳng, râu dê dài mảnh, mắt sắc; áo vàng mù tạt cổ nâu, dải tím (Tím); MŨ NHỌN; cầm BÚA ĐÁ + KHIÊN ĐỒNG tròn hoa văn Đông Sơn,
 # cờ chim Lạc đỏ nhỏ cắm lưng (tuỳ chọn trong DANH-SACH). Chiêu (Trống Hiệu Triệu / Lời Thề Bộ Lạc): giơ khiên — vòng đồng hộ thân.
@@ -9,9 +10,11 @@ colors:
   k = vien
   T = toi
   K = khoi
-  f = da-toi
-  F = da
-  h = da-sang
+  f = dong
+  F = dong-sang
+  h = vang-nghe
+  g = reu
+  G = reu-sang
   e = trang
   t = trang-xam
   r = dat-toi
@@ -38,15 +41,15 @@ part dau
 .....DDd....
 ....dDDdd...
 ..yYyYyYyy..
-.KKKKKKKKKK.
-KKKfFTTFFTTF
-.KffFekFFekF
-.KfFFFFFFFFh
-..fFFFFFFfF.
-...fFKKKFF..
-....ffKKf...
-......KK....
-......K.....
+.oooooooooo.
+oooyFTTFyTTF
+.oyfFekFoekF
+.oyFyFFFFyFh
+..fFoFFyFfo.
+...fFoooFF..
+....ffoof...
+......oo....
+......o.....
 end
 
 part co
@@ -87,14 +90,14 @@ oVVvvVVo
 end
 
 part than
-.....fFf.......
+....gfFfG......
 ...ddrdrdvv....
-..vVdddddVVY...
-..vV.VVVVVVY...
-..vV.VVVVVVY...
-..vY.VVVVVVY...
+..vVdddddoVY...
+..vV.VVoVVVY...
+..vo.VVVVVoY...
+..vY.VoVVVVY...
 .....qpPpPpq...
-.....VVVVVVY...
+.....VVVoVVY...
 end
 
 part chan
@@ -135,7 +138,7 @@ end
 
 part tay
 fF.
-.FF
+.oF
 .Fh
 end
 
@@ -278,7 +281,7 @@ frame hurt
   use @idle.0
   shift -1 0
   use mat_nham 14 9
-  swap F h
+  swap F v
 end
 
 anim die fps=5 once

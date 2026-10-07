@@ -1,4 +1,5 @@
 # Thổ Công (mã thocong) — pixel 32×32 (tướng Tím · hành Thổ). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# PHÁ CÁCH (DANH-SACH): thân thấp tròn như ụ đất, chân lẫn vào đất (gò đất có cỏ dưới chân).
 # Đặc trưng (PROMPT-GEN-LAI.txt:1020 ưu tiên + PROMPT-DUNG-XUONG.txt:686): cụ ông ~80 thấp tròn, rộng gần bằng cao, RÂU TRẮNG dài tới
 # bụng, mày bạc; áo vàng nâu, MŨ TRÒN ĐEN mềm (KHÔNG cánh chuồn), thắt lưng đỏ, gấu áo viền tím (Tím); cầm GẬY TRE ngắn treo HỒ LÔ
 # (KHÔNG đại đao). Chiêu (Khiên Đất / Thổ Địa Hiển Linh): gõ gậy — vòng đất vàng bừng lên quanh chân.
@@ -64,7 +65,7 @@ yYmRRRRRRRRRRmy.
 yYYYYYYYYYYYYYy.
 .yYYYYYYYYYYYy..
 .qpPpPpPpPpPpq..
-..TTT....TTT....
+rdDdLdddDdLddr..
 end
 
 part gay

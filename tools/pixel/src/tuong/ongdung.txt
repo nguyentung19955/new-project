@@ -1,4 +1,5 @@
 # Ông Đùng (mã ongdung) — pixel 32×32 (tướng Tím · hành Thổ). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# PHÁ CÁCH (DANH-SACH): thân như gò đất có cỏ mọc trên vai.
 # Đặc trưng (PROMPT-GEN-LAI.txt:996 ưu tiên + PROMPT-DUNG-XUONG.txt:665): người khổng lồ dân gian, thân cao to nhất đội, tay chân to,
 # da sạm, mũi to, cười hiền; khố rơm vàng, rêu bám tóc, viền khố tím (Tím); vác ĐÒN GÁNH tre với 2 SỌT ĐẤT to rộng hơn thân
 # (KHÔNG giáo). Chiêu (Bước Chân Thành Ao / Dựng Núi): dậm chân — đất đá bắn lên.
@@ -40,7 +41,7 @@ KKfFTTFFFTTF
 end
 
 part than
-......fFFFf.....
+..g.G.fFFFf.Gg..
 ..hhhhFFFFFFFf..
 .hFFFhhFFFFFFFf.
 hFFFFhFFFFhFFFFf

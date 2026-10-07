@@ -1,4 +1,5 @@
 # Bà Hỏa (mã baahoa) — pixel 32×32 (tướng Tím · hành Hỏa). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# PHÁ CÁCH (DANH-SACH): thân dưới tan thành ngọn lửa (không chân), mặt tro trắng bình thản.
 # Đặc trưng (PROMPT-GEN-LAI.txt:88 ưu tiên + PROMPT-DUNG-XUONG.txt:770): nữ thần lửa bí ẩn ~40, mảnh, LƠ LỬNG (thân áo thuôn thành
 # đuôi, không chạm đất), mắt hẹp sắc, môi đỏ sẫm, cười lạnh; TÓC KHỔNG LỒ bốc ngược như lửa khói, rộng hơn thân; áo đỏ rượu hoa văn
 # lửa đen, dải tím (Tím); QUẢ CẦU LỬA trong lòng bàn tay. Chiêu (Biển Lửa): hai tay giơ cao — lửa bùng quanh.
@@ -9,11 +10,12 @@ colors:
   k = vien
   T = toi
   K = khoi
-  f = da-toi
-  F = da
-  h = da-sang
+  f = trang-xam
+  F = trang
+  h = sang
   e = trang
   W = sang
+  t = trang-xam
   m = son-toi
   s = son
   R = son-sang
@@ -76,11 +78,11 @@ part than
 end
 
 part duoi
-...sKsssm...
-....sKssm...
-....ssKm....
-.....sm.....
-......m.....
+...slLlLs...
+....lLLl.L..
+..L.sLl.....
+....lL..l...
+.....L......
 end
 
 part cau
@@ -229,7 +231,7 @@ frame hurt
   use @idle.0
   shift -1 0
   use mat_nham 12 10
-  swap F h
+  swap F t
 end
 
 anim die fps=5 once

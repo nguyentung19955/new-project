@@ -1,4 +1,5 @@
 # Thần Săn Ba Vì (mã thansan) — pixel 32×32 (tướng Tím · hành Mộc). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# PHÁ CÁCH (DANH-SACH): NGƯỜI-HƯƠU — mặt là sọ hươu trắng (mắt đỏ trong hốc), gạc phân nhánh, chân móng guốc.
 # Đặc trưng (PROMPT-GEN-LAI.txt:94 ưu tiên + PROMPT-DUNG-XUONG.txt:875 + js/data.js "vuốt hổ đao rừng"): thần săn ~30 cao gầy chân
 # dài, sơn chiến đỏ son ngang mắt, nhìn chăm chú; áo da xanh ô-liu, ÁO CHOÀNG LÔNG nâu, vòng cổ xương, dải tím (Tím); MŨ SỌ HƯƠU
 # GẠC TO phân nhánh; cầm ĐAO RỪNG (GEN-LAI giữ đao). Chiêu (Gọi Hổ Ba Vì / Nanh Hổ): ba vết vuốt hổ xé gió + lá rừng bay.
@@ -13,6 +14,7 @@ colors:
   F = da
   h = da-sang
   e = trang
+  E = sang
   t = trang-xam
   W = sang
   s = son
@@ -45,16 +47,16 @@ end
 
 part dau
 ..eeeeeeee..
-.etTeeeeTte.
-.eteeeeeette
-KKKtttttttK.
-KKKfFFFFFFFF
-KKfFTTFFFTTF
-.Kfsekssseks
-.KfFFFFFFFFh
-..fFFFFFFfF.
-..ffFFTTFF..
-...ffffff...
+.etteeeette.
+KeteeeeeettE
+KKteeeeeeet.
+KKteTTeeTTe.
+KKteTseeTse.
+KKtteeeeeeee
+.K.tteeeeeTe
+....tteeeeeT
+.....ttteTT.
+.......TT...
 end
 
 part choang
@@ -87,7 +89,7 @@ part chan
 .....dDd.dDd.
 .....dDd.dDd.
 .....rDd.rDd.
-....rrrr.rrrr
+....KK.K.KK.K
 end
 
 part dao
@@ -155,7 +157,7 @@ Ll
 end
 
 part mat_nham
-TT...TT
+T....T
 end
 
 anim idle fps=3 loop
@@ -278,7 +280,7 @@ anim hurt fps=8 once
 frame hurt
   use @idle.0
   shift -1 0
-  use mat_nham 12 11
+  use mat_nham 13 10
   swap F h
 end
 
@@ -289,7 +291,7 @@ frame die
   use than 8 19
   use dau 9 8
   use gac 7 4
-  use mat_nham 13 14
+  use mat_nham 14 13
   outline
 end
 frame die
@@ -298,7 +300,7 @@ frame die
   use than 8 19
   use dau 9 8
   use gac 7 4
-  use mat_nham 13 14
+  use mat_nham 14 13
   rot 90
   shift 0 1
   outline

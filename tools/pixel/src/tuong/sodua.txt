@@ -1,7 +1,8 @@
 # Sọ Dừa (mã sodua) — pixel 32×32 (tướng Tím · hành Mộc). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# PHÁ CÁCH (DANH-SACH): vỏ dừa KHẮC MẶT DỮ, 2 mắt sáng trong lỗ mắt dừa, miệng khắc răng cưa, tay chân là dây xơ dừa bện.
 # Đặc trưng (PROMPT-GEN-LAI.txt:947 ưu tiên + PROMPT-DUNG-XUONG.txt:643): chàng trai nằm trọn trong QUẢ DỪA tròn (vỏ dừa là thân,
 # chỉ thò mặt + tay chân ngắn), CHỎM VỎ làm mũ, vành miệng vỏ viền tím-bạc (Tím), sáo trúc buộc sau lưng; cầm QUẢ DỪA XANH sắp ném
-# (KHÔNG giáo). Chiêu (Tiếng Sáo Chăn Dê): thổi sáo trúc — nốt nhạc bay ra. Mặt nghiêm hiền, mắt nhỏ (không má hồng).
+# (KHÔNG giáo). Chiêu (Tiếng Sáo Chăn Dê): thổi sáo trúc — nốt nhạc bay ra. 
 name: Sọ Dừa
 size: 32x32
 anchor: 15,30
@@ -23,6 +24,8 @@ colors:
   q = tim-toi
   p = tim
   P = tim-sang
+  L = lua-sang
+  W = sang
   w = bac
   V = vang-sang
 
@@ -31,14 +34,14 @@ part dua
 ....rrdDDDdrr.....
 ...rdDDcDDDddr....
 ..rdDDDDDDddddr...
-..TTTTTTTTTTTTT...
-.rdDDqpPwPPPpqdr..
-.rdDqKKKKKKKKqdr..
-rdDDpKFTTFFTTpddr.
-rdDDpFFekFFekpddr.
-rdDDwFFFFFFFFwddr.
-rdDDqfFFFTTFFqddr.
-rdDdDqpPwPPpqdddr.
+..qpPwPpPwPpPpq...
+.rdDDdDDDDDDddr...
+.rdDdTTddddTTdr...
+rdDDdrLrddrLrddr..
+rdDDdrrrddrrrddr..
+rdDDddddddddddddr.
+rdDDdTeTeTeTeddr..
+rdDdddTTTTTTdddr..
 rdDcddddddddddddr.
 .rdDdddddddddddr..
 .rddddddddddddrr..
@@ -47,9 +50,9 @@ rdDcddddddddddddr.
 end
 
 part chan
-..FF....FF..
-..fT....fT..
-.TTT...TTTT.
+..cD....cD..
+..Dc....Dc..
+.rrr...rrrr.
 end
 
 part sao
@@ -69,19 +72,19 @@ lgggl
 end
 
 part tay
-FF
-fF
+cD
+Dc
 end
 
 part tay_len
-.F
-FF
-fF
+.c
+cD
+Dc
 end
 
 part tay_sau
-FF.
-.fF
+cD.
+.Dc
 end
 
 part sao_ngang
@@ -96,7 +99,7 @@ V.
 end
 
 part mat_nham
-TT..TT
+r....r
 end
 
 anim idle fps=3 loop
@@ -203,21 +206,21 @@ anim hurt fps=8 once
 frame hurt
   use @idle.0
   shift -1 0
-  use mat_nham 13 19
-  swap D c
+  use mat_nham 12 18
+  swap L W
 end
 
 anim die fps=5 once
 frame die
   use dua 7 12
   use chan 9 27
-  use mat_nham 14 20
+  use mat_nham 13 19
   use dua_xanh 25 25
   outline
 end
 frame die
   use dua 7 12
-  use mat_nham 14 20
+  use mat_nham 13 19
   rot 90
   shift 1 0
   use dua_xanh 26 25

@@ -1,4 +1,6 @@
 # Thần Trống Đồng (mã trongdong) — pixel 32×32 (tướng Tím · hành Kim). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# PHÁ CÁCH (DANH-SACH): TRỐNG ĐỒNG SỐNG — thân là chiếc trống đồng (tang trống làm bụng, mặt trống sao trên lưng/đỉnh),
+# mặt nhỏ hô vang trên tang trống, tay chân đồng gỉ xanh, mũ lông chim Lạc nhỏ trên vành; vẫn HAI DÙI.
 # Đặc trưng (PROMPT-GEN-LAI.txt:92 ưu tiên + PROMPT-DUNG-XUONG.txt:791): thần trống thân tròn như thùng, chân ngắn, má to, miệng
 # mở hô vang, râu vuông, mày rậm; khăn quấn nâu đỏ gắn phiến đồng, MŨ LÔNG CHIM LẠC nhỏ, dải tím (Tím); TRỐNG ĐỒNG ĐÔNG SƠN to
 # đeo sau lưng, mặt trống có NGÔI SAO mặt trời + vành chấm tròn; cầm HAI DÙI TRỐNG gỗ. Chiêu (Sấm Đồng): vung dùi — sóng âm vàng.
@@ -14,70 +16,61 @@ colors:
   h = da-sang
   e = trang
   t = trang-xam
-  W = sang
+  W = vang-sang
   m = son-toi
   s = son
   r = dat-toi
   d = dat
   D = dat-sang
-  o = dong-toi
-  y = dong
-  Y = dong-sang
-  v = vang-nghe
-  V = vang-sang
-  g = reu
+  o = toi
+  y = dong-toi
+  Y = dong
+  v = dong-sang
+  V = vang-nghe
+  g = ngoc
   q = tim-toi
   p = tim
   P = tim-sang
 
+part long
+.e.e.e
+.eTeTe
+tetete
+end
+
 part trong
-.....ooooo.....
-...ooyyyyyoo...
-..oyYvYvYvYyo..
-.oyvyyyyyyyvyo.
-.oYyyYYvYYyyYo.
-oyvyYyyvyyYyvyo
-oyYyYvYVYvYyYgo
-oyvyvVVWVVvyvyo
-oyYyYvYVYvYyYyo
-oyvyYyyvyyYygyo
-.oYyyYYvYYyyYo.
-.oyvyyyyyyyvyo.
-..oyYvYvYvYyo..
-...ooyyyyyoo...
-.....ooooo.....
+.....oooooooo......
+...oovvvvvvvvoo....
+.oovyyyyVyyyyyvoo..
+ovyVyVVVWVVVyVyyvo.
+.oovyyyyVyyyyyvoo..
+...oovvvvvvvvoo....
+.ovvvvvvvvvvvvvvyo.
+ovYgYvYvYvYvYgYvYyo
+oYYYYYYYTTYYYTTYYyo
+oYYgYYYYYekYYekYYyo
+oYYYYYYYYYTmmTYYgyo
+.oYvYvYvYTTTTvYvyo.
+..oyYYYgYYYYYgYyo..
+...oyYYYYgYYYYyo...
+..oyvYvYvYvYvYvyo..
+..ooooooooooooooo..
 end
 
-part dau
-...e.e.e....
-...eTeTe....
-..tetete....
-.yYvYvYvYy..
-.KKKKKKKKKK.
-KKTTTFFFTTTF
-.KfFekFFFekF
-.KfFFFFFFFFh
-.KfFFFTTTFFF
-..KKFTmmTFKK
-..KKKKKKKKK.
-end
-
-part than
-....fFFFFf.....
-..mssYsssYsm...
-.msssYsssYssm..
-msYsssssssYssm.
-msYsssYsssYssm.
-mssssYsssYsssm.
-msqpPpPpPpPpqm.
-.mssYsssYsssm..
-..mmmmmmmmmm...
+part trong_sang
+.....oooooooo......
+...ooVVVVVVVVoo....
+.ooVWWWVWWWWWVoo...
+oVWVWVVVWVVVWVWWVo.
+.ooVWWWVWWWWWVoo...
+...ooVVVVVVVVoo....
 end
 
 part chan
-...FFf..FFf...
-...fFf..fFf...
-..TTTT..TTTT..
+...yo...yo...
+...yg...yg...
+..oyyo.oyyo..
+..oooo.oooo..
 end
 
 part dui
@@ -97,8 +90,13 @@ rddddDD
 end
 
 part tay
-fF
-FF
+yg
+Yy
+end
+
+part tay_sau
+gy.
+.yY
 end
 
 part vong
@@ -116,114 +114,123 @@ V.V..V
 end
 
 part mat_nham
-TT...TT
+TT..TT
 end
 
 anim idle fps=3 loop
 frame idle
-  use trong 1 9
-  use chan 8 27
-  use than 7 18
-  use dau 9 7
-  use dui 21 12
-  use tay 21 19
+  use dui 2 11
+  use tay_sau 3 18
+  use chan 9 26
+  use trong 6 10
+  use long 9 7
+  use dui 25 11
+  use tay 25 18
   outline
 end
 frame idle
-  use trong 1 10
-  use chan 8 27
-  use than 7 19
-  use dau 9 8
-  use dui 21 13
-  use tay 21 20
+  use dui 2 12
+  use tay_sau 3 19
+  use chan 9 26
+  use trong 6 11
+  use long 9 8
+  use dui 25 12
+  use tay 25 19
   outline
 end
 frame idle
-  use trong 1 9
-  use chan 8 27
-  use than 7 18
-  use dau 9 7
-  use dui 21 12
-  use tay 21 19
-  set 9 16 W
+  use dui 2 11
+  use tay_sau 3 18
+  use chan 9 26
+  use trong 6 10
+  use long 9 7
+  use dui 25 11
+  use tay 25 18
+  set 14 13 W
   outline
 end
 
 # đánh: giơ dùi → nện mạnh ra trước → sóng âm → thu dùi
 anim attack fps=10 once
 frame attack
-  use trong 1 9
-  use chan 8 27
-  use than 7 18
-  use dau 9 7
-  use dui 22 5
-  use tay 22 12
+  use dui 2 11
+  use tay_sau 3 18
+  use chan 9 26
+  use trong 6 10
+  use long 9 7
+  use dui 26 4
+  use tay 26 11
   outline
 end
 frame attack
-  use trong 1 9
-  use chan 8 27
-  use than 8 18
-  use dau 10 7
-  use dui_ngang 21 18
-  use tay 21 18
+  use dui 2 11
+  use tay_sau 3 18
+  use chan 9 26
+  use trong 6 10
+  use long 9 7
+  use dui_ngang 24 18
+  use tay 24 18
   outline
 end
 frame attack
-  use trong 1 9
-  use chan 8 27
-  use than 8 18
-  use dau 10 7
-  use dui_ngang 21 18
-  use tay 21 18
-  use song 25 13
-  use vong 26 19
+  use dui 2 11
+  use tay_sau 3 18
+  use chan 9 26
+  use trong 6 10
+  use long 9 7
+  use dui_ngang 24 18
+  use tay 24 18
+  use song 25 11
+  use vong 26 20
   outline
 end
 frame attack
-  use trong 1 9
-  use chan 8 27
-  use than 7 18
-  use dau 9 7
-  use dui 21 12
-  use tay 21 19
+  use dui 2 11
+  use tay_sau 3 18
+  use chan 9 26
+  use trong 6 10
+  use long 9 7
+  use dui 25 11
+  use tay 25 18
   outline
 end
 
 # chiêu Sấm Đồng: mặt trống loé sáng, sóng âm vàng lan ra
 anim cast fps=8 loop
 frame cast
-  use trong 1 9
-  use chan 8 27
-  use than 7 18
-  use dau 9 7
-  use dui 22 5
-  use tay 22 12
-  set 8 16 W
-  set 7 16 V
-  set 9 16 V
+  use dui 1 4
+  use tay_sau 2 11
+  use chan 9 26
+  use trong 6 10
+  use trong_sang 6 10
+  use long 9 7
+  use dui 26 4
+  use tay 26 11
   outline
 end
 frame cast
-  use trong 1 9
-  use chan 8 27
-  use than 7 18
-  use dau 9 7
-  use dui 22 5
-  use tay 22 12
-  use vong 0 2
-  use vong 26 20
+  use dui 1 4
+  use tay_sau 2 11
+  use chan 9 26
+  use trong 6 10
+  use trong_sang 6 10
+  use long 9 7
+  use dui 26 4
+  use tay 26 11
+  use vong 0 21
+  use vong 26 21
   outline
 end
 frame cast
-  use trong 1 9
-  use chan 8 27
-  use than 7 18
-  use dau 9 7
-  use dui_ngang 21 18
-  use tay 21 18
+  use dui 2 11
+  use tay_sau 3 18
+  use chan 9 26
+  use trong 6 10
+  use long 9 7
+  use dui_ngang 24 18
+  use tay 24 18
   use song 24 10
-  use vong 0 1
+  use vong 1 2
   use song 0 26
   outline
 end
@@ -231,28 +238,27 @@ end
 anim hurt fps=8 once
 frame hurt
   use @idle.0
-  use mat_nham 13 13
-  swap F h
+  shift -1 0
+  use mat_nham 14 19
+  swap Y y
 end
 
 anim die fps=5 once
 frame die
-  use trong 1 12
-  use chan 8 27
-  use than 7 20
-  use dau 9 10
-  use mat_nham 13 16
+  use chan 9 26
+  use trong 6 12
+  use long 9 9
+  use mat_nham 15 21
+  use dui_ngang 22 28
   outline
 end
 frame die
-  use trong 1 12
-  use chan 8 27
-  use than 7 20
-  use dau 9 10
-  use mat_nham 13 16
+  use trong 6 12
+  use long 9 9
+  use mat_nham 15 21
   rot 90
-  shift 0 1
-  use dui_ngang 22 27
+  shift 1 0
+  use dui_ngang 22 28
   outline
 end
 frame die
