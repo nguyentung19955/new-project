@@ -272,7 +272,6 @@ IMPORTANT: draw NO road, NO path, NO trail, NO dashed lines anywhere. The middle
 Subtle Dong Son bronze-drum motifs (sun-star, Lac birds, zigzag bands) worked softly into the ground texture or carved stones at the corners. Soft daylight, gentle colors, no text, no watermark, no frame, full bleed.`;
 for (const k of Object.keys(MAP_DESC).filter((x) => !fs.existsSync(path.join(ROOT, 'assets/maps', `nen-${x}.jpg`)))) items.push({ group: '8. Nền bản đồ (trống đồng)', file: `nen-${k}.png`, title: `Nền bản đồ · ${k}`, text: mapPrompt(k) });
 const UI_SHEETS = {
-  'ui-nen-nut': ['round bronze drum-face button plate with a sun-star center and ring of Lac birds (empty center)', 'wide rectangular bronze button plate with zigzag border (empty middle for text)', 'square bronze panel corner frame with circle-dot border (empty middle)', 'small round bronze coin-shaped badge (empty center)'],
   'ui-tran-1': ['play triangle carved in a bronze drum disc', 'pause (two bars) carved in a bronze drum disc', 'fast-forward double arrow carved in a bronze drum disc', 'open eye carved in a bronze drum disc'],
   'ui-tran-2': ['menu (three bronze bars) on a drum disc', 'upward arrow over a bronze anvil (auto upgrade)', 'bronze shield with a small sun (auto equip)', 'cracked clay jar (sell / trash)'],
   'ui-tran-3': ['bronze drum with a mallet (summon hero)', 'two hands joining over a glowing star (fusion)', 'green mountain rising from water (raise mountain)', 'bronze left arrow (back)'],
@@ -284,7 +283,8 @@ const uiPrompt = (k) => `Create ONE image: a 512x128 row of four equal 128x128 s
 ${UI_SHEETS[k].map((x, i) => `[${i + 1}] ${x}`).join('  ')}.
 ${DRUM}. Each icon: one bold centered symbol, readable at 40 px, no text, no letters, no numbers.
 ${BG}`;
-for (const k of Object.keys(UI_SHEETS).filter((x) => !fs.existsSync(path.join(ROOT, 'assets/ui', `${x}-1.png`)))) items.push({ group: '9. Nút giao diện (trống đồng)', file: `${k}.png`, title: `Nút · ${k}`, text: uiPrompt(k) });
+// đã cắt tấm (còn ít nhất một ô trong assets/ui — ô game không dùng đã xoá ở v180) thì thôi gen lại
+for (const k of Object.keys(UI_SHEETS).filter((x) => ![1, 2, 3, 4].some((i) => fs.existsSync(path.join(ROOT, 'assets/ui', `${x}-${i}.png`))))) items.push({ group: '9. Nút giao diện (trống đồng)', file: `${k}.png`, title: `Nút · ${k}`, text: uiPrompt(k) });
 // v121: quái / boss cũ chỉ có 1 dáng (đi không cử động) → gen lại đủ dáng theo phong cách chung.
 // Bản đổi màu (camapden, thietky, chanlua, tuongthuy) tự sinh lại từ ảnh gốc bằng tools/make-variants.py.
 const sameFrames = (k) => { try { return fs.readFileSync(path.join(ROOT, 'assets/packs', k, 'walk1.png')).equals(fs.readFileSync(path.join(ROOT, 'assets/packs', k, 'walk2.png'))); } catch (e) { return true; } };
