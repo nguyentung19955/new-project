@@ -62,6 +62,8 @@ let KHO_MODE = false;       // đang mở Lò đúc đồng trước trận: gi�
 const uiSrcOf = (paths) => { const p = paths.find((x) => hasAsset(x)); return p ? assetSrc(p) : ''; };
 const COIN_SRC = ['ui/ui-tai-nguyen-1.png'], BAC_SRC = ['ui/ui-tai-nguyen-3.png'];
 const bac = (sm) => { const u = uiSrcOf(BAC_SRC); return u ? `<img class="bac-img${sm ? ' sm' : ''}" src="${u}" alt="">` : `<i class="bac${sm ? ' sm' : ''}"></i>`; };
+// cho-6-the: chân dung trên thẻ Chợ tướng (và ảnh nạp sẵn) lấy qua 1 hàm — khi có chân dung pixel chỉ cần đổi ở đây
+const marketPortrait = (t) => heroImgUrl(t, 'head');
 const coin = (sm) => { if (KHO_MODE) return bac(sm); const u = uiSrcOf(COIN_SRC) || assetUrl('ui_dong-xu.png'); return u ? `<img class="coin-img${sm ? ' sm' : ''}" src="${u}" alt="">` : `<i class="coin${sm ? ' sm' : ''}"></i>`; };
 // icon giao diện vẽ tay (ui_*.png) nếu đã có, không thì dùng ký hiệu dự phòng
 // v155: nút vẽ tay thay ký hiệu (ui-tran-4/5, huy chương); thiếu ảnh thì quay về ký hiệu cũ
@@ -2218,7 +2220,7 @@ class UI {
 
   // cho-6-the: nạp + giải mã sẵn ảnh mặt mọi tướng có thể ra ở chợ → thẻ mới hiện ngay, không khung trắng
   preloadMarket(pool) {
-    for (const t of pool) { const u = heroImgUrl(t, 'head'); if (u) this.preImg(u); }
+    for (const t of pool) { const u = marketPortrait(t); if (u) this.preImg(u); }
   }
   // mỗi ảnh giữ sẵn 3 bản đã tải (hàng chợ có thể ra vài thẻ trùng loại)
   preImg(u) {
@@ -2255,7 +2257,7 @@ class UI {
       // đích chưa mở khoá: ổ khoá nhỏ trên dải giá + lời nhắc "Mở ở Anh Hùng"
       const lockTo = (t) => nd.hopLock.get(t), lockTip = (t) => `Nguyên liệu hợp thể ${HEROES[lockTo(t)].name} — chưa mở khoá: Mở ở Anh Hùng · ${fmt(OWN_COST[heroTier(lockTo(t))])} Ngân khố`;
       html = `<div class="mk-row ${m.lock ? 'locked' : ''}">${m.types.map((t, i) => `<button class="mk-card ${ok[i] ? '' : 'poor'} ${twins[i] ? 'twin' : ''} ${hops[i] ? 'hop' : ''} ${hints[i] === 'hopLock' ? 'hoplk' : ''}" data-mk="${i}" style="--c:${ELEMENTS[HEROES[t].el].color}" aria-label="Mua ${esc(HEROES[t].name)}${heroRole(t) ? ` (${ROLES[heroRole(t)].name})` : ''}${twins[i] ? ' (mua là ghép luôn)' : ''}${hops[i] ? ' (nguyên liệu hợp thể)' : ''}${hints[i] === 'hopLock' ? ` (${esc(lockTip(t))})` : ''}, ${sc} vàng" title="${esc(HEROES[t].name)}${heroRole(t) ? ` · ${ROLES[heroRole(t)].name}` : ''}${hints[i] === 'hopLock' ? ` · ${esc(lockTip(t))}` : ''}">
-          <img src="${heroImgUrl(t, 'head')}" alt="" draggable="false" decoding="sync"><span class="el">${elIcon(HEROES[t].el, 11)}</span>${heroRole(t) ? `<span class="rl">${roleIcon(heroRole(t), 16, true)}</span>` : ''}
+          <img src="${marketPortrait(t)}" alt="" draggable="false" decoding="sync"><span class="el">${elIcon(HEROES[t].el, 11)}</span>${heroRole(t) ? `<span class="rl">${roleIcon(heroRole(t), 16, true)}</span>` : ''}
           <b class="nm">${esc(short(t))}</b><span class="cost">${twins[i] ? '<i class="tw">ghép</i>' : ''}${coin(1)}${sc}${hops[i] ? '<i class="hp">hợp</i>' : hints[i] === 'hopLock' ? `<i class="hl">${UIE.lock()}</i>` : ''}</span></button>`).join('')}
           <button class="mk-rr metal ${g.gold >= rc ? '' : 'poor'}" data-act="mk-reroll" aria-label="Đổi cả hàng, ${rc} vàng"><b>${UIE.redo()}</b><span>${coin(1)}${rc}</span></button>
           <button class="mk-lk metal ${m.lock ? 'on' : ''}" data-act="mk-lock" aria-pressed="${!!m.lock}" aria-label="${m.lock ? 'Bỏ khoá chợ' : 'Khoá chợ: giữ nguyên hàng thẻ sang đợt sau'}" title="${m.lock ? 'Đang khoá: đợt sau giữ nguyên hàng thẻ' : 'Khoá chợ: giữ nguyên hàng thẻ sang đợt sau'}">${MK_LOCK[m.lock ? 1 : 0]}<span>${m.lock ? 'Đã<br>khoá' : 'Khoá'}</span></button></div>
