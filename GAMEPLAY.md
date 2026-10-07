@@ -1366,3 +1366,7 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - **Nghỉ chân**: sau mỗi đợt boss (cứ 10 đợt) ở cả Vô tận và Phó bản (trừ đợt cuối thắng ải), trận tạm dừng và hiện bảng **Nghỉ chân**: bỏ tối đa **2 tướng** khỏi đội và chọn tướng mới thay vào, miễn phí; **Bỏ qua** được. Tướng đang trên sân giữ nguyên, chợ làm mới theo đội mới.
 - Lưu trận (tiếp tục giữa chừng) giữ cả chợ tướng, đội và bảng Nghỉ chân đang mở. Bản lưu cũ còn bảng chọn 1 trong 3 đã trả vàng thì được hoàn lại vàng.
 - Test: `node tests/cho-tuong/cho-tuong.test.js` (ảnh chụp trong `tests/cho-tuong/shots/`). Repo không có công cụ máy chơi thử nên không có gì để cập nhật.
+
+## Phiên bản 144 — Gộp 4 nhánh
+- Gộp: kéo tướng ẩn thanh đáy (141), quái hình người → quái vật (142), Firebase Hosting + tự deploy, Chợ tướng + Nghỉ chân (143).
+- Tên dài trên thẻ chợ tướng tự thu nhỏ chữ cho vừa thẻ (trước bị cắt khi xoay dọc).

@@ -860,7 +860,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 143 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 144 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1364,6 +1364,10 @@ class UI {
     if (this.sig.deck !== key) {
       this.sig.deck = key;
       deck.innerHTML = html;
+      // v144: tên dài trên thẻ chợ tự thu nhỏ chữ cho vừa thẻ (thay vì bị cắt "…")
+      for (const nm of deck.querySelectorAll('.mk-card .nm')) {
+        for (let f = 10.5; nm.scrollWidth > nm.clientWidth + 1 && f > 7.5; f -= 0.5) nm.style.fontSize = f + 'px';
+      }
     }
     if (h) {
       drawHeroPortrait($('#dk-portrait'), h, performance.now() / 1000);
