@@ -48,6 +48,7 @@ async function main() {
     // ---------- 2. chọn ảnh đơn: bộ nhiều khung vẫn ưu tiên; chỉ còn idle (hoặc <mã>.png) → ảnh đơn
     console.log('Chọn ảnh:');
     const s = await page.evaluate(() => {
+      ['lactuong.png', 'xathu.png', 'tom.png'].forEach((f) => ASSET_SET.delete(f));   // giả mã chưa có ảnh dựng xương
       const a = !!cdSoloImg('lactuong', false);
       ['wind', 'strike', 'cast'].forEach((n) => ASSET_SET.delete(`packs/xathu/${n}.png`)); cdMultiCache.clear();
       ASSET_SET.add('ma-moi.png');
@@ -57,7 +58,7 @@ async function main() {
     ok(s.xathu, 'chỉ còn packs/<mã>/idle.png → coi là ảnh đơn');
     ok(!s.tom, 'quái có walk2 / attack → giữ bộ nhiều khung');
     ok(s.path[0] === 'ma-moi.png', '<mã>.png ở gốc assets/ được nhận làm ảnh đơn');
-    const dx = await page.evaluate(() => ({ adv: hasAsset('adv.png') && hasAsset('packs/adv/strike.png'), solo: !!(cdSoloImg('adv', false) || hasAsset('adv.png')) }));
+    const dx = await page.evaluate(() => ({ adv: hasAsset('adv.png') && hasAsset('packs/adv/strike.png'), solo: hasAsset('adv.png') && !cdHasMulti('adv', false) === false }));
     ok(dx.adv && dx.solo, 'có ảnh dựng xương adv.png thì dùng thay bộ cũ packs/adv (wind / strike)');
     await page.close();
   }
