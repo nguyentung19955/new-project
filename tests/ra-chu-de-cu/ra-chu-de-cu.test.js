@@ -81,7 +81,9 @@ async function result(page, lv, win, endless) {
     const files = Object.values(frames).flatMap((v) => v.files);
     const plain = await open(844, 390, { unlocked: 17 });
     const before = await plain.page.evaluate(() => document.documentElement.className);
-    ok(!/sk-/.test(before), 'chưa có ảnh khung → không bật lớp sk-… (giữ hình CSS)');
+    // v180: ảnh huy hiệu ải ui/ai-*.png đã có thật → sk-huy-hieu bật sẵn; các khung khác chưa có ảnh thì không bật
+    const real = fs.existsSync(path.join(ROOT, 'assets/ui/ai-mo.png')) ? ['sk-huy-hieu'] : [];
+    ok(before.split(/\s+/).filter((c) => /^sk-/.test(c)).every((c) => real.includes(c)), `chưa có ảnh khung → không bật lớp sk-… (giữ hình CSS) [${before}]`);
     await plain.browser.close();
     const { chromium } = require('/opt/node-tools/node_modules/playwright');
     const browser = await chromium.launch({ args: ['--allow-file-access-from-files'] });
