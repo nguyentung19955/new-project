@@ -683,7 +683,7 @@ class UI {
           ${card('gold', 'Lương thảo', `+${PREP.goldAmount} vàng đầu trận`, PREP.goldCost, ic('tui-vang'), b.gold)}
           ${card('jar', 'Hũ đồng', 'Mở ngay 2 món Hiếm trở lên vào túi', PREP.jarCost, ic('hu-bau'), b.jar)}
           ${card('king', 'Hũ Vua Hùng', 'Mở ngay 2 món Sử thi trở lên (35% đồ bộ)', PREP.kingCost, UIE.medal(3), b.king)}
-          ${card('lives', 'Đắp thành', `+${PREP.livesAmount} mạng`, PREP.livesCost, ic('mang'), b.lives)}
+          ${card('lives', 'Đắp thành', `+${PREP.livesAmount} mạng (${g.maxLives - (b.lives ? PREP.livesAmount : 0)} → ${g.maxLives + (b.lives ? 0 : PREP.livesAmount)})`, PREP.livesCost, ic('mang'), b.lives)}
           <button class="prep-card metal" data-act="prep-forge"><span class="ic">⚒</span><b>Lò đúc đồng</b><small>Mua và đúc đồ bằng Ngân khố. Đồ Huyền thoại hiếm và đắt</small><span class="cost">Mở ›</span></button></div>
         <div class="prep-col wide"><div class="h">Tướng đã sở hữu (hợp thể được trong trận)</div>
           <div class="prep-heroes">${LEGEND_HEROES.filter((t) => (this.save.owned || []).includes(t)).map((t) => `<span class="prep-hero metal ${HEROES[t].legend}"><img src="${heroImgUrl(t, 'head')}" alt=""><b>${HEROES[t].name}</b></span>`).join('')
@@ -704,7 +704,7 @@ class UI {
     if (b[id] || (s.kho || 0) < cost) return;
     s.kho -= cost; b[id] = true;
     if (id === 'gold') g.gold += PREP.goldAmount;
-    if (id === 'lives') g.lives += PREP.livesAmount;
+    if (id === 'lives') g.gainLives(PREP.livesAmount);
     if (id === 'jar' || id === 'king') for (let k = 0; k < 2; k++) g.addItem(makeItem(id === 'king' && Math.random() < 0.35 ? rollSetItem() : rollItem(id === 'king' ? 'epic' : 'rare')), true);
     writeSave(s); this.showPrep();
   }
@@ -1853,7 +1853,9 @@ class UI {
     $('#tb-fill').style.width = `${Math.max(0, Math.min(1, ((g.wave - 1 + Math.max(0, prog)) / total))) * 71}%`;
     this.setText('#tb-gold b', fmt(g.gold));
     $('#tb-gold').classList.toggle('kho', !!this.prepForge);     // v95: đang tiêu Ngân khố (bạc), không phải vàng trận
-    this.setText('#tb-lives b', g.lives);
+    { const mx = Math.max(g.maxLives || CONFIG.startLives, g.lives), r = g.lives / mx;   // v169: mạng "còn/tối đa", đổi màu khi thấp
+      this.setHTML('#tb-lives b', g.lives + '/' + mx, `${g.lives}<small>/${mx}</small>`);
+      $('#tb-lives').className = r <= 0.25 ? 'lv-low' : r <= 0.5 ? 'lv-mid' : ''; }
     this.setText('#tb-water b', `${g.water}/3`);
     // thanh mực nước: tiến tới lần dâng nước kế (sau đợt boss tiếp theo)
     let prev = 0, next = 0;
@@ -2646,6 +2648,7 @@ class UI {
     this.closeScreen();
     $('#reward').hidden = true;
     const rows = `<div><span>⚑ Đợt</span><b>${g.wave}</b></div>
+      <div><span>${ic('mang')}Mạng còn</span><b style="color:#FF8A6A">${g.lives}/${Math.max(g.maxLives || CONFIG.startLives, g.lives)}</b></div>
       <div><span>✕ Quái đã hạ</span><b>${fmt(g.stats.kills)}</b></div>
       <div><span>${coin()} Vàng kiếm trong trận</span><b style="color:#FFD66B">+${fmt(g.stats.goldEarned)}</b></div>
       <div><span>Tướng trên sân</span><b>${g.heroes.filter(Boolean).length}</b></div>

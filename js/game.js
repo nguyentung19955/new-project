@@ -1361,6 +1361,7 @@ class Game {
     setMap(this.lv.map || 'song1');
     this.gold = CONFIG.startGold;
     this.lives = CONFIG.startLives;
+    this.maxLives = CONFIG.startLives;   // v169: mạng tối đa của trận (hiện "còn/tối đa")
     this.wave = 0;
     this.heroes = CONFIG.slots.map(() => null);
     this.summonN = 0;         // số lần triệu hồi trong ải (giá tăng dần)
@@ -1406,6 +1407,11 @@ class Game {
   get levelWaves() { return this.lv.waves; }
 
   // ẩn khi thành nguy: Thánh Gióng Vươn Vai tối đa (≤ 5 mạng), Kim Quy tự hộ thành (1 mạng)
+  // v169: cộng mạng — hồi phần đã mất trước, phần dư nâng luôn mạng tối đa (20/20 +1 → 21/21; 18/20 +1 → 19/20)
+  gainLives(n) {
+    this.lives += n;
+    this.maxLives = Math.max(this.maxLives || CONFIG.startLives, this.lives);
+  }
   livesLost() {
     for (const h of this.heroes) {
       if (!h || h.dead) continue;
@@ -2414,7 +2420,7 @@ class Game {
     const st = this.mountainStage();
     const gold = st * MOUNTAIN.goldPerStage;
     this.addGold(gold);
-    if (st >= 2 && this.wave % 3 === 0) { this.lives++; this.notify(this.sonTinh() ? 'Núi cao che thành: +1 mạng' : 'Thành vững thêm: +1 mạng', '#6AE06A'); }
+    if (st >= 2 && this.wave % 3 === 0) { this.gainLives(1); this.notify(this.sonTinh() ? 'Núi cao che thành: +1 mạng' : 'Thành vững thêm: +1 mạng', '#6AE06A'); }
     // v92: bỏ màn Núi Tản Viên — núi tự cao theo đợt (vàng, mạng, thêm lượt Mọc Núi), không còn Linh Chi
     return gold;
   }
@@ -2626,7 +2632,7 @@ class Game {
     const skip = new Set(['_anim', 'target', 'tgt', 'notice', 'unlockFx', 'procT', 'strike', '_va']);   // v131: strike giữ hàm (đòn đang vung) — không lưu được
     const heroes = JSON.parse(JSON.stringify(this.heroes, (k, v) => (skip.has(k) ? undefined : v)));
     const o = { v: 1, at: Date.now(), heroes };
-    for (const k of ['level', 'hard', 'endless', 'won', 'gold', 'lives', 'wave', 'summonN', 'bossesKilled', 'seen', 'water', 'raised', 'moc',
+    for (const k of ['level', 'hard', 'endless', 'won', 'gold', 'lives', 'maxLives', 'wave', 'summonN', 'bossesKilled', 'seen', 'water', 'raised', 'moc',
       'mountain', 'stats', 'inventory', 'jarCount', 'shop', 'time', 'flags', 'runId', 'guardT', 'oathT', 'xpLog', 'deck', 'market', 'rest', 'restWave']) o[k] = this[k];
     return JSON.parse(JSON.stringify(o));
   }
@@ -2637,6 +2643,7 @@ class Game {
     if (o.offer && o.offer.cost) { this.gold += o.offer.cost; this.summonN = Math.max(0, (this.summonN || 0) - 1); }
     this.offer = null;
     if (!('restWave' in o)) this.restWave = this.wave;
+    this.maxLives = Math.max(o.maxLives || CONFIG.startLives, this.lives);   // v169: bản lưu cũ chưa có mạng tối đa
     this.ensureMarket();
     this.heroes = CONFIG.slots.map((_, i) => {
       const h = o.heroes && o.heroes[i];
@@ -3726,7 +3733,7 @@ class Game {
       for (const id of o.ids || [o.id]) this.addItem(id);
     } else if (o.kind === 'treasure') {
       this.addGold(o.gold);
-      this.lives += o.lives;
+      this.gainLives(o.lives);
     } else if (o.kind === 'levelup') {
       for (const h of this.heroes) {
         if (!h) continue;
