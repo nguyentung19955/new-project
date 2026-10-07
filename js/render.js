@@ -846,6 +846,8 @@ function footK(img) {
   return k;
 }
 function drawHeroSprite(ctx, h, x, y, o = {}) {
+  // pixel art (js/pixel.js): mã có sprite pixel thì vẽ pixel, chưa có thì hình cũ
+  if (!o.vector && typeof pxDrawHero === 'function') { const r = pxDrawHero(ctx, h, x, y, o); if (r) return r; }
   const def = HEROES[h.type];
   const look = o.look || computeLook(h);
   const t = o.t || 0;
@@ -2061,6 +2063,8 @@ function enemyBox(e) {
   const a = enemyArt(e.type);
   const k = (e.champion ? 1.5 : 1) * (e.elite ? 1.15 : 1);
   const w = (ENEMY_W[e.type] || 40) * k;
+  const pb = typeof pxEnemyBox === 'function' && pxEnemyBox(e, w, k);   // pixel art (js/pixel.js)
+  if (pb) return pb;
   // tự cử động: ảnh đơn → cao theo khung bao của ảnh (thanh máu nằm trên đỉnh hình thật)
   const so = typeof cdSoloImg === 'function' && !vectorHeroesOn() && cdSoloImg(e.type, true);
   const sp = so && cdPrepare(so);
@@ -2176,8 +2180,9 @@ function drawEnemy(ctx, e, t, o = {}) {
     ctx.shadowColor = '#ff2d2d';
     ctx.shadowBlur = 14;
   }
-  const packRef = !box.solo && !vectorHeroesOn() && enemyPackRef(e.type);
-  let png = box.solo ? null : (packRef && enemyPackImg(e, t)) || enemyPng(e.type, e.elite || e.champion, e);
+  const pxOk = box.px && pxDrawEnemy(ctx, e, t, box);
+  const packRef = !box.solo && !pxOk && !vectorHeroesOn() && enemyPackRef(e.type);
+  let png = box.solo || pxOk ? null : (packRef && enemyPackImg(e, t)) || enemyPng(e.type, e.elite || e.champion, e);
   if (box.solo) cdDrawEnemy(ctx, e, t, box, box.solo, o);
   if (png) {
     // ảnh vẽ tay: chân ở giữa đáy ảnh, rộng theo ENEMY_W (bộ ảnh quái: cao theo ảnh bước 1 để đổi khung không đổi cỡ)
@@ -2197,8 +2202,8 @@ function drawEnemy(ctx, e, t, o = {}) {
       ctx.globalAlpha = 1;
     }
   }
-  const img = !png && !box.solo && a && enemyImage(e.type, o.px || 1);
-  if (png || box.solo) { /* đã vẽ */ } else if (ready(img)) {
+  const img = !png && !box.solo && !pxOk && a && enemyImage(e.type, o.px || 1);
+  if (png || box.solo || pxOk) { /* đã vẽ */ } else if (ready(img)) {
     const x0 = -(a.ax / a.w) * box.w, y0 = -box.ay;
     ctx.drawImage(img, x0, y0, box.w, box.h);
     // chớp sáng khi trúng đòn
@@ -2394,6 +2399,7 @@ function drawEnemyStatus(ctx, e, box, lift, t, vs = {}) {
 
 // Vẽ quái làm biểu tượng (bảng đợt, bách khoa) vào một canvas
 function drawEnemyIcon(cv, type, pad = 0.12) {
+  if (typeof pxEnemyIcon === 'function' && pxEnemyIcon(cv, type, pad)) return;
   const c = cv.getContext('2d');
   const W = cv.width, H = cv.height;
   c.clearRect(0, 0, W, H);
@@ -2416,6 +2422,7 @@ function drawEnemyIcon(cv, type, pad = 0.12) {
 
 // Vẽ chân dung tướng vào canvas (thân trên, phóng to)
 function drawHeroPortrait(cv, h, t, o = {}) {
+  if (typeof pxHeroPortrait === 'function' && pxHeroPortrait(cv, h, o)) return;
   const c = cv.getContext('2d');
   const W = cv.width, H = cv.height;
   c.clearRect(0, 0, W, H);

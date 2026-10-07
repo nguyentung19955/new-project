@@ -1,0 +1,282 @@
+# Sơn Tinh (mã game: tanvien) — mẫu pixel 32×32 (tướng Vàng · hành Thổ), phong cách sử thi (QUY-CHUAN mục 0).
+# Đặc trưng (PROMPT-DUNG-XUONG.txt:1064–1073): thần núi trẻ, oai nghiêm, VƯƠNG MIỆN 3 ĐỈNH NÚI vàng gắn ngọc, tóc đen dài,
+# GIÁP XANH RÊU (#6F8A3C) đai đồng hoa văn Đông Sơn, ÁO CHOÀNG XANH LÁ; cầm GẬY THẦN gỗ đầu ngọc (game: cận chiến);
+# chiêu: NÚI NHỎ bay lên trên lòng bàn tay, mây trắng (hành Thổ).
+name: Sơn Tinh
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  K = khoi
+  t = toi
+  x = reu-toi
+  s = reu
+  S = reu-sang
+  w = la-sang
+  f = da-toi
+  F = da
+  h = da-sang
+  e = trang
+  y = vang-nghe
+  Y = vang-sang
+  j = dong
+  d = dong-toi
+  D = dong-sang
+  r = la
+  m = la-toi
+  R = la-ma
+  g = dat
+  G = dat-sang
+  q = dat-toi
+  n = ngoc
+  N = ngoc-sang
+  l = la
+  L = la-ma
+  z = trang
+  c = trang-xam
+
+part tren
+................................
+............Y...Y..Y............
+...........yYy.yYyyYy...........
+..........jyyyynyyyyyj..........
+..........KKKKKKKKKKKK..........
+.........KKKKKKKKKKKKK..........
+........KKKKKhFFFFFFFF..........
+........KKKKhFFKKFFKKF..........
+........KKKfFFFekFFekf..........
+........KKKffFFFFFFFFFh.........
+.........K.ffFFFFFffFf..........
+............ffFFFFFFff..........
+..............fffff.............
+.......mr.xwSSDDDDSSSx..........
+......mrrxwSSSdDdSSSsx..........
+......RrrxSSsssssssssx..........
+......mrrxDdDdDdDdDdDx..........
+......mrrxSSsssssssssx..........
+......mmrxSsssssssssxx..........
+......mmrdDDDDDYDDDDDd..........
+.......mm.xSsssxSsssx...........
+.......m..xsssxtxsssx...........
+end
+
+part chan
+...........Ssx..Ssx.............
+...........Ssx..Ssx.............
+...........SDx..SDx.............
+...........Ssx..Ssx.............
+...........Ssx..Ssx.............
+...........Ssx..Ssx.............
+..........KKKK..KKKKK...........
+..........KKKK..KKKKK...........
+................................
+................................
+end
+
+part gay
+nN
+yy
+Gg
+Gg
+Gg
+Gg
+Gg
+Gg
+Gg
+Gg
+Gg
+Gg
+Gg
+Gg
+Gg
+Gg
+Gg
+Gg
+Gg
+Gg
+Gg
+Gg
+qq
+end
+
+part gay_ngang
+qGGGGGGGGGGGyN
+qggggggggggyyn
+end
+
+part gay_cheo
+..........nN
+.........Ggy
+........Gg..
+.......Gg...
+......Gg....
+.....Gg.....
+....Gg......
+...Gg.......
+..Gg........
+.Gg.........
+Gg..........
+q...........
+end
+
+part gay_xuong
+Gg.........
+.Gg........
+..Gg.......
+...Gg......
+....Gg.....
+.....Gg....
+......Gg...
+.......Gg..
+........yy.
+.........Nn
+end
+
+
+part tay
+.xs.
+..xS
+..FF
+..fF
+end
+
+part tay_len
+.FF
+.fF
+.S.
+xS.
+xs.
+end
+
+part tay_dam
+xsFF
+.SfF
+end
+
+part mat_nham
+ttFFtt
+end
+
+part nui_nho
+.L.
+LlL
+zcz
+end
+
+part nui
+...L...
+..LlL..
+.LLllL.
+LLllllq
+.zzczz.
+end
+
+anim idle fps=3 loop
+frame idle
+  use chan 0 22
+  use tren
+  use gay 23 5
+  use tay 20 13
+  outline
+end
+frame idle
+  use chan 0 22
+  use tren 0 1
+  use gay 23 5
+  use tay 20 14
+  outline
+end
+
+# đánh: vung lên → giơ cao → bổ ngang → thu về
+anim attack fps=10 once
+frame attack
+  use chan 0 22
+  use tren
+  use gay_cheo 19 2
+  use tay_len 21 10
+  outline
+end
+frame attack
+  use chan 0 22
+  use tren
+  use gay 23 1
+  use tay_len 21 9
+  outline
+end
+frame attack
+  use chan 0 22
+  use tren 1 0
+  use gay_ngang 17 16
+  use tay_dam 21 15
+  outline
+end
+frame attack
+  use chan 0 22
+  use tren
+  use gay_xuong 20 17
+  use tay 20 13
+  outline
+end
+
+# chiêu: giơ tay, NÚI NHỎ bay lên trên lòng bàn tay (hành Thổ), mây trắng
+anim cast fps=6 loop
+frame cast
+  use chan 0 22
+  use tren
+  use tay_len 21 10
+  use nui_nho 23 6
+  outline
+end
+frame cast
+  use chan 0 22
+  use tren
+  use tay_len 21 10
+  use nui 22 2
+  outline
+end
+frame cast
+  use chan 0 22
+  use tren 0 1
+  use tay_len 21 11
+  use nui 22 1
+  set 17 3 z
+  set 27 4 z
+  outline
+end
+
+# trúng đòn: giật lùi, nhắm mắt, da nháy sáng
+anim hurt fps=8 once
+frame hurt
+  use @idle.0
+  shift -1 0
+  use mat_nham 14 8
+  swap F h
+end
+frame hurt
+  use @idle.0
+  shift -1 0
+  use mat_nham 14 8
+end
+
+# chết: khuỵu gối → ngã nằm
+anim die fps=5 once
+frame die
+  use gay_xuong 20 17
+  use chan 0 22
+  use tren 0 3
+  use mat_nham 15 11
+  outline
+end
+frame die
+  use chan 0 22
+  use tren 0 3
+  use mat_nham 15 11
+  rot 90
+  shift 0 5
+  use gay_ngang 1 29
+  outline
+end
+frame die
+  use @die.1
+  swap y j
+end

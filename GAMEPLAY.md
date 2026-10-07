@@ -2192,6 +2192,45 @@ Test: cập nhật `cho-tuong` (màn Chuẩn bị không còn chọn đội, sau
 - Người dùng thấy hạt Kenney cho choáng / băng "chưa đẹp" → thêm **prompt phần E** trong `docs/PROMPT-HIEU-UNG.txt`: 5 ảnh kiểu sticker chibi (viền nâu đậm, màu phẳng 2 tông, không quầng sáng mờ, nền hồng tím): `tt-choang` (vòng sao xoay trên đầu), `tt-bang` (khối băng bọc quái), `tt-cham` (vòng sương lạnh dưới chân), `tt-bong` (cụm lửa trên thân), `tt-doc` (bong bóng độc). Cắt: `python3 tools/cat-fx.py dai <ảnh> <tên>` → `assets/vfx/<tên>.png`, rồi `node tools/build-asset-list.js`.
 - Game (js/vfx.js `VFX.status`) ưu tiên: ảnh vẽ tay `tt-*.png` (dải khung chạy lặp) → hạt Kenney → vẽ bằng code. Có `tt-bang.png` thì tắt khối băng vẽ bằng code. Mọi ảnh trạng thái đặt sao cho nội dung không lên tới thanh máu.
 - Test `tests/hieu-ung/hat-vfx.test.js` thêm phần ảnh vẽ tay giả (phục vụ qua route, không ghi vào assets/).
+## claude/pixel-nen-tang — Nền tảng chuyển toàn bộ hình sang PIXEL ART (vẽ bằng code)
+
+Người dùng chốt: đổi toàn bộ hình ảnh sang **pixel art do Claude vẽ bằng code** (lưới ký tự + bảng màu chung → PNG), không gen AI.
+Session này dựng khung để nhiều session vẽ song song không xung đột:
+
+- **Quy chuẩn** `docs/pixel/QUY-CHUAN.md`: bảng màu chung 44 màu (`tools/pixel/palette.txt` — đồng, son đỏ, vàng nghệ, chàm,
+  xanh lá mạ, nâu đất…), cỡ theo nhóm (tướng / quái 32×32, boss 48 / 64, ô nền 16, icon 16 / 12, đồ · ấn phù · kỹ năng 24),
+  viền đen 1px, sáng trên-trái 2 tông, chibi 2,5–3 đầu quay phải, ngũ hành / độ hiếm, **đặc trưng nhân vật theo prompt** (thứ tự
+  ưu tiên PROMPT-GEN-LAI > PROMPT-DUNG-XUONG > prompts-*.csv), định dạng nguồn, động tác bắt buộc.
+- **Nguồn** `tools/pixel/src/<nhóm>/<mã>.txt` (part lưới ký tự + khung ghép bằng lệnh use / shift / wrap / swap / set / rot /
+  outline). **Tool** `node tools/build-pixel.js` (Node thuần, tự mã hoá PNG) → `assets/pixel/<nhóm>/<mã>.png` (dải khung) + `.json`
+  + `<mã>-chan-dung.png`, manifest **theo nhóm** `js/pixel/<nhóm>.js` (12 file, index.html nạp sẵn → session khác nhóm không đụng
+  nhau), tự chạy lại `js/asset-list.js`. Báo lỗi: màu ngoài bảng màu, ký tự chưa khai báo, sai cỡ theo nhóm, thiếu động tác /
+  sai số khung, tràn khung… `--check`, `--strict`, `--nhap` (vẽ dở), `--xem DIR` (ảnh xem trước ×8).
+- **Game** `js/pixel.js`: công tắc `const PIXEL_BAT = false` (bật toàn cục sau) · thử `?pixel=1` (`?pixel=0` ép tắt). Khi bật,
+  mã CÓ sprite pixel thì vẽ pixel, mã chưa có giữ hình cũ: tướng trên bản đồ (idle / attack theo pha vung / cast / hurt / die,
+  giữ bóng, quầng phụ kiện, viền sáng chiêu / sao, thanh máu), quái / boss (walk / attack / hurt / rage, hiệu ứng biến thể, trạng
+  thái, thanh máu, chấm hành), biểu tượng quái, chân dung tướng (thẻ chợ, Anh Hùng, Bách khoa… qua `heroImgUrl` /
+  `drawHeroPortrait`), icon ngũ hành (`elIcon`), nền bản đồ (cỏ + đường đất / nước lát ô, `mapLayer`). Vẽ nearest-neighbor,
+  bám lưới điểm ảnh màn hình, phóng bội số nguyên; CSS `image-rendering: pixelated`.
+- **Font** (cùng công tắc): tiêu đề **Handjet**, số (vàng, đợt, sát thương bay) **VT323** — hai font pixel Google Fonts có subset
+  tiếng Việt đủ dấu; chữ dài giữ Alegreya Sans.
+- **Mẫu đủ động tác:** tướng `giong` (Thánh Gióng: khăn vàng, giáp sắt, áo choàng đỏ, gậy sắt; chiêu đầu gậy bốc lửa),
+  `tanvien` (Sơn Tinh: vương miện 3 đỉnh núi, giáp xanh rêu viền vàng, gậy thần đầu ngọc; chiêu núi nhỏ bay trên tay),
+  `chodo` (Chàng Chèo Đò: đầu cạo búi tóc, áo trắng quần chàm, dây lưng vàng, **mái chèo**; chiêu tạt sóng) — mỗi tướng idle 2 ·
+  attack 4 · cast 3 · hurt 2 · die 3; quái `tom` (Tôm Binh: mũ đồng, khiên đồng sao, giáo ngắn; walk 3 · attack 3 · hurt 2 · die 3);
+  ô nền `co`, `dat`, `nuoc` (3 khung gợn); icon `hanh-kim`, `hanh-moc`, `hanh-thuy`.
+- **Danh sách toàn bộ hình** `docs/pixel/DANH-SACH.md`: 48 lô + lô 0, 973 hình (60 tướng, 34 quái, 9 boss, ô nền, icon, kỹ năng,
+  đồ, ấn phù, thần khí, giao diện, cảnh; vfx do nhánh `claude/vfx-kenney`), mỗi mã có đặc trưng + nguồn prompt; mục đối chiếu
+  hình vẽ bằng code → mã pixel; mục **Bổ sung** cho hình mới của nhánh khác.
+- **Phong cách sử thi** (chỉ đạo người dùng, QUY-CHUAN mục 0): không trẻ con — đầu:thân 1:1,5–1:2, mắt nhỏ có thần, không má
+  hồng, mặt nghiêm; bảng màu đổi sang tông trầm cổ kính (46 màu, thêm `khoi`, `reu-toi`), bóng 3 tông, họa tiết Đông Sơn.
+  3 tướng mẫu vẽ lại theo hướng này (đai đồng hoa văn trống đồng trên giáp Gióng / Sơn Tinh).
+- **Phá cách** (chỉ đạo người dùng, QUY-CHUAN mục 0b): được diễn giải lại táo bạo (pháp sư bộ xương, hình nhân giấy, hồn ma…) nhưng giữ vai trò / vũ khí / ngũ hành; nhân vật huyền thoại có danh tính chỉ phá cách tạo hình. Mẫu: `chodo` thành **hồn lái đò sông Âm** (da xanh tái, nón lá, chân tan thành sương, vẫn cầm mái chèo). DANH-SACH thêm cột "Hướng phá cách". Không vẽ đồ trang bị lên tướng 32px.
+- Nhóm hiệu ứng là `vfx` (nhánh vfx-kenney; cho phép `tools/pixel/src/vfx/palette.txt` tạm hoặc `KHONG-BUILD`).
+
+Test mới `tests/pixel` (tool: nguồn thật hợp lệ --strict, 5 kiểu nguồn lỗi bị chặn, dựng ra thư mục tạm khớp file trong repo;
+game: không bật thì không dùng pixel; ?pixel=1 ở 1920×934 / 844×390 / 667×375 / dọc 390×844 không lỗi console, giong · tanvien ·
+chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hình cũ, vẽ không làm mịn; chụp + phóng vùng sprite).
 ## claude/sua-thoat-than-khi — Sửa lỗi vào màn Thần Khí không thoát ra được
 
 - **Nguyên nhân:** từ v170 (làm lại bảng Hợp thể), nút Quay lại ở đầu màn Thần Khí bị đổi nhầm `data-act="lg-close"` → `hx-close` (lệnh đóng bảng Hợp thể). Bấm nút chỉ ẩn bảng Hợp thể, màn Thần Khí đứng yên → kẹt (cả trong trận lẫn ngoài menu; trong trận game còn bị tạm dừng). Phím Esc ngoài trận không làm gì, nút Back trình duyệt thì rời luôn trang.

@@ -1,0 +1,31 @@
+# Icon ngũ hành Hành Thủy 16×16 — huy hiệu tròn nền tối, vành màu hành, biểu tượng giữa (thay ui/ic-hanh-thuy.png khi bật pixel).
+name: Hành Thủy
+size: 16x16
+colors:
+  k = vien
+  K = toi
+  r = nuoc
+  N = troi
+  n = nuoc-sang
+part o
+.......kk.......
+....kkrrrrkk....
+...krrrKKrrrk...
+..krrKKKKKKrrk..
+.krrKKKKKKKKrrk.
+.krKKNKKKNKKKrk.
+.rrKNnNKNnNKKrr.
+krKKKKKnKKKnKKrk
+krKKKKKKKKKKKKrk
+.rrKKNKKKNKKKrr.
+.krKNnNKNnNKKrk.
+.krrKKKnKKKnrrk.
+..krrKKKKKKrrk..
+...krrrKKrrrk...
+....kkrrrrkk....
+.......kk.......
+end
+anim main fps=1 loop
+frame main
+  use o
+end

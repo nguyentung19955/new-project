@@ -1,0 +1,38 @@
+# Ô NƯỚC 16×16 — lát liền, 3 khung gợn sóng (sông, đầm, biển).
+name: Nước
+size: 16x16
+colors:
+  n = nuoc
+  c = cham-sang
+  s = nuoc-sang
+  t = troi
+part o
+nnnnnnnnnnnnnnnn
+nnnnnnnnnnnnnnnn
+nnsstnnnnnnnnnnn
+nnnnnnnnnnnnnnnn
+nnnnnnnnnncnnnnn
+nnnnnnnnnnnnnnnn
+nnnnnnnnnnnnssnn
+nnnnnnnnnnnnnnnn
+nncnnnnnnnnnnnnn
+nnnnnnnnnnnnnnnn
+nnnnnnnsstnnnnnn
+nnnnnnnnnnnnnnnn
+nnnnnnnnnnnnnncn
+nnnnnnnnnnnnnnnn
+tnnnnnnnnnnnnnss
+nnnnnnnnnnnnnnnn
+end
+anim main fps=3 loop
+frame main
+  use o
+end
+frame main
+  use o
+  wrap 2 0
+end
+frame main
+  use o
+  wrap 4 1
+end

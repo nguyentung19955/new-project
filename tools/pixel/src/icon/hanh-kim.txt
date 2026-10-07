@@ -1,0 +1,32 @@
+# Icon ngũ hành Hành Kim 16×16 — huy hiệu tròn nền tối, vành màu hành, biểu tượng giữa (thay ui/ic-hanh-kim.png khi bật pixel).
+name: Hành Kim
+size: 16x16
+colors:
+  k = vien
+  K = toi
+  r = bac
+  w = bac
+  S = sat-sang
+  s = sat
+part o
+.......kk.......
+....kkrrrrkk....
+...krrrKKrrrk...
+..krrKKKKKKrrk..
+.krrKKKKKKKKrrk.
+.krKKKSSSSKKKrk.
+.rrKKSwwwwSKKrr.
+krKKSwwwwwwSKKrk
+krKKssssssssKKrk
+.rrKKssssssKKrr.
+.krKKKKKKKKKKrk.
+.krrKKKKKKKKrrk.
+..krrKKKKKKrrk..
+...krrrKKrrrk...
+....kkrrrrkk....
+.......kk.......
+end
+anim main fps=1 loop
+frame main
+  use o
+end
