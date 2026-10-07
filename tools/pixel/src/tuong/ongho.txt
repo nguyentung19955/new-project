@@ -1,0 +1,163 @@
+# Chúa Sơn Lâm — linh thú 32×32 (tướng Vàng · hành Mộc). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:268, PROMPT-DUNG-XUONG.txt:1257): HỔ THẬT đi 4 chân, vai to, chân nặng, mình dài — KHÔNG người,
+# không quần áo, không kiếm; lông cam VẰN ĐEN đậm, ngực + mõm trắng, chữ 王 trên trán, nanh + vuốt;
+# KHĂN CHOÀNG LÁ xanh ngọc trên vai, VÒNG CỔ ĐỒNG viền vàng (đồ Vàng). Chiêu hành Mộc: gầm, lá xanh cuộn quanh.
+name: Chúa Sơn Lâm
+size: 32x32
+anchor: 16,30
+colors:
+  k = vien
+  K = khoi
+  O = lua-sang
+  o = lua
+  d = dong
+  D = dong-toi
+  e = trang
+  E = trang-xam
+  w = sang
+  G = ngoc-sang
+  g = ngoc
+  x = la-toi
+  y = vang-nghe
+  Y = vang-sang
+  j = dong-sang
+  m = son-toi
+  r = son-sang
+  l = la-ma
+  L = la-sang
+
+part duoi
+...OK.
+..Oo..
+..oK..
+...oK.
+...Ko.
+..oo..
+.oK...
+oo....
+end
+
+part than
+...OOOOOOOOOOOOOO...
+.OOOKOOOKOOOKOOOOO..
+OOOoKoOoKoOOKoOOOOO.
+OooKooOKooOKooooooEe
+ooKoooKoooKooooKooEE
+ooKooKoooKoooooKooEE
+doooooooooooooooooEE
+ddoooooooooooooooEEd
+.dddEEEEEEEEEEEEEEd.
+end
+
+part chan
+.OOoKd.ood.....ood.OOooK
+.OoKod.oKd.....oKd.OoKod
+..OooK.ood.....ood..OooK
+..OKod.oKd.....oKd..OoKd
+..Ood..odd.....odd..Ood.
+.OOod..odd.....odd.OOod.
+eeEEE.eEEd....eEEd.eeEEE
+end
+
+part dau
+.dd.....dd....
+dEOd...dEOd...
+dOOOOOOOOOd...
+OOOKKKOOOOOd..
+OOOOKOOOOKOo..
+OOOKKKOOKKoo..
+KOOOOOOKKOOOo.
+OOOOOOOwKOOOoo
+eKOOOOOOOOOeeK
+eeKOOOOOOeeEEK
+EeeOoOOoeEmmm.
+.EEEdoooeEEE..
+end
+
+part khan
+...GGGGGG..
+.GGgggggggx
+GGggGggggxx
+GgggggGgxgx
+ggxgggggxxx
+.gxggxggxx.
+..x.gx.gx..
+....x...x..
+end
+
+part co
+jjYjj
+DdydD
+..y..
+end
+
+part mat_nham
+OOO
+KKO
+end
+
+part dau_gam
+.dd.....dd....
+dEOd...dEOd...
+dOOOOOOOOOd...
+OOOKKKOOOOOd..
+OOOOKOOOOKOo..
+OOOKKKOOKKoo..
+KOOOOOOKKOOOo.
+OOOOOOOwKOOOoo
+eKOOOOOOOOOeeK
+eeKOOOOOOmmmmK
+EeeOoOOomewmw.
+.EEEdooomEEEE.
+end
+
+part vuot
+....eEe
+...Oodk
+..OodK.
+.OodK..
+OodK...
+odK....
+end
+
+part la1
+.L.
+LlL
+.l.
+end
+
+part la2
+..Ll.
+.LllL
+LlLl.
+.lL..
+end
+
+anim idle fps=3 loop
+frame idle
+  use duoi 1 8
+  use chan 2 23
+  use than 3 14
+  use khan 10 11
+  use dau 17 5
+  use co 20 17
+  outline
+end
+frame idle
+  use duoi 1 9
+  use chan 2 23
+  use than 3 15
+  use khan 10 12
+  use dau 17 6
+  use co 20 18
+  outline
+end
+frame idle
+  use duoi 1 9
+  use chan 2 23
+  use than 3 15
+  use khan 10 12
+  use dau 17 5
+  use co 20 17
+  outline
+end
