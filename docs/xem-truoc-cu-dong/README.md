@@ -73,7 +73,7 @@ Khớp game: anvuong, giaodong, giong, haba, denroi (đèn lồng → phép), la
 
 ## Tách nền khó
 - **muc**: thân hồng trùng màu nền — giữ được thân, còn vài lỗ nhỏ trong xúc tu và 1 mảng hồng nhỏ giữa xúc tu phải.
-- **kinhduong**: viền trắng kiểu sticker (giữ nguyên), 1 chấm hồng nhỏ dưới chân.
+- **kinhduong**: viền trắng kiểu sticker — nhánh tu-cu-dong đã bóc viền (giữ khung, rig vẫn khớp).
 - **potaoapui**: giữ lửa dính thân / giáo, bỏ tia lửa và dấu ✦ rời.
 - **haisen**: lư đồng đặt cạnh (rời thân) — giữ lại, đứng yên.
 
