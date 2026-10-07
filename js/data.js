@@ -1609,6 +1609,33 @@ function rollSinhLe(opt = {}, rng = srand) {
   return ids.filter((id) => ws[id] > 0).pop();
 }
 
+// claude/can-bang-phan-thuong: BẢNG THƯỞNG BOSS CÂN BẰNG. Ô 1 luôn là Sính lễ; ô 2, 3 bốc từ 2 NHÓM KHÁC NHAU
+// (Sức mạnh / Kinh tế / An nguy), mỗi ô một kiểu. Mọi ô quy ra "vàng tương đương" (Game.rewardValue) và được
+// chỉnh số cho gần ngân sách V của lần thưởng này (chênh ≤ ~15%): ô thiếu thì kèm vàng, Hũ dư thì bớt món.
+const RW_KIND = {
+  bau:   { name: 'Bảo vật',    fam: 'suc',  color: '#FFD66B', hint: 'Mặc là mạnh ngay' },
+  do:    { name: 'Trang bị',   fam: 'suc',  color: '#C8A0F0', hint: 'Hợp khi tướng còn trống ô đồ' },
+  luyen: { name: 'Luyện quân', fam: 'suc',  color: '#6AE06A', hint: 'Hợp khi có vài tướng chủ lực' },
+  he:    { name: 'Theo hệ',    fam: 'suc',  color: '#7FC8FF', hint: 'Hợp khi đội đông tướng cùng hệ' },
+  ngay:  { name: 'Vàng ngay',  fam: 'kinh', color: '#FFD66B', hint: 'Hợp khi cần mua, ghép tướng ngay' },
+  lau:   { name: 'Lâu dài',    fam: 'kinh', color: '#E8C070', hint: 'Tổng nhiều hơn nhưng nhận dần' },
+  thu:   { name: 'Phòng thủ',  fam: 'an',   color: '#FF8A6A', hint: 'Hợp khi thành sắp vỡ' },
+  ruiro: { name: 'Rủi ro',     fam: 'an',   color: '#FF6A9A', hint: 'Giữ thành chắc thì lời to' },
+};
+const RW = {
+  budget: (w) => 400 + 40 * w,   // ngân sách gốc (vàng tương đương) theo đợt
+  slMin: 0.85, slMax: 1.3,      // V = giá trị sính lễ, kẹp trong [0.85, 1.3] × ngân sách gốc
+  bal: 0.15,                    // chênh cho phép so với V
+  mangG: 40,                    // 1 mạng ≈ 40 vàng
+  reviveG: (w) => 120 + 8 * w,  // Ngọc Hồi Sinh (hồi sinh 1 lần) ≈ vàng
+  lauN: 8, lauMul: 1.2,         // Lâu dài: tổng 1.2 V chia đều 8 đợt
+  lauDisc: 0.85,                // vàng nhận dần tính 85%
+  betWin: 1.15, betLose: 0.35,  // Rủi ro: không mất mạng tới hết đợt kế → 1.15 V, mất mạng → 0.35 V
+  betP: 0.75,                   // xác suất giữ thành dùng khi chưa có lịch sử
+  thuLives: (V) => Math.max(4, Math.min(15, Math.round(V * 0.35 / 40))),   // Phòng thủ: ~35% V thành mạng, còn lại là vàng
+  heMin: 10, heMax: 60,         // Theo hệ: +% sát thương và máu, bậc 5%
+};
+
 // ------------------------------------------------------------
 //  ĐỒ MỚI (v15): 4 phụ kiện, 8 đồ ghép, 4 bộ đồ (Sơn Tinh, Chim Lạc,
 //  Trống Đồng, Ngựa Sắt). fx: hiệu ứng đặc biệt cộng vào chỉ số tướng.

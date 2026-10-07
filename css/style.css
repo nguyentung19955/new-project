@@ -1116,6 +1116,13 @@ button:disabled { cursor: default; }
 #more::after { left: var(--ax, 50%); }
 #more.below::after { bottom: auto; top: -6px; transform: translateX(-50%) rotate(225deg); }
 /* v37: Hũ Vua Hùng nhiều món */
+/* claude/can-bang-phan-thuong: nhãn kiểu + con số của từng ô thưởng */
+.sl-tag.sl-kind { background: #0D0B08E6; border: 1px solid; }
+.sl-card.misc .sl-desc { height: auto; min-height: 50px; }
+.sl-desc .rw-big { font-size: 16px; font-weight: 800; white-space: nowrap; }
+.sl-desc .rw-g { color: #FFD66B; white-space: nowrap; }
+.sl-desc small { color: #A89A80; }
+.rw-hint { margin-top: 2px; font-size: 11px; color: #A89A80; font-style: italic; }
 .sl-desc.jar-list { display: flex; flex-direction: column; gap: 1px; font-size: 13px; line-height: 1.2; }
 .sl-desc.jar-list div { display: flex; justify-content: space-between; gap: 6px; white-space: nowrap; }
 .sl-desc.jar-list span { font-weight: 800; overflow: hidden; text-overflow: ellipsis; }

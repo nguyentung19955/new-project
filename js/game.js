@@ -315,7 +315,8 @@ function heroStats(h) {
   if (s.hid['i.moc2'] && (h.still || 0) >= 10) s.bonusDmgPct += 15;
   if (s.hid['i.thuy1'] && b.thuyAdj) s.bonusDmgPct += 10;   // đứng kề tướng hành Thủy
   if (b.vt) for (const k in b.vt) s[k] += b.vt[k];        // v182: cộng hưởng vai trò
-  s.bonusDmgPct += (b.sinh || 0) * ELEM.sinh + (b.full ? ELEM.full : 0) + (b.drum || 0) - (b.llqPen ? 10 : 0);
+  s.bonusDmgPct += (b.sinh || 0) * ELEM.sinh + (b.full ? ELEM.full : 0) + (b.drum || 0) - (b.llqPen ? 10 : 0) + (b.elPct || 0);
+  s.hpPct += b.elPct || 0;                                 // thưởng boss Theo hệ: +% sát thương và máu
   s.airMult += s.airPct / 100;
   if (s.hitAir) s.canAir = true;
   if (h.huntT > 0) s.haste += 30;
@@ -1383,6 +1384,11 @@ class Game {
     this.shake = 0;
     this.bossesKilled = 0;
     this.slHist = [];         // v181: sính lễ đã ra trong trận (chống trùng liên tiếp)
+    this.rwHist = '';         // claude/can-bang-phan-thuong: cặp kiểu ô 2, 3 lần thưởng trước
+    this.incomes = [];        // Lâu dài: [{ per, left }]
+    this.bet = null;          // Rủi ro: { until, lost0, win, lose }
+    this.elBuff = {};         // Theo hệ: { hệ: +% sát thương & máu }
+    this.lostN = 0; this.lostWave = 0; this.lossLog = [];   // số mạng đã mất (đếm lần lọt), lịch sử đợt có mất mạng
     this.seen = {};
     this.endless = true;      // v166: chỉ còn chế độ vô tận (đơn và nhóm)
     this.won = false;
@@ -2531,6 +2537,7 @@ class Game {
       const el = HEROES[h.type].el;
       h.buff.sinh = Math.min(ELEM.sinhMax, alive.filter((o) => near(h, o, ELEM.adj) && EL_SINH[HEROES[o.type].el] === el).length);
       h.buff.full = full;
+      if (this.elBuff && this.elBuff[el]) h.buff.elPct = this.elBuff[el];   // claude/can-bang-phan-thuong: thưởng Theo hệ
       h.buff.vt = typeof roleSynStats === 'function' ? roleSynStats(h.type, tiers) : null;
       h.buff.tamGioi = els.size >= 3;
       h.buff.airWave = airWave;
@@ -2648,6 +2655,9 @@ class Game {
       }
     }
     if (extra) this.addGold(extra);
+    this.rwWaveEnd();
+    this.lossLog = (this.lossLog || []).concat((this.lostN || 0) > (this.lostWave || 0)).slice(-6);   // đợt này có mất mạng không
+    this.lostWave = this.lostN || 0;
     this.moc = this.mocMax();
     this.rollShop();      // cửa hàng nhập hàng mới
     this.notify(`Hoàn thành đợt ${this.wave}! +${bonus + extra} vàng · ${this.sonTinh() ? 'núi cao' : 'giữ vững'} +${mGold} vàng`, '#F2D27A');
@@ -2671,7 +2681,7 @@ class Game {
     const skip = new Set(['_anim', 'target', 'tgt', 'notice', 'unlockFx', 'procT', 'strike', '_va']);   // v131: strike giữ hàm (đòn đang vung) — không lưu được
     const heroes = JSON.parse(JSON.stringify(this.heroes, (k, v) => (skip.has(k) ? undefined : v)));
     const o = { v: 1, at: Date.now(), heroes };
-    for (const k of ['level', 'hard', 'endless', 'won', 'gold', 'lives', 'maxLives', 'wave', 'summonN', 'bossesKilled', 'slHist', 'seen', 'water', 'raised', 'moc',
+    for (const k of ['level', 'hard', 'endless', 'won', 'gold', 'lives', 'maxLives', 'wave', 'summonN', 'bossesKilled', 'slHist', 'rwHist', 'incomes', 'bet', 'elBuff', 'lostN', 'lostWave', 'lossLog', 'seen', 'water', 'raised', 'moc',
       'mountain', 'stats', 'inventory', 'jarCount', 'shop', 'time', 'flags', 'runId', 'guardT', 'oathT', 'xpLog', 'market']) o[k] = this[k];
     return JSON.parse(JSON.stringify(o));
   }
@@ -2974,6 +2984,7 @@ class Game {
         return;
       }
       this.lives -= d.lives || 1;
+      this.lostN = (this.lostN || 0) + 1;
       this.effects.push({ type: 'flash', ttl: 0.3, max: 0.3 });
       this.livesLost();
       if (this.lives <= 0) {
@@ -3740,6 +3751,8 @@ class Game {
   }
 
   // Vua Hùng ban thưởng: chọn 1 trong 3
+  // claude/can-bang-phan-thuong: ô 1 Sính lễ (bốc ngẫu nhiên như v181); ô 2, 3 hai kiểu thuộc 2 nhóm khác nhau
+  // (RW_KIND: Sức mạnh / Kinh tế / An nguy). Cả 3 ô chỉnh số theo "vàng tương đương" cho gần ngân sách V.
   bossRewards(bossType) {
     // v181: sính lễ bốc ngẫu nhiên có trọng số (rollSinhLe trong data.js), mốc lớn tăng tỉ lệ món hiếm
     const big = slBigWave(this.wave);
@@ -3748,19 +3761,146 @@ class Game {
     this.slHist = this.slHist || [];
     const sl = rollSinhLe({ hist: this.slHist, owned, big });
     this.slHist = this.slHist.concat(sl).slice(-6);
-    const opts = [{ kind: 'item', id: sl, title: `Sính lễ ${ITEMS[sl].name}`, sinhLe: true, big }];
-    // Hũ Vua Hùng (v37): nhiều món, chọn món hợp với các tướng mạnh nhất trên sân
+    const rates = this.rwRates();
+    const gift = { kind: 'item', id: sl, title: `Sính lễ ${ITEMS[sl].name}`, sinhLe: true, big, tag: 'bau' };
+    const base = RW.budget(this.wave);
+    const V = Math.round(Math.min(base * RW.slMax, Math.max(base * RW.slMin, this.rewardValue(gift, rates))));
+    const opts = [this.rwFit(gift, V, rates)];
+    // 2 kiểu cho ô 2, 3: 2 nhóm khác nhau, không lặp đúng cặp của lần trước
+    const heEl = this.rwHeEl();
+    const fams = { suc: ['do', 'luyen'].concat(heEl ? ['he'] : []), kinh: ['ngay', 'lau'], an: ['thu', 'ruiro'] };
+    const pick = (a) => a[Math.floor(srand() * a.length)];
+    let pair;
+    for (let k = 0; k < 6; k++) {
+      const fs = Object.keys(fams), f1 = fs.splice(Math.floor(srand() * 3), 1)[0], f2 = pick(fs);
+      pair = [pick(fams[f1]), pick(fams[f2])].sort((a, b) => (RW_KIND[a].fam === 'suc' ? -1 : 0) - (RW_KIND[b].fam === 'suc' ? -1 : 0));
+      if (pair.join() !== (this.rwHist || '')) break;
+    }
+    this.rwHist = pair.join();
+    for (const tag of pair) opts.push(this.rwMake(tag, V, rates, bossType, heEl));
+    return opts;
+  }
+
+  // ---------- "vàng tương đương" (claude/can-bang-phan-thuong)
+  // vàng cần để tăng 1 điểm lực chiến của tướng h bằng cách lên cấp (tướng cấp tối đa: trung vị các tướng khác)
+  rwRates() {
+    const m = new Map(), all = [];
+    for (const h of this.heroes) {
+      if (!h || h.level >= CONFIG.maxLevel) continue;
+      const p0 = heroPower(h); h.level++; const p1 = heroPower(h); h.level--; heroStats(h);
+      if (p1 > p0) { const r = this.levelCost(h) / (p1 - p0); m.set(h, r); all.push(r); }
+    }
+    all.sort((a, b) => a - b);
+    m.mid = all.length ? all[all.length >> 1] : 5;
+    return m;
+  }
+  rwPowGold(h, dp, rates) { return dp * (rates.get(h) || rates.mid); }
+  // đồ: gán lần lượt từng món cho tướng lợi nhất (món sau tính trên đồ đã mặc thử của món trước)
+  rwItemsGold(ids, rates) {
+    const tried = [];
+    let sum = 0;
+    for (const id of ids) {
+      const inst = makeItem(id);
+      let best = null, bg = 0;
+      for (const h of this.heroes) { if (!h) continue; const gn = this.rwPowGold(h, upgradeGain(h, inst), rates); if (gn > bg) { bg = gn; best = h; } }
+      if (!best) continue;
+      const sl = slotFor(best, inst);
+      tried.push([best, sl, best.equip[sl]]);
+      best.equip[sl] = inst;
+      sum += bg;
+    }
+    for (const [h, sl, old] of tried.reverse()) h.equip[sl] = old;
+    for (const h of this.heroes) if (h) heroStats(h);
+    return sum;
+  }
+  rwLevelGold(o) {
+    let v = 0;
+    for (const h of this.heroes) {
+      if (!h || (o.who && !o.who.includes(h.id))) continue;
+      const L = h.level;
+      for (let i = 0; i < o.levels && h.level < CONFIG.maxLevel; i++) { v += this.levelCost(h); h.level++; }
+      h.level = L;
+    }
+    return v;
+  }
+  rwHeGold(el, pct, rates) {
+    let v = 0;
+    for (const h of this.heroes) {
+      if (!h || HEROES[h.type].el !== el) continue;
+      const b = h.buff, p0 = heroPower(h);
+      h.buff = Object.assign({}, b, { elPct: ((b && b.elPct) || 0) + pct });
+      v += this.rwPowGold(h, heroPower(h) - p0, rates);
+      h.buff = b; heroStats(h);
+    }
+    return v;
+  }
+  // hệ có nhiều lực chiến nhất trên sân (cần ít nhất 2 tướng cùng hệ)
+  rwHeEl() {
+    const n = {}, p = {};
+    for (const h of this.heroes) if (h) { const el = HEROES[h.type].el; n[el] = (n[el] || 0) + 1; p[el] = (p[el] || 0) + heroPower(h); }
+    const els = Object.keys(n).filter((el) => n[el] >= 2).sort((a, b) => p[b] - p[a]);
+    return els[0] || null;
+  }
+  rwSafeP() {
+    const L = (this.lossLog || []).slice(-3);
+    return L.length ? L.filter((x) => !x).length / L.length : RW.betP;
+  }
+  rewardValue(o, rates = this.rwRates()) {
+    let v = (o.gold || 0) + (o.lives || 0) * RW.mangG;
+    if (o.kind === 'item') {
+      v += this.rwItemsGold(o.ids || [o.id], rates);
+      if (ITEMS[o.id] && ITEMS[o.id].revive) v += RW.reviveG(this.wave);
+    } else if (o.kind === 'levelup') v += this.rwLevelGold(o);
+    else if (o.kind === 'income') v += o.per * o.waves * RW.lauDisc;
+    else if (o.kind === 'elbuff') v += this.rwHeGold(o.el, o.pct, rates);
+    else if (o.kind === 'bet') { const p = this.rwSafeP(); v = (o.lives || 0) * RW.mangG + p * o.win + (1 - p) * o.lose; }
+    return Math.round(v);
+  }
+  // ô thiếu so với V thì kèm vàng cho đủ
+  rwFit(o, V, rates) {
+    const v = this.rewardValue(o, rates);
+    if (v < V * (1 - RW.bal / 2)) o.gold = (o.gold || 0) + Math.round((V - v) / 10) * 10;
+    o.val = this.rewardValue(o, rates);
+    return o;
+  }
+  rwMake(tag, V, rates, bossType, heEl) {
+    const r10 = (x) => Math.max(10, Math.round(x / 10) * 10);
+    if (tag === 'ngay') return { kind: 'treasure', tag, gold: r10(V), lives: 0, title: 'Kho lúa', val: r10(V) };
+    if (tag === 'lau') {
+      const per = Math.max(5, Math.round(V * RW.lauMul / RW.lauN / 5) * 5);
+      return this.rwFit({ kind: 'income', tag, per, waves: RW.lauN, title: 'Ruộng công điền' }, V, rates);
+    }
+    if (tag === 'thu') {
+      const lives = RW.thuLives(V);
+      return this.rwFit({ kind: 'treasure', tag, gold: 0, lives, title: 'Đắp thành' }, V, rates);
+    }
+    if (tag === 'ruiro') return this.rwFit({ kind: 'bet', tag, win: r10(V * RW.betWin), lose: r10(V * RW.betLose), title: 'Cược với thần sông' }, V, rates);
+    if (tag === 'he') {
+      let pct = RW.heMin;
+      while (pct < RW.heMax && this.rwHeGold(heEl, pct + 5, rates) <= V * (1 + RW.bal / 2)) pct += 5;
+      return this.rwFit({ kind: 'elbuff', tag, el: heEl, pct, title: `Hệ ${ELEMENTS[heEl].name} hưng thịnh` }, V, rates);
+    }
+    if (tag === 'luyen') {
+      // chọn số tướng mạnh nhất (K) và số cấp (1–3) cho tổng vàng lên cấp gần V nhất
+      const top = this.heroes.filter((h) => h && h.level < CONFIG.maxLevel).sort((a, b) => heroPower(b) - heroPower(a));
+      let best = null;
+      for (let lv = 1; lv <= 3; lv++) for (let k = 1; k <= top.length; k++) {
+        const o = { kind: 'levelup', tag, levels: lv, who: top.slice(0, k).map((h) => h.id), title: 'Hội làng mừng thắng' };
+        const v = this.rwLevelGold(o), d = v > V * (1 + RW.bal / 2) ? (v - V) * 3 : V - v;
+        if (!best || d < best.d) best = { o, d };
+      }
+      if (!best) return this.rwMake('ngay', V, rates);
+      best.o.names = this.heroes.filter((h) => h && best.o.who.includes(h.id)).map((h) => HEROES[h.type].name);
+      return this.rwFit(best.o, V, rates);
+    }
+    // Hũ Vua Hùng (v37): nhiều món, chọn món hợp với các tướng mạnh nhất trên sân; dư so với V thì bớt món
     const lvl = { thuongluong: 0, haba: 1, thuytinh: 2 }[bossType] || 0;
     const plan = [['epic', 'epic'], ['set', 'epic', 'epic'], ['set', 'set', 'epic']][lvl];
     const ids = [];
     for (const r of plan) ids.push(this.jarPick(r, ids));
-    opts.push({ kind: 'item', id: ids[0], ids, title: 'Hũ Vua Hùng', jar: true });
-    if (srand() < 0.5) {
-      opts.push({ kind: 'treasure', gold: 200 + this.wave * 15, lives: 3, title: 'Kho lúa · Đắp thành' });
-    } else {
-      opts.push({ kind: 'levelup', levels: 2, title: 'Hội làng mừng thắng' });
-    }
-    return opts;
+    const o = { kind: 'item', tag: 'do', id: ids[0], ids, title: 'Hũ Vua Hùng', jar: true };
+    while (o.ids.length > 1 && this.rewardValue(o, rates) > V * (1 + RW.bal / 2)) o.ids.pop();
+    return this.rwFit(o, V, rates);
   }
 
   // bốc tối đa 10 món cùng độ hiếm (bỏ món đã có trong hũ), lấy món tăng lực chiến nhiều nhất cho 3 tướng mạnh nhất
@@ -3780,12 +3920,9 @@ class Game {
   claimReward(o) {
     if (o.kind === 'item') {
       for (const id of o.ids || [o.id]) this.addItem(id);
-    } else if (o.kind === 'treasure') {
-      this.addGold(o.gold);
-      this.gainLives(o.lives);
     } else if (o.kind === 'levelup') {
       for (const h of this.heroes) {
-        if (!h) continue;
+        if (!h || (o.who && !o.who.includes(h.id))) continue;
         let n = 0;
         for (let i = 0; i < o.levels && h.level < CONFIG.maxLevel; i++) {
           const before = heroStats(h).hpMax;
@@ -3796,6 +3933,32 @@ class Game {
         }
         if (n) this.levelFx(h, n);
       }
+    } else if (o.kind === 'income') {
+      // Lâu dài: nhận o.per vàng khi xong mỗi đợt, o.waves đợt (cộng dồn nếu chọn nhiều lần)
+      this.incomes = (this.incomes || []).concat({ per: o.per, left: o.waves });
+    } else if (o.kind === 'elbuff') {
+      this.elBuff = Object.assign({}, this.elBuff);
+      this.elBuff[o.el] = (this.elBuff[o.el] || 0) + o.pct;
+      this.updateAuras();
+    } else if (o.kind === 'bet') {
+      // Rủi ro: tới hết đợt kế mà không mất mạng nào → o.win, mất mạng → o.lose
+      this.bet = { until: this.wave + 1, lost0: this.lostN || 0, win: o.win, lose: o.lose };
+    }
+    if (o.gold) this.addGold(o.gold);
+    if (o.lives) this.gainLives(o.lives);
+  }
+  // xong đợt: trả vàng Lâu dài, chốt cược Rủi ro
+  rwWaveEnd() {
+    let pay = 0;
+    for (const x of this.incomes || []) if (x.left > 0) { pay += x.per; x.left--; }
+    if (this.incomes) this.incomes = this.incomes.filter((x) => x.left > 0);
+    if (pay) { this.addGold(pay); this.notify(`Ruộng công điền: +${pay} vàng`, '#E8C070'); }
+    const b = this.bet;
+    if (b && this.wave >= b.until) {
+      const ok = (this.lostN || 0) === b.lost0;
+      this.addGold(ok ? b.win : b.lose);
+      this.notify(ok ? `Thắng cược thần sông! +${b.win} vàng` : `Thua cược (thành mất mạng): chỉ +${b.lose} vàng`, ok ? '#FFD66B' : '#FF8A6A');
+      this.bet = null;
     }
   }
 

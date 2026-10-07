@@ -2872,14 +2872,42 @@ class UI {
     const g = this.game;
     const flood = false;      // v36: bỏ nước dâng ngập ô
     const th = themeOf(g.level, g.endless && g.wave > g.levelWaves);   // v163: lời ban thưởng theo chương
-    const gift = ev.options[0], jar = ev.options[1], misc = ev.options[2];
+    const gift = ev.options[0];
     const art = { voi_chin_nga: 'voi', ga_chin_cua: 'ga', ngua_hong_mao: 'ngua' }[gift.id];
     const it = ITEMS[gift.id];
     // v181: sính lễ ngẫu nhiên — hiện rõ ảnh + tên + độ hiếm sính lễ (và tỉ lệ ra ở mốc này)
     const sl = SINH_LE[gift.id], tier = SL_TIER[sl ? sl.tier : 'thuong'];
     const ws = sinhLeWeights({ big: gift.big }), pct = Math.round(100 * ws[gift.id] / Object.values(ws).reduce((a, b) => a + b, 0));
     const giftArt = (art && sceneArt(art)) || itemIcon(gift.id);
-    const jit = ITEMS[jar.id];
+    // claude/can-bang-phan-thuong: mỗi ô có nhãn kiểu (RW_KIND) + con số cụ thể + một dòng "hợp khi"
+    const K = (o) => RW_KIND[o.tag] || RW_KIND.ngay;
+    const kTag = (o) => `<span class="sl-tag sl-kind" style="right:6px;border-color:${K(o).color};color:${K(o).color}">${K(o).name}</span>`;
+    const plus = (o) => (o.gold && o.kind !== 'treasure' ? ` <b class="rw-g">${coin(1)}+${fmt(o.gold)} kèm</b>` : '');
+    const hint = (o) => `<div class="rw-hint">${K(o).hint}</div>`;
+    const card = (o, i) => {
+      let well = sceneArt('kholua'), name = o.title, body;
+      if (o.tag === 'do') {
+        well = sceneArt('huvua'); name = `Hũ Vua Hùng · ${o.ids.length} món`;
+        body = `<div class="sl-desc jar-list">${o.ids.map((id) => {
+          const best = g.bestHeroFor(makeItem(id));
+          return `<div><span class="c-${ITEMS[id].rarity}">${ITEMS[id].name}</span>${best ? `<small>▲${best.gain} ${HEROES[best.hero.type].name}</small>` : ''}</div>`;
+        }).join('')}${o.gold ? `<div>${plus(o)}</div>` : ''}</div>`;
+      } else {
+        const big = (t, c = '#FFD66B') => `<span class="rw-big" style="color:${c}">${t}</span>`;
+        const main = {
+          ngay: () => big(`${coin()}+${fmt(o.gold)} vàng`) + ' ngay',
+          lau: () => big(`${coin()}+${o.per}/đợt`, '#E8C070') + ` × ${o.waves} đợt (tổng ${fmt(o.per * o.waves)})`,
+          thu: () => big(`${ic('mang')}+${o.lives} mạng`, '#FF8A6A') + (o.gold ? ` ${coin(1)}+${fmt(o.gold)} vàng` : ''),
+          ruiro: () => `Không mất mạng tới hết đợt ${g.wave + 1}: ${big(`+${fmt(o.win)}`)} · mất mạng: +${fmt(o.lose)}`,
+          he: () => `Tướng hệ ${ELEMENTS[o.el].name} (${g.heroes.filter((h) => h && HEROES[h.type].el === o.el).length} tướng): ${big(`+${o.pct}%`, ELEMENTS[o.el].color)} sát thương &amp; máu cả trận`,
+          luyen: () => `${big(`+${o.levels} cấp`, '#6AE06A')} cho ${o.who.length} tướng mạnh nhất <small>(${(o.names || []).slice(0, 3).join(', ')}${(o.names || []).length > 3 ? '…' : ''})</small>`,
+        }[o.tag];
+        body = `<div class="sl-desc">${main ? main() : ''}${plus(o)}${hint(o)}</div>`;
+      }
+      return `<div class="sl-card ${o.tag === 'do' ? 'jar' : 'misc'} rw-${o.tag}"><div class="sl-well">${svgI(well)}<span class="sl-tag" style="left:6px;background:#0D0B08;border:1px solid #8C6A2E;color:#F2E6C8">${o.tag === 'do' ? 'HŨ BÁU' : 'LỘC VUA'}</span>${kTag(o)}</div>
+          <div class="sl-name">${name}</div>${body}
+          <button class="sl-pick metal" style="color:#F2D27A" data-act="reward" data-i="${i}">Chọn</button></div>`;
+    };
     $('#reward').innerHTML = `<div class="screen" style="z-index:auto">
       <div class="scr-head metal"><h1 class="ttl">${th.rewardHead || 'Chọn phần thưởng'}</h1><span class="chip dark">Đợt ${g.wave}</span>
         <span class="chip ok">${UIE.done()} Đã hạ ${ENEMIES[ev.boss].name}</span><span class="chip goldc">Chọn 1 trong 3</span>${gift.big ? '<span class="chip sl-big">★ Mốc lớn: sính lễ hiếm dễ ra hơn</span>' : ''}<div class="sp"></div>
@@ -2887,19 +2915,9 @@ class UI {
       <div class="sl-title">${th.reward || 'Phần thưởng hạ boss'}</div>
       <div class="sl-cards">
         <div class="sl-card gift sl-${sl ? sl.tier : 'thuong'}"><div class="sl-well${art ? '' : ' sl-icon'}">${svgI(giftArt)}<span class="sl-tag" style="left:6px;background:#0D0B08;border:1px solid #8C6A2E;color:#F2E6C8">SÍNH LỄ</span><span class="sl-tag sl-tier" style="right:6px;background:${tier.bg};border:1px solid ${tier.color};color:${tier.color}">${tier.name}</span></div>
-          <div class="sl-name">${it.name}</div><div class="sl-rar"><span style="color:${tier.color}">● Sính lễ ${tier.name}</span> · <span class="c-legendary">Huyền thoại</span> · ngẫu nhiên ~${pct}%</div><div class="sl-desc">${esc(it.desc)}${statLine(it.stats) ? `<br><b>${statLine(it.stats)}</b>` : ''}</div>
+          <div class="sl-name">${it.name}</div><div class="sl-rar"><span style="color:${tier.color}">● Sính lễ ${tier.name}</span> · <span class="c-legendary">Huyền thoại</span> · ngẫu nhiên ~${pct}%</div><div class="sl-desc">${esc(it.desc)}${statLine(it.stats) ? `<br><b>${statLine(it.stats)}</b>` : ''}${plus(gift)}</div>
           <button class="sl-pick btn-gold" data-act="reward" data-i="0">Chọn</button></div>
-        <div class="sl-card jar"><div class="sl-well">${svgI(sceneArt('huvua'))}<span class="sl-tag" style="left:6px;background:#0D0B08;border:1px solid #8C6A2E;color:#F2E6C8">HŨ BÁU</span><span class="sl-tag" style="right:6px;background:#A86CE0;color:#1A0A28">${(jar.ids || []).length} món</span></div>
-          <div class="sl-name">Hũ Vua Hùng · ${(jar.ids || [jar.id]).length} món</div><div class="sl-desc jar-list">${(jar.ids || [jar.id]).map((id) => {
-            const best = g.bestHeroFor(makeItem(id));
-            return `<div><span class="c-${ITEMS[id].rarity}">${ITEMS[id].name}</span>${best ? `<small>▲${best.gain} ${HEROES[best.hero.type].name}</small>` : ''}</div>`;
-          }).join('')}</div>
-          <button class="sl-pick metal" style="color:#F2D27A" data-act="reward" data-i="1">Chọn</button></div>
-        <div class="sl-card misc"><div class="sl-well">${svgI(sceneArt('kholua'))}<span class="sl-tag" style="left:6px;background:#0D0B08;border:1px solid #8C6A2E;color:#F2E6C8">${misc.kind === 'treasure' ? 'KHO LÚA' : 'HỘI LÀNG'}</span><span class="sl-tag" style="right:6px;background:#12301A;border:1px solid #3EDC4E;color:#6AE06A">Ngẫu nhiên</span></div>
-          <div class="sl-name">${misc.title}</div>
-          <div class="sl-desc">${misc.kind === 'treasure' ? `<span style="font-size:17px;font-weight:800;color:#FFD66B">${coin()} +${misc.gold} vàng</span> <span style="font-size:17px;font-weight:800;color:#FF8A6A">${ic('mang')}+${misc.lives} mạng</span>`
-            : '<span class="g">Mọi tướng trên sân +2 cấp</span> (kèm 2 điểm kỹ năng)'}<br>Lần khác: ${misc.kind === 'treasure' ? '<span class="g">mọi tướng +2 cấp</span>' : '<span class="g">vàng và +3 mạng</span>'}</div>
-          <button class="sl-pick metal" style="color:#F2D27A" data-act="reward" data-i="2">Chọn</button></div>
+        ${ev.options.slice(1).map((o, i) => card(o, i + 1)).join('')}
       </div>
       ${flood ? `<div class="sl-warn"><span style="font-size:20px">${ic('nuoc-dang')}</span><span style="flex:1"><b>Thủy Tinh dâng nước:</b> sau đợt này, các ô bậc <b>${TIER_NAMES[g.water]}</b> sẽ ngập và tướng đứng đó bị sa lầy. Dùng <span class="m">Mọc Núi</span> để cứu ô quan trọng.</span></div>` : ''}
     </div>`;
@@ -2923,8 +2941,11 @@ class UI {
     if (o.kind === 'item' && o.ids) this.toast(`Nhận ${o.ids.length} món từ Hũ Vua Hùng · bấm ≡ → Mặc đồ cả đội`, '#C8A0F0');
     else if (o.kind === 'item' && o.sinhLe) this.toast(`Nhận sính lễ ${ITEMS[o.id].name} (${SL_TIER[SINH_LE[o.id].tier].name})! Mở Túi đồ để đeo cho tướng`, SL_TIER[SINH_LE[o.id].tier].color);
     else if (o.kind === 'item') this.toast(`Nhận ${ITEMS[o.id].name}! Mở Túi đồ để đeo cho tướng`, RARITY[ITEMS[o.id].rarity].color);
-    else if (o.kind === 'treasure') this.toast(`+${o.gold} vàng, +${o.lives} mạng`, '#F2D27A');
-    else this.toast('Mọi tướng +2 cấp!', '#6AE06A');
+    else if (o.kind === 'treasure') this.toast(o.lives ? `+${o.lives} mạng${o.gold ? `, +${o.gold} vàng` : ''}` : `+${o.gold} vàng`, '#F2D27A');
+    else if (o.kind === 'income') this.toast(`Ruộng công điền: +${o.per} vàng mỗi đợt trong ${o.waves} đợt`, '#E8C070');
+    else if (o.kind === 'bet') this.toast(`Đã cược: giữ thành không mất mạng tới hết đợt ${this.game.bet ? this.game.bet.until : ''} để nhận ${o.win} vàng`, '#FF6A9A');
+    else if (o.kind === 'elbuff') this.toast(`Tướng hệ ${ELEMENTS[o.el].name} +${o.pct}% sát thương và máu`, ELEMENTS[o.el].color);
+    else this.toast(`${o.who ? o.who.length + ' tướng mạnh nhất' : 'Mọi tướng'} +${o.levels} cấp!`, '#6AE06A');
   }
 
   // cộng thành tích trận vào hồ sơ người chơi (chỉ cộng phần mới)
