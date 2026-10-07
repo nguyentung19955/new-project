@@ -1123,11 +1123,11 @@ button:disabled { cursor: default; }
 .dk-stbtn { width: 40px; height: 46px; padding: 0; border-radius: 6px; flex: none; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 16px; line-height: 1; }
 .dk-stbtn small { font-size: 9px; font-weight: 800; color: var(--gold-pale); margin-top: 2px; }
 .dk-stbtn.on { border-color: #FFD66B; box-shadow: 0 0 8px #FFD66B88; }
-#hero-stats { position: absolute; left: 6px; bottom: 96px; width: 400px; max-width: calc(100% / var(--hz, 1) - 12px); z-index: 7; pointer-events: none; -webkit-user-select: none; user-select: none; padding: 8px 10px; border-radius: 8px; border: 1.5px solid #D9B25A; box-shadow: 0 6px 18px #000c; }
-#hero-stats .hs-h { font-size: 12px; font-weight: 800; color: var(--gold); margin-bottom: 4px; }
+#hero-stats { position: absolute; left: 6px; bottom: 96px; width: 300px; max-width: calc(100% / var(--hz, 1) - 12px); z-index: 7; pointer-events: none; -webkit-user-select: none; user-select: none; padding: 4px 7px; border-radius: 6px; border: 1.5px solid #D9B25A; box-shadow: 0 6px 18px #000c; }
+#hero-stats .hs-h { font-size: 10.5px; font-weight: 800; color: var(--gold); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 #hero-stats .hs-h b { color: #FFD66B; }
-#hero-stats .hs-g { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px 12px; }
-#hero-stats .hs-g div { display: flex; justify-content: space-between; gap: 6px; font-size: 11.5px; color: var(--text-2); border-bottom: 1px solid #ffffff10; }
+#hero-stats .hs-g { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0 8px; }
+#hero-stats .hs-g div { display: flex; justify-content: space-between; gap: 3px; font-size: 9.5px; line-height: 1.35; color: var(--text-2); border-bottom: 1px solid #ffffff10; white-space: nowrap; }
 #hero-stats .hs-g b { color: var(--text); font-variant-numeric: tabular-nums; }
 /* v41: Cỡ chữ & nút (--hz do main.js đặt; điện thoại mặc định 1,2). Chỉ phóng các phần trong trận,
    mỗi phần phóng quanh cạnh nó bám vào màn hình nên không lệch chỗ. */
@@ -1770,7 +1770,8 @@ html.sk-nen-man-phu #prep .screen, html.sk-nen-man-phu #result .screen, html.sk-
 svg.icn { overflow: visible; }
 #bb-info .fc .icn { width: 13px; height: 13px; vertical-align: -2px; margin-right: 2px; }
 #bb-tag .icn { width: 12px; height: 12px; vertical-align: -2px; }
-#hero-stats .hs-g span .icn { width: 13px; height: 13px; vertical-align: -2px; margin-right: 3px; }
+#hero-stats .hs-g span .icn { width: 10px; height: 10px; vertical-align: -1px; margin-right: 2px; }
+#hero-stats .hs-h .icn { width: 11px; height: 11px; vertical-align: -1px; }
 .prep-card .ic .icn, .nt-ico .icn { width: 26px; height: 26px; margin: 0; vertical-align: middle; }
 .sl-warn .icn { width: 22px; height: 22px; }
 .bk-stat { flex-wrap: wrap; gap: 2px 12px; }
