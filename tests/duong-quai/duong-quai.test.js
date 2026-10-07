@@ -19,9 +19,13 @@ for f, col in [('de-tuong-thuong.png', (0,0,255)), ('de-tuong-co.png', (255,0,0)
 Image.new('RGB', (512, 512), (250, 40, 200)).save(d + '/duong-nuoc.jpg', quality=90)
 `, TILES]);
 const clean = () => FAKE.forEach((f) => { try { fs.unlinkSync(path.join(TILES, f)); } catch (e) { /* chưa tạo */ } });
+// v180: ảnh thật (duong-nuoc.jpg đã có) cất sang thư mục tạm khi chạy, xong trả lại — trước đây test xoá mất ảnh thật
+const BAK = fs.mkdtempSync(path.join(require('os').tmpdir(), 'duong-quai-'));
+const stash = () => FAKE.forEach((f) => { const p = path.join(TILES, f); if (fs.existsSync(p)) fs.copyFileSync(p, path.join(BAK, f)); });
+const restore = () => { clean(); FAKE.forEach((f) => { const b = path.join(BAK, f); if (fs.existsSync(b)) fs.copyFileSync(b, path.join(TILES, f)); }); };
 
 (async () => {
-  clean();
+  stash(); clean();
   // ---------- 1. mọi ải ----------
   {
     const { browser, page, errors } = await open(844, 390, { unlocked: 17 });
@@ -111,6 +115,6 @@ const clean = () => FAKE.forEach((f) => { try { fs.unlinkSync(path.join(TILES, f
     await page.screenshot({ path: path.join(__dirname, 'shots', 'de-gia.png') });
     ok(!errors.length, `không lỗi trang ${errors.slice(0, 3).join(' | ')}`);
     await browser.close();
-  } finally { clean(); }
+  } finally { restore(); }
   console.log('XONG');
-})().catch((e) => { clean(); console.error(e); process.exit(1); });
+})().catch((e) => { restore(); console.error(e); process.exit(1); });
