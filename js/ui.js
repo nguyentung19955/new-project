@@ -376,6 +376,25 @@ class UI {
     });
     for (const e of ['pointerup', 'pointercancel', 'pointerleave']) $('#deck').addEventListener(e, hideTip);
     $('#deck').addEventListener('contextmenu', (ev) => { if (ev.target.closest('[data-act=cmd-skill]')) ev.preventDefault(); });
+    // v154: giữ tay ~0,35 giây lên chân dung ở thanh đáy → hiện bảng chỉ số tướng; thả tay là ẩn.
+    // Chạm nhanh không mở bảng (lần đầu nhắc "Giữ ảnh để xem chỉ số").
+    let stT = 0, stP = null;
+    const stEnd = (ev) => {
+      if (!stP || (ev && ev.pointerId !== undefined && ev.pointerId !== stP.id)) return;
+      clearTimeout(stT);
+      if (!this.statsOpen && ev && ev.type === 'pointerup' && !this.statsHinted) { this.statsHinted = true; this.toast('Giữ ảnh để xem chỉ số'); }
+      stP = null;
+      if (this.statsOpen) { this.statsOpen = false; $('#hero-stats').hidden = true; }
+    };
+    $('#deck').addEventListener('pointerdown', (ev) => {
+      if (!ev.target.closest('.dk-pt') || (ev.pointerType === 'mouse' && ev.button !== 0)) return;
+      stEnd(); stP = { id: ev.pointerId, x: ev.clientX, y: ev.clientY };
+      stT = setTimeout(() => { if (stP && this.game.heroes[this.sel]) { this.statsOpen = true; this.statsSig = null; } }, 350);
+    });
+    window.addEventListener('pointermove', (ev) => { if (stP && !this.statsOpen && ev.pointerId === stP.id && Math.hypot(ev.clientX - stP.x, ev.clientY - stP.y) > 12) { clearTimeout(stT); stP = null; } });
+    for (const e of ['pointerup', 'pointercancel']) window.addEventListener(e, stEnd, true);
+    window.addEventListener('blur', () => { stP = stP || { id: undefined }; stEnd(); });
+    $('#deck').addEventListener('contextmenu', (ev) => { if (ev.target.closest('.dk-pt')) ev.preventDefault(); });
     // v128: giữ tay lên mọi ô có data-tip (kỹ năng ở màn Anh Hùng, Ấn Phù, thẻ tướng…) → hiện mô tả
     let tip2 = 0;
     $('#ui').addEventListener('pointerdown', (ev) => {
@@ -889,7 +908,7 @@ class UI {
           <button class="btn metal" style="margin-left:auto" data-act="set-feedback">✉ Góp ý</button></div>
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 152 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 154 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1497,9 +1516,7 @@ class UI {
       // chỉ dựng lại khi đủ / thiếu vàng cho một nút (không phải mỗi lần vàng đổi) — đỡ giật khi đánh
       const afford = [lc, g.trainCost(h), ...def.skills.map((sk, i) => (skillLevel(h, i) ? (h.from ? COSTS.skillGold(i, skillLevel(h, i)) : 0) : unlockCost(h, i)))]
         .map((c) => (g.gold >= c ? 1 : 0)).join('');
-      // v147: gợi ý phát triển 1 dòng (nổi phía trên ô tên tướng)
-      const ev = this.evolveHint(h)[0];
-      key = `h|${h.id}|${h.type}|${h.level}|${h.train || 0}|${h.tier}|${h.skillPts}|${skillKey}|${afford}|${h.dead}|${h.bogged}|${fresh}|${notice}|${up}|${ev ? ev.i + ev.need : ''}|${this.moving < 0}|${assetVersion}`;
+      key = `h|${h.id}|${h.type}|${h.level}|${h.train || 0}|${h.tier}|${h.skillPts}|${skillKey}|${afford}|${h.dead}|${h.bogged}|${fresh}|${notice}|${up}|${this.moving < 0}|${assetVersion}`;
       const status = h.dead ? `Hồi sinh sau ${Math.ceil(h.respawnT)}s` : h.bogged ? 'Sa lầy · dùng Mọc Núi' : `Hành ${ELEMENTS[def.el].name} · ${ELEM_TRAIT[def.el].name}`;
       // 4 ô kỹ năng (v37): số trên ô = cấp kỹ năng; tag phía trên = giá nâng tiếp (+ điểm / + vàng / MAX).
       // Chạm ô = nâng (hoặc mở khóa) luôn, không còn màn Kỹ năng riêng.
@@ -1527,11 +1544,9 @@ class UI {
       const maxed = h.level >= CONFIG.maxLevel;
       const tc = g.trainCost(h);
       html = `<button class="dk-x metal" data-act="deck-close" aria-label="Bỏ chọn">${ICON.close}</button>
-        <span class="dk-pt ${g.known.has('h.' + h.type) ? 'goldf' : ''}" ${assetUrl(`ui_khung-${h.from ? 'vang' : 'thuong'}.png`) ? `style="background-image:url('${assetUrl(`ui_khung-${h.from ? 'vang' : 'thuong'}.png`)}'),radial-gradient(circle at 50% 60%,#3A2416,#1A0F0A 75%);background-size:100% 100%,auto"` : ''}><canvas id="dk-portrait" width="108" height="116"></canvas><span class="lv">${h.level}${h.train ? `<i>✦${h.train}</i>` : ''}</span><span class="st" ${h.from ? 'style="color:#FF7A3A"' : ''}>${'★'.repeat(h.tier || 0)}</span></span>
-        <span class="dk-info" data-act="hero-stats" role="button" aria-label="Xem chỉ số"><span class="nm">${elIcon(def.el, 15)}${def.name}</span><span class="sub ${h.bogged || h.dead ? 'warn' : ''}">${status}</span>
+        <span class="dk-pt ${g.known.has('h.' + h.type) ? 'goldf' : ''}" ${assetUrl(`ui_khung-${h.from ? 'vang' : 'thuong'}.png`) ? `style="background-image:url('${assetUrl(`ui_khung-${h.from ? 'vang' : 'thuong'}.png`)}'),radial-gradient(circle at 50% 60%,#3A2416,#1A0F0A 75%);background-size:100% 100%,auto"` : ''}><canvas id="dk-portrait" width="108" height="116" title="Giữ để xem chỉ số"></canvas><span class="lv">${h.level}${h.train ? `<i>✦${h.train}</i>` : ''}</span><span class="st" ${h.from ? 'style="color:#FF7A3A"' : ''}>${'★'.repeat(h.tier || 0)}</span></span>
+        <span class="dk-info"><span class="nm">${elIcon(def.el, 15)}${def.name}</span><span class="sub ${h.bogged || h.dead ? 'warn' : ''}">${status}</span>
           <span class="bar hp"><i id="dk-hp"></i></span><span class="bar mp"><i id="dk-mp"></i></span></span>
-        ${ev && !this.statsOpen && this.moving < 0 ? `<button class="dk-evo ${HEROES[ev.f.to].legend} ${ev.need ? '' : 'go'}" data-act="evo-focus" data-i="${ev.i}" title="${esc(`${def.name} + ${HEROES[ev.pt].name} → ${HEROES[ev.f.to].name}${ev.need ? ' · ' + ev.need : ''}`)}">
-          <span class="lb">Phát triển:</span>+<img src="${heroImgUrl(ev.pt, 'head')}" alt="">➜<img src="${heroImgUrl(ev.f.to, 'head')}" alt=""><b>${esc(HEROES[ev.f.to].name)}</b><span class="nd">${ev.need ? esc(ev.need) : 'Đủ điều kiện!'}</span></button>` : ''}
 
         ${skills}
         ${maxed ? `<button class="dk-up btn-gold" data-act="train" ${g.gold < tc ? 'disabled' : ''} aria-label="Luyện thể"><b>${uiIc('luyen-the')}Luyện thể ✦${(h.train || 0) + 1}</b><span>${coin(1)}${tc}</span></button>`
@@ -1563,10 +1578,10 @@ class UI {
         const cn = el.querySelector('.cdn');
         if (cn.textContent !== txt) cn.textContent = txt;
       });
-      // bảng chỉ số tướng (nút 📊 trên thanh tướng)
+      // bảng chỉ số tướng: chỉ hiện khi đang giữ tay lên chân dung (v154)
       const sp = $('#hero-stats');
       if (this.statsOpen && !this.screen) {
-        const sk2 = `${h.id}|${h.level}|${h.tier}|${h.train}|${h.statPts}|${Object.values(h.skillLv).join()}|${SLOTS.map((x) => h.equip[x] ? h.equip[x].uid : '').join()}|${Math.round(h.hp)}|${this.evolveHint(h).map((o) => o.need).join()}`;
+        const sk2 = `${h.id}|${h.level}|${h.tier}|${h.train}|${h.statPts}|${Object.values(h.skillLv).join()}|${SLOTS.map((x) => h.equip[x] ? h.equip[x].uid : '').join()}|${Math.round(h.hp)}`;
         if (this.statsSig !== sk2 || sp.hidden) {
           this.statsSig = sk2;
           const S = heroStats(h);
@@ -1576,10 +1591,10 @@ class UI {
             + row('Máu', `${Math.round(h.hp)}/${Math.round(S.hpMax)}`) + row('Chí mạng', `${Math.round(S.crit)}% ×${S.critMult.toFixed(1)}`) + row('Giảm hồi chiêu', `${Math.round(S.cdr)}%`)
             + row('Giảm s.thương', `${Math.round(S.dr)}%`) + row('Năng lượng', Math.round(S.maxMana))
             + row(ATTRS.str.name, Math.round(S.str)) + row(ATTRS.agi.name, Math.round(S.agi)) + row(ATTRS.int.name, Math.round(S.int))
-            + row('Điểm đã cộng', h.statPts || 0) + '</div>'
-            + this.evolveHint(h).map((o) => `<button class="hs-evo" data-act="evo-focus" data-i="${o.i}">Phát triển: + <b>${esc(HEROES[o.pt].name)}</b> ➜ <b style="color:${RARITY[HEROES[o.f.to].legend].color}">${esc(HEROES[o.f.to].name)}</b> <small class="${o.need ? '' : 'ok'}">${o.need ? esc(o.need) : 'Đủ điều kiện!'}</small></button>`).join('');
+            + row('Điểm đã cộng', h.statPts || 0) + '</div>';
           sp.hidden = false;
         }
+        this.placeStats(sp);
       } else if (!sp.hidden) sp.hidden = true;
       // thanh thao tác nổi trên tướng: tự hiện khi chọn tướng (ẩn khi mở màn khác / menu)
       const show = !h.dead && !this.screen && !this.statsOpen && $('#drawer').hidden && this.moving < 0;
@@ -1587,7 +1602,7 @@ class UI {
       if (show && (this.moreSig !== mk || $('#more').hidden)) { this.moreSig = mk; $('#more').hidden = false; this.renderMore(); }
       else if (show) this.placeMore(h);
       else if (!$('#more').hidden) $('#more').hidden = true;
-    } else { $('#more').hidden = true; $('#hero-stats').hidden = true; }
+    } else { $('#more').hidden = true; $('#hero-stats').hidden = true; this.statsOpen = false; }
     // gợi ý ngắn trên hàng thẻ
     const hint = this.moving >= 0 ? 'Chạm ô muốn chuyển tướng tới (tướng cùng loại cùng sao: ghép)' : '';
     $('#deck-hint').hidden = !hint;
@@ -1898,6 +1913,24 @@ class UI {
     this.hideOverlays();
     $('#roster').hidden = false;
     this.renderRoster();
+  }
+  // v154: bảng chỉ số nổi ngay trên thanh đáy, mép trái căn theo chân dung, không tràn khỏi màn
+  placeStats(sp) {
+    const pt = $('#dk-portrait'), ui = $('#ui');
+    if (!pt) return;
+    // đổi toạ độ màn hình → toạ độ trong #ui (máy xoay dọc: #wrap.rot quay 90°)
+    const u = ui.getBoundingClientRect(), rot = $('#wrap').classList.contains('rot');
+    const sc = (rot ? u.height : u.width) / ui.offsetWidth || 1;
+    const loc = (e) => { const r = e.getBoundingClientRect();
+      return rot ? { left: (r.top - u.top) / sc, top: (u.right - r.right) / sc } : { left: (r.left - u.left) / sc, top: (r.top - u.top) / sc }; };
+    const r = loc(pt), d = loc($('#deck'));
+    const hz = parseFloat(getComputedStyle($('#wrap')).getPropertyValue('--hz')) || 1;
+    const W = ui.offsetWidth, w = sp.offsetWidth * hz;
+    const x = Math.max(6, Math.min(W - w - 6, r.left - 4));
+    const bottom = ui.offsetHeight - d.top + 6;
+    const L = x + 'px', B = bottom + 'px';
+    if (sp.style.left !== L) sp.style.left = L;
+    if (sp.style.bottom !== B) sp.style.bottom = B;
   }
   showTip(html, el) {
     let t = $('#sk-tip');
@@ -2362,15 +2395,6 @@ class UI {
       }
       case 'merge-any': this.mergeAny(); break;
       case 'fuse-with': this.fuseWith(+d.slot); break;
-      case 'evo-focus': {
-        // v147: đánh dấu 2 tướng thành phần trên sân + mở Cây hợp thể, sáng dòng công thức
-        const f = FUSION[+d.i]; if (!f) break;
-        this.fuseFocus = { i: +d.i, until: performance.now() + 6000 };
-        $('#legends').hidden = false; $('#drawer').hidden = true; this.renderLegends();
-        for (const r of $('#lg-grid').querySelectorAll('.asc-row')) r.classList.toggle('hl', +r.dataset.i === +d.i);
-        const hl = $('#lg-grid').querySelector('.asc-row.hl'); if (hl) hl.scrollIntoView({ block: 'nearest' });
-        break;
-      }
       case 'legend-open': for (const r of $('#lg-grid').querySelectorAll('.asc-row.hl')) r.classList.remove('hl'); $('#legends').hidden = !$('#legends').hidden; $('#drawer').hidden = true; this.renderLegends(); break;
       case 'deck-close': this.clearSel(); $('#more').hidden = true; break;
       case 'quit-run':
@@ -2398,7 +2422,6 @@ class UI {
         this.sig.deck = null;
         break;
       }
-      case 'hero-stats': this.statsOpen = !this.statsOpen; this.sig.deck = null; break;
       case 'sk-stat-deck': {
         if (!h) break;
         const r = g.spendStat(h);
@@ -3080,7 +3103,7 @@ class UI {
       </div>`;
   }
 
-  // v147: CÂY PHÁT TRIỂN — tướng này ghép từ đâu / sẽ hợp thể thành tướng nào (dùng chung: Anh Hùng, chọn đội, trong trận)
+  // v147: CÂY PHÁT TRIỂN — tướng này ghép từ đâu / sẽ hợp thể thành tướng nào (dùng chung: Anh Hùng, chọn đội)
   evolveTree(t) {
     const owned = new Set(this.save.owned || []);
     const NEED = { epic: `2 tướng ${'★'.repeat(COSTS.ascendTier)}`, legendary: `Thần tinh ${'★'.repeat(COSTS.ascendTier2)} + kỹ năng tối đa` };
@@ -3110,22 +3133,6 @@ class UI {
     if (!body) return '';
     return `<div class="ev-tree inset" style="--rc:${d.legend ? RARITY[d.legend].color : '#C8BFA8'}"><div class="ev-h">${title}<small>chạm chân dung để xem tướng</small></div>${body}</div>`;
   }
-  // gợi ý 1 dòng trong trận: hợp thể gần nhất của tướng h (đối tác trên sân, điều kiện còn thiếu)
-  evolveHint(h) {
-    const g = this.game;
-    const opts = FUSION.map((f, i) => ({ f, i })).filter(({ f }) => f.a === h.type || f.b === h.type).map((o) => {
-      const pt = o.f.a === h.type ? o.f.b : o.f.a;
-      const mate = g.heroes.filter((x) => x && x !== h && x.type === pt).sort((x, y) => (y.tier || 0) - (x.tier || 0) || y.level - x.level)[0];
-      const mr = mate ? g.fusionReady(mate) : null, sr = g.fusionReady(h);
-      const star = HEROES[o.f.to].legend === 'legendary' ? `Thần tinh ${'★'.repeat(COSTS.ascendTier2)}` : '★'.repeat(COSTS.ascendTier);
-      const need = !g.ownsHero(o.f.to) ? `chưa có ${HEROES[o.f.to].name}` : sr !== true ? sr.replace(HEROES[h.type].name + ' ', '')
-        : !mate ? `cần ${HEROES[pt].name} ${star}` : mr !== true ? mr : '';
-      const score = (g.ownsHero(o.f.to) ? 4 : 0) + (mate ? 2 : 0) + (sr === true ? 1 : 0) + (mate && mr === true ? 1 : 0);
-      return { ...o, pt, need, score };
-    }).sort((a, b) => b.score - a.score);
-    return opts;
-  }
-
   // dòng "hợp nhất cho tướng nào" của một món (lực chiến tăng bao nhiêu)
   bestFor(inst) {
     const g = this.game;
