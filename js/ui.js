@@ -59,6 +59,9 @@ const coin = (sm) => KHO_MODE ? bac(sm) : (assetUrl('ui_dong-xu.png') ? `<img cl
 // icon giao diện vẽ tay (ui_*.png) nếu đã có, không thì dùng ký hiệu dự phòng
 // v155: nút vẽ tay thay ký hiệu (ui-tran-4/5, huy chương); thiếu ảnh thì quay về ký hiệu cũ
 const uiE = (f, emo, cls = 'uie') => `<img class="${cls}" src="${assetSrc(`ui/${f}.png`)}" alt="${emo}" onerror="this.replaceWith(this.alt)">`;
+// v186: ổ khoá chợ tướng — [mở, đóng]
+const MK_LOCK = ['<svg viewBox="0 0 24 24" width="20" height="20"><path d="M7 11V7a5 5 0 0 1 9.6-1.9" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><rect x="4" y="11" width="16" height="11" rx="2.5" fill="currentColor"/><circle cx="12" cy="16.5" r="1.8" fill="#1A120A"/></svg>',
+  '<svg viewBox="0 0 24 24" width="20" height="20"><path d="M7 11V7a5 5 0 0 1 10 0v4" fill="none" stroke="currentColor" stroke-width="2.6"/><rect x="4" y="11" width="16" height="11" rx="2.5" fill="currentColor"/><circle cx="12" cy="16.5" r="1.8" fill="#5A3A08"/></svg>'];
 const UIE = { star: () => uiE('ui-tran-4-1', '★'), equip: () => uiE('ui-tran-4-2', '▲'), lock: () => uiE('ui-tran-4-3', '🔒'), redo: () => uiE('ui-tran-4-4', '↻'),
   tip: () => uiE('ui-tran-5-1', '💡'), endless: () => uiE('ui-tran-5-2', '♾'), battle: () => uiE('ui-tran-5-3', '⚔'), done: () => uiE('ui-tran-5-4', '✓'),
   medal: (i) => uiE(`ui-huy-chuong-${i + 1}`, ['🥇', '🥈', '🥉', '👑'][i]) };
@@ -741,7 +744,7 @@ class UI {
     const els = EL_ORDER.map((el) => `<div class="dk-el"><div class="dk-eh" style="color:${ELEMENTS[el].color}">${elIcon(el, 13)} ${ELEMENTS[el].name}</div>${BASIC_HEROES.filter((t) => HEROES[t].el === el).map(card).join('')}</div>`).join('');
     return `<div class="dk-modal"><div class="dk-box metal">
       <div class="dk-head"><b class="ttl">Chọn đội ưu tiên</b><span class="chip ${sel.length === DECK_SIZE ? 'ok' : 'dark'}">${sel.length} / ${DECK_SIZE}</span>
-        <small>Chợ ra mọi tướng Thường, đội này ra nhiều gấp đôi · <i class="c">khắc chế</i> quái bản đồ này · <i class="h">hợp thể</i> ra tướng Tím / Vàng</small><div class="sp"></div>
+        <small class="dk-short">Chợ ra mọi tướng đã mở · đội này ra ×2</small><small>Chợ ra mọi tướng Thường đã mở, đội này ra nhiều gấp đôi · <i class="c">khắc chế</i> quái bản đồ này · <i class="h">hợp thể</i> ra tướng Tím / Vàng</small><div class="sp"></div>
         <button class="btn metal" data-act="deck-suggest">Gợi ý</button><button class="btn btn-gold" data-act="deck-done" ${sel.length === DECK_SIZE ? '' : 'disabled'}>Xong</button></div>
       <div class="dk-grid">${els}</div></div></div>`;
   }
@@ -1316,7 +1319,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 188</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 190</div>
       </div></div>`;
   }
 
@@ -2121,11 +2124,11 @@ class UI {
       key = `m|${m.types.join(',')}|${sc}|${ok.join()}|${twins.join()}|${hops.join()}|${!!m.lock}|${g.gold >= rc}|${rc}|${pairs}|${assetVersion}`;
       const short = (t) => CARD_NAME[t] || HEROES[t].name.split(' ').slice(-2).join(' ');
       html = `${pairs ? `<button class="dk-auto metal on" data-act="auto-merge" aria-label="Ghép tự động"><b>⇄</b>Ghép<br>tự động<i>${Math.floor(pairs / 2)}</i></button>` : ''}
-        <div class="mk-row">${m.types.map((t, i) => `<button class="mk-card ${ok[i] ? '' : 'poor'} ${twins[i] ? 'twin' : ''} ${hops[i] ? 'hop' : ''}" data-mk="${i}" style="--c:${ELEMENTS[HEROES[t].el].color}" aria-label="Mua ${esc(HEROES[t].name)}${heroRole(t) ? ` (${ROLES[heroRole(t)].name})` : ''}${twins[i] ? ' (ghép được)' : ''}${hops[i] ? ' (nguyên liệu hợp thể)' : ''}, ${sc} vàng" title="${heroRole(t) ? `Vai trò: ${ROLES[heroRole(t)].name}` : ''}">
-          <img src="${heroImgUrl(t, 'head')}" alt="" draggable="false"><span class="el">${elIcon(HEROES[t].el, 11)}</span>${heroRole(t) ? `<span class="rl">${roleIcon(heroRole(t), 16, true)}</span>` : ''}${twins[i] ? '<i class="tw">ghép</i>' : ''}${hops[i] ? '<i class="hp">hợp thể</i>' : ''}
-          <b class="nm">${esc(short(t))}</b><span class="cost">${coin(1)}${sc}</span></button>`).join('')}
-          <span class="mk-rrw"><button class="mk-rr metal ${g.gold >= rc ? '' : 'poor'}" data-act="mk-reroll" aria-label="Đổi cả hàng, ${rc} vàng"><b>${UIE.redo()}</b><span>${coin(1)}${rc}</span></button>
-          <button class="mk-lk ${m.lock ? 'on' : ''}" data-act="mk-lock" aria-pressed="${!!m.lock}" aria-label="${m.lock ? 'Bỏ khoá chợ' : 'Khoá chợ: giữ 4 thẻ sang đợt sau'}" title="${m.lock ? 'Đang khoá: đợt sau giữ nguyên 4 thẻ' : 'Khoá chợ: giữ 4 thẻ sang đợt sau'}">${UIE.lock()}</button></span></div>
+        <div class="mk-row ${m.lock ? 'locked' : ''}">${m.types.map((t, i) => `<button class="mk-card ${ok[i] ? '' : 'poor'} ${twins[i] ? 'twin' : ''} ${hops[i] ? 'hop' : ''}" data-mk="${i}" style="--c:${ELEMENTS[HEROES[t].el].color}" aria-label="Mua ${esc(HEROES[t].name)}${heroRole(t) ? ` (${ROLES[heroRole(t)].name})` : ''}${twins[i] ? ' (ghép được)' : ''}${hops[i] ? ' (nguyên liệu hợp thể)' : ''}, ${sc} vàng" title="${heroRole(t) ? `Vai trò: ${ROLES[heroRole(t)].name}` : ''}">
+          <img src="${heroImgUrl(t, 'head')}" alt="" draggable="false"><span class="el">${elIcon(HEROES[t].el, 11)}</span>${heroRole(t) ? `<span class="rl">${roleIcon(heroRole(t), 16, true)}</span>` : ''}
+          <b class="nm">${esc(short(t))}</b><span class="cost">${twins[i] ? '<i class="tw">ghép</i>' : ''}${coin(1)}${sc}${hops[i] ? '<i class="hp">hợp</i>' : ''}</span></button>`).join('')}
+          <button class="mk-rr metal ${g.gold >= rc ? '' : 'poor'}" data-act="mk-reroll" aria-label="Đổi cả hàng, ${rc} vàng"><b>${UIE.redo()}</b><span>${coin(1)}${rc}</span></button>
+          <button class="mk-lk metal ${m.lock ? 'on' : ''}" data-act="mk-lock" aria-pressed="${!!m.lock}" aria-label="${m.lock ? 'Bỏ khoá chợ' : 'Khoá chợ: giữ 4 thẻ sang đợt sau'}" title="${m.lock ? 'Đang khoá: đợt sau giữ nguyên 4 thẻ' : 'Khoá chợ: giữ 4 thẻ sang đợt sau'}">${MK_LOCK[m.lock ? 1 : 0]}<span>${m.lock ? 'Đã<br>khoá' : 'Khoá'}</span></button></div>
         <span class="dk-sep"></span><button class="dk-card legend" data-act="legend-open" aria-label="Cây hợp thể">${`<img class="asc-ic" src="${assetSrc('ui/ui-tran-3-2.png')}" alt="★">`}Hợp<br>thể</button>`;
     } else {
       const def = HEROES[h.type];

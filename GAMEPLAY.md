@@ -1950,3 +1950,27 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 - Ảnh test tự chụp (`tests/**/shots/`, ảnh của menu-nut) bỏ khỏi git (.gitignore), giữ trên đĩa; ảnh minh hoạ `tests/<tên>/truoc-sau.png`, `docs/` giữ nguyên. Không test nào so ảnh với ảnh gốc đã commit nên không cần `ref/`.
 - `.gitattributes`: `GAMEPLAY.md merge=union` — các nhánh cùng thêm ghi chú cuối file không còn xung đột.
 - Sửa test: duong-quai (ảnh giả qua `page.route` + thư mục tạm, không còn xoá/cất `assets/tiles/duong-nuoc.jpg` thật); cat-anh (thiếu scipy → tự `pip install --user`, không được thì SKIP; animation chờ theo điều kiện thay 400 ms cố định); xem-gop-y/rules-emulator (thiếu thư viện / Java / emulator → SKIP); cho-tuong/ti-le (mô phỏng chợ seed Math.random); hop-the, tui-do (chờ phần tử hiện thay đợi cố định — trước hay đỏ khi máy bận); menu-nut (ảnh ghi vào shots/). `helpers.open()` nhận thêm `prep(page)` chạy trước khi mở trang.
+## Phiên bản 186 — Sửa 3 lỗi tester ở chợ tướng (khoá chợ, nhãn thẻ, dòng giải thích)
+- **🔒 Khoá chợ rõ hơn:** bỏ nút tròn 26px chồm lên viền thanh chợ; thay bằng nút riêng cạnh ↻ (36×60, vùng chạm ~39×65 sau phóng to), ổ khoá SVG vẽ bằng code (mở khi chưa khoá, đóng khi khoá) + chữ "Khoá" / "Đã khoá". Đang khoá: nút nền vàng, chữ nâu đậm, và 4 thẻ có viền vàng (tắt nhấp nháy "ghép" để viền khoá dễ thấy).
+- **Nhãn thẻ không che mặt:** nhãn "ghép" (xanh) và "hợp" (tím, rút gọn từ "hợp thể"; đọc màn hình vẫn đọc đủ "nguyên liệu hợp thể") chuyển xuống thanh giá ở đáy thẻ: "ghép" bên trái, giá ở giữa, "hợp" bên phải. Không còn đè vương miện / icon hệ / icon vai trò, thẻ có cả hai nhãn cũng không chồng nhau.
+- **Dòng giải thích ở Chọn đội ưu tiên** hiện cả ở 844×390 / 667×375 bằng bản ngắn "Chợ ra mọi tướng đã mở · đội này ra ×2" (máy tính vẫn hiện bản đầy đủ).
+- Test: `node tests/cho-tuong/ti-le.test.js` thêm bảo hiểm với rng cố định (rng luôn 0.9999 → trượt, trượt, lần 3 chắc chắn ra tướng cần, bộ đếm 1-2-0 lặp lại; rng có seed 2000 lần ↻ không lần nào thủng bảo hiểm), kiểm tra vùng chạm nút khoá ≥ 36, viền khoá trên hàng thẻ, 2 nhãn nằm dưới ảnh mặt và không chồng nhau. Ảnh đã xem: thanh chợ mở / khoá và bảng chọn đội ở 1920×934, 844×390, 667×375, dọc 390×844.
+
+## Phiên bản 188 — Sửa test bảo hiểm chợ chạy chập chờn, gộp nhánh chính v187
+- Tester: `tests/cho-tuong/ti-le.test.js` FAIL 2/4 lần ở bước "rng cố định" (chuỗi lệch trượt, TRÚNG, …). Nguyên nhân ở test: đặt `game.market = null` rồi `rerollMarket(rng)` → `ensureMarket()` rút trước một hàng bằng `srand` ngẫu nhiên, trượt thì bộ đếm `dry` đã là 1. Sửa: gán sẵn chợ hợp lệ `{ types, rr: 0, dry: 0, lock: false }` trước vòng lặp. Chạy 10 lần liên tiếp: 10/10 đạt, chuỗi luôn trượt, trượt, TRÚNG ×3.
+- Gộp nhánh chính v187 (icon vai trò thẻ chợ 16px): giữ bố cục chợ v186 (nút khoá riêng, nhãn ghép / hợp ở thanh giá) + icon vai trò mới.
+
+## Phiên bản 189 — Gộp sửa chợ tướng (tester đạt)
+
+- Nút Khoá chợ riêng rõ ràng, nhãn ghép/hợp ở thanh giá, dòng giải thích đội ưu tiên ở màn nhỏ, test bảo hiểm ổn định.
+
+## claude/prompt-dung-xuong — Prompt ảnh dựng xương (1 nhân vật / 1 ảnh tĩnh)
+
+- Script mới `tools/build-prompt-dung-xuong.js` (chạy lại được: `node tools/build-prompt-dung-xuong.js`) sinh `docs/PROMPT-DUNG-XUONG.txt` + `.md`: **90 prompt** — 20 tướng Thường, 20 Tím, 20 Vàng, 21 quái, 9 boss (quái / boss lấy từ danh sách gen lại `REDO_ENEMY` / `REDO_BOSS`).
+- Dùng chung dữ liệu với `tools/build-prompts.js` (thẻ nhận diện `tools/hero-id.js`, mô tả quái / boss, `EL`, `RAR`, `chibiBody`, STYLE LOCK / ANATOMY / NEGATIVE — đọc thẳng từ mã nguồn, đổi "cell" → "image").
+- Mỗi prompt: MỘT ảnh tĩnh 1024×1024, toàn thân, nghiêng 3/4 quay PHẢI, A-pose chiến đấu (chân dạng có khe, tay tách thân, vũ khí ở tay trước tách khỏi thân / đầu, không che khớp), nền #FF00FF hoặc trong suốt, nhân vật cao ~85% khung, chân chạm ~92%; thêm NEGATIVE riêng cho dựng xương (nhiều tư thế, lưới, turnaround, nhìn sau / chính diện, khoanh tay, vũ khí sau lưng, áo choàng che tay, hiệu ứng…). Thú / rắn / chim bay / cưỡi thú có tư thế riêng.
+- Mỗi khối ghi `Tên file: <mã>.png` và `Loại vũ khí: kiem | riu | giao | cung | no | gay-phep | tay-khong` (kèm ghi chú: búa tạ, ống thổi, ném dưa…) để `tools/dung-xuong.html` chọn chuyển động. Đầu file có chỉ thị cho AI (Anh + Việt) và checklist cho người dùng.
+
+## Phiên bản 190 — File prompt ảnh tĩnh cho tool dựng xương
+
+- Gộp claude/prompt-dung-xuong: docs/PROMPT-DUNG-XUONG.txt (90 ảnh tĩnh A-pose quay phải).
