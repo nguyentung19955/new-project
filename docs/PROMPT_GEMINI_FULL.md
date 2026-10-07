@@ -1,4 +1,4 @@
-# Prompt Gemini đầy đủ — mỗi ảnh một prompt (84 ảnh)
+# Prompt Gemini đầy đủ — mỗi ảnh một prompt (108 ảnh)
 
 Mỗi khối dán **riêng một lần** vào Gemini (đính kèm `docs/mau-lac-tuong.png` làm mẫu nét vẽ nếu được), tải ảnh về và đặt **đúng tên file** ghi trên khối. Gen theo thứ tự từ trên xuống: phần 0 (nền menu tên mới) và 1–4 là cần thiết, phần 5–7 là tùy chọn.
 
@@ -1480,5 +1480,237 @@ Cắt: `python3 tools/cat-items.py <ảnh> ic-ngu-hanh`
 Create ONE image: a 640x128 row of 5 equal 128x128 square TINY game UI icons (status / stat icons), one per cell, left to right:
 [1] Metal element: a silver-white bronze axe blade on a round grey disc  [2] Wood element: a green sprouting leaf on a round green disc  [3] Water element: two blue waves on a round blue disc  [4] Fire element: an orange flame on a round red disc  [5] Earth element: a brown mountain peak on a round ochre disc.
 Dong Son bronze-drum style kept minimal: warm bronze gold #C9963A and dark green patina #2F6B5E accents, flat cartoon shading for a cute mobile game, at most one tiny zigzag or circle-dot accent (no rings, no birds, no busy engraving). These icons are shown VERY SMALL (16-20 px on a phone): one big simple silhouette that fills about 80% of the cell, VERY thick dark-brown outline #2A1608, at most 2-3 flat colors, no thin lines, no tiny details, no background shapes unless described, high contrast, no text, no letters, no numbers.
+BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
+```
+
+## 18. Tranh kết quả theo chương (thay SVG)
+
+### 85. Thua · Sơn Tinh – Thủy Tinh → `scenes/thua-sontinh.png`
+Cắt: `đặt thẳng vào assets/scenes/thua-sontinh.png`
+```
+Create ONE image: a 768x832 portrait illustration (full bleed) for the DEFEAT result screen of a cute mobile tower-defense game based on Vietnamese folk legends, chapter Sơn Tinh – Thủy Tinh (Phong Châu citadel of the Hung Kings by the Da river).
+SCENE: night storm over Phong Châu citadel: the flood of Thủy Tinh breaks the earthen walls, the bronze gate half under water, broken banners floating, giant water snake and dark waves curling around the towers, lightning in purple clouds; sad but not gory.
+COMPOSITION: main subject in the lower 2/3, keep the top-left corner calm (a small label is drawn there), readable at 320 px wide. Mood: dark and tense, cold or fiery shadows, but still cute and family-friendly.
+Painterly cute mobile-game illustration in the same family as the main menu key art: warm Dong Son bronze-drum motifs (sun-star, Lac birds, zigzag bands) worked into the scenery, soft cel shading, rich but readable colors, chibi characters with big round eyes and thick dark-brown outlines #2A1608. No text, no letters, no numbers, no UI, no frame, no watermark, full bleed.
+```
+
+### 86. Thắng · Sơn Tinh – Thủy Tinh → `scenes/thang-sontinh.png`
+Cắt: `đặt thẳng vào assets/scenes/thang-sontinh.png`
+```
+Create ONE image: a 768x832 portrait illustration (full bleed) for the VICTORY result screen of a cute mobile tower-defense game based on Vietnamese folk legends, chapter Sơn Tinh – Thủy Tinh (Phong Châu citadel of the Hung Kings by the Da river).
+SCENE: Sơn Tinh, the mountain god in a leafy green-brown robe with a stone crown, stands on a green mountain that has just risen above the river, raising his arms; the flood water recedes, sun-star breaks through the clouds, Phong Châu citadel with bronze roofs safe and dry, villagers cheering on the walls.
+COMPOSITION: main subject in the lower 2/3, keep the top-left corner calm (a small label is drawn there), readable at 320 px wide. Mood: triumphant, warm golden light.
+Painterly cute mobile-game illustration in the same family as the main menu key art: warm Dong Son bronze-drum motifs (sun-star, Lac birds, zigzag bands) worked into the scenery, soft cel shading, rich but readable colors, chibi characters with big round eyes and thick dark-brown outlines #2A1608. No text, no letters, no numbers, no UI, no frame, no watermark, full bleed.
+```
+
+### 87. Thua · Thạch Sanh → `scenes/thua-thachsanh.png`
+Cắt: `đặt thẳng vào assets/scenes/thua-thachsanh.png`
+```
+Create ONE image: a 768x832 portrait illustration (full bleed) for the DEFEAT result screen of a cute mobile tower-defense game based on Vietnamese folk legends, chapter Thạch Sanh (forest temple and highland village).
+SCENE: night in the ancient forest: the green ogre Chằn Tinh and little forest goblins swarm into the stilt-house village and the small temple, temple doors broken open, torches knocked over, eerie green mist and glowing red eyes among the banyan roots; spooky but cute, no gore.
+COMPOSITION: main subject in the lower 2/3, keep the top-left corner calm (a small label is drawn there), readable at 320 px wide. Mood: dark and tense, cold or fiery shadows, but still cute and family-friendly.
+Painterly cute mobile-game illustration in the same family as the main menu key art: warm Dong Son bronze-drum motifs (sun-star, Lac birds, zigzag bands) worked into the scenery, soft cel shading, rich but readable colors, chibi characters with big round eyes and thick dark-brown outlines #2A1608. No text, no letters, no numbers, no UI, no frame, no watermark, full bleed.
+```
+
+### 88. Thắng · Thạch Sanh → `scenes/thang-thachsanh.png`
+Cắt: `đặt thẳng vào assets/scenes/thang-thachsanh.png`
+```
+Create ONE image: a 768x832 portrait illustration (full bleed) for the VICTORY result screen of a cute mobile tower-defense game based on Vietnamese folk legends, chapter Thạch Sanh (forest temple and highland village).
+SCENE: Thạch Sanh, young woodcutter hero with bare chest, red headband and a bronze axe and bow, stands victorious in front of the old forest temple at dawn; the ogre Chằn Tinh lies defeated (cartoon stars over its head) in the background, villagers and their stilt house safe, fireflies turning into morning light.
+COMPOSITION: main subject in the lower 2/3, keep the top-left corner calm (a small label is drawn there), readable at 320 px wide. Mood: triumphant, warm golden light.
+Painterly cute mobile-game illustration in the same family as the main menu key art: warm Dong Son bronze-drum motifs (sun-star, Lac birds, zigzag bands) worked into the scenery, soft cel shading, rich but readable colors, chibi characters with big round eyes and thick dark-brown outlines #2A1608. No text, no letters, no numbers, no UI, no frame, no watermark, full bleed.
+```
+
+### 89. Thua · Thánh Gióng → `scenes/thua-giong.png`
+Cắt: `đặt thẳng vào assets/scenes/thua-giong.png`
+```
+Create ONE image: a 768x832 portrait illustration (full bleed) for the DEFEAT result screen of a cute mobile tower-defense game based on Vietnamese folk legends, chapter Thánh Gióng (Phù Đổng village, Red River delta rice fields).
+SCENE: Phù Đổng village under attack: Ân invader soldiers in horned helmets and the Ân King on a dark warhorse charge through the bamboo village gate, thatched roofs on fire, red smoke over the rice fields, a broken bamboo hedge; dramatic but not gory.
+COMPOSITION: main subject in the lower 2/3, keep the top-left corner calm (a small label is drawn there), readable at 320 px wide. Mood: dark and tense, cold or fiery shadows, but still cute and family-friendly.
+Painterly cute mobile-game illustration in the same family as the main menu key art: warm Dong Son bronze-drum motifs (sun-star, Lac birds, zigzag bands) worked into the scenery, soft cel shading, rich but readable colors, chibi characters with big round eyes and thick dark-brown outlines #2A1608. No text, no letters, no numbers, no UI, no frame, no watermark, full bleed.
+```
+
+### 90. Thắng · Thánh Gióng → `scenes/thang-giong.png`
+Cắt: `đặt thẳng vào assets/scenes/thang-giong.png`
+```
+Create ONE image: a 768x832 portrait illustration (full bleed) for the VICTORY result screen of a cute mobile tower-defense game based on Vietnamese folk legends, chapter Thánh Gióng (Phù Đổng village, Red River delta rice fields).
+SCENE: Saint Gióng, giant young warrior in iron armor riding a fire-breathing iron horse, holding an uprooted bamboo, at sunset over golden rice fields; the Ân invaders flee in the distance, Phù Đổng village gate with bamboo hedge safe, villagers waving.
+COMPOSITION: main subject in the lower 2/3, keep the top-left corner calm (a small label is drawn there), readable at 320 px wide. Mood: triumphant, warm golden light.
+Painterly cute mobile-game illustration in the same family as the main menu key art: warm Dong Son bronze-drum motifs (sun-star, Lac birds, zigzag bands) worked into the scenery, soft cel shading, rich but readable colors, chibi characters with big round eyes and thick dark-brown outlines #2A1608. No text, no letters, no numbers, no UI, no frame, no watermark, full bleed.
+```
+
+### 91. Thua · Lạc Long Quân → `scenes/thua-llq.png`
+Cắt: `đặt thẳng vào assets/scenes/thua-llq.png`
+```
+Create ONE image: a 768x832 portrait illustration (full bleed) for the DEFEAT result screen of a cute mobile tower-defense game based on Vietnamese folk legends, chapter Lạc Long Quân (East Sea coast, dragon king).
+SCENE: stormy East Sea: the giant fish demon Ngư Tinh with huge jaws rises from black waves, sharks and crab monsters crash onto the shore, fishing boats smashed, the stilt-house fishing village flooded by surging waves, lightning; scary but cute, no gore.
+COMPOSITION: main subject in the lower 2/3, keep the top-left corner calm (a small label is drawn there), readable at 320 px wide. Mood: dark and tense, cold or fiery shadows, but still cute and family-friendly.
+Painterly cute mobile-game illustration in the same family as the main menu key art: warm Dong Son bronze-drum motifs (sun-star, Lac birds, zigzag bands) worked into the scenery, soft cel shading, rich but readable colors, chibi characters with big round eyes and thick dark-brown outlines #2A1608. No text, no letters, no numbers, no UI, no frame, no watermark, full bleed.
+```
+
+### 92. Thắng · Lạc Long Quân → `scenes/thang-llq.png`
+Cắt: `đặt thẳng vào assets/scenes/thang-llq.png`
+```
+Create ONE image: a 768x832 portrait illustration (full bleed) for the VICTORY result screen of a cute mobile tower-defense game based on Vietnamese folk legends, chapter Lạc Long Quân (East Sea coast, dragon king).
+SCENE: Lạc Long Quân, the dragon lord in jade-green scale armor with a pearl crown, stands on a sea rock above calm turquoise water at sunrise, a friendly sea dragon spirit coiling behind him; the giant fish demon Ngư Tinh defeated sinking far away, fishing boats returning safely to the shore village.
+COMPOSITION: main subject in the lower 2/3, keep the top-left corner calm (a small label is drawn there), readable at 320 px wide. Mood: triumphant, warm golden light.
+Painterly cute mobile-game illustration in the same family as the main menu key art: warm Dong Son bronze-drum motifs (sun-star, Lac birds, zigzag bands) worked into the scenery, soft cel shading, rich but readable colors, chibi characters with big round eyes and thick dark-brown outlines #2A1608. No text, no letters, no numbers, no UI, no frame, no watermark, full bleed.
+```
+
+### 93. Thua · An Dương Vương → `scenes/thua-adv.png`
+Cắt: `đặt thẳng vào assets/scenes/thua-adv.png`
+```
+Create ONE image: a 768x832 portrait illustration (full bleed) for the DEFEAT result screen of a cute mobile tower-defense game based on Vietnamese folk legends, chapter An Dương Vương (spiral Cổ Loa citadel).
+SCENE: Cổ Loa citadel falls at dusk: Triệu Đà soldiers and war elephants pour through the broken spiral earthen walls, watchtowers burning, the magic crossbow lying broken on the ground, fallen bronze banners, orange smoke in the sky; dramatic but not gory.
+COMPOSITION: main subject in the lower 2/3, keep the top-left corner calm (a small label is drawn there), readable at 320 px wide. Mood: dark and tense, cold or fiery shadows, but still cute and family-friendly.
+Painterly cute mobile-game illustration in the same family as the main menu key art: warm Dong Son bronze-drum motifs (sun-star, Lac birds, zigzag bands) worked into the scenery, soft cel shading, rich but readable colors, chibi characters with big round eyes and thick dark-brown outlines #2A1608. No text, no letters, no numbers, no UI, no frame, no watermark, full bleed.
+```
+
+### 94. Thắng · An Dương Vương → `scenes/thang-adv.png`
+Cắt: `đặt thẳng vào assets/scenes/thang-adv.png`
+```
+Create ONE image: a 768x832 portrait illustration (full bleed) for the VICTORY result screen of a cute mobile tower-defense game based on Vietnamese folk legends, chapter An Dương Vương (spiral Cổ Loa citadel).
+SCENE: King An Dương Vương in red royal robe and golden crown holds the magic crossbow on the spiral walls of Cổ Loa citadel, the Golden Turtle god Kim Quy smiling beside him, bronze arrows of light raining on the fleeing Triệu army, sun-star sky, banners flying.
+COMPOSITION: main subject in the lower 2/3, keep the top-left corner calm (a small label is drawn there), readable at 320 px wide. Mood: triumphant, warm golden light.
+Painterly cute mobile-game illustration in the same family as the main menu key art: warm Dong Son bronze-drum motifs (sun-star, Lac birds, zigzag bands) worked into the scenery, soft cel shading, rich but readable colors, chibi characters with big round eyes and thick dark-brown outlines #2A1608. No text, no letters, no numbers, no UI, no frame, no watermark, full bleed.
+```
+
+## 19. Nền bản đồ chọn ải theo chương
+
+### 95. Bản đồ chương · Sơn Tinh – Thủy Tinh → `scenes/chuong-sontinh.png`
+Cắt: `đặt thẳng vào assets/scenes/chuong-sontinh.png`
+```
+Create ONE image: a 1280x768 illustrated campaign map background (bird's-eye view, slightly tilted, like a painted fantasy map) for the level-select screen of a cute mobile tower-defense game, chapter Sơn Tinh – Thủy Tinh (Phong Châu citadel of the Hung Kings by the Da river): the Da river valley seen from above: winding blue river, green Tản Viên mountains, rice terraces, small bronze-roofed villages and Phong Châu citadel at the far right.
+Keep the middle band fairly calm (the game draws level badges and a dotted route on top). Subtle Dong Son bronze-drum border ornaments at the corners only.
+Painterly cute mobile-game illustration in the same family as the main menu key art: warm Dong Son bronze-drum motifs (sun-star, Lac birds, zigzag bands) worked into the scenery, soft cel shading, rich but readable colors, chibi characters with big round eyes and thick dark-brown outlines #2A1608. No text, no letters, no numbers, no UI, no frame, no watermark, full bleed.
+```
+
+### 96. Bản đồ chương · Thạch Sanh → `scenes/chuong-thachsanh.png`
+Cắt: `đặt thẳng vào assets/scenes/chuong-thachsanh.png`
+```
+Create ONE image: a 1280x768 illustrated campaign map background (bird's-eye view, slightly tilted, like a painted fantasy map) for the level-select screen of a cute mobile tower-defense game, chapter Thạch Sanh (forest temple and highland village): an ancient misty forest seen from above: giant banyan tree, a small temple, a dark cave mouth in rocky hills, a stilt-house village.
+Keep the middle band fairly calm (the game draws level badges and a dotted route on top). Subtle Dong Son bronze-drum border ornaments at the corners only.
+Painterly cute mobile-game illustration in the same family as the main menu key art: warm Dong Son bronze-drum motifs (sun-star, Lac birds, zigzag bands) worked into the scenery, soft cel shading, rich but readable colors, chibi characters with big round eyes and thick dark-brown outlines #2A1608. No text, no letters, no numbers, no UI, no frame, no watermark, full bleed.
+```
+
+### 97. Bản đồ chương · Thánh Gióng → `scenes/chuong-giong.png`
+Cắt: `đặt thẳng vào assets/scenes/chuong-giong.png`
+```
+Create ONE image: a 1280x768 illustrated campaign map background (bird's-eye view, slightly tilted, like a painted fantasy map) for the level-select screen of a cute mobile tower-defense game, chapter Thánh Gióng (Phù Đổng village, Red River delta rice fields): Red River delta rice fields seen from above: golden paddies with dikes, bamboo groves, Phù Đổng village, Sóc mountain in the distance.
+Keep the middle band fairly calm (the game draws level badges and a dotted route on top). Subtle Dong Son bronze-drum border ornaments at the corners only.
+Painterly cute mobile-game illustration in the same family as the main menu key art: warm Dong Son bronze-drum motifs (sun-star, Lac birds, zigzag bands) worked into the scenery, soft cel shading, rich but readable colors, chibi characters with big round eyes and thick dark-brown outlines #2A1608. No text, no letters, no numbers, no UI, no frame, no watermark, full bleed.
+```
+
+### 98. Bản đồ chương · Lạc Long Quân → `scenes/chuong-llq.png`
+Cắt: `đặt thẳng vào assets/scenes/chuong-llq.png`
+```
+Create ONE image: a 1280x768 illustrated campaign map background (bird's-eye view, slightly tilted, like a painted fantasy map) for the level-select screen of a cute mobile tower-defense game, chapter Lạc Long Quân (East Sea coast, dragon king): the East Sea coast seen from above: turquoise sea with islands of Hạ Long, sandy beaches, coral, a fishing village, a lake shaped like a fox (Hồ Tây).
+Keep the middle band fairly calm (the game draws level badges and a dotted route on top). Subtle Dong Son bronze-drum border ornaments at the corners only.
+Painterly cute mobile-game illustration in the same family as the main menu key art: warm Dong Son bronze-drum motifs (sun-star, Lac birds, zigzag bands) worked into the scenery, soft cel shading, rich but readable colors, chibi characters with big round eyes and thick dark-brown outlines #2A1608. No text, no letters, no numbers, no UI, no frame, no watermark, full bleed.
+```
+
+### 99. Bản đồ chương · An Dương Vương → `scenes/chuong-adv.png`
+Cắt: `đặt thẳng vào assets/scenes/chuong-adv.png`
+```
+Create ONE image: a 1280x768 illustrated campaign map background (bird's-eye view, slightly tilted, like a painted fantasy map) for the level-select screen of a cute mobile tower-defense game, chapter An Dương Vương (spiral Cổ Loa citadel): the spiral Cổ Loa citadel seen from above: three spiral earthen walls, moats, bronze banners, villages and fields around, the sea far to the right.
+Keep the middle band fairly calm (the game draws level badges and a dotted route on top). Subtle Dong Son bronze-drum border ornaments at the corners only.
+Painterly cute mobile-game illustration in the same family as the main menu key art: warm Dong Son bronze-drum motifs (sun-star, Lac birds, zigzag bands) worked into the scenery, soft cel shading, rich but readable colors, chibi characters with big round eyes and thick dark-brown outlines #2A1608. No text, no letters, no numbers, no UI, no frame, no watermark, full bleed.
+```
+
+## 20. Nền màn phụ (Chuẩn bị / Kết quả / Phần thưởng)
+
+### 100. Nền đồng tối cho màn phụ → `scenes/nen-man-phu.png`
+Cắt: `đặt thẳng vào assets/scenes/nen-man-phu.png`
+```
+Create ONE image: a 1792x832 wide background texture (full bleed) for secondary screens (prepare for battle, results, rewards) of a cute mobile tower-defense game based on Vietnamese folk legends.
+CONTENT: a dark aged bronze drum surface seen from the front, very low contrast: faint concentric rings, a dim sun-star in the center, Lac birds and zigzag bands engraved softly, warm dark brown #1A140E to deep patina green #16231F, a soft vignette. It must stay DARK and calm so white and gold text is readable on top.
+No text, no letters, no numbers, no UI, no frame, no watermark.
+```
+
+## 21. Khung / nút / thanh giao diện (trống đồng, nền hồng tím)
+
+### 101. Khung bảng / popup (giấy dó viền đồng, 9 mảnh) → `khung-bang.png`
+Cắt: `python3 tools/cat-khung.py khung-bang.png khung-bang`
+```
+Create ONE image: a 1024x1024 game UI sheet, one element centered:
+one square panel frame: thick bronze border with ornate Dong Son corner pieces (sun-star discs) and PLAIN straight edges between the corners (so the frame can be stretched as 9-slice), the inside filled with flat dark aged paper #17130F with very faint fiber texture; corners take about 22% of the width.
+Dong Son bronze drum art style (Vietnamese trong dong): engraved bronze surfaces, concentric rings, a sun-star with pointed rays, flying Lac birds, zigzag and circle-dot bands, warm bronze gold #C9963A with dark green patina #2F6B5E accents, thick dark-brown outline #2A1608, flat cartoon shading for a cute mobile game. Same lighting and the same bronze palette in every cell; elements fill about 90% of their cell; straight, symmetric, front view (no perspective), no text, no letters, no numbers, no icons inside.
+BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
+```
+
+### 102. Nút chữ nhật vàng + đồng · thường / nhấn / khóa → `nut-chu-nhat.png`
+Cắt: `python3 tools/cat-khung.py nut-chu-nhat.png nut-chu-nhat`
+```
+Create ONE image: a 1536x512 game UI sheet, an invisible 3x2 grid of 6 equal 512x256 cells, one element per cell, read left to right, top to bottom:
+[1] wide rectangular GOLD button (3:1), polished gold-bronze with a zigzag border and small sun-star studs at both ends, empty smooth middle for text — NORMAL state, bright with a top highlight
+[2] the same GOLD button — PRESSED state: slightly darker, highlight moved to the bottom, looks pushed in by 2 px
+[3] the same GOLD button — DISABLED state: desaturated grey-brown, dull, no shine
+[4] wide rectangular BRONZE button (3:1), dark brown-bronze with patina-green trims and a circle-dot border, empty middle — NORMAL state
+[5] the same BRONZE button — PRESSED state: darker, pushed in
+[6] the same BRONZE button — DISABLED state: grey, dull.
+Dong Son bronze drum art style (Vietnamese trong dong): engraved bronze surfaces, concentric rings, a sun-star with pointed rays, flying Lac birds, zigzag and circle-dot bands, warm bronze gold #C9963A with dark green patina #2F6B5E accents, thick dark-brown outline #2A1608, flat cartoon shading for a cute mobile game. Same lighting and the same bronze palette in every cell; elements fill about 90% of their cell; straight, symmetric, front view (no perspective), no text, no letters, no numbers, no icons inside.
+BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
+```
+
+### 103. Nút tròn (quay lại / đóng) · thường / nhấn / khóa → `nut-tron.png`
+Cắt: `python3 tools/cat-khung.py nut-tron.png nut-tron`
+```
+Create ONE image: a 768x256 game UI sheet, an invisible 3x1 grid of 3 equal 256x256 cells, one element per cell, read left to right, top to bottom:
+[1] round bronze drum-face button with a ring of Lac birds on the rim and an EMPTY dark center (an icon is drawn on top) — NORMAL
+[2] the same round button — PRESSED: darker, pushed in
+[3] the same round button — DISABLED: grey and dull.
+Dong Son bronze drum art style (Vietnamese trong dong): engraved bronze surfaces, concentric rings, a sun-star with pointed rays, flying Lac birds, zigzag and circle-dot bands, warm bronze gold #C9963A with dark green patina #2F6B5E accents, thick dark-brown outline #2A1608, flat cartoon shading for a cute mobile game. Same lighting and the same bronze palette in every cell; elements fill about 90% of their cell; straight, symmetric, front view (no perspective), no text, no letters, no numbers, no icons inside.
+BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
+```
+
+### 104. Khung thanh máu boss / tướng / quái → `thanh-mau.png`
+Cắt: `python3 tools/cat-khung.py thanh-mau.png thanh-mau`
+```
+Create ONE image: a 1024x384 game UI sheet, an invisible 1x3 grid of 3 equal 1024x128 cells, one element per cell, read left to right, top to bottom:
+[1] very long thin BOSS health bar frame (about 8:1): dark iron and red-bronze with a small horned demon-mask cap on the left end and a spiked cap on the right end; the inside of the bar is an EMPTY flat magenta slot
+[2] long thin HERO health bar frame (about 8:1): slim polished bronze with tiny sun-star rivets at both ends; the inside is an EMPTY flat magenta slot
+[3] long thin ENEMY health bar frame (about 8:1): slim dark iron with tiny claw tips at both ends; the inside is an EMPTY flat magenta slot.
+Dong Son bronze drum art style (Vietnamese trong dong): engraved bronze surfaces, concentric rings, a sun-star with pointed rays, flying Lac birds, zigzag and circle-dot bands, warm bronze gold #C9963A with dark green patina #2F6B5E accents, thick dark-brown outline #2A1608, flat cartoon shading for a cute mobile game. Same lighting and the same bronze palette in every cell; elements fill about 90% of their cell; straight, symmetric, front view (no perspective), no text, no letters, no numbers, no icons inside.
+BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
+```
+
+### 105. Khung thanh đáy (chợ tướng trong trận) → `khung-thanh-day.png`
+Cắt: `python3 tools/cat-khung.py khung-thanh-day.png khung-thanh-day`
+```
+Create ONE image: a 1600x320 game UI sheet, one element centered:
+one very wide low tray frame (5:1) for the bottom bar of a game screen: carved bronze rim with a zigzag band, small Lac birds at both ends, a slightly raised center, the inside filled with flat dark bronze #1E1810 (cards are drawn on top).
+Dong Son bronze drum art style (Vietnamese trong dong): engraved bronze surfaces, concentric rings, a sun-star with pointed rays, flying Lac birds, zigzag and circle-dot bands, warm bronze gold #C9963A with dark green patina #2F6B5E accents, thick dark-brown outline #2A1608, flat cartoon shading for a cute mobile game. Same lighting and the same bronze palette in every cell; elements fill about 90% of their cell; straight, symmetric, front view (no perspective), no text, no letters, no numbers, no icons inside.
+BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
+```
+
+### 106. Khung thẻ chợ tướng + nút đổi → `khung-the-cho.png`
+Cắt: `python3 tools/cat-khung.py khung-the-cho.png khung-the-cho`
+```
+Create ONE image: a 1024x256 game UI sheet, an invisible 4x1 grid of 4 equal 256x256 cells, one element per cell, read left to right, top to bottom:
+[1] landscape card frame (5:4) of plain bronze with rounded corners and an EMPTY magenta window inside (a hero portrait is drawn there) — NORMAL
+[2] the same card frame glowing gold with sparkles — CAN MERGE (ghép)
+[3] the same card frame dull grey-brown and cracked — NOT ENOUGH GOLD
+[4] small square bronze button plate with rounded corners and an EMPTY dark center — REROLL button base.
+Dong Son bronze drum art style (Vietnamese trong dong): engraved bronze surfaces, concentric rings, a sun-star with pointed rays, flying Lac birds, zigzag and circle-dot bands, warm bronze gold #C9963A with dark green patina #2F6B5E accents, thick dark-brown outline #2A1608, flat cartoon shading for a cute mobile game. Same lighting and the same bronze palette in every cell; elements fill about 90% of their cell; straight, symmetric, front view (no perspective), no text, no letters, no numbers, no icons inside.
+BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
+```
+
+### 107. Dải thông báo (tên chiêu lớn, boss tới) → `dai-thong-bao.png`
+Cắt: `python3 tools/cat-khung.py dai-thong-bao.png dai-thong-bao`
+```
+Create ONE image: a 1536x256 game UI sheet, one element centered:
+one long horizontal ribbon banner (6:1): deep red cloth with gold-bronze edges, folded swallow-tail ends, small sun-star medallions at both ends, the long middle EMPTY and plain for text.
+Dong Son bronze drum art style (Vietnamese trong dong): engraved bronze surfaces, concentric rings, a sun-star with pointed rays, flying Lac birds, zigzag and circle-dot bands, warm bronze gold #C9963A with dark green patina #2F6B5E accents, thick dark-brown outline #2A1608, flat cartoon shading for a cute mobile game. Same lighting and the same bronze palette in every cell; elements fill about 90% of their cell; straight, symmetric, front view (no perspective), no text, no letters, no numbers, no icons inside.
+BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
+```
+
+### 108. Huy hiệu ải trên bản đồ · mở / đang chọn / khóa → `huy-hieu-ai.png`
+Cắt: `python3 tools/cat-khung.py huy-hieu-ai.png huy-hieu-ai`
+```
+Create ONE image: a 768x256 game UI sheet, an invisible 3x1 grid of 3 equal 256x256 cells, one element per cell, read left to right, top to bottom:
+[1] round level badge: bronze drum disc with a sun-star rim and an EMPTY flat center (a number is drawn on top) — OPEN
+[2] the same badge glowing bright gold with a soft halo — SELECTED
+[3] the same badge as dark grey stone, cracked, no glow — LOCKED.
+Dong Son bronze drum art style (Vietnamese trong dong): engraved bronze surfaces, concentric rings, a sun-star with pointed rays, flying Lac birds, zigzag and circle-dot bands, warm bronze gold #C9963A with dark green patina #2F6B5E accents, thick dark-brown outline #2A1608, flat cartoon shading for a cute mobile game. Same lighting and the same bronze palette in every cell; elements fill about 90% of their cell; straight, symmetric, front view (no perspective), no text, no letters, no numbers, no icons inside.
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.
 ```

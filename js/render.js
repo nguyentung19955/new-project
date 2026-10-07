@@ -456,12 +456,31 @@ function vfxSheet(type) {
   const f = VFX_FILE[type];
   return f ? asset(`vfx/${f}.png`) : null;
 }
-// vẽ một khung của dải hiệu ứng theo tiến độ p (0..1), tâm (x, y), cạnh size
-function drawVfx(ctx, img, p, x, y, size) {
-  const n = Math.max(1, Math.round(img.naturalWidth / img.naturalHeight));
+// vẽ một khung của dải hiệu ứng theo tiến độ p (0..1), tâm (x, y), cạnh size (h: chiều cao riêng, mặc định = size)
+function drawVfx(ctx, img, p, x, y, size, h = size) {
+  const W = img.naturalWidth || img.width, H = img.naturalHeight || img.height;
+  const n = Math.max(1, Math.round(W / H));
   const fr = Math.min(n - 1, Math.floor(p * n));
-  const fw = img.naturalWidth / n;
-  ctx.drawImage(img, fr * fw, 0, fw, img.naturalHeight, x - size / 2, y - size / 2, size, size);
+  const fw = W / n;
+  ctx.drawImage(img, fr * fw, 0, fw, H, x - size / 2, y - h / 2, size, h);
+}
+// v153: dải hiệu ứng trắng xám (vòng sóng, cảnh báo, tia, bóng lướt) tô theo màu của hiệu ứng, như ảnh hạt Kenney
+const tintCache = new WeakMap();
+function tintSheet(img, color) {
+  if (!color || !/^#[0-9a-f]{6}$/i.test(color)) return img;
+  let m = tintCache.get(img);
+  if (!m) tintCache.set(img, (m = new Map()));
+  let c = m.get(color);
+  if (!c) {
+    c = document.createElement('canvas');
+    c.width = img.naturalWidth || img.width; c.height = img.naturalHeight || img.height;
+    const x = c.getContext('2d');
+    x.drawImage(img, 0, 0);
+    x.globalCompositeOperation = 'multiply'; x.fillStyle = color; x.fillRect(0, 0, c.width, c.height);
+    x.globalCompositeOperation = 'destination-in'; x.drawImage(img, 0, 0);
+    m.set(color, c);
+  }
+  return c;
 }
 
 // ------------------------------------------------------------
@@ -2237,6 +2256,8 @@ function drawEnemy(ctx, e, t, o = {}) {
   const r = e.hp / e.maxHp;
   ctx.fillStyle = r > 0.5 ? '#3EBE3E' : r > 0.25 ? '#E0B030' : '#D84A2A';
   ctx.fillRect(e.x - w / 2, by, w * Math.max(0, r), 3);
+  const fr = asset(e.def.boss ? 'ui/thanh-mau-boss.png' : 'ui/thanh-mau-quai.png', true);   // v163: khung thanh máu vẽ tay (nếu có)
+  if (fr) ctx.drawImage(fr, e.x - w / 2 - (e.def.boss ? 8 : 4), by - 3, w + (e.def.boss ? 16 : 8), 9);
   // chấm hành bên trái thanh máu (quái tinh anh có thể có hành phụ)
   if (detail) [e.el, e.el2].filter(Boolean).forEach((el, k) => {
     circle(ctx, e.x - w / 2 - 5 - k * 7, by + 1.5, 3.4, '#0D0B08');

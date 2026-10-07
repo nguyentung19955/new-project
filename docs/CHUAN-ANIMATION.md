@@ -10,13 +10,14 @@ Thay cho `docs/LUAT_GEN_ANIMATION.md` (luật cũ: dải 4 ô, mỗi ảnh một
 
 | File | Dùng để |
 |---|---|
-| `docs/CHUAN-ANIMATION.md` | Tài liệu này: phong cách, quy cách từng loại ảnh, nhịp phát, mẫu prompt, cách giao nộp |
+| `docs/CHUAN-ANIMATION.md` (+ bản chữ thường `.txt`) | Tài liệu này: phong cách, quy cách từng loại ảnh, nhịp phát, mẫu prompt, cách giao nộp |
 | `docs/mau-luoi/hero12.png` · `enemy6.png` · `enemy6-bay.png` · `boss9.png` · `icon4.png` | Ảnh lưới trống có số ô + đường đáy chân — **đính kèm cho AI làm mẫu bố cục** |
 | `docs/mau-luoi/vi-du-hero12-lactuong.png` | Ví dụ một tấm tướng đã xếp đúng lưới (ghép từ ảnh Lạc Tướng hiện có) |
 | `docs/prompts-tuong.csv` | 60 tướng, mỗi dòng: mã · tên · bậc · hệ · cỡ ảnh · tên file · lệnh cắt · **prompt đầy đủ** |
 | `docs/prompts-quai.csv` | 21 quái (2 quái bay) + 9 boss, cùng cột như trên |
 | `tools/ghep-luoi.py` | Ghép N ảnh rời (mỗi ảnh một khung) thành tấm lưới đúng chuẩn |
 | `tools/cat-sheet.py` | Cắt tấm lưới thành các khung game dùng |
+| `docs/PROMPT-HIEU-UNG.txt` | **Hiệu ứng** (48 prompt): ảnh hạt kiểu Kenney, dải khung chiêu, triệu hồi, đạn bay — cắt bằng `tools/cat-fx.py` |
 
 Mở file `.csv` bằng Excel / Google Sheets / Numbers (đã có BOM UTF-8, dấu tiếng Việt hiển thị đúng). Hai file CSV sinh lại bằng `node tools/build-prompts.js`; ảnh mẫu lưới vẽ lại bằng `python3 tools/ve-mau-luoi.py`.
 
