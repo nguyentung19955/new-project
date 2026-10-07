@@ -109,7 +109,7 @@ Sinh từ dữ liệu game (js/data.js, js/enemies2.js, js/roles.js, js/chapters
 
 | mã | tên | ghi chú | Hướng phá cách |
 |---|---|---|---|
-| `tuong/giong` | Thánh Gióng | cưỡi ngựa sắt — lô 5 | giữ nhận diện — phá cách tạo hình: giáp sắt cháy đỏ như vừa ra lò, lửa bốc từ vai, ngựa sắt có khe nứt lửa ở khớp; vẫn gậy/bụi tre |
+| `tuong/giong` | Thánh Gióng | cưỡi ngựa sắt — lô 5 | giữ nhận diện — phá cách tạo hình: giáp sắt cháy đỏ như vừa ra lò, lửa bốc từ vai, ngựa sắt có khe nứt lửa ở khớp; vẫn gậy sắt |
 | `tuong/tanvien` | Sơn Tinh (mã game `tanvien`) | lô 6 | giữ nhận diện — phá cách tạo hình: hai vai nhô thành đỉnh núi đá nhỏ, mây trắng quấn ngang hông, đá vụn lơ lửng quanh; vẫn GIÁO vàng + vương miện 3 đỉnh |
 | `tuong/chodo` | Chàng Chèo Đò — cầm MÁI CHÈO | lô 2 | hồn lái đò sông Âm: da xanh tái ma mị, nón lá, chân tan thành sương, vẫn cầm mái chèo |
 | `quai/tom` | Tôm Binh | lô 8 | giữ: lính tôm dữ tợn, giáp vỏ |
@@ -192,7 +192,7 @@ Sinh từ dữ liệu game (js/data.js, js/enemies2.js, js/roles.js, js/chapters
 
 | mã | tên | cỡ | động tác | đặc trưng (giới tính/loài · trang phục/màu · vật cầm · phụ kiện · hành) | Hướng phá cách | dấu hiệu 32px | nguồn |
 |---|---|---|---|---|---|---|---|
-| **ĐÃ CÓ MẪU — lô 0** `tuong/giong` | Thánh Gióng | 32×32 | idle 3 · attack 4 · cast 3 · hurt 1 · die 3 · **chân dung riêng** · cưỡi ngựa (người + ngựa 1 khối) | Nam — cậu bé khổng lồ CƯỠI NGỰA SẮT (ngựa + người một khối) · áo đỏ gỉ #B23A1E, phiến giáp sắt, mũ sắt, ngựa sắt đen #2B2B2B, viền vàng, quầng nhỏ · cầm: GẬY TRE / bụi tre nhổ gốc đang cháy (game: "Gậy Tre Ngà") · ngựa sắt đen BỜM LỬA · hành Hỏa — ⚠ GEN-LAI giữ ảnh giáo ("gậy sắt / tre hợp"); DUNG-XUONG: bụi tre cháy; game: gậy tre ngà → vẽ gậy tre (cháy ở chiêu) | giữ nhận diện — phá cách tạo hình: giáp sắt cháy đỏ như vừa ra lò, lửa bốc từ vai, ngựa sắt có khe nứt lửa ở khớp; vẫn gậy/bụi tre | ngựa sắt đen bờm lửa · gậy/bụi tre · đỏ gỉ + đen | PROMPT-GEN-LAI.txt:76 · PROMPT-DUNG-XUONG.txt:900 · js/data.js:257 |
+| **ĐÃ CÓ MẪU — lô 0** `tuong/giong` | Thánh Gióng | 32×32 | idle 3 · attack 4 · cast 3 · hurt 1 · die 3 · **chân dung riêng** · cưỡi ngựa (người + ngựa 1 khối) | Nam — cậu bé khổng lồ CƯỠI NGỰA SẮT (ngựa + người một khối) · áo đỏ gỉ #B23A1E, phiến giáp sắt, mũ sắt, ngựa sắt đen #2B2B2B, viền vàng, quầng nhỏ · cầm: **GẬY SẮT** (quyết định điều phối; bụi tre nhổ gốc cháy = chiêu) · ngựa sắt đen BỜM LỬA · hành Hỏa — ⚠ GEN-LAI giữ ảnh giáo ("gậy sắt / tre hợp"); DUNG-XUONG: bụi tre cháy; game: gậy tre ngà → đã chốt GẬY SẮT (mẫu duyệt) | giữ nhận diện — phá cách tạo hình: giáp sắt cháy đỏ như vừa ra lò, lửa bốc từ vai, ngựa sắt có khe nứt lửa ở khớp; vẫn gậy sắt | khăn vàng · giáp sắt + áo choàng đỏ · gậy sắt (ngựa sắt ở chiêu/triệu hồi) | PROMPT-GEN-LAI.txt:76 · PROMPT-DUNG-XUONG.txt:900 · js/data.js:257 |
 | `tuong/llq` | Lạc Long Quân | 32×32 | idle 3 · attack 4 · cast 3 · hurt 1 · die 3 | Nam vua rồng ~40, cao lớn vai rộng · áo xanh biển sâu #1F5FA8 vảy rồng ngọc #3FB59E, viền vàng, quầng nhỏ · cầm: GIÁO (GEN-LAI giữ: "kiếm / giáo hợp"; game `look = spear`) · SỪNG RỒNG phân nhánh to, dải lụa đuôi rồng bay sau · hành Thủy — ⚠ DUNG-XUONG/CSV: kiếm dài thẳng; GEN-LAI + game: giáo → vẽ giáo | giữ nhận diện — phá cách tạo hình: tóc như bờm rồng bay, vảy rồng ngọc mọc lên cổ và má, mắt vàng con ngươi dọc, sóng cuộn quanh chân; vẫn GIÁO | sừng rồng nhánh · dải lụa đuôi rồng · xanh biển + ngọc | PROMPT-GEN-LAI.txt:77 · PROMPT-DUNG-XUONG.txt:921 · js/data.js:276 |
 | `tuong/auco` | Âu Cơ | 32×32 | idle 3 · attack 4 · cast 3 · hurt 1 · die 3 · **chân dung riêng** | Nữ Mẹ Tiên ~25, cao thanh · áo kem #FFF6E0 viền vàng #E7C46C, khăn san hô hồng, quầng nhỏ · cầm: ĐŨA LÔNG HẠC (tay trước) + túi lụa BỌC TRĂM TRỨNG (tay sau) — không giáo · CÁNH HẠC trắng lớn xoè lên · hành Thổ — ⚠ GEN-LAI: đũa lông hạc + bọc trứng (ảnh cũ giáo) | giữ nhận diện — phá cách tạo hình: tóc trắng như lông hạc, lông vũ mọc từ cẳng tay nối vào đôi cánh hạc, bọc trăm trứng phát sáng như đèn; nữ | cánh hạc trắng to · bọc trứng · kem + vàng | PROMPT-GEN-LAI.txt:778 · PROMPT-DUNG-XUONG.txt:963 · js/data.js:371 |
 | `tuong/thienloi` | Thiên Lôi | 32×32 | idle 3 · attack 4 · cast 3 · hurt 1 · die 3 | Nam thần sấm vạm vỡ, vai gấp đôi đầu · giáp chàm bão #4A5578 sọc sét vàng #FFE14A, giáp tay bạc #C8D0DA, viền vàng · cầm: LƯỠI TẦM SÉT: rìu đá sấm to trên cán ngắn — không kiếm · tóc trắng dựng như tia sét + đôi cánh lông nhỏ sau lưng · hành Kim — ⚠ GEN-LAI: búa/lưỡi tầm sét (ảnh cũ kiếm); game `look = staff + orb` | giữ nhận diện — phá cách tạo hình: da xanh chàm như mây giông, mắt trắng loé chớp, tia sét nhảy giữa hai tay; vẫn LƯỠI TẦM SÉT | tóc trắng dựng sét · rìu đá sấm · cánh nhỏ | PROMPT-GEN-LAI.txt:899 · PROMPT-DUNG-XUONG.txt:1005 · js/data.js:540 |
@@ -1542,7 +1542,7 @@ Thứ tự ưu tiên: **PROMPT-GEN-LAI > PROMPT-DUNG-XUONG > prompts-*.csv > cũ
 - `thansan`: DUNG-XUONG/CSV giáo tre ↔ GEN-LAI + game (saber) **đao rừng**.
 - `llq`: DUNG-XUONG/CSV kiếm dài ↔ GEN-LAI + game **giáo**.
 - `tanvien` (Sơn Tinh): DUNG-XUONG núi nhỏ lơ lửng + sách phép (CSV "magic book on the belt") ↔ GEN-LAI + game **giáo** → giáo, núi nhỏ ở khung cast.
-- `giong`: DUNG-XUONG bụi tre nhổ gốc cháy ↔ GEN-LAI giữ giáo ("gậy sắt / tre") ↔ game "Gậy Tre Ngà" → **gậy tre** (cháy ở chiêu).
+- `giong`: DUNG-XUONG bụi tre nhổ gốc cháy ↔ GEN-LAI giữ giáo ("gậy sắt / tre") ↔ game "Gậy Tre Ngà" → ~~gậy tre~~ **GẬY SẮT** theo quyết định điều phối (mẫu đã duyệt); nhổ tre / lửa thể hiện ở chiêu.
 - `cuoi`: DUNG-XUONG rìu ↔ GEN-LAI ảnh "đòn gánh + giỏ" (giữ) ↔ game `pole` + chiêu "Đòn Gánh Quật" → **đòn gánh** (quyết định điều phối, xem dưới).
 - `kinhduong`: DUNG-XUONG kiếm đồng ↔ GEN-LAI ảnh đại đao ↔ game `glaive` — cả hai hợp.
 - `trongdong`: DUNG-XUONG trống sau lưng + 2 dùi ↔ GEN-LAI ảnh "trống cầm tay" ↔ game `cleaver`.
@@ -1581,6 +1581,7 @@ Thứ tự ưu tiên: **PROMPT-GEN-LAI > PROMPT-DUNG-XUONG > prompts-*.csv > cũ
    - `tuong/cuoi` (Chú Cuội): **ĐÒN GÁNH** — js/data.js:613 `look.weapon.type = 'pole'`, `attack: 'melee'`, chiêu Q "Đòn Gánh Quật" (js/data.js:622). Không vẽ rìu.
    - `boss/trieuda` (Hổ Vương Triệu Đà): **KÍCH**, kiểu đánh **bổ (chop)** cận chiến. js/enemies2.js:75 không có trường vũ khí (chỉ: boss cận chiến size 30, màu `#2A3A5A`, desc "đầu hổ vằn lửa, nanh dài, giáp đỏ đen", chiêu tráo vũ khí "Lẫy nỏ thần bị tráo!"); vũ khí lấy từ js/tu-cu-dong.js:38 `trieuda: 'kich'` (`CD_KIND.kich = 'chop'`) và js/rigs.js:60 `kind: 'chop'` (ảnh kích). Không vẽ đao cong.
    - Hai dòng tương ứng trong bảng lô 5 và lô 11 đã sửa khớp.
+4. **Thánh Gióng cầm GẬY SẮT** (mẫu người dùng đã duyệt, `tuong/giong` Lô 0). Gióng nhổ tre đánh giặc là chiêu / thần thoại — thể hiện ở khung `cast` hoặc hiệu ứng, không thay vật cầm.
 
 ## Bổ sung
 
