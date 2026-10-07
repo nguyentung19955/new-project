@@ -1639,3 +1639,11 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
   - Cột **Hợp thể**: mỗi hướng một thẻ ngang [tướng này + nguyên liệu ➜ tướng đích lớn, tên, bậc màu], một hàng điều kiện ✓/✗ (Tướng này ★★ / Thần tinh ★★★, Kỹ năng tối đa, nguyên liệu trên sân, chưa sở hữu, thiếu vàng), một dòng truyền thuyết cắt gọn (đủ điều kiện thì thay bằng *Lực chiến → N*), nút **Hợp thể · giá** bật/tắt theo điều kiện. Tướng Thường không còn hiện ✗ *Kỹ năng tối đa* (từ v136 đã không cần).
   - Bỏ đoạn *Cách khác: kéo tướng…* (còn 1 dòng gợi ý nhỏ + nút **?**). Mọi chữ một dòng, quá dài thì cắt “…”, không xuống dòng vỡ tên.
 - Test: `node tests/hop-the/hop-the.test.js` (1920×1000, 844×390, 667×375, xoay dọc 390×844: bảng không bị thanh chợ đè, nằm trọn màn hình, tab / lọc, chạm thẻ → fuseFocus, hợp thể thật từ bảng; màn Tiến hoá tướng Thường / Tím / Vàng: 1 ảnh, 3 mốc, không chữ tràn, hợp thể thật lên Tím rồi lên Vàng; ảnh `tests/hop-the/shots/`). Ảnh trước / sau: `docs/hop-the-truoc-sau.png`.
+
+## Phiên bản 173 — Màn Chọn chế độ phủ kín bề ngang
+- Bỏ luật lưới 3 cột cũ (`.md-body:has(.md-card.coop)`) khiến 2 thẻ chỉ chiếm 2/3 màn trên máy tính. Lưới `.md-body` giờ tự chia đều theo số thẻ (`grid-auto-flow: column; grid-auto-columns: minmax(0,1fr)`): 2 thẻ chia đôi, thêm chế độ thì tự chia tiếp.
+- Màn rất hẹp (≤ 560px bề ngang) xếp thẻ dọc, cuộn được. Ảnh nền thẻ luôn `background-size: cover` (trước bị luật nền của thẻ ghi đè).
+
+## Phiên bản 174 — Gộp làm lại Hợp thể/Tiến hoá và màn Chọn chế độ phủ kín
+
+- Gộp hai nhánh lam-lai-hop-the và che-do-full về nhánh chính.
