@@ -12,7 +12,7 @@ async function open(w = 844, h = 390, save = {}) {
   page.on('pageerror', (e) => errors.push(String(e)));
   page.on('console', (m) => { if (m.type() === 'error' && !/Failed to load resource|net::|favicon|firebase|gstatic/i.test(m.text())) errors.push(m.text()); });
   await page.route('**/firebase-config.js*', (r) => r.fulfill({ contentType: 'application/javascript', body: "const FIREBASE_CONFIG={apiKey:''};" }));
-  // v186: test giả ảnh chưa có (page.route / file tạm) thì bỏ qua danh sách ảnh js/asset-list.js
+  // v187: test giả ảnh chưa có (page.route / file tạm) thì bỏ qua danh sách ảnh js/asset-list.js
   if (global.ASSET_ALL_TEST) await page.addInitScript(() => { window.ASSET_ALL = true; });
   const init = Object.assign({ unlocked: 5, storySeen: true, settings: { skipStory: true } }, save);
   await page.addInitScript((s) => { if (!sessionStorage.getItem('seeded')) { localStorage.setItem('nuicao.v1', JSON.stringify(s)); sessionStorage.setItem('seeded', '1'); } }, init);

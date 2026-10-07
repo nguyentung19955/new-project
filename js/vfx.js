@@ -68,7 +68,7 @@ const VFX = (() => {
   const fxImg = new Map(), fxTint = new Map();
   function texBase(name) {
     let a = fxImg.get(name);
-    if (!a && typeof hasAsset === 'function' && !hasAsset('fx/' + name + '.png')) { fxImg.set(name, a = {}); }   // v186: ảnh không có trong danh sách → khỏi tải
+    if (!a && typeof hasAsset === 'function' && !hasAsset('fx/' + name + '.png')) { fxImg.set(name, a = {}); }   // v187: ảnh không có trong danh sách → khỏi tải
     if (!a) { a = new Image(); a.decoding = 'async'; a.src = FX_ROOT + name + '.png'; fxImg.set(name, a); }
     return a.complete && a.naturalWidth ? a : null;
   }

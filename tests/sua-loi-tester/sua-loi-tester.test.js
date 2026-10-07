@@ -1,4 +1,4 @@
-// Test v186: sửa các lỗi trong docs/BAO-CAO-TEST.md (báo cáo QA bản 180) — mỗi lỗi một nhóm kiểm tra,
+// Test v187: sửa các lỗi trong docs/BAO-CAO-TEST.md (báo cáo QA bản 180) — mỗi lỗi một nhóm kiểm tra,
 // ở 1920×934, 844×390, 667×375. Ảnh sau khi sửa: tests/sua-loi-tester/shots/ (đã xem bằng mắt khi sửa).
 // Chạy: node tests/sua-loi-tester/sua-loi-tester.test.js
 const path = require('path');
