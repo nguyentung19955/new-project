@@ -9,7 +9,7 @@ android/local.properties
 *.apk
 firebase-debug.log
 firestore-debug.log
-tools/__pycache__/cat_anh.*
+tools/__pycache__/
 # ảnh test tự chụp (mỗi lần chạy ghi lại) — không commit; ảnh minh hoạ cố ý để ở docs/ hoặc tests/<tên>/truoc-sau.png
 tests/**/shots/
 tests/menu-nut/*.png
