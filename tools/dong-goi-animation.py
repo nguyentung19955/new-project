@@ -23,10 +23,12 @@ CÁCH DÙNG NHANH (mỗi nhân vật một ảnh):
 TRONG GÓI:
 - CHUAN-ANIMATION.txt / .md   chuẩn đầy đủ: phong cách, quy cách lưới, nhịp phát, mẫu prompt, danh sách kiểm tra
 - PROMPT-GUI-AI.txt           90 prompt sẵn (60 tướng + 21 quái + 9 boss)
+- PROMPT-HIEU-UNG.txt         48 prompt HIỆU ỨNG (ảnh hạt kiểu Kenney, dải khung chiêu, triệu hồi, đạn bay) — đọc phần đầu file
 - prompts-tuong.csv, prompts-quai.csv   cùng nội dung, dạng bảng (Excel / Google Sheets)
 - mau-luoi/                   ảnh lưới trống có số ô + đường đáy chân, và một tấm ví dụ
 - anh-mau-nhan-vat/           ảnh hiện có của từng nhân vật, đặt tên theo mã
-- cong-cu/                    ghep-luoi.py (ghép ảnh rời thành lưới), cat-sheet.py (cắt lưới thành khung game)
+- cong-cu/                    ghep-luoi.py (ghép ảnh rời thành lưới), cat-sheet.py (cắt lưới thành khung game), cat-fx.py (cắt hiệu ứng)
+- mau-luoi/mau-hieu-ung-kenney.png   32 ảnh hạt hiện tại, đính kèm làm mẫu khi gen hiệu ứng phần A
 
 AI chỉ ra từng dáng một hoặc dùng AI video: xem mục 7 trong CHUAN-ANIMATION.txt.
 """
@@ -35,7 +37,7 @@ AI chỉ ra từng dáng một hoặc dùng AI video: xem mục 7 trong CHUAN-AN
 def main():
     files = [('docs/CHUAN-ANIMATION.md', 'CHUAN-ANIMATION.md'), ('docs/CHUAN-ANIMATION.txt', 'CHUAN-ANIMATION.txt'),
              ('docs/PROMPT-GUI-AI.txt', 'PROMPT-GUI-AI.txt'), ('docs/prompts-tuong.csv', 'prompts-tuong.csv'),
-             ('docs/prompts-quai.csv', 'prompts-quai.csv'),
+             ('docs/prompts-quai.csv', 'prompts-quai.csv'), ('docs/PROMPT-HIEU-UNG.txt', 'PROMPT-HIEU-UNG.txt'), ('tools/cat-fx.py', 'cong-cu/cat-fx.py'),
              ('tools/ghep-luoi.py', 'cong-cu/ghep-luoi.py'), ('tools/cat-sheet.py', 'cong-cu/cat-sheet.py')]
     for f in sorted(os.listdir(os.path.join(ROOT, 'docs/mau-luoi'))):
         files.append((f'docs/mau-luoi/{f}', f'mau-luoi/{f}'))
