@@ -1530,10 +1530,11 @@ class Game {
     const pool = this.marketPool(), doi = new Set(this.summonList()), cp = {}, ghep = new Set(), hop = new Set();
     for (const t of pool) cp[t] = this.marketCopies(t);
     for (const t of pool) if (cp[t] > 0 && cp[t] < MARKET_CAP) ghep.add(t);
-    const need = COSTS.ascendTier === 2 ? 2 : Math.pow(2, COSTS.ascendTier - 1);
+    // v186: hợp thể cần ★★★ (4 bản sao) — vẫn bắt đầu ưu tiên khi bên kia đã ★★ (2 bản sao), ưu tiên bên thiếu tới khi đủ ★★★
+    const need = Math.pow(2, COSTS.ascendTier - 1), half = Math.min(2, need);
     for (const f of FUSION) {
       if (!pool.includes(f.a) || !pool.includes(f.b) || !this.ownsHero(f.to)) continue;
-      for (const [x, y] of [[f.a, f.b], [f.b, f.a]]) if (cp[x] >= need && cp[y] < need && (doi.has(y) || cp[y] > 0)) hop.add(y);
+      for (const [x, y] of [[f.a, f.b], [f.b, f.a]]) if (cp[x] >= half && cp[y] < need && cp[y] <= cp[x] && (doi.has(y) || cp[y] > 0)) hop.add(y);
     }
     const w = {};
     for (const t of pool) w[t] = cp[t] >= MARKET_CAP ? 0 : hop.has(t) ? MARKET_W.hop : ghep.has(t) ? MARKET_W.ghep : doi.has(t) ? MARKET_W.doi : 1;

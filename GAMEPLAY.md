@@ -1871,6 +1871,8 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 
 ## Phiên bản 186 — Gộp nhánh hop-the-ky-nang: hợp thể cần ★★★ + kỹ năng tối đa, ★★★ lên cấp nửa giá
 - Gộp nhánh chính (v185) vào nhánh: giữ bảng Hợp thể không thanh lọc (sua-the-cho), heroOpen/lockedPick ở chọn đội, "Chợ tướng ★", roles.js; thêm phần hợp thể dưới đây (lý do khoá dưới tiêu đề bảng, ★★★ · kỹ năng tối đa, lý do xoá khi đổi tab).
+- Chợ có chủ đích (`marketNeeds`) theo luật ★★★: ưu tiên ra nguyên liệu còn thiếu khi bên kia đã ★★ (2 bản sao) và tiếp tục ưu tiên bên thiếu tới khi đủ ★★★ (4 bản sao). Trước khi sửa, ngưỡng tự nhảy lên 4 bản sao nên Ngư Phủ ★★ không kéo Thần Sương (17%); giờ 67% (`node tests/cho-tuong/ti-le.test.js` đạt).
+- Test toàn bộ: đạt hết trừ `cat-anh` (1 lỗi đo thời gian, nhánh gốc cũng lỗi) và `xem-gop-y/rules-emulator` (máy thiếu `@firebase/rules-unit-testing`). Ảnh đã xem: bảng Hợp thể (Tím/Vàng, sau khi chạm 🔒), Tiến hoá — 1920×934, 844×390, 667×375.
 
 ### (nhánh hop-the-ky-nang, bản 180) — Hợp thể bắt buộc ★★★ + nâng hết kỹ năng (bỏ ngoại lệ v136)
 - Người dùng: "sao lại cho hợp thể khi chưa nâng hết skill?" → ra **Tím** cần **cả 2 tướng Thường ★★★ VÀ kỹ năng tối đa** (`COSTS.ascendTier` 2 → 3, bỏ dòng `if (!h.from) return true` trong `fusionReady`); ra **Vàng** giữ như cũ (2 tướng Tím Thần tinh ★★★ + kỹ năng tối đa). Ghép sao ★→★★→★★★ không đổi. Mọi đường hợp thể (nút trên thẻ bảng Hợp thể, màn Tiến hoá, kéo thả, dải gợi ý / fuseFocus, nút → trên tướng, chơi nhóm lockstep) đều đi qua `canFuse` → `fusionReady` nên bị chặn như nhau.
