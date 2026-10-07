@@ -2061,9 +2061,42 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 - Gộp `claude/tu-cu-dong-anh` (bản 2: 60 ảnh tách nền lại bằng `tools/tach-nen-hong.py` + 60 rig soát tay trong js/rigs.js, `RIGS[mã].kind/amp`, `cdAbsorbSlivers`, `cdFillBehind`) — giữ ảnh + rig của bản 2 cho 60 mã đó; `kinhduong.png` = ảnh bản 2 đã bóc viền trắng (cùng khung, rig vẫn khớp). Nhánh này là nhánh gộp cuối đưa tester.
 - **Quái / boss dùng rig** (`cdDrawEnemy`): mã có rig tách tay thì cả người vẫn đi / nhún như cũ, riêng tay cầm vũ khí vung khi đánh, vệt theo đầu vũ khí; không có rig thì cử động nguyên khối.
 
+## claude/vu-khi-theo-anh — Vật cầm trong ảnh dựng xương phải hợp nhân vật
+
+**Nguyên tắc (người dùng chốt sau lần đầu):** vật cầm trên tay phải HỢP danh tính / nghề / truyền thuyết (lái đò → mái chèo, thợ gốm → bình gốm, thần linh hiền / công chúa không cầm kiếm giáo; linh thú vẽ ra thú). Rà đủ 90 ảnh — bảng `mã · tên · vật trong ảnh · vật hợp lý · quyết định` ở `docs/xem-truoc-cu-dong/README.md` (sinh từ `tools/build-prompt-gen-lai.js`). Kết quả: **gen lại 57**, **giữ 33**.
+- Ảnh hợp nhân vật dù khác dữ liệu cũ → giữ ảnh, **game sửa theo ảnh**.
+- Ảnh không hợp → **gen lại** theo `docs/PROMPT-GEN-LAI.txt` và đưa vào `CD_SKIP` (js/tu-cu-dong.js): game hiện bộ ảnh cũ packs/ (mọi mã đều có), dữ liệu game giữ vật đúng (kiểu đánh, đạn, tên kỹ năng như trước nhánh này). Lần đầu nhánh đã "sửa theo ảnh" cả các mã này (đạn giáo / kiếm khí, Thợ Gốm cận chiến…) — đã **hoàn tác** hết, gỡ luôn 2 loại đạn mới.
+
+**Sửa game theo ảnh (giữ ảnh):**
+- **Thợ Săn Rừng** (`thosan`): dao găm → **cung** (đánh xa, tên `arrow`, bắn được quái bay). Gốc 2 / tầm 140 / 0,85 giây → 2 / 145 / 0,9 giây. Tiêu đề "Cung săn lá rừng, mũi tên chí mạng"; W "Giáo Ẩn" → "Tên Ẩn", Q / R viết lại theo cung.
+- **Trẻ Chăn Trâu** (`chantrau`): ná cao su → **gậy đầu trâu** (cận chiến). Gốc 5 / 170 / 0,95 giây → 8 / 145 / 0,9 giây. Nhãn "Choáng xa" → "Gõ choáng", W "Sỏi Trúng Đầu" → "Gậy Gõ Đầu"; Q Sỏi Nảy giữ (ghi rõ "Ném viên sỏi…" — chiêu ném), R Cả Xóm Ra Đồng giữ.
+- Tướng hợp thể từ 2 tướng này không đổi chỉ số: `base.heir` (js/game.js `inheritBase`) — chỉ số truyền lại cho tướng con giữ như cũ.
+- Chỉ đổi chữ / `look.weapon`: Thần Săn (dao lá → đao, Q "Phi Đao Tẩm Độc"), Kinh Dương Vương (Q "Đao Xích Quỷ"), Chú Cuội (rìu → đòn gánh, Q "Đòn Gánh Quật"), Mẹ Lúa (liềm + gùi lúa), Lạc Long Quân / Sơn Tinh (giáo). Thợ Gốm: ảnh cầm bình gốm → khớp game cũ (ném bình), không đổi.
+- Quái: `kybinh` "Quỷ Cưỡi Lợn" → **"Quỷ Lợn Rừng"** (ảnh: người đầu lợn, không cưỡi — tên, mô tả, tag boss Triệu Đà, mô tả ải). `CD_WEAPON` theo ảnh cho mã giữ (thêm mã `dao`, `gay`, `kich`, `dinh-ba`, `phep`).
+- Trang thử `?xem-cu-dong` (js/xem-cu-dong.js): nhãn = vũ khí theo `CD_WEAPON` · động tác (trước suy từ động tác: giáo bổ hiện "rìu").
+
+**Mô phỏng trước / sau** (`node tests/vu-khi-theo-anh/mo-phong.js 2 1,3` — dựng lại chỉ số cũ ngay trong trang; tướng thử cấp 12 ★★★ kỹ năng 10 ở ô phủ đường tốt nhất + Xạ Thủ cấp 8 lo quái bay + 2 tướng cấp 1, tới đợt 20, ải 1 và 3 × 2 seed):
+
+| Tướng | Bản | Lực chiến cấp 10 | cấp 20 | Sát thương / trận | trong đó lên quái bay | Mạng còn | Đợt |
+|---|---|---|---|---|---|---|---|
+| Thợ Săn | cũ (dao) | 33.477 | 92.959 | 111.488 | 0 | 12 | 20 |
+| Thợ Săn | mới (cung) | 31.658 | 87.846 | 123.901 | 9.367 | 25 | 20 |
+| Chăn Trâu | cũ (ná) | 3.086 | 5.716 | 115.083 | 8.600 | 15,5 | 20 |
+| Chăn Trâu | mới (gậy) | 3.360 | 6.176 | 98.591 | 5.721 | 13 | 19,5 |
+
+Sát thương lên quái đất gần như giữ (Thợ Săn 111k → 115k, Chăn Trâu 106k → 93k). DPS đơn mục tiêu cấp 10 (sát thương × chí mạng / hồi chiêu): Thợ Săn −5,6% (đổi lấy bắn được quái bay), Chăn Trâu +12% (bù mất tầm 170 → 145 và quái bay). Theo tester (bản bf46c2d: Thợ Săn 0 / 0,95 giây yếu −14…−17% DPS, Chăn Trâu 10 sát thương +26%) → chỉnh lại 2 / 0,9 giây và 8.
+- Rig `thogom` (js/rigs.js + tools/rig-dung-xuong.txt): `chop` → `punch` — ảnh cầm bình gốm, game ném bình: vung tay ném, không còn vệt bổ rìu. (Tester báo `RIGS[mã].kind` thắng `CD_WEAPON`: đúng thiết kế — kind = động tác theo ẢNH; nhãn trang thử đã ghi vũ khí theo `CD_WEAPON` · động tác. thansuong / dapde giờ trong CD_SKIP; cuoi đòn gánh, chantrau gậy: động tác bổ là đúng.)
+
+**Gen lại 57** (`docs/PROMPT-GEN-LAI.txt`, `node tools/build-prompt-gen-lai.js` — dùng chung STYLE / LOCK / NEGATIVE / A-pose #FF00FF của `tools/build-prompt-dung-xuong.js`, file đó giờ `module.exports`; mỗi khối có dòng `!!! FIX` ghi vật đúng phải cầm + `NEGATIVE FOR THIS CHARACTER` (sword, spear, blade… khi không hợp); script dừng nếu `CD_SKIP` lệch danh sách gen lại):
+1. Sai loài (26): rua, phuthuy, chimbao, nongnoc, ran, thachtinh, dacon, cungan, voichien, camap, cua, cao, casau, doi, echme, hotinh, chantinh, thuongluong, daibang, nguphu + linh thú vẽ thành người: kimquy (rùa vàng), nghedong (nghê đồng), kylan (kỳ lân), halong (rồng), caong (cá voi), ongho (hổ).
+2. Vật cầm không hợp (31): linhan (thiếu giáo), tre (vũ khí rời), dotnuong (3D bóng), xathu (cung), adv (nỏ thần), caolo (nỏ máy), thoren (búa), thienloi (búa tầm sét), thachsanh (rìu), potaoapui (gươm thần), cdt (gậy thần), thansuong (tinh thể băng), antiem (dưa hấu), auco (đũa lông hạc), tiendung (quạt), langlieu (mâm bánh chưng), mychau (rắc lông ngỗng), sodua (quả dừa), dapde (xẻng / cuốc, bỏ giáp vàng), ongdung (đòn gánh đất), thocong (gậy hồ lô), maudia (nữ, chum hạt giống), chodo (mái chèo), truongchi (sáo trúc), longnu (nữ, ngọc rồng), viemde (cuốc lửa), ongtao (kẹp than), matroi (quyền trượng mặt trời), mauthoai (nữ, gậy gáo nước), trutroi (cột trời), mau (nữ, cành hoa).
+
+Test: `node tests/run-all.js` đạt (tu-cu-dong: mẫu trang thử đổi xathu / echme → chantrau / tom vì 2 mã này giờ trong CD_SKIP). Ảnh đã xem: trận đội giữ ảnh (Thợ Săn cung · Chăn Trâu gậy · Thợ Gốm bình · Cuội đòn gánh) và đội chờ gen lại (hiện ảnh cũ: Chèo Đò mái chèo, Xạ Thủ cung, Kỳ Lân thú…) ở 1920×934, 844×390, 667×375 (`node tests/vu-khi-theo-anh/chup.js`); trang thử nhãn vũ khí 1920×934, 667×375.
+
 ## Phiên bản 194 — 90 ảnh tĩnh mới + game tự cử động (tester đạt)
 
 - Gộp claude/tu-cu-dong + claude/tu-cu-dong-anh: 90 ảnh mới (72 dùng, 18 chờ gen lại trong CD_SKIP), rig 90 mã (67 vung tay), chân đứng yên, boss ×2, nhún lấy đà, vệt chém đúng phía.
+- Theo tester: nhãn trang thử `?xem-cu-dong` (js/xem-cu-dong.js) trước suy tên vũ khí từ động tác (giáo bổ → "rìu", gậy → "rìu/cung") — giờ hiện **vũ khí theo `CD_WEAPON` · động tác** (vd `thansuong · giáo · bổ`, `chantrau · gậy · bổ`, `dapde · gậy · bổ`, `cuoi · gậy · bổ`). Xạ Thủ hiện `cung · chém` vì ảnh cầm đao trong khi game giữ cung — chờ gen lại. Người Đắp Đê: "gậy chĩa đầu thú". Đã xem ảnh trang thử 1920×934, 667×375.
 
 ## claude/dung-anh-co-san — Dùng ảnh có sẵn thay hình vẽ bằng code / emoji
 

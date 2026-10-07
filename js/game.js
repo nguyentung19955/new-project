@@ -415,8 +415,10 @@ function upgradeGain(h, inst) {
 }
 
 // chỉ số gốc của tướng thăng thần: lấy bên tốt hơn giữa tướng gốc và tướng thần
-function inheritBase(def, fd, prev) {
+function inheritBase(def, fd0, prev) {
   // tốc đánh giữ theo tướng thần (nét riêng của tướng), sát thương / tầm lấy bên cao hơn
+  // base.heir: chỉ số truyền lại cho tướng hợp thể (tướng đổi kiểu đánh theo ảnh vẫn truyền như cũ — không đổi cân bằng tướng con)
+  const fd = fd0.base.heir ? { base: { ...fd0.base, ...fd0.base.heir } } : fd0;
   const p = prev || { damage: def.base.damage, range: def.base.range };
   const out = { ...p, damage: Math.max(p.damage, fd.base.damage), range: Math.max(p.range, fd.base.range) };
   if (fd.base.splash && !def.base.splash) out.splash = Math.max(out.splash || 0, fd.base.splash);
