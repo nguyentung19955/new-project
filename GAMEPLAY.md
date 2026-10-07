@@ -1560,3 +1560,6 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 165 — Gộp màn xem góp ý (quản trị) + báo lỗi chơi nhóm rõ ràng
 - Gộp: màn "📥 Góp ý nhận được" chỉ cho tài khoản quản trị (luật Firestore isAdmin), chơi nhóm báo đúng nguyên nhân khi tạo/vào phòng lỗi + nút Thử lại.
+
+## Phiên bản 166 — Chơi nhóm "Sắp ra mắt"
+- Thẻ **Cùng Giữ Thành** trong màn Chọn chế độ hiện mờ, nhãn **Sắp ra mắt**, không bấm được (`COOP.visible = false` trong `js/coop.js`). Mã, luật Firestore và test chơi nhóm vẫn giữ nguyên; đổi thành `true` là mở lại.

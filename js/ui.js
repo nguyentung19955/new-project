@@ -927,9 +927,9 @@ class UI {
         <button class="md-card metal endl" data-act="mode-pick" data-k="endless" style="background-image:linear-gradient(90deg,#0A1A24f0 35%,#0A1A2455),url('${assetSrc('maps/nen-bien.jpg')}')"><span class="md-ic"><img src="${assetSrc('ui/ui-tran-1-3.png')}" alt="♾"></span><b>Vô Tận</b>
           <small>Chọn một bản đồ đã mở, giữ thành mãi mãi. Quái mạnh dần, boss mỗi 10 đợt, đổi bộ quái liên tục. Đua bảng xếp hạng.</small>
           <span class="md-st">Kỷ lục: đợt ${best}</span></button>
-        <button class="md-card metal coop" data-act="mode-pick" data-k="coop" style="background-image:linear-gradient(90deg,#14240Ef0 35%,#14240E55),url('${assetSrc('maps/nen-thanh.jpg')}')"><span class="md-ic">🤝</span><b>Cùng Giữ Thành</b>
+        <button class="md-card metal coop ${COOP.visible ? '' : 'soon'}" ${COOP.visible ? 'data-act="mode-pick" data-k="coop"' : 'disabled aria-disabled="true"'} style="background-image:linear-gradient(90deg,#14240Ef0 35%,#14240E55),url('${assetSrc('maps/nen-thanh.jpg')}')"><span class="md-ic">🤝</span><b>Cùng Giữ Thành</b>
           <small>Chơi nhóm 2 người: chung bản đồ, chung mạng, mỗi người giữ một nửa số ô và ví vàng riêng. Tạo phòng lấy mã 6 ký tự, bạn bè nhập mã để vào.</small>
-          <span class="md-st">${COOP.saved() ? `Đang có phòng ${COOP.saved()}` : 'Cần đăng nhập'}</span></button>
+          ${COOP.visible ? `<span class="md-st">${COOP.saved() ? `Đang có phòng ${COOP.saved()}` : 'Cần đăng nhập'}</span>` : '<span class="md-soon">Sắp ra mắt</span>'}</button>
       </div></div>`;
     $('#modes').hidden = false;
   }
@@ -1264,7 +1264,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 165 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 166 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
