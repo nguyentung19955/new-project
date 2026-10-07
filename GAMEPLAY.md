@@ -2186,3 +2186,12 @@ Test: cập nhật `cho-tuong` (màn Chuẩn bị không còn chọn đội, sau
 
 ## Phiên bản 201 — quy tắc hình mới phải có bản pixel
 - CLAUDE.md: thêm quy tắc "Đang chuyển sang pixel art: hình mới phải có bản pixel" — session thêm/đổi hình (kể cả vẽ bằng code) vẽ luôn bản pixel theo docs/pixel/QUY-CHUAN.md hoặc ghi vào docs/pixel/DANH-SACH.md mục "Bổ sung"; giữ đường vẽ dự phòng.
+
+## claude/duong-di-moi — Sửa theo tester (Sính lễ dừng trận, gộp thông báo, xoá "đường ma", nhãn Tiếp tục)
+
+- **Bảng Sính lễ dừng hẳn trận** (chơi đơn): mở bảng → `game.running = false` + `game.holdStage` (đặt ngay lúc hạ boss trong game.js, kể cả khi đợt boss xong cùng khung hình). Đóng bảng (`ui.pickReward`) → trận chạy lại, **lúc này mới** sang màn mới (`game.stageTick()`), banner + nghỉ 20 giây trước đợt kế. Nạp trận lưu lúc bảng còn mở → màn tự khớp số đợt.
+- **Gộp thông báo đổi màn:** 1 banner "Màn N · vùng đất mới / tên ải" + 1 thông báo sau banner (dạng đường, mô tả, quân, số tướng dời); bỏ thông báo "Sang vùng đất mới…" của game; ẩn bảng "Đợt N · bộ quái mới" khi đổi màn (quân đã ghi trong thông báo).
+- **Xoá "đường ma":** nền vẽ tay có dải hoa văn / khung theo đường cũ (sông: khung chữ nhật; rừng: dải chữ S; biển, đầm, thành) → màn dùng dạng đường mới phủ vùng giữa bằng mảng đất / cỏ sạch lấy từ chính ảnh nền (lát gương 2×2 cho liền mép, viền mờ dần 34 đơn vị) — `BG_CLEAN` / `drawBgClean` trong maps.js. Hang (đá nứt) và Đồng (bờ ruộng) giữ nguyên.
+- **Nhãn Tiếp tục** dùng cùng hàm suy ra màn (`endlessStageAt(đợt)`) → bản lưu cũ ghi đúng vùng đất sẽ vào.
+- Pixel art (quy tắc mới): cầu tre / cầu đá, miệng hang ngầm, cột mốc cửa vào vẽ bằng code — **chưa có bản pixel** (docs/pixel chưa có trên nhánh chính); cần bổ sung vào danh sách pixel khi nhánh pixel có QUY-CHUAN / DANH-SACH.
+- Test thêm (tests/duong-di-moi): chạy thật đợt boss 10 bằng vòng lặp game, hạ boss → bảng Sính lễ mở 4 giây: vẫn đợt 10, đếm ngược đứng yên, chưa đổi màn; đóng bảng → màn 2, trận chạy lại, nghỉ ≥ 17 giây; 1 banner, không bảng bộ quái, ≤ 2 thông báo; nhãn Tiếp tục bản lưu cũ đúng vùng đất.

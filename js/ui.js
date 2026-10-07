@@ -681,7 +681,7 @@ class UI {
     $('#menu-art').innerHTML = `<img class="keyart" src="${assetSrc('ui/nen-menu.jpg')}" alt="" onerror="this.outerHTML=''">` + svgI(sceneArt('menu'));
     const g0 = this.game, live = g0.started && !g0.over && (!g0.won || g0.endless);
     const run = !live && s.run;
-    const lvN = live ? (g0.stage ? g0.stage.lv : g0.level) : run ? (run.stage && LEVELS[run.stage.lv] ? run.stage.lv : run.level) : 0, wN = live ? g0.wave : run ? run.wave : 0;   // vô tận theo màn: tên vùng đất đang chơi
+    const lvN = live ? (g0.stage ? g0.stage.lv : g0.level) : run ? endlessStageAt(run.wave || 0, run.level || 0).lv : 0, wN = live ? g0.wave : run ? run.wave : 0;   // vô tận theo màn: tên vùng đất đang chơi (màn là hàm của số đợt — khớp màn khi Tiếp tục, cả bản lưu cũ)
     $('#continue-label').textContent = live || run ? `Tiếp tục · ${(LEVELS[lvN] || LEVELS[0]).name} · Đợt ${wN} ♾` : 'Xuất Quân';
     $('#btn-newgame').hidden = !(live || run);
     $('#roster-hint').onclick = () => { $('#roster-hint').hidden = true; };
@@ -2004,9 +2004,8 @@ class UI {
       } else if (ev.type === 'setDone') {
         this.banner(`${HEROES[ev.hero.type].name} mặc đủ bộ`, ev.name);
       } else if (ev.type === 'stage') {
-        // vô tận sang màn mới (bản đồ cũ tự mờ dần sang bản đồ mới: main.js cachedBackdrop). Đang mở bảng Sính lễ
-        // thì đợi đóng bảng mới báo (bảng thưởng là khoảng chuyển cảnh)
-        if (!$('#reward').hidden) this.pendingStage = ev; else this.stageBanner(ev);
+        // vô tận sang màn mới (bản đồ cũ tự mờ dần sang bản đồ mới: main.js cachedBackdrop) — luôn sau khi đóng bảng Sính lễ
+        this.stageBanner(ev);
       } else if (ev.type === 'checkpoint') {
         this.saveRun();
       } else if (ev.type === 'victory') {
@@ -2873,6 +2872,8 @@ class UI {
     this.rewardBoss = ev.boss;
     this.closeScreen();
     const g = this.game;
+    // chơi đơn: bảng mở thì dừng hẳn trận (đổi màn + nghỉ 10 giây bắt đầu sau khi đóng bảng — pickReward)
+    if (!COOP.on && !g.co && $('#reward').hidden) { this.rewardWasRunning = g.running; g.running = false; }
     const flood = false;      // v36: bỏ nước dâng ngập ô
     const th = themeOf(g.level, g.endless && g.wave > g.levelWaves);   // v163: lời ban thưởng theo chương
     const gift = ev.options[0], jar = ev.options[1], misc = ev.options[2];
@@ -2911,12 +2912,17 @@ class UI {
   }
 
   // vùng đất mới (vô tận theo màn): banner tên ải + dạng đường, mô tả đường, nhắc kéo đổi ô
+  // gộp mọi tin đổi màn thành 1 banner + 1 thông báo (sau banner); ẩn bảng "bộ quái mới" (đã ghi quân trong thông báo)
   stageBanner(ev) {
-    this.pendingStage = null;
-    const sh = ev.stage.shape && PATH_SHAPES[ev.stage.shape];
+    const g = this.game, sh = ev.stage.shape && PATH_SHAPES[ev.stage.shape];
+    const key = rosterKeyOf(rosterFor(g.wave + 1, g.level, g.stLv()));
+    this.rosterKey = key; this.rosterLevel = g.level;
+    $('#roster-hint').hidden = true;
     this.banner(`Màn ${ev.stage.k + 1} · vùng đất mới`, LEVELS[ev.stage.lv].name);
     const extra = ev.lost ? ` · ${ev.lost} tướng hết chỗ: hoàn ${fmt(ev.refund)} vàng` : ev.moved ? ` · ${ev.moved} tướng dời sang ô gần nhất (kéo để đổi ô)` : '';
-    setTimeout(() => this.toast(`<b>${esc(sh ? sh.name : 'Đường ' + LEVELS[ev.stage.lv].name)}</b>${sh ? ' · ' + esc(sh.desc) : ''}${extra}`, '#9EDDF2'), 2700);
+    const msg = `<b>${esc(sh ? sh.name : 'Đường ' + LEVELS[ev.stage.lv].name)}</b>${sh ? ' · ' + esc(sh.desc) : ''}${key && ROSTER_NAMES[key] ? ` · Quân: <b>${esc(ROSTER_NAMES[key])}</b>` : ''}${extra}`;
+    const wait = Math.max(0, (this.bannerEnd || 0) - performance.now()) + 50;
+    setTimeout(() => this.toast(msg, '#9EDDF2'), wait);
   }
 
   pickReward(i) {
@@ -2926,11 +2932,16 @@ class UI {
       COOP.issue('reward', [i, this.rewardId]);
       return;
     }
-    this.game.claimReward(o);
+    const g = this.game;
+    g.claimReward(o);
     $('#reward').hidden = true;
-    if (this.pendingStage) this.stageBanner(this.pendingStage);
-    if (!this.game.waveActive) this.saveRun();
     this.rewardToast(o);
+    if (!g.over && this.rewardWasRunning != null) g.running = this.rewardWasRunning;
+    this.rewardWasRunning = null;
+    g.holdStage = false;
+    g.stageTick();          // đợt boss đã xong khi bảng mở → sang màn mới ngay bây giờ (banner + nghỉ 10 giây)
+    this.handleEvents();
+    if (!g.waveActive) this.saveRun();
   }
   rewardToast(o) {
     if (o.kind === 'item' && o.ids) this.toast(`Nhận ${o.ids.length} món từ Hũ Vua Hùng · bấm ≡ → Mặc đồ cả đội`, '#C8A0F0');

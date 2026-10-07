@@ -270,21 +270,38 @@ fs.mkdirSync(SHOT, { recursive: true });
     await page.click('[data-act=prep-diff]');
     await page.click('[data-act=prep-go]');
     await page.waitForTimeout(300);
-    // chơi tới hết đợt boss 10: đặt tướng, tua đợt 1–9, đợt 10 chạy thật tới khi hạ / lọt boss
-    const r1 = await page.evaluate(() => {
+    // chơi tới đợt boss 10: đặt tướng, tua đợt 1–9, đợt 10 chạy thật bằng vòng lặp game (game.running), hạ hết quái + boss
+    await page.evaluate(() => {
       game.gold = 5000;
       game.placeHero(2, 'xathu'); game.placeHero(6, 'lactuong'); game.placeHero(9, 'thaymo');
       for (let w = 1; w <= 9; w++) { game.wave = w; game.waveActive = true; game.spawnQueue = []; game.enemies = []; game.waveComplete(); }
-      game.lives = 999; game.nextWaveT = 0; game.running = true;
-      game.startWave();
-      for (let s = 0; s < 4000 && game.waveActive; s++) { game.update(0.05); if (game.rest) game.rest = null; }
-      return { wave: game.wave, k: game.stage.k, id: MAP_ID, active: game.waveActive };
+      game.nextWave = buildWave(10, game.level, game.stLv());   // (tua bằng waveComplete không dựng đợt kế)
+      game.lives = 999; game.nextWaveT = 0.1; game.running = true; game.speed = 4;
     });
-    ok(!r1.active && r1.wave === 10 && r1.k === 1 && r1.id !== 'song1', `qua đợt boss 10 → sang màn 2 (${r1.id})`);
-    await page.waitForTimeout(800);   // ui xử lý sự kiện: Sính lễ (nếu hạ boss) + lưu trận
-    if (await page.evaluate(() => !$('#reward').hidden)) { await page.click('#reward [data-act=reward][data-i="2"]'); await page.waitForTimeout(300); }
-    await page.waitForTimeout(3000);
+    await page.waitForFunction(() => game.wave === 10 && game.enemies.some((e) => e.def.boss), null, { timeout: 60000 });
+    // hạ boss cuối cùng (sân hết quái cùng lúc → đợt boss xong ngay trong khung hạ boss)
+    await page.evaluate(() => { game.spawnQueue = []; for (const e of game.enemies) if (!e.def.boss) { e.dead = true; } game.enemies = game.enemies.filter((e) => e.def.boss); const b = game.enemies[0]; game.kill(b, null); });
+    await page.waitForSelector('#reward:not([hidden])');
+    const w0 = await page.evaluate(() => ({ run: game.running, wave: game.wave, active: game.waveActive, t: game.nextWaveT, id: MAP_ID, k: game.stage.k }));
+    await page.waitForTimeout(4000);   // để bảng Sính lễ mở 4 giây (tester: trước đây đợt 11–13 tự chạy sau lưng bảng)
+    const w1 = await page.evaluate(() => ({ run: game.running, wave: game.wave, active: game.waveActive, t: game.nextWaveT, id: MAP_ID, k: game.stage.k }));
+    ok(!w0.run && !w1.run && w1.wave === 10 && !w1.active && Math.abs(w1.t - w0.t) < 0.01 && w1.id === 'song1' && w1.k === 0,
+      `bảng Sính lễ mở: trận dừng hẳn (4 giây vẫn đợt 10, đếm ngược đứng ở ${w1.t.toFixed(1)} giây), chưa đổi màn`);
+    await page.screenshot({ path: path.join(SHOT, 'sinh-le-844x390.png') });
+    await page.evaluate(() => { game.speed = 1; });
+    await page.click('#reward [data-act=reward][data-i="2"]');
+    await page.waitForTimeout(400);
+    const r1 = await page.evaluate(() => ({ run: game.running, wave: game.wave, k: game.stage.k, id: MAP_ID, t: game.nextWaveT, hint: !$('#roster-hint').hidden, banner: !$('#banner').hidden && $('#banner').textContent }));
+    ok(r1.run && r1.wave === 10 && r1.k === 1 && r1.id !== 'song1' && r1.t >= 19, `đóng Sính lễ → sang màn 2 (${r1.id}), trận chạy lại, nghỉ ${r1.t.toFixed(1)} giây trước đợt 11`);
+    ok(/vùng đất mới/.test(r1.banner) && !r1.hint, `một banner "${(r1.banner || '').replace(/\s+/g, ' ').trim()}", không chồng bảng bộ quái mới`);
+    await page.waitForTimeout(1200);
     await page.screenshot({ path: path.join(SHOT, 'sang-man-844x390.png') });
+    await page.waitForTimeout(2200);
+    const toasts = await page.evaluate(() => [...document.querySelectorAll('#toasts .toast')].map((t) => t.textContent));
+    const hint2 = await page.evaluate(() => !!document.querySelector('#roster-hint:not([hidden])'));
+    ok(toasts.length <= 2 && !hint2, `sau banner: ${toasts.length} thông báo (${toasts.join(' | ').slice(0, 120)})`);
+    await page.screenshot({ path: path.join(SHOT, 'sang-man-thong-bao-844x390.png') });
+    await page.evaluate(() => { game.running = false; });
     const before = await page.evaluate(() => ({ id: MAP_ID, k: game.stage.k, lv: game.stage.lv, wave: game.wave, ro: rosterKeyOf(rosterFor(game.wave + 1, game.level, game.stLv())), hp: game.pathHp,
       heroes: game.heroes.map((h, i) => h && `${i}:${h.type}`).filter(Boolean).join(' '), saved: ui.save.run && ui.save.run.mapId, savedStage: ui.save.run && ui.save.run.stage && ui.save.run.stage.k }));
     ok(before.saved === before.id && before.savedStage === before.k, `bản lưu ghi màn hiện tại (${before.saved}, màn ${before.savedStage})`);
@@ -308,6 +325,8 @@ fs.mkdirSync(SHOT, { recursive: true });
     });
     await page.reload();
     await page.waitForTimeout(1200);
+    const lbl = await page.evaluate(() => ({ t: $('#continue-label').textContent, want: LEVELS[endlessStageAt(35, 0).lv].name }));
+    ok(lbl.t.includes(lbl.want) && /Đợt 35/.test(lbl.t), `bản lưu cũ: nút "${lbl.t}" ghi đúng vùng đất sẽ vào`);
     await page.click('#btn-continue');
     await page.waitForTimeout(600);
     const old = await page.evaluate(() => { const st = endlessStageAt(35, 0); return { k: game.stage.k, want: st.k, id: MAP_ID, wid: stageMapId(st), n: game.heroes.filter(Boolean).length, wave: game.wave, started: game.started }; });

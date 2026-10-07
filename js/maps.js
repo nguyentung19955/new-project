@@ -405,6 +405,54 @@ function drawEntryOne(x, g, m) {
 const GATE_FILE = { castle: 'cong-phong-chau', hut: 'cong-ban-rung', cave: 'cong-hang', village: 'cong-lang-tre', citadel: 'cong-co-loa' };
 const gateArt = (theme) => typeof asset === 'function' && asset(`tiles/${GATE_FILE[(MAP_THEMES[theme] || MAP_THEMES.song).gate]}.png`, true);
 
+// Nền vẽ tay có sẵn dải hoa văn / lối mòn theo đường cũ → với dạng đường mới (vô tận theo màn) thành "đường ma" song song
+// đường thật. Phủ vùng giữa bằng mảng đất / cỏ sạch lấy từ chính ảnh nền (lát gương cho liền mép, viền mờ dần),
+// giữ viền trang trí ngoài. patch: [x, y, w, h] trên ảnh 1600×738; area: [x1, y1, x2, y2] toạ độ thiết kế 932×430.
+// Hang (nền đá nứt) và Đồng (bờ ruộng hợp chủ đề) không có dải kiểu đường → không phủ.
+const BG_CLEAN = {
+  song:  { patch: [620, 300, 380, 240], area: [36, 58, 900, 430] },
+  dam:   { patch: [640, 300, 420, 200], area: [180, 58, 870, 430] },
+  rung:  { patch: [760, 280, 300, 150], area: [110, 50, 860, 430] },
+  bien:  { patch: [440, 430, 700, 180], area: [150, 30, 900, 430] },
+  thanh: { patch: [440, 290, 520, 200], area: [40, 58, 880, 430] },
+};
+const bgCleanCache = new Map();
+function bgCleanTile(img, theme) {
+  const k = theme + '|' + img.src;
+  if (bgCleanCache.has(k)) return bgCleanCache.get(k);
+  const [px, py, pw, ph] = BG_CLEAN[theme].patch, sx = img.naturalWidth / 1600, sy = img.naturalHeight / 738;
+  const c = document.createElement('canvas');
+  c.width = Math.round(pw * sx) * 2; c.height = Math.round(ph * sy) * 2;
+  const x = c.getContext('2d'), w = c.width / 2, h = c.height / 2;
+  // 2×2 lát gương: mép trùng nhau → lặp không thấy đường nối
+  for (const [fx, fy] of [[1, 1], [-1, 1], [1, -1], [-1, -1]]) {
+    x.save(); x.translate(fx > 0 ? 0 : 2 * w, fy > 0 ? 0 : 2 * h); x.scale(fx, fy);
+    x.drawImage(img, px * sx, py * sy, pw * sx, ph * sy, 0, 0, w, h);
+    x.restore();
+  }
+  bgCleanCache.set(k, c);
+  return c;
+}
+function drawBgClean(x, img, theme, pw) {
+  const C = BG_CLEAN[theme];
+  if (!C || !img || !img.naturalWidth) return;
+  const [a1, b1, a2, b2] = C.area.map((v) => v * DK), feather = 34 * DK;
+  // lớp phủ vẽ riêng (cỡ điểm ảnh thật) rồi khoét viền mờ bằng mặt nạ làm mờ
+  const k = pw / CONFIG.W, o = document.createElement('canvas');
+  o.width = Math.round(CONFIG.W * k); o.height = Math.round(CONFIG.H * k);
+  const q = o.getContext('2d');
+  q.setTransform(k, 0, 0, k, 0, 0);
+  const tile = bgCleanTile(img, theme), pat = q.createPattern(tile, 'repeat');
+  try { pat.setTransform(new DOMMatrix().scale(CONFIG.W / img.naturalWidth * 1.0)); } catch (e) { /* cỡ gốc */ }
+  q.fillStyle = pat; q.fillRect(a1, b1, a2 - a1, b2 - b1);
+  q.globalCompositeOperation = 'destination-in';
+  q.filter = `blur(${Math.round(feather * k / 2)}px)`;
+  q.fillStyle = '#000';
+  q.fillRect(a1 + feather, b1 + feather, a2 - a1 - feather * 2, b2 - b1 - feather * 2);
+  q.filter = 'none';
+  x.save(); x.setTransform(1, 0, 0, 1, 0, 0); x.drawImage(o, 0, 0); x.restore();
+}
+
 // Canvas tĩnh: nền vẽ tay + đường + cổng vào + cổng thành; dựng lại khi đổi bản đồ / cỡ màn hình / có thêm ảnh
 let mapLayerCache = { key: '', c: null };
 function mapLayer(id, bgImg, svgImg, pw, ph) {
@@ -418,6 +466,7 @@ function mapLayer(id, bgImg, svgImg, pw, ph) {
   const x = c.getContext('2d');
   x.setTransform(pw / CONFIG.W, 0, 0, ph / CONFIG.H, 0, 0);
   if (bgImg) x.drawImage(bgImg, 0, 0, CONFIG.W, CONFIG.H);
+  if (bgImg && m.shape) drawBgClean(x, bgImg, m.theme, pw);   // dạng đường mới: xoá dải hoa văn của đường cũ trên nền
   else { x.fillStyle = (MAP_THEMES[m.theme] || MAP_THEMES.song).ground; x.fillRect(0, 0, CONFIG.W, CONFIG.H); }
   drawThemedPath(x, id);
   drawEntry(x, id);

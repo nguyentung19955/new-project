@@ -2719,7 +2719,7 @@ class Game {
   stLv() { return this.stage && this.stage.k > 0 ? this.stage.lv : undefined; }   // ải nguồn của màn (bộ quái, boss)
   placeName() { return LEVELS[this.stage ? this.stage.lv : this.level].name; }
   stageTick() {
-    if (!this.endless || this.co || typeof endlessStageAt !== 'function') return;
+    if (!this.endless || this.co || this.holdStage || typeof endlessStageAt !== 'function') return;   // holdStage: bảng Sính lễ đang mở — đổi màn khi đóng bảng
     const want = endlessStageAt(this.wave, this.level);
     if (!this.stage || want.k !== this.stage.k) this.setStage(want);
   }
@@ -2765,8 +2765,7 @@ class Game {
     if (quiet) return true;
     this.stageFade = true;   // main.js: nền cũ mờ dần sang nền mới
     this.nextWaveT = Math.max(this.nextWaveT, CONFIG.waveBreak + 10);   // thêm thời gian xếp lại tướng (kéo đổi ô miễn phí)
-    const name = this.placeName() + (st.shape ? ` · ${PATH_SHAPES[st.shape].name}` : '');
-    this.notify(`Sang vùng đất mới: ${name}${moved ? ` · ${moved} tướng dời sang ô gần nhất` : ''}${lost ? ` · ${lost} tướng hết chỗ, hoàn ${refund} vàng` : ''}`, '#9EDDF2');
+    const name = this.placeName() + (st.shape ? ` · ${PATH_SHAPES[st.shape].name}` : '');   // (giao diện báo bằng 1 banner + 1 thông báo: ui.stageBanner)
     this.events.push({ type: 'stage', stage: st, name, moved, lost, refund });
     return true;
   }
@@ -2808,8 +2807,9 @@ class Game {
     for (const h of this.heroes) if (h) h.hp = heroStats(h).hpMax;
     this.started = true; this.running = false; this.over = false;
     this.waveActive = false; this.enemies = []; this.spawnQueue = [];
-    // bản lưu cũ (chưa ghi màn): suy ra màn từ số đợt, dời tướng sang bản đồ của màn (im lặng)
-    if (!o.stage && this.endless && !this.co) { const st = endlessStageAt(this.wave, this.level); if (st.k) this.setStage(st, true); }
+    // màn phải khớp số đợt: bản lưu cũ (chưa ghi màn) hoặc lưu lúc bảng Sính lễ còn mở (chưa đổi màn) → sang đúng màn (im lặng)
+    this.holdStage = false;
+    if (this.endless && !this.co) { const st = endlessStageAt(this.wave, this.level); if (st.k !== this.stage.k) this.setStage(st, true); }
     this.nextWaveT = 0;
     this.nextWave = buildWave(this.wave + 1, this.level, this.stLv());
     this.updateAuras();
@@ -3778,6 +3778,7 @@ class Game {
       this.shake = Math.max(this.shake, 8);
       this.sparks(e.x, e.y - 20, '#F2D27A', 24);
       const options = this.bossRewards(e.type);
+      if (!this.co) this.holdStage = true;   // chơi đơn: bảng Sính lễ dừng trận, đổi màn đợi đóng bảng (ui.pickReward)
       if (this.co) this.co.reward = { id: e.id, options, taken: -1 };   // co-op: ai chọn trước thì nhận (lệnh 'reward')
       this.events.push({ type: 'reward', boss: e.type, options, id: e.id });
     }
