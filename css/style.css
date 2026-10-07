@@ -2170,7 +2170,6 @@ html.sk-the-cho .mk-card .rl { z-index: 2; }
 /* cho-6-the: bảng Hợp thể — công thức chưa mở khoá có nút tới Anh Hùng; màn kết quả nhắc mở tướng Tím */
 .hx-st.hx-open { border: 1px solid #8A7AA0; border-radius: 6px; background: #241A30; padding: 3px 7px; color: #E0CCF4; cursor: pointer; }
 .res-unl.res-tim b { color: #D8A8FF; }
-
 /* ===== PIXEL ART (claude/pixel-nen-tang · js/pixel.js, bật bằng ?pixel=1 / PIXEL_BAT) =====
    ảnh pixel phóng nearest-neighbor; tiêu đề Handjet, số VT323 (Google Fonts, có dấu tiếng Việt); chữ dài giữ Alegreya Sans */
 html.pixel img[src*="pixel/"], html.pixel canvas:not(#game) { image-rendering: pixelated; image-rendering: crisp-edges; }
