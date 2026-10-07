@@ -600,6 +600,7 @@ class UI {
       if (ev.target && /^(INPUT|TEXTAREA)$/.test(ev.target.tagName)) return;   // đang gõ chữ (góp ý, đổi tên): không bắt phím tắt
       if (ev.key === 'Escape' && !$('#feedback').hidden) return this.fbClose();
       if (ev.key === 'Escape' && !$('#fbadmin').hidden) return this.fbaKey();
+      if (ev.key === 'Escape' && this.escBack()) return;   // đóng màn phụ trên cùng (Thần Khí, Anh Hùng, Ấn Phù, bảng trong trận…)
       if (!g.started) return;
       const k = ev.key.toLowerCase();
       const h = g.heroes[this.sel];
@@ -609,6 +610,36 @@ class UI {
       if (this.screen || !h) return;
       if (k === 'u') this.doLevelUp(h);
     });
+    this.bindHistoryBack();
+  }
+
+  // claude/sua-thoat-than-khi: Esc / nút Quay lại của trình duyệt (vuốt back trên điện thoại) → đóng màn phụ trên cùng,
+  // đúng như bấm nút quay lại / ✕ của màn đó (Thần Khí → Anh Hùng → trận/menu). Không có gì để đóng thì trả về null.
+  backTarget() {
+    if (this.tip) return () => this.hideTip();
+    for (const id of ['#ranks', '#treasury', '#runes', '#roster', '#settings', '#coop', '#modes', '#campaign']) {
+      const el = $(id);
+      if (el.hidden) continue;
+      const b = el.querySelector('.scr-head [data-act$="close"], .scr-head [data-act$="back"]') || el.querySelector('[data-act$="-close"], [data-act$="-back"]');
+      if (b) return () => b.click();
+    }
+    if (!$('#screen').hidden) return () => this.closeScreen();
+    if (!$('#legends').hidden) return () => this.openLegends(false);
+    if (!$('#more').hidden) return () => this.action({ act: 'deck-close' });
+    if (!$('#drawer').hidden) return () => { $('#drawer').hidden = true; };
+    return null;
+  }
+  escBack() { const f = this.backTarget(); if (f) f(); return !!f; }
+  // nút Quay lại của trình duyệt: khi đang mở màn phụ thì gài một mục lịch sử; bấm back → đóng màn đó thay vì rời trang
+  bindHistoryBack() {
+    let trap = false;
+    const arm = () => {
+      if (trap || !this.backTarget() || this.tip) return;
+      try { history.pushState({ tt: 1 }, ''); trap = true; } catch (e) { /* trình duyệt chặn: bỏ qua */ }
+    };
+    // gài khi một màn phụ vừa hiện (bấm nút, phím tắt, hay mở bằng mã) — chỉ theo dõi thuộc tính hidden
+    new MutationObserver(() => { if (!trap) arm(); }).observe($('#wrap'), { subtree: true, attributes: true, attributeFilter: ['hidden'] });
+    window.addEventListener('popstate', () => { trap = false; if (this.escBack()) setTimeout(arm, 0); });
   }
 
   // ảnh vẽ tay cho các icon cố định trên thanh trên (vàng, mạng, mực nước)
@@ -1269,7 +1300,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 199</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 201</div>
       </div></div>`;
   }
 
@@ -2525,7 +2556,7 @@ class UI {
       </div>`;
     };
     $('#roster').innerHTML = `<div class="screen" style="z-index:auto;--elc:${elc}">
-      <div class="scr-head metal"><button class="xbtn metal" data-act="hx-close" aria-label="Quay lại">${ICON.back}</button>
+      <div class="scr-head metal"><button class="xbtn metal" data-act="lg-close" aria-label="Quay lại">${ICON.back}</button>
         <img class="lg-av" src="${heroImgUrl(t, 'head')}" alt=""><h1 class="ttl">Thần Khí · ${d.name}</h1>${elChip(d.el)}
         <span class="chip dark">${this.legacyPts(t)}/${LEGACY_MAX * 3} cấp</span><div class="sp"></div>
         <span class="chip kho">Ngân khố ${bac()} ${fmt(kho)}</span></div>
@@ -3516,7 +3547,8 @@ class UI {
     el.hidden = false;
     if (this.checkToasts) this.checkToasts();   // v189: đổi từ màn này sang màn khác (#screen vẫn hiện)
     this.sig.screen = null;
-    this.renderScreen(true);
+    // dựng bảng lỗi thì đóng lại ngay — không để lại #screen trống không có nút ✕ chặn cả màn
+    try { this.renderScreen(true); } catch (e) { this.closeScreen(); this.toast('Không mở được bảng này', '#E25A3A'); throw e; }
   }
 
   closeScreen() {
@@ -3646,7 +3678,8 @@ class UI {
       ${!h.skillPts && h.level < CONFIG.maxLevel ? `<button class="btn metal" style="height:34px;color:#F2D27A" data-act="sk-level">Nâng cấp tướng · ${coin(1)} ${g.levelCost(h)} (+1 điểm)</button>` : ''}
     </div>`;
     const hk = 'h.' + h.type, hd = SECRETS[hk];
-    const hidChip = `<span class="chip hidc ${g.known.has(hk) ? 'ok' : ''}" title="${esc(g.known.has(hk) ? hd.desc : hd.hint)}">${g.known.has(hk) ? '✦ ' + esc(hd.desc) : `??? “${esc(hd.hint)}”`}</span>`;
+    // claude/sua-thoat-than-khi: 40 tướng chưa có bí ẩn riêng (SECRETS['h.…']) → trước đây mở Cây kỹ năng là lỗi JS, màn trống không có nút đóng
+    const hidChip = !hd ? '' : `<span class="chip hidc ${g.known.has(hk) ? 'ok' : ''}" title="${esc(g.known.has(hk) ? hd.desc : hd.hint)}">${g.known.has(hk) ? '✦ ' + esc(hd.desc) : `??? “${esc(hd.hint)}”`}</span>`;
     const pst = heroStats(h);
     const penChip = `<span class="chip dark" title="Xuyên giáp / xuyên kháng phép (chiêu R xuyên thêm ${ULT_PEN}%)">${ic('xuyen-giap', 'Xuyên giáp')}${Math.round(pst.pierce)}% · ${ic('xuyen-phep', 'Xuyên kháng phép')}${Math.round(pst.mpen)}%</span>`;
     return `${this.head('Cây kỹ năng', `<span class="chip dark">${def.name} · Cấp ${h.level}${h.train ? ` ✦${h.train}` : ''}</span>${penChip}${elChip(def.el)}${hidChip}

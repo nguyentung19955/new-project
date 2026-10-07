@@ -2146,3 +2146,43 @@ Test: `node tests/run-all.js` đạt (tu-cu-dong: mẫu trang thử đổi xathu
 - **Cân bằng** (`mapExposure` / `stageHpFor`, game.js): máu quái của màn × (độ phơi bản đồ màn / bản đồ màn đầu)^0,5 × độ khó dạng (khó ×1,12; Ngã ba chia nhánh ×0,85), kẹp 0,8–1,4. Độ phơi = tổng quãng đường quái đi trong tầm 190 của 10 ô phủ đường tốt nhất (trung bình theo nhánh). Mô phỏng trận (đội 8 tướng ★3 cấp 20 đặt ô tốt nhất, 3 đợt, cùng bộ quái): bù tuyến tính (^1) làm đường dài khó hơn đường gốc (chữ U lọt 47% máu quái so với 15%) → chọn ^0,5: dạng thường lọt ~0,5–1,4 lần đường gốc, dạng khó ~1–2 lần. Ví dụ từ Bến Sông Đà: zíc-zắc ×1,22, uốn khúc ×1,19, cầu tre ×1,29, chữ U ×1,27, chia nhánh ×0,82, xoắn ốc ×1,18, bậc thang ×1,07, hai cửa ×1,09, đường tắt ×1,11, Cổ Loa gốc ×1,22.
 - Kim Quy Hộ Thành + thành Phong Châu vẽ tay đặt theo vị trí thành của bản đồ (không cố định góc phải).
 - Test: `node tests/duong-di-moi/duong-di-moi.test.js` — hình học (liền mạch, cuối đường sát thành, nhánh đều, vùng an toàn, ≥ 12 ô, ô không đè đường), thứ tự màn (đổi đúng sau boss, màn liền nhau khác bản đồ, dạng khó từ đợt 60, đủ 9 dạng trong 400 đợt), quái đi hết đường ở mọi dạng + mọi nhánh, tua 1 → 200 (chạy thật đợt boss: đúng boss + bộ quái của màn), đầy sân → hoàn vàng, lưu / nạp, chơi nhóm, **giao diện: chọn Vô tận vào luôn → qua boss 10 → sang màn → tải lại trang → Tiếp tục cùng bản đồ / bộ quái / đợt / ô tướng; bản lưu cũ suy ra màn**, mô phỏng cân bằng, không đè giao diện ở 1920×934 / 844×390 / 667×375 + ảnh từng dạng (cả dọc 390×844) ở `tests/duong-di-moi/shots/`. `tests/vo-tan` sửa theo luồng mới.
+- **Màn Chuẩn bị:** bỏ khối "Đội ưu tiên · 6 tướng", nút "✎ Chọn đội" và bảng chọn đội (Gợi ý / Xong, thẻ khoá). Màn vẫn giữ vì còn **Hậu cần** (Lương thảo, Hũ đồng, Hũ Vua Hùng, Đắp thành, Lò đúc đồng), tướng Tím/Vàng đã sở hữu và **Tướng khắc chế** — không trống, không thừa nút.
+- **Nghỉ chân** (sau đợt boss, dừng trận để đổi tối đa 2 tướng trong đội) chỉ dùng để đổi đội → **bỏ hẳn**: hạ boss xong trận chạy tiếp. Bỏ `restDeck` / `skipRest`, khung `#rest`, `REST_SWAPS`, `REST_COOP_T`.
+- **Code:** bỏ `suggestDeck`, `validDeck`, `deckIngredients`, `DECK_SIZE` (thay bằng `MIN_COMMONS` cho `openCommons`), `game.summonList()` (Triệu hồi ngẫu nhiên / gợi ý bộ quái mới dùng `game.marketPool()`), `MARKET_W.doi`. CSS bảng chọn đội (`.dk-modal`, `.dk-pick`…) xoá theo.
+- **Bản lưu:** trận đã lưu không còn `deck` / `rest` / `restWave`; bản lưu cũ có các trường này (kể cả đang mở Nghỉ chân) → bỏ qua, trận chạy tiếp bình thường. `save.deck` cũ để yên, không đọc nữa.
+- **Chơi nhóm:** bỏ lệnh `restDeck` / `skipRest`, bỏ `deck` khỏi ví riêng mỗi người (`CO_KEYS`), khỏi dòng băm trạng thái và khỏi thông tin người chơi gửi lên phòng.
+- **Chữ:** "Mở khoá để chọn vào đội triệu hồi" → "Mở khoá để ra trong chợ tướng khi chơi"; mở khoá tướng Thường báo "Giờ đã ra trong chợ tướng khi chơi".
+
+**Chợ tướng:** trọng số còn thường ×1 · đang ghép dở ×5 · nguyên liệu hợp thể còn thiếu ×12 (không đổi); giữ bảo hiểm (2 lần trượt → lần sau chắc chắn có), giới hạn bản sao (đủ ★★★ thì thôi ra), 🔒 khoá chợ. Trước đây nguyên liệu hợp thể chỉ được ưu tiên khi nằm trong đội hoặc đã có trên sân (để khỏi loãng); hết đội nên thay bằng **giới hạn `MARKET_HOP = { max: 2, off: 1 }`**: tối đa 2 nguyên liệu được ưu tiên cùng lúc, trong đó tối đa 1 loại chưa có trên sân; xếp hạng: đã có trên sân → bên kia nhiều bản sao hơn → bên thiếu nhiều bản sao hơn → thứ tự công thức.
+
+Mô phỏng `node tests/cho-tuong/ti-le-sim.js 4000` (4000 lần ↻ mỗi tình huống, seed cố định; sở hữu đủ 20 tướng Thường + tướng Tím của tình huống; "trước" = mã phiên bản 194 chạy cùng mô phỏng):
+
+| Tình huống | Chỉ số | Trước (đội ưu tiên ×2) | Sau (bỏ đội) |
+|---|---|---|---|
+| Đầu trận (1 tướng ★) | ≥1 thẻ tướng đang có | 58.8% | **65.0%** |
+| | thẻ là tướng đang có | 18.7% | 21.6% |
+| | trượt liền dài nhất | 2 | 2 |
+| Giữa trận (7 tướng, 5 loại) | ≥1 thẻ tướng đang có | 97.7% | **98.0%** |
+| | ≥1 thẻ ghép ngay (trùng ★) | 92.8% | 93.4% |
+| | trượt liền dài nhất | 1 | 2 |
+| Thiếu nguyên liệu (Ngư Phủ ★★ → cần Thần Sương, có Cá Ông) | ra đúng nguyên liệu | 68.1% | **68.1%** |
+| | trượt liền dài nhất | 2 | 2 |
+| Giữa trận, sở hữu MỌI tướng Tím/Vàng | ≥1 thẻ tướng đang có | 97.7% | 93.0% |
+| | trượt liền dài nhất | 1 | 3 |
+
+Tỉ lệ ra đúng tướng cần không giảm (đầu trận còn tăng vì 14 tướng ngoài đội cũ không còn bị lép ×1 so với ×2) → **giữ nguyên trọng số ×5 / ×12**. Riêng người đã sở hữu mọi tướng Tím: chợ giờ chủ động đẩy 1 nguyên liệu hợp thể chưa có trên sân (trước bị đội chặn), nên thẻ "tướng đang có" giảm nhẹ — đúng ý (giúp hợp thể), có giới hạn `off: 1` để không loãng (không giới hạn: 87.6%, trượt liền 5). Dò thêm ×6/×12 và ×7/×14: tăng ra tướng đang có nhưng giảm ra nguyên liệu thiếu (64.9–65.4%) → không dùng.
+
+Test: cập nhật `cho-tuong` (màn Chuẩn bị không còn chọn đội, sau boss không Nghỉ chân, bản lưu cũ có đội/Nghỉ chân vẫn chạy), `ti-le` (trọng số không còn ×2, giới hạn nguyên liệu ưu tiên, tình huống sở hữu mọi Tím), `ngan-kho`, `khung-do-hiem`, `vo-tan`, `icon-nho`, `duong-quai`, `hop-the/mo-phong`, `coop/test-lockstep`, `coop/test-solo`.
+- Sửa theo tester (sau v195): đồng xu bay khi hạ quái ~16 px CSS, rương rơi đồ ~30 px CSS (cỡ tính theo `view.scale`, không nhỏ lại trên điện thoại), quầng tròn + viền vòng đậm màu độ hiếm (xám / xanh / tím / cam) nhấp nháy nhẹ, chỉ mờ ở cuối. Icon tựa màn thua chương Sơn Tinh "Phong Châu thất thủ": thay mũi tên sóng (`ic-nuoc-dang`, trông như biểu đồ tăng) bằng cổng thành `tiles/cong-phong-chau.png` chìm trong 2 ngọn sóng `ic-hanh-thuy`.
+
+## claude/sua-thoat-than-khi — Sửa lỗi vào màn Thần Khí không thoát ra được
+
+- **Nguyên nhân:** từ v170 (làm lại bảng Hợp thể), nút Quay lại ở đầu màn Thần Khí bị đổi nhầm `data-act="lg-close"` → `hx-close` (lệnh đóng bảng Hợp thể). Bấm nút chỉ ẩn bảng Hợp thể, màn Thần Khí đứng yên → kẹt (cả trong trận lẫn ngoài menu; trong trận game còn bị tạm dừng). Phím Esc ngoài trận không làm gì, nút Back trình duyệt thì rời luôn trang.
+- **Sửa:** nút Quay lại về đúng `lg-close` (Thần Khí → Anh Hùng → trận/menu, game chạy tiếp).
+- **Esc** đóng màn phụ trên cùng ở mọi nơi (trong và ngoài trận), đúng như bấm nút quay lại / ✕ của màn đó: khung mô tả → Xếp hạng / Ngân khố / Ấn Phù / Anh Hùng (Thần Khí) / Cài đặt / Chơi nhóm / Chế độ / Bản đồ → bảng #screen (Cây kỹ năng, Tiến hoá, Bách khoa, Túi đồ, Lò đúc…) → Hợp thể → bảng tướng (#more) → menu ≡.
+- **Nút Back trình duyệt / vuốt back trên điện thoại:** khi có màn phụ đang mở, game gài một mục lịch sử; bấm Back thì đóng màn phụ đó thay vì rời trang (không có gì để đóng thì Back hoạt động như cũ).
+- **Lỗi kẹt thứ hai tìm thấy khi rà:** 40 tướng (Đốt Nương, Thổ Rèn, Kỳ Lân, Tản Viên…) chưa có bí ẩn riêng `SECRETS['h.<tướng>']` → mở **Cây kỹ năng** của họ là lỗi JS giữa chừng, #screen hiện trống không có nút ✕ chặn cả màn. Sửa: thiếu bí ẩn thì bỏ ô bí ẩn; và `openScreen` dựng bảng lỗi thì tự đóng #screen + báo "Không mở được bảng này" thay vì để màn trống.
+- Test mới `tests/thoat-man-phu`: mở / đóng Thần Khí (cả sau khi nâng cấp), Anh Hùng, Ấn Phù, Cây kỹ năng, Tiến hoá, Bách khoa, Túi đồ, Hợp thể, menu ≡, Cây kỹ năng / Tiến hoá của tướng không có bí ẩn, bằng nút / Esc / Back ở 1920×934, 844×390, 667×375, dọc 390×844; sau khi đóng không còn lớp phủ, giữa sân chạm tới được, game chạy tiếp.
+
+## Phiên bản 201 — quy tắc hình mới phải có bản pixel
+- CLAUDE.md: thêm quy tắc "Đang chuyển sang pixel art: hình mới phải có bản pixel" — session thêm/đổi hình (kể cả vẽ bằng code) vẽ luôn bản pixel theo docs/pixel/QUY-CHUAN.md hoặc ghi vào docs/pixel/DANH-SACH.md mục "Bổ sung"; giữ đường vẽ dự phòng.
