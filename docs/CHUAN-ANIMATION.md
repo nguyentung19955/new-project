@@ -24,6 +24,48 @@ Mở file `.csv` bằng Excel / Google Sheets / Numbers (đã có BOM UTF-8, d�
 
 ---
 
+## 0. STYLE BIBLE — chuẩn phong cách chibi thần thoại Việt (đọc trước, v178)
+
+```
+ẢNH MẪU PHONG CÁCH: đính kèm docs/mau-luoi/vi-du-hero12-lactuong.png (tấm Lạc Tướng 12 khung đạt chuẩn; bản 1 nhân vật: docs/mau-lac-tuong.png) cùng mọi prompt và ghi thêm câu:
+  "Match the art style, chibi proportions and line art of the attached style sample exactly, but draw the NEW character described below."
+
+1. NHÂN VẬT NGƯỜI / TƯỚNG: CHIBI cao 2.5–3 đầu (đầu to ~1/3 chiều cao, mắt to, thân và tay chân ngắn), viền nâu sẫm đậm và sạch, tô cel-shading phẳng, màu tươi.
+   Tướng già / to cao / gầy vẫn là chibi — khác nhau bằng bề ngang, dáng đứng, cỡ người, râu tóc, mảng hình đặc trưng, KHÔNG thu nhỏ đầu thành người thật.
+2. CHẤT VIỆT: trang phục / vũ khí thần thoại Việt thời Văn Lang – Âu Lạc, văn hoá Đông Sơn: hoa văn trống đồng (mặt trời, chim Lạc, răng cưa, vòng tròn chấm),
+   khố, áo the, váy đụp, mũ lông chim, giáo đồng, rìu đồng, dao găm, nỏ thần, khiên đồng. KHÔNG phong cách Trung Quốc / Nhật / Hàn / phương Tây (không giáp Tàu, kimono, samurai, hanbok, hiệp sĩ).
+3. QUÁI / BOSS / THÚ: vẫn chibi tròn trịa, mập mạp, "dễ thương mà dữ", cùng nét vẽ với tướng.
+4. GIẢI PHẪU: đúng 1 đầu, 2 tay, 2 chân, bàn tay 5 ngón (vẽ đơn giản được), tay chân nối đúng khớp, không thiếu / thừa chi. Thú, rồng, hồn ma: đúng số đầu / chân / cánh / đuôi như mô tả.
+   TOÀN THÂN (từ đỉnh mũ lông tới bàn chân) luôn nằm trọn trong ô, chừa lề ~8% — không cắt mất chân / đầu.
+5. MỖI Ô ĐÚNG MỘT NHÂN VẬT: không nhân bản 2–3 người trong một ô, không thêm người phụ / đám đông. CÙNG MỘT NHÂN VẬT ở mọi ô: cùng mặt, tóc, màu áo, vũ khí, tỉ lệ — chỉ khác tư thế.
+6. TUYỆT ĐỐI KHÔNG chữ, số, chữ ký, watermark, logo, nhãn, khung, đường lưới, bóng chữ trong ảnh.
+7. NỀN hồng tím #FF00FF phẳng tuyệt đối (hiệu ứng ghi BLACK thì nền đen #000000), không bóng đổ ra nền, không dùng màu hồng tím trên nhân vật.
+8. VŨ KHÍ & CHUYỂN ĐỘNG ĐÁNH: vũ khí cùng cỡ, cùng hình ở mọi khung, luôn nằm trong tay (không biến mất, không nhân đôi, không bay lơ lửng).
+   Cung: khung 5 lắp tên → khung 6 kéo dây tới má, mũi tên LUÔN thấy trên dây → khung 7 buông, tên vừa rời cung → khung 8 thu tay. Nỏ tương tự (mũi tên trong rãnh).
+   Kiếm / rìu / giáo / gậy phép: khung 5 giơ cao ra sau → khung 6 giữa đường vung (một vệt mờ duy nhất) → khung 7 cuối đường vung, tay duỗi → khung 8 thu về; đầu vũ khí đi theo MỘT cung tròn mượt.
+
+ENGLISH SUMMARY FOR THE AI: Vietnamese-mythology CHIBI game art (2.5-3 heads tall, big head and eyes, short limbs, thick clean dark-brown outline, flat cel shading, bright colors),
+Van Lang / Au Lac / Dong Son costume and weapons, never Chinese / Japanese / Korean / Western style. Exactly ONE character per cell and the SAME character design in every cell,
+correct anatomy (1 head, 2 arms, 2 legs, 5 fingers), whole body inside the cell, no text / letters / numbers / watermark, flat magenta #FF00FF background.
+
+QUY TRÌNH NÊN LÀM (giảm sai nhân vật giữa các ô):
+  B1. Gen trước một ảnh "character sheet" 1 nhân vật đứng thẳng (dán prompt + câu: "First draw ONLY ONE full-body character, standing, on flat magenta #FF00FF — no grid, no text").
+  B2. Duyệt ảnh đó theo danh sách kiểm tra bên dưới; sai thì gen lại B1, đúng thì giữ.
+  B3. Gen tấm nhiều khung: đính kèm ảnh B1 làm ẢNH THAM CHIẾU + ảnh lưới docs/mau-luoi/<kiểu>.png + ảnh mẫu phong cách, dán prompt đầy đủ và ghi thêm:
+      "Use the first attached image as the exact character reference — same face, hair, outfit colors, weapon and proportions in every cell."
+
+KIỂM TRA TRƯỚC KHI NHẬN ẢNH (sai 1 dòng → gen lại, đừng cắt):
+  [ ] Mỗi ô đúng 1 nhân vật (không nhân bản 2–3 người, không người phụ)
+  [ ] Đủ đầu, 2 tay, 2 chân, nối đúng khớp; toàn thân nằm trọn trong ô, không bị cắt chân / đầu
+  [ ] Các ô giống nhau: cùng mặt, tóc, màu áo, vũ khí, tỉ lệ (không như 2 người khác nhau)
+  [ ] Không có chữ, số, chữ ký, watermark, khung, đường lưới
+  [ ] Đúng chibi 2.5–3 đầu, chất Việt (Đông Sơn), không ra kiểu Trung / Nhật / Hàn / Tây
+  [ ] Nền hồng tím #FF00FF phẳng, không bóng đổ, không màu hồng tím trên nhân vật
+  [ ] Hàng đánh: vũ khí còn nguyên ở mọi khung; cung có mũi tên trên dây (khung 5–6) và tên vừa bay ra (khung 7); đường vung kiếm / gậy liền mạch
+
+Trong từng prompt đã có sẵn bản gọn tiếng Anh: dòng STYLE LOCK, ONE CHARACTER SAME DESIGN, ANATOMY, NEGATIVE (và BOW / WEAPON CONTINUITY cho tướng dùng cung, nỏ, kiếm, gậy) — dán prompt lẻ vẫn đủ chuẩn.
+```
+
 ## 1. Phong cách chung
 
 - **Chibi dễ thương, đề tài truyền thuyết Việt Nam (Văn Lang – Âu Lạc)**, game thủ thành trên điện thoại màn ngang. Nhân vật nhìn rõ ở cỡ nhỏ (~40 px trên màn hình).

@@ -60,6 +60,61 @@ const RAR = { undefined: 'common hero: simple clothes, few details', epic: 'epic
 const STYLE = 'STYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.';
 const BG = 'BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.';
 
+// v178: chuẩn phong cách chibi thần thoại Việt nhắc lại trong TỪNG prompt (người dùng hay dán prompt lẻ) + câu cấm.
+const LOCK_STYLE = 'STYLE LOCK: Vietnamese-mythology CHIBI game art like the attached style sample — chibi body 2.5 to 3 heads tall (big head about 1/3 of the height, big expressive eyes, short body and short limbs), thick clean dark-brown outline, flat cel shading, bright colors; Van Lang / Au Lac / Dong Son costume and weapons (bronze-drum patterns, Lac-bird feather headdress, loincloth, ao the, bronze spear, bronze axe, crossbow), never Chinese, Japanese, Korean or Western fantasy style.';
+const LOCK_ONE = 'ONE CHARACTER, SAME DESIGN: exactly ONE character in each cell (no clones, no second person, no helpers or crowd), and it is the SAME character in every cell — same face, hair, outfit colors, weapon and proportions, only the pose changes. Draw cell 1 as the model sheet and copy that design into every other cell.';
+const LOCK_BODY_HUMAN = 'ANATOMY: exactly one head, two arms, two legs, hands with five fingers (simplified is fine), arms and legs attached at the right joints, nothing missing or extra; the WHOLE body from the top of the head (and headdress) to the feet is inside the cell with empty margin — never cropped by the cell edge. No text, letters, numbers, signature or watermark anywhere.';
+const LOCK_BODY_CREATURE = 'ANATOMY: correct, readable body for this creature — the right number of heads, legs, wings and tails as described, nothing missing, extra or melted together; the WHOLE body including tail, wings and horns is inside the cell with empty margin — never cropped by the cell edge. No text, letters, numbers, signature or watermark anywhere.';
+const NEG_CHAR = 'NEGATIVE (do NOT draw): two or more characters in one cell, duplicated / cloned character, extra people, a different-looking character between cells, extra limbs, extra fingers, missing arms, missing legs, cropped feet or head, body cut by the cell edge, twisted or broken body, text, letters, numbers, captions, speech bubbles, signature, watermark, logo, grid lines, cell borders, frames, realistic, photo, 3D render, tall anime proportions, Chinese armor, Japanese samurai or kimono, Korean hanbok, Western knight armor, magenta on the character, floor shadow.';
+const LOCK_FX = 'STYLE LOCK: cartoon VFX matching chibi Vietnamese-mythology game art (Dong Son bronze-drum flavor), the SAME effect in every frame. NEGATIVE (do NOT draw): characters, people, faces, hands, text, letters, numbers, signature, watermark, logo, grid lines, cell borders, frames, realistic, photo, 3D render.';
+const charLock = (creature) => `${LOCK_STYLE}${creature ? ' Non-human monsters and beasts are chibi too: round, chunky, cute-but-fierce, the same line art.' : ''}\n${LOCK_ONE}\n${creature ? LOCK_BODY_CREATURE : LOCK_BODY_HUMAN}\n${NEG_CHAR}`;
+// thẻ nhận diện cũ ghi "head about 1/N of the height" (dáng cao gầy) → quy về chibi 2.5–3 đầu, khác nhau bằng dáng / bề ngang / mảng hình
+const chibiBody = (b) => b.replace(/head about 1\/(\d) of the height/, (_, n) => +n <= 3
+  ? 'CHIBI about 2.5 heads tall (head about 2/5 of the height)'
+  : `CHIBI about 3 heads tall (head about 1/3 of the height)${+n >= 6 ? ' — show the big / tall build with a larger overall size, broader shoulders and a slightly longer chibi body, NOT by shrinking the head' : ''}`);
+
+// Khối chuẩn đặt ở đầu các file prompt (PROMPT-CAN-GEN, PROMPT-GUI-AI, PROMPT_GEMINI_FULL) — bản gọn của nó nằm trong từng prompt (charLock).
+const STYLE_SAMPLE = 'docs/mau-luoi/vi-du-hero12-lactuong.png';
+const STYLE_BIBLE = `${'='.repeat(60)}
+STYLE BIBLE / CHUẨN PHONG CÁCH (áp dụng cho MỌI ảnh nhân vật bên dưới)
+${'='.repeat(60)}
+ẢNH MẪU PHONG CÁCH: đính kèm ${STYLE_SAMPLE} (tấm Lạc Tướng 12 khung đạt chuẩn; bản 1 nhân vật: docs/mau-lac-tuong.png) cùng mọi prompt và ghi thêm câu:
+  "Match the art style, chibi proportions and line art of the attached style sample exactly, but draw the NEW character described below."
+
+1. NHÂN VẬT NGƯỜI / TƯỚNG: CHIBI cao 2.5–3 đầu (đầu to ~1/3 chiều cao, mắt to, thân và tay chân ngắn), viền nâu sẫm đậm và sạch, tô cel-shading phẳng, màu tươi.
+   Tướng già / to cao / gầy vẫn là chibi — khác nhau bằng bề ngang, dáng đứng, cỡ người, râu tóc, mảng hình đặc trưng, KHÔNG thu nhỏ đầu thành người thật.
+2. CHẤT VIỆT: trang phục / vũ khí thần thoại Việt thời Văn Lang – Âu Lạc, văn hoá Đông Sơn: hoa văn trống đồng (mặt trời, chim Lạc, răng cưa, vòng tròn chấm),
+   khố, áo the, váy đụp, mũ lông chim, giáo đồng, rìu đồng, dao găm, nỏ thần, khiên đồng. KHÔNG phong cách Trung Quốc / Nhật / Hàn / phương Tây (không giáp Tàu, kimono, samurai, hanbok, hiệp sĩ).
+3. QUÁI / BOSS / THÚ: vẫn chibi tròn trịa, mập mạp, "dễ thương mà dữ", cùng nét vẽ với tướng.
+4. GIẢI PHẪU: đúng 1 đầu, 2 tay, 2 chân, bàn tay 5 ngón (vẽ đơn giản được), tay chân nối đúng khớp, không thiếu / thừa chi. Thú, rồng, hồn ma: đúng số đầu / chân / cánh / đuôi như mô tả.
+   TOÀN THÂN (từ đỉnh mũ lông tới bàn chân) luôn nằm trọn trong ô, chừa lề ~8% — không cắt mất chân / đầu.
+5. MỖI Ô ĐÚNG MỘT NHÂN VẬT: không nhân bản 2–3 người trong một ô, không thêm người phụ / đám đông. CÙNG MỘT NHÂN VẬT ở mọi ô: cùng mặt, tóc, màu áo, vũ khí, tỉ lệ — chỉ khác tư thế.
+6. TUYỆT ĐỐI KHÔNG chữ, số, chữ ký, watermark, logo, nhãn, khung, đường lưới, bóng chữ trong ảnh.
+7. NỀN hồng tím #FF00FF phẳng tuyệt đối (hiệu ứng ghi BLACK thì nền đen #000000), không bóng đổ ra nền, không dùng màu hồng tím trên nhân vật.
+8. VŨ KHÍ & CHUYỂN ĐỘNG ĐÁNH: vũ khí cùng cỡ, cùng hình ở mọi khung, luôn nằm trong tay (không biến mất, không nhân đôi, không bay lơ lửng).
+   Cung: khung 5 lắp tên → khung 6 kéo dây tới má, mũi tên LUÔN thấy trên dây → khung 7 buông, tên vừa rời cung → khung 8 thu tay. Nỏ tương tự (mũi tên trong rãnh).
+   Kiếm / rìu / giáo / gậy phép: khung 5 giơ cao ra sau → khung 6 giữa đường vung (một vệt mờ duy nhất) → khung 7 cuối đường vung, tay duỗi → khung 8 thu về; đầu vũ khí đi theo MỘT cung tròn mượt.
+
+ENGLISH SUMMARY FOR THE AI: Vietnamese-mythology CHIBI game art (2.5-3 heads tall, big head and eyes, short limbs, thick clean dark-brown outline, flat cel shading, bright colors),
+Van Lang / Au Lac / Dong Son costume and weapons, never Chinese / Japanese / Korean / Western style. Exactly ONE character per cell and the SAME character design in every cell,
+correct anatomy (1 head, 2 arms, 2 legs, 5 fingers), whole body inside the cell, no text / letters / numbers / watermark, flat magenta #FF00FF background.
+
+QUY TRÌNH NÊN LÀM (giảm sai nhân vật giữa các ô):
+  B1. Gen trước một ảnh "character sheet" 1 nhân vật đứng thẳng (dán prompt + câu: "First draw ONLY ONE full-body character, standing, on flat magenta #FF00FF — no grid, no text").
+  B2. Duyệt ảnh đó theo danh sách kiểm tra bên dưới; sai thì gen lại B1, đúng thì giữ.
+  B3. Gen tấm nhiều khung: đính kèm ảnh B1 làm ẢNH THAM CHIẾU + ảnh lưới docs/mau-luoi/<kiểu>.png + ảnh mẫu phong cách, dán prompt đầy đủ và ghi thêm:
+      "Use the first attached image as the exact character reference — same face, hair, outfit colors, weapon and proportions in every cell."
+
+KIỂM TRA TRƯỚC KHI NHẬN ẢNH (sai 1 dòng → gen lại, đừng cắt):
+  [ ] Mỗi ô đúng 1 nhân vật (không nhân bản 2–3 người, không người phụ)
+  [ ] Đủ đầu, 2 tay, 2 chân, nối đúng khớp; toàn thân nằm trọn trong ô, không bị cắt chân / đầu
+  [ ] Các ô giống nhau: cùng mặt, tóc, màu áo, vũ khí, tỉ lệ (không như 2 người khác nhau)
+  [ ] Không có chữ, số, chữ ký, watermark, khung, đường lưới
+  [ ] Đúng chibi 2.5–3 đầu, chất Việt (Đông Sơn), không ra kiểu Trung / Nhật / Hàn / Tây
+  [ ] Nền hồng tím #FF00FF phẳng, không bóng đổ, không màu hồng tím trên nhân vật
+  [ ] Hàng đánh: vũ khí còn nguyên ở mọi khung; cung có mũi tên trên dây (khung 5–6) và tên vừa bay ra (khung 7); đường vung kiếm / gậy liền mạch
+`;
+
 const clean = (d) => d.replace(/\s*Element [A-Z]+[^.]*\.\s*/g, ' ').replace(/\s*Rarity:[^.]*\.?/g, '').replace(/\s+/g, ' ').trim();
 const heroPrompt = (t) => (HERO_ID[t] ? heroIdPrompt(t) : heroPromptOld(t));
 const heroPromptOld = (t) => {
@@ -72,12 +127,14 @@ CHARACTER: ${desc}
 COLORS: element ${E} — the main outfit color is ${pal}. ${RAR[h.legend]}.
 CELLS (same character, same size and proportions in cells 1-5, facing RIGHT in 3/4 view, feet on the same baseline): [1] idle holding the weapon [2] wind-up [3] ${ranged ? 'shooting / casting forward, the projectile leaving the hand' : 'strike with ONE short pale motion swoosh'} [4] casting the skill: ${effect || 'a small element-colored effect'} (small, inside the cell) [5] full body facing the viewer [6] portrait, head and shoulders, big and centered.
 ${STYLE}
+${charLock(false)}
 ${BG}`;
 };
 const enemyPrompt = (t) => `Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.
 CREATURE: ${ENEMY_DESC[t]}. Cute-but-mischievous chibi monster facing RIGHT.
 CELLS (same creature, same size): ${REDO_FLY.has(k) ? '[1] flying, wings up [2] flying, wings down [3] diving attack' : '[1] walk step A [2] walk step B (opposite legs) [3] attack'}.
 ${STYLE}
+${charLock(true)}
 ${BG}`;
 const iconPrompt = (t) => `Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero ${HEROES[t].name}, one icon per cell, left to right:
 ${ICONS[t].map((x, i) => `[${i + 1}] ${x}`).join('  ')}.
@@ -100,25 +157,44 @@ ${BG}`;
 // v151: tướng vẽ lại cho dễ phân biệt — thẻ nhận diện ở tools/hero-id.js (dáng, mảng hình đặc trưng, màu riêng).
 const { HERO_ID, CONFUSE } = require('./hero-id.js');
 const HERO_STYLE = 'STYLE: cute stylized mobile-game character in the same art family as the other heroes: thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds) on the clothes. Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\n'
-  + 'DISTINCT SILHOUETTE (most important): the character must be recognizable from its black shadow alone, at 40 px: follow BODY for age, build and head-to-body ratio (do NOT give every hero the same 1/3 head and the same height), and make SIGNATURE SHAPE big and bold. Main color must clearly be the first COLORS entry.\n'
-  + 'FACE: do not reuse the generic chibi face (same round head, same big round eyes) — draw the unique features in FACE (eyebrows, beard, scars, wrinkles, age lines, eye shape).';
+  + 'DISTINCT SILHOUETTE (most important): the character must be recognizable from its black shadow alone, at 40 px: everyone stays CHIBI (2.5-3 heads tall), so show age and build through BODY width, posture and size, and make SIGNATURE SHAPE big and bold. Main color must clearly be the first COLORS entry.\n'
+  + 'FACE: keep the big chibi head and big eyes, but give this hero the unique features in FACE (eyebrows, beard, scars, wrinkles, age lines, eye shape) so it is not a generic face.';
+// v178: chuyển động đánh theo loại vũ khí — cung không mất tên, kéo cung / vung kiếm / vung gậy phép mượt qua 4 khung.
+const weaponKind = (w, ranged) => /longbow|\bbow\b/i.test(w) ? 'bow' : /crossbow/i.test(w) ? 'crossbow' : /slingshot|blowgun/i.test(w) ? 'shooter'
+  : /staff|wand|scepter|stick|book|lantern|pearl|fan|flute|ladle|umbrella|branch/i.test(w) ? 'staff'
+  : !ranged && /sword|axe|spear|knife|knives|hammer|glaive|machete|hoe|oar|shovel|tongs|mallet|bamboo|pole|torch|club/i.test(w) ? 'swing' : '';
+const ATTACK_ROW = {
+  bow: ['bow shot, a smooth 4-frame draw-and-release', '[5] nock: bow raised in front, ONE arrow placed on the string, string still straight [6] full draw: string pulled back to the cheek, bow bent, the SAME arrow clearly visible lying on the string and the bow [7] release: string snapping forward, that arrow just leaving the bow, a short motion streak behind it [8] follow-through: bow arm still extended, string straight, drawing hand open behind, returning toward idle',
+    'BOW AND ARROW CONTINUITY: the bow is the same size and shape in every frame and is never missing; in frames 5-6 the arrow is ALWAYS visible on the string (never vanished, never two arrows), in frame 7 it is visible just in front of the bow; the drawing hand moves back step by step (frame 5 near the bow, frame 6 at the cheek), the bow arm stays steady.'],
+  crossbow: ['crossbow shot, a smooth 4-frame aim-and-shoot', '[5] load: crossbow held at the hip, ONE bolt placed in the groove, string cocked [6] aim: crossbow raised to the shoulder, bolt clearly visible in the groove [7] shoot: string snapped forward, the bolt just leaving the front with a short motion streak, small recoil [8] recover: crossbow lowering back toward idle',
+    'CROSSBOW CONTINUITY: the crossbow is the same size and shape in every frame and always held with both hands; the bolt is ALWAYS visible in frames 5-6 and just in front of the crossbow in frame 7.'],
+  shooter: ['shooting forward, a smooth 4-frame aim-and-shoot', '[5] load: ammo placed in the weapon, weight back [6] aim: weapon raised and pulled / breath drawn, the ammo clearly visible [7] shoot: the ammo just leaving the weapon with a short motion streak [8] recover: returning toward idle',
+    'WEAPON CONTINUITY: the weapon is the same size and shape in every frame and always held in the hand; the ammo is visible in frames 5-7 (loaded, then just leaving).'],
+  staff: ['magic attack with the weapon, a smooth 4-frame cast', '[5] wind-up: weapon raised up and back over the shoulder, weight on the back foot [6] swing: weapon sweeping forward in a smooth arc, a small glow gathering at its tip, ONE short pale motion trail [7] cast: weapon pointing forward at full reach, the small magic shot just leaving the tip [8] recover: weapon coming back toward the idle pose',
+    'WEAPON CONTINUITY: the weapon stays the same length, shape and color in every frame, always gripped in the hand (never floating, bent, doubled or disappearing); its tip moves along one smooth arc from frame 5 to frame 7.'],
+  swing: ['melee swing, a smooth 4-frame strike', '[5] wind-up: weapon raised high behind the head / shoulder, weight on the back foot [6] mid-swing: body twisting forward, weapon half way along its arc, ONE short pale motion swoosh following the blade [7] strike: weapon at the end of the arc in front, arm fully extended, front knee bent [8] recover: weapon pulled back toward the idle pose',
+    'WEAPON CONTINUITY: the weapon stays the same length, shape and color in every frame, always gripped in the hand (never floating, bent, doubled or disappearing); the blade moves along one smooth arc from frame 5 to frame 7, only frame 6 has the swoosh.'],
+};
 const heroIdPrompt = (t) => {
   const h = HERO_ID[t], [E] = EL[HEROES[t].el];
   const ranged = HEROES[t].attack !== 'melee';
+  const wk = ATTACK_ROW[weaponKind(h.weapon, ranged)];
+  const row2 = wk ? `ROW 2 — ${wk[0]}: ${wk[1]}.` : `ROW 2 — ${ranged ? 'attack (shooting / casting forward)' : 'melee attack'}: [5] prepare: weight back, ${ranged ? 'drawing / aiming' : 'weapon pulled back'} [6] swing: body twisting forward, ${ranged ? 'about to release' : 'weapon moving with ONE short pale motion swoosh'} [7] hit: full extension, ${ranged ? 'the projectile leaving the hand / weapon' : 'weapon at the end of the swing'} [8] recover: returning toward the idle pose.`;
   const avoid = CONFUSE.filter((g) => g.heroes.includes(t));
   const avoidTxt = avoid.length ? `\nMUST NOT look like the generic ${avoid.map((g) => `"${g.look}"`).join(' or ')} shared by other heroes — keep only what is listed here.` : '';
   return `Create ONE image: a 768x576 animation sprite sheet for a cute mobile tower-defense game based on Vietnamese folk legends, an invisible 4x3 grid of twelve equal 192x192 cells (4 columns, 3 rows, each ROW is one action read left to right). REDESIGN of the hero ${HEROES[t].name} so it is easy to tell apart from the other heroes.
-BODY: ${h.body}.
+BODY: ${chibiBody(h.body)}.
 SIGNATURE SHAPE: ${h.mark}.
 COLORS: main ${h.colors[0]}, second ${h.colors[1]}, accent ${h.colors[2]} (element ${E}). ${RAR[HEROES[t].legend]}, but keep the silhouette above.
 FACE: ${h.face}.
 OUTFIT: ${h.outfit}. WEAPON / ITEM: ${h.weapon}.${avoidTxt}
 CELLS (facing RIGHT in 3/4 view; in every full-body cell the ${h.kind === 'spirit' ? 'feet (or floating base)' : 'feet'} stand on the same invisible baseline near the bottom of the cell, same scale, the body fills about 85% of the cell height):
 ROW 1 — idle loop: [1] ${h.pose} [2] same pose, breathing in: chest and shoulders slightly up, weapon/hair/cloth slightly lifted [3] same pose, small settle: knees slightly bent, cloth swinging the other way [4] portrait: head and shoulders, big and centered, showing the unique face.
-ROW 2 — ${ranged ? 'attack (shooting / casting forward)' : 'melee attack'}: [5] prepare: weight back, ${ranged ? 'drawing / aiming' : 'weapon pulled back'} [6] swing: body twisting forward, ${ranged ? 'about to release' : 'weapon moving with ONE short pale motion swoosh'} [7] hit: full extension, ${ranged ? 'the projectile leaving the hand / weapon' : 'weapon at the end of the swing'} [8] recover: returning toward the idle pose.
+${row2}
 ROW 3 — skill and reaction: [9] skill start: gathering power, small glow around the hands [10] skill peak: ${h.fx} (small, inside the cell) [11] skill end: effect fading, body relaxing [12] hurt: flinching backward, eyes squeezed shut, one arm raised to guard (no blood).
-ANIMATION RULES: same character identical in every cell, consistent size and outfit, feet on the same baseline, smooth motion between consecutive frames, clear gaps between cells. Small changes between neighbouring frames of the same row; nothing touches or crosses a cell border.
+ANIMATION RULES: same character identical in every cell, consistent size and outfit, feet on the same baseline, smooth motion between consecutive frames, clear gaps between cells. Small changes between neighbouring frames of the same row; nothing touches or crosses a cell border.${wk ? '\n' + wk[2] : ''}
 ${HERO_STYLE}
+${charLock(h.kind !== 'human')}
 ${BG}`;
 };
 // kiểm tra: mọi tướng có thẻ, không hai tướng trùng màu chính hay mảng hình đặc trưng
@@ -259,12 +335,14 @@ CREATURE: ${REDO_ENEMY[k]}. Cute-but-mischievous chibi monster facing RIGHT, the
 CELLS: ${REDO_FLY.has(k) ? '[1] flying, wings fully up [2] wings half down [3] wings fully down [4] wings half up (a smooth 4-frame flap loop) [5] attack wind-up: pulling back, eyes narrowed [6] diving attack: lunging forward' : '[1] walk: right foot forward [2] walk: passing, body slightly higher [3] walk: left foot forward [4] walk: passing, body slightly higher (a smooth 4-frame walk loop) [5] attack wind-up: rearing back [6] attack: lunging forward with the bite / claw / weapon'}.
 ${ANIM_RULES}
 ${STYLE}
+${charLock(true)}
 ${BG}`;
 const redoBossPrompt = (k) => `Create ONE image: a 768x768 boss animation sprite sheet for a cute mobile tower-defense game based on Vietnamese folk legends, an invisible 3x3 grid of nine equal 256x256 cells, read left to right, top to bottom.
 BOSS: ${REDO_BOSS[k]}. Big, menacing but still cute chibi boss facing RIGHT, the body fills about 85% of the cell height, feet on the same invisible baseline near the bottom of every cell.
 CELLS: [1] walk: front foot forward [2] walk: passing, body higher [3] walk: back foot forward [4] walk: passing, body higher (a smooth 4-frame walk loop) [5] attack wind-up: weapon raised high [6] attack swing: weapon coming down with ONE short pale swoosh [7] attack impact: weapon low, small dust burst [8] rage: body glowing red-orange, roaring, arms wide [9] rage: same, stronger glow, head thrown back.
 ${ANIM_RULES}
 ${STYLE}
+${charLock(true)}
 ${BG}`;
 const redone = (k) => fs.existsSync(path.join(ROOT, 'assets/packs', k, '.redo'));
 for (const k of Object.keys(REDO_ENEMY).filter((x) => REDO_ENEMY_FORCE.has(x) ? !redone(x) : sameFrames(x))) items.push({ group: '10. Quái gen lại (đủ dáng)', file: `${k}.png`, title: `Quái · ${ENEMIES[k].name}`, text: redoEnemyPrompt(k), cut: `python3 tools/cat-sheet.py <ảnh> ${k} enemy6` });
@@ -516,6 +594,7 @@ fs.writeFileSync(path.join(ROOT, 'docs/PROMPT_GEMINI_FULL.md'), out);
 // Văn bản thường (.txt): không ký hiệu Markdown, mỗi prompt kẹp giữa hai đường kẻ để dễ chép
 let txt = `PROMPT GEMINI ĐẦY ĐỦ — MỖI ẢNH MỘT PROMPT (${items.length} ảnh)\n`;
 txt += 'Mỗi khối dán riêng một lần vào Gemini (đính kèm docs/mau-lac-tuong.png làm mẫu nét vẽ nếu được), tải ảnh về và đặt đúng tên file ghi trên khối.\n';
+txt += '\n' + STYLE_BIBLE;
 g = '';
 for (const it of items) {
   if (it.group !== g) { g = it.group; txt += `\n\n${'='.repeat(60)}\n${g.toUpperCase()}\n${'='.repeat(60)}\n`; }
@@ -543,7 +622,7 @@ const blk = (rows, title) => `${title}\n${'='.repeat(60)}\n` + rows.slice(1).map
   const o = Object.fromEntries(rows[0].map((k, i) => [k, r[i]]));
   return `\n${o.ten} (${o.ma}) · ${o.bac || o.loai}${o.he ? ' · ' + o.he : ''} · ảnh ${o.kich_thuoc} · lưu tên: ${o.ten_file}\n${'-'.repeat(60)}\n${o.prompt}\n${'-'.repeat(60)}\n`;
 }).join('');
-fs.writeFileSync(path.join(ROOT, 'docs/PROMPT-GUI-AI.txt'), 'PROMPT GỬI AI TẠO ẢNH — mỗi khối là một ảnh. Chép phần giữa hai đường kẻ, dán vào AI, đính kèm ảnh lưới docs/mau-luoi/ (tướng: hero12.png · quái: enemy6.png hoặc enemy6-bay.png · boss: boss9.png) và thêm câu: "the attached grid is only a layout guide — do NOT draw its numbers, lines or labels". Lưu ảnh về đúng tên ghi trên khối. Chuẩn đầy đủ: docs/CHUAN-ANIMATION.txt\n\n'
+fs.writeFileSync(path.join(ROOT, 'docs/PROMPT-GUI-AI.txt'), 'PROMPT GỬI AI TẠO ẢNH — mỗi khối là một ảnh. Chép phần giữa hai đường kẻ, dán vào AI, đính kèm ảnh lưới docs/mau-luoi/ (tướng: hero12.png · quái: enemy6.png hoặc enemy6-bay.png · boss: boss9.png) và thêm câu: "the attached grid is only a layout guide — do NOT draw its numbers, lines or labels". Lưu ảnh về đúng tên ghi trên khối. Chuẩn đầy đủ: docs/CHUAN-ANIMATION.txt\n\n' + STYLE_BIBLE + '\n'
   + blk(heroRows, `TƯỚNG (${heroRows.length - 1})`) + '\n\n' + blk(foeRows, `QUÁI + BOSS (${foeRows.length - 1})`));
 
 // v175: docs/PROMPT-CAN-GEN.txt — CHỈ những ảnh CÒN PHẢI GEN (gửi thẳng cho AI tạo ảnh, có chỉ thị rõ ở đầu file).
@@ -577,6 +656,7 @@ const FXS = (a) => fs.existsSync(path.join(ROOT, 'assets', a));
 const STRIP6 = (eff, bg) => `Create ONE image: a 1536x256 horizontal animation strip of 6 equal 256x256 square frames in ONE row, read left to right, for a cute mobile tower-defense game based on Vietnamese folk legends. Each frame is one moment of the SAME effect, same center, same scale, smooth change between neighbouring frames (frame 1 = start, frames 3-4 = strongest, frame 6 = almost gone).
 EFFECT: ${eff}.
 STYLE: bold readable cartoon VFX, thick simple shapes, flat colors with a bright core, Vietnamese Dong Son bronze-drum flavor (sun-star rays, Lac birds, zigzag and circle-dot bands) only where it is asked. Readable at 50 px.
+${LOCK_FX}
 ${bg === 'black' ? 'BACKGROUND: perfectly flat pure BLACK #000000 everywhere (the game turns black into transparency). Bright, saturated glowing colors; no text, no numbers, no labels, no grid lines, no borders, no watermark. The effect is centered in every frame with at least 6% empty margin; nothing crosses into another frame.'
     : 'BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. Never use magenta or pink on the effect. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Centered in every frame with at least 6% empty margin; nothing crosses into another frame.'}`;
 const fxGen = [];
@@ -587,6 +667,7 @@ if (ELS.some((e) => !FXS(`fx/dan-${e}.png`))) fxGen.push({ g: 'dan', file: 'dan-
 ${ELS.map((e, i) => `[${i + 1}] ${EL_EN[e]}: ${FX_EL[e].dan}.`).join('\n')}
 Each projectile centered, about 60% of the cell, bold and readable at 20 px, the five clearly different in shape and color.
 STYLE: cute mobile-game art matching chibi heroes of a Vietnamese folk-legend tower-defense game: thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), a small bright glow core, about 10-15 flat colors per projectile, no gradients.
+${LOCK_FX}
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. Never use magenta or pink on the projectiles. No text, no numbers, no labels, no grid lines, no borders, no watermark. At least 8% empty margin in every cell; nothing crosses into another cell.` });
 for (const e of ELS) if (!FXS(`vfx/trung-${e}.png`)) fxGen.push({ g: 'trung', file: `trung-${e}.png`, title: `Trúng đòn hệ ${EL_VI[e]} (đạn chạm quái)`, size: '1536x256', cut: `python3 tools/cat-fx.py dai trung-${e}.png trung-${e}`,
   text: STRIP6(`a SMALL ${EL_EN[e]} hit spark when a projectile strikes an enemy: ${FX_EL[e].trung}. [1] tiny flash at the center [2] flash opening [3] full burst [4] pieces flying outward [5] pieces small and scattered [6] last faint bits`, 'black') });
@@ -635,7 +716,8 @@ INSTRUCTIONS FOR THE AI (read first)
 - This file lists ONLY images that STILL HAVE TO BE GENERATED. Every block below is a REQUIRED new image. Nothing here is optional and nothing here is finished yet.
 - REDRAW EVERYTHING in this list from scratch, INCLUDING heroes / bosses that already have an older picture: the new image REPLACES the old one completely. Do not conclude that the set is "already complete", "enough" or "only optional extras remain" — that is wrong for this list.
 - Each character prompt is ONE sprite sheet with MANY ANIMATION FRAMES on an invisible grid exactly as written in the block: hero = 4x3 grid, 12 frames, 768x576 (idle 3 + portrait, attack 4, skill 3 + hurt); enemy = 3x2 grid, 6 frames, 576x384 (walk 4, attack 2); boss = 3x3 grid, 9 frames, 768x768 (walk 4, attack 3, rage 2). Effect strips = 6 frames in one row, 1536x256; projectile sheet = 5 cells, 1280x256.
-- Every hero must look clearly DIFFERENT from the others (body shape, age, head size, signature shape, main color) — follow BODY / SIGNATURE SHAPE / FACE in each block.
+- STYLE for every character: Vietnamese-mythology CHIBI (2.5-3 heads tall), ONE character per cell, the SAME character in every cell, correct anatomy, whole body inside the cell, no text anywhere — see STYLE BIBLE below and the STYLE LOCK / NEGATIVE lines in each block. Attach ${STYLE_SAMPLE} as the style sample.
+- Every hero must look clearly DIFFERENT from the others (build, age, signature shape, main color) while staying chibi — follow BODY / SIGNATURE SHAPE / FACE in each block.
 - Return EVERY image, one file per block, saved with EXACTLY the file name written after "lưu tên:". Work through the list in order until the last block (#${nC}); if you can only make some per reply, continue with the next block number in the next reply.
 - Background: perfectly flat pure magenta #FF00FF (effect blocks that say BLACK use pure black #000000). Do NOT draw numbers, labels, grid lines, cell borders, frames, floor shadows, text or watermarks. The attached grid image (docs/mau-luoi/hero12.png / enemy6.png / enemy6-bay.png / boss9.png) is only a layout guide — do NOT draw its numbers, lines or labels.
 
@@ -643,12 +725,15 @@ CHỈ THỊ CHO AI (đọc trước)
 - File này CHỈ gồm những ảnh CÒN PHẢI GEN. Mỗi khối bên dưới là MỘT ảnh BẮT BUỘC phải vẽ mới. Không có khối nào là tùy chọn, không có khối nào đã xong.
 - VẼ MỚI TOÀN BỘ danh sách, KỂ CẢ tướng / boss đã có ảnh cũ: ảnh mới THAY THẾ HOÀN TOÀN ảnh cũ. KHÔNG được kết luận "bộ ảnh đã đủ", "không còn nhóm bắt buộc", "chỉ còn tùy chọn" — với danh sách này kết luận đó là SAI.
 - Mỗi prompt nhân vật là MỘT sprite sheet NHIỀU KHUNG ANIMATION theo đúng lưới ghi trong khối: tướng 4x3 = 12 khung 768x576 (đứng thở 3 + chân dung, đánh 4, chiêu 3 + trúng đòn); quái 3x2 = 6 khung 576x384 (đi 4, đánh 2); boss 3x3 = 9 khung 768x768 (đi 4, đánh 3, nổi giận 2). Dải hiệu ứng 6 khung một hàng 1536x256; tấm đạn 5 ô 1280x256.
-- Mỗi tướng phải KHÁC RÕ các tướng khác (dáng người, tuổi, cỡ đầu, mảng hình đặc trưng, màu chính) — làm theo BODY / SIGNATURE SHAPE / FACE trong khối.
+- Phong cách mọi nhân vật: CHIBI thần thoại Việt (2.5–3 đầu), mỗi ô MỘT nhân vật, CÙNG một nhân vật ở mọi ô, đủ tay chân, toàn thân trong ô, không chữ — xem STYLE BIBLE bên dưới và dòng STYLE LOCK / NEGATIVE trong từng khối. Đính kèm ${STYLE_SAMPLE} làm mẫu phong cách.
+- Mỗi tướng phải KHÁC RÕ các tướng khác (bề ngang, tuổi, mảng hình đặc trưng, màu chính) nhưng vẫn chibi — làm theo BODY / SIGNATURE SHAPE / FACE trong khối.
 - Trả về ĐỦ TỪNG FILE, mỗi khối một file, đặt ĐÚNG tên ghi sau "lưu tên:". Làm lần lượt tới khối cuối (#${nC}); mỗi lượt chỉ ra được vài ảnh thì lượt sau làm tiếp từ số khối kế tiếp.
 - Nền hồng tím phẳng tuyệt đối #FF00FF (khối hiệu ứng ghi BLACK thì nền đen #000000). KHÔNG vẽ số, nhãn, đường lưới, viền ô, khung, bóng dưới chân, chữ, watermark. Ảnh lưới đính kèm (docs/mau-luoi/…) chỉ để xem bố cục — không vẽ lại số / vạch của nó.
 
 TÓM TẮT: tướng ${canHero.length} · quái ${canEnemy.length} · boss ${canBoss.length} (${canBoss.join(', ') || '—'}) · hiệu ứng ${fxGen.length} (đạn ${fxCount('dan')}, trúng đòn ${fxCount('trung')}, vụ nổ ${fxCount('no')}, vòng chiêu ${fxCount('vong')}, chết ${fxCount('chet')})
 Đã xong, KHÔNG có trong file: quái / boss đã gen lại (có assets/packs/<mã>/.redo hoặc đã đủ dáng). Tướng cắt xong bằng cat-sheet.py hero12 sẽ tự rời danh sách (.v2).
-Sinh lại: node tools/build-prompts.js · Chuẩn đầy đủ: docs/CHUAN-ANIMATION.txt · Cắt: lệnh ghi trên từng khối (chạy trong thư mục dự án).`;
+Sinh lại: node tools/build-prompts.js · Chuẩn đầy đủ: docs/CHUAN-ANIMATION.txt · Cắt: lệnh ghi trên từng khối (chạy trong thư mục dự án).
+
+${STYLE_BIBLE}`;
 fs.writeFileSync(path.join(ROOT, 'docs/PROMPT-CAN-GEN.txt'), DIRECTIVE + can);
 console.log('PROMPT-CAN-GEN', nC, '· tướng', canHero.length, '· quái', canEnemy.length, '· boss', canBoss.length, '· hiệu ứng', fxGen.length);

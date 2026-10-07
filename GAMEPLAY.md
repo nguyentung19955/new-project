@@ -1677,3 +1677,12 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Zip chỉ chứa ảnh thật: các tên cũ (`idle`, `front`, `wind`, `walk1`… = bản sao khung đại diện) ghi trong `alias.json`, `--ghep` tạo lại. In dung lượng zip; quá 20 MB (`--toi-da <MB>`) tự chia `da-cat-phan-1.zip`, `-phan-2.zip`… (mỗi tấm nằm trọn một phần, mỗi phần có `pack-frames.json` + `alias.json` của nó). Trang HTML hiện một nút tải cho mỗi phần kèm dung lượng.
 - `python3 tools/cat_anh.py --ghep <phần 1> <phần 2> …` nhận nhiều zip / thư mục một lần.
 - Hướng dẫn cập nhật: `docs/HUONG-DAN-CAT-ANH.md`. Test: `node tests/cat-anh/cat-anh.test.js`.
+
+## Phiên bản 178 — Prompt ảnh: chuẩn chibi thần thoại Việt, chống nhân bản / thiếu chân tay / có chữ
+- Người dùng gửi `docs/PROMPT-CAN-GEN.txt` cho AI tạo ảnh, kết quả sai nhiều (không chibi, 2–3 người trong một ô, các ô như hai người khác nhau, mất / thiếu chân tay, có chữ). Sửa nguồn `tools/build-prompts.js` rồi sinh lại toàn bộ file prompt.
+- Khối **STYLE BIBLE / CHUẨN PHONG CÁCH** ở đầu `PROMPT-CAN-GEN.txt`, `PROMPT-GUI-AI.txt`, `PROMPT_GEMINI_FULL.txt` và mục 0 của `CHUAN-ANIMATION.md/.txt`: chibi 2.5–3 đầu, chất Văn Lang – Âu Lạc / Đông Sơn (không Trung / Nhật / Hàn / Tây), quái cũng chibi, giải phẫu đúng, mỗi ô MỘT nhân vật và CÙNG một nhân vật ở mọi ô, không chữ, nền magenta; ảnh mẫu phong cách `docs/mau-luoi/vi-du-hero12-lactuong.png`.
+- Mỗi prompt nhân vật có thêm 4 dòng cố định (STYLE LOCK, ONE CHARACTER SAME DESIGN, ANATOMY, NEGATIVE); prompt hiệu ứng có dòng STYLE LOCK + NEGATIVE riêng — dán prompt lẻ vẫn đủ chuẩn.
+- Thẻ nhận diện cũ ghi "head about 1/5…1/8 of the height" (người thật) → tự quy về CHIBI 3 đầu (≤1/3 → 2.5 đầu); tướng to cao thể hiện bằng bề ngang / cỡ người, không thu nhỏ đầu.
+- Hàng đánh theo vũ khí: cung (lắp tên → kéo dây tới má, tên luôn thấy trên dây → buông, tên vừa rời cung → thu tay), nỏ, ná / ống thổi, gậy phép, kiếm / rìu / giáo (một cung vung mượt, vệt mờ chỉ ở khung 6) + dòng WEAPON CONTINUITY: vũ khí không biến mất / nhân đôi.
+- Danh sách "Kiểm tra trước khi nhận ảnh" (7 dòng) + quy trình: gen character sheet 1 nhân vật → duyệt → gen tấm nhiều khung dùng ảnh đó làm tham chiếu.
+- Chưa làm: cảnh báo tự động trong tool cắt ảnh (nghi nhân bản / chạm mép / lệch màu) — người dùng yêu cầu chỉ sinh file, không chạy test.
