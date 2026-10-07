@@ -33,7 +33,7 @@ def fit_bg(im, sel, W, H, n=20000):
     return (design(xx.ravel().astype(float), yy.ravel().astype(float), W, H) @ coef).reshape(H, W, 3)
 
 
-def cut(path, out_h=400, verbose=False):
+def cut(path, out_h=400, verbose=False, strict=False, shadow=False):
     im = np.asarray(Image.open(path).convert('RGB')).astype(float)
     H, W, _ = im.shape
     band = np.zeros((H, W), bool)
@@ -55,7 +55,8 @@ def cut(path, out_h=400, verbose=False):
         if it < 2:
             M = fit_bg(im, bg, W, H)
     # lỗ kín màu nền thuần (khe giữa tay / chân / cán vũ khí)
-    pure = (d < 34) & ~bg
+    # strict (nhân vật cùng màu nền: rồng hồng…): không khoét lỗ kín (vảy hồng giống nền), chỉ bỏ nền chạm mép
+    pure = (d < 34) & ~bg & (not strict)
     lab2, n2 = ndi.label(pure)
     if n2:
         sz = ndi.sum(np.ones_like(d), lab2, range(1, n2 + 1))
@@ -83,6 +84,28 @@ def cut(path, out_h=400, verbose=False):
         elif z > 30:
             dropped.append(int(z))
     fg = np.isin(lab3, keep)
+    if shadow:
+        # bóng đổ hồng còn dính chân: ở dải 7% đáy hình, bỏ điểm cùng sắc nền (magenta, b > g)
+        ys2 = np.nonzero(fg.any(1))[0]
+        y0b = int(ys2.max() - 0.07 * (ys2.max() - ys2.min()))
+        mm2 = (M * M).sum(2) + 1e-6
+        s2 = (im * M).sum(2) / mm2
+        res2 = np.linalg.norm(im - s2[..., None] * M, axis=2)
+        mag = (res2 < 45) & (s2 > 0.3) & (s2 < 1.1)          # cùng sắc nền (chỉ đậm nhạt khác)
+        # bóng nằm NGOÀI nét viền đen: mỗi hàng ở dải đáy, bỏ điểm cùng sắc nền nằm ngoài khoảng [viền đen trái, viền đen phải]
+        dark = fg & (im.sum(2) < 260)
+        for y in range(y0b, H):
+            xs = np.nonzero(dark[y])[0]
+            row = fg[y] & mag[y]
+            if len(xs) == 0:
+                fg[y] &= ~row
+                continue
+            out = np.ones(W, bool); out[xs.min():xs.max() + 1] = False
+            fg[y] &= ~(row & out)
+        lab4, n4 = ndi.label(fg)
+        if n4 > 1:
+            sz4 = ndi.sum(np.ones_like(d), lab4, range(1, n4 + 1))
+            fg = np.isin(lab4, np.nonzero(sz4 >= 0.01 * sz4.max())[0] + 1)
     fg = ndi.binary_fill_holes(fg) & (fg | ~(d < 34))   # lấp lỗ li ti không phải màu nền
     # alpha + khử lem hồng ở viền (2 điểm sát nền)
     alpha = fg.astype(float)
@@ -118,6 +141,8 @@ def main():
     ap.add_argument('--out', default='assets')
     ap.add_argument('--h', type=int, default=400)
     ap.add_argument('--only', default='')
+    ap.add_argument('--shadow', default='', help='mã còn bóng đổ hồng dính chân (cách nhau dấu phẩy)')
+    ap.add_argument('--strict', default='', help='mã nhân vật cùng màu nền (cách nhau dấu phẩy): tách chặt, không đục lỗ trong thân')
     a = ap.parse_args()
     only = set(filter(None, a.only.split(',')))
     os.makedirs(a.out, exist_ok=True)
@@ -126,7 +151,7 @@ def main():
             ma = os.path.splitext(os.path.basename(p))[0]
             if only and ma not in only:
                 continue
-            img, info = cut(p, a.h)
+            img, info = cut(p, a.h, strict=ma in set(a.strict.split(',')), shadow=ma in set(a.shadow.split(',')))
             img.save(os.path.join(a.out, ma + '.png'), optimize=True)
             print(ma, info['size'], 'mảng giữ', info['parts'], 'bỏ hạt', info['dropped'])
 

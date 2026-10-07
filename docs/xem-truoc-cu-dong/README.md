@@ -1,6 +1,6 @@
-# Xem trước tự cử động — ảnh dựng xương đợt 2–3 (60 nhân vật)
+# Xem trước tự cử động — 90 ảnh dựng xương (phần 1–3)
 
-Mỗi `<mã>.webp`: đứng thở → đánh (lấy đà · ra đòn · thu về) → trúng đòn. `tong-hop.jpg`: 3 khung (đứng · ra đòn · trúng đòn) của cả 60.
+Mỗi `<mã>.webp`: đứng thở → đánh (lấy đà · ra đòn · thu về) → trúng đòn. `tong-hop.jpg`: 3 khung (đứng · ra đòn · trúng đòn) của cả 90.
 Dựng bằng chính engine (`cdBuildRig` + `cdRigFrame` trong js/tu-cu-dong.js) với rig ở js/rigs.js.
 Chân (dưới đường hông) đứng yên tuyệt đối — đã đo: không điểm ảnh nào dưới hông đổi giữa các khung.
 
@@ -52,8 +52,24 @@ Chân (dưới đường hông) đứng yên tuyệt đối — đã đo: không
 | viemde | gậy phép | giáo ngắn → đâm |
 | xathu | cung | đao, không thấy cung → chém |
 | yeutinh | rìu | không vũ khí → nhún nguyên khối |
+| adv | nỏ | kiếm → chém |
+| antiem | tay không | giáo → đâm |
+| auco | gậy phép | giáo → đâm |
+| baahoa | tay không | đuốc lửa → phép |
+| caolo | nỏ | kiếm trong vỏ cầm ngang → đâm |
+| caong | tay không | giáo → đâm |
+| cdt | gậy phép | giáo cầm chéo → đâm |
+| chantinh | rìu | giáo → đâm |
+| chantrau | nỏ | gậy đầu trâu → bổ |
+| chodo | giáo | đao → chém |
+| chuongdong | gậy phép | chiêng đồng → phép |
+| cungan | cung | không thấy cung → nhún nguyên khối |
+| cuoi | rìu | đòn gánh vác vai → nhún nguyên khối (tách sẽ gãy gánh) |
+| daibang | tay không | giáo → bổ |
+| dapde | giáo | gậy đầu thú → bổ |
+| dotnuong | kiếm | giáo → bổ |
 
-Khớp game: lachau, lactuong, lyngu, nguphu, ongdung, ongthoi, thaylang, thaymo, thuytinh, trongdong; quái không người nhún nguyên khối: muc, nongnoc, ran, rua, thachtinh, voichien.
+Khớp game: anvuong, giaodong, giong, haba, denroi (đèn lồng → phép), lachau, lactuong, lyngu, nguphu, ongdung, ongthoi, thaylang, thaymo, thuytinh, trongdong; quái không người nhún nguyên khối: camap, cao, casau, chimbao, cua (càng dính sát mặt), dacon, doi, echme, giaolong, muc, nongnoc, ran, rua, thachtinh, voichien.
 
 ## Tách nền khó
 - **muc**: thân hồng trùng màu nền — giữ được thân, còn vài lỗ nhỏ trong xúc tu và 1 mảng hồng nhỏ giữa xúc tu phải.
@@ -61,6 +77,8 @@ Khớp game: lachau, lactuong, lyngu, nguphu, ongdung, ongthoi, thaylang, thaymo
 - **potaoapui**: giữ lửa dính thân / giáo, bỏ tia lửa và dấu ✦ rời.
 - **haisen**: lư đồng đặt cạnh (rời thân) — giữ lại, đứng yên.
 
+- **Phần 1** (tách nền ở nhánh claude/tu-cu-dong): cao, casau, chimbao, cungan, cua bị ăn mất chân / hở giữa người (thân hồng-đỏ trùng màu nền) → tách lại bằng `tools/tach-nen-hong.py --strict … --shadow chimbao` (không khoét lỗ kín; bóng hồng của chimbao chỉ bỏ phần nằm ngoài nét viền đen). 25 ảnh phần 1 còn lại giữ bản của nhánh kia.
+
 ## Rig phải chỉnh tay
-Rig tự đoán của engine bắt nhầm dải băng / tóc / đuôi ở hầu hết ảnh → cả 46 rig có tay đều đặt tay (tools/rig-dung-xuong.txt).
-Phải sửa lại sau khi xem khung động: hotinh (đầu giáo rộng hơn khối rig), thansuong (lệch cán giáo), ngutinh (khối đinh ba ăn vào tóc), kinhduong (viền trắng sót → thêm hút mảnh viền), các cán dài dựng đứng (thêm `amp`).
+Rig tự đoán của engine bắt nhầm dải băng / tóc / đuôi ở hầu hết ảnh → cả 48 rig có tay (đợt 2–3) và 19 rig phần 1 đều đặt tay (tools/rig-dung-xuong.txt).
+Phải sửa lại sau khi xem khung động: dapde (đầu gậy sót lại → nới khối), caolo, anvuong (khối giáo ăn vào áo choàng), cua (đổi sang nguyên khối), hotinh (đầu giáo rộng hơn khối rig), thansuong (lệch cán giáo), ngutinh (khối đinh ba ăn vào tóc), kinhduong (viền trắng sót → thêm hút mảnh viền), các cán dài dựng đứng (thêm `amp`).
