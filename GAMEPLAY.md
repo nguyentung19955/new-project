@@ -1613,3 +1613,8 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Cài đặt: dòng cuối chỉ còn "Thần Thoại Việt · Phiên bản N"; hàng tài khoản đổi tên **Tài khoản** (bảng nhỏ ở khung người chơi cũng bỏ "lưu trên đám mây"), chỉ hiện tên (Khách / tên Google / "Chưa đăng nhập").
 - Hướng dẫn trong trận (khung "Chạm 1 thẻ tướng…", "Bấm ▶ (góc trên phải)…") và toast "Mẹo:" chỉ hiện cho người mới (chưa qua ải 1).
 - Danh sách đầy đủ (chỗ, chữ, quyết định): `docs/CHU-THUA.md`; ảnh trước/sau: `docs/chu-thua-truoc-sau.png`.
+
+## Phiên bản 171 — Bỏ nút Ghép sao / Trang bị trên tướng
+- Chạm tướng trên sân: bảng nổi phía trên tướng **bỏ nút Ghép sao (★+ / Ghép ★★) và Trang bị / Mặc N món**; chỉ còn nút **Hủy** nhỏ (vẫn bấm 2 lần "Chắc chắn? +vàng"), cùng nút **Hợp thể** khi đủ điều kiện và **Thần tinh** cho thần Sử thi/Huyền thoại.
+- Ghép sao: **kéo tướng thả lên tướng cùng loại cùng sao** (mẹo khi có cặp đầu tiên đã chỉ cách này) hoặc nút **⇄ Ghép tự động** ở thanh đáy. Mặc đồ: nút **Tự mặc đồ** / **Túi đồ** ở cột phải.
+- Test: `tests/bo-nut-tren-tuong/bo-nut-tren-tuong.test.js` (bảng nổi chỉ còn Hủy, Hủy 2 bước hoạt động, kéo thả ghép được, không lỗi trang ở 844×390 / 667×375).
