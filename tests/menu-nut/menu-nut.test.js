@@ -8,6 +8,8 @@
 const path = require('path');
 const { chromium } = require('/opt/node-tools/node_modules/playwright');
 const ROOT = path.resolve(__dirname, '../..');
+const SHOT = path.join(__dirname, 'shots');
+require('fs').mkdirSync(SHOT, { recursive: true });
 const ok = (c, m) => { if (!c) throw new Error('FAIL: ' + m); console.log('  ✓ ' + m); };
 const shown = (page, sel) => page.evaluate((s) => { const e = document.querySelector(s); return !!e && !e.hidden && e.getClientRects().length > 0; }, sel);
 
@@ -55,7 +57,7 @@ const hit = (page, sel) => page.evaluate((s) => {
       await page.click('#btn-runes');
       await page.waitForTimeout(200);
       ok(await shown(page, '#runes') && (await page.textContent('#runes')).includes('Chưa có tướng Vàng'), 'chưa có tướng Vàng: vẫn mở màn Ấn Phù kèm giải thích');
-      await page.screenshot({ path: path.join(__dirname, 'an-phu-trong.png') });
+      await page.screenshot({ path: path.join(SHOT, 'an-phu-trong.png') });
       await page.click('#runes [data-act=rn-roster]');
       await page.waitForTimeout(200);
       ok(await shown(page, '#roster') && !(await shown(page, '#runes')), 'nút Đến Anh Hùng → màn Anh Hùng');
@@ -122,7 +124,7 @@ const hit = (page, sel) => page.evaluate((s) => {
       await page.click('#menu-player');
       ok(await shown(page, '#pl-pop'), 'chạm khung người chơi → bảng tài khoản');
       ok(await page.locator('#pl-pop [data-act=cloud-out]').isVisible(), 'đã đăng nhập: có nút Đăng xuất');
-      await page.screenshot({ path: path.join(__dirname, 'bang-tai-khoan.png') });
+      await page.screenshot({ path: path.join(SHOT, 'bang-tai-khoan.png') });
       await page.click('#pl-pop [data-act=cloud-out]');
       ok(await page.locator('#pl-pop [data-act=cloud-out-ok]').isVisible() && await page.evaluate(() => window.__out === 0), 'bấm Đăng xuất → hỏi xác nhận, chưa đăng xuất');
       await page.click('#pl-pop [data-act=cloud-out-no]');
