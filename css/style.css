@@ -2132,7 +2132,11 @@ html.sk-the-cho .mk-card .rl { z-index: 2; }
 #bb-info .fx { display: flex; flex-wrap: nowrap; gap: 6px; height: 15px; overflow: hidden; font-size: 10.5px; font-weight: 800; line-height: 15px; white-space: nowrap; }
 #bb-info .fx span { display: inline-flex; align-items: center; gap: 2px; }
 #bb-info .fx .icn { width: 12px; height: 12px; }
-#bossbar.low { top: auto; transform-origin: 0 100%; }
+/* v189: đè boss / tướng thì thu gọn 1 dòng (ẩn chỉ số + mô tả), vẫn đè thì mờ */
+#bossbar.mini #bb-info { display: none; }
+#bossbar.mini { padding-bottom: 4px; }
+#bossbar.ghost { opacity: .6; }
+#bossbar { transition: opacity .2s; }
 #bb-info .fx { margin-top: 3px; color: #C8BFA8; }
 #bb-info .fx .fst { color: #FFE08A; background: #3A2410; border-radius: 3px; padding: 0 4px; }
 #menu .mc-row .mc-btn:last-child { flex-basis: 44%; }
@@ -2144,3 +2148,4 @@ html.sk-the-cho .mk-card .rl { z-index: 2; }
 #banner b { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 #banner small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 @media (max-height: 520px) { #banner { top: 70px; padding: 4px 22px; } #banner b { font-size: 22px; } #banner small { font-size: 11px; } }
+#tb-wave .wn { display: inline-block; min-width: 1.15em; text-align: center; }

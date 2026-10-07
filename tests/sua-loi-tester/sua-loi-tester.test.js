@@ -141,6 +141,27 @@ const bossWave = (page) => page.evaluate(() => { const g = ui.game; g.wave = 9; 
       const r = await rect(page, '#tb-wave');
       ok(r.t >= 0.5, `L16 chữ "Đợt" cách mép trên ${r.t.toFixed(1)}px (≥ 0,5)`);
     }
+    // ---------- L21: chữ "Đợt" không nhích khi số đợt thêm chữ số
+    {
+      const xs = [];
+      for (const wv of [0, 9, 10, 99]) xs.push(await page.evaluate((wv) => { ui.game.wave = wv; ui.updateTopbar(); const r = document.createRange(), t = document.getElementById('tb-wave').firstChild; r.setStart(t, 0); r.setEnd(t, 3); const b = r.getBoundingClientRect(); return ROT ? b.top : b.left; }, wv));
+      await page.evaluate(() => { ui.game.wave = 0; ui.updateTopbar(); });
+      ok(Math.max(...xs) - Math.min(...xs) < 0.6, `L21 chữ "Đợt" đứng yên khi đợt 0 → 9 → 10 → 99 (lệch ${(Math.max(...xs) - Math.min(...xs)).toFixed(1)}px)`);
+    }
+    // ---------- L22: bong bóng Thần tinh không đè đầu tướng vừa hoá thân (tướng Tím vẽ to)
+    {
+      const r = await page.evaluate(() => {
+        const g = ui.game, t = Object.keys(HEROES).find((k) => HEROES[k].legend === 'epic');
+        const slots = CONFIG.slots.map((s, i) => [s[1], i]).sort((a, b) => b[0] - a[0]).map((x) => x[1]);   // ô thấp nhất (bong bóng hiện trên đầu)
+        const i = slots.find((k) => !g.heroes[k]); g.spawnHero(i, t); const h = g.heroes[i]; h.from = 'lactuong'; h.tier = 1;
+        ui.sel = i; ui.moreSig = null; return i;
+      });
+      await sleep(400);
+      const m = await page.evaluate((i) => { const el = document.getElementById('more'); if (el.hidden) return null; const b = el.getBoundingClientRect(); const top = HERO_TOP.get(ui.game.heroes[i]); const c = document.getElementById('game').getBoundingClientRect(); const y = ROT ? null : c.top + (top + view.oy) * view.scale; return { mb: b.bottom, mt: b.top, y, below: el.classList.contains('below') }; }, r);
+      ok(m && (m.y === null || m.below || m.mb <= m.y + 2), `L22 bong bóng Thần tinh nằm trên đỉnh hình tướng (đáy bong bóng ${m && m.mb.toFixed(0)} ≤ đỉnh tướng ${m && m.y && m.y.toFixed(0)})`);
+      await page.screenshot({ path: path.join(SHOT, `L22-than-tinh-${tag}.png`) });
+      await page.evaluate((i) => { ui.game.heroes[i] = null; ui.sel = -1; }, r);
+    }
     // ---------- L07: banner boss — hội thoại + thông báo đợi banner tắt, không chồng nhau
     {
       await bossWave(page);
@@ -168,17 +189,33 @@ const bossWave = (page) => page.evaluate(() => { const g = ui.game; g.wave = 9; 
       }
       ok(Math.max(...hs) - Math.min(...hs) < 0.5, `L06 bảng boss cao cố định khi dính/hết hiệu ứng (${hs.map((x) => x.toFixed(0)).join(',')})`);
       // đặt boss ngay dưới bảng (góc trên trái) → bảng dời xuống; boss xuống dưới → bảng về trên
-      const place = (q) => page.evaluate((q) => { const b = ui.game.enemies.find((e) => e.def.boss); const p = PATH.at(q); b.dist = q; b.x = p.x; b.y = p.y; b.speedMul = 0; b.slowT = 99; b.zoneSlow = 1; ui.bossSel = b; }, q);
-      await page.evaluate(() => { const b = document.getElementById('bossbar'); b.classList.remove('low'); b.style.bottom = ''; ui.placeBossbar = () => {}; });
-      const under = await page.evaluate(() => { const bar = document.getElementById('bossbar').getBoundingClientRect(), c = document.getElementById('game').getBoundingClientRect(); const bx = enemyBox(ui.game.enemies.find((e) => e.def.boss)); for (let q = 0; q < PATH.total; q += 10) { const p = PATH.at(q), x = c.left + (p.x + view.ox) * view.scale, y = c.top + (p.y - bx.h * 0.45 + view.oy) * view.scale; if (x > bar.left + 20 && x < bar.right - 20 && y > bar.top + 10 && y < bar.bottom - 10) return q; } return -1; });
-      await page.evaluate(() => { delete ui.placeBossbar; });
+      // boss / tướng nằm dưới bảng (góc trên trái) → bảng thu gọn 1 dòng, không còn che; không có gì bên dưới → bảng đầy đủ
+      await page.evaluate(() => { ui.placeBossbar0 = ui.placeBossbar; ui.placeBossbar = () => {}; document.getElementById('bossbar').classList.remove('mini', 'ghost'); });
+      await sleep(150);
+      const full = await rect(page, '#bossbar');
+      const under = await page.evaluate((fb) => { const c = document.getElementById('game').getBoundingClientRect(), bx = enemyBox(ui.game.enemies.find((e) => e.def.boss)); let best = -1; for (let q = 0; q < PATH.total; q += 10) { const p = PATH.at(q), x = c.left + (p.x + view.ox) * view.scale, y = c.top + (p.y - bx.h * 0.45 + view.oy) * view.scale; if (x > fb.l + 20 && x < fb.r - 20 && y > fb.t + 40 && y < fb.b - 5) best = q; } return best; }, full);
+      await page.evaluate(() => { ui.placeBossbar = ui.placeBossbar0; });
+      const place = (q) => page.evaluate((q) => { const b = ui.game.enemies.find((e) => e.def.boss); const p = PATH.at(q); b.dist = q; b.x = p.x; b.y = p.y; b.slowT = 99; b.zoneSlow = 1; ui.bossSel = b; }, q);
+      const moveHeroesAway = () => page.evaluate(() => { const g = ui.game; for (const h of g.heroes) if (h) { h.y = 9999; } });
       if (under >= 0) {
+        await page.evaluate(() => { for (const h of ui.game.heroes) if (h) h.__y = h.y; }); await moveHeroesAway();
         await place(under); await sleep(250);
-        const lowNow = await page.evaluate(() => document.getElementById('bossbar').classList.contains('low'));
-        const bb = await rect(page, '#bossbar'), dk = await rect(page, '#deck');
-        ok(lowNow && bb.b <= dk.t + 1, `L06 boss nằm dưới bảng (đường đi ${under}) → bảng dời xuống trên thanh chợ`);
+        const m = await page.evaluate(() => ({ mini: document.getElementById('bossbar').classList.contains('mini'), h: document.getElementById('bossbar').getBoundingClientRect().height }));
+        ok(m.mini && m.h < (full.b - full.t) * 0.45, `L06 boss nằm dưới bảng → bảng thu gọn 1 dòng (cao ${m.h.toFixed(0)} / ${(full.b - full.t).toFixed(0)}px)`);
         await page.screenshot({ path: path.join(SHOT, `L06-bang-boss-${tag}.png`) });
+        await place(Math.round(await page.evaluate(() => PATH.total * 0.75))); await sleep(250);
+        ok(await page.evaluate(() => !document.getElementById('bossbar').classList.contains('mini')), 'L06 boss đi xa, không tướng dưới bảng → bảng đầy đủ');
+        await page.evaluate(() => { for (const h of ui.game.heroes) if (h && h.__y !== undefined) h.y = h.__y; });
       } else ok(true, 'L06 (đường đi không chạy dưới bảng ở cỡ màn này)');
+      // tướng đứng ở ô hàng trái, dưới bảng đầy đủ → bảng thu gọn, không che tướng
+      const hsl = await page.evaluate((fb) => { const c = document.getElementById('game').getBoundingClientRect(); for (let i = 0; i < CONFIG.slots.length; i++) { const [x, y] = CONFIG.slots[i]; const sx = c.left + (x + view.ox) * view.scale, sy = c.top + (y - 40 + view.oy) * view.scale; if (sx > fb.l + 10 && sx < fb.r - 10 && sy > fb.t + 40 && sy < fb.b) return i; } return -1; }, full);
+      if (hsl >= 0) {
+        await page.evaluate((hs) => { const g = ui.game; if (!g.heroes[hs]) g.spawnHero(hs, 'lucsi'); }, hsl); await sleep(250);
+        const sl = await page.evaluate((hs) => { const h = ui.game.heroes[hs], c = document.getElementById('game').getBoundingClientRect(); return { x: c.left + (h.x + view.ox) * view.scale, y: c.top + (h.y - 40 + view.oy) * view.scale }; }, hsl);
+        const bb = await rect(page, '#bossbar');
+        ok(!(sl.x > bb.l && sl.x < bb.r && sl.y > bb.t && sl.y < bb.b) || await page.evaluate(() => document.getElementById("bossbar").classList.contains("ghost")), `L06 tướng ở ô ${hsl} (dưới bảng đầy đủ): bảng thu gọn, không che tướng`);
+        await page.screenshot({ path: path.join(SHOT, `L06-tuong-duoi-bang-${tag}.png`) });
+      } else ok(true, 'L06 (không có ô tướng dưới bảng ở cỡ màn này)');
       ok(await page.evaluate(() => [...document.querySelectorAll('#bb-info .fc span')].every((s) => !/Câm lặng|Choáng/.test(s.textContent))), 'L06 hiệu ứng nằm ở dòng riêng (không xen dòng chỉ số)');
     }
     // ---------- L04 + L17: màn kết quả cuộn được tới dòng cuối; icon Mạng còn là trái tim

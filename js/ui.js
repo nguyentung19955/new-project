@@ -2097,7 +2097,8 @@ class UI {
   updateTopbar() {
     const g = this.game;
     const total = g.levelWaves;
-    { const wt = g.endless ? `Đợt ${g.wave} · Vô tận` : `Đợt ${g.wave} / ${total}`; this.setHTML('#tb-wave', wt + g.hard + assetVersion, wt + (g.hard ? ` · ${ic('kho')}Khó` : '')); }
+    // v189: số đợt nằm trong ô rộng cố định (3 chữ số) → chữ "Đợt" không nhích khi 9 → 10 → 100
+    { const n = `<span class="wn">${g.wave}</span>`, wt = g.endless ? `Đợt ${n} · Vô tận` : `Đợt ${n} / ${total}`; this.setHTML('#tb-wave', wt + g.hard + assetVersion, wt + (g.hard ? ` · ${ic('kho')}Khó` : '')); }
     const prog = g.waveActive && g.waveTotal ? 1 - (g.spawnQueue.length + g.enemies.length * 0.5) / (g.waveTotal * 1.5) : 0;
     $('#tb-fill').style.width = `${Math.max(0, Math.min(1, ((g.wave - 1 + Math.max(0, prog)) / total))) * 100}%`;
     this.setText('#tb-gold b', fmt(g.gold));
@@ -2223,26 +2224,23 @@ class UI {
     $('#bb-fill').style.width = `${Math.max(0, b.hp / b.maxHp) * 100}%`;
     this.placeBossbar(b);
   }
-  // v189 (L06): bảng nằm góc trên trái — đúng chỗ quái đi vào nên hay che chính con boss đang xem.
-  // Boss lọt vào vùng bảng thì dời bảng xuống góc dưới trái (ngay trên thanh chợ), boss sang vùng dưới thì về lại trên.
+  // v189 (L06): bảng nằm góc trên trái — đúng chỗ quái đi vào và gần các ô tướng hàng trái. Bảng đầy đủ đè lên boss
+  // hoặc tướng thì thu gọn còn 1 dòng (tên + thanh máu) ở mép trên; bản gọn vẫn đè thì mờ đi để thấy bên dưới.
+  // (Bản trước dời bảng xuống góc dưới trái — lại che tướng ở ô hàng trái.)
   placeBossbar(b) {
     const bar = $('#bossbar'), hz = typeof HZ !== 'undefined' ? HZ : 1;
-    const ur = $('#ui').getBoundingClientRect(), k = ur.height / UIH || 1;
-    const dk = $('#deck').getBoundingClientRect();
-    const floor = dk.height ? (dk.top - ur.top) / k - 6 : UIH - 86 * hz;     // mép trên thanh chợ (khung thiết kế)
+    const mini = bar.classList.contains('mini');
+    if (!mini) this.bbFullH = bar.offsetHeight; else this.bbMiniH = bar.offsetHeight;
+    const w = bar.offsetWidth * hz, top = 44 * hz, fullH = (this.bbFullH || 150) * hz, miniH = (this.bbMiniH || 44) * hz;
+    // vật cản (khung thiết kế): boss đang xem + mọi tướng trên sân
+    const R = [];
     const box = enemyBox(b), lift = b.def.flying ? 24 : 0;
-    const x = (b.x + MAPX) / DK, y = (b.y - lift - box.h * 0.45 + MAPY) / DK;
-    const rx = box.w * 0.45 / DK + 8, ry = box.h * 0.55 / DK + 8;
-    const w = bar.offsetWidth * hz, h = bar.offsetHeight * hz, top = 44 * hz, low = floor - h;
-    // diện tích boss bị bảng che ở mỗi chỗ; chỉ dời khi chỗ kia che ít hơn hẳn (tránh nhảy qua lại)
-    const over = (y0) => Math.max(0, Math.min(x + rx, 6 + w) - Math.max(x - rx, 6)) * Math.max(0, Math.min(y + ry, y0 + h) - Math.max(y - ry, y0));
-    let on = bar.classList.contains('low');
-    const cur = over(on ? low : top), alt = over(on ? top : low);
-    if (low <= top + h * 0.5) on = false;
-    else if (cur > 0 && alt < cur * 0.5) on = !on;
-    bar.classList.toggle('low', on);
-    const B = on ? `${Math.round(UIH - floor)}px` : '';
-    if (bar.style.bottom !== B) bar.style.bottom = B;
+    { const x = (b.x + MAPX) / DK, y = (b.y - lift - box.h * 0.45 + MAPY) / DK, rx = box.w * 0.4 / DK + 4, ry = box.h * 0.5 / DK + 4; R.push([x - rx, y - ry, x + rx, y + ry]); }
+    for (const h of this.game.heroes) if (h && !h.dead) { const x = (h.x + MAPX) / DK, y = (h.y + MAPY) / DK; R.push([x - 24 / DK, y - 76 / DK, x + 24 / DK, y + 6 / DK]); }
+    const hit = (hh) => R.some(([l, t, r, bt]) => r > 6 && l < 6 + w && bt > top && t < top + hh);
+    const nextMini = hit(fullH);
+    bar.classList.toggle('mini', nextMini);
+    bar.classList.toggle('ghost', nextMini && hit(miniH));
   }
 
   // ---------- hàng thẻ dưới đáy: thẻ triệu hồi, hoặc thẻ tướng đang chọn
@@ -2479,7 +2477,10 @@ class UI {
   placeMore(h) {
     const el = $('#more');
     // toạ độ trong khung thiết kế 932×430 (đúng cả khi khung đang tự xoay ngang)
-    const x = (h.x + MAPX) / DK, y = (h.y + MAPY) / DK, head = (h.y - 66 + MAPY) / DK;
+    // v189: đỉnh đầu theo hình tướng vẽ thật (main.js ghi HERO_TOP) + chỗ sao Thần tinh — tướng Tím / Vàng vẽ to hơn,
+    // trước đây ước 66 nên bong bóng đè lên đầu tướng vừa hoá thân
+    const x = (h.x + MAPX) / DK, y = (h.y + MAPY) / DK, dt = typeof HERO_TOP !== 'undefined' ? HERO_TOP.get(h) : undefined,
+      head = ((dt != null ? Math.min(h.y - 66, dt - 22) : h.y - 66) + MAPY) / DK;
     const bw = el.offsetWidth || 260, bh = el.offsetHeight || 50;
     // thanh được phóng --hz quanh mép dưới giữa (hoặc mép trên khi hiện dưới chân)
     const hz = typeof HZ !== 'undefined' ? HZ : 1;

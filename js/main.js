@@ -647,6 +647,7 @@ function drawDragGhost(d, dropSlot, t) {
   ctx.globalAlpha = 1;
 }
 
+const HERO_TOP = new WeakMap();   // tướng → toạ độ y đỉnh hình vẽ khung trước
 function drawHeroOnMap(h, t) {
   if (h.dead && !(h.fallT > 0)) {
     // đá đánh dấu + đếm ngược hồi sinh
@@ -690,6 +691,7 @@ function drawHeroOnMap(h, t) {
   drawRankAura(h, t, true);
   drawHeroStates(h, st, t, true);
   const top = r.top + 6;
+  HERO_TOP.set(h, r.top);   // v189: đỉnh hình tướng — bong bóng thao tác (#more) đặt trên đỉnh thật (không ghi vào tướng: khỏi lưu / đồng bộ)
   if (h.invulnT > 0) {
     ctx.strokeStyle = '#FFE08A';
     ctx.lineWidth = 2;
