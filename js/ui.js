@@ -15,7 +15,17 @@ function fitText(el, min) {
   let fs = parseFloat(getComputedStyle(el).fontSize);
   while (el.scrollWidth > el.clientWidth + 0.5 && fs > min) el.style.fontSize = (fs -= 0.5) + 'px';
 }
-const fmt = (n) => Math.round(n).toLocaleString('vi-VN');
+// vo-tan-su-kien: số rất lớn (máu quái đợt xa) viết gọn — trước đây "112.000.000.000.000…" tràn thanh boss
+const fmt = (n) => {
+  const a = Math.abs(n);
+  if (!(a < 1e9)) {
+    if (!isFinite(n)) return '∞';
+    if (a < 1e12) return (n / 1e9).toLocaleString('vi-VN', { maximumFractionDigits: 2 }) + ' tỷ';
+    if (a < 1e15) return (n / 1e12).toLocaleString('vi-VN', { maximumFractionDigits: 2 }) + ' nghìn tỷ';
+    return n.toExponential(2).replace('.', ',').replace('e+', 'e');
+  }
+  return Math.round(n).toLocaleString('vi-VN');
+};
 const ICON = {
   close: '<svg viewBox="0 0 16 16"><path d="M3 3 L13 13 M13 3 L3 13" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>',
   back: '<svg viewBox="0 0 16 16"><path d="M10 3 L5 8 L10 13" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>',
@@ -118,6 +128,9 @@ const IC_SVG = {
   bay: `<path d="M3 15 C6 7 13 4 21 4 C19 7 18 9 15 10 C17 10.5 18 11.5 18 12.5 C15.5 12.5 14 13 12.5 14.5 C13.5 15 14 16 14 17 C10 17 6 16.5 3 15 Z" fill="#F2F0E8" ${IC_O}/>`,
   boss: `<path d="M3 18 L4 7 L8.5 11 L12 4 L15.5 11 L20 7 L21 18 Z" fill="#E0402A" ${IC_O}/><rect x="3" y="18" width="18" height="3" fill="#C9963A" ${IC_O}/><circle cx="12" cy="14" r="1.8" fill="#FFD23A"/>`,
   'cam-lang': `<path d="M4 5 H20 V15 H11 L6 19.5 V15 H4 Z" fill="#E8E2D0" ${IC_O}/><path d="M5 20 L20 4" stroke="#E0402A" stroke-width="2.4" stroke-linecap="round"/>`,
+  // vo-tan-su-kien: vẽ tạm bằng code (chưa có ảnh ui/ic-suong-mu.png, ui/ic-phan-than.png — đã ghi vào docs/PROMPT-CAN-GEN.txt)
+  'suong-mu': `<path d="M5 10 C5 7 8 5.5 10.5 7 C11.5 4.5 16 4.5 17 7.5 C19.5 7.5 20.5 10 19 11.5 H5.5 C5 11 5 10.5 5 10 Z" fill="#D8E2E6" ${IC_O}/><path d="M3 14.5 H18 M6 18 H21" stroke="#B8C6CC" stroke-width="2.2" stroke-linecap="round"/>`,
+  'phan-than': `<path d="M4 20 V11 C4 6.5 7 4 10 4 C13 4 16 6.5 16 11 V20 L13.5 18 L11 20 L8.5 18 L6 20 Z" fill="#C08CF0" opacity=".55" ${IC_O}/><path d="M8 21 V12 C8 7.5 11 5 14 5 C17 5 20 7.5 20 12 V21 L17.5 19 L15 21 L12.5 19 L10 21 Z" fill="#C08CF0" ${IC_O}/><circle cx="12.5" cy="11" r="1.3" fill="#2A1608"/><circle cx="16.5" cy="11" r="1.3" fill="#2A1608"/>`,
   'tinh-anh': `<path d="M12 2.5 L20 9.5 L12 21.5 L4 9.5 Z" fill="#A86CE0" ${IC_O}/><path d="M4 9.5 H20 M9 9.5 L12 21.5 L15 9.5 M8 5.5 L9 9.5 M16 5.5 L15 9.5" stroke="#2A1608" stroke-width="1"/>`,
   lan: `<path d="M3 11 q3 -3 6 0 t6 0 t6 0 M3 16 q3 -3 6 0 t6 0 t6 0" stroke="#2A1608" stroke-width="3.6" fill="none" stroke-linecap="round"/><path d="M3 11 q3 -3 6 0 t6 0 t6 0 M3 16 q3 -3 6 0 t6 0 t6 0" stroke="#5AB4F0" stroke-width="1.8" fill="none" stroke-linecap="round"/>`,
   vang: `<circle cx="12" cy="12" r="9" fill="#F2C23A" ${IC_O}/><circle cx="12" cy="12" r="6.2" fill="none" stroke="#B8861A" stroke-width="1.2"/><rect x="10" y="10" width="4" height="4" fill="#7A5418"/>`,
@@ -2044,6 +2057,8 @@ class UI {
         this.toast(`Ngân khố ${bac(1)} +${fmt(ev.n)} · ${esc(ev.why)}`, '#E4ECF4');
       } else if (ev.type === 'reward') {
         this.showReward(ev);
+      } else if (ev.type === 'waveEvent') {
+        this.waveEventMsg(ev);
       } else if (ev.type === 'boss') {
         this.banner(ev.champion ? 'Quái khổng lồ' : 'Boss xuất hiện', ev.name);
         if (ev.enemy) this.say(ev.enemy, BOSS_LINES[ev.enemy]);
@@ -2071,6 +2086,20 @@ class UI {
     }
   }
 
+  // vo-tan-su-kien: sự kiện đợt — báo trước (đợt liền trước), mở màn, vượt qua (thưởng)
+  waveEventMsg(m) {
+    const e = m.ev, icon = ic(e.ic, '', 'ev-ic');
+    if (m.phase === 'soon') {
+      this.banner(`Đợt ${e.n} · sự kiện`, e.name, icon, e.color);
+      this.toast(`<b>Đợt ${e.n}: ${esc(e.name)}</b> · ${esc(e.desc)} · vượt qua: +${fmt(e.gold)} vàng, +${fmt(e.kho)} Ngân khố`, e.color);
+    } else if (m.phase === 'start') {
+      this.banner(`Sự kiện · ${e.lore}`, e.name, icon, e.color);
+      this.toast(`${icon}<b>${esc(e.name)}</b>: ${esc(e.desc)}`, e.color);
+    } else {
+      this.toast(`<b>Vượt ${esc(e.name)}!</b> +${fmt(m.gold)} vàng`, '#F2D27A');
+    }
+  }
+
   // Hộp thoại có ảnh nhân vật (theo bản thiết kế mobile)
   say(who, text) {
     if (!text) return;
@@ -2091,10 +2120,12 @@ class UI {
     this.sayT = setTimeout(() => { box.hidden = true; this.placeToasts(); }, 3000);
   }
 
-  banner(sub, text) {
-    $('#banner-sub').textContent = sub;
+  banner(sub, text, icon, color) {
+    if (icon) $('#banner-sub').innerHTML = icon + esc(sub); else $('#banner-sub').textContent = sub;
     $('#banner-text').textContent = text;
     const b = $('#banner');
+    b.classList.toggle('ev', !!color);
+    b.style.setProperty('--bn-c', color || '');
     b.hidden = false;
     b.style.animation = 'none';
     void b.offsetWidth;
@@ -2120,7 +2151,9 @@ class UI {
     // v189: số đợt nằm trong ô rộng cố định (3 chữ số) → chữ "Đợt" không nhích khi 9 → 10 → 100
     { const n = `<span class="wn">${g.wave}</span>`, wt = g.endless ? `Đợt ${n} · Vô tận` : `Đợt ${n} / ${total}`; this.setHTML('#tb-wave', wt + g.hard + assetVersion, wt + (g.hard ? ` · ${ic('kho')}Khó` : '')); }
     const prog = g.waveActive && g.waveTotal ? 1 - (g.spawnQueue.length + g.enemies.length * 0.5) / (g.waveTotal * 1.5) : 0;
-    $('#tb-fill').style.width = `${Math.max(0, Math.min(1, ((g.wave - 1 + Math.max(0, prog)) / total))) * 100}%`;
+    // vo-tan-su-kien: qua đợt cuối cũ của bản đồ thì thanh chạy theo chặng 10 đợt (trước đây đứng yên ở 100%)
+    const past = g.endless && g.wave > total, done = past ? ((g.wave - 1) % 10 + Math.max(0, prog)) / 10 : (g.wave - 1 + Math.max(0, prog)) / total;
+    $('#tb-fill').style.width = `${Math.max(0, Math.min(1, done)) * 100}%`;
     this.setText('#tb-gold b', fmt(g.gold));
     $('#tb-gold').classList.toggle('kho', !!this.prepForge);     // v95: đang tiêu Ngân khố (bạc), không phải vàng trận
     { const mx = Math.max(g.maxLives || CONFIG.startLives, g.lives), r = g.lives / mx;   // v169: mạng "còn/tối đa", đổi màu khi thấp
@@ -2129,7 +2162,7 @@ class UI {
     this.setText('#tb-water b', `${g.water}/3`);
     // thanh mực nước: tiến tới lần dâng nước kế (sau đợt boss tiếp theo)
     let prev = 0, next = 0;
-    for (let n = 1; n <= Math.max(g.levelWaves, g.wave + 10); n++) {
+    for (let n = Math.max(1, g.wave - 20); n <= Math.max(g.levelWaves, g.wave + 10); n++) {
       if (!bossAt(n, g.level)) continue;
       if (n <= g.wave && !(n === g.wave && g.waveActive)) prev = n; else { next = n; break; }
     }
@@ -2176,13 +2209,17 @@ class UI {
     const el = $('#nextwaves');
     const lim = g.endless ? Infinity : g.levelWaves;
     let html = '', early = false;
-    const kindTxt = (n) => {
+    let kindTxt = (n) => {
       const k = waveKind(n, g.level);
       if (k === 'boss') return `<span class="boss">Boss ${ENEMIES[bossAt(n, g.level)].name}</span>`;
       if (k === 'air') return 'Chim Bão <span class="air">(bay)</span>';
       if (k === 'champion') return 'Rùa khổng lồ';
       return '';
     };
+    // vo-tan-su-kien: đợt kế có sự kiện → biểu tượng + tên; đang đánh đợt sự kiện → nhắc thử thách
+    const evTxt = (e) => `<span class="evt" style="--c:${e.color}">${ic(e.ic, '', 'ev-ic')}${esc(e.name)}</span>`;
+    const nx = eventAt(g.wave + 1, g.level), cur = g.waveActive && g.waveEvent();
+    if (nx) { const k0 = kindTxt; kindTxt = (n) => k0(n) + (n === nx.n ? evTxt(nx) : ''); }
     if (g.wave > 0 && g.wave + 1 <= lim) {
       if (!g.waveActive && g.running) {
         early = true;
@@ -2192,6 +2229,7 @@ class UI {
         if (t) html = `<b>Đợt ${g.wave + 1}:</b> ${t}`;
       }
     }
+    if (cur && !early) html = `${evTxt(cur)}<span class="evd">${esc(cur.desc)}</span>${html ? ' · ' + html : ''}`;
     if (g.floodSoon() >= 0) html += `${html ? ' · ' : ''}<span class="flood">${ic('nuoc-dang')}Nước sắp dâng: thêm ${FLOOD_PER_RISE} ô sát sông ngập</span>`;
     el.classList.toggle('early', early);
     this.setHTML('#nextwaves', html, html);

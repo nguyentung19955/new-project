@@ -2161,3 +2161,15 @@ html.sk-the-cho .mk-card .rl { z-index: 2; }
 #banner small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 @media (max-height: 520px) { #banner { top: 70px; padding: 4px 22px; } #banner b { font-size: 22px; } #banner small { font-size: 11px; } }
 #tb-wave .wn { display: inline-block; min-width: 1.15em; text-align: center; }
+
+/* vo-tan-su-kien: sự kiện đợt (từ đợt 60, mỗi 10 đợt) — banner viền màu sự kiện, biểu tượng trên dải đợt kế */
+#banner.ev { background: linear-gradient(90deg, transparent, #0D0B08f0 18%, #0D0B08f0 82%, transparent); box-shadow: inset 0 2px 0 -1px var(--bn-c), inset 0 -2px 0 -1px var(--bn-c); }
+#banner.ev small { color: var(--bn-c); }
+#banner .ev-ic { height: 1.5em; width: auto; vertical-align: -0.45em; margin-right: 4px; }
+#nextwaves .evt { color: var(--c); font-weight: 800; display: inline-flex; align-items: center; gap: 3px; }
+#nextwaves .evd { color: var(--text); opacity: .9; }
+#nextwaves .ev-ic { height: 15px; width: auto; }
+#toasts .ev-ic { height: 1.25em; width: auto; vertical-align: -0.3em; margin-right: 2px; }
+/* banner sự kiện nằm dưới dải "đợt kế" (dải luôn hiện tên sự kiện nên không được che dòng phụ của banner) */
+#banner.ev { top: 104px; }
+@media (max-height: 520px) { #banner.ev { top: 84px; } }
