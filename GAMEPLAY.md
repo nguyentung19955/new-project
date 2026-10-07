@@ -1695,3 +1695,12 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 179 — Tool cắt ảnh nhận ảnh dáng rời, tấm icon tự tách
 
 - Gộp nhánh tool-cat-anh: ảnh <mã>_pose01..04 mỗi ảnh một khung, tấm nhiều icon tự tách theo vùng có hình, bảng cat-anh-them.json cho ảnh lẻ trong D:\ảnh game; ảnh chưa có chỗ dùng vào assets/chua-dung/.
+
+## Phiên bản 180 — Gắn ảnh mới cắt từ tool (commit "up ảnh")
+- Đã xem từng ảnh (contact sheet): 38 icon `assets/ui/ic-*.png` + 3 huy hiệu ải `ai-mo/chon/khoa` · 5 cổng `tiles/cong-*.png` · 6 kết cấu đường `tiles/duong-*.jpg` · 4 đồ ghép `do-ghep_{giap-dong-bat-diet,luoi-hai-chi-tu,mui-sung-pha-giap,riu-quet-song}.png` · boss 4 dáng `packs/{daibang,haba,hotinh,thuytinh,trieuda}`. Nền trong suốt, đúng nội dung tên; game tự nhận theo tên (ic() / elIcon / GATE_FILE / mapLayer / itemPngPath / UI_SKIN / ENEMY_PACK), không cần manifest.
+- **Sửa lỗi huy hiệu ải biến mất** khi có `ui/ai-*.png`: biến CSS `--sk-*` chứa `url("assets/…")` tương đối bị Chrome phân giải theo `css/style.css` (→ `css/assets/…` 404). `loadUiSkins` giờ ghi URL tuyệt đối — sửa luôn cho mọi khung / nút vẽ tay sau này.
+- Icon "dự phòng" nay có chỗ dùng: `cap-do` (nút Lên cấp), `nang-cap` (nâng Thần Khí), `diem-an-phu` (Điểm Ấn còn), `khac-che` (thanh boss: "bị … khắc"), `hoi-mau` (dòng mới Hồi máu/giây trong bảng chỉ số tướng), `khien` / `sa-lay` (đầu bảng chỉ số khi tướng có khiên / bị sa lầy).
+- Boss **Hổ Vương Triệu Đà** đổi từ ảnh người (102×246) sang ảnh hổ (≈470×480): độ rộng vẽ 60 → 128 để cao gần như cũ. Các boss khác: walk1 ≠ walk2, đáy chân cùng hàng (≈460/480), cao 480 đồng đều.
+- Dọn watermark còn sót (tool chưa bỏ hết): chữ "Pippit AI" ở vùng trong suốt của `daibang/walk1,walk2` (xoá điểm ảnh rời); 6 `duong-*.jpg` có "Pippit AI"/"AI" ở góc → cắt bỏ viền 34 px rồi phóng lại 512.
+- Còn lỗi cần gen lại: `daibang/attack.png`, `rage.png` có chữ "Pippit AI" đè lên cánh (không tự vẽ thay). `duong-gach.jpg` là ảnh hành lang phối cảnh (có viền gạch hai bên) nên lặp thành sọc — nên gen kết cấu nhìn thẳng từ trên, lặp liền.
+- Chưa có trong game (tool để vào `assets/chua-dung/` vì số vật tách ra khác số tên): `ic-boss/cam-lang/tinh-anh/lan`, `ic-cham/choang/dot/doc/dong-bang`, đế đặt tướng `tiles/de-tuong-*` (2 tấm), đồ ghép tấm 1 và 3 — vẫn dùng SVG / hình cũ.

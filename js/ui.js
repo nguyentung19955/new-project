@@ -44,7 +44,8 @@ function loadUiSkins() {
   const root = document.documentElement;
   const one = (src, name, cls) => {
     const im = new Image();
-    im.onload = () => { root.style.setProperty('--sk-' + name, `url("${src}")`); if (cls) root.classList.add('sk-' + cls); };
+    // URL tuyệt đối: url() tương đối trong biến CSS bị phân giải theo css/style.css (→ css/assets/… 404, huy hiệu ải biến mất)
+    im.onload = () => { root.style.setProperty('--sk-' + name, `url("${new URL(src, document.baseURI).href}")`); if (cls) root.classList.add('sk-' + cls); };
     im.src = src;
   };
   for (const [name, cls] of UI_SKIN) one(assetSrc(`ui/${name}.png`), name, cls);
@@ -1229,7 +1230,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 179</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 180</div>
       </div></div>`;
   }
 
@@ -2008,7 +2009,7 @@ class UI {
       const chips = [
         `<span title="Giáp">${ic('giap', 'Giáp')}Giáp <b>${Math.round(b.armor)}</b></span>`, `<span title="Kháng phép">${ic('khang-phep', 'Kháng phép')}Kháng phép <b>${Math.round(b.mr)}%</b></span>`,
         `<span title="Tốc chạy">${ic('toc-chay', 'Tốc chạy')}Tốc <b>${Math.round(d.speed)}</b></span>`, `<span title="Vàng rơi khi hạ">${ic('tui-vang', 'Vàng rơi')}<b>${d.gold}</b></span>`,
-        el ? `<span style="color:${el.color}">${elIcon(b.el, 13)} Hành <b>${el.name}</b>${by ? ` · bị ${ELEMENTS[by].name} khắc` : ''}</span>` : '',
+        el ? `<span style="color:${el.color}">${elIcon(b.el, 13)} Hành <b>${el.name}</b>${by ? ` · ${ic('khac-che')}bị ${ELEMENTS[by].name} khắc` : ''}</span>` : '',
         b.enraged ? `<span style="color:#FF8A6A">${ic('noi-gian')}Đang hóa điên</span>` : '',
         ...st.map(([n, x]) => `<span class="fst">${ic(n)}${x}</span>`),
       ].filter(Boolean).join('');
@@ -2088,7 +2089,7 @@ class UI {
 
         ${skills}
         ${maxed ? `<button class="dk-up btn-gold" data-act="train" ${g.gold < tc ? 'disabled' : ''} aria-label="Luyện thể"><b>${uiIc('luyen-the')}Luyện thể ✦${(h.train || 0) + 1}</b><span>${coin(1)}${tc}</span></button>`
-          : `<button class="dk-up btn-gold" data-act="levelup" ${g.gold < lc ? 'disabled' : ''} aria-label="Nâng cấp tướng"><b>Lên cấp ${h.level + 1}</b><span>${coin(1)}${lc}</span></button>`}
+          : `<button class="dk-up btn-gold" data-act="levelup" ${g.gold < lc ? 'disabled' : ''} aria-label="Nâng cấp tướng"><b>${ic('cap-do')}Lên cấp ${h.level + 1}</b><span>${coin(1)}${lc}</span></button>`}
 `;
     }
     if (this.sig.deck !== key) {
@@ -2119,17 +2120,17 @@ class UI {
       // bảng chỉ số tướng: chỉ hiện khi đang giữ tay lên chân dung (v154)
       const sp = $('#hero-stats');
       if (this.statsOpen && !this.screen) {
-        const sk2 = `${h.id}|${h.level}|${h.tier}|${h.train}|${h.statPts}|${Object.values(h.skillLv).join()}|${SLOTS.map((x) => h.equip[x] ? h.equip[x].uid : '').join()}|${Math.round(h.hp)}`;
+        const sk2 = `${h.id}|${h.level}|${h.tier}|${h.train}|${h.statPts}|${Object.values(h.skillLv).join()}|${SLOTS.map((x) => h.equip[x] ? h.equip[x].uid : '').join()}|${Math.round(h.hp)}|${Math.round(h.shield || 0)}|${h.bogged ? 1 : 0}`;
         if (this.statsSig !== sk2 || sp.hidden) {
           this.statsSig = sk2;
           const S = heroStats(h);
           const row = (k, v, n) => `<div><span>${n ? ic(n) : ''}${k}</span><b>${v}</b></div>`;
-          sp.innerHTML = `<div class="hs-h">${HEROES[h.type].name} · cấp ${h.level} · ${'★'.repeat(h.tier || 0)} · ${ic('luc-chien')}lực chiến <b>${heroPower(h)}</b></div><div class="hs-g">`
+          sp.innerHTML = `<div class="hs-h">${HEROES[h.type].name} · cấp ${h.level} · ${'★'.repeat(h.tier || 0)} · ${ic('luc-chien')}lực chiến <b>${heroPower(h)}</b>${h.shield > 0 ? ` · ${ic('khien')}khiên <b>${Math.round(h.shield)}</b>` : ''}${h.bogged ? ` · ${ic('sa-lay')}sa lầy` : ''}</div><div class="hs-g">`
             + row('Sát thương', Math.round(S.damage), 'sat-thuong') + row('Tốc đánh', `${(1 / S.cooldown).toFixed(2)}/giây`, 'toc-danh') + row('Tầm đánh', Math.round(S.range), 'tam-danh')
             + row('Máu', `${Math.round(h.hp)}/${Math.round(S.hpMax)}`, 'mau') + row('Chí mạng', `${Math.round(S.crit)}% ×${S.critMult.toFixed(1)}`, 'chi-mang') + row('Giảm hồi chiêu', `${Math.round(S.cdr)}%`, 'hoi-chieu')
             + row('Giảm s.thương', `${Math.round(S.dr)}%`, 'giam-sat-thuong') + row('Năng lượng', Math.round(S.maxMana), 'nang-luong')
             + row(ATTRS.str.name, Math.round(S.str), 'suc-manh') + row(ATTRS.agi.name, Math.round(S.agi), 'nhanh-nhen') + row(ATTRS.int.name, Math.round(S.int), 'tri-tue')
-            + row('Điểm đã cộng', h.statPts || 0, 'diem-ky-nang') + '</div>';
+            + row('Hồi máu', `${S.regen.toFixed(1)}/giây`, 'hoi-mau') + row('Điểm đã cộng', h.statPts || 0, 'diem-ky-nang') + '</div>';
           sp.hidden = false;
         }
         this.placeStats(sp);
@@ -2352,7 +2353,7 @@ class UI {
         <div class="lg-now">${lv ? legacyPerText(sys, lv) : 'Chưa nâng'}${lv < LEGACY_MAX ? `<br><small>Cấp ${lv + 1}: ${legacyPerText(sys, lv + 1)}</small>` : ''}</div>
         ${sys.ms.map((m) => `<div class="lg-ms ${lv >= m.lv ? 'got' : ''}"><span>Cấp ${m.lv}</span>${esc(m.t)}</div>`).join('')}
         ${lv >= LEGACY_MAX ? '<div class="chip ok" style="text-align:center;margin-top:auto">Đã tối đa</div>'
-          : `<button class="btn btn-gold lg-buy" data-act="lg-buy" data-k="${sys.id}" ${kho < c ? 'disabled' : ''}>Nâng cấp ${lv + 1} · ${bac()} ${fmt(c)}</button>`}
+          : `<button class="btn btn-gold lg-buy" data-act="lg-buy" data-k="${sys.id}" ${kho < c ? 'disabled' : ''}>${ic('nang-cap')}Nâng cấp ${lv + 1} · ${bac()} ${fmt(c)}</button>`}
       </div>`;
     };
     $('#roster').innerHTML = `<div class="screen" style="z-index:auto;--elc:${elc}">
@@ -2440,7 +2441,7 @@ class UI {
         <div class="panel metal rn-det" style="--rc:${br.color}">
           <div class="rn-tv"><img src="${heroImgUrl(t, 'head')}" alt=""><div><b>${d.name}</b><small>${ic('tu-vi')}Tu Vi ${tl} · ${tuviRank(xp)}</small>
             <div class="rn-xp"><i style="width:${bar * 100}%"></i></div><small>${nx ? `${fmt(Math.floor(xp))} / ${fmt(nx)} — hạ quái bằng tướng này để lên bậc` : 'Đã đạt bậc cao nhất'}</small></div></div>
-          <div class="rn-pts">Điểm Ấn còn <b>${left}</b> / ${tuviPoints(xp)} <button class="btn ${this.runeResetArm ? 'btn-gold' : 'metal'}" data-act="rn-reset" ${runeSpent(lvs) ? '' : 'disabled'}>${this.runeResetArm ? 'Bấm lần nữa' : 'Tẩy ấn'}</button></div>
+          <div class="rn-pts">${ic('diem-an-phu')}Điểm Ấn còn <b>${left}</b> / ${tuviPoints(xp)} <button class="btn ${this.runeResetArm ? 'btn-gold' : 'metal'}" data-act="rn-reset" ${runeSpent(lvs) ? '' : 'disabled'}>${this.runeResetArm ? 'Bấm lần nữa' : 'Tẩy ấn'}</button></div>
           <div class="rn-dh"><span class="rn-big">${runeIc(r)}</span><div><b>${r.name}</b><small>${br.name} · ${r.skill ? 'Ấn kỹ năng · 3 điểm / cấp' : 'Ấn chỉ số · 1 điểm / cấp'} · cấp ${lv}/${r.max}</small></div></div>
           <div class="rn-lvs">${lines.join('')}</div>
           ${lv >= r.max ? '<div class="chip ok" style="text-align:center">Đã tối đa</div>'

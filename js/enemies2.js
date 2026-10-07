@@ -116,7 +116,7 @@ for (const id in ENEMY_EL) if (ENEMIES[id]) ENEMIES[id].el = ENEMY_EL[id];
 const ENEMY_W_EXTRA_V81 = { tomlua: 44, ranbang: 62, doima: 68, thachvang: 64, thietky: 70, camapden: 72, mucdoc: 46, cungtlua: 42,
   tuongthuy: 78, chanlua: 84, hoden: 92 };
 const ENEMY_W_EXTRA = { yeutinh: 34, ran: 60, doi: 66, thachtinh: 56, dacon: 24, linhan: 38, cungan: 38, kybinh: 64, voichien: 86,
-  camap: 66, muc: 42, cua: 58, cao: 40, chantinh: 104, daibang: 150, anvuong: 112, ngutinh: 140, hotinh: 112, trieuda: 60, ...ENEMY_W_EXTRA_V81 };
+  camap: 66, muc: 42, cua: 58, cao: 40, chantinh: 104, daibang: 150, anvuong: 112, ngutinh: 140, hotinh: 112, trieuda: 128, ...ENEMY_W_EXTRA_V81 };
 
 // ---------- bảng quân theo chương: base = quái thường; list = [đợt từ, ngưỡng xác suất cộng dồn, loại];
 // air = quái bay cho đợt bay (null: đợt bay thành đợt thường); champ = quái tinh anh đợt 5/15/25; fast = quái đi nhanh (giãn cách ngắn)
