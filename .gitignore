@@ -9,3 +9,4 @@ android/local.properties
 *.apk
 firebase-debug.log
 tests/gop-y/shots/
+tests/khung-do-hiem/shots/

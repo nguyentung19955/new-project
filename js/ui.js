@@ -500,7 +500,7 @@ class UI {
     const ctr = new Set(); try { const lv = LEVELS[g.level], R = ROSTERS[lv.roster || 'thuy']; for (const c of rosterCounters(R, Object.values(lv.bosses || {}), BASIC_HEROES, lv.hint).list) ctr.add(c.t); } catch (e) { /* bỏ qua */ }
     const ing = deckIngredients(this.save.owned || []);
     const card = (t) => { const d = HEROES[t], on = sel.includes(t);
-      return `<button class="dk-pick metal ${on ? 'on' : ''}" data-act="deck-tog" data-id="${t}" style="--c:${ELEMENTS[d.el].color}" data-tip="${esc(`<b>${esc(d.name)}</b><small>Hành ${ELEMENTS[d.el].name} · ${d.attack === 'melee' ? 'Cận chiến' : 'Đánh xa'}</small><p>${esc(d.title || '')}</p>${FUSION.filter((f) => f.a === t || f.b === t).map((f) => `<small>Hợp thể: + ${esc(HEROES[f.a === t ? f.b : f.a].name)} ➜ ${esc(HEROES[f.to].name)}</small>`).join('')}`)}">
+      return `<button class="dk-pick metal ${d.legend || 'common'} ${on ? 'on' : ''}" data-act="deck-tog" data-id="${t}" style="--c:${ELEMENTS[d.el].color}" data-tip="${esc(`<b>${esc(d.name)}</b><small>Hành ${ELEMENTS[d.el].name} · ${d.attack === 'melee' ? 'Cận chiến' : 'Đánh xa'}</small><p>${esc(d.title || '')}</p>${FUSION.filter((f) => f.a === t || f.b === t).map((f) => `<small>Hợp thể: + ${esc(HEROES[f.a === t ? f.b : f.a].name)} ➜ ${esc(HEROES[f.to].name)}</small>`).join('')}`)}">
         <img src="${heroImgUrl(t, 'head')}" alt=""><b>${esc(d.name)}</b>
         <span class="tg">${ctr.has(t) ? '<i class="c">khắc chế</i>' : ''}${ing.has(t) ? '<i class="h">hợp thể</i>' : ''}</span>${on ? `<span class="no">${sel.indexOf(t) + 1}</span>` : ''}</button>`; };
     const els = EL_ORDER.map((el) => `<div class="dk-el"><div class="dk-eh" style="color:${ELEMENTS[el].color}">${elIcon(el, 13)} ${ELEMENTS[el].name}</div>${BASIC_HEROES.filter((t) => HEROES[t].el === el).map(card).join('')}</div>`).join('');
@@ -574,7 +574,7 @@ class UI {
     const added = sel.filter((t) => !orig.includes(t)).length;
     const ing = deckIngredients(this.save.owned || []);
     const card = (t) => { const d = HEROES[t], on = sel.includes(t), nu = on && !orig.includes(t), gone = !on && orig.includes(t);
-      return `<button class="dk-pick metal ${on ? 'on' : ''} ${gone ? 'gone' : ''}" data-act="rest-tog" data-id="${t}" style="--c:${ELEMENTS[d.el].color}">
+      return `<button class="dk-pick metal ${d.legend || 'common'} ${on ? 'on' : ''} ${gone ? 'gone' : ''}" data-act="rest-tog" data-id="${t}" style="--c:${ELEMENTS[d.el].color}">
         <img src="${heroImgUrl(t, 'head')}" alt=""><b>${esc(d.name)}</b>
         <span class="tg">${nu ? '<i class="c">mới</i>' : gone ? '<i class="x">bỏ</i>' : ''}${ing.has(t) ? '<i class="h">hợp thể</i>' : ''}</span></button>`; };
     const els = EL_ORDER.map((el) => `<div class="dk-el"><div class="dk-eh" style="color:${ELEMENTS[el].color}">${elIcon(el, 13)} ${ELEMENTS[el].name}</div>${BASIC_HEROES.filter((t) => HEROES[t].el === el).map(card).join('')}</div>`).join('');
@@ -889,7 +889,7 @@ class UI {
           <button class="btn metal" style="margin-left:auto" data-act="set-feedback">✉ Góp ý</button></div>
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 152 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 153 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1527,7 +1527,7 @@ class UI {
       const maxed = h.level >= CONFIG.maxLevel;
       const tc = g.trainCost(h);
       html = `<button class="dk-x metal" data-act="deck-close" aria-label="Bỏ chọn">${ICON.close}</button>
-        <span class="dk-pt ${g.known.has('h.' + h.type) ? 'goldf' : ''}" ${assetUrl(`ui_khung-${h.from ? 'vang' : 'thuong'}.png`) ? `style="background-image:url('${assetUrl(`ui_khung-${h.from ? 'vang' : 'thuong'}.png`)}'),radial-gradient(circle at 50% 60%,#3A2416,#1A0F0A 75%);background-size:100% 100%,auto"` : ''}><canvas id="dk-portrait" width="108" height="116"></canvas><span class="lv">${h.level}${h.train ? `<i>✦${h.train}</i>` : ''}</span><span class="st" ${h.from ? 'style="color:#FF7A3A"' : ''}>${'★'.repeat(h.tier || 0)}</span></span>
+        <span class="dk-pt ${def.legend || 'common'} ${g.known.has('h.' + h.type) ? 'known' : ''}" ${assetUrl(`ui_khung-${def.legend === 'legendary' ? 'vang' : 'thuong'}.png`) ? `style="background-image:url('${assetUrl(`ui_khung-${def.legend === 'legendary' ? 'vang' : 'thuong'}.png`)}'),radial-gradient(circle at 50% 60%,#3A2416,#1A0F0A 75%);background-size:100% 100%,auto"` : ''}><canvas id="dk-portrait" width="108" height="116"></canvas>${g.known.has('h.' + h.type) ? '<i class="kn" title="Đã khám phá hiệu ứng ẩn">✦</i>' : ''}<span class="lv">${h.level}${h.train ? `<i>✦${h.train}</i>` : ''}</span><span class="st" ${h.from ? 'style="color:#FF7A3A"' : ''}>${'★'.repeat(h.tier || 0)}</span></span>
         <span class="dk-info" data-act="hero-stats" role="button" aria-label="Xem chỉ số"><span class="nm">${elIcon(def.el, 15)}${def.name}</span><span class="sub ${h.bogged || h.dead ? 'warn' : ''}">${status}</span>
           <span class="bar hp"><i id="dk-hp"></i></span><span class="bar mp"><i id="dk-mp"></i></span></span>
         ${ev && !this.statsOpen && this.moving < 0 ? `<button class="dk-evo ${HEROES[ev.f.to].legend} ${ev.need ? '' : 'go'}" data-act="evo-focus" data-i="${ev.i}" title="${esc(`${def.name} + ${HEROES[ev.pt].name} → ${HEROES[ev.f.to].name}${ev.need ? ' · ' + ev.need : ''}`)}">
@@ -1942,13 +1942,13 @@ class UI {
         <div class="ro-grid">${all.map((k) => {
           const h = HEROES[k];
           const lock = h.legend && !(this.save.owned || []).includes(k);
-          return `<button class="ro-card ${h.legend || ''} ${k === t ? 'on' : ''} ${lock ? 'lock' : ''} ${this.game.known.has('h.' + k) ? 'goldf' : ''}" data-act="ro-sel" data-type="${k}">${lock ? '<span class="ro-lock">🔒</span>' : ''}
+          return `<button class="ro-card ${h.legend || 'common'} ${k === t ? 'on' : ''} ${lock ? 'lock' : ''} ${this.game.known.has('h.' + k) ? 'known' : ''}" data-act="ro-sel" data-type="${k}">${lock ? '<span class="ro-lock">🔒</span>' : ''}${this.game.known.has('h.' + k) ? '<i class="kn" title="Đã khám phá hiệu ứng ẩn">✦</i>' : ''}
             <span class="tag el" style="color:${ELEMENTS[h.el].color}">${elIcon(h.el, 11)}${ELEMENTS[h.el].name}</span>
             <img src="${heroImgUrl(k)}" alt=""><span class="nm">${h.name}</span></button>`;
         }).join('')}</div>
         <div class="panel metal ro-det">
           <div class="ro-top">
-            <div class="ro-pic inset ${this.game.known.has('h.' + t) ? 'goldf' : ''}">${splash ? `<img src="${splash}" alt="">` : '<canvas id="ro-cv" width="300" height="300"></canvas>'}</div>
+            <div class="ro-pic inset ${d.legend || 'common'} ${this.game.known.has('h.' + t) ? 'known' : ''}">${this.game.known.has('h.' + t) ? '<i class="kn" title="Đã khám phá hiệu ứng ẩn">✦</i>' : ''}${splash ? `<img src="${splash}" alt="">` : '<canvas id="ro-cv" width="300" height="300"></canvas>'}</div>
             <div style="display:flex;flex-direction:column;gap:5px;min-width:0">
               <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="ttl" style="font-size:26px;line-height:1">${d.name}</span>
                 ${!d.legend ? '<span class="chip ok">Có sẵn</span>' : (this.save.owned || []).includes(t) ? `<span class="chip ok">✓ Đã sở hữu</span>${LEGACY[t] ? `<button class="btn btn-gold" style="height:32px;padding:0 12px;font-size:14px" data-act="lg-open" data-type="${t}">⚜ Thần Khí · ${this.legacyPts(t)}/${LEGACY_MAX * 3}</button>` : ''}`

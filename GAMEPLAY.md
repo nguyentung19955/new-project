@@ -1420,3 +1420,16 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - **Lệnh cắt mới:** `python3 tools/cat-sheet.py <ảnh> <mã> hero12` (tướng) · `… enemy6` (quái) · `… boss9` (boss); lệnh cắt ghi ngay dưới tên mỗi khối prompt. Lệnh cắt tự: chép khung đại diện sang tên cũ (`idle`, `front`, `wind`, `strike`, `cast`; `walk1`, `walk2`, `attack`, `rage`) để mọi chỗ cũ vẫn chạy; ghi số khung vào dòng `PACK_FRAMES` trong `js/render.js` (sau đó tăng phiên bản game); với `hero12` tạo `assets/packs/<mã>/.v2` để ẩn prompt vẽ lại. Bộ cũ (`hero`, `enemy`, `boss`, `boss4`) vẫn dùng được.
 - **Game phát khung** (`js/render.js`): tướng đứng thở đi qua lại 1-2-3-2 (~5,5 khung/giây), đánh theo pha đòn (chuẩn bị → vung → trúng → thu về), tung chiêu lặp 3 khung, trúng đòn hiện khung bị đánh, thắng trận hiện khung ăn mừng / tung chiêu; quái đi 4 khung, đánh theo thời điểm ra đòn, boss nổi giận 2 khung. Mỗi khung căn chân riêng (footK v137). Khung tải lười (lần đầu cần động tác nào mới tải động tác đó), có cache; thiếu khung nào thì dùng ảnh cũ như trước.
 - Test: `node tests/khung-chuyen-dong/khung-chuyen-dong.test.js` (tạo tấm giả bằng PIL → cắt bằng `hero12` / `enemy6` / `boss9` vào thư mục tạm → game phát đúng thứ tự khung, thiếu khung thì dùng bộ cũ, chơi thật vài giây không lỗi trang).
+## Phiên bản 151 — Khung theo độ hiếm
+- Người chơi báo "khung tướng thường trông vàng y tướng vàng": trước đây mọi thẻ ở màn **Anh Hùng Văn Lang** có viền vàng sáng (lớp `.goldf` gán theo *đã khám phá hiệu ứng ẩn*, cộng viền mặc định #B8853A), nên không phân biệt được bậc.
+- Khung/viền giờ theo độ hiếm, thống nhất toàn game (màu từ `RARITY` / biến CSS `--r-com`, `--r-epic`, `--r-legend`):
+  - **Thường:** viền đồng/nâu trầm #8A5A2A, **không phát sáng**.
+  - **Tím (Sử thi):** viền tím #A86CE0 + quầng tím nhẹ.
+  - **Vàng (Huyền thoại):** viền vàng #F0A030 + quầng vàng — chỉ bậc này được sáng vàng.
+- **Đang chọn:** viền sáng hơn cùng màu bậc + vòng trong (Thường: đồng sáng #B97A45, không quầng ngoài; Tím/Vàng: quầng đậm hơn).
+- **Đã khám phá hiệu ứng ẩn** (ý nghĩa cũ của khung vàng): nay là dấu **✦** xanh ngọc nhỏ ở góc thẻ / ảnh chi tiết / chân dung trong trận. Tướng chưa sở hữu vẫn làm xám ảnh + 🔒.
+- Áp dụng ở: lưới thẻ + ảnh chi tiết màn Anh Hùng (thêm vạch màu bậc trên tên thẻ), cây **Phát triển thành** (chân dung Thường viền đồng, chân dung đang xem không sáng vàng), bảng **Chọn đội** và **Nghỉ chân** (thẻ đang chọn viền đồng sáng, số thứ tự nền đồng), chân dung tướng đang chọn trong trận (khung ảnh vàng chỉ dùng cho tướng Huyền thoại), thẻ Đền Anh Hùng. Thẻ chợ tướng giữ viền màu hệ (chợ chỉ có tướng Thường).
+- Test: `node tests/khung-do-hiem/khung.test.js` (đọc viền/bóng tính toán của thẻ Thường/Tím/Vàng, ảnh chi tiết, cây phát triển, chọn đội, chân dung trong trận; 844×390 / 667×375 / xoay dọc). Ảnh `tests/khung-do-hiem/shots/` không commit; ảnh mẫu trước/sau `tests/khung-do-hiem/truoc-sau.png`.
+
+## Phiên bản 153 — Gộp khung theo độ hiếm
+- Gộp nhánh khung theo độ hiếm (v151) vào sau v152.
