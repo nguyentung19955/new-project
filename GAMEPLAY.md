@@ -1560,3 +1560,7 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 165 — Gộp màn xem góp ý (quản trị) + báo lỗi chơi nhóm rõ ràng
 - Gộp: màn "📥 Góp ý nhận được" chỉ cho tài khoản quản trị (luật Firestore isAdmin), chơi nhóm báo đúng nguyên nhân khi tạo/vào phòng lỗi + nút Thử lại.
+## Phiên bản 164 — Bảng cảm ơn sau khi gửi góp ý
+- Bấm **Gửi** trong bảng Góp ý → thay toast bằng **bảng cảm ơn**: biểu tượng mặt trống đồng (SVG), "Cảm ơn góp ý của bạn!", "Đội ngũ Thần Thoại Việt sẽ đọc và hoàn thiện game để mang lại trải nghiệm tốt hơn." và dòng trạng thái: *✓ Góp ý đã được gửi tới đội làm game* hoặc *Đang không có mạng — góp ý đã được lưu và sẽ tự gửi khi có mạng*.
+- Bảng không tự đóng; **Đóng** (hoặc Esc) → về lại menu / Cài đặt / trận; đang trong trận thì trận vẫn tạm dừng tới khi bấm Đóng rồi chạy tiếp như trước.
+- Test: `tests/gop-y/gop-y.test.js` thêm kiểm tra bảng cảm ơn (gửi được / ngoại tuyến / Firestore lỗi), không tự đóng, Đóng thì trận chạy tiếp, không tràn ở 844×390 / 667×375 / xoay dọc.

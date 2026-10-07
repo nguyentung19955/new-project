@@ -1264,7 +1264,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 165 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 164 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1397,11 +1397,22 @@ class UI {
     const sent = await this.fbTry(item);
     if (!sent) { const s2 = this.fbStore(); s2.queue.push(item); while (s2.queue.length > FB_QUEUE) s2.queue.shift(); this.fbWrite(s2); }
     this.fb = null;
-    $('#feedback').hidden = true;
-    if (this.fbResume && this.game.started && !this.game.over && $('#settings').hidden) this.game.running = true;
-    this.fbResume = false;
-    if (sent) { this.toast('<b>Cảm ơn bạn đã góp ý!</b> Đội làm game sẽ đọc sớm 💌', '#6AE06A'); this.fbFlush(); }
-    else this.toast('<b>Đã lưu góp ý</b>, sẽ gửi khi có mạng', '#F2D27A');
+    this.fbThanks(sent);   // v164: bảng cảm ơn (trận vẫn tạm dừng tới khi bấm Đóng)
+    if (sent) this.fbFlush();
+  }
+  // v164: bảng cảm ơn sau khi gửi — không tự đóng; Đóng / Esc → fbClose() (trận đang chạy thì chạy tiếp như trước)
+  fbThanks(sent) {
+    const drum = `<svg class="fb-ty-ic" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#5A3A14" stroke="#F2D27A" stroke-width="2"/>
+      <circle cx="32" cy="32" r="22" fill="none" stroke="#D9B25A" stroke-width="1.5"/><circle cx="32" cy="32" r="15" fill="none" stroke="#B8852A" stroke-width="1.2" stroke-dasharray="2 2"/>
+      <path d="${Array.from({ length: 12 }, (_, i) => { const a = i * Math.PI / 6, b = a + Math.PI / 12; return `M32 32L${(32 + 10 * Math.cos(a - Math.PI / 12)).toFixed(1)} ${(32 + 10 * Math.sin(a - Math.PI / 12)).toFixed(1)}L${(32 + 4 * Math.cos(b)).toFixed(1)} ${(32 + 4 * Math.sin(b)).toFixed(1)}Z`; }).join('')}" fill="#FFE29A"/>
+      <circle cx="32" cy="32" r="3" fill="#FFF1C4"/></svg>`;
+    $('#feedback').innerHTML = `<div class="fb-box fb-thanks metal" role="dialog" aria-label="Cảm ơn góp ý">
+      ${drum}<b class="ttl">Cảm ơn góp ý của bạn!</b>
+      <p>Đội ngũ Thần Thoại Việt sẽ đọc và hoàn thiện game để mang lại trải nghiệm tốt hơn.</p>
+      <small class="fb-ty-st ${sent ? 'ok' : 'off'}">${sent ? '✓ Góp ý đã được gửi tới đội làm game' : 'Đang không có mạng — góp ý đã được lưu và sẽ tự gửi khi có mạng'}</small>
+      <button class="btn btn-gold title" data-act="fb-close">Đóng</button></div>`;
+    $('#feedback').hidden = false;
+    const b = $('#feedback [data-act=fb-close]'); if (b) b.focus();
   }
   // gửi 1 góp ý; quá 12 giây chưa xong thì coi như chưa gửi (nếu sau đó gửi được thì tự gỡ khỏi hàng đợi)
   fbTry(item) {
