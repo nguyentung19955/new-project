@@ -2018,7 +2018,7 @@ const PATH_SHAPES = {
 // ============================================================
 const ENDLESS_STAGES = {
   // thứ tự ải nguồn: chủ đề xen nhau (sông → rừng → đồng → biển → hang → đầm → thành …)
-  order: [0, 8, 11, 13, 10, 3, 15, 9, 12, 16, 2, 6, 14, 1, 4, 5, 7],
+  order: [0, 8, 11, 13, 10, 3, 15, 9, 12, 16, 2, 6, 1, 4],   // bỏ ải trùng bản đồ (5, 14 = song4; 7 = song1)
   normal: ['zigzag', 'uonkhuc', 'caucheo', 'vongve', 'bacthang', 'chianhanh', 'xoanoc'],
   hard: ['haicong', 'duongtat'],
   hardFrom: 60,     // đợt cao: màn lẻ dùng dạng khó

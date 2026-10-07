@@ -2763,6 +2763,7 @@ class Game {
     this.tempFlood = CONFIG.slots.map(() => 0);
     this.updateAuras();
     if (quiet) return true;
+    this.stageFade = true;   // main.js: nền cũ mờ dần sang nền mới
     this.nextWaveT = Math.max(this.nextWaveT, CONFIG.waveBreak + 10);   // thêm thời gian xếp lại tướng (kéo đổi ô miễn phí)
     const name = this.placeName() + (st.shape ? ` · ${PATH_SHAPES[st.shape].name}` : '');
     this.notify(`Sang vùng đất mới: ${name}${moved ? ` · ${moved} tướng dời sang ô gần nhất` : ''}${lost ? ` · ${lost} tướng hết chỗ, hoàn ${refund} vàng` : ''}`, '#9EDDF2');

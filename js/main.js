@@ -272,8 +272,9 @@ function cachedBackdrop(s) {
   const key = `${canvas.width}x${canvas.height}|${view.ox}|${view.oy}|${px()}|${MAP_ID}|${game.level}`;
   if (bgCache.key !== key || refs.some((r, i) => r !== bgCache.refs[i])) {
     // vô tận sang màn mới (cùng trận, cùng cỡ màn): giữ nền cũ để mờ dần sang nền mới
-    const pk = bgCache.key.split('|');
-    if (bgCache.c && pk[4] && pk[4] !== MAP_ID && pk[5] === String(game.level) && pk[0] === `${canvas.width}x${canvas.height}` && game.started) startPathFade();
+    // (chỉ khi đổi màn trong trận — game.stageFade do setStage bật; nạp trận / vào trận mới thì không)
+    if (game.stageFade && bgCache.c && bgCache.c.width === canvas.width && bgCache.c.height === canvas.height) startPathFade();
+    game.stageFade = false;
     const c = bgCache.c || (bgCache.c = document.createElement('canvas'));
     c.width = canvas.width; c.height = canvas.height;
     drawBackdrop(c.getContext('2d'), s, false);
@@ -285,7 +286,7 @@ function cachedBackdrop(s) {
 // Vô tận đổi đường: chụp nền cũ, vài khung sau phủ lên nền mới rồi mờ dần (1,6 giây)
 let pathFade = null;
 function startPathFade() {
-  if (!bgCache.c || !bgCache.c.width) return;
+  if (!bgCache.c || !bgCache.c.width) return;   // (bgCache.c lúc này còn là nền của màn cũ)
   const c = document.createElement('canvas');
   c.width = bgCache.c.width; c.height = bgCache.c.height;
   c.getContext('2d').drawImage(bgCache.c, 0, 0);

@@ -219,7 +219,7 @@ fs.mkdirSync(SHOT, { recursive: true });
         seed = 777;
         game.reset(lv); game.endless = true; game.started = true; game.running = true;
         game.wave = w0; game.stageTick = () => {};
-        if (shape) game.setStage({ k: 1, lv, shape, at: 0 });
+        game.setStage({ k: 1, lv, shape, at: 0 });   // cùng bộ quái của ải cho mọi dạng (cả đường gốc: shape null)
         const cov = CONFIG.slots.map(([x, y], i) => { let c = 0; PATH.lanes.forEach((_, li) => { for (let d = 0; d < PATH.total; d += 8) { const p = PATH.at(d, li); if (Math.hypot(p.x - x, p.y - y) <= 190) c += 8; } }); return [c / PATH.lanes.length, i]; }).sort((a, b) => b[0] - a[0]);
         game.gold = 1e9;
         ARMY.forEach((t, k) => { const slot = cov[k][1]; game.placeHero(slot, t); const h = game.heroes[slot]; h.tier = 3; for (let i = 1; i < 20; i++) game.levelUp(h); h.hp = heroStats(h).hpMax; });
@@ -296,6 +296,7 @@ fs.mkdirSync(SHOT, { recursive: true });
     const after = await page.evaluate(() => ({ id: MAP_ID, k: game.stage.k, lv: game.stage.lv, wave: game.wave, ro: rosterKeyOf(rosterFor(game.wave + 1, game.level, game.stLv())), hp: game.pathHp,
       heroes: game.heroes.map((h, i) => h && `${i}:${h.type}`).filter(Boolean).join(' '), saved: ui.save.run && ui.save.run.mapId, savedStage: ui.save.run && ui.save.run.stage && ui.save.run.stage.k }));
     ok(JSON.stringify(after) === JSON.stringify(before), `Tiếp tục: cùng bản đồ ${after.id}, bộ quái ${after.ro}, đợt ${after.wave}, ô tướng ${after.heroes}`);
+    ok(await page.evaluate(() => { render(); return !pathFade; }), 'Tiếp tục: không chạy chuyển cảnh (chỉ chạy khi đổi màn trong trận)');
     await page.screenshot({ path: path.join(SHOT, 'tiep-tuc-844x390.png') });
     // bản lưu cũ (không có trường màn): đợt 35, tướng trên bản đồ gốc → suy ra màn từ số đợt, không lỗi
     await page.evaluate(() => {

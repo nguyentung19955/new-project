@@ -2115,51 +2115,23 @@ Test: `node tests/run-all.js` đạt (tu-cu-dong: mẫu trang thử đổi xathu
 
 - Gộp claude/dung-anh-co-san: đồng xu, nén bạc, tim mạng, icon ngăn kéo, Lò đúc, Bách khoa, rương rơi đồ… dùng ảnh thật.
 
-## claude/duong-di-moi — Dạng đường mới + Vô tận đổi đường mỗi 10 đợt từ đợt 60
+## claude/duong-di-moi — Dạng đường mới + Vô tận theo màn (đổi vùng đất sau mỗi boss)
 
-- **Trước đây:** 14 bản đồ (MAPS, data.js) đều là đường cong SVG một nhánh, từ trái sang thành bên phải (trừ Cổ Loa xoắn vào giữa); nhiều ải dùng chung đường (song4 ×3, song1 ×2, song5 = rung2). Đường vẽ theo chủ đề (maps.js: nước / đất / đá / đê / cát / gạch).
+- **Trước đây:** 14 bản đồ (MAPS, data.js) đều là đường cong SVG một nhánh, từ trái sang thành bên phải (trừ Cổ Loa xoắn vào giữa); nhiều ải dùng chung đường (song4 ×3, song1 ×2, song5 = rung2). Vô tận phải chọn 1 trong 17 bản đồ và chơi mãi trên bản đồ đó.
 - **9 dạng đường mới** (`PATH_SHAPES`, data.js; điểm gấp bo góc bằng `rpath` → M / L / C; `sampleSvgPath` hiểu thêm lệnh L):
-  - `zigzag` **Đê zíc-zắc** (gấp khúc nhọn, ô trong khúc gấp đánh hai phía) · `uonkhuc` **Đê uốn khúc** (lên xuống như khúc ruột) · `caucheo` **Cầu tre bắc chéo** (vòng một vòng rồi đi qua **cầu tre** bắc ngang chính nó — cầu vẽ tự động ở chỗ đường tự cắt, đá/gạch thì cầu đá) · `vongve` **Khúc quanh chữ U** (quay về thành bên trái) · `bacthang` **Ruộng bậc thang** (hai bậc góc vuông);
-  - `chianhanh` **Ngã ba chia nhánh** (2 nhánh quanh cồn đất rồi nhập lại) · `xoanoc` **Xoắn ốc Cổ Loa** (cuộn vào thành giữa bản đồ);
+  - `zigzag` **Đê zíc-zắc** (gấp khúc nhọn, ô trong khúc gấp đánh hai phía) · `uonkhuc` **Đê uốn khúc** · `caucheo` **Cầu tre bắc chéo** (vòng một vòng rồi đi qua **cầu tre** bắc ngang chính nó — cầu vẽ tự động ở chỗ đường tự cắt; hang / thành thì cầu đá) · `vongve` **Khúc quanh chữ U** (quay về thành bên trái) · `bacthang` **Ruộng bậc thang** (hai bậc góc vuông) · `chianhanh` **Ngã ba chia nhánh** (2 nhánh quanh cồn đất rồi nhập lại) · `xoanoc` **Xoắn ốc Cổ Loa** (cuộn vào thành giữa bản đồ);
   - dạng khó: `haicong` **Hai cửa giặc** (2 cổng vào cùng lúc, nhập một đường) · `duongtat` **Đường tắt hang ngầm** (quái chui lên từ miệng hang giữa đồng, đường rất ngắn).
-  - Mọi dạng nằm trong vùng an toàn: tim đường y ∈ [125, 312] (thiết kế 932×430), không vào cột nút phải (x > 865, y > 235); thành không đè thanh trên / hàng thẻ.
-- **Nhiều nhánh** (`MAPS[id].lanes`, `CONFIG.paths`): `PATH.lanes`, `PATH.at(d, nhánh)` (quãng đường mọi nhánh quy về độ dài nhánh 0 — các nhánh dài lệch < 1%), quái đầu đợt chia lượt từng nhánh (`e.lane`), quái đẻ / tách ra theo nhánh con mẹ; vật chặn đường + vệt lửa vẽ và tác dụng trên mọi nhánh; `distToPath` / `PATH.distOf` xét mọi nhánh. Cửa vào: mỗi cổng một cặp cột mốc.
-- **Vô tận đổi đường** (`endlessPathFor(wave, level)`, `endlessPathStage(wave)`, `ENDLESS_PATH` — data.js; dùng chung mốc cho sự kiện thử thách): đợt < 60 đường gốc; 60–99 lần lượt 4 dạng dễ/vừa (xoay theo bản đồ), 100–129 chia nhánh / xoắn ốc / bậc thang, từ 130 xen kẽ dạng khó với dạng khác (hai mốc liền nhau luôn khác dạng). Bản đồ đổi đường có id `gốc~dạng` (`mapVariant`), giữ chủ đề + nền của bản đồ gốc.
-  - Đổi lúc **xong đợt trước mốc** (sân đã hết quái; gọi sớm vượt mốc thì đổi khi đợt gộp xong). Báo trước một đợt; lúc đổi: banner "Quân giặc đổi đường" + mô tả, nền cũ **mờ dần** sang nền mới (1,6 giây), thêm 5 giây nghỉ để xếp lại tướng.
-  - **Tướng:** ghép tướng ↔ ô mới theo khoảng cách gần nhất (ô trùng chỗ thì đứng yên, còn lại dời sang ô gần nhất, có vệt bay); hết ô → **hoàn trọn số vàng đã bỏ vào tướng**, đồ đang mặc về túi.
-  - Lưu / nạp giữa trận giữ đúng đường (`pathShape`, `pathHp` trong snapshot). Chơi nhóm (Cùng Giữ Thành) **không** đổi đường (ô đã chia theo người chơi).
-- **Cân bằng** (`mapExposure` / `pathHpFor`, game.js): máu quái × (độ phơi đường mới / đường gốc)^0,5 × độ khó dạng, kẹp 0,8–1,4. Độ phơi = tổng quãng đường quái đi trong tầm 190 của 10 ô phủ đường tốt nhất (trung bình theo nhánh). Mô phỏng trận (đội 8 tướng ★3 cấp 20 đặt ô tốt nhất, 3 đợt): bù tuyến tính (^1) làm đường dài khó hơn đường gốc (vd chữ U 47% máu quái lọt so với 15%) → chọn ^0,5: dạng thường lọt ~0,5–1,4 lần đường gốc, Ngã ba chia nhánh hệ số 0,85 (chia nhánh làm tướng đứng một bên rảnh tay), dạng khó ×1,12 (lọt ~1–2 lần). Ví dụ Bến Sông Đà: zíc-zắc ×1,22, uốn khúc ×1,19, cầu tre ×1,29, chữ U ×1,27, chia nhánh ×0,82, xoắn ốc ×1,18, bậc thang ×1,07, hai cửa ×1,09, đường tắt ×1,11.
+  - Vùng an toàn: tim đường y ∈ [125, 312] (thiết kế 932×430), không vào cột nút phải (x > 865, y > 235); thành không đè thanh trên / hàng thẻ / cột nút.
+- **Nhiều nhánh** (`MAPS[id].lanes`, `CONFIG.paths`): `PATH.lanes`, `PATH.at(d, nhánh)` (quãng đường mọi nhánh quy về độ dài nhánh 0 — các nhánh dài lệch < 1%), quái đầu đợt chia lượt từng nhánh (`e.lane`), quái đẻ / tách ra theo nhánh con mẹ; vật chặn đường + vệt lửa vẽ và tác dụng trên mọi nhánh; `distToPath` / `PATH.distOf` xét mọi nhánh. Mỗi cổng vào một cặp cột mốc.
+- **Vô tận theo màn** (yêu cầu bổ sung của người dùng):
+  - Chọn chế độ **Vô Tận → vào trận luôn** ở màn đầu (Bến Sông Đà, đường gốc) — bỏ bước chọn bản đồ; nút **🔥 Khó** chuyển vào màn Chuẩn bị xuất quân; bỏ nút "Bản đồ" ở Tạm dừng / Kết quả (Chơi lại = trận mới từ màn đầu); nút menu "Chơi mới (chọn bản đồ)" → "Chơi mới". Màn chọn bản đồ (`showCampaign`) không còn đường vào từ Vô tận.
+  - **Sau mỗi đợt boss** (đợt 10, 20, 25, 30, 40, …) sang **màn mới**: bản đồ + nền chủ đề + **bộ quái và boss** của một ải khác (`ENDLESS_STAGES.order`: sông → rừng → đồng → biển → hang → đầm → Cổ Loa → …, bỏ ải trùng bản đồ) + dạng đường (cứ 3 màn có 1 màn dùng đường gốc của ải đó, còn lại lần lượt 7 dạng thường; **từ đợt 60** màn lẻ dùng dạng khó Hai cửa giặc / Đường tắt). Đợt boss vẫn theo lịch của trận; quái / boss lấy theo màn (`bossAt / rosterFor / waveKind / buildWave(n, level, st)`; game: `stLv()`, `placeName()`).
+  - `endlessStage(k, wave, start)`, `endlessStageAt(wave, start)` (màn là hàm của số đợt), `stageMapId(st)`; game: `stageTick()` (gọi khi xong đợt — sân đã hết quái, gọi sớm vượt boss vẫn đổi khi đợt gộp xong), `setStage(st)`.
+  - **Chuyển cảnh:** đổi màn lúc xong đợt boss — thường lúc bảng Sính lễ đang mở; banner "Màn N · vùng đất mới" + tên dạng đường / mô tả hiện khi đóng bảng Sính lễ (hoặc ngay nếu đã đóng); nền cũ mờ dần sang nền mới (1,6 giây); thêm 10 giây nghỉ để kéo đổi ô tướng (miễn phí) trước đợt kế; bảng "Bộ quái mới" báo quân của màn.
+  - **Tướng:** ghép tướng ↔ ô mới theo khoảng cách gần nhất (dời sang ô gần nhất, có vệt bay); chỉ khi số tướng > số ô mới thì tướng thừa được **hoàn trọn số vàng đã bỏ vào** (giá + nâng cấp), đồ đang mặc về túi.
+  - **Lưu tiến trình:** bản lưu ghi `stage` {k, lv, shape}, `mapId`, `pathHp`, đợt → Tiếp tục vào đúng bản đồ / đường / nền / bộ quái. Bản lưu cũ (không có `stage`) → suy ra màn từ số đợt (`endlessStageAt`), dời tướng sang bản đồ của màn (im lặng). Nút Tiếp tục ở menu ghi tên vùng đất đang chơi. (Trận đơn không có hạt giống ngẫu nhiên — đợt kế rút lại khi nạp như trước.)
+  - Chơi nhóm (Cùng Giữ Thành) **giữ nguyên** bản đồ của phòng (ô đã chia theo người chơi).
+  - Sự kiện thử thách mỗi 10 đợt từ đợt 60 (nhánh claude/vo-tan-su-kien) độc lập với việc đổi màn — nhánh này không sửa chỗ đó.
+- **Cân bằng** (`mapExposure` / `stageHpFor`, game.js): máu quái của màn × (độ phơi bản đồ màn / bản đồ màn đầu)^0,5 × độ khó dạng (khó ×1,12; Ngã ba chia nhánh ×0,85), kẹp 0,8–1,4. Độ phơi = tổng quãng đường quái đi trong tầm 190 của 10 ô phủ đường tốt nhất (trung bình theo nhánh). Mô phỏng trận (đội 8 tướng ★3 cấp 20 đặt ô tốt nhất, 3 đợt, cùng bộ quái): bù tuyến tính (^1) làm đường dài khó hơn đường gốc (chữ U lọt 47% máu quái so với 15%) → chọn ^0,5: dạng thường lọt ~0,5–1,4 lần đường gốc, dạng khó ~1–2 lần. Ví dụ từ Bến Sông Đà: zíc-zắc ×1,22, uốn khúc ×1,19, cầu tre ×1,29, chữ U ×1,27, chia nhánh ×0,82, xoắn ốc ×1,18, bậc thang ×1,07, hai cửa ×1,09, đường tắt ×1,11, Cổ Loa gốc ×1,22.
 - Kim Quy Hộ Thành + thành Phong Châu vẽ tay đặt theo vị trí thành của bản đồ (không cố định góc phải).
-- Test: `node tests/duong-di-moi/duong-di-moi.test.js` — hình học (liền mạch, cuối đường sát thành, nhánh đều, vùng an toàn, ≥ 12 ô, ô không đè đường), thứ tự đổi đường tới đợt 260, quái đi hết đường ở mọi dạng + mọi nhánh, tua 1 → 200 ở 3 bản đồ (chạy thật đợt 60, 70, … 200), đầy sân → hoàn vàng, lưu / nạp, chơi nhóm, mô phỏng cân bằng, không đè giao diện ở 1920×934 / 844×390 / 667×375 + ảnh từng dạng (cả dọc 390×844) ở `tests/duong-di-moi/shots/`.
-## claude/bo-chon-doi — Bỏ phần chọn đội (chợ tướng đã rút ngẫu nhiên)
-
-Chợ tướng đã rút từ mọi tướng Thường đã mở khoá, nên đội 6 tướng ("đội ưu tiên" ×2) không còn ý nghĩa — bỏ hẳn:
-
-- **Màn Chuẩn bị:** bỏ khối "Đội ưu tiên · 6 tướng", nút "✎ Chọn đội" và bảng chọn đội (Gợi ý / Xong, thẻ khoá). Màn vẫn giữ vì còn **Hậu cần** (Lương thảo, Hũ đồng, Hũ Vua Hùng, Đắp thành, Lò đúc đồng), tướng Tím/Vàng đã sở hữu và **Tướng khắc chế** — không trống, không thừa nút.
-- **Nghỉ chân** (sau đợt boss, dừng trận để đổi tối đa 2 tướng trong đội) chỉ dùng để đổi đội → **bỏ hẳn**: hạ boss xong trận chạy tiếp. Bỏ `restDeck` / `skipRest`, khung `#rest`, `REST_SWAPS`, `REST_COOP_T`.
-- **Code:** bỏ `suggestDeck`, `validDeck`, `deckIngredients`, `DECK_SIZE` (thay bằng `MIN_COMMONS` cho `openCommons`), `game.summonList()` (Triệu hồi ngẫu nhiên / gợi ý bộ quái mới dùng `game.marketPool()`), `MARKET_W.doi`. CSS bảng chọn đội (`.dk-modal`, `.dk-pick`…) xoá theo.
-- **Bản lưu:** trận đã lưu không còn `deck` / `rest` / `restWave`; bản lưu cũ có các trường này (kể cả đang mở Nghỉ chân) → bỏ qua, trận chạy tiếp bình thường. `save.deck` cũ để yên, không đọc nữa.
-- **Chơi nhóm:** bỏ lệnh `restDeck` / `skipRest`, bỏ `deck` khỏi ví riêng mỗi người (`CO_KEYS`), khỏi dòng băm trạng thái và khỏi thông tin người chơi gửi lên phòng.
-- **Chữ:** "Mở khoá để chọn vào đội triệu hồi" → "Mở khoá để ra trong chợ tướng khi chơi"; mở khoá tướng Thường báo "Giờ đã ra trong chợ tướng khi chơi".
-
-**Chợ tướng:** trọng số còn thường ×1 · đang ghép dở ×5 · nguyên liệu hợp thể còn thiếu ×12 (không đổi); giữ bảo hiểm (2 lần trượt → lần sau chắc chắn có), giới hạn bản sao (đủ ★★★ thì thôi ra), 🔒 khoá chợ. Trước đây nguyên liệu hợp thể chỉ được ưu tiên khi nằm trong đội hoặc đã có trên sân (để khỏi loãng); hết đội nên thay bằng **giới hạn `MARKET_HOP = { max: 2, off: 1 }`**: tối đa 2 nguyên liệu được ưu tiên cùng lúc, trong đó tối đa 1 loại chưa có trên sân; xếp hạng: đã có trên sân → bên kia nhiều bản sao hơn → bên thiếu nhiều bản sao hơn → thứ tự công thức.
-
-Mô phỏng `node tests/cho-tuong/ti-le-sim.js 4000` (4000 lần ↻ mỗi tình huống, seed cố định; sở hữu đủ 20 tướng Thường + tướng Tím của tình huống; "trước" = mã phiên bản 194 chạy cùng mô phỏng):
-
-| Tình huống | Chỉ số | Trước (đội ưu tiên ×2) | Sau (bỏ đội) |
-|---|---|---|---|
-| Đầu trận (1 tướng ★) | ≥1 thẻ tướng đang có | 58.8% | **65.0%** |
-| | thẻ là tướng đang có | 18.7% | 21.6% |
-| | trượt liền dài nhất | 2 | 2 |
-| Giữa trận (7 tướng, 5 loại) | ≥1 thẻ tướng đang có | 97.7% | **98.0%** |
-| | ≥1 thẻ ghép ngay (trùng ★) | 92.8% | 93.4% |
-| | trượt liền dài nhất | 1 | 2 |
-| Thiếu nguyên liệu (Ngư Phủ ★★ → cần Thần Sương, có Cá Ông) | ra đúng nguyên liệu | 68.1% | **68.1%** |
-| | trượt liền dài nhất | 2 | 2 |
-| Giữa trận, sở hữu MỌI tướng Tím/Vàng | ≥1 thẻ tướng đang có | 97.7% | 93.0% |
-| | trượt liền dài nhất | 1 | 3 |
-
-Tỉ lệ ra đúng tướng cần không giảm (đầu trận còn tăng vì 14 tướng ngoài đội cũ không còn bị lép ×1 so với ×2) → **giữ nguyên trọng số ×5 / ×12**. Riêng người đã sở hữu mọi tướng Tím: chợ giờ chủ động đẩy 1 nguyên liệu hợp thể chưa có trên sân (trước bị đội chặn), nên thẻ "tướng đang có" giảm nhẹ — đúng ý (giúp hợp thể), có giới hạn `off: 1` để không loãng (không giới hạn: 87.6%, trượt liền 5). Dò thêm ×6/×12 và ×7/×14: tăng ra tướng đang có nhưng giảm ra nguyên liệu thiếu (64.9–65.4%) → không dùng.
-
-Test: cập nhật `cho-tuong` (màn Chuẩn bị không còn chọn đội, sau boss không Nghỉ chân, bản lưu cũ có đội/Nghỉ chân vẫn chạy), `ti-le` (trọng số không còn ×2, giới hạn nguyên liệu ưu tiên, tình huống sở hữu mọi Tím), `ngan-kho`, `khung-do-hiem`, `vo-tan`, `icon-nho`, `duong-quai`, `hop-the/mo-phong`, `coop/test-lockstep`, `coop/test-solo`.
-- Sửa theo tester (sau v195): đồng xu bay khi hạ quái ~16 px CSS, rương rơi đồ ~30 px CSS (cỡ tính theo `view.scale`, không nhỏ lại trên điện thoại), quầng tròn + viền vòng đậm màu độ hiếm (xám / xanh / tím / cam) nhấp nháy nhẹ, chỉ mờ ở cuối. Icon tựa màn thua chương Sơn Tinh "Phong Châu thất thủ": thay mũi tên sóng (`ic-nuoc-dang`, trông như biểu đồ tăng) bằng cổng thành `tiles/cong-phong-chau.png` chìm trong 2 ngọn sóng `ic-hanh-thuy`.
+- Test: `node tests/duong-di-moi/duong-di-moi.test.js` — hình học (liền mạch, cuối đường sát thành, nhánh đều, vùng an toàn, ≥ 12 ô, ô không đè đường), thứ tự màn (đổi đúng sau boss, màn liền nhau khác bản đồ, dạng khó từ đợt 60, đủ 9 dạng trong 400 đợt), quái đi hết đường ở mọi dạng + mọi nhánh, tua 1 → 200 (chạy thật đợt boss: đúng boss + bộ quái của màn), đầy sân → hoàn vàng, lưu / nạp, chơi nhóm, **giao diện: chọn Vô tận vào luôn → qua boss 10 → sang màn → tải lại trang → Tiếp tục cùng bản đồ / bộ quái / đợt / ô tướng; bản lưu cũ suy ra màn**, mô phỏng cân bằng, không đè giao diện ở 1920×934 / 844×390 / 667×375 + ảnh từng dạng (cả dọc 390×844) ở `tests/duong-di-moi/shots/`. `tests/vo-tan` sửa theo luồng mới.
