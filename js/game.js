@@ -1524,7 +1524,8 @@ class Game {
   // gần xong (bên kia đã đủ ★★ quy đổi, đã sở hữu tướng đích, nguyên liệu nằm trong đội ưu tiên hoặc đã có trên sân —
   // không thì 20 tướng ra quá nhiều công thức "gần xong", loãng); top = loại bảo hiểm nhắm tới
   // v180: chợ rút từ mọi tướng Thường; đội 6 tướng thành đội ưu tiên (ra nhiều hơn)
-  marketPool() { return BASIC_HEROES; }
+  // v185: chỉ tướng Thường đã mở khoá bằng Ngân khố (owned = null: bot mô phỏng → mọi tướng)
+  marketPool() { return openCommons(this.owned); }
   marketNeeds() {
     const pool = this.marketPool(), doi = new Set(this.summonList()), cp = {}, ghep = new Set(), hop = new Set();
     for (const t of pool) cp[t] = this.marketCopies(t);
