@@ -130,8 +130,8 @@ const CHI_ANH = !!process.env.CHI_ANH;   // CHI_ANH=1: chỉ chụp ảnh
       ui.updateNextWaves();
       out.strip = !!document.querySelector('#nextwaves .evt .icn') && document.querySelector('#nextwaves').innerText.includes(ev.name);
       g.events.length = 0;
-      const range0 = heroStats(g.heroes[1]).range;
-      const dmg0 = g.heroes.map((h) => (h ? heroStats(h).damage : 0));
+      g.updateAuras(); const range0 = heroStats(g.heroes[1]).range;
+      g.updateAuras(); const dmg0 = g.heroes.map((h) => (h ? heroStats(h).damage : 0));
       g.startWave();
       out.start = g.events.some((e) => e.type === 'waveEvent' && e.phase === 'start' && e.ev.id === id);
       const q = g.spawnQueue;
