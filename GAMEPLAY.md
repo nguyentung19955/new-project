@@ -1991,3 +1991,12 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 ## Phiên bản 191 — Gộp sửa lỗi báo cáo tester (tester đạt)
 
 - Gộp claude/sua-loi-tester: toast, kết quả cuộn, 404=0, FPS, bảng boss gọn, Đợt không nhích, bong bóng Thần tinh, đăng nhập bắt buộc không kẹt.
+
+## claude/prompt-thay-hinh-code — Prompt thay mọi hình còn vẽ bằng code
+
+- Rà toàn bộ game (đọc code + chạy thật bằng Playwright, ghi lại mọi đường dẫn ảnh game hỏi `hasAsset`): tướng / quái / boss / bản đồ / đường / cổng đã có ảnh thật; còn vẽ code là ô đặt tướng, thanh máu, đạn, toàn bộ `vfx/` (46 dải), triệu hồi / vật ném, icon trạng thái trên thanh boss, khung bảng / nút / thanh chợ (UI_SKIN), icon kỹ năng 19 tướng, 8 đồ ghép, tranh kết quả / chương, nền màn phụ, núi bậc 2 + 5, icon `ui_*` (chỉ hiện khi bật "Dùng ảnh AI").
+- Script mới `tools/build-prompt-hinh-code.js` → `docs/PROMPT-THAY-HINH-CODE.txt` (+ `.md`): **112 ảnh gửi AI → 222 file** (A ô đặt 2/10 · B thanh máu 3/5 · C đạn 3/15 · D vfx 46/46 · E triệu hồi 11/11 · F icon 3/17 · G khung 5/15 · H icon kỹ năng + đồ 21/84 · I màn hình 18/19), xếp theo ưu tiên (thấy nhiều nhất trước). Mỗi khối ghi tên file đúng như code tìm, chỗ dùng, cỡ trên màn, số khung, đã có prompt trong file tổng chưa. Dùng chung STYLE BIBLE / LOCK / NEGATIVE / DRUM / BG với `tools/build-prompts.js`; prompt có sẵn (prompts.json, PROMPT-HIEU-UNG, PROMPT-CAN-GEN) dùng lại nguyên văn.
+- `tools/cat-anh-them.json`: thêm khóa `hc-…` (tấm mới) để `tools/cat-anh.html` / `cat_anh.py` tự cắt đúng tên (đã chạy `tools/build-cat-anh.js`; cắt thử 3 tấm giả ra đúng `tiles/de-tuong-*`, `ui/thanh-mau-*`, `ui_*.png`).
+- Cuối file có danh sách hình code CHƯA có chỗ nhận ảnh (vòng tầm đánh, đồng xu rơi, số sát thương, icon vai trò, nút ✕ / ‹, emoji ngăn kéo, sao ★…) — cần nối code trước khi gen.
+- Khi gộp: icon kỹ năng cắt bằng cat-anh ra `packs/<tướng>/sk-*.png` → nhớ thêm tướng vào `SKILL_PACK` (js/render.js:465). Ảnh tester: chỉ là tài liệu + tool ngoài, không đổi game.
+- Test: `node tests/cat-anh/cat-anh.test.js` (Tất cả đạt).
