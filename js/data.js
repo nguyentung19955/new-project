@@ -1255,6 +1255,8 @@ const summonPool = (level) => [...BASIC_HEROES.slice(0, 6), ...NEW_GROUPS[(level
 // v133: ĐỘI TRIỆU HỒI — người chơi tự chọn 6 tướng Thường trước trận; Triệu hồi chỉ ra trong 6 tướng này
 // (20 tướng ngẫu nhiên quá khó ghép). Thiếu / sai thì dùng đội gợi ý.
 const DECK_SIZE = 6;
+const MARKET_SIZE = 4;     // v143: chợ tướng — số thẻ luôn mở ở thanh đáy
+const REST_SWAPS = 2;      // v143: Nghỉ chân sau đợt boss — đổi tối đa 2 tướng trong đội
 const validDeck = (d) => Array.isArray(d) && d.length === DECK_SIZE && new Set(d).size === DECK_SIZE && d.every((t) => BASIC_HEROES.includes(t));
 // tướng Thường là nguyên liệu (trực tiếp hoặc qua tướng Tím) của các tướng Tím / Vàng đã sở hữu
 function deckIngredients(owned) {
