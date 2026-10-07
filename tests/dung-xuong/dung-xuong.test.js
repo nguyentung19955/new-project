@@ -133,6 +133,28 @@ print(json.dumps(out))`, ZIP], { maxBuffer: 1 << 28 }));
   });
   ok(Math.abs(rt.moved - rt.was - 5) < 1e-6 && rt.same && rt.khung >= 12, `nạp lại rig: khớp + vùng giữ đúng, dựng lại ${rt.khung} khung (${rt.fields})`);
 
+  // ── giao diện: kéo khớp bằng chuột, tô vùng bằng cọ ──
+  console.log('Giao diện:');
+  await page.evaluate(() => window.__dungXuong.chon(window.__dungXuong.ITEMS[1]));
+  await page.waitForTimeout(200); await page.$eval('#ve', (e) => e.scrollIntoView({ block: 'center' }));
+  const kq = await page.evaluate(() => { const it = window.__dungXuong.ITEMS[1], cv = document.getElementById('ve'), r = cv.getBoundingClientRect(), k = r.width / cv.width * SC;
+    return { x: r.left + it.rig.joints.goiP[0] * k, y: r.top + it.rig.joints.goiP[1] * k, k, old: it.rig.joints.goiP.slice() }; });
+  await page.mouse.move(kq.x, kq.y); await page.mouse.down(); await page.mouse.move(kq.x + 12, kq.y + 6, { steps: 4 }); await page.mouse.up();
+  await page.waitForFunction(() => document.getElementById('cho').textContent === '', null, { timeout: 30000 });
+  const moved = await page.evaluate(() => window.__dungXuong.ITEMS[1].rig.joints.goiP);
+  ok(Math.abs(moved[0] - kq.old[0] - 12 / kq.k) < 2, `kéo chấm "gối phải" bằng chuột: khớp dời ${(moved[0] - kq.old[0]).toFixed(1)} px ảnh, dựng lại khung`);
+  await page.check('input[name=che-do][value=to]'); await page.selectOption('#bo-phan', '11');
+  const truoc = await page.evaluate(() => window.__dungXuong.ITEMS[1].nhan.filter((v) => v === 11).length);
+  const tam = await page.evaluate(() => { const it = window.__dungXuong.ITEMS[1], cv = document.getElementById('ve'), r = cv.getBoundingClientRect(), k = r.width / cv.width * SC; return { x: r.left + it.rig.joints.hong[0] * k, y: r.top + it.rig.joints.hong[1] * k }; });
+  await page.mouse.move(tam.x, tam.y); await page.mouse.down(); await page.mouse.move(tam.x + 10, tam.y, { steps: 3 }); await page.mouse.up();
+  const sau = await page.evaluate(() => window.__dungXuong.ITEMS[1].nhan.filter((v) => v === 11).length);
+  ok(sau > truoc, `tô vùng "Vũ khí" bằng cọ: +${sau - truoc} điểm`);
+  await page.click('#hoan-tac'); await page.waitForTimeout(300);
+  await page.waitForFunction(() => document.getElementById('cho').textContent === '', null, { timeout: 30000 });
+  const lui = await page.evaluate(() => window.__dungXuong.ITEMS[1].nhan.filter((v) => v === 11).length);
+  ok(lui === truoc, 'nút Hoàn tác trả lại vùng cũ');
+  await page.check('input[name=che-do][value=khop]');
+
   // ── ảnh mẫu để xem bằng mắt ──
   const MAU = path.join(TMP, 'mau'); fs.mkdirSync(MAU);
   for (const c of ['lactuong', 'xathu', 'thaymo', 'llq', 'chantinh']) {

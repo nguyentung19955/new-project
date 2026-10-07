@@ -1957,3 +1957,13 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 ## Phiên bản 189 — Gộp sửa chợ tướng (tester đạt)
 
 - Nút Khoá chợ riêng rõ ràng, nhãn ghép/hợp ở thanh giá, dòng giải thích đội ưu tiên ở màn nhỏ, test bảo hiểm ổn định.
+
+## claude/tool-dung-xuong — Tool dựng xương: tạo cử động từ 1 ảnh tĩnh (tool ngoài, game không đổi)
+
+- `tools/dung-xuong.html` (một file, mở bằng Chrome / Edge): thả 1 ảnh đứng mỗi tướng / quái / boss (PNG nền trong hoặc #FF00FF, nhận mã theo tên file như cat-anh) → tự đoán 17 khớp + vùng bộ phận (dò cổ, hai chân, bàn tay; vũ khí = phần nhô dài nhất ngoài thân).
+  Kéo chỉnh khớp, tô vùng bằng cọ, hoàn tác, lưu / nạp rig `tools/rig/<mã>.json`.
+- Biến dạng: thân + đầu + chân là một khối liền uốn mềm theo lưới tam giác (trọng số theo vùng lân cận → chỗ nối không gãy, không hở); tay cầm vũ khí, vũ khí (và tay kéo dây cung) là lớp riêng, thân bên dưới được vá màu lân cận + kẻ viền nâu sẫm; chân giải IK bám đất, bàn chân giữ phẳng; lấy mẫu song tuyến giữ viền sắc.
+- Bộ chuyển động theo vũ khí: vung (kiếm / rìu / giáo, có một vệt chém), cung (lắp tên → kéo dây → tên bay), nỏ (ngắm → bắn giật), gậy phép (giơ cao, cầu phép), tay không (đấm). Đứng thở 3 khung, chiêu 3 khung (ánh sáng + vòng chân), trúng đòn; thêm đi 4 khung, chết 4 khung (ngã + mờ); boss nổi giận (ánh đỏ). Biên độ / tốc độ chỉnh được, xem trước trên nền bản đồ game, so khung trước / sau.
+- Xuất: tấm sheet đúng lưới hero12 / enemy6 / boss9 (đưa qua cat-anh được) và zip `assets/packs/<mã>/…` + `pack-frames.json` + `alias.json` (ghép bằng `python3 tools/cat_anh.py --ghep`). Khung cắt như cat-anh: chung mép trên / dưới, chân cùng đường đáy, cao ≤ 480, chân dung 240.
+- Lõi tách nền / nhận tên / PNG / zip nhúng từ cat-anh.html bằng `node tools/build-dung-xuong.js` (kèm loại vũ khí 60 tướng từ `tools/hero-id.js`).
+- Hướng dẫn: `docs/HUONG-DAN-DUNG-XUONG.md`, ảnh mẫu `docs/dung-xuong-mau.png`. Test: `node tests/dung-xuong/dung-xuong.test.js` (7 nhân vật: rìu, cung, gậy, kiếm, nỏ, quái, boss — đoán xương, số khung, cỡ, chân thẳng hàng, không khung trùng, ghép --ghep, cat-anh cắt lại sheet, rig, kéo khớp / tô vùng bằng chuột).
