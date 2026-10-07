@@ -2103,28 +2103,28 @@ Test: `node tests/run-all.js` đạt (tu-cu-dong: mẫu trang thử đổi xathu
 - **Chợ ra 6 thẻ mỗi lượt** (`MARKET_SIZE` 4 → 6). Đổi ↻, 🔒 khoá chợ, thẻ bù, giới hạn bản sao (`MARKET_CAP` = 4), co-op lockstep đều dùng chung `MARKET_SIZE`. Bản lưu cũ có hàng 4 thẻ: giữ 4 thẻ cũ, rút thêm 2 cho đủ (hàng đang khoá cũng vậy). **Giữ giá đổi chợ** (10 + 10 × số lần đổi trong đợt).
 - **Mua thẻ ghép được thì TỰ GHÉP luôn** (kể cả còn ô trống, hoặc kéo thẻ vào ô trống khác): dồn vào tướng ★ cùng loại trên sân, có hiệu ứng lên sao, **ghép dây chuyền** ★ + ★ → ★★, rồi ★★ + ★★ → ★★★ nếu sân còn ★★ cùng loại. Không tự hợp thể. **Bỏ nút "Ghép tự động"** ở thanh chợ (thẻ vẫn có nhãn ⇄ "mua là ghép").
 - **Nguyên liệu hợp thể (tướng đích phải mở khoá ở Anh Hùng — giữ như cũ):**
-  - Công thức **đang theo** = tướng đích đã mở khoá và đã có ≥1 bản của một nửa công thức trên sân (chưa bắt đầu công thức nào thì mọi công thức đích đã mở) — không còn đòi "gần xong" (bên kia ★★) hay "trong đội ưu tiên".
-  - Nguyên liệu còn thiếu bản sao của công thức đang theo: trọng số ×8 (đội ưu tiên ×2, thường ×1; đang ghép dở ×3.5).
+  - Công thức **đang theo** = tướng đích đã mở khoá và đã có ≥1 bản của một nửa công thức trên sân (chưa bắt đầu công thức nào thì mọi công thức đích đã mở) — không còn đòi "gần xong" (bên kia ★★). Giữ giới hạn của bo-chon-doi nhưng tính theo công thức: tối đa `MARKET_HOP.max` = 2 công thức đang theo cùng lúc (cả 2 bên đã có trên sân trước → nhiều bản sao hơn → thứ tự công thức); `MARKET_HOP.off` không dùng nữa.
+  - Nguyên liệu còn thiếu bản sao của công thức đang theo: trọng số ×8 (đang ghép dở ×3.5, thường ×1).
   - **Bảo hiểm hợp thể:** mỗi lần rút cả hàng (đầu đợt / ↻) **chắc chắn ≥1 thẻ** là nguyên liệu thiếu nhất (ít bản sao nhất) của công thức đang theo. Bảo hiểm ghép (`MARKET_PITY` = 2 lần liền không ra tướng đang có → lần sau chắc chắn có) tính riêng, không đè thẻ hợp thể.
   - Nguyên liệu của công thức có **tướng đích chưa mở khoá**: không ưu tiên; thẻ có ổ khoá nhỏ ở dải giá + tiêu đề "Nguyên liệu hợp thể X — chưa mở khoá: Mở ở Anh Hùng · 900 Ngân khố"; mua thẻ đó lần đầu trong trận → nhắc đi mở khoá.
   - Bảng **Hợp thể** trong trận: công thức chưa mở có nút **"🔒 Mở ở Anh Hùng · 900"** (bấm → mở Anh Hùng đúng tướng đó), công thức đã mở xếp lên đầu; chưa mở tướng Tím nào thì dòng phụ nhắc "Mở khoá 1 tướng Tím ở Anh Hùng…". Bảng Tiến hoá: "Chưa mở khoá — Mở ở Anh Hùng · 900 Ngân khố". **Màn kết quả**: chưa mở tướng Tím nào thì có dòng "Hợp thể: Mở khoá 1 tướng Tím ở Anh Hùng · 900 để hợp thể được trong trận".
-- Mô phỏng chợ `node tests/cho-tuong/ti-le-sim.js` (1000 lần ↻, seed cố định, tài khoản đã mở mọi tướng Thường + Cá Ông):
+- Mô phỏng chợ `node tests/cho-tuong/ti-le-sim.js` (1000 lần ↻, seed cố định; tài khoản mở đủ 20 tướng Thường + tướng Tím của tình huống — giống bộ mô phỏng của bo-chon-doi):
 
-| Tình huống | Nhánh chính (4 thẻ) | **cho-6-the (6 thẻ)** |
+| Tình huống | Nhánh chính v198 (4 thẻ) | **cho-6-the (6 thẻ)** |
 |---|---|---|
-| Đầu trận (1 tướng ★) — ≥1 thẻ ghép được | 59.9% | **52.1%** (1 chỗ dành cho nguyên liệu Cá Ông) |
-| Giữa trận — ≥1 thẻ ghép được | 92.5% | **95.6%** |
-| Giữa trận — ≥1 tướng đang có | 98.6% | **97.6%** |
-| Thiếu Thần Sương (Ngư Phủ ★★ → Cá Ông) — ra đúng nguyên liệu | 69.0% (trượt liền tối đa 2) | **100%** (mỗi lần đổi) |
+| Đầu trận (1 tướng ★, chưa mở Tím) — ≥1 thẻ ghép được | 66.3% | **66.5%** |
+| Giữa trận (chưa mở Tím) — ≥1 thẻ ghép được / ≥1 tướng đang có | 93.4% / 98.7% | **95.6% / 98.6%** |
+| Thiếu Thần Sương (Ngư Phủ ★★, đã mở Cá Ông) — ra đúng nguyên liệu | 69% (trượt liền tối đa 2) | **100%** (mỗi lần đổi) |
+| Giữa trận, sở hữu MỌI tướng Tím/Vàng — ≥1 thẻ ghép được / ≥1 tướng đang có | 84.6% / 93.1% | **93% / 96.7%** |
 | Trượt liền dài nhất (bảo hiểm ghép) | 2 | **2** |
 
-- Mô phỏng đợt ra **tướng Tím đầu tiên** `MK=1 node tests/hop-the/mo-phong.js 6 own1` (bot tham lam, tài khoản đã mở mọi tướng Thường + **1 tướng Tím** = Cá Ông, bot theo công thức đã mở, 6 ván mỗi ải, chạy tối đa 1800 s):
+- Mô phỏng đợt ra **tướng Tím đầu tiên** `MK=1 node tests/hop-the/mo-phong.js 6 own1` (bot tham lam, tài khoản đã mở mọi tướng Thường + **1 tướng Tím** = Cá Ông, bot theo công thức đã mở và mua thẻ có nhãn hợp thể, 6 ván mỗi ải, tối đa 1800 s; cùng một bot cho trước / sau):
 
-| Ải | Nhánh chính: có Tím · đợt TB | Nhánh chính: đợt đạt ★★★ cả 2 | **cho-6-the: có Tím · đợt TB** | **cho-6-the: đợt đạt ★★★ cả 2** |
+| Ải | Nhánh chính v198: có Tím · đợt TB | v198: đợt đạt ★★★ cả 2 nguyên liệu | **cho-6-the: có Tím · đợt TB** | **cho-6-the: đợt đạt ★★★ cả 2** |
 |---|---|---|---|---|
-| 1 | 2/6 ván · đợt 29.5 | 23, 31 (4/6 ván không lên nổi) | **6/6 · đợt 20.8** | **9–13** |
-| 3 | 3/6 · đợt 23.3 | 16–18 | **6/6 · đợt 20.7** | **10–12** |
-| 5 | 2/6 · đợt 25 | 16, 26 | **4/6 · đợt 20.3** (2 ván thua trước) | **8–14** |
+| 1 | 2/6 ván · đợt 28 | 20, 31 (4/6 ván không đạt) | **6/6 · đợt 21.2** | **8–14** |
+| 3 | 1/6 · đợt 27 | 26 (5/6 không đạt) | **6/6 · đợt 20.7** | **8–13** |
+| 5 | 0/6 (thua sớm đợt 10–13) | — | **4/6 · đợt 20.3** (2 ván thua đợt 20) | **9–14** |
 
   Chợ đã đưa đủ ★★★ cả 2 nguyên liệu về **đợt ~8–14**. Tím đầu tiên vẫn ở **đợt ~20–21** vì điều kiện **kỹ năng tối đa** (R tối đa cần cấp 16 — `R_REQ`; nâng 2 tướng lên cấp 16 tốn vàng tới khoảng đợt 20) — muốn về đợt 12–16 cần chỉnh kinh tế kỹ năng / cấp (ngoài phạm vi chợ, chờ quyết định).
 - **Thanh chợ nhỏ gọn** (`#deck.mk-mode`, chỉ khi hiện chợ; thanh tướng đang chọn giữ nguyên): cao 70 → **48** (khung thiết kế) — 844×390: **76 → 52px (69%)**, 667×375: 60 → 41px, 1920×934: 144 → 99px, dọc 390×844: 76 → 52. Thẻ 66×44: chân dung tròn 24px, icon hệ (trái, 15px) + vai trò (phải, 16px) ở góc trên, **dải giá riêng 16px: chữ 14px, xu 15px viền sáng, nền đỏ sẫm** (667×375: xu ~13px thật). **Tên tướng không hiện trên thẻ** (tên đè cằm chân dung — tester T8; tên ở tiêu đề thẻ / aria và thanh tướng khi chọn). Nhãn "ghép" / "hợp" → ký hiệu ⇄ / ✦, ổ khoá = đích chưa mở. Nút ↻ 42×44 (giá 14px), 🔒 42×44, Hợp thể 46×44. 6 thẻ + nút một hàng, vùng chạm nhỏ nhất 36px ở 667×375.
