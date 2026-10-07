@@ -148,10 +148,12 @@ const CHI_ANH = !!process.env.CHI_ANH;   // CHI_ANH=1: chỉ chụp ảnh
       // Quân Hùng Hậu: quái (kể cả boss) thêm máu
       if (ev.p.hp) { const a = g.spawn(q[0].type, 40, null, q[0]), b = g.spawn(q[0].type, 40, null, { ...q[0], ev: null }); out.hpx = a.maxHp / b.maxHp; out.bossEv = !!(q[q.length - 1].ev && q[q.length - 1].ev.hp); a.dead = b.dead = true; }
       // quái sinh ra mang hiệu ứng
-      const e = g.spawn(q[0].type, 50, null, q[0]);
+      // quái thường (tướng giặc / boss / lính triệu hồi không tách — chọn đúng loại để test không phụ thuộc may rủi)
+      const q0 = q.find((it) => !ENEMIES[it.type].general && !ENEMIES[it.type].minion && !ENEMIES[it.type].boss && !it.champion) || q[0];
+      const e = g.spawn(q0.type, 50, null, q0);
       out.regen = e.evRegen || 0; out.speed = e.evSpeed || 0; out.split = e.evSplit || 0;
       if (id === 'hoimau') { e.hp = e.maxHp * 0.5; g.updateEnemy(e, 1); out.healed = e.hp / e.maxHp - 0.5; }
-      if (id === 'giobao') { const a = g.spawn(q[0].type, 50, null), d0 = e.dist, a0 = a.dist; g.updateEnemy(e, 0.5); g.updateEnemy(a, 0.5); out.fast = (e.dist - d0) / (a.dist - a0); }
+      if (id === 'giobao') { const a = g.spawn(q0.type, 50, null), d0 = e.dist, a0 = a.dist; g.updateEnemy(e, 0.5); g.updateEnemy(a, 0.5); out.fast = (e.dist - d0) / (a.dist - a0); }
       if (id === 'phanthan') {
         const n0 = g.enemies.length, gold0 = g.gold; g.kill(e, null);
         const kid = g.enemies.find((o) => o.split && !o.dead);
