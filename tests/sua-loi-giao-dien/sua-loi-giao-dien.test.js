@@ -103,6 +103,8 @@ const toastHits = (page) => page.evaluate(() => {
       await page.evaluate(() => document.querySelector('#reward [data-act=reward]').click()); await sleep(500);
       const s2 = await page.evaluate(() => ({ reward: !$('#reward').hidden, result: !$('#result').hidden }));
       ok(!s2.reward && s2.result, `T2 chọn thưởng xong mới ra bảng kết quả (${JSON.stringify(s2)})`);
+      await page.evaluate(() => ui.toast('Mẹo: giữ và kéo tướng sang ô khác để đổi vị trí', '#9dffc4')); await sleep(100);
+      ok(await page.evaluate(() => document.querySelectorAll('#toasts .toast').length === 0), 'màn kết quả: không còn thông báo sót của trận / mẹo hẹn giờ');
       await page.screenshot({ path: path.join(SHOT, `T2-ket-qua-${tag}.png`) });
       ok(page.errors.length === 0, 'không lỗi JS ' + page.errors.join(' | '));
       await page.context().close();
@@ -175,6 +177,8 @@ const toastHits = (page) => page.evaluate(() => {
       const bg = await page.evaluate(() => { const f = document.querySelector('.ro-grid > .rl-filter'); return f ? getComputedStyle(f).backgroundColor : 'none'; });
       ok(/^rgb\(/.test(bg), `G6 thanh lọc vai trò nền đặc (${bg})`);
       await page.evaluate(() => ui.showCampaign(0)); await sleep(500);
+      const c6 = await page.evaluate(() => { const sc = document.querySelector('#campaign .cp-scroll').getBoundingClientRect(); const im = [...document.querySelectorAll('#campaign .cp-scroll .ch-av > img')]; return im.length && im.every((i) => { const r = i.getBoundingClientRect(); return r.bottom <= sc.bottom + 1; }); });
+      if (w >= 1280) ok(c6, 'C6 Bản đồ: ảnh "Tướng khắc chế" hiện trọn, không bị nút dưới cắt');
       const g7 = await page.evaluate(() => { const sc = document.querySelector('#campaign .cp-scroll'); const can = sc.scrollHeight - sc.clientHeight > 6; const on = sc.parentNode.classList.contains('can-down'); sc.scrollTop = 1e5; sc.dispatchEvent(new Event('scroll')); return { can, on, off: !sc.parentNode.classList.contains('can-down') }; });
       ok(g7.on === g7.can && g7.off, `G7 cột phải Bản đồ: gợi ý cuộn khi còn nội dung (${g7.can ? 'có' : 'không'} nội dung ẩn), tắt khi cuộn tới đáy`);
       await page.evaluate(() => { document.querySelector('#campaign .cp-scroll').scrollTop = 0; document.querySelector('#campaign .cp-scroll').dispatchEvent(new Event('scroll')); }); await sleep(250);

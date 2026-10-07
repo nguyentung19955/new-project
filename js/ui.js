@@ -1272,13 +1272,14 @@ class UI {
           <div class="sub">${esc(ch.chip || ch.name)}</div>
           <div class="desc">${lv.desc}</div>
           <div class="sub">Quân <b>${esc(ROSTER_NAMES[lv.roster || 'thuy'] || '')}</b> · boss <b>${bosses}</b></div>
-          <div class="desc">Quái mạnh dần mãi, boss mỗi 10 đợt. Sau đợt ${lv.waves}, cứ 10 đợt đổi sang quân truyền thuyết khác. Mỗi 10 đợt và mỗi boss hạ được nhận Ngân khố ngay. Hết mạng là kết thúc, ghi điểm bảng xếp hạng.</div>
           <div class="cp-rec">${UIE.endless()} Kỷ lục bản đồ này: <b>đợt ${rec[i] || 0}</b></div>
-          ${this.counterHtml(i)}</div>
+          ${this.counterHtml(i)}
+          <div class="desc">Quái mạnh dần mãi, boss mỗi 10 đợt. Sau đợt ${lv.waves}, cứ 10 đợt đổi sang quân truyền thuyết khác. Mỗi 10 đợt và mỗi boss hạ được nhận Ngân khố ngay. Hết mạng là kết thúc, ghi điểm bảng xếp hạng.</div></div>
           <div class="cp-act"><div class="cp-diff"><button class="${this.save.settings.hard ? 'metal' : 'btn-gold'}" data-act="diff" data-k="0">Thường</button><button class="${this.save.settings.hard ? 'on' : 'metal'}" data-act="diff" data-k="1" title="Máu quái ×${HARD.hp(i).toFixed(2)} · Ngân khố ×1,5">🔥 Khó <small>×${HARD.hp(i).toFixed(2).replace('.', ',')}</small></button></div>
           <button class="go btn-gold" data-act="cp-go">${UIE.endless()} Vào vô tận</button></div>
         </div>
       </div></div>`;
+    // C6: "Tướng khắc chế" (ảnh tướng) đứng trước đoạn luật chung → không bị nút Vào vô tận cắt mất ở màn lớn
     // G7: cột phải còn nội dung bên dưới → mép dưới mờ dần + mũi tên gợi ý cuộn (tắt khi đã cuộn tới đáy)
     const sc = $('#campaign .cp-scroll'), side = sc && sc.parentNode;
     if (sc) {
@@ -1330,6 +1331,8 @@ class UI {
   // ---------- thông báo
   toast(msg, color = '#F2D27A') {
     const box = $('#toasts');
+    // mẹo hẹn giờ của trận không hiện khi trận đã xong (trước đây 2 toast "Mẹo…" đè cổng thành ở màn thua)
+    if (/^Mẹo/.test(msg) && (!$('#result').hidden || (this.game && this.game.over))) return;
     const el = document.createElement('div');
     el.className = 'toast';
     el.style.borderLeftColor = color;
@@ -2563,7 +2566,7 @@ class UI {
         text = 'Chạm 1 thẻ tướng ↓ để triệu hồi (hoặc kéo thẻ vào ô)';
       } else if (heroes.length === 1 && g.wave === 0 && g.gold >= g.summonCost()) {
         pos = [466, 330];
-        text = 'Mua thêm tướng: thẻ có nhãn “ghép” mua về là lên ★★';
+        text = 'Mua thêm tướng: thẻ có ⇄ mua về là tự ghép lên ★★ luôn';
       } else if (g.wave === 0 && !g.running) {
         pos = [800, 76];
         text = `Bấm ▶ (góc trên phải) để ${themeOf(g.level).foe} tràn tới`;
@@ -3052,6 +3055,8 @@ class UI {
   // v166: chỉ còn Vô tận (đơn / nhóm) — trận kết thúc khi hết mạng (không còn thắng ải)
   finishLevel() {
     const g = this.game;
+    // sang màn kết quả: xoá thông báo còn sót của trận (và hàng chờ)
+    $('#toasts').replaceChildren(); this.toastQ = [];
     const s = this.save;
     const lv = g.level;
     const coop = !!g.co;      // v141: chơi nhóm — nhận Ngân khố + Tu Vi như vô tận (không ghi kỷ lục / xếp hạng)
