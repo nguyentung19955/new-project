@@ -35,6 +35,7 @@ service cloud.firestore {
         && request.resource.data.get('ua', '') is string && request.resource.data.get('ua', '').size() <= 160
         && request.resource.data.at is number
         && request.resource.data.get('guest', false) is bool;
+    }
     // v141: CHƠI NHÓM — phòng rooms/{mã 6 ký tự}: chỉ 2 thành viên đọc / ghi, hết hạn sau ~12 giờ (expiresAt)
     function signedIn() { return request.auth != null; }
     function roomOf(code) { return get(/databases/$(database)/documents/rooms/$(code)).data; }
