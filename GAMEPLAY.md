@@ -1768,3 +1768,7 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
   | Đã có Voi + Gà | 228 | 202 | 386 | 184 | 0 |
 
 - Test mới `tests/sinh-le/sinh-le.test.js`: phân bố, thứ tự độ hiếm, không 3 lần liền, mốc lớn, ưu tiên món chưa có, cùng seed → cùng chuỗi (co-op), lưu lịch sử theo trận, màn nhận thưởng có ảnh + tên + độ hiếm, không lòi ra ngoài ở 1920×934 / 844×390 / 667×375. Ảnh đã xem: `tests/sinh-le/shots/nhan-thuong-*-{1920x934,844x390,667x375}.png`.
+
+## Phiên bản 183 — Gộp báo cáo tester + sính lễ ngẫu nhiên
+
+- Gộp tester-toan-bo (docs/BAO-CAO-TEST.md, 17 lỗi) và sinh-le-ngau-nhien (sính lễ hạ boss ngẫu nhiên theo độ hiếm, chống trùng, mốc lớn tăng tỉ lệ hiếm).
