@@ -653,7 +653,7 @@ class UI {
     const ctr = new Set(); try { const lv = LEVELS[g.level], R = ROSTERS[lv.roster || 'thuy']; for (const c of rosterCounters(R, Object.values(lv.bosses || {}), BASIC_HEROES, lv.hint).list) ctr.add(c.t); } catch (e) { /* bỏ qua */ }
     const ing = deckIngredients(this.save.owned || []);
     const card = (t) => { const d = HEROES[t], on = sel.includes(t);
-      return `<button class="dk-pick metal ${d.legend || 'common'} ${on ? 'on' : ''}" data-act="deck-tog" data-id="${t}" style="--c:${ELEMENTS[d.el].color}" data-tip="${esc(`<b>${esc(d.name)}</b><small>Hành ${ELEMENTS[d.el].name} · ${d.attack === 'melee' ? 'Cận chiến' : 'Đánh xa'}</small><p>${esc(d.title || '')}</p>${FUSION.filter((f) => f.a === t || f.b === t).map((f) => `<small>Hợp thể: + ${esc(HEROES[f.a === t ? f.b : f.a].name)} ➜ ${esc(HEROES[f.to].name)}</small>`).join('')}`)}">
+      return `<button class="dk-pick metal ${d.legend || 'common'} ${on ? 'on' : ''}" data-act="deck-tog" data-id="${t}" style="--c:${ELEMENTS[d.el].color}" data-tip="${esc(`<b>${esc(d.name)}</b><small>Hành ${ELEMENTS[d.el].name} · ${d.attack === 'melee' ? 'Cận chiến' : 'Đánh xa'}</small><p>${esc(d.title || '')}</p>${FUSION.filter((f) => f.a === t || f.b === t).map((f) => `<small>Hợp thể: + ${esc(HEROES[f.a === t ? f.b : f.a].name)} ➜ ${esc(HEROES[f.to].name)} (cả 2 ★★ + kỹ năng tối đa)</small>`).join('')}`)}">
         <img src="${heroImgUrl(t, 'head')}" alt=""><b>${esc(d.name)}</b>
         <span class="tg">${ctr.has(t) ? '<i class="c">khắc chế</i>' : ''}${ing.has(t) ? '<i class="h">hợp thể</i>' : ''}</span>${on ? `<span class="no">${sel.indexOf(t) + 1}</span>` : ''}</button>`; };
     const els = EL_ORDER.map((el) => `<div class="dk-el"><div class="dk-eh" style="color:${ELEMENTS[el].color}">${elIcon(el, 13)} ${ELEMENTS[el].name}</div>${BASIC_HEROES.filter((t) => HEROES[t].el === el).map(card).join('')}</div>`).join('');
@@ -1229,7 +1229,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 179</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 180</div>
       </div></div>`;
   }
 
@@ -1709,7 +1709,7 @@ class UI {
       const h = g.heroes.filter((x) => x && x.type === type).sort((x, y) => (y.tier || 0) - (x.tier || 0) || y.level - x.level)[0] || null;
       const need = h ? g.ascendNeed(h) : HEROES[type].legend ? COSTS.ascendTier2 : COSTS.ascendTier;
       const r = h ? g.fusionReady(h) : `chưa có ${HEROES[type].name} trên sân`;
-      return { type, h, need, ok: r === true, why: r === true ? '' : r };
+      return { type, h, need, gap: h ? g.skillGap(h) : -1, ok: r === true, why: r === true ? '' : r };
     };
     const m = [mat(f.a), mat(f.b)], own = g.ownsHero(f.to), n = m.filter((x) => x.ok).length;
     const cost = COSTS.ascend[HEROES[f.to].legend];
@@ -1726,16 +1726,17 @@ class UI {
     const cnt = { ready: inTab.filter((x) => x.ready).length, one: inTab.filter((x) => x.own && x.n === 1).length, all: inTab.length };
     const list = inTab.filter((x) => lg.flt === 'all' || (lg.flt === 'ready' ? x.ready : x.own && x.n === 1))
       .sort((x, y) => y.own - x.own || y.n - x.n || y.p - x.p || x.i - y.i);
-    const key = [lg.tab, lg.flt, lg.help, assetVersion, ...list.map((x) => `${x.i}:${x.m.map((m) => (m.h ? (m.ok ? 2 : 1) : 0)).join('')}${x.own ? '' : 'L'}${x.ready && x.poor ? 'P' : ''}`)].join('|');
+    const key = [lg.tab, lg.flt, lg.help, assetVersion, ...list.map((x) => `${x.i}:${x.m.map((m) => (m.h ? (m.ok ? 2 : 1) + '.' + m.gap : 0)).join('')}${x.own ? '' : 'L'}${x.ready && x.poor ? 'P' : ''}`)].join('|');
     if (this.sig.lg === key && el.firstElementChild && el.firstElementChild.classList.contains('hx-hd')) return;
     this.sig.lg = key;
     const R = (t) => RARITY[HEROES[t].legend];
-    const NEED = lg.tab === 'epic' ? `Tím = 2 tướng Thường ${'★'.repeat(COSTS.ascendTier)} đúng cặp` : `Vàng = 2 tướng Tím Thần tinh ${'★'.repeat(COSTS.ascendTier2)} · kỹ năng tối đa`;
+    const NEED = lg.tab === 'epic' ? `Tím = 2 tướng Thường ${'★'.repeat(COSTS.ascendTier)} đúng cặp · kỹ năng tối đa` : `Vàng = 2 tướng Tím Thần tinh ${'★'.repeat(COSTS.ascendTier2)} · kỹ năng tối đa`;
     const mat = (m) => `<span class="hx-m ${m.ok ? 'ok' : m.h ? 'part' : 'no'} ${HEROES[m.type].legend || 'common'}" title="${esc(HEROES[m.type].name + (m.ok ? ' ✓' : ' — ' + m.why))}">
-        <img src="${heroImgUrl(m.type, 'head')}" alt=""><i>${m.ok ? '✓' : m.h ? '★'.repeat(m.h.tier || 0) || '·' : ''}</i><small>${'★'.repeat(m.need)}</small></span>`;
+        <img src="${heroImgUrl(m.type, 'head')}" alt=""><i>${m.ok ? '✓' : m.h ? '★'.repeat(m.h.tier || 0) || '·' : ''}</i><small>${'★'.repeat(m.need)}</small>${m.h ? `<b class="hx-sk ${m.gap ? 'n' : 'y'}">KN${m.gap ? '-' + m.gap : '✓'}</b>` : ''}</span>`;
     const card = (x) => { const t = x.f.to, d = HEROES[t];
       const st = !x.own ? `<span class="hx-st lock">${UIE.lock()} Chưa có</span>`
         : x.ready ? `<button class="hx-go" data-act="hx-fuse" data-i="${x.i}" ${x.poor ? `disabled title="Cần ${x.cost} vàng"` : ''}>Hợp thể · ${coin(1)}${x.cost}</button>`
+        : x.m.every((m) => m.h) ? `<button class="hx-go off" data-act="hx-fuse" data-i="${x.i}" aria-disabled="true">${UIE.lock()} Hợp thể</button>`
         : `<span class="hx-st">${x.n}/2</span>`;
       return `<div class="hx-card ${d.legend} ${x.ready ? 'ready' : ''} ${x.own ? '' : 'lock'}" data-act="hx-card" data-i="${x.i}" role="button" style="--rc:${R(t).color}">
         <span class="hx-to ${d.legend}"><img src="${heroImgUrl(t, 'head')}" alt=""></span>
@@ -2544,7 +2545,7 @@ class UI {
                 <span style="background:#1A1610;color:#C8BFA8">${d.role}</span></div></div>
               <div class="kvt inset" style="font-size:12px">${d.legend
                 ? `<div><span>Ghép từ</span><b style="text-align:right">${ascendSources(t).map((x) => HEROES[x].name).join(' + ')}</b></div>
-                  <div><span>Cần</span><b style="color:#FFD66B">${d.legend === 'epic' ? `2 tướng ${'★'.repeat(COSTS.ascendTier)}` : `Thần tinh ${'★'.repeat(COSTS.ascendTier2)} · kỹ năng tối đa`} · ${COSTS.ascend[d.legend]} vàng</b></div>`
+                  <div><span>Cần</span><b style="color:#FFD66B">${d.legend === 'epic' ? `2 tướng ${'★'.repeat(COSTS.ascendTier)} · kỹ năng tối đa` : `Thần tinh ${'★'.repeat(COSTS.ascendTier2)} · kỹ năng tối đa`} · ${COSTS.ascend[d.legend]} vàng</b></div>`
                 : `<div><span>Có từ</span><b style="color:#FFD66B">Triệu hồi ★ (đội 6 tướng)</b></div>`}
                 <div><span>Tầm · Tốc đánh</span><b>${d.base.range} · ${d.base.cooldown}s</b></div></div>
               ${d.trait ? `<div class="tipbox inset" style="font-size:12px">★ <b>${d.trait.name}:</b> ${esc(d.trait.desc)}</div>` : ''}
@@ -2968,7 +2969,7 @@ class UI {
         break;
       }
       case 'merge-any': this.mergeAny(); break;
-      case 'fuse-with': this.fuseWith(+d.slot); break;
+      case 'fuse-with': if (d.why) this.toast(d.why, '#E25A3A'); else this.fuseWith(+d.slot); break;
       case 'legend-open': this.openLegends($('#legends').hidden); break;
       case 'hx-close': this.openLegends(false); break;
       case 'hx-tab': this.lg.tab = d.k; this.lg.flt = 'all'; this.renderLegends(); $('#legends .hx-list').scrollTop = 0; break;
@@ -2980,7 +2981,7 @@ class UI {
         this.fuseFocus = { i: x.i, until: performance.now() + 6000 };
         this.sel = -1;
         if (d.act === 'hx-fuse' && x.ready) { this.openLegends(false); this.action({ act: 'fuse-strip', i: x.i }); break; }
-        if (x.m.some((m) => m.h)) this.openLegends(false);
+        if (x.m.some((m) => m.h) && d.act !== 'hx-fuse') this.openLegends(false);
         this.toast(`<b>${HEROES[x.f.to].name}</b> · ${!x.own ? 'chưa sở hữu — mua ở Anh Hùng' : x.m.map((m) => (m.ok ? `${HEROES[m.type].name} ✓` : m.why)).join(' · ')}`, RARITY[HEROES[x.f.to].legend].color);
         break;
       }
@@ -3707,7 +3708,7 @@ class UI {
   // v147: CÂY PHÁT TRIỂN — tướng này ghép từ đâu / sẽ hợp thể thành tướng nào (dùng chung: Anh Hùng, chọn đội)
   evolveTree(t) {
     const owned = new Set(this.save.owned || []);
-    const NEED = { epic: `2 tướng ${'★'.repeat(COSTS.ascendTier)}`, legendary: `Thần tinh ${'★'.repeat(COSTS.ascendTier2)} + kỹ năng tối đa` };
+    const NEED = { epic: `2 tướng ${'★'.repeat(COSTS.ascendTier)} + kỹ năng tối đa`, legendary: `Thần tinh ${'★'.repeat(COSTS.ascendTier2)} + kỹ năng tối đa` };
     const pic = (x) => { const d = HEROES[x], lock = d.legend && !owned.has(x);
       return `<button class="ev-p ${d.legend || 'base'} ${x === t ? 'me' : ''} ${lock ? 'lock' : ''}" data-act="ro-sel" data-type="${x}" data-ev="1" title="${esc(d.name)}${lock ? ' (chưa có)' : ''}">
         <img src="${heroImgUrl(x, 'head')}" alt=""><b>${esc(d.name)}</b>${lock ? '<i>Chưa có</i>' : ''}</button>`; };
@@ -3754,9 +3755,11 @@ class UI {
       const ok = o ? g.canFuse(o, h) : 'thiếu';
       const go = typeof ok !== 'string';
       const oReady = o && g.fusionReady(o) === true, own = g.ownsHero(t), cost = COSTS.ascend[d.legend];
+      const gap = g.skillGap(h), og = o ? g.skillGap(o) : 0;
       const conds = [ck((h.tier || 0) >= need, `Tướng này ${stars(need, h.from)}`)];
-      if (h.from) conds.push(ck(!left.length, `Kỹ năng tối đa${left.length ? ` (còn ${left.length})` : ''}`));
-      conds.push(ck(oReady, `${HEROES[pt].name} ${stars(o ? g.ascendNeed(o) : need, h.from)}${o ? '' : ' trên sân'}`));
+      conds.push(ck(!left.length, `Kỹ năng tối đa${gap ? ` (còn ${gap})` : ''}`));
+      conds.push(ck(o && (o.tier || 0) >= g.ascendNeed(o), `${HEROES[pt].name} ${stars(o ? g.ascendNeed(o) : need, h.from)}${o ? '' : ' trên sân'}`));
+      if (o) conds.push(ck(!og, `${HEROES[pt].name} kỹ năng tối đa${og ? ` (còn ${og})` : ''}`));
       if (!own) conds.push(ck(false, 'Chưa sở hữu'));
       else if (oReady && g.fusionReady(h) === true && g.gold < cost) conds.push(ck(false, `${cost} vàng`));
       const pic = (x, st, cls = '') => `<span class="hx-m ${st} ${HEROES[x].legend || 'common'} ${cls}" title="${esc(HEROES[x].name)}"><img src="${heroImgUrl(x, 'head')}" alt=""></span>`;
@@ -3766,7 +3769,7 @@ class UI {
           <span class="ho-nm"><b>${esc(d.name)} ${elIcon(d.el, 13)}</b><small>${R.name} · ${esc(d.trait.name)}</small></span></div>
         <div class="ho-cond">${conds.join('')}</div>
         <div class="ho-ft"><span class="ho-why" title="${esc(f.why)}">${go ? `Lực chiến → <b>${g.fusePreview(o, h)}</b>` : esc(f.why)}</span>
-          <button class="hx-go" data-act="fuse-with" data-slot="${o ? o.slot : ''}" ${go ? '' : `disabled title="${esc(typeof ok === 'string' && ok !== 'thiếu' ? ok : `Cần ${HEROES[pt].name} trên sân`)}"`}>Hợp thể · ${coin(1)}${cost}</button></div></div>`;
+          <button class="hx-go ${go ? '' : 'off'}" data-act="fuse-with" data-slot="${o ? o.slot : ''}" ${go ? '' : `aria-disabled="true" data-why="${esc(typeof ok === 'string' && ok !== 'thiếu' ? ok : `Cần ${HEROES[pt].name} trên sân`)}"`}>${go ? '' : UIE.lock()}Hợp thể · ${coin(1)}${cost}</button></div></div>`;
     }).join('');
     return `<div class="panel metal set-panel asc-panel ho-panel"><div class="ph"><span class="ttl" style="font-size:20px">Hợp thể</span>
         <button class="hx-q" data-act="evo-help" aria-label="Cách hợp thể">?</button></div>

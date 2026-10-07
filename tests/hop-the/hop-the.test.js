@@ -1,4 +1,4 @@
-// Test bảng Hợp thể trong trận + màn Tiến hoá làm lại (v170). Chạy: node tests/hop-the/hop-the.test.js
+// Test bảng Hợp thể trong trận + màn Tiến hoá làm lại (v170); v180: ra Tím cũng phải nâng hết kỹ năng. Chạy: node tests/hop-the/hop-the.test.js
 const path = require('path');
 const fs = require('fs');
 const { open, enter, ok } = require('../cho-tuong/helpers');
@@ -7,10 +7,13 @@ fs.mkdirSync(SHOT, { recursive: true });
 const SAVE = new Set(['844x390']);   // chỉ lưu ảnh một cỡ cho nhẹ repo
 const OWNED = ['thachsanh', 'lachau', 'thansan', 'caolo', 'antiem', 'tiendung', 'langlieu', 'cdt', 'trongdong', 'caong', 'ongtao', 'potaoapui', 'baahoa', 'lyngu', 'truongchi', 'ongdung', 'thocong', 'nghedong', 'mychau', 'kimquy', 'kylan'];
 
-// đặt tướng thẳng lên sân (bỏ qua giá), tier = số sao
+// đặt tướng thẳng lên sân (bỏ qua giá), tier = số sao; mặc định nâng hết kỹ năng (extra.noSkill: giữ kỹ năng gốc)
 const put = (page, type, tier, extra = {}) => page.evaluate(([t, tier, ex]) => {
-  const s = game.freeSlots()[0]; game.gold += 9999; game.placeHero(s, t); const h = game.heroes[s]; h.tier = tier; Object.assign(h, ex); ui.sig = {}; return s;
+  const s = game.freeSlots()[0]; game.gold += 9999; game.placeHero(s, t); const h = game.heroes[s]; h.tier = tier;
+  if (!ex.noSkill) { h.level = 16; HEROES[h.type].skills.forEach((sk, i) => { h.skillLv[sk.id] = SKILL_MAX[i]; }); }
+  delete ex.noSkill; Object.assign(h, ex); ui.sig = {}; return s;
 }, [type, tier, extra]);
+const maxSkills = (page, slot) => page.evaluate((s) => { const h = game.heroes[s]; h.level = 16; HEROES[h.type].skills.forEach((sk, i) => { h.skillLv[sk.id] = SKILL_MAX[i]; }); ui.sig = {}; }, slot);
 // chữ tràn: phần tử có chữ mà scrollWidth > clientWidth (trừ chỗ cố ý cắt "…") hoặc lòi ra ngoài khung cha `root`
 const overflow = (page, root) => page.evaluate((root) => {
   const R = document.querySelector(root); if (!R) return ['không thấy ' + root];
@@ -81,6 +84,48 @@ async function legendsCase(w, h) {
   await browser.close();
 }
 
+// v180: thiếu kỹ năng thì không hợp thể ra Tím (mọi đường gọi), nâng hết thì được
+async function skillCase(w, h) {
+  const { browser, page, errors } = await open(w, h, { owned: OWNED });
+  await enter(page, 0);
+  await page.evaluate(() => { game.running = false; game.gold = 5000; });
+  const tag = `${w}x${h}`;
+  const a = await put(page, 'lactuong', 2, { noSkill: true }), b = await put(page, 'chuongdong', 2);
+  let r = await page.evaluate(([a, b]) => ({ c: game.canFuse(game.heroes[a], game.heroes[b]), gap: game.skillGap(game.heroes[a]), f: game.fuse(a, b), still: game.heroes[a] && game.heroes[a].type }), [a, b]);
+  ok(typeof r.c === 'string' && /Lạc Tướng còn thiếu \d+ cấp kỹ năng/.test(r.c) && r.gap > 0, `${tag}: Lạc Tướng ★★ chưa nâng kỹ năng → canFuse báo "${r.c.slice(0, 40)}…"`);
+  ok(typeof r.f === 'string' && r.still === 'lactuong', `${tag}: game.fuse bị chặn, tướng vẫn còn`);
+  ok(await page.evaluate(() => game.fusionProgress(FUSION.find((f) => f.to === 'trongdong')).p < 1), `${tag}: tiến độ (dải gợi ý) < 100% khi thiếu kỹ năng`);
+  // bảng Hợp thể: thẻ Thần Trống Đồng có huy hiệu KN, nút khoá, chạm → toast nêu rõ tướng thiếu
+  await page.click('#deck [data-act=legend-open]'); await page.waitForTimeout(200);
+  const iTD = await page.evaluate(() => FUSION.findIndex((f) => f.to === 'trongdong'));
+  const card = page.locator(`#legends .hx-card[data-i="${iTD}"]`);
+  const info = await card.evaluate((c) => ({ ready: c.classList.contains('ready'), lock: !!c.querySelector('.hx-go.off'), sk: [...c.querySelectorAll('.hx-sk')].map((x) => x.textContent) }));
+  ok(!info.ready && info.lock, `${tag}: thẻ không "ready", nút Hợp thể bị khoá`);
+  ok(info.sk.length === 2 && info.sk.some((t) => /^KN-\d+$/.test(t)) && info.sk.includes('KN✓'), `${tag}: huy hiệu kỹ năng từng nguyên liệu ${info.sk.join(' / ')}`);
+  await page.evaluate(() => { document.querySelector('#toasts').innerHTML = ''; });
+  await card.locator('.hx-go.off').click({ force: true }); await page.waitForTimeout(150);
+  const t = await page.evaluate(() => ({ txt: document.querySelector('#toasts').textContent, open: !document.querySelector('#legends').hidden, td: game.heroes.some((h) => h && h.type === 'trongdong') }));
+  ok(/Lạc Tướng còn thiếu \d+ cấp kỹ năng/.test(t.txt) && t.open && !t.td, `${tag}: chạm nút khoá → toast "${t.txt.slice(0, 50)}…", bảng vẫn mở, không hợp thể`);
+  // kéo thả cũng bị chặn
+  await page.evaluate(([a, b]) => ui.dropOn(a, b), [a, b]); await page.waitForTimeout(100);
+  ok(await page.evaluate(() => !game.heroes.some((h) => h && h.type === 'trongdong')), `${tag}: kéo thả thiếu kỹ năng → không hợp thể`);
+  // màn Tiến hoá: ✗ Kỹ năng tối đa (còn N), nút khoá chạm ra toast
+  await page.evaluate((s) => { ui.openLegends(false); ui.sel = s; ui.openScreen('evo'); }, a); await page.waitForTimeout(250);
+  const ev = await page.evaluate(() => [...document.querySelectorAll('#screen .ho-cond .n')].map((x) => x.textContent));
+  ok(ev.some((x) => /Kỹ năng tối đa \(còn \d+\)/.test(x)), `${tag}: Tiến hoá hiện ✗ Kỹ năng tối đa (còn N)`);
+  await page.evaluate(() => { document.querySelector('#toasts').innerHTML = ''; });
+  await page.locator('#screen .ho .hx-go.off').first().click({ force: true }); await page.waitForTimeout(150);
+  ok(/còn thiếu \d+ cấp kỹ năng/.test(await page.evaluate(() => document.querySelector('#toasts').textContent)), `${tag}: chạm nút khoá ở Tiến hoá → toast lý do`);
+  // nâng hết kỹ năng → hợp thể được
+  await maxSkills(page, a); await page.waitForTimeout(300);
+  const btn = page.locator('#screen .ho.ready .hx-go:not(.off)');
+  ok(await btn.count() === 1, `${tag}: nâng hết kỹ năng → nút Hợp thể bật`);
+  await btn.click(); await page.waitForTimeout(250);
+  ok(await page.evaluate(() => game.heroes.some((h) => h && h.type === 'trongdong')), `${tag}: đủ kỹ năng → ra Thần Trống Đồng`);
+  ok(!errors.length, `${tag}: không lỗi JS ${errors.join(' | ')}`);
+  await browser.close();
+}
+
 async function evoCase(w, h) {
   const { browser, page, errors } = await open(w, h, { owned: OWNED });
   await enter(page, 0);
@@ -100,11 +145,12 @@ async function evoCase(w, h) {
   if (SAVE.has(tag)) await page.screenshot({ path: path.join(SHOT, `tien-hoa-thuong-${tag}.png`) });
   const btn = page.locator('#screen .ho.ready .hx-go');
   ok(await btn.count() === 1 && await btn.isEnabled(), `${tag}: nút Hợp thể · 300 bật khi đủ điều kiện`);
-  ok(await page.locator('#screen .ho:not(.ready) .hx-go[disabled]').count() >= 1, `${tag}: hướng thiếu nguyên liệu → nút tắt, có ✗`);
+  ok(await page.locator('#screen .ho:not(.ready) .hx-go.off').count() >= 1, `${tag}: hướng thiếu nguyên liệu → nút khoá, có ✗`);
   await btn.click(); await page.waitForTimeout(250);
   const td = await page.evaluate(() => { const h = game.heroes.find((x) => x && x.type === 'trongdong'); return h ? h.slot : -1; });
   ok(td >= 0, `${tag}: bấm Hợp thể trong màn Tiến hoá → ra Thần Trống Đồng`);
-  // --- Tím (Thần tinh, có hướng lên Vàng)
+  // --- Tím (Thần tinh, có hướng lên Vàng); hạ cấp để mốc hiện tại là nút Lên cấp
+  await page.evaluate((s) => { game.heroes[s].level = 1; }, td);
   await openEvo(td);
   n = await page.evaluate(() => ({ cv: document.querySelectorAll('#screen canvas[data-hero]').length, ho: document.querySelectorAll('#screen .ho').length, n: document.querySelectorAll('#screen .ho-cond .n').length, lv: !!document.querySelector('#screen .es.cur [data-act=sk-level]') }));
   ok(n.cv === 1 && n.ho >= 1 && n.n >= 1 && n.lv, `${tag} Tím: 1 ảnh, ${n.ho} hướng lên Vàng có điều kiện ✗, mốc hiện tại có nút Lên cấp`);
@@ -146,6 +192,7 @@ async function evoCase(w, h) {
     console.log(`— ${w}x${h}`);
     await legendsCase(w, h);
     await evoCase(w, h);
+    await skillCase(w, h);
   }
   console.log('XONG: tất cả test Hợp thể / Tiến hoá đạt');
 })().catch((e) => { console.error(e); process.exit(1); });

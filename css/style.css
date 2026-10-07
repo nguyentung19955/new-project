@@ -1911,6 +1911,10 @@ svg.icn { overflow: visible; }
 .hx-m.ok small { color: #9dffc4; }
 .hx-go { height: 30px; padding: 0 10px; border-radius: 6px; border: 1.5px solid var(--gold-pale); background: linear-gradient(180deg, #F2D27A, #B8852A); color: #2A1A08; font-size: 13px; font-weight: 900; white-space: nowrap; display: flex; align-items: center; gap: 3px; box-shadow: 0 0 10px #FFD66B66; }
 .hx-go:disabled { filter: grayscale(.7) brightness(.7); box-shadow: none; }
+.hx-go.off { filter: grayscale(.8) brightness(.62); box-shadow: none; }   /* v180: khoá (chưa đủ sao / kỹ năng) — chạm vẫn ra toast lý do */
+.hx-go .uie { width: 13px; height: 13px; }
+.hx-sk { position: absolute; left: -5px; top: -5px; height: 13px; padding: 0 2px; border-radius: 4px; font-size: 8px; font-weight: 900; line-height: 13px; letter-spacing: -.3px; white-space: nowrap; color: #fff; }
+.hx-sk.y { background: #2E7A3A; } .hx-sk.n { background: #A8452A; }
 .hx-go .coin-img, .hx-go .coin { margin-left: 2px; }
 .hx-st { font-size: 12px; font-weight: 800; color: var(--muted); white-space: nowrap; display: flex; align-items: center; gap: 3px; }
 .hx-st.lock { color: #C8BFA8; font-size: 11px; }

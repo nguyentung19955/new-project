@@ -1696,8 +1696,8 @@ class Game {
       const starP = best.from ? (best.tier || 0) / need : Math.min(1, hs.reduce((a, h) => a + Math.pow(2, Math.max(0, (h.tier || 1) - 1)), 0) / Math.pow(2, need - 1));
       const sk = HEROES[type].skills.reduce((a, s, i) => a + Math.min(SKILL_MAX[i], skillLevel(best, i)), 0) / SKILL_MAX.reduce((a, b) => a + b, 0);
       const ready = this.fusionReady(best) === true;
-      // v136: tướng Thường chỉ cần đủ sao (không tính kỹ năng)
-      return { p: ready ? 1 : Math.min(0.99, best.from ? starP * 0.7 + sk * 0.3 : starP), h: best };
+      // v180: cả tướng Thường lẫn tướng thần đều tính kỹ năng (hợp thể cần kỹ năng tối đa)
+      return { p: ready ? 1 : Math.min(0.99, starP * 0.7 + sk * 0.3), h: best };
     };
     const A = score(f.a), B = score(f.b);
     return { p: (A.p + B.p) / 2, a: A.h, b: B.h };
@@ -1706,11 +1706,13 @@ class Game {
   // 2 tướng ★★★ đúng công thức (đủ kỹ năng) → thần mới
   fusionReady(h) {
     if ((h.tier || 0) < this.ascendNeed(h)) return h.from ? `${HEROES[h.type].name} cần Thần tinh ${'★'.repeat(COSTS.ascendTier2)}` : `${HEROES[h.type].name} cần ${'★'.repeat(COSTS.ascendTier)}`;
-    if (!h.from) return true;   // v136: tướng Thường → tướng Tím không cần kỹ năng tối đa
+    // v180: bỏ ngoại lệ v136 — ra tướng Tím cũng phải nâng hết kỹ năng cả 2 tướng Thường
     const left = this.skillsLeft(h);
-    if (left.length) return `${HEROES[h.type].name} cần nâng tối đa kỹ năng: ${left.map(([k, lv, mx]) => `${k} ${lv}/${mx}`).join(', ')}`;
+    if (left.length) return `${HEROES[h.type].name} còn thiếu ${this.skillGap(h)} cấp kỹ năng: ${left.map(([k, lv, mx]) => `${k} ${lv}/${mx}`).join(', ')}`;
     return true;
   }
+  // số cấp kỹ năng còn thiếu tới tối đa (0 = đã nâng hết)
+  skillGap(h) { return this.skillsLeft(h).reduce((a, [, lv, mx]) => a + mx - lv, 0); }
   // tài khoản đã mua tướng này chưa (owned = null: không giới hạn, ví dụ bot mô phỏng)
   ownsHero(t) { return !this.owned || !HEROES[t].legend || this.owned.has(t); }
   canFuse(a, b) {
