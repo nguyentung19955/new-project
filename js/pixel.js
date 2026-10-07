@@ -32,7 +32,8 @@ function pxEntry(group, code) {
   if (!e.key) e.key = group + '/' + code;
   return e;
 }
-const pxEnemyEntry = (type) => pxEntry('quai', type) || pxEntry('boss', type);
+// Giao Long Con đổi màu theo hành (e.el: hoa / tho → quai/giaolong-hoa|-tho; thuy hoặc chưa có → giaolong)
+const pxEnemyEntry = (type, e) => (type === 'giaolong' && e && e.el && pxEntry('quai', 'giaolong-' + e.el)) || pxEntry('quai', type) || pxEntry('boss', type);
 // đường dẫn ảnh (trong assets/) — dùng cho <img>
 const pxPath = (e, cd) => `pixel/${e.key}${cd ? '-chan-dung' : ''}.png`;
 const pxUrl = (group, code, cd) => { const e = pxEntry(group, code); return e && hasAsset(pxPath(e, cd)) ? assetSrc(pxPath(e, cd)) : ''; };
@@ -132,7 +133,7 @@ function pxDrawHero(ctx, h, x, y, o) {
 
 // ---- QUÁI / BOSS: kích thước (enemyBox) + vẽ (drawEnemy, sau khi đã dịch / lật / nhún)
 function pxEnemyBox(e, w, k) {
-  const pe = pxEnemyEntry(e.type);
+  const pe = pxEnemyEntry(e.type, e);
   if (!pe) return null;
   const unit = w / Math.max(8, pe.bbox[2]);
   const h = (pe.ay + 1 - pe.bbox[1]) * unit;
