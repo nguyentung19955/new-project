@@ -2000,3 +2000,7 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 - Cuối file có danh sách hình code CHƯA có chỗ nhận ảnh (vòng tầm đánh, đồng xu rơi, số sát thương, icon vai trò, nút ✕ / ‹, emoji ngăn kéo, sao ★…) — cần nối code trước khi gen.
 - Khi gộp: icon kỹ năng cắt bằng cat-anh ra `packs/<tướng>/sk-*.png` → nhớ thêm tướng vào `SKILL_PACK` (js/render.js:465). Ảnh tester: chỉ là tài liệu + tool ngoài, không đổi game.
 - Test: `node tests/cat-anh/cat-anh.test.js` (Tất cả đạt).
+
+## Phiên bản 192 — File prompt thay hình vẽ bằng code
+
+- Gộp claude/prompt-thay-hinh-code: docs/PROMPT-THAY-HINH-CODE.txt (112 ảnh → 222 file), tool cắt ảnh nhận tên mới.
