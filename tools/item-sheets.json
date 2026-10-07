@@ -1,0 +1,199 @@
+{
+ "ui-tran-4": {
+  "dir": "ui",
+  "files": [
+   "ui-tran-4-1.png",
+   "ui-tran-4-2.png",
+   "ui-tran-4-3.png",
+   "ui-tran-4-4.png"
+  ]
+ },
+ "ui-tran-5": {
+  "dir": "ui",
+  "files": [
+   "ui-tran-5-1.png",
+   "ui-tran-5-2.png",
+   "ui-tran-5-3.png",
+   "ui-tran-5-4.png"
+  ]
+ },
+ "ui-huy-chuong": {
+  "dir": "ui",
+  "files": [
+   "ui-huy-chuong-1.png",
+   "ui-huy-chuong-2.png",
+   "ui-huy-chuong-3.png",
+   "ui-huy-chuong-4.png"
+  ]
+ },
+ "do-riu": {
+  "dir": "",
+  "files": [
+   "do_riu_thuong.png",
+   "do_riu_hiem.png",
+   "do_riu_su-thi.png",
+   "do_riu_huyen-thoai.png"
+  ]
+ },
+ "do-no": {
+  "dir": "",
+  "files": [
+   "do_no_thuong.png",
+   "do_no_hiem.png",
+   "do_no_su-thi.png",
+   "do_no_huyen-thoai.png"
+  ]
+ },
+ "do-gay": {
+  "dir": "",
+  "files": [
+   "do_gay_thuong.png",
+   "do_gay_hiem.png",
+   "do_gay_su-thi.png",
+   "do_gay_huyen-thoai.png"
+  ]
+ },
+ "do-mu": {
+  "dir": "",
+  "files": [
+   "do_mu_thuong.png",
+   "do_mu_hiem.png",
+   "do_mu_su-thi.png",
+   "do_mu_huyen-thoai.png"
+  ]
+ },
+ "do-giap": {
+  "dir": "",
+  "files": [
+   "do_giap_thuong.png",
+   "do_giap_hiem.png",
+   "do_giap_su-thi.png",
+   "do_giap_huyen-thoai.png"
+  ]
+ },
+ "bo-lac-long": {
+  "dir": "",
+  "files": [
+   "bo-lac-long_riu.png",
+   "bo-lac-long_no.png",
+   "bo-lac-long_gay.png",
+   "bo-lac-long_mu.png",
+   "bo-lac-long_giap.png"
+  ]
+ },
+ "bo-son-tinh": {
+  "dir": "",
+  "files": [
+   "bo-son-tinh_riu.png",
+   "bo-son-tinh_no.png",
+   "bo-son-tinh_gay.png",
+   "bo-son-tinh_mu.png",
+   "bo-son-tinh_giap.png"
+  ]
+ },
+ "bo-chim-lac": {
+  "dir": "",
+  "files": [
+   "bo-chim-lac_riu.png",
+   "bo-chim-lac_no.png",
+   "bo-chim-lac_gay.png",
+   "bo-chim-lac_mu.png",
+   "bo-chim-lac_giap.png"
+  ]
+ },
+ "bo-trong-dong": {
+  "dir": "",
+  "files": [
+   "bo-trong-dong_riu.png",
+   "bo-trong-dong_no.png",
+   "bo-trong-dong_gay.png",
+   "bo-trong-dong_mu.png",
+   "bo-trong-dong_giap.png"
+  ]
+ },
+ "bo-ngua-sat": {
+  "dir": "",
+  "files": [
+   "bo-ngua-sat_riu.png",
+   "bo-ngua-sat_no.png",
+   "bo-ngua-sat_gay.png",
+   "bo-ngua-sat_mu.png",
+   "bo-ngua-sat_giap.png"
+  ]
+ },
+ "phu-kien-1": {
+  "dir": "",
+  "files": [
+   "phu-kien_vuot-ho.png",
+   "phu-kien_gang-da.png",
+   "phu-kien_dai.png",
+   "phu-kien_dep-co.png"
+  ]
+ },
+ "phu-kien-2": {
+  "dir": "",
+  "files": [
+   "phu-kien_khan.png",
+   "phu-kien_khan-hien-gia.png",
+   "phu-kien_mat-ngoc.png",
+   "phu-kien_ngoc-sinh-luc.png",
+   "phu-kien_mat-trong.png"
+  ]
+ },
+ "phu-kien-3": {
+  "dir": "",
+  "files": [
+   "phu-kien_dui-trong.png",
+   "phu-kien_sung-te.png",
+   "phu-kien_long-chim-lac.png",
+   "phu-kien_vay-ca.png",
+   "phu-kien_hat-lua.png"
+  ]
+ },
+ "sinh-le": {
+  "dir": "",
+  "files": [
+   "sinh-le_voi-chin-nga.png",
+   "sinh-le_ga-chin-cua.png",
+   "sinh-le_ngua-chin-hong-mao.png",
+   "sinh-le_ngoc-hoi-sinh.png"
+  ]
+ },
+ "do-ghep-1": {
+  "dir": "",
+  "files": [
+   "do-ghep_trong-dong.png",
+   "do-ghep_song-riu-cuong-no.png",
+   "do-ghep_gay-tam-gioi.png",
+   "do-ghep_gay-thoi-khong.png"
+  ]
+ },
+ "do-ghep-2": {
+  "dir": "",
+  "files": [
+   "do-ghep_giap-dong-bat-diet.png",
+   "do-ghep_luoi-hai-chi-tu.png",
+   "do-ghep_mui-sung-pha-giap.png",
+   "do-ghep_riu-quet-song.png"
+  ]
+ },
+ "do-ghep-3": {
+  "dir": "",
+  "files": [
+   "do-ghep_cung-mat-chim.png",
+   "do-ghep_bua-chim-lac.png",
+   "do-ghep_ao-vay-ca.png",
+   "do-ghep_ngoc-tran-thuy.png"
+  ]
+ },
+ "do-ghep-4": {
+  "dir": "",
+  "files": [
+   "do-ghep_luoi-danh-ca.png",
+   "do-ghep_ngoc-minh-chau.png",
+   "do-ghep_vuot-kim-quy.png",
+   "do-ghep_riu-than-thach-sanh.png",
+   "do-ghep_ao-long-vu-au-co.png"
+  ]
+ }
+}

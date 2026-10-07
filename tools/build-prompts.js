@@ -75,7 +75,7 @@ ${BG}`;
 };
 const enemyPrompt = (t) => `Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.
 CREATURE: ${ENEMY_DESC[t]}. Cute-but-mischievous chibi monster facing RIGHT.
-CELLS (same creature, same size): [1] walk step A [2] walk step B (opposite legs) [3] attack.
+CELLS (same creature, same size): ${REDO_FLY.has(k) ? '[1] flying, wings up [2] flying, wings down [3] diving attack' : '[1] walk step A [2] walk step B (opposite legs) [3] attack'}.
 ${STYLE}
 ${BG}`;
 const iconPrompt = (t) => `Create ONE image: a 512x128 row of four equal 128x128 square game skill icons for the hero ${HEROES[t].name}, one icon per cell, left to right:
@@ -148,7 +148,26 @@ const REDO_ENEMY = {
   cua: 'Cua: big red river crab soldier walking sideways, huge claws, tiny bronze helmet',
   kybinh: 'Kỵ Binh giặc Ân: enemy horseman in dark leather armor riding a small brown horse, long spear',
   voichien: 'Voi Chiến: grey war elephant with a red and gold saddle tower, bronze tusk caps, small banner',
+  // v140: quái vẽ trước 06/10 (nét mảnh, khác phong cách chibi viền đậm hiện tại) → gen lại
+  tom: 'Tôm Binh: orange river-shrimp soldier walking on small legs, tiny bronze helmet, round bronze shield with a star, short spear',
+  casau: 'Cá Sấu: chubby green crocodile walking on four short legs, bumpy back scales, toothy grin, bronze ring on the tail',
+  rua: 'Rùa Giáp: big slow tortoise walking on four legs, dark green shell with bronze spikes and a zigzag rim, stern eyebrows',
+  phuthuy: 'Phù Thủy Nước: small water witch in a teal hooded robe of seaweed, glowing cyan eyes in the hood, coral branch staff',
+  chimbao: 'Chim Bão: blue-grey storm bird flying with wide wings, small lightning sparks on the wing tips, angry eyes',
+  echme: 'Ếch Mẹ: big fat green mother toad with a yellow belly, warts on the back, wide mouth, hopping',
+  nongnoc: 'Nòng Nọc: small round black tadpole with a wiggly tail and one big shiny eye, swimming',
+  giaolong: 'Giao Long Con: young green water dragon slithering, small horns, whiskers, little fins, curled tail',
+  yeutinh: 'Yêu Tinh Rừng: small green forest goblin with pointy ears, leaf loincloth, wooden club',
+  ran: 'Rắn Độc: green venomous snake slithering in S-curves, yellow belly stripes, forked red tongue, small fangs',
+  doi: 'Dơi Hang: purple cave bat flying, big ears, tiny fangs, red eyes, leathery wings',
+  thachtinh: 'Thạch Tinh: stocky grey stone golem of the cave, cracked rock body with moss, glowing yellow eyes, big stone fists',
+  dacon: 'Đá Con: small round grey rock creature with big cute eyes, stubby arms and legs, running',
+  linhan: 'Lính Giáo giặc Ân: enemy foot soldier in dark red leather armor, leather helmet, round wooden shield, long spear',
+  cungan: 'Cung Thủ giặc Ân: enemy archer in brown-green leather armor, cloth cap, quiver on the back, drawing a wooden bow',
+  muc: 'Mực Tinh: pink squid spirit floating upright, big angry eyes, eight curly tentacles, small ink drops',
 };
+const REDO_ENEMY_FORCE = new Set(['tom', 'casau', 'rua', 'phuthuy', 'chimbao', 'echme', 'nongnoc', 'giaolong', 'yeutinh', 'ran', 'doi', 'thachtinh', 'dacon', 'linhan', 'cungan', 'muc']);
+const REDO_FLY = new Set(['doi', 'chimbao']);
 const REDO_BOSS = {
   anvuong: 'Ân Vương: tyrant king of the Ân invaders in black and gold armor riding a black warhorse, crown helmet with red plume, big halberd',
   chantinh: 'Chằn Tinh: big green ogre demon of the banyan forest, tusks, horn, loincloth, huge stone club',
@@ -158,11 +177,13 @@ const REDO_BOSS = {
   thuytinh: 'Thủy Tinh: water god warlord in silver-blue armor and fish-scale cape, crown of waves, trident',
   trieuda: 'Triệu Đà: enemy general in dark red and black armor, topknot, long beard, big curved sword',
   daibang: 'Đại Bàng Tinh: giant golden-brown eagle demon of the cave, spread wings, sharp talons, fierce red eyes, flying',
+  hotinh: 'Hồ Tinh Chín Đuôi: white nine-tailed fox demon standing on hind legs, nine fluffy tails fanned out, sly red eyes, purple fox-fire flames',
 };
-const REDO_FORCE = new Set(['daibang']);   // có 2 dáng nhưng nét cũ, nhỏ, lệch phong cách chung
+// có đủ dáng nhưng nét cũ, nhỏ, lệch phong cách chung; cắt xong bản mới thì tạo file assets/packs/<mã>/.redo để bỏ khỏi danh sách
+const REDO_FORCE = new Set(['daibang', 'trieuda', 'hotinh']);
 const redoEnemyPrompt = (k) => `Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.
 CREATURE: ${REDO_ENEMY[k]}. Cute-but-mischievous chibi monster facing RIGHT.
-CELLS (same creature, same size): [1] walk step A [2] walk step B (opposite legs) [3] attack.
+CELLS (same creature, same size): ${REDO_FLY.has(k) ? '[1] flying, wings up [2] flying, wings down [3] diving attack' : '[1] walk step A [2] walk step B (opposite legs) [3] attack'}.
 ${STYLE}
 ${BG}`;
 const redoBossPrompt = (k) => `Create ONE image: a 512x512 boss sprite sheet for a cute mobile tower-defense game based on Vietnamese folk legends, an invisible 2x2 grid of four equal 256x256 cells.
@@ -170,8 +191,66 @@ BOSS: ${REDO_BOSS[k]}. Big, menacing but still cute chibi boss facing RIGHT.
 CELLS (same character, same size, left to right, top to bottom): [1] walk step A [2] walk step B (opposite legs) [3] attack swing [4] rage: body glowing red-orange, roaring.
 ${STYLE}
 ${BG}`;
-for (const k of Object.keys(REDO_ENEMY).filter(sameFrames)) items.push({ group: '10. Quái gen lại (đủ dáng)', file: `${k}.png`, title: `Quái · ${ENEMIES[k].name}`, text: redoEnemyPrompt(k) });
+const redone = (k) => fs.existsSync(path.join(ROOT, 'assets/packs', k, '.redo'));
+for (const k of Object.keys(REDO_ENEMY).filter((x) => REDO_ENEMY_FORCE.has(x) ? !redone(x) : sameFrames(x))) items.push({ group: '10. Quái gen lại (đủ dáng)', file: `${k}.png`, title: `Quái · ${ENEMIES[k].name}`, text: redoEnemyPrompt(k) });
 for (const k of Object.keys(REDO_BOSS).filter((x) => REDO_FORCE.has(x) ? !fs.existsSync(path.join(ROOT, 'assets/packs', x, '.redo')) : sameFrames(x))) items.push({ group: '11. Boss gen lại (đủ dáng)', file: `${k}.png`, title: `Boss · ${ENEMIES[k].name}`, text: redoBossPrompt(k) });
+// v140: icon đồ vật (đang vẽ bằng code) — mỗi tấm 4–5 ô, cắt bằng: python3 tools/cat-items.py <ảnh> <mã tấm>
+const ITEM_STYLE = 'cute mobile-game item icon, chunky readable shape, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, circle-dots)';
+const RAR_LOOK = [['thuong', 'COMMON: plain dull bronze and wood, no gems'], ['hiem', 'RARE: polished bronze with blue trim and one small blue gem'],
+  ['su-thi', 'EPIC: silver and purple trim, purple gem, faint purple glow'], ['huyen-thoai', 'LEGENDARY: ornate gold with a sun-star engraving, red gem, small golden glow']];
+const KIND_LOOK = { riu: 'a short bronze battle axe (Rìu Đồng)', no: 'a bamboo crossbow (Nỏ Tre)', gay: 'a shaman staff with a carved head (Gậy Thầy Mo)', mu: 'a feathered warrior headdress hat (Mũ Lông Chim)', giap: 'a sleeveless warrior tunic / chest armor (Áo Giáp)' };
+const SET_LOOK = {
+  'lac-long': 'Lạc Long Quân dragon set: jade-green dragon scales, sea-wave patterns, pearl accents',
+  'son-tinh': 'Sơn Tinh mountain set: grey carved stone and earth-brown, small green moss, mountain-peak shapes',
+  'chim-lac': 'Lac bird set: cream-white feathers on bronze, Lac bird head shapes, long tail feathers',
+  'trong-dong': 'bronze drum set: shiny gold-bronze with drum-face sun-star rings and circle-dot bands',
+  'ngua-sat': 'Thánh Gióng iron horse set: black iron with glowing red-orange fire manes and ember sparks',
+};
+const SET_PIECE = { riu: 'axe', no: 'crossbow', gay: 'staff', mu: 'helmet', giap: 'chest armor' };
+const ACC = [
+  ['vuot-ho', 'tiger claw on a cord'], ['gang-da', 'brown leather glove'], ['dai', 'woven belt with a bronze buckle'], ['dep-co', 'pair of straw sandals'],
+  ['khan', 'red cloth headband scarf'], ['khan-hien-gia', 'indigo sage turban with a small bronze pin'], ['mat-ngoc', 'jade eye-shaped amulet'], ['ngoc-sinh-luc', 'glowing green life jade'],
+  ['mat-trong', 'flat bronze drum face with sun-star'], ['dui-trong', 'wooden drum mallet with a cloth grip'], ['sung-te', 'rhino horn'], ['long-chim-lac', 'single long Lac bird feather'],
+  ['vay-ca', 'shiny silver-blue fish scale'], ['hat-lua', 'handful of golden rice grains'],
+];
+const SINH_LE = [['voi-chin-nga', 'small cute elephant with nine tusks and a red saddle cloth'], ['ga-chin-cua', 'proud rooster with nine spurs and a red comb'],
+  ['ngua-chin-hong-mao', 'small horse with a flowing nine-colored red mane'], ['ngoc-hoi-sinh', 'glowing red-gold revival pearl with a phoenix shape inside']];
+// chia 4–5 ô mỗi tấm, không để tấm lẻ 1–3 ô
+const chunk = (a) => { const out = []; let i = 0; while (i < a.length) { const left = a.length - i; const n = left === 5 || left === 10 ? 5 : left > 5 && left % 4 && left % 4 < 4 && left <= 7 ? left - 4 : 4; out.push(a.slice(i, i + Math.min(n, 5))); i += Math.min(n, 5); } return out; };
+const ACC_GHEP = [
+  ['trong-dong', 'Dong Son bronze drum, full drum with frogs on top'], ['song-riu-cuong-no', 'two crossed red-glowing battle axes'], ['gay-tam-gioi', 'staff with three rings of sky, earth and water'], ['gay-thoi-khong', 'staff topped with a spinning hourglass and stars'],
+  ['giap-dong-bat-diet', 'heavy bronze chest armor with a shield emblem'], ['luoi-hai-chi-tu', 'dark scythe with a curved blade and purple glow'], ['mui-sung-pha-giap', 'sharp horn spearhead cracking a shield'], ['riu-quet-song', 'wide axe with a water-wave blade'],
+  ['cung-mat-chim', 'bow with a bird eye on the grip'], ['bua-chim-lac', 'bronze Lac bird talisman on a red string'], ['ao-vay-ca', 'shirt covered in silver fish scales'], ['ngoc-tran-thuy', 'blue water-sealing jade with a calm wave inside'],
+  ['luoi-danh-ca', 'folded fishing net with floats'], ['ngoc-minh-chau', 'radiant white sea pearl on a shell'], ['vuot-kim-quy', 'golden turtle claw crossbow trigger'], ['riu-than-thach-sanh', 'heavenly golden axe of Thạch Sanh with light rays'],
+  ['ao-long-vu-au-co', 'white feather cloak of Âu Cơ with a golden clasp'],
+];
+const ITEM_SHEETS = {};
+for (const [k, look] of Object.entries(KIND_LOOK)) ITEM_SHEETS[`do-${k}`] = { title: `Đồ thường · ${k} (4 độ hiếm)`, cells: RAR_LOOK.map(([r, rl]) => [`do_${k}_${r}.png`, `${look}, ${rl}`]) };
+for (const [k, look] of Object.entries(SET_LOOK)) ITEM_SHEETS[`bo-${k}`] = { title: `Đồ bộ · ${k} (5 món)`, cells: Object.keys(SET_PIECE).map((pc) => [`bo-${k}_${pc}.png`, `${SET_PIECE[pc]} of the ${look}`]) };
+chunk(ACC).forEach((c, i) => { ITEM_SHEETS[`phu-kien-${i + 1}`] = { title: `Phụ kiện ${i + 1}`, cells: c.map(([f, d]) => [`phu-kien_${f}.png`, d]) }; });
+ITEM_SHEETS['sinh-le'] = { title: 'Sính lễ của boss', cells: SINH_LE.map(([f, d]) => [`sinh-le_${f}.png`, `${d}, legendary treasure, small golden glow`]) };
+chunk(ACC_GHEP).forEach((c, i) => { ITEM_SHEETS[`do-ghep-${i + 1}`] = { title: `Đồ ghép ${i + 1}`, cells: c.map(([f, d]) => [`do-ghep_${f}.png`, `${d}, rare magical crafted item, slightly glowing`]) }; });
+// v140: thêm nút giao diện cho các chỗ còn dùng emoji
+const UI_SHEETS2 = {
+  'ui-tran-4': ['golden star with a plus sign (merge stars)', 'tunic with an upward arrow (equip gear)', 'bronze padlock (locked)', 'two circular arrows (reroll / refresh)'],
+  'ui-tran-5': ['glowing bronze oil lamp (hint / tip)', 'infinity loop made of bronze rope (endless mode)', 'two crossed bronze swords (battle)', 'green check mark on a bronze disc (done)'],
+  'ui-huy-chuong': ['gold medal with a red ribbon', 'silver medal with a blue ribbon', 'bronze medal with a green ribbon', 'small golden crown (top rank)'],
+};
+const sheetPrompt = (cells, what) => `Create ONE image: a ${cells.length * 128}x128 row of ${cells.length} equal 128x128 square ${what}, one per cell, left to right:
+${cells.map((x, i) => `[${i + 1}] ${x}`).join('  ')}.
+${what.includes('UI') ? DRUM : ITEM_STYLE}. Each icon: one bold centered object, readable at 40 px, no text, no letters, no numbers.
+${BG}`;
+const done = (f) => fs.existsSync(path.join(ROOT, 'assets', f));
+const sheetsJson = {};
+for (const [k, v] of Object.entries(UI_SHEETS2)) {
+  sheetsJson[k] = { dir: 'ui', files: v.map((_, i) => `${k}-${i + 1}.png`) };
+  if (!done(`ui/${k}-1.png`)) items.push({ group: '12. Nút giao diện thêm (trống đồng)', file: `${k}.png`, title: `Nút · ${k}`, text: sheetPrompt(v, 'game UI icons') });
+}
+for (const [k, v] of Object.entries(ITEM_SHEETS)) {
+  sheetsJson[k] = { dir: '', files: v.cells.map((c) => c[0]) };
+  if (!v.cells.every((c) => done(c[0]))) items.push({ group: '13. Icon đồ vật', file: `${k}.png`, title: v.title, text: sheetPrompt(v.cells.map((c) => c[1]), 'game item icons') });
+}
+fs.writeFileSync(path.join(ROOT, 'tools/item-sheets.json'), JSON.stringify(sheetsJson, null, 1));
 items.forEach((it, i) => { it.n = i + 1; });
 const noIcon = need.filter((x) => !ICONS[x]);  // tướng mới chưa có mô tả icon
 if (noIcon.length) console.error('Chưa có mô tả icon:', noIcon.join(', '));

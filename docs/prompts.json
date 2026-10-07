@@ -7,17 +7,283 @@
   "n": 1
  },
  {
+  "group": "10. Quái gen lại (đủ dáng)",
+  "file": "tom.png",
+  "title": "Quái · Tôm Binh",
+  "text": "Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.\nCREATURE: Tôm Binh: orange river-shrimp soldier walking on small legs, tiny bronze helmet, round bronze shield with a star, short spear. Cute-but-mischievous chibi monster facing RIGHT.\nCELLS (same creature, same size): [1] walk step A [2] walk step B (opposite legs) [3] attack.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 2
+ },
+ {
+  "group": "10. Quái gen lại (đủ dáng)",
+  "file": "casau.png",
+  "title": "Quái · Cá Sấu",
+  "text": "Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.\nCREATURE: Cá Sấu: chubby green crocodile walking on four short legs, bumpy back scales, toothy grin, bronze ring on the tail. Cute-but-mischievous chibi monster facing RIGHT.\nCELLS (same creature, same size): [1] walk step A [2] walk step B (opposite legs) [3] attack.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 3
+ },
+ {
+  "group": "10. Quái gen lại (đủ dáng)",
+  "file": "rua.png",
+  "title": "Quái · Rùa Giáp",
+  "text": "Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.\nCREATURE: Rùa Giáp: big slow tortoise walking on four legs, dark green shell with bronze spikes and a zigzag rim, stern eyebrows. Cute-but-mischievous chibi monster facing RIGHT.\nCELLS (same creature, same size): [1] walk step A [2] walk step B (opposite legs) [3] attack.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 4
+ },
+ {
+  "group": "10. Quái gen lại (đủ dáng)",
+  "file": "phuthuy.png",
+  "title": "Quái · Phù Thủy Nước",
+  "text": "Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.\nCREATURE: Phù Thủy Nước: small water witch in a teal hooded robe of seaweed, glowing cyan eyes in the hood, coral branch staff. Cute-but-mischievous chibi monster facing RIGHT.\nCELLS (same creature, same size): [1] walk step A [2] walk step B (opposite legs) [3] attack.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 5
+ },
+ {
+  "group": "10. Quái gen lại (đủ dáng)",
+  "file": "chimbao.png",
+  "title": "Quái · Chim Bão",
+  "text": "Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.\nCREATURE: Chim Bão: blue-grey storm bird flying with wide wings, small lightning sparks on the wing tips, angry eyes. Cute-but-mischievous chibi monster facing RIGHT.\nCELLS (same creature, same size): [1] flying, wings up [2] flying, wings down [3] diving attack.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 6
+ },
+ {
+  "group": "10. Quái gen lại (đủ dáng)",
+  "file": "echme.png",
+  "title": "Quái · Ếch Mẹ",
+  "text": "Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.\nCREATURE: Ếch Mẹ: big fat green mother toad with a yellow belly, warts on the back, wide mouth, hopping. Cute-but-mischievous chibi monster facing RIGHT.\nCELLS (same creature, same size): [1] walk step A [2] walk step B (opposite legs) [3] attack.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 7
+ },
+ {
+  "group": "10. Quái gen lại (đủ dáng)",
+  "file": "nongnoc.png",
+  "title": "Quái · Nòng Nọc",
+  "text": "Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.\nCREATURE: Nòng Nọc: small round black tadpole with a wiggly tail and one big shiny eye, swimming. Cute-but-mischievous chibi monster facing RIGHT.\nCELLS (same creature, same size): [1] walk step A [2] walk step B (opposite legs) [3] attack.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 8
+ },
+ {
+  "group": "10. Quái gen lại (đủ dáng)",
+  "file": "giaolong.png",
+  "title": "Quái · Giao Long Con",
+  "text": "Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.\nCREATURE: Giao Long Con: young green water dragon slithering, small horns, whiskers, little fins, curled tail. Cute-but-mischievous chibi monster facing RIGHT.\nCELLS (same creature, same size): [1] walk step A [2] walk step B (opposite legs) [3] attack.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 9
+ },
+ {
+  "group": "10. Quái gen lại (đủ dáng)",
+  "file": "yeutinh.png",
+  "title": "Quái · Yêu Tinh Rừng",
+  "text": "Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.\nCREATURE: Yêu Tinh Rừng: small green forest goblin with pointy ears, leaf loincloth, wooden club. Cute-but-mischievous chibi monster facing RIGHT.\nCELLS (same creature, same size): [1] walk step A [2] walk step B (opposite legs) [3] attack.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 10
+ },
+ {
+  "group": "10. Quái gen lại (đủ dáng)",
+  "file": "ran.png",
+  "title": "Quái · Rắn Độc",
+  "text": "Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.\nCREATURE: Rắn Độc: green venomous snake slithering in S-curves, yellow belly stripes, forked red tongue, small fangs. Cute-but-mischievous chibi monster facing RIGHT.\nCELLS (same creature, same size): [1] walk step A [2] walk step B (opposite legs) [3] attack.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 11
+ },
+ {
+  "group": "10. Quái gen lại (đủ dáng)",
+  "file": "doi.png",
+  "title": "Quái · Dơi Hang",
+  "text": "Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.\nCREATURE: Dơi Hang: purple cave bat flying, big ears, tiny fangs, red eyes, leathery wings. Cute-but-mischievous chibi monster facing RIGHT.\nCELLS (same creature, same size): [1] flying, wings up [2] flying, wings down [3] diving attack.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 12
+ },
+ {
+  "group": "10. Quái gen lại (đủ dáng)",
+  "file": "thachtinh.png",
+  "title": "Quái · Thạch Tinh",
+  "text": "Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.\nCREATURE: Thạch Tinh: stocky grey stone golem of the cave, cracked rock body with moss, glowing yellow eyes, big stone fists. Cute-but-mischievous chibi monster facing RIGHT.\nCELLS (same creature, same size): [1] walk step A [2] walk step B (opposite legs) [3] attack.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 13
+ },
+ {
+  "group": "10. Quái gen lại (đủ dáng)",
+  "file": "dacon.png",
+  "title": "Quái · Đá Con",
+  "text": "Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.\nCREATURE: Đá Con: small round grey rock creature with big cute eyes, stubby arms and legs, running. Cute-but-mischievous chibi monster facing RIGHT.\nCELLS (same creature, same size): [1] walk step A [2] walk step B (opposite legs) [3] attack.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 14
+ },
+ {
+  "group": "10. Quái gen lại (đủ dáng)",
+  "file": "linhan.png",
+  "title": "Quái · Lính Giáo",
+  "text": "Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.\nCREATURE: Lính Giáo giặc Ân: enemy foot soldier in dark red leather armor, leather helmet, round wooden shield, long spear. Cute-but-mischievous chibi monster facing RIGHT.\nCELLS (same creature, same size): [1] walk step A [2] walk step B (opposite legs) [3] attack.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 15
+ },
+ {
+  "group": "10. Quái gen lại (đủ dáng)",
+  "file": "cungan.png",
+  "title": "Quái · Cung Thủ Giặc",
+  "text": "Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.\nCREATURE: Cung Thủ giặc Ân: enemy archer in brown-green leather armor, cloth cap, quiver on the back, drawing a wooden bow. Cute-but-mischievous chibi monster facing RIGHT.\nCELLS (same creature, same size): [1] walk step A [2] walk step B (opposite legs) [3] attack.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 16
+ },
+ {
+  "group": "10. Quái gen lại (đủ dáng)",
+  "file": "muc.png",
+  "title": "Quái · Mực Tinh",
+  "text": "Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.\nCREATURE: Mực Tinh: pink squid spirit floating upright, big angry eyes, eight curly tentacles, small ink drops. Cute-but-mischievous chibi monster facing RIGHT.\nCELLS (same creature, same size): [1] walk step A [2] walk step B (opposite legs) [3] attack.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 17
+ },
+ {
   "group": "11. Boss gen lại (đủ dáng)",
   "file": "trieuda.png",
   "title": "Boss · Triệu Đà",
   "text": "Create ONE image: a 512x512 boss sprite sheet for a cute mobile tower-defense game based on Vietnamese folk legends, an invisible 2x2 grid of four equal 256x256 cells.\nBOSS: Triệu Đà: enemy general in dark red and black armor, topknot, long beard, big curved sword. Big, menacing but still cute chibi boss facing RIGHT.\nCELLS (same character, same size, left to right, top to bottom): [1] walk step A [2] walk step B (opposite legs) [3] attack swing [4] rage: body glowing red-orange, roaring.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
-  "n": 2
+  "n": 18
  },
  {
   "group": "11. Boss gen lại (đủ dáng)",
   "file": "daibang.png",
   "title": "Boss · Đại Bàng Tinh",
   "text": "Create ONE image: a 512x512 boss sprite sheet for a cute mobile tower-defense game based on Vietnamese folk legends, an invisible 2x2 grid of four equal 256x256 cells.\nBOSS: Đại Bàng Tinh: giant golden-brown eagle demon of the cave, spread wings, sharp talons, fierce red eyes, flying. Big, menacing but still cute chibi boss facing RIGHT.\nCELLS (same character, same size, left to right, top to bottom): [1] walk step A [2] walk step B (opposite legs) [3] attack swing [4] rage: body glowing red-orange, roaring.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
-  "n": 3
+  "n": 19
+ },
+ {
+  "group": "11. Boss gen lại (đủ dáng)",
+  "file": "hotinh.png",
+  "title": "Boss · Hồ Tinh Chín Đuôi",
+  "text": "Create ONE image: a 512x512 boss sprite sheet for a cute mobile tower-defense game based on Vietnamese folk legends, an invisible 2x2 grid of four equal 256x256 cells.\nBOSS: Hồ Tinh Chín Đuôi: white nine-tailed fox demon standing on hind legs, nine fluffy tails fanned out, sly red eyes, purple fox-fire flames. Big, menacing but still cute chibi boss facing RIGHT.\nCELLS (same character, same size, left to right, top to bottom): [1] walk step A [2] walk step B (opposite legs) [3] attack swing [4] rage: body glowing red-orange, roaring.\nSTYLE: cute chibi mobile-game character, head about 1/3 of the body, big round dark-brown eyes with two white highlights, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds). Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 20
+ },
+ {
+  "group": "12. Nút giao diện thêm (trống đồng)",
+  "file": "ui-tran-4.png",
+  "title": "Nút · ui-tran-4",
+  "text": "Create ONE image: a 512x128 row of 4 equal 128x128 square game UI icons, one per cell, left to right:\n[1] golden star with a plus sign (merge stars)  [2] tunic with an upward arrow (equip gear)  [3] bronze padlock (locked)  [4] two circular arrows (reroll / refresh).\nDong Son bronze drum art style (Vietnamese trong dong): engraved bronze surfaces, concentric rings, a sun-star with pointed rays, flying Lac birds, zigzag and circle-dot bands, warm bronze gold #C9963A with dark green patina #2F6B5E accents, thick dark-brown outline #2A1608, flat cartoon shading for a cute mobile game. Each icon: one bold centered object, readable at 40 px, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 21
+ },
+ {
+  "group": "12. Nút giao diện thêm (trống đồng)",
+  "file": "ui-tran-5.png",
+  "title": "Nút · ui-tran-5",
+  "text": "Create ONE image: a 512x128 row of 4 equal 128x128 square game UI icons, one per cell, left to right:\n[1] glowing bronze oil lamp (hint / tip)  [2] infinity loop made of bronze rope (endless mode)  [3] two crossed bronze swords (battle)  [4] green check mark on a bronze disc (done).\nDong Son bronze drum art style (Vietnamese trong dong): engraved bronze surfaces, concentric rings, a sun-star with pointed rays, flying Lac birds, zigzag and circle-dot bands, warm bronze gold #C9963A with dark green patina #2F6B5E accents, thick dark-brown outline #2A1608, flat cartoon shading for a cute mobile game. Each icon: one bold centered object, readable at 40 px, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 22
+ },
+ {
+  "group": "12. Nút giao diện thêm (trống đồng)",
+  "file": "ui-huy-chuong.png",
+  "title": "Nút · ui-huy-chuong",
+  "text": "Create ONE image: a 512x128 row of 4 equal 128x128 square game UI icons, one per cell, left to right:\n[1] gold medal with a red ribbon  [2] silver medal with a blue ribbon  [3] bronze medal with a green ribbon  [4] small golden crown (top rank).\nDong Son bronze drum art style (Vietnamese trong dong): engraved bronze surfaces, concentric rings, a sun-star with pointed rays, flying Lac birds, zigzag and circle-dot bands, warm bronze gold #C9963A with dark green patina #2F6B5E accents, thick dark-brown outline #2A1608, flat cartoon shading for a cute mobile game. Each icon: one bold centered object, readable at 40 px, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 23
+ },
+ {
+  "group": "13. Icon đồ vật",
+  "file": "do-riu.png",
+  "title": "Đồ thường · riu (4 độ hiếm)",
+  "text": "Create ONE image: a 512x128 row of 4 equal 128x128 square game item icons, one per cell, left to right:\n[1] a short bronze battle axe (Rìu Đồng), COMMON: plain dull bronze and wood, no gems  [2] a short bronze battle axe (Rìu Đồng), RARE: polished bronze with blue trim and one small blue gem  [3] a short bronze battle axe (Rìu Đồng), EPIC: silver and purple trim, purple gem, faint purple glow  [4] a short bronze battle axe (Rìu Đồng), LEGENDARY: ornate gold with a sun-star engraving, red gem, small golden glow.\ncute mobile-game item icon, chunky readable shape, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, circle-dots). Each icon: one bold centered object, readable at 40 px, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 24
+ },
+ {
+  "group": "13. Icon đồ vật",
+  "file": "do-no.png",
+  "title": "Đồ thường · no (4 độ hiếm)",
+  "text": "Create ONE image: a 512x128 row of 4 equal 128x128 square game item icons, one per cell, left to right:\n[1] a bamboo crossbow (Nỏ Tre), COMMON: plain dull bronze and wood, no gems  [2] a bamboo crossbow (Nỏ Tre), RARE: polished bronze with blue trim and one small blue gem  [3] a bamboo crossbow (Nỏ Tre), EPIC: silver and purple trim, purple gem, faint purple glow  [4] a bamboo crossbow (Nỏ Tre), LEGENDARY: ornate gold with a sun-star engraving, red gem, small golden glow.\ncute mobile-game item icon, chunky readable shape, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, circle-dots). Each icon: one bold centered object, readable at 40 px, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 25
+ },
+ {
+  "group": "13. Icon đồ vật",
+  "file": "do-gay.png",
+  "title": "Đồ thường · gay (4 độ hiếm)",
+  "text": "Create ONE image: a 512x128 row of 4 equal 128x128 square game item icons, one per cell, left to right:\n[1] a shaman staff with a carved head (Gậy Thầy Mo), COMMON: plain dull bronze and wood, no gems  [2] a shaman staff with a carved head (Gậy Thầy Mo), RARE: polished bronze with blue trim and one small blue gem  [3] a shaman staff with a carved head (Gậy Thầy Mo), EPIC: silver and purple trim, purple gem, faint purple glow  [4] a shaman staff with a carved head (Gậy Thầy Mo), LEGENDARY: ornate gold with a sun-star engraving, red gem, small golden glow.\ncute mobile-game item icon, chunky readable shape, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, circle-dots). Each icon: one bold centered object, readable at 40 px, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 26
+ },
+ {
+  "group": "13. Icon đồ vật",
+  "file": "do-mu.png",
+  "title": "Đồ thường · mu (4 độ hiếm)",
+  "text": "Create ONE image: a 512x128 row of 4 equal 128x128 square game item icons, one per cell, left to right:\n[1] a feathered warrior headdress hat (Mũ Lông Chim), COMMON: plain dull bronze and wood, no gems  [2] a feathered warrior headdress hat (Mũ Lông Chim), RARE: polished bronze with blue trim and one small blue gem  [3] a feathered warrior headdress hat (Mũ Lông Chim), EPIC: silver and purple trim, purple gem, faint purple glow  [4] a feathered warrior headdress hat (Mũ Lông Chim), LEGENDARY: ornate gold with a sun-star engraving, red gem, small golden glow.\ncute mobile-game item icon, chunky readable shape, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, circle-dots). Each icon: one bold centered object, readable at 40 px, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 27
+ },
+ {
+  "group": "13. Icon đồ vật",
+  "file": "do-giap.png",
+  "title": "Đồ thường · giap (4 độ hiếm)",
+  "text": "Create ONE image: a 512x128 row of 4 equal 128x128 square game item icons, one per cell, left to right:\n[1] a sleeveless warrior tunic / chest armor (Áo Giáp), COMMON: plain dull bronze and wood, no gems  [2] a sleeveless warrior tunic / chest armor (Áo Giáp), RARE: polished bronze with blue trim and one small blue gem  [3] a sleeveless warrior tunic / chest armor (Áo Giáp), EPIC: silver and purple trim, purple gem, faint purple glow  [4] a sleeveless warrior tunic / chest armor (Áo Giáp), LEGENDARY: ornate gold with a sun-star engraving, red gem, small golden glow.\ncute mobile-game item icon, chunky readable shape, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, circle-dots). Each icon: one bold centered object, readable at 40 px, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 28
+ },
+ {
+  "group": "13. Icon đồ vật",
+  "file": "bo-lac-long.png",
+  "title": "Đồ bộ · lac-long (5 món)",
+  "text": "Create ONE image: a 640x128 row of 5 equal 128x128 square game item icons, one per cell, left to right:\n[1] axe of the Lạc Long Quân dragon set: jade-green dragon scales, sea-wave patterns, pearl accents  [2] crossbow of the Lạc Long Quân dragon set: jade-green dragon scales, sea-wave patterns, pearl accents  [3] staff of the Lạc Long Quân dragon set: jade-green dragon scales, sea-wave patterns, pearl accents  [4] helmet of the Lạc Long Quân dragon set: jade-green dragon scales, sea-wave patterns, pearl accents  [5] chest armor of the Lạc Long Quân dragon set: jade-green dragon scales, sea-wave patterns, pearl accents.\ncute mobile-game item icon, chunky readable shape, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, circle-dots). Each icon: one bold centered object, readable at 40 px, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 29
+ },
+ {
+  "group": "13. Icon đồ vật",
+  "file": "bo-son-tinh.png",
+  "title": "Đồ bộ · son-tinh (5 món)",
+  "text": "Create ONE image: a 640x128 row of 5 equal 128x128 square game item icons, one per cell, left to right:\n[1] axe of the Sơn Tinh mountain set: grey carved stone and earth-brown, small green moss, mountain-peak shapes  [2] crossbow of the Sơn Tinh mountain set: grey carved stone and earth-brown, small green moss, mountain-peak shapes  [3] staff of the Sơn Tinh mountain set: grey carved stone and earth-brown, small green moss, mountain-peak shapes  [4] helmet of the Sơn Tinh mountain set: grey carved stone and earth-brown, small green moss, mountain-peak shapes  [5] chest armor of the Sơn Tinh mountain set: grey carved stone and earth-brown, small green moss, mountain-peak shapes.\ncute mobile-game item icon, chunky readable shape, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, circle-dots). Each icon: one bold centered object, readable at 40 px, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 30
+ },
+ {
+  "group": "13. Icon đồ vật",
+  "file": "bo-chim-lac.png",
+  "title": "Đồ bộ · chim-lac (5 món)",
+  "text": "Create ONE image: a 640x128 row of 5 equal 128x128 square game item icons, one per cell, left to right:\n[1] axe of the Lac bird set: cream-white feathers on bronze, Lac bird head shapes, long tail feathers  [2] crossbow of the Lac bird set: cream-white feathers on bronze, Lac bird head shapes, long tail feathers  [3] staff of the Lac bird set: cream-white feathers on bronze, Lac bird head shapes, long tail feathers  [4] helmet of the Lac bird set: cream-white feathers on bronze, Lac bird head shapes, long tail feathers  [5] chest armor of the Lac bird set: cream-white feathers on bronze, Lac bird head shapes, long tail feathers.\ncute mobile-game item icon, chunky readable shape, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, circle-dots). Each icon: one bold centered object, readable at 40 px, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 31
+ },
+ {
+  "group": "13. Icon đồ vật",
+  "file": "bo-trong-dong.png",
+  "title": "Đồ bộ · trong-dong (5 món)",
+  "text": "Create ONE image: a 640x128 row of 5 equal 128x128 square game item icons, one per cell, left to right:\n[1] axe of the bronze drum set: shiny gold-bronze with drum-face sun-star rings and circle-dot bands  [2] crossbow of the bronze drum set: shiny gold-bronze with drum-face sun-star rings and circle-dot bands  [3] staff of the bronze drum set: shiny gold-bronze with drum-face sun-star rings and circle-dot bands  [4] helmet of the bronze drum set: shiny gold-bronze with drum-face sun-star rings and circle-dot bands  [5] chest armor of the bronze drum set: shiny gold-bronze with drum-face sun-star rings and circle-dot bands.\ncute mobile-game item icon, chunky readable shape, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, circle-dots). Each icon: one bold centered object, readable at 40 px, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 32
+ },
+ {
+  "group": "13. Icon đồ vật",
+  "file": "bo-ngua-sat.png",
+  "title": "Đồ bộ · ngua-sat (5 món)",
+  "text": "Create ONE image: a 640x128 row of 5 equal 128x128 square game item icons, one per cell, left to right:\n[1] axe of the Thánh Gióng iron horse set: black iron with glowing red-orange fire manes and ember sparks  [2] crossbow of the Thánh Gióng iron horse set: black iron with glowing red-orange fire manes and ember sparks  [3] staff of the Thánh Gióng iron horse set: black iron with glowing red-orange fire manes and ember sparks  [4] helmet of the Thánh Gióng iron horse set: black iron with glowing red-orange fire manes and ember sparks  [5] chest armor of the Thánh Gióng iron horse set: black iron with glowing red-orange fire manes and ember sparks.\ncute mobile-game item icon, chunky readable shape, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, circle-dots). Each icon: one bold centered object, readable at 40 px, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 33
+ },
+ {
+  "group": "13. Icon đồ vật",
+  "file": "phu-kien-1.png",
+  "title": "Phụ kiện 1",
+  "text": "Create ONE image: a 512x128 row of 4 equal 128x128 square game item icons, one per cell, left to right:\n[1] tiger claw on a cord  [2] brown leather glove  [3] woven belt with a bronze buckle  [4] pair of straw sandals.\ncute mobile-game item icon, chunky readable shape, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, circle-dots). Each icon: one bold centered object, readable at 40 px, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 34
+ },
+ {
+  "group": "13. Icon đồ vật",
+  "file": "phu-kien-2.png",
+  "title": "Phụ kiện 2",
+  "text": "Create ONE image: a 640x128 row of 5 equal 128x128 square game item icons, one per cell, left to right:\n[1] red cloth headband scarf  [2] indigo sage turban with a small bronze pin  [3] jade eye-shaped amulet  [4] glowing green life jade  [5] flat bronze drum face with sun-star.\ncute mobile-game item icon, chunky readable shape, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, circle-dots). Each icon: one bold centered object, readable at 40 px, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 35
+ },
+ {
+  "group": "13. Icon đồ vật",
+  "file": "phu-kien-3.png",
+  "title": "Phụ kiện 3",
+  "text": "Create ONE image: a 640x128 row of 5 equal 128x128 square game item icons, one per cell, left to right:\n[1] wooden drum mallet with a cloth grip  [2] rhino horn  [3] single long Lac bird feather  [4] shiny silver-blue fish scale  [5] handful of golden rice grains.\ncute mobile-game item icon, chunky readable shape, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, circle-dots). Each icon: one bold centered object, readable at 40 px, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 36
+ },
+ {
+  "group": "13. Icon đồ vật",
+  "file": "sinh-le.png",
+  "title": "Sính lễ của boss",
+  "text": "Create ONE image: a 512x128 row of 4 equal 128x128 square game item icons, one per cell, left to right:\n[1] small cute elephant with nine tusks and a red saddle cloth, legendary treasure, small golden glow  [2] proud rooster with nine spurs and a red comb, legendary treasure, small golden glow  [3] small horse with a flowing nine-colored red mane, legendary treasure, small golden glow  [4] glowing red-gold revival pearl with a phoenix shape inside, legendary treasure, small golden glow.\ncute mobile-game item icon, chunky readable shape, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, circle-dots). Each icon: one bold centered object, readable at 40 px, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 37
+ },
+ {
+  "group": "13. Icon đồ vật",
+  "file": "do-ghep-1.png",
+  "title": "Đồ ghép 1",
+  "text": "Create ONE image: a 512x128 row of 4 equal 128x128 square game item icons, one per cell, left to right:\n[1] Dong Son bronze drum, full drum with frogs on top, rare magical crafted item, slightly glowing  [2] two crossed red-glowing battle axes, rare magical crafted item, slightly glowing  [3] staff with three rings of sky, earth and water, rare magical crafted item, slightly glowing  [4] staff topped with a spinning hourglass and stars, rare magical crafted item, slightly glowing.\ncute mobile-game item icon, chunky readable shape, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, circle-dots). Each icon: one bold centered object, readable at 40 px, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 38
+ },
+ {
+  "group": "13. Icon đồ vật",
+  "file": "do-ghep-2.png",
+  "title": "Đồ ghép 2",
+  "text": "Create ONE image: a 512x128 row of 4 equal 128x128 square game item icons, one per cell, left to right:\n[1] heavy bronze chest armor with a shield emblem, rare magical crafted item, slightly glowing  [2] dark scythe with a curved blade and purple glow, rare magical crafted item, slightly glowing  [3] sharp horn spearhead cracking a shield, rare magical crafted item, slightly glowing  [4] wide axe with a water-wave blade, rare magical crafted item, slightly glowing.\ncute mobile-game item icon, chunky readable shape, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, circle-dots). Each icon: one bold centered object, readable at 40 px, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 39
+ },
+ {
+  "group": "13. Icon đồ vật",
+  "file": "do-ghep-3.png",
+  "title": "Đồ ghép 3",
+  "text": "Create ONE image: a 512x128 row of 4 equal 128x128 square game item icons, one per cell, left to right:\n[1] bow with a bird eye on the grip, rare magical crafted item, slightly glowing  [2] bronze Lac bird talisman on a red string, rare magical crafted item, slightly glowing  [3] shirt covered in silver fish scales, rare magical crafted item, slightly glowing  [4] blue water-sealing jade with a calm wave inside, rare magical crafted item, slightly glowing.\ncute mobile-game item icon, chunky readable shape, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, circle-dots). Each icon: one bold centered object, readable at 40 px, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 40
+ },
+ {
+  "group": "13. Icon đồ vật",
+  "file": "do-ghep-4.png",
+  "title": "Đồ ghép 4",
+  "text": "Create ONE image: a 640x128 row of 5 equal 128x128 square game item icons, one per cell, left to right:\n[1] folded fishing net with floats, rare magical crafted item, slightly glowing  [2] radiant white sea pearl on a shell, rare magical crafted item, slightly glowing  [3] golden turtle claw crossbow trigger, rare magical crafted item, slightly glowing  [4] heavenly golden axe of Thạch Sanh with light rays, rare magical crafted item, slightly glowing  [5] white feather cloak of Âu Cơ with a golden clasp, rare magical crafted item, slightly glowing.\ncute mobile-game item icon, chunky readable shape, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, circle-dots). Each icon: one bold centered object, readable at 40 px, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "n": 41
  }
 ]

@@ -142,9 +142,9 @@ canvas.addEventListener('pointerup', (ev) => {
   const d = drag;
   drag = null;
   if (!d.moved) return ui.tapMap(d.sx, d.sy);
-  // thả vào thùng 🗑: hủy tướng, hoàn vàng
-  if (ui.hideTrash(ev.clientX, ev.clientY)) return ui.trashHero(d.from);
   const to = ui.slotAt(d.x, d.y);
+  // thả vào thùng 🗑: hủy tướng, hoàn vàng (v140: thả trúng một ô khác thì ưu tiên ô, không hủy nhầm)
+  if (ui.hideTrash(ev.clientX, ev.clientY) && !(to >= 0 && to !== d.from)) return ui.trashHero(d.from);
   // thả lên tướng cùng loại cùng sao: ghép; đúng công thức: hợp thể; còn lại: đổi chỗ
   if (to >= 0 && to !== d.from) ui.dropOn(d.from, to);
 });

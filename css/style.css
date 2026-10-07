@@ -1558,3 +1558,10 @@ i.c { background: #1F4A2A; color: #8AE09A; } i.h { background: #4A2A5A; color: #
 .of-rr span { font-size: 11px; display: flex; align-items: center; gap: 2px; }
 .of-rr.poor { filter: grayscale(.7) brightness(.7); }
 @media (max-width: 760px) { .of-card { width: 150px; } .of-card small { display: none; } }
+/* v140: thùng hủy tướng chuyển xuống giữa đáy (đè lên thanh Triệu hồi lúc đang kéo) — không còn nằm sát các ô cạnh thành */
+#trash { left: 50%; right: auto; bottom: calc(10px * var(--hz, 1)); width: 220px; transform: translateX(-50%) scale(var(--hz, 1)); transform-origin: 50% 100%; }
+#trash.hot { transform: translateX(-50%) scale(calc(var(--hz, 1) * 1.08)); }
+/* v140: hàng Anh Hùng / Ấn Phù ở menu — chữ không chạm mép khung trên máy nhỏ */
+.mc-row .mc-btn { padding: 0 6px; gap: 5px; justify-content: center; }
+.mc-row .mc-btn .uimg.mc { width: 26px; height: 26px; }
+.mc-row .mc-btn:last-child { flex: 0 0 40%; }

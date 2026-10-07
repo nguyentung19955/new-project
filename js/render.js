@@ -453,10 +453,12 @@ function drawVfx(ctx, img, p, x, y, size) {
 // ------------------------------------------------------------
 let mapImgKey = '';
 // v124: nền bản đồ vẽ tay theo chủ đề (assets/maps/nen-<chủ đề>.jpg); đường đi, ô tướng, thành vẫn do game vẽ lên trên
-const MAP_BG = new Set(['dam', 'hang', 'rung', 'dong', 'thanh', 'bien']);
+// v140: chủ đề Sông chưa có tranh riêng → tạm dùng nền Đầm sen (bờ nước, cỏ ở giữa); có nen-song.jpg thì đổi lại
+const MAP_BG = new Set(['dam', 'hang', 'rung', 'dong', 'thanh', 'bien', 'song']);
+const MAP_BG_FILE = { song: 'dam' };
 function mapBg() {
   const m = typeof MAP_ID !== 'undefined' && MAPS[MAP_ID];
-  return m && MAP_BG.has(m.theme) ? { img: asset(`maps/nen-${m.theme}.jpg`, true), theme: m.theme } : null;
+  return m && MAP_BG.has(m.theme) ? { img: asset(`maps/nen-${MAP_BG_FILE[m.theme] || m.theme}.jpg`, true), theme: m.theme } : null;
 }
 function mapImage(pw, ph, level) {
   const png = asset(`maps/map-0${(level || 0) + 1}.png`);

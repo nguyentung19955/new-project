@@ -1331,3 +1331,9 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 139 — Bỏ khung vàng ảnh tướng
 - Màn Anh Hùng Văn Lang: ảnh tướng ở bảng chi tiết không còn khung vàng chạm trổ, thay bằng ô viền đồng đơn giản cùng kiểu với thẻ tướng.
+
+## Phiên bản 140 — Thùng hủy không chắn ô cạnh thành, màn 1 có nền mới
+- **Thùng Hủy tướng** (hiện khi kéo tướng) chuyển từ góc dưới phải — chỗ sát các ô cạnh thành — xuống giữa đáy, đè lên thanh Triệu hồi. Thả trúng một ô thì luôn ưu tiên đổi chỗ / ghép, không hủy nhầm.
+- **Màn 1–3 (chủ đề Sông)** chưa có tranh nền riêng nên tạm dùng nền Đầm sen vẽ tay; có tranh Sông thì đổi lại.
+- Menu: hàng nút Anh Hùng / Ấn Phù gọn hơn để chữ không chạm mép trên máy nhỏ.
+- Prompt mới: 16 quái + 3 boss nét cũ gen lại, 80 icon đồ vật (19 tấm), 3 tấm nút giao diện thêm; cắt bằng `tools/cat-items.py <ảnh> <mã tấm>`.
