@@ -1,61 +1,66 @@
-# BẢNG MÀU CHUNG — pixel art Thần Thoại Việt (docs/pixel/QUY-CHUAN.md)
+# BẢNG MÀU CHUNG (46 màu) — pixel art Thần Thoại Việt (docs/pixel/QUY-CHUAN.md)
 # Mỗi dòng: <tên> <#hex> <ghi chú>. Tên dùng trong mục "colors:" của file nguồn.
 # CHỈ được dùng màu trong bảng này (tools/build-pixel.js báo lỗi màu lạ). Thêm màu = sửa file này
 # + ghi GAMEPLAY.md + báo session điều phối (đừng thêm tuỳ tiện: bảng màu chung giữ cả game đồng bộ).
 # Dấu * = màu viền ngoài hợp lệ (pixel chạm nền trong suốt phải là màu viền).
 
+# PHONG CÁCH: trầm, cổ kính (đồng hun, son sẫm, vàng nghệ cũ, chàm, rêu, nâu đất, đen khói) — không kẹo ngọt / pastel / neon.
+# Mỗi dải có ≥3 tông để đổ bóng 3 tông (tối · gốc · sáng).
+
 # --- viền / tối
-vien       #1A1008  * viền đen nâu 1px quanh mọi hình
-toi        #3A2A1E  * nâu rất tối: viền trong, khe, bóng sâu
+vien       #140C06  * viền đen nâu 1px quanh mọi hình
+toi        #2E241B  * nâu rất tối: viền trong, khe, bóng sâu
+khoi       #24201C  * đen khói (tóc, khói, hắc ín)
 # --- sắt / bạc (hành Kim)
-sat-toi    #3C3F48  * sắt tối (bóng giáp sắt)
-sat        #5E6470    sắt
-sat-sang   #9AA1AC    sắt sáng
-bac        #D4D8DE    bạc / ánh kim
+sat-toi    #33363C  * sắt tối (bóng giáp sắt)
+sat        #555A62    sắt
+sat-sang   #8A9098    sắt sáng
+bac        #C3C6C4    bạc / ánh kim
 # --- trắng
-trang-xam  #CFC6B2    vải trắng ngà (bóng)
-trang      #F4EFE2    trắng ngà
-sang       #FFFBE8    điểm sáng / phép thuật
+trang-xam  #B8AE98    vải trắng ngà (bóng)
+trang      #E4DCC8    trắng ngà
+sang       #F5EED8    điểm sáng / phép thuật
 # --- da
-da-toi     #B9714A    da bóng
-da         #E0A273    da
-da-sang    #F6CFA0    da sáng
+da-toi     #9A5E3E    da bóng
+da         #C98A62    da
+da-sang    #E2B58A    da sáng
 # --- nâu đất (hành Thổ)
-dat-toi    #4A2E1A  * nâu đất tối
-dat        #7A4E2C    nâu đất
-dat-sang   #A8743E    đất sáng / gỗ
-cat        #D9B97A    cát / rơm / tre khô
+dat-toi    #3E2716  * nâu đất tối
+dat        #6B4426    nâu đất
+dat-sang   #946538    đất sáng / gỗ
+cat        #C2A26A    cát / rơm / tre khô
 # --- đồng / vàng (trống đồng, đồ Huyền thoại)
-dong-toi   #6A4318  * đồng tối
-dong       #A86A26    đồng
-dong-sang  #D99A3E    đồng sáng
-vang-nghe  #F2C230    vàng nghệ (viền đồ Vàng / Huyền thoại)
-vang-sang  #FFE7A0    vàng sáng
+dong-toi   #5A3814  * đồng tối
+dong       #8E5A22    đồng
+dong-sang  #BF863A    đồng sáng
+vang-nghe  #D6A532    vàng nghệ (viền đồ Vàng / Huyền thoại)
+vang-sang  #ECD08A    vàng sáng
 # --- son đỏ / lửa (hành Hỏa)
-son-toi    #6E1A14  * son đỏ tối
-son        #B23A1E    son đỏ (áo choàng, khăn)
-son-sang   #E0583A    son sáng
-hong       #F29A8A    hồng (má, hoa sen)
-lua        #F07A1E    lửa cam
-lua-sang   #FFB347    lửa sáng
+son-toi    #5A1610  * son đỏ tối
+son        #92301C    son đỏ (áo choàng, khăn)
+son-sang   #BC4A2E    son sáng
+hong       #C7786A    hồng (má, hoa sen)
+lua        #D2661E    lửa cam
+lua-sang   #E8A048    lửa sáng
 # --- xanh lá (hành Mộc)
-la-toi     #1F4A22  * lá tối
-la         #3E7A2E    lá
-la-ma      #7FBF3F    xanh lá mạ
-la-sang    #C2E27A    lá non
-reu        #6F8A3C    xanh rêu / ngọc ô-liu (Sơn Tinh)
-reu-sang   #9DB45A    rêu sáng
+la-toi     #1C3A1E  * lá tối
+la         #35632A    lá
+la-ma      #6A9A38    xanh lá mạ
+la-sang    #A8C46A    lá non
+reu-toi    #3A4A22  * rêu tối
+reu        #5E7434    xanh rêu / ngọc ô-liu (Sơn Tinh)
+reu-sang   #869A4C    rêu sáng
 # --- chàm / nước (hành Thủy)
-cham-toi   #1A2448  * chàm tối
-cham       #2B4C7E    chàm (áo chàm, quần ngư phủ)
-cham-sang  #4F7DB8    chàm sáng
-nuoc       #3E8FC4    nước
-nuoc-sang  #8FD3EE    nước sáng / bọt
-troi       #CDEFF8    trời / bọt trắng xanh
+cham-toi   #161E3A  * chàm tối
+cham       #26406A    chàm (áo chàm, quần ngư phủ)
+cham-sang  #44699A    chàm sáng
+nuoc       #3478A6    nước
+nuoc-sang  #78B4CC    nước sáng / bọt
+troi       #B8D8E0    trời / bọt trắng xanh
 # --- tím (độ hiếm Sử thi / Tím, ma quái)
-tim-toi    #3E2058  * tím tối
-tim        #7A4AA8    tím
-tim-sang   #B58AE0    tím sáng
+tim-toi    #36204A  * tím tối
+tim        #63407E    tím
+tim-sang   #9478B0    tím sáng
 # --- ngọc (ngọc bích, phép nước)
-ngoc       #2FA59A    ngọc lam
-ngoc-sang  #7FE0D0    ngọc sáng
+ngoc       #2A8A7E    ngọc lam
+ngoc-sang  #6CC0B0    ngọc sáng

@@ -1,8 +1,24 @@
 # Quy chuẩn PIXEL ART — Thần Thoại Việt
 
 Toàn bộ hình ảnh game chuyển dần sang **pixel art do Claude vẽ bằng code** (lưới ký tự + bảng màu chung → PNG), không gen AI.
-Mẫu gốc người dùng đã duyệt: **Thánh Gióng chibi 32×32** — đầu to, khăn vàng, giáp sắt, áo choàng đỏ, gậy sắt, viền đen 1px,
-đổ bóng 2 tông, phóng to nearest-neighbor.
+Mẫu gốc: Thánh Gióng 32×32 — khăn vàng, giáp sắt, áo choàng đỏ, gậy sắt, viền đen 1px, phóng to nearest-neighbor.
+
+## 0. PHONG CÁCH (BẮT BUỘC — chỉ đạo của người dùng)
+
+Pixel **ĐỪNG TRẺ CON QUÁ** — bám sát thần thoại / huyền sử Việt, có **khí chất sử thi**:
+
+- **Vẫn chibi nhưng tỉ lệ đầu : thân ≈ 1 : 1,5 – 1 : 2** (32×32: đầu ~10–11 dòng, thân + chân ~17–19 dòng). Không đầu quá
+  to kiểu em bé. **Mắt nhỏ có thần** (1 điểm trắng + 1 điểm đen, có lông mày), KHÔNG mắt tròn to long lanh, KHÔNG má hồng mặc
+  định. Nét mặt **nghiêm / oai** cho thần, tướng, boss; **dữ tợn** cho quái. Dáng đứng vững, vai rộng.
+- **Bảng màu trầm, cổ kính:** đồng hun, son đỏ sẫm, vàng nghệ cũ, chàm, xanh rêu, nâu đất, đen khói (palette.txt đã chỉnh
+  theo hướng này). Tránh màu kẹo ngọt / pastel / neon. **Đổ bóng 3 tông** (tối · gốc · sáng), tương phản sáng tối rõ.
+- **Họa tiết văn hoá đúng:** hoa văn trống đồng Đông Sơn (vòng tròn chấm, răng cưa, chim Lạc), khố / váy, áo giao lĩnh,
+  mũ lông chim, rìu / giáo đồng, nón lá, khăn vấn, rồng / rắn thời Lý–Trần. Tránh phong cách Nhật / Hàn / phương Tây
+  (không kimono, không giáp hiệp sĩ).
+- **Boss / thần to, uy** (Thủy Tinh, Thuồng Luồng, Sơn Tinh…); **quái theo truyền thuyết** (Ngư tinh, Hồ tinh, Mộc tinh…)
+  nhìn đáng sợ vừa phải.
+- **Icon / nút / khung:** chất liệu đồng, gỗ sơn son, đá, giấy dó, viền hoa văn trống đồng; không bo tròn kiểu game trẻ em.
+- Mẫu cũ (đầu to, má hồng) đã bị coi là quá trẻ con → 3 tướng mẫu `giong`, `tanvien`, `chodo` vẽ lại theo mục này.
 
 - Danh sách mọi hình cần vẽ, chia lô: [`DANH-SACH.md`](DANH-SACH.md)
 - Bảng màu: [`tools/pixel/palette.txt`](../../tools/pixel/palette.txt) · tool dựng: `node tools/build-pixel.js`
@@ -28,26 +44,26 @@ Mẫu gốc người dùng đã duyệt: **Thánh Gióng chibi 32×32** — đ�
 
 ---
 
-## 2. Bảng màu chung (44 màu)
+## 2. Bảng màu chung (46 màu, tông trầm cổ kính)
 
 Chỉ dùng màu trong `tools/pixel/palette.txt` — tool **báo lỗi** khi file nguồn khai báo màu lạ. Thêm màu = sửa palette.txt +
 ghi GAMEPLAY.md + báo session điều phối (giữ cả game đồng bộ, đừng thêm tuỳ tiện).
 
 | Nhóm | Tên màu (tối → sáng) | Dùng cho |
 |---|---|---|
-| Viền | `vien` #1A1008 · `toi` #3A2A1E | viền ngoài 1px, viền trong, khe, tóc đen |
-| Sắt / bạc (Kim) | `sat-toi` #3C3F48 · `sat` #5E6470 · `sat-sang` #9AA1AC · `bac` #D4D8DE | giáp sắt, gậy sắt, lưỡi |
-| Trắng | `trang-xam` #CFC6B2 · `trang` #F4EFE2 · `sang` #FFFBE8 | vải trắng, mắt, điểm sáng phép |
-| Da | `da-toi` #B9714A · `da` #E0A273 · `da-sang` #F6CFA0 | da người |
-| Đất (Thổ) | `dat-toi` #4A2E1A · `dat` #7A4E2C · `dat-sang` #A8743E · `cat` #D9B97A | gỗ, cán, đường đất, rơm, tre khô |
-| Đồng / vàng | `dong-toi` #6A4318 · `dong` #A86A26 · `dong-sang` #D99A3E · `vang-nghe` #F2C230 · `vang-sang` #FFE7A0 | trống đồng, mũ đồng, viền đồ Vàng |
-| Son / lửa (Hỏa) | `son-toi` #6E1A14 · `son` #B23A1E · `son-sang` #E0583A · `hong` #F29A8A · `lua` #F07A1E · `lua-sang` #FFB347 | áo choàng, khăn, má hồng, lửa |
-| Lá (Mộc) | `la-toi` #1F4A22 · `la` #3E7A2E · `la-ma` #7FBF3F · `la-sang` #C2E27A · `reu` #6F8A3C · `reu-sang` #9DB45A | cỏ, lá, áo xanh núi |
-| Chàm / nước (Thủy) | `cham-toi` #1A2448 · `cham` #2B4C7E · `cham-sang` #4F7DB8 · `nuoc` #3E8FC4 · `nuoc-sang` #8FD3EE · `troi` #CDEFF8 | áo chàm, nước, bọt |
-| Tím | `tim-toi` #3E2058 · `tim` #7A4AA8 · `tim-sang` #B58AE0 | độ hiếm Sử thi, ma quái |
-| Ngọc | `ngoc` #2FA59A · `ngoc-sang` #7FE0D0 | ngọc bích, phép nước |
+| Viền | `vien` · `toi` · `khoi` (đen khói) | viền ngoài 1px, viền trong, khe, tóc đen |
+| Sắt / bạc (Kim) | `sat-toi` · `sat` · `sat-sang` · `bac` | giáp sắt, gậy sắt, lưỡi |
+| Trắng | `trang-xam` · `trang` · `sang` | vải trắng, mắt, điểm sáng phép |
+| Da | `da-toi` · `da` · `da-sang` | da người |
+| Đất (Thổ) | `dat-toi` · `dat` · `dat-sang` · `cat` | gỗ, cán, đường đất, rơm, tre khô |
+| Đồng / vàng | `dong-toi` · `dong` · `dong-sang` · `vang-nghe` · `vang-sang` | trống đồng, mũ đồng, viền đồ Vàng |
+| Son / lửa (Hỏa) | `son-toi` · `son` · `son-sang` · `hong` · `lua` · `lua-sang` | áo choàng, khăn, má hồng, lửa |
+| Lá (Mộc) | `la-toi` · `la` · `la-ma` · `la-sang` · `reu-toi` · `reu` · `reu-sang` | cỏ, lá, áo xanh núi |
+| Chàm / nước (Thủy) | `cham-toi` · `cham` · `cham-sang` · `nuoc` · `nuoc-sang` · `troi` | áo chàm, nước, bọt |
+| Tím | `tim-toi` · `tim` · `tim-sang` | độ hiếm Sử thi, ma quái |
+| Ngọc | `ngoc` · `ngoc-sang` | ngọc bích, phép nước |
 
-Màu đánh dấu `*` trong palette.txt (`vien`, `toi`, `sat-toi`, `dat-toi`, `dong-toi`, `son-toi`, `la-toi`, `cham-toi`,
+Mã hex xem palette.txt (đã chỉnh tông trầm). Màu đánh dấu `*` trong palette.txt (`vien`, `toi`, `khoi`, `reu-toi`, `sat-toi`, `dat-toi`, `dong-toi`, `son-toi`, `la-toi`, `cham-toi`,
 `tim-toi`) là **màu viền hợp lệ**: pixel chạm nền trong suốt phải là một trong các màu này (tool cảnh báo, `--strict` báo lỗi).
 
 ---
@@ -73,8 +89,9 @@ Trong game: phóng **nearest-neighbor theo bội số nguyên** điểm ảnh m�
 
 ## 4. Tỉ lệ chibi, hướng, điểm neo
 
-- **Chibi 2,5–3 đầu:** tướng 32×32 — đầu ~13–14 dòng (dòng 2–15), thân ~9 dòng, chân ~5 dòng; chân chạm dòng 29–30.
-- **Quay mặt sang PHẢI**, góc 3/4 (game tự lật khi đi trái). Mắt 2×2 (1 điểm sáng trắng góc trên trái), lông mày 2 điểm.
+- **Tỉ lệ đầu : thân 1 : 1,5 – 1 : 2** (mục 0): tướng 32×32 — đầu ~10–11 dòng (dòng 1–12), thân ~9 dòng, chân ~8 dòng; chân
+  chạm dòng 29–30.
+- **Quay mặt sang PHẢI**, góc 3/4 (game tự lật khi đi trái). Mắt nhỏ 2×1 (trắng + đen), lông mày đậm 2 điểm, không má hồng.
 - **Điểm neo** `anchor: x,y` = điểm chân chạm đất (giữa hai bàn chân, dòng dưới cùng của viền). Game đặt điểm này đúng ô.
 - Vật cầm ở **tay trước** (bên phải), không che mặt; áo choàng / cánh / đuôi ở **sau lưng** (bên trái).
 - Linh thú là **THÚ** (rùa, nghê, kỳ lân, rồng, hổ…), không vẽ người mặc đồ thú. Quái bay: bóng game tự vẽ, sprite không có đất.
@@ -83,8 +100,8 @@ Trong game: phóng **nearest-neighbor theo bội số nguyên** điểm ảnh m�
 
 - **Viền ngoài đen nâu 1px** (`vien`) quanh toàn bộ hình — dùng lệnh `outline` ở cuối mỗi khung. Viền trong (tay đè thân,
   đầu và cổ) dùng `toi` hoặc tông tối của màu đó.
-- **Ánh sáng từ trên-trái.** Mỗi mảng màu **2 tông**: màu gốc + tông tối (mép phải / dưới); thêm 1 tông sáng ở mép trên-trái
-  khi cần (tóc, kim loại). Không dùng gradient, không khử răng cưa, không điểm lẻ loi (pillow shading cấm).
+- **Ánh sáng từ trên-trái.** Mỗi mảng màu **3 tông**: tông sáng (mép trên-trái) · màu gốc · tông tối (mép phải / dưới,
+  khe áo, dưới cằm), tương phản rõ. Không dùng gradient, không khử răng cưa, không điểm lẻ loi (pillow shading cấm).
 - Không bóng đổ dưới chân trong sprite (game vẽ bóng elip). Không hào quang trong sprite — game vẽ viền sáng theo sao / chiêu.
 
 ## 6. Ngũ hành & độ hiếm
