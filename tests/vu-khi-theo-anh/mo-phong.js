@@ -1,12 +1,12 @@
 // Mô phỏng cân bằng nhánh vu-khi-theo-anh: 3 tướng đổi cận chiến ↔ đánh xa cho khớp vũ khí trong ảnh
-// (Thợ Săn: dao găm → cung · Thợ Gốm: ném bình → vồ gốm · Trẻ Chăn Trâu: ná → gậy).
+// (Thợ Săn: dao găm → cung · Trẻ Chăn Trâu: ná → gậy). Thợ Gốm đã hoàn tác (ảnh cầm bình gốm — khớp ném bình như cũ), giữ dòng cũ để đo lại nếu cần.
 // So bản CŨ (dựng lại chỉ số cũ ngay trong trang) với bản MỚI (js/data.js hiện tại):
 //   1. lực chiến heroPower ở cấp 10 / 20 (★★★, kỹ năng 10)
 //   2. trận thật: tướng thử cấp 12 ở ô phủ đường tốt nhất + Xạ Thủ cấp 8 (lo quái bay) + 2 tướng cấp 1, đánh tới đợt 20 — sát thương tướng thử gây ra, mạng còn lại.
-// Chạy: node tests/vu-khi-theo-anh/mo-phong.js [số ván=3] [ải,…=1,3]   (không thuộc bộ test, chỉ để đo)
+// Chạy: node tests/vu-khi-theo-anh/mo-phong.js [số ván=3] [ải,…=1,3] [mã,…=thosan,chantrau]   (không thuộc bộ test, chỉ để đo)
 const { open, enter } = require('../cho-tuong/helpers');
 const N = +process.argv[2] || 3, LEVELS = (process.argv[3] || '1,3').split(',').map(Number);
-const HEROS = ['thosan', 'thogom', 'chantrau'];
+const HEROS = (process.argv[4] || 'thosan,chantrau').split(',');
 
 const OLD = {
   thosan: { attack: 'melee', proj: undefined, wclass: 'blade', base: { damage: 2, range: 140, cooldown: 0.85 } },

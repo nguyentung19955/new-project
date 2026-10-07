@@ -223,7 +223,7 @@ function heroStats(h) {
   const line = heroLineage(h);
   const s = {
     damage: def.base.damage, range: def.base.range, baseCooldown: def.base.cooldown,
-    haste: 0, crit: 5, critMult: 2, cleave: def.base.cleave || 0, arrows: 1, poison: 0,
+    haste: 0, crit: 5, critMult: 2, cleave: 0, arrows: 1, poison: 0,
     splash: def.base.splash || 0, slow: def.base.slow || 0, stench: 0, bonusDmgPct: 0,
     str: base.str, agi: base.agi, int: base.int, hp: 0, regen: 0, cdr: 0, dr: 0,
     pierce: hasLine(h, 'caolo') ? 50 : 0, mpen: 0, canAir: def.attack !== 'melee', airMult: 1,

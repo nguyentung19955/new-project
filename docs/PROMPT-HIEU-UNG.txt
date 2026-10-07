@@ -374,18 +374,7 @@ STYLE: cute mobile-game art matching chibi heroes of a Vietnamese folk-legend to
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. Never use magenta or pink on the effect. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Centered in every cell with at least 6% empty margin; nothing crosses into another cell.
 ------------------------------------------------------------
 
-D3. Đạn bay: spear, blade
-Tên file: dan-3.png  ->  Cắt: python3 tools/cat-fx.py hat dan-3.png dan_spear dan_blade --mau
-------------------------------------------------------------
-Create ONE image: a 256x128 row of two equal 128x128 square cells, one small flying projectile per cell, left to right, all pointing RIGHT where they have a direction:
-[1] a short glowing magic spear (javelin) flying RIGHT: wooden shaft, bright leaf-shaped bronze tip, faint light streak behind.
-[2] a crescent-moon sword-wave (sword qi) flying RIGHT: a thin glowing white-blue crescent arc, sharp tips, soft glow.
-Each projectile centered, about 60% of the cell, bold and readable at 16 px.
-STYLE: cute mobile-game art matching chibi heroes of a Vietnamese folk-legend tower-defense game: thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds), about 20-30 flat colors, no gradients.
-BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. Never use magenta or pink on the effect. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Centered in every cell with at least 6% empty margin; nothing crosses into another cell.
-------------------------------------------------------------
-
-D4. Xoáy cát / gió quanh tướng  (hiệu ứng game: vortex)
+D3. Xoáy cát / gió quanh tướng  (hiệu ứng game: vortex)
 Tên file: vortex.png  ->  Cắt: python3 tools/cat-fx.py dai vortex.png vortex
 ------------------------------------------------------------
 Create ONE image: a 1536x256 horizontal animation strip of 6 equal 256x256 square frames in ONE row, read left to right, for a cute mobile tower-defense game based on Vietnamese folk legends. Each frame is one moment of the SAME effect, same center, same scale, smooth change between neighbouring frames.
@@ -394,7 +383,7 @@ STYLE: bold readable cartoon VFX, thick simple shapes, flat colors with a bright
 BACKGROUND: perfectly flat pure BLACK #000000 everywhere (the game turns black into transparency, so dark parts become see-through). Bright, saturated glowing colors; no text, no numbers, no labels, no grid lines, no borders, no watermark. The effect is centered in every cell with at least 6% empty margin; nothing crosses into another cell.
 ------------------------------------------------------------
 
-D5. Gậy tre quét vòng cung  (hiệu ứng game: sweep)
+D4. Gậy tre quét vòng cung  (hiệu ứng game: sweep)
 Tên file: sweep.png  ->  Cắt: python3 tools/cat-fx.py dai sweep.png sweep
 ------------------------------------------------------------
 Create ONE image: a 1536x256 horizontal animation strip of 6 equal 256x256 square frames in ONE row, read left to right, for a cute mobile tower-defense game based on Vietnamese folk legends. Each frame is one moment of the SAME effect, same center, same scale, smooth change between neighbouring frames.
@@ -403,7 +392,7 @@ STYLE: bold readable cartoon VFX, thick simple shapes, flat colors with a bright
 BACKGROUND: perfectly flat pure BLACK #000000 everywhere (the game turns black into transparency, so dark parts become see-through). Bright, saturated glowing colors; no text, no numbers, no labels, no grid lines, no borders, no watermark. The effect is centered in every cell with at least 6% empty margin; nothing crosses into another cell.
 ------------------------------------------------------------
 
-D6. Thiên thạch / đá lửa rơi  (hiệu ứng game: meteor)
+D5. Thiên thạch / đá lửa rơi  (hiệu ứng game: meteor)
 Tên file: meteor.png  ->  Cắt: python3 tools/cat-fx.py dai meteor.png meteor
 ------------------------------------------------------------
 Create ONE image: a 1536x256 horizontal animation strip of 6 equal 256x256 square frames in ONE row, read left to right, for a cute mobile tower-defense game based on Vietnamese folk legends. Each frame is one moment of the SAME effect, same center, same scale, smooth change between neighbouring frames.
@@ -412,7 +401,7 @@ STYLE: bold readable cartoon VFX, thick simple shapes, flat colors with a bright
 BACKGROUND: perfectly flat pure BLACK #000000 everywhere (the game turns black into transparency, so dark parts become see-through). Bright, saturated glowing colors; no text, no numbers, no labels, no grid lines, no borders, no watermark. The effect is centered in every cell with at least 6% empty margin; nothing crosses into another cell.
 ------------------------------------------------------------
 
-D7. Hồi sinh (cột sáng vàng)  (hiệu ứng game: revive)
+D6. Hồi sinh (cột sáng vàng)  (hiệu ứng game: revive)
 Tên file: revive.png  ->  Cắt: python3 tools/cat-fx.py dai revive.png revive
 ------------------------------------------------------------
 Create ONE image: a 1536x256 horizontal animation strip of 6 equal 256x256 square frames in ONE row, read left to right, for a cute mobile tower-defense game based on Vietnamese folk legends. Each frame is one moment of the SAME effect, same center, same scale, smooth change between neighbouring frames.
@@ -421,7 +410,7 @@ STYLE: bold readable cartoon VFX, thick simple shapes, flat colors with a bright
 BACKGROUND: perfectly flat pure BLACK #000000 everywhere (the game turns black into transparency, so dark parts become see-through). Bright, saturated glowing colors; no text, no numbers, no labels, no grid lines, no borders, no watermark. The effect is centered in every cell with at least 6% empty margin; nothing crosses into another cell.
 ------------------------------------------------------------
 
-D8. Bắn loạt tên  (hiệu ứng game: volley)
+D7. Bắn loạt tên  (hiệu ứng game: volley)
 Tên file: volley.png  ->  Cắt: python3 tools/cat-fx.py dai volley.png volley
 ------------------------------------------------------------
 Create ONE image: a 1536x256 horizontal animation strip of 6 equal 256x256 square frames in ONE row, read left to right, for a cute mobile tower-defense game based on Vietnamese folk legends. Each frame is one moment of the SAME effect, same center, same scale, smooth change between neighbouring frames.
@@ -430,7 +419,7 @@ STYLE: bold readable cartoon VFX, thick simple shapes, flat colors with a bright
 BACKGROUND: perfectly flat pure BLACK #000000 everywhere (the game turns black into transparency, so dark parts become see-through). Bright, saturated glowing colors; no text, no numbers, no labels, no grid lines, no borders, no watermark. The effect is centered in every cell with at least 6% empty margin; nothing crosses into another cell.
 ------------------------------------------------------------
 
-D9. Mưa tên / mưa đá trúng vùng  (hiệu ứng game: rain)
+D8. Mưa tên / mưa đá trúng vùng  (hiệu ứng game: rain)
 Tên file: rain.png  ->  Cắt: python3 tools/cat-fx.py dai rain.png rain
 ------------------------------------------------------------
 Create ONE image: a 1536x256 horizontal animation strip of 6 equal 256x256 square frames in ONE row, read left to right, for a cute mobile tower-defense game based on Vietnamese folk legends. Each frame is one moment of the SAME effect, same center, same scale, smooth change between neighbouring frames.
@@ -439,7 +428,7 @@ STYLE: bold readable cartoon VFX, thick simple shapes, flat colors with a bright
 BACKGROUND: perfectly flat pure BLACK #000000 everywhere (the game turns black into transparency, so dark parts become see-through). Bright, saturated glowing colors; no text, no numbers, no labels, no grid lines, no borders, no watermark. The effect is centered in every cell with at least 6% empty margin; nothing crosses into another cell.
 ------------------------------------------------------------
 
-D10. Vòng sóng toả (đánh lan, lên cấp…) — TRẮNG XÁM, game tô màu  (hiệu ứng game: ring)
+D9. Vòng sóng toả (đánh lan, lên cấp…) — TRẮNG XÁM, game tô màu  (hiệu ứng game: ring)
 Tên file: ring.png  ->  Cắt: python3 tools/cat-fx.py dai ring.png ring
 ------------------------------------------------------------
 Create ONE image: a 1536x256 horizontal animation strip of 6 equal 256x256 square frames in ONE row, read left to right, for a cute mobile tower-defense game based on Vietnamese folk legends. Each frame is one moment of the SAME effect, same center, same scale, smooth change between neighbouring frames.
@@ -447,7 +436,7 @@ EFFECT: a thin expanding shockwave ring (flattened ellipse): [1] small ring [2] 
 STYLE: game VFX animation frames in the style of the free Kenney Particle Pack: ONLY pure white and light-grey shapes on a perfectly flat pure BLACK #000000 background, soft glowing edges, bright core, NO color at all (the game tints it), no outline, no shading other than brightness, no text, no numbers, no labels, no grid lines, no borders, no watermark. Each shape centered in every frame with at least 8% empty black margin; nothing touches or crosses into another cell.
 ------------------------------------------------------------
 
-D11. Tia nước / tia sáng bắn thẳng — TRẮNG XÁM, game tô màu  (hiệu ứng game: streak)
+D10. Tia nước / tia sáng bắn thẳng — TRẮNG XÁM, game tô màu  (hiệu ứng game: streak)
 Tên file: streak.png  ->  Cắt: python3 tools/cat-fx.py dai streak.png streak
 ------------------------------------------------------------
 Create ONE image: a 1536x256 horizontal animation strip of 6 equal 256x256 square frames in ONE row, read left to right, for a cute mobile tower-defense game based on Vietnamese folk legends. Each frame is one moment of the SAME effect, same center, same scale, smooth change between neighbouring frames.
@@ -455,7 +444,7 @@ EFFECT: a straight water beam going from LEFT to RIGHT across the cell: [1] shor
 STYLE: game VFX animation frames in the style of the free Kenney Particle Pack: ONLY pure white and light-grey shapes on a perfectly flat pure BLACK #000000 background, soft glowing edges, bright core, NO color at all (the game tints it), no outline, no shading other than brightness, no text, no numbers, no labels, no grid lines, no borders, no watermark. Each shape centered in every frame with at least 8% empty black margin; nothing touches or crosses into another cell.
 ------------------------------------------------------------
 
-D12. Dấu đánh dấu mục tiêu (săn)  (hiệu ứng game: mark)
+D11. Dấu đánh dấu mục tiêu (săn)  (hiệu ứng game: mark)
 Tên file: mark.png  ->  Cắt: python3 tools/cat-fx.py dai mark.png mark
 ------------------------------------------------------------
 Create ONE image: a 1536x256 horizontal animation strip of 6 equal 256x256 square frames in ONE row, read left to right, for a cute mobile tower-defense game based on Vietnamese folk legends. Each frame is one moment of the SAME effect, same center, same scale, smooth change between neighbouring frames.
@@ -464,7 +453,7 @@ STYLE: bold readable cartoon VFX, thick simple shapes, flat colors with a bright
 BACKGROUND: perfectly flat pure BLACK #000000 everywhere (the game turns black into transparency, so dark parts become see-through). Bright, saturated glowing colors; no text, no numbers, no labels, no grid lines, no borders, no watermark. The effect is centered in every cell with at least 6% empty margin; nothing crosses into another cell.
 ------------------------------------------------------------
 
-D13. Vùng cảnh báo sắp trúng chiêu — TRẮNG XÁM, game tô màu  (hiệu ứng game: warn)
+D12. Vùng cảnh báo sắp trúng chiêu — TRẮNG XÁM, game tô màu  (hiệu ứng game: warn)
 Tên file: warn.png  ->  Cắt: python3 tools/cat-fx.py dai warn.png warn
 ------------------------------------------------------------
 Create ONE image: a 1536x256 horizontal animation strip of 6 equal 256x256 square frames in ONE row, read left to right, for a cute mobile tower-defense game based on Vietnamese folk legends. Each frame is one moment of the SAME effect, same center, same scale, smooth change between neighbouring frames.
@@ -472,7 +461,7 @@ EFFECT: a warning area on the ground (flattened ellipse): [1] faint ring [2] rin
 STYLE: game VFX animation frames in the style of the free Kenney Particle Pack: ONLY pure white and light-grey shapes on a perfectly flat pure BLACK #000000 background, soft glowing edges, bright core, NO color at all (the game tints it), no outline, no shading other than brightness, no text, no numbers, no labels, no grid lines, no borders, no watermark. Each shape centered in every frame with at least 8% empty black margin; nothing touches or crosses into another cell.
 ------------------------------------------------------------
 
-D14. Bóng mờ lướt tới (lướt chém) — TRẮNG XÁM, game tô màu  (hiệu ứng game: afterimage)
+D13. Bóng mờ lướt tới (lướt chém) — TRẮNG XÁM, game tô màu  (hiệu ứng game: afterimage)
 Tên file: afterimage.png  ->  Cắt: python3 tools/cat-fx.py dai afterimage.png afterimage
 ------------------------------------------------------------
 Create ONE image: a 1536x256 horizontal animation strip of 6 equal 256x256 square frames in ONE row, read left to right, for a cute mobile tower-defense game based on Vietnamese folk legends. Each frame is one moment of the SAME effect, same center, same scale, smooth change between neighbouring frames.
@@ -480,7 +469,7 @@ EFFECT: a dash trail of speed lines from LEFT to RIGHT: [1] short streaks [2] lo
 STYLE: game VFX animation frames in the style of the free Kenney Particle Pack: ONLY pure white and light-grey shapes on a perfectly flat pure BLACK #000000 background, soft glowing edges, bright core, NO color at all (the game tints it), no outline, no shading other than brightness, no text, no numbers, no labels, no grid lines, no borders, no watermark. Each shape centered in every frame with at least 8% empty black margin; nothing touches or crosses into another cell.
 ------------------------------------------------------------
 
-D15. Dây móc kéo quái  (hiệu ứng game: hook)
+D14. Dây móc kéo quái  (hiệu ứng game: hook)
 Tên file: hook.png  ->  Cắt: python3 tools/cat-fx.py dai hook.png hook
 ------------------------------------------------------------
 Create ONE image: a 1536x256 horizontal animation strip of 6 equal 256x256 square frames in ONE row, read left to right, for a cute mobile tower-defense game based on Vietnamese folk legends. Each frame is one moment of the SAME effect, same center, same scale, smooth change between neighbouring frames.
@@ -489,7 +478,7 @@ STYLE: bold readable cartoon VFX, thick simple shapes, flat colors with a bright
 BACKGROUND: perfectly flat pure BLACK #000000 everywhere (the game turns black into transparency, so dark parts become see-through). Bright, saturated glowing colors; no text, no numbers, no labels, no grid lines, no borders, no watermark. The effect is centered in every cell with at least 6% empty margin; nothing crosses into another cell.
 ------------------------------------------------------------
 
-D16. Ngựa sắt Thánh Gióng phun lửa (phi dọc sông)
+D15. Ngựa sắt Thánh Gióng phun lửa (phi dọc sông)
 Tên file: trieu-hoi_ngua-sat.png  ->  Cắt: python3 tools/cat-fx.py don trieu-hoi_ngua-sat.png trieu-hoi_ngua-sat
 ------------------------------------------------------------
 Create ONE image: a 512x512 single game sprite, one subject centered, filling about 85% of the image.
@@ -498,7 +487,7 @@ STYLE: cute mobile-game art matching chibi heroes of a Vietnamese folk-legend to
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. Never use magenta or pink on the effect. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Centered in every cell with at least 6% empty margin; nothing crosses into another cell.
 ------------------------------------------------------------
 
-D17. Thánh Gióng cưỡi ngựa bay dọc sông (skyride)
+D16. Thánh Gióng cưỡi ngựa bay dọc sông (skyride)
 Tên file: trieu-hoi_giong-bay.png  ->  Cắt: python3 tools/cat-fx.py don trieu-hoi_giong-bay.png trieu-hoi_giong-bay
 ------------------------------------------------------------
 Create ONE image: a 512x512 single game sprite, one subject centered, filling about 85% of the image.
@@ -507,7 +496,7 @@ STYLE: cute mobile-game art matching chibi heroes of a Vietnamese folk-legend to
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. Never use magenta or pink on the effect. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Centered in every cell with at least 6% empty margin; nothing crosses into another cell.
 ------------------------------------------------------------
 
-D18. Đèn trời rơi xuống quái (Cô Thả Đèn Trời)
+D17. Đèn trời rơi xuống quái (Cô Thả Đèn Trời)
 Tên file: hieu-ung_den-troi.png  ->  Cắt: python3 tools/cat-fx.py don hieu-ung_den-troi.png hieu-ung_den-troi
 ------------------------------------------------------------
 Create ONE image: a 512x512 single game sprite, one subject centered, filling about 85% of the image.
@@ -516,7 +505,7 @@ STYLE: cute mobile-game art matching chibi heroes of a Vietnamese folk-legend to
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. Never use magenta or pink on the effect. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Centered in every cell with at least 6% empty margin; nothing crosses into another cell.
 ------------------------------------------------------------
 
-D19. Chài lưới quăng ra (Ngư Phủ)
+D18. Chài lưới quăng ra (Ngư Phủ)
 Tên file: hieu-ung_chai.png  ->  Cắt: python3 tools/cat-fx.py don hieu-ung_chai.png hieu-ung_chai
 ------------------------------------------------------------
 Create ONE image: a 512x512 single game sprite, one subject centered, filling about 85% of the image.
@@ -525,7 +514,7 @@ STYLE: cute mobile-game art matching chibi heroes of a Vietnamese folk-legend to
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. Never use magenta or pink on the effect. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Centered in every cell with at least 6% empty margin; nothing crosses into another cell.
 ------------------------------------------------------------
 
-D20. Bình gốm ném nổ (Thợ Gốm)
+D19. Bình gốm ném nổ (Thợ Gốm)
 Tên file: hieu-ung_binh-gom.png  ->  Cắt: python3 tools/cat-fx.py don hieu-ung_binh-gom.png hieu-ung_binh-gom
 ------------------------------------------------------------
 Create ONE image: a 512x512 single game sprite, one subject centered, filling about 85% of the image.
@@ -534,7 +523,7 @@ STYLE: cute mobile-game art matching chibi heroes of a Vietnamese folk-legend to
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. Never use magenta or pink on the effect. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Centered in every cell with at least 6% empty margin; nothing crosses into another cell.
 ------------------------------------------------------------
 
-D21. Dưa hấu ném (Mai An Tiêm)
+D20. Dưa hấu ném (Mai An Tiêm)
 Tên file: hieu-ung_dua-hau.png  ->  Cắt: python3 tools/cat-fx.py don hieu-ung_dua-hau.png hieu-ung_dua-hau
 ------------------------------------------------------------
 Create ONE image: a 512x512 single game sprite, one subject centered, filling about 85% of the image.

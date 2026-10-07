@@ -234,11 +234,11 @@ const HEROES = {
     ],
   },
   thansuong: {
-    name: 'Thần Sương Núi', cost: 80, attack: 'frost', proj: 'spear', wclass: 'staff', dmgType: 'magic',
-    role: 'Làm chậm', title: 'Giáo sương đỉnh núi, làm chậm và đóng băng', color: '#A88CE8',
+    name: 'Thần Sương Núi', cost: 80, attack: 'frost', proj: 'frostbolt', wclass: 'staff', dmgType: 'magic',
+    role: 'Làm chậm', title: 'Sương lạnh đỉnh núi, làm chậm và đóng băng', color: '#A88CE8',
     attrs: { str: 15, agi: 13, int: 22 }, gain: { str: 1.6, agi: 1.4, int: 2.8 },
     base: { damage: 2, range: 155, cooldown: 1.2, slow: 15 },
-    look: { aura: '#74b9ff', weapon: { type: 'spear', color: '#cfd8dc', glow: '#74b9ff' } },
+    look: { aura: '#74b9ff', weapon: { type: 'staff', color: '#cfd8dc', orb: '#aee9ff', glow: '#74b9ff' } },
     skills: [
       { id: 'nova', name: 'Vòng Sương', active: { cooldown: 8, cast: 'nova', mana: 55 },
         info: (n) => `Nổ sương quanh mục tiêu: ${60 + n} sát thương, làm chậm 60%` },
@@ -297,7 +297,7 @@ const HEROES = {
     role: 'Che chắn', title: 'Rùa vàng hộ thành, che chở đồng đội', color: '#E25A3A',
     attrs: { str: 30, agi: 10, int: 18 }, gain: { str: 3.2, agi: 1.0, int: 1.8 },
     base: { damage: 8, range: 140, cooldown: 1.3 },
-    look: { aura: '#F2D27A', bulk: 1.1, weapon: { type: 'trident', color: '#F2D27A' } },
+    look: { aura: '#F2D27A', bulk: 1.1, weapon: { type: 'none' } },
     trait: { name: 'Mai Thần', desc: 'Tướng đứng kề nhận ít hơn 30% sát thương' },
     skills: [
       { id: 'k_q', name: 'Mai Vàng', active: { cooldown: 9, cast: 'goldshell', mana: 60 },
@@ -350,11 +350,11 @@ const HEROES = {
     ],
   },
   antiem: {
-    legend: 'epic', name: 'Mai An Tiêm', attack: 'arrow', proj: 'spear', wclass: 'bow', dmgType: 'phys',
-    role: 'Kiếm vàng', title: 'Phóng lao giữ đảo, dưa hấu trù phú', color: '#7FC24A',
+    legend: 'epic', name: 'Mai An Tiêm', attack: 'arrow', proj: 'melon', wclass: 'bow', dmgType: 'phys',
+    role: 'Kiếm vàng', title: 'Ném dưa hấu, đảo trù phú', color: '#7FC24A',
     attrs: { str: 18, agi: 22, int: 16 }, gain: { str: 1.8, agi: 2.6, int: 1.6 },
     base: { damage: 4, range: 170, cooldown: 1.15, splash: 30 },
-    look: { aura: '#3EDC4E', weapon: { type: 'spear', color: '#8A6A40' } },
+    look: { aura: '#3EDC4E', weapon: { type: 'none' } },
     trait: { name: 'Đảo Trù Phú', desc: '+20 vàng mỗi đợt' },
     skills: [
       { id: 'a_q', name: 'Ném Dưa Hấu', active: { cooldown: 6, cast: 'melon', mana: 40 },
@@ -369,17 +369,17 @@ const HEROES = {
     ],
   },
   auco: {
-    legend: 'legendary', name: 'Âu Cơ', attack: 'magic', proj: 'spear', wclass: 'staff', dmgType: 'magic',
+    legend: 'legendary', name: 'Âu Cơ', attack: 'magic', proj: 'feather', wclass: 'staff', dmgType: 'magic',
     role: 'Hồi máu', title: 'Mẹ Tiên, bọc trăm trứng', color: '#A88CE8',
     attrs: { str: 16, agi: 14, int: 28 }, gain: { str: 1.6, agi: 1.4, int: 3.2 },
     base: { damage: 10, range: 160, cooldown: 1.3 },
-    look: { aura: '#FF9EC4', weapon: { type: 'spear', color: '#F2D27A' } },
+    look: { aura: '#FF9EC4', weapon: { type: 'none' } },
     trait: { name: 'Mẹ Tiên', desc: 'Hồi máu từ từ cho tướng xung quanh (2% máu/giây)' },
     skills: [
       { id: 'u_q', name: 'Hoa Tiên', active: { cooldown: 7, cast: 'flowerheal', mana: 50 },
         info: (n) => `Hồi ${Math.round(25 + n * 0.3)}% máu cho tướng trong 180` },
-      { id: 'u_w', name: 'Giáo Lông Hạc',
-        info: (n) => `Phóng ${Math.min(4, 2 + Math.floor(n / 50))} ngọn giáo lông hạc mỗi lần đánh`,
+      { id: 'u_w', name: 'Lông Vũ Tiên',
+        info: (n) => `Bắn ${Math.min(4, 2 + Math.floor(n / 50))} lông vũ mỗi lần đánh`,
         apply: (s, n) => { s.arrows = Math.min(4, 2 + Math.floor(n / 50)); } },
       { id: 'u_e', name: 'Núi Mẹ', active: { cooldown: 10, cast: 'mothermountain', mana: 90 },
         info: (n) => `Đá núi trồi lên hất tung quái: choáng 1 giây, x2 sát thương +${n}; bãi đá làm chậm 35% trong 3.5 giây` },
@@ -407,15 +407,15 @@ const HEROES = {
     ],
   },
   tiendung: {
-    legend: 'epic', name: 'Tiên Dung', attack: 'magic', proj: 'blade', wclass: 'staff', dmgType: 'magic',
-    role: 'Đẩy lùi', title: 'Công chúa kiếm tiên, mưa hoa', color: '#A88CE8',
+    legend: 'epic', name: 'Tiên Dung', attack: 'magic', proj: 'petal', wclass: 'staff', dmgType: 'magic',
+    role: 'Đẩy lùi', title: 'Công chúa quạt tiên, mưa hoa', color: '#A88CE8',
     attrs: { str: 14, agi: 16, int: 26 }, gain: { str: 1.4, agi: 1.6, int: 3.0 },
     base: { damage: 9, range: 160, cooldown: 1.2 },
-    look: { aura: '#FF9EC4', weapon: { type: 'sword', color: '#E8E0F0' } },
+    look: { aura: '#FF9EC4', weapon: { type: 'none' } },
     trait: { name: 'Đôi Uyên Ương', desc: 'Đứng cạnh Chử Đồng Tử thì cả hai +20% sát thương phép' },
     skills: [
-      { id: 'n_q', name: 'Kiếm Phong', active: { cooldown: 7, cast: 'fan', mana: 45 },
-        info: (n) => `Gió kiếm đẩy lùi quái trong tầm, x1.2 sát thương +${n}` },
+      { id: 'n_q', name: 'Quạt Tiên', active: { cooldown: 7, cast: 'fan', mana: 45 },
+        info: (n) => `Gió quạt đẩy lùi quái trong tầm, x1.2 sát thương +${n}` },
       { id: 'n_w', name: 'Ánh Ngọc',
         info: () => 'Tướng đứng gần +15% sát thương phép',
         apply: (s) => { s.magicAura = 15; } },
@@ -426,11 +426,11 @@ const HEROES = {
     ],
   },
   langlieu: {
-    legend: 'epic', name: 'Lang Liêu', attack: 'magic', proj: 'spear', wclass: 'staff', dmgType: 'magic',
+    legend: 'epic', name: 'Lang Liêu', attack: 'magic', proj: 'rice', wclass: 'staff', dmgType: 'magic',
     role: 'Hỗ trợ', title: 'Bánh chưng bánh giầy, lễ vật đất trời', color: '#A88CE8',
     attrs: { str: 18, agi: 12, int: 24 }, gain: { str: 1.8, agi: 1.2, int: 2.8 },
     base: { damage: 8, range: 155, cooldown: 1.3 },
-    look: { aura: '#7FC24A', weapon: { type: 'spear', color: '#8A6A40' } },
+    look: { aura: '#7FC24A', weapon: { type: 'none' } },
     trait: { name: 'Lễ Vật Đất Trời', desc: 'Tướng đứng gần +10% máu tối đa' },
     skills: [
       { id: 'b_q', name: 'Bánh Chưng', active: { cooldown: 10, cast: 'feast', mana: 50 },
@@ -485,7 +485,7 @@ const HEROES = {
     role: 'Linh thú', title: 'Linh thú bằng đồng canh cửa đình làng', color: '#D9DDE0',
     attrs: { str: 27, agi: 14, int: 14 }, gain: { str: 2.9, agi: 1.4, int: 1.4 },
     base: { damage: 11, range: 145, cooldown: 1.2 },
-    look: { aura: '#F2D27A', bulk: 1.1, weapon: { type: 'twin-swords', color: '#F2D27A' } },
+    look: { aura: '#F2D27A', bulk: 1.1, weapon: { type: 'none' } },
     trait: { name: 'Linh Thú Giữ Đền', desc: '−10% sát thương nhận, phản 20% sát thương' },
     traitApply: (s) => { s.dr += 10; s.thorns += 20; },
     skills: [
@@ -500,12 +500,12 @@ const HEROES = {
     ],
   },
   mychau: {
-    legend: 'epic', name: 'Mỵ Châu', attack: 'magic', proj: 'blade', wclass: 'staff', dmgType: 'magic',
+    legend: 'epic', name: 'Mỵ Châu', attack: 'magic', proj: 'feather', wclass: 'staff', dmgType: 'magic',
     role: 'Đánh dấu', title: 'Công chúa Âu Lạc, áo lông ngỗng rắc đường', color: '#D9DDE0',
     attrs: { str: 14, agi: 17, int: 26 }, gain: { str: 1.4, agi: 1.7, int: 3.0 },
     base: { damage: 9, range: 170, cooldown: 1.15 },
-    look: { aura: '#F7F3FC', weapon: { type: 'sword', color: '#F7F3FC' } },
-    trait: { name: 'Áo Lông Ngỗng', desc: 'Đường kiếm rắc lông ngỗng: quái trúng nhận thêm 25% sát thương từ mọi tướng 2 giây' },
+    look: { aura: '#F7F3FC', weapon: { type: 'none' } },
+    trait: { name: 'Áo Lông Ngỗng', desc: 'Đòn đánh rắc lông ngỗng: quái trúng nhận thêm 25% sát thương từ mọi tướng 2 giây' },
     traitApply: (s) => { s.markHit = 2; },
     skills: [
       { id: 'mc_q', name: 'Lông Ngỗng Bay', active: { cooldown: 10, cast: 'birds', mana: 60 },
@@ -523,7 +523,7 @@ const HEROES = {
     role: 'Điềm lành', title: 'Linh thú điềm lành, xuất hiện khi đất nước thái bình', color: '#D9DDE0',
     attrs: { str: 30, agi: 18, int: 16 }, gain: { str: 3.3, agi: 1.9, int: 1.6 },
     base: { damage: 14, range: 150, cooldown: 1.0 },
-    look: { aura: '#FFE08A', bulk: 1.12, weapon: { type: 'spear', color: '#FFE08A' } },
+    look: { aura: '#FFE08A', bulk: 1.12, weapon: { type: 'none' } },
     trait: { name: 'Điềm Lành', desc: 'Toàn quân +15% xuyên giáp; bản thân +20% máu' },
     traitApply: (s) => { s.hpPct += 20; },
     skills: [
@@ -592,11 +592,11 @@ const HEROES = {
     ],
   },
   sodua: {
-    legend: 'epic', name: 'Sọ Dừa', attack: 'magic', proj: 'spear', wclass: 'staff', dmgType: 'magic',
+    legend: 'epic', name: 'Sọ Dừa', attack: 'magic', proj: 'melon', wclass: 'staff', dmgType: 'magic',
     role: 'Ẩn thân', title: 'Chàng trai ẩn trong vỏ dừa, tài giỏi thổi sáo', color: '#5FB84A',
     attrs: { str: 15, agi: 15, int: 26 }, gain: { str: 1.5, agi: 1.5, int: 3.0 },
     base: { damage: 8, range: 165, cooldown: 1.25, splash: 30 },
-    look: { aura: '#7FC24A', weapon: { type: 'spear', color: '#8A6A40' } },
+    look: { aura: '#7FC24A', weapon: { type: 'none' } },
     trait: { name: 'Vỏ Dừa Thần', desc: '−10% sát thương nhận; tướng đứng gần +2 hồi máu/giây' },
     traitApply: (s) => { s.dr += 10; s.regenAura = Math.max(s.regenAura || 0, 2); },
     skills: [
@@ -651,13 +651,13 @@ const HEROES = {
   // ================= v100: ĐỢT HÀNH THỔ — đủ 4 tướng mỗi bậc, ghép CÙNG HÀNH =================
   dapde: {
     name: 'Người Đắp Đê', cost: 75, attack: 'melee', wclass: 'blade', dmgType: 'phys',
-    role: 'Chắn lũ', title: 'Gậy chĩa đầu thú đắp đê, giữ làng trước mùa lũ', color: '#C99A3C',
+    role: 'Chắn lũ', title: 'Cuốc đất đắp đê, giữ làng trước mùa lũ', color: '#C99A3C',
     attrs: { str: 24, agi: 11, int: 13 }, gain: { str: 2.7, agi: 1.1, int: 1.3 },
     base: { damage: 8, range: 140, cooldown: 1.25 },
-    look: { aura: '#C99A3C', bulk: 1.08, weapon: { type: 'club', color: '#8A8070' } },
+    look: { aura: '#C99A3C', bulk: 1.08, weapon: { type: 'axe', color: '#8A8070' } },
     skills: [
-      { id: 'dd_q', name: 'Nện Gậy', active: { cooldown: 7, cast: 'bash', mana: 45 },
-        info: (n) => `Nện gậy chĩa đầu thú xuống: choáng mục tiêu, x2 sát thương +${(n * 0.6).toFixed(0)}` },
+      { id: 'dd_q', name: 'Nện Cuốc', active: { cooldown: 7, cast: 'bash', mana: 45 },
+        info: (n) => `Nện cuốc xuống: choáng mục tiêu, x2 sát thương +${(n * 0.6).toFixed(0)}` },
       { id: 'dd_w', name: 'Đê Vững',
         info: (n) => `+6% máu, −${(4 + n * 0.08).toFixed(1)}% sát thương nhận`, apply: (s, n) => { s.hpPct += 6; s.dr += 4 + n * 0.08; } },
       { id: 'dd_e', name: 'Đắp Đê Chắn Lũ', active: { cooldown: 14, cast: 'goldshell', mana: 70 },
@@ -688,7 +688,7 @@ const HEROES = {
     role: 'Khổng lồ', title: 'Người khổng lồ gánh đất đắp núi, bước chân thành ao', color: '#A8784A',
     attrs: { str: 28, agi: 12, int: 14 }, gain: { str: 3.0, agi: 1.2, int: 1.4 },
     base: { damage: 12, range: 145, cooldown: 1.3 },
-    look: { aura: '#C99A3C', bulk: 1.18, weapon: { type: 'spear', color: '#8A8070' } },
+    look: { aura: '#C99A3C', bulk: 1.18, weapon: { type: 'cleaver', color: '#8A8070' } },
     trait: { name: 'Gánh Núi Đắp Sông', desc: '+20% máu, mỗi đòn thứ 5 choáng mục tiêu' },
     traitApply: (s) => { s.hpPct += 20; s.lg.stunEvery = s.lg.stunEvery ? Math.min(s.lg.stunEvery, 5) : 5; },
     skills: [
@@ -703,11 +703,11 @@ const HEROES = {
     ],
   },
   thocong: {
-    legend: 'epic', name: 'Thổ Công', attack: 'magic', proj: 'blade', wclass: 'staff', dmgType: 'magic',
+    legend: 'epic', name: 'Thổ Công', attack: 'magic', proj: 'orb', wclass: 'staff', dmgType: 'magic',
     role: 'Giữ nhà', title: 'Thần đất giữ nhà, phù hộ người trong ngõ', color: '#D9A84E',
     attrs: { str: 16, agi: 13, int: 26 }, gain: { str: 1.6, agi: 1.3, int: 3.0 },
     base: { damage: 8, range: 165, cooldown: 1.3 },
-    look: { aura: '#F2D27A', weapon: { type: 'saber', color: '#D9A84E' } },
+    look: { aura: '#F2D27A', weapon: { type: 'staff', color: '#7A5232', orb: '#F2D27A' } },
     trait: { name: 'Giữ Đất Giữ Nhà', desc: 'Tướng đứng gần giảm 10% sát thương nhận' },
     skills: [
       { id: 'tg_q', name: 'Phù Hộ', active: { cooldown: 9, cast: 'staffheal', mana: 55 },
@@ -740,11 +740,11 @@ const HEROES = {
     ],
   },
   maudia: {
-    legend: 'legendary', name: 'Mẫu Địa', attack: 'magic', proj: 'blade', wclass: 'staff', dmgType: 'magic',
+    legend: 'legendary', name: 'Mẫu Địa', attack: 'magic', proj: 'orb', wclass: 'staff', dmgType: 'magic',
     role: 'Mẹ Đất', title: 'Địa Tiên Thánh Mẫu, nuôi muôn loài từ lòng đất', color: '#C99A3C',
     attrs: { str: 17, agi: 14, int: 31 }, gain: { str: 1.7, agi: 1.4, int: 3.5 },
     base: { damage: 11, range: 170, cooldown: 1.3, splash: 30 },
-    look: { aura: '#E8C27A', weapon: { type: 'sword', color: '#E8C27A', glow: '#C99A3C' } },
+    look: { aura: '#E8C27A', weapon: { type: 'staff', color: '#5A3A1A', orb: '#E8C27A', glow: '#C99A3C' } },
     trait: { name: 'Địa Tiên Thánh Mẫu', desc: 'Tướng đứng gần +10% máu tối đa' },
     skills: [
       { id: 'md_q', name: 'Đất Nứt', active: { cooldown: 8, cast: 'quake', mana: 55 },
@@ -760,14 +760,14 @@ const HEROES = {
   // ================= v97: ĐỢT HÀNH THỦY — đủ 4 tướng mỗi bậc, ghép CÙNG HÀNH =================
   chodo: {
     name: 'Chàng Chèo Đò', cost: 70, attack: 'melee', wclass: 'blade', dmgType: 'phys',
-    role: 'Quét lan', title: 'Đao đò ngang, quét sóng quét quân', color: '#5AB4D6',
+    role: 'Quét lan', title: 'Mái chèo đò ngang, quét sóng quét quân', color: '#5AB4D6',
     attrs: { str: 21, agi: 16, int: 13 }, gain: { str: 2.3, agi: 1.8, int: 1.3 },
     base: { damage: 7, range: 140, cooldown: 1.05 },
-    look: { aura: '#5AB4D6', weapon: { type: 'saber', color: '#C8C8C0' } },
+    look: { aura: '#5AB4D6', weapon: { type: 'staff', color: '#7A5232' } },
     skills: [
-      { id: 'cd_q', name: 'Sống Đao Đập', active: { cooldown: 7, cast: 'bash', mana: 45 },
-        info: (n) => `Đập sống đao: choáng mục tiêu, x2 sát thương +${(n * 0.6).toFixed(0)}` },
-      { id: 'cd_w', name: 'Quét Đao',
+      { id: 'cd_q', name: 'Mái Chèo Đập', active: { cooldown: 7, cast: 'bash', mana: 45 },
+        info: (n) => `Đập mái chèo: choáng mục tiêu, x2 sát thương +${(n * 0.6).toFixed(0)}` },
+      { id: 'cd_w', name: 'Quét Chèo',
         info: (n) => `Quét lan ${Math.round(25 + n * 0.4)}% sát thương`, apply: (s, n) => { s.cleave += 0.25 + n * 0.004; } },
       { id: 'cd_e', name: 'Thân Sông Nước',
         info: (n) => `+5% máu, −${(3 + n * 0.06).toFixed(1)}% sát thương nhận`, apply: (s, n) => { s.hpPct += 5; s.dr += 3 + n * 0.06; } },
@@ -813,11 +813,11 @@ const HEROES = {
     ],
   },
   truongchi: {
-    legend: 'epic', name: 'Trương Chi', attack: 'magic', proj: 'spear', wclass: 'staff', dmgType: 'magic',
+    legend: 'epic', name: 'Trương Chi', attack: 'magic', proj: 'orb', wclass: 'staff', dmgType: 'magic',
     role: 'Mê hoặc', title: 'Chàng đánh cá hát hay, tiếng sáo vang mặt sông', color: '#7FA8F0',
     attrs: { str: 14, agi: 16, int: 27 }, gain: { str: 1.4, agi: 1.6, int: 3.1 },
     base: { damage: 9, range: 170, cooldown: 1.2 },
-    look: { aura: '#9EDDF2', weapon: { type: 'spear', color: '#8a6a3a' } },
+    look: { aura: '#9EDDF2', weapon: { type: 'staff', color: '#8a6a3a', orb: '#BFE8F8' } },
     trait: { name: 'Tiếng Sáo Sông Thao', desc: 'Đòn đánh làm chậm 30%, 10% làm quái mê đứng yên' },
     traitApply: (s) => { s.el.slow = Math.max(s.el.slow || 0, 30); s.el.stun = Math.max(s.el.stun || 0, 10); },
     skills: [
@@ -836,7 +836,7 @@ const HEROES = {
     role: 'Rồng giữ biển', title: 'Rồng Mẹ dẫn đàn rồng con phun ngọc thành đảo giữ biển', color: '#5AD6C8',
     attrs: { str: 31, agi: 15, int: 15 }, gain: { str: 3.3, agi: 1.5, int: 1.5 },
     base: { damage: 14, range: 150, cooldown: 1.1 },
-    look: { aura: '#7FE8E0', bulk: 1.15, weapon: { type: 'spear', color: '#7FE8E0' } },
+    look: { aura: '#7FE8E0', bulk: 1.15, weapon: { type: 'none' } },
     trait: { name: 'Đàn Rồng Hạ Long', desc: '+30% máu, đòn đánh lan 30% sát thương' },
     traitApply: (s) => { s.hpPct += 30; s.cleave += 0.3; },
     skills: [
@@ -851,11 +851,11 @@ const HEROES = {
     ],
   },
   longnu: {
-    legend: 'legendary', name: 'Long Nữ Động Đình', attack: 'magic', proj: 'blade', wclass: 'staff', dmgType: 'magic',
+    legend: 'legendary', name: 'Long Nữ Động Đình', attack: 'magic', proj: 'orb', wclass: 'staff', dmgType: 'magic',
     role: 'Long châu', title: 'Long Nữ hồ Động Đình, mẹ của Lạc Long Quân', color: '#5AB4D6',
     attrs: { str: 16, agi: 15, int: 31 }, gain: { str: 1.6, agi: 1.5, int: 3.5 },
     base: { damage: 12, range: 175, cooldown: 1.2, slow: 15 },
-    look: { aura: '#9EDDF2', weapon: { type: 'sword', color: '#E8F4FF', glow: '#5AB4D6' } },
+    look: { aura: '#9EDDF2', weapon: { type: 'staff', color: '#E8F4FF', orb: '#5AD6C8', glow: '#5AB4D6' } },
     trait: { name: 'Ngọc Long Nữ', desc: 'Tướng đứng gần +10% sát thương phép, +10% hồi năng lượng' },
     skills: [
       { id: 'ln_q', name: 'Long Châu', active: { cooldown: 7, cast: 'nova', mana: 55 },
@@ -962,11 +962,11 @@ const HEROES = {
     ],
   },
   viemde: {
-    legend: 'legendary', name: 'Viêm Đế Thần Nông', attack: 'magic', proj: 'spear', wclass: 'staff', dmgType: 'magic',
+    legend: 'legendary', name: 'Viêm Đế Thần Nông', attack: 'magic', proj: 'fireball', wclass: 'staff', dmgType: 'magic',
     role: 'Lửa nuôi dân', title: 'Vua Lửa dạy dân cày cấy, nếm trăm thứ cỏ', color: '#FFB04A',
     attrs: { str: 16, agi: 14, int: 31 }, gain: { str: 1.6, agi: 1.4, int: 3.5 },
     base: { damage: 12, range: 175, cooldown: 1.25, splash: 35 },
-    look: { aura: '#FFB04A', weapon: { type: 'spear', color: '#7A5232', glow: '#FF8A3A' } },
+    look: { aura: '#FFB04A', weapon: { type: 'staff', color: '#7A5232', orb: '#FFB04A', glow: '#FF8A3A' } },
     trait: { name: 'Lửa Nuôi Muôn Dân', desc: 'Mỗi quái Viêm Đế hạ: mọi tướng hồi 2% máu' },
     skills: [
       { id: 'vd_q', name: 'Ngọn Lửa Đầu Tiên', active: { cooldown: 6, cast: 'firepillar', mana: 55 },
@@ -1017,17 +1017,17 @@ const HEROES = {
     ],
   },
   thogom: {
-    name: 'Thợ Gốm Phù Lãng', cost: 70, attack: 'melee', wclass: 'blade', dmgType: 'phys',
-    role: 'Phá giáp', title: 'Vồ gốm khiên đất nung, đập vỡ giáp giặc', color: '#C99A3C',
+    name: 'Thợ Gốm Phù Lãng', cost: 70, attack: 'arrow', proj: 'melon', wclass: 'bow', dmgType: 'phys',
+    role: 'Phá giáp', title: 'Ném bình gốm nung, đất vỡ giáp tan', color: '#C99A3C',
     attrs: { str: 17, agi: 20, int: 14 }, gain: { str: 1.8, agi: 2.4, int: 1.4 },
-    base: { damage: 9, range: 145, cooldown: 1.3, cleave: 0.4, heir: { damage: 6, range: 165, splash: 30 } },
-    look: { aura: '#C99A3C', weapon: { type: 'mallet', color: '#A8784A' } },
+    base: { damage: 6, range: 165, cooldown: 1.35, splash: 30 },
+    look: { aura: '#C99A3C', weapon: { type: 'none' } },
     skills: [
       { id: 'gm_q', name: 'Bình Gốm Nổ', active: { cooldown: 7, cast: 'potbomb', mana: 50 },
         info: (n) => `Ném bình gốm: x2 sát thương +${(n * 0.8).toFixed(0)} vùng 70, choáng 0,6 giây` },
       { id: 'gm_w', name: 'Đất Nung',
-        info: (n) => `+${(n * 0.3).toFixed(1)} sát thương · đập lan ${Math.round(Math.min(80, 40 + n * 0.3))}% lên quái trong tầm`,
-        apply: (s, n) => { s.damage += n * 0.3; s.cleave = Math.max(s.cleave, Math.min(0.8, 0.4 + n * 0.003)); } },
+        info: (n) => `+${(n * 0.3).toFixed(1)} sát thương · vùng vỡ ${Math.round(Math.min(90, 35 + n * 0.4))}`,
+        apply: (s, n) => { s.damage += n * 0.3; s.splash = Math.min(90, 35 + n * 0.4); } },
       { id: 'gm_e', name: 'Men Rạn',
         info: (n) => `Mỗi đòn giảm ${(1 + n * 0.03).toFixed(1)} giáp quái (cộng 3 lần)`, apply: (s, n) => { s.shred = Math.max(s.shred, 1 + n * 0.03); } },
       { id: 'gm_r', name: 'Lò Gốm Ngàn Năm', active: { cooldown: 16, cast: 'boulder', mana: 110 },
@@ -1075,7 +1075,7 @@ const HEROES = {
     role: 'Che chắn', title: 'Cá Ông cứu thuyền chài giữa biển động', color: '#5AB4D6',
     attrs: { str: 28, agi: 12, int: 15 }, gain: { str: 3.0, agi: 1.2, int: 1.5 },
     base: { damage: 9, range: 140, cooldown: 1.3 },
-    look: { aura: '#9EDDF2', bulk: 1.14, weapon: { type: 'spear', color: '#9EDDF2' } },
+    look: { aura: '#9EDDF2', bulk: 1.14, weapon: { type: 'none' } },
     trait: { name: 'Hộ Ngư Dân', desc: 'Tướng đứng kề giảm 10% sát thương nhận; bản thân +15% máu' },
     traitApply: (s) => { s.hpPct += 15; },
     skills: [
@@ -1095,7 +1095,7 @@ const HEROES = {
     role: 'Đốt cháy', title: 'Thần bếp cưỡi cá chép, lửa than không tắt', color: '#E0452C',
     attrs: { str: 22, agi: 20, int: 15 }, gain: { str: 2.4, agi: 2.2, int: 1.5 },
     base: { damage: 10, range: 145, cooldown: 1.0 },
-    look: { aura: '#FF8A3A', weapon: { type: 'saber', color: '#C8C8C0' } },
+    look: { aura: '#FF8A3A', weapon: { type: 'daggers', color: '#3A2A1A' } },
     trait: { name: 'Bếp Lửa Nhà Nam', desc: '35% mỗi đòn thiêu đốt quái 3 giây' },
     traitApply: (s) => { s.el.burn = Math.max(s.el.burn || 0, 35); },
     skills: [
@@ -1111,11 +1111,11 @@ const HEROES = {
   },
   // ---- Vàng
   matroi: {
-    legend: 'legendary', name: 'Nữ Thần Mặt Trời', attack: 'magic', proj: 'spear', wclass: 'staff', dmgType: 'magic',
+    legend: 'legendary', name: 'Nữ Thần Mặt Trời', attack: 'magic', proj: 'fireball', wclass: 'staff', dmgType: 'magic',
     role: 'Thiêu rụi', title: 'Nữ thần dắt mặt trời qua bầu trời mỗi ngày', color: '#FFB04A',
     attrs: { str: 16, agi: 14, int: 30 }, gain: { str: 1.6, agi: 1.4, int: 3.4 },
     base: { damage: 12, range: 170, cooldown: 1.25, splash: 30 },
-    look: { aura: '#FFB04A', weapon: { type: 'spear', color: '#E0B030', glow: '#FFB04A' } },
+    look: { aura: '#FFB04A', weapon: { type: 'staff', color: '#E0B030', orb: '#FFE08A', glow: '#FFB04A' } },
     trait: { name: 'Vầng Dương', desc: '+20% sát thương lên quái bay, đòn đánh đốt 30% quái trúng' },
     traitApply: (s) => { s.airPct += 20; s.el.burn = Math.max(s.el.burn || 0, 30); },
     skills: [
@@ -1131,11 +1131,11 @@ const HEROES = {
     ],
   },
   mauthoai: {
-    legend: 'legendary', name: 'Mẫu Thoải', attack: 'magic', proj: 'spear', wclass: 'staff', dmgType: 'magic',
+    legend: 'legendary', name: 'Mẫu Thoải', attack: 'magic', proj: 'orb', wclass: 'staff', dmgType: 'magic',
     role: 'Khống chế', title: 'Thánh Mẫu cai quản sông nước, Thủy Cung', color: '#5AB4D6',
     attrs: { str: 16, agi: 15, int: 30 }, gain: { str: 1.6, agi: 1.5, int: 3.4 },
     base: { damage: 11, range: 170, cooldown: 1.25, slow: 15 },
-    look: { aura: '#9EDDF2', weapon: { type: 'spear', color: '#E8F4FF', glow: '#5AB4D6' } },
+    look: { aura: '#9EDDF2', weapon: { type: 'staff', color: '#E8F4FF', orb: '#9EDDF2', glow: '#5AB4D6' } },
     trait: { name: 'Thủy Cung Thánh Mẫu', desc: 'Tướng đứng gần +15% hồi năng lượng' },
     skills: [
       { id: 'mth_q', name: 'Sóng Bạc', active: { cooldown: 8, cast: 'seawave', mana: 55 },
@@ -1153,7 +1153,7 @@ const HEROES = {
     role: 'Chống trời', title: 'Người khổng lồ đắp cột chống trời, tách trời khỏi đất', color: '#C99A3C',
     attrs: { str: 32, agi: 10, int: 15 }, gain: { str: 3.4, agi: 1.0, int: 1.5 },
     base: { damage: 13, range: 145, cooldown: 1.35 },
-    look: { aura: '#C99A3C', bulk: 1.2, weapon: { type: 'sword', color: '#8A8070' } },
+    look: { aura: '#C99A3C', bulk: 1.2, weapon: { type: 'cleaver', color: '#8A8070' } },
     trait: { name: 'Chống Trời', desc: '+25% máu, chặn thêm 10% đòn đánh' },
     traitApply: (s) => { s.hpPct += 25; s.el.block = (s.el.block || 0) + 10; },
     skills: [
@@ -1173,7 +1173,7 @@ const HEROES = {
     role: 'Kết liễu', title: 'Ông Ba Mươi, chúa tể núi rừng', color: '#E8843A',
     attrs: { str: 22, agi: 30, int: 12 }, gain: { str: 2.4, agi: 3.4, int: 1.2 },
     base: { damage: 12, range: 145, cooldown: 0.85 },
-    look: { aura: '#E8843A', weapon: { type: 'sword', color: '#F2EEE0' } },
+    look: { aura: '#E8843A', weapon: { type: 'daggers', color: '#F2EEE0' } },
     trait: { name: 'Chúa Tể Núi Rừng', desc: 'Đánh quái dưới 30% máu: +40% sát thương' },
     traitApply: (s) => { s.execPct = 40; },
     skills: [
@@ -1247,11 +1247,11 @@ const HEROES = {
     ],
   },
   mau: {
-    legend: 'legendary', name: 'Mẫu Thượng Ngàn', attack: 'magic', proj: 'blade', wclass: 'staff', dmgType: 'magic',
+    legend: 'legendary', name: 'Mẫu Thượng Ngàn', attack: 'magic', proj: 'petal', wclass: 'staff', dmgType: 'magic',
     role: 'Mẹ rừng', title: 'Bà chúa núi rừng, cây lá nghe lời', color: '#A88CE8',
     attrs: { str: 17, agi: 14, int: 30 }, gain: { str: 1.7, agi: 1.4, int: 3.4 },
     base: { damage: 11, range: 165, cooldown: 1.25, slow: 15 },
-    look: { aura: '#5FD06A', weapon: { type: 'sword', color: '#7FE07A', glow: '#5FD06A' } },
+    look: { aura: '#5FD06A', weapon: { type: 'staff', color: '#5A3A1A', orb: '#7FE07A', glow: '#5FD06A' } },
     trait: { name: 'Mẹ Rừng', desc: 'Tướng đứng gần +10% sát thương và +2 hồi máu/giây' },
     skills: [
       { id: 'm_q', name: 'Dây Rừng Trói', active: { cooldown: 7, cast: 'vines', mana: 45 },

@@ -11,15 +11,15 @@ try { if (/[?&]solo=1\b/.test(location.search)) CD.force = true; } catch (e) { /
 // loại vũ khí trong game — theo vũ khí nhân vật cầm trong ẢNH dựng xương (nhánh vu-khi-theo-anh: game sửa theo ảnh;
 // mã còn để vũ khí cũ trong khi ảnh khác = chờ gen lại, docs/PROMPT-GEN-LAI.txt) — chọn vệt chém / đạn / quả cầu
 const CD_WEAPON = {
-  lactuong: 'riu', lucsi: 'tay-khong', xathu: 'cung', thosan: 'cung', thaymo: 'gay-phep', thansuong: 'giao', giaodong: 'giao',
-  chuongdong: 'phep', tre: 'giao', ongthoi: 'no', dapde: 'gay', chantrau: 'gay', chodo: 'dao', haisen: 'phep', dotnuong: 'kiem',
-  denroi: 'gay-phep', thoren: 'riu', nguphu: 'giao', thogom: 'gay', thaylang: 'gay-phep', thachsanh: 'riu', caolo: 'no',
-  antiem: 'giao', cdt: 'gay-phep', tiendung: 'kiem', langlieu: 'giao', nghedong: 'kiem', mychau: 'kiem',
-  sodua: 'giao', ongdung: 'giao', thocong: 'dao', lyngu: 'giao', truongchi: 'giao', potaoapui: 'kiem', baahoa: 'phep',
-  trongdong: 'gay-phep', caong: 'giao', ongtao: 'dao', lachau: 'giao', thansan: 'dao', giong: 'giao', llq: 'giao',
-  kimquy: 'dinh-ba', auco: 'giao', kylan: 'giao', thienloi: 'riu', cuoi: 'gay', melua: 'phep', tanvien: 'giao',
-  maudia: 'kiem', halong: 'giao', longnu: 'kiem', kinhduong: 'dao', viemde: 'giao', matroi: 'giao',
-  mauthoai: 'giao', trutroi: 'kiem', ongho: 'kiem', adv: 'no', mau: 'kiem',
+  lactuong: 'riu', lucsi: 'tay-khong', xathu: 'cung', thosan: 'cung', thaymo: 'gay-phep', thansuong: 'tay-khong', giaodong: 'giao',
+  chuongdong: 'phep', tre: 'giao', ongthoi: 'no', dapde: 'giao', chantrau: 'gay', chodo: 'giao', haisen: 'phep', dotnuong: 'kiem',
+  denroi: 'gay-phep', thoren: 'riu', nguphu: 'giao', thogom: 'tay-khong', thaylang: 'gay-phep', thachsanh: 'riu', caolo: 'no',
+  antiem: 'tay-khong', cdt: 'gay-phep', tiendung: 'gay-phep', langlieu: 'gay-phep', nghedong: 'tay-khong', mychau: 'tay-khong',
+  sodua: 'tay-khong', ongdung: 'giao', thocong: 'gay-phep', lyngu: 'giao', truongchi: 'gay-phep', potaoapui: 'kiem', baahoa: 'phep',
+  trongdong: 'gay-phep', caong: 'tay-khong', ongtao: 'gay-phep', lachau: 'giao', thansan: 'dao', giong: 'giao', llq: 'giao',
+  kimquy: 'tay-khong', auco: 'gay-phep', kylan: 'tay-khong', thienloi: 'riu', cuoi: 'gay', melua: 'phep', tanvien: 'giao',
+  maudia: 'gay-phep', halong: 'tay-khong', longnu: 'tay-khong', kinhduong: 'dao', viemde: 'gay-phep', matroi: 'gay-phep',
+  mauthoai: 'gay-phep', trutroi: 'giao', ongho: 'tay-khong', adv: 'no', mau: 'gay-phep',
   // quái / boss
   camap: 'tay-khong', cao: 'tay-khong', cua: 'tay-khong', kybinh: 'tay-khong', voichien: 'tay-khong', tom: 'tay-khong', casau: 'tay-khong',
   rua: 'tay-khong', phuthuy: 'gay-phep', chimbao: 'tay-khong', echme: 'tay-khong', nongnoc: 'tay-khong', giaolong: 'tay-khong',
@@ -37,11 +37,16 @@ function cdWeapon(type, attack) {
   return attack === 'arrow' ? 'shot' : attack === 'melee' ? 'slash' : attack ? 'orb' : 'punch';
 }
 
-// ảnh dựng xương VẼ SAI (sai loài / vũ khí rời / lệch phong cách) — chờ gen lại; mã trong đây giữ nguyên cách hiển thị cũ của game
+// ảnh dựng xương VẼ SAI — chờ gen lại (docs/PROMPT-GEN-LAI.txt, bảng đủ 90 mã: docs/xem-truoc-cu-dong/README.md);
+// mã trong đây giữ nguyên cách hiển thị cũ của game (bộ ảnh packs/) — tools/build-prompt-gen-lai.js kiểm tra danh sách này khớp bảng gen lại
 const CD_SKIP = new Set([
-  'rua', 'phuthuy', 'chimbao', 'nongnoc', 'ran', 'thachtinh', 'dacon', 'linhan', 'cungan', 'voichien', 'camap', 'cua', 'cao',   // quái sai loài (thành rồng con / người có sừng)
-  'hotinh', 'chantinh',                                                                                                        // boss sai loài
-  'nguphu', 'tre', 'dotnuong',                                                                                                 // tướng: tiên cá · vũ khí rời · kiểu 3D bóng
+  // sai loài: quái thành rồng con / người có sừng, linh thú thành người mặc đồ thú
+  'rua', 'phuthuy', 'chimbao', 'nongnoc', 'ran', 'thachtinh', 'dacon', 'cungan', 'voichien', 'camap', 'cua', 'cao', 'casau', 'doi', 'echme',
+  'hotinh', 'chantinh', 'thuongluong', 'daibang', 'nguphu', 'kimquy', 'nghedong', 'kylan', 'halong', 'caong', 'ongho',
+  // vật cầm không hợp nhân vật (kiếm / giáo trong tay dân thường, nghề nghiệp, thần linh hiền), vũ khí rời / thiếu, lệch phong cách
+  'linhan', 'tre', 'dotnuong', 'xathu', 'adv', 'caolo', 'thoren', 'thienloi', 'thachsanh', 'potaoapui', 'cdt',
+  'thansuong', 'antiem', 'auco', 'tiendung', 'langlieu', 'mychau', 'sodua', 'dapde', 'ongdung', 'thocong', 'maudia', 'chodo', 'truongchi',
+  'longnu', 'viemde', 'ongtao', 'matroi', 'mauthoai', 'trutroi', 'mau',
 ]);
 // ---- chọn ảnh đơn
 const cdMultiCache = new Map();

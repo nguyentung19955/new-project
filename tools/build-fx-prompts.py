@@ -129,8 +129,6 @@ DON = [
 ]
 
 # ---------- D. đang vẽ bằng code (chưa có chỗ nhận ảnh — cần thêm code)
-# mỗi tấm 5 ô (tấm cuối có thể ít hơn)
-NUM = {1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five'}
 DAN = [
     ('dan_fireball', 'fireball', 'a small flaming fireball flying RIGHT with a short fire tail'),
     ('dan_frostbolt', 'frostbolt', 'an ice shard bolt flying RIGHT, pale blue crystal with frosty trail'),
@@ -142,10 +140,7 @@ DAN = [
     ('dan_melon', 'melon', 'a small green watermelon (Mai An Tiem) with dark stripes'),
     ('dan_rice', 'rice', 'a small bundle of golden rice grains flying RIGHT'),
     ('dan_evil', 'evil', 'a dark-blue evil water spirit ball with a grumpy face and a wispy tail, flying RIGHT'),
-    ('dan_spear', 'spear', 'a short glowing magic spear (javelin) flying RIGHT: wooden shaft, bright leaf-shaped bronze tip, faint light streak behind'),
-    ('dan_blade', 'blade', 'a crescent-moon sword-wave (sword qi) flying RIGHT: a thin glowing white-blue crescent arc, sharp tips, soft glow'),
 ]
-N_DAN = (len(DAN) + 4) // 5
 CODE_DAI = [
     ('vortex', 'Xoáy cát / gió quanh tướng', 'black', 'a spinning sand-and-wind vortex: [1] small swirl [2] swirl growing with sand grains [3] full tornado swirl, tan and white [4] spinning faster [5] breaking apart [6] fading grains'),
     ('sweep', 'Gậy tre quét vòng cung', 'black', 'a sweeping arc of a bamboo staff: [1] start of a green-ivory arc on the left [2] half arc [3] full wide arc with leaf bits [4] arc trail thinning [5] few bamboo leaves [6] fading'),
@@ -221,26 +216,26 @@ def main():
         o.append(block(f'C{i}. {vi}', f'Tên file: {f}.png  ->  Cắt: python3 tools/cat-fx.py don {f}.png {f}', text))
     o.append(f'\n\nPHẦN D — ĐẠN BAY + HIỆU ỨNG TRƯỚC CHỈ VẼ BẰNG CODE (game đã có chỗ nhận từ phiên bản 153)\n{BAR}\n'
              'Chưa có ảnh thì game vẫn vẽ bằng code như cũ; cắt ảnh vào là game tự dùng. Hiệu ứng chỉ là chữ / làm tối màn (banner, text, dim, flash, dive) không cần ảnh.\n')
-    for k in range(N_DAN):
+    for k in range(2):
         part = DAN[k * 5:(k + 1) * 5]
-        text = (f'Create ONE image: a {128 * len(part)}x128 row of {NUM[len(part)]} equal 128x128 square cells, one small flying projectile per cell, left to right, all pointing RIGHT where they have a direction:\n'
+        text = (f'Create ONE image: a 640x128 row of five equal 128x128 square cells, one small flying projectile per cell, left to right, all pointing RIGHT where they have a direction:\n'
                 + '\n'.join(f'[{j}] {d}.' for j, (_, _, d) in enumerate(part, 1))
                 + f'\nEach projectile centered, about 60% of the cell, bold and readable at 16 px.\n{CHIBI}\n{COLOR_MAGENTA}')
         o.append(block(f'D{k + 1}. Đạn bay: {", ".join(p[1] for p in part)}', f'Tên file: dan-{k + 1}.png  ->  Cắt: python3 tools/cat-fx.py hat dan-{k + 1}.png {" ".join(p[0] for p in part)} --mau', text))
-    for i, (f, vi, bg, frames) in enumerate(CODE_DAI, N_DAN + 1):
+    for i, (f, vi, bg, frames) in enumerate(CODE_DAI, 3):
         text = (f'Create ONE image: a 1536x256 horizontal animation strip of {N_FRAMES} equal 256x256 square frames in ONE row, read left to right, '
                 f'for a cute mobile tower-defense game based on Vietnamese folk legends. Each frame is one moment of the SAME effect, same center, same scale, smooth change between neighbouring frames.\n'
                 f'EFFECT: {frames}.\n'
                 + (f'STYLE: bold readable cartoon VFX, thick simple shapes, flat colors with a bright core, {DRUM}\n' if bg != 'grey' else '')
                 + {'black': COLOR_BLACK, 'magenta': COLOR_MAGENTA, 'grey': GREY.replace('particle texture', 'animation frames').replace('in its own cell', 'in every frame')}[bg])
         o.append(block(f'D{i}. {vi}  (hiệu ứng game: {f})', f'Tên file: {f}.png  ->  Cắt: python3 tools/cat-fx.py dai {f}.png {f}', text))
-    for i, (f, vi, desc) in enumerate(CODE_DON, N_DAN + 1 + len(CODE_DAI)):
+    for i, (f, vi, desc) in enumerate(CODE_DON, 3 + len(CODE_DAI)):
         text = (f'Create ONE image: a 512x512 single game sprite, one subject centered, filling about 85% of the image.\n'
                 f'SUBJECT: {desc}. Readable at 40 px.\n{CHIBI}\n{COLOR_MAGENTA}')
         o.append(block(f'D{i}. {vi}', f'Tên file: {f}.png  ->  Cắt: python3 tools/cat-fx.py don {f}.png {f}', text))
     open(OUT, 'w', encoding='utf8').write(''.join(o))
-    n = len(HAT) + len(DAI) + len(DON) + N_DAN + len(CODE_DAI) + len(CODE_DON)
-    print('PROMPT-HIEU-UNG.txt:', n, 'ảnh (A', len(HAT), '· B', len(DAI), '· C', len(DON), '· D', N_DAN + len(CODE_DAI) + len(CODE_DON), ')')
+    n = len(HAT) + len(DAI) + len(DON) + 2 + len(CODE_DAI) + len(CODE_DON)
+    print('PROMPT-HIEU-UNG.txt:', n, 'ảnh (A', len(HAT), '· B', len(DAI), '· C', len(DON), '· D', 2 + len(CODE_DAI) + len(CODE_DON), ')')
 
 
 if __name__ == '__main__':

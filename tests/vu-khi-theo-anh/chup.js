@@ -1,4 +1,4 @@
-// Chụp trận có tướng đổi kiểu đánh theo ảnh (Thợ Săn bắn cung, Thợ Gốm / Chăn Trâu cận chiến, đạn giáo / kiếm khí)
+// Chụp trận: đội a giữ ảnh mới (Thợ Săn cung, Chăn Trâu gậy, Thợ Gốm bình gốm, Cuội đòn gánh) · đội b chờ gen lại (CD_SKIP, ảnh cũ)
 // Chạy: node tests/vu-khi-theo-anh/chup.js [thư mục gốc game=.] [thư mục ảnh=tests/vu-khi-theo-anh/shots] [tiền tố=sau]
 const path = require('path'), fs = require('fs');
 const { chromium } = require('/opt/node-tools/node_modules/playwright');
@@ -6,7 +6,7 @@ const ROOT = path.resolve(process.argv[2] || path.join(__dirname, '../..'));
 const OUT = path.resolve(process.argv[3] || path.join(__dirname, 'shots'));
 const PRE = process.argv[4] || 'sau';
 fs.mkdirSync(OUT, { recursive: true });
-const TEAMS = { a: ['thosan', 'thogom', 'chantrau', 'xathu'], b: ['matroi', 'longnu', 'thansuong', 'tiendung', 'antiem', 'auco'] };
+const TEAMS = { a: ['thosan', 'chantrau', 'thogom', 'cuoi'], b: ['chodo', 'matroi', 'longnu', 'xathu', 'thansuong', 'kylan'] };   // b: mã chờ gen lại (CD_SKIP) → phải hiện ảnh cũ
 (async () => {
   const browser = await chromium.launch({ args: ['--allow-file-access-from-files'] });
   const errs = [];
