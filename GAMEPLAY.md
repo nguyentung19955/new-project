@@ -1868,3 +1868,9 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 ## Phiên bản 185 — Gộp chợ kiểu TFT + vai trò tướng (tester đạt)
 
 - Gộp cho-bot-ngau-nhien và vai-tro-tuong sau khi tester báo đạt; ghép tay thẻ chợ (nhãn hợp thể + icon vai trò) và thẻ Anh Hùng (giá mở khoá + icon vai trò).
+
+## Phiên bản 186 — Sửa 3 lỗi tester ở chợ tướng (khoá chợ, nhãn thẻ, dòng giải thích)
+- **🔒 Khoá chợ rõ hơn:** bỏ nút tròn 26px chồm lên viền thanh chợ; thay bằng nút riêng cạnh ↻ (36×60, vùng chạm ~39×65 sau phóng to), ổ khoá SVG vẽ bằng code (mở khi chưa khoá, đóng khi khoá) + chữ "Khoá" / "Đã khoá". Đang khoá: nút nền vàng, chữ nâu đậm, và 4 thẻ có viền vàng (tắt nhấp nháy "ghép" để viền khoá dễ thấy).
+- **Nhãn thẻ không che mặt:** nhãn "ghép" (xanh) và "hợp" (tím, rút gọn từ "hợp thể"; đọc màn hình vẫn đọc đủ "nguyên liệu hợp thể") chuyển xuống thanh giá ở đáy thẻ: "ghép" bên trái, giá ở giữa, "hợp" bên phải. Không còn đè vương miện / icon hệ / icon vai trò, thẻ có cả hai nhãn cũng không chồng nhau.
+- **Dòng giải thích ở Chọn đội ưu tiên** hiện cả ở 844×390 / 667×375 bằng bản ngắn "Chợ ra mọi tướng đã mở · đội này ra ×2" (máy tính vẫn hiện bản đầy đủ).
+- Test: `node tests/cho-tuong/ti-le.test.js` thêm kiểm tra vùng chạm nút khoá ≥ 36, viền khoá trên hàng thẻ, 2 nhãn nằm dưới ảnh mặt và không chồng nhau. Ảnh đã xem: thanh chợ mở / khoá và bảng chọn đội ở 1920×934, 844×390, 667×375, dọc 390×844.

@@ -54,10 +54,11 @@ async function main() {
   const box = await page.locator('#deck [data-act=mk-lock]').boundingBox();
   const rr = await page.locator('#deck [data-act=mk-reroll]').boundingBox();
   ok(rr.width >= 40 && rr.height >= 40, `nút ↻ vẫn đủ lớn (${rr.width}×${rr.height})`);
-  ok(box.width >= 24 && box.y + box.height > rr.y, `nút 🔒 gắn góc nút ↻ (${box.width}px)`);
+  ok(box.width >= 36 && box.height >= 40 && box.x >= rr.x + rr.width - 1, `nút 🔒 riêng cạnh ↻, vùng chạm ${Math.round(box.width)}×${Math.round(box.height)} ≥ 36`);
   const before = await page.evaluate(() => [...game.market.types]);
   await page.click('#deck [data-act=mk-lock]'); await page.waitForTimeout(150);
   ok(await page.evaluate(() => game.market.lock === true) && await page.locator('#deck .mk-lk.on').count() === 1, 'bấm 🔒 → chợ khoá, nút sáng');
+  ok(await page.locator('#deck .mk-row.locked').count() === 1 && await page.locator('#deck .mk-lk.on span').innerText() === 'Đã\nkhoá', 'đang khoá: hàng thẻ có viền khoá, nút ghi "Đã khoá"');
   await page.screenshot({ path: path.join(SHOT, 'khoa-cho-844x390.png'), clip: { x: 0, y: 390 - 110, width: 844, height: 110 } });
   const w1 = await page.evaluate(() => { game.startWave(); game.running = false; return { t: [...game.market.types], lock: game.market.lock, rr: game.market.rr }; });
   ok(JSON.stringify(w1.t) === JSON.stringify(before) && w1.lock === false && w1.rr === 0, 'sang đợt sau: giữ nguyên 4 thẻ, tự mở khoá, giá ↻ về 10');
@@ -76,9 +77,11 @@ async function main() {
   }
   ok(pity && maxDry <= 2, `bấm ↻ 30 lần: Thần Sương (nguyên liệu Cá Ông) trượt liền tối đa ${maxDry} ≤ 2`);
   // nhãn "hợp thể" trên thẻ
-  await page.evaluate(() => { game.market.types = ['thansuong', 'xathu', 'lucsi', 'nguphu']; ui.sig.deck = null; });
+  await page.evaluate(() => { game.spawnHero(game.freeSlots()[0], 'thansuong', { tier: 1 }); game.spawnHero(game.freeSlots()[0], 'nguphu', { tier: 1 }); game.market.types = ['thansuong', 'xathu', 'lucsi', 'nguphu']; ui.sig.deck = null; });
   await page.waitForTimeout(150);
-  ok(await page.locator('#deck .mk-card[data-mk="0"].hop .hp').innerText() === 'hợp thể', 'thẻ nguyên liệu còn thiếu có nhãn "hợp thể"');
+  ok(await page.locator('#deck .mk-card[data-mk="0"].hop .cost .hp').innerText() === 'hợp', 'thẻ nguyên liệu còn thiếu có nhãn "hợp" ở thanh giá');
+  const lab = await page.evaluate(() => { const c = document.querySelector('#deck .mk-card[data-mk="0"]'); const im = c.querySelector(':scope > img').getBoundingClientRect(); const rs = [...c.querySelectorAll('.tw,.hp')].map((e) => e.getBoundingClientRect()); return rs.length === 2 && rs.every((r) => r.top >= im.bottom - 4) && rs[0].right <= rs[1].left; });
+  ok(lab, 'thẻ vừa ghép vừa hợp: 2 nhãn nằm ở thanh giá dưới mặt tướng, không chồng nhau');
   ok(await page.locator('#deck .mk-card[data-mk="1"] .hp').count() === 0, 'thẻ thường không có nhãn');
   await page.screenshot({ path: path.join(SHOT, 'nhan-hop-the-844x390.png'), clip: { x: 0, y: 390 - 110, width: 844, height: 110 } });
   ok(errors.length === 0, 'không lỗi trang ' + errors.join(' | '));
