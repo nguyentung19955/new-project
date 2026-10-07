@@ -1322,3 +1322,6 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - **Hợp thể ra tướng Tím**: chỉ cần 2 tướng Thường **★★** đúng công thức (trước: ★★★ + kỹ năng tối đa). Tướng Vàng giữ điều kiện cũ (2 tướng Tím Thần tinh ★★★, kỹ năng tối đa). Vẫn cần sở hữu tướng Tím đó.
 - **Độ khó chương Sơn Tinh – Thủy Tinh**: máu quái ải 4–8 tăng dần (hệ số đợt dài 1,3 → 1,7 thay vì nhảy thẳng 1,7 ở ải 4); ải 6–7 giảm thêm một chút; boss đợt 10 của ải 6–7 là Thuồng Luồng thay vì Hà Bá.
 - Đo bằng máy chơi thử (triệu hồi 1/3, ghép, mở / nâng kỹ năng, lên cấp — không mặc đồ): ải 1, 2, 4, 5 thắng chắc (còn 17–29 mạng); ải 6 thắng hoặc qua đợt 20–33; ải 7–8 qua đợt 25–35 / 40 (máy không dùng đồ, người chơi thật mạnh hơn).
+
+## Phiên bản 137 — Tướng đứng đúng giữa ô
+- Ảnh tướng vẽ tay có vũ khí / tảng đá chìa ra một bên nên "giữa ảnh" lệch khỏi chân, tướng đứng lệch vòng ô. Nay mỗi ảnh được đo tâm chân (giữa các điểm chạm đất ở đáy ảnh) một lần và căn chân vào giữa ô; hào quang, bóng mờ khi đổi tư thế cũng căn theo.

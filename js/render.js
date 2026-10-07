@@ -731,6 +731,26 @@ function rarityGlow(g, t) {
 // Vẽ tướng. o: { t, dir, scale, swing, castT, castUlt, hurt, bog, fall, summon, px, noShadow,
 //   bounce (lên cấp 0.3 → 0), evo (tiến hoá 1.2 → 0), wingT (bung cánh 1.5 → 0) }
 // o.px = số điểm ảnh màn hình trên 1 đơn vị khung 200×230 (chọn độ nét ảnh)
+// v137: tâm chân của ảnh vẽ tay (trung vị điểm có hình ở 10% hàng dưới cùng), tính một lần mỗi ảnh.
+// Ảnh cắt sát khung nên vũ khí / tảng đá chìa một bên làm "giữa ảnh" lệch khỏi chân → tướng đứng lệch vòng ô.
+function footK(img) {
+  if (!img) return 0.5;
+  if (img.__fk !== undefined) return img.__fk;
+  if (!img.complete || !img.naturalWidth) return 0.5; // chưa tải xong: không lưu, lần sau đo lại
+  let k = 0.5;
+  try {
+    const W = Math.max(8, Math.round(img.naturalWidth / 4)), H = Math.max(8, Math.round(img.naturalHeight / 4));
+    const c = document.createElement('canvas'); c.width = W; c.height = H;
+    const x = c.getContext('2d'); x.drawImage(img, 0, 0, W, H);
+    const y0 = Math.floor(H * 0.9), d = x.getImageData(0, y0, W, H - y0).data;
+    const col = new Array(W).fill(0); let n = 0;
+    for (let i = 3; i < d.length; i += 4) if (d[i] > 60) { col[((i - 3) / 4) % W]++; n++; }
+    // trung vị theo cột: hai bàn chân nhiều điểm hơn đầu gậy / cán rìu chạm đất
+    if (n > 4) { let acc = 0, m = 0; for (; m < W; m++) { acc += col[m]; if (acc >= n / 2) break; } k = Math.min(0.78, Math.max(0.22, (m + 0.5) / W)); }
+  } catch (e) { k = 0.5; }
+  img.__fk = k;
+  return k;
+}
 function drawHeroSprite(ctx, h, x, y, o = {}) {
   const def = HEROES[h.type];
   const look = o.look || computeLook(h);
@@ -820,7 +840,7 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
     if (sw < 1) {
       const wp = hgt * an.prevPng.naturalWidth / an.prevPng.naturalHeight;
       ctx.globalAlpha = base * (1 - sw);
-      drawBent(ctx, an.prevPng, -wp / 2, -hgt, wp, hgt, bend, breath);
+      drawBent(ctx, an.prevPng, -wp * footK(an.prevPng), -hgt, wp, hgt, bend, breath);
       ctx.globalAlpha = base * sw;
     }
     // tung chiêu: thân phát sáng viền theo màu chiêu
@@ -830,23 +850,24 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
     if (dollBase) ctx.translate(0, hgt * 0.035);
     // viền sáng (tung chiêu / đồ hiếm): vẽ RIÊNG phần bóng một lần, không bôi lên từng lát ảnh
     // (trước đây 14 lát × shadowBlur → cả người loè thành khối màu và nặng máy)
-    if (glowK > 0) drawGlowOnly(ctx, mixD > 0.5 ? pngD : png, -w / 2, -hgt, w, hgt, o.castColor || '#FFE08A', 12 * glowK * (o.castUlt ? 1.4 : 1), 0.8 * glowK);
-    else if (gt > 0) drawGlowOnly(ctx, png, -w / 2, -hgt, w, hgt, RAR_COLOR[RARITY_ORDER[gt]], 4 + gt * 2, 0.55 + Math.sin(t * 3) * 0.1);
+    const fx = pack ? w * footK(png) : w / 2, fxD = pack && pngD ? hgt * pngD.naturalWidth / pngD.naturalHeight * footK(pngD) : 0;
+    if (glowK > 0) drawGlowOnly(ctx, mixD > 0.5 ? pngD : png, -fx, -hgt, w, hgt, o.castColor || '#FFE08A', 12 * glowK * (o.castUlt ? 1.4 : 1), 0.8 * glowK);
+    else if (gt > 0) drawGlowOnly(ctx, png, -fx, -hgt, w, hgt, RAR_COLOR[RARITY_ORDER[gt]], 4 + gt * 2, 0.55 + Math.sin(t * 3) * 0.1);
     // bộ ảnh riêng: ★★ trở lên viền sáng màu hệ (★★★ có thêm vầng mặt trời phía sau)
     else if (pack) packGlow(ctx, png, w, hgt, h, look, def, t, tierShown, ascShown);
-    if (mixD < 1) drawBent(ctx, png, -w / 2, -hgt, w, hgt, bend, breath);
+    if (mixD < 1) drawBent(ctx, png, -fx, -hgt, w, hgt, bend, breath);
     ctx.globalAlpha = base;
     if (dollBase && mixD < 1) drawDollGear(ctx, h, -w / 2, -hgt, w, hgt, bend, t);
     if (mixD > 0) {
       const wd = hgt * pngD.naturalWidth / pngD.naturalHeight;
       ctx.globalAlpha = base * mixD;
-      drawBent(ctx, pngD, -wd / 2, -hgt, wd, hgt, bend, breath);
+      drawBent(ctx, pngD, pack ? -fxD : -wd / 2, -hgt, wd, hgt, bend, breath);
       ctx.globalAlpha = base;
     }
     // vệt mờ khi chém (ghost lùi sau thân)
     if (pose.phase === 'strike' && def.attack === 'melee') {
       ctx.globalAlpha = base * 0.12 * (1 - pose.k);
-      drawBent(ctx, mixD > 0.5 ? pngD : png, -w / 2 - 10, -hgt, w, hgt, bend * 0.5, breath);
+      drawBent(ctx, mixD > 0.5 ? pngD : png, -fx - 10, -hgt, w, hgt, bend * 0.5, breath);
       ctx.globalAlpha = base;
     }
     if (o.hurt > 0) {
@@ -1328,9 +1349,9 @@ function drawSmokeAura(ctx, t, rgb, k, h) {
 }
 function packGlow(ctx, png, w, hgt, h, look, def, t, tier, asc) {
   const L = def.legend, pulse = Math.sin(t * 3) * 0.12;
-  if (L) drawGlowOnly(ctx, png, -w / 2, -hgt, w, hgt, AURA_C[L], 10 + asc * 4 + (L === 'legendary' ? 4 : 0), 0.85 + pulse);
-  else if (tier >= 2) drawGlowOnly(ctx, png, -w / 2, -hgt, w, hgt, look.attrColor, 5 + tier * 2, 0.55 + pulse);
-  if (hasLegendGear(h)) drawGlowOnly(ctx, png, -w / 2, -hgt, w, hgt, '#FFB01E', 14, 0.6 + pulse);
+  if (L) drawGlowOnly(ctx, png, -w * footK(png), -hgt, w, hgt, AURA_C[L], 10 + asc * 4 + (L === 'legendary' ? 4 : 0), 0.85 + pulse);
+  else if (tier >= 2) drawGlowOnly(ctx, png, -w * footK(png), -hgt, w, hgt, look.attrColor, 5 + tier * 2, 0.55 + pulse);
+  if (hasLegendGear(h)) drawGlowOnly(ctx, png, -w * footK(png), -hgt, w, hgt, '#FFB01E', 14, 0.6 + pulse);
 }
 function drawPackFront(ctx, h, def, t, hgt, asc) {
   const L = def.legend;
