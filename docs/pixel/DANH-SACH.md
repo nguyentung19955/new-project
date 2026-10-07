@@ -1191,13 +1191,26 @@ Mã nguồn đặt theo nghĩa (một sprite dùng cho nhiều mã danh sách). 
 | đòn đánh tướng (costume.js `fxImage`, tên ảnh Kenney cũ) | `TEXMAP` trong js/vfx.js → sprite pixel | |
 | **ngoài danh sách** — trạng thái trên QUÁI: bỏng · độc · choáng · đóng băng · làm chậm; lên cấp | `lua-chay` · `may-doc` + `bong-doc` · `chim-lac` + `gio-xoay` + vòng xoáy · vỏ băng code + `bang-tinh` · `suong-lanh` + `tuyet` · `len-cap` | `VFX.status` (render.js drawEnemy) |
 
-**Chưa làm (lô sau):** `dan-<hệ>` ×5 (đang dùng đạn riêng), `vat-da-lan` `vat-den-troi` `vat-chai` `vat-binh-gom`, `no-kim/moc/thuy/tho`,
-`vong-chieu-<hệ>` ×5, `water-wave` (đang vòng code), `music-notes`, `flood-rise`, `mountain-rise`, `sweep`, `mark`, `afterimage`,
-`hook`, `tinh-anh-*` ×4, `mua`, `song-chay`, `trieu-hoi-*` ×7, `fx-*` biến thể quái ×8 (đang chấm code), `choang-sao` (tướng bị choáng),
-`sa-lay`, `hat-01/02/03/06/08/12/15`, `tien-hoa-1..3`, `than-tinh-1..3`, `sao-than-tinh`, `khoi-tim`, `khoi-vang`,
-`hao-quang-mat-troi`, `canh-rong`, `canh-long-vu`, `phu-kien-aura`; chỗ vẽ code chưa có móc pixel: `drawZones` (vệt lửa, ruộng, đá),
-`burnAura`, `drawAccAura`, `drawEnemyFxBack`, chữ `text`/`banner`. `sau-lung-*` ×5, `trang-phuc-*`, `do-*` ×8: điều phối đã chốt
-**không vẽ đồ lên tướng 32px** → chờ xác nhận bỏ khỏi lô.
+### Lô 2 (claude/vfx-pixel-2) — thêm 21 sprite + móc pixel
+
+| mã danh sách | đã có bằng | chỗ móc |
+|---|---|---|
+| `dan-kim` `dan-moc` `dan-thuy` `dan-tho` (`dan-hoa` = `dan-lua`) | sprite cùng tên | `VFX.drawProj`: đạn chung của tướng theo hệ |
+| `vat-da-lan` `vat-den-troi` `vat-chai` `vat-binh-gom` `vat-dua-hau` | sprite `vat-*`, `dua` | `drawFx` lob / skyride (đá lăn) |
+| `no-kim` `no-moc` `no-thuy` `no-tho` | sprite cùng tên (đổi màu từ `no`) | nổ lan theo hệ (`onEffect` impact splash) |
+| `trieu-hoi-ho-ba-vi` `-chim-lac` `-chim-than` `-ngua-sat` `-giong-bay` `-cay-da-than` `-lac-tu` | `ho-ba-vi` `chim-lac` (×2) `chim-than` `ngua-sat` `giong-bay` `cay-da` `lac-tu` | `drawFx` tiger / bird / horse / skyride · `drawZones` tree · `drawBlocks` |
+| `tinh-anh-armored` `-regen` `-swift` `-shield` | `khien-giap` `giot-nuoc` `song-cuon` + vòng pixel (shield: màng nước nét đứt) | render.js vòng tinh anh |
+| `fx-fire` … `fx-water` (8) | ô điểm ảnh màu theo loại (ma / bóng tối: cụm ô lớn) | `drawEnemyFxBack` |
+| `choang-sao` (tướng), `sa-lay` | chim Lạc + xoáy khí trên vòng xoáy · vũng bùn vòng pixel | `drawHeroStun` / main.js · `drawBogWater` |
+| `mua` (Thủy Tinh hô mưa), hào quang trống trận / lửa ma | vòng + vạch mưa / chấm lửa pixel | render.js `burnAura` |
+| `sweep` `mark` `afterimage` `hook` `mountain-rise` `music-notes` | vẽ bằng ô điểm ảnh | `drawFx` |
+| vệt lửa / ruộng lúa / đá núi (zones) | `lua-chay` · bông lúa ô · `vat-da-lan` | `drawZones` |
+| `tien-hoa-1..3` `than-tinh-1..3` `khoi-tim` `khoi-vang` `hao-quang-mat-troi` `phu-kien-aura` | vòng hoa văn trống đồng / vòng lửa thần / khói ô / vầng trống đồng 12 tia / ngọc bay quanh (thay ngôi sao) | `drawEvoAura` `drawAscAura` `drawSmokeAura` `drawPackFront` `drawAscStars` `drawSunHalo` `drawAccAura` |
+
+**Còn lại / không làm:** `song-chay` (dòng nước trên đường sông — thuộc nền bản đồ, nhóm `nen`), `flood-rise` (giữ lớp phủ màu cả màn),
+`hat-01/02/03/06/08/12/15` (đã quy về sprite / ô qua `TEXMAP`, không cần ảnh riêng), `sao-than-tinh`, chữ `text`/`banner`.
+`sau-lung-*`, `trang-phuc-*`, `do-*`, `canh-rong`, `canh-long-vu` (đồ / bộ đồ hiện trên người): **điều phối quyết định không vẽ pixel**
+— tướng pixel không hiện đồ trên người, tướng hình cũ giữ lớp đồ cũ.
 
 | mã | tên | cỡ | khung | mô tả | dấu hiệu | nguồn |
 |---|---|---|---|---|---|---|

@@ -2274,3 +2274,10 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
 - Tiến độ / phần còn lại của lô vfx: `docs/pixel/DANH-SACH.md` Lô 44 mục "Tiến độ".
 - FPS sơ bộ (máy test không GPU, 120 quái ¾ dính trạng thái + nổ liên tục): 34–42 FPS (bản Kenney cũ ~26–36).
 - Test `tests/hieu-ung/hat-vfx.test.js` (bản pixel); `hieu-ung-game.test.js` bỏ manifest pixel để kiểm tra đường dự phòng ảnh vẽ tay.
+
+## claude/vfx-pixel-2 — Hiệu ứng PIXEL lô 2 (phần còn lại Lô 44)
+
+- **21 sprite mới** `tools/pixel/src/vfx/` (bảng màu chung, `node tools/build-pixel.js`): đạn theo hệ Kim (lưỡi bạc) / Mộc (phi tiêu lá) / Thủy (cầu nước) / Thổ (cục đất); vật ném đá lăn, đèn trời, chai sành, bình gốm; nổ lan theo hệ `no-kim/moc/thuy/tho`; Hổ Ba Vì, Chim Thần, Ngựa sắt, Gióng bay, Cây Đa Thần, Lạc Tử; dấu tinh anh khiên đồng / giọt nước thánh / sóng cuốn.
+- **Móc pixel mới** (thứ tự: pixel → hình cũ dự phòng): đạn chung đổi theo hệ tướng; vật ném (`lob`), Gióng bay dọc sông / đá Lạc Hầu lăn (`skyride`), hổ vồ, chim Lạc / Chim Thần, ngựa sắt phun lửa, quét gậy, dấu săn, bóng lướt, móc kéo, mọc núi, nốt nhạc; vùng đất (vệt lửa, ruộng lúa, Cây Đa, đá núi); đàn Lạc Tử; hào quang đốt quanh boss (trống trận, lửa ma, mưa gió Thủy Tinh); hạt quái biến thể; vòng tinh anh + dấu loại; **tướng bị choáng = chim Lạc + xoáy khí** (thay ngôi sao); sa lầy; hào quang đồ, Thần tinh, tiến hoá, khói Tím/Vàng, vầng trống đồng; Thần tinh bay quanh là **ngọc** thay ngôi sao.
+- Đồ / bộ đồ hiện trên người tướng (`sau-lung-*`, `trang-phuc-*`, `do-*`, cánh): không vẽ pixel (quyết định điều phối). Tiến độ đầy đủ: `docs/pixel/DANH-SACH.md` Lô 44.
+- Test mới `tests/hieu-ung/hat-vfx-2.test.js` (móc trả về pixel, không lỗi console, chụp 1920×934 / 844×390 / 667×375).
