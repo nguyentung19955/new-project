@@ -1,0 +1,236 @@
+# Mai An Tiêm (mã antiem) — pixel 32×32 (tướng Tím · hành Mộc). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:753 ưu tiên + PROMPT-DUNG-XUONG.txt:515): người đảo hoang ~30, da rám nắng, râu lởm chởm, búi tóc buộc
+# thừng; ÁO TƠI RƠM xù như áo choàng cỏ trên áo nâu rách, vòng cổ vỏ sò, dây buộc tím (Tím); cầm QUẢ DƯA HẤU sọc xanh ruột đỏ trên vai
+# sắp ném (KHÔNG giáo). Chiêu (Mưa Dưa): giơ dưa bổ đôi, miếng dưa đỏ rơi như mưa.
+name: Mai An Tiêm
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  T = toi
+  K = khoi
+  f = da-toi
+  F = da
+  h = da-sang
+  e = trang
+  r = dat-toi
+  d = dat
+  D = dat-sang
+  c = cat
+  C = vang-sang
+  l = la-toi
+  g = la
+  G = la-ma
+  m = son-toi
+  R = son-sang
+  q = tim-toi
+  p = tim
+  P = tim-sang
+
+part dau
+....KKK.....
+....KcK.....
+..KKKKKKK...
+.KKKKKKKKK..
+KKKKKKKhKKK.
+KKKfFTTFFTTF
+.KffFekFFekF
+.KfFFFFFFFFh
+..fFFFFFFFfF
+..ffFfFTTfF.
+...ffffffff.
+end
+
+part than
+.....fFFf......
+.cCcDcCcDcCc...
+cCcDcDcDcDcDc..
+cDDdddeFedddd..
+cDdddddFdddd...
+cDcdddddddddd..
+cDcddrddddrdd..
+.cDqpPpppppq...
+.c.cDcddddddr..
+end
+
+part chan
+...dddddddd...
+...ddd..ddd...
+...dmd..dmd...
+...FFf..FFf...
+...FFf..FFf...
+...ffT..ffT...
+..TTTT..TTTT..
+end
+
+part dua
+.lglgl.
+lgGlGgl
+glGlGlg
+lgGlGgl
+.lglgl.
+end
+
+part dua_bo
+.lglgl.
+lRRRRRl
+.mRRRm.
+..mmm..
+end
+
+part mieng
+lRm
+.m.
+end
+
+part tay_vai
+.FF
+FFh
+fF.
+fF.
+end
+
+part tay_nem
+fFFFF
+.fFFh
+end
+
+part tay
+fF.
+.FF
+.Fh
+end
+
+anim idle fps=3 loop
+frame idle
+  use chan 9 23
+  use than 8 14
+  use dau 10 3
+  use dua 22 8
+  use tay_vai 21 13
+  outline
+end
+frame idle
+  use chan 9 23
+  use than 8 15
+  use dau 10 4
+  use dua 22 9
+  use tay_vai 21 14
+  outline
+end
+frame idle
+  use chan 9 23
+  use than 8 14
+  use dau 10 3
+  use dua 22 8
+  use tay_vai 21 13
+  set 25 9 G
+  outline
+end
+
+# đánh: nhấc dưa ra sau → vươn tay ném → dưa bay → thu tay
+anim attack fps=10 once
+frame attack
+  use dua 16 2
+  use chan 9 23
+  use than 8 14
+  use dau 10 3
+  use tay_vai 19 10
+  outline
+end
+frame attack
+  use chan 9 23
+  use than 9 14
+  use dau 11 3
+  use tay_nem 21 15
+  use dua 24 12
+  outline
+end
+frame attack
+  use chan 9 23
+  use than 9 14
+  use dau 11 3
+  use tay_nem 21 15
+  use dua 24 6
+  outline
+end
+frame attack
+  use chan 9 23
+  use than 8 14
+  use dau 10 3
+  use tay 20 15
+  outline
+end
+
+# chiêu Mưa Dưa: giơ dưa bổ đôi, miếng dưa đỏ rơi xuống
+anim cast fps=8 loop
+frame cast
+  use chan 9 23
+  use than 8 14
+  use dau 10 3
+  use tay_vai 22 9
+  use dua_bo 22 5
+  use mieng 26 2
+  outline
+end
+frame cast
+  use chan 9 23
+  use than 8 14
+  use dau 10 3
+  use tay_vai 22 9
+  use dua_bo 22 5
+  use mieng 27 7
+  use mieng 2 3
+  outline
+end
+frame cast
+  use chan 9 23
+  use than 8 14
+  use dau 10 3
+  use tay_vai 22 9
+  use dua_bo 22 5
+  use mieng 28 12
+  use mieng 3 8
+  use mieng 26 1
+  outline
+end
+
+anim hurt fps=8 once
+frame hurt
+  use @idle.0
+  shift -1 0
+  set 14 9 T
+  set 15 9 T
+  set 18 9 T
+  set 19 9 T
+  swap F h
+end
+
+anim die fps=5 once
+frame die
+  use chan 9 23
+  use than 8 17
+  use dau 10 6
+  use dua 22 23
+  set 15 12 T
+  set 16 12 T
+  outline
+end
+frame die
+  use chan 9 23
+  use than 8 17
+  use dau 10 6
+  set 15 12 T
+  set 16 12 T
+  set 19 12 T
+  set 20 12 T
+  rot 90
+  shift 0 3
+  outline
+end
+frame die
+  use @die.1
+  swap P p
+  use dua 24 24
+  outline
+end

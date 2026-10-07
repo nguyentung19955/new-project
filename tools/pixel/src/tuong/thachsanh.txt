@@ -1,0 +1,352 @@
+# Thạch Sanh (mã thachsanh) — pixel 32×32 (tướng Tím · hành Mộc). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:705 ưu tiên + PROMPT-DUNG-XUONG.txt:473): tiều phu trẻ cao, thân chữ V, CỞI TRẦN, khố xanh rừng
+# thắt dây thừng, tóc bù xù; cầm RÌU đốn củi lưỡi rộng (KHÔNG giáo); ĐÀN thần tròn vàng đeo lưng, quai đàn viền tím-bạc (Tím).
+# Chiêu (Đàn Thần): gảy đàn — vòng âm thanh vàng lan ra.
+name: Thạch Sanh
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  T = toi
+  K = khoi
+  f = da-toi
+  F = da
+  h = da-sang
+  e = trang
+  l = la-toi
+  g = la
+  G = la-ma
+  r = dat-toi
+  d = dat
+  D = dat-sang
+  c = cat
+  s = sat-toi
+  S = sat
+  b = sat-sang
+  w = bac
+  o = dong-toi
+  y = dong
+  Y = dong-sang
+  v = vang-nghe
+  V = vang-sang
+  q = tim-toi
+  p = tim
+  P = tim-sang
+
+part dau
+..K..KK.K...
+.KKKKKKKKK..
+KKKKKKKKKKK.
+KKKKKKKKKKKK
+KKKKhKhhKhK.
+KKKfFTTFFTTF
+.KffFekFFekF
+.KfFFFFFFFFh
+..fFFFFFFFfF
+..ffFFFTTFF.
+...ffffffff.
+end
+
+part than
+.....fFFFf.....
+..hhhFFFFFFFf..
+.hFFhhFFFFFFFf.
+.FFFhFFFFhFFFf.
+.FFfPFFFFfFFf..
+.FF.fPFFFFFf...
+.Ff.fFpFhFFf...
+.ff.rcccccccr..
+.fF.lggGGGggl..
+end
+
+part chan
+...lgGGGGgl...
+...lgGgGggl...
+...lglglggl...
+...FFf..FFf...
+...FFf..FFf...
+...FFf..FFf...
+...ffT..ffT...
+..TTTT..TTTT..
+end
+
+part dan
+.Ty.....
+.ry.....
+..rd....
+..rd....
+..qp....
+.vVVVv..
+vVyyyVv.
+vVyooYv.
+vyoTTov.
+vyoooyv.
+vyyyyyv.
+.vyyyv..
+..ooo...
+end
+
+part tay
+fF.
+.FF
+.Fh
+.FF
+.fF
+end
+
+part tay_len
+.FF
+.Fh
+.F.
+fF.
+fF.
+end
+
+part tay_dam
+fFFF
+.FFh
+end
+
+# rìu dựng: lưỡi rộng ở dưới, cán lên trên
+part riu
+.D...
+.d...
+.D...
+.d...
+.D...
+.d...
+.D...
+.d...
+.D...
+bD...
+wSSb.
+wSSSb
+wSSSS
+wSSSs
+wSSs.
+bSs..
+.s...
+end
+
+# rìu giơ cao (lưỡi ở trên)
+part riu_len
+.s...
+bSs..
+wSSs.
+wSSSs
+wSSSS
+wSSSb
+wSSb.
+bD...
+.D...
+.d...
+.D...
+.d...
+.D...
+.r...
+end
+
+# rìu bổ ngang ra trước
+part riu_ngang
+rdDdDdDdDDbwwwww.
+............SSSSs
+............SSSSs
+............bSSs.
+.............ss..
+end
+
+part riu_cheo
+...........bw
+..........bSw
+.........DSSs
+........D.Ss.
+.......D.....
+......d......
+.....D.......
+....d........
+...D.........
+..d..........
+.r...........
+end
+
+# rìu bổ xuống đất
+part riu_xuong
+D..........
+.D.........
+..d........
+...D.......
+....d......
+.....Dbwww.
+......SSSSw
+......SSSSw
+......sSSSb
+.......sss.
+end
+
+part vong_nho
+.V.
+V.V
+.V.
+end
+
+part vong
+..vVv..
+.v...v.
+V.....V
+V.....V
+V.....V
+.v...v.
+..vVv..
+end
+
+part not
+.V
+VV
+V.
+end
+
+part mat_nham
+TT..TT
+end
+
+anim idle fps=3 loop
+frame idle
+  use dan 2 7
+  use chan 9 22
+  use than 8 13
+  use dau 10 2
+  use riu 21 13
+  use tay 20 15
+  outline
+end
+frame idle
+  use dan 2 8
+  use chan 9 22
+  use than 8 14
+  use dau 10 3
+  use riu 21 13
+  use tay 20 16
+  outline
+end
+frame idle
+  use dan 2 7
+  use chan 9 22
+  use than 8 13
+  use dau 10 2
+  use riu 21 13
+  use tay 20 15
+  set 25 25 V
+  outline
+end
+
+# đánh: nhấc rìu → giơ cao → bổ chéo → bổ xuống đất
+anim attack fps=10 once
+frame attack
+  use dan 2 7
+  use riu_cheo 17 1
+  use chan 9 22
+  use than 8 13
+  use dau 10 2
+  use tay_len 20 12
+  outline
+end
+frame attack
+  use dan 2 7
+  use chan 9 22
+  use than 8 13
+  use dau 10 2
+  use riu_len 22 0
+  use tay_len 20 11
+  outline
+end
+frame attack
+  use dan 2 7
+  use chan 9 22
+  use than 9 13
+  use dau 11 2
+  use riu_ngang 14 17
+  use tay_dam 21 17
+  outline
+end
+frame attack
+  use dan 2 7
+  use chan 9 22
+  use than 8 13
+  use dau 10 2
+  use riu_xuong 19 19
+  use tay 20 15
+  outline
+end
+
+# chiêu Đàn Thần: tay gảy đàn, vòng âm thanh vàng lan ra
+anim cast fps=8 loop
+frame cast
+  use dan 2 7
+  use chan 9 22
+  use than 8 13
+  use dau 10 2
+  use riu 21 13
+  use tay 20 15
+  use vong_nho 25 4
+  use not 0 6
+  outline
+end
+frame cast
+  use dan 2 7
+  use chan 9 22
+  use than 8 13
+  use dau 10 2
+  use riu 21 13
+  use tay 20 15
+  use vong 24 1
+  use not 25 4
+  outline
+end
+frame cast
+  use dan 2 7
+  use chan 9 22
+  use than 8 13
+  use dau 10 2
+  use riu 21 13
+  use tay 20 15
+  use vong_nho 25 4
+  use not 1 3
+  use not 27 8
+  outline
+end
+
+# trúng đòn: giật lùi, nhắm mắt, nháy sáng da
+anim hurt fps=8 once
+frame hurt
+  use @idle.0
+  shift -1 0
+  use mat_nham 14 8
+  swap F h
+end
+
+# chết: khuỵu gối → ngã nằm
+anim die fps=5 once
+frame die
+  use riu_xuong 19 19
+  use dan 2 10
+  use chan 9 22
+  use than 8 16
+  use dau 10 5
+  use mat_nham 15 11
+  outline
+end
+frame die
+  use dan 2 10
+  use chan 9 22
+  use than 8 16
+  use dau 10 5
+  use mat_nham 15 11
+  rot 90
+  shift 0 4
+  outline
+end
+frame die
+  use @die.1
+  swap G g
+  swap V v
+end

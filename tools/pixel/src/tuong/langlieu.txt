@@ -1,0 +1,236 @@
+# Lang Liêu (mã langlieu) — pixel 32×32 (tướng Tím · hành Thổ). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:850 ưu tiên + PROMPT-DUNG-XUONG.txt:579): hoàng tử ~20 hiền, vai hẹp, tóc gọn dưới dải băng vàng;
+# áo vàng son, thắt lưng nâu, cổ áo viền tím (Tím); hai tay bưng MÂM đồng với CHỒNG BÁNH CHƯNG vuông gói lá xanh buộc lạt (KHÔNG giáo).
+# Chiêu (Lễ Tổ Tiên): nâng mâm dâng lễ — khói hương + ánh vàng toả lên.
+name: Lang Liêu
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  T = toi
+  K = khoi
+  f = da-toi
+  F = da
+  h = da-sang
+  e = trang
+  r = dat-toi
+  d = dat
+  D = dat-sang
+  c = cat
+  o = dong-toi
+  y = dong
+  Y = dong-sang
+  v = vang-nghe
+  V = vang-sang
+  l = la-toi
+  g = la
+  G = la-ma
+  q = tim-toi
+  p = tim
+  P = tim-sang
+  W = sang
+  t = trang-xam
+
+part dau
+.....KK.....
+...KKKKKK...
+..KKKKKKKK..
+.KKKKKKKKKK.
+KVvvvvvvvvvv
+KKKfFTTFFTTF
+.KffFekFFekF
+.KfFFFFFFFFh
+..fFFFFFFFfF
+..ffFFFTTFF.
+...ffffffff.
+end
+
+part than
+.....pPPp......
+...YYvpPvYYy...
+..YvvYYvYYYYy..
+..vY.YvYYYYYy..
+..YY.YYYvYYy...
+..Yy.YvYYYYy...
+..Fh.rdDdddr...
+.....yYYvYYy...
+.....yYYvYYy...
+end
+
+part chan
+....yYYvYYYy..
+....yYYvYYYy..
+....oyyoyyyo..
+.....dd..dd...
+.....dd..dd...
+.....TT..TT...
+....TTT..TTT..
+end
+
+part mam
+...lGcGl...
+...cccccc..
+...lgcggl..
+.lGcGllGcGl
+.ccccccccc.
+.lgcgllgcgl
+yYYYYYYYYYy
+.ooooooooo.
+end
+
+part banh
+lGcGl
+ccccc
+lgcgl
+end
+
+part tay2
+FFh
+fFF
+end
+
+part khoi
+.t.
+t..
+.t.
+..t
+end
+
+anim idle fps=3 loop
+frame idle
+  use chan 8 23
+  use than 8 14
+  use dau 10 3
+  use mam 17 12
+  use tay2 18 19
+  outline
+end
+frame idle
+  use chan 8 23
+  use than 8 15
+  use dau 10 4
+  use mam 17 13
+  use tay2 18 20
+  outline
+end
+frame idle
+  use chan 8 23
+  use than 8 14
+  use dau 10 3
+  use mam 17 12
+  use tay2 18 19
+  set 21 12 W
+  outline
+end
+
+# đánh: nhấc mâm → hất bánh chưng → bánh bay → hạ mâm
+anim attack fps=10 once
+frame attack
+  use chan 8 23
+  use than 8 14
+  use dau 10 3
+  use mam 17 10
+  use tay2 18 17
+  outline
+end
+frame attack
+  use chan 8 23
+  use than 9 14
+  use dau 11 3
+  use mam 19 11
+  use tay2 20 18
+  use banh 25 6
+  outline
+end
+frame attack
+  use chan 8 23
+  use than 9 14
+  use dau 11 3
+  use mam 19 12
+  use tay2 20 19
+  use banh 26 9
+  outline
+end
+frame attack
+  use chan 8 23
+  use than 8 14
+  use dau 10 3
+  use mam 17 12
+  use tay2 18 19
+  outline
+end
+
+# chiêu Lễ Tổ Tiên: nâng mâm dâng lễ, khói hương + ánh vàng
+anim cast fps=6 loop
+frame cast
+  use chan 8 23
+  use than 8 14
+  use dau 10 3
+  use mam 18 8
+  use tay2 19 15
+  use khoi 22 3
+  outline
+end
+frame cast
+  use chan 8 23
+  use than 8 14
+  use dau 10 3
+  use mam 18 8
+  use tay2 19 15
+  use khoi 23 2
+  set 20 6 V
+  set 27 5 V
+  outline
+end
+frame cast
+  use chan 8 23
+  use than 8 14
+  use dau 10 3
+  use mam 18 8
+  use tay2 19 15
+  use khoi 22 1
+  set 19 4 W
+  set 29 6 W
+  set 24 0 V
+  outline
+end
+
+anim hurt fps=8 once
+frame hurt
+  use @idle.0
+  shift -1 0
+  set 14 9 T
+  set 15 9 T
+  set 18 9 T
+  set 19 9 T
+  swap F h
+end
+
+anim die fps=5 once
+frame die
+  use chan 8 23
+  use than 8 17
+  use dau 10 6
+  use banh 20 26
+  use banh 25 26
+  set 15 12 T
+  set 16 12 T
+  outline
+end
+frame die
+  use chan 8 23
+  use than 8 17
+  use dau 10 6
+  set 15 12 T
+  set 16 12 T
+  set 19 12 T
+  set 20 12 T
+  rot 90
+  shift 0 3
+  use banh 22 26
+  outline
+end
+frame die
+  use @die.1
+  swap V v
+end
