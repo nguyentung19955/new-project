@@ -1,4 +1,4 @@
-// Test chợ có chủ đích (v180): tỉ lệ ra tướng cần, bảo hiểm, giới hạn bản sao, 🔒 khoá chợ, nhãn "hợp thể".
+// Test chợ có chủ đích (v180; claude/bo-chon-doi: bỏ đội ưu tiên): tỉ lệ ra tướng cần, bảo hiểm, giới hạn bản sao, 🔒 khoá chợ, nhãn "hợp thể".
 // Chạy: node tests/cho-tuong/ti-le.test.js
 const path = require('path');
 const fs = require('fs');
@@ -11,20 +11,20 @@ async function main() {
   // ---------- mô phỏng 1000 lần đổi chợ mỗi tình huống
   const { out, errors: e0 } = await runAll(1000);
   for (const k in out) console.log(`  · ${CASES[k].name}: ${JSON.stringify(out[k])}`);
-  const A = out['dau-tran'], B = out['giua-tran'], C = out['thieu-hop-the'];
+  const A = out['dau-tran'], B = out['giua-tran'], C = out['thieu-hop-the'], D = out['giua-tran-moi-tim'];
   ok(A.board >= 50 && A.board <= 80, `đầu trận: ra tướng đang có ${A.board}% (v179 ~51%, không quá dễ ≤ 80%)`);
-  ok(A.kinds === 20 && A.outDeck >= 30, `chợ ra mọi tướng Thường: ${A.kinds} loại, ${A.outDeck}% thẻ ngoài đội ưu tiên`);
+  ok(A.kinds === 20 && A.outDeck >= 50, `chợ ra mọi tướng Thường, không còn đội ưu tiên: ${A.kinds} loại, ${A.outDeck}% thẻ ngoài 6 tướng đội cũ`);
   ok(A.maxDry <= 2, `đầu trận: bảo hiểm — trượt liền tối đa ${A.maxDry} ≤ 2 lần`);
   ok(B.board >= 93, `giữa trận: ra tướng đang có ${B.board}% (dù chợ 20 loại)`);
   ok(C.need === 100 && C.maxNeedDry === 0, `thiếu nguyên liệu hợp thể (đích đã mở): MỖI lần đổi chợ đều có nguyên liệu thiếu (${C.need}%, cho-6-the)`);
+  ok(D.board >= 90 && D.maxDry <= 3, `giữa trận, sở hữu mọi tướng Tím: vẫn ra tướng đang có ${D.board}% (tối đa MARKET_HOP.max công thức đang theo), trượt liền tối đa ${D.maxDry}`);
   ok(e0.length === 0, 'không lỗi trang khi mô phỏng ' + e0.join(' | '));
 
   // ---------- luật chợ trong trận thật
   const { browser, page, errors } = await open(844, 390);
   await enter(page, 0);
   const r = await page.evaluate(() => {
-    game.running = false; game.owned = new Set([...BASIC_HEROES, fusionFor('nguphu', 'thansuong').to]); game.gold = 1e6;
-    game.deck = ['nguphu', 'thansuong', 'lactuong', 'lucsi', 'xathu', 'thaymo'];
+    game.running = false; game.owned = new Set([...BASIC_HEROES, 'caong']); game.gold = 1e6;
     for (let s = 0; s < game.heroes.length; s++) game.heroes[s] = null;
     // Lạc Tướng ★★★ = đủ 4 bản sao → không ra nữa
     game.spawnHero(game.freeSlots()[0], 'lactuong', { tier: 3 });
@@ -36,15 +36,26 @@ async function main() {
     for (let i = 0; i < 200; i++) { const t = game.rollCard(); if (t === 'lactuong') refill++; }
     const nd = game.marketNeeds();
     // chưa sở hữu Cá Ông → không coi là nguyên liệu hợp thể
-    game.owned = new Set();
+    game.owned = new Set(BASIC_HEROES);
     const nd2 = game.marketNeeds();
-    game.owned = new Set([...BASIC_HEROES, fusionFor('nguphu', 'thansuong').to]);
-    return { capped, hop, refill, hint: game.marketHint('thansuong', nd), hint2: nd2.hop.has('thansuong'), lock2: nd2.hopLock.get('thansuong') === fusionFor('nguphu', 'thansuong').to, w: nd.w, W: { ...MARKET_W }, hopOut: nd.hop.has('chodo') };
+    game.owned = new Set([...BASIC_HEROES, 'caong']);
+    // sở hữu MỌI tướng Tím: nhiều công thức cùng đang theo → tối đa MARKET_HOP.max công thức; công thức có cả 2 bên trên sân đứng trước
+    game.owned = null;
+    const nd3 = game.marketNeeds();
+    game.spawnHero(game.freeSlots()[0], 'thansuong', { tier: 1 });
+    const nd4 = game.marketNeeds();
+    const recOf = (S) => FUSION.filter((f) => HEROES[f.to].legend && [...S].some((x) => x === f.a || x === f.b));
+    game.owned = new Set([...BASIC_HEROES, 'caong']);
+    return { capped, hop, refill, hint: game.marketHint('thansuong', nd), hint2: nd2.hop.has('thansuong'), lock2: nd2.hopLock.get('thansuong') === 'caong', w: nd.w, W: { ...MARKET_W }, hopOut: nd.hop.has('chodo'),
+      hop3: [...nd3.hop], hop4: [...nd4.hop], noDoi: !('doi' in MARKET_W) && typeof game.summonList === 'undefined' && typeof suggestDeck === 'undefined' };
   });
   ok(r.capped === 0 && r.refill === 0, 'tướng đã đủ bản sao (★★★) không ra nữa — cả đổi chợ lẫn thẻ bù');
-  ok(r.hint === 'hop' && r.w.thansuong === r.W.hop && r.w.nguphu === r.W.hop && r.w.xathu === r.W.doi && r.w.chodo === 1 && r.W.hop === 8 && r.W.ghep === 3.5, `trọng số (cho-6-the): nguyên liệu công thức đang theo ×${r.W.hop} (cả Ngư Phủ đang ghép dở), đội ưu tiên ×2, ngoài đội ×1`);
-  ok(!r.hopOut, 'nguyên liệu ngoài đội và chưa có trên sân (Chèo Đò → Lý Ngư) không được ưu tiên hợp thể');
+  ok(r.hint === 'hop' && r.w.thansuong === r.W.hop && r.w.nguphu === r.W.hop && r.w.xathu === 1 && r.w.chodo === 1 && r.W.hop === 8 && r.W.ghep === 3.5, `trọng số (cho-6-the): nguyên liệu công thức đang theo ×${r.W.hop} (cả Ngư Phủ đang ghép dở), còn lại ×1 ${JSON.stringify(r.w)}`);
+  ok(r.noDoi, 'đã bỏ đội ưu tiên: không còn MARKET_W.doi / summonList / suggestDeck');
+  ok(!r.hopOut, 'chưa sở hữu Lý Ngư → Chèo Đò không được ưu tiên hợp thể');
   ok(!r.hint2 && r.lock2, 'chưa mở khoá tướng đích: không ưu tiên nguyên liệu, chỉ gắn nhãn khoá (hopLock → Cá Ông)');
+  ok(r.hop3.length >= 1 && r.hop3.length <= 2 * 2, `sở hữu mọi Tím: chỉ nguyên liệu của tối đa 2 công thức đang theo được ưu tiên (${r.hop3})`);
+  ok(r.hop4.includes('thansuong') && r.hop4.includes('nguphu') && r.hop4.length <= 4, `có Thần Sương ★ cạnh Ngư Phủ ★★: Cá Ông (cả 2 bên trên sân) được theo trước (${r.hop4})`);
 
   // cho-6-the: bảo hiểm HỢP THỂ — đang theo công thức có đích đã mở (Ngư Phủ ★★ → Cá Ông): MỌI lần đổi chợ có Thần Sương,
   // kể cả rng cố định 0.9999 (mỗi thẻ rút ra loại cuối danh sách)

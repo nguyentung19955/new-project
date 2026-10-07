@@ -119,6 +119,10 @@ ${POSE[kind]}
 ${tail(true)}`;
 };
 
+// dùng chung cho tools/build-prompt-gen-lai.js (prompt gen lại ảnh vẽ sai): require() thì chỉ xuất khối chuẩn, không ghi file
+module.exports = { HEROES, ENEMIES, HERO_ID, EL, RAR, REDO_ENEMY, REDO_BOSS, chibiBody, LOCK_STYLE, LOCK_BODY_HUMAN, LOCK_BODY_CREATURE, NEG_CHAR,
+  LOCK_ONE, NEG_RIG, CANVAS, BG, POSE, KEEP, WK, HERO_WEAPON, FOE, wkLine, head, tail, heroPrompt, foePrompt };
+if (require.main === module) {
 const tierName = ['Thường', 'Tím', 'Vàng'];
 const tier = (t) => (HEROES[t].legend === 'legendary' ? 2 : HEROES[t].legend === 'epic' ? 1 : 0);
 const groups = [];
@@ -175,3 +179,4 @@ for (const g of groups) {
 fs.writeFileSync(path.join(ROOT, 'docs/PROMPT-DUNG-XUONG.txt'), txt);
 fs.writeFileSync(path.join(ROOT, 'docs/PROMPT-DUNG-XUONG.md'), md);
 console.log('docs/PROMPT-DUNG-XUONG.txt (+ .md):', groups.map((g) => `${g.name} ${g.items.length}`).join(' · '), '· tổng', total);
+}

@@ -9,7 +9,7 @@ const SHOTS = path.join(__dirname, 'shots');
 fs.mkdirSync(SHOTS, { recursive: true });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const SIZES = [[1920, 934], [844, 390], [667, 375]];
-const MA = 'lactuong,xathu,thosan,thaymo,lucsi,kinhduong,kybinh,echme,anvuong';
+const MA = 'lactuong,chantrau,thosan,thaymo,lucsi,kinhduong,kybinh,tom,anvuong';   // mã không nằm trong CD_SKIP (trang thử bỏ mã chờ gen lại)
 
 async function open(browser, w, h, q = '') {
   const ctx = await browser.newContext({ viewport: { width: w, height: h } });
