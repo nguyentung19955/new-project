@@ -1,0 +1,23 @@
+# Lông vũ (chim Lạc / phượng) — lông trắng ngà, sống lông đồng, mép son (bay sang phải).
+name: Lông vũ
+size: 13x6
+anchor: 7,3
+colors:
+  k = toi
+  w = trang
+  W = trang-xam
+  d = dong
+  r = son-sang
+part a
+.............
+...WWww......
+.rWwwwwwwww..
+.dddddddddddd
+.rWWWwwwww...
+.............
+end
+anim main fps=1 loop
+frame main
+  use a
+  outline k
+end

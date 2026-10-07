@@ -160,8 +160,10 @@ function styledAttackPose(style, swing, castT) {
 }
 
 // hiệu ứng riêng của từng kiểu đòn (khung 200×230, đã lật theo hướng)
-// ảnh hiệu ứng Kenney (assets/fx) nếu đã tải: vẽ quanh (cx, cy), cỡ r, xoay rot, dẹt sy
+// hiệu ứng đòn đánh quanh (cx, cy), cỡ r, dẹt sy: sprite PIXEL tương đương tên ảnh cũ (js/vfx.js pxTex, claude/vfx-kenney);
+// không có thì ảnh cũ (nếu còn) → false để vẽ bằng code
 function fxImage(ctx, name, color, cx, cy, r, rot = 0, sy = 1, alpha = 1) {
+  if (typeof VFX !== 'undefined' && VFX.pxTex && VFX.pxTex(ctx, name, color, cx, cy, r, rot, sy, alpha)) return true;
   const im = typeof VFX !== 'undefined' && VFX.tex ? VFX.tex(name, color) : null;
   if (!im) return false;
   ctx.save();

@@ -1,0 +1,33 @@
+# Tinh thể băng mọc dưới chân quái bị đóng băng — lam nhạt, viền chàm tối, 1 ánh lấp lánh.
+name: Tinh thể băng
+size: 10x11
+anchor: 5,10
+colors:
+  k = cham-toi
+  s = nuoc-sang
+  w = troi
+  b = cham-sang
+  x = sang
+part a
+..........
+....s.....
+...sw.....
+...sw..s..
+..ssw.sw..
+.sssw.sw..
+.sswwssw..
+.ssswsswb.
+.bbbbbbbb.
+..........
+end
+anim main fps=3 loop
+frame main
+  use a 0 1
+  outline k
+end
+frame main
+  use a 0 1
+  set 4 3 x
+  set 7 6 x
+  outline k
+end

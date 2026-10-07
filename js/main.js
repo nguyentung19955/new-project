@@ -388,6 +388,8 @@ function drawProjectile(p, t) {
     ctx.translate(p.x, p.y);
     ctx.rotate(p.angle || 0);
   }
+  // claude/vfx-kenney: đạn pixel (js/vfx.js, sprite tools/pixel/src/vfx/) — không có sprite thì ảnh vẽ tay / code như cũ
+  if (VFX.drawProj && VFX.drawProj(ctx, p, t)) { ctx.restore(); return; }
   // v153: đạn vẽ tay assets/fx/dan_<loại>.png (docs/PROMPT-HIEU-UNG.txt phần D) — chưa có ảnh thì vẽ bằng code như cũ
   const pk = PROJ_IMG[p.kind] ? p.kind : 'fireball';
   // v175: chưa có ảnh riêng của loại đạn thì dùng đạn theo hệ của tướng bắn (assets/fx/dan-<hệ>.png, docs/PROMPT-CAN-GEN.txt)
@@ -1111,6 +1113,8 @@ function drawEffects(t) {
     const p = 1 - k;         // 0 -> 1
     ctx.save();
     ctx.globalAlpha = Math.max(0, Math.min(1, k * 1.5));
+    // claude/vfx-kenney: hiệu ứng pixel (js/vfx.js VFX.drawFx) trước; loại chưa có bản pixel → ảnh vẽ tay / code như cũ
+    if (VFX.drawFx && VFX.drawFx(ctx, f, p, t)) { ctx.restore(); continue; }
     // v153: hiệu ứng trước chỉ vẽ bằng code (phần D docs/PROMPT-HIEU-UNG.txt) — có ảnh thì dùng ảnh
     if (drawFxArt(f, p, t)) { ctx.restore(); continue; }
     // hiệu ứng vẽ tay (dải khung hình trong assets/vfx/) nếu có

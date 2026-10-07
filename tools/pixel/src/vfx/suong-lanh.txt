@@ -1,0 +1,33 @@
+# Sương lạnh dưới chân quái bị làm chậm — dải sương lam xoay chậm.
+name: Sương lạnh
+size: 18x6
+anchor: 9,3
+colors:
+  k = cham-sang
+  t = troi
+  w = nuoc-sang
+part a
+..................
+...tt...ww....tt..
+.wwttwwwttwwwttww.
+...ww....tt...ww..
+..................
+..................
+end
+part b
+..................
+....ww...tt...ww..
+.ttwwtttwwtttwwtt.
+....tt...ww...tt..
+..................
+..................
+end
+anim main fps=4 loop
+frame main
+  use a
+  outline k
+end
+frame main
+  use b
+  outline k
+end

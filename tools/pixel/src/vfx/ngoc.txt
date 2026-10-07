@@ -1,0 +1,32 @@
+# Viên ngọc phép (hạt nước / ngọc lam) — tròn, ánh lấp lánh đổi chỗ 2 khung.
+name: Ngọc phép
+size: 9x9
+anchor: 4,4
+colors:
+  k = cham-toi
+  n = ngoc
+  N = ngoc-sang
+  x = sang
+  c = cham-sang
+part a
+.........
+...nnn...
+..nNNnn..
+.nNxNnnc.
+.nNNnnnc.
+.nnnnncc.
+..nnccc..
+...ccc...
+.........
+end
+anim main fps=6 loop
+frame main
+  use a
+  outline k
+end
+frame main
+  use a
+  set 3 3 N
+  set 4 2 x
+  outline k
+end

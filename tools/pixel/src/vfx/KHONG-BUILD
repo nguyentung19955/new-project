@@ -1,0 +1,2 @@
+Nhóm vfx (hiệu ứng) dựng bằng tool riêng: node tools/build-vfx-pixel.js → js/vfx-pixel-data.js (game dựng canvas lúc chạy).
+tools/build-pixel.js bỏ qua thư mục này (docs/pixel/QUY-CHUAN.md mục 3).
