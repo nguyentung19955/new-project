@@ -199,7 +199,7 @@ const HEROES = {
     name: 'Thợ Săn Rừng', cost: 75, attack: 'arrow', proj: 'arrow', wclass: 'bow', dmgType: 'phys',
     role: 'Chí mạng', title: 'Cung săn lá rừng, mũi tên chí mạng', color: '#7FC24A',
     attrs: { str: 16, agi: 24, int: 12 }, gain: { str: 1.8, agi: 3.0, int: 1.2 },
-    base: { damage: 0, range: 145, cooldown: 0.95, heir: { damage: 2, range: 140 } },
+    base: { damage: 2, range: 145, cooldown: 0.9, heir: { damage: 2, range: 140 } },
     look: { aura: '#9b59b6', weapon: { type: 'bow', color: '#8e5a2b' } },
     skills: [
       { id: 'shadowstep', name: 'Bước Lá Rừng', active: { cooldown: 6, cast: 'shadowstep', mana: 45 },
@@ -670,11 +670,11 @@ const HEROES = {
     name: 'Trẻ Chăn Trâu', cost: 65, attack: 'melee', wclass: 'blade', dmgType: 'phys',
     role: 'Gõ choáng', title: 'Gậy chăn trâu đầu trâu, sỏi bờ đê, sáo trúc lưng trâu', color: '#C99A3C',
     attrs: { str: 15, agi: 21, int: 13 }, gain: { str: 1.5, agi: 2.6, int: 1.3 },
-    base: { damage: 10, range: 145, cooldown: 0.9, heir: { damage: 5, range: 170 } },
+    base: { damage: 8, range: 145, cooldown: 0.9, heir: { damage: 5, range: 170 } },
     look: { aura: '#E8C27A', weapon: { type: 'club', color: '#7A5232' } },
     skills: [
       { id: 'ct_q', name: 'Sỏi Nảy', active: { cooldown: 6, cast: 'ricochet', mana: 45 },
-        info: (n) => `Viên sỏi nảy qua 5 quái, x1.3 sát thương +${(n * 0.5).toFixed(0)}` },
+        info: (n) => `Ném viên sỏi nảy qua 5 quái, x1.3 sát thương +${(n * 0.5).toFixed(0)}` },
       { id: 'ct_w', name: 'Gậy Gõ Đầu',
         info: (n) => `${(4 + n * 0.06).toFixed(1)}% choáng 0,5 giây mỗi đòn`, apply: (s, n) => { s.stunChance += 4 + n * 0.06; } },
       { id: 'ct_e', name: 'Sáo Trúc Lưng Trâu',
