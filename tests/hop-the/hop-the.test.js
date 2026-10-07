@@ -110,11 +110,15 @@ async function skillCase(w, h) {
   const card = page.locator(`#legends .hx-card[data-i="${iTD}"]`);
   const info = await card.evaluate((c) => ({ ready: c.classList.contains('ready'), lock: !!c.querySelector('.hx-go.off'), sk: [...c.querySelectorAll('.hx-sk')].map((x) => x.textContent), oks: c.querySelectorAll('.hx-m.ok').length }));
   ok(!info.ready && info.lock, `${tag}: thẻ không "ready", nút Hợp thể bị khoá`);
-  ok(info.sk.length === 1 && /^KN-\d+$/.test(info.sk[0]) && info.oks === 1, `${tag}: nguyên liệu đủ hiện ✓, nguyên liệu thiếu kỹ năng hiện ${info.sk[0]}`);
+  ok(info.sk.length === 1 && /^−\d+$/.test(info.sk[0]) && info.oks === 1, `${tag}: nguyên liệu đủ hiện ✓, nguyên liệu thiếu kỹ năng hiện ⚡${info.sk[0]}`);
+  const fs = await card.evaluate((c) => ({ sk: parseFloat(getComputedStyle(c.querySelector('.hx-sk')).fontSize), lock: !!c.querySelector('.hx-go.off svg.svlk') }));
+  ok(fs.sk >= 10 && fs.lock, `${tag}: huy hiệu kỹ năng chữ ${fs.sk}px, nút khoá có icon ổ khoá SVG`);
   await page.evaluate(() => { document.querySelector('#toasts').innerHTML = ''; });
   await card.locator('.hx-go.off').click({ force: true }); await page.waitForTimeout(150);
-  const t = await page.evaluate(() => ({ txt: document.querySelector('#toasts').textContent, open: !document.querySelector('#legends').hidden, td: game.heroes.some((h) => h && h.type === 'trongdong') }));
-  ok(/Lạc Tướng còn thiếu \d+ cấp kỹ năng/.test(t.txt) && t.open && !t.td, `${tag}: chạm nút khoá → toast "${t.txt.slice(0, 50)}…", bảng vẫn mở, không hợp thể`);
+  const t = await page.evaluate((i) => ({ txt: document.querySelector('#legends .hx-sub').textContent, toast: document.querySelector('#toasts').textContent, mark: document.querySelector(`#legends .hx-card[data-i="${i}"]`).classList.contains('why'), open: !document.querySelector('#legends').hidden, td: game.heroes.some((h) => h && h.type === 'trongdong') }), iTD);
+  ok(/Lạc Tướng còn thiếu \d+ cấp kỹ năng/.test(t.txt) && !t.toast && t.mark && t.open && !t.td, `${tag}: chạm nút khoá → lý do dưới tiêu đề bảng "${t.txt.slice(0, 50)}…", không toast, thẻ đánh dấu, không hợp thể`);
+  const ov2 = await overflow(page, '#legends');
+  ok(!ov2.length, `${tag}: dòng lý do không tràn ${ov2.slice(0, 3).join(' | ')}`);
   // kéo thả cũng bị chặn
   await page.evaluate(([a, b]) => ui.dropOn(a, b), [a, b]); await page.waitForTimeout(100);
   ok(await page.evaluate(() => !game.heroes.some((h) => h && h.type === 'trongdong')), `${tag}: kéo thả thiếu kỹ năng → không hợp thể`);
@@ -122,9 +126,10 @@ async function skillCase(w, h) {
   await page.evaluate((s) => { ui.openLegends(false); ui.sel = s; ui.openScreen('evo'); }, a); await page.waitForTimeout(250);
   const ev = await page.evaluate(() => [...document.querySelectorAll('#screen .ho-cond .n')].map((x) => x.textContent));
   ok(ev.some((x) => /Kỹ năng tối đa \(còn \d+\)/.test(x)), `${tag}: Tiến hoá hiện ✗ Kỹ năng tối đa (còn N)`);
-  await page.evaluate(() => { document.querySelector('#toasts').innerHTML = ''; });
+  await page.evaluate(() => { document.querySelector('#toasts').innerHTML = ''; });   // toast của lần kéo thả ở trên
   await page.locator('#screen .ho .hx-go.off').first().click({ force: true }); await page.waitForTimeout(150);
-  ok(/còn thiếu \d+ cấp kỹ năng/.test(await page.evaluate(() => document.querySelector('#toasts').textContent)), `${tag}: chạm nút khoá ở Tiến hoá → toast lý do`);
+  const ew = await page.evaluate(() => ({ why: (document.querySelector('#screen .ho-why.err') || {}).textContent || '', toast: document.querySelector('#toasts').textContent }));
+  ok(/còn thiếu \d+ cấp kỹ năng/.test(ew.why) && !ew.toast, `${tag}: chạm nút khoá ở Tiến hoá → lý do ngay trong thẻ "${ew.why.trim().slice(0, 40)}…", không toast`);
   // nâng hết kỹ năng → hợp thể được
   await maxSkills(page, a); await page.waitForTimeout(300);
   const btn = page.locator('#screen .ho.ready .hx-go:not(.off)');

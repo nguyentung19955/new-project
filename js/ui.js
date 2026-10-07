@@ -61,6 +61,9 @@ const uiE = (f, emo, cls = 'uie') => `<img class="${cls}" src="${assetSrc(`ui/${
 const UIE = { star: () => uiE('ui-tran-4-1', '★'), equip: () => uiE('ui-tran-4-2', '▲'), lock: () => uiE('ui-tran-4-3', '🔒'), redo: () => uiE('ui-tran-4-4', '↻'),
   tip: () => uiE('ui-tran-5-1', '💡'), endless: () => uiE('ui-tran-5-2', '♾'), battle: () => uiE('ui-tran-5-3', '⚔'), done: () => uiE('ui-tran-5-4', '✓'),
   medal: (i) => uiE(`ui-huy-chuong-${i + 1}`, ['🥇', '🥈', '🥉', '👑'][i]) };
+// v181: ổ khoá / tia kỹ năng vẽ SVG (ảnh ui-tran-4-3 thu nhỏ chỉ còn chấm xám)
+const SVG_LOCK = '<svg class="svlk" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="8" rx="1.6" fill="currentColor"/><path d="M5.2 7V5.2a2.8 2.8 0 0 1 5.6 0V7" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>';
+const SVG_SK = '<svg class="svsk" viewBox="0 0 16 16" aria-hidden="true"><path d="M9.5 1 3 9.2h4.2L6.3 15 13 6.6H8.7z" fill="currentColor"/></svg>';
 const uiIc = (name, fallback = '') => (assetUrl(`ui_${name}.png`) ? `<img class="uiic" src="${assetUrl(`ui_${name}.png`)}" alt="">` : fallback);
 // v163: icon nhỏ (chỉ số, trạng thái, tiền tệ…) — ảnh assets/ui/ic-<tên>.png (cắt bằng tools/cat-items.py ic-…),
 // chưa có ảnh thì vẽ SVG nội tuyến (KHÔNG dùng emoji: điện thoại thiếu font sẽ hiện ô vuông). Bảng kê: docs/ICON-NHO.md
@@ -1229,7 +1232,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 181</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 182</div>
       </div></div>`;
   }
 
@@ -1726,19 +1729,20 @@ class UI {
     const cnt = { ready: inTab.filter((x) => x.ready).length, one: inTab.filter((x) => x.own && x.n === 1).length, all: inTab.length };
     const list = inTab.filter((x) => lg.flt === 'all' || (lg.flt === 'ready' ? x.ready : x.own && x.n === 1))
       .sort((x, y) => y.own - x.own || y.n - x.n || y.p - x.p || x.i - y.i);
-    const key = [lg.tab, lg.flt, lg.help, assetVersion, ...list.map((x) => `${x.i}:${x.m.map((m) => (m.h ? (m.ok ? 2 : 1) + '.' + m.gap : 0)).join('')}${x.own ? '' : 'L'}${x.ready && x.poor ? 'P' : ''}`)].join('|');
+    const why = lg.why && FUSION[lg.why.i] && HEROES[FUSION[lg.why.i].to].legend === lg.tab ? lg.why : null;
+    const key = [lg.tab, lg.flt, lg.help, why && why.txt, assetVersion, ...list.map((x) => `${x.i}:${x.m.map((m) => (m.h ? (m.ok ? 2 : 1) + '.' + m.gap : 0)).join('')}${x.own ? '' : 'L'}${x.ready && x.poor ? 'P' : ''}`)].join('|');
     if (this.sig.lg === key && el.firstElementChild && el.firstElementChild.classList.contains('hx-hd')) return;
     this.sig.lg = key;
     const R = (t) => RARITY[HEROES[t].legend];
     const NEED = lg.tab === 'epic' ? `Tím = 2 tướng Thường ${'★'.repeat(COSTS.ascendTier)} đúng cặp · kỹ năng tối đa` : `Vàng = 2 tướng Tím Thần tinh ${'★'.repeat(COSTS.ascendTier2)} · kỹ năng tối đa`;
     const mat = (m) => `<span class="hx-m ${m.ok ? 'ok' : m.h ? 'part' : 'no'} ${HEROES[m.type].legend || 'common'}" title="${esc(HEROES[m.type].name + (m.ok ? ' ✓' : ' — ' + m.why))}">
-        <img src="${heroImgUrl(m.type, 'head')}" alt=""><i>${m.ok ? '✓' : m.h ? `${m.h.tier || 0}/${m.need}★` : ''}</i>${m.h && !m.ok && m.gap ? `<b class="hx-sk">KN-${m.gap}</b>` : `<small>${m.ok ? '' : '★'.repeat(m.need)}</small>`}</span>`;
+        <img src="${heroImgUrl(m.type, 'head')}" alt=""><i>${m.ok ? '✓' : m.h ? `${m.h.tier || 0}/${m.need}★` : ''}</i>${m.h && !m.ok && m.gap ? `<b class="hx-sk" title="Còn thiếu ${m.gap} cấp kỹ năng">${SVG_SK}−${m.gap}</b>` : `<small>${m.ok ? '' : '★'.repeat(m.need)}</small>`}</span>`;
     const card = (x) => { const t = x.f.to, d = HEROES[t];
       const st = !x.own ? `<span class="hx-st lock">${UIE.lock()} Chưa có</span>`
         : x.ready ? `<button class="hx-go" data-act="hx-fuse" data-i="${x.i}" ${x.poor ? `disabled title="Cần ${x.cost} vàng"` : ''}>Hợp thể · ${coin(1)}${x.cost}</button>`
-        : x.m.every((m) => m.h) ? `<button class="hx-go off" data-act="hx-fuse" data-i="${x.i}" aria-disabled="true">${UIE.lock()} Hợp thể</button>`
+        : x.m.every((m) => m.h) ? `<button class="hx-go off" data-act="hx-fuse" data-i="${x.i}" aria-disabled="true">${SVG_LOCK} Hợp thể</button>`
         : `<span class="hx-st">${x.n}/2</span>`;
-      return `<div class="hx-card ${d.legend} ${x.ready ? 'ready' : ''} ${x.own ? '' : 'lock'}" data-act="hx-card" data-i="${x.i}" role="button" style="--rc:${R(t).color}">
+      return `<div class="hx-card ${d.legend} ${x.ready ? 'ready' : ''} ${x.own ? '' : 'lock'} ${why && why.i === x.i ? 'why' : ''}" data-act="hx-card" data-i="${x.i}" role="button" style="--rc:${R(t).color}">
         <span class="hx-to ${d.legend}"><img src="${heroImgUrl(t, 'head')}" alt=""></span>
         <span class="hx-nm"><b>${esc(d.name)}</b><small>${R(t).name}</small></span>
         <span class="hx-mats">${mat(x.m[0])}<em>+</em>${mat(x.m[1])}</span>${st}</div>`; };
@@ -1748,7 +1752,7 @@ class UI {
     el.innerHTML = `<div class="hx-hd"><span class="ttl">Hợp thể</span>${tab('epic', 'Tím')}${tab('legendary', 'Vàng')}
         <span class="hx-fs">${flt('ready', 'Làm được')}${flt('one', 'Thiếu 1')}${flt('all', 'Tất cả')}</span>
         <button class="hx-q ${lg.help ? 'on' : ''}" data-act="hx-help" aria-label="Cách hợp thể">?</button><button class="hx-x" data-act="hx-close" aria-label="Đóng">✕</button></div>
-      <div class="hx-sub">${lg.help ? 'Kéo 2 tướng nguyên liệu vào nhau, hoặc bấm <b>Hợp thể</b>. Tướng mới giữ cấp, đồ và nội tại của cả hai.' : `${NEED} · chạm thẻ để đánh dấu tướng trên sân`}</div>
+      <div class="hx-sub ${why ? 'err' : ''}">${why ? `${SVG_LOCK} <b>${esc(HEROES[FUSION[why.i].to].name)}</b>: ${why.txt}` : lg.help ? 'Kéo 2 tướng nguyên liệu vào nhau, hoặc bấm <b>Hợp thể</b>. Tướng mới giữ cấp, đồ và nội tại của cả hai.' : `${NEED} · chạm thẻ để đánh dấu tướng trên sân`}</div>
       <div class="hx-list">${list.map(card).join('') || `<div class="hx-empty">${lg.flt === 'ready' ? 'Chưa có công thức nào đủ nguyên liệu' : 'Chưa có công thức nào thiếu đúng 1 nguyên liệu'}</div>`}</div>`;
   }
   openLegends(on) {
@@ -1756,7 +1760,7 @@ class UI {
     el.hidden = !on;
     if (!on) return;
     $('#drawer').hidden = true; $('#more').hidden = true;
-    if (this.lg) this.lg.tab = null;     // mở lại: chọn tab có công thức làm được
+    if (this.lg) { this.lg.tab = null; this.lg.why = null; }     // mở lại: chọn tab có công thức làm được
     this.sig.lg = null;
     this.renderLegends();
     const b = el.querySelector('.hx-list'); if (b) b.scrollTop = 0;
@@ -2969,10 +2973,10 @@ class UI {
         break;
       }
       case 'merge-any': this.mergeAny(); break;
-      case 'fuse-with': if (d.why) this.toast(d.why, '#E25A3A'); else this.fuseWith(+d.slot); break;
+      case 'fuse-with': if (d.why) { if (this.screen) { this.screen.why = d.to; this.renderScreen(true); } else this.toast(d.why, '#E25A3A'); } else this.fuseWith(+d.slot); break;
       case 'legend-open': this.openLegends($('#legends').hidden); break;
       case 'hx-close': this.openLegends(false); break;
-      case 'hx-tab': this.lg.tab = d.k; this.lg.flt = 'all'; this.renderLegends(); $('#legends .hx-list').scrollTop = 0; break;
+      case 'hx-tab': this.lg.tab = d.k; this.lg.flt = 'all'; this.lg.why = null; this.renderLegends(); $('#legends .hx-list').scrollTop = 0; break;
       case 'hx-flt': this.lg.flt = d.k; this.renderLegends(); $('#legends .hx-list').scrollTop = 0; break;
       case 'hx-help': this.lg.help = !this.lg.help; this.renderLegends(); break;
       case 'hx-card': case 'hx-fuse': {
@@ -2981,7 +2985,9 @@ class UI {
         this.fuseFocus = { i: x.i, until: performance.now() + 6000 };
         this.sel = -1;
         if (d.act === 'hx-fuse' && x.ready) { this.openLegends(false); this.action({ act: 'fuse-strip', i: x.i }); break; }
-        if (x.m.some((m) => m.h) && d.act !== 'hx-fuse') this.openLegends(false);
+        // v181: nút 🔒 → lý do hiện ngay dưới tiêu đề bảng, bảng vẫn mở (không toast đè thẻ / sót sang màn khác)
+        if (d.act === 'hx-fuse') { this.fuseFocus = null; this.lg.why = { i: x.i, txt: x.m.filter((m) => !m.ok).map((m) => esc(m.why)).join(' · ') || (x.own ? '' : 'chưa sở hữu') }; this.renderLegends(); break; }
+        if (x.m.some((m) => m.h)) this.openLegends(false);
         this.toast(`<b>${HEROES[x.f.to].name}</b> · ${!x.own ? 'chưa sở hữu — mua ở Anh Hùng' : x.m.map((m) => (m.ok ? `${HEROES[m.type].name} ✓` : m.why)).join(' · ')}`, RARITY[HEROES[x.f.to].legend].color);
         break;
       }
@@ -3754,6 +3760,7 @@ class UI {
       const o = g.heroes.filter((x) => x && x !== h && x.type === pt).sort((x, y) => (y.tier || 0) - (x.tier || 0) || y.level - x.level)[0];
       const ok = o ? g.canFuse(o, h) : 'thiếu';
       const go = typeof ok !== 'string';
+      const lockWhy = typeof ok === 'string' && ok !== 'thiếu' ? ok : `Cần ${HEROES[pt].name} trên sân`;
       const oReady = o && g.fusionReady(o) === true, own = g.ownsHero(t), cost = COSTS.ascend[d.legend];
       const gap = g.skillGap(h), og = o ? g.skillGap(o) : 0;
       const conds = [ck((h.tier || 0) >= need, `Tướng này ${stars(need, h.from)}`)];
@@ -3768,8 +3775,8 @@ class UI {
           <span class="hx-to ${d.legend}"><img src="${heroImgUrl(t, 'head')}" alt=""></span>
           <span class="ho-nm"><b>${esc(d.name)} ${elIcon(d.el, 13)}</b><small>${R.name} · ${esc(d.trait.name)}</small></span></div>
         <div class="ho-cond">${conds.join('')}</div>
-        <div class="ho-ft"><span class="ho-why" title="${esc(f.why)}">${go ? `Lực chiến → <b>${g.fusePreview(o, h)}</b>` : esc(f.why)}</span>
-          <button class="hx-go ${go ? '' : 'off'}" data-act="fuse-with" data-slot="${o ? o.slot : ''}" ${go ? '' : `aria-disabled="true" data-why="${esc(typeof ok === 'string' && ok !== 'thiếu' ? ok : `Cần ${HEROES[pt].name} trên sân`)}"`}>${go ? '' : UIE.lock()}Hợp thể · ${coin(1)}${cost}</button></div></div>`;
+        <div class="ho-ft">${!go && this.screen && this.screen.why === t ? `<span class="ho-why err">${SVG_LOCK} ${esc(lockWhy)}</span>` : `<span class="ho-why" title="${esc(f.why)}">${go ? `Lực chiến → <b>${g.fusePreview(o, h)}</b>` : esc(f.why)}</span>`}
+          <button class="hx-go ${go ? '' : 'off'}" data-act="fuse-with" data-to="${t}" data-slot="${o ? o.slot : ''}" ${go ? '' : `aria-disabled="true" data-why="${esc(lockWhy)}"`}>${go ? '' : SVG_LOCK}Hợp thể · ${coin(1)}${cost}</button></div></div>`;
     }).join('');
     return `<div class="panel metal set-panel asc-panel ho-panel"><div class="ph"><span class="ttl" style="font-size:20px">Hợp thể</span>
         <button class="hx-q" data-act="evo-help" aria-label="Cách hợp thể">?</button></div>

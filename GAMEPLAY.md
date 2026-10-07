@@ -1729,3 +1729,11 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
   v181 là phương án duy nhất ra Tím ở cả 9/9 ván, quanh đợt 20 (v136: đợt 13–16). "Ghép tặng cấp" (★★ +1–2 cấp, ★★★ +2–4 cấp kèm điểm) gần như không giúp nên bỏ.
 - Test: `node tests/hop-the/hop-the.test.js` (thêm: ★★★ lên cấp ½ giá, ★★ nguyên giá). Ảnh đã xem: toast lên ★★★ + nút Lên cấp 15 vàng ở 1920×934, 844×390, 667×375.
+
+## Phiên bản 182 — Hợp thể: lý do khoá hiện tại chỗ, huy hiệu kỹ năng dễ đọc (sửa theo tester)
+- Chạm nút **🔒 Hợp thể** không còn bật toast (toast ở góc phải trên đè thẻ cột phải, còn sót sang màn Tiến hoá chồng 2–3 cái):
+  - Bảng Hợp thể: lý do hiện ngay dòng dưới tiêu đề bảng (chữ cam, xuống dòng nếu dài), thẻ đó viền cam; đổi tab / mở lại bảng thì xoá.
+  - Màn Tiến hoá: lý do thay dòng truyền thuyết ngay trong thẻ hướng hợp thể đó.
+- Huy hiệu kỹ năng thiếu trên ô nguyên liệu: ⚡ (tia SVG) + "−14", chữ 10,5px, nền đỏ đất viền sáng (trước: "KN-14" chữ 8px khó đọc, khó hiểu); di chuột hiện "Còn thiếu 14 cấp kỹ năng".
+- Ổ khoá trên nút Hợp thể vẽ bằng SVG (ảnh `ui-tran-4-3` thu nhỏ ở 844/667 chỉ còn chấm xám).
+- Test: `node tests/hop-the/hop-the.test.js` (lý do dưới tiêu đề, không toast, thẻ đánh dấu, không tràn chữ; Tiến hoá lý do trong thẻ; huy hiệu ≥ 10px, nút khoá có SVG). Ảnh đã xem: bảng sau khi chạm 🔒, Tiến hoá sau khi chạm 🔒, tab Vàng — 1920×934, 844×390, 667×375.
