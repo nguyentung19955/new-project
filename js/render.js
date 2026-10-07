@@ -860,6 +860,12 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
   }
   // Thần tinh: mỗi bậc to thêm 4%
   const s = (o.scale || 0.26) * TIER_SCALE[tierShown] * (1 + 0.04 * ascShown) * look.bulk;
+  // tự cử động: chỉ có MỘT ảnh tĩnh (<mã>.png / packs/<mã>/idle.png, không có bộ nhiều khung) → js/tu-cu-dong.js
+  const soloImg = !o.vector && typeof cdSoloImg === 'function' && !(h.equip && asset(`${heroSlug(h.type)}_than.png`)) && cdSoloImg(h.type, false);
+  if (soloImg) {
+    const r = cdDrawHero(ctx, h, x, y + evoLift * DK * (o.scale || 0.26) / 0.26, o, s, look, def, soloImg, tierShown, ascShown);
+    if (r) return r;
+  }
   const q = heroQ((o.px || 1) * s);
   const seed = (h.id || 0) * 1.7;
   const breathe = Math.sin(t * 2.85 + seed) * 3;
@@ -2055,6 +2061,10 @@ function enemyBox(e) {
   const a = enemyArt(e.type);
   const k = (e.champion ? 1.5 : 1) * (e.elite ? 1.15 : 1);
   const w = (ENEMY_W[e.type] || 40) * k;
+  // tự cử động: ảnh đơn → cao theo khung bao của ảnh (thanh máu nằm trên đỉnh hình thật)
+  const so = typeof cdSoloImg === 'function' && !vectorHeroesOn() && cdSoloImg(e.type, true);
+  const sp = so && cdPrepare(so);
+  if (sp) { const H = cdEnemySize(e, { w }, sp).H; return { w, h: H, ay: H, k, solo: so }; }
   const h = a ? w * a.h / a.w : w * 0.8;
   const ay = a ? (a.ay / a.h) * h : h;
   return { w, h, ay, k };
@@ -2072,7 +2082,9 @@ function drawEnemy(ctx, e, t, o = {}) {
   if (!o.icon) {
     ctx.fillStyle = 'rgba(0,0,0,0.32)';
     ctx.beginPath();
-    ctx.ellipse(0, 2, box.w * 0.36, box.w * 0.1 + 2, 0, 0, Math.PI * 2);
+    // ảnh đơn đang đi: bóng co lại khi nhún lên
+    const shK = box.solo && !d.flying && !(e.stunT > 0) ? 1 - 0.14 * Math.abs(Math.sin(t * (e.enraged ? 13 : 9) + cdSeed(e.id, e.type))) : 1;
+    ctx.ellipse(0, 2, box.w * 0.36 * shK, (box.w * 0.1 + 2) * shK, 0, 0, Math.PI * 2);
     ctx.fill();
     // gợn nước quanh quái bơi (chỉ bản đồ có sông / biển)
     const wet = typeof MAP_ID === 'undefined' || !MAPS[MAP_ID] || (MAP_THEMES[MAPS[MAP_ID].theme] || {}).water;
@@ -2155,17 +2167,18 @@ function drawEnemy(ctx, e, t, o = {}) {
   // trúng đòn: giật lùi + nén lại; bơi: co giãn theo nhịp
   const kb = e.kbT > 0 ? e.kbT / 0.14 : 0;
   if (kb) ctx.translate((e.kbDir || 1) * 7 * Math.sin(kb * Math.PI), 0);
-  ctx.rotate(wig * (d.flying ? 2 : 1) + (kb ? (e.kbDir || 1) * 0.12 * kb : 0));
+  ctx.rotate((box.solo ? 0 : wig * (d.flying ? 2 : 1)) + (kb ? (e.kbDir || 1) * 0.12 * kb : 0));
   const flip = e.dir < 0 ? -1 : 1;
   const flapY = d.flying ? 1 + Math.sin(t * 16 + e.id) * 0.12 : 1;
-  const swim = d.flying || e.stunT > 0 ? 0 : Math.sin(t * 9 + e.id) * 0.035;
+  const swim = d.flying || e.stunT > 0 || box.solo ? 0 : Math.sin(t * 9 + e.id) * 0.035;
   ctx.scale(flip * (1 + swim + kb * 0.1), flapY * (1 - swim - kb * 0.1));
   if (e.enraged) {
     ctx.shadowColor = '#ff2d2d';
     ctx.shadowBlur = 14;
   }
-  const packRef = !vectorHeroesOn() && enemyPackRef(e.type);
-  let png = (packRef && enemyPackImg(e, t)) || enemyPng(e.type, e.elite || e.champion, e);
+  const packRef = !box.solo && !vectorHeroesOn() && enemyPackRef(e.type);
+  let png = box.solo ? null : (packRef && enemyPackImg(e, t)) || enemyPng(e.type, e.elite || e.champion, e);
+  if (box.solo) cdDrawEnemy(ctx, e, t, box, box.solo, o);
   if (png) {
     // ảnh vẽ tay: chân ở giữa đáy ảnh, rộng theo ENEMY_W (bộ ảnh quái: cao theo ảnh bước 1 để đổi khung không đổi cỡ)
     const h2 = packRef ? box.w * packRef.naturalHeight / packRef.naturalWidth : box.w * png.naturalHeight / png.naturalWidth;
@@ -2184,8 +2197,8 @@ function drawEnemy(ctx, e, t, o = {}) {
       ctx.globalAlpha = 1;
     }
   }
-  const img = !png && a && enemyImage(e.type, o.px || 1);
-  if (png) { /* đã vẽ */ } else if (ready(img)) {
+  const img = !png && !box.solo && a && enemyImage(e.type, o.px || 1);
+  if (png || box.solo) { /* đã vẽ */ } else if (ready(img)) {
     const x0 = -(a.ax / a.w) * box.w, y0 = -box.ay;
     ctx.drawImage(img, x0, y0, box.w, box.h);
     // chớp sáng khi trúng đòn
