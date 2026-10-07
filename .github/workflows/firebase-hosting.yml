@@ -63,6 +63,19 @@ jobs:
           channelId: live
           target: main
 
+      # Tạo site thanthoaiviet nếu dự án chưa có (chỉ cần một lần; tên site là duy nhất trên toàn Firebase).
+      - name: Tạo site thanthoaiviet nếu chưa có
+        if: steps.secret.outputs.ok == 'true'
+        continue-on-error: true
+        run: |
+          trap 'rm -f "$RUNNER_TEMP/sa.json"' EXIT
+          printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
+          fb="npx --yes firebase-tools@latest --project sontinhthuytinh --non-interactive"
+          if $fb hosting:sites:get thanthoaiviet > /dev/null 2>&1; then echo "Site thanthoaiviet đã có"; exit 0; fi
+          $fb hosting:sites:create thanthoaiviet \
+            || { echo "::warning title=Chưa tạo được site thanthoaiviet::Tên có thể đã có người dùng hoặc khoá thiếu quyền. Tạo tay: Firebase console → Hosting → Add another site."; exit 1; }
+
       # Site phụ có tên đẹp. Nếu site chưa được tạo trong Firebase console thì chỉ cảnh báo, không chặn site chính.
       - name: Đăng lên thanthoaiviet.web.app
         id: deploy_ttv
