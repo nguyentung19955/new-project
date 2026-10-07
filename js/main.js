@@ -121,6 +121,7 @@ const toLogical = (ev) => {
 };
 
 canvas.addEventListener('pointerdown', (ev) => {
+  if (ui.uiHidden) return;   // v180: đang ẩn giao diện = chỉ xem, chạm bản đồ không chọn / kéo tướng
   const [x, y] = toLogical(ev);
   const slot = ui.slotAt(x, y);
   if (game.started && !game.over && !ui.raising && slot >= 0 && game.heroes[slot]) {

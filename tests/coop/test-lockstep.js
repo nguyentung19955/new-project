@@ -118,9 +118,9 @@ async function run(browser) {
   await waitFor(async () => (await B.evaluate(() => COOP.hashes.has(60))), 10000, 'mốc hash đầu tiên');
   const same0 = await Promise.all([A, B].map((p) => p.evaluate(() => COOP.hashes.get(60))));
   check(same0[0] === same0[1], 'cùng seed → trạng thái ở bước 60 giống hệt (' + same0.join(' / ') + ')');
-  const mk = await Promise.all([A, B].map((p) => p.evaluate(() => game.co.pl.map((x) => ({ m: x.market.types.join(','), ok: x.market.types.every((t) => x.deck.includes(t)) })))));
+  const mk = await Promise.all([A, B].map((p) => p.evaluate(() => game.co.pl.map((x) => ({ m: x.market.types.join(','), ok: x.market.types.every((t) => BASIC_HEROES.includes(t)) })))));
   check(JSON.stringify(mk[0]) === JSON.stringify(mk[1]) && mk[0].every((x) => x.ok) && mk[0][0].m !== undefined,
-    `chợ tướng riêng mỗi người, rút từ đội của mình, giống nhau trên hai máy (${mk[0].map((x) => x.m).join(' | ')})`);
+    `chợ tướng riêng mỗi người (v181: mọi tướng Thường, ưu tiên đội mình), giống nhau trên hai máy (${mk[0].map((x) => x.m).join(' | ')})`);
 
   // ---- trò chuyện (không đi qua lockstep)
   await A.evaluate(() => ui.chatAct({ act: 'chat-quick', i: '0' }));

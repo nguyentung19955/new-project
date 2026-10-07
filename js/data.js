@@ -457,7 +457,8 @@ const HEROES = {
       { id: 'gd_w', name: 'Mũi Giáo Đồng',
         info: (n) => `+${(8 + n * 0.2).toFixed(1)}% xuyên giáp`, apply: (s, n) => { s.pierce += 8 + n * 0.2; } },
       { id: 'gd_e', name: 'Thế Giáo',
-        info: (n) => `+${(3 + n * 0.08).toFixed(1)}% chí mạng`, apply: (s, n) => { s.crit += 3 + n * 0.08; } },
+        // v182: vai trò Diệt boss — thêm % sát thương lên boss
+        info: (n) => `+${(3 + n * 0.08).toFixed(1)}% chí mạng · +${Math.round(Math.min(30, 10 + n * 0.1))}% sát thương lên boss`, apply: (s, n) => { s.crit += 3 + n * 0.08; s.bossPct += Math.min(30, 10 + n * 0.1); } },
       { id: 'gd_r', name: 'Giáo Xoáy', active: { cooldown: 14, cast: 'chop', mana: 100 },
         info: (n) => `Xoáy giáo một nhát: x3 sát thương +${n}` },
     ],
@@ -1275,6 +1276,13 @@ const summonPool = (level) => [...BASIC_HEROES.slice(0, 6), ...NEW_GROUPS[(level
 // (20 tướng ngẫu nhiên quá khó ghép). Thiếu / sai thì dùng đội gợi ý.
 const DECK_SIZE = 6;
 const MARKET_SIZE = 4;     // v143: chợ tướng — số thẻ luôn mở ở thanh đáy
+// v180: chợ có chủ đích — chợ ra MỌI tướng Thường (như TFT), trọng số rút thẻ: thường ×1 · trong đội ưu tiên 6 tướng ×2 ·
+// đang ghép dở trên sân ×5 · nguyên liệu còn thiếu của công thức hợp thể gần xong ×12; đủ MARKET_CAP bản sao (= một ★★★)
+// thì loại đó không ra nữa. Bảo hiểm: MARKET_PITY lần làm mới cả hàng liền không ra tướng cần nhất (nguyên liệu hợp thể,
+// không có thì tướng đang có) → lần sau chắc chắn có 1 thẻ.
+const MARKET_W = { doi: 2, ghep: 5, hop: 12 };
+const MARKET_PITY = 2;
+const MARKET_CAP = 4;
 const REST_SWAPS = 2;      // v143: Nghỉ chân sau đợt boss — đổi tối đa 2 tướng trong đội
 const validDeck = (d) => Array.isArray(d) && d.length === DECK_SIZE && new Set(d).size === DECK_SIZE && d.every((t) => BASIC_HEROES.includes(t));
 // tướng Thường là nguyên liệu (trực tiếp hoặc qua tướng Tím) của các tướng Tím / Vàng đã sở hữu
@@ -1288,7 +1296,8 @@ function deckIngredients(owned) {
 // đội gợi ý: tướng khắc chế quái của ải → nguyên liệu hợp thể tướng đã sở hữu → quân mặc định của ải
 function suggestDeck(level, owned) {
   const out = [];
-  const add = (t) => { if (out.length < DECK_SIZE && BASIC_HEROES.includes(t) && !out.includes(t)) out.push(t); };
+  const open = openCommons(owned);
+  const add = (t) => { if (out.length < DECK_SIZE && open.includes(t) && !out.includes(t)) out.push(t); };
   try {
     const lv = LEVELS[level] || {}, R = typeof ROSTERS !== 'undefined' ? ROSTERS[lv.roster || 'thuy'] : null;
     for (const c of rosterCounters(R, Object.values(lv.bosses || {}), BASIC_HEROES, lv.hint).list) add(c.t);
@@ -1389,18 +1398,37 @@ Object.assign(COSTS, {
 // CỬA HÀNG (v24): 6 món đồ trang phục / phụ kiện ngẫu nhiên, làm mới miễn phí mỗi đợt,
 // làm mới tay tốn vàng (tăng dần trong đợt). Độ hiếm tốt dần theo đợt.
 // v86: tướng Tím / Vàng phải MUA bằng Ngân khố (lưu theo tài khoản) mới hợp thể / thăng thần ra được trong trận
-const OWN_COST = { epic: 1200, legendary: 3000 };
+// v182: Ngân khố mở khoá MỌI tướng (Thường / Tím / Vàng), giá theo bậc. Tướng Thường chưa mở không vào được đội triệu hồi
+// (nên không ra trong chợ trận). Người mới có sẵn STARTER_HEROES; bản lưu cũ (trước v182) giữ đủ 20 tướng Thường.
+const OWN_COST = { common: 300, epic: 900, legendary: 2000 };
+const STARTER_HEROES = ['lactuong', 'lucsi', 'xathu', 'thosan', 'thaymo', 'thansuong', 'nguphu', 'thoren'];
+const heroTier = (t) => HEROES[t].legend || 'common';
+// tướng Thường đã mở theo danh sách owned (mảng hoặc Set). Không truyền / không có tướng Thường nào (bot mô phỏng, bản lưu khác) → mở hết
+function openCommons(owned) {
+  if (!owned) return BASIC_HEROES;
+  const has = (t) => (owned.has ? owned.has(t) : owned.includes(t));
+  const out = BASIC_HEROES.filter(has);
+  return out.length >= DECK_SIZE ? out : BASIC_HEROES;
+}
 // v66: Ngân khố — thưởng sau trận, tiêu trước trận
 const PREP = {
-  losePerWave: 4, minShow: 1,
+  losePerWave: 6, minShow: 1,
   // v103: Vô tận mỗi 10 đợt / mỗi boss hạ được Ngân khố ngay
   endlessEvery: 10, endlessMilestone: 150, endlessBoss: 100,
   // v166: bỏ Phó bản (trước: thắng ải 120 + 25 × ải + 40 × sao) — cuối trận vô tận nhận endWave mỗi đợt đã qua;
   // trận đầu mỗi ngày giữ qua đợt dailyWave thưởng thêm dailyWin
-  endWave: 4, dailyWave: 10, dailyWin: 300,
+  // v182: cuối trận 6 mỗi đợt (trước 4); kỷ lục mới của bản đồ +recordWave mỗi đợt vượt kỷ lục cũ; nhiệm vụ ngày (QUESTS)
+  endWave: 6, dailyWave: 10, dailyWin: 300, recordWave: 15,
   goldCost: 150, goldAmount: 150, jarCost: 250, kingCost: 700, livesCost: 200, livesAmount: 5,
   heroCost: { epic: 900, legendary: 2000 },
 };
+// v182: nhiệm vụ ngày (đặt lại mỗi ngày): đếm qua mọi trận Vô tận / chơi nhóm trong ngày, đạt là cộng Ngân khố ngay
+// (nhiệm vụ 'first' = thưởng trận đầu ngày qua đợt PREP.dailyWave đã có từ v103)
+const QUESTS = [
+  { id: 'first', name: `Trận đầu ngày qua đợt ${PREP.dailyWave}`, need: 1, kho: PREP.dailyWin },
+  { id: 'boss', name: 'Hạ 3 boss', need: 3, kho: 200 },
+  { id: 'waves', name: 'Qua tổng 60 đợt', need: 60, kho: 250 },
+];
 const SHOP = {
   slots: 6,
   reroll: (n) => 20 + 10 * n,
@@ -1565,6 +1593,43 @@ const ITEMS = {
   ngoc_hoi_sinh: { name: 'Ngọc Hồi Sinh', slot: 'acc', rarity: 'legendary', bossOnly: true, revive: true,
                 stats: {}, desc: 'Khi gục sẽ hồi sinh ngay với đầy máu (dùng 1 lần)' },
 };
+
+// v181: SÍNH LỄ NGẪU NHIÊN. Bảng thưởng boss không còn tặng cố định món của boss đó mà bốc ngẫu nhiên
+// theo trọng số độ hiếm sính lễ (Thường nhiều, Quý hiếm ít). Mốc lớn (đợt 20, 40, 60…) nhân trọng số món hiếm.
+// Chống trùng: không ra một món quá 2 lần liền (lịch sử theo trận), món đã có trong túi / trên tướng giảm trọng số.
+// rng mặc định srand → co-op ra giống hệt trên 2 máy (seed chung của trận).
+const SL_TIER = {
+  thuong: { name: 'Thường', color: '#E8E0CC', bg: '#3A3226', big: 1 },
+  hiem:   { name: 'Hiếm', color: '#7FC8FF', bg: '#123048', big: 1.8 },
+  quy:    { name: 'Quý hiếm', color: '#FFD66B', bg: '#5A3A08', big: 3 },
+};
+const SINH_LE = {
+  voi_chin_nga:  { tier: 'thuong', w: 34 },
+  ga_chin_cua:   { tier: 'thuong', w: 34 },
+  ngua_hong_mao: { tier: 'hiem', w: 22 },
+  ngoc_hoi_sinh: { tier: 'quy', w: 10 },
+};
+const SL_OWNED_MUL = 0.35;          // món đã có: trọng số × 0.35 (ưu tiên món chưa có)
+const slBigWave = (wave) => wave > 0 && wave % 20 === 0;
+// trọng số từng món ở lần bốc này: { id: w }
+function sinhLeWeights({ hist = [], owned = [], big = false } = {}) {
+  const out = {};
+  const n = hist.length, rep = n >= 2 && hist[n - 1] === hist[n - 2] ? hist[n - 1] : null;
+  for (const id of Object.keys(SINH_LE)) {
+    let w = SINH_LE[id].w * (big ? SL_TIER[SINH_LE[id].tier].big : 1);
+    if (owned.includes(id)) w *= SL_OWNED_MUL;
+    if (id === rep) w = 0;          // đã ra 2 lần liền → lần này không ra nữa
+    out[id] = w;
+  }
+  return out;
+}
+function rollSinhLe(opt = {}, rng = srand) {
+  const ws = sinhLeWeights(opt);
+  const ids = Object.keys(ws);
+  let r = rng() * ids.reduce((a, id) => a + ws[id], 0);
+  for (const id of ids) { r -= ws[id]; if (r < 0 && ws[id] > 0) return id; }
+  return ids.filter((id) => ws[id] > 0).pop();
+}
 
 // ------------------------------------------------------------
 //  ĐỒ MỚI (v15): 4 phụ kiện, 8 đồ ghép, 4 bộ đồ (Sơn Tinh, Chim Lạc,
