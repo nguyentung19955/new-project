@@ -57,6 +57,8 @@ const GFX = {
   mode() { return (ui && ui.save && ui.save.settings.gfx) || 'auto'; },
   level() { const m = this.mode(); return m === 'high' ? 0 : m === 'low' ? 2 : this.lv; },
   dprCap() { return [3, 2, 1.5][this.level()]; },          // v47: máy ×3 (iPhone) vẽ nét đủ ×3
+  // v183 (L15): bậc thấp còn giới hạn tổng số điểm ảnh canvas (màn to 1920×934 vẽ ~1,8 triệu điểm mỗi khung — chậm gấp 2–3 lần 844×390)
+  pxCap(w, h) { const m = [Infinity, 2.2e6, 1.1e6][this.level()]; return Math.sqrt(m / Math.max(1, w * h)); },
   apply() { if (typeof VFX !== 'undefined' && VFX.setMax) VFX.setMax([700, 380, 180][this.level()]); resize(); },
   sample(ms) {
     if (this.mode() !== 'auto' || this.lv >= 2 || document.hidden) return;
@@ -89,7 +91,7 @@ function resize() {
   const ox = (w / scale - CONFIG.W) / 2;                       // lệch bản đồ (đơn vị logic)
   const hv = h / scale;
   const oy = hv >= CONFIG.H ? (hv - CONFIG.H) / 2 : (hv - CONFIG.H) * 0.55;   // cắt trên nhiều hơn dưới một chút
-  const dpr = Math.min(window.devicePixelRatio || 1, GFX.dprCap());
+  const dpr = Math.min(window.devicePixelRatio || 1, GFX.dprCap(), GFX.pxCap(w, h));
   wrap.style.width = w + 'px';
   wrap.style.height = h + 'px';
   // giao diện: cùng tỉ lệ với bản đồ (k), khung thiết kế rộng / cao theo màn hình (UIW × UIH)
@@ -200,7 +202,7 @@ const px = () => view.scale * view.dpr;
 // Bản đồ ải vẽ bằng AI (nen_ai-1..4, PROMPT-FOOOCUS): phủ kín khung rồi vẽ lại dòng sông
 // của game lên trên, để đường quái đi và ô đặt tướng luôn khớp dù ảnh lệch đôi chút.
 const NEN_AI = [1, 2, 3, 3, 1, 2, 3, 4];     // ải 1..8 → ảnh nền
-function drawAiMap(img) {
+function drawAiMap(img, ctx = canvas.getContext('2d')) {
   const k = Math.max(CONFIG.W / img.naturalWidth, CONFIG.H / img.naturalHeight);
   const w = img.naturalWidth * k, h = img.naturalHeight * k;
   ctx.drawImage(img, (CONFIG.W - w) / 2, (CONFIG.H - h) / 2, w, h);
@@ -224,39 +226,71 @@ function drawMateSpot(x, y, hero) {
   ctx.restore();
 }
 
-function render() {
-  const t = performance.now() / 1000;
+// v183 (L15): nền tĩnh (lề tối quanh bản đồ + bản đồ + thành) trước đây vẽ lại MỖI khung: một lần phóng ảnh phủ kín màn có
+// độ mờ (lề) + một ảnh bản đồ cỡ màn hình. Nay vẽ sẵn một lần vào canvas đệm cùng cỡ, mỗi khung chỉ chép 1:1
+// (đo Chromium không GPU 1920×934, ~110 quái: xem GAMEPLAY.md v183). Rung màn (shake) thì vẽ trực tiếp như cũ.
+function backdropSrc() {
+  const map = asset(`maps/map-0${game.level + 1}.png`);
+  // v163: ảnh nền nen_ai-*.png là bản đồ sông Đà (chương Sơn Tinh – Thủy Tinh) — không dùng cho ải chương khác
+  const nen = !map && NEN_AI[game.level] && asset(`nen_ai-${NEN_AI[game.level]}.png`);
+  const bg = !nen && mapBg();
+  const margin = view.ox > 0.5 || view.oy > 0.5;
+  const back = margin && (typeof mapLayerCache !== 'undefined' && mapLayerCache.key.startsWith(MAP_ID + '|') ? mapLayerCache.c : ready(mapImg) && mapImg);
+  // v156: nền vẽ tay + đường đi theo chủ đề + cổng dựng sẵn một lần vào canvas tĩnh; mỗi khung chỉ vẽ gợn nước / dấu chân
+  const layer = bg && typeof mapLayer === 'function' && !map
+    && mapLayer(MAP_ID, bg.img, mapImg, Math.round(CONFIG.W * px()), Math.round(CONFIG.H * px()));
+  // thành Phong Châu vẽ tay (khi bản đồ chưa có ảnh riêng) — v163: chỉ ở chương Sơn Tinh – Thủy Tinh
+  const castle = !map && chapterOf(game.level).id === 'sontinh' && (assetAny(['ban-do_phong-chau.png', 'tiles/castle-phong-chau.png']) || {}).img;
+  return { nen, bg, margin, back, layer, castle };
+}
+function drawBackdrop(c, s, shake) {
   // phần màn hình ngoài bản đồ: ảnh bản đồ phóng phủ kín, tối đi (chỉ khi có lề)
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
-  if (view.ox > 0.5 || view.oy > 0.5) {
-    ctx.fillStyle = '#1E2A16';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    const back = typeof mapLayerCache !== 'undefined' && mapLayerCache.key.startsWith(MAP_ID + '|') ? mapLayerCache.c : ready(mapImg) && mapImg;
-    if (back) {
+  c.setTransform(1, 0, 0, 1, 0, 0);
+  if (s.margin) {
+    c.fillStyle = '#1E2A16';
+    c.fillRect(0, 0, canvas.width, canvas.height);
+    if (s.back) {
       const cs = Math.max(canvas.width / CONFIG.W, canvas.height / CONFIG.H);
-      ctx.globalAlpha = 0.45;
-      ctx.drawImage(back, (canvas.width - CONFIG.W * cs) / 2, (canvas.height - CONFIG.H * cs) / 2, CONFIG.W * cs, CONFIG.H * cs);
-      ctx.globalAlpha = 1;
+      c.globalAlpha = 0.45;
+      c.drawImage(s.back, (canvas.width - CONFIG.W * cs) / 2, (canvas.height - CONFIG.H * cs) / 2, CONFIG.W * cs, CONFIG.H * cs);
+      c.globalAlpha = 1;
     }
   }
-  ctx.setTransform(px(), 0, 0, px(), view.ox * px(), view.oy * px());
-  if (game.shake > 0.2) ctx.translate((Math.random() - 0.5) * game.shake, (Math.random() - 0.5) * game.shake);
-  // v163: ảnh nền nen_ai-*.png là bản đồ sông Đà (chương Sơn Tinh – Thủy Tinh) — không dùng cho ải chương khác
-  const nen = !asset(`maps/map-0${game.level + 1}.png`) && NEN_AI[game.level] && asset(`nen_ai-${NEN_AI[game.level]}.png`);
-  const bg = !nen && mapBg();
-  // v156: nền vẽ tay + đường đi theo chủ đề + cổng dựng sẵn một lần vào canvas tĩnh; mỗi khung chỉ vẽ gợn nước / dấu chân
-  const layer = bg && typeof mapLayer === 'function' && !asset(`maps/map-0${game.level + 1}.png`)
-    && mapLayer(MAP_ID, bg.img, mapImg, Math.round(CONFIG.W * px()), Math.round(CONFIG.H * px()));
-  if (layer) { ctx.drawImage(layer, 0, 0, CONFIG.W, CONFIG.H); drawPathFx(ctx, MAP_ID, t); }
+  c.setTransform(px(), 0, 0, px(), view.ox * px(), view.oy * px());
+  if (shake) c.translate((Math.random() - 0.5) * game.shake, (Math.random() - 0.5) * game.shake);
+  if (s.layer) c.drawImage(s.layer, 0, 0, CONFIG.W, CONFIG.H);
   else {
-    if (bg) { if (bg.img) ctx.drawImage(bg.img, 0, 0, CONFIG.W, CONFIG.H); else { ctx.fillStyle = MAP_THEMES[bg.theme].ground; ctx.fillRect(0, 0, CONFIG.W, CONFIG.H); } }
-    if (nen) drawAiMap(nen);
-    else if (ready(mapImg)) ctx.drawImage(mapImg, 0, 0, CONFIG.W, CONFIG.H);
-    else drawMapFallback(ctx);
+    if (s.bg) { if (s.bg.img) c.drawImage(s.bg.img, 0, 0, CONFIG.W, CONFIG.H); else { c.fillStyle = MAP_THEMES[s.bg.theme].ground; c.fillRect(0, 0, CONFIG.W, CONFIG.H); } }
+    if (s.nen) drawAiMap(s.nen, c);
+    else if (ready(mapImg)) c.drawImage(mapImg, 0, 0, CONFIG.W, CONFIG.H);
+    else drawMapFallback(c);
   }
-  // thành Phong Châu vẽ tay (khi bản đồ chưa có ảnh riêng) — v163: chỉ ở chương Sơn Tinh – Thủy Tinh
-  const castle = !asset(`maps/map-0${game.level + 1}.png`) && chapterOf(game.level).id === 'sontinh' && (assetAny(['ban-do_phong-chau.png', 'tiles/castle-phong-chau.png']) || {}).img;
-  if (castle) ctx.drawImage(castle, 838 * DK, 70 * DK, 110 * DK, 150 * DK);
+  if (s.castle) c.drawImage(s.castle, 838 * DK, 70 * DK, 110 * DK, 150 * DK);
+}
+const bgCache = { c: null, key: '', refs: [], builds: 0 };
+function cachedBackdrop(s) {
+  if (!s.layer && !s.nen && !ready(mapImg)) return null;          // ảnh nền chưa tải xong: vẽ trực tiếp
+  const refs = [s.layer, s.bg && s.bg.img, s.nen, s.castle, s.back, s.layer ? null : mapImg];
+  const key = `${canvas.width}x${canvas.height}|${view.ox}|${view.oy}|${px()}|${MAP_ID}|${game.level}`;
+  if (bgCache.key !== key || refs.some((r, i) => r !== bgCache.refs[i])) {
+    const c = bgCache.c || (bgCache.c = document.createElement('canvas'));
+    c.width = canvas.width; c.height = canvas.height;
+    drawBackdrop(c.getContext('2d'), s, false);
+    bgCache.key = key; bgCache.refs = refs; bgCache.builds++;
+  }
+  return bgCache.c;
+}
+
+function render() {
+  const t = performance.now() / 1000;
+  const s = backdropSrc(), shake = game.shake > 0.2;
+  const cached = !shake && cachedBackdrop(s);
+  if (cached) {
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.drawImage(cached, 0, 0);
+    ctx.setTransform(px(), 0, 0, px(), view.ox * px(), view.oy * px());
+  } else drawBackdrop(ctx, s, shake);
+  if (s.layer) drawPathFx(ctx, MAP_ID, t);
   drawWaterLevel(ctx, game.water, t);
   drawZones(t);
   drawBlocks(t);
