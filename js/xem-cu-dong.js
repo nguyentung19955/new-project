@@ -15,11 +15,11 @@
   const cells = [];
   let id = 1;
   for (const k of Object.keys(HEROES)) {
-    if (!pick(k) || !hasAsset(`${k}.png`) || CD_SKIP.has(k)) continue;   // chỉ ảnh dựng xương mới (assets/<mã>.png) đạt; mã trong CD_SKIP chờ gen lại
+    if (!cdBat() || !pick(k) || !hasAsset(`${k}.png`) || CD_SKIP.has(k)) continue;   // chỉ ảnh dựng xương mới (assets/<mã>.png) đạt; mã trong CD_SKIP chờ gen lại
     cells.push({ kind: 'hero', type: k, name: HEROES[k].name, h: { type: k, id: id++, tier: 1, equip: {}, level: 1 } });
   }
   for (const k of Object.keys(ENEMIES)) {
-    if (!pick(k) || !hasAsset(`${k}.png`) || CD_SKIP.has(k)) continue;
+    if (!cdBat() || !pick(k) || !hasAsset(`${k}.png`) || CD_SKIP.has(k)) continue;
     const d = ENEMIES[k];
     cells.push({ kind: d.boss ? 'boss' : 'enemy', type: k, name: d.name, e: { type: k, id: id++, def: d, x: 0, y: 0, dir: 1, hp: d.hp, maxHp: d.hp, el: d.el || null } });
   }

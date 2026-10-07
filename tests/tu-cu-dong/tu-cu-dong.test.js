@@ -240,7 +240,7 @@ s.save(out+'-khung.png')
     await page.close();
   }
   const tool = fs.readFileSync(path.join(ROOT, 'tools/xem-cu-dong.html'), 'utf8');
-  ok(/index\.html\?xem-cu-dong/.test(tool), 'tools/xem-cu-dong.html mở được trang thử');
+  ok(/index\.html\?anhmoi=1&amp;xem-cu-dong/.test(tool), 'tools/xem-cu-dong.html mở được trang thử (kèm ?anhmoi=1 bật tạm ảnh mới)');
 
   // ---------- 0. công tắc CD_BAT tắt (mặc định): không dùng ảnh mới nào, mọi nhân vật vẽ hình cũ
   console.log('Công tắc tắt:');
@@ -257,6 +257,14 @@ s.save(out+'-khung.png')
     });
     ok(!r.bat && r.coAnh >= 80 && r.solo.length === 0, `tắt: ${r.coAnh} mã có ảnh mới nhưng không mã nào dùng ảnh đơn (${r.solo.join(' ')})`);
     ok(r.rig === null, 'tắt: cdBuildRig trả null');
+    // trang thử không có ?anhmoi=1 cũng tắt; ?anhmoi=1 bật tạm (không lưu)
+    for (const [q, mong] of [['?xem-cu-dong&ma=lactuong,kybinh', 0], ['?anhmoi=1&xem-cu-dong&ma=lactuong,kybinh', 2]]) {
+      const pg = await open(browser, 844, 390, q, false);
+      await pg.waitForFunction(() => window.XEM, null, { timeout: 15000 });
+      const t = await pg.evaluate(() => ({ n: XEM.cells.length, bat: cdBat(), luu: JSON.stringify(localStorage).includes('anhmoi') }));
+      ok(t.n === mong && t.bat === (mong > 0) && !t.luu, `${q}: ${t.n} nhân vật, ảnh mới ${t.bat ? 'bật tạm' : 'tắt'}, không lưu`);
+      await pg.close();
+    }
     await enter(page);
     await page.evaluate(() => { const g = ui.game; g.gold = 99999; for (let i = 0; i < 8; i++) g.summonRandom(); g.running = true; g.speed = 3; g.startWave(); });
     await sleep(3000);

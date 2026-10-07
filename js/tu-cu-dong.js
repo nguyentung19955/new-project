@@ -11,8 +11,9 @@
 // true  = BẬT lại hệ tự cử động + ảnh mới → đổi thành true khi đã đủ 90 ảnh mới.
 // Mọi chỗ dùng ảnh mới phải hỏi cdBat() (hoặc cdSoloImg / cdBuildRig vốn đã hỏi) — nhánh khác gộp vào cứ dựa vào cùng công tắc này.
 const CD_BAT = false;
-// ép bật để thử / test khi công tắc đang tắt: window.CD_BAT_EP = true (page.addInitScript) hoặc ?cd=1 · trang thử ?xem-cu-dong · ?solo=1
-const CD_ON = CD_BAT || (() => { try { return !!window.CD_BAT_EP || /[?&](cd=1|xem-cu-dong|solo=1)\b/.test(location.search); } catch (e) { return false; } })();
+// bật TẠM để thử khi công tắc đang tắt (không lưu, không có nút cho người chơi): ?anhmoi=1 trên URL · test: window.CD_BAT_EP = true (page.addInitScript)
+// tắt thì cả trang thử ?xem-cu-dong / ?solo=1 cũng không dùng ảnh mới — thêm &anhmoi=1
+const CD_ON = CD_BAT || (() => { try { return !!window.CD_BAT_EP || /[?&]anhmoi=1\b/.test(location.search); } catch (e) { return false; } })();
 const cdBat = () => CD_ON;
 const CD = { force: false, stats: { hero: 0, enemy: 0 }, seen: new Set() };   // seen: mã đã vẽ bằng ảnh đơn (test)
 try { if (/[?&]solo=1\b/.test(location.search)) CD.force = true; } catch (e) { /* không có location */ }
