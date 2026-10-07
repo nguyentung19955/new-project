@@ -5,7 +5,8 @@
   python cat_anh.py [thư mục ảnh] [thư mục ra]
         mặc định đọc  D:\\ảnh game   ghi ra  <thư mục ảnh>\\da-cat\\  (cùng cấu trúc assets/ của game)
         + da-cat\\bao-cao.html (xem trước từng khung, báo ảnh lỗi) + da-cat.zip (gửi cho Claude)
-  python cat_anh.py --ghep <da-cat.zip | thư mục da-cat>      (chạy trong repo game)
+  python cat_anh.py [thư mục ảnh] [thư mục ra] --toi-da 20     mỗi zip tối đa 20 MB (quá thì chia -phan-1, -phan-2…)
+  python cat_anh.py --ghep <da-cat.zip …| thư mục da-cat>     (chạy trong repo game; nhận nhiều phần một lần)
         chép assets/ vào game và ghi số khung vào PACK_FRAMES (js/render.js)
 
 Tự nhận loại ảnh theo tên file (thaymo.png → tướng 4×3, trieuda.png → boss 3×3, trung-kim.png → dải hiệu ứng,
@@ -40,6 +41,8 @@ if __name__ == '__main__': can_thu_vien()
 import numpy as np
 from PIL import Image, ImageFilter
 from scipy import ndimage
+
+Image.MAX_IMAGE_PIXELS = 400_000_000   # ảnh AI gốc rất to (vài nghìn px) vẫn mở được
 
 MAC_DINH_VAO = 'D:\\ảnh game'
 
@@ -596,12 +599,26 @@ def cat_mot(path, key):
     return ket
 
 
+def save_png(im, path):
+    """PNG không mất gì: ảnh ≤ 256 màu → bảng màu (điểm ảnh giữ y nguyên, file nhỏ hơn nhiều); còn lại như cat-fx.py."""
+    a = np.asarray(im.convert('RGBA'))
+    flat = a.reshape(-1, 4).copy(); flat[flat[:, 3] == 0] = 0
+    cols, idx = np.unique(flat.view(np.uint32).ravel(), return_inverse=True)
+    if len(cols) <= 256:                                   # (điểm trong suốt hẳn coi như một màu)
+        pal = cols.view(np.uint8).reshape(-1, 4)
+        p = Image.fromarray(idx.reshape(a.shape[:2]).astype(np.uint8), 'P')
+        p.putpalette(pal[:, :3].ravel().tolist())
+        p.save(path, optimize=True, transparency=bytes(pal[:, 3].tolist()))
+    else:
+        im.save(path, optimize=True)
+
+
 def luu(ket, out_assets):
     for rel, (how, im) in ket.files.items():
         p = os.path.join(out_assets, *rel.split('/'))
         os.makedirs(os.path.dirname(p), exist_ok=True)
         if how == 'light': save_light(im, p)
-        else: im.save(p, optimize=True)
+        else: save_png(im, p)
     for rel, src in ket.alias.items():
         shutil.copyfile(os.path.join(out_assets, *src.split('/')), os.path.join(out_assets, *rel.split('/')))
     for rel in ket.marks:
@@ -612,7 +629,7 @@ def luu(ket, out_assets):
 ANH = re.compile(r'\.(png|jpe?g|webp|gif|bmp)$', re.I)
 
 
-def chay(vao, ra):
+def chay(vao, ra, toi_da=20 * 1048576):
     vao, ra = os.path.abspath(vao), os.path.abspath(ra)
     files = []
     for d, sub, fs in os.walk(vao):
@@ -639,20 +656,73 @@ def chay(vao, ra):
         except Exception as e:
             row['err'].append(f'lỗi khi cắt: {e}'); print('✗', rel, e); continue
         luu(ket, out_assets)
-        row.update(kind=ket.kind, files=sorted(list(ket.files) + list(ket.alias) + ket.marks), anim=ket.anim)
+        row.update(kind=ket.kind, files=sorted(list(ket.files) + list(ket.alias) + ket.marks), anim=ket.anim, alias=dict(ket.alias), frames=ket.frames or {})
         row['warn'] += ket.warn; row['err'] += ket.err
         if ket.frames: frames.update(ket.frames)
         print('✓' if not ket.err else '!', rel, '→', key, f'({ket.kind}, {len(ket.files)} ảnh)', *(['· ' + x for x in ket.warn + ket.err]))
+        del ket                                             # giải phóng ảnh ngay, ảnh sau mới mở
     json.dump(frames, open(os.path.join(ra, 'pack-frames.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+    aliases = {a: src for r in rows for a, src in r.get('alias', {}).items()}
+    json.dump(aliases, open(os.path.join(ra, 'alias.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     bao_cao(rows, ra)
-    zp = ra.rstrip('\\/') + '.zip'
-    with zipfile.ZipFile(zp, 'w', zipfile.ZIP_DEFLATED) as z:
-        for d, _, fs in os.walk(ra):
-            for x in fs: z.write(os.path.join(d, x), os.path.relpath(os.path.join(d, x), ra).replace(os.sep, '/'))
+    zps = dong_zip(rows, ra, frames, toi_da)
     ok = sum(1 for r in rows if not r['err']); bad = len(rows) - ok
     print(f'\nXong: {ok} ảnh tốt, {bad} ảnh cần xem lại.')
-    print('Kết quả:', ra, '\nBáo cáo:', os.path.join(ra, 'bao-cao.html'), '\nGửi Claude file:', zp)
+    print('Kết quả:', ra, '\nBáo cáo:', os.path.join(ra, 'bao-cao.html'))
+    tong = sum(os.path.getsize(z) for z in zps)
+    print(f'Gửi Claude {"file" if len(zps) == 1 else str(len(zps)) + " file"} (tổng {mb(tong)}):')
+    for z in zps: print('   ', z, mb(os.path.getsize(z)))
     return rows
+
+
+def mb(n):
+    return f'{n / 1048576:.1f} MB' if n >= 104858 else f'{n / 1024:.0f} KB'
+
+
+def bao_cao_txt(rows):
+    out = []
+    for r in rows:
+        x = f"{r['file']} → {r.get('key') or '?'}" + (f" ({r['kind']})" if r.get('kind') else '')
+        if r['err']: x += ' · LỖI: ' + '; '.join(r['err'])
+        if r['warn']: x += ' · ' + '; '.join(r['warn'])
+        out.append(x)
+    return '\r\n'.join(out) + '\r\n'
+
+
+def dong_zip(rows, ra, frames, toi_da):
+    """Đóng zip để gửi: chỉ ảnh thật (tên cũ chép từ khung đại diện ghi trong alias.json, --ghep tự tạo lại).
+    Quá toi_da byte → chia da-cat-phan-1.zip, -phan-2.zip… (mỗi ảnh gốc nằm trọn trong một phần)."""
+    base = ra.rstrip('\\/')
+    d0 = os.path.dirname(base) or '.'
+    for x in os.listdir(d0):                                # xoá zip lần chạy trước
+        if re.fullmatch(re.escape(os.path.basename(base)) + r'(-phan-\d+)?\.zip', x): os.remove(os.path.join(d0, x))
+    last = {}
+    for r in rows:
+        if r.get('kind'): last[r['key']] = r
+    groups = []
+    for r in last.values():
+        fs = [f for f in r['files'] if f not in r.get('alias', {})]
+        size = sum(os.path.getsize(os.path.join(ra, 'assets', *f.split('/'))) for f in fs)
+        groups.append((r, fs, size))
+    parts, cur, cs = [], [], 0
+    for g in groups:
+        if cur and cs + g[2] > toi_da: parts.append(cur); cur, cs = [], 0
+        cur.append(g); cs += g[2]
+    parts.append(cur)
+    out = []
+    for i, part in enumerate(parts):
+        zp = base + ('.zip' if len(parts) == 1 else f'-phan-{i + 1}.zip')
+        with zipfile.ZipFile(zp, 'w', zipfile.ZIP_STORED) as z:
+            codes, al = set(), {}
+            for r, fs, _ in part:
+                for f in fs: z.write(os.path.join(ra, 'assets', *f.split('/')), 'assets/' + f)
+                al.update(r.get('alias', {}))
+                codes |= set(r.get('frames', {}))
+            z.writestr('pack-frames.json', json.dumps({k: frames[k] for k in frames if k in codes}, ensure_ascii=False, indent=1), zipfile.ZIP_DEFLATED)
+            z.writestr('alias.json', json.dumps(al, ensure_ascii=False, indent=1), zipfile.ZIP_DEFLATED)
+            if i == 0: z.writestr('bao-cao.txt', bao_cao_txt(rows), zipfile.ZIP_DEFLATED)
+        out.append(zp)
+    return out
 
 
 def bao_cao(rows, ra):
@@ -678,38 +748,46 @@ img.anim{{height:150px;background:repeating-conic-gradient(#ddd 0 25%,#fff 0 50%
 
 
 # ───────────── ghép kết quả vào repo game ─────────────
-def ghep(src):
+def ghep(srcs):
+    """Chép da-cat.zip (hoặc các phần -phan-N.zip, hoặc thư mục da-cat) vào assets/ của repo, tạo lại tên cũ
+    từ alias.json và ghi số khung vào PACK_FRAMES trong js/render.js."""
     root = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
     render = os.environ.get('CAT_SHEET_RENDER') or os.path.join(root, 'js', 'render.js')
     assets = os.environ.get('CAT_ANH_ASSETS') or os.path.join(root, 'assets')
-    if zipfile.is_zipfile(src):
-        z = zipfile.ZipFile(src)
-        names = [n for n in z.namelist() if n.startswith('assets/') and not n.endswith('/')]
-        for n in names:
-            p = os.path.join(assets, *n.split('/')[1:]); os.makedirs(os.path.dirname(p), exist_ok=True)
-            open(p, 'wb').write(z.read(n))
-        frames = json.loads(z.read('pack-frames.json')) if 'pack-frames.json' in z.namelist() else {}
-    else:
-        names = []
-        for d, _, fs in os.walk(os.path.join(src, 'assets')):
-            for x in fs:
-                rel = os.path.relpath(os.path.join(d, x), os.path.join(src, 'assets'))
-                p = os.path.join(assets, rel); os.makedirs(os.path.dirname(p), exist_ok=True)
-                shutil.copyfile(os.path.join(d, x), p); names.append(rel)
-        pf = os.path.join(src, 'pack-frames.json')
-        frames = json.load(open(pf, encoding='utf-8')) if os.path.exists(pf) else {}
+    n, frames, alias = 0, {}, {}
+    for src in srcs:
+        if zipfile.is_zipfile(src):
+            z = zipfile.ZipFile(src)
+            for name in z.namelist():
+                if name.startswith('assets/') and not name.endswith('/'):
+                    p = os.path.join(assets, *name.split('/')[1:]); os.makedirs(os.path.dirname(p), exist_ok=True)
+                    open(p, 'wb').write(z.read(name)); n += 1
+            rd = lambda f: json.loads(z.read(f)) if f in z.namelist() else {}
+        else:
+            for d, _, fs in os.walk(os.path.join(src, 'assets')):
+                for x in fs:
+                    rel = os.path.relpath(os.path.join(d, x), os.path.join(src, 'assets'))
+                    p = os.path.join(assets, rel); os.makedirs(os.path.dirname(p), exist_ok=True)
+                    shutil.copyfile(os.path.join(d, x), p); n += 1
+            rd = lambda f: json.load(open(os.path.join(src, f), encoding='utf-8')) if os.path.exists(os.path.join(src, f)) else {}
+        frames.update(rd('pack-frames.json')); alias.update(rd('alias.json'))
+    for a, b in alias.items():
+        shutil.copyfile(os.path.join(assets, *b.split('/')), os.path.join(assets, *a.split('/')))
     if frames:
         s = open(render, encoding='utf8').read()
         m = re.search(r'^const PACK_FRAMES = (\{.*\});', s, re.M)
         data = json.loads(m.group(1)); data.update(frames)
         line = 'const PACK_FRAMES = ' + json.dumps(dict(sorted(data.items())), separators=(',', ':'), ensure_ascii=False) + ';'
         open(render, 'w', encoding='utf8').write(s[:m.start()] + line + s[m.end():])
-    print(f'Đã chép {len(names)} file vào {assets}; PACK_FRAMES +{len(frames)} mã. Nhớ tăng phiên bản game (CLAUDE.md).')
+    print(f'Đã chép {n} file (+{len(alias)} tên cũ) vào {assets}; PACK_FRAMES +{len(frames)} mã. Nhớ tăng phiên bản game (CLAUDE.md).')
 
 
 def main(argv):
     if argv and argv[0] == '--ghep':
-        return ghep(argv[1])
+        return ghep(argv[1:])
+    toi_da = 20 * 1048576
+    if '--toi-da' in argv:                                  # --toi-da <MB>: cỡ tối đa mỗi file zip
+        i = argv.index('--toi-da'); toi_da = int(float(argv[i + 1]) * 1048576); argv = argv[:i] + argv[i + 2:]
     vao = argv[0] if argv else MAC_DINH_VAO
     if not os.path.isdir(vao):
         print(f'Không thấy thư mục "{vao}".')
@@ -720,7 +798,7 @@ def main(argv):
         if not os.path.isdir(vao): print('Vẫn không thấy thư mục.'); return
     ra = argv[1] if len(argv) > 1 else os.path.join(vao, 'da-cat')
     print('Đọc ảnh trong:', vao); print('Ghi ra:', ra, '\n')
-    chay(vao, ra)
+    chay(vao, ra, toi_da)
 
 
 if __name__ == '__main__':

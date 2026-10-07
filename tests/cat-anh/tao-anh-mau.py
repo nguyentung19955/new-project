@@ -42,6 +42,8 @@ h2 = tam(4, 3, 256, (150, 70, 30), head=3); h2.save(vao + '/Dotnuong (1).PNG'); 
 # 3. tướng lệch lề + sai cỡ: lưới đúng dán lệch vào nền 860×700, đuôi .png.png
 h3 = tam(4, 3, 192, (40, 90, 150), head=3); h3.save(chuan + '/denroi.png')
 c3 = Image.new('RGB', (860, 700), MG); c3.paste(h3, (57, 83)); c3.save(vao + '/denroi.png.png')
+# 3b. ảnh gốc rất to (AI xuất 3072×2304, ~4 lần cỡ yêu cầu)
+h4 = tam(4, 3, 768, (110, 60, 120), head=3); h4.save(vao + '/thoren.png'); h4.save(chuan + '/thoren.png')
 # 4. quái 3×2, boss 3×3
 e = tam(3, 2, 192, (120, 140, 30)); e.save(vao + '/tom.png'); e.save(chuan + '/tom.png')
 b = tam(3, 3, 256, (150, 40, 40)); b.save(vao + '/Hổ Vương Triệu Đà.png'); b.save(chuan + '/trieuda.png')

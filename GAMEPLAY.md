@@ -1670,3 +1670,10 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Danh sách tên file → cách cắt sinh từ dữ liệu game + lệnh cắt trong file prompt: `node tools/build-cat-anh.js` (chạy lại khi thêm tướng / quái / hiệu ứng).
 - Hướng dẫn 3–5 bước: `docs/HUONG-DAN-CAT-ANH.md`.
 - Test: `node tests/cat-anh/cat-anh.test.js` (ảnh mẫu tự sinh: bản Python trùng từng điểm ảnh với tools cũ, kể cả tướng lệch lề 860×700; bản HTML trong Chromium cùng bộ file, cùng cỡ, màu lệch < 1/255 do bảng 256 màu).
+
+## Phiên bản 177 — Tool cắt ảnh: ảnh gốc rất to, zip nhỏ để gửi lên chat
+- Ảnh gốc quá lớn để gửi lên chat → tool chạy hoàn toàn trên máy, xử lý tuần tự từng ảnh: bản HTML giải mã bằng `createImageBitmap` + `OffscreenCanvas`, cắt, nén PNG ngay rồi bỏ ảnh gốc khỏi bộ nhớ (chỉ giữ ảnh xem trước nhỏ); bản Python mở ảnh tới 400 triệu điểm, giải phóng sau mỗi ảnh. Test có ảnh gốc 3072×2304: vẫn trùng từng điểm ảnh với `tools/cat-sheet.py`.
+- Kết quả đã thu về cỡ game dùng; ảnh hiệu ứng / đạn ≤ 256 màu lưu PNG bảng màu (không mất điểm ảnh nào), PNG bản HTML lọc hàng thích ứng (Paeth…) → zip bản HTML ~bằng bản Python.
+- Zip chỉ chứa ảnh thật: các tên cũ (`idle`, `front`, `wind`, `walk1`… = bản sao khung đại diện) ghi trong `alias.json`, `--ghep` tạo lại. In dung lượng zip; quá 20 MB (`--toi-da <MB>`) tự chia `da-cat-phan-1.zip`, `-phan-2.zip`… (mỗi tấm nằm trọn một phần, mỗi phần có `pack-frames.json` + `alias.json` của nó). Trang HTML hiện một nút tải cho mỗi phần kèm dung lượng.
+- `python3 tools/cat_anh.py --ghep <phần 1> <phần 2> …` nhận nhiều zip / thư mục một lần.
+- Hướng dẫn cập nhật: `docs/HUONG-DAN-CAT-ANH.md`. Test: `node tests/cat-anh/cat-anh.test.js`.

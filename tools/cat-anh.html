@@ -23,6 +23,7 @@ h1{font-size:22px;margin:4px 0 2px}
 .nut:disabled{opacity:.45;cursor:default}
 #tong{position:sticky;top:0;z-index:2;background:var(--bg);padding:10px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--line)}
 #tong .dem{flex:1;min-width:200px}
+#tai{display:flex;gap:4px 8px;flex-wrap:wrap;align-items:center}#tai .nut{margin:0}
 .the{background:var(--card);border-radius:10px;margin:10px 0;padding:10px 12px;border-left:6px solid var(--line)}
 .the.tot{border-color:var(--ok)}.the.canh{border-color:var(--warn)}.the.loi{border-color:var(--bad)}
 .dau{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
@@ -55,7 +56,7 @@ canvas.chay{max-height:160px;max-width:100%;height:auto}
 </div>
 <div id="tong" hidden>
   <span class="dem" id="dem"></span>
-  <button class="nut" id="tai" type="button" disabled>Tải da-cat.zip</button>
+  <span id="tai"></span>
   <button class="nut phu" id="xoa" type="button">Làm lại</button>
 </div>
 <div id="ds"></div>
@@ -661,7 +662,7 @@ function chunk(type, data) {
   o.set(data, 8); v.setUint32(8 + data.length, (crc32(o.subarray(4, 8 + data.length)) ^ 0xffffffff) >>> 0);
   return o;
 }
-function quantize(im) {                       // ≤256 màu: bảng đúng; nhiều hơn: median cut trên RGBA
+function quantize(im, lossless) {             // ≤256 màu: bảng đúng; nhiều hơn: median cut trên RGBA (lossless → null)
   const N = im.w * im.h, key = new Uint32Array(N), map = new Map();
   for (let i = 0; i < N; i++) {
     const a = im.d[i * 4 + 3], k = a === 0 ? 0 : ((im.d[i * 4] << 24) | (im.d[i * 4 + 1] << 16) | (im.d[i * 4 + 2] << 8) | a) >>> 0;
@@ -669,6 +670,7 @@ function quantize(im) {                       // ≤256 màu: bảng đúng; nhi
   }
   let pal = [...map.keys()];
   const unpack = (k) => [k >>> 24, (k >>> 16) & 255, (k >>> 8) & 255, k & 255];
+  if (pal.length > 256 && lossless) return null;
   if (pal.length > 256) {
     let boxes = [pal.map(unpack).map((c, i) => [...c, map.get(pal[i])])];
     while (boxes.length < 256) {
@@ -693,23 +695,45 @@ function quantize(im) {                       // ≤256 màu: bảng đúng; nhi
   for (let i = 0; i < N; i++) idx[i] = pos.get(key[i]);
   return { pal: pal.map(unpack), idx };
 }
-async function encodePNG(im, light) {
+function filterRows(px, w, h, bpp) {          // lọc PNG thích ứng từng hàng (chọn lọc có tổng |byte| nhỏ nhất)
+  const stride = w * bpp, out = new Uint8Array((stride + 1) * h), cand = Array.from({ length: 5 }, () => new Uint8Array(stride));
+  const paeth = (a, b, c) => { const p = a + b - c, pa = Math.abs(p - a), pb = Math.abs(p - b), pc = Math.abs(p - c); return pa <= pb && pa <= pc ? a : pb <= pc ? b : c; };
+  for (let y = 0; y < h; y++) {
+    const r = y * stride, u = (y - 1) * stride; let best = 0, bs = Infinity;
+    for (let f = 0; f < 5; f++) {
+      const c = cand[f]; let sum = 0;
+      for (let i = 0; i < stride; i++) {
+        const x = px[r + i], a = i >= bpp ? px[r + i - bpp] : 0, b = y ? px[u + i] : 0, cc = y && i >= bpp ? px[u + i - bpp] : 0;
+        const v = (f === 0 ? x : f === 1 ? x - a : f === 2 ? x - b : f === 3 ? x - ((a + b) >> 1) : x - paeth(a, b, cc)) & 255;
+        c[i] = v; sum += v < 128 ? v : 256 - v;
+        if (sum >= bs) break;
+      }
+      if (sum < bs) { bs = sum; best = f; }
+    }
+    if (best !== 4) { const c = cand[best]; for (let i = 0; i < stride; i++) { const x = px[r + i], a = i >= bpp ? px[r + i - bpp] : 0, b = y ? px[u + i] : 0; c[i] = (best === 0 ? x : best === 1 ? x - a : best === 2 ? x - b : x - ((a + b) >> 1)) & 255; } }
+    else { const c = cand[4]; for (let i = 0; i < stride; i++) { const x = px[r + i], a = i >= bpp ? px[r + i - bpp] : 0, b = y ? px[u + i] : 0, cc = y && i >= bpp ? px[u + i - bpp] : 0; c[i] = (x - paeth(a, b, cc)) & 255; } }
+    out[y * (stride + 1)] = best; out.set(cand[best], y * (stride + 1) + 1);
+  }
+  return out;
+}
+async function encodePNG(im, light) {         // light: bảng 256 màu như save_light; còn lại: bảng màu nếu ≤256 màu (không mất gì), không thì RGBA / LA
   const { w, h } = im, head = new Uint8Array(13), v = new DataView(head.buffer);
   v.setUint32(0, w); v.setUint32(4, h); head[8] = 8;
   let raw, extra = [];
-  if (light) {
-    const { pal, idx } = quantize(im); head[9] = 3;
+  const q = quantize(im, !light);
+  if (q) {
+    const { pal, idx } = q; head[9] = 3;
     const plte = new Uint8Array(pal.length * 3), trns = new Uint8Array(pal.length);
     pal.forEach((p, i) => { plte[i * 3] = p[0]; plte[i * 3 + 1] = p[1]; plte[i * 3 + 2] = p[2]; trns[i] = p[3]; });
     extra = [chunk('PLTE', plte), chunk('tRNS', trns)];
     raw = new Uint8Array((w + 1) * h); for (let y = 0; y < h; y++) raw.set(idx.subarray(y * w, y * w + w), y * (w + 1) + 1);
   } else {
     const ch = im.c === 2 ? 2 : 4; head[9] = ch === 2 ? 4 : 6;
-    raw = new Uint8Array((w * ch + 1) * h);
-    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
-      const s = (y * w + x) * 4, t = y * (w * ch + 1) + 1 + x * ch;
-      if (ch === 2) { raw[t] = im.d[s]; raw[t + 1] = im.d[s + 3]; } else for (let k = 0; k < 4; k++) raw[t + k] = im.d[s + k];
+    const px = new Uint8Array(w * h * ch);
+    for (let i = 0; i < w * h; i++) {
+      if (ch === 2) { px[i * 2] = im.d[i * 4]; px[i * 2 + 1] = im.d[i * 4 + 3]; } else for (let k = 0; k < 4; k++) px[i * 4 + k] = im.d[i * 4 + 3] ? im.d[i * 4 + k] : 0;
     }
+    raw = filterRows(px, w, h, ch);
   }
   const parts = [new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10]), chunk('IHDR', head), ...extra, chunk('IDAT', await zlib(raw)), chunk('IEND', new Uint8Array(0))];
   const out = new Uint8Array(parts.reduce((s, p) => s + p.length, 0)); let o = 0; for (const p of parts) { out.set(p, o); o += p.length; }
@@ -740,12 +764,15 @@ const dl = $('dl');
 for (const [k, v] of Object.entries(DANH_SACH)) { const o = document.createElement('option'); o.value = k; o.label = v[2]; dl.appendChild(o); }
 
 async function decode(file) {
-  const bm = await createImageBitmap(file, { colorSpaceConversion: 'none', premultiplyAlpha: 'none' });
+  const bm = await createImageBitmap(file, { colorSpaceConversion: 'none', premultiplyAlpha: 'none' }), W = bm.width, H = bm.height;
   const cv = new OffscreenCanvas(bm.width, bm.height), g = cv.getContext('2d', { willReadFrequently: true, colorSpace: 'srgb' });
   g.drawImage(bm, 0, 0);
   const d = g.getImageData(0, 0, bm.width, bm.height).data;
   let trans = false; for (let i = 3; i < d.length; i += 4) if (d[i] < 255) { trans = true; break; }
-  return { w: bm.width, h: bm.height, c: 4, d: new Uint8ClampedArray(d), trans };
+  const th = document.createElement('canvas'); th.height = Math.min(90, bm.height); th.width = Math.max(1, Math.round(bm.width * th.height / bm.height));
+  th.className = 'goc'; th.getContext('2d').drawImage(bm, 0, 0, th.width, th.height);
+  bm.close();
+  return { w: W, h: H, c: 4, d, trans, thumb: th };
 }
 function toCanvas(im) {
   const cv = document.createElement('canvas'); cv.width = im.w; cv.height = im.h; cv.className = 'o';
@@ -770,7 +797,14 @@ async function run() {
     it.ket = null; it.err = null; status(); render(it);
     await new Promise((r) => setTimeout(r, 0));
     try {
-      if (it.key) { it.raw = it.raw || await decode(it.file); it.ket = catMot(it.raw, it.key); }
+      if (it.key) {
+        // tuần tự từng ảnh: giải mã ảnh gốc (có thể vài nghìn px), cắt, nén PNG ngay rồi bỏ ảnh gốc khỏi bộ nhớ
+        let raw = await decode(it.file); it.thumb = raw.thumb;
+        it.ket = catMot(raw, it.key); raw = null;
+        it.ket.bytes = {};
+        for (const [p, [how, im]] of Object.entries(it.ket.files)) it.ket.bytes[p] = await encodePNG(im, how === 'light');
+        it.ket.size = Object.values(it.ket.bytes).reduce((s, b) => s + b.length, 0);
+      } else if (!it.thumb) it.thumb = (await decode(it.file)).thumb;
     } catch (e) { it.err = String(e && e.message || e); console.error(e); }
     it.done = true; render(it); status();
   }
@@ -781,7 +815,7 @@ function status() {
   const bad = ITEMS.filter((i) => i.done && (!i.key || i.err || (i.ket && i.ket.err.length))).length;
   const warn = ITEMS.filter((i) => i.done && i.ket && !i.ket.err.length && (i.ket.warn.length || i.doan)).length;
   $('dem').textContent = done < n ? `Đang cắt ${done}/${n} ảnh…` : `${n} ảnh · ${n - bad - warn} tốt · ${warn} cần xem lại · ${bad} lỗi`;
-  $('tai').disabled = done < n || !ITEMS.some((i) => i.ket && Object.keys(i.ket.files).length);
+  if (done === n) nutTai(); else $('tai').innerHTML = '';
 }
 function render(it) {
   if (!it.el) { it.el = document.createElement('div'); $('ds').appendChild(it.el); }
@@ -808,7 +842,7 @@ function render(it) {
     el.appendChild(ul);
   }
   const xem = document.createElement('div'); xem.className = 'xem';
-  if (it.raw && (!k || !Object.keys(k.files).length)) { const g = toCanvas(it.raw); g.className = 'goc'; xem.appendChild(g); }
+  if (it.thumb && (!k || !Object.keys(k.files).length)) xem.appendChild(it.thumb);
   if (k && Object.keys(k.files).length) {
     const frames = k.anim.map((p) => k.files[p][1]).filter(Boolean);
     if (k.strip) { const im = Object.values(k.files)[0][1]; for (let i = 0; i < k.strip.n; i++) frames.push(crop(im, i * k.strip.hh, 0, (i + 1) * k.strip.hh, k.strip.hh)); }
@@ -828,31 +862,52 @@ function render(it) {
   }
   el.appendChild(xem);
 }
-async function zipBytes() {
-  const entries = [], frames = {}, lines = [], enc = new TextEncoder(), taken = new Set();
-  for (const it of ITEMS.slice().reverse()) {        // ảnh sau ghi đè ảnh trước cùng mã
-    const k = it.ket;
-    lines.unshift(`${it.path} → ${it.key || '?'}${k ? ` (${k.kind})` : ''}${k && k.err.length ? ' · LỖI: ' + k.err.join('; ') : ''}${k && k.warn.length ? ' · ' + k.warn.join('; ') : ''}${!it.key ? ' · không nhận ra tên file' : ''}`);
-    if (!k || taken.has(it.key)) continue;
-    taken.add(it.key);
-    const bytes = {};
-    for (const [p, [how, im]] of Object.entries(k.files)) { bytes[p] = await encodePNG(im, how === 'light'); entries.push({ name: 'assets/' + p, data: bytes[p] }); }
-    for (const [p, src] of Object.entries(k.alias)) entries.push({ name: 'assets/' + p, data: bytes[src] });
-    for (const p of k.marks) entries.push({ name: 'assets/' + p, data: new Uint8Array(0) });
-    if (k.frames) Object.assign(frames, k.frames);
+const MB = (n) => (n >= 104858 ? (n / 1048576).toFixed(1) + ' MB' : Math.round(n / 1024) + ' KB');
+let TOI_DA = 20 * 1048576;                     // mỗi zip tối đa ~20 MB để gửi lên chat; quá thì chia phần
+function zipParts() {                          // → [{name, data}]: da-cat.zip hoặc da-cat-phan-1.zip, -phan-2.zip…
+  const enc = new TextEncoder(), last = new Map();
+  for (const it of ITEMS) if (it.ket && it.key) last.set(it.key, it);        // ảnh sau cùng mã ghi đè ảnh trước
+  const lines = ITEMS.map((it) => { const k = it.ket; return `${it.path} → ${it.key || '?'}${k ? ` (${k.kind})` : ''}${k && k.err.length ? ' · LỖI: ' + k.err.join('; ') : ''}${k && k.warn.length ? ' · ' + k.warn.join('; ') : ''}${!it.key ? ' · không nhận ra tên file' : ''}`; });
+  const parts = []; let cur = [], cs = 0;
+  for (const it of last.values()) {
+    if (!Object.keys(it.ket.files).length) continue;
+    if (cur.length && cs + it.ket.size > TOI_DA) { parts.push(cur); cur = []; cs = 0; }
+    cur.push(it); cs += it.ket.size;
   }
-  entries.sort((a, b) => (a.name < b.name ? -1 : 1));
-  entries.push({ name: 'pack-frames.json', data: enc.encode(JSON.stringify(frames, null, 1)) });
-  entries.push({ name: 'bao-cao.txt', data: enc.encode(lines.join('\r\n') + '\r\n') });
-  return makeZip(entries);
+  parts.push(cur);
+  return parts.map((part, pi) => {
+    const entries = [], frames = {}, alias = {};
+    for (const it of part) {
+      const k = it.ket;
+      for (const [p, b] of Object.entries(k.bytes)) entries.push({ name: 'assets/' + p, data: b });
+      for (const p of k.marks) entries.push({ name: 'assets/' + p, data: new Uint8Array(0) });
+      Object.assign(alias, k.alias); if (k.frames) Object.assign(frames, k.frames);
+    }
+    entries.sort((a, b) => (a.name < b.name ? -1 : 1));
+    entries.push({ name: 'pack-frames.json', data: enc.encode(JSON.stringify(frames, null, 1)) });
+    entries.push({ name: 'alias.json', data: enc.encode(JSON.stringify(alias, null, 1)) });   // tên cũ (idle, walk1…) = bản sao khung đại diện; --ghep tạo lại
+    if (pi === 0) entries.push({ name: 'bao-cao.txt', data: enc.encode(lines.join('\r\n') + '\r\n') });
+    return { name: parts.length === 1 ? 'da-cat.zip' : `da-cat-phan-${pi + 1}.zip`, data: makeZip(entries) };
+  });
 }
-window.__catAnh = { zipBytes, nhanDien, ITEMS };
-$('tai').onclick = async () => {
-  $('tai').disabled = true;
-  const blob = new Blob([await zipBytes()], { type: 'application/zip' });
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'da-cat.zip'; a.click();
-  setTimeout(() => URL.revokeObjectURL(a.href), 60000); $('tai').disabled = false;
-};
+function taiVe(p) {
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([p.data], { type: 'application/zip' })); a.download = p.name; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 60000);
+}
+function nutTai() {
+  const box = $('tai'); box.innerHTML = '';
+  const n = ITEMS.length, done = ITEMS.filter((i) => i.done).length;
+  if (done < n || !ITEMS.some((i) => i.ket && Object.keys(i.ket.files).length)) return;
+  const parts = zipParts(), tong = parts.reduce((s, p) => s + p.data.length, 0);
+  const note = document.createElement('span'); note.className = 'nhan';
+  note.textContent = parts.length === 1 ? `zip ${MB(tong)}` : `tổng ${MB(tong)}, chia ${parts.length} phần (mỗi phần ≤ ${MB(TOI_DA)}) — gửi đủ các phần`;
+  for (const p of parts) {
+    const b = document.createElement('button'); b.className = 'nut'; b.type = 'button';
+    b.textContent = `Tải ${p.name} (${MB(p.data.length)})`; b.onclick = () => taiVe(p); box.appendChild(b);
+  }
+  box.appendChild(note);
+}
+window.__catAnh = { zipParts, nhanDien, ITEMS, setToiDa: (mb) => { TOI_DA = mb * 1048576; nutTai(); } };
 $('xoa').onclick = () => { ITEMS.length = 0; $('ds').innerHTML = ''; $('tong').hidden = true; };
 $('nut-thu-muc').onclick = (e) => { e.stopPropagation(); $('chon-thu-muc').click(); };
 $('nut-anh').onclick = (e) => { e.stopPropagation(); $('chon-anh').click(); };
