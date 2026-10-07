@@ -2098,3 +2098,6 @@ Sát thương lên quái đất gần như giữ nguyên (Thợ Săn 111k → 11
 3. 3 quái vẽ lai rồng: casau, doi, echme.
 
 Test: toàn bộ `node tests/run-all.js` đạt (cat-fx: thêm prompt 2 loại đạn mới). Chụp trận trước / sau `node tests/vu-khi-theo-anh/chup.js [gốc game] [thư mục ảnh] [tiền tố]` ở 1920×934, 844×390, 667×375 (đội Thợ Săn cung · Thợ Gốm vồ · Chăn Trâu gậy; đội đạn giáo / kiếm khí) + cận cảnh đạn + màn Anh Hùng — không vỡ / tràn chữ. Ghi chú: ảnh chân dung ở màn Anh Hùng là bộ ảnh cũ (packs/), Thợ Săn ở đó còn cầm giáo — không thuộc nhánh này.
+## Phiên bản 194 — 90 ảnh tĩnh mới + game tự cử động (tester đạt)
+
+- Gộp claude/tu-cu-dong + claude/tu-cu-dong-anh: 90 ảnh mới (72 dùng, 18 chờ gen lại trong CD_SKIP), rig 90 mã (67 vung tay), chân đứng yên, boss ×2, nhún lấy đà, vệt chém đúng phía.
