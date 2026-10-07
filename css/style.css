@@ -681,7 +681,12 @@ button:disabled { cursor: default; }
 .res-title { font-family: var(--title); font-size: 46px; font-weight: 800; text-align: center; line-height: 1.1; margin-top: 4px; }
 .res-title.win { color: var(--gold); text-shadow: 0 2px 0 #3A2408, 0 0 20px #F0A03088; }
 .res-title.lose { color: #E07050; text-shadow: 0 2px 0 #2A0A04; }
-.res-title.long { font-size: 34px; }   /* v163: tựa thua theo chương có câu dài (Giặc Ân chiếm làng Phù Đổng…) */
+.res-title.long { font-size: 34px; }
+/* thua chương Sơn Tinh: cổng Phong Châu ngập sóng */
+.res-flood { position: relative; display: inline-block; width: 1.5em; height: 1.25em; vertical-align: -.28em; }
+.res-flood img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: contain; filter: saturate(.75) brightness(.9); }
+.res-flood img.wv { top: auto; bottom: -.1em; width: 46%; height: 46%; filter: drop-shadow(0 1px 1px #000a); }
+.res-flood img.w2 { left: auto; right: -.04em; transform: scaleX(-1); }   /* v163: tựa thua theo chương có câu dài (Giặc Ân chiếm làng Phù Đổng…) */
 .res-stars { text-align: center; font-size: 42px; letter-spacing: 8px; color: var(--gold-hi); line-height: 1; text-shadow: 0 0 14px #FFD66B88; }
 .res-stars i { color: #4A4236; font-style: normal; text-shadow: none; }
 .res-grid { flex: 1; display: flex; gap: 10px; min-height: 0; }
