@@ -2064,3 +2064,35 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 ## Phiên bản 194 — 90 ảnh tĩnh mới + game tự cử động (tester đạt)
 
 - Gộp claude/tu-cu-dong + claude/tu-cu-dong-anh: 90 ảnh mới (72 dùng, 18 chờ gen lại trong CD_SKIP), rig 90 mã (67 vung tay), chân đứng yên, boss ×2, nhún lấy đà, vệt chém đúng phía.
+
+## claude/bo-chon-doi — Bỏ phần chọn đội (chợ tướng đã rút ngẫu nhiên)
+
+Chợ tướng đã rút từ mọi tướng Thường đã mở khoá, nên đội 6 tướng ("đội ưu tiên" ×2) không còn ý nghĩa — bỏ hẳn:
+
+- **Màn Chuẩn bị:** bỏ khối "Đội ưu tiên · 6 tướng", nút "✎ Chọn đội" và bảng chọn đội (Gợi ý / Xong, thẻ khoá). Màn vẫn giữ vì còn **Hậu cần** (Lương thảo, Hũ đồng, Hũ Vua Hùng, Đắp thành, Lò đúc đồng), tướng Tím/Vàng đã sở hữu và **Tướng khắc chế** — không trống, không thừa nút.
+- **Nghỉ chân** (sau đợt boss, dừng trận để đổi tối đa 2 tướng trong đội) chỉ dùng để đổi đội → **bỏ hẳn**: hạ boss xong trận chạy tiếp. Bỏ `restDeck` / `skipRest`, khung `#rest`, `REST_SWAPS`, `REST_COOP_T`.
+- **Code:** bỏ `suggestDeck`, `validDeck`, `deckIngredients`, `DECK_SIZE` (thay bằng `MIN_COMMONS` cho `openCommons`), `game.summonList()` (Triệu hồi ngẫu nhiên / gợi ý bộ quái mới dùng `game.marketPool()`), `MARKET_W.doi`. CSS bảng chọn đội (`.dk-modal`, `.dk-pick`…) xoá theo.
+- **Bản lưu:** trận đã lưu không còn `deck` / `rest` / `restWave`; bản lưu cũ có các trường này (kể cả đang mở Nghỉ chân) → bỏ qua, trận chạy tiếp bình thường. `save.deck` cũ để yên, không đọc nữa.
+- **Chơi nhóm:** bỏ lệnh `restDeck` / `skipRest`, bỏ `deck` khỏi ví riêng mỗi người (`CO_KEYS`), khỏi dòng băm trạng thái và khỏi thông tin người chơi gửi lên phòng.
+- **Chữ:** "Mở khoá để chọn vào đội triệu hồi" → "Mở khoá để ra trong chợ tướng khi chơi"; mở khoá tướng Thường báo "Giờ đã ra trong chợ tướng khi chơi".
+
+**Chợ tướng:** trọng số còn thường ×1 · đang ghép dở ×5 · nguyên liệu hợp thể còn thiếu ×12 (không đổi); giữ bảo hiểm (2 lần trượt → lần sau chắc chắn có), giới hạn bản sao (đủ ★★★ thì thôi ra), 🔒 khoá chợ. Trước đây nguyên liệu hợp thể chỉ được ưu tiên khi nằm trong đội hoặc đã có trên sân (để khỏi loãng); hết đội nên thay bằng **giới hạn `MARKET_HOP = { max: 2, off: 1 }`**: tối đa 2 nguyên liệu được ưu tiên cùng lúc, trong đó tối đa 1 loại chưa có trên sân; xếp hạng: đã có trên sân → bên kia nhiều bản sao hơn → bên thiếu nhiều bản sao hơn → thứ tự công thức.
+
+Mô phỏng `node tests/cho-tuong/ti-le-sim.js 4000` (4000 lần ↻ mỗi tình huống, seed cố định; sở hữu đủ 20 tướng Thường + tướng Tím của tình huống; "trước" = mã phiên bản 194 chạy cùng mô phỏng):
+
+| Tình huống | Chỉ số | Trước (đội ưu tiên ×2) | Sau (bỏ đội) |
+|---|---|---|---|
+| Đầu trận (1 tướng ★) | ≥1 thẻ tướng đang có | 58.8% | **65.0%** |
+| | thẻ là tướng đang có | 18.7% | 21.6% |
+| | trượt liền dài nhất | 2 | 2 |
+| Giữa trận (7 tướng, 5 loại) | ≥1 thẻ tướng đang có | 97.7% | **98.0%** |
+| | ≥1 thẻ ghép ngay (trùng ★) | 92.8% | 93.4% |
+| | trượt liền dài nhất | 1 | 2 |
+| Thiếu nguyên liệu (Ngư Phủ ★★ → cần Thần Sương, có Cá Ông) | ra đúng nguyên liệu | 68.1% | **68.1%** |
+| | trượt liền dài nhất | 2 | 2 |
+| Giữa trận, sở hữu MỌI tướng Tím/Vàng | ≥1 thẻ tướng đang có | 97.7% | 93.0% |
+| | trượt liền dài nhất | 1 | 3 |
+
+Tỉ lệ ra đúng tướng cần không giảm (đầu trận còn tăng vì 14 tướng ngoài đội cũ không còn bị lép ×1 so với ×2) → **giữ nguyên trọng số ×5 / ×12**. Riêng người đã sở hữu mọi tướng Tím: chợ giờ chủ động đẩy 1 nguyên liệu hợp thể chưa có trên sân (trước bị đội chặn), nên thẻ "tướng đang có" giảm nhẹ — đúng ý (giúp hợp thể), có giới hạn `off: 1` để không loãng (không giới hạn: 87.6%, trượt liền 5). Dò thêm ×6/×12 và ×7/×14: tăng ra tướng đang có nhưng giảm ra nguyên liệu thiếu (64.9–65.4%) → không dùng.
+
+Test: cập nhật `cho-tuong` (màn Chuẩn bị không còn chọn đội, sau boss không Nghỉ chân, bản lưu cũ có đội/Nghỉ chân vẫn chạy), `ti-le` (trọng số không còn ×2, giới hạn nguyên liệu ưu tiên, tình huống sở hữu mọi Tím), `ngan-kho`, `khung-do-hiem`, `vo-tan`, `icon-nho`, `duong-quai`, `hop-the/mo-phong`, `coop/test-lockstep`, `coop/test-solo`.
