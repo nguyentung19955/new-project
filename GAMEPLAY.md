@@ -2227,3 +2227,21 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
 ## Phiên bản 201 — quy tắc hình mới phải có bản pixel
 - CLAUDE.md: thêm quy tắc "Đang chuyển sang pixel art: hình mới phải có bản pixel" — session thêm/đổi hình (kể cả vẽ bằng code) vẽ luôn bản pixel theo docs/pixel/QUY-CHUAN.md hoặc ghi vào docs/pixel/DANH-SACH.md mục "Bổ sung"; giữ đường vẽ dự phòng.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
+
+## claude/pixel-quai-boss — Pixel art quái thường, biến thể, tinh anh và 9 boss (DANH-SACH lô 8–11)
+
+- **41 sprite mới** (vẽ bằng lưới ký tự, `tools/pixel/src/quai|boss/`, dựng bằng `node tools/build-pixel.js`), bật bằng `?pixel=1`:
+  - Lô 8 (12): casau, rua (rùa đội bia đá), phuthuy (sứa ma da), chimbao (diều sáo yêu, bay), echme, nongnoc, giaolong (rồng sành men) + 2 bản màu
+    `giaolong-hoa` / `giaolong-tho`, camap (cá mập thuyền đắm), muc (mực trong chum), cua (cua chiêng đồng gỉ).
+  - Lô 9 (10): yeutinh, ran (rắn thần 3 đầu), doi (dơi xương, bay), thachtinh (tượng đá lăng), dacon, linhan (âm binh giấy vàng mã — giáo + khiên),
+    cungan (sói cung), kybinh (lợn đất nung), voichien (voi gỗ đình), cao (cáo đuôi ma trơi).
+  - Lô 10 (11): tomlua, ranbang, doima, thachvang, thietky, camapden, mucdoc, cungtlua (biến thể giữ dáng gốc, đổi bảng màu + chi tiết riêng);
+    tinh anh lớn tuongthuy, chanlua, hoden (có `rage`).
+  - Lô 11 (9 boss): thuongluong 64 (rage), thuytinh 64, haba 48, ngutinh 48, chantinh 64 (rage), daibang 64 (bay, rage), anvuong 64,
+    hotinh 64 (9 đuôi, rage), trieuda 64.
+- Mọi mã đủ `walk 4 · attack 3 · hurt 1 · die 3`; khung **trúng đòn khác rõ** (ngả người, mắt X / nhắm, há miệng, sáng tông).
+  Hướng phá cách theo cột "Hướng phá cách" của DANH-SACH, lý do ghi ở chú thích đầu từng file nguồn.
+- Cỡ trong game: thanh máu / hộp quái lấy từ bbox khung `walk.0` + điểm neo chân trong manifest (js/pixel.js `pxEnemyBox`) → walk.0 là khung rộng nhất
+  (Đại Bàng: sải cánh ngang) để không vượt cỡ.
+- `js/pixel.js`: **Giao Long Con chọn sprite theo hành** (`e.el` = hoa / tho → `quai/giaolong-hoa|-tho`, còn lại `quai/giaolong`) — 1 dòng trong `pxEnemyEntry`.
+- `tests/pixel`: casau giờ đã có pixel → kiểm tra casau VẼ pixel (bỏ khỏi danh sách "chưa có pixel").
