@@ -2250,4 +2250,24 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   Độ khó (nhánh chính, chơi đến 4000 s): mạng còn TB ải 1: 27.8 → 34.8 · ải 3: 22.3 → 12.5 (1 ván thua đ68) · ải 5: 8.8 (3 thua) → 16.3 (2 thua) — dao động lớn, không thấy xu hướng dễ hẳn.
 - **Nhận xét:** hạ R3 xuống cấp 12 chỉ sớm Tím 0–2 đợt; với bot này điểm nghẽn chính là gom đủ hai tướng ★★★ (vàng mua thẻ / ghép), không phải cấp R. Game không dễ hơn rõ rệt → **không bù** (không đổi sức mạnh R hay giá nâng). Muốn Tím ở đợt 12–16 cần thêm thay đổi khác (vd ★★★ rẻ hơn / chợ ra đúng nguyên liệu hơn).
 - Test: `hop-the` thêm kiểm tra R cần tướng cấp 6/9/12, cấp 11 bị chặn R3 ("Cần tướng cấp 12"), cấp 12 nâng được. Ảnh đã xem: `docs/r-cap-12/skills-844x390.png`, `docs/r-cap-12/skills-1920x934.png`.
+## claude/pixel-tuong-thuong — Pixel art 19 tướng Thường (DANH-SACH lô 1–2)
+
+- Vẽ đủ 19 mã tướng Thường (lô 1: `lactuong lucsi xathu thosan thaymo thansuong giaodong chuongdong tre ongthoi`; lô 2: `dapde chantrau
+  haisen dotnuong denroi thoren nguphu thogom thaylang`; `chodo` đã có ở lô 0). Mỗi tướng 15 khung 32×32: idle 3 · attack 4 · cast 3 ·
+  hurt 1 (lùi 1 điểm + nhắm mắt + nháy sáng mọi màu lên một tông) · die 3 (quỳ → nằm → tối màu) + `portrait` 1 (đầu + vai cắt 16×16 phóng ×2 → chân dung thẻ chợ / Anh Hùng rõ mặt).
+- Theo **"Hướng phá cách"** của DANH-SACH (QUY-CHUAN mục 0b) — đội hình đa dạng hình thể, vẫn giữ vũ khí / kiểu đánh / màu hành:
+  Lạc Tướng = giáp đồng rỗng (2 đốm mắt gỉ xanh, mũ lông chim Lạc, rìu xéo) · Lực Sĩ = khổng lồ đất sét nứt, cỏ trên vai, vác tảng đá ·
+  Xạ Thủ = người-chim Lạc mỏ dài, cung dài · Thợ Săn = ma cây mặt hốc cây mắt cam, mũ trùm tai báo, cung · Thầy Mo = bộ xương đội vòng
+  lông đỏ-đen, lửa trong hốc mắt, gậy hồ lô lửa · Thần Sương = hồn sương mặt nạ băng, tóc khói dựng ngược, ôm tinh thể băng ·
+  Giáo Đồng = người tê tê, giáo dài + khiên đồng trống đồng · Chuông Đồng = con rối nước gỗ sơn bóng, chốt vai, gậy treo chuông ·
+  Tre Làng = hình nhân tre đan, sào tre ngọn lá · Ống Thổi = người cóc tía, ống thổi ngang · Đắp Đê = người bùn (nữ, váy bùn, rơm),
+  nón lá, xẻng · Chăn Trâu = tượng tò he, gậy đầu trâu, que tre làm đế · Hái Sen = tinh sen (tóc cánh sen, da xanh, chân cuống sen),
+  lá sen làm ô · Đốt Nương = ma trơi đầu ngọn lửa, thân khói tro, dao rựa + đuốc · Đèn Trời = hình nhân giấy xếp nếp, mặt vẽ mực,
+  nâng đèn trời · Thợ Rèn = người đá bazan nứt lửa, búa tạ đầu đỏ · Ngư Phủ = bộ xương rêu, vỏ hến, lưới + phao cam + chĩa ba ·
+  Thợ Gốm = tượng đất nung rạn men lam, bình gốm men lam · Thầy Lang = người nấm linh chi, gùi lá thuốc, gậy chống.
+- Nguồn: `tools/pixel/src/tuong/<mã>.txt` **sinh tự động** từ `tools/pixel/src/tuong/_gen-thuong.js` (thư viện vẽ: thân / đầu / tay /
+  vũ khí theo dáng, hiệu ứng chiêu theo hành, khung chết xoay) + `_tuong-thuong.js` (hàm vẽ từng tướng). Sửa: chỉnh hàm vẽ →
+  `node tools/pixel/src/tuong/_gen-thuong.js [mã…]` → `node tools/build-pixel.js --strict`. build-pixel chỉ đọc `.txt`, bỏ qua `.js`.
+- Không màu mới, không sửa build-pixel / js/pixel.js. Test `tests/pixel`: mã "chưa có pixel" đổi `lactuong` → `thachsanh`
+  (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
