@@ -18,7 +18,7 @@ Game thủ thành trên điện thoại, chơi **màn hình ngang**, lấy cảm
 
 ## 1. Vòng chơi chính
 
-1. **Triệu hồi (Chợ tướng, từ phiên bản 143):** thanh dưới luôn mở **4 thẻ tướng ★** rút ngẫu nhiên từ đội 6 tướng. **Chạm thẻ** = mua và đặt vào 1 ô trống ngẫu nhiên; **kéo thẻ** thả vào ô = đặt đúng ô (thả lên tướng ★ cùng loại = ghép luôn). ↻ đổi cả hàng (10 vàng, +10 mỗi lần trong đợt); đầu mỗi đợt chợ tự làm mới miễn phí. Xem ghi chú phiên bản 143.
+1. **Triệu hồi (Chợ tướng, từ phiên bản 143):** thanh dưới luôn mở **4 thẻ tướng ★** rút từ **mọi tướng Thường** (từ phiên bản 181; đội 6 tướng chọn trước trận là *đội ưu tiên*, ra nhiều gấp đôi). **Chạm thẻ** = mua và đặt vào 1 ô trống ngẫu nhiên; **kéo thẻ** thả vào ô = đặt đúng ô (thả lên tướng ★ cùng loại = ghép luôn). ↻ đổi cả hàng (10 vàng, +10 mỗi lần trong đợt); đầu mỗi đợt chợ tự làm mới miễn phí (🔒 khoá thì giữ nguyên). Thẻ rút theo nhu cầu, có bảo hiểm — xem ghi chú phiên bản 143 và 180.
    - Giá **60 vàng**, mỗi lần sau **+6** (tối đa 220), tính lại từ đầu mỗi ải.
    - Bản đồ có **17 ô** dọc hai bờ sông, mọi ô như nhau. Hết ô trống thì phải ghép, hoặc kéo tướng vào thùng 🗑 (hiện khi kéo) để hủy.
    - Giữ và kéo tướng để đổi chỗ.
@@ -1718,8 +1718,158 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 181 — Gộp sửa thẻ chợ + bỏ lọc Hợp thể + nút ẩn giao diện
 
 - Gộp sua-the-cho (icon hệ không còn bị phóng to lòi ra sau avatar; bỏ thanh lọc bảng Hợp thể) và an-giao-dien (bỏ bong bóng Hủy trên tướng; nút ẩn giao diện, phím H).
+## Phiên bản 180 — Khối "Đợt N · Vô tận" đứng yên một chỗ
 
-## Phiên bản 182 — Rê chuột / giữ tay lên ô kỹ năng để đọc mô tả
+- Nguyên nhân khối đợt (chữ + thanh tiến độ, góc trên trái) thỉnh thoảng nhảy: `.tb-center` là `flex: 1` — chiếm toàn bộ phần trống còn lại của thanh trên rồi căn giữa nội dung trong đó. Mỗi khi ô tiền/mạng đổi số chữ số (99→100→1000→123.456, mạng 20/20→100/100), hiện ô mực nước, hiện nút chat (chơi nhóm), phần trống co giãn và cả khối trượt ngang theo (đo được tới 50–120px). Thêm: chữ đổi số chữ số làm chữ trượt, biểu tượng "Khó" làm dòng cao lên đẩy khối lệch dọc 2–4px. Đổi tốc độ, ẩn/hiện chỉ số 👁, thanh boss, thanh tướng không ảnh hưởng.
+- Sửa (chỉ CSS, khối /v180 cuối style.css): `.tb-center` rộng 184px, cao 40px, không co giãn; lề trái tính theo bề ngang thanh trên (`clamp(0px, 50% - 320px, 400px)`) nên không phụ thuộc phần tử khác; chữ số đều nhau (tabular-nums); biểu tượng trong chữ cao đúng 1 dòng. Chữ "Đợt 9999 · Vô tận · Khó" vẫn nằm gọn trong khối.
+- Test mới `tests/dot-co-dinh/dot-co-dinh.test.js`: 22 tình huống × 3 cỡ màn (1920×1000, 844×390, 667×375), lệch ≤1px (đo được 0px), chữ không tràn khối, không đè ô tiền; ảnh trước/sau trong `tests/dot-co-dinh/shots/`.
+## Phiên bản 180 — Chợ tướng có chủ đích: ưu tiên tướng đang ghép, bảo hiểm, 🔒 khoá chợ
+- Người chơi phàn nàn chợ "random tùm lum", khó có tướng cần để ghép sao / hợp thể. Đo trước khi sửa (mô phỏng 1000 lần ↻ mỗi tình huống, đội 6 tướng Ngư Phủ · Thần Sương · Lạc Tướng · Lực Sĩ · Xạ Thủ · Thầy Mo — `node tests/cho-tuong/ti-le-sim.js`):
+
+  | Tình huống | Chỉ số | Trước (v179) | Sau (v180) |
+  |---|---|---|---|
+  | Đầu trận (1 tướng ★) | ≥1 thẻ ghép được / lần ↻ | 50,6% | 68,6% |
+  | | Trượt liền dài nhất | 10 lần | 2 lần |
+  | Giữa trận (7 tướng, 5 loại) | ≥1 thẻ tướng đang có | 99,9% | 100% |
+  | | Thẻ là tướng đang có | 82,8% | 88,1% |
+  | Thiếu 1 nguyên liệu (Ngư Phủ ★★, cần Thần Sương → Cá Ông) | Ra đúng nguyên liệu / lần ↻ | 49,5% | 73,9% |
+  | | Trượt liền dài nhất | 8 lần | 2 lần |
+
+  Kết luận: giữa trận vốn đã gần như luôn có thẻ ghép (đội chỉ 6 loại); cái khó thật là **ra đúng tướng đang cần** (đầu trận, nguyên liệu hợp thể) với chuỗi trượt dài tới 8–10 lần. Kinh tế giữ nguyên (thẻ 60 +6/lần, ↻ 10 +10/lần trong đợt).
+- **Luật rút thẻ mới** (hằng số `MARKET_W`, `MARKET_PITY`, `MARKET_CAP` trong data.js; `marketNeeds()` / `rollCard()` / `rollMarket()` trong game.js):
+  - Trọng số mỗi loại trong đội: thường ×1 · **đang có trên sân, chưa đủ bản sao ×1,5** · **nguyên liệu còn thiếu của công thức hợp thể gần xong ×3** (bên kia đã đủ ★★ quy đổi, đã sở hữu tướng đích).
+  - **Giới hạn bản sao:** đủ 4 bản sao ★ quy đổi trên sân (= một ★★★; ★ = 1, ★★ = 2, ★★★ = 4) thì loại đó không ra nữa (cả đổi chợ lẫn thẻ bù sau khi mua). Hợp thể xong (tướng bị dùng) thì ra lại. Nếu cả đội đủ hết thì rút đều như cũ. Số loại trong trận vẫn giới hạn ở đội 6 tướng.
+  - **Bảo hiểm:** mỗi lần làm mới cả hàng (↻ hoặc đầu đợt) không có "tướng cần nhất" (nguyên liệu hợp thể; không có thì tướng đang có trên sân) thì đếm 1; đủ **2 lần liền** thì lần sau chắc chắn có 1 thẻ đúng loại đó.
+  - Thẻ bù sau khi mua rút theo sân mới (vừa mua xong), không tính bảo hiểm.
+- **🔒 Khoá chợ:** nút tròn nhỏ ở góc trên phải nút ↻ (không đổi bề ngang thanh đáy). Bật thì đầu đợt sau giữ nguyên 4 thẻ rồi tự mở khoá; bấm ↻ khi đang khoá thì rút hàng mới và mở khoá. Chơi nhóm: lệnh `toggleMarketLock` đồng bộ như ↻.
+- **Nhãn trên thẻ:** giữ "ghép" (xanh, trùng tướng ★ trên sân); thêm **"hợp thể"** (tím, viền tím) cho nguyên liệu còn thiếu của công thức gần xong.
+- Test: `node tests/cho-tuong/ti-le.test.js` (mô phỏng tỉ lệ + giới hạn bản sao + khoá chợ + bảo hiểm qua nút ↻ + nhãn). Ảnh đã xem: thanh đáy 1920×934, 844×390, 667×375 (có nhãn "hợp thể", nút 🔒 đang bật).
+
+## Phiên bản 182 — Gộp khung Đợt cố định + chợ bớt ngẫu nhiên
+
+- Gộp dot-co-dinh (khối Đợt rộng/cao cố định, không trượt khi tiền/mạng đổi số chữ số) và cho-bot-ngau-nhien (ưu tiên tướng đang ghép/nguyên liệu hợp thể, bảo hiểm, khoá chợ).
+## Phiên bản 180 — Báo cáo test toàn bộ (QA nhìn ảnh thật)
+
+- Thêm `docs/BAO-CAO-TEST.md`: chơi thật bằng Playwright ở 1920×934, 1280×720, 844×390, 667×375, dọc 390×844, xem từng ảnh chụp. 17 lỗi (Cao 5 · Trung bình 7 · Thấp 5) kèm ảnh minh hoạ trong `docs/bao-cao-test/`, và mục đề xuất cải thiện trải nghiệm. Không sửa code game.
+
+## Phiên bản 181 — Sính lễ ngẫu nhiên có trọng số
+- **Chỗ game tặng sính lễ:** chỉ có ô **Sính lễ** trong bảng thưởng hạ boss (`bossRewards`). Trước đây mỗi boss luôn tặng đúng một món (Thuồng Luồng → Voi Chín Ngà, Hà Bá → Gà Chín Cựa, Thủy Tinh → Ngựa Chín Hồng Mao…); Ngọc Hồi Sinh chưa bao giờ ra. Quà người mới / quy đổi / mốc đợt Vô Tận tặng Ngân khố, Hũ đồng / Hũ Vua Hùng đã bốc ngẫu nhiên — không tặng sính lễ nên không đổi. Màn **Kho Báu & Sính Lễ** chỉ là bộ sưu tập.
+- **Bốc ngẫu nhiên theo độ hiếm sính lễ** (`SINH_LE`, `SL_TIER`, `rollSinhLe` trong `data.js`): Voi Chín Ngà, Gà Chín Cựa = **Thường** (trọng số 34 mỗi món) · Ngựa Chín Hồng Mao = **Hiếm** (22) · Ngọc Hồi Sinh = **Quý hiếm** (10). Đồ vẫn là bậc Huyền thoại như cũ.
+- **Mốc lớn** (boss ở đợt 20, 40, 60…): trọng số Hiếm ×1.8, Quý hiếm ×3; bảng thưởng hiện chip "★ Mốc lớn: sính lễ hiếm dễ ra hơn".
+- **Chống trùng:** không món nào ra quá 2 lần liền (lịch sử `slHist` theo trận, có lưu khi lưu trận); món đã có trong túi hoặc đang đeo trên tướng: trọng số ×0.35 (ưu tiên món chưa có).
+- **Co-op:** bốc bằng `srand()` khi hạ boss (đang trong bước mô phỏng) → seed chung, 2 máy ra cùng món; túi đồ và lịch sử là trạng thái chung của trận.
+- **Màn nhận thưởng:** thẻ Sính lễ hiện ảnh món (Ngọc Hồi Sinh dùng icon món), tên, nhãn độ hiếm (màu theo bậc, viền thẻ đổi màu), dòng "Sính lễ <bậc> · Huyền thoại · ngẫu nhiên ~X%"; thông báo khi nhận ghi cả độ hiếm. Ô mô tả thẻ sính lễ cao theo nội dung (trước bị cắt dòng chỉ số của Ngựa Chín Hồng Mao ở 844×390).
+- **Mô phỏng 1000 lần** (`node tests/sinh-le/sinh-le.test.js`, rng seed cố định, có chống trùng):
+
+  | Trường hợp | Voi Chín Ngà (Thường) | Gà Chín Cựa (Thường) | Ngựa Chín Hồng Mao (Hiếm) | Ngọc Hồi Sinh (Quý hiếm) | ra 3 lần liền |
+  |---|---|---|---|---|---|
+  | Boss thường | 314 | 319 | 248 | 119 | 0 |
+  | Mốc lớn (đợt 20, 40…) | 240 | 229 | 305 | 226 | 0 |
+  | Đã có Voi + Gà | 228 | 202 | 386 | 184 | 0 |
+
+- Test mới `tests/sinh-le/sinh-le.test.js`: phân bố, thứ tự độ hiếm, không 3 lần liền, mốc lớn, ưu tiên món chưa có, cùng seed → cùng chuỗi (co-op), lưu lịch sử theo trận, màn nhận thưởng có ảnh + tên + độ hiếm, không lòi ra ngoài ở 1920×934 / 844×390 / 667×375. Ảnh đã xem: `tests/sinh-le/shots/nhan-thuong-*-{1920x934,844x390,667x375}.png`.
+
+## Phiên bản 183 — Gộp báo cáo tester + sính lễ ngẫu nhiên
+
+- Gộp tester-toan-bo (docs/BAO-CAO-TEST.md, 17 lỗi) và sinh-le-ngau-nhien (sính lễ hạ boss ngẫu nhiên theo độ hiếm, chống trùng, mốc lớn tăng tỉ lệ hiếm).
+
+## Phiên bản 182 — Cày Ngân khố để mở khoá đủ 60 tướng
+
+Góp ý người chơi: "cần có cơ chế cày ngân khố để mở khoá full tướng".
+
+**Hiện trạng trước v182:** 20 tướng Thường mở sẵn hết; 20 Tím (1.200) và 20 Vàng (3.000) mua ở Anh Hùng — tổng 84.000 Ngân khố. Ngân khố chỉ kiếm ở Vô tận: 4 mỗi đợt cuối trận, mốc mỗi 10 đợt +150, boss +100, trận đầu ngày qua đợt 10 +300.
+
+**Mở khoá MỌI tướng bằng Ngân khố (giá theo bậc):** Thường **300** · Tím **900** · Vàng **2.000** (`OWN_COST` trong data.js).
+- Người chơi mới có sẵn 8 tướng Thường khởi đầu (`STARTER_HEROES`: Lạc Tướng, Lực Sĩ Núi, Xạ Thủ, Thợ Săn Rừng, Thầy Mo Lửa, Thần Sương Núi, Ngư Phủ, Thợ Rèn — đủ 2 công thức Tím Cá Ông / Ông Táo). 12 Thường còn lại + 40 Tím/Vàng mở dần.
+- Màn **Anh Hùng**: chip **Đã mở X/60**; thẻ tướng khoá mờ + ổ khoá + giá (xanh lá khi đủ tiền); bảng chi tiết có nút **Mở khoá · giá**, chưa đủ thì "còn thiếu N", kèm cách kiếm Ngân khố và tiến độ nhiệm vụ ngày.
+- **Tướng chưa mở không vào chợ trận:** bảng Chọn đội / Nghỉ chân hiện tướng Thường khoá (mờ, giá, chạm thì nhắc mở ở Anh Hùng); đội gợi ý (`suggestDeck`) và `restDeck` chỉ nhận tướng đã mở → chợ (rút từ đội 6 tướng) chỉ ra tướng đã mở. Tướng Tím / Vàng chưa mở vẫn không hợp thể ra được như trước.
+- Bot / mô phỏng (`owned = null`) vẫn coi như mở hết.
+
+**Vòng cày (Vô tận, chơi nhóm cũng nhận trừ kỷ lục):**
+- Cuối trận **6** mỗi đợt đã qua (trước 4); dừng trận giữa chừng cũng 6/đợt.
+- Mốc mỗi 10 đợt +150 (từ đợt 50 ×1,5), mỗi boss hạ +100 — như cũ, cộng ngay giữa trận.
+- **Kỷ lục mới** của bản đồ: **+15 mỗi đợt vượt kỷ lục cũ** (17 bản đồ → động lực thử mọi bản đồ).
+- **Nhiệm vụ ngày** (đặt lại mỗi ngày, cộng dồn mọi trận): Trận đầu ngày qua đợt 10 **+300** (cũ) · Hạ 3 boss **+200** · Qua tổng 60 đợt **+250**.
+- Khó: mọi khoản trong trận / cuối trận / kỷ lục ×1,5.
+- Màn kết quả: ô **Ngân khố cả trận** to ở trên cùng (tổng + còn bao nhiêu + đã mở X/60), từng dòng (giữa trận / theo đợt / kỷ lục / nhiệm vụ), tiến độ nhiệm vụ ngày, gợi ý tướng rẻ nhất chưa mở (đủ tiền thì có nút **Mở …** đưa thẳng tới Anh Hùng). Cột phải màn kết quả giờ cuộn được (trước bị cắt đáy, không xem được mẹo).
+
+**Tốc độ kiếm (đo bằng bot chơi tự động ở x1, không gọi sớm):** tới đợt 10 ≈ 4,5 phút · đợt 20 ≈ 11–13 phút · đợt 30 ≈ 19 phút · đợt 40 ≈ 31 phút.
+
+| Trận Thường, thua sau khi qua đợt | 10 | 20 | 30 | 40 |
+|---|---|---|---|---|
+| Theo đợt (6/đợt) | 60 | 120 | 180 | 240 |
+| Mốc 10 đợt + boss | 250 | 500 | 750 | 1.000 |
+| **Tổng một trận** | **310** | **620** | **930** | **1.240** |
+| Trước v182 | 290 | 580 | 870 | 1.160 |
+
+≈ 50 Ngân khố / phút chơi ≈ **3.000 / giờ** ở x1 (x2 ≈ gấp đôi theo giờ thật; Khó ×1,5). Một lần: kỷ lục mới ≈ 15 × 30 × 17 bản đồ ≈ 7.000. Nhiệm vụ ngày ≈ 750/ngày.
+
+**Mở hết mất bao lâu:** người mới cần 12 × 300 + 20 × 900 + 20 × 2.000 = **61.600** (trước: 84.000 chỉ riêng Tím/Vàng). Trừ thưởng kỷ lục ≈ 7.000 → ≈ 54.000 ÷ 3.000/giờ ≈ **18 giờ chơi ở x1** (≈ 10 giờ nếu để x2, ≈ 12 giờ nếu chơi Khó). Chơi 1 giờ/ngày (thêm nhiệm vụ ngày) ≈ **2,5 tuần**. Ngân khố còn dùng cho Thần Khí / Lò đúc / hậu cần nên thực tế lâu hơn chút.
+
+**Bản lưu cũ / đám mây:** `loadSave` chuyển đổi một lần (`heroOpenV = 1`): bản lưu đã có từ trước (máy hoặc kéo từ đám mây — cả hai đều đi qua `loadSave`) giữ đủ **20 tướng Thường** + mọi tướng Tím/Vàng đã mua, Ngân khố giữ nguyên; chỉ người chưa từng có bản lưu mới bắt đầu với 8 tướng. `owned` giờ chứa mọi tướng đã mở (Thường + Tím + Vàng), đồng bộ đám mây như cũ (cả bản lưu). Không hoàn tiền phần chênh giá cũ.
+
+**Phối hợp nhánh cho-bot-ngau-nhien (chợ có trọng số):** chợ vẫn rút từ `summonList()` = đội 6 tướng; v182 chỉ chặn ở chỗ chọn đội (UI, `suggestDeck`, `restDeck`) nên không đụng code chợ — pool chợ = tướng đã mở trong đội.
+
+Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 lần đổi chỉ ra tướng đã mở, chọn đội / Nghỉ chân chặn tướng khoá, Anh Hùng X/60 + giá + mở Thường 300 / Tím 900, thiếu tiền, thưởng cuối trận theo đợt + kỷ lục + nhiệm vụ ngày, nút mở tướng ở màn kết quả, chuyển đổi bản lưu cũ / bản đám mây / tài khoản mới); ảnh `tests/ngan-kho/shots/` (anh-hung-khoa, anh-hung-thieu-tien, chon-doi-khoa, ket-qua, ket-qua-cuon — 1920×934 / 844×390 / 667×375). `tests/vo-tan` cập nhật số thưởng mới.
+
+## Phiên bản 184 — Gộp mở khoá tướng bằng Ngân khố (tester đạt)
+
+- Gộp ngan-kho-mo-tuong sau khi tester báo đạt.
+## Phiên bản 181 — Chợ ra mọi tướng Thường (như TFT), đội 6 tướng thành đội ưu tiên
+- Góp ý người chơi: "nên để mua tướng giống game TFT có thể roll ALL các tướng mặc định, ko chỉ để 6 con". Chợ giờ rút từ **cả 20 tướng Thường**; đội 6 tướng chọn trước trận (và đổi ở Nghỉ chân) thành **đội ưu tiên**.
+- Mở rộng 6 → 20 loại mà rút đều thì ghép rất khó (tính trực tiếp: ra 1 loại cụ thể trong 4 thẻ chỉ 18,5%, giữa trận 5 loại trên sân 68%). Cân bằng bằng trọng số (`MARKET_W` trong data.js): ngoài đội ×1 · **đội ưu tiên ×2** · **đang ghép dở trên sân ×5** · **nguyên liệu hợp thể còn thiếu ×12**. Nguyên liệu chỉ được ưu tiên khi nằm trong đội ưu tiên hoặc đã có trên sân (với 20 tướng, một tướng ★★ "mở" 2–3 công thức cùng lúc, ưu tiên hết thì loãng: thử nghiệm ra đúng nguyên liệu chỉ 36,8%, trượt liền 11 lần). Bảo hiểm 2 lần, giới hạn 4 bản sao, 🔒 khoá chợ, nhãn "ghép" / "hợp thể" giữ như phiên bản 180.
+- Số liệu (1000 lần ↻ mỗi tình huống, `node tests/cho-tuong/ti-le-sim.js`):
+
+  | Tình huống | Chỉ số | v179 (6 loại, rút đều) | v180 (6 loại, trọng số) | **v181 (20 loại, trọng số)** |
+  |---|---|---|---|---|
+  | Đầu trận (1 tướng ★) | ≥1 thẻ ghép được / lần ↻ | 50,6% | 68,6% | **57,7%** |
+  | | Trượt liền dài nhất | 10 | 2 | **2** |
+  | Giữa trận (7 tướng, 5 loại) | ≥1 thẻ tướng đang có | 99,9% | 100% | **97,8%** |
+  | | ≥1 thẻ ghép ngay (trùng ★) | 98,8% | 99,6% | **93,9%** |
+  | Thiếu 1 nguyên liệu hợp thể | Ra đúng nguyên liệu / lần ↻ | 49,5% | 73,9% | **67,9%** |
+  | | Trượt liền dài nhất | 8 | 2 | **2** |
+  | Mọi tình huống | Số loại tướng xuất hiện | 6 | 6 | **20** (27–48% thẻ ngoài đội) |
+
+  → Chợ đa dạng như TFT, nhưng tướng cần vẫn ra nhiều hơn v179 và không bao giờ trượt quá 2 lần liền. Kinh tế giữ nguyên.
+- Giao diện: "Đội triệu hồi" → **"Đội ưu tiên"** (màn Chuẩn bị, bảng chọn đội; máy tính có thêm dòng "Chợ ra mọi tướng Thường, đội này ra nhiều gấp đôi"), Nghỉ chân ghi "chợ tướng làm mới và ưu tiên đội mới", bảng tướng ghi nguồn "Chợ tướng ★".
+- Test: `node tests/cho-tuong/ti-le.test.js` (20 loại, trọng số, nguyên liệu ngoài đội không ưu tiên…), `tests/cho-tuong/cho-tuong.test.js` cập nhật (chợ rút từ tướng Thường, ưu tiên đội). Ảnh đã xem: màn Chuẩn bị, bảng chọn đội, thanh chợ ở 1920×934, 844×390, 667×375.
+
+## Phiên bản 182 — Vai trò tướng + cộng hưởng vai trò
+
+- Góp ý người chơi: muốn mỗi tướng có **vai trò** rõ để xây đội hình (buff, choáng, giết boss, đánh lan, phép, dame…), song song với ngũ hành.
+- **7 vai trò** (`js/roles.js`, file mới để dễ gộp): ⚔ **Sát thương** (vật lý đều tay, đánh nhanh) · ✺ **Đánh lan** (chém lan / nổ vùng) · ✦ **Pháp sư** (sát thương phép, mạnh kỹ năng) · ◎ **Diệt boss** (dồn sát thương một mục tiêu máu cao / boss) · ⛓ **Khống chế** (choáng, trói, làm chậm, đẩy lùi) · ✚ **Hỗ trợ** (hồi máu, khiên, tăng tốc / sát thương đồng đội) · 🛡 **Đỡ đòn** (máu trâu, giảm sát thương nhận, che chắn). Mỗi tướng 1 vai chính + tối đa 1 vai phụ, xếp theo kỹ năng thật.
+- **Cộng hưởng** (nhỏ, tương đương "Ngũ hành tề tựu" +10%): đủ **2 / 4 tướng khác loại** cùng vai trò **chính** trên sân → tướng mang vai trò đó (chính hoặc phụ) nhận buff; Hỗ trợ buff toàn quân. Tướng trùng loại không tính thêm. Bật bậc mới có thông báo.
+
+  | Vai trò | 2 tướng | 4 tướng |
+  |---|---|---|
+  | Sát thương | +8% tốc đánh | +20% tốc đánh |
+  | Đánh lan | +6% sát thương | +15% sát thương |
+  | Pháp sư | +8% sức mạnh kỹ năng, +8% xuyên kháng phép | +18% / +18% |
+  | Diệt boss | +12% sát thương lên boss | +30% sát thương lên boss |
+  | Khống chế | −6% hồi chiêu | −15% hồi chiêu |
+  | Hỗ trợ | toàn quân +1,5 hồi máu/giây | toàn quân +3 hồi máu/giây, +5% sát thương |
+  | Đỡ đòn | −8% sát thương nhận | −18% sát thương nhận |
+
+- **Bảng tướng → vai trò** (chính / phụ):
+
+  | Bậc | Tướng → vai trò |
+  |---|---|
+  | Thường | Lạc Tướng: Đánh lan / Khống chế · Lực Sĩ Núi: Đỡ đòn / Diệt boss · Xạ Thủ: Sát thương / Đánh lan · Thợ Săn Rừng: Diệt boss / Sát thương · Thầy Mo Lửa: Pháp sư / Đánh lan · Thần Sương Núi: Khống chế / Pháp sư · Thợ Rèn: Sát thương / Đỡ đòn · Ngư Phủ: Khống chế / Sát thương · Thợ Gốm: Đánh lan / Khống chế · Thầy Lang: Hỗ trợ · Chàng Đốt Nương: Sát thương / Đánh lan · Cô Thả Đèn Trời: Pháp sư / Đánh lan · Chàng Chèo Đò: Đánh lan / Đỡ đòn · Cô Hái Sen: Hỗ trợ / Khống chế · Người Đắp Đê: Đỡ đòn / Khống chế · Trẻ Chăn Trâu: Khống chế / Hỗ trợ · Dũng Sĩ Giáo Đồng: Diệt boss / Sát thương · Thầy Chuông Đồng: Khống chế / Pháp sư · Dũng Sĩ Tre Làng: Sát thương / Đánh lan · Thợ Săn Ống Thổi: Sát thương / Diệt boss |
+  | Sử thi | Thạch Sanh: Diệt boss / Khống chế · Lạc Hầu: Đỡ đòn / Hỗ trợ · Thần Săn Ba Vì: Diệt boss / Sát thương · Cao Lỗ: Diệt boss / Sát thương · Mai An Tiêm: Đánh lan / Khống chế · Tiên Dung: Hỗ trợ / Khống chế · Lang Liêu: Hỗ trợ · Chử Đồng Tử: Hỗ trợ / Khống chế · Thần Trống Đồng: Hỗ trợ / Khống chế · Thần Cá Ông: Đỡ đòn / Hỗ trợ · Ông Táo: Sát thương / Diệt boss · Vua Lửa Pơtao Apui: Diệt boss / Đánh lan · Bà Hỏa: Pháp sư / Đánh lan · Lý Ngư Tướng Quân: Diệt boss / Sát thương · Trương Chi: Khống chế / Pháp sư · Ông Đùng: Đỡ đòn / Khống chế · Thổ Công: Hỗ trợ / Đỡ đòn · Nghê Đồng: Đỡ đòn / Đánh lan · Mỵ Châu: Pháp sư / Hỗ trợ · Sọ Dừa: Pháp sư / Đánh lan |
+  | Huyền thoại | Thánh Gióng: Đánh lan / Đỡ đòn · Lạc Long Quân: Sát thương / Khống chế · Kim Quy: Đỡ đòn / Hỗ trợ · An Dương Vương: Sát thương / Hỗ trợ · Âu Cơ: Hỗ trợ / Khống chế · Mẫu Thượng Ngàn: Khống chế / Hỗ trợ · Nữ Thần Mặt Trời: Pháp sư / Đánh lan · Mẫu Thoải: Khống chế / Hỗ trợ · Thần Trụ Trời: Đỡ đòn / Khống chế · Chúa Sơn Lâm: Sát thương / Khống chế · Kinh Dương Vương: Hỗ trợ / Sát thương · Viêm Đế: Pháp sư / Hỗ trợ · Rồng Mẹ Hạ Long: Đỡ đòn / Đánh lan · Long Nữ: Pháp sư / Khống chế · Sơn Tinh: Khống chế / Đỡ đòn · Mẫu Địa: Hỗ trợ / Khống chế · Kỳ Lân Vàng: Sát thương / Hỗ trợ · Thiên Lôi: Pháp sư / Diệt boss · Chú Cuội: Đánh lan / Hỗ trợ · Mẹ Lúa: Hỗ trợ / Khống chế |
+
+  Tổng vai chính: Sát thương 10 · Đánh lan 6 · Pháp sư 9 · Diệt boss 7 · Khống chế 8 · Hỗ trợ 11 · Đỡ đòn 9. Tướng Thường phủ đủ 7 vai (đội 6 tướng mặc định là 6 vai khác nhau → không cộng hưởng; muốn cộng hưởng phải chọn đội theo vai).
+- **Chỉnh kỹ năng:** Dũng Sĩ Giáo Đồng (vai Diệt boss) — Thế Giáo nay thêm **+10…30% sát thương lên boss** (trước chỉ chí mạng).
+- **Hiển thị:** icon vai trò ở góc trái thẻ chợ (dưới icon hệ; tên vai trò trong tooltip / nhãn đọc màn hình) · thanh tướng đang chọn ghi "icon Vai trò · Hành …" · bảng chỉ số (giữ chân dung) có nhãn vai chính/phụ, số tướng cùng vai trên sân (x/2, x/4) và cộng hưởng đang hưởng · Anh Hùng: icon vai trò góc phải mỗi thẻ, nhãn vai trò ở chi tiết, **hàng lọc** Tất cả + 7 vai (vai chính trước, vai phụ mờ sau) · Bách khoa có tab mới **Vai trò**: 7 cột (mô tả, cộng hưởng 2/4, tướng theo vai), lọc 1 vai thì hiện thêm tướng vai phụ.
+- **Mô phỏng trước/sau** (lực chiến đội 6 tướng cấp 10 ★★, `heroPower`): đội 4 Sát thương + 2 Hỗ trợ +7% lực chiến (+10% DPS); 4 Khống chế + 2 Đánh lan +1,3%; 2 Đỡ đòn + 2 Diệt boss + 2 Pháp sư +1,5% (+6,9% DPS lên boss); đội mặc định 0%. Bot tự chơi ải 4 (đợt 1–15, 8–20 lần mỗi bên): đội Sát thương thua 7/8 → 2/8; đội Khống chế 1/8 → 1/8; đội Đỡ/Boss/Phép 4/20 → 8–9/20 (lực chiến chỉ +1,5%, chênh lệch do mô phỏng hỗn loạn — bật riêng Đỡ đòn hay Diệt boss cho kết quả y hệt khi tắt). Kết luận: buff nhỏ, ngang "Ngũ hành tề tựu", không phá cân bằng.
+- **Gộp nhánh:** dữ liệu + hàm ở `js/roles.js` (nạp sau `data.js`); `game.js` chỉ thêm 4 dòng (`updateAuras` tính `vtTiers`, `heroStats` cộng `buff.vt`); `ROLE_SYN.on = false` để tắt cộng hưởng. Chợ (cho-bot-ngau-nhien), hợp thể, mở khoá tướng không bị đụng logic — chỉ thêm `<span class="rl">` trong thẻ chợ.
+- Test: `tests/vai-tro/vai-tro.test.js` (dữ liệu, cộng hưởng 2/4, trùng loại, tắt/bật; icon thẻ chợ / bảng chỉ số / Anh Hùng / Bách khoa; lọc; chụp 1920×934, 844×390, 667×375 vào `tests/vai-tro/shots/`).
+
+## Phiên bản 185 — Gộp chợ kiểu TFT + vai trò tướng (tester đạt)
+
+- Gộp cho-bot-ngau-nhien và vai-tro-tuong sau khi tester báo đạt; ghép tay thẻ chợ (nhãn hợp thể + icon vai trò) và thẻ Anh Hùng (giá mở khoá + icon vai trò).
+
+## Phiên bản 186 — Rê chuột / giữ tay lên ô kỹ năng để đọc mô tả
 
 - Góp ý người chơi (Mac, Chrome 1018×612): "hover vào kỹ năng để đọc kỹ năng". Nay **rê chuột** (máy tính, ~0,15 giây) hoặc **giữ tay ~0,35 giây** (điện thoại; trước là 0,45 giây và chỉ có ở vài chỗ) lên ô kỹ năng → hiện khung mô tả: tên + loại (chủ động / nội tại / tối thượng), mô tả có số liệu theo cấp tướng, **hiệu lực cấp này ➜ cấp sau** (mỗi cấp kỹ năng +25%), **hồi chiêu** (đã trừ giảm hồi chiêu của tướng, kèm năng lượng và số giây còn lại), **điều kiện** mở / lên cấp kế (cần tướng cấp mấy ✓/✗), **giá** mở (vàng) hoặc nâng (1 điểm kỹ năng / vàng sau thăng thần), "Đã tối đa" khi max.
 - Có ở: thanh thông tin tướng trong trận (4 ô Q/W/E/R kể cả ô khoá), Cây kỹ năng (đầu cột + icon bảng chi tiết), Anh Hùng (4 ô kỹ năng — thêm dòng "Các cấp" cần tướng cấp mấy), Ấn Phù (cấp hiện tại ➜ cấp kế, điều kiện mở hàng, giá điểm Ấn; bỏ `title` gốc để không hiện 2 khung), Thần Khí (đầu mỗi hệ: hiện tại, cấp kế, giá Ngân khố, các mốc). Màn Tiến hoá và Bách khoa không có ô kỹ năng nên không đổi; thẻ tướng màn Chuẩn bị (data-tip cũ) cũng rê chuột là thấy.
@@ -1727,3 +1877,10 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - **Chạm / bấm nhanh giữ nguyên** (nâng / mở kỹ năng); bấm chuột khi đang rê vẫn nâng. Giữ tay xem mô tả rồi thả không nâng; kéo ngón tay đi (cuộn) thì không hiện. Game **không dừng** khi xem.
 - Kỹ thuật: một bộ xử lý chung cho mọi ô `[data-tip]`, `[data-skt]` (kỹ năng thứ i của tướng đang chọn), `[data-skr="loại:i"]` (màn Anh Hùng) — thay 2 bộ giữ tay cũ (v121 thanh tướng, v128 data-tip). Nội dung kỹ năng do `ui.skillTipHtml()` dựng.
 - Test: `tests/mo-ta-ky-nang/mo-ta-ky-nang.test.js` (1920×934, 1018×612, 844×390, 667×375): rê chuột ở 5 màn, giữ tay (cảm ứng thật qua CDP), chạm nhanh vẫn nâng, kéo không hiện, khung trong màn / không che ô / tự đổi phía, game vẫn chạy. Ảnh đã xem: `tests/mo-ta-ky-nang/shots/*-{deck-hover,deck-giu-tay,cay-ky-nang,anh-hung,than-khi,an-phu}.png`.
+- Sửa theo báo cáo tester (sau khi gộp v185):
+  - **(Cao) Màn dọc 390×844** (cả `#wrap` xoay 90°): khung mô tả bị đặt ra ngoài màn ở thanh tướng / Anh Hùng vì tính toạ độ bằng `getBoundingClientRect` theo màn hình. Nay đổi toạ độ màn hình về hệ trong `#ui` theo chiều xoay (và tỉ lệ thu phóng) trước khi đặt khung — đúng ở mọi màn.
+  - **Cây kỹ năng:** khung không còn đè các dòng cấp của chính cột (tránh cả cột `.col`, đặt sang cột bên).
+  - **Ấn Phù:** khung tránh cả bảng ấn (đặt lên bảng chi tiết bên phải); hẹp quá thì tránh cả cột nhánh — không đè hàng ấn bên dưới.
+  - **Thần Khí:** khung tránh cả thẻ hệ; bỏ phần trùng với thẻ (hiện tại, cấp kế, mốc) — chỉ còn mức khi **tối đa**, **Ngân khố còn cần** đến tối đa và **đang có / còn thiếu**.
+  - Cơ chế chung: `data-tip-avoid="sel1|sel2"` = vùng nên tránh che, thử lần lượt rồi mới đến chính ô; hai bên hẹp thì thu khung (≥ 180px).
+- Test thêm cỡ dọc 390×844, kiểm khung không đè cột / thẻ / nhánh chứa ô; ảnh đã xem: `tests/mo-ta-ky-nang/shots/{1920x934,1018x612,844x390,667x375,390x844}-*.png`.

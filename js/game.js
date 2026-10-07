@@ -314,6 +314,7 @@ function heroStats(h) {
   if (h.warT > 0) s.haste += 20;                           // Trống Đồng gõ đầu đợt
   if (s.hid['i.moc2'] && (h.still || 0) >= 10) s.bonusDmgPct += 15;
   if (s.hid['i.thuy1'] && b.thuyAdj) s.bonusDmgPct += 10;   // đứng kề tướng hành Thủy
+  if (b.vt) for (const k in b.vt) s[k] += b.vt[k];        // v182: cộng hưởng vai trò
   s.bonusDmgPct += (b.sinh || 0) * ELEM.sinh + (b.full ? ELEM.full : 0) + (b.drum || 0) - (b.llqPen ? 10 : 0);
   s.airMult += s.airPct / 100;
   if (s.hitAir) s.canAir = true;
@@ -1382,6 +1383,7 @@ class Game {
     this.nextWave = buildWave(1, this.level);
     this.shake = 0;
     this.bossesKilled = 0;
+    this.slHist = [];         // v181: sính lễ đã ra trong trận (chống trùng liên tiếp)
     this.seen = {};
     this.endless = true;      // v166: chỉ còn chế độ vô tận (đơn và nhóm)
     this.won = false;
@@ -1509,29 +1511,84 @@ class Game {
   }
   // v133: quân triệu hồi = đội 6 tướng người chơi chọn (thiếu thì quân mặc định của ải)
   summonList() { return validDeck(this.deck) ? this.deck : summonPool(this.level); }
-  // v143: CHỢ TƯỚNG — luôn mở 4 thẻ rút ngẫu nhiên từ đội 6 tướng. Chạm thẻ = mua & đặt ngay, kéo thẻ = đặt đúng ô.
-  // Mua thẻ nào thì chỗ đó ra thẻ mới; đầu mỗi đợt cả hàng làm mới miễn phí; ↻ đổi cả hàng tốn vàng (tăng dần trong đợt).
-  rollCard(rng = srand) { const pool = this.summonList(); return pool[Math.floor(rng() * pool.length)]; }
+  // v143: CHỢ TƯỚNG — luôn mở 4 thẻ (v180: rút từ mọi tướng Thường, đội 6 tướng được ưu tiên). Chạm thẻ = mua & đặt ngay, kéo thẻ = đặt đúng ô.
+  // Mua thẻ nào thì chỗ đó ra thẻ mới; đầu mỗi đợt cả hàng làm mới miễn phí (trừ khi đang 🔒 khoá); ↻ đổi cả hàng tốn vàng (tăng dần trong đợt).
+  // v180: rút có trọng số theo nhu cầu (xem MARKET_W / MARKET_PITY / MARKET_CAP trong data.js).
+  // số bản sao ★ quy đổi của loại t trên sân người đang chơi (★ = 1, ★★ = 2, ★★★ = 4)
+  marketCopies(t) {
+    let n = 0;
+    for (const h of this.heroes) if (h && h.type === t && !h.from && (!this.co || this.co.canAct(this.co.actor, h.slot))) n += Math.pow(2, Math.max(0, (h.tier || 1) - 1));
+    return n;
+  }
+  // nhu cầu từng loại: ghep = đang có trên sân, chưa đủ bản sao; hop = nguyên liệu còn thiếu của công thức hợp thể
+  // gần xong (bên kia đã đủ ★★ quy đổi, đã sở hữu tướng đích, nguyên liệu nằm trong đội ưu tiên hoặc đã có trên sân —
+  // không thì 20 tướng ra quá nhiều công thức "gần xong", loãng); top = loại bảo hiểm nhắm tới
+  // v180: chợ rút từ mọi tướng Thường; đội 6 tướng thành đội ưu tiên (ra nhiều hơn)
+  // v185: chỉ tướng Thường đã mở khoá bằng Ngân khố (owned = null: bot mô phỏng → mọi tướng)
+  marketPool() { return openCommons(this.owned); }
+  marketNeeds() {
+    const pool = this.marketPool(), doi = new Set(this.summonList()), cp = {}, ghep = new Set(), hop = new Set();
+    for (const t of pool) cp[t] = this.marketCopies(t);
+    for (const t of pool) if (cp[t] > 0 && cp[t] < MARKET_CAP) ghep.add(t);
+    const need = COSTS.ascendTier === 2 ? 2 : Math.pow(2, COSTS.ascendTier - 1);
+    for (const f of FUSION) {
+      if (!pool.includes(f.a) || !pool.includes(f.b) || !this.ownsHero(f.to)) continue;
+      for (const [x, y] of [[f.a, f.b], [f.b, f.a]]) if (cp[x] >= need && cp[y] < need && (doi.has(y) || cp[y] > 0)) hop.add(y);
+    }
+    const w = {};
+    for (const t of pool) w[t] = cp[t] >= MARKET_CAP ? 0 : hop.has(t) ? MARKET_W.hop : ghep.has(t) ? MARKET_W.ghep : doi.has(t) ? MARKET_W.doi : 1;
+    if (pool.every((t) => !w[t])) for (const t of pool) w[t] = 1;     // đủ hết bản sao: rút đều như cũ
+    const top = hop.size ? hop : ghep;
+    return { pool, w, ghep, hop, top };
+  }
+  // nhãn gợi ý trên thẻ: 'hop' = nguyên liệu hợp thể còn thiếu
+  marketHint(t, nd = this.marketNeeds()) { return nd.hop.has(t) ? 'hop' : null; }
+  rollCard(rng = srand, nd = this.marketNeeds(), only = null) {
+    const list = only ? nd.pool.filter((t) => only.has(t) && nd.w[t] > 0) : nd.pool.filter((t) => nd.w[t] > 0);
+    const sum = list.reduce((a, t) => a + nd.w[t], 0);
+    let r = rng() * sum;
+    for (const t of list) { r -= nd.w[t]; if (r < 0) return t; }
+    return list[list.length - 1];
+  }
+  // rút cả hàng (đầu đợt / ↻): đủ MARKET_PITY lần liền không có tướng cần nhất thì thẻ đầu chắc chắn là nó
   rollMarket(rng = srand) {
-    this.market = { types: Array.from({ length: MARKET_SIZE }, () => this.rollCard(rng)), rr: (this.market && this.market.rr) || 0 };
+    const old = this.market || {}, nd = this.marketNeeds();
+    const types = Array.from({ length: MARKET_SIZE }, () => this.rollCard(rng, nd));
+    let dry = old.dry || 0;
+    if (nd.top.size) {
+      if (dry >= MARKET_PITY && !types.some((t) => nd.top.has(t))) types[Math.floor(rng() * MARKET_SIZE)] = this.rollCard(rng, nd, nd.top);
+      dry = types.some((t) => nd.top.has(t)) ? 0 : dry + 1;
+    } else dry = 0;
+    this.market = { types, rr: old.rr || 0, dry, lock: false };
     return this.market;
   }
   ensureMarket() {
-    const m = this.market, pool = this.summonList();
+    const m = this.market, pool = this.marketPool();
     if (SIM.coop && !SIM.active && m) return m;     // co-op: giao diện không được tự rút lại chợ (lệch seed)
     if (!m || !Array.isArray(m.types) || m.types.length !== MARKET_SIZE || m.types.some((t) => !pool.includes(t))) this.rollMarket();
     return this.market;
   }
-  // đầu đợt mới: làm mới cả hàng miễn phí, giá ↻ về lại từ đầu
+  // đầu đợt mới: làm mới cả hàng miễn phí (hàng đang 🔒 khoá thì giữ nguyên một lượt rồi mở khoá), giá ↻ về lại từ đầu
   freshMarket() {
+    const one = () => {
+      const m = this.market, pool = this.marketPool();
+      if (m && m.lock && Array.isArray(m.types) && m.types.length === MARKET_SIZE && m.types.every((t) => pool.includes(t))) { m.lock = false; m.rr = 0; return; }
+      this.rollMarket(); this.market.rr = 0;
+    };
     // co-op: mỗi người một hàng chợ riêng (rút từ đội của mình) — làm mới cả hai
     if (this.co) {
       const a = this.co.actor;
-      for (let p = 0; p < this.co.pl.length; p++) { this.co.actor = p; this.market = null; this.rollMarket(); this.market.rr = 0; }
+      for (let p = 0; p < this.co.pl.length; p++) { this.co.actor = p; one(); }
       this.co.actor = a;
       return;
     }
-    this.market = null; this.rollMarket(); this.market.rr = 0;
+    one();
+  }
+  // v180: 🔒 khoá chợ — giữ nguyên 4 thẻ sang đợt sau (đổi ↻ thì mở khoá)
+  toggleMarketLock() {
+    const m = this.ensureMarket();
+    m.lock = !m.lock;
+    return true;
   }
   rerollCost() { return 10 + 10 * ((this.market && this.market.rr) || 0); }
   rerollMarket(rng = srand) {
@@ -1539,8 +1596,9 @@ class Game {
     const c = this.rerollCost();
     if (this.gold < c) return `Cần ${c} vàng để đổi`;
     this.gold -= c;
-    this.market.rr++;
-    this.market.types = Array.from({ length: MARKET_SIZE }, () => this.rollCard(rng));
+    const rr = this.market.rr + 1;
+    this.rollMarket(rng);
+    this.market.rr = rr;
     return true;
   }
   // tướng ★ trên sân ghép được với thẻ loại `type` (mua về là ghép ngay được)
@@ -1563,14 +1621,15 @@ class Game {
     } else if (this.isFlooded(slot) || !CONFIG.slots[slot]) return 'Không đặt được ở ô này';
     this.gold -= c;
     this.summonN = (this.summonN || 0) + 1;
-    m.types[i] = this.rollCard(rng);
-    if (!target) { this.spawnHero(slot, type, { tier: 1, spent: c }); return slot; }
+    m.types[i] = null;
+    if (!target) { this.spawnHero(slot, type, { tier: 1, spent: c }); m.types[i] = this.rollCard(rng); return slot; }
     // ghép thẳng vào tướng ★ cùng loại: tạo tướng tạm ở chỗ thừa cuối mảng rồi ghép như kéo thả
     const k = this.heroes.length;
     const a = this.spawnHero(k, type, { tier: 1, spent: c }, target);
     this.merge(k, target.slot);
     this.heroes.length = CONFIG.slots.length;
     this.updateAuras();
+    m.types[i] = this.rollCard(rng);     // thẻ bù rút theo sân mới (vừa mua xong)
     return target.slot;
   }
   // v143: Nghỉ chân — sau đợt boss được đổi tối đa REST_SWAPS tướng trong đội (miễn phí)
@@ -1578,6 +1637,7 @@ class Game {
     if (!this.rest) return 'Không ở lúc nghỉ chân';
     const old = this.summonList();
     if (!validDeck(sel)) return `Đội cần đủ ${DECK_SIZE} tướng khác nhau`;
+    if (this.owned && sel.some((t) => !openCommons(this.owned).includes(t))) return 'Tướng chưa mở khoá — mở ở Anh Hùng bằng Ngân khố';   // v182
     if (sel.filter((t) => !old.includes(t)).length > REST_SWAPS) return `Chỉ đổi tối đa ${REST_SWAPS} tướng`;
     this.deck = [...sel];
     if (this.co) { this.market = null; this.rollMarket(); this.market.rr = 0; this.skipRest(); return true; }
@@ -2478,11 +2538,16 @@ class Game {
     const full = els.size >= 5;
     if (full && !this.fullEl) this.notify('Ngũ hành tề tựu! Toàn quân +10% sát thương', '#FFD66B');
     this.fullEl = full;
+    // v182: cộng hưởng vai trò (2 / 4 tướng khác loại cùng vai trò chính)
+    const tiers = typeof roleTiers === 'function' ? roleTiers(roleCounts(alive)) : {};
+    for (const r in tiers) if (tiers[r] > ((this.vtTiers || {})[r] || 0)) this.notify(`Cộng hưởng ${ROLES[r].name} ${tiers[r] * 2}: ${ROLE_SYN[r].t[tiers[r] - 1]}`, ROLES[r].color);
+    this.vtTiers = tiers;
     const airWave = this.waveActive && waveKind(this.wave, this.level) === 'air';
     for (const h of alive) {
       const el = HEROES[h.type].el;
       h.buff.sinh = Math.min(ELEM.sinhMax, alive.filter((o) => near(h, o, ELEM.adj) && EL_SINH[HEROES[o.type].el] === el).length);
       h.buff.full = full;
+      h.buff.vt = typeof roleSynStats === 'function' ? roleSynStats(h.type, tiers) : null;
       h.buff.tamGioi = els.size >= 3;
       h.buff.airWave = airWave;
       const own = owns.get(h);
@@ -2632,7 +2697,7 @@ class Game {
     const skip = new Set(['_anim', 'target', 'tgt', 'notice', 'unlockFx', 'procT', 'strike', '_va']);   // v131: strike giữ hàm (đòn đang vung) — không lưu được
     const heroes = JSON.parse(JSON.stringify(this.heroes, (k, v) => (skip.has(k) ? undefined : v)));
     const o = { v: 1, at: Date.now(), heroes };
-    for (const k of ['level', 'hard', 'endless', 'won', 'gold', 'lives', 'maxLives', 'wave', 'summonN', 'bossesKilled', 'seen', 'water', 'raised', 'moc',
+    for (const k of ['level', 'hard', 'endless', 'won', 'gold', 'lives', 'maxLives', 'wave', 'summonN', 'bossesKilled', 'slHist', 'seen', 'water', 'raised', 'moc',
       'mountain', 'stats', 'inventory', 'jarCount', 'shop', 'time', 'flags', 'runId', 'guardT', 'oathT', 'xpLog', 'deck', 'market', 'rest', 'restWave']) o[k] = this[k];
     return JSON.parse(JSON.stringify(o));
   }
@@ -3701,7 +3766,14 @@ class Game {
 
   // Vua Hùng ban thưởng: chọn 1 trong 3
   bossRewards(bossType) {
-    const opts = [{ kind: 'item', id: ENEMIES[bossType].reward, title: 'Sính lễ' }];
+    // v181: sính lễ bốc ngẫu nhiên có trọng số (rollSinhLe trong data.js), mốc lớn tăng tỉ lệ món hiếm
+    const big = slBigWave(this.wave);
+    const owned = this.inventory.map((i) => i.id);
+    for (const h of this.heroes) if (h) for (const s of SLOTS) if (h.equip[s]) owned.push(h.equip[s].id);
+    this.slHist = this.slHist || [];
+    const sl = rollSinhLe({ hist: this.slHist, owned, big });
+    this.slHist = this.slHist.concat(sl).slice(-6);
+    const opts = [{ kind: 'item', id: sl, title: `Sính lễ ${ITEMS[sl].name}`, sinhLe: true, big }];
     // Hũ Vua Hùng (v37): nhiều món, chọn món hợp với các tướng mạnh nhất trên sân
     const lvl = { thuongluong: 0, haba: 1, thuytinh: 2 }[bossType] || 0;
     const plan = [['epic', 'epic'], ['set', 'epic', 'epic'], ['set', 'set', 'epic']][lvl];

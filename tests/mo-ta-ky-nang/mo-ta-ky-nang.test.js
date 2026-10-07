@@ -1,14 +1,14 @@
 // Test v182: rê chuột (máy tính) / giữ tay ~0,35 giây (điện thoại) lên ô kỹ năng → khung mô tả: tên, mô tả có số liệu,
 // hiệu lực cấp này ➜ cấp sau, hồi chiêu, điều kiện mở, giá nâng. Khung nằm gọn trong màn, không che ô đang chỉ,
 // tự đổi trên / dưới; chạm nhanh vẫn nâng kỹ năng; game không dừng.
-// Kiểm tra 1920×934, 1018×612, 844×390, 667×375 ở: thanh tướng trong trận, Cây kỹ năng, Anh Hùng, Ấn Phù, Thần Khí.
+// Kiểm tra 1920×934, 1018×612, 844×390, 667×375, dọc 390×844 (giao diện xoay) ở: thanh tướng trong trận, Cây kỹ năng, Anh Hùng, Ấn Phù, Thần Khí.
 // Chạy: node tests/mo-ta-ky-nang/mo-ta-ky-nang.test.js
 const path = require('path');
 const fs = require('fs');
 const { open, enter, ok } = require('../cho-tuong/helpers');
 const SHOT = path.join(__dirname, 'shots');
 fs.mkdirSync(SHOT, { recursive: true });
-const SIZES = [[1920, 934], [1018, 612], [844, 390], [667, 375]];
+const SIZES = [[1920, 934], [1018, 612], [844, 390], [667, 375], [390, 844]];   // 390×844: màn dọc, #wrap xoay 90°
 
 const center = (page, sel) => page.evaluate((sel) => {
   const el = document.querySelector(sel); if (!el) return null;
@@ -20,8 +20,11 @@ const tipState = (page, sel) => page.evaluate((sel) => {
   if (!t || t.hidden) return { shown: false };
   const a = t.getBoundingClientRect();
   const b = [el, ...el.children].map((x) => x.getBoundingClientRect()).filter((x) => x.width && x.height).reduce((m, x) => ({ left: Math.min(m.left, x.left), top: Math.min(m.top, x.top), right: Math.max(m.right, x.right), bottom: Math.max(m.bottom, x.bottom) }));
-  const over = a.left < b.right - 1 && b.left < a.right - 1 && a.top < b.bottom - 1 && b.top < a.bottom - 1;
-  return { shown: true, text: t.innerText, side: t.dataset.side, over,
+  const hit = (b) => a.left < b.right - 1 && b.left < a.right - 1 && a.top < b.bottom - 1 && b.top < a.bottom - 1;
+  const over = hit(b);
+  // vùng nên tránh (cả cột / thẻ chứa ô): tên vùng nào khung còn đè
+  const overZone = (el.dataset.tipAvoid || '').split('|').filter(Boolean).filter((q) => el.closest(q) && hit(el.closest(q).getBoundingClientRect()));
+  return { shown: true, text: t.innerText, side: t.dataset.side, over, overZone,
     inside: a.left >= -0.5 && a.top >= -0.5 && a.right <= innerWidth + 0.5 && a.bottom <= innerHeight + 0.5,
     fits: t.scrollHeight <= t.clientHeight + 1 };
 }, sel);
@@ -111,6 +114,10 @@ async function run(w, h) {
   await page.evaluate(() => { ui.openScreen('skills'); }); await page.waitForTimeout(300);
   const s4 = await hover(page, '#screen .col[data-i="3"] .hd', tag, 'Cây kỹ năng ô R', 'cay-ky-nang');
   ok(/R · /.test(s4.text) && /Mở khóa|Lên cấp/.test(s4.text), `[${tag}] Cây kỹ năng: mô tả ô R`);
+  for (const i of [0, 1]) {
+    const sq = await hover(page, `#screen .col[data-i="${i}"] .hd`, tag, `Cây kỹ năng ô ${'QW'[i]}`, i ? '' : 'cay-ky-nang-q');
+    ok(!sq.overZone.length, `[${tag}] Cây kỹ năng ô ${'QW'[i]}: khung không đè các dòng cấp của chính cột (${sq.side})`);
+  }
   await page.mouse.move(2, 2);
   await page.evaluate(() => ui.closeScreen()); await page.waitForTimeout(200);
 
@@ -125,8 +132,10 @@ async function run(w, h) {
   // 6) Thần Khí: tiêu đề hệ (trên cùng) → khung tự đặt phía dưới
   await page.evaluate(() => { ui.legacyHero = 'giong'; ui.renderLegacy(); }); await page.waitForTimeout(300);
   const s6 = await hover(page, '#roster .lg-sys .lg-h', tag, 'Thần Khí', 'than-khi');
-  ok(/Cấp 1/.test(s6.text) && /Giá nâng/.test(s6.text), `[${tag}] Thần Khí: cấp kế + giá nâng`);
+  ok(/Tối đa/.test(s6.text) && /Còn cần/.test(s6.text) && /Đang có/.test(s6.text), `[${tag}] Thần Khí: mức tối đa, Ngân khố còn cần / đang có`);
+  ok(!/Mốc cấp|Hiện tại/.test(s6.text), `[${tag}] Thần Khí: không lặp nội dung đã có trên thẻ (mốc, hiện tại)`);
   ok(s6.side !== 'top', `[${tag}] Thần Khí (sát mép trên) → khung tự đổi xuống dưới / bên (${s6.side})`);
+  ok(!s6.overZone.length, `[${tag}] Thần Khí: khung không đè chính thẻ hệ (${s6.side})`);
   await page.mouse.move(2, h / 2);
   await page.evaluate(() => { ui.legacyHero = null; document.querySelector('#roster').hidden = true; }); await page.waitForTimeout(150);
 
@@ -134,6 +143,7 @@ async function run(w, h) {
   await page.evaluate(() => ui.showRunes(true, 'giong')); await page.waitForTimeout(400);
   const s7 = await hover(page, '#runes .rn-node', tag, 'Ấn Phù', 'an-phu');
   ok(/Cấp 1/.test(s7.text) && /Giá/.test(s7.text) && /Điều kiện/.test(s7.text), `[${tag}] Ấn Phù: cấp kế, điều kiện, giá`);
+  ok(!s7.overZone.includes('.rn-col'), `[${tag}] Ấn Phù: khung không đè các hàng ấn cùng nhánh (${s7.side}, đè: ${s7.overZone.join(',') || 'không'})`);
   ok(!(await page.evaluate(() => document.querySelector('#runes .rn-node[title]'))), `[${tag}] Ấn Phù: không còn title gốc trùng mô tả`);
 
   ok(!errors.length, `[${tag}] không lỗi JS ${errors.join(' | ')}`);
