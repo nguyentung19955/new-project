@@ -182,8 +182,8 @@ lO..lO
 end
 
 part mat_nham
-FFFFFFFFFF
-FKKFFFFKKF
+FFFFFFFFF
+FKKFFFKKF
 end
 
 
@@ -252,7 +252,7 @@ frame attack
   use dia 0 0
   use chan 0 24
   use tren
-  use truong 24 1
+  use truong 24 2
   use tay_len 25 11
   outline
 end
@@ -320,10 +320,14 @@ end
 # trúng đòn: giật lùi, nhắm mắt, nháy sáng da
 anim hurt fps=8 once
 frame hurt
-  use @idle.0
-  shift -1 0
-  use mat_nham 15 8
+  use dia 0 0
+  use chan -1 24
+  use tren -1 0
+  use truong 23 3
+  use tay 21 16
+  use mat_nham 14 8
   swap F h
+  outline
 end
 
 # chết: khuỵu (đĩa tắt dần) → ngã nằm → tối (mặt trời lặn)
