@@ -2438,7 +2438,7 @@ class UI {
       ${daily ? `<div><span>☀ Trận đầu trong ngày qua đợt ${PREP.dailyWave}</span><b style="color:#FFE08A">${bac(1)} +${fmt(daily)}</b></div>` : ''}
       ${tv.rows.length ? `<div><span>${ic('tu-vi')}Tu Vi${fullTv ? '' : ' (60% · chưa qua đợt ' + PREP.dailyWave + ')'}</span><b style="color:#C8A0F0">${tv.rows.join(' · ')}</b></div>` : ''}
       ${tv.up.map((u) => `<div><span></span><b style="color:#FFD66B">${u}</b></div>`).join('')}`;
-    const name = `${coop ? '🤝 ' : UIE.endless() + ' '}${LEVELS[lv].name}${coop ? ` · cùng ${esc(mate)}` : ''}`;
+    const name = `${coop ? '🤝 Cùng giữ thành · ' : UIE.endless() + ' Vô tận · '}${LEVELS[lv].name}${coop ? ` · cùng ${esc(mate)}` : ''}`;
     // v163: chữ, tranh, màu theo chương (trước gắn cứng Sơn Tinh – Thủy Tinh). v166: mọi trận là vô tận → dùng chủ đề chương của bản đồ
     const th = themeOf(lv);
     const art = (w) => { const u = resultImg(th.id, w); return u ? `<img src="${u}" alt="">` : th.id === 'sontinh' ? sceneArt(w ? 'win' : 'lose') : resultScene(lv, w); };

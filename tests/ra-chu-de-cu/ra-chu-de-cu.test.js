@@ -45,7 +45,7 @@ async function result(page, lv, win, endless) {
       const { browser, page, errors } = await open(w, h, { unlocked: 17 });
       const e = await result(page, 4, false, true);
       const nm = await page.evaluate(() => LEVELS[4].name);
-      ok(e.title.includes('Phong Châu thất thủ') && e.head.includes(nm) && !/47\/|Chiến thắng|Ải /.test(e.text), `Vô tận: "${e.title}", đầu "${e.head.trim().slice(0, 30)}"`);
+      ok(e.title.includes("Phong Châu thất thủ") && e.head.includes(nm) && /Vô tận · /.test(e.head) && !/47\/|Chiến thắng|Ải /.test(e.text), `Vô tận: "${e.title}", đầu "${e.head.trim().slice(0, 30)}"`);
       ok(/Giữ được tới đợt\s*47/.test(e.text) && !e.over.length && !e.mainOut, '  "Giữ được tới đợt 47", không tràn');
       if (w === 844) await page.screenshot({ path: path.join(SHOTS, 'thua-vo-tan.png') });
       ok(!errors.length, '  không lỗi trang' + (errors.length ? ': ' + errors.join(' | ') : ''));
