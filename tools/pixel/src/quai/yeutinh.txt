@@ -206,12 +206,22 @@ end
 
 anim hurt fps=8 once
 frame hurt
-  use @walk.0
-  shift -1 0
-  swap Y q
-  swap y q
+  use than -2 1
+  use chan1 11 23
+  use chuy 21 18
+  use tay 19 15
+  set 16 8 k
+  set 18 8 k
+  set 17 9 k
+  set 16 10 k
+  set 18 10 k
+  set 18 12 m
+  set 19 12 m
+  set 20 12 m
+  set 19 13 m
   swap g L
   swap G g
+  outline
 end
 
 # chết: khuỵu gối → đổ sấp → tối màu

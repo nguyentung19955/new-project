@@ -123,6 +123,12 @@ part cang
 oOo
 end
 
+part mat_X
+k.k
+.k.
+k.k
+end
+
 part mat_x
 k.k
 .k.
@@ -210,11 +216,20 @@ frame attack
 end
 
 anim hurt fps=8 once
+# trúng đòn: ngả ra sau, mắt X, sáng tông
 frame hurt
-  use @walk.0
-  shift -1 0
+  use than -1 -1
+  use chan2 11 23
+  use giao 25 3
+  use khien 16 13
+  use cang 25 14
+  use lua2 8 6
+  use mat_X 20 7
+  set 23 9 k
+  set 23 10 k
   swap o O
   swap r o
+  outline
 end
 frame hurt
   use @walk.0

@@ -1,0 +1,50 @@
+{
+ "code": "trieuda",
+ "group": "boss",
+ "name": "Hổ Vương Triệu Đà",
+ "w": 64,
+ "h": 64,
+ "ax": 30,
+ "ay": 62,
+ "bbox": [
+  5,
+  1,
+  53,
+  62
+ ],
+ "n": 13,
+ "anims": {
+  "walk": {
+   "start": 0,
+   "n": 4,
+   "fps": 6,
+   "loop": true
+  },
+  "attack": {
+   "start": 4,
+   "n": 3,
+   "fps": 8,
+   "loop": false
+  },
+  "hurt": {
+   "start": 7,
+   "n": 1,
+   "fps": 8,
+   "loop": false
+  },
+  "die": {
+   "start": 8,
+   "n": 3,
+   "fps": 5,
+   "loop": false
+  },
+  "rage": {
+   "start": 11,
+   "n": 2,
+   "fps": 6,
+   "loop": true
+  }
+ },
+ "cd": 1,
+ "sheet": "trieuda.png"
+}

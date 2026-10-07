@@ -147,13 +147,16 @@ end
 
 anim hurt fps=8 once
 frame hurt
-  use @walk.0
+  use than 1 -1
+  use chan_sau 3 19
+  use chan_truoc 21 21
+  use mieng_ha 18 16
+  use mat_x 20 9
   shift -1 0
   swap g L
   swap G g
   swap y Y
-  set 21 12 t
-  set 22 12 t
+  outline
 end
 
 # chết: mắt X, bẹp xuống → lật ngửa bụng vàng → sẫm màu

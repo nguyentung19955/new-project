@@ -142,6 +142,11 @@ mR.r..r....
 end
 
 # bò ngang: 8 chân bước so le, mai nhún, càng nhấp
+part mieng_ha
+.mDDm.
+..mm..
+end
+
 anim walk fps=6 loop
 frame walk
   use chan_t 1 19
@@ -222,20 +227,22 @@ frame attack
   use @walk.0
 end
 
+# trúng đòn: giật lùi, hai càng hất tung (càng phải há), rụt mắt, há miệng, sáng tông (không dồn màu)
 anim hurt fps=8 once
 frame hurt
-  use chan_t 1 19
-  use chan_p 20 19
-  use cang_trai 0 6
-  use mat 14 10
-  use mieng 12 20
-  use mai 5 11
-  use cang_phai 22 6
-  set 23 14 r
-  set 22 15 m
+  use chan_t2 0 19
+  use chan_p2 19 19
+  use cang_trai 0 3
+  use mat 13 10
+  use mai 4 11
+  use mieng_ha 11 19
+  use cang_phai_ha 21 2
+  set 22 13 r
+  set 22 14 r
+  set 21 15 m
   outline
-  swap S s
   swap s S
+  swap z s
   swap r R
   swap m r
 end

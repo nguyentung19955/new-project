@@ -148,11 +148,18 @@ frame attack
 end
 
 anim hurt fps=8 once
+# trúng đòn: giật lùi, ngóc đầu há mõm, mắt X, sáng tông
 frame hurt
-  use @walk.0
-  shift -1 0
+  use chan_xa 10 22
+  use chan_xa 20 22
+  use than 0 15
+  use dau_mo 15 13
+  use chan 7 22
+  use chan_len 17 21
+  use mat_x 17 14
   swap g L
   swap G g
+  outline
 end
 
 # chết: gục mắt X → lật ngửa bụng → sẫm màu

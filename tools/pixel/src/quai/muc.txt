@@ -81,6 +81,11 @@ DDp.qDD
 end
 
 # lơ lửng: chum + đầu nhấp nhô, xúc tu uốn so le
+part mat_x2
+DPD
+PDP
+end
+
 anim walk fps=6 loop
 frame walk
   use tua1 2 21
@@ -128,14 +133,15 @@ frame attack
   use @walk.0
 end
 
+# trúng đòn: đầu giật ngả ra sau, mắt chữ X, xúc tu xoè, sáng tông
 anim hurt fps=8 once
 frame hurt
-  use tua2 2 21
-  use dau 10 3
-  use mat_nham 13 13
+  use tua1 1 20
+  use dau 9 2
+  use mat_x2 12 12
+  use mat_x2 17 12
   use chum 9 14
   outline
-  swap P p
   swap p P
   swap q p
 end

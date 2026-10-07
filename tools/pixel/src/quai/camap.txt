@@ -130,6 +130,13 @@ GGg........GGt
 end
 
 # nhún trên vây đuôi: thân nhấc lên, vây ngực vẫy
+part mat_x
+GGGG
+DGDG
+GDGG
+DGDG
+end
+
 anim walk fps=6 loop
 frame walk
   use vay_lung 3 8
@@ -193,14 +200,16 @@ frame attack
   use @walk.0
 end
 
+# trúng đòn: thân giật ngả ra sau, há hàm, mắt chữ X, sáng tông
 anim hurt fps=8 once
 frame hurt
-  use vay_lung 2 8
-  use van 2 15
-  use than -1 0
-  use vay_nguc2 19 15
-  use day 9 19
-  use mat_nham 17 6
+  use vay_lung 1 9
+  use van 1 16
+  use than -2 1
+  use vay_nguc2 18 16
+  use day 8 20
+  use ha 16 9
+  use mat_x 15 5
   use duoi 8 24
   outline
   swap g G

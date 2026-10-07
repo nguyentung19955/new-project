@@ -102,6 +102,17 @@ part mat_nham
 mm.mm
 end
 
+part mat_X
+k.k
+.k.
+k.k
+end
+
+part mieng_o
+mmmm
+mCCm
+end
+
 part mat_x
 kk..kk
 end
@@ -160,11 +171,17 @@ end
 
 anim hurt fps=8 once
 frame hurt
-  use @walk.0
+  use toc2 6 12
+  use chuong 6 1
+  use tay 21 11
+  use sanho 23 7
+  use mat_X 15 6
+  use mat_X 19 6
+  use mieng_o 17 9
   shift -1 0
   swap n N
   swap g q
-  use mat_nham 16 8
+  outline
 end
 
 # chết: nhắm mắt, rủ xuống → chuông xẹp nằm trên đất → tan mờ

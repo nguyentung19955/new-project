@@ -105,6 +105,12 @@ part duoi
 xX.
 end
 
+part mat_X
+k.k
+.k.
+k.k
+end
+
 part mat_x
 k.k
 .k.
@@ -199,11 +205,22 @@ end
 
 anim hurt fps=8 once
 frame hurt
-  use @walk.0
+  use chan_xa 10 20
+  use chan_xa 22 20
+  use duoi 2 19
+  use dau_ha 21 11
+  use mai 2 11
+  use bia 10 3
+  use gai 5 11
+  use gai 19 11
+  use chan 4 20
+  use chan 16 20
+  use mat_X 22 13
   shift -1 0
   swap r R
   swap s h
   swap q r
+  outline
 end
 
 # chết: rụt đầu mắt X → mai sập xuống đất, chân thu → sẫm màu

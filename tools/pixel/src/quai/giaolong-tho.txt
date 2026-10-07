@@ -130,6 +130,12 @@ part manh
 end
 
 # trườn: đầu nhấp nhô, chân + vuốt bước so le, thân nhích lên xuống
+part mat_x
+D.D
+.D.
+D.D
+end
+
 anim walk fps=6 loop
 frame walk
   use than
@@ -180,12 +186,13 @@ frame attack
   use @walk.0
 end
 
+# trúng đòn: giật đầu ra sau, há miệng, mắt chữ X, sáng tông
 anim hurt fps=8 once
 frame hurt
   use than
-  use dau 16 3
-  use mat_nham 22 8
-  use tay2 25 19
+  use dau_mo 15 2
+  use mat_x 21 6
+  use tay2 24 19
   use chan2 14 25
   outline
   swap g G

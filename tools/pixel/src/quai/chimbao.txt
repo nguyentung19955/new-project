@@ -158,6 +158,21 @@ part day2
 w..
 end
 
+part mat_X
+k.k
+.k.
+k.k
+end
+
+part dau_ha
+..oPPo....
+.oPRRRo...
+oPPpykoDD.
+oPpppok...
+.oppppoDd.
+..oppo....
+end
+
 part mat_x
 k.k
 .k.
@@ -241,11 +256,18 @@ end
 
 anim hurt fps=8 once
 frame hurt
-  use @walk.1
-  shift 0 1
+  use day2 15 26
+  use duoi 10 20
+  use canhP_xuong 19 11
+  use canhT_xuong 1 11
+  use than 12 10
+  use dau_ha 15 4
+  use set 1 13
+  use set 28 13
+  use mat_X 18 5
   swap p P
   swap o p
-  use mat_x 20 8
+  outline
 end
 
 # chết: mắt X, cánh rũ → rơi xuống → nằm bẹp sẫm màu

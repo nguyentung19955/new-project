@@ -59,6 +59,12 @@ Z.........
 ...r..KKK.
 end
 
+part mat_X
+k.k
+.k.
+k.k
+end
+
 part mat_x
 k.k
 .k.
@@ -105,10 +111,13 @@ end
 
 anim hurt fps=8 once
 frame hurt
-  use @walk.0
+  use duoi3 7 16
+  use dau_ha 15 15
+  use mat_X 20 16
   shift -1 0
   swap K Z
   swap r s
+  outline
 end
 
 # chết: mắt X → lật ngửa → nhạt màu tan như mực loang
