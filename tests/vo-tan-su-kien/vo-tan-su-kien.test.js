@@ -5,7 +5,7 @@
 const path = require('path');
 const fs = require('fs');
 const { open, enter, ok } = require('../cho-tuong/helpers');
-const { minM } = require('./mo-phong');
+const { minM, leaks } = require('./mo-phong');
 const SHOT = path.join(__dirname, 'shots');
 fs.mkdirSync(SHOT, { recursive: true });
 
@@ -15,6 +15,7 @@ const setup = (page, n, evId) => page.evaluate(([n, evId]) => {
   if (evId) { window.__ev0 = window.__ev0 || eventAt; eventAt = (w, lv) => (w === n ? waveEventOf(evId, n, (n - 60) / 10) : window.__ev0(w, lv)); }
   g.gold = 5000; g.lives = 20;
   for (const [sl, t] of [[1, 'xathu'], [3, 'lactuong'], [5, 'thaymo'], [7, 'thansuong'], [9, 'lucsi'], [11, 'thosan']]) if (!g.heroes[sl] && !g.isFlooded(sl)) { g.placeHero(sl, t); }
+  for (const h of g.heroes) if (h) { h.dead = false; h.respawnT = 0; h.stunT = 0; h.cursed = 0; h.hp = heroStats(h).hpMax; }
   g.wave = n - 1; g.restWave = n - 1; g.waveActive = false; g.enemies = []; g.spawnQueue = [];
   g.nextWave = buildWave(n, g.level); g.nextWaveT = 3; g.running = true; g.events.length = 0;
   // nhảy thẳng tới đợt n (không chơi qua) → khung "bộ quái mới" bật ra; chơi thật thì đã báo từ trước
@@ -99,19 +100,20 @@ const CHI_ANH = !!process.env.CHI_ANH;   // CHI_ANH=1: chỉ chụp ảnh
         prev = e.id;
         if (!WAVE_EVENTS[e.id] || !isFinite(e.gold) || !isFinite(e.kho) || /NaN|undefined/.test(e.desc)) bad.push(`${lv}:${n}:${e.id}`);
       }
-      // mỗi 6 sự kiện liên tiếp (một vòng) đủ cả 6 loại
-      for (let c = 0; c < 20; c++) { const s = new Set(); for (let i = 0; i < 6; i++) s.add(eventAt(60 + (c * 6 + i) * 10, lv).id); if (s.size !== 6) miss.push(`${lv}:${c}`); }
+      // mỗi vòng L sự kiện liên tiếp đủ cả L loại
+      const L = WAVE_EVENT_IDS.length;
+      for (let c = 0; c < 20; c++) { const s = new Set(); for (let i = 0; i < L; i++) s.add(eventAt(60 + (c * L + i) * 10, lv).id); if (s.size !== L) miss.push(`${lv}:${c}`); }
     }
     const early = []; for (let n = 1; n < 60; n++) if (buildWave(n, 0).some((it) => it.ev)) early.push(n);
     return { bad, rep, miss, early, ids: WAVE_EVENT_IDS, k60: eventAt(60, 0), k100: eventAt(100, 0), deep: eventAt(1000000, 3) };
   });
   ok(!cal.bad.length, 'sự kiện đúng lịch 60, 70, 80 … (tới đợt 12000, cả 17 bản đồ), không có ở đợt khác ' + cal.bad.slice(0, 5));
   ok(!cal.rep.length, 'không lặp cùng sự kiện 2 lần liên tiếp ' + cal.rep.slice(0, 5));
-  ok(!cal.miss.length, 'mỗi vòng 6 sự kiện có đủ cả 6 loại (xoay vòng có kiểm soát)');
+  ok(!cal.miss.length, `mỗi vòng ${cal.ids.length} sự kiện có đủ cả ${cal.ids.length} loại (xoay vòng ngẫu nhiên có kiểm soát)`);
   ok(!cal.early.length, 'trước đợt 60 không đổi gì (không có sự kiện)');
   ok(cal.deep && cal.deep.n === 1000000 && isFinite(cal.deep.kho), `đợt 1.000.000 vẫn có sự kiện: ${cal.deep.name} (${cal.deep.desc})`);
   // mức độ nặng dần theo số lần gặp
-  const lvls = await page.evaluate(() => WAVE_EVENT_IDS.map((id) => { const a = waveEventOf(id, 60, 0).p, b = waveEventOf(id, 100, 4).p, c = waveEventOf(id, 1000, 94).p; const k = Object.keys(a)[0]; return [id, a[k], b[k], c[k]]; }));
+  const lvls = await page.evaluate(() => WAVE_EVENT_IDS.map((id) => { const a = waveEventOf(id, 60, 0).p, b = waveEventOf(id, 100, 4).p, c = waveEventOf(id, 1000, 94).p; const k = id === 'troibua' ? 'lock' : Object.keys(a)[0]; return [id, a[k], b[k], c[k]]; }));
   ok(lvls.every(([, a, b, c]) => a < b && b <= c && isFinite(c)), 'sự kiện nặng dần (đợt 60 < đợt 100 ≤ đợt 1000, có trần): ' + lvls.map(([id, a, , c]) => `${id} ${a}→${c}`).join(', '));
 
   // ================= từng sự kiện: kích hoạt đúng, hiệu ứng đúng, thưởng đúng
@@ -129,6 +131,7 @@ const CHI_ANH = !!process.env.CHI_ANH;   // CHI_ANH=1: chỉ chụp ảnh
       out.strip = !!document.querySelector('#nextwaves .evt .icn') && document.querySelector('#nextwaves').innerText.includes(ev.name);
       g.events.length = 0;
       const range0 = heroStats(g.heroes[1]).range;
+      const dmg0 = g.heroes.map((h) => (h ? heroStats(h).damage : 0));
       g.startWave();
       out.start = g.events.some((e) => e.type === 'waveEvent' && e.phase === 'start' && e.ev.id === id);
       const q = g.spawnQueue;
@@ -137,6 +140,13 @@ const CHI_ANH = !!process.env.CHI_ANH;   // CHI_ANH=1: chỉ chụp ảnh
       out.evq = q.filter((it) => it.ev).length;
       g.updateAuras();
       out.fog = 1 - heroStats(g.heroes[1]).range / range0;
+      // Ngũ Hành Nghịch: đúng hành bị giảm, hành khác giữ nguyên
+      out.weakOk = g.heroes.every((h, i) => !h || Math.abs(heroStats(h).damage / dmg0[i] - (ev.p.weak && HEROES[h.type].el === ev.p.el ? 1 - ev.p.weak : 1)) < 0.01);
+      out.weakHit = g.heroes.filter((h) => h && ev.p.weak && HEROES[h.type].el === ev.p.el).length;
+      // Bùa Yểm: chạy quá p.every giây → có 1 tướng bị trói
+      if (ev.p.lock) { for (let i = 0; i < Math.ceil((ev.p.every + 0.3) * 30); i++) g.updateEventCurse(1 / 30); out.cursed = g.heroes.filter((h) => h && h.stunT > 0 && h.cursed).length; }
+      // Quân Hùng Hậu: quái (kể cả boss) thêm máu
+      if (ev.p.hp) { const a = g.spawn(q[0].type, 40, null, q[0]), b = g.spawn(q[0].type, 40, null, { ...q[0], ev: null }); out.hpx = a.maxHp / b.maxHp; out.bossEv = !!(q[q.length - 1].ev && q[q.length - 1].ev.hp); a.dead = b.dead = true; }
       // quái sinh ra mang hiệu ứng
       const e = g.spawn(q[0].type, 50, null, q[0]);
       out.regen = e.evRegen || 0; out.speed = e.evSpeed || 0; out.split = e.evSplit || 0;
@@ -165,7 +175,10 @@ const CHI_ANH = !!process.env.CHI_ANH;   // CHI_ANH=1: chỉ chụp ảnh
     }, id);
     const p = r.want.p;
     ok(r.soon && r.banner && r.strip, `${id}: hết đợt 59 → báo trước (banner + biểu tượng trên dải đợt kế)`);
-    ok(r.start && (r.evq > 0 || p.elite || p.air || p.fog), `${id}: đợt 60 bắt đầu → sự kiện kích hoạt`);
+    ok(r.start && (r.evq > 0 || p.elite || p.air || p.fog || p.weak || p.lock), `${id}: đợt 60 bắt đầu → sự kiện kích hoạt`);
+    ok(r.weakOk, `${id}: sát thương tướng ${p.weak ? `hành ${p.el} −${Math.round(p.weak * 100)}% (${r.weakHit} tướng trúng), hành khác giữ nguyên` : 'không đổi'}`);
+    if (p.lock) ok(r.cursed === 1, `${id}: sau ${p.every} giây trói 1 tướng ${p.lock} giây`);
+    if (p.hp) ok(Math.abs(r.hpx - (1 + p.hp)) < 0.01 && r.bossEv, `${id}: quái máu ×${r.hpx.toFixed(2)}, boss cũng được tăng`);
     if (p.elite) ok(r.elite >= 0.25, `${id}: tỉ lệ tinh anh ${Math.round(r.elite * 100)}% (thường ~45%… cộng thêm ${p.elite * 100}%)`);
     if (p.air) ok(r.air >= 0.35, `${id}: ${Math.round(r.air * 100)}% quân là quái bay`);
     if (p.fog) ok(Math.abs(r.fog - p.fog) < 0.01 && r.fogAfter < 0.001, `${id}: tầm đánh −${Math.round(r.fog * 100)}% trong đợt, hết đợt trả lại`);
@@ -210,15 +223,23 @@ const CHI_ANH = !!process.env.CHI_ANH;   // CHI_ANH=1: chỉ chụp ảnh
   }
 
   if (CHI_ANH) return;
-  // ================= PHẦN 3: MÔ PHỎNG — đội vừa đủ qua đợt 60 thường vẫn qua được đợt 60 sự kiện (khó hơn chút)
+  // ================= PHẦN 3: MÔ PHỎNG — đội vừa đủ qua đợt 60 thường (M = lực sát thương nhỏ nhất để mất ≤ 2 mạng)
+  // đánh 24 trận / sự kiện (lực ×0,8 · ×1 · ×1,25 × 8 seed): sự kiện phải khó hơn chút, và đội mạnh hơn 50% vẫn qua gọn
   ({ browser, page, errors } = await open(844, 390, {}));
   await enter(page, 0, true);
   const base = await minM(page, 60, false);
+  const L0 = await leaks(page, 60, false, base);
   const rows = [];
-  for (const id of await page.evaluate(() => WAVE_EVENT_IDS)) rows.push([id, (await minM(page, 60, id, base, 0)) / base]);
-  console.log('    đợt 60 — lực cần so với đợt thường: ' + rows.map(([id, x]) => `${id} ×${x.toFixed(2)}`).join(' · '));
-  ok(rows.every(([, x]) => x >= 0.97 && x <= 1.8), 'mỗi sự kiện khó hơn chút (cần ×1,0–1,8 lực đội), không phải tường chặn');
-  ok(rows.filter(([, x]) => x > 1.04).length >= 4, 'đa số sự kiện thật sự làm đợt khó hơn');
+  for (const id of await page.evaluate(() => WAVE_EVENT_IDS)) {
+    const L = await leaks(page, 60, id, base);
+    const strong = await leaks(page, 60, id, base * 1.5, 0, [1]);
+    rows.push({ id, lost: L.lost, hp: L.hp / Math.max(1, L0.hp), strong: strong.lost / 8, out: L.out + strong.out });
+  }
+  console.log(`    đợt 60, lực M=${base.toFixed(1)}, đợt thường mất ${L0.lost} mạng / 24 trận:\n      ` + rows.map((r) => `${r.id}: mất ${r.lost} · máu lọt ×${r.hp.toFixed(2)} · lực ×1,5 mất TB ${r.strong.toFixed(1)}`).join('\n      '));
+  ok(rows.every((r) => !r.out), 'mọi trận mô phỏng đều đánh xong đợt (không kẹt)');
+  ok(rows.every((r) => r.strong <= 3), 'đội mạnh hơn 50% qua mọi sự kiện, mất TB ≤ 3 mạng — không phải tường chặn');
+  ok(rows.every((r) => r.hp <= 6 && r.lost <= L0.lost * 5 + 30), 'không sự kiện nào khó vọt (máu lọt ≤ ×6 đợt thường)');
+  ok(rows.filter((r) => r.hp > 1.05 || r.lost > L0.lost * 1.1).length >= rows.length - 2, 'đa số sự kiện làm đợt khó hơn đợt thường');
   ok(errors.length === 0, 'mô phỏng: không lỗi trang ' + errors.join(' | '));
   await browser.close();
   console.log('XONG vo-tan-su-kien');

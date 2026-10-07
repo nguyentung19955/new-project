@@ -344,6 +344,7 @@ function heroStats(h) {
   s.hpMax = Math.round((150 + s.str * 18 + s.hp) * grow * (1 + ((b.hpPct || 0) + s.hpPct) / 100));
   s.range *= 1 + s.rangePct / 100;
   if (b.fog) s.range *= 1 - b.fog;                   // sự kiện Sương Mù Lam Chướng: tầm đánh giảm
+  if (b.weak) s.damage *= 1 - b.weak;                // sự kiện Ngũ Hành Nghịch: tướng hành bị suy
   s.regen += 0.5 + s.str * 0.06 + (b.regen || 0);
   s.skillPower = (1 + s.int * 0.015) * (1 + s.skillPct / 100) * (1 + evoSkill / 100);
   s.hpMax = Math.round(s.hpMax * (1 + evoHp / 100));
@@ -2423,6 +2424,21 @@ class Game {
     if (ev) this.events.push({ type: 'waveEvent', phase: 'start', ev });
   }
 
+  // sự kiện Bùa Yểm Thủy Tinh: cứ p.every giây trói (choáng) ngẫu nhiên 1 tướng p.lock giây — srand nên chơi nhóm vẫn khớp
+  updateEventCurse(dt) {
+    const ev = this.waveActive && this.waveEvent();
+    if (!ev || !ev.p.lock) { this.curseT = 0; return; }
+    if (!this.curseT) this.curseT = ev.p.every;
+    if ((this.curseT -= dt) > 0) return;
+    this.curseT = ev.p.every;
+    const list = this.heroes.filter((h) => h && !h.dead && !(h.stunT > 0));
+    if (!list.length) return;
+    const h = list[Math.floor(srand() * list.length)];
+    h.stunT = Math.max(h.stunT || 0, ev.p.lock); h.cursed = ev.p.lock;
+    this.effects.push({ type: 'ring', x: h.x, y: h.y - 20, r: 34, color: '#7FA8F0', ttl: 0.7, max: 0.7 });
+    this.text(h.x, h.y - 70, 'Bị yểm bùa!', '#7FA8F0', 1.2, 14);
+  }
+
   // Gọi sớm: giữa hai đợt thì bắt đầu ngay; đang trong đợt thì dồn đợt kế vào luôn
   earlyBonus() {
     if (this.wave === 0) return 0;
@@ -2558,6 +2574,7 @@ class Game {
     this.vtTiers = tiers;
     const airWave = this.waveActive && waveKind(this.wave, this.level) === 'air';
     const fog = this.fogNow();
+    const wev = this.waveActive && this.waveEvent(), weak = wev && wev.p.weak ? wev.p : null;
     for (const h of alive) {
       const el = HEROES[h.type].el;
       h.buff.sinh = Math.min(ELEM.sinhMax, alive.filter((o) => near(h, o, ELEM.adj) && EL_SINH[HEROES[o.type].el] === el).length);
@@ -2566,6 +2583,7 @@ class Game {
       h.buff.tamGioi = els.size >= 3;
       h.buff.airWave = airWave;
       h.buff.fog = fog;
+      h.buff.weak = weak && weak.el === HEROES[h.type].el ? weak.weak : 0;
       const own = owns.get(h);
       if (own.hid['r.gay_tam_gioi'] && els.size >= 3) this.discover('r.gay_tam_gioi', h.x, h.y);
       if (own.hid['r.cung_mat_chim'] && airWave) this.discover('r.cung_mat_chim', h.x, h.y);
@@ -2652,6 +2670,7 @@ class Game {
       if (this.nextWaveT <= 0) this.startWave();
     }
     this.updateAuras();
+    this.updateEventCurse(dt);
     this.updateSpawns(dt);
     this.updateZones(dt);
     this.auraBosses = this.enemies.filter((e) => !e.dead && e.def.speedAura);
@@ -2759,6 +2778,7 @@ class Game {
     if (elite) hp *= 1.8;
     if (this.hard) hp *= HARD.hp(this.level);
     if (it && it.hpx) hp *= it.hpx;                 // đợt quá WAVE_CAP con: phần dư dồn vào máu
+    if (it && it.ev && it.ev.hp) hp *= 1 + it.ev.hp; // sự kiện Quân Hùng Hậu
     hp = Math.min(hp, 1e250);                       // không bao giờ thành Infinity
     const p = PATH.at(dist);
     const e = {

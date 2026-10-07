@@ -2064,11 +2064,11 @@ function buildWave(n, level) {
     const fast = ro ? ro.fast.includes(type) && !evAir : false;
     const it = { type, elite, gap: fast ? 0.45 : 0.8 };
     if (hx !== 1) it.hpx = hx;
-    if (ev && (ev.p.regen || ev.p.speed || ev.p.split)) it.ev = { regen: ev.p.regen || 0, speed: ev.p.speed || 0, split: ev.p.split || 0 };
+    if (ev && (ev.p.regen || ev.p.speed || ev.p.split || ev.p.hp)) it.ev = { regen: ev.p.regen || 0, speed: ev.p.speed || 0, split: ev.p.split || 0, hp: ev.p.hp || 0 };
     list.push(it);
   }
   if (kind === 'champion') list.push({ type: ro ? ro.champ : 'rua', elite: 'armored', champion: true, gap: 2 });
-  if (kind === 'boss') list.push({ type: bossAt(n, level), gap: 3 });
+  if (kind === 'boss') list.push({ type: bossAt(n, level), gap: 3, ...(ev && ev.p.hp ? { ev: { hp: ev.p.hp } } : {}) });
   return list;
 }
 
@@ -2084,13 +2084,23 @@ const WAVE_EVENTS = {
   hoimau:   { name: 'Nước Thánh Hà Bá', ic: 'hoi-mau', color: '#3EDC4E', lore: 'Hà Bá rưới nước thánh lên quân',
     p: (k) => ({ regen: Math.min(2.5, 1.2 + 0.1 * k) }), desc: (p) => `quái hồi ${String(+p.regen.toFixed(1)).replace('.', ',')}% máu mỗi giây` },
   giobao:   { name: 'Gió Bão Thủy Tinh', ic: 'toc-chay', color: '#9EDDF2', lore: 'Thủy Tinh hô gió gọi bão',
-    p: (k) => ({ speed: Math.min(0.4, 0.2 + 0.02 * k) }), desc: (p) => `quái chạy nhanh hơn ${Math.round(p.speed * 100)}%` },
+    p: (k) => ({ speed: Math.min(0.45, 0.25 + 0.02 * k) }), desc: (p) => `quái chạy nhanh hơn ${Math.round(p.speed * 100)}%` },
   suongmu:  { name: 'Sương Mù Lam Chướng', ic: 'suong-mu', color: '#B8C6CC', lore: 'Sương độc rừng thiêng phủ kín trận',
-    p: (k) => ({ fog: Math.min(0.22, 0.12 + 0.01 * k) }), desc: (p) => `tầm đánh của tướng −${Math.round(p.fog * 100)}%` },
+    p: (k) => ({ fog: Math.min(0.2, 0.08 + 0.01 * k) }), desc: (p) => `tầm đánh của tướng −${Math.round(p.fog * 100)}%` },
   phanthan: { name: 'Yêu Tinh Phân Thân', ic: 'phan-than', color: '#C08CF0', lore: 'Yêu tinh núi Tản hoá phép phân thân',
     p: (k) => ({ split: Math.min(0.55, 0.35 + 0.02 * k) }), desc: (p) => `quái thường chết tách 1 phân thân ${Math.round(p.split * 100)}% máu` },
+  // tham khảo game thủ thành khác: làm yếu một nhóm tướng (Arknights "Contingency Contract"), cấm / trói tháp ngẫu nhiên
+  // (Rogue Tower, Kingdom Rush: phù thuỷ làm choáng tháp), cả đợt quái được tăng sức
+  hesuy:    { name: 'Ngũ Hành Nghịch', ic: 'khac-che', color: '#F0A030', lore: 'Âm dương đảo lộn, một hành suy yếu',
+    p: (k, n, lv) => ({ weak: Math.min(0.45, 0.3 + 0.015 * k), el: EL_ORDER[(n * 7 + (lv || 0) * 3 + k) % 5] }),
+    desc: (p) => `tướng hành ${ELEMENTS[p.el].name} −${Math.round(p.weak * 100)}% sát thương` },
+  troibua:  { name: 'Bùa Yểm Thủy Tinh', ic: 'cam-lang', color: '#7FA8F0', lore: 'Phù thủy nước yểm bùa trói tướng',
+    p: (k) => ({ every: Math.max(6, 10 - 0.3 * k), lock: Math.min(6, 3.5 + 0.25 * k) }),
+    desc: (p) => `cứ ${String(+p.every.toFixed(1)).replace('.', ',')} giây trói ngẫu nhiên 1 tướng ${String(+p.lock.toFixed(1)).replace('.', ',')} giây` },
+  hunghau:  { name: 'Quân Hùng Hậu', ic: 'mau', color: '#E25A3A', lore: 'Thủy Tinh dốc toàn quân',
+    p: (k) => ({ hp: Math.min(0.6, 0.25 + 0.03 * k) }), desc: (p) => `cả đợt (kể cả boss) +${Math.round(p.hp * 100)}% máu` },
   chimbao:  { name: 'Đàn Chim Bão', ic: 'bay', color: '#F2D27A', lore: 'Chim Bão che kín trời',
-    p: (k) => ({ air: Math.min(0.8, 0.5 + 0.02 * k), airHp: Math.min(2, 1.4 + 0.05 * k) }), desc: (p) => `${Math.round(p.air * 100)}% quân là quái bay, máu ×${String(+p.airHp.toFixed(2)).replace('.', ',')}` },
+    p: (k) => ({ air: Math.min(0.7, 0.4 + 0.02 * k), airHp: Math.min(1.3, 0.85 + 0.04 * k) }), desc: (p) => `${Math.round(p.air * 100)}% quân là quái bay, máu ×${String(+p.airHp.toFixed(2)).replace('.', ',')}` },
 };
 const WAVE_EVENT_IDS = Object.keys(WAVE_EVENTS);
 function waveEventCycle(c, level) {
@@ -2105,10 +2115,10 @@ function eventAt(n, level) {
   const cyc = waveEventCycle(c, level);
   // vòng mới mở đầu trùng sự kiện cuối vòng trước → đổi chỗ 2 sự kiện đầu (không đụng phần tử cuối nên không đệ quy)
   if (c > 0 && cyc[0] === waveEventCycle(c - 1, level)[L - 1]) [cyc[0], cyc[1]] = [cyc[1], cyc[0]];
-  return waveEventOf(cyc[k % L], n, k);
+  return waveEventOf(cyc[k % L], n, k, level);
 }
-function waveEventOf(id, n, k) {
-  const d = WAVE_EVENTS[id], p = d.p(k);
+function waveEventOf(id, n, k, level) {
+  const d = WAVE_EVENTS[id], p = d.p(k, n, level);
   return { id, n, k, p, name: d.name, ic: d.ic, color: d.color, lore: d.lore, desc: d.desc(p), gold: Math.round((20 + n * 5) * 0.6), kho: Math.min(250, 60 + 12 * k) };
 }
 
