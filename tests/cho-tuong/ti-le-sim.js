@@ -20,7 +20,8 @@ async function simulate(page, key, n = 1000, seed = 12345) {
     try {
     game.running = false;
     game.deck = [...DECK];
-    game.owned = null;
+    // cho-6-the: tài khoản đã mở mọi tướng Thường + 1 tướng Tím (Cá Ông = Ngư Phủ + Thần Sương); owned = null thì mọi công thức đều "đang theo"
+    game.owned = new Set([...BASIC_HEROES, fusionFor('nguphu', 'thansuong').to]);
     for (let s = 0; s < game.heroes.length; s++) game.heroes[s] = null;
     c.board.forEach(([t, tier]) => game.spawnHero(game.freeSlots()[0], t, { tier, spent: 60 }));
     game.freshMarket();

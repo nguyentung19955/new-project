@@ -28,7 +28,8 @@ async function main() {
   ok(inDeck, 'thẻ rút từ tướng Thường (v180: mọi tướng Thường, đội 6 tướng được ưu tiên)');
   await page.screenshot({ path: path.join(SHOT, 'thanh-day-844x390.png'), clip: { x: 0, y: 390 - 110, width: 844, height: 110 } });
 
-  // chạm mua
+  // chạm mua (thẻ loại chưa có trên sân — có thì mua là tự ghép, xem bên dưới)
+  await page.evaluate(() => { const on = new Set(game.heroes.filter(Boolean).map((h) => h.type)); game.market.types = game.market.types.map((t) => (on.has(t) ? BASIC_HEROES.find((x) => !on.has(x)) : t)); ui.sig.deck = null; });
   let s0 = await page.evaluate(() => ({ gold: game.gold, cost: game.summonCost(), t: game.market.types[0], n: game.heroes.filter(Boolean).length }));
   await page.click('#deck .mk-card[data-mk="0"]');
   await page.waitForTimeout(150);
@@ -40,12 +41,42 @@ async function main() {
   // kéo thẻ vào ô cụ thể
   await page.evaluate(() => { game.gold = 2000; });
   const target = await page.evaluate(() => game.freeSlots()[3]);
-  const t1 = await page.evaluate(() => game.market.types[1]);
+  const t1 = await page.evaluate(() => { const on = new Set(game.heroes.filter(Boolean).map((h) => h.type)); return (game.market.types[1] = BASIC_HEROES.find((x) => !on.has(x))); });
   await rerender(page); await page.waitForTimeout(100);
   await dragTo(page, await center(page, '#deck .mk-card[data-mk="1"]'), await slotXY(page, target));
   ok(await page.locator('#mk-ghost:not([hidden])').count() === 1, 'đang kéo thẻ có ảnh tướng theo tay');
   await page.mouse.up(); await page.waitForTimeout(150);
   ok(await page.evaluate(([s, t]) => game.heroes[s] && game.heroes[s].type === t, [target, t1]), `kéo thẻ thả vào ô ${target} → tướng đặt đúng ô`);
+
+  // cho-6-the: mua thẻ ghép được → TỰ GHÉP luôn (còn ô trống cũng ghép), ghép dây chuyền ★ → ★★ → ★★★; không còn nút "Ghép tự động"
+  const am = await page.evaluate(() => {
+    for (let s = 0; s < game.heroes.length; s++) game.heroes[s] = null;
+    game.gold = 5000; const t = 'lucsi';
+    const a = game.freeSlots()[0]; game.spawnHero(a, t, { tier: 2 });
+    const b = game.freeSlots()[0]; game.spawnHero(b, t, { tier: 1 });
+    game.market.types[2] = t; ui.sig.deck = null; ui.updateDeck();
+    return { a, b, n: game.heroes.filter(Boolean).length, auto: document.querySelectorAll('#deck [data-act=auto-merge], #deck .dk-auto').length, twin: document.querySelector('#deck .mk-card[data-mk="2"]').classList.contains('twin') };
+  });
+  ok(am.auto === 0 && am.twin, 'không còn nút "Ghép tự động"; thẻ ghép được có nhãn ⇄ ghép');
+  await page.click('#deck .mk-card[data-mk="2"]'); await page.waitForTimeout(150);
+  const am2 = await page.evaluate(() => ({ n: game.heroes.filter(Boolean).length, tiers: game.heroes.filter(Boolean).map((h) => h.tier), fx: game.effects.filter((e) => e.type === 'evolve').length }));
+  ok(am2.n === 1 && am2.tiers[0] === 3 && am2.fx >= 2, `mua Lực Sĩ khi sân có ★★ + ★ → tự ghép dây chuyền thành ★★★ (còn ${am2.n} tướng, ${am2.fx} hiệu ứng lên sao)`);
+  const am3 = await page.evaluate(() => { const r = game.buyCard(0, game.freeSlots()[0]); game.market.types[1] = game.heroes[r].type; ui.sig.deck = null; const free = game.freeSlots()[1]; const r2 = game.buyCard(1, free); return { r, r2, tier: game.heroes[r].tier, empty: !game.heroes[free] }; });
+  ok(am3.r2 === am3.r && am3.tier === 2 && am3.empty, 'kéo thẻ ghép được vào ô trống khác → vẫn ghép vào tướng ★ trên sân (ô trống để trống)');
+  // cho-6-the: dựng lại thanh chợ (đổi ↻ / mua) không tạo lại ảnh đã có → không nháy trắng; ảnh mới đã giải mã sẵn
+  const nf = await page.evaluate(async () => {
+    game.gold = 1e5; ui.sig.deck = null; ui.updateDeck(); await new Promise((r) => setTimeout(r, 400));
+    let blank = 0, kept = 0, total = 0;
+    for (let k = 0; k < 20; k++) {
+      const before = new Map([...document.querySelectorAll('#deck .mk-card > img')].map((im) => [im.getAttribute('src'), im]));
+      await new Promise((r) => setTimeout(r, 250));     // nhịp bấm ↻ của người (≥ 1/4 giây)
+      game.market.rr = 0; game.rerollMarket(); ui.updateDeck();
+      for (const im of document.querySelectorAll('#deck .mk-card > img')) { total++; if (before.get(im.getAttribute('src')) === im) kept++; if (!(im.complete && im.naturalWidth > 0)) blank++; }
+    }
+    return { blank, kept, total };
+  });
+  ok(nf.blank === 0 && nf.kept > 0, `20 lần đổi chợ: ${nf.total} ảnh thẻ, ảnh chưa sẵn sàng ngay khi dựng lại: ${nf.blank}, ${nf.kept} ảnh dùng lại không tạo mới`);
+  await page.evaluate(() => { game.gold = 2000; game.market.rr = 0; ui.sig.deck = null; });
 
   // ↻ đổi hàng
   let r0 = await page.evaluate(() => ({ gold: game.gold, c: game.rerollCost() }));
@@ -62,7 +93,7 @@ async function main() {
   ok(w1.fresh && w1.rr === 0 && w1.c === 10 && w1.gold === w0 && w1.ok, 'đầu đợt mới: chợ làm mới miễn phí, giá ↻ về 10');
 
   // thẻ "ghép"
-  const twin = await page.evaluate(() => { const h = game.heroes.find((x) => x && x.tier === 1); game.market.types[2] = h.type; game.market.types[3] = game.summonList().find((t) => !game.heroes.some((x) => x && x.type === t)) || game.market.types[3]; ui.sig.deck = null; return { slot: h.slot, type: h.type }; });
+  const twin = await page.evaluate(() => { const h = game.heroes.find((x) => x && x.tier === 1) || game.spawnHero(game.freeSlots()[0], 'thaymo', { tier: 1 }); game.market.types[2] = h.type; game.market.types[3] = game.summonList().find((t) => !game.heroes.some((x) => x && x.type === t)) || game.market.types[3]; ui.sig.deck = null; return { slot: h.slot, type: h.type }; });
   await page.waitForTimeout(120);
   ok(await page.locator('#deck .mk-card[data-mk="2"].twin .tw').innerText() === 'ghép', 'thẻ trùng tướng ★ trên sân có viền sáng + nhãn "ghép"');
   await page.screenshot({ path: path.join(SHOT, 'thanh-day-ghep-844x390.png'), clip: { x: 0, y: 390 - 110, width: 844, height: 110 } });

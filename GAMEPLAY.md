@@ -2065,37 +2065,36 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 
 - Gộp claude/tu-cu-dong + claude/tu-cu-dong-anh: 90 ảnh mới (72 dùng, 18 chờ gen lại trong CD_SKIP), rig 90 mã (67 vung tay), chân đứng yên, boss ×2, nhún lấy đà, vệt chém đúng phía.
 
-## claude/cho-6-the — Chợ tướng 6 thẻ, thanh chợ nhỏ gọn
+## claude/cho-6-the — Chợ tướng 6 thẻ, thanh chợ nhỏ gọn, tự ghép khi mua, ưu tiên nguyên liệu hợp thể
 
-- **Chợ ra 6 thẻ mỗi lượt** (`MARKET_SIZE` 4 → 6). Đổi ↻, 🔒 khoá chợ, thẻ bù, bảo hiểm (`MARKET_PITY` = 2), giới hạn bản sao (`MARKET_CAP` = 4), co-op lockstep đều dùng chung `MARKET_SIZE`. Bản lưu cũ có hàng 4 thẻ: giữ 4 thẻ cũ, rút thêm 2 cho đủ (hàng đang khoá cũng vậy).
-- **Giữ giá đổi chợ** (10 + 10 × số lần đổi trong đợt). 6 lựa chọn dễ ghép hơn nên **giảm trọng số ưu tiên**: đang ghép dở ×5 → **×3.5**, nguyên liệu hợp thể thiếu ×12 → **×8** (đội ưu tiên ×2, thường ×1 giữ nguyên).
-- Mô phỏng `node tests/cho-tuong/ti-le-sim.js` (1000 lần ↻, seed cố định):
+- **Chợ ra 6 thẻ mỗi lượt** (`MARKET_SIZE` 4 → 6). Đổi ↻, 🔒 khoá chợ, thẻ bù, giới hạn bản sao (`MARKET_CAP` = 4), co-op lockstep đều dùng chung `MARKET_SIZE`. Bản lưu cũ có hàng 4 thẻ: giữ 4 thẻ cũ, rút thêm 2 cho đủ (hàng đang khoá cũng vậy). **Giữ giá đổi chợ** (10 + 10 × số lần đổi trong đợt).
+- **Mua thẻ ghép được thì TỰ GHÉP luôn** (kể cả còn ô trống, hoặc kéo thẻ vào ô trống khác): dồn vào tướng ★ cùng loại trên sân, có hiệu ứng lên sao, **ghép dây chuyền** ★ + ★ → ★★, rồi ★★ + ★★ → ★★★ nếu sân còn ★★ cùng loại. Không tự hợp thể. **Bỏ nút "Ghép tự động"** ở thanh chợ (thẻ vẫn có nhãn ⇄ "mua là ghép").
+- **Nguyên liệu hợp thể (tướng đích phải mở khoá ở Anh Hùng — giữ như cũ):**
+  - Công thức **đang theo** = tướng đích đã mở khoá và đã có ≥1 bản của một nửa công thức trên sân (chưa bắt đầu công thức nào thì mọi công thức đích đã mở) — không còn đòi "gần xong" (bên kia ★★) hay "trong đội ưu tiên".
+  - Nguyên liệu còn thiếu bản sao của công thức đang theo: trọng số ×8 (đội ưu tiên ×2, thường ×1; đang ghép dở ×3.5).
+  - **Bảo hiểm hợp thể:** mỗi lần rút cả hàng (đầu đợt / ↻) **chắc chắn ≥1 thẻ** là nguyên liệu thiếu nhất (ít bản sao nhất) của công thức đang theo. Bảo hiểm ghép (`MARKET_PITY` = 2 lần liền không ra tướng đang có → lần sau chắc chắn có) tính riêng, không đè thẻ hợp thể.
+  - Nguyên liệu của công thức có **tướng đích chưa mở khoá**: không ưu tiên; thẻ có ổ khoá nhỏ ở dải giá + tiêu đề "Nguyên liệu hợp thể X — chưa mở khoá: Mở ở Anh Hùng · 900 Ngân khố"; mua thẻ đó lần đầu trong trận → nhắc đi mở khoá.
+  - Bảng **Hợp thể** trong trận: công thức chưa mở có nút **"🔒 Mở ở Anh Hùng · 900"** (bấm → mở Anh Hùng đúng tướng đó), công thức đã mở xếp lên đầu; chưa mở tướng Tím nào thì dòng phụ nhắc "Mở khoá 1 tướng Tím ở Anh Hùng…". Bảng Tiến hoá: "Chưa mở khoá — Mở ở Anh Hùng · 900 Ngân khố". **Màn kết quả**: chưa mở tướng Tím nào thì có dòng "Hợp thể: Mở khoá 1 tướng Tím ở Anh Hùng · 900 để hợp thể được trong trận".
+- Mô phỏng chợ `node tests/cho-tuong/ti-le-sim.js` (1000 lần ↻, seed cố định, tài khoản đã mở mọi tướng Thường + Cá Ông):
 
-| Tình huống | Chợ 4 thẻ (cũ, ×5/×12) | 6 thẻ, trọng số cũ | **6 thẻ, ×3.5/×8 (chọn)** |
-|---|---|---|---|
-| Đầu trận — ≥1 thẻ ghép ngay | 59.9% | 69.1% | **60.4%** |
-| Giữa trận — ≥1 thẻ ghép ngay | 92.5% | 98.0% | **95.1%** |
-| Giữa trận — ≥1 tướng đang có | 98.6% | 99.6% | **98.3%** |
-| Thiếu nguyên liệu hợp thể — ra đúng nguyên liệu | 69.0% | 78.4% | **75.1%** |
-| Trượt liền dài nhất (bảo hiểm) | 2 | 2 | **2** |
+| Tình huống | Nhánh chính (4 thẻ) | **cho-6-the (6 thẻ)** |
+|---|---|---|
+| Đầu trận (1 tướng ★) — ≥1 thẻ ghép được | 59.9% | **52.1%** (1 chỗ dành cho nguyên liệu Cá Ông) |
+| Giữa trận — ≥1 thẻ ghép được | 92.5% | **95.6%** |
+| Giữa trận — ≥1 tướng đang có | 98.6% | **97.6%** |
+| Thiếu Thần Sương (Ngư Phủ ★★ → Cá Ông) — ra đúng nguyên liệu | 69.0% (trượt liền tối đa 2) | **100%** (mỗi lần đổi) |
+| Trượt liền dài nhất (bảo hiểm ghép) | 2 | **2** |
 
-  Đầu trận giữ như cũ; giữa trận / hợp thể dễ hơn một chút (đổi lại hàng thẻ rộng hơn, nhiều lựa chọn) — không đổi giá ↻.
-- **Thanh chợ nhỏ gọn** (`#deck.mk-mode`, chỉ khi hiện chợ; thanh tướng đang chọn giữ nguyên): cao 70 → **46** (khung thiết kế) — ở 844×390 cao **76 → 50px (≈66%)**, 667×375: 60 → 39.5px, 1920×934: 144 → 95px. Thẻ 62×42: chân dung tròn 29px, icon hệ góc trái (15px) + icon vai trò góc phải (16px), tên 1 dòng (tự thu nhỏ chữ), dải giá 12px; nhãn "ghép" / "hợp" thu thành ký hiệu ⇄ / ✦ (viền xanh / tím vẫn báo). Nút ↻ 42×42, 🔒 42×42, Ghép tự động 46×42, Hợp thể 44×42. 6 thẻ + nút vừa một hàng ở 1920×934, 844×390, 667×375 và dọc 390×844; vùng chạm thẻ ≥ 36px ở 667×375.
-- Test: `cho-tuong.test.js` (6 thẻ, thanh ≤ 70% chiều cao cũ, vùng chạm ≥ 36), `ti-le.test.js` (trọng số mới, hàng 6 thẻ).
+- Mô phỏng đợt ra **tướng Tím đầu tiên** `MK=1 node tests/hop-the/mo-phong.js 6 own1` (bot tham lam, tài khoản đã mở mọi tướng Thường + **1 tướng Tím** = Cá Ông, bot theo công thức đã mở, 6 ván mỗi ải, chạy tối đa 1800 s):
+
+| Ải | Nhánh chính: có Tím · đợt TB | Nhánh chính: đợt đạt ★★★ cả 2 | **cho-6-the: có Tím · đợt TB** | **cho-6-the: đợt đạt ★★★ cả 2** |
+|---|---|---|---|---|
+| 1 | 2/6 ván · đợt 29.5 | 23, 31 (4/6 ván không lên nổi) | **6/6 · đợt 20.8** | **9–13** |
+| 3 | 3/6 · đợt 23.3 | 16–18 | **6/6 · đợt 20.7** | **10–12** |
+| 5 | 2/6 · đợt 25 | 16, 26 | **4/6 · đợt 20.3** (2 ván thua trước) | **8–14** |
+
+  Chợ đã đưa đủ ★★★ cả 2 nguyên liệu về **đợt ~8–14**. Tím đầu tiên vẫn ở **đợt ~20–21** vì điều kiện **kỹ năng tối đa** (R tối đa cần cấp 16 — `R_REQ`; nâng 2 tướng lên cấp 16 tốn vàng tới khoảng đợt 20) — muốn về đợt 12–16 cần chỉnh kinh tế kỹ năng / cấp (ngoài phạm vi chợ, chờ quyết định).
+- **Thanh chợ nhỏ gọn** (`#deck.mk-mode`, chỉ khi hiện chợ; thanh tướng đang chọn giữ nguyên): cao 70 → **48** (khung thiết kế) — 844×390: **76 → 52px (69%)**, 667×375: 60 → 41px, 1920×934: 144 → 99px, dọc 390×844: 76 → 52. Thẻ 66×44: chân dung tròn 24px, icon hệ (trái, 15px) + vai trò (phải, 16px) ở góc trên, **dải giá riêng 16px: chữ 14px, xu 15px viền sáng, nền đỏ sẫm** (667×375: xu ~13px thật). **Tên tướng không hiện trên thẻ** (tên đè cằm chân dung — tester T8; tên ở tiêu đề thẻ / aria và thanh tướng khi chọn). Nhãn "ghép" / "hợp" → ký hiệu ⇄ / ✦, ổ khoá = đích chưa mở. Nút ↻ 42×44 (giá 14px), 🔒 42×44, Hợp thể 46×44. 6 thẻ + nút một hàng, vùng chạm nhỏ nhất 36px ở 667×375.
+- **Hết nháy khi dựng lại thanh chợ:** giữ lại phần tử `<img>` cũ khi đổi chợ / mua; ảnh mặt mọi tướng chợ có thể ra được nạp + giải mã sẵn (3 bản mỗi ảnh), thẻ mới lấy thẳng ảnh đã tải. Test: 20 lần ↻ (nhịp ¼ giây) → 0 ảnh chưa sẵn sàng.
+- Test: `cho-tuong.test.js` (6 thẻ, thanh ≤ 70%, vùng chạm ≥ 36, tự ghép dây chuyền, không còn nút Ghép tự động, không nháy), `ti-le.test.js` (trọng số, bảo hiểm hợp thể mỗi lần đổi, bảo hiểm ghép, nhãn khoá + nhắc mở khoá), `vai-tro.test.js` (6 thẻ, icon không đè tên).
 - Ảnh trước / sau (4 cỡ): `docs/cho-6-the/truoc-*.jpg`, `docs/cho-6-the/sau-*.jpg` (dải đáy).
-## claude/dung-anh-co-san — Dùng ảnh có sẵn thay hình vẽ bằng code / emoji
-
-- **Luôn dùng khi có file** (không phụ thuộc "Dùng ảnh AI"), thiếu file thì giữ hình code / ký hiệu cũ:
-  - Đồng xu vàng (thanh trên, giá, mọi `coin()`, ô "Vàng mỗi đợt" Núi Tản Viên) → `ui/ui-tai-nguyen-1.png` (đồng xu lỗ vuông; đĩa đồng `ui_dong-xu.png` cũ xuống dự phòng). Nén bạc Ngân khố (`bac()`) → `ui/ui-tai-nguyen-3.png`. Trái tim mạng trên thanh trên → `ui/ui-tai-nguyen-2.png`; mực nước dâng → `ui/ic-nuoc-dang.png`.
-  - Ngăn kéo ≡ trong trận: 🎒 → `ui-menu-2-4`, 🔯 → `ui-menu-1-4`, 📖 → `ui-menu-2-2`, ⏸ → `ui-tran-1-2` (giống icon menu chính).
-  - ⚒ Lò đúc (thẻ chuẩn bị + đầu màn Lò đúc) → `ui-tran-2-2` (đe); đầu màn Bách khoa (3 tab) → `ui-menu-2-2`; ⛰ Mọc Núi / đầu màn Núi Tản Viên / ô Bồi đất → `ui-tran-3-3`; ↑ nút Nâng kỹ năng → `ic-nang-cap`.
-  - ↻ Thử lại / Vào lại / Tải lại → `ui-tran-4-4`; ⚔ Bắt đầu (Cùng giữ thành) → `ui-tran-5-3`; 🔯 Ấn Phù (màn Anh Hùng) → `ui-menu-1-4`; 📜 tab Công thức → `ui-menu-2-2`; 🎁 sính lễ boss (Bách khoa) → `ui-menu-1-3`.
-  - Icon chương khi thua: 🔥 → `ic-hanh-hoa`, 🌊 → `ic-hanh-thuy`, ♾ → `ui-tran-5-2`; icon hệ Thần Khí dự phòng (khi chưa có `packs/<mã>/tk-N.png`) đi qua cùng bảng `EMO_ART`.
-  - Trống đồng ở bảng "Cảm ơn góp ý" → `ui-tran-3-1`.
-  - Trên bản đồ: đồng xu bay khi hạ quái → `ui-tai-nguyen-1` (12 px); hộp rơi đồ → rương `ui-menu-1-3` có quầng màu độ hiếm.
-- **Không dùng (ảnh kém / sai nội dung):** `ui_dong-xu`, `ui_an`, `ui_khoa`, `ui_mang`, `ui_muc-nuoc`, `ui_hu-bau`, `ui_toi-luyen`, `ui_khung-thuong/vang` (đĩa đồng chung chung, khó phân biệt — vẫn chỉ hiện khi bật "Dùng ảnh AI"); `ui-tran-2-1` (có chữ "MENU" tiếng Anh) cho nút ≡; `ui-tran-4-1` (huy chương tròn, nhỏ thì nhoè) cho sao ★ bậc tướng; `ui-tran-4-3` / `ai-khoa` cho ổ khoá nhỏ (đã thử ở v181: chỉ còn chấm xám); `ui-tran-1-3` (◁▷) cho x1/x2; `ui-tran-1-4` (mắt mở) cho nút ẩn giao diện (dễ nhầm với nút chỉ số).
-- **Còn vẽ code vì chưa có ảnh:** icon vai trò 7 màu, ✕ đóng, ‹ quay lại, ✓, 💬, ✉ Góp ý, 🏳 Dừng chơi, ⛺ Nghỉ chân, ☀ nhiệm vụ ngày, 🤝 Cùng giữ thành, ⚜ Thần Khí, 🍄 Linh Chi, 👹 / 🏹 icon chương, x1/x2, mắt gạch; đế ô, thanh máu, đạn, hiệu ứng trúng đòn, icon trạng thái trên quái (danh sách gen: docs/PROMPT-THAY-HINH-CODE.txt).
-
-## Phiên bản 195 — Dùng ảnh có sẵn thay hình vẽ code (tester đạt)
-
-- Gộp claude/dung-anh-co-san: đồng xu, nén bạc, tim mạng, icon ngăn kéo, Lò đúc, Bách khoa, rương rơi đồ… dùng ảnh thật.

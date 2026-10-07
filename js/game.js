@@ -1520,30 +1520,35 @@ class Game {
     for (const h of this.heroes) if (h && h.type === t && !h.from && (!this.co || this.co.canAct(this.co.actor, h.slot))) n += Math.pow(2, Math.max(0, (h.tier || 1) - 1));
     return n;
   }
-  // nhu cầu từng loại: ghep = đang có trên sân, chưa đủ bản sao; hop = nguyên liệu còn thiếu của công thức hợp thể
-  // gần xong (bên kia đã đủ ★★ quy đổi, đã sở hữu tướng đích, nguyên liệu nằm trong đội ưu tiên hoặc đã có trên sân —
-  // không thì 20 tướng ra quá nhiều công thức "gần xong", loãng); top = loại bảo hiểm nhắm tới
+  // nhu cầu từng loại: ghep = đang có trên sân, chưa đủ bản sao; hop = nguyên liệu (còn thiếu bản sao) của công thức hợp thể
+  // ĐANG THEO — tướng đích đã mở khoá và đã có ≥1 bản của một nửa công thức trên sân (chưa theo công thức nào thì mọi
+  // công thức đích đã mở) (cho-6-the: không cần "gần xong");
+  // hopLock = như hop nhưng tướng đích chưa mở khoá (không ưu tiên, chỉ để nhắc "Mở ở Anh Hùng"); top = loại bảo hiểm nhắm tới
   // v180: chợ rút từ mọi tướng Thường; đội 6 tướng thành đội ưu tiên (ra nhiều hơn)
   // v185: chỉ tướng Thường đã mở khoá bằng Ngân khố (owned = null: bot mô phỏng → mọi tướng)
   marketPool() { return openCommons(this.owned); }
   marketNeeds() {
-    const pool = this.marketPool(), doi = new Set(this.summonList()), cp = {}, ghep = new Set(), hop = new Set();
+    const pool = this.marketPool(), doi = new Set(this.summonList()), cp = {}, ghep = new Set(), hop = new Set(), hopLock = new Map();
     for (const t of pool) cp[t] = this.marketCopies(t);
     for (const t of pool) if (cp[t] > 0 && cp[t] < MARKET_CAP) ghep.add(t);
-    // v186: hợp thể cần ★★★ (4 bản sao) — vẫn bắt đầu ưu tiên khi bên kia đã ★★ (2 bản sao), ưu tiên bên thiếu tới khi đủ ★★★
-    const need = Math.pow(2, COSTS.ascendTier - 1), half = Math.min(2, need);
-    for (const f of FUSION) {
-      if (!pool.includes(f.a) || !pool.includes(f.b) || !this.ownsHero(f.to)) continue;
-      for (const [x, y] of [[f.a, f.b], [f.b, f.a]]) if (cp[x] >= half && cp[y] < need && cp[y] <= cp[x] && (doi.has(y) || cp[y] > 0)) hop.add(y);
-    }
+    const need = Math.pow(2, COSTS.ascendTier - 1);
+    const rs = FUSION.filter((f) => pool.includes(f.a) && pool.includes(f.b));
+    const got = (f) => cp[f.a] > 0 || cp[f.b] > 0;
+    // chưa bắt đầu công thức (đích đã mở) nào thì mọi công thức đích đã mở đều là "đang theo" — chợ mời nguyên liệu đầu tiên
+    const mine = rs.filter((f) => this.ownsHero(f.to)), follow = mine.some(got) ? mine.filter(got) : mine;
+    for (const f of follow) for (const x of [f.a, f.b]) if (cp[x] < need) hop.add(x);
+    for (const f of rs) if (!this.ownsHero(f.to) && got(f)) for (const x of [f.a, f.b]) if (cp[x] < need && !hopLock.has(x)) hopLock.set(x, f.to);
+    for (const x of hop) hopLock.delete(x);
+    // nguyên liệu thiếu nhất (ít bản sao nhất) trong các công thức đang theo — bảo hiểm nhắm vào đây trước
+    const lack = Math.min(...[...hop].map((x) => cp[x])), hopNeed = new Set([...hop].filter((x) => cp[x] === lack));
     const w = {};
     for (const t of pool) w[t] = cp[t] >= MARKET_CAP ? 0 : hop.has(t) ? MARKET_W.hop : ghep.has(t) ? MARKET_W.ghep : doi.has(t) ? MARKET_W.doi : 1;
     if (pool.every((t) => !w[t])) for (const t of pool) w[t] = 1;     // đủ hết bản sao: rút đều như cũ
-    const top = hop.size ? hop : ghep;
-    return { pool, w, ghep, hop, top };
+    const top = ghep;     // bảo hiểm ghép (bảo hiểm hợp thể dùng hopNeed)
+    return { pool, w, ghep, hop, hopNeed, hopLock, top };
   }
-  // nhãn gợi ý trên thẻ: 'hop' = nguyên liệu hợp thể còn thiếu
-  marketHint(t, nd = this.marketNeeds()) { return nd.hop.has(t) ? 'hop' : null; }
+  // nhãn gợi ý trên thẻ: 'hop' = nguyên liệu hợp thể còn thiếu; 'hopLock' = nguyên liệu của tướng đích chưa mở khoá
+  marketHint(t, nd = this.marketNeeds()) { return nd.hop.has(t) ? 'hop' : nd.hopLock.has(t) ? 'hopLock' : null; }
   rollCard(rng = srand, nd = this.marketNeeds(), only = null) {
     const list = only ? nd.pool.filter((t) => only.has(t) && nd.w[t] > 0) : nd.pool.filter((t) => nd.w[t] > 0);
     const sum = list.reduce((a, t) => a + nd.w[t], 0);
@@ -1555,10 +1560,16 @@ class Game {
   rollMarket(rng = srand) {
     const old = this.market || {}, nd = this.marketNeeds();
     const types = Array.from({ length: MARKET_SIZE }, () => this.rollCard(rng, nd));
+    // cho-6-the: bảo hiểm hợp thể — đang theo công thức (đích đã mở khoá) thì MỖI lần rút cả hàng chắc chắn có ≥1 nguyên liệu
+    // thiếu nhất; bảo hiểm ghép (MARKET_PITY lần liền không ra tướng đang có → lần sau chắc chắn có) tính riêng
+    const has = (S) => types.some((t) => S.has(t)), live = (S) => [...S].some((t) => nd.w[t] > 0);
+    if (live(nd.hopNeed) && !has(nd.hopNeed)) types[Math.floor(rng() * MARKET_SIZE)] = this.rollCard(rng, nd, nd.hopNeed);
     let dry = old.dry || 0;
-    if (nd.top.size) {
-      if (dry >= MARKET_PITY && !types.some((t) => nd.top.has(t))) types[Math.floor(rng() * MARKET_SIZE)] = this.rollCard(rng, nd, nd.top);
-      dry = types.some((t) => nd.top.has(t)) ? 0 : dry + 1;
+    if (live(nd.ghep)) {
+      // thay một thẻ không phải nguyên liệu hợp thể vừa bảo đảm
+      const free = types.map((t, k) => k).filter((k) => !nd.hopNeed.has(types[k]));
+      if (dry >= MARKET_PITY && !has(nd.ghep) && free.length) types[free[Math.floor(rng() * free.length)]] = this.rollCard(rng, nd, nd.ghep);
+      dry = has(nd.ghep) ? 0 : dry + 1;
     } else dry = 0;
     this.market = { types, rr: old.rr || 0, dry, lock: false };
     return this.market;
@@ -1617,23 +1628,30 @@ class Game {
     const c = this.summonCost();
     if (this.gold < c) return `Cần ${c} vàng`;
     let target = null;
-    if (slot == null || slot < 0) {
-      const free = this.freeSlots();
-      if (free.length) slot = free[Math.floor(rng() * free.length)];
-      else { target = this.marketTwin(type); if (!target) return 'Hết ô trống: ghép, hoặc kéo tướng vào 🗑 để hủy'; slot = target.slot; }
+    if (slot == null || slot < 0 || (!this.heroes[slot] && !this.isFlooded(slot) && CONFIG.slots[slot])) {
+      // cho-6-the: có tướng ★ cùng loại trên sân thì mua là ghép luôn (kể cả còn ô trống / kéo vào ô trống)
+      target = this.marketTwin(type);
+      if (target) slot = target.slot;
+      else if (slot == null || slot < 0) {
+        const free = this.freeSlots();
+        if (!free.length) return 'Hết ô trống: ghép, hoặc kéo tướng vào 🗑 để hủy';
+        slot = free[Math.floor(rng() * free.length)];
+      }
     } else if (this.heroes[slot]) {
       target = this.heroes[slot];
       if (!(target.type === type && (target.tier || 0) === 1 && !target.from)) return target.type === type ? 'Chỉ ghép thẻ ★ với tướng ★ cùng loại' : 'Ô đã có tướng';
-    } else if (this.isFlooded(slot) || !CONFIG.slots[slot]) return 'Không đặt được ở ô này';
+    } else return 'Không đặt được ở ô này';
     this.gold -= c;
     this.summonN = (this.summonN || 0) + 1;
     m.types[i] = null;
     if (!target) { this.spawnHero(slot, type, { tier: 1, spent: c }); m.types[i] = this.rollCard(rng); return slot; }
     // ghép thẳng vào tướng ★ cùng loại: tạo tướng tạm ở chỗ thừa cuối mảng rồi ghép như kéo thả
     const k = this.heroes.length;
-    const a = this.spawnHero(k, type, { tier: 1, spent: c }, target);
+    this.spawnHero(k, type, { tier: 1, spent: c }, target);
     this.merge(k, target.slot);
     this.heroes.length = CONFIG.slots.length;
+    // ghép dây chuyền: lên ★★ mà sân còn ★★ cùng loại thì dồn tiếp (★★ + ★★ → ★★★)
+    for (let o; (o = this.heroes.find((x) => x && x !== target && this.canMerge(x, target) === true && (!this.co || this.co.canAct(this.co.actor, x.slot))));) this.merge(o.slot, target.slot);
     this.updateAuras();
     m.types[i] = this.rollCard(rng);     // thẻ bù rút theo sân mới (vừa mua xong)
     return target.slot;
@@ -1785,7 +1803,7 @@ class Game {
     if (!a || !b || a === b) return 'Chọn 2 tướng';
     const f = fusionFor(a.type, b.type);
     if (!f) return 'Hai tướng này không có công thức hợp thể';
-    if (!this.ownsHero(f.to)) return `Chưa sở hữu ${HEROES[f.to].name} — mua ở Anh Hùng (menu ≡)`;
+    if (!this.ownsHero(f.to)) return `Chưa mở khoá ${HEROES[f.to].name} — Mở ở Anh Hùng · ${OWN_COST[HEROES[f.to].legend]} Ngân khố`;
     for (const h of [a, b]) { const r = this.fusionReady(h); if (r !== true) return r; }
     const d = HEROES[f.to];
     const c = COSTS.ascend[d.legend];
@@ -2004,7 +2022,7 @@ class Game {
   }
   canAscend(h, to) {
     if (!(ASCEND[h.type] || []).includes(to)) return 'Không thể thăng thần theo nhánh này';
-    if (!this.ownsHero(to)) return `Chưa sở hữu ${HEROES[to].name} — mua ở Anh Hùng (menu ≡)`;
+    if (!this.ownsHero(to)) return `Chưa mở khoá ${HEROES[to].name} — Mở ở Anh Hùng · ${OWN_COST[HEROES[to].legend]} Ngân khố`;
     const ready = this.ascendReady(h);
     if (ready !== true) return ready;
     const d = HEROES[to];
