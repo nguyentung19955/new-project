@@ -1652,3 +1652,7 @@ i.c { background: #1F4A2A; color: #8AE09A; } i.h { background: #4A2A5A; color: #
 .fb-foot .btn-gold { min-width: 96px; font-size: 17px; }
 .mc-subs:has(#btn-feedback) { gap: 2px; }
 .mc-subs:has(#btn-feedback) .mc-sub { flex: 1 1 auto; padding: 0 2px; }
+/* v150: 3 liên kết nhỏ dưới bảng nút menu (Bách khoa · Xếp hạng · Góp ý) không đè chữ lên nhau */
+.mc-subs:has(#btn-feedback) { justify-content: space-between; gap: 4px; }
+.mc-subs:has(#btn-feedback) .mc-sub { flex: 0 1 auto; min-width: 0; overflow: visible; font-size: 11.5px; letter-spacing: -.3px; padding: 0 1px; white-space: nowrap; }
+.mc-subs:has(#btn-feedback) .mc-sub .uimg.sub { width: 15px; height: 15px; margin-right: 2px; vertical-align: -3px; }

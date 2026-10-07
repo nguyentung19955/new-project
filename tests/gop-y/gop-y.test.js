@@ -75,7 +75,7 @@ const typeSend = async (page, text, opts = {}) => {
     ok(d.kind === 'idea' && d.text === 'Nút Xuất Quân hơi khó bấm trên máy nhỏ' && d.contact === 'zalo 0900', 'loại / nội dung / liên hệ đúng');
     ok(d.uid === 'anonUID123' && d.guest === true, 'uid ẩn danh, đánh dấu khách');
     ok(!JSON.stringify(d).includes('@example.com'), 'KHÔNG gửi email người dùng');
-    ok(d.ver === 'v149' && d.where === 'Menu' && /^844x390@/.test(d.scr) && d.ua.length <= 160 && d.ua.length > 3, `thông tin kỹ thuật: ${d.ver} · ${d.where} · ${d.scr} · ${d.ua}`);
+    ok(/^v\d+$/.test(d.ver) && d.where === 'Menu' && /^844x390@/.test(d.scr) && d.ua.length <= 160 && d.ua.length > 3, `thông tin kỹ thuật: ${d.ver} · ${d.where} · ${d.scr} · ${d.ua}`);
     ok(d.shot === '', 'không kèm ảnh khi gửi từ menu');
     s = await store(page);
     ok(s.queue.length === 0, 'gửi được thì xoá khỏi hàng đợi');

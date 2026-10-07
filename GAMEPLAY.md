@@ -1403,3 +1403,7 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Cách xem góp ý và đăng luật: `docs/FIREBASE.md` mục "Xem góp ý của người chơi".
 - Dòng phiên bản trên menu chính cập nhật (trước còn ghi 145).
 - Test: `node tests/gop-y/gop-y.test.js` (CLOUD giả ghi lại dữ liệu gửi; hàng đợi, gửi lại, giới hạn, bố cục 844×390 / 667×375 / xoay dọc; ảnh `tests/gop-y/shots/` không commit, ảnh mẫu `tests/gop-y/gop-y-tran.png`).
+
+## Phiên bản 150 — Gộp nút Góp ý
+- Gộp nhánh nút Góp ý (v149).
+- Menu: 3 liên kết nhỏ Bách khoa · Xếp hạng · Góp ý thu nhỏ biểu tượng và chữ để không đè lên nhau.
