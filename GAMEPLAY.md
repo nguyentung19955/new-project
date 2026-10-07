@@ -1337,3 +1337,16 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - **Màn 1–3 (chủ đề Sông)** chưa có tranh nền riêng nên tạm dùng nền Đầm sen vẽ tay; có tranh Sông thì đổi lại.
 - Menu: hàng nút Anh Hùng / Ấn Phù gọn hơn để chữ không chạm mép trên máy nhỏ.
 - Prompt mới: 16 quái + 3 boss nét cũ gen lại, 80 icon đồ vật (19 tấm), 3 tấm nút giao diện thêm; cắt bằng `tools/cat-items.py <ảnh> <mã tấm>`.
+
+## Phiên bản 142 — Quái hình người đổi thành quái vật
+- Mọi quái / boss hình người đổi thành quái vật, **giữ nguyên mã, chỉ số, kỹ năng, hành, bay / không bay**:
+  - Lính Giáo → **Quỷ Giáo** (yêu tinh da xám xanh, sừng nhỏ, nanh, cầm giáo đồng).
+  - Cung Thủ Giặc → **Sói Cung Thủ** (sói tinh đứng hai chân, đeo ống tên); bản đổi màu Cung Thủ Lửa → **Sói Cung Lửa**.
+  - Kỵ Binh → **Quỷ Cưỡi Lợn** (yêu tinh cưỡi lợn rừng ma); bản đổi màu Thiết Kỵ → **Lợn Giáp Sắt**.
+  - Tướng Giặc Ân → **Quỷ Vương Ân** (quỷ vương da xanh thẫm, sừng trâu, giáp đen, cưỡi quỷ mã bờm lửa).
+  - Triệu Đà → **Hổ Vương Triệu Đà** (tướng quỷ đầu hổ vằn lửa, giáp đỏ đen).
+  - Phù Thủy Nước → **Sứa Tinh** (sứa thành tinh quấn rong biển, mắt sáng xanh).
+  - Giữ tên Hà Bá, Thủy Tinh (nhân vật truyền thuyết) nhưng đổi hình: Hà Bá là cá trê tinh râu dài, Thủy Tinh là thần nước đầu rồng vảy bạc; Tướng Thủy Quân (đổi màu từ ảnh Hà Bá) thành cá trê tinh phó tướng.
+- Đổi chữ theo: kỹ năng boss (gọi Quỷ Giáo / Quỷ Cưỡi Lợn, "Quỷ mã xông lên!"), tên bộ quái trong cảnh báo đợt (Quỷ binh giặc Ân / Quỷ binh Triệu Đà), mô tả ải Đồng Trâu, cảnh kể chuyện Cổ Loa, đồ khắc chế Sứa Tinh.
+- Hình vẽ dự phòng (SVG, dùng trong cảnh kể chuyện và khi thiếu ảnh) của Quỷ Giáo, Sói Cung Thủ, Quỷ Cưỡi Lợn, Quỷ Vương Ân, Hổ Vương Triệu Đà vẽ lại thành quái vật.
+- Prompt gen lại ảnh (`tools/build-prompts.js`): mô tả quái vật mới cho linhan, cungan, kybinh, phuthuy (quái) và anvuong, trieuda, haba, thuytinh (boss); kybinh, anvuong, haba, thuytinh thêm vào danh sách bắt buộc gen lại. Ảnh cũ vẫn dùng cho tới khi có ảnh mới; cắt xong thì chạy `python3 tools/make-variants.py thietky cungtlua tuongthuy` để sinh lại bản đổi màu, và tạo `assets/packs/<mã>/.redo`.

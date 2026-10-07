@@ -146,13 +146,14 @@ const REDO_ENEMY = {
   camap: 'Cá Mập: grey river shark monster swimming upright on its tail fin, toothy grin, bronze ring on the fin',
   cao: 'Cáo: sly orange fox spirit standing on hind legs, fluffy tail with a white tip, little bronze bell collar',
   cua: 'Cua: big red river crab soldier walking sideways, huge claws, tiny bronze helmet',
-  kybinh: 'Kỵ Binh giặc Ân: enemy horseman in dark leather armor riding a small brown horse, long spear',
+  // v142: mọi quái hình người → quái vật (giữ vai trò, đổi hình)
+  kybinh: 'Quỷ Cưỡi Lợn: small grey-green goblin with tusks and tiny horns riding a charging dark-brown ghost wild boar with curved white tusks, glowing red eyes and a bristly mane, goblin holds a short bronze spear, NO human, NO horse',
   voichien: 'Voi Chiến: grey war elephant with a red and gold saddle tower, bronze tusk caps, small banner',
   // v140: quái vẽ trước 06/10 (nét mảnh, khác phong cách chibi viền đậm hiện tại) → gen lại
   tom: 'Tôm Binh: orange river-shrimp soldier walking on small legs, tiny bronze helmet, round bronze shield with a star, short spear',
   casau: 'Cá Sấu: chubby green crocodile walking on four short legs, bumpy back scales, toothy grin, bronze ring on the tail',
   rua: 'Rùa Giáp: big slow tortoise walking on four legs, dark green shell with bronze spikes and a zigzag rim, stern eyebrows',
-  phuthuy: 'Phù Thủy Nước: small water witch in a teal hooded robe of seaweed, glowing cyan eyes in the hood, coral branch staff',
+  phuthuy: 'Sứa Tinh: translucent teal jellyfish spirit floating upright, round bell-shaped head with two big glowing cyan eyes and a small grumpy mouth, wavy tentacles tangled with green seaweed, holds a small coral branch with one tentacle, NO human',
   chimbao: 'Chim Bão: blue-grey storm bird flying with wide wings, small lightning sparks on the wing tips, angry eyes',
   echme: 'Ếch Mẹ: big fat green mother toad with a yellow belly, warts on the back, wide mouth, hopping',
   nongnoc: 'Nòng Nọc: small round black tadpole with a wiggly tail and one big shiny eye, swimming',
@@ -162,25 +163,25 @@ const REDO_ENEMY = {
   doi: 'Dơi Hang: purple cave bat flying, big ears, tiny fangs, red eyes, leathery wings',
   thachtinh: 'Thạch Tinh: stocky grey stone golem of the cave, cracked rock body with moss, glowing yellow eyes, big stone fists',
   dacon: 'Đá Con: small round grey rock creature with big cute eyes, stubby arms and legs, running',
-  linhan: 'Lính Giáo giặc Ân: enemy foot soldier in dark red leather armor, leather helmet, round wooden shield, long spear',
-  cungan: 'Cung Thủ giặc Ân: enemy archer in brown-green leather armor, cloth cap, quiver on the back, drawing a wooden bow',
+  linhan: 'Quỷ Giáo: small grey-green goblin soldier with pointy ears, two small horns, tusks and red eyes, dark red leather vest, small leather cap, round wooden shield, long bronze spear, NO human face',
+  cungan: 'Sói Cung Thủ: grey wolf demon standing on hind legs, wolf head with yellow eyes and sharp fangs, bushy tail, brown-green leather vest, quiver of arrows on the back, drawing a wooden bow, NO human',
   muc: 'Mực Tinh: pink squid spirit floating upright, big angry eyes, eight curly tentacles, small ink drops',
 };
-const REDO_ENEMY_FORCE = new Set(['tom', 'casau', 'rua', 'phuthuy', 'chimbao', 'echme', 'nongnoc', 'giaolong', 'yeutinh', 'ran', 'doi', 'thachtinh', 'dacon', 'linhan', 'cungan', 'muc']);
+const REDO_ENEMY_FORCE = new Set(['tom', 'casau', 'rua', 'phuthuy', 'chimbao', 'echme', 'nongnoc', 'giaolong', 'yeutinh', 'ran', 'doi', 'thachtinh', 'dacon', 'linhan', 'cungan', 'muc', 'kybinh']);
 const REDO_FLY = new Set(['doi', 'chimbao']);
 const REDO_BOSS = {
-  anvuong: 'Ân Vương: tyrant king of the Ân invaders in black and gold armor riding a black warhorse, crown helmet with red plume, big halberd',
+  anvuong: 'Quỷ Vương Ân: demon king with dark blue skin, big curved water-buffalo horns, fangs and glowing yellow eyes, black armor with gold trim, riding a black demon steed with a flaming red mane and glowing eyes, big halberd, war drum on the saddle, NO human face',
   chantinh: 'Chằn Tinh: big green ogre demon of the banyan forest, tusks, horn, loincloth, huge stone club',
-  haba: 'Hà Bá: old river god with a long green beard and blue robe, coral crown, trident',
+  haba: 'Hà Bá: giant old catfish spirit standing upright on a fish tail, long drooping whisker-beard, wrinkled dark green-blue skin, fish-scale robe, coral and seashell crown, trident, NO human',
   ngutinh: 'Ngư Tinh: monstrous blue-green fish demon of the East Sea rising from waves, many sharp teeth, fin spikes',
   thuongluong: 'Thuồng Luồng: long green water dragon serpent coiling out of the river, horns, whiskers, bronze scales on the belly',
-  thuytinh: 'Thủy Tinh: water god warlord in silver-blue armor and fish-scale cape, crown of waves, trident',
-  trieuda: 'Triệu Đà: enemy general in dark red and black armor, topknot, long beard, big curved sword',
+  thuytinh: 'Thủy Tinh: water demon king with a blue sea-dragon head (horns, whiskers, fangs), silver-blue scaly body, fin crest on the back, silver-blue armor and fish-scale cape, crown of waves, trident, NO human face',
+  trieuda: 'Hổ Vương Triệu Đà: tiger-headed demon general, orange tiger head with black-red flame stripes, long fangs and glowing eyes, clawed paws, dark red and black armor, tiger tail, big curved sword, NO human face',
   daibang: 'Đại Bàng Tinh: giant golden-brown eagle demon of the cave, spread wings, sharp talons, fierce red eyes, flying',
   hotinh: 'Hồ Tinh Chín Đuôi: white nine-tailed fox demon standing on hind legs, nine fluffy tails fanned out, sly red eyes, purple fox-fire flames',
 };
 // có đủ dáng nhưng nét cũ, nhỏ, lệch phong cách chung; cắt xong bản mới thì tạo file assets/packs/<mã>/.redo để bỏ khỏi danh sách
-const REDO_FORCE = new Set(['daibang', 'trieuda', 'hotinh']);
+const REDO_FORCE = new Set(['daibang', 'trieuda', 'hotinh', 'anvuong', 'haba', 'thuytinh']);
 const redoEnemyPrompt = (k) => `Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.
 CREATURE: ${REDO_ENEMY[k]}. Cute-but-mischievous chibi monster facing RIGHT.
 CELLS (same creature, same size): ${REDO_FLY.has(k) ? '[1] flying, wings up [2] flying, wings down [3] diving attack' : '[1] walk step A [2] walk step B (opposite legs) [3] attack'}.
