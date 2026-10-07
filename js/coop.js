@@ -398,11 +398,11 @@ const COOP = {
   },
   // hết trận / thoát: trả game về chế độ chơi đơn
   end(quit) {
-    if (!this.on && !this.game) return;
+    if (!this.on && !(this.game && this.game.co)) return;
     const net = this.net, code = this.code, wasAuth = this.isAuth(), partner = this.partnerUid;
     if (net && code) {
       if (quit && wasAuth) net.updateRoom(code, { auth: partner, epoch: this.epoch + 1, away: this.uid }).catch(() => {});
-      else if (quit) net.putReq(code, { t: 'bye' }).catch(() => {});
+      else if (quit) net.putReq(code, { t: 'bye', ep: this.epoch }).catch(() => {});
       else if (wasAuth) { if (this.partnerLive) this.flush(); net.updateRoom(code, { state: 'end' }).catch(() => {}); }
     }
     this.stop();
@@ -464,7 +464,7 @@ const COOP = {
     const c = { p: this.me, n: name, a: JSON.parse(JSON.stringify(a)), cid: ++this.cid };
     if (then) this.cbs.set(c.cid, then);
     if (this.isAuth()) this.schedule(c);
-    else this.net.putReq(this.code, { t: 'cmd', c }).catch(() => this.ui && this.ui.toast('Mất mạng: lệnh chưa gửi được', '#E25A3A'));
+    else this.req({ t: 'cmd', c }).catch(() => this.ui && this.ui.toast('Mất mạng: lệnh chưa gửi được', '#E25A3A'));
     return COOP_PENDING;
   },
   checkArgs(p, spec, a) {
@@ -626,7 +626,7 @@ const COOP = {
     this.t.desync = now;
     console.warn('coop desync:', why);
     if (this.ui) this.ui.coopNote('Lệch dữ liệu — đang đồng bộ lại…');
-    this.net.putReq(this.code, { t: 'desync', tick: this.tick }).catch(() => {});
+    this.req({ t: 'desync', tick: this.tick }).catch(() => {});
   },
   doResync(c) {
     if (this.isAuth()) {
@@ -669,13 +669,15 @@ const COOP = {
   },
 
   // ---------- MẠNG
+  // yêu cầu gửi người điều phối, kèm "nhiệm kỳ" (epoch): yêu cầu cũ từ trước khi đổi người điều phối bị bỏ qua
+  req(o) { return this.net.putReq(this.code, { ...o, ep: this.epoch }); },
   netTick(now) {
     if (this.isAuth()) {
       if (this.partnerLive && (this.outbox.length || now - this.t.flush > COOP_CFG.hb)) this.flush();
       if (this.partnerLive && now - this.t.req > COOP_CFG.dropAfter) this.partnerGone('Đồng đội mất kết nối');
     } else {
-      if (now - this.t.ping > COOP_CFG.pingEvery) { this.t.ping = now; this.net.putReq(this.code, { t: 'ping', tick: this.tick }).catch(() => {}); }
-      if (this.waitSnap && now - this.t.join > 3) { this.t.join = now; this.net.putReq(this.code, { t: 'join' }).catch(() => {}); }
+      if (now - this.t.ping > COOP_CFG.pingEvery) { this.t.ping = now; this.req({ t: 'ping', tick: this.tick }).catch(() => {}); }
+      if (this.waitSnap && now - this.t.join > 3) { this.t.join = now; this.req({ t: 'join' }).catch(() => {}); }
       if (now - this.t.batch > COOP_CFG.authLost && !this.claiming) this.claim();
     }
   },
@@ -694,12 +696,13 @@ const COOP = {
     console.warn('coop batch', e);
     try {
       const r = await this.net.getRoom(this.code);
+      if (r && (r.epoch || 0) > this.epoch) this.epoch = r.epoch;
       if (r && r.auth === this.uid) { this.seq = Math.max(this.seq, await this.net.maxSeq(this.code)); return; }
     } catch (x) { /* mạng lỗi: thử lại ở lô sau */ return; }
     this.demote();
   },
   onReq(o, by) {
-    if (!this.on || !this.isAuth() || by !== this.partnerUid) return;
+    if (!this.on || !this.isAuth() || by !== this.partnerUid || (o.ep || 0) < this.epoch) return;
     const now = this.now();
     this.t.req = now;
     const p = 1 - this.me;
@@ -753,6 +756,7 @@ const COOP = {
   onRoom(r) {
     if (!this.on || !r) return;
     this.room = { ...r, code: this.code };
+    if ((r.epoch || 0) > this.epoch) this.epoch = r.epoch;
     if (this.isAuth() && r.auth && r.auth !== this.uid) return this.demote();
     if (!this.isAuth() && r.auth === this.uid && !this.waitSnap) return this.promote(false);
     if (!this.isAuth() && r.away === this.uid && !this.waitSnap) {

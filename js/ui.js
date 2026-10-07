@@ -567,7 +567,7 @@ class UI {
     if (g.endless) { this.submitScores(false, 0); const sv = this.save; sv.bestEndless = sv.bestEndless || {}; sv.bestEndless[g.level] = Math.max(sv.bestEndless[g.level] || 0, g.wave); writeSave(sv); }
     g.running = false; g.over = true; g.started = false;
     if (COOP.on || g.co) { COOP.end(true); this.lobby = null; }
-    this.clearRun();
+    else this.clearRun();
     this.closeScreen && this.closeScreen();
     this.showMenu();
     this.toast('Đã dừng trận', '#C8BFA8');
@@ -815,7 +815,6 @@ class UI {
       case 'coop-back': this.showMenu(); break;
       case 'coop-login': this.showLogin(true); break;
       case 'coop-create':
-        if (g.started && !g.over && !g.won && !COOP.on) { this.coopErr = 'Đang có trận chơi đơn dở: vào trận → ≡ → Dừng chơi trước'; this.renderCoop(); break; }
         await busy('Đang tạo phòng', async () => { const code = await COOP.createRoom(this.coopMember()); this.coopLobbyWatch(code); });
         break;
       case 'coop-join': {
@@ -849,7 +848,7 @@ class UI {
       case 'coop-start': {
         const L = this.lobby;
         if (!L || !L.room || L.room.members.length < 2) break;
-        if (g.started && !g.over && !g.won) { this.bankStats(); this.clearRun(); }
+        if (g.started && !g.over && !g.won && !COOP.on) { this.bankStats(); this.saveRun(); }   // trận đơn dở: lưu lại để Tiếp tục sau
         await busy('Đang bắt đầu', () => COOP.startRoom(L.code, L.room.level || 0));
         break;
       }
@@ -865,7 +864,7 @@ class UI {
   }
   coopBegin(room) {
     this.lobbyClose();
-    if (this.game.started && !this.game.over && !this.game.won) { this.bankStats(); this.clearRun(); }
+    if (this.game.started && !this.game.over && !this.game.won && !this.game.co) { this.bankStats(); this.saveRun(); }
     COOP.begin(this.game, this, room);
     this.coopEnter(false);
   }
@@ -1255,7 +1254,7 @@ class UI {
       } else if (ev.type === 'upgrade') {
         // đồ vừa rơi tốt hơn cho một tướng: hiện nút đeo nhanh vài giây
         const inst = g.inventory.find((i) => i.uid === ev.uid);
-        if (inst && g.heroes.includes(ev.hero)) {
+        if (inst && g.heroes.includes(ev.hero) && (!COOP.on || g.co.canAct(COOP.me, ev.hero.slot))) {
           this.quickEq = { uid: ev.uid, hero: ev.hero };
           const b = $('#quick-eq');
           b.innerHTML = `<span class="slot ${rarCls(inst.rarity)}">${svgI(itemIcon(inst.id))}</span><span><b>▲ Đeo cho ${HEROES[ev.hero.type].name}</b><small>${ITEMS[inst.id].name} · +${ev.gain} lực chiến</small></span>`;
@@ -2083,8 +2082,7 @@ class UI {
     if (daily) s.dailyWin = today;
     s.kho = (s.kho || 0) + khoGain + daily;
     const tv = this.bankTuvi(win ? 1 : TUVI_LOSE);
-    if (!coop) this.submitScores(win, stars);
-    this.clearRun();
+    if (!coop) { this.submitScores(win, stars); this.clearRun(); }
     this.bankStats();
     const mate = coop ? g.co.names[1 - COOP.me] : '';
     if (coop) { COOP.end(false); this.coopDone = true; this.coopSaid = false; }

@@ -171,11 +171,11 @@ function drawAiMap(img) {
 
 function drawMateSpot(x, y, hero) {
   ctx.save();
-  ctx.strokeStyle = 'rgba(90,180,214,0.85)';
-  ctx.fillStyle = 'rgba(90,180,214,0.10)';
-  ctx.lineWidth = 2.5;
-  ctx.setLineDash([7, 5]);
-  ctx.beginPath(); ctx.ellipse(x, y + 4, hero ? 30 : 26, hero ? 12 : 11, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.strokeStyle = 'rgba(110,200,240,0.95)';
+  ctx.fillStyle = 'rgba(90,180,214,0.16)';
+  ctx.lineWidth = 3;
+  ctx.setLineDash([8, 5]);
+  ctx.beginPath(); ctx.ellipse(x, y, 15 * DK * (hero ? 1.45 : 1.2), 10 * DK * (hero ? 1.3 : 1.2), 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
   ctx.restore();
 }
 
@@ -225,11 +225,11 @@ function render() {
     else if (i === ui.spot && !h) o.mode = 'target';
     else if (!h && ui.armed && !o.flooded) o.mode = 'free';
     else if (!h && i === ui.coachSlot) o.mode = 'hint';
-    // v141: chơi nhóm — ô của đồng đội viền xanh (dưới chân tướng)
-    if (COOP.on && game.co && !game.co.canAct(COOP.me, i)) drawMateSpot(x, y, !!h);
+    // v141: chơi nhóm — ô của đồng đội viền xanh nét đứt (cả khi có tướng đứng trên)
+    const mate = COOP.on && game.co && !game.co.canAct(COOP.me, i);
     // v138: ô đã có tướng không vẽ vòng (kể cả khi chọn tướng — đã có vòng tầm đánh); chỉ hiện lúc đang kéo để ghép
-    if (h && !o.mode) return;
-    drawSpot(ctx, x, y, o, t);
+    if (!(h && !o.mode)) drawSpot(ctx, x, y, o, t);
+    if (mate) drawMateSpot(x, y, !!h);
   });
 
   // vòng tầm đánh của tướng đang chọn
