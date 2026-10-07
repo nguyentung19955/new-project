@@ -2083,3 +2083,19 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 - **Thanh chợ nhỏ gọn** (`#deck.mk-mode`, chỉ khi hiện chợ; thanh tướng đang chọn giữ nguyên): cao 70 → **46** (khung thiết kế) — ở 844×390 cao **76 → 50px (≈66%)**, 667×375: 60 → 39.5px, 1920×934: 144 → 95px. Thẻ 62×42: chân dung tròn 29px, icon hệ góc trái (15px) + icon vai trò góc phải (16px), tên 1 dòng (tự thu nhỏ chữ), dải giá 12px; nhãn "ghép" / "hợp" thu thành ký hiệu ⇄ / ✦ (viền xanh / tím vẫn báo). Nút ↻ 42×42, 🔒 42×42, Ghép tự động 46×42, Hợp thể 44×42. 6 thẻ + nút vừa một hàng ở 1920×934, 844×390, 667×375 và dọc 390×844; vùng chạm thẻ ≥ 36px ở 667×375.
 - Test: `cho-tuong.test.js` (6 thẻ, thanh ≤ 70% chiều cao cũ, vùng chạm ≥ 36), `ti-le.test.js` (trọng số mới, hàng 6 thẻ).
 - Ảnh trước / sau (4 cỡ): `docs/cho-6-the/truoc-*.jpg`, `docs/cho-6-the/sau-*.jpg` (dải đáy).
+## claude/dung-anh-co-san — Dùng ảnh có sẵn thay hình vẽ bằng code / emoji
+
+- **Luôn dùng khi có file** (không phụ thuộc "Dùng ảnh AI"), thiếu file thì giữ hình code / ký hiệu cũ:
+  - Đồng xu vàng (thanh trên, giá, mọi `coin()`, ô "Vàng mỗi đợt" Núi Tản Viên) → `ui/ui-tai-nguyen-1.png` (đồng xu lỗ vuông; đĩa đồng `ui_dong-xu.png` cũ xuống dự phòng). Nén bạc Ngân khố (`bac()`) → `ui/ui-tai-nguyen-3.png`. Trái tim mạng trên thanh trên → `ui/ui-tai-nguyen-2.png`; mực nước dâng → `ui/ic-nuoc-dang.png`.
+  - Ngăn kéo ≡ trong trận: 🎒 → `ui-menu-2-4`, 🔯 → `ui-menu-1-4`, 📖 → `ui-menu-2-2`, ⏸ → `ui-tran-1-2` (giống icon menu chính).
+  - ⚒ Lò đúc (thẻ chuẩn bị + đầu màn Lò đúc) → `ui-tran-2-2` (đe); đầu màn Bách khoa (3 tab) → `ui-menu-2-2`; ⛰ Mọc Núi / đầu màn Núi Tản Viên / ô Bồi đất → `ui-tran-3-3`; ↑ nút Nâng kỹ năng → `ic-nang-cap`.
+  - ↻ Thử lại / Vào lại / Tải lại → `ui-tran-4-4`; ⚔ Bắt đầu (Cùng giữ thành) → `ui-tran-5-3`; 🔯 Ấn Phù (màn Anh Hùng) → `ui-menu-1-4`; 📜 tab Công thức → `ui-menu-2-2`; 🎁 sính lễ boss (Bách khoa) → `ui-menu-1-3`.
+  - Icon chương khi thua: 🔥 → `ic-hanh-hoa`, 🌊 → `ic-hanh-thuy`, ♾ → `ui-tran-5-2`; icon hệ Thần Khí dự phòng (khi chưa có `packs/<mã>/tk-N.png`) đi qua cùng bảng `EMO_ART`.
+  - Trống đồng ở bảng "Cảm ơn góp ý" → `ui-tran-3-1`.
+  - Trên bản đồ: đồng xu bay khi hạ quái → `ui-tai-nguyen-1` (12 px); hộp rơi đồ → rương `ui-menu-1-3` có quầng màu độ hiếm.
+- **Không dùng (ảnh kém / sai nội dung):** `ui_dong-xu`, `ui_an`, `ui_khoa`, `ui_mang`, `ui_muc-nuoc`, `ui_hu-bau`, `ui_toi-luyen`, `ui_khung-thuong/vang` (đĩa đồng chung chung, khó phân biệt — vẫn chỉ hiện khi bật "Dùng ảnh AI"); `ui-tran-2-1` (có chữ "MENU" tiếng Anh) cho nút ≡; `ui-tran-4-1` (huy chương tròn, nhỏ thì nhoè) cho sao ★ bậc tướng; `ui-tran-4-3` / `ai-khoa` cho ổ khoá nhỏ (đã thử ở v181: chỉ còn chấm xám); `ui-tran-1-3` (◁▷) cho x1/x2; `ui-tran-1-4` (mắt mở) cho nút ẩn giao diện (dễ nhầm với nút chỉ số).
+- **Còn vẽ code vì chưa có ảnh:** icon vai trò 7 màu, ✕ đóng, ‹ quay lại, ✓, 💬, ✉ Góp ý, 🏳 Dừng chơi, ⛺ Nghỉ chân, ☀ nhiệm vụ ngày, 🤝 Cùng giữ thành, ⚜ Thần Khí, 🍄 Linh Chi, 👹 / 🏹 icon chương, x1/x2, mắt gạch; đế ô, thanh máu, đạn, hiệu ứng trúng đòn, icon trạng thái trên quái (danh sách gen: docs/PROMPT-THAY-HINH-CODE.txt).
+
+## Phiên bản 195 — Dùng ảnh có sẵn thay hình vẽ code (tester đạt)
+
+- Gộp claude/dung-anh-co-san: đồng xu, nén bạc, tim mạng, icon ngăn kéo, Lò đúc, Bách khoa, rương rơi đồ… dùng ảnh thật.
