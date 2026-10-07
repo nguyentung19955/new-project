@@ -1,6 +1,6 @@
 name: Deploy Firebase Hosting
 
-# Mỗi lần đẩy code lên nhánh chính: gom bản web rồi đăng lên https://sontinhthuytinh.web.app
+# Mỗi lần đẩy code lên nhánh chính: gom bản web rồi đăng lên https://sontinhthuytinh.web.app và https://thanthoaiviet.web.app
 on:
   push:
     branches: [claude/mobile-tower-defense-game-k5oxzo, main]
@@ -61,12 +61,34 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SONTINHTHUYTINH }}
           projectId: sontinhthuytinh
           channelId: live
+          target: main
+
+      # Site phụ có tên đẹp. Nếu site chưa được tạo trong Firebase console thì chỉ cảnh báo, không chặn site chính.
+      - name: Đăng lên thanthoaiviet.web.app
+        id: deploy_ttv
+        if: steps.secret.outputs.ok == 'true'
+        continue-on-error: true
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SONTINHTHUYTINH }}
+          projectId: sontinhthuytinh
+          channelId: live
+          target: thanthoaiviet
 
       - name: Ghi đường dẫn
         if: steps.secret.outputs.ok == 'true'
+        env:
+          TTV: ${{ steps.deploy_ttv.outcome }}
         run: |
           echo "## ✅ Đã đăng game" >> "$GITHUB_STEP_SUMMARY"
-          echo "https://sontinhthuytinh.web.app — commit ${GITHUB_SHA::7}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- https://sontinhthuytinh.web.app — commit ${GITHUB_SHA::7}" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$TTV" = "success" ]; then
+            echo "- https://thanthoaiviet.web.app" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::warning title=Chưa đăng được thanthoaiviet.web.app::Tạo site 'thanthoaiviet' trong Firebase console (Hosting → Add another site) rồi chạy lại workflow. Xem docs/FIREBASE.md."
+            echo "- ⚠️ Chưa đăng được https://thanthoaiviet.web.app — cần tạo site 'thanthoaiviet' (xem docs/FIREBASE.md)" >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - name: Luật Firestore có đổi không?
         id: rules

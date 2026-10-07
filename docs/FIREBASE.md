@@ -18,7 +18,7 @@ Game đã có sẵn mã lưu đám mây (`js/cloud.js`). Chỉ cần tạo dự 
 7. Gửi 4 giá trị đó cho Claude hoặc tự điền rồi đẩy lên.
 
 ## Firebase Hosting tự động
-Game có đường dẫn riêng: **https://sontinhthuytinh.web.app** (hoặc https://sontinhthuytinh.firebaseapp.com). Bản GitHub Pages vẫn chạy như cũ.
+Game có đường dẫn riêng: **https://thanthoaiviet.web.app** (tên đẹp) và **https://sontinhthuytinh.web.app** (tên gốc của dự án) — hai đường dẫn cùng một bản game, cùng dữ liệu người chơi. Bản GitHub Pages vẫn chạy như cũ.
 
 Mỗi lần có code mới đẩy lên nhánh `claude/mobile-tower-defense-game-k5oxzo` (hoặc `main`), GitHub tự gom bản web vào thư mục `dist-web/` (lệnh `npm run build:hosting`) và đăng lên Firebase Hosting (file `.github/workflows/firebase-hosting.yml`). Nếu `firestore.rules` có đổi thì đăng luôn luật Firestore.
 
@@ -28,7 +28,8 @@ Mỗi lần có code mới đẩy lên nhánh `claude/mobile-tower-defense-game-
 3. Vào trang repo trên GitHub → **Settings → Secrets and variables → Actions → New repository secret**:
    - Name: `FIREBASE_SERVICE_ACCOUNT_SONTINHTHUYTINH`
    - Secret: mở file `.json` vừa tải bằng Notepad, chép **toàn bộ** nội dung dán vào → **Add secret**. Xong thì xoá file `.json` trên máy.
-4. Firebase console → **Authentication → Settings → Authorized domains → Add domain**: thêm `sontinhthuytinh.web.app` (và `sontinhthuytinh.firebaseapp.com` nếu chưa có) để đăng nhập Google chạy trên đường dẫn mới.
+4. Firebase console → **Authentication → Settings → Authorized domains → Add domain**: thêm `sontinhthuytinh.web.app` và `thanthoaiviet.web.app` (và `sontinhthuytinh.firebaseapp.com` nếu chưa có) để đăng nhập Google chạy trên đường dẫn mới.
+   - Site tên đẹp `thanthoaiviet`: **Hosting** → kéo xuống cuối trang → **Add another site** → gõ `thanthoaiviet` → **Add site**. Tên site là duy nhất trên toàn Firebase; nếu bị báo đã có người dùng thì chọn tên khác và sửa `thanthoaiviet` trong `.firebaserc` cho khớp. Chưa tạo site thì workflow chỉ cảnh báo vàng, đường dẫn sontinhthuytinh.web.app vẫn được cập nhật.
 5. Chạy lần đầu: GitHub → tab **Actions → Deploy Firebase Hosting → Run workflow** (hoặc chờ lần đẩy code tiếp theo).
 
 Cách khác cho bước 2–3 (dành cho người quen dòng lệnh): `npm i -g firebase-tools` → `firebase login` → `firebase init hosting:github` — công cụ tự tạo khoá và secret (khi được hỏi, giữ thư mục `dist-web`, **không** cho nó ghi đè `firebase.json` và workflow sẵn có). Lưu ý: khoá tạo kiểu này có thể không đủ quyền đăng luật Firestore — khi đó dán `firestore.rules` tay vào Firestore → Rules.
@@ -40,7 +41,7 @@ Cách khác cho bước 2–3 (dành cho người quen dòng lệnh): `npm i -g 
 - Mở https://sontinhthuytinh.web.app, vào **Cài đặt** xem số “Phiên bản” khớp bản mới nhất (trình duyệt có thể cần tải lại trang 1–2 lần để service worker cập nhật).
 
 ### Đăng tay (nếu cần)
-Trên máy có Node.js: `npm i -g firebase-tools` → `firebase login` → trong thư mục game chạy `firebase deploy` (tự gom `dist-web/` trước khi đăng, đăng cả luật Firestore). Chỉ đăng game: `firebase deploy --only hosting`. Xem thử trên máy: `npm run build:hosting` rồi `firebase emulators:start --only hosting` → mở http://localhost:5000.
+Trên máy có Node.js: `npm i -g firebase-tools` → `firebase login` → trong thư mục game chạy `firebase deploy` (tự gom `dist-web/` trước khi đăng, đăng cả luật Firestore). Chỉ đăng game: `firebase deploy --only hosting` (cả hai site), hoặc một site: `firebase deploy --only hosting:main` / `hosting:thanthoaiviet`. Xem thử trên máy: `npm run build:hosting` rồi `firebase emulators:start --only hosting` → mở http://localhost:5000.
 
 ## Xem góp ý của người chơi (v149)
 Nút **✉ Góp ý** (menu chính, Cài đặt, menu ☰ trong trận) gửi vào Firestore, collection **`feedback`**.
