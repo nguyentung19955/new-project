@@ -1370,3 +1370,13 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 144 — Gộp 4 nhánh
 - Gộp: kéo tướng ẩn thanh đáy (141), quái hình người → quái vật (142), Firebase Hosting + tự deploy, Chợ tướng + Nghỉ chân (143).
 - Tên dài trên thẻ chợ tướng tự thu nhỏ chữ cho vừa thẻ (trước bị cắt khi xoay dọc).
+
+## Phiên bản 147 — Gợi ý phát triển (cây hợp thể của từng tướng)
+- **Màn Anh Hùng Văn Lang:** dưới phần kỹ năng có khối **Phát triển thành** (hàm dùng chung `ui.evolveTree(type)`, dựng thẳng từ `FUSION`):
+  - Tướng Thường: mọi tướng Tím ghép ra được (`[tướng này] + [tướng ghép] ➜ [Tím]`, cần 2 tướng ★★), mỗi nhánh nối tiếp ↳ `+ [tướng ghép] ➜ [Vàng]` (Thần tinh ★★★ + kỹ năng tối đa).
+  - Tướng Tím: ghép từ 2 tướng Thường nào, và hợp thể với ai ra tướng Vàng nào.
+  - Tướng Vàng: **Nguồn gốc** (2 tướng Tím, và 2 tướng Thường của mỗi tướng Tím), ghi "Bậc cao nhất".
+  - Tướng Tím/Vàng chưa sở hữu hiện mờ + nhãn "Chưa có". Chạm chân dung bất kỳ → bảng chi tiết chuyển sang tướng đó (danh sách tự cuộn tới). Bỏ dòng chữ "Hợp thể ra" cũ.
+- **Trong trận:** chọn tướng → một dòng nổi trên thanh đáy `Phát triển: + [tướng ghép] ➜ [tướng đích] · cần …` (ưu tiên tướng đích đã sở hữu, đối tác đã có trên sân; nói rõ thiếu gì, ví dụ "cần Người Đắp Đê ★★", "chưa có Lang Liêu"; đủ thì "Đủ điều kiện!" viền xanh). Chạm → mở Cây hợp thể, sáng dòng công thức, đánh dấu 2 tướng thành phần trên sân (fuseFocus). Bảng chỉ số tướng liệt kê mọi hướng phát triển. Dòng gợi ý ẩn khi mở bảng chỉ số / đang chuyển tướng / kéo tướng.
+- **Chọn đội:** giữ tay lên thẻ tướng → tooltip có thêm "Hợp thể: + X ➜ Y".
+- Test: `node tests/phat-trien/phat-trien.test.js` (ảnh trong `tests/phat-trien/shots/`).

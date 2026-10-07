@@ -477,7 +477,7 @@ class UI {
     const ctr = new Set(); try { const lv = LEVELS[g.level], R = ROSTERS[lv.roster || 'thuy']; for (const c of rosterCounters(R, Object.values(lv.bosses || {}), BASIC_HEROES, lv.hint).list) ctr.add(c.t); } catch (e) { /* bỏ qua */ }
     const ing = deckIngredients(this.save.owned || []);
     const card = (t) => { const d = HEROES[t], on = sel.includes(t);
-      return `<button class="dk-pick metal ${on ? 'on' : ''}" data-act="deck-tog" data-id="${t}" style="--c:${ELEMENTS[d.el].color}" data-tip="${esc(`<b>${esc(d.name)}</b><small>Hành ${ELEMENTS[d.el].name} · ${d.attack === 'melee' ? 'Cận chiến' : 'Đánh xa'}</small><p>${esc(d.title || '')}</p>`)}">
+      return `<button class="dk-pick metal ${on ? 'on' : ''}" data-act="deck-tog" data-id="${t}" style="--c:${ELEMENTS[d.el].color}" data-tip="${esc(`<b>${esc(d.name)}</b><small>Hành ${ELEMENTS[d.el].name} · ${d.attack === 'melee' ? 'Cận chiến' : 'Đánh xa'}</small><p>${esc(d.title || '')}</p>${FUSION.filter((f) => f.a === t || f.b === t).map((f) => `<small>Hợp thể: + ${esc(HEROES[f.a === t ? f.b : f.a].name)} ➜ ${esc(HEROES[f.to].name)}</small>`).join('')}`)}">
         <img src="${heroImgUrl(t, 'head')}" alt=""><b>${esc(d.name)}</b>
         <span class="tg">${ctr.has(t) ? '<i class="c">khắc chế</i>' : ''}${ing.has(t) ? '<i class="h">hợp thể</i>' : ''}</span>${on ? `<span class="no">${sel.indexOf(t) + 1}</span>` : ''}</button>`; };
     const els = EL_ORDER.map((el) => `<div class="dk-el"><div class="dk-eh" style="color:${ELEMENTS[el].color}">${elIcon(el, 13)} ${ELEMENTS[el].name}</div>${BASIC_HEROES.filter((t) => HEROES[t].el === el).map(card).join('')}</div>`).join('');
@@ -860,7 +860,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 144 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 147 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1018,7 +1018,7 @@ class UI {
     // hàng thẻ dưới đáy dựng trong updateDeck; ở đây dựng bảng "Cây thăng thần"
     // công thức hợp thể: 2 tướng ★★★ → thần Sử thi; 2 thần tím Thần tinh ★★★ → Huyền thoại
     const card = (t, cls = '') => `<span class="asc-to ${HEROES[t].legend || 'base'} ${cls}"><img src="${heroImgUrl(t, 'head')}" alt=""><b>${HEROES[t].name}</b></span>`;
-    const row = (f) => `<div class="asc-row fz">${card(f.a)}<span class="asc-plus">+</span>${card(f.b)}<span class="asc-arr ${HEROES[f.to].legend === 'legendary' ? 'leg' : ''}">➜<small>${COSTS.ascend[HEROES[f.to].legend]}</small></span>${card(f.to, 'res')}</div>`;
+    const row = (f) => `<div class="asc-row fz" data-i="${FUSION.indexOf(f)}">${card(f.a)}<span class="asc-plus">+</span>${card(f.b)}<span class="asc-arr ${HEROES[f.to].legend === 'legendary' ? 'leg' : ''}">➜<small>${COSTS.ascend[HEROES[f.to].legend]}</small></span>${card(f.to, 'res')}</div>`;
     $('#lg-grid').innerHTML = `<div class="fz-col"><div class="fz-h">Thường ★★ + Thường ★★ → <b style="color:${RARITY.epic.color}">Sử thi</b></div>${FUSION.filter((f) => HEROES[f.to].legend === 'epic').map(row).join('')}</div>
       <div class="fz-col"><div class="fz-h">Thần tinh ★★★ + Thần tinh ★★★ → <b style="color:${RARITY.legendary.color}">Huyền thoại</b></div>${FUSION.filter((f) => HEROES[f.to].legend === 'legendary').map(row).join('')}</div>`;
   }
@@ -1324,7 +1324,9 @@ class UI {
       // chỉ dựng lại khi đủ / thiếu vàng cho một nút (không phải mỗi lần vàng đổi) — đỡ giật khi đánh
       const afford = [lc, g.trainCost(h), ...def.skills.map((sk, i) => (skillLevel(h, i) ? (h.from ? COSTS.skillGold(i, skillLevel(h, i)) : 0) : unlockCost(h, i)))]
         .map((c) => (g.gold >= c ? 1 : 0)).join('');
-      key = `h|${h.id}|${h.type}|${h.level}|${h.train || 0}|${h.tier}|${h.skillPts}|${skillKey}|${afford}|${h.dead}|${h.bogged}|${fresh}|${notice}|${up}|${assetVersion}`;
+      // v147: gợi ý phát triển 1 dòng (nổi phía trên ô tên tướng)
+      const ev = this.evolveHint(h)[0];
+      key = `h|${h.id}|${h.type}|${h.level}|${h.train || 0}|${h.tier}|${h.skillPts}|${skillKey}|${afford}|${h.dead}|${h.bogged}|${fresh}|${notice}|${up}|${ev ? ev.i + ev.need : ''}|${this.moving < 0}|${assetVersion}`;
       const status = h.dead ? `Hồi sinh sau ${Math.ceil(h.respawnT)}s` : h.bogged ? 'Sa lầy · dùng Mọc Núi' : `Hành ${ELEMENTS[def.el].name} · ${ELEM_TRAIT[def.el].name}`;
       // 4 ô kỹ năng (v37): số trên ô = cấp kỹ năng; tag phía trên = giá nâng tiếp (+ điểm / + vàng / MAX).
       // Chạm ô = nâng (hoặc mở khóa) luôn, không còn màn Kỹ năng riêng.
@@ -1355,6 +1357,8 @@ class UI {
         <span class="dk-pt ${g.known.has('h.' + h.type) ? 'goldf' : ''}" ${assetUrl(`ui_khung-${h.from ? 'vang' : 'thuong'}.png`) ? `style="background-image:url('${assetUrl(`ui_khung-${h.from ? 'vang' : 'thuong'}.png`)}'),radial-gradient(circle at 50% 60%,#3A2416,#1A0F0A 75%);background-size:100% 100%,auto"` : ''}><canvas id="dk-portrait" width="108" height="116"></canvas><span class="lv">${h.level}${h.train ? `<i>✦${h.train}</i>` : ''}</span><span class="st" ${h.from ? 'style="color:#FF7A3A"' : ''}>${'★'.repeat(h.tier || 0)}</span></span>
         <span class="dk-info" data-act="hero-stats" role="button" aria-label="Xem chỉ số"><span class="nm">${elIcon(def.el, 15)}${def.name}</span><span class="sub ${h.bogged || h.dead ? 'warn' : ''}">${status}</span>
           <span class="bar hp"><i id="dk-hp"></i></span><span class="bar mp"><i id="dk-mp"></i></span></span>
+        ${ev && !this.statsOpen && this.moving < 0 ? `<button class="dk-evo ${HEROES[ev.f.to].legend} ${ev.need ? '' : 'go'}" data-act="evo-focus" data-i="${ev.i}" title="${esc(`${def.name} + ${HEROES[ev.pt].name} → ${HEROES[ev.f.to].name}${ev.need ? ' · ' + ev.need : ''}`)}">
+          <span class="lb">Phát triển:</span>+<img src="${heroImgUrl(ev.pt, 'head')}" alt="">➜<img src="${heroImgUrl(ev.f.to, 'head')}" alt=""><b>${esc(HEROES[ev.f.to].name)}</b><span class="nd">${ev.need ? esc(ev.need) : 'Đủ điều kiện!'}</span></button>` : ''}
 
         ${skills}
         ${maxed ? `<button class="dk-up btn-gold" data-act="train" ${g.gold < tc ? 'disabled' : ''} aria-label="Luyện thể"><b>${uiIc('luyen-the')}Luyện thể ✦${(h.train || 0) + 1}</b><span>${coin(1)}${tc}</span></button>`
@@ -1389,7 +1393,7 @@ class UI {
       // bảng chỉ số tướng (nút 📊 trên thanh tướng)
       const sp = $('#hero-stats');
       if (this.statsOpen && !this.screen) {
-        const sk2 = `${h.id}|${h.level}|${h.tier}|${h.train}|${h.statPts}|${Object.values(h.skillLv).join()}|${SLOTS.map((x) => h.equip[x] ? h.equip[x].uid : '').join()}|${Math.round(h.hp)}`;
+        const sk2 = `${h.id}|${h.level}|${h.tier}|${h.train}|${h.statPts}|${Object.values(h.skillLv).join()}|${SLOTS.map((x) => h.equip[x] ? h.equip[x].uid : '').join()}|${Math.round(h.hp)}|${this.evolveHint(h).map((o) => o.need).join()}`;
         if (this.statsSig !== sk2 || sp.hidden) {
           this.statsSig = sk2;
           const S = heroStats(h);
@@ -1399,7 +1403,8 @@ class UI {
             + row('Máu', `${Math.round(h.hp)}/${Math.round(S.hpMax)}`) + row('Chí mạng', `${Math.round(S.crit)}% ×${S.critMult.toFixed(1)}`) + row('Giảm hồi chiêu', `${Math.round(S.cdr)}%`)
             + row('Giảm s.thương', `${Math.round(S.dr)}%`) + row('Năng lượng', Math.round(S.maxMana))
             + row(ATTRS.str.name, Math.round(S.str)) + row(ATTRS.agi.name, Math.round(S.agi)) + row(ATTRS.int.name, Math.round(S.int))
-            + row('Điểm đã cộng', h.statPts || 0) + '</div>';
+            + row('Điểm đã cộng', h.statPts || 0) + '</div>'
+            + this.evolveHint(h).map((o) => `<button class="hs-evo" data-act="evo-focus" data-i="${o.i}">Phát triển: + <b>${esc(HEROES[o.pt].name)}</b> ➜ <b style="color:${RARITY[HEROES[o.f.to].legend].color}">${esc(HEROES[o.f.to].name)}</b> <small class="${o.need ? '' : 'ok'}">${o.need ? esc(o.need) : 'Đủ điều kiện!'}</small></button>`).join('');
           sp.hidden = false;
         }
       } else if (!sp.hidden) sp.hidden = true;
@@ -1788,12 +1793,12 @@ class UI {
                 ? `<div><span>Ghép từ</span><b style="text-align:right">${ascendSources(t).map((x) => HEROES[x].name).join(' + ')}</b></div>
                   <div><span>Cần</span><b style="color:#FFD66B">${d.legend === 'epic' ? `2 tướng ${'★'.repeat(COSTS.ascendTier)}` : `Thần tinh ${'★'.repeat(COSTS.ascendTier2)} · kỹ năng tối đa`} · ${COSTS.ascend[d.legend]} vàng</b></div>`
                 : `<div><span>Có từ</span><b style="color:#FFD66B">Triệu hồi ★ (đội 6 tướng)</b></div>`}
-                ${ASCEND[t] ? `<div><span>Hợp thể ra</span><b style="text-align:right;color:${RARITY[d.legend ? 'legendary' : 'epic'].color}">${ASCEND[t].map((x) => HEROES[x].name).join(' / ')}</b></div>` : ''}
                 <div><span>Tầm · Tốc đánh</span><b>${d.base.range} · ${d.base.cooldown}s</b></div></div>
               ${d.trait ? `<div class="tipbox inset" style="font-size:12px">★ <b>${d.trait.name}:</b> ${esc(d.trait.desc)}</div>` : ''}
               ${secretLine(this.game, 'h.' + t)}
             </div></div>
           <div class="ro-sk">${d.skills.map((sk, i) => `<div class="inset" data-tip="${esc(`<div class='st-h'>${svgI(skillIcon(t, i))}<div><b>${SKILL_KEYS[i]} · ${esc(sk.name)}</b><small>${sk.active ? `Chủ động · ${sk.active.mana} năng lượng · hồi ${sk.active.cooldown}s` : 'Nội tại (luôn có hiệu lực)'}</small></div></div><p>${esc(sk.info(n))}</p>`)}">${svgI(skillIcon(t, i))}<b style="color:#F2D27A">${SKILL_KEYS[i]} · ${sk.name}</b><span style="color:#C8BFA8;font-weight:500">${esc(sk.info(n))}</span></div>`).join('')}</div>
+          ${this.evolveTree(t)}
         </div></div></div>`;
     for (const [q, y] of keep) { const el = $('#roster').querySelector(q); if (el && q === '.ro-grid') el.scrollTop = y; }
     // ảnh vector tải không đồng bộ: vẽ lại vài lần cho chắc
@@ -2091,7 +2096,12 @@ class UI {
       case 'restart': this.startLevel(g.level); break;
       case 'to-map': this.showCampaign(g.level); break;
       case 'to-menu': $('#settings').hidden = true; if (g.started) this.bankStats(); this.showMenu(); break;
-      case 'ro-sel': this.rosterSel = d.type; this.renderRoster(); break;
+      case 'ro-sel': {
+        this.rosterSel = d.type; this.renderRoster();
+        // v147: chạm chân dung trong cây phát triển → cuộn danh sách tới tướng đó
+        if (d.ev) { const c = $('#roster').querySelector(`.ro-card[data-type="${d.type}"]`); if (c) c.scrollIntoView({ block: 'nearest' }); }
+        break;
+      }
       case 'ro-back':
         if (this.rosterInGame && $('#ranks').hidden && $('#treasury').hidden) { this.rosterInGame = false; $('#roster').hidden = true; if (this.rosterWasRunning) g.running = true; this.sig.fuse = ''; break; }
         this.showMenu(); break;
@@ -2174,7 +2184,16 @@ class UI {
       }
       case 'merge-any': this.mergeAny(); break;
       case 'fuse-with': this.fuseWith(+d.slot); break;
-      case 'legend-open': $('#legends').hidden = !$('#legends').hidden; $('#drawer').hidden = true; this.renderLegends(); break;
+      case 'evo-focus': {
+        // v147: đánh dấu 2 tướng thành phần trên sân + mở Cây hợp thể, sáng dòng công thức
+        const f = FUSION[+d.i]; if (!f) break;
+        this.fuseFocus = { i: +d.i, until: performance.now() + 6000 };
+        $('#legends').hidden = false; $('#drawer').hidden = true; this.renderLegends();
+        for (const r of $('#lg-grid').querySelectorAll('.asc-row')) r.classList.toggle('hl', +r.dataset.i === +d.i);
+        const hl = $('#lg-grid').querySelector('.asc-row.hl'); if (hl) hl.scrollIntoView({ block: 'nearest' });
+        break;
+      }
+      case 'legend-open': for (const r of $('#lg-grid').querySelectorAll('.asc-row.hl')) r.classList.remove('hl'); $('#legends').hidden = !$('#legends').hidden; $('#drawer').hidden = true; this.renderLegends(); break;
       case 'deck-close': this.clearSel(); $('#more').hidden = true; break;
       case 'quit-run':
         if (!this.quitArmed) { this.quitArmed = true; $('#quit-label').textContent = 'Bấm lần nữa để bỏ trận'; setTimeout(() => { this.quitArmed = false; const q = $('#quit-label'); if (q) q.textContent = 'Dừng chơi'; }, 3000); break; }
@@ -2880,6 +2899,52 @@ class UI {
             <div><b style="color:#F2D27A">2 món:</b> ${SD.p2}</div><div><b style="color:#F2D27A">Đủ bộ:</b> ${SD.p3}</div>
             <div style="color:#C8BFA8">${SD.look3}${SD.el === def.el ? ' · <b style="color:#FFD66B">Thiên mệnh: cùng hành, mạnh thêm 50%</b>' : ''}</div></div></div>`}
       </div>`;
+  }
+
+  // v147: CÂY PHÁT TRIỂN — tướng này ghép từ đâu / sẽ hợp thể thành tướng nào (dùng chung: Anh Hùng, chọn đội, trong trận)
+  evolveTree(t) {
+    const owned = new Set(this.save.owned || []);
+    const NEED = { epic: `2 tướng ${'★'.repeat(COSTS.ascendTier)}`, legendary: `Thần tinh ${'★'.repeat(COSTS.ascendTier2)} + kỹ năng tối đa` };
+    const pic = (x) => { const d = HEROES[x], lock = d.legend && !owned.has(x);
+      return `<button class="ev-p ${d.legend || 'base'} ${x === t ? 'me' : ''} ${lock ? 'lock' : ''}" data-act="ro-sel" data-type="${x}" data-ev="1" title="${esc(d.name)}${lock ? ' (chưa có)' : ''}">
+        <img src="${heroImgUrl(x, 'head')}" alt=""><b>${esc(d.name)}</b>${lock ? '<i>Chưa có</i>' : ''}</button>`; };
+    // sub = dòng tầng 2: bỏ chân dung đầu (đã có ở dòng trên), nối bằng ↳
+    const row = (f, sub) => `<div class="ev-row ${sub ? 'sub' : ''}">${sub ? '' : `${pic(f.a)}`}<span class="ev-op">+</span>${pic(f.b)}<span class="ev-op ar ${HEROES[f.to].legend}">➜</span>${pic(f.to)}</div>`;
+    const lb = (txt, tier) => `<div class="ev-lb">${txt}${tier ? ` · <b style="color:${RARITY[tier].color}">${NEED[tier]}</b>` : ''}</div>`;
+    // đặt tướng đang xem lên đầu công thức cho dễ đọc
+    const mine = (f, x) => (f.b === x ? { ...f, a: f.b, b: f.a } : f);
+    const into = (x) => FUSION.filter((f) => f.a === x || f.b === x).map((f) => mine(f, x));
+    const from = FUSION.find((f) => f.to === t);
+    const d = HEROES[t];
+    let body = '', title = 'Phát triển thành';
+    if (!d.legend) {
+      const list = into(t);
+      body = list.length ? lb('Lên Tím', 'epic') + list.map((f) => `<div class="ev-br">${row(f)}${into(f.to).length ? `<div class="ev-sl">rồi lên Vàng · ${NEED.legendary}</div>` : ''}${into(f.to).map((g2) => row(g2, true)).join('')}</div>`).join('') : '';
+    } else if (d.legend === 'epic') {
+      body = (from ? lb('Ghép từ', 'epic') + row(from) : '') + lb('Hợp thể thành', 'legendary') + into(t).map((f) => row(f)).join('');
+    } else {
+      title = 'Nguồn gốc';
+      const subs = from ? [from.a, from.b].map((x) => FUSION.find((f) => f.to === x)).filter(Boolean) : [];
+      body = (from ? lb('Ghép từ', 'legendary') + row(from) : '') + (subs.length ? lb('Hai tướng Tím ghép từ', 'epic') + subs.map((f) => row(f)).join('') : '')
+        + `<div class="ev-top" style="color:${RARITY.legendary.color}">★ Bậc cao nhất</div>`;
+    }
+    if (!body) return '';
+    return `<div class="ev-tree inset" style="--rc:${d.legend ? RARITY[d.legend].color : '#C8BFA8'}"><div class="ev-h">${title}<small>chạm chân dung để xem tướng</small></div>${body}</div>`;
+  }
+  // gợi ý 1 dòng trong trận: hợp thể gần nhất của tướng h (đối tác trên sân, điều kiện còn thiếu)
+  evolveHint(h) {
+    const g = this.game;
+    const opts = FUSION.map((f, i) => ({ f, i })).filter(({ f }) => f.a === h.type || f.b === h.type).map((o) => {
+      const pt = o.f.a === h.type ? o.f.b : o.f.a;
+      const mate = g.heroes.filter((x) => x && x !== h && x.type === pt).sort((x, y) => (y.tier || 0) - (x.tier || 0) || y.level - x.level)[0];
+      const mr = mate ? g.fusionReady(mate) : null, sr = g.fusionReady(h);
+      const star = HEROES[o.f.to].legend === 'legendary' ? `Thần tinh ${'★'.repeat(COSTS.ascendTier2)}` : '★'.repeat(COSTS.ascendTier);
+      const need = !g.ownsHero(o.f.to) ? `chưa có ${HEROES[o.f.to].name}` : sr !== true ? sr.replace(HEROES[h.type].name + ' ', '')
+        : !mate ? `cần ${HEROES[pt].name} ${star}` : mr !== true ? mr : '';
+      const score = (g.ownsHero(o.f.to) ? 4 : 0) + (mate ? 2 : 0) + (sr === true ? 1 : 0) + (mate && mr === true ? 1 : 0);
+      return { ...o, pt, need, score };
+    }).sort((a, b) => b.score - a.score);
+    return opts;
   }
 
   // dòng "hợp nhất cho tướng nào" của một món (lực chiến tăng bao nhiêu)
