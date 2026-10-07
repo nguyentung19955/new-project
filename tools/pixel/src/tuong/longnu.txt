@@ -2,6 +2,8 @@
 # Đặc trưng (PROMPT-GEN-LAI.txt:1116 ưu tiên + PROMPT-DUNG-XUONG.txt:1131): NỮ công chúa rồng ~20, cao thanh, cổ dài; SỪNG RỒNG nhỏ + vương miện
 # nhỏ ngọc trai, tóc dài như nước; lụa xanh ngọc biển + trắng ngọc trai + điểm hồng san hô, viền vàng; HAI TAY NÂNG NGỌC RỒNG to (không kiếm);
 # GẤU VÁY THÀNH VÂY CÁ xoè trên đất; chiêu: ngọc giơ cao + sóng nước xoáy (hành Thủy).
+# PHÁ CÁCH (QUY-CHUAN 0b): tóc là DÒNG NƯỚC chảy không ngừng (sọc nước dọc chàm–nước–nước sáng, chảy tràn xuống gấu váy vây cá),
+# vảy NGỌC TRAI lấm tấm trên má và tay; vẫn nữ, sừng rồng nhỏ, hai tay nâng NGỌC RỒNG. Cả hình trong 1..30 (không chạm mép).
 name: Long Nữ Động Đình
 size: 32x32
 anchor: 16,30

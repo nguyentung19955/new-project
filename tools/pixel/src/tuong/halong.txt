@@ -1,6 +1,7 @@
 # Rồng Mẹ Hạ Long — linh thú 32×32 (tướng Vàng · hành Thủy). Quy chuẩn: docs/pixel/QUY-CHUAN.md
 # Đặc trưng (PROMPT-GEN-LAI.txt:196, PROMPT-DUNG-XUONG.txt:1110): RỒNG VIỆT thân rắn dài uốn CHỮ S, chân nhỏ — KHÔNG người, KHÔNG giáo;
 # xanh bọt biển (ngọc sáng) bụng trắng ngọc trai, SỪNG VÀNG, bờm + râu rồng, vây viền vàng; NGỌC SÁNG trong 1 vuốt trước.
+# Dáng rồng Lý–Trần: mõm dài, SỪNG NHÁNH vàng, râu rồng dài bay, mào vây dọc lưng; thân uốn 2 khúc hở nền giữa.
 # Phá cách (QUY-CHUAN 0b): trên lưng mọc DÃY NÚI ĐÁ VÔI tí hon như vịnh Hạ Long, nước rỏ từ vây đuôi. Chiêu Thủy: ngọc toả sóng nước.
 name: Rồng Mẹ Hạ Long
 size: 32x32
@@ -28,56 +29,79 @@ colors:
   c = cham-toi
 
 part than
-...................TTTT.........
-........TTTTTTTTTTTTTTMM........
-.....TTTTMMMMMMMMMMMMMMM........
-....TTMMMMMMMMMnnnnnnnnn........
-....TMMMnnEEEeeEEEeeEEE.........
-...TTMnnEE......................
-...TMMnE........................
-...TMMneTTTTTTTTTTTTTTT.........
-...TTMMMMMMMMMMMMMMMMTTTTT......
-....TTMMMMMMMMMMMMMMMMMMMTT.....
-.....EnnnnnnnnnnnnnnnnMMMnE.....
-......EEeeEEEeeEEEeeEEenMMne....
-......................eTMMnE....
-.......................TTMnE....
-....TTTTTT.......TTTTTTTMMnE....
-...nnMMMMTTTTTTTTTTTMMMMMne.....
-....EnnMMMMMMMMMMMMMMMMMnEe.....
-......EeennnnnnnnnnnnnnneE......
-.........EeeeEEEeeeEEeee........
+....................TTT.........
+.........TTTTTTTTTTTTTMM........
+.......TTTTTTTMMMMMMMMMM........
+.....TTTMMMMMMMMMMMnnnnn........
+....TTMMMMnnnnnnnneeEEE.........
+...TTMMMnnEEEeeEEEe.............
+...TMMnnEee.....................
+..TTMMnEE.......................
+..TMMneE........................
+.TTMMnE.........................
+..TMMnee........................
+..TTMMne........................
+...TMMnETT......................
+...TTMMMTTTTTTTTT...............
+...TTnMMMMMTTTTTTTTTTTTTTTTTMM..
+....EEnnMMMMMMMMMMMMMMMMMMMMnn..
+.....EeennnMMMMMMMMMMMMMnnneE...
+.......eEEnnnnnnnnnnnnnEeEE.....
+.........EeeeEEeeeEEeeE.........
 end
 
 part nui
-........l..
-....l..lSl.
-...lSl.lSsx
-...SSx.SSsx
-l..SSx.SSsx
-Sl.SsxSSssx
-SSxSssSsssx
-Ssxssssssxx
+...l...
+..lSl.l
+.lSsxlS
+.SSsxSs
+SSssxSs
+end
+
+part vay_lung
+y..y..y..
+Uy.Uy.Uy.
+UUnUUnUUn
 end
 
 part dau
-..yY..yY....
-...jy..jy...
-.UUTTTTTT...
-UUTTMMMMMT..
-UnTTMKKMMTT.
-UnTMMeKMMMMT
-.nMMMMMMMMnM
-UnnMMMMMnKKK
-.UnnMnnwnnny
-..Unnnnnn.y.
+y.y...........
+.yy.y.........
+..yjy.........
+.UUTTTTT......
+UnTTMMMMTTT...
+UnTMKKMMMMMTT.
+UnTMeKMMMMMMMT
+UUnMMMMMMMMMnK
+.UnnMMMnKKKKK.
+UUnnMMwnnnny..
+.UUnnnnnnnn.y.
+end
+
+part dau_ha
+y.y...........
+.yy.y.........
+..yjy.........
+.UUTTTTT......
+UnTTMMMMTTT...
+UnTMKKMMMMMTT.
+UnTMeKMMMMMMMT
+UUnMMMMMMMMMnK
+.UnnMMMKKKKKK.
+UUnnMKwKKwKy..
+.UUnnnnnnnn.y.
+end
+
+part rau
+y.
+.y
+.y
 end
 
 part tay
-..yy
+TMy.
 .Mny
-TMn.
-Mn..
+..ny
 end
 
 part ngoc
@@ -93,10 +117,9 @@ yjy.......yjy
 end
 
 part vay
-yy..
-yMy.
-.yMn
-..nn
+y.y
+yMy
+.n.
 end
 
 part giot
@@ -134,22 +157,9 @@ part nam
 ......EEeeEEEeeeEEEe............
 end
 
-part dau_ha
-..yY..yY....
-...jy..jy...
-.UUTTTTTT...
-UUTTMMMMMT..
-UnTTMKKMMTT.
-UnTMMeKMMMMT
-.nMMMMMMMMnM
-UnnMMMMKKKKK
-.UnnMKwKwKKy
-..UnnnnnnnKy
-end
-
 part mat_nham
-MMM
-KKM
+MM
+KK
 end
 
 part song
@@ -176,74 +186,86 @@ end
 
 anim idle fps=3 loop
 frame idle
-  use nui 5 2
+  use nui 4 5
+  use vay_lung 11 6
   use than 0 8
   use chan 8 27
-  use vay 1 19
-  use giot 1 24
-  use tay 23 13
-  use ngoc 26 12
-  use dau 19 1
+  use vay 28 19
+  use giot 30 26
+  use tay 21 13
+  use ngoc 24 12
+  use dau 17 1
+  use rau 29 12
   outline
 end
 frame idle
-  use nui 5 3
+  use nui 4 6
+  use vay_lung 11 7
   use than 0 8
   use chan 8 27
-  use vay 1 19
-  use giot 1 25
-  use tay 23 13
-  use ngoc 26 12
-  use dau 19 2
+  use vay 28 19
+  use giot 30 27
+  use tay 21 14
+  use ngoc 24 13
+  use dau 17 2
+  use rau 29 13
   outline
 end
 frame idle
-  use nui 5 3
+  use nui 4 6
+  use vay_lung 11 7
   use than 0 8
   use chan 8 27
-  use vay 1 20
-  use giot 2 26
-  use tay 23 14
-  use ngoc 26 13
-  use dau 19 2
+  use vay 28 20
+  use giot 30 28
+  use tay 21 14
+  use ngoc 24 13
+  use dau 17 2
+  use rau 29 13
   outline
 end
 
 # đòn: ngẩng đầu lấy đà → mổ tới, ngọc loé → sóng nước bắn trúng → thu về
 anim attack fps=10 once
 frame attack
-  use nui 5 2
+  use nui 4 5
+  use vay_lung 11 6
   use than 0 8
   use chan 8 27
-  use vay 1 19
-  use giot 1 24
-  use tay 21 11
-  use ngoc 24 9
-  use dau 18 1
+  use vay 28 19
+  use giot 30 26
+  use tay 20 12
+  use ngoc 23 11
+  use dau 16 1
+  use rau 28 12
   outline
 end
 frame attack
-  use nui 5 2
+  use nui 4 5
+  use vay_lung 11 6
   use than 0 8
   use chan 8 27
-  use vay 1 19
-  use giot 1 24
-  use tay 22 13
-  use ngoc 26 13
-  use dau_ha 19 3
+  use vay 28 19
+  use giot 30 26
+  use tay 22 14
+  use ngoc 25 14
+  use dau_ha 17 2
+  use rau 29 13
   swap e w
   outline
 end
 frame attack
-  use nui 5 2
+  use nui 4 5
+  use vay_lung 11 6
   use than 0 8
   use chan 8 27
-  use vay 1 19
-  use giot 1 24
-  use tay 22 13
-  use ngoc 26 13
-  use dau_ha 19 3
-  use song 27 18
+  use vay 28 19
+  use giot 30 26
+  use tay 22 14
+  use ngoc 25 14
+  use dau_ha 17 2
+  use rau 29 13
+  use song 27 22
   outline
 end
 frame attack
@@ -253,84 +275,92 @@ end
 # chiêu (hành Thủy): ngọc rồng toả sáng, sóng nước bắn quanh, đá vôi loé
 anim cast fps=8 loop
 frame cast
-  use nui 5 2
+  use nui 4 5
+  use vay_lung 11 6
   use than 0 8
   use chan 8 27
-  use vay 1 19
-  use giot 1 24
-  use tay 22 11
-  use ngoc 25 9
-  use dau_ha 19 1
+  use vay 28 19
+  use giot 30 26
+  use tay 21 13
+  use ngoc 24 12
+  use dau_ha 17 1
+  use rau 29 12
   outline
-  use toa1 25 9
+  use toa1 24 13
 end
 frame cast
-  use nui 5 2
+  use nui 4 5
+  use vay_lung 11 6
   use than 0 8
   use chan 8 27
-  use vay 1 19
-  use giot 1 24
-  use tay 22 11
-  use ngoc 25 9
-  use dau_ha 19 1
+  use vay 28 19
+  use giot 30 26
+  use tay 21 13
+  use ngoc 24 12
+  use dau_ha 17 1
+  use rau 29 12
   swap S b
   outline
-  use toa2 23 7
+  use toa2 23 11
   set 2 4 t
-  set 30 22 t
+  set 30 26 t
 end
 frame cast
-  use nui 5 2
+  use nui 4 5
+  use vay_lung 11 6
   use than 0 8
   use chan 8 27
-  use vay 1 19
-  use giot 1 24
-  use tay 22 11
-  use ngoc 25 9
-  use dau_ha 19 1
+  use vay 28 19
+  use giot 30 26
+  use tay 21 13
+  use ngoc 24 12
+  use dau_ha 17 1
+  use rau 29 12
   outline
-  use toa2 23 7
+  use toa2 23 11
   swap t U
-  use song 27 18
-  use song 1 2
+  use song 27 22
+  use song 1 3
 end
 
 # trúng đòn: giật lùi, nhắm mắt, nháy sáng
 anim hurt fps=8 once
 frame hurt
-  use nui 4 2
+  use nui 3 5
+  use vay_lung 10 6
   use than 0 8
   use chan 8 27
-  use vay 1 19
-  use giot 1 24
-  use tay 22 14
-  use ngoc 25 13
-  use dau 18 2
-  use mat_nham 22 6
+  use vay 28 19
+  use giot 30 26
+  use tay 20 14
+  use ngoc 23 13
+  use dau 16 2
+  use rau 28 13
+  use mat_nham 20 7
   swap M T
   swap n M
   outline
 end
 
-# chết: đầu gục, khúc rồng sụp → nằm duỗi trên đất → tối màu
+# chết: đầu gục, thân sụp → nằm duỗi trên đất → tối màu
 anim die fps=5 once
 frame die
-  use nui 5 4
+  use nui 4 8
+  use vay_lung 11 8
   use than 0 10
-  use chan 8 27
-  use vay 1 21
-  use tay 22 15
-  use ngoc 25 15
-  use dau 19 5
-  use mat_nham 23 9
+  use vay 28 21
+  use tay 21 16
+  use ngoc 24 15
+  use dau 17 4
+  use rau 29 15
+  use mat_nham 21 9
   outline
 end
 frame die
-  use nui 6 17
+  use nui 6 20
   use nam 0 23
-  use ngoc 26 26
-  use dau 19 18
-  use mat_nham 23 22
+  use dau 17 18
+  use mat_nham 21 23
   outline
 end
 frame die
@@ -342,13 +372,14 @@ frame die
   swap y j
 end
 
-# chân dung: đầu rồng sừng vàng + cổ uốn có núi đá vôi + ngọc trong vuốt
+# chân dung: đầu rồng sừng nhánh vàng + râu + cổ uốn có núi đá vôi + ngọc trong vuốt
 anim portrait fps=1 once
 frame portrait
-  use nui 6 10
+  use nui 7 12
   use co_dc 0 12
-  use tay 21 18
-  use ngoc 24 16
-  use dau 16 5
+  use tay 20 17
+  use ngoc 23 16
+  use dau 15 4
+  use rau 27 15
   outline
 end

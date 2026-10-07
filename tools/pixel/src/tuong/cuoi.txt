@@ -76,18 +76,18 @@ part tren
 ........KKhFKKFFFKKFF.....
 ........KKFFekFFFekFF.....
 ........KfFFFFFFFFFFFF....
-........KfFFKFFFFFKFf.....
-........KffFKeeeeKFf......
-.........KfFFKKKKFf.......
-..........KffKKfK.........
+........KfFFFKFFFKFFf.....
+........KffFFFKKKFFff.....
+.........KfFFFFKFFff......
+..........KffKKKffK.......
 .......jzYYYYyYYYYcj......
-......jzYYYYYYyYYYYcj.....
-......czYYYYYbYYYYYcc.....
-......czYYYYbSYYYYYcc.....
-......czYYYYYbYYYYccc.....
+......jzzYYYYYyYYYccj.....
+......czYYYcYbYYYYccc.....
+......czYYcYbSYYcYccc.....
+......czYYcYYbYYcYccT.....
 ......jyyyyyyyyyyyyyj.....
-.......cYYYYYYYYYYcc......
-.......cccYYYYYYcccc......
+.......cYYcYYYcYYYcc......
+.......cccYcYYYcYccT......
 end
 
 part tay_sau
@@ -203,7 +203,7 @@ part mat_nham
 FKKFFFKK
 end
 
-# chân dung riêng: đầu + tán đa + trăng khuyết phóng ×2
+# chân dung riêng: đầu + tán đa + trăng khuyết phóng ×2 (mắt nhỏ 2×1, nụ cười hiền khép)
 part chan_dung
 LLllllllllllLLLLkk....zzbbbb..
 LLllllllllllLLLLkk....zzbbbb..
@@ -220,19 +220,19 @@ KKKKKKKKKKKKKKKKKKKKKKkkkkllLL
 KKKKKKhhhhhhhhFFFFFFFFFFFFkkcc
 KKKKKKhhhhhhhhFFFFFFFFFFFFkkcc
 KKKKhhFFKKKKFFFFFFKKKKFFFFkkGG
-KKKKhhFFKKKKFFFFFFKKKKFFFFkkGG
-KKKKFFFFeekkFFFFFFeekkFFFFkkcc
-KKKKFFFFeekkFFFFFFeekkFFFFkkcc
+KKKKhhFFFFFFFFFFFFFFFFFFFFkkGG
+KKKKFFFFFekFFFFFFFFekFFFFFkkcc
+KKKKFFFFFFFFFFFFFFFFFFFFFFkkcc
 KKffFFFFFFFFFFFFFFFFFFFFFFFFTT
 KKffFFFFFFFFFFFFFFFFFFFFFFFFTT
-KKffFFFFKKFFFFFFFFFFKKFFffkkcc
-KKffFFFFKKFFFFFFFFFFKKFFffkkcc
-KKffffFFKKeeeeeeeeKKFFffkkkkcc
-KKffffFFKKeeeeeeeeKKFFffkkkkcc
-kkKKffFFFFKKKKKKKKFFffkk..kkTT
-kkKKffFFFFKKKKKKKKFFffkk..kkTT
-TTkkKKffffKKKKffKKkkkkkk..kkcc
-TTkkKKffffKKKKffKKkkkkkk..kkcc
+KKffFFFFFFFFFFFFFFFFFFFFffkkcc
+KKffFFFFFFKKFFFFFFKKFFFFffkkcc
+KKffffFFFFFFKKKKKKFFFFffffkkcc
+KKffffFFFFFFFFFFFFFFFFffffkkcc
+kkKKffFFFFFFFFKKFFFFffffkkkkTT
+kkKKffFFFFFFFFKKFFFFffffkkkkTT
+TTkkKKffffKKKKKKffffKKkk..kkcc
+TTkkKKffffKKKKKKffffKKkk..kkcc
 zzYYYYYYYYyyYYYYYYYYccjjkkkkGG
 zzYYYYYYYYyyYYYYYYYYccjjkkkkGG
 end
@@ -298,8 +298,8 @@ frame attack
   use chan 0 24
   use tay_sau 4 17
   use tren 1 0
-  use don_ngang 12 19
-  use tay_ngang 19 18
+  use don_ngang 12 16
+  use tay_ngang 19 16
   outline
 end
 frame attack
@@ -309,10 +309,10 @@ frame attack
   use chan 0 24
   use tay_sau 4 17
   use tren 1 0
-  use don_ngang 12 19
-  use tay_ngang 19 18
-  use la 28 15
-  use la2 28 22
+  use don_ngang 12 16
+  use tay_ngang 19 16
+  use la 28 12
+  use la2 28 19
   outline
 end
 frame attack

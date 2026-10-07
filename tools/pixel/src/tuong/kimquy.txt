@@ -2,6 +2,8 @@
 # Đặc trưng (PROMPT-GEN-LAI.txt:124, PROMPT-DUNG-XUONG.txt:942): RÙA VÀNG thần thân rùa thật 4 chân, đứng thấp — KHÔNG người,
 # không đuôi rồng, không sừng, không đinh ba; MAI VÒM VÀNG vảy lục giác rộng hơn cao, viền vàng mai, da xanh ngọc,
 # đầu rùa già lông mày + chòm RÂU TRẮNG, vương miện nhỏ; 1 VUỐT TRƯỚC giơ lên phát sáng đỏ-vàng.
+# Phá cách tạo hình: MAI LÀ MẶT TRỐNG ĐỒNG vàng (ngôi sao giữa đỉnh, các vành đồng tâm chấm/răng cưa Đông Sơn),
+# RÊU NGỌC bám mép mai (rêu xanh + đốm ngọc); vẫn rùa thật 4 chân, vuốt sáng.
 name: Thần Kim Quy
 size: 32x32
 anchor: 15,30
@@ -23,20 +25,22 @@ colors:
   l = lua
   L = lua-sang
   r = son
+  m = reu
+  M = reu-sang
 
 part mai
 .......jjjjjj.......
-....jjYYYYYYYyyj....
-...jYYYooooooyyyj...
-..jYYYoYYYYYyoyyyj..
-.jYYYoYYYYYYyyoyyyj.
-.jooooYYYYYYyyooooj.
-jYYYYoYYYYYyyyoyyyyj
-jYYYYYooooooooyyyyyj
-jYYYYoYYYYyyyyoyyyyj
-jyooooyyyyyyyyooooyj
-ojjjjjjjjjjjjjjjjjjo
-.oyyyyyyyyyyyyyyyyo.
+....jjYoooooooyyj...
+...jYoYjYjYjyjoyj...
+..jYoYoooooooyoyyj..
+.jYoYoYYYwYYYoyoyyj.
+.jYoYoYYwwwYyoyoyyj.
+jYoYYoYYYwYYyoyyoyyj
+jYoYjYoooooooyjyoyyj
+jYYoYjYjYjyjyjyoyyyj
+jyYYooooooooooooyyyj
+oMjjjmMjjjjjjjMmjjjo
+.omMGyyyyyyyMGmyyyo.
 end
 
 part dau
@@ -139,29 +143,29 @@ end
 
 anim idle fps=3 loop
 frame idle
-  use duoi 1 19
+  use duoi 2 19
   use chan 2 24
-  use co 18 15
+  use co 17 15
   use mai 2 12
-  use dau 19 6
+  use dau 18 6
   use vuot 20 19
   outline
 end
 frame idle
-  use duoi 1 19
+  use duoi 2 19
   use chan 2 24
-  use co 18 16
+  use co 17 16
   use mai 2 13
-  use dau 19 7
+  use dau 18 7
   use vuot 20 19
   outline
 end
 frame idle
-  use duoi 1 20
+  use duoi 2 20
   use chan 2 24
-  use co 18 16
+  use co 17 16
   use mai 2 13
-  use dau 19 7
+  use dau 18 7
   use vuot 20 18
   swap L l
   outline
@@ -170,7 +174,7 @@ end
 # cào: giơ vuốt sáng lên cao → bổ xuống phía trước → toé sáng → thu về
 anim attack fps=10 once
 frame attack
-  use duoi 1 19
+  use duoi 2 19
   use chan 2 24
   use co 17 15
   use mai 2 12
@@ -179,21 +183,21 @@ frame attack
   outline
 end
 frame attack
-  use duoi 1 19
+  use duoi 2 19
   use chan 2 24
-  use co 18 15
+  use co 17 15
   use mai 2 12
-  use dau 19 6
-  use vuot_dam 19 20
+  use dau 18 6
+  use vuot_dam 18 20
   outline
 end
 frame attack
-  use duoi 1 19
+  use duoi 2 19
   use chan 2 24
-  use co 18 15
+  use co 17 15
   use mai 2 12
-  use dau 19 6
-  use vuot_dam 19 21
+  use dau 18 6
+  use vuot_dam 18 21
   use sang_nho 27 19
   outline
 end
@@ -204,32 +208,32 @@ end
 # chiêu (hành Kim): vuốt thần toả hào quang vàng-bạc, mai rùa loé sáng
 anim cast fps=8 loop
 frame cast
-  use duoi 1 19
+  use duoi 2 19
   use chan 2 24
-  use co 18 15
+  use co 17 15
   use mai 2 12
-  use dau 19 6
+  use dau 18 6
   use vuot_len 21 14
   outline
   use sang_nho 24 12
 end
 frame cast
-  use duoi 1 19
+  use duoi 2 19
   use chan 2 24
-  use co 18 15
+  use co 17 15
   use mai 2 12
-  use dau 19 6
+  use dau 18 6
   use vuot_len 21 14
   swap o j
   outline
   use sang_to 22 10
 end
 frame cast
-  use duoi 1 19
+  use duoi 2 19
   use chan 2 24
-  use co 18 15
+  use co 17 15
   use mai 2 12
-  use dau 19 6
+  use dau 18 6
   use vuot_len 21 14
   outline
   use sang_to 22 10
@@ -257,21 +261,21 @@ end
 # chết: khuỵu chân → mai sập xuống đất, đầu gục → tối màu
 anim die fps=5 once
 frame die
-  use duoi 1 21
+  use duoi 2 21
   use chan 2 24
-  use co 18 18
+  use co 17 18
   use mai 2 15
-  use dau 19 10
-  use mat_nham 21 14
+  use dau 18 10
+  use mat_nham 20 14
   outline
 end
 frame die
   use nam 2 27
-  use duoi 1 23
+  use duoi 2 23
   use mai 2 17
-  use co 18 21
-  use dau 20 17
-  use mat_nham 22 21
+  use co 16 21
+  use dau 18 17
+  use mat_nham 20 21
   outline
 end
 frame die
@@ -285,7 +289,7 @@ end
 # chân dung: đầu rùa già râu trắng + vương miện + vuốt sáng, mai vàng phía sau
 anim portrait fps=1 once
 frame portrait
-  use mai 1 15
+  use mai 2 15
   use co 12 18
   use dau 13 9
   use vuot 15 22

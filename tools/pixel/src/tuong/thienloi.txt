@@ -34,30 +34,30 @@ colors:
   n = nuoc-sang
 
 part tren
-..........................
-.......z.....z.....z......
-...z..zW....zW....zW......
-...Wz.WX...zWX...zWX......
-....WWWXzzzWWXzzzWWX......
-....XWWWWWWWWWWWWWWWX.....
-....XWWWWyyYYYbYYyyyyy....
-....XWWXXhhhhhFFFFFFFF....
-....XWWXhhKKKFFFFKKKFf....
-....XWXXhFFFFKFFKFFFFf....
-....XWXXFFFFzuFFFzuFFf....
-.....XXXfFFFFFFFFFFFFFf...
-.....XXXfFFFFFFFKeeeKf....
-.....XXXffFFFFFFFFFfff....
-.......XKKffffffffff......
-...qbbSqyYYYYYYYYyqbbSq...
-..qbSSSsqvCcYccccvqbSSsq..
-..qsSSsqvCccYYcccvqsSsq...
-...qsq.vCcccccYccv........
-...vcv.vCccccYcccv........
-...vCc.yyyyybyyyyy........
-...qbS.vCcYcccccv.........
-...qbS.vCccYYcccv.........
-...hFf.vvCcccYcvv.........
+...........................
+...........................
+...........................
+..........z...z...z........
+.......z.zW..zWX.zWX.......
+......XWWWWWzWWWWWWWX......
+......XWWyyYYYbYYyyyy......
+......XWWhhhhFFFFFFFf......
+......XWhKKKfFFfKKKFf......
+......XWhfzufFFfzufFf......
+......XWWhhFFFFFFFFFFF.....
+.......XWfhFFFFKeeeKff.....
+.......XWffFFFFfKKKff......
+........XXKffffffff........
+..qbbbSqyYYYYYYYYYyqbbbSq..
+.qbSSSSsqvCcYccccvqbSSSSsq.
+.qsSSSsqvCccYYcccvqsSSSsq..
+..qssq.vCcccccYccv.qsssq...
+..vccv.vCccccYcccv.........
+..vCcv.yyyyybyyyyy.........
+..qbSq.vCcYcccccv..........
+..qbSq.vCccYYcccv..........
+..hFFf.vvCcccYcvv..........
+......vvCccccYcvv..........
 end
 
 part chan
@@ -70,11 +70,11 @@ part chan
 end
 
 part canh
-.z.....
-zWz....
-wWWz...
-ywWWz..
-.ywWWq.
+z......
+Wz.....
+wWz....
+ywWz...
+.ywWz..
 .ywwWq.
 ..ywwq.
 ...yq..
@@ -82,11 +82,11 @@ end
 
 part canh2
 .......
-.z.....
-zWz....
+z......
+Wz.....
 wWWz...
 ywWWz..
-.ywWWq.
+.ywwWq.
 ..ywwq.
 ...yq..
 end
@@ -182,12 +182,12 @@ z.z
 end
 
 part mat_nham
-FKKFFFKK
+KKFFFFKK
 end
 
 anim idle fps=3 loop
 frame idle
-  use canh 1 11
+  use canh 1 8
   use chan 0 24
   use tren
   use riu 21 6
@@ -195,7 +195,7 @@ frame idle
   outline
 end
 frame idle
-  use canh 1 12
+  use canh 1 9
   use chan 0 24
   use tren 0 1
   use riu 21 6
@@ -203,7 +203,7 @@ frame idle
   outline
 end
 frame idle
-  use canh2 1 11
+  use canh2 1 8
   use chan 0 24
   use tren
   use riu 21 6
@@ -213,7 +213,7 @@ end
 
 anim attack fps=10 once
 frame attack
-  use canh2 1 11
+  use canh2 1 8
   use chan 0 24
   use tren -1 0
   use riu_len 13 1
@@ -221,7 +221,7 @@ frame attack
   outline
 end
 frame attack
-  use canh 1 11
+  use canh 1 8
   use chan 0 24
   use tren 1 1
   use riu_bo 14 17
@@ -229,7 +229,7 @@ frame attack
   outline
 end
 frame attack
-  use canh 1 11
+  use canh 1 8
   use chan 0 24
   use tren 1 1
   use riu_bo 14 17
@@ -239,7 +239,7 @@ frame attack
   outline
 end
 frame attack
-  use canh2 1 11
+  use canh2 1 8
   use chan 0 24
   use tren
   use riu 21 7
@@ -249,31 +249,31 @@ end
 
 anim cast fps=8 loop
 frame cast
-  use canh 1 11
+  use canh 1 8
   use chan 0 24
   use tren
   use riu 21 4
   use tay_len 21 14
-  use set_nho 24 0
+  use set_nho 24 1
   outline
 end
 frame cast
-  use canh2 1 10
+  use canh2 1 7
   use chan 0 24
   use tren
   use riu 21 4
   use tay_len 21 14
-  use set 25 0
+  use set 25 1
   use set_nho 1 21
   outline
 end
 frame cast
-  use canh 1 11
+  use canh 1 8
   use chan 0 24
   use tren 0 1
   use riu 21 4
   use tay_len 21 15
-  use set 26 0
+  use set 26 1
   use set_nho 1 22
   use tia 27 9
   set 2 4 u
@@ -282,12 +282,12 @@ end
 
 anim hurt fps=8 once
 frame hurt
-  use canh 1 11
+  use canh 1 8
   use chan -1 24
   use tren -1 0
   use riu 20 6
   use tay 19 17
-  use mat_nham 10 10
+  use mat_nham 9 9
   outline
   swap F h
   swap c C
@@ -295,17 +295,17 @@ end
 
 anim die fps=5 once
 frame die
-  use canh 1 14
+  use canh 1 11
   use chan 0 24
   use tren 0 3
   use riu_bo 14 22
-  use mat_nham 11 13
+  use mat_nham 10 12
   outline
 end
 frame die
   use chan 0 24
   use tren 0 3
-  use mat_nham 11 13
+  use mat_nham 10 12
   rot 90
   shift 0 5
   outline
