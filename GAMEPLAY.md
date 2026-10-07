@@ -1600,3 +1600,11 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 169 — Gộp bộ lọc thả xuống màn Góp ý nhận được
 - Màn Góp ý nhận được: lọc Loại / Trạng thái bằng ô chọn thả xuống (kèm số lượng), nút Bỏ lọc, dòng "Đang hiện x/y".
+## Phiên bản 169 — Mạng thành hiện "còn / tối đa"
+- Thêm **mạng tối đa** của trận (`game.maxLives`, đầu trận = 20). Thanh trên hiện `20/20` (số còn to, "/tối đa" nhỏ); mất mạng chỉ giảm số còn (`19/20`).
+- Cộng mạng (`gainLives`: Đắp thành, Kho lúa · Đắp thành, núi che thành +1): hồi phần đã mất trước, phần dư nâng luôn mạng tối đa — `20/20 +1 → 21/21`, `18/20 +1 → 19/20`, `19/20 +3 → 22/22` (không ai bị thiệt so với trước).
+- Màu số mạng: còn > 50% vàng nhạt, ≤ 50% cam, ≤ 25% đỏ nhấp nháy nhẹ. Màn kết quả hiện `còn/tối đa`; thẻ Đắp thành ở bảng chuẩn bị hiện `20 → 25`.
+- Lưu trận dở / ảnh chụp chơi nhóm có `maxLives` (bản cũ thiếu → lấy max(mạng còn, 20)); mã kiểm đồng bộ chơi nhóm thêm `maxLives`. Số sao vẫn tính theo mốc 20 mạng như cũ.
+
+## Phiên bản 170 — Gộp mạng hiện tại/tối đa
+- Mạng hiện "còn/tối đa" (20/20 → 21/21 khi được cộng lúc đầy, 20/21 khi mất), đổi màu khi thấp; Đắp thành hiện "20 → 25"; màn kết quả hiện còn/tối đa.
