@@ -2050,7 +2050,7 @@ class UI {
       const short = (t) => CARD_NAME[t] || HEROES[t].name.split(' ').slice(-2).join(' ');
       html = `${pairs ? `<button class="dk-auto metal on" data-act="auto-merge" aria-label="Ghép tự động"><b>⇄</b>Ghép<br>tự động<i>${Math.floor(pairs / 2)}</i></button>` : ''}
         <div class="mk-row">${m.types.map((t, i) => `<button class="mk-card ${ok[i] ? '' : 'poor'} ${twins[i] ? 'twin' : ''}" data-mk="${i}" style="--c:${ELEMENTS[HEROES[t].el].color}" aria-label="Mua ${esc(HEROES[t].name)}${heroRole(t) ? ` (${ROLES[heroRole(t)].name})` : ''}${twins[i] ? ' (ghép được)' : ''}, ${sc} vàng" title="${heroRole(t) ? `Vai trò: ${ROLES[heroRole(t)].name}` : ''}">
-          <img src="${heroImgUrl(t, 'head')}" alt="" draggable="false"><span class="el">${elIcon(HEROES[t].el, 11)}</span>${heroRole(t) ? `<span class="rl">${roleIcon(heroRole(t), 14)}</span>` : ''}${twins[i] ? '<i class="tw">ghép</i>' : ''}
+          <img src="${heroImgUrl(t, 'head')}" alt="" draggable="false"><span class="el">${elIcon(HEROES[t].el, 11)}</span>${heroRole(t) ? `<span class="rl">${roleIcon(heroRole(t), 13)}</span>` : ''}${twins[i] ? '<i class="tw">ghép</i>' : ''}
           <b class="nm">${esc(short(t))}</b><span class="cost">${coin(1)}${sc}</span></button>`).join('')}
           <button class="mk-rr metal ${g.gold >= rc ? '' : 'poor'}" data-act="mk-reroll" aria-label="Đổi cả hàng, ${rc} vàng"><b>${UIE.redo()}</b><span>${coin(1)}${rc}</span></button></div>
         <span class="dk-sep"></span><button class="dk-card legend" data-act="legend-open" aria-label="Cây hợp thể">${`<img class="asc-ic" src="${assetSrc('ui/ui-tran-3-2.png')}" alt="★">`}Hợp<br>thể</button>`;
