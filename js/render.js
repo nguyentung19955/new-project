@@ -2216,9 +2216,10 @@ function drawEnemy(ctx, e, t, o = {}) {
   ctx.restore();
 
   const top = e.y - lift - box.ay - 4;
-  if (!o.icon) drawEnemyStatus(ctx, e, box, lift, t);
-  // trạng thái bằng ảnh hạt assets/vfx/ (js/vfx.js); ảnh chưa có / hết hạn mức → cờ false → vẽ bằng code như cũ bên dưới
+  // trạng thái bằng ảnh assets/vfx/ (js/vfx.js: ảnh vẽ tay tt-*.png, không có thì hạt Kenney);
+  // ảnh chưa có / hết hạn mức → cờ false → vẽ bằng code như cũ
   const vs = !o.icon && typeof VFX !== 'undefined' && VFX.status ? VFX.status(ctx, e, box, lift, t) : {};
+  if (!o.icon) drawEnemyStatus(ctx, e, box, lift, t, vs);
   ctx.save();
   ctx.translate(e.x, 0);
   // bị làm chậm: phủ sương xanh
@@ -2239,13 +2240,15 @@ function drawEnemy(ctx, e, t, o = {}) {
   }
   if (e.stunT > 0) {
     if (e.stunKind === 'ice') {
-      ctx.fillStyle = 'rgba(189,235,250,0.45)';
-      ctx.strokeStyle = '#E8FBFF';
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.rect(-box.w * 0.5, e.y - lift - box.h, box.w, box.h + 2);
-      ctx.fill();
-      ctx.stroke();
+      if (!vs.iceArt) {   // có ảnh khối băng vẽ tay thì js/vfx.js đã vẽ
+        ctx.fillStyle = 'rgba(189,235,250,0.45)';
+        ctx.strokeStyle = '#E8FBFF';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.rect(-box.w * 0.5, e.y - lift - box.h, box.w, box.h + 2);
+        ctx.fill();
+        ctx.stroke();
+      }
     } else if (e.stunKind === 'root') {
       // dây rừng trói chân
       ctx.strokeStyle = '#3E9A4A'; ctx.lineWidth = 3;
@@ -2339,10 +2342,10 @@ function drawEnemyFxBack(ctx, kind, c, w, h, t, id, fly) {
   ctx.restore();
 }
 
-function drawEnemyStatus(ctx, e, box, lift, t) {
+function drawEnemyStatus(ctx, e, box, lift, t, vs = {}) {
   const cx = e.x, cy = e.y - lift - box.h * 0.4;
   ctx.save();
-  if (e.stunT > 0 && e.stunKind === 'ice') {
+  if (e.stunT > 0 && e.stunKind === 'ice' && !vs.iceArt) {
     ctx.fillStyle = 'rgba(190,235,250,0.38)';
     ctx.strokeStyle = 'rgba(232,248,255,0.9)';
     ctx.lineWidth = 1.4;

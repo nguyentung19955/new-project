@@ -531,3 +531,60 @@ SUBJECT: a whole round green watermelon with dark green stripes and a short stem
 STYLE: cute mobile-game art matching chibi heroes of a Vietnamese folk-legend tower-defense game: thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds), about 20-30 flat colors, no gradients.
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. Never use magenta or pink on the effect. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Centered in every cell with at least 6% empty margin; nothing crosses into another cell.
 ------------------------------------------------------------
+
+
+PHẦN E — HIỆU ỨNG TRẠNG THÁI TRÊN QUÁI (choáng, đóng băng, làm chậm, bỏng, độc) — game đã có chỗ nhận
+============================================================
+Vì sao bản cũ xấu: hạt sáng trên nền đen (Kenney / phần A) nhoà trắng trên bản đồ cát + nước sáng và không hợp nét chibi.
+Phần này vẽ kiểu STICKER CHIBI: viền nâu đậm, màu phẳng 2 tông, KHÔNG quầng sáng mờ, nền hồng tím #FF00FF (xoá sạch, giữ viền).
+- Gửi kèm ảnh docs/mau-lac-tuong.png (hoặc 1 ảnh tướng bất kỳ) làm mẫu nét vẽ / màu, ghi thêm "match the line art and colors of the attached character, but DO NOT draw the character".
+- Mỗi khối = 1 ảnh. Dải 6 khung vuông 1536x256 chạy LẶP (khung 6 nối liền về khung 1). Khối E2 là 1 ảnh vuông.
+- Tải về, lưu đúng "Tên file" rồi cắt: python3 tools/cat-fx.py dai <ảnh> <tên>  → assets/vfx/<tên>.png, sau đó chạy node tools/build-asset-list.js.
+  Game tự dùng ngay (js/vfx.js): có ảnh tt-*.png thì thay ảnh hạt Kenney; chưa có thì như cũ.
+- Mẹo gen đẹp: gen 3–4 lần, chọn bản các khung GIỐNG NHAU nhất (cùng cỡ, cùng tâm); khung lệch nhau sẽ giật khi chạy.
+  AI hay vẽ thêm nhân vật / chữ / khung lưới: gen lại. Màu hiệu ứng không được có hồng tím (sẽ bị xoá thành lỗ).
+
+E1. Choáng — vòng sao xoay trên đầu  (trạng thái: choáng)
+Tên file: tt-choang.png  ->  Cắt: python3 tools/cat-fx.py dai tt-choang.png tt-choang
+------------------------------------------------------------
+Create ONE image: a 1536x256 horizontal animation strip of 6 equal 256x256 square frames in ONE row, read left to right, a seamless LOOP (frame 6 flows back into frame 1), for a cute chibi mobile tower-defense game based on Vietnamese folk legends.
+EFFECT: the classic cartoon "dizzy" halo that floats above a stunned character's head: 3 chubby five-pointed golden-yellow stars and 1 small round white sparkle circling on a flat elliptical orbit (seen slightly from above, the orbit is about 85% of the frame wide and only 30% tall, centered in the frame). Each frame rotates the stars 1/6 of a turn clockwise; stars at the front of the orbit are a bit bigger, stars at the back a bit smaller. A thin faint white orbit trail line connects them.
+STYLE: cute sticker-like chibi game art, thick clean dark-brown #2A1608 outline around every star (about 4 px), flat 2-tone cel shading (golden yellow #FFD23A with lighter #FFF1A8 highlight), small white shine dot on each star, NO glow haze, NO blur, NO gradient bloom, not realistic.
+BACKGROUND: perfectly flat pure magenta #FF00FF everywhere (the game deletes it), no magenta or pink inside the effect. NO character, no head, no face, no text, no numbers, no grid lines, no borders, no watermark. All content stays inside the middle horizontal band of each frame (between 28% and 72% of the height) with empty magenta above and below; nothing crosses into another frame.
+------------------------------------------------------------
+
+E2. Đóng băng — khối băng bọc quái  (trạng thái: đóng băng; thay khối băng vẽ bằng code)
+Tên file: tt-bang.png  ->  Cắt: python3 tools/cat-fx.py dai tt-bang.png tt-bang
+------------------------------------------------------------
+Create ONE image: 1024x1024, a single game sprite for a cute chibi mobile tower-defense game based on Vietnamese folk legends.
+EFFECT: an EMPTY block of ice that a frozen monster would be trapped inside: a tall rounded chunky ice crystal shell, about 70% of the image wide and 92% tall, standing on its flat bottom edge which touches the bottom of the image, a few sharp ice crystal spikes sticking out of the top corners and the sides, a small pile of ice shards and snow at the base. The INSIDE of the block is mostly a plain light icy-blue #CFEFFF area (the game draws it see-through over the monster), with only a few white diagonal shine streaks and 2–3 thin crack lines; the frame of the block is a thicker darker blue #6FB8E0 border.
+STYLE: cute sticker-like chibi game art, thick clean dark-blue #1E4A6A outline (about 6 px), flat 2-tone cel shading, white highlight glints, NO glow haze, NO blur, not realistic, no character inside.
+BACKGROUND: perfectly flat pure magenta #FF00FF around the block (the game deletes it), no magenta or pink inside the effect. No text, no numbers, no borders, no watermark.
+------------------------------------------------------------
+
+E3. Làm chậm — vòng sương lạnh dưới chân  (trạng thái: làm chậm)
+Tên file: tt-cham.png  ->  Cắt: python3 tools/cat-fx.py dai tt-cham.png tt-cham
+------------------------------------------------------------
+Create ONE image: a 1536x256 horizontal animation strip of 6 equal 256x256 square frames in ONE row, read left to right, a seamless LOOP (frame 6 flows back into frame 1), for a cute chibi mobile tower-defense game based on Vietnamese folk legends.
+EFFECT: a frosty ground circle that lies flat on the floor under a slowed character's feet, seen from a 3/4 top-down angle (a wide flat ellipse filling about 92% of the frame width and 40% of its height, centered): a ring of pale icy-blue frost mist with 4 small six-armed snowflakes and a few tiny ice crystals sitting on the ring. The snowflakes and mist slowly travel around the ring (1/6 turn per frame) and twinkle.
+STYLE: cute sticker-like chibi game art, clean dark-blue #1E4A6A outline on snowflakes and crystals (about 3 px), mist drawn as soft flat cartoon cloud puffs with a light outline, colors icy blue #A8DCF5 and white, NO glow haze, NO blur, not realistic.
+BACKGROUND: perfectly flat pure magenta #FF00FF everywhere (the game deletes it), no magenta or pink inside the effect. NO character, no feet, no text, no numbers, no grid lines, no borders, no watermark. Nothing crosses into another frame.
+------------------------------------------------------------
+
+E4. Bỏng — lửa cháy trên thân  (trạng thái: bỏng / đốt)
+Tên file: tt-bong.png  ->  Cắt: python3 tools/cat-fx.py dai tt-bong.png tt-bong
+------------------------------------------------------------
+Create ONE image: a 1536x256 horizontal animation strip of 6 equal 256x256 square frames in ONE row, read left to right, a seamless LOOP (frame 6 flows back into frame 1), for a cute chibi mobile tower-defense game based on Vietnamese folk legends.
+EFFECT: a small cluster of 3 cartoon flames burning (as if on a burning character's body): one bigger flame in the middle and two smaller ones on the sides, rising from the bottom third of the frame and reaching about 75% of the frame height, plus 2–3 tiny ember sparks flying up. Each frame the flame tips flicker and sway a little; same base position in every frame.
+STYLE: cute sticker-like chibi game art, thick clean dark-red-brown #5A1A08 outline (about 4 px), flat 2-tone cel shading: orange #FF7A2E outer flame, yellow #FFD23A inner flame, tiny white-yellow core, NO glow haze, NO blur, NO smoke cloud, not realistic.
+BACKGROUND: perfectly flat pure magenta #FF00FF everywhere (the game deletes it), no magenta or pink inside the effect. NO character, no body, no text, no numbers, no grid lines, no borders, no watermark. Nothing crosses into another frame.
+------------------------------------------------------------
+
+E5. Độc — bong bóng độc  (trạng thái: trúng độc)
+Tên file: tt-doc.png  ->  Cắt: python3 tools/cat-fx.py dai tt-doc.png tt-doc
+------------------------------------------------------------
+Create ONE image: a 1536x256 horizontal animation strip of 6 equal 256x256 square frames in ONE row, read left to right, a seamless LOOP (frame 6 flows back into frame 1), for a cute chibi mobile tower-defense game based on Vietnamese folk legends.
+EFFECT: poison bubbles: a low flat puddle-like wisp of green poison mist at the bottom of the frame and 4 round bubbles of different sizes rising from it; each frame the bubbles move up a bit, the top bubble pops into a tiny 4-spike splash in frame 5 and a new small bubble appears at the bottom in frame 6, so the loop is seamless. Content spans the middle 80% of the frame width and from 10% to 90% of its height.
+STYLE: cute sticker-like chibi game art, thick clean dark-green #1E3A12 outline (about 4 px), flat 2-tone cel shading: toxic green #7FD04A with a little purple #9A5AD0 in two bubbles, a white shine dot on every bubble, NO glow haze, NO blur, NO skull, not realistic.
+BACKGROUND: perfectly flat pure magenta #FF00FF everywhere (the game deletes it), no magenta or pink inside the effect. NO character, no text, no numbers, no grid lines, no borders, no watermark. Nothing crosses into another frame.
+------------------------------------------------------------

@@ -5,6 +5,8 @@
 // Chạy: node tests/hieu-ung/hat-vfx.test.js
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
+const { execFileSync } = require('child_process');
 const { open, enter, ok } = require('../cho-tuong/helpers');
 
 const SHOTS = path.join(__dirname, 'shots');
@@ -172,6 +174,58 @@ const boom = (page, at) => page.evaluate((at) => {
     await page.waitForTimeout(300);
     await page.screenshot({ path: path.join(SHOTS, 'hat-vfx-thieu-anh-844x390.png') });
     ok(!errors.length, 'thiếu ảnh: không lỗi console' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
+    await browser.close();
+  }
+  // ---------- 3. có ảnh trạng thái VẼ TAY (phần E, assets/vfx/tt-*.png) → dùng thay Kenney, khối băng code tắt, không lên thanh máu
+  {
+    const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'tt-vfx-'));
+    execFileSync('python3', ['-c', `
+import sys
+from PIL import Image, ImageDraw
+d = sys.argv[1]
+def strip(name, col, box):
+    s = Image.new('RGBA', (6 * 192, 192)); g = ImageDraw.Draw(s)
+    for i in range(6):
+        x0 = i * 192; g.ellipse((x0 + box[0], box[1], x0 + box[2], box[3]), fill=col, outline=(42, 22, 8, 255), width=4)
+    s.save(d + '/' + name + '.png')
+strip('tt-choang', (255, 210, 58, 255), (20, 60, 172, 132))
+strip('tt-cham', (168, 220, 245, 255), (8, 60, 184, 132))
+strip('tt-bong', (255, 122, 46, 255), (40, 40, 152, 182))
+strip('tt-doc', (127, 208, 74, 255), (30, 20, 162, 172))
+b = Image.new('RGBA', (192, 192)); ImageDraw.Draw(b).rectangle((29, 15, 163, 191), fill=(207, 239, 255, 255), outline=(30, 74, 106, 255), width=6); b.save(d + '/tt-bang.png')
+`, TMP]);
+    global.ASSET_ALL_TEST = true;
+    const { browser, page, errors } = await open(1920, 934, {}, (p) => p.route('**/assets/vfx/tt-*.png', (r) => r.fulfill({ path: path.join(TMP, r.request().url().match(/(tt-[\w-]+\.png)/)[1]), contentType: 'image/png' })));
+    global.ASSET_ALL_TEST = false;
+    await enter(page, 0);
+    await page.waitForTimeout(500);
+    await stage(page);
+    await page.waitForFunction(() => ['tt-choang', 'tt-cham', 'tt-bong', 'tt-doc', 'tt-bang'].every((n) => asset('vfx/' + n + '.png', true)), null, { timeout: 8000 });
+    const r = await page.evaluate(() => {
+      // mép trên của NỘI DUNG trong ảnh giả (phần còn lại của khung là nền trong suốt), theo bố cục ghi trong prompt phần E
+      const TOP = { 'tt-choang': 0.31, 'tt-cham': 0.31, 'tt-bong': 0.21, 'tt-doc': 0.1, 'tt-bang': 0.08 };
+      const arts = new Map(Object.keys(TOP).map((n) => [asset('vfx/' + n + '.png', true), TOP[n]]));
+      const c = document.createElement('canvas').getContext('2d');
+      const bad = [], used = new Set();
+      c.drawImage = function (im, ...a) {
+        if (!arts.has(im)) return;
+        used.add(im);
+        const [sx, sy, sw, sh, x, y, w, h] = a;
+        const m = this.getTransform(), e = this.__e, box = enemyBox(e), by = e.y - box.ay - 7;
+        const yt = y + arts.get(im) * h;
+        const y0 = Math.min(...[[x, yt], [x + w, yt], [x, y + h], [x + w, y + h]].map(([u, v]) => m.b * u + m.d * v + m.f));
+        if (y0 < by + 4) bad.push([e.type, Math.round(y0), Math.round(by)]);   // dưới đáy thanh máu (cao 5 px)
+      };
+      const flags = [];
+      for (const e of game.enemies) { c.__e = e; VFX.frame(); flags.push(VFX.status(c, e, enemyBox(e), 0, 1.1)); }
+      return { flags, used: used.size, bad };
+    });
+    ok(r.flags[0].dot && r.flags[1].stun && r.flags[2].iceArt && r.flags[3].dot && r.flags[4].slow, 'có ảnh tt-*.png: bỏng / choáng / khối băng / độc / chậm dùng ảnh vẽ tay');
+    ok(r.used === 5, 'vẽ đủ 5 ảnh trạng thái vẽ tay');
+    ok(!r.bad.length, 'ảnh vẽ tay không lên tới thanh máu' + (r.bad.length ? ' — ' + JSON.stringify(r.bad) : ''));
+    await page.waitForTimeout(200);
+    await page.screenshot({ path: path.join(SHOTS, 'hat-vfx-ve-tay-1920x934.png') });
+    ok(!errors.length, 'ảnh vẽ tay: không lỗi console' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
     await browser.close();
   }
   console.log('hat-vfx: OK');

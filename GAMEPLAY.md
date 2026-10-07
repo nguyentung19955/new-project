@@ -2167,3 +2167,9 @@ Tỉ lệ ra đúng tướng cần không giảm (đầu trận còn tăng vì 1
 
 Test: cập nhật `cho-tuong` (màn Chuẩn bị không còn chọn đội, sau boss không Nghỉ chân, bản lưu cũ có đội/Nghỉ chân vẫn chạy), `ti-le` (trọng số không còn ×2, giới hạn nguyên liệu ưu tiên, tình huống sở hữu mọi Tím), `ngan-kho`, `khung-do-hiem`, `vo-tan`, `icon-nho`, `duong-quai`, `hop-the/mo-phong`, `coop/test-lockstep`, `coop/test-solo`.
 - Sửa theo tester (sau v195): đồng xu bay khi hạ quái ~16 px CSS, rương rơi đồ ~30 px CSS (cỡ tính theo `view.scale`, không nhỏ lại trên điện thoại), quầng tròn + viền vòng đậm màu độ hiếm (xám / xanh / tím / cam) nhấp nháy nhẹ, chỉ mờ ở cuối. Icon tựa màn thua chương Sơn Tinh "Phong Châu thất thủ": thay mũi tên sóng (`ic-nuoc-dang`, trông như biểu đồ tăng) bằng cổng thành `tiles/cong-phong-chau.png` chìm trong 2 ngọn sóng `ic-hanh-thuy`.
+
+## claude/vfx-kenney — Chỗ nhận ảnh trạng thái vẽ tay (prompt phần E)
+
+- Người dùng thấy hạt Kenney cho choáng / băng "chưa đẹp" → thêm **prompt phần E** trong `docs/PROMPT-HIEU-UNG.txt`: 5 ảnh kiểu sticker chibi (viền nâu đậm, màu phẳng 2 tông, không quầng sáng mờ, nền hồng tím): `tt-choang` (vòng sao xoay trên đầu), `tt-bang` (khối băng bọc quái), `tt-cham` (vòng sương lạnh dưới chân), `tt-bong` (cụm lửa trên thân), `tt-doc` (bong bóng độc). Cắt: `python3 tools/cat-fx.py dai <ảnh> <tên>` → `assets/vfx/<tên>.png`, rồi `node tools/build-asset-list.js`.
+- Game (js/vfx.js `VFX.status`) ưu tiên: ảnh vẽ tay `tt-*.png` (dải khung chạy lặp) → hạt Kenney → vẽ bằng code. Có `tt-bang.png` thì tắt khối băng vẽ bằng code. Mọi ảnh trạng thái đặt sao cho nội dung không lên tới thanh máu.
+- Test `tests/hieu-ung/hat-vfx.test.js` thêm phần ảnh vẽ tay giả (phục vụ qua route, không ghi vào assets/).

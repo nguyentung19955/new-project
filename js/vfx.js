@@ -252,6 +252,17 @@ const VFX = (() => {
     ctx.drawImage(im, -s, -s, s * 2, s * 2);
     ctx.rotate(-(rot || 0)); ctx.scale(1, 1 / sy); ctx.translate(-x, -y);
   }
+  // ảnh trạng thái VẼ TAY (docs/PROMPT-HIEU-UNG.txt phần E, cắt bằng tools/cat-fx.py dai → assets/vfx/tt-*.png):
+  // dải N khung vuông chạy lặp theo thời gian; có ảnh thì thay ảnh Kenney, chưa có thì như cũ
+  const art = (n) => (typeof asset === 'function' ? asset('vfx/' + n + '.png', true) : null);
+  function loop(ctx, img, t, fps, x, y, w, h, alpha) {
+    if (SB.n >= SB.max) return;
+    SB.n++;
+    const IW = img.naturalWidth || img.width, IH = img.naturalHeight || img.height, n = Math.max(1, Math.round(IW / IH));
+    const fr = ((Math.floor(t * fps) % n) + n) % n, fw = IW / n;
+    ctx.globalAlpha = alpha;
+    ctx.drawImage(img, fr * fw, 0, fw, IH, x - w / 2, y - h / 2, w, h);
+  }
   // lửa hay độc: màu DOT đỏ / cam = bỏng, còn lại (xanh, tím…) = độc
   function isFire(c) {
     const m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/i.exec(c || '');
@@ -260,13 +271,20 @@ const VFX = (() => {
     return r >= g && r >= b && r > 150;
   }
   function status(ctx, e, box, lift, t) {
-    const r = { dot: false, stun: false, slow: false, ice: false };
+    const r = { dot: false, stun: false, slow: false, ice: false, iceArt: false };
     if (!e || e.dead) return r;
     const W = box.w, H = Math.max(10, box.ay), fy = e.y - lift, cx = e.x, id = e.id || 0;
     const room = SB.n < SB.max;
     ctx.save();
     // làm chậm: sương lạnh dưới chân + bông tuyết rơi chậm (thêm vào lớp phủ xanh của render.js)
-    if ((e.slowT > 0 || e.zoneSlow > 0) && !(e.stunT > 0 && e.stunKind === 'ice') && room && ready('vfx/khoi-trang-1') && ready('vfx/bang-1')) {
+    const slowOn = (e.slowT > 0 || e.zoneSlow > 0) && !(e.stunT > 0 && e.stunKind === 'ice') && room;
+    const aCham = slowOn && art('tt-cham');
+    if (aCham) {
+      // vòng sương lạnh vẽ tay dưới chân (dẹt theo mặt đất)
+      r.slow = true;
+      ctx.globalCompositeOperation = 'source-over';
+      loop(ctx, aCham, t + id * 0.37, 8, cx, fy - 1, W * 1.15, W * 0.5, 0.9);
+    } else if (slowOn && ready('vfx/khoi-trang-1') && ready('vfx/bang-1')) {
       r.slow = true;
       ctx.globalCompositeOperation = 'source-over';
       spr(ctx, 'vfx/khoi-trang-1', '#A8DCF5', cx, fy - 2, W * 0.42, t * 0.4 + id, 0.55, 0.42);
@@ -276,7 +294,14 @@ const VFX = (() => {
     // bỏng / độc
     if (e.poisonT > 0 && room) {
       const fire = isFire(e.dotColor);
-      if (fire && ready('vfx/lua-1') && ready('vfx/lua-2')) {
+      const aDot = art(fire ? 'tt-bong' : 'tt-doc');
+      if (aDot) {
+        // lửa / bong bóng độc vẽ tay phủ nửa dưới thân, hơi trong để không che mặt nhân vật
+        r.dot = true;
+        ctx.globalCompositeOperation = 'source-over';
+        const S = Math.min(W * 0.8, H * 0.75);
+        loop(ctx, aDot, t + id * 0.29, fire ? 10 : 7, cx, fy - H * 0.32, S, S, fire ? 0.9 : 0.85);
+      } else if (fire && ready('vfx/lua-1') && ready('vfx/lua-2')) {
         r.dot = true;
         // vẽ thường (không cộng sáng): trên nền cát / nước sáng, cộng sáng làm lửa trắng nhoà mất
         ctx.globalCompositeOperation = 'source-over';
@@ -303,7 +328,15 @@ const VFX = (() => {
       }
     }
     // choáng thường: sao vàng xoay vòng ngay trên đầu (dưới thanh máu)
-    if (e.stunT > 0 && !['ice', 'root', 'music', 'net'].includes(e.stunKind) && ready('vfx/choang-sao') && SB.n + 4 <= SB.max) {
+    const stunOn = e.stunT > 0 && !['ice', 'root', 'music', 'net'].includes(e.stunKind);
+    const aChoang = stunOn && art('tt-choang');
+    if (aChoang) {
+      // vòng sao vẽ tay: nội dung nằm ở dải giữa khung (±22% cạnh) → đặt tâm sao cho mép trên vẫn dưới thanh máu
+      r.stun = true;
+      ctx.globalCompositeOperation = 'source-over';
+      const S = Math.min(60, Math.max(30, W * 0.9));
+      loop(ctx, aChoang, t + id * 0.31, 10, cx, Math.max(fy - H * 0.86, fy - H - 1 + S * 0.24), S, S, 1);
+    } else if (stunOn && ready('vfx/choang-sao') && SB.n + 4 <= SB.max) {
       r.stun = true;
       ctx.globalCompositeOperation = 'source-over';
       // quái thấp: hạ sao xuống để đỉnh sao (cỡ tối đa 11 + nhún 3) vẫn dưới đáy thanh máu (fy - H - 3)
@@ -316,7 +349,15 @@ const VFX = (() => {
       spr(ctx, 'vfx/sao-lap-lanh', '#FFF4C4', cx + Math.cos(t * 5 + 1) * rx * 0.6, y0 - 2, 4, t * 2, 0.5 + 0.4 * Math.sin(t * 9 + id));
     }
     // đóng băng: khối băng vẽ bằng code (render.js) + ánh lấp lánh và mảnh băng
-    if (e.stunT > 0 && e.stunKind === 'ice' && ready('vfx/sao-lap-lanh') && ready('vfx/bang-2')) {
+    const aBang = e.stunT > 0 && e.stunKind === 'ice' && art('tt-bang');
+    if (aBang) {
+      // khối băng vẽ tay bọc cả thân (thay khối băng vẽ bằng code trong render.js), hơi trong để còn thấy quái
+      r.ice = r.iceArt = true;
+      ctx.globalCompositeOperation = 'source-over';
+      // ảnh vuông, khối băng chiếm ~70% rộng × 92% cao, đáy chạm đáy ảnh: đủ bọc thân, nhưng đỉnh không vượt thanh máu
+      const S = Math.min(Math.max(W * 1.35, H * 1.08), (H + 1) / 0.92);
+      loop(ctx, aBang, 0, 0, cx, fy - S / 2 + 2, S, S, 0.68);
+    } else if (e.stunT > 0 && e.stunKind === 'ice' && ready('vfx/sao-lap-lanh') && ready('vfx/bang-2')) {
       r.ice = true;
       ctx.globalCompositeOperation = 'lighter';
       for (let i = 0; i < 2; i++) {
