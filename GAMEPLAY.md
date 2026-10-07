@@ -1744,3 +1744,7 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - **🔒 Khoá chợ:** nút tròn nhỏ ở góc trên phải nút ↻ (không đổi bề ngang thanh đáy). Bật thì đầu đợt sau giữ nguyên 4 thẻ rồi tự mở khoá; bấm ↻ khi đang khoá thì rút hàng mới và mở khoá. Chơi nhóm: lệnh `toggleMarketLock` đồng bộ như ↻.
 - **Nhãn trên thẻ:** giữ "ghép" (xanh, trùng tướng ★ trên sân); thêm **"hợp thể"** (tím, viền tím) cho nguyên liệu còn thiếu của công thức gần xong.
 - Test: `node tests/cho-tuong/ti-le.test.js` (mô phỏng tỉ lệ + giới hạn bản sao + khoá chợ + bảo hiểm qua nút ↻ + nhãn). Ảnh đã xem: thanh đáy 1920×934, 844×390, 667×375 (có nhãn "hợp thể", nút 🔒 đang bật).
+
+## Phiên bản 182 — Gộp khung Đợt cố định + chợ bớt ngẫu nhiên
+
+- Gộp dot-co-dinh (khối Đợt rộng/cao cố định, không trượt khi tiền/mạng đổi số chữ số) và cho-bot-ngau-nhien (ưu tiên tướng đang ghép/nguyên liệu hợp thể, bảo hiểm, khoá chợ).
