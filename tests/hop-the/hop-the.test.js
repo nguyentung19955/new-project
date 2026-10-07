@@ -13,6 +13,8 @@ const put = (page, type, tier, extra = {}) => page.evaluate(([t, tier, ex]) => {
   if (!ex.noSkill) { h.level = 16; HEROES[h.type].skills.forEach((sk, i) => { h.skillLv[sk.id] = SKILL_MAX[i]; }); }
   delete ex.noSkill; Object.assign(h, ex); ui.sig = {}; return s;
 }, [type, tier, extra]);
+// chờ phần tử hiện (tối đa 5 giây) thay cho đợi cố định — màn vẽ lại theo khung hình, máy bận / chạy song song thì chậm hơn
+const seen = (loc) => loc.first().waitFor({ state: 'visible', timeout: 5000 }).catch(() => {});
 const maxSkills = (page, slot) => page.evaluate((s) => { const h = game.heroes[s]; h.level = 16; HEROES[h.type].skills.forEach((sk, i) => { h.skillLv[sk.id] = SKILL_MAX[i]; }); ui.sig = {}; }, slot);
 // chữ tràn: phần tử có chữ mà scrollWidth > clientWidth (trừ chỗ cố ý cắt "…") hoặc lòi ra ngoài khung cha `root`
 const overflow = (page, root) => page.evaluate((root) => {
@@ -128,12 +130,15 @@ async function skillCase(w, h) {
   const ev = await page.evaluate(() => [...document.querySelectorAll('#screen .ho-cond .n')].map((x) => x.textContent));
   ok(ev.some((x) => /Kỹ năng tối đa \(còn \d+\)/.test(x)), `${tag}: Tiến hoá hiện ✗ Kỹ năng tối đa (còn N)`);
   await page.evaluate(() => { document.querySelector('#toasts').innerHTML = ''; });   // toast của lần kéo thả ở trên
-  await page.locator('#screen .ho .hx-go.off').first().click({ force: true }); await page.waitForTimeout(150);
+  // chờ màn Tiến hoá dựng xong (nút hiện thật) rồi mới bấm — đợi cố định 250 ms đôi khi chưa đủ (chập chờn)
+  const lockBtn = page.locator('#screen .ho .hx-go.off').first();
+  await lockBtn.waitFor({ state: 'visible' }); await lockBtn.click({ force: true }); await page.waitForTimeout(150);
   const ew = await page.evaluate(() => ({ why: (document.querySelector('#screen .ho-why.err') || {}).textContent || '', toast: document.querySelector('#toasts').textContent }));
   ok(/còn thiếu \d+ cấp kỹ năng/.test(ew.why) && !ew.toast, `${tag}: chạm nút khoá ở Tiến hoá → lý do ngay trong thẻ "${ew.why.trim().slice(0, 40)}…", không toast`);
   // nâng hết kỹ năng → hợp thể được
   await maxSkills(page, a); await page.waitForTimeout(300);
   const btn = page.locator('#screen .ho.ready .hx-go:not(.off)');
+  await seen(btn);
   ok(await btn.count() === 1, `${tag}: nâng hết kỹ năng → nút Hợp thể bật`);
   await btn.click(); await page.waitForTimeout(250);
   ok(await page.evaluate(() => game.heroes.some((h) => h && h.type === 'trongdong')), `${tag}: đủ kỹ năng → ra Thần Trống Đồng`);
@@ -147,7 +152,7 @@ async function evoCase(w, h) {
   await page.evaluate(() => { game.running = false; game.gold = 5000; });
   const tag = `${w}x${h}`;
   const s1 = await put(page, 'lactuong', 3); await put(page, 'chuongdong', 3);
-  const openEvo = async (slot) => { await page.evaluate((s) => { ui.closeScreen && ui.screen && ui.closeScreen(); ui.sel = s; ui.openScreen('evo'); }, slot); await page.waitForTimeout(250); };
+  const openEvo = async (slot) => { await page.evaluate((s) => { ui.closeScreen && ui.screen && ui.closeScreen(); ui.sel = s; ui.openScreen('evo'); }, slot); await page.waitForTimeout(250); await seen(page.locator('#screen .ev2-body')); };
   // --- Thường
   await openEvo(s1);
   let n = await page.evaluate(() => ({ cv: document.querySelectorAll('#screen canvas[data-hero]').length, steps: document.querySelectorAll('#screen .es').length, ho: document.querySelectorAll('#screen .ho').length, done: document.querySelectorAll('#screen .es.done').length }));
@@ -185,6 +190,7 @@ async function evoCase(w, h) {
     }, [td, pair.pt]);
     await page.waitForTimeout(350);
     const b2 = page.locator('#screen .ho.ready .hx-go');
+    await seen(b2);
     ok(await b2.count() >= 1 && await b2.first().isEnabled(), `${tag} Tím: đủ điều kiện → nút Hợp thể · 1200 bật`);
     await b2.first().click(); await page.waitForTimeout(250);
     const lg = await page.evaluate((to) => { const h = game.heroes.find((x) => x && x.type === to); return h ? h.slot : -1; }, pair.to);
