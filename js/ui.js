@@ -62,6 +62,8 @@ let KHO_MODE = false;       // đang mở Lò đúc đồng trước trận: gi�
 const uiSrcOf = (paths) => { const p = paths.find((x) => hasAsset(x)); return p ? assetSrc(p) : ''; };
 const COIN_SRC = ['ui/ui-tai-nguyen-1.png'], BAC_SRC = ['ui/ui-tai-nguyen-3.png'];
 const bac = (sm) => { const u = uiSrcOf(BAC_SRC); return u ? `<img class="bac-img${sm ? ' sm' : ''}" src="${u}" alt="">` : `<i class="bac${sm ? ' sm' : ''}"></i>`; };
+// cho-6-the: chân dung trên thẻ Chợ tướng (và ảnh nạp sẵn) lấy qua 1 hàm — khi có chân dung pixel chỉ cần đổi ở đây
+const marketPortrait = (t) => heroImgUrl(t, 'head');
 const coin = (sm) => { if (KHO_MODE) return bac(sm); const u = uiSrcOf(COIN_SRC) || assetUrl('ui_dong-xu.png'); return u ? `<img class="coin-img${sm ? ' sm' : ''}" src="${u}" alt="">` : `<i class="coin${sm ? ' sm' : ''}"></i>`; };
 // icon giao diện vẽ tay (ui_*.png) nếu đã có, không thì dùng ký hiệu dự phòng
 // v155: nút vẽ tay thay ký hiệu (ui-tran-4/5, huy chương); thiếu ảnh thì quay về ký hiệu cũ
@@ -767,6 +769,11 @@ class UI {
   }
   // màn kết quả: tướng rẻ nhất chưa mở — đủ tiền thì mời mở ngay, chưa đủ thì báo còn thiếu bao nhiêu
   unlockHint() {
+    // cho-6-the: chưa mở tướng Tím nào thì nhắc — hợp thể trong trận cần tướng đích đã mở khoá
+    const noEpic = !LEGEND_HEROES.some((t) => HEROES[t].legend === 'epic' && this.heroOpen(t));
+    return (noEpic ? `<div class="res-unl res-tim"><span>Hợp thể</span><b>Mở khoá 1 tướng Tím ở Anh Hùng · ${bac(1)}${fmt(OWN_COST.epic)} để hợp thể được trong trận</b></div>` : '') + this.unlockHint0();
+  }
+  unlockHint0() {
     const left = [...BASIC_HEROES, ...LEGEND_HEROES].filter((t) => !this.heroOpen(t));
     if (!left.length) return `<div class="res-unl"><span>Anh Hùng</span><b style="color:#6AE06A">${UIE.done()} Đã mở đủ ${this.openCount().all} tướng</b></div>`;
     const t = left.sort((a, b) => OWN_COST[heroTier(a)] - OWN_COST[heroTier(b)])[0], c = OWN_COST[heroTier(t)], kho = this.save.kho || 0, oc = this.openCount();
@@ -1303,7 +1310,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 201</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 202</div>
       </div></div>`;
   }
 
@@ -1780,7 +1787,12 @@ class UI {
   buyCard(i, slot) {
     const g = this.game;
     if (!g.started || g.over) return;
-    this.cmd('buyCard', [i, slot == null ? -1 : slot], (r) => this.boughtCard(r));
+    const t = g.market && g.market.types[i], nd = t && g.marketNeeds(), to = nd && nd.hopLock.get(t);
+    this.cmd('buyCard', [i, slot == null ? -1 : slot], (r) => {
+      this.boughtCard(r);
+      // cho-6-the: mua nguyên liệu của công thức có tướng đích chưa mở khoá → nhắc đi mở khoá (mỗi trận 1 lần)
+      if (typeof r !== 'string' && to && !g.flags.hopLockTip) { g.flags.hopLockTip = true; setTimeout(() => this.toast(`${UIE.lock()} Hợp thể <b>${esc(HEROES[to].name)}</b> chưa mở khoá — Mở ở <b>Anh Hùng</b> · ${bac(1)}${fmt(OWN_COST[heroTier(to)])} Ngân khố`, '#D8A8FF'), 700); }
+    });
   }
   boughtCard(r) {
     const g = this.game;
@@ -1891,7 +1903,7 @@ class UI {
     const inTab = of(lg.tab);
     const list = inTab.slice().sort((x, y) => y.own - x.own || y.n - x.n || y.p - x.p || x.i - y.i);
     const why = lg.why && FUSION[lg.why.i] && HEROES[FUSION[lg.why.i].to].legend === lg.tab ? lg.why : null;
-    const key = [lg.tab, lg.help, why && why.txt, assetVersion, ...list.map((x) => `${x.i}:${x.m.map((m) => (m.h ? (m.ok ? 2 : 1) + '.' + m.gap : 0)).join('')}${x.own ? '' : 'L'}${x.ready && x.poor ? 'P' : ''}`)].join('|');
+    const key = [lg.tab, lg.help, why && why.txt, inTab.some((x) => x.own), assetVersion, ...list.map((x) => `${x.i}:${x.m.map((m) => (m.h ? (m.ok ? 2 : 1) + '.' + m.gap : 0)).join('')}${x.own ? '' : 'L'}${x.ready && x.poor ? 'P' : ''}`)].join('|');
     if (this.sig.lg === key && el.firstElementChild && el.firstElementChild.classList.contains('hx-hd')) return;
     this.sig.lg = key;
     const R = (t) => RARITY[HEROES[t].legend];
@@ -1899,7 +1911,7 @@ class UI {
     const mat = (m) => `<span class="hx-m ${m.ok ? 'ok' : m.h ? 'part' : 'no'} ${HEROES[m.type].legend || 'common'}" title="${esc(HEROES[m.type].name + (m.ok ? ' ✓' : ' — ' + m.why))}">
         <img src="${heroImgUrl(m.type, 'head')}" alt=""><i>${m.ok ? '✓' : m.h ? `${m.h.tier || 0}/${m.need}★` : ''}</i>${m.h && !m.ok && m.gap ? `<b class="hx-sk" title="Còn thiếu ${m.gap} cấp kỹ năng">${SVG_SK}−${m.gap}</b>` : `<small>${m.ok ? '' : '★'.repeat(m.need)}</small>`}</span>`;
     const card = (x) => { const t = x.f.to, d = HEROES[t];
-      const st = !x.own ? `<span class="hx-st lock">${UIE.lock()} Chưa có</span>`
+      const st = !x.own ? `<button class="hx-st lock hx-open" data-act="hx-open" data-t="${t}" title="Chưa mở khoá — mở ở Anh Hùng bằng Ngân khố">${UIE.lock()} Mở ở Anh Hùng · ${bac(1)}${fmt(OWN_COST[heroTier(t)])}</button>`
         : x.ready ? `<button class="hx-go" data-act="hx-fuse" data-i="${x.i}" ${x.poor ? `disabled title="Cần ${x.cost} vàng"` : ''}>Hợp thể · ${coin(1)}${x.cost}</button>`
         : x.m.every((m) => m.h) ? `<button class="hx-go off" data-act="hx-fuse" data-i="${x.i}" aria-disabled="true">${SVG_LOCK} Hợp thể</button>`
         : `<span class="hx-st">${x.n}/2</span>`;
@@ -1912,7 +1924,7 @@ class UI {
     el.innerHTML = `<div class="hx-hd"><span class="ttl">Hợp thể</span>${tab('epic', 'Tím')}${tab('legendary', 'Vàng')}
 
         <button class="hx-q ${lg.help ? 'on' : ''}" data-act="hx-help" aria-label="Cách hợp thể">?</button><button class="hx-x" data-act="hx-close" aria-label="Đóng">✕</button></div>
-      <div class="hx-sub ${why ? 'err' : ''}">${why ? `${SVG_LOCK} <b>${esc(HEROES[FUSION[why.i].to].name)}</b>: ${why.txt}` : lg.help ? 'Kéo 2 tướng nguyên liệu vào nhau, hoặc bấm <b>Hợp thể</b>. Tướng mới giữ cấp, đồ và nội tại của cả hai.' : `${NEED} · chạm thẻ để đánh dấu tướng trên sân`}</div>
+      <div class="hx-sub ${why ? 'err' : ''}">${why ? `${SVG_LOCK} <b>${esc(HEROES[FUSION[why.i].to].name)}</b>: ${why.txt}` : !inTab.some((x) => x.own) ? `${SVG_LOCK} Mở khoá 1 tướng ${lg.tab === 'epic' ? 'Tím' : 'Vàng'} ở <b>Anh Hùng</b> (Ngân khố) để hợp thể được trong trận` : lg.help ? 'Kéo 2 tướng nguyên liệu vào nhau, hoặc bấm <b>Hợp thể</b>. Tướng mới giữ cấp, đồ và nội tại của cả hai.' : `${NEED} · chạm thẻ để đánh dấu tướng trên sân`}</div>
       <div class="hx-list">${list.map(card).join('')}</div>`;
   }
   openLegends(on) {
@@ -2208,6 +2220,25 @@ class UI {
     bar.classList.toggle('ghost', nextMini && hit(miniH));
   }
 
+  // cho-6-the: nạp + giải mã sẵn ảnh mặt mọi tướng có thể ra ở chợ → thẻ mới hiện ngay, không khung trắng
+  preloadMarket(pool) {
+    for (const t of pool) { const u = marketPortrait(t); if (u) this.preImg(u); }
+  }
+  // mỗi ảnh giữ sẵn 3 bản đã tải (hàng chợ có thể ra vài thẻ trùng loại)
+  preImg(u) {
+    const P = this.mkPre || (this.mkPre = new Map());
+    const abs = new URL(u, document.baseURI).href, L = P.get(abs) || [];
+    P.set(abs, L);
+    while (L.length < 3) { const im = new Image(); im.decoding = 'sync'; im.src = u; if (im.decode) im.decode().catch(() => {}); L.push(im); }
+  }
+  // lấy ảnh đã nạp xong (đưa thẳng vào thẻ, không tạo ảnh mới chưa tải) rồi nạp sẵn bản khác cho lần sau
+  takeMarketImg(abs) {
+    const L = this.mkPre && this.mkPre.get(abs), k = L ? L.findIndex((im) => im.complete && im.naturalWidth && !im.isConnected) : -1;
+    if (k < 0) return null;
+    const im = L.splice(k, 1)[0];
+    this.preImg(abs);
+    return im;
+  }
   // ---------- hàng thẻ dưới đáy: thẻ triệu hồi, hoặc thẻ tướng đang chọn
   updateDeck() {
     const g = this.game;
@@ -2216,20 +2247,22 @@ class UI {
     const deck = $('#deck');
     let key, html;
     if (!h) {
-      // v143: CHỢ TƯỚNG — 4 thẻ luôn mở (chạm = mua, kéo = đặt đúng ô) + ↻ đổi hàng + Hợp thể
+      // v143: CHỢ TƯỚNG — MARKET_SIZE thẻ luôn mở (cho-6-the: 6) (chạm = mua, kéo = đặt đúng ô) + ↻ đổi hàng + Hợp thể
       const m = g.ensureMarket(), sc = g.summonCost(), rc = g.rerollCost(), free = g.freeSlots().length;
-      const pairs = g.heroes.filter((x) => x && g.heroes.some((y) => y && y !== x && g.canMerge(x, y) === true)).length;
       const twins = m.types.map((t) => !!g.marketTwin(t));
-      const nd = g.marketNeeds(), hops = m.types.map((t) => g.marketHint(t, nd) === 'hop');
+      const nd = g.marketNeeds(), hints = m.types.map((t) => g.marketHint(t, nd)), hops = hints.map((x) => x === 'hop');
       const ok = m.types.map((t, i) => g.gold >= sc && (free > 0 || twins[i]));
-      key = `m|${m.types.join(',')}|${sc}|${ok.join()}|${twins.join()}|${hops.join()}|${!!m.lock}|${g.gold >= rc}|${rc}|${pairs}|${assetVersion}`;
+      key = `m|${m.types.join(',')}|${sc}|${ok.join()}|${twins.join()}|${hints.join()}|${!!m.lock}|${g.gold >= rc}|${rc}|${assetVersion}`;
+      this.preloadMarket(nd.pool);
       const short = (t) => CARD_NAME[t] || HEROES[t].name.split(' ').slice(-2).join(' ');
-      html = `${pairs ? `<button class="dk-auto metal on" data-act="auto-merge" aria-label="Ghép tự động"><b>⇄</b>Ghép<br>tự động<i>${Math.floor(pairs / 2)}</i></button>` : ''}
-        <div class="mk-row ${m.lock ? 'locked' : ''}">${m.types.map((t, i) => `<button class="mk-card ${ok[i] ? '' : 'poor'} ${twins[i] ? 'twin' : ''} ${hops[i] ? 'hop' : ''}" data-mk="${i}" style="--c:${ELEMENTS[HEROES[t].el].color}" aria-label="Mua ${esc(HEROES[t].name)}${heroRole(t) ? ` (${ROLES[heroRole(t)].name})` : ''}${twins[i] ? ' (ghép được)' : ''}${hops[i] ? ' (nguyên liệu hợp thể)' : ''}, ${sc} vàng" title="${heroRole(t) ? `Vai trò: ${ROLES[heroRole(t)].name}` : ''}">
-          <img src="${heroImgUrl(t, 'head')}" alt="" draggable="false"><span class="el">${elIcon(HEROES[t].el, 11)}</span>${heroRole(t) ? `<span class="rl">${roleIcon(heroRole(t), 16, true)}</span>` : ''}
-          <b class="nm">${esc(short(t))}</b><span class="cost">${twins[i] ? '<i class="tw">ghép</i>' : ''}${coin(1)}${sc}${hops[i] ? '<i class="hp">hợp</i>' : ''}</span></button>`).join('')}
+      // cho-6-the: bỏ nút "Ghép tự động" — mua thẻ ghép được thì tự ghép luôn (Game.buyCard). Nguyên liệu hợp thể của tướng
+      // đích chưa mở khoá: ổ khoá nhỏ trên dải giá + lời nhắc "Mở ở Anh Hùng"
+      const lockTo = (t) => nd.hopLock.get(t), lockTip = (t) => `Nguyên liệu hợp thể ${HEROES[lockTo(t)].name} — chưa mở khoá: Mở ở Anh Hùng · ${fmt(OWN_COST[heroTier(lockTo(t))])} Ngân khố`;
+      html = `<div class="mk-row ${m.lock ? 'locked' : ''}">${m.types.map((t, i) => `<button class="mk-card ${ok[i] ? '' : 'poor'} ${twins[i] ? 'twin' : ''} ${hops[i] ? 'hop' : ''} ${hints[i] === 'hopLock' ? 'hoplk' : ''}" data-mk="${i}" style="--c:${ELEMENTS[HEROES[t].el].color}" aria-label="Mua ${esc(HEROES[t].name)}${heroRole(t) ? ` (${ROLES[heroRole(t)].name})` : ''}${twins[i] ? ' (mua là ghép luôn)' : ''}${hops[i] ? ' (nguyên liệu hợp thể)' : ''}${hints[i] === 'hopLock' ? ` (${esc(lockTip(t))})` : ''}, ${sc} vàng" title="${esc(HEROES[t].name)}${heroRole(t) ? ` · ${ROLES[heroRole(t)].name}` : ''}${hints[i] === 'hopLock' ? ` · ${esc(lockTip(t))}` : ''}">
+          <img src="${marketPortrait(t)}" alt="" draggable="false" decoding="sync"><span class="el">${elIcon(HEROES[t].el, 11)}</span>${heroRole(t) ? `<span class="rl">${roleIcon(heroRole(t), 16, true)}</span>` : ''}
+          <b class="nm">${esc(short(t))}</b><span class="cost">${twins[i] ? '<i class="tw">ghép</i>' : ''}${coin(1)}${sc}${hops[i] ? '<i class="hp">hợp</i>' : hints[i] === 'hopLock' ? `<i class="hl">${UIE.lock()}</i>` : ''}</span></button>`).join('')}
           <button class="mk-rr metal ${g.gold >= rc ? '' : 'poor'}" data-act="mk-reroll" aria-label="Đổi cả hàng, ${rc} vàng"><b>${UIE.redo()}</b><span>${coin(1)}${rc}</span></button>
-          <button class="mk-lk metal ${m.lock ? 'on' : ''}" data-act="mk-lock" aria-pressed="${!!m.lock}" aria-label="${m.lock ? 'Bỏ khoá chợ' : 'Khoá chợ: giữ 4 thẻ sang đợt sau'}" title="${m.lock ? 'Đang khoá: đợt sau giữ nguyên 4 thẻ' : 'Khoá chợ: giữ 4 thẻ sang đợt sau'}">${MK_LOCK[m.lock ? 1 : 0]}<span>${m.lock ? 'Đã<br>khoá' : 'Khoá'}</span></button></div>
+          <button class="mk-lk metal ${m.lock ? 'on' : ''}" data-act="mk-lock" aria-pressed="${!!m.lock}" aria-label="${m.lock ? 'Bỏ khoá chợ' : 'Khoá chợ: giữ nguyên hàng thẻ sang đợt sau'}" title="${m.lock ? 'Đang khoá: đợt sau giữ nguyên hàng thẻ' : 'Khoá chợ: giữ nguyên hàng thẻ sang đợt sau'}">${MK_LOCK[m.lock ? 1 : 0]}<span>${m.lock ? 'Đã<br>khoá' : 'Khoá'}</span></button></div>
         <span class="dk-sep"></span><button class="dk-card legend" data-act="legend-open" aria-label="Cây hợp thể">${`<img class="asc-ic" src="${assetSrc('ui/ui-tran-3-2.png')}" alt="★">`}Hợp<br>thể</button>`;
     } else {
       const def = HEROES[h.type];
@@ -2286,10 +2319,18 @@ class UI {
     }
     if (this.sig.deck !== key) {
       this.sig.deck = key;
+      deck.classList.toggle('mk-mode', !h);     // cho-6-the: thanh chợ thấp gọn hơn thanh tướng đang chọn
+      // cho-6-the: giữ lại <img> đã tải/giải mã khi dựng lại thanh (đổi chợ, mua) — ảnh mới tạo lại hay trắng 1–2 khung → nháy
+      const old = new Map();
+      for (const im of deck.querySelectorAll('img')) { const k = im.getAttribute('src'); if (!old.has(k)) old.set(k, []); old.get(k).push(im); }
       deck.innerHTML = html;
+      for (const im of deck.querySelectorAll('img')) {
+        const o = old.get(im.getAttribute('src')), r = (o && o.shift()) || (im.closest('.mk-card') && this.takeMarketImg(im.src));
+        if (r) { r.className = im.className; r.alt = ''; r.draggable = false; im.replaceWith(r); }
+      }
       // v144: tên dài trên thẻ chợ tự thu nhỏ chữ cho vừa thẻ (thay vì bị cắt "…")
       for (const nm of deck.querySelectorAll('.mk-card .nm')) {
-        for (let f = 10.5; nm.scrollWidth > nm.clientWidth + 1 && f > 7.5; f -= 0.5) nm.style.fontSize = f + 'px';
+        for (let f = 9.5; nm.scrollWidth > nm.clientWidth + 1 && f > 7.5; f -= 0.5) nm.style.fontSize = f + 'px';
       }
     }
     if (h) {
@@ -3247,7 +3288,7 @@ class UI {
       case 'ro-temple': location.href = 'den-anh-hung.html'; break;
       case 'reward': this.pickReward(+d.i); break;
       case 'summon': this.pickSummon(d.type); break;
-      case 'mk-lock': C('toggleMarketLock', [], () => { this.sig.deck = null; if (this.game.market && this.game.market.lock) this.toast('🔒 Đã khoá chợ: đợt sau giữ nguyên 4 thẻ', '#F2D27A'); }); break;
+      case 'mk-lock': C('toggleMarketLock', [], () => { this.sig.deck = null; if (this.game.market && this.game.market.lock) this.toast('🔒 Đã khoá chợ: đợt sau giữ nguyên hàng thẻ', '#F2D27A'); }); break;
       case 'mk-reroll': C('rerollMarket', [], (r) => { if (typeof r === 'string') this.toast(r, '#E25A3A'); this.sig.deck = null; }); break;
       case 'auto-merge': C('autoMerge', [], (n) => this.toast(n ? `Đã ghép ${n} lần` : 'Không có cặp nào ghép được', n ? '#F2D27A' : '#E25A3A')); break;
       case 'fuse-strip': {
@@ -3268,6 +3309,7 @@ class UI {
       case 'hx-close': this.openLegends(false); break;
       case 'hx-tab': this.lg.tab = d.k; this.lg.why = null; this.renderLegends(); $('#legends .hx-list').scrollTop = 0; break;
       case 'hx-help': this.lg.help = !this.lg.help; this.renderLegends(); break;
+      case 'hx-open': $('#legends').hidden = true; this.showRoster(d.t, true); break;     // cho-6-the: công thức chưa mở → tới Anh Hùng
       case 'hx-card': case 'hx-fuse': {
         // chạm thẻ: đánh dấu tướng nguyên liệu trên sân (có ít nhất 1 con thì đóng bảng cho thấy dấu); nút Hợp thể: hợp luôn
         const x = this.fusionState(FUSION[+d.i]);
@@ -4050,7 +4092,7 @@ class UI {
       conds.push(ck(!left.length, `Kỹ năng tối đa${gap ? ` (còn ${gap})` : ''}`));
       conds.push(ck(o && (o.tier || 0) >= g.ascendNeed(o), `${HEROES[pt].name} ${stars(o ? g.ascendNeed(o) : need, h.from)}${o ? '' : ' trên sân'}`));
       if (o) conds.push(ck(!og, `${HEROES[pt].name} kỹ năng tối đa${og ? ` (còn ${og})` : ''}`));
-      if (!own) conds.push(ck(false, 'Chưa sở hữu'));
+      if (!own) conds.push(ck(false, `Chưa mở khoá — Mở ở Anh Hùng · ${fmt(OWN_COST[heroTier(t)])} Ngân khố`));
       else if (oReady && g.fusionReady(h) === true && g.gold < cost) conds.push(ck(false, `${cost} vàng`));
       const pic = (x, st, cls = '') => `<span class="hx-m ${st} ${HEROES[x].legend || 'common'} ${cls}" title="${esc(HEROES[x].name)}"><img src="${heroImgUrl(x, 'head')}" alt=""></span>`;
       return `<div class="ho ${d.legend} ${go ? 'ready' : ''}" style="--rc:${R.color}">
