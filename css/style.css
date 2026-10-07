@@ -1495,10 +1495,13 @@ body { overflow: hidden; }
 .seg button { background: linear-gradient(180deg, #F4F4F6, #B8BCC4 55%, #8E929C); border: 2px solid #5A2A14; border-radius: 999px; color: #3A2A1A; box-shadow: inset 0 1px 0 #FFFFFF, 0 1px 0 #2A1608; }
 .seg button.on { background: linear-gradient(180deg, #FFE08A, #E8A93A 55%, #B8741E); border-color: #5A2A14; color: #3A1A06; box-shadow: inset 0 1px 0 #FFF4C8, 0 0 8px #FFD66B88; }
 .seg { gap: 4px; background: transparent; }
-.tb-prog { width: 170px; height: 18px; border-radius: 0; overflow: visible; position: relative; background: url('../assets/ui/thanh-tien-do.png') center / 100% 100% no-repeat; box-shadow: none; border: 0; }
-.tb-prog i { position: absolute; left: 14.5%; top: 31%; height: 38%; border-radius: 4px; max-width: 71%; }
-/* v146: khung người chơi giữ đúng tỉ lệ ảnh 700×241; toạ độ % đo trên ảnh: lòng huy hiệu tâm (117,118) r≈45,
-   ô tối x 230–628, y 48–190 (mép phải bo tròn) — ảnh đại diện và chữ đặt tuyệt đối theo % nên không lệch khi co giãn */
+/* v172: thanh tiến độ đợt — ảnh 800×163 cắt 9 mảnh (border-image): hai đầu ngọc (x 0–131 và 667–800) giữ đúng tỉ lệ,
+   chỉ rãnh giữa giãn ngang; phần lấp đầy nằm trong lòng rãnh (y 33–122 trên ảnh), JS đặt width 0–100% của rãnh */
+.tb-prog { --h: 20px; width: 140px; height: var(--h); border-radius: 0; overflow: visible; position: relative; background: none; box-shadow: none;
+  box-sizing: border-box; border-style: solid; border-width: 0 calc(var(--h) * 133 / 163) 0 calc(var(--h) * 131 / 163);
+  border-image: url('../assets/ui/thanh-tien-do.png') 0 133 0 131 fill / 0 calc(var(--h) * 133 / 163) 0 calc(var(--h) * 131 / 163) stretch; }
+.tb-prog i { position: absolute; left: 0; top: 20.2%; height: 54.6%; border-radius: 3px; max-width: 100%; }
+/* /v172 */
 .pl-box { background: url('../assets/ui/khung-nguoi-choi.png') 0 0 / 100% 100% no-repeat; border: 0; box-shadow: none; border-radius: 0;
   width: 192px; height: auto; aspect-ratio: 700 / 241; padding: 0; display: block; }
 .pl-box .av { position: absolute; left: 11%; top: 32.37%; width: 11.43%; height: 33.2%; border: 0; border-radius: 50%; background: #4A2C18;

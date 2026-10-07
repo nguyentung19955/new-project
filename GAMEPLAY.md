@@ -1600,3 +1600,9 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 169 — Gộp bộ lọc thả xuống màn Góp ý nhận được
 - Màn Góp ý nhận được: lọc Loại / Trạng thái bằng ô chọn thả xuống (kèm số lượng), nút Bỏ lọc, dòng "Đang hiện x/y".
+
+## Phiên bản 172 — Thanh tiến độ đợt không còn bị kéo dãn
+- Thanh tiến độ đợt trên thanh trên cùng (ảnh `thanh-tien-do.png` 800×163) trước bị nền `100% 100%` ép vào khung 170×18 nên kéo ngang gấp đôi, hai viên ngọc bè ra. Nay cắt 9 mảnh bằng `border-image`: hai đầu ngọc (x 0–131 và 667–800 trên ảnh) giữ đúng tỉ lệ, chỉ rãnh giữa giãn ngang; thanh 140×20 (co giãn theo `--hz` như cả thanh trên).
+- Phần lấp đầy nằm gọn trong lòng rãnh (y 33–122 trên ảnh); JS đặt chiều rộng 0–100% của rãnh (trước là 0–71% của cả thanh).
+- Đã kiểm các khung ảnh khác dùng `100% 100%`: khung người chơi đúng tỉ lệ (aspect-ratio 700/241), nút chính menu lệch ~8% — không méo rõ, giữ nguyên.
+- Test: `tests/thanh-dot/thanh-dot.test.js` đo tỉ lệ đầu ngọc, phần lấp đầy ở 0/50/100% nằm trong rãnh, chụp ảnh trước/sau ở 1920×1000, 844×390, 667×375 và màn dọc.
