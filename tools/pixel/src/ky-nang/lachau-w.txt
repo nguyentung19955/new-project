@@ -1,0 +1,67 @@
+# Icon kỹ năng Lạc Hầu · W «Giáp Da Tê Gai» — giáp da tê giác nâu với gai xương nhọn quanh viền
+# Mô tả: Bị đánh phản 32% sát thương · hành Thổ (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 29 · PROMPT-THAY-HINH-CODE.txt:931 · js/data.js:1202
+name: Lạc Hầu · W «Giáp Da Tê Gai»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = dat-toi
+  g = bac
+  h = dat-sang
+  i = dat
+  j = cat
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdbbbbbbbbbbbbbbbbbbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+acdbffffffffffffffffbdca
+acdbffffffffffffffffbdca
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbbbbbbbbbbbbbbbbbbdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+..................
+.....a.......a....
+....aga...aaaga...
+...aahha.ahhhaa...
+..ahhiihaghiihha..
+..ahiiiihhiiiifaa.
+.aghiififihififaga
+.ahiifjhfihfjhiha.
+.ahiifhffiffhfifa.
+.ahifiiiiiiiiihfaa
+agfiihhhhihhhhifag
+.aahifjhfihfjhfa.a
+..ahifhffiffhffa..
+..affiiiiiiiiifaa.
+.agahhhhhihhhhaaga
+..aafffjfifjffa.a.
+....aafhfifaaa....
+......aaaaa.......
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

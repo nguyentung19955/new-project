@@ -1,0 +1,72 @@
+# Icon kỹ năng Thần Săn Ba Vì · Q «Phi Đao Tẩm Độc» — mũi phi đao sắt nhỏ giọt độc xanh
+# Mô tả: Phi đao vào quái xa nhất, độc + chậm · hành Mộc (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 29 · PROMPT-THAY-HINH-CODE.txt:945 · js/data.js:1219
+name: Thần Săn Ba Vì · Q «Phi Đao Tẩm Độc»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = la-ma
+  g = la-toi
+  h = bac
+  i = sat
+  j = sat-sang
+  m = dat-sang
+  n = la-sang
+  o = dat-toi
+  p = dat
+  q = la
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+..................
+..a...............
+.ahaa.............
+..ahhaaa..........
+..ahhhhha.........
+...ahhhhha........
+...aijhhhha.......
+....aiihhhaa......
+....aaaiiamma.....
+...ana.aaaopma....
+...aqaanaanopma...
+....a.anaaqaopma..
+...ana.a.anaaopma.
+....a.a...a..amoma
+.....ana.a...aopoa
+.....anaana..aomoa
+......a..a....aaa.
+..................
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

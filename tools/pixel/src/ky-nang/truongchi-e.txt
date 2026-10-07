@@ -1,0 +1,69 @@
+# Icon kỹ năng Trương Chi · E «Sương Khói Mặt Sông» — dải sương lạnh trắng trôi trên mặt sông + tinh thể băng
+# Mô tả: Sương lạnh làm chậm, đóng băng · hành Thủy (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 28 · PROMPT_GEMINI_V94.md:339 · js/data.js:828
+name: Trương Chi · E «Sương Khói Mặt Sông»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = nuoc
+  g = cham-toi
+  h = sang
+  i = troi
+  j = trang-xam
+  m = nuoc-sang
+  n = cham
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+..................
+.aaaaaaaaa....a...
+ahhhhhhhhha..aia..
+ajjjjjjjjja.aiiia.
+.aaaaaaaaaaaaaia..
+....ahhhhhhhhhhha.
+....ajjjjjjjjjjja.
+..aaaaaaaaaaaaaa..
+.ahhhhhhhhhhhha...
+.ajjjjjjjjjjjja...
+..aaaaaaaaaaaaa...
+.....ahhhhhhhhha..
+aaaaaajjjjjjjjjaaa
+mmmmmimmmmimmmmmmm
+mffnimimnimimffffn
+mfffmfmffmfmfffffn
+mffffffffffffffffn
+nnnnnnnnnnnnnnnnnn
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

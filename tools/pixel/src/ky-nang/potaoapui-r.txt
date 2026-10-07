@@ -1,0 +1,71 @@
+# Icon kỹ năng Vua Lửa Pơtao Apui · R «Núi Lửa Thức Giấc» — núi lửa phun, dung nham chảy, đá lửa văng
+# Mô tả: Đá lửa rơi x5 · hành Hỏa (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 28 · PROMPT_GEMINI_V94.md:267 · js/data.js:922
+name: Vua Lửa Pơtao Apui · R «Núi Lửa Thức Giấc»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = son-sang
+  g = son-toi
+  h = lua-sang
+  i = son
+  j = lua
+  m = vang-sang
+  n = dat-sang
+  o = dat
+  p = dat-toi
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+..............aaa.
+..aaa...a....ahhha
+.ahhha.aha...aihia
+.aihiaahjha..aihia
+.aihiaahjjha..aaa.
+..aaa.ahiiia.aha..
+.....ahimmhhahjha.
+.....aiijjhiaaia..
+.....anihhiaa.a...
+....anonnnnnna....
+...anoopjhjnona...
+...anoopjhjpopa...
+..anoopjjhjjnona..
+.anooopjnhnjnopa..
+.anooopjphpjnoona.
+anoooopjnnpjpooona
+anooopjnooonjnoopa
+npppppjpppppjppppn
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

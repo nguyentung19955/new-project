@@ -1,0 +1,66 @@
+# Icon kỹ năng Thần Trống Đồng · W «Âm Vang» — các vòng âm vang lan toả từ tâm đồng
+# Mô tả: 5% choáng mỗi đòn · hành Kim (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 28 · PROMPT_GEMINI_V94.md:145 · js/data.js:1065
+name: Thần Trống Đồng · W «Âm Vang»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = sat-sang
+  g = sat-toi
+  h = bac
+  i = vang-sang
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+..................
+.......hhhhh......
+.....hh.....hh....
+...hh....f....hh..
+...h..fff.fff..h..
+..h..f.......f..h.
+..h.f...hhh...f.h.
+.h..f..h...h..f..h
+.h..f.h..i..h.f...
+.h.f..h.ici.h..f..
+.h..f.h..d..h.f...
+.h..f..h...h..f..h
+..h.f...hhh...f.h.
+..h..f.......f..h.
+...h..fff.fff..h..
+...hh....f....hh..
+.....hh.....hh....
+.......hhhhh......
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

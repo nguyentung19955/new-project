@@ -1,0 +1,70 @@
+# Icon kỹ năng Lạc Long Quân · Q «Vuốt Rồng» — ba vệt vuốt nước chéo từ móng rồng ngọc
+# Mô tả: Cào hai đường vuốt nước · hành Thủy (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 29 · PROMPT-THAY-HINH-CODE.txt:819 · js/data.js:284
+name: Lạc Long Quân · Q «Vuốt Rồng»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = nuoc
+  g = cham-toi
+  h = troi
+  i = nuoc-sang
+  j = bac
+  m = ngoc-sang
+  n = ngoc
+  o = cham
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+.........a........
+........aha.......
+.......aiha.......
+......aihfa.a.....
+.....aihfa.aha....
+.....ahfa.aiha....
+....aifa.aihfa.a..
+...aiha.aihfa.aha.
+..aiha..ahfa.aiha.
+.aiha..aifa.aihfa.
+..aa..aiha.aihfa..
+...a.aiha..ahfa...
+.aajaiha..aifa....
+ajaaaja..aiha.....
+amma.a..aiha......
+mnnma..aiha.......
+onnnma..aa........
+aooooma...........
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

@@ -1,0 +1,69 @@
+# Icon kỹ năng Bà Hỏa · Q «Đốm Lửa» — một ngọn lửa đơn cao vút
+# Mô tả: Cột lửa thiêu quái x1.8 · hành Hỏa (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 28 · PROMPT_GEMINI_V94.md:268 · js/data.js:935
+name: Bà Hỏa · Q «Đốm Lửa»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = son-sang
+  g = son-toi
+  h = lua-sang
+  i = son
+  j = lua
+  m = vang-sang
+  n = sang
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+..................
+..................
+.........a........
+.......aaha.......
+......ahhia.......
+......ahjia.a.....
+......ahjiaaha....
+......ahjjhhia....
+.....ahjiijjia....
+....ahjimmijjha...
+...ahjimhhmhjia...
+...ahimhhhjijia...
+...ahimhhjhmhia...
+...ahimhjmmjhia...
+...ahimhjnmjhia...
+...aiijjjmjjiia...
+....aaaaaaaaaa....
+..................
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

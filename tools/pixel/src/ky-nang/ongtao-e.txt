@@ -1,0 +1,73 @@
+# Icon kỹ năng Ông Táo · E «Tấu Trình Thiên Đình» — tờ sớ giấy dó hai trục gỗ, ấn son, mũi tên ánh sáng bay lên trời
+# Mô tả: Giáng đòn lên quái nhiều máu nhất x4 · hành Hỏa (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 29 · PROMPT_GEMINI_V94.md:147 · js/data.js:1106
+name: Ông Táo · E «Tấu Trình Thiên Đình»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = son-sang
+  g = son-toi
+  h = vang-sang
+  i = dat
+  j = dat-sang
+  m = dat-toi
+  n = sang
+  o = trang-xam
+  p = toi
+  q = trang
+  r = son
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+........aha.......
+.......ahhha......
+..a...ahahaha..a..
+.aia...aahaa..aia.
+ajjjaaaaaaaaaajjja
+ajimnnnnnnnnnnjima
+ajimoppppppnqojima
+ajimnnnnnnnqqojima
+ajimoppppppnqojima
+ajimnnnnnnnqqojima
+ajimoppppppooojima
+ajimnnnnnnrfrojima
+ajimopppporrrojima
+ajimonnnnonnnojima
+ammmaaaaaaaaaammma
+.ana..........aina
+ana...........anan
+.a.............a.a
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

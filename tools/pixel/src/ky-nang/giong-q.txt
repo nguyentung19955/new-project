@@ -1,0 +1,72 @@
+# Icon kỹ năng Thánh Gióng · Q «Gậy Tre Ngà» — gậy tre ngà vàng có đốt, quật thành vòng cung
+# Mô tả: Quật lan mọi quái, choáng · hành Hỏa (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 29 · PROMPT-THAY-HINH-CODE.txt:805 · js/data.js:265
+name: Thánh Gióng · Q «Gậy Tre Ngà»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = son-sang
+  g = son-toi
+  h = la-sang
+  i = la
+  j = la-ma
+  m = vang-sang
+  n = cat
+  o = dat-sang
+  p = lua-sang
+  q = dat
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+..............aha.
+.............ahiha
+............ahjia.
+...........ammima.
+.......aa.amnnmoa.
+......appammonnoa.
+.......aappqqmoa..
+........ammppoa...
+.......amnnmppa.a.
+......ammonoappapa
+.....amqqqoa.apaaa
+....amnmmmoa..apap
+...ammonnoa...apaa
+...aqqqmoa.....apa
+..ammmmoa......apa
+.amnnnoa........a.
+.amnnoa...........
+.aoooa............
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

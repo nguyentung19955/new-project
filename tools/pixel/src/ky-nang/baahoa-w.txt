@@ -1,0 +1,70 @@
+# Icon kỹ năng Bà Hỏa · W «Lửa Lan» — lửa bén lan thành ba ngọn trên đất + tàn lửa
+# Mô tả: Quái trúng nổ bị đốt · hành Hỏa (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 28 · PROMPT_GEMINI_V94.md:268 · js/data.js:937
+name: Bà Hỏa · W «Lửa Lan»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = son-sang
+  g = son-toi
+  h = lua
+  i = lua-sang
+  j = son
+  m = vang-sang
+  n = dat-sang
+  o = dat-toi
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+..................
+.............a....
+............aha...
+.............a..a.
+..a......a.....aia
+.aia....aia.....a.
+..a....aija.......
+....a..aijaa......
+...aia.aihiia.a...
+..aijaaijjhjaaia..
+..aihiijmmijaija..
+.aijjhhjmhjjajjia.
+aijmmijmiimiimmiia
+aijmhijmiihijmhija
+aijmhijmiihijmhija
+ajjhhjjhhhhjjhhjja
+nnnnnnnnnnnnnnnnnn
+oohooooohoooooohoo
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

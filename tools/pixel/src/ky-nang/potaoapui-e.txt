@@ -1,0 +1,68 @@
+# Icon kỹ năng Vua Lửa Pơtao Apui · E «Vòng Lửa» — vòng lửa tròn bùng quanh tâm
+# Mô tả: Vòng lửa quanh mình x4, đốt · hành Hỏa (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 28 · PROMPT_GEMINI_V94.md:267 · js/data.js:920
+name: Vua Lửa Pơtao Apui · E «Vòng Lửa»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = son-sang
+  g = son-toi
+  h = lua-sang
+  i = son
+  j = vang-sang
+  m = lua
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+.........a........
+.....aaaahaaaa....
+....ahhhhhhhhha...
+...ahhijjjjjihha..
+..ahijjhhahhjjiha.
+.ahijmaaa.aaamjiha
+.ahima...a...amiha
+.aijha..afa..ahjia
+.aimia.afffa.aimia
+ahima.affhffa.amhh
+.aimha.afffa.ahmia
+.aimia..afa..aimia
+.aihja...a...ajhia
+.ahimjaaa.aaajmiha
+..aihmjhhahhjmhia.
+...aihhjjjjjhhia..
+....ahihhhhhiha...
+.....aaaaiaaaa....
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

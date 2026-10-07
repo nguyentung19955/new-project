@@ -1,0 +1,67 @@
+# Icon kỹ năng Lạc Long Quân · E «Gầm Biển» — con sóng lớn cuộn đầu bọt trắng
+# Mô tả: Sóng lớn đẩy lùi quái · hành Thủy (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 29 · PROMPT-THAY-HINH-CODE.txt:819 · js/data.js:289
+name: Lạc Long Quân · E «Gầm Biển»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = nuoc
+  g = cham-toi
+  h = nuoc-sang
+  i = cham
+  j = troi
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+.........aaaa.....
+......aaahhhhaa...
+.....ahhhiiijhha..
+....ahffijjjjjjha.
+...ahfiijjjjhjjia.
+..ahfijijjhhihhjha
+.ahfijfijfaaaiifia
+ahffifhija...aiha.
+ahfijhfia.....aa..
+hfijfhfia.......a.
+hfifhhfia......aja
+hijhhhffha....ahaa
+hfhhhffffhaaaaaaaj
+hihhhfffffhhhhhaaa
+hihhfffffffffffhhh
+ihhffffffffffffffi
+ihiiiiiiiiiiiiiiii
+aaaaaaaaaaaaaaaaaa
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

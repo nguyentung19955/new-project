@@ -1,0 +1,69 @@
+# Icon kỹ năng Thần Trống Đồng · Q «Gõ Trống Trận» — dùi gỗ gõ xuống mặt trống đồng, tiếng vang
+# Mô tả: Tướng quanh +26% tốc đánh · hành Kim (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 28 · PROMPT_GEMINI_V94.md:145 · js/data.js:1063
+name: Thần Trống Đồng · Q «Gõ Trống Trận»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = sat-sang
+  g = sat-toi
+  h = dat-sang
+  i = dat
+  j = dat-toi
+  m = troi
+  n = vang-sang
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+.............aaa..
+............ahhha.
+............ahija.
+...........ahija..
+...........ahija..
+..........ahija...
+..a.....a.ahija...
+.ama...amahija....
+..ama.amaahija....
+...aaaaaahijaaa...
+..aannnnhiijnnnaa.
+.anncccdnjjncccnna
+.ancccdccnccncccda
+abddcccnncnncccddb
+abbbdddddndddddbbe
+aeddddddddddddddbe
+abbbbbbbbbbbbbbbde
+aeeeeeeeeeeeeeeeee
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

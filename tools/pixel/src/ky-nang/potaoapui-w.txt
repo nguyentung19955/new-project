@@ -1,0 +1,73 @@
+# Icon kỹ năng Vua Lửa Pơtao Apui · W «Lời Thề Núi Lửa» — bia đá thề khắc dấu son, lửa núi cháy trên đỉnh
+# Mô tả: +sát thương, +máu · hành Hỏa (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 28 · PROMPT_GEMINI_V94.md:267 · js/data.js:918
+name: Vua Lửa Pơtao Apui · W «Lời Thề Núi Lửa»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = son-sang
+  g = son-toi
+  h = lua-sang
+  i = son
+  j = vang-sang
+  m = lua
+  n = sat-sang
+  o = sat
+  p = toi
+  q = dat-sang
+  r = dat-toi
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+........aha.......
+.......ahia.......
+......aaiiha......
+.....ahhjjhha.....
+.....ahijmhia.....
+.....ahijmhia.....
+.....aiimmiia.....
+....annnnnnna.....
+....anooopoona....
+....anoopfpopa....
+....anopfnfppa....
+....anpfninfpa....
+...anoonfnfnpa....
+...anooonfnoona...
+...anoooonooopa...
+..aappppppppppaa..
+.aqqqqqqqqqqqqqqa.
+.arrrrrrrrrrrrrra.
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

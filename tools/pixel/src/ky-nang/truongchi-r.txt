@@ -1,0 +1,69 @@
+# Icon kỹ năng Trương Chi · R «Khúc Ca Cuối» — nốt nhạc giữa xoáy nước cuốn ngược
+# Mô tả: Tiếng hát cuốn ngược quái, chậm 50% · hành Thủy (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 28 · PROMPT_GEMINI_V94.md:339 · js/data.js:830
+name: Trương Chi · R «Khúc Ca Cuối»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = nuoc
+  g = cham-toi
+  h = cham-sang
+  i = troi
+  j = cham
+  m = nuoc-sang
+  n = trang
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+......aaaaaaa.....
+.....ahhhihhha....
+...aahiiihiiihaa..
+..ahiihhhjhhhiiha.
+..aifhmhjgjjjhfia.
+.ahfhmhggmggjjhfha
+ahihmhgmmnnmgjjhih
+ahhgjgmhhnhhmhjgfg
+ahjgjhhggnhgmgjgfg
+ahgmhjgnnnhjhmhjhi
+ahjhmgnnnnhgmhggih
+ahjgjhhnnhjgmgmgfg
+agjgjgjhhjgmhgjgfg
+.agjhmgggjghgmhiha
+..ahjhmmmgmmmhifa.
+..aggjhhhmhhhifha.
+...aagjjjhjjjhaa..
+.....aggggggga....
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

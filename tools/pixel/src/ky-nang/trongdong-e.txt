@@ -1,0 +1,67 @@
+# Icon kỹ năng Thần Trống Đồng · E «Mặt Trời Trống Đồng» — mặt trống đồng Đông Sơn: ngôi sao mặt trời nhiều cánh giữa các vành hoa văn
+# Mô tả: Chém lan 32% · hành Kim (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 28 · PROMPT_GEMINI_V94.md:145 · js/data.js:1067
+name: Thần Trống Đồng · E «Mặt Trời Trống Đồng»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = sat-sang
+  g = sat-toi
+  h = toi
+  i = vang-sang
+  j = sang
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+.......aaaaa......
+.....aabbbbbaa....
+...aabbdddddbbaa..
+..abbddbbbbbddbba.
+..aedbbdddddbbdea.
+.abdbbdbbbbbdbbdba
+.aededbehihebdedea
+abdbdbeihihiebdbdb
+aedbdehhiiihhedbde
+aedbdeiiijiiiidbde
+aedbdehhiiihhbdbde
+aedbdebiiihibedbde
+.abdbdeihihbidbdba
+.aedebdbbibedbedea
+..abdbbdddddbbdba.
+..aebddbbbbbddbea.
+...aabbdddddbbaa..
+.....aabbbbbaa....
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

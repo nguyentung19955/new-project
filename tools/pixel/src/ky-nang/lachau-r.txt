@@ -1,0 +1,68 @@
+# Icon kỹ năng Lạc Hầu · R «Lời Thề Bộ Lạc» — ba nắm tay giơ cao trước ngôi sao mặt trời trống đồng
+# Mô tả: Toàn quân giảm 30% sát thương nhận, hồi máu · hành Thổ (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 29 · PROMPT-THAY-HINH-CODE.txt:931 · js/data.js:1207
+name: Lạc Hầu · R «Lời Thề Bộ Lạc»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = dat-toi
+  g = vang-sang
+  h = da-sang
+  i = son-toi
+  j = da-toi
+  m = toi
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdbbbbbbbbbbbbbbbbbbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+acdbffffffffffffffffbdca
+acdbffffffffffffffffbdca
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbbbbbbbbbbbbbbbbbbdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+.....aca.a.aca....
+.....acaagacca....
+.....agcgdgcga....
+..aaagdhhhdcggaaaa
+.accgddiijmgcdgccc
+..acccdhhjmmdcccaa
+.ahhhgmhjggmhhha..
+.aiijdmhjggmiijga.
+.ahhjdmhjggmhhja..
+.ahjccghjmmmhjccaa
+.ahjggdhjmmghjgacc
+.ahjaddhjgcchja.aa
+.ahjaadhjggchja...
+.ahja.ahjdachja...
+.ahjaachja.ahja...
+.ahjaachja.ahja...
+.ahja.ahja.ahja...
+.ajja.ajja.ajja...
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

@@ -1,0 +1,68 @@
+# Icon kỹ năng Ông Táo · R «Cá Chép Hóa Rồng» — cá chép vàng hoá đầu rồng đỏ phun lửa
+# Mô tả: Rồng lửa phun một dải x5 · hành Hỏa (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 29 · PROMPT_GEMINI_V94.md:147 · js/data.js:1108
+name: Ông Táo · R «Cá Chép Hóa Rồng»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = son-sang
+  g = son-toi
+  h = vang-sang
+  i = son
+  j = lua-sang
+  m = lua
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+.ahhaa............
+..adffaa..........
+..afiiffaa........
+.afigiiiffaa......
+afighfiiiiffaaaaaa
+agiifiiiiiighhhhjj
+.afiigiiiiggjmmmhj
+.agigjfiigaaajjjjj
+..aggfggga...aaaaa
+...ahhhhhaa.......
+...adhhcdhha......
+....ahcddhdha.....
+.....adchddhha....
+......addchccha...
+.......aaddccdha..
+.........adddddha.
+........ajjaajajja
+.......ajia..a.aia
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

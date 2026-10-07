@@ -1,0 +1,71 @@
+# Icon kỹ năng Lý Ngư Tướng Quân · Q «Ngọn Giáo Vũ Môn» — đinh ba bạc cán vàng đâm vọt lên từ sóng Vũ Môn
+# Mô tả: Đâm quái nhiều máu nhất x4 · hành Thủy (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 28 · PROMPT_GEMINI_V94.md:338 · js/data.js:805
+name: Lý Ngư Tướng Quân · Q «Ngọn Giáo Vũ Môn»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = nuoc
+  g = cham-toi
+  h = bac
+  i = sat
+  j = sat-sang
+  m = vang-sang
+  n = nuoc-sang
+  o = troi
+  p = cham
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+.ahha..ahha..ahha.
+.ahha..ahha..ahha.
+.ahia.ahjjha.ahia.
+.ahia.aijjia.ahia.
+.aijhaaahiaaahjia.
+..aijhhhjjhhhjia..
+...aiiiiiiiiiia...
+....aaammmmaaa....
+.......amda.......
+.......amda.......
+.......amda.......
+.......amda.......
+..a....amda....a..
+.ana...amda...ana.
+aoooa..amda..aoooa
+ofnnoaaoddoaaonnnn
+nnffnnnnnnnnnnfffp
+pppppppppppppppppp
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

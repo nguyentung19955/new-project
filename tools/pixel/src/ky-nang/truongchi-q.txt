@@ -1,0 +1,70 @@
+# Icon kỹ năng Trương Chi · Q «Khúc Sáo Mê Hồn» — ống sáo trúc chéo, nốt nhạc trắng bay ra
+# Mô tả: Tiếng sáo làm quái đứng mê · hành Thủy (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 28 · PROMPT_GEMINI_V94.md:339 · js/data.js:824
+name: Trương Chi · Q «Khúc Sáo Mê Hồn»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = nuoc
+  g = cham-toi
+  h = trang
+  i = vang-sang
+  j = cat
+  m = dat-sang
+  n = toi
+  o = dat
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+....aa............
+...ahha...........
+...aha............
+..aaha........aaa.
+.ahhha.......aijia
+.ahha.......aijjma
+..aa.......aijjia.
+..........ainjia..
+.........aiojia...
+........aijjia....
+.......ainjiaaaa..
+......aijjiaahhha.
+.....aijjia.ahaha.
+....ainjia..ahaha.
+...aiojia..ahhhha.
+..aijjia...ahahha.
+..ajjia.....a.aa..
+..aiia............
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

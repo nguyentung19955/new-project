@@ -1,0 +1,68 @@
+# Icon kỹ năng Trương Chi · W «Lời Ca Sông Nước» — cặp nốt nhạc ngân trên mặt sông gợn sóng
+# Mô tả: +sức mạnh kỹ năng · hành Thủy (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 28 · PROMPT_GEMINI_V94.md:339 · js/data.js:826
+name: Trương Chi · W «Lời Ca Sông Nước»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = nuoc
+  g = cham-toi
+  h = trang
+  i = nuoc-sang
+  j = troi
+  m = cham
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+......aaaaaaa.....
+.....ahhhhhhha....
+.....ahhhhhhha....
+.....ahaaaaaha....
+.....aha...aha....
+....aaha..aaha....
+...ahhha.ahhha....
+..ahhhhaahhhha....
+..ahhha.ahhha.a...
+...aaa...aaa.aia..
+aaaia.aaa...aiaia.
+jjaaaajjjaaaajjaaa
+iijjjjiiijjjjiijjj
+ifiiiifffiiiiffiii
+iffffffffffffffffm
+iffffffffffffffffm
+iffffffffffffffffm
+mmmmmmmmmmmmmmmmmm
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

@@ -1,0 +1,68 @@
+# Icon kỹ năng Lý Ngư Tướng Quân · E «Quẫy Đuôi» — đuôi cá chép vàng quẫy tung bọt nước
+# Mô tả: Quẫy nước làm chậm quái · hành Thủy (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 28 · PROMPT_GEMINI_V94.md:338 · js/data.js:809
+name: Lý Ngư Tướng Quân · E «Quẫy Đuôi»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = nuoc
+  g = cham-toi
+  h = vang-sang
+  i = troi
+  j = nuoc-sang
+  m = cham
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+..................
+.aaaa........aaaa.
+ahhhha......ahhhha
+.adddha....ahcdda.
+..addhha..ahcdddaa
+a..addchaahccddaai
+ia.ahddchhccdda.aa
+aa..addhcdcdddaaja
+aja..addddhdda..a.
+.a...ahddddda.....
+..a...addddda..a..
+.aja...addda..aja.
+..a.....ada....a..
+a....a.ahhha...a..
+iaaaajahddjhaaaiaa
+fiijjiijjiijjjifij
+jjjffjjffjjfffjjjm
+mmmmmmmmmmmmmmmmmm
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

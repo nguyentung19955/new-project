@@ -1,0 +1,69 @@
+# Icon kỹ năng Lạc Hầu · E «Đá Lăn Phong Châu» — tảng đá tròn lăn tung bụi, vệt gió phía sau
+# Mô tả: Lăn đá đè quái, đẩy lùi · hành Thổ (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 29 · PROMPT-THAY-HINH-CODE.txt:931 · js/data.js:1205
+name: Lạc Hầu · E «Đá Lăn Phong Châu»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = dat-toi
+  g = sat-sang
+  h = toi
+  i = sat
+  j = cat
+  m = vang-sang
+  n = dat-sang
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdbbbbbbbbbbbbbbbbbbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+acdbffffffffffffffffbdca
+acdbffffffffffffffffbdca
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbffffffffffffffffbdea
+abdbbbbbbbbbbbbbbbbbbdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+..................
+..................
+.........aaaaa....
+.......aagggggaa..
+aaa...agghhiiigga.
+jjja.agihgggiiiiga
+aaa..aghgggiiiiiha
+.aaaaghgghhhhiiiig
+ajjjagigggghhgiiih
+.aaaagiiiiiggiiiih
+aaa.agiiiiiiihiiih
+jjjaahiiiiiihhhiih
+aaa..agiiiiihhhgha
+..aaamhiiiiiighgha
+.ammmjmhhiiiiighma
+aamjjnaaahhhhhamjm
+nnnnnnnnnnnnnnnnnn
+ffnnnfffffffffffnf
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

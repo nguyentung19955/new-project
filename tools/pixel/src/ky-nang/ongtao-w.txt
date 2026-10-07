@@ -1,0 +1,71 @@
+# Icon kỹ năng Ông Táo · W «Ba Ông Đầu Rau» — ba ông đầu rau (ba hòn đất kê bếp) quây quanh ngọn lửa
+# Mô tả: +sát thương · hành Hỏa (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 29 · PROMPT_GEMINI_V94.md:147 · js/data.js:1104
+name: Ông Táo · W «Ba Ông Đầu Rau»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = son-sang
+  g = son-toi
+  h = lua-sang
+  i = son
+  j = dat-sang
+  m = dat
+  n = dat-toi
+  o = vang-sang
+  p = lua
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+..................
+.........a........
+.......aaha.......
+......ahhia.......
+......aiiiaa......
+......ajjjjja.....
+.....ahjmmmna.....
+....ahinnnnnha....
+....ahioooohia....
+..aaaiiohhphiaaaa.
+.ajjjjiohhphijjjja
+ajjjmmjppppijjjmmj
+ajjmmmnaaaaajjmmmn
+ajmmmmmjjjjjmmmmmn
+ajmmmmmmjmmmmmmmmn
+anmmmmnmmmmmnmmmmn
+.annnnajmmmnannnna
+..aaaaannnnnaaaaa.
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

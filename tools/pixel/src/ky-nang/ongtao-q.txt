@@ -1,0 +1,73 @@
+# Icon kỹ năng Ông Táo · Q «Kẹp Than Hồng» — kẹp sắt dài gắp cục than hồng rực
+# Mô tả: Kẹp than x2.2, đốt mục tiêu · hành Hỏa (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 29 · PROMPT_GEMINI_V94.md:147 · js/data.js:1102
+name: Ông Táo · Q «Kẹp Than Hồng»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = son-sang
+  g = son-toi
+  h = lua-sang
+  i = vang-sang
+  j = son
+  m = lua
+  n = sat-sang
+  o = sat
+  p = sat-toi
+  q = dat-sang
+  r = dat-toi
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+.........a..aaa...
+........ahaahhha.a
+.........aahiijham
+.........ahiiiihha
+.........ajmihmhja
+.........ajhmmhmja
+..........ajhhmja.
+.........annjjjna.
+........anoonnnaa.
+.......anoooopaaha
+......anoooopa..a.
+......anoooopa....
+.....anoooopa.....
+....anoooopa......
+.aaanpppopa.......
+aqqqpqqqnpa.......
+arrrprrrpa........
+.annaanna.........
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

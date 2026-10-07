@@ -1,0 +1,69 @@
+# Icon kỹ năng Thánh Gióng · W «Giáp Sắt» — tấm giáp ngực sắt đinh tán, cổ áo son
+# Mô tả: Giảm 23% sát thương nhận · hành Hỏa (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 29 · PROMPT-THAY-HINH-CODE.txt:805 · js/data.js:267
+name: Thánh Gióng · W «Giáp Sắt»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = son-sang
+  g = son-toi
+  h = sat-sang
+  i = sat-toi
+  j = sat
+  m = toi
+  n = bac
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+..................
+...a...aaaa...a...
+..ahaaaffffaaaha..
+..ahhhagfggahhia..
+..ahjihhhmhhijia..
+.ahjinhjimhinhia..
+.ahjihiiimiihijha.
+.ahimmmmmmmmmmhia.
+.ahjhhhhhmhhhhjia.
+.ahjinhjimhinhjia.
+.aijihiiimiihijia.
+..aimmmmmmmmmmia..
+..ahhhhhhmhhhhia..
+..aiinhjimhinhia..
+...ahhjjimhjhia...
+...aiiiiimiiiia...
+....aaaaamaaaa....
+.........a........
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

@@ -1,0 +1,71 @@
+# Icon kỹ năng Thần Săn Ba Vì · E «Gọi Hổ Ba Vì» — đầu hổ Ba Vì gầm, nanh trắng, vằn đen
+# Mô tả: Hổ thần vồ 3 quái yếu máu nhất · hành Mộc (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 29 · PROMPT-THAY-HINH-CODE.txt:945 · js/data.js:1224
+name: Thần Săn Ba Vì · E «Gọi Hổ Ba Vì»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = la-ma
+  g = la-toi
+  h = lua-sang
+  i = sang
+  j = son
+  m = trang-xam
+  n = lua
+  o = toi
+  p = trang
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+..aa..........aa..
+.ahha........ahha.
+ahihhaaaaaaaahjiha
+ajmhnhohhhhohnjmja
+.ahnnjoohjoohnnha.
+aojnjjhhnnhhjjnjoa
+ahojcahnjjnjacjoha
+ajhohhjjiijjhhohja
+aohhjiiiooiiijhjoa
+ahjiimpmooipmiihha
+ajjimommiimmommhja
+.ajmojjjjjjjjomja.
+.ajmoijjjjjjiomja.
+..ahiojjjjjjoiha..
+...ahiooooooiha...
+....ahhiiiihha....
+.....ajhhhhja.....
+......aaaaaa......
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

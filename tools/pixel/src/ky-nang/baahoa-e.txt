@@ -1,0 +1,70 @@
+# Icon kỹ năng Bà Hỏa · E «Khói Mù» — đám khói đen cuồn cuộn, đốm lửa le lói
+# Mô tả: Khói làm chậm, câm lặng · hành Hỏa (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 28 · PROMPT_GEMINI_V94.md:268 · js/data.js:940
+name: Bà Hỏa · E «Khói Mù»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = son-sang
+  g = son-toi
+  h = sat
+  i = toi
+  j = khoi
+  m = sat-sang
+  n = lua
+  o = lua-sang
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+..................
+...........a......
+........aaahaaa...
+.......ahhhihhha..
+......ahjmjiiiiha.
+....aaahihmhiiija.
+...ahhhiiihiiiija.
+..ahjiiiiiiiiiiiha
+.ahjmjiiiiiiiiija.
+.ahihmhiiiiiiiija.
+.ahiihiiiiiiiiiiha
+.ahiiiiiiiiiiiiija
+.ajiiiiiiiiiiiiiih
+..ajiiiiiiiiiiiija
+..anjiiiiiiiiiiija
+.anonjiiiiijjijja.
+..anaajjijjaajaa..
+...a..aajaa..a....
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

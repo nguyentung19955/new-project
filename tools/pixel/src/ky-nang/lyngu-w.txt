@@ -1,0 +1,67 @@
+# Icon kỹ năng Lý Ngư Tướng Quân · W «Vảy Chép Vàng» — mảng vảy cá chép vàng xếp lớp + tia chí mạng đỏ
+# Mô tả: +chí mạng, +sát thương chí mạng · hành Thủy (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 28 · PROMPT_GEMINI_V94.md:338 · js/data.js:807
+name: Lý Ngư Tướng Quân · W «Vảy Chép Vàng»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = nuoc
+  g = cham-toi
+  h = son-sang
+  i = vang-sang
+  j = lua-sang
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+...aaaaa.aaaaaaha.
+..aiiiiiaiiiiihjha
+.aidiiicidiiiciha.
+.adciiccdciiccda..
+aidicccddicccddia.
+iddddddddddddddiia
+diiddddiiddddiiici
+iiiiiiiiiiiiiiiccd
+icccddicccddicccdd
+dddddddddddddddddd
+ddddiiddddiiddddda
+aaiiiiiiiiiiiiiaa.
+.adicccddicccdda..
+.adddddiidddddda..
+..adddddiddddda...
+...aadiiciidaa....
+....addddddda.....
+.....addddda......
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

@@ -1,0 +1,72 @@
+# Icon kỹ năng Lý Ngư Tướng Quân · R «Hóa Rồng» — cá chép mình vàng hoá đầu rồng ngọc phun dải nước
+# Mô tả: Hoá rồng phun nước một dải x5 · hành Thủy (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 28 · PROMPT_GEMINI_V94.md:338 · js/data.js:811
+name: Lý Ngư Tướng Quân · R «Hóa Rồng»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = nuoc
+  g = cham-toi
+  h = bac
+  i = ngoc-sang
+  j = ngoc
+  m = cham
+  n = lua-sang
+  o = nuoc-sang
+  p = troi
+  q = vang-sang
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+.ahhaa............
+..ahiiaa..........
+..aijjiiaa........
+.aijmjjjiiaa......
+aijmnijjjjiiaaa...
+amjjijjjjjjjiooaaa
+.aijjmjjjjmmpppppp
+.amjmiijjmaafffffp
+..ammimmma..aaoooo
+...aqqqqqaa...aaaa
+...adqqcdqqa......
+....aqcddqdqa.....
+.....adcqddqqa....
+......addcqccqa...
+.......aaddccdqa..
+.........adddddqa.
+........aqqaaqadqa
+.......aqda..a.ada
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

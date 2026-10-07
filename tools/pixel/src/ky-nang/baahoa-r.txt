@@ -1,0 +1,68 @@
+# Icon kỹ năng Bà Hỏa · R «Biển Lửa» — biển lửa: hàng lửa dày phủ kín ô
+# Mô tả: Biển lửa trong tầm, thiêu 4s · hành Hỏa (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 28 · PROMPT_GEMINI_V94.md:268 · js/data.js:942
+name: Bà Hỏa · R «Biển Lửa»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = son-sang
+  g = son-toi
+  h = lua-sang
+  i = son
+  j = lua
+  m = vang-sang
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+..................
+......a........a..
+.....aha......aha.
+..a.ahiaa..a..aiaa
+.aha.aiahaaha.ahhh
+ahiaahihiahiaahiji
+ahiahimhiahiaaimii
+hiihjijijhjihhimmi
+immhimhmhjimhimhji
+imjhimhjhimjiimhji
+imjhijhjhimhmijhji
+imjhihjjhimjhihjji
+ijhimhhjhijhimhhji
+aaimjijhiihimjiiaa
+.aimhmhimmhimhmia.
+aaijjjhijjhijjjiaa
+hhjhhhjjhhjjhhhjhh
+iiiiiiiiiiiiiiiiii
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

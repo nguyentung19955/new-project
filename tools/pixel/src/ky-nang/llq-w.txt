@@ -1,0 +1,68 @@
+# Icon kỹ năng Lạc Long Quân · W «Vảy Rồng» — tấm khiên vảy rồng ngọc bích xếp lớp
+# Mô tả: Giảm 17% sát thương nhận, hồi máu · hành Thủy (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 29 · PROMPT-THAY-HINH-CODE.txt:819 · js/data.js:286
+name: Lạc Long Quân · W «Vảy Rồng»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = nuoc
+  g = cham-toi
+  h = ngoc-sang
+  i = cham
+  j = ngoc
+  m = cham-sang
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+..................
+..aaaaaaaaaaaaaa..
+.ahhhhhhhhhhhhhha.
+.ahihhjihhjihhjia.
+.aimhiimhiimhiima.
+.aimmmmmmmmmmmmma.
+.aihhhhhhhhhhhhha.
+.ahhjihhjihhjihiaa
+amhiimhiimhiimhiam
+ammmmmmmmmmmmmmmmm
+.aahhhhhhhhhhhhaaa
+...ahhjihhjihiaa..
+..amaiimhiimhaama.
+..ammmmmmmmmmmmma.
+...aaaahhhhaaaaa..
+......amhiama.....
+......ammmmma.....
+.......aaaaa......
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end

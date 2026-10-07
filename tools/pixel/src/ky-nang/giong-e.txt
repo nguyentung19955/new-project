@@ -1,0 +1,73 @@
+# Icon kỹ năng Thánh Gióng · E «Ngựa Sắt Phun Lửa» — đầu ngựa sắt bờm lửa, miệng phun lửa
+# Mô tả: Vệt lửa dọc đường quái đi · hành Hỏa (vành + nền màu hành, khung đồng chung icon kỹ năng)
+# Nguồn: docs/pixel/DANH-SACH.md Lô 29 · PROMPT-THAY-HINH-CODE.txt:805 · js/data.js:270
+name: Thánh Gióng · E «Ngựa Sắt Phun Lửa»
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = dong
+  e = dong-toi
+  f = son-sang
+  g = son-toi
+  h = sat-sang
+  i = sat
+  j = lua-sang
+  m = son
+  n = sat-toi
+  o = toi
+  p = vang-sang
+  q = lua
+  r = bac
+part khung
+.aaaaaaaaaaaaaaaaaaaaaa.
+abbbbbbbbbbccbbbbbbbbbda
+abddddddddddddddddddddea
+abdffffffffffffffffffdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+acdfggggggggggggggggfdca
+acdfggggggggggggggggfdca
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdfggggggggggggggggfdea
+abdffffffffffffffffffdea
+abddddddddddddddddddddea
+adeeeeeeeeeecceeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+part hinh
+......aha.a.......
+.....ahihaha......
+....ajjhihiha.....
+...ajmhiinniha....
+..ajmhiinjfhiha...
+..ajmhiiihhiiiha..
+.ajmhiiiiiiiiinha.
+.ajmhiiiinniinona.
+.ajmhiiinaannihjaa
+ajmhiiina..aanjmjj
+ajmhiiina....ampmm
+ajmhiiiiha..ajpjpm
+jmhiiiiiiha.ampjqm
+jmhinnnnnnhaamqjqm
+mhinrrrrrrrrrmjqqm
+mhiihhhhhhhhhajjqm
+mhiiiiiiiiiiihmmjm
+mnnnnnnnnnnnnnhaaa
+end
+anim main fps=1 loop
+frame main
+  use khung
+  use hinh 3 3
+end
