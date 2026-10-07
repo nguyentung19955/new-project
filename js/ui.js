@@ -1334,6 +1334,8 @@ class UI {
     while (box.children.length > (ovNow ? 1 : 2)) box.firstChild.remove();
     setTimeout(() => el.remove(), 2600);
     this.placeToasts();
+    // T3: bảng thường vẽ lại ngay sau thông báo (vd mở khoá tướng → thanh tiêu đề đổi số) → đặt lại một lần ở khung sau
+    requestAnimationFrame(() => { if (el.isConnected) this.placeToasts(); });
   }
   // v189 (L05): thông báo không sống qua chuyển màn (đổi màn/lớp phủ thì xoá thông báo cũ, giữ cái vừa tạo cùng lúc mở màn),
   // không đè nội dung: đang mở lớp phủ / màn hình → hiện ở đáy giữa; trong trận → né thành (đích của quái) và bảng boss
@@ -1416,8 +1418,8 @@ class UI {
       for (const ww of [380, 330, 290, 250]) {
         w = Math.min(ww, UIW - 24);
         box.style.width = `${w}px`; h = Math.max(24, box.offsetHeight); box.style.width = '';
-        // T3: chỗ trên thanh tiêu đề chỉ dùng khi KHÔNG chạm chip / nút / tiêu đề nào
-        if (h <= 42) for (let x0 = 12; x0 + w <= UIW - 12; x0 += 10) { if (area(x0, 2) > 0) continue; const sc = Math.abs(x0 + w / 2 - UIW / 2) * 0.01 + (380 - ww) * 0.01; if (best.a > 0 || sc < best.sc) best = { sc, a: 0, x0, y0: 2, w }; }
+        // T3: chỗ trên thanh tiêu đề chỉ dùng khi KHÔNG chạm chip / nút / tiêu đề nào (chừa thêm 6 đơn vị hai bên)
+        if (h <= 42) for (let x0 = 12; x0 + w <= UIW - 12; x0 += 10) { if (area(x0 - 6, 2) > 0 || area(x0 + 6, 2) > 0) continue; const sc = Math.abs(x0 + w / 2 - UIW / 2) * 0.01 + (380 - ww) * 0.01; if (best.a > 0 || sc < best.sc) best = { sc, a: 0, x0, y0: 2, w }; }
       }
       w = w0; h = h0;
       // T3: không còn chỗ trống nào → không che bảng đang mở: cất thông báo vào hàng chờ, hiện khi đóng bảng (tối đa 3)
