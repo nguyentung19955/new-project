@@ -1,5 +1,5 @@
 // v149: kiểm tra nút Góp ý — mở từ menu / cài đặt / menu ☰ trong trận, dữ liệu gửi Firestore (CLOUD.db giả),
-// hàng đợi khi ngoại tuyến + gửi lại, giới hạn 1 góp ý / 60 giây và 10 / ngày, bố cục không tràn, không lỗi trang.
+// hàng đợi khi ngoại tuyến + gửi lại, bảng cảm ơn sau khi gửi (v164), giới hạn 1 góp ý / 60 giây và 10 / ngày, bố cục không tràn, không lỗi trang.
 const path = require('path');
 const { open, enter, ok } = require('../cho-tuong/helpers');
 const SHOTS = path.join(__dirname, 'shots');
@@ -33,7 +33,16 @@ const typeSend = async (page, text, opts = {}) => {
   if (opts.contact !== undefined) await page.fill('#fb-contact', opts.contact);
   await page.click('[data-act=fb-send]');
   await page.waitForTimeout(250);
+  return thanks(page, opts.keep);
 };
+// v164: bảng cảm ơn sau khi gửi → trả về chữ trong bảng ('' nếu không hiện) rồi bấm Đóng (trừ khi keep)
+const thanks = async (page, keep) => {
+  if (!(await page.isVisible('#feedback .fb-thanks'))) return '';
+  const t = await page.textContent('#feedback .fb-thanks');
+  if (!keep) await page.click('.fb-thanks [data-act=fb-close]');
+  return t;
+};
+const THANKS = /Cảm ơn góp ý của bạn![\s\S]*Đội ngũ Thần Thoại Việt sẽ đọc và hoàn thiện game để mang lại trải nghiệm tốt hơn/;
 
 (async () => {
   // ---------- 1. menu: ngoại tuyến → hàng đợi → có mạng thì tự gửi
@@ -58,9 +67,13 @@ const typeSend = async (page, text, opts = {}) => {
     ok((await page.inputValue('#fb-text')) === 'ngắn', 'giữ nguyên chữ đã gõ sau khi báo lỗi');
     await page.fill('#fb-text', 'x'.repeat(1200));
     ok((await page.inputValue('#fb-text')).length === 1000, 'tối đa 1000 ký tự');
-    await typeSend(page, 'Nút Xuất Quân hơi khó bấm trên máy nhỏ', { kind: 'idea', contact: 'zalo 0900' });
-    ok(await page.isHidden('#feedback'), 'gửi xong đóng bảng');
-    ok(/Đã lưu góp ý.*sẽ gửi khi có mạng/.test(await toastTxt(page)), 'ngoại tuyến → toast "Đã lưu góp ý, sẽ gửi khi có mạng"');
+    let ty = await typeSend(page, 'Nút Xuất Quân hơi khó bấm trên máy nhỏ', { kind: 'idea', contact: 'zalo 0900', keep: true });
+    ok(THANKS.test(ty), 'gửi xong → hiện bảng "Cảm ơn góp ý của bạn!"');
+    ok(/Đang không có mạng — góp ý đã được lưu và sẽ tự gửi khi có mạng/.test(ty), 'ngoại tuyến → bảng cảm ơn ghi đã lưu, tự gửi khi có mạng');
+    await page.waitForTimeout(3000);
+    ok(await page.isVisible('#feedback .fb-thanks'), 'bảng cảm ơn không tự đóng (sau 3 giây vẫn còn)');
+    await page.click('.fb-thanks [data-act=fb-close]');
+    ok(await page.isHidden('#feedback'), 'bấm Đóng → đóng bảng');
     let s = await store(page);
     ok(s.queue.length === 1 && s.n === 1, 'góp ý nằm trong hàng đợi localStorage');
     ok((await page.evaluate(() => window.__adds.length)) === 0, 'chưa gọi Firestore khi ngoại tuyến');
@@ -86,8 +99,10 @@ const typeSend = async (page, text, opts = {}) => {
     ok(/đợi \d+ giây/.test(await page.textContent('#fb-err')), 'gửi lại trong 60 giây → bị chặn, báo đợi');
     ok((await page.evaluate(() => window.__adds.length)) === 1, 'không gửi khi bị chặn');
     await unlimit(page);
-    await typeSend(page, 'Góp ý thứ hai sau 61 giây', { kind: 'balance' });
-    ok((await page.evaluate(() => window.__adds.length)) === 2 && /Cảm ơn bạn đã góp ý/.test(await toastTxt(page)), 'qua 60 giây → gửi thẳng, toast cảm ơn');
+    ty = await typeSend(page, 'Góp ý thứ hai sau 61 giây', { kind: 'balance', keep: true });
+    ok((await page.evaluate(() => window.__adds.length)) === 2 && THANKS.test(ty) && /Góp ý đã được gửi/.test(ty), 'qua 60 giây → gửi thẳng, bảng cảm ơn ghi đã gửi');
+    await page.keyboard.press('Escape');
+    ok(await page.isHidden('#feedback'), 'Esc đóng bảng cảm ơn');
     // giới hạn 10 / ngày
     await page.evaluate(() => { const s = JSON.parse(localStorage.getItem('nuicao.feedback')); s.n = 10; s.last = 0; localStorage.setItem('nuicao.feedback', JSON.stringify(s)); });
     await page.click('#btn-feedback');
@@ -95,15 +110,15 @@ const typeSend = async (page, text, opts = {}) => {
     ok(/Hôm nay đã gửi 10/.test(await page.textContent('#fb-err')), 'quá 10 góp ý / ngày → bị chặn');
     // sang ngày mới thì đếm lại
     await page.evaluate(() => { const s = JSON.parse(localStorage.getItem('nuicao.feedback')); s.day = 'Mon Jan 01 2001'; localStorage.setItem('nuicao.feedback', JSON.stringify(s)); });
-    await page.click('[data-act=fb-send]'); await page.waitForTimeout(250);
+    await page.click('[data-act=fb-send]'); await page.waitForTimeout(250); await thanks(page);
     ok((await page.evaluate(() => window.__adds.length)) === 3, 'sang ngày mới → gửi được tiếp');
     // gửi lỗi (Firestore từ chối) → vào hàng đợi
     await unlimit(page);
     await page.evaluate(() => { window.__mode = 'fail'; });
     await page.click('#btn-feedback');
-    await typeSend(page, 'Lỗi mạng giữa chừng khi gửi', { kind: 'bug' });
+    ty = await typeSend(page, 'Lỗi mạng giữa chừng khi gửi', { kind: 'bug' });
     s = await store(page);
-    ok(s.queue.length === 1 && /sẽ gửi khi có mạng/.test(await toastTxt(page)), 'Firestore báo lỗi → lưu hàng đợi, báo rõ');
+    ok(s.queue.length === 1 && /sẽ tự gửi khi có mạng/.test(ty), 'Firestore báo lỗi → lưu hàng đợi, bảng cảm ơn báo rõ');
     await page.evaluate(() => { window.__mode = 'ok'; });
     await page.click('#btn-feedback');   // mở lại bảng cũng thử gửi hàng đợi
     await page.waitForTimeout(300);
@@ -149,12 +164,20 @@ const typeSend = async (page, text, opts = {}) => {
     await page.screenshot({ path: path.join(SHOTS, `tran-${w}x${h}.png`) });
     // phím tắt không ăn khi đang gõ
     await page.click('[data-act=fb-send]'); await page.waitForTimeout(250);
+    ok(await page.isVisible('#feedback .fb-thanks'), 'trong trận: gửi xong hiện bảng cảm ơn');
+    ok(await page.evaluate(() => !game.running), 'bảng cảm ơn đang mở thì trận vẫn tạm dừng');
+    const T = await page.evaluate(() => { const b = document.querySelector('.fb-thanks'), r = b.getBoundingClientRect(), btn = b.querySelector('.btn').getBoundingClientRect();
+      const over = [...b.querySelectorAll('*')].filter((e) => e.scrollWidth > e.clientWidth + 2 && e.tagName !== 'svg' && e.namespaceURI.endsWith('xhtml')).map((e) => e.className || e.tagName);
+      return { inView: r.left >= -1 && r.top >= -1 && r.right <= innerWidth + 1 && r.bottom <= innerHeight + 1, over, scroll: b.scrollHeight > b.clientHeight + 1, btn: Math.min(btn.width, btn.height) > 30 }; });
+    ok(T.inView && !T.over.length && !T.scroll && T.btn, 'bảng cảm ơn nằm gọn màn hình, không tràn, nút Đóng đủ to' + (T.inView && !T.over.length && !T.scroll && T.btn ? '' : ': ' + JSON.stringify(T)));
+    await page.screenshot({ path: path.join(SHOTS, `cam-on-${w}x${h}.png`) });
+    await page.click('.fb-thanks [data-act=fb-close]');
     const d = await page.evaluate(() => window.__adds[window.__adds.length - 1].doc);
     ok(/^data:image\/jpeg;base64,/.test(d.shot) && d.shot.length <= 150000, `ảnh chụp JPEG ≤ 150KB (${Math.round(d.shot.length / 1024)}KB)`);
     const dim = await page.evaluate((src) => new Promise((r) => { const i = new Image(); i.onload = () => r([i.width, i.height]); i.src = src; }), d.shot);
     ok(dim[0] <= 640 && dim[0] > 100, `ảnh thu nhỏ ≤ 640px rộng (${dim.join('x')})`);
     ok(/^Trong trận · Ải 1 .* · Đợt \d+/.test(d.where), 'ghi màn / ải / đợt: ' + d.where);
-    ok(await page.evaluate(() => game.running), 'gửi xong trận chạy tiếp');
+    ok(await page.evaluate(() => game.running), 'bấm Đóng bảng cảm ơn → trận chạy tiếp');
     // bỏ chọn ảnh
     await unlimit(page);
     await page.click('#btn-menu'); await page.click('#drawer [data-k=feedback]');
@@ -162,7 +185,7 @@ const typeSend = async (page, text, opts = {}) => {
     ok(await page.isVisible('.fb-shot:not(.on)'), 'bấm ô ảnh → bỏ đính kèm');
     ok((await page.inputValue('#fb-text')) === '', 'gửi xong thì bảng mới để trống');
     await page.fill('#fb-text', 'Lần này không gửi kèm ảnh nhé');
-    await page.click('[data-act=fb-send]'); await page.waitForTimeout(250);
+    await page.click('[data-act=fb-send]'); await page.waitForTimeout(250); await thanks(page);
     ok((await page.evaluate(() => window.__adds[window.__adds.length - 1].doc.shot)) === '', 'bỏ chọn → không gửi ảnh');
     // Tạm dừng → Góp ý
     await unlimit(page);
@@ -191,9 +214,9 @@ const typeSend = async (page, text, opts = {}) => {
     if (off) await off.click();
     await page.click('#btn-feedback');
     ok(await page.isVisible('#feedback .fb-box'), 'không kết nối được Firebase: nút vẫn mở bảng góp ý');
-    await typeSend(page, 'Thử gửi khi không có Firebase');
+    const ty = await typeSend(page, 'Thử gửi khi không có Firebase');
     const s = await store(page);
-    ok(s.queue.length === 1 && /sẽ gửi khi có mạng/.test(await toastTxt(page)), 'lưu hàng đợi + báo rõ');
+    ok(s.queue.length === 1 && THANKS.test(ty) && /sẽ tự gửi khi có mạng/.test(ty), 'lưu hàng đợi + bảng cảm ơn báo rõ');
     ok(!errors.length, 'không lỗi trang' + (errors.length ? ': ' + errors.join(' | ') : ''));
     await browser.close();
   }

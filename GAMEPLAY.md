@@ -1525,3 +1525,8 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - `firestore.rules`: thêm hàm `isAdmin()` trong khối `feedback/{id}` — chỉ quản trị đọc, đổi `status` / `note`, xoá; luật tạo góp ý giữ nguyên; không đụng luật phòng chơi nhóm.
 - **Cần làm:** dán lại `firestore.rules` vào Firebase console → Firestore → Rules → Publish.
 - Test: `node tests/xem-gop-y/xem-gop-y.test.js` (giao diện, CLOUD.db giả, 844×390 / 667×375 / xoay dọc) và `tests/xem-gop-y/rules-emulator.test.js` (luật trên Firestore emulator, cách chạy trong `docs/FIREBASE.md`).
+
+## Phiên bản 164 — Bảng cảm ơn sau khi gửi góp ý
+- Bấm **Gửi** trong bảng Góp ý → thay toast bằng **bảng cảm ơn**: biểu tượng mặt trống đồng (SVG), "Cảm ơn góp ý của bạn!", "Đội ngũ Thần Thoại Việt sẽ đọc và hoàn thiện game để mang lại trải nghiệm tốt hơn." và dòng trạng thái: *✓ Góp ý đã được gửi tới đội làm game* hoặc *Đang không có mạng — góp ý đã được lưu và sẽ tự gửi khi có mạng*.
+- Bảng không tự đóng; **Đóng** (hoặc Esc) → về lại menu / Cài đặt / trận; đang trong trận thì trận vẫn tạm dừng tới khi bấm Đóng rồi chạy tiếp như trước.
+- Test: `tests/gop-y/gop-y.test.js` thêm kiểm tra bảng cảm ơn (gửi được / ngoại tuyến / Firestore lỗi), không tự đóng, Đóng thì trận chạy tiếp, không tràn ở 844×390 / 667×375 / xoay dọc.
