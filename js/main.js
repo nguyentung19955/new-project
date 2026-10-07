@@ -1804,7 +1804,12 @@ function drawEffects(t) {
         ctx.globalAlpha = k;
         // dùng ảnh có sẵn: đồng xu lỗ vuông (ui-tai-nguyen-1); chưa có / chưa tải xong thì vẽ tròn như cũ
         const ci = asset('ui/ui-tai-nguyen-1.png', true);
-        if (ci) ctx.drawImage(ci, f.x - 6, yy - 6, 12, 12);
+        if (ci) {
+          // cỡ theo màn: ~16 px CSS trên điện thoại (không nhỏ hơn 12 đơn vị bản đồ), chỉ mờ dần ở 40% cuối
+          const cs = Math.max(12, 16 / view.scale);
+          ctx.globalAlpha = Math.min(1, k / 0.4);
+          ctx.drawImage(ci, f.x - cs / 2, yy - cs / 2, cs, cs);
+        }
         else {
           circle(ctx, f.x, yy, 4.5, '#B8852A');
           circle(ctx, f.x, yy, 3.5, '#F2D27A');
@@ -1833,8 +1838,18 @@ function drawEffects(t) {
         // dùng ảnh có sẵn: rương đồng (ui-menu-1-3), quầng màu theo độ hiếm; chưa có ảnh thì hộp + sao như cũ
         const bi = asset('ui/ui-menu-1-3.png', true);
         if (bi) {
-          ctx.shadowColor = f.color; ctx.shadowBlur = 10;
-          ctx.drawImage(bi, f.x - 11, y - 11, 22, 22);
+          // ~30 px CSS trên điện thoại (không nhỏ hơn 26 đơn vị bản đồ), quầng tròn đậm màu độ hiếm phía sau, chỉ mờ ở 30% cuối
+          const bs = Math.max(26, 30 / view.scale), a = Math.min(1, k / 0.3);
+          const gr = ctx.createRadialGradient(f.x, y, bs * 0.15, f.x, y, bs * 0.85);
+          gr.addColorStop(0, f.color); gr.addColorStop(0.55, f.color + 'AA'); gr.addColorStop(1, f.color + '00');
+          ctx.globalAlpha = a * (0.75 + 0.25 * Math.sin(t * 8));
+          ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(f.x, y, bs * 0.85, 0, Math.PI * 2); ctx.fill();
+          // viền vòng đậm màu độ hiếm (quầng vàng huyền thoại dễ chìm trên nền cát)
+          ctx.strokeStyle = f.color; ctx.lineWidth = Math.max(2, 2.5 / view.scale);
+          ctx.beginPath(); ctx.arc(f.x, y, bs * 0.62, 0, Math.PI * 2); ctx.stroke();
+          ctx.globalAlpha = a;
+          ctx.shadowColor = f.color; ctx.shadowBlur = 14 * px();
+          ctx.drawImage(bi, f.x - bs / 2, y - bs / 2, bs, bs);
           break;
         }
         ctx.strokeStyle = f.color;

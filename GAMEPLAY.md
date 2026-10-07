@@ -2081,3 +2081,4 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 ## Phiên bản 195 — Dùng ảnh có sẵn thay hình vẽ code (tester đạt)
 
 - Gộp claude/dung-anh-co-san: đồng xu, nén bạc, tim mạng, icon ngăn kéo, Lò đúc, Bách khoa, rương rơi đồ… dùng ảnh thật.
+- Sửa theo tester (sau v195): đồng xu bay khi hạ quái ~16 px CSS, rương rơi đồ ~30 px CSS (cỡ tính theo `view.scale`, không nhỏ lại trên điện thoại), quầng tròn + viền vòng đậm màu độ hiếm (xám / xanh / tím / cam) nhấp nháy nhẹ, chỉ mờ ở cuối. Icon tựa màn thua chương Sơn Tinh "Phong Châu thất thủ": thay mũi tên sóng (`ic-nuoc-dang`, trông như biểu đồ tăng) bằng cổng thành `tiles/cong-phong-chau.png` chìm trong 2 ngọn sóng `ic-hanh-thuy`.
