@@ -1337,3 +1337,7 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - **Màn 1–3 (chủ đề Sông)** chưa có tranh nền riêng nên tạm dùng nền Đầm sen vẽ tay; có tranh Sông thì đổi lại.
 - Menu: hàng nút Anh Hùng / Ấn Phù gọn hơn để chữ không chạm mép trên máy nhỏ.
 - Prompt mới: 16 quái + 3 boss nét cũ gen lại, 80 icon đồ vật (19 tấm), 3 tấm nút giao diện thêm; cắt bằng `tools/cat-items.py <ảnh> <mã tấm>`.
+
+## Phiên bản 141 — Kéo tướng: ẩn thanh Triệu hồi, hiện nút Hủy ở đáy
+- Giữ và kéo một tướng: thanh dưới cùng (nút Triệu hồi, Hợp thể, Ghép tự động, bảng chọn 1 trong 3 hoặc bảng tướng đang chọn) ẩn đi, thùng **Hủy tướng** hiện đúng chỗ đó với cỡ bằng thanh, dễ thả trúng trên điện thoại.
+- Thả ra (hủy, đổi chỗ, ghép hay bị ngắt kéo) thì thanh dưới cùng hiện lại ngay. Thả trúng một ô vẫn ưu tiên đổi chỗ / ghép, chỉ thả vào thùng mới hủy.

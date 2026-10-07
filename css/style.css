@@ -1565,3 +1565,6 @@ i.c { background: #1F4A2A; color: #8AE09A; } i.h { background: #4A2A5A; color: #
 .mc-row .mc-btn { padding: 0 6px; gap: 5px; justify-content: center; }
 .mc-row .mc-btn .uimg.mc { width: 26px; height: 26px; }
 .mc-row .mc-btn:last-child { flex: 0 0 40%; }
+/* v141: đang kéo tướng → ẩn thanh đáy (Triệu hồi, Hợp thể, bảng chọn 1 trong 3, bảng tướng đang chọn), thùng Hủy chiếm đúng chỗ đó, cỡ bằng thanh để dễ thả */
+#wrap.dragging-hero #deck, #wrap.dragging-hero #deck-hint, #wrap.dragging-hero #quick-eq { visibility: hidden; pointer-events: none; }
+#wrap.dragging-hero #trash { bottom: calc(6px * var(--hz, 1)); width: 320px; height: 70px; justify-content: center; }
