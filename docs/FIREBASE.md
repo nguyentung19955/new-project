@@ -64,3 +64,13 @@ Nút **✉ Góp ý** (menu chính, Cài đặt, menu ☰ trong trận) gửi và
 
 ## Lưu ý
 - Bản thử trên claude.ai (artifact) chặn kết nối ra ngoài nên **không** lưu đám mây được; chỉ chạy khi game đặt trên web thật (GitHub Pages, Firebase Hosting…).
+
+## Chơi nhóm "Cùng Giữ Thành" (v153) — BẮT BUỘC deploy lại luật
+Chế độ chơi nhóm truyền tin qua Firestore: `rooms/{mã 6 ký tự}` (phòng) và 4 bảng con `cmds` (lô lệnh của người điều phối), `reqs` (yêu cầu của người chơi), `snap` (ảnh chụp trạng thái để đồng bộ lại / vào lại phòng), `chat` (trò chuyện: tin ≤ 120 ký tự, thời điểm = giờ máy chủ, chỉ tạo mới).
+
+1. **Deploy luật mới** (không làm thì không tạo được phòng — báo lỗi quyền): Firestore → tab **Rules** → dán toàn bộ `firestore.rules` → **Publish**; hoặc `firebase deploy --only firestore:rules`.
+   Luật mới: chỉ 2 thành viên đọc / ghi phòng; người thứ hai chỉ được tự thêm mình vào phòng đang chờ còn 1 chỗ; chỉ người điều phối ghi `cmds` / `snap`; giới hạn kích thước (lô lệnh < 20 KB, yêu cầu < 4 KB, ảnh chụp < 900 KB); phòng có `expiresAt` tối đa 13 giờ, hết hạn thì không đọc / ghi được nữa.
+2. **(Nên làm) Tự xoá phòng cũ:** Firestore → **TTL policies** → tạo 5 chính sách trên trường `expiresAt` cho các nhóm bộ sưu tập `rooms`, `cmds`, `reqs`, `snap`, `chat`. Firestore tự xoá tài liệu đã hết hạn (trong vòng ~24 giờ).
+3. Không cần tạo chỉ mục (index): các truy vấn chỉ dùng một trường (`seq` / `at`).
+
+**Chi phí gói miễn phí:** một trận nhóm ~20 phút: người điều phối ghi khoảng 1,7 lô / giây khi có đồng đội (~2.000 lần ghi), khách ghi tín hiệu còn sống mỗi 4 giây + mỗi thao tác (~400 lần ghi); số lần đọc tương tự. Gói Spark (20.000 ghi / 50.000 đọc mỗi ngày) đủ khoảng 8 trận nhóm mỗi ngày.

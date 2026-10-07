@@ -19,6 +19,25 @@ const hexA = (c, aa) => {
   return c + aa;
 };
 
+// v141: CHƠI NHÓM (co-op) cần mô phỏng giống hệt trên 2 máy. Mọi phép ngẫu nhiên của logic trận
+// đi qua srand(): chơi đơn = Math.random như cũ; co-op = bộ sinh số có seed chung của trận
+// (chỉ khi đang chạy bước mô phỏng / lệnh — giao diện gọi vào thì vẫn dùng Math.random, không làm lệch seed).
+const SIM = {
+  coop: false,      // đang trong trận co-op
+  active: false,    // đang chạy bước mô phỏng hoặc thực thi lệnh (logic chung)
+  seed: 0,          // trạng thái bộ sinh số (mulberry32)
+  tmpId: 0,
+  owner: null,      // (h) => 0 | 1: người sở hữu ô của tướng (ấn phù / thần khí theo từng người)
+  runes: null, legacy: null,   // [người 0, người 1]
+};
+function srand() {
+  if (!SIM.coop || !SIM.active) return Math.random();
+  let t = (SIM.seed = (SIM.seed + 0x6D2B79F5) | 0);
+  t = Math.imul(t ^ (t >>> 15), t | 1);
+  t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+}
+
 const CONFIG = {
   W: 1280,
   H: 590,
@@ -1949,12 +1968,12 @@ function buildWave(n, level) {
   // v48: quân theo chương (ROSTERS trong enemies2.js); mặc định quân Thủy Tinh
   const ro = rosterFor(n, level);
   for (let i = 0; i < count; i++) {
-    const r = Math.random();
+    const r = srand();
     let type = ro ? ro.base : 'tom';
     if (kind === 'air' && ro && ro.air && r < 0.55) type = ro.air;
     else if (ro) { for (const [from, p, t] of ro.list) if (e >= from && r < p) { type = t; break; } }
-    const elite = e >= 6 && Math.random() < 0.08 + e * 0.006
-      ? Object.keys(ELITE_MODS)[Math.floor(Math.random() * 4)] : null;
+    const elite = e >= 6 && srand() < 0.08 + e * 0.006
+      ? Object.keys(ELITE_MODS)[Math.floor(srand() * 4)] : null;
     const fast = ro ? ro.fast.includes(type) : false;
     list.push({ type, elite, gap: fast ? 0.45 : 0.8 });
   }
@@ -2054,13 +2073,16 @@ function runeFxOf(lvs) {
 }
 // hiệu lực ấn trong trận theo loại tướng (null = không có ấn: bot mô phỏng, chế độ thử)
 let RUNE_MAP = null;
-function setRunes(map) {
-  if (!map) { RUNE_MAP = null; return; }
-  RUNE_MAP = {};
+function setRunes(map) { RUNE_MAP = buildRuneMap(map); }
+function buildRuneMap(map) {
+  if (!map) return null;
+  const out = {};
   // v123: chỉ tướng Vàng mới có Ấn Phù (ấn đã khắc cho tướng Thường / Tím bỏ qua)
-  for (const t in map) if (HEROES[t] && HEROES[t].legend === 'legendary') RUNE_MAP[t] = runeFxOf(map[t]);
+  for (const t in map) if (HEROES[t] && HEROES[t].legend === 'legendary') out[t] = runeFxOf(map[t]);
+  return out;
 }
-const runeFx = (h) => (RUNE_MAP && h ? RUNE_MAP[h.type] || null : null);
+// co-op: mỗi tướng dùng ấn của người sở hữu ô
+const runeFx = (h) => { const M = SIM.runes && h ? SIM.runes[SIM.owner(h)] : RUNE_MAP; return M && h ? M[h.type] || null : null; };
 
 // ===== v95: TU VI — cấp tướng ngoài trận (theo tài khoản), lên bằng số quái tướng đó hạ =====
 // "Cấp" trong trận vẫn như cũ (mất khi hết trận); Tu Vi giữ mãi, mỗi bậc cho 3 điểm Ấn Phù cho chính tướng đó.
@@ -2293,3 +2315,5 @@ const legacyPerText = (sys, lv) => Object.entries(sys.per).map(([k, v]) => {
 // cấp thần khí trong trận (null = không áp: bot mô phỏng)
 let LEGACY_LV = null;
 function setLegacy(map) { LEGACY_LV = map || null; }
+// cấp thần khí áp cho tướng h (co-op: theo người sở hữu ô)
+const legacyOf = (h) => (SIM.legacy ? SIM.legacy[SIM.owner(h)] : LEGACY_LV);
