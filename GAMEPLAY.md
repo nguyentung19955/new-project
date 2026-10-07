@@ -1478,3 +1478,8 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - **Nền Sông riêng:** `assets/maps/nen-song.jpg` (1600×738 như các nền khác, cắt bỏ dải dưới có dấu AI); bỏ ánh xạ tạm `song → dam`.
 - **Khung giao diện:** `thanh-tien-do`, `nut-vang`, `nut-bac`, `khung-nut-chinh` cắt lại từ ảnh gốc cùng mẫu — hết viền / bóng ám hồng, nhẹ hơn nhiều (khung-nut-chinh 250 → 45 KB). Nền menu gửi kèm trùng ảnh đang dùng → giữ nguyên; khung thẻ vàng và khung người chơi có chữ → không dùng.
 - `tools/build-bundle.py` gói thêm icon đồ theo `tools/item-sheets.json` cho bản thử. Ảnh trước/sau: `docs/anh-dot-0710.png`.
+
+## Phiên bản 159 — Sửa màu dáng nổi giận của Tướng Thủy và Hồ Đen
+- `tools/make-variants.py`: mỗi bản đổi màu có thể có công thức riêng cho `rage.png` (khoá `'rage'`), và tuỳ chọn `keep_warm` giữ nguyên điểm đỏ-cam-vàng rực (lửa).
+- **Tướng Thủy** (`tuongthuy`, đổi sắc từ Hà Bá): dáng nổi giận giữ lửa cam như bản gốc, chỉ thân đổi màu như dáng thường (trước đây lửa bị xoay thành hồng tím).
+- **Hồ Đen** (`hoden`, từ Hồ Tinh): dáng nổi giận chuyển lửa đỏ cam sang **lửa tím sáng** (xoay sắc, không nhuộm) — hợp với dáng thường màu tím, hết bị đục.
