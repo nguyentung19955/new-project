@@ -1513,3 +1513,7 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 161 — Gộp ảnh đợt 07/10 + icon nhỏ
 - Gộp nhánh gắn ảnh đợt 07/10 (icon đồ, 17 quái + 5 boss nét mới, nền Sông, nút mới, khung nút cắt lại) và nhánh icon nhỏ (hàm ic(), SVG dự phòng thay emoji, prompt nhóm 17).
 - Sửa tools/cat-items.py: tham số cỡ px không còn đọc nhầm "lap=…".
+
+## Phiên bản 162 — Sửa luật Firestore cho chơi nhóm
+- Lần gộp nhánh trước làm khối luật `feedback` (Góp ý) thiếu dấu đóng `}`, khiến toàn bộ luật phòng chơi nhóm (`rooms/…`, `cmds`, `reqs`, `snap`, `chat`) bị lồng nhầm vào trong `feedback/{id}` → không tạo được phòng. Đã sửa; thêm `tests/coop/test-rules.js` kiểm tra ngoặc cân bằng và các khối `match` nằm đúng cấp (chạy trong `node tests/coop/run-all.js`).
+- **Cần làm:** dán lại `firestore.rules` vào Firebase console → Firestore → Rules → Publish (hoặc để workflow tự đăng khi khoá GitHub đủ quyền Firebase Rules Admin + Service Usage Consumer).
