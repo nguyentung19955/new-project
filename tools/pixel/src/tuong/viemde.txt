@@ -1,0 +1,314 @@
+# Viêm Đế Thần Nông (mã viemde) — pixel 32×32 (tướng Vàng · hành Hỏa). Quy chuẩn: docs/pixel/QUY-CHUAN.md (mục 0 + 0b phá cách)
+# Đặc trưng (PROMPT-GEN-LAI.txt:1188 FIX ưu tiên + PROMPT-DUNG-XUONG.txt:1173): NAM thần nông già ~80, lùn chắc hơi còng, 2 SỪNG BÒ nhỏ trên trán,
+# RÂU TRẮNG DÀI, ngậm lá thuốc; áo cam cháy dưới ÁO CHOÀNG LÁ + RƠM, băng trán vàng; cầm CUỐC lưỡi cháy lửa (không giáo).
+# Phá cách (DANH-SACH): da như vỏ cây cháy sém (nâu đất, vết nứt), sừng bò mọc mầm lúa, mép áo choàng lá rơm có lửa liếm; chiêu: cuốc bùng lửa (Hỏa).
+name: Viêm Đế Thần Nông
+size: 32x32
+anchor: 17,30
+colors:
+  k = vien
+  K = toi
+  W = trang
+  X = trang-xam
+  z = sang
+  F = dat-sang
+  h = cat
+  f = dat
+  e = trang
+  o = lua-sang
+  O = lua
+  R = son-sang
+  r = son
+  y = vang-nghe
+  Y = vang-sang
+  j = dong-sang
+  J = dong
+  c = cat
+  d = dat-sang
+  g = la
+  G = la-ma
+  L = la-toi
+  n = lua
+  l = lua-sang
+
+part tren
+................................
+................................
+........Gg...........gG.........
+.........cc.........cc..........
+..........dchhhFFFFFcd..........
+.........fhjyyyyYyyyyj..........
+........fhFFhhFFFFFFFFFF........
+........fFfFhFFFfFFFFFfFF.......
+........fFFfFXXXFFFXXXFF........
+........fFfFFFekFFFFekFFF.......
+........XWfffFFFFFFFFFFFFF......
+........XWWWfFfFFFFFFFFFF.......
+........XXWWWfFfFFFFFFFFf.......
+.........XXWWfffffffffff........
+.......GgGgLyooOOOOOOOOyR.......
+......GggGgLLyoOOOOOOOOOyR......
+......gLGggLLoOOOOOOOOOORR......
+.....GgggLgLLoOOOOOOOOOORR......
+.....ggLGggLLyyyyyyyyyyyyy......
+.....gGgggLLLoOOOOOOOOOORR......
+....cdcdcdcLLoOOOOROOOOORR......
+....cnclcncLLoOOOOROOOOORR......
+....n.l.n.lLLoyyyyyyyyyyyY......
+...........LLoOOOROOOOOROR......
+end
+
+part chan
+............oOOOROOOOOORR.......
+............yyyyyyyyyyyyY.......
+.............FFf....FFf.........
+.............FFf....FFf.........
+............cccd...cccd.........
+............fffff..fffff........
+................................
+................................
+end
+
+part vay
+............oOOOROOOOOORR.......
+............yyyyyyyyyyyyY.......
+end
+
+part rau
+....XWzWWWWX..
+...WWzWWWGWWX.
+...WzWWWWWWX..
+....WzWWWWX...
+....WWzWWWX...
+.....WzWWX....
+.....WWzWX....
+......WzX.....
+......WWX.....
+.......X......
+end
+
+part cuoc
+yjjJ
+yjjJ
+f.jJ
+f.jJ
+f.JJ
+f.ln
+f..l
+f...
+f...
+f...
+f...
+f...
+f...
+f...
+f...
+f...
+f...
+f...
+f...
+f...
+f...
+f...
+f...
+end
+
+part cuoc_cheo
+fffffffyjJ
+.......yjJ
+........jJ
+........jJ
+........ln
+.........l
+end
+
+part cuoc_bo
+f.....
+.f....
+..f...
+...yj.
+...yjJ
+....jJ
+....jJ
+....ln
+.....l
+end
+
+part lua_nho
+.l.
+lnl
+.n.
+end
+
+part lua_to
+..l..
+.lnl.
+lnznl
+nlnln
+.nOn.
+end
+
+part bung
+.l...l.
+..n.n..
+ln.l.nl
+.nlznl.
+end
+
+part than
+n...
+...l
+.l..
+end
+
+part tay
+oO..
+OOhF
+.RFf
+end
+
+part tay_len
+.hF
+.FF
+.O.
+oO.
+OR.
+end
+
+part tay_dam
+oOhF
+ORFf
+end
+
+part mat_nham
+FFKKFFFFKKF
+end
+
+anim idle fps=3 loop
+frame idle
+  use chan 0 24
+  use tren
+  use rau 12 11
+  use cuoc 26 7
+  use lua_nho 27 4
+  use tay 23 15
+  outline
+end
+frame idle
+  use chan 0 24
+  use tren 0 1
+  use rau 12 12
+  use cuoc 26 7
+  use lua_nho 27 4
+  use tay 23 16
+  outline
+end
+frame idle
+  use @idle.0
+end
+
+# đánh: nhấc cuốc lên cao (lấy đà) → bổ chéo xuống → lưỡi cuốc cắm đất bùng lửa → thu về
+anim attack fps=10 once
+frame attack
+  use chan 0 24
+  use tren
+  use rau 12 11
+  use cuoc 26 3
+  use tay_len 24 11
+  outline
+end
+frame attack
+  use chan 0 24
+  use tren 1 0
+  use rau 13 11
+  use cuoc_cheo 19 14
+  use tay_dam 18 13
+  outline
+end
+frame attack
+  use chan 0 24
+  use tren 1 1
+  use rau 13 12
+  use cuoc_bo 23 15
+  use bung 23 23
+  use tay_dam 21 14
+  outline
+end
+frame attack
+  use @idle.0
+end
+
+# chiêu (Hỏa · «Viêm Đế Giáng Hỏa»): giơ cuốc, lưỡi cuốc bùng lửa, lửa liếm áo choàng, than hồng bay quanh chân
+anim cast fps=6 loop
+frame cast
+  use chan 0 24
+  use tren
+  use rau 12 11
+  use cuoc 26 6
+  use lua_nho 27 3
+  use tay_len 24 13
+  use than 2 25
+  outline
+end
+frame cast
+  use chan 0 24
+  use tren
+  use rau 12 11
+  use cuoc 26 6
+  use lua_to 25 2
+  use tay_len 24 13
+  use than 2 23
+  use than 26 26
+  outline
+end
+frame cast
+  use chan 0 24
+  use tren 0 1
+  use rau 12 12
+  use cuoc 26 6
+  use lua_to 25 2
+  use tay_len 24 14
+  use bung 2 25
+  use than 25 25
+  swap g n
+  outline
+end
+
+# trúng đòn: giật lùi, nhắm mắt, nháy sáng vỏ cây
+anim hurt fps=8 once
+frame hurt
+  use @idle.0
+  shift -1 0
+  use mat_nham 11 9
+  swap F h
+  swap O o
+end
+
+# chết: khuỵu → ngã nằm → tàn tro tối
+anim die fps=5 once
+frame die
+  use chan 0 24
+  use tren 0 3
+  use rau 12 14
+  use mat_nham 12 12
+  use cuoc_bo 23 18
+  outline
+end
+frame die
+  use vay 0 24
+  use tren 0 3
+  use rau 12 14
+  use mat_nham 12 12
+  rot 90
+  shift 0 1
+  outline
+end
+frame die
+  use @die.1
+  swap y J
+  swap O R
+  swap o O
+  swap n R
+  swap l n
+  swap G g
+end

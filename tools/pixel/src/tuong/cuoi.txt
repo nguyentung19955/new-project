@@ -1,0 +1,414 @@
+# Chú Cuội (mã cuoi) — pixel 32×32 (tướng Vàng · hành Mộc). Quy chuẩn: docs/pixel/QUY-CHUAN.md (mục 0b phá cách)
+# Đặc trưng (DANH-SACH Lô 5 · PROMPT-GEN-LAI.txt:81 giữ ĐÒN GÁNH · PROMPT-DUNG-XUONG.txt:1026 · js/data.js:613 look=pole, chiêu «Đòn Gánh Quật»):
+# nam ~35 tròn mập cười toe, râu cằm ngắn, búi tóc; áo vàng trăng nhạt viền vàng, mặt dây TRĂNG KHUYẾT bạc; CÂY ĐA THẦN sau lưng tán tròn cao quá đầu + vầng trăng khuyết;
+# cầm ĐÒN GÁNH tre (điều phối chốt: không rìu). Phá cách: rễ đa quấn quanh đòn gánh, chân lơ lửng rời đất (đang bay lên cung trăng) có ánh trăng bạc dưới chân.
+name: Chú Cuội
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  K = toi
+  F = da
+  h = da-sang
+  f = da-toi
+  e = trang
+  z = sang
+  Y = vang-sang
+  c = cat
+  y = vang-nghe
+  j = dong-sang
+  d = dong
+  b = bac
+  S = sat-sang
+  u = troi
+  P = la-sang
+  L = la-ma
+  l = la
+  v = la-toi
+  G = dat-sang
+  t = dat
+  T = dat-toi
+  a = cat
+
+part cay
+......LLPLLl........
+...LLPLLlllllLL.....
+..LPLlllllllllLl....
+.LPllllvllllllllv...
+LPlllvllllvvllllvv..
+Llllllllllllllllvv..
+Lllvlllllvllllvlvv..
+.llllvlllllvllvvv...
+.vlllvvvllvvvvvv....
+..vvTvvv.vvv........
+..TTGtTv............
+..TTGtTT............
+.T.TGtT.T...........
+.T.TGtT.............
+...TGtTT............
+..TGGttT............
+..TGttT.............
+.TGGtTT.............
+.TGttT..............
+.TGtTT..............
+.TGtT...............
+TGGtT...............
+end
+
+part trang
+.zbb
+zbS.
+zb..
+zbS.
+.zbb
+end
+
+part tren
+..........................
+..........................
+..........................
+..........................
+..........................
+..........................
+..........KKKKKK..........
+........KKKKKKKKKKK.......
+........KKKhhhhFFFFFF.....
+........KKhFKKFFFKKFF.....
+........KKFFekFFFekFF.....
+........KfFFFFFFFFFFFF....
+........KfFFKFFFFFKFf.....
+........KffFKeeeeKFf......
+.........KfFFKKKKFf.......
+..........KffKKfK.........
+.......jzYYYYyYYYYcj......
+......jzYYYYYYyYYYYcj.....
+......czYYYYYbYYYYYcc.....
+......czYYYYbSYYYYYcc.....
+......czYYYYYbYYYYccc.....
+......jyyyyyyyyyyyyyj.....
+.......cYYYYYYYYYYcc......
+.......cccYYYYYYcccc......
+end
+
+part tay_sau
+.zY.
+zYc.
+zYc.
+zYc.
+hF..
+end
+
+part chan
+.........tGt.tGt
+.........tTt.tTt
+.........hFf.hFf
+..........F...F.
+end
+
+part anh
+.........u.z..u.
+........z..u..z.
+end
+
+part anh2
+........u..z.u..
+.........z..u..z
+end
+
+# đòn gánh tre đứng, rễ đa quấn, chồi lá ở đầu
+part don
+.LP
+lL.
+.aT
+.Ga
+.aT
+.Ta
+.aG
+.aT
+.Ta
+.aG
+.Ga
+.aT
+.Ta
+.aG
+.aT
+.Ta
+.aG
+.Ga
+.aT
+.Ta
+.at
+end
+
+part tay
+zYc.
+cYc.
+.hFF
+.fFf
+end
+
+# đòn gánh vác chéo ra sau vai (lấy đà)
+part don_len
+LP.................
+lLT................
+..aT...............
+...aG..............
+....aT.............
+.....Ta............
+......aG...........
+.......aT..........
+........Ta.........
+.........aG........
+..........aT.......
+...........Ta......
+end
+
+# đòn gánh quật ngang
+part don_ngang
+taGaTaGaTaGaTaGaLP
+taTaGaTaGaTaGaTalL
+end
+
+part tay_ngang
+zYcFF
+cYcFh
+end
+
+part tay_len
+.FF
+.Fh
+zYc
+cYc
+.c.
+end
+
+part la
+.P.
+LlL
+.v.
+end
+
+part la2
+L.
+lP
+end
+
+part sang_nho
+.z.
+zuz
+.z.
+end
+
+part mat_nham
+FKKFFFKK
+end
+
+# chân dung riêng: đầu + tán đa + trăng khuyết phóng ×2
+part chan_dung
+LLllllllllllLLLLkk....zzbbbb..
+LLllllllllllLLLLkk....zzbbbb..
+llllllllllllllLLllkkzzbbSS....
+llllllllllllllLLllkkzzbbSS....
+vvllllllllllllllllvvzzbb......
+vvllllllllllllllllvvzzbb......
+llllllvvvvllllllllvvvvbbSS..kk
+llllllvvvvllllllllvvvvbbSS..kk
+llllKKKKKKKKKKKKllvvvvzzbbbbLL
+llllKKKKKKKKKKKKllvvvvzzbbbbLL
+KKKKKKKKKKKKKKKKKKKKKKkkkkllLL
+KKKKKKKKKKKKKKKKKKKKKKkkkkllLL
+KKKKKKhhhhhhhhFFFFFFFFFFFFkkcc
+KKKKKKhhhhhhhhFFFFFFFFFFFFkkcc
+KKKKhhFFKKKKFFFFFFKKKKFFFFkkGG
+KKKKhhFFKKKKFFFFFFKKKKFFFFkkGG
+KKKKFFFFeekkFFFFFFeekkFFFFkkcc
+KKKKFFFFeekkFFFFFFeekkFFFFkkcc
+KKffFFFFFFFFFFFFFFFFFFFFFFFFTT
+KKffFFFFFFFFFFFFFFFFFFFFFFFFTT
+KKffFFFFKKFFFFFFFFFFKKFFffkkcc
+KKffFFFFKKFFFFFFFFFFKKFFffkkcc
+KKffffFFKKeeeeeeeeKKFFffkkkkcc
+KKffffFFKKeeeeeeeeKKFFffkkkkcc
+kkKKffFFFFKKKKKKKKFFffkk..kkTT
+kkKKffFFFFKKKKKKKKFFffkk..kkTT
+TTkkKKffffKKKKffKKkkkkkk..kkcc
+TTkkKKffffKKKKffKKkkkkkk..kkcc
+zzYYYYYYYYyyYYYYYYYYccjjkkkkGG
+zzYYYYYYYYyyYYYYYYYYccjjkkkkGG
+end
+
+anim portrait fps=1 once
+frame portrait
+  use chan_dung 1 1
+  outline
+end
+
+anim idle fps=3 loop
+frame idle
+  use cay 1 1
+  use trang 25 1
+  use anh 0 28
+  use chan 0 24
+  use tay_sau 4 17
+  use tren
+  use don 21 6
+  use tay 19 17
+  outline
+end
+frame idle
+  use cay 1 1
+  use trang 25 1
+  use anh2 0 28
+  use chan 0 23
+  use tay_sau 4 16
+  use tren 0 -1
+  use don 21 5
+  use tay 19 16
+  outline
+end
+frame idle
+  use cay 1 1
+  use trang 25 1
+  use anh 0 28
+  use chan 0 24
+  use tay_sau 4 17
+  use tren
+  use don 21 6
+  use tay 19 17
+  set 25 7 z
+  outline
+end
+
+anim attack fps=10 once
+frame attack
+  use cay 1 1
+  use trang 25 1
+  use anh 0 28
+  use chan 0 24
+  use tay_sau 4 17
+  use tren -1 0
+  use don_len 3 5
+  use tay_len 15 14
+  outline
+end
+frame attack
+  use cay 1 1
+  use trang 25 1
+  use anh2 0 28
+  use chan 0 24
+  use tay_sau 4 17
+  use tren 1 0
+  use don_ngang 12 19
+  use tay_ngang 19 18
+  outline
+end
+frame attack
+  use cay 1 1
+  use trang 25 1
+  use anh2 0 28
+  use chan 0 24
+  use tay_sau 4 17
+  use tren 1 0
+  use don_ngang 12 19
+  use tay_ngang 19 18
+  use la 28 15
+  use la2 28 22
+  outline
+end
+frame attack
+  use cay 1 1
+  use trang 25 1
+  use anh 0 28
+  use chan 0 24
+  use tay_sau 4 17
+  use tren
+  use don 21 7
+  use tay 19 17
+  outline
+end
+
+anim cast fps=8 loop
+frame cast
+  use cay 1 1
+  use trang 25 1
+  use anh 0 28
+  use chan 0 24
+  use tay_sau 4 17
+  use tren
+  use don 21 4
+  use tay_len 20 14
+  use la2 26 9
+  outline
+end
+frame cast
+  use cay 1 0
+  use trang 25 1
+  use sang_nho 25 0
+  use anh2 0 27
+  use chan 0 23
+  use tay_sau 4 16
+  use tren 0 -1
+  use don 21 3
+  use tay_len 20 13
+  use la 26 9
+  use la2 27 17
+  outline
+end
+frame cast
+  use cay 1 0
+  use trang 25 1
+  use sang_nho 25 0
+  use anh 0 27
+  use chan 0 23
+  use tay_sau 4 16
+  use tren 0 -1
+  use don 21 3
+  use tay_len 20 13
+  use la2 26 7
+  use la 26 14
+  use la2 1 20
+  set 25 6 z
+  outline
+end
+
+anim hurt fps=8 once
+frame hurt
+  use cay 1 1
+  use trang 25 1
+  use chan -1 24
+  use tay_sau 3 17
+  use tren -1 0
+  use don 20 6
+  use tay 18 17
+  use mat_nham 10 10
+  outline
+  swap F h
+  swap Y z
+end
+
+anim die fps=5 once
+frame die
+  use cay 1 3
+  use chan 0 25
+  use tay_sau 4 19
+  use tren 0 2
+  use don_ngang 12 28
+  use mat_nham 11 12
+  outline
+end
+frame die
+  use cay 1 1
+  use chan 0 24
+  use tren
+  use mat_nham 11 10
+  rot 90
+  shift 0 3
+  outline
+end
+frame die
+  use @die.1
+  swap Y c
+  swap L l
+  swap P L
+  swap y d
+end
