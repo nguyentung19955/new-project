@@ -2036,3 +2036,17 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 - **Rig ở đâu:** `js/rigs.js` (`const RIGS = { mã: { hip, pivot, tip, poly, noArm } }`, toạ độ 0..1 theo ảnh gốc; trường nào thiếu thì tự đoán) — chỉnh / xuất bằng `tools/rig-tay.html` (kéo vai, đầu vũ khí, đường hông; vẽ đa giác vùng tay; xem thử chuyển động; "Xem tất cả" để soi tự đoán). Định dạng này giữ ổn định cho session khác dùng.
 - **Tự đoán tay** (chỉ bên phải = tay trước theo prompt): bỏ qua khi tách sẽ gãy vũ khí — chỗ nối không ở vai, nối ở 2 chỗ, cán mảnh (giáo cầm chéo qua người), vật vắt ngang đầu (đá vác vai), vũ khí chìa dưới hông. Khi đó vẫn chân đứng yên + thân trên cử động + vệt / đạn vẽ theo vị trí tay ước lượng. Ảnh mới hiện chỉ ~1/4 tách được tay tự động (AI hay vẽ giáo chéo qua người) → muốn vung tay đủ 90 tướng thì chỉnh rig bằng tool.
 - Test: `node tests/tu-cu-dong/tu-cu-dong.test.js` thêm phần rig: ghép 3 lớp khớp ảnh gốc (sót ≤ 0,01%), điểm ảnh dưới hông trùng khít 0 điểm qua thở / lấy đà / chém / thu / tung chiêu / trúng đòn (mẫu mau-nv + llq, cuoi, adv, auco, lucsi, giaodong), tay vung 22–73% chiều cao; xuất `shots/vung-tay.gif`. Ảnh minh hoạ: `tests/tu-cu-dong/vung-tay-khung.jpg`, `tests/tu-cu-dong/90-anh-dung-xuong.jpg`.
+
+## claude/tu-cu-dong — Sửa theo tester (2c50feb)
+
+- **Danh sách loại trừ `CD_SKIP`** (js/tu-cu-dong.js) — ảnh dựng xương vẽ sai, CẦN GEN LẠI; các mã này giữ nguyên cách hiển thị cũ của game (không dùng ảnh mới, không ép ảnh đơn), trang thử / tool rig bỏ qua:
+  - quái sai loài (thành rồng con / người có sừng): `rua` Rùa Giáp, `phuthuy` Sứa Tinh, `chimbao` Chim Bão, `nongnoc` Nòng Nọc, `ran` Rắn Độc, `thachtinh` Thạch Tinh, `dacon` Đá Con, `linhan` Quỷ Giáo, `cungan` Sói Cung Thủ, `voichien` Voi Chiến, `camap` Cá Mập Yêu, `cua` Cua Khổng Lồ, `cao` Cáo Con;
+  - boss sai loài: `hotinh` Hồ Tinh Chín Đuôi, `chantinh` Chằn Tinh;
+  - tướng: `nguphu` (thành tiên cá), `tre` (vũ khí đứng rời cạnh người), `dotnuong` (kiểu 3D bóng, lệch phong cách).
+  Gen lại xong: tách nền bằng `tools/tach-nen-dung-xuong.py`, bỏ mã khỏi `CD_SKIP`.
+- **Boss** ảnh đơn cao chuẩn 100–125 (≈ cỡ boss cũ, ~2× quái thường) — trước đây boss thiếu `ENEMY_W` bé như quái.
+- **Đánh sống hơn:** nhún lấy đà (nén xuống ~0,1 giây) → bật dãn + vươn / lao về phía trước → bật về; thân trên ngả mạnh hơn khi có rig. **Tung chiêu:** nhún xuống rồi bật lên + ngửa thân trên ra sau (không chỉ phát sáng).
+- **Vệt chém đúng phía tay cầm vũ khí:** có rig thì theo đầu vũ khí; không có rig thì dò phía vũ khí từ ảnh (chân lệch phải khung bao = vũ khí chìa bên trái, vd Lạc Tướng cầm rìu tay trái) và lật vệt / đạn sang bên đó.
+- **Ô sát mép:** ảnh mới rộng (vũ khí chìa ngang) không còn bị cắt nửa người ở mép màn hình — hình được đẩy vào trong canvas.
+- `kinhduong` tách lại, bóc viền trắng kiểu sticker (`tools/tach-nen-dung-xuong.py … --boc-vien-trang kinhduong`).
+- Test thêm: CD_SKIP giữ hiển thị cũ, phía vũ khí, cỡ boss, mép canvas, nhún → bật khi tung chiêu.
