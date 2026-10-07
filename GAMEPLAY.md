@@ -1549,3 +1549,14 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Tạo phòng / vào phòng bị lỗi giờ báo đúng nguyên nhân kèm mã lỗi ngắn và nút **↻ Thử lại**: máy chủ từ chối (`permission-denied` — luật chơi nhóm chưa đăng lên Firebase), mất mạng (`unavailable`), phiên đăng nhập hết hạn (`unauthenticated`), sai mã (`not-found`). Chi tiết ghi vào console. Trước đây lỗi luật bị nuốt sau 5 lần thử mã và chỉ báo "Không tạo được phòng, thử lại"; nay chỉ thử mã khác 1 lần.
 - Thông báo chơi nhóm (đồng đội rời / vào lại, đồng bộ lại) được giữ 20 dòng gần nhất (`ui.coopLog`); test chơi nhóm đọc từ đó thay vì từ toast (toast chỉ giữ 2 dòng nên dễ bị đẩy mất).
 - Test mới: luật chưa đăng → báo rõ + Thử lại; mất mạng khi tạo phòng → báo mất mạng.
+
+## Phiên bản 163 — Xem góp ý trong game (chỉ tài khoản quản trị)
+- **📥 Góp ý nhận được** (Cài đặt → dòng Góp ý) chỉ hiện với tài khoản **ly230595@gmail.com** đã đăng nhập và đã xác minh email (`CLOUD.isAdmin()`, danh sách `ADMIN_EMAILS` trong `js/cloud.js`). Khách / tài khoản khác / email chưa xác minh không thấy gì; email quản trị chưa xác minh thấy nút **Xác minh email**.
+- Màn danh sách: mới nhất trước, 20 mục / lần + **Tải thêm**; loại có màu, giờ Việt Nam, nội dung, liên hệ, phiên bản, màn / ải / đợt, cỡ màn hình, máy, khách hay đã đăng nhập; ảnh thu nhỏ chạm để xem to. Lọc theo loại + trạng thái (Mới / Đã xem / Đã xử lý), đổi trạng thái, ghi chú, xoá có hỏi lại ngay trong mục. Chấm đỏ trên nút (và trên nút Cài Đặt ở menu) = số góp ý Mới.
+- `js/cloud.js`: `isAdmin()`, `listFeedback(opts)`, `setFeedbackStatus(id, status, note)`, `deleteFeedback(id)`; bị từ chối → "Tài khoản này không có quyền xem góp ý" / "Máy chủ chưa đăng luật mới".
+- `firestore.rules`: thêm hàm `isAdmin()` trong khối `feedback/{id}` — chỉ quản trị đọc, đổi `status` / `note`, xoá; luật tạo góp ý giữ nguyên; không đụng luật phòng chơi nhóm.
+- **Cần làm:** dán lại `firestore.rules` vào Firebase console → Firestore → Rules → Publish.
+- Test: `node tests/xem-gop-y/xem-gop-y.test.js` (giao diện, CLOUD.db giả, 844×390 / 667×375 / xoay dọc) và `tests/xem-gop-y/rules-emulator.test.js` (luật trên Firestore emulator, cách chạy trong `docs/FIREBASE.md`).
+
+## Phiên bản 165 — Gộp màn xem góp ý (quản trị) + báo lỗi chơi nhóm rõ ràng
+- Gộp: màn "📥 Góp ý nhận được" chỉ cho tài khoản quản trị (luật Firestore isAdmin), chơi nhóm báo đúng nguyên nhân khi tạo/vào phòng lỗi + nút Thử lại.

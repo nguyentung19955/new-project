@@ -52,12 +52,24 @@ Nút **✉ Góp ý** (menu chính, Cài đặt, menu ☰ trong trận) gửi và
   - `shot`: ảnh chụp trận dạng `data:image/jpeg;base64,…` (≤ 150KB, có thể trống). Xem ảnh: chép cả chuỗi, dán vào thanh địa chỉ trình duyệt.
   - **Không** gửi email người dùng. Cần biết ai gửi thì tra `uid` trong **Authentication → Users**.
 - Sắp xếp: trong tab Data bấm biểu tượng lọc cạnh tên collection, chọn sắp theo `at` giảm dần. Xem xong có thể xoá tài liệu ngay trong console.
-- **Luật**: ai đã đăng nhập (kể cả khách ẩn danh) chỉ được **tạo** góp ý; không ai đọc / sửa / xoá được từ máy người chơi. Luật kiểm tra loại, độ dài từng trường (ảnh ≤ 200000 ký tự), `uid` phải đúng người gửi.
+- **Luật**: ai đã đăng nhập (kể cả khách ẩn danh) chỉ được **tạo** góp ý. Luật kiểm tra loại, độ dài từng trường (ảnh ≤ 200000 ký tự), `uid` phải đúng người gửi. Từ v163 chỉ tài khoản quản trị đọc / đổi trạng thái / xoá được (xem mục dưới).
 - **Phải đăng luật mới** (`firestore.rules` có thêm mục `feedback`) — chưa đăng thì mọi góp ý bị từ chối và nằm trong hàng đợi trên máy người chơi:
   - Workflow `.github/workflows/firebase-hosting.yml` tự đăng luật khi `firestore.rules` đổi trong lần đẩy code lên nhánh chính (cần secret `FIREBASE_SERVICE_ACCOUNT_SONTINHTHUYTINH` có quyền Firestore). Xem bước **Đăng luật Firestore** trong tab Actions; bị vàng/cảnh báo thì làm tay bên dưới.
   - Làm tay: Firestore → **Rules** → dán nội dung `firestore.rules` → **Publish**. Hoặc Actions → *Deploy Firebase Hosting* → **Run workflow** và tick *Đăng cả luật Firestore*.
 - Giới hạn phía máy người chơi: 1 góp ý / 60 giây, 10 góp ý / ngày. Không có mạng, chưa bật Firebase hoặc gửi lỗi → lưu tối đa 5 góp ý trong `localStorage` (`nuicao.feedback`), tự gửi lại khi có mạng / khi mở game hoặc mở bảng góp ý lần sau.
 - Gói miễn phí: mỗi góp ý là 1 lượt ghi (20.000 lượt/ngày miễn phí); ảnh ~40–150KB mỗi cái — 1GB lưu trữ đủ cho hàng nghìn góp ý có ảnh.
+
+## Xem góp ý trong game (v163)
+Tài khoản **ly230595@gmail.com** (đã đăng nhập, email đã xác minh) thấy nút **📥 Góp ý nhận được** trong **Cài đặt**, dòng *Góp ý* (chấm đỏ = số góp ý *Mới* trong 50 góp ý gần nhất; nút **Cài Đặt** ở menu chính cũng có chấm đỏ). Người khác — khách, tài khoản khác, email chưa xác minh — không thấy gì.
+
+- **Màn Góp ý nhận được**: mới nhất trước, mỗi lần tải 20 mục (**Tải thêm** để xem tiếp). Mỗi mục: loại (Lỗi / Ý tưởng / Cân bằng / Khác, có màu), giờ Việt Nam, nội dung, liên hệ, phiên bản, màn / ải / đợt, cỡ màn hình, máy + trình duyệt, khách hay đã đăng nhập; ảnh chụp thu nhỏ — chạm để xem to.
+- **Lọc** theo loại và trạng thái (*Mới* / *Đã xem* / *Đã xử lý*) — lọc trong số đã tải, không đủ thì bấm Tải thêm. Bấm nút trạng thái trên từng mục để đổi; **✎ Ghi chú** (≤ 300 ký tự, chỉ quản trị thấy); **🗑 Xoá** → hỏi lại ngay trong mục → **Xoá** để xoá hẳn.
+- Góp ý cũ chưa có trường `status` được tính là *Mới*.
+- **Đăng nhập bằng Google** thì email luôn được xác minh. Nếu tạo tài khoản bằng email + mật khẩu, Cài đặt hiện nút **📥 Xác minh email**: bấm lần 1 gửi thư xác minh, bấm vào liên kết trong thư, rồi bấm nút lần nữa.
+- **Bảo mật thật nằm ở luật Firestore**: hàm `isAdmin()` trong `firestore.rules` (khối `feedback/{id}`) là nơi duy nhất ghi email quản trị phía máy chủ; `ADMIN_EMAILS` trong `js/cloud.js` chỉ để hiện / ẩn nút. Đổi / thêm quản trị → sửa **cả hai** chỗ rồi đăng lại luật. Luật chỉ cho quản trị đổi đúng 2 trường `status` (`new` / `seen` / `done`) và `note`; không sửa được nội dung người chơi gửi.
+- **BẮT BUỘC đăng lại luật** (workflow tự đăng luật hiện bị lỗi 403): Firebase console → **Firestore Database** → **Rules** → xoá hết, dán toàn bộ nội dung `firestore.rules` → **Publish**. Chưa đăng thì màn báo *"Máy chủ chưa đăng luật mới"*.
+- Thử luật trên máy (cần Java): `npm i firebase-tools @firebase/rules-unit-testing firebase` ở một thư mục tạm, rồi `NODE_PATH=<tạm>/node_modules <tạm>/node_modules/.bin/firebase emulators:exec --only firestore --project demo-tt "node tests/xem-gop-y/rules-emulator.test.js"`.
+- Không cần chỉ mục ghép (sắp theo `at` dùng chỉ mục một trường có sẵn). Mỗi lần mở màn = tối đa 20 lượt đọc (+50 khi đăng nhập để đếm chấm báo).
 
 ## Giới hạn gói miễn phí
 50.000 lượt đọc + 20.000 lượt ghi Firestore mỗi ngày. Mỗi người chơi ghi tối đa khoảng 1 lần / 4 giây khi đang thay đổi tiến trình — đủ cho vài trăm người chơi mỗi ngày.
