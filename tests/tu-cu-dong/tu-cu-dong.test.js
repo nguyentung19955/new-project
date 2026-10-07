@@ -171,7 +171,7 @@ async function main() {
       ok(r.miss < 0.005, `${r.k}: 3 lớp (chân · thân · tay) ghép lại khớp ảnh gốc (sót ${(r.miss * 100).toFixed(2)}%)`);
       ok(r.legDiff === 0, `${r.k}: chân đứng yên — điểm ảnh dưới hông trùng khít qua thở / lấy đà / chém / thu / tung chiêu (${r.legDiff} điểm khác)`);
       ok(r.hurtDiff === 0, `${r.k}: trúng đòn chỉ chớp màu, hình chân không xê dịch (${r.hurtDiff} điểm)`);
-      if (r.arm) ok(r.span > 0.15, `${r.k}: tay + vũ khí vung rõ (đầu vũ khí đi ${(r.span * 100).toFixed(0)}% chiều cao)`);
+      if (r.arm) ok(r.span > ({ shot: 0.05, punch: 0.12, thrust: 0.12 }[r.kind] || 0.2), `${r.k}: tay + vũ khí ${r.kind === 'shot' ? 'kéo lùi rồi bật (cung / nỏ: nhẹ)' : 'vung rõ'} (đầu vũ khí đi ${(r.span * 100).toFixed(0)}% chiều cao)`);
     }
     ok(res.out.filter((r) => r.arm).length >= 6, 'mẫu mau-nv + 5 tướng ảnh mới tách được tay (kiếm, rìu, cung, gậy, tay không)');
     // GIF: các nhân vật xếp ngang, mỗi khung một hình
