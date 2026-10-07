@@ -187,6 +187,44 @@ FKKFFFFKKF
 end
 
 
+part chan_dung
+............................
+............................
+....nnnnnnaazzaa..nn........
+.y..nnnnnnaazzaa..nn........
+yR..nnnnnnnnnnnnnnnnnn......
+RR..nnnnnnnnnnnnnnnnnn......
+RRaaaaaaaaaaaaaaaaaaaann....
+RRaaaaaaaaaaaaaaaaaaaann....
+RRaannaaaahhhhFFFFFFFFFFFF..
+RRaannaaaahhhhFFFFFFFFFFFF..
+yRaannaahhFFFFFFFFjjFFFFFFFF
+yRaannaahhFFFFFFFFjjFFFFFFFF
+RRaannhhFFFFKKKKFFFFFFKKKKFF
+RRaannhhFFFFKKKKFFFFFFKKKKFF
+RRnnaaFFFFFFeeKKFFFFFFeeKKFF
+RRnnaaFFFFFFeeKKFFFFFFeeKKFF
+rrnnaaffFFFFFFFFFFFFFFFFFFFF
+rrnnaaffFFFFFFFFFFFFFFFFFFFF
+yrnnaaffFFjjFFFFFFFFFFffFFFF
+yrnnaaffFFjjFFFFFFFFFFffFFFF
+rrzzaaaaffFFFFFFFFFFffFFFF..
+rrzzaaaaffFFFFFFFFFFffFFFF..
+rraannaaffffFFFFFFFFff......
+rraannaaffffFFFFFFFFff......
+rrmmnnaammmmmmffFFFFff......
+rrmmnnaammmmmmffFFFFff......
+.rmmmmmmmmeeaaooFFFFooaaee..
+.rmmmmmmmmeeaaooFFFFooaaee..
+end
+
+# chân dung riêng: đầu + vai phóng ×2 (cắt từ khung đứng), cung đĩa mặt trời đỏ bên trái
+anim portrait fps=1 once
+frame portrait
+  use chan_dung 2 2
+  outline
+end
+
 anim idle fps=3 loop
 frame idle
   use dia 0 0

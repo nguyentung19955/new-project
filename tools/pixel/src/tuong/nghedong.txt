@@ -1,6 +1,8 @@
 # Nghê Đồng — linh thú 32×32 (tướng Tím · hành Kim). Quy chuẩn: docs/pixel/QUY-CHUAN.md
 # Đặc trưng (PROMPT-GEN-LAI.txt:148, PROMPT-DUNG-XUONG.txt:600): nghê đồng canh đình đi 4 CHÂN, thấp rộng, đầu to — KHÔNG người;
 # đồng cổ loang gỉ xanh, BỜM XOẮN hình ngọn lửa, đuôi xoắn cuộn lên lưng, CHUÔNG VÀNG trên vòng cổ đỏ, viền tím-bạc; vồ + cắn.
+# Phá cách tạo hình: TƯỢNG NGHÊ ĐỒNG ĐÌNH LÀNG SỐNG DẬY — GỈ XANH LOANG từng mảng trên thân/chân/đầu/đuôi, MẮT NGỌC ĐỎ,
+# BỜM XOẮN cong vút như ĐAO MÁI ĐÌNH (3 móc đao trên đỉnh đầu); vẫn 4 chân, chuông vàng vòng cổ đỏ.
 name: Nghê Đồng
 size: 32x32
 anchor: 16,30
@@ -23,59 +25,59 @@ colors:
   w = sang
 
 part duoi
-..DDD....
-.DdddD...
-Ddo.Ddo..
-do..Ddo..
-dD.Ddo...
+..gDD....
+.GggdD...
+Ddg.Dgo..
+do..Ggg..
+dD.Ddg...
 .dDdo....
-..ddDD...
-.DdddD...
-.dddo....
+..dgDD...
+.DGggD...
+.ddgo....
 ..ddo....
 ...do....
 end
 
 part than
-....DDDDDDDDD......
-..DDdddddddddDD....
-.DddddgGgdddddddd..
-DdddddgggdddddddoD.
-ddddddddddddgGdddo.
-dddGdddddddddggddo.
-ddgggdddddddddddooo
-dddgddddddddddddooo
-oddddddddddddddooo.
-.oddddddddddddooo..
+....DDDDDDDgD......
+..DDddddddGggDD....
+.DdddGgGgddgddddd..
+DddddGgggdddGggdoD.
+dddddgggddddgGgddo.
+ddGGgdddddddgggddo.
+ddgggdddddddddddgoo
+ddgggddddgdddddGggo
+odddddddGggddddogo.
+.odddddddgddddooo..
 ..ooooooooooooo....
 end
 
 part chan
-.Dddo.oooK...oooK.Dddo..
-.Dddo.oooK...oooK.Dddo..
-.dddo.oooK...oooK.dddo..
-.dddo.oooK...oooK.dddo..
-.dddo..ooK....ooK.dddo..
-DdDdo.oooK...oooK.DdDdo.
+.Dgdo.oooK...oooK.Dddo..
+.Gggo.oooK...oooK.Dgdo..
+.dgdo.oogK...oooK.Gggo..
+.dddo.oGgK...oogK.dgdo..
+.dddo..ogK....GgK.dddo..
+DdDdo.oooK...oogK.DdDdo.
 dDdDdKKKK...KKKK.dDdDdK.
 oooooK...........oooooK.
 end
 
 part dau
-...y...y...y.....
-..ydy.ydy.ydy....
+..Yy...Yy..Yy....
+...yd...yd..yd...
 .ydody.dyddody...
-ydodoDDDDDDDdy...
-dodoDDDDDDDDDDy..
-doyoDDKKKDDDDDD..
-ydoDDDDeKDDDDDDo.
-dodDDDDDDDDDDDDDK
-yodDdDDDDDDDdKKKK
-dododdDDDDdmmmmmk
+ydodoDDDDDDgdy...
+dodoDDDDDDGggDy..
+doyoDDKKKDDgDDD..
+ydoDDDDRmDDDDDDo.
+dodDDgDDDDDDDDDDK
+yodDGggDDDDDdKKKK
+dododgDDDDdmmmmmk
 ydoddddDDmeeeeeek
-dodoKddddmmmmmmK.
-yoddoKdddddeeeeK.
-dodyodKddooooooK.
+dogoKdddgmmmmmmK.
+yGggoKdGggdeeeeK.
+dogyodKdgooooooK.
 .ydodydoydyo.....
 ..yd.yd..yd......
 end
@@ -88,12 +90,12 @@ rRrrrrm
 end
 
 part chan_sau
-.Dddo.oooK...oooK.......
-.Dddo.oooK...oooK.......
-.dddo.oooK...oooK.......
-.dddo.oooK...oooK.......
-.dddo..ooK....ooK.......
-DdDdo.oooK...oooK.......
+.Dgdo.oooK...oooK.......
+.Gggo.oooK...oooK.......
+.dgdo.oogK...oooK.......
+.dddo.oGgK...oogK.......
+.dddo..ogK....GgK.......
+DdDdo.oooK...oogK.......
 dDdDdKKKK...KKKK........
 oooooK..................
 end
@@ -101,33 +103,33 @@ end
 part vuot
 .....eDe
 ....DddK
-...Dddo.
-..Dddo..
-.Dddo...
+...gddo.
+..Gggo..
+.Ddgo...
 Dddo....
 ddo.....
 end
 
 part chan_gap
-.DddddoK.oooKK..oooK.DdddddoK
-DdDdDdddKKKKK..KKKKKDdDdDdddK
+.DddddoK.oooKK..oooK.Dddddo.
+DdDdDdddKKKKK..KKKKKDdDdDddd
 end
 
 part dau_can
-...y...y...y.....
-..ydy.ydy.ydy....
+..Yy...Yy..Yy....
+...yd...yd..yd...
 .ydody.dyddody...
-ydodoDDDDDDDdy...
-dodoDDDDDDDDDDy..
-doyoDDKKKDDDDDD..
-ydoDDDDeKDDDDDDo.
-dodDDDDDDDDDDDDDK
-yodDdDDDDDDDdKKKK
-dododdDDDDddddddk
+ydodoDDDDDDgdy...
+dodoDDDDDDGggDy..
+doyoDDKKKDDgDDD..
+ydoDDDDRmDDDDDDo.
+dodDDgDDDDDDDDDDK
+yodDGggDDDDDdKKKK
+dododgDDDDddddddk
 ydoddddDDdeKeKeKk
-dodoKddddddddddK.
-yoddoKddddddddK..
-dodyodKddooooooK.
+dogoKdddgddddddK.
+yGggoKdGggddddK..
+dogyodKdgooooooK.
 .ydodydoydyo.....
 ..yd.yd..yd......
 end
@@ -157,25 +159,25 @@ anim idle fps=3 loop
 frame idle
   use chan 2 22
   use than 2 12
-  use duoi 1 2
-  use dau 14 2
-  use co 17 17
+  use duoi 2 2
+  use dau 13 2
+  use co 16 17
   outline
 end
 frame idle
   use chan 2 22
   use than 2 13
-  use duoi 1 3
-  use dau 14 3
-  use co 17 18
+  use duoi 2 3
+  use dau 13 3
+  use co 16 18
   outline
 end
 frame idle
   use chan 2 22
   use than 2 13
-  use duoi 1 3
-  use dau 14 2
-  use co 17 18
+  use duoi 2 3
+  use dau 13 2
+  use co 16 18
   outline
 end
 
@@ -184,27 +186,27 @@ anim attack fps=10 once
 frame attack
   use chan 2 22
   use than 2 14
-  use duoi 1 4
-  use dau 13 5
-  use co 16 20
+  use duoi 2 4
+  use dau 12 5
+  use co 15 20
   outline
 end
 frame attack
   use chan_sau 2 22
   use than 2 11
-  use duoi 1 1
+  use duoi 2 2
   use vuot 19 17
-  use dau 15 1
-  use co 18 16
+  use dau 13 2
+  use co 16 16
   outline
 end
 frame attack
   use chan_sau 2 22
   use than 2 12
-  use duoi 1 2
+  use duoi 2 2
   use vuot 19 18
-  use dau_can 15 2
-  use co 18 17
+  use dau_can 13 2
+  use co 16 17
   outline
 end
 frame attack
@@ -216,32 +218,32 @@ anim cast fps=8 loop
 frame cast
   use chan 2 22
   use than 2 12
-  use duoi 1 2
-  use dau 14 1
-  use co 17 17
+  use duoi 2 2
+  use dau 13 2
+  use co 16 17
   swap y Y
   outline
 end
 frame cast
   use chan 2 22
   use than 2 12
-  use duoi 1 2
-  use dau 14 1
-  use co 17 17
+  use duoi 2 2
+  use dau 13 2
+  use co 16 17
   outline
-  use song1 30 5
+  use song1 29 5
   set 20 20 w
   set 23 21 w
 end
 frame cast
   use chan 2 22
   use than 2 12
-  use duoi 1 2
-  use dau 14 1
-  use co 17 17
+  use duoi 2 2
+  use dau 13 2
+  use co 16 17
   swap y Y
   outline
-  use song2 29 4
+  use song2 28 4
   set 19 21 w
   set 24 20 w
   set 21 23 b
@@ -250,13 +252,13 @@ end
 # trúng đòn: giật lùi, nhắm mắt, nháy sáng
 anim hurt fps=8 once
 frame hurt
-  use chan 1 22
-  use than 1 12
-  use duoi 1 2
-  use dau 13 2
-  use co 16 17
+  use chan 2 22
+  use than 2 12
+  use duoi 2 2
+  use dau 12 3
+  use co 15 18
   outline
-  use mat_nham 17 7
+  use mat_nham 16 8
   swap D Y
 end
 
@@ -265,18 +267,18 @@ anim die fps=5 once
 frame die
   use chan 2 22
   use than 2 16
-  use duoi 1 5
-  use dau 14 6
-  use co 17 21
-  use mat_nham 18 11
+  use duoi 2 5
+  use dau 13 6
+  use co 16 21
+  use mat_nham 17 11
   outline
 end
 frame die
-  use chan_gap 1 28
+  use chan_gap 2 28
   use than 2 18
-  use duoi 1 9
-  use dau 14 13
-  use mat_nham 18 18
+  use duoi 2 9
+  use dau 13 13
+  use mat_nham 17 18
   outline
 end
 frame die
@@ -289,7 +291,7 @@ end
 # chân dung: đầu + bờm xoắn + chuông vàng vòng cổ đỏ
 anim portrait fps=1 once
 frame portrait
-  use than 1 18
+  use than 2 18
   use dau 8 4
   use co 11 19
   outline
