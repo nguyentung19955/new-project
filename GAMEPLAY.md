@@ -2014,3 +2014,7 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 ## claude/tool-dung-xuong — prompt video từ ảnh
 
 - docs/PROMPT-VIDEO.txt: 90 nhân vật / 309 video (Kling…), sinh bằng tools/build-prompt-video.js.
+
+## Phiên bản 193 — Tăng tốc quy trình test
+
+- Gộp claude/tang-toc-quy-trinh: tests/run-all.js song song 4 luồng (808s → ~345s), ảnh test ra khỏi git, GAMEPLAY.md merge=union, sửa test chập chờn.
