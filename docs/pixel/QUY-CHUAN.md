@@ -20,6 +20,23 @@ Pixel **ĐỪNG TRẺ CON QUÁ** — bám sát thần thoại / huyền sử Vi�
 - **Icon / nút / khung:** chất liệu đồng, gỗ sơn son, đá, giấy dó, viền hoa văn trống đồng; không bo tròn kiểu game trẻ em.
 - Mẫu cũ (đầu to, má hồng) đã bị coi là quá trẻ con → 3 tướng mẫu `giong`, `tanvien`, `chodo` vẽ lại theo mục này.
 
+### 0b. PHÁ CÁCH (chỉ đạo của người dùng: "cứ phá cách về các nhân vật, vd pháp sư có thể là bộ xương")
+
+- **Được — và khuyến khích — diễn giải lại táo bạo**, miễn hợp thần thoại / tâm linh dân gian Việt và vẫn đọc được vai trò
+  trong game. Ví dụ: Thầy Mo / pháp sư = **bộ xương** đội mũ lông chim cầm gậy chuông đồng · thầy cúng = **hình nhân giấy
+  vàng mã** · bà đồng = **bóng người mờ đeo mặt nạ** · thợ rèn = **người đá nứt lửa** · lái đò = **hồn ma đội nón lá chèo đò
+  sông Âm** · quái = ma cây, ma da, hồn trâu, rắn thần nhiều đầu…
+- **GIỮ NGUYÊN:** (1) vai trò / vũ khí / kiểu đánh trong game (cung vẫn bắn xa, chèo vẫn là vật cầm); (2) ngũ hành qua màu
+  chủ đạo; (3) giới tính / loài khi đó chính là bản sắc nhân vật.
+- **Nhân vật huyền thoại có danh tính rõ** (Thánh Gióng, Sơn Tinh, Thủy Tinh, Âu Cơ, Lạc Long Quân, Mỵ Châu, An Dương Vương,
+  Chử Đồng Tử…): giữ dấu hiệu nhận diện cốt lõi, chỉ phá cách ở **tạo hình** (vd Gióng giáp sắt cháy đỏ, lửa bốc từ ngựa
+  sắt) — KHÔNG đổi thành sinh vật khác.
+- **Đội hình đa dạng hình thể** (người, xương, đá, giấy, gỗ / cây, đất nung, đồng, thú, hồn ma…) để trên sân dễ phân biệt.
+- Tránh yếu tố văn hoá nước ngoài (cương thi Trung Hoa, ninja, ma cà rồng / xác ướp phương Tây), tránh ghê rợn máu me,
+  vẫn không trẻ con. Gợi ý từng mã: cột **"Hướng phá cách"** trong `DANH-SACH.md` (session vẽ được phép đề xuất hướng khác
+  nếu hợp các quy tắc trên — ghi lý do ở chú thích đầu file nguồn).
+- **Không vẽ đồ / trang phục trang bị lên người tướng 32px** (chỉ vũ khí bản thân) — quyết định của điều phối.
+
 - Danh sách mọi hình cần vẽ, chia lô: [`DANH-SACH.md`](DANH-SACH.md)
 - Bảng màu: [`tools/pixel/palette.txt`](../../tools/pixel/palette.txt) · tool dựng: `node tools/build-pixel.js`
 - Mẫu: `tools/pixel/src/tuong/giong.txt` (Thánh Gióng), `tanvien.txt` (Sơn Tinh), `chodo.txt` (Chàng Chèo Đò),

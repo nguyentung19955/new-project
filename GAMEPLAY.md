@@ -2184,7 +2184,14 @@ Session này dựng khung để nhiều session vẽ song song không xung độ
   `chodo` (Chàng Chèo Đò: đầu cạo búi tóc, áo trắng quần chàm, dây lưng vàng, **mái chèo**; chiêu tạt sóng) — mỗi tướng idle 2 ·
   attack 4 · cast 3 · hurt 2 · die 3; quái `tom` (Tôm Binh: mũ đồng, khiên đồng sao, giáo ngắn; walk 3 · attack 3 · hurt 2 · die 3);
   ô nền `co`, `dat`, `nuoc` (3 khung gợn); icon `hanh-kim`, `hanh-moc`, `hanh-thuy`.
-- **Danh sách toàn bộ hình** `docs/pixel/DANH-SACH.md`, chia lô 15–25 hình theo nhóm, mỗi mã có đặc trưng + nguồn prompt.
+- **Danh sách toàn bộ hình** `docs/pixel/DANH-SACH.md`: 48 lô + lô 0, 973 hình (60 tướng, 34 quái, 9 boss, ô nền, icon, kỹ năng,
+  đồ, ấn phù, thần khí, giao diện, cảnh; vfx do nhánh `claude/vfx-kenney`), mỗi mã có đặc trưng + nguồn prompt; mục đối chiếu
+  hình vẽ bằng code → mã pixel; mục **Bổ sung** cho hình mới của nhánh khác.
+- **Phong cách sử thi** (chỉ đạo người dùng, QUY-CHUAN mục 0): không trẻ con — đầu:thân 1:1,5–1:2, mắt nhỏ có thần, không má
+  hồng, mặt nghiêm; bảng màu đổi sang tông trầm cổ kính (46 màu, thêm `khoi`, `reu-toi`), bóng 3 tông, họa tiết Đông Sơn.
+  3 tướng mẫu vẽ lại theo hướng này (đai đồng hoa văn trống đồng trên giáp Gióng / Sơn Tinh).
+- **Phá cách** (chỉ đạo người dùng, QUY-CHUAN mục 0b): được diễn giải lại táo bạo (pháp sư bộ xương, hình nhân giấy, hồn ma…) nhưng giữ vai trò / vũ khí / ngũ hành; nhân vật huyền thoại có danh tính chỉ phá cách tạo hình. Mẫu: `chodo` thành **hồn lái đò sông Âm** (da xanh tái, nón lá, chân tan thành sương, vẫn cầm mái chèo). DANH-SACH thêm cột "Hướng phá cách". Không vẽ đồ trang bị lên tướng 32px.
+- Nhóm hiệu ứng là `vfx` (nhánh vfx-kenney; cho phép `tools/pixel/src/vfx/palette.txt` tạm hoặc `KHONG-BUILD`).
 
 Test mới `tests/pixel` (tool: nguồn thật hợp lệ --strict, 5 kiểu nguồn lỗi bị chặn, dựng ra thư mục tạm khớp file trong repo;
 game: không bật thì không dùng pixel; ?pixel=1 ở 1920×934 / 844×390 / 667×375 / dọc 390×844 không lỗi console, giong · tanvien ·
