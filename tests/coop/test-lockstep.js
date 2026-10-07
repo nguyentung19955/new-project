@@ -22,12 +22,6 @@ async function startBot(page, seed) {
       if (!COOP.on || COOP.waitSnap || !game.co) return;
       const g = game, me = COOP.me, co = g.co;
       if (!co.started) { if (me === 0) COOP.issue('start'); return; }
-      // Nghỉ chân: người 1 đổi 1 tướng trong đội, người 0 bỏ qua
-      if (g.rest && !document.querySelector('#rest').hidden) {
-        if (me === 1) { const sel = [...g.summonList()], nu = BASIC_HEROES.find((t) => !sel.includes(t)); sel[0] = nu; ui.restSel = sel; ui.restDone(true); window.__restSwap = nu; }
-        else ui.restDone(false);
-        return;
-      }
       if (window.__botBusy > 0) { window.__botBusy--; return; }
       const mine = g.heroes.filter((h) => h && co.canAct(me, h.slot));
       const r = rnd();
@@ -120,7 +114,7 @@ async function run(browser) {
   check(same0[0] === same0[1], 'cùng seed → trạng thái ở bước 60 giống hệt (' + same0.join(' / ') + ')');
   const mk = await Promise.all([A, B].map((p) => p.evaluate(() => game.co.pl.map((x) => ({ m: x.market.types.join(','), ok: x.market.types.every((t) => BASIC_HEROES.includes(t)) })))));
   check(JSON.stringify(mk[0]) === JSON.stringify(mk[1]) && mk[0].every((x) => x.ok) && mk[0][0].m !== undefined,
-    `chợ tướng riêng mỗi người (v181: mọi tướng Thường, ưu tiên đội mình), giống nhau trên hai máy (${mk[0].map((x) => x.m).join(' | ')})`);
+    `chợ tướng riêng mỗi người (mọi tướng Thường đã mở, không còn đội ưu tiên), giống nhau trên hai máy (${mk[0].map((x) => x.m).join(' | ')})`);
 
   // ---- trò chuyện (không đi qua lockstep)
   await A.evaluate(() => ui.chatAct({ act: 'chat-quick', i: '0' }));
@@ -144,7 +138,7 @@ async function run(browser) {
   // ---- chạy nhiều đợt với 2 "người chơi máy"
   await A.evaluate(() => COOP.issue('speed', [3]));
   await startBot(A, 7); await startBot(B, 99);
-  await waitFor(async () => { const s = await state(B); return s.wave >= 12 || s.over; }, 420000, 'chơi tới đợt 12 (qua boss đợt 10 + Nghỉ chân)');
+  await waitFor(async () => { const s = await state(B); return s.wave >= 12 || s.over; }, 420000, 'chơi tới đợt 12 (qua boss đợt 10)');
   let a = await state(A), b = await state(B);
   let cmp = compareHashes(a, b);
   console.log(`    đợt ${b.wave}, bước ${a.tick}/${b.tick}, tướng ${a.heroes}, vàng ${a.gold}, mạng ${a.lives}`);
@@ -153,9 +147,8 @@ async function run(browser) {
   check(b.stats.ok >= 20 && b.stats.bad === 0 && b.stats.resync === 0, `máy khách so ${b.stats.ok} hash với chủ phòng, không lệch`);
   check(a.heroes >= 4 && a.gold[0] >= 0 && a.gold[1] >= 0, 'cả hai người đều có tướng và ví riêng');
   if (!a.over) {
-    const rest = await Promise.all([A, B].map((p) => p.evaluate(() => ({ rest: !!game.rest, deck1: game.co.pl[1].deck.join(','), swap: window.__restSwap || null }))));
-    check(!rest[0].rest && !rest[1].rest && rest[1].swap && rest[0].deck1 === rest[1].deck1 && rest[0].deck1.includes(rest[1].swap),
-      `Nghỉ chân sau boss: khách đổi đội (thêm ${rest[1].swap}), cả hai máy cùng đội mới, trận chạy tiếp`);
+    const rest = await Promise.all([A, B].map((p) => p.evaluate(() => ({ rest: !!game.rest, deck: game.co.pl.some((x) => 'deck' in x), cmds: 'restDeck' in COOP_CMDS || 'skipRest' in COOP_CMDS }))));
+    check(rest.every((r) => !r.rest && !r.deck && !r.cmds), 'qua boss đợt 10 không Nghỉ chân, không còn đội / lệnh đổi đội trong chơi nhóm');
   }
 
   // ---- làm lệch một trang → phát hiện + tự sửa

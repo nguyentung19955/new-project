@@ -1544,28 +1544,7 @@ body { overflow: hidden; }
 .cp-node.edge-l .lb { position: relative; transform: translateX(30%); }
 /* v131: chữ trên nút vàng có kiểu tựa (Vào game…) bị trùng màu vàng nên gần như không đọc được */
 .btn.btn-gold.title { color: #2A1A08; text-shadow: 0 1px 0 #FFF1C4; }
-/* v133: đội triệu hồi */
-.deck-row { gap: 4px; }
-.deck-row .ch-av small { font-size: 9.5px; line-height: 1.1; text-align: center; color: var(--text-2); }
-.dk-modal { position: absolute; inset: 0; z-index: 40; background: #0D0B08cc; display: flex; align-items: center; justify-content: center; padding: 8px; }
-.dk-box { width: 100%; max-width: 900px; max-height: 100%; display: flex; flex-direction: column; border-radius: 10px; padding: 10px; gap: 8px; background: #17130F; }
-.dk-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.dk-head .ttl { font-family: var(--title); font-size: 19px; color: var(--gold); }
-.dk-head small { font-size: 11px; color: var(--text-2); }
-.dk-head small.dk-short { display: none; }
-.dk-head .btn { height: 34px; padding: 0 14px; font-size: 14px; }
-.dk-grid { flex: 1; min-height: 0; overflow-y: auto; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; overscroll-behavior: contain; }
-.dk-el { display: flex; flex-direction: column; gap: 5px; }
-.dk-eh { font-weight: 800; font-size: 13px; display: flex; align-items: center; gap: 4px; justify-content: center; }
-.dk-pick { position: relative; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 5px 3px 4px; border-radius: 8px; border: 2px solid #5A4228; -webkit-touch-callout: none; user-select: none; }
-.dk-pick img { width: 46px; height: 46px; border-radius: 50%; border: 2px solid var(--c); background: #0D0B08; object-fit: cover; object-position: 50% 0; }
-.dk-pick b { font-size: 11px; line-height: 1.15; text-align: center; color: var(--text); }
-.dk-pick.on { border-color: var(--gold-hi); background: #4A3212; box-shadow: 0 0 10px #FFD66B88; }
-.dk-pick .no { position: absolute; top: 3px; right: 4px; width: 18px; height: 18px; border-radius: 50%; background: var(--gold-hi); color: #2A1608; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
-.dk-pick .tg { display: flex; gap: 2px; min-height: 13px; }
-.dk-pick .tg i, .dk-head small i { font-style: normal; font-size: 9px; font-weight: 800; padding: 0 4px; border-radius: 3px; }
 i.c { background: #1F4A2A; color: #8AE09A; } i.h { background: #4A2A5A; color: #E0B0FF; }
-@media (max-height: 430px) { .dk-pick { padding: 3px 2px; } .dk-pick img { width: 38px; height: 38px; } .dk-pick b { font-size: 10.5px; } .dk-box { padding: 8px; gap: 6px; } .dk-head small { display: none; } .dk-head small.dk-short { display: inline; } }
 /* v140: thùng hủy tướng chuyển xuống giữa đáy (đè lên thanh Triệu hồi lúc đang kéo) — không còn nằm sát các ô cạnh thành */
 #trash { left: 50%; right: auto; bottom: calc(10px * var(--hz, 1)); width: 220px; transform: translateX(-50%) scale(var(--hz, 1)); transform-origin: 50% 100%; }
 #trash.hot { transform: translateX(-50%) scale(calc(var(--hz, 1) * 1.08)); }
@@ -1614,9 +1593,6 @@ i.c { background: #1F4A2A; color: #8AE09A; } i.h { background: #4A2A5A; color: #
 #wrap.dragging-hero #trash { left: 50%; right: auto; bottom: calc(6px * var(--hz, 1)); width: 320px; height: 70px; justify-content: center; transform: translateX(-50%) scale(var(--hz, 1)); transform-origin: 50% 100%; }
 #wrap.dragging-hero #trash.hot { transform: translateX(-50%) scale(calc(var(--hz, 1) * 1.08)); }
 /* v143: Nghỉ chân sau đợt boss */
-#rest { background: transparent; z-index: 32; }
-.dk-pick.gone { opacity: .6; border-style: dashed; border-color: #E25A3A; }
-.dk-pick .tg i.x { background: #5A1E14; color: #FFB08A; }
 /* v147: CÂY PHÁT TRIỂN (Anh Hùng) + gợi ý phát triển trong trận */
 .ev-tree { margin-top: 8px; border-radius: 6px; padding: 6px 8px; display: flex; flex-direction: column; gap: 4px; border-left: 3px solid var(--rc); }
 .ev-h { font-family: var(--title); font-size: 15px; font-weight: 800; color: var(--gold); display: flex; align-items: baseline; gap: 8px; }
@@ -1703,24 +1679,20 @@ i.c { background: #1F4A2A; color: #8AE09A; } i.h { background: #4A2A5A; color: #
 .ev-p.base.me { border-color: var(--r-com-hi); box-shadow: inset 0 0 0 1px var(--r-com-hi); }
 .ev-p.epic.me { box-shadow: 0 0 8px #A86CE0CC; }
 .ev-p.legendary.me { box-shadow: 0 0 9px #F0A030DD; }
-.dk-pick.common { border-color: var(--r-com-d); }
-.dk-pick.common.on { border-color: var(--r-com-hi); background: #4A2C16; box-shadow: inset 0 0 0 1px var(--r-com-hi), inset 0 0 12px #00000077; }
-.dk-pick.common .no { background: var(--r-com-hi); color: #1A0F0A; }
-.dk-pick.common.gone { border-color: #E25A3A; }
 
 /* ============================================================
    v163: khung / nút / thanh vẽ tay — chỉ bật khi đã có file (ui.js loadUiSkins thêm lớp sk-… lên <html>
    và biến --sk-<tên>). Chưa có ảnh: giữ nguyên CSS cũ ở trên.
    ============================================================ */
 .cp-map .bgart .cp-bgimg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-html.sk-khung-bang .res-tips, html.sk-khung-bang .res-table, html.sk-khung-bang .dk-box, html.sk-khung-bang .sl-card {
+html.sk-khung-bang .res-tips, html.sk-khung-bang .res-table, html.sk-khung-bang .sl-card {
   border-color: transparent; border-image: var(--sk-khung-bang) 22% fill / 12px / 4px stretch; background: none; box-shadow: none; }
 html.sk-nut-vang .btn-gold { background: var(--sk-nut-vang-thuong) center / 100% 100% no-repeat; border-color: transparent; box-shadow: none; }
 html.sk-nut-vang .btn-gold:active { background-image: var(--sk-nut-vang-nhan, var(--sk-nut-vang-thuong)); }
 html.sk-nut-vang .btn-gold:disabled { background-image: var(--sk-nut-vang-khoa, var(--sk-nut-vang-thuong)); filter: none; }
-html.sk-nut-dong .res-btns button.metal, html.sk-nut-dong .dk-head button.metal { background: var(--sk-nut-dong-thuong) center / 100% 100% no-repeat; border-color: transparent; box-shadow: none; }
-html.sk-nut-dong .res-btns button.metal:active, html.sk-nut-dong .dk-head button.metal:active { background-image: var(--sk-nut-dong-nhan, var(--sk-nut-dong-thuong)); }
-html.sk-nut-dong .res-btns button.metal:disabled, html.sk-nut-dong .dk-head button.metal:disabled { background-image: var(--sk-nut-dong-khoa, var(--sk-nut-dong-thuong)); }
+html.sk-nut-dong .res-btns button.metal { background: var(--sk-nut-dong-thuong) center / 100% 100% no-repeat; border-color: transparent; box-shadow: none; }
+html.sk-nut-dong .res-btns button.metal:active { background-image: var(--sk-nut-dong-nhan, var(--sk-nut-dong-thuong)); }
+html.sk-nut-dong .res-btns button.metal:disabled { background-image: var(--sk-nut-dong-khoa, var(--sk-nut-dong-thuong)); }
 html.sk-nut-tron .xbtn { background: var(--sk-nut-tron-thuong) center / contain no-repeat; border-color: transparent; box-shadow: none; }
 html.sk-nut-tron .xbtn:active { background-image: var(--sk-nut-tron-nhan, var(--sk-nut-tron-thuong)); }
 html.sk-nut-tron .xbtn:disabled { background-image: var(--sk-nut-tron-khoa, var(--sk-nut-tron-thuong)); }
@@ -2041,10 +2013,6 @@ img.eli { position: static !important; inset: auto !important; transform: none !
 .res-table .res-qd b, .res-table .res-unl b { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 2px 8px; font-size: 12px; text-align: right; }
 .res-table .res-unl .btn { height: 26px; padding: 0 10px; font-size: 12.5px; display: inline-flex; align-items: center; gap: 4px; }
 .res-table .res-unl .btn .uie { width: 13px; height: 13px; }
-.dk-pick.lock { opacity: .62; border-style: dashed; }
-.dk-pick.lock img { filter: grayscale(.85) brightness(.65); }
-.dk-pick .tg i.lk { display: inline-flex; align-items: center; gap: 2px; background: #1A1610; color: #E4ECF4; }
-.dk-pick .tg i.lk .uie { width: 10px; height: 10px; }
 .res-khobox { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 1px; padding: 6px 12px; border-radius: 6px; border: 1px solid #8FA4B8; background: #10161C; white-space: nowrap; }
 .res-khobox small { font-size: 11px; color: #C8BFA8; }
 .res-khobox b { font-family: var(--title); font-size: 24px; line-height: 1.1; color: #E4ECF4; display: inline-flex; align-items: center; gap: 4px; }

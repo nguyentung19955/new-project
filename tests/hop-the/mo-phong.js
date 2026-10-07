@@ -14,17 +14,14 @@ async function run(level, rule, seed) {
     if (rule !== 'v181') COSTS.lvDisc3 = 1;
     if (rule === 'r12') R_REQ.splice(0, 4, 0, 6, 9, 12);
     if (rule === 'cu') { const orig = game.fusionReady.bind(game); game.fusionReady = (h) => ((h.tier || 0) >= game.ascendNeed(h) && !h.from ? true : orig(h)); }
-    // đội = 3 cặp hợp thể ra Tím (tướng Thường, không trùng)
-    const deck = [];
-    for (const f of FUSION) if (HEROES[f.to].legend === 'epic' && BASIC_HEROES.includes(f.a) && BASIC_HEROES.includes(f.b) && !deck.includes(f.a) && !deck.includes(f.b) && deck.length < 6) deck.push(f.a, f.b);
-    game.deck = deck; game.market = null;
+    // claude/bo-chon-doi: không còn đội ưu tiên — chợ rút từ mọi tướng Thường
+    game.market = null;
     let s = seed; Math.random = () => ((s = (s * 16807) % 2147483647) / 2147483647);
     game.running = false; game.owned = null;
     const g = game, DT = 1 / 20, recipes = FUSION.filter((f) => HEROES[f.to].legend === 'epic');
     const partnerOn = (h) => recipes.some((f) => (f.a === h.type || f.b === h.type) && g.heroes.some((o) => o && o !== h && o.type === (f.a === h.type ? f.b : f.a)));
     let first = null, t = 0;
     const think = () => {
-      if (g.rest) g.rest = null;
       // 1. hợp thể ra Tím
       for (const a of g.heroes) for (const b of g.heroes) if (a && b && a !== b && typeof g.canFuse(a, b) !== 'string' && HEROES[fusionFor(a.type, b.type).to].legend === 'epic') {
         g.fuse(a.slot, b.slot); if (!first) first = { t: Math.round(g.time), wave: g.wave }; return;
@@ -52,7 +49,7 @@ async function run(level, rule, seed) {
       g.update(DT); t += DT;
       if (t >= 0.5) { t = 0; for (let k = 0; k < 6; k++) think(); }
     }
-    return { first, over: g.over, win: g.won, wave: g.wave, time: Math.round(g.time), deck };
+    return { first, over: g.over, win: g.won, wave: g.wave, time: Math.round(g.time) };
   }, [rule, seed]);
   await browser.close();
   return r;
