@@ -1174,7 +1174,30 @@ Sinh từ dữ liệu game (js/data.js, js/enemies2.js, js/roles.js, js/chapters
 
 ## Lô 44 — vfx: vfx — DO NHÁNH claude/vfx-kenney VẼ (không chia lô cho session khác)
 
-137 hình · ưu tiên — (nhánh claude/vfx-kenney). Toàn bộ hiệu ứng (đạn, trúng đòn, nổ, vòng chiêu, dải chiêu, triệu hồi, hạt, hào quang, lớp phủ trên người, đồ sau lưng đủ bộ, hiệu ứng quái biến thể, thời tiết) thuộc nhóm `vfx` và do nhánh **claude/vfx-kenney** đảm nhận. Bảng dưới chỉ là danh sách tham chiếu để nhánh đó đối chiếu — session vẽ khác KHÔNG nhận mục nào ở đây. Cỡ khung 16×16 / 32×32 (một số 48×48 nếu build-pixel cho phép). ⚠ Lớp phủ đồ/trang phục sao trên người tướng 32px: điều phối quyết có giữ không.
+### Tiến độ (claude/vfx-kenney) — lô 1: 30 sprite `tools/pixel/src/vfx/` + hình vẽ bằng ô điểm ảnh trong `js/vfx.js`
+
+Mã nguồn đặt theo nghĩa (một sprite dùng cho nhiều mã danh sách). Hình vòng / tia / đường vẽ bằng code theo lưới điểm ảnh
+(`ring`, `seg`, `zig`, `dot` trong `js/vfx.js`), màu bảng chung, không khử răng cưa.
+
+| mã danh sách | đã có bằng | ghi chú |
+|---|---|---|
+| `dan_fireball` `dan_frostbolt` `dan_arrow` `dan_bolt` `dan_orb` `dan_feather` `dan_petal` `dan_melon` `dan_rice` `dan_evil` | `dan-lua` `dan-bang` `mui-ten` `ne-no` `ngoc` `long-vu` `hoa-sen` `dua` `gao` `ta-khi` | `drawProjectile` (main.js) → `VFX.drawProj` |
+| `trung-kim` `trung-moc` `trung-thuy` `trung-hoa` `trung-tho` | `kim-quang` · `la-tre` · `nuoc-ban` · `lua-chay` · `bui-dat` (+ `trung`) | `VFX.onEffect` impact theo hệ tướng bắn |
+| `no-hoa`, `fire-burst`, `chet-boss` | `no` (+ `khoi`, vòng trống đồng code) | nổ lan hệ khác: khói + vòng màu hệ |
+| `chet-quai`, `dust` | `khoi` | |
+| `fire-pillar` `lightning` `set-troi` `slash-gold` `heal` `coins` `hit-spark` | `lua-chay` xếp cột · `set` + tia gấp khúc · `chem` · `hoi` · `xu` · `trung` | |
+| `ice-ring` `freeze` `shield-gold` `rocks` `spawn-ring` `ring` `vortex` `meteor` `revive` `volley` `rain` `streak` `warn` | vẽ bằng ô điểm ảnh (`VFX.drawFx`) + `bang-tinh` `tuyet` `bui-dat` `no` | |
+| `hat-04` `hat-05` `hat-07` `hat-09` `hat-10` `hat-11` `hat-13` `hat-14` `hat-16` `hat-glow` `hat-leaf` `hat-petal` | `set` `lua-chay` `trung` `bui-dat` `khoi` `chem` (chấm) `gio-xoay` `kim-quang` (ô chấm) `la-tre` `hoa-sen` | hạt (`VFX.emit/burst`) |
+| đòn đánh tướng (costume.js `fxImage`, tên ảnh Kenney cũ) | `TEXMAP` trong js/vfx.js → sprite pixel | |
+| **ngoài danh sách** — trạng thái trên QUÁI: bỏng · độc · choáng · đóng băng · làm chậm; lên cấp | `lua-chay` · `may-doc` + `bong-doc` · `chim-lac` + `gio-xoay` + vòng xoáy · vỏ băng code + `bang-tinh` · `suong-lanh` + `tuyet` · `len-cap` | `VFX.status` (render.js drawEnemy) |
+
+**Chưa làm (lô sau):** `dan-<hệ>` ×5 (đang dùng đạn riêng), `vat-da-lan` `vat-den-troi` `vat-chai` `vat-binh-gom`, `no-kim/moc/thuy/tho`,
+`vong-chieu-<hệ>` ×5, `water-wave` (đang vòng code), `music-notes`, `flood-rise`, `mountain-rise`, `sweep`, `mark`, `afterimage`,
+`hook`, `tinh-anh-*` ×4, `mua`, `song-chay`, `trieu-hoi-*` ×7, `fx-*` biến thể quái ×8 (đang chấm code), `choang-sao` (tướng bị choáng),
+`sa-lay`, `hat-01/02/03/06/08/12/15`, `tien-hoa-1..3`, `than-tinh-1..3`, `sao-than-tinh`, `khoi-tim`, `khoi-vang`,
+`hao-quang-mat-troi`, `canh-rong`, `canh-long-vu`, `phu-kien-aura`; chỗ vẽ code chưa có móc pixel: `drawZones` (vệt lửa, ruộng, đá),
+`burnAura`, `drawAccAura`, `drawEnemyFxBack`, chữ `text`/`banner`. `sau-lung-*` ×5, `trang-phuc-*`, `do-*` ×8: điều phối đã chốt
+**không vẽ đồ lên tướng 32px** → chờ xác nhận bỏ khỏi lô.
 
 | mã | tên | cỡ | khung | mô tả | dấu hiệu | nguồn |
 |---|---|---|---|---|---|---|

@@ -3,10 +3,10 @@ name: Bong bóng độc
 size: 8x8
 anchor: 3,3
 colors:
-  k = la-toi
-  g = la
-  l = reu-sang
-  w = trang-xam
+  k = la
+  g = la-ma
+  l = la-sang
+  w = trang
 part a
 .......
 ..ggg..

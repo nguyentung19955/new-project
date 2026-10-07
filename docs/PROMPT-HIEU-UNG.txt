@@ -533,8 +533,10 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. Never use magenta or
 ------------------------------------------------------------
 
 
-PHẦN E — HIỆU ỨNG TRẠNG THÁI TRÊN QUÁI (choáng, đóng băng, làm chậm, bỏng, độc) — game đã có chỗ nhận
+PHẦN E — HIỆU ỨNG TRẠNG THÁI TRÊN QUÁI (choáng, đóng băng, làm chậm, bỏng, độc) — KHÔNG DÙNG NỮA
 ============================================================
+>>> KHÔNG DÙNG: người dùng chốt toàn bộ hiệu ứng là PIXEL ART vẽ bằng code (tools/pixel/src/vfx/, docs/pixel/QUY-CHUAN.md),
+>>> không gen ảnh AI. Giữ phần này chỉ để tham khảo; game không còn đọc assets/vfx/tt-*.png.
 Vì sao bản cũ xấu: hạt sáng trên nền đen (Kenney / phần A) nhoà trắng trên bản đồ cát + nước sáng và không hợp nét chibi.
 Phần này vẽ kiểu STICKER CHIBI: viền nâu đậm, màu phẳng 2 tông, KHÔNG quầng sáng mờ, nền hồng tím #FF00FF (xoá sạch, giữ viền).
 - Gửi kèm ảnh docs/mau-lac-tuong.png (hoặc 1 ảnh tướng bất kỳ) làm mẫu nét vẽ / màu, ghi thêm "match the line art and colors of the attached character, but DO NOT draw the character".

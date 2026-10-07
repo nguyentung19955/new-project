@@ -326,8 +326,8 @@ const VFX = (() => {
     if (!e || e.dead || !D) return r;
     const W = box.w, H = Math.max(10, box.ay), fy = e.y - lift, cx = e.x, id = e.id || 0;
     const bar = fy - H - 3;                          // đáy thanh máu: không vẽ gì cao hơn
-    begin(ctx);
-    const big = W > 70 ? 2 : 1;
+    begin(ctx, 0.6);                                 // sprite trạng thái nhỏ hơn hạt chiêu: không lấn át quái
+    const big = W > 80 ? 2 : 1;
     // đóng băng: vỏ băng pixel bọc thân (thay khối băng vẽ bằng code) + tinh thể băng dưới chân
     if (e.stunT > 0 && e.stunKind === 'ice' && ready('bang-tinh') && sb(3)) {
       r.ice = r.iceArt = true;
@@ -394,6 +394,9 @@ const VFX = (() => {
         items.push({ a, z: Math.sin(a), bird: i % 2 === 0 });
       }
       items.sort((p, q) => p.z - q.z);                // sau trước: phía sau vẽ trước
+      // vòng xoáy khí sáng (bóng tối 1 ô bên dưới cho nổi trên mọi nền), nét đứt chạy vòng
+      ring(ctx, cx, y0 + u, rx, rx * 0.28, C.toi, { dash: 2, phase: t * 6 });
+      ring(ctx, cx, y0, rx, rx * 0.28, C.trang, { dash: 2, phase: t * 6 });
       for (const it of items) {
         const x = cx + Math.cos(it.a) * rx, y = y0 + it.z * 3;
         ctx.globalAlpha = it.z < -0.3 ? 0.6 : 1;
