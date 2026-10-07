@@ -2064,3 +2064,10 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 ## Phiên bản 194 — 90 ảnh tĩnh mới + game tự cử động (tester đạt)
 
 - Gộp claude/tu-cu-dong + claude/tu-cu-dong-anh: 90 ảnh mới (72 dùng, 18 chờ gen lại trong CD_SKIP), rig 90 mã (67 vung tay), chân đứng yên, boss ×2, nhún lấy đà, vệt chém đúng phía.
+
+## claude/tu-cu-dong — Chân dung từ ảnh mới + sửa sau v194
+
+- **Chân dung mới:** tool `tools/cat-chan-dung.py` cắt đầu + vai (cao 240 px, như `packs/<mã>/head.png`) từ `assets/<mã>.png` → `assets/chan-dung-moi/<mã>.png` cho 72 mã (90 trừ CD_SKIP). `heroImgUrl` (thẻ chợ, Anh Hùng, khắc chế, bảng chỉ số…) và `drawHeroPortrait` (khung chân dung bảng tướng / Anh Hùng) dùng chân dung + dáng đứng mới khi có (`cdNewArt`, `cdHeadPath` trong js/tu-cu-dong.js); icon quái (`drawEnemyIcon`) dùng ảnh mới. Mã trong CD_SKIP giữ ảnh cũ. Gen lại ảnh nào thì chạy lại `python3 tools/cat-chan-dung.py <mã>` + `node tools/build-asset-list.js`.
+- **Thân trên uốn mượt:** mỗi lát ngang nghiêng liên tục (shear) thay vì dịch bậc thang; độ uốn tối đa ±0,26; từ cổ trở lên dịch nguyên khối, giãn dọc ≤ 5% → Lạc Tướng hết đầu phình / đỉnh tóc vuông khi vươn người.
+- **Thần Săn Ba Vì:** `RIGS.thansan.amp = 0.55` — đỉnh cú vung không dựng sát cằm, vệt không quét ngang mặt.
+- **Test tu-cu-dong ổn định khi máy bận:** đợi điều kiện (game khởi tạo, ảnh tải xong, sân đủ quái, đã vẽ ảnh đơn) thay vì thời gian cố định; so FPS chỉ khi bản gốc ≥ 30 FPS (máy rảnh), không thì chỉ in ra. Thêm kiểm chân dung mới.

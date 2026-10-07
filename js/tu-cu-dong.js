@@ -41,6 +41,9 @@ const CD_SKIP = new Set([
   'hotinh', 'chantinh',                                                                                                        // boss sai loài
   'nguphu', 'tre', 'dotnuong',                                                                                                 // tướng: tiên cá · vũ khí rời · kiểu 3D bóng
 ]);
+// có ảnh dựng xương mới dùng được (không nằm trong CD_SKIP) → giao diện dùng chân dung / dáng đứng mới cho khớp mặt với sân
+const cdNewArt = (type) => !CD_SKIP.has(type) && hasAsset(`${type}.png`);
+const cdHeadPath = (type) => (cdNewArt(type) && hasAsset(`chan-dung-moi/${type}.png`) ? `chan-dung-moi/${type}.png` : null);
 // ---- chọn ảnh đơn
 const cdMultiCache = new Map();
 function cdHasMulti(type, enemy) {
@@ -580,14 +583,24 @@ const cdTintC = (c, color) => { const m = c.__tint || (c.__tint = new Map()); le
 function cdDrawUpper(ctx, R, img, bend, sy) {
   const hip = R.hip, w = img.width;
   if (img.height > hip) ctx.drawImage(img, 0, hip, w, img.height - hip, 0, hip, w, img.height - hip);
+  sy = 1 + Math.max(-0.05, Math.min(0.05, sy - 1));   // giãn dọc nhẹ: đầu không phình
   const tr = ctx.getTransform(), scr = Math.hypot(tr.c, tr.d) * hip;
   const lv = typeof GFX_LEVEL === 'function' ? GFX_LEVEL() : 0;
   const n = Math.abs(bend) < 0.002 ? 1 : lv >= 2 || scr < 30 ? 3 : Math.max(4, Math.min(12, Math.round(scr / (lv === 1 ? 16 : 9))));
+  bend = Math.max(-0.26, Math.min(0.26, bend));
+  // độ lệch ngang theo chiều cao (cong mềm, 0 ở hông); từ cổ trở lên (đầu) dịch NGUYÊN KHỐI — đầu không bị nghiêng méo / phình
+  const yN = hip * 0.5;
+  const off = (y) => { const um = 1 - Math.max(y, yN) / hip; return bend * hip * um * um; };
   for (let i = 0; i < n; i++) {
-    const y0 = hip * i / n, y1 = hip * (i + 1) / n, um = 1 - (y0 + y1) / 2 / hip;
-    const dx = n === 1 ? 0 : bend * hip * um * um;
+    const y0 = hip * i / n, y1 = hip * (i + 1) / n;
     const Y0 = hip - (hip - y0) * sy, Y1 = hip - (hip - y1) * sy;
-    ctx.drawImage(img, 0, y0, w, y1 - y0 + (i < n - 1 ? 0.7 : 0), dx, Y0, w, Y1 - Y0 + (i < n - 1 ? 0.7 * sy : 0));
+    // mỗi lát NGHIÊNG liên tục giữa độ lệch hai mép (shear) → không còn bậc thang / đỉnh đầu vuông
+    const d0 = n === 1 ? 0 : off(y0), d1 = n === 1 ? 0 : off(y1), k = (d0 - d1) / ((Y0 - Y1) || 1);
+    const ov = i < n - 1 ? 0.7 : 0;
+    ctx.save();
+    ctx.transform(1, 0, k, 1, d1 - k * Y1, 0);
+    ctx.drawImage(img, 0, y0, w, y1 - y0 + ov, 0, Y0, w, Y1 - Y0 + ov * sy);
+    ctx.restore();
   }
 }
 // một khung của nhân vật có rig (toạ độ = điểm ảnh của ảnh cắt; gốc = góc trên trái). st: như cdPose; o: { kind, col, glow:[màu, mờ, độ đậm],

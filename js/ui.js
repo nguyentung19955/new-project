@@ -267,6 +267,11 @@ const CARD_NAME = { lactuong: 'Lạc Tướng', lucsi: 'Lực Sĩ', xathu: 'Xạ
   haisen: 'Hái Sen', dapde: 'Đắp Đê', chantrau: 'Chăn Trâu', giaodong: 'Giáo Đồng', chuongdong: 'Chuông Đồng', tre: 'Tre Làng', ongthoi: 'Ống Thổi' };
 function heroImgUrl(type, crop) {
   // v64: tướng có bộ ảnh vẽ tay → chân dung / dáng đứng từ assets/packs
+  // tự cử động: có ảnh dựng xương mới → chân dung cắt từ ảnh mới (tools/cat-chan-dung.py) / dáng đứng = ảnh mới
+  if (typeof cdNewArt === 'function' && !vectorHeroesOn() && cdNewArt(type)) {
+    const hp = crop === 'head' ? cdHeadPath(type) : `${type}.png`;
+    if (hp) return assetSrc(hp);
+  }
   if (HERO_PACK[type] && !vectorHeroesOn()) return assetSrc(HERO_PACK[type] + (crop === 'head' ? 'head.png' : 'front.png'));
   const slug = heroSlug(type);
   const png = assetUrl(crop === 'head' ? [`chan-dung_${slug}.png`, `heroes/hero_${HERO_CODE[type]}_B.png`]
