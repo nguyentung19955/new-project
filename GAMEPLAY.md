@@ -2207,3 +2207,24 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
 
 ## Phiên bản 201 — quy tắc hình mới phải có bản pixel
 - CLAUDE.md: thêm quy tắc "Đang chuyển sang pixel art: hình mới phải có bản pixel" — session thêm/đổi hình (kể cả vẽ bằng code) vẽ luôn bản pixel theo docs/pixel/QUY-CHUAN.md hoặc ghi vào docs/pixel/DANH-SACH.md mục "Bổ sung"; giữ đường vẽ dự phòng.
+
+## claude/pixel-tuong-thuong — Pixel art 19 tướng Thường (DANH-SACH lô 1–2)
+
+- Vẽ đủ 19 mã tướng Thường (lô 1: `lactuong lucsi xathu thosan thaymo thansuong giaodong chuongdong tre ongthoi`; lô 2: `dapde chantrau
+  haisen dotnuong denroi thoren nguphu thogom thaylang`; `chodo` đã có ở lô 0). Mỗi tướng 15 khung 32×32: idle 3 · attack 4 · cast 3 ·
+  hurt 1 · die 3 (quỳ → nằm → tối màu) + `portrait` 1 (đầu + vai cắt 16×16 phóng ×2 → chân dung thẻ chợ / Anh Hùng rõ mặt).
+- Theo **"Hướng phá cách"** của DANH-SACH (QUY-CHUAN mục 0b) — đội hình đa dạng hình thể, vẫn giữ vũ khí / kiểu đánh / màu hành:
+  Lạc Tướng = giáp đồng rỗng (2 đốm mắt gỉ xanh, mũ lông chim Lạc, rìu xéo) · Lực Sĩ = khổng lồ đất sét nứt, cỏ trên vai, vác tảng đá ·
+  Xạ Thủ = người-chim Lạc mỏ dài, cung dài · Thợ Săn = ma cây mặt hốc cây mắt cam, mũ trùm tai báo, cung · Thầy Mo = bộ xương đội vòng
+  lông đỏ-đen, lửa trong hốc mắt, gậy hồ lô lửa · Thần Sương = hồn sương mặt nạ băng, tóc khói dựng ngược, ôm tinh thể băng ·
+  Giáo Đồng = người tê tê, giáo dài + khiên đồng trống đồng · Chuông Đồng = con rối nước gỗ sơn bóng, chốt vai, gậy treo chuông ·
+  Tre Làng = hình nhân tre đan, sào tre ngọn lá · Ống Thổi = người cóc tía, ống thổi ngang · Đắp Đê = người bùn (nữ, váy bùn, rơm),
+  nón lá, xẻng · Chăn Trâu = tượng tò he, gậy đầu trâu, que tre làm đế · Hái Sen = tinh sen (tóc cánh sen, da xanh, chân cuống sen),
+  lá sen làm ô · Đốt Nương = ma trơi đầu ngọn lửa, thân khói tro, dao rựa + đuốc · Đèn Trời = hình nhân giấy xếp nếp, mặt vẽ mực,
+  nâng đèn trời · Thợ Rèn = người đá bazan nứt lửa, búa tạ đầu đỏ · Ngư Phủ = bộ xương rêu, vỏ hến, lưới + phao cam + chĩa ba ·
+  Thợ Gốm = tượng đất nung rạn men lam, bình gốm men lam · Thầy Lang = người nấm linh chi, gùi lá thuốc, gậy chống.
+- Nguồn: `tools/pixel/src/tuong/<mã>.txt` **sinh tự động** từ `tools/pixel/src/tuong/_gen-thuong.js` (thư viện vẽ: thân / đầu / tay /
+  vũ khí theo dáng, hiệu ứng chiêu theo hành, khung chết xoay) + `_tuong-thuong.js` (hàm vẽ từng tướng). Sửa: chỉnh hàm vẽ →
+  `node tools/pixel/src/tuong/_gen-thuong.js [mã…]` → `node tools/build-pixel.js --strict`. build-pixel chỉ đọc `.txt`, bỏ qua `.js`.
+- Không màu mới, không sửa build-pixel / js/pixel.js. Test `tests/pixel`: mã "chưa có pixel" đổi `lactuong` → `thachsanh`
+  (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.

@@ -2,7 +2,7 @@
 // 1. tools/build-pixel.js: nguồn thật hợp lệ (--strict); nguồn lỗi (màu ngoài bảng màu, ký tự chưa khai báo, sai cỡ,
 //    thiếu động tác, tràn khung) bị chặn; dựng ra thư mục tạm: PNG đúng cỡ, JSON, manifest theo nhóm
 // 2. game ?pixel=1: không lỗi console; mã có pixel (giong · tanvien · chodo · tom · ô nền · icon ngũ hành) vẽ pixel,
-//    mã chưa có (lactuong · casau · hành Hỏa) giữ hình cũ; không bật thì không dùng pixel
+//    mã chưa có (thachsanh · casau · hành Hỏa) giữ hình cũ; không bật thì không dùng pixel
 // 3. chụp 1920×934 · 844×390 · 667×375 · dọc 390×844 + phóng to vùng sprite → tests/pixel/shots/ (xem tận mắt)
 const path = require('path');
 const fs = require('fs');
@@ -83,7 +83,7 @@ async function open(w, h, query) {
   await page.waitForTimeout(400);
   return { browser, page, errors };
 }
-const TYPES = ['giong', 'tanvien', 'chodo', 'lactuong'];
+const TYPES = ['giong', 'tanvien', 'chodo', 'lactuong', 'thachsanh'];   // lactuong: tướng Thường đã vẽ (lô 1); thachsanh: chưa vẽ
 async function setup(page) {
   return page.evaluate((types) => {
     game.gold += 99999;
@@ -116,12 +116,12 @@ async function setup(page) {
     await page.evaluate(() => { game.paused = true; });
     await page.waitForTimeout(200);
     const s = await page.evaluate(() => ({ on: pixelOn(), seen: [...PX.seen], cls: document.documentElement.className,
-      head: heroImgUrl('giong', 'head'), headOld: heroImgUrl('lactuong', 'head'), kim: elIcon('kim'), hoa: elIcon('hoa'),
+      head: heroImgUrl('giong', 'head'), headOld: heroImgUrl('thachsanh', 'head'), kim: elIcon('kim'), hoa: elIcon('hoa'),
       sm: pxSmoothOff() }));
     ok(s.on && /pixel/.test(s.cls), `[${tag}] bật pixel bằng ?pixel=1`);
-    for (const k of ['tuong/giong', 'tuong/tanvien', 'tuong/chodo', 'quai/tom', 'nen/co', 'nen/nuoc']) ok(s.seen.includes(k), `[${tag}] vẽ pixel: ${k}`);
-    ok(!s.seen.includes('tuong/lactuong') && !s.seen.includes('quai/casau'), `[${tag}] mã chưa có pixel (lactuong, casau) giữ hình cũ`);
-    ok(/pixel\/tuong\/giong-chan-dung\.png/.test(s.head) && !/pixel\//.test(s.headOld), `[${tag}] chân dung giao diện: giong pixel, lactuong hình cũ`);
+    for (const k of ['tuong/giong', 'tuong/tanvien', 'tuong/chodo', 'tuong/lactuong', 'quai/tom', 'nen/co', 'nen/nuoc']) ok(s.seen.includes(k), `[${tag}] vẽ pixel: ${k}`);
+    ok(!s.seen.includes('tuong/thachsanh') && !s.seen.includes('quai/casau'), `[${tag}] mã chưa có pixel (thachsanh, casau) giữ hình cũ`);
+    ok(/pixel\/tuong\/giong-chan-dung\.png/.test(s.head) && !/pixel\//.test(s.headOld), `[${tag}] chân dung giao diện: giong pixel, thachsanh hình cũ`);
     ok(/pixel\/icon\/hanh-kim\.png/.test(s.kim) && !/pixel\//.test(s.hoa), `[${tag}] icon ngũ hành: Kim pixel, Hỏa (chưa vẽ) hình cũ`);
     ok(s.sm, `[${tag}] ảnh pixel vẽ không làm mịn (nearest-neighbor)`);
     ok(!errors.length, `[${tag}] không lỗi console ${errors.join(' | ')}`);
