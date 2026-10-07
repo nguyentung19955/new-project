@@ -332,21 +332,25 @@ function mapLayer(id, bgImg, svgImg, pw, ph) {
   const m = MAPS[id] || MAPS.song1, kind = pathKind(m.theme);
   const tex = asset(`tiles/duong-${kind}.jpg`, true), gate = gateArt(m.theme);
   const svgOk = svgImg && svgImg.complete && svgImg.naturalWidth > 0;
-  const key = `${id}|${pw}x${ph}|${!!bgImg}|${!!tex}|${!!gate}|${svgOk}`;
+  const pxk = typeof pixelOn === 'function' && pixelOn() && pxEntry('nen', 'co') ? 'px' : '';
+  const key = `${id}|${pw}x${ph}|${!!bgImg}|${!!tex}|${!!gate}|${svgOk}|${pxk}`;
   if (mapLayerCache.key === key) return mapLayerCache.c;
-  const c = mapLayerCache.c && mapLayerCache.c.width === pw && mapLayerCache.c.height === ph ? mapLayerCache.c : document.createElement('canvas');
+  const c = !pxk && mapLayerCache.c && mapLayerCache.c.width === pw && mapLayerCache.c.height === ph ? mapLayerCache.c : document.createElement('canvas');
   c.width = pw; c.height = ph;
   const x = c.getContext('2d');
   x.setTransform(pw / CONFIG.W, 0, 0, ph / CONFIG.H, 0, 0);
-  if (bgImg) x.drawImage(bgImg, 0, 0, CONFIG.W, CONFIG.H);
+  // pixel art (js/pixel.js): cỏ + đường đất / nước lát ô; ô chưa tải xong → nền cũ (lần dựng sau đổi khoá cache)
+  const pxDone = pxk && pxMapGround(x, m, kind, pw / CONFIG.W);
+  if (pxDone) { /* nền pixel */ }
+  else if (bgImg) x.drawImage(bgImg, 0, 0, CONFIG.W, CONFIG.H);
   else { x.fillStyle = (MAP_THEMES[m.theme] || MAP_THEMES.song).ground; x.fillRect(0, 0, CONFIG.W, CONFIG.H); }
-  drawThemedPath(x, id);
+  if (!pxDone) drawThemedPath(x, id);
   drawEntry(x, id);
   if (gate) {
     const [ex, ey] = m.end, s = 124 * DK;
     x.drawImage(gate, ex * DK - s / 2, ey * DK - s * 0.62, s, s);
   } else if (svgOk) x.drawImage(svgImg, 0, 0, CONFIG.W, CONFIG.H);
-  mapLayerCache = { key, c };
+  mapLayerCache = { key: pxk && !pxDone ? key + '|cho' : key, c };   // ô pixel chưa tải xong: lần sau dựng lại
   return c;
 }
 
