@@ -1686,3 +1686,12 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Hàng đánh theo vũ khí: cung (lắp tên → kéo dây tới má, tên luôn thấy trên dây → buông, tên vừa rời cung → thu tay), nỏ, ná / ống thổi, gậy phép, kiếm / rìu / giáo (một cung vung mượt, vệt mờ chỉ ở khung 6) + dòng WEAPON CONTINUITY: vũ khí không biến mất / nhân đôi.
 - Danh sách "Kiểm tra trước khi nhận ảnh" (7 dòng) + quy trình: gen character sheet 1 nhân vật → duyệt → gen tấm nhiều khung dùng ảnh đó làm tham chiếu.
 - Chưa làm: cảnh báo tự động trong tool cắt ảnh (nghi nhân bản / chạm mép / lệch màu) — người dùng yêu cầu chỉ sinh file, không chạy test.
+## Phiên bản 178 — Tool cắt ảnh: ảnh một dáng / một vật không chia lưới, ảnh tên mã băm ghi tay
+- Xem ảnh chụp thư mục `D:\ảnh game` (07/10): phần lớn không phải tấm lưới theo `PROMPT-CAN-GEN.txt` mà là ảnh tải từ Doubao/Jimeng (tên mã băm `…~tplv-…-ai-watermark`), dáng boss tách từng ảnh (`<mã>_pose01..04`), tấm icon lưới 2×2 / 3×2 / một hàng, kết cấu đường, nút / tháp một vật. Bản v177 cắt `daibang_pose01` như tấm boss 3×3 → mảnh vụn.
+- Ảnh từng dáng `<mã>_pose|dang|frame|khung<số>`: gom theo mã, mỗi ảnh = một khung (xoá nền, bỏ chữ Pippit / dấu AI, chung khung dọc giữ đường chân như cat-sheet). Boss 4 dáng → `walk1 · walk2 · attack · rage` (đúng bộ cũ trong `assets/packs/<boss>/`), 9 dáng → boss9; quái 3 / 6; tướng 6 / 12.
+- `tools/cat-anh-them.json`: ghi tay từng ảnh (khóa = 10 ký tự đầu mã băm hoặc tên ảnh) → `vat` (tách từng vật theo thứ tự đọc, tên file như `item-sheets.json`, cho phép đổi thứ tự — ngũ hành AI vẽ Mộc Hỏa Thổ Kim Thủy), `khung` (giữ tỉ lệ như cat-khung), `tex` (kết cấu đường: vuông giữa, JPG 512 như cat-items), `chua` (chưa có chỗ trong game: xoá nền, tách vật vào `assets/chua-dung/`), `bo` (bỏ qua). Xoá nền tự nhận hồng sen / #FF00FF / nền tím-màu khác (loang từ mép). Bảng chi tiết trong `docs/HUONG-DAN-CAT-ANH.md`.
+- Test thêm thư mục giống thật (`tests/cat-anh/tao-anh-mau-2.py`): 30 file đúng chỗ, dáng boss không vụn, ngũ hành đúng màu, chữ chú thích bị bỏ; bản HTML ra cùng file với bản Python.
+
+## Phiên bản 179 — Tool cắt ảnh nhận ảnh dáng rời, tấm icon tự tách
+
+- Gộp nhánh tool-cat-anh: ảnh <mã>_pose01..04 mỗi ảnh một khung, tấm nhiều icon tự tách theo vùng có hình, bảng cat-anh-them.json cho ảnh lẻ trong D:\ảnh game; ảnh chưa có chỗ dùng vào assets/chua-dung/.
