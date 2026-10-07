@@ -326,7 +326,6 @@ class UI {
     this.armed = null;      // loại tướng chờ đặt
     this.raising = false;   // đang chọn ô để Mọc Núi
     this.moving = -1;       // đang đổi chỗ tướng
-    this.sellArmed = false;
     this.screen = null;     // { kind, ... }
     this.sig = {};
     this.refreshT = 0;
@@ -471,6 +470,9 @@ class UI {
       this.toast(st.detail ? 'Hiện chỉ số chi tiết (tên, cấp, máu, số sát thương)' : 'Chế độ gọn', '#9dffc4');
     };
     $('#btn-detail').classList.toggle('on', !!this.save.settings.detail);
+    // v180: ẩn hết nút trên màn hình, chỉ còn bản đồ + tướng + quái; nút nhỏ ở góc (hoặc phím H) để hiện lại
+    $('#btn-hideui').onclick = () => this.setUiHidden(true);
+    $('#btn-showui').onclick = () => this.setUiHidden(false);
     $('#btn-speed').onclick = () => {
       const v = g.speed === 1 ? 2 : g.speed === 2 ? 3 : 1;
       if (COOP.on) { COOP.issue('speed', [v]); this.toast(`Tốc độ x${v} (đổi cho cả hai người)`, '#C8BFA8'); return; }
@@ -545,6 +547,8 @@ class UI {
       if (!g.started) return;
       const k = ev.key.toLowerCase();
       const h = g.heroes[this.sel];
+      if (k === 'h' && !this.screen && !g.over && !ev.ctrlKey && !ev.metaKey && !ev.altKey) return this.setUiHidden(!this.uiHidden);
+      if (k === 'escape' && this.uiHidden && !this.screen) return this.setUiHidden(false);
       if (k === 'escape') return this.screen ? this.closeScreen() : this.clearSel();
       if (this.screen || !h) return;
       if (k === 'u') this.doLevelUp(h);
@@ -599,7 +603,15 @@ class UI {
     for (const id of ['#menu', '#campaign', '#settings', '#result', '#reward', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks', '#modes', '#rest', '#coop', '#fbadmin']) $(id).hidden = true;
     if (this.needLogin()) this.showLogin(false);   // v73: chưa đăng nhập thì luôn che game
   }
+  setUiHidden(on) {
+    on = !!on;
+    if (on) { this.clearSel(); $('#drawer').hidden = true; $('#legends').hidden = true; }
+    this.uiHidden = on;
+    $('#wrap').classList.toggle('ui-off', on);
+    $('#btn-showui').hidden = !on;
+  }
   setInGame(on) {
+    if (!on && this.uiHidden) this.setUiHidden(false);
     document.querySelectorAll('.ingame').forEach((el) => { el.hidden = !on; });
     if (!on) for (const id of ['#legends', '#bossbar', '#coach', '#drawer', '#more', '#deck-hint', '#btn-moc', '#nextwaves', '#coop-bar']) $(id).hidden = true;
     if (on) $('#coop-bar').hidden = !COOP.on;
@@ -1230,7 +1242,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 180</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 181</div>
       </div></div>`;
   }
 
@@ -1570,7 +1582,7 @@ class UI {
   }
 
   clearSel() {
-    this.sel = -1; this.spot = -1; this.armed = null; this.raising = false; this.moving = -1; this.sellArmed = false;
+    this.sel = -1; this.spot = -1; this.armed = null; this.raising = false; this.moving = -1;
   }
 
   tapMap(x, y) {
@@ -1602,7 +1614,6 @@ class UI {
       this.fuseFocus = null;
       this.spot = -1;
       this.armed = null;
-      this.sellArmed = false;
       return;
     }
     if (this.armed) return this.place(this.armed, slot);
@@ -1765,6 +1776,7 @@ class UI {
   tick(dt) {
     const g = this.game;
     this.handleEvents();
+    if (this.uiHidden && (!g.started || g.over || this.screen)) this.setUiHidden(false);   // hết trận / mở màn khác: hiện lại giao diện
     this.abT = (this.abT || 0) - dt;
     if (this.abT <= 0 && g.started) { this.abT = 1; this.updateAutoBtns(); }
     if (this.assetSeen !== assetVersion) {
@@ -2135,8 +2147,8 @@ class UI {
       // thanh thao tác nổi trên tướng: tự hiện khi chọn tướng (ẩn khi mở màn khác / menu)
       const show = !h.dead && !this.screen && !this.statsOpen && $('#drawer').hidden && this.moving < 0;
       const mk = show ? this.moreKey(h) : '';
-      if (show && (this.moreSig !== mk || $('#more').hidden)) { this.moreSig = mk; $('#more').hidden = false; this.renderMore(); }
-      else if (show) this.placeMore(h);
+      if (show && this.moreSig !== mk) { this.moreSig = mk; this.renderMore(); }
+      else if (show && this.moreHas) { if ($('#more').hidden) $('#more').hidden = false; this.placeMore(h); }
       else if (!$('#more').hidden) $('#more').hidden = true;
     } else { $('#more').hidden = true; $('#hero-stats').hidden = true; this.statsOpen = false; }
     // gợi ý ngắn trên hàng thẻ
@@ -2213,14 +2225,15 @@ class UI {
   }
 
   // Thanh thao tác nổi ngay trên tướng đang chọn (v37): chạm tướng là thấy, mỗi việc 1 chạm.
-  // Hợp thể làm luôn khi đủ điều kiện; ghép sao / đổi chỗ = giữ & kéo; hủy = chạm 2 lần hoặc kéo vào 🗑.
+  // Hợp thể làm luôn khi đủ điều kiện; ghép sao / đổi chỗ = giữ & kéo; hủy = kéo tướng thả vào thùng 🗑 ở dưới.
+  // v180: bỏ nút Hủy trên bong bóng; không còn nút nào (không Thần tinh / Hợp thể) thì không hiện bong bóng.
   moreKey(h) {
     const g = this.game;
     const fz = (ASCEND[h.type] || []).map((to) => {
       const o = g.heroes.find((x) => x && x !== h && x.type === fusionPartner(h.type, to) && typeof g.canFuse(x, h) !== 'string');
       return o ? o.slot : -1;
     }).join();
-    return [h.id, h.type, h.tier, h.skillPts, h.notice.skills, h.notice.evo, h.from, fz, this.sellArmed, h.spent].join('|');
+    return [h.id, h.type, h.tier, h.skillPts, h.notice.skills, h.notice.evo, h.from, fz, h.spent].join('|');
   }
   renderMore() {
     const g = this.game;
@@ -2237,9 +2250,10 @@ class UI {
       // v171: bỏ nút Ghép sao / Trang bị — ghép = kéo tướng thả lên tướng cùng loại cùng sao (hoặc Ghép tự động), mặc đồ = Tự mặc đồ / Túi đồ
       h.from ? b(h.notice.evo ? 'notice' : '', 'open-evo', '✦', t < 3 ? `Thần tinh ★${t + 1}` : 'Thần tinh') : '',
       ...readyF.map((f) => b('fuse', 'fuse-with', '✸', `→ ${HEROES[f.to].name}`, `data-slot="${f.o.slot}" style="color:${RARITY[HEROES[f.to].legend].color}"`)),
-      b(`danger ${this.sellArmed ? 'armed' : ''}`, 'sell', '🗑', this.sellArmed ? `Chắc chắn? +${g.sellValue(h)}` : 'Hủy'),
     ].join('');
-    this.placeMore(h);
+    this.moreHas = !!$('#more').innerHTML;
+    $('#more').hidden = !this.moreHas;
+    if (this.moreHas) this.placeMore(h);
   }
   // đặt thanh ngay trên đầu tướng, kẹp trong màn hình
   placeMore(h) {
@@ -3025,15 +3039,6 @@ class UI {
         $('#more').hidden = true;
         this.moving = this.moving >= 0 ? -1 : this.sel;
         if (this.moving >= 0) this.toast('Chạm vào ô muốn chuyển tướng tới (ô có tướng thì đổi chỗ)', '#9dffc4');
-        break;
-      case 'sell':
-        if (!h) break;
-        if (!this.sellArmed) { this.sellArmed = true; this.renderMore(); break; }
-        $('#more').hidden = true;
-        if (COOP.on && !g.co.canAct(COOP.me, this.sel)) { this.toast('Đây là tướng của đồng đội', '#E25A3A'); break; }
-        this.toast(`Đã hủy ${HEROES[h.type].name}: +${g.sellValue(h)} vàng`, '#F2D27A');
-        C('sellHero', [this.sel]);
-        this.clearSel();
         break;
       case 'levelup': if (h) this.doLevelUp(h); break;
       case 'train': if (h) C('trainHero', [h], fail); break;
