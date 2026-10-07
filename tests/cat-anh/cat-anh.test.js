@@ -160,9 +160,9 @@ print(json.dumps([list(m.nhan_dien(f)) for f in ['Thaymo (1).PNG', 'trung-kim.pn
   py([path.join(__dirname, 'tao-anh-mau-2.py'), VAO2]);
   const out2 = py(['tools/cat_anh.py', VAO2]);
   const RA2 = path.join(VAO2, 'da-cat'), f2 = walk(path.join(RA2, 'assets')).sort();
-  const want = ['packs/daibang/walk1.png', 'packs/daibang/walk2.png', 'packs/daibang/attack.png', 'packs/daibang/rage.png', 'do-ghep_cung-mat-chim.png', 'do-ghep_ngoc-tran-thuy.png', 'do-ghep_trong-dong.png', 'do-ghep_gay-thoi-khong.png', 'ui/ic-hanh-moc.png', 'ui/ic-hanh-thuy.png', 'tiles/duong-dat.jpg', 'chua-dung/clean-button-hover.png', 'chua-dung/thap-phong-thu_v2/thap-phong-thu_v2-6.png', 'chua-dung/thap-phong-thu_v3/thap-phong-thu_v3-5.png'];
-  ok(want.every((f) => f2.includes(f)) && f2.length === 30 && !f2.some((f) => /walk_|rage_|idle/.test(f)), `ra đúng ${f2.length} file: 4 dáng boss (không chia lưới ảnh một dáng), đồ ghép 2×2, icon ngũ hành, kết cấu JPG, ảnh chưa dùng vào chua-dung/`);
-  ok(/daibang_pose01\.png, daibang_pose02\.png, daibang_pose03\.png, daibang_pose04\.png → daibang \(boss4 \(từng dáng\)/.test(out2) && /127e45df08[^\n]*bỏ qua/.test(out2), 'gom daibang_pose01..04 thành một bộ dáng; ảnh ghi "bỏ" thì bỏ qua');
+  const want = ['packs/daibang/walk1.png', 'packs/daibang/walk2.png', 'packs/daibang/attack.png', 'packs/daibang/rage.png', 'do-ghep_cung-mat-chim.png', 'do-ghep_ngoc-tran-thuy.png', 'do-ghep_trong-dong.png', 'do-ghep_gay-thoi-khong.png', 'ui/ic-hanh-moc.png', 'ui/ic-hanh-thuy.png', 'tiles/duong-dat.jpg'];
+  ok(want.every((f) => f2.includes(f)) && f2.length === 18 && !f2.some((f) => /walk_|rage_|idle|chua-dung/.test(f)), `ra đúng ${f2.length} file: 4 dáng boss (không chia lưới ảnh một dáng), đồ ghép 2×2, icon ngũ hành, kết cấu JPG; không còn thư mục chua-dung/`);
+  ok(/daibang_pose01\.png, daibang_pose02\.png, daibang_pose03\.png, daibang_pose04\.png → daibang \(boss4 \(từng dáng\)/.test(out2) && /127e45df08[^\n]*bỏ — game không dùng/.test(out2) && /clean_button_hover[^\n]*bỏ — game không dùng/.test(out2) && /thap-phong-thu_v3[^\n]*bỏ — game không dùng/.test(out2) && /bỏ — game không dùng \(\d+ ảnh, không ghi file\)/.test(out2), 'gom daibang_pose01..04 thành một bộ dáng; ảnh game không dùng (ảnh đen, clean_button, thap-phong-thu…) bỏ qua, chỉ liệt kê "bỏ — game không dùng"');
   const px = JSON.parse(py(['-c', `
 import json, sys
 from PIL import Image
@@ -195,6 +195,8 @@ print(json.dumps({'moc': col('ui/ic-hanh-moc.png'), 'kim': col('ui/ic-hanh-kim.p
   const r2 = cmpAll(png2.map((f) => [path.join(RA2, 'assets', f), path.join(H2, 'assets', f)]));
   const bad2 = r2.map((r, i) => [png2[i], r]).filter(([, r]) => JSON.stringify(r.size[0]) !== JSON.stringify(r.size[1]) || r.alphaDiff > 0.01 || r.meanDiff > 3);
   ok(bad2.length === 0, 'ảnh bản HTML cùng cỡ, gần trùng bản Python ' + JSON.stringify(bad2.slice(0, 3)));
+  const bo2 = await p2.evaluate(() => [document.getElementById('dem').textContent, document.querySelectorAll('.the.bo').length]);
+  ok(/\d+ bỏ — game không dùng/.test(bo2[0]) && bo2[1] >= 4, `trang HTML: ảnh game không dùng viền xám, đếm riêng (${bo2[0]})`);
   await p2.close();
   ok(errs.length === 0, 'không lỗi JS ' + errs.join(' | '));
   await browser.close();
