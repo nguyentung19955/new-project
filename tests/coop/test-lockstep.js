@@ -79,8 +79,8 @@ async function run(browser) {
   for (const p of [A, B]) await setCfg(p);
 
   // ---- phòng chờ bằng giao diện
-  await A.evaluate(() => { ui.save.unlocked = Math.max(ui.save.unlocked || 1, 2); });
   await A.evaluate(() => ui.showModes());
+  check(await A.evaluate(() => document.querySelectorAll('#modes .md-card').length === 2 && !/Phó Bản/.test(document.querySelector('#modes').innerText)), 'màn Chọn chế độ: chỉ Vô Tận + Cùng Giữ Thành');
   await click(A, '.md-card.coop');
   await click(A, '[data-act=coop-create]');
   const code = await waitFor(() => A.evaluate(() => ui.lobby && ui.lobby.code), 5000, 'tạo phòng');
@@ -91,10 +91,12 @@ async function run(browser) {
   await waitFor(() => A.evaluate(() => ui.lobby && ui.lobby.room && ui.lobby.room.members.length === 2), 5000, 'khách vào phòng');
   const lobbyTxt = await A.evaluate(() => document.querySelector('#coop').innerText);
   check(/Chủ phòng/.test(lobbyTxt) && /Khách/.test(lobbyTxt), 'màn chờ hiện 2 người');
+  check(await A.evaluate(() => document.querySelectorAll('#coop [data-act=coop-lv]').length === LEVELS.length) && !/(^|\s)Ải(\s|$)/.test(lobbyTxt), 'chủ phòng chọn được cả ' + 17 + ' bản đồ vô tận, không còn chữ "Ải"');
   await click(A, '[data-act=coop-lv][data-i="1"]');
-  await waitFor(() => B.evaluate(() => ui.lobby && ui.lobby.room && ui.lobby.room.level === 1), 5000, 'khách thấy ải đã chọn');
+  await waitFor(() => B.evaluate(() => ui.lobby && ui.lobby.room && ui.lobby.room.level === 1), 5000, 'khách thấy bản đồ đã chọn');
   await click(A, '[data-act=coop-start]');
   await waitFor(async () => (await A.evaluate(() => COOP.on)) && (await B.evaluate(() => COOP.on)), 5000, 'vào trận');
+  check(await A.evaluate(() => game.endless) && await B.evaluate(() => game.endless), 'trận nhóm là vô tận');
   const own = await A.evaluate(() => [game.co.own.filter((x) => x === 0).length, game.co.own.filter((x) => x === 1).length]);
   check(Math.abs(own[0] - own[1]) <= 1, `chia ô công bằng: ${own[0]} / ${own[1]}`);
   await waitFor(async () => (await B.evaluate(() => COOP.hashes.has(60))), 10000, 'mốc hash đầu tiên');
@@ -223,6 +225,8 @@ async function run(browser) {
   await waitFor(async () => (await A.evaluate(() => !COOP.on)) && (await B.evaluate(() => !COOP.on)), 120000, 'hết trận');
   const k1 = await Promise.all([A, B].map((p) => p.evaluate(() => ui.save.kho || 0)));
   check(k1[0] >= k0[0] && k1[1] >= k0[1] && (k1[0] > k0[0] || k1[1] > k0[1]), `kết thúc trận: Ngân khố ${k0} → ${k1}`);
+  const [res, lvName] = await B.evaluate(() => [document.querySelector('#result').innerText, LEVELS[1].name]);
+  check(/Giữ được tới đợt/.test(res) && res.includes(lvName) && !/(^|\s)Ải(\s|$)/.test(res), 'màn kết quả nhóm: theo bản đồ, không chữ "Ải"');
   const after = await A.evaluate(() => { ui.showMenu(); ui.startLevel(0); document.querySelector('#prep').hidden = true; for (let i = 0; i < 300; i++) game.update(1 / 30); return { coop: SIM.coop, co: !!game.co, gold: typeof Object.getOwnPropertyDescriptor(game, 'gold').value }; });
   check(!after.coop && !after.co && after.gold === 'number', 'sau trận nhóm, chơi đơn trở lại bình thường');
   check(errors.length === 0, 'không có lỗi JS' + (errors.length ? ': ' + errors.slice(0, 5).join(' | ') : ''));
