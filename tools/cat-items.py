@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Cắt một tấm icon (1 hàng × 4–5 ô, nền hồng tím) thành từng file theo tools/item-sheets.json (128 px).
+"""Cắt một tấm icon (1 hàng × 4–5 ô, nền hồng tím) thành từng file theo tools/item-sheets.json (128 px;
+tấm icon nhỏ ic-… ghi "size": 64 trong item-sheets.json).
 
-  python3 tools/cat-items.py <ảnh.png> <mã tấm>      vd. do-riu, bo-son-tinh, phu-kien-1, ui-tran-4, de-tuong, cong-thanh
+  python3 tools/cat-items.py <ảnh.png> <mã tấm> [cỡ px]   vd. do-riu, bo-son-tinh, phu-kien-1, ui-tran-4, de-tuong, cong-thanh, ic-chi-so-1
   Kết cấu đường (duong-nuoc, duong-dat…): không xoá nền, chỉ cắt vuông 512 px → assets/tiles/duong-<loại>.jpg
   python3 tools/cat-items.py <ảnh.png> ui-huy-chuong lap=4   → lấp lỗ kín ô 4 (giữ thẻ nền cùng màu nền ảnh)
 Ảnh Pippit nền hồng sen (không phải #FF00FF) được nhận ra tự động (cat-sheet.key_pink), dấu "AI" góc dưới phải tự xoá.
@@ -24,6 +25,7 @@ def main():
     sheets = json.load(open(os.path.join(here, 'item-sheets.json'), encoding='utf8'))
     if code not in sheets: sys.exit(f'Không có tấm {code}. Có: {", ".join(sheets)}')
     files = sheets[code]['files']; n = len(files)
+    size = next((int(a) for a in sys.argv[3:] if a.isdigit()), sheets[code].get('size', 128))
     out = os.path.join(here, '..', 'assets', sheets[code]['dir']); os.makedirs(out, exist_ok=True)
     if sheets[code].get('texture'):
         # kết cấu lặp (đường quái đi, v156): không xoá nền, chỉ đưa về hình vuông N px và lưu JPG
@@ -49,8 +51,8 @@ def main():
         c = c.crop(bb); side = int(max(c.size) * 1.08)
         sq = Image.new('RGBA', (side, side), (0, 0, 0, 0))
         sq.paste(c, ((side - c.width) // 2, (side - c.height) // 2))
-        cs.save_light(sq.resize((128, 128), Image.LANCZOS), os.path.join(out, f))
-    print(f"{code}: {', '.join(files)}")
+        cs.save_light(sq.resize((size, size), Image.LANCZOS), os.path.join(out, f))
+    print(f"{code} ({size} px): {', '.join(files)}")
 
 if __name__ == '__main__':
     main()

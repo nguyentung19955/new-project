@@ -45,6 +45,68 @@ const UIE = { star: () => uiE('ui-tran-4-1', '★'), equip: () => uiE('ui-tran-4
   tip: () => uiE('ui-tran-5-1', '💡'), endless: () => uiE('ui-tran-5-2', '♾'), battle: () => uiE('ui-tran-5-3', '⚔'), done: () => uiE('ui-tran-5-4', '✓'),
   medal: (i) => uiE(`ui-huy-chuong-${i + 1}`, ['🥇', '🥈', '🥉', '👑'][i]) };
 const uiIc = (name, fallback = '') => (assetUrl(`ui_${name}.png`) ? `<img class="uiic" src="${assetUrl(`ui_${name}.png`)}" alt="">` : fallback);
+// v159: icon nhỏ (chỉ số, trạng thái, tiền tệ…) — ảnh assets/ui/ic-<tên>.png (cắt bằng tools/cat-items.py ic-…),
+// chưa có ảnh thì vẽ SVG nội tuyến (KHÔNG dùng emoji: điện thoại thiếu font sẽ hiện ô vuông). Bảng kê: docs/ICON-NHO.md
+const IC_ALT = { vang: ['ui_dong-xu.png', 'ui/ui-tai-nguyen-1.png'], mang: ['ui_mang.png', 'ui/ui-tai-nguyen-2.png'], bac: ['ui/ui-tai-nguyen-3.png'],
+  'tu-vi': ['ui/ui-tai-nguyen-4.png'], 'hu-bau': ['ui_hu-bau.png'], 'nuoc-dang': ['ui_muc-nuoc.png'] };
+const IC_O = 'stroke="#2A1608" stroke-width="1.5" stroke-linejoin="round"';
+const IC_SVG = {
+  giap: `<path d="M12 2.5 L20 5.5 V11 C20 16 16.5 19.5 12 21.5 C7.5 19.5 4 16 4 11 V5.5 Z" fill="#C9963A" ${IC_O}/><path d="M12 5.5 V18.5 M7 9.5 H17" stroke="#7A5418" stroke-width="1.6"/>`,
+  'khang-phep': `<circle cx="12" cy="12" r="8.5" fill="#8A5CD0" ${IC_O}/><circle cx="12" cy="12" r="4.5" fill="none" stroke="#E4D2FF" stroke-width="1.6"/><circle cx="9.5" cy="8.5" r="1.6" fill="#fff"/>`,
+  'toc-chay': `<ellipse cx="8.5" cy="9" rx="3.2" ry="5" fill="#B8C86A" ${IC_O}/><ellipse cx="15.5" cy="15" rx="3.2" ry="5" fill="#B8C86A" ${IC_O}/>`,
+  'toc-danh': `<path d="M13.5 2 L5 13.5 H11 L9.5 22 L19 9.5 H13 Z" fill="#FFD23A" ${IC_O}/>`,
+  'sat-thuong': `<path d="M19.5 3 L21 4.5 L10 15.5 L8.5 14 Z" fill="#E8E2D0" ${IC_O}/><path d="M6 12 L12 18 M5 19 L8.5 15.5" stroke="#2A1608" stroke-width="2.6" stroke-linecap="round"/><path d="M6 12 L12 18" stroke="#C9963A" stroke-width="1.4" stroke-linecap="round"/>`,
+  mau: `<path d="M12 2.5 C15 7 18.5 10.5 18.5 14.5 A6.5 6.5 0 0 1 5.5 14.5 C5.5 10.5 9 7 12 2.5 Z" fill="#E0402A" ${IC_O}/><path d="M9 14 A3 3 0 0 0 11 17" stroke="#FFB0A0" stroke-width="1.5" fill="none" stroke-linecap="round"/>`,
+  'chi-mang': `<path d="M12 1.5 L14.2 8.2 L21 6.5 L16.2 11.8 L21.5 16.5 L14.5 16 L12 22.5 L9.5 16 L2.5 16.5 L7.8 11.8 L3 6.5 L9.8 8.2 Z" fill="#FF6A3A" ${IC_O}/><circle cx="12" cy="12" r="2.6" fill="#FFE07A"/>`,
+  'tam-danh': `<circle cx="12" cy="12" r="9" fill="#F2E6C8" ${IC_O}/><circle cx="12" cy="12" r="5.5" fill="#E0402A" stroke="#2A1608" stroke-width="1.2"/><circle cx="12" cy="12" r="2.2" fill="#F2E6C8"/>`,
+  'hoi-chieu': `<path d="M6 2.5 H18 M6 21.5 H18" stroke="#2A1608" stroke-width="2.4" stroke-linecap="round"/><path d="M7 3.5 H17 C17 8 13.5 10 12 12 C13.5 14 17 16 17 20.5 H7 C7 16 10.5 14 12 12 C10.5 10 7 8 7 3.5 Z" fill="#9ED8F2" ${IC_O}/><path d="M9 19.5 L12 16.5 L15 19.5 Z" fill="#E8C25A"/>`,
+  'nang-luong': `<path d="M12 2.5 C15 7 18.5 10.5 18.5 14.5 A6.5 6.5 0 0 1 5.5 14.5 C5.5 10.5 9 7 12 2.5 Z" fill="#3A8CE8" ${IC_O}/><path d="M9 14 A3 3 0 0 0 11 17" stroke="#BFE0FF" stroke-width="1.5" fill="none" stroke-linecap="round"/>`,
+  'suc-manh': `<rect x="5" y="7" width="14" height="12" rx="4" fill="#E88A4A" ${IC_O}/><path d="M9 7.5 V11 M12.5 7.5 V11 M16 7.5 V11 M5.5 13 H11" stroke="#2A1608" stroke-width="1.3"/>`,
+  'nhanh-nhen': `<path d="M19 3 C10 4 5 11 5 20 C12 19 18 13 19 3 Z" fill="#6AD06A" ${IC_O}/><path d="M5 20 L15 8" stroke="#2A1608" stroke-width="1.3"/>`,
+  'tri-tue': `<path d="M2.5 6 C6 4.5 9.5 4.5 12 6.5 C14.5 4.5 18 4.5 21.5 6 V19 C18 17.5 14.5 17.5 12 19.5 C9.5 17.5 6 17.5 2.5 19 Z" fill="#7AB4F0" ${IC_O}/><path d="M12 6.5 V19.5" stroke="#2A1608" stroke-width="1.3"/>`,
+  'giam-sat-thuong': `<path d="M12 2.5 L20 5.5 V11 C20 16 16.5 19.5 12 21.5 C7.5 19.5 4 16 4 11 V5.5 Z" fill="#6A9AA8" ${IC_O}/><path d="M12 7 V16 M8.5 12.5 L12 16 L15.5 12.5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>`,
+  'xuyen-giap': `<path d="M3 21 L13 11" stroke="#8A5A2A" stroke-width="2.8" stroke-linecap="round"/><path d="M12 7 L21 3 L17 12 Z" fill="#C9963A" ${IC_O}/><path d="M3 21 L13 11" stroke="#2A1608" stroke-width="1" stroke-linecap="round" opacity=".5"/>`,
+  'xuyen-phep': `<path d="M3 21 L13 11" stroke="#6A4AA0" stroke-width="2.8" stroke-linecap="round"/><path d="M12 7 L21 3 L17 12 Z" fill="#B48AF0" ${IC_O}/>`,
+  cham: `<path d="M3 18 H18 C20.5 18 21.5 16.5 21 15" fill="none" ${IC_O} stroke-width="2"/><circle cx="11" cy="12" r="6" fill="#C89A5A" ${IC_O}/><path d="M11 12 m-1.5 0 a1.5 1.5 0 1 1 1.5 1.5 a3.5 3.5 0 1 1 3.5 -3.5" fill="none" stroke="#2A1608" stroke-width="1.3"/>`,
+  choang: `<ellipse cx="12" cy="13" rx="9" ry="4" fill="none" stroke="#FFD23A" stroke-width="1.8"/><path d="M6 6 L7 8.5 L9.5 8.8 L7.6 10.3 L8.2 12.8 L6 11.4 L3.8 12.8 L4.4 10.3 L2.5 8.8 L5 8.5 Z M18 4 L19 6.5 L21.5 6.8 L19.6 8.3 L20.2 10.8 L18 9.4 L15.8 10.8 L16.4 8.3 L14.5 6.8 L17 6.5 Z" fill="#FFD23A" stroke="#2A1608" stroke-width="1"/>`,
+  dot: `<path d="M12 2 C15.5 6.5 19 9.5 18 15 C17.2 19 14.5 21.5 12 21.5 C9.5 21.5 6.8 19 6 15 C5.5 11.5 8 9.5 8.8 6.5 C10 8.5 10.8 9.8 12 10.5 C12.8 8 13 5 12 2 Z" fill="#FF7A2A" ${IC_O}/><path d="M12 13 C13.5 15 14.5 16 14 18 C13.5 19.5 10.5 19.5 10 18 C9.6 16.5 11 15 12 13 Z" fill="#FFD23A"/>`,
+  doc: `<path d="M12 2.5 C15 7 18.5 10.5 18.5 14.5 A6.5 6.5 0 0 1 5.5 14.5 C5.5 10.5 9 7 12 2.5 Z" fill="#6AC83A" ${IC_O}/><circle cx="10" cy="14" r="1.6" fill="#2A1608"/><circle cx="14" cy="14" r="1.6" fill="#2A1608"/><path d="M10 17.5 H14" stroke="#2A1608" stroke-width="1.4"/>`,
+  'dong-bang': `<path d="M12 2 V22 M3.3 7 L20.7 17 M3.3 17 L20.7 7" stroke="#2A1608" stroke-width="3.6" stroke-linecap="round"/><path d="M12 2 V22 M3.3 7 L20.7 17 M3.3 17 L20.7 7" stroke="#9EE6FF" stroke-width="1.8" stroke-linecap="round"/>`,
+  'sa-lay': `<path d="M2.5 15 C5 12 8 12 12 13.5 C16 12 19 12 21.5 15 V20 H2.5 Z" fill="#8A6A3A" ${IC_O}/><circle cx="8" cy="9" r="2" fill="#B8925A" stroke="#2A1608" stroke-width="1.2"/><circle cx="15" cy="6.5" r="1.5" fill="#B8925A" stroke="#2A1608" stroke-width="1.2"/>`,
+  khien: `<circle cx="12" cy="12" r="9" fill="#5AD0F0" fill-opacity=".45" ${IC_O}/><path d="M7 8.5 A6.5 6.5 0 0 1 12 5.5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>`,
+  'hoi-mau': `<path d="M9 3 H15 V9 H21 V15 H15 V21 H9 V15 H3 V9 H9 Z" fill="#4AD05A" ${IC_O}/>`,
+  'noi-gian': `<path d="M4 9 C7 9 9 7 9 4 M15 4 C15 7 17 9 20 9 M20 15 C17 15 15 17 15 20 M9 20 C9 17 7 15 4 15" stroke="#2A1608" stroke-width="4.4" fill="none" stroke-linecap="round"/><path d="M4 9 C7 9 9 7 9 4 M15 4 C15 7 17 9 20 9 M20 15 C17 15 15 17 15 20 M9 20 C9 17 7 15 4 15" stroke="#FF4A2A" stroke-width="2.4" fill="none" stroke-linecap="round"/>`,
+  bay: `<path d="M3 15 C6 7 13 4 21 4 C19 7 18 9 15 10 C17 10.5 18 11.5 18 12.5 C15.5 12.5 14 13 12.5 14.5 C13.5 15 14 16 14 17 C10 17 6 16.5 3 15 Z" fill="#F2F0E8" ${IC_O}/>`,
+  boss: `<path d="M3 18 L4 7 L8.5 11 L12 4 L15.5 11 L20 7 L21 18 Z" fill="#E0402A" ${IC_O}/><rect x="3" y="18" width="18" height="3" fill="#C9963A" ${IC_O}/><circle cx="12" cy="14" r="1.8" fill="#FFD23A"/>`,
+  'cam-lang': `<path d="M4 5 H20 V15 H11 L6 19.5 V15 H4 Z" fill="#E8E2D0" ${IC_O}/><path d="M5 20 L20 4" stroke="#E0402A" stroke-width="2.4" stroke-linecap="round"/>`,
+  'tinh-anh': `<path d="M12 2.5 L20 9.5 L12 21.5 L4 9.5 Z" fill="#A86CE0" ${IC_O}/><path d="M4 9.5 H20 M9 9.5 L12 21.5 L15 9.5 M8 5.5 L9 9.5 M16 5.5 L15 9.5" stroke="#2A1608" stroke-width="1"/>`,
+  lan: `<path d="M3 11 q3 -3 6 0 t6 0 t6 0 M3 16 q3 -3 6 0 t6 0 t6 0" stroke="#2A1608" stroke-width="3.6" fill="none" stroke-linecap="round"/><path d="M3 11 q3 -3 6 0 t6 0 t6 0 M3 16 q3 -3 6 0 t6 0 t6 0" stroke="#5AB4F0" stroke-width="1.8" fill="none" stroke-linecap="round"/>`,
+  vang: `<circle cx="12" cy="12" r="9" fill="#F2C23A" ${IC_O}/><circle cx="12" cy="12" r="6.2" fill="none" stroke="#B8861A" stroke-width="1.2"/><rect x="10" y="10" width="4" height="4" fill="#7A5418"/>`,
+  mang: `<path d="M12 20.5 C3.5 14 2 9.5 4.5 6 C7 3 10.5 4 12 7 C13.5 4 17 3 19.5 6 C22 9.5 20.5 14 12 20.5 Z" fill="#E25A3A" ${IC_O}/>`,
+  bac: `<path d="M3 11 C6 13 18 13 21 11 L18.5 18 H5.5 Z" fill="#D8DEE6" ${IC_O}/><ellipse cx="12" cy="11" rx="5" ry="3" fill="#F2F4F8" ${IC_O}/>`,
+  'tu-vi': `<circle cx="12" cy="12" r="9" fill="#F2F0E8" ${IC_O}/><path d="M12 3 A9 9 0 0 1 12 21 A4.5 4.5 0 0 1 12 12 A4.5 4.5 0 0 0 12 3 Z" fill="#2A1608"/><circle cx="12" cy="7.5" r="1.4" fill="#2A1608"/><circle cx="12" cy="16.5" r="1.4" fill="#F2F0E8"/>`,
+  'tui-vang': `<path d="M8 6 C6 9 4 12 4 15.5 C4 19 7 21 12 21 C17 21 20 19 20 15.5 C20 12 18 9 16 6 Z" fill="#C89A5A" ${IC_O}/><path d="M8 6 H16 L14.5 3 H9.5 Z" fill="#A87A3A" ${IC_O}/><circle cx="12" cy="14.5" r="3.4" fill="#F2C23A" stroke="#2A1608" stroke-width="1.2"/>`,
+  'diem-ky-nang': `<circle cx="12" cy="12" r="9.5" fill="#2F6B5E" ${IC_O}/><path d="M12 5 L13.8 9.6 L18.6 9.8 L14.8 12.8 L16.2 17.5 L12 14.8 L7.8 17.5 L9.2 12.8 L5.4 9.8 L10.2 9.6 Z" fill="#FFD23A" stroke="#2A1608" stroke-width="1"/>`,
+  'diem-an-phu': `<rect x="4" y="4" width="16" height="16" rx="4" fill="#9A8A7A" ${IC_O}/><circle cx="12" cy="12" r="4" fill="none" stroke="#FFD66B" stroke-width="1.8"/><path d="M12 5.5 V8 M12 16 V18.5 M5.5 12 H8 M16 12 H18.5" stroke="#FFD66B" stroke-width="1.8"/>`,
+  'luc-chien': `<path d="M4 4 L15 15 M20 4 L9 15" stroke="#2A1608" stroke-width="4" stroke-linecap="round"/><path d="M4 4 L15 15 M20 4 L9 15" stroke="#E8E2D0" stroke-width="2" stroke-linecap="round"/><path d="M13 17 L17 13 L20 16 L16 20 Z M11 17 L7 13 L4 16 L8 20 Z" fill="#C9963A" stroke="#2A1608" stroke-width="1.2"/>`,
+  'cap-do': `<path d="M4 12 L12 4 L20 12 M4 20 L12 12 L20 20" stroke="#2A1608" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 12 L12 4 L20 12 M4 20 L12 12 L20 20" stroke="#6AE06A" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
+  kho: `<path d="M12 3 C17 3 20 6.5 20 11 C20 13.5 18.8 15 17.5 15.8 V19.5 H6.5 V15.8 C5.2 15 4 13.5 4 11 C4 6.5 7 3 12 3 Z" fill="#E8E2D0" ${IC_O}/><circle cx="9" cy="11" r="2.2" fill="#C8401E"/><circle cx="15" cy="11" r="2.2" fill="#C8401E"/><path d="M10 19.5 V16.5 M14 19.5 V16.5" stroke="#2A1608" stroke-width="1.2"/>`,
+  'nuoc-dang': `<path d="M2.5 15 q2.4 -3 4.8 0 t4.8 0 t4.8 0 t4.8 0 V21 H2.5 Z" fill="#3A8CE8" ${IC_O}/><path d="M12 11 V3 M8.5 6.5 L12 3 L15.5 6.5" stroke="#2A1608" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M12 11 V3 M8.5 6.5 L12 3 L15.5 6.5" stroke="#9ED8F2" stroke-width="2" fill="none" stroke-linecap="round"/>`,
+  'khac-che': `<path d="M3 12 H16 M12 6 L18 12 L12 18" stroke="#2A1608" stroke-width="4.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 12 H16 M12 6 L18 12 L12 18" stroke="#FF8A4A" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="12" r="2" fill="#FFD23A" stroke="#2A1608" stroke-width="1"/>`,
+  'nang-cap': `<path d="M12 3 L20 12 H15.5 V21 H8.5 V12 H4 Z" fill="#4AD05A" ${IC_O}/>`,
+  'hu-bau': `<path d="M8 4 H16 V7 C19 9 20 12 19.5 15 C19 19 16 21 12 21 C8 21 5 19 4.5 15 C4 12 5 9 8 7 Z" fill="#B87A3A" ${IC_O}/><path d="M5.5 13 H18.5" stroke="#F2C23A" stroke-width="1.8"/>`,
+};
+// danh sách tên có ảnh riêng (để tải trước một lần khi vào game)
+const IC_NAMES = Object.keys(IC_SVG);
+const icPaths = (name) => [`ui/ic-${name}.png`, ...(IC_ALT[name] || [])];
+// như nút giao diện (ui-tran-…): luôn dùng ảnh khi có, không phụ thuộc cài đặt "ảnh AI"
+const icUrl = (name) => { const p = icPaths(name).find((x) => asset(x, true)); return p ? assetSrc(p) : ''; };
+function ic(name, alt = '', cls = '') {
+  const u = icUrl(name);
+  if (u) return `<img class="icn ${cls}" src="${u}" alt="${alt}">`;
+  return `<svg class="icn ${cls}" viewBox="0 0 24 24"${alt ? ` aria-label="${alt}"` : ' aria-hidden="true"'}>${IC_SVG[name] || ''}</svg>`;
+}
+const icPreload = () => { IC_NAMES.forEach(icUrl); Object.keys(ELEMENTS).forEach((e) => asset(`ui/ic-hanh-${e}.png`, true)); };
 const rarCls = (r) => ({ common: 'rt', rare: 'rh', epic: 'rs', legendary: 'rl' }[r]);
 const ATTR_CLS = { str: 'a-str', agi: 'a-agi', int: 'a-int' };
 const BOSS_LINES = {
@@ -140,7 +202,8 @@ const EL_PATH = {
 function elIcon(el, size = 16) {
   const e = ELEMENTS[el];
   if (!e) return '';
-  const png = assetUrl(`hanh_${el}.png`);
+  // v159: bộ 5 icon ngũ hành mới (ui/ic-hanh-*.png, tấm ic-ngu-hanh) luôn dùng khi có; ảnh hanh_*.png cũ chỉ khi bật ảnh AI
+  const png = (asset(`ui/ic-hanh-${el}.png`, true) && assetSrc(`ui/ic-hanh-${el}.png`)) || assetUrl(`hanh_${el}.png`);
   if (png) return `<img class="eli" src="${png}" width="${size}" height="${size}" alt="Hành ${e.name}">`;
   return `<svg class="eli" viewBox="0 0 24 24" width="${size}" height="${size}" aria-label="Hành ${e.name}"><circle cx="12" cy="12" r="11" fill="#1A1208" stroke="${e.color}" stroke-width="1.6"/><circle cx="12" cy="12" r="8.6" fill="none" stroke="${e.color}" stroke-width="0.6" stroke-dasharray="1.2 1.4" opacity=".7"/><g fill="none" stroke="${e.color}" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">${EL_PATH[el]}</g></svg>`;
 }
@@ -224,6 +287,7 @@ class UI {
     this.save = loadSave();
     // v43: mặc định dùng hình tự vẽ (vector); ảnh AI trong assets/ chỉ bật khi chọn trong Cài đặt
     useAssets = !!this.save.settings.aiArt;
+    icPreload();
     this.scale = 1;
     this.sel = -1;          // ô có tướng đang chọn
     this.spot = -1;         // ô trống đang chọn
@@ -557,10 +621,10 @@ class UI {
         <button class="btn btn-gold title" style="height:40px;padding:0 18px;font-size:17px" data-act="prep-go">Vào trận ▶</button></div>
       <div class="prep-body">
         <div class="prep-col"><div class="h">Hậu cần</div>
-          ${card('gold', 'Lương thảo', `+${PREP.goldAmount} vàng đầu trận`, PREP.goldCost, '🌾', b.gold)}
-          ${card('jar', 'Hũ đồng', 'Mở ngay 2 món Hiếm trở lên vào túi', PREP.jarCost, '🏺', b.jar)}
+          ${card('gold', 'Lương thảo', `+${PREP.goldAmount} vàng đầu trận`, PREP.goldCost, ic('tui-vang'), b.gold)}
+          ${card('jar', 'Hũ đồng', 'Mở ngay 2 món Hiếm trở lên vào túi', PREP.jarCost, ic('hu-bau'), b.jar)}
           ${card('king', 'Hũ Vua Hùng', 'Mở ngay 2 món Sử thi trở lên (35% đồ bộ)', PREP.kingCost, UIE.medal(3), b.king)}
-          ${card('lives', 'Đắp thành', `+${PREP.livesAmount} mạng`, PREP.livesCost, '🧱', b.lives)}
+          ${card('lives', 'Đắp thành', `+${PREP.livesAmount} mạng`, PREP.livesCost, ic('mang'), b.lives)}
           <button class="prep-card metal" data-act="prep-forge"><span class="ic">⚒</span><b>Lò đúc đồng</b><small>Mua và đúc đồ bằng Ngân khố. Đồ Huyền thoại hiếm và đắt</small><span class="cost">Mở ›</span></button></div>
         <div class="prep-col wide"><div class="h">Tướng đã sở hữu (hợp thể được trong trận)</div>
           <div class="prep-heroes">${LEGEND_HEROES.filter((t) => (this.save.owned || []).includes(t)).map((t) => `<span class="prep-hero metal ${HEROES[t].legend}"><img src="${heroImgUrl(t, 'head')}" alt=""><b>${HEROES[t].name}</b></span>`).join('')
@@ -1171,7 +1235,7 @@ class UI {
           <button class="btn metal" style="margin-left:auto" data-act="set-feedback">✉ Góp ý</button></div>
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 160 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 161 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1620,7 +1684,7 @@ class UI {
   updateTopbar() {
     const g = this.game;
     const total = g.levelWaves;
-    this.setText('#tb-wave', (g.endless ? `Đợt ${g.wave} · Vô tận` : `Đợt ${g.wave} / ${total}`) + (g.hard ? ' · 🔥 Khó' : ''));
+    { const wt = g.endless ? `Đợt ${g.wave} · Vô tận` : `Đợt ${g.wave} / ${total}`; this.setHTML('#tb-wave', wt + g.hard + assetVersion, wt + (g.hard ? ` · ${ic('kho')}Khó` : '')); }
     const prog = g.waveActive && g.waveTotal ? 1 - (g.spawnQueue.length + g.enemies.length * 0.5) / (g.waveTotal * 1.5) : 0;
     $('#tb-fill').style.width = `${Math.max(0, Math.min(1, ((g.wave - 1 + Math.max(0, prog)) / total))) * 71}%`;
     this.setText('#tb-gold b', fmt(g.gold));
@@ -1692,7 +1756,7 @@ class UI {
         if (t) html = `<b>Đợt ${g.wave + 1}:</b> ${t}`;
       }
     }
-    if (g.floodSoon() >= 0) html += `${html ? ' · ' : ''}<span class="flood">💧 Nước sắp dâng: thêm ${FLOOD_PER_RISE} ô sát sông ngập</span>`;
+    if (g.floodSoon() >= 0) html += `${html ? ' · ' : ''}<span class="flood">${ic('nuoc-dang')}Nước sắp dâng: thêm ${FLOOD_PER_RISE} ô sát sông ngập</span>`;
     el.classList.toggle('early', early);
     this.setHTML('#nextwaves', html, html);
     el.hidden = !html;
@@ -1721,22 +1785,22 @@ class UI {
     $('#ui').classList.toggle('foe-on', !!b);
     if (!b) return;
     const d = b.def;
-    const st = [b.poisonT > 0 && 'Thiêu đốt', b.stunT > 0 && (b.stunKind === 'ice' ? 'Đóng băng' : 'Choáng'), (b.slowT > 0 || b.zoneSlow > 0) && 'Chậm', b.silenceT > 0 && 'Câm lặng'].filter(Boolean);
-    const key = b.id + '|' + (b.enraged ? 1 : 0) + (b.el || '') + Math.round(b.armor) + '|' + Math.round(b.mr) + st.join();
+    const st = [b.poisonT > 0 && ['dot', 'Thiêu đốt'], b.stunT > 0 && (b.stunKind === 'ice' ? ['dong-bang', 'Đóng băng'] : ['choang', 'Choáng']), (b.slowT > 0 || b.zoneSlow > 0) && ['cham', 'Chậm'], b.silenceT > 0 && ['cam-lang', 'Câm lặng']].filter(Boolean);
+    const key = b.id + '|' + (b.enraged ? 1 : 0) + (b.el || '') + Math.round(b.armor) + '|' + Math.round(b.mr) + st.map((x) => x[0]).join() + '|' + assetVersion;
     if (this.sig.foe !== key) {
       this.sig.foe = key;
       const tag = d.boss ? 'Boss' : d.general ? 'Tướng địch' : b.champion ? 'Khổng lồ' : b.elite ? 'Tinh anh' : d.variant ? 'Biến thể' : d.flying ? 'Bay' : '';
       this.setText('#bb-name', b.champion ? `${d.name} khổng lồ` : d.name);
-      $('#bb-tag').textContent = tag;
+      $('#bb-tag').innerHTML = tag ? (d.boss || d.general ? ic('boss') : b.elite ? ic('tinh-anh') : d.flying ? ic('bay') : '') + tag : '';
       $('#bossbar').className = d.boss || d.general || b.champion ? 'big' : b.elite || d.variant ? 'elite' : '';
       const el = b.el && ELEMENTS[b.el];
       const by = el ? EL_ORDER.find((k) => EL_KHAC[k] === b.el) : null;
       const chips = [
-        `<span>🛡 Giáp <b>${Math.round(b.armor)}</b></span>`, `<span>🔮 Kháng phép <b>${Math.round(b.mr)}%</b></span>`,
-        `<span>👣 Tốc <b>${Math.round(d.speed)}</b></span>`, `<span>🪙 <b>${d.gold}</b></span>`,
-        el ? `<span style="color:${el.color}">Hành <b>${el.name}</b>${by ? ` · bị ${ELEMENTS[by].name} khắc` : ''}</span>` : '',
-        b.enraged ? '<span style="color:#FF8A6A">Đang hóa điên</span>' : '',
-        ...st.map((x) => `<span class="fst">${x}</span>`),
+        `<span title="Giáp">${ic('giap', 'Giáp')}Giáp <b>${Math.round(b.armor)}</b></span>`, `<span title="Kháng phép">${ic('khang-phep', 'Kháng phép')}Kháng phép <b>${Math.round(b.mr)}%</b></span>`,
+        `<span title="Tốc chạy">${ic('toc-chay', 'Tốc chạy')}Tốc <b>${Math.round(d.speed)}</b></span>`, `<span title="Vàng rơi khi hạ">${ic('tui-vang', 'Vàng rơi')}<b>${d.gold}</b></span>`,
+        el ? `<span style="color:${el.color}">${elIcon(b.el, 13)} Hành <b>${el.name}</b>${by ? ` · bị ${ELEMENTS[by].name} khắc` : ''}</span>` : '',
+        b.enraged ? `<span style="color:#FF8A6A">${ic('noi-gian')}Đang hóa điên</span>` : '',
+        ...st.map(([n, x]) => `<span class="fst">${ic(n)}${x}</span>`),
       ].filter(Boolean).join('');
       $('#bb-info').innerHTML = `<div class="fc">${chips}</div>${d.short ? `<div class="fs">${esc(d.short)}</div>` : ''}`;
     }
@@ -1849,13 +1913,13 @@ class UI {
         if (this.statsSig !== sk2 || sp.hidden) {
           this.statsSig = sk2;
           const S = heroStats(h);
-          const row = (k, v) => `<div><span>${k}</span><b>${v}</b></div>`;
-          sp.innerHTML = `<div class="hs-h">${HEROES[h.type].name} · cấp ${h.level} · ${'★'.repeat(h.tier || 0)} · lực chiến <b>${heroPower(h)}</b></div><div class="hs-g">`
-            + row('Sát thương', Math.round(S.damage)) + row('Tốc đánh', `${(1 / S.cooldown).toFixed(2)}/giây`) + row('Tầm đánh', Math.round(S.range))
-            + row('Máu', `${Math.round(h.hp)}/${Math.round(S.hpMax)}`) + row('Chí mạng', `${Math.round(S.crit)}% ×${S.critMult.toFixed(1)}`) + row('Giảm hồi chiêu', `${Math.round(S.cdr)}%`)
-            + row('Giảm s.thương', `${Math.round(S.dr)}%`) + row('Năng lượng', Math.round(S.maxMana))
-            + row(ATTRS.str.name, Math.round(S.str)) + row(ATTRS.agi.name, Math.round(S.agi)) + row(ATTRS.int.name, Math.round(S.int))
-            + row('Điểm đã cộng', h.statPts || 0) + '</div>';
+          const row = (k, v, n) => `<div><span>${n ? ic(n) : ''}${k}</span><b>${v}</b></div>`;
+          sp.innerHTML = `<div class="hs-h">${HEROES[h.type].name} · cấp ${h.level} · ${'★'.repeat(h.tier || 0)} · ${ic('luc-chien')}lực chiến <b>${heroPower(h)}</b></div><div class="hs-g">`
+            + row('Sát thương', Math.round(S.damage), 'sat-thuong') + row('Tốc đánh', `${(1 / S.cooldown).toFixed(2)}/giây`, 'toc-danh') + row('Tầm đánh', Math.round(S.range), 'tam-danh')
+            + row('Máu', `${Math.round(h.hp)}/${Math.round(S.hpMax)}`, 'mau') + row('Chí mạng', `${Math.round(S.crit)}% ×${S.critMult.toFixed(1)}`, 'chi-mang') + row('Giảm hồi chiêu', `${Math.round(S.cdr)}%`, 'hoi-chieu')
+            + row('Giảm s.thương', `${Math.round(S.dr)}%`, 'giam-sat-thuong') + row('Năng lượng', Math.round(S.maxMana), 'nang-luong')
+            + row(ATTRS.str.name, Math.round(S.str), 'suc-manh') + row(ATTRS.agi.name, Math.round(S.agi), 'nhanh-nhen') + row(ATTRS.int.name, Math.round(S.int), 'tri-tue')
+            + row('Điểm đã cộng', h.statPts || 0, 'diem-ky-nang') + '</div>';
           sp.hidden = false;
         }
         this.placeStats(sp);
@@ -2052,7 +2116,7 @@ class UI {
     const el = $('#roster-hint');
     el.innerHTML = `<div class="rh-h"><small>Đợt ${n} · bộ quái mới</small><b>${ROSTER_NAMES[key] || key}</b></div>
       ${c.main ? `<div class="ch-sum">Quái chủ yếu hành <b style="color:${ELEMENTS[c.main].color}">${ELEMENTS[c.main].name}</b> → dùng hành <b style="color:${ELEMENTS[c.ce].color}">${ELEMENTS[c.ce].name}</b></div>` : ''}
-      <div class="rh-foes">${c.foes.slice(0, 7).map((k) => `<span title="${esc(ENEMIES[k].name)}">${esc(ENEMIES[k].name)}${ENEMIES[k].boss ? ' ' + UIE.medal(3) : ''}</span>`).join('')}</div>
+      <div class="rh-foes">${c.foes.slice(0, 7).map((k) => `<span title="${esc(ENEMIES[k].name)}">${esc(ENEMIES[k].name)}${ENEMIES[k].boss ? ' ' + ic('boss', 'Boss') : ''}</span>`).join('')}</div>
       <div class="ch-row">${c.list.map((x) => `<span class="ch-av ${HEROES[x.t].legend || ''}" style="--c:${ELEMENTS[HEROES[x.t].el].color}"><img src="${heroImgUrl(x.t, 'head')}" alt="${esc(HEROES[x.t].name)}"><i>${elIcon(HEROES[x.t].el, 11)}</i><small>${x.why}</small></span>`).join('')}</div>
       <div class="rh-x">Chạm để đóng</div>`;
     el.hidden = false;
@@ -2106,7 +2170,7 @@ class UI {
       sv.tuvi[t] = (sv.tuvi[t] || 0) + add;
       const after = tuviLevel(sv.tuvi[t]);
       rows.push(`${HEROES[t].name} +${add}`);
-      if (after > before) up.push(`☯ ${HEROES[t].name} lên ${TUVI_RANKS[after - 1]} (Tu Vi ${after}) · +${(after - before) * TUVI_PTS} điểm Ấn Phù`);
+      if (after > before) up.push(`${ic('tu-vi')}${HEROES[t].name} lên ${TUVI_RANKS[after - 1]} (Tu Vi ${after}) · +${(after - before) * TUVI_PTS} điểm Ấn Phù`);
     }
     g.xpLog = {};
     writeSave(sv);
@@ -2160,7 +2224,7 @@ class UI {
       <div class="scr-body rn-body">
         <div class="rn-board">${RUNE_BRANCHES.map(col).join('')}</div>
         <div class="panel metal rn-det" style="--rc:${br.color}">
-          <div class="rn-tv"><img src="${heroImgUrl(t, 'head')}" alt=""><div><b>${d.name}</b><small>☯ Tu Vi ${tl} · ${tuviRank(xp)}</small>
+          <div class="rn-tv"><img src="${heroImgUrl(t, 'head')}" alt=""><div><b>${d.name}</b><small>${ic('tu-vi')}Tu Vi ${tl} · ${tuviRank(xp)}</small>
             <div class="rn-xp"><i style="width:${bar * 100}%"></i></div><small>${nx ? `${fmt(Math.floor(xp))} / ${fmt(nx)} — hạ quái bằng tướng này để lên bậc` : 'Đã đạt bậc cao nhất'}</small></div></div>
           <div class="rn-pts">Điểm Ấn còn <b>${left}</b> / ${tuviPoints(xp)} <button class="btn ${this.runeResetArm ? 'btn-gold' : 'metal'}" data-act="rn-reset" ${runeSpent(lvs) ? '' : 'disabled'}>${this.runeResetArm ? 'Bấm lần nữa' : 'Tẩy ấn'}</button></div>
           <div class="rn-dh"><span class="rn-big">${runeIc(r)}</span><div><b>${r.name}</b><small>${br.name} · ${r.skill ? 'Ấn kỹ năng · 3 điểm / cấp' : 'Ấn chỉ số · 1 điểm / cấp'} · cấp ${lv}/${r.max}</small></div></div>
@@ -2256,7 +2320,7 @@ class UI {
                 ${!d.legend ? '<span class="chip ok">Có sẵn</span>' : (this.save.owned || []).includes(t) ? `<span class="chip ok">${UIE.done()} Đã sở hữu</span>${LEGACY[t] ? `<button class="btn btn-gold" style="height:32px;padding:0 12px;font-size:14px" data-act="lg-open" data-type="${t}">⚜ Thần Khí · ${this.legacyPts(t)}/${LEGACY_MAX * 3}</button>` : ''}`
                   : `<button class="btn btn-gold" style="height:32px;padding:0 12px;font-size:14px" data-act="ro-buy" data-type="${t}" ${(this.save.kho || 0) < OWN_COST[d.legend] ? 'disabled' : ''}>Mua · ${bac()} ${fmt(OWN_COST[d.legend])}</button>`}</div>
               <div class="note" style="font-style:italic">${esc(d.title)}</div>
-              ${!d.legend || (this.save.owned || []).includes(t) ? `<div class="ro-tv"><span>☯ Tu Vi ${tuviLevel((this.save.tuvi || {})[t] || 0)} · ${tuviRank((this.save.tuvi || {})[t] || 0)}</span>
+              ${!d.legend || (this.save.owned || []).includes(t) ? `<div class="ro-tv"><span>${ic('tu-vi')}Tu Vi ${tuviLevel((this.save.tuvi || {})[t] || 0)} · ${tuviRank((this.save.tuvi || {})[t] || 0)}</span>
                 ${d.legend === 'legendary' ? `<button class="btn metal" data-act="ro-runes" data-type="${t}">🔯 Ấn Phù${this.runePtsLeft(t) > 0 ? ` <b class="rn-dot">${this.runePtsLeft(t)}</b>` : ''}</button>` : ''}</div>` : ''}
               <div class="bt-info" style="padding:0;background:none;border:0;box-shadow:none"><div class="tags">
                 <span style="background:#1A1208;color:${ELEMENTS[d.el].color};display:inline-flex;align-items:center;gap:3px">${elIcon(d.el, 13)} Hành ${ELEMENTS[d.el].name} · ${ELEM_TRAIT[d.el].name}</span>
@@ -2338,11 +2402,11 @@ class UI {
           <button class="sl-pick metal" style="color:#F2D27A" data-act="reward" data-i="1">Chọn</button></div>
         <div class="sl-card misc"><div class="sl-well">${svgI(sceneArt('kholua'))}<span class="sl-tag" style="left:6px;background:#0D0B08;border:1px solid #8C6A2E;color:#F2E6C8">${misc.kind === 'treasure' ? 'KHO LÚA' : 'HỘI LÀNG'}</span><span class="sl-tag" style="right:6px;background:#12301A;border:1px solid #3EDC4E;color:#6AE06A">Ngẫu nhiên</span></div>
           <div class="sl-name">${misc.title}</div>
-          <div class="sl-desc">${misc.kind === 'treasure' ? `<span style="font-size:17px;font-weight:800;color:#FFD66B">${coin()} +${misc.gold} vàng</span> <span style="font-size:17px;font-weight:800;color:#FF8A6A">♥ +${misc.lives} mạng</span>`
+          <div class="sl-desc">${misc.kind === 'treasure' ? `<span style="font-size:17px;font-weight:800;color:#FFD66B">${coin()} +${misc.gold} vàng</span> <span style="font-size:17px;font-weight:800;color:#FF8A6A">${ic('mang')}+${misc.lives} mạng</span>`
             : '<span class="g">Mọi tướng trên sân +2 cấp</span> (kèm 2 điểm kỹ năng)'}<br>Lần khác: ${misc.kind === 'treasure' ? '<span class="g">mọi tướng +2 cấp</span>' : '<span class="g">vàng và +3 mạng</span>'}</div>
           <button class="sl-pick metal" style="color:#F2D27A" data-act="reward" data-i="2">Chọn</button></div>
       </div>
-      ${flood ? `<div class="sl-warn"><span style="font-size:20px">💧</span><span style="flex:1"><b>Thủy Tinh dâng nước:</b> sau đợt này, các ô bậc <b>${TIER_NAMES[g.water]}</b> sẽ ngập và tướng đứng đó bị sa lầy. Dùng <span class="m">Mọc Núi</span> để cứu ô quan trọng.</span></div>` : ''}
+      ${flood ? `<div class="sl-warn"><span style="font-size:20px">${ic('nuoc-dang')}</span><span style="flex:1"><b>Thủy Tinh dâng nước:</b> sau đợt này, các ô bậc <b>${TIER_NAMES[g.water]}</b> sẽ ngập và tướng đứng đó bị sa lầy. Dùng <span class="m">Mọc Núi</span> để cứu ô quan trọng.</span></div>` : ''}
     </div>`;
     $('#reward').hidden = false;
     this.guard('#reward');
@@ -2412,15 +2476,15 @@ class UI {
     this.closeScreen();
     $('#reward').hidden = true;
     const rows = `<div><span>⚑ Đợt</span><b>${g.wave}/${g.levelWaves}</b></div>
-      <div><span>♥ Mạng còn</span><b style="color:#FF8A6A">${g.lives}/${CONFIG.startLives}</b></div>
+      <div><span>${ic('mang')}Mạng còn</span><b style="color:#FF8A6A">${g.lives}/${CONFIG.startLives}</b></div>
       <div><span>✕ Quái đã hạ</span><b>${fmt(g.stats.kills)}</b></div>
       <div><span>${coin()} Vàng kiếm trong trận</span><b style="color:#FFD66B">+${fmt(g.stats.goldEarned)}</b></div>
       <div><span>${coin()} Đầu trận ${fmt(CONFIG.startGold)} + kiếm ${fmt(g.stats.goldEarned)}${g.stats.goldRefund ? ` + hủy tướng ${fmt(g.stats.goldRefund)}` : ''} − đã tiêu ${fmt(Math.max(0, CONFIG.startGold + g.stats.goldEarned + (g.stats.goldRefund || 0) - g.gold))}</span><b style="color:#FFD66B">= ${fmt(g.gold)}</b></div>
       <div><span>Tướng trên sân</span><b>${g.heroes.filter(Boolean).length}</b></div>
-      <div><span>🏦 Ngân khố nhận (mua đồ / tướng trước trận)</span><b style="color:#E4ECF4">${bac(1)} +${fmt(khoGain + daily)} → ${fmt(s.kho)}</b></div>
+      <div><span>${ic('bac')}Ngân khố nhận (mua đồ / tướng trước trận)</span><b style="color:#E4ECF4">${bac(1)} +${fmt(khoGain + daily)} → ${fmt(s.kho)}</b></div>
       ${daily ? `<div><span>☀ Thắng trận đầu trong ngày</span><b style="color:#FFE08A">${bac(1)} +${fmt(daily)}</b></div>` : ''}
       ${g.khoRun ? `<div><span>${UIE.endless()} Đã nhận giữa trận (mốc đợt / boss)</span><b style="color:#E4ECF4">${bac(1)} +${fmt(g.khoRun)}</b></div>` : ''}
-      ${tv.rows.length ? `<div><span>☯ Tu Vi${win ? '' : ' (60%)'}</span><b style="color:#C8A0F0">${tv.rows.join(' · ')}</b></div>` : ''}
+      ${tv.rows.length ? `<div><span>${ic('tu-vi')}Tu Vi${win ? '' : ' (60%)'}</span><b style="color:#C8A0F0">${tv.rows.join(' · ')}</b></div>` : ''}
       ${tv.up.map((u) => `<div><span></span><b style="color:#FFD66B">${u}</b></div>`).join('')}`;
     const name = `${coop ? '🤝 ' : ''}Ải ${lv + 1} · ${LEVELS[lv].name}${coop ? ` · cùng ${esc(mate)}` : ''}`;
     const html = win ? `<div class="screen" style="z-index:auto">
@@ -2445,7 +2509,7 @@ class UI {
       <div class="res-body">
         <div class="res-art" style="border-color:#2C6A86">${svgI(sceneArt('lose'))}<span class="tg2" style="border-color:#5AB4D6;color:#9EDDF2">NƯỚC NGẬP THÀNH</span></div>
         <div class="res-main">
-          <div class="res-title lose">💧 Phong Châu thất thủ</div>
+          <div class="res-title lose">${ic('nuoc-dang')}Phong Châu thất thủ</div>
           <div style="display:flex;gap:12px;align-items:center"><div class="inset" style="padding:8px 16px;border-radius:6px;font-size:15px">Dừng ở đợt <b style="font-family:var(--title);font-size:34px;color:#9EDDF2">${g.wave}</b><span style="font-family:var(--title);font-size:20px;color:#9EDDF2">/${g.levelWaves}</span></div>
             <div style="flex:1"><div class="inset" style="height:12px;border-radius:4px;overflow:hidden"><i style="display:block;height:100%;width:${g.wave / g.levelWaves * 100}%;background:linear-gradient(90deg,#2C6A86,#5AB4D6)"></i></div>
             <div class="note" style="margin-top:4px">${coop ? 'Chơi nhóm' : `Kỷ lục ải này: đợt ${s.best[lv]}`}</div></div></div>
@@ -3090,7 +3154,7 @@ class UI {
     const hk = 'h.' + h.type, hd = SECRETS[hk];
     const hidChip = `<span class="chip hidc ${g.known.has(hk) ? 'ok' : ''}" title="${esc(g.known.has(hk) ? hd.desc : hd.hint)}">${g.known.has(hk) ? '✦ ' + esc(hd.desc) : `??? “${esc(hd.hint)}”`}</span>`;
     const pst = heroStats(h);
-    const penChip = `<span class="chip dark" title="Xuyên giáp / xuyên kháng phép (chiêu R xuyên thêm ${ULT_PEN}%)">⚔ ${Math.round(pst.pierce)}% · ✦ ${Math.round(pst.mpen)}%</span>`;
+    const penChip = `<span class="chip dark" title="Xuyên giáp / xuyên kháng phép (chiêu R xuyên thêm ${ULT_PEN}%)">${ic('xuyen-giap', 'Xuyên giáp')}${Math.round(pst.pierce)}% · ${ic('xuyen-phep', 'Xuyên kháng phép')}${Math.round(pst.mpen)}%</span>`;
     return `${this.head('Cây kỹ năng', `<span class="chip dark">${def.name} · Cấp ${h.level}${h.train ? ` ✦${h.train}` : ''}</span>${penChip}${elChip(def.el)}${hidChip}
         ${h.skillPts ? `<span class="chip ok">Còn ${h.skillPts} điểm kỹ năng</span>` : ''}${this.runChip()}`)}
       <div class="scr-body" style="padding-bottom:4px"><div class="sk-cols">${cols}</div>${detail}</div>
@@ -3103,8 +3167,8 @@ class UI {
     const sc = this.screen;
     const tabs = `<div class="tabs">
       <button class="tab ${sc.tab === 'recipe' ? 'on' : 'metal'}" data-act="tab" data-tab="recipe">📜 Công thức</button>
-      <button class="tab ${sc.tab === 'shop' ? 'on' : 'metal'}" data-act="tab" data-tab="shop">🪙 Cửa hàng</button>
-      <button class="tab ${sc.tab === 'chest' ? 'on' : 'metal'}" data-act="tab" data-tab="chest">🏺 Hũ báu</button><span class="zig"></span></div>`;
+      <button class="tab ${sc.tab === 'shop' ? 'on' : 'metal'}" data-act="tab" data-tab="shop">${ic('vang')}Cửa hàng</button>
+      <button class="tab ${sc.tab === 'chest' ? 'on' : 'metal'}" data-act="tab" data-tab="chest">${ic('hu-bau')}Hũ báu</button><span class="zig"></span></div>`;
     let body = '';
     if (sc.tab === 'recipe') {
       const recipes = Object.keys(ITEMS).filter((id) => ITEMS[id].recipe);
@@ -3494,7 +3558,7 @@ class UI {
         <div class="mt-stages">${cards}</div>
         <div class="mt-tiles">
           <div class="nt-tile inset"><div class="nt-ico metal">${coin()}</div><div><div class="nt-lbl">VÀNG MỖI ĐỢT</div><div class="nt-val">+${st * MOUNTAIN.goldPerStage}</div><div class="nt-note">Giai đoạn ${st} × ${MOUNTAIN.goldPerStage}</div></div></div>
-          <div class="nt-tile inset"><div class="nt-ico metal" style="color:#E25A3A">♥</div><div><div class="nt-lbl">MẠNG THÀNH</div><div class="nt-val">${st >= 2 ? '+1 mỗi 3 đợt' : 'Chưa mở'}</div><div class="nt-note">Mở từ giai đoạn 2</div></div></div>
+          <div class="nt-tile inset"><div class="nt-ico metal" style="color:#E25A3A">${ic('mang')}</div><div><div class="nt-lbl">MẠNG THÀNH</div><div class="nt-val">${st >= 2 ? '+1 mỗi 3 đợt' : 'Chưa mở'}</div><div class="nt-note">Mở từ giai đoạn 2</div></div></div>
           <button class="nt-tile metal act" data-act="harvest" ${m.herbs ? '' : 'disabled'}><div class="nt-ico inset">🍄</div><div><div class="nt-val" style="font-size:19px;color:#F2D27A">Hái ${m.herbs} Linh Chi</div><div class="nt-note">${coin(1)} <b>+${m.herbs * MOUNTAIN.herbGold} vàng</b> · <b style="color:#6AE06A">hồi máu</b></div></div></button>
           <div class="nt-tile inset"><div class="nt-ico metal">🍄</div><div><div class="nt-lbl">LINH CHI</div><div class="nt-val">${MOUNTAIN.herbGold} vàng / cây</div><div class="nt-note">${st >= 3 ? 'Mọc 1 cây mỗi đợt (tối đa 5)' : 'Mọc từ giai đoạn 3'} · hồi <b style="color:#6AE06A">máu tướng</b></div></div></div>
           <button class="nt-tile actg" data-act="soil" ${m.soiled || g.gold < MOUNTAIN.soilCost || st >= 5 ? 'disabled' : ''}><div class="nt-ico" style="background:#0D0B0833;border:1px solid #5A3608">⛰</div><div><div class="nt-val">Bồi đất · ${MOUNTAIN.soilCost} vàng</div><div class="nt-note">${m.soiled ? 'Đợt này đã bồi đất' : 'Núi cao nhanh hơn · 1 lần/đợt'}</div></div></button>
@@ -3575,7 +3639,7 @@ class UI {
       body = `${chTabs}<div class="bk-row"><div class="bk-cards">${cards}</div>
         <div class="panel metal bk-det"><div class="top"><div class="pic"><canvas data-enemy="${cur}" data-pad="0.1" width="280" height="212"></canvas></div>
           <div><div class="ttl">${d.name}</div><div class="bk-tags">${tags.join('')}</div>
-          <div class="bk-stat"><span>Hành ${elIcon(d.el, 14)} <b>${ELEMENTS[d.el].name}</b></span><span>Máu gốc <b>${d.hp}</b></span><span>Giáp <b>${d.armor}</b></span><span>Kháng phép <b>${d.mr}%</b></span><span>Vàng <b>${d.gold}</b></span></div>
+          <div class="bk-stat"><span>Hành ${elIcon(d.el, 14)} <b>${ELEMENTS[d.el].name}</b></span><span>${ic('mau')}Máu gốc <b>${d.hp}</b></span><span>${ic('giap')}Giáp <b>${d.armor}</b></span><span>${ic('khang-phep')}Kháng phép <b>${d.mr}%</b></span><span>${ic('tui-vang')}Vàng <b>${d.gold}</b></span></div>
           <div class="note" style="font-size:11px">Mỗi ${ENEMY_GROW.every} đợt: +${ENEMY_GROW.armor} giáp${d.mr ? `, +${ENEMY_GROW.mr}% kháng phép (tối đa ${ENEMY_GROW.mrCap}%)` : ''}. Giáp ${d.armor} giảm ${Math.round(100 * 0.06 * d.armor / (1 + 0.06 * d.armor))}% sát thương vật lý · dùng đồ <b>xuyên giáp / xuyên kháng phép</b> để phá.</div></div></div>
           <div class="mech inset" style="color:#E8E0CC;font-size:14px">${d.desc}</div>${extra}</div></div>`;
     } else {
@@ -3594,7 +3658,7 @@ class UI {
         <div class="panel metal bk-det"><div class="top"><div class="pic" style="height:110px"><canvas data-enemy="${cur}" data-pad="0.05" width="280" height="220" style="height:110px"></canvas></div>
           <div><div style="display:flex;align-items:center;gap:10px"><span class="ttl" style="font-size:30px">${d.name}</span><span class="chip run" style="font-size:13px">Boss · ${where(cur)}</span></div>
             <div class="bk-tags">${d.tags.map((t, k) => `<span class="bk-tag ${k % 2 ? 's' : 'd'}">${t}</span>`).join('')}</div>
-            <div class="bk-stat"><span>Hành ${elIcon(d.el, 14)} <b>${ELEMENTS[d.el].name}${cur === 'haba' && g.known.has('e.haba') ? ' → Kim' : ''}</b></span><span>Máu <b>${d.hp}+</b></span><span>Giáp <b>${d.armor}</b></span><span>Kháng phép <b>${d.mr}%</b></span><span>Lọt thành <b>−${d.lives} mạng</b></span></div></div></div>
+            <div class="bk-stat"><span>Hành ${elIcon(d.el, 14)} <b>${ELEMENTS[d.el].name}${cur === 'haba' && g.known.has('e.haba') ? ' → Kim' : ''}</b></span><span>${ic('mau')}Máu <b>${d.hp}+</b></span><span>${ic('giap')}Giáp <b>${d.armor}</b></span><span>${ic('khang-phep')}Kháng phép <b>${d.mr}%</b></span><span>${ic('mang')}Lọt thành <b>−${d.lives} mạng</b></span></div></div></div>
           <div class="mech inset">${esc(d.desc)}</div>
           <div class="tipbox inset">🎁 <b>Hạ được:</b> chọn sính lễ <b>${ITEMS[d.reward].name}</b></div>
           <div class="tipbox inset">${UIE.tip()} <b>Mẹo:</b> ${esc(d.tip)}</div></div></div>`;

@@ -1734,3 +1734,13 @@ i.c { background: #1F4A2A; color: #8AE09A; } i.h { background: #4A2A5A; color: #
   box-shadow: 0 2px 8px #000a; animation: chbub 4s ease forwards; word-break: break-word; }
 .ch-bub b { color: #BFE8F8; margin-right: 5px; }
 @keyframes chbub { 0% { opacity: 0; transform: translateY(-6px); } 8%, 85% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+/* v159: icon nhỏ dùng chung (ui.ic): ảnh ic-*.png hoặc SVG dự phòng, cao theo cỡ chữ */
+.icn { display: inline-block; width: 1.25em; height: 1.25em; vertical-align: -.28em; object-fit: contain; flex: none; margin-right: .15em; }
+svg.icn { overflow: visible; }
+#bb-info .fc .icn { width: 13px; height: 13px; vertical-align: -2px; margin-right: 2px; }
+#bb-tag .icn { width: 12px; height: 12px; vertical-align: -2px; }
+#hero-stats .hs-g span .icn { width: 13px; height: 13px; vertical-align: -2px; margin-right: 3px; }
+.prep-card .ic .icn, .nt-ico .icn { width: 26px; height: 26px; margin: 0; vertical-align: middle; }
+.sl-warn .icn { width: 22px; height: 22px; }
+.bk-stat { flex-wrap: wrap; gap: 2px 12px; }
+.bk-stat .icn { width: 14px; height: 14px; vertical-align: -3px; margin-right: 2px; }
