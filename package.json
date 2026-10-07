@@ -5,6 +5,7 @@
   "description": "Núi Cao Nước Dâng — game thủ thành dân gian Việt Nam",
   "scripts": {
     "build:web": "node tools/build-web.js",
+    "build:hosting": "node tools/build-web.js --hosting",
     "sync": "npm run build:web && npx cap sync android",
     "apk": "npm run sync && cd android && ./gradlew assembleDebug"
   },

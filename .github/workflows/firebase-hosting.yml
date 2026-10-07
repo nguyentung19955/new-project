@@ -1,0 +1,94 @@
+name: Deploy Firebase Hosting
+
+# Mỗi lần đẩy code lên nhánh chính: gom bản web rồi đăng lên https://sontinhthuytinh.web.app
+on:
+  push:
+    branches: [claude/mobile-tower-defense-game-k5oxzo, main]
+  workflow_dispatch:
+    inputs:
+      deploy_rules:
+        description: Đăng cả luật Firestore (firestore.rules)
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+concurrency:
+  group: firebase-hosting
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SONTINHTHUYTINH }}
+    steps:
+      - name: Kiểm tra secret
+        id: secret
+        run: |
+          if [ -z "$FIREBASE_SA" ]; then
+            echo "::warning title=Chưa deploy Firebase Hosting::Thiếu secret FIREBASE_SERVICE_ACCOUNT_SONTINHTHUYTINH. Làm theo docs/FIREBASE.md (mục 'Firebase Hosting tự động') rồi chạy lại workflow."
+            echo "## ⚠️ Bỏ qua deploy: chưa có secret FIREBASE_SERVICE_ACCOUNT_SONTINHTHUYTINH" >> "$GITHUB_STEP_SUMMARY"
+            echo "Xem hướng dẫn trong docs/FIREBASE.md, mục **Firebase Hosting tự động**." >> "$GITHUB_STEP_SUMMARY"
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.secret.outputs.ok == 'true'
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        if: steps.secret.outputs.ok == 'true'
+        with:
+          node-version: 22
+
+      - name: Gom bản web (dist-web/)
+        if: steps.secret.outputs.ok == 'true'
+        run: node tools/build-web.js --hosting
+
+      - name: Đăng lên Firebase Hosting (kênh live)
+        id: deploy
+        if: steps.secret.outputs.ok == 'true'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SONTINHTHUYTINH }}
+          projectId: sontinhthuytinh
+          channelId: live
+
+      - name: Ghi đường dẫn
+        if: steps.secret.outputs.ok == 'true'
+        run: |
+          echo "## ✅ Đã đăng game" >> "$GITHUB_STEP_SUMMARY"
+          echo "https://sontinhthuytinh.web.app — commit ${GITHUB_SHA::7}" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Luật Firestore có đổi không?
+        id: rules
+        if: steps.secret.outputs.ok == 'true'
+        env:
+          BEFORE: ${{ github.event.before }}
+          MANUAL: ${{ inputs.deploy_rules }}
+        run: |
+          changed=false
+          if [ "$MANUAL" = "true" ]; then
+            changed=true
+          elif [ -n "$BEFORE" ] && git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
+            git diff --quiet "$BEFORE" "$GITHUB_SHA" -- firestore.rules || changed=true
+          fi
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
+
+      - name: Đăng luật Firestore
+        if: steps.secret.outputs.ok == 'true' && steps.rules.outputs.changed == 'true'
+        continue-on-error: true
+        run: |
+          trap 'rm -f "$RUNNER_TEMP/sa.json"' EXIT
+          printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
+          npx --yes firebase-tools@latest deploy --only firestore:rules --project sontinhthuytinh --non-interactive \
+            || { echo "::warning title=Chưa đăng được luật Firestore::Service account có thể thiếu quyền Firestore. Dán firestore.rules vào Firebase console (Firestore → Rules) hoặc dùng khoá tạo từ Project settings → Service accounts."; exit 1; }
