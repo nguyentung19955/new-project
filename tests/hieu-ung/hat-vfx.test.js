@@ -97,7 +97,7 @@ const noPixelVfx = (p) => p.route('**/js/pixel/vfx.js*', (r) => r.fulfill({ cont
       const c = document.querySelector('canvas').getContext('2d');
       const kinds = ['fireball', 'frostbolt', 'arrow', 'bolt', 'orb', 'feather', 'petal', 'melon', 'rice', 'evil'];
       const proj = kinds.filter((kind) => { c.save(); c.translate(200, 200); const r = VFX.drawProj(c, { kind, angle: 0.4, st: {} }, 1); c.restore(); return r; });
-      const notOwn = [...VFX.OWN].filter((type) => { c.save(); const r = VFX.drawFx(c, { type, x: 300, y: 220, x2: 420, y2: 200, r: 60, d: 20, a: 1, color: '#E25A3A', lv: 3, ttl: 0.2, max: 0.5 }, 0.5, 1); c.restore(); return !r; });
+      const notOwn = [...VFX.OWN].filter((type) => { c.save(); const r = VFX.drawFx(c, { type, x: 300, y: 220, x2: 420, y2: 200, r: 60, d: 20, a: 1, dir: 1, d1: 0, d2: 300, kind: 'lac', color: '#E25A3A', lv: 3, ttl: 0.2, max: 0.5, target: { x: 420, y: 230, dead: false }, hero: { x: 250, y: 230 } }, 0.5, 1); c.restore(); return !r; });
       return { proj: proj.length, n: kinds.length, notOwn };
     });
     ok(fx.proj === fx.n, `đạn bay pixel đủ ${fx.n} loại`);

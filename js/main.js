@@ -472,6 +472,7 @@ function drawProjectile(p, t) {
 function drawZones(t) {
   for (const z of game.zones) {
     const k = Math.min(1, z.ttl / 0.4, (z.max - z.ttl) / 0.25);
+    if (typeof VFX !== 'undefined' && VFX.px && VFX.px.zone(ctx, z, t)) continue;   // claude/vfx-pixel-2: vùng đất pixel (js/vfx.js)
     ctx.save();
     ctx.globalAlpha = Math.max(0, k);
     if (z.kind === 'fire') {
@@ -550,6 +551,8 @@ function drawBlocks(t) {
         rrect(ctx, x, y, 12, 11, 1, (r + c) % 2 ? '#8A7046' : '#A08458');
         ctx.strokeStyle = '#2A1F12'; ctx.lineWidth = 1; ctx.strokeRect(x, y, 12, 11);
       }
+    } else if (typeof VFX !== 'undefined' && VFX.px && VFX.px.lacTu(ctx, p, t, k)) {
+      // claude/vfx-pixel-2: đàn Lạc Tử pixel (js/vfx.js)
     } else if (asset('trieu-hoi_lac-tu.png')) {
       // ảnh vẽ tay Lạc Tử: 7 đứa đứng thành 2 hàng
       const img = asset('trieu-hoi_lac-tu.png');
@@ -748,7 +751,7 @@ function drawHeroOnMap(h, t) {
   // chấm hành
   circle(ctx, h.x + 28.5, h.y - 12, 3.2, '#0D0B08');
   circle(ctx, h.x + 28.5, h.y - 12, 2.4, ELEMENTS[HEROES[h.type].el].color);
-  if (h.stunT > 0) {
+  if (h.stunT > 0 && !(typeof VFX !== 'undefined' && VFX.px && VFX.px.heroStun(ctx, h.x, top - 16, t))) {
     for (let i = 0; i < 3; i++) {
       const a = t * 5 + (i * Math.PI * 2) / 3;
       drawStar(ctx, h.x + Math.cos(a) * 12, top - 16 + Math.sin(a) * 4, 3.5, '#F2D27A');
@@ -838,6 +841,7 @@ function drawHeroStun(h, top, t) {
     ctx.beginPath(); ctx.moveTo(h.x - 4, y - 4); ctx.lineTo(h.x + 4, y + 4); ctx.moveTo(h.x + 4, y - 4); ctx.lineTo(h.x - 4, y + 4); ctx.stroke();
   }
   if (!(h.stunT > 0)) return;
+  if (typeof VFX !== 'undefined' && VFX.px && VFX.px.heroStun(ctx, h.x, top - 16, t)) return;   // claude/vfx-pixel-2: chim Lạc + xoáy khí
   for (let i = 0; i < 3; i++) {
     const a = t * 5 + (i * Math.PI * 2) / 3;
     drawStar(ctx, h.x + Math.cos(a) * 12, top - 16 + Math.sin(a) * 4, 3.5, '#F2D27A');

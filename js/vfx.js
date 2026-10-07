@@ -295,6 +295,9 @@ const VFX = (() => {
   const SPIN = { petal: 1, melon: 1, evil: 1, orb: 1 };
   function drawProj(ctx, p, t) {
     let nm = PROJ[p.kind] || 'dan-lua';
+    // đạn chung (cầu lửa) của tướng hệ Kim / Mộc / Thủy / Thổ → đạn theo hệ (Lô 44: dan-<hệ>)
+    const el = p.hero && typeof HEROES !== 'undefined' && HEROES[p.hero.type] && HEROES[p.hero.type].el;
+    if (nm === 'dan-lua' && el && el !== 'hoa' && spr('dan-' + el)) nm = 'dan-' + el;
     if (nm === 'dan-lua' && p.st && p.st.slow) nm = 'dan-bang';
     const s = spr(nm);
     if (!s) return false;
@@ -433,8 +436,7 @@ const VFX = (() => {
   const EL_COL = { kim: '#D4D8DE', moc: '#7FBF3F', thuy: '#3E8FC4', hoa: '#E0583A', tho: '#D99A3E' };
   function splashFx(x, y, el, r) {
     const big = (r || 40) > 70 ? 2 : 1;
-    if (!el || el === 'hoa') decal(x, y - 4, 'no', null, 12, 0.4, { sc: big });
-    else decal(x, y - 4, 'khoi', null, 10, 0.45, { sc: big });
+    decal(x, y - 4, !el || el === 'hoa' ? 'no' : 'no-' + el, null, 12, 0.4, { sc: big });   // nổ theo hệ (Lô 44: no-<hệ>)
     decal(x, y + 2, 'ring', EL_COL[el] || '#F07A1E', Math.max(8, (r || 40) * 0.25), 0.3, { grow: (r || 40) * 2, sy: 0.45 });
   }
   function onEffect(f) {
@@ -492,9 +494,12 @@ const VFX = (() => {
   // ---------- hiệu ứng vẽ mỗi khung (thay case tương ứng trong drawEffects của main.js). true = đã vẽ pixel, bỏ phần cũ.
   const OWN = new Set(['ring', 'slash', 'spark', 'bolt', 'scorch', 'bash', 'streak', 'beam', 'volley', 'warn', 'rain', 'pillar', 'meteor',
     'explosion', 'vortex', 'xslash', 'claw', 'nova', 'snow', 'heal', 'revive', 'wave', 'gust', 'dome', 'cracks', 'splat', 'petals', 'summon',
-    'proc', 'equipflash', 'promote', 'die', 'coin', 'lob', 'levelup', 'evolve', 'rockfall', 'impact']);
+    'proc', 'equipflash', 'promote', 'die', 'coin', 'lob', 'levelup', 'evolve', 'rockfall', 'impact',
+    'skyride', 'tiger', 'bird', 'horse', 'sweep', 'mark', 'afterimage', 'hook', 'raise', 'notes']);
+  const LOB = { den: 'vat-den-troi', chai: 'vat-chai', gom: 'vat-binh-gom', dua: 'dua' };
   function drawFx(ctx, f, p, t) {
-    if (!D || !OWN.has(f.type) || f.x === undefined && !f.hero) return false;
+    if (!D || !OWN.has(f.type) || (f.x === undefined && !f.hero && f.type !== 'skyride')) return false;
+    if (f.type === 'mark' && (!f.target || f.target.dead)) return false;
     const k = 1 - p, x = f.x, y = f.y;
     begin(ctx);
     ctx.globalAlpha = step(Math.min(1, k * 1.5));
@@ -572,7 +577,78 @@ const VFX = (() => {
       case 'proc': { ring(ctx, x, y, f.r * (0.4 + p * 0.8), f.r * (0.4 + p * 0.8), col(f.color, '#F2C230')); for (let i = 0; i < 6; i++) { const a = (i / 6) * Math.PI * 2 + f.r, r0 = f.r * (0.3 + p * 0.6); seg(ctx, x + Math.cos(a) * r0, y + Math.sin(a) * r0, x + Math.cos(a) * (r0 + 6 * k), y + Math.sin(a) * (r0 + 6 * k), col(f.color, '#F2C230')); } break; }
       case 'equipflash': case 'promote': { const fl = f.type === 'promote' ? Math.abs(Math.sin(p * Math.PI * 2)) : Math.sin(p * Math.PI); ctx.globalAlpha = step(fl); const r = f.type === 'promote' ? 16 : 10 + p * 8; ring(ctx, x, y, r, r, col(f.color, '#F2C230'), { c: 2 }); dot(ctx, x, y, C.sang, 3); break; }
       case 'coin': { const yy = y - 18 * Math.sin(Math.min(1, p * 1.5) * Math.PI * 0.5), s = spr('xu'); ctx.globalAlpha = step(Math.min(1, k / 0.4)); if (s) blit(ctx, 'xu', frameOf(s, null, t), x, yy, 1); break; }
-      case 'lob': { const xx = x + (f.x2 - x) * p, yy = y + (f.y2 - y) * p - Math.sin(p * Math.PI) * 60, s = spr('dua'); ctx.globalAlpha = 1; if (s) blit(ctx, 'dua', frameOf(s, null, t), xx, yy, 1); break; }
+      case 'lob': { const nm = LOB[f.kind] || 'dua', xx = x + (f.x2 - x) * p, yy = y + (f.y2 - y) * p - Math.sin(p * Math.PI) * 60, s = spr(nm); ctx.globalAlpha = 1; if (!s) { end(ctx); return false; } blit(ctx, nm, frameOf(s, null, t), xx, yy, 1); break; }
+      case 'skyride': {
+        // Gióng bay dọc sông (R) / tảng đá Lạc Hầu lăn ngược dòng: vệt chấm pixel + sprite
+        if (typeof PATH === 'undefined') { end(ctx); return false; }
+        const d = f.d1 + (f.d2 - f.d1) * Math.min(1, p * 1.3), stp = f.d2 >= f.d1 ? 14 : -14;
+        ctx.globalAlpha = 1;
+        let i = 0;
+        for (let dd = f.d1; stp > 0 ? dd <= d : dd >= d; dd += stp, i++) { const q = PATH.at(dd); dot(ctx, q.x, q.y - (f.rock ? 6 : 30), f.rock ? (i % 2 ? C.dat : C['dat-sang']) : (i % 2 ? C.lua : C['vang-nghe']), 2); }
+        const q = PATH.at(d), nm = f.rock ? 'vat-da-lan' : 'giong-bay', s = spr(nm);
+        if (!s) { end(ctx); return false; }
+        blit(ctx, nm, frameOf(s, null, t), q.x, q.y - (f.rock ? 16 : 34), 2, f.d2 < f.d1);
+        break;
+      }
+      case 'tiger': case 'bird': {
+        const e = f.target, s = spr(f.type === 'tiger' ? 'ho-ba-vi' : f.kind === 'lac' ? 'chim-lac' : 'chim-than');
+        if (!e || !s) { end(ctx); return false; }
+        const q = Math.min(1, p * (f.type === 'tiger' ? 1.15 : 1.2));
+        const xx = x + (e.x - x) * q, yy = f.type === 'tiger' ? y + (e.y - y) * q - Math.sin(q * Math.PI) * 26 : y + (e.y - 20 - y) * q - Math.sin(q * Math.PI) * 30;
+        ctx.globalAlpha = 1;
+        blit(ctx, f.type === 'tiger' ? 'ho-ba-vi' : f.kind === 'lac' ? 'chim-lac' : 'chim-than', frameOf(s, null, t * 2), xx, yy, f.kind === 'lac' ? 2 : 1, e.x < x);
+        break;
+      }
+      case 'horse': {
+        const s = spr('ngua-sat');
+        if (!s) { end(ctx); return false; }
+        const xx = x + (f.x2 - x) * p, yy = y + (f.y2 - y) * p - Math.sin(p * Math.PI) * 30;
+        ctx.globalAlpha = 1;
+        for (let i = 1; i < 6; i++) { ctx.globalAlpha = step(1 - i / 6); dot(ctx, xx - (f.x2 - x) * 0.05 * i, yy - 6 - i, i < 3 ? C['vang-nghe'] : C.lua, 2); }
+        ctx.globalAlpha = 1;
+        blit(ctx, 'ngua-sat', frameOf(s, null, t * 2), xx, yy + 8, 1, f.x2 < x);
+        break;
+      }
+      case 'sweep': {
+        // gậy tre quét vòng cung: dải ô 2 lớp
+        const a0 = f.dir > 0 ? -1.6 : Math.PI + 1.6, r = f.r * 0.7;
+        for (let i = 0; i <= 14; i++) { const a = a0 - 1.2 + (p * 2.4 + (i / 14) * 1.2) * f.dir; dot(ctx, x + Math.cos(a) * r, y + Math.sin(a) * r, i > 10 ? C['vang-sang'] : col(f.color, '#C2A26A'), 2); }
+        break;
+      }
+      case 'mark': {
+        // dấu săn: vòng + 4 khấc son, xoay theo bậc 45°
+        const e = f.target, r = 26 - p * 10, rot = Math.round(p * 6) * Math.PI / 4;
+        ctx.globalAlpha = 1;
+        ring(ctx, e.x, e.y - 10, r, r, C['son-sang']);
+        for (let i = 0; i < 4; i++) { const a = rot + (i * Math.PI) / 2; seg(ctx, e.x + Math.cos(a) * (r - 6), e.y - 10 + Math.sin(a) * (r - 6), e.x + Math.cos(a) * (r + 5), e.y - 10 + Math.sin(a) * (r + 5), C['son-sang']); }
+        break;
+      }
+      case 'afterimage': for (let i = 0; i < 5; i++) { const q = i / 4, xx = x + (f.x2 - x) * q, yy = y + (f.y2 - y) * q; ctx.globalAlpha = step(k * (0.25 + q * 0.5)); seg(ctx, xx, yy - 8, xx, yy - 34, col(f.color, '#9478B0'), 3); dot(ctx, xx, yy - 42, col(f.color, '#9478B0'), 3); } break;
+      case 'hook': {
+        const h = f.hero, e = f.target;
+        if (!h || !e) { end(ctx); return false; }
+        ctx.globalAlpha = 1;
+        const out = Math.min(1, p / 0.35), hx = h.x, hy = h.y - 22, tx = hx + (e.x - hx) * out, ty = hy + (e.y - 8 - hy) * out;
+        seg(ctx, hx, hy, tx, ty, C['dat-toi'], 2); seg(ctx, hx, hy, tx, ty, col(f.color, '#5E7434'));
+        dot(ctx, tx, ty, C['la-ma'], 3);
+        break;
+      }
+      case 'raise': {
+        // Mọc Núi: núi đất bậc thang pixel trồi lên
+        const hgt = 36 * Math.sin(Math.min(1, p * 1.5) * Math.PI / 2) * (p > 0.7 ? 1 - (p - 0.7) / 0.3 : 1);
+        ctx.globalAlpha = 1;
+        const rows = Math.max(1, Math.round(hgt / PU));
+        for (let i = 0; i < rows; i++) { const q = i / rows, w = 26 * (1 - q); seg(ctx, x - w, y - i * PU, x + w * 0.8, y - i * PU, i > rows * 0.7 ? C['dat-sang'] : i % 3 ? C.dat : C['dat-toi']); }
+        break;
+      }
+      case 'notes': {
+        // nốt nhạc pixel (đầu 2×2 + đuôi) xoay vòng, bay lên
+        for (let i = 0; i < 10; i++) {
+          const a = (i / 10) * Math.PI * 2 + t, r = 20 + p * f.r, nx = x + Math.cos(a) * r, ny = y - 30 + Math.sin(a) * r * 0.45 - p * 20, c = i % 2 ? C['vang-nghe'] : C.trang;
+          dot(ctx, nx, ny, c, 2); seg(ctx, nx + PU, ny, nx + PU, ny - 4 * PU, c); if (i % 3 === 0) seg(ctx, nx + PU, ny - 4 * PU, nx + 3 * PU, ny - 3 * PU, c);
+        }
+        break;
+      }
       case 'levelup': {
         const hx = f.hero ? f.hero.x : x, hy = f.hero ? f.hero.y : y;
         ctx.globalAlpha = step(Math.min(1, k * 1.6));
@@ -605,6 +681,254 @@ const VFX = (() => {
     return true;
   }
 
+  // ---------- các chỗ vẽ khác (móc ở main.js / render.js; true = đã vẽ pixel, false = vẽ cách cũ)
+  // vùng đất trên đường: vệt lửa dọc sông, ruộng lúa, Cây Đa Thần, đá núi (main.js drawZones)
+  function zone(ctx, z, t) {
+    if (!D) return false;
+    const k = Math.min(1, z.ttl / 0.4, (z.max - z.ttl) / 0.25);
+    if (z.kind === 'fire') {
+      const s = spr('lua-chay');
+      if (!s || typeof PATH === 'undefined') return false;
+      begin(ctx);
+      ctx.globalAlpha = step(k);
+      let i = 0;
+      for (let d = z.d1; d <= z.d2; d += 12, i++) {
+        const q = PATH.at(d);
+        if (i % 2) { dot(ctx, q.x, q.y, C.son, 2); continue; }
+        blit(ctx, 'lua-chay', frameOf(s, null, t, i * 0.7), q.x, q.y + 2, 1, i % 4 === 0);
+      }
+      end(ctx);
+      return true;
+    }
+    if (z.kind === 'rice') {
+      begin(ctx);
+      ctx.globalAlpha = step(k);
+      ring(ctx, z.x, z.y, z.r, z.r * 0.45, C.cat, { dash: 3 });
+      for (let i = 0; i < 22; i++) {
+        const a = i * 2.4, rr = z.r * (((i * 37) % 100) / 100), x = z.x + Math.cos(a) * rr, y = z.y + Math.sin(a) * rr * 0.45;
+        const sw = Math.round(Math.sin(t * 3 + i)) * PU;
+        seg(ctx, x, y, x + sw, y - 12, C['reu-sang']); dot(ctx, x + sw, y - 14, C['vang-nghe'], 2);
+      }
+      end(ctx);
+      return true;
+    }
+    if (z.kind === 'tree') {
+      const s = spr('cay-da');
+      if (!s) return false;
+      begin(ctx);
+      ctx.globalAlpha = step(k);
+      ring(ctx, z.x, z.y, z.r, z.r * 0.45, C['la-ma'], { dash: 2, phase: t * 2 });
+      if (z.heal) ring(ctx, z.x, z.y, z.heal.r, z.heal.r * 0.45, C['la-sang'], { dash: 3, phase: -t * 3 });
+      const grow = Math.min(1, (z.max - z.ttl) / 0.5);
+      blit(ctx, 'cay-da', frameOf(s, null, t), z.x, z.y + 2 - (1 - grow) * 10, grow > 0.5 ? 2 : 1);
+      end(ctx);
+      return true;
+    }
+    if (z.kind === 'rock') {
+      const s = spr('vat-da-lan');
+      if (!s) return false;
+      begin(ctx);
+      ctx.globalAlpha = step(k);
+      ring(ctx, z.x, z.y, z.r, z.r * 0.45, C.dat, { dash: 2 });
+      const grow = Math.min(1, (z.max - z.ttl) / 0.3);
+      for (let i = 0; i < 7; i++) {
+        const a = i * 0.9, rr = z.r * (0.25 + ((i * 41) % 70) / 100);
+        blit(ctx, 'vat-da-lan', s.anims.main.start + (i % 4), z.x + Math.cos(a) * rr, z.y + Math.sin(a) * rr * 0.45 + (1 - grow) * 8, 1);
+      }
+      end(ctx);
+      return true;
+    }
+    return false;
+  }
+  // đàn Lạc Tử chặn đường (main.js drawBlocks): 7 đứa trẻ pixel đứng 2 hàng
+  function lacTu(ctx, p, t, k) {
+    const s = spr('lac-tu');
+    if (!s) return false;
+    begin(ctx);
+    ctx.globalAlpha = step(k);
+    for (let i = 0; i < 7; i++) {
+      const x = p.x - 24 + (i % 4) * 16 + (i > 3 ? 8 : 0), y = p.y + (i > 3 ? 6 : -6);
+      blit(ctx, 'lac-tu', frameOf(s, null, t, i * 0.5), x, y, 1, i % 2 === 1);
+    }
+    end(ctx);
+    return true;
+  }
+  // hào quang đốt quanh boss / quái (render.js, toạ độ đã dịch về chân quái): trống trận · lửa ma · mưa gió (Thủy Tinh)
+  function aura(ctx, a, t) {
+    if (!D) return false;
+    const R = a.radius;
+    begin(ctx);
+    const c = pal(a.color || '#3478A6');
+    if (a.kind === 'drum') {
+      ctx.globalAlpha = 0.6;
+      ring(ctx, 0, 0, R, R * 0.45, c, { dash: 2, drum: 7, drumColor: C['dong-sang'] });
+      for (let i = 0; i < 3; i++) { const q = (t * 0.9 + i / 3) % 1; ctx.globalAlpha = step((1 - q) * 0.8); ring(ctx, 0, 0, R * q, R * q * 0.45, c); }
+    } else if (a.kind) {
+      ctx.globalAlpha = 0.6;
+      ring(ctx, 0, 0, R, R * 0.45, c, { dash: 2, phase: t * 2 });
+      for (let i = 0; i < 10; i++) { const q = (t * 0.6 + i / 10) % 1, an = i * 2.4; ctx.globalAlpha = step((1 - q) * 0.9); dot(ctx, Math.cos(an) * R * 0.7, Math.sin(an) * R * 0.3 - q * 50, c, q < 0.5 ? 2 : 1); }
+    } else {
+      ctx.globalAlpha = 0.55;
+      ring(ctx, 0, 0, R, R * 0.45, C['nuoc-sang'], { dash: 3, phase: t * 2 });
+      for (let i = 0; i < 14; i++) {
+        const rx = ((i * 53 + t * 40) % (R * 2)) - R, ry = (((i * 31) % 60) - 30) + ((t * 260 + i * 40) % 80) - 60;
+        ctx.globalAlpha = 0.8; seg(ctx, rx, ry, rx - 4, ry + 12, C.troi);
+      }
+    }
+    end(ctx);
+    return true;
+  }
+  // hiệu ứng quái biến thể (render.js drawEnemyFxBack, toạ độ khung quái): hạt pixel theo loại; ma / bóng tối = cụm khói
+  const EFX = { fire: ['lua-sang', 'lua'], frost: ['troi', 'nuoc-sang'], ghost: ['tim-sang', 'trang-xam'], gold: ['vang-sang', 'vang-nghe'],
+    steel: null, shadow: ['tim-toi', 'khoi'], poison: ['la-ma', 'reu-sang'], water: ['nuoc-sang', 'ngoc-sang'] };
+  function enemyFx(ctx, kind, w, h, t, id, fly) {
+    if (!D || !(kind in EFX)) return false;
+    const cs = EFX[kind];
+    if (!cs) return true;
+    begin(ctx);
+    const base = fly ? h * 0.5 : 0, n = 6;
+    for (let i = 0; i < n; i++) {
+      const p = (t * (kind === 'fire' ? 1.1 : 0.6) + i / n + id * 0.13) % 1;
+      const x = Math.sin(i * 2.3 + t + id) * w * 0.35, y = base - p * h * (kind === 'shadow' ? 0.8 : 1.1);
+      ctx.globalAlpha = step(Math.sin(p * Math.PI) * (kind === 'shadow' || kind === 'ghost' ? 0.6 : 0.9));
+      dot(ctx, x, y, C[cs[i % 2]], kind === 'shadow' || kind === 'ghost' ? 3 : p < 0.5 ? 2 : 1);
+    }
+    end(ctx);
+    return true;
+  }
+  // vòng tinh anh dưới chân quái + dấu nhỏ theo loại (render.js; toạ độ đã dịch về chân quái)
+  const ELITE_ICON = { armored: 'khien-giap', regen: 'giot-nuoc', swift: 'song-cuon' };
+  function elite(ctx, kind, color, w, t) {
+    if (!D) return false;
+    begin(ctx);
+    ctx.globalAlpha = step(0.6 + Math.sin(t * 6) * 0.3);
+    ring(ctx, 0, 2, w * 0.55, w * 0.18, pal(color), { c: 1, drum: kind === 'shield' ? 0 : 6, drumColor: pal(color) });
+    if (kind === 'shield') ring(ctx, 0, -w * 0.4, w * 0.55, w * 0.6, C['nuoc-sang'], { dash: 2, phase: t * 3 });
+    ctx.globalAlpha = 1;
+    const nm = ELITE_ICON[kind];
+    if (nm && spr(nm)) blit(ctx, nm, frameOf(spr(nm), null, t), -w * 0.45, -4 + Math.round(Math.sin(t * 3)) * PU, 1);
+    end(ctx);
+    return true;
+  }
+  // tướng bị choáng: chim Lạc + xoáy khí lượn trên vòng xoáy (thay ngôi sao), tâm (x, y)
+  function heroStun(ctx, x, y, t) {
+    if (!spr('chim-lac') || !spr('gio-xoay')) return false;
+    begin(ctx, 0.6);
+    const rx = 13, u = G.n / G.k;
+    ring(ctx, x, y + u, rx, rx * 0.3, C.toi, { dash: 2, phase: t * 6 });
+    ring(ctx, x, y, rx, rx * 0.3, C.trang, { dash: 2, phase: t * 6 });
+    for (let i = 0; i < 2; i++) {
+      const a = t * 3.2 + i * Math.PI, z = Math.sin(a);
+      blit(ctx, i ? 'gio-xoay' : 'chim-lac', frameOf(spr(i ? 'gio-xoay' : 'chim-lac'), null, t), x + Math.cos(a) * rx, y + z * 3, 1, Math.sin(a) < 0);
+    }
+    end(ctx);
+    return true;
+  }
+  // tướng sa lầy: vũng bùn nước chàm + gợn vòng pixel
+  function bog(ctx, x, y, rx, ry, t) {
+    if (!D) return false;
+    begin(ctx);
+    ctx.globalAlpha = 0.85;
+    ring(ctx, x, y - 2, rx, ry, C.cham, { c: 2 });
+    ring(ctx, x, y - 2, rx * 0.6, ry * 0.6, C['cham-sang'], { dash: 2 });
+    for (let i = 0; i < 2; i++) { const p = (t * 0.8 + i * 0.5) % 1; ctx.globalAlpha = step(1 - p); ring(ctx, x, y - 2, rx * (0.7 + p * 0.8), ry * (0.7 + p * 0.7), C['nuoc-sang']); }
+    end(ctx);
+    return true;
+  }
+  // hào quang phụ kiện huyền thoại dưới chân tướng (render.js drawAccAura, toạ độ chân tướng): vòng + chấm hoa văn trống đồng
+  function accAura(ctx, a, s, t, glowOnly) {
+    if (!D) return false;
+    if (glowOnly) return true;                       // pixel: không quầng mềm
+    const k = s / 0.28, rx = 30 * (typeof DK !== 'undefined' ? DK : 1) * k, ry = rx / 3;
+    const c = pal(a.kind === 'copper' ? '#C8603A' : a.color);
+    begin(ctx);
+    ctx.globalAlpha = step(0.6 + Math.sin(t * 3) * 0.15);
+    ring(ctx, 0, 0, rx, ry, c, { drum: 6, drumColor: C['vang-nghe'] });
+    if (a.kind === 'drum') for (let i = 0; i < 2; i++) { const p = (t * 0.7 + i * 0.5) % 1; ctx.globalAlpha = step((1 - p) * 0.7); ring(ctx, 0, 0, rx * (1 + p * 0.6), ry * (1 + p * 0.6), c); }
+    for (let i = 0; i < 3; i++) { const q = (t * 0.5 + i / 3) % 1; ctx.globalAlpha = step(1 - q); dot(ctx, Math.sin(i * 2.1 + t) * rx * 0.6, -q * 40 * k, c, 1); }
+    end(ctx);
+    return true;
+  }
+
+  // ---------- hào quang theo bậc của tướng (render.js; toạ độ chân tướng hoặc khung 200×230 của tướng)
+  // Thần tinh (asc): vòng lửa thần nét đứt + tàn lửa bay lên
+  function ascAura(ctx, asc, s, t) {
+    if (!D) return false;
+    const k = s / 0.28, rx = 30 * (typeof DK !== 'undefined' ? DK : 1) * k, ry = rx / 3;
+    begin(ctx);
+    for (let i = 0; i < asc; i++) { ctx.globalAlpha = 0.8 - i * 0.15; ring(ctx, 0, 0, rx * (1 + i * 0.22), ry * (1 + i * 0.22), i % 2 ? C.lua : C['son-sang'], { dash: 3, phase: (i % 2 ? 1 : -1) * t * 2 }); }
+    for (let i = 0; i < 2 + asc; i++) { const a = i * 2.4 + t * 0.7, q = (t * 0.7 + i * 0.37) % 1; ctx.globalAlpha = step((1 - q) * 0.8); dot(ctx, Math.cos(a) * rx * 0.8, Math.sin(a) * ry * 0.8 - q * 34 * k, i % 2 ? C['lua-sang'] : C.lua); }
+    end(ctx);
+    return true;
+  }
+  // tiến hoá ★1–★3: vòng hoa văn trống đồng (chấm xoay ngược chiều mỗi vòng)
+  function evoAura(ctx, tier, attrColor, s, t) {
+    if (!D || !tier) return false;
+    const k = s / 0.28, rx = 24 * (typeof DK !== 'undefined' ? DK : 1) * k, ry = rx / 3;
+    begin(ctx);
+    for (let i = 0; i < tier; i++) {
+      const f = 1 - i * 0.24, c = i === 1 ? pal(attrColor) : C['dong-sang'];
+      ctx.globalAlpha = 0.85;
+      ring(ctx, 0, 0, rx * f, ry * f, c);
+      const n = 12 - i * 2;
+      for (let j = 0; j < n; j++) { const a = (j / n) * Math.PI * 2 + t * (i % 2 ? -0.5 : 0.4); dot(ctx, Math.cos(a) * rx * f * 0.88, Math.sin(a) * ry * f * 0.88, j % 3 ? c : C['vang-nghe']); }
+    }
+    end(ctx);
+    return true;
+  }
+  // khói hào quang Tím / Vàng (khung 200×230): cụm ô khói bay lên
+  function smokeAura(ctx, t, rgb, k, h) {
+    if (!D) return false;
+    const m = /(\d+)\D+(\d+)\D+(\d+)/.exec(String(rgb));
+    const c = m ? pal('#' + [m[1], m[2], m[3]].map((v) => (+v).toString(16).padStart(2, '0')).join('')) : C['tim-sang'];
+    const seed = ((h && h.id) || 0) * 1.37, n = Math.round(6 + 3 * k);
+    begin(ctx);
+    for (let i = 0; i < n; i++) {
+      const p = (t * 0.32 + i / n + seed) % 1;
+      ctx.globalAlpha = step(Math.sin(p * Math.PI) * 0.5 * Math.min(1.7, k));
+      dot(ctx, 100 + Math.sin(i * 2.1 + t * 0.9 + seed) * (26 + p * 40), 215 - p * (170 + 30 * k), c, p < 0.5 ? 3 : 2);
+    }
+    end(ctx);
+    return true;
+  }
+  // bụi sáng Tím / Vàng + lửa vàng đồ Huyền thoại quanh chân (khung tướng, gốc ở chân)
+  function packFront(ctx, L, legendGear, t, hgt) {
+    if (!D) return false;
+    begin(ctx);
+    if (L) {
+      const n = L === 'legendary' ? 9 : 6, c = L === 'epic' ? C['tim-sang'] : C['vang-nghe'];
+      for (let i = 0; i < n; i++) { const p = (t * 0.45 + i / n) % 1; ctx.globalAlpha = step(Math.sin(p * Math.PI)); dot(ctx, Math.sin(i * 2.7 + t * 0.8) * 70, -p * hgt * 1.05, c, p < 0.4 ? 3 : 2); }
+    }
+    if (legendGear && spr('lua-chay')) for (let i = 0; i < 4; i++) { ctx.globalAlpha = 0.9; blit(ctx, 'lua-chay', frameOf(spr('lua-chay'), null, t, i), (i - 1.5) * 34, 0, 3, i % 2 === 1); }
+    end(ctx);
+    return true;
+  }
+  // Thần tinh: ngọc lam bay vòng quanh người (thay ngôi sao), khung 200×230
+  function ascGems(ctx, t, asc, L, front) {
+    if (!spr('ngoc')) return false;
+    begin(ctx);
+    for (let i = 0; i < asc; i++) {
+      const a = t * 1.6 + i * (Math.PI * 2 / asc), z = Math.sin(a);
+      if ((z > 0) !== front) continue;
+      ctx.globalAlpha = z < 0 ? 0.7 : 1;
+      blit(ctx, L === 'epic' ? 'kim-quang' : 'ngoc', frameOf(spr(L === 'epic' ? 'kim-quang' : 'ngoc'), null, t, i), 100 + Math.cos(a) * 78, 130 + z * 18, 4);
+    }
+    end(ctx);
+    return true;
+  }
+  // vầng mặt trời trống đồng sau lưng (★★★ / Thần tinh 3): vòng + 12 tia, xoay theo bậc
+  function sunHalo(ctx, t) {
+    if (!D) return false;
+    begin(ctx);
+    const rot = Math.round(t * 0.15 * 12 / Math.PI) * Math.PI / 12;
+    ctx.globalAlpha = 0.85;
+    ring(ctx, 100, 112, 40, 40, C['dong-sang'], { c: 2 });
+    ring(ctx, 100, 112, 26, 26, C['vang-nghe'], { dash: 2 });
+    for (let i = 0; i < 12; i++) { const a = rot + (i / 12) * Math.PI * 2; seg(ctx, 100 + Math.cos(a) * 48, 112 + Math.sin(a) * 48, 100 + Math.cos(a) * (i % 2 ? 62 : 74), 112 + Math.sin(a) * (i % 2 ? 62 : 74), i % 2 ? C['vang-nghe'] : C['dong-sang'], 2); }
+    end(ctx);
+    return true;
+  }
+
   // ---------- ảnh hiệu ứng cũ theo tên (costume.js: đòn đánh của tướng) → vẽ sprite pixel tương đương; false = không có
   function pxTex(ctx, name, color, cx, cy, r, rot = 0, sy = 1, alpha = 1) {
     const nm = pxName(name);
@@ -626,7 +950,7 @@ const VFX = (() => {
   const sprite = () => null;
 
   // công cụ vẽ pixel cho nơi khác (main.js / render.js): begin(ctx, scale) … end(ctx); toạ độ bản đồ, bám lưới điểm ảnh
-  const px = { begin, end, dot, ring, seg, zig, blit, spr, frameOf, step, pal, C, G };
+  const px = { begin, end, dot, ring, seg, zig, blit, spr, frameOf, step, pal, C, G, zone, lacTu, aura, enemyFx, elite, heroStun, bog, accAura, ascAura, evoAura, smokeAura, packFront, ascGems, sunHalo };
   return { emit, burst, flare, rise, line, update, draw, trail, projGlow, drawProj, onEffect, drawFx, sprite, tex, pxTex, decal, shards, status,
     frame, ready, isFire, pal, spr, PU, OWN, px,
     count: () => parts.length, max: () => MAX, poolSize: () => pool.length, dropped: () => dropped, statusDrawn: () => SB.n,
