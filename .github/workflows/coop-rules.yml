@@ -1,0 +1,40 @@
+name: Deploy luật Firestore (nhánh chơi nhóm)
+
+# Chỉ đăng firestore.rules (không đăng web) khi luật đổi trên nhánh chơi nhóm.
+# Bản luật ở nhánh này = luật nhánh chính + rooms/… (chơi nhóm, trò chuyện), nên đăng trước khi gộp vẫn an toàn.
+on:
+  push:
+    branches: [claude/coop-2-nguoi]
+    paths: [firestore.rules, .github/workflows/coop-rules.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: firestore-rules
+  cancel-in-progress: false
+
+jobs:
+  rules:
+    runs-on: ubuntu-latest
+    env:
+      FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SONTINHTHUYTINH }}
+    steps:
+      - name: Kiểm tra secret
+        run: |
+          if [ -z "$FIREBASE_SA" ]; then
+            echo "::error title=Thiếu secret::Chưa có FIREBASE_SERVICE_ACCOUNT_SONTINHTHUYTINH (xem docs/FIREBASE.md)."
+            exit 1
+          fi
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Đăng luật Firestore
+        run: |
+          trap 'rm -f "$RUNNER_TEMP/sa.json"' EXIT
+          printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
+          npx --yes firebase-tools@latest deploy --only firestore:rules --project sontinhthuytinh --non-interactive
+          echo "## ✅ Đã đăng firestore.rules (commit ${GITHUB_SHA::7})" >> "$GITHUB_STEP_SUMMARY"
