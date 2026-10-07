@@ -2002,3 +2002,34 @@ img.eli { position: static !important; inset: auto !important; transform: none !
 #tb-wave { font-variant-numeric: tabular-nums; height: 17px; }
 #tb-wave .icn { height: 1em; width: auto; vertical-align: top; }
 /* /v180 */
+/* v182: mở khoá tướng bằng Ngân khố — giá trên thẻ khoá, nút mở, cách kiếm, nhiệm vụ ngày */
+.ro-card .ro-price { position: absolute; right: 3px; bottom: 18px; z-index: 2; display: inline-flex; align-items: center; gap: 2px; padding: 0 4px; border-radius: 8px; background: #0D0B08d8; color: #E4ECF4; font-size: 10px; font-weight: 800; line-height: 15px; }
+.ro-card.lock.can .ro-price { color: #6AE06A; box-shadow: 0 0 0 1px #6AE06A99; }
+.ro-card .ro-price .bac { width: 11px; height: 11px; }
+#roster .ro-cnt b { color: #FFD66B; }
+.ro-open { display: inline-flex; align-items: center; gap: 4px; }
+.ro-open .uie { width: 15px; height: 15px; }
+.ro-need { color: #FFB08A; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 2px; }
+.ro-earn { font-size: 11.5px; line-height: 1.35; }
+.ro-qd { margin-top: 3px; display: flex; flex-wrap: wrap; gap: 2px 8px; }
+.qd { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; color: #E8D8B0; font-weight: 600; }
+.qd.ok { color: #6AE06A; }
+.qd .uie { width: 13px; height: 13px; }
+.qd .bac { width: 11px; height: 11px; }
+.res-table .res-kho { border-top: 1px solid #FFFFFF22; }
+.res-table .res-qd b, .res-table .res-unl b { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 2px 8px; font-size: 12px; text-align: right; }
+.res-table .res-unl .btn { height: 26px; padding: 0 10px; font-size: 12.5px; display: inline-flex; align-items: center; gap: 4px; }
+.res-table .res-unl .btn .uie { width: 13px; height: 13px; }
+.dk-pick.lock { opacity: .62; border-style: dashed; }
+.dk-pick.lock img { filter: grayscale(.85) brightness(.65); }
+.dk-pick .tg i.lk { display: inline-flex; align-items: center; gap: 2px; background: #1A1610; color: #E4ECF4; }
+.dk-pick .tg i.lk .uie { width: 10px; height: 10px; }
+.res-khobox { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 1px; padding: 6px 12px; border-radius: 6px; border: 1px solid #8FA4B8; background: #10161C; white-space: nowrap; }
+.res-khobox small { font-size: 11px; color: #C8BFA8; }
+.res-khobox b { font-family: var(--title); font-size: 24px; line-height: 1.1; color: #E4ECF4; display: inline-flex; align-items: center; gap: 4px; }
+@media (max-width: 720px) { .res-khobox { padding: 4px 8px; } .res-khobox b { font-size: 19px; } .res-khobox small { font-size: 10px; } }
+/* v182: màn kết quả dài hơn (kỷ lục, nhiệm vụ ngày, mở tướng) — cột phải cuộn được, không bị cắt đáy */
+#result .res-body { overflow: hidden; }
+#result .res-main { min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+#result .res-main > * { flex-shrink: 0; }
+.res-table .res-qd > span, .res-table .res-unl > span { white-space: nowrap; margin-right: 10px; }

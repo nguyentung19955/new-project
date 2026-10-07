@@ -82,8 +82,8 @@ const txt = (page, sel) => page.evaluate((s) => document.querySelector(s).innerT
   ok(res.includes(lv2) && /Giữ được tới đợt/.test(res) && /Kỷ lục mới/.test(res) && !NO_AI.test(res) && !/★ ?Kỷ lục mới[\s\S]*Ải tiếp/.test(res), 'thua → màn kết quả theo bản đồ, có kỷ lục mới, không chữ Ải');
   await page.screenshot({ path: path.join(SHOT, 'ket-qua-844x390.png') });
   const k2 = await page.evaluate(() => ({ kho: ui.save.kho, best: ui.save.bestEndless[2], daily: ui.save.dailyWin, run: ui.save.run }));
-  // đợt 12: cuối trận 4 × 11 = 44 + trận đầu ngày qua đợt 10: 300
-  ok(k2.kho - k1.kho === 44 + 300 && k2.best === 12 && k2.daily && !k2.run, `thưởng cuối trận đúng: +${k2.kho - k1.kho} (44 theo đợt + 300 trận đầu ngày), kỷ lục 12`);
+  // đợt 12: cuối trận 6 × 11 = 66 + kỷ lục mới (v182) 15 × 11 = 165 + trận đầu ngày qua đợt 10: 300
+  ok(k2.kho - k1.kho === 66 + 165 + 300 && k2.best === 12 && k2.daily && !k2.run, `thưởng cuối trận đúng: +${k2.kho - k1.kho} (66 theo đợt + 165 kỷ lục mới + 300 trận đầu ngày), kỷ lục 12`);
   ok(await page.locator('#result [data-act=next-level], #result [data-act=endless]').count() === 0, 'không còn nút Ải tiếp theo / Chơi vô tận');
   await page.click('#result [data-act=to-map]');
   await page.waitForSelector('#campaign:not([hidden])');
@@ -93,7 +93,7 @@ const txt = (page, sel) => page.evaluate((s) => document.querySelector(s).innerT
   const k3 = await page.evaluate(() => ui.save.kho);
   await page.evaluate(() => { game.over = true; game.events.push({ type: 'defeat' }); });
   await page.waitForSelector('#result:not([hidden])');
-  ok(await page.evaluate((k) => ui.save.kho - k === 40, k3), 'trận thứ hai trong ngày: chỉ thưởng theo đợt (40)');
+  ok(await page.evaluate((k) => ui.save.kho - k === 60 + 150, k3), 'trận thứ hai trong ngày: theo đợt (60) + kỷ lục mới bản đồ này (150), không thưởng trận đầu ngày nữa');
   await page.click('#result [data-act=to-menu]').catch(() => {});
   await page.waitForTimeout(1300);
   await page.evaluate(() => ui.showMenu());

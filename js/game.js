@@ -1632,6 +1632,7 @@ class Game {
     if (!this.rest) return 'Không ở lúc nghỉ chân';
     const old = this.summonList();
     if (!validDeck(sel)) return `Đội cần đủ ${DECK_SIZE} tướng khác nhau`;
+    if (this.owned && sel.some((t) => !openCommons(this.owned).includes(t))) return 'Tướng chưa mở khoá — mở ở Anh Hùng bằng Ngân khố';   // v182
     if (sel.filter((t) => !old.includes(t)).length > REST_SWAPS) return `Chỉ đổi tối đa ${REST_SWAPS} tướng`;
     this.deck = [...sel];
     if (this.co) { this.market = null; this.rollMarket(); this.market.rr = 0; this.skipRest(); return true; }
