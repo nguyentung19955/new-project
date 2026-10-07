@@ -37,10 +37,13 @@ async function run(level, rule, seed) {
       for (const h of g.heroes) if (h && !h.from) for (let i = 0; i < 4; i++) {
         if (!skillLevel(h, i)) { if (g.unlockSkill(h, i) === true) return; } else if (h.skillPts > 0 && g.upgradeSkill(h, i) === true) return;
       }
-      // 4. lên cấp: ưu tiên tướng ★★ có bạn hợp thể trên sân (tới cấp 16), không thì tướng cấp thấp nhất
-      const hs = g.heroes.filter((h) => h && !h.from && h.level < 16);
-      const tgt = hs.filter((h) => (h.tier || 0) >= 2 && partnerOn(h)).sort((a, b) => a.level - b.level)[0] || hs.sort((a, b) => a.level - b.level)[0];
-      if (tgt && g.gold >= g.levelCost(tgt) + (tgt.tier >= 2 ? 0 : g.summonCost())) g.levelUp(tgt);
+      // 4. lên cấp: dồn vàng vào CẶP hợp thể tốt nhất trên sân (sao cao nhất), chưa có cặp thì nâng tướng cấp thấp nhất
+      const best = (ty) => g.heroes.filter((h) => h && h.type === ty).sort((a, b) => (b.tier || 0) - (a.tier || 0) || b.level - a.level)[0];
+      const pairs = recipes.map((f) => [best(f.a), best(f.b)]).filter(([a, b]) => a && b)
+        .sort((x, y) => Math.min(y[0].tier, y[1].tier) - Math.min(x[0].tier, x[1].tier) || (y[0].level + y[1].level) - (x[0].level + x[1].level));
+      const pool = pairs.length ? pairs[0] : g.heroes.filter((h) => h && !h.from);
+      const tgt = pool.filter((h) => h.level < 16 && g.skillGap(h) > 0).sort((a, b) => a.level - b.level)[0];
+      if (tgt && g.gold >= g.levelCost(tgt)) g.levelUp(tgt);
     };
     while (!g.over && !first && g.time < 1800) {
       g.update(DT); t += DT;
