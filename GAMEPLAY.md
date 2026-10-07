@@ -1469,3 +1469,24 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 158 — Gộp chơi nhóm + trò chuyện
 - Gộp nhánh chơi nhóm "Cùng Giữ Thành" (chợ tướng riêng mỗi người, Nghỉ chân đồng bộ, trò chuyện trong trận) vào sau v157 (bỏ ô gợi ý đồ, nút Túi đồ).
 - Cần đăng lại firestore.rules (có thêm luật phòng chơi nhóm + chat + góp ý).
+
+## Phiên bản 156 — Đường quái đi theo chủ đề + đế đặt tướng vẽ tay
+- **Đường quái đi vẽ lại theo chủ đề** (`js/maps.js`, mục "ĐƯỜNG QUÁI ĐI THEO CHỦ ĐỀ"): bỏ dải xanh có vạch đứt trắng giữa đường (trông như đường nhựa). Mỗi chủ đề một loại đường (`PATH_KIND`):
+  - **Sông / Đầm** → dòng nước: lòng nước có gợn, bờ cỏ, bèo sát bờ (Đầm thêm hoa sen nhỏ).
+  - **Rừng** → đường đất mòn: rễ cây bò ngang mép đường, lá rụng.
+  - **Hang** → nền đá lát (khối đá bo tròn, bó vỉa đá, rêu ở chân vỉa).
+  - **Đồng** → bờ đê đất, cỏ mọc hai mép.
+  - **Biển** (Biển Đông, Cửa Sông Hồng, Biển Mộ Dạ) → bãi cát ướt, bọt sóng một mép, vỏ sò.
+  - **Thành** (Cổ Loa) → đường lát gạch đá cổ, bó vỉa.
+  - Mỗi loại: bóng đổ mềm + viền hòa vào nền + mép/bờ + lòng đường có kết cấu (vẽ bằng code, liền mạch) + vệt sáng giữa nhẹ. Cờ `water` của chủ đề **không đổi** (luật chơi giữ nguyên).
+- **Hướng đi:** đường nước có mũi tên dòng chảy rất mờ trôi theo hướng quái đi + gợn nước nhỏ trôi xuôi dòng; đường bộ có **dấu chân** hiện dần rồi mờ theo hướng quái đi. **Cổng vào:** hai cột mốc đá khắc vòng trống đồng, dải vải đỏ, đặt nơi đường bắt đầu lộ ra màn hình.
+- **Hiệu năng:** nền vẽ tay + đường + cổng vào + cổng thành dựng **một lần** vào canvas tĩnh (`mapLayer`, dựng lại khi đổi bản đồ / cỡ màn hình / có thêm ảnh); mỗi khung chỉ vẽ 1 ảnh + phần động (gợn nước / mũi tên / dấu chân). Đo 17 ải (Playwright, 120 khung có đọc lại điểm ảnh): trung bình **3,33 ms/khung trước → 2,45 ms/khung sau** (nhanh hơn vì bỏ được một lần vẽ ảnh nền riêng).
+- **Đế đặt tướng vẽ tay** (`drawSpot` trong `js/render.js`): có ảnh `assets/tiles/de-tuong-*.png` thì dùng ảnh, thiếu thì giữ elip vẽ code như cũ. Thứ tự chọn ảnh: ô ngập → `ngap`; đã nâng núi → `nui`; ô đích khi kéo/chọn → `chon`; ô sáng khi đang đặt / gợi ý → `san-sang`; còn lại → đế theo chủ đề (`co` cho Sông/Đầm/Đồng, `dat` Rừng, `da` Hang, `cat` Biển, `gach` Thành) → `thuong`. Hiệu ứng trạng thái (nhấp nháy sắp ngập, vòng vàng ô đích, vòng nhấp nháy, gợn sóng loang ở ô ngập) vẽ chồng lên ảnh. Ảnh đế là một phần bản đồ nên luôn dùng (như nền vẽ tay), kể cả khi tắt "Dùng ảnh AI". **Ô đã có tướng vẫn không vẽ đế** (giữ như v138).
+- **Prompt mới** (`node tools/build-prompts.js` → `docs/PROMPT_GEMINI_FULL.md/.txt`):
+  - Nhóm **14. Đế đặt tướng**: `de-tuong.png` (5 trạng thái: thường, sẵn sàng, đang chọn, ngập, núi) · `de-tuong-chu-de.png` (cỏ, đất/gốc cây, đá hang, cát, gạch). Cắt: `python3 tools/cat-items.py <ảnh> de-tuong` / `… de-tuong-chu-de` → `assets/tiles/de-tuong-<x>.png`.
+  - Nhóm **15. Đường quái đi (kết cấu lặp 512×512)**: `duong-nuoc`, `duong-dat`, `duong-da`, `duong-de`, `duong-cat`, `duong-gach`. Cắt: `python3 tools/cat-items.py <ảnh> duong-<loại>` (không xoá nền, chỉ cắt vuông 512 px, lưu `assets/tiles/duong-<loại>.jpg`). Có ảnh thì lòng đường dùng ảnh làm kết cấu lặp, không thì dùng kết cấu vẽ bằng code.
+  - Nhóm **16. Cổng thành cuối đường**: `cong-thanh.png` (Phong Châu, bản rừng, hang, cổng làng tre, Cổ Loa). Cắt: `python3 tools/cat-items.py <ảnh> cong-thanh` → `assets/tiles/cong-*.png`; có ảnh thì thay cổng vẽ SVG.
+- Test: `node tests/duong-quai/duong-quai.test.js` (17 ải: lớp nền tĩnh dựng đúng bản đồ, lòng đường đúng màu theo loại, quái chạy 2 đợt vẫn bám đường; ảnh đế + kết cấu giả tạo bằng PIL → ô trống dùng đúng ảnh theo trạng thái, ô có tướng không vẽ đế, lớp đường dùng ảnh kết cấu; xoá ảnh giả khi xong). Chụp/đo: `node tests/duong-quai/chup.js <nhãn>`. Ảnh so sánh: `docs/duong-quai-truoc-sau.png`.
+
+## Phiên bản 159 — Gộp đường quái + đế ô đặt tướng
+- Gộp nhánh đường quái đi theo chủ đề + đế ô đặt tướng bằng ảnh (v156) vào sau v158.

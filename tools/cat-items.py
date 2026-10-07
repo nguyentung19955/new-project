@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Cắt một tấm icon (1 hàng × 4–5 ô, nền hồng tím) thành từng file theo tools/item-sheets.json (128 px).
 
-  python3 tools/cat-items.py <ảnh.png> <mã tấm>      vd. do-riu, bo-son-tinh, phu-kien-1, ui-tran-4
+  python3 tools/cat-items.py <ảnh.png> <mã tấm>      vd. do-riu, bo-son-tinh, phu-kien-1, ui-tran-4, de-tuong, cong-thanh
+  Kết cấu đường (duong-nuoc, duong-dat…): không xoá nền, chỉ cắt vuông 512 px → assets/tiles/duong-<loại>.jpg
 Mã tấm và tên file từng ô do tools/build-prompts.js sinh ra (đúng thứ tự ô trong prompt).
 """
 import os, sys, json, importlib.util
@@ -20,6 +21,12 @@ def main():
     if code not in sheets: sys.exit(f'Không có tấm {code}. Có: {", ".join(sheets)}')
     files = sheets[code]['files']; n = len(files)
     out = os.path.join(here, '..', 'assets', sheets[code]['dir']); os.makedirs(out, exist_ok=True)
+    if sheets[code].get('texture'):
+        # kết cấu lặp (đường quái đi, v156): không xoá nền, chỉ đưa về hình vuông N px và lưu JPG
+        side = sheets[code]['texture']; im = Image.open(src).convert('RGB')
+        s = min(im.size); im = im.crop(((im.width - s) // 2, (im.height - s) // 2, (im.width + s) // 2, (im.height + s) // 2))
+        im.resize((side, side), Image.LANCZOS).save(os.path.join(out, files[0]), quality=86, optimize=True)
+        print(f"{code}: {files[0]}"); return
     sheet = cs.key_magenta(Image.open(src).convert('RGB'))
     W, H = sheet.size
     xs = cs.cut_lines(sheet, n, W, axis=0)
