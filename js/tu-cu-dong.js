@@ -832,7 +832,8 @@ function cdDrawEnemy(ctx, e, t, box, img, o) {
   const base = ctx.globalAlpha;
   cdDrawBody(ctx, pp, body, H, P, false);
   if (P.flash > 0) {
-    ctx.globalAlpha = base * Math.min(1, P.flash * (e.hitT > 0 ? 1.3 : 1));
+    // T7: boss đang nổi giận: chớp trắng nhẹ (≤ 0,4) để vẫn thấy rõ tư thế + ám đỏ
+    ctx.globalAlpha = base * Math.min(e.enraged ? 0.4 : 1, P.flash * (e.hitT > 0 ? 1.3 : 1));
     cdDrawBody(ctx, pp, cdTint(p, e.hitT > 0 ? '#FFFFFF' : P.flashC), H, P, false);
     ctx.globalAlpha = base;
   }

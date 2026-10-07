@@ -329,6 +329,8 @@ const gateArt = (theme) => typeof asset === 'function' && asset(`tiles/${GATE_FI
 // Canvas tĩnh: nền vẽ tay + đường + cổng vào + cổng thành; dựng lại khi đổi bản đồ / cỡ màn hình / có thêm ảnh
 let mapLayerCache = { key: '', c: null };
 function mapLayer(id, bgImg, svgImg, pw, ph) {
+  // T1: cửa sổ thu về gần 0 (thu nhỏ app, chia đôi màn, xoay máy) → không dựng canvas cỡ 0 (drawImage sẽ ném lỗi)
+  if (!(pw >= 1 && ph >= 1)) return null;
   const m = MAPS[id] || MAPS.song1, kind = pathKind(m.theme);
   const tex = asset(`tiles/duong-${kind}.jpg`, true), gate = gateArt(m.theme);
   const svgOk = svgImg && svgImg.complete && svgImg.naturalWidth > 0;

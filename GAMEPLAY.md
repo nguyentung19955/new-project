@@ -2081,3 +2081,14 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 ## Phiên bản 195 — Dùng ảnh có sẵn thay hình vẽ code (tester đạt)
 
 - Gộp claude/dung-anh-co-san: đồng xu, nén bạc, tim mạng, icon ngăn kéo, Lò đúc, Bách khoa, rương rơi đồ… dùng ảnh thật.
+
+## claude/sua-loi-giao-dien — Sửa lỗi tester báo ở bản 194–195 (T1–T5, T7, G5–G7)
+
+- **T1 · bản đồ đen vĩnh viễn sau khi thu cửa sổ về gần 0** (thu nhỏ app, chia đôi màn, xoay máy): `mapLayer` không dựng canvas cỡ 0 nữa (trả `null` → vẽ trực tiếp), `cachedBackdrop` bỏ qua khi canvas < 2 px, canvas game tối thiểu 1×1. Vòng lặp `loop` hẹn khung sau **trước** khi vẽ — một khung vẽ lỗi không còn làm chết vòng lặp.
+- **T2 · thứ tự bảng sau boss:** Sính lễ (Vua Hùng ban thưởng) luôn lên trước. Nghỉ chân đến khi Sính lễ đang mở thì vào hàng đợi `ui.afterReward()`, mở sau khi chọn thưởng (cả chơi nhóm). Sính lễ đến khi Nghỉ chân đang mở thì Nghỉ chân tạm cất, mở lại sau. Bảng nào thêm về sau (khi bỏ Nghỉ chân) dùng chung hàng đợi này.
+- **T3 · thông báo (toast) không che bảng đang mở:** trong lớp phủ chỉ tính nút / chip / tiêu đề của chính các bảng đang mở (nới 4 px), chỗ trên thanh tiêu đề chỉ dùng khi không chạm gì; **hết chỗ trống thì cất vào hàng chờ** (tối đa 3) và hiện khi đóng bảng (rời trận thì bỏ). Trong trận: né thêm ngăn kéo ≡ / bảng phụ / Hợp thể, thử thêm cột trái và giữa. Toạ độ vật cản tính đúng cả khi khung xoay 90° (cầm dọc — trước đây lệch hẳn nên toast đè nút Chọn ở Sính lễ).
+- **T4 · đợt boss:** "Quái mới: …" của boss gộp vào chính hộp thoại boss (nhãn QUÁI MỚI + 1 dòng mô tả, giữ 4,2 giây) thay vì thoại + thông báo chồng 3 lớp. Bảng boss ở bản gọn mà vẫn đè đúng con boss (boss vào từ góc trên trái) thì dời sang góc trên phải / góc dưới trái / giữa dưới; hết chỗ mới mờ như cũ.
+- **T5 · "Đợt N · Bộ quái mới":** thành banner nhỏ một dải (tên bộ quái · hành khắc · 3 ảnh tướng khắc chế), không chặn chạm, tự tắt sau 5,5 giây; banner lớn (Boss xuất hiện, Thăng thần…) hiện thì nhường chỗ rồi hiện lại phần thời gian còn lại.
+- **T7 · boss sắp chết trắng bệch như bóng ma:** bị nhiều tướng đánh liên tục làm chớp trúng đòn sáng suốt. Nay chớp trắng tối đa ~3 lần / giây (`hitGap` 0,32 s) và boss đang hóa điên chỉ chớp nhẹ (≤ 0,4) → thấy rõ tư thế + ám đỏ.
+- **G5:** ô vàng trận ("220") không hiện khi mở Bách khoa từ menu ngoài trận. **G6:** thanh lọc vai trò dính ở Anh Hùng có nền đặc, phủ kín khe trên/dưới. **G7:** cột phải màn Bản đồ còn nội dung thì mép dưới mờ dần + mũi tên ⌄ nhấp nhô, tắt khi cuộn tới đáy.
+- Test: `node tests/run-all.js sua-loi-giao-dien` (T1 thu cửa sổ 1×1 / 0×0 rồi trả lại, thứ tự Sính lễ → Nghỉ chân, toast không đè ở 4 cỡ màn, boss, banner bộ quái, chớp trúng đòn, G5–G7).

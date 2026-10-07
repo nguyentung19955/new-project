@@ -2805,6 +2805,7 @@ class Game {
     if (e.dead) return;
     const d = e.def;
     if (e.hitT > 0) e.hitT -= dt;
+    if (e.hitGap > 0) e.hitGap -= dt;
     if (e.atkT > 0) e.atkT -= dt;
     if (e.slowT > 0) e.slowT -= dt; else e.slowPct = 0;
     if (e.poisonT > 0) {
@@ -3468,7 +3469,8 @@ class Game {
     if (st && st.stunChance && srand() * 100 < st.stunChance) { this.stun(e, 0.5, 'stun'); this.proc(e, 'tusk', e.x, e.y - 16, '#C8A040', 22); }
     if (st && !o.silent) this.onHitFx(e, hero, st, crit, dmg);
     if (!o.silent) {
-      e.hitT = 0.12;
+      // T7: chớp trắng khi trúng đòn tối đa ~3 lần / giây — bị nhiều tướng đánh liên tục (boss sắp chết) không còn trắng bệch như bóng ma
+      if (!(e.hitGap > 0)) { e.hitT = 0.12; e.hitGap = 0.32; }
       if (st && hero) { e.kbT = 0.14; e.kbDir = e.x >= hero.x ? 1 : -1; }
     }
     // số sát thương: khắc chế hiện vàng, bị khắc hiện xám

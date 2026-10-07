@@ -148,6 +148,13 @@ function ic(name, alt = '', cls = '') {
 const icPreload = () => { IC_NAMES.forEach(icUrl); Object.keys(ELEMENTS).forEach((e) => asset(`ui/ic-hanh-${e}.png`, true)); };
 const rarCls = (r) => ({ common: 'rt', rare: 'rh', epic: 'rs', legendary: 'rl' }[r]);
 const ATTR_CLS = { str: 'a-str', agi: 'a-agi', int: 'a-int' };
+// T3/T4: hình chữ nhật trên màn (getBoundingClientRect) → toạ độ khung thiết kế UIW × UIH, kể cả khi khung xoay 90° (cầm dọc)
+function uiRect(d) {
+  const ur = $('#ui').getBoundingClientRect();
+  if (typeof ROT !== 'undefined' && ROT) { const k = ur.width / UIH || 1; return [(d.top - ur.top) / k, (ur.right - d.right) / k, (d.bottom - ur.top) / k, (ur.right - d.left) / k]; }
+  const k = ur.height / UIH || 1;
+  return [(d.left - ur.left) / k, (d.top - ur.top) / k, (d.right - ur.left) / k, (d.bottom - ur.top) / k];
+}
 const BOSS_LINES = {
   thuongluong: 'Ta là Thuồng Luồng sông Đà! Một cú quẫy đuôi là tướng của ngươi nằm rạp!',
   haba: 'Hà Bá ta sống dưới nước nghìn năm. Hạ ta một lần chưa phải là xong đâu!',
@@ -649,7 +656,7 @@ class UI {
     const lvN = live ? g0.level : run ? run.level : 0, wN = live ? g0.wave : run ? run.wave : 0;
     $('#continue-label').textContent = live || run ? `Tiếp tục · ${(LEVELS[lvN] || LEVELS[0]).name} · Đợt ${wN} ♾` : 'Xuất Quân';
     $('#btn-newgame').hidden = !(live || run);
-    $('#roster-hint').onclick = () => { $('#roster-hint').hidden = true; };
+    $('#roster-hint').onclick = () => { $('#roster-hint').hidden = true; clearTimeout(this.rosterHintT); };
     this.setInGame(false);
   }
   hideOverlays() {
@@ -823,6 +830,8 @@ class UI {
   showRest() {
     const g = this.game;
     if (!g.rest) return;
+    // T2: bảng Vua Hùng ban thưởng (Sính lễ) đang mở thì Nghỉ chân chờ — thứ tự luôn: Sính lễ trước, bảng khác sau
+    if (!$('#reward').hidden) return this.afterReward(() => this.showRest());
     const coop = COOP.on;
     if (coop && g.rest.done && g.rest.done[COOP.me]) return;      // chơi nhóm: mình xong rồi, chờ đồng đội
     if (!this.restSel || this.restFor !== g.rest.wave) { this.restSel = [...g.summonList()]; this.restFor = g.rest.wave; this.restWasRunning = g.running !== false; }
@@ -1191,6 +1200,7 @@ class UI {
         const o = co.reward && co.reward.options[c.a[0]];
         if (!mine && o) this.toast(`${mate} đã chọn sính lễ: ${esc(o.title)}`, '#C8A0F0');
         if (mine && o) this.rewardToast(o);
+        this.runAfterReward();
       } else if (mine) this.toast(r, '#E25A3A');
     } else if (c.n === 'speed' && !mine) this.toast(`${mate} đổi tốc độ x${co.speed}`, '#C8BFA8');
     else if (c.n === 'back') this.toast('Hai người lại cùng giữ thành: vàng chia đôi lại', '#9dffc4');
@@ -1315,6 +1325,13 @@ class UI {
           <button class="go btn-gold" data-act="cp-go">${UIE.endless()} Vào vô tận</button></div>
         </div>
       </div></div>`;
+    // G7: cột phải còn nội dung bên dưới → mép dưới mờ dần + mũi tên gợi ý cuộn (tắt khi đã cuộn tới đáy)
+    const sc = $('#campaign .cp-scroll'), side = sc && sc.parentNode;
+    if (sc) {
+      const upd = () => side.classList.toggle('can-down', sc.scrollHeight - sc.scrollTop - sc.clientHeight > 6);
+      sc.addEventListener('scroll', upd, { passive: true });
+      requestAnimationFrame(upd);
+    }
   }
 
   // ---------- Cài đặt / tạm dừng
@@ -1374,7 +1391,7 @@ class UI {
   // v189 (L05): thông báo không sống qua chuyển màn (đổi màn/lớp phủ thì xoá thông báo cũ, giữ cái vừa tạo cùng lúc mở màn),
   // không đè nội dung: đang mở lớp phủ / màn hình → hiện ở đáy giữa; trong trận → né thành (đích của quái) và bảng boss
   watchToasts() {
-    const ids = ['#screen', '#legends', '#reward', '#rest', '#menu', '#campaign', '#modes', '#coop', '#settings', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks', '#result', '#feedback', '#fbadmin'];
+    const ids = this.toastIds = ['#screen', '#legends', '#reward', '#rest', '#menu', '#campaign', '#modes', '#coop', '#settings', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks', '#result', '#feedback', '#fbadmin'];
     const view = () => ids.filter((id) => !$(id).hidden).join() + '|' + (this.screen ? this.screen.kind : '');
     this.toastView = view();
     this.checkToasts = () => {
@@ -1384,6 +1401,9 @@ class UI {
       const now = performance.now();
       for (const t of [...$('#toasts').children]) if (now - (t.born || 0) > 250) t.remove();
       this.placeToasts();
+      // T3: thông báo phải chờ vì lớp phủ không còn chỗ trống → hiện khi về trận (hoặc sang màn có chỗ)
+      if (/#menu|#campaign|#result/.test(v)) this.toastQ = [];   // rời trận: bỏ thông báo trận đang chờ
+      if (this.toastQ && this.toastQ.length && !$('#toasts').children.length) { const q = this.toastQ; this.toastQ = []; for (const x of q.slice(-2)) this.toast(x.m, x.c); }
     };
     // đổi lựa chọn trong lớp phủ (bấm tướng khác, tab khác…) thì thông báo của lựa chọn trước tắt luôn
     $('#ui').addEventListener('pointerdown', (ev) => {
@@ -1407,18 +1427,17 @@ class UI {
       // thanh chợ, cột nút phải. Thử vài chỗ đặt cột thông báo, chọn chỗ đè ít nhất (ưu tiên chỗ cũ: góc phải dưới thanh trên)
       const hz = typeof HZ !== 'undefined' ? HZ : 1, w = 250 * hz, h = Math.max(40 * hz, box.offsetHeight * hz), G = 56;
       const p = PATH.at(PATH.total), gx = (p.x + MAPX) / DK, gy = (p.y + MAPY) / DK;
-      const ur = $('#ui').getBoundingClientRect(), k = ur.height / UIH || 1;
       const R = [[gx - G, gy - G, gx + G, gy + G]];
-      for (const id of ['#dialogue', '#roster-hint', '#bossbar', '#banner', '#deck', '#auto-btns', '#topbar']) {
+      for (const id of ['#dialogue', '#roster-hint', '#bossbar', '#banner', '#deck', '#auto-btns', '#topbar', '#drawer', '#more', '#legends']) {
         const el = $(id);
         if (el.hidden || !el.offsetParent) continue;
         const d = el.getBoundingClientRect();
-        if (d.width) R.push([(d.left - ur.left) / k, (d.top - ur.top) / k, (d.right - ur.left) / k, (d.bottom - ur.top) / k]);
+        if (d.width) R.push(uiRect(d));
       }
       const area = (x0, y0) => R.reduce((s2, [l, t, r, b]) => s2 + Math.max(0, Math.min(r, x0 + w) - Math.max(l, x0)) * Math.max(0, Math.min(b, y0 + h) - Math.max(t, y0)), 0)
         + Math.max(0, y0 + h - UIH) * w;
       const tops = [104 * hz, ...R.map((r) => r[3] + 6).filter((y) => y > 104 * hz && y < UIH * 0.6)];
-      const rights = [8, UIW - (gx - G) + 4].filter((r) => UIW - r - w >= 8);
+      const rights = [8, UIW - (gx - G) + 4, UIW - w - 8, (UIW - w) / 2].filter((r) => UIW - r - w >= 8);   // T3: thêm lề trái / giữa (ngăn kéo ≡ mở bên phải)
       let best = null;
       for (const rr of rights) for (const tt of tops) {
         const sc = area(UIW - rr - w, tt) + (rr === 8 ? 0 : 1) + (tt - 104 * hz) * 0.5;   // hoà thì giữ chỗ quen
@@ -1432,26 +1451,35 @@ class UI {
     let left = '', width = '';
     if (ov && box.children.length) {
       // lớp phủ / màn hình: thử đáy giữa, dưới tiêu đề, đáy trái, đáy phải — chọn chỗ đè ít nút / ô nhập nhất
-      const ur = $('#ui').getBoundingClientRect(), k = ur.height / UIH || 1;
       let w = Math.min(440, UIW - 24), h = Math.max(30, box.offsetHeight);
       const R = [];
-      for (const e of $('#ui').querySelectorAll('button, input, textarea, select, .btn, [data-act], [data-tip], .chip, h1, .ttl')) {
+      // T3: chỉ tính nút / chữ của các lớp phủ đang mở (nút trận nằm dưới lớp phủ không còn làm lệch chỗ đặt); nới 4px để không sát mép
+      const open = (this.toastIds || []).filter((id) => !$(id).hidden).map((id) => $(id));
+      for (const c of open.length ? open : [$('#ui')]) for (const e of c.querySelectorAll('button, input, textarea, select, .btn, [data-act], [data-tip], .chip, h1, h2, h3, .ttl, .sl-title, .goldbox')) {
         if (e.closest('[hidden]') || e.closest('#toasts')) continue;
         const d = e.getBoundingClientRect();
-        if (d.width > 1 && d.height > 1) R.push([(d.left - ur.left) / k, (d.top - ur.top) / k, (d.right - ur.left) / k, (d.bottom - ur.top) / k]);
+        if (d.width > 1 && d.height > 1) { const q = uiRect(d); R.push([q[0] - 4, q[1] - 4, q[2] + 4, q[3] + 4]); }
       }
       const area = (x0, y0) => R.reduce((a, [l, t, r, b]) => a + Math.max(0, Math.min(r, x0 + w) - Math.max(l, x0)) * Math.max(0, Math.min(b, y0 + h) - Math.max(t, y0)), 0);
       const C = [[(UIW - w) / 2, UIH - 10 - h], [(UIW - w) / 2, 52], [12, UIH - 10 - h], [UIW - 12 - w, UIH - 10 - h]];
       let best = null;
-      C.forEach(([x0, y0], i) => { const sc = area(x0, y0) + i; if (!best || sc < best.sc) best = { sc, x0, y0, w }; });
+      C.forEach(([x0, y0], i) => { const a = area(x0, y0), sc = a + i; if (!best || sc < best.sc) best = { sc, a, x0, y0, w }; });
       // ưu tiên chỗ trống trên thanh tiêu đề (giữa tên màn và các nút bên phải) nếu thông báo vừa 1–2 dòng
       const w0 = w, h0 = h;
       for (const ww of [380, 330, 290, 250]) {
         w = Math.min(ww, UIW - 24);
         box.style.width = `${w}px`; h = Math.max(24, box.offsetHeight); box.style.width = '';
-        if (h <= 42) for (let x0 = 12; x0 + w <= UIW - 12; x0 += 10) { const sc = area(x0, 2) * 2 + Math.abs(x0 + w / 2 - UIW / 2) * 0.01 + (380 - ww) * 0.01; if (sc < best.sc) best = { sc, x0, y0: 2, w }; }
+        // T3: chỗ trên thanh tiêu đề chỉ dùng khi KHÔNG chạm chip / nút / tiêu đề nào
+        if (h <= 42) for (let x0 = 12; x0 + w <= UIW - 12; x0 += 10) { if (area(x0, 2) > 0) continue; const sc = Math.abs(x0 + w / 2 - UIW / 2) * 0.01 + (380 - ww) * 0.01; if (best.a > 0 || sc < best.sc) best = { sc, a: 0, x0, y0: 2, w }; }
       }
       w = w0; h = h0;
+      // T3: không còn chỗ trống nào → không che bảng đang mở: cất thông báo vào hàng chờ, hiện khi đóng bảng (tối đa 3)
+      if (best.a > 0) {
+        this.toastQ = this.toastQ || [];
+        for (const t of [...box.children]) { this.toastQ.push({ m: t.innerHTML, c: t.style.borderLeftColor }); t.remove(); }
+        this.toastQ = this.toastQ.slice(-3);
+        return;
+      }
       left = `${Math.round(best.x0)}px`; top0 = `${Math.round(best.y0)}px`; width = best.w === w ? '' : `${Math.round(best.w)}px`;
     }
     box.classList.toggle('ov', ov);
@@ -2037,7 +2065,12 @@ class UI {
         // v189 (L07): boss — banner + hội thoại + thông báo từng chồng 3 lớp chữ; thông báo đợi banner tắt
         // (sự kiện quái mới đến trước sự kiện boss trong cùng khung hình, nên boss thì luôn chờ hết thời gian banner)
         const wait = d.boss ? 2650 : !$('#banner').hidden ? (this.bannerEnd || 0) - performance.now() + 50 : 0;
-        if (wait > 0) setTimeout(() => this.toast(msg, col), wait); else this.toast(msg, col);
+        // T4: boss có lời thoại → gộp "Quái mới" vào chính hộp thoại (một lớp chữ thay vì thoại + thông báo chồng nhau)
+        if (d.boss && BOSS_LINES[ev.enemy]) {
+          const fi = this.foeInfo = { who: ev.enemy, txt: d.short || d.desc };
+          setTimeout(() => { if (this.foeInfo === fi) { this.foeInfo = null; this.toast(msg, col); } }, 4000);   // không có lời thoại nào nhận → báo như cũ
+        }
+        else if (wait > 0) setTimeout(() => this.toast(msg, col), wait); else this.toast(msg, col);
       } else if (ev.type === 'kho') {
         // v103: Ngân khố kiếm giữa trận (Vô tận) — cộng thẳng vào tài khoản
         this.save.kho = (this.save.kho || 0) + ev.n; g.khoRun = (g.khoRun || 0) + ev.n; writeSave(this.save);
@@ -2083,12 +2116,14 @@ class UI {
     const name = foe ? ENEMIES[who].name : who === 'sontinh' ? 'Sơn Tinh' : HEROES[who] ? HEROES[who].name : who;
     box.className = foe ? 'foe' : 'ally';
     const av = foe ? '<canvas width="108" height="124"></canvas>' : HEROES[who] ? `<img src="${heroImgUrl(who, 'head')}" alt="">` : svgI(sceneArt('drum'));
-    box.innerHTML = `<div class="dav">${av}</div><div><h4>${esc(name)}</h4><p>“${esc(text)}”</p></div>`;
+    const info = foe && this.foeInfo && this.foeInfo.who === who ? this.foeInfo.txt : '';
+    if (info) this.foeInfo = null;
+    box.innerHTML = `<div class="dav">${av}</div><div><h4>${esc(name)}${info ? ' <i class="dnew">Quái mới</i>' : ''}</h4><p>“${esc(text)}”</p>${info ? `<small class="dinfo">${esc(info)}</small>` : ''}</div>`;
     if (foe) drawEnemyIcon(box.querySelector('canvas'), who, 0.04);
     box.hidden = false;
     this.placeToasts();
     clearTimeout(this.sayT);
-    this.sayT = setTimeout(() => { box.hidden = true; this.placeToasts(); }, 3000);
+    this.sayT = setTimeout(() => { box.hidden = true; this.placeToasts(); }, info ? 4200 : 3000);
   }
 
   banner(sub, text) {
@@ -2101,6 +2136,9 @@ class UI {
     b.style.animation = '';
     clearTimeout(this.bannerT);
     this.bannerEnd = performance.now() + 2600;
+    // T5: banner bộ quái mới đang hiện thì nhường banner lớn, hiện lại phần thời gian còn lại sau đó
+    const rh = $('#roster-hint');
+    if (!rh.hidden) this.showRosterHint(Math.max(1500, (this.rosterHintEnd || 0) - performance.now()));
     this.bannerT = setTimeout(() => { b.hidden = true; }, 2600);
   }
 
@@ -2257,10 +2295,21 @@ class UI {
     const box = enemyBox(b), lift = b.def.flying ? 24 : 0;
     { const x = (b.x + MAPX) / DK, y = (b.y - lift - box.h * 0.45 + MAPY) / DK, rx = box.w * 0.4 / DK + 4, ry = box.h * 0.5 / DK + 4; R.push([x - rx, y - ry, x + rx, y + ry]); }
     for (const h of this.game.heroes) if (h && !h.dead) { const x = (h.x + MAPX) / DK, y = (h.y + MAPY) / DK; R.push([x - 24 / DK, y - 76 / DK, x + 24 / DK, y + 6 / DK]); }
-    const hit = (hh) => R.some(([l, t, r, bt]) => r > 6 && l < 6 + w && bt > top && t < top + hh);
+    const hit = (hh, x0 = 6, y0 = top, only) => (only ? R.slice(0, 1) : R).some(([l, t, r, bt]) => r > x0 && l < x0 + w && bt > y0 && t < y0 + hh);
     const nextMini = hit(fullH);
     bar.classList.toggle('mini', nextMini);
-    bar.classList.toggle('ghost', nextMini && hit(miniH));
+    // T4: bản gọn vẫn đè đúng con boss (boss mới vào từ góc trên trái) → dời bảng sang chỗ khác không đè boss:
+    // góc trên phải (dưới thanh trên), góc dưới trái (trên thanh chợ). Hết chỗ mới mờ đi như cũ.
+    let pos = null;
+    if (nextMini && hit(miniH, 6, top, true)) {
+      const dk = $('#deck').getBoundingClientRect(), deckTop = dk.height ? uiRect(dk)[1] : UIH - 90;
+      const C = [[UIW - w - 66 * hz, top], [6, deckTop - miniH - 6], [(UIW - w) / 2, deckTop - miniH - 6]];
+      pos = C.find(([x, y]) => !hit(miniH, x, y, true) && !hit(miniH, x, y)) || C.find(([x, y]) => !hit(miniH, x, y, true));
+    }
+    const L = pos ? `${Math.round(pos[0])}px` : '', T = pos ? `${Math.round(pos[1])}px` : '';
+    if (bar.style.left !== L) bar.style.left = L;
+    if (bar.style.top !== T) { bar.style.top = T; this.placeToasts(); }
+    bar.classList.toggle('ghost', nextMini && (pos ? hit(miniH, pos[0], pos[1]) : hit(miniH)));
   }
 
   // ---------- hàng thẻ dưới đáy: thẻ triệu hồi, hoặc thẻ tướng đang chọn
@@ -2571,16 +2620,23 @@ class UI {
     for (let w = n; w < n + 10; w++) { const b = bossAt(w, g.level); if (b) bosses.push(b); }
     const pool = [...g.summonList(), ...LEGEND_HEROES.filter((t) => (this.save.owned || []).includes(t))];
     const c = rosterCounters(ROSTERS[key], bosses, pool, []);
+    // T5: banner nhỏ tự tắt, không chặn thao tác (trước: bảng to giữa màn che bản đồ đúng lúc quái vào, phải chạm để đóng)
     const el = $('#roster-hint');
     el.innerHTML = `<div class="rh-h"><small>Đợt ${n} · bộ quái mới</small><b>${ROSTER_NAMES[key] || key}</b></div>
-      ${c.main ? `<div class="ch-sum">Quái chủ yếu hành <b style="color:${ELEMENTS[c.main].color}">${ELEMENTS[c.main].name}</b> → dùng hành <b style="color:${ELEMENTS[c.ce].color}">${ELEMENTS[c.ce].name}</b></div>` : ''}
-      <div class="rh-foes">${c.foes.slice(0, 7).map((k) => `<span title="${esc(ENEMIES[k].name)}">${esc(ENEMIES[k].name)}${ENEMIES[k].boss ? ' ' + ic('boss', 'Boss') : ''}</span>`).join('')}</div>
-      <div class="ch-row">${c.list.map((x) => `<span class="ch-av ${HEROES[x.t].legend || ''}" style="--c:${ELEMENTS[HEROES[x.t].el].color}"><img src="${heroImgUrl(x.t, 'head')}" alt="${esc(HEROES[x.t].name)}"><i>${elIcon(HEROES[x.t].el, 11)}</i><small>${x.why}</small></span>`).join('')}</div>
-      <div class="rh-x">Chạm để đóng</div>`;
-    el.hidden = false;
-    this.placeToasts();
+      ${c.main ? `<div class="ch-sum">Quái hành <b style="color:${ELEMENTS[c.main].color}">${ELEMENTS[c.main].name}</b> → dùng <b style="color:${ELEMENTS[c.ce].color}">${ELEMENTS[c.ce].name}</b></div>` : ''}
+      <div class="rh-av">${c.list.slice(0, 3).map((x) => `<span class="ch-av ${HEROES[x.t].legend || ''}" style="--c:${ELEMENTS[HEROES[x.t].el].color}" title="${esc(HEROES[x.t].name + ' — ' + x.why)}"><img src="${heroImgUrl(x.t, 'head')}" alt="${esc(HEROES[x.t].name)}"></span>`).join('')}</div>`;
+    this.showRosterHint(5500);
+  }
+  showRosterHint(ms) {
+    const el = $('#roster-hint');
     clearTimeout(this.rosterHintT);
-    this.rosterHintT = setTimeout(() => { el.hidden = true; this.placeToasts(); }, 9000);
+    // banner lớn (Boss xuất hiện, Thăng thần…) đang hiện → chờ banner tắt rồi mới hiện, không đè nhau
+    const wait = !$('#banner').hidden ? (this.bannerEnd || 0) - performance.now() + 60 : 0;
+    if (wait > 0) { el.hidden = true; this.rosterHintT = setTimeout(() => this.showRosterHint(ms), wait); return; }
+    el.hidden = false;
+    this.rosterHintEnd = performance.now() + ms;
+    this.placeToasts();
+    this.rosterHintT = setTimeout(() => { el.hidden = true; this.placeToasts(); }, ms);
   }
 
   // v92: tướng nên có để khắc chế quái của ải — hiện ảnh đại diện
@@ -2926,6 +2982,8 @@ class UI {
     this.rewardId = ev.id;
     this.rewardBoss = ev.boss;
     this.closeScreen();
+    // T2: Sính lễ luôn lên trước — bảng Nghỉ chân đang mở thì cất đi, mở lại sau khi chọn thưởng
+    if (!$('#rest').hidden) { $('#rest').hidden = true; this.afterReward(() => this.showRest()); }
     const g = this.game;
     const flood = false;      // v36: bỏ nước dâng ngập ô
     const th = themeOf(g.level, g.endless && g.wave > g.levelWaves);   // v163: lời ban thưởng theo chương
@@ -2969,12 +3027,21 @@ class UI {
     if (COOP.on) {
       $('#reward').hidden = true;
       COOP.issue('reward', [i, this.rewardId]);
+      this.runAfterReward();
       return;
     }
     this.game.claimReward(o);
     $('#reward').hidden = true;
     if (!this.game.waveActive) this.saveRun();
     this.rewardToast(o);
+    this.runAfterReward();
+  }
+  // T2: hàng đợi các bảng mở sau khi chọn xong phần thưởng boss (mỗi loại bảng một chỗ, theo thứ tự đến)
+  afterReward(fn) { (this.rewardQ || (this.rewardQ = [])).push(fn); }
+  runAfterReward() {
+    const q = this.rewardQ || [];
+    this.rewardQ = [];
+    for (const fn of q) if ($('#reward').hidden) fn();
   }
   rewardToast(o) {
     if (o.kind === 'item' && o.ids) this.toast(`Nhận ${o.ids.length} món từ Hũ Vua Hùng · bấm ≡ → Mặc đồ cả đội`, '#C8A0F0');
@@ -3027,7 +3094,7 @@ class UI {
     const mate = coop ? g.co.names[1 - COOP.me] : '';
     if (coop) { COOP.end(false); this.coopDone = true; this.coopSaid = false; }
     this.closeScreen();
-    $('#reward').hidden = true;
+    $('#reward').hidden = true; this.rewardQ = [];
     const rows = `<div><span>⚑ Đợt</span><b>${g.wave}</b></div>
       <div><span>${ic('mang')}Mạng còn</span><b style="color:#FF8A6A">${g.lives}/${Math.max(g.maxLives || CONFIG.startLives, g.lives)}</b></div>
       <div><span>✕ Quái đã hạ</span><b>${fmt(g.stats.kills)}</b></div>
@@ -3614,9 +3681,10 @@ class UI {
     }   // đóng Lò đúc mở từ bảng chuẩn bị → quay lại bảng
   }
 
+  // G5: ô vàng TRONG TRẬN chỉ hiện khi đang chơi — mở từ menu ngoài trận (Bách khoa…) không còn hiện "220" vàng khởi đầu lạ
   head(title, chips, right, icon) {
     return `<div class="scr-head metal">${icon ? `<span class="ic">${icon}</span>` : ''}<h1 class="ttl">${title}</h1>${chips || ''}<div class="sp"></div>${right || ''}
-      <div class="goldbox inset">${coin()}${fmt(this.game.gold)}</div>
+      ${this.game.started && !(this.screen && this.screen.top) ? `<div class="goldbox inset">${coin()}${fmt(this.game.gold)}</div>` : ''}
       <button class="xbtn metal" data-act="close" aria-label="Đóng">${ICON.close}</button></div>`;
   }
   runChip() { return this.game.started && this.game.running && !this.screen?.top ? RUN_CHIP : ''; }

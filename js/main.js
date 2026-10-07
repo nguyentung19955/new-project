@@ -102,8 +102,8 @@ function resize() {
   wrap.style.setProperty('--k', k);
   HZ = uiZoom(vh);
   wrap.style.setProperty('--hz', HZ);
-  canvas.width = Math.round(w * dpr);
-  canvas.height = Math.round(h * dpr);
+  canvas.width = Math.max(1, Math.round(w * dpr));
+  canvas.height = Math.max(1, Math.round(h * dpr));
   view = { scale, dpr, ox, oy };
   ui.scale = scale;
   mapImg = mapImage(Math.round(CONFIG.W * scale * dpr), Math.round(CONFIG.H * scale * dpr), game.level);
@@ -235,7 +235,7 @@ function backdropSrc() {
   const nen = !map && NEN_AI[game.level] && asset(`nen_ai-${NEN_AI[game.level]}.png`);
   const bg = !nen && mapBg();
   const margin = view.ox > 0.5 || view.oy > 0.5;
-  const back = margin && (typeof mapLayerCache !== 'undefined' && mapLayerCache.key.startsWith(MAP_ID + '|') ? mapLayerCache.c : ready(mapImg) && mapImg);
+  const back = margin && (typeof mapLayerCache !== 'undefined' && mapLayerCache.key.startsWith(MAP_ID + '|') && mapLayerCache.c && mapLayerCache.c.width ? mapLayerCache.c : ready(mapImg) && mapImg);
   // v156: nền vẽ tay + đường đi theo chủ đề + cổng dựng sẵn một lần vào canvas tĩnh; mỗi khung chỉ vẽ gợn nước / dấu chân
   const layer = bg && typeof mapLayer === 'function' && !map
     && mapLayer(MAP_ID, bg.img, mapImg, Math.round(CONFIG.W * px()), Math.round(CONFIG.H * px()));
@@ -270,6 +270,7 @@ function drawBackdrop(c, s, shake) {
 const bgCache = { c: null, key: '', refs: [], builds: 0 };
 function cachedBackdrop(s) {
   if (!s.layer && !s.nen && !ready(mapImg)) return null;          // ảnh nền chưa tải xong: vẽ trực tiếp
+  if (canvas.width < 2 || canvas.height < 2) return null;          // T1: cửa sổ gần 0 → không dựng đệm cỡ 0
   const refs = [s.layer, s.bg && s.bg.img, s.nen, s.castle, s.back, s.layer ? null : mapImg];
   const key = `${canvas.width}x${canvas.height}|${view.ox}|${view.oy}|${px()}|${MAP_ID}|${game.level}`;
   if (bgCache.key !== key || refs.some((r, i) => r !== bgCache.refs[i])) {
@@ -1852,6 +1853,8 @@ function drawEffects(t) {
 
 let last = performance.now();
 function loop(now) {
+  // T1: hẹn khung sau TRƯỚC khi vẽ — một lỗi vẽ (vd cửa sổ cỡ 0) không còn làm vòng lặp chết, bản đồ đen vĩnh viễn
+  requestAnimationFrame(loop);
   const raw = Math.max(0, (now - last) / 1000);
   const dt = Math.min(0.05, raw);
   if (game.started && game.running) GFX.sample(now - last);
@@ -1865,6 +1868,5 @@ function loop(now) {
   mapImg = mapImage(Math.round(CONFIG.W * view.scale * view.dpr), Math.round(CONFIG.H * view.scale * view.dpr), game.level);
   render();
   ui.tick(dt);
-  requestAnimationFrame(loop);
 }
 requestAnimationFrame(loop);

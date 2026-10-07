@@ -174,9 +174,10 @@ const bossWave = (page) => page.evaluate(() => { const g = ui.game; g.wave = 9; 
       await page.screenshot({ path: path.join(SHOT, `L07-banner-${tag}.png`) });
       await sleep(2600);
       const dl = await rect(page, '#dialogue'), ts = await page.evaluate(() => [...document.querySelectorAll('#toasts .toast')].map((t) => { const r = t.getBoundingClientRect(); return { l: r.left, t: r.top, r: r.right, b: r.bottom, x: t.textContent }; }));
-      const bt = ts.find((t) => /Quái mới/.test(t.x));
-      ok(dl && bt, 'L07 sau banner: hiện hội thoại boss và thông báo "Quái mới"');
-      ok(!inter(dl, bt) && !inter(bt, await gateRect(page)), 'L07 hội thoại, thông báo, thành không chồng nhau');
+      // nhánh claude/sua-loi-giao-dien (T4): "Quái mới" của boss gộp vào chính hộp thoại, không còn thông báo riêng
+      const dtx = await page.evaluate(() => document.getElementById('dialogue').textContent);
+      ok(dl && /Quái mới/.test(dtx) && !ts.some((t) => /Quái mới/.test(t.x)), 'L07 sau banner: hiện hội thoại boss kèm "Quái mới" (không thông báo riêng)');
+      ok(!inter(dl, await gateRect(page)) && ts.every((t) => !inter(dl, t)), 'L07 hội thoại, thông báo, thành không chồng nhau');
       await page.screenshot({ path: path.join(SHOT, `L07-sau-banner-${tag}.png`) });
     }
     // ---------- L06: bảng boss không giật cao, dời khi che boss
@@ -190,7 +191,8 @@ const bossWave = (page) => page.evaluate(() => { const g = ui.game; g.wave = 9; 
       ok(Math.max(...hs) - Math.min(...hs) < 0.5, `L06 bảng boss cao cố định khi dính/hết hiệu ứng (${hs.map((x) => x.toFixed(0)).join(',')})`);
       // đặt boss ngay dưới bảng (góc trên trái) → bảng dời xuống; boss xuống dưới → bảng về trên
       // boss / tướng nằm dưới bảng (góc trên trái) → bảng thu gọn 1 dòng, không còn che; không có gì bên dưới → bảng đầy đủ
-      await page.evaluate(() => { ui.placeBossbar0 = ui.placeBossbar; ui.placeBossbar = () => {}; document.getElementById('bossbar').classList.remove('mini', 'ghost'); });
+      // (T4: bảng có thể đã dời khỏi góc trái lúc boss mới vào → đưa về chỗ gốc trước khi đo)
+      await page.evaluate(() => { ui.placeBossbar0 = ui.placeBossbar; ui.placeBossbar = () => {}; const bb = document.getElementById('bossbar'); bb.classList.remove('mini', 'ghost'); bb.style.left = ''; bb.style.top = ''; });
       await sleep(150);
       const full = await rect(page, '#bossbar');
       const under = await page.evaluate((fb) => { const c = document.getElementById('game').getBoundingClientRect(), bx = enemyBox(ui.game.enemies.find((e) => e.def.boss)); let best = -1; for (let q = 0; q < PATH.total; q += 10) { const p = PATH.at(q), x = c.left + (p.x + view.ox) * view.scale, y = c.top + (p.y - bx.h * 0.45 + view.oy) * view.scale; if (x > fb.l + 20 && x < fb.r - 20 && y > fb.t + 40 && y < fb.b - 5) best = q; } return best; }, full);
