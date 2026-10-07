@@ -3,7 +3,7 @@
   A. 32 ảnh hạt Kenney (assets/fx/, trắng xám, game tự tô màu)      → cắt: tools/cat-fx.py hat
   B. 17 dải khung hiệu ứng vẽ tay (assets/vfx/, game đã có chỗ nhận) → cắt: tools/cat-fx.py dai
   C. 6 ảnh triệu hồi / vật thể (assets/, game đã có chỗ nhận)          → cắt: tools/cat-fx.py don
-  D. hiệu ứng / đạn bay hiện vẽ bằng code (cần thêm vài dòng code mới dùng được ảnh)
+  D. đạn bay + hiệu ứng trước chỉ vẽ bằng code — v153 đã nối code (drawProjectile / drawFxArt trong js/main.js)
 Danh sách lấy theo js/vfx.js (ảnh Kenney), VFX_FILE trong js/render.js, drawEffects / drawProjectile trong js/main.js.
   python3 tools/build-fx-prompts.py"""
 import os
@@ -148,17 +148,20 @@ CODE_DAI = [
     ('revive', 'Hồi sinh (cột sáng vàng)', 'black', 'a golden revive light column: [1] gold dot on ground [2] thin column rising [3] full column with a sun-star at the top and rising sparkles [4] column glowing [5] column thinning [6] sparkles fading'),
     ('volley', 'Bắn loạt tên', 'black', 'a fan of five light arrows shooting RIGHT: [1] arrows appear at the left [2] spread forming a fan [3] full fan with streaks [4] streaks stretching [5] thinning [6] faint streaks'),
     ('rain', 'Mưa tên / mưa đá trúng vùng', 'black', 'many arrows raining down onto an area (slightly top-down): [1] few arrows at the top [2] more arrows falling [3] arrows hitting, dust puffs [4] full rain hitting [5] fewer [6] dust fading'),
-    ('ring', 'Vòng sóng toả (đánh lan, lên cấp)', 'black', 'a thin expanding shockwave ring (flattened ellipse): [1] small ring [2] bigger [3] bigger and brighter [4] biggest [5] thin [6] gone'),
-    ('streak', 'Tia nước / tia sáng bắn thẳng', 'black', 'a straight water beam going from LEFT to RIGHT across the cell: [1] short beam start [2] half length [3] full length bright beam with white core [4] beam pulsing with droplets [5] thinning [6] droplets'),
+    ('ring', 'Vòng sóng toả (đánh lan, lên cấp…) — TRẮNG XÁM, game tô màu', 'grey', 'a thin expanding shockwave ring (flattened ellipse): [1] small ring [2] bigger [3] bigger and brighter [4] biggest [5] thin [6] gone'),
+    ('streak', 'Tia nước / tia sáng bắn thẳng — TRẮNG XÁM, game tô màu', 'grey', 'a straight water beam going from LEFT to RIGHT across the cell: [1] short beam start [2] half length [3] full length bright beam with white core [4] beam pulsing with droplets [5] thinning [6] droplets'),
     ('mark', 'Dấu đánh dấu mục tiêu (săn)', 'black', 'a red-orange target mark above an enemy: [1] small circle [2] circle with four inward arrows [3] full crosshair seal with bronze-drum dots, bright [4] pulsing [5] shrinking [6] fading'),
-    ('warn', 'Vùng cảnh báo sắp trúng chiêu', 'black', 'a warning area on the ground (flattened ellipse): [1] faint ring [2] ring with dashed inner circle [3] bright pulsing red ring [4] dimmer [5] bright again [6] fading'),
-    ('afterimage', 'Bóng mờ lướt tới (lướt chém)', 'black', 'a green dash trail of speed lines from LEFT to RIGHT: [1] short streaks [2] longer [3] full ghostly speed trail [4] trail breaking [5] thin [6] faint'),
+    ('warn', 'Vùng cảnh báo sắp trúng chiêu — TRẮNG XÁM, game tô màu', 'grey', 'a warning area on the ground (flattened ellipse): [1] faint ring [2] ring with dashed inner circle [3] bright pulsing ring [4] dimmer [5] bright again [6] fading'),
+    ('afterimage', 'Bóng mờ lướt tới (lướt chém) — TRẮNG XÁM, game tô màu', 'grey', 'a dash trail of speed lines from LEFT to RIGHT: [1] short streaks [2] longer [3] full ghostly speed trail [4] trail breaking [5] thin [6] faint'),
     ('hook', 'Dây móc kéo quái', 'black', 'a vine rope with a hook shooting RIGHT then pulling back: [1] short vine [2] half [3] full vine with hook [4] hook caught, vine tight [5] pulling back [6] short vine'),
-    ('lob', 'Vật ném vòng cung (hũ, đá)', 'magenta', 'a clay jar thrown in an arc, tumbling: [1] jar upright [2] tilted 60 degrees [3] sideways [4] upside down [5] tilted [6] almost upright'),
 ]
 CODE_DON = [
     ('trieu-hoi_ngua-sat', 'Ngựa sắt Thánh Gióng phun lửa (phi dọc sông)', 'the iron horse of Saint Giong galloping RIGHT, black iron armor plates, flaming red-orange mane and tail, breathing a small fire jet from its mouth, side view, whole body'),
     ('trieu-hoi_giong-bay', 'Thánh Gióng cưỡi ngựa bay dọc sông (skyride)', 'young giant hero Saint Giong riding the flying iron horse to the RIGHT, swinging an uprooted bamboo cane, flame trail behind, side view'),
+    ('hieu-ung_den-troi', 'Đèn trời rơi xuống quái (Cô Thả Đèn Trời)', 'a glowing Vietnamese sky lantern (paper lantern) with a small flame inside, warm yellow-orange paper, bronze-drum zigzag band, upright'),
+    ('hieu-ung_chai', 'Chài lưới quăng ra (Ngư Phủ)', 'a round fishing cast net spread open in the air, brown rope mesh with small lead weights around the rim, seen from the front'),
+    ('hieu-ung_binh-gom', 'Bình gốm ném nổ (Thợ Gốm)', 'a small round clay pot (Bat Trang pottery) with a short neck, ochre glaze with a dark-brown zigzag band, a lit fuse on top'),
+    ('hieu-ung_dua-hau', 'Dưa hấu ném (Mai An Tiêm)', 'a whole round green watermelon with dark green stripes and a short stem'),
 ]
 
 
@@ -175,6 +178,7 @@ def main():
              '- Hiệu ứng KHÔNG cần ảnh mẫu nhân vật. Nếu AI cho đính kèm, gửi kèm ảnh mau-hieu-ung-kenney.png (32 ảnh hạt hiện tại) làm mẫu kiểu dáng.\n'
              '- Phần A: chỉ trắng / xám trên nền ĐEN. Game tự tô màu theo chiêu (lửa đỏ, băng xanh, phép vàng…), nên tuyệt đối không cho AI tô màu.\n'
              '- Phần B và D (dải khung): có màu, nền ĐEN cho hiệu ứng phát sáng (lửa, băng, sét, phép) và nền hồng tím #FF00FF cho vật đặc (đá, xu, núi).\n'
+             '  Riêng 4 dải ghi "TRẮNG XÁM" (ring, warn, streak, afterimage): vẽ trắng xám như phần A, game tô màu.\n'
              '  Mỗi dải = 6 ô vuông nằm ngang một hàng (ảnh 1536x256), đọc trái → phải từ lúc bắt đầu tới lúc tắt.\n'
              '- Phần C và D (ảnh rời): vẽ kiểu chibi giống tướng, nền hồng tím, quay mặt sang PHẢI.\n\n'
              'NHỊP TRONG GAME: hiệu ứng rất nhanh, 0,2–0,9 giây. Game tự chọn khung theo tiến độ (khung 1 = lúc bắt đầu, khung 6 = lúc tắt),\n'
@@ -183,7 +187,7 @@ def main():
              '  A: python3 tools/cat-fx.py hat <ảnh> <tên1> <tên2> <tên3> <tên4>   → assets/fx/<tên>.png (thay thẳng ảnh Kenney)\n'
              '  B: python3 tools/cat-fx.py dai <ảnh> <tên>                         → assets/vfx/<tên>.png (game tự dùng ngay)\n'
              '  C: python3 tools/cat-fx.py don <ảnh> <tên>                         → assets/<tên>.png (game tự dùng ngay)\n'
-             '  D: cắt như B / C, nhưng cần thêm vài dòng code để game dùng (nhờ Claude: "nối hiệu ứng <tên> vào game").\n'
+             '  D: cắt như A (--mau) / B / C ghi trên từng khối — game đã có chỗ nhận (từ phiên bản 153).\n'
              'Lưu ý phần B: khi đã có ảnh, ảnh dải THAY hẳn phần vẽ bằng code của hiệu ứng đó (hạt Kenney đi kèm vẫn chạy).\n'
              'Sau khi cắt: tăng phiên bản game theo CLAUDE.md.\n')
     o.append(f'\n\nPHẦN A — 32 ẢNH HẠT (KENNEY), 8 TẤM × 4 Ô\n{BAR}\n'
@@ -210,20 +214,20 @@ def main():
         text = (f'Create ONE image: a 512x512 single game sprite, one object centered, filling about 85% of the image.\n'
                 f'SUBJECT: {desc}. Readable at 30 px.\n{CHIBI}\n{COLOR_MAGENTA}')
         o.append(block(f'C{i}. {vi}', f'Tên file: {f}.png  ->  Cắt: python3 tools/cat-fx.py don {f}.png {f}', text))
-    o.append(f'\n\nPHẦN D — ĐANG VẼ BẰNG CODE (cần thêm code mới dùng được ảnh)\n{BAR}\n'
-             'Gen trước cũng được; khi có ảnh nhờ Claude "nối hiệu ứng / đạn <tên> vào game". Hiệu ứng chỉ là chữ / làm tối màn (banner, text, dim, flash, dive) không cần ảnh.\n')
+    o.append(f'\n\nPHẦN D — ĐẠN BAY + HIỆU ỨNG TRƯỚC CHỈ VẼ BẰNG CODE (game đã có chỗ nhận từ phiên bản 153)\n{BAR}\n'
+             'Chưa có ảnh thì game vẫn vẽ bằng code như cũ; cắt ảnh vào là game tự dùng. Hiệu ứng chỉ là chữ / làm tối màn (banner, text, dim, flash, dive) không cần ảnh.\n')
     for k in range(2):
         part = DAN[k * 5:(k + 1) * 5]
         text = (f'Create ONE image: a 640x128 row of five equal 128x128 square cells, one small flying projectile per cell, left to right, all pointing RIGHT where they have a direction:\n'
                 + '\n'.join(f'[{j}] {d}.' for j, (_, _, d) in enumerate(part, 1))
                 + f'\nEach projectile centered, about 60% of the cell, bold and readable at 16 px.\n{CHIBI}\n{COLOR_MAGENTA}')
-        o.append(block(f'D{k + 1}. Đạn bay: {", ".join(p[1] for p in part)}', f'Tên file: dan-{k + 1}.png  ->  Cắt: python3 tools/cat-fx.py hat dan-{k + 1}.png {" ".join(p[0] for p in part)}  (thêm --mau để giữ màu)', text))
+        o.append(block(f'D{k + 1}. Đạn bay: {", ".join(p[1] for p in part)}', f'Tên file: dan-{k + 1}.png  ->  Cắt: python3 tools/cat-fx.py hat dan-{k + 1}.png {" ".join(p[0] for p in part)} --mau', text))
     for i, (f, vi, bg, frames) in enumerate(CODE_DAI, 3):
         text = (f'Create ONE image: a 1536x256 horizontal animation strip of {N_FRAMES} equal 256x256 square frames in ONE row, read left to right, '
                 f'for a cute mobile tower-defense game based on Vietnamese folk legends. Each frame is one moment of the SAME effect, same center, same scale, smooth change between neighbouring frames.\n'
                 f'EFFECT: {frames}.\n'
-                f'STYLE: bold readable cartoon VFX, thick simple shapes, flat colors with a bright core, {DRUM}\n'
-                + (COLOR_BLACK if bg == 'black' else COLOR_MAGENTA))
+                + (f'STYLE: bold readable cartoon VFX, thick simple shapes, flat colors with a bright core, {DRUM}\n' if bg != 'grey' else '')
+                + {'black': COLOR_BLACK, 'magenta': COLOR_MAGENTA, 'grey': GREY.replace('particle texture', 'animation frames').replace('in its own cell', 'in every frame')}[bg])
         o.append(block(f'D{i}. {vi}  (hiệu ứng game: {f})', f'Tên file: {f}.png  ->  Cắt: python3 tools/cat-fx.py dai {f}.png {f}', text))
     for i, (f, vi, desc) in enumerate(CODE_DON, 3 + len(CODE_DAI)):
         text = (f'Create ONE image: a 512x512 single game sprite, one subject centered, filling about 85% of the image.\n'

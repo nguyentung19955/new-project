@@ -7,6 +7,7 @@ KHÁC VỚI TƯỚNG / QUÁI:
 - Hiệu ứng KHÔNG cần ảnh mẫu nhân vật. Nếu AI cho đính kèm, gửi kèm ảnh mau-hieu-ung-kenney.png (32 ảnh hạt hiện tại) làm mẫu kiểu dáng.
 - Phần A: chỉ trắng / xám trên nền ĐEN. Game tự tô màu theo chiêu (lửa đỏ, băng xanh, phép vàng…), nên tuyệt đối không cho AI tô màu.
 - Phần B và D (dải khung): có màu, nền ĐEN cho hiệu ứng phát sáng (lửa, băng, sét, phép) và nền hồng tím #FF00FF cho vật đặc (đá, xu, núi).
+  Riêng 4 dải ghi "TRẮNG XÁM" (ring, warn, streak, afterimage): vẽ trắng xám như phần A, game tô màu.
   Mỗi dải = 6 ô vuông nằm ngang một hàng (ảnh 1536x256), đọc trái → phải từ lúc bắt đầu tới lúc tắt.
 - Phần C và D (ảnh rời): vẽ kiểu chibi giống tướng, nền hồng tím, quay mặt sang PHẢI.
 
@@ -17,7 +18,7 @@ CẮT (chạy trong thư mục dự án):
   A: python3 tools/cat-fx.py hat <ảnh> <tên1> <tên2> <tên3> <tên4>   → assets/fx/<tên>.png (thay thẳng ảnh Kenney)
   B: python3 tools/cat-fx.py dai <ảnh> <tên>                         → assets/vfx/<tên>.png (game tự dùng ngay)
   C: python3 tools/cat-fx.py don <ảnh> <tên>                         → assets/<tên>.png (game tự dùng ngay)
-  D: cắt như B / C, nhưng cần thêm vài dòng code để game dùng (nhờ Claude: "nối hiệu ứng <tên> vào game").
+  D: cắt như A (--mau) / B / C ghi trên từng khối — game đã có chỗ nhận (từ phiên bản 153).
 Lưu ý phần B: khi đã có ảnh, ảnh dải THAY hẳn phần vẽ bằng code của hiệu ứng đó (hạt Kenney đi kèm vẫn chạy).
 Sau khi cắt: tăng phiên bản game theo CLAUDE.md.
 
@@ -341,12 +342,12 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. Never use magenta or
 ------------------------------------------------------------
 
 
-PHẦN D — ĐANG VẼ BẰNG CODE (cần thêm code mới dùng được ảnh)
+PHẦN D — ĐẠN BAY + HIỆU ỨNG TRƯỚC CHỈ VẼ BẰNG CODE (game đã có chỗ nhận từ phiên bản 153)
 ============================================================
-Gen trước cũng được; khi có ảnh nhờ Claude "nối hiệu ứng / đạn <tên> vào game". Hiệu ứng chỉ là chữ / làm tối màn (banner, text, dim, flash, dive) không cần ảnh.
+Chưa có ảnh thì game vẫn vẽ bằng code như cũ; cắt ảnh vào là game tự dùng. Hiệu ứng chỉ là chữ / làm tối màn (banner, text, dim, flash, dive) không cần ảnh.
 
 D1. Đạn bay: fireball, frostbolt, arrow, bolt, orb
-Tên file: dan-1.png  ->  Cắt: python3 tools/cat-fx.py hat dan-1.png dan_fireball dan_frostbolt dan_arrow dan_bolt dan_orb  (thêm --mau để giữ màu)
+Tên file: dan-1.png  ->  Cắt: python3 tools/cat-fx.py hat dan-1.png dan_fireball dan_frostbolt dan_arrow dan_bolt dan_orb --mau
 ------------------------------------------------------------
 Create ONE image: a 640x128 row of five equal 128x128 square cells, one small flying projectile per cell, left to right, all pointing RIGHT where they have a direction:
 [1] a small flaming fireball flying RIGHT with a short fire tail.
@@ -360,7 +361,7 @@ BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. Never use magenta or
 ------------------------------------------------------------
 
 D2. Đạn bay: feather, petal, melon, rice, evil
-Tên file: dan-2.png  ->  Cắt: python3 tools/cat-fx.py hat dan-2.png dan_feather dan_petal dan_melon dan_rice dan_evil  (thêm --mau để giữ màu)
+Tên file: dan-2.png  ->  Cắt: python3 tools/cat-fx.py hat dan-2.png dan_feather dan_petal dan_melon dan_rice dan_evil --mau
 ------------------------------------------------------------
 Create ONE image: a 640x128 row of five equal 128x128 square cells, one small flying projectile per cell, left to right, all pointing RIGHT where they have a direction:
 [1] a single glowing white-pink goose feather flying RIGHT.
@@ -427,22 +428,20 @@ STYLE: bold readable cartoon VFX, thick simple shapes, flat colors with a bright
 BACKGROUND: perfectly flat pure BLACK #000000 everywhere (the game turns black into transparency, so dark parts become see-through). Bright, saturated glowing colors; no text, no numbers, no labels, no grid lines, no borders, no watermark. The effect is centered in every cell with at least 6% empty margin; nothing crosses into another cell.
 ------------------------------------------------------------
 
-D9. Vòng sóng toả (đánh lan, lên cấp)  (hiệu ứng game: ring)
+D9. Vòng sóng toả (đánh lan, lên cấp…) — TRẮNG XÁM, game tô màu  (hiệu ứng game: ring)
 Tên file: ring.png  ->  Cắt: python3 tools/cat-fx.py dai ring.png ring
 ------------------------------------------------------------
 Create ONE image: a 1536x256 horizontal animation strip of 6 equal 256x256 square frames in ONE row, read left to right, for a cute mobile tower-defense game based on Vietnamese folk legends. Each frame is one moment of the SAME effect, same center, same scale, smooth change between neighbouring frames.
 EFFECT: a thin expanding shockwave ring (flattened ellipse): [1] small ring [2] bigger [3] bigger and brighter [4] biggest [5] thin [6] gone.
-STYLE: bold readable cartoon VFX, thick simple shapes, flat colors with a bright core, Vietnamese Dong Son bronze-drum flavor (sun-star rays, Lac birds, zigzag and circle-dot bands) only where it is asked.
-BACKGROUND: perfectly flat pure BLACK #000000 everywhere (the game turns black into transparency, so dark parts become see-through). Bright, saturated glowing colors; no text, no numbers, no labels, no grid lines, no borders, no watermark. The effect is centered in every cell with at least 6% empty margin; nothing crosses into another cell.
+STYLE: game VFX animation frames in the style of the free Kenney Particle Pack: ONLY pure white and light-grey shapes on a perfectly flat pure BLACK #000000 background, soft glowing edges, bright core, NO color at all (the game tints it), no outline, no shading other than brightness, no text, no numbers, no labels, no grid lines, no borders, no watermark. Each shape centered in every frame with at least 8% empty black margin; nothing touches or crosses into another cell.
 ------------------------------------------------------------
 
-D10. Tia nước / tia sáng bắn thẳng  (hiệu ứng game: streak)
+D10. Tia nước / tia sáng bắn thẳng — TRẮNG XÁM, game tô màu  (hiệu ứng game: streak)
 Tên file: streak.png  ->  Cắt: python3 tools/cat-fx.py dai streak.png streak
 ------------------------------------------------------------
 Create ONE image: a 1536x256 horizontal animation strip of 6 equal 256x256 square frames in ONE row, read left to right, for a cute mobile tower-defense game based on Vietnamese folk legends. Each frame is one moment of the SAME effect, same center, same scale, smooth change between neighbouring frames.
 EFFECT: a straight water beam going from LEFT to RIGHT across the cell: [1] short beam start [2] half length [3] full length bright beam with white core [4] beam pulsing with droplets [5] thinning [6] droplets.
-STYLE: bold readable cartoon VFX, thick simple shapes, flat colors with a bright core, Vietnamese Dong Son bronze-drum flavor (sun-star rays, Lac birds, zigzag and circle-dot bands) only where it is asked.
-BACKGROUND: perfectly flat pure BLACK #000000 everywhere (the game turns black into transparency, so dark parts become see-through). Bright, saturated glowing colors; no text, no numbers, no labels, no grid lines, no borders, no watermark. The effect is centered in every cell with at least 6% empty margin; nothing crosses into another cell.
+STYLE: game VFX animation frames in the style of the free Kenney Particle Pack: ONLY pure white and light-grey shapes on a perfectly flat pure BLACK #000000 background, soft glowing edges, bright core, NO color at all (the game tints it), no outline, no shading other than brightness, no text, no numbers, no labels, no grid lines, no borders, no watermark. Each shape centered in every frame with at least 8% empty black margin; nothing touches or crosses into another cell.
 ------------------------------------------------------------
 
 D11. Dấu đánh dấu mục tiêu (săn)  (hiệu ứng game: mark)
@@ -454,22 +453,20 @@ STYLE: bold readable cartoon VFX, thick simple shapes, flat colors with a bright
 BACKGROUND: perfectly flat pure BLACK #000000 everywhere (the game turns black into transparency, so dark parts become see-through). Bright, saturated glowing colors; no text, no numbers, no labels, no grid lines, no borders, no watermark. The effect is centered in every cell with at least 6% empty margin; nothing crosses into another cell.
 ------------------------------------------------------------
 
-D12. Vùng cảnh báo sắp trúng chiêu  (hiệu ứng game: warn)
+D12. Vùng cảnh báo sắp trúng chiêu — TRẮNG XÁM, game tô màu  (hiệu ứng game: warn)
 Tên file: warn.png  ->  Cắt: python3 tools/cat-fx.py dai warn.png warn
 ------------------------------------------------------------
 Create ONE image: a 1536x256 horizontal animation strip of 6 equal 256x256 square frames in ONE row, read left to right, for a cute mobile tower-defense game based on Vietnamese folk legends. Each frame is one moment of the SAME effect, same center, same scale, smooth change between neighbouring frames.
-EFFECT: a warning area on the ground (flattened ellipse): [1] faint ring [2] ring with dashed inner circle [3] bright pulsing red ring [4] dimmer [5] bright again [6] fading.
-STYLE: bold readable cartoon VFX, thick simple shapes, flat colors with a bright core, Vietnamese Dong Son bronze-drum flavor (sun-star rays, Lac birds, zigzag and circle-dot bands) only where it is asked.
-BACKGROUND: perfectly flat pure BLACK #000000 everywhere (the game turns black into transparency, so dark parts become see-through). Bright, saturated glowing colors; no text, no numbers, no labels, no grid lines, no borders, no watermark. The effect is centered in every cell with at least 6% empty margin; nothing crosses into another cell.
+EFFECT: a warning area on the ground (flattened ellipse): [1] faint ring [2] ring with dashed inner circle [3] bright pulsing ring [4] dimmer [5] bright again [6] fading.
+STYLE: game VFX animation frames in the style of the free Kenney Particle Pack: ONLY pure white and light-grey shapes on a perfectly flat pure BLACK #000000 background, soft glowing edges, bright core, NO color at all (the game tints it), no outline, no shading other than brightness, no text, no numbers, no labels, no grid lines, no borders, no watermark. Each shape centered in every frame with at least 8% empty black margin; nothing touches or crosses into another cell.
 ------------------------------------------------------------
 
-D13. Bóng mờ lướt tới (lướt chém)  (hiệu ứng game: afterimage)
+D13. Bóng mờ lướt tới (lướt chém) — TRẮNG XÁM, game tô màu  (hiệu ứng game: afterimage)
 Tên file: afterimage.png  ->  Cắt: python3 tools/cat-fx.py dai afterimage.png afterimage
 ------------------------------------------------------------
 Create ONE image: a 1536x256 horizontal animation strip of 6 equal 256x256 square frames in ONE row, read left to right, for a cute mobile tower-defense game based on Vietnamese folk legends. Each frame is one moment of the SAME effect, same center, same scale, smooth change between neighbouring frames.
-EFFECT: a green dash trail of speed lines from LEFT to RIGHT: [1] short streaks [2] longer [3] full ghostly speed trail [4] trail breaking [5] thin [6] faint.
-STYLE: bold readable cartoon VFX, thick simple shapes, flat colors with a bright core, Vietnamese Dong Son bronze-drum flavor (sun-star rays, Lac birds, zigzag and circle-dot bands) only where it is asked.
-BACKGROUND: perfectly flat pure BLACK #000000 everywhere (the game turns black into transparency, so dark parts become see-through). Bright, saturated glowing colors; no text, no numbers, no labels, no grid lines, no borders, no watermark. The effect is centered in every cell with at least 6% empty margin; nothing crosses into another cell.
+EFFECT: a dash trail of speed lines from LEFT to RIGHT: [1] short streaks [2] longer [3] full ghostly speed trail [4] trail breaking [5] thin [6] faint.
+STYLE: game VFX animation frames in the style of the free Kenney Particle Pack: ONLY pure white and light-grey shapes on a perfectly flat pure BLACK #000000 background, soft glowing edges, bright core, NO color at all (the game tints it), no outline, no shading other than brightness, no text, no numbers, no labels, no grid lines, no borders, no watermark. Each shape centered in every frame with at least 8% empty black margin; nothing touches or crosses into another cell.
 ------------------------------------------------------------
 
 D14. Dây móc kéo quái  (hiệu ứng game: hook)
@@ -481,16 +478,7 @@ STYLE: bold readable cartoon VFX, thick simple shapes, flat colors with a bright
 BACKGROUND: perfectly flat pure BLACK #000000 everywhere (the game turns black into transparency, so dark parts become see-through). Bright, saturated glowing colors; no text, no numbers, no labels, no grid lines, no borders, no watermark. The effect is centered in every cell with at least 6% empty margin; nothing crosses into another cell.
 ------------------------------------------------------------
 
-D15. Vật ném vòng cung (hũ, đá)  (hiệu ứng game: lob)
-Tên file: lob.png  ->  Cắt: python3 tools/cat-fx.py dai lob.png lob
-------------------------------------------------------------
-Create ONE image: a 1536x256 horizontal animation strip of 6 equal 256x256 square frames in ONE row, read left to right, for a cute mobile tower-defense game based on Vietnamese folk legends. Each frame is one moment of the SAME effect, same center, same scale, smooth change between neighbouring frames.
-EFFECT: a clay jar thrown in an arc, tumbling: [1] jar upright [2] tilted 60 degrees [3] sideways [4] upside down [5] tilted [6] almost upright.
-STYLE: bold readable cartoon VFX, thick simple shapes, flat colors with a bright core, Vietnamese Dong Son bronze-drum flavor (sun-star rays, Lac birds, zigzag and circle-dot bands) only where it is asked.
-BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. Never use magenta or pink on the effect. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Centered in every cell with at least 6% empty margin; nothing crosses into another cell.
-------------------------------------------------------------
-
-D16. Ngựa sắt Thánh Gióng phun lửa (phi dọc sông)
+D15. Ngựa sắt Thánh Gióng phun lửa (phi dọc sông)
 Tên file: trieu-hoi_ngua-sat.png  ->  Cắt: python3 tools/cat-fx.py don trieu-hoi_ngua-sat.png trieu-hoi_ngua-sat
 ------------------------------------------------------------
 Create ONE image: a 512x512 single game sprite, one subject centered, filling about 85% of the image.
@@ -499,11 +487,47 @@ STYLE: cute mobile-game art matching chibi heroes of a Vietnamese folk-legend to
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. Never use magenta or pink on the effect. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Centered in every cell with at least 6% empty margin; nothing crosses into another cell.
 ------------------------------------------------------------
 
-D17. Thánh Gióng cưỡi ngựa bay dọc sông (skyride)
+D16. Thánh Gióng cưỡi ngựa bay dọc sông (skyride)
 Tên file: trieu-hoi_giong-bay.png  ->  Cắt: python3 tools/cat-fx.py don trieu-hoi_giong-bay.png trieu-hoi_giong-bay
 ------------------------------------------------------------
 Create ONE image: a 512x512 single game sprite, one subject centered, filling about 85% of the image.
 SUBJECT: young giant hero Saint Giong riding the flying iron horse to the RIGHT, swinging an uprooted bamboo cane, flame trail behind, side view. Readable at 40 px.
+STYLE: cute mobile-game art matching chibi heroes of a Vietnamese folk-legend tower-defense game: thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds), about 20-30 flat colors, no gradients.
+BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. Never use magenta or pink on the effect. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Centered in every cell with at least 6% empty margin; nothing crosses into another cell.
+------------------------------------------------------------
+
+D17. Đèn trời rơi xuống quái (Cô Thả Đèn Trời)
+Tên file: hieu-ung_den-troi.png  ->  Cắt: python3 tools/cat-fx.py don hieu-ung_den-troi.png hieu-ung_den-troi
+------------------------------------------------------------
+Create ONE image: a 512x512 single game sprite, one subject centered, filling about 85% of the image.
+SUBJECT: a glowing Vietnamese sky lantern (paper lantern) with a small flame inside, warm yellow-orange paper, bronze-drum zigzag band, upright. Readable at 40 px.
+STYLE: cute mobile-game art matching chibi heroes of a Vietnamese folk-legend tower-defense game: thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds), about 20-30 flat colors, no gradients.
+BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. Never use magenta or pink on the effect. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Centered in every cell with at least 6% empty margin; nothing crosses into another cell.
+------------------------------------------------------------
+
+D18. Chài lưới quăng ra (Ngư Phủ)
+Tên file: hieu-ung_chai.png  ->  Cắt: python3 tools/cat-fx.py don hieu-ung_chai.png hieu-ung_chai
+------------------------------------------------------------
+Create ONE image: a 512x512 single game sprite, one subject centered, filling about 85% of the image.
+SUBJECT: a round fishing cast net spread open in the air, brown rope mesh with small lead weights around the rim, seen from the front. Readable at 40 px.
+STYLE: cute mobile-game art matching chibi heroes of a Vietnamese folk-legend tower-defense game: thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds), about 20-30 flat colors, no gradients.
+BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. Never use magenta or pink on the effect. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Centered in every cell with at least 6% empty margin; nothing crosses into another cell.
+------------------------------------------------------------
+
+D19. Bình gốm ném nổ (Thợ Gốm)
+Tên file: hieu-ung_binh-gom.png  ->  Cắt: python3 tools/cat-fx.py don hieu-ung_binh-gom.png hieu-ung_binh-gom
+------------------------------------------------------------
+Create ONE image: a 512x512 single game sprite, one subject centered, filling about 85% of the image.
+SUBJECT: a small round clay pot (Bat Trang pottery) with a short neck, ochre glaze with a dark-brown zigzag band, a lit fuse on top. Readable at 40 px.
+STYLE: cute mobile-game art matching chibi heroes of a Vietnamese folk-legend tower-defense game: thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds), about 20-30 flat colors, no gradients.
+BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. Never use magenta or pink on the effect. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Centered in every cell with at least 6% empty margin; nothing crosses into another cell.
+------------------------------------------------------------
+
+D20. Dưa hấu ném (Mai An Tiêm)
+Tên file: hieu-ung_dua-hau.png  ->  Cắt: python3 tools/cat-fx.py don hieu-ung_dua-hau.png hieu-ung_dua-hau
+------------------------------------------------------------
+Create ONE image: a 512x512 single game sprite, one subject centered, filling about 85% of the image.
+SUBJECT: a whole round green watermelon with dark green stripes and a short stem. Readable at 40 px.
 STYLE: cute mobile-game art matching chibi heroes of a Vietnamese folk-legend tower-defense game: thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds), about 20-30 flat colors, no gradients.
 BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. Never use magenta or pink on the effect. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Centered in every cell with at least 6% empty margin; nothing crosses into another cell.
 ------------------------------------------------------------

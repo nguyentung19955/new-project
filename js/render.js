@@ -456,12 +456,31 @@ function vfxSheet(type) {
   const f = VFX_FILE[type];
   return f ? asset(`vfx/${f}.png`) : null;
 }
-// vẽ một khung của dải hiệu ứng theo tiến độ p (0..1), tâm (x, y), cạnh size
-function drawVfx(ctx, img, p, x, y, size) {
-  const n = Math.max(1, Math.round(img.naturalWidth / img.naturalHeight));
+// vẽ một khung của dải hiệu ứng theo tiến độ p (0..1), tâm (x, y), cạnh size (h: chiều cao riêng, mặc định = size)
+function drawVfx(ctx, img, p, x, y, size, h = size) {
+  const W = img.naturalWidth || img.width, H = img.naturalHeight || img.height;
+  const n = Math.max(1, Math.round(W / H));
   const fr = Math.min(n - 1, Math.floor(p * n));
-  const fw = img.naturalWidth / n;
-  ctx.drawImage(img, fr * fw, 0, fw, img.naturalHeight, x - size / 2, y - size / 2, size, size);
+  const fw = W / n;
+  ctx.drawImage(img, fr * fw, 0, fw, H, x - size / 2, y - h / 2, size, h);
+}
+// v153: dải hiệu ứng trắng xám (vòng sóng, cảnh báo, tia, bóng lướt) tô theo màu của hiệu ứng, như ảnh hạt Kenney
+const tintCache = new WeakMap();
+function tintSheet(img, color) {
+  if (!color || !/^#[0-9a-f]{6}$/i.test(color)) return img;
+  let m = tintCache.get(img);
+  if (!m) tintCache.set(img, (m = new Map()));
+  let c = m.get(color);
+  if (!c) {
+    c = document.createElement('canvas');
+    c.width = img.naturalWidth || img.width; c.height = img.naturalHeight || img.height;
+    const x = c.getContext('2d');
+    x.drawImage(img, 0, 0);
+    x.globalCompositeOperation = 'multiply'; x.fillStyle = color; x.fillRect(0, 0, c.width, c.height);
+    x.globalCompositeOperation = 'destination-in'; x.drawImage(img, 0, 0);
+    m.set(color, c);
+  }
+  return c;
 }
 
 // ------------------------------------------------------------
