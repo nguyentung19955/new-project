@@ -439,6 +439,8 @@ class UI {
     $('#btn-feedback').onclick = () => this.showFeedback('menu');
     // góp ý còn trong hàng đợi: gửi lại khi có mạng / khi vừa kết nối được Firebase
     window.addEventListener('online', () => this.fbFlush());
+    // v166: bộ lọc dạng drop-down ở màn Góp ý nhận được
+    $('#fbadmin').addEventListener('change', (ev) => { const t = ev.target; if (t.id === 'fba-kind' || t.id === 'fba-stf') this.fbaAct({ act: t.id, k: t.value }); });
     if (typeof CLOUD !== 'undefined') CLOUD.onChange(() => { if (CLOUD.ready) this.fbFlush(); this.fbaCheck(); });
     // v153: trò chuyện trong trận nhóm (💬 trên thanh trên; Enter để gửi)
     $('#btn-chat').onclick = () => this.chatToggle();
@@ -1229,7 +1231,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 168 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 169 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -1493,8 +1495,10 @@ class UI {
         <span class="chip dark">${a.items.length}${a.more ? '+' : ''} góp ý · ${this.fbaNew || 0} mới</span><div class="sp"></div>
         <button class="btn metal" style="height:34px;padding:0 10px;font-size:13px;flex:none" data-act="fba-reload" ${a.busy ? 'disabled' : ''}>↻ Tải lại</button></div>
       <div class="fba-filters">
-        <div class="cp-tabs">${kinds.map(([k, l]) => `<button class="cp-tab ${a.kind === k ? 'on' : ''}" data-act="fba-kind" data-k="${k}">${k === 'all' ? '' : `<i class="fba-sw" style="--kc:${FBA_KIND[k][1]}"></i>`}${l} <small>${k === 'all' ? a.items.length : n((f) => f.kind === k)}</small></button>`).join('')}</div>
-        <div class="cp-tabs">${sts.map(([k, l]) => `<button class="cp-tab ${a.st === k ? 'on' : ''}" data-act="fba-stf" data-k="${k}">${l}${k === 'all' ? '' : ` <small>${n((f) => stOf(f) === k)}</small>`}</button>`).join('')}</div>
+        <label class="fba-sel"><span>Loại</span>${a.kind === 'all' ? '' : `<i class="fba-sw" style="--kc:${FBA_KIND[a.kind][1]}"></i>`}<select id="fba-kind" aria-label="Lọc theo loại">${kinds.map(([k, l]) => `<option value="${k}" ${a.kind === k ? 'selected' : ''}>${k === 'all' ? '' : '● '}${l} (${k === 'all' ? a.items.length : n((f) => f.kind === k)})</option>`).join('')}</select></label>
+        <label class="fba-sel"><span>Trạng thái</span><select id="fba-stf" aria-label="Lọc theo trạng thái">${sts.map(([k, l]) => `<option value="${k}" ${a.st === k ? 'selected' : ''}>${l} (${k === 'all' ? a.items.length : n((f) => stOf(f) === k)})</option>`).join('')}</select></label>
+        ${a.kind !== 'all' || a.st !== 'all' ? `<button class="btn metal fba-clear" data-act="fba-clear">✕ Bỏ lọc</button>` : ''}
+        <span class="fba-shown">Đang hiện ${list.length}/${a.items.length}${a.more ? '+' : ''}</span>
       </div>
       <div class="fba-list">
         ${a.err ? `<div class="login-err fba-err">${esc(a.err)}</div>` : ''}
@@ -1524,6 +1528,7 @@ class UI {
       case 'fba-more': this.fbaLoad(); break;
       case 'fba-kind': a.kind = d.k; this.renderFbAdmin(); break;
       case 'fba-stf': a.st = d.k; this.renderFbAdmin(); break;
+      case 'fba-clear': a.kind = a.st = 'all'; this.renderFbAdmin(); break;
       case 'fba-big': a.big = d.id; this.renderFbAdmin(); break;
       case 'fba-big-x': a.big = ''; this.renderFbAdmin(); break;
       case 'fba-note': a.note = d.id; a.del = ''; this.renderFbAdmin(); break;
@@ -2814,7 +2819,7 @@ class UI {
         }, (e) => this.toast(esc(e.message), '#FF7A5C'));
         break;
       }
-      case 'fba-close': case 'fba-reload': case 'fba-more': case 'fba-kind': case 'fba-stf': case 'fba-big': case 'fba-big-x':
+      case 'fba-close': case 'fba-reload': case 'fba-more': case 'fba-kind': case 'fba-stf': case 'fba-clear': case 'fba-big': case 'fba-big-x':
       case 'fba-note': case 'fba-note-x': case 'fba-note-ok': case 'fba-del': case 'fba-del-x': case 'fba-del-ok': case 'fba-st':
         this.fbaAct(d); break;
       case 'set-feedback': this.showFeedback(this.settingsInGame ? 'tam-dung' : 'cai-dat'); break;

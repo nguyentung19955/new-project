@@ -1590,3 +1590,13 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 168 — Gộp: chỉ còn Vô tận
 - Gộp nhánh bỏ Phó bản (chỉ còn Vô Tận + Cùng Giữ Thành — đang "Sắp ra mắt"), 17 bản đồ mở hết theo 5 truyền thuyết, quy đổi sao cũ sang Ngân khố một lần.
+## Phiên bản 165 — Gộp màn xem góp ý (quản trị) + báo lỗi chơi nhóm rõ ràng
+- Gộp: màn "📥 Góp ý nhận được" chỉ cho tài khoản quản trị (luật Firestore isAdmin), chơi nhóm báo đúng nguyên nhân khi tạo/vào phòng lỗi + nút Thử lại.
+
+## Phiên bản 166 — Bộ lọc dạng drop-down ở màn Góp ý nhận được
+- Gộp nhánh chính v165 (đã có màn xem góp ý) với bảng cảm ơn sau khi gửi góp ý (v164 nhánh xem-gop-y).
+- Màn **Góp ý nhận được**: hai hàng nút lọc đổi thành 2 ô chọn thả xuống **Loại** (Tất cả / Lỗi / Ý tưởng / Cân bằng / Khác, kèm số lượng; đang lọc thì có chấm màu của loại) và **Trạng thái** (Mọi trạng thái / Mới / Đã xem / Đã xử lý, kèm số lượng). Đang lọc thì có nút **✕ Bỏ lọc** và dòng "Đang hiện x/y". Gọn hơn, danh sách được thêm chỗ.
+- Test: `tests/xem-gop-y/xem-gop-y.test.js` dùng drop-down để lọc, kiểm tra số đếm trong ô chọn, Bỏ lọc.
+
+## Phiên bản 169 — Gộp bộ lọc thả xuống màn Góp ý nhận được
+- Màn Góp ý nhận được: lọc Loại / Trạng thái bằng ô chọn thả xuống (kèm số lượng), nút Bỏ lọc, dòng "Đang hiện x/y".

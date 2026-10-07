@@ -1781,9 +1781,15 @@ svg.icn { overflow: visible; }
   font-size: 11px; font-weight: 800; line-height: 18px; text-align: center; box-shadow: 0 0 0 2px #1A140D; }
 #btn-settings.fba-has { position: relative; }
 #btn-settings.fba-has::after { content: ''; position: absolute; top: 4px; right: 6px; width: 10px; height: 10px; border-radius: 50%; background: #E0402A; box-shadow: 0 0 0 2px #1A140D; }
-.fba-filters { display: flex; flex-wrap: wrap; gap: 4px 10px; padding: 4px 10px 2px; min-width: 0; }
-.fba-filters .cp-tabs { margin-left: 0; max-width: 100%; }
-.fba-filters .cp-tab small { opacity: .75; font-weight: 700; }
+.fba-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; padding: 5px 10px 3px; min-width: 0; }
+.fba-sel { display: flex; align-items: center; gap: 6px; min-width: 0; font-size: 12px; font-weight: 700; color: var(--text-2); }
+.fba-sel select { height: 32px; min-width: 0; max-width: 220px; padding: 0 28px 0 10px; border-radius: 6px; border: 1px solid #8C6A2E; color: var(--text); font-size: 14px; font-weight: 700;
+  font-family: inherit; appearance: none; -webkit-appearance: none; cursor: pointer;
+  background: #17130F url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23F2D27A' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 9px center / 10px 6px; }
+.fba-sel select:focus { outline: 2px solid #D9B25A; outline-offset: -1px; }
+.fba-sel select option { background: #17130F; color: var(--text); }
+.fba-clear { height: 32px; padding: 0 10px; font-size: 12px; flex: none; }
+.fba-shown { margin-left: auto; font-size: 12px; color: var(--text-2); white-space: nowrap; }
 .fba-sw { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--kc); }
 .fba-list { flex: 1; min-height: 0; overflow-y: auto; padding: 4px 10px 10px; display: flex; flex-direction: column; gap: 6px; }
 .fba-list > * { width: 100%; max-width: 860px; margin: 0 auto; box-sizing: border-box; }
