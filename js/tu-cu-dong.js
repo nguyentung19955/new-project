@@ -5,6 +5,16 @@
 //  nên không bao giờ gãy vũ khí / lộ lỗ. Bộ nhiều khung đã có (packs/<mã>/wind · strike · walk2 · attack…)
 //  vẫn ưu tiên như cũ. Ép dùng ảnh đơn để thử: ?solo=1 hoặc CD.force = true (tools/xem-cu-dong.html).
 // ------------------------------------------------------------
+// ==== CÔNG TẮC ẢNH MỚI (một dòng duy nhất) ====
+// false = TẮT: không dùng ảnh dựng xương mới (assets/<mã>.png), chân dung mới, rig tay — mọi tướng / quái / boss / linh thú
+//   vẽ đúng hình cũ như trước khi có hệ tự cử động (bộ nhiều khung · ảnh cũ · vector), ở trận, Chợ, Anh Hùng, Bách khoa, hợp thể…
+// true  = BẬT lại hệ tự cử động + ảnh mới → đổi thành true khi đã đủ 90 ảnh mới.
+// Mọi chỗ dùng ảnh mới phải hỏi cdBat() (hoặc cdSoloImg / cdBuildRig vốn đã hỏi) — nhánh khác gộp vào cứ dựa vào cùng công tắc này.
+const CD_BAT = false;
+// bật TẠM để thử khi công tắc đang tắt (không lưu, không có nút cho người chơi): ?anhmoi=1 trên URL · test: window.CD_BAT_EP = true (page.addInitScript)
+// tắt thì cả trang thử ?xem-cu-dong / ?solo=1 cũng không dùng ảnh mới — thêm &anhmoi=1
+const CD_ON = CD_BAT || (() => { try { return !!window.CD_BAT_EP || /[?&]anhmoi=1\b/.test(location.search); } catch (e) { return false; } })();
+const cdBat = () => CD_ON;
 const CD = { force: false, stats: { hero: 0, enemy: 0 }, seen: new Set() };   // seen: mã đã vẽ bằng ảnh đơn (test)
 try { if (/[?&]solo=1\b/.test(location.search)) CD.force = true; } catch (e) { /* không có location */ }
 
@@ -61,7 +71,7 @@ function cdHasMulti(type, enemy) {
 }
 // ảnh đơn của một mã (null = dùng đường vẽ cũ: bộ nhiều khung / ảnh cũ / vector)
 function cdSoloImg(type, enemy) {
-  if (CD_SKIP.has(type)) return null;
+  if (!cdBat() || CD_SKIP.has(type)) return null;   // công tắc tắt → hình cũ
   // ảnh dựng xương <mã>.png ở gốc assets/ là ảnh mới vẽ theo docs/PROMPT-DUNG-XUONG.txt → dùng thay bộ cũ;
   // chỉ có packs/<mã>/idle.png thì bộ nhiều khung (nếu có) vẫn ưu tiên
   // bộ nhiều khung thật (PACK_FRAMES / FRAME_ANIMS, tools/cat-sheet.py) vẫn ưu tiên nhất
@@ -437,6 +447,7 @@ function cdFarthest(mask, W, H, pv) {
 }
 // dựng rig từ ảnh đã cắt (p = cdPrepare) + rig chỉnh tay (toạ độ 0..1 theo ẢNH GỐC: hip, pivot, tip, poly, noArm)
 function cdBuildRig(p, man) {
+  if (!cdBat()) return null;   // công tắc tắt → không dựng rig ảnh mới
   const c = p.c, W = c.width, H = c.height, g = p.geo;
   const src = c.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, W, H), A = src.data;
   const auto = cdAutoRig(A, W, H, p.fx * W);

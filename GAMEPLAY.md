@@ -2115,6 +2115,17 @@ Test: `node tests/run-all.js` đạt (tu-cu-dong: mẫu trang thử đổi xathu
 
 - Gộp claude/dung-anh-co-san: đồng xu, nén bạc, tim mạng, icon ngăn kéo, Lò đúc, Bách khoa, rương rơi đồ… dùng ảnh thật.
 
+## claude/tat-anh-moi — Tạm tắt ảnh tướng mới, quay về toàn bộ hình cũ
+
+- Người dùng: "Trước mắt cứ revert về toàn bộ hình ảnh tướng cũ, sau khi có đủ hết ảnh thì sẽ dùng cái mới sau."
+- **Một công tắc duy nhất** ở đầu `js/tu-cu-dong.js`: `const CD_BAT = false;` — **bật lại = đổi thành `true`** khi đủ 90 ảnh mới. Không xoá code / ảnh nào.
+- Khi tắt: `cdBat()` trả false → `cdSoloImg` trả null cho mọi mã (không dùng `assets/<mã>.png` dựng xương, không dùng `packs/<mã>/idle.png` làm ảnh đơn), `cdBuildRig` trả null → tướng / quái / boss vẽ đúng đường cũ (bộ nhiều khung · ảnh vẽ tay · vector) ở trận, thanh Chợ, Anh Hùng, Bách khoa, hợp thể… (chỉ hệ tự cử động đọc ảnh mới, đã soát bằng grep).
+- **Nhánh khác gộp vào** (chân dung mới / `cdUiImg`, `CD_SKIP` mở rộng…): mọi chỗ đọc ảnh mới phải hỏi `cdBat()` (hoặc đi qua `cdSoloImg` / `cdBuildRig` vốn đã hỏi).
+- Mặc định TẮT cả phần giao diện dùng ảnh mới, kể cả trang thử `?xem-cu-dong` (lưới trống) và `?solo=1`. Bật TẠM để thử bằng tham số URL `?anhmoi=1` (không lưu, không có nút cho người chơi; tools/xem-cu-dong.html đã kèm sẵn); test dùng `window.CD_BAT_EP = true` (Playwright `page.addInitScript`).
+- Test `tests/tu-cu-dong`: các phần thử ảnh mới mở trang với `CD_BAT_EP`; thêm phần "Công tắc tắt" (CD_BAT = false trong mã nguồn, 90 mã có ảnh nhưng 0 mã dùng ảnh đơn, `cdBuildRig` null, trong trận 0 lượt vẽ ảnh đơn, `?xem-cu-dong` không kèm `?anhmoi=1` ra 0 nhân vật, có `?anhmoi=1` thì bật và không ghi gì vào localStorage, không lỗi trang).
+- Ảnh đã xem: `docs/tat-anh-moi/tat-tran-*.jpg`, `tat-anh-hung-*.jpg` (1920×934, 844×390, 667×375 — toàn hình cũ); so sánh khi bật: `bat-tran-1920x934.jpg`.
+## claude/bo-chon-doi — Bỏ phần chọn đội (chợ tướng đã rút ngẫu nhiên)
+
 ## claude/duong-di-moi — Dạng đường mới + Vô tận theo màn (đổi vùng đất sau mỗi boss)
 
 - **Trước đây:** 14 bản đồ (MAPS, data.js) đều là đường cong SVG một nhánh, từ trái sang thành bên phải (trừ Cổ Loa xoắn vào giữa); nhiều ải dùng chung đường (song4 ×3, song1 ×2, song5 = rung2). Vô tận phải chọn 1 trong 17 bản đồ và chơi mãi trên bản đồ đó.
