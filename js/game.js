@@ -2680,7 +2680,7 @@ class Game {
       e.enraged = true;
       this.text(e.x, e.y - 30, d.boss ? 'HÓA ĐIÊN!' : 'Điên!', '#ff4d4d', 0.9, d.boss ? 18 : 13);
     }
-    // hồi máu đồng đội (Phù Thủy Nước)
+    // hồi máu đồng đội (Sứa Tinh)
     if (d.heal && !mute) {
       e.healCd -= dt;
       if (e.healCd <= 0) {
