@@ -169,6 +169,16 @@ function drawAiMap(img) {
   ctx.restore();
 }
 
+function drawMateSpot(x, y, hero) {
+  ctx.save();
+  ctx.strokeStyle = 'rgba(90,180,214,0.85)';
+  ctx.fillStyle = 'rgba(90,180,214,0.10)';
+  ctx.lineWidth = 2.5;
+  ctx.setLineDash([7, 5]);
+  ctx.beginPath(); ctx.ellipse(x, y + 4, hero ? 30 : 26, hero ? 12 : 11, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.restore();
+}
+
 function render() {
   const t = performance.now() / 1000;
   // phần màn hình ngoài bản đồ: ảnh bản đồ phóng phủ kín, tối đi (chỉ khi có lề)
@@ -215,6 +225,8 @@ function render() {
     else if (i === ui.spot && !h) o.mode = 'target';
     else if (!h && ui.armed && !o.flooded) o.mode = 'free';
     else if (!h && i === ui.coachSlot) o.mode = 'hint';
+    // v141: chơi nhóm — ô của đồng đội viền xanh (dưới chân tướng)
+    if (COOP.on && game.co && !game.co.canAct(COOP.me, i)) drawMateSpot(x, y, !!h);
     // v138: ô đã có tướng không vẽ vòng (kể cả khi chọn tướng — đã có vòng tầm đánh); chỉ hiện lúc đang kéo để ghép
     if (h && !o.mode) return;
     drawSpot(ctx, x, y, o, t);
@@ -1615,11 +1627,14 @@ function drawEffects(t) {
 
 let last = performance.now();
 function loop(now) {
-  const dt = Math.min(0.05, (now - last) / 1000);
+  const raw = Math.max(0, (now - last) / 1000);
+  const dt = Math.min(0.05, raw);
   if (game.started && game.running) GFX.sample(now - last);
   last = now;
+  // v141: chơi nhóm — mô phỏng bước cố định theo lệnh đồng bộ (js/coop.js), không theo khung hình
+  if (COOP.on) COOP.frame(raw);
   // game vẫn chạy khi mở các bảng; chỉ dừng khi bấm nút dừng
-  if (game.started && game.running) {
+  else if (game.started && game.running) {
     for (let i = 0; i < game.speed; i++) game.update(dt);
   } else if (game.started) game.updateIdle(dt);
   mapImg = mapImage(Math.round(CONFIG.W * view.scale * view.dpr), Math.round(CONFIG.H * view.scale * view.dpr), game.level);
