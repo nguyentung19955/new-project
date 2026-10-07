@@ -30,16 +30,16 @@ async function run(level, rule, seed) {
         g.fuse(a.slot, b.slot); if (!first) first = { t: Math.round(g.time), wave: g.wave }; return;
       }
       g.autoMerge();
-      // 2. mua thẻ: ghép được / có cặp hợp thể trên sân / còn ít tướng
+      // 2. kỹ năng (trước khi mua thẻ: mở R đủ vàng thì mở ngay): mở / nâng bằng điểm
+      for (const h of g.heroes) if (h && !h.from) for (let i = 0; i < 4; i++) {
+        if (!skillLevel(h, i)) { if (g.unlockSkill(h, i) === true) return; } else if (h.skillPts > 0 && g.upgradeSkill(h, i) === true) return;
+      }
+      // 3. mua thẻ: ghép được / có cặp hợp thể trên sân / còn ít tướng
       const m = g.ensureMarket(), free = g.freeSlots().length, n = g.heroes.filter(Boolean).length;
       const want = m.types.map((ty, i) => ({ i, sc: g.marketTwin(ty) ? 3 : recipes.some((f) => (f.a === ty || f.b === ty) && g.heroes.some((o) => o && o.type === (f.a === ty ? f.b : f.a))) ? 2 : g.heroes.some((o) => o && o.type === ty) ? 1 : 0 }))
         .sort((x, y) => y.sc - x.sc)[0];
       if (g.gold >= g.summonCost() && (free > 0 || want.sc === 3) && (want.sc >= 1 || n < 5)) { g.buyCard(want.i, -1); return; }
       if (want.sc === 0 && n >= 5 && free > 0 && g.gold >= g.summonCost() + 2 * g.rerollCost()) { g.rerollMarket(); return; }
-      // 3. kỹ năng: mở / nâng bằng điểm
-      for (const h of g.heroes) if (h && !h.from) for (let i = 0; i < 4; i++) {
-        if (!skillLevel(h, i)) { if (g.unlockSkill(h, i) === true) return; } else if (h.skillPts > 0 && g.upgradeSkill(h, i) === true) return;
-      }
       // 4. lên cấp: dồn vàng vào CẶP hợp thể tốt nhất trên sân (sao cao nhất), chưa có cặp thì nâng tướng cấp thấp nhất
       const best = (ty) => g.heroes.filter((h) => h && h.type === ty).sort((a, b) => (b.tier || 0) - (a.tier || 0) || b.level - a.level)[0];
       const pairs = recipes.map((f) => [best(f.a), best(f.b)]).filter(([a, b]) => a && b)
