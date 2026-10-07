@@ -2187,3 +2187,13 @@ html.pixel img[src*="pixel/"], html.pixel canvas:not(#game) { image-rendering: p
 html.pixel { --title: 'Handjet', 'Alegreya SC', 'Palatino Linotype', Georgia, serif; }
 html.pixel .ttl, html.pixel #tb-wave, html.pixel #banner b, html.pixel #bossbar .bn span:first-child { font-weight: 700; letter-spacing: .02em; }
 html.pixel .tb-res b, html.pixel #tb-wave { font-family: 'VT323', var(--body); font-weight: 400; font-size: 1.2em; line-height: 1; }
+/* vo-tan-su-kien: dòng sự kiện trong bảng "Bộ quái mới" (trùng mốc đợt thì gộp một thông báo) */
+#roster-hint .rh-ev { font-size: 11.5px; line-height: 1.25; color: var(--text); border-left: 3px solid var(--c); padding: 2px 6px; background: #1A120C; border-radius: 3px; }
+#roster-hint .rh-ev b { color: var(--c); }
+#roster-hint .rh-ev .ev-ic { height: 1.3em; width: auto; vertical-align: -0.3em; margin-right: 3px; }
+/* cầm dọc: cả game xoay 90° (#wrap.rot) nên chiều cao thật là bề ngang máy (~390) — media max-height không bắt được,
+   banner phải dùng cỡ gọn như màn ngang thấp (trước đây chữ 30px bị cắt "NGŨ HÀNH NGH…" và toast đè lên) */
+#wrap.rot #banner { top: 70px; padding: 4px 22px; }
+#wrap.rot #banner b { font-size: 22px; }
+#wrap.rot #banner small { font-size: 11px; }
+#wrap.rot #banner.ev { top: 84px; }

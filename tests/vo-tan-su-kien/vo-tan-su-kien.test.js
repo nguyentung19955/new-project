@@ -222,6 +222,56 @@ const CHI_ANH = !!process.env.CHI_ANH;   // CHI_ANH=1: chỉ chụp ảnh
     await browser.close();
   }
 
+  // ================= tester2: bảng "Bộ quái mới" trùng mốc sự kiện (bản đồ 30 đợt: bộ quái đổi ở 61, 91, 101 → bảng bật đúng lúc
+  // đợt sự kiện 60 / 90 / 100 bắt đầu) không được che banner: bảng đợi banner tắt, ghi luôn dòng sự kiện; banner đến khi bảng mở thì xếp hàng
+  for (const [w, h] of [[1920, 934], [844, 390], [390, 844]]) {
+    ({ browser, page, errors } = await open(w, h, {}));
+    await enter(page, 1, true);
+    for (const N of [60, 90, 100]) {
+      await page.evaluate((N) => {
+        const g = game; g.gold = 5000; g.lives = 20;
+        for (const [sl, t] of [[1, 'xathu'], [3, 'lactuong'], [5, 'thaymo'], [7, 'thansuong']]) if (!g.heroes[sl] && !g.isFlooded(sl)) g.placeHero(sl, t);
+        g.wave = N - 1; g.evWave = N - 2; g.waveActive = true; g.enemies = []; g.spawnQueue = []; g.running = false; g.events.length = 0;
+        ui.rosterKey = rosterKeyOf(rosterFor(N, g.level)); ui.rosterLevel = g.level;
+        document.querySelector('#roster-hint').hidden = true; document.querySelector('#banner').hidden = true; ui.evQueued = null;
+        g.waveComplete(); g.events = g.events.filter((e) => e.type !== 'rest'); ui.handleEvents(); ui.checkRosterHint();
+      }, N);
+      const vis = () => page.evaluate(() => ({ bn: !document.querySelector('#banner').hidden, rh: !document.querySelector('#roster-hint').hidden,
+        bnTxt: document.querySelector('#banner-text').innerText, rhEv: (document.querySelector('#roster-hint .rh-ev') || {}).innerText || '', rhH: (document.querySelector('#roster-hint .rh-h small') || {}).innerText || '' }));
+      const ev = await page.evaluate((N) => eventAt(N, game.level), N);
+      let v = await vis();
+      ok(v.bn && !v.rh && v.bnTxt === ev.name, `${w}x${h} đợt ${N - 1} xong: banner báo trước "${ev.name}", không có bảng che`);
+      await page.waitForTimeout(600);
+      await page.screenshot({ path: path.join(SHOT, `trung-${N - 1}-bao-truoc-${w}x${h}.png`) });
+      const tov = await page.evaluate(() => { const b = document.querySelector('#banner').getBoundingClientRect();
+        return [...document.querySelectorAll('#toasts > *')].reduce((a, t) => { const r = t.getBoundingClientRect(); return a + Math.max(0, Math.min(b.right, r.right) - Math.max(b.left, r.left)) * Math.max(0, Math.min(b.bottom, r.bottom) - Math.max(b.top, r.top)); }, 0); });
+      ok(tov < 4, `${w}x${h} đợt ${N - 1}: toast không đè banner (${Math.round(tov)} px²)`);
+      await page.waitForTimeout(2200);
+      await page.evaluate(() => { const g = game; g.startWave(); ui.handleEvents(); ui.checkRosterHint(); });
+      v = await vis();
+      ok(v.bn && !v.rh, `${w}x${h} đợt ${N} bắt đầu: banner mở màn hiện trước, bảng bộ quái mới đợi`);
+      await page.waitForTimeout(600);
+      await page.screenshot({ path: path.join(SHOT, `trung-${N}-mo-man-${w}x${h}.png`) });
+      await page.waitForTimeout(2300);
+      await page.evaluate(() => ui.checkRosterHint());
+      v = await vis();
+      ok(!v.bn && v.rh && /bộ quái mới/i.test(v.rhH) && v.rhEv.includes(ev.name), `${w}x${h} đợt ${N}: banner tắt rồi bảng "${v.rhH}" mới mở, có dòng sự kiện "${v.rhEv.slice(0, 50)}…"`);
+      await page.screenshot({ path: path.join(SHOT, `trung-${N}-bang-${w}x${h}.png`) });
+      const fit = await page.evaluate(() => { const r = document.querySelector('#roster-hint').getBoundingClientRect(); return r.left >= -1 && r.right <= innerWidth + 1 && r.top >= -1 && r.bottom <= innerHeight + 1; });
+      ok(fit, `${w}x${h} đợt ${N}: bảng nằm gọn trong màn`);
+    }
+    // bảng đang mở mà sự kiện báo trước tới → banner xếp hàng, bảng đóng mới hiện
+    await page.evaluate(() => { const g = game; document.querySelector('#roster-hint').hidden = false; document.querySelector('#banner').hidden = true; ui.rosterEvN = 0;
+      ui.waveEventMsg({ phase: 'soon', ev: eventAt(110, g.level) }); });
+    let q = await page.evaluate(() => ({ bn: !document.querySelector('#banner').hidden, queued: !!ui.evQueued }));
+    ok(!q.bn && q.queued, `${w}x${h}: bảng đang mở → banner sự kiện xếp hàng, không chồng`);
+    await page.evaluate(() => { document.querySelector('#roster-hint').hidden = true; ui.checkRosterHint(); });
+    q = await page.evaluate(() => ({ bn: !document.querySelector('#banner').hidden, queued: !!ui.evQueued }));
+    ok(q.bn && !q.queued, `${w}x${h}: bảng đóng → banner hiện`);
+    ok(errors.length === 0, `${w}x${h}: không lỗi trang ` + errors.join(' | '));
+    await browser.close();
+  }
+
   if (CHI_ANH) return;
   // ================= PHẦN 3: MÔ PHỎNG — đội vừa đủ qua đợt 60 thường (M = lực sát thương nhỏ nhất để mất ≤ 2 mạng)
   // đánh 24 trận / sự kiện (lực ×0,8 · ×1 · ×1,25 × 8 seed): sự kiện phải khó hơn chút, và đội mạnh hơn 50% vẫn qua gọn

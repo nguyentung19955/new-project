@@ -1378,13 +1378,18 @@ class UI {
       // thanh chợ, cột nút phải. Thử vài chỗ đặt cột thông báo, chọn chỗ đè ít nhất (ưu tiên chỗ cũ: góc phải dưới thanh trên)
       const hz = typeof HZ !== 'undefined' ? HZ : 1, w = 250 * hz, h = Math.max(40 * hz, box.offsetHeight * hz), G = 56;
       const p = PATH.at(PATH.total), gx = (p.x + MAPX) / DK, gy = (p.y + MAPY) / DK;
-      const ur = $('#ui').getBoundingClientRect(), k = ur.height / UIH || 1;
+      // cầm dọc cả game xoay 90° theo chiều kim đồng hồ (#wrap.rot): trục x giao diện → trục y màn hình, trục y → ngược trục x
+      // (trước đây đổi toạ độ như màn ngang nên toast không né được banner / bảng, đè lên chữ)
+      const rot = typeof ROT !== 'undefined' && ROT;
+      const ur = $('#ui').getBoundingClientRect(), k = (rot ? ur.width : ur.height) / UIH || 1;
       const R = [[gx - G, gy - G, gx + G, gy + G]];
       for (const id of ['#dialogue', '#roster-hint', '#bossbar', '#banner', '#deck', '#auto-btns', '#topbar']) {
         const el = $(id);
         if (el.hidden || !el.offsetParent) continue;
         const d = el.getBoundingClientRect();
-        if (d.width) R.push([(d.left - ur.left) / k, (d.top - ur.top) / k, (d.right - ur.left) / k, (d.bottom - ur.top) / k]);
+        if (!d.width) continue;
+        R.push(rot ? [(d.top - ur.top) / k, (ur.right - d.right) / k, (d.bottom - ur.top) / k, (ur.right - d.left) / k]
+          : [(d.left - ur.left) / k, (d.top - ur.top) / k, (d.right - ur.left) / k, (d.bottom - ur.top) / k]);
       }
       const area = (x0, y0) => R.reduce((s2, [l, t, r, b]) => s2 + Math.max(0, Math.min(r, x0 + w) - Math.max(l, x0)) * Math.max(0, Math.min(b, y0 + h) - Math.max(t, y0)), 0)
         + Math.max(0, y0 + h - UIH) * w;
@@ -2048,14 +2053,23 @@ class UI {
   waveEventMsg(m) {
     const e = m.ev, icon = ic(e.ic, '', 'ev-ic');
     if (m.phase === 'soon') {
-      this.banner(`Đợt ${e.n} · sự kiện`, e.name, icon, e.color);
+      this.evBanner(e, `Đợt ${e.n} · sự kiện`, e.name, icon, e.color);
       this.toast(`<b>Đợt ${e.n}: ${esc(e.name)}</b> · ${esc(e.desc)} · vượt qua: +${fmt(e.gold)} vàng, +${fmt(e.kho)} Ngân khố`, e.color);
     } else if (m.phase === 'start') {
-      this.banner(`Sự kiện · ${e.lore}`, e.name, icon, e.color);
+      this.evBanner(e, `Sự kiện · ${e.lore}`, e.name, icon, e.color);
       this.toast(`${icon}<b>${esc(e.name)}</b>: ${esc(e.desc)}`, e.color);
     } else {
       this.toast(`<b>Vượt ${esc(e.name)}!</b> +${fmt(m.gold)} vàng`, '#F2D27A');
     }
+  }
+
+  // bảng "Bộ quái mới" đang mở (nằm giữa màn, che banner) → hoãn banner tới khi bảng đóng; bảng đã ghi sự kiện này thì bỏ
+  evBanner(e, ...args) {
+    if ($('#roster-hint').hidden) { this.evQueued = null; return this.banner(...args); }
+    this.evQueued = this.rosterEvN === e.n ? null : args;
+  }
+  flushEvBanner() {
+    if (this.evQueued && $('#roster-hint').hidden && $('#banner').hidden) { const a = this.evQueued; this.evQueued = null; this.banner(...a); }
   }
 
   // Hộp thoại có ảnh nhân vật (theo bản thiết kế mobile)
@@ -2588,16 +2602,22 @@ class UI {
       this.rosterKey = rosterKeyOf(rosterFor(Math.max(1, g.wave), g.level)); this.rosterLevel = g.level;
       if (!g.endless) return;
     }
+    this.flushEvBanner();
     const key = rosterKeyOf(rosterFor(n, g.level));
     if (key === this.rosterKey) return;
+    if (!$('#banner').hidden) return;     // banner (boss / sự kiện) đang hiện → đợi banner tắt rồi mới mở bảng (không che nhau)
     this.rosterKey = key;
     if (!g.endless || !key) return;
+    // vo-tan-su-kien: đợt mới đổi bộ quái trùng mốc sự kiện → ghi luôn sự kiện vào bảng (1 dòng icon + tên + thử thách)
+    const ev = eventAt(n, g.level) || (g.waveActive && g.waveEvent());
+    this.rosterEvN = ev ? ev.n : 0;
     const bosses = [];
     for (let w = n; w < n + 10; w++) { const b = bossAt(w, g.level); if (b) bosses.push(b); }
     const pool = [...g.marketPool(), ...LEGEND_HEROES.filter((t) => (this.save.owned || []).includes(t))];
     const c = rosterCounters(ROSTERS[key], bosses, pool, []);
     const el = $('#roster-hint');
     el.innerHTML = `<div class="rh-h"><small>Đợt ${n} · bộ quái mới</small><b>${ROSTER_NAMES[key] || key}</b></div>
+      ${ev ? `<div class="rh-ev" style="--c:${ev.color}">${ic(ev.ic, '', 'ev-ic')}<b>Đợt ${ev.n} · ${esc(ev.name)}</b> · ${esc(ev.desc)}</div>` : ''}
       ${c.main ? `<div class="ch-sum">Quái chủ yếu hành <b style="color:${ELEMENTS[c.main].color}">${ELEMENTS[c.main].name}</b> → dùng hành <b style="color:${ELEMENTS[c.ce].color}">${ELEMENTS[c.ce].name}</b></div>` : ''}
       <div class="rh-foes">${c.foes.slice(0, 7).map((k) => `<span title="${esc(ENEMIES[k].name)}">${esc(ENEMIES[k].name)}${ENEMIES[k].boss ? ' ' + ic('boss', 'Boss') : ''}</span>`).join('')}</div>
       <div class="ch-row">${c.list.map((x) => `<span class="ch-av ${HEROES[x.t].legend || ''}" style="--c:${ELEMENTS[HEROES[x.t].el].color}"><img src="${heroImgUrl(x.t, 'head')}" alt="${esc(HEROES[x.t].name)}"><i>${elIcon(HEROES[x.t].el, 11)}</i><small>${x.why}</small></span>`).join('')}</div>
