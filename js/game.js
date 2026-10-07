@@ -3590,8 +3590,6 @@ class Game {
       const inst = this.addItem(makeItem(id, null, { drop: true }));
       if (inst) {
         const it = ITEMS[id];
-        const bh = this.bestHeroFor(inst);
-        if (bh) this.events.push({ type: 'upgrade', uid: inst.uid, hero: bh.hero, gain: bh.gain });
         this.notify(`Rơi đồ: ${it.name} (${RARITY[it.rarity].name})`, RARITY[it.rarity].color);
         this.effects.push({ type: 'drop', x: e.x, y: e.y, color: RARITY[it.rarity].color, ttl: 1, max: 1 });
       }
