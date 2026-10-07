@@ -7,6 +7,8 @@
 // ============================================================
 
 let nextId = 1;
+// id mới cho tướng / quái / đồ. Co-op: giao diện tạo đồ để xem trước (ngoài mô phỏng) dùng id âm tạm, không làm lệch id chung
+function newId() { return SIM.coop && !SIM.active ? -(++SIM.tmpId) : nextId++; }
 
 // --- Đường quái đi: lấy mẫu đường cong SVG của bản đồ đang chơi (MAPS, data.js)
 let RIVER_D = MAPS.song1.d;
@@ -135,10 +137,10 @@ setMap('song1');
 // ------------------------------------------------------------
 // Đồ trang phục mang 1 hành (đồ bộ: hành của bộ). o.drop: đồ rơi / trong hũ
 // có thêm dòng phụ ngẫu nhiên. Đồ Sử thi / Huyền thoại có 1 hiệu ứng ẩn theo hành.
-const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+const pick = (arr) => arr[Math.floor(srand() * arr.length)];
 function makeItem(id, rarity, o = {}) {
   const it = ITEMS[id];
-  const inst = { uid: nextId++, id, rarity: rarity || it.rarity, plus: 0, locked: false, spent: 0 };
+  const inst = { uid: newId(), id, rarity: rarity || it.rarity, plus: 0, locked: false, spent: 0 };
   if (GEAR_SLOTS.includes(it.slot)) {
     inst.el = it.set ? SETS[it.set].el : pick(EL_ORDER);
     inst.aff = o.drop ? rollAffixes([], AFFIX_COUNT[inst.rarity]) : [];
@@ -151,13 +153,13 @@ function makeItem(id, rarity, o = {}) {
 function rollAffixes(keep, n) {
   const out = keep.slice();
   const pool = Object.keys(AFFIXES).filter((k) => !out.includes(k));
-  while (out.length < n && pool.length) out.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
+  while (out.length < n && pool.length) out.push(pool.splice(Math.floor(srand() * pool.length), 1)[0]);
   return out;
 }
 // hiệu ứng ẩn của món (đồ bộ dùng hiệu ứng ẩn của bộ)
 function rollHidden(inst) {
   if (inst.hid || ITEMS[inst.id].set || RARITY_ORDER.indexOf(inst.rarity) < 2) return;
-  inst.hid = `i.${inst.el}${1 + Math.floor(Math.random() * 2)}`;
+  inst.hid = `i.${inst.el}${1 + Math.floor(srand() * 2)}`;
 }
 function itemHiddens(inst) {
   const out = [];
@@ -291,7 +293,7 @@ function heroStats(h) {
   if (ELEM_TRAIT[def.el]) ELEM_TRAIT[def.el].apply(s);
   if (def.traitApply) def.traitApply(s, h);          // v94: nội tại riêng của tướng mới
   // v92: Thần khí của tướng Vàng (3 hệ, mỗi hệ 5 cấp)
-  const LG = LEGACY_LV && LEGACY[h.type] && LEGACY_LV[h.type];
+  const LV = legacyOf(h), LG = LV && LEGACY[h.type] && LV[h.type];
   if (LG) for (const sys of LEGACY[h.type]) {
     const lv = LG[sys.id] || 0;
     if (!lv) continue;
@@ -372,7 +374,8 @@ function heroStats(h) {
   s.cooldown = s.baseCooldown / Math.max(0.2, 1 + s.haste / 100);
   if (h.bogged) { s.cooldown *= 2; s.manaRegen = 0; }   // sa lầy: -50% tốc đánh, không hồi năng lượng
   if (def.attack === 'melee' && s.spread) { s.cleave = Math.min(1, s.cleave + s.spread / 100); s.spread = 0; }
-  h.hpMaxLast = s.hpMax;
+  // co-op: giao diện gọi heroStats (ngoài mô phỏng) không được ghi vào trạng thái chung
+  if (!SIM.coop || SIM.active) h.hpMaxLast = s.hpMax;
   return s;
 }
 
@@ -449,7 +452,7 @@ function rollItem(minRarity) {
   const pool = Object.keys(ITEMS).filter((id) =>
     GEAR_SLOTS.includes(ITEMS[id].slot) && !ITEMS[id].bossOnly && !ITEMS[id].set && RARITY_ORDER.indexOf(ITEMS[id].rarity) >= min);
   const total = pool.reduce((a, id) => a + RARITY[ITEMS[id].rarity].weight, 0);
-  let r = Math.random() * total;
+  let r = srand() * total;
   for (const id of pool) {
     r -= RARITY[ITEMS[id].rarity].weight;
     if (r <= 0) return id;
@@ -989,7 +992,7 @@ const SKILL_CASTS = {
     if (list.length < 4) return false;
     game.effects.push({ type: 'banner', str: st.skName || 'Mưa Dưa', color: '#3EDC4E', ttl: 1.6, max: 1.6 });
     for (const e of list) {
-      game.effects.push({ type: 'lob', x: e.x - 40, y: e.y - 220, x2: e.x, y2: e.y, color: '#3EDC4E', ttl: 0.4 + Math.random() * 0.5, max: 0.9,
+      game.effects.push({ type: 'lob', x: e.x - 40, y: e.y - 220, x2: e.x, y2: e.y, color: '#3EDC4E', ttl: 0.4 + srand() * 0.5, max: 0.9,
         onEnd: () => {
           game.effects.push({ type: 'splat', x: e.x, y: e.y, r: 30, color: '#E04848', ttl: 0.4, max: 0.4 });
           if (!e.dead) { game.hit(e, (st.damage * 2 + n) * st.skillPower, h, { color: '#3EDC4E' }); if (!e.dead) game.slow(e, 40, 2); }
@@ -1472,7 +1475,7 @@ class Game {
     this.gold -= def.cost;
     const [x, y] = CONFIG.slots[slot];
     const h = {
-      id: nextId++, type, slot, x, y, kills: 0, level: 1, cd: 0, swing: 0, dir: 1,
+      id: newId(), type, slot, x, y, kills: 0, level: 1, cd: 0, swing: 0, dir: 1,
       dead: false, respawnT: 0, stunT: 0, hp: 0, mana: 0, skillLv: { [def.skills[0].id]: 1 }, skillPts: 0,
       tier: 0, spent: def.cost, grow: 0, shield: 0, shieldT: 0, invulnT: 0, reviveCd: 0,
       equip: { weapon: null, helmet: null, armor: null, acc1: null, acc2: null, acc3: null },
@@ -1488,7 +1491,7 @@ class Game {
 
   // ---------- TRIỆU HỒI NGẪU NHIÊN · GHÉP SAO · HỢP THỂ (v34)
   summonCost() { return COSTS.summon(this.summonN || 0); }
-  freeSlots() { return CONFIG.slots.map((_, i) => i).filter((i) => !this.heroes[i] && !this.isFlooded(i)); }
+  freeSlots() { return CONFIG.slots.map((_, i) => i).filter((i) => !this.heroes[i] && !this.isFlooded(i) && (!this.co || this.co.canAct(this.co.actor, i))); }
   canSummon() {
     if (this.gold < this.summonCost()) return `Cần ${this.summonCost()} vàng`;
     if (!this.freeSlots().length) return 'Hết ô trống: ghép, hoặc kéo tướng vào 🗑 để hủy';
@@ -1497,13 +1500,13 @@ class Game {
   // v133: quân triệu hồi = đội 6 tướng người chơi chọn (thiếu thì quân mặc định của ải)
   summonList() { return validDeck(this.deck) ? this.deck : summonPool(this.level); }
   // v134: TRIỆU HỒI CHỌN 1 TRONG 3 — trả vàng, hiện 3 tướng (trong đội), chọn 1 đặt vào ô trống; Đổi lượt mới tốn ít vàng
-  rollOffer(rng = Math.random) {
+  rollOffer(rng = srand) {
     const pool = [...this.summonList()], out = [];
     while (out.length < 3 && pool.length) out.push(pool.splice(Math.floor(rng() * pool.length), 1)[0]);
     return out;
   }
   rerollCost() { return 10 + 10 * ((this.offer && this.offer.rr) || 0); }
-  summonOffer(rng = Math.random) {
+  summonOffer(rng = srand) {
     if (this.offer) return true;
     const ok = this.canSummon();
     if (ok !== true) return ok;
@@ -1513,7 +1516,7 @@ class Game {
     this.offer = { types: this.rollOffer(rng), cost: c, rr: 0 };
     return true;
   }
-  rerollOffer(rng = Math.random) {
+  rerollOffer(rng = srand) {
     if (!this.offer) return 'Chưa triệu hồi';
     const c = this.rerollCost();
     if (this.gold < c) return `Cần ${c} vàng để đổi`;
@@ -1522,7 +1525,7 @@ class Game {
     this.offer.types = this.rollOffer(rng);
     return true;
   }
-  pickOffer(i, rng = Math.random) {
+  pickOffer(i, rng = srand) {
     const o = this.offer; if (!o || !o.types[i]) return 'Chưa triệu hồi';
     const free = this.freeSlots();
     if (!free.length) return 'Hết ô trống: ghép, hoặc kéo tướng vào 🗑 để hủy';
@@ -1532,7 +1535,7 @@ class Game {
     return slot;
   }
   // gọi 1 tướng Thường ngẫu nhiên (★) vào 1 ô trống ngẫu nhiên; trả về ô vừa đặt
-  summonRandom(rng = Math.random) {
+  summonRandom(rng = srand) {
     const ok = this.canSummon();
     if (ok !== true) return ok;
     const free = this.freeSlots();
@@ -1550,7 +1553,7 @@ class Game {
     const def = HEROES[type];
     const [x, y] = CONFIG.slots[slot];
     const h = {
-      id: nextId++, type, slot, x, y, kills: 0, level: 1, cd: 0, swing: 0, dir: 1,
+      id: newId(), type, slot, x, y, kills: 0, level: 1, cd: 0, swing: 0, dir: 1,
       dead: false, respawnT: 0, stunT: 0, hp: 0, mana: 0, skillLv: { [def.skills[0].id]: 1 }, skillPts: 0,
       tier: o.tier || 0, spent: o.spent || 0, grow: 0, shield: 0, shieldT: 0, invulnT: 0, reviveCd: 0,
       equip: { weapon: null, helmet: null, armor: null, acc1: null, acc2: null, acc3: null },
@@ -2162,7 +2165,7 @@ class Game {
     this.jarCount = (this.jarCount || 0) + 1;
     let min = j.min;
     if (this.jarCount >= JAR_PITY && RARITY_ORDER.indexOf(min) < 2) { min = 'epic'; }
-    const id = j.set && Math.random() < j.set ? rollSetItem() : rollItem(min);
+    const id = j.set && srand() < j.set ? rollSetItem() : rollItem(min);
     const inst = makeItem(id, null, { drop: true });
     if (RARITY_ORDER.indexOf(inst.rarity) >= 2) this.jarCount = 0;
     return this.addItem(inst);
@@ -2174,13 +2177,13 @@ class Game {
     const total = w.reduce((a, b) => a + b, 0);
     const out = [];
     for (let i = 0; i < SHOP.slots; i++) {
-      if (Math.random() < SHOP.accChance) {
+      if (srand() < SHOP.accChance) {
         const accs = Object.keys(ITEMS).filter((id) => ITEMS[id].price);
         const id = pick(accs);
         out.push({ inst: makeItem(id), price: ITEMS[id].price * (prep ? 2 : 1) });
         continue;
       }
-      let r = Math.random() * total, k = 0;
+      let r = srand() * total, k = 0;
       while (k < 3 && r > w[k]) { r -= w[k]; k++; }
       const rar = RARITY_ORDER[k];
       const pool = Object.keys(ITEMS).filter((id) => GEAR_SLOTS.includes(ITEMS[id].slot) && !ITEMS[id].set && !ITEMS[id].bossOnly
@@ -2275,7 +2278,7 @@ class Game {
     }
     for (const h of this.heroes) if (h) { h.blockUsed = false; h.gbdUsed = false; h.lgRevUsed = false; }
     // Thần khí: khiên đầu đợt
-    if (LEGACY_LV) for (const h of this.heroes) if (h && !h.dead && LEGACY[h.type]) {
+    for (const h of this.heroes) if (h && !h.dead && LEGACY[h.type] && legacyOf(h)) {
       const st = heroStats(h);
       if (st.lg.waveShield) { h.shield = Math.max(h.shield || 0, st.hpMax * st.lg.waveShield / 100); h.shieldT = 8; }
     }
@@ -2308,7 +2311,9 @@ class Game {
   }
 
   addGold(n) {
-    this.gold += n;
+    // co-op: vàng do trận sinh ra (hạ quái, xong đợt, núi…) chia đôi; vàng từ lệnh (bán đồ, gọi sớm) về người ra lệnh
+    if (this.co && !this.co.inCmd) this.co.split(n);
+    else this.gold += n;
     this.stats.goldEarned += n;
   }
 
@@ -2521,10 +2526,10 @@ class Game {
       if (h.type === 'giong' && h.grow < 10) { h.grow++; this.text(h.x, h.y - 80, 'Vươn Vai!', '#FFB04A', 1.2); }
       if (h.type === 'antiem') extra += 20;
       // ẩn: sau đợt 20, 10% mỗi đợt "dưa vàng" / "bồ lúa vàng" +100 vàng
-      if (this.wave > 20 && h.type === 'antiem' && Math.random() < 0.1) {
+      if (this.wave > 20 && h.type === 'antiem' && srand() < 0.1) {
         extra += 100; this.text(h.x, h.y - 80, 'Dưa vàng! +100', '#FFD66B', 1.4, 15); this.discover('h.antiem', h.x, h.y);
       }
-      if (this.wave > 20 && ACC_SLOTS.some((sl) => h.equip[sl] && h.equip[sl].id === 'bo_lua') && Math.random() < 0.1) {
+      if (this.wave > 20 && ACC_SLOTS.some((sl) => h.equip[sl] && h.equip[sl].id === 'bo_lua') && srand() < 0.1) {
         extra += 100; this.text(h.x, h.y - 80, 'Bồ lúa vàng! +100', '#FFD66B', 1.4, 15); this.discover('r.bo_lua', h.x, h.y);
       }
     }
@@ -2587,7 +2592,7 @@ class Game {
     if (this.hard) hp *= HARD.hp(this.level);
     const p = PATH.at(dist);
     const e = {
-      id: nextId++, type, def, hp, maxHp: hp, dist, x: p.x, y: p.y, dir: 1,
+      id: newId(), type, def, hp, maxHp: hp, dist, x: p.x, y: p.y, dir: 1,
       slowT: 0, slowPct: 0, stunT: 0, poisonT: 0, poisonDps: 0, poisonBy: null, dotColor: '#2ecc71', dotType: 'pure',
       atkCd: 1, slamCd: 4, summonCd: 6, healCd: 2, burnT: 0, dead: false, stunKind: 'stun', pullT: 0, pullSpeed: 0,
       elite: elite || null, armor: (def.armor || 0) + (elite === 'armored' ? 10 : 0), mr: def.mr || 0,
@@ -2621,7 +2626,7 @@ class Game {
       e.armor += 15;
       e.baseArmor = e.armor;
       // ẩn: 30% mang thêm một hành phụ, chịu khắc từ cả hai hành
-      if (Math.random() < 0.3) { e.el2 = pick(EL_ORDER.filter((x) => x !== e.el)); this.discover('e.elite'); }
+      if (srand() < 0.3) { e.el2 = pick(EL_ORDER.filter((x) => x !== e.el)); this.discover('e.elite'); }
       this.events.push({ type: 'boss', name: `${e.def.name} khổng lồ`, armor: e.armor, champion: true });
     }
     if (e.def.boss) this.events.push({ type: 'boss', name: e.def.name, armor: e.armor, enemy: e.type });
@@ -2873,7 +2878,7 @@ class Game {
     return;            // v36: bỏ ngập tạm
     const dry = CONFIG.slots.map((s, i) => i).filter((i) => !this.isFlooded(i));
     for (let k = 0; k < count && dry.length; k++) {
-      const i = dry.splice(Math.floor(Math.random() * dry.length), 1)[0];
+      const i = dry.splice(Math.floor(srand() * dry.length), 1)[0];
       this.tempFlood[i] = this.time + time;
       const [x, y] = CONFIG.slots[i];
       this.effects.push({ type: 'ring', x, y, r: 30, color: '#5AB4D6', ttl: 0.6, max: 0.6 });
@@ -2893,13 +2898,13 @@ class Game {
   damageHero(h, amount, ranged, magic) {
     if (h.dead || h.invulnT > 0) return;
     const b = h.buff || {};
-    if (ranged && b.block && Math.random() * 100 < b.block) {
+    if (ranged && b.block && srand() * 100 < b.block) {
       this.text(h.x, h.y - 50, 'Chặn!', '#9EDDF2', 0.6, 13);
       return;
     }
     const st = heroStats(h);
     // hệ Thổ: chặn hẳn đòn đánh
-    if (st.el.block && Math.random() * 100 < st.el.block) { this.text(h.x, h.y - 50, 'Chặn!', '#E8C27A', 0.6, 13); return; }
+    if (st.el.block && srand() * 100 < st.el.block) { this.text(h.x, h.y - 50, 'Chặn!', '#E8C27A', 0.6, 13); return; }
     amount *= (1 - st.dr / 100) * (1 - (b.dr || 0) / 100);
     if (magic && st.magicRes) { amount *= 1 - st.magicRes / 100; this.proc(h, 'scale', h.x, h.y - 26, '#5AB4D6', 26); }
     // ẩn đồ hành Thổ "Đất lành chim đậu": máu dưới 30% thì giảm 30% sát thương 4 giây (hồi 20 giây)
@@ -3004,7 +3009,7 @@ class Game {
     if (h.shieldT > 0) { h.shieldT -= dt; if (h.shieldT <= 0) h.shield = 0; }
     for (const k of ['rallyT', 'feastT', 'hotT', 'volleyT', 'huntT', 'rageT', 'warT', 'earthT', 'earthCd', 'drumBoostT', 'trailCd', 'breathCd', 'windT']) if (h[k] > 0) h[k] -= dt;
     // Thần khí: hồi máu đồng đội mỗi 5 giây
-    if (LEGACY_LV && LEGACY[h.type] && !h.dead) {
+    if (legacyOf(h) && LEGACY[h.type] && !h.dead) {
       h.lgHealT = (h.lgHealT || 5) - dt;
       if (h.lgHealT <= 0) {
         h.lgHealT = 5;
@@ -3030,7 +3035,7 @@ class Game {
     // đòn đánh thường rơi đúng lúc hoạt ảnh ra đòn (sau pha lấy đà)
     if (h.strike) {
       h.strike.t -= dt;
-      if (h.strike.t <= 0) { const f = h.strike.fn; h.strike = null; f(); }
+      if (h.strike.t <= 0) { const tg = h.strike.target; h.strike = null; this.heroAttack(h, tg); }
     }
     if (h.castT > 0) h.castT -= dt;
     for (const sk of def.skills) {
@@ -3080,14 +3085,14 @@ class Game {
       this.ultCast = false;
       if (castOk) {
         // ẩn Gậy Thời Không: 10% dùng chiêu không tốn năng lượng
-        if (st.hid['r.gay_thoi_khong'] && Math.random() < 0.1) {
+        if (st.hid['r.gay_thoi_khong'] && srand() < 0.1) {
           this.text(h.x, h.y - 84, 'Không tốn năng lượng!', '#4a90e2', 1, 13);
           this.discover('r.gay_thoi_khong', h.x, h.y);
-        } else if (runeFx(h) && runeFx(h).fx.freeCast && Math.random() * 100 < runeFx(h).fx.freeCast) {
+        } else if (runeFx(h) && runeFx(h).fx.freeCast && srand() * 100 < runeFx(h).fx.freeCast) {
           this.text(h.x, h.y - 84, 'Phúc Thần!', '#7FA8F0', 1, 13);
         } else {
           h.mana -= sk.active.mana;
-          if (runeFx(h) && runeFx(h).sk.s_echo && Math.random() * 100 < runeFx(h).sk.s_echo) { h.mana += sk.active.mana * 0.5; this.text(h.x, h.y - 84, 'Vang Vọng!', '#7FA8F0', 0.8, 12); }
+          if (runeFx(h) && runeFx(h).sk.s_echo && srand() * 100 < runeFx(h).sk.s_echo) { h.mana += sk.active.mana * 0.5; this.text(h.x, h.y - 84, 'Vang Vọng!', '#7FA8F0', 0.8, 12); }
         }
         h.skillCd[sk.id] = sk.active.cooldown * (1 - st.cdr / 100);
         // ẩn Lang Liêu: đợt có Thủy Tinh, Lễ Tổ Tiên giảm 50% hồi chiêu
@@ -3125,7 +3130,7 @@ class Game {
     // hoạt ảnh đánh co theo tốc đánh: đánh nhanh thì vung nhanh, không bị giật về tư thế lấy đà
     h.swingRate = Math.max(SWING_RATE, 1 / (st.cooldown * 0.92));
     h.swing = 1;
-    h.strike = { t: (STRIKE_DELAY[def.attack] || 0.12) * (SWING_RATE / h.swingRate), fn: () => this.heroAttack(h, target) };
+    h.strike = { t: (STRIKE_DELAY[def.attack] || 0.12) * (SWING_RATE / h.swingRate), target };   // v141: không giữ hàm (lưu / đồng bộ co-op được)
   }
 
   // đòn đánh thường (gọi khi hoạt ảnh tới lúc ra đòn)
@@ -3221,7 +3226,7 @@ class Game {
 
   sparks(x, y, color, n) {
     for (let i = 0; i < n; i++) {
-      this.effects.push({ type: 'spark', x, y, a: Math.random() * 6.28, color, ttl: 0.5, max: 0.5, d: 20 + Math.random() * 25 });
+      this.effects.push({ type: 'spark', x, y, a: srand() * 6.28, color, ttl: 0.5, max: 0.5, d: 20 + srand() * 25 });
     }
   }
 
@@ -3274,7 +3279,7 @@ class Game {
     let dmg = amount;
     const st = o.st;
     const hid = st ? st.hid : {};
-    let crit = st && Math.random() * 100 < st.crit;
+    let crit = st && srand() * 100 < st.crit;
     let critMult = st ? st.critMult || 2 : 2;
     const RF = st && hero ? runeFx(hero) : null;
     // Ấn Mắt Ưng: đòn đầu tiên trúng mỗi quái luôn chí mạng
@@ -3314,7 +3319,7 @@ class Game {
       const mpen = (st ? st.mpen : hero ? heroStats(hero).mpen : 0) + (this.ultCast ? ULT_PEN : 0);
       dmg *= 1 - (e.mr * (1 - Math.min(100, mpen) / 100)) / 100;
     }
-    if (st && st.stunChance && Math.random() * 100 < st.stunChance) { this.stun(e, 0.5, 'stun'); this.proc(e, 'tusk', e.x, e.y - 16, '#C8A040', 22); }
+    if (st && st.stunChance && srand() * 100 < st.stunChance) { this.stun(e, 0.5, 'stun'); this.proc(e, 'tusk', e.x, e.y - 16, '#C8A040', 22); }
     if (st && !o.silent) this.onHitFx(e, hero, st, crit, dmg);
     if (!o.silent) {
       e.hitT = 0.12;
@@ -3386,7 +3391,7 @@ class Game {
     if (crit && hid['i.hoa1']) {
       this.proc(e, 'burn', e.x, e.y - 14, '#E0452C', 18); this.dot(e, dmg * 0.2, hero, '#E0452C', 'magic', 2); this.discover('i.hoa1', hero.x, hero.y); }
     // ẩn đủ Bộ Lạc Long: đứng ô ngập, 10% phóng sét lan 3 quái
-    if (hid['s.laclong'] && Math.random() < 0.1) {
+    if (hid['s.laclong'] && srand() < 0.1) {
       const near = this.enemiesInRange(e.x, e.y, 130).filter((o) => o !== e).slice(0, 3);
       for (const o of near) {
         this.effects.push({ type: 'streak', x: e.x, y: e.y - 14, x2: o.x, y2: o.y - 14, color: '#BFF0FF', w: 4, ttl: 0.3, max: 0.3 });
@@ -3406,7 +3411,7 @@ class Game {
 
   // v93: hiệu ứng trạng thái theo hành của tướng (đòn đánh thường)
   elemOnHit(e, hero, st) {
-    const E = st.el, R = () => Math.random() * 100;
+    const E = st.el, R = () => srand() * 100;
     if (E.burn && !(e.poisonT > 0) && R() < E.burn) { this.dot(e, st.damage * 0.3, hero, '#E0452C', 'magic', 3); this.proc(e, 'burn', e.x, e.y - 14, '#E0452C', 16); }
     if (E.slow) this.slow(e, E.slow, 1.5);
     if (E.freeze && R() < E.freeze && !e.def.boss) { this.stun(e, 1, 'ice'); this.proc(e, 'ice', e.x, e.y - 14, '#BFEFFF', 18); }
@@ -3435,7 +3440,7 @@ class Game {
     if (L.splashHit) {
       for (const o of this.enemiesInRange(e.x, e.y, 70)) if (o !== e) this.hit(o, st.damage * L.splashHit / 100, hero, { silent: true });
     }
-    if (L.chainHit && Math.random() * 100 < L.chainHit) {
+    if (L.chainHit && srand() * 100 < L.chainHit) {
       let px = e.x, py = e.y - 14;
       for (const o of this.enemiesInRange(e.x, e.y, 140).filter((o) => o !== e).slice(0, 3)) {
         this.effects.push({ type: 'streak', x: px, y: py, x2: o.x, y2: o.y - 14, color: '#BFE8FF', w: 4, ttl: 0.3, max: 0.3 });
@@ -3464,7 +3469,7 @@ class Game {
         for (const o of this.enemiesInRange(e.x, e.y, 80)) { if (o !== e) this.hit(o, st.damage * 0.6, hero, { silent: true }); this.slow(o, 30, 1.5); }
       }
     }
-    if (RF.sk.s_chain && Math.random() * 100 < RF.sk.s_chain) {
+    if (RF.sk.s_chain && srand() * 100 < RF.sk.s_chain) {
       const near = this.enemiesInRange(e.x, e.y, 140).filter((o) => o !== e && !o.dead).slice(0, 3);
       let px = e.x, py = e.y - 14;
       for (const o of near) {
@@ -3485,7 +3490,7 @@ class Game {
     this.stats.kills++;
     this.text(e.x, e.y - 20, '+' + gold, '#F2D27A', 0.7);
     for (let i = 0; i < 6; i++) {
-      this.effects.push({ type: 'spark', x: e.x, y: e.y - 8, a: Math.random() * 6.28, color: e.def.color, ttl: 0.4, max: 0.4 });
+      this.effects.push({ type: 'spark', x: e.x, y: e.y - 8, a: srand() * 6.28, color: e.def.color, ttl: 0.4, max: 0.4 });
     }
     this.effects.push({ type: 'die', x: e.x, y: e.y, etype: e.type, dir: e.dir, ttl: 0.4, max: 0.4 });
     // xác quái: chớp trắng, ngã nghiêng, co lại và chìm xuống nước (0,45 giây) thay vì biến mất ngay
@@ -3535,11 +3540,13 @@ class Game {
       this.notify(`Đã hạ ${e.def.name}!`, '#F0A030');
       this.shake = Math.max(this.shake, 8);
       this.sparks(e.x, e.y - 20, '#F2D27A', 24);
-      this.events.push({ type: 'reward', boss: e.type, options: this.bossRewards(e.type) });
+      const options = this.bossRewards(e.type);
+      if (this.co) this.co.reward = { id: e.id, options, taken: -1 };   // co-op: ai chọn trước thì nhận (lệnh 'reward')
+      this.events.push({ type: 'reward', boss: e.type, options, id: e.id });
     }
-    if (Math.random() < e.def.drop * (e.elite ? 3 : 1)) {
+    if (srand() < e.def.drop * (e.elite ? 3 : 1)) {
       // quái tinh anh, boss, tướng địch: 25% rơi một món đồ bộ. v82: quái biến thể / ghép rơi từ Hiếm trở lên
-      const id = (e.elite || e.def.boss || e.champion || e.def.general) && Math.random() < 0.25 ? rollSetItem()
+      const id = (e.elite || e.def.boss || e.champion || e.def.general) && srand() < 0.25 ? rollSetItem()
         : rollItem(e.def.boss || e.elite || e.def.variant || e.def.chimera || e.def.general ? 'rare' : 'common');
       const inst = this.addItem(makeItem(id, null, { drop: true }));
       if (inst) {
@@ -3595,7 +3602,7 @@ class Game {
         this.discover('h.xathu', h.x, h.y);
       }
     }
-    if (e.type === 'chimbao' && hid['s.chimlac'] && Math.random() < 0.2) {
+    if (e.type === 'chimbao' && hid['s.chimlac'] && srand() < 0.2) {
       const t = this.findTarget(e.x, e.y, 400);
       if (t) {
         this.effects.push({ type: 'bird', kind: 'lac', x: e.x, y: e.y - 30, target: t, ttl: 0.6, max: 0.6,
@@ -3625,7 +3632,7 @@ class Game {
     const ids = [];
     for (const r of plan) ids.push(this.jarPick(r, ids));
     opts.push({ kind: 'item', id: ids[0], ids, title: 'Hũ Vua Hùng', jar: true });
-    if (Math.random() < 0.5) {
+    if (srand() < 0.5) {
       opts.push({ kind: 'treasure', gold: 200 + this.wave * 15, lives: 3, title: 'Kho lúa · Đắp thành' });
     } else {
       opts.push({ kind: 'levelup', levels: 2, title: 'Hội làng mừng thắng' });
