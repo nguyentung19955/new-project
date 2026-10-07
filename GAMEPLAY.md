@@ -1517,3 +1517,8 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 162 — Sửa luật Firestore cho chơi nhóm
 - Lần gộp nhánh trước làm khối luật `feedback` (Góp ý) thiếu dấu đóng `}`, khiến toàn bộ luật phòng chơi nhóm (`rooms/…`, `cmds`, `reqs`, `snap`, `chat`) bị lồng nhầm vào trong `feedback/{id}` → không tạo được phòng. Đã sửa; thêm `tests/coop/test-rules.js` kiểm tra ngoặc cân bằng và các khối `match` nằm đúng cấp (chạy trong `node tests/coop/run-all.js`).
 - **Cần làm:** dán lại `firestore.rules` vào Firebase console → Firestore → Rules → Publish (hoặc để workflow tự đăng khi khoá GitHub đủ quyền Firebase Rules Admin + Service Usage Consumer).
+
+## Phiên bản 163 — Báo lỗi rõ khi tạo / vào phòng chơi nhóm
+- Tạo phòng / vào phòng bị lỗi giờ báo đúng nguyên nhân kèm mã lỗi ngắn và nút **↻ Thử lại**: máy chủ từ chối (`permission-denied` — luật chơi nhóm chưa đăng lên Firebase), mất mạng (`unavailable`), phiên đăng nhập hết hạn (`unauthenticated`), sai mã (`not-found`). Chi tiết ghi vào console. Trước đây lỗi luật bị nuốt sau 5 lần thử mã và chỉ báo "Không tạo được phòng, thử lại"; nay chỉ thử mã khác 1 lần.
+- Thông báo chơi nhóm (đồng đội rời / vào lại, đồng bộ lại) được giữ 20 dòng gần nhất (`ui.coopLog`); test chơi nhóm đọc từ đó thay vì từ toast (toast chỉ giữ 2 dòng nên dễ bị đẩy mất).
+- Test mới: luật chưa đăng → báo rõ + Thử lại; mất mạng khi tạo phòng → báo mất mạng.

@@ -1744,3 +1744,4 @@ svg.icn { overflow: visible; }
 .sl-warn .icn { width: 22px; height: 22px; }
 .bk-stat { flex-wrap: wrap; gap: 2px 12px; }
 .bk-stat .icn { width: 14px; height: 14px; vertical-align: -3px; margin-right: 2px; }
+.co-retry { height: 26px; padding: 0 10px; margin-left: 6px; font-size: 12.5px; }
