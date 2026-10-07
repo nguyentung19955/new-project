@@ -714,8 +714,8 @@ class UI {
         <span class="tg">${ctr.has(t) ? '<i class="c">khắc chế</i>' : ''}${ing.has(t) ? '<i class="h">hợp thể</i>' : ''}</span>${on ? `<span class="no">${sel.indexOf(t) + 1}</span>` : ''}</button>`; };
     const els = EL_ORDER.map((el) => `<div class="dk-el"><div class="dk-eh" style="color:${ELEMENTS[el].color}">${elIcon(el, 13)} ${ELEMENTS[el].name}</div>${BASIC_HEROES.filter((t) => HEROES[t].el === el).map(card).join('')}</div>`).join('');
     return `<div class="dk-modal"><div class="dk-box metal">
-      <div class="dk-head"><b class="ttl">Chọn đội triệu hồi</b><span class="chip ${sel.length === DECK_SIZE ? 'ok' : 'dark'}">${sel.length} / ${DECK_SIZE}</span>
-        <small><i class="c">khắc chế</i> quái bản đồ này · <i class="h">hợp thể</i> ra tướng Tím / Vàng</small><div class="sp"></div>
+      <div class="dk-head"><b class="ttl">Chọn đội ưu tiên</b><span class="chip ${sel.length === DECK_SIZE ? 'ok' : 'dark'}">${sel.length} / ${DECK_SIZE}</span>
+        <small>Chợ ra mọi tướng Thường, đội này ra nhiều gấp đôi · <i class="c">khắc chế</i> quái bản đồ này · <i class="h">hợp thể</i> ra tướng Tím / Vàng</small><div class="sp"></div>
         <button class="btn metal" data-act="deck-suggest">Gợi ý</button><button class="btn btn-gold" data-act="deck-done" ${sel.length === DECK_SIZE ? '' : 'disabled'}>Xong</button></div>
       <div class="dk-grid">${els}</div></div></div>`;
   }
@@ -744,7 +744,7 @@ class UI {
           <div class="prep-heroes">${LEGEND_HEROES.filter((t) => (this.save.owned || []).includes(t)).map((t) => `<span class="prep-hero metal ${HEROES[t].legend}"><img src="${heroImgUrl(t, 'head')}" alt=""><b>${HEROES[t].name}</b></span>`).join('')
             || '<div class="note">Chưa có tướng Tím / Vàng nào.</div>'}</div></div>
         <div class="prep-col cp-side prep-counter">${this.counterHtml(g.level)}
-          <div class="hint-h">ĐỘI TRIỆU HỒI · ${DECK_SIZE} TƯỚNG</div>
+          <div class="hint-h">ĐỘI ƯU TIÊN · ${DECK_SIZE} TƯỚNG</div>
           <div class="ch-row deck-row">${g.summonList().map((t) => `<span class="ch-av" style="--c:${ELEMENTS[HEROES[t].el].color}" title="${esc(HEROES[t].name)}"><img src="${heroImgUrl(t, 'head')}" alt=""><small>${esc(HEROES[t].name.split(' ').slice(-2).join(' '))}</small></span>`).join('')}</div>
           <button class="btn btn-gold" style="height:36px;font-size:14px" data-act="deck-open">✎ Chọn đội</button></div>
       </div>
@@ -792,7 +792,7 @@ class UI {
     $('#rest').innerHTML = `<div class="dk-modal"><div class="dk-box metal rest-box">
       <div class="dk-head"><b class="ttl">⛺ Nghỉ chân · sau đợt ${g.rest.wave}</b><span class="chip ${added ? 'ok' : 'dark'}">Đổi ${added} / ${REST_SWAPS}</span><span class="chip dark">Đội ${sel.length} / ${DECK_SIZE}</span>
         ${coop ? `<span class="chip run" id="rest-left">còn ${Math.max(0, Math.ceil(REST_COOP_T - (g.rest.t || 0)))} giây</span>` : ''}
-        <small>Đã hạ boss! Bỏ tối đa ${REST_SWAPS} tướng khỏi đội rồi chọn tướng mới thay vào — miễn phí. Tướng trên sân giữ nguyên, chợ tướng làm mới theo đội mới.${coop ? ' Chơi nhóm: mỗi người đổi đội của mình; trận chạy tiếp khi cả hai xong hoặc hết giờ.' : ''}</small><div class="sp"></div>
+        <small>Đã hạ boss! Bỏ tối đa ${REST_SWAPS} tướng khỏi đội rồi chọn tướng mới thay vào — miễn phí. Tướng trên sân giữ nguyên, chợ tướng làm mới và ưu tiên đội mới.${coop ? ' Chơi nhóm: mỗi người đổi đội của mình; trận chạy tiếp khi cả hai xong hoặc hết giờ.' : ''}</small><div class="sp"></div>
         <button class="btn metal" data-act="rest-skip">Bỏ qua</button><button class="btn btn-gold" data-act="rest-done" ${sel.length === DECK_SIZE ? '' : 'disabled'}>Xong</button></div>
       <div class="dk-grid">${els}</div></div></div>`;
     $('#rest').hidden = false;
@@ -1290,7 +1290,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 184</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 181</div>
       </div></div>`;
   }
 
@@ -2610,7 +2610,7 @@ class UI {
               <div class="kvt inset" style="font-size:12px">${d.legend
                 ? `<div><span>Ghép từ</span><b style="text-align:right">${ascendSources(t).map((x) => HEROES[x].name).join(' + ')}</b></div>
                   <div><span>Cần</span><b style="color:#FFD66B">${d.legend === 'epic' ? `2 tướng ${'★'.repeat(COSTS.ascendTier)}` : `Thần tinh ${'★'.repeat(COSTS.ascendTier2)} · kỹ năng tối đa`} · ${COSTS.ascend[d.legend]} vàng</b></div>`
-                : `<div><span>Có từ</span><b style="color:#FFD66B">Triệu hồi ★ (đội 6 tướng)</b></div>`}
+                : `<div><span>Có từ</span><b style="color:#FFD66B">Chợ tướng ★</b></div>`}
                 <div><span>Tầm · Tốc đánh</span><b>${d.base.range} · ${d.base.cooldown}s</b></div></div>
               ${d.trait ? `<div class="tipbox inset" style="font-size:12px">★ <b>${d.trait.name}:</b> ${esc(d.trait.desc)}</div>` : ''}
               ${secretLine(this.game, 'h.' + t)}

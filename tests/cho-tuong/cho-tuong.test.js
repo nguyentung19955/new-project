@@ -24,8 +24,8 @@ async function main() {
   ok(await page.locator('#deck .mk-card').count() === 4, 'thanh đáy có 4 thẻ tướng');
   ok(await page.locator('#deck [data-act=mk-reroll]').count() === 1 && await page.locator('#deck [data-act=legend-open]').count() === 1, 'có nút ↻ và Hợp thể');
   ok(await page.locator('[data-act=summon-rand]').count() === 0, 'không còn nút Triệu hồi cũ');
-  const inDeck = await page.evaluate(() => game.market.types.every((t) => game.summonList().includes(t)));
-  ok(inDeck, 'thẻ rút từ đội 6 tướng');
+  const inDeck = await page.evaluate(() => game.market.types.every((t) => BASIC_HEROES.includes(t)));
+  ok(inDeck, 'thẻ rút từ tướng Thường (v180: mọi tướng Thường, đội 6 tướng được ưu tiên)');
   await page.screenshot({ path: path.join(SHOT, 'thanh-day-844x390.png'), clip: { x: 0, y: 390 - 110, width: 844, height: 110 } });
 
   // chạm mua
@@ -134,8 +134,8 @@ async function main() {
   await page.click('[data-act=deck-done]');
   await page.click('[data-act=prep-go]');
   await page.waitForTimeout(200);
-  const dk = await page.evaluate(() => ({ e: game.endless, deck: game.deck, m: game.market.types.every((t) => game.deck.includes(t)) }));
-  ok(dk.e && dk.deck.includes(pick.in) && !dk.deck.includes(pick.out) && dk.m, 'Vô tận: trận dùng đội vừa chọn, chợ theo đội');
+  const dk = await page.evaluate(() => ({ e: game.endless, deck: game.deck, m: game.marketNeeds().w[game.deck[0]] >= MARKET_W.doi }));
+  ok(dk.e && dk.deck.includes(pick.in) && !dk.deck.includes(pick.out) && dk.m, 'Vô tận: trận dùng đội vừa chọn, chợ ưu tiên đội');
 
   // giả lập vừa hạ boss đợt 10
   await page.evaluate(() => { game.running = true; game.wave = 10; game.restWave = 9; game.waveActive = true; game.spawnQueue = []; game.enemies = []; game.waveComplete(); });
@@ -162,10 +162,10 @@ async function main() {
   for (const t of outs.slice(0, 2)) await page.click(`#rest [data-act=rest-tog][data-id="${t}"]`);
   for (const t of ins.slice(0, 2)) await page.click(`#rest [data-act=rest-tog][data-id="${t}"]`);
   await page.click('#rest [data-act=rest-done]'); await page.waitForTimeout(150);
-  const after = await page.evaluate(() => ({ deck: game.deck, rest: game.rest, open: !document.querySelector('#rest').hidden, m: game.market.types.every((t) => game.deck.includes(t)), heroes: game.heroes.filter(Boolean).length }));
+  const after = await page.evaluate(() => ({ deck: game.deck, rest: game.rest, open: !document.querySelector('#rest').hidden, m: game.market.types.every((t) => BASIC_HEROES.includes(t)) && game.market.rr === 0 && game.marketNeeds().w[game.deck[5]] >= MARKET_W.doi, heroes: game.heroes.filter(Boolean).length }));
   const changed = after.deck.filter((t) => !before.deck.includes(t));
   ok(changed.length === 2 && ins.slice(0, 2).every((t) => after.deck.includes(t)), 'Nghỉ chân: đổi đúng 2 tướng');
-  ok(!after.rest && !after.open && after.m, 'đóng bảng, chợ làm mới theo đội mới');
+  ok(!after.rest && !after.open && after.m, 'đóng bảng, chợ làm mới, ưu tiên đội mới');
   ok(after.heroes === before.heroes, 'tướng trên sân giữ nguyên');
   // lưu lại & tiếp tục lần nữa: đội mới, không còn nghỉ chân
   await page.evaluate(() => ui.saveRun());

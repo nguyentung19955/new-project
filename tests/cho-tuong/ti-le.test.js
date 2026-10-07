@@ -12,10 +12,11 @@ async function main() {
   const { out, errors: e0 } = await runAll(1000);
   for (const k in out) console.log(`  · ${CASES[k].name}: ${JSON.stringify(out[k])}`);
   const A = out['dau-tran'], B = out['giua-tran'], C = out['thieu-hop-the'];
-  ok(A.board >= 60 && A.board <= 85, `đầu trận: ra tướng đang có ${A.board}% (trước ~52%, không quá dễ ≤ 85%)`);
+  ok(A.board >= 50 && A.board <= 80, `đầu trận: ra tướng đang có ${A.board}% (v179 ~51%, không quá dễ ≤ 80%)`);
+  ok(A.kinds === 20 && A.outDeck >= 30, `chợ ra mọi tướng Thường: ${A.kinds} loại, ${A.outDeck}% thẻ ngoài đội ưu tiên`);
   ok(A.maxDry <= 2, `đầu trận: bảo hiểm — trượt liền tối đa ${A.maxDry} ≤ 2 lần`);
-  ok(B.board >= 99, `giữa trận: ra tướng đang có ${B.board}%`);
-  ok(C.need >= 65 && C.need <= 85, `thiếu nguyên liệu hợp thể: ra đúng nguyên liệu ${C.need}% (trước ~52%)`);
+  ok(B.board >= 93, `giữa trận: ra tướng đang có ${B.board}% (dù chợ 20 loại)`);
+  ok(C.need >= 60 && C.need <= 85, `thiếu nguyên liệu hợp thể: ra đúng nguyên liệu ${C.need}% (v179 ~50%)`);
   ok(C.maxNeedDry <= 2, `thiếu nguyên liệu: bảo hiểm — trượt liền tối đa ${C.maxNeedDry} ≤ 2 lần`);
   ok(e0.length === 0, 'không lỗi trang khi mô phỏng ' + e0.join(' | '));
 
@@ -39,10 +40,11 @@ async function main() {
     game.owned = new Set();
     const nd2 = game.marketNeeds();
     game.owned = null;
-    return { capped, hop, refill, hint: game.marketHint('thansuong', nd), hint2: nd2.hop.has('thansuong'), w: nd.w };
+    return { capped, hop, refill, hint: game.marketHint('thansuong', nd), hint2: nd2.hop.has('thansuong'), w: nd.w, hopOut: nd.hop.has('chodo') };
   });
   ok(r.capped === 0 && r.refill === 0, 'tướng đã đủ bản sao (★★★) không ra nữa — cả đổi chợ lẫn thẻ bù');
-  ok(r.hint === 'hop' && r.w.thansuong === 3 && r.w.nguphu === 1.5, `nguyên liệu còn thiếu ×3, tướng đang ghép dở ×1.5 (${JSON.stringify(r.w)})`);
+  ok(r.hint === 'hop' && r.w.thansuong === 12 && r.w.nguphu === 5 && r.w.xathu === 2 && r.w.chodo === 1, `trọng số: nguyên liệu thiếu ×12, đang ghép ×5, đội ưu tiên ×2, ngoài đội ×1`);
+  ok(!r.hopOut, 'nguyên liệu ngoài đội và chưa có trên sân (Chèo Đò → Lý Ngư) không được ưu tiên hợp thể');
   ok(!r.hint2, 'chưa sở hữu tướng đích thì không ưu tiên nguyên liệu');
 
   // 🔒 khoá chợ: bấm nút → đầu đợt sau giữ nguyên 4 thẻ, rồi tự mở khoá
