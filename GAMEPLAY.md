@@ -1544,3 +1544,9 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 164 — Gộp rà chủ đề cũ + bảng chỉ số gọn + hiệu ứng vẽ tay
 - Gộp: màn thắng/thua theo chương (v163, rà chủ đề cũ + 24 prompt khung/nút/tranh nhóm 18–21), bảng chỉ số tướng thu nhỏ, chuẩn animation + prompt hiệu ứng (game dùng ảnh assets/fx, assets/vfx khi có; đạn quả dưa dùng srand để chơi nhóm vẫn đồng bộ).
+
+## Phiên bản 167 — Bỏ chữ thừa / gợi ý không cần thiết
+- Rà toàn bộ giao diện, xoá câu giải thích kỹ thuật ("Lưu đám mây", "Tiến trình lưu trên trình duyệt / máy và đám mây", "(chỉ máy này)", "đồng bộ lúc …", toast "Đã tải tiến trình từ đám mây", "Thả tay để đóng", "chạm chân dung để xem tướng"…) và rút gọn chú thích dài ở Cài đặt, Chuẩn bị xuất quân, chọn đội, Túi đồ, Kho báu, chợ Hũ báu, kết quả trận.
+- Cài đặt: dòng cuối chỉ còn "Thần Thoại Việt · Phiên bản N"; hàng tài khoản đổi tên **Tài khoản**, chỉ hiện tên (Khách / tên Google / "Chưa đăng nhập").
+- Hướng dẫn trong trận (khung "Chạm 1 thẻ tướng…", "Bấm ▶ (góc trên phải)…") và toast "Mẹo:" chỉ hiện cho người mới (chưa qua ải 1).
+- Danh sách đầy đủ (chỗ, chữ, quyết định): `docs/CHU-THUA.md`; ảnh trước/sau: `docs/chu-thua-truoc-sau.png`.

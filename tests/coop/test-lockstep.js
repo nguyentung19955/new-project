@@ -154,9 +154,11 @@ async function run(browser) {
   // ---- mất mạng giữa chừng
   if (!a.over && !a.won) {
     await stopBot(B);
+    // ghi lại mọi thông báo: hộp toast chỉ giữ 2 cái, bot chủ phòng có thể đẩy thông báo mất kết nối ra trước khi kịp đọc
+    await A.evaluate(() => { window.__tl = []; const o = ui.toast.bind(ui); ui.toast = (m, c) => { window.__tl.push(m); return o(m, c); }; });
     relay.setOffline('khach');
     await waitFor(async () => (await state(A)).alone === 0, 20000, 'chủ phòng thấy đồng đội rời');
-    const tA = await A.evaluate(() => [...document.querySelectorAll('#toasts .toast')].map((e) => e.textContent).join(' | '));
+    const tA = await A.evaluate(() => window.__tl.join(' | '));
     check(/mất kết nối/i.test(tA) || /rời/i.test(tA), 'chủ phòng thấy thông báo mất kết nối');
     const solo = await A.evaluate(() => { const s = game.co.own.findIndex((o, i) => o === 1); return game.co.canAct(COOP.me, s); });
     check(solo, 'chơi tiếp một mình, điều khiển được cả nửa của đồng đội');
