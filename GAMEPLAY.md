@@ -2165,3 +2165,6 @@ Test: cập nhật `cho-tuong` (màn Chuẩn bị không còn chọn đội, sau
 - **Nút Back trình duyệt / vuốt back trên điện thoại:** khi có màn phụ đang mở, game gài một mục lịch sử; bấm Back thì đóng màn phụ đó thay vì rời trang (không có gì để đóng thì Back hoạt động như cũ).
 - **Lỗi kẹt thứ hai tìm thấy khi rà:** 40 tướng (Đốt Nương, Thổ Rèn, Kỳ Lân, Tản Viên…) chưa có bí ẩn riêng `SECRETS['h.<tướng>']` → mở **Cây kỹ năng** của họ là lỗi JS giữa chừng, #screen hiện trống không có nút ✕ chặn cả màn. Sửa: thiếu bí ẩn thì bỏ ô bí ẩn; và `openScreen` dựng bảng lỗi thì tự đóng #screen + báo "Không mở được bảng này" thay vì để màn trống.
 - Test mới `tests/thoat-man-phu`: mở / đóng Thần Khí (cả sau khi nâng cấp), Anh Hùng, Ấn Phù, Cây kỹ năng, Tiến hoá, Bách khoa, Túi đồ, Hợp thể, menu ≡, Cây kỹ năng / Tiến hoá của tướng không có bí ẩn, bằng nút / Esc / Back ở 1920×934, 844×390, 667×375, dọc 390×844; sau khi đóng không còn lớp phủ, giữa sân chạm tới được, game chạy tiếp.
+
+## Phiên bản 201 — quy tắc hình mới phải có bản pixel
+- CLAUDE.md: thêm quy tắc "Đang chuyển sang pixel art: hình mới phải có bản pixel" — session thêm/đổi hình (kể cả vẽ bằng code) vẽ luôn bản pixel theo docs/pixel/QUY-CHUAN.md hoặc ghi vào docs/pixel/DANH-SACH.md mục "Bổ sung"; giữ đường vẽ dự phòng.
