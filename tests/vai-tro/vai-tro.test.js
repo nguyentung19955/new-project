@@ -52,7 +52,7 @@ async function main() {
   ok(syn.t4 === 2, '4 tướng Sát thương khác loại: bậc 2');
   ok(syn.regen === 1.5, 'Hỗ trợ 2: toàn quân +1,5 hồi máu/giây');
   ok(syn.off === 0, 'tắt ROLE_SYN thì không cộng hưởng');
-  ok(await page.locator('#deck .mk-card .rl svg.rli').count() === 4, 'thẻ chợ có icon vai trò');
+  ok(await page.locator('#deck .mk-card .rl svg.rli').count() === 6, 'thẻ chợ có icon vai trò (6 thẻ)');
   await browser.close();
 
   // ---------- ảnh 3 cỡ màn hình
@@ -70,7 +70,7 @@ async function main() {
     const ic = await page.evaluate(() => { const i = document.querySelector('#deck .mk-card .rl svg'); const r = i.getBoundingClientRect(); return { w: r.width, solid: i.classList.contains('solid') }; });
     ok(ic.solid && ic.w >= 13, `${w}x${h}: icon vai trò thẻ chợ dạng đặc, rộng ${ic.w.toFixed(1)}px`);
     // không chồng lên tên tướng
-    const clash = await page.evaluate(() => [...document.querySelectorAll('#deck .mk-card')].some((c) => { const i = c.querySelector('.rl').getBoundingClientRect(), n = c.querySelector('.nm'); const rg = document.createRange(); rg.selectNodeContents(n); const t = rg.getBoundingClientRect(); return i.bottom > t.top + 1 && i.right > t.left + 1; }));
+    const clash = await page.evaluate(() => [...document.querySelectorAll('#deck .mk-card')].some((c) => { const i = c.querySelector('.rl').getBoundingClientRect(), n = c.querySelector('.nm'); const rg = document.createRange(); rg.selectNodeContents(n); const t = rg.getBoundingClientRect(); return i.bottom > t.top + 1 && i.right > t.left + 1 && i.left < t.right - 1; }));
     ok(!clash, `${w}x${h}: icon vai trò không đè tên tướng`);
     // chọn tướng + giữ chân dung → bảng chỉ số
     await page.evaluate(() => { ui.sel = game.heroes.findIndex((x) => x && x.type === 'xathu'); ui.statsOpen = true; ui.sig.deck = null; });
