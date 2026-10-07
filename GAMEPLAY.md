@@ -113,7 +113,7 @@ Sau khi mở, sức mạnh kỹ năng tăng theo **2 cách**:
 
 1. **Điểm kỹ năng** (mỗi cấp tướng cho 1 điểm, mà cấp tướng mua bằng vàng): nâng trong **Cây kỹ năng**.
    - Q/W/E nâng tối đa cấp 4 (yêu cầu tướng cấp 3/5/7).
-   - R nâng tối đa cấp 3 (yêu cầu tướng cấp 6/11/16).
+   - R nâng tối đa cấp 3 (yêu cầu tướng cấp 6/9/12 — trước claude/r-cap-12 là 6/11/16).
    - Mỗi cấp kỹ năng thêm +25% sức mạnh.
 2. **Trí tuệ** tăng sức mạnh kỹ năng.
 

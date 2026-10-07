@@ -2,17 +2,23 @@
 //   cu = v136: 2 tướng Thường ★★, không cần kỹ năng · kn2 = ★★ + kỹ năng tối đa · v180 = ★★★ + kỹ năng tối đa · v181 = v180 + ★★★ lên cấp ½ giá.
 // Bot tham lam giống nhau ở mọi luật (đội 6 tướng = 3 cặp hợp thể Tím), chỉ đổi điều kiện hợp thể.
 // Chạy: node tests/hop-the/mo-phong.js [số ván mỗi ải=6] [luật,… = cu,kn2,v180,v181,r12]   (không thuộc bộ test, chỉ để đo)
+// claude/r-cap-12: luật `nay` = game hiện tại không đổi gì · `rA-B-C` = game hiện tại với R_REQ = [0, A, B, C] (vd r6-11-16, r5-9-12)
+// Thêm `het` làm tham số thứ 3 → chơi tiếp đến hết ải (hoặc thua) để đo độ khó: mạng còn lại / đợt thua.
 const { open, enter } = require('../cho-tuong/helpers');
 const N = +process.argv[2] || 6, LEVELS = [0, 2, 4];
 
+const FULL = process.argv[4] === 'het';
 async function run(level, rule, seed) {
   const { browser, page } = await open(844, 390, {});
   await enter(page, level);
-  const r = await page.evaluate(([rule, seed]) => {
+  const r = await page.evaluate(([rule, seed, full]) => {
     // phương án (đều trên luật v180 ★★★ + KN): v180 = bản gốc (★★★ lên cấp nguyên giá) · v181 = ★★★ lên cấp ½ giá (đang dùng) · r12 = R3 ở cấp 12
     if (rule === 'cu' || rule === 'kn2') COSTS.ascendTier = 2;
     if (rule !== 'v181') COSTS.lvDisc3 = 1;
     if (rule === 'r12') R_REQ.splice(0, 4, 0, 6, 9, 12);
+    const rq = /^r(\d+)-(\d+)-(\d+)$/.exec(rule);
+    if (rq) { COSTS.lvDisc3 = 0.5; R_REQ.splice(0, 4, 0, +rq[1], +rq[2], +rq[3]); }
+    if (rule === 'nay') COSTS.lvDisc3 = 0.5;
     if (rule === 'cu') { const orig = game.fusionReady.bind(game); game.fusionReady = (h) => ((h.tier || 0) >= game.ascendNeed(h) && !h.from ? true : orig(h)); }
     // claude/bo-chon-doi: không còn đội ưu tiên — chợ rút từ mọi tướng Thường
     game.market = null;
@@ -45,12 +51,12 @@ async function run(level, rule, seed) {
       const tgt = pool.filter((h) => h.level < 16 && g.skillGap(h) > 0).sort((a, b) => a.level - b.level)[0];
       if (tgt && g.gold >= g.levelCost(tgt)) g.levelUp(tgt);
     };
-    while (!g.over && !first && g.time < 1800) {
+    while (!g.over && !g.won && (full || !first) && g.time < (full ? 4000 : 1800)) {
       g.update(DT); t += DT;
       if (t >= 0.5) { t = 0; for (let k = 0; k < 6; k++) think(); }
     }
-    return { first, over: g.over, win: g.won, wave: g.wave, time: Math.round(g.time) };
-  }, [rule, seed]);
+    return { first, over: g.over, win: g.won, wave: g.wave, lives: g.lives, time: Math.round(g.time) };
+  }, [rule, seed, FULL]);
   await browser.close();
   return r;
 }
@@ -62,6 +68,7 @@ async function run(level, rule, seed) {
     for (let k = 0; k < N; k++) rs.push(await run(lv, rule, 1234 + k * 977));
     const got = rs.filter((x) => x.first);
     const avg = (f) => (got.length ? (got.reduce((a, x) => a + f(x), 0) / got.length).toFixed(1) : '-');
+    if (FULL) console.log(`   hết ải: thắng ${rs.filter((x) => x.win).length}/${N} · mạng còn TB ${(rs.reduce((a, x) => a + Math.max(0, x.lives), 0) / N).toFixed(1)} · ${rs.map((x) => (x.win ? `thắng(${x.lives}♥)` : x.over ? `thua đ${x.wave}` : `đ${x.wave}`)).join(' ')}`);
     out[`${lv}/${rule}`] = { coTim: `${got.length}/${N}`, giay: avg((x) => x.first.t), dot: avg((x) => x.first.wave), thua: rs.filter((x) => !x.first && x.over).length };
     console.log(`ải ${lv + 1} · luật ${{ cu: 'v136 ★★', kn2: '★★+KN (nguyên giá)', v180: 'v180 ★★★+KN', v181: 'v181 ★★★+KN, ★★★ lên cấp ½ giá', r12: '★★★+KN, R3 cấp 12' }[rule] || rule}: có Tím ${got.length}/${N} ván · TB ${avg((x) => x.first.t)} s · đợt ${avg((x) => x.first.wave)} · ${rs.map((x) => (x.first ? `đ${x.first.wave}` : x.over ? 'thua/hết' : '—')).join(' ')}`);
   }
