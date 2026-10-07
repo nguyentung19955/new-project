@@ -1118,7 +1118,7 @@ button:disabled { cursor: default; }
 /* v37: Hũ Vua Hùng nhiều món */
 /* claude/can-bang-phan-thuong: nhãn kiểu + con số của từng ô thưởng */
 .sl-tag.sl-kind { background: #0D0B08E6; border: 1px solid; }
-.sl-card.misc .sl-desc { height: auto; min-height: 50px; }
+.sl-card.misc .sl-desc, .sl-card.jar .sl-desc { height: auto; min-height: 50px; }
 .sl-desc .rw-big { font-size: 16px; font-weight: 800; white-space: nowrap; }
 .sl-desc .rw-g { color: #FFD66B; white-space: nowrap; }
 .sl-desc small { color: #A89A80; }
