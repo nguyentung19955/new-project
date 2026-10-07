@@ -27,7 +27,7 @@ async function open(w, h, fake) {
   page.on('pageerror', (e) => errors.push(String(e)));
   await page.route('**/firebase-config.js*', (r) => r.fulfill({ contentType: 'application/javascript', body: "const FIREBASE_CONFIG={apiKey:''};" }));
   if (fake) await page.route('**/assets/ui/ic-*.png', (r) => r.fulfill({ contentType: 'image/png', body: fs.readFileSync(FAKE) }));
-  if (fake) await page.addInitScript(() => { window.ASSET_ALL = true; });   // v187: ảnh giả không có trong js/asset-list.js
+  if (fake) await page.addInitScript(() => { window.ASSET_ALL = true; });   // v189: ảnh giả không có trong js/asset-list.js
   await page.addInitScript(() => { localStorage.setItem('nuicao.v1', JSON.stringify({ unlocked: 17, storySeen: true, settings: { skipStory: true } })); });
   await page.goto('file://' + path.join(ROOT, 'index.html'));
   await page.waitForTimeout(800);

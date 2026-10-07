@@ -83,7 +83,7 @@ const ready = (img) => img && img.complete && img.naturalWidth > 0;
 const ASSET_ROOT = 'assets/';
 // bản thử gói ảnh vào window.ASSET_DATA (đường dẫn → data URL) để khỏi vượt giới hạn số file; bản thường để trống
 const assetSrc = (path) => (window.ASSET_DATA && window.ASSET_DATA[path]) || ASSET_ROOT + path;
-// v187 (L14): js/asset-list.js (tools/build-asset-list.js) liệt kê ảnh có thật → ảnh tuỳ chọn chưa có thì coi như thiếu ngay,
+// v189 (L14): js/asset-list.js (tools/build-asset-list.js) liệt kê ảnh có thật → ảnh tuỳ chọn chưa có thì coi như thiếu ngay,
 // không gửi request rồi chờ 404. Không có danh sách (bản cũ) thì thử tải như trước.
 const ASSET_SET = window.ASSET_LIST ? new Set(window.ASSET_LIST) : null;
 // (window.ASSET_ALL = true: bỏ qua danh sách — test giả ảnh chưa có bằng page.route)
@@ -124,7 +124,7 @@ function shrinkForCanvas(path, img) {
     return c;
   } catch (e) { return null; }
 }
-// v187 (L15): ảnh quái thu nhỏ sẵn theo cỡ thật trên màn (×1,5 cho nét khi xoay/co giãn), làm tròn bậc 16 px.
+// v189 (L15): ảnh quái thu nhỏ sẵn theo cỡ thật trên màn (×1,5 cho nét khi xoay/co giãn), làm tròn bậc 16 px.
 // Trước đây mỗi khung co ảnh 320 px xuống ~50 px cho từng con (100+ quái lúc đông) — tốn nhất trong khung hình.
 const fitCache = new WeakMap();
 function fitSprite(img, devW) {

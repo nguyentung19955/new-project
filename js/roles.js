@@ -88,10 +88,12 @@ function roleSynStats(t, tiers) {
   return s;
 }
 // icon vai trò (SVG nội tuyến, đổi màu theo vai trò)
-function roleIcon(r, size = 14) {
+// solid = nền đặc màu vai trò + nét tối, viền sáng (dễ thấy ở cỡ nhỏ: thẻ chợ)
+function roleIcon(r, size = 14, solid = false) {
   const d = ROLES[r];
   if (!d) return '';
-  return `<svg class="rli" viewBox="0 0 24 24" width="${size}" height="${size}" style="width:${size}px;height:${size}px" aria-label="${d.name}"><circle cx="12" cy="12" r="11" fill="#140F0A" stroke="${d.color}" stroke-width="1.6"/><g fill="none" stroke="${d.color}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${d.path}</g></svg>`;
+  const bg = solid ? d.color : '#140F0A', fg = solid ? '#1A0F06' : d.color, ring = solid ? '#FFF6DC' : d.color;
+  return `<svg class="rli${solid ? ' solid' : ''}" viewBox="0 0 24 24" width="${size}" height="${size}" style="width:${size}px;height:${size}px" aria-label="${d.name}"><circle cx="12" cy="12" r="11" fill="${bg}" stroke="${ring}" stroke-width="${solid ? 1.4 : 1.6}"/><g fill="none" stroke="${fg}" stroke-width="${solid ? 2.3 : 1.9}" stroke-linecap="round" stroke-linejoin="round">${d.path}</g></svg>`;
 }
 // nhãn vai trò: icon + tên (chính), phụ nhạt hơn
 function roleChip(t, o = {}) {

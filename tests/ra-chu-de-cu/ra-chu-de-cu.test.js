@@ -4,7 +4,7 @@
 const path = require('path');
 const fs = require('fs');
 const { open, enter, ok, ROOT } = require('../cho-tuong/helpers');
-global.ASSET_ALL_TEST = true;   // v187: test giả ảnh chưa có → bỏ qua danh sách js/asset-list.js
+global.ASSET_ALL_TEST = true;   // v189: test giả ảnh chưa có → bỏ qua danh sách js/asset-list.js
 const SHOTS = path.join(__dirname, 'shots');
 fs.mkdirSync(SHOTS, { recursive: true });
 
@@ -92,7 +92,7 @@ async function result(page, lv, win, endless) {
     const errors = []; page.on('pageerror', (e) => errors.push(String(e)));
     await page.route('**/firebase-config.js*', (r) => r.fulfill({ contentType: 'application/javascript', body: "const FIREBASE_CONFIG={apiKey:''};" }));
     await page.route(/assets\/(ui\/(khung-bang|nut-|thanh-mau|khung-thanh-day|the-cho|ai-|dai-thong-bao)[\w-]*|scenes\/(thua|thang|chuong)-\w+|scenes\/nen-man-phu)\.png/, (r) => r.fulfill({ contentType: 'image/png', body: png }));
-    await page.addInitScript(() => { window.ASSET_ALL = true; });   // v187: ảnh giả không có trong js/asset-list.js
+    await page.addInitScript(() => { window.ASSET_ALL = true; });   // v189: ảnh giả không có trong js/asset-list.js
     await page.addInitScript(() => localStorage.setItem('nuicao.v1', JSON.stringify({ unlocked: 17, storySeen: true, settings: { skipStory: true } })));
     await page.goto('file://' + path.join(ROOT, 'index.html'));
     await page.waitForTimeout(1200);

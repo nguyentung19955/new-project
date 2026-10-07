@@ -7,7 +7,7 @@ const fs = require('fs');
 const os = require('os');
 const { execFileSync } = require('child_process');
 const { open, enter, ok, ROOT } = require('../cho-tuong/helpers');
-global.ASSET_ALL_TEST = true;   // v187: test giả ảnh chưa có → bỏ qua danh sách js/asset-list.js
+global.ASSET_ALL_TEST = true;   // v189: test giả ảnh chưa có → bỏ qua danh sách js/asset-list.js
 
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'hieuunghe-'));
 execFileSync('python3', ['-c', `

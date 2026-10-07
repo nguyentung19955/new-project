@@ -7,7 +7,7 @@ const path = require('path');
 const fs = require('fs');
 const { execFileSync } = require('child_process');
 const { open, enter, ok, ROOT } = require('../cho-tuong/helpers');
-global.ASSET_ALL_TEST = true;   // v187: test giả ảnh chưa có → bỏ qua danh sách js/asset-list.js
+global.ASSET_ALL_TEST = true;   // v189: test giả ảnh chưa có → bỏ qua danh sách js/asset-list.js
 
 const TILES = path.join(ROOT, 'assets/tiles');
 const FAKE = ['de-tuong-thuong.png', 'de-tuong-co.png', 'de-tuong-san-sang.png', 'de-tuong-chon.png', 'de-tuong-ngap.png', 'de-tuong-nui.png', 'duong-nuoc.jpg'];

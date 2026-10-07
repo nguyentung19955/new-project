@@ -59,13 +59,19 @@ async function main() {
   for (const [w, h] of SIZES) {
     ({ browser, page, errors } = await open(w, h, { owned: ['thachsanh', 'giong'] }));
     await enter(page, 0);
-    await page.evaluate(() => { game.running = false; game.gold = 99999; for (const t of ['xathu', 'tre', 'thaylang', 'haisen']) game.placeHero(game.freeSlots()[0], t); game.updateAuras(); ui.sig.deck = null; });
+    await page.evaluate(() => { game.running = false; game.gold = 99999; for (const t of ['xathu', 'tre', 'thaylang', 'haisen']) game.placeHero(game.freeSlots()[0], t); game.updateAuras(); game.market.types = ['lucsi', 'thaymo', 'thansuong', 'thosan']; ui.sig.deck = null; });
     await page.waitForTimeout(250);
     const deck = await page.locator('#deck').boundingBox();
     await page.screenshot({ path: path.join(SHOT, `the-cho-${w}x${h}.png`), clip: { x: 0, y: Math.max(0, deck.y - 6), width: w, height: Math.min(h - Math.max(0, deck.y - 6), deck.height + 12) } });
     // icon vai trò không lòi ra ngoài thẻ
     const inside = await page.evaluate(() => [...document.querySelectorAll('#deck .mk-card')].every((c) => { const r = c.getBoundingClientRect(), i = c.querySelector('.rl').getBoundingClientRect(); return i.left >= r.left && i.right <= r.right && i.top >= r.top && i.bottom <= r.bottom; }));
     ok(inside, `${w}x${h}: icon vai trò nằm gọn trong thẻ chợ`);
+    // icon thẻ chợ: nền đặc màu vai trò, đủ to để thấy (≥13px trên màn)
+    const ic = await page.evaluate(() => { const i = document.querySelector('#deck .mk-card .rl svg'); const r = i.getBoundingClientRect(); return { w: r.width, solid: i.classList.contains('solid') }; });
+    ok(ic.solid && ic.w >= 13, `${w}x${h}: icon vai trò thẻ chợ dạng đặc, rộng ${ic.w.toFixed(1)}px`);
+    // không chồng lên tên tướng
+    const clash = await page.evaluate(() => [...document.querySelectorAll('#deck .mk-card')].some((c) => { const i = c.querySelector('.rl').getBoundingClientRect(), n = c.querySelector('.nm'); const rg = document.createRange(); rg.selectNodeContents(n); const t = rg.getBoundingClientRect(); return i.bottom > t.top + 1 && i.right > t.left + 1; }));
+    ok(!clash, `${w}x${h}: icon vai trò không đè tên tướng`);
     // chọn tướng + giữ chân dung → bảng chỉ số
     await page.evaluate(() => { ui.sel = game.heroes.findIndex((x) => x && x.type === 'xathu'); ui.statsOpen = true; ui.sig.deck = null; });
     await page.waitForTimeout(300);
@@ -86,6 +92,12 @@ async function main() {
     const f = await page.evaluate(() => { const f = [...document.querySelectorAll('#roster .ro-card')].map((c) => c.dataset.type);
       return { n: f.length, ok: f.every((k) => heroRoles(k).includes('dietboss')), all: [...BASIC_HEROES, ...LEGEND_HEROES].filter((k) => heroRoles(k).includes('dietboss')).length }; });
     ok(f.n > 0 && f.ok && f.n === f.all, `${w}x${h}: lọc Diệt boss → ${f.n} tướng`);
+    ok(await page.locator('#roster .rl-f.on span').evaluate((e) => getComputedStyle(e).display !== 'none'), `${w}x${h}: nút lọc đang chọn hiện tên vai trò`);
+    ok(await page.locator('#roster .rl-f[data-r=dietboss][data-tip][title]').count() === 1, `${w}x${h}: nút lọc có tooltip (giữ / rê)`);
+    // tướng đang xem không thuộc bộ lọc → chọn tướng đầu danh sách
+    await page.click('#roster .rl-f[data-r=hotro]'); await page.waitForTimeout(200);
+    const sel = await page.evaluate(() => ({ t: ui.rosterSel, first: document.querySelector('#roster .ro-card').dataset.type, on: (document.querySelector('#roster .ro-card.on') || {}).dataset }));
+    ok(sel.t === sel.first && sel.on && sel.on.type === sel.t, `${w}x${h}: lọc Hỗ trợ → chọn ${sel.t} (đầu danh sách)`);
     await page.screenshot({ path: path.join(SHOT, `anh-hung-loc-${w}x${h}.png`) });
     await page.click('#roster .rl-f[data-r=""]');
     ok(await page.locator('#roster .ro-card').count() === 60, `${w}x${h}: Tất cả → đủ 60 tướng`);

@@ -1,4 +1,4 @@
-// Test v187: sửa các lỗi trong docs/BAO-CAO-TEST.md (báo cáo QA bản 180) — mỗi lỗi một nhóm kiểm tra,
+// Test v189: sửa các lỗi trong docs/BAO-CAO-TEST.md (báo cáo QA bản 180) — mỗi lỗi một nhóm kiểm tra,
 // ở 1920×934, 844×390, 667×375. Ảnh sau khi sửa: tests/sua-loi-tester/shots/ (đã xem bằng mắt khi sửa).
 // Chạy: node tests/sua-loi-tester/sua-loi-tester.test.js
 const path = require('path');
@@ -226,14 +226,24 @@ const bossWave = (page) => page.evaluate(() => { const g = ui.game; g.wave = 9; 
       await p2.evaluate(() => { CLOUD.init = () => {}; CLOUD.status = 'signedout'; CLOUD.authKnown = true; CLOUD.signedIn = false; CLOUD.user = null; ui.showLogin(false); });
       await sleep(300);
       await p2.screenshot({ path: path.join(SHOT, `L11-dang-nhap-${tag}.png`) });
-      const g = await rect(p2, '#login .login-guest');
-      ok(g && g.b <= h && g.t >= 0, 'L11 có nút "Chơi với tư cách khách" thấy trọn trong màn');
-      await p2.click('#login .login-guest'); await sleep(300);
-      ok(await p2.evaluate(() => document.getElementById('login').hidden && !document.getElementById('menu').hidden), 'L11 bấm Chơi khách → vào menu');
+      // người dùng quyết (v189): BẮT BUỘC đăng nhập như v73 — không nút khách, không ✕ khi chưa đăng nhập; nhưng treo/lỗi thì có Thử lại
+      ok(!(await rect(p2, '#login .login-guest')) && !(await p2.evaluate(() => [...document.querySelectorAll('#login button')].some((b) => /khách|ngoại tuyến/i.test(b.textContent)))), 'L11 bắt buộc đăng nhập: không có nút chơi khách / ngoại tuyến');
       await p2.evaluate(() => ui.showLogin(true)); await sleep(200);
-      ok(!!(await rect(p2, '#login .login-x')), 'L11 mở đăng nhập từ menu (chưa đăng nhập): có nút đóng ✕');
-      await p2.click('#login .login-x'); await sleep(200);
-      ok(await p2.evaluate(() => document.getElementById('login').hidden), 'L11 bấm ✕ đóng được');
+      ok(!(await rect(p2, '#login .login-x')), 'L11 chưa đăng nhập: mở từ menu cũng không có ✕');
+      await p2.evaluate(() => { CLOUD.authKnown = false; ui.loginSlow = true; ui.showLogin(false); }); await sleep(200);
+      ok(await p2.evaluate(() => !!document.querySelector('#login [data-act=login-retry]') && /quá lâu/.test(document.getElementById('login').textContent)), 'L11 kiểm tra đăng nhập quá lâu: báo lỗi + nút Thử lại (không kẹt ở "Đang kiểm tra…")');
+      await p2.screenshot({ path: path.join(SHOT, `L11-cham-${tag}.png`) });
+      if (w === 844) {
+        await p2.evaluate(() => { ui.loginSlow = false; CLOUD.authKnown = true; CLOUD.email = () => new Promise(() => {}); ui.showLogin(false); });
+        await sleep(200);
+        await p2.fill('#lg-email', 'a@b.vn'); await p2.fill('#lg-pass', '123456');
+        await p2.click('#login [data-act=login-email]'); await sleep(300);
+        ok(await p2.evaluate(() => /Đang xử lý/.test(document.getElementById('login').textContent)), 'L11 bấm Đăng nhập: hiện "Đang xử lý…"');
+        await sleep(20300);
+        ok(await p2.evaluate(() => /không phản hồi/.test(document.getElementById('login').textContent) && !document.querySelector('#login [data-act=login-email]').disabled), 'L11 máy chủ không trả lời 20 giây: báo lỗi, nút Đăng nhập bấm lại được');
+        await p2.screenshot({ path: path.join(SHOT, `L11-treo-${tag}.png`) });
+      }
+      await p2.evaluate(() => { ui.offline = true; document.getElementById('login').hidden = true; ui.showMenu(); });
       // L12: Firebase bật nhưng mất mạng → nút Thử lại
       await p2.evaluate(() => { CLOUD.ready = false; CLOUD.status = 'error'; CLOUD.error = 'mất mạng'; CLOUD.topScores = async () => null; document.getElementById('btn-ranks').click(); });
       await sleep(600);
