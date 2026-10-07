@@ -1600,3 +1600,7 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 169 — Gộp bộ lọc thả xuống màn Góp ý nhận được
 - Màn Góp ý nhận được: lọc Loại / Trạng thái bằng ô chọn thả xuống (kèm số lượng), nút Bỏ lọc, dòng "Đang hiện x/y".
+
+## Phiên bản 173 — Màn Chọn chế độ phủ kín bề ngang
+- Bỏ luật lưới 3 cột cũ (`.md-body:has(.md-card.coop)`) khiến 2 thẻ chỉ chiếm 2/3 màn trên máy tính. Lưới `.md-body` giờ tự chia đều theo số thẻ (`grid-auto-flow: column; grid-auto-columns: minmax(0,1fr)`): 2 thẻ chia đôi, thêm chế độ thì tự chia tiếp.
+- Màn rất hẹp (≤ 560px bề ngang) xếp thẻ dọc, cuộn được. Ảnh nền thẻ luôn `background-size: cover` (trước bị luật nền của thẻ ghi đè).
