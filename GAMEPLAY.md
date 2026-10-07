@@ -1964,3 +1964,7 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 - Dùng chung dữ liệu với `tools/build-prompts.js` (thẻ nhận diện `tools/hero-id.js`, mô tả quái / boss, `EL`, `RAR`, `chibiBody`, STYLE LOCK / ANATOMY / NEGATIVE — đọc thẳng từ mã nguồn, đổi "cell" → "image").
 - Mỗi prompt: MỘT ảnh tĩnh 1024×1024, toàn thân, nghiêng 3/4 quay PHẢI, A-pose chiến đấu (chân dạng có khe, tay tách thân, vũ khí ở tay trước tách khỏi thân / đầu, không che khớp), nền #FF00FF hoặc trong suốt, nhân vật cao ~85% khung, chân chạm ~92%; thêm NEGATIVE riêng cho dựng xương (nhiều tư thế, lưới, turnaround, nhìn sau / chính diện, khoanh tay, vũ khí sau lưng, áo choàng che tay, hiệu ứng…). Thú / rắn / chim bay / cưỡi thú có tư thế riêng.
 - Mỗi khối ghi `Tên file: <mã>.png` và `Loại vũ khí: kiem | riu | giao | cung | no | gay-phep | tay-khong` (kèm ghi chú: búa tạ, ống thổi, ném dưa…) để `tools/dung-xuong.html` chọn chuyển động. Đầu file có chỉ thị cho AI (Anh + Việt) và checklist cho người dùng.
+
+## Phiên bản 190 — File prompt ảnh tĩnh cho tool dựng xương
+
+- Gộp claude/prompt-dung-xuong: docs/PROMPT-DUNG-XUONG.txt (90 ảnh tĩnh A-pose quay phải).
