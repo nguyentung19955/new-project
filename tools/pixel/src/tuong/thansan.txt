@@ -1,0 +1,309 @@
+# Thần Săn Ba Vì (mã thansan) — pixel 32×32 (tướng Tím · hành Mộc). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:94 ưu tiên + PROMPT-DUNG-XUONG.txt:875 + js/data.js "vuốt hổ đao rừng"): thần săn ~30 cao gầy chân
+# dài, sơn chiến đỏ son ngang mắt, nhìn chăm chú; áo da xanh ô-liu, ÁO CHOÀNG LÔNG nâu, vòng cổ xương, dải tím (Tím); MŨ SỌ HƯƠU
+# GẠC TO phân nhánh; cầm ĐAO RỪNG (GEN-LAI giữ đao). Chiêu (Gọi Hổ Ba Vì / Nanh Hổ): ba vết vuốt hổ xé gió + lá rừng bay.
+name: Thần Săn Ba Vì
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  T = toi
+  K = khoi
+  f = da-toi
+  F = da
+  h = da-sang
+  e = trang
+  t = trang-xam
+  W = sang
+  s = son
+  m = son-toi
+  r = dat-toi
+  d = dat
+  D = dat-sang
+  c = cat
+  g = reu-toi
+  o = reu
+  O = reu-sang
+  x = sat-toi
+  S = sat
+  y = dong
+  b = sat-sang
+  w = bac
+  l = la
+  L = la-ma
+  q = tim-toi
+  p = tim
+  P = tim-sang
+
+part gac
+t..t........t..t
+.t.t.t....t.t.t.
+.ttt.t....t.ttt.
+..ttt......ttt..
+....tt....tt....
+end
+
+part dau
+..eeeeeeee..
+.etTeeeeTte.
+.eteeeeeette
+KKKtttttttK.
+KKKfFFFFFFFF
+KKfFTTFFFTTF
+.Kfsekssseks
+.KfFFFFFFFFh
+..fFFFFFFfF.
+..ffFFTTFF..
+...ffffff...
+end
+
+part choang
+..DcD.
+.DcDcD
+DcDcDc
+DcDdcD
+cDcDdD
+DcDdDc
+.DdDcD
+.dDdD.
+..dDd.
+...d..
+end
+
+part than
+.....fFf.....
+...oeOeOeoo..
+..oOOOOOOOog.
+..oO.OOOOOog.
+..oO.OOOoOog.
+..Ff.qpPpPpq.
+..ff.ooOoooog
+.....oOOooog.
+end
+
+part chan
+.....oOoooog.
+.....dDd.dDd.
+.....dDd.dDd.
+.....dDd.dDd.
+.....rDd.rDd.
+....rrrr.rrrr
+end
+
+part dao
+.c..
+.d..
+yry.
+.bS.
+.bS.
+.bS.
+.bSS
+.bSS
+..bS
+..bS
+...b
+end
+
+part dao_len
+....b
+...bS
+..bSS
+..bS.
+.bSS.
+.bS..
+bSS..
+bS...
+yry..
+.d...
+.c...
+end
+
+part dao_ngang
+cdy.bbbbbbb...
+..y.SSSSSSSbb.
+......SSSSSSSb
+end
+
+part tay
+fF.
+.FF
+.Fh
+end
+
+part tay_len
+.FF
+.Fh
+.F.
+fF.
+end
+
+part tay_dam
+fFFF
+.FFh
+end
+
+part vuot
+W...W...W...
+.w...w...w..
+..w...w...w.
+...b...b...b
+end
+
+part la
+.L
+Ll
+end
+
+part mat_nham
+TT...TT
+end
+
+anim idle fps=3 loop
+frame idle
+  use choang 5 15
+  use chan 8 24
+  use than 8 16
+  use dau 9 5
+  use gac 7 1
+  use dao 20 17
+  use tay 19 17
+  outline
+end
+frame idle
+  use choang 5 16
+  use chan 8 24
+  use than 8 17
+  use dau 9 6
+  use gac 7 2
+  use dao 20 18
+  use tay 19 18
+  outline
+end
+frame idle
+  use choang 5 15
+  use chan 8 24
+  use than 8 16
+  use dau 9 5
+  use gac 7 1
+  use dao 20 17
+  use tay 19 17
+  set 23 24 W
+  outline
+end
+
+# đánh: giơ đao → chém ngang → vết vuốt → thu đao
+anim attack fps=10 once
+frame attack
+  use choang 5 15
+  use chan 8 24
+  use than 8 16
+  use dau 9 5
+  use gac 7 1
+  use dao_len 20 4
+  use tay_len 19 13
+  outline
+end
+frame attack
+  use choang 6 15
+  use chan 8 24
+  use than 9 16
+  use dau 10 5
+  use gac 8 1
+  use dao_ngang 17 18
+  use tay_dam 20 18
+  outline
+end
+frame attack
+  use choang 6 15
+  use chan 8 24
+  use than 9 16
+  use dau 10 5
+  use gac 8 1
+  use dao_ngang 17 18
+  use tay_dam 20 18
+  use vuot 19 10
+  outline
+end
+frame attack
+  use choang 5 15
+  use chan 8 24
+  use than 8 16
+  use dau 9 5
+  use gac 7 1
+  use dao 20 17
+  use tay 19 17
+  outline
+end
+
+# chiêu Gọi Hổ Ba Vì: giơ đao — ba vết vuốt hổ + lá rừng cuộn
+anim cast fps=8 loop
+frame cast
+  use choang 5 15
+  use chan 8 24
+  use than 8 16
+  use dau 9 5
+  use gac 7 1
+  use dao_len 20 4
+  use tay_len 19 13
+  use la 2 20
+  outline
+end
+frame cast
+  use choang 5 15
+  use chan 8 24
+  use than 8 16
+  use dau 9 5
+  use gac 7 1
+  use dao_len 20 4
+  use tay_len 19 13
+  use vuot 19 17
+  use la 1 14
+  outline
+end
+frame cast
+  use choang 5 15
+  use chan 8 24
+  use than 8 16
+  use dau 9 5
+  use gac 7 1
+  use dao_len 20 4
+  use tay_len 19 13
+  use vuot 19 20
+  use la 2 9
+  use la 28 3
+  outline
+end
+
+anim hurt fps=8 once
+frame hurt
+  use @idle.0
+  shift -1 0
+  use mat_nham 12 11
+  swap F h
+end
+
+anim die fps=5 once
+frame die
+  use choang 5 18
+  use chan 8 24
+  use than 8 19
+  use dau 9 8
+  use gac 7 4
+  use mat_nham 13 14
+  outline
+end
+frame die
+  use choang 5 18
+  use chan 8 24
+  use than 8 19
+  use dau 9 8
+  use gac 7 4
+  use mat_nham 13 14
+  rot 90
+  shift 0 1
+  outline
+end
+frame die
+  use @die.1
+  swap O o
+end

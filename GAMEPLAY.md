@@ -2200,3 +2200,18 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
 
 ## Phiên bản 201 — quy tắc hình mới phải có bản pixel
 - CLAUDE.md: thêm quy tắc "Đang chuyển sang pixel art: hình mới phải có bản pixel" — session thêm/đổi hình (kể cả vẽ bằng code) vẽ luôn bản pixel theo docs/pixel/QUY-CHUAN.md hoặc ghi vào docs/pixel/DANH-SACH.md mục "Bổ sung"; giữ đường vẽ dự phòng.
+
+## claude/pixel-tuong-tim — Pixel art 18 tướng Tím (DANH-SACH lô 3–4)
+
+- Vẽ pixel 32×32 theo `docs/pixel/QUY-CHUAN.md` (tỉ lệ đầu:thân ≈ 1:1,6, mắt nhỏ trắng+đen có lông mày, không má hồng, bóng 3 tông,
+  viền `vien`) cho 18 tướng Tím: `thachsanh` (rìu lưỡi rộng + đàn tròn sau lưng), `caolo` (nỏ máy bánh răng đồng, kính lúp, râu vuông),
+  `antiem` (áo tơi rơm, dưa hấu trên vai), `cdt` (chỉ đóng khố, gậy trơn + nón lá thần sáng ngọc), `tiendung` (2 vòng tóc, quạt tròn,
+  áo tứ thân đỏ thắm), `langlieu` (mâm bánh chưng, băng vàng), `mychau` (áo lông ngỗng trắng kéo đất, tóc dài, rắc lông), `sodua`
+  (thân quả dừa, chỏm vỏ làm mũ, dừa xanh, sáo), `ongdung` (khổng lồ gánh 2 sọt đất), `thocong` (cụ tròn, mũ tròn đen, râu trắng tới
+  bụng, gậy tre hồ lô), `lyngu` (mào đuôi cá chép, giáp vảy cam, đao vây cá), `truongchi` (đứng trong thuyền nan, sáo ngang, nón sau
+  lưng, nhắm mắt), `potaoapui` (mũ sừng trâu, khố thổ cẩm đen-đỏ, gươm lửa, vạch sơn chiến thay chấm má), `baahoa` (lơ lửng, tóc bốc
+  như lửa, cầu lửa), `trongdong` (trống đồng Đông Sơn có sao sau lưng, dùi, mũ lông chim Lạc), `ongtao` (mũ cánh chuồn, không quần,
+  kẹp than, cá chép vàng), `lachau` (mũ nhọn, búa đá + khiên đồng, cờ chim Lạc nhỏ), `thansan` (gạc hươu, sơn chiến, áo choàng lông,
+  đao rừng). Mỗi tướng: idle 3 · attack 4 · cast 3 (hiệu ứng theo chiêu) · hurt 1 · die 3; chân dung tự cắt từ khung đứng (đã xem, đủ dấu hiệu).
+- Chi tiết Tím: mỗi tướng có 1 điểm tím (quai đàn / thắt lưng / gấu áo / vành vỏ dừa). Không vẽ trang bị lên người.
+- Chỉ thêm nguồn `tools/pixel/src/tuong/<mã>.txt` + file sinh ra (`assets/pixel/tuong/`, `js/pixel/*.js`, `js/asset-list.js`); không sửa js/pixel.js.

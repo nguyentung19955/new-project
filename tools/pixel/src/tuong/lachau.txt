@@ -1,0 +1,307 @@
+# Lạc Hầu (mã lachau) — pixel 32×32 (tướng Tím · hành Thổ). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:93 ưu tiên + PROMPT-DUNG-XUONG.txt:854 + js/data.js "búa đá và khiên đồng"): cố vấn bộ Lạc ~55, gầy,
+# lưng thẳng, râu dê dài mảnh, mắt sắc; áo vàng mù tạt cổ nâu, dải tím (Tím); MŨ NHỌN; cầm BÚA ĐÁ + KHIÊN ĐỒNG tròn hoa văn Đông Sơn,
+# cờ chim Lạc đỏ nhỏ cắm lưng (tuỳ chọn trong DANH-SACH). Chiêu (Trống Hiệu Triệu / Lời Thề Bộ Lạc): giơ khiên — vòng đồng hộ thân.
+name: Lạc Hầu
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  T = toi
+  K = khoi
+  f = da-toi
+  F = da
+  h = da-sang
+  e = trang
+  t = trang-xam
+  r = dat-toi
+  d = dat
+  D = dat-sang
+  o = dong-toi
+  y = dong
+  Y = dong-sang
+  v = vang-sang
+  V = vang-nghe
+  x = sat-toi
+  S = sat
+  b = sat-sang
+  m = son-toi
+  s = son
+  q = tim-toi
+  p = tim
+  P = tim-sang
+
+part dau
+......d.....
+......D.....
+.....dDd....
+.....DDd....
+....dDDdd...
+..yYyYyYyy..
+.KKKKKKKKKK.
+KKKfFTTFFTTF
+.KffFekFFekF
+.KfFFFFFFFFh
+..fFFFFFFfF.
+...fFKKKFF..
+....ffKKf...
+......KK....
+......K.....
+end
+
+part co
+..msss
+.rmsts
+.rmsss
+.r....
+.r....
+.r....
+.r....
+.r....
+.r....
+.r....
+.r....
+.r....
+end
+
+part khien
+..oooo..
+.oyYYyo.
+oyYvvYyo
+oYvoovYo
+oYvoovYo
+oyYvvYyo
+.oyYYyo.
+..oooo..
+end
+
+part khien_sang
+..oooo..
+.oVVVVo.
+oVVvvVVo
+oVvYYvVo
+oVvYYvVo
+oVVvvVVo
+.oVVVVo.
+..oooo..
+end
+
+part than
+.....fFf.......
+...ddrdrdvv....
+..vVdddddVVY...
+..vV.VVVVVVY...
+..vV.VVVVVVY...
+..vY.VVVVVVY...
+.....qpPpPpq...
+.....VVVVVVY...
+end
+
+part chan
+.....VVVvVVY..
+.....VVVvVVYY.
+....YYYYvYYYY.
+.....TT...TT..
+....TTT..TTT..
+end
+
+part bua
+.xSSb
+xSSSb
+xSSbt
+..d..
+..d..
+..D..
+..d..
+..d..
+..r..
+end
+
+part bua_ngang
+....xxx
+rdDdSSb
+....SSb
+....xSt
+end
+
+part bua_xuong
+D......
+.d.....
+..d....
+...DxSb
+...xSSb
+....xS.
+end
+
+part tay
+fF.
+.FF
+.Fh
+end
+
+part tay_len
+.FF
+.Fh
+.F.
+fF.
+end
+
+part tay_dam
+fFFF
+.FFh
+end
+
+part vong
+..YYYY..
+.Y....Y.
+Y......Y
+end
+
+part mat_nham
+TT..TT
+end
+
+anim idle fps=3 loop
+frame idle
+  use co 3 2
+  use chan 8 24
+  use than 8 16
+  use dau 10 1
+  use khien 4 16
+  use bua 21 12
+  use tay 19 18
+  outline
+end
+frame idle
+  use co 3 3
+  use chan 8 24
+  use than 8 17
+  use dau 10 2
+  use khien 4 17
+  use bua 21 13
+  use tay 19 19
+  outline
+end
+frame idle
+  use co 3 2
+  use chan 8 24
+  use than 8 16
+  use dau 10 1
+  use khien 4 16
+  use bua 21 12
+  use tay 19 18
+  set 6 3 t
+  outline
+end
+
+# đánh: giơ búa đá → đập ngang → nện xuống → về thế thủ
+anim attack fps=10 once
+frame attack
+  use co 3 2
+  use chan 8 24
+  use than 8 16
+  use dau 10 1
+  use khien 4 16
+  use bua 21 3
+  use tay_len 19 13
+  outline
+end
+frame attack
+  use co 3 2
+  use chan 8 24
+  use than 9 16
+  use dau 11 1
+  use khien 5 16
+  use bua_ngang 21 18
+  use tay_dam 20 18
+  outline
+end
+frame attack
+  use co 3 2
+  use chan 8 24
+  use than 8 16
+  use dau 10 1
+  use khien 4 16
+  use bua_xuong 20 20
+  use tay 19 18
+  outline
+end
+frame attack
+  use co 3 2
+  use chan 8 24
+  use than 8 16
+  use dau 10 1
+  use khien 4 16
+  use bua 21 12
+  use tay 19 18
+  outline
+end
+
+# chiêu: giơ khiên đồng loé sáng — vòng đồng hộ thân lan ra
+anim cast fps=8 loop
+frame cast
+  use co 3 2
+  use chan 8 24
+  use than 8 16
+  use dau 10 1
+  use khien_sang 4 14
+  use bua 21 12
+  use tay 19 18
+  outline
+end
+frame cast
+  use co 3 2
+  use chan 8 24
+  use than 8 16
+  use dau 10 1
+  use khien_sang 4 14
+  use bua 21 12
+  use tay 19 18
+  use vong 2 27
+  outline
+end
+frame cast
+  use co 3 2
+  use chan 8 24
+  use than 8 16
+  use dau 10 1
+  use khien 4 14
+  use bua 21 12
+  use tay 19 18
+  use vong 0 26
+  use vong 22 26
+  outline
+end
+
+anim hurt fps=8 once
+frame hurt
+  use @idle.0
+  shift -1 0
+  use mat_nham 14 9
+  swap F h
+end
+
+anim die fps=5 once
+frame die
+  use co 3 5
+  use chan 8 24
+  use than 8 19
+  use dau 10 4
+  use khien 4 21
+  use mat_nham 15 12
+  outline
+end
+frame die
+  use chan 8 24
+  use than 8 19
+  use dau 10 4
+  use mat_nham 15 12
+  rot 90
+  shift 0 1
+  use khien 22 22
+  outline
+end
+frame die
+  use @die.1
+  swap V v
+end
