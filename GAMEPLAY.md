@@ -1695,3 +1695,7 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 179 — Tool cắt ảnh nhận ảnh dáng rời, tấm icon tự tách
 
 - Gộp nhánh tool-cat-anh: ảnh <mã>_pose01..04 mỗi ảnh một khung, tấm nhiều icon tự tách theo vùng có hình, bảng cat-anh-them.json cho ảnh lẻ trong D:\ảnh game; ảnh chưa có chỗ dùng vào assets/chua-dung/.
+
+## Phiên bản 180 — Báo cáo test toàn bộ (QA nhìn ảnh thật)
+
+- Thêm `docs/BAO-CAO-TEST.md`: chơi thật bằng Playwright ở 1920×934, 1280×720, 844×390, 667×375, dọc 390×844, xem từng ảnh chụp. 17 lỗi (Cao 5 · Trung bình 7 · Thấp 5) kèm ảnh minh hoạ trong `docs/bao-cao-test/`, và mục đề xuất cải thiện trải nghiệm. Không sửa code game.
