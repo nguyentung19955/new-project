@@ -1884,3 +1884,12 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
   - **Thần Khí:** khung tránh cả thẻ hệ; bỏ phần trùng với thẻ (hiện tại, cấp kế, mốc) — chỉ còn mức khi **tối đa**, **Ngân khố còn cần** đến tối đa và **đang có / còn thiếu**.
   - Cơ chế chung: `data-tip-avoid="sel1|sel2"` = vùng nên tránh che, thử lần lượt rồi mới đến chính ô; hai bên hẹp thì thu khung (≥ 180px).
 - Test thêm cỡ dọc 390×844, kiểm khung không đè cột / thẻ / nhánh chứa ô; ảnh đã xem: `tests/mo-ta-ky-nang/shots/{1920x934,1018x612,844x390,667x375,390x844}-*.png`.
+## Phiên bản 186 — Vai trò: sửa 3 lỗi tester báo
+- **Icon Đỡ đòn ở thẻ chợ như chấm đen (667×375, 11px):** icon vai trò trên thẻ chợ đổi sang dạng **đặc** (nền màu vai trò, nét tối, viền sáng, bóng đen), cỡ 16px gốc → ≥13,7px ở 667×375. Icon hệ nhích lên 1px để icon vai trò không chạm tên tướng dài (ở 1920 trước đây chạm "Thần Sương").
+- **Hàng lọc vai trò chỉ có icon (màn thấp):** nút đang chọn luôn hiện tên vai trò; mọi nút có `title` (rê chuột) + `data-tip` (giữ tay → mô tả + cộng hưởng 2/4).
+- **Anh Hùng sau khi lọc vẫn hiện tướng không thuộc bộ lọc:** lọc xong mà tướng đang xem không có vai đó thì tự chọn tướng đầu danh sách đã lọc.
+- Test `tests/vai-tro` thêm: icon thẻ chợ dạng đặc ≥13px, không đè tên; nút lọc đang chọn có tên + tooltip; lọc Hỗ trợ tự chọn tướng đầu.
+
+## Phiên bản 187 — Gộp sửa vai trò tướng (tester đạt)
+
+- Icon vai trò dạng đặc rõ ở màn nhỏ, hàng lọc hiện tên vai đang chọn, Anh Hùng lọc tự chọn tướng đầu danh sách.
