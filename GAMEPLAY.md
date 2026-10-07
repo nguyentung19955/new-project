@@ -2210,6 +2210,7 @@ Session này dựng khung để nhiều session vẽ song song không xung độ
   hồng, mặt nghiêm; bảng màu đổi sang tông trầm cổ kính (46 màu, thêm `khoi`, `reu-toi`), bóng 3 tông, họa tiết Đông Sơn.
   3 tướng mẫu vẽ lại theo hướng này (đai đồng hoa văn trống đồng trên giáp Gióng / Sơn Tinh).
 - **Phá cách** (chỉ đạo người dùng, QUY-CHUAN mục 0b): được diễn giải lại táo bạo (pháp sư bộ xương, hình nhân giấy, hồn ma…) nhưng giữ vai trò / vũ khí / ngũ hành; nhân vật huyền thoại có danh tính chỉ phá cách tạo hình. Mẫu: `chodo` thành **hồn lái đò sông Âm** (da xanh tái, nón lá, chân tan thành sương, vẫn cầm mái chèo). DANH-SACH thêm cột "Hướng phá cách". Không vẽ đồ trang bị lên tướng 32px.
+- Quyết định điều phối: Thánh Gióng cầm **gậy sắt** (nhổ tre / lửa ở chiêu), Cuội đòn gánh, Triệu Đà kích; không vẽ đồ lên tướng 32px. Đã gộp nhánh chính v202 (chợ 6 thẻ: chân dung qua `marketPortrait` → `heroImgUrl` đã móc pixel).
 - Nhóm hiệu ứng là `vfx` (nhánh vfx-kenney; cho phép `tools/pixel/src/vfx/palette.txt` tạm hoặc `KHONG-BUILD`).
 
 Test mới `tests/pixel` (tool: nguồn thật hợp lệ --strict, 5 kiểu nguồn lỗi bị chặn, dựng ra thư mục tạm khớp file trong repo;
