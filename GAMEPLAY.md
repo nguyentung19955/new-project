@@ -1530,3 +1530,17 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 163 — Thu nhỏ bảng chỉ số khi giữ chân dung
 - Bảng chỉ số tướng (giữ chân dung ở thanh đáy, v154) gọn hơn: rộng 400 → 300 px, chữ tiêu đề 12 → 10,5 px, chữ chỉ số 11,5 → 9,5 px, biểu tượng 13 → 10 px, lề và khoảng cách hẹp lại; cao còn ~70–87 px (trước ~108 px). Vẫn nằm trên thanh đáy, căn theo chân dung, chữ không xuống dòng.
+- **`docs/PROMPT-GUI-AI.txt`**: bản chữ thường của hai CSV — 90 khối prompt (60 tướng + 30 quái/boss), mỗi khối ghi tên, cỡ ảnh, tên file cần lưu; sinh cùng `node tools/build-prompts.js`.
+- **`docs/bo-animation.zip`** (~2,5 MB, đóng gói bằng `python3 tools/dong-goi-animation.py`): HUONG-DAN.txt + chuẩn (md/txt) + 90 prompt (txt/csv) + ảnh mẫu lưới + ảnh mẫu 90 nhân vật (đặt tên theo mã) + ghep-luoi.py / cat-sheet.py.
+- **`docs/PROMPT-HIEU-UNG.txt`** (sinh bằng `python3 tools/build-fx-prompts.py`): 48 prompt gen lại **mọi hiệu ứng** game đang có — A: 32 ảnh hạt Kenney (8 tấm × 4 ô, trắng xám nền đen, game tự tô màu, giữ tên file để thay thẳng `assets/fx/`) · B: 17 dải khung chiêu cho chỗ nhận sẵn `assets/vfx/` (`VFX_FILE`: cột lửa, nổ, vòng băng, sét, chém vàng, hồi máu, khiên, đá, xu, nốt nhạc, triệu hồi, bụi, đập, nước dâng, núi trồi…) · C: 6 ảnh triệu hồi / vật thể đã có chỗ nhận (hổ Ba Vì, chim Lạc, chim thần, cây đa thần, đá lăn, Lạc tử) · D: đạn bay 10 loại + 13 hiệu ứng / 2 ảnh hiện vẽ bằng code (cần nối code khi có ảnh). Ảnh mẫu `docs/mau-luoi/mau-hieu-ung-kenney.png`.
+- **`tools/cat-fx.py hat|dai|don`**: cắt ảnh hiệu ứng (nền đen → trong suốt theo độ sáng, nền hồng tím → xoá như cat-sheet). Test: `node tests/hieu-ung/cat-fx.test.js` (cắt ảnh giả + kiểm tra file prompt phủ đủ ảnh Kenney trong `js/vfx.js`, `VFX_FILE`, ảnh triệu hồi trong `js/main.js`, mọi loại đạn).
+
+## Phiên bản 153 — Nối ảnh hiệu ứng phần D (đạn bay + hiệu ứng trước chỉ vẽ bằng code)
+- **Đạn bay**: `drawProjectile` dùng `assets/fx/dan_<loại>.png` nếu có (fireball, frostbolt, arrow, bolt, orb, feather, petal, melon, rice, evil; cắt bằng `tools/cat-fx.py hat … --mau`), xoay theo hướng bay (dưa / cánh hoa / quả cầu tự xoay); chưa có ảnh thì vẽ bằng code như cũ.
+- **12 dải khung** `assets/vfx/<loại>.png` (hàm `drawFxArt` trong `js/main.js`): vortex, sweep (lật theo hướng tướng), meteor, revive, volley, rain (chờ hết delay), ring, warn, mark (theo quái), streak / afterimage / hook (kéo dài + xoay giữa hai điểm). **ring / warn / streak / afterimage** vẽ trắng xám và được **tô theo màu hiệu ứng** (`tintSheet` trong `js/render.js`) nên một ảnh dùng cho mọi màu.
+- **Ảnh rời**: ngựa sắt Thánh Gióng `trieu-hoi_ngua-sat.png`, Gióng bay dọc sông `trieu-hoi_giong-bay.png`, vật ném `hieu-ung_den-troi / chai / binh-gom / dua-hau.png` (hiệu ứng `lob` có thêm `kind` den / chai / gom / dua trong `js/game.js`).
+- `docs/PROMPT-HIEU-UNG.txt` phần D cập nhật (51 ảnh): 4 dải tô màu ghi "TRẮNG XÁM", vật ném tách thành 4 ảnh rời; zip `docs/bo-animation.zip` đóng gói lại.
+- Test: `node tests/hieu-ung/hieu-ung-game.test.js` (ảnh giả qua route: đủ 12 dải + 6 ảnh rời + 10 loại đạn được vẽ, 4 dải được tô màu; 404 → vẽ bằng code, không lỗi trang) · `node tests/hieu-ung/cat-fx.test.js`.
+
+## Phiên bản 164 — Gộp rà chủ đề cũ + bảng chỉ số gọn + hiệu ứng vẽ tay
+- Gộp: màn thắng/thua theo chương (v163, rà chủ đề cũ + 24 prompt khung/nút/tranh nhóm 18–21), bảng chỉ số tướng thu nhỏ, chuẩn animation + prompt hiệu ứng (game dùng ảnh assets/fx, assets/vfx khi có; đạn quả dưa dùng srand để chơi nhóm vẫn đồng bộ).

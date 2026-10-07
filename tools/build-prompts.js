@@ -538,3 +538,10 @@ for (const k of Object.keys(REDO_ENEMY)) foeRows.push([k, ENEMIES[k].name, REDO_
 for (const k of Object.keys(REDO_BOSS)) foeRows.push([k, ENEMIES[k].name, 'Boss', 'boss9 (3x3, ô 256)', '768x768', `${k}.png`, `python3 tools/cat-sheet.py ${k}.png ${k} boss9`, redoBossPrompt(k)]);
 fs.writeFileSync(path.join(ROOT, 'docs/prompts-quai.csv'), csv(foeRows));
 console.log('csv tướng', heroRows.length - 1, '· quái / boss', foeRows.length - 1);
+// Bản chữ thường của hai CSV trên: mỗi nhân vật một khối, chép từng khối dán vào AI.
+const blk = (rows, title) => `${title}\n${'='.repeat(60)}\n` + rows.slice(1).map((r) => {
+  const o = Object.fromEntries(rows[0].map((k, i) => [k, r[i]]));
+  return `\n${o.ten} (${o.ma}) · ${o.bac || o.loai}${o.he ? ' · ' + o.he : ''} · ảnh ${o.kich_thuoc} · lưu tên: ${o.ten_file}\n${'-'.repeat(60)}\n${o.prompt}\n${'-'.repeat(60)}\n`;
+}).join('');
+fs.writeFileSync(path.join(ROOT, 'docs/PROMPT-GUI-AI.txt'), 'PROMPT GỬI AI TẠO ẢNH — mỗi khối là một ảnh. Chép phần giữa hai đường kẻ, dán vào AI, đính kèm ảnh lưới docs/mau-luoi/ (tướng: hero12.png · quái: enemy6.png hoặc enemy6-bay.png · boss: boss9.png) và thêm câu: "the attached grid is only a layout guide — do NOT draw its numbers, lines or labels". Lưu ảnh về đúng tên ghi trên khối. Chuẩn đầy đủ: docs/CHUAN-ANIMATION.txt\n\n'
+  + blk(heroRows, `TƯỚNG (${heroRows.length - 1})`) + '\n\n' + blk(foeRows, `QUÁI + BOSS (${foeRows.length - 1})`));
