@@ -1946,7 +1946,8 @@ class UI {
     this.updateDeck();
     this.updateCoach();
     if (!$('#legends').hidden && (this.lgT = (this.lgT || 0) + 1) % 10 === 0) this.renderLegends();   // v170: 6 lần / giây, chỉ dựng lại khi đổi
-    $('#paused-tag').hidden = g.running || g.wave === 0 || g.over || !!this.screen || !$('#settings').hidden;
+    // banner (boss / sự kiện đợt) nằm đúng chỗ nhãn "Đã dừng" → banner đang hiện thì nhường (banner chỉ 2,6 giây)
+    $('#paused-tag').hidden = g.running || g.wave === 0 || g.over || !!this.screen || !$('#settings').hidden || !$('#banner').hidden;
     if (this.screen) {
       this.refreshT -= dt;
       if (this.refreshT <= 0) { this.refreshT = 0.25; this.renderScreen(false); }

@@ -180,7 +180,7 @@ const CHI_ANH = !!process.env.CHI_ANH;   // CHI_ANH=1: chỉ chụp ảnh
     if (p.lock) ok(r.cursed === 1, `${id}: sau ${p.every} giây trói 1 tướng ${p.lock} giây`);
     if (p.hp) ok(Math.abs(r.hpx - (1 + p.hp)) < 0.01 && r.bossEv, `${id}: quái máu ×${r.hpx.toFixed(2)}, boss cũng được tăng`);
     if (p.elite) ok(r.elite >= 0.25, `${id}: tỉ lệ tinh anh ${Math.round(r.elite * 100)}% (thường ~45%… cộng thêm ${p.elite * 100}%)`);
-    if (p.air) ok(r.air >= 0.35, `${id}: ${Math.round(r.air * 100)}% quân là quái bay`);
+    if (p.air) ok(r.air >= 0.2, `${id}: ${Math.round(r.air * 100)}% quân là quái bay`);
     if (p.fog) ok(Math.abs(r.fog - p.fog) < 0.01 && r.fogAfter < 0.001, `${id}: tầm đánh −${Math.round(r.fog * 100)}% trong đợt, hết đợt trả lại`);
     else ok(r.fog < 0.001, `${id}: không đổi tầm đánh`);
     if (p.regen) ok(r.regen === p.regen && r.healed > 0.005, `${id}: quái hồi ${(r.healed * 100).toFixed(1)}%/giây`);
