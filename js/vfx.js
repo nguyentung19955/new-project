@@ -306,7 +306,8 @@ const VFX = (() => {
     if (e.stunT > 0 && !['ice', 'root', 'music', 'net'].includes(e.stunKind) && ready('vfx/choang-sao') && SB.n + 4 <= SB.max) {
       r.stun = true;
       ctx.globalCompositeOperation = 'source-over';
-      const y0 = fy - H * 0.86, rx = Math.min(22, W * 0.3);
+      // quái thấp: hạ sao xuống để đỉnh sao (cỡ tối đa 11 + nhún 3) vẫn dưới đáy thanh máu (fy - H - 3)
+      const y0 = Math.max(fy - H * 0.86, fy - H + 15), rx = Math.min(22, W * 0.3);
       for (let i = 0; i < 3; i++) {
         const a = t * 5 + (i * Math.PI * 2) / 3, z = Math.sin(a);
         spr(ctx, 'vfx/choang-sao', '#FFC83A', cx + Math.cos(a) * rx, y0 + z * 3, 9 + z * 2, 0, 0.85 + z * 0.15);

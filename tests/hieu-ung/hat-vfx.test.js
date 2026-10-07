@@ -65,9 +65,10 @@ const boom = (page, at) => page.evaluate((at) => {
         for (const t of [0.1, 0.4, 0.7, 1.0, 1.3, 2.2]) {
           c.setTransform(1, 0, 0, 1, 0, 0);
           c.drawImage = function (im, x, y, w, h) {
+            // mép trên thật của ảnh = điểm cao nhất trong 4 góc sau khi biến đổi (xoay / ép dẹt)
             const m = this.getTransform();
-            const y0 = m.f + Math.min(y * m.d, (y + h) * m.d) - Math.abs(m.c) * Math.abs(w);
-            if (y0 < by - 1 + (Math.abs(m.b) + Math.abs(m.c) > 0.01 ? -6 : 0) - 4) bad.push([e.id, t, Math.round(y0), Math.round(by)]);
+            const y0 = Math.min(...[[x, y], [x + w, y], [x, y + h], [x + w, y + h]].map(([u, v]) => m.b * u + m.d * v + m.f));
+            if (y0 < by - 1) bad.push([e.id, e.type, t, Math.round(y0), Math.round(by)]);
           };
           VFX.frame(); VFX.status(c, e, box, 0, t);
         }
