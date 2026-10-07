@@ -30,7 +30,7 @@ Chân (dưới đường hông) đứng yên tuyệt đối — đã đo: không
 | ngutinh | tay không | đinh ba → bổ |
 | ongho | tay không | kiếm → chém |
 | ongtao | gậy phép | đao → đâm |
-| phuthuy | gậy phép | rồng nhỏ không gậy → nhún nguyên khối |
+| phuthuy | gậy phép | Sứa Tinh vẽ thành rồng nhỏ → nhún nguyên khối |
 | potaoapui | kiếm | giáo → đâm |
 | sodua | tay không | giáo → đâm |
 | tanvien | gậy phép | giáo → đâm |
@@ -64,7 +64,7 @@ Chân (dưới đường hông) đứng yên tuyệt đối — đã đo: không
 | chodo | giáo | đao → chém |
 | chuongdong | gậy phép | chiêng đồng → phép |
 | cungan | cung | không thấy cung → nhún nguyên khối |
-| cuoi | rìu | đòn gánh vác vai → nhún nguyên khối (tách sẽ gãy gánh) |
+| cuoi | Chú Cuội (rìu) | đòn gánh vác vai → nhún nguyên khối (tách sẽ gãy gánh) |
 | daibang | tay không | giáo → bổ |
 | dapde | giáo | gậy đầu thú → bổ |
 | dotnuong | kiếm | giáo → bổ |
@@ -90,22 +90,22 @@ Rig trong js/rigs.js của các mã này vẫn để đó (vô hại vì `CD_SKI
 |---|---|---|---|
 | cao | Cáo Con | rồng con hồng có sừng | sai loài |
 | camap | Cá Mập Yêu | rồng con xanh vây cá | sai loài |
-| cua | Cua | rồng con đỏ có 1 càng | sai loài |
-| chimbao | Chim Báo | rồng con hồng có cánh | sai loài |
-| rua | Rùa | rồng con xanh mai rùa | sai loài |
+| cua | Cua Khổng Lồ | rồng con đỏ có 1 càng | sai loài |
+| chimbao | Chim Bão | rồng con hồng có cánh | sai loài |
+| rua | Rùa Giáp | rồng con xanh mai rùa | sai loài |
 | ran | Rắn Độc | rồng con xanh lá | sai loài |
 | dacon | Đá Con | rồng con xanh | sai loài |
 | nongnoc | Nòng Nọc | rồng con xanh | sai loài |
-| phuthuy | Phù Thuỷ (gậy phép) | rồng con xanh, không gậy | sai loài + thiếu vũ khí |
+| phuthuy | Sứa Tinh | rồng con xanh đuôi cá | sai loài |
 | thachtinh | Thạch Tinh | người có sừng, không vũ khí | sai loài |
 | voichien | Voi Chiến | người có sừng | sai loài |
-| linhan | Lính Ấn (giáo) | người có sừng, không giáo | sai loài + thiếu vũ khí |
+| linhan | Quỷ Giáo (giáo) | người có sừng, không giáo | sai loài + thiếu vũ khí |
 | cungan | Sói Cung Thủ (cung) | rồng/người có sừng, không cung | sai loài + thiếu vũ khí |
 | hotinh | Hồ Tinh Chín Đuôi (boss) | rồng nhiều tay cầm giáo | sai loài |
 | chantinh | Chằn Tinh (boss, rìu) | người-rồng cầm giáo | sai loài + sai vũ khí |
-| nguphu | Ngư Phủ (tướng, giáo) | tiên cá cầm đinh ba | sai loài |
-| tre | Thánh Gióng tre (giáo) | kiếm cắm đất bên cạnh, tay không cầm | vũ khí rời |
-| dotnuong | Đốt Nương (kiếm) | kiểu 3D bóng, cầm giáo | lệch phong cách + sai vũ khí |
+| nguphu | Ngư Phủ Sông Đà (tướng, giáo) | tiên cá cầm đinh ba | sai loài |
+| tre | Dũng Sĩ Tre Làng (giáo) | kiếm cắm đất bên cạnh, tay không cầm | vũ khí rời |
+| dotnuong | Chàng Đốt Nương (kiếm) | kiểu 3D bóng, cầm giáo | lệch phong cách + sai vũ khí |
 
 ### Nên gen lại thêm (chưa trong `CD_SKIP`, tôi soát thấy khi làm rig)
 | Mã | Đúng ra | Ảnh hiện tại | Lý do |
@@ -114,9 +114,9 @@ Rig trong js/rigs.js của các mã này vẫn để đó (vô hại vì `CD_SKI
 | doi | Dơi Hang | rồng con có cánh dơi | sai loài (lai rồng) |
 | echme | Ếch Mẹ | ếch có đuôi rồng, đội mũ | lệch loài nhẹ |
 | kybinh | Quỷ Cưỡi Lợn (giáo) | người đầu lợn rừng, không cưỡi, không giáo | sai mô tả + thiếu vũ khí |
-| xathu | Xạ Thủ (cung) | cầm đao, không có cung | sai vũ khí (lớp cung thủ) |
-| thosan | Thợ Săn (kiếm) | cầm cung | sai vũ khí |
+| xathu | Xạ Thủ Văn Lang (cung) | cầm đao, không có cung | sai vũ khí (lớp cung thủ) |
+| thosan | Thợ Săn Rừng (kiếm) | cầm cung | sai vũ khí |
 | yeutinh | Yêu Tinh Rừng (rìu) | không vũ khí | thiếu vũ khí |
-| haisen, melua | gậy phép | không gậy (lư đồng / quang gánh lúa) | thiếu vũ khí |
-| cuoi | rìu | vác đòn gánh | sai vũ khí |
+| haisen (Cô Hái Sen), melua (Mẹ Lúa) | gậy phép | không gậy (lư đồng / quang gánh lúa) | thiếu vũ khí |
+| cuoi | Chú Cuội (rìu) | vác đòn gánh | sai vũ khí |
 Các tướng cầm giáo/kiếm/đao thay vì gậy phép / tay không (bảng ở trên) chạy được bình thường; chỉ cần gen lại nếu muốn hình khớp kiểu đánh trong game.
