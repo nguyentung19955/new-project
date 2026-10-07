@@ -379,6 +379,7 @@ function cdAutoRig(A, W, H, fxPx) {
       if (c.cross || c.att.some((y, i) => i && y - c.att[i - 1] > 3)) { why(c.cross ? 'hong' : '2cho'); continue; }
       if (aBot - aTop < H * 0.03) { why('manh'); continue; }   // chỗ nối mảnh như cán giáo (giáo cầm chéo qua người), không phải cánh tay
       if (aBot < H * 0.3 || aTop > hip - H * 0.04) { why('cao'); continue; }
+      if (aTop < H * 0.3) { why('dau'); continue; }   // vật cầm vắt qua ranh giới ngang đầu (tảng đá vác vai…) → tách sẽ xẻ đôi
       // nối ở VAI (nửa trên thân, dưới đầu ~38% chiều cao); nối ở bàn tay / cẳng tay = vũ khí xuyên qua thân → không tách
       if (aTop > H * 0.38 + (hip - H * 0.38) * 0.6) { why('vai'); continue; }
       if (c.n < nOp * 0.015 || c.n > nOp * 0.45 || c.far < H * 0.09) { why('nho'); continue; }
@@ -489,7 +490,10 @@ function cdUpMap(R, x, y, bend, sy) {
 function cdArmTip(R, st, kind, bend, sy) {
   const A = cdArm(kind, st.swing || 0, st.castT || 0, st.hurt || 0, st.t, st.seed);
   const pv = cdUpMap(R, R.pivot[0], R.pivot[1], bend, sy), up = Math.max(0, (R.hip - R.pivot[1]) / R.hip);
-  const ang = A.a * R.side + 2 * bend * up;
+  // giới hạn hướng tay: lấy đà không quá thẳng đứng ra sau đầu (vũ khí không quét qua mặt), chém xuống tối đa chếch trước-dưới
+  const rest = Math.atan2(R.tip[1] - R.pivot[1], (R.tip[0] - R.pivot[0]) * R.side);   // 0 = chĩa thẳng ra trước, −π/2 = thẳng lên
+  const lo = Math.min(rest, -Math.PI / 2 - 0.25), hi = Math.max(rest, 1.25);
+  const ang = (Math.min(hi, Math.max(lo, rest + A.a)) - rest) * R.side + 2 * bend * up;
   const vx = R.tip[0] - R.pivot[0], vy = R.tip[1] - R.pivot[1], k = 1 + A.d;
   const c = Math.cos(ang), s = Math.sin(ang);
   return { pv, ang, d: A.d, tip: [pv[0] + (vx * k) * c - (vy * k) * s, pv[1] + (vx * k) * s + (vy * k) * c] };
