@@ -121,8 +121,9 @@ async function main() {
   console.log('Vung tay (rig 3 lớp):');
   {
     const page = await open(browser, 844, 390);
-    const SAMPLES = [['mau-nv', 'docs/mau-vung-tay/mau-nv.png'], ['llq', 'assets/packs/llq/idle.png'], ['cuoi', 'assets/cuoi.png'], ['adv', 'assets/adv.png'],
-      ['auco', 'assets/auco.png'], ['lucsi', 'assets/packs/lucsi/idle.png'], ['giaodong', 'assets/giaodong.png']];
+    // chỉ ảnh dựng xương mới (assets/<mã>.png) + mẫu docs/mau-vung-tay — không dùng ảnh cũ packs/
+    const SAMPLES = [['mau-nv', 'docs/mau-vung-tay/mau-nv.png'], ['kinhduong', 'assets/kinhduong.png'], ['cuoi', 'assets/cuoi.png'], ['xathu', 'assets/xathu.png'],
+      ['auco', 'assets/auco.png'], ['sodua', 'assets/sodua.png'], ['giaodong', 'assets/giaodong.png']];
     const res = await page.evaluate(async (SAMPLES) => {
       const out = [], frames = [];
       const FW = 220, FH = 250;
@@ -172,7 +173,7 @@ async function main() {
       ok(r.hurtDiff === 0, `${r.k}: trúng đòn chỉ chớp màu, hình chân không xê dịch (${r.hurtDiff} điểm)`);
       if (r.arm) ok(r.span > 0.15, `${r.k}: tay + vũ khí vung rõ (đầu vũ khí đi ${(r.span * 100).toFixed(0)}% chiều cao)`);
     }
-    ok(res.out.filter((r) => r.arm).length >= 5, 'mẫu mau-nv + ≥4 tướng tách được tay (kiếm / rìu, nỏ, gậy, tay không)');
+    ok(res.out.filter((r) => r.arm).length >= 6, 'mẫu mau-nv + 5 tướng ảnh mới tách được tay (kiếm, rìu, cung, gậy, tay không)');
     // GIF: các nhân vật xếp ngang, mỗi khung một hình
     const tmp = fs.mkdtempSync(path.join(require('os').tmpdir(), 'vungtay-'));
     const nF = res.frames[0].length;

@@ -13,16 +13,16 @@
 </head>
 <body>
 <h2>Tự cử động — 1 ảnh tĩnh, game tự chuyển động</h2>
-<p>Mở game ở chế độ thử: lưới mọi tướng / quái / boss vẽ bằng <b>ảnh đơn</b> (dùng khung idle / walk1 hiện có làm ảnh đơn),
-mỗi ô tự đổi trạng thái: thở · đánh · tung chiêu · trúng đòn · chết (tướng); đi · đánh · trúng đòn · nổi giận · chết (quái / boss).</p>
+<p>Mở game ở chế độ thử: lưới mọi tướng / quái / boss vẽ bằng <b>ảnh đơn</b> 
+dùng ảnh dựng xương mới <code>assets/&lt;mã&gt;.png</code>; mỗi ô tự đổi trạng thái: thở · đánh · tung chiêu · trúng đòn · chết (tướng); đi · đánh · trúng đòn · nổi giận · chết (quái / boss).</p>
 <ul>
   <li><a href="../index.html?xem-cu-dong">Tất cả — ảnh đơn</a></li>
-  <li><a href="../index.html?xem-cu-dong&amp;ma=lactuong,xathu,thosan,thaymo,lucsi,kinhduong,adv,cao,kybinh,anvuong,thuongluong">Nhóm mẫu (rìu, cung, kiếm, gậy, tay không, nỏ + quái + boss)</a></li>
+  <li><a href="../index.html?xem-cu-dong&amp;ma=cuoi,adv,auco,baahoa,giong,chantinh,cao,kybinh,haba,thuongluong">Nhóm mẫu (rìu, cung, kiếm, gậy, tay không, nỏ + quái + boss)</a></li>
   <li><a href="../index.html?xem-cu-dong&amp;tt=attack">Chỉ xem đánh</a> · <a href="../index.html?xem-cu-dong&amp;tt=walk">chỉ xem đi</a> · <a href="../index.html?xem-cu-dong&amp;tt=die">chỉ xem chết</a></li>
   <li><a href="../index.html?xem-cu-dong&amp;nhieu=1">So sánh: bộ nhiều khung cũ</a></li>
   <li><a href="../index.html?solo=1">Chơi thật với ảnh đơn</a> (<code>?solo=1</code> ép mọi nhân vật dùng ảnh đơn)</li>
 </ul>
 <p>Thêm ảnh mới: lưu <code>assets/&lt;mã&gt;.png</code> (theo docs/PROMPT-DUNG-XUONG.txt), chạy <code>node tools/build-asset-list.js</code>.
-Mã chưa có bộ nhiều khung sẽ tự dùng ảnh này; bộ nhiều khung (packs/&lt;mã&gt;/wind · strike · walk2 · attack…) vẫn được ưu tiên.</p>
+Có ảnh này thì game dùng nó thay bộ ảnh cũ packs/&lt;mã&gt; trên sân. Rig vung tay chỉnh ở <a href="rig-tay.html">tools/rig-tay.html</a>.</p>
 </body>
 </html>

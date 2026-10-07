@@ -48,6 +48,8 @@ function cdHasMulti(type, enemy) {
 function cdSoloImg(type, enemy) {
   // ảnh dựng xương <mã>.png ở gốc assets/ là ảnh mới vẽ theo docs/PROMPT-DUNG-XUONG.txt → dùng thay bộ cũ;
   // chỉ có packs/<mã>/idle.png thì bộ nhiều khung (nếu có) vẫn ưu tiên
+  // bộ nhiều khung thật (PACK_FRAMES / FRAME_ANIMS, tools/cat-sheet.py) vẫn ưu tiên nhất
+  if (!CD.force && ((typeof PACK_FRAMES !== 'undefined' && PACK_FRAMES[type]) || (typeof FRAME_ANIMS !== 'undefined' && FRAME_ANIMS[type]))) return null;
   if (hasAsset(`${type}.png`)) return asset(`${type}.png`, true);
   if (!CD.force && cdHasMulti(type, enemy)) return null;
   const list = [`${type}.png`, `packs/${type}/idle.png`];
