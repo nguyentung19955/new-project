@@ -57,5 +57,22 @@
   "clean-tower-bunker": ["chua", "thap", "Tháp lô cốt (1 vật)"],
   "clean-tower-drum": ["chua", "thap", "Tháp trống (1 vật)"],
   "clean-tower-elephant": ["chua", "thap", "Tháp voi đá (1 vật)"],
-  "clean-tower-pagoda": ["chua", "thap", "Tháp chùa (1 vật)"]
+  "clean-tower-pagoda": ["chua", "thap", "Tháp chùa (1 vật)"],
+  "_hc": "Khóa hc-… sinh tự động bởi tools/build-prompt-hinh-code.js (prompt docs/PROMPT-THAY-HINH-CODE.txt) — đừng sửa tay.",
+  "hc-de-tuong": ["vat", {"dir": "tiles", "size": 128, "files": ["de-tuong-thuong.png", "de-tuong-san-sang.png", "de-tuong-chon.png", "de-tuong-ngap.png", "de-tuong-nui.png"]}, "Bản đồ · ô đặt tướng · công trình · Đế đặt tướng · 5 trạng thái"],
+  "hc-de-tuong-chu-de": ["vat", {"dir": "tiles", "size": 128, "files": ["de-tuong-co.png", "de-tuong-dat.png", "de-tuong-da.png", "de-tuong-cat.png", "de-tuong-gach.png"]}, "Bản đồ · ô đặt tướng · công trình · Đế đặt tướng · theo chủ đề bản đồ"],
+  "hc-thanh-mau": ["khung", {"dir": "ui", "max": 512, "files": ["thanh-mau-boss.png", "thanh-mau-tuong.png", "thanh-mau-quai.png"]}, "Thanh máu · khung HUD trong trận · Khung thanh máu boss / tướng / quái"],
+  "hc-ic-trang-thai-1": ["vat", {"dir": "ui", "size": 64, "files": ["ic-cham.png", "ic-choang.png", "ic-dot.png", "ic-doc.png", "ic-dong-bang.png"]}, "Icon UI (trạng thái, tài nguyên, chỉ số) · Icon nhỏ · ic-trang-thai-1"],
+  "hc-ic-trang-thai-3": ["vat", {"dir": "ui", "size": 64, "files": ["ic-boss.png", "ic-cam-lang.png", "ic-tinh-anh.png", "ic-lan.png"]}, "Icon UI (trạng thái, tài nguyên, chỉ số) · Icon nhỏ · ic-trang-thai-3"],
+  "hc-khung-bang": ["khung", {"dir": "ui", "max": 384, "files": ["khung-bang.png"]}, "Khung · nút · nền panel · Khung bảng / popup (giấy dó viền đồng, 9 mảnh)"],
+  "hc-nut-chu-nhat": ["khung", {"dir": "ui", "max": 384, "files": ["nut-vang-thuong.png", "nut-vang-nhan.png", "nut-vang-khoa.png", "nut-dong-thuong.png", "nut-dong-nhan.png", "nut-dong-khoa.png"]}, "Khung · nút · nền panel · Nút chữ nhật vàng + đồng · thường / nhấn / khóa"],
+  "hc-khung-thanh-day": ["khung", {"dir": "ui", "max": 1200, "files": ["khung-thanh-day.png"]}, "Khung · nút · nền panel · Khung thanh đáy (chợ tướng trong trận)"],
+  "hc-khung-the-cho": ["khung", {"dir": "ui", "max": 192, "files": ["the-cho-thuong.png", "the-cho-ghep.png", "the-cho-thieu.png", "nut-doi-cho.png"]}, "Khung · nút · nền panel · Khung thẻ chợ tướng + nút đổi"],
+  "hc-nut-tron": ["khung", {"dir": "ui", "max": 160, "files": ["nut-tron-thuong.png", "nut-tron-nhan.png", "nut-tron-khoa.png"]}, "Khung · nút · nền panel · Nút tròn (quay lại / đóng) · thường / nhấn / khóa"],
+  "hc-do-ghep-1": ["vat", {"dir": "", "size": 128, "files": ["do-ghep_trong-dong.png", "do-ghep_song-riu-cuong-no.png", "do-ghep_gay-tam-gioi.png", "do-ghep_gay-thoi-khong.png"]}, "Tướng · đồ (icon kỹ năng, đồ ghép) · Đồ ghép 1"],
+  "hc-do-ghep-3": ["vat", {"dir": "", "size": 128, "files": ["do-ghep_cung-mat-chim.png", "do-ghep_bua-chim-lac.png", "do-ghep_ao-vay-ca.png", "do-ghep_ngoc-tran-thuy.png"]}, "Tướng · đồ (icon kỹ năng, đồ ghép) · Đồ ghép 3"],
+  "hc-dai-thong-bao": ["khung", {"dir": "ui", "max": 768, "files": ["dai-thong-bao.png"]}, "Thanh máu · khung HUD trong trận · Dải thông báo (tên chiêu lớn, boss tới)"],
+  "hc-sao-than-tinh": ["vat", {"dir": "", "size": 64, "files": ["ui_than-tinh.png"]}, "Thanh máu · khung HUD trong trận · Sao Thần tinh trên đầu tướng thần"],
+  "hc-ui-ic": ["vat", {"dir": "", "size": 128, "files": ["ui_dong-vang.png", "ui_goi-som.png", "ui_da-kham-pha.png", "ui_luyen-the.png", "ui_tay-luyen.png", "ui_hu-dong.png", "ui_hu-vua-hung.png", "ui_kho-lua.png"]}, "Icon UI (trạng thái, tài nguyên, chỉ số) · Icon vẽ tay ui_*.png (gọi sớm · khám phá · luyện · hũ · kho lúa · đồng vàng)"],
+  "hc-nui": ["vat", {"dir": "", "size": 512, "files": ["ban-do_nui-2.png", "ban-do_nui-5.png"]}, "Màn hình (kết quả, chương, menu, truyện, núi) · Núi Tản Viên · bậc 2 + bậc 5"]
 }

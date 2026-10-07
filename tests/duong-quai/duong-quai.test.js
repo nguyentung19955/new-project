@@ -8,6 +8,7 @@ const path = require('path');
 const fs = require('fs');
 const { execFileSync } = require('child_process');
 const { open, enter, ok } = require('../cho-tuong/helpers');
+global.ASSET_ALL_TEST = true;   // v189: test giả ảnh chưa có → bỏ qua danh sách js/asset-list.js
 
 const SHOT = path.join(__dirname, 'shots');
 fs.mkdirSync(SHOT, { recursive: true });
