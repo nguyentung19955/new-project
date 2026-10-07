@@ -573,7 +573,7 @@ class UI {
     // v146: khung ảnh đã có huy hiệu mặt trời — chỉ đặt ảnh Google (nếu có) vào lòng huy hiệu, không chèn SVG.
     // Chưa đặt biệt danh thì hiện "Khách" + gợi ý chạm để đặt tên (không lấy phần đầu email).
     const nick = this.nickName();
-    $('#menu-player').innerHTML = `${acc && acc.photoURL ? `<span class="av"><img src="${esc(acc.photoURL)}" alt="" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></span>` : ''}<span class="pl-txt"><b>${nick ? esc(nick) : 'Khách <i class="pl-hint">✎ đặt tên</i>'}</b><small>Cấp ${lv} · ♾ Kỷ lục đợt ${best}</small></span>`;
+    $('#menu-player').innerHTML = `${acc && acc.photoURL ? `<span class="av"><img src="${esc(acc.photoURL)}" alt="" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></span>` : ''}<span class="pl-txt"><b>${nick ? esc(nick) : 'Khách <i class="pl-hint">✎ đặt tên</i>'}</b><small>Cấp ${lv} · ♾ đợt ${best}</small></span>`;
     $('#menu-player').title = nick ? 'Tài khoản & đổi tên' : 'Chạm để đặt biệt danh';
     for (const el of $('#menu-player').querySelectorAll('b, small')) fitText(el, el.tagName === 'B' ? 10 : 8);
     $('#menu-player').onclick = () => { this.plPop = !this.plPop; this.outArm = false; this.plMsg = ''; this.renderPlPop(); };
