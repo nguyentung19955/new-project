@@ -1661,3 +1661,12 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
   - Tung chiêu: vòng `vong-chieu-<hệ>` dưới chân tướng (chiêu cuối to hơn), dẹt theo mặt đất.
   - Quái chết: `chet-quai` (64 px), boss chết: `chet-boss` (130 px); không có thì dùng `dust` / vẽ code như cũ.
 - Test: `node tests/hieu-ung/hieu-ung-he.test.js`.
+
+## Phiên bản 176 — Tool cắt ảnh chạy trên máy người dùng (Windows)
+- Ảnh AI gen theo `docs/PROMPT-CAN-GEN.txt` nằm trên máy người dùng (`D:\ảnh game`), nên có tool để tự cắt rồi gửi lại:
+  - `tools/cat-anh.html`: mở bằng Chrome / Edge, không cần cài gì. Kéo thả thư mục / nhiều ảnh → tự nhận loại theo tên file (lệch như `Thaymo (1).PNG`, `.png.png`, `_v2`, tên tiếng Việt có dấu vẫn đoán; không đoán được thì gõ mã), xoá nền hồng tím + viền hồng, xem trước từng khung chạy animation, báo ảnh lỗi (thiếu khung, 2 khung giống hệt, sai lưới), tải `da-cat.zip` đúng cấu trúc `assets/` + `pack-frames.json` + `bao-cao.txt`.
+  - `tools/cat-anh.bat` + `tools/cat_anh.py` (Python + Pillow/numpy/scipy, tự pip install): mặc định đọc `D:\ảnh game`, ghi `D:\ảnh game\da-cat\` (assets/ + `bao-cao.html`) và `da-cat.zip`. `python tools/cat_anh.py --ghep da-cat.zip` (trong repo) chép ảnh vào `assets/` và ghi số khung vào `PACK_FRAMES`.
+- Cách cắt giống hệt `tools/cat-sheet.py` (hero12 / enemy6 / boss9, cả quái cũ 3 ô) · `cat-fx.py` (dai / hat / don) · `cat-icons.py` (icon kỹ năng, Thần Khí): cùng tên file, cùng tên cũ chép từ khung đại diện, `.v2` cho tướng. Thêm: ảnh sai tỉ lệ / lệch lề / đường chia đều cắt ngang hình → dò lưới theo vùng không-hồng-tím (khe trống rộng nhất giữa các hình, bước ô đều) rồi cắt.
+- Danh sách tên file → cách cắt sinh từ dữ liệu game + lệnh cắt trong file prompt: `node tools/build-cat-anh.js` (chạy lại khi thêm tướng / quái / hiệu ứng).
+- Hướng dẫn 3–5 bước: `docs/HUONG-DAN-CAT-ANH.md`.
+- Test: `node tests/cat-anh/cat-anh.test.js` (ảnh mẫu tự sinh: bản Python trùng từng điểm ảnh với tools cũ, kể cả tướng lệch lề 860×700; bản HTML trong Chromium cùng bộ file, cùng cỡ, màu lệch < 1/255 do bảng 256 màu).

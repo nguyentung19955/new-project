@@ -1,0 +1,879 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cắt ảnh game</title>
+<!-- Mở bằng Chrome / Edge (bấm đúp file), không cần cài gì. Kéo thả thư mục "D:\ảnh game" vào trang → xem trước → tải da-cat.zip.
+     Cắt giống tools/cat_anh.py (cùng thuật toán với tools/cat-sheet.py · cat-fx.py · cat-icons.py). Hướng dẫn: docs/HUONG-DAN-CAT-ANH.md -->
+<style>
+:root{--bg:#f6f1e7;--card:#fff;--ink:#2a1608;--mute:#7a6a5a;--ok:#2e9a3e;--warn:#d99000;--bad:#d03030;--line:#e3d8c6;--acc:#b5651d}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1e1a16;--card:#2a241e;--ink:#f1e6d6;--mute:#b3a48f;--line:#3d342b;--acc:#e09a50}}
+:root[data-theme="dark"]{--bg:#1e1a16;--card:#2a241e;--ink:#f1e6d6;--mute:#b3a48f;--line:#3d342b;--acc:#e09a50}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,"Segoe UI",sans-serif}
+main{max-width:1100px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:4px 0 2px}
+.sub{color:var(--mute);margin:0 0 12px}
+#tha{border:3px dashed var(--acc);border-radius:14px;padding:26px 16px;text-align:center;background:var(--card);cursor:pointer}
+#tha.over{background:#fff3e0}
+#tha b{font-size:18px}
+.nut{display:inline-block;margin:6px 4px 0;padding:9px 16px;border-radius:9px;border:0;background:var(--acc);color:#fff;font:inherit;font-weight:600;cursor:pointer}
+.nut.phu{background:transparent;color:var(--acc);border:2px solid var(--acc)}
+.nut:disabled{opacity:.45;cursor:default}
+#tong{position:sticky;top:0;z-index:2;background:var(--bg);padding:10px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+#tong .dem{flex:1;min-width:200px}
+.the{background:var(--card);border-radius:10px;margin:10px 0;padding:10px 12px;border-left:6px solid var(--line)}
+.the.tot{border-color:var(--ok)}.the.canh{border-color:var(--warn)}.the.loi{border-color:var(--bad)}
+.dau{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.dau .ten{font-weight:700;word-break:break-all}
+.dau input{font:inherit;padding:4px 6px;border:1px solid var(--line);border-radius:6px;min-width:230px;background:var(--bg);color:var(--ink)}
+.nhan{font-size:13px;color:var(--mute)}
+ul.tb{margin:4px 0;padding-left:20px}ul.tb li.e{color:var(--bad)}ul.tb li.w{color:var(--warn)}
+.xem{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-top:6px}
+.o{background:repeating-conic-gradient(#d8d8d8 0 25%,#fff 0 50%) 0 0/12px 12px;border-radius:6px}
+canvas.chay{max-height:160px;max-width:100%;height:auto}
+.khung{display:flex;flex-wrap:wrap;gap:3px;align-items:flex-end;flex:1 1 220px;min-width:0}
+.khung figure{max-width:100%}
+.khung figure{margin:0;text-align:center;font-size:11px;color:var(--mute)}
+.khung canvas{max-height:64px;max-width:100%;height:auto;display:block}
+.goc{max-height:90px;max-width:100%;border-radius:6px;border:1px solid var(--line)}
+@media (max-width:600px){.dau input{min-width:0;width:100%}canvas.chay{max-height:120px}}
+</style>
+</head>
+<body>
+<main>
+<h1>Cắt ảnh game</h1>
+<p class="sub">Kéo thả cả thư mục ảnh AI vừa gen (ví dụ <b>D:\ảnh game</b>) vào ô dưới. Tool tự nhận ảnh theo tên file, xoá nền hồng tím, cắt từng khung, rồi cho tải <b>da-cat.zip</b> đúng cấu trúc thư mục <code>assets/</code> của game.</p>
+<div id="tha" tabindex="0">
+  <b>Thả thư mục hoặc ảnh vào đây</b><br>
+  <span class="nhan">hoặc</span><br>
+  <button class="nut" id="nut-thu-muc" type="button">Chọn thư mục…</button>
+  <button class="nut phu" id="nut-anh" type="button">Chọn ảnh…</button>
+  <input id="chon-thu-muc" type="file" webkitdirectory multiple hidden>
+  <input id="chon-anh" type="file" accept="image/*" multiple hidden>
+</div>
+<div id="tong" hidden>
+  <span class="dem" id="dem"></span>
+  <button class="nut" id="tai" type="button" disabled>Tải da-cat.zip</button>
+  <button class="nut phu" id="xoa" type="button">Làm lại</button>
+</div>
+<div id="ds"></div>
+<datalist id="dl"></datalist>
+</main>
+<script>
+'use strict';
+// DANH-SACH (sinh bằng node tools/build-cat-anh.js — đừng sửa tay)
+const DANH_SACH = {"adv":["hero12","adv","An Dương Vương"],"afterimage":["dai","afterimage","Hiệu ứng · afterimage"],"antiem":["hero12","antiem","Mai An Tiêm"],"anvuong":["boss9","anvuong","Boss · Quỷ Vương Ân"],"auco":["hero12","auco","Âu Cơ"],"baahoa":["hero12","baahoa","Bà Hỏa"],"camap":["enemy6","camap","Quái · Cá Mập Yêu"],"camapden":["enemy6","camapden","Quái · Cá Mập Bóng Đêm"],"cao":["enemy6","cao","Quái · Cáo Con"],"caolo":["hero12","caolo","Cao Lỗ"],"caong":["hero12","caong","Thần Cá Ông"],"casau":["enemy6","casau","Quái · Cá Sấu"],"cdt":["hero12","cdt","Chử Đồng Tử"],"chanlua":["enemy6","chanlua","Quái · Chằn Lửa"],"chantinh":["boss9","chantinh","Boss · Chằn Tinh"],"chantrau":["hero12","chantrau","Trẻ Chăn Trâu"],"chet-boss":["dai","chet-boss","Boss chết (nổ lớn + cột sáng)"],"chet-quai":["dai","chet-quai","Quái chết (khói tan)"],"chimbao":["enemy6","chimbao","Quái · Chim Bão"],"chodo":["hero12","chodo","Chàng Chèo Đò"],"chuongdong":["hero12","chuongdong","Thầy Chuông Đồng"],"coins":["dai","coins","Hiệu ứng · coins"],"cua":["enemy6","cua","Quái · Cua Khổng Lồ"],"cungan":["enemy6","cungan","Quái · Sói Cung Thủ"],"cungtlua":["enemy6","cungtlua","Quái · Sói Cung Lửa"],"cuoi":["hero12","cuoi","Chú Cuội"],"dacon":["enemy6","dacon","Quái · Đá Con"],"daibang":["boss9","daibang","Boss · Đại Bàng Tinh"],"dan-1":["hatmau",["dan_fireball","dan_frostbolt","dan_arrow","dan_bolt","dan_orb"],"Hạt hiệu ứng · dan_fireball, dan_frostbolt, dan_arrow, dan_bolt, dan_orb"],"dan-2":["hatmau",["dan_feather","dan_petal","dan_melon","dan_rice","dan_evil"],"Hạt hiệu ứng · dan_feather, dan_petal, dan_melon, dan_rice, dan_evil"],"dan-he":["hatmau",["dan-kim","dan-moc","dan-thuy","dan-hoa","dan-tho"],"Đạn bay theo hệ (5 ô: Kim · Mộc · Thủy · Hỏa · Thổ)"],"dapde":["hero12","dapde","Người Đắp Đê"],"denroi":["hero12","denroi","Cô Thả Đèn Trời"],"doi":["enemy6","doi","Quái · Dơi Hang"],"doima":["enemy6","doima","Quái · Dơi Ma"],"dotnuong":["hero12","dotnuong","Chàng Đốt Nương"],"dust":["dai","dust","Hiệu ứng · dust"],"echme":["enemy6","echme","Quái · Ếch Mẹ"],"fire-burst":["dai","fire-burst","Hiệu ứng · fire-burst"],"fire-pillar":["dai","fire-pillar","Hiệu ứng · fire-pillar"],"flood-rise":["dai","flood-rise","Hiệu ứng · flood-rise"],"freeze":["dai","freeze","Hiệu ứng · freeze"],"giaodong":["hero12","giaodong","Dũng Sĩ Giáo Đồng"],"giaolong":["enemy6","giaolong","Quái · Giao Long Con"],"giong":["hero12","giong","Thánh Gióng"],"haba":["boss9","haba","Boss · Hà Bá"],"haisen":["hero12","haisen","Cô Hái Sen"],"halong":["hero12","halong","Rồng Mẹ Hạ Long"],"hat-1":["hat",["circle_02","circle_03","circle_05","light_03"],"Hạt hiệu ứng · circle_02, circle_03, circle_05, light_03"],"hat-2":["hat",["magic_01","magic_02","magic_03","magic_05"],"Hạt hiệu ứng · magic_01, magic_02, magic_03, magic_05"],"hat-3":["hat",["fire_01","fire_02","flame_05","flame_06"],"Hạt hiệu ứng · fire_01, fire_02, flame_05, flame_06"],"hat-4":["hat",["muzzle_02","scorch_01","scorch_02","dirt_01"],"Hạt hiệu ứng · muzzle_02, scorch_01, scorch_02, dirt_01"],"hat-5":["hat",["smoke_03","smoke_07","smoke_09","flare_01"],"Hạt hiệu ứng · smoke_03, smoke_07, smoke_09, flare_01"],"hat-6":["hat",["slash_01","slash_03","scratch_01","trace_05"],"Hạt hiệu ứng · slash_01, slash_03, scratch_01, trace_05"],"hat-7":["hat",["spark_01","spark_06","twirl_01","twirl_02"],"Hạt hiệu ứng · spark_01, spark_06, twirl_01, twirl_02"],"hat-8":["hat",["star_04","star_06","star_08","star_09"],"Hạt hiệu ứng · star_04, star_06, star_08, star_09"],"heal":["dai","heal","Hiệu ứng · heal"],"hieu-ung_binh-gom":["don","hieu-ung_binh-gom","Hiệu ứng · hieu-ung_binh-gom"],"hieu-ung_chai":["don","hieu-ung_chai","Hiệu ứng · hieu-ung_chai"],"hieu-ung_da-lan":["don","hieu-ung_da-lan","Hiệu ứng · hieu-ung_da-lan"],"hieu-ung_den-troi":["don","hieu-ung_den-troi","Hiệu ứng · hieu-ung_den-troi"],"hieu-ung_dua-hau":["don","hieu-ung_dua-hau","Hiệu ứng · hieu-ung_dua-hau"],"hit-spark":["dai","hit-spark","Hiệu ứng · hit-spark"],"hoden":["enemy6","hoden","Quái · Hồ Ly Bóng Đêm"],"hook":["dai","hook","Hiệu ứng · hook"],"hotinh":["boss9","hotinh","Boss · Hồ Tinh Chín Đuôi"],"ice-ring":["dai","ice-ring","Hiệu ứng · ice-ring"],"icon-adv":["icon4","adv","Icon kỹ năng · An Dương Vương"],"icon-antiem":["icon4","antiem","Icon kỹ năng · Mai An Tiêm"],"icon-auco":["icon4","auco","Icon kỹ năng · Âu Cơ"],"icon-baahoa":["icon4","baahoa","Icon kỹ năng · Bà Hỏa"],"icon-caolo":["icon4","caolo","Icon kỹ năng · Cao Lỗ"],"icon-caong":["icon4","caong","Icon kỹ năng · Thần Cá Ông"],"icon-cdt":["icon4","cdt","Icon kỹ năng · Chử Đồng Tử"],"icon-chantrau":["icon4","chantrau","Icon kỹ năng · Trẻ Chăn Trâu"],"icon-chodo":["icon4","chodo","Icon kỹ năng · Chàng Chèo Đò"],"icon-chuongdong":["icon4","chuongdong","Icon kỹ năng · Thầy Chuông Đồng"],"icon-cuoi":["icon4","cuoi","Icon kỹ năng · Chú Cuội"],"icon-dapde":["icon4","dapde","Icon kỹ năng · Người Đắp Đê"],"icon-denroi":["icon4","denroi","Icon kỹ năng · Cô Thả Đèn Trời"],"icon-dotnuong":["icon4","dotnuong","Icon kỹ năng · Chàng Đốt Nương"],"icon-giaodong":["icon4","giaodong","Icon kỹ năng · Dũng Sĩ Giáo Đồng"],"icon-giong":["icon4","giong","Icon kỹ năng · Thánh Gióng"],"icon-haisen":["icon4","haisen","Icon kỹ năng · Cô Hái Sen"],"icon-halong":["icon4","halong","Icon kỹ năng · Rồng Mẹ Hạ Long"],"icon-kimquy":["icon4","kimquy","Icon kỹ năng · Thần Kim Quy"],"icon-kinhduong":["icon4","kinhduong","Icon kỹ năng · Kinh Dương Vương"],"icon-kylan":["icon4","kylan","Icon kỹ năng · Kỳ Lân Vàng"],"icon-lachau":["icon4","lachau","Icon kỹ năng · Lạc Hầu"],"icon-lactuong":["icon4","lactuong","Icon kỹ năng · Lạc Tướng"],"icon-langlieu":["icon4","langlieu","Icon kỹ năng · Lang Liêu"],"icon-llq":["icon4","llq","Icon kỹ năng · Lạc Long Quân"],"icon-longnu":["icon4","longnu","Icon kỹ năng · Long Nữ Động Đình"],"icon-lucsi":["icon4","lucsi","Icon kỹ năng · Lực Sĩ Núi"],"icon-lyngu":["icon4","lyngu","Icon kỹ năng · Lý Ngư Tướng Quân"],"icon-matroi":["icon4","matroi","Icon kỹ năng · Nữ Thần Mặt Trời"],"icon-mau":["icon4","mau","Icon kỹ năng · Mẫu Thượng Ngàn"],"icon-maudia":["icon4","maudia","Icon kỹ năng · Mẫu Địa"],"icon-mauthoai":["icon4","mauthoai","Icon kỹ năng · Mẫu Thoải"],"icon-melua":["icon4","melua","Icon kỹ năng · Mẹ Lúa"],"icon-mychau":["icon4","mychau","Icon kỹ năng · Mỵ Châu"],"icon-nghedong":["icon4","nghedong","Icon kỹ năng · Nghê Đồng"],"icon-nguphu":["icon4","nguphu","Icon kỹ năng · Ngư Phủ Sông Đà"],"icon-ongdung":["icon4","ongdung","Icon kỹ năng · Ông Đùng"],"icon-ongho":["icon4","ongho","Icon kỹ năng · Chúa Sơn Lâm"],"icon-ongtao":["icon4","ongtao","Icon kỹ năng · Ông Táo"],"icon-ongthoi":["icon4","ongthoi","Icon kỹ năng · Thợ Săn Ống Thổi"],"icon-potaoapui":["icon4","potaoapui","Icon kỹ năng · Vua Lửa Pơtao Apui"],"icon-sodua":["icon4","sodua","Icon kỹ năng · Sọ Dừa"],"icon-tanvien":["icon4","tanvien","Icon kỹ năng · Sơn Tinh"],"icon-thachsanh":["icon4","thachsanh","Icon kỹ năng · Thạch Sanh"],"icon-thansan":["icon4","thansan","Icon kỹ năng · Thần Săn Ba Vì"],"icon-thansuong":["icon4","thansuong","Icon kỹ năng · Thần Sương Núi"],"icon-thaylang":["icon4","thaylang","Icon kỹ năng · Thầy Lang Lá Thuốc"],"icon-thaymo":["icon4","thaymo","Icon kỹ năng · Thầy Mo Lửa"],"icon-thienloi":["icon4","thienloi","Icon kỹ năng · Thiên Lôi"],"icon-thocong":["icon4","thocong","Icon kỹ năng · Thổ Công"],"icon-thogom":["icon4","thogom","Icon kỹ năng · Thợ Gốm Phù Lãng"],"icon-thoren":["icon4","thoren","Icon kỹ năng · Thợ Rèn Đông Sơn"],"icon-thosan":["icon4","thosan","Icon kỹ năng · Thợ Săn Rừng"],"icon-tiendung":["icon4","tiendung","Icon kỹ năng · Tiên Dung"],"icon-tre":["icon4","tre","Icon kỹ năng · Dũng Sĩ Tre Làng"],"icon-trongdong":["icon4","trongdong","Icon kỹ năng · Thần Trống Đồng"],"icon-truongchi":["icon4","truongchi","Icon kỹ năng · Trương Chi"],"icon-trutroi":["icon4","trutroi","Icon kỹ năng · Thần Trụ Trời"],"icon-viemde":["icon4","viemde","Icon kỹ năng · Viêm Đế Thần Nông"],"icon-xathu":["icon4","xathu","Icon kỹ năng · Xạ Thủ Văn Lang"],"kimquy":["hero12","kimquy","Thần Kim Quy"],"kinhduong":["hero12","kinhduong","Kinh Dương Vương"],"kybinh":["enemy6","kybinh","Quái · Quỷ Cưỡi Lợn"],"kylan":["hero12","kylan","Kỳ Lân Vàng"],"lachau":["hero12","lachau","Lạc Hầu"],"lactuong":["hero12","lactuong","Lạc Tướng"],"langlieu":["hero12","langlieu","Lang Liêu"],"lightning":["dai","lightning","Hiệu ứng · lightning"],"linhan":["enemy6","linhan","Quái · Quỷ Giáo"],"llq":["hero12","llq","Lạc Long Quân"],"longnu":["hero12","longnu","Long Nữ Động Đình"],"lucsi":["hero12","lucsi","Lực Sĩ Núi"],"lyngu":["hero12","lyngu","Lý Ngư Tướng Quân"],"mark":["dai","mark","Hiệu ứng · mark"],"matroi":["hero12","matroi","Nữ Thần Mặt Trời"],"mau":["hero12","mau","Mẫu Thượng Ngàn"],"maudia":["hero12","maudia","Mẫu Địa"],"mauthoai":["hero12","mauthoai","Mẫu Thoải"],"melua":["hero12","melua","Mẹ Lúa"],"meteor":["dai","meteor","Hiệu ứng · meteor"],"mountain-rise":["dai","mountain-rise","Hiệu ứng · mountain-rise"],"muc":["enemy6","muc","Quái · Mực Tinh"],"mucdoc":["enemy6","mucdoc","Quái · Mực Độc"],"music-notes":["dai","music-notes","Hiệu ứng · music-notes"],"mychau":["hero12","mychau","Mỵ Châu"],"nghedong":["hero12","nghedong","Nghê Đồng"],"nguphu":["hero12","nguphu","Ngư Phủ Sông Đà"],"ngutinh":["boss9","ngutinh","Boss · Ngư Tinh"],"no-hoa":["dai","no-hoa","Vụ nổ hệ Hỏa (đạn nổ lan)"],"no-kim":["dai","no-kim","Vụ nổ hệ Kim (đạn nổ lan)"],"no-moc":["dai","no-moc","Vụ nổ hệ Mộc (đạn nổ lan)"],"no-tho":["dai","no-tho","Vụ nổ hệ Thổ (đạn nổ lan)"],"no-thuy":["dai","no-thuy","Vụ nổ hệ Thủy (đạn nổ lan)"],"nongnoc":["enemy6","nongnoc","Quái · Nòng Nọc"],"ongdung":["hero12","ongdung","Ông Đùng"],"ongho":["hero12","ongho","Chúa Sơn Lâm"],"ongtao":["hero12","ongtao","Ông Táo"],"ongthoi":["hero12","ongthoi","Thợ Săn Ống Thổi"],"phuthuy":["enemy6","phuthuy","Quái · Sứa Tinh"],"potaoapui":["hero12","potaoapui","Vua Lửa Pơtao Apui"],"rain":["dai","rain","Hiệu ứng · rain"],"ran":["enemy6","ran","Quái · Rắn Độc"],"ranbang":["enemy6","ranbang","Quái · Rắn Băng"],"revive":["dai","revive","Hiệu ứng · revive"],"ring":["dai","ring","Hiệu ứng · ring"],"rocks":["dai","rocks","Hiệu ứng · rocks"],"rua":["enemy6","rua","Quái · Rùa Giáp"],"shield-gold":["dai","shield-gold","Hiệu ứng · shield-gold"],"slash-gold":["dai","slash-gold","Hiệu ứng · slash-gold"],"sodua":["hero12","sodua","Sọ Dừa"],"spawn-ring":["dai","spawn-ring","Hiệu ứng · spawn-ring"],"streak":["dai","streak","Hiệu ứng · streak"],"sweep":["dai","sweep","Hiệu ứng · sweep"],"tanvien":["hero12","tanvien","Sơn Tinh"],"thachsanh":["hero12","thachsanh","Thạch Sanh"],"thachtinh":["enemy6","thachtinh","Quái · Thạch Tinh"],"thachvang":["enemy6","thachvang","Quái · Thạch Tinh Vàng"],"than-khi-adv":["tk3","adv","Thần Khí · An Dương Vương"],"than-khi-antiem":["tk3","antiem","Thần Khí · Mai An Tiêm"],"than-khi-auco":["tk3","auco","Thần Khí · Âu Cơ"],"than-khi-baahoa":["tk3","baahoa","Thần Khí · Bà Hỏa"],"than-khi-caolo":["tk3","caolo","Thần Khí · Cao Lỗ"],"than-khi-caong":["tk3","caong","Thần Khí · Thần Cá Ông"],"than-khi-cdt":["tk3","cdt","Thần Khí · Chử Đồng Tử"],"than-khi-chantrau":["tk3","chantrau","Thần Khí · Trẻ Chăn Trâu"],"than-khi-chodo":["tk3","chodo","Thần Khí · Chàng Chèo Đò"],"than-khi-chuongdong":["tk3","chuongdong","Thần Khí · Thầy Chuông Đồng"],"than-khi-cuoi":["tk3","cuoi","Thần Khí · Chú Cuội"],"than-khi-dapde":["tk3","dapde","Thần Khí · Người Đắp Đê"],"than-khi-denroi":["tk3","denroi","Thần Khí · Cô Thả Đèn Trời"],"than-khi-dotnuong":["tk3","dotnuong","Thần Khí · Chàng Đốt Nương"],"than-khi-giaodong":["tk3","giaodong","Thần Khí · Dũng Sĩ Giáo Đồng"],"than-khi-giong":["tk3","giong","Thần Khí · Thánh Gióng"],"than-khi-haisen":["tk3","haisen","Thần Khí · Cô Hái Sen"],"than-khi-halong":["tk3","halong","Thần Khí · Rồng Mẹ Hạ Long"],"than-khi-kimquy":["tk3","kimquy","Thần Khí · Thần Kim Quy"],"than-khi-kinhduong":["tk3","kinhduong","Thần Khí · Kinh Dương Vương"],"than-khi-kylan":["tk3","kylan","Thần Khí · Kỳ Lân Vàng"],"than-khi-lachau":["tk3","lachau","Thần Khí · Lạc Hầu"],"than-khi-lactuong":["tk3","lactuong","Thần Khí · Lạc Tướng"],"than-khi-langlieu":["tk3","langlieu","Thần Khí · Lang Liêu"],"than-khi-llq":["tk3","llq","Thần Khí · Lạc Long Quân"],"than-khi-longnu":["tk3","longnu","Thần Khí · Long Nữ Động Đình"],"than-khi-lucsi":["tk3","lucsi","Thần Khí · Lực Sĩ Núi"],"than-khi-lyngu":["tk3","lyngu","Thần Khí · Lý Ngư Tướng Quân"],"than-khi-matroi":["tk3","matroi","Thần Khí · Nữ Thần Mặt Trời"],"than-khi-mau":["tk3","mau","Thần Khí · Mẫu Thượng Ngàn"],"than-khi-maudia":["tk3","maudia","Thần Khí · Mẫu Địa"],"than-khi-mauthoai":["tk3","mauthoai","Thần Khí · Mẫu Thoải"],"than-khi-melua":["tk3","melua","Thần Khí · Mẹ Lúa"],"than-khi-mychau":["tk3","mychau","Thần Khí · Mỵ Châu"],"than-khi-nghedong":["tk3","nghedong","Thần Khí · Nghê Đồng"],"than-khi-nguphu":["tk3","nguphu","Thần Khí · Ngư Phủ Sông Đà"],"than-khi-ongdung":["tk3","ongdung","Thần Khí · Ông Đùng"],"than-khi-ongho":["tk3","ongho","Thần Khí · Chúa Sơn Lâm"],"than-khi-ongtao":["tk3","ongtao","Thần Khí · Ông Táo"],"than-khi-ongthoi":["tk3","ongthoi","Thần Khí · Thợ Săn Ống Thổi"],"than-khi-potaoapui":["tk3","potaoapui","Thần Khí · Vua Lửa Pơtao Apui"],"than-khi-sodua":["tk3","sodua","Thần Khí · Sọ Dừa"],"than-khi-tanvien":["tk3","tanvien","Thần Khí · Sơn Tinh"],"than-khi-thachsanh":["tk3","thachsanh","Thần Khí · Thạch Sanh"],"than-khi-thansan":["tk3","thansan","Thần Khí · Thần Săn Ba Vì"],"than-khi-thansuong":["tk3","thansuong","Thần Khí · Thần Sương Núi"],"than-khi-thaylang":["tk3","thaylang","Thần Khí · Thầy Lang Lá Thuốc"],"than-khi-thaymo":["tk3","thaymo","Thần Khí · Thầy Mo Lửa"],"than-khi-thienloi":["tk3","thienloi","Thần Khí · Thiên Lôi"],"than-khi-thocong":["tk3","thocong","Thần Khí · Thổ Công"],"than-khi-thogom":["tk3","thogom","Thần Khí · Thợ Gốm Phù Lãng"],"than-khi-thoren":["tk3","thoren","Thần Khí · Thợ Rèn Đông Sơn"],"than-khi-thosan":["tk3","thosan","Thần Khí · Thợ Săn Rừng"],"than-khi-tiendung":["tk3","tiendung","Thần Khí · Tiên Dung"],"than-khi-tre":["tk3","tre","Thần Khí · Dũng Sĩ Tre Làng"],"than-khi-trongdong":["tk3","trongdong","Thần Khí · Thần Trống Đồng"],"than-khi-truongchi":["tk3","truongchi","Thần Khí · Trương Chi"],"than-khi-trutroi":["tk3","trutroi","Thần Khí · Thần Trụ Trời"],"than-khi-viemde":["tk3","viemde","Thần Khí · Viêm Đế Thần Nông"],"than-khi-xathu":["tk3","xathu","Thần Khí · Xạ Thủ Văn Lang"],"thansan":["hero12","thansan","Thần Săn Ba Vì"],"thansuong":["hero12","thansuong","Thần Sương Núi"],"thaylang":["hero12","thaylang","Thầy Lang Lá Thuốc"],"thaymo":["hero12","thaymo","Thầy Mo Lửa"],"thienloi":["hero12","thienloi","Thiên Lôi"],"thietky":["enemy6","thietky","Quái · Lợn Giáp Sắt"],"thocong":["hero12","thocong","Thổ Công"],"thogom":["hero12","thogom","Thợ Gốm Phù Lãng"],"thoren":["hero12","thoren","Thợ Rèn Đông Sơn"],"thosan":["hero12","thosan","Thợ Săn Rừng"],"thuongluong":["boss9","thuongluong","Boss · Thuồng Luồng"],"thuytinh":["boss9","thuytinh","Boss · Thủy Tinh"],"tiendung":["hero12","tiendung","Tiên Dung"],"tom":["enemy6","tom","Quái · Tôm Binh"],"tomlua":["enemy6","tomlua","Quái · Tôm Lửa"],"tre":["hero12","tre","Dũng Sĩ Tre Làng"],"trieu-hoi_cay-da-than":["don","trieu-hoi_cay-da-than","Hiệu ứng · trieu-hoi_cay-da-than"],"trieu-hoi_chim-lac":["don","trieu-hoi_chim-lac","Hiệu ứng · trieu-hoi_chim-lac"],"trieu-hoi_chim-than":["don","trieu-hoi_chim-than","Hiệu ứng · trieu-hoi_chim-than"],"trieu-hoi_giong-bay":["don","trieu-hoi_giong-bay","Hiệu ứng · trieu-hoi_giong-bay"],"trieu-hoi_ho-ba-vi":["don","trieu-hoi_ho-ba-vi","Hiệu ứng · trieu-hoi_ho-ba-vi"],"trieu-hoi_lac-tu":["don","trieu-hoi_lac-tu","Hiệu ứng · trieu-hoi_lac-tu"],"trieu-hoi_ngua-sat":["don","trieu-hoi_ngua-sat","Hiệu ứng · trieu-hoi_ngua-sat"],"trieuda":["boss9","trieuda","Boss · Hổ Vương Triệu Đà"],"trongdong":["hero12","trongdong","Thần Trống Đồng"],"trung-hoa":["dai","trung-hoa","Trúng đòn hệ Hỏa (đạn chạm quái)"],"trung-kim":["dai","trung-kim","Trúng đòn hệ Kim (đạn chạm quái)"],"trung-moc":["dai","trung-moc","Trúng đòn hệ Mộc (đạn chạm quái)"],"trung-tho":["dai","trung-tho","Trúng đòn hệ Thổ (đạn chạm quái)"],"trung-thuy":["dai","trung-thuy","Trúng đòn hệ Thủy (đạn chạm quái)"],"truongchi":["hero12","truongchi","Trương Chi"],"trutroi":["hero12","trutroi","Thần Trụ Trời"],"tuongthuy":["enemy6","tuongthuy","Quái · Tướng Thủy Quân"],"viemde":["hero12","viemde","Viêm Đế Thần Nông"],"voichien":["enemy6","voichien","Quái · Voi Chiến"],"volley":["dai","volley","Hiệu ứng · volley"],"vong-chieu-hoa":["dai","vong-chieu-hoa","Vòng chiêu / hào quang hệ Hỏa (dưới chân tướng khi tung chiêu)"],"vong-chieu-kim":["dai","vong-chieu-kim","Vòng chiêu / hào quang hệ Kim (dưới chân tướng khi tung chiêu)"],"vong-chieu-moc":["dai","vong-chieu-moc","Vòng chiêu / hào quang hệ Mộc (dưới chân tướng khi tung chiêu)"],"vong-chieu-tho":["dai","vong-chieu-tho","Vòng chiêu / hào quang hệ Thổ (dưới chân tướng khi tung chiêu)"],"vong-chieu-thuy":["dai","vong-chieu-thuy","Vòng chiêu / hào quang hệ Thủy (dưới chân tướng khi tung chiêu)"],"vortex":["dai","vortex","Hiệu ứng · vortex"],"warn":["dai","warn","Hiệu ứng · warn"],"water-wave":["dai","water-wave","Hiệu ứng · water-wave"],"xathu":["hero12","xathu","Xạ Thủ Văn Lang"],"yeutinh":["enemy6","yeutinh","Quái · Yêu Tinh Rừng"]};
+// HET-DANH-SACH
+
+// ═════════════ ảnh: {w, h, c (số kênh 4 = RGBA, 2 = LA), d: Uint8ClampedArray RGBA} ═════════════
+const mk = (w, h, c = 4) => ({ w, h, c, d: new Uint8ClampedArray(w * h * 4) });
+const clone = (im) => ({ w: im.w, h: im.h, c: im.c, d: new Uint8ClampedArray(im.d) });
+const rhe = (x) => { const f = Math.floor(x), r = x - f; return r > 0.5 ? f + 1 : r < 0.5 ? f : (f % 2 === 0 ? f : f + 1); }; // numpy round (nửa → chẵn)
+const clip = (x, a, b) => (x < a ? a : x > b ? b : x);
+
+function crop(im, x0, y0, x1, y1) {          // như PIL crop: ngoài ảnh = trong suốt
+  const w = Math.max(0, x1 - x0), h = Math.max(0, y1 - y0), o = mk(w, h, im.c);
+  for (let y = 0; y < h; y++) {
+    const sy = y + y0; if (sy < 0 || sy >= im.h) continue;
+    for (let x = 0; x < w; x++) {
+      const sx = x + x0; if (sx < 0 || sx >= im.w) continue;
+      const s = (sy * im.w + sx) * 4, t = (y * w + x) * 4;
+      o.d[t] = im.d[s]; o.d[t + 1] = im.d[s + 1]; o.d[t + 2] = im.d[s + 2]; o.d[t + 3] = im.d[s + 3];
+    }
+  }
+  return o;
+}
+function bbox(im) {                           // như PIL getbbox (kênh alpha) → [x0,y0,x1,y1] hoặc null
+  let x0 = im.w, y0 = im.h, x1 = -1, y1 = -1;
+  for (let y = 0; y < im.h; y++) for (let x = 0; x < im.w; x++) if (im.d[(y * im.w + x) * 4 + 3]) {
+    if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+  }
+  return x1 < 0 ? null : [x0, y0, x1 + 1, y1 + 1];
+}
+function paste(dst, src, ox, oy) {            // dán thay (không trộn) như PIL paste không mặt nạ
+  for (let y = 0; y < src.h; y++) for (let x = 0; x < src.w; x++) {
+    const X = x + ox, Y = y + oy; if (X < 0 || Y < 0 || X >= dst.w || Y >= dst.h) continue;
+    const s = (y * src.w + x) * 4, t = (Y * dst.w + X) * 4;
+    for (let k = 0; k < 4; k++) dst.d[t + k] = src.d[s + k];
+  }
+}
+function median(arr) { const a = Float64Array.from(arr).sort(); const n = a.length; return n % 2 ? a[(n - 1) / 2] : (a[n / 2 - 1] + a[n / 2]) / 2; }
+function edgePixels(im, m) {                  // hàng trên m · dưới m · cột trái m · phải m (như numpy concatenate)
+  const out = [];
+  const add = (x, y) => { const i = (y * im.w + x) * 4; out.push([im.d[i], im.d[i + 1], im.d[i + 2]]); };
+  for (let y = 0; y < Math.min(m, im.h); y++) for (let x = 0; x < im.w; x++) add(x, y);
+  for (let y = Math.max(0, im.h - m); y < im.h; y++) for (let x = 0; x < im.w; x++) add(x, y);
+  for (let y = 0; y < im.h; y++) for (let x = 0; x < Math.min(m, im.w); x++) add(x, y);
+  for (let y = 0; y < im.h; y++) for (let x = Math.max(0, im.w - m); x < im.w; x++) add(x, y);
+  return out;
+}
+const borderColor = (im) => { const e = edgePixels(im, 6); return [0, 1, 2].map((k) => median(e.map((p) => p[k]))); };
+const isPink = ([r, g, b]) => r > 150 && g < 120 && b > 60 && r > b + 40 && b > g + 20;
+
+function dilate7(mask, w, h) {                // PIL MaxFilter(7) (mép lặp lại = cửa sổ cắt theo ảnh)
+  const t = new Uint8Array(w * h), o = new Uint8Array(w * h);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    let v = 0; for (let k = Math.max(0, x - 3); k <= Math.min(w - 1, x + 3); k++) if (mask[y * w + k]) { v = 1; break; }
+    t[y * w + x] = v;
+  }
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    let v = 0; for (let k = Math.max(0, y - 3); k <= Math.min(h - 1, y + 3); k++) if (t[k * w + x]) { v = 1; break; }
+    o[y * w + x] = v;
+  }
+  return o;
+}
+function label(mask, w, h) {                  // nhãn liên thông 4 hướng (như scipy.ndimage.label mặc định)
+  const lab = new Int32Array(w * h); let n = 0; const st = new Int32Array(w * h);
+  for (let i = 0; i < w * h; i++) {
+    if (!mask[i] || lab[i]) continue;
+    n++; let sp = 0; st[sp++] = i; lab[i] = n;
+    while (sp) {
+      const p = st[--sp], x = p % w, y = (p - x) / w;
+      if (x > 0 && mask[p - 1] && !lab[p - 1]) { lab[p - 1] = n; st[sp++] = p - 1; }
+      if (x < w - 1 && mask[p + 1] && !lab[p + 1]) { lab[p + 1] = n; st[sp++] = p + 1; }
+      if (y > 0 && mask[p - w] && !lab[p - w]) { lab[p - w] = n; st[sp++] = p - w; }
+      if (y < h - 1 && mask[p + w] && !lab[p + w]) { lab[p + w] = n; st[sp++] = p + w; }
+    }
+  }
+  return { lab, n };
+}
+function borderLabels(lab, w, h) {
+  const s = new Set();
+  for (let x = 0; x < w; x++) { s.add(lab[x]); s.add(lab[(h - 1) * w + x]); }
+  for (let y = 0; y < h; y++) { s.add(lab[y * w]); s.add(lab[y * w + w - 1]); }
+  s.delete(0); return s;
+}
+
+// ═════════════ lõi cắt — chép theo tools/cat_anh.py (= tools/cat-sheet.py) ═════════════
+const NAMES = {
+  hero: [3, 2, ['idle', 'wind', 'strike', 'cast', 'front', 'head']],
+  enemy: [3, 1, ['walk1', 'walk2', 'attack']],
+  boss: [2, 2, ['idle', 'attack', 'skill', 'rage']],
+  boss4: [2, 2, ['walk1', 'walk2', 'attack', 'rage']],
+  hero12: [4, 3, ['idle_1', 'idle_2', 'idle_3', 'head', 'attack_1', 'attack_2', 'attack_3', 'attack_4', 'cast_1', 'cast_2', 'cast_3', 'hurt']],
+  enemy6: [3, 2, ['walk_1', 'walk_2', 'walk_3', 'walk_4', 'attack_1', 'attack_2']],
+  boss9: [3, 3, ['walk_1', 'walk_2', 'walk_3', 'walk_4', 'attack_1', 'attack_2', 'attack_3', 'rage_1', 'rage_2']],
+};
+const ALIAS = {
+  hero12: { idle: 'idle_1', front: 'idle_1', wind: 'attack_2', strike: 'attack_3', cast: 'cast_2' },
+  enemy6: { walk1: 'walk_1', walk2: 'walk_3', attack: 'attack_2' },
+  boss9: { idle: 'walk_1', walk1: 'walk_1', walk2: 'walk_3', attack: 'attack_2', skill: 'attack_3', rage: 'rage_1' },
+};
+function frameCounts(names) {
+  const cnt = {};
+  for (const n of names) {
+    if (n === 'head') continue;
+    if (!n.includes('_')) { cnt[n] = 1; continue; }
+    const a = n.slice(0, n.lastIndexOf('_'));
+    while (names.includes(`${a}_${(cnt[a] || 0) + 1}`)) cnt[a] = (cnt[a] || 0) + 1;
+  }
+  return cnt;
+}
+
+function keyMagenta(im) {
+  if (isPink(borderColor(im))) return keyPink(im);
+  const { w, h } = im, N = w * h, bg = new Uint8Array(N);
+  for (let i = 0; i < N; i++) { const r = im.d[i * 4], g = im.d[i * 4 + 1], b = im.d[i * 4 + 2]; bg[i] = Math.sqrt((255 - r) ** 2 + g * g + (255 - b) ** 2) < 120 ? 1 : 0; }
+  const dil = dilate7(bg, w, h), o = mk(w, h);
+  for (let i = 0; i < N; i++) {
+    const r = im.d[i * 4], g = im.d[i * 4 + 1], b = im.d[i * 4 + 2];
+    let a = im.d[i * 4 + 3], nr = r, nb = b;
+    const edge = dil[i] && !bg[i], m = Math.min(r, b) - g;
+    if (edge) {
+      const k = clip((m - 20) / 150, 0, 1); a = a * (1 - k);
+      const ex = Math.max(m, 0); nr = clip(r - ex, 0, 255); nb = clip(b - ex, 0, 255);
+      if (nr > 150 && nb > g + 8) nb = g;
+    }
+    if (bg[i]) a = 0;
+    o.d[i * 4] = nr; o.d[i * 4 + 1] = g; o.d[i * 4 + 2] = nb; o.d[i * 4 + 3] = clip(rhe(a), 0, 255);
+  }
+  return o;
+}
+
+function keyPink(im) {
+  const { w, h } = im, N = w * h, c = borderColor(im), cc = c[0] * c[0] + c[1] * c[1] + c[2] * c[2];
+  const s = new Float64Array(N), res = new Float64Array(N), loose = new Uint8Array(N), strict = new Uint8Array(N);
+  for (let i = 0; i < N; i++) {
+    const r = im.d[i * 4], g = im.d[i * 4 + 1], b = im.d[i * 4 + 2];
+    const si = (r * c[0] + g * c[1] + b * c[2]) / cc; s[i] = si;
+    res[i] = Math.sqrt((r - si * c[0]) ** 2 + (g - si * c[1]) ** 2 + (b - si * c[2]) ** 2);
+    loose[i] = res[i] < 34 && si > 0.55 && si < 1.18 ? 1 : 0;
+    strict[i] = res[i] < 18 && si > 0.75 && si < 1.12 ? 1 : 0;
+  }
+  const { lab, n } = label(loose, w, h), edgeIds = borderLabels(lab, w, h);
+  const size = new Float64Array(n + 1), sum = new Float64Array(n + 1);
+  for (let i = 0; i < N; i++) if (lab[i]) { size[lab[i]]++; sum[lab[i]] += res[i]; }
+  const big = new Uint8Array(n + 1);
+  for (let k = 1; k <= n; k++) if (size[k] >= 3e-4 * N && sum[k] / size[k] < 22) big[k] = 1;
+  const bg = new Uint8Array(N);
+  for (let i = 0; i < N; i++) bg[i] = (lab[i] && (edgeIds.has(lab[i]) || big[lab[i]])) || strict[i] ? 1 : 0;
+  const near = dilate7(bg, w, h), o = mk(w, h);
+  for (let i = 0; i < N; i++) {
+    const band = near[i] && !bg[i], k = clip((res[i] - 14) / 60, 0, 1);
+    let al = bg[i] ? 0 : band ? Math.max(k, 0) : 1;
+    if (band && k < 0.25) al = 0;
+    const sc = clip(s[i], 0.5, 1.2), A = Math.max(al, 1e-3);
+    for (let ch = 0; ch < 3; ch++) {
+      const v = im.d[i * 4 + ch];
+      o.d[i * 4 + ch] = clip(rhe(band ? clip((v - (1 - al) * sc * c[ch]) / A, 0, 255) : v), 0, 255);
+    }
+    o.d[i * 4 + 3] = clip(rhe(al * 255), 0, 255);
+  }
+  return o;
+}
+
+function wipeAiMark(im) {
+  const a = clone(im), y0 = Math.floor(im.h * 0.83), x0 = Math.floor(im.w * 0.92);
+  for (let y = y0; y < im.h; y++) for (let x = x0; x < im.w; x++) {
+    const i = (y * im.w + x) * 4, r = a.d[i], g = a.d[i + 1], b = a.d[i + 2];
+    if (r > 170 && b > 120 && r > g + 30 && b > g + 10) a.d[i + 3] = 0;
+  }
+  return a;
+}
+function wipeLabels(im, cols, rows, xs, ys) {
+  const a = clone(im), cw = Math.floor(im.w / cols), ch = Math.floor(im.h / rows);
+  for (let rr = 0; rr < rows; rr++) for (let cc = 0; cc < cols; cc++) {
+    let y0, x0, bw, bh;
+    if (!xs) { y0 = rr * ch; x0 = cc * cw; bw = cw; bh = ch; } else { y0 = Math.max(0, ys[rr]); x0 = Math.max(0, xs[cc]); bw = xs[cc + 1] - xs[cc]; bh = ys[rr + 1] - ys[rr]; }
+    const y1 = Math.min(im.h, y0 + Math.floor(bh * 0.1)), x1 = Math.min(im.w, x0 + Math.floor(bw * 0.55));
+    for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) {
+      const i = (y * im.w + x) * 4;
+      if (a.d[i] > 160 && a.d[i + 2] > 160) { a.d[i] = 255; a.d[i + 1] = 0; a.d[i + 2] = 255; }
+    }
+  }
+  return a;
+}
+function dropLines(im) {
+  const a = clone(im), { w, h } = im;
+  const op = (i) => a.d[i * 4 + 3] > 20, dark = (i) => op(i) && a.d[i * 4] + a.d[i * 4 + 1] + a.d[i * 4 + 2] < 200;
+  const rows = [], cols = [];
+  for (let y = 0; y < h; y++) { let o = 0, d = 0; for (let x = 0; x < w; x++) { const i = y * w + x; if (op(i)) o++; if (dark(i)) d++; } if (o > 0.85 * w && d > 0.8 * w) rows.push(y); }
+  for (let x = 0; x < w; x++) { let o = 0, d = 0; for (let y = 0; y < h; y++) { const i = y * w + x; if (op(i)) o++; if (dark(i)) d++; } if (o > 0.85 * h && d > 0.8 * h) cols.push(x); }
+  for (const y of rows) for (let x = 0; x < w; x++) a.d[(y * w + x) * 4 + 3] = 0;
+  for (const x of cols) for (let y = 0; y < h; y++) a.d[(y * w + x) * 4 + 3] = 0;
+  return a;
+}
+function keyBorder(im) {
+  const { w, h } = im, N = w * h, e = edgePixels(im, 6), cnt = new Map();
+  for (const p of e) { const k = (p[0] >> 4) * 65536 + (p[1] >> 4) * 256 + (p[2] >> 4); cnt.set(k, (cnt.get(k) || 0) + 1); }
+  const ord = [...cnt.entries()].sort((a, b) => b[1] - a[1] || a[0] - b[0]);
+  const tot = e.length, pal = []; let acc = 0;
+  for (const [k, n] of ord) { pal.push([(k >> 16) * 16 + 8, ((k >> 8) & 255) * 16 + 8, (k & 255) * 16 + 8]); acc += n; if (acc > 0.97 * tot || pal.length >= 6) break; }
+  const like = new Uint8Array(N);
+  for (let i = 0; i < N; i++) {
+    let best = 1e9; for (const p of pal) { const d = Math.sqrt((im.d[i * 4] - p[0]) ** 2 + (im.d[i * 4 + 1] - p[1]) ** 2 + (im.d[i * 4 + 2] - p[2]) ** 2); if (d < best) best = d; }
+    like[i] = best < 34 ? 1 : 0;
+  }
+  const { lab } = label(like, w, h), ids = borderLabels(lab, w, h), o = clone(im);
+  for (let i = 0; i < N; i++) o.d[i * 4 + 3] = lab[i] && ids.has(lab[i]) ? 0 : 255;
+  return o;
+}
+function dropSpecks(im, minPx = 40) {
+  const a = clone(im), { w, h } = im, N = w * h, m = new Uint8Array(N);
+  for (let i = 0; i < N; i++) m[i] = a.d[i * 4 + 3] > 20 ? 1 : 0;
+  const { lab, n } = label(m, w, h), size = new Int32Array(n + 1);
+  for (let i = 0; i < N; i++) size[lab[i]]++;
+  for (let i = 0; i < N; i++) if ((lab[i] && size[lab[i]] < minPx) || a.d[i * 4 + 3] <= 20) a.d[i * 4 + 3] = 0;
+  return a;
+}
+function dropBelow(im) {
+  const a = clone(im), { w, h } = im, N = w * h, m = new Uint8Array(N);
+  for (let i = 0; i < N; i++) m[i] = a.d[i * 4 + 3] > 20 ? 1 : 0;
+  const { lab, n } = label(m, w, h);
+  if (n < 2) return im;
+  const size = new Int32Array(n + 1), top = new Int32Array(n + 1).fill(h), bot = new Int32Array(n + 1).fill(-1);
+  for (let i = 0; i < N; i++) if (lab[i]) { const y = Math.floor(i / w); size[lab[i]]++; if (y < top[lab[i]]) top[lab[i]] = y; if (y > bot[lab[i]]) bot[lab[i]] = y; }
+  let big = 1; for (let k = 2; k <= n; k++) if (size[k] > size[big]) big = k;
+  for (let i = 0; i < N; i++) if (lab[i] && lab[i] !== big && top[lab[i]] > bot[big] - 2) a.d[i * 4 + 3] = 0;
+  return a;
+}
+function profile(im, axis) {                  // axis 0: số điểm có hình mỗi cột; 1: mỗi hàng
+  const p = new Int32Array(axis === 0 ? im.w : im.h);
+  for (let y = 0; y < im.h; y++) for (let x = 0; x < im.w; x++) if (im.d[(y * im.w + x) * 4 + 3] > 20) p[axis === 0 ? x : y]++;
+  return p;
+}
+function cutLines(sheet, n, size, axis, forced) {
+  const prof = profile(sheet, axis), full = axis === 0 ? sheet.h : sheet.w, step = size / n, lines = [0];
+  for (let i = 1; i < n; i++) {
+    const c = rhe(i * step), w = Math.floor(step * 0.25);
+    let nm = 0; for (let j = Math.max(0, c - 4); j < Math.min(prof.length, c + 5); j++) nm = Math.max(nm, prof[j]);
+    if (prof[c] === 0 || nm > 0.6 * full) { lines.push(c); continue; }
+    let best = null;
+    for (let j = c - w; j <= c + w; j++) if (j >= 0 && j < prof.length && prof[j] === 0 && (best === null || Math.abs(j - c) < Math.abs(best - c))) best = j;
+    if (best === null && forced) forced.push(c);
+    lines.push(best === null ? c : best);
+  }
+  lines.push(size);
+  return lines;
+}
+function snapLines(sheet, lines, axis) {
+  const prof = profile(sheet, axis), L = prof.length, res = [lines[0]];
+  for (let i = 1; i < lines.length - 1; i++) {
+    const c = clip(lines[i], 0, L - 1), w = Math.floor((lines[i + 1] - lines[i - 1]) / 2 * 0.25);
+    if (prof[c] === 0) { res.push(c); continue; }
+    let best = null;
+    for (let j = c - w; j <= c + w; j++) if (j >= 0 && j < L && prof[j] === 0 && (best === null || Math.abs(j - c) < Math.abs(best - c))) best = j;
+    res.push(best === null ? c : best);
+  }
+  res.push(lines[lines.length - 1]);
+  return res;
+}
+
+// ── dò lưới khi ảnh AI sai cỡ / lệch lề (giống detect_lines / find_grid trong cat_anh.py) ──
+function runsOf(prof, thr) {
+  const runs = []; let i = 0;
+  while (i < prof.length) { if (prof[i] >= thr) { let j = i; while (j < prof.length && prof[j] >= thr) j++; runs.push([i, j]); i = j; } else i++; }
+  return runs;
+}
+function detectLines(al, n, axis, hint) {
+  const L = axis === 0 ? al.w : al.h, other = axis === 0 ? al.h : al.w, prof = profile(al, axis);
+  const runs = runsOf(prof, Math.max(2, Math.floor(other / 200))).filter((r) => r[1] - r[0] >= Math.max(2, Math.floor(L / 150)));
+  if (n === 1 || !runs.length) return [[0, L], n === 1];
+  const gaps = []; for (let i = 0; i < runs.length - 1; i++) gaps.push([runs[i + 1][0] - runs[i][1], i]);
+  if (gaps.length < n - 1) {
+    const s = runs[0][0], e = runs[runs.length - 1][1], p = (e - s) / n;
+    return [Array.from({ length: n + 1 }, (_, i) => rhe(s + i * p)), false];
+  }
+  const top = gaps.slice().sort((a, b) => b[0] - a[0] || a[1] - b[1]).slice(0, n - 1).sort((a, b) => a[1] - b[1]);
+  const bnd = top.map(([, i]) => (runs[i][1] + runs[i + 1][0]) / 2);
+  let p;
+  if (n >= 3) p = (bnd[bnd.length - 1] - bnd[0]) / (n - 2);
+  else if (hint) p = hint;
+  else p = Math.max(bnd[0] - runs[0][0], runs[runs.length - 1][1] - bnd[0]) * 1.1;
+  const lines = Array.from({ length: n + 1 }, (_, i) => rhe(bnd[0] - p + i * p));
+  lines[0] = Math.min(lines[0], runs[0][0] - 1); lines[n] = Math.max(lines[n], runs[runs.length - 1][1] + 1);
+  const sure = bnd.every((b, i) => Math.abs(b - (bnd[0] + i * p)) < 0.12 * p);
+  return [lines, sure];
+}
+function findGrid(sheet, cols, rows) {
+  const al = dropSpecks(sheet, 60);
+  let [xs, sx] = detectLines(al, cols, 0);
+  const px = cols >= 3 ? (xs[xs.length - 2] - xs[1]) / Math.max(1, cols - 2) : null;
+  let [ys, sy] = detectLines(al, rows, 1, px);
+  if (cols < 3 && rows >= 3) [xs, sx] = detectLines(al, cols, 0, (ys[ys.length - 2] - ys[1]) / (rows - 2));
+  return [xs, ys, sx && sy];
+}
+
+// ── thu nhỏ LANCZOS giống Pillow (hệ số 22 bit, ngang trước dọc sau, RGBA nhân trước alpha) ──
+function lanczos(x) { const s = (t) => (t === 0 ? 1 : Math.sin(Math.PI * t) / (Math.PI * t)); return x >= -3 && x < 3 ? s(x) * s(x / 3) : 0; }
+function coeffs(inSize, outSize) {
+  const scale = inSize / outSize, fs = Math.max(scale, 1), support = 3 * fs, ss = 1 / fs, out = [];
+  for (let xx = 0; xx < outSize; xx++) {
+    const center = (xx + 0.5) * scale;
+    const xmin = Math.max(Math.trunc(center - support + 0.5), 0);
+    const xmax = Math.min(Math.trunc(center + support + 0.5), inSize) - xmin;
+    const k = []; let ww = 0;
+    for (let x = 0; x < xmax; x++) { const v = lanczos((x + xmin - center + 0.5) * ss); k.push(v); ww += v; }
+    out.push([xmin, k.map((v) => { v = ww ? v / ww : 0; return v < 0 ? Math.trunc(-0.5 + v * 4194304) : Math.trunc(0.5 + v * 4194304); })]);
+  }
+  return out;
+}
+function resample1(src, sw, sh, nch, outW, outH, horiz) {
+  const cf = coeffs(horiz ? sw : sh, horiz ? outW : outH), o = new Uint8ClampedArray(outW * outH * 4);
+  for (let y = 0; y < outH; y++) for (let x = 0; x < outW; x++) {
+    const [mn, k] = cf[horiz ? x : y];
+    for (let ch = 0; ch < 4; ch++) {
+      let acc = 2097152;
+      for (let j = 0; j < k.length; j++) acc += src[((horiz ? y * sw + mn + j : (mn + j) * sw + x) * 4) + ch] * k[j];
+      o[(y * outW + x) * 4 + ch] = clip(Math.floor(acc / 4194304), 0, 255);
+    }
+  }
+  return o;
+}
+function resize(im, W, H) {
+  if (W === im.w && H === im.h) return clone(im);
+  const N = im.w * im.h, pm = new Uint8ClampedArray(im.d);
+  for (let i = 0; i < N; i++) {           // RGBA → RGBa (MULDIV255)
+    const a = im.d[i * 4 + 3];
+    for (let ch = 0; ch < 3; ch++) { const t = im.d[i * 4 + ch] * a + 128; pm[i * 4 + ch] = ((t >> 8) + t) >> 8; }
+  }
+  let d = pm, w = im.w;
+  if (W !== im.w) { d = resample1(d, im.w, im.h, 4, W, im.h, true); w = W; }
+  if (H !== im.h) d = resample1(d, w, im.h, 4, W, H, false);
+  const o = { w: W, h: H, c: im.c, d };
+  for (let i = 0; i < W * H; i++) {      // RGBa → RGBA
+    const a = d[i * 4 + 3];
+    if (a !== 255 && a !== 0) for (let ch = 0; ch < 3; ch++) d[i * 4 + ch] = clip(Math.floor((255 * d[i * 4 + ch]) / a), 0, 255);
+  }
+  return o;
+}
+
+// ═════════════ cắt từng loại ═════════════
+function rgbOnly(im) { const o = clone(im); for (let i = 3; i < o.d.length; i += 4) o.d[i] = 255; o.c = 4; return o; }
+function frameSig(im) {                       // ảnh 32×32 (trung bình ô) để so khung giống nhau
+  const s = new Float64Array(32 * 32 * 4);
+  for (let Y = 0; Y < 32; Y++) for (let X = 0; X < 32; X++) {
+    const x0 = Math.floor(X * im.w / 32), x1 = Math.max(x0 + 1, Math.floor((X + 1) * im.w / 32)), y0 = Math.floor(Y * im.h / 32), y1 = Math.max(y0 + 1, Math.floor((Y + 1) * im.h / 32));
+    let n = 0; const acc = [0, 0, 0, 0];
+    for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) { const i = (y * im.w + x) * 4; for (let k = 0; k < 4; k++) acc[k] += im.d[i + k]; n++; }
+    for (let k = 0; k < 4; k++) s[(Y * 32 + X) * 4 + k] = acc[k] / n;
+  }
+  return s;
+}
+const sigDiff = (a, b) => { let t = 0; for (let i = 0; i < a.length; i++) t += Math.abs(a[i] - b[i]); return t / a.length; };
+
+function sheetFrames(raw, kind, ket) {
+  const [cols, rows, names] = NAMES[kind];
+  raw = rgbOnly(raw);
+  const pi = (Math.floor(raw.w / 2) + 3 * raw.w) * 4, r0 = raw.d[pi], g0 = raw.d[pi + 1], b0 = raw.d[pi + 2];
+  const pink = isPink(borderColor(raw)), magenta = (r0 > 180 && b0 > 180 && g0 < 90) || pink;
+  const key = (img, xs, ys) => {
+    const s = pink ? dropSpecks(wipeAiMark(keyPink(img)), 400) : magenta ? keyMagenta(wipeLabels(img, cols, rows, xs, ys)) : keyBorder(img);
+    const wm = Math.max(40, Math.floor(img.w / 24));
+    for (let y = Math.max(0, s.h - wm); y < s.h; y++) for (let x = Math.max(0, s.w - wm); x < s.w; x++) s.d[(y * s.w + x) * 4 + 3] = 0;
+    return s;
+  };
+  if (!magenta) ket.warn.push('nền không phải hồng tím #FF00FF — xoá nền theo màu mép ảnh');
+  let sheet = key(raw);
+  const W = sheet.w, H = sheet.h, forced = [];
+  let xs = cutLines(sheet, cols, W, 0, forced), ys = cutLines(sheet, rows, H, 1, forced);
+  const ratio = (W / H) / (cols / rows), ins = 8;
+  const cut = (sh, xs, ys) => { const o = []; for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) o.push(dropSpecks(dropLines(crop(sh, xs[c] + ins, ys[r] + ins, xs[c + 1] - ins, ys[r + 1] - ins)))); return o; };
+  let cells = cut(sheet, xs, ys);
+  let empty = cells.filter((c) => !bbox(c)).length;
+  if (Math.abs(ratio - 1) > 0.04 || forced.length || empty) {
+    const why = [];
+    if (Math.abs(ratio - 1) > 0.04) why.push(`ảnh ${W}×${H} không đúng tỉ lệ lưới ${cols}×${rows}`);
+    if (forced.length) why.push('đường chia đều cắt ngang hình');
+    if (empty) why.push(`${empty} ô trống khi chia đều`);
+    const [gx, gy, sure] = findGrid(key(raw), cols, rows);
+    const sheet2 = key(raw, gx, gy), gx2 = snapLines(sheet2, gx, 0), gy2 = snapLines(sheet2, gy, 1);
+    const cells2 = cut(sheet2, gx2, gy2), empty2 = cells2.filter((c) => !bbox(c)).length;
+    if (empty2 < empty || ((Math.abs(ratio - 1) > 0.04 || forced.length) && empty2 <= empty)) {
+      sheet = sheet2; cells = cells2; xs = gx2; ys = gy2; empty = empty2;
+      ket.warn.push('sai lưới (' + why.join('; ') + ') → đã dò lưới theo vùng có hình' + (sure ? '' : ' (không chắc, xem kỹ từng khung)'));
+    } else if (Math.abs(ratio - 1) > 0.04 || forced.length) ket.warn.push('sai lưới (' + why.join('; ') + ')');
+  }
+  if (pink) cells = cells.map(dropBelow);
+  const body = names.map((n, i) => (n !== 'head' ? i : -1)).filter((i) => i >= 0);
+  const boxes = cells.map(bbox);
+  if (!body.some((i) => boxes[i])) { ket.err.push('không thấy hình nào trong ảnh'); return {}; }
+  const top = Math.min(...body.filter((i) => boxes[i]).map((i) => boxes[i][1]));
+  const bot = Math.max(...body.filter((i) => boxes[i]).map((i) => boxes[i][3]));
+  const out = {};
+  names.forEach((n, i) => {
+    const bb = boxes[i];
+    if (!bb) { ket.err.push(`thiếu khung ${n} (ô ${i + 1} trống)`); return; }
+    let im, hh;
+    if (n === 'head') { im = crop(cells[i], ...bb); hh = 240; } else { im = crop(cells[i], bb[0], top, bb[2], bot); hh = 480; }
+    hh = Math.min(hh, im.h);
+    const k = hh / im.h;
+    out[n] = resize(im, Math.max(1, rhe(im.w * k)), hh);
+  });
+  const ks = Object.keys(out).filter((n) => n !== 'head'), sig = ks.map((n) => frameSig(resize(out[n], 32, 32)));
+  for (let i = 0; i < ks.length; i++) for (let j = i + 1; j < ks.length; j++) if (sigDiff(sig[i], sig[j]) < 1.5) ket.err.push(`khung ${ks[i]} và ${ks[j]} giống hệt nhau`);
+  return out;
+}
+function catNhanVat(raw, kind, code, ket) {
+  const fr = sheetFrames(raw, kind, ket), base = `packs/${code}/`;
+  for (const [n, im] of Object.entries(fr)) ket.files[base + n + '.png'] = ['light', im];
+  if (ALIAS[kind]) {
+    for (const [old, nw] of Object.entries(ALIAS[kind])) if (fr[nw]) ket.alias[base + old + '.png'] = base + nw + '.png';
+    ket.frames = { [code]: frameCounts(NAMES[kind][2].filter((n) => fr[n])) };
+    if (kind === 'hero12') ket.marks.push(base + '.v2');
+  }
+  ket.anim = NAMES[kind][2].filter((n) => fr[n] && n !== 'head').map((n) => base + n + '.png');
+}
+function nenFx(raw) {
+  const e = edgePixels(raw, 4), [r, g, b] = [0, 1, 2].map((k) => median(e.map((p) => p[k])));
+  return r > 150 && b > 150 && g < 100 ? 'magenta' : 'black';
+}
+function pct5(arr) {                          // numpy percentile 5 (nội suy tuyến tính)
+  const a = Float64Array.from(arr).sort(), pos = 0.05 * (a.length - 1), f = Math.floor(pos);
+  return f + 1 < a.length ? a[f] + (a[f + 1] - a[f]) * (pos - f) : a[f];
+}
+function xoaDen(im, xam) {
+  const N = im.w * im.h, mx = new Float64Array(N);
+  for (let i = 0; i < N; i++) mx[i] = Math.max(im.d[i * 4], im.d[i * 4 + 1], im.d[i * 4 + 2]);
+  const lv = pct5(mx), o = mk(im.w, im.h, xam ? 2 : 4), den = Math.max(1, 255 - lv);
+  for (let i = 0; i < N; i++) {
+    const r = im.d[i * 4], g = im.d[i * 4 + 1], b = im.d[i * 4 + 2];
+    if (xam) {
+      const v = rhe(clip((0.299 * r + 0.587 * g + 0.114 * b - lv) / den, 0, 1) * 255);
+      o.d[i * 4] = o.d[i * 4 + 1] = o.d[i * 4 + 2] = o.d[i * 4 + 3] = v;
+    } else {
+      const al = clip((mx[i] - lv) / den, 0, 1), A = Math.max(al, 1e-3);
+      for (let k = 0; k < 3; k++) o.d[i * 4 + k] = al < 0.02 ? 0 : rhe(clip(im.d[i * 4 + k] / A, 0, 255));
+      o.d[i * 4 + 3] = rhe(al * 255);
+    }
+  }
+  return o;
+}
+function toLA(im) {                            // PIL convert RGBA → LA: L = (r*19595 + g*38470 + b*7471 + 0x8000) >> 16
+  const o = mk(im.w, im.h, 2);
+  for (let i = 0; i < im.w * im.h; i++) {
+    const L = (im.d[i * 4] * 19595 + im.d[i * 4 + 1] * 38470 + im.d[i * 4 + 2] * 7471 + 0x8000) >> 16;
+    o.d[i * 4] = o.d[i * 4 + 1] = o.d[i * 4 + 2] = L; o.d[i * 4 + 3] = im.d[i * 4 + 3];
+  }
+  return o;
+}
+function boNen(raw, xam) {
+  if (nenFx(raw) === 'magenta') { const im = keyMagenta(rgbOnly(raw)); return xam ? toLA(im) : im; }
+  return xoaDen(raw, xam);
+}
+function boDau(im) {
+  const a = clone(im), wm = Math.max(24, Math.floor(im.w / 40));
+  for (let y = Math.max(0, a.h - wm); y < a.h; y++) for (let x = Math.max(0, a.w - wm); x < a.w; x++) a.d[(y * a.w + x) * 4 + 3] = 0;
+  return a;
+}
+function catO(im, n) {
+  const cw = im.w / n, ins = Math.max(2, Math.floor(cw * 0.02)), o = [];
+  for (let i = 0; i < n; i++) o.push(crop(im, rhe(i * cw) + ins, ins, rhe((i + 1) * cw) - ins, im.h - ins));
+  return o;
+}
+function oTrong(cells, names, ket) {
+  cells.forEach((c, i) => { let mx = 0; for (let k = 3; k < c.d.length; k += 4) mx = Math.max(mx, c.d[k]); if (mx < 8) ket.err.push(`ô ${i + 1} (${names[i] || i + 1}) trống`); });
+}
+function catHat(raw, names, mau, ket) {
+  const im = boDau(boNen(raw, !mau)), size = mau ? 128 : 256, cells = catO(im, names.length);
+  oTrong(cells, names, ket);
+  names.forEach((name, i) => {
+    let c = cells[i];
+    if (mau) {
+      const bb = bbox(c); if (bb) c = crop(c, ...bb);
+      const s = Math.max(c.w, c.h), sq = mk(s, s, c.c); paste(sq, c, Math.floor((s - c.w) / 2), Math.floor((s - c.h) / 2)); c = sq;
+    }
+    ket.files['fx/' + name + '.png'] = ['png', resize(c, size, size)];
+  });
+  if (Math.abs(raw.w / raw.h - names.length) > 0.15 * names.length) ket.warn.push(`ảnh ${raw.w}×${raw.h}: mong đợi ${names.length} ô vuông một hàng`);
+}
+function catDai(raw, name, ket) {
+  const W = raw.w, H = raw.h, n = Math.max(1, rhe(W / H)), im = boDau(boNen(raw, false)), hh = Math.min(192, H);
+  const parts = catO(W >= n * H ? crop(im, 0, 0, rhe(n * H), H) : im, n);
+  oTrong(parts, parts.map((_, i) => `khung ${i + 1}`), ket);
+  const cells = parts.map((c) => resize(c, hh, hh)), out = mk(n * hh, hh);
+  cells.forEach((c, i) => paste(out, c, i * hh, 0));
+  ket.files['vfx/' + name + '.png'] = ['png', out];
+  ket.strip = { n, hh };
+  if (n !== 6) ket.warn.push(`dải có ${n} khung (ảnh ${W}×${H}; prompt yêu cầu 6 khung 1536×256)`);
+  const sig = cells.map((c) => frameSig(resize(c, 32, 32)));
+  for (let i = 0; i < sig.length - 1; i++) {
+    let mx = 0; for (let k = 3; k < sig[i].length; k += 4) mx = Math.max(mx, sig[i][k]);
+    if (mx > 0 && sigDiff(sig[i], sig[i + 1]) < 1.0) ket.err.push(`khung ${i + 1} và ${i + 2} giống hệt nhau`);
+  }
+}
+function catDon(raw, name, ket) {
+  let im = dropSpecks(boDau(boNen(raw, false)));
+  const bb = bbox(im); if (!bb) { ket.err.push('ảnh trống'); return; }
+  im = crop(im, ...bb);
+  if (im.h > 256) im = resize(im, Math.max(1, rhe(im.w * 256 / im.h)), 256);
+  ket.files[name + '.png'] = ['light', im];
+}
+function cleanMark(im) {
+  const a = clone(im), { w, h } = im, N = w * h, m = new Uint8Array(N);
+  for (let i = 0; i < N; i++) m[i] = a.d[i * 4 + 3] > 20 ? 1 : 0;
+  const { lab, n } = label(m, w, h); if (n < 2) return im;
+  const size = new Int32Array(n + 1), ymin = new Int32Array(n + 1).fill(h), xmin = new Int32Array(n + 1).fill(w);
+  for (let i = 0; i < N; i++) if (lab[i]) { const x = i % w, y = (i - x) / w; size[lab[i]]++; ymin[lab[i]] = Math.min(ymin[lab[i]], y); xmin[lab[i]] = Math.min(xmin[lab[i]], x); }
+  let mx = 0; for (let k = 1; k <= n; k++) mx = Math.max(mx, size[k]);
+  for (let i = 0; i < N; i++) { const k = lab[i]; if (k && size[k] < mx * 0.03 && ymin[k] > h * 0.7 && xmin[k] > w * 0.7) a.d[i * 4 + 3] = 0; }
+  return a;
+}
+function catIcon(raw, code, n, ket) {
+  const names = n === 3 ? ['tk-1', 'tk-2', 'tk-3'] : ['sk-q', 'sk-w', 'sk-e', 'sk-r'];
+  const sheet = keyMagenta(rgbOnly(raw)), W = sheet.w, H = sheet.h, xs = cutLines(sheet, n, W, 0), ins = 8;
+  names.forEach((k, i) => {
+    let c = cleanMark(dropSpecks(dropLines(crop(sheet, xs[i] + ins, ins, xs[i + 1] - ins, H - ins))));
+    const bb = bbox(c); if (!bb) { ket.err.push(`ô ${k} trống`); return; }
+    c = crop(c, ...bb); const side = Math.trunc(Math.max(c.w, c.h) * 1.08), sq = mk(side, side);
+    paste(sq, c, Math.floor((side - c.w) / 2), Math.floor((side - c.h) / 2));
+    ket.files[`packs/${code}/${k}.png`] = ['light', resize(sq, 128, 128)];
+  });
+  if (Math.abs(W / H - n) > 0.15 * n) ket.warn.push(`ảnh ${W}×${H}: mong đợi ${n} ô vuông một hàng`);
+}
+
+// ═════════════ nhận loại ảnh theo tên file (giống chuan_ten / nhan_dien trong cat_anh.py) ═════════════
+const boDauTV = (s) => s.normalize('NFD').replace(/\p{M}/gu, '').replace(/đ/g, 'd').replace(/Đ/g, 'D');
+function chuanTen(fn) {
+  let s = boDauTV(fn.split(/[\\/]/).pop()).toLowerCase().trim();
+  for (;;) { const t = s.replace(/\.(png|jpe?g|webp|gif|bmp)$/, '').trim(); if (t === s) break; s = t; }
+  s = s.replace(/\s*\(\d+\)$/, '').replace(/[\s_-]*(copy|ban sao|sao chep)(\s*\d+)?$/, '');
+  s = s.trim().replace(/\s+/g, '-');
+  if (!(s in DANH_SACH) && s.replace(/_/g, '-') in DANH_SACH) s = s.replace(/_/g, '-');
+  return s;
+}
+function lev(a, b) {
+  if (Math.abs(a.length - b.length) > 2) return 9;
+  let prev = Array.from({ length: b.length + 1 }, (_, i) => i);
+  for (let i = 1; i <= a.length; i++) {
+    const cur = [i];
+    for (let j = 1; j <= b.length; j++) cur.push(Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] !== b[j - 1] ? 1 : 0)));
+    prev = cur;
+  }
+  return prev[b.length];
+}
+const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+function nhanDien(fn) {
+  let s = chuanTen(fn);
+  if (s in DANH_SACH) return [s, false];
+  let t = s;
+  for (;;) {
+    const t2 = t.replace(/[\s_-]*(v?\d+|final|new|moi|sheet|anh|hero|boss|fx)$/, '');
+    if (t2 === t || !t2) break;
+    t = t2; if (t in DANH_SACH) return [t, true];
+  }
+  const flat = s.replace(/[\s_-]/g, '');
+  for (const k in DANH_SACH) if (k.replace(/[\s_-]/g, '') === flat) return [k, true];
+  const az = (x) => boDauTV(x).toLowerCase().replace(/[^a-z0-9]/g, '');
+  for (const [k, v] of Object.entries(DANH_SACH)) if (NAMES[v[0]] && az(v[2].split(' · ').pop()) === az(flat)) return [k, true];   // "Thầy Mo Lửa.png" → thaymo
+  const hits = Object.keys(DANH_SACH).filter((k) => k.length >= 3 && new RegExp('(^|[^a-z])' + esc(k) + '($|[^a-z])').test(s));
+  if (hits.length) return [hits.reduce((a, b) => (b.length > a.length ? b : a)), true];
+  const near = Object.keys(DANH_SACH).filter((k) => k.length >= 5).map((k) => [lev(flat, k.replace(/[\s_-]/g, '')), k]).sort((a, b) => a[0] - b[0] || (a[1] < b[1] ? -1 : 1));
+  if (near.length && near[0][0] <= (flat.length < 7 ? 1 : 2) && (near.length < 2 || near[1][0] > near[0][0])) return [near[0][1], true];
+  return [null, false];
+}
+function kieuTheoAnh(key, raw) {
+  const [kind, arg] = DANH_SACH[key];
+  if (kind === 'enemy6' && raw.w / raw.h > 2.4) return ['enemy', arg];
+  return [kind, arg];
+}
+function catMot(raw, key) {
+  const ket = { files: {}, alias: {}, warn: [], err: [], frames: null, marks: [], anim: [] };
+  const [kind, arg] = kieuTheoAnh(key, raw);
+  ket.kind = kind;
+  if (!['hat', 'hatmau', 'dai', 'don'].includes(kind) && raw.trans) {   // nền trong suốt sẵn → đặt lên hồng tím
+    const o = clone(raw);
+    for (let i = 0; i < o.w * o.h; i++) {
+      const a = o.d[i * 4 + 3], bgc = [255, 0, 255];
+      for (let k = 0; k < 3; k++) o.d[i * 4 + k] = Math.floor((o.d[i * 4 + k] * a + bgc[k] * (255 - a) + 127) / 255);
+      o.d[i * 4 + 3] = 255;
+    }
+    raw = o;
+  }
+  if (NAMES[kind]) catNhanVat(raw, kind, arg, ket);
+  else if (kind === 'icon4') catIcon(raw, arg, 4, ket);
+  else if (kind === 'tk3') catIcon(raw, arg, 3, ket);
+  else if (kind === 'hat' || kind === 'hatmau') catHat(raw, arg, kind === 'hatmau', ket);
+  else if (kind === 'dai') catDai(raw, arg, ket);
+  else if (kind === 'don') catDon(raw, arg, ket);
+  return ket;
+}
+
+// ═════════════ ghi PNG (RGBA · LA · bảng 256 màu) và zip ═════════════
+const CRC = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+function crc32(buf, crc = 0xffffffff) { for (let i = 0; i < buf.length; i++) crc = CRC[(crc ^ buf[i]) & 255] ^ (crc >>> 8); return crc; }
+async function zlib(data) { return new Uint8Array(await new Response(new Blob([data]).stream().pipeThrough(new CompressionStream('deflate'))).arrayBuffer()); }
+function chunk(type, data) {
+  const o = new Uint8Array(12 + data.length), v = new DataView(o.buffer);
+  v.setUint32(0, data.length); for (let i = 0; i < 4; i++) o[4 + i] = type.charCodeAt(i);
+  o.set(data, 8); v.setUint32(8 + data.length, (crc32(o.subarray(4, 8 + data.length)) ^ 0xffffffff) >>> 0);
+  return o;
+}
+function quantize(im) {                       // ≤256 màu: bảng đúng; nhiều hơn: median cut trên RGBA
+  const N = im.w * im.h, key = new Uint32Array(N), map = new Map();
+  for (let i = 0; i < N; i++) {
+    const a = im.d[i * 4 + 3], k = a === 0 ? 0 : ((im.d[i * 4] << 24) | (im.d[i * 4 + 1] << 16) | (im.d[i * 4 + 2] << 8) | a) >>> 0;
+    key[i] = k; map.set(k, (map.get(k) || 0) + 1);
+  }
+  let pal = [...map.keys()];
+  const unpack = (k) => [k >>> 24, (k >>> 16) & 255, (k >>> 8) & 255, k & 255];
+  if (pal.length > 256) {
+    let boxes = [pal.map(unpack).map((c, i) => [...c, map.get(pal[i])])];
+    while (boxes.length < 256) {
+      let bi = -1, br = 0, bc = 0;
+      boxes.forEach((b, i) => { if (b.length < 2) return; for (let c = 0; c < 4; c++) { let lo = 255, hi = 0; for (const p of b) { if (p[c] < lo) lo = p[c]; if (p[c] > hi) hi = p[c]; } if (hi - lo > br) { br = hi - lo; bi = i; bc = c; } } });
+      if (bi < 0) break;
+      const b = boxes[bi].sort((p, q) => p[bc] - q[bc]); let tot = 0; for (const p of b) tot += p[4];
+      let acc = 0, cut = 1; for (let j = 0; j < b.length - 1; j++) { acc += b[j][4]; if (acc >= tot / 2) { cut = j + 1; break; } cut = j + 1; }
+      boxes.splice(bi, 1, b.slice(0, cut), b.slice(cut));
+    }
+    const cols = boxes.map((b) => { let w = 0; const s = [0, 0, 0, 0]; for (const p of b) { for (let c = 0; c < 4; c++) s[c] += p[c] * p[4]; w += p[4]; } return s.map((v) => Math.round(v / w)); });
+    const look = new Map();
+    for (const k of map.keys()) {
+      const c = unpack(k); let best = 0, bd = 1e18;
+      cols.forEach((p, i) => { const d = (p[0] - c[0]) ** 2 + (p[1] - c[1]) ** 2 + (p[2] - c[2]) ** 2 + 2 * (p[3] - c[3]) ** 2; if (d < bd) { bd = d; best = i; } });
+      look.set(k, best);
+    }
+    const idx = new Uint8Array(N); for (let i = 0; i < N; i++) idx[i] = look.get(key[i]);
+    return { pal: cols, idx };
+  }
+  const pos = new Map(pal.map((k, i) => [k, i])), idx = new Uint8Array(N);
+  for (let i = 0; i < N; i++) idx[i] = pos.get(key[i]);
+  return { pal: pal.map(unpack), idx };
+}
+async function encodePNG(im, light) {
+  const { w, h } = im, head = new Uint8Array(13), v = new DataView(head.buffer);
+  v.setUint32(0, w); v.setUint32(4, h); head[8] = 8;
+  let raw, extra = [];
+  if (light) {
+    const { pal, idx } = quantize(im); head[9] = 3;
+    const plte = new Uint8Array(pal.length * 3), trns = new Uint8Array(pal.length);
+    pal.forEach((p, i) => { plte[i * 3] = p[0]; plte[i * 3 + 1] = p[1]; plte[i * 3 + 2] = p[2]; trns[i] = p[3]; });
+    extra = [chunk('PLTE', plte), chunk('tRNS', trns)];
+    raw = new Uint8Array((w + 1) * h); for (let y = 0; y < h; y++) raw.set(idx.subarray(y * w, y * w + w), y * (w + 1) + 1);
+  } else {
+    const ch = im.c === 2 ? 2 : 4; head[9] = ch === 2 ? 4 : 6;
+    raw = new Uint8Array((w * ch + 1) * h);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const s = (y * w + x) * 4, t = y * (w * ch + 1) + 1 + x * ch;
+      if (ch === 2) { raw[t] = im.d[s]; raw[t + 1] = im.d[s + 3]; } else for (let k = 0; k < 4; k++) raw[t + k] = im.d[s + k];
+    }
+  }
+  const parts = [new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10]), chunk('IHDR', head), ...extra, chunk('IDAT', await zlib(raw)), chunk('IEND', new Uint8Array(0))];
+  const out = new Uint8Array(parts.reduce((s, p) => s + p.length, 0)); let o = 0; for (const p of parts) { out.set(p, o); o += p.length; }
+  return out;
+}
+function makeZip(entries) {                   // [{name, data}] → Uint8Array (không nén, tên UTF-8)
+  const enc = new TextEncoder(), local = [], central = []; let off = 0;
+  for (const e of entries) {
+    const nm = enc.encode(e.name), crc = (crc32(e.data) ^ 0xffffffff) >>> 0;
+    const lh = new Uint8Array(30 + nm.length), lv = new DataView(lh.buffer);
+    lv.setUint32(0, 0x04034b50, true); lv.setUint16(4, 20, true); lv.setUint16(6, 0x0800, true); lv.setUint32(14, crc, true);
+    lv.setUint32(18, e.data.length, true); lv.setUint32(22, e.data.length, true); lv.setUint16(26, nm.length, true); lh.set(nm, 30);
+    const ch = new Uint8Array(46 + nm.length), cv = new DataView(ch.buffer);
+    cv.setUint32(0, 0x02014b50, true); cv.setUint16(4, 20, true); cv.setUint16(6, 20, true); cv.setUint16(8, 0x0800, true); cv.setUint32(16, crc, true);
+    cv.setUint32(20, e.data.length, true); cv.setUint32(24, e.data.length, true); cv.setUint16(28, nm.length, true); cv.setUint32(42, off, true); ch.set(nm, 46);
+    local.push(lh, e.data); central.push(ch); off += lh.length + e.data.length;
+  }
+  const cs = central.reduce((s, c) => s + c.length, 0), end = new Uint8Array(22), ev = new DataView(end.buffer);
+  ev.setUint32(0, 0x06054b50, true); ev.setUint16(8, entries.length, true); ev.setUint16(10, entries.length, true); ev.setUint32(12, cs, true); ev.setUint32(16, off, true);
+  const all = [...local, ...central, end], out = new Uint8Array(all.reduce((s, p) => s + p.length, 0)); let o = 0; for (const p of all) { out.set(p, o); o += p.length; }
+  return out;
+}
+
+// ═════════════ giao diện ═════════════
+const $ = (id) => document.getElementById(id);
+const ITEMS = [];
+const dl = $('dl');
+for (const [k, v] of Object.entries(DANH_SACH)) { const o = document.createElement('option'); o.value = k; o.label = v[2]; dl.appendChild(o); }
+
+async function decode(file) {
+  const bm = await createImageBitmap(file, { colorSpaceConversion: 'none', premultiplyAlpha: 'none' });
+  const cv = new OffscreenCanvas(bm.width, bm.height), g = cv.getContext('2d', { willReadFrequently: true, colorSpace: 'srgb' });
+  g.drawImage(bm, 0, 0);
+  const d = g.getImageData(0, 0, bm.width, bm.height).data;
+  let trans = false; for (let i = 3; i < d.length; i += 4) if (d[i] < 255) { trans = true; break; }
+  return { w: bm.width, h: bm.height, c: 4, d: new Uint8ClampedArray(d), trans };
+}
+function toCanvas(im) {
+  const cv = document.createElement('canvas'); cv.width = im.w; cv.height = im.h; cv.className = 'o';
+  const id = new ImageData(new Uint8ClampedArray(im.d), im.w, im.h); cv.getContext('2d').putImageData(id, 0, 0);
+  return cv;
+}
+function addFiles(list) {
+  const imgs = list.filter((f) => /\.(png|jpe?g|webp|gif|bmp)$/i.test(f.name) && !/(^|\/)da-cat\//.test(f.path || f.webkitRelativePath || ''));
+  for (const f of imgs) {
+    const it = { file: f, path: f.path || f.webkitRelativePath || f.name };
+    [it.key, it.doan] = nhanDien(f.name);
+    ITEMS.push(it); render(it);
+  }
+  $('tong').hidden = !ITEMS.length;
+  run();
+}
+let busy = false;
+async function run() {
+  if (busy) return; busy = true; window.__xong = false;
+  for (const it of ITEMS) {
+    if (it.done) continue;
+    it.ket = null; it.err = null; status(); render(it);
+    await new Promise((r) => setTimeout(r, 0));
+    try {
+      if (it.key) { it.raw = it.raw || await decode(it.file); it.ket = catMot(it.raw, it.key); }
+    } catch (e) { it.err = String(e && e.message || e); console.error(e); }
+    it.done = true; render(it); status();
+  }
+  busy = false; window.__xong = true; status();
+}
+function status() {
+  const n = ITEMS.length, done = ITEMS.filter((i) => i.done).length;
+  const bad = ITEMS.filter((i) => i.done && (!i.key || i.err || (i.ket && i.ket.err.length))).length;
+  const warn = ITEMS.filter((i) => i.done && i.ket && !i.ket.err.length && (i.ket.warn.length || i.doan)).length;
+  $('dem').textContent = done < n ? `Đang cắt ${done}/${n} ảnh…` : `${n} ảnh · ${n - bad - warn} tốt · ${warn} cần xem lại · ${bad} lỗi`;
+  $('tai').disabled = done < n || !ITEMS.some((i) => i.ket && Object.keys(i.ket.files).length);
+}
+function render(it) {
+  if (!it.el) { it.el = document.createElement('div'); $('ds').appendChild(it.el); }
+  const el = it.el, k = it.ket, errs = [], warns = [];
+  if (!it.key) errs.push('không nhận ra tên file — gõ mã ở ô bên cạnh (ví dụ thaymo, trieuda, trung-kim) hoặc đổi tên đúng như "lưu tên:" trong PROMPT-CAN-GEN.txt');
+  if (it.err) errs.push('lỗi khi cắt: ' + it.err);
+  if (it.key && it.doan) warns.push(`đoán là "${it.key}" theo tên file — sai thì sửa ở ô bên cạnh`);
+  const dup = ITEMS.find((o) => o !== it && o.key && o.key === it.key && ITEMS.indexOf(o) < ITEMS.indexOf(it));
+  if (dup) warns.push(`trùng với ${dup.path} — ảnh này ghi đè ảnh trước`);
+  if (k) { errs.push(...k.err); warns.push(...k.warn); }
+  el.className = 'the ' + (!it.done ? '' : errs.length ? 'loi' : warns.length ? 'canh' : 'tot');
+  el.innerHTML = '';
+  const dau = document.createElement('div'); dau.className = 'dau';
+  const ten = document.createElement('span'); ten.className = 'ten'; ten.textContent = it.path;
+  const inp = document.createElement('input'); inp.setAttribute('list', 'dl'); inp.value = it.key || ''; inp.placeholder = 'mã ảnh (thaymo, trieuda…)';
+  inp.onchange = () => { const v = inp.value.trim().toLowerCase(); it.key = v in DANH_SACH ? v : null; it.doan = false; it.done = false; render(it); run(); };
+  const nhan = document.createElement('span'); nhan.className = 'nhan';
+  nhan.textContent = it.key ? `${DANH_SACH[it.key][2]} · ${k ? k.kind : DANH_SACH[it.key][0]}` + (it.done ? '' : ' · đang cắt…') : '';
+  dau.append(ten, '→', inp, nhan); el.appendChild(dau);
+  if (errs.length || warns.length) {
+    const ul = document.createElement('ul'); ul.className = 'tb';
+    for (const m of errs) { const li = document.createElement('li'); li.className = 'e'; li.textContent = m; ul.appendChild(li); }
+    for (const m of warns) { const li = document.createElement('li'); li.className = 'w'; li.textContent = m; ul.appendChild(li); }
+    el.appendChild(ul);
+  }
+  const xem = document.createElement('div'); xem.className = 'xem';
+  if (it.raw && (!k || !Object.keys(k.files).length)) { const g = toCanvas(it.raw); g.className = 'goc'; xem.appendChild(g); }
+  if (k && Object.keys(k.files).length) {
+    const frames = k.anim.map((p) => k.files[p][1]).filter(Boolean);
+    if (k.strip) { const im = Object.values(k.files)[0][1]; for (let i = 0; i < k.strip.n; i++) frames.push(crop(im, i * k.strip.hh, 0, (i + 1) * k.strip.hh, k.strip.hh)); }
+    if (frames.length) {
+      const W = Math.max(...frames.map((f) => f.w)), H = Math.max(...frames.map((f) => f.h));
+      const cv = document.createElement('canvas'); cv.width = W; cv.height = H; cv.className = 'o chay';
+      const cvs = frames.map(toCanvas); let i = 0;
+      const draw = () => { if (!cv.isConnected) return; const g = cv.getContext('2d'); g.clearRect(0, 0, W, H); const f = cvs[i % cvs.length]; g.drawImage(f, (W - f.width) / 2, H - f.height); i++; setTimeout(draw, 150); };
+      xem.appendChild(cv); setTimeout(draw, 0);
+    }
+    const kh = document.createElement('div'); kh.className = 'khung';
+    for (const [p, [, im]] of Object.entries(k.files)) {
+      const fg = document.createElement('figure'), c = toCanvas(im), cap = document.createElement('figcaption');
+      cap.textContent = p.split('/').pop().replace('.png', ''); fg.append(c, cap); kh.appendChild(fg);
+    }
+    xem.appendChild(kh);
+  }
+  el.appendChild(xem);
+}
+async function zipBytes() {
+  const entries = [], frames = {}, lines = [], enc = new TextEncoder(), taken = new Set();
+  for (const it of ITEMS.slice().reverse()) {        // ảnh sau ghi đè ảnh trước cùng mã
+    const k = it.ket;
+    lines.unshift(`${it.path} → ${it.key || '?'}${k ? ` (${k.kind})` : ''}${k && k.err.length ? ' · LỖI: ' + k.err.join('; ') : ''}${k && k.warn.length ? ' · ' + k.warn.join('; ') : ''}${!it.key ? ' · không nhận ra tên file' : ''}`);
+    if (!k || taken.has(it.key)) continue;
+    taken.add(it.key);
+    const bytes = {};
+    for (const [p, [how, im]] of Object.entries(k.files)) { bytes[p] = await encodePNG(im, how === 'light'); entries.push({ name: 'assets/' + p, data: bytes[p] }); }
+    for (const [p, src] of Object.entries(k.alias)) entries.push({ name: 'assets/' + p, data: bytes[src] });
+    for (const p of k.marks) entries.push({ name: 'assets/' + p, data: new Uint8Array(0) });
+    if (k.frames) Object.assign(frames, k.frames);
+  }
+  entries.sort((a, b) => (a.name < b.name ? -1 : 1));
+  entries.push({ name: 'pack-frames.json', data: enc.encode(JSON.stringify(frames, null, 1)) });
+  entries.push({ name: 'bao-cao.txt', data: enc.encode(lines.join('\r\n') + '\r\n') });
+  return makeZip(entries);
+}
+window.__catAnh = { zipBytes, nhanDien, ITEMS };
+$('tai').onclick = async () => {
+  $('tai').disabled = true;
+  const blob = new Blob([await zipBytes()], { type: 'application/zip' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'da-cat.zip'; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 60000); $('tai').disabled = false;
+};
+$('xoa').onclick = () => { ITEMS.length = 0; $('ds').innerHTML = ''; $('tong').hidden = true; };
+$('nut-thu-muc').onclick = (e) => { e.stopPropagation(); $('chon-thu-muc').click(); };
+$('nut-anh').onclick = (e) => { e.stopPropagation(); $('chon-anh').click(); };
+$('tha').onclick = () => $('chon-anh').click();
+for (const id of ['chon-thu-muc', 'chon-anh']) $(id).onchange = (e) => { addFiles([...e.target.files]); e.target.value = ''; };
+async function walk(entry, pre, out) {
+  if (entry.isFile) { const f = await new Promise((r, j) => entry.file(r, j)); f.path = pre + f.name; out.push(f); return; }
+  if (entry.name === 'da-cat') return;
+  const rd = entry.createReader();
+  for (;;) { const b = await new Promise((r, j) => rd.readEntries(r, j)); if (!b.length) break; for (const e of b) await walk(e, pre + entry.name + '/', out); }
+}
+const tha = $('tha');
+tha.ondragover = (e) => { e.preventDefault(); tha.classList.add('over'); };
+tha.ondragleave = () => tha.classList.remove('over');
+document.body.ondragover = (e) => e.preventDefault();
+document.body.ondrop = tha.ondrop = async (e) => {
+  e.preventDefault(); e.stopPropagation(); tha.classList.remove('over');
+  const out = [], ents = [...e.dataTransfer.items].map((i) => i.webkitGetAsEntry && i.webkitGetAsEntry()).filter(Boolean);
+  if (ents.length) for (const en of ents) await walk(en, '', out); else out.push(...e.dataTransfer.files);
+  addFiles(out);
+};
+</script>
+</body>
+</html>
