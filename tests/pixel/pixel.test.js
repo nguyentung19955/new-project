@@ -77,6 +77,14 @@ async function open(w, h, query) {
   await page.addInitScript(() => { localStorage.setItem('nuicao.v1', JSON.stringify({ unlocked: 17, storySeen: true, settings: { skipStory: true } })); });
   await page.goto('file://' + path.join(ROOT, 'index.html') + query);
   await page.waitForTimeout(800);
+  if (query && !open.menuShot) open.menuShot = {};
+  if (query && !open.menuShot[w]) {   // màn menu khi bật pixel: logo + nút giữ font cũ (góp ý tester)
+    open.menuShot[w] = 1;
+    await page.screenshot({ path: path.join(SHOT, `pixel-menu-${w}x${h}.png`) });
+    const f = await page.evaluate(() => ({ logo: getComputedStyle(document.querySelector('#menu-logo')).fontFamily,
+      btn: [...document.querySelectorAll('#menu button')].map((b) => getComputedStyle(b).fontFamily).join('|') }));
+    ok(!/Handjet|VT323/.test(f.logo) && !/Handjet|VT323/.test(f.btn), `[${w}x${h}] menu: logo + nút giữ font cũ khi bật pixel`);
+  }
   await page.evaluate(() => ui.playLevel(0, false));
   await page.waitForSelector('#prep:not([hidden])');
   await page.click('[data-act=prep-go]');
@@ -125,6 +133,8 @@ async function setup(page) {
     ok(/pixel\/icon\/hanh-kim\.png/.test(s.kim) && !/pixel\//.test(s.hoa), `[${tag}] icon ngũ hành: Kim pixel, Hỏa (chưa vẽ) hình cũ`);
     ok(s.sm, `[${tag}] ảnh pixel vẽ không làm mịn (nearest-neighbor)`);
     ok(!errors.length, `[${tag}] không lỗi console ${errors.join(' | ')}`);
+    const wf = await page.evaluate(() => getComputedStyle(document.querySelector('#tb-wave')).fontFamily);
+    ok(!/VT323/.test(wf), `[${tag}] "Đợt N · …" không dùng font số đều VT323 (${wf})`);
     await page.screenshot({ path: path.join(SHOT, `pixel-${tag}.png`) });
     // phóng to vùng tướng đầu tiên + quái
     const pts = await page.evaluate((hs) => hs.map((p) => ({ x: p.x * view.scale + view.ox, y: p.y * view.scale + view.oy })), heroes);
