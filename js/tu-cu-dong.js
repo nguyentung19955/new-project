@@ -58,11 +58,12 @@ const CD_SKIP = new Set([
   'longnu', 'viemde', 'ongtao', 'matroi', 'mauthoai', 'trutroi', 'mau',
 ]);
 // có ảnh dựng xương mới dùng được (không nằm trong CD_SKIP) → giao diện dùng chân dung / dáng đứng mới cho khớp mặt với sân
-const cdNewArt = (type) => !CD_SKIP.has(type) && hasAsset(`${type}.png`);
+const cdNewArt = (type) => cdBat() && !CD_SKIP.has(type) && hasAsset(`${type}.png`);   // công tắc tắt → mọi chỗ ngoài sân dùng hình cũ
 const cdHeadPath = (type) => (cdNewArt(type) && hasAsset(`chan-dung-moi/${type}.png`) ? `chan-dung-moi/${type}.png` : null);
 // HÀM CHUNG cho mọi chỗ ngoài sân vẽ bằng canvas (khung chân dung, icon quái / boss): ảnh mới đã tải → trả ảnh;
 // chưa tải → trả false (KHÔNG quay về ảnh cũ) và gọi lại `redraw` khi tải xong; không có ảnh mới → null (dùng đường cũ)
 function cdUiImg(path, redraw) {
+  if (!cdBat()) return null;   // công tắc ảnh mới tắt → đường cũ
   if (!path) return null;
   const im = asset(path, true);
   if (im) return im;
@@ -511,7 +512,9 @@ function cdBuildRig(p, man) {
     { const pts = []; let cnt = 0; for (let i = 0; i < mask.length; i++) if (mask[i]) cnt++;
       const step = Math.max(1, Math.floor(cnt / 80)); let j = 0;
       for (let i = 0; i < mask.length; i++) if (mask[i] && (j++ % step === 0)) { const x = i % W; pts.push([x - pivot[0], (i - x) / W - pivot[1]]); }
-      R.armPts = pts; }
+      R.armPts = pts;
+      // tầm với thật của vật cầm (điểm xa vai nhất, kể cả đầu cán phía dưới) — rig ghi tip ở đầu mũi nên len có thể ngắn hơn
+      R.reach = Math.max(R.len || 0, Math.max(...pts.map(([x, y]) => Math.hypot(x, y)))); }
     R.side = tip[0] >= pivot[0] ? 1 : -1; R.len = Math.max(4, Math.hypot(tip[0] - pivot[0], tip[1] - pivot[1]));
     // hộp MẶT: phần thân (không tính tay) ở vùng đầu (trên cổ = nửa trên đoạn từ đỉnh tới hông), bỏ mép mũ / tóc rộng
     const yN = Math.round(hip * 0.5), cols = new Int32Array(W);
@@ -611,6 +614,13 @@ function cdUpMap(R, x, y, bend, sy) {
 }
 function cdArmTip(R, st, kind, bend, sy) {
   const A = cdArm(kind, st.swing || 0, st.castT || 0, st.hurt || 0, st.t, st.seed);
+  if (st.castT > 0 && R.len) {
+    // tung chiêu với vũ khí cán dài (giáo, gậy, chĩa): chỉ nghiêng nhẹ — giơ dựng đứng thì đầu cán thòng xuống chân, lộ chỗ tay cũ ở bụng
+    const A0 = cdArm(kind, st.swing || 0, 0, st.hurt || 0, st.t, st.seed);
+    // len ≤ 25% chiều cao: giơ đủ; ≥ 45%: không xoay (chỉ thân trên nhún–bật + phát sáng)
+    const L = Math.max(R.len, R.reach || 0);
+    A.a = A0.a + (A.a - A0.a) * Math.max(0, Math.min(1, 1 - (L / R.H - 0.25) * 5));
+  }
   const pv = cdUpMap(R, R.pivot[0], R.pivot[1], bend, sy), up = Math.max(0, (R.hip - R.pivot[1]) / R.hip);
   // giới hạn hướng tay: lấy đà không quá thẳng đứng ra sau đầu (vũ khí không quét qua mặt), chém xuống tối đa chếch trước-dưới
   // amp (rig): thu biên độ vung cho vũ khí cán dài dựng đứng
@@ -623,13 +633,14 @@ function cdArmTip(R, st, kind, bend, sy) {
     return { ang, c, s, tip: [pv[0] + (vx * k) * c - (vy * k) * s, pv[1] + (vx * k) * s + (vy * k) * c] };
   };
   let r = at(1);
-  // KHÔNG CHE MẶT: tay + vũ khí (từ khuỷu tới đầu vũ khí) cắt qua hộp mặt → thu góc vung dần về tư thế gốc tới khi thoát
-  if (R.face && (st.swing > 0 || st.castT > 0)) {
+  // KHÔNG CHE MẶT + KHÔNG THÒNG XUỐNG ĐẤT: tay + vũ khí cắt qua hộp mặt hoặc chìa xuống dưới bàn chân
+  // → thu góc vung dần về tư thế gốc tới khi thoát
+  if (st.swing > 0 || st.castT > 0) {
     const bb = Math.max(-0.26, Math.min(0.26, bend)) * R.hip * 0.25;   // đầu dịch nguyên khối theo thân trên (cdDrawUpper)
-    const [fx0, fy0, fx1, fy1] = R.face;
+    const [fx0, fy0, fx1, fy1] = R.face || [0, 0, -1, -1], ground = R.H - 1;
     // điểm mẫu của tay + vật cầm (xoay quanh vai + dịch theo trục tay như lúc vẽ); điểm sát vai (vai / bắp tay) bỏ qua
     const ux = vx / R.len, uy = vy / R.len, sh = A.d * R.len, minR2 = (R.len * 0.25) ** 2;
-    const inF = (q, px, py) => { const ax = px + ux * sh, ay = py + uy * sh, x = pv[0] + ax * q.c - ay * q.s, y = pv[1] + ax * q.s + ay * q.c; return x > fx0 + bb && x < fx1 + bb && y > fy0 && y < fy1; };
+    const inF = (q, px, py) => { const ax = px + ux * sh, ay = py + uy * sh, x = pv[0] + ax * q.c - ay * q.s, y = pv[1] + ax * q.s + ay * q.c; return (x > fx0 + bb && x < fx1 + bb && y > fy0 && y < fy1) || y > ground; };
     // chỉ tính điểm MỚI lấn vào mặt (điểm vốn sát mặt ở tư thế gốc của ảnh thì không tính)
     const q0 = at(0), pts = (R.armPts || []).filter(([px, py]) => px * px + py * py >= minR2 && !inF(q0, px, py));
     const hit = (q) => pts.some(([px, py]) => inF(q, px, py));
@@ -665,6 +676,7 @@ function cdDrawUpper(ctx, R, img, bend, sy) {
 }
 // một khung của nhân vật có rig (toạ độ = điểm ảnh của ảnh cắt; gốc = góc trên trái). st: như cdPose; o: { kind, col, glow:[màu, mờ, độ đậm],
 //   flash, flashC, noArm, noFx, gfxBlur(k) }
+let cdFlashCv = null;
 function cdRigFrame(ctx, R, P, st, o) {
   const bend = cdRigBend(P), sy = P.sy;
   const base = ctx.globalAlpha;
@@ -688,11 +700,22 @@ function cdRigFrame(ctx, R, P, st, o) {
   cdDrawUpper(ctx, R, R.upper, bend, sy);
   if (R.arm && !o.noArm) armDraw(R.arm);
   if (P.flash > 0) {
-    const fc = o.flashC || P.flashC;
+    // chớp màu: vẽ cả người vào MỘT canvas phụ (đè khít, alpha đầy) rồi tô màu 1 lần — vẽ từng lát bán trong suốt chồng mép
+    // làm hiện vạch ngang mảnh ở chỗ nối lát (ngang trán / đầu)
+    const fc = o.flashC || P.flashC, pad = Math.ceil(Math.max(R.W, R.H) * 0.6);
+    const fl = cdFlashCv || (cdFlashCv = document.createElement('canvas'));
+    const fw = R.W + pad * 2, fh = R.H + pad;
+    if (fl.width < fw || fl.height < fh) { fl.width = Math.max(fl.width, fw); fl.height = Math.max(fl.height, fh); }
+    const fx = fl.getContext('2d');
+    fx.setTransform(1, 0, 0, 1, 0, 0); fx.globalCompositeOperation = 'source-over'; fx.globalAlpha = 1; fx.clearRect(0, 0, fl.width, fl.height);
+    fx.translate(pad, pad);
+    fx.drawImage(R.legs, 0, 0);
+    cdDrawUpper(fx, R, R.upper, bend, sy);
+    if (R.arm && !o.noArm) { const c0 = ctx; ctx = fx; armDraw(R.arm); ctx = c0; }
+    fx.setTransform(1, 0, 0, 1, 0, 0); fx.globalCompositeOperation = 'source-atop'; fx.fillStyle = fc; fx.fillRect(0, 0, fw, fh);
+    fx.globalCompositeOperation = 'source-over';
     ctx.globalAlpha = base * P.flash;
-    ctx.drawImage(cdTintC(R.legs, fc), 0, 0);
-    cdDrawUpper(ctx, R, cdTintC(R.upper, fc), bend, sy);
-    if (R.arm && !o.noArm) armDraw(cdTintC(R.arm, fc));
+    ctx.drawImage(fl, 0, 0, fw, fh, -pad, -pad, fw, fh);
     ctx.globalAlpha = base;
   }
   if (!o.noFx && R.arm && !o.noArm) cdRigFx(ctx, R, P, st, o, bend, sy, T);

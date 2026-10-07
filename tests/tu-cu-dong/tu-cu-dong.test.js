@@ -79,9 +79,9 @@ async function main() {
       const cast = [0.5, 0.42, 0.32, 0.25, 0.1].map((ct) => +cdPose({ t: 0, seed: 0, castT: ct }).sy.toFixed(3));
       return { skip, lacSide: lac.wside, kdSide: kd.wside, boss, boss2, quai, edge, cast };
     });
-    const cd = await page.evaluate(() => ({ head: heroImgUrl('auco', 'head'), front: heroImgUrl('auco'), skip: heroImgUrl('nguphu', 'head'),
+    const cd = await page.evaluate(() => ({ head: heroImgUrl('cuoi', 'head'), front: heroImgUrl('cuoi'), skip: heroImgUrl('nguphu', 'head'),
       n: Object.keys(HEROES).filter((k) => cdNewArt(k)).filter((k) => !hasAsset(`chan-dung-moi/${k}.png`)) }));
-    ok(/chan-dung-moi\/auco\.png/.test(cd.head) && /\/auco\.png/.test(cd.front), 'thẻ chợ / chân dung / Anh Hùng dùng ảnh mới (chan-dung-moi/<mã>.png, <mã>.png)');
+    ok(/chan-dung-moi\/cuoi\.png/.test(cd.head) && /\/cuoi\.png/.test(cd.front), 'thẻ chợ / chân dung / Anh Hùng dùng ảnh mới (chan-dung-moi/<mã>.png, <mã>.png)');
     ok(!/chan-dung-moi/.test(cd.skip), 'mã trong CD_SKIP vẫn dùng chân dung cũ');
     ok(cd.n.length === 0, 'mọi tướng có ảnh mới đều có chân dung cắt sẵn (thiếu: ' + cd.n.join(' ') + ')');
     // không che mặt: Thầy Chuông Đồng (chiêng to) — điểm của tay + chiêng không lấn vào hộp mặt ở mọi khung đánh / tung chiêu
@@ -106,6 +106,18 @@ async function main() {
       return out;
     });
     console.log('  đầu vũ khí lấn vào mặt (số khung / 41):', JSON.stringify(face));
+    // tester2 C1: tung chiêu với giáo / gậy dài — vật cầm không bị xoay dựng đứng (đầu cán thòng xuống chân, lộ chỗ cắt ở bụng)
+    const c1 = await page.evaluate(async () => {
+      const o = {};
+      for (const k of ['giaodong', 'tanvien', 'lachau']) {
+        const im = new Image(); im.src = 'assets/' + k + '.png'; await im.decode();
+        const R = cdBuildRig(cdPrepare(im), RIGS[k] || null); if (!R.arm) { o[k] = 0; continue; }
+        const kind = cdWeapon(k, HEROES[k].attack), a0 = cdArmTip(R, { t: 3, seed: 0 }, kind, 0, 1).ang;
+        o[k] = Math.max(...[0.45, 0.3, 0.15].map((ct) => Math.abs(cdArmTip(R, { t: 3, seed: 0, castT: ct }, kind, 0, 1).ang - a0)));
+      }
+      return o;
+    });
+    ok(Object.values(c1).every((v) => v < 0.12), 'tung chiêu: giáo / gậy dài chỉ nghiêng nhẹ (' + Object.entries(c1).map(([k, v]) => k + ' ' + v.toFixed(2)).join(', ') + ' rad)');
     ok(Object.values(face).every((v) => v === 0 || v === 'không tách tay'), 'vũ khí / vật cầm không cắt qua mặt khi đánh / tung chiêu (chuongdong, dapde, thansan, denroi)');
     // hàm ảnh chung ngoài sân: ảnh mới chưa tải → false (không quay về ảnh cũ)
     const ui1 = await page.evaluate(() => { const p = 'zz-chua-tai.png'; ASSET_SET.add(p); return cdUiImg(p, () => {}); });
