@@ -1695,3 +1695,8 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 179 — Tool cắt ảnh nhận ảnh dáng rời, tấm icon tự tách
 
 - Gộp nhánh tool-cat-anh: ảnh <mã>_pose01..04 mỗi ảnh một khung, tấm nhiều icon tự tách theo vùng có hình, bảng cat-anh-them.json cho ảnh lẻ trong D:\ảnh game; ảnh chưa có chỗ dùng vào assets/chua-dung/.
+
+## Phiên bản 180 — Sửa avatar thẻ chợ bị vỡ, bỏ thanh lọc bảng Hợp thể
+- **Avatar thẻ chợ tướng bị vỡ** (mảng lửa đỏ / khối vàng lòi ra mép trái chân dung): quy tắc CSS `.mk-card img` (chân dung 42px, căn giữa bằng `left:50%` + `translateX(-50%)`) áp nhầm cả vào icon ngũ hành `img.eli` trong góc thẻ → icon hệ bị phóng 42px, tâm nằm ở mép trái nên bị cắt nửa, đè sau avatar. Sửa: chân dung dùng `.mk-card > img`; icon hệ nằm gọn trong vòng tròn tối 15px viền màu hệ ở góc trái trên. Cùng lỗi ở ô tướng khắc chế màn chọn ải (`.ch-av img`) → `.ch-av > img`.
+- Chặn tận gốc: `elIcon()` gắn cỡ inline cho `img.eli`, CSS chung `img.eli` khoá position/transform/border/radius — icon hệ không còn ăn theo quy tắc ảnh của khung chứa nào nữa.
+- **Bảng Hợp thể:** bỏ thanh lọc "Làm được / Thiếu 1 / Tất cả" — luôn hiện tất cả công thức của tab, vẫn sắp gần xong lên đầu; nút **?** và **✕** gọn ở góc phải.

@@ -1356,7 +1356,7 @@ body { overflow: hidden; }
 .ch-sum { font-size: 12px; color: var(--text-2); }
 .ch-row { display: flex; gap: 6px; flex-wrap: wrap; }
 .ch-av { position: relative; width: 50px; display: flex; flex-direction: column; align-items: center; gap: 1px; }
-.ch-av img { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--c); object-fit: cover; object-position: 50% 0; background: #0D0B08; }
+.ch-av > img { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--c); object-fit: cover; object-position: 50% 0; background: #0D0B08; }
 .ch-av.epic img { box-shadow: 0 0 6px var(--r-epic); }
 .ch-av.legendary img { box-shadow: 0 0 8px var(--r-legend); }
 .ch-av i { position: absolute; top: 28px; right: 2px; width: 16px; height: 16px; border-radius: 50%; background: #0D0B08; border: 1px solid var(--c); display: flex; align-items: center; justify-content: center; }
@@ -1524,7 +1524,7 @@ body { overflow: hidden; }
 #campaign .cp-side { overflow: hidden; padding-bottom: 8px; }
 #campaign .cp-side .cp-scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; gap: 8px; padding-bottom: 4px; }
 #campaign .cp-side .cp-act { position: static; flex: none; margin-top: 0; padding: 6px 0 0; border-top: 1px solid #3A2A18; }
-@media (max-height: 400px) { #campaign .ch-av { width: 44px; } #campaign .ch-av img { width: 36px; height: 36px; } }
+@media (max-height: 400px) { #campaign .ch-av { width: 44px; } #campaign .ch-av > img { width: 36px; height: 36px; } }
 /* nhãn ải sát mép bản đồ không bị cắt */
 .cp-node.edge-r .lb { position: relative; transform: translateX(-34%); }
 .cp-node.edge-l .lb { position: relative; transform: translateX(30%); }
@@ -1562,15 +1562,15 @@ i.c { background: #1F4A2A; color: #8AE09A; } i.h { background: #4A2A5A; color: #
 .mk-row { display: flex; gap: 5px; align-items: center; flex: none; }
 .mk-card { position: relative; flex: none; width: 76px; height: 60px; padding: 0; border-radius: 8px; overflow: hidden; cursor: pointer; touch-action: none; -webkit-touch-callout: none; user-select: none;
   border: 2px solid var(--c); background: radial-gradient(circle at 50% 35%, #3A2416, #160E08 80%); box-shadow: inset 0 0 0 1px #0008; }
-.mk-card img { position: absolute; left: 50%; top: 1px; width: 42px; height: 42px; transform: translateX(-50%); border-radius: 50%; object-fit: cover; object-position: 50% 0; pointer-events: none; }
-.mk-card .el { position: absolute; left: 2px; top: 2px; line-height: 0; pointer-events: none; }
+.mk-card > img { position: absolute; left: 50%; top: 1px; width: 42px; height: 42px; transform: translateX(-50%); border-radius: 50%; object-fit: cover; object-position: 50% 0; pointer-events: none; }
+.mk-card .el { position: absolute; left: 2px; top: 2px; z-index: 1; width: 15px; height: 15px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #0D0B08d0; border: 1px solid var(--c); line-height: 0; pointer-events: none; }
 .mk-card .nm { position: absolute; left: 0; right: 0; bottom: 13px; font-size: 10.5px; font-weight: 800; line-height: 11px; color: var(--text); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 2px; text-shadow: 0 1px 2px #000; pointer-events: none; }
 .mk-card .cost { position: absolute; left: 0; right: 0; bottom: 0; height: 13px; display: flex; align-items: center; justify-content: center; gap: 2px; background: #C8302A; color: #fff; font-size: 10px; font-weight: 800; line-height: 13px; pointer-events: none; }
 .mk-card .cost .coin, .mk-card .cost img { width: 10px; height: 10px; }
 .mk-card .tw { position: absolute; right: 1px; top: 1px; padding: 0 3px; border-radius: 4px; background: #1F6A2A; color: #CFFFC8; font-style: normal; font-size: 9px; font-weight: 800; line-height: 12px; pointer-events: none; }
 .mk-card.twin { border-color: #9DFFC4; box-shadow: 0 0 10px #6AE06A, inset 0 0 8px #6AE06A66; animation: mkTwin 1.3s ease-in-out infinite; }
 @keyframes mkTwin { 50% { box-shadow: 0 0 4px #6AE06A, inset 0 0 3px #6AE06A44; } }
-.mk-card.poor img { filter: grayscale(.7) brightness(.55); }
+.mk-card.poor > img { filter: grayscale(.7) brightness(.55); }
 .mk-card.poor .cost { background: #5A3A2A; color: #FFB08A; }
 .mk-card.poor .nm { color: #9A8E78; }
 .mk-card:active { transform: scale(.96); }
@@ -1872,11 +1872,7 @@ svg.icn { overflow: visible; }
 .hx-tab { height: 30px; padding: 0 14px; border-radius: 15px; border: 1.5px solid #5C4620; background: #1A140E; font-size: 14px; font-weight: 800; color: var(--text-2); display: flex; align-items: center; gap: 5px; flex: none; }
 .hx-tab.on { border-color: var(--rc); color: var(--rc); background: #2A1F14; box-shadow: inset 0 0 10px #0008, 0 0 8px color-mix(in srgb, var(--rc) 45%, transparent); }
 .hx-tab i { font-style: normal; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 9px; background: #2E9E3E; color: #fff; font-size: 11px; line-height: 18px; text-align: center; }
-.hx-fs { display: flex; gap: 3px; margin-left: auto; padding: 2px; border-radius: 15px; background: #0D0B08; border: 1px solid #3A3226; flex: none; }
-.hx-f { height: 24px; padding: 0 9px; border-radius: 12px; border: 0; background: none; font-size: 12.5px; font-weight: 700; color: var(--text-2); white-space: nowrap; }
-.hx-f small { color: var(--muted); font-weight: 800; }
-.hx-f.on { background: linear-gradient(180deg, #F2D27A, #B8852A); color: #2A1A08; }
-.hx-f.on small { color: #5A3A10; }
+.hx-q { margin-left: auto; }
 .hx-q, .hx-x { width: 30px; height: 30px; flex: none; border-radius: 50%; border: 1.5px solid #8C6A2E; background: #1A140E; font-size: 15px; font-weight: 900; color: var(--gold); padding: 0; }
 .hx-q.on { background: #3A2A14; border-color: var(--gold-hi); }
 .hx-x { border-radius: 8px; color: var(--text); }
@@ -1971,3 +1967,7 @@ svg.icn { overflow: visible; }
 .ho-ft .hx-go { flex: none; height: 32px; }
 .ho-hint { flex: none; font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 @media (max-height: 400px) { .ev2-body .ho-panel { width: 340px; } .es-fx { display: none; } .ho-why { font-size: 10.5px; } }
+
+/* v180: icon ngũ hành (img.eli) luôn giữ đúng cỡ được truyền (style inline) — không ăn theo quy tắc ảnh chân dung của khung chứa
+   (lỗi cũ: ".mk-card img" phóng icon hệ thành 42px, tâm ở mép trái → mảng lửa/khối vàng bị cắt lòi ra sau avatar) */
+img.eli { position: static !important; inset: auto !important; transform: none !important; margin: 0 !important; border: 0 !important; border-radius: 0 !important; background: none !important; box-shadow: none !important; max-width: none !important; object-fit: contain !important; }

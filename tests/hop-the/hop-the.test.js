@@ -34,6 +34,8 @@ async function legendsCase(w, h) {
   await enter(page, 0);
   await page.evaluate(() => { game.running = false; game.gold = 5000; });
   const tag = `${w}x${h}`;
+  const ic = await page.evaluate(() => [...document.querySelectorAll('#deck .mk-card')].map((c) => { const C = c.getBoundingClientRect(), e = c.querySelector('.eli').getBoundingClientRect(), im = c.querySelector(':scope > img').getBoundingClientRect(); return { small: e.width <= 20 * (C.width / 76) + 1, inside: e.left >= C.left - 1 && e.top >= C.top - 1, face: im.width > e.width * 2 }; }));
+  ok(ic.length && ic.every((x) => x.small && x.inside && x.face), `${tag}: icon hệ trên thẻ chợ nhỏ gọn trong góc, không phóng to đè avatar (v180)`);
   // --- chưa có nguyên liệu trên sân
   await page.click('#deck [data-act=legend-open]'); await page.waitForTimeout(200);
   let st = await page.evaluate(() => {
@@ -43,8 +45,9 @@ async function legendsCase(w, h) {
   ok(st.open && st.deckVis === 'hidden', `${tag}: mở bảng Hợp thể → thanh chợ ẩn (không đè bảng)`);
   ok(st.inView, `${tag}: bảng nằm trọn trong màn hình`);
   ok(st.cards > 5 && st.tab === 'epic', `${tag}: tab Tím mặc định, ${st.cards} thẻ`);
-  await page.click('#legends [data-act=hx-flt][data-k=ready]'); await page.waitForTimeout(80);
-  ok(await page.locator('#legends .hx-card').count() === 0 && await page.locator('#legends .hx-empty').count() === 1, `${tag}: lọc "Làm được" khi chưa có nguyên liệu → trống, có dòng báo`);
+  ok(await page.locator('#legends [data-act=hx-flt], #legends .hx-fs').count() === 0, `${tag}: không còn thanh lọc Làm được / Thiếu 1 / Tất cả (v180)`);
+  const hb = await page.evaluate(() => { const L = document.querySelector('#legends .hx-hd'), q = document.querySelector('#legends .hx-q'), x = document.querySelector('#legends .hx-x'); return { right: L.clientWidth - (x.offsetLeft - L.offsetLeft * (x.offsetParent === L ? 0 : 1) + x.offsetWidth), gap: x.offsetLeft - (q.offsetLeft + q.offsetWidth), same: Math.abs(q.offsetTop - x.offsetTop) < 2 }; });
+  ok(hb.right < 4 && hb.gap >= 0 && hb.gap < 12 && hb.same, `${tag}: nút ? và ✕ gọn ở góc phải (lệch ${Math.round(hb.right)}px, cách ${Math.round(hb.gap)}px)`);
   await page.click('#legends [data-act=hx-close]'); await page.waitForTimeout(80);
   ok(await page.evaluate(() => document.querySelector('#legends').hidden && getComputedStyle(document.querySelector('#deck')).visibility === 'visible'), `${tag}: nút ✕ đóng bảng, thanh chợ hiện lại`);
 
@@ -54,11 +57,9 @@ async function legendsCase(w, h) {
   const first = await page.evaluate(() => { const c = document.querySelector('#legends .hx-card'); return { to: FUSION[+c.dataset.i].to, ready: c.classList.contains('ready'), btn: !!c.querySelector('[data-act=hx-fuse]'), oks: c.querySelectorAll('.hx-m.ok').length }; });
   ok(first.to === 'trongdong' && first.ready && first.btn && first.oks === 2, `${tag}: thẻ làm được lên đầu (Thần Trống Đồng, 2 ✓, nút Hợp thể)`);
   ok((await page.locator('#legends .hx-card').first().locator('.hx-go').innerText()).includes('300'), `${tag}: giá 300 hiện trên nút`);
-  await page.click('#legends [data-act=hx-flt][data-k=ready]'); await page.waitForTimeout(80);
-  ok(await page.locator('#legends .hx-card').count() === 1, `${tag}: lọc "Làm được" → 1 thẻ`);
-  await page.click('#legends [data-act=hx-flt][data-k=one]'); await page.waitForTimeout(80);
-  const ones = await page.evaluate(() => [...document.querySelectorAll('#legends .hx-card')].map((c) => c.querySelectorAll('.hx-m.ok').length));
-  ok(ones.length >= 2 && ones.every((n) => n === 1), `${tag}: lọc "Thiếu 1" → ${ones.length} thẻ, mỗi thẻ đúng 1 ✓`);
+  const oks = await page.evaluate(() => [...document.querySelectorAll('#legends .hx-card')].map((c) => c.querySelectorAll('.hx-m.ok').length));
+  ok(oks.length > 5, `${tag}: luôn hiện tất cả công thức của tab (${oks.length} thẻ)`);
+  ok(oks.every((n, i) => i === 0 || n <= oks[i - 1]) && oks.filter((n) => n === 1).length >= 2, `${tag}: sắp gần xong lên đầu (số ✓ giảm dần: ${oks.slice(0, 5).join(',')}…)`);
   await page.click('#legends [data-act=hx-tab][data-k=legendary]'); await page.waitForTimeout(80);
   ok(await page.evaluate(() => [...document.querySelectorAll('#legends .hx-card')].every((c) => HEROES[FUSION[+c.dataset.i].to].legend === 'legendary') && document.querySelectorAll('#legends .hx-card').length > 5), `${tag}: tab Vàng chỉ có tướng Vàng`);
   await page.click('#legends [data-act=hx-help]'); await page.waitForTimeout(60);
