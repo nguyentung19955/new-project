@@ -325,6 +325,59 @@ for (const [k, v] of Object.entries(ITEM_SHEETS)) {
   sheetsJson[k] = { dir: '', files: v.cells.map((c) => c[0]) };
   if (!v.cells.every((c) => done(c[0]))) items.push({ group: '13. Icon đồ vật', file: `${k}.png`, title: v.title, text: sheetPrompt(v.cells.map((c) => c[1]), 'game item icons') });
 }
+// v156: đế đặt tướng (ô trên bản đồ) + kết cấu đường quái đi + cổng thành theo chủ đề — đang vẽ bằng code, có ảnh thì game tự dùng
+const SPOT_LOOK = 'a low round pedestal / plinth seen from a 3/4 top-down view, so it looks like a FLAT WIDE ELLIPSE (about 3 wide : 2 tall, the top face fills ~75% of the cell width), short visible side rim only a few pixels thick, the top face is EMPTY and flat (a hero stands on it), carved Dong Son bronze-drum ring pattern (sun-star in the middle, circle-dot band, zigzag rim) engraved very lightly on the top face';
+const SPOT_SHEETS = {
+  'de-tuong': { title: 'Đế đặt tướng · 5 trạng thái', dir: 'tiles', cells: [
+    ['de-tuong-thuong.png', `${SPOT_LOOK}, plain weathered grey-brown stone with dull bronze inlay, calm (normal empty spot)`],
+    ['de-tuong-san-sang.png', `${SPOT_LOOK}, same stone but the bronze inlay softly glows warm cream-white (ready to place a hero), faint light on the top face only`],
+    ['de-tuong-chon.png', `${SPOT_LOOK}, same stone with a bright gold rim glowing around the top edge and a golden sun-star (selected spot)`],
+    ['de-tuong-ngap.png', `${SPOT_LOOK}, the stone half sunk under shallow blue river water, ripples and a few duckweed leaves on the water around it (flooded spot)`],
+    ['de-tuong-nui.png', `${SPOT_LOOK}, the stone pushed up on a small green-brown rocky mountain mound with grass tufts on the sides, top face still flat and empty (raised mountain spot)`],
+  ] },
+  'de-tuong-chu-de': { title: 'Đế đặt tướng · theo chủ đề bản đồ', dir: 'tiles', cells: [
+    ['de-tuong-co.png', `${SPOT_LOOK}, made of packed earth with a ring of short green grass and two tiny reeds (river / marsh / rice-field maps)`],
+    ['de-tuong-dat.png', `${SPOT_LOOK}, a flat old tree-stump slice with roots and moss around the rim (forest map)`],
+    ['de-tuong-da.png', `${SPOT_LOOK}, dark cave stone slab with two small blue glowing crystals at the rim (cave map)`],
+    ['de-tuong-cat.png', `${SPOT_LOOK}, pale sandstone with small seashells and a bit of sand at the rim (sea shore map)`],
+    ['de-tuong-gach.png', `${SPOT_LOOK}, fitted old red-brown bricks and a bronze rim like a citadel tower base (citadel map)`],
+  ] },
+};
+const spotPrompt = (cells) => `Create ONE image: a ${cells.length * 128}x128 row of ${cells.length} equal 128x128 square game map tiles for a cute mobile tower-defense game, one per cell, left to right:
+${cells.map((x, i) => `[${i + 1}] ${x}`).join('  ')}.
+${DRUM}. All cells: the same camera angle, the same size and the same ellipse shape, centered in the cell, readable at 50 px, no characters on top, no text, no letters, no numbers.
+${BG}`;
+for (const [k, v] of Object.entries(SPOT_SHEETS)) {
+  sheetsJson[k] = { dir: v.dir, files: v.cells.map((c) => c[0]) };
+  if (!v.cells.every((c) => done(`${v.dir}/${c[0]}`))) items.push({ group: '14. Đế đặt tướng (ô trên bản đồ)', file: `${k}.png`, title: v.title, text: spotPrompt(v.cells.map((c) => c[1])), cut: `python3 tools/cat-items.py <ảnh> ${k}` });
+}
+const ROAD_TEX = {
+  nuoc: 'calm shallow river water seen from straight above: blue-teal water with soft light ripples, a few tiny duckweed leaves, gentle darker patches (Sông / Đầm maps)',
+  dat: 'a worn forest dirt trail seen from straight above: packed brown earth, small pebbles, a few fallen dry leaves and thin root bits (Rừng map)',
+  da: 'old cave floor paving seen from straight above: irregular rounded grey-brown flagstones with dark gaps and a little moss (Hang map)',
+  de: 'the top of an earthen rice-field dike seen from straight above: packed light-brown clay, faint footprints, tiny grass tufts (Đồng map)',
+  cat: 'wet beach sand seen from straight above: darker damp sand with ripple marks, tiny shell bits, a few foam traces (Biển map)',
+  gach: 'an ancient citadel road seen from straight above: worn brown-grey fired bricks and stone slabs in a running bond, chipped edges, moss in the joints (Thành map)',
+};
+const roadPrompt = (k) => `Create ONE image: a 512x512 SEAMLESS TILEABLE texture (the left edge continues the right edge, the top edge continues the bottom edge, no visible seam when repeated) for the road of a cute mobile tower-defense game: ${ROAD_TEX[k]}.
+Flat even lighting, no strong shadows, no perspective, no vignette, no single big object, no border, no road markings, no dashed lines. Soft hand-painted cartoon look matching a Dong Son bronze-drum themed game, medium contrast so characters walking on it stay readable. No text, no watermark, full bleed.`;
+for (const k of Object.keys(ROAD_TEX)) {
+  sheetsJson[`duong-${k}`] = { dir: 'tiles', files: [`duong-${k}.jpg`], texture: 512 };
+  if (!done(`tiles/duong-${k}.jpg`)) items.push({ group: '15. Đường quái đi (kết cấu lặp 512×512)', file: `duong-${k}.png`, title: `Kết cấu đường · ${k}`, text: roadPrompt(k), cut: `python3 tools/cat-items.py <ảnh> duong-${k}` });
+}
+const GATE_CELLS = [
+  ['cong-phong-chau.png', 'the gate tower of Phong Chau capital: a wooden-and-earth fortress gate with a dark arched doorway, a bronze drum disc above the door, a red banner on top'],
+  ['cong-ban-rung.png', 'a forest village gate: a stilt house with a thatched roof behind a bamboo palisade gate, small red cloth on a pole'],
+  ['cong-hang.png', 'a cave mouth gate: a dark rocky cave entrance framed by stalactites and two carved stone pillars with bronze rings'],
+  ['cong-lang-tre.png', 'a Vietnamese bamboo village gate (cong lang): two bamboo posts with a curved thatched-and-tile roof, a red plaque with a golden sun-star'],
+  ['cong-co-loa.png', 'the spiral citadel of Co Loa: a small round earthen wall ring with a stone gate tower in the middle, red flag on top'],
+];
+sheetsJson['cong-thanh'] = { dir: 'tiles', files: GATE_CELLS.map((c) => c[0]) };
+if (!GATE_CELLS.every((c) => done(`tiles/${c[0]}`))) items.push({ group: '16. Cổng thành cuối đường (theo chủ đề)', file: 'cong-thanh.png', title: 'Cổng thành · 5 chủ đề',
+  text: `Create ONE image: a 640x128 row of 5 equal 128x128 square game map buildings for a cute mobile tower-defense game, one per cell, left to right, all seen from the same 3/4 top-down view, the doorway facing the viewer, the base sitting near the bottom of the cell:
+${GATE_CELLS.map((c, i) => `[${i + 1}] ${c[1]}`).join('  ')}.
+${DRUM}. Each building: one bold readable shape at 60 px, no characters, no text, no letters, no numbers.
+${BG}`, cut: 'python3 tools/cat-items.py <ảnh> cong-thanh' });
 fs.writeFileSync(path.join(ROOT, 'tools/item-sheets.json'), JSON.stringify(sheetsJson, null, 1));
 items.forEach((it, i) => { it.n = i + 1; });
 const noIcon = need.filter((x) => !ICONS[x]);  // tướng mới chưa có mô tả icon

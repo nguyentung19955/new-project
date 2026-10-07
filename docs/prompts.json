@@ -830,5 +830,77 @@
   "title": "Đồ ghép 4",
   "text": "Create ONE image: a 640x128 row of 5 equal 128x128 square game item icons, one per cell, left to right:\n[1] folded fishing net with floats, rare magical crafted item, slightly glowing  [2] radiant white sea pearl on a shell, rare magical crafted item, slightly glowing  [3] golden turtle claw crossbow trigger, rare magical crafted item, slightly glowing  [4] heavenly golden axe of Thạch Sanh with light rays, rare magical crafted item, slightly glowing  [5] white feather cloak of Âu Cơ with a golden clasp, rare magical crafted item, slightly glowing.\ncute mobile-game item icon, chunky readable shape, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, circle-dots). Each icon: one bold centered object, readable at 40 px, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
   "n": 107
+ },
+ {
+  "group": "14. Đế đặt tướng (ô trên bản đồ)",
+  "file": "de-tuong.png",
+  "title": "Đế đặt tướng · 5 trạng thái",
+  "text": "Create ONE image: a 640x128 row of 5 equal 128x128 square game map tiles for a cute mobile tower-defense game, one per cell, left to right:\n[1] a low round pedestal / plinth seen from a 3/4 top-down view, so it looks like a FLAT WIDE ELLIPSE (about 3 wide : 2 tall, the top face fills ~75% of the cell width), short visible side rim only a few pixels thick, the top face is EMPTY and flat (a hero stands on it), carved Dong Son bronze-drum ring pattern (sun-star in the middle, circle-dot band, zigzag rim) engraved very lightly on the top face, plain weathered grey-brown stone with dull bronze inlay, calm (normal empty spot)  [2] a low round pedestal / plinth seen from a 3/4 top-down view, so it looks like a FLAT WIDE ELLIPSE (about 3 wide : 2 tall, the top face fills ~75% of the cell width), short visible side rim only a few pixels thick, the top face is EMPTY and flat (a hero stands on it), carved Dong Son bronze-drum ring pattern (sun-star in the middle, circle-dot band, zigzag rim) engraved very lightly on the top face, same stone but the bronze inlay softly glows warm cream-white (ready to place a hero), faint light on the top face only  [3] a low round pedestal / plinth seen from a 3/4 top-down view, so it looks like a FLAT WIDE ELLIPSE (about 3 wide : 2 tall, the top face fills ~75% of the cell width), short visible side rim only a few pixels thick, the top face is EMPTY and flat (a hero stands on it), carved Dong Son bronze-drum ring pattern (sun-star in the middle, circle-dot band, zigzag rim) engraved very lightly on the top face, same stone with a bright gold rim glowing around the top edge and a golden sun-star (selected spot)  [4] a low round pedestal / plinth seen from a 3/4 top-down view, so it looks like a FLAT WIDE ELLIPSE (about 3 wide : 2 tall, the top face fills ~75% of the cell width), short visible side rim only a few pixels thick, the top face is EMPTY and flat (a hero stands on it), carved Dong Son bronze-drum ring pattern (sun-star in the middle, circle-dot band, zigzag rim) engraved very lightly on the top face, the stone half sunk under shallow blue river water, ripples and a few duckweed leaves on the water around it (flooded spot)  [5] a low round pedestal / plinth seen from a 3/4 top-down view, so it looks like a FLAT WIDE ELLIPSE (about 3 wide : 2 tall, the top face fills ~75% of the cell width), short visible side rim only a few pixels thick, the top face is EMPTY and flat (a hero stands on it), carved Dong Son bronze-drum ring pattern (sun-star in the middle, circle-dot band, zigzag rim) engraved very lightly on the top face, the stone pushed up on a small green-brown rocky mountain mound with grass tufts on the sides, top face still flat and empty (raised mountain spot).\nDong Son bronze drum art style (Vietnamese trong dong): engraved bronze surfaces, concentric rings, a sun-star with pointed rays, flying Lac birds, zigzag and circle-dot bands, warm bronze gold #C9963A with dark green patina #2F6B5E accents, thick dark-brown outline #2A1608, flat cartoon shading for a cute mobile game. All cells: the same camera angle, the same size and the same ellipse shape, centered in the cell, readable at 50 px, no characters on top, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "cut": "python3 tools/cat-items.py <ảnh> de-tuong",
+  "n": 108
+ },
+ {
+  "group": "14. Đế đặt tướng (ô trên bản đồ)",
+  "file": "de-tuong-chu-de.png",
+  "title": "Đế đặt tướng · theo chủ đề bản đồ",
+  "text": "Create ONE image: a 640x128 row of 5 equal 128x128 square game map tiles for a cute mobile tower-defense game, one per cell, left to right:\n[1] a low round pedestal / plinth seen from a 3/4 top-down view, so it looks like a FLAT WIDE ELLIPSE (about 3 wide : 2 tall, the top face fills ~75% of the cell width), short visible side rim only a few pixels thick, the top face is EMPTY and flat (a hero stands on it), carved Dong Son bronze-drum ring pattern (sun-star in the middle, circle-dot band, zigzag rim) engraved very lightly on the top face, made of packed earth with a ring of short green grass and two tiny reeds (river / marsh / rice-field maps)  [2] a low round pedestal / plinth seen from a 3/4 top-down view, so it looks like a FLAT WIDE ELLIPSE (about 3 wide : 2 tall, the top face fills ~75% of the cell width), short visible side rim only a few pixels thick, the top face is EMPTY and flat (a hero stands on it), carved Dong Son bronze-drum ring pattern (sun-star in the middle, circle-dot band, zigzag rim) engraved very lightly on the top face, a flat old tree-stump slice with roots and moss around the rim (forest map)  [3] a low round pedestal / plinth seen from a 3/4 top-down view, so it looks like a FLAT WIDE ELLIPSE (about 3 wide : 2 tall, the top face fills ~75% of the cell width), short visible side rim only a few pixels thick, the top face is EMPTY and flat (a hero stands on it), carved Dong Son bronze-drum ring pattern (sun-star in the middle, circle-dot band, zigzag rim) engraved very lightly on the top face, dark cave stone slab with two small blue glowing crystals at the rim (cave map)  [4] a low round pedestal / plinth seen from a 3/4 top-down view, so it looks like a FLAT WIDE ELLIPSE (about 3 wide : 2 tall, the top face fills ~75% of the cell width), short visible side rim only a few pixels thick, the top face is EMPTY and flat (a hero stands on it), carved Dong Son bronze-drum ring pattern (sun-star in the middle, circle-dot band, zigzag rim) engraved very lightly on the top face, pale sandstone with small seashells and a bit of sand at the rim (sea shore map)  [5] a low round pedestal / plinth seen from a 3/4 top-down view, so it looks like a FLAT WIDE ELLIPSE (about 3 wide : 2 tall, the top face fills ~75% of the cell width), short visible side rim only a few pixels thick, the top face is EMPTY and flat (a hero stands on it), carved Dong Son bronze-drum ring pattern (sun-star in the middle, circle-dot band, zigzag rim) engraved very lightly on the top face, fitted old red-brown bricks and a bronze rim like a citadel tower base (citadel map).\nDong Son bronze drum art style (Vietnamese trong dong): engraved bronze surfaces, concentric rings, a sun-star with pointed rays, flying Lac birds, zigzag and circle-dot bands, warm bronze gold #C9963A with dark green patina #2F6B5E accents, thick dark-brown outline #2A1608, flat cartoon shading for a cute mobile game. All cells: the same camera angle, the same size and the same ellipse shape, centered in the cell, readable at 50 px, no characters on top, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "cut": "python3 tools/cat-items.py <ảnh> de-tuong-chu-de",
+  "n": 109
+ },
+ {
+  "group": "15. Đường quái đi (kết cấu lặp 512×512)",
+  "file": "duong-nuoc.png",
+  "title": "Kết cấu đường · nuoc",
+  "text": "Create ONE image: a 512x512 SEAMLESS TILEABLE texture (the left edge continues the right edge, the top edge continues the bottom edge, no visible seam when repeated) for the road of a cute mobile tower-defense game: calm shallow river water seen from straight above: blue-teal water with soft light ripples, a few tiny duckweed leaves, gentle darker patches (Sông / Đầm maps).\nFlat even lighting, no strong shadows, no perspective, no vignette, no single big object, no border, no road markings, no dashed lines. Soft hand-painted cartoon look matching a Dong Son bronze-drum themed game, medium contrast so characters walking on it stay readable. No text, no watermark, full bleed.",
+  "cut": "python3 tools/cat-items.py <ảnh> duong-nuoc",
+  "n": 110
+ },
+ {
+  "group": "15. Đường quái đi (kết cấu lặp 512×512)",
+  "file": "duong-dat.png",
+  "title": "Kết cấu đường · dat",
+  "text": "Create ONE image: a 512x512 SEAMLESS TILEABLE texture (the left edge continues the right edge, the top edge continues the bottom edge, no visible seam when repeated) for the road of a cute mobile tower-defense game: a worn forest dirt trail seen from straight above: packed brown earth, small pebbles, a few fallen dry leaves and thin root bits (Rừng map).\nFlat even lighting, no strong shadows, no perspective, no vignette, no single big object, no border, no road markings, no dashed lines. Soft hand-painted cartoon look matching a Dong Son bronze-drum themed game, medium contrast so characters walking on it stay readable. No text, no watermark, full bleed.",
+  "cut": "python3 tools/cat-items.py <ảnh> duong-dat",
+  "n": 111
+ },
+ {
+  "group": "15. Đường quái đi (kết cấu lặp 512×512)",
+  "file": "duong-da.png",
+  "title": "Kết cấu đường · da",
+  "text": "Create ONE image: a 512x512 SEAMLESS TILEABLE texture (the left edge continues the right edge, the top edge continues the bottom edge, no visible seam when repeated) for the road of a cute mobile tower-defense game: old cave floor paving seen from straight above: irregular rounded grey-brown flagstones with dark gaps and a little moss (Hang map).\nFlat even lighting, no strong shadows, no perspective, no vignette, no single big object, no border, no road markings, no dashed lines. Soft hand-painted cartoon look matching a Dong Son bronze-drum themed game, medium contrast so characters walking on it stay readable. No text, no watermark, full bleed.",
+  "cut": "python3 tools/cat-items.py <ảnh> duong-da",
+  "n": 112
+ },
+ {
+  "group": "15. Đường quái đi (kết cấu lặp 512×512)",
+  "file": "duong-de.png",
+  "title": "Kết cấu đường · de",
+  "text": "Create ONE image: a 512x512 SEAMLESS TILEABLE texture (the left edge continues the right edge, the top edge continues the bottom edge, no visible seam when repeated) for the road of a cute mobile tower-defense game: the top of an earthen rice-field dike seen from straight above: packed light-brown clay, faint footprints, tiny grass tufts (Đồng map).\nFlat even lighting, no strong shadows, no perspective, no vignette, no single big object, no border, no road markings, no dashed lines. Soft hand-painted cartoon look matching a Dong Son bronze-drum themed game, medium contrast so characters walking on it stay readable. No text, no watermark, full bleed.",
+  "cut": "python3 tools/cat-items.py <ảnh> duong-de",
+  "n": 113
+ },
+ {
+  "group": "15. Đường quái đi (kết cấu lặp 512×512)",
+  "file": "duong-cat.png",
+  "title": "Kết cấu đường · cat",
+  "text": "Create ONE image: a 512x512 SEAMLESS TILEABLE texture (the left edge continues the right edge, the top edge continues the bottom edge, no visible seam when repeated) for the road of a cute mobile tower-defense game: wet beach sand seen from straight above: darker damp sand with ripple marks, tiny shell bits, a few foam traces (Biển map).\nFlat even lighting, no strong shadows, no perspective, no vignette, no single big object, no border, no road markings, no dashed lines. Soft hand-painted cartoon look matching a Dong Son bronze-drum themed game, medium contrast so characters walking on it stay readable. No text, no watermark, full bleed.",
+  "cut": "python3 tools/cat-items.py <ảnh> duong-cat",
+  "n": 114
+ },
+ {
+  "group": "15. Đường quái đi (kết cấu lặp 512×512)",
+  "file": "duong-gach.png",
+  "title": "Kết cấu đường · gach",
+  "text": "Create ONE image: a 512x512 SEAMLESS TILEABLE texture (the left edge continues the right edge, the top edge continues the bottom edge, no visible seam when repeated) for the road of a cute mobile tower-defense game: an ancient citadel road seen from straight above: worn brown-grey fired bricks and stone slabs in a running bond, chipped edges, moss in the joints (Thành map).\nFlat even lighting, no strong shadows, no perspective, no vignette, no single big object, no border, no road markings, no dashed lines. Soft hand-painted cartoon look matching a Dong Son bronze-drum themed game, medium contrast so characters walking on it stay readable. No text, no watermark, full bleed.",
+  "cut": "python3 tools/cat-items.py <ảnh> duong-gach",
+  "n": 115
+ },
+ {
+  "group": "16. Cổng thành cuối đường (theo chủ đề)",
+  "file": "cong-thanh.png",
+  "title": "Cổng thành · 5 chủ đề",
+  "text": "Create ONE image: a 640x128 row of 5 equal 128x128 square game map buildings for a cute mobile tower-defense game, one per cell, left to right, all seen from the same 3/4 top-down view, the doorway facing the viewer, the base sitting near the bottom of the cell:\n[1] the gate tower of Phong Chau capital: a wooden-and-earth fortress gate with a dark arched doorway, a bronze drum disc above the door, a red banner on top  [2] a forest village gate: a stilt house with a thatched roof behind a bamboo palisade gate, small red cloth on a pole  [3] a cave mouth gate: a dark rocky cave entrance framed by stalactites and two carved stone pillars with bronze rings  [4] a Vietnamese bamboo village gate (cong lang): two bamboo posts with a curved thatched-and-tile roof, a red plaque with a golden sun-star  [5] the spiral citadel of Co Loa: a small round earthen wall ring with a stone gate tower in the middle, red flag on top.\nDong Son bronze drum art style (Vietnamese trong dong): engraved bronze surfaces, concentric rings, a sun-star with pointed rays, flying Lac birds, zigzag and circle-dot bands, warm bronze gold #C9963A with dark green patina #2F6B5E accents, thick dark-brown outline #2A1608, flat cartoon shading for a cute mobile game. Each building: one bold readable shape at 60 px, no characters, no text, no letters, no numbers.\nBACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.",
+  "cut": "python3 tools/cat-items.py <ảnh> cong-thanh",
+  "n": 116
  }
 ]

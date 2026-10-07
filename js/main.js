@@ -217,10 +217,11 @@ function render() {
   if (view.ox > 0.5 || view.oy > 0.5) {
     ctx.fillStyle = '#1E2A16';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    if (ready(mapImg)) {
+    const back = typeof mapLayerCache !== 'undefined' && mapLayerCache.key.startsWith(MAP_ID + '|') ? mapLayerCache.c : ready(mapImg) && mapImg;
+    if (back) {
       const cs = Math.max(canvas.width / CONFIG.W, canvas.height / CONFIG.H);
       ctx.globalAlpha = 0.45;
-      ctx.drawImage(mapImg, (canvas.width - CONFIG.W * cs) / 2, (canvas.height - CONFIG.H * cs) / 2, CONFIG.W * cs, CONFIG.H * cs);
+      ctx.drawImage(back, (canvas.width - CONFIG.W * cs) / 2, (canvas.height - CONFIG.H * cs) / 2, CONFIG.W * cs, CONFIG.H * cs);
       ctx.globalAlpha = 1;
     }
   }
@@ -228,10 +229,16 @@ function render() {
   if (game.shake > 0.2) ctx.translate((Math.random() - 0.5) * game.shake, (Math.random() - 0.5) * game.shake);
   const nen = !asset(`maps/map-0${game.level + 1}.png`) && asset(`nen_ai-${NEN_AI[game.level] || 1}.png`);
   const bg = !nen && mapBg();
-  if (bg) { if (bg.img) ctx.drawImage(bg.img, 0, 0, CONFIG.W, CONFIG.H); else { ctx.fillStyle = MAP_THEMES[bg.theme].ground; ctx.fillRect(0, 0, CONFIG.W, CONFIG.H); } }
-  if (nen) drawAiMap(nen);
-  else if (ready(mapImg)) ctx.drawImage(mapImg, 0, 0, CONFIG.W, CONFIG.H);
-  else drawMapFallback(ctx);
+  // v156: nền vẽ tay + đường đi theo chủ đề + cổng dựng sẵn một lần vào canvas tĩnh; mỗi khung chỉ vẽ gợn nước / dấu chân
+  const layer = bg && typeof mapLayer === 'function' && !asset(`maps/map-0${game.level + 1}.png`)
+    && mapLayer(MAP_ID, bg.img, mapImg, Math.round(CONFIG.W * px()), Math.round(CONFIG.H * px()));
+  if (layer) { ctx.drawImage(layer, 0, 0, CONFIG.W, CONFIG.H); drawPathFx(ctx, MAP_ID, t); }
+  else {
+    if (bg) { if (bg.img) ctx.drawImage(bg.img, 0, 0, CONFIG.W, CONFIG.H); else { ctx.fillStyle = MAP_THEMES[bg.theme].ground; ctx.fillRect(0, 0, CONFIG.W, CONFIG.H); } }
+    if (nen) drawAiMap(nen);
+    else if (ready(mapImg)) ctx.drawImage(mapImg, 0, 0, CONFIG.W, CONFIG.H);
+    else drawMapFallback(ctx);
+  }
   // thành Phong Châu vẽ tay (khi bản đồ chưa có ảnh riêng)
   const castle = !asset(`maps/map-0${game.level + 1}.png`) && (assetAny(['ban-do_phong-chau.png', 'tiles/castle-phong-chau.png']) || {}).img;
   if (castle) ctx.drawImage(castle, 838 * DK, 70 * DK, 110 * DK, 150 * DK);

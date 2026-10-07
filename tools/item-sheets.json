@@ -195,5 +195,77 @@
    "do-ghep_riu-than-thach-sanh.png",
    "do-ghep_ao-long-vu-au-co.png"
   ]
+ },
+ "de-tuong": {
+  "dir": "tiles",
+  "files": [
+   "de-tuong-thuong.png",
+   "de-tuong-san-sang.png",
+   "de-tuong-chon.png",
+   "de-tuong-ngap.png",
+   "de-tuong-nui.png"
+  ]
+ },
+ "de-tuong-chu-de": {
+  "dir": "tiles",
+  "files": [
+   "de-tuong-co.png",
+   "de-tuong-dat.png",
+   "de-tuong-da.png",
+   "de-tuong-cat.png",
+   "de-tuong-gach.png"
+  ]
+ },
+ "duong-nuoc": {
+  "dir": "tiles",
+  "files": [
+   "duong-nuoc.jpg"
+  ],
+  "texture": 512
+ },
+ "duong-dat": {
+  "dir": "tiles",
+  "files": [
+   "duong-dat.jpg"
+  ],
+  "texture": 512
+ },
+ "duong-da": {
+  "dir": "tiles",
+  "files": [
+   "duong-da.jpg"
+  ],
+  "texture": 512
+ },
+ "duong-de": {
+  "dir": "tiles",
+  "files": [
+   "duong-de.jpg"
+  ],
+  "texture": 512
+ },
+ "duong-cat": {
+  "dir": "tiles",
+  "files": [
+   "duong-cat.jpg"
+  ],
+  "texture": 512
+ },
+ "duong-gach": {
+  "dir": "tiles",
+  "files": [
+   "duong-gach.jpg"
+  ],
+  "texture": 512
+ },
+ "cong-thanh": {
+  "dir": "tiles",
+  "files": [
+   "cong-phong-chau.png",
+   "cong-ban-rung.png",
+   "cong-hang.png",
+   "cong-lang-tre.png",
+   "cong-co-loa.png"
+  ]
  }
 }
