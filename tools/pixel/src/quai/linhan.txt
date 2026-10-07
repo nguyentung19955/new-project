@@ -201,14 +201,21 @@ frame attack
   use @walk.0
 end
 
+# trúng đòn: ngả người giật lùi, mắt chữ X, miệng méo, loé sáng
 anim hurt fps=8 once
 frame hurt
-  use @walk.0
-  shift -1 0
+  use chanB 9 22
+  use khien 1 15
+  use than -2 1
+  use giao 20 3
+  use tay 19 17
+  use mat_x 12 9
+  use mat_x 16 9
   swap G H
+  swap g G
   swap r R
-  set 15 9 t
-  set 19 9 t
+  swap m r
+  outline
 end
 
 # chết: khuỵu gối → ngã ngửa ra sau → nằm sẫm màu

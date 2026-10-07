@@ -204,12 +204,23 @@ frame attack
   use @walk.0
 end
 
+# trúng đòn: ngả người giật lùi, mắt chữ X, miệng méo, loé sáng
 anim hurt fps=8 once
 frame hurt
-  use @walk.0
+  use chan_xa 8 21
+  use chan_xa 21 19
+  use than 0 -1
+  use chan 3 22
+  use chan_gap 16 19
+  use tai 17 7
+  use voi_len 24 6
+  use nga 23 16
+  use mat_x 25 10
+  swap H Y
   swap G H
+  swap g G
   swap r R
-  set 25 12 t
+  outline
 end
 
 # chết: khuỵu chân trước → đổ sụp nằm (chân gập) → gỗ sẫm, sơn tối
