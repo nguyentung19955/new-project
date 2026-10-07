@@ -1840,3 +1840,9 @@ svg.icn { overflow: visible; }
 .pl-pop .pp-act > .btn:only-child { flex: 1; }
 .out-ask { font-size: 12px; font-weight: 700; color: #FFD9A0; align-self: center; }
 .login-out { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; justify-content: center; }
+/* v166: chơi nhóm tạm khoá — thẻ mờ + nhãn Sắp ra mắt */
+.md-card.coop.soon { cursor: default; border-color: #5C5A4E; box-shadow: inset 0 0 0 999px #0E0C0Acc; }
+.md-card.coop.soon .md-ic, .md-card.coop.soon b, .md-card.coop.soon small { filter: grayscale(.8); opacity: .6; }
+.md-card.coop.soon:active { transform: none; }
+.md-card .md-soon { margin-top: auto; font-family: var(--title); font-size: 15px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+  color: #2A1A08; background: linear-gradient(180deg, #F2D27A, #B8852A); border-radius: 4px; padding: 3px 10px; filter: none; }

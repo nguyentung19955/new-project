@@ -1573,3 +1573,6 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 166 — Gộp bảng cảm ơn góp ý + sửa Ấn Phù + Đăng xuất
 - Gộp: bảng cảm ơn sau khi gửi góp ý; nút Ấn Phù luôn mở (chưa có tướng Vàng thì giải thích + nút Đến Anh Hùng; toast nổi trên lớp phủ); bỏ dấu ✦; nút Đăng xuất (chạm khung người chơi / Cài đặt, có xác nhận).
+
+## Phiên bản 166 — Chơi nhóm "Sắp ra mắt"
+- Thẻ **Cùng Giữ Thành** trong màn Chọn chế độ hiện mờ, nhãn **Sắp ra mắt**, không bấm được (`COOP.visible = false` trong `js/coop.js`). Mã, luật Firestore và test chơi nhóm vẫn giữ nguyên; đổi thành `true` là mở lại.

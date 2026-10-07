@@ -271,6 +271,8 @@ class CoopFireNet {
 //  BỘ ĐIỀU KHIỂN CO-OP
 // ============================================================
 const COOP = {
+  // v166: chơi nhóm tạm khoá — thẻ "Cùng Giữ Thành" hiện mờ, nhãn "Sắp ra mắt", không bấm được. Đổi thành true để mở lại (mã, luật giữ nguyên).
+  visible: false,
   on: false,            // đang trong trận co-op
   net: null, netFactory: null,
   game: null, ui: null,

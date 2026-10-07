@@ -80,7 +80,9 @@ async function run(browser) {
 
   // ---- phòng chờ bằng giao diện
   await A.evaluate(() => { ui.save.unlocked = Math.max(ui.save.unlocked || 1, 2); });
-  await A.evaluate(() => ui.showModes());
+  const soon = await A.evaluate(() => { ui.showModes(); const c = document.querySelector('.md-card.coop'); c.click(); return { dis: c.disabled, txt: c.textContent, open: !document.querySelector('#coop').hidden }; });
+  check(soon.dis && /Sắp ra mắt/.test(soon.txt) && !soon.open, 'mặc định thẻ Cùng Giữ Thành khoá, ghi "Sắp ra mắt", bấm không mở (COOP.visible = false)');
+  await A.evaluate(() => { COOP.visible = true; ui.showModes(); });
   await click(A, '.md-card.coop');
   // luật chưa đăng → báo rõ + nút Thử lại; mất mạng → báo mất mạng
   relay.noRules = true;
