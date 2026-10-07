@@ -240,7 +240,8 @@ function render() {
   }
   ctx.setTransform(px(), 0, 0, px(), view.ox * px(), view.oy * px());
   if (game.shake > 0.2) ctx.translate((Math.random() - 0.5) * game.shake, (Math.random() - 0.5) * game.shake);
-  const nen = !asset(`maps/map-0${game.level + 1}.png`) && asset(`nen_ai-${NEN_AI[game.level] || 1}.png`);
+  // v163: ảnh nền nen_ai-*.png là bản đồ sông Đà (chương Sơn Tinh – Thủy Tinh) — không dùng cho ải chương khác
+  const nen = !asset(`maps/map-0${game.level + 1}.png`) && NEN_AI[game.level] && asset(`nen_ai-${NEN_AI[game.level]}.png`);
   const bg = !nen && mapBg();
   // v156: nền vẽ tay + đường đi theo chủ đề + cổng dựng sẵn một lần vào canvas tĩnh; mỗi khung chỉ vẽ gợn nước / dấu chân
   const layer = bg && typeof mapLayer === 'function' && !asset(`maps/map-0${game.level + 1}.png`)
@@ -252,8 +253,8 @@ function render() {
     else if (ready(mapImg)) ctx.drawImage(mapImg, 0, 0, CONFIG.W, CONFIG.H);
     else drawMapFallback(ctx);
   }
-  // thành Phong Châu vẽ tay (khi bản đồ chưa có ảnh riêng)
-  const castle = !asset(`maps/map-0${game.level + 1}.png`) && (assetAny(['ban-do_phong-chau.png', 'tiles/castle-phong-chau.png']) || {}).img;
+  // thành Phong Châu vẽ tay (khi bản đồ chưa có ảnh riêng) — v163: chỉ ở chương Sơn Tinh – Thủy Tinh
+  const castle = !asset(`maps/map-0${game.level + 1}.png`) && chapterOf(game.level).id === 'sontinh' && (assetAny(['ban-do_phong-chau.png', 'tiles/castle-phong-chau.png']) || {}).img;
   if (castle) ctx.drawImage(castle, 838 * DK, 70 * DK, 110 * DK, 150 * DK);
   drawWaterLevel(ctx, game.water, t);
   drawZones(t);
@@ -336,6 +337,8 @@ function render() {
   else drawFuseMarks(t);
 }
 
+// cỡ vẽ (px) của ảnh đạn vẽ tay theo loại
+const PROJ_IMG = { fireball: 20, frostbolt: 20, arrow: 24, bolt: 22, orb: 18, feather: 20, petal: 16, melon: 18, rice: 18, evil: 20 };
 function drawProjectile(p, t) {
   ctx.save();
   if (p.curve) {
@@ -348,6 +351,16 @@ function drawProjectile(p, t) {
   } else {
     ctx.translate(p.x, p.y);
     ctx.rotate(p.angle || 0);
+  }
+  // v153: đạn vẽ tay assets/fx/dan_<loại>.png (docs/PROMPT-HIEU-UNG.txt phần D) — chưa có ảnh thì vẽ bằng code như cũ
+  const pk = PROJ_IMG[p.kind] ? p.kind : 'fireball';
+  const pim = asset(`fx/dan_${pk}.png`, true);
+  if (pim) {
+    const s = PROJ_IMG[pk];
+    if (pk === 'melon' || pk === 'petal' || pk === 'orb' || pk === 'evil') ctx.rotate(t * (pk === 'melon' ? 10 : 6));
+    ctx.drawImage(pim, -s / 2, -s / 2, s, s);
+    ctx.restore();
+    return;
   }
   switch (p.kind) {
     case 'evil':
@@ -519,7 +532,7 @@ function drawBlocks(t) {
   }
 }
 
-// Kim Quy Hộ Thành: mai rùa vàng che thành Phong Châu
+// Kim Quy Hộ Thành: mai rùa vàng che thành (cuối đường)
 function drawGuard(t) {
   if (game.guardT <= 0) return;
   const [x, y] = [899 * DK, 160 * DK];
@@ -653,6 +666,8 @@ function drawHeroOnMap(h, t) {
     ctx.fillStyle = h.hp / st.hpMax > 0.35 ? '#3EBE3E' : '#D84A2A';
     ctx.fillRect(h.x - 16, top - 4, 32 * Math.max(0, h.hp / st.hpMax), 2.5);
     if (detail) { ctx.fillStyle = '#4A90E2'; ctx.fillRect(h.x - 16, top - 1.2, 32 * Math.max(0, h.mana / st.maxMana), 1.6); }
+    const fr = asset('ui/thanh-mau-tuong.png', true);      // v163: khung thanh máu vẽ tay (nếu có)
+    if (fr) ctx.drawImage(fr, h.x - 20, top - 7.5, 40, detail ? 11 : 9);
   }
   // sao mới hiện khi tướng hạ xuống (60% thời gian tiến hoá)
   const stars = (h.tier || 0) - (h.evoT > 0.48 ? 1 : 0);
@@ -956,6 +971,72 @@ function particles(x, y, n, color, spread, p, size = 2.5) {
   }
 }
 
+// v153: ảnh vẽ tay cho các hiệu ứng phần D (docs/PROMPT-HIEU-UNG.txt). Trả về true nếu đã vẽ bằng ảnh.
+// Dải khung assets/vfx/<loại>.png (cắt bằng tools/cat-fx.py dai); dải trắng xám (TINT) được tô theo màu hiệu ứng.
+const FX_ART_TINT = new Set(['ring', 'warn', 'streak', 'beam', 'afterimage']);
+function drawFxArt(f, p, t) {
+  const strip = (name) => asset(`vfx/${name}.png`, true);
+  // tia nối hai điểm: dải nằm ngang, kéo dài theo khoảng cách, xoay theo hướng
+  const along = (img, x1, y1, x2, y2, thick) => {
+    const len = Math.hypot(x2 - x1, y2 - y1);
+    if (len < 2) return;
+    ctx.translate(x1, y1); ctx.rotate(Math.atan2(y2 - y1, x2 - x1));
+    drawVfx(ctx, img, p, len / 2, 0, len, thick);
+  };
+  const flipAt = (x, y, left) => { ctx.translate(x, y); if (left) ctx.scale(-1, 1); };
+  switch (f.type) {
+    case 'vortex': case 'revive': case 'volley': case 'ring': case 'warn': case 'rain': case 'mark': case 'meteor': case 'sweep': {
+      let img = strip(f.type);
+      if (!img) return false;
+      if (FX_ART_TINT.has(f.type)) img = tintSheet(img, f.color);
+      ctx.globalAlpha = 1;
+      if (f.type === 'rain' && f.delay > 0) return true;
+      if (f.type === 'mark') { const e = f.target; if (e && !e.dead) drawVfx(ctx, img, p, e.x, e.y - 10, 56); return true; }
+      if (f.type === 'sweep') { flipAt(f.x, f.y, f.dir < 0); drawVfx(ctx, img, p, 0, 0, Math.max(80, (f.r || 60) * 1.6)); return true; }
+      const size = { vortex: 80, revive: 100, volley: 90, meteor: 170 }[f.type] || Math.max(60, (f.r || 30) * 2.2);
+      const dy = { revive: -40, meteor: -size * 0.35, rain: -20 }[f.type] || 0;
+      drawVfx(ctx, img, p, f.x, f.y + dy, size);
+      return true;
+    }
+    case 'streak': case 'beam': case 'afterimage': {
+      const img = strip(f.type === 'beam' ? 'streak' : f.type);
+      if (!img || f.x2 === undefined) return false;
+      ctx.globalAlpha = 1;
+      along(tintSheet(img, f.color), f.x, f.y, f.x2, f.y2, f.type === 'afterimage' ? 36 : 26);
+      return true;
+    }
+    case 'hook': {
+      const img = strip('hook'), h = f.hero, e = f.target;
+      if (!img || !h || !e) return false;
+      ctx.globalAlpha = 1;
+      along(img, h.x, h.y - 22, e.x, e.y - 8, 30);
+      return true;
+    }
+    case 'lob': {
+      // vật ném: đèn trời (Cô Thả Đèn Trời), chài (Ngư Phủ), bình gốm (Thợ Gốm), dưa hấu (Mai An Tiêm)
+      const file = { den: 'den-troi', chai: 'chai', gom: 'binh-gom', dua: 'dua-hau' }[f.kind];
+      const img = file && asset(`hieu-ung_${file}.png`, true);
+      if (!img) return false;
+      const x = f.x + (f.x2 - f.x) * p, y = f.y + (f.y2 - f.y) * p - Math.sin(p * Math.PI) * 60;
+      const hh = { den: 26, chai: 30, gom: 22, dua: 20 }[f.kind], ww = hh * img.width / img.height;
+      ctx.globalAlpha = 1; ctx.translate(x, y);
+      if (f.kind !== 'den') ctx.rotate(p * (f.kind === 'chai' ? 4 : 9));
+      ctx.drawImage(img, -ww / 2, -hh / 2, ww, hh);
+      return true;
+    }
+    case 'horse': {
+      const img = asset('trieu-hoi_ngua-sat.png', true);
+      if (!img) return false;
+      const x = f.x + (f.x2 - f.x) * p, y = f.y + (f.y2 - f.y) * p - Math.sin(p * Math.PI) * 30;
+      const hh = 40, ww = hh * img.width / img.height;
+      ctx.globalAlpha = 1; flipAt(x, y, f.x2 < f.x);
+      ctx.drawImage(img, -ww / 2, -hh, ww, hh);
+      return true;
+    }
+    default: return false;
+  }
+}
+
 function drawEffects(t) {
   for (const f of game.effects) {
     if (!f._vfx) { f._vfx = true; VFX.onEffect(f); }
@@ -965,6 +1046,8 @@ function drawEffects(t) {
     const p = 1 - k;         // 0 -> 1
     ctx.save();
     ctx.globalAlpha = Math.max(0, Math.min(1, k * 1.5));
+    // v153: hiệu ứng trước chỉ vẽ bằng code (phần D docs/PROMPT-HIEU-UNG.txt) — có ảnh thì dùng ảnh
+    if (drawFxArt(f, p, t)) { ctx.restore(); continue; }
     // hiệu ứng vẽ tay (dải khung hình trong assets/vfx/) nếu có
     const sheet = f.x !== undefined && vfxSheet(f.type);
     if (sheet) {
@@ -996,6 +1079,9 @@ function drawEffects(t) {
         ctx.scale(sc, sc);
         ctx.font = '800 44px "Alegreya SC", serif';
         ctx.textAlign = 'center';
+        // v163: dải lụa vẽ tay sau chữ (ui/dai-thong-bao.png), chưa có ảnh thì chỉ có chữ như cũ
+        const rib = asset('ui/dai-thong-bao.png', true);
+        if (rib) { const rw = ctx.measureText(f.str).width + 150; ctx.drawImage(rib, -rw / 2, -50, rw, 76); }
         ctx.lineWidth = 7;
         ctx.strokeStyle = '#1A0C04';
         ctx.strokeText(f.str, 0, 0);
@@ -1399,6 +1485,13 @@ function drawEffects(t) {
           ctx.beginPath(); ctx.ellipse(0, 0, 18, 15, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
           ctx.beginPath(); ctx.moveTo(-8, -4); ctx.lineTo(6, 6); ctx.stroke();
           ctx.restore();
+          break;
+        }
+        const gimg = asset('trieu-hoi_giong-bay.png', true);   // v153: ảnh vẽ tay nếu có
+        if (gimg) {
+          const hh = 48, ww = hh * gimg.width / gimg.height;
+          ctx.translate(q.x, q.y - 34); if (f.d2 < f.d1) ctx.scale(-1, 1);
+          ctx.drawImage(gimg, -ww / 2, -hh / 2, ww, hh);
           break;
         }
         circle(ctx, q.x, q.y - 34, 14, '#FFB04A');

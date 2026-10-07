@@ -523,7 +523,7 @@ const SKILL_CASTS = {
     const list = game.enemiesInRange(h.x, h.y, st.range * 1.2).sort((a, b) => b.hp - a.hp).slice(0, 3);
     if (!list.length) return false;
     for (const e of list) {
-      game.effects.push({ type: 'lob', x: e.x, y: e.y - 120, x2: e.x, y2: e.y, color: '#FFD66B', ttl: 0.4, max: 0.4 });
+      game.effects.push({ type: 'lob', kind: 'den', x: e.x, y: e.y - 120, x2: e.x, y2: e.y, color: '#FFD66B', ttl: 0.4, max: 0.4 });
       game.effects.push({ type: 'ring', x: e.x, y: e.y, r: 34, color: '#FFB04A', ttl: 0.4, max: 0.4 });
       game.hit(e, (st.damage * 1.5 + n * 0.6) * st.skillPower, h, { big: true, color: '#FFD66B' });
       if (!e.dead) game.dot(e, st.damage * 0.4 * st.skillPower, h, '#E0452C', 'magic', 3);
@@ -580,7 +580,7 @@ const SKILL_CASTS = {
     const list = game.enemiesInRange(h.x, h.y, st.range * 1.3, false).sort((a, b) => b.dist - a.dist).slice(0, n >= 15 ? 5 : 4);
     if (!list.length) return false;
     for (const e of list) {
-      game.effects.push({ type: 'lob', x: h.x, y: h.y - 30, x2: e.x, y2: e.y, color: '#D8C8A0', ttl: 0.35, max: 0.35 });
+      game.effects.push({ type: 'lob', kind: 'chai', x: h.x, y: h.y - 30, x2: e.x, y2: e.y, color: '#D8C8A0', ttl: 0.35, max: 0.35 });
       game.stun(e, 1.2, 'net');
       game.hit(e, (st.damage * 1.2 + n * 0.5) * st.skillPower, h, { color: '#D8C8A0' });
     }
@@ -590,7 +590,7 @@ const SKILL_CASTS = {
   potbomb(game, h, st, n) {
     const t = game.findTarget(h.x, h.y, st.range * 1.1);
     if (!t) return false;
-    game.effects.push({ type: 'lob', x: h.x, y: h.y - 30, x2: t.x, y2: t.y, color: '#C99A3C', ttl: 0.45, max: 0.45 });
+    game.effects.push({ type: 'lob', kind: 'gom', x: h.x, y: h.y - 30, x2: t.x, y2: t.y, color: '#C99A3C', ttl: 0.45, max: 0.45 });
     game.effects.push({ type: 'ring', x: t.x, y: t.y, r: 70, color: '#C99A3C', ttl: 0.5, max: 0.5 });
     for (const e of game.enemiesInRange(t.x, t.y, 70)) { game.hit(e, (st.damage * 2 + n * 0.8) * st.skillPower, h, { big: true, color: '#E8C27A' }); game.stun(e, 0.6, 'stun'); }
     return true;
@@ -967,7 +967,7 @@ const SKILL_CASTS = {
   melon(game, h, st, n) {
     const t = game.findTarget(h.x, h.y, st.range);
     if (!t) return false;
-    game.effects.push({ type: 'lob', x: h.x, y: h.y - 30, x2: t.x, y2: t.y, color: '#3EDC4E', ttl: 0.45, max: 0.45,
+    game.effects.push({ type: 'lob', kind: 'dua', x: h.x, y: h.y - 30, x2: t.x, y2: t.y, color: '#3EDC4E', ttl: 0.45, max: 0.45,
       onEnd: () => {
         game.effects.push({ type: 'splat', x: t.x, y: t.y, r: 70, color: '#E04848', ttl: 0.6, max: 0.6 });
         for (const e of game.enemiesInRange(t.x, t.y, 70)) {
@@ -992,7 +992,7 @@ const SKILL_CASTS = {
     if (list.length < 4) return false;
     game.effects.push({ type: 'banner', str: st.skName || 'Mưa Dưa', color: '#3EDC4E', ttl: 1.6, max: 1.6 });
     for (const e of list) {
-      game.effects.push({ type: 'lob', x: e.x - 40, y: e.y - 220, x2: e.x, y2: e.y, color: '#3EDC4E', ttl: 0.4 + srand() * 0.5, max: 0.9,
+      game.effects.push({ type: 'lob', kind: 'dua', x: e.x - 40, y: e.y - 220, x2: e.x, y2: e.y, color: '#3EDC4E', ttl: 0.4 + srand() * 0.5, max: 0.9,
         onEnd: () => {
           game.effects.push({ type: 'splat', x: e.x, y: e.y, r: 30, color: '#E04848', ttl: 0.4, max: 0.4 });
           if (!e.dead) { game.hit(e, (st.damage * 2 + n) * st.skillPower, h, { color: '#3EDC4E' }); if (!e.dead) game.slow(e, 40, 2); }
@@ -2404,6 +2404,9 @@ class Game {
     return n;
   }
 
+  // v163: chữ "núi cao" (Sơn Tinh dời non) chỉ hợp chương Sơn Tinh – Thủy Tinh; chương khác / vô tận dùng chữ trung tính
+  sonTinh() { return !this.endless && (typeof chapterOf !== 'function' || chapterOf(this.level).id === 'sontinh'); }
+
   growMountain() {
     const m = this.mountain;
     m.growth++;
@@ -2411,7 +2414,7 @@ class Game {
     const st = this.mountainStage();
     const gold = st * MOUNTAIN.goldPerStage;
     this.addGold(gold);
-    if (st >= 2 && this.wave % 3 === 0) { this.lives++; this.notify('Núi cao che thành: +1 mạng', '#6AE06A'); }
+    if (st >= 2 && this.wave % 3 === 0) { this.lives++; this.notify(this.sonTinh() ? 'Núi cao che thành: +1 mạng' : 'Thành vững thêm: +1 mạng', '#6AE06A'); }
     // v92: bỏ màn Núi Tản Viên — núi tự cao theo đợt (vàng, mạng, thêm lượt Mọc Núi), không còn Linh Chi
     return gold;
   }
@@ -2597,7 +2600,7 @@ class Game {
     if (extra) this.addGold(extra);
     this.moc = this.mocMax();
     this.rollShop();      // cửa hàng nhập hàng mới
-    this.notify(`Hoàn thành đợt ${this.wave}! +${bonus + extra} vàng · núi cao +${mGold} vàng`, '#F2D27A');
+    this.notify(`Hoàn thành đợt ${this.wave}! +${bonus + extra} vàng · ${this.sonTinh() ? 'núi cao' : 'giữ vững'} +${mGold} vàng`, '#F2D27A');
     if (this.bossKho) { this.events.push({ type: 'kho', n: this.bossKho, why: `hạ ${this.bossKhoName}` }); this.bossKho = 0; }
     // v104: Tu Vi cho mọi tướng còn trên sân mỗi đợt (tướng hỗ trợ / hồi máu ít hạ quái vẫn lên bậc)
     const log = this.xpLog || (this.xpLog = {});

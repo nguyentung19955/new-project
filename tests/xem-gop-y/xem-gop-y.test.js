@@ -1,5 +1,5 @@
 // v163: màn "Góp ý nhận được" — chỉ tài khoản quản trị (đăng nhập, email ly230595@gmail.com, đã xác minh) thấy nút.
-// CLOUD.db giả trả danh sách góp ý mẫu: phân trang 20, lọc loại / trạng thái, đổi trạng thái, ghi chú, xoá có xác nhận,
+// CLOUD.db giả trả danh sách góp ý mẫu: phân trang 20, lọc loại / trạng thái (drop-down, v166), đổi trạng thái, ghi chú, xoá có xác nhận,
 // ảnh thu nhỏ → xem to, chấm báo số góp ý Mới; tài khoản khác / khách / email chưa xác minh → không có nút; bố cục 3 cỡ màn hình.
 const path = require('path');
 const { open, ok } = require('../cho-tuong/helpers');
@@ -140,18 +140,23 @@ const layout = (page) => page.evaluate(() => {
     ok(n === 25, 'đã tải đủ 25 góp ý');
     ok(!(await page.$('[data-act=fba-more]')), 'hết dữ liệu → ẩn nút Tải thêm');
     // lọc loại
-    await page.click('[data-act=fba-kind][data-k=idea]');
+    await page.selectOption('#fba-kind', 'idea');
     let kinds = await page.$$eval('#fbadmin .fba-kind', (e) => [...new Set(e.map((x) => x.textContent))]);
     ok(kinds.length === 1 && kinds[0] === 'Ý tưởng', 'lọc "Ý tưởng" → chỉ còn Ý tưởng');
     ok((await page.$$('#fbadmin .fba-item')).length === 6, '6 góp ý Ý tưởng (fb1, fb5, …, fb21)');
-    await page.click('[data-act=fba-kind][data-k=all]');
+    ok(await page.isVisible('[data-act=fba-clear]') && /Đang hiện 6\/25/.test(await page.textContent('.fba-shown')), 'đang lọc → hiện "Đang hiện 6/25" + nút Bỏ lọc');
+    ok((await page.$$eval('#fba-kind option', (o) => o.map((x) => x.textContent))).join('|') === 'Tất cả (25)|● Lỗi (7)|● Ý tưởng (6)|● Cân bằng (6)|● Khác (6)', 'drop-down Loại có số đếm từng loại');
+    await page.click('[data-act=fba-clear]');
+    ok((await page.$$('#fbadmin .fba-item')).length === 25 && (await page.inputValue('#fba-kind')) === 'all', 'Bỏ lọc → hiện lại cả 25');
+    await page.selectOption('#fba-kind', 'idea');
+    await page.selectOption('#fba-kind', 'all');
     // lọc trạng thái
-    await page.click('[data-act=fba-stf][data-k=seen]');
+    await page.selectOption('#fba-stf', 'seen');
     ok((await page.$$('#fbadmin .fba-item')).length === 6, 'lọc "Đã xem" → 6 mục');
-    await page.click('[data-act=fba-stf][data-k=done]');
+    await page.selectOption('#fba-stf', 'done');
     let ids = await page.$$eval('#fbadmin .fba-item', (e) => e.map((x) => x.dataset.id));
     ok(ids.join() === 'fb5' && (await page.textContent('[data-id=fb5]')).includes('đã sửa ở v160'), 'lọc "Đã xử lý" → fb5 kèm ghi chú');
-    await page.click('[data-act=fba-stf][data-k=new]');
+    await page.selectOption('#fba-stf', 'new');
     ok((await page.$$('#fbadmin .fba-item')).length === 18, 'lọc "Mới" → 18 mục');
     // đổi trạng thái
     await page.click('[data-id=fb0] [data-act=fba-st][data-k=seen]'); await page.waitForTimeout(150);
@@ -160,7 +165,7 @@ const layout = (page) => page.evaluate(() => {
     ok(u && u[1] === 'feedback' && u[2] === 'fb0' && JSON.stringify(u[3]) === '{"status":"seen"}', 'đổi trạng thái → update feedback/fb0 {status:"seen"}');
     ok(!(await page.$('[data-id=fb0]')), 'đang lọc "Mới" → fb0 rời danh sách');
     ok((await page.$$('#fbadmin .fba-item')).length === 17, 'còn 17 mục Mới');
-    await page.click('[data-act=fba-stf][data-k=all]');
+    await page.selectOption('#fba-stf', 'all');
     await page.click('[data-act=fba-close]');
     ok((await page.textContent('#settings .fba-dot')) === '17', 'chấm báo giảm còn 17');
     await page.click('#settings [data-act=fba-open]'); await page.waitForTimeout(300);

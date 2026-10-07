@@ -676,16 +676,17 @@ button:disabled { cursor: default; }
 .res-title { font-family: var(--title); font-size: 46px; font-weight: 800; text-align: center; line-height: 1.1; margin-top: 4px; }
 .res-title.win { color: var(--gold); text-shadow: 0 2px 0 #3A2408, 0 0 20px #F0A03088; }
 .res-title.lose { color: #E07050; text-shadow: 0 2px 0 #2A0A04; }
+.res-title.long { font-size: 34px; }   /* v163: tựa thua theo chương có câu dài (Giặc Ân chiếm làng Phù Đổng…) */
 .res-stars { text-align: center; font-size: 42px; letter-spacing: 8px; color: var(--gold-hi); line-height: 1; text-shadow: 0 0 14px #FFD66B88; }
 .res-stars i { color: #4A4236; font-style: normal; text-shadow: none; }
 .res-grid { flex: 1; display: flex; gap: 10px; min-height: 0; }
 .res-table { flex: 1; border-radius: 6px; padding: 0; display: flex; flex-direction: column; }
 .res-table div { display: flex; justify-content: space-between; align-items: center; padding: 6px 14px; border-bottom: 1px solid #2A2216; font-size: 15px; }
 .res-table div b { font-size: 18px; font-variant-numeric: tabular-nums; }
-.res-tips { flex: 1; border-radius: 6px; padding: 10px 14px; display: flex; flex-direction: column; gap: 8px; border: 1px solid #2C6A86; background: #0B1418; }
-.res-tips .h { font-size: 12px; font-weight: 800; letter-spacing: .08em; color: var(--water-t); }
+.res-tips { flex: 1; border-radius: 6px; padding: 10px 14px; display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--ch-e, #2C6A86); background: #0B1418; }
+.res-tips .h { font-size: 12px; font-weight: 800; letter-spacing: .08em; color: var(--ch-t, var(--water-t)); }
 .res-tips .t { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.35; }
-.res-tips .t i { width: 26px; height: 26px; flex: none; border-radius: 50%; border: 2px solid #5AB4D6; color: var(--water-t); font-style: normal; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+.res-tips .t i { width: 26px; height: 26px; flex: none; border-radius: 50%; border: 2px solid var(--ch-a, #5AB4D6); color: var(--ch-t, var(--water-t)); font-style: normal; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 13px; }
 .res-tips .t b { color: var(--gold-hi); }
 .res-btns { display: flex; gap: 10px; height: 46px; flex: none; }
 .res-btns button { flex: 1; border-radius: 4px; font-family: var(--title); font-size: 19px; font-weight: 800; }
@@ -1122,11 +1123,11 @@ button:disabled { cursor: default; }
 .dk-stbtn { width: 40px; height: 46px; padding: 0; border-radius: 6px; flex: none; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 16px; line-height: 1; }
 .dk-stbtn small { font-size: 9px; font-weight: 800; color: var(--gold-pale); margin-top: 2px; }
 .dk-stbtn.on { border-color: #FFD66B; box-shadow: 0 0 8px #FFD66B88; }
-#hero-stats { position: absolute; left: 6px; bottom: 96px; width: 400px; max-width: calc(100% / var(--hz, 1) - 12px); z-index: 7; pointer-events: none; -webkit-user-select: none; user-select: none; padding: 8px 10px; border-radius: 8px; border: 1.5px solid #D9B25A; box-shadow: 0 6px 18px #000c; }
-#hero-stats .hs-h { font-size: 12px; font-weight: 800; color: var(--gold); margin-bottom: 4px; }
+#hero-stats { position: absolute; left: 6px; bottom: 96px; width: 300px; max-width: calc(100% / var(--hz, 1) - 12px); z-index: 7; pointer-events: none; -webkit-user-select: none; user-select: none; padding: 4px 7px; border-radius: 6px; border: 1.5px solid #D9B25A; box-shadow: 0 6px 18px #000c; }
+#hero-stats .hs-h { font-size: 10.5px; font-weight: 800; color: var(--gold); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 #hero-stats .hs-h b { color: #FFD66B; }
-#hero-stats .hs-g { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px 12px; }
-#hero-stats .hs-g div { display: flex; justify-content: space-between; gap: 6px; font-size: 11.5px; color: var(--text-2); border-bottom: 1px solid #ffffff10; }
+#hero-stats .hs-g { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0 8px; }
+#hero-stats .hs-g div { display: flex; justify-content: space-between; gap: 3px; font-size: 9.5px; line-height: 1.35; color: var(--text-2); border-bottom: 1px solid #ffffff10; white-space: nowrap; }
 #hero-stats .hs-g b { color: var(--text); font-variant-numeric: tabular-nums; }
 /* v41: Cỡ chữ & nút (--hz do main.js đặt; điện thoại mặc định 1,2). Chỉ phóng các phần trong trận,
    mỗi phần phóng quanh cạnh nó bám vào màn hình nên không lệch chỗ. */
@@ -1677,6 +1678,36 @@ i.c { background: #1F4A2A; color: #8AE09A; } i.h { background: #4A2A5A; color: #
 .dk-pick.common.on { border-color: var(--r-com-hi); background: #4A2C16; box-shadow: inset 0 0 0 1px var(--r-com-hi), inset 0 0 12px #00000077; }
 .dk-pick.common .no { background: var(--r-com-hi); color: #1A0F0A; }
 .dk-pick.common.gone { border-color: #E25A3A; }
+
+/* ============================================================
+   v163: khung / nút / thanh vẽ tay — chỉ bật khi đã có file (ui.js loadUiSkins thêm lớp sk-… lên <html>
+   và biến --sk-<tên>). Chưa có ảnh: giữ nguyên CSS cũ ở trên.
+   ============================================================ */
+.cp-map .bgart .cp-bgimg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+html.sk-khung-bang .res-tips, html.sk-khung-bang .res-table, html.sk-khung-bang .dk-box, html.sk-khung-bang .sl-card {
+  border-color: transparent; border-image: var(--sk-khung-bang) 22% fill / 12px / 4px stretch; background: none; box-shadow: none; }
+html.sk-nut-vang .btn-gold { background: var(--sk-nut-vang-thuong) center / 100% 100% no-repeat; border-color: transparent; box-shadow: none; }
+html.sk-nut-vang .btn-gold:active { background-image: var(--sk-nut-vang-nhan, var(--sk-nut-vang-thuong)); }
+html.sk-nut-vang .btn-gold:disabled { background-image: var(--sk-nut-vang-khoa, var(--sk-nut-vang-thuong)); filter: none; }
+html.sk-nut-dong .res-btns button.metal, html.sk-nut-dong .dk-head button.metal { background: var(--sk-nut-dong-thuong) center / 100% 100% no-repeat; border-color: transparent; box-shadow: none; }
+html.sk-nut-dong .res-btns button.metal:active, html.sk-nut-dong .dk-head button.metal:active { background-image: var(--sk-nut-dong-nhan, var(--sk-nut-dong-thuong)); }
+html.sk-nut-dong .res-btns button.metal:disabled, html.sk-nut-dong .dk-head button.metal:disabled { background-image: var(--sk-nut-dong-khoa, var(--sk-nut-dong-thuong)); }
+html.sk-nut-tron .xbtn { background: var(--sk-nut-tron-thuong) center / contain no-repeat; border-color: transparent; box-shadow: none; }
+html.sk-nut-tron .xbtn:active { background-image: var(--sk-nut-tron-nhan, var(--sk-nut-tron-thuong)); }
+html.sk-nut-tron .xbtn:disabled { background-image: var(--sk-nut-tron-khoa, var(--sk-nut-tron-thuong)); }
+html.sk-thanh-mau-boss #bossbar .tr { position: relative; overflow: visible; border-color: transparent; }
+html.sk-thanh-mau-boss #bossbar .tr::after { content: ''; position: absolute; inset: -5px -12px; background: var(--sk-thanh-mau-boss) center / 100% 100% no-repeat; pointer-events: none; }
+html.sk-thanh-day #deck { border-color: transparent; border-image: var(--sk-khung-thanh-day) 30% 10% fill / 16px 36px / 2px 6px stretch; background: none; box-shadow: none; }
+html.sk-the-cho .mk-card::after { content: ''; position: absolute; inset: 0; background: var(--sk-the-cho-thuong) center / 100% 100% no-repeat; pointer-events: none; z-index: 1; }
+html.sk-the-cho .mk-card .el, html.sk-the-cho .mk-card .nm, html.sk-the-cho .mk-card .cost, html.sk-the-cho .mk-card .tw { z-index: 2; }
+html.sk-the-cho .mk-card.twin::after { background-image: var(--sk-the-cho-ghep, var(--sk-the-cho-thuong)); }
+html.sk-the-cho .mk-card.poor::after { background-image: var(--sk-the-cho-thieu, var(--sk-the-cho-thuong)); }
+html.sk-nut-doi-cho .mk-rr { background: var(--sk-nut-doi-cho) center / 100% 100% no-repeat; border-color: transparent; box-shadow: none; }
+html.sk-huy-hieu .cp-node .c { background: var(--sk-ai-mo) center / contain no-repeat; border-color: transparent; box-shadow: none; }
+html.sk-huy-hieu .cp-node.sel .c { background-image: var(--sk-ai-chon, var(--sk-ai-mo)); }
+html.sk-huy-hieu .cp-node.lock .c { background-image: var(--sk-ai-khoa, var(--sk-ai-mo)); }
+html.sk-nen-man-phu #prep .screen, html.sk-nen-man-phu #result .screen, html.sk-nen-man-phu #reward .screen {
+  background: linear-gradient(#0D0B08b0, #0D0B08b0), var(--sk-nen-man-phu) center / cover no-repeat, var(--bg); }
 /* v141: chơi nhóm "Cùng Giữ Thành" — thẻ chế độ, phòng chờ, thanh đồng đội */
 .md-body:has(.md-card.coop) { grid-template-columns: 1fr 1fr 1fr; }
 .md-card.coop { border-color: #6AB04A; background: linear-gradient(180deg, #1C3414, #10160C); }
@@ -1734,16 +1765,18 @@ i.c { background: #1F4A2A; color: #8AE09A; } i.h { background: #4A2A5A; color: #
   box-shadow: 0 2px 8px #000a; animation: chbub 4s ease forwards; word-break: break-word; }
 .ch-bub b { color: #BFE8F8; margin-right: 5px; }
 @keyframes chbub { 0% { opacity: 0; transform: translateY(-6px); } 8%, 85% { opacity: 1; transform: none; } 100% { opacity: 0; } }
-/* v159: icon nhỏ dùng chung (ui.ic): ảnh ic-*.png hoặc SVG dự phòng, cao theo cỡ chữ */
+/* v163: icon nhỏ dùng chung (ui.ic): ảnh ic-*.png hoặc SVG dự phòng, cao theo cỡ chữ */
 .icn { display: inline-block; width: 1.25em; height: 1.25em; vertical-align: -.28em; object-fit: contain; flex: none; margin-right: .15em; }
 svg.icn { overflow: visible; }
 #bb-info .fc .icn { width: 13px; height: 13px; vertical-align: -2px; margin-right: 2px; }
 #bb-tag .icn { width: 12px; height: 12px; vertical-align: -2px; }
-#hero-stats .hs-g span .icn { width: 13px; height: 13px; vertical-align: -2px; margin-right: 3px; }
+#hero-stats .hs-g span .icn { width: 10px; height: 10px; vertical-align: -1px; margin-right: 2px; }
+#hero-stats .hs-h .icn { width: 11px; height: 11px; vertical-align: -1px; }
 .prep-card .ic .icn, .nt-ico .icn { width: 26px; height: 26px; margin: 0; vertical-align: middle; }
 .sl-warn .icn { width: 22px; height: 22px; }
 .bk-stat { flex-wrap: wrap; gap: 2px 12px; }
 .bk-stat .icn { width: 14px; height: 14px; vertical-align: -3px; margin-right: 2px; }
+.co-retry { height: 26px; padding: 0 10px; margin-left: 6px; font-size: 12.5px; }
 
 /* v163: Góp ý nhận được (chỉ tài khoản quản trị) */
 #fbadmin { z-index: 21; }
@@ -1753,9 +1786,15 @@ svg.icn { overflow: visible; }
   font-size: 11px; font-weight: 800; line-height: 18px; text-align: center; box-shadow: 0 0 0 2px #1A140D; }
 #btn-settings.fba-has { position: relative; }
 #btn-settings.fba-has::after { content: ''; position: absolute; top: 4px; right: 6px; width: 10px; height: 10px; border-radius: 50%; background: #E0402A; box-shadow: 0 0 0 2px #1A140D; }
-.fba-filters { display: flex; flex-wrap: wrap; gap: 4px 10px; padding: 4px 10px 2px; min-width: 0; }
-.fba-filters .cp-tabs { margin-left: 0; max-width: 100%; }
-.fba-filters .cp-tab small { opacity: .75; font-weight: 700; }
+.fba-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; padding: 5px 10px 3px; min-width: 0; }
+.fba-sel { display: flex; align-items: center; gap: 6px; min-width: 0; font-size: 12px; font-weight: 700; color: var(--text-2); }
+.fba-sel select { height: 32px; min-width: 0; max-width: 220px; padding: 0 28px 0 10px; border-radius: 6px; border: 1px solid #8C6A2E; color: var(--text); font-size: 14px; font-weight: 700;
+  font-family: inherit; appearance: none; -webkit-appearance: none; cursor: pointer;
+  background: #17130F url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23F2D27A' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 9px center / 10px 6px; }
+.fba-sel select:focus { outline: 2px solid #D9B25A; outline-offset: -1px; }
+.fba-sel select option { background: #17130F; color: var(--text); }
+.fba-clear { height: 32px; padding: 0 10px; font-size: 12px; flex: none; }
+.fba-shown { margin-left: auto; font-size: 12px; color: var(--text-2); white-space: nowrap; }
 .fba-sw { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--kc); }
 .fba-list { flex: 1; min-height: 0; overflow-y: auto; padding: 4px 10px 10px; display: flex; flex-direction: column; gap: 6px; }
 .fba-list > * { width: 100%; max-width: 860px; margin: 0 auto; box-sizing: border-box; }

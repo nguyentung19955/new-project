@@ -1517,6 +1517,38 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 162 — Sửa luật Firestore cho chơi nhóm
 - Lần gộp nhánh trước làm khối luật `feedback` (Góp ý) thiếu dấu đóng `}`, khiến toàn bộ luật phòng chơi nhóm (`rooms/…`, `cmds`, `reqs`, `snap`, `chat`) bị lồng nhầm vào trong `feedback/{id}` → không tạo được phòng. Đã sửa; thêm `tests/coop/test-rules.js` kiểm tra ngoặc cân bằng và các khối `match` nằm đúng cấp (chạy trong `node tests/coop/run-all.js`).
 - **Cần làm:** dán lại `firestore.rules` vào Firebase console → Firestore → Rules → Publish (hoặc để workflow tự đăng khi khoá GitHub đủ quyền Firebase Rules Admin + Service Usage Consumer).
+## Phiên bản 163 — Rà chủ đề cũ Sơn Tinh – Thủy Tinh + prompt khung / nút / tranh giao diện
+- **Màn thua / thắng theo chương** (trước mọi ải đều "💧 Phong Châu thất thủ · Nước ngập thành · Nước rút"): Sơn Tinh – Thủy Tinh giữ nguyên; Thạch Sanh "👹 Yêu quái tràn vào làng · Miếu thất thủ"; Thánh Gióng "🔥 Giặc Ân chiếm làng Phù Đổng · Lửa giặc cháy làng"; Lạc Long Quân "🌊 Yêu tinh biển hoành hành · Sóng dữ tràn bờ"; An Dương Vương "🏹 Cổ Loa thất thủ · Giặc Triệu vào thành". Nhãn đầu (Đã giữ thành / làng / biển), màu thanh tiến độ, khung mẹo, tranh cảnh (SVG dựng từ nền truyện + boss cuối ải + lửa / sương yêu / sóng; thắng: tướng mở chương dưới mặt trời trống đồng) đổi theo chương. Bảng `CH_THEME` trong js/chapters.js.
+- **Vô tận:** tựa trung tính "♾ Thành đã thất thủ", đầu "♾ Vô tận · tên ải" (trước ghi "Ải N" và "47/35"), "Trụ được N đợt", thanh so với kỷ lục vô tận. Mẹo 2 nói quân đổi chương mỗi 10 đợt. Nút cuối ải 17 "Năm nào cũng dâng nước" → "♾ Chơi vô tận" (bỏ nút trùng); lời nhắc vào vô tận không còn "dâng nước".
+- Mẹo 2 lấy **quái bay của chính ải** (Dơi Hang, Chim Bão…) hoặc quái khỏe (Voi Chiến) khi chương không có quái bay — trước luôn ghi Chim Bão.
+- **Lời nhắc đầu trận / hướng dẫn / phần thưởng hạ boss** theo chương: "giữ miếu và bản làng / làng Phù Đổng / miền sông biển / thành Cổ Loa qua N đợt", "Bấm ▶ để giặc Ân tràn tới", "Chọn phần thưởng · Dân làng tạ ơn / Long Cung ban thưởng / An Dương Vương ban thưởng" (Sơn Tinh giữ "Chọn sính lễ · Vua Hùng ban thưởng").
+- Thông báo "núi cao +N vàng / Núi cao che thành" chỉ ở chương Sơn Tinh; chương khác "giữ vững / Thành vững thêm" (số không đổi).
+- Ảnh thành Phong Châu (`ban-do_phong-chau.png`) và nền sông Đà (`nen_ai-*.png`) chỉ vẽ ở ải chương Sơn Tinh (trước nếu có file sẽ hiện ở mọi ải). Lịch đợt Bách khoa bỏ vạch "Nước dâng", "Rùa khổng lồ" → tên quái khỏe của ải. Thủy Tinh bỏ câu "làm ngập tạm 3 ô" (đã tắt từ v36). Cài đặt: "Không hiện truyện mở đầu chương". Chân menu: "Văn Lang – Âu Lạc".
+- **Cơ chế nước dâng / ngập ô / Mọc Núi:** đã tắt hẳn từ v36 (mực nước luôn 0, nút Mọc Núi ẩn) → không đổi số, không bật lại; chỉ dọn chữ người chơi còn thấy. Chi tiết: docs/RA-CHU-DE-CU.md.
+- **Prompt mới (tools/build-prompts.js, nhóm 18–21, 24 prompt):** 10 tranh thắng / thua theo chương (`assets/scenes/thang-<chương>.png`, `thua-<chương>.png`), 5 nền bản đồ chọn ải (`scenes/chuong-<chương>.png`), nền màn phụ (`scenes/nen-man-phu.png`), 8 tấm khung / nút / thanh nền hồng tím cắt bằng **`python3 tools/cat-khung.py <ảnh> <mã>`** (tools/ui-frames.json): khung bảng 9 mảnh, nút chữ nhật vàng / đồng (thường · nhấn · khóa), nút tròn, khung thanh máu boss / tướng / quái, khung thanh đáy, khung thẻ chợ (thường · ghép · thiếu vàng) + nút đổi, dải thông báo, huy hiệu ải (mở · chọn · khóa). Có file là game tự dùng (lớp `sk-…` trên `<html>`, canvas vẽ khung khi có ảnh), chưa có giữ hình vẽ bằng code.
+- Test: `node tests/ra-chu-de-cu/ra-chu-de-cu.test.js` (thua mỗi chương + thắng + Vô tận ở 844×390, 667×375, dọc 390×844; giả lập có ảnh khung / tranh).
+
+## Phiên bản 163 — Thu nhỏ bảng chỉ số khi giữ chân dung
+- Bảng chỉ số tướng (giữ chân dung ở thanh đáy, v154) gọn hơn: rộng 400 → 300 px, chữ tiêu đề 12 → 10,5 px, chữ chỉ số 11,5 → 9,5 px, biểu tượng 13 → 10 px, lề và khoảng cách hẹp lại; cao còn ~70–87 px (trước ~108 px). Vẫn nằm trên thanh đáy, căn theo chân dung, chữ không xuống dòng.
+- **`docs/PROMPT-GUI-AI.txt`**: bản chữ thường của hai CSV — 90 khối prompt (60 tướng + 30 quái/boss), mỗi khối ghi tên, cỡ ảnh, tên file cần lưu; sinh cùng `node tools/build-prompts.js`.
+- **`docs/bo-animation.zip`** (~2,5 MB, đóng gói bằng `python3 tools/dong-goi-animation.py`): HUONG-DAN.txt + chuẩn (md/txt) + 90 prompt (txt/csv) + ảnh mẫu lưới + ảnh mẫu 90 nhân vật (đặt tên theo mã) + ghep-luoi.py / cat-sheet.py.
+- **`docs/PROMPT-HIEU-UNG.txt`** (sinh bằng `python3 tools/build-fx-prompts.py`): 48 prompt gen lại **mọi hiệu ứng** game đang có — A: 32 ảnh hạt Kenney (8 tấm × 4 ô, trắng xám nền đen, game tự tô màu, giữ tên file để thay thẳng `assets/fx/`) · B: 17 dải khung chiêu cho chỗ nhận sẵn `assets/vfx/` (`VFX_FILE`: cột lửa, nổ, vòng băng, sét, chém vàng, hồi máu, khiên, đá, xu, nốt nhạc, triệu hồi, bụi, đập, nước dâng, núi trồi…) · C: 6 ảnh triệu hồi / vật thể đã có chỗ nhận (hổ Ba Vì, chim Lạc, chim thần, cây đa thần, đá lăn, Lạc tử) · D: đạn bay 10 loại + 13 hiệu ứng / 2 ảnh hiện vẽ bằng code (cần nối code khi có ảnh). Ảnh mẫu `docs/mau-luoi/mau-hieu-ung-kenney.png`.
+- **`tools/cat-fx.py hat|dai|don`**: cắt ảnh hiệu ứng (nền đen → trong suốt theo độ sáng, nền hồng tím → xoá như cat-sheet). Test: `node tests/hieu-ung/cat-fx.test.js` (cắt ảnh giả + kiểm tra file prompt phủ đủ ảnh Kenney trong `js/vfx.js`, `VFX_FILE`, ảnh triệu hồi trong `js/main.js`, mọi loại đạn).
+
+## Phiên bản 153 — Nối ảnh hiệu ứng phần D (đạn bay + hiệu ứng trước chỉ vẽ bằng code)
+- **Đạn bay**: `drawProjectile` dùng `assets/fx/dan_<loại>.png` nếu có (fireball, frostbolt, arrow, bolt, orb, feather, petal, melon, rice, evil; cắt bằng `tools/cat-fx.py hat … --mau`), xoay theo hướng bay (dưa / cánh hoa / quả cầu tự xoay); chưa có ảnh thì vẽ bằng code như cũ.
+- **12 dải khung** `assets/vfx/<loại>.png` (hàm `drawFxArt` trong `js/main.js`): vortex, sweep (lật theo hướng tướng), meteor, revive, volley, rain (chờ hết delay), ring, warn, mark (theo quái), streak / afterimage / hook (kéo dài + xoay giữa hai điểm). **ring / warn / streak / afterimage** vẽ trắng xám và được **tô theo màu hiệu ứng** (`tintSheet` trong `js/render.js`) nên một ảnh dùng cho mọi màu.
+- **Ảnh rời**: ngựa sắt Thánh Gióng `trieu-hoi_ngua-sat.png`, Gióng bay dọc sông `trieu-hoi_giong-bay.png`, vật ném `hieu-ung_den-troi / chai / binh-gom / dua-hau.png` (hiệu ứng `lob` có thêm `kind` den / chai / gom / dua trong `js/game.js`).
+- `docs/PROMPT-HIEU-UNG.txt` phần D cập nhật (51 ảnh): 4 dải tô màu ghi "TRẮNG XÁM", vật ném tách thành 4 ảnh rời; zip `docs/bo-animation.zip` đóng gói lại.
+- Test: `node tests/hieu-ung/hieu-ung-game.test.js` (ảnh giả qua route: đủ 12 dải + 6 ảnh rời + 10 loại đạn được vẽ, 4 dải được tô màu; 404 → vẽ bằng code, không lỗi trang) · `node tests/hieu-ung/cat-fx.test.js`.
+
+## Phiên bản 164 — Gộp rà chủ đề cũ + bảng chỉ số gọn + hiệu ứng vẽ tay
+- Gộp: màn thắng/thua theo chương (v163, rà chủ đề cũ + 24 prompt khung/nút/tranh nhóm 18–21), bảng chỉ số tướng thu nhỏ, chuẩn animation + prompt hiệu ứng (game dùng ảnh assets/fx, assets/vfx khi có; đạn quả dưa dùng srand để chơi nhóm vẫn đồng bộ).
+
+## Phiên bản 163 — Báo lỗi rõ khi tạo / vào phòng chơi nhóm
+- Tạo phòng / vào phòng bị lỗi giờ báo đúng nguyên nhân kèm mã lỗi ngắn và nút **↻ Thử lại**: máy chủ từ chối (`permission-denied` — luật chơi nhóm chưa đăng lên Firebase), mất mạng (`unavailable`), phiên đăng nhập hết hạn (`unauthenticated`), sai mã (`not-found`). Chi tiết ghi vào console. Trước đây lỗi luật bị nuốt sau 5 lần thử mã và chỉ báo "Không tạo được phòng, thử lại"; nay chỉ thử mã khác 1 lần.
+- Thông báo chơi nhóm (đồng đội rời / vào lại, đồng bộ lại) được giữ 20 dòng gần nhất (`ui.coopLog`); test chơi nhóm đọc từ đó thay vì từ toast (toast chỉ giữ 2 dòng nên dễ bị đẩy mất).
+- Test mới: luật chưa đăng → báo rõ + Thử lại; mất mạng khi tạo phòng → báo mất mạng.
 
 ## Phiên bản 163 — Xem góp ý trong game (chỉ tài khoản quản trị)
 - **📥 Góp ý nhận được** (Cài đặt → dòng Góp ý) chỉ hiện với tài khoản **ly230595@gmail.com** đã đăng nhập và đã xác minh email (`CLOUD.isAdmin()`, danh sách `ADMIN_EMAILS` trong `js/cloud.js`). Khách / tài khoản khác / email chưa xác minh không thấy gì; email quản trị chưa xác minh thấy nút **Xác minh email**.
@@ -1530,3 +1562,10 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Bấm **Gửi** trong bảng Góp ý → thay toast bằng **bảng cảm ơn**: biểu tượng mặt trống đồng (SVG), "Cảm ơn góp ý của bạn!", "Đội ngũ Thần Thoại Việt sẽ đọc và hoàn thiện game để mang lại trải nghiệm tốt hơn." và dòng trạng thái: *✓ Góp ý đã được gửi tới đội làm game* hoặc *Đang không có mạng — góp ý đã được lưu và sẽ tự gửi khi có mạng*.
 - Bảng không tự đóng; **Đóng** (hoặc Esc) → về lại menu / Cài đặt / trận; đang trong trận thì trận vẫn tạm dừng tới khi bấm Đóng rồi chạy tiếp như trước.
 - Test: `tests/gop-y/gop-y.test.js` thêm kiểm tra bảng cảm ơn (gửi được / ngoại tuyến / Firestore lỗi), không tự đóng, Đóng thì trận chạy tiếp, không tràn ở 844×390 / 667×375 / xoay dọc.
+## Phiên bản 165 — Gộp màn xem góp ý (quản trị) + báo lỗi chơi nhóm rõ ràng
+- Gộp: màn "📥 Góp ý nhận được" chỉ cho tài khoản quản trị (luật Firestore isAdmin), chơi nhóm báo đúng nguyên nhân khi tạo/vào phòng lỗi + nút Thử lại.
+
+## Phiên bản 166 — Bộ lọc dạng drop-down ở màn Góp ý nhận được
+- Gộp nhánh chính v165 (đã có màn xem góp ý) với bảng cảm ơn sau khi gửi góp ý (v164 nhánh xem-gop-y).
+- Màn **Góp ý nhận được**: hai hàng nút lọc đổi thành 2 ô chọn thả xuống **Loại** (Tất cả / Lỗi / Ý tưởng / Cân bằng / Khác, kèm số lượng; đang lọc thì có chấm màu của loại) và **Trạng thái** (Mọi trạng thái / Mới / Đã xem / Đã xử lý, kèm số lượng). Đang lọc thì có nút **✕ Bỏ lọc** và dòng "Đang hiện x/y". Gọn hơn, danh sách được thêm chỗ.
+- Test: `tests/xem-gop-y/xem-gop-y.test.js` dùng drop-down để lọc, kiểm tra số đếm trong ô chọn, Bỏ lọc.
