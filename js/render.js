@@ -83,12 +83,18 @@ const ready = (img) => img && img.complete && img.naturalWidth > 0;
 const ASSET_ROOT = 'assets/';
 // bản thử gói ảnh vào window.ASSET_DATA (đường dẫn → data URL) để khỏi vượt giới hạn số file; bản thường để trống
 const assetSrc = (path) => (window.ASSET_DATA && window.ASSET_DATA[path]) || ASSET_ROOT + path;
+// v189 (L14): js/asset-list.js (tools/build-asset-list.js) liệt kê ảnh có thật → ảnh tuỳ chọn chưa có thì coi như thiếu ngay,
+// không gửi request rồi chờ 404. Không có danh sách (bản cũ) thì thử tải như trước.
+const ASSET_SET = window.ASSET_LIST ? new Set(window.ASSET_LIST) : null;
+// (window.ASSET_ALL = true: bỏ qua danh sách — test giả ảnh chưa có bằng page.route)
+const hasAsset = (path) => !ASSET_SET || window.ASSET_ALL || ASSET_SET.has(path) || !!(window.ASSET_DATA && window.ASSET_DATA[path]);
 const assetMap = new Map();      // đường dẫn -> { img, ok: null | true | false }
 let assetVersion = 0;            // tăng mỗi khi có ảnh mới tải xong (để giao diện vẽ lại)
 let useAssets = true;
 function asset(path, force) {
   if (!useAssets && !force) return null;
   let a = assetMap.get(path);
+  if (!a && !hasAsset(path)) { assetMap.set(path, { img: new Image(), ok: false }); return null; }   // Image chưa gán src: không tải
   if (!a) {
     a = { img: new Image(), ok: null };
     a.img.onload = () => { a.draw = shrinkForCanvas(path, a.img); a.ok = true; assetVersion++; };
@@ -117,6 +123,28 @@ function shrinkForCanvas(path, img) {
     c.naturalWidth = c.width; c.naturalHeight = c.height;
     return c;
   } catch (e) { return null; }
+}
+// v189 (L15): ảnh quái thu nhỏ sẵn theo cỡ thật trên màn (×1,5 cho nét khi xoay/co giãn), làm tròn bậc 16 px.
+// Trước đây mỗi khung co ảnh 320 px xuống ~50 px cho từng con (100+ quái lúc đông) — tốn nhất trong khung hình.
+const fitCache = new WeakMap();
+function fitSprite(img, devW) {
+  const iw = img.naturalWidth || img.width, ih = img.naturalHeight || img.height;
+  const tw = Math.max(16, Math.ceil(devW * 1.5 / 16) * 16);
+  if (!iw || tw >= iw * 0.8) return img;
+  let m = fitCache.get(img);
+  if (!m) fitCache.set(img, m = new Map());
+  let c = m.get(tw);
+  if (!c) {
+    if (m.size > 6) m.clear();
+    c = document.createElement('canvas');
+    c.width = tw; c.height = Math.max(1, Math.round(ih * tw / iw));
+    const x = c.getContext('2d');
+    x.imageSmoothingQuality = 'high';
+    x.drawImage(img, 0, 0, c.width, c.height);
+    c.naturalWidth = c.width; c.naturalHeight = c.height;
+    m.set(tw, c);
+  }
+  return c;
 }
 // nhận một đường dẫn hoặc danh sách (thử lần lượt, dùng ảnh đầu tiên đã có)
 function assetAny(paths) {
@@ -2137,11 +2165,12 @@ function drawEnemy(ctx, e, t, o = {}) {
     ctx.shadowBlur = 14;
   }
   const packRef = !vectorHeroesOn() && enemyPackRef(e.type);
-  const png = (packRef && enemyPackImg(e, t)) || enemyPng(e.type, e.elite || e.champion, e);
+  let png = (packRef && enemyPackImg(e, t)) || enemyPng(e.type, e.elite || e.champion, e);
   if (png) {
     // ảnh vẽ tay: chân ở giữa đáy ảnh, rộng theo ENEMY_W (bộ ảnh quái: cao theo ảnh bước 1 để đổi khung không đổi cỡ)
     const h2 = packRef ? box.w * packRef.naturalHeight / packRef.naturalWidth : box.w * png.naturalHeight / png.naturalWidth;
     const w2 = packRef ? h2 * png.naturalWidth / png.naturalHeight : box.w;
+    if (!o.icon) { const tr = ctx.getTransform(); png = fitSprite(png, Math.hypot(tr.a, tr.b) * w2); }
     const fxc = d.fx && ENEMY_FX[d.fx];
     if (fxc) drawEnemyFxBack(ctx, d.fx, fxc, w2, h2, t, e.id || 0, d.flying);
     if (fxc) { drawGlowOnly(ctx, png, -w2 / 2, -h2 + (d.flying ? h2 * 0.5 : 0), w2, h2, fxc.glow, fxc.blur, 0.9); ctx.save(); if (d.fx === 'ghost') ctx.globalAlpha *= 0.72 + Math.sin(t * 3 + (e.id || 0)) * 0.12; }
