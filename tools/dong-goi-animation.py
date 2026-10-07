@@ -12,8 +12,11 @@ HUONG_DAN = """BỘ ANIMATION — THẦN THOẠI VIỆT
 ============================================================
 Gửi cho AI tạo ảnh (Gemini, ChatGPT, Midjourney, Leonardo, Pippit…) hoặc họa sĩ.
 
+CẦN GEN NGAY: PROMPT-CAN-GEN.txt — CHỈ những ảnh còn phải vẽ (60 tướng vẽ mới hoàn toàn, boss còn thiếu, hiệu ứng theo ngũ hành),
+có chỉ thị cho AI ở đầu file. Gửi file này cho AI thay vì PROMPT-GUI-AI.txt (file đó gồm cả ảnh đã xong, chỉ để tra cứu).
+
 CÁCH DÙNG NHANH (mỗi nhân vật một ảnh):
-1. Mở PROMPT-GUI-AI.txt, tìm khối của nhân vật, chép phần giữa hai đường kẻ ------ dán vào AI.
+1. Mở PROMPT-CAN-GEN.txt (hoặc PROMPT-GUI-AI.txt để tra cứu), tìm khối của nhân vật, chép phần giữa hai đường kẻ ------ dán vào AI.
 2. Đính kèm 2 ảnh:
    - ảnh nhân vật: anh-mau-nhan-vat/<mã>.png (để AI giữ đúng nhân vật)
    - ảnh lưới: mau-luoi/hero12.png (tướng) · enemy6.png (quái) · enemy6-bay.png (quái bay: doi, chimbao) · boss9.png (boss)
@@ -22,6 +25,7 @@ CÁCH DÙNG NHANH (mỗi nhân vật một ảnh):
 
 TRONG GÓI:
 - CHUAN-ANIMATION.txt / .md   chuẩn đầy đủ: phong cách, quy cách lưới, nhịp phát, mẫu prompt, danh sách kiểm tra
+- PROMPT-CAN-GEN.txt          CHỈ ảnh còn phải gen (tướng + boss + hiệu ứng theo hệ), đánh số #1…#N, có chỉ thị cho AI
 - PROMPT-GUI-AI.txt           90 prompt sẵn (60 tướng + 21 quái + 9 boss)
 - PROMPT-HIEU-UNG.txt         48 prompt HIỆU ỨNG (ảnh hạt kiểu Kenney, dải khung chiêu, triệu hồi, đạn bay) — đọc phần đầu file
 - prompts-tuong.csv, prompts-quai.csv   cùng nội dung, dạng bảng (Excel / Google Sheets)
@@ -36,7 +40,7 @@ AI chỉ ra từng dáng một hoặc dùng AI video: xem mục 7 trong CHUAN-AN
 
 def main():
     files = [('docs/CHUAN-ANIMATION.md', 'CHUAN-ANIMATION.md'), ('docs/CHUAN-ANIMATION.txt', 'CHUAN-ANIMATION.txt'),
-             ('docs/PROMPT-GUI-AI.txt', 'PROMPT-GUI-AI.txt'), ('docs/prompts-tuong.csv', 'prompts-tuong.csv'),
+             ('docs/PROMPT-CAN-GEN.txt', 'PROMPT-CAN-GEN.txt'), ('docs/PROMPT-GUI-AI.txt', 'PROMPT-GUI-AI.txt'), ('docs/prompts-tuong.csv', 'prompts-tuong.csv'),
              ('docs/prompts-quai.csv', 'prompts-quai.csv'), ('docs/PROMPT-HIEU-UNG.txt', 'PROMPT-HIEU-UNG.txt'), ('tools/cat-fx.py', 'cong-cu/cat-fx.py'),
              ('tools/ghep-luoi.py', 'cong-cu/ghep-luoi.py'), ('tools/cat-sheet.py', 'cong-cu/cat-sheet.py')]
     for f in sorted(os.listdir(os.path.join(ROOT, 'docs/mau-luoi'))):

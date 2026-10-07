@@ -1647,3 +1647,17 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 174 — Gộp làm lại Hợp thể/Tiến hoá và màn Chọn chế độ phủ kín
 
 - Gộp hai nhánh lam-lai-hop-the và che-do-full về nhánh chính.
+
+## Phiên bản 175 — File prompt "cần gen" cho AI tạo ảnh + hiệu ứng theo ngũ hành
+
+- **`docs/PROMPT-CAN-GEN.txt`** (79 ảnh, đánh số #1…#79): CHỈ những ảnh còn phải gen, gửi thẳng cho AI tạo ảnh. Đầu file có đoạn **CHỈ THỊ CHO AI** (Anh + Việt): vẽ mới toàn bộ kể cả tướng đã có ảnh cũ (thay thế hoàn toàn), mỗi prompt là một sprite sheet nhiều khung theo lưới quy định, không được kết luận "đã đủ", trả đủ từng file đúng tên, nền `#FF00FF`, không vẽ số / đường lưới. (Lý do: `PROMPT-GUI-AI.txt` lẫn cả 29 quái/boss đã xong, AI tưởng bộ ảnh đã đủ.)
+  - 60 tướng `hero12` (12 khung: đứng thở 3 + chân dung, đánh 4, chiêu 3 + trúng đòn) — cắt xong bằng `cat-sheet.py … hero12` thì tự rời danh sách (`.v2`).
+  - 1 boss `boss9`: Hổ Vương Triệu Đà (`trieuda`, ảnh hiện tại chỉ 1 dáng). 22 quái/boss có `.redo` (gen lại 07/10) và 7 ảnh vẽ kiểu mới 06/10 (camap, cao, cua, voichien, chantinh, ngutinh, thuongluong) không còn trong file.
+  - 18 hiệu ứng: 1 tấm đạn 5 hệ (`dan-he.png` → `fx/dan-kim|moc|thuy|hoa|tho.png`), 5 dải trúng đòn `vfx/trung-<hệ>.png`, 5 dải vụ nổ `vfx/no-<hệ>.png`, 5 dải vòng chiêu `vfx/vong-chieu-<hệ>.png`, quái chết `vfx/chet-quai.png`, boss chết `vfx/chet-boss.png`.
+  - Sinh lại bằng `node tools/build-prompts.js` (danh sách tự rút gọn khi ảnh đã cắt vào game). Gói `docs/bo-animation.zip` có thêm file này.
+- **Game nhận ảnh hiệu ứng theo hệ** (chưa có ảnh thì vẽ bằng code như cũ):
+  - Đạn tướng: loại đạn chưa có ảnh riêng `fx/dan_<loại>.png` thì dùng `fx/dan-<hệ của tướng>.png`.
+  - Đạn trúng quái: hiệu ứng `impact` mang hệ của tướng → dải `trung-<hệ>` (52 px); đạn nổ lan → `no-<hệ>` (theo bán kính nổ). Thời gian hiệu ứng trúng 0,3 s khi có hệ.
+  - Tung chiêu: vòng `vong-chieu-<hệ>` dưới chân tướng (chiêu cuối to hơn), dẹt theo mặt đất.
+  - Quái chết: `chet-quai` (64 px), boss chết: `chet-boss` (130 px); không có thì dùng `dust` / vẽ code như cũ.
+- Test: `node tests/hieu-ung/hieu-ung-he.test.js`.

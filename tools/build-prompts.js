@@ -1,5 +1,5 @@
 // Sinh bộ prompt Gemini (mỗi ảnh một prompt tự đủ) từ dữ liệu game + mô tả trong docs/PROMPT_GEMINI_V94.md.
-// Chạy: node tools/build-prompts.js  →  docs/PROMPT_GEMINI_FULL.md (+ .txt) + (tùy chọn) trang HTML có nút sao chép.
+// Chạy: node tools/build-prompts.js  →  docs/PROMPT_GEMINI_FULL.md (+ .txt), docs/PROMPT-CAN-GEN.txt (chỉ ảnh còn phải gen) + (tùy chọn) trang HTML có nút sao chép.
 const fs = require('fs'), vm = require('vm'), path = require('path');
 const ROOT = path.join(__dirname, '..');
 const ctx = { console, window: {}, document: { createElement: () => ({ getContext: () => ({}) }) }, Image: function () {}, localStorage: { getItem() {}, setItem() {} }, navigator: {} };
@@ -545,3 +545,110 @@ const blk = (rows, title) => `${title}\n${'='.repeat(60)}\n` + rows.slice(1).map
 }).join('');
 fs.writeFileSync(path.join(ROOT, 'docs/PROMPT-GUI-AI.txt'), 'PROMPT GỬI AI TẠO ẢNH — mỗi khối là một ảnh. Chép phần giữa hai đường kẻ, dán vào AI, đính kèm ảnh lưới docs/mau-luoi/ (tướng: hero12.png · quái: enemy6.png hoặc enemy6-bay.png · boss: boss9.png) và thêm câu: "the attached grid is only a layout guide — do NOT draw its numbers, lines or labels". Lưu ảnh về đúng tên ghi trên khối. Chuẩn đầy đủ: docs/CHUAN-ANIMATION.txt\n\n'
   + blk(heroRows, `TƯỚNG (${heroRows.length - 1})`) + '\n\n' + blk(foeRows, `QUÁI + BOSS (${foeRows.length - 1})`));
+
+// v175: docs/PROMPT-CAN-GEN.txt — CHỈ những ảnh CÒN PHẢI GEN (gửi thẳng cho AI tạo ảnh, có chỉ thị rõ ở đầu file).
+// Tướng: mọi tướng chưa có assets/packs/<mã>/.v2 (cat-sheet.py hero12 tự tạo) — vẽ MỚI hoàn toàn, thay ảnh cũ.
+// Quái / boss: như nhóm 10–11 ở trên (chưa .redo hoặc chỉ có 1 dáng). Hiệu ứng theo hệ: chưa có file trong assets/fx|vfx.
+const EL_EN = { kim: 'METAL', moc: 'WOOD', thuy: 'WATER', hoa: 'FIRE', tho: 'EARTH' };
+const EL_VI = { kim: 'Kim', moc: 'Mộc', thuy: 'Thủy', hoa: 'Hỏa', tho: 'Thổ' };
+const FX_EL = {
+  kim: { dan: 'a spinning silver-white metal blade shard with a bronze edge and a tiny golden spark tail, pointing RIGHT',
+    trung: 'silver-white star sparks and tiny metal shards flying out from the center, a sharp white cross flash',
+    no: 'a burst of silver blades and golden sun-star rays exploding outward, sharp metal shards, a bright white core',
+    vong: 'silver-white and pale gold, a ring of small sword-blade shapes pointing outward' },
+  moc: { dan: 'a glowing green leaf dart with a small curling vine and two tiny leaves behind it, pointing RIGHT',
+    trung: 'green leaves and small yellow pollen dots bursting out, a soft green flash',
+    no: 'thorny green vines and leaves bursting up from the ground in a ring, flowers blooming, green spores',
+    vong: 'fresh green with brown wood, a ring of leaves and tiny sprouts' },
+  thuy: { dan: 'a blue water orb with a white swirl inside and a short splashing water tail, flying RIGHT',
+    trung: 'a blue water splash: droplets flying out in a crown shape, white foam',
+    no: 'a blue water geyser splash: a ring of big waves bursting outward, droplets and white foam',
+    vong: 'light blue and white, a ring of curling waves and droplets' },
+  hoa: { dan: 'a red-orange fireball with a yellow core and a short flickering flame tail, flying RIGHT',
+    trung: 'a small fire burst: orange flames and embers popping out, a yellow flash',
+    no: 'a fiery explosion: orange-red fireball, flames and embers, then dark smoke puffs',
+    vong: 'red-orange and gold, a ring of small flames' },
+  tho: { dan: 'a golden-brown rock clod with small cracks and a dusty trail, flying RIGHT',
+    trung: 'a dust puff with small brown pebbles bouncing out, a yellow-brown flash',
+    no: 'an earth eruption: rock chunks and dirt blasting up in a ring, a dust cloud',
+    vong: 'ochre yellow and earth brown, a ring of small rocks and mountain-peak shapes' },
+};
+const FXS = (a) => fs.existsSync(path.join(ROOT, 'assets', a));
+const STRIP6 = (eff, bg) => `Create ONE image: a 1536x256 horizontal animation strip of 6 equal 256x256 square frames in ONE row, read left to right, for a cute mobile tower-defense game based on Vietnamese folk legends. Each frame is one moment of the SAME effect, same center, same scale, smooth change between neighbouring frames (frame 1 = start, frames 3-4 = strongest, frame 6 = almost gone).
+EFFECT: ${eff}.
+STYLE: bold readable cartoon VFX, thick simple shapes, flat colors with a bright core, Vietnamese Dong Son bronze-drum flavor (sun-star rays, Lac birds, zigzag and circle-dot bands) only where it is asked. Readable at 50 px.
+${bg === 'black' ? 'BACKGROUND: perfectly flat pure BLACK #000000 everywhere (the game turns black into transparency). Bright, saturated glowing colors; no text, no numbers, no labels, no grid lines, no borders, no watermark. The effect is centered in every frame with at least 6% empty margin; nothing crosses into another frame.'
+    : 'BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. Never use magenta or pink on the effect. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Centered in every frame with at least 6% empty margin; nothing crosses into another frame.'}`;
+const fxGen = [];
+const ELS = ['kim', 'moc', 'thuy', 'hoa', 'tho'];
+if (ELS.some((e) => !FXS(`fx/dan-${e}.png`))) fxGen.push({ g: 'dan', file: 'dan-he.png', title: 'Đạn bay theo hệ (5 ô: Kim · Mộc · Thủy · Hỏa · Thổ)', size: '1280x256',
+  cut: `python3 tools/cat-fx.py hat dan-he.png ${ELS.map((e) => 'dan-' + e).join(' ')} --mau`,
+  text: `Create ONE image: a 1280x256 row of five equal 256x256 square cells, one small flying magic projectile per cell, left to right, all pointing RIGHT where they have a direction, one per Vietnamese five-element (ngu hanh):
+${ELS.map((e, i) => `[${i + 1}] ${EL_EN[e]}: ${FX_EL[e].dan}.`).join('\n')}
+Each projectile centered, about 60% of the cell, bold and readable at 20 px, the five clearly different in shape and color.
+STYLE: cute mobile-game art matching chibi heroes of a Vietnamese folk-legend tower-defense game: thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), a small bright glow core, about 10-15 flat colors per projectile, no gradients.
+BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. Never use magenta or pink on the projectiles. No text, no numbers, no labels, no grid lines, no borders, no watermark. At least 8% empty margin in every cell; nothing crosses into another cell.` });
+for (const e of ELS) if (!FXS(`vfx/trung-${e}.png`)) fxGen.push({ g: 'trung', file: `trung-${e}.png`, title: `Trúng đòn hệ ${EL_VI[e]} (đạn chạm quái)`, size: '1536x256', cut: `python3 tools/cat-fx.py dai trung-${e}.png trung-${e}`,
+  text: STRIP6(`a SMALL ${EL_EN[e]} hit spark when a projectile strikes an enemy: ${FX_EL[e].trung}. [1] tiny flash at the center [2] flash opening [3] full burst [4] pieces flying outward [5] pieces small and scattered [6] last faint bits`, 'black') });
+for (const e of ELS) if (!FXS(`vfx/no-${e}.png`)) fxGen.push({ g: 'no', file: `no-${e}.png`, title: `Vụ nổ hệ ${EL_VI[e]} (đạn nổ lan)`, size: '1536x256', cut: `python3 tools/cat-fx.py dai no-${e}.png no-${e}`,
+  text: STRIP6(`a ${EL_EN[e]} area explosion seen from the front, slightly from above: ${FX_EL[e].no}. [1] small bright core on the ground [2] blast growing [3] biggest blast [4] blast breaking apart [5] debris and smoke thinning [6] faint smoke`, 'black') });
+for (const e of ELS) if (!FXS(`vfx/vong-chieu-${e}.png`)) fxGen.push({ g: 'vong', file: `vong-chieu-${e}.png`, title: `Vòng chiêu / hào quang hệ ${EL_VI[e]} (dưới chân tướng khi tung chiêu)`, size: '1536x256', cut: `python3 tools/cat-fx.py dai vong-chieu-${e}.png vong-chieu-${e}`,
+  text: STRIP6(`a ${EL_EN[e]} magic casting circle on the ground under a hero, drawn as a PERFECT ROUND circle seen from directly above (the game flattens it into an ellipse): a bronze-drum sun-star in the middle, concentric rings with circle-dot bands, colors ${FX_EL[e].vong}. [1] thin ring appearing [2] ring growing, symbols drawing in [3] full bright circle with small rising sparkles [4] circle turned a little, still bright [5] dimmer [6] faint ring fading`, 'black') });
+if (!FXS('vfx/chet-quai.png')) fxGen.push({ g: 'chet', file: 'chet-quai.png', title: 'Quái chết (khói tan)', size: '1536x256', cut: 'python3 tools/cat-fx.py dai chet-quai.png chet-quai',
+  text: STRIP6('a small cartoon monster defeat poof: [1] small white flash star [2] round puff of pale grey-blue smoke with a thick outline [3] bigger cloud puff with two tiny spinning stars [4] cloud breaking into three small puffs, a tiny cute ghost wisp rising from the top [5] puffs shrinking, wisp higher and fading [6] last tiny puff', 'magenta') });
+if (!FXS('vfx/chet-boss.png')) fxGen.push({ g: 'chet', file: 'chet-boss.png', title: 'Boss chết (nổ lớn + cột sáng)', size: '1536x256', cut: 'python3 tools/cat-fx.py dai chet-boss.png chet-boss',
+  text: STRIP6('a BIG boss defeat burst: [1] bright white-gold flash in the center [2] golden bronze-drum sun-star with many rays exploding outward [3] shockwave ring and a tall column of golden light rising, sparks flying [4] smoke clouds rolling out at the base, light column at its brightest [5] column thinning, golden sparkles falling [6] faint sparkles and thin smoke', 'black') });
+
+const canHero = Object.keys(HERO_ID).filter((t) => !fs.existsSync(path.join(ROOT, 'assets/packs', t, '.v2')))
+  .sort((a, b) => tier(a) - tier(b) || HEROES[a].el.localeCompare(HEROES[b].el));
+const canEnemy = Object.keys(REDO_ENEMY).filter((x) => REDO_ENEMY_FORCE.has(x) ? !redone(x) : sameFrames(x));
+const canBoss = Object.keys(REDO_BOSS).filter((x) => REDO_FORCE.has(x) ? !redone(x) : sameFrames(x));
+const NEW_ART = 'NEW ART: this is a brand-new drawing that REPLACES the old picture completely. Do NOT reuse or copy any old design; do NOT skip it because an older picture exists.';
+const blkC = (n, head, file, size, cut, text) => `\n#${n} · ${head} · ảnh ${size} · lưu tên: ${file}\nCắt: ${cut}\n${'-'.repeat(60)}\n${text}\n${'-'.repeat(60)}\n`;
+let nC = 0, can = '';
+const secC = (title) => `\n\n${'='.repeat(60)}\n${title}\n${'='.repeat(60)}\n`;
+if (canHero.length) {
+  can += secC(`PHẦN 1 — TƯỚNG: ${canHero.length} tấm hero12 (4x3 = 12 khung, ảnh 768x576) — đính kèm docs/mau-luoi/hero12.png`)
+    + 'Mỗi tấm = 12 khung animation: hàng 1 đứng thở (3 khung) + chân dung · hàng 2 đánh thường (4 khung) · hàng 3 tung chiêu (3 khung) + trúng đòn.\n';
+  for (const t of canHero) can += blkC(++nC, `${HEROES[t].name} (${t}) · ${tierName[tier(t)]} · ${EL_VI[HEROES[t].el]}`, `${t}.png`, '768x576', `python3 tools/cat-sheet.py ${t}.png ${t} hero12`, `${NEW_ART}\n${heroIdPrompt(t)}`);
+}
+if (canEnemy.length) {
+  can += secC(`PHẦN 2 — QUÁI: ${canEnemy.length} tấm enemy6 (3x2 = 6 khung, ảnh 576x384) — đính kèm docs/mau-luoi/enemy6.png (quái bay: enemy6-bay.png)`);
+  for (const k of canEnemy) can += blkC(++nC, `${ENEMIES[k].name} (${k}) · ${REDO_FLY.has(k) ? 'Quái bay' : 'Quái'}`, `${k}.png`, '576x384', `python3 tools/cat-sheet.py ${k}.png ${k} enemy6`, `${NEW_ART}\n${redoEnemyPrompt(k)}`);
+}
+if (canBoss.length) {
+  can += secC(`PHẦN ${canEnemy.length ? 3 : 2} — BOSS: ${canBoss.length} tấm boss9 (3x3 = 9 khung, ảnh 768x768) — đính kèm docs/mau-luoi/boss9.png`)
+    + 'Mỗi tấm = 9 khung animation: đi (4 khung) · đánh (3 khung) · nổi giận (2 khung).\n';
+  for (const k of canBoss) can += blkC(++nC, `${ENEMIES[k].name} (${k}) · Boss`, `${k}.png`, '768x768', `python3 tools/cat-sheet.py ${k}.png ${k} boss9`, `${NEW_ART}\n${redoBossPrompt(k)}`);
+}
+const fxCount = (g) => fxGen.filter((x) => x.g === g).length;
+if (fxGen.length) {
+  can += secC(`PHẦN HIỆU ỨNG — ${fxGen.length} ảnh: đạn theo ngũ hành ${fxCount('dan')} · trúng đòn ${fxCount('trung')} · vụ nổ ${fxCount('no')} · vòng chiêu ${fxCount('vong')} · quái / boss chết ${fxCount('chet')}`)
+    + 'Không cần ảnh lưới. Dải hiệu ứng = 6 khung vuông 256x256 một hàng (ảnh 1536x256), khung 1 = bắt đầu → khung 6 = tắt.\n'
+    + 'Game đã có chỗ nhận (v175): đạn tướng dùng fx/dan-<hệ>.png khi loại đạn chưa có ảnh riêng; đạn trúng → vfx/trung-<hệ>.png (đạn nổ lan → vfx/no-<hệ>.png);\n'
+    + 'tung chiêu → vfx/vong-chieu-<hệ>.png dưới chân; quái chết → vfx/chet-quai.png, boss chết → vfx/chet-boss.png. Chưa có ảnh thì vẽ bằng code như cũ.\n';
+  for (const x of fxGen) can += blkC(++nC, x.title, x.file, x.size, x.cut, x.text);
+}
+const DIRECTIVE = `PROMPT CẦN GEN — THẦN THOẠI VIỆT (${nC} ảnh)
+${'='.repeat(60)}
+INSTRUCTIONS FOR THE AI (read first)
+- This file lists ONLY images that STILL HAVE TO BE GENERATED. Every block below is a REQUIRED new image. Nothing here is optional and nothing here is finished yet.
+- REDRAW EVERYTHING in this list from scratch, INCLUDING heroes / bosses that already have an older picture: the new image REPLACES the old one completely. Do not conclude that the set is "already complete", "enough" or "only optional extras remain" — that is wrong for this list.
+- Each character prompt is ONE sprite sheet with MANY ANIMATION FRAMES on an invisible grid exactly as written in the block: hero = 4x3 grid, 12 frames, 768x576 (idle 3 + portrait, attack 4, skill 3 + hurt); enemy = 3x2 grid, 6 frames, 576x384 (walk 4, attack 2); boss = 3x3 grid, 9 frames, 768x768 (walk 4, attack 3, rage 2). Effect strips = 6 frames in one row, 1536x256; projectile sheet = 5 cells, 1280x256.
+- Every hero must look clearly DIFFERENT from the others (body shape, age, head size, signature shape, main color) — follow BODY / SIGNATURE SHAPE / FACE in each block.
+- Return EVERY image, one file per block, saved with EXACTLY the file name written after "lưu tên:". Work through the list in order until the last block (#${nC}); if you can only make some per reply, continue with the next block number in the next reply.
+- Background: perfectly flat pure magenta #FF00FF (effect blocks that say BLACK use pure black #000000). Do NOT draw numbers, labels, grid lines, cell borders, frames, floor shadows, text or watermarks. The attached grid image (docs/mau-luoi/hero12.png / enemy6.png / enemy6-bay.png / boss9.png) is only a layout guide — do NOT draw its numbers, lines or labels.
+
+CHỈ THỊ CHO AI (đọc trước)
+- File này CHỈ gồm những ảnh CÒN PHẢI GEN. Mỗi khối bên dưới là MỘT ảnh BẮT BUỘC phải vẽ mới. Không có khối nào là tùy chọn, không có khối nào đã xong.
+- VẼ MỚI TOÀN BỘ danh sách, KỂ CẢ tướng / boss đã có ảnh cũ: ảnh mới THAY THẾ HOÀN TOÀN ảnh cũ. KHÔNG được kết luận "bộ ảnh đã đủ", "không còn nhóm bắt buộc", "chỉ còn tùy chọn" — với danh sách này kết luận đó là SAI.
+- Mỗi prompt nhân vật là MỘT sprite sheet NHIỀU KHUNG ANIMATION theo đúng lưới ghi trong khối: tướng 4x3 = 12 khung 768x576 (đứng thở 3 + chân dung, đánh 4, chiêu 3 + trúng đòn); quái 3x2 = 6 khung 576x384 (đi 4, đánh 2); boss 3x3 = 9 khung 768x768 (đi 4, đánh 3, nổi giận 2). Dải hiệu ứng 6 khung một hàng 1536x256; tấm đạn 5 ô 1280x256.
+- Mỗi tướng phải KHÁC RÕ các tướng khác (dáng người, tuổi, cỡ đầu, mảng hình đặc trưng, màu chính) — làm theo BODY / SIGNATURE SHAPE / FACE trong khối.
+- Trả về ĐỦ TỪNG FILE, mỗi khối một file, đặt ĐÚNG tên ghi sau "lưu tên:". Làm lần lượt tới khối cuối (#${nC}); mỗi lượt chỉ ra được vài ảnh thì lượt sau làm tiếp từ số khối kế tiếp.
+- Nền hồng tím phẳng tuyệt đối #FF00FF (khối hiệu ứng ghi BLACK thì nền đen #000000). KHÔNG vẽ số, nhãn, đường lưới, viền ô, khung, bóng dưới chân, chữ, watermark. Ảnh lưới đính kèm (docs/mau-luoi/…) chỉ để xem bố cục — không vẽ lại số / vạch của nó.
+
+TÓM TẮT: tướng ${canHero.length} · quái ${canEnemy.length} · boss ${canBoss.length} (${canBoss.join(', ') || '—'}) · hiệu ứng ${fxGen.length} (đạn ${fxCount('dan')}, trúng đòn ${fxCount('trung')}, vụ nổ ${fxCount('no')}, vòng chiêu ${fxCount('vong')}, chết ${fxCount('chet')})
+Đã xong, KHÔNG có trong file: quái / boss đã gen lại (có assets/packs/<mã>/.redo hoặc đã đủ dáng). Tướng cắt xong bằng cat-sheet.py hero12 sẽ tự rời danh sách (.v2).
+Sinh lại: node tools/build-prompts.js · Chuẩn đầy đủ: docs/CHUAN-ANIMATION.txt · Cắt: lệnh ghi trên từng khối (chạy trong thư mục dự án).`;
+fs.writeFileSync(path.join(ROOT, 'docs/PROMPT-CAN-GEN.txt'), DIRECTIVE + can);
+console.log('PROMPT-CAN-GEN', nC, '· tướng', canHero.length, '· quái', canEnemy.length, '· boss', canBoss.length, '· hiệu ứng', fxGen.length);

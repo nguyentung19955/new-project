@@ -3190,7 +3190,7 @@ class Game {
         h.castT = i === 3 ? 0.9 : 0.5;
         h.castColor = color;
         h.castUlt = i === 3;
-        this.effects.push({ type: 'cast', x: h.x, y: h.y, color, ult: i === 3, ttl: 0.5, max: 0.5 });
+        this.effects.push({ type: 'cast', x: h.x, y: h.y, color, ult: i === 3, el: HEROES[h.type].el, ttl: 0.5, max: 0.5 });
         this.text(h.x, h.y - 66, sk.name + '!', color, 1.1, 17);
         break;   // mỗi lần chỉ tung một chiêu
       } else {
@@ -3268,7 +3268,9 @@ class Game {
       }
       p.done = true;
       // chỉ để vẽ: hạt nổ khi đạn trúng (js/vfx.js)
-      this.effects.push({ type: 'impact', kind: p.kind === 'fireball' || !p.kind ? 'fireball' : p.kind, x: p.tx, y: p.ty, ttl: 0.12, max: 0.12 });
+      // v175: el / splash để vẽ ảnh trúng đòn / vụ nổ theo hệ (vfx/trung-<hệ>.png, vfx/no-<hệ>.png) nếu có — docs/PROMPT-CAN-GEN.txt
+      const pel = p.hero && HEROES[p.hero.type] ? HEROES[p.hero.type].el : null;
+      this.effects.push({ type: 'impact', kind: p.kind === 'fireball' || !p.kind ? 'fireball' : p.kind, x: p.tx, y: p.ty, el: pel, splash: p.st && p.st.splash > 0 ? p.st.splash : 0, ttl: pel ? 0.3 : 0.12, max: pel ? 0.3 : 0.12 });
       const { st, hero } = p;
       if (p.kind === 'evil') {
         if (!p.target.dead) this.damageHero(p.target, p.dmg, true, true);

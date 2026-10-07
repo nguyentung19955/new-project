@@ -17,6 +17,7 @@ Thay cho `docs/LUAT_GEN_ANIMATION.md` (luật cũ: dải 4 ô, mỗi ảnh một
 | `docs/prompts-quai.csv` | 21 quái (2 quái bay) + 9 boss, cùng cột như trên |
 | `tools/ghep-luoi.py` | Ghép N ảnh rời (mỗi ảnh một khung) thành tấm lưới đúng chuẩn |
 | `tools/cat-sheet.py` | Cắt tấm lưới thành các khung game dùng |
+| `docs/PROMPT-CAN-GEN.txt` | **Gửi AI ngay**: CHỈ ảnh còn phải gen (60 tướng vẽ mới, boss còn thiếu, 18 hiệu ứng theo ngũ hành), có chỉ thị cho AI ở đầu file — sinh lại bằng `node tools/build-prompts.js` |
 | `docs/PROMPT-HIEU-UNG.txt` | **Hiệu ứng** (48 prompt): ảnh hạt kiểu Kenney, dải khung chiêu, triệu hồi, đạn bay — cắt bằng `tools/cat-fx.py` |
 
 Mở file `.csv` bằng Excel / Google Sheets / Numbers (đã có BOM UTF-8, dấu tiếng Việt hiển thị đúng). Hai file CSV sinh lại bằng `node tools/build-prompts.js`; ảnh mẫu lưới vẽ lại bằng `python3 tools/ve-mau-luoi.py`.

@@ -354,7 +354,9 @@ function drawProjectile(p, t) {
   }
   // v153: đạn vẽ tay assets/fx/dan_<loại>.png (docs/PROMPT-HIEU-UNG.txt phần D) — chưa có ảnh thì vẽ bằng code như cũ
   const pk = PROJ_IMG[p.kind] ? p.kind : 'fireball';
-  const pim = asset(`fx/dan_${pk}.png`, true);
+  // v175: chưa có ảnh riêng của loại đạn thì dùng đạn theo hệ của tướng bắn (assets/fx/dan-<hệ>.png, docs/PROMPT-CAN-GEN.txt)
+  const pel = p.hero && HEROES[p.hero.type] && HEROES[p.hero.type].el;
+  const pim = asset(`fx/dan_${pk}.png`, true) || (pel && p.kind !== 'evil' ? asset(`fx/dan-${pel}.png`, true) : null);
   if (pim) {
     const s = PROJ_IMG[pk];
     if (pk === 'melon' || pk === 'petal' || pk === 'orb' || pk === 'evil') ctx.rotate(t * (pk === 'melon' ? 10 : 6));
@@ -985,6 +987,32 @@ function drawFxArt(f, p, t) {
   };
   const flipAt = (x, y, left) => { ctx.translate(x, y); if (left) ctx.scale(-1, 1); };
   switch (f.type) {
+    // v175: hiệu ứng theo hệ của tướng (docs/PROMPT-CAN-GEN.txt phần HIỆU ỨNG) — chưa có ảnh thì như cũ
+    case 'impact': {
+      const img = f.el && strip(f.splash ? `no-${f.el}` : `trung-${f.el}`);
+      if (!img) return false;
+      ctx.globalAlpha = 1;
+      const size = f.splash ? Math.max(70, f.splash * 2.2) : 52;
+      drawVfx(ctx, img, p, f.x, f.y - size * (f.splash ? 0.25 : 0.1), size);
+      return true;
+    }
+    case 'cast': {
+      const img = f.el && strip(`vong-chieu-${f.el}`);
+      if (!img) return false;
+      ctx.globalAlpha = 1;
+      const size = f.ult ? 120 : 84;
+      drawVfx(ctx, img, p, f.x, f.y - 4, size, size * 0.5);
+      return true;
+    }
+    case 'die': {
+      const boss = f.etype && ENEMIES[f.etype] && ENEMIES[f.etype].boss;
+      const img = strip(boss ? 'chet-boss' : 'chet-quai');
+      if (!img) return false;
+      ctx.globalAlpha = 1;
+      const size = boss ? 130 : 64;
+      drawVfx(ctx, img, p, f.x, f.y - size * 0.35, size);
+      return true;
+    }
     case 'vortex': case 'revive': case 'volley': case 'ring': case 'warn': case 'rain': case 'mark': case 'meteor': case 'sweep': {
       let img = strip(f.type);
       if (!img) return false;
@@ -1040,7 +1068,6 @@ function drawFxArt(f, p, t) {
 function drawEffects(t) {
   for (const f of game.effects) {
     if (!f._vfx) { f._vfx = true; VFX.onEffect(f); }
-    if (f.type === 'impact') continue;
     if (f.delay > 0 && f.type !== 'rain') continue;
     const k = f.ttl / f.max; // 1 -> 0
     const p = 1 - k;         // 0 -> 1
