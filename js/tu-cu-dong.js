@@ -28,6 +28,8 @@ const CD_WEAPON = {
 };
 const CD_KIND = { kiem: 'slash', riu: 'chop', giao: 'thrust', cung: 'shot', no: 'shot', 'gay-phep': 'orb', 'tay-khong': 'punch' };
 function cdWeapon(type, attack) {
+  const rg = typeof RIGS !== 'undefined' && RIGS[type];   // rig ghi rõ kiểu đánh theo vũ khí trong ẢNH (ảnh khác vũ khí game)
+  if (rg && rg.kind && rg.kind !== 'none') return rg.kind;
   const w = CD_WEAPON[type];
   if (w) return CD_KIND[w];
   return attack === 'arrow' ? 'shot' : attack === 'melee' ? 'slash' : attack ? 'orb' : 'punch';
@@ -409,6 +411,7 @@ function cdBuildRig(p, man) {
     mask = new Uint8Array(W * H);
     for (let i = 0; i < mask.length; i++) if (d[i * 4 + 3] > 127 && A[i * 4 + 3] > 40) mask[i] = 1;
   } else if (!(man && man.noArm)) mask = auto.mask || null;
+  if (mask && !CD.noAbsorb) cdAbsorbSlivers(mask, A, W, H);
   if (mask) {
     pivot = P2(man && man.pivot) || auto.pivot;
     if (!pivot) { let sx = 0, sy = 0, n = 0, my = H; for (let i = 0; i < mask.length; i++) if (mask[i]) { const x = i % W, y = (i - x) / W; if (y < my) my = y; } for (let i = 0; i < mask.length; i++) if (mask[i]) { const x = i % W, y = (i - x) / W; if (y < my + 4) { sx += x; sy += y; n++; } } pivot = [sx / n, sy / n]; }
@@ -431,8 +434,9 @@ function cdBuildRig(p, man) {
       if (y >= hip) up.data[j + 3] = a * (1 - (y - hip + 1) / (f + 1));
     }
   }
+  if (mask) { cdFillBehind(legs, mask, A, W, hip, H); cdFillBehind(up, mask, A, W, 0, hip); }
   const toC = (im) => { const k = document.createElement('canvas'); k.width = im.width; k.height = im.height; k.getContext('2d').putImageData(im, 0, 0); k.naturalWidth = k.width; k.naturalHeight = k.height; return k; };
-  const R = { W, H, hip, f, legs: toC(legs), upper: toC(up), arm: null, pivot, tip, side: 1, len: 0, auto: !(man && (man.poly || man.pivot)) };
+  const R = { W, H, hip, f, legs: toC(legs), upper: toC(up), arm: null, pivot, tip, side: 1, len: 0, auto: !(man && (man.poly || man.pivot)), amp: (man && man.amp) || 1 };
   if (mask && ax1 >= ax0) {
     const am = new ImageData(ax1 - ax0 + 1, ay1 - ay0 + 1);
     for (let y = ay0; y <= ay1; y++) for (let x = ax0; x <= ax1; x++) { const i = y * W + x; if (mask[i]) am.data.set(A.subarray(i * 4, i * 4 + 4), ((y - ay0) * am.width + (x - ax0)) * 4); }
@@ -440,6 +444,55 @@ function cdBuildRig(p, man) {
     R.side = tip[0] >= pivot[0] ? 1 : -1; R.len = Math.max(4, Math.hypot(tip[0] - pivot[0], tip[1] - pivot[1]));
   }
   return R;
+}
+// mảnh viền mỏng / rời còn sót sát vùng tay (nét viền, viền trắng sticker) → cho theo tay, khỏi để lại "bóng ma" vũ khí
+function cdAbsorbSlivers(mask, A, W, H) {
+  const lab = new Int32Array(W * H), comps = [];
+  let total = 0;
+  for (let i = 0; i < W * H; i++) if (A[i * 4 + 3] > 40 && !mask[i]) total++;
+  for (let i0 = 0; i0 < W * H; i0++) {
+    if (lab[i0] || mask[i0] || A[i0 * 4 + 3] <= 40) continue;
+    const id = comps.length + 1, st = [i0], px = [];
+    let touch = false;
+    lab[i0] = id;
+    while (st.length) {
+      const i = st.pop(), x = i % W;
+      px.push(i);
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+        const nx = x + dx, j = i + dy * W + dx;
+        if (nx < 0 || nx >= W || j < 0 || j >= W * H) continue;
+        if (mask[j]) { touch = true; continue; }
+        if (!lab[j] && A[j * 4 + 3] > 40) { lab[j] = id; st.push(j); }
+      }
+    }
+    comps.push({ px, touch });
+  }
+  for (const c of comps) if (c.touch && c.px.length < total * 0.05) for (const i of c.px) mask[i] = 1;
+}
+// vá phần thân / chân bị tay + vũ khí che (đã tách sang lớp tay) để khi vung đi không lộ lỗ trong suốt:
+// chỉ vá điểm nằm GIỮA hình theo hàng ngang (có thân ở cả hai bên), loang màu từ điểm kề
+function cdFillBehind(im, mask, A, W, y0, y1) {
+  const D = im.data, h = im.height, L = new Int32Array(h).fill(W), R = new Int32Array(h).fill(-1);
+  for (let y = Math.max(0, y0); y < Math.min(y1, h); y++) for (let x = 0; x < W; x++) if (D[(y * W + x) * 4 + 3] > 40 && !mask[y * W + x]) { if (x < L[y]) L[y] = x; R[y] = x; }
+  let todo = [];
+  for (let y = Math.max(0, y0); y < Math.min(y1, h); y++) for (let x = L[y] + 1; x < R[y]; x++) { const i = y * W + x; if (mask[i] && D[i * 4 + 3] < 200 && A[i * 4 + 3] > 40) todo.push(i); }
+  for (let pass = 0; pass < 60 && todo.length; pass++) {
+    const next = [], set = [];
+    for (const i of todo) {
+      const x = i % W, y = (i - x) / W;
+      let r = 0, g = 0, b = 0, n = 0;
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const nx = x + dx, ny = y + dy;
+        if (nx < 0 || nx >= W || ny < y0 || ny >= Math.min(y1, h)) continue;
+        const j = (ny * W + nx) * 4;
+        if (D[j + 3] > 200) { r += D[j]; g += D[j + 1]; b += D[j + 2]; n++; }
+      }
+      if (n) set.push([i, r / n, g / n, b / n]); else next.push(i);
+    }
+    for (const [i, r, g, b] of set) { const j = i * 4; D[j] = r; D[j + 1] = g; D[j + 2] = b; D[j + 3] = 255; }
+    if (!set.length) break;
+    todo = next;
+  }
 }
 function cdRig(p, type) {
   if (CD.noRig) return null;
@@ -478,7 +531,7 @@ function cdUpMap(R, x, y, bend, sy) {
 function cdArmTip(R, st, kind, bend, sy) {
   const A = cdArm(kind, st.swing || 0, st.castT || 0, st.hurt || 0, st.t, st.seed);
   const pv = cdUpMap(R, R.pivot[0], R.pivot[1], bend, sy), up = Math.max(0, (R.hip - R.pivot[1]) / R.hip);
-  const ang = A.a * R.side + 2 * bend * up;
+  const ang = A.a * R.side * (R.amp || 1) + 2 * bend * up;   // amp (rig): thu biên độ vung cho vũ khí cán dài dựng đứng
   const vx = R.tip[0] - R.pivot[0], vy = R.tip[1] - R.pivot[1], k = 1 + A.d;
   const c = Math.cos(ang), s = Math.sin(ang);
   return { pv, ang, d: A.d, tip: [pv[0] + (vx * k) * c - (vy * k) * s, pv[1] + (vx * k) * s + (vy * k) * c] };
