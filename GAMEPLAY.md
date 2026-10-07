@@ -2132,6 +2132,16 @@ Test: `node tests/run-all.js` đạt (tu-cu-dong: mẫu trang thử đổi xathu
 - Test: `cho-tuong.test.js` (6 thẻ, thanh ≤ 70%, vùng chạm ≥ 36, tự ghép dây chuyền, không còn nút Ghép tự động, không nháy), `ti-le.test.js` (trọng số, bảo hiểm hợp thể mỗi lần đổi, bảo hiểm ghép, nhãn khoá + nhắc mở khoá), `vai-tro.test.js` (6 thẻ, icon không đè tên).
 - Ảnh trước / sau (4 cỡ): `docs/cho-6-the/truoc-*.jpg`, `docs/cho-6-the/sau-*.jpg` (dải đáy).
 - Gộp claude/dung-anh-co-san: đồng xu, nén bạc, tim mạng, icon ngăn kéo, Lò đúc, Bách khoa, rương rơi đồ… dùng ảnh thật.
+
+## claude/tat-anh-moi — Tạm tắt ảnh tướng mới, quay về toàn bộ hình cũ
+
+- Người dùng: "Trước mắt cứ revert về toàn bộ hình ảnh tướng cũ, sau khi có đủ hết ảnh thì sẽ dùng cái mới sau."
+- **Một công tắc duy nhất** ở đầu `js/tu-cu-dong.js`: `const CD_BAT = false;` — **bật lại = đổi thành `true`** khi đủ 90 ảnh mới. Không xoá code / ảnh nào.
+- Khi tắt: `cdBat()` trả false → `cdSoloImg` trả null cho mọi mã (không dùng `assets/<mã>.png` dựng xương, không dùng `packs/<mã>/idle.png` làm ảnh đơn), `cdBuildRig` trả null → tướng / quái / boss vẽ đúng đường cũ (bộ nhiều khung · ảnh vẽ tay · vector) ở trận, thanh Chợ, Anh Hùng, Bách khoa, hợp thể… (chỉ hệ tự cử động đọc ảnh mới, đã soát bằng grep).
+- **Nhánh khác gộp vào** (chân dung mới / `cdUiImg`, `CD_SKIP` mở rộng…): mọi chỗ đọc ảnh mới phải hỏi `cdBat()` (hoặc đi qua `cdSoloImg` / `cdBuildRig` vốn đã hỏi).
+- Mặc định TẮT cả phần giao diện dùng ảnh mới, kể cả trang thử `?xem-cu-dong` (lưới trống) và `?solo=1`. Bật TẠM để thử bằng tham số URL `?anhmoi=1` (không lưu, không có nút cho người chơi; tools/xem-cu-dong.html đã kèm sẵn); test dùng `window.CD_BAT_EP = true` (Playwright `page.addInitScript`).
+- Test `tests/tu-cu-dong`: các phần thử ảnh mới mở trang với `CD_BAT_EP`; thêm phần "Công tắc tắt" (CD_BAT = false trong mã nguồn, 90 mã có ảnh nhưng 0 mã dùng ảnh đơn, `cdBuildRig` null, trong trận 0 lượt vẽ ảnh đơn, `?xem-cu-dong` không kèm `?anhmoi=1` ra 0 nhân vật, có `?anhmoi=1` thì bật và không ghi gì vào localStorage, không lỗi trang).
+- Ảnh đã xem: `docs/tat-anh-moi/tat-tran-*.jpg`, `tat-anh-hung-*.jpg` (1920×934, 844×390, 667×375 — toàn hình cũ); so sánh khi bật: `bat-tran-1920x934.jpg`.
 ## claude/bo-chon-doi — Bỏ phần chọn đội (chợ tướng đã rút ngẫu nhiên)
 
 Chợ tướng đã rút từ mọi tướng Thường đã mở khoá, nên đội 6 tướng ("đội ưu tiên" ×2) không còn ý nghĩa — bỏ hẳn:
@@ -2165,3 +2175,12 @@ Tỉ lệ ra đúng tướng cần không giảm (đầu trận còn tăng vì 1
 Test: cập nhật `cho-tuong` (màn Chuẩn bị không còn chọn đội, sau boss không Nghỉ chân, bản lưu cũ có đội/Nghỉ chân vẫn chạy), `ti-le` (trọng số không còn ×2, giới hạn nguyên liệu ưu tiên, tình huống sở hữu mọi Tím), `ngan-kho`, `khung-do-hiem`, `vo-tan`, `icon-nho`, `duong-quai`, `hop-the/mo-phong`, `coop/test-lockstep`, `coop/test-solo`.
 - Sửa theo tester (sau v195): đồng xu bay khi hạ quái ~16 px CSS, rương rơi đồ ~30 px CSS (cỡ tính theo `view.scale`, không nhỏ lại trên điện thoại), quầng tròn + viền vòng đậm màu độ hiếm (xám / xanh / tím / cam) nhấp nháy nhẹ, chỉ mờ ở cuối. Icon tựa màn thua chương Sơn Tinh "Phong Châu thất thủ": thay mũi tên sóng (`ic-nuoc-dang`, trông như biểu đồ tăng) bằng cổng thành `tiles/cong-phong-chau.png` chìm trong 2 ngọn sóng `ic-hanh-thuy`.
 - Ảnh bảng Hợp thể (nút Mở ở Anh Hùng) và màn kết quả (nhắc mở 1 tướng Tím): `docs/cho-6-the/bang-hop-the-844x390.jpg`, `docs/cho-6-the/ket-qua-667x375.jpg`.
+
+## claude/sua-thoat-than-khi — Sửa lỗi vào màn Thần Khí không thoát ra được
+
+- **Nguyên nhân:** từ v170 (làm lại bảng Hợp thể), nút Quay lại ở đầu màn Thần Khí bị đổi nhầm `data-act="lg-close"` → `hx-close` (lệnh đóng bảng Hợp thể). Bấm nút chỉ ẩn bảng Hợp thể, màn Thần Khí đứng yên → kẹt (cả trong trận lẫn ngoài menu; trong trận game còn bị tạm dừng). Phím Esc ngoài trận không làm gì, nút Back trình duyệt thì rời luôn trang.
+- **Sửa:** nút Quay lại về đúng `lg-close` (Thần Khí → Anh Hùng → trận/menu, game chạy tiếp).
+- **Esc** đóng màn phụ trên cùng ở mọi nơi (trong và ngoài trận), đúng như bấm nút quay lại / ✕ của màn đó: khung mô tả → Xếp hạng / Ngân khố / Ấn Phù / Anh Hùng (Thần Khí) / Cài đặt / Chơi nhóm / Chế độ / Bản đồ → bảng #screen (Cây kỹ năng, Tiến hoá, Bách khoa, Túi đồ, Lò đúc…) → Hợp thể → bảng tướng (#more) → menu ≡.
+- **Nút Back trình duyệt / vuốt back trên điện thoại:** khi có màn phụ đang mở, game gài một mục lịch sử; bấm Back thì đóng màn phụ đó thay vì rời trang (không có gì để đóng thì Back hoạt động như cũ).
+- **Lỗi kẹt thứ hai tìm thấy khi rà:** 40 tướng (Đốt Nương, Thổ Rèn, Kỳ Lân, Tản Viên…) chưa có bí ẩn riêng `SECRETS['h.<tướng>']` → mở **Cây kỹ năng** của họ là lỗi JS giữa chừng, #screen hiện trống không có nút ✕ chặn cả màn. Sửa: thiếu bí ẩn thì bỏ ô bí ẩn; và `openScreen` dựng bảng lỗi thì tự đóng #screen + báo "Không mở được bảng này" thay vì để màn trống.
+- Test mới `tests/thoat-man-phu`: mở / đóng Thần Khí (cả sau khi nâng cấp), Anh Hùng, Ấn Phù, Cây kỹ năng, Tiến hoá, Bách khoa, Túi đồ, Hợp thể, menu ≡, Cây kỹ năng / Tiến hoá của tướng không có bí ẩn, bằng nút / Esc / Back ở 1920×934, 844×390, 667×375, dọc 390×844; sau khi đóng không còn lớp phủ, giữa sân chạm tới được, game chạy tiếp.
