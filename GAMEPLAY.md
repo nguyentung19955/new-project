@@ -1748,3 +1748,6 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 182 — Gộp khung Đợt cố định + chợ bớt ngẫu nhiên
 
 - Gộp dot-co-dinh (khối Đợt rộng/cao cố định, không trượt khi tiền/mạng đổi số chữ số) và cho-bot-ngau-nhien (ưu tiên tướng đang ghép/nguyên liệu hợp thể, bảo hiểm, khoá chợ).
+## Phiên bản 180 — Báo cáo test toàn bộ (QA nhìn ảnh thật)
+
+- Thêm `docs/BAO-CAO-TEST.md`: chơi thật bằng Playwright ở 1920×934, 1280×720, 844×390, 667×375, dọc 390×844, xem từng ảnh chụp. 17 lỗi (Cao 5 · Trung bình 7 · Thấp 5) kèm ảnh minh hoạ trong `docs/bao-cao-test/`, và mục đề xuất cải thiện trải nghiệm. Không sửa code game.

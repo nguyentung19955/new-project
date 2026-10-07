@@ -1,6 +1,6 @@
 // Service worker: lưu sẵn game để mở lại không cần mạng (trừ lưu đám mây).
 // Đổi VERSION mỗi khi phát hành để máy người chơi tải bản mới.
-const VERSION = 'v182';
+const VERSION = 'v180';
 const CORE = ['./', './index.html', './manifest.webmanifest', './css/style.css', './icons/icon-192.png'];
 self.addEventListener('install', (e) => { e.waitUntil(caches.open(VERSION).then((c) => c.addAll(CORE))); self.skipWaiting(); });
 self.addEventListener('activate', (e) => {
