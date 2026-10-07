@@ -1325,3 +1325,6 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 137 — Tướng đứng đúng giữa ô
 - Ảnh tướng vẽ tay có vũ khí / tảng đá chìa ra một bên nên "giữa ảnh" lệch khỏi chân, tướng đứng lệch vòng ô. Nay mỗi ảnh được đo tâm chân (giữa các điểm chạm đất ở đáy ảnh) một lần và căn chân vào giữa ô; hào quang, bóng mờ khi đổi tư thế cũng căn theo.
+
+## Phiên bản 138 — Bỏ vòng dưới chân tướng đã đặt
+- Chọn tướng trên sân không còn vẽ vòng xanh dưới chân (chỉ còn vòng tầm đánh mờ). Tướng đang được gợi ý hợp thể cũng không vẽ vòng, chỉ còn quầng sáng và mũi tên phía trên. Vòng ô chỉ hiện ở ô trống, và hiện tạm thời trên tướng khác lúc đang kéo tướng để ghép.

@@ -212,12 +212,10 @@ function render() {
       o.mode = i === dropSlot ? 'target' : pair ? 'sel' : !h ? 'free' : '';
     }
     else if (ui.raising) o.mode = game.canRaise(i) && (o.flooded || o.soon) ? 'free' : '';
-    else if (h && fuseMarks().has(h)) o.mode = 'sel';
-    else if (i === ui.spot) o.mode = 'target';
-    else if (i === ui.sel && h) o.mode = 'sel';
+    else if (i === ui.spot && !h) o.mode = 'target';
     else if (!h && ui.armed && !o.flooded) o.mode = 'free';
     else if (!h && i === ui.coachSlot) o.mode = 'hint';
-    // v50: ô đã có tướng thì không vẽ vòng tròn (trừ khi đang chọn / đang kéo để ghép)
+    // v138: ô đã có tướng không vẽ vòng (kể cả khi chọn tướng — đã có vòng tầm đánh); chỉ hiện lúc đang kéo để ghép
     if (h && !o.mode) return;
     drawSpot(ctx, x, y, o, t);
   });
