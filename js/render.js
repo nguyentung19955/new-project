@@ -2392,7 +2392,13 @@ function drawEnemyIcon(cv, type, pad = 0.12) {
   const c = cv.getContext('2d');
   const W = cv.width, H = cv.height;
   c.clearRect(0, 0, W, H);
-  const png = (!vectorHeroesOn() && typeof cdNewArt === 'function' && cdNewArt(type) && asset(`${type}.png`, true)) || (!vectorHeroesOn() && enemyPackRef(type)) || enemyPng(type);
+  let png = null;
+  if (!vectorHeroesOn() && typeof cdNewArt === 'function' && cdNewArt(type)) {
+    const im = cdUiImg(`${type}.png`, () => drawEnemyIcon(cv, type, pad));   // ảnh mới chưa tải: để trống, tải xong vẽ lại
+    if (im === false) return;
+    png = im;
+  }
+  png = png || (!vectorHeroesOn() && enemyPackRef(type)) || enemyPng(type);
   if (png) {
     const k2 = Math.min((W * (1 - pad * 2)) / png.naturalWidth, (H * (1 - pad * 2)) / png.naturalHeight);
     c.drawImage(png, (W - png.naturalWidth * k2) / 2, (H - png.naturalHeight * k2) / 2, png.naturalWidth * k2, png.naturalHeight * k2);
@@ -2415,13 +2421,23 @@ function drawHeroPortrait(cv, h, t, o = {}) {
   const W = cv.width, H = cv.height;
   c.clearRect(0, 0, W, H);
   const nu = !vectorHeroesOn() && typeof cdNewArt === 'function' && cdNewArt(h.type);   // ảnh dựng xương mới (tự cử động)
-  const front = o.full && !vectorHeroesOn() && ((nu && asset(`${h.type}.png`, true)) || packImg(h.type, 'front'));
+  if (nu) {
+    // ảnh mới: chưa tải xong thì để trống rồi vẽ lại khi tải xong — không chớp ảnh cũ (lúc mới lúc cũ)
+    const im = cdUiImg(o.full ? `${h.type}.png` : cdHeadPath(h.type), () => drawHeroPortrait(cv, h, t, o));
+    if (im === false) return;
+    if (im) {
+      if (o.full) { const k = Math.min(W / im.naturalWidth, H * 0.94 / im.naturalHeight); c.drawImage(im, (W - im.naturalWidth * k) / 2, H * 0.97 - im.naturalHeight * k, im.naturalWidth * k, im.naturalHeight * k); }
+      else { const k = Math.min(W / im.naturalWidth, H / im.naturalHeight) * 1.08; c.drawImage(im, (W - im.naturalWidth * k) / 2, H - im.naturalHeight * k, im.naturalWidth * k, im.naturalHeight * k); }
+      return;
+    }
+  }
+  const front = o.full && !vectorHeroesOn() && packImg(h.type, 'front');
   if (front) {
     const k = Math.min(W / front.naturalWidth, H * 0.94 / front.naturalHeight);
     c.drawImage(front, (W - front.naturalWidth * k) / 2, H * 0.97 - front.naturalHeight * k, front.naturalWidth * k, front.naturalHeight * k);
     return;
   }
-  const head = !o.full && !vectorHeroesOn() && ((nu && cdHeadPath(h.type) && asset(cdHeadPath(h.type), true)) || packImg(h.type, 'head'));
+  const head = !o.full && !vectorHeroesOn() && packImg(h.type, 'head');
   if (head) {   // đầu vẽ tay: vừa khung, sát đáy
     const k = Math.min(W / head.naturalWidth, H / head.naturalHeight) * 1.08;
     c.drawImage(head, (W - head.naturalWidth * k) / 2, H - head.naturalHeight * k, head.naturalWidth * k, head.naturalHeight * k);

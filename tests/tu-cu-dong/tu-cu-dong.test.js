@@ -82,6 +82,32 @@ async function main() {
     ok(/chan-dung-moi\/auco\.png/.test(cd.head) && /\/auco\.png/.test(cd.front), 'thẻ chợ / chân dung / Anh Hùng dùng ảnh mới (chan-dung-moi/<mã>.png, <mã>.png)');
     ok(!/chan-dung-moi/.test(cd.skip), 'mã trong CD_SKIP vẫn dùng chân dung cũ');
     ok(cd.n.length === 0, 'mọi tướng có ảnh mới đều có chân dung cắt sẵn (thiếu: ' + cd.n.join(' ') + ')');
+    // không che mặt: Thầy Chuông Đồng (chiêng to) — điểm của tay + chiêng không lấn vào hộp mặt ở mọi khung đánh / tung chiêu
+    const face = await page.evaluate(async () => {
+      const out = {};
+      for (const k of ['chuongdong', 'dapde', 'thansan', 'denroi']) {
+        const im = new Image(); im.src = 'assets/' + k + '.png'; await im.decode();
+        const R = cdBuildRig(cdPrepare(im), RIGS[k] || null);
+        if (!R.arm || !R.face) { out[k] = 'không tách tay'; continue; }
+        let bad = 0;
+        const kind = cdWeapon(k, HEROES[k].attack);
+        const q0 = cdArmTip(R, { t: 1, seed: 0 }, kind, 0, 1);
+        for (let i = 0; i <= 40; i++) {
+          const st = i <= 30 ? { t: 2 + i * 0.05, seed: 0.4, swing: 1 - i / 30 } : { t: 4, seed: 0.4, castT: 0.5 * (i - 30) / 10 };
+          const P = cdPose(st), T = cdArmTip(R, st, kind, cdRigBend(P), P.sy);
+          const [x0, y0, x1, y1] = R.face, bb = Math.max(-0.26, Math.min(0.26, cdRigBend(P))) * R.hip * 0.25;
+          const inF = (x, y) => x > x0 + bb && x < x1 + bb && y > y0 && y < y1;
+          if (inF(T.tip[0], T.tip[1]) && !inF(q0.tip[0], q0.tip[1])) bad++;
+        }
+        out[k] = bad;
+      }
+      return out;
+    });
+    console.log('  đầu vũ khí lấn vào mặt (số khung / 41):', JSON.stringify(face));
+    ok(Object.values(face).every((v) => v === 0 || v === 'không tách tay'), 'vũ khí / vật cầm không cắt qua mặt khi đánh / tung chiêu (chuongdong, dapde, thansan, denroi)');
+    // hàm ảnh chung ngoài sân: ảnh mới chưa tải → false (không quay về ảnh cũ)
+    const ui1 = await page.evaluate(() => { const p = 'zz-chua-tai.png'; ASSET_SET.add(p); return cdUiImg(p, () => {}); });
+    ok(ui1 === false, 'cdUiImg: ảnh mới chưa tải xong → chờ vẽ lại, không chớp ảnh cũ');
     ok(t6.skip.length === 0, 'mã trong CD_SKIP (ảnh vẽ sai, chờ gen lại) không dùng ảnh mới — giữ hiển thị cũ');
     ok(t6.lacSide === -1 && t6.kdSide === 1, 'phía vũ khí: Lạc Tướng cầm rìu bên trái → vệt bên trái; Kinh Dương Vương bên phải');
     ok(t6.boss >= 100 && t6.boss2 <= 125 && t6.boss > t6.quai * 1.6, `boss cao ${Math.round(t6.boss)}–${Math.round(t6.boss2)} (quái thường ${Math.round(t6.quai)}) — không bé như quái`);

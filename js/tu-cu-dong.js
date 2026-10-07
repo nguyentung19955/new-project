@@ -44,6 +44,18 @@ const CD_SKIP = new Set([
 // có ảnh dựng xương mới dùng được (không nằm trong CD_SKIP) → giao diện dùng chân dung / dáng đứng mới cho khớp mặt với sân
 const cdNewArt = (type) => !CD_SKIP.has(type) && hasAsset(`${type}.png`);
 const cdHeadPath = (type) => (cdNewArt(type) && hasAsset(`chan-dung-moi/${type}.png`) ? `chan-dung-moi/${type}.png` : null);
+// HÀM CHUNG cho mọi chỗ ngoài sân vẽ bằng canvas (khung chân dung, icon quái / boss): ảnh mới đã tải → trả ảnh;
+// chưa tải → trả false (KHÔNG quay về ảnh cũ) và gọi lại `redraw` khi tải xong; không có ảnh mới → null (dùng đường cũ)
+function cdUiImg(path, redraw) {
+  if (!path) return null;
+  const im = asset(path, true);
+  if (im) return im;
+  const a = typeof assetMap !== 'undefined' && assetMap.get(path);
+  if (a && a.ok === false) return null;   // tải lỗi → đường cũ
+  if (a && redraw && !a.__waiters) { a.__waiters = []; a.img.addEventListener('load', () => setTimeout(() => { for (const f of a.__waiters) f(); a.__waiters = null; }, 0), { once: true }); }
+  if (a && redraw && a.__waiters) a.__waiters.push(redraw);
+  return false;
+}
 // ---- chọn ảnh đơn
 const cdMultiCache = new Map();
 function cdHasMulti(type, enemy) {
@@ -478,7 +490,22 @@ function cdBuildRig(p, man) {
     const am = new ImageData(ax1 - ax0 + 1, ay1 - ay0 + 1);
     for (let y = ay0; y <= ay1; y++) for (let x = ax0; x <= ax1; x++) { const i = y * W + x; if (mask[i]) am.data.set(A.subarray(i * 4, i * 4 + 4), ((y - ay0) * am.width + (x - ax0)) * 4); }
     R.arm = toC(am); R.ax0 = ax0; R.ay0 = ay0;
+    // điểm mẫu của vùng tay + vật cầm (≤ 80 điểm có hình, so với vai) — để kiểm vật cầm có che mặt không
+    { const pts = []; let cnt = 0; for (let i = 0; i < mask.length; i++) if (mask[i]) cnt++;
+      const step = Math.max(1, Math.floor(cnt / 80)); let j = 0;
+      for (let i = 0; i < mask.length; i++) if (mask[i] && (j++ % step === 0)) { const x = i % W; pts.push([x - pivot[0], (i - x) / W - pivot[1]]); }
+      R.armPts = pts; }
     R.side = tip[0] >= pivot[0] ? 1 : -1; R.len = Math.max(4, Math.hypot(tip[0] - pivot[0], tip[1] - pivot[1]));
+    // hộp MẶT: phần thân (không tính tay) ở vùng đầu (trên cổ = nửa trên đoạn từ đỉnh tới hông), bỏ mép mũ / tóc rộng
+    const yN = Math.round(hip * 0.5), cols = new Int32Array(W);
+    let fy0 = H, fy1 = -1, n = 0;
+    for (let y = 0; y < yN; y++) for (let x = 0; x < W; x++) { const i = y * W + x; if (A[i * 4 + 3] > 40 && !mask[i]) { cols[x]++; n++; if (y < fy0) fy0 = y; if (y > fy1) fy1 = y; } }
+    if (n > 20) {
+      let acc = 0, x0 = 0, x1 = W - 1;
+      for (; x0 < W; x0++) { acc += cols[x0]; if (acc >= n * 0.12) break; }
+      acc = 0; for (; x1 > 0; x1--) { acc += cols[x1]; if (acc >= n * 0.12) break; }
+      R.face = [x0, fy0 + (fy1 - fy0) * 0.3, x1, fy1 + (hip - yN) * 0.15];   // bỏ 30% trên (ngọn mũ / búi tóc), kéo xuống tới cằm
+    }
   }
   return R;
 }
@@ -572,10 +599,26 @@ function cdArmTip(R, st, kind, bend, sy) {
   // amp (rig): thu biên độ vung cho vũ khí cán dài dựng đứng
   const rest = Math.atan2(R.tip[1] - R.pivot[1], (R.tip[0] - R.pivot[0]) * R.side);   // 0 = chĩa thẳng ra trước, −π/2 = thẳng lên
   const lo = Math.min(rest, -Math.PI / 2 - 0.25), hi = Math.max(rest, 1.25);
-  const ang = (Math.min(hi, Math.max(lo, rest + A.a * (R.amp || 1))) - rest) * R.side + 2 * bend * up;
   const vx = R.tip[0] - R.pivot[0], vy = R.tip[1] - R.pivot[1], k = 1 + A.d;
-  const c = Math.cos(ang), s = Math.sin(ang);
-  return { pv, ang, d: A.d, tip: [pv[0] + (vx * k) * c - (vy * k) * s, pv[1] + (vx * k) * s + (vy * k) * c] };
+  const at = (f) => {
+    const ang = (Math.min(hi, Math.max(lo, rest + A.a * (R.amp || 1) * f)) - rest) * R.side + 2 * bend * up;
+    const c = Math.cos(ang), s = Math.sin(ang);
+    return { ang, c, s, tip: [pv[0] + (vx * k) * c - (vy * k) * s, pv[1] + (vx * k) * s + (vy * k) * c] };
+  };
+  let r = at(1);
+  // KHÔNG CHE MẶT: tay + vũ khí (từ khuỷu tới đầu vũ khí) cắt qua hộp mặt → thu góc vung dần về tư thế gốc tới khi thoát
+  if (R.face && (st.swing > 0 || st.castT > 0)) {
+    const bb = Math.max(-0.26, Math.min(0.26, bend)) * R.hip * 0.25;   // đầu dịch nguyên khối theo thân trên (cdDrawUpper)
+    const [fx0, fy0, fx1, fy1] = R.face;
+    // điểm mẫu của tay + vật cầm (xoay quanh vai + dịch theo trục tay như lúc vẽ); điểm sát vai (vai / bắp tay) bỏ qua
+    const ux = vx / R.len, uy = vy / R.len, sh = A.d * R.len, minR2 = (R.len * 0.25) ** 2;
+    const inF = (q, px, py) => { const ax = px + ux * sh, ay = py + uy * sh, x = pv[0] + ax * q.c - ay * q.s, y = pv[1] + ax * q.s + ay * q.c; return x > fx0 + bb && x < fx1 + bb && y > fy0 && y < fy1; };
+    // chỉ tính điểm MỚI lấn vào mặt (điểm vốn sát mặt ở tư thế gốc của ảnh thì không tính)
+    const q0 = at(0), pts = (R.armPts || []).filter(([px, py]) => px * px + py * py >= minR2 && !inF(q0, px, py));
+    const hit = (q) => pts.some(([px, py]) => inF(q, px, py));
+    if (hit(r)) for (let f = 0.9; f >= -0.01; f -= 0.1) { const q = at(Math.max(0, f)); if (!hit(q) || f <= 0) { r = q; break; } }
+  }
+  return { pv, ang: r.ang, d: A.d, tip: r.tip };
 }
 const cdRigBend = (P) => (P.bend + P.dx + P.rot * 0.9) * 0.75;
 const cdTintC = (c, color) => { const m = c.__tint || (c.__tint = new Map()); let t = m.get(color); if (!t) { t = document.createElement('canvas'); t.width = c.width; t.height = c.height; const x = t.getContext('2d'); x.drawImage(c, 0, 0); x.globalCompositeOperation = 'source-atop'; x.fillStyle = color; x.fillRect(0, 0, t.width, t.height); t.naturalWidth = t.width; t.naturalHeight = t.height; m.set(color, t); } return t; };
