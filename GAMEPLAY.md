@@ -1868,3 +1868,9 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 ## Phiên bản 185 — Gộp chợ kiểu TFT + vai trò tướng (tester đạt)
 
 - Gộp cho-bot-ngau-nhien và vai-tro-tuong sau khi tester báo đạt; ghép tay thẻ chợ (nhãn hợp thể + icon vai trò) và thẻ Anh Hùng (giá mở khoá + icon vai trò).
+
+## Phiên bản 186 — Vai trò: sửa 3 lỗi tester báo
+- **Icon Đỡ đòn ở thẻ chợ như chấm đen (667×375, 11px):** icon vai trò trên thẻ chợ đổi sang dạng **đặc** (nền màu vai trò, nét tối, viền sáng, bóng đen), cỡ 16px gốc → ≥13,7px ở 667×375. Icon hệ nhích lên 1px để icon vai trò không chạm tên tướng dài (ở 1920 trước đây chạm "Thần Sương").
+- **Hàng lọc vai trò chỉ có icon (màn thấp):** nút đang chọn luôn hiện tên vai trò; mọi nút có `title` (rê chuột) + `data-tip` (giữ tay → mô tả + cộng hưởng 2/4).
+- **Anh Hùng sau khi lọc vẫn hiện tướng không thuộc bộ lọc:** lọc xong mà tướng đang xem không có vai đó thì tự chọn tướng đầu danh sách đã lọc.
+- Test `tests/vai-tro` thêm: icon thẻ chợ dạng đặc ≥13px, không đè tên; nút lọc đang chọn có tên + tooltip; lọc Hỗ trợ tự chọn tướng đầu.
