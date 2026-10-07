@@ -1,15 +1,17 @@
 # Mực Tinh (mã muc) — quái thường 32×32, hành Thủy, [bắn xa: phun mực]. Quy chuẩn: docs/pixel/QUY-CHUAN.md
 # Đặc trưng (PROMPT-GEN-LAI.txt:99 "mực / bạch tuộc — giữ"; PROMPT-DUNG-XUONG.txt:1644): mực tinh hồng lơ lửng, mắt giận, 8 XÚC TU XOĂN, giọt mực đen.
 # Phá cách (DANH-SACH): "mực trong chum" — mực chui trong CHUM SÀNH vỡ đáy, đầu thò lên miệng chum, xúc tu thò ra từ đáy vỡ.
+# Màu: hồng (hong) bóng tím-hồng (tim-sang → tim) — palette không có hồng sáng nên mảng sáng và gốc cùng `hong`.
 name: Mực Tinh
 size: 32x32
 anchor: 16,29
 colors:
   k = vien
-  P = da-sang
+  P = hong
   p = hong
-  q = son-sang
-  Q = son
+  q = tim-sang
+  Q = tim
+  L = da-sang
   J = dat-sang
   j = dat
   z = dat-toi
@@ -142,7 +144,8 @@ frame hurt
   use mat_x2 17 12
   use chum 9 14
   outline
-  swap p P
+  swap p L
+  swap P L
   swap q p
 end
 
