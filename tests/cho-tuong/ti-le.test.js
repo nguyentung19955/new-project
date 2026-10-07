@@ -47,6 +47,28 @@ async function main() {
   ok(!r.hopOut, 'nguyên liệu ngoài đội và chưa có trên sân (Chèo Đò → Lý Ngư) không được ưu tiên hợp thể');
   ok(!r.hint2, 'chưa sở hữu tướng đích thì không ưu tiên nguyên liệu');
 
+  // bảo hiểm MARKET_PITY với rng cố định: rng luôn trả 0.9999 → mỗi thẻ rút ra loại cuối danh sách (không phải tướng cần),
+  // nên chuỗi trượt chắc chắn xảy ra; sau đúng MARKET_PITY lần trượt, lần kế phải có tướng cần (rồi đếm lại từ đầu)
+  const p = await page.evaluate(() => {
+    for (let s = 0; s < game.heroes.length; s++) game.heroes[s] = null;
+    game.owned = null; game.gold = 1e6;
+    game.spawnHero(game.freeSlots()[0], 'nguphu', { tier: 2 });       // cần Thần Sương (Cá Ông)
+    game.market = null;
+    const nd = game.marketNeeds(), list = nd.pool.filter((t) => nd.w[t] > 0);
+    const hi = () => 0.9999, seq = [];
+    for (let i = 0; i < 9; i++) { game.rerollMarket(hi); seq.push({ hit: game.market.types.includes('thansuong'), dry: game.market.dry }); }
+    // cùng tình huống, rng có seed (LCG) cố định: mọi lần đủ MARKET_PITY trượt thì lần kế phải trúng
+    let x = 12345; const lcg = () => ((x = (x * 1103515245 + 12345) % 2147483648) / 2147483648);
+    let dry = 0, maxDry = 0, forced = 0;
+    for (let i = 0; i < 2000; i++) { game.market.rr = 0; const d0 = game.market.dry; game.rerollMarket(lcg); const hit = game.market.types.some((t) => nd.top.has(t)); if (d0 >= MARKET_PITY) { forced++; if (!hit) return { bad: i }; } dry = hit ? 0 : dry + 1; maxDry = Math.max(maxDry, dry); }
+    return { pity: MARKET_PITY, last: list[list.length - 1], top: [...nd.top], seq, maxDry, forced };
+  });
+  console.log('  · pity rng cố định:', JSON.stringify(p.seq.map((s) => (s.hit ? 'TRÚNG' : 'trượt'))));
+  ok(p.pity === 2 && p.last !== 'thansuong' && p.top.join() === 'thansuong', `tình huống: tướng cần = Thần Sương, rng cố định rút toàn ${p.last}`);
+  ok(p.seq.map((s) => s.hit).join() === 'false,false,true,false,false,true,false,false,true', 'rng cố định: trượt, trượt → lần 3 chắc chắn ra Thần Sương; lặp lại đúng chu kỳ');
+  ok(p.seq.map((s) => s.dry).join() === '1,2,0,1,2,0,1,2,0', 'bộ đếm trượt 1, 2 rồi về 0 khi ra tướng cần');
+  ok(p.bad === undefined && p.maxDry <= 2 && p.forced > 0, `rng có seed, 2000 lần ↻: không lần nào đủ 2 trượt mà lần sau vẫn trượt (bảo hiểm kích hoạt ${p.forced} lần, trượt liền tối đa ${p.maxDry})`);
+
   // 🔒 khoá chợ: bấm nút → đầu đợt sau giữ nguyên 4 thẻ, rồi tự mở khoá
   await page.evaluate(() => { game.freshMarket(); ui.clearSel && ui.clearSel(); ui.sig.deck = null; });
   await page.waitForTimeout(150);
