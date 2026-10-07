@@ -9,6 +9,12 @@
 
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+// v146: co cỡ chữ (bước 0,5px, không nhỏ hơn min) tới khi vừa chiều ngang ô; vẫn tràn thì CSS cắt bằng dấu …
+function fitText(el, min) {
+  el.style.fontSize = '';
+  let fs = parseFloat(getComputedStyle(el).fontSize);
+  while (el.scrollWidth > el.clientWidth + 0.5 && fs > min) el.style.fontSize = (fs -= 0.5) + 'px';
+}
 const fmt = (n) => Math.round(n).toLocaleString('vi-VN');
 const ICON = {
   close: '<svg viewBox="0 0 16 16"><path d="M3 3 L13 13 M13 3 L3 13" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>',
@@ -403,7 +409,12 @@ class UI {
     const total = s.stars.reduce((a, b) => a + b, 0);
     const lv = 1 + Math.floor(Math.sqrt(s.lifeKills / 25));
     const acc = typeof CLOUD !== 'undefined' && CLOUD.user && !CLOUD.user.isAnonymous ? CLOUD.user : null;
-    $('#menu-player').innerHTML = `<span class="av">${acc && acc.photoURL ? `<img src="${esc(acc.photoURL)}" alt="" referrerpolicy="no-referrer">` : svgI(sceneArt('drum'))}</span><span><b>${esc(acc ? this.playerName() : 'Sơn Tinh')}</b><small>Cấp ${lv} · ★ ${total}/${LEVELS.length * 3} · ${acc ? 'Đã đăng nhập' : 'Khách'}</small></span>`;
+    // v146: khung ảnh đã có huy hiệu mặt trời — chỉ đặt ảnh Google (nếu có) vào lòng huy hiệu, không chèn SVG.
+    // Chưa đặt biệt danh thì hiện "Khách" + gợi ý chạm để đặt tên (không lấy phần đầu email).
+    const nick = this.nickName();
+    $('#menu-player').innerHTML = `${acc && acc.photoURL ? `<span class="av"><img src="${esc(acc.photoURL)}" alt="" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></span>` : ''}<span class="pl-txt"><b>${nick ? esc(nick) : 'Khách <i class="pl-hint">✎ đặt tên</i>'}</b><small>Cấp ${lv} · ★ ${total}/${LEVELS.length * 3}</small></span>`;
+    $('#menu-player').title = nick ? 'Tài khoản & đổi tên' : 'Chạm để đặt biệt danh';
+    for (const el of $('#menu-player').querySelectorAll('b, small')) fitText(el, el.tagName === 'B' ? 10 : 8);
     $('#menu-player').onclick = () => this.showLogin(true);
     if (s.runeRefund) { this.toast(`Ấn Phù giờ riêng từng tướng, khắc bằng điểm Tu Vi. Đã hoàn ${fmt(s.runeRefund)} Ngân khố đã tiêu cho ấn cũ.`, '#E4ECF4'); delete s.runeRefund; writeSave(s); }
     const short = (n) => (n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace('.', ',') + 'k' : n);
@@ -621,11 +632,15 @@ class UI {
   }
 
   // ---------- v72: Bảng xếp hạng (vô tận + từng ải)
+  // v146: biệt danh người chơi tự đặt (hoặc tên tài khoản Google) — rỗng nếu chưa có; không bao giờ lấy từ email
+  nickName() {
+    const u = typeof CLOUD !== 'undefined' && CLOUD.user;
+    return this.save.nick || (u && !u.isAnonymous && u.displayName) || '';
+  }
   playerName() {
     const u = typeof CLOUD !== 'undefined' && CLOUD.user;
     if (this.save.nick) return this.save.nick;
     if (u && !u.isAnonymous && u.displayName) return u.displayName;
-    if (u && !u.isAnonymous && u.email) return u.email.split('@')[0];
     return 'Khách ' + (u ? u.uid.slice(0, 4).toUpperCase() : '');
   }
   submitScores(win, stars) {
@@ -675,7 +690,7 @@ class UI {
     let inner;
     if (!C || !C.enabled) inner = '<div class="login-sub">Chưa cấu hình đăng nhập.</div><button class="btn btn-gold title login-btn" data-act="login-offline">Vào game</button>';
     else if (signed) inner = `<div class="login-who">${u.photoURL ? `<img src="${esc(u.photoURL)}" alt="" referrerpolicy="no-referrer">` : ''}<b>${esc(this.playerName())}</b><small>${esc(u.email || '')} · tiến trình lưu trên đám mây</small></div>
-        <div class="login-rename"><input id="lg-nick" class="login-in" maxlength="20" placeholder="Tên hiển thị" value="${esc(this.playerName())}"><button class="btn metal" data-act="login-rename">Đổi tên</button></div>
+        <div class="login-rename"><input id="lg-nick" class="login-in" maxlength="20" placeholder="Đặt biệt danh" value="${esc(this.nickName())}"><button class="btn metal" data-act="login-rename">Đổi tên</button></div>
         ${err}
         <button class="btn btn-gold title login-btn" data-act="login-close">Vào game</button>
         <button class="btn metal login-btn" data-act="cloud-out">Đăng xuất</button>`;
@@ -860,7 +875,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 144 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 146 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -2048,7 +2063,7 @@ class UI {
       case 'rank-tab': this.showRanks(d.k); break;
       case 'rank-nick': {
         const box = $('#ranks .rk-body');
-        box.insertAdjacentHTML('afterbegin', `<div class="rk-nick inset"><span>Tên trên bảng xếp hạng:</span><input id="rk-nick-in" maxlength="20" value="${esc(this.playerName())}"><button class="btn btn-gold" data-act="rank-nick-ok" style="height:32px;padding:0 12px">Lưu</button></div>`);
+        box.insertAdjacentHTML('afterbegin', `<div class="rk-nick inset"><span>Tên trên bảng xếp hạng:</span><input id="rk-nick-in" maxlength="20" placeholder="Đặt biệt danh" value="${esc(this.nickName())}"><button class="btn btn-gold" data-act="rank-nick-ok" style="height:32px;padding:0 12px">Lưu</button></div>`);
         break;
       }
       case 'rank-nick-ok': {

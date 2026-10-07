@@ -1494,8 +1494,17 @@ body { overflow: hidden; }
 .seg { gap: 4px; background: transparent; }
 .tb-prog { width: 170px; height: 18px; border-radius: 0; overflow: visible; position: relative; background: url('../assets/ui/thanh-tien-do.png') center / 100% 100% no-repeat; box-shadow: none; border: 0; }
 .tb-prog i { position: absolute; left: 14.5%; top: 31%; height: 38%; border-radius: 4px; max-width: 71%; }
-.pl-box { background: url('../assets/ui/khung-nguoi-choi.png') left center / 100% 100% no-repeat; border: 0; box-shadow: none; height: 56px; min-width: 240px; padding: 0 26px 0 10px; gap: 30px; border-radius: 0; }
-.pl-box .av { width: 38px; height: 38px; border: 0; background: transparent; }
+/* v146: khung người chơi giữ đúng tỉ lệ ảnh 700×241; toạ độ % đo trên ảnh: lòng huy hiệu tâm (117,118) r≈45,
+   ô tối x 230–628, y 48–190 (mép phải bo tròn) — ảnh đại diện và chữ đặt tuyệt đối theo % nên không lệch khi co giãn */
+.pl-box { background: url('../assets/ui/khung-nguoi-choi.png') 0 0 / 100% 100% no-repeat; border: 0; box-shadow: none; border-radius: 0;
+  width: 192px; height: auto; aspect-ratio: 700 / 241; padding: 0; display: block; }
+.pl-box .av { position: absolute; left: 11%; top: 32.37%; width: 11.43%; height: 33.2%; border: 0; border-radius: 50%; background: #4A2C18;
+  box-shadow: 0 0 0 1px #6A3E1A; overflow: hidden; }
+.pl-box .pl-txt { position: absolute; left: 35%; right: 12.5%; top: 21%; bottom: 22%; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+.pl-box .pl-txt b, .pl-box .pl-txt small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 1px 2px #0008; }
+.pl-box .pl-txt b { font-size: 14px; line-height: 1.2; }
+.pl-box .pl-txt small { font-size: 10.5px; line-height: 1.25; margin-top: 1px; }
+.pl-box .pl-hint { font: italic 700 9.5px var(--body); color: #E8D8B0; opacity: .85; margin-left: 3px; }
 .ro-pic { position: relative; background: radial-gradient(circle at 50% 60%, #6A3A18, #2A160A 75%); border: 2px solid #8A5A2A; border-radius: 10px; box-shadow: inset 0 0 0 1px #2A160A, 0 2px 8px #0008; }
 .md-card { position: relative; overflow: hidden; background-size: cover; background-position: center; }
 .md-card .md-ic img { width: 64px; height: 64px; display: block; }
