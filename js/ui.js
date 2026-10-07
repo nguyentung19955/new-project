@@ -1242,7 +1242,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 180</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 181</div>
       </div></div>`;
   }
 
@@ -2612,15 +2612,19 @@ class UI {
     const gift = ev.options[0], jar = ev.options[1], misc = ev.options[2];
     const art = { voi_chin_nga: 'voi', ga_chin_cua: 'ga', ngua_hong_mao: 'ngua' }[gift.id];
     const it = ITEMS[gift.id];
+    // v181: sính lễ ngẫu nhiên — hiện rõ ảnh + tên + độ hiếm sính lễ (và tỉ lệ ra ở mốc này)
+    const sl = SINH_LE[gift.id], tier = SL_TIER[sl ? sl.tier : 'thuong'];
+    const ws = sinhLeWeights({ big: gift.big }), pct = Math.round(100 * ws[gift.id] / Object.values(ws).reduce((a, b) => a + b, 0));
+    const giftArt = (art && sceneArt(art)) || itemIcon(gift.id);
     const jit = ITEMS[jar.id];
     $('#reward').innerHTML = `<div class="screen" style="z-index:auto">
       <div class="scr-head metal"><h1 class="ttl">${th.rewardHead || 'Chọn phần thưởng'}</h1><span class="chip dark">Đợt ${g.wave}</span>
-        <span class="chip ok">${UIE.done()} Đã hạ ${ENEMIES[ev.boss].name}</span><span class="chip goldc">Chọn 1 trong 3</span><div class="sp"></div>
+        <span class="chip ok">${UIE.done()} Đã hạ ${ENEMIES[ev.boss].name}</span><span class="chip goldc">Chọn 1 trong 3</span>${gift.big ? '<span class="chip sl-big">★ Mốc lớn: sính lễ hiếm dễ ra hơn</span>' : ''}<div class="sp"></div>
         <div class="goldbox inset">${coin()}${fmt(g.gold)}</div></div>
       <div class="sl-title">${th.reward || 'Phần thưởng hạ boss'}</div>
       <div class="sl-cards">
-        <div class="sl-card gift"><div class="sl-well">${svgI(sceneArt(art))}<span class="sl-tag" style="left:6px;background:#0D0B08;border:1px solid #8C6A2E;color:#F2E6C8">SÍNH LỄ</span><span class="sl-tag" style="right:6px;background:#F0A030;color:#2A1A08">Huyền thoại</span></div>
-          <div class="sl-name">${it.name}</div><div class="sl-desc">${esc(it.desc)}<br><b>${statLine(it.stats)}</b></div>
+        <div class="sl-card gift sl-${sl ? sl.tier : 'thuong'}"><div class="sl-well${art ? '' : ' sl-icon'}">${svgI(giftArt)}<span class="sl-tag" style="left:6px;background:#0D0B08;border:1px solid #8C6A2E;color:#F2E6C8">SÍNH LỄ</span><span class="sl-tag sl-tier" style="right:6px;background:${tier.bg};border:1px solid ${tier.color};color:${tier.color}">${tier.name}</span></div>
+          <div class="sl-name">${it.name}</div><div class="sl-rar"><span style="color:${tier.color}">● Sính lễ ${tier.name}</span> · <span class="c-legendary">Huyền thoại</span> · ngẫu nhiên ~${pct}%</div><div class="sl-desc">${esc(it.desc)}${statLine(it.stats) ? `<br><b>${statLine(it.stats)}</b>` : ''}</div>
           <button class="sl-pick btn-gold" data-act="reward" data-i="0">Chọn</button></div>
         <div class="sl-card jar"><div class="sl-well">${svgI(sceneArt('huvua'))}<span class="sl-tag" style="left:6px;background:#0D0B08;border:1px solid #8C6A2E;color:#F2E6C8">HŨ BÁU</span><span class="sl-tag" style="right:6px;background:#A86CE0;color:#1A0A28">${(jar.ids || []).length} món</span></div>
           <div class="sl-name">Hũ Vua Hùng · ${(jar.ids || [jar.id]).length} món</div><div class="sl-desc jar-list">${(jar.ids || [jar.id]).map((id) => {
@@ -2654,6 +2658,7 @@ class UI {
   }
   rewardToast(o) {
     if (o.kind === 'item' && o.ids) this.toast(`Nhận ${o.ids.length} món từ Hũ Vua Hùng · bấm ≡ → Mặc đồ cả đội`, '#C8A0F0');
+    else if (o.kind === 'item' && o.sinhLe) this.toast(`Nhận sính lễ ${ITEMS[o.id].name} (${SL_TIER[SINH_LE[o.id].tier].name})! Mở Túi đồ để đeo cho tướng`, SL_TIER[SINH_LE[o.id].tier].color);
     else if (o.kind === 'item') this.toast(`Nhận ${ITEMS[o.id].name}! Mở Túi đồ để đeo cho tướng`, RARITY[ITEMS[o.id].rarity].color);
     else if (o.kind === 'treasure') this.toast(`+${o.gold} vàng, +${o.lives} mạng`, '#F2D27A');
     else this.toast('Mọi tướng +2 cấp!', '#6AE06A');

@@ -708,6 +708,14 @@ button:disabled { cursor: default; }
 .sl-card.jar .sl-well { background: radial-gradient(circle at 50% 45%, #3A2058, #0D0B08 75%); }
 .sl-well .svgi { width: 100%; height: 100%; }
 .sl-tag { position: absolute; top: 6px; padding: 1px 7px; border-radius: 3px; font-size: 11px; font-weight: 800; letter-spacing: .04em; line-height: 16px; z-index: 2; }
+.sl-card.gift.sl-hiem { border-color: #7FC8FF; box-shadow: 0 0 14px #7FC8FF66; }
+.sl-card.gift.sl-quy { border-color: #FFD66B; box-shadow: 0 0 18px #FFD66B99; }
+.sl-well.sl-icon { display: flex; align-items: center; justify-content: center; }
+.sl-well.sl-icon .svgi { width: 70%; height: 82%; }
+.sl-well.sl-icon .svgi img { width: 100%; height: 100%; object-fit: contain; }
+.sl-card.gift .sl-desc { height: auto; min-height: 50px; }
+.sl-rar { font-size: 12px; line-height: 15px; font-weight: 700; color: #C8BFA8; }
+.chip.sl-big { background: #5A3A08; border: 1px solid #FFD66B; color: #FFD66B; }
 .sl-name { font-family: var(--title); font-size: 18px; font-weight: 800; line-height: 22px; color: var(--gold); text-shadow: 0 1px 2px #000; }
 .sl-card.jar .sl-name { color: #D9B8FF; }
 .sl-desc { height: 50px; font-size: 12px; line-height: 1.35; color: var(--text-2); overflow: hidden; }

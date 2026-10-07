@@ -1751,3 +1751,20 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 180 — Báo cáo test toàn bộ (QA nhìn ảnh thật)
 
 - Thêm `docs/BAO-CAO-TEST.md`: chơi thật bằng Playwright ở 1920×934, 1280×720, 844×390, 667×375, dọc 390×844, xem từng ảnh chụp. 17 lỗi (Cao 5 · Trung bình 7 · Thấp 5) kèm ảnh minh hoạ trong `docs/bao-cao-test/`, và mục đề xuất cải thiện trải nghiệm. Không sửa code game.
+
+## Phiên bản 181 — Sính lễ ngẫu nhiên có trọng số
+- **Chỗ game tặng sính lễ:** chỉ có ô **Sính lễ** trong bảng thưởng hạ boss (`bossRewards`). Trước đây mỗi boss luôn tặng đúng một món (Thuồng Luồng → Voi Chín Ngà, Hà Bá → Gà Chín Cựa, Thủy Tinh → Ngựa Chín Hồng Mao…); Ngọc Hồi Sinh chưa bao giờ ra. Quà người mới / quy đổi / mốc đợt Vô Tận tặng Ngân khố, Hũ đồng / Hũ Vua Hùng đã bốc ngẫu nhiên — không tặng sính lễ nên không đổi. Màn **Kho Báu & Sính Lễ** chỉ là bộ sưu tập.
+- **Bốc ngẫu nhiên theo độ hiếm sính lễ** (`SINH_LE`, `SL_TIER`, `rollSinhLe` trong `data.js`): Voi Chín Ngà, Gà Chín Cựa = **Thường** (trọng số 34 mỗi món) · Ngựa Chín Hồng Mao = **Hiếm** (22) · Ngọc Hồi Sinh = **Quý hiếm** (10). Đồ vẫn là bậc Huyền thoại như cũ.
+- **Mốc lớn** (boss ở đợt 20, 40, 60…): trọng số Hiếm ×1.8, Quý hiếm ×3; bảng thưởng hiện chip "★ Mốc lớn: sính lễ hiếm dễ ra hơn".
+- **Chống trùng:** không món nào ra quá 2 lần liền (lịch sử `slHist` theo trận, có lưu khi lưu trận); món đã có trong túi hoặc đang đeo trên tướng: trọng số ×0.35 (ưu tiên món chưa có).
+- **Co-op:** bốc bằng `srand()` khi hạ boss (đang trong bước mô phỏng) → seed chung, 2 máy ra cùng món; túi đồ và lịch sử là trạng thái chung của trận.
+- **Màn nhận thưởng:** thẻ Sính lễ hiện ảnh món (Ngọc Hồi Sinh dùng icon món), tên, nhãn độ hiếm (màu theo bậc, viền thẻ đổi màu), dòng "Sính lễ <bậc> · Huyền thoại · ngẫu nhiên ~X%"; thông báo khi nhận ghi cả độ hiếm. Ô mô tả thẻ sính lễ cao theo nội dung (trước bị cắt dòng chỉ số của Ngựa Chín Hồng Mao ở 844×390).
+- **Mô phỏng 1000 lần** (`node tests/sinh-le/sinh-le.test.js`, rng seed cố định, có chống trùng):
+
+  | Trường hợp | Voi Chín Ngà (Thường) | Gà Chín Cựa (Thường) | Ngựa Chín Hồng Mao (Hiếm) | Ngọc Hồi Sinh (Quý hiếm) | ra 3 lần liền |
+  |---|---|---|---|---|---|
+  | Boss thường | 314 | 319 | 248 | 119 | 0 |
+  | Mốc lớn (đợt 20, 40…) | 240 | 229 | 305 | 226 | 0 |
+  | Đã có Voi + Gà | 228 | 202 | 386 | 184 | 0 |
+
+- Test mới `tests/sinh-le/sinh-le.test.js`: phân bố, thứ tự độ hiếm, không 3 lần liền, mốc lớn, ưu tiên món chưa có, cùng seed → cùng chuỗi (co-op), lưu lịch sử theo trận, màn nhận thưởng có ảnh + tên + độ hiếm, không lòi ra ngoài ở 1920×934 / 844×390 / 667×375. Ảnh đã xem: `tests/sinh-le/shots/nhan-thuong-*-{1920x934,844x390,667x375}.png`.
