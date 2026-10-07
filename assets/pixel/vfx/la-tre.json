@@ -1,0 +1,25 @@
+{
+ "code": "la-tre",
+ "group": "vfx",
+ "name": "Lá tre",
+ "w": 10,
+ "h": 8,
+ "ax": 5,
+ "ay": 4,
+ "bbox": [
+  0,
+  1,
+  9,
+  5
+ ],
+ "n": 2,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 2,
+   "fps": 4,
+   "loop": true
+  }
+ },
+ "sheet": "la-tre.png"
+}

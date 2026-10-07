@@ -25,6 +25,6 @@ frame main
 end
 frame main
   use a
-  flipy
+  rot 90
   outline k
 end

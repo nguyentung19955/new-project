@@ -1,7 +1,7 @@
 # Xoáy khí (mây cuộn) — lượn quanh đầu khi choáng, kèm chim Lạc.
 name: Xoáy khí
-size: 8x6
-anchor: 4,3
+size: 8x8
+anchor: 4,4
 colors:
   k = cham-sang
   t = trang
@@ -24,8 +24,8 @@ part b
 end
 anim main fps=6 loop
 frame main
-  use a
+  use a 0 1
 end
 frame main
-  use b
+  use b 0 1
 end

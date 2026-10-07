@@ -1,0 +1,25 @@
+{
+ "code": "hoa-sen",
+ "group": "vfx",
+ "name": "Cánh sen",
+ "w": 9,
+ "h": 9,
+ "ax": 4,
+ "ay": 4,
+ "bbox": [
+  0,
+  0,
+  9,
+  8
+ ],
+ "n": 2,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 2,
+   "fps": 8,
+   "loop": true
+  }
+ },
+ "sheet": "hoa-sen.png"
+}

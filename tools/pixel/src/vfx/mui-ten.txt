@@ -1,7 +1,7 @@
 # Mũi tên — thân tre, đầu đồng, lông đuôi son (bay sang phải). Tên tẩm độc: game đổi lông đuôi sang xanh rêu.
 name: Mũi tên
-size: 16x5
-anchor: 10,2
+size: 16x8
+anchor: 10,3
 colors:
   k = toi
   c = cat
@@ -17,5 +17,5 @@ part a
 end
 anim main fps=1 loop
 frame main
-  use a
+  use a 0 1
 end

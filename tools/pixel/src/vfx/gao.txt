@@ -1,7 +1,7 @@
 # Nắm hạt gạo / thóc (Thần Lúa) — 3 hạt trắng ngà nối đuôi (bay sang phải).
 name: Hạt gạo
-size: 12x6
-anchor: 7,3
+size: 12x8
+anchor: 7,4
 colors:
   k = dat
   w = trang
@@ -16,5 +16,5 @@ wwWw...WW...
 end
 anim main fps=1 loop
 frame main
-  use a
+  use a 0 1
 end

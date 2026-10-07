@@ -1,6 +1,6 @@
 # Đạn băng — mũi băng nhọn lam nhạt, đuôi tuyết (bay sang phải).
 name: Mũi băng
-size: 13x7
+size: 13x8
 anchor: 8,3
 colors:
   k = cham-toi
@@ -19,7 +19,7 @@ part a
 end
 anim main fps=1 loop
 frame main
-  use a
+  use a 0 0
   swap t w
   outline k
 end

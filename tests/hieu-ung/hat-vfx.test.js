@@ -1,13 +1,16 @@
-// Test claude/vfx-kenney: hệ hạt dùng ảnh assets/vfx/ (Kenney CC0) — lửa, độc, choáng, băng, làm chậm, nổ, quái / boss chết.
-// - không lỗi console; số hạt bị giới hạn (MAX), có pool dùng lại; hạn mức ảnh trạng thái mỗi khung;
-// - thiếu ảnh (404) → VFX.status trả cờ false, game vẽ cách cũ bằng code, hạt 'tex' vẽ quầng dự phòng;
-// - chụp trong trận (1920×934, 844×390, 667×375) vào tests/hieu-ung/shots/ + đo FPS sơ bộ khi nhiều quái.
+// Test claude/vfx-kenney: hiệu ứng PIXEL (js/vfx.js + sprite nhóm vfx: tools/pixel/src/vfx/*.txt → node tools/build-pixel.js
+// → assets/pixel/vfx/*.png + js/pixel/vfx.js)
+// - nguồn vfx hợp lệ theo tool chung; bảng màu chép trong js/vfx.js khớp tools/pixel/palette.txt;
+// - trạng thái (bỏng / độc / choáng chim Lạc / đóng băng / làm chậm) bằng sprite pixel, không lên tới thanh máu, bám lưới điểm ảnh;
+// - đạn bay + hiệu ứng mỗi khung (drawFx) bằng pixel; mọi loại hiệu ứng chạy không lỗi;
+// - số hạt bị giới hạn (MAX), pool dùng lại, hạn mức sprite trạng thái mỗi khung;
+// - thiếu sprite pixel → status / drawFx / drawProj trả false (game vẽ cách cũ), không lỗi console;
+// - chụp trong trận 1920×934, 844×390, 667×375 vào tests/hieu-ung/shots/ + đo FPS sơ bộ khi nhiều quái.
 // Chạy: node tests/hieu-ung/hat-vfx.test.js
 const path = require('path');
 const fs = require('fs');
-const os = require('os');
 const { execFileSync } = require('child_process');
-const { open, enter, ok } = require('../cho-tuong/helpers');
+const { open, enter, ok, ROOT } = require('../cho-tuong/helpers');
 
 const SHOTS = path.join(__dirname, 'shots');
 fs.mkdirSync(SHOTS, { recursive: true });
@@ -15,118 +18,138 @@ fs.mkdirSync(SHOTS, { recursive: true });
 // đặt một hàng quái với đủ trạng thái, dừng trận để chụp
 const stage = (page) => page.evaluate(() => {
   game.running = false;
-  game.enemies.length = 0; game.effects.length = 0;
+  game.enemies.length = 0; game.effects.length = 0; game.projectiles.length = 0;
   const types = Object.keys(ENEMIES).filter((k) => !ENEMIES[k].boss && !ENEMIES[k].minion && !ENEMIES[k].flying);
   const L = PATH.total;
   const mk = (k, f, st) => { const e = game.spawn(types[k % types.length], L * f); Object.assign(e, st); return e; };
   mk(0, 0.18, { poisonT: 99, dotColor: '#E0452C' });                    // bỏng
   mk(1, 0.28, { stunT: 99, stunKind: 'stun' });                        // choáng
   mk(2, 0.38, { stunT: 99, stunKind: 'ice' });                         // đóng băng
-  mk(3, 0.48, { poisonT: 99, dotColor: '#7FC24A', hp: 1 });            // độc (đã bị đánh → hiện thanh máu)
+  mk(3, 0.48, { poisonT: 99, dotColor: '#7FC24A' });                   // độc
   mk(4, 0.58, { slowT: 99, slowPct: 30 });                             // làm chậm
   mk(5, 0.68, { poisonT: 99, dotColor: '#E0452C', stunT: 99, stunKind: 'stun' });
-  for (const e of game.enemies) e.hp = Math.min(e.hp, e.maxHp * 0.6);
+  for (const e of game.enemies) e.hp = e.maxHp * 0.6;
   return game.enemies.map((e) => ({ x: e.x, y: e.y }));
 });
 const boom = (page, at) => page.evaluate((at) => {
   const [a, b, c] = at;
   game.effects.push({ type: 'explosion', x: a.x, y: a.y, r: 70, ttl: 0.5, max: 0.5 });
   game.effects.push({ type: 'impact', kind: 'fireball', el: 'hoa', splash: 60, x: b.x, y: b.y, ttl: 0.3, max: 0.3 });
-  game.effects.push({ type: 'nova', x: c.x, y: c.y, ttl: 0.4, max: 0.4 });
+  game.effects.push({ type: 'nova', x: c.x, y: c.y, r: 70, ttl: 0.4, max: 0.4 });
   game.effects.push({ type: 'scorch', x: c.x + 60, y: c.y + 10, r: 40, ttl: 1.4, max: 1.4 });
+  game.effects.push({ type: 'bolt', x: at[4].x, y: at[4].y, ttl: 0.4, max: 0.4 });
   game.effects.push({ type: 'die', etype: Object.keys(ENEMIES).find((k) => ENEMIES[k].boss), x: at[5].x, y: at[5].y, ttl: 0.4, max: 0.4 });
 }, at);
+const noPixelVfx = (p) => p.route('**/js/pixel/vfx.js*', (r) => r.fulfill({ contentType: 'application/javascript', body: '' }));
 
 (async () => {
-  // ---------- 1. có ảnh: trạng thái bằng sprite, giới hạn hạt, pool
+  // ---------- 0. nguồn sprite hợp lệ theo tool chung; bảng màu trong js/vfx.js khớp bảng chung
+  {
+    const out = execFileSync('node', [path.join(ROOT, 'tools/build-pixel.js'), '--check', 'vfx/'], { encoding: 'utf8' });
+    const n = +((/(\d+) file nguồn hợp lệ/.exec(out) || [])[1] || 0);
+    ok(n > 0, 'nguồn tools/pixel/src/vfx/ hợp lệ (build-pixel --check): ' + out.trim().split('\n').pop());
+    const vfxSrc = fs.readdirSync(path.join(ROOT, 'tools/pixel/src/vfx')).filter((f) => f.endsWith('.txt') && f !== 'palette.txt');
+    ok(vfxSrc.length >= 30, `${vfxSrc.length} sprite hiệu ứng pixel`);
+    const missing = vfxSrc.map((f) => f.replace(/\.txt$/, '')).filter((c) => !fs.existsSync(path.join(ROOT, 'assets/pixel/vfx', c + '.png')));
+    ok(!missing.length, 'đã dựng đủ assets/pixel/vfx/*.png' + (missing.length ? ' — thiếu ' + missing : ''));
+    const pal = Object.fromEntries(fs.readFileSync(path.join(ROOT, 'tools/pixel/palette.txt'), 'utf8').split('\n')
+      .map((l) => /^\s*([a-z0-9-]+)\s+(#[0-9a-fA-F]{6})/.exec(l)).filter(Boolean).map((m) => [m[1], m[2].toUpperCase()]));
+    const js = fs.readFileSync(path.join(ROOT, 'js/vfx.js'), 'utf8');
+    const C = Object.fromEntries([...js.matchAll(/'([a-z0-9-]+)': '(#[0-9A-Fa-f]{6})'/g)].map((m) => [m[1], m[2].toUpperCase()]));
+    ok(JSON.stringify(C) === JSON.stringify(pal), `bảng màu trong js/vfx.js khớp tools/pixel/palette.txt (${Object.keys(pal).length} màu)`);
+  }
+  // ---------- 1. có sprite pixel
   {
     const { browser, page, errors } = await open(844, 390);
     await enter(page, 0);
-    await page.waitForFunction(() => VFX.VFX_IMGS.every((n) => VFX.ready('vfx/' + n)), null, { timeout: 8000 });
-    ok(true, 'nạp đủ ' + (await page.evaluate(() => VFX.VFX_IMGS.length)) + ' ảnh assets/vfx/');
-    const at = await stage(page);
+    await page.waitForFunction(() => ['lua-chay', 'chim-lac', 'gio-xoay', 'bang-tinh', 'suong-lanh', 'may-doc', 'bong-doc', 'tuyet', 'dan-lua', 'no'].every((n) => VFX.spr(n)), null, { timeout: 8000 });
+    await stage(page);
     await page.waitForTimeout(200);
     const r = await page.evaluate(() => {
       const c = document.createElement('canvas').getContext('2d');
       VFX.frame();
       return game.enemies.map((e) => VFX.status(c, e, enemyBox(e), 0, 1.3));
     });
-    ok(r[0].dot && !r[0].stun, 'bỏng: ngọn lửa ảnh lua-*');
-    ok(r[1].stun, 'choáng: sao choang-sao xoay trên đầu');
-    ok(r[2].ice && !r[2].stun, 'đóng băng: ánh lấp lánh + mảnh băng');
-    ok(r[3].dot, 'độc: mây doc-1 + bong bóng');
+    ok(r[0].dot && !r[0].stun, 'bỏng: ngọn lửa pixel');
+    ok(r[1].stun, 'choáng: chim Lạc + xoáy khí lượn quanh đầu');
+    ok(r[2].ice && r[2].iceArt && !r[2].stun, 'đóng băng: vỏ băng pixel (thay khối băng code) + tinh thể băng');
+    ok(r[3].dot, 'độc: mây độc + bong bóng');
     ok(r[4].slow, 'làm chậm: sương lạnh + bông tuyết');
     ok(r[5].dot && r[5].stun, 'bỏng + choáng cùng lúc');
-    // các trạng thái không vẽ lên thanh máu: mọi ảnh trạng thái nằm dưới đỉnh hình quái
-    const hpOk = await page.evaluate(() => {
-      const bad = [];
+    // không lên tới thanh máu, toạ độ nguyên, không khử răng cưa
+    const chk = await page.evaluate(() => {
+      const bad = [], frac = [];
+      let smooth = false;
       const c = document.createElement('canvas').getContext('2d');
-      const di = c.drawImage;
       for (const e of game.enemies) {
-        const box = enemyBox(e), top = e.y - box.ay - 4, by = top - 3;
-        for (const t of [0.1, 0.4, 0.7, 1.0, 1.3, 2.2]) {
-          c.setTransform(1, 0, 0, 1, 0, 0);
-          c.drawImage = function (im, x, y, w, h) {
-            // mép trên thật của ảnh = điểm cao nhất trong 4 góc sau khi biến đổi (xoay / ép dẹt)
-            const m = this.getTransform();
-            const y0 = Math.min(...[[x, y], [x + w, y], [x, y + h], [x + w, y + h]].map(([u, v]) => m.b * u + m.d * v + m.f));
-            if (y0 < by - 1) bad.push([e.id, e.type, t, Math.round(y0), Math.round(by)]);
-          };
-          VFX.frame(); VFX.status(c, e, box, 0, t);
-        }
+        const box = enemyBox(e), by = e.y - box.ay - 7;
+        const top = (y) => { if (y < by + 4) bad.push([e.type, Math.round(y), Math.round(by)]); };
+        c.drawImage = function (im, x, y, w, h) { if (this.imageSmoothingEnabled) smooth = true; top(this.getTransform().f + Math.min(y, y + h)); if (x % 1 || y % 1) frac.push([x, y]); };
+        c.fillRect = function (x, y) { top(this.getTransform().f + y); if (x % 1 || y % 1) frac.push([x, y]); };
+        for (const t of [0.1, 0.4, 0.7, 1.0, 1.3, 2.2]) { VFX.frame(); VFX.status(c, e, box, 0, t); }
       }
-      c.drawImage = di;
-      return bad;
+      return { bad, frac: frac.length, smooth };
     });
-    ok(hpOk.length === 0, 'ảnh trạng thái không lên tới thanh máu' + (hpOk.length ? ' — ' + JSON.stringify(hpOk.slice(0, 4)) : ''));
+    ok(!chk.bad.length, 'ảnh trạng thái không lên tới thanh máu' + (chk.bad.length ? ' — ' + JSON.stringify(chk.bad.slice(0, 4)) : ''));
+    ok(!chk.frac && !chk.smooth, 'trạng thái vẽ bám lưới điểm ảnh (toạ độ nguyên), không khử răng cưa');
+    // đạn bay + hiệu ứng mỗi khung bằng pixel
+    const fx = await page.evaluate(() => {
+      const c = document.querySelector('canvas').getContext('2d');
+      const kinds = ['fireball', 'frostbolt', 'arrow', 'bolt', 'orb', 'feather', 'petal', 'melon', 'rice', 'evil'];
+      const proj = kinds.filter((kind) => { c.save(); c.translate(200, 200); const r = VFX.drawProj(c, { kind, angle: 0.4, st: {} }, 1); c.restore(); return r; });
+      const notOwn = [...VFX.OWN].filter((type) => { c.save(); const r = VFX.drawFx(c, { type, x: 300, y: 220, x2: 420, y2: 200, r: 60, d: 20, a: 1, color: '#E25A3A', lv: 3, ttl: 0.2, max: 0.5 }, 0.5, 1); c.restore(); return !r; });
+      return { proj: proj.length, n: kinds.length, notOwn };
+    });
+    ok(fx.proj === fx.n, `đạn bay pixel đủ ${fx.n} loại`);
+    ok(!fx.notOwn.length, 'drawFx vẽ pixel mọi loại trong danh sách OWN' + (fx.notOwn.length ? ' — thiếu ' + fx.notOwn : ''));
+    await page.evaluate(() => {
+      const types = ['impact', 'slash', 'xslash', 'claw', 'bash', 'explosion', 'pillar', 'nova', 'snow', 'bolt', 'heal', 'dome', 'rockfall', 'cracks',
+        'splat', 'wave', 'gust', 'petals', 'beam', 'streak', 'cast', 'evolve', 'levelup', 'promote', 'summon', 'proc', 'die', 'scorch', 'meteor'];
+      for (const el of [null, 'kim', 'moc', 'thuy', 'hoa', 'tho'])
+        for (const type of types) VFX.onEffect({ type, x: 300, y: 200, x2: 400, y2: 220, r: 50, el, splash: el ? 40 : 0, kind: 'fireball', etype: 'haba', ult: true });
+      VFX.update(0.05); VFX.draw(document.querySelector('canvas').getContext('2d'));
+      const c = document.querySelector('canvas').getContext('2d');   // đòn đánh của tướng (costume.js fxImage → VFX.pxTex)
+      for (const n of ['slash_03', 'circle_03', 'flame_05', 'spark_06', 'star_09', 'smoke_09', 'twirl_02', 'dirt_01']) if (!VFX.pxTex(c, n, '#E25A3A', 300, 200, 30, 0, 0.5, 1)) throw new Error('pxTex ' + n);
+    });
     // giới hạn số hạt + pool
     const lim = await page.evaluate(() => {
+      VFX.update(9);
       const max = VFX.max();
       for (let i = 0; i < 4000; i++) VFX.burst(400, 200, 1, '#FFB04A');
-      const full = VFX.count();
-      const d0 = VFX.dropped();
-      VFX.decal(400, 200, 'vfx/no-2', null, 20, 0.5, { must: true });
+      const full = VFX.count(), d0 = VFX.dropped();
+      VFX.decal(400, 200, 'no', null, 20, 0.5, { must: true });
       const afterMust = VFX.count();
       VFX.update(2); VFX.update(2);
       const pool = VFX.poolSize(), empty = VFX.count();
       for (let i = 0; i < 100; i++) VFX.burst(400, 200, 1, '#FFB04A');
       return { max, full, d0, afterMust, pool, empty, pool2: VFX.poolSize(), n2: VFX.count() };
     });
-    ok(lim.full <= lim.max && lim.full === lim.max, `số hạt không vượt MAX (${lim.full}/${lim.max}), ${lim.d0} hạt bị bỏ`);
+    ok(lim.full === lim.max, `số hạt không vượt MAX (${lim.full}/${lim.max}), ${lim.d0} hạt bị bỏ`);
     ok(lim.afterMust === lim.max, 'hạt quan trọng (must) thế chỗ khi đầy, không vượt MAX');
     ok(lim.empty === 0 && lim.pool >= lim.max * 0.9, `hạt chết vào pool (${lim.pool})`);
     ok(lim.n2 === 100 && lim.pool2 === lim.pool - 100, 'hạt mới lấy lại từ pool, không tạo object mới');
-    // hạn mức ảnh trạng thái mỗi khung
     const sb = await page.evaluate(() => {
       const c = document.createElement('canvas').getContext('2d');
       VFX.frame();
       const e0 = game.enemies[0], box = enemyBox(e0);
-      let n = 0;
-      for (let i = 0; i < 400; i++) { VFX.status(c, e0, box, 0, i * 0.01); n++; }
-      return { drawn: VFX.statusDrawn() };
+      for (let i = 0; i < 400; i++) VFX.status(c, e0, box, 0, i * 0.01);
+      return VFX.statusDrawn();
     });
-    ok(sb.drawn <= 180, `ảnh trạng thái mỗi khung bị giới hạn (${sb.drawn} ≤ 180)`);
-    // mọi loại hiệu ứng gọi qua onEffect không lỗi
-    await page.evaluate(() => {
-      const types = ['impact', 'slash', 'xslash', 'claw', 'bash', 'explosion', 'pillar', 'nova', 'snow', 'bolt', 'heal', 'dome', 'rockfall', 'cracks',
-        'splat', 'wave', 'gust', 'petals', 'beam', 'streak', 'cast', 'evolve', 'summon', 'die', 'scorch', 'meteor'];
-      for (const el of [null, 'kim', 'moc', 'thuy', 'hoa', 'tho'])
-        for (const type of types) VFX.onEffect({ type, x: 300, y: 200, x2: 400, y2: 220, r: 50, el, splash: el ? 40 : 0, kind: 'fireball', etype: 'haba', ult: true });
-      VFX.update(0.05); VFX.draw(document.querySelector('canvas').getContext('2d'));
-    });
+    ok(sb <= 180, `sprite trạng thái mỗi khung bị giới hạn (${sb} ≤ 180)`);
     // ---------- chụp ở 3 cỡ màn hình
     for (const [w, h] of [[1920, 934], [844, 390], [667, 375]]) {
       await page.setViewportSize({ width: w, height: h });
       await page.waitForTimeout(400);
       const at2 = await stage(page);
-      await page.waitForTimeout(150);
+      await page.waitForTimeout(250);
+      await page.screenshot({ path: path.join(SHOTS, `hat-vfx-trang-thai-${w}x${h}.png`) });
       await boom(page, at2);
-      await page.waitForTimeout(170);
+      await page.waitForTimeout(160);
       const f = path.join(SHOTS, `hat-vfx-${w}x${h}.png`);
       await page.screenshot({ path: f });
       console.log('  ảnh: ' + path.relative(process.cwd(), f));
     }
-    // ---------- FPS sơ bộ: 120 quái, nửa số bị bỏng / độc / choáng, trận chạy
+    // ---------- FPS sơ bộ: 120 quái, ¾ dính trạng thái, nổ liên tục
     await page.setViewportSize({ width: 844, height: 390 });
     const fps = await page.evaluate(async () => {
       game.enemies.length = 0; game.effects.length = 0;
@@ -149,83 +172,33 @@ const boom = (page, at) => page.evaluate((at) => {
     ok(!errors.length, 'không lỗi console' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
     await browser.close();
   }
-  // ---------- 2. thiếu ảnh assets/vfx/ (404): vẽ cách cũ, không lỗi
+  // ---------- 2. thiếu sprite pixel (không có manifest vfx): vẽ cách cũ, không lỗi
   {
-    const { browser, page, errors } = await open(844, 390, {}, (p) => p.route('**/assets/vfx/*.png', (r) => r.fulfill({ status: 404, body: '' })));
+    const { browser, page, errors } = await open(844, 390, {}, noPixelVfx);
     await enter(page, 0);
-    await page.waitForTimeout(600);
-    await stage(page);
+    await page.waitForTimeout(300);
+    const at = await stage(page);
     const r = await page.evaluate(() => {
       const c = document.createElement('canvas').getContext('2d');
       VFX.frame();
       const flags = game.enemies.map((e) => VFX.status(c, e, enemyBox(e), 0, 1.3));
-      // hạt 'tex' của ảnh vfx/ vẫn vẽ quầng gradient dự phòng
+      const fx = VFX.drawFx(c, { type: 'ring', x: 1, y: 1, r: 10, ttl: 1, max: 1 }, 0.5, 1);
+      const pj = VFX.drawProj(c, { kind: 'arrow', st: {} }, 1);
       const k = document.createElement('canvas'); k.width = k.height = 200;
       const kc = k.getContext('2d');
       VFX.update(5);
-      VFX.decal(100, 100, 'vfx/no-2', null, 30, 1, { add: false, fbc: '#FF8A2E' });
+      VFX.burst(100, 100, 30, '#FFB04A', { speed: 1 });
       VFX.draw(kc);
-      const px = kc.getImageData(100, 100, 1, 1).data[3];
+      let px = 0; const d = kc.getImageData(80, 80, 40, 40).data; for (let i = 3; i < d.length; i += 4) px = Math.max(px, d[i]);
       VFX.update(5);
-      return { ready: VFX.ready('vfx/lua-1'), any: flags.some((f) => f.dot || f.stun || f.slow || f.ice), px };
+      return { any: flags.some((f) => f.dot || f.stun || f.slow || f.ice), fx, pj, px };
     });
-    ok(!r.ready && !r.any, 'thiếu ảnh: VFX.status trả cờ false → render.js vẽ sao / sương / chấm độc bằng code như cũ');
-    ok(r.px > 0, 'thiếu ảnh: hạt ảnh vẽ quầng gradient dự phòng');
+    ok(!r.any && !r.fx && !r.pj, 'thiếu sprite pixel: status / drawFx / drawProj trả false → game vẽ sao / khối băng / đạn bằng code như cũ');
+    ok(r.px > 0, 'thiếu sprite pixel: hạt vẫn vẽ ô màu');
+    await boom(page, at);
     await page.waitForTimeout(300);
-    await page.screenshot({ path: path.join(SHOTS, 'hat-vfx-thieu-anh-844x390.png') });
-    ok(!errors.length, 'thiếu ảnh: không lỗi console' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
-    await browser.close();
-  }
-  // ---------- 3. có ảnh trạng thái VẼ TAY (phần E, assets/vfx/tt-*.png) → dùng thay Kenney, khối băng code tắt, không lên thanh máu
-  {
-    const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'tt-vfx-'));
-    execFileSync('python3', ['-c', `
-import sys
-from PIL import Image, ImageDraw
-d = sys.argv[1]
-def strip(name, col, box):
-    s = Image.new('RGBA', (6 * 192, 192)); g = ImageDraw.Draw(s)
-    for i in range(6):
-        x0 = i * 192; g.ellipse((x0 + box[0], box[1], x0 + box[2], box[3]), fill=col, outline=(42, 22, 8, 255), width=4)
-    s.save(d + '/' + name + '.png')
-strip('tt-choang', (255, 210, 58, 255), (20, 60, 172, 132))
-strip('tt-cham', (168, 220, 245, 255), (8, 60, 184, 132))
-strip('tt-bong', (255, 122, 46, 255), (40, 40, 152, 182))
-strip('tt-doc', (127, 208, 74, 255), (30, 20, 162, 172))
-b = Image.new('RGBA', (192, 192)); ImageDraw.Draw(b).rectangle((29, 15, 163, 191), fill=(207, 239, 255, 255), outline=(30, 74, 106, 255), width=6); b.save(d + '/tt-bang.png')
-`, TMP]);
-    global.ASSET_ALL_TEST = true;
-    const { browser, page, errors } = await open(1920, 934, {}, (p) => p.route('**/assets/vfx/tt-*.png', (r) => r.fulfill({ path: path.join(TMP, r.request().url().match(/(tt-[\w-]+\.png)/)[1]), contentType: 'image/png' })));
-    global.ASSET_ALL_TEST = false;
-    await enter(page, 0);
-    await page.waitForTimeout(500);
-    await stage(page);
-    await page.waitForFunction(() => ['tt-choang', 'tt-cham', 'tt-bong', 'tt-doc', 'tt-bang'].every((n) => asset('vfx/' + n + '.png', true)), null, { timeout: 8000 });
-    const r = await page.evaluate(() => {
-      // mép trên của NỘI DUNG trong ảnh giả (phần còn lại của khung là nền trong suốt), theo bố cục ghi trong prompt phần E
-      const TOP = { 'tt-choang': 0.31, 'tt-cham': 0.31, 'tt-bong': 0.21, 'tt-doc': 0.1, 'tt-bang': 0.08 };
-      const arts = new Map(Object.keys(TOP).map((n) => [asset('vfx/' + n + '.png', true), TOP[n]]));
-      const c = document.createElement('canvas').getContext('2d');
-      const bad = [], used = new Set();
-      c.drawImage = function (im, ...a) {
-        if (!arts.has(im)) return;
-        used.add(im);
-        const [sx, sy, sw, sh, x, y, w, h] = a;
-        const m = this.getTransform(), e = this.__e, box = enemyBox(e), by = e.y - box.ay - 7;
-        const yt = y + arts.get(im) * h;
-        const y0 = Math.min(...[[x, yt], [x + w, yt], [x, y + h], [x + w, y + h]].map(([u, v]) => m.b * u + m.d * v + m.f));
-        if (y0 < by + 4) bad.push([e.type, Math.round(y0), Math.round(by)]);   // dưới đáy thanh máu (cao 5 px)
-      };
-      const flags = [];
-      for (const e of game.enemies) { c.__e = e; VFX.frame(); flags.push(VFX.status(c, e, enemyBox(e), 0, 1.1)); }
-      return { flags, used: used.size, bad };
-    });
-    ok(r.flags[0].dot && r.flags[1].stun && r.flags[2].iceArt && r.flags[3].dot && r.flags[4].slow, 'có ảnh tt-*.png: bỏng / choáng / khối băng / độc / chậm dùng ảnh vẽ tay');
-    ok(r.used === 5, 'vẽ đủ 5 ảnh trạng thái vẽ tay');
-    ok(!r.bad.length, 'ảnh vẽ tay không lên tới thanh máu' + (r.bad.length ? ' — ' + JSON.stringify(r.bad) : ''));
-    await page.waitForTimeout(200);
-    await page.screenshot({ path: path.join(SHOTS, 'hat-vfx-ve-tay-1920x934.png') });
-    ok(!errors.length, 'ảnh vẽ tay: không lỗi console' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
+    await page.screenshot({ path: path.join(SHOTS, 'hat-vfx-thieu-pixel-844x390.png') });
+    ok(!errors.length, 'thiếu sprite pixel: không lỗi console' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
     await browser.close();
   }
   console.log('hat-vfx: OK');

@@ -1,0 +1,25 @@
+{
+ "code": "hoi",
+ "group": "vfx",
+ "name": "Hồi máu",
+ "w": 9,
+ "h": 9,
+ "ax": 4,
+ "ay": 8,
+ "bbox": [
+  0,
+  1,
+  9,
+  8
+ ],
+ "n": 2,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 2,
+   "fps": 3,
+   "loop": true
+  }
+ },
+ "sheet": "hoi.png"
+}

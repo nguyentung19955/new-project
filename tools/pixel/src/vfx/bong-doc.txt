@@ -1,6 +1,6 @@
 # Bong bóng độc — xanh rêu chen tím, viền lá tối. Trạng thái: trúng độc (bong bóng nổi lên rồi vỡ).
 name: Bong bóng độc
-size: 7x7
+size: 8x8
 anchor: 3,3
 colors:
   k = la-toi
@@ -27,9 +27,9 @@ part b
 end
 anim main fps=6 loop
 frame main
-  use a
+  use a 0 0
   outline k
 end
 frame main
-  use b
+  use b 0 0
 end

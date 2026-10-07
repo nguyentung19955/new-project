@@ -2,12 +2,12 @@
 
 // ============================================================
 //  HIỆU ỨNG PIXEL (claude/vfx-kenney; hệ hạt từ v35): hạt, đạn bay, trạng thái trên quái, hiệu ứng chiêu / sự kiện
-//  vẽ bằng PIXEL ART: sprite lưới ký tự tools/pixel/src/vfx/*.txt → node tools/build-vfx-pixel.js → js/vfx-pixel-data.js
-//  (game dựng canvas lúc chạy), cộng các hình vẽ bằng code theo ô điểm ảnh (vòng elip, đường, chấm).
+//  vẽ bằng PIXEL ART: sprite lưới ký tự tools/pixel/src/vfx/*.txt → node tools/build-pixel.js → assets/pixel/vfx/*.png
+//  (docs/pixel/QUY-CHUAN.md), cộng các hình vẽ bằng code theo ô điểm ảnh (vòng elip, đường, chấm).
 //  - Một điểm ảnh sprite = PU đơn vị bản đồ, phóng theo SỐ NGUYÊN điểm ảnh màn hình, vị trí bám lưới, không khử răng cưa.
 //  - Màu: chỉ màu bảng chung (tools/pixel/palette.txt, docs/pixel/QUY-CHUAN.md); màu truyền vào được quy về màu gần nhất.
 //  - Pool hạt + giới hạn MAX (theo mức đồ hoạ) + hạn mức ảnh trạng thái mỗi khung → không giật trên điện thoại.
-//  - Thiếu dữ liệu sprite (window.VFX_PX) → hạt vẽ ô vuông màu; trạng thái / đạn / hiệu ứng trả false → main.js /
+//  - Chưa có / chưa tải sprite → hạt vẽ ô vuông màu; trạng thái / đạn / hiệu ứng trả false → main.js /
 //    render.js vẽ cách cũ bằng code (dự phòng).
 // ============================================================
 const VFX = (() => {
@@ -16,51 +16,52 @@ const VFX = (() => {
   const PU = 2;           // một điểm ảnh sprite = 2 đơn vị bản đồ
   const R = (a, b) => a + Math.random() * (b - a);
 
-  // ---------- dữ liệu sprite + bảng màu
-  const D = typeof window !== 'undefined' && window.VFX_PX && window.VFX_PX.spr ? window.VFX_PX : null;
-  const CODE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-  const PAL = D ? Object.values(D.all || {}).map((h) => [h, parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)]) : [];
-  const C = D && D.all ? D.all : {};
+  // ---------- dữ liệu sprite (nhóm vfx của bộ pixel chung: tools/pixel/src/vfx/*.txt → node tools/build-pixel.js →
+  // assets/pixel/vfx/<mã>.png + manifest window.PIXEL_MANIFEST['vfx/<mã>'] trong js/pixel/vfx.js) + bảng màu chung
+  // Bản sao tools/pixel/palette.txt (tests/hieu-ung/hat-vfx.test.js kiểm tra khớp): quy màu bất kỳ về màu gần nhất.
+  const C = { 'vien': '#140C06', 'toi': '#2E241B', 'khoi': '#24201C', 'sat-toi': '#33363C', 'sat': '#555A62', 'sat-sang': '#8A9098', 'bac': '#C3C6C4', 'trang-xam': '#B8AE98', 'trang': '#E4DCC8', 'sang': '#F5EED8', 'da-toi': '#9A5E3E', 'da': '#C98A62', 'da-sang': '#E2B58A', 'dat-toi': '#3E2716', 'dat': '#6B4426', 'dat-sang': '#946538', 'cat': '#C2A26A', 'dong-toi': '#5A3814', 'dong': '#8E5A22', 'dong-sang': '#BF863A', 'vang-nghe': '#D6A532', 'vang-sang': '#ECD08A', 'son-toi': '#5A1610', 'son': '#92301C', 'son-sang': '#BC4A2E', 'hong': '#C7786A', 'lua': '#D2661E', 'lua-sang': '#E8A048', 'la-toi': '#1C3A1E', 'la': '#35632A', 'la-ma': '#6A9A38', 'la-sang': '#A8C46A', 'reu-toi': '#3A4A22', 'reu': '#5E7434', 'reu-sang': '#869A4C', 'cham-toi': '#161E3A', 'cham': '#26406A', 'cham-sang': '#44699A', 'nuoc': '#3478A6', 'nuoc-sang': '#78B4CC', 'troi': '#B8D8E0', 'tim-toi': '#36204A', 'tim': '#63407E', 'tim-sang': '#9478B0', 'ngoc': '#2A8A7E', 'ngoc-sang': '#6CC0B0' };
+  const PAL = Object.values(C).map((h) => [h, parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)]);
+  const MF = () => (typeof window !== 'undefined' && window.PIXEL_MANIFEST) || {};
+  const D = Object.keys(MF()).some((k) => k.startsWith('vfx/'));   // có sprite hiệu ứng pixel không
   const snapCache = new Map();
   // màu bất kỳ (#rgb / #rrggbb) → màu gần nhất trong bảng màu chung
   function pal(color) {
-    if (!color) return C.trang || '#F4EFE2';
+    if (!color) return C.trang;
     let c = snapCache.get(color);
     if (c) return c;
     let h = String(color);
     if (/^#[0-9a-f]{3}$/i.test(h)) h = '#' + h[1] + h[1] + h[2] + h[2] + h[3] + h[3];
-    if (!/^#[0-9a-f]{6}/i.test(h) || !PAL.length) { snapCache.set(color, h.slice(0, 7)); return h.slice(0, 7); }
+    if (!/^#[0-9a-f]{6}/i.test(h)) { snapCache.set(color, C.trang); return C.trang; }
     const r = parseInt(h.slice(1, 3), 16), g = parseInt(h.slice(3, 5), 16), b = parseInt(h.slice(5, 7), 16);
     let best = PAL[0], bd = 1e9;
     for (const p of PAL) { const d = (p[1] - r) ** 2 * 3 + (p[2] - g) ** 2 * 4 + (p[3] - b) ** 2 * 2; if (d < bd) { bd = d; best = p; } }
     snapCache.set(color, best[0]);
     return best[0];
   }
-  // sprite → { w, h, ax, ay, anims, fr: [canvas] } (dựng một lần)
+  // sprite → { w, h, ax, ay, anims, fr: [canvas] }: cắt dải khung PNG một lần khi ảnh đã tải; null = chưa có / chưa tải xong
   const sprCache = new Map();
+  const sheetOf = (name) => (typeof asset === 'function' ? asset('pixel/vfx/' + name + '.png', true) : null);
   function spr(name) {
-    if (!D) return null;
-    let s = sprCache.get(name);
-    if (s !== undefined) return s;
-    const src = D.spr[name];
-    if (!src || typeof document === 'undefined') { sprCache.set(name, null); return null; }
-    s = { w: src.w, h: src.h, ax: src.ax, ay: src.ay, anims: src.anims, fr: [] };
-    for (const f of src.f) {
+    const s0 = sprCache.get(name);
+    if (s0 !== undefined) return s0;
+    const e = MF()['vfx/' + name];
+    if (!e || typeof document === 'undefined') { sprCache.set(name, null); return null; }
+    const sheet = sheetOf(name);
+    if (!sheet) return null;                       // đang tải: thử lại khung sau
+    const s = { w: e.w, h: e.h, ax: e.ax, ay: e.ay, anims: e.anims, fr: [] };
+    for (let i = 0; i < e.n; i++) {
       const c = document.createElement('canvas');
-      c.width = src.w; c.height = src.h;
-      const x = c.getContext('2d'), im = x.createImageData(src.w, src.h);
-      for (let i = 0; i < f.length; i++) {
-        if (f[i] === '.') continue;
-        const hex = D.pal[CODE.indexOf(f[i])];
-        im.data[i * 4] = parseInt(hex.slice(1, 3), 16); im.data[i * 4 + 1] = parseInt(hex.slice(3, 5), 16);
-        im.data[i * 4 + 2] = parseInt(hex.slice(5, 7), 16); im.data[i * 4 + 3] = 255;
-      }
-      x.putImageData(im, 0, 0);
+      c.width = e.w; c.height = e.h;
+      const x = c.getContext('2d');
+      x.imageSmoothingEnabled = false;
+      x.drawImage(sheet, i * e.w, 0, e.w, e.h, 0, 0, e.w, e.h);
       s.fr.push(c);
     }
     sprCache.set(name, s);
     return s;
   }
+  // tải sẵn mọi dải hiệu ứng (vài trăm byte mỗi dải) để lần đầu tung chiêu đã có hình
+  if (D) for (const k of Object.keys(MF())) if (k.startsWith('vfx/')) sheetOf(k.slice(4));
   const ready = (name) => !!spr(name);
   // chỉ số khung: p (0..1) cho động tác một lần, hoặc thời gian t cho vòng lặp
   function frameOf(s, p, t, seed = 0) {
@@ -157,7 +158,7 @@ const VFX = (() => {
     smoke_03: 'khoi', smoke_07: 'khoi', smoke_09: 'khoi', spark_01: 'set', spark_06: 'set', star_04: 'trung', star_06: 'trung',
     star_08: 'tuyet', star_09: 'trung', trace_05: 'trung', twirl_01: 'gio-xoay', twirl_02: 'gio-xoay',
   };
-  const pxName = (name) => (D && D.spr[name] ? name : TEXMAP[name] || null);
+  const pxName = (name) => (MF()['vfx/' + name] ? name : TEXMAP[name] || null);
 
   // ---------- hạt
   // o: { x, y, vx, vy, life, size, grow, color, kind ('glow'|'soft'|'spark'|'leaf'|'petal'|'tex'), tex, grav, drag, sy, a, must, sc }
@@ -384,7 +385,9 @@ const VFX = (() => {
     const stunOn = e.stunT > 0 && !['ice', 'root', 'music', 'net'].includes(e.stunKind);
     if (stunOn && ready('chim-lac') && ready('gio-xoay') && sb(4)) {
       r.stun = true;
-      const y0 = Math.max(fy - H * 0.86, bar + 8), rx = Math.min(24, Math.max(12, W * 0.32));
+      // đỉnh sprite (neo cao ay điểm ảnh, nhún ±3) phải dưới đáy thanh máu ở mọi cỡ màn hình (u = cỡ điểm ảnh thật)
+      const u = G.n / G.k, ayMax = Math.max(spr('chim-lac').ay, spr('gio-xoay').ay);
+      const y0 = Math.max(fy - H * 0.86, bar + 4 + ayMax * u + u), rx = Math.min(24, Math.max(12, W * 0.32));
       const items = [];
       for (let i = 0; i < 4; i++) {
         const a = t * 3.2 + (i * Math.PI) / 2;

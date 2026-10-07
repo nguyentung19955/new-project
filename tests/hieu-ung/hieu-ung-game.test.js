@@ -23,9 +23,9 @@ const SINGLES = ['trieu-hoi_ngua-sat', 'trieu-hoi_giong-bay', 'hieu-ung_den-troi
 const PROJ = ['fireball', 'frostbolt', 'arrow', 'bolt', 'orb', 'feather', 'petal', 'melon', 'rice', 'evil'];
 
 async function run(withArt) {
-  // claude/vfx-kenney: hiệu ứng / đạn pixel (js/vfx-pixel-data.js) được ưu tiên trước ảnh vẽ tay — test này kiểm tra đường
-  // dự phòng ảnh vẽ tay / code nên tắt dữ liệu pixel
-  const { browser, page, errors } = await open(844, 390, {}, (pg) => pg.addInitScript(() => Object.defineProperty(window, 'VFX_PX', { get: () => undefined, set: () => {} })));
+  // claude/vfx-kenney: hiệu ứng / đạn pixel (assets/pixel/vfx/, manifest js/pixel/vfx.js) được ưu tiên trước ảnh vẽ tay —
+  // test này kiểm tra đường dự phòng ảnh vẽ tay / code nên bỏ manifest hiệu ứng pixel
+  const { browser, page, errors } = await open(844, 390, {}, (pg) => pg.route('**/js/pixel/vfx.js*', (r) => r.fulfill({ contentType: 'application/javascript', body: '' })));
   await page.route('**/assets/**', (r) => {
     const u = r.request().url();
     let m = u.match(/assets\/vfx\/([\w-]+)\.png/);

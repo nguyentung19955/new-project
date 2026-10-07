@@ -1,7 +1,7 @@
 # Lá tre (hành Mộc) — lá thuôn xanh rêu / lá, bay lả tả.
 name: Lá tre
-size: 10x6
-anchor: 5,3
+size: 10x8
+anchor: 5,4
 colors:
   k = la-toi
   g = la
@@ -16,12 +16,11 @@ part a
 end
 anim main fps=4 loop
 frame main
-  use a
+  use a 0 1
   outline k
 end
 frame main
-  use a
-  flipy
-  shift 0 -1
+  use a 0 1
+  flipx
   outline k
 end
