@@ -1379,3 +1379,8 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - APK: bản phát hành `apk-latest` đăng thêm `than-thoai-viet.apk`, vẫn giữ `nui-cao-nuoc-dang.apk` (cùng file) để link cũ không chết.
 - Ảnh nền menu `assets/ui/nen-menu.jpg` (thành Phong Châu + sóng nước) dùng tạm; prompt ảnh nền mới nhiều truyền thuyết + logo chữ ở **phần 0** của `docs/PROMPT_GEMINI_FULL.md` (`node tools/build-prompts.js`).
 - Test: `node tests/ten-game/ten-game.test.js` (ảnh chụp trong `tests/ten-game/shots/`).
+## Phiên bản 146 — Sửa khung người chơi trên menu
+- Khung `khung-nguoi-choi.png` giữ đúng tỉ lệ ảnh (700×241, `aspect-ratio`), không còn kéo méo. Ảnh đại diện Google (nếu có) cắt tròn, nằm đúng lòng huy hiệu mặt trời; không có ảnh thì để nguyên huy hiệu của khung (bỏ SVG trống đồng đè lệch).
+- Tên + dòng phụ đặt theo % trong ô tối của khung (đo bằng PIL), chữ tự co (`fitText`) và cắt bằng dấu … khi quá dài. Dòng phụ gọn: "Cấp N · ★ x/y" (bỏ "Đã đăng nhập" / "Khách").
+- Không còn lấy phần trước @ của email làm tên (cả menu lẫn bảng xếp hạng). Chưa đặt biệt danh thì hiện "Khách ✎ đặt tên"; chạm khung để mở ô đổi tên. Ô đổi tên để trống kèm gợi ý "Đặt biệt danh" thay vì điền sẵn tên tạm.
+- Test: `node tests/khung-nguoi-choi/khung.test.js` (844×390, 667×375, 932×430, xoay dọc 390×844; khách / email / tên dài / có ảnh; ảnh trong `tests/khung-nguoi-choi/shots/`).
