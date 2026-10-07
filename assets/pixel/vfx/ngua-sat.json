@@ -1,0 +1,25 @@
+{
+ "code": "ngua-sat",
+ "group": "vfx",
+ "name": "Ngựa sắt",
+ "w": 24,
+ "h": 18,
+ "ax": 12,
+ "ay": 17,
+ "bbox": [
+  0,
+  4,
+  23,
+  14
+ ],
+ "n": 2,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 2,
+   "fps": 8,
+   "loop": true
+  }
+ },
+ "sheet": "ngua-sat.png"
+}

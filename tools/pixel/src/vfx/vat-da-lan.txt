@@ -1,0 +1,48 @@
+# Tảng đá lăn Phong Châu (Lạc Hầu) — đá xám nâu có vết nứt, lăn 4 khung (xoay 90°).
+name: Đá lăn
+size: 16x16
+anchor: 8,8
+colors:
+  k = toi
+  s = sat
+  S = sat-sang
+  d = dat
+  D = dat-sang
+part a
+................
+.....ssssss.....
+...ssSSSSsssd...
+..sSSSSsssssdd..
+..sSSSsskssssd..
+.sSSSsssskssddd.
+.sSSssssskksddd.
+.sSsssssssksddd.
+.ssssskkssssddd.
+.ssssssskssdddd.
+.sssssssssddddd.
+..ssssssdddddd..
+..dsssdddddddd..
+...ddddddddd....
+.....dddddd.....
+................
+end
+anim main fps=8 loop
+frame main
+  use a
+  outline k
+end
+frame main
+  use a
+  rot 90
+  outline k
+end
+frame main
+  use a
+  rot 180
+  outline k
+end
+frame main
+  use a
+  rot 270
+  outline k
+end

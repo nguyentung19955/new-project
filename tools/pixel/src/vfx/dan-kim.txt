@@ -1,0 +1,33 @@
+# Đạn hệ Kim — mảnh lưỡi kim loại bạc viền đồng, đuôi tia vàng nghệ (bay sang PHẢI).
+name: Đạn hệ Kim
+size: 14x8
+anchor: 9,3
+colors:
+  k = sat-toi
+  b = bac
+  s = sat-sang
+  x = sang
+  d = dong-sang
+  y = vang-nghe
+part a
+..............
+.......sbb....
+.y.y..sbbxbb..
+y.yyddsbxxxbbb
+.y.y..sbbxbb..
+.......sbb....
+..............
+..............
+end
+anim main fps=10 loop
+frame main
+  use a
+  outline k
+end
+frame main
+  use a
+  set 0 3 _
+  set 1 2 _
+  set 1 4 _
+  outline k
+end

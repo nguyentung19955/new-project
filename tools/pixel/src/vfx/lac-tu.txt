@@ -1,0 +1,33 @@
+# Lạc Tử (trăm con Âu Cơ) — đứa trẻ áo son, búi tóc, đứng chặn đường; nhún 2 khung.
+name: Lạc Tử
+size: 8x12
+anchor: 4,11
+colors:
+  k = vien
+  t = toi
+  d = da
+  r = son
+  R = son-sang
+part a
+........
+...tt...
+..tddt..
+..dddd..
+...dd...
+..rRrr..
+.drRrrd.
+..rrrr..
+..r..r..
+..t..t..
+........
+........
+end
+anim main fps=4 loop
+frame main
+  use a 0 1
+  outline k
+end
+frame main
+  use a 0 0
+  outline k
+end

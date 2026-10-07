@@ -1,0 +1,25 @@
+{
+ "code": "vat-binh-gom",
+ "group": "vfx",
+ "name": "Bình gốm",
+ "w": 12,
+ "h": 12,
+ "ax": 6,
+ "ay": 6,
+ "bbox": [
+  1,
+  0,
+  10,
+  11
+ ],
+ "n": 4,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 4,
+   "fps": 10,
+   "loop": true
+  }
+ },
+ "sheet": "vat-binh-gom.png"
+}

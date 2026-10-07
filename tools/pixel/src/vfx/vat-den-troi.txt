@@ -1,0 +1,39 @@
+# Đèn trời ném — đèn giấy son, khung tre, lửa vàng nghệ bên trong (nhấp nháy).
+name: Đèn trời
+size: 12x14
+anchor: 6,7
+colors:
+  k = son-toi
+  r = son
+  R = son-sang
+  y = vang-nghe
+  c = cat
+part a
+............
+...rrrrrr...
+..rRRrrrrr..
+..rRrrrrrr..
+..rRryyrrr..
+..rRyyyyrr..
+..rryyyyrr..
+..rrryyrrr..
+...rrrrrr...
+....cccc....
+....c..c....
+.....yy.....
+............
+............
+end
+anim main fps=6 loop
+frame main
+  use a
+  outline k
+end
+frame main
+  use a
+  set 5 11 _
+  set 6 11 _
+  set 5 4 y
+  set 6 4 R
+  outline k
+end

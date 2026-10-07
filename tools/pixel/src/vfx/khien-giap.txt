@@ -1,0 +1,26 @@
+# Dấu tinh anh "Vỏ Cứng" — khiên đồng nhỏ có núm, lơ lửng cạnh quái.
+name: Khiên giáp
+size: 9x10
+anchor: 4,5
+colors:
+  k = dong-toi
+  d = dong
+  D = dong-sang
+  y = vang-nghe
+part a
+.........
+..ddddd..
+.dDDDDdd.
+.dDDyDdd.
+.dDyyydd.
+.dDDyDdd.
+..dDDdd..
+...ddd...
+....d....
+.........
+end
+anim main fps=1 loop
+frame main
+  use a
+  outline k
+end

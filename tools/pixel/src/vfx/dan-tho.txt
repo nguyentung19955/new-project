@@ -1,0 +1,32 @@
+# Đạn hệ Thổ — cục đất nâu nứt, vệt bụi cát phía sau (bay sang PHẢI).
+name: Đạn hệ Thổ
+size: 14x9
+anchor: 9,4
+colors:
+  k = dat-toi
+  d = dat
+  D = dat-sang
+  c = cat
+part a
+..............
+........ddd...
+..c....dDDcd..
+.c.cc.dDDdDdd.
+c.cccddDkDDdd.
+.c.cc.dDDkDdd.
+..c....dddDd..
+........ddd...
+..............
+end
+anim main fps=6 loop
+frame main
+  use a
+  outline k
+end
+frame main
+  use a
+  set 0 4 _
+  set 1 3 _
+  set 1 5 _
+  outline k
+end

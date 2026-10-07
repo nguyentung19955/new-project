@@ -1,0 +1,25 @@
+{
+ "code": "vat-da-lan",
+ "group": "vfx",
+ "name": "Đá lăn",
+ "w": 16,
+ "h": 16,
+ "ax": 8,
+ "ay": 8,
+ "bbox": [
+  0,
+  0,
+  16,
+  16
+ ],
+ "n": 4,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 4,
+   "fps": 8,
+   "loop": true
+  }
+ },
+ "sheet": "vat-da-lan.png"
+}

@@ -625,8 +625,10 @@ const VFX = (() => {
   const tex = () => null;
   const sprite = () => null;
 
+  // công cụ vẽ pixel cho nơi khác (main.js / render.js): begin(ctx, scale) … end(ctx); toạ độ bản đồ, bám lưới điểm ảnh
+  const px = { begin, end, dot, ring, seg, zig, blit, spr, frameOf, step, pal, C, G };
   return { emit, burst, flare, rise, line, update, draw, trail, projGlow, drawProj, onEffect, drawFx, sprite, tex, pxTex, decal, shards, status,
-    frame, ready, isFire, pal, spr, PU, OWN,
+    frame, ready, isFire, pal, spr, PU, OWN, px,
     count: () => parts.length, max: () => MAX, poolSize: () => pool.length, dropped: () => dropped, statusDrawn: () => SB.n,
     setMax: (n) => { MAX = n; SB.max = Math.max(100, Math.round(180 * n / 700)); if (parts.length > n) pool.push(...parts.splice(0, parts.length - n)); } };
 })();
