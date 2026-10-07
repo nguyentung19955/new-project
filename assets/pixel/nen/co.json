@@ -1,0 +1,25 @@
+{
+ "code": "co",
+ "group": "nen",
+ "name": "Cỏ",
+ "w": 16,
+ "h": 16,
+ "ax": 8,
+ "ay": 15,
+ "bbox": [
+  0,
+  0,
+  16,
+  16
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": true
+  }
+ },
+ "sheet": "co.png"
+}

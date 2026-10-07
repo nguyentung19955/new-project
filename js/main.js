@@ -1126,7 +1126,7 @@ function drawEffects(t) {
         // chế độ Gọn: bỏ số sát thương / vàng / chữ phụ, chỉ giữ đòn chí mạng
         if (!showDetail() && !/^\d[\d.,]*!$/.test(String(f.str))) break;
         const pop = p < 0.15 ? 0.7 + p * 2 : 1;
-        ctx.font = `800 ${Math.round((f.size || 15) * pop)}px "Alegreya Sans", sans-serif`;
+        ctx.font = typeof pixelOn === 'function' && pixelOn() ? `${Math.round((f.size || 15) * pop * 1.3)}px "VT323", "Alegreya Sans", sans-serif` : `800 ${Math.round((f.size || 15) * pop)}px "Alegreya Sans", sans-serif`;   // pixel: số sát thương / vàng bằng VT323 (có dấu)
         ctx.textAlign = 'center';
         ctx.lineWidth = 3.5;
         ctx.strokeStyle = '#1A0C04';
