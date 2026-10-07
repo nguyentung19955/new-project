@@ -31,25 +31,15 @@ async function open(save, w = 844, h = 390) {
   ok(s0.v === 1 && s0.owned.length === s0.starter.length && s0.starter.every((t) => s0.owned.includes(t)), `người mới: mở sẵn ${s0.starter.length} tướng Thường khởi đầu`);
   ok(s0.all === 60, 'tổng 60 tướng (20 Thường · 20 Tím · 20 Vàng)');
   ok(await page.evaluate(() => OWN_COST.common < OWN_COST.epic && OWN_COST.epic < OWN_COST.legendary), `giá theo bậc: Thường < Tím < Vàng`);
-  // đội gợi ý / đội trong trận chỉ gồm tướng đã mở → chợ trận chỉ ra tướng đã mở
-  const dk = await page.evaluate(() => { const out = []; for (let i = 0; i < LEVELS.length; i++) out.push(suggestDeck(i, ui.save.owned)); return out; });
-  ok(dk.every((d) => d.length === 6 && d.every((t) => s0.starter.includes(t))), 'đội gợi ý ở mọi bản đồ chỉ gồm tướng đã mở');
-  ok(await page.evaluate(() => suggestDeck(0, null).length === 6 && openCommons(null).length === 20), 'không truyền owned (bot mô phỏng): mở hết như cũ');
+  // claude/bo-chon-doi: không còn đội — chợ trận rút thẳng từ tướng Thường đã mở
+  ok(await page.evaluate(() => typeof suggestDeck === 'undefined' && openCommons(ui.save.owned).length === STARTER_HEROES.length), 'không còn đội gợi ý; tướng Thường đã mở = tướng khởi đầu');
+  ok(await page.evaluate(() => openCommons(null).length === 20), 'không truyền owned (bot mô phỏng): mở hết như cũ');
   await page.evaluate(() => { ui.playLevel(5); });
   await page.waitForSelector('#prep:not([hidden])');
-  const mk = await page.evaluate(() => { const seen = new Set(); for (let k = 0; k < 300; k++) { game.gold = 1e6; game.rerollMarket(); game.market.types.forEach((t) => seen.add(t)); } return { seen: [...seen], deck: game.deck }; });
+  const mk = await page.evaluate(() => { const seen = new Set(); for (let k = 0; k < 300; k++) { game.gold = 1e6; game.rerollMarket(); game.market.types.forEach((t) => seen.add(t)); } return { seen: [...seen] }; });
   ok(mk.seen.every((t) => s0.starter.includes(t)), `chợ trận (300 lần đổi) chỉ ra tướng đã mở: ${mk.seen.length} loại`);
-  // bảng chọn đội: tướng khoá mờ, có giá, chạm không chọn được
-  await page.click('[data-act=deck-open]');
-  for (const [w, h] of SIZES) { await page.setViewportSize({ width: w, height: h }); await page.evaluate(() => { document.querySelector('#toasts').innerHTML = ''; }); await page.waitForTimeout(250); await page.screenshot({ path: path.join(SHOT, `chon-doi-khoa-${w}x${h}.png`) }); }
-  await page.setViewportSize({ width: 844, height: 390 });
-  const lockN = await page.locator('#prep .dk-pick.lock').count();
-  ok(lockN === 12, `chọn đội: ${lockN} tướng Thường khoá (mờ + giá)`);
-  const lockedId = await page.getAttribute('#prep .dk-pick.lock', 'data-id');
-  await page.click('#prep .dk-pick.lock');
-  ok(await page.evaluate((t) => !(ui.deckSel || []).includes(t), lockedId), 'chạm tướng khoá: không vào đội, nhắc mở ở Anh Hùng');
-  ok(await page.evaluate((t) => typeof game.restDeck === 'function' && (game.rest = { wave: 10 }, typeof game.restDeck([...game.deck.slice(0, 5), t]) === 'string'), lockedId), 'Nghỉ chân: không đổi được sang tướng chưa mở');
-  await page.evaluate(() => { game.rest = null; ui.deckOpen = false; ui.showMenu(); });
+  ok(await page.locator('#prep [data-act^=deck-], #prep .dk-pick').count() === 0, 'màn Chuẩn bị không còn bảng chọn đội');
+  await page.evaluate(() => { ui.showMenu(); });
   // màn Anh Hùng: Đã mở X/Y, tướng khoá có giá + nút mở
   await page.evaluate(() => { ui.save.kho = 5000; ui.showRoster('dotnuong'); });
   let ro = await page.evaluate(() => document.querySelector('#roster').innerText);
@@ -61,7 +51,7 @@ async function open(save, w = 844, h = 390) {
   await page.click('#roster [data-act=ro-buy]');
   const b1 = await page.evaluate(() => ({ kho: ui.save.kho, own: ui.save.owned.includes('dotnuong') }));
   ok(b1.own && b1.kho === 5000 - 300, 'mở tướng Thường: trừ 300 Ngân khố, vào danh sách đã mở');
-  ok(await page.evaluate(() => suggestDeck(0, ui.save.owned).length === 6 && openCommons(ui.save.owned).includes('dotnuong')), 'tướng vừa mở chọn được vào đội');
+  ok(await page.evaluate(() => openCommons(ui.save.owned).includes('dotnuong')), 'tướng vừa mở ra trong chợ trận');
   await page.evaluate(() => ui.showRoster('caong'));
   await page.click('#roster [data-act=ro-buy]');
   const b2 = await page.evaluate(() => ({ kho: ui.save.kho, own: ui.save.owned.includes('caong') }));
@@ -74,7 +64,7 @@ async function open(save, w = 844, h = 390) {
 
   // ================= thưởng cuối trận: theo đợt + kỷ lục mới + nhiệm vụ ngày
   await page.evaluate(() => { ui.save.kho = 0; ui.save.bestEndless = { 2: 5 }; delete ui.save.dailyWin; delete ui.save.quest; ui.playLevel(2); document.querySelector('[data-act=prep-go]').click(); });
-  await page.evaluate(() => { game.running = true; for (let w = 1; w <= 20; w++) { game.wave = w; game.waveActive = true; game.spawnQueue = []; game.enemies = []; game.waveComplete(); if (game.rest) game.skipRest(); } game.wave = 21; game.bossesKilled = 2; });
+  await page.evaluate(() => { game.running = true; for (let w = 1; w <= 20; w++) { game.wave = w; game.waveActive = true; game.spawnQueue = []; game.enemies = []; game.waveComplete(); } game.wave = 21; game.bossesKilled = 2; });
   await page.waitForTimeout(300);
   const mid = await page.evaluate(() => ({ kho: ui.save.kho, run: game.khoRun }));
   ok(mid.run === 300, `mốc đợt 10 và 20: +150 mỗi mốc (${mid.run})`);
@@ -113,7 +103,7 @@ async function open(save, w = 844, h = 390) {
   ok(o.v === 1 && BASIC_OK(o.owned) && o.owned.includes('caong') && o.owned.includes('giong') && o.kho === 777, `bản lưu cũ: ${o.owned.length} tướng đã mở (20 Thường + 2 đã mua), Ngân khố giữ nguyên`);
   function BASIC_OK(list) { return ['lactuong', 'chodo', 'haisen', 'ongthoi', 'tre', 'chantrau'].every((t) => list.includes(t)) && list.length === 22; }
   await page.evaluate(() => { ui.playLevel(0); });
-  ok(await page.evaluate(() => game.deck.join() === 'chodo,haisen,nguphu,lactuong,lucsi,xathu'), 'bản lưu cũ: đội đã chọn giữ nguyên');
+  ok(await page.evaluate(() => !('deck' in game) && game.marketPool().length === 20), 'bản lưu cũ còn đội đã chọn: bỏ qua, chợ ra đủ 20 tướng Thường');
   // đám mây: bản cũ trên mây (chưa có heroOpenV) nạp về → cũng được giữ đủ
   await page.evaluate(() => ui.applyCloudSave({ kho: 50, owned: ['thachsanh'], savedAt: 5 }, 'u1'));
   const c = await page.evaluate(() => ({ owned: ui.save.owned, v: ui.save.heroOpenV, stored: JSON.parse(localStorage.getItem('nuicao.v1')).heroOpenV }));
