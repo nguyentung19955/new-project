@@ -1943,3 +1943,17 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 ## Phiên bản 188 — Gộp hợp thể ★★★ + kỹ năng tối đa (tester đạt)
 
 - Ra Tím cần 2 tướng Thường ★★★ + kỹ năng tối đa; ★★★ lên cấp nửa giá; lý do khoá hiện dưới tiêu đề bảng, huy hiệu ⚡−N, ổ khoá SVG.
+
+## Phiên bản 186 — Sửa 3 lỗi tester ở chợ tướng (khoá chợ, nhãn thẻ, dòng giải thích)
+- **🔒 Khoá chợ rõ hơn:** bỏ nút tròn 26px chồm lên viền thanh chợ; thay bằng nút riêng cạnh ↻ (36×60, vùng chạm ~39×65 sau phóng to), ổ khoá SVG vẽ bằng code (mở khi chưa khoá, đóng khi khoá) + chữ "Khoá" / "Đã khoá". Đang khoá: nút nền vàng, chữ nâu đậm, và 4 thẻ có viền vàng (tắt nhấp nháy "ghép" để viền khoá dễ thấy).
+- **Nhãn thẻ không che mặt:** nhãn "ghép" (xanh) và "hợp" (tím, rút gọn từ "hợp thể"; đọc màn hình vẫn đọc đủ "nguyên liệu hợp thể") chuyển xuống thanh giá ở đáy thẻ: "ghép" bên trái, giá ở giữa, "hợp" bên phải. Không còn đè vương miện / icon hệ / icon vai trò, thẻ có cả hai nhãn cũng không chồng nhau.
+- **Dòng giải thích ở Chọn đội ưu tiên** hiện cả ở 844×390 / 667×375 bằng bản ngắn "Chợ ra mọi tướng đã mở · đội này ra ×2" (máy tính vẫn hiện bản đầy đủ).
+- Test: `node tests/cho-tuong/ti-le.test.js` thêm bảo hiểm với rng cố định (rng luôn 0.9999 → trượt, trượt, lần 3 chắc chắn ra tướng cần, bộ đếm 1-2-0 lặp lại; rng có seed 2000 lần ↻ không lần nào thủng bảo hiểm), kiểm tra vùng chạm nút khoá ≥ 36, viền khoá trên hàng thẻ, 2 nhãn nằm dưới ảnh mặt và không chồng nhau. Ảnh đã xem: thanh chợ mở / khoá và bảng chọn đội ở 1920×934, 844×390, 667×375, dọc 390×844.
+
+## Phiên bản 188 — Sửa test bảo hiểm chợ chạy chập chờn, gộp nhánh chính v187
+- Tester: `tests/cho-tuong/ti-le.test.js` FAIL 2/4 lần ở bước "rng cố định" (chuỗi lệch trượt, TRÚNG, …). Nguyên nhân ở test: đặt `game.market = null` rồi `rerollMarket(rng)` → `ensureMarket()` rút trước một hàng bằng `srand` ngẫu nhiên, trượt thì bộ đếm `dry` đã là 1. Sửa: gán sẵn chợ hợp lệ `{ types, rr: 0, dry: 0, lock: false }` trước vòng lặp. Chạy 10 lần liên tiếp: 10/10 đạt, chuỗi luôn trượt, trượt, TRÚNG ×3.
+- Gộp nhánh chính v187 (icon vai trò thẻ chợ 16px): giữ bố cục chợ v186 (nút khoá riêng, nhãn ghép / hợp ở thanh giá) + icon vai trò mới.
+
+## Phiên bản 189 — Gộp sửa chợ tướng (tester đạt)
+
+- Nút Khoá chợ riêng rõ ràng, nhãn ghép/hợp ở thanh giá, dòng giải thích đội ưu tiên ở màn nhỏ, test bảo hiểm ổn định.
