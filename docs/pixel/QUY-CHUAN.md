@@ -62,7 +62,7 @@ Màu đánh dấu `*` trong palette.txt (`vien`, `toi`, `sat-toi`, `dat-toi`, `d
 | `nen` — ô nền, cổng, thành, đế tướng | **16×16** (ô lát liền) · 32 / 48 / 64 (cổng, thành, đế) | ô nền phải lát liền 4 mép |
 | `icon` — icon giao diện | **16×16** · **12×12** (icon nhỏ chỉ số / trạng thái) | |
 | `do` · `an-phu` · `ky-nang` · `than-khi` | **24×24** | đồ, ấn phù, icon kỹ năng, thần khí |
-| `hieu-ung` — đạn, chém, nổ, hào quang | 16×16 · 32×32 · 48×48 | 3–6 khung |
+| `vfx` — hiệu ứng (lửa, băng, choáng, độc, nổ, đạn, hạt…) | tuỳ | **do nhánh `claude/vfx-kenney` đảm nhận** — session vẽ lô khác không vẽ hiệu ứng; tạm có bảng màu riêng `tools/pixel/src/vfx/palette.txt` (build-pixel cộng thêm vào bảng chung, có cảnh báo); nếu nhóm dùng tool dựng riêng thì đặt file `KHONG-BUILD` trong thư mục nhóm để build-pixel bỏ qua |
 | `giao-dien` — khung thẻ, thanh máu, nút | tuỳ (8..320), ghi rõ trong DANH-SACH | |
 | `canh` — cảnh truyện, nền menu, chương | 160×90 · 320×180 | |
 
@@ -181,3 +181,10 @@ viền, động tác lạ.
 - `assets/pixel/<nhóm>/<mã>.json` — `{ w, h, ax, ay, bbox, n, anims: { idle: { start, n, fps, loop } … } }`.
 - `assets/pixel/<nhóm>/<mã>-chan-dung.png` — chân dung (tướng / quái / boss).
 - `js/pixel/<nhóm>.js` — manifest theo nhóm cho game (index.html nạp sẵn đủ 12 nhóm).
+
+## 12. Tích hợp kiểu "móc" (cho nhánh chức năng)
+
+Mọi chỗ vẽ chỉ thêm MỘT dòng móc ở đầu hàm vẽ cũ: tra bảng mã → có ảnh pixel thì vẽ pixel và thoát, không có thì chạy tiếp
+thân hàm cũ (giữ đường vẽ dự phòng). Ví dụ `drawHeroSprite`: `if (... pxDrawHero(ctx, h, x, y, o)) return …`. Hàm tra:
+`pxEntry(nhóm, mã)` (null khi tắt pixel / chưa có ảnh), `pxUrl(nhóm, mã, chanDung)` cho `<img>`, `pxFrame(entry, i)` lấy khung.
+Hình mới vẽ bằng code ở nhánh chức năng: thêm móc tương tự + ghi vào mục **Bổ sung** cuối `DANH-SACH.md`.

@@ -36,7 +36,7 @@ const GROUP_SIZES = {
   tuong: ['32x32'], quai: ['32x32'], boss: ['48x48', '64x64'],
   nen: ['16x16', '32x32', '48x48', '64x64'], icon: ['16x16', '12x12'],
   do: ['24x24'], 'an-phu': ['24x24'], 'ky-nang': ['24x24'], 'than-khi': ['24x24'],
-  'hieu-ung': ['16x16', '32x32', '48x48'], 'giao-dien': null, canh: ['160x90', '320x180'],
+  vfx: null, 'giao-dien': null, canh: ['160x90', '320x180'],   // vfx: hiệu ứng — nhánh claude/vfx-kenney đảm nhận
 };
 // động tác bắt buộc + số khung cho phép
 const REQUIRED = {
@@ -316,7 +316,8 @@ function listSources(srcDir) {
   for (const g of fs.readdirSync(srcDir).sort()) {
     const d = path.join(srcDir, g);
     if (!fs.statSync(d).isDirectory()) continue;
-    for (const f of fs.readdirSync(d).sort()) if (f.endsWith('.txt')) out.push({ group: g, code: f.replace(/\.txt$/, ''), file: path.join(d, f) });
+    if (fs.existsSync(path.join(d, 'KHONG-BUILD'))) continue;   // nhóm có tool dựng riêng (vd vfx của nhánh vfx-kenney)
+    for (const f of fs.readdirSync(d).sort()) if (f.endsWith('.txt') && f !== 'palette.txt') out.push({ group: g, code: f.replace(/\.txt$/, ''), file: path.join(d, f) });
   }
   return out;
 }
@@ -345,7 +346,7 @@ function run(argv) {
   const log = (...m) => { if (!opt.quiet) console.log(...m); };
   const pal = loadPalette();
   const all = listSources(opt.src);
-  const errors = [], warns = [], entries = {}, outputs = [];
+  const errors = [], warns = [], entries = {}, outputs = [], warnedPal = new Set();
   for (const s of all) {
     const rel = `${s.group}/${s.code}`;
     if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(s.code)) { errors.push(`${rel}.txt: tên file phải viết thường không dấu, nối bằng '-' (vd hanh-kim.txt)`); continue; }
@@ -353,7 +354,11 @@ function run(argv) {
     let src, sp;
     try { src = parseSource(fs.readFileSync(s.file, 'utf8'), path.relative(ROOT, s.file)); }
     catch (e) { errors.push(e.message); continue; }
-    sp = buildSprite(src, pal, s.group, opt.nhap);
+    // nhóm có bảng màu riêng tạm thời (tools/pixel/src/<nhóm>/palette.txt, vd vfx) → cộng thêm vào bảng chung, có cảnh báo
+    const gp = path.join(opt.src, s.group, 'palette.txt');
+    let palG = pal;
+    if (fs.existsSync(gp)) { palG = { ...loadPalette(gp), ...pal }; if (!warnedPal.has(s.group)) { warnedPal.add(s.group); warns.push(`${s.group}/palette.txt: nhóm dùng bảng màu riêng tạm thời — nhớ gộp về tools/pixel/palette.txt`); } }
+    sp = buildSprite(src, palG, s.group, opt.nhap);
     errors.push(...sp.errors); warns.push(...sp.warns);
     if (sp.errors.length) continue;
     // dải khung theo thứ tự anim khai báo
@@ -364,7 +369,7 @@ function run(argv) {
     if (s.group === 'tuong' || s.group === 'quai' || s.group === 'boss') entry.cd = 1;
     entries[rel] = entry;
     if (!pick) continue;
-    outputs.push({ rel, s, src, sp, grids, entry });
+    outputs.push({ rel, s, src, sp, grids, entry, pal: palG });
   }
   for (const w of warns) log('  ! ' + w);
   if (opt.strict && warns.length) errors.push(...warns.map((w) => '(strict) ' + w));
@@ -377,13 +382,13 @@ function run(argv) {
   for (const o of outputs) {
     const dir = path.join(opt.out, 'assets', 'pixel', o.s.group);
     fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(path.join(dir, o.s.code + '.png'), encodePNG(o.sp.w * o.grids.length, o.sp.h, toRGBA(o.grids, o.sp.w, o.sp.h, o.src, pal)));
+    fs.writeFileSync(path.join(dir, o.s.code + '.png'), encodePNG(o.sp.w * o.grids.length, o.sp.h, toRGBA(o.grids, o.sp.w, o.sp.h, o.src, o.pal)));
     fs.writeFileSync(path.join(dir, o.s.code + '.json'), JSON.stringify({ code: o.s.code, group: o.s.group, ...o.entry, sheet: `${o.s.code}.png` }, null, 1) + '\n');
     if (o.entry.cd) {
       const pg = portraitGrid(o.sp);
-      fs.writeFileSync(path.join(dir, o.s.code + '-chan-dung.png'), encodePNG(pg[0].length, pg.length, toRGBA([pg], pg[0].length, pg.length, o.src, pal)));
+      fs.writeFileSync(path.join(dir, o.s.code + '-chan-dung.png'), encodePNG(pg[0].length, pg.length, toRGBA([pg], pg[0].length, pg.length, o.src, o.pal)));
     }
-    if (opt.xem) { fs.mkdirSync(opt.xem, { recursive: true }); fs.writeFileSync(path.join(opt.xem, `${o.s.group}-${o.s.code}.png`), previewPNG(o.grids, o.sp.w, o.sp.h, o.src, pal)); }
+    if (opt.xem) { fs.mkdirSync(opt.xem, { recursive: true }); fs.writeFileSync(path.join(opt.xem, `${o.s.group}-${o.s.code}.png`), previewPNG(o.grids, o.sp.w, o.sp.h, o.src, o.pal)); }
     log(`  ✓ ${o.rel}: ${o.sp.w}x${o.sp.h} × ${o.grids.length} khung (${Object.entries(o.entry.anims).map(([k, v]) => k + ' ' + v.n).join(', ')})`);
   }
   // xoá ảnh cũ của nguồn đã xoá (chỉ khi dựng đủ bộ)
