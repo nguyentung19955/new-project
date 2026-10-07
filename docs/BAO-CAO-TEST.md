@@ -73,7 +73,15 @@ Kịch bản đo (`tests/sua-loi-tester` + script đo riêng): đợt 30 nhân 3
 
 Đã làm: (1) nền tĩnh vẽ sẵn vào canvas đệm, mỗi khung chép 1:1; (2) ảnh quái thu nhỏ sẵn theo cỡ trên màn (dùng lại); (3) bậc đồ hoạ tự hạ giới hạn tổng điểm ảnh canvas (bậc 2 ≤ 1,1 triệu).
 
-FPS_TABLE
+Đo A/B cùng kịch bản, 2 lần mỗi bản (FPS trung bình 5 giây):
+
+| Cỡ màn | v185 (nhánh chính) | v186 (bản sửa) | Ghi chú |
+|---|---|---|---|
+| 1920×934 | 15,0 · 16,3 | 31,9 · 29,9 | **gấp ~2 lần**; canvas 1920×934 → 1504×731 khi bậc đồ hoạ tự hạ |
+| 1280×720 | 29,5 · 31,2 | 29,2 · 35,6 | +~7%, trong biên dao động — chưa khẳng định |
+| 844×390 | 46,5 · 43,3 | 45,1 · 44,3 | không đổi (màn nhỏ vốn ít điểm ảnh) |
+
+Khung chậm nhất (worst) 1920×934: 100–117 ms → 50–67 ms.
 
 Số liệu headless thấp hơn máy thật (máy thật vẽ canvas bằng GPU). **Vẫn cần đo trên điện thoại tầm trung / máy tính bảng.**
 

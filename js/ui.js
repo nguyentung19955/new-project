@@ -1350,6 +1350,10 @@ class UI {
     for (const id of ids) mo.observe($(id), { attributes: true, attributeFilter: ['hidden'] });
   }
   placeToasts() {
+    // lúc khởi động (main.js chưa chạy, chưa có UIW/UIH/PATH…) thì để vị trí mặc định
+    try { this.placeToasts0(); } catch (e) { /* bỏ qua */ }
+  }
+  placeToasts0() {
     const box = $('#toasts');
     const ov = !!this.toastView && !this.toastView.startsWith('|');
     let right = '', top0 = '';
