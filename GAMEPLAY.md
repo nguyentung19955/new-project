@@ -1407,3 +1407,9 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 150 — Gộp nút Góp ý
 - Gộp nhánh nút Góp ý (v149).
 - Menu: 3 liên kết nhỏ Bách khoa · Xếp hạng · Góp ý thu nhỏ biểu tượng và chữ để không đè lên nhau.
+
+## Prompt ảnh — vẽ lại tướng cho dễ phân biệt (không đổi phiên bản game)
+- Vấn đề: nhiều tướng cùng khuôn chibi (đầu 1/3, mặt tròn mắt to, cùng tư thế, khăn đỏ/áo nâu) nên khó phân biệt. Ảnh so sánh 9 nhóm dễ nhầm (ảnh + bóng đen): `docs/tuong-de-nham.png` — khăn đầu + vũ khí cán dài; nón lá / dân làng áo nâu; cụ già râu trắng chống gậy; nữ thần áo dài + gậy + hào quang; vua / tướng mũ vàng mặc giáp; cô gái thôn quê; thú giáp bạc / tướng đi kèm hổ; thợ săn trùm mũ cầm giáo; áo nâu-vàng đứng thẳng.
+- Thẻ nhận diện cho cả 60 tướng: `tools/hero-id.js` (`HERO_ID`: loại thân người / thú / thần, tuổi + vóc dáng + tỉ lệ đầu/thân, mảng hình đặc trưng lớn, 3 màu riêng, nét mặt riêng, tư thế idle, hiệu ứng chiêu; `CONFUSE`: các nhóm dễ nhầm). `node tools/build-prompts.js` dừng nếu thiếu thẻ hoặc hai tướng trùng màu chính / mảng hình.
+- Prompt mới nhấn mạnh bóng đen đọc được ở 40 px, tỉ lệ cơ thể theo thẻ (không ép đầu 1/3), không dùng lại mặt chibi chung; vẫn giữ viền nâu #2A1608, đổ bóng phẳng, họa tiết trống đồng, nền magenta. Vì `tools/cat-sheet.py` đưa mọi tướng về cùng chiều cao, "to / nhỏ" thể hiện bằng tỉ lệ (vai rộng, đầu nhỏ…).
+- Nhóm prompt **"0B. Tướng vẽ lại cho dễ phân biệt"** (60 prompt, nhóm dễ nhầm trước, rồi Thường → Tím → Vàng), tên file giữ `<mã>.png`. Cắt bằng `python3 tools/cat-sheet.py <ảnh> <mã>`, rồi **tạo file trống `assets/packs/<mã>/.v2`** để ẩn prompt tướng đó khỏi danh sách, và chạy lại `node tools/build-prompts.js`.

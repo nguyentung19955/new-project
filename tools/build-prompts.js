@@ -61,7 +61,8 @@ const STYLE = 'STYLE: cute chibi mobile-game character, head about 1/3 of the bo
 const BG = 'BACKGROUND: perfectly flat pure magenta #FF00FF everywhere. No text, no numbers, no labels, no grid lines, no borders, no floor shadow, no watermark. Never use magenta on the subject. Keep at least 8% empty margin inside every cell; nothing crosses into another cell.';
 
 const clean = (d) => d.replace(/\s*Element [A-Z]+[^.]*\.\s*/g, ' ').replace(/\s*Rarity:[^.]*\.?/g, '').replace(/\s+/g, ' ').trim();
-const heroPrompt = (t) => {
+const heroPrompt = (t) => (HERO_ID[t] ? heroIdPrompt(t) : heroPromptOld(t));
+const heroPromptOld = (t) => {
   const h = HEROES[t], [E, pal] = EL[h.el];
   const ranged = h.attack !== 'melee';
   const effect = (DESC[t].match(/Cast effect: ([^.]+)\./) || [])[1];
@@ -96,10 +97,45 @@ ${RUNE_SYM[k][1]}.
 Thick dark-brown outline #2A1608, flat colors, no text.
 ${BG}`;
 
+// v151: tướng vẽ lại cho dễ phân biệt — thẻ nhận diện ở tools/hero-id.js (dáng, mảng hình đặc trưng, màu riêng).
+const { HERO_ID, CONFUSE } = require('./hero-id.js');
+const HERO_STYLE = 'STYLE: cute stylized mobile-game character in the same art family as the other heroes: thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), Dong Son bronze-drum motifs (zigzag bands, sun-star, Lac birds) on the clothes. Light file: about 20-30 flat colors, no gradients, no texture, no glow except the small effect asked.\n'
+  + 'DISTINCT SILHOUETTE (most important): the character must be recognizable from its black shadow alone, at 40 px: follow BODY for age, build and head-to-body ratio (do NOT give every hero the same 1/3 head and the same height), and make SIGNATURE SHAPE big and bold. Main color must clearly be the first COLORS entry.\n'
+  + 'FACE: do not reuse the generic chibi face (same round head, same big round eyes) — draw the unique features in FACE (eyebrows, beard, scars, wrinkles, age lines, eye shape).';
+const heroIdPrompt = (t) => {
+  const h = HERO_ID[t], [E] = EL[HEROES[t].el];
+  const ranged = HEROES[t].attack !== 'melee';
+  const avoid = CONFUSE.filter((g) => g.heroes.includes(t));
+  const avoidTxt = avoid.length ? `\nMUST NOT look like the generic ${avoid.map((g) => `"${g.look}"`).join(' or ')} shared by other heroes — keep only what is listed here.` : '';
+  return `Create ONE image: a 768x512 character sprite sheet for a cute mobile tower-defense game based on Vietnamese folk legends, an invisible 3x2 grid of six equal 256x256 cells. REDESIGN of the hero ${HEROES[t].name} so it is easy to tell apart from the other heroes.
+BODY: ${h.body}.
+SIGNATURE SHAPE: ${h.mark}.
+COLORS: main ${h.colors[0]}, second ${h.colors[1]}, accent ${h.colors[2]} (element ${E}). ${RAR[HEROES[t].legend]}, but keep the silhouette above.
+FACE: ${h.face}.
+OUTFIT: ${h.outfit}. WEAPON / ITEM: ${h.weapon}.${avoidTxt}
+CELLS (same character, same size and proportions in cells 1-5, facing RIGHT in 3/4 view, feet${h.kind === 'spirit' ? ' (or floating base)' : ''} on the same baseline, the whole body fills the cell height): [1] idle — ${h.pose} [2] wind-up [3] ${ranged ? 'shooting / casting forward, the projectile leaving the hand' : 'strike with ONE short pale motion swoosh'} [4] casting the skill: ${h.fx} (small, inside the cell) [5] full body facing the viewer [6] portrait, head and shoulders, big and centered, showing the unique face.
+${HERO_STYLE}
+${BG}`;
+};
+// kiểm tra: mọi tướng có thẻ, không hai tướng trùng màu chính hay mảng hình đặc trưng
+{
+  const miss = Object.keys(HEROES).filter((t) => !HERO_ID[t]);
+  if (miss.length) { console.error('Thiếu thẻ nhận diện (tools/hero-id.js):', miss.join(', ')); process.exit(1); }
+  const seen = {};
+  for (const [t, h] of Object.entries(HERO_ID)) {
+    if (!HEROES[t]) { console.error('Thẻ nhận diện thừa:', t); process.exit(1); }
+    for (const f of ['kind', 'body', 'mark', 'face', 'outfit', 'weapon', 'pose', 'fx']) if (!h[f]) { console.error('Thiếu', f, 'của', t); process.exit(1); }
+    for (const key of ['c:' + h.colors[0].toLowerCase(), 'm:' + h.mark.toLowerCase()]) {
+      if (seen[key]) { console.error('Trùng', key, t, seen[key]); process.exit(1); }
+      seen[key] = t;
+    }
+  }
+}
+
 const need = Object.keys(HEROES).filter((t) => !packs.has(t));
 const tier = (t) => (HEROES[t].legend === 'legendary' ? 2 : HEROES[t].legend === 'epic' ? 1 : 0);
 need.sort((a, b) => tier(a) - tier(b));
-const missingDesc = need.filter((t) => !DESC[t]);
+const missingDesc = need.filter((t) => !DESC[t] && !HERO_ID[t]);
 if (missingDesc.length) { console.error('Thiếu mô tả:', missingDesc); process.exit(1); }
 const items = [];
 // v145: đổi tên game → "Thần Thoại Việt": ảnh nền menu mới + logo chữ (đặt lên đầu danh sách)
@@ -124,6 +160,15 @@ ${BG.replace(' No text, no numbers, no labels,', ' No other text, no numbers, no
 if (!fs.existsSync(path.join(ROOT, 'assets/ui/.nen-menu-ttv'))) items.push({ group: '0. Ảnh nền menu — Thần Thoại Việt', file: 'nen-menu.jpg', title: 'Nền menu chính (key-art nhiều truyền thuyết, chừa nửa trái cho chữ tựa)', text: MENU_ART });
 if (!fs.existsSync(path.join(ROOT, 'assets/ui/logo-tua.png'))) items.push({ group: '0. Ảnh nền menu — Thần Thoại Việt', file: 'logo-tua.png', title: 'Logo chữ "Thần Thoại Việt" (tùy chọn — AI hay viết sai dấu; sai thì bỏ, game dùng chữ HTML)', text: LOGO });
 const tierName = ['Thường', 'Tím', 'Vàng'];
+// v151: vẽ lại MỌI tướng cho dễ phân biệt — nhóm dễ nhầm trước, rồi Thường → Tím → Vàng.
+// Cắt xong bản mới (python3 tools/cat-sheet.py <ảnh> <mã>) thì tạo file assets/packs/<mã>/.v2 để ẩn prompt.
+const confuseRank = (t) => { const i = CONFUSE.findIndex((g) => g.heroes.includes(t)); return i < 0 ? 99 : i; };
+const redraw = Object.keys(HERO_ID).filter((t) => packs.has(t) && !fs.existsSync(path.join(ROOT, 'assets/packs', t, '.v2')))
+  .sort((a, b) => confuseRank(a) - confuseRank(b) || tier(a) - tier(b));
+for (const t of redraw) {
+  const g = CONFUSE[confuseRank(t)];
+  items.push({ group: '0B. Tướng vẽ lại cho dễ phân biệt', file: `${t}.png`, title: `${HEROES[t].name} · ${tierName[tier(t)]} · ${EL[HEROES[t].el][0]}${g ? ` · nhóm dễ nhầm: ${g.name}` : ''}`, text: heroIdPrompt(t) });
+}
 for (const t of need.filter((x) => tier(x) === 0)) items.push({ group: '1. Tướng Thường (ưu tiên: xuất hiện mỗi trận)', file: `${t}.png`, title: `${HEROES[t].name} · ${tierName[tier(t)]} · ${EL[HEROES[t].el][0]}`, text: heroPrompt(t) });
 for (const t of ['yeutinh', 'dacon', 'linhan'].filter((x) => !packs.has(x))) items.push({ group: '2. Quái còn thiếu', file: `${t}.png`, title: ENEMIES[t].name, text: enemyPrompt(t) });
 for (const t of need.filter((x) => tier(x) === 1)) items.push({ group: '3. Tướng Tím', file: `${t}.png`, title: `${HEROES[t].name} · Tím · ${EL[HEROES[t].el][0]}`, text: heroPrompt(t) });
@@ -279,7 +324,7 @@ if (noIcon.length) console.error('Chưa có mô tả icon:', noIcon.join(', '));
 
 // Markdown
 let out = `# Prompt Gemini đầy đủ — mỗi ảnh một prompt (${items.length} ảnh)\n\n`;
-out += 'Mỗi khối dán **riêng một lần** vào Gemini (đính kèm `docs/mau-lac-tuong.png` làm mẫu nét vẽ nếu được), tải ảnh về và đặt **đúng tên file** ghi trên khối. Gen theo thứ tự từ trên xuống: phần 0 (nền menu tên mới) và 1–4 là cần thiết, phần 5–7 là tùy chọn.\n\n> **Phần 0 — đổi tên game thành \"Thần Thoại Việt\" (v145):** ảnh nền menu mới thay `assets/ui/nen-menu.jpg` (ảnh cũ chủ đề Sơn Tinh – Thủy Tinh, đang dùng tạm). Logo chữ là tùy chọn: AI hay viết sai dấu tiếng Việt — kiểm tra kỹ từng dấu (ầ, ạ, ệ); sai thì bỏ, game tự hiện chữ HTML. Có ảnh đúng thì xoá nền magenta, lưu `assets/ui/logo-tua.png`. Các ảnh cảnh khác (nền thắng/thua, truyện) hiện không có chữ tên game nên không cần gen lại.\n\n';
+out += 'Mỗi khối dán **riêng một lần** vào Gemini (đính kèm `docs/mau-lac-tuong.png` làm mẫu nét vẽ nếu được), tải ảnh về và đặt **đúng tên file** ghi trên khối. Gen theo thứ tự từ trên xuống: phần 0 (nền menu tên mới) và 1–4 là cần thiết, phần 5–7 là tùy chọn.\n\n> **Phần 0B — vẽ lại tướng cho dễ phân biệt:** mỗi tướng có dáng, mảng hình và màu riêng (thẻ nhận diện `tools/hero-id.js`, so sánh nhóm dễ nhầm ở `docs/tuong-de-nham.png`). Cắt xong bằng `python3 tools/cat-sheet.py <ảnh> <mã>` thì tạo file trống `assets/packs/<mã>/.v2` để ẩn prompt tướng đó.\n\n> **Phần 0 — đổi tên game thành \"Thần Thoại Việt\" (v145):** ảnh nền menu mới thay `assets/ui/nen-menu.jpg` (ảnh cũ chủ đề Sơn Tinh – Thủy Tinh, đang dùng tạm). Logo chữ là tùy chọn: AI hay viết sai dấu tiếng Việt — kiểm tra kỹ từng dấu (ầ, ạ, ệ); sai thì bỏ, game tự hiện chữ HTML. Có ảnh đúng thì xoá nền magenta, lưu `assets/ui/logo-tua.png`. Các ảnh cảnh khác (nền thắng/thua, truyện) hiện không có chữ tên game nên không cần gen lại.\n\n';
 let g = '';
 for (const it of items) {
   if (it.group !== g) { g = it.group; out += `\n## ${g}\n`; }
