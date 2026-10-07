@@ -1,6 +1,6 @@
 """Tách nền hồng / magenta cho ảnh DỰNG XƯƠNG (docs/PROMPT-DUNG-XUONG.txt) → assets/<mã>.png nền trong suốt.
 
-Cách chạy:  python3 tools/tach-nen-dung-xuong.py <file .zip | thư mục ảnh> [assets] [--xem anh-xem.png]
+Cách chạy:  python3 tools/tach-nen-dung-xuong.py <file .zip | thư mục ảnh> [assets] [--xem anh-xem.png] [--boc-vien-trang kinhduong,...]
 Cần: pip install pillow numpy scipy
 - Tên ảnh = mã nhân vật (thoren.png, trieuda.png…) — ảnh có tên lạ vẫn tách nhưng in cảnh báo.
 - Nền: vùng màu hồng / tím (đỏ và lam cao hơn lục) nối với mép ảnh, kể cả bóng đổ hồng sẫm dưới chân;
@@ -45,7 +45,7 @@ def bg_model(a):
     return model
 
 
-def cut(img):
+def cut(img, peel_white=False):
     a = np.asarray(img.convert('RGB')).astype(np.int32)
     model = bg_model(a)
     af = a.astype(np.float64)
@@ -89,6 +89,15 @@ def cut(img):
         s2 = ndimage.sum(fg, lab2, index=np.arange(1, n2 + 1))
         keep = np.isin(lab2, [i + 1 for i, s in enumerate(s2) if s >= s2.max() * 0.004])
         fg &= keep
+    if peel_white:
+        # bóc viền trắng kiểu sticker (vd kinhduong): gọt dần các điểm trắng / xám nhạt nằm ở mép ngoài, tối đa ~1,5% cạnh ảnh
+        white = (a.min(2) > 200) & (a.max(2) - a.min(2) < 45)
+        for _ in range(max(4, int(max(a.shape[:2]) * 0.015))):
+            edge = fg & ~ndimage.binary_erosion(fg)
+            rm = edge & white
+            if not rm.any():
+                break
+            fg &= ~rm
     alpha = Image.fromarray((fg * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(0.7))
     al = np.asarray(alpha).astype(np.int32)
     al[~fg] = np.minimum(al[~fg], 140)
@@ -131,13 +140,16 @@ def main():
         sys.exit(1)
     src, dst = args[0], (args[1] if len(args) > 1 else 'assets')
     xem = sys.argv[sys.argv.index('--xem') + 1] if '--xem' in sys.argv else None
+    # --boc-vien-trang ma1,ma2: bóc viền trắng sticker cho các mã này
+    peel = set(sys.argv[sys.argv.index('--boc-vien-trang') + 1].split(',')) if '--boc-vien-trang' in sys.argv else set()
+    args = [x for x in args if x not in (xem,) and not (peel and x == ','.join(sorted(peel)))]
     codes = known_codes()
     done = []
     for name, img in inputs(src):
         code = os.path.splitext(name)[0]
         if codes and code not in codes:
             print('  ! tên lạ (không có trong docs/PROMPT-DUNG-XUONG.txt):', name)
-        out = cut(img)
+        out = cut(img, peel_white=code in peel)
         if out is None:
             print('  ✗ không tìm thấy nền hồng:', name)
             continue

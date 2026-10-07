@@ -35,6 +35,12 @@ function cdWeapon(type, attack) {
   return attack === 'arrow' ? 'shot' : attack === 'melee' ? 'slash' : attack ? 'orb' : 'punch';
 }
 
+// ảnh dựng xương VẼ SAI (sai loài / vũ khí rời / lệch phong cách) — chờ gen lại; mã trong đây giữ nguyên cách hiển thị cũ của game
+const CD_SKIP = new Set([
+  'rua', 'phuthuy', 'chimbao', 'nongnoc', 'ran', 'thachtinh', 'dacon', 'linhan', 'cungan', 'voichien', 'camap', 'cua', 'cao',   // quái sai loài (thành rồng con / người có sừng)
+  'hotinh', 'chantinh',                                                                                                        // boss sai loài
+  'nguphu', 'tre', 'dotnuong',                                                                                                 // tướng: tiên cá · vũ khí rời · kiểu 3D bóng
+]);
 // ---- chọn ảnh đơn
 const cdMultiCache = new Map();
 function cdHasMulti(type, enemy) {
@@ -48,6 +54,7 @@ function cdHasMulti(type, enemy) {
 }
 // ảnh đơn của một mã (null = dùng đường vẽ cũ: bộ nhiều khung / ảnh cũ / vector)
 function cdSoloImg(type, enemy) {
+  if (CD_SKIP.has(type)) return null;
   // ảnh dựng xương <mã>.png ở gốc assets/ là ảnh mới vẽ theo docs/PROMPT-DUNG-XUONG.txt → dùng thay bộ cũ;
   // chỉ có packs/<mã>/idle.png thì bộ nhiều khung (nếu có) vẫn ưu tiên
   // bộ nhiều khung thật (PACK_FRAMES / FRAME_ANIMS, tools/cat-sheet.py) vẫn ưu tiên nhất
@@ -102,7 +109,9 @@ function cdPrepare(img) {
   c.naturalWidth = c.width; c.naturalHeight = c.height;
   const fx = Math.min(0.85, Math.max(0.15, (fk * (x1 - x0) / k + (x0 / k - sx)) / sw));
   c.__fk = fx;   // footK() của render.js đọc giá trị này
-  p = { c, ar: c.width / c.height, fx, tint: new Map(), geo: { sx, sy, sw, sh, iw, ih, q: c.width / sw } };
+  // phía cầm vũ khí: chân lệch hẳn sang phải khung bao = phần chìa ra nhiều ở bên TRÁI (vũ khí cầm tay trái) → vệt / đạn vẽ bên trái
+  const wside = fx > 0.58 ? -1 : 1;
+  p = { c, ar: c.width / c.height, fx, wside, tint: new Map(), geo: { sx, sy, sw, sh, iw, ih, q: c.width / sw } };
   cdPrep.set(img, p);
   return p;
 }
@@ -146,25 +155,30 @@ function cdPose(st) {
     const u = 1 - st.swing;
     if (u < 0.3) {                // lấy đà: ngả về sau, nén xuống
       const k = cdOut(u / 0.3);
-      P.dx -= 0.05 * k * big; P.bend -= 0.13 * k; P.sx *= 1 - 0.04 * k; P.sy *= 1 + 0.05 * k; P.rot -= 0.04 * k;
+      // nhún lấy đà (~0,1 giây): ngả ra sau, nén thấp xuống, phình ngang
+      P.dx -= 0.05 * k * big; P.bend -= 0.14 * k; P.sx *= 1 + 0.05 * k; P.sy *= 1 - 0.09 * k; P.rot -= 0.05 * k;
       P.phase = 'wind'; P.k = k;
     } else if (u < 0.46) {        // lao tới + uốn phần trên theo hướng đánh, giãn ngang
       const k = cdOut((u - 0.3) / 0.16);
-      P.dx += (-0.05 + 0.11 * k) * big; P.bend += -0.13 + (0.13 + 0.24 * big) * k; P.sx *= 1 + 0.08 * k * big; P.sy *= 1 - 0.06 * k * big;
-      P.rot += (-0.04 + 0.1 * k) * big;
+      P.dx += (-0.05 + 0.15 * k) * big; P.bend += -0.14 + (0.14 + 0.32 * big) * k; P.sx *= 1 + 0.05 * (1 - k) + 0.06 * k * big; P.sy *= 1 - 0.09 * (1 - k) + 0.05 * k;
+      P.rot += (-0.05 + 0.13 * k) * big;
       if (!st.melee) P.dx -= 0.05 * k;   // đánh xa: giật lùi khi bắn
       P.phase = 'strike'; P.k = k;
     } else {                      // bật về (vượt nhẹ rồi đứng yên)
       const k = cdBack((u - 0.46) / 0.54);
       const r = 1 - k;
-      P.dx += (0.06 * big - (st.melee ? 0 : 0.05)) * r; P.bend += 0.24 * big * r; P.sx *= 1 + 0.08 * big * r; P.sy *= 1 - 0.06 * big * r; P.rot += 0.06 * big * r;
+      P.dx += (0.1 * big - (st.melee ? 0 : 0.05)) * r; P.bend += 0.32 * big * r; P.sx *= 1 + 0.06 * big * r; P.sy *= 1 + 0.05 * r; P.rot += 0.08 * big * r;
       P.phase = 'recover'; P.k = Math.min(1, Math.max(0, (u - 0.46) / 0.54));
     }
   }
-  if (st.castT > 0) {             // tung chiêu: nhún lên, phóng to nhẹ, phát sáng viền
-    const k = cdInOut(Math.min(1, st.castT / 0.3));
-    P.dy -= 0.07 * k; P.sx *= 1 + (st.castUlt ? 0.12 : 0.06) * k; P.sy *= 1 + (st.castUlt ? 0.14 : 0.08) * k; P.bend -= 0.05 * k;
-    P.glow = k; if (!P.phase) { P.phase = 'cast'; P.k = k; }
+  if (st.castT > 0) {             // tung chiêu (castT 0,5 → 0; tối thượng 0,9): nhún xuống → bật lên + ngửa thân trên ra sau, phát sáng viền
+    // nhún: 0,5 → 0,38 hạ dần xuống (tối thượng: giữ thế nhún tới 0,3) · bật: từ 0,3 về 0 bung lên rồi hạ dần
+    const crouch = st.castT > 0.3 ? cdOut(Math.min(1, (0.5 - Math.min(0.5, st.castT)) / 0.12 + (st.castT > 0.5 ? 1 : 0))) : 0;
+    const k = st.castT <= 0.3 ? cdInOut(st.castT / 0.3) : 0;
+    P.sy *= 1 - 0.1 * crouch + (st.castUlt ? 0.13 : 0.09) * k; P.sx *= 1 + 0.05 * crouch + (st.castUlt ? 0.08 : 0.04) * k;
+    P.dy -= 0.08 * k; P.bend -= 0.04 * crouch + 0.12 * k;
+    P.glow = Math.max(0.35, k); P.cast = { crouch, k };
+    if (!P.phase) { P.phase = 'cast'; P.k = k; }
   }
   if (st.hurt > 0) {              // trúng đòn: chớp + giật lùi + rung
     const k = Math.min(1, st.hurt / 0.2);
@@ -299,6 +313,12 @@ function cdFx(ctx, kind, P, H, col, t, seed, fr) {
     if (tex) fxImage(ctx, 'spark_01', col, sx, sy, 0.16 * H, seed, 1, (1 - q) * 0.8);
   }
   ctx.restore();
+}
+// vệt / đạn ở đúng phía tay cầm vũ khí (ảnh không tách được tay): bên trái thì lật ngang
+function cdFxSide(ctx, p, kind, P, H, col, t, seed) {
+  const w = H * p.ar;
+  if (p.wside < 0) { ctx.save(); ctx.scale(-1, 1); cdFx(ctx, kind, P, H, col, t, seed, p.fx * w); ctx.restore(); }
+  else cdFx(ctx, kind, P, H, col, t, seed, (1 - p.fx) * w);
 }
 // bụi chân khi đi: 2 cụm khói nhỏ sau gót, theo nhịp bước (không cần trạng thái)
 function cdDust(ctx, H, t, rate, seed) {
@@ -554,7 +574,7 @@ function cdArmTip(R, st, kind, bend, sy) {
   const c = Math.cos(ang), s = Math.sin(ang);
   return { pv, ang, d: A.d, tip: [pv[0] + (vx * k) * c - (vy * k) * s, pv[1] + (vx * k) * s + (vy * k) * c] };
 }
-const cdRigBend = (P) => (P.bend + P.dx + P.rot * 0.9) * 0.6;
+const cdRigBend = (P) => (P.bend + P.dx + P.rot * 0.9) * 0.75;
 const cdTintC = (c, color) => { const m = c.__tint || (c.__tint = new Map()); let t = m.get(color); if (!t) { t = document.createElement('canvas'); t.width = c.width; t.height = c.height; const x = t.getContext('2d'); x.drawImage(c, 0, 0); x.globalCompositeOperation = 'source-atop'; x.fillStyle = color; x.fillRect(0, 0, t.width, t.height); t.naturalWidth = t.width; t.naturalHeight = t.height; m.set(color, t); } return t; };
 // vẽ thân trên theo lát ngang: lát dưới hông giữ nguyên, càng lên cao càng lệch (cong mềm, không gãy ở hông)
 function cdDrawUpper(ctx, R, img, bend, sy) {
@@ -686,6 +706,17 @@ function cdDrawHero(ctx, h, x, y, o, s, look, def, img, tierShown, ascShown) {
   ctx.save();
   ctx.globalAlpha *= (o.alpha ?? 1) * P.alpha;
   ctx.translate(x, y);
+  {
+    // ô sát mép bản đồ + ảnh mới rộng (vũ khí chìa ngang): đẩy hình vào trong để không bị cắt nửa người ở mép màn hình
+    const tr = ctx.getTransform(), kx = Math.abs(tr.a), w = H * p.ar * s;
+    if (kx > 0 && ctx.canvas && ctx.canvas.width) {
+      const L = (dir > 0 ? p.fx : 1 - p.fx) * w * kx, Rr = (dir > 0 ? 1 - p.fx : p.fx) * w * kx, pad = 3;
+      let dx = 0;
+      if (tr.e - L < pad) dx = (pad - (tr.e - L)) / kx;
+      else if (tr.e + Rr > ctx.canvas.width - pad) dx = (ctx.canvas.width - pad - (tr.e + Rr)) / kx;
+      if (dx) ctx.translate(dx, 0);
+    }
+  }
   if (!o.noShadow) {
     // bóng co lại khi nhún lên / nhảy
     const up = Math.min(1, Math.max(0, -((R ? P.hop || 0 : P.dy) * H + lift) / 40));
@@ -718,7 +749,7 @@ function cdDrawHero(ctx, h, x, y, o, s, look, def, img, tierShown, ascShown) {
     ctx.restore();
     if (!dying) drawPackFront(ctx, h, def, t, H, ascShown);
     // không tách được tay: vệt chém / đạn / quả cầu vẽ theo vị trí tay ước lượng như khi cử động nguyên khối
-    if (!R.arm && !dying && !CD.noFx) cdFx(ctx, kind, P, H, look.attrColor || '#FFF1C4', t, seed, (1 - p.fx) * H * p.ar);
+    if (!R.arm && !dying && !CD.noFx) cdFxSide(ctx, p, kind, P, H, look.attrColor || '#FFF1C4', t, seed);
     ctx.restore();
     if (o.bog) drawBogWater(ctx, x, y, s, t);
     return { top: y - (H + 12 - lift) * s * Math.max(1, P.sy), s };
@@ -741,7 +772,7 @@ function cdDrawHero(ctx, h, x, y, o, s, look, def, img, tierShown, ascShown) {
   }
   ctx.restore();
   if (!dying) drawPackFront(ctx, h, def, t, H, ascShown);
-  if (!dying) cdFx(ctx, kind, P, H, look.attrColor || '#FFF1C4', t, seed, (1 - p.fx) * H * p.ar);
+  if (!dying) cdFxSide(ctx, p, kind, P, H, look.attrColor || '#FFF1C4', t, seed);
   ctx.restore();
   if (o.bog) drawBogWater(ctx, x, y, s, t);
   return { top: y - (H + 12 - lift) * s * Math.max(1, P.sy), s };
@@ -749,7 +780,9 @@ function cdDrawHero(ctx, h, x, y, o, s, look, def, img, tierShown, ascShown) {
 
 // ---- QUÁI / BOSS (gọi từ drawEnemy; ctx đã dịch tới chân, lật theo hướng, rung khi trúng đòn)
 function cdEnemySize(e, box, p) {
-  const hgt = box.w * Math.min(1.7, Math.max(0.6, 1 / p.ar)) * (e.def.boss ? 1.05 : 1);
+  let hgt = box.w * Math.min(1.7, Math.max(0.6, 1 / p.ar));
+  // boss: cao chuẩn 100–125 (≈ cỡ ảnh boss cũ, gấp ~2 quái thường) — boss thiếu ENEMY_W (rộng mặc định 40) không còn bé như quái thường
+  if (e.def.boss) hgt = Math.min(125, Math.max(100, hgt)) * (box.k || 1);
   return { H: hgt, W: hgt * p.ar };
 }
 function cdDrawEnemy(ctx, e, t, box, img, o) {
@@ -777,6 +810,22 @@ function cdDrawEnemy(ctx, e, t, box, img, o) {
   cdApply(ctx, P, H);
   const fxc = d.fx && typeof ENEMY_FX !== 'undefined' && ENEMY_FX[d.fx];
   const w = H * p.ar;
+  // quái / boss có rig tách tay: cả người vẫn đi / nhún theo cdApply, riêng tay cầm vũ khí vung khi đánh (vệt theo đầu vũ khí)
+  const R = !o.icon && cdRig(p, e.type);
+  if (R && R.arm) {
+    const k = H / R.H;
+    if (fxc) drawEnemyFxBack(ctx, d.fx, fxc, w, H, t, e.id || 0, false);
+    if (fxc && d.fx === 'ghost') ctx.globalAlpha *= 0.72 + Math.sin(t * 3 + (e.id || 0)) * 0.12;
+    ctx.scale(k, k); ctx.translate(-p.fx * R.W, -R.H);
+    const el = e.el && typeof ELEMENTS !== 'undefined' && ELEMENTS[e.el];
+    const st = { t, seed, swing: e.atkT > 0 ? Math.min(1, e.atkT / atkDur) : 0, hurt: e.hitT > 0 ? e.hitT / 0.12 * 0.2 : 0, melee: !d.ranged };
+    const glow = e.enraged ? ['#FF2D2D', 14 / k, 0.85] : fxc ? [fxc.glow, fxc.blur / k, 0.9] : null;
+    // cdApply đã dịch / xoay / co giãn cả người → thân trên chỉ còn uốn (bend)
+    cdRigFrame(ctx, R, { ...P, dx: 0, rot: 0, sy: 1 }, st, { kind: R.kind || cdWeapon(e.type, d.ranged ? 'arrow' : 'melee'), col: (el && el.color) || '#FFB04A', glow,
+      flashC: e.hitT > 0 ? '#FFFFFF' : P.flashC, noFx: CD.noFx });
+    ctx.restore();
+    return true;
+  }
   if (fxc) { drawEnemyFxBack(ctx, d.fx, fxc, w, H, t, e.id || 0, false); drawGlowOnly(ctx, body, -w * p.fx, -H, w, H, fxc.glow, fxc.blur, 0.9); }
   if (e.enraged) drawGlowOnly(ctx, body, -w * p.fx, -H, w, H, '#FF2D2D', 14, 0.85);
   if (fxc && d.fx === 'ghost') ctx.globalAlpha *= 0.72 + Math.sin(t * 3 + (e.id || 0)) * 0.12;
@@ -791,7 +840,7 @@ function cdDrawEnemy(ctx, e, t, box, img, o) {
   if (!o.icon && P.phase) {
     const el = e.el && typeof ELEMENTS !== 'undefined' && ELEMENTS[e.el];
     ctx.save(); ctx.translate(0, fly);
-    cdFx(ctx, cdWeapon(e.type, d.ranged ? 'arrow' : 'melee'), P, H, (el && el.color) || '#FFB04A', t, seed, (1 - p.fx) * H * p.ar);
+    cdFxSide(ctx, p, cdWeapon(e.type, d.ranged ? 'arrow' : 'melee'), P, H, (el && el.color) || '#FFB04A', t, seed);
     ctx.restore();
   }
   return true;

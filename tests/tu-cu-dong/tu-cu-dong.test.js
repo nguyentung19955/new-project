@@ -9,7 +9,7 @@ const SHOTS = path.join(__dirname, 'shots');
 fs.mkdirSync(SHOTS, { recursive: true });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const SIZES = [[1920, 934], [844, 390], [667, 375]];
-const MA = 'lactuong,xathu,thosan,thaymo,lucsi,kinhduong,kybinh,cao,anvuong';
+const MA = 'lactuong,xathu,thosan,thaymo,lucsi,kinhduong,kybinh,echme,anvuong';
 
 async function open(browser, w, h, q = '') {
   const ctx = await browser.newContext({ viewport: { width: w, height: h } });
@@ -60,6 +60,26 @@ async function main() {
     ok(s.path[0] === 'ma-moi.png', '<mã>.png ở gốc assets/ được nhận làm ảnh đơn');
     const dx = await page.evaluate(() => ({ adv: hasAsset('adv.png') && hasAsset('packs/adv/strike.png'), solo: hasAsset('adv.png') && !cdHasMulti('adv', false) === false }));
     ok(dx.adv && dx.solo, 'có ảnh dựng xương adv.png thì dùng thay bộ cũ packs/adv (wind / strike)');
+    // tester t6: ảnh vẽ sai → danh sách loại trừ giữ cách hiển thị cũ; boss to; vệt đúng phía vũ khí; không cắt ở mép
+    const t6 = await page.evaluate(async () => {
+      const skip = [...CD_SKIP].filter((k) => hasAsset(k + '.png') && cdSoloImg(k, !HEROES[k]));
+      const load = async (k) => { const im = new Image(); im.src = 'assets/' + k + '.png'; await im.decode(); return cdPrepare(im); };
+      const lac = await load('lactuong'), kd = await load('kinhduong');
+      const boss = cdEnemySize({ def: { boss: true } }, { w: 40 }, await load('haba')).H, boss2 = cdEnemySize({ def: { boss: true } }, { w: 140 }, await load('thuongluong')).H;
+      const quai = cdEnemySize({ def: {} }, { w: 40 }, await load('tom')).H;
+      // tướng ở ô sát mép trái: không vẽ ra ngoài canvas
+      const c = document.createElement('canvas'); c.width = 300; c.height = 300; const x = c.getContext('2d', { willReadFrequently: true });
+      CD.force = true; asset('lactuong.png', true); await new Promise((r) => setTimeout(r, 300));
+      drawHeroSprite(x, { type: 'lactuong', id: 1, tier: 3, equip: {} }, 6, 280, { t: 1, scale: 0.9, noShadow: true });
+      const d = x.getImageData(0, 0, 1, 300).data; let edge = 0; for (let i = 3; i < d.length; i += 4) if (d[i] > 40) edge++;
+      const cast = [0.5, 0.42, 0.32, 0.25, 0.1].map((ct) => +cdPose({ t: 0, seed: 0, castT: ct }).sy.toFixed(3));
+      return { skip, lacSide: lac.wside, kdSide: kd.wside, boss, boss2, quai, edge, cast };
+    });
+    ok(t6.skip.length === 0, 'mã trong CD_SKIP (ảnh vẽ sai, chờ gen lại) không dùng ảnh mới — giữ hiển thị cũ');
+    ok(t6.lacSide === -1 && t6.kdSide === 1, 'phía vũ khí: Lạc Tướng cầm rìu bên trái → vệt bên trái; Kinh Dương Vương bên phải');
+    ok(t6.boss >= 100 && t6.boss2 <= 125 && t6.boss > t6.quai * 1.6, `boss cao ${Math.round(t6.boss)}–${Math.round(t6.boss2)} (quái thường ${Math.round(t6.quai)}) — không bé như quái`);
+    ok(t6.edge === 0, `tướng ở ô sát mép trái không bị vẽ lẹm ra ngoài canvas (${t6.edge} điểm ở cột 0)`);
+    ok(t6.cast[1] < 0.95 && t6.cast[3] > 1.05, `tung chiêu nhún xuống rồi bật lên (cao ${t6.cast.join(' → ')})`);
     await page.close();
   }
 
@@ -122,7 +142,7 @@ async function main() {
   {
     const page = await open(browser, 844, 390);
     // chỉ ảnh dựng xương mới (assets/<mã>.png) + mẫu docs/mau-vung-tay — không dùng ảnh cũ packs/
-    const SAMPLES = [['mau-nv', 'docs/mau-vung-tay/mau-nv.png'], ['kinhduong', 'assets/kinhduong.png'], ['cuoi', 'assets/cuoi.png'], ['xathu', 'assets/xathu.png'],
+    const SAMPLES = [['mau-nv', 'docs/mau-vung-tay/mau-nv.png'], ['potaoapui', 'assets/potaoapui.png'], ['cuoi', 'assets/cuoi.png'], ['xathu', 'assets/xathu.png'],
       ['auco', 'assets/auco.png'], ['sodua', 'assets/sodua.png'], ['giaodong', 'assets/giaodong.png']];
     const res = await page.evaluate(async (SAMPLES) => {
       const out = [], frames = [];

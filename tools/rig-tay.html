@@ -51,7 +51,7 @@
 const $ = (s) => document.querySelector(s);
 const ed = $('#ed'), pv = $('#pv'), ex = ed.getContext('2d'), px = pv.getContext('2d');
 // chỉ ảnh dựng xương mới (assets/<mã>.png) — không dùng ảnh cũ packs/
-const LIST = (window.ASSET_LIST || []).flatMap((f) => { const m = /^([\w-]+)\.png$/.exec(f); return m && CD_WEAPON[m[1]] ? [[m[1], '../assets/' + f]] : []; });
+const LIST = (window.ASSET_LIST || []).flatMap((f) => { const m = /^([\w-]+)\.png$/.exec(f); return m && CD_WEAPON[m[1]] && !CD_SKIP.has(m[1]) ? [[m[1], '../assets/' + f]] : []; });   // bỏ mã chờ gen lại (CD_SKIP)
 LIST.unshift(['mau-nv', '../docs/mau-vung-tay/mau-nv.png']);
 $('#ma').innerHTML = LIST.map(([k, f]) => `<option value="${f}">${k}</option>`).join('');
 let code = '', img = null, prep = null, man = {}, rig = null, mode = '', drag = null, sc = 1;

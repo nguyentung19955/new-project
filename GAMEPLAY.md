@@ -2037,6 +2037,19 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 - **Tự đoán tay** (chỉ bên phải = tay trước theo prompt): bỏ qua khi tách sẽ gãy vũ khí — chỗ nối không ở vai, nối ở 2 chỗ, cán mảnh (giáo cầm chéo qua người), vật vắt ngang đầu (đá vác vai), vũ khí chìa dưới hông. Khi đó vẫn chân đứng yên + thân trên cử động + vệt / đạn vẽ theo vị trí tay ước lượng. Ảnh mới hiện chỉ ~1/4 tách được tay tự động (AI hay vẽ giáo chéo qua người) → muốn vung tay đủ 90 tướng thì chỉnh rig bằng tool.
 - Test: `node tests/tu-cu-dong/tu-cu-dong.test.js` thêm phần rig: ghép 3 lớp khớp ảnh gốc (sót ≤ 0,01%), điểm ảnh dưới hông trùng khít 0 điểm qua thở / lấy đà / chém / thu / tung chiêu / trúng đòn (mẫu mau-nv + llq, cuoi, adv, auco, lucsi, giaodong), tay vung 22–73% chiều cao; xuất `shots/vung-tay.gif`. Ảnh minh hoạ: `tests/tu-cu-dong/vung-tay-khung.jpg`, `tests/tu-cu-dong/90-anh-dung-xuong.jpg`.
 
+## claude/tu-cu-dong — Sửa theo tester (2c50feb)
+
+- **Danh sách loại trừ `CD_SKIP`** (js/tu-cu-dong.js) — ảnh dựng xương vẽ sai, CẦN GEN LẠI; các mã này giữ nguyên cách hiển thị cũ của game (không dùng ảnh mới, không ép ảnh đơn), trang thử / tool rig bỏ qua:
+  - quái sai loài (thành rồng con / người có sừng): `rua` Rùa Giáp, `phuthuy` Sứa Tinh, `chimbao` Chim Bão, `nongnoc` Nòng Nọc, `ran` Rắn Độc, `thachtinh` Thạch Tinh, `dacon` Đá Con, `linhan` Quỷ Giáo, `cungan` Sói Cung Thủ, `voichien` Voi Chiến, `camap` Cá Mập Yêu, `cua` Cua Khổng Lồ, `cao` Cáo Con;
+  - boss sai loài: `hotinh` Hồ Tinh Chín Đuôi, `chantinh` Chằn Tinh;
+  - tướng: `nguphu` (thành tiên cá), `tre` (vũ khí đứng rời cạnh người), `dotnuong` (kiểu 3D bóng, lệch phong cách).
+  Gen lại xong: tách nền bằng `tools/tach-nen-dung-xuong.py`, bỏ mã khỏi `CD_SKIP`.
+- **Boss** ảnh đơn cao chuẩn 100–125 (≈ cỡ boss cũ, ~2× quái thường) — trước đây boss thiếu `ENEMY_W` bé như quái.
+- **Đánh sống hơn:** nhún lấy đà (nén xuống ~0,1 giây) → bật dãn + vươn / lao về phía trước → bật về; thân trên ngả mạnh hơn khi có rig. **Tung chiêu:** nhún xuống rồi bật lên + ngửa thân trên ra sau (không chỉ phát sáng).
+- **Vệt chém đúng phía tay cầm vũ khí:** có rig thì theo đầu vũ khí; không có rig thì dò phía vũ khí từ ảnh (chân lệch phải khung bao = vũ khí chìa bên trái, vd Lạc Tướng cầm rìu tay trái) và lật vệt / đạn sang bên đó.
+- **Ô sát mép:** ảnh mới rộng (vũ khí chìa ngang) không còn bị cắt nửa người ở mép màn hình — hình được đẩy vào trong canvas.
+- `kinhduong` tách lại, bóc viền trắng kiểu sticker (`tools/tach-nen-dung-xuong.py … --boc-vien-trang kinhduong`).
+- Test thêm: CD_SKIP giữ hiển thị cũ, phía vũ khí, cỡ boss, mép canvas, nhún → bật khi tung chiêu.
 ## claude/tu-cu-dong-anh — Ảnh dựng xương đợt 2–3 (60 nhân vật) + rig tay cầm vũ khí
 
 - **Tách nền** 60 ảnh người dùng gửi (incoming/dung-xuong-2, incoming/dung-xuong-3 trên nhánh claude/anh-dung-xuong-2; nền hồng/magenta chuyển sắc) bằng `tools/tach-nen-hong.py`: mô hình nền bậc 2 theo (x, y) → loang từ mép (nét viền đen chặn lại) + lỗ kín màu nền thuần (khe tay / chân, lỗ ≥ 1.2% ảnh coi là thân cùng màu nền — bạch tuộc hồng) → bỏ bóng đổ hồng đậm (cùng sắc, tối hơn) → khử lem hồng ở 2 điểm viền (tách lại pha trộn nét đen + nền) → bỏ hạt rời nhỏ (✦, tia lửa bay, < 3% thân) → cắt sát, chân ở đáy, cao 400 px → `assets/<mã>.png` (đã chạy build-asset-list).
@@ -2045,3 +2058,5 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 - **Xem trước**: `docs/xem-truoc-cu-dong/<mã>.webp` (đứng thở · đánh · trúng đòn, ≤ 200 KB) + `tong-hop.jpg`; danh sách ảnh lệch vũ khí game ở `docs/xem-truoc-cu-dong/README.md`. Kiểm tra máy: điểm ảnh dưới hông không đổi giữa mọi khung (chân đứng yên) ở cả 60 nhân vật.
 - Gộp với claude/tu-cu-dong (cũng đã tách nền 60 ảnh này bằng tools/tach-nen-dung-xuong.py): giữ ảnh của nhánh này (đã bỏ dấu ✦ / "!" / tia lửa rời, rig tính theo khung cắt này, cao 400 px); giới hạn góc tay của engine giữ nguyên, `amp` nhân vào góc vung trước khi giới hạn. Theo luật chọn ảnh mới của engine, `assets/<mã>.png` thay bộ cũ trên sân → ảnh + rig này dùng thật trong trận. Quái / boss (`cdDrawEnemy`) chưa dùng rig — rig đã sẵn trong js/rigs.js.
 - **Phần 1 (30 ảnh, incoming/dung-xuong-1 trên nhánh claude/tu-cu-dong)**: thêm rig cho cả 30 → js/rigs.js đủ 90 mã (67 tách tay, 23 nguyên khối). Tách lại cao, casau, chimbao, cungan, cua bằng `tools/tach-nen-hong.py --strict <mã…> --shadow chimbao` (bản cũ mất chân / hở người vì thân trùng màu nền); 25 ảnh còn lại giữ bản tách của nhánh tu-cu-dong. Xem trước + tổng hợp + README cập nhật đủ 90.
+- Gộp `claude/tu-cu-dong-anh` (bản 2: 60 ảnh tách nền lại bằng `tools/tach-nen-hong.py` + 60 rig soát tay trong js/rigs.js, `RIGS[mã].kind/amp`, `cdAbsorbSlivers`, `cdFillBehind`) — giữ ảnh + rig của bản 2 cho 60 mã đó; `kinhduong.png` = ảnh bản 2 đã bóc viền trắng (cùng khung, rig vẫn khớp). Nhánh này là nhánh gộp cuối đưa tester.
+- **Quái / boss dùng rig** (`cdDrawEnemy`): mã có rig tách tay thì cả người vẫn đi / nhún như cũ, riêng tay cầm vũ khí vung khi đánh, vệt theo đầu vũ khí; không có rig thì cử động nguyên khối.
