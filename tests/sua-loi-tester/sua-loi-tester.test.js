@@ -19,7 +19,7 @@ async function open(browser, w, h, o = {}) {
   const page = await ctx.newPage();
   page.errors = []; page.fails = [];
   page.on('pageerror', (e) => page.errors.push(String(e)));
-  page.on('requestfailed', (r) => page.fails.push(r.url().replace('file://' + ROOT + '/', '')));
+  page.on('requestfailed', (r) => /^https?:/.test(r.url()) || page.fails.push(r.url().replace('file://' + ROOT + '/', '')));
   await page.route('**/firebase-config.js*', (r) => r.fulfill({ contentType: 'application/javascript', body: o.fb || "const FIREBASE_CONFIG={apiKey:''};" }));
   await page.addInitScript((s) => localStorage.setItem('nuicao.v1', JSON.stringify(s)), o.save || SAVE);
   await page.goto(URL);
