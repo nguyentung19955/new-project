@@ -1433,3 +1433,10 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 153 — Gộp khung theo độ hiếm
 - Gộp nhánh khung theo độ hiếm (v151) vào sau v152.
+
+## Bộ chuẩn animation cho AI khác / họa sĩ (không đổi phiên bản game)
+- **`docs/CHUAN-ANIMATION.md`** (thay `docs/LUAT_GEN_ANIMATION.md`, file cũ trỏ sang): phong cách chung (chibi trống đồng, viền #2A1608, đổ bóng phẳng, màu theo hệ, bậc Thường / Tím / Vàng), quy cách từng loại ảnh (tướng `hero12` 768×576, quái `enemy6` 576×384, quái bay, boss `boss9` 768×768, icon kỹ năng / đồ / Thần Khí / Ấn Phù, nền bản đồ, nút giao diện), nhịp phát từng động tác lấy từ `js/render.js` (thở 5,5 khung/giây qua lại · đánh ~0,38 s · chiêu 9 khung/giây · đi 8 khung/giây…), tên file + lệnh cắt, mẫu prompt chung + 2 ví dụ điền sẵn (Lạc Tướng, Tôm Binh), hướng dẫn theo loại công cụ (ra cả lưới / một dáng mỗi lần / video), danh sách kiểm tra.
+- **`docs/mau-luoi/`**: ảnh lưới trống có số ô, vùng lề, đường đáy chân (`hero12`, `enemy6`, `enemy6-bay`, `boss9`, `icon4`) + ví dụ tấm tướng xếp đúng lưới; vẽ lại bằng `python3 tools/ve-mau-luoi.py`.
+- **`docs/prompts-tuong.csv`** (60 tướng) và **`docs/prompts-quai.csv`** (21 quái + 9 boss): mã · tên · bậc / loại · hệ · cỡ ảnh · tên file · lệnh cắt · prompt đầy đủ; sinh cùng `node tools/build-prompts.js`.
+- **`tools/ghep-luoi.py <hero12|enemy6|boss9> <ra.png> <ảnh…|thư mục> [--chung-khung]`**: ghép ảnh rời (nền trong suốt / #FF00FF / một màu phẳng) thành tấm lưới chuẩn — cùng tỉ lệ, tâm chân giữa ô, chân trên đường đáy 92%, nền #FF00FF — để cắt bằng `cat-sheet.py`.
+- Test: `node tests/ghep-luoi/ghep-luoi.test.js` (khung rời giả → ghép → cắt lại đúng 12 / 6 / 9 khung và đúng `PACK_FRAMES`, không đụng file thật).
