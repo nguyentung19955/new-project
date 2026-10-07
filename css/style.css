@@ -1085,9 +1085,7 @@ button:disabled { cursor: default; }
 #more .ha .i { font-size: 17px; line-height: 1.1; }
 #more .ha .l { font-size: 10.5px; font-weight: 800; white-space: nowrap; }
 #more .ha .l i { font-style: normal; color: #6AE06A; }
-#more .ha.go { border-color: #6AE06A; color: #9DFFC4; box-shadow: 0 0 8px #3EDC4E66; }
 #more .ha.fuse { border-color: #F0A030; box-shadow: 0 0 10px #F0A03088; animation: noticeBlink 1s ease-in-out infinite; }
-#more .ha.dim { color: #9A8E78; }
 #more .ha.danger { color: #FFB08A; min-width: 40px; }
 #more .ha.danger.armed { background: #8A2A18; color: #fff; border-color: #FF8A6A; }
 #more .ha.notice { border-color: #FFD66B; }

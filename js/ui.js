@@ -1290,7 +1290,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 167 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 171 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 
@@ -2225,34 +2225,29 @@ class UI {
   }
 
   // Thanh thao tác nổi ngay trên tướng đang chọn (v37): chạm tướng là thấy, mỗi việc 1 chạm.
-  // Ghép / hợp thể / mặc đồ làm luôn khi đủ điều kiện; đổi chỗ = giữ & kéo; hủy = chạm 2 lần hoặc kéo vào 🗑.
+  // Hợp thể làm luôn khi đủ điều kiện; ghép sao / đổi chỗ = giữ & kéo; hủy = chạm 2 lần hoặc kéo vào 🗑.
   moreKey(h) {
     const g = this.game;
-    const twin = !h.from && g.heroes.some((o) => o && o !== h && g.canMerge(o, h) === true);
     const fz = (ASCEND[h.type] || []).map((to) => {
       const o = g.heroes.find((x) => x && x !== h && x.type === fusionPartner(h.type, to) && typeof g.canFuse(x, h) !== 'string');
       return o ? o.slot : -1;
     }).join();
-    return [h.id, h.type, h.tier, h.skillPts, h.notice.skills, h.notice.evo, twin, fz, this.upCount(h), this.sellArmed, h.spent].join('|');
+    return [h.id, h.type, h.tier, h.skillPts, h.notice.skills, h.notice.evo, h.from, fz, this.sellArmed, h.spent].join('|');
   }
   renderMore() {
     const g = this.game;
     const h = g.heroes[this.sel];
     if (!h) return;
     const t = h.tier || 0;
-    const twin = !h.from && g.heroes.find((o) => o && o !== h && g.canMerge(o, h) === true);
     const readyF = (ASCEND[h.type] || []).map((to) => {
       const pt = fusionPartner(h.type, to);
       const o = g.heroes.filter((x) => x && x !== h && x.type === pt && typeof g.canFuse(x, h) !== 'string')[0];
       return o ? { to, pt, o } : null;
     }).filter(Boolean);
-    const up = this.upCount(h);
     const b = (cls, act, ic, label, extra = '') => `<button class="ha ${cls}" data-act="${act}" ${extra}><span class="i">${ic}</span><span class="l">${label}</span></button>`;
     $('#more').innerHTML = [
-      h.from ? b(h.notice.evo ? 'notice' : '', 'open-evo', '✦', t < 3 ? `Thần tinh ★${t + 1}` : 'Thần tinh')
-        : twin ? b('go', 'merge-any', '⇄', `Ghép ${'★'.repeat(t + 1)}`)
-        : b('dim', 'open-evo', UIE.star(), t >= 3 ? '★★★ tối đa' : 'Ghép sao'),
-      up ? b('go', 'auto-eq', UIE.equip(), `Mặc ${up} món`) : b('', 'open-bag', '🛡', 'Trang bị'),
+      // v171: bỏ nút Ghép sao / Trang bị — ghép = kéo tướng thả lên tướng cùng loại cùng sao (hoặc Ghép tự động), mặc đồ = Tự mặc đồ / Túi đồ
+      h.from ? b(h.notice.evo ? 'notice' : '', 'open-evo', '✦', t < 3 ? `Thần tinh ★${t + 1}` : 'Thần tinh') : '',
       ...readyF.map((f) => b('fuse', 'fuse-with', '✸', `→ ${HEROES[f.to].name}`, `data-slot="${f.o.slot}" style="color:${RARITY[HEROES[f.to].legend].color}"`)),
       b(`danger ${this.sellArmed ? 'armed' : ''}`, 'sell', '🗑', this.sellArmed ? `Chắc chắn? +${g.sellValue(h)}` : 'Hủy'),
     ].join('');
@@ -3108,16 +3103,6 @@ class UI {
           this.sig.deck = null; rs();
         });
         $('#more').hidden = true; $('#drawer').hidden = true;
-        break;
-      }
-      case 'auto-eq': {
-        if (!h) { this.toast('Chọn một tướng trước', '#E25A3A'); break; }
-        C('autoEquip', [h], (n) => {
-          if (typeof n === 'string') return this.toast(n, '#E25A3A');
-          this.toast(n ? `${HEROES[h.type].name} đã mặc ${n} món tốt hơn · lực chiến ${heroPower(h)}` : 'Đồ đang mặc đã là tốt nhất trong túi', n ? '#6AE06A' : '#C8BFA8');
-          this.sig.deck = null; rs();
-        });
-        $('#more').hidden = true;
         break;
       }
       case 'temper': C('temper', [+d.uid], (r) => { if (fail(r)) { this.toast('Tôi luyện thành công!', '#FFD66B'); rs(); } }); break;

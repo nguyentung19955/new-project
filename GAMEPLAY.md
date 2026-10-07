@@ -1576,3 +1576,8 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 166 — Chơi nhóm "Sắp ra mắt"
 - Thẻ **Cùng Giữ Thành** trong màn Chọn chế độ hiện mờ, nhãn **Sắp ra mắt**, không bấm được (`COOP.visible = false` trong `js/coop.js`). Mã, luật Firestore và test chơi nhóm vẫn giữ nguyên; đổi thành `true` là mở lại.
+
+## Phiên bản 171 — Bỏ nút Ghép sao / Trang bị trên tướng
+- Chạm tướng trên sân: bảng nổi phía trên tướng **bỏ nút Ghép sao (★+ / Ghép ★★) và Trang bị / Mặc N món**; chỉ còn nút **Hủy** nhỏ (vẫn bấm 2 lần "Chắc chắn? +vàng"), cùng nút **Hợp thể** khi đủ điều kiện và **Thần tinh** cho thần Sử thi/Huyền thoại.
+- Ghép sao: **kéo tướng thả lên tướng cùng loại cùng sao** (mẹo khi có cặp đầu tiên đã chỉ cách này) hoặc nút **⇄ Ghép tự động** ở thanh đáy. Mặc đồ: nút **Tự mặc đồ** / **Túi đồ** ở cột phải.
+- Test: `tests/bo-nut-tren-tuong/bo-nut-tren-tuong.test.js` (bảng nổi chỉ còn Hủy, Hủy 2 bước hoạt động, kéo thả ghép được, không lỗi trang ở 844×390 / 667×375).
