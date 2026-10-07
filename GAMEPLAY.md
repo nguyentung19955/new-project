@@ -18,7 +18,7 @@ Game thủ thành trên điện thoại, chơi **màn hình ngang**, lấy cảm
 
 ## 1. Vòng chơi chính
 
-1. **Triệu hồi:** bấm nút lớn **Triệu hồi** giữa thanh dưới. Mỗi lần gọi ra **1 trong 6 tướng Thường ngẫu nhiên (★)** vào **1 ô trống ngẫu nhiên**.
+1. **Triệu hồi (Chợ tướng, từ phiên bản 143):** thanh dưới luôn mở **4 thẻ tướng ★** rút ngẫu nhiên từ đội 6 tướng. **Chạm thẻ** = mua và đặt vào 1 ô trống ngẫu nhiên; **kéo thẻ** thả vào ô = đặt đúng ô (thả lên tướng ★ cùng loại = ghép luôn). ↻ đổi cả hàng (10 vàng, +10 mỗi lần trong đợt); đầu mỗi đợt chợ tự làm mới miễn phí. Xem ghi chú phiên bản 143.
    - Giá **60 vàng**, mỗi lần sau **+6** (tối đa 220), tính lại từ đầu mỗi ải.
    - Bản đồ có **17 ô** dọc hai bờ sông, mọi ô như nhau. Hết ô trống thì phải ghép, hoặc kéo tướng vào thùng 🗑 (hiện khi kéo) để hủy.
    - Giữ và kéo tướng để đổi chỗ.
@@ -1354,3 +1354,15 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Đổi chữ theo: kỹ năng boss (gọi Quỷ Giáo / Quỷ Cưỡi Lợn, "Quỷ mã xông lên!"), tên bộ quái trong cảnh báo đợt (Quỷ binh giặc Ân / Quỷ binh Triệu Đà), mô tả ải Đồng Trâu, cảnh kể chuyện Cổ Loa, đồ khắc chế Sứa Tinh.
 - Hình vẽ dự phòng (SVG, dùng trong cảnh kể chuyện và khi thiếu ảnh) của Quỷ Giáo, Sói Cung Thủ, Quỷ Cưỡi Lợn, Quỷ Vương Ân, Hổ Vương Triệu Đà vẽ lại thành quái vật.
 - Prompt gen lại ảnh (`tools/build-prompts.js`): mô tả quái vật mới cho linhan, cungan, kybinh, phuthuy (quái) và anvuong, trieuda, haba, thuytinh (boss); kybinh, anvuong, haba, thuytinh thêm vào danh sách bắt buộc gen lại. Ảnh cũ vẫn dùng cho tới khi có ảnh mới; cắt xong thì chạy `python3 tools/make-variants.py thietky cungtlua tuongthuy` để sinh lại bản đổi màu, và tạo `assets/packs/<mã>/.redo`.
+## Phiên bản 143 — Chợ tướng luôn mở + Nghỉ chân đổi đội
+- **Chợ tướng** thay nút Triệu hồi và bảng chọn 1 trong 3: thanh đáy luôn hiện **4 thẻ tướng** rút ngẫu nhiên (có thể trùng) từ đội 6 tướng. Mỗi thẻ có chân dung, tên ngắn, biểu tượng hành, giá vàng.
+  - **Chạm 1 lần** = mua và đặt ngay vào một ô trống ngẫu nhiên. Hết ô trống mà thẻ là tướng đang có ★ trên sân thì ghép thẳng vào tướng đó.
+  - **Kéo thẻ** thả vào một ô trống = đặt đúng ô đó; thả lên tướng ★ cùng loại = ghép luôn thành ★★. Trong lúc kéo, ô trống sáng lên, tướng ghép được nhấp nháy.
+  - Mua thẻ nào thì chỗ đó ra thẻ mới. **Đầu mỗi đợt** cả hàng làm mới miễn phí. Nút **↻** đổi cả hàng: 10 vàng, mỗi lần đổi sau +10 trong cùng đợt (về 10 khi sang đợt mới).
+  - Thẻ trùng loại với một tướng ★ trên sân (mua về là ghép được) có **viền xanh sáng + nhãn "ghép"**. Thẻ mờ khi thiếu vàng hoặc hết ô.
+  - Giá giữ nguyên công thức cũ (60, +6 mỗi lần, tối đa 220, tính lại mỗi ải) — bỏ bước chọn 1/3 nên tổng chi phí tương đương. Nút **Ghép tự động** và **Hợp thể** giữ nguyên cạnh chợ.
+  - Đang kéo tướng trên sân: chợ tướng ẩn, **thùng Hủy** nằm đúng chỗ thanh đáy (cùng ý với nhánh kéo-tướng-ẩn-triệu-hồi).
+- **Đội 6 tướng cho cả Vô tận**: vào Vô tận cũng qua màn Chuẩn bị xuất quân (có ghi ♾ Vô tận) với bảng **Chọn đội** và nút **Gợi ý**.
+- **Nghỉ chân**: sau mỗi đợt boss (cứ 10 đợt) ở cả Vô tận và Phó bản (trừ đợt cuối thắng ải), trận tạm dừng và hiện bảng **Nghỉ chân**: bỏ tối đa **2 tướng** khỏi đội và chọn tướng mới thay vào, miễn phí; **Bỏ qua** được. Tướng đang trên sân giữ nguyên, chợ làm mới theo đội mới.
+- Lưu trận (tiếp tục giữa chừng) giữ cả chợ tướng, đội và bảng Nghỉ chân đang mở. Bản lưu cũ còn bảng chọn 1 trong 3 đã trả vàng thì được hoàn lại vàng.
+- Test: `node tests/cho-tuong/cho-tuong.test.js` (ảnh chụp trong `tests/cho-tuong/shots/`). Repo không có công cụ máy chơi thử nên không có gì để cập nhật.
