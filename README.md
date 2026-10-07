@@ -2,7 +2,7 @@
 
 > Tên cũ: *Núi Cao Nước Dâng* (đổi ở phiên bản 145 vì game giờ gồm nhiều truyền thuyết: Sơn Tinh – Thủy Tinh, Thạch Sanh, Thánh Gióng, Lạc Long Quân, An Dương Vương). Mã nội bộ (`nuicao.v1`, `vn.nuicao.game`, dự án Firebase) giữ nguyên để không mất tiến trình.
 
-Game thủ thành **màn hình ngang** cho điện thoại, chủ đề **Sơn Tinh – Thủy Tinh**, lối chơi lấy cảm hứng từ Dota 1. Người chơi vào vai Sơn Tinh, triệu hồi tướng Văn Lang dọc sông Đà để chặn quân Thủy Tinh tràn vào thành Phong Châu.
+Game thủ thành **màn hình ngang** cho điện thoại, chủ đề **truyền thuyết Văn Lang – Âu Lạc** qua 5 chương: Sơn Tinh – Thủy Tinh (giữ thành Phong Châu trước quân Thủy Tinh), Thạch Sanh (giữ miếu, bản làng trước yêu tinh rừng), Thánh Gióng (giữ làng Phù Đổng trước giặc Ân), Lạc Long Quân (giữ miền sông biển trước yêu tinh biển), An Dương Vương (giữ thành Cổ Loa trước quân Triệu Đà), cùng chế độ Vô tận. Lối chơi lấy cảm hứng từ Dota 1: triệu hồi tướng dọc đường quái, ghép sao, hợp thể.
 
 - Luật chơi và số liệu: [`GAMEPLAY.md`](GAMEPLAY.md). Mục 14 ghi những gì đã làm trong code.
 - Tài liệu bàn giao thiết kế: [`docs/HANDOFF.md`](docs/HANDOFF.md).
@@ -13,7 +13,7 @@ Game thủ thành **màn hình ngang** cho điện thoại, chủ đề **Sơn T
 
 - **16 tướng:** 6 tướng cơ bản và 10 tướng huyền thoại (Thánh Gióng, Lạc Long Quân, Thần Kim Quy, Thạch Sanh, Cao Lỗ, Mai An Tiêm, Âu Cơ, Chử Đồng Tử, Tiên Dung, Lang Liêu). Mỗi tướng có Q W E R, tướng huyền thoại có thêm đặc trưng riêng.
 - **Nâng cấp bằng vàng:** lên cấp tướng, mở khóa W/E/R, tiến hoá ★ ★★ ★★★.
-- **Nước Dâng & Mọc Núi:** ô đặt tướng chia 3 bậc độ cao. Sau mỗi đợt boss nước dâng một bậc, tướng ở ô ngập bị sa lầy. Kỹ năng Mọc Núi cứu ô.
+- ~~**Nước Dâng & Mọc Núi**~~ (bỏ từ phiên bản 36): ô đặt tướng không còn bị ngập, không còn sa lầy / Mọc Núi. Màn thắng / thua, lời nhắc đầu trận, màn phần thưởng hạ boss hiện theo chương (từ phiên bản 159).
 - **Đồ đổi hình dạng tướng** (vũ khí, mũ, giáp; Bộ Lạc Long mọc cánh rồng):
   - Lò đúc đồng: Công thức, Cửa hàng, Hũ báu.
   - Túi 40 ô: cường hóa +1…+5, thăng phẩm, khóa, đổi ra vàng theo chất lượng.

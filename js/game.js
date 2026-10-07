@@ -2379,6 +2379,9 @@ class Game {
     return n;
   }
 
+  // v159: chữ "núi cao" (Sơn Tinh dời non) chỉ hợp chương Sơn Tinh – Thủy Tinh; chương khác / vô tận dùng chữ trung tính
+  sonTinh() { return !this.endless && (typeof chapterOf !== 'function' || chapterOf(this.level).id === 'sontinh'); }
+
   growMountain() {
     const m = this.mountain;
     m.growth++;
@@ -2386,7 +2389,7 @@ class Game {
     const st = this.mountainStage();
     const gold = st * MOUNTAIN.goldPerStage;
     this.addGold(gold);
-    if (st >= 2 && this.wave % 3 === 0) { this.lives++; this.notify('Núi cao che thành: +1 mạng', '#6AE06A'); }
+    if (st >= 2 && this.wave % 3 === 0) { this.lives++; this.notify(this.sonTinh() ? 'Núi cao che thành: +1 mạng' : 'Thành vững thêm: +1 mạng', '#6AE06A'); }
     // v92: bỏ màn Núi Tản Viên — núi tự cao theo đợt (vàng, mạng, thêm lượt Mọc Núi), không còn Linh Chi
     return gold;
   }
@@ -2567,7 +2570,7 @@ class Game {
     if (extra) this.addGold(extra);
     this.moc = this.mocMax();
     this.rollShop();      // cửa hàng nhập hàng mới
-    this.notify(`Hoàn thành đợt ${this.wave}! +${bonus + extra} vàng · núi cao +${mGold} vàng`, '#F2D27A');
+    this.notify(`Hoàn thành đợt ${this.wave}! +${bonus + extra} vàng · ${this.sonTinh() ? 'núi cao' : 'giữ vững'} +${mGold} vàng`, '#F2D27A');
     if (this.bossKho) { this.events.push({ type: 'kho', n: this.bossKho, why: `hạ ${this.bossKhoName}` }); this.bossKho = 0; }
     // v104: Tu Vi cho mọi tướng còn trên sân mỗi đợt (tướng hỗ trợ / hồi máu ít hạ quái vẫn lên bậc)
     const log = this.xpLog || (this.xpLog = {});

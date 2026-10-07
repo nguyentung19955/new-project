@@ -1830,8 +1830,8 @@ const ENEMIES = {
             drop: 1, boss: true, lives: 5, armor: 6, mr: 50, reward: 'ngua_hong_mao',
             burnAura: { radius: 150, dps: 10 }, phaseSummon: { type: 'giaolong', count: 4 }, slowResist: 0.5,
             tempFlood: { count: 3, time: 8 }, tags: ['Hô mưa gọi gió', 'Gọi Giao Long'],
-            short: 'Hô mưa gọi gió gây sát thương tướng đứng gần; mỗi lần mất 25% máu gọi 4 Giao Long Con và làm ngập tạm 3 ô trong 8 giây',
-            desc: 'Thần nước đầu rồng vảy bạc, vây cá sau lưng nổi giận. Hô mưa gọi gió gây sát thương tướng đứng gần. Mỗi lần mất 25% máu gọi 4 Giao Long Con (kháng phép cao) và làm ngập tạm 3 ô trong 8 giây.',
+            short: 'Hô mưa gọi gió gây sát thương tướng đứng gần; mỗi lần mất 25% máu gọi 4 Giao Long Con',
+            desc: 'Thần nước đầu rồng vảy bạc, vây cá sau lưng nổi giận. Hô mưa gọi gió gây sát thương tướng đứng gần. Mỗi lần mất 25% máu gọi 4 Giao Long Con (kháng phép cao).',
             tip: 'Đặt tướng vật lý chặn Giao Long Con: chúng kháng phép rất cao.' },
 };
 const BOSS_ORDER = ['thuongluong', 'haba', 'thuytinh'];
@@ -1853,7 +1853,7 @@ const waveHpMult = (n) => Math.pow(1.16, n - 1);
 const effWave = (n, level) => { const lv = LEVELS[level || 0]; const sc = (lv && lv.waveScale) || 1; return 1 + (n - 1) * sc; };
 
 // Lịch đợt mặc định: boss ở đợt 10/20/30, đợt bay 7/13/17/24/27,
-// Rùa Giáp khổng lồ ở 5/15/25. Nước dâng sau đợt boss 10 và 20.
+// Rùa Giáp khổng lồ ở 5/15/25. (Nước dâng sau đợt boss: bỏ từ v36.)
 const AIR_WAVES = [7, 13, 17, 24, 27];
 const CHAMPION_WAVES = [5, 15, 25];
 

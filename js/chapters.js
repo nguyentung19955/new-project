@@ -159,3 +159,87 @@ function storyScene(p) {
     + (p.foes || []).map(([t, x, sc]) => storyFoe(t, x, sc)).join('');
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200" preserveAspectRatio="xMidYMid slice">${body}</svg>`;
 }
+
+// ---------- v159: chủ đề theo chương cho màn thắng / thua, lời nhắc đầu trận, màn chọn phần thưởng
+// (trước gắn cứng Sơn Tinh – Thủy Tinh: "Phong Châu thất thủ", "Nước ngập thành", "Vua Hùng ban thưởng"…)
+// keep/lost: chữ nhỏ trên thanh đầu · goal: mục tiêu ải · loseTitle/loseTag/winTag: màn kết quả
+// fx: hiện tượng vẽ trong tranh thua (water nước lũ, mist sương yêu, fire lửa giặc, wave sóng biển)
+// gate: cổng / thành vẽ trong tranh (mapGate trong maps.js) · bar: màu thanh tiến độ · hi: màu số đợt
+const CH_THEME = {
+  sontinh: { keep: 'Đã giữ thành', lost: 'Thành đã mất', goal: 'giữ thành Phong Châu', foe: 'quân Thủy Tinh',
+    loseTitle: 'Phong Châu thất thủ', loseTag: 'Nước ngập thành', winTag: 'Nước rút', ic: '💧', fx: 'water', gate: 'default',
+    bar: ['#2C6A86', '#5AB4D6'], hi: '#9EDDF2', edge: '#2C6A86', rewardHead: 'Chọn sính lễ', reward: 'Vua Hùng ban thưởng' },
+  thachsanh: { keep: 'Đã giữ làng', lost: 'Làng đã mất', goal: 'giữ miếu và bản làng', foe: 'yêu tinh rừng',
+    loseTitle: 'Yêu quái tràn vào làng', loseTag: 'Miếu thất thủ', winTag: 'Yêu quái tan', ic: '👹', fx: 'mist', gate: 'hut',
+    bar: ['#3E5A22', '#8AC04A'], hi: '#B8E07A', edge: '#4E7A2E', rewardHead: 'Chọn phần thưởng', reward: 'Dân làng tạ ơn' },
+  giong: { keep: 'Đã giữ làng', lost: 'Làng đã mất', goal: 'giữ làng Phù Đổng', foe: 'giặc Ân',
+    loseTitle: 'Giặc Ân chiếm làng Phù Đổng', loseTag: 'Lửa giặc cháy làng', winTag: 'Giặc Ân tan', ic: '🔥', fx: 'fire', gate: 'village',
+    bar: ['#8A2A12', '#E0702C'], hi: '#FFB070', edge: '#A8401E', rewardHead: 'Chọn phần thưởng', reward: 'Vua Hùng ban thưởng' },
+  llq: { keep: 'Đã giữ biển', lost: 'Bờ biển đã mất', goal: 'giữ yên miền sông biển', foe: 'yêu tinh biển',
+    loseTitle: 'Yêu tinh biển hoành hành', loseTag: 'Sóng dữ tràn bờ', winTag: 'Biển lặng', ic: '🌊', fx: 'wave', gate: 'hut',
+    bar: ['#1F5A6A', '#3EC0C0'], hi: '#8AE8E0', edge: '#1F7A78', rewardHead: 'Chọn phần thưởng', reward: 'Long Cung ban thưởng' },
+  adv: { keep: 'Đã giữ thành', lost: 'Thành đã mất', goal: 'giữ thành Cổ Loa', foe: 'quân Triệu Đà',
+    loseTitle: 'Cổ Loa thất thủ', loseTag: 'Giặc Triệu vào thành', winTag: 'Nỏ thần giữ thành', ic: '🏹', fx: 'fire', gate: 'citadel',
+    bar: ['#6A3A1A', '#D08A3A'], hi: '#F2C07A', edge: '#8C5A2A', rewardHead: 'Chọn phần thưởng', reward: 'An Dương Vương ban thưởng' },
+};
+// Vô tận: quân đổi chương mỗi 10 đợt → chữ trung tính, tranh vẫn theo bản đồ của ải
+const ENDLESS_THEME = { keep: 'Vô tận', lost: 'Hết lượt trụ', goal: 'giữ thành càng lâu càng tốt', foe: 'quân địch',
+  loseTitle: 'Thành đã thất thủ', loseTag: 'Vô tận', ic: '♾', bar: ['#5C4620', '#D9B25A'], hi: '#F2D27A', edge: '#8C6A2E' };
+function themeOf(level, endless) {
+  const ch = chapterOf(level);
+  const t = Object.assign({ id: ch.id }, CH_THEME[ch.id] || CH_THEME.sontinh);
+  return endless ? Object.assign(t, ENDLESS_THEME, { id: ch.id }) : t;
+}
+// quái bay / quái khỏe của ải (cho mẹo lần sau, lịch đợt)
+function rosterOfLevel(level) {
+  const lv = LEVELS[level] || {};
+  return (typeof ROSTERS !== 'undefined' && ROSTERS[lv.roster || 'thuy']) || null;
+}
+// ảnh vẽ tay tranh thắng / thua theo chương (đặt file là game tự dùng, chưa có thì vẽ SVG bên dưới)
+const RESULT_FILE = (id, win) => [`scenes/${win ? 'thang' : 'thua'}-${id}.png`, ...(id === 'sontinh' ? SCENE_FILE[win ? 'win' : 'lose'] : [])];
+// tranh / khung giao diện luôn dùng khi có file (như ảnh nền menu, nút ui/), không phụ thuộc cài đặt "Dùng ảnh AI" của nhân vật
+function resultImg(id, win) {
+  for (const p of RESULT_FILE(id, win)) if (asset(p, true)) return assetSrc(p);
+  return '';
+}
+// tranh SVG 330×362 cho chương chưa có ảnh (Sơn Tinh – Thủy Tinh dùng tranh cũ trong art.js)
+function resultScene(level, win) {
+  const ch = chapterOf(level), th = CH_THEME[ch.id] || CH_THEME.sontinh;
+  const bg = ch.bg || 'dong';
+  const lv = LEVELS[level] || {};
+  const boss = lv.bosses ? lv.bosses[lv.waves] : null;
+  const hero = (ch.opener || ['sontinh'])[0];
+  const W = 330, H = 362, K = 1.3, Y = H - 200 * K;     // nền truyện 320×200 phóng 1,3 lần kê sát đáy, phía trên là trời
+  const [sky, mid0] = STORY_BG[bg] || STORY_BG.dong;
+  let s = `<defs><linearGradient id="rs-${bg}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky}"/><stop offset="1" stop-color="${mid0}"/></linearGradient></defs><rect width="${W}" height="${H}" fill="url(#rs-${bg})"/>`;
+  if (win) {
+    // trời vàng, mặt trời trống đồng toả tia
+    s += `<rect width="${W}" height="${Y + 120}" fill="#F2C060" opacity="0.5"/>`
+      + Array.from({ length: 16 }, (_, i) => { const a = i / 16 * Math.PI * 2; return `<path d="M165 92 L${165 + Math.cos(a) * 190} ${92 + Math.sin(a) * 190}" stroke="#FFE9A8" stroke-width="${i % 2 ? 3 : 6}" opacity="0.5"/>`; }).join('')
+      + `<circle cx="165" cy="92" r="40" fill="#E8B04A" stroke="#8C5A1A" stroke-width="3"/><circle cx="165" cy="92" r="28" fill="none" stroke="#8C5A1A" stroke-width="2"/>`
+      + Array.from({ length: 12 }, (_, i) => { const a = i / 12 * Math.PI * 2; return `<path d="M${165 + Math.cos(a) * 8} ${92 + Math.sin(a) * 8} L${165 + Math.cos(a + 0.13) * 24} ${92 + Math.sin(a + 0.13) * 24} L${165 + Math.cos(a - 0.13) * 24} ${92 + Math.sin(a - 0.13) * 24} Z" fill="#8C5A1A"/>`; }).join('');
+  } else {
+    // trời tối theo hiện tượng
+    const dark = { mist: '#1A2A1C', fire: '#3A1410', wave: '#0E2230', water: '#0E1820' }[th.fx] || '#1A1410';
+    s += `<rect width="${W}" height="${Y + 120}" fill="${dark}" opacity="0.8"/>`;
+    if (th.fx === 'fire') s += [60, 150, 250].map((x, i) => `<ellipse cx="${x}" cy="${70 + i * 14}" rx="${70 - i * 8}" ry="26" fill="#2A2420" opacity="0.8"/>`).join('');
+    if (th.fx === 'mist') s += `<circle cx="262" cy="52" r="20" fill="#C8E8A0" opacity="0.8"/>` + [[70, 70], [140, 50], [230, 90]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="3" fill="#E04848"/><circle cx="${x + 12}" cy="${y}" r="3" fill="#E04848"/>`).join('');
+    if (th.fx === 'wave') s += [40, 120, 210].map((x) => `<path d="M${x - 30} 40 q15 -14 30 0 q15 14 30 0" stroke="#5A7A8A" stroke-width="3" fill="none"/>`).join('') + `<path d="M150 20 l-12 30 h10 l-8 26" stroke="#BFE8F5" stroke-width="3" fill="none"/>`;
+  }
+  const inner = storyBackdrop(bg, {}).replace(/<rect width="320" height="200" fill="url\(#sk-\w+\)"\/>/, '');   // bỏ trời của khung truyện (đã vẽ trời cao hơn)
+  const gate = typeof mapGate === 'function' && th.gate && th.gate !== 'default' ? mapGate(th.gate, 70, 150) : '';
+  let mid = inner + gate;
+  if (win) mid += storyHero(hero, 175, 1.15) + (hero === 'adv' ? storyHero('kimquy', 255, 0.7) : '');
+  else {
+    const foe = boss ? storyFoe(boss, 200, boss === 'daibang' || boss === 'ngutinh' ? 0.6 : 0.75) : '';
+    if (th.fx !== 'wave') mid += foe;
+    if (th.fx === 'fire') mid += [40, 80, 110].map((x, i) => `<path d="M${x} ${150 - i * 6} q-10 -20 0 -40 q4 14 10 6 q6 16 -2 34 z" fill="#E0702C" stroke="#8A2A12" stroke-width="1.5"/><path d="M${x + 2} ${148 - i * 6} q-4 -10 0 -18 q4 8 4 18 z" fill="#FFD66B"/>`).join('');
+    if (th.fx === 'mist') mid += `<rect y="120" width="320" height="80" fill="#8AC04A" opacity="0.18"/><ellipse cx="90" cy="150" rx="120" ry="18" fill="#C8E8A0" opacity="0.2"/>`;
+    if (th.fx === 'wave') mid += `<path d="M0 150 C40 110 80 170 120 130 C160 100 200 160 240 125 C270 105 300 140 320 120 V200 H0 Z" fill="#1F5A6A" opacity="0.8"/>`
+      + [30, 110, 200, 280].map((x) => `<path d="M${x} 140 q10 -12 20 0" stroke="#BFE8F5" stroke-width="2.5" fill="none"/>`).join('');
+    if (th.fx === 'wave') mid += foe;     // yêu tinh biển trồi lên trên sóng
+  }
+  s += `<g transform="translate(${(W - 320 * K) / 2} ${Y}) scale(${K})">${mid}</g>`;
+  if (!win) s += `<rect width="${W}" height="${H}" fill="#000" opacity="0.18"/>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" preserveAspectRatio="xMidYMid slice">${s}</svg>`;
+}

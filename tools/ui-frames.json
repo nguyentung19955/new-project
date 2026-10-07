@@ -1,0 +1,88 @@
+{
+ "khung-bang": {
+  "cols": 1,
+  "rows": 1,
+  "max": 384,
+  "dir": "ui",
+  "files": [
+   "khung-bang.png"
+  ]
+ },
+ "nut-chu-nhat": {
+  "cols": 3,
+  "rows": 2,
+  "max": 384,
+  "dir": "ui",
+  "files": [
+   "nut-vang-thuong.png",
+   "nut-vang-nhan.png",
+   "nut-vang-khoa.png",
+   "nut-dong-thuong.png",
+   "nut-dong-nhan.png",
+   "nut-dong-khoa.png"
+  ]
+ },
+ "nut-tron": {
+  "cols": 3,
+  "rows": 1,
+  "max": 160,
+  "dir": "ui",
+  "files": [
+   "nut-tron-thuong.png",
+   "nut-tron-nhan.png",
+   "nut-tron-khoa.png"
+  ]
+ },
+ "thanh-mau": {
+  "cols": 1,
+  "rows": 3,
+  "max": 512,
+  "dir": "ui",
+  "files": [
+   "thanh-mau-boss.png",
+   "thanh-mau-tuong.png",
+   "thanh-mau-quai.png"
+  ]
+ },
+ "khung-thanh-day": {
+  "cols": 1,
+  "rows": 1,
+  "max": 1200,
+  "dir": "ui",
+  "files": [
+   "khung-thanh-day.png"
+  ]
+ },
+ "khung-the-cho": {
+  "cols": 4,
+  "rows": 1,
+  "max": 192,
+  "dir": "ui",
+  "files": [
+   "the-cho-thuong.png",
+   "the-cho-ghep.png",
+   "the-cho-thieu.png",
+   "nut-doi-cho.png"
+  ]
+ },
+ "dai-thong-bao": {
+  "cols": 1,
+  "rows": 1,
+  "max": 768,
+  "dir": "ui",
+  "files": [
+   "dai-thong-bao.png"
+  ]
+ },
+ "huy-hieu-ai": {
+  "cols": 3,
+  "rows": 1,
+  "max": 160,
+  "dir": "ui",
+  "files": [
+   "ai-mo.png",
+   "ai-chon.png",
+   "ai-khoa.png"
+  ]
+ }
+}

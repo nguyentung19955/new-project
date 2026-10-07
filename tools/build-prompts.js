@@ -326,6 +326,106 @@ for (const [k, v] of Object.entries(ITEM_SHEETS)) {
   if (!v.cells.every((c) => done(c[0]))) items.push({ group: '13. Icon đồ vật', file: `${k}.png`, title: v.title, text: sheetPrompt(v.cells.map((c) => c[1]), 'game item icons') });
 }
 fs.writeFileSync(path.join(ROOT, 'tools/item-sheets.json'), JSON.stringify(sheetsJson, null, 1));
+
+// ============================================================
+// v159: thành phần giao diện còn vẽ bằng code (rà bằng ảnh chụp Playwright các màn: kết quả, chọn ải, chuẩn bị, trận, Nghỉ chân, sính lễ).
+// Không gồm icon nhỏ chỉ số / trạng thái / tiền tệ (nhánh khác làm). Game tự dùng ảnh khi có file, chưa có thì giữ hình vẽ bằng code.
+// Tranh cảnh: full bleed, đặt thẳng vào assets/scenes/. Khung / nút / thanh: nền hồng tím, cắt bằng python3 tools/cat-khung.py <ảnh> <mã>.
+const SCENE_STYLE = 'Painterly cute mobile-game illustration in the same family as the main menu key art: warm Dong Son bronze-drum motifs (sun-star, Lac birds, zigzag bands) worked into the scenery, soft cel shading, rich but readable colors, chibi characters with big round eyes and thick dark-brown outlines #2A1608. No text, no letters, no numbers, no UI, no frame, no watermark, full bleed.';
+const CH_SCENE = {
+  sontinh: { name: 'Sơn Tinh – Thủy Tinh (Phong Châu citadel of the Hung Kings by the Da river)',
+    win: 'Sơn Tinh, the mountain god in a leafy green-brown robe with a stone crown, stands on a green mountain that has just risen above the river, raising his arms; the flood water recedes, sun-star breaks through the clouds, Phong Châu citadel with bronze roofs safe and dry, villagers cheering on the walls',
+    lose: 'night storm over Phong Châu citadel: the flood of Thủy Tinh breaks the earthen walls, the bronze gate half under water, broken banners floating, giant water snake and dark waves curling around the towers, lightning in purple clouds; sad but not gory' },
+  thachsanh: { name: 'Thạch Sanh (forest temple and highland village)',
+    win: 'Thạch Sanh, young woodcutter hero with bare chest, red headband and a bronze axe and bow, stands victorious in front of the old forest temple at dawn; the ogre Chằn Tinh lies defeated (cartoon stars over its head) in the background, villagers and their stilt house safe, fireflies turning into morning light',
+    lose: 'night in the ancient forest: the green ogre Chằn Tinh and little forest goblins swarm into the stilt-house village and the small temple, temple doors broken open, torches knocked over, eerie green mist and glowing red eyes among the banyan roots; spooky but cute, no gore' },
+  giong: { name: 'Thánh Gióng (Phù Đổng village, Red River delta rice fields)',
+    win: 'Saint Gióng, giant young warrior in iron armor riding a fire-breathing iron horse, holding an uprooted bamboo, at sunset over golden rice fields; the Ân invaders flee in the distance, Phù Đổng village gate with bamboo hedge safe, villagers waving',
+    lose: 'Phù Đổng village under attack: Ân invader soldiers in horned helmets and the Ân King on a dark warhorse charge through the bamboo village gate, thatched roofs on fire, red smoke over the rice fields, a broken bamboo hedge; dramatic but not gory' },
+  llq: { name: 'Lạc Long Quân (East Sea coast, dragon king)',
+    win: 'Lạc Long Quân, the dragon lord in jade-green scale armor with a pearl crown, stands on a sea rock above calm turquoise water at sunrise, a friendly sea dragon spirit coiling behind him; the giant fish demon Ngư Tinh defeated sinking far away, fishing boats returning safely to the shore village',
+    lose: 'stormy East Sea: the giant fish demon Ngư Tinh with huge jaws rises from black waves, sharks and crab monsters crash onto the shore, fishing boats smashed, the stilt-house fishing village flooded by surging waves, lightning; scary but cute, no gore' },
+  adv: { name: 'An Dương Vương (spiral Cổ Loa citadel)',
+    win: 'King An Dương Vương in red royal robe and golden crown holds the magic crossbow on the spiral walls of Cổ Loa citadel, the Golden Turtle god Kim Quy smiling beside him, bronze arrows of light raining on the fleeing Triệu army, sun-star sky, banners flying',
+    lose: 'Cổ Loa citadel falls at dusk: Triệu Đà soldiers and war elephants pour through the broken spiral earthen walls, watchtowers burning, the magic crossbow lying broken on the ground, fallen bronze banners, orange smoke in the sky; dramatic but not gory' },
+};
+const resultPrompt = (k, win) => `Create ONE image: a 768x832 portrait illustration (full bleed) for the ${win ? 'VICTORY' : 'DEFEAT'} result screen of a cute mobile tower-defense game based on Vietnamese folk legends, chapter ${CH_SCENE[k].name}.
+SCENE: ${CH_SCENE[k][win ? 'win' : 'lose']}.
+COMPOSITION: main subject in the lower 2/3, keep the top-left corner calm (a small label is drawn there), readable at 320 px wide. ${win ? 'Mood: triumphant, warm golden light.' : 'Mood: dark and tense, cold or fiery shadows, but still cute and family-friendly.'}
+${SCENE_STYLE}`;
+const CAMP_DESC = {
+  sontinh: 'the Da river valley seen from above: winding blue river, green Tản Viên mountains, rice terraces, small bronze-roofed villages and Phong Châu citadel at the far right',
+  thachsanh: 'an ancient misty forest seen from above: giant banyan tree, a small temple, a dark cave mouth in rocky hills, a stilt-house village',
+  giong: 'Red River delta rice fields seen from above: golden paddies with dikes, bamboo groves, Phù Đổng village, Sóc mountain in the distance',
+  llq: 'the East Sea coast seen from above: turquoise sea with islands of Hạ Long, sandy beaches, coral, a fishing village, a lake shaped like a fox (Hồ Tây)',
+  adv: 'the spiral Cổ Loa citadel seen from above: three spiral earthen walls, moats, bronze banners, villages and fields around, the sea far to the right',
+};
+const campPrompt = (k) => `Create ONE image: a 1280x768 illustrated campaign map background (bird's-eye view, slightly tilted, like a painted fantasy map) for the level-select screen of a cute mobile tower-defense game, chapter ${CH_SCENE[k].name}: ${CAMP_DESC[k]}.
+Keep the middle band fairly calm (the game draws level badges and a dotted route on top). Subtle Dong Son bronze-drum border ornaments at the corners only.
+${SCENE_STYLE}`;
+for (const [k, v] of Object.entries(CH_SCENE)) for (const win of [false, true]) {
+  const f = `scenes/${win ? 'thang' : 'thua'}-${k}.png`;
+  if (!done(f)) items.push({ group: '14. Tranh kết quả theo chương (thay SVG)', file: f, title: `${win ? 'Thắng' : 'Thua'} · ${v.name.split(' (')[0]}`, cut: `đặt thẳng vào assets/${f}`, text: resultPrompt(k, win) });
+}
+for (const k of Object.keys(CH_SCENE)) {
+  const f = `scenes/chuong-${k}.png`;
+  if (!done(f)) items.push({ group: '15. Nền bản đồ chọn ải theo chương', file: f, title: `Bản đồ chương · ${CH_SCENE[k].name.split(' (')[0]}`, cut: `đặt thẳng vào assets/${f}`, text: campPrompt(k) });
+}
+const NEN_PHU = `Create ONE image: a 1792x832 wide background texture (full bleed) for secondary screens (prepare for battle, results, rewards) of a cute mobile tower-defense game based on Vietnamese folk legends.
+CONTENT: a dark aged bronze drum surface seen from the front, very low contrast: faint concentric rings, a dim sun-star in the center, Lac birds and zigzag bands engraved softly, warm dark brown #1A140E to deep patina green #16231F, a soft vignette. It must stay DARK and calm so white and gold text is readable on top.
+No text, no letters, no numbers, no UI, no frame, no watermark.`;
+if (!done('scenes/nen-man-phu.png')) items.push({ group: '16. Nền màn phụ (Chuẩn bị / Kết quả / Phần thưởng)', file: 'scenes/nen-man-phu.png', title: 'Nền đồng tối cho màn phụ', cut: 'đặt thẳng vào assets/scenes/nen-man-phu.png', text: NEN_PHU });
+// tấm khung / nút / thanh — cols × rows ô bằng nhau, tên file theo thứ tự ô; max = cạnh dài nhất sau khi cắt
+const UI_FRAMES = {
+  'khung-bang': { cols: 1, rows: 1, max: 384, size: '1024x1024', title: 'Khung bảng / popup (giấy dó viền đồng, 9 mảnh)', cells: [
+    'one square panel frame: thick bronze border with ornate Dong Son corner pieces (sun-star discs) and PLAIN straight edges between the corners (so the frame can be stretched as 9-slice), the inside filled with flat dark aged paper #17130F with very faint fiber texture; corners take about 22% of the width'], files: ['khung-bang.png'] },
+  'nut-chu-nhat': { cols: 3, rows: 2, max: 384, size: '1536x512', title: 'Nút chữ nhật vàng + đồng · thường / nhấn / khóa', cells: [
+    'wide rectangular GOLD button (3:1), polished gold-bronze with a zigzag border and small sun-star studs at both ends, empty smooth middle for text — NORMAL state, bright with a top highlight',
+    'the same GOLD button — PRESSED state: slightly darker, highlight moved to the bottom, looks pushed in by 2 px',
+    'the same GOLD button — DISABLED state: desaturated grey-brown, dull, no shine',
+    'wide rectangular BRONZE button (3:1), dark brown-bronze with patina-green trims and a circle-dot border, empty middle — NORMAL state',
+    'the same BRONZE button — PRESSED state: darker, pushed in',
+    'the same BRONZE button — DISABLED state: grey, dull'],
+    files: ['nut-vang-thuong.png', 'nut-vang-nhan.png', 'nut-vang-khoa.png', 'nut-dong-thuong.png', 'nut-dong-nhan.png', 'nut-dong-khoa.png'] },
+  'nut-tron': { cols: 3, rows: 1, max: 160, size: '768x256', title: 'Nút tròn (quay lại / đóng) · thường / nhấn / khóa', cells: [
+    'round bronze drum-face button with a ring of Lac birds on the rim and an EMPTY dark center (an icon is drawn on top) — NORMAL',
+    'the same round button — PRESSED: darker, pushed in',
+    'the same round button — DISABLED: grey and dull'],
+    files: ['nut-tron-thuong.png', 'nut-tron-nhan.png', 'nut-tron-khoa.png'] },
+  'thanh-mau': { cols: 1, rows: 3, max: 512, size: '1024x384', title: 'Khung thanh máu boss / tướng / quái', cells: [
+    'very long thin BOSS health bar frame (about 8:1): dark iron and red-bronze with a small horned demon-mask cap on the left end and a spiked cap on the right end; the inside of the bar is an EMPTY flat magenta slot',
+    'long thin HERO health bar frame (about 8:1): slim polished bronze with tiny sun-star rivets at both ends; the inside is an EMPTY flat magenta slot',
+    'long thin ENEMY health bar frame (about 8:1): slim dark iron with tiny claw tips at both ends; the inside is an EMPTY flat magenta slot'],
+    files: ['thanh-mau-boss.png', 'thanh-mau-tuong.png', 'thanh-mau-quai.png'] },
+  'khung-thanh-day': { cols: 1, rows: 1, max: 1200, size: '1600x320', title: 'Khung thanh đáy (chợ tướng trong trận)', cells: [
+    'one very wide low tray frame (5:1) for the bottom bar of a game screen: carved bronze rim with a zigzag band, small Lac birds at both ends, a slightly raised center, the inside filled with flat dark bronze #1E1810 (cards are drawn on top)'],
+    files: ['khung-thanh-day.png'] },
+  'khung-the-cho': { cols: 4, rows: 1, max: 192, size: '1024x256', title: 'Khung thẻ chợ tướng + nút đổi', cells: [
+    'landscape card frame (5:4) of plain bronze with rounded corners and an EMPTY magenta window inside (a hero portrait is drawn there) — NORMAL',
+    'the same card frame glowing gold with sparkles — CAN MERGE (ghép)',
+    'the same card frame dull grey-brown and cracked — NOT ENOUGH GOLD',
+    'small square bronze button plate with rounded corners and an EMPTY dark center — REROLL button base'],
+    files: ['the-cho-thuong.png', 'the-cho-ghep.png', 'the-cho-thieu.png', 'nut-doi-cho.png'] },
+  'dai-thong-bao': { cols: 1, rows: 1, max: 768, size: '1536x256', title: 'Dải thông báo (tên chiêu lớn, boss tới)', cells: [
+    'one long horizontal ribbon banner (6:1): deep red cloth with gold-bronze edges, folded swallow-tail ends, small sun-star medallions at both ends, the long middle EMPTY and plain for text'],
+    files: ['dai-thong-bao.png'] },
+  'huy-hieu-ai': { cols: 3, rows: 1, max: 160, size: '768x256', title: 'Huy hiệu ải trên bản đồ · mở / đang chọn / khóa', cells: [
+    'round level badge: bronze drum disc with a sun-star rim and an EMPTY flat center (a number is drawn on top) — OPEN',
+    'the same badge glowing bright gold with a soft halo — SELECTED',
+    'the same badge as dark grey stone, cracked, no glow — LOCKED'],
+    files: ['ai-mo.png', 'ai-chon.png', 'ai-khoa.png'] },
+};
+const framePrompt = (k) => { const v = UI_FRAMES[k]; const [W, H] = v.size.split('x').map(Number);
+  return `Create ONE image: a ${v.size} game UI sheet${v.cols * v.rows > 1 ? `, an invisible ${v.cols}x${v.rows} grid of ${v.cols * v.rows} equal ${W / v.cols}x${H / v.rows} cells, one element per cell, read left to right, top to bottom` : ', one element centered'}:
+${v.cells.map((x, i) => (v.cells.length > 1 ? `[${i + 1}] ${x}` : x)).join('\n')}.
+${DRUM}. Same lighting and the same bronze palette in every cell; elements fill about 90% of their cell; straight, symmetric, front view (no perspective), no text, no letters, no numbers, no icons inside.
+${BG}`; };
+const framesJson = {};
+for (const [k, v] of Object.entries(UI_FRAMES)) {
+  framesJson[k] = { cols: v.cols, rows: v.rows, max: v.max, dir: 'ui', files: v.files };
+  if (!v.files.every((f) => done('ui/' + f))) items.push({ group: '17. Khung / nút / thanh giao diện (trống đồng, nền hồng tím)', file: `${k}.png`, title: v.title, cut: `python3 tools/cat-khung.py ${k}.png ${k}`, text: framePrompt(k) });
+}
+fs.writeFileSync(path.join(ROOT, 'tools/ui-frames.json'), JSON.stringify(framesJson, null, 1));
 items.forEach((it, i) => { it.n = i + 1; });
 const noIcon = need.filter((x) => !ICONS[x]);  // tướng mới chưa có mô tả icon
 if (noIcon.length) console.error('Chưa có mô tả icon:', noIcon.join(', '));
