@@ -113,7 +113,7 @@ Sau khi mở, sức mạnh kỹ năng tăng theo **2 cách**:
 
 1. **Điểm kỹ năng** (mỗi cấp tướng cho 1 điểm, mà cấp tướng mua bằng vàng): nâng trong **Cây kỹ năng**.
    - Q/W/E nâng tối đa cấp 4 (yêu cầu tướng cấp 3/5/7).
-   - R nâng tối đa cấp 3 (yêu cầu tướng cấp 6/11/16).
+   - R nâng tối đa cấp 3 (yêu cầu tướng cấp 6/9/12 — trước claude/r-cap-12 là 6/11/16).
    - Mỗi cấp kỹ năng thêm +25% sức mạnh.
 2. **Trí tuệ** tăng sức mạnh kỹ năng.
 
@@ -2231,4 +2231,22 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
 
 ## Phiên bản 201 — quy tắc hình mới phải có bản pixel
 - CLAUDE.md: thêm quy tắc "Đang chuyển sang pixel art: hình mới phải có bản pixel" — session thêm/đổi hình (kể cả vẽ bằng code) vẽ luôn bản pixel theo docs/pixel/QUY-CHUAN.md hoặc ghi vào docs/pixel/DANH-SACH.md mục "Bổ sung"; giữ đường vẽ dự phòng.
+
+## claude/r-cap-12 — Kỹ năng R tối đa ở tướng cấp 12
+
+- **Đổi:** `R_REQ = [0, 6, 9, 12]` (trước `[0, 6, 11, 16]`): R1 vẫn mở ở cấp 6 (`COSTS.unlockReq` không đổi), R2 cấp 9, **R3 cấp 12**. Với Q/W/E tối đa ở cấp 7, "kỹ năng tối đa" (điều kiện hợp thể Tím) giờ đạt ở **tướng cấp 12**.
+- Mọi chỗ hiển thị đều đọc `skillReqLevel` nên tự đổi: nhãn khoá "cấp 12" trên cây kỹ năng, "Cấp 3 cần · Tướng cấp 12", khung mô tả kỹ năng, thông báo "Cần tướng cấp 12". Chân trang Cây kỹ năng nay đọc cấp mở E/R từ `COSTS.unlockReq` thay vì viết cứng. Bản lưu cũ không ảnh hưởng (cấp R vẫn ≤ 3; tướng cấp 12–15 chỉ được nâng thêm).
+- Mô phỏng `tests/hop-the/mo-phong.js`: thêm luật `rA-B-C` (game hiện tại với R_REQ tuỳ chọn) và tham số `het` (chơi tiếp đến 4000 s / thua để đo độ khó). Lưu ý: ải 1 mặc định là Vô tận nên không có "thắng"; đo mạng còn lại ở giây 4000.
+- Kết quả (4 ván mỗi ải, bot tham lam, đợt có Tím đầu tiên TB):
+
+| Ải | Nhánh chính 6/11/16 | Nhánh chính 6/9/12 | cho-6-the 6/11/16 | cho-6-the 6/9/12 |
+|---|---|---|---|---|
+| 1 | đợt 20.3 (4/4) | đợt 20.3 (4/4) | đợt 20.5 (4/4) | đợt 19.8 (4/4) |
+| 3 | đợt 22.3 (4/4) | đợt 22.0 (4/4) | đợt 19.0 (2/4) | đợt 19.0 (2/4) |
+| 5 | đợt 19.0 (2/4) | đợt 19.5 (2/4) | đợt 19.7 (3/4) | đợt 17.7 (3/4) |
+
+  Sau khi gộp v202 (chợ 6 thẻ), luật `own1` (tài khoản đã mở mọi tướng Thường + 1 tướng Tím; `RREQ=6,11,16` vs `RREQ=6,9,12`): ải 1 đợt 21.3 → **19.0** · ải 3 20.8 → **19.5** · ải 5 20.3 → **19.3** (3/4 ván). Lưu ý `own1` chạy với ★★★ lên cấp nguyên giá (`lvDisc3 = 1`) như bản gốc của luật.
+  Độ khó (nhánh chính, chơi đến 4000 s): mạng còn TB ải 1: 27.8 → 34.8 · ải 3: 22.3 → 12.5 (1 ván thua đ68) · ải 5: 8.8 (3 thua) → 16.3 (2 thua) — dao động lớn, không thấy xu hướng dễ hẳn.
+- **Nhận xét:** hạ R3 xuống cấp 12 chỉ sớm Tím 0–2 đợt; với bot này điểm nghẽn chính là gom đủ hai tướng ★★★ (vàng mua thẻ / ghép), không phải cấp R. Game không dễ hơn rõ rệt → **không bù** (không đổi sức mạnh R hay giá nâng). Muốn Tím ở đợt 12–16 cần thêm thay đổi khác (vd ★★★ rẻ hơn / chợ ra đúng nguyên liệu hơn).
+- Test: `hop-the` thêm kiểm tra R cần tướng cấp 6/9/12, cấp 11 bị chặn R3 ("Cần tướng cấp 12"), cấp 12 nâng được. Ảnh đã xem: `docs/r-cap-12/skills-844x390.png`, `docs/r-cap-12/skills-1920x934.png`.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
