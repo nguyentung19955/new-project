@@ -1,0 +1,275 @@
+# Chàng Chèo Đò (mã chodo) — mẫu pixel 32×32 (tướng Thường · hành Thủy). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:1063–1073 ưu tiên + PROMPT-DUNG-XUONG.txt:296–305): người lái đò vạm vỡ, ĐẦU CẠO + búi tóc nhỏ,
+# áo cộc trắng không tay, quần chàm xắn ống #2B4C7E, thắt lưng dây vàng, chân đất; cầm MÁI CHÈO to bản gỗ (KHÔNG kiếm/đao, KHÔNG giáp);
+# chiêu: vung chèo tạt sóng nước (hành Thủy). Tướng Thường: đồ đơn giản, không viền vàng, không hào quang.
+name: Chàng Chèo Đò
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  K = toi
+  f = da-toi
+  F = da
+  h = da-sang
+  p = hong
+  e = trang
+  w = trang
+  W = sang
+  X = trang-xam
+  y = vang-nghe
+  Y = vang-sang
+  c = cham
+  C = cham-sang
+  v = cham-toi
+  g = dat
+  G = dat-sang
+  t = dat-toi
+  n = nuoc
+  N = nuoc-sang
+  z = troi
+
+part tren
+................................
+.............KK.................
+............KKKK................
+.............KK.................
+.........hhhFFFFFFFF............
+........hhhFFFFFFFFFFf..........
+........hFFFFFFFFFFFFf..........
+........FFFFFFFFFFFFFF..........
+.......fFFFFFFFFFFFFFF..........
+.......fFFhFFFFFFFFFFF..........
+.......fFhFFKKFFFFKKFF..........
+.......fFFFFekFFFFekFF..........
+.......fFFFFkkFFFFkkFF..........
+.......ffFFpFFFFFFFFfF..........
+........ffFFFFkeekFFFf..........
+.........ffffffffffff...........
+..........FFFFFFFFF.............
+........FWWWwwwwwwwX............
+........FWWWwwwwwwwX............
+........FWWwwwwwwwwX............
+........fwwwwwwwwwwX............
+........FWWwwwwwwwwX............
+........FyyyyyyyyyyyY...........
+.........WWwwwXWwwX.............
+end
+
+part chan
+.........vvvvvvvvvv.............
+..........ccc..ccc..............
+..........Ccv..Ccv..............
+..........Ccv..Ccv..............
+..........FFf..FFf..............
+.........Kffff.fffff............
+................................
+................................
+end
+
+part gay
+Gg..
+Gg..
+Gg..
+Gg..
+Gg..
+Gg..
+Gg..
+Gg..
+Gg..
+Gg..
+Gg..
+Gg..
+Gg..
+Gg..
+Gg..
+Gg..
+Gg..
+GGg.
+GGgg
+GGgg
+GGgg
+GGgg
+.Gg.
+..t.
+end
+
+part tay
+ff..
+.FF.
+..FF
+..Fh
+end
+part gay_ngang
+tgggggggggg.GGGG.
+tGGGGGGGGGGGGGGGG
+...........GGgg..
+end
+
+part gay_cheo
+........GGG.
+.......GGgg.
+......GGgg..
+.....GGg....
+....Gg......
+...Gg.......
+..Gg........
+.Gg.........
+Gg..........
+t...........
+end
+
+
+part gay_xuong
+Gg........
+.Gg.......
+..Gg......
+...Gg.....
+....GGg...
+.....GGgg.
+......GGgg
+.......GGg
+........t.
+end
+
+part tay_len
+.FF
+.Fh
+.F.
+fF.
+fF.
+end
+
+part tay_dam
+fFFF
+.FFh
+end
+
+part song_nho
+.N.
+NnN
+end
+
+part song
+..N....
+.NnN..N
+NnnnNNn
+nnnnnnn
+end
+
+part mat_nham
+FFFFFFFF
+kkFFFFkk
+end
+
+anim idle fps=3 loop
+frame idle
+  use chan 0 24
+  use tren
+  use gay 22 6
+  use tay 19 17
+  outline
+end
+frame idle
+  use chan 0 24
+  use tren 0 1
+  use gay 22 6
+  use tay 19 18
+  outline
+end
+
+# đánh: lấy đà (gậy vung ra sau đầu) → giơ cao → đập ngang → thu về
+anim attack fps=10 once
+frame attack
+  use gay_cheo 19 3
+  use chan 0 24
+  use tren
+  use tay_len 20 13
+  outline
+end
+frame attack
+  use chan 0 24
+  use tren
+  use gay 22 1
+  use tay_len 20 12
+  outline
+end
+frame attack
+  use chan 0 24
+  use tren 1 0
+  use gay_ngang 14 18
+  use tay_dam 20 18
+  outline
+end
+frame attack
+  use chan 0 24
+  use tren
+  use gay_xuong 20 19
+  use tay 19 17
+  outline
+end
+
+# chiêu: vung mái chèo tạt SÓNG nước (hành Thủy)
+anim cast fps=8 loop
+frame cast
+  use chan 0 24
+  use tren
+  use gay_cheo 19 3
+  use tay_len 20 13
+  use song_nho 25 27
+  outline
+end
+frame cast
+  use chan 0 24
+  use tren 1 0
+  use gay_ngang 14 18
+  use tay_dam 20 18
+  use song 23 25
+  outline
+end
+frame cast
+  use chan 0 24
+  use tren
+  use gay_xuong 20 19
+  use tay 19 17
+  use song 24 23
+  set 30 21 z
+  set 22 22 z
+  outline
+end
+
+# trúng đòn: giật lùi, nhắm mắt, nháy sáng da
+anim hurt fps=8 once
+frame hurt
+  use @idle.0
+  shift -1 0
+  use mat_nham 11 11
+  swap F h
+end
+frame hurt
+  use @idle.0
+  shift -1 0
+  use mat_nham 11 11
+end
+
+# chết: khuỵu gối → ngã nằm
+anim die fps=5 once
+frame die
+  use gay_xuong 20 19
+  use chan 0 24
+  use tren 0 3
+  use mat_nham 12 14
+  outline
+end
+frame die
+  use chan 0 24
+  use tren 0 3
+  use mat_nham 12 14
+  rot 90
+  shift 0 6
+  use gay_ngang 1 29
+  outline
+end
+frame die
+  use @die.1
+  swap y g
+end

@@ -1,0 +1,31 @@
+# Ô nền CỎ 16×16 — lát liền (mép trái khớp mép phải, mép trên khớp mép dưới). Dùng làm nền bản đồ (js/pixel.js).
+name: Cỏ
+size: 16x16
+colors:
+  g = la
+  d = la-toi
+  m = la-ma
+  s = la-sang
+  y = vang-nghe
+part o
+gggggggggggggggg
+ggmggggggggdgggg
+gmsmgggggggggggg
+ggdgggggmggggggg
+gggggggggmgggdgg
+gggggdgggdggggmg
+ggggggggggggggsm
+gmgggggggggggggd
+gsmggggmgggggggg
+ggdgggmsmggggggg
+gggggggdggggdggg
+ggggggggggggmggg
+gggdgggggggmsmgg
+gggggggygggggdgg
+gmggggggggdggggg
+gggggggggggggggg
+end
+anim main fps=1 loop
+frame main
+  use o
+end

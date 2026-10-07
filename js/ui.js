@@ -248,7 +248,7 @@ function elIcon(el, size = 16) {
   const e = ELEMENTS[el];
   if (!e) return '';
   // v163: bộ 5 icon ngũ hành mới (ui/ic-hanh-*.png, tấm ic-ngu-hanh) luôn dùng khi có; ảnh hanh_*.png cũ chỉ khi bật ảnh AI
-  const png = (asset(`ui/ic-hanh-${el}.png`, true) && assetSrc(`ui/ic-hanh-${el}.png`)) || assetUrl(`hanh_${el}.png`);
+  const png = (typeof pxUrl === 'function' && pxUrl('icon', 'hanh-' + el)) || (asset(`ui/ic-hanh-${el}.png`, true) && assetSrc(`ui/ic-hanh-${el}.png`)) || assetUrl(`hanh_${el}.png`);
   if (png) return `<img class="eli" src="${png}" width="${size}" height="${size}" style="width:${size}px;height:${size}px" alt="Hành ${e.name}">`;
   return `<svg class="eli" viewBox="0 0 24 24" width="${size}" height="${size}" aria-label="Hành ${e.name}"><circle cx="12" cy="12" r="11" fill="#1A1208" stroke="${e.color}" stroke-width="1.6"/><circle cx="12" cy="12" r="8.6" fill="none" stroke="${e.color}" stroke-width="0.6" stroke-dasharray="1.2 1.4" opacity=".7"/><g fill="none" stroke="${e.color}" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">${EL_PATH[el]}</g></svg>`;
 }
@@ -284,6 +284,8 @@ const CARD_NAME = { lactuong: 'Lạc Tướng', lucsi: 'Lực Sĩ', xathu: 'Xạ
   thoren: 'Thợ Rèn', nguphu: 'Ngư Phủ', thogom: 'Thợ Gốm', thaylang: 'Thầy Lang', dotnuong: 'Đốt Nương', denroi: 'Đèn Trời', chodo: 'Chèo Đò',
   haisen: 'Hái Sen', dapde: 'Đắp Đê', chantrau: 'Chăn Trâu', giaodong: 'Giáo Đồng', chuongdong: 'Chuông Đồng', tre: 'Tre Làng', ongthoi: 'Ống Thổi' };
 function heroImgUrl(type, crop) {
+  const px = typeof pxUrl === 'function' && pxUrl('tuong', type, true);   // pixel art: chân dung 32×32 (js/pixel.js)
+  if (px) return px;
   // v64: tướng có bộ ảnh vẽ tay → chân dung / dáng đứng từ assets/packs
   if (HERO_PACK[type] && !vectorHeroesOn()) return assetSrc(HERO_PACK[type] + (crop === 'head' ? 'head.png' : 'front.png'));
   const slug = heroSlug(type);
@@ -2751,7 +2753,8 @@ class UI {
     const vf = ROLES[this.rosterRole] ? this.rosterRole : '';
     const shown = vf ? [...all.filter((k) => heroRole(k) === vf), ...all.filter((k) => heroRoles(k)[1] === vf)] : all;
     if (vf && !shown.includes(t)) return (this.rosterSel = shown[0], this.renderRoster());   // tướng đang xem không thuộc bộ lọc → tướng đầu danh sách
-    const splash = assetUrl([`anh-lon_${heroSlug(t)}.png`, `heroes/hero_${HERO_CODE[t]}_A.png`]);
+    // pixel art: tướng có sprite pixel → vẽ cả người lên canvas (drawHeroPortrait full) thay ảnh lớn
+    const splash = !(typeof pxEntry === 'function' && pxEntry('tuong', t)) && assetUrl([`anh-lon_${heroSlug(t)}.png`, `heroes/hero_${HERO_CODE[t]}_A.png`]);
     const n = skillN(1);
     const oc = this.openCount(), own = this.heroOpen(t), oCost = OWN_COST[heroTier(t)], kho = this.save.kho || 0;
     // giữ vị trí cuộn danh sách tướng / bảng chi tiết khi chọn tướng khác (trước đây nhảy về đầu)

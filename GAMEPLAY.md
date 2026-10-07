@@ -2156,3 +2156,36 @@ Tỉ lệ ra đúng tướng cần không giảm (đầu trận còn tăng vì 1
 
 Test: cập nhật `cho-tuong` (màn Chuẩn bị không còn chọn đội, sau boss không Nghỉ chân, bản lưu cũ có đội/Nghỉ chân vẫn chạy), `ti-le` (trọng số không còn ×2, giới hạn nguyên liệu ưu tiên, tình huống sở hữu mọi Tím), `ngan-kho`, `khung-do-hiem`, `vo-tan`, `icon-nho`, `duong-quai`, `hop-the/mo-phong`, `coop/test-lockstep`, `coop/test-solo`.
 - Sửa theo tester (sau v195): đồng xu bay khi hạ quái ~16 px CSS, rương rơi đồ ~30 px CSS (cỡ tính theo `view.scale`, không nhỏ lại trên điện thoại), quầng tròn + viền vòng đậm màu độ hiếm (xám / xanh / tím / cam) nhấp nháy nhẹ, chỉ mờ ở cuối. Icon tựa màn thua chương Sơn Tinh "Phong Châu thất thủ": thay mũi tên sóng (`ic-nuoc-dang`, trông như biểu đồ tăng) bằng cổng thành `tiles/cong-phong-chau.png` chìm trong 2 ngọn sóng `ic-hanh-thuy`.
+
+## claude/pixel-nen-tang — Nền tảng chuyển toàn bộ hình sang PIXEL ART (vẽ bằng code)
+
+Người dùng chốt: đổi toàn bộ hình ảnh sang **pixel art do Claude vẽ bằng code** (lưới ký tự + bảng màu chung → PNG), không gen AI.
+Session này dựng khung để nhiều session vẽ song song không xung đột:
+
+- **Quy chuẩn** `docs/pixel/QUY-CHUAN.md`: bảng màu chung 44 màu (`tools/pixel/palette.txt` — đồng, son đỏ, vàng nghệ, chàm,
+  xanh lá mạ, nâu đất…), cỡ theo nhóm (tướng / quái 32×32, boss 48 / 64, ô nền 16, icon 16 / 12, đồ · ấn phù · kỹ năng 24),
+  viền đen 1px, sáng trên-trái 2 tông, chibi 2,5–3 đầu quay phải, ngũ hành / độ hiếm, **đặc trưng nhân vật theo prompt** (thứ tự
+  ưu tiên PROMPT-GEN-LAI > PROMPT-DUNG-XUONG > prompts-*.csv), định dạng nguồn, động tác bắt buộc.
+- **Nguồn** `tools/pixel/src/<nhóm>/<mã>.txt` (part lưới ký tự + khung ghép bằng lệnh use / shift / wrap / swap / set / rot /
+  outline). **Tool** `node tools/build-pixel.js` (Node thuần, tự mã hoá PNG) → `assets/pixel/<nhóm>/<mã>.png` (dải khung) + `.json`
+  + `<mã>-chan-dung.png`, manifest **theo nhóm** `js/pixel/<nhóm>.js` (12 file, index.html nạp sẵn → session khác nhóm không đụng
+  nhau), tự chạy lại `js/asset-list.js`. Báo lỗi: màu ngoài bảng màu, ký tự chưa khai báo, sai cỡ theo nhóm, thiếu động tác /
+  sai số khung, tràn khung… `--check`, `--strict`, `--nhap` (vẽ dở), `--xem DIR` (ảnh xem trước ×8).
+- **Game** `js/pixel.js`: công tắc `const PIXEL_BAT = false` (bật toàn cục sau) · thử `?pixel=1` (`?pixel=0` ép tắt). Khi bật,
+  mã CÓ sprite pixel thì vẽ pixel, mã chưa có giữ hình cũ: tướng trên bản đồ (idle / attack theo pha vung / cast / hurt / die,
+  giữ bóng, quầng phụ kiện, viền sáng chiêu / sao, thanh máu), quái / boss (walk / attack / hurt / rage, hiệu ứng biến thể, trạng
+  thái, thanh máu, chấm hành), biểu tượng quái, chân dung tướng (thẻ chợ, Anh Hùng, Bách khoa… qua `heroImgUrl` /
+  `drawHeroPortrait`), icon ngũ hành (`elIcon`), nền bản đồ (cỏ + đường đất / nước lát ô, `mapLayer`). Vẽ nearest-neighbor,
+  bám lưới điểm ảnh màn hình, phóng bội số nguyên; CSS `image-rendering: pixelated`.
+- **Font** (cùng công tắc): tiêu đề **Handjet**, số (vàng, đợt, sát thương bay) **VT323** — hai font pixel Google Fonts có subset
+  tiếng Việt đủ dấu; chữ dài giữ Alegreya Sans.
+- **Mẫu đủ động tác:** tướng `giong` (Thánh Gióng: khăn vàng, giáp sắt, áo choàng đỏ, gậy sắt; chiêu đầu gậy bốc lửa),
+  `tanvien` (Sơn Tinh: vương miện 3 đỉnh núi, giáp xanh rêu viền vàng, gậy thần đầu ngọc; chiêu núi nhỏ bay trên tay),
+  `chodo` (Chàng Chèo Đò: đầu cạo búi tóc, áo trắng quần chàm, dây lưng vàng, **mái chèo**; chiêu tạt sóng) — mỗi tướng idle 2 ·
+  attack 4 · cast 3 · hurt 2 · die 3; quái `tom` (Tôm Binh: mũ đồng, khiên đồng sao, giáo ngắn; walk 3 · attack 3 · hurt 2 · die 3);
+  ô nền `co`, `dat`, `nuoc` (3 khung gợn); icon `hanh-kim`, `hanh-moc`, `hanh-thuy`.
+- **Danh sách toàn bộ hình** `docs/pixel/DANH-SACH.md`, chia lô 15–25 hình theo nhóm, mỗi mã có đặc trưng + nguồn prompt.
+
+Test mới `tests/pixel` (tool: nguồn thật hợp lệ --strict, 5 kiểu nguồn lỗi bị chặn, dựng ra thư mục tạm khớp file trong repo;
+game: không bật thì không dùng pixel; ?pixel=1 ở 1920×934 / 844×390 / 667×375 / dọc 390×844 không lỗi console, giong · tanvien ·
+chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hình cũ, vẽ không làm mịn; chụp + phóng vùng sprite).

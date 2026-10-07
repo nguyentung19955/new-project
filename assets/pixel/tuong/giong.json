@@ -1,0 +1,50 @@
+{
+ "code": "giong",
+ "group": "tuong",
+ "name": "Thánh Gióng",
+ "w": 32,
+ "h": 32,
+ "ax": 15,
+ "ay": 30,
+ "bbox": [
+  2,
+  1,
+  23,
+  30
+ ],
+ "n": 14,
+ "anims": {
+  "idle": {
+   "start": 0,
+   "n": 2,
+   "fps": 3,
+   "loop": true
+  },
+  "attack": {
+   "start": 2,
+   "n": 4,
+   "fps": 10,
+   "loop": false
+  },
+  "cast": {
+   "start": 6,
+   "n": 3,
+   "fps": 8,
+   "loop": true
+  },
+  "hurt": {
+   "start": 9,
+   "n": 2,
+   "fps": 8,
+   "loop": false
+  },
+  "die": {
+   "start": 11,
+   "n": 3,
+   "fps": 5,
+   "loop": false
+  }
+ },
+ "cd": 1,
+ "sheet": "giong.png"
+}
