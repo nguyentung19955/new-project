@@ -107,13 +107,17 @@ const heroIdPrompt = (t) => {
   const ranged = HEROES[t].attack !== 'melee';
   const avoid = CONFUSE.filter((g) => g.heroes.includes(t));
   const avoidTxt = avoid.length ? `\nMUST NOT look like the generic ${avoid.map((g) => `"${g.look}"`).join(' or ')} shared by other heroes — keep only what is listed here.` : '';
-  return `Create ONE image: a 768x512 character sprite sheet for a cute mobile tower-defense game based on Vietnamese folk legends, an invisible 3x2 grid of six equal 256x256 cells. REDESIGN of the hero ${HEROES[t].name} so it is easy to tell apart from the other heroes.
+  return `Create ONE image: a 768x576 animation sprite sheet for a cute mobile tower-defense game based on Vietnamese folk legends, an invisible 4x3 grid of twelve equal 192x192 cells (4 columns, 3 rows, each ROW is one action read left to right). REDESIGN of the hero ${HEROES[t].name} so it is easy to tell apart from the other heroes.
 BODY: ${h.body}.
 SIGNATURE SHAPE: ${h.mark}.
 COLORS: main ${h.colors[0]}, second ${h.colors[1]}, accent ${h.colors[2]} (element ${E}). ${RAR[HEROES[t].legend]}, but keep the silhouette above.
 FACE: ${h.face}.
 OUTFIT: ${h.outfit}. WEAPON / ITEM: ${h.weapon}.${avoidTxt}
-CELLS (same character, same size and proportions in cells 1-5, facing RIGHT in 3/4 view, feet${h.kind === 'spirit' ? ' (or floating base)' : ''} on the same baseline, the whole body fills the cell height): [1] idle — ${h.pose} [2] wind-up [3] ${ranged ? 'shooting / casting forward, the projectile leaving the hand' : 'strike with ONE short pale motion swoosh'} [4] casting the skill: ${h.fx} (small, inside the cell) [5] full body facing the viewer [6] portrait, head and shoulders, big and centered, showing the unique face.
+CELLS (facing RIGHT in 3/4 view; in every full-body cell the ${h.kind === 'spirit' ? 'feet (or floating base)' : 'feet'} stand on the same invisible baseline near the bottom of the cell, same scale, the body fills about 85% of the cell height):
+ROW 1 — idle loop: [1] ${h.pose} [2] same pose, breathing in: chest and shoulders slightly up, weapon/hair/cloth slightly lifted [3] same pose, small settle: knees slightly bent, cloth swinging the other way [4] portrait: head and shoulders, big and centered, showing the unique face.
+ROW 2 — ${ranged ? 'attack (shooting / casting forward)' : 'melee attack'}: [5] prepare: weight back, ${ranged ? 'drawing / aiming' : 'weapon pulled back'} [6] swing: body twisting forward, ${ranged ? 'about to release' : 'weapon moving with ONE short pale motion swoosh'} [7] hit: full extension, ${ranged ? 'the projectile leaving the hand / weapon' : 'weapon at the end of the swing'} [8] recover: returning toward the idle pose.
+ROW 3 — skill and reaction: [9] skill start: gathering power, small glow around the hands [10] skill peak: ${h.fx} (small, inside the cell) [11] skill end: effect fading, body relaxing [12] hurt: flinching backward, eyes squeezed shut, one arm raised to guard (no blood).
+ANIMATION RULES: same character identical in every cell, consistent size and outfit, feet on the same baseline, smooth motion between consecutive frames, clear gaps between cells. Small changes between neighbouring frames of the same row; nothing touches or crosses a cell border.
 ${HERO_STYLE}
 ${BG}`;
 };
@@ -161,18 +165,18 @@ if (!fs.existsSync(path.join(ROOT, 'assets/ui/.nen-menu-ttv'))) items.push({ gro
 if (!fs.existsSync(path.join(ROOT, 'assets/ui/logo-tua.png'))) items.push({ group: '0. Ảnh nền menu — Thần Thoại Việt', file: 'logo-tua.png', title: 'Logo chữ "Thần Thoại Việt" (tùy chọn — AI hay viết sai dấu; sai thì bỏ, game dùng chữ HTML)', text: LOGO });
 const tierName = ['Thường', 'Tím', 'Vàng'];
 // v151: vẽ lại MỌI tướng cho dễ phân biệt — nhóm dễ nhầm trước, rồi Thường → Tím → Vàng.
-// Cắt xong bản mới (python3 tools/cat-sheet.py <ảnh> <mã>) thì tạo file assets/packs/<mã>/.v2 để ẩn prompt.
+// Cắt bằng python3 tools/cat-sheet.py <ảnh> <mã> hero12 — lệnh cắt tự tạo assets/packs/<mã>/.v2 để ẩn prompt.
 const confuseRank = (t) => { const i = CONFUSE.findIndex((g) => g.heroes.includes(t)); return i < 0 ? 99 : i; };
 const redraw = Object.keys(HERO_ID).filter((t) => packs.has(t) && !fs.existsSync(path.join(ROOT, 'assets/packs', t, '.v2')))
   .sort((a, b) => confuseRank(a) - confuseRank(b) || tier(a) - tier(b));
 for (const t of redraw) {
   const g = CONFUSE[confuseRank(t)];
-  items.push({ group: '0B. Tướng vẽ lại cho dễ phân biệt', file: `${t}.png`, title: `${HEROES[t].name} · ${tierName[tier(t)]} · ${EL[HEROES[t].el][0]}${g ? ` · nhóm dễ nhầm: ${g.name}` : ''}`, text: heroIdPrompt(t) });
+  items.push({ group: '0B. Tướng vẽ lại cho dễ phân biệt', file: `${t}.png`, title: `${HEROES[t].name} · ${tierName[tier(t)]} · ${EL[HEROES[t].el][0]}${g ? ` · nhóm dễ nhầm: ${g.name}` : ''}`, text: heroIdPrompt(t), cut: `python3 tools/cat-sheet.py <ảnh> ${t} hero12` });
 }
-for (const t of need.filter((x) => tier(x) === 0)) items.push({ group: '1. Tướng Thường (ưu tiên: xuất hiện mỗi trận)', file: `${t}.png`, title: `${HEROES[t].name} · ${tierName[tier(t)]} · ${EL[HEROES[t].el][0]}`, text: heroPrompt(t) });
+for (const t of need.filter((x) => tier(x) === 0)) items.push({ group: '1. Tướng Thường (ưu tiên: xuất hiện mỗi trận)', file: `${t}.png`, title: `${HEROES[t].name} · ${tierName[tier(t)]} · ${EL[HEROES[t].el][0]}`, text: heroPrompt(t), cut: `python3 tools/cat-sheet.py <ảnh> ${t} ${HERO_ID[t] ? 'hero12' : 'hero'}` });
 for (const t of ['yeutinh', 'dacon', 'linhan'].filter((x) => !packs.has(x))) items.push({ group: '2. Quái còn thiếu', file: `${t}.png`, title: ENEMIES[t].name, text: enemyPrompt(t) });
-for (const t of need.filter((x) => tier(x) === 1)) items.push({ group: '3. Tướng Tím', file: `${t}.png`, title: `${HEROES[t].name} · Tím · ${EL[HEROES[t].el][0]}`, text: heroPrompt(t) });
-for (const t of need.filter((x) => tier(x) === 2)) items.push({ group: '4. Tướng Vàng', file: `${t}.png`, title: `${HEROES[t].name} · Vàng · ${EL[HEROES[t].el][0]}`, text: heroPrompt(t) });
+for (const t of need.filter((x) => tier(x) === 1)) items.push({ group: '3. Tướng Tím', file: `${t}.png`, title: `${HEROES[t].name} · Tím · ${EL[HEROES[t].el][0]}`, text: heroPrompt(t), cut: `python3 tools/cat-sheet.py <ảnh> ${t} ${HERO_ID[t] ? 'hero12' : 'hero'}` });
+for (const t of need.filter((x) => tier(x) === 2)) items.push({ group: '4. Tướng Vàng', file: `${t}.png`, title: `${HEROES[t].name} · Vàng · ${EL[HEROES[t].el][0]}`, text: heroPrompt(t), cut: `python3 tools/cat-sheet.py <ảnh> ${t} ${HERO_ID[t] ? 'hero12' : 'hero'}` });
 for (const t of Object.keys(ICONS).filter((x) => HEROES[x] && !fs.existsSync(path.join(ROOT, 'assets/packs', x, 'sk-q.png'))).sort((a, b) => tier(a) - tier(b))) items.push({ group: '5. Icon kỹ năng (tùy chọn)', file: `icon-${t}.png`, title: `Icon kỹ năng ${HEROES[t].name}`, text: iconPrompt(t) });
 for (const t of Object.keys(LEGACY).filter((x) => RELICS[x] && !fs.existsSync(path.join(ROOT, 'assets/packs', x, 'tk-1.png')))) items.push({ group: '6. Icon Thần Khí (tùy chọn)', file: `than-khi-${t}.png`, title: `Thần Khí ${HEROES[t].name}`, text: relicPrompt(t) });
 for (const k of Object.keys(RUNE_SYM).filter((b) => !fs.existsSync(path.join(ROOT, 'assets/runes', `${b[0]}_${{ nui: 'dmg', gio: 'haste', sam: 'power' }[b]}.png`)))) items.push({ group: '7. Icon Ấn Phù (tùy chọn)', file: `an-phu-${k}.png`, title: `Ấn Phù nhánh ${k}`, text: runePrompt(k) });
@@ -248,19 +252,23 @@ const REDO_BOSS = {
 };
 // có đủ dáng nhưng nét cũ, nhỏ, lệch phong cách chung; cắt xong bản mới thì tạo file assets/packs/<mã>/.redo để bỏ khỏi danh sách
 const REDO_FORCE = new Set(['daibang', 'trieuda', 'hotinh', 'anvuong', 'haba', 'thuytinh']);
-const redoEnemyPrompt = (k) => `Create ONE image: a 576x192 enemy sprite row for a cute mobile tower-defense game based on Vietnamese folk legends, three equal 192x192 cells in one row.
-CREATURE: ${REDO_ENEMY[k]}. Cute-but-mischievous chibi monster facing RIGHT.
-CELLS (same creature, same size): ${REDO_FLY.has(k) ? '[1] flying, wings up [2] flying, wings down [3] diving attack' : '[1] walk step A [2] walk step B (opposite legs) [3] attack'}.
+// v151: quái 3×2 = 6 khung (đi 4 + đánh 2), boss 3×3 = 9 khung (đi 4 + đánh 3 + nổi giận 2) — cắt bằng tools/cat-sheet.py enemy6 / boss9
+const ANIM_RULES = 'ANIMATION RULES: same character identical in every cell, consistent size and outfit, feet on the same baseline, smooth motion between consecutive frames, clear gaps between cells. Small changes between neighbouring frames; nothing touches or crosses a cell border.';
+const redoEnemyPrompt = (k) => `Create ONE image: a 576x384 enemy animation sprite sheet for a cute mobile tower-defense game based on Vietnamese folk legends, an invisible 3x2 grid of six equal 192x192 cells, read left to right, top to bottom.
+CREATURE: ${REDO_ENEMY[k]}. Cute-but-mischievous chibi monster facing RIGHT, the body fills about 80% of the cell height, ${REDO_FLY.has(k) ? 'flying at the same height in every cell' : 'feet on the same invisible baseline near the bottom of every cell'}.
+CELLS: ${REDO_FLY.has(k) ? '[1] flying, wings fully up [2] wings half down [3] wings fully down [4] wings half up (a smooth 4-frame flap loop) [5] attack wind-up: pulling back, eyes narrowed [6] diving attack: lunging forward' : '[1] walk: right foot forward [2] walk: passing, body slightly higher [3] walk: left foot forward [4] walk: passing, body slightly higher (a smooth 4-frame walk loop) [5] attack wind-up: rearing back [6] attack: lunging forward with the bite / claw / weapon'}.
+${ANIM_RULES}
 ${STYLE}
 ${BG}`;
-const redoBossPrompt = (k) => `Create ONE image: a 512x512 boss sprite sheet for a cute mobile tower-defense game based on Vietnamese folk legends, an invisible 2x2 grid of four equal 256x256 cells.
-BOSS: ${REDO_BOSS[k]}. Big, menacing but still cute chibi boss facing RIGHT.
-CELLS (same character, same size, left to right, top to bottom): [1] walk step A [2] walk step B (opposite legs) [3] attack swing [4] rage: body glowing red-orange, roaring.
+const redoBossPrompt = (k) => `Create ONE image: a 768x768 boss animation sprite sheet for a cute mobile tower-defense game based on Vietnamese folk legends, an invisible 3x3 grid of nine equal 256x256 cells, read left to right, top to bottom.
+BOSS: ${REDO_BOSS[k]}. Big, menacing but still cute chibi boss facing RIGHT, the body fills about 85% of the cell height, feet on the same invisible baseline near the bottom of every cell.
+CELLS: [1] walk: front foot forward [2] walk: passing, body higher [3] walk: back foot forward [4] walk: passing, body higher (a smooth 4-frame walk loop) [5] attack wind-up: weapon raised high [6] attack swing: weapon coming down with ONE short pale swoosh [7] attack impact: weapon low, small dust burst [8] rage: body glowing red-orange, roaring, arms wide [9] rage: same, stronger glow, head thrown back.
+${ANIM_RULES}
 ${STYLE}
 ${BG}`;
 const redone = (k) => fs.existsSync(path.join(ROOT, 'assets/packs', k, '.redo'));
-for (const k of Object.keys(REDO_ENEMY).filter((x) => REDO_ENEMY_FORCE.has(x) ? !redone(x) : sameFrames(x))) items.push({ group: '10. Quái gen lại (đủ dáng)', file: `${k}.png`, title: `Quái · ${ENEMIES[k].name}`, text: redoEnemyPrompt(k) });
-for (const k of Object.keys(REDO_BOSS).filter((x) => REDO_FORCE.has(x) ? !fs.existsSync(path.join(ROOT, 'assets/packs', x, '.redo')) : sameFrames(x))) items.push({ group: '11. Boss gen lại (đủ dáng)', file: `${k}.png`, title: `Boss · ${ENEMIES[k].name}`, text: redoBossPrompt(k) });
+for (const k of Object.keys(REDO_ENEMY).filter((x) => REDO_ENEMY_FORCE.has(x) ? !redone(x) : sameFrames(x))) items.push({ group: '10. Quái gen lại (đủ dáng)', file: `${k}.png`, title: `Quái · ${ENEMIES[k].name}`, text: redoEnemyPrompt(k), cut: `python3 tools/cat-sheet.py <ảnh> ${k} enemy6` });
+for (const k of Object.keys(REDO_BOSS).filter((x) => REDO_FORCE.has(x) ? !fs.existsSync(path.join(ROOT, 'assets/packs', x, '.redo')) : sameFrames(x))) items.push({ group: '11. Boss gen lại (đủ dáng)', file: `${k}.png`, title: `Boss · ${ENEMIES[k].name}`, text: redoBossPrompt(k), cut: `python3 tools/cat-sheet.py <ảnh> ${k} boss9` });
 // v140: icon đồ vật (đang vẽ bằng code) — mỗi tấm 4–5 ô, cắt bằng: python3 tools/cat-items.py <ảnh> <mã tấm>
 const ITEM_STYLE = 'cute mobile-game item icon, chunky readable shape, thick clean dark-brown outline #2A1608, flat cel shading (one shadow, one highlight), small Dong Son bronze-drum motifs (zigzag bands, sun-star, circle-dots)';
 const RAR_LOOK = [['thuong', 'COMMON: plain dull bronze and wood, no gems'], ['hiem', 'RARE: polished bronze with blue trim and one small blue gem'],
@@ -324,11 +332,11 @@ if (noIcon.length) console.error('Chưa có mô tả icon:', noIcon.join(', '));
 
 // Markdown
 let out = `# Prompt Gemini đầy đủ — mỗi ảnh một prompt (${items.length} ảnh)\n\n`;
-out += 'Mỗi khối dán **riêng một lần** vào Gemini (đính kèm `docs/mau-lac-tuong.png` làm mẫu nét vẽ nếu được), tải ảnh về và đặt **đúng tên file** ghi trên khối. Gen theo thứ tự từ trên xuống: phần 0 (nền menu tên mới) và 1–4 là cần thiết, phần 5–7 là tùy chọn.\n\n> **Phần 0B — vẽ lại tướng cho dễ phân biệt:** mỗi tướng có dáng, mảng hình và màu riêng (thẻ nhận diện `tools/hero-id.js`, so sánh nhóm dễ nhầm ở `docs/tuong-de-nham.png`). Cắt xong bằng `python3 tools/cat-sheet.py <ảnh> <mã>` thì tạo file trống `assets/packs/<mã>/.v2` để ẩn prompt tướng đó.\n\n> **Phần 0 — đổi tên game thành \"Thần Thoại Việt\" (v145):** ảnh nền menu mới thay `assets/ui/nen-menu.jpg` (ảnh cũ chủ đề Sơn Tinh – Thủy Tinh, đang dùng tạm). Logo chữ là tùy chọn: AI hay viết sai dấu tiếng Việt — kiểm tra kỹ từng dấu (ầ, ạ, ệ); sai thì bỏ, game tự hiện chữ HTML. Có ảnh đúng thì xoá nền magenta, lưu `assets/ui/logo-tua.png`. Các ảnh cảnh khác (nền thắng/thua, truyện) hiện không có chữ tên game nên không cần gen lại.\n\n';
+out += 'Mỗi khối dán **riêng một lần** vào Gemini (đính kèm `docs/mau-lac-tuong.png` làm mẫu nét vẽ nếu được), tải ảnh về và đặt **đúng tên file** ghi trên khối. Gen theo thứ tự từ trên xuống: phần 0 (nền menu tên mới) và 1–4 là cần thiết, phần 5–7 là tùy chọn.\n\n> **Phần 0B — vẽ lại tướng cho dễ phân biệt:** mỗi tướng có dáng, mảng hình và màu riêng (thẻ nhận diện `tools/hero-id.js`, so sánh nhóm dễ nhầm ở `docs/tuong-de-nham.png`). Mỗi tấm 12 khung chuyển động (4×3: thở ×3 + chân dung · đánh ×4 · chiêu ×3 + bị đánh); cắt bằng `python3 tools/cat-sheet.py <ảnh> <mã> hero12` — lệnh cắt tự tạo `assets/packs/<mã>/.v2` để ẩn prompt tướng đó và tự ghi số khung vào `js/render.js` (nhớ tăng phiên bản game). Quái gen lại cắt bằng `enemy6` (3×2), boss bằng `boss9` (3×3); lệnh cắt ghi ngay dưới tên mỗi khối.\n\n> **Phần 0 — đổi tên game thành \"Thần Thoại Việt\" (v145):** ảnh nền menu mới thay `assets/ui/nen-menu.jpg` (ảnh cũ chủ đề Sơn Tinh – Thủy Tinh, đang dùng tạm). Logo chữ là tùy chọn: AI hay viết sai dấu tiếng Việt — kiểm tra kỹ từng dấu (ầ, ạ, ệ); sai thì bỏ, game tự hiện chữ HTML. Có ảnh đúng thì xoá nền magenta, lưu `assets/ui/logo-tua.png`. Các ảnh cảnh khác (nền thắng/thua, truyện) hiện không có chữ tên game nên không cần gen lại.\n\n';
 let g = '';
 for (const it of items) {
   if (it.group !== g) { g = it.group; out += `\n## ${g}\n`; }
-  out += `\n### ${it.n}. ${it.title} → \`${it.file}\`\n\`\`\`\n${it.text}\n\`\`\`\n`;
+  out += `\n### ${it.n}. ${it.title} → \`${it.file}\`\n${it.cut ? `Cắt: \`${it.cut}\`\n` : ''}\`\`\`\n${it.text}\n\`\`\`\n`;
 }
 fs.writeFileSync(path.join(ROOT, 'docs/PROMPT_GEMINI_FULL.md'), out);
 // Văn bản thường (.txt): không ký hiệu Markdown, mỗi prompt kẹp giữa hai đường kẻ để dễ chép
@@ -337,7 +345,7 @@ txt += 'Mỗi khối dán riêng một lần vào Gemini (đính kèm docs/mau-l
 g = '';
 for (const it of items) {
   if (it.group !== g) { g = it.group; txt += `\n\n${'='.repeat(60)}\n${g.toUpperCase()}\n${'='.repeat(60)}\n`; }
-  txt += `\n${it.n}. ${it.title}  ->  Tên file: ${it.file}\n${'-'.repeat(60)}\n${it.text}\n${'-'.repeat(60)}\n`;
+  txt += `\n${it.n}. ${it.title}  ->  Tên file: ${it.file}${it.cut ? `  ->  Cắt: ${it.cut}` : ''}\n${'-'.repeat(60)}\n${it.text}\n${'-'.repeat(60)}\n`;
 }
 fs.writeFileSync(path.join(ROOT, 'docs/PROMPT_GEMINI_FULL.txt'), txt);
 fs.writeFileSync(path.join(ROOT, 'docs/prompts.json'), JSON.stringify(items, null, 1));

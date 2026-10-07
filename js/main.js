@@ -612,7 +612,7 @@ function drawHeroOnMap(h, t) {
   const r = drawHeroSprite(ctx, h, h.x, h.y, {
     scale: (useAssets ? 0.285 : 0.33) * (HZ > 1 ? 1.12 : 1), t, dir: h.dir, swing: va.swing, castT: va.castT, castUlt: h.castUlt, hurt: h.hurtT, px: px(),
     bog: h.bogged, summon: h.summonT, fall: h.dead ? h.fallT : undefined,
-    bounce: h.bounceT, evo: h.evoT, wingT: h.wingT, smooth: true, castColor: h.castColor, vector: !!(ui.save && ui.save.settings.vectorHeroes),
+    bounce: h.bounceT, evo: h.evoT, wingT: h.wingT, smooth: true, castColor: h.castColor, win: !!game.won, vector: !!(ui.save && ui.save.settings.vectorHeroes),
   });
   if (h.dead) return;
   drawRankAura(h, t, true);
