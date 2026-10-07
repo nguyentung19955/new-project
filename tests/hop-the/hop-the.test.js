@@ -139,6 +139,15 @@ async function skillCase(w, h) {
   await page.waitForTimeout(150);
   const ew = await page.evaluate(() => ({ why: (document.querySelector('#screen .ho-why.err') || {}).textContent || '', toast: document.querySelector('#toasts').textContent }));
   ok(/còn thiếu \d+ cấp kỹ năng/.test(ew.why) && !ew.toast, `${tag}: chạm nút khoá ở Tiến hoá → lý do ngay trong thẻ "${ew.why.trim().slice(0, 40)}…", không toast`);
+  // claude/r-cap-12: R tối đa ở tướng cấp 12 (R2 cấp 9, R3 cấp 12) — trước là 11/16
+  r = await page.evaluate((a) => {
+    const h = game.heroes[a], ri = 3, id = HEROES[h.type].skills[ri].id, keep = { ...h.skillLv }, kl = h.level, kp = h.skillPts;
+    const out = { req: [skillReqLevel(ri, 1), skillReqLevel(ri, 2), skillReqLevel(ri, 3)] };
+    h.skillLv[id] = 2; h.skillPts = 5; h.level = 11; out.at11 = game.upgradeSkill(h, ri);
+    h.level = 12; out.at12 = game.upgradeSkill(h, ri); out.lv = h.skillLv[id];
+    h.skillLv = keep; h.level = kl; h.skillPts = kp; return out;
+  }, a);
+  ok(r.req.join() === '6,9,12' && r.at11 === 'Cần tướng cấp 12' && r.at12 === true && r.lv === 3, `${tag}: R cần tướng cấp ${r.req.join('/')}; cấp 11 bị chặn ("${r.at11}"), cấp 12 nâng R3 được`);
   // nâng hết kỹ năng → hợp thể được
   await maxSkills(page, a); await page.waitForTimeout(300);
   const btn = page.locator('#screen .ho.ready .hx-go:not(.off)');
