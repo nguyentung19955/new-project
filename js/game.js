@@ -223,7 +223,7 @@ function heroStats(h) {
   const line = heroLineage(h);
   const s = {
     damage: def.base.damage, range: def.base.range, baseCooldown: def.base.cooldown,
-    haste: 0, crit: 5, critMult: 2, cleave: 0, arrows: 1, poison: 0,
+    haste: 0, crit: 5, critMult: 2, cleave: def.base.cleave || 0, arrows: 1, poison: 0,
     splash: def.base.splash || 0, slow: def.base.slow || 0, stench: 0, bonusDmgPct: 0,
     str: base.str, agi: base.agi, int: base.int, hp: 0, regen: 0, cdr: 0, dr: 0,
     pierce: hasLine(h, 'caolo') ? 50 : 0, mpen: 0, canAir: def.attack !== 'melee', airMult: 1,
@@ -415,8 +415,10 @@ function upgradeGain(h, inst) {
 }
 
 // chỉ số gốc của tướng thăng thần: lấy bên tốt hơn giữa tướng gốc và tướng thần
-function inheritBase(def, fd, prev) {
+function inheritBase(def, fd0, prev) {
   // tốc đánh giữ theo tướng thần (nét riêng của tướng), sát thương / tầm lấy bên cao hơn
+  // base.heir: chỉ số truyền lại cho tướng hợp thể (tướng đổi kiểu đánh theo ảnh vẫn truyền như cũ — không đổi cân bằng tướng con)
+  const fd = fd0.base.heir ? { base: { ...fd0.base, ...fd0.base.heir } } : fd0;
   const p = prev || { damage: def.base.damage, range: def.base.range };
   const out = { ...p, damage: Math.max(p.damage, fd.base.damage), range: Math.max(p.range, fd.base.range) };
   if (fd.base.splash && !def.base.splash) out.splash = Math.max(out.splash || 0, fd.base.splash);

@@ -373,7 +373,7 @@ function render() {
 }
 
 // cỡ vẽ (px) của ảnh đạn vẽ tay theo loại
-const PROJ_IMG = { fireball: 20, frostbolt: 20, arrow: 24, bolt: 22, orb: 18, feather: 20, petal: 16, melon: 18, rice: 18, evil: 20 };
+const PROJ_IMG = { fireball: 20, frostbolt: 20, arrow: 24, bolt: 22, orb: 18, feather: 20, petal: 16, melon: 18, rice: 18, evil: 20, spear: 28, blade: 24 };
 function drawProjectile(p, t) {
   ctx.save();
   if (p.curve) {
@@ -424,6 +424,31 @@ function drawProjectile(p, t) {
       ctx.fillStyle = '#C8C8C0';
       ctx.beginPath(); ctx.moveTo(7, 0); ctx.lineTo(3, -2.5); ctx.lineTo(3, 2.5); ctx.fill();
       break;
+    case 'spear': {
+      // giáo bay / giáo phép (tướng cầm giáo trong ảnh): cán gỗ + mũi sáng màu hệ
+      const c = (pel && ELEMENTS[pel] && ELEMENTS[pel].color) || '#F2D27A';
+      ctx.shadowColor = c;
+      ctx.shadowBlur = 10;
+      ctx.strokeStyle = '#8A6A40';
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(-14, 0); ctx.lineTo(4, 0); ctx.stroke();
+      ctx.fillStyle = c;
+      ctx.beginPath(); ctx.moveTo(13, 0); ctx.lineTo(3, -3.5); ctx.lineTo(5, 0); ctx.lineTo(3, 3.5); ctx.fill();
+      ctx.fillStyle = '#FFF8E0';
+      ctx.beginPath(); ctx.moveTo(11, 0); ctx.lineTo(5, -1.4); ctx.lineTo(5, 1.4); ctx.fill();
+      break;
+    }
+    case 'blade': {
+      // kiếm khí / đao khí (tướng cầm kiếm, đao trong ảnh): vầng trăng khuyết bay ngang
+      const c = (pel && ELEMENTS[pel] && ELEMENTS[pel].color) || '#E8F4FF';
+      ctx.shadowColor = c;
+      ctx.shadowBlur = 12;
+      ctx.fillStyle = c;
+      ctx.beginPath(); ctx.arc(-2, 0, 10, -1.25, 1.25); ctx.arc(-7, 0, 9, 1.0, -1.0, true); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,0.85)';
+      ctx.beginPath(); ctx.arc(-2, 0, 8.5, -0.9, 0.9); ctx.arc(-5, 0, 7.5, 0.75, -0.75, true); ctx.closePath(); ctx.fill();
+      break;
+    }
     case 'melon':
       ctx.rotate(t * 10);
       circle(ctx, 0, 0, 7, '#2E8A2E');

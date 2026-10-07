@@ -8,25 +8,27 @@
 const CD = { force: false, stats: { hero: 0, enemy: 0 }, seen: new Set() };   // seen: mã đã vẽ bằng ảnh đơn (test)
 try { if (/[?&]solo=1\b/.test(location.search)) CD.force = true; } catch (e) { /* không có location */ }
 
-// loại vũ khí theo docs/PROMPT-DUNG-XUONG.txt (dòng "Loại vũ khí") — chọn vệt chém / đạn / quả cầu
+// loại vũ khí trong game — theo vũ khí nhân vật cầm trong ẢNH dựng xương (nhánh vu-khi-theo-anh: game sửa theo ảnh;
+// mã còn để vũ khí cũ trong khi ảnh khác = chờ gen lại, docs/PROMPT-GEN-LAI.txt) — chọn vệt chém / đạn / quả cầu
 const CD_WEAPON = {
-  lactuong: 'riu', lucsi: 'tay-khong', xathu: 'cung', thosan: 'kiem', thaymo: 'gay-phep', thansuong: 'tay-khong', giaodong: 'giao',
-  chuongdong: 'gay-phep', tre: 'giao', ongthoi: 'no', dapde: 'giao', chantrau: 'no', chodo: 'giao', haisen: 'gay-phep', dotnuong: 'kiem',
-  denroi: 'gay-phep', thoren: 'riu', nguphu: 'giao', thogom: 'tay-khong', thaylang: 'gay-phep', thachsanh: 'riu', caolo: 'no',
-  antiem: 'tay-khong', cdt: 'gay-phep', tiendung: 'gay-phep', langlieu: 'gay-phep', nghedong: 'tay-khong', mychau: 'tay-khong',
-  sodua: 'tay-khong', ongdung: 'giao', thocong: 'gay-phep', lyngu: 'giao', truongchi: 'gay-phep', potaoapui: 'kiem', baahoa: 'tay-khong',
-  trongdong: 'gay-phep', caong: 'tay-khong', ongtao: 'gay-phep', lachau: 'giao', thansan: 'giao', giong: 'giao', llq: 'kiem',
-  kimquy: 'tay-khong', auco: 'gay-phep', kylan: 'tay-khong', thienloi: 'riu', cuoi: 'riu', melua: 'gay-phep', tanvien: 'gay-phep',
-  maudia: 'gay-phep', halong: 'tay-khong', longnu: 'tay-khong', kinhduong: 'kiem', viemde: 'gay-phep', matroi: 'gay-phep',
-  mauthoai: 'gay-phep', trutroi: 'giao', ongho: 'tay-khong', adv: 'no', mau: 'gay-phep',
+  lactuong: 'riu', lucsi: 'tay-khong', xathu: 'cung', thosan: 'cung', thaymo: 'gay-phep', thansuong: 'giao', giaodong: 'giao',
+  chuongdong: 'phep', tre: 'giao', ongthoi: 'no', dapde: 'gay', chantrau: 'gay', chodo: 'dao', haisen: 'phep', dotnuong: 'kiem',
+  denroi: 'gay-phep', thoren: 'riu', nguphu: 'giao', thogom: 'gay', thaylang: 'gay-phep', thachsanh: 'riu', caolo: 'no',
+  antiem: 'giao', cdt: 'gay-phep', tiendung: 'kiem', langlieu: 'giao', nghedong: 'kiem', mychau: 'kiem',
+  sodua: 'giao', ongdung: 'giao', thocong: 'dao', lyngu: 'giao', truongchi: 'giao', potaoapui: 'kiem', baahoa: 'phep',
+  trongdong: 'gay-phep', caong: 'giao', ongtao: 'dao', lachau: 'giao', thansan: 'dao', giong: 'giao', llq: 'giao',
+  kimquy: 'dinh-ba', auco: 'giao', kylan: 'giao', thienloi: 'riu', cuoi: 'gay', melua: 'phep', tanvien: 'giao',
+  maudia: 'kiem', halong: 'giao', longnu: 'kiem', kinhduong: 'dao', viemde: 'giao', matroi: 'giao',
+  mauthoai: 'giao', trutroi: 'kiem', ongho: 'kiem', adv: 'no', mau: 'kiem',
   // quái / boss
-  camap: 'tay-khong', cao: 'tay-khong', cua: 'tay-khong', kybinh: 'giao', voichien: 'tay-khong', tom: 'giao', casau: 'tay-khong',
+  camap: 'tay-khong', cao: 'tay-khong', cua: 'tay-khong', kybinh: 'tay-khong', voichien: 'tay-khong', tom: 'tay-khong', casau: 'tay-khong',
   rua: 'tay-khong', phuthuy: 'gay-phep', chimbao: 'tay-khong', echme: 'tay-khong', nongnoc: 'tay-khong', giaolong: 'tay-khong',
-  yeutinh: 'riu', ran: 'tay-khong', doi: 'tay-khong', thachtinh: 'tay-khong', dacon: 'tay-khong', linhan: 'giao', cungan: 'cung',
-  muc: 'tay-khong', anvuong: 'giao', chantinh: 'riu', haba: 'giao', ngutinh: 'tay-khong', thuongluong: 'tay-khong', thuytinh: 'giao',
-  trieuda: 'kiem', daibang: 'tay-khong', hotinh: 'gay-phep',
+  yeutinh: 'tay-khong', ran: 'tay-khong', doi: 'tay-khong', thachtinh: 'tay-khong', dacon: 'tay-khong', linhan: 'giao', cungan: 'cung',
+  muc: 'tay-khong', anvuong: 'giao', chantinh: 'riu', haba: 'giao', ngutinh: 'dinh-ba', thuongluong: 'giao', thuytinh: 'giao',
+  trieuda: 'kich', daibang: 'giao', hotinh: 'gay-phep',
 };
-const CD_KIND = { kiem: 'slash', riu: 'chop', giao: 'thrust', cung: 'shot', no: 'shot', 'gay-phep': 'orb', 'tay-khong': 'punch' };
+const CD_KIND = { kiem: 'slash', dao: 'slash', riu: 'chop', gay: 'chop', kich: 'chop', giao: 'thrust', 'dinh-ba': 'thrust', cung: 'shot', no: 'shot',
+  'gay-phep': 'orb', phep: 'orb', 'tay-khong': 'punch' };
 function cdWeapon(type, attack) {
   const rg = typeof RIGS !== 'undefined' && RIGS[type];   // rig ghi rõ kiểu đánh theo vũ khí trong ẢNH (ảnh khác vũ khí game)
   if (rg && rg.kind && rg.kind !== 'none') return rg.kind;

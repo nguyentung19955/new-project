@@ -6,6 +6,8 @@ Chân (dưới đường hông) đứng yên tuyệt đối — đã đo: không
 
 ## Ảnh cầm vũ khí KHÁC game (đã chọn chuyển động theo vũ khí trong ẢNH)
 
+> Nhánh `claude/vu-khi-theo-anh`: game đã **sửa theo ảnh** cho các mã dưới đây (kiểu đánh / đạn / mô tả — GAMEPLAY.md), trừ các mã vũ khí là bản sắc (xathu, adv, caolo, thoren, thienloi, thachsanh, potaoapui, cdt) và các mã trong `CD_SKIP` → gen lại theo `docs/PROMPT-GEN-LAI.txt`.
+
 | Mã | Game | Trong ảnh → kiểu đánh |
 |---|---|---|
 | haisen | gậy phép | không cầm gậy → giơ tay phát phép (orb) |

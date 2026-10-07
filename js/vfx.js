@@ -203,6 +203,8 @@ const VFX = (() => {
     melon: { c: '#8AD05A', n: 1 },
     rice: { c: '#F2E6C8', n: 1 },
     evil: { c: '#5AB4D6', n: 1 },
+    spear: { c: '#FFE8B0', n: 1, thin: true },
+    blade: { c: '#E8F4FF', n: 2 },
   };
   function trail(p, dt) {
     const tr = TRAIL[p.kind] || TRAIL.fireball;
@@ -239,6 +241,8 @@ const VFX = (() => {
     petal: (x, y) => burst(x, y, 8, '#FFB8D8', { kind: 'petal', add: false, speed: 70, spin: 5, life: 0.7 }),
     rice: (x, y) => burst(x, y, 8, '#F2E6C8', { add: false, kind: 'soft', speed: 90, grav: 200, size: 2 }),
     evil: (x, y) => burst(x, y, 8, '#5AB4D6', { speed: 90 }),
+    spear: (x, y) => { flare(x, y, '#FFE8B0', 12, 0.18); burst(x, y, 7, '#FFF1C4', { kind: 'spark', speed: 150, life: 0.25 }); },
+    blade: (x, y) => { decal(x, y, 'slash_01', '#E8F4FF', 18, 0.2); burst(x, y, 6, '#E8F4FF', { kind: 'spark', speed: 130, life: 0.25 }); },
   };
   function onEffect(f) {
     const x = f.x, y = f.y;
