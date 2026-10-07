@@ -2,7 +2,7 @@
 // Chạy toàn bộ kiểm thử chơi nhóm: node tests/coop/run-all.js
 // Cần Playwright + Chromium (môi trường có sẵn: /opt/node-tools/node_modules/playwright, /opt/pw-browsers/chromium).
 const { launch } = require('./harness');
-const tests = [['Chơi đơn', require('./test-solo')], ['Chơi nhóm lockstep', require('./test-lockstep')]];
+const tests = [['Luật Firestore', require('./test-rules')], ['Chơi đơn', require('./test-solo')], ['Chơi nhóm lockstep', require('./test-lockstep')]];
 
 (async () => {
   const browser = await launch();
