@@ -2135,6 +2135,42 @@ html.sk-the-cho .mk-card .rl { z-index: 2; }
 @media (max-height: 520px) { #banner { top: 70px; padding: 4px 22px; } #banner b { font-size: 22px; } #banner small { font-size: 11px; } }
 #tb-wave .wn { display: inline-block; min-width: 1.15em; text-align: center; }
 
+/* cho-6-the: chợ 6 thẻ, thanh chợ thấp gọn (48px thay 70px ≈ 69%) để thấy nhiều sân hơn.
+   Thẻ 66×44: chân dung tròn 24px, icon hệ (trái) + vai trò (phải) ở góc trên, dải giá riêng 16px (xu 15px viền sáng, chữ 14px).
+   Tên tướng không hiện trên thẻ (ở tiêu đề/aria và thanh tướng khi chọn) — tên chen dưới ảnh đè cằm chân dung (tester T8). */
+#deck.mk-mode { height: 48px; padding: 2px 6px; gap: 4px; }
+#deck.mk-mode .mk-row { gap: 3px; }
+#deck.mk-mode .mk-card { width: 66px; height: 44px; border-radius: 7px; }
+#deck.mk-mode .mk-card > img { top: 1px; width: 24px; height: 24px; }
+#deck.mk-mode .mk-card .el { left: 1px; top: 0; width: 15px; height: 15px; }
+#deck.mk-mode .mk-card .rl { left: auto; right: 0; top: 0; width: 16px; height: 16px; }
+#deck.mk-mode .mk-card .rl svg, #deck.mk-mode .mk-card .rl img { width: 16px !important; height: 16px !important; }
+#deck.mk-mode .mk-card .nm { display: none; }
+#deck.mk-mode .mk-card .cost { height: 16px; font-size: 14px; line-height: 16px; gap: 2px; background: #8E1F18; border-top: 1px solid #E8604A; text-shadow: 0 1px 1px #000; }
+#deck.mk-mode .mk-card .cost .coin, #deck.mk-mode .mk-card .cost img { width: 15px; height: 15px; border-radius: 50%; box-shadow: 0 0 0 1px #FFE9A8, 0 0 3px #FFD66B; }
+#deck.mk-mode .mk-card.poor .cost { background: #4A2E22; border-top-color: #7A5A44; }
+/* nhãn "ghép" / "hợp" thành ký hiệu nhỏ ở hai mép dải giá — viền xanh / tím của thẻ vẫn báo rõ; ổ khoá = đích chưa mở */
+#deck.mk-mode .mk-card .cost .tw, #deck.mk-mode .mk-card .cost .hp, #deck.mk-mode .mk-card .cost .hl { font-size: 0; padding: 0 2px; }
+#deck.mk-mode .mk-card .cost .tw::before { content: '⇄'; font-size: 10px; }
+#deck.mk-mode .mk-card .cost .hp::before { content: '✦'; font-size: 10px; }
+.mk-card .cost .hl { position: absolute; right: 1px; top: 1px; bottom: 1px; display: flex; align-items: center; border-radius: 3px; background: #4A3A5A; color: #E0CCF4; }
+#deck .mk-card .cost .hl .uie, #deck .mk-card .cost .hl svg, #deck.mk-mode .mk-card .cost .hl img { width: 10px; height: 10px; box-shadow: none; border-radius: 0; }
+.mk-card.hoplk { border-color: #9A86B0; }
+#deck.mk-mode .mk-rr { width: 42px; height: 44px; gap: 1px; }
+#deck.mk-mode .mk-rr b { font-size: 16px; }
+#deck.mk-mode .mk-rr b .uie { width: 22px; height: 22px; }
+#deck.mk-mode .mk-rr span { font-size: 14px; }
+#deck.mk-mode .mk-rr span .coin, #deck.mk-mode .mk-rr span img { width: 15px; height: 15px; }
+#deck.mk-mode .mk-lk { width: 42px; height: 44px; gap: 1px; }
+#deck.mk-mode .mk-lk svg { width: 16px; height: 16px; }
+#deck.mk-mode .mk-lk span { font-size: 10px; line-height: 10.5px; }
+#deck.mk-mode .dk-card.legend { width: 46px; height: 44px; font-size: 10.5px; line-height: 1.05; }
+#deck.mk-mode .dk-card.legend img.asc-ic { width: 20px; height: 20px; margin: 0 auto; }
+#deck.mk-mode .dk-sep { height: 34px; }
+/* cho-6-the: bảng Hợp thể — công thức chưa mở khoá có nút tới Anh Hùng; màn kết quả nhắc mở tướng Tím */
+.hx-st.hx-open { border: 1px solid #8A7AA0; border-radius: 6px; background: #241A30; padding: 3px 7px; color: #E0CCF4; cursor: pointer; }
+.res-unl.res-tim b { color: #D8A8FF; }
+
 /* ===== PIXEL ART (claude/pixel-nen-tang · js/pixel.js, bật bằng ?pixel=1 / PIXEL_BAT) =====
    ảnh pixel phóng nearest-neighbor; tiêu đề Handjet, số VT323 (Google Fonts, có dấu tiếng Việt); chữ dài giữ Alegreya Sans */
 html.pixel img[src*="pixel/"], html.pixel canvas:not(#game) { image-rendering: pixelated; image-rendering: crisp-edges; }
