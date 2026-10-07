@@ -93,7 +93,7 @@ const toastHits = (page) => page.evaluate(() => {
     {
       const page = await open(browser, w, h);
       await enter(page); await sleep(300);
-      await page.evaluate(() => { const g = ui.game; g.endless = false; g.levelWaves = 10; });
+      await page.evaluate(() => { const g = ui.game; g.endless = false; Object.defineProperty(g, 'levelWaves', { value: 10, configurable: true }); });
       await bossWave(page); await sleep(1500);
       await page.evaluate(() => { const g = ui.game; g.enemies.filter((e) => !e.def.boss).forEach((e) => { e.dead = true; }); const b = g.enemies.find((e) => e.def.boss); g.kill(b, null); b.dead = true; });
       await sleep(500);
