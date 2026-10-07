@@ -2150,3 +2150,33 @@ html.sk-the-cho .mk-card .rl { z-index: 2; }
 #banner small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 @media (max-height: 520px) { #banner { top: 70px; padding: 4px 22px; } #banner b { font-size: 22px; } #banner small { font-size: 11px; } }
 #tb-wave .wn { display: inline-block; min-width: 1.15em; text-align: center; }
+
+/* cho-6-the: chợ 6 thẻ, thanh chợ thấp gọn (~67% chiều cao cũ: 46px thay 70px) để thấy nhiều sân hơn.
+   Thẻ 62×42: chân dung tròn 29px, icon hệ (trái) + vai trò (phải) ở góc trên, tên 1 dòng, dải giá 12px. */
+#deck.mk-mode { height: 46px; padding: 2px 6px; gap: 4px; }
+#deck.mk-mode .mk-row { gap: 3px; }
+#deck.mk-mode .mk-card { width: 62px; height: 42px; border-radius: 7px; }
+#deck.mk-mode .mk-card > img { top: 1px; width: 29px; height: 29px; }
+#deck.mk-mode .mk-card .el { left: 1px; top: 0; width: 15px; height: 15px; }
+
+#deck.mk-mode .mk-card .rl { left: auto; right: 0; top: 0; width: 16px; height: 16px; }
+#deck.mk-mode .mk-card .rl svg, #deck.mk-mode .mk-card .rl img { width: 16px !important; height: 16px !important; }
+#deck.mk-mode .mk-card .nm { bottom: 11px; font-size: 9.5px; line-height: 10px; padding: 0 1px; }
+#deck.mk-mode .mk-card .cost { height: 12px; font-size: 10px; line-height: 12px; }
+/* nhãn "ghép" / "hợp" thành ký hiệu nhỏ (thẻ hẹp, chữ đè lên giá) — viền xanh / tím của thẻ vẫn báo rõ */
+#deck.mk-mode .mk-card .cost .tw, #deck.mk-mode .mk-card .cost .hp { font-size: 0; padding: 0 2px; }
+#deck.mk-mode .mk-card .cost .tw::before { content: '⇄'; font-size: 9px; }
+#deck.mk-mode .mk-card .cost .hp::before { content: '✦'; font-size: 9px; }
+#deck.mk-mode .mk-rr { width: 42px; height: 42px; gap: 1px; }
+#deck.mk-mode .mk-rr b { font-size: 16px; }
+#deck.mk-mode .mk-rr b .uie { width: 22px; height: 22px; }
+#deck.mk-mode .mk-rr span { font-size: 10px; }
+#deck.mk-mode .mk-lk { width: 42px; height: 42px; gap: 1px; }
+#deck.mk-mode .mk-lk svg { width: 16px; height: 16px; }
+#deck.mk-mode .mk-lk span { font-size: 9px; line-height: 9.5px; }
+#deck.mk-mode .dk-auto { width: 46px; height: 42px; font-size: 9px; line-height: 1.05; padding: 0; }
+#deck.mk-mode .dk-auto b { font-size: 14px; line-height: 1; }
+#deck.mk-mode .dk-auto i { top: -7px; right: -5px; min-width: 16px; height: 16px; line-height: 16px; font-size: 10px; }
+#deck.mk-mode .dk-card.legend { width: 44px; height: 42px; font-size: 10px; line-height: 1.05; }
+#deck.mk-mode .dk-card.legend img.asc-ic { width: 20px; height: 20px; margin: 0 auto; }
+#deck.mk-mode .dk-sep { height: 34px; }

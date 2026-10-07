@@ -40,10 +40,10 @@ async function main() {
     game.owned = new Set();
     const nd2 = game.marketNeeds();
     game.owned = null;
-    return { capped, hop, refill, hint: game.marketHint('thansuong', nd), hint2: nd2.hop.has('thansuong'), w: nd.w, hopOut: nd.hop.has('chodo') };
+    return { capped, hop, refill, hint: game.marketHint('thansuong', nd), hint2: nd2.hop.has('thansuong'), w: nd.w, W: { ...MARKET_W }, hopOut: nd.hop.has('chodo') };
   });
   ok(r.capped === 0 && r.refill === 0, 'tướng đã đủ bản sao (★★★) không ra nữa — cả đổi chợ lẫn thẻ bù');
-  ok(r.hint === 'hop' && r.w.thansuong === 12 && r.w.nguphu === 5 && r.w.xathu === 2 && r.w.chodo === 1, `trọng số: nguyên liệu thiếu ×12, đang ghép ×5, đội ưu tiên ×2, ngoài đội ×1`);
+  ok(r.hint === 'hop' && r.w.thansuong === r.W.hop && r.w.nguphu === r.W.ghep && r.w.xathu === r.W.doi && r.w.chodo === 1 && r.W.hop === 8 && r.W.ghep === 3.5, `trọng số (cho-6-the): nguyên liệu thiếu ×8, đang ghép ×3.5, đội ưu tiên ×2, ngoài đội ×1`);
   ok(!r.hopOut, 'nguyên liệu ngoài đội và chưa có trên sân (Chèo Đò → Lý Ngư) không được ưu tiên hợp thể');
   ok(!r.hint2, 'chưa sở hữu tướng đích thì không ưu tiên nguyên liệu');
 
@@ -54,7 +54,7 @@ async function main() {
     game.owned = null; game.gold = 1e6;
     game.spawnHero(game.freeSlots()[0], 'nguphu', { tier: 2 });       // cần Thần Sương (Cá Ông)
     // chợ hợp lệ, bộ đếm trượt = 0 (không để ensureMarket() rút ngẫu nhiên bằng srand trước vòng lặp → lệch bộ đếm)
-    game.market = { types: ['xathu', 'xathu', 'xathu', 'xathu'], rr: 0, dry: 0, lock: false };
+    game.market = { types: Array(MARKET_SIZE).fill('xathu'), rr: 0, dry: 0, lock: false };
     const nd = game.marketNeeds(), list = nd.pool.filter((t) => nd.w[t] > 0);
     const hi = () => 0.9999, seq = [];
     for (let i = 0; i < 9; i++) { game.rerollMarket(hi); seq.push({ hit: game.market.types.includes('thansuong'), dry: game.market.dry }); }
@@ -70,7 +70,7 @@ async function main() {
   ok(p.seq.map((s) => s.dry).join() === '1,2,0,1,2,0,1,2,0', 'bộ đếm trượt 1, 2 rồi về 0 khi ra tướng cần');
   ok(p.bad === undefined && p.maxDry <= 2 && p.forced > 0, `rng có seed, 2000 lần ↻: không lần nào đủ 2 trượt mà lần sau vẫn trượt (bảo hiểm kích hoạt ${p.forced} lần, trượt liền tối đa ${p.maxDry})`);
 
-  // 🔒 khoá chợ: bấm nút → đầu đợt sau giữ nguyên 4 thẻ, rồi tự mở khoá
+  // 🔒 khoá chợ: bấm nút → đầu đợt sau giữ nguyên 6 thẻ, rồi tự mở khoá
   await page.evaluate(() => { game.freshMarket(); ui.clearSel && ui.clearSel(); ui.sig.deck = null; });
   await page.waitForTimeout(150);
   ok(await page.locator('#deck [data-act=mk-lock]').count() === 1, 'có nút 🔒 khoá chợ cạnh ↻');
@@ -84,7 +84,7 @@ async function main() {
   ok(await page.locator('#deck .mk-row.locked').count() === 1 && await page.locator('#deck .mk-lk.on span').innerText() === 'Đã\nkhoá', 'đang khoá: hàng thẻ có viền khoá, nút ghi "Đã khoá"');
   await page.screenshot({ path: path.join(SHOT, 'khoa-cho-844x390.png'), clip: { x: 0, y: 390 - 110, width: 844, height: 110 } });
   const w1 = await page.evaluate(() => { game.startWave(); game.running = false; return { t: [...game.market.types], lock: game.market.lock, rr: game.market.rr }; });
-  ok(JSON.stringify(w1.t) === JSON.stringify(before) && w1.lock === false && w1.rr === 0, 'sang đợt sau: giữ nguyên 4 thẻ, tự mở khoá, giá ↻ về 10');
+  ok(JSON.stringify(w1.t) === JSON.stringify(before) && w1.lock === false && w1.rr === 0, 'sang đợt sau: giữ nguyên 6 thẻ, tự mở khoá, giá ↻ về 10');
   const w2 = await page.evaluate(() => { game.toggleMarketLock(); game.gold = 1000; game.rerollMarket(); return { lock: game.market.lock, rr: game.market.rr }; });
   ok(w2.lock === false && w2.rr === 1, 'đổi ↻ khi đang khoá: rút hàng mới và mở khoá');
   // bảo hiểm qua giao diện: bấm ↻ nhiều lần, nguyên liệu thiếu không trượt quá 2 lần liền

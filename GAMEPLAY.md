@@ -18,7 +18,7 @@ Game thủ thành trên điện thoại, chơi **màn hình ngang**, lấy cảm
 
 ## 1. Vòng chơi chính
 
-1. **Triệu hồi (Chợ tướng, từ phiên bản 143):** thanh dưới luôn mở **4 thẻ tướng ★** rút từ **mọi tướng Thường** (từ phiên bản 181; đội 6 tướng chọn trước trận là *đội ưu tiên*, ra nhiều gấp đôi). **Chạm thẻ** = mua và đặt vào 1 ô trống ngẫu nhiên; **kéo thẻ** thả vào ô = đặt đúng ô (thả lên tướng ★ cùng loại = ghép luôn). ↻ đổi cả hàng (10 vàng, +10 mỗi lần trong đợt); đầu mỗi đợt chợ tự làm mới miễn phí (🔒 khoá thì giữ nguyên). Thẻ rút theo nhu cầu, có bảo hiểm — xem ghi chú phiên bản 143 và 180.
+1. **Triệu hồi (Chợ tướng, từ phiên bản 143):** thanh dưới luôn mở **6 thẻ tướng ★** (4 thẻ tới nhánh claude/cho-6-the) rút từ **mọi tướng Thường** (từ phiên bản 181; đội 6 tướng chọn trước trận là *đội ưu tiên*, ra nhiều gấp đôi). **Chạm thẻ** = mua và đặt vào 1 ô trống ngẫu nhiên; **kéo thẻ** thả vào ô = đặt đúng ô (thả lên tướng ★ cùng loại = ghép luôn). ↻ đổi cả hàng (10 vàng, +10 mỗi lần trong đợt); đầu mỗi đợt chợ tự làm mới miễn phí (🔒 khoá thì giữ nguyên). Thẻ rút theo nhu cầu, có bảo hiểm — xem ghi chú phiên bản 143 và 180.
    - Giá **60 vàng**, mỗi lần sau **+6** (tối đa 220), tính lại từ đầu mỗi ải.
    - Bản đồ có **17 ô** dọc hai bờ sông, mọi ô như nhau. Hết ô trống thì phải ghép, hoặc kéo tướng vào thùng 🗑 (hiện khi kéo) để hủy.
    - Giữ và kéo tướng để đổi chỗ.
@@ -2064,3 +2064,22 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 ## Phiên bản 194 — 90 ảnh tĩnh mới + game tự cử động (tester đạt)
 
 - Gộp claude/tu-cu-dong + claude/tu-cu-dong-anh: 90 ảnh mới (72 dùng, 18 chờ gen lại trong CD_SKIP), rig 90 mã (67 vung tay), chân đứng yên, boss ×2, nhún lấy đà, vệt chém đúng phía.
+
+## claude/cho-6-the — Chợ tướng 6 thẻ, thanh chợ nhỏ gọn
+
+- **Chợ ra 6 thẻ mỗi lượt** (`MARKET_SIZE` 4 → 6). Đổi ↻, 🔒 khoá chợ, thẻ bù, bảo hiểm (`MARKET_PITY` = 2), giới hạn bản sao (`MARKET_CAP` = 4), co-op lockstep đều dùng chung `MARKET_SIZE`. Bản lưu cũ có hàng 4 thẻ: giữ 4 thẻ cũ, rút thêm 2 cho đủ (hàng đang khoá cũng vậy).
+- **Giữ giá đổi chợ** (10 + 10 × số lần đổi trong đợt). 6 lựa chọn dễ ghép hơn nên **giảm trọng số ưu tiên**: đang ghép dở ×5 → **×3.5**, nguyên liệu hợp thể thiếu ×12 → **×8** (đội ưu tiên ×2, thường ×1 giữ nguyên).
+- Mô phỏng `node tests/cho-tuong/ti-le-sim.js` (1000 lần ↻, seed cố định):
+
+| Tình huống | Chợ 4 thẻ (cũ, ×5/×12) | 6 thẻ, trọng số cũ | **6 thẻ, ×3.5/×8 (chọn)** |
+|---|---|---|---|
+| Đầu trận — ≥1 thẻ ghép ngay | 59.9% | 69.1% | **60.4%** |
+| Giữa trận — ≥1 thẻ ghép ngay | 92.5% | 98.0% | **95.1%** |
+| Giữa trận — ≥1 tướng đang có | 98.6% | 99.6% | **98.3%** |
+| Thiếu nguyên liệu hợp thể — ra đúng nguyên liệu | 69.0% | 78.4% | **75.1%** |
+| Trượt liền dài nhất (bảo hiểm) | 2 | 2 | **2** |
+
+  Đầu trận giữ như cũ; giữa trận / hợp thể dễ hơn một chút (đổi lại hàng thẻ rộng hơn, nhiều lựa chọn) — không đổi giá ↻.
+- **Thanh chợ nhỏ gọn** (`#deck.mk-mode`, chỉ khi hiện chợ; thanh tướng đang chọn giữ nguyên): cao 70 → **46** (khung thiết kế) — ở 844×390 cao **76 → 50px (≈66%)**, 667×375: 60 → 39.5px, 1920×934: 144 → 95px. Thẻ 62×42: chân dung tròn 29px, icon hệ góc trái (15px) + icon vai trò góc phải (16px), tên 1 dòng (tự thu nhỏ chữ), dải giá 12px; nhãn "ghép" / "hợp" thu thành ký hiệu ⇄ / ✦ (viền xanh / tím vẫn báo). Nút ↻ 42×42, 🔒 42×42, Ghép tự động 46×42, Hợp thể 44×42. 6 thẻ + nút vừa một hàng ở 1920×934, 844×390, 667×375 và dọc 390×844; vùng chạm thẻ ≥ 36px ở 667×375.
+- Test: `cho-tuong.test.js` (6 thẻ, thanh ≤ 70% chiều cao cũ, vùng chạm ≥ 36), `ti-le.test.js` (trọng số mới, hàng 6 thẻ).
+- Ảnh trước / sau (4 cỡ): `docs/cho-6-the/truoc-*.jpg`, `docs/cho-6-the/sau-*.jpg` (dải đáy).

@@ -2254,7 +2254,7 @@ class UI {
     const deck = $('#deck');
     let key, html;
     if (!h) {
-      // v143: CHỢ TƯỚNG — 4 thẻ luôn mở (chạm = mua, kéo = đặt đúng ô) + ↻ đổi hàng + Hợp thể
+      // v143: CHỢ TƯỚNG — MARKET_SIZE thẻ luôn mở (cho-6-the: 6) (chạm = mua, kéo = đặt đúng ô) + ↻ đổi hàng + Hợp thể
       const m = g.ensureMarket(), sc = g.summonCost(), rc = g.rerollCost(), free = g.freeSlots().length;
       const pairs = g.heroes.filter((x) => x && g.heroes.some((y) => y && y !== x && g.canMerge(x, y) === true)).length;
       const twins = m.types.map((t) => !!g.marketTwin(t));
@@ -2267,7 +2267,7 @@ class UI {
           <img src="${heroImgUrl(t, 'head')}" alt="" draggable="false"><span class="el">${elIcon(HEROES[t].el, 11)}</span>${heroRole(t) ? `<span class="rl">${roleIcon(heroRole(t), 16, true)}</span>` : ''}
           <b class="nm">${esc(short(t))}</b><span class="cost">${twins[i] ? '<i class="tw">ghép</i>' : ''}${coin(1)}${sc}${hops[i] ? '<i class="hp">hợp</i>' : ''}</span></button>`).join('')}
           <button class="mk-rr metal ${g.gold >= rc ? '' : 'poor'}" data-act="mk-reroll" aria-label="Đổi cả hàng, ${rc} vàng"><b>${UIE.redo()}</b><span>${coin(1)}${rc}</span></button>
-          <button class="mk-lk metal ${m.lock ? 'on' : ''}" data-act="mk-lock" aria-pressed="${!!m.lock}" aria-label="${m.lock ? 'Bỏ khoá chợ' : 'Khoá chợ: giữ 4 thẻ sang đợt sau'}" title="${m.lock ? 'Đang khoá: đợt sau giữ nguyên 4 thẻ' : 'Khoá chợ: giữ 4 thẻ sang đợt sau'}">${MK_LOCK[m.lock ? 1 : 0]}<span>${m.lock ? 'Đã<br>khoá' : 'Khoá'}</span></button></div>
+          <button class="mk-lk metal ${m.lock ? 'on' : ''}" data-act="mk-lock" aria-pressed="${!!m.lock}" aria-label="${m.lock ? 'Bỏ khoá chợ' : 'Khoá chợ: giữ nguyên hàng thẻ sang đợt sau'}" title="${m.lock ? 'Đang khoá: đợt sau giữ nguyên hàng thẻ' : 'Khoá chợ: giữ nguyên hàng thẻ sang đợt sau'}">${MK_LOCK[m.lock ? 1 : 0]}<span>${m.lock ? 'Đã<br>khoá' : 'Khoá'}</span></button></div>
         <span class="dk-sep"></span><button class="dk-card legend" data-act="legend-open" aria-label="Cây hợp thể">${`<img class="asc-ic" src="${assetSrc('ui/ui-tran-3-2.png')}" alt="★">`}Hợp<br>thể</button>`;
     } else {
       const def = HEROES[h.type];
@@ -2324,10 +2324,11 @@ class UI {
     }
     if (this.sig.deck !== key) {
       this.sig.deck = key;
+      deck.classList.toggle('mk-mode', !h);     // cho-6-the: thanh chợ thấp gọn hơn thanh tướng đang chọn
       deck.innerHTML = html;
       // v144: tên dài trên thẻ chợ tự thu nhỏ chữ cho vừa thẻ (thay vì bị cắt "…")
       for (const nm of deck.querySelectorAll('.mk-card .nm')) {
-        for (let f = 10.5; nm.scrollWidth > nm.clientWidth + 1 && f > 7.5; f -= 0.5) nm.style.fontSize = f + 'px';
+        for (let f = 9.5; nm.scrollWidth > nm.clientWidth + 1 && f > 7.5; f -= 0.5) nm.style.fontSize = f + 'px';
       }
     }
     if (h) {
@@ -3292,7 +3293,7 @@ class UI {
       case 'ro-temple': location.href = 'den-anh-hung.html'; break;
       case 'reward': this.pickReward(+d.i); break;
       case 'summon': this.pickSummon(d.type); break;
-      case 'mk-lock': C('toggleMarketLock', [], () => { this.sig.deck = null; if (this.game.market && this.game.market.lock) this.toast('🔒 Đã khoá chợ: đợt sau giữ nguyên 4 thẻ', '#F2D27A'); }); break;
+      case 'mk-lock': C('toggleMarketLock', [], () => { this.sig.deck = null; if (this.game.market && this.game.market.lock) this.toast('🔒 Đã khoá chợ: đợt sau giữ nguyên hàng thẻ', '#F2D27A'); }); break;
       case 'mk-reroll': C('rerollMarket', [], (r) => { if (typeof r === 'string') this.toast(r, '#E25A3A'); this.sig.deck = null; }); break;
       case 'rest-tog': this.restTog(d.id); break;
       case 'rest-done': this.restDone(true); break;

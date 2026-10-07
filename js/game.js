@@ -1354,7 +1354,7 @@ class Game {
 
   reset(level) {
     this.offer = null;
-    this.market = null;     // v143: chợ tướng (4 thẻ)
+    this.market = null;     // v143: chợ tướng (MARKET_SIZE thẻ)
     this.rest = null;       // v143: đang nghỉ chân sau đợt boss (đổi đội)
     this.restWave = 0;
     this.level = level || 0;
@@ -1511,7 +1511,7 @@ class Game {
   }
   // v133: quân triệu hồi = đội 6 tướng người chơi chọn (thiếu thì quân mặc định của ải)
   summonList() { return validDeck(this.deck) ? this.deck : summonPool(this.level); }
-  // v143: CHỢ TƯỚNG — luôn mở 4 thẻ (v180: rút từ mọi tướng Thường, đội 6 tướng được ưu tiên). Chạm thẻ = mua & đặt ngay, kéo thẻ = đặt đúng ô.
+  // v143: CHỢ TƯỚNG — luôn mở MARKET_SIZE thẻ (cho-6-the: 6) (v180: rút từ mọi tướng Thường, đội 6 tướng được ưu tiên). Chạm thẻ = mua & đặt ngay, kéo thẻ = đặt đúng ô.
   // Mua thẻ nào thì chỗ đó ra thẻ mới; đầu mỗi đợt cả hàng làm mới miễn phí (trừ khi đang 🔒 khoá); ↻ đổi cả hàng tốn vàng (tăng dần trong đợt).
   // v180: rút có trọng số theo nhu cầu (xem MARKET_W / MARKET_PITY / MARKET_CAP trong data.js).
   // số bản sao ★ quy đổi của loại t trên sân người đang chơi (★ = 1, ★★ = 2, ★★★ = 4)
@@ -1566,6 +1566,11 @@ class Game {
   ensureMarket() {
     const m = this.market, pool = this.marketPool();
     if (SIM.coop && !SIM.active && m) return m;     // co-op: giao diện không được tự rút lại chợ (lệch seed)
+    // cho-6-the: bản lưu cũ hàng 4 thẻ hợp lệ → giữ nguyên, rút thêm cho đủ (không đổi trắng hàng đang khoá)
+    if (m && Array.isArray(m.types) && m.types.length < MARKET_SIZE && m.types.every((t) => pool.includes(t))) {
+      const nd = this.marketNeeds();
+      while (m.types.length < MARKET_SIZE) m.types.push(this.rollCard(srand, nd));
+    }
     if (!m || !Array.isArray(m.types) || m.types.length !== MARKET_SIZE || m.types.some((t) => !pool.includes(t))) this.rollMarket();
     return this.market;
   }
@@ -1573,7 +1578,7 @@ class Game {
   freshMarket() {
     const one = () => {
       const m = this.market, pool = this.marketPool();
-      if (m && m.lock && Array.isArray(m.types) && m.types.length === MARKET_SIZE && m.types.every((t) => pool.includes(t))) { m.lock = false; m.rr = 0; return; }
+      if (m && m.lock && Array.isArray(m.types) && m.types.length && m.types.length <= MARKET_SIZE && m.types.every((t) => pool.includes(t))) { this.ensureMarket(); m.lock = false; m.rr = 0; return; }
       this.rollMarket(); this.market.rr = 0;
     };
     // co-op: mỗi người một hàng chợ riêng (rút từ đội của mình) — làm mới cả hai
@@ -1585,7 +1590,7 @@ class Game {
     }
     one();
   }
-  // v180: 🔒 khoá chợ — giữ nguyên 4 thẻ sang đợt sau (đổi ↻ thì mở khoá)
+  // v180: 🔒 khoá chợ — giữ nguyên cả hàng thẻ sang đợt sau (đổi ↻ thì mở khoá)
   toggleMarketLock() {
     const m = this.ensureMarket();
     m.lock = !m.lock;

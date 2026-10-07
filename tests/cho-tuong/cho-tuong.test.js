@@ -21,7 +21,7 @@ async function main() {
   let { browser, page, errors } = await open(844, 390);
   await enter(page, 0);
   await page.evaluate(() => { game.running = false; });
-  ok(await page.locator('#deck .mk-card').count() === 4, 'thanh đáy có 4 thẻ tướng');
+  ok(await page.locator('#deck .mk-card').count() === 6, 'thanh đáy có 6 thẻ tướng (cho-6-the)');
   ok(await page.locator('#deck [data-act=mk-reroll]').count() === 1 && await page.locator('#deck [data-act=legend-open]').count() === 1, 'có nút ↻ và Hợp thể');
   ok(await page.locator('[data-act=summon-rand]').count() === 0, 'không còn nút Triệu hồi cũ');
   const inDeck = await page.evaluate(() => game.market.types.every((t) => BASIC_HEROES.includes(t)));
@@ -58,7 +58,7 @@ async function main() {
   // làm mới miễn phí đầu đợt
   let w0 = await page.evaluate(() => { game.market.types = game.market.types.map(() => game.summonList()[0]); const m = game.market; window.__m = m; return game.gold; });
   await page.evaluate(() => { game.startWave(); game.running = false; });
-  let w1 = await page.evaluate(() => ({ gold: game.gold, rr: game.market.rr, fresh: game.market !== window.__m, c: game.rerollCost(), ok: game.market.types.length === 4 }));
+  let w1 = await page.evaluate(() => ({ gold: game.gold, rr: game.market.rr, fresh: game.market !== window.__m, c: game.rerollCost(), ok: game.market.types.length === 6 }));
   ok(w1.fresh && w1.rr === 0 && w1.c === 10 && w1.gold === w0 && w1.ok, 'đầu đợt mới: chợ làm mới miễn phí, giá ↻ về 10');
 
   // thẻ "ghép"
@@ -99,15 +99,16 @@ async function main() {
     await page.evaluate(() => { game.running = false; game.gold = 400; const s = game.freeSlots(); game.spawnHero(s[0], game.summonList()[0], { tier: 1 }); game.spawnHero(s[1], game.summonList()[0], { tier: 1 }); game.market.types[1] = game.summonList()[0]; ui.sig.deck = null; });
     await page.waitForTimeout(250);
     const m = await page.evaluate(() => {
-      const els = [...document.querySelectorAll('#deck .mk-card, #deck .mk-rr, #deck .dk-card, #deck .dk-auto')];
+      const els = [...document.querySelectorAll('#deck .mk-card, #deck .mk-rr, #deck .mk-lk, #deck .dk-card, #deck .dk-auto')];
       const rs = els.map((e) => e.getBoundingClientRect());
       const over = [...document.querySelectorAll('#deck .mk-card .nm')].some((e) => e.scrollWidth > e.clientWidth + 1);
       const tops = new Set(rs.map((r) => Math.round(ROT ? r.left : r.top) / 4 | 0));
       const d = document.querySelector('#deck').getBoundingClientRect();
-      return { min: Math.min(...rs.map((r) => Math.min(r.width, r.height))), over, rows: tops.size, inside: d.left >= 0 && d.right <= innerWidth && d.top >= 0 && d.bottom <= innerHeight, n: els.length, rot: ROT };
+      return { deckH: (ROT ? d.width : d.height) / (innerWidth > innerHeight ? innerHeight : innerWidth) * 390, min: Math.min(...rs.map((r) => Math.min(r.width, r.height))), over, rows: tops.size, inside: d.left >= 0 && d.right <= innerWidth && d.top >= 0 && d.bottom <= innerHeight, n: els.length, rot: ROT };
     });
-    ok(m.n >= 7 && m.rows <= 2 && m.inside, `${name}: 4 thẻ + ↻ + Hợp thể (+ Ghép tự động) một hàng, nằm trong màn hình (rot=${m.rot})`);
-    ok(m.min >= 40, `${name}: vùng chạm nhỏ nhất ${m.min.toFixed(1)}px ≥ 40`);
+    ok(m.n >= 7 && m.rows <= 2 && m.inside, `${name}: 6 thẻ + ↻ + Hợp thể (+ Ghép tự động) một hàng, nằm trong màn hình (rot=${m.rot})`);
+    ok(m.min >= 36, `${name}: vùng chạm nhỏ nhất ${m.min.toFixed(1)}px ≥ 36 (cho-6-the: thanh gọn)`);
+    ok(m.deckH <= 0.7 * 76, `${name}: thanh chợ gọn ${m.deckH.toFixed(1)}px ≤ 70% thanh cũ (~76px ở 844×390)`);
     ok(!m.over, `${name}: tên trên thẻ không tràn`);
     if (!m.rot) await page.screenshot({ path: path.join(SHOT, `thanh-day-${name}.png`), clip: { x: 0, y: h - 100, width: w, height: 100 } });
     else await page.screenshot({ path: path.join(SHOT, `thanh-day-${name}.png`) });
@@ -195,7 +196,7 @@ async function main() {
   await page.click('#rest [data-act=rest-skip]'); await page.waitForTimeout(100);
   // bản lưu cũ còn bảng chọn 1 trong 3 (đã trả vàng) → hoàn vàng
   const old = await page.evaluate(() => { const o = game.snapshot(); delete o.market; delete o.rest; delete o.restWave; o.won = false; o.wave = 4; o.gold = 100; o.summonN = 3; o.offer = { types: game.deck.slice(0, 3), cost: 72, rr: 0 }; game.restore(o); return { gold: game.gold, n: game.summonN, m: game.market && game.market.types.length, rw: game.restWave, offer: game.offer }; });
-  ok(old.gold === 172 && old.n === 2 && old.m === 4 && old.rw === 4 && !old.offer, 'bản lưu cũ có offer: hoàn vàng, chuyển sang chợ tướng');
+  ok(old.gold === 172 && old.n === 2 && old.m === 6 && old.rw === 4 && !old.offer, 'bản lưu cũ có offer: hoàn vàng, chuyển sang chợ tướng');
   ok(errors.length === 0, 'không lỗi trang (bản đồ 2) ' + errors.join(' | '));
   await browser.close();
   console.log('\nTẤT CẢ ĐẠT');
