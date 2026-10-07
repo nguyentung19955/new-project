@@ -1509,11 +1509,51 @@ class Game {
   }
   // v133: quân triệu hồi = đội 6 tướng người chơi chọn (thiếu thì quân mặc định của ải)
   summonList() { return validDeck(this.deck) ? this.deck : summonPool(this.level); }
-  // v143: CHỢ TƯỚNG — luôn mở 4 thẻ rút ngẫu nhiên từ đội 6 tướng. Chạm thẻ = mua & đặt ngay, kéo thẻ = đặt đúng ô.
-  // Mua thẻ nào thì chỗ đó ra thẻ mới; đầu mỗi đợt cả hàng làm mới miễn phí; ↻ đổi cả hàng tốn vàng (tăng dần trong đợt).
-  rollCard(rng = srand) { const pool = this.summonList(); return pool[Math.floor(rng() * pool.length)]; }
+  // v143: CHỢ TƯỚNG — luôn mở 4 thẻ rút từ đội 6 tướng. Chạm thẻ = mua & đặt ngay, kéo thẻ = đặt đúng ô.
+  // Mua thẻ nào thì chỗ đó ra thẻ mới; đầu mỗi đợt cả hàng làm mới miễn phí (trừ khi đang 🔒 khoá); ↻ đổi cả hàng tốn vàng (tăng dần trong đợt).
+  // v180: rút có trọng số theo nhu cầu (xem MARKET_W / MARKET_PITY / MARKET_CAP trong data.js).
+  // số bản sao ★ quy đổi của loại t trên sân người đang chơi (★ = 1, ★★ = 2, ★★★ = 4)
+  marketCopies(t) {
+    let n = 0;
+    for (const h of this.heroes) if (h && h.type === t && !h.from && (!this.co || this.co.canAct(this.co.actor, h.slot))) n += Math.pow(2, Math.max(0, (h.tier || 1) - 1));
+    return n;
+  }
+  // nhu cầu từng loại trong đội: ghep = đang có trên sân, chưa đủ bản sao; hop = nguyên liệu còn thiếu của công thức
+  // hợp thể gần xong (bên kia đã đủ ★★ quy đổi, đã sở hữu tướng đích); top = loại bảo hiểm nhắm tới
+  marketNeeds() {
+    const pool = this.summonList(), cp = {}, ghep = new Set(), hop = new Set();
+    for (const t of pool) cp[t] = this.marketCopies(t);
+    for (const t of pool) if (cp[t] > 0 && cp[t] < MARKET_CAP) ghep.add(t);
+    const need = COSTS.ascendTier === 2 ? 2 : Math.pow(2, COSTS.ascendTier - 1);
+    for (const f of FUSION) {
+      if (!pool.includes(f.a) || !pool.includes(f.b) || !this.ownsHero(f.to)) continue;
+      for (const [x, y] of [[f.a, f.b], [f.b, f.a]]) if (cp[x] >= need && cp[y] < need) hop.add(y);
+    }
+    const w = {};
+    for (const t of pool) w[t] = cp[t] >= MARKET_CAP ? 0 : hop.has(t) ? MARKET_W.hop : ghep.has(t) ? MARKET_W.ghep : 1;
+    if (pool.every((t) => !w[t])) for (const t of pool) w[t] = 1;     // đủ hết bản sao: rút đều như cũ
+    const top = hop.size ? hop : ghep;
+    return { pool, w, ghep, hop, top };
+  }
+  // nhãn gợi ý trên thẻ: 'hop' = nguyên liệu hợp thể còn thiếu
+  marketHint(t, nd = this.marketNeeds()) { return nd.hop.has(t) ? 'hop' : null; }
+  rollCard(rng = srand, nd = this.marketNeeds(), only = null) {
+    const list = only ? nd.pool.filter((t) => only.has(t) && nd.w[t] > 0) : nd.pool.filter((t) => nd.w[t] > 0);
+    const sum = list.reduce((a, t) => a + nd.w[t], 0);
+    let r = rng() * sum;
+    for (const t of list) { r -= nd.w[t]; if (r < 0) return t; }
+    return list[list.length - 1];
+  }
+  // rút cả hàng (đầu đợt / ↻): đủ MARKET_PITY lần liền không có tướng cần nhất thì thẻ đầu chắc chắn là nó
   rollMarket(rng = srand) {
-    this.market = { types: Array.from({ length: MARKET_SIZE }, () => this.rollCard(rng)), rr: (this.market && this.market.rr) || 0 };
+    const old = this.market || {}, nd = this.marketNeeds();
+    const types = Array.from({ length: MARKET_SIZE }, () => this.rollCard(rng, nd));
+    let dry = old.dry || 0;
+    if (nd.top.size) {
+      if (dry >= MARKET_PITY && !types.some((t) => nd.top.has(t))) types[Math.floor(rng() * MARKET_SIZE)] = this.rollCard(rng, nd, nd.top);
+      dry = types.some((t) => nd.top.has(t)) ? 0 : dry + 1;
+    } else dry = 0;
+    this.market = { types, rr: old.rr || 0, dry, lock: false };
     return this.market;
   }
   ensureMarket() {
@@ -1522,16 +1562,27 @@ class Game {
     if (!m || !Array.isArray(m.types) || m.types.length !== MARKET_SIZE || m.types.some((t) => !pool.includes(t))) this.rollMarket();
     return this.market;
   }
-  // đầu đợt mới: làm mới cả hàng miễn phí, giá ↻ về lại từ đầu
+  // đầu đợt mới: làm mới cả hàng miễn phí (hàng đang 🔒 khoá thì giữ nguyên một lượt rồi mở khoá), giá ↻ về lại từ đầu
   freshMarket() {
+    const one = () => {
+      const m = this.market, pool = this.summonList();
+      if (m && m.lock && Array.isArray(m.types) && m.types.length === MARKET_SIZE && m.types.every((t) => pool.includes(t))) { m.lock = false; m.rr = 0; return; }
+      this.rollMarket(); this.market.rr = 0;
+    };
     // co-op: mỗi người một hàng chợ riêng (rút từ đội của mình) — làm mới cả hai
     if (this.co) {
       const a = this.co.actor;
-      for (let p = 0; p < this.co.pl.length; p++) { this.co.actor = p; this.market = null; this.rollMarket(); this.market.rr = 0; }
+      for (let p = 0; p < this.co.pl.length; p++) { this.co.actor = p; one(); }
       this.co.actor = a;
       return;
     }
-    this.market = null; this.rollMarket(); this.market.rr = 0;
+    one();
+  }
+  // v180: 🔒 khoá chợ — giữ nguyên 4 thẻ sang đợt sau (đổi ↻ thì mở khoá)
+  toggleMarketLock() {
+    const m = this.ensureMarket();
+    m.lock = !m.lock;
+    return true;
   }
   rerollCost() { return 10 + 10 * ((this.market && this.market.rr) || 0); }
   rerollMarket(rng = srand) {
@@ -1539,8 +1590,9 @@ class Game {
     const c = this.rerollCost();
     if (this.gold < c) return `Cần ${c} vàng để đổi`;
     this.gold -= c;
-    this.market.rr++;
-    this.market.types = Array.from({ length: MARKET_SIZE }, () => this.rollCard(rng));
+    const rr = this.market.rr + 1;
+    this.rollMarket(rng);
+    this.market.rr = rr;
     return true;
   }
   // tướng ★ trên sân ghép được với thẻ loại `type` (mua về là ghép ngay được)
@@ -1563,14 +1615,15 @@ class Game {
     } else if (this.isFlooded(slot) || !CONFIG.slots[slot]) return 'Không đặt được ở ô này';
     this.gold -= c;
     this.summonN = (this.summonN || 0) + 1;
-    m.types[i] = this.rollCard(rng);
-    if (!target) { this.spawnHero(slot, type, { tier: 1, spent: c }); return slot; }
+    m.types[i] = null;
+    if (!target) { this.spawnHero(slot, type, { tier: 1, spent: c }); m.types[i] = this.rollCard(rng); return slot; }
     // ghép thẳng vào tướng ★ cùng loại: tạo tướng tạm ở chỗ thừa cuối mảng rồi ghép như kéo thả
     const k = this.heroes.length;
     const a = this.spawnHero(k, type, { tier: 1, spent: c }, target);
     this.merge(k, target.slot);
     this.heroes.length = CONFIG.slots.length;
     this.updateAuras();
+    m.types[i] = this.rollCard(rng);     // thẻ bù rút theo sân mới (vừa mua xong)
     return target.slot;
   }
   // v143: Nghỉ chân — sau đợt boss được đổi tối đa REST_SWAPS tướng trong đội (miễn phí)

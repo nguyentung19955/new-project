@@ -45,7 +45,7 @@ function coopClean(text) {
 
 // tham số lệnh: h = tướng (gửi số ô), s = ô, t = ô hoặc -1 (tự chọn), u = uid đồ, v = giá trị, * = áp cho cả đội của người ra lệnh
 const COOP_CMDS = {
-  buyCard: ['v', 't'], rerollMarket: [], restDeck: ['v'], skipRest: [], summonRandom: [],
+  buyCard: ['v', 't'], rerollMarket: [], toggleMarketLock: [], restDeck: ['v'], skipRest: [], summonRandom: [],
   placeHero: ['s', 'v'], merge: ['s', 's'], fuse: ['s', 's'], moveHero: ['s', 's'], sellHero: ['s'],
   levelUp: ['h'], trainHero: ['h'], unlockSkill: ['h', 'v'], upgradeSkill: ['h', 'v'], spendStat: ['h'],
   evolve: ['h'], ascend: ['h', 'v'], equip: ['h', 'u', 'v'], unequip: ['h', 'v'], autoEquip: ['h'],
