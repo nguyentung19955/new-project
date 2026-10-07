@@ -2232,7 +2232,7 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
 
 - Vẽ đủ 19 mã tướng Thường (lô 1: `lactuong lucsi xathu thosan thaymo thansuong giaodong chuongdong tre ongthoi`; lô 2: `dapde chantrau
   haisen dotnuong denroi thoren nguphu thogom thaylang`; `chodo` đã có ở lô 0). Mỗi tướng 15 khung 32×32: idle 3 · attack 4 · cast 3 ·
-  hurt 1 · die 3 (quỳ → nằm → tối màu) + `portrait` 1 (đầu + vai cắt 16×16 phóng ×2 → chân dung thẻ chợ / Anh Hùng rõ mặt).
+  hurt 1 (lùi 1 điểm + nhắm mắt + nháy sáng mọi màu lên một tông) · die 3 (quỳ → nằm → tối màu) + `portrait` 1 (đầu + vai cắt 16×16 phóng ×2 → chân dung thẻ chợ / Anh Hùng rõ mặt).
 - Theo **"Hướng phá cách"** của DANH-SACH (QUY-CHUAN mục 0b) — đội hình đa dạng hình thể, vẫn giữ vũ khí / kiểu đánh / màu hành:
   Lạc Tướng = giáp đồng rỗng (2 đốm mắt gỉ xanh, mũ lông chim Lạc, rìu xéo) · Lực Sĩ = khổng lồ đất sét nứt, cỏ trên vai, vác tảng đá ·
   Xạ Thủ = người-chim Lạc mỏ dài, cung dài · Thợ Săn = ma cây mặt hốc cây mắt cam, mũ trùm tai báo, cung · Thầy Mo = bộ xương đội vòng

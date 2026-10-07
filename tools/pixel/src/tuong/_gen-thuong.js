@@ -234,6 +234,14 @@ function fx(g, el, i, cx, cy) {
   pts.forEach(([dx, dy]) => GL.forEach(([a, b, c]) => g.set(cx + dx + a, cy + dy + b, c)));
 }
 
+// tông sáng kế tiếp trong từng dải màu (nháy trúng đòn)
+const LIGHT = {};
+[['toi', 'khoi'], ['sat-toi', 'sat', 'sat-sang', 'bac', 'sang'], ['trang-xam', 'trang', 'sang'], ['da-toi', 'da', 'da-sang', 'sang'],
+  ['dat-toi', 'dat', 'dat-sang', 'cat', 'vang-sang'], ['dong-toi', 'dong', 'dong-sang', 'vang-nghe', 'vang-sang', 'sang'],
+  ['son-toi', 'son', 'son-sang', 'hong'], ['lua', 'lua-sang', 'vang-sang'], ['la-toi', 'la', 'la-ma', 'la-sang'],
+  ['reu-toi', 'reu', 'reu-sang', 'la-sang'], ['cham-toi', 'cham', 'cham-sang', 'nuoc-sang'], ['nuoc', 'nuoc-sang', 'troi', 'sang'],
+  ['tim-toi', 'tim', 'tim-sang'], ['ngoc', 'ngoc-sang', 'troi']].forEach((r) => r.forEach((c, i) => { if (i < r.length - 1 && !LIGHT[c]) LIGHT[c] = r[i + 1]; }));
+
 // ------------------------------------------------------------------ xoay để vẽ khung chết
 function lieDown(src) {
   const [x0, y0, x1, y1] = src.bbox();
@@ -269,7 +277,9 @@ function frames(def) {
   atk.forEach((p, i) => add('attack', run({ k: 'attack', i, ...p })));
   cast.forEach((p, i) => add('cast', run({ k: 'cast', i, ...p })));
   const hurt = run({ k: 'hurt', ...idle[0], eyes: 'closed', hurt: 1 }); hurt.shift(-1, 0);
-  hurt.swap('da', 'da-sang'); if (def.hurtSwap) def.hurtSwap.forEach(([a, b]) => hurt.swap(a, b));
+  // nháy sáng: mọi màu lên một tông (trừ viền) — trúng đòn khác hẳn idle (lùi 1 điểm + nhắm mắt + sáng)
+  if (def.hurtSwap) def.hurtSwap.forEach(([a, b]) => hurt.swap(a, b));
+  for (const r of hurt.a) for (let i = 0; i < W; i++) if (r[i] && LIGHT[r[i]]) r[i] = LIGHT[r[i]];
   add('hurt', hurt);
   const kneel = run({ k: 'die', arm: 'down', eyes: 'closed', kneel: 1, dy: 3, ...(P.kneel || {}) });
   add('die', kneel);
