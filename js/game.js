@@ -1530,10 +1530,11 @@ class Game {
     const pool = this.marketPool(), doi = new Set(this.summonList()), cp = {}, ghep = new Set(), hop = new Set();
     for (const t of pool) cp[t] = this.marketCopies(t);
     for (const t of pool) if (cp[t] > 0 && cp[t] < MARKET_CAP) ghep.add(t);
-    const need = COSTS.ascendTier === 2 ? 2 : Math.pow(2, COSTS.ascendTier - 1);
+    // v186: hợp thể cần ★★★ (4 bản sao) — vẫn bắt đầu ưu tiên khi bên kia đã ★★ (2 bản sao), ưu tiên bên thiếu tới khi đủ ★★★
+    const need = Math.pow(2, COSTS.ascendTier - 1), half = Math.min(2, need);
     for (const f of FUSION) {
       if (!pool.includes(f.a) || !pool.includes(f.b) || !this.ownsHero(f.to)) continue;
-      for (const [x, y] of [[f.a, f.b], [f.b, f.a]]) if (cp[x] >= need && cp[y] < need && (doi.has(y) || cp[y] > 0)) hop.add(y);
+      for (const [x, y] of [[f.a, f.b], [f.b, f.a]]) if (cp[x] >= half && cp[y] < need && cp[y] <= cp[x] && (doi.has(y) || cp[y] > 0)) hop.add(y);
     }
     const w = {};
     for (const t of pool) w[t] = cp[t] >= MARKET_CAP ? 0 : hop.has(t) ? MARKET_W.hop : ghep.has(t) ? MARKET_W.ghep : doi.has(t) ? MARKET_W.doi : 1;
@@ -1728,7 +1729,7 @@ class Game {
     if (!b.dead) b.hp = Math.min(heroStats(b).hpMax, b.hp + heroStats(b).hpMax - before + heroStats(b).hpMax * 0.3);
     this.effects.push({ type: 'evolve', hero: b, x: b.x, y: b.y, color: ELEMENTS[HEROES[b.type].el].color, ttl: 1.2, max: 1.2 });
     this.effects.push({ type: 'streak', x: a.x, y: a.y - 30, x2: b.x, y2: b.y - 30, color: '#FFE08A', ttl: 0.35, max: 0.35 });
-    this.notify(`${HEROES[b.type].name} lên ${'★'.repeat(b.tier)}!`, '#F2D27A');
+    this.notify(`${HEROES[b.type].name} lên ${'★'.repeat(b.tier)}!${b.tier >= 3 && COSTS.lvDisc3 < 1 ? ` Lên cấp giảm ${Math.round((1 - COSTS.lvDisc3) * 100)}%` : ''}`, '#F2D27A');
     b.notice.evo = b.tier >= 3;
     return true;
   }
@@ -1756,8 +1757,8 @@ class Game {
       const starP = best.from ? (best.tier || 0) / need : Math.min(1, hs.reduce((a, h) => a + Math.pow(2, Math.max(0, (h.tier || 1) - 1)), 0) / Math.pow(2, need - 1));
       const sk = HEROES[type].skills.reduce((a, s, i) => a + Math.min(SKILL_MAX[i], skillLevel(best, i)), 0) / SKILL_MAX.reduce((a, b) => a + b, 0);
       const ready = this.fusionReady(best) === true;
-      // v136: tướng Thường chỉ cần đủ sao (không tính kỹ năng)
-      return { p: ready ? 1 : Math.min(0.99, best.from ? starP * 0.7 + sk * 0.3 : starP), h: best };
+      // v180: cả tướng Thường lẫn tướng thần đều tính kỹ năng (hợp thể cần kỹ năng tối đa)
+      return { p: ready ? 1 : Math.min(0.99, starP * 0.7 + sk * 0.3), h: best };
     };
     const A = score(f.a), B = score(f.b);
     return { p: (A.p + B.p) / 2, a: A.h, b: B.h };
@@ -1766,11 +1767,13 @@ class Game {
   // 2 tướng ★★★ đúng công thức (đủ kỹ năng) → thần mới
   fusionReady(h) {
     if ((h.tier || 0) < this.ascendNeed(h)) return h.from ? `${HEROES[h.type].name} cần Thần tinh ${'★'.repeat(COSTS.ascendTier2)}` : `${HEROES[h.type].name} cần ${'★'.repeat(COSTS.ascendTier)}`;
-    if (!h.from) return true;   // v136: tướng Thường → tướng Tím không cần kỹ năng tối đa
+    // v180: bỏ ngoại lệ v136 — ra tướng Tím cũng phải nâng hết kỹ năng cả 2 tướng Thường
     const left = this.skillsLeft(h);
-    if (left.length) return `${HEROES[h.type].name} cần nâng tối đa kỹ năng: ${left.map(([k, lv, mx]) => `${k} ${lv}/${mx}`).join(', ')}`;
+    if (left.length) return `${HEROES[h.type].name} còn thiếu ${this.skillGap(h)} cấp kỹ năng: ${left.map(([k, lv, mx]) => `${k} ${lv}/${mx}`).join(', ')}`;
     return true;
   }
+  // số cấp kỹ năng còn thiếu tới tối đa (0 = đã nâng hết)
+  skillGap(h) { return this.skillsLeft(h).reduce((a, [, lv, mx]) => a + mx - lv, 0); }
   // tài khoản đã mua tướng này chưa (owned = null: không giới hạn, ví dụ bot mô phỏng)
   ownsHero(t) { return !this.owned || !HEROES[t].legend || this.owned.has(t); }
   canFuse(a, b) {
@@ -1855,7 +1858,7 @@ class Game {
   }
 
   // Nâng cấp tướng bằng vàng: +1 cấp, +1 điểm kỹ năng
-  levelCost(h) { return COSTS.level(h.level); }
+  levelCost(h) { return Math.round(COSTS.level(h.level) * (!h.from && (h.tier || 0) >= 3 ? COSTS.lvDisc3 : 1)); }
   levelUp(h) {
     if (h.level >= CONFIG.maxLevel) return 'Tướng đã đạt cấp tối đa';
     const c = this.levelCost(h);

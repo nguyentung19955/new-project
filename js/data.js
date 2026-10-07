@@ -1381,8 +1381,10 @@ const FUSE_MULT = { epic: 1.3, legendary: 2.0 };
 // cân bằng riêng từng thần (vì mỗi cặp ghép gộp nội tại khác nhau): đo bằng sim/cmp4.js
 const FUSE_ADJ = { cdt: 1.069, lachau: 0.96, thachsanh: 0.45, thansan: 0.516, caolo: 0.969, antiem: 0.692, tiendung: 1.068, langlieu: 1.54, giong: 0.904, llq: 0.755, kimquy: 1.371, adv: 0.599, auco: 1.398, mau: 0.416 };
 // lên vàng cần thần tím Thần tinh ★★★ (đủ sao rồi mới hóa thân), giá cao hơn bậc sao cuối
-// v136: hợp thể ra tướng Tím chỉ cần 2 tướng ★★ (không cần kỹ năng tối đa) — người mới hợp thể được sớm; tướng Vàng giữ điều kiện cũ
-Object.assign(COSTS, { ascend: { epic: 300, legendary: 1200 }, ascendTier: 2, ascendTier2: 3 });
+// v180: hợp thể ra tướng Tím cần 2 tướng Thường ★★★ ĐÃ NÂNG HẾT KỸ NĂNG (bỏ ngoại lệ v136); ra Vàng cần 2 thần Tím Thần tinh ★★★ + kỹ năng tối đa
+Object.assign(COSTS, { ascend: { epic: 300, legendary: 1200 }, ascendTier: 3, ascendTier2: 3 });
+// v181: nới cho luật v180 — tướng Thường ★★★ lên cấp nửa giá (đỡ phần nâng kỹ năng tối đa trước khi hợp thể; mô phỏng: Tím đầu tiên ~đợt 20)
+Object.assign(COSTS, { lvDisc3: 0.5 });
 // Thần lực: hệ số sát thương và máu của tướng đã thăng thần (kỹ năng +một nửa mức này)
 const ASCEND_POWER = { epic: 1.15, legendary: 1.6 };
 // Thần tinh của tướng thần Huyền thoại mạnh hơn Sử thi (nhân chỉ số mỗi bậc sao)
@@ -1476,7 +1478,9 @@ const SKILL_KEYS = ['Q', 'W', 'E', 'R'];
 const SKILL_MAX = [4, 4, 4, 3];
 const skillMult = (lv) => 1 + 0.25 * (Math.max(1, lv) - 1);   // mỗi cấp kỹ năng +25% hiệu lực
 // cấp tướng cần để kỹ năng thứ i đạt cấp L
-const skillReqLevel = (i, L) => (i === 3 ? [0, 6, 11, 16][L] || 99 : [0, 1, 3, 5, 7][L] || 99);
+// cấp tướng cần cho từng cấp kỹ năng: Q/W/E, và R (tối thượng)
+const SKILL_REQ = [0, 1, 3, 5, 7], R_REQ = [0, 6, 11, 16];
+const skillReqLevel = (i, L) => (i === 3 ? R_REQ[L] : SKILL_REQ[L]) || 99;
 
 // ------------------------------------------------------------
 //  TRANG BỊ (3 ô trang phục) — `look` đổi hình dạng tướng khi mặc
