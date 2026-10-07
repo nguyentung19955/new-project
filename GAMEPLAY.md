@@ -1328,3 +1328,6 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 138 — Bỏ vòng dưới chân tướng đã đặt
 - Chọn tướng trên sân không còn vẽ vòng xanh dưới chân (chỉ còn vòng tầm đánh mờ). Tướng đang được gợi ý hợp thể cũng không vẽ vòng, chỉ còn quầng sáng và mũi tên phía trên. Vòng ô chỉ hiện ở ô trống, và hiện tạm thời trên tướng khác lúc đang kéo tướng để ghép.
+
+## Phiên bản 139 — Bỏ khung vàng ảnh tướng
+- Màn Anh Hùng Văn Lang: ảnh tướng ở bảng chi tiết không còn khung vàng chạm trổ, thay bằng ô viền đồng đơn giản cùng kiểu với thẻ tướng.
