@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""v159: cắt tấm khung / nút / thanh giao diện (nền hồng tím #FF00FF) thành từng file theo tools/ui-frames.json.
+"""v163: cắt tấm khung / nút / thanh giao diện (nền hồng tím #FF00FF) thành từng file theo tools/ui-frames.json.
 
   python3 tools/cat-khung.py <ảnh.png> <mã tấm>      vd. khung-bang, nut-chu-nhat, thanh-mau, huy-hieu-ai
 Mã tấm, số cột × hàng, tên file từng ô (đọc trái → phải, trên → xuống) do tools/build-prompts.js sinh ra.

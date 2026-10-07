@@ -1,4 +1,4 @@
-// v159: rà chủ đề cũ — màn thắng / thua, lời nhắc đầu trận, phần thưởng hạ boss theo CHƯƠNG (không còn gắn cứng
+// v163: rà chủ đề cũ — màn thắng / thua, lời nhắc đầu trận, phần thưởng hạ boss theo CHƯƠNG (không còn gắn cứng
 // "Phong Châu thất thủ / Nước ngập thành" cho mọi ải), Vô tận chữ trung tính; khung / nút / tranh vẽ tay dùng khi có file.
 const path = require('path');
 const fs = require('fs');

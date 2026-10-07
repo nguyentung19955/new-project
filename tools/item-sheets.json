@@ -195,5 +195,175 @@
    "do-ghep_riu-than-thach-sanh.png",
    "do-ghep_ao-long-vu-au-co.png"
   ]
+ },
+ "de-tuong": {
+  "dir": "tiles",
+  "files": [
+   "de-tuong-thuong.png",
+   "de-tuong-san-sang.png",
+   "de-tuong-chon.png",
+   "de-tuong-ngap.png",
+   "de-tuong-nui.png"
+  ]
+ },
+ "de-tuong-chu-de": {
+  "dir": "tiles",
+  "files": [
+   "de-tuong-co.png",
+   "de-tuong-dat.png",
+   "de-tuong-da.png",
+   "de-tuong-cat.png",
+   "de-tuong-gach.png"
+  ]
+ },
+ "duong-nuoc": {
+  "dir": "tiles",
+  "files": [
+   "duong-nuoc.jpg"
+  ],
+  "texture": 512
+ },
+ "duong-dat": {
+  "dir": "tiles",
+  "files": [
+   "duong-dat.jpg"
+  ],
+  "texture": 512
+ },
+ "duong-da": {
+  "dir": "tiles",
+  "files": [
+   "duong-da.jpg"
+  ],
+  "texture": 512
+ },
+ "duong-de": {
+  "dir": "tiles",
+  "files": [
+   "duong-de.jpg"
+  ],
+  "texture": 512
+ },
+ "duong-cat": {
+  "dir": "tiles",
+  "files": [
+   "duong-cat.jpg"
+  ],
+  "texture": 512
+ },
+ "duong-gach": {
+  "dir": "tiles",
+  "files": [
+   "duong-gach.jpg"
+  ],
+  "texture": 512
+ },
+ "cong-thanh": {
+  "dir": "tiles",
+  "files": [
+   "cong-phong-chau.png",
+   "cong-ban-rung.png",
+   "cong-hang.png",
+   "cong-lang-tre.png",
+   "cong-co-loa.png"
+  ]
+ },
+ "ic-chi-so-1": {
+  "dir": "ui",
+  "size": 64,
+  "files": [
+   "ic-giap.png",
+   "ic-khang-phep.png",
+   "ic-toc-chay.png",
+   "ic-toc-danh.png",
+   "ic-sat-thuong.png"
+  ]
+ },
+ "ic-chi-so-2": {
+  "dir": "ui",
+  "size": 64,
+  "files": [
+   "ic-mau.png",
+   "ic-chi-mang.png",
+   "ic-tam-danh.png",
+   "ic-hoi-chieu.png",
+   "ic-nang-luong.png"
+  ]
+ },
+ "ic-chi-so-3": {
+  "dir": "ui",
+  "size": 64,
+  "files": [
+   "ic-suc-manh.png",
+   "ic-nhanh-nhen.png",
+   "ic-tri-tue.png",
+   "ic-giam-sat-thuong.png",
+   "ic-xuyen-giap.png"
+  ]
+ },
+ "ic-trang-thai-1": {
+  "dir": "ui",
+  "size": 64,
+  "files": [
+   "ic-cham.png",
+   "ic-choang.png",
+   "ic-dot.png",
+   "ic-doc.png",
+   "ic-dong-bang.png"
+  ]
+ },
+ "ic-trang-thai-2": {
+  "dir": "ui",
+  "size": 64,
+  "files": [
+   "ic-sa-lay.png",
+   "ic-khien.png",
+   "ic-hoi-mau.png",
+   "ic-noi-gian.png",
+   "ic-bay.png"
+  ]
+ },
+ "ic-trang-thai-3": {
+  "dir": "ui",
+  "size": 64,
+  "files": [
+   "ic-boss.png",
+   "ic-cam-lang.png",
+   "ic-tinh-anh.png",
+   "ic-lan.png"
+  ]
+ },
+ "ic-tien-te": {
+  "dir": "ui",
+  "size": 64,
+  "files": [
+   "ic-tui-vang.png",
+   "ic-diem-ky-nang.png",
+   "ic-diem-an-phu.png",
+   "ic-luc-chien.png",
+   "ic-cap-do.png"
+  ]
+ },
+ "ic-khac": {
+  "dir": "ui",
+  "size": 64,
+  "files": [
+   "ic-kho.png",
+   "ic-nuoc-dang.png",
+   "ic-khac-che.png",
+   "ic-nang-cap.png",
+   "ic-xuyen-phep.png"
+  ]
+ },
+ "ic-ngu-hanh": {
+  "dir": "ui",
+  "size": 64,
+  "files": [
+   "ic-hanh-kim.png",
+   "ic-hanh-moc.png",
+   "ic-hanh-thuy.png",
+   "ic-hanh-hoa.png",
+   "ic-hanh-tho.png"
+  ]
  }
 }

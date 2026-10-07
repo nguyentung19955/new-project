@@ -160,7 +160,7 @@ function storyScene(p) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200" preserveAspectRatio="xMidYMid slice">${body}</svg>`;
 }
 
-// ---------- v159: chủ đề theo chương cho màn thắng / thua, lời nhắc đầu trận, màn chọn phần thưởng
+// ---------- v163: chủ đề theo chương cho màn thắng / thua, lời nhắc đầu trận, màn chọn phần thưởng
 // (trước gắn cứng Sơn Tinh – Thủy Tinh: "Phong Châu thất thủ", "Nước ngập thành", "Vua Hùng ban thưởng"…)
 // keep/lost: chữ nhỏ trên thanh đầu · goal: mục tiêu ải · loseTitle/loseTag/winTag: màn kết quả
 // fx: hiện tượng vẽ trong tranh thua (water nước lũ, mist sương yêu, fire lửa giặc, wave sóng biển)

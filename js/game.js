@@ -2404,7 +2404,7 @@ class Game {
     return n;
   }
 
-  // v159: chữ "núi cao" (Sơn Tinh dời non) chỉ hợp chương Sơn Tinh – Thủy Tinh; chương khác / vô tận dùng chữ trung tính
+  // v163: chữ "núi cao" (Sơn Tinh dời non) chỉ hợp chương Sơn Tinh – Thủy Tinh; chương khác / vô tận dùng chữ trung tính
   sonTinh() { return !this.endless && (typeof chapterOf !== 'function' || chapterOf(this.level).id === 'sontinh'); }
 
   growMountain() {

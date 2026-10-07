@@ -13,7 +13,7 @@ Game thủ thành **màn hình ngang** cho điện thoại, chủ đề **truy�
 
 - **16 tướng:** 6 tướng cơ bản và 10 tướng huyền thoại (Thánh Gióng, Lạc Long Quân, Thần Kim Quy, Thạch Sanh, Cao Lỗ, Mai An Tiêm, Âu Cơ, Chử Đồng Tử, Tiên Dung, Lang Liêu). Mỗi tướng có Q W E R, tướng huyền thoại có thêm đặc trưng riêng.
 - **Nâng cấp bằng vàng:** lên cấp tướng, mở khóa W/E/R, tiến hoá ★ ★★ ★★★.
-- ~~**Nước Dâng & Mọc Núi**~~ (bỏ từ phiên bản 36): ô đặt tướng không còn bị ngập, không còn sa lầy / Mọc Núi. Màn thắng / thua, lời nhắc đầu trận, màn phần thưởng hạ boss hiện theo chương (từ phiên bản 159).
+- ~~**Nước Dâng & Mọc Núi**~~ (bỏ từ phiên bản 36): ô đặt tướng không còn bị ngập, không còn sa lầy / Mọc Núi. Màn thắng / thua, lời nhắc đầu trận, màn phần thưởng hạ boss hiện theo chương (từ phiên bản 163).
 - **Đồ đổi hình dạng tướng** (vũ khí, mũ, giáp; Bộ Lạc Long mọc cánh rồng):
   - Lò đúc đồng: Công thức, Cửa hàng, Hũ báu.
   - Túi 40 ô: cường hóa +1…+5, thăng phẩm, khóa, đổi ra vàng theo chất lượng.

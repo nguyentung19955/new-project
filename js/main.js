@@ -230,23 +230,30 @@ function render() {
   if (view.ox > 0.5 || view.oy > 0.5) {
     ctx.fillStyle = '#1E2A16';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    if (ready(mapImg)) {
+    const back = typeof mapLayerCache !== 'undefined' && mapLayerCache.key.startsWith(MAP_ID + '|') ? mapLayerCache.c : ready(mapImg) && mapImg;
+    if (back) {
       const cs = Math.max(canvas.width / CONFIG.W, canvas.height / CONFIG.H);
       ctx.globalAlpha = 0.45;
-      ctx.drawImage(mapImg, (canvas.width - CONFIG.W * cs) / 2, (canvas.height - CONFIG.H * cs) / 2, CONFIG.W * cs, CONFIG.H * cs);
+      ctx.drawImage(back, (canvas.width - CONFIG.W * cs) / 2, (canvas.height - CONFIG.H * cs) / 2, CONFIG.W * cs, CONFIG.H * cs);
       ctx.globalAlpha = 1;
     }
   }
   ctx.setTransform(px(), 0, 0, px(), view.ox * px(), view.oy * px());
   if (game.shake > 0.2) ctx.translate((Math.random() - 0.5) * game.shake, (Math.random() - 0.5) * game.shake);
-  // v159: ảnh nền nen_ai-*.png là bản đồ sông Đà (chương Sơn Tinh – Thủy Tinh) — không dùng cho ải chương khác
+  // v163: ảnh nền nen_ai-*.png là bản đồ sông Đà (chương Sơn Tinh – Thủy Tinh) — không dùng cho ải chương khác
   const nen = !asset(`maps/map-0${game.level + 1}.png`) && NEN_AI[game.level] && asset(`nen_ai-${NEN_AI[game.level]}.png`);
   const bg = !nen && mapBg();
-  if (bg) { if (bg.img) ctx.drawImage(bg.img, 0, 0, CONFIG.W, CONFIG.H); else { ctx.fillStyle = MAP_THEMES[bg.theme].ground; ctx.fillRect(0, 0, CONFIG.W, CONFIG.H); } }
-  if (nen) drawAiMap(nen);
-  else if (ready(mapImg)) ctx.drawImage(mapImg, 0, 0, CONFIG.W, CONFIG.H);
-  else drawMapFallback(ctx);
-  // thành Phong Châu vẽ tay (khi bản đồ chưa có ảnh riêng) — v159: chỉ ở chương Sơn Tinh – Thủy Tinh
+  // v156: nền vẽ tay + đường đi theo chủ đề + cổng dựng sẵn một lần vào canvas tĩnh; mỗi khung chỉ vẽ gợn nước / dấu chân
+  const layer = bg && typeof mapLayer === 'function' && !asset(`maps/map-0${game.level + 1}.png`)
+    && mapLayer(MAP_ID, bg.img, mapImg, Math.round(CONFIG.W * px()), Math.round(CONFIG.H * px()));
+  if (layer) { ctx.drawImage(layer, 0, 0, CONFIG.W, CONFIG.H); drawPathFx(ctx, MAP_ID, t); }
+  else {
+    if (bg) { if (bg.img) ctx.drawImage(bg.img, 0, 0, CONFIG.W, CONFIG.H); else { ctx.fillStyle = MAP_THEMES[bg.theme].ground; ctx.fillRect(0, 0, CONFIG.W, CONFIG.H); } }
+    if (nen) drawAiMap(nen);
+    else if (ready(mapImg)) ctx.drawImage(mapImg, 0, 0, CONFIG.W, CONFIG.H);
+    else drawMapFallback(ctx);
+  }
+  // thành Phong Châu vẽ tay (khi bản đồ chưa có ảnh riêng) — v163: chỉ ở chương Sơn Tinh – Thủy Tinh
   const castle = !asset(`maps/map-0${game.level + 1}.png`) && chapterOf(game.level).id === 'sontinh' && (assetAny(['ban-do_phong-chau.png', 'tiles/castle-phong-chau.png']) || {}).img;
   if (castle) ctx.drawImage(castle, 838 * DK, 70 * DK, 110 * DK, 150 * DK);
   drawWaterLevel(ctx, game.water, t);
@@ -647,7 +654,7 @@ function drawHeroOnMap(h, t) {
     ctx.fillStyle = h.hp / st.hpMax > 0.35 ? '#3EBE3E' : '#D84A2A';
     ctx.fillRect(h.x - 16, top - 4, 32 * Math.max(0, h.hp / st.hpMax), 2.5);
     if (detail) { ctx.fillStyle = '#4A90E2'; ctx.fillRect(h.x - 16, top - 1.2, 32 * Math.max(0, h.mana / st.maxMana), 1.6); }
-    const fr = asset('ui/thanh-mau-tuong.png', true);      // v159: khung thanh máu vẽ tay (nếu có)
+    const fr = asset('ui/thanh-mau-tuong.png', true);      // v163: khung thanh máu vẽ tay (nếu có)
     if (fr) ctx.drawImage(fr, h.x - 20, top - 7.5, 40, detail ? 11 : 9);
   }
   // sao mới hiện khi tướng hạ xuống (60% thời gian tiến hoá)
@@ -992,7 +999,7 @@ function drawEffects(t) {
         ctx.scale(sc, sc);
         ctx.font = '800 44px "Alegreya SC", serif';
         ctx.textAlign = 'center';
-        // v159: dải lụa vẽ tay sau chữ (ui/dai-thong-bao.png), chưa có ảnh thì chỉ có chữ như cũ
+        // v163: dải lụa vẽ tay sau chữ (ui/dai-thong-bao.png), chưa có ảnh thì chỉ có chữ như cũ
         const rib = asset('ui/dai-thong-bao.png', true);
         if (rib) { const rw = ctx.measureText(f.str).width + 150; ctx.drawImage(rib, -rw / 2, -50, rw, 76); }
         ctx.lineWidth = 7;

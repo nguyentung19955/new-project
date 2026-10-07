@@ -103,7 +103,7 @@ function asset(path, force) {
 // Ảnh nền / bản đồ / truyện giữ nguyên. Ảnh trong giao diện (thẻ <img>) vẫn dùng file gốc.
 const SHRINK_SIDE = 320;
 function shrinkForCanvas(path, img) {
-  if (/^(nen_|truyen_|ban-do_nui|logo|icon-app|maps\/|scenes\/)/.test(path)) return null;
+  if (/^(nen_|truyen_|ban-do_nui|logo|icon-app|maps\/|scenes\/|tiles\/duong-)/.test(path)) return null;
   const w = img.naturalWidth, h = img.naturalHeight;
   const k = SHRINK_SIDE / Math.min(w, h);
   if (k >= 0.9) return null;
@@ -469,9 +469,9 @@ function drawVfx(ctx, img, p, x, y, size) {
 // ------------------------------------------------------------
 let mapImgKey = '';
 // v124: nền bản đồ vẽ tay theo chủ đề (assets/maps/nen-<chủ đề>.jpg); đường đi, ô tướng, thành vẫn do game vẽ lên trên
-// v140: chủ đề Sông chưa có tranh riêng → tạm dùng nền Đầm sen (bờ nước, cỏ ở giữa); có nen-song.jpg thì đổi lại
+// v140: chủ đề Sông tạm dùng nền Đầm sen; v155 đã có nen-song.jpg riêng (MAP_BG_FILE để trống, giữ cho chủ đề mượn nền sau này)
 const MAP_BG = new Set(['dam', 'hang', 'rung', 'dong', 'thanh', 'bien', 'song']);
-const MAP_BG_FILE = { song: 'dam' };
+const MAP_BG_FILE = {};
 function mapBg() {
   const m = typeof MAP_ID !== 'undefined' && MAPS[MAP_ID];
   return m && MAP_BG.has(m.theme) ? { img: asset(`maps/nen-${MAP_BG_FILE[m.theme] || m.theme}.jpg`, true), theme: m.theme } : null;
@@ -520,12 +520,28 @@ function drawWaterLevel(ctx, water, t) {
   ctx.restore();
 }
 
+const SPOT_THEME = { song: 'co', dam: 'co', dong: 'co', rung: 'dat', hang: 'da', bien: 'cat', thanh: 'gach' };
 // Ô đặt tướng theo bản thiết kế: ellipse 15×10 (tọa độ thiết kế)
 // state: dry | flooded | raised | target | free | hint | soon
 function drawSpot(ctx, x, y, o, t) {
   const rx = 15 * DK, ry = 10 * DK;
+  // v156: đế đặt tướng vẽ tay (tiles/de-tuong-*.png, cắt bằng tools/cat-items.py de-tuong / de-tuong-chu-de):
+  // ngập / núi / đang chọn / sẵn sàng đặt có ảnh riêng; ô thường dùng đế theo chủ đề bản đồ, thiếu thì đế chung
+  const th = typeof MAP_ID !== 'undefined' && MAPS[MAP_ID] ? MAPS[MAP_ID].theme : 'song';
+  const de = o.flooded ? ['ngap'] : o.raised ? ['nui'] : o.mode === 'target' || o.mode === 'raise' ? ['chon', 'san-sang']
+    : o.mode === 'free' || o.mode === 'hint' ? ['san-sang'] : [];
+  de.push(SPOT_THEME[th] || 'co', 'thuong');
+  // ảnh đế là một phần bản đồ (như nền vẽ tay) → luôn dùng nếu có, kể cả khi tắt "Dùng ảnh AI"
+  let base = null;
+  for (const k of de) { const img = asset(`tiles/de-tuong-${k}.png`, true); if (img) { base = { img }; break; } }
+  if (base) {
+    // ảnh vuông, đế elip nằm giữa; mặt đế hơi cao hơn tâm ảnh (phối cảnh 3/4) → hạ ảnh xuống một chút
+    const s = rx * 2.9;
+    ctx.drawImage(base.img, x - s / 2, y - s / 2 + ry * 0.3, s, s);
+    o = { ...o, tileArt: true };
+  }
   const tk = o.flooded ? 'ngap' : o.raised || o.tier === 2 ? 'cao' : o.tier === 1 ? 'giua' : 'thap';
-  const tile = (assetAny([`ban-do_o-${tk}.png`, `tiles/tile-${{ ngap: 'flooded', cao: 'high', giua: 'mid', thap: 'low' }[tk]}.png`]) || {}).img;
+  const tile = !base && (assetAny([`ban-do_o-${tk}.png`, `tiles/tile-${{ ngap: 'flooded', cao: 'high', giua: 'mid', thap: 'low' }[tk]}.png`]) || {}).img;
   if (tile) {
     // ô vẽ tay: ảnh vuông, vẽ phẳng theo phối cảnh ô (rộng 2.4 × bán kính)
     ctx.drawImage(tile, x - rx * 1.25, y - ry * 1.25, rx * 2.5, ry * 2.5);
@@ -535,7 +551,20 @@ function drawSpot(ctx, x, y, o, t) {
   ctx.beginPath();
   ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
   if (o.tileArt) {
-    // đã có ảnh ô
+    // đã có ảnh ô; ô ngập: gợn sóng loang chồng lên ảnh
+    if (o.flooded) {
+      const k = (t * 0.8) % 1;
+      ctx.save();
+      ctx.globalAlpha = (1 - k) * 0.7;
+      ctx.strokeStyle = '#BFE8F5';
+      ctx.lineWidth = 1.5 * DK;
+      ctx.beginPath();
+      ctx.ellipse(x, y, rx * (0.4 + k * 0.7), ry * (0.4 + k * 0.7), 0, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+      ctx.beginPath();
+      ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
+    }
   } else if (o.flooded) {
     ctx.fillStyle = 'rgba(44,106,134,0.85)';
     ctx.fill();
@@ -2208,7 +2237,7 @@ function drawEnemy(ctx, e, t, o = {}) {
   const r = e.hp / e.maxHp;
   ctx.fillStyle = r > 0.5 ? '#3EBE3E' : r > 0.25 ? '#E0B030' : '#D84A2A';
   ctx.fillRect(e.x - w / 2, by, w * Math.max(0, r), 3);
-  const fr = asset(e.def.boss ? 'ui/thanh-mau-boss.png' : 'ui/thanh-mau-quai.png', true);   // v159: khung thanh máu vẽ tay (nếu có)
+  const fr = asset(e.def.boss ? 'ui/thanh-mau-boss.png' : 'ui/thanh-mau-quai.png', true);   // v163: khung thanh máu vẽ tay (nếu có)
   if (fr) ctx.drawImage(fr, e.x - w / 2 - (e.def.boss ? 8 : 4), by - 3, w + (e.def.boss ? 16 : 8), 9);
   // chấm hành bên trái thanh máu (quái tinh anh có thể có hành phụ)
   if (detail) [e.el, e.el2].filter(Boolean).forEach((el, k) => {

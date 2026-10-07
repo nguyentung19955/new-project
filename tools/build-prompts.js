@@ -325,10 +325,84 @@ for (const [k, v] of Object.entries(ITEM_SHEETS)) {
   sheetsJson[k] = { dir: '', files: v.cells.map((c) => c[0]) };
   if (!v.cells.every((c) => done(c[0]))) items.push({ group: '13. Icon đồ vật', file: `${k}.png`, title: v.title, text: sheetPrompt(v.cells.map((c) => c[1]), 'game item icons') });
 }
+// v156: đế đặt tướng (ô trên bản đồ) + kết cấu đường quái đi + cổng thành theo chủ đề — đang vẽ bằng code, có ảnh thì game tự dùng
+const SPOT_LOOK = 'a low round pedestal / plinth seen from a 3/4 top-down view, so it looks like a FLAT WIDE ELLIPSE (about 3 wide : 2 tall, the top face fills ~75% of the cell width), short visible side rim only a few pixels thick, the top face is EMPTY and flat (a hero stands on it), carved Dong Son bronze-drum ring pattern (sun-star in the middle, circle-dot band, zigzag rim) engraved very lightly on the top face';
+const SPOT_SHEETS = {
+  'de-tuong': { title: 'Đế đặt tướng · 5 trạng thái', dir: 'tiles', cells: [
+    ['de-tuong-thuong.png', `${SPOT_LOOK}, plain weathered grey-brown stone with dull bronze inlay, calm (normal empty spot)`],
+    ['de-tuong-san-sang.png', `${SPOT_LOOK}, same stone but the bronze inlay softly glows warm cream-white (ready to place a hero), faint light on the top face only`],
+    ['de-tuong-chon.png', `${SPOT_LOOK}, same stone with a bright gold rim glowing around the top edge and a golden sun-star (selected spot)`],
+    ['de-tuong-ngap.png', `${SPOT_LOOK}, the stone half sunk under shallow blue river water, ripples and a few duckweed leaves on the water around it (flooded spot)`],
+    ['de-tuong-nui.png', `${SPOT_LOOK}, the stone pushed up on a small green-brown rocky mountain mound with grass tufts on the sides, top face still flat and empty (raised mountain spot)`],
+  ] },
+  'de-tuong-chu-de': { title: 'Đế đặt tướng · theo chủ đề bản đồ', dir: 'tiles', cells: [
+    ['de-tuong-co.png', `${SPOT_LOOK}, made of packed earth with a ring of short green grass and two tiny reeds (river / marsh / rice-field maps)`],
+    ['de-tuong-dat.png', `${SPOT_LOOK}, a flat old tree-stump slice with roots and moss around the rim (forest map)`],
+    ['de-tuong-da.png', `${SPOT_LOOK}, dark cave stone slab with two small blue glowing crystals at the rim (cave map)`],
+    ['de-tuong-cat.png', `${SPOT_LOOK}, pale sandstone with small seashells and a bit of sand at the rim (sea shore map)`],
+    ['de-tuong-gach.png', `${SPOT_LOOK}, fitted old red-brown bricks and a bronze rim like a citadel tower base (citadel map)`],
+  ] },
+};
+const spotPrompt = (cells) => `Create ONE image: a ${cells.length * 128}x128 row of ${cells.length} equal 128x128 square game map tiles for a cute mobile tower-defense game, one per cell, left to right:
+${cells.map((x, i) => `[${i + 1}] ${x}`).join('  ')}.
+${DRUM}. All cells: the same camera angle, the same size and the same ellipse shape, centered in the cell, readable at 50 px, no characters on top, no text, no letters, no numbers.
+${BG}`;
+for (const [k, v] of Object.entries(SPOT_SHEETS)) {
+  sheetsJson[k] = { dir: v.dir, files: v.cells.map((c) => c[0]) };
+  if (!v.cells.every((c) => done(`${v.dir}/${c[0]}`))) items.push({ group: '14. Đế đặt tướng (ô trên bản đồ)', file: `${k}.png`, title: v.title, text: spotPrompt(v.cells.map((c) => c[1])), cut: `python3 tools/cat-items.py <ảnh> ${k}` });
+}
+const ROAD_TEX = {
+  nuoc: 'calm shallow river water seen from straight above: blue-teal water with soft light ripples, a few tiny duckweed leaves, gentle darker patches (Sông / Đầm maps)',
+  dat: 'a worn forest dirt trail seen from straight above: packed brown earth, small pebbles, a few fallen dry leaves and thin root bits (Rừng map)',
+  da: 'old cave floor paving seen from straight above: irregular rounded grey-brown flagstones with dark gaps and a little moss (Hang map)',
+  de: 'the top of an earthen rice-field dike seen from straight above: packed light-brown clay, faint footprints, tiny grass tufts (Đồng map)',
+  cat: 'wet beach sand seen from straight above: darker damp sand with ripple marks, tiny shell bits, a few foam traces (Biển map)',
+  gach: 'an ancient citadel road seen from straight above: worn brown-grey fired bricks and stone slabs in a running bond, chipped edges, moss in the joints (Thành map)',
+};
+const roadPrompt = (k) => `Create ONE image: a 512x512 SEAMLESS TILEABLE texture (the left edge continues the right edge, the top edge continues the bottom edge, no visible seam when repeated) for the road of a cute mobile tower-defense game: ${ROAD_TEX[k]}.
+Flat even lighting, no strong shadows, no perspective, no vignette, no single big object, no border, no road markings, no dashed lines. Soft hand-painted cartoon look matching a Dong Son bronze-drum themed game, medium contrast so characters walking on it stay readable. No text, no watermark, full bleed.`;
+for (const k of Object.keys(ROAD_TEX)) {
+  sheetsJson[`duong-${k}`] = { dir: 'tiles', files: [`duong-${k}.jpg`], texture: 512 };
+  if (!done(`tiles/duong-${k}.jpg`)) items.push({ group: '15. Đường quái đi (kết cấu lặp 512×512)', file: `duong-${k}.png`, title: `Kết cấu đường · ${k}`, text: roadPrompt(k), cut: `python3 tools/cat-items.py <ảnh> duong-${k}` });
+}
+const GATE_CELLS = [
+  ['cong-phong-chau.png', 'the gate tower of Phong Chau capital: a wooden-and-earth fortress gate with a dark arched doorway, a bronze drum disc above the door, a red banner on top'],
+  ['cong-ban-rung.png', 'a forest village gate: a stilt house with a thatched roof behind a bamboo palisade gate, small red cloth on a pole'],
+  ['cong-hang.png', 'a cave mouth gate: a dark rocky cave entrance framed by stalactites and two carved stone pillars with bronze rings'],
+  ['cong-lang-tre.png', 'a Vietnamese bamboo village gate (cong lang): two bamboo posts with a curved thatched-and-tile roof, a red plaque with a golden sun-star'],
+  ['cong-co-loa.png', 'the spiral citadel of Co Loa: a small round earthen wall ring with a stone gate tower in the middle, red flag on top'],
+];
+sheetsJson['cong-thanh'] = { dir: 'tiles', files: GATE_CELLS.map((c) => c[0]) };
+if (!GATE_CELLS.every((c) => done(`tiles/${c[0]}`))) items.push({ group: '16. Cổng thành cuối đường (theo chủ đề)', file: 'cong-thanh.png', title: 'Cổng thành · 5 chủ đề',
+  text: `Create ONE image: a 640x128 row of 5 equal 128x128 square game map buildings for a cute mobile tower-defense game, one per cell, left to right, all seen from the same 3/4 top-down view, the doorway facing the viewer, the base sitting near the bottom of the cell:
+${GATE_CELLS.map((c, i) => `[${i + 1}] ${c[1]}`).join('  ')}.
+${DRUM}. Each building: one bold readable shape at 60 px, no characters, no text, no letters, no numbers.
+${BG}`, cut: 'python3 tools/cat-items.py <ảnh> cong-thanh' });
+// v163: icon NHỎ (chỉ số, trạng thái, tiền tệ, ngũ hành…) đang vẽ bằng SVG/emoji — hiện ở 13–20 px nên nét phải rất to, ít chi tiết.
+// Cắt: python3 tools/cat-items.py <ảnh> <mã tấm>  → assets/ui/ic-<tên>.png (64 px). Bảng kê chỗ dùng: docs/ICON-NHO.md
+const IC_SHEETS = {
+  'ic-chi-so-1': [['giap', 'armor: a sturdy bronze kite shield'], ['khang-phep', 'magic resistance: a glowing purple orb inside a bronze ring'], ['toc-chay', 'move speed: one green-brown straw sandal with three speed lines'], ['toc-danh', 'attack speed: a yellow lightning bolt'], ['sat-thuong', 'damage: a short bronze sword pointing up-right']],
+  'ic-chi-so-2': [['mau', 'health: a big red blood drop'], ['chi-mang', 'critical hit: an orange-red spiky burst star'], ['tam-danh', 'attack range: a red and cream round target with an arrow in the center'], ['hoi-chieu', 'cooldown: a bronze hourglass with blue sand'], ['nang-luong', 'energy / mana: a big blue water drop with a white sparkle']],
+  'ic-chi-so-3': [['suc-manh', 'strength: a clenched orange fist'], ['nhanh-nhen', 'agility: a green Lac bird feather'], ['tri-tue', 'intelligence: an open blue bamboo scroll book'], ['giam-sat-thuong', 'damage reduction: a teal shield with a white downward arrow'], ['xuyen-giap', 'armor penetration: a bronze spear tip cracking through a small shield']],
+  'ic-trang-thai-1': [['cham', 'slowed: a small brown snail'], ['choang', 'stunned: three yellow stars circling in a ring'], ['dot', 'burning: an orange-red flame'], ['doc', 'poisoned: a green poison drop with a tiny skull'], ['dong-bang', 'frozen: a light-blue ice crystal snowflake']],
+  'ic-trang-thai-2': [['sa-lay', 'stuck in mud: brown mud puddle with two bubbles'], ['khien', 'shield: a glowing cyan bubble dome'], ['hoi-mau', 'healing: a green plus cross with a glow'], ['noi-gian', 'enraged: a red angry vein mark (four curved strokes)'], ['bay', 'flying: one white feathered wing']],
+  'ic-trang-thai-3': [['boss', 'boss: a red demon crown with two small horns'], ['cam-lang', 'silenced: a cream speech bubble crossed by a red slash'], ['tinh-anh', 'elite: a purple faceted gem'], ['lan', 'diving underwater: two blue wave lines with bubbles']],
+  'ic-tien-te': [['tui-vang', 'gold reward: a small cloth pouch with a gold coin on it'], ['diem-ky-nang', 'skill point: a yellow star on a dark-green bronze disc'], ['diem-an-phu', 'rune point: a small grey carved stone seal with a golden sun mark'], ['luc-chien', 'combat power: two crossed bronze swords'], ['cap-do', 'level up: two green upward chevrons']],
+  'ic-khac': [['kho', 'hard mode: a cream skull with red glowing eyes'], ['nuoc-dang', 'flood rising: blue water waves with an upward arrow'], ['khac-che', 'element counter: an orange arrow hitting a small yellow spark'], ['nang-cap', 'upgrade: a fat green upward arrow'], ['xuyen-phep', 'magic penetration: a purple glowing spear tip piercing a ring']],
+  'ic-ngu-hanh': [['hanh-kim', 'Metal element: a silver-white bronze axe blade on a round grey disc'], ['hanh-moc', 'Wood element: a green sprouting leaf on a round green disc'], ['hanh-thuy', 'Water element: two blue waves on a round blue disc'], ['hanh-hoa', 'Fire element: an orange flame on a round red disc'], ['hanh-tho', 'Earth element: a brown mountain peak on a round ochre disc']],
+};
+const icPrompt = (cells) => `Create ONE image: a ${cells.length * 128}x128 row of ${cells.length} equal 128x128 square TINY game UI icons (status / stat icons), one per cell, left to right:
+${cells.map(([, d], i) => `[${i + 1}] ${d}`).join('  ')}.
+Dong Son bronze-drum style kept minimal: warm bronze gold #C9963A and dark green patina #2F6B5E accents, flat cartoon shading for a cute mobile game, at most one tiny zigzag or circle-dot accent (no rings, no birds, no busy engraving). These icons are shown VERY SMALL (16-20 px on a phone): one big simple silhouette that fills about 80% of the cell, VERY thick dark-brown outline #2A1608, at most 2-3 flat colors, no thin lines, no tiny details, no background shapes unless described, high contrast, no text, no letters, no numbers.
+${BG}`;
+for (const [k, v] of Object.entries(IC_SHEETS)) {
+  sheetsJson[k] = { dir: 'ui', size: 64, files: v.map(([n]) => `ic-${n}.png`) };
+  if (!v.every(([n]) => done(`ui/ic-${n}.png`))) items.push({ group: '17. Icon nhỏ (chỉ số, trạng thái, tiền tệ)', file: `${k}.png`, title: `Icon nhỏ · ${k}`, text: icPrompt(v), cut: `python3 tools/cat-items.py <ảnh> ${k}` });
+}
 fs.writeFileSync(path.join(ROOT, 'tools/item-sheets.json'), JSON.stringify(sheetsJson, null, 1));
 
 // ============================================================
-// v159: thành phần giao diện còn vẽ bằng code (rà bằng ảnh chụp Playwright các màn: kết quả, chọn ải, chuẩn bị, trận, Nghỉ chân, sính lễ).
+// v163: thành phần giao diện còn vẽ bằng code (rà bằng ảnh chụp Playwright các màn: kết quả, chọn ải, chuẩn bị, trận, Nghỉ chân, sính lễ).
 // Không gồm icon nhỏ chỉ số / trạng thái / tiền tệ (nhánh khác làm). Game tự dùng ảnh khi có file, chưa có thì giữ hình vẽ bằng code.
 // Tranh cảnh: full bleed, đặt thẳng vào assets/scenes/. Khung / nút / thanh: nền hồng tím, cắt bằng python3 tools/cat-khung.py <ảnh> <mã>.
 const SCENE_STYLE = 'Painterly cute mobile-game illustration in the same family as the main menu key art: warm Dong Son bronze-drum motifs (sun-star, Lac birds, zigzag bands) worked into the scenery, soft cel shading, rich but readable colors, chibi characters with big round eyes and thick dark-brown outlines #2A1608. No text, no letters, no numbers, no UI, no frame, no watermark, full bleed.';
@@ -365,16 +439,16 @@ Keep the middle band fairly calm (the game draws level badges and a dotted route
 ${SCENE_STYLE}`;
 for (const [k, v] of Object.entries(CH_SCENE)) for (const win of [false, true]) {
   const f = `scenes/${win ? 'thang' : 'thua'}-${k}.png`;
-  if (!done(f)) items.push({ group: '14. Tranh kết quả theo chương (thay SVG)', file: f, title: `${win ? 'Thắng' : 'Thua'} · ${v.name.split(' (')[0]}`, cut: `đặt thẳng vào assets/${f}`, text: resultPrompt(k, win) });
+  if (!done(f)) items.push({ group: '18. Tranh kết quả theo chương (thay SVG)', file: f, title: `${win ? 'Thắng' : 'Thua'} · ${v.name.split(' (')[0]}`, cut: `đặt thẳng vào assets/${f}`, text: resultPrompt(k, win) });
 }
 for (const k of Object.keys(CH_SCENE)) {
   const f = `scenes/chuong-${k}.png`;
-  if (!done(f)) items.push({ group: '15. Nền bản đồ chọn ải theo chương', file: f, title: `Bản đồ chương · ${CH_SCENE[k].name.split(' (')[0]}`, cut: `đặt thẳng vào assets/${f}`, text: campPrompt(k) });
+  if (!done(f)) items.push({ group: '19. Nền bản đồ chọn ải theo chương', file: f, title: `Bản đồ chương · ${CH_SCENE[k].name.split(' (')[0]}`, cut: `đặt thẳng vào assets/${f}`, text: campPrompt(k) });
 }
 const NEN_PHU = `Create ONE image: a 1792x832 wide background texture (full bleed) for secondary screens (prepare for battle, results, rewards) of a cute mobile tower-defense game based on Vietnamese folk legends.
 CONTENT: a dark aged bronze drum surface seen from the front, very low contrast: faint concentric rings, a dim sun-star in the center, Lac birds and zigzag bands engraved softly, warm dark brown #1A140E to deep patina green #16231F, a soft vignette. It must stay DARK and calm so white and gold text is readable on top.
 No text, no letters, no numbers, no UI, no frame, no watermark.`;
-if (!done('scenes/nen-man-phu.png')) items.push({ group: '16. Nền màn phụ (Chuẩn bị / Kết quả / Phần thưởng)', file: 'scenes/nen-man-phu.png', title: 'Nền đồng tối cho màn phụ', cut: 'đặt thẳng vào assets/scenes/nen-man-phu.png', text: NEN_PHU });
+if (!done('scenes/nen-man-phu.png')) items.push({ group: '20. Nền màn phụ (Chuẩn bị / Kết quả / Phần thưởng)', file: 'scenes/nen-man-phu.png', title: 'Nền đồng tối cho màn phụ', cut: 'đặt thẳng vào assets/scenes/nen-man-phu.png', text: NEN_PHU });
 // tấm khung / nút / thanh — cols × rows ô bằng nhau, tên file theo thứ tự ô; max = cạnh dài nhất sau khi cắt
 const UI_FRAMES = {
   'khung-bang': { cols: 1, rows: 1, max: 384, size: '1024x1024', title: 'Khung bảng / popup (giấy dó viền đồng, 9 mảnh)', cells: [
@@ -423,7 +497,7 @@ ${BG}`; };
 const framesJson = {};
 for (const [k, v] of Object.entries(UI_FRAMES)) {
   framesJson[k] = { cols: v.cols, rows: v.rows, max: v.max, dir: 'ui', files: v.files };
-  if (!v.files.every((f) => done('ui/' + f))) items.push({ group: '17. Khung / nút / thanh giao diện (trống đồng, nền hồng tím)', file: `${k}.png`, title: v.title, cut: `python3 tools/cat-khung.py ${k}.png ${k}`, text: framePrompt(k) });
+  if (!v.files.every((f) => done('ui/' + f))) items.push({ group: '21. Khung / nút / thanh giao diện (trống đồng, nền hồng tím)', file: `${k}.png`, title: v.title, cut: `python3 tools/cat-khung.py ${k}.png ${k}`, text: framePrompt(k) });
 }
 fs.writeFileSync(path.join(ROOT, 'tools/ui-frames.json'), JSON.stringify(framesJson, null, 1));
 items.forEach((it, i) => { it.n = i + 1; });

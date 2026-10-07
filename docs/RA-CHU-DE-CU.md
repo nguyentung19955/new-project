@@ -1,4 +1,4 @@
-# Rà chủ đề cũ Sơn Tinh – Thủy Tinh (phiên bản 159)
+# Rà chủ đề cũ Sơn Tinh – Thủy Tinh (phiên bản 163)
 
 Game ban đầu chỉ có truyện Sơn Tinh – Thủy Tinh (giữ thành Phong Châu trước nước lũ). Nay có 5 chương
 (Sơn Tinh – Thủy Tinh ải 1–8 · Thạch Sanh 9–11 · Thánh Gióng 12–13 · Lạc Long Quân 14–15 · An Dương Vương 16–17),
@@ -46,23 +46,23 @@ Vô tận và chơi nhóm. Bảng dưới liệt kê mọi chỗ người chơi 
   (đồ của boss chương Sơn Tinh), lời thoại Thủy Tinh (chỉ nói khi boss Thủy Tinh xuất hiện), truyện mở đầu "Vua Hùng kén rể" (chỉ chương Sơn Tinh),
   màn Núi Tản Viên (đã bỏ khỏi trận từ v92, không mở được).
 
-## Phần 2 — prompt khung / nút / tranh giao diện (nhóm 14–17 trong docs/PROMPT_GEMINI_FULL.md)
+## Phần 2 — prompt khung / nút / tranh giao diện (nhóm 18–21 trong docs/PROMPT_GEMINI_FULL.md)
 
 Không gồm icon nhỏ chỉ số / trạng thái / tiền tệ (nhánh `claude/icon-nho`), ô đặt tướng, đường quái (nhánh khác).
 
 | Nhóm | File | Cắt / đặt | Gắn vào game (chưa có file → giữ hình cũ) |
 |---|---|---|---|
-| 14 · Tranh kết quả (10) | `scenes/thang-<chương>.png`, `scenes/thua-<chương>.png` (768×832) | đặt thẳng vào `assets/scenes/` | `resultImg()` ở màn thắng / thua; tải sẵn khi vào ải |
-| 15 · Nền bản đồ chọn ải (5) | `scenes/chuong-<chương>.png` (1280×768) | đặt thẳng | `<img class="cp-bgimg">` trên nền SVG, lỗi tải thì tự gỡ |
-| 16 · Nền màn phụ (1) | `scenes/nen-man-phu.png` | đặt thẳng | `html.sk-nen-man-phu` → nền màn Chuẩn bị / Kết quả / Phần thưởng |
-| 17 · `khung-bang` | `ui/khung-bang.png` | `python3 tools/cat-khung.py <ảnh> khung-bang` | border-image 9 mảnh cho khung mẹo / bảng kết quả, bảng Nghỉ chân, thẻ phần thưởng |
-| 17 · `nut-chu-nhat` | `ui/nut-vang-{thuong,nhan,khoa}.png`, `ui/nut-dong-…` | `cat-khung.py … nut-chu-nhat` | `.btn-gold` (thường / :active / :disabled); nút đồng ở thanh kết quả + Nghỉ chân |
-| 17 · `nut-tron` | `ui/nut-tron-{thuong,nhan,khoa}.png` | `cat-khung.py … nut-tron` | nút tròn quay lại / đóng `.xbtn` |
-| 17 · `thanh-mau` | `ui/thanh-mau-{boss,tuong,quai}.png` | `cat-khung.py … thanh-mau` | khung thanh máu boss (#bossbar), tướng và quái trên canvas |
-| 17 · `khung-thanh-day` | `ui/khung-thanh-day.png` | `cat-khung.py … khung-thanh-day` | thanh đáy chợ tướng `#deck` |
-| 17 · `khung-the-cho` | `ui/the-cho-{thuong,ghep,thieu}.png`, `ui/nut-doi-cho.png` | `cat-khung.py … khung-the-cho` | khung thẻ chợ tướng (thường / ghép được / thiếu vàng), nút ↻ |
-| 17 · `dai-thong-bao` | `ui/dai-thong-bao.png` | `cat-khung.py … dai-thong-bao` | dải lụa sau chữ lớn giữa màn (tên chiêu tối thượng, Kim Quy Hộ Thành…) |
-| 17 · `huy-hieu-ai` | `ui/ai-{mo,chon,khoa}.png` | `cat-khung.py … huy-hieu-ai` | huy hiệu ải trên bản đồ chọn ải |
+| 18 · Tranh kết quả (10) | `scenes/thang-<chương>.png`, `scenes/thua-<chương>.png` (768×832) | đặt thẳng vào `assets/scenes/` | `resultImg()` ở màn thắng / thua; tải sẵn khi vào ải |
+| 19 · Nền bản đồ chọn ải (5) | `scenes/chuong-<chương>.png` (1280×768) | đặt thẳng | `<img class="cp-bgimg">` trên nền SVG, lỗi tải thì tự gỡ |
+| 20 · Nền màn phụ (1) | `scenes/nen-man-phu.png` | đặt thẳng | `html.sk-nen-man-phu` → nền màn Chuẩn bị / Kết quả / Phần thưởng |
+| 21 · `khung-bang` | `ui/khung-bang.png` | `python3 tools/cat-khung.py <ảnh> khung-bang` | border-image 9 mảnh cho khung mẹo / bảng kết quả, bảng Nghỉ chân, thẻ phần thưởng |
+| 21 · `nut-chu-nhat` | `ui/nut-vang-{thuong,nhan,khoa}.png`, `ui/nut-dong-…` | `cat-khung.py … nut-chu-nhat` | `.btn-gold` (thường / :active / :disabled); nút đồng ở thanh kết quả + Nghỉ chân |
+| 21 · `nut-tron` | `ui/nut-tron-{thuong,nhan,khoa}.png` | `cat-khung.py … nut-tron` | nút tròn quay lại / đóng `.xbtn` |
+| 21 · `thanh-mau` | `ui/thanh-mau-{boss,tuong,quai}.png` | `cat-khung.py … thanh-mau` | khung thanh máu boss (#bossbar), tướng và quái trên canvas |
+| 21 · `khung-thanh-day` | `ui/khung-thanh-day.png` | `cat-khung.py … khung-thanh-day` | thanh đáy chợ tướng `#deck` |
+| 21 · `khung-the-cho` | `ui/the-cho-{thuong,ghep,thieu}.png`, `ui/nut-doi-cho.png` | `cat-khung.py … khung-the-cho` | khung thẻ chợ tướng (thường / ghép được / thiếu vàng), nút ↻ |
+| 21 · `dai-thong-bao` | `ui/dai-thong-bao.png` | `cat-khung.py … dai-thong-bao` | dải lụa sau chữ lớn giữa màn (tên chiêu tối thượng, Kim Quy Hộ Thành…) |
+| 21 · `huy-hieu-ai` | `ui/ai-{mo,chon,khoa}.png` | `cat-khung.py … huy-hieu-ai` | huy hiệu ải trên bản đồ chọn ải |
 
 Prompt đã có file thì `node tools/build-prompts.js` tự ẩn. Cơ chế: `loadUiSkins()` (ui.js) thử tải từng file, có thì gắn biến CSS `--sk-<tên>`
 và lớp `sk-<nhóm>` lên `<html>`; các luật `html.sk-…` cuối css/style.css mới dùng ảnh.
