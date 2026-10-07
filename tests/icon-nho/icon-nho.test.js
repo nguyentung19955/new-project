@@ -72,7 +72,7 @@ async function boss(page) {
       const S = await page.evaluate(() => {
         game.paused = true;
         const slot = game.freeSlots()[0];
-        try { game.spawnHero(slot, game.summonList()[0], { tier: 1 }); } catch (e) { return { err: String(e) }; }
+        try { game.spawnHero(slot, game.marketPool()[0], { tier: 1 }); } catch (e) { return { err: String(e) }; }
         ui.sel = game.heroes.findIndex((x) => x && x.slot === slot); if (ui.sel < 0) ui.sel = slot; ui.statsOpen = true; ui.statsSig = null;
         return null;
       });

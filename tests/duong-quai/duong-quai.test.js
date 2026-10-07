@@ -108,7 +108,7 @@ const routeTiles = (useFake) => (page) => page.route(new RegExp('/assets/tiles/(
       const imgs = new Set(['thuong', 'co', 'san-sang', 'chon', 'ngap', 'nui'].map((k) => asset(`tiles/de-tuong-${k}.png`, true)));
       game.gold = 9999;
       const t = Object.keys(HEROES)[0];
-      game.placeHero(5, game.summonList()[0] || t);
+      game.placeHero(5, game.marketPool()[0] || t);
       const has = !!game.heroes[5];
       let drawn = 0; const orig = ctx.drawImage;
       ctx.drawImage = function (im, ...a) { if (imgs.has(im)) drawn++; return orig.call(this, im, ...a); };

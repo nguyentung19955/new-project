@@ -19,7 +19,7 @@ async function simWave(page, n, M, evOn, evK = 0, level = 0, seed = 7) {
       const slots = [1, 3, 5, 7, 9, 11, 13, 15].filter((i) => i < CONFIG.slots.length);
       TEAM.forEach((t, i) => { const sl = slots[i]; if (g.heroes[sl] || g.isFlooded(sl)) return; g.placeHero(sl, t); const h = g.heroes[sl]; if (h) { h.level = 12; h.tier = 2; } });
       for (const h of g.heroes) if (h) h.hp = heroStats(h).hpMax;
-      g.wave = n - 1; g.restWave = n - 1; g.nextWave = buildWave(n, level); g.nextWaveT = 0;
+      g.wave = n - 1; g.evWave = n - 1; g.nextWave = buildWave(n, level); g.nextWaveT = 0;
       g.startWave();
       // máu còn lại của quái lọt vào thành (đo mượt hơn số mạng)
       let leakHp = 0; const ue = g.updateEnemy;

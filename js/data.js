@@ -196,22 +196,22 @@ const HEROES = {
     ],
   },
   thosan: {
-    name: 'Thợ Săn Rừng', cost: 75, attack: 'melee', wclass: 'blade', dmgType: 'phys',
-    role: 'Chí mạng', title: 'Dao găm lá rừng, đòn chí mạng', color: '#7FC24A',
+    name: 'Thợ Săn Rừng', cost: 75, attack: 'arrow', proj: 'arrow', wclass: 'bow', dmgType: 'phys',
+    role: 'Chí mạng', title: 'Cung săn lá rừng, mũi tên chí mạng', color: '#7FC24A',
     attrs: { str: 16, agi: 24, int: 12 }, gain: { str: 1.8, agi: 3.0, int: 1.2 },
-    base: { damage: 2, range: 140, cooldown: 0.85 },
-    look: { aura: '#9b59b6', weapon: { type: 'daggers', color: '#dfe6e9' } },
+    base: { damage: 2, range: 145, cooldown: 0.9, heir: { damage: 2, range: 140 } },
+    look: { aura: '#9b59b6', weapon: { type: 'bow', color: '#8e5a2b' } },
     skills: [
       { id: 'shadowstep', name: 'Bước Lá Rừng', active: { cooldown: 6, cast: 'shadowstep', mana: 45 },
-        info: (n) => `Lướt tới quái xa nhất trong tầm gấp đôi, đâm giáo: x2 sát thương +${(n * 0.5).toFixed(0)}` },
-      { id: 'hiddenblade', name: 'Giáo Ẩn',
+        info: (n) => `Lướt tới quái xa nhất trong tầm gấp đôi, bắn tên sát mặt: x2 sát thương +${(n * 0.5).toFixed(0)}` },
+      { id: 'hiddenblade', name: 'Tên Ẩn',
         info: (n) => `+${(n * 0.35).toFixed(1)} sát thương`,
         apply: (s, n) => { s.damage += n * 0.35; } },
       { id: 'critical', name: 'Đòn Chí Mạng',
         info: (n) => `+${Math.round(15 + Math.min(25, n * 0.1))}% cơ hội chí mạng, chí mạng x${(2.2 + Math.min(1.3, n * 0.008)).toFixed(1)}`,
         apply: (s, n) => { s.crit += 15 + Math.min(25, n * 0.1); s.critMult = 2.2 + Math.min(1.3, n * 0.008); } },
       { id: 'assassinate', name: 'Săn Mồi', active: { cooldown: 14, cast: 'assassinate', mana: 100 },
-        info: (n) => `Đánh dấu rồi vồ quái máu cao nhất: x6 sát thương +${n * 3}` },
+        info: (n) => `Đánh dấu rồi bắn mũi tên săn vào quái máu cao nhất: x6 sát thương +${n * 3}` },
     ],
   },
   thaymo: {
@@ -278,7 +278,7 @@ const HEROES = {
     role: 'Con Rồng', title: 'Vua rồng biển, không sợ nước dâng', color: '#E25A3A',
     attrs: { str: 28, agi: 16, int: 16 }, gain: { str: 3.2, agi: 1.6, int: 1.6 },
     base: { damage: 12, range: 150, cooldown: 1.0 },
-    look: { aura: '#5AB4D6', weapon: { type: 'none' } },
+    look: { aura: '#5AB4D6', weapon: { type: 'spear', color: '#5AB4D6' } },
     trait: { name: 'Con Rồng', desc: 'Khi máu dưới 50%: rồng nổi giận, +30% sát thương' },
     skills: [
       { id: 'l_q', name: 'Vuốt Rồng', active: { cooldown: 5, cast: 'claw', mana: 40 },
@@ -615,12 +615,12 @@ const HEROES = {
     role: 'Cây đa thần', title: 'Chú Cuội ôm cây đa thần bay lên cung trăng', color: '#5FB84A',
     attrs: { str: 30, agi: 18, int: 15 }, gain: { str: 3.3, agi: 1.9, int: 1.5 },
     base: { damage: 14, range: 150, cooldown: 1.0 },
-    look: { aura: '#7FE07A', weapon: { type: 'axe', color: '#9E9A90' } },
+    look: { aura: '#7FE07A', weapon: { type: 'pole', color: '#8A6A40' } },
     trait: { name: 'Lá Đa Cải Tử', desc: 'Mỗi 5 giây hồi 4% máu tướng quanh mình; gục lần đầu mỗi đợt sống lại với 30% máu' },
     traitApply: (s) => { s.lg.healAura = Math.max(s.lg.healAura || 0, 4); s.lg.reviveOnce = Math.max(s.lg.reviveOnce || 0, 30); },
     skills: [
-      { id: 'cu_q', name: 'Rìu Đốn Củi', active: { cooldown: 7, cast: 'chop', mana: 55 },
-        info: (n) => `Bổ rìu một nhát: x3 sát thương +${n}` },
+      { id: 'cu_q', name: 'Đòn Gánh Quật', active: { cooldown: 7, cast: 'chop', mana: 55 },
+        info: (n) => `Quật đòn gánh một nhát: x3 sát thương +${n}` },
       { id: 'cu_w', name: 'Lá Đa Thần',
         info: (n) => `+10% máu, +${(1.5 + n * 0.05).toFixed(1)} hồi máu/giây`, apply: (s, n) => { s.hpPct += 10; s.regen += 1.5 + n * 0.05; } },
       { id: 'cu_e', name: 'Cây Đa Bay', active: { cooldown: 14, cast: 'sacredtree', mana: 80 },
@@ -634,7 +634,7 @@ const HEROES = {
     role: 'Mùa vàng', title: 'Thần Lúa nuôi người Việt, mùa vàng no ấm', color: '#5FB84A',
     attrs: { str: 16, agi: 15, int: 31 }, gain: { str: 1.6, agi: 1.5, int: 3.5 },
     base: { damage: 11, range: 175, cooldown: 1.25, splash: 30 },
-    look: { aura: '#F2D27A', weapon: { type: 'staff', color: '#7A5232', orb: '#F2D27A', glow: '#C8E070' } },
+    look: { aura: '#F2D27A', weapon: { type: 'sickle', color: '#C8C8C0', glow: '#C8E070' } },
     trait: { name: 'Mùa Vàng', desc: 'Mỗi quái hạ +1 vàng; tướng đứng gần +10% sát thương' },
     traitApply: (s) => { s.goldOnKill += 1; },
     skills: [
@@ -667,15 +667,15 @@ const HEROES = {
     ],
   },
   chantrau: {
-    name: 'Trẻ Chăn Trâu', cost: 65, attack: 'arrow', proj: 'bolt', wclass: 'bow', dmgType: 'phys',
-    role: 'Choáng xa', title: 'Ná cao su, sỏi bờ đê, sáo trúc lưng trâu', color: '#C99A3C',
+    name: 'Trẻ Chăn Trâu', cost: 65, attack: 'melee', wclass: 'blade', dmgType: 'phys',
+    role: 'Gõ choáng', title: 'Gậy chăn trâu đầu trâu, sỏi bờ đê, sáo trúc lưng trâu', color: '#C99A3C',
     attrs: { str: 15, agi: 21, int: 13 }, gain: { str: 1.5, agi: 2.6, int: 1.3 },
-    base: { damage: 5, range: 170, cooldown: 0.95 },
-    look: { aura: '#E8C27A', weapon: { type: 'crossbow', color: '#7A5232' } },
+    base: { damage: 8, range: 145, cooldown: 0.9, heir: { damage: 5, range: 170 } },
+    look: { aura: '#E8C27A', weapon: { type: 'club', color: '#7A5232' } },
     skills: [
       { id: 'ct_q', name: 'Sỏi Nảy', active: { cooldown: 6, cast: 'ricochet', mana: 45 },
-        info: (n) => `Viên sỏi nảy qua 5 quái, x1.3 sát thương +${(n * 0.5).toFixed(0)}` },
-      { id: 'ct_w', name: 'Sỏi Trúng Đầu',
+        info: (n) => `Ném viên sỏi nảy qua 5 quái, x1.3 sát thương +${(n * 0.5).toFixed(0)}` },
+      { id: 'ct_w', name: 'Gậy Gõ Đầu',
         info: (n) => `${(4 + n * 0.06).toFixed(1)}% choáng 0,5 giây mỗi đòn`, apply: (s, n) => { s.stunChance += 4 + n * 0.06; } },
       { id: 'ct_e', name: 'Sáo Trúc Lưng Trâu',
         info: (n) => `+${(8 + n * 0.15).toFixed(1)}% tốc đánh`, apply: (s, n) => { s.haste += 8 + n * 0.15; } },
@@ -725,7 +725,7 @@ const HEROES = {
     role: 'Dời non', title: 'Tản Viên Sơn Thánh, nước dâng bao nhiêu núi cao bấy nhiêu', color: '#5FB84A',
     attrs: { str: 33, agi: 15, int: 18 }, gain: { str: 3.5, agi: 1.5, int: 1.8 },
     base: { damage: 15, range: 150, cooldown: 1.05 },
-    look: { aura: '#7FC24A', bulk: 1.1, weapon: { type: 'staff', color: '#D9A84E' } },
+    look: { aura: '#7FC24A', bulk: 1.1, weapon: { type: 'spear', color: '#D9A84E' } },
     trait: { name: 'Núi Cao Nước Dâng', desc: '+25% máu, đánh quái hành Thủy +30% sát thương' },
     traitApply: (s) => { s.hpPct += 25; s.vsThuy = 30; },
     skills: [
@@ -948,10 +948,10 @@ const HEROES = {
     role: 'Vua Xích Quỷ', title: 'Vua nước Xích Quỷ, cha của Lạc Long Quân', color: '#E0452C',
     attrs: { str: 30, agi: 16, int: 16 }, gain: { str: 3.3, agi: 1.7, int: 1.6 },
     base: { damage: 14, range: 150, cooldown: 1.0 },
-    look: { aura: '#FF6A3A', bulk: 1.1, weapon: { type: 'axe', color: '#E0B030' } },
+    look: { aura: '#FF6A3A', bulk: 1.1, weapon: { type: 'glaive', color: '#E0B030' } },
     trait: { name: 'Vua Xích Quỷ', desc: 'Toàn quân +8% sát thương khi Kinh Dương Vương trên sân' },
     skills: [
-      { id: 'kd_q', name: 'Kiếm Xích Quỷ', active: { cooldown: 7, cast: 'chop', mana: 55 },
+      { id: 'kd_q', name: 'Đao Xích Quỷ', active: { cooldown: 7, cast: 'chop', mana: 55 },
         info: (n) => `Chém một nhát rực lửa: x3 sát thương +${n}` },
       { id: 'kd_w', name: 'Dòng Dõi Thần Nông',
         info: (n) => `+${(10 + n * 0.2).toFixed(1)}% máu, +${(1 + n * 0.04).toFixed(1)} hồi máu/giây`, apply: (s, n) => { s.hpPct += 10 + n * 0.2; s.regen += 1 + n * 0.04; } },
@@ -1210,14 +1210,14 @@ const HEROES = {
   },
   thansan: {
     legend: 'epic', name: 'Thần Săn Ba Vì', attack: 'melee', wclass: 'blade', dmgType: 'phys',
-    role: 'Săn mồi', title: 'Thợ săn được núi Ba Vì truyền phép, vuốt hổ dao lá', color: '#7FC24A',
+    role: 'Săn mồi', title: 'Thợ săn được núi Ba Vì truyền phép, vuốt hổ đao rừng', color: '#7FC24A',
     attrs: { str: 18, agi: 28, int: 13 }, gain: { str: 1.9, agi: 3.3, int: 1.3 },
     base: { damage: 6, range: 145, cooldown: 0.8 },
-    look: { aura: '#5FB84A', weapon: { type: 'daggers', color: '#E8E0C0' } },
+    look: { aura: '#5FB84A', weapon: { type: 'saber', color: '#E8E0C0' } },
     trait: { name: 'Mắt Rừng', desc: 'Đánh quái đang bị làm chậm hoặc choáng: +25% sát thương' },
     skills: [
-      { id: 's_q', name: 'Lao Tẩm Độc', active: { cooldown: 6, cast: 'venomspear', mana: 40 },
-        info: (n) => `Phóng lao vào quái xa nhất (tầm x1.6): x1.5 sát thương +${n}, độc ${(6 + n * 0.25).toFixed(0)}/giây trong 6 giây, chậm 35%` },
+      { id: 's_q', name: 'Phi Đao Tẩm Độc', active: { cooldown: 6, cast: 'venomspear', mana: 40 },
+        info: (n) => `Phi đao vào quái xa nhất (tầm x1.6): x1.5 sát thương +${n}, độc ${(6 + n * 0.25).toFixed(0)}/giây trong 6 giây, chậm 35%` },
       { id: 's_w', name: 'Nanh Hổ',
         info: (n) => `+${Math.round(10 + Math.min(20, n * 0.1))}% chí mạng, +${Math.min(40, Math.round(n * 0.3))}% tốc đánh`,
         apply: (s, n) => { s.crit += 10 + Math.min(20, n * 0.1); s.haste += Math.min(40, n * 0.3); } },
@@ -1272,41 +1272,19 @@ const BASIC_HEROES = ['lactuong', 'lucsi', 'xathu', 'thosan', 'thaymo', 'thansuo
 const NEW_GROUPS = [['thoren', 'dotnuong', 'denroi'], ['nguphu', 'chodo', 'haisen'], ['thogom', 'dapde', 'chantrau'], ['giaodong', 'chuongdong'], ['thaylang', 'tre', 'ongthoi']];
 const NEW_BASICS = NEW_GROUPS.flat();
 const summonPool = (level) => [...BASIC_HEROES.slice(0, 6), ...NEW_GROUPS[(level || 0) % NEW_GROUPS.length]];
-// v133: ĐỘI TRIỆU HỒI — người chơi tự chọn 6 tướng Thường trước trận; Triệu hồi chỉ ra trong 6 tướng này
-// (20 tướng ngẫu nhiên quá khó ghép). Thiếu / sai thì dùng đội gợi ý.
-const DECK_SIZE = 6;
+// v133–v194: từng có ĐỘI TRIỆU HỒI 6 tướng (chọn trước trận, đổi ở Nghỉ chân) — đã bỏ: chợ rút từ mọi tướng Thường đã mở.
+const MIN_COMMONS = 6;     // ít hơn số này tướng Thường đã mở (bản lưu lạ) thì chợ ra đủ 20 tướng
 const MARKET_SIZE = 4;     // v143: chợ tướng — số thẻ luôn mở ở thanh đáy
-// v180: chợ có chủ đích — chợ ra MỌI tướng Thường (như TFT), trọng số rút thẻ: thường ×1 · trong đội ưu tiên 6 tướng ×2 ·
-// đang ghép dở trên sân ×5 · nguyên liệu còn thiếu của công thức hợp thể gần xong ×12; đủ MARKET_CAP bản sao (= một ★★★)
+// v180: chợ có chủ đích — chợ ra MỌI tướng Thường đã mở (như TFT), trọng số rút thẻ: thường ×1 ·
+// đang ghép dở trên sân ×W.ghep · nguyên liệu còn thiếu của công thức hợp thể gần xong ×W.hop; đủ MARKET_CAP bản sao (= một ★★★)
 // thì loại đó không ra nữa. Bảo hiểm: MARKET_PITY lần làm mới cả hàng liền không ra tướng cần nhất (nguyên liệu hợp thể,
 // không có thì tướng đang có) → lần sau chắc chắn có 1 thẻ.
-const MARKET_W = { doi: 2, ghep: 5, hop: 12 };
+// claude/bo-chon-doi: bỏ đội ưu tiên (×2) — xem bảng tỉ lệ trước / sau trong GAMEPLAY.md
+const MARKET_W = { ghep: 5, hop: 12 };
 const MARKET_PITY = 2;
 const MARKET_CAP = 4;
-const REST_SWAPS = 2;      // v143: Nghỉ chân sau đợt boss — đổi tối đa 2 tướng trong đội
-const validDeck = (d) => Array.isArray(d) && d.length === DECK_SIZE && new Set(d).size === DECK_SIZE && d.every((t) => BASIC_HEROES.includes(t));
-// tướng Thường là nguyên liệu (trực tiếp hoặc qua tướng Tím) của các tướng Tím / Vàng đã sở hữu
-function deckIngredients(owned) {
-  const out = new Set(), seen = new Set();
-  const walk = (t) => { if (seen.has(t)) return; seen.add(t);
-    for (const f of (typeof FUSION !== 'undefined' ? FUSION : [])) if (f.to === t) for (const x of [f.a, f.b]) { if (BASIC_HEROES.includes(x)) out.add(x); else walk(x); } };
-  for (const t of owned || []) walk(t);
-  return out;
-}
-// đội gợi ý: tướng khắc chế quái của ải → nguyên liệu hợp thể tướng đã sở hữu → quân mặc định của ải
-function suggestDeck(level, owned) {
-  const out = [];
-  const open = openCommons(owned);
-  const add = (t) => { if (out.length < DECK_SIZE && open.includes(t) && !out.includes(t)) out.push(t); };
-  try {
-    const lv = LEVELS[level] || {}, R = typeof ROSTERS !== 'undefined' ? ROSTERS[lv.roster || 'thuy'] : null;
-    for (const c of rosterCounters(R, Object.values(lv.bosses || {}), BASIC_HEROES, lv.hint).list) add(c.t);
-  } catch (e) { /* bỏ qua */ }
-  for (const t of deckIngredients(owned)) add(t);
-  for (const t of summonPool(level)) add(t);
-  for (const t of BASIC_HEROES) add(t);
-  return out;
-}
+// claude/bo-chon-doi: tối đa max nguyên liệu hợp thể được ưu tiên cùng lúc, trong đó tối đa off loại chưa có trên sân
+const MARKET_HOP = { max: 2, off: 1 };
 const LEGEND_HEROES = ['thachsanh', 'lachau', 'thansan', 'caolo', 'antiem', 'tiendung', 'langlieu', 'cdt', 'trongdong', 'caong', 'ongtao', 'potaoapui', 'baahoa', 'lyngu', 'truongchi', 'ongdung', 'thocong', 'nghedong', 'mychau', 'sodua',
   'giong', 'llq', 'kimquy', 'adv', 'auco', 'mau', 'matroi', 'mauthoai', 'trutroi', 'ongho', 'kinhduong', 'viemde', 'halong', 'longnu', 'tanvien', 'maudia', 'kylan', 'thienloi', 'cuoi', 'melua'];
 for (const id of LEGEND_HEROES) HEROES[id].cost = COSTS.legend[HEROES[id].legend];
@@ -1398,8 +1376,8 @@ Object.assign(COSTS, {
 // CỬA HÀNG (v24): 6 món đồ trang phục / phụ kiện ngẫu nhiên, làm mới miễn phí mỗi đợt,
 // làm mới tay tốn vàng (tăng dần trong đợt). Độ hiếm tốt dần theo đợt.
 // v86: tướng Tím / Vàng phải MUA bằng Ngân khố (lưu theo tài khoản) mới hợp thể / thăng thần ra được trong trận
-// v182: Ngân khố mở khoá MỌI tướng (Thường / Tím / Vàng), giá theo bậc. Tướng Thường chưa mở không vào được đội triệu hồi
-// (nên không ra trong chợ trận). Người mới có sẵn STARTER_HEROES; bản lưu cũ (trước v182) giữ đủ 20 tướng Thường.
+// v182: Ngân khố mở khoá MỌI tướng (Thường / Tím / Vàng), giá theo bậc. Tướng Thường chưa mở không ra trong chợ trận
+//. Người mới có sẵn STARTER_HEROES; bản lưu cũ (trước v182) giữ đủ 20 tướng Thường.
 const OWN_COST = { common: 300, epic: 900, legendary: 2000 };
 const STARTER_HEROES = ['lactuong', 'lucsi', 'xathu', 'thosan', 'thaymo', 'thansuong', 'nguphu', 'thoren'];
 const heroTier = (t) => HEROES[t].legend || 'common';
@@ -1408,7 +1386,7 @@ function openCommons(owned) {
   if (!owned) return BASIC_HEROES;
   const has = (t) => (owned.has ? owned.has(t) : owned.includes(t));
   const out = BASIC_HEROES.filter(has);
-  return out.length >= DECK_SIZE ? out : BASIC_HEROES;
+  return out.length >= MIN_COMMONS ? out : BASIC_HEROES;
 }
 // v66: Ngân khố — thưởng sau trận, tiêu trước trận
 const PREP = {

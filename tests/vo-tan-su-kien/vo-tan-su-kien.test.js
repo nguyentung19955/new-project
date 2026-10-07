@@ -16,7 +16,7 @@ const setup = (page, n, evId) => page.evaluate(([n, evId]) => {
   g.gold = 5000; g.lives = 20;
   for (const [sl, t] of [[1, 'xathu'], [3, 'lactuong'], [5, 'thaymo'], [7, 'thansuong'], [9, 'lucsi'], [11, 'thosan']]) if (!g.heroes[sl] && !g.isFlooded(sl)) { g.placeHero(sl, t); }
   for (const h of g.heroes) if (h) { h.dead = false; h.respawnT = 0; h.stunT = 0; h.cursed = 0; h.hp = heroStats(h).hpMax; }
-  g.wave = n - 1; g.restWave = n - 1; g.waveActive = false; g.enemies = []; g.spawnQueue = [];
+  g.wave = n - 1; g.evWave = n - 1; g.waveActive = false; g.enemies = []; g.spawnQueue = [];
   g.nextWave = buildWave(n, g.level); g.nextWaveT = 3; g.running = true; g.events.length = 0;
   // nhảy thẳng tới đợt n (không chơi qua) → khung "bộ quái mới" bật ra; chơi thật thì đã báo từ trước
   ui.rosterKey = rosterKeyOf(rosterFor(n + 1, g.level)); ui.rosterLevel = g.level; document.querySelector('#roster-hint').hidden = true;
@@ -123,7 +123,7 @@ const CHI_ANH = !!process.env.CHI_ANH;   // CHI_ANH=1: chỉ chụp ảnh
       const g = game, out = { id };
       const ev = waveEventOf(id, 60, 0);
       // đợt 59 xong → báo trước
-      g.wave = 59; g.waveActive = true; g.restWave = 58; g.waveComplete(); if (g.rest) g.skipRest();
+      g.wave = 59; g.waveActive = true; g.evWave = 58; g.waveComplete(); if (g.rest) g.skipRest();
       out.soon = g.events.some((e) => e.type === 'waveEvent' && e.phase === 'soon' && e.ev.id === id && e.ev.n === 60);
       ui.handleEvents();
       out.banner = !document.querySelector('#banner').hidden && document.querySelector('#banner-text').innerText === ev.name;

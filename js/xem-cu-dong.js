@@ -8,18 +8,20 @@
   const HERO_ST = ['idle', 'attack', 'cast', 'hurt', 'die'];
   const ENEMY_ST = ['walk', 'attack', 'hurt', 'die'];
   const ST_NAME = { idle: 'thở', walk: 'đi', attack: 'đánh', cast: 'tung chiêu', hurt: 'trúng đòn', die: 'chết', rage: 'nổi giận' };
-  const KIND_NAME = { slash: 'kiếm', chop: 'rìu', thrust: 'giáo', shot: 'cung/nỏ', orb: 'gậy phép', punch: 'tay không' };
+  const KIND_NAME = { slash: 'chém', chop: 'bổ', thrust: 'đâm', shot: 'bắn', orb: 'phép', punch: 'đấm / nhún' };
+  // tên vũ khí theo CD_WEAPON (vũ khí trong ảnh) — nhãn trước đây suy từ động tác nên giáo bổ hiện thành "rìu"
+  const W_NAME = { kiem: 'kiếm', dao: 'đao', riu: 'rìu', gay: 'gậy', kich: 'kích', giao: 'giáo', 'dinh-ba': 'đinh ba', cung: 'cung', no: 'nỏ', 'gay-phep': 'gậy phép', phep: 'phép', 'tay-khong': 'tay không' };
   const DUR = 1.6;
   const only = (q.get('ma') || '').split(',').filter(Boolean);
   const pick = (k) => !only.length || only.includes(k);
   const cells = [];
   let id = 1;
   for (const k of Object.keys(HEROES)) {
-    if (!pick(k) || !hasAsset(`${k}.png`) || CD_SKIP.has(k)) continue;   // chỉ ảnh dựng xương mới (assets/<mã>.png) đạt; mã trong CD_SKIP chờ gen lại
+    if (!cdBat() || !pick(k) || !hasAsset(`${k}.png`) || CD_SKIP.has(k)) continue;   // chỉ ảnh dựng xương mới (assets/<mã>.png) đạt; mã trong CD_SKIP chờ gen lại
     cells.push({ kind: 'hero', type: k, name: HEROES[k].name, h: { type: k, id: id++, tier: 1, equip: {}, level: 1 } });
   }
   for (const k of Object.keys(ENEMIES)) {
-    if (!pick(k) || !hasAsset(`${k}.png`) || CD_SKIP.has(k)) continue;
+    if (!cdBat() || !pick(k) || !hasAsset(`${k}.png`) || CD_SKIP.has(k)) continue;
     const d = ENEMIES[k];
     cells.push({ kind: d.boss ? 'boss' : 'enemy', type: k, name: d.name, e: { type: k, id: id++, def: d, x: 0, y: 0, dir: 1, hp: d.hp, maxHp: d.hp, el: d.el || null } });
   }
@@ -104,7 +106,8 @@
     ctx.fillStyle = '#F2E6C8'; ctx.font = '700 12px "Alegreya Sans",sans-serif'; ctx.textAlign = 'left';
     ctx.fillText(c.name, x0 + 6, y0 + 15);
     ctx.font = '11px "Alegreya Sans",sans-serif'; ctx.fillStyle = '#C8B48A';
-    const wk = KIND_NAME[cdWeapon(c.type, c.kind === 'hero' ? HEROES[c.type].attack : c.e.def.ranged ? 'arrow' : 'melee')];
+    const mv = KIND_NAME[cdWeapon(c.type, c.kind === 'hero' ? HEROES[c.type].attack : c.e.def.ranged ? 'arrow' : 'melee')];
+    const wk = CD_WEAPON[c.type] ? `${W_NAME[CD_WEAPON[c.type]] || CD_WEAPON[c.type]} · ${mv}` : mv;
     ctx.fillText(`${c.type} · ${wk}`, x0 + 6, y0 + 29);
     ctx.textAlign = 'right'; ctx.fillStyle = '#FFD66B';
     ctx.fillText(ST_NAME[st], x0 + CW - 6, y0 + 15);
