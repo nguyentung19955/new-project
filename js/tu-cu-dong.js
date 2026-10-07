@@ -810,6 +810,22 @@ function cdDrawEnemy(ctx, e, t, box, img, o) {
   cdApply(ctx, P, H);
   const fxc = d.fx && typeof ENEMY_FX !== 'undefined' && ENEMY_FX[d.fx];
   const w = H * p.ar;
+  // quái / boss có rig tách tay: cả người vẫn đi / nhún theo cdApply, riêng tay cầm vũ khí vung khi đánh (vệt theo đầu vũ khí)
+  const R = !o.icon && cdRig(p, e.type);
+  if (R && R.arm) {
+    const k = H / R.H;
+    if (fxc) drawEnemyFxBack(ctx, d.fx, fxc, w, H, t, e.id || 0, false);
+    if (fxc && d.fx === 'ghost') ctx.globalAlpha *= 0.72 + Math.sin(t * 3 + (e.id || 0)) * 0.12;
+    ctx.scale(k, k); ctx.translate(-p.fx * R.W, -R.H);
+    const el = e.el && typeof ELEMENTS !== 'undefined' && ELEMENTS[e.el];
+    const st = { t, seed, swing: e.atkT > 0 ? Math.min(1, e.atkT / atkDur) : 0, hurt: e.hitT > 0 ? e.hitT / 0.12 * 0.2 : 0, melee: !d.ranged };
+    const glow = e.enraged ? ['#FF2D2D', 14 / k, 0.85] : fxc ? [fxc.glow, fxc.blur / k, 0.9] : null;
+    // cdApply đã dịch / xoay / co giãn cả người → thân trên chỉ còn uốn (bend)
+    cdRigFrame(ctx, R, { ...P, dx: 0, rot: 0, sy: 1 }, st, { kind: R.kind || cdWeapon(e.type, d.ranged ? 'arrow' : 'melee'), col: (el && el.color) || '#FFB04A', glow,
+      flashC: e.hitT > 0 ? '#FFFFFF' : P.flashC, noFx: CD.noFx });
+    ctx.restore();
+    return true;
+  }
   if (fxc) { drawEnemyFxBack(ctx, d.fx, fxc, w, H, t, e.id || 0, false); drawGlowOnly(ctx, body, -w * p.fx, -H, w, H, fxc.glow, fxc.blur, 0.9); }
   if (e.enraged) drawGlowOnly(ctx, body, -w * p.fx, -H, w, H, '#FF2D2D', 14, 0.85);
   if (fxc && d.fx === 'ghost') ctx.globalAlpha *= 0.72 + Math.sin(t * 3 + (e.id || 0)) * 0.12;
