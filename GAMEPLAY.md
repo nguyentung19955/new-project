@@ -18,7 +18,7 @@ Game thủ thành trên điện thoại, chơi **màn hình ngang**, lấy cảm
 
 ## 1. Vòng chơi chính
 
-1. **Triệu hồi (Chợ tướng, từ phiên bản 143):** thanh dưới luôn mở **4 thẻ tướng ★** rút ngẫu nhiên từ đội 6 tướng. **Chạm thẻ** = mua và đặt vào 1 ô trống ngẫu nhiên; **kéo thẻ** thả vào ô = đặt đúng ô (thả lên tướng ★ cùng loại = ghép luôn). ↻ đổi cả hàng (10 vàng, +10 mỗi lần trong đợt); đầu mỗi đợt chợ tự làm mới miễn phí. Xem ghi chú phiên bản 143.
+1. **Triệu hồi (Chợ tướng, từ phiên bản 143):** thanh dưới luôn mở **4 thẻ tướng ★** rút ngẫu nhiên từ đội 6 tướng. **Chạm thẻ** = mua và đặt vào 1 ô trống ngẫu nhiên; **kéo thẻ** thả vào ô = đặt đúng ô (thả lên tướng ★ cùng loại = ghép luôn). ↻ đổi cả hàng (10 vàng, +10 mỗi lần trong đợt); đầu mỗi đợt chợ tự làm mới miễn phí (🔒 khoá thì giữ nguyên). Thẻ rút theo nhu cầu, có bảo hiểm — xem ghi chú phiên bản 143 và 180.
    - Giá **60 vàng**, mỗi lần sau **+6** (tối đa 220), tính lại từ đầu mỗi ải.
    - Bản đồ có **17 ô** dọc hai bờ sông, mọi ô như nhau. Hết ô trống thì phải ghép, hoặc kéo tướng vào thùng 🗑 (hiện khi kéo) để hủy.
    - Giữ và kéo tướng để đổi chỗ.
@@ -1723,3 +1723,24 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Nguyên nhân khối đợt (chữ + thanh tiến độ, góc trên trái) thỉnh thoảng nhảy: `.tb-center` là `flex: 1` — chiếm toàn bộ phần trống còn lại của thanh trên rồi căn giữa nội dung trong đó. Mỗi khi ô tiền/mạng đổi số chữ số (99→100→1000→123.456, mạng 20/20→100/100), hiện ô mực nước, hiện nút chat (chơi nhóm), phần trống co giãn và cả khối trượt ngang theo (đo được tới 50–120px). Thêm: chữ đổi số chữ số làm chữ trượt, biểu tượng "Khó" làm dòng cao lên đẩy khối lệch dọc 2–4px. Đổi tốc độ, ẩn/hiện chỉ số 👁, thanh boss, thanh tướng không ảnh hưởng.
 - Sửa (chỉ CSS, khối /v180 cuối style.css): `.tb-center` rộng 184px, cao 40px, không co giãn; lề trái tính theo bề ngang thanh trên (`clamp(0px, 50% - 320px, 400px)`) nên không phụ thuộc phần tử khác; chữ số đều nhau (tabular-nums); biểu tượng trong chữ cao đúng 1 dòng. Chữ "Đợt 9999 · Vô tận · Khó" vẫn nằm gọn trong khối.
 - Test mới `tests/dot-co-dinh/dot-co-dinh.test.js`: 22 tình huống × 3 cỡ màn (1920×1000, 844×390, 667×375), lệch ≤1px (đo được 0px), chữ không tràn khối, không đè ô tiền; ảnh trước/sau trong `tests/dot-co-dinh/shots/`.
+## Phiên bản 180 — Chợ tướng có chủ đích: ưu tiên tướng đang ghép, bảo hiểm, 🔒 khoá chợ
+- Người chơi phàn nàn chợ "random tùm lum", khó có tướng cần để ghép sao / hợp thể. Đo trước khi sửa (mô phỏng 1000 lần ↻ mỗi tình huống, đội 6 tướng Ngư Phủ · Thần Sương · Lạc Tướng · Lực Sĩ · Xạ Thủ · Thầy Mo — `node tests/cho-tuong/ti-le-sim.js`):
+
+  | Tình huống | Chỉ số | Trước (v179) | Sau (v180) |
+  |---|---|---|---|
+  | Đầu trận (1 tướng ★) | ≥1 thẻ ghép được / lần ↻ | 50,6% | 68,6% |
+  | | Trượt liền dài nhất | 10 lần | 2 lần |
+  | Giữa trận (7 tướng, 5 loại) | ≥1 thẻ tướng đang có | 99,9% | 100% |
+  | | Thẻ là tướng đang có | 82,8% | 88,1% |
+  | Thiếu 1 nguyên liệu (Ngư Phủ ★★, cần Thần Sương → Cá Ông) | Ra đúng nguyên liệu / lần ↻ | 49,5% | 73,9% |
+  | | Trượt liền dài nhất | 8 lần | 2 lần |
+
+  Kết luận: giữa trận vốn đã gần như luôn có thẻ ghép (đội chỉ 6 loại); cái khó thật là **ra đúng tướng đang cần** (đầu trận, nguyên liệu hợp thể) với chuỗi trượt dài tới 8–10 lần. Kinh tế giữ nguyên (thẻ 60 +6/lần, ↻ 10 +10/lần trong đợt).
+- **Luật rút thẻ mới** (hằng số `MARKET_W`, `MARKET_PITY`, `MARKET_CAP` trong data.js; `marketNeeds()` / `rollCard()` / `rollMarket()` trong game.js):
+  - Trọng số mỗi loại trong đội: thường ×1 · **đang có trên sân, chưa đủ bản sao ×1,5** · **nguyên liệu còn thiếu của công thức hợp thể gần xong ×3** (bên kia đã đủ ★★ quy đổi, đã sở hữu tướng đích).
+  - **Giới hạn bản sao:** đủ 4 bản sao ★ quy đổi trên sân (= một ★★★; ★ = 1, ★★ = 2, ★★★ = 4) thì loại đó không ra nữa (cả đổi chợ lẫn thẻ bù sau khi mua). Hợp thể xong (tướng bị dùng) thì ra lại. Nếu cả đội đủ hết thì rút đều như cũ. Số loại trong trận vẫn giới hạn ở đội 6 tướng.
+  - **Bảo hiểm:** mỗi lần làm mới cả hàng (↻ hoặc đầu đợt) không có "tướng cần nhất" (nguyên liệu hợp thể; không có thì tướng đang có trên sân) thì đếm 1; đủ **2 lần liền** thì lần sau chắc chắn có 1 thẻ đúng loại đó.
+  - Thẻ bù sau khi mua rút theo sân mới (vừa mua xong), không tính bảo hiểm.
+- **🔒 Khoá chợ:** nút tròn nhỏ ở góc trên phải nút ↻ (không đổi bề ngang thanh đáy). Bật thì đầu đợt sau giữ nguyên 4 thẻ rồi tự mở khoá; bấm ↻ khi đang khoá thì rút hàng mới và mở khoá. Chơi nhóm: lệnh `toggleMarketLock` đồng bộ như ↻.
+- **Nhãn trên thẻ:** giữ "ghép" (xanh, trùng tướng ★ trên sân); thêm **"hợp thể"** (tím, viền tím) cho nguyên liệu còn thiếu của công thức gần xong.
+- Test: `node tests/cho-tuong/ti-le.test.js` (mô phỏng tỉ lệ + giới hạn bản sao + khoá chợ + bảo hiểm qua nút ↻ + nhãn). Ảnh đã xem: thanh đáy 1920×934, 844×390, 667×375 (có nhãn "hợp thể", nút 🔒 đang bật).

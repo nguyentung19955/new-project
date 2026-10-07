@@ -1564,6 +1564,9 @@ i.c { background: #1F4A2A; color: #8AE09A; } i.h { background: #4A2A5A; color: #
 .mk-card .cost { position: absolute; left: 0; right: 0; bottom: 0; height: 13px; display: flex; align-items: center; justify-content: center; gap: 2px; background: #C8302A; color: #fff; font-size: 10px; font-weight: 800; line-height: 13px; pointer-events: none; }
 .mk-card .cost .coin, .mk-card .cost img { width: 10px; height: 10px; }
 .mk-card .tw { position: absolute; right: 1px; top: 1px; padding: 0 3px; border-radius: 4px; background: #1F6A2A; color: #CFFFC8; font-style: normal; font-size: 9px; font-weight: 800; line-height: 12px; pointer-events: none; }
+.mk-card .hp { position: absolute; right: 1px; top: 1px; padding: 0 3px; border-radius: 4px; background: #5A2A8A; color: #F0D8FF; font-style: normal; font-size: 9px; font-weight: 800; line-height: 12px; pointer-events: none; }
+.mk-card.twin .hp { top: 14px; }
+.mk-card.hop { border-color: #D8A8FF; box-shadow: 0 0 10px #B06AE0, inset 0 0 8px #B06AE066; }
 .mk-card.twin { border-color: #9DFFC4; box-shadow: 0 0 10px #6AE06A, inset 0 0 8px #6AE06A66; animation: mkTwin 1.3s ease-in-out infinite; }
 @keyframes mkTwin { 50% { box-shadow: 0 0 4px #6AE06A, inset 0 0 3px #6AE06A44; } }
 .mk-card.poor > img { filter: grayscale(.7) brightness(.55); }
@@ -1575,6 +1578,14 @@ i.c { background: #1F4A2A; color: #8AE09A; } i.h { background: #4A2A5A; color: #
 .mk-rr span { display: flex; align-items: center; gap: 1px; font-size: 10.5px; font-weight: 800; }
 .mk-rr span .coin, .mk-rr span img { width: 10px; height: 10px; }
 .mk-rr.poor { filter: grayscale(.7) brightness(.7); }
+.mk-rrw { position: relative; flex: none; display: block; }
+/* v180: 🔒 khoá chợ — nút tròn nhỏ gắn góc trên phải nút ↻ (không đổi bề ngang hàng thẻ) */
+.mk-lk { position: absolute; right: -7px; top: -9px; z-index: 3; width: 26px; height: 26px; padding: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #2A1C12; border: 1.5px solid #8A6A3A; color: #C9B48A; box-shadow: 0 1px 3px #000a; cursor: pointer; }
+.mk-lk::before { content: ''; position: absolute; inset: -8px; }
+.mk-lk .uie, .mk-lk img, .mk-lk svg { width: 15px; height: 15px; display: block; opacity: .6; filter: grayscale(.6); }
+.mk-lk.on { background: #7A4A12; border-color: #FFD36A; box-shadow: 0 0 8px #FFC94A, 0 1px 3px #000a; }
+.mk-lk.on .uie, .mk-lk.on img, .mk-lk.on svg { opacity: 1; filter: none; }
+.mk-rrw:has(.mk-lk.on) .mk-rr { border-color: #FFD36A; }
 #mk-ghost { position: fixed; z-index: 100; width: 56px; height: 56px; margin: -46px 0 0 -28px; border-radius: 50%; border: 3px solid var(--c, #FFD66B); background: #0D0B08; overflow: hidden; pointer-events: none; box-shadow: 0 4px 14px #000c, 0 0 12px var(--c, #FFD66B); opacity: .92; }
 #mk-ghost.rot { transform: rotate(90deg); margin: -28px 0 0 -10px; }
 #mk-ghost img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; }
@@ -1697,7 +1708,7 @@ html.sk-thanh-mau-boss #bossbar .tr { position: relative; overflow: visible; bor
 html.sk-thanh-mau-boss #bossbar .tr::after { content: ''; position: absolute; inset: -5px -12px; background: var(--sk-thanh-mau-boss) center / 100% 100% no-repeat; pointer-events: none; }
 html.sk-thanh-day #deck { border-color: transparent; border-image: var(--sk-khung-thanh-day) 30% 10% fill / 16px 36px / 2px 6px stretch; background: none; box-shadow: none; }
 html.sk-the-cho .mk-card::after { content: ''; position: absolute; inset: 0; background: var(--sk-the-cho-thuong) center / 100% 100% no-repeat; pointer-events: none; z-index: 1; }
-html.sk-the-cho .mk-card .el, html.sk-the-cho .mk-card .nm, html.sk-the-cho .mk-card .cost, html.sk-the-cho .mk-card .tw { z-index: 2; }
+html.sk-the-cho .mk-card .el, html.sk-the-cho .mk-card .nm, html.sk-the-cho .mk-card .cost, html.sk-the-cho .mk-card .tw, html.sk-the-cho .mk-card .hp { z-index: 2; }
 html.sk-the-cho .mk-card.twin::after { background-image: var(--sk-the-cho-ghep, var(--sk-the-cho-thuong)); }
 html.sk-the-cho .mk-card.poor::after { background-image: var(--sk-the-cho-thieu, var(--sk-the-cho-thuong)); }
 html.sk-nut-doi-cho .mk-rr { background: var(--sk-nut-doi-cho) center / 100% 100% no-repeat; border-color: transparent; box-shadow: none; }
