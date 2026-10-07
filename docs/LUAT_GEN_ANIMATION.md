@@ -1,4 +1,4 @@
-# Luật gen khung hình chuyển động (animation) cho Núi Cao Nước Dâng
+# Luật gen khung hình chuyển động (animation) cho Thần Thoại Việt
 
 Mục tiêu: mỗi động tác có 4 khung giống hệt nhân vật, chỉ khác tư thế → game ghép lại thành chuyển động mượt.
 

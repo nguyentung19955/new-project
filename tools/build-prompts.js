@@ -102,6 +102,27 @@ need.sort((a, b) => tier(a) - tier(b));
 const missingDesc = need.filter((t) => !DESC[t]);
 if (missingDesc.length) { console.error('Thiếu mô tả:', missingDesc); process.exit(1); }
 const items = [];
+// v145: đổi tên game → "Thần Thoại Việt": ảnh nền menu mới + logo chữ (đặt lên đầu danh sách)
+const MENU_ART = `Create ONE image: a 1792x832 wide landscape key-art illustration (about 2.15:1, full bleed, no border) for the MAIN MENU background of a cute mobile tower-defense game based on Vietnamese folk legends of Van Lang and Au Lac.
+STYLE: Dong Son bronze drum art style (Vietnamese trong dong): engraved bronze surfaces, concentric rings, a sun-star with pointed rays, flying Lac birds, zigzag and circle-dot bands, warm bronze gold #C9963A with dark green patina #2F6B5E accents, thick dark-brown outline #2A1608, flat cartoon shading. Characters are cute chibi (head about 1/3 of the body, big round dark-brown eyes with two white highlights), same look as the game heroes.
+SKY: a huge engraved Dong Son bronze drum face fills the upper sky like a giant sun disc: a glowing 14-ray sun-star in the center, rings of flying Lac birds and zigzag bands around it, warm golden dawn light.
+SCENE (one unified epic scene, many legends together):
+- center: Son Tinh (mountain god, green-brown robe, raising a mountain range with his hands) facing Thuy Tinh (water god, blue robe, riding a big rising wave with a dragon shape) — mountains climb on one side, waves rise on the other;
+- Thanh Giong as a young giant hero on a galloping iron horse breathing fire, swinging an uprooted bamboo cane;
+- Lac Long Quan (dragon lord) and Au Co (fairy with bird wings) together, a small golden dragon coiling in the clouds and a white crane-bird above;
+- the Co Loa spiral citadel with King An Duong Vuong holding the magic crossbow with the golden turtle claw, the golden turtle Kim Quy beside him;
+- Thach Sanh with his axe and magic lute, a defeated python-spirit coil in the background;
+- foreground: Red River rice fields, bamboo, a stilt house with a boat-shaped roof.
+COMPOSITION (very important): keep the LEFT HALF (0-45% of the width) calm and open — soft sky, drum-face glow, distant hills only, no characters and no busy details there — because the game title text is placed on it. Put all main characters between 35% and 70% of the width. The RIGHT 30% of the width will be covered by a menu panel: only low-detail background there (waves, mountains, clouds). Keep the bottom 12% simple (ground, water). Readable at phone size, strong silhouettes, warm golden light against teal water.
+NO text, NO letters, NO numbers, NO logo, NO watermark, NO frame.`;
+const LOGO = `Create ONE image: a 1024x384 game title logo that reads exactly "Thần Thoại Việt" (Vietnamese, with correct diacritics: Thần = T-h-ầ-n, Thoại = T-h-o-ạ-i, Việt = V-i-ệ-t), one or two lines, big and centered.
+LETTERS: thick bold carved bronze letters like engraved Dong Son bronze, warm gold #F2D27A to bronze #B8852A with dark green patina #2F6B5E edges, thick dark-brown outline #2A1608, small zigzag and circle-dot bands engraved inside the strokes, slight 3D bevel.
+DECOR: behind the letters a thin half bronze-drum ring with a small sun-star and two flying Lac birds; a small mountain on the left end and a small wave curl on the right end. Keep the decoration small; the words must be the most readable thing.
+Cute mobile-game look, flat cel shading, no gradients except the metal sheen, no glow outside the letters.
+${BG.replace(' No text, no numbers, no labels,', ' No other text, no numbers, no labels,')}`;
+// ảnh nền mới đã thay xong thì tạo file đánh dấu assets/ui/.nen-menu-ttv để ẩn prompt này
+if (!fs.existsSync(path.join(ROOT, 'assets/ui/.nen-menu-ttv'))) items.push({ group: '0. Ảnh nền menu — Thần Thoại Việt', file: 'nen-menu.jpg', title: 'Nền menu chính (key-art nhiều truyền thuyết, chừa nửa trái cho chữ tựa)', text: MENU_ART });
+if (!fs.existsSync(path.join(ROOT, 'assets/ui/logo-tua.png'))) items.push({ group: '0. Ảnh nền menu — Thần Thoại Việt', file: 'logo-tua.png', title: 'Logo chữ "Thần Thoại Việt" (tùy chọn — AI hay viết sai dấu; sai thì bỏ, game dùng chữ HTML)', text: LOGO });
 const tierName = ['Thường', 'Tím', 'Vàng'];
 for (const t of need.filter((x) => tier(x) === 0)) items.push({ group: '1. Tướng Thường (ưu tiên: xuất hiện mỗi trận)', file: `${t}.png`, title: `${HEROES[t].name} · ${tierName[tier(t)]} · ${EL[HEROES[t].el][0]}`, text: heroPrompt(t) });
 for (const t of ['yeutinh', 'dacon', 'linhan'].filter((x) => !packs.has(x))) items.push({ group: '2. Quái còn thiếu', file: `${t}.png`, title: ENEMIES[t].name, text: enemyPrompt(t) });
@@ -258,7 +279,7 @@ if (noIcon.length) console.error('Chưa có mô tả icon:', noIcon.join(', '));
 
 // Markdown
 let out = `# Prompt Gemini đầy đủ — mỗi ảnh một prompt (${items.length} ảnh)\n\n`;
-out += 'Mỗi khối dán **riêng một lần** vào Gemini (đính kèm `docs/mau-lac-tuong.png` làm mẫu nét vẽ nếu được), tải ảnh về và đặt **đúng tên file** ghi trên khối. Gen theo thứ tự từ trên xuống: phần 1–4 là cần thiết, phần 5–7 là tùy chọn.\n\n';
+out += 'Mỗi khối dán **riêng một lần** vào Gemini (đính kèm `docs/mau-lac-tuong.png` làm mẫu nét vẽ nếu được), tải ảnh về và đặt **đúng tên file** ghi trên khối. Gen theo thứ tự từ trên xuống: phần 0 (nền menu tên mới) và 1–4 là cần thiết, phần 5–7 là tùy chọn.\n\n> **Phần 0 — đổi tên game thành \"Thần Thoại Việt\" (v145):** ảnh nền menu mới thay `assets/ui/nen-menu.jpg` (ảnh cũ chủ đề Sơn Tinh – Thủy Tinh, đang dùng tạm). Logo chữ là tùy chọn: AI hay viết sai dấu tiếng Việt — kiểm tra kỹ từng dấu (ầ, ạ, ệ); sai thì bỏ, game tự hiện chữ HTML. Có ảnh đúng thì xoá nền magenta, lưu `assets/ui/logo-tua.png`. Các ảnh cảnh khác (nền thắng/thua, truyện) hiện không có chữ tên game nên không cần gen lại.\n\n';
 let g = '';
 for (const it of items) {
   if (it.group !== g) { g = it.group; out += `\n## ${g}\n`; }

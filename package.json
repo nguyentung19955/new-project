@@ -2,7 +2,7 @@
   "name": "nui-cao-nuoc-dang",
   "version": "1.0.0",
   "private": true,
-  "description": "Núi Cao Nước Dâng — game thủ thành dân gian Việt Nam",
+  "description": "Thần Thoại Việt — game thủ thành dân gian Việt Nam",
   "scripts": {
     "build:web": "node tools/build-web.js",
     "build:hosting": "node tools/build-web.js --hosting",

@@ -222,6 +222,8 @@ class UI {
     this.bind();
     this.buildSummon();
     $('#menu-art').innerHTML = `<img class="keyart" src="${assetSrc('ui/nen-menu.jpg')}" alt="" onerror="this.outerHTML=''">` + svgI(sceneArt('menu'));
+    // v145: logo tựa "Thần Thoại Việt" — có ảnh assets/ui/logo-tua.png thì hiện ảnh, không thì giữ chữ HTML
+    $('#menu-logo').insertAdjacentHTML('afterbegin', `<img class="logo-img" src="${assetSrc('ui/logo-tua.png')}" alt="Thần Thoại Việt" hidden onload="this.hidden=false;this.parentNode.classList.add('has-img')" onerror="this.remove()">`);
     $('#rotate-art').innerHTML = sceneArt('rotate');
     $('#loading').hidden = true;
     this.showMenu();
@@ -693,7 +695,7 @@ class UI {
         <button class="btn btn-gold title login-btn" data-act="login-email" ${this.loginBusy ? 'disabled' : ''}>${this.loginBusy ? 'Đang xử lý…' : mode === 'up' ? 'Tạo tài khoản' : 'Đăng nhập'}</button>
         ${mode === 'in' ? '<button class="login-link" data-act="login-reset">Quên mật khẩu?</button>' : ''}`;
     $('#login').innerHTML = `<div class="bgart"><img src="${assetSrc('ui/nen-menu.jpg')}" alt="" style="object-fit:cover" onerror="this.outerHTML=''"></div><div class="login-box metal">
-      <div class="login-logo">Núi Cao Nước Dâng</div>${inner}
+      <div class="login-logo">Thần Thoại Việt</div>${inner}
       ${fromMenu && signed ? '<button class="xbtn metal login-x" data-act="login-close" aria-label="Đóng">' + ICON.close + '</button>' : ''}</div>`;
     $('#login').hidden = false;
   }
@@ -860,7 +862,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Núi Cao Nước Dâng · Phiên bản 144 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 145 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 

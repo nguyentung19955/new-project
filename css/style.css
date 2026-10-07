@@ -600,6 +600,9 @@ button:disabled { cursor: default; }
   background: linear-gradient(180deg, #FFF1C4, #F2D27A 45%, #B8852A); -webkit-background-clip: text; background-clip: text; color: transparent;
   filter: drop-shadow(0 3px 0 #1A0E04) drop-shadow(0 0 16px #F0A03088);
 }
+#menu .title h1 .logo-img { display: block; width: 380px; max-width: 100%; height: auto; margin: -22px auto -18px; filter: drop-shadow(0 3px 0 #1A0E04) drop-shadow(0 0 12px #F0A03066); }
+#menu .title h1.has-img { background: none; filter: none; }
+#menu .title h1.has-img .logo-txt { display: none; }
 #menu .title p { margin: 10px 0 0; font-size: 17px; font-weight: 700; color: #F4ECD6; text-shadow: 0 0 4px #0D0B08, 0 2px 3px #0D0B08; }
 #menu .title .orn { width: 380px; height: 14px; margin: 8px auto 0; background: linear-gradient(90deg, transparent, #F2D27A 30%, #F2D27A 70%, transparent); clip-path: polygon(0 45%, 47% 45%, 50% 0, 53% 45%, 100% 45%, 100% 55%, 53% 55%, 50% 100%, 47% 55%, 0 55%); }
 .mc-nav {

@@ -1,4 +1,6 @@
-# Núi Cao Nước Dâng
+# Thần Thoại Việt
+
+> Tên cũ: *Núi Cao Nước Dâng* (đổi ở phiên bản 145 vì game giờ gồm nhiều truyền thuyết: Sơn Tinh – Thủy Tinh, Thạch Sanh, Thánh Gióng, Lạc Long Quân, An Dương Vương). Mã nội bộ (`nuicao.v1`, `vn.nuicao.game`, dự án Firebase) giữ nguyên để không mất tiến trình.
 
 Game thủ thành **màn hình ngang** cho điện thoại, chủ đề **Sơn Tinh – Thủy Tinh**, lối chơi lấy cảm hứng từ Dota 1. Người chơi vào vai Sơn Tinh, triệu hồi tướng Văn Lang dọc sông Đà để chặn quân Thủy Tinh tràn vào thành Phong Châu.
 
