@@ -242,9 +242,17 @@ end
 
 anim hurt fps=8 once
 frame hurt
-  use @idle.0
-  use mat_nham 13 11
+  use dau 9 4
+  use canh 0 7
+  use chan 7 26
+  use than 7 17
+  use kep 19 11
+  use tay 18 18
+  use ca 1 15
+  use mat_nham 12 11
+  outline
   swap F h
+  swap R l
 end
 
 anim die fps=5 once

@@ -240,7 +240,7 @@ frame hurt
   use @idle.0
   shift -1 0
   use mat_nham 14 19
-  swap Y y
+  swap Y v
 end
 
 anim die fps=5 once

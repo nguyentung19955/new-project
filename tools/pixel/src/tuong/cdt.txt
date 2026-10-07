@@ -276,6 +276,7 @@ frame hurt
   set 17 9 T
   set 18 9 T
   swap F h
+  swap n N
 end
 
 anim die fps=5 once

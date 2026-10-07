@@ -322,6 +322,7 @@ frame hurt
   shift -1 0
   use mat_nham 14 8
   swap F h
+  swap g G
 end
 
 # chết: khuỵu gối → ngã nằm

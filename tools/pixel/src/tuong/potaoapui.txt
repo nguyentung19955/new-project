@@ -58,15 +58,15 @@ KK.rrdddddd.
 end
 
 part than
-.KK...fFFf.....
-.KhhhFFFFFFFf..
-.hFFhhFFFFFFFf.
-.FFFhFFFFhFFFf.
-yYFfFFFFfFFFf..
-.FF.fFFFFFFf...
-.Ff.fFFFFFFf...
-.ff.qPpPpPpPq..
-.Ff.KRKKRKKRK..
+.KK...fFFFf......
+KhhhhFFFFFFFFf...
+hFFFhhFFFFFFFFf..
+FFFFhFFFFhFFFFFf.
+yYFfFFFFFfFFFFf..
+FFF.fFFFFFFFFf...
+.Ff.fFFFFFFFf....
+.ff.qPpPpPpPPq...
+.Ff.KRKKRKKRKK...
 end
 
 part chan
@@ -157,7 +157,7 @@ anim idle fps=3 loop
 frame idle
   use sung 5 4
   use chan 8 23
-  use than 8 15
+  use than 7 15
   use dau 10 6
   use guom 21 16
   use tay 20 16
@@ -168,7 +168,7 @@ end
 frame idle
   use sung 5 5
   use chan 8 23
-  use than 8 16
+  use than 7 16
   use dau 10 7
   use guom 21 16
   use tay 20 17
@@ -179,7 +179,7 @@ end
 frame idle
   use sung 5 4
   use chan 8 23
-  use than 8 15
+  use than 7 15
   use dau 10 6
   use guom 21 16
   use tay 20 16
@@ -194,7 +194,7 @@ anim attack fps=10 once
 frame attack
   use sung 5 4
   use chan 8 23
-  use than 8 15
+  use than 7 15
   use dau 10 6
   use guom_len 21 2
   use tay_len 20 13
@@ -203,7 +203,7 @@ end
 frame attack
   use sung 6 4
   use chan 8 23
-  use than 9 15
+  use than 8 15
   use dau 11 6
   use guom_ngang 18 17
   use tay_dam 20 18
@@ -212,7 +212,7 @@ end
 frame attack
   use sung 6 4
   use chan 8 23
-  use than 9 15
+  use than 8 15
   use dau 11 6
   use guom_ngang 18 17
   use tay_dam 20 18
@@ -222,7 +222,7 @@ end
 frame attack
   use sung 5 4
   use chan 8 23
-  use than 8 15
+  use than 7 15
   use dau 10 6
   use guom 21 16
   use tay 20 16
@@ -234,7 +234,7 @@ anim cast fps=8 loop
 frame cast
   use sung 5 4
   use chan 8 23
-  use than 8 15
+  use than 7 15
   use dau 10 6
   use guom_len 21 1
   use tay_len 20 13
@@ -245,7 +245,7 @@ end
 frame cast
   use sung 5 4
   use chan 8 23
-  use than 8 15
+  use than 7 15
   use dau 10 6
   use guom_len 21 1
   use tay_len 20 13
@@ -256,7 +256,7 @@ end
 frame cast
   use sung 5 4
   use chan 8 23
-  use than 8 15
+  use than 7 15
   use dau 10 6
   use guom_len 21 1
   use tay_len 20 13
@@ -269,9 +269,10 @@ end
 anim hurt fps=8 once
 frame hurt
   use @idle.0
-  shift -1 0
-  use mat_nham 13 11
+  shift -2 0
+  use mat_nham 12 11
   swap F h
+  swap s R
 end
 
 anim die fps=5 once
@@ -279,7 +280,7 @@ frame die
   use guom_ngang 18 26
   use sung 5 7
   use chan 8 23
-  use than 8 18
+  use than 7 18
   use dau 10 9
   use mat_nham 14 14
   outline
@@ -287,7 +288,7 @@ end
 frame die
   use sung 5 7
   use chan 8 23
-  use than 8 18
+  use than 7 18
   use dau 10 9
   use mat_nham 14 14
   rot 90

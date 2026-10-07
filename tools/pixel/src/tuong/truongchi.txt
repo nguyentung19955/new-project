@@ -234,6 +234,7 @@ frame hurt
   shift -1 0
   use mat_mo 13 11
   swap F h
+  swap b B
 end
 
 anim die fps=5 once

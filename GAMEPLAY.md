@@ -2248,6 +2248,8 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (thân trống đồng gỉ xanh, mặt sao trên đỉnh, mặt hô trên tang trống), `lachau` = tượng đá ong lỗ chỗ có rêu, `thansan` = người-hươu
   (mặt sọ hươu mắt đỏ, chân móng guốc), `sodua` = vỏ dừa khắc mặt dữ mắt sáng, tay chân xơ dừa; phá cách nhẹ: `baahoa` mặt tro trắng +
   thân dưới là lửa, `potaoapui` mặt nạ gỗ + lửa trên vai, `cdt` búp sen đầu gậy, `ongdung` cỏ mọc trên vai, `thocong` chân lẫn ụ đất.
+- Trúng đòn (góp ý tester): lùi 2px (1px khi vật cầm sát mép khung) + nhắm mắt + nháy sáng da và màu áo chính; Ông Đùng / Ông Táo dựng
+  khung riêng (đòn gánh / cánh chuồn chạm mép). Pơtao Apui thân vạm vỡ rộng hơn Thạch Sanh để không trùng dáng.
 - Chi tiết Tím: mỗi tướng có 1 điểm tím (quai đàn / thắt lưng / gấu áo / vành vỏ dừa). Không vẽ trang bị lên người.
 - Chỉ thêm nguồn `tools/pixel/src/tuong/<mã>.txt` + file sinh ra (`assets/pixel/tuong/`, `js/pixel/*.js`, `js/asset-list.js`); không sửa js/pixel.js.
 ## claude/r-cap-12 — Kỹ năng R tối đa ở tướng cấp 12

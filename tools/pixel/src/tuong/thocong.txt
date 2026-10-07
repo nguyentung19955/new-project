@@ -233,9 +233,10 @@ end
 anim hurt fps=8 once
 frame hurt
   use @idle.0
-  shift -1 0
-  use mat_nham 12 14
+  shift -2 0
+  use mat_nham 11 14
   swap F h
+  swap Y v
 end
 
 anim die fps=5 once
