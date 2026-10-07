@@ -1427,3 +1427,4 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - **`docs/prompts-tuong.csv`** (60 tướng) và **`docs/prompts-quai.csv`** (21 quái + 9 boss): mã · tên · bậc / loại · hệ · cỡ ảnh · tên file · lệnh cắt · prompt đầy đủ; sinh cùng `node tools/build-prompts.js`.
 - **`tools/ghep-luoi.py <hero12|enemy6|boss9> <ra.png> <ảnh…|thư mục> [--chung-khung]`**: ghép ảnh rời (nền trong suốt / #FF00FF / một màu phẳng) thành tấm lưới chuẩn — cùng tỉ lệ, tâm chân giữa ô, chân trên đường đáy 92%, nền #FF00FF — để cắt bằng `cat-sheet.py`.
 - Test: `node tests/ghep-luoi/ghep-luoi.test.js` (khung rời giả → ghép → cắt lại đúng 12 / 6 / 9 khung và đúng `PACK_FRAMES`, không đụng file thật).
+- **`docs/PROMPT-GUI-AI.txt`**: bản chữ thường của hai CSV — 90 khối prompt (60 tướng + 30 quái/boss), mỗi khối ghi tên, cỡ ảnh, tên file cần lưu; sinh cùng `node tools/build-prompts.js`.
