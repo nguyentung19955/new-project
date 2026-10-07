@@ -1,5 +1,5 @@
 // Trang thử TỰ CỬ ĐỘNG (claude/tu-cu-dong): index.html?xem-cu-dong (mở từ tools/xem-cu-dong.html).
-// Vẽ lưới mọi tướng / quái / boss bằng ẢNH ĐƠN (khung idle / walk1 hiện có làm ảnh đơn) chạy đủ trạng thái:
+// Vẽ lưới mọi tướng / quái / boss có ảnh dựng xương mới (assets/<mã>.png) chạy đủ trạng thái:
 // thở · đánh · tung chiêu · trúng đòn · chết (tướng) — đi · đánh · trúng đòn · nổi giận · chết (quái / boss).
 // Tham số: &ma=lactuong,cao,… (chỉ vẽ các mã này) · &tt=attack (giữ một trạng thái) · &nhieu=1 (bộ nhiều khung cũ để so).
 // Test điều khiển bằng XEM.pause / XEM.draw(t) để chụp đúng khoảnh khắc.
@@ -15,11 +15,11 @@
   const cells = [];
   let id = 1;
   for (const k of Object.keys(HEROES)) {
-    if (!pick(k) || !(hasAsset(`packs/${k}/idle.png`) || hasAsset(`${k}.png`))) continue;
+    if (!pick(k) || !hasAsset(`${k}.png`)) continue;   // chỉ ảnh dựng xương mới (assets/<mã>.png), không dùng ảnh cũ packs/
     cells.push({ kind: 'hero', type: k, name: HEROES[k].name, h: { type: k, id: id++, tier: 1, equip: {}, level: 1 } });
   }
   for (const k of Object.keys(ENEMIES)) {
-    if (!pick(k) || !(hasAsset(`packs/${k}/walk1.png`) || hasAsset(`packs/${k}/idle.png`) || hasAsset(`${k}.png`))) continue;
+    if (!pick(k) || !hasAsset(`${k}.png`)) continue;
     const d = ENEMIES[k];
     cells.push({ kind: d.boss ? 'boss' : 'enemy', type: k, name: d.name, e: { type: k, id: id++, def: d, x: 0, y: 0, dir: 1, hp: d.hp, maxHp: d.hp, el: d.el || null } });
   }

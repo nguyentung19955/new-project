@@ -8,14 +8,9 @@ android/.gradle/
 android/local.properties
 *.apk
 firebase-debug.log
-tests/gop-y/shots/
-tests/khung-do-hiem/shots/
-tests/tui-do/shots/
-tests/duong-quai/shots/
-tests/xem-gop-y/shots/
 firestore-debug.log
-tests/bo-nut-tren-tuong/shots/
-tests/cat-anh/shots/
-tools/__pycache__/cat_anh.*
-tests/an-giao-dien/shots/
-tests/sua-loi-tester/shots/
+tools/__pycache__/
+# ảnh test tự chụp (mỗi lần chạy ghi lại) — không commit; ảnh minh hoạ cố ý để ở docs/ hoặc tests/<tên>/truoc-sau.png
+tests/**/shots/
+tests/menu-nut/*.png
+tests/.thoi-gian.json

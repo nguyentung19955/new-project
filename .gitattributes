@@ -1,0 +1,2 @@
+# Nhiều nhánh cùng thêm ghi chú vào cuối file → gộp kiểu "hợp" (giữ cả hai phía), không báo xung đột
+GAMEPLAY.md merge=union

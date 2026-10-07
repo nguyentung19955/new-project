@@ -2,14 +2,17 @@
 // 1) mọi ải: lớp nền tĩnh (mapLayer) dựng đúng bản đồ, lòng đường có màu theo chủ đề (không còn dải xanh vạch trắng ở bản đồ đất),
 //    quái chạy vài đợt vẫn bám đường, không lỗi trang
 // 2) ảnh đế giả (PIL) trong assets/tiles → drawSpot dùng ảnh cho ô trống, ô có tướng không vẽ đế; ảnh kết cấu giả → lớp đường dùng ảnh
-// Ảnh giả được xoá khi xong.
+// Ảnh giả nằm trong thư mục tạm, trình duyệt nhận qua page.route — KHÔNG ghi/xoá/đổi tên gì trong assets/ thật
+// (chạy song song với test khác vẫn an toàn).
 const path = require('path');
 const fs = require('fs');
 const { execFileSync } = require('child_process');
-const { open, enter, ok, ROOT } = require('../cho-tuong/helpers');
+const { open, enter, ok } = require('../cho-tuong/helpers');
 global.ASSET_ALL_TEST = true;   // v189: test giả ảnh chưa có → bỏ qua danh sách js/asset-list.js
 
-const TILES = path.join(ROOT, 'assets/tiles');
+const SHOT = path.join(__dirname, 'shots');
+fs.mkdirSync(SHOT, { recursive: true });
+const TILES = fs.mkdtempSync(path.join(require('os').tmpdir(), 'duong-quai-'));
 const FAKE = ['de-tuong-thuong.png', 'de-tuong-co.png', 'de-tuong-san-sang.png', 'de-tuong-chon.png', 'de-tuong-ngap.png', 'de-tuong-nui.png', 'duong-nuoc.jpg'];
 const fake = () => execFileSync('python3', ['-c', `
 from PIL import Image, ImageDraw
@@ -19,17 +22,18 @@ for f, col in [('de-tuong-thuong.png', (0,0,255)), ('de-tuong-co.png', (255,0,0)
     im = Image.new('RGBA', (128, 128), (0,0,0,0)); ImageDraw.Draw(im).ellipse((10, 34, 118, 106), fill=col + (255,)); im.save(d + '/' + f)
 Image.new('RGB', (512, 512), (250, 40, 200)).save(d + '/duong-nuoc.jpg', quality=90)
 `, TILES]);
-const clean = () => FAKE.forEach((f) => { try { fs.unlinkSync(path.join(TILES, f)); } catch (e) { /* chưa tạo */ } });
-// v180: ảnh thật (duong-nuoc.jpg đã có) cất sang thư mục tạm khi chạy, xong trả lại — trước đây test xoá mất ảnh thật
-const BAK = fs.mkdtempSync(path.join(require('os').tmpdir(), 'duong-quai-'));
-const stash = () => FAKE.forEach((f) => { const p = path.join(TILES, f); if (fs.existsSync(p)) fs.copyFileSync(p, path.join(BAK, f)); });
-const restore = () => { clean(); FAKE.forEach((f) => { const b = path.join(BAK, f); if (fs.existsSync(b)) fs.copyFileSync(b, path.join(TILES, f)); }); };
+const restore = () => fs.rmSync(TILES, { recursive: true, force: true });
+// trình duyệt hỏi assets/tiles/<ảnh trong FAKE>: phần 1 → như chưa có ảnh (lỗi tải, game tự vẽ thay), phần 2 → trả ảnh giả
+const routeTiles = (useFake) => (page) => page.route(new RegExp('/assets/tiles/(' + FAKE.map((f) => f.replace(/[.-]/g, '\\$&')).join('|') + ')(\\?.*)?$'), (r) => {
+  const f = decodeURIComponent(new URL(r.request().url()).pathname).split('/').pop();
+  if (!useFake) return r.abort();
+  return r.fulfill({ contentType: f.endsWith('.jpg') ? 'image/jpeg' : 'image/png', body: fs.readFileSync(path.join(TILES, f)) });
+});
 
 (async () => {
-  stash(); clean();
   // ---------- 1. mọi ải ----------
   {
-    const { browser, page, errors } = await open(844, 390, { unlocked: 17 });
+    const { browser, page, errors } = await open(844, 390, { unlocked: 17 }, routeTiles(false));
     const n = await page.evaluate(() => LEVELS.length);
     ok(n >= 17, `có ${n} ải`);
     for (let i = 0; i < n; i++) {
@@ -67,7 +71,7 @@ const restore = () => { clean(); FAKE.forEach((f) => { const b = path.join(BAK, 
   // ---------- 2. ảnh đế + kết cấu giả ----------
   try {
     fake();
-    const { browser, page, errors } = await open(844, 390, { unlocked: 17, settings: { skipStory: true } });
+    const { browser, page, errors } = await open(844, 390, { unlocked: 17, settings: { skipStory: true } }, routeTiles(true));
     await enter(page, 0);
     // chờ ảnh tải
     await page.evaluate(() => ['thuong', 'co', 'san-sang', 'chon', 'ngap', 'nui'].forEach((k) => asset(`tiles/de-tuong-${k}.png`, true)));
@@ -113,7 +117,7 @@ const restore = () => { clean(); FAKE.forEach((f) => { const b = path.join(BAK, 
     });
     if (r2.has) ok(r2.drawn === r2.empty, `có tướng ở ô 6 → ô đó không vẽ đế (${r2.drawn} / ${r2.empty})`);
     else console.log('  (bỏ qua bước đặt tướng: không tìm thấy hàm đặt tướng)');
-    await page.screenshot({ path: path.join(__dirname, 'shots', 'de-gia.png') });
+    await page.screenshot({ path: path.join(SHOT, 'de-gia.png') });
     ok(!errors.length, `không lỗi trang ${errors.slice(0, 3).join(' | ')}`);
     await browser.close();
   } finally { restore(); }

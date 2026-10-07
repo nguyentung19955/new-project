@@ -11,9 +11,13 @@ const CASES = {
   'thieu-hop-the': { name: 'Thiếu 1 nguyên liệu hợp thể (Ngư Phủ ★★, chưa có Thần Sương → Cá Ông)', board: [['nguphu', 2], ['lactuong', 2], ['lucsi', 1], ['xathu', 1], ['thaymo', 2]], need: 'thansuong' },
 };
 
-async function simulate(page, key, n = 1000) {
+// seed: Math.random cố định (mulberry32) trong lúc mô phỏng → kết quả lặp lại được, test không chập chờn; null = ngẫu nhiên thật
+async function simulate(page, key, n = 1000, seed = 12345) {
   const c = CASES[key];
-  return page.evaluate(([c, n, DECK]) => {
+  return page.evaluate(([c, n, DECK, seed]) => {
+    const rnd0 = Math.random;
+    if (seed != null) { let a = seed >>> 0; Math.random = () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+    try {
     game.running = false;
     game.deck = [...DECK];
     game.owned = null;
@@ -42,7 +46,8 @@ async function simulate(page, key, n = 1000) {
     const pct = (x) => Math.round(x / n * 1000) / 10;
     return { twin: pct(twin), board: pct(board), boardCards: Math.round(boardCards / cards * 1000) / 10, maxDry, outDeck: Math.round(outDeck / cards * 1000) / 10, kinds: kinds.size,
       need: c.need ? pct(need) : null, maxNeedDry: c.need ? maxNeedDry : null };
-  }, [c, n, DECK]);
+    } finally { Math.random = rnd0; }
+  }, [c, n, DECK, seed]);
 }
 
 async function runAll(n = 1000) {

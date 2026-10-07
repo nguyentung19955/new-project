@@ -50,7 +50,8 @@
 <script>
 const $ = (s) => document.querySelector(s);
 const ed = $('#ed'), pv = $('#pv'), ex = ed.getContext('2d'), px = pv.getContext('2d');
-const LIST = (window.ASSET_LIST || []).flatMap((f) => { const m = /^packs\/([\w-]+)\/idle\.png$/.exec(f) || (/^([\w-]+)\.png$/.exec(f) && CD_WEAPON[/^([\w-]+)\.png$/.exec(f)[1]] && /^([\w-]+)\.png$/.exec(f)); return m ? [[m[1], '../assets/' + f]] : []; });
+// chỉ ảnh dựng xương mới (assets/<mã>.png) — không dùng ảnh cũ packs/
+const LIST = (window.ASSET_LIST || []).flatMap((f) => { const m = /^([\w-]+)\.png$/.exec(f); return m && CD_WEAPON[m[1]] ? [[m[1], '../assets/' + f]] : []; });
 LIST.unshift(['mau-nv', '../docs/mau-vung-tay/mau-nv.png']);
 $('#ma').innerHTML = LIST.map(([k, f]) => `<option value="${f}">${k}</option>`).join('');
 let code = '', img = null, prep = null, man = {}, rig = null, mode = '', drag = null, sc = 1;

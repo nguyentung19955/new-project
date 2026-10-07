@@ -5,7 +5,7 @@
 //  nên không bao giờ gãy vũ khí / lộ lỗ. Bộ nhiều khung đã có (packs/<mã>/wind · strike · walk2 · attack…)
 //  vẫn ưu tiên như cũ. Ép dùng ảnh đơn để thử: ?solo=1 hoặc CD.force = true (tools/xem-cu-dong.html).
 // ------------------------------------------------------------
-const CD = { force: false, stats: { hero: 0, enemy: 0 } };
+const CD = { force: false, stats: { hero: 0, enemy: 0 }, seen: new Set() };   // seen: mã đã vẽ bằng ảnh đơn (test)
 try { if (/[?&]solo=1\b/.test(location.search)) CD.force = true; } catch (e) { /* không có location */ }
 
 // loại vũ khí theo docs/PROMPT-DUNG-XUONG.txt (dòng "Loại vũ khí") — chọn vệt chém / đạn / quả cầu
@@ -48,6 +48,11 @@ function cdHasMulti(type, enemy) {
 }
 // ảnh đơn của một mã (null = dùng đường vẽ cũ: bộ nhiều khung / ảnh cũ / vector)
 function cdSoloImg(type, enemy) {
+  // ảnh dựng xương <mã>.png ở gốc assets/ là ảnh mới vẽ theo docs/PROMPT-DUNG-XUONG.txt → dùng thay bộ cũ;
+  // chỉ có packs/<mã>/idle.png thì bộ nhiều khung (nếu có) vẫn ưu tiên
+  // bộ nhiều khung thật (PACK_FRAMES / FRAME_ANIMS, tools/cat-sheet.py) vẫn ưu tiên nhất
+  if (!CD.force && ((typeof PACK_FRAMES !== 'undefined' && PACK_FRAMES[type]) || (typeof FRAME_ANIMS !== 'undefined' && FRAME_ANIMS[type]))) return null;
+  if (hasAsset(`${type}.png`)) return asset(`${type}.png`, true);
   if (!CD.force && cdHasMulti(type, enemy)) return null;
   const list = [`${type}.png`, `packs/${type}/idle.png`];
   if (enemy) list.push(`packs/${type}/walk1.png`);
@@ -347,7 +352,7 @@ function cdAutoRig(A, W, H, fxPx) {
   if (R - L > 2 * core) { L = Math.max(L, Math.round(fxPx - core)); R = Math.min(R, Math.round(fxPx + core)); }
   const nOp = (() => { let n = 0; for (let i = 3; i < A.length; i += 4) if (A[i] > 40) n++; return n; })();
   let pick = null;
-  for (const side of [1, -1]) {
+  for (const side of [1]) {   // ảnh dựng xương: vũ khí ở tay TRƯỚC (bên phải); bên trái hay là ruy băng / đuôi / cánh
     const bx = side > 0 ? R + m : L - m;            // cột ranh giới thân / tay
     if (bx <= 0 || bx >= W - 1) continue;
     const lab = new Int32Array(W * H), inSide = (x) => (side > 0 ? x > bx : x < bx);
@@ -356,11 +361,12 @@ function cdAutoRig(A, W, H, fxPx) {
       if (!inSide(x0) || lab[y0 * W + x0] || !cdOp(A, W, x0, y0)) continue;
       id++;
       const st = [y0 * W + x0]; lab[st[0]] = id;
-      const c = { id, n: 0, att: [], far: 0 };
+      const c = { id, n: 0, att: [], far: 0, cross: false };
       while (st.length) {
         const i = st.pop(), x = i % W, y = (i - x) / W;
         c.n++; c.far = Math.max(c.far, Math.abs(x - bx));
         if (x === bx + side && cdOp(A, W, bx, y)) c.att.push(y);
+        if (y === hip - 1 && cdOp(A, W, x, hip)) c.cross = true;   // vũ khí chìa xuống dưới hông → tách sẽ gãy
         for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
           const nx = x + dx, ny = y + dy;
           if (nx < 0 || ny < 0 || nx >= W || ny >= hip || !inSide(nx)) continue;
@@ -369,10 +375,18 @@ function cdAutoRig(A, W, H, fxPx) {
         }
       }
       // tay: nối thân ở nửa trên (không phải đầu / mũ), đủ lớn, chìa đủ xa
+      const why = (r) => { if (CD.why) CD.why.push([r, c.n, Math.round(c.far), c.att.length && Math.min(...c.att), c.att.length && Math.max(...c.att)]); };
       if (c.att.length < 2) continue;
       const aTop = Math.min(...c.att), aBot = Math.max(...c.att);
-      if (aBot < H * 0.3 || aTop > hip - H * 0.04) continue;
-      if (c.n < nOp * 0.012 || c.n > nOp * 0.45 || c.far < H * 0.07) continue;
+      // chạm thân ở 2 chỗ trở lên (giáo cầm chéo qua người) hoặc chìa xuống dưới hông: không tách tay, kẻo gãy vũ khí
+      c.att.sort((u, v) => u - v);
+      if (c.cross || c.att.some((y, i) => i && y - c.att[i - 1] > 3)) { why(c.cross ? 'hong' : '2cho'); continue; }
+      if (aBot - aTop < H * 0.03) { why('manh'); continue; }   // chỗ nối mảnh như cán giáo (giáo cầm chéo qua người), không phải cánh tay
+      if (aBot < H * 0.3 || aTop > hip - H * 0.04) { why('cao'); continue; }
+      if (aTop < H * 0.3) { why('dau'); continue; }   // vật cầm vắt qua ranh giới ngang đầu (tảng đá vác vai…) → tách sẽ xẻ đôi
+      // nối ở VAI (nửa trên thân, dưới đầu ~38% chiều cao); nối ở bàn tay / cẳng tay = vũ khí xuyên qua thân → không tách
+      if (aTop > H * 0.38 + (hip - H * 0.38) * 0.6) { why('vai'); continue; }
+      if (c.n < nOp * 0.015 || c.n > nOp * 0.45 || c.far < H * 0.09) { why('nho'); continue; }
       const score = c.n * (side > 0 ? 1.25 : 1);
       if (!pick || score > pick.score) pick = { score, side, bx, lab, id, aTop, aBot };
     }
@@ -531,7 +545,11 @@ function cdUpMap(R, x, y, bend, sy) {
 function cdArmTip(R, st, kind, bend, sy) {
   const A = cdArm(kind, st.swing || 0, st.castT || 0, st.hurt || 0, st.t, st.seed);
   const pv = cdUpMap(R, R.pivot[0], R.pivot[1], bend, sy), up = Math.max(0, (R.hip - R.pivot[1]) / R.hip);
-  const ang = A.a * R.side * (R.amp || 1) + 2 * bend * up;   // amp (rig): thu biên độ vung cho vũ khí cán dài dựng đứng
+  // giới hạn hướng tay: lấy đà không quá thẳng đứng ra sau đầu (vũ khí không quét qua mặt), chém xuống tối đa chếch trước-dưới
+  // amp (rig): thu biên độ vung cho vũ khí cán dài dựng đứng
+  const rest = Math.atan2(R.tip[1] - R.pivot[1], (R.tip[0] - R.pivot[0]) * R.side);   // 0 = chĩa thẳng ra trước, −π/2 = thẳng lên
+  const lo = Math.min(rest, -Math.PI / 2 - 0.25), hi = Math.max(rest, 1.25);
+  const ang = (Math.min(hi, Math.max(lo, rest + A.a * (R.amp || 1))) - rest) * R.side + 2 * bend * up;
   const vx = R.tip[0] - R.pivot[0], vy = R.tip[1] - R.pivot[1], k = 1 + A.d;
   const c = Math.cos(ang), s = Math.sin(ang);
   return { pv, ang, d: A.d, tip: [pv[0] + (vx * k) * c - (vy * k) * s, pv[1] + (vx * k) * s + (vy * k) * c] };
@@ -654,7 +672,7 @@ const CD_HERO_H = 228;   // chiều cao hình trong khung 200×230 (như bộ �
 function cdDrawHero(ctx, h, x, y, o, s, look, def, img, tierShown, ascShown) {
   const p = cdPrepare(img);
   if (!p) return null;
-  CD.stats.hero++;
+  CD.stats.hero++; CD.seen.add(h.type);
   const t = o.t || 0, dir = o.dir || 1, seed = cdSeed(h.id, h.type);
   const kind = cdWeapon(h.type, def.attack);
   const P = cdPose({ t, seed, swing: o.swing || 0, castT: o.castT || 0, castUlt: !!o.castUlt, hurt: o.hurt || 0, fall: o.fall, win: o.win,
@@ -699,6 +717,8 @@ function cdDrawHero(ctx, h, x, y, o, s, look, def, img, tierShown, ascShown) {
       flashC: o.hurt > 0 ? (Math.floor(t * 30) % 2 ? '#FFFFFF' : '#FF5A4A') : null, noArm: CD.noArm, noFx: CD.noFx || dying });
     ctx.restore();
     if (!dying) drawPackFront(ctx, h, def, t, H, ascShown);
+    // không tách được tay: vệt chém / đạn / quả cầu vẽ theo vị trí tay ước lượng như khi cử động nguyên khối
+    if (!R.arm && !dying && !CD.noFx) cdFx(ctx, kind, P, H, look.attrColor || '#FFF1C4', t, seed, (1 - p.fx) * H * p.ar);
     ctx.restore();
     if (o.bog) drawBogWater(ctx, x, y, s, t);
     return { top: y - (H + 12 - lift) * s * Math.max(1, P.sy), s };
@@ -735,7 +755,7 @@ function cdEnemySize(e, box, p) {
 function cdDrawEnemy(ctx, e, t, box, img, o) {
   const p = cdPrepare(img);
   if (!p) return false;
-  CD.stats.enemy++;
+  CD.stats.enemy++; CD.seen.add(e.type);
   const d = e.def, seed = cdSeed(e.id, e.type);
   const { H } = cdEnemySize(e, box, p);
   const moving = !o.icon && !(e.stunT > 0) && !(e.atkT > 0);
