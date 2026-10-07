@@ -298,6 +298,12 @@ function loadSave() {
       if (stars) { out.kho = (out.kho || 0) + stars * CAMP_STAR_KHO; out.campGift = stars * CAMP_STAR_KHO; }
       out.campConv = 1;
     }
+    // v182: Ngân khố mở khoá mọi tướng — bản lưu đã có từ trước v182 giữ đủ 20 tướng Thường (không mất tiến trình);
+    // người chơi mới (chưa có bản lưu) có sẵn STARTER_HEROES. owned = mọi tướng đã mở (Thường + Tím + Vàng).
+    if (!out.heroOpenV) {
+      out.owned = [...new Set([...(out.owned || []), ...(Object.keys(s).some((k) => k !== 'owner') ? BASIC_HEROES : STARTER_HEROES)])];
+      out.heroOpenV = 1;
+    }
     // v95: Ấn Phù cũ (chung tài khoản, mua bằng Ngân khố) → hoàn lại Ngân khố; ấn giờ riêng từng tướng, khắc bằng điểm Tu Vi
     if (out.runes && Object.keys(out.runes).length) {
       let back = 0;
@@ -638,7 +644,7 @@ class UI {
     g.reset(i);
     g.endless = true;
     g.owned = new Set(this.save.owned || []);
-    g.deck = validDeck(this.save.deck) ? [...this.save.deck] : suggestDeck(i, this.save.owned);   // v133: đội triệu hồi 6 tướng
+    g.deck = validDeck(this.save.deck) && this.save.deck.every((t) => this.heroOpen(t)) ? [...this.save.deck] : suggestDeck(i, this.save.owned);   // v133: đội triệu hồi 6 tướng (v182: chỉ tướng đã mở)
     setRunes(this.save.heroRunes || {});
     setLegacy(this.save.legacy || {});
     g.runId = Date.now();
@@ -659,6 +665,42 @@ class UI {
     this.showPrep();   // v77: luôn hiện (có Lò đúc đồng trước trận)
   }
 
+  // ---------- v182: mở khoá tướng bằng Ngân khố + nhiệm vụ ngày
+  heroOpen(t) { return (this.save.owned || []).includes(t); }
+  openCount() { const all = [...BASIC_HEROES, ...LEGEND_HEROES]; return { n: all.filter((t) => this.heroOpen(t)).length, all: all.length }; }
+  // thẻ tướng Thường chưa mở trong bảng chọn đội / Nghỉ chân: mờ, ổ khoá + giá, chạm thì nhắc đi mở ở Anh Hùng
+  lockedPick(t) {
+    const d = HEROES[t];
+    return `<button class="dk-pick metal common lock" data-act="dk-locked" data-id="${t}" style="--c:${ELEMENTS[d.el].color}" aria-label="${esc(d.name)} chưa mở khoá">
+      <img src="${heroImgUrl(t, 'head')}" alt=""><b>${esc(d.name)}</b><span class="tg"><i class="lk">${UIE.lock()}${fmt(OWN_COST.common)}</i></span></button>`;
+  }
+  // nhiệm vụ ngày (QUESTS): s.quest = { d: ngày, boss, waves, got: { id: true } } — sang ngày mới thì đặt lại
+  questDay() {
+    const s = this.save, today = new Date().toISOString().slice(0, 10);
+    if (!s.quest || s.quest.d !== today) s.quest = { d: today, boss: 0, waves: 0, got: {} };
+    if (s.dailyWin === today) s.quest.got.first = true;     // thưởng trận đầu ngày (v103) tính là nhiệm vụ 'first'
+    return s.quest;
+  }
+  questProg(q, id) { return id === 'first' ? (q.got.first ? 1 : 0) : Math.min(QUESTS.find((x) => x.id === id).need, q[id] || 0); }
+  // cộng tiến độ một trận (đợt đã qua, boss đã hạ) → trả về [{ q, kho }] nhiệm vụ vừa xong (đã cộng Ngân khố)
+  questAdd(waves, boss) {
+    const q = this.questDay(), done = [];
+    q.waves += Math.max(0, waves); q.boss += Math.max(0, boss);
+    for (const x of QUESTS) if (x.id !== 'first' && !q.got[x.id] && q[x.id] >= x.need) { q.got[x.id] = true; this.save.kho = (this.save.kho || 0) + x.kho; done.push(x); }
+    return done;
+  }
+  // màn kết quả: tướng rẻ nhất chưa mở — đủ tiền thì mời mở ngay, chưa đủ thì báo còn thiếu bao nhiêu
+  unlockHint() {
+    const left = [...BASIC_HEROES, ...LEGEND_HEROES].filter((t) => !this.heroOpen(t));
+    if (!left.length) return `<div class="res-unl"><span>Anh Hùng</span><b style="color:#6AE06A">${UIE.done()} Đã mở đủ ${this.openCount().all} tướng</b></div>`;
+    const t = left.sort((a, b) => OWN_COST[heroTier(a)] - OWN_COST[heroTier(b)])[0], c = OWN_COST[heroTier(t)], kho = this.save.kho || 0, oc = this.openCount();
+    return `<div class="res-unl"><span>Anh Hùng · đã mở ${oc.n}/${oc.all}</span><b>${kho >= c ? `<button class="btn btn-gold" data-act="res-heroes" data-type="${t}">${UIE.lock()} Mở ${esc(HEROES[t].name)} · ${bac(1)}${fmt(c)}</button>` : `Mở ${esc(HEROES[t].name)}: còn thiếu ${bac(1)} ${fmt(c - kho)}`}</b></div>`;
+  }
+  questLine() {
+    const q = this.questDay();
+    return QUESTS.map((x) => `<span class="qd ${q.got[x.id] ? 'ok' : ''}">${q.got[x.id] ? UIE.done() : '◻'} ${esc(x.name)}${x.need > 1 && !q.got[x.id] ? ` ${this.questProg(q, x.id)}/${x.need}` : ''} · ${bac(1)}${fmt(x.kho)}</span>`).join('');
+  }
+
   // ---------- v66: Chuẩn bị xuất quân — tiêu Ngân khố mua đồ / vàng / tướng Tím, Vàng trước trận
   // v133: bảng chọn đội triệu hồi (20 tướng Thường, chia theo hành)
   deckPicker() {
@@ -666,6 +708,7 @@ class UI {
     const ctr = new Set(); try { const lv = LEVELS[g.level], R = ROSTERS[lv.roster || 'thuy']; for (const c of rosterCounters(R, Object.values(lv.bosses || {}), BASIC_HEROES, lv.hint).list) ctr.add(c.t); } catch (e) { /* bỏ qua */ }
     const ing = deckIngredients(this.save.owned || []);
     const card = (t) => { const d = HEROES[t], on = sel.includes(t);
+      if (!this.heroOpen(t)) return this.lockedPick(t);
       return `<button class="dk-pick metal ${d.legend || 'common'} ${on ? 'on' : ''}" data-act="deck-tog" data-id="${t}" style="--c:${ELEMENTS[d.el].color}" data-tip="${esc(`<b>${esc(d.name)}</b><small>Hành ${ELEMENTS[d.el].name} · ${d.attack === 'melee' ? 'Cận chiến' : 'Đánh xa'}</small><p>${esc(d.title || '')}</p>${FUSION.filter((f) => f.a === t || f.b === t).map((f) => `<small>Hợp thể: + ${esc(HEROES[f.a === t ? f.b : f.a].name)} ➜ ${esc(HEROES[f.to].name)}</small>`).join('')}`)}">
         <img src="${heroImgUrl(t, 'head')}" alt=""><b>${esc(d.name)}</b>
         <span class="tg">${ctr.has(t) ? '<i class="c">khắc chế</i>' : ''}${ing.has(t) ? '<i class="h">hợp thể</i>' : ''}</span>${on ? `<span class="no">${sel.indexOf(t) + 1}</span>` : ''}</button>`; };
@@ -741,6 +784,7 @@ class UI {
     const added = sel.filter((t) => !orig.includes(t)).length;
     const ing = deckIngredients(this.save.owned || []);
     const card = (t) => { const d = HEROES[t], on = sel.includes(t), nu = on && !orig.includes(t), gone = !on && orig.includes(t);
+      if (!this.heroOpen(t) && !on) return this.lockedPick(t);
       return `<button class="dk-pick metal ${d.legend || 'common'} ${on ? 'on' : ''} ${gone ? 'gone' : ''}" data-act="rest-tog" data-id="${t}" style="--c:${ELEMENTS[d.el].color}">
         <img src="${heroImgUrl(t, 'head')}" alt=""><b>${esc(d.name)}</b>
         <span class="tg">${nu ? '<i class="c">mới</i>' : gone ? '<i class="x">bỏ</i>' : ''}${ing.has(t) ? '<i class="h">hợp thể</i>' : ''}</span></button>`; };
@@ -800,7 +844,11 @@ class UI {
       this.bankStats(); const tv = this.bankTuvi(TUVI_LOSE); if (tv.up.length) this.toast(tv.up.join('<br>'), '#FFD66B');
       // v103: dừng trận vẫn nhận Ngân khố như khi thua (4 mỗi đợt đã qua)
       const k = PREP.losePerWave * Math.max(0, g.wave - 1);
-      if (k && !g.over) { this.save.kho = (this.save.kho || 0) + k; writeSave(this.save); this.toast(`Ngân khố ${bac(1)} +${fmt(k)} (dừng ở đợt ${g.wave})`, '#E4ECF4'); }
+      if (k && !g.over) {
+        const qd = this.questAdd(g.wave - 1, g.bossesKilled || 0);      // v182: dừng trận vẫn tính nhiệm vụ ngày
+        this.save.kho = (this.save.kho || 0) + k; writeSave(this.save);
+        this.toast(`Ngân khố ${bac(1)} +${fmt(k)} (dừng ở đợt ${g.wave})${qd.map((x) => `<br>☀ ${esc(x.name)} +${fmt(x.kho)}`).join('')}`, '#E4ECF4');
+      }
     }
     if (g.endless) { this.submitScores(); const sv = this.save; sv.bestEndless = sv.bestEndless || {}; sv.bestEndless[g.level] = Math.max(sv.bestEndless[g.level] || 0, g.wave); writeSave(sv); }
     g.running = false; g.over = true; g.started = false;
@@ -1242,7 +1290,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 181</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 182</div>
       </div></div>`;
   }
 
@@ -2524,17 +2572,18 @@ class UI {
     const all = [...BASIC_HEROES, ...LEGEND_HEROES];
     const splash = assetUrl([`anh-lon_${heroSlug(t)}.png`, `heroes/hero_${HERO_CODE[t]}_A.png`]);
     const n = skillN(1);
+    const oc = this.openCount(), own = this.heroOpen(t), oCost = OWN_COST[heroTier(t)], kho = this.save.kho || 0;
     // giữ vị trí cuộn danh sách tướng / bảng chi tiết khi chọn tướng khác (trước đây nhảy về đầu)
     const keep = ['.ro-grid', '.ro-det'].map((q) => [q, ($('#roster').querySelector(q) || {}).scrollTop || 0]);
     $('#roster').innerHTML = `<div class="screen" style="z-index:auto">
       <div class="scr-head metal"><button class="xbtn metal" data-act="ro-back" aria-label="Quay lại">${ICON.back}</button><h1 class="ttl">Anh Hùng Văn Lang</h1>
-        <span class="chip dark" title="${BASIC_HEROES.length} Thường · ${LEGEND_HEROES.filter((x) => HEROES[x].legend === 'epic').length} Sử thi · ${LEGEND_HEROES.filter((x) => HEROES[x].legend === 'legendary').length} Huyền thoại">${all.length} tướng</span><div class="sp"></div>
+        <span class="chip dark ro-cnt" title="${BASIC_HEROES.length} Thường · ${LEGEND_HEROES.filter((x) => HEROES[x].legend === 'epic').length} Sử thi · ${LEGEND_HEROES.filter((x) => HEROES[x].legend === 'legendary').length} Huyền thoại">Đã mở <b>${oc.n}/${oc.all}</b></span><div class="sp"></div>
         <span class="chip kho ro-kho">Ngân khố ${bac()} ${fmt(this.save.kho || 0)}</span>${this.rosterInGame ? "" : `<button class="btn metal title" data-act="ro-temple">Đền Anh Hùng</button>`}</div>
       <div class="scr-body">
         <div class="ro-grid">${all.map((k) => {
           const h = HEROES[k];
-          const lock = h.legend && !(this.save.owned || []).includes(k);
-          return `<button class="ro-card ${h.legend || 'common'} ${k === t ? 'on' : ''} ${lock ? 'lock' : ''}" data-act="ro-sel" data-type="${k}">${lock ? `<span class="ro-lock">${UIE.lock()}</span>` : ''}
+          const lock = !this.heroOpen(k), c = OWN_COST[heroTier(k)];
+          return `<button class="ro-card ${h.legend || 'common'} ${k === t ? 'on' : ''} ${lock ? 'lock' : ''} ${lock && kho >= c ? 'can' : ''}" data-act="ro-sel" data-type="${k}">${lock ? `<span class="ro-lock">${UIE.lock()}</span><span class="ro-price">${bac(1)}${fmt(c)}</span>` : ''}
             <span class="tag el" style="color:${ELEMENTS[h.el].color}">${elIcon(h.el, 11)}${ELEMENTS[h.el].name}</span>
             <img src="${heroImgUrl(k)}" alt=""><span class="nm">${h.name}</span></button>`;
         }).join('')}</div>
@@ -2543,10 +2592,12 @@ class UI {
             <div class="ro-pic inset ${d.legend || 'common'}">${splash ? `<img src="${splash}" alt="">` : '<canvas id="ro-cv" width="300" height="300"></canvas>'}</div>
             <div style="display:flex;flex-direction:column;gap:5px;min-width:0">
               <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="ttl" style="font-size:26px;line-height:1">${d.name}</span>
-                ${!d.legend ? '<span class="chip ok">Có sẵn</span>' : (this.save.owned || []).includes(t) ? `<span class="chip ok">${UIE.done()} Đã sở hữu</span>${LEGACY[t] ? `<button class="btn btn-gold" style="height:32px;padding:0 12px;font-size:14px" data-act="lg-open" data-type="${t}">⚜ Thần Khí · ${this.legacyPts(t)}/${LEGACY_MAX * 3}</button>` : ''}`
-                  : `<button class="btn btn-gold" style="height:32px;padding:0 12px;font-size:14px" data-act="ro-buy" data-type="${t}" ${(this.save.kho || 0) < OWN_COST[d.legend] ? 'disabled' : ''}>Mua · ${bac()} ${fmt(OWN_COST[d.legend])}</button>`}</div>
+                ${own ? `<span class="chip ok">${UIE.done()} Đã mở</span>${d.legend && LEGACY[t] ? `<button class="btn btn-gold" style="height:32px;padding:0 12px;font-size:14px" data-act="lg-open" data-type="${t}">⚜ Thần Khí · ${this.legacyPts(t)}/${LEGACY_MAX * 3}</button>` : ''}`
+                  : `<button class="btn btn-gold ro-open" style="height:32px;padding:0 12px;font-size:14px" data-act="ro-buy" data-type="${t}" ${kho < oCost ? 'disabled' : ''}>${UIE.lock()} Mở khoá · ${bac()} ${fmt(oCost)}</button>${kho < oCost ? `<small class="ro-need">còn thiếu ${bac(1)} ${fmt(oCost - kho)}</small>` : ''}`}</div>
               <div class="note" style="font-style:italic">${esc(d.title)}</div>
-              ${!d.legend || (this.save.owned || []).includes(t) ? `<div class="ro-tv"><span>${ic('tu-vi')}Tu Vi ${tuviLevel((this.save.tuvi || {})[t] || 0)} · ${tuviRank((this.save.tuvi || {})[t] || 0)}</span>
+              ${own ? '' : `<div class="tipbox inset ro-earn"><b>${d.legend ? 'Mở khoá để hợp thể ra trong trận' : 'Mở khoá để chọn vào đội triệu hồi (ra trong chợ trận)'}.</b> Kiếm Ngân khố ở <b>Vô tận</b>: ${PREP.endWave} mỗi đợt · mốc 10 đợt +${PREP.endlessMilestone} · boss +${PREP.endlessBoss} · kỷ lục mới +${PREP.recordWave}/đợt · Khó ×1,5
+                <div class="ro-qd">Nhiệm vụ ngày: ${this.questLine()}</div></div>`}
+              ${own ? `<div class="ro-tv"><span>${ic('tu-vi')}Tu Vi ${tuviLevel((this.save.tuvi || {})[t] || 0)} · ${tuviRank((this.save.tuvi || {})[t] || 0)}</span>
                 ${d.legend === 'legendary' ? `<button class="btn metal" data-act="ro-runes" data-type="${t}">🔯 Ấn Phù${this.runePtsLeft(t) > 0 ? ` <b class="rn-dot">${this.runePtsLeft(t)}</b>` : ''}</button>` : ''}</div>` : ''}
               <div class="bt-info" style="padding:0;background:none;border:0;box-shadow:none"><div class="tags">
                 <span style="background:#1A1208;color:${ELEMENTS[d.el].color};display:inline-flex;align-items:center;gap:3px">${elIcon(d.el, 13)} Hành ${ELEMENTS[d.el].name} · ${ELEM_TRAIT[d.el].name}</span>
@@ -2687,7 +2738,11 @@ class UI {
     const today = new Date().toISOString().slice(0, 10);
     const daily = g.wave > PREP.dailyWave && s.dailyWin !== today ? PREP.dailyWin : 0;
     if (daily) s.dailyWin = today;
-    s.kho = (s.kho || 0) + khoGain + daily;
+    // v182: kỷ lục mới của bản đồ: +recordWave mỗi đợt vượt kỷ lục cũ (tính theo đợt đã qua; chơi nhóm không tính)
+    const recGain = newBest ? Math.round(PREP.recordWave * (g.wave - Math.max(prevBest, 1)) * (g.hard ? 1.5 : 1)) : 0;
+    s.kho = (s.kho || 0) + khoGain + daily + recGain;
+    const qDone = this.questAdd(g.wave - 1, g.bossesKilled || 0);      // v182: nhiệm vụ ngày (đã cộng Ngân khố)
+    const khoAll = (g.khoRun || 0) + khoGain + daily + recGain + qDone.reduce((a, x) => a + x.kho, 0);
     // Tu Vi đủ 100% khi đã qua đợt boss đầu (dưới đó 60% như bỏ trận)
     const fullTv = g.wave > PREP.dailyWave;
     const tv = this.bankTuvi(fullTv ? 1 : TUVI_LOSE);
@@ -2703,8 +2758,12 @@ class UI {
       <div><span>${coin()} Vàng kiếm trong trận</span><b style="color:#FFD66B">+${fmt(g.stats.goldEarned)}</b></div>
       <div><span>Tướng trên sân</span><b>${g.heroes.filter(Boolean).length}</b></div>
       ${g.khoRun ? `<div><span>${UIE.endless()} Ngân khố giữa trận (mốc đợt / boss)</span><b style="color:#E4ECF4">${bac(1)} +${fmt(g.khoRun)}</b></div>` : ''}
-      <div><span>${ic('bac')}Ngân khố cuối trận (${PREP.endWave} mỗi đợt${g.hard ? ' · Khó ×1,5' : ''})</span><b style="color:#E4ECF4">${bac(1)} +${fmt(khoGain + daily)} → ${fmt(s.kho)}</b></div>
-      ${daily ? `<div><span>☀ Trận đầu trong ngày qua đợt ${PREP.dailyWave}</span><b style="color:#FFE08A">${bac(1)} +${fmt(daily)}</b></div>` : ''}
+      <div><span>${ic('bac')}Ngân khố cuối trận (${PREP.endWave} mỗi đợt${g.hard ? ' · Khó ×1,5' : ''})</span><b style="color:#E4ECF4">${bac(1)} +${fmt(khoGain)}</b></div>
+      ${recGain ? `<div><span>★ Kỷ lục mới (+${PREP.recordWave} mỗi đợt vượt kỷ lục cũ)</span><b style="color:#FFE08A">${bac(1)} +${fmt(recGain)}</b></div>` : ''}
+      ${daily ? `<div><span>☀ Nhiệm vụ ngày: trận đầu qua đợt ${PREP.dailyWave}</span><b style="color:#FFE08A">${bac(1)} +${fmt(daily)}</b></div>` : ''}
+      ${qDone.map((x) => `<div><span>☀ Nhiệm vụ ngày: ${esc(x.name)}</span><b style="color:#FFE08A">${bac(1)} +${fmt(x.kho)}</b></div>`).join('')}
+      <div class="res-qd"><span>Nhiệm vụ ngày</span><b>${this.questLine()}</b></div>
+      ${this.unlockHint()}
       ${tv.rows.length ? `<div><span>${ic('tu-vi')}Tu Vi${fullTv ? '' : ' (60% · chưa qua đợt ' + PREP.dailyWave + ')'}</span><b style="color:#C8A0F0">${tv.rows.join(' · ')}</b></div>` : ''}
       ${tv.up.map((u) => `<div><span></span><b style="color:#FFD66B">${u}</b></div>`).join('')}`;
     const name = `${coop ? '🤝 Cùng giữ thành · ' : UIE.endless() + ' Vô tận · '}${LEVELS[lv].name}${coop ? ` · cùng ${esc(mate)}` : ''}`;
@@ -2725,7 +2784,8 @@ class UI {
           <div class="res-title lose${th.loseTitle.length > 18 ? ' long' : ''}">${th.id === 'sontinh' ? ic('nuoc-dang') : `<span class="res-ic">${th.ic}</span> `}${th.loseTitle}</div>
           <div style="display:flex;gap:12px;align-items:center"><div class="inset" style="padding:8px 16px;border-radius:6px;font-size:15px;white-space:nowrap">Giữ được tới đợt <b style="font-family:var(--title);font-size:34px;color:${th.hi}">${g.wave}</b></div>
             <div style="flex:1">${newBest ? '<div class="chip ok" style="display:inline-block">★ Kỷ lục mới!</div>' : `<div class="inset" style="height:12px;border-radius:4px;overflow:hidden"><i style="display:block;height:100%;width:${Math.min(1, g.wave / (endBest || 1)) * 100}%;background:linear-gradient(90deg,${th.bar[0]},${th.bar[1]})"></i></div>`}
-            <div class="note" style="margin-top:4px">${coop ? 'Chơi nhóm' : `Kỷ lục bản đồ này: đợt ${s.bestEndless[lv]}`}</div></div></div>
+            <div class="note" style="margin-top:4px">${coop ? 'Chơi nhóm' : `Kỷ lục bản đồ này: đợt ${s.bestEndless[lv]}`}</div></div>
+            <div class="res-khobox inset"><small>Ngân khố cả trận</small><b>${bac()} +${fmt(khoAll)}</b><small>còn ${fmt(s.kho)} · đã mở ${this.openCount().n}/${this.openCount().all} tướng</small></div></div>
           <div class="res-table inset">${rows}</div>
           <div class="res-tips"><div class="h">${UIE.tip()} MẸO LẦN SAU</div>
             <div class="t"><i>1</i><span><b>Ghép</b> 2 tướng cùng loại cùng sao và <b>hợp thể</b> đúng cặp để có tướng thần mạnh hơn hẳn.</span></div>
@@ -2757,7 +2817,7 @@ class UI {
   }
   action(d) {
     const g = this.game;
-    if (['reward', 'restart', 'to-map', 'to-menu'].includes(d.act)
+    if (['reward', 'restart', 'to-map', 'to-menu', 'res-heroes'].includes(d.act)
       && (!$('#result').hidden || !$('#reward').hidden) && performance.now() < (this.guardUntil || 0)) return;
     const sc = this.screen;
     const h = g.heroes[this.sel];
@@ -2822,7 +2882,8 @@ class UI {
       case 'prep-hero': this.prepHero(d.id); break;
       case 'prep-go': $('#prep').hidden = true; this.saveRun(); break;
       case 'deck-open': this.deckOpen = true; this.deckSel = [...this.game.summonList()]; this.showPrep(); break;
-      case 'deck-tog': { const sel = this.deckSel || (this.deckSel = []); const k = sel.indexOf(d.id);
+      case 'dk-locked': this.toast(`<b>${HEROES[d.id].name}</b> chưa mở khoá — mở ở <b>Anh Hùng</b> (menu) bằng ${bac(1)} ${fmt(OWN_COST.common)} Ngân khố`, '#E4ECF4'); break;
+      case 'deck-tog': { if (!this.heroOpen(d.id)) break; const sel = this.deckSel || (this.deckSel = []); const k = sel.indexOf(d.id);
         if (k >= 0) sel.splice(k, 1); else if (sel.length < DECK_SIZE) sel.push(d.id); else { sel.shift(); sel.push(d.id); }
         this.showPrep(); break; }
       case 'deck-suggest': this.deckSel = suggestDeck(this.game.level, this.save.owned); this.showPrep(); break;
@@ -2893,6 +2954,7 @@ class UI {
       case 'restart': if (this.coopDone) { this.coopDone = false; this.showCoop(); break; } this.startLevel(g.level); break;
       case 'to-map': if (this.coopDone) { this.coopDone = false; this.showCoop(); break; } this.showCampaign(g.level); break;
       case 'to-menu': $('#settings').hidden = true; if (g.started) this.bankStats(); this.showMenu(); break;
+      case 'res-heroes': if (g.started) this.bankStats(); this.showMenu(); this.showRoster(d.type); break;     // v182: kết quả trận → mở khoá tướng
       case 'ro-sel': {
         this.rosterSel = d.type; this.renderRoster();
         // v147: chạm chân dung trong cây phát triển → cuộn danh sách tới tướng đó
@@ -2903,12 +2965,13 @@ class UI {
         if (this.rosterInGame && $('#ranks').hidden && $('#treasury').hidden) { this.rosterInGame = false; $('#roster').hidden = true; if (this.rosterWasRunning) g.running = true; this.sig.fuse = ''; break; }
         this.showMenu(); break;
       case 'ro-buy': {
-        const t = d.type, c = OWN_COST[HEROES[t].legend], s = this.save;
+        const t = d.type, c = OWN_COST[heroTier(t)], s = this.save;
         s.owned = s.owned || [];
         if (s.owned.includes(t) || (s.kho || 0) < c) break;
         s.kho -= c; s.owned.push(t); writeSave(s);
         if (this.game.owned && !COOP.on) this.game.owned.add(t);   // chơi nhóm: dùng được từ trận sau
-        this.toast(`Đã mua ${HEROES[t].name}! Giờ có thể hợp thể ra trong trận`, '#6AE06A');
+        const oc = this.openCount();
+        this.toast(`Đã mở khoá ${HEROES[t].name} (${oc.n}/${oc.all})! ${HEROES[t].legend ? 'Giờ có thể hợp thể ra trong trận' : 'Chọn vào đội triệu hồi ở màn Chuẩn bị'}`, '#6AE06A');
         this.renderRoster();
         break;
       }

@@ -1718,3 +1718,42 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 181 — Gộp sửa thẻ chợ + bỏ lọc Hợp thể + nút ẩn giao diện
 
 - Gộp sua-the-cho (icon hệ không còn bị phóng to lòi ra sau avatar; bỏ thanh lọc bảng Hợp thể) và an-giao-dien (bỏ bong bóng Hủy trên tướng; nút ẩn giao diện, phím H).
+
+## Phiên bản 182 — Cày Ngân khố để mở khoá đủ 60 tướng
+
+Góp ý người chơi: "cần có cơ chế cày ngân khố để mở khoá full tướng".
+
+**Hiện trạng trước v182:** 20 tướng Thường mở sẵn hết; 20 Tím (1.200) và 20 Vàng (3.000) mua ở Anh Hùng — tổng 84.000 Ngân khố. Ngân khố chỉ kiếm ở Vô tận: 4 mỗi đợt cuối trận, mốc mỗi 10 đợt +150, boss +100, trận đầu ngày qua đợt 10 +300.
+
+**Mở khoá MỌI tướng bằng Ngân khố (giá theo bậc):** Thường **300** · Tím **900** · Vàng **2.000** (`OWN_COST` trong data.js).
+- Người chơi mới có sẵn 8 tướng Thường khởi đầu (`STARTER_HEROES`: Lạc Tướng, Lực Sĩ Núi, Xạ Thủ, Thợ Săn Rừng, Thầy Mo Lửa, Thần Sương Núi, Ngư Phủ, Thợ Rèn — đủ 2 công thức Tím Cá Ông / Ông Táo). 12 Thường còn lại + 40 Tím/Vàng mở dần.
+- Màn **Anh Hùng**: chip **Đã mở X/60**; thẻ tướng khoá mờ + ổ khoá + giá (xanh lá khi đủ tiền); bảng chi tiết có nút **Mở khoá · giá**, chưa đủ thì "còn thiếu N", kèm cách kiếm Ngân khố và tiến độ nhiệm vụ ngày.
+- **Tướng chưa mở không vào chợ trận:** bảng Chọn đội / Nghỉ chân hiện tướng Thường khoá (mờ, giá, chạm thì nhắc mở ở Anh Hùng); đội gợi ý (`suggestDeck`) và `restDeck` chỉ nhận tướng đã mở → chợ (rút từ đội 6 tướng) chỉ ra tướng đã mở. Tướng Tím / Vàng chưa mở vẫn không hợp thể ra được như trước.
+- Bot / mô phỏng (`owned = null`) vẫn coi như mở hết.
+
+**Vòng cày (Vô tận, chơi nhóm cũng nhận trừ kỷ lục):**
+- Cuối trận **6** mỗi đợt đã qua (trước 4); dừng trận giữa chừng cũng 6/đợt.
+- Mốc mỗi 10 đợt +150 (từ đợt 50 ×1,5), mỗi boss hạ +100 — như cũ, cộng ngay giữa trận.
+- **Kỷ lục mới** của bản đồ: **+15 mỗi đợt vượt kỷ lục cũ** (17 bản đồ → động lực thử mọi bản đồ).
+- **Nhiệm vụ ngày** (đặt lại mỗi ngày, cộng dồn mọi trận): Trận đầu ngày qua đợt 10 **+300** (cũ) · Hạ 3 boss **+200** · Qua tổng 60 đợt **+250**.
+- Khó: mọi khoản trong trận / cuối trận / kỷ lục ×1,5.
+- Màn kết quả: ô **Ngân khố cả trận** to ở trên cùng (tổng + còn bao nhiêu + đã mở X/60), từng dòng (giữa trận / theo đợt / kỷ lục / nhiệm vụ), tiến độ nhiệm vụ ngày, gợi ý tướng rẻ nhất chưa mở (đủ tiền thì có nút **Mở …** đưa thẳng tới Anh Hùng). Cột phải màn kết quả giờ cuộn được (trước bị cắt đáy, không xem được mẹo).
+
+**Tốc độ kiếm (đo bằng bot chơi tự động ở x1, không gọi sớm):** tới đợt 10 ≈ 4,5 phút · đợt 20 ≈ 11–13 phút · đợt 30 ≈ 19 phút · đợt 40 ≈ 31 phút.
+
+| Trận Thường, thua sau khi qua đợt | 10 | 20 | 30 | 40 |
+|---|---|---|---|---|
+| Theo đợt (6/đợt) | 60 | 120 | 180 | 240 |
+| Mốc 10 đợt + boss | 250 | 500 | 750 | 1.000 |
+| **Tổng một trận** | **310** | **620** | **930** | **1.240** |
+| Trước v182 | 290 | 580 | 870 | 1.160 |
+
+≈ 50 Ngân khố / phút chơi ≈ **3.000 / giờ** ở x1 (x2 ≈ gấp đôi theo giờ thật; Khó ×1,5). Một lần: kỷ lục mới ≈ 15 × 30 × 17 bản đồ ≈ 7.000. Nhiệm vụ ngày ≈ 750/ngày.
+
+**Mở hết mất bao lâu:** người mới cần 12 × 300 + 20 × 900 + 20 × 2.000 = **61.600** (trước: 84.000 chỉ riêng Tím/Vàng). Trừ thưởng kỷ lục ≈ 7.000 → ≈ 54.000 ÷ 3.000/giờ ≈ **18 giờ chơi ở x1** (≈ 10 giờ nếu để x2, ≈ 12 giờ nếu chơi Khó). Chơi 1 giờ/ngày (thêm nhiệm vụ ngày) ≈ **2,5 tuần**. Ngân khố còn dùng cho Thần Khí / Lò đúc / hậu cần nên thực tế lâu hơn chút.
+
+**Bản lưu cũ / đám mây:** `loadSave` chuyển đổi một lần (`heroOpenV = 1`): bản lưu đã có từ trước (máy hoặc kéo từ đám mây — cả hai đều đi qua `loadSave`) giữ đủ **20 tướng Thường** + mọi tướng Tím/Vàng đã mua, Ngân khố giữ nguyên; chỉ người chưa từng có bản lưu mới bắt đầu với 8 tướng. `owned` giờ chứa mọi tướng đã mở (Thường + Tím + Vàng), đồng bộ đám mây như cũ (cả bản lưu). Không hoàn tiền phần chênh giá cũ.
+
+**Phối hợp nhánh cho-bot-ngau-nhien (chợ có trọng số):** chợ vẫn rút từ `summonList()` = đội 6 tướng; v182 chỉ chặn ở chỗ chọn đội (UI, `suggestDeck`, `restDeck`) nên không đụng code chợ — pool chợ = tướng đã mở trong đội.
+
+Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 lần đổi chỉ ra tướng đã mở, chọn đội / Nghỉ chân chặn tướng khoá, Anh Hùng X/60 + giá + mở Thường 300 / Tím 900, thiếu tiền, thưởng cuối trận theo đợt + kỷ lục + nhiệm vụ ngày, nút mở tướng ở màn kết quả, chuyển đổi bản lưu cũ / bản đám mây / tài khoản mới); ảnh `tests/ngan-kho/shots/` (anh-hung-khoa, anh-hung-thieu-tien, chon-doi-khoa, ket-qua, ket-qua-cuon — 1920×934 / 844×390 / 667×375). `tests/vo-tan` cập nhật số thưởng mới.
