@@ -403,3 +403,17 @@ for (const it of items) {
 fs.writeFileSync(path.join(ROOT, 'docs/PROMPT_GEMINI_FULL.txt'), txt);
 fs.writeFileSync(path.join(ROOT, 'docs/prompts.json'), JSON.stringify(items, null, 1));
 console.log('items', items.length, 'heroes', need.length);
+
+// Bộ xuất cho AI khác / họa sĩ (docs/CHUAN-ANIMATION.md): mỗi dòng một nhân vật, prompt đầy đủ — mở bằng Excel / Google Sheets.
+// Có cả tướng đã có ảnh (để vẽ lại bằng công cụ khác), không phụ thuộc danh sách "còn thiếu" ở trên.
+const csvCell = (v) => `"${String(v).replace(/"/g, '""')}"`;
+const csv = (rows) => '﻿' + rows.map((r) => r.map(csvCell).join(',')).join('\r\n') + '\r\n';
+const heroRows = [['ma', 'ten', 'bac', 'he', 'kieu_luoi', 'kich_thuoc', 'ten_file', 'lenh_cat', 'prompt']];
+for (const t of Object.keys(HERO_ID).sort((a, b) => tier(a) - tier(b) || HEROES[a].el.localeCompare(HEROES[b].el)))
+  heroRows.push([t, HEROES[t].name, tierName[tier(t)], { kim: 'Kim', moc: 'Mộc', thuy: 'Thủy', hoa: 'Hỏa', tho: 'Thổ' }[HEROES[t].el], 'hero12 (4x3, ô 192)', '768x576', `${t}.png`, `python3 tools/cat-sheet.py ${t}.png ${t} hero12`, heroIdPrompt(t)]);
+fs.writeFileSync(path.join(ROOT, 'docs/prompts-tuong.csv'), csv(heroRows));
+const foeRows = [['ma', 'ten', 'loai', 'kieu_luoi', 'kich_thuoc', 'ten_file', 'lenh_cat', 'prompt']];
+for (const k of Object.keys(REDO_ENEMY)) foeRows.push([k, ENEMIES[k].name, REDO_FLY.has(k) ? 'Quái bay' : 'Quái', 'enemy6 (3x2, ô 192)', '576x384', `${k}.png`, `python3 tools/cat-sheet.py ${k}.png ${k} enemy6`, redoEnemyPrompt(k)]);
+for (const k of Object.keys(REDO_BOSS)) foeRows.push([k, ENEMIES[k].name, 'Boss', 'boss9 (3x3, ô 256)', '768x768', `${k}.png`, `python3 tools/cat-sheet.py ${k}.png ${k} boss9`, redoBossPrompt(k)]);
+fs.writeFileSync(path.join(ROOT, 'docs/prompts-quai.csv'), csv(foeRows));
+console.log('csv tướng', heroRows.length - 1, '· quái / boss', foeRows.length - 1);

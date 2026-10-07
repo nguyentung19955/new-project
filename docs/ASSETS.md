@@ -1,5 +1,7 @@
 # Ảnh vẽ tay (AI) cho Thần Thoại Việt
 
+> **Muốn nhờ AI khác / họa sĩ vẽ nhân vật có chuyển động?** Đọc `docs/CHUAN-ANIMATION.md` (chuẩn lưới tướng 4×3 · quái 3×2 · boss 3×3, nhịp phát, mẫu prompt, ghép / cắt) — ảnh mẫu lưới ở `docs/mau-luoi/`, prompt từng nhân vật ở `docs/prompts-tuong.csv` / `docs/prompts-quai.csv`.
+
 ## Tạo bằng Fooocus (ảnh đơn): `docs/PROMPT-FOOOCUS.txt`
 
 Mỗi mục trong prompt là một ảnh, đặt tên đúng dòng "File:". Xoá nền xám và thu nhỏ:
