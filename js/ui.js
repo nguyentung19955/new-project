@@ -976,7 +976,7 @@ class UI {
         <div class="co-row"><button class="btn btn-gold title" data-act="coop-create">＋ Tạo phòng</button></div>
         <div class="co-row"><input id="co-code" class="login-in co-code" maxlength="6" placeholder="Mã phòng" autocapitalize="characters" autocomplete="off" value="${esc(this.coopCode || '')}"><button class="btn metal title" data-act="coop-join">Vào phòng</button></div>
         ${saved ? `<div class="co-row"><button class="btn metal" data-act="coop-rejoin">↻ Vào lại phòng ${esc(saved)}</button></div>` : ''}
-        ${this.coopErr ? `<div class="login-err">${esc(this.coopErr)}</div>` : ''}</div>`;
+        ${this.coopErr ? `<div class="login-err">${esc(this.coopErr)}${this.coopRetry ? ' <button class="btn metal co-retry" data-act="coop-retry">↻ Thử lại</button>' : ''}</div>` : ''}</div>`;
     } else {
       const host = r && r.host === me, members = r ? r.members : [];
       const lv = r ? r.level || 0 : 0;
@@ -991,16 +991,18 @@ class UI {
         <div class="hint-h">ẢI (PHÓ BẢN ĐÃ MỞ CỦA CHỦ PHÒNG)</div>${lvList}
         <div class="co-row">${host ? `<button class="btn btn-gold title" data-act="coop-start" ${members.length === 2 ? '' : 'disabled'}>⚔ Bắt đầu</button>` : '<span class="note">Chờ chủ phòng bấm Bắt đầu…</span>'}
           <button class="btn metal" data-act="coop-leave">Rời phòng</button></div>
-        ${this.coopErr ? `<div class="login-err">${esc(this.coopErr)}</div>` : ''}</div>`;
+        ${this.coopErr ? `<div class="login-err">${esc(this.coopErr)}${this.coopRetry ? ' <button class="btn metal co-retry" data-act="coop-retry">↻ Thử lại</button>' : ''}</div>` : ''}</div>`;
     }
     $('#coop').innerHTML = `<div class="screen" style="z-index:auto">${head}<div class="co-body">${body}</div></div>`;
   }
   async coopAct(d) {
     const g = this.game;
     this.coopErr = '';
+    if (d.act === 'coop-retry') { const last = this.coopRetry; this.coopRetry = null; if (last) return this.coopAct(last); return; }
     const busy = async (msg, fn) => {
       this.coopBusy = msg; this.renderCoop();
-      try { await fn(); } catch (e) { this.coopErr = e.message || String(e); } finally { this.coopBusy = ''; if (!$('#coop').hidden) this.renderCoop(); }
+      this.coopRetry = null;
+      try { await fn(); } catch (e) { this.coopErr = e.message || String(e); this.coopRetry = { ...d }; } finally { this.coopBusy = ''; if (!$('#coop').hidden) this.renderCoop(); }
     };
     switch (d.act) {
       case 'coop-back': this.showMenu(); break;
@@ -1143,7 +1145,11 @@ class UI {
     if (r !== true) return this.toast(r, '#E25A3A');
     if (d.act === 'chat-send') { const i = $('#chat-in'); if (i) i.value = ''; }
   }
-  coopNote(msg) { this.toast(esc(msg), '#5AB4D6'); }
+  // thông báo chơi nhóm (đồng đội rời / vào lại, đồng bộ lại…): hiện toast và giữ 20 dòng gần nhất (xem lại / kiểm thử)
+  coopNote(msg) {
+    this.coopLog = (this.coopLog || []).concat([{ at: Date.now(), msg }]).slice(-20);
+    this.toast(esc(msg), '#5AB4D6');
+  }
   updateCoopBar() {
     const g = this.game, co = g.co, bar = $('#coop-bar');
     $('#btn-chat').hidden = !COOP.on;
@@ -1253,7 +1259,7 @@ class UI {
           <button class="btn metal" style="margin-left:auto" data-act="set-feedback">✉ Góp ý</button></div>
         <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 164 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 163 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
   }
 

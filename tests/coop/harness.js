@@ -56,6 +56,8 @@ class RelayServer {
   }
   call(uid, m, a) {
     if (this.offline.has(uid)) throw new Error('unavailable (offline)');
+    // giả lập Firebase chưa có luật chơi nhóm: mọi thao tác với phòng bị từ chối
+    if (this.noRules && m !== 'sub' && m !== 'unsub') throw new Error('permission-denied (no rules)');
     const [code] = a;
     switch (m) {
       case 'createRoom': {

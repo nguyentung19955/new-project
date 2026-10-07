@@ -1544,3 +1544,8 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 164 — Gộp rà chủ đề cũ + bảng chỉ số gọn + hiệu ứng vẽ tay
 - Gộp: màn thắng/thua theo chương (v163, rà chủ đề cũ + 24 prompt khung/nút/tranh nhóm 18–21), bảng chỉ số tướng thu nhỏ, chuẩn animation + prompt hiệu ứng (game dùng ảnh assets/fx, assets/vfx khi có; đạn quả dưa dùng srand để chơi nhóm vẫn đồng bộ).
+
+## Phiên bản 163 — Báo lỗi rõ khi tạo / vào phòng chơi nhóm
+- Tạo phòng / vào phòng bị lỗi giờ báo đúng nguyên nhân kèm mã lỗi ngắn và nút **↻ Thử lại**: máy chủ từ chối (`permission-denied` — luật chơi nhóm chưa đăng lên Firebase), mất mạng (`unavailable`), phiên đăng nhập hết hạn (`unauthenticated`), sai mã (`not-found`). Chi tiết ghi vào console. Trước đây lỗi luật bị nuốt sau 5 lần thử mã và chỉ báo "Không tạo được phòng, thử lại"; nay chỉ thử mã khác 1 lần.
+- Thông báo chơi nhóm (đồng đội rời / vào lại, đồng bộ lại) được giữ 20 dòng gần nhất (`ui.coopLog`); test chơi nhóm đọc từ đó thay vì từ toast (toast chỉ giữ 2 dòng nên dễ bị đẩy mất).
+- Test mới: luật chưa đăng → báo rõ + Thử lại; mất mạng khi tạo phòng → báo mất mạng.
