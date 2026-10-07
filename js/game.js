@@ -1382,7 +1382,7 @@ class Game {
     this.shake = 0;
     this.bossesKilled = 0;
     this.seen = {};
-    this.endless = false;
+    this.endless = true;      // v166: chỉ còn chế độ vô tận (đơn và nhóm)
     this.won = false;
     this.guardT = 0;
     this.oathT = 0;
@@ -2608,7 +2608,7 @@ class Game {
     // v103: Vô tận — mỗi 10 đợt cộng Ngân khố (tài khoản) ngay
     if (this.endless && this.wave % PREP.endlessEvery === 0) this.events.push({ type: 'kho', n: Math.round(PREP.endlessMilestone * (1 + Math.floor(this.wave / 50) * 0.5) * (this.hard ? 1.5 : 1)), why: `mốc đợt ${this.wave}` });
     if (bossAt(this.wave, this.level)) this.riseWater();
-    // v143: Nghỉ chân sau đợt boss (cả Vô tận và Phó bản, trừ đợt cuối thắng ải): đổi tối đa 2 tướng trong đội
+    // v143: Nghỉ chân sau đợt boss: đổi tối đa 2 tướng trong đội
     let bossDone = false;
     for (let w = (this.restWave || 0) + 1; w <= this.wave; w++) if (bossAt(w, this.level)) bossDone = true;
     this.restWave = this.wave;
@@ -2650,11 +2650,6 @@ class Game {
     this.nextWaveT = 0;
     this.nextWave = buildWave(this.wave + 1, this.level);
     this.updateAuras();
-  }
-
-  stars() {
-    if (!this.won) return 0;
-    return this.lives >= CONFIG.startLives ? 3 : this.lives >= 15 ? 2 : 1;
   }
 
   spawn(type, dist, elite) {

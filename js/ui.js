@@ -272,21 +272,31 @@ const SAVE_KEY = 'nuicao.v1';
 // v149: góp ý — giới hạn gửi + hàng đợi khi chưa có mạng (lưu riêng, không lẫn vào bản lưu đồng bộ đám mây)
 const FB_KEY = 'nuicao.feedback';
 const FB_KINDS = [['bug', '🐞 Lỗi'], ['idea', '💡 Ý tưởng'], ['balance', '⚖ Cân bằng'], ['other', '💬 Khác']];
+const CAMP_STAR_KHO = 40;    // v166: quy đổi sao Phó bản cũ → Ngân khố (một lần)
 // v163: màn "Góp ý nhận được" (chỉ tài khoản quản trị): màu từng loại, trạng thái, số mục mỗi trang
 const FBA_KIND = { bug: ['Lỗi', '#FF7A5C'], idea: ['Ý tưởng', '#7FD0FF'], balance: ['Cân bằng', '#F2D27A'], other: ['Khác', '#B9B0A0'] };
 const FBA_ST = [['new', 'Mới'], ['seen', 'Đã xem'], ['done', 'Đã xử lý']];
 const FBA_PAGE = 20;
 const FB_GAP = 60000, FB_DAY = 10, FB_QUEUE = 5, FB_MIN = 10, FB_MAX = 1000, FB_SHOT = 150000;
 function loadSave() {
-  const def = { stars: LEVELS.map(() => 0), unlocked: 1, last: 0, best: {}, storySeen: false,
+  // stars / unlocked / best: tiến trình Phó bản cũ (v166 bỏ Phó bản) — vẫn giữ trong bản lưu, chỉ dùng để quy đổi một lần
+  const def = { stars: LEVELS.map(() => 0), unlocked: 1, last: 0, best: {}, bestEndless: {},
     lifeGold: 0, lifeKills: 0, lifeHerbs: 0, collected: [], kho: 0, loginChosen: false, owned: [], runes: {}, legacy: {}, heroRunes: {}, tuvi: {},
-    settings: { dmgText: true, shake: true, skipStory: false, vectorHeroes: false, detail: false, aiArt: false } };
+    settings: { dmgText: true, shake: true, vectorHeroes: false, detail: false, aiArt: false } };
   try {
     const s = JSON.parse(localStorage.getItem(SAVE_KEY) || '{}');
     const out = { ...def, ...s, settings: { ...def.settings, ...(s.settings || {}) } };
     // v48: thêm chương / ải mới → nới mảng sao cho bản lưu cũ
     while (out.stars.length < LEVELS.length) out.stars.push(0);
-    out.chSeen = out.chSeen || {};
+    // v166: bỏ Phó bản, chỉ còn Vô tận — quy đổi MỘT LẦN tiến trình chiến dịch cũ (sao / ải đã mở vẫn giữ trong bản lưu, không xoá):
+    // mỗi sao +CAMP_STAR_KHO Ngân khố; đợt xa nhất từng giữ ở mỗi ải tính vào kỷ lục vô tận của bản đồ đó
+    if (!out.campConv) {
+      const stars = out.stars.reduce((a, b) => a + (b || 0), 0);
+      out.bestEndless = out.bestEndless || {};
+      for (const k of Object.keys(out.best || {})) out.bestEndless[k] = Math.max(out.bestEndless[k] || 0, out.best[k] || 0);
+      if (stars) { out.kho = (out.kho || 0) + stars * CAMP_STAR_KHO; out.campGift = stars * CAMP_STAR_KHO; }
+      out.campConv = 1;
+    }
     // v95: Ấn Phù cũ (chung tài khoản, mua bằng Ngân khố) → hoàn lại Ngân khố; ấn giờ riêng từng tướng, khắc bằng điểm Tu Vi
     if (out.runes && Object.keys(out.runes).length) {
       let back = 0;
@@ -392,11 +402,11 @@ class UI {
   // ---------- gắn sự kiện
   bind() {
     const g = this.game;
-    // Xuất Quân: đang có trận dở thì quay lại trận, không thì mở bản đồ chiến dịch
+    // Xuất Quân: đang có trận dở thì quay lại trận, không thì chọn chế độ (Vô tận / Cùng Giữ Thành)
     $('#btn-continue').onclick = () => {
       const g = this.game;
       // v131: trận vô tận đang dở phải truyền đúng chế độ, không thì playLevel tưởng là trận mới và chơi lại từ đầu
-      if (g.started && !g.over && (!g.won || g.endless)) return this.playLevel(g.level, g.endless);
+      if (g.started && !g.over && (!g.won || g.endless)) return this.playLevel(g.level);
       if (this.save.run) return this.resumeRun();
       this.showModes();
     };
@@ -473,7 +483,7 @@ class UI {
       });
     };
     // ủy quyền sự kiện cho các vùng dựng lại liên tục
-    for (const id of ['#fuse-strip', '#auto-btns', '#screen', '#deck', '#drawer', '#more', '#reward', '#result', '#story', '#campaign', '#settings', '#legends', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks', '#modes', '#rest', '#feedback', '#fbadmin', '#coop', '#coop-bar', '#chat', '#pl-pop']) {
+    for (const id of ['#fuse-strip', '#auto-btns', '#screen', '#deck', '#drawer', '#more', '#reward', '#result', '#campaign', '#settings', '#legends', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks', '#modes', '#rest', '#feedback', '#coop', '#coop-bar', '#chat', '#fbadmin', '#pl-pop']) {
       $(id).addEventListener('click', (ev) => {
         const el = ev.target.closest('[data-act]');
         if (this.tipShown) { this.tipShown = false; ev.preventDefault(); return; }   // vừa giữ tay xem mô tả: không nâng kỹ năng
@@ -557,17 +567,18 @@ class UI {
     this.hideOverlays();
     $('#menu').hidden = false;
     const s = this.save;
-    const total = s.stars.reduce((a, b) => a + b, 0);
+    const best = Math.max(0, ...Object.values(s.bestEndless || {}));
     const lv = 1 + Math.floor(Math.sqrt(s.lifeKills / 25));
     const acc = typeof CLOUD !== 'undefined' && CLOUD.user && !CLOUD.user.isAnonymous ? CLOUD.user : null;
     // v146: khung ảnh đã có huy hiệu mặt trời — chỉ đặt ảnh Google (nếu có) vào lòng huy hiệu, không chèn SVG.
     // Chưa đặt biệt danh thì hiện "Khách" + gợi ý chạm để đặt tên (không lấy phần đầu email).
     const nick = this.nickName();
-    $('#menu-player').innerHTML = `${acc && acc.photoURL ? `<span class="av"><img src="${esc(acc.photoURL)}" alt="" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></span>` : ''}<span class="pl-txt"><b>${nick ? esc(nick) : 'Khách <i class="pl-hint">✎ đặt tên</i>'}</b><small>Cấp ${lv} · ★ ${total}/${LEVELS.length * 3}</small></span>`;
+    $('#menu-player').innerHTML = `${acc && acc.photoURL ? `<span class="av"><img src="${esc(acc.photoURL)}" alt="" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></span>` : ''}<span class="pl-txt"><b>${nick ? esc(nick) : 'Khách <i class="pl-hint">✎ đặt tên</i>'}</b><small>Cấp ${lv} · ♾ đợt ${best}</small></span>`;
     $('#menu-player').title = nick ? 'Tài khoản & đổi tên' : 'Chạm để đặt biệt danh';
     for (const el of $('#menu-player').querySelectorAll('b, small')) fitText(el, el.tagName === 'B' ? 10 : 8);
     $('#menu-player').onclick = () => { this.plPop = !this.plPop; this.outArm = false; this.plMsg = ''; this.renderPlPop(); };
     this.renderPlPop();
+    if (s.campGift) { this.toast(`Phó bản đã gộp vào <b>Vô tận</b>: mọi bản đồ đều mở. Sao cũ đổi thành ${bac(1)} ${fmt(s.campGift)} Ngân khố.`, '#F2D27A'); delete s.campGift; writeSave(s); }
     if (s.runeRefund) { this.toast(`Ấn Phù giờ riêng từng tướng, khắc bằng điểm Tu Vi. Đã hoàn ${fmt(s.runeRefund)} Ngân khố đã tiêu cho ấn cũ.`, '#E4ECF4'); delete s.runeRefund; writeSave(s); }
     const short = (n) => (n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace('.', ',') + 'k' : n);
     $('#menu-res').innerHTML = `<span title="Ngân khố: bạc thưởng sau mỗi trận, dùng mua tướng Tím / Vàng, Thần Khí, đồ trước trận — không dùng được trong trận"><small class="pr-l">Ngân khố</small>${bac(1)} <b style="color:#E4ECF4">${fmt(s.kho || 0)}</b></span>`;
@@ -575,15 +586,15 @@ class UI {
     $('#menu-art').innerHTML = `<img class="keyart" src="${assetSrc('ui/nen-menu.jpg')}" alt="" onerror="this.outerHTML=''">` + svgI(sceneArt('menu'));
     const g0 = this.game, live = g0.started && !g0.over && (!g0.won || g0.endless);
     const run = !live && s.run;
-    const lvN = live ? g0.level : run ? run.level : 0, wN = live ? g0.wave : run ? run.wave : 0, endl = live ? g0.endless : run && run.endless;
-    $('#continue-label').textContent = live || run ? `Tiếp tục · Ải ${lvN + 1} · Đợt ${wN}${endl ? ' ♾' : ''}` : 'Xuất Quân';
+    const lvN = live ? g0.level : run ? run.level : 0, wN = live ? g0.wave : run ? run.wave : 0;
+    $('#continue-label').textContent = live || run ? `Tiếp tục · ${(LEVELS[lvN] || LEVELS[0]).name} · Đợt ${wN} ♾` : 'Xuất Quân';
     $('#btn-newgame').hidden = !(live || run);
     $('#roster-hint').onclick = () => { $('#roster-hint').hidden = true; };
     this.setInGame(false);
   }
   hideOverlays() {
     this.plPop = false; this.outArm = false; $('#pl-pop').hidden = true;
-    for (const id of ['#menu', '#story', '#campaign', '#settings', '#result', '#reward', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks', '#modes', '#rest', '#coop', '#fbadmin']) $(id).hidden = true;
+    for (const id of ['#menu', '#campaign', '#settings', '#result', '#reward', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks', '#modes', '#rest', '#coop', '#fbadmin']) $(id).hidden = true;
     if (this.needLogin()) this.showLogin(false);   // v73: chưa đăng nhập thì luôn che game
   }
   setInGame(on) {
@@ -592,19 +603,16 @@ class UI {
     if (on) $('#coop-bar').hidden = !COOP.on;
   }
 
-  playLevel(i, endless) {
+  // v166: chỉ còn chế độ Vô tận — i là bản đồ (chỉ số trong LEVELS); tham số thứ hai giữ cho chỗ gọi cũ, bỏ qua
+  playLevel(i) {
     const g = this.game;
-    this.nextEndless = !!endless;    // v99: vào thẳng chế độ vô tận từ ngoài
-    // đang chơi dở đúng ải này (cùng chế độ) thì quay lại trận
-    if (g.started && !g.over && (!g.won || g.endless) && g.level === i && !!g.endless === !!endless) {
+    // đang chơi dở đúng bản đồ này thì quay lại trận
+    if (g.started && !g.over && g.endless && g.level === i) {
       this.hideOverlays();
       this.setInGame(true);
       if (g.rest) this.showRest();
       return;
     }
-    const ch = chapterOf(i);
-    const seen = ch.classic ? this.save.storySeen : this.save.chSeen && this.save.chSeen[ch.id];
-    if (!seen && !this.save.settings.skipStory) return this.showStory(i);
     this.startLevel(i);
   }
 
@@ -614,7 +622,7 @@ class UI {
     if (g.started) this.bankStats();
     g.hard = !!this.save.settings.hard;
     g.reset(i);
-    g.endless = !!this.nextEndless; this.nextEndless = false;
+    g.endless = true;
     g.owned = new Set(this.save.owned || []);
     g.deck = validDeck(this.save.deck) ? [...this.save.deck] : suggestDeck(i, this.save.owned);   // v133: đội triệu hồi 6 tướng
     setRunes(this.save.heroRunes || {});
@@ -630,7 +638,7 @@ class UI {
     writeSave(this.save);
     this.hideOverlays();
     this.setInGame(true);
-    this.toast(g.endless ? `Vô tận · ${LEVELS[i].name}: giữ thành càng lâu càng tốt — boss mỗi 10 đợt` : `Ải ${i + 1} · ${LEVELS[i].name}: ${themeOf(i).goal} qua ${LEVELS[i].waves} đợt`, '#F2D27A');
+    this.toast(`Vô tận · ${LEVELS[i].name}: ${themeOf(i).goal} càng lâu càng tốt — boss mỗi 10 đợt`, '#F2D27A');
     this.prepBought = {}; this.prepShopRolled = false;
     { const id = themeOf(i).id; resultImg(id, true); resultImg(id, false); }   // v163: tải sẵn tranh thắng / thua của chương (nếu có ảnh)
     this.saveRun();
@@ -650,7 +658,7 @@ class UI {
     const els = EL_ORDER.map((el) => `<div class="dk-el"><div class="dk-eh" style="color:${ELEMENTS[el].color}">${elIcon(el, 13)} ${ELEMENTS[el].name}</div>${BASIC_HEROES.filter((t) => HEROES[t].el === el).map(card).join('')}</div>`).join('');
     return `<div class="dk-modal"><div class="dk-box metal">
       <div class="dk-head"><b class="ttl">Chọn đội triệu hồi</b><span class="chip ${sel.length === DECK_SIZE ? 'ok' : 'dark'}">${sel.length} / ${DECK_SIZE}</span>
-        <small>Chạm để chọn / bỏ · <i class="c">khắc chế</i> quái ải này · <i class="h">hợp thể</i> ra tướng Tím / Vàng bạn có</small><div class="sp"></div>
+        <small>Chạm để chọn / bỏ · <i class="c">khắc chế</i> quái bản đồ này · <i class="h">hợp thể</i> ra tướng Tím / Vàng bạn có</small><div class="sp"></div>
         <button class="btn metal" data-act="deck-suggest">Gợi ý</button><button class="btn btn-gold" data-act="deck-done" ${sel.length === DECK_SIZE ? '' : 'disabled'}>Xong</button></div>
       <div class="dk-grid">${els}</div></div></div>`;
   }
@@ -665,7 +673,7 @@ class UI {
     const legends = Object.keys(HEROES).filter((t) => HEROES[t].legend === 'legendary');
     const epics = Object.keys(HEROES).filter((t) => HEROES[t].legend === 'epic');
     $('#prep').innerHTML = `<div class="screen" style="z-index:auto">
-      <div class="scr-head metal"><h1 class="ttl">Chuẩn bị xuất quân</h1><span class="chip dark">${g.endless ? UIE.endless() + ' Vô tận' : 'Ải ' + (g.level + 1)} · ${LEVELS[g.level].name}</span><div class="sp"></div>
+      <div class="scr-head metal"><h1 class="ttl">Chuẩn bị xuất quân</h1><span class="chip dark">${UIE.endless()} Vô tận · ${LEVELS[g.level].name}</span><div class="sp"></div>
         <span class="chip kho">Ngân khố ${bac(1)} ${fmt(kho)}</span>
         <button class="btn btn-gold title" style="height:40px;padding:0 18px;font-size:17px" data-act="prep-go">Vào trận ▶</button></div>
       <div class="prep-body">
@@ -781,7 +789,7 @@ class UI {
       const k = PREP.losePerWave * Math.max(0, g.wave - 1);
       if (k && !g.over) { this.save.kho = (this.save.kho || 0) + k; writeSave(this.save); this.toast(`Ngân khố ${bac(1)} +${fmt(k)} (dừng ở đợt ${g.wave})`, '#E4ECF4'); }
     }
-    if (g.endless) { this.submitScores(false, 0); const sv = this.save; sv.bestEndless = sv.bestEndless || {}; sv.bestEndless[g.level] = Math.max(sv.bestEndless[g.level] || 0, g.wave); writeSave(sv); }
+    if (g.endless) { this.submitScores(); const sv = this.save; sv.bestEndless = sv.bestEndless || {}; sv.bestEndless[g.level] = Math.max(sv.bestEndless[g.level] || 0, g.wave); writeSave(sv); }
     g.running = false; g.over = true; g.started = false;
     if (COOP.on || g.co) { COOP.end(true); this.lobby = null; }
     else this.clearRun();
@@ -793,11 +801,12 @@ class UI {
   resumeRun() {
     const r = this.save.run;
     if (!r || !LEVELS[r.level]) { this.clearRun(); return this.showCampaign(this.save.last); }
-    try { this.game.restore(r); this.game.owned = new Set(this.save.owned || []); setRunes(this.save.heroRunes || {}); setLegacy(this.save.legacy || {}); } catch (e) { this.clearRun(); this.toast('Không nạp được màn đã lưu', '#E25A3A'); return this.showCampaign(this.save.last); }
+    // v166: trận Phó bản dở (bản lưu cũ) chơi tiếp thành vô tận
+    try { this.game.restore(r); this.game.endless = true; this.game.won = false; this.game.owned = new Set(this.save.owned || []); setRunes(this.save.heroRunes || {}); setLegacy(this.save.legacy || {}); } catch (e) { this.clearRun(); this.toast('Không nạp được màn đã lưu', '#E25A3A'); return this.showCampaign(this.save.last); }
     this.sel = -1; this.spot = -1; this.armed = null; this.raising = false; this.moving = -1; this.screen = null;
     $('#screen').hidden = true;
     this.hideOverlays(); this.setInGame(true);
-    this.toast(`Tiếp tục Ải ${r.level + 1} · ${LEVELS[r.level].name} — từ đợt ${r.wave + 1}`, '#F2D27A');
+    this.toast(`Tiếp tục vô tận · ${LEVELS[r.level].name} — từ đợt ${r.wave + 1}`, '#F2D27A');
     if (this.game.rest) { this.restWasRunning = false; this.restSel = null; this.showRest(); }
   }
 
@@ -813,23 +822,17 @@ class UI {
     if (u && !u.isAnonymous && u.displayName) return u.displayName;
     return 'Khách ' + (u ? u.uid.slice(0, 4).toUpperCase() : '');
   }
-  submitScores(win, stars) {
+  submitScores() {
     if (typeof CLOUD === 'undefined' || !CLOUD.ready) return;
     const g = this.game, name = this.playerName();
-    if (g.endless) {
-      // vô tận: điểm = đợt đã vượt; hoà thì ai còn nhiều mạng hơn
-      const wave = Math.max(0, g.wave - 1);
-      CLOUD.submitScore('endless', wave * 100 + Math.max(0, g.lives), { name, detail: `Đợt ${wave} · Ải ${g.level + 1}${g.hard ? ' · Khó' : ''}` });
-    } else if (win) {
-      // từng ải: Khó > sao > mạng còn > nhanh hơn
-      const sec = Math.round(g.time || 0);
-      const score = (g.hard ? 1e7 : 0) + stars * 1e6 + Math.max(0, g.lives) * 1e4 + Math.max(0, 9999 - sec);
-      CLOUD.submitScore('lv' + (g.level + 1), score, { name, detail: `${'★'.repeat(stars)} · ${g.lives} mạng · ${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}${g.hard ? ' · Khó' : ''}` });
-    }
+    if (!g.endless || g.co) return;
+    // vô tận: điểm = đợt đã vượt; hoà thì ai còn nhiều mạng hơn
+    const wave = Math.max(0, g.wave - 1);
+    CLOUD.submitScore('endless', wave * 100 + Math.max(0, g.lives), { name, detail: `Đợt ${wave} · ${LEVELS[g.level].name}${g.hard ? ' · Khó' : ''}` });
   }
   async showRanks(board) {
     this.ranksBoard = board;
-    const opts = [['endless', '♾ Vô tận'], ...LEVELS.map((l, i) => ['lv' + (i + 1), `Ải ${i + 1} · ${l.name}`])];
+    const opts = [['endless', '♾ Vô tận']];
     const head = `<div class="scr-head metal"><button class="xbtn metal" data-act="ro-back" aria-label="Quay lại">${ICON.back}</button><h1 class="ttl">Bảng xếp hạng</h1>
       <div class="cp-tabs">${opts.map(([k, n]) => `<button class="cp-tab ${k === board ? 'on' : ''}" data-act="rank-tab" data-k="${k}">${n}</button>`).join('')}</div><div class="sp"></div>
       <button class="btn metal" style="height:34px;padding:0 10px;font-size:13px;flex:none" data-act="rank-nick">✎ ${esc(this.playerName())}</button></div>`;
@@ -843,7 +846,7 @@ class UI {
     const me = CLOUD.user && CLOUD.user.uid;
     const medal = (i) => (i < 3 ? UIE.medal(i) : i + 1);
     const body = !rows ? `<div class="note" style="text-align:center;padding:20px">Không tải được bảng xếp hạng (${esc(CLOUD.error || 'mất mạng')}).</div>`
-      : !rows.length ? `<div class="note" style="text-align:center;padding:20px">Chưa có ai ghi tên. ${board === 'endless' ? 'Thắng một ải rồi chọn <b>Chơi vô tận</b> để lên bảng!' : 'Thắng ải này để lên bảng!'}</div>`
+      : !rows.length ? `<div class="note" style="text-align:center;padding:20px">Chưa có ai ghi tên. Chơi <b>Vô tận</b> ở bản đồ bất kỳ để lên bảng!</div>`
       : `<div class="rk-list">${rows.map((r, i) => `<div class="rk-row inset ${r.uid === me ? 'me' : ''}"><span class="rk-n">${medal(i)}</span><b class="rk-name">${esc(r.name || 'Khách')}${r.google ? '' : ' <small>(khách)</small>'}</b><span class="rk-d">${esc(r.detail || '')}</span></div>`).join('')}</div>`;
     $('#ranks .rk-body').innerHTML = body;
   }
@@ -884,77 +887,20 @@ class UI {
   }
 
 
-  // ---------- Mở đầu: Vua Hùng kén rể
-  showStory(level) {
-    this.storyStep = 0;
-    this.storyLevel = level;
-    this.hideOverlays();
-    $('#story').hidden = false;
-    this.renderStory();
-  }
-  renderStory() {
-    const st = this.storyStep;
-    const ch = chapterOf(this.storyLevel);
-    if (!ch.classic) {
-      const P = ch.panels;
-      $('#story').innerHTML = `<div class="screen" style="z-index:auto">
-        <div class="scr-head metal"><span class="ic">${svgI(sceneArt('drum'))}</span><h1 class="ttl">${ch.title}</h1>
-          <span class="chip dark">${ch.chip}</span><div class="sp"></div></div>
-        <div class="story-panels">${P.map((p, i) => `
-          <div class="st-card ${i <= st ? 'on' : ''} ${i === st && i === P.length - 1 ? 'cur' : ''}">
-            <div class="well">${svgI(storyScene(p))}<span class="num">${i + 1}</span></div>
-            <div class="cap inset">${p.cap}</div>
-          </div>`).join('')}</div>
-        <div class="story-foot metal">
-          <div class="dots">${P.map((_, i) => `<i class="${i === st ? 'on' : ''}"></i>`).join('')}</div>
-          <span class="cnt">${st + 1}/${P.length}</span>
-          <span class="lead">${P[st].lead}</span>
-          <button class="btn metal title" style="height:44px;font-size:18px;padding:0 20px" data-act="story-skip">Bỏ qua</button>
-          <button class="btn btn-gold" style="height:46px;font-family:var(--title);font-size:20px;padding:0 24px" data-act="story-next">${st < P.length - 1 ? 'Tiếp' : 'Vào trận'} ▸</button>
-        </div></div>`;
-      return;
-    }
-    const caps = [
-      '<b>Vua Hùng thứ 18</b> có con gái là công chúa <b>Mị Nương</b>, muốn kén cho nàng một người chồng xứng đáng.',
-      '<b>Sơn Tinh</b> và <span class="w">Thủy Tinh</span> cùng đến cầu hôn. Vua ra sính lễ: <b>voi chín ngà, gà chín cựa, ngựa chín hồng mao</b>.',
-      'Sơn Tinh mang lễ đến trước, rước <b>Mị Nương</b> về núi. <span class="w">Thủy Tinh</span> đến sau, nổi giận <span class="w">dâng nước</span> đánh Sơn Tinh.',
-    ];
-    const leads = ['Ngày xưa, ở đất Phong Châu…', 'Ai mang đủ lễ vật đến trước thì được rước dâu.', 'Từ đó, năm nào Thủy Tinh cũng dâng nước đánh Sơn Tinh. Hãy giữ lấy thành Phong Châu!'];
-    $('#story').innerHTML = `<div class="screen" style="z-index:auto">
-      <div class="scr-head metal"><span class="ic">${svgI(sceneArt('drum'))}</span><h1 class="ttl">Vua Hùng kén rể</h1>
-        <span class="chip dark">Truyền thuyết Sơn Tinh – Thủy Tinh</span><div class="sp"></div></div>
-      <div class="story-panels">${[0, 1, 2].map((i) => `
-        <div class="st-card ${i <= st ? 'on' : ''} ${i === st && i === 2 ? 'cur' : ''}">
-          <div class="well">${svgI(sceneArt('story' + (i + 1)))}<span class="num">${i + 1}</span></div>
-          <div class="cap inset">${caps[i]}</div>
-        </div>`).join('')}</div>
-      <div class="story-foot metal">
-        <div class="dots">${[0, 1, 2].map((i) => `<i class="${i === st ? 'on' : ''}"></i>`).join('')}</div>
-        <span class="cnt">${st + 1}/3</span>
-        <span class="lead">${leads[st]}</span>
-        <button class="btn metal title" style="height:44px;font-size:18px;padding:0 20px" data-act="story-skip">Bỏ qua</button>
-        <button class="btn btn-gold" style="height:46px;font-family:var(--title);font-size:20px;padding:0 24px" data-act="story-next">${st < 2 ? 'Tiếp' : 'Vào trận'} ▸</button>
-      </div></div>`;
-  }
-
-  // ---------- Bản đồ chiến dịch dọc sông Đà
-  // v99: chọn chế độ từ ngoài — Phó bản (chiến dịch theo ải) hoặc Vô tận (chọn bản đồ, chơi mãi)
+  // v99: chọn chế độ từ ngoài. v166: bỏ Phó bản — còn Vô tận (chơi đơn, chọn bản đồ) và Cùng Giữ Thành (chơi nhóm, cũng vô tận)
   showModes() {
     this.hideOverlays();
     this.setInGame(false);
-    const s = this.save, total = s.stars.reduce((a, b) => a + b, 0);
+    const s = this.save;
     const best = Math.max(0, ...Object.values(s.bestEndless || {}));
     $('#modes').innerHTML = `<div class="screen" style="z-index:auto">
       <div class="scr-head metal"><button class="xbtn metal" data-act="mode-close" aria-label="Quay lại">${ICON.back}</button><h1 class="ttl">Chọn chế độ</h1><div class="sp"></div></div>
       <div class="md-body">
-        <button class="md-card metal" data-act="mode-pick" data-k="camp" style="background-image:linear-gradient(90deg,#1A1008f0 35%,#1A100855),url('${assetSrc('maps/nen-thanh.jpg')}')"><span class="md-ic"><img src="${assetSrc('ui/ui-menu-1-1.png')}" alt="⚔"></span><b>Phó Bản</b>
-          <small>Chiến dịch theo chương truyền thuyết. Mỗi ải số đợt cố định, có boss, đạt 1–3 sao, thắng nhận Ngân khố.</small>
-          <span class="md-st">★ ${total} / ${LEVELS.length * 3} · đã mở ${s.unlocked}/${LEVELS.length} ải</span></button>
         <button class="md-card metal endl" data-act="mode-pick" data-k="endless" style="background-image:linear-gradient(90deg,#0A1A24f0 35%,#0A1A2455),url('${assetSrc('maps/nen-bien.jpg')}')"><span class="md-ic"><img src="${assetSrc('ui/ui-tran-1-3.png')}" alt="♾"></span><b>Vô Tận</b>
-          <small>Chọn một bản đồ đã mở, giữ thành mãi mãi. Quái mạnh dần, boss mỗi 10 đợt, đổi bộ quái liên tục. Đua bảng xếp hạng.</small>
+          <small>Chọn một trong ${LEVELS.length} bản đồ truyền thuyết, giữ thành mãi mãi. Quái mạnh dần, boss mỗi 10 đợt, mỗi mốc đợt và mỗi boss hạ được nhận Ngân khố. Đua bảng xếp hạng.</small>
           <span class="md-st">Kỷ lục: đợt ${best}</span></button>
         <button class="md-card metal coop ${COOP.visible ? '' : 'soon'}" ${COOP.visible ? 'data-act="mode-pick" data-k="coop"' : 'disabled aria-disabled="true"'} style="background-image:linear-gradient(90deg,#14240Ef0 35%,#14240E55),url('${assetSrc('maps/nen-thanh.jpg')}')"><span class="md-ic">🤝</span><b>Cùng Giữ Thành</b>
-          <small>Chơi nhóm 2 người: chung bản đồ, chung mạng, mỗi người giữ một nửa số ô và ví vàng riêng. Tạo phòng lấy mã 6 ký tự, bạn bè nhập mã để vào.</small>
+          <small>Vô tận cho 2 người: chung bản đồ, chung mạng, mỗi người giữ một nửa số ô và ví vàng riêng. Tạo phòng lấy mã 6 ký tự, bạn bè nhập mã để vào.</small>
           ${COOP.visible ? `<span class="md-st">${COOP.saved() ? `Đang có phòng ${COOP.saved()}` : 'Cần đăng nhập'}</span>` : '<span class="md-soon">Sắp ra mắt</span>'}</button>
       </div></div>`;
     $('#modes').hidden = false;
@@ -1013,13 +959,13 @@ class UI {
       const lv = r ? r.level || 0 : 0;
       const pl = [0, 1].map((k) => { const u = members[k];
         return `<div class="co-pl metal ${u ? '' : 'empty'}"><span class="co-dot" style="background:${k ? '#5AB4D6' : '#F2D27A'}"></span><b>${u ? esc((r.names || {})[u] || 'Người chơi') : 'Đang chờ…'}</b><small>${!u ? 'Gửi mã phòng cho bạn' : u === r.host ? 'Chủ phòng' : 'Khách'}${u === me ? ' · bạn' : ''}</small></div>`; }).join('');
-      const unlocked = Math.max(1, this.save.unlocked || 1);
-      const lvList = host ? `<div class="co-lv">${LEVELS.slice(0, unlocked).map((l, i) => `<button class="${i === lv ? 'btn-gold' : 'metal'}" data-act="coop-lv" data-i="${i}">${i + 1}. ${esc(l.name)}</button>`).join('')}</div>`
-        : `<div class="note">Chủ phòng chọn ải: <b>Ải ${lv + 1} · ${esc(LEVELS[lv].name)}</b></div>`;
+      const lvList = host ? `<div class="co-lv">${CHAPTERS.map((c) => LEVELS.slice(c.from, c.to + 1).map((l, k) => { const i = c.from + k;
+          return `<button class="${i === lv ? 'btn-gold' : 'metal'}" data-act="coop-lv" data-i="${i}" title="${esc(c.name)}">${esc(l.name)}</button>`; }).join('')).join('')}</div>`
+        : `<div class="note">Chủ phòng chọn bản đồ: <b>${esc(LEVELS[lv].name)}</b> · ${esc(chapterOf(lv).name)}</div>`;
       body = `<div class="co-box metal wide">
         <div class="co-code-big">Mã phòng <b>${esc(L.code)}</b></div>
         <div class="co-pls">${pl}</div>
-        <div class="hint-h">ẢI (PHÓ BẢN ĐÃ MỞ CỦA CHỦ PHÒNG)</div>${lvList}
+        <div class="hint-h">BẢN ĐỒ VÔ TẬN (CHỦ PHÒNG CHỌN)</div>${lvList}
         <div class="co-row">${host ? `<button class="btn btn-gold title" data-act="coop-start" ${members.length === 2 ? '' : 'disabled'}>⚔ Bắt đầu</button>` : '<span class="note">Chờ chủ phòng bấm Bắt đầu…</span>'}
           <button class="btn metal" data-act="coop-leave">Rời phòng</button></div>
         ${this.coopErr ? `<div class="login-err">${esc(this.coopErr)}${this.coopRetry ? ' <button class="btn metal co-retry" data-act="coop-retry">↻ Thử lại</button>' : ''}</div>` : ''}</div>`;
@@ -1103,7 +1049,7 @@ class UI {
     this.sig = {};
     this.coopDone = false;
     const co = g.co, mate = co.names[1 - COOP.me];
-    this.toast(rejoin ? `Đã vào lại trận cùng ${esc(mate)}` : `Cùng giữ thành với <b>${esc(mate)}</b> · Ải ${g.level + 1} · ${LEVELS[g.level].name}. Ô viền xanh là của đồng đội.`, '#9dffc4');
+    this.toast(rejoin ? `Đã vào lại trận cùng ${esc(mate)}` : `Cùng giữ thành với <b>${esc(mate)}</b> · Vô tận · ${LEVELS[g.level].name}. Ô viền xanh là của đồng đội.`, '#9dffc4');
   }
   // mỗi lệnh thực thi xong (cả hai máy): báo cho người chơi biết việc của đồng đội
   coopExec(c, r, mine) {
@@ -1199,8 +1145,9 @@ class UI {
     bar.innerHTML = `<span class="co-dot" style="background:#5AB4D6"></span><b>${esc(mate)}</b><span class="cg">${coin(1)} ${fmt(mg)}</span>${st ? `<small>${esc(st)}</small>` : ''}
       ${co.alone < 0 ? '<button class="metal" data-act="coop-gift" data-v="50">Gửi 50</button><button class="metal" data-act="coop-gift" data-v="200">Gửi 200</button>' : ''}`;
   }
+  // v166: màn chọn bản đồ VÔ TẬN (thay bản đồ chiến dịch): đủ 17 bản đồ chia theo chương truyền thuyết, mở hết
   showCampaign(sel) {
-    this.cpSel = Math.min(sel ?? this.save.last, this.save.unlocked - 1);
+    this.cpSel = Math.max(0, Math.min(LEVELS.length - 1, sel ?? this.save.last ?? 0));
     this.hideOverlays();
     this.setInGame(false);
     $('#campaign').hidden = false;
@@ -1212,44 +1159,37 @@ class UI {
     const lv = LEVELS[i];
     const ch = chapterOf(i);
     const n = ch.to - ch.from + 1;
-    // chương Sơn Tinh dùng bản đồ sông Đà vẽ sẵn; chương khác: các ải rải chéo trên nền truyện
+    const rec = s.bestEndless || {};
+    // chương Sơn Tinh dùng bản đồ sông Đà vẽ sẵn; chương khác: các bản đồ rải chéo trên nền truyện
     const NODES = ch.classic ? [[60, 330], [140, 286], [225, 246], [292, 182], [367, 200], [432, 140], [506, 102], [608, 62]]
       : Array.from({ length: n }, (_, k) => [110 + k * (420 / Math.max(1, n - 1)), k % 2 ? 150 : 270]);
-    const total = s.stars.reduce((a, b) => a + b, 0);
     const bosses = [...new Set(Object.values(lv.bosses))].map((b) => ENEMIES[b].name).join(', ');
-    const starsOf = (n) => '★'.repeat(n) + `<i>${'★'.repeat(3 - n)}</i>`;
-    const endl = this.cpMode === 'endless';
+    const diff = ['Dễ', 'Vừa', 'Khó', 'Rất khó'][i < 3 ? 0 : i < 8 ? 1 : i < 13 ? 2 : 3];
     $('#campaign').innerHTML = `<div class="screen" style="z-index:auto">
       <div class="scr-head metal"><button class="xbtn metal" data-act="cp-back" aria-label="Quay lại">${ICON.back}</button>
-        <h1 class="ttl">${endl ? 'Vô Tận' : 'Phó Bản'}</h1>
-        <div class="seg inset cp-mode"><button class="${endl ? '' : 'on'}" data-act="cp-mode" data-k="camp">${UIE.battle()} Phó bản</button><button class="${endl ? 'on' : ''}" data-act="cp-mode" data-k="endless">${UIE.endless()} Vô tận</button></div>
-        ${endl ? '' : `<span class="chip dark">★ ${total} / ${LEVELS.length * 3}</span>`}
-        <div class="cp-tabs">${CHAPTERS.map((c, ci) => { const open = c.from < s.unlocked;
-          return `<button class="cp-tab ${c === ch ? 'on' : ''} ${open ? '' : 'lock'}" data-act="cp-ch" data-i="${ci}" ${open ? '' : 'disabled'}>${open ? '' : ICON.lock}${ci + 1}. ${c.name}</button>`; }).join('')}</div>
+        <h1 class="ttl">${UIE.endless()} Vô Tận</h1>
+        <div class="cp-tabs">${CHAPTERS.map((c, ci) => `<button class="cp-tab ${c === ch ? 'on' : ''}" data-act="cp-ch" data-i="${ci}">${c.name}</button>`).join('')}</div>
         <div class="sp"></div></div>
       <div class="cp-body">
         <div class="cp-map"><div class="bgart">${ch.classic ? svgI(sceneArt('campaign')) : svgI(storyScene({ bg: ch.bg }))}<img class="cp-bgimg" src="${assetSrc(`scenes/chuong-${ch.id}.png`)}" alt="" onerror="this.remove()"></div>
           ${ch.classic ? '' : `<svg class="cp-trail" viewBox="0 0 640 382" preserveAspectRatio="none"><polyline points="${NODES.map(([x, y]) => `${x},${y}`).join(' ')}" fill="none" stroke="#F2D27A" stroke-width="4" stroke-dasharray="10 8" opacity="0.8"/></svg>`}
           ${NODES.map(([x, y], kk) => { const k = ch.from + kk;
-            const lock = k >= s.unlocked;
-            return `<button class="cp-node ${lock ? 'lock' : ''} ${k === i ? 'sel' : ''} ${x > 560 ? 'edge-r' : x < 80 ? 'edge-l' : ''}" style="left:${x / 640 * 100}%;top:${y / 382 * 100}%" data-act="cp-sel" data-i="${k}" ${lock ? 'disabled' : ''}>
-              <span class="stars">${lock ? '' : starsOf(s.stars[k])}</span>
-              <span class="c">${lock ? ICON.lock : k + 1}</span>
-              <span class="lb">${k + 1} · ${LEVELS[k].name}</span></button>`;
+            return `<button class="cp-node ${k === i ? 'sel' : ''} ${x > 560 ? 'edge-r' : x < 80 ? 'edge-l' : ''}" style="left:${x / 640 * 100}%;top:${y / 382 * 100}%" data-act="cp-sel" data-i="${k}">
+              <span class="stars">${rec[k] ? `♾ ${rec[k]}` : ''}</span>
+              <span class="c">${kk + 1}</span>
+              <span class="lb">${LEVELS[k].name}</span></button>`;
           }).join('')}
         </div>
         <div class="cp-side">
-          <div class="cp-scroll"><div class="hd"><span class="no">Ải ${i + 1}</span><span class="ttl">${lv.name}</span><span class="op">${s.stars[i] ? '★'.repeat(s.stars[i]) : 'Đang mở'}</span></div>
-          ${endl ? `<div class="sub">Vô tận · quái mạnh dần mãi · boss mỗi 10 đợt</div>
-          <div class="desc">Sau ${lv.waves} đợt, cứ 10 đợt đổi bộ quái mới. Hết mạng là thua; ghi điểm bảng xếp hạng.</div>
-          <div class="cp-rec">${UIE.endless()} Kỷ lục bản đồ này: <b>đợt ${(s.bestEndless || {})[i] || 0}</b></div>`
-          : `<div class="sub">${lv.waves} đợt · boss <b>${bosses}</b></div>
+          <div class="cp-scroll"><div class="hd"><span class="no">${UIE.endless()}</span><span class="ttl">${lv.name}</span><span class="op">${diff}</span></div>
+          <div class="sub">${esc(ch.chip || ch.name)}</div>
           <div class="desc">${lv.desc}</div>
-          <div class="cond inset"><div class="h">ĐIỀU KIỆN SAO</div>
-            ${STAR_RULES.map((r, k) => `<div class="${s.stars[i] > k ? 'got' : ''}"><span>${'★'.repeat(k + 1)}</span><span>${r}</span></div>`).join('')}</div>`}
+          <div class="sub">Quân <b>${esc(ROSTER_NAMES[lv.roster || 'thuy'] || '')}</b> · boss <b>${bosses}</b></div>
+          <div class="desc">Quái mạnh dần mãi, boss mỗi 10 đợt. Sau đợt ${lv.waves}, cứ 10 đợt đổi sang quân truyền thuyết khác. Mỗi 10 đợt và mỗi boss hạ được nhận Ngân khố ngay. Hết mạng là kết thúc, ghi điểm bảng xếp hạng.</div>
+          <div class="cp-rec">${UIE.endless()} Kỷ lục bản đồ này: <b>đợt ${rec[i] || 0}</b></div>
           ${this.counterHtml(i)}</div>
-          <div class="cp-act"><div class="cp-diff"><button class="${this.save.settings.hard ? 'metal' : 'btn-gold'}" data-act="diff" data-k="0">Thường</button><button class="${this.save.settings.hard ? 'on' : 'metal'}" data-act="diff" data-k="1" title="Máu quái ×${HARD.hp(i).toFixed(2)}">🔥 Khó${(s.hardStars || [])[i] ? ` <small>${'★'.repeat(s.hardStars[i])}</small>` : ` <small>×${HARD.hp(i).toFixed(2).replace('.', ',')}</small>`}</button></div>
-          <button class="go btn-gold" data-act="cp-go">${endl ? UIE.endless() + ' Vào vô tận' : UIE.battle() + ' Vào trận'}</button></div>
+          <div class="cp-act"><div class="cp-diff"><button class="${this.save.settings.hard ? 'metal' : 'btn-gold'}" data-act="diff" data-k="0">Thường</button><button class="${this.save.settings.hard ? 'on' : 'metal'}" data-act="diff" data-k="1" title="Máu quái ×${HARD.hp(i).toFixed(2)} · Ngân khố ×1,5">🔥 Khó <small>×${HARD.hp(i).toFixed(2).replace('.', ',')}</small></button></div>
+          <button class="go btn-gold" data-act="cp-go">${UIE.endless()} Vào vô tận</button></div>
         </div>
       </div></div>`;
   }
@@ -1268,7 +1208,7 @@ class UI {
     const inGame = this.settingsInGame;
     const tg = (k, name, desc) => `<div class="tg metal"><div><b>${name}</b><small>${desc}</small></div><button class="sw ${st[k] ? 'on' : ''}" style="margin-left:auto" data-act="set" data-k="${k}" aria-label="${name}"></button></div>`;
     $('#settings').innerHTML = `<div class="screen" style="z-index:auto">
-      <div class="scr-head metal"><h1 class="ttl">${inGame ? 'Tạm dừng' : 'Cài đặt'}</h1>${inGame ? `<span class="chip dark">Ải ${this.game.level + 1} · ${LEVELS[this.game.level].name} · Đợt ${this.game.wave}</span>` : ''}<div class="sp"></div>
+      <div class="scr-head metal"><h1 class="ttl">${inGame ? 'Tạm dừng' : 'Cài đặt'}</h1>${inGame ? `<span class="chip dark">${UIE.endless()} ${LEVELS[this.game.level].name} · Đợt ${this.game.wave}</span>` : ''}<div class="sp"></div>
         <button class="xbtn metal" data-act="set-close" aria-label="Đóng">${ICON.close}</button></div>
       <div class="set-list">
         ${inGame ? `<div style="display:flex;gap:10px">
@@ -1278,7 +1218,6 @@ class UI {
           <button class="btn metal title" style="flex:1;height:48px;font-size:16px" data-act="to-menu">Menu chính</button></div>` : ''}
         ${tg('dmgText', 'Hiện số sát thương', 'Số bay lên khi tướng đánh trúng quái')}
         ${tg('shake', 'Rung màn hình', 'Rung khi boss quẫy đuôi và khi tung chiêu tối thượng')}
-        ${tg('skipStory', 'Bỏ qua cốt truyện', 'Không hiện truyện mở đầu chương trước trận')}
         ${tg('aiArt', 'Dùng ảnh AI (thử nghiệm)', 'Tắt: toàn bộ hình do game tự vẽ. Bật: dùng ảnh tạo bằng AI trong thư mục assets/ (tải lại trang)')}
         ${tg('vectorHeroes', 'Tướng vẽ nét (thấy từng món đồ)', 'Tắt: dùng ảnh vẽ tay, đồ mặc đổi theo bậc trang phục. Bật: hình vẽ nét, mũ / giáp / vũ khí hiện riêng từng món')}
         <div class="tg metal"><div><b>Cỡ chữ & nút</b><small>Phóng to thanh trên, thanh tướng, nút và thông báo trong trận. Tự động: điện thoại to thêm 20%</small></div>
@@ -1288,7 +1227,7 @@ class UI {
         ${this.cloudRow()}
         <div class="tg metal"><div><b>Góp ý</b><small>Báo lỗi, gửi ý tưởng hay góp ý cân bằng cho đội làm game</small></div>
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
-        <div class="tg metal"><div><b>Xoá tiến trình</b><small>Xoá sao và các ải đã mở trên máy này</small></div>
+        <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
         <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 171 · ${typeof CLOUD !== 'undefined' && CLOUD.enabled ? 'Tiến trình lưu trên máy và đám mây' : 'Tiến trình lưu trên trình duyệt của bạn'}</div>
       </div></div>`;
@@ -1343,7 +1282,7 @@ class UI {
     const name = { menu: 'Menu', 'cai-dat': 'Cài đặt', 'tam-dung': 'Tạm dừng', tran: 'Trong trận' }[from] || from;
     if (!this.fbInRun()) return name;
     const lv = LEVELS[g.level];
-    return `${name} · ${g.endless ? 'Vô tận' : 'Ải'} ${g.level + 1}${lv ? ' ' + lv.name : ''} · Đợt ${g.wave}${g.over ? ' · đã kết thúc' : ''}`.slice(0, 120);
+    return `${name} · ${g.co ? 'Chơi nhóm' : 'Vô tận'}${lv ? ' · ' + lv.name : ''} · Đợt ${g.wave}${g.over ? ' · đã kết thúc' : ''}`.slice(0, 120);
   }
   fbInRun() { return !!(this.game.started && $('#menu').hidden); }
   // chụp màn hình trận: thu nhỏ ≤ 640px rộng, JPEG ~0.6, hạ chất lượng tới khi ≤ 150KB
@@ -1801,7 +1740,7 @@ class UI {
       if (have.size !== n0) { this.save.collected = [...have]; writeSave(this.save); }
     }
     if (!g.started) return;
-    const inGame = $('#menu').hidden && $('#campaign').hidden && $('#story').hidden && $('#roster').hidden && $('#runes').hidden && $('#treasury').hidden && $('#modes').hidden;
+    const inGame = $('#menu').hidden && $('#campaign').hidden && $('#roster').hidden && $('#runes').hidden && $('#treasury').hidden && $('#modes').hidden;
     if (!inGame) return;
     this.updateTopbar();
     this.updateCoopBar();
@@ -1857,9 +1796,9 @@ class UI {
       } else if (ev.type === 'checkpoint') {
         this.saveRun();
       } else if (ev.type === 'victory') {
-        this.finishLevel(true);
+        this.finishLevel();
       } else if (ev.type === 'defeat') {
-        this.finishLevel(false);
+        this.finishLevel();
       }
     }
   }
@@ -2288,7 +2227,7 @@ class UI {
         text = 'Mua thêm tướng: thẻ có nhãn “ghép” mua về là lên ★★';
       } else if (g.wave === 0 && !g.running) {
         pos = [800, 76];
-        text = `Bấm ▶ (góc trên phải) để ${themeOf(g.level, g.endless).foe} tràn tới`;
+        text = `Bấm ▶ (góc trên phải) để ${themeOf(g.level).foe} tràn tới`;
       } else if (false) {
         pos = [560, 250];
         text = 'Nước sắp dâng! Bấm Mọc Núi (góc dưới phải) rồi chạm ô nhấp nháy';
@@ -2667,93 +2606,71 @@ class UI {
     b.kills = g.stats.kills; b.gold = g.stats.goldEarned; b.herbs = g.stats.herbs || 0;
     this.banked = b;
     writeSave(s);
-    if (g.endless && g.wave > g.levelWaves) this.submitScores(false, 0);   // rời trận vô tận giữa chừng vẫn ghi điểm
+    if (g.endless && g.wave > g.levelWaves) this.submitScores();   // rời trận vô tận giữa chừng vẫn ghi điểm
   }
 
-  finishLevel(win) {
+  // v166: chỉ còn Vô tận (đơn / nhóm) — trận kết thúc khi hết mạng (không còn thắng ải)
+  finishLevel() {
     const g = this.game;
     const s = this.save;
     const lv = g.level;
-    const coop = !!g.co;      // v141: chơi nhóm — chỉ nhận Ngân khố + Tu Vi như Phó bản (không tính sao / mở ải / xếp hạng)
-    let stars = 0;
-    if (win && coop) stars = g.stars();
-    else if (win) {
-      stars = g.stars();
-      s.stars[lv] = Math.max(s.stars[lv], stars);
-      if (g.hard) { s.hardStars = s.hardStars || LEVELS.map(() => 0); s.hardStars[lv] = Math.max(s.hardStars[lv] || 0, stars); }
-      s.unlocked = Math.max(s.unlocked, Math.min(LEVELS.length, lv + 2));
-    }
-    if (!coop) s.best[lv] = Math.max(s.best[lv] || 0, g.wave);
-    if (g.endless) { s.bestEndless = s.bestEndless || {}; s.bestEndless[lv] = Math.max(s.bestEndless[lv] || 0, g.wave); }
-    // v66: Ngân khố
-    const khoGain = win ? Math.round((PREP.winBase + PREP.winPerLevel * (lv + 1) + PREP.winPerStar * stars) * (g.hard ? 1.5 : 1))
-      : PREP.losePerWave * Math.max(0, g.wave - 1);
-    // v103: thắng trận đầu tiên trong ngày (Phó bản) thưởng thêm
+    const coop = !!g.co;      // v141: chơi nhóm — nhận Ngân khố + Tu Vi như vô tận (không ghi kỷ lục / xếp hạng)
+    s.bestEndless = s.bestEndless || {};
+    const prevBest = s.bestEndless[lv] || 0;
+    if (!coop) s.bestEndless[lv] = Math.max(prevBest, g.wave);
+    const newBest = !coop && g.wave > prevBest;
+    // Ngân khố cuối trận theo số đợt đã qua (mốc 10 đợt / boss đã cộng giữa trận — g.khoRun)
+    const khoGain = Math.round(PREP.endWave * Math.max(0, g.wave - 1) * (g.hard ? 1.5 : 1));
+    // v103 → v166: trận đầu tiên trong ngày giữ được từ đợt PREP.dailyWave trở lên thưởng thêm
     const today = new Date().toISOString().slice(0, 10);
-    const daily = win && s.dailyWin !== today ? PREP.dailyWin : 0;
+    const daily = g.wave > PREP.dailyWave && s.dailyWin !== today ? PREP.dailyWin : 0;
     if (daily) s.dailyWin = today;
     s.kho = (s.kho || 0) + khoGain + daily;
-    const tv = this.bankTuvi(win ? 1 : TUVI_LOSE);
-    if (!coop) { this.submitScores(win, stars); this.clearRun(); }
+    // Tu Vi đủ 100% khi đã qua đợt boss đầu (dưới đó 60% như bỏ trận)
+    const fullTv = g.wave > PREP.dailyWave;
+    const tv = this.bankTuvi(fullTv ? 1 : TUVI_LOSE);
+    if (!coop) { this.submitScores(); this.clearRun(); }
     this.bankStats();
     const mate = coop ? g.co.names[1 - COOP.me] : '';
     if (coop) { COOP.end(false); this.coopDone = true; this.coopSaid = false; }
     this.closeScreen();
     $('#reward').hidden = true;
-    const rows = `<div><span>⚑ Đợt</span><b>${g.wave}/${g.levelWaves}</b></div>
-      <div><span>${ic('mang')}Mạng còn</span><b style="color:#FF8A6A">${g.lives}/${CONFIG.startLives}</b></div>
+    const rows = `<div><span>⚑ Đợt</span><b>${g.wave}</b></div>
       <div><span>✕ Quái đã hạ</span><b>${fmt(g.stats.kills)}</b></div>
       <div><span>${coin()} Vàng kiếm trong trận</span><b style="color:#FFD66B">+${fmt(g.stats.goldEarned)}</b></div>
-      <div><span>${coin()} Đầu trận ${fmt(CONFIG.startGold)} + kiếm ${fmt(g.stats.goldEarned)}${g.stats.goldRefund ? ` + hủy tướng ${fmt(g.stats.goldRefund)}` : ''} − đã tiêu ${fmt(Math.max(0, CONFIG.startGold + g.stats.goldEarned + (g.stats.goldRefund || 0) - g.gold))}</span><b style="color:#FFD66B">= ${fmt(g.gold)}</b></div>
       <div><span>Tướng trên sân</span><b>${g.heroes.filter(Boolean).length}</b></div>
-      <div><span>${ic('bac')}Ngân khố nhận (mua đồ / tướng trước trận)</span><b style="color:#E4ECF4">${bac(1)} +${fmt(khoGain + daily)} → ${fmt(s.kho)}</b></div>
-      ${daily ? `<div><span>☀ Thắng trận đầu trong ngày</span><b style="color:#FFE08A">${bac(1)} +${fmt(daily)}</b></div>` : ''}
-      ${g.khoRun ? `<div><span>${UIE.endless()} Đã nhận giữa trận (mốc đợt / boss)</span><b style="color:#E4ECF4">${bac(1)} +${fmt(g.khoRun)}</b></div>` : ''}
-      ${tv.rows.length ? `<div><span>${ic('tu-vi')}Tu Vi${win ? '' : ' (60%)'}</span><b style="color:#C8A0F0">${tv.rows.join(' · ')}</b></div>` : ''}
+      ${g.khoRun ? `<div><span>${UIE.endless()} Ngân khố giữa trận (mốc đợt / boss)</span><b style="color:#E4ECF4">${bac(1)} +${fmt(g.khoRun)}</b></div>` : ''}
+      <div><span>${ic('bac')}Ngân khố cuối trận (${PREP.endWave} mỗi đợt${g.hard ? ' · Khó ×1,5' : ''})</span><b style="color:#E4ECF4">${bac(1)} +${fmt(khoGain + daily)} → ${fmt(s.kho)}</b></div>
+      ${daily ? `<div><span>☀ Trận đầu trong ngày qua đợt ${PREP.dailyWave}</span><b style="color:#FFE08A">${bac(1)} +${fmt(daily)}</b></div>` : ''}
+      ${tv.rows.length ? `<div><span>${ic('tu-vi')}Tu Vi${fullTv ? '' : ' (60% · chưa qua đợt ' + PREP.dailyWave + ')'}</span><b style="color:#C8A0F0">${tv.rows.join(' · ')}</b></div>` : ''}
       ${tv.up.map((u) => `<div><span></span><b style="color:#FFD66B">${u}</b></div>`).join('')}`;
-    const name = `${coop ? '🤝 ' : g.endless ? '♾ Vô tận · ' : ''}${g.endless && !coop ? '' : 'Ải ' + (lv + 1) + ' · '}${LEVELS[lv].name}${coop ? ` · cùng ${esc(mate)}` : ''}`;
-    // v163: chữ, tranh, màu theo chương (trước gắn cứng Sơn Tinh – Thủy Tinh: "Phong Châu thất thủ / Nước ngập thành")
-    const th = themeOf(lv, g.endless);
+    const name = `${coop ? '🤝 Cùng giữ thành · ' : UIE.endless() + ' Vô tận · '}${LEVELS[lv].name}${coop ? ` · cùng ${esc(mate)}` : ''}`;
+    // v163: chữ, tranh, màu theo chương (trước gắn cứng Sơn Tinh – Thủy Tinh). v166: mọi trận là vô tận → dùng chủ đề chương của bản đồ
+    const th = themeOf(lv);
     const art = (w) => { const u = resultImg(th.id, w); return u ? `<img src="${u}" alt="">` : th.id === 'sontinh' ? sceneArt(w ? 'win' : 'lose') : resultScene(lv, w); };
     const R = rosterOfLevel(lv);
-    const air = !g.endless && R && R.air && ENEMIES[R.air], champ = R && R.champ && ENEMIES[R.champ];
+    const air = R && R.air && ENEMIES[R.air], champ = R && R.champ && ENEMIES[R.champ];
     const tip2 = air ? `Đặt tướng <b>đánh xa</b> cho đợt <b style="color:${th.hi}">${air.name}</b> (quái bay).`
-      : champ && !g.endless ? `Dồn sát thương chặn <b style="color:${th.hi}">${champ.name}</b> ở các đợt quái khỏe (5, 15, 25…).`
+      : champ ? `Dồn sát thương chặn <b style="color:${th.hi}">${champ.name}</b> ở các đợt quái khỏe (5, 15, 25…).`
         : 'Mỗi 10 đợt quân địch đổi sang chương khác: mang cả tướng <b>đánh xa</b> (quái bay) lẫn tướng <b>vật lý</b> (quái kháng phép).';
-    const endBest = g.endless ? Math.max(g.wave, (s.bestEndless || {})[lv] || 0) : 0;
-    const html = win ? `<div class="screen" style="z-index:auto">
-      <div class="scr-head metal"><h1 class="ttl">${name}</h1><span class="chip ok">${UIE.done()} ${th.keep}</span><div class="sp"></div></div>
-      <div class="res-body" style="--ch-e:${th.edge};--ch-a:${th.bar[1]};--ch-t:${th.hi}">
-        <div class="res-art">${svgI(art(true))}<span class="tg2">${th.winTag.toUpperCase()}</span></div>
-        <div class="res-main">
-          <div class="res-title win">Chiến thắng!</div>
-          <div class="res-stars">${'★'.repeat(stars)}<i>${'★'.repeat(3 - stars)}</i></div>
-          <div class="res-grid"><div class="res-table inset">${rows}</div>
-            <div class="res-tips"><div class="h" style="color:#D9B25A">ĐIỀU KIỆN SAO</div>
-              ${STAR_RULES.map((r, k) => `<div class="t"><i style="border-color:${stars > k ? '#3EDC4E' : '#5C4620'};color:${stars > k ? '#6AE06A' : '#7A705C'}">${k + 1}</i><span>${r}</span></div>`).join('')}</div></div>
-          <div class="res-btns">
-            ${coop ? '<button class="btn-gold" data-act="restart">🤝 Chơi nhóm tiếp</button><button class="metal" style="color:#F2D27A" data-act="to-menu">Menu chính</button>' : `
-            ${lv + 1 < LEVELS.length ? '<button class="btn-gold" data-act="next-level">Ải tiếp theo ›</button>' : '<button class="btn-gold" data-act="endless">♾ Chơi vô tận ›</button>'}
-            ${lv + 1 < LEVELS.length ? '<button class="metal" style="color:#F2D27A" data-act="endless">Chơi vô tận</button>' : ''}
-            <button class="metal" style="color:#F2D27A" data-act="restart">${UIE.redo()} Chơi lại</button>
-            <button class="metal" style="color:#F2D27A" data-act="to-map">Bản đồ</button>`}</div>
-        </div></div></div>`
-      : `<div class="screen" style="z-index:auto">
+    const endBest = Math.max(g.wave, s.bestEndless[lv] || 0);
+    const html = `<div class="screen" style="z-index:auto">
       <div class="scr-head metal" style="border-color:#C8401E"><h1 class="ttl">${name}</h1><span class="chip run">${th.lost}</span><div class="sp"></div></div>
       <div class="res-body" style="--ch-e:${th.edge};--ch-a:${th.bar[1]};--ch-t:${th.hi}">
         <div class="res-art" style="border-color:${th.edge}" data-ch="${th.id}">${svgI(art(false))}<span class="tg2" style="border-color:${th.bar[1]};color:${th.hi}">${th.loseTag.toUpperCase()}</span></div>
         <div class="res-main">
-          <div class="res-title lose${th.loseTitle.length > 18 ? ' long' : ''}">${th.id === 'sontinh' && !g.endless ? ic('nuoc-dang') : `<span class="res-ic">${th.ic}</span> `}${th.loseTitle}</div>
-          <div style="display:flex;gap:12px;align-items:center"><div class="inset" style="padding:8px 16px;border-radius:6px;font-size:15px;white-space:nowrap">${g.endless ? 'Trụ được' : 'Dừng ở đợt'} <b style="font-family:var(--title);font-size:34px;color:${th.hi}">${g.wave}</b><span style="font-family:var(--title);font-size:20px;color:${th.hi}">${g.endless ? ' đợt' : '/' + g.levelWaves}</span></div>
-            <div style="flex:1"><div class="inset" style="height:12px;border-radius:4px;overflow:hidden"><i style="display:block;height:100%;width:${Math.min(1, g.wave / (g.endless ? endBest || 1 : g.levelWaves)) * 100}%;background:linear-gradient(90deg,${th.bar[0]},${th.bar[1]})"></i></div>
-            <div class="note" style="margin-top:4px">${coop ? 'Chơi nhóm' : g.endless ? `Kỷ lục vô tận ải này: đợt ${endBest}` : `Kỷ lục ải này: đợt ${s.best[lv]}`}</div></div></div>
+          <div class="res-title lose${th.loseTitle.length > 18 ? ' long' : ''}">${th.id === 'sontinh' ? ic('nuoc-dang') : `<span class="res-ic">${th.ic}</span> `}${th.loseTitle}</div>
+          <div style="display:flex;gap:12px;align-items:center"><div class="inset" style="padding:8px 16px;border-radius:6px;font-size:15px;white-space:nowrap">Giữ được tới đợt <b style="font-family:var(--title);font-size:34px;color:${th.hi}">${g.wave}</b></div>
+            <div style="flex:1">${newBest ? '<div class="chip ok" style="display:inline-block">★ Kỷ lục mới!</div>' : `<div class="inset" style="height:12px;border-radius:4px;overflow:hidden"><i style="display:block;height:100%;width:${Math.min(1, g.wave / (endBest || 1)) * 100}%;background:linear-gradient(90deg,${th.bar[0]},${th.bar[1]})"></i></div>`}
+            <div class="note" style="margin-top:4px">${coop ? 'Chơi nhóm' : `Kỷ lục bản đồ này: đợt ${s.bestEndless[lv]}`}</div></div></div>
+          <div class="res-table inset">${rows}</div>
           <div class="res-tips"><div class="h">${UIE.tip()} MẸO LẦN SAU</div>
             <div class="t"><i>1</i><span><b>Ghép</b> 2 tướng cùng loại cùng sao và <b>hợp thể</b> đúng cặp để có tướng thần mạnh hơn hẳn.</span></div>
             <div class="t"><i>2</i><span>${tip2}</span></div>
-            <div class="t"><i>3</i><span>Nâng cấp tướng bằng <b>vàng</b> giữa các đợt; mở khóa W, E, R trong Cây kỹ năng.</span></div></div>
+            <div class="t"><i>3</i><span>Mỗi bản đồ có quân riêng: xem <b>Tướng khắc chế</b> ở màn chọn bản đồ trước khi vào trận.</span></div></div>
           <div class="res-btns">
             <button class="btn-gold" data-act="restart">${coop ? '🤝 Chơi nhóm tiếp' : UIE.redo() + ' Chơi lại'}</button>
-            <button class="metal" style="color:#F2D27A" data-act="to-map">Bản đồ</button>
+            <button class="metal" style="color:#F2D27A" data-act="to-map">${coop ? 'Phòng' : 'Bản đồ'}</button>
             <button class="metal" style="color:#F2D27A" data-act="to-menu">Menu chính</button></div>
         </div></div></div>`;
     $('#result').innerHTML = html;
@@ -2777,7 +2694,7 @@ class UI {
   }
   action(d) {
     const g = this.game;
-    if (['reward', 'next-level', 'endless', 'restart', 'to-map', 'to-menu'].includes(d.act)
+    if (['reward', 'restart', 'to-map', 'to-menu'].includes(d.act)
       && (!$('#result').hidden || !$('#reward').hidden) && performance.now() < (this.guardUntil || 0)) return;
     const sc = this.screen;
     const h = g.heroes[this.sel];
@@ -2788,25 +2705,13 @@ class UI {
     if (d.act.startsWith('coop-')) { this.coopAct(d); return; }
     if (d.act.startsWith('chat-')) { this.chatAct(d); return; }
     switch (d.act) {
-      // ----- menu, truyện, chiến dịch, cài đặt
-      case 'story-next': {
-        const ch = chapterOf(this.storyLevel);
-        const n = ch.classic ? 3 : ch.panels.length;
-        if (this.storyStep < n - 1) { this.storyStep++; this.renderStory(); break; }
-      }
-      // falls through: hết truyện → vào trận
-      case 'story-skip': {
-        const ch = chapterOf(this.storyLevel);
-        if (ch.classic) this.save.storySeen = true; else { this.save.chSeen = this.save.chSeen || {}; this.save.chSeen[ch.id] = true; }
-        writeSave(this.save); this.startLevel(this.storyLevel); break;
-      }
+      // ----- menu, chọn bản đồ, cài đặt
       case 'cp-back': this.showMenu(); break;
       case 'cp-sel': this.cpSel = +d.i; this.renderCampaign(); break;
-      case 'cp-ch': { const c = CHAPTERS[+d.i]; this.cpSel = Math.min(c.to, Math.max(c.from, this.save.unlocked - 1)); this.renderCampaign(); break; }
+      case 'cp-ch': { const c = CHAPTERS[+d.i]; this.cpSel = c.from; this.renderCampaign(); break; }
       case 'diff': this.save.settings.hard = d.k === '1'; writeSave(this.save); this.renderCampaign(); break;
-      case 'cp-go': this.save.last = this.cpSel; this.playLevel(this.cpSel, this.cpMode === 'endless'); break;
-      case 'cp-mode': this.cpMode = d.k; this.renderCampaign(); break;
-      case 'mode-pick': $('#modes').hidden = true; if (d.k === 'coop') { this.showCoop(); break; } this.cpMode = d.k; this.showCampaign(this.save.last); break;
+      case 'cp-go': this.save.last = this.cpSel; this.playLevel(this.cpSel); break;
+      case 'mode-pick': $('#modes').hidden = true; if (d.k === 'coop') { this.showCoop(); break; } this.showCampaign(this.save.last); break;
       case 'mode-close': $('#modes').hidden = true; this.showMenu(); break;
       case 'set':
         this.save.settings[d.k] = !this.save.settings[d.k];
@@ -2916,10 +2821,10 @@ class UI {
       case 'wipe':
         if (!this.wipeArmed) { this.wipeArmed = true; this.renderSettings(); break; }
         this.save = loadSave();
-        this.save.stars = LEVELS.map(() => 0); this.save.unlocked = 1; this.save.last = 0; this.save.best = {}; this.save.storySeen = false;
+        this.save.last = 0; this.save.best = {}; this.save.bestEndless = {};
         writeSave(this.save);
         this.wipeArmed = false;
-        this.toast('Đã xoá tiến trình', '#E25A3A');
+        this.toast('Đã xoá kỷ lục', '#E25A3A');
         this.renderSettings();
         break;
       case 'restart': if (this.coopDone) { this.coopDone = false; this.showCoop(); break; } this.startLevel(g.level); break;
@@ -2992,15 +2897,6 @@ class UI {
       }
       case 'ro-runes': this.runesFromRoster = true; this.showRunes(this.rosterInGame, d.type); break;
       case 'ro-temple': location.href = 'den-anh-hung.html'; break;
-      case 'next-level': this.save.last = Math.min(LEVELS.length - 1, g.level + 1); writeSave(this.save); this.showCampaign(this.save.last); break;
-      case 'endless':
-        if (this.coopDone) break;
-        g.endless = true;
-        g.running = true;
-        $('#result').hidden = true;
-        this.saveRun();
-        this.toast('♾ Vô tận: quái mạnh dần, boss mỗi 10 đợt, quân địch đổi chương mỗi 10 đợt', '#F2D27A');   // v163: trước "Năm nào cũng dâng nước" (chỉ hợp Sơn Tinh)
-        break;
       case 'reward': this.pickReward(+d.i); break;
       case 'summon': this.pickSummon(d.type); break;
       case 'mk-reroll': C('rerollMarket', [], (r) => { if (typeof r === 'string') this.toast(r, '#E25A3A'); this.sig.deck = null; }); break;
@@ -3862,15 +3758,15 @@ class UI {
     const seg = `<div class="seg inset"><button class="${sc.tab === 'enemy' ? 'on' : ''}" data-act="tab" data-tab="enemy">Quái</button><button class="${isBoss ? 'on' : ''}" data-act="tab" data-tab="boss">Boss</button><button class="${sc.tab === 'secret' ? 'on' : ''}" data-act="tab" data-tab="secret">Bí truyền</button></div>`;
     let body;
     if (sc.tab === 'secret') return this.render_secrets(seg);
-    // v53: chọn chương truyện → quái / boss của các ải trong chương đó
+    // v53: chọn chương truyện → quái / boss của các bản đồ trong chương đó
     const lvNow = g.started ? g.level : this.save.last;
     if (sc.ch == null) sc.ch = Math.max(0, CHAPTERS.findIndex((c) => lvNow >= c.from && lvNow <= c.to));
     const chap = CHAPTERS[sc.ch] || CHAPTERS[0];
     const chLv = [];
     for (let i = chap.from; i <= chap.to && i < LEVELS.length; i++) chLv.push(i);
     const chTabs = `<div class="cp-tabs bk-ch">${CHAPTERS.map((c, ci) => `<button class="cp-tab ${ci === sc.ch ? 'on' : ''}" data-act="bk-ch" data-i="${ci}">${ci + 1}. ${c.name}</button>`).join('')}</div>`;
-    const where = (id) => {   // ải + đợt đầu tiên boss xuất hiện trong chương
-      for (const i of chLv) { const w = Object.keys(LEVELS[i].bosses || {}).map(Number).sort((a, b) => a - b).find((n) => LEVELS[i].bosses[n] === id); if (w) return `Ải ${i + 1} · Đợt ${w}`; }
+    const where = (id) => {   // bản đồ + đợt đầu tiên boss xuất hiện trong chương
+      for (const i of chLv) { const w = Object.keys(LEVELS[i].bosses || {}).map(Number).sort((a, b) => a - b).find((n) => LEVELS[i].bosses[n] === id); if (w) return `${LEVELS[i].name} · Đợt ${w}`; }
       return '';
     };
     if (!isBoss) {
@@ -3937,7 +3833,7 @@ class UI {
     }
     return `${this.head('Bách khoa quái thú', this.runChip(), seg, '<svg viewBox="0 0 24 24" width="26" height="26"><rect x="4" y="3" width="16" height="18" rx="2" fill="none" stroke="#F2D27A" stroke-width="1.8"/><circle cx="12" cy="10" r="3" fill="none" stroke="#F2D27A" stroke-width="1.6"/></svg>')}
       <div class="scr-body bk-body" style="padding-bottom:6px">${body}</div>
-      <div class="sched metal" style="margin:0 10px 10px"><div class="hd"><span class="ttl">Lịch ${N} đợt · Ải ${lv + 1}</span>
+      <div class="sched metal" style="margin:0 10px 10px"><div class="hd"><span class="ttl">Lịch ${N} đợt đầu · ${LEVELS[lv].name}</span>
         <div class="lg"><span><i style="background:#8A2A12;border:1px solid #C8401E"></i>Boss</span><span><i style="background:#3A4A5A;border:1px solid #5A7088"></i>Bay</span><span><i style="background:#5A4E30;border:1px solid #8C7A5A"></i>${(() => { const R = rosterOfLevel(lv); return R && ENEMIES[R.champ] ? ENEMIES[R.champ].name : 'Quái khỏe'; })()}</span><span><i style="border:2px solid #FFD66B"></i>Đợt hiện tại</span></div></div>
         <div class="cells">${cells.join('')}</div></div>`;
   }
