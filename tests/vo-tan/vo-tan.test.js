@@ -68,7 +68,7 @@ const txt = (page, sel) => page.evaluate((s) => document.querySelector(s).innerT
   // ---- trận ở bản đồ 3 (Rừng Lim): mốc đợt 10 + boss → Ngân khố giữa trận; hết mạng → màn kết quả theo bản đồ
   await page.evaluate(() => { ui.playLevel(2); document.querySelector('[data-act=prep-go]').click(); });
   const k0 = await page.evaluate(() => ui.save.kho || 0);
-  await page.evaluate(() => { game.running = true; for (let w = 1; w <= 12; w++) { game.wave = w; game.waveActive = true; game.spawnQueue = []; game.enemies = []; game.waveComplete(); if (game.rest) game.skipRest(); } });
+  await page.evaluate(() => { game.running = true; for (let w = 1; w <= 12; w++) { game.wave = w; game.waveActive = true; game.spawnQueue = []; game.enemies = []; game.waveComplete(); } });
   await page.waitForTimeout(300);
   const k1 = await page.evaluate(() => ({ kho: ui.save.kho, run: game.khoRun }));
   ok(k1.kho - k0 === 150 && k1.run === 150, `mốc đợt 10: +150 Ngân khố giữa trận (${k0} → ${k1.kho})`);

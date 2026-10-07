@@ -9,15 +9,17 @@ const SHOTS = path.join(__dirname, 'shots');
 fs.mkdirSync(SHOTS, { recursive: true });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const SIZES = [[1920, 934], [844, 390], [667, 375]];
-const MA = 'lactuong,xathu,thosan,thaymo,lucsi,kinhduong,kybinh,echme,anvuong';
+const MA = 'lactuong,chantrau,thosan,thaymo,lucsi,kinhduong,kybinh,tom,anvuong';   // mã không nằm trong CD_SKIP (trang thử bỏ mã chờ gen lại)
 
-async function open(browser, w, h, q = '') {
+// bat: ép bật công tắc ảnh mới (CD_BAT trong js/tu-cu-dong.js đang tắt chờ đủ 90 ảnh) — mặc định bật để thử hệ tự cử động
+async function open(browser, w, h, q = '', bat = true) {
   const ctx = await browser.newContext({ viewport: { width: w, height: h } });
   const page = await ctx.newPage();
   page.errors = [];
   page.on('pageerror', (e) => page.errors.push(String(e)));
   page.on('console', (m) => { if (m.type() === 'error' && !/Failed to load resource|net::|favicon|firebase|gstatic/i.test(m.text())) page.errors.push(m.text()); });
   await page.route('**/firebase-config.js*', (r) => r.fulfill({ contentType: 'application/javascript', body: "const FIREBASE_CONFIG={apiKey:''};" }));
+  if (bat) await page.addInitScript(() => { window.CD_BAT_EP = true; });
   await page.addInitScript(() => { if (!sessionStorage.getItem('seeded')) { localStorage.setItem('nuicao.v1', JSON.stringify({ unlocked: 5, storySeen: true, settings: { skipStory: true } })); sessionStorage.setItem('seeded', '1'); } });
   await page.goto('file://' + path.join(ROOT, 'index.html') + q);
   await page.waitForTimeout(1200);
@@ -238,7 +240,40 @@ s.save(out+'-khung.png')
     await page.close();
   }
   const tool = fs.readFileSync(path.join(ROOT, 'tools/xem-cu-dong.html'), 'utf8');
-  ok(/index\.html\?xem-cu-dong/.test(tool), 'tools/xem-cu-dong.html mở được trang thử');
+  ok(/index\.html\?anhmoi=1&amp;xem-cu-dong/.test(tool), 'tools/xem-cu-dong.html mở được trang thử (kèm ?anhmoi=1 bật tạm ảnh mới)');
+
+  // ---------- 0. công tắc CD_BAT tắt (mặc định): không dùng ảnh mới nào, mọi nhân vật vẽ hình cũ
+  console.log('Công tắc tắt:');
+  {
+    const src = fs.readFileSync(path.join(ROOT, 'js/tu-cu-dong.js'), 'utf8');
+    ok(/^const CD_BAT = false;/m.test(src), 'js/tu-cu-dong.js: const CD_BAT = false (chờ đủ 90 ảnh mới)');
+    const page = await open(browser, 844, 390, '', false);
+    const r = await page.evaluate(async () => {
+      const ma = [...Object.keys(HEROES), ...Object.keys(ENEMIES)];
+      const coAnh = ma.filter((k) => hasAsset(k + '.png'));
+      const solo = ma.filter((k) => cdSoloImg(k, !HEROES[k]));
+      const im = new Image(); im.src = 'assets/lactuong.png'; await im.decode();
+      return { bat: cdBat(), coAnh: coAnh.length, solo, rig: cdBuildRig(cdPrepare(im), null) };
+    });
+    ok(!r.bat && r.coAnh >= 80 && r.solo.length === 0, `tắt: ${r.coAnh} mã có ảnh mới nhưng không mã nào dùng ảnh đơn (${r.solo.join(' ')})`);
+    ok(r.rig === null, 'tắt: cdBuildRig trả null');
+    // trang thử không có ?anhmoi=1 cũng tắt; ?anhmoi=1 bật tạm (không lưu)
+    for (const [q, mong] of [['?xem-cu-dong&ma=lactuong,kybinh', 0], ['?anhmoi=1&xem-cu-dong&ma=lactuong,kybinh', 2]]) {
+      const pg = await open(browser, 844, 390, q, false);
+      await pg.waitForFunction(() => window.XEM, null, { timeout: 15000 });
+      const t = await pg.evaluate(() => ({ n: XEM.cells.length, bat: cdBat(), luu: JSON.stringify(localStorage).includes('anhmoi') }));
+      ok(t.n === mong && t.bat === (mong > 0) && !t.luu, `${q}: ${t.n} nhân vật, ảnh mới ${t.bat ? 'bật tạm' : 'tắt'}, không lưu`);
+      await pg.close();
+    }
+    await enter(page);
+    await page.evaluate(() => { const g = ui.game; g.gold = 99999; for (let i = 0; i < 8; i++) g.summonRandom(); g.running = true; g.speed = 3; g.startWave(); });
+    await sleep(3000);
+    const st = await page.evaluate(() => ({ ...CD.stats, seen: [...CD.seen] }));
+    ok(st.hero === 0 && st.enemy === 0 && st.seen.length === 0, `tắt: trong trận không vẽ ảnh đơn nào (${st.hero} tướng, ${st.enemy} quái)`);
+    ok(page.errors.length === 0, 'tắt: không lỗi trang ' + page.errors.join(' | '));
+    await page.screenshot({ path: path.join(SHOTS, 'tat-tran-844x390.jpg'), quality: 80 });
+    await page.close();
+  }
 
   // ---------- 6. chơi thật ?solo=1: tướng + quái vẽ bằng ảnh đơn, đo FPS so với bộ nhiều khung
   console.log('Trong trận:');

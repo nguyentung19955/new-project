@@ -5,28 +5,40 @@
 //  nên không bao giờ gãy vũ khí / lộ lỗ. Bộ nhiều khung đã có (packs/<mã>/wind · strike · walk2 · attack…)
 //  vẫn ưu tiên như cũ. Ép dùng ảnh đơn để thử: ?solo=1 hoặc CD.force = true (tools/xem-cu-dong.html).
 // ------------------------------------------------------------
+// ==== CÔNG TẮC ẢNH MỚI (một dòng duy nhất) ====
+// false = TẮT: không dùng ảnh dựng xương mới (assets/<mã>.png), chân dung mới, rig tay — mọi tướng / quái / boss / linh thú
+//   vẽ đúng hình cũ như trước khi có hệ tự cử động (bộ nhiều khung · ảnh cũ · vector), ở trận, Chợ, Anh Hùng, Bách khoa, hợp thể…
+// true  = BẬT lại hệ tự cử động + ảnh mới → đổi thành true khi đã đủ 90 ảnh mới.
+// Mọi chỗ dùng ảnh mới phải hỏi cdBat() (hoặc cdSoloImg / cdBuildRig vốn đã hỏi) — nhánh khác gộp vào cứ dựa vào cùng công tắc này.
+const CD_BAT = false;
+// bật TẠM để thử khi công tắc đang tắt (không lưu, không có nút cho người chơi): ?anhmoi=1 trên URL · test: window.CD_BAT_EP = true (page.addInitScript)
+// tắt thì cả trang thử ?xem-cu-dong / ?solo=1 cũng không dùng ảnh mới — thêm &anhmoi=1
+const CD_ON = CD_BAT || (() => { try { return !!window.CD_BAT_EP || /[?&]anhmoi=1\b/.test(location.search); } catch (e) { return false; } })();
+const cdBat = () => CD_ON;
 const CD = { force: false, stats: { hero: 0, enemy: 0 }, seen: new Set() };   // seen: mã đã vẽ bằng ảnh đơn (test)
 try { if (/[?&]solo=1\b/.test(location.search)) CD.force = true; } catch (e) { /* không có location */ }
 
-// loại vũ khí theo docs/PROMPT-DUNG-XUONG.txt (dòng "Loại vũ khí") — chọn vệt chém / đạn / quả cầu
+// loại vũ khí trong game — theo vũ khí nhân vật cầm trong ẢNH dựng xương (nhánh vu-khi-theo-anh: game sửa theo ảnh;
+// mã còn để vũ khí cũ trong khi ảnh khác = chờ gen lại, docs/PROMPT-GEN-LAI.txt) — chọn vệt chém / đạn / quả cầu
 const CD_WEAPON = {
-  lactuong: 'riu', lucsi: 'tay-khong', xathu: 'cung', thosan: 'kiem', thaymo: 'gay-phep', thansuong: 'tay-khong', giaodong: 'giao',
-  chuongdong: 'gay-phep', tre: 'giao', ongthoi: 'no', dapde: 'giao', chantrau: 'no', chodo: 'giao', haisen: 'gay-phep', dotnuong: 'kiem',
+  lactuong: 'riu', lucsi: 'tay-khong', xathu: 'cung', thosan: 'cung', thaymo: 'gay-phep', thansuong: 'tay-khong', giaodong: 'giao',
+  chuongdong: 'phep', tre: 'giao', ongthoi: 'no', dapde: 'giao', chantrau: 'gay', chodo: 'giao', haisen: 'phep', dotnuong: 'kiem',
   denroi: 'gay-phep', thoren: 'riu', nguphu: 'giao', thogom: 'tay-khong', thaylang: 'gay-phep', thachsanh: 'riu', caolo: 'no',
   antiem: 'tay-khong', cdt: 'gay-phep', tiendung: 'gay-phep', langlieu: 'gay-phep', nghedong: 'tay-khong', mychau: 'tay-khong',
-  sodua: 'tay-khong', ongdung: 'giao', thocong: 'gay-phep', lyngu: 'giao', truongchi: 'gay-phep', potaoapui: 'kiem', baahoa: 'tay-khong',
-  trongdong: 'gay-phep', caong: 'tay-khong', ongtao: 'gay-phep', lachau: 'giao', thansan: 'giao', giong: 'giao', llq: 'kiem',
-  kimquy: 'tay-khong', auco: 'gay-phep', kylan: 'tay-khong', thienloi: 'riu', cuoi: 'riu', melua: 'gay-phep', tanvien: 'gay-phep',
-  maudia: 'gay-phep', halong: 'tay-khong', longnu: 'tay-khong', kinhduong: 'kiem', viemde: 'gay-phep', matroi: 'gay-phep',
+  sodua: 'tay-khong', ongdung: 'giao', thocong: 'gay-phep', lyngu: 'giao', truongchi: 'gay-phep', potaoapui: 'kiem', baahoa: 'phep',
+  trongdong: 'gay-phep', caong: 'tay-khong', ongtao: 'gay-phep', lachau: 'giao', thansan: 'dao', giong: 'giao', llq: 'giao',
+  kimquy: 'tay-khong', auco: 'gay-phep', kylan: 'tay-khong', thienloi: 'riu', cuoi: 'gay', melua: 'phep', tanvien: 'giao',
+  maudia: 'gay-phep', halong: 'tay-khong', longnu: 'tay-khong', kinhduong: 'dao', viemde: 'gay-phep', matroi: 'gay-phep',
   mauthoai: 'gay-phep', trutroi: 'giao', ongho: 'tay-khong', adv: 'no', mau: 'gay-phep',
   // quái / boss
-  camap: 'tay-khong', cao: 'tay-khong', cua: 'tay-khong', kybinh: 'giao', voichien: 'tay-khong', tom: 'giao', casau: 'tay-khong',
+  camap: 'tay-khong', cao: 'tay-khong', cua: 'tay-khong', kybinh: 'tay-khong', voichien: 'tay-khong', tom: 'tay-khong', casau: 'tay-khong',
   rua: 'tay-khong', phuthuy: 'gay-phep', chimbao: 'tay-khong', echme: 'tay-khong', nongnoc: 'tay-khong', giaolong: 'tay-khong',
-  yeutinh: 'riu', ran: 'tay-khong', doi: 'tay-khong', thachtinh: 'tay-khong', dacon: 'tay-khong', linhan: 'giao', cungan: 'cung',
-  muc: 'tay-khong', anvuong: 'giao', chantinh: 'riu', haba: 'giao', ngutinh: 'tay-khong', thuongluong: 'tay-khong', thuytinh: 'giao',
-  trieuda: 'kiem', daibang: 'tay-khong', hotinh: 'gay-phep',
+  yeutinh: 'tay-khong', ran: 'tay-khong', doi: 'tay-khong', thachtinh: 'tay-khong', dacon: 'tay-khong', linhan: 'giao', cungan: 'cung',
+  muc: 'tay-khong', anvuong: 'giao', chantinh: 'riu', haba: 'giao', ngutinh: 'dinh-ba', thuongluong: 'giao', thuytinh: 'giao',
+  trieuda: 'kich', daibang: 'giao', hotinh: 'gay-phep',
 };
-const CD_KIND = { kiem: 'slash', riu: 'chop', giao: 'thrust', cung: 'shot', no: 'shot', 'gay-phep': 'orb', 'tay-khong': 'punch' };
+const CD_KIND = { kiem: 'slash', dao: 'slash', riu: 'chop', gay: 'chop', kich: 'chop', giao: 'thrust', 'dinh-ba': 'thrust', cung: 'shot', no: 'shot',
+  'gay-phep': 'orb', phep: 'orb', 'tay-khong': 'punch' };
 function cdWeapon(type, attack) {
   const rg = typeof RIGS !== 'undefined' && RIGS[type];   // rig ghi rõ kiểu đánh theo vũ khí trong ẢNH (ảnh khác vũ khí game)
   if (rg && rg.kind && rg.kind !== 'none') return rg.kind;
@@ -35,11 +47,16 @@ function cdWeapon(type, attack) {
   return attack === 'arrow' ? 'shot' : attack === 'melee' ? 'slash' : attack ? 'orb' : 'punch';
 }
 
-// ảnh dựng xương VẼ SAI (sai loài / vũ khí rời / lệch phong cách) — chờ gen lại; mã trong đây giữ nguyên cách hiển thị cũ của game
+// ảnh dựng xương VẼ SAI — chờ gen lại (docs/PROMPT-GEN-LAI.txt, bảng đủ 90 mã: docs/xem-truoc-cu-dong/README.md);
+// mã trong đây giữ nguyên cách hiển thị cũ của game (bộ ảnh packs/) — tools/build-prompt-gen-lai.js kiểm tra danh sách này khớp bảng gen lại
 const CD_SKIP = new Set([
-  'rua', 'phuthuy', 'chimbao', 'nongnoc', 'ran', 'thachtinh', 'dacon', 'linhan', 'cungan', 'voichien', 'camap', 'cua', 'cao',   // quái sai loài (thành rồng con / người có sừng)
-  'hotinh', 'chantinh',                                                                                                        // boss sai loài
-  'nguphu', 'tre', 'dotnuong',                                                                                                 // tướng: tiên cá · vũ khí rời · kiểu 3D bóng
+  // sai loài: quái thành rồng con / người có sừng, linh thú thành người mặc đồ thú
+  'rua', 'phuthuy', 'chimbao', 'nongnoc', 'ran', 'thachtinh', 'dacon', 'cungan', 'voichien', 'camap', 'cua', 'cao', 'casau', 'doi', 'echme',
+  'hotinh', 'chantinh', 'thuongluong', 'daibang', 'nguphu', 'kimquy', 'nghedong', 'kylan', 'halong', 'caong', 'ongho',
+  // vật cầm không hợp nhân vật (kiếm / giáo trong tay dân thường, nghề nghiệp, thần linh hiền), vũ khí rời / thiếu, lệch phong cách
+  'linhan', 'tre', 'dotnuong', 'xathu', 'adv', 'caolo', 'thoren', 'thienloi', 'thachsanh', 'potaoapui', 'cdt',
+  'thansuong', 'antiem', 'auco', 'tiendung', 'langlieu', 'mychau', 'sodua', 'dapde', 'ongdung', 'thocong', 'maudia', 'chodo', 'truongchi',
+  'longnu', 'viemde', 'ongtao', 'matroi', 'mauthoai', 'trutroi', 'mau',
 ]);
 // ---- chọn ảnh đơn
 const cdMultiCache = new Map();
@@ -54,7 +71,7 @@ function cdHasMulti(type, enemy) {
 }
 // ảnh đơn của một mã (null = dùng đường vẽ cũ: bộ nhiều khung / ảnh cũ / vector)
 function cdSoloImg(type, enemy) {
-  if (CD_SKIP.has(type)) return null;
+  if (!cdBat() || CD_SKIP.has(type)) return null;   // công tắc tắt → hình cũ
   // ảnh dựng xương <mã>.png ở gốc assets/ là ảnh mới vẽ theo docs/PROMPT-DUNG-XUONG.txt → dùng thay bộ cũ;
   // chỉ có packs/<mã>/idle.png thì bộ nhiều khung (nếu có) vẫn ưu tiên
   // bộ nhiều khung thật (PACK_FRAMES / FRAME_ANIMS, tools/cat-sheet.py) vẫn ưu tiên nhất
@@ -430,6 +447,7 @@ function cdFarthest(mask, W, H, pv) {
 }
 // dựng rig từ ảnh đã cắt (p = cdPrepare) + rig chỉnh tay (toạ độ 0..1 theo ẢNH GỐC: hip, pivot, tip, poly, noArm)
 function cdBuildRig(p, man) {
+  if (!cdBat()) return null;   // công tắc tắt → không dựng rig ảnh mới
   const c = p.c, W = c.width, H = c.height, g = p.geo;
   const src = c.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, W, H), A = src.data;
   const auto = cdAutoRig(A, W, H, p.fx * W);

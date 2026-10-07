@@ -73,29 +73,37 @@ const toastHits = (page) => page.evaluate(() => {
     const tag = `${w}x${h}`;
     console.log(`\n== ${tag}`);
 
-    // ---------- T2 + T3: boss là quái cuối bị hạ → Sính lễ trước, Nghỉ chân sau; thông báo không đè bảng
+    // ---------- T2 + T3: boss là quái cuối bị hạ → Sính lễ trước, bảng khác sau; thông báo không đè bảng
     {
       const page = await open(browser, w, h);
       await enter(page); await sleep(300); await bossWave(page); await sleep(1500);
       await page.evaluate(() => { const g = ui.game; g.enemies.filter((e) => !e.def.boss).forEach((e) => { e.dead = true; }); const b = g.enemies.find((e) => e.def.boss); g.kill(b, null); b.dead = true; });
       await sleep(500);
-      const s1 = await page.evaluate(() => ({ reward: !$('#reward').hidden, rest: !$('#rest').hidden }));
-      ok(s1.reward && !s1.rest, `T2 hạ boss cuối: mở Sính lễ, Nghỉ chân chưa mở (${JSON.stringify(s1)})`);
+      ok(await page.evaluate(() => !$('#reward').hidden), 'T2 hạ boss cuối: mở Sính lễ');
       const hit = await toastHits(page);
       ok(hit.length === 0, `T3 Sính lễ: thông báo không đè nút / tiêu đề / chip (${hit.join(' | ') || 'không'})`);
       await page.screenshot({ path: path.join(SHOT, `T2-sinh-le-${tag}.png`) });
       await sleep(1000);
       await page.evaluate(() => document.querySelector('#reward [data-act=reward]').click()); await sleep(400);
-      const s2 = await page.evaluate(() => ({ reward: !$('#reward').hidden, rest: !$('#rest').hidden }));
-      ok(!s2.reward && s2.rest, `T2 chọn thưởng xong mới mở Nghỉ chân (${JSON.stringify(s2)})`);
-      const hit2 = await toastHits(page);
-      ok(hit2.length === 0, `T3 Nghỉ chân: thông báo không đè nút (${hit2.join(' | ') || 'không'})`);
-      await page.screenshot({ path: path.join(SHOT, `T2-nghi-chan-${tag}.png`) });
-      // Sính lễ đến khi Nghỉ chân đang mở → Sính lễ lên trước, Nghỉ chân mở lại sau
-      await page.evaluate(() => { const g = ui.game; ui.showReward({ options: g.bossRewards('thuongluong'), id: 2, boss: 'thuongluong' }); });
-      await sleep(200);
-      const s3 = await page.evaluate(() => ({ reward: !$('#reward').hidden, rest: !$('#rest').hidden }));
-      ok(s3.reward && !s3.rest, `T2 Sính lễ đến khi Nghỉ chân đang mở: Sính lễ lên trước (${JSON.stringify(s3)})`);
+      ok(await page.evaluate(() => $('#reward').hidden), 'T2 chọn thưởng xong thì đóng Sính lễ');
+      ok(page.errors.length === 0, 'không lỗi JS ' + page.errors.join(' | '));
+      await page.context().close();
+    }
+    // ---------- T2: boss ĐỢT CUỐI (phó bản) là con cuối bị hạ → Sính lễ trước, bảng kết quả sau (không đóng mất Sính lễ)
+    {
+      const page = await open(browser, w, h);
+      await enter(page); await sleep(300);
+      await page.evaluate(() => { const g = ui.game; g.endless = false; g.levelWaves = 10; });
+      await bossWave(page); await sleep(1500);
+      await page.evaluate(() => { const g = ui.game; g.enemies.filter((e) => !e.def.boss).forEach((e) => { e.dead = true; }); const b = g.enemies.find((e) => e.def.boss); g.kill(b, null); b.dead = true; });
+      await sleep(500);
+      const s1 = await page.evaluate(() => ({ reward: !$('#reward').hidden, result: !$('#result').hidden }));
+      ok(s1.reward && !s1.result, `T2 thắng ở boss đợt cuối: Sính lễ hiện trước, chưa ra bảng kết quả (${JSON.stringify(s1)})`);
+      await sleep(1000);
+      await page.evaluate(() => document.querySelector('#reward [data-act=reward]').click()); await sleep(500);
+      const s2 = await page.evaluate(() => ({ reward: !$('#reward').hidden, result: !$('#result').hidden }));
+      ok(!s2.reward && s2.result, `T2 chọn thưởng xong mới ra bảng kết quả (${JSON.stringify(s2)})`);
+      await page.screenshot({ path: path.join(SHOT, `T2-ket-qua-${tag}.png`) });
       ok(page.errors.length === 0, 'không lỗi JS ' + page.errors.join(' | '));
       await page.context().close();
     }
