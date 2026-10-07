@@ -314,6 +314,7 @@ function heroStats(h) {
   if (h.warT > 0) s.haste += 20;                           // Trống Đồng gõ đầu đợt
   if (s.hid['i.moc2'] && (h.still || 0) >= 10) s.bonusDmgPct += 15;
   if (s.hid['i.thuy1'] && b.thuyAdj) s.bonusDmgPct += 10;   // đứng kề tướng hành Thủy
+  if (b.vt) for (const k in b.vt) s[k] += b.vt[k];        // v182: cộng hưởng vai trò
   s.bonusDmgPct += (b.sinh || 0) * ELEM.sinh + (b.full ? ELEM.full : 0) + (b.drum || 0) - (b.llqPen ? 10 : 0);
   s.airMult += s.airPct / 100;
   if (s.hitAir) s.canAir = true;
@@ -2478,11 +2479,16 @@ class Game {
     const full = els.size >= 5;
     if (full && !this.fullEl) this.notify('Ngũ hành tề tựu! Toàn quân +10% sát thương', '#FFD66B');
     this.fullEl = full;
+    // v182: cộng hưởng vai trò (2 / 4 tướng khác loại cùng vai trò chính)
+    const tiers = typeof roleTiers === 'function' ? roleTiers(roleCounts(alive)) : {};
+    for (const r in tiers) if (tiers[r] > ((this.vtTiers || {})[r] || 0)) this.notify(`Cộng hưởng ${ROLES[r].name} ${tiers[r] * 2}: ${ROLE_SYN[r].t[tiers[r] - 1]}`, ROLES[r].color);
+    this.vtTiers = tiers;
     const airWave = this.waveActive && waveKind(this.wave, this.level) === 'air';
     for (const h of alive) {
       const el = HEROES[h.type].el;
       h.buff.sinh = Math.min(ELEM.sinhMax, alive.filter((o) => near(h, o, ELEM.adj) && EL_SINH[HEROES[o.type].el] === el).length);
       h.buff.full = full;
+      h.buff.vt = typeof roleSynStats === 'function' ? roleSynStats(h.type, tiers) : null;
       h.buff.tamGioi = els.size >= 3;
       h.buff.airWave = airWave;
       const own = owns.get(h);

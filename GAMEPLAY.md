@@ -1718,3 +1718,34 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 181 — Gộp sửa thẻ chợ + bỏ lọc Hợp thể + nút ẩn giao diện
 
 - Gộp sua-the-cho (icon hệ không còn bị phóng to lòi ra sau avatar; bỏ thanh lọc bảng Hợp thể) và an-giao-dien (bỏ bong bóng Hủy trên tướng; nút ẩn giao diện, phím H).
+
+## Phiên bản 182 — Vai trò tướng + cộng hưởng vai trò
+
+- Góp ý người chơi: muốn mỗi tướng có **vai trò** rõ để xây đội hình (buff, choáng, giết boss, đánh lan, phép, dame…), song song với ngũ hành.
+- **7 vai trò** (`js/roles.js`, file mới để dễ gộp): ⚔ **Sát thương** (vật lý đều tay, đánh nhanh) · ✺ **Đánh lan** (chém lan / nổ vùng) · ✦ **Pháp sư** (sát thương phép, mạnh kỹ năng) · ◎ **Diệt boss** (dồn sát thương một mục tiêu máu cao / boss) · ⛓ **Khống chế** (choáng, trói, làm chậm, đẩy lùi) · ✚ **Hỗ trợ** (hồi máu, khiên, tăng tốc / sát thương đồng đội) · 🛡 **Đỡ đòn** (máu trâu, giảm sát thương nhận, che chắn). Mỗi tướng 1 vai chính + tối đa 1 vai phụ, xếp theo kỹ năng thật.
+- **Cộng hưởng** (nhỏ, tương đương "Ngũ hành tề tựu" +10%): đủ **2 / 4 tướng khác loại** cùng vai trò **chính** trên sân → tướng mang vai trò đó (chính hoặc phụ) nhận buff; Hỗ trợ buff toàn quân. Tướng trùng loại không tính thêm. Bật bậc mới có thông báo.
+
+  | Vai trò | 2 tướng | 4 tướng |
+  |---|---|---|
+  | Sát thương | +8% tốc đánh | +20% tốc đánh |
+  | Đánh lan | +6% sát thương | +15% sát thương |
+  | Pháp sư | +8% sức mạnh kỹ năng, +8% xuyên kháng phép | +18% / +18% |
+  | Diệt boss | +12% sát thương lên boss | +30% sát thương lên boss |
+  | Khống chế | −6% hồi chiêu | −15% hồi chiêu |
+  | Hỗ trợ | toàn quân +1,5 hồi máu/giây | toàn quân +3 hồi máu/giây, +5% sát thương |
+  | Đỡ đòn | −8% sát thương nhận | −18% sát thương nhận |
+
+- **Bảng tướng → vai trò** (chính / phụ):
+
+  | Bậc | Tướng → vai trò |
+  |---|---|
+  | Thường | Lạc Tướng: Đánh lan / Khống chế · Lực Sĩ Núi: Đỡ đòn / Diệt boss · Xạ Thủ: Sát thương / Đánh lan · Thợ Săn Rừng: Diệt boss / Sát thương · Thầy Mo Lửa: Pháp sư / Đánh lan · Thần Sương Núi: Khống chế / Pháp sư · Thợ Rèn: Sát thương / Đỡ đòn · Ngư Phủ: Khống chế / Sát thương · Thợ Gốm: Đánh lan / Khống chế · Thầy Lang: Hỗ trợ · Chàng Đốt Nương: Sát thương / Đánh lan · Cô Thả Đèn Trời: Pháp sư / Đánh lan · Chàng Chèo Đò: Đánh lan / Đỡ đòn · Cô Hái Sen: Hỗ trợ / Khống chế · Người Đắp Đê: Đỡ đòn / Khống chế · Trẻ Chăn Trâu: Khống chế / Hỗ trợ · Dũng Sĩ Giáo Đồng: Diệt boss / Sát thương · Thầy Chuông Đồng: Khống chế / Pháp sư · Dũng Sĩ Tre Làng: Sát thương / Đánh lan · Thợ Săn Ống Thổi: Sát thương / Diệt boss |
+  | Sử thi | Thạch Sanh: Diệt boss / Khống chế · Lạc Hầu: Đỡ đòn / Hỗ trợ · Thần Săn Ba Vì: Diệt boss / Sát thương · Cao Lỗ: Diệt boss / Sát thương · Mai An Tiêm: Đánh lan / Khống chế · Tiên Dung: Hỗ trợ / Khống chế · Lang Liêu: Hỗ trợ · Chử Đồng Tử: Hỗ trợ / Khống chế · Thần Trống Đồng: Hỗ trợ / Khống chế · Thần Cá Ông: Đỡ đòn / Hỗ trợ · Ông Táo: Sát thương / Diệt boss · Vua Lửa Pơtao Apui: Diệt boss / Đánh lan · Bà Hỏa: Pháp sư / Đánh lan · Lý Ngư Tướng Quân: Diệt boss / Sát thương · Trương Chi: Khống chế / Pháp sư · Ông Đùng: Đỡ đòn / Khống chế · Thổ Công: Hỗ trợ / Đỡ đòn · Nghê Đồng: Đỡ đòn / Đánh lan · Mỵ Châu: Pháp sư / Hỗ trợ · Sọ Dừa: Pháp sư / Đánh lan |
+  | Huyền thoại | Thánh Gióng: Đánh lan / Đỡ đòn · Lạc Long Quân: Sát thương / Khống chế · Kim Quy: Đỡ đòn / Hỗ trợ · An Dương Vương: Sát thương / Hỗ trợ · Âu Cơ: Hỗ trợ / Khống chế · Mẫu Thượng Ngàn: Khống chế / Hỗ trợ · Nữ Thần Mặt Trời: Pháp sư / Đánh lan · Mẫu Thoải: Khống chế / Hỗ trợ · Thần Trụ Trời: Đỡ đòn / Khống chế · Chúa Sơn Lâm: Sát thương / Khống chế · Kinh Dương Vương: Hỗ trợ / Sát thương · Viêm Đế: Pháp sư / Hỗ trợ · Rồng Mẹ Hạ Long: Đỡ đòn / Đánh lan · Long Nữ: Pháp sư / Khống chế · Sơn Tinh: Khống chế / Đỡ đòn · Mẫu Địa: Hỗ trợ / Khống chế · Kỳ Lân Vàng: Sát thương / Hỗ trợ · Thiên Lôi: Pháp sư / Diệt boss · Chú Cuội: Đánh lan / Hỗ trợ · Mẹ Lúa: Hỗ trợ / Khống chế |
+
+  Tổng vai chính: Sát thương 10 · Đánh lan 6 · Pháp sư 9 · Diệt boss 7 · Khống chế 8 · Hỗ trợ 11 · Đỡ đòn 9. Tướng Thường phủ đủ 7 vai (đội 6 tướng mặc định là 6 vai khác nhau → không cộng hưởng; muốn cộng hưởng phải chọn đội theo vai).
+- **Chỉnh kỹ năng:** Dũng Sĩ Giáo Đồng (vai Diệt boss) — Thế Giáo nay thêm **+10…30% sát thương lên boss** (trước chỉ chí mạng).
+- **Hiển thị:** icon vai trò ở góc trái thẻ chợ (dưới icon hệ; tên vai trò trong tooltip / nhãn đọc màn hình) · thanh tướng đang chọn ghi "icon Vai trò · Hành …" · bảng chỉ số (giữ chân dung) có nhãn vai chính/phụ, số tướng cùng vai trên sân (x/2, x/4) và cộng hưởng đang hưởng · Anh Hùng: icon vai trò góc phải mỗi thẻ, nhãn vai trò ở chi tiết, **hàng lọc** Tất cả + 7 vai (vai chính trước, vai phụ mờ sau) · Bách khoa có tab mới **Vai trò**: 7 cột (mô tả, cộng hưởng 2/4, tướng theo vai), lọc 1 vai thì hiện thêm tướng vai phụ.
+- **Mô phỏng trước/sau** (lực chiến đội 6 tướng cấp 10 ★★, `heroPower`): đội 4 Sát thương + 2 Hỗ trợ +7% lực chiến (+10% DPS); 4 Khống chế + 2 Đánh lan +1,3%; 2 Đỡ đòn + 2 Diệt boss + 2 Pháp sư +1,5% (+6,9% DPS lên boss); đội mặc định 0%. Bot tự chơi ải 4 (đợt 1–15, 8–20 lần mỗi bên): đội Sát thương thua 7/8 → 2/8; đội Khống chế 1/8 → 1/8; đội Đỡ/Boss/Phép 4/20 → 8–9/20 (lực chiến chỉ +1,5%, chênh lệch do mô phỏng hỗn loạn — bật riêng Đỡ đòn hay Diệt boss cho kết quả y hệt khi tắt). Kết luận: buff nhỏ, ngang "Ngũ hành tề tựu", không phá cân bằng.
+- **Gộp nhánh:** dữ liệu + hàm ở `js/roles.js` (nạp sau `data.js`); `game.js` chỉ thêm 4 dòng (`updateAuras` tính `vtTiers`, `heroStats` cộng `buff.vt`); `ROLE_SYN.on = false` để tắt cộng hưởng. Chợ (cho-bot-ngau-nhien), hợp thể, mở khoá tướng không bị đụng logic — chỉ thêm `<span class="rl">` trong thẻ chợ.
+- Test: `tests/vai-tro/vai-tro.test.js` (dữ liệu, cộng hưởng 2/4, trùng loại, tắt/bật; icon thẻ chợ / bảng chỉ số / Anh Hùng / Bách khoa; lọc; chụp 1920×934, 844×390, 667×375 vào `tests/vai-tro/shots/`).

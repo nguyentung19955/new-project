@@ -1976,3 +1976,43 @@ img.eli { position: static !important; inset: auto !important; transform: none !
 #btn-showui[hidden] { display: none; }
 #btn-showui:hover, #btn-showui:focus-visible, #btn-showui:active { opacity: 1; }
 #btn-showui svg { width: 20px; height: 20px; }
+/* v182: vai trò tướng */
+svg.rli { flex: none; display: inline-block; vertical-align: middle; position: static; transform: none; margin: 0; }
+.mk-card .rl { position: absolute; left: 2.5px; top: 18px; z-index: 1; width: 14px; height: 14px; line-height: 0; pointer-events: none; }
+html.sk-the-cho .mk-card .rl { z-index: 2; }
+.rl-chip { display: inline-flex; align-items: center; gap: 3px; padding: 1px 7px 1px 2px; border-radius: 10px; border: 1px solid var(--rc); background: #140F0Ad8; color: var(--rc); font-size: 11.5px; font-weight: 800; line-height: 16px; white-space: nowrap; }
+.rl-chip.sub { opacity: .78; border-style: dashed; font-weight: 700; }
+.rl-tags { margin-top: 4px; display: flex; gap: 5px; flex-wrap: wrap; }
+.ro-card .tag.rl { left: auto; right: 3px; padding: 0; border-radius: 50%; background: none; line-height: 0; z-index: 2; }
+.ro-card .tag.rl.sub { opacity: .6; }
+.rl-filter { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+.ro-grid > .rl-filter { grid-column: 1 / -1; position: sticky; top: 0; z-index: 3; padding: 2px 0 4px; background: #1B120Bf0; }
+.rl-f { display: inline-flex; align-items: center; gap: 3px; height: 24px; padding: 0 7px 0 4px; border-radius: 12px; border: 1px solid #6A5230; background: #1A120B; color: #E8D8B0; font-size: 11px; font-weight: 800; white-space: nowrap; cursor: pointer; }
+.rl-f:first-child { padding: 0 9px; }
+.rl-f.on { border-color: var(--rc, #FFD66B); background: #3A2814; color: var(--rc, #FFD66B); box-shadow: 0 0 6px var(--rc, #FFD66B); }
+.hs-vt { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; margin: 2px 0 4px; }
+.hs-vt small { color: #C8BFA8; font-size: 10.5px; font-weight: 700; }
+.hs-syn { width: 100%; display: flex; flex-wrap: wrap; gap: 2px 8px; font-size: 10.5px; font-weight: 800; }
+.hs-syn span { display: inline-flex; align-items: center; gap: 2px; }
+#deck .dk-info .sub svg.rli { margin-right: 2px; }
+.vt-top { display: flex; flex-direction: column; gap: 4px; align-items: stretch !important; }
+.vt-top .note { font-size: 11.5px; }
+.vt-body { display: grid !important; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 8px; overflow-y: auto; align-items: start; }
+.vt-body.one { grid-template-columns: 1fr; }
+.vt-col { border-radius: 6px; padding: 6px; display: flex; flex-direction: column; gap: 5px; border: 1px solid var(--rc); min-width: 0; }
+.vt-hd { display: flex; align-items: center; gap: 7px; }
+.vt-hd > div { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.vt-hd b { color: var(--rc); font-family: var(--title); font-size: 17px; line-height: 1.1; }
+.vt-hd small { color: #C8BFA8; font-size: 11px; line-height: 1.2; }
+.vt-hd > i { font-style: normal; font-weight: 800; color: var(--rc); font-size: 13px; }
+.vt-syn { display: flex; flex-direction: column; gap: 2px; font-size: 11.5px; color: #F2E6C8; }
+.vt-syn b { display: inline-block; min-width: 16px; text-align: center; border-radius: 3px; background: var(--rc); color: #140F0A; margin-right: 4px; }
+.vt-list { display: flex; flex-wrap: wrap; gap: 4px; }
+.vt-h { width: 54px; padding: 2px 0 1px; border-radius: 5px; border: 1px solid var(--r-com, #8C7A5A); background: #1A120B; display: flex; flex-direction: column; align-items: center; gap: 1px; cursor: pointer; }
+.vt-h.epic { border-color: var(--r-epic); } .vt-h.legendary { border-color: var(--r-legend); }
+.vt-h.sub { opacity: .6; border-style: dashed; }
+.vt-h.lock img { filter: grayscale(.8) brightness(.65); }
+.vt-h img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; object-position: 50% 0; }
+.vt-h span { width: 100%; font-size: 9.5px; font-weight: 800; line-height: 11px; color: #E8D8B0; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 1px; }
+@media (max-height: 400px) { .vt-body { grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); } .vt-h { width: 48px; } .vt-h img { width: 30px; height: 30px; } .rl-f span { display: none; } .rl-f { padding: 0 4px; } .rl-f:first-child { padding: 0 8px; } }
+.vt-h span.lg { font-size: 8.5px; letter-spacing: -.2px; }
