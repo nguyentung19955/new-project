@@ -2035,7 +2035,7 @@ img.eli { position: static !important; inset: auto !important; transform: none !
 .res-table .res-qd > span, .res-table .res-unl > span { white-space: nowrap; margin-right: 10px; }
 /* v182: vai trò tướng */
 svg.rli { flex: none; display: inline-block; vertical-align: middle; position: static; transform: none; margin: 0; }
-.mk-card .rl { position: absolute; left: 1.5px; top: 15.5px; z-index: 1; width: 16px; height: 16px; filter: drop-shadow(0 0 1.5px #000); line-height: 0; pointer-events: none; }
+.mk-card .rl { position: absolute; left: 1.5px; top: 15px; z-index: 1; width: 15px; height: 15px; filter: drop-shadow(0 0 1.5px #000); line-height: 0; pointer-events: none; }
 html.sk-the-cho .mk-card .rl { z-index: 2; }
 .mk-card .el { top: 1px; }   /* v185: chừa chỗ icon vai trò bên dưới */
 .rl-chip { display: inline-flex; align-items: center; gap: 3px; padding: 1px 7px 1px 2px; border-radius: 10px; border: 1px solid var(--rc); background: #140F0Ad8; color: var(--rc); font-size: 11.5px; font-weight: 800; line-height: 16px; white-space: nowrap; }
