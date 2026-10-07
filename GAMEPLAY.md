@@ -1600,3 +1600,14 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 
 ## Phiên bản 169 — Gộp bộ lọc thả xuống màn Góp ý nhận được
 - Màn Góp ý nhận được: lọc Loại / Trạng thái bằng ô chọn thả xuống (kèm số lượng), nút Bỏ lọc, dòng "Đang hiện x/y".
+
+## Phiên bản 170 — Làm lại bảng Hợp thể và màn Tiến hoá
+- **Bảng Hợp thể trong trận** (nút *Hợp thể* cạnh chợ tướng): mở ra là **ẩn thanh chợ / dải gợi ý** nên bảng không còn bị che; bảng chiếm gần trọn màn hình, cuộn bên trong, có nút **✕** (chạm ra bản đồ cũng đóng).
+  - Mỗi tướng Tím / Vàng là **một thẻ**: chân dung lớn tướng đích + tên + bậc màu, bên dưới 2 nguyên liệu dạng chân dung nhỏ — **✓ xanh** nếu trên sân đã có con đủ sao, mờ (kèm số ★ hiện có) nếu chưa đủ, xám nếu chưa có. Dưới mỗi nguyên liệu ghi số ★ cần.
+  - Tab **Tím / Vàng** (số xanh = số công thức làm được ngay), lọc **Làm được / Thiếu 1 / Tất cả**; cái gần xong lên đầu, tướng chưa sở hữu xuống cuối (mờ, nhãn *Chưa có*).
+  - Làm được thì thẻ sáng viền màu bậc, có nút **Hợp thể · 300 / 1200** (thiếu vàng thì nút tắt). Chạm thẻ → đánh dấu 2 tướng nguyên liệu trên sân 6 giây (như dải gợi ý trên cùng) và đóng bảng nếu có ít nhất 1 con trên sân, kèm một dòng báo còn thiếu gì.
+  - Bỏ đoạn hướng dẫn dài; còn 1 dòng ngắn (công thức của tab), nút **?** cho lời giải thích ngắn.
+- **Màn Tiến hoá / Thần tinh:** ảnh tướng **một lần** (to, bên trái, khung theo độ hiếm) + dải 3 mốc **★ ➜ ★★ ➜ ★★★**: mỗi mốc liệt kê chỉ số tăng từng dòng, hiệu ứng ngắn, điều kiện (Ghép 2 × ★ / Cấp · giá) và trạng thái **Đã đạt** hoặc nút hành động (Ghép 2 → ★★, Thần tinh · giá, Lên cấp · giá).
+  - Cột **Hợp thể**: mỗi hướng một thẻ ngang [tướng này + nguyên liệu ➜ tướng đích lớn, tên, bậc màu], một hàng điều kiện ✓/✗ (Tướng này ★★ / Thần tinh ★★★, Kỹ năng tối đa, nguyên liệu trên sân, chưa sở hữu, thiếu vàng), một dòng truyền thuyết cắt gọn (đủ điều kiện thì thay bằng *Lực chiến → N*), nút **Hợp thể · giá** bật/tắt theo điều kiện. Tướng Thường không còn hiện ✗ *Kỹ năng tối đa* (từ v136 đã không cần).
+  - Bỏ đoạn *Cách khác: kéo tướng…* (còn 1 dòng gợi ý nhỏ + nút **?**). Mọi chữ một dòng, quá dài thì cắt “…”, không xuống dòng vỡ tên.
+- Test: `node tests/hop-the/hop-the.test.js` (1920×1000, 844×390, 667×375, xoay dọc 390×844: bảng không bị thanh chợ đè, nằm trọn màn hình, tab / lọc, chạm thẻ → fuseFocus, hợp thể thật từ bảng; màn Tiến hoá tướng Thường / Tím / Vàng: 1 ảnh, 3 mốc, không chữ tràn, hợp thể thật lên Tím rồi lên Vàng; ảnh `tests/hop-the/shots/`). Ảnh trước / sau: `docs/hop-the-truoc-sau.png`.
