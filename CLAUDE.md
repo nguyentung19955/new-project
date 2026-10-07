@@ -8,3 +8,11 @@
 - **Sửa tool ngoài thì chỉ test tool đó.** Tool chạy ngoài game (tools/cat-anh.html, tools/cat_anh.py, tools/cat-anh.bat, tools/build-*.js, tools/cat-*.py…) không ảnh hưởng game: chỉ chạy test riêng của tool (ví dụ `node tests/cat-anh/cat-anh.test.js`), không chạy toàn bộ test hệ thống. Chỉ khi sửa code game (js/, css/, index.html, sw.js, assets game dùng) mới chạy toàn bộ test.
 - **Sửa giao diện thì phải NHÌN ảnh chụp, không chỉ chạy test.** Mọi thay đổi đụng tới giao diện/ảnh: chụp màn hình trước/sau bằng Playwright ở 1920×934, 844×390, 667×375 và dùng công cụ Read để xem tận mắt từng ảnh (ảnh vỡ/cắt/lệch, icon lòi ra, chữ tràn, nút chồng). Chỉ báo "xong" khi đã xem ảnh và không thấy lỗi; ghi đường dẫn ảnh đã xem trong tin nhắn báo cáo. Session điều phối cũng xem lại ảnh trước khi báo người dùng.
 - **Tester 10 năm kinh nghiệm kiểm tra sau mỗi lần sửa.** Khi một session sửa lỗi / làm tính năng báo xong, session điều phối giao nhánh đó cho session tester (vai tester game mobile 10 năm kinh nghiệm: chơi thật bằng Playwright ở 1920×934, 844×390, 667×375, dọc 390×844, chụp và xem tận mắt từng ảnh, soi cả lỗi hồi quy xung quanh chỗ sửa). Tester chỉ báo cáo (đạt / lỗi + ảnh + bước tái hiện), không sửa code. Chỉ gộp vào nhánh chính khi tester báo đạt; lỗi thì trả lại session sửa. Hàng đợi theo thứ tự đến trước — xử lý trước, test trước (FIFO), không chen ngang.
+
+# Chạy test
+
+- Đủ bộ (song song 4 luồng, in bảng thời gian, mã thoát ≠ 0 nếu có lỗi): `node tests/run-all.js` (thêm `--j 6` để đổi số luồng).
+- Chỉ test liên quan: `node tests/run-all.js <tên> [<tên>…]` (lọc theo đường dẫn, vd `node tests/run-all.js hop-the cho-tuong`).
+- Test thiếu môi trường (emulator Firestore, Java, scipy không cài được) tự in `SKIP` và không tính lỗi.
+- Ảnh test chụp ra `tests/<tên>/shots/` — không commit (đã .gitignore). Ảnh minh hoạ muốn giữ thì để ở `docs/`.
+- Test không được ghi vào `assets/`, `js/` thật (dùng thư mục tạm + `page.route`), để chạy song song an toàn.

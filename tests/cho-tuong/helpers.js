@@ -4,7 +4,8 @@ const { chromium } = require('/opt/node-tools/node_modules/playwright');
 const ROOT = path.resolve(__dirname, '../..');
 const URL = 'file://' + path.join(ROOT, 'index.html');
 
-async function open(w = 844, h = 390, save = {}) {
+// prep(page): chạy trước khi mở trang (vd page.route thay ảnh assets bằng ảnh giả, không đụng file thật)
+async function open(w = 844, h = 390, save = {}, prep = null) {
   const browser = await chromium.launch({ args: ['--allow-file-access-from-files'] });
   const ctx = await browser.newContext({ viewport: { width: w, height: h }, hasTouch: false });
   const page = await ctx.newPage();
@@ -12,6 +13,7 @@ async function open(w = 844, h = 390, save = {}) {
   page.on('pageerror', (e) => errors.push(String(e)));
   page.on('console', (m) => { if (m.type() === 'error' && !/Failed to load resource|net::|favicon|firebase|gstatic/i.test(m.text())) errors.push(m.text()); });
   await page.route('**/firebase-config.js*', (r) => r.fulfill({ contentType: 'application/javascript', body: "const FIREBASE_CONFIG={apiKey:''};" }));
+  if (prep) await prep(page);
   const init = Object.assign({ unlocked: 5, storySeen: true, settings: { skipStory: true } }, save);
   await page.addInitScript((s) => { if (!sessionStorage.getItem('seeded')) { localStorage.setItem('nuicao.v1', JSON.stringify(s)); sessionStorage.setItem('seeded', '1'); } }, init);
   await page.goto(URL);

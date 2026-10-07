@@ -15,6 +15,18 @@ let fail = 0;
 const ok = (c, m) => { console.log((c ? '  ✓ ' : '  ✗ ') + m); if (!c) fail++; };
 const py = (args, opt = {}) => execFileSync('python3', args, { cwd: ROOT, ...opt }).toString();
 
+// tool Python cần scipy: thiếu thì tự cài (pip --user, máy "externally managed" thì thêm --break-system-packages);
+// cài không được (không có mạng…) thì bỏ qua cả test với thông báo rõ — không tính là lỗi
+const coScipy = () => { try { execFileSync('python3', ['-c', 'import PIL, numpy, scipy'], { stdio: 'ignore' }); return true; } catch (e) { return false; } };
+if (!coScipy()) {
+  console.log('  · thiếu scipy → đang cài (pip install --user scipy)…');
+  for (const extra of [[], ['--break-system-packages']]) {
+    try { execFileSync('python3', ['-m', 'pip', 'install', '--user', '-q', ...extra, 'pillow', 'numpy', 'scipy'], { stdio: 'inherit', timeout: 300000 }); } catch (e) { /* thử cách sau */ }
+    if (coScipy()) break;
+  }
+  if (!coScipy()) { console.log('SKIP: thiếu thư viện Python scipy và không tự cài được (chạy: pip install --user scipy)'); process.exit(0); }
+}
+
 py([path.join(__dirname, 'tao-anh-mau.py'), VAO, CHUAN]);
 
 // ── kết quả mẫu: tools cũ chạy trong bản sao (không đụng assets/ và js/render.js thật) ──
@@ -141,8 +153,10 @@ print(json.dumps([list(m.nhan_dien(f)) for f in ['Thaymo (1).PNG', 'trung-kim.pn
   const txt = await page.textContent('#ds');
   ok(/không nhận ra tên file/.test(txt) && /đã dò lưới/.test(txt) && /thiếu khung attack_2/.test(txt) && /giống hệt/.test(txt), 'trang báo: tên lạ, sai lưới đã dò, thiếu khung, khung trùng');
   const anim = async () => page.evaluate(() => [...document.querySelectorAll('canvas.chay')].map((c) => { const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let h = 0; for (let i = 3; i < d.length; i += 4) h = (h * 31 + d[i]) % 1e9; return h; }));
-  const a1 = await anim(); await page.waitForTimeout(400); const a2 = await anim();
-  ok(a1.length === 9 && a1.every((h, i) => h !== 0 && h !== a2[i]), 'mỗi tấm nhân vật / dải hiệu ứng có khung xem trước đang chạy animation (9)');
+  // chờ tới khi mọi khung đã đổi hình ít nhất một lần (tối đa ~5 giây) — đợi cố định 400 ms dễ trượt khi máy bận / chạy song song
+  const a1 = await anim(); const moved = a1.map(() => false);
+  for (let k = 0; k < 25 && !moved.every(Boolean); k++) { await page.waitForTimeout(200); (await anim()).forEach((h, i) => { if (h !== a1[i]) moved[i] = true; }); }
+  ok(a1.length === 9 && a1.every((h) => h !== 0) && moved.every(Boolean), 'mỗi tấm nhân vật / dải hiệu ứng có khung xem trước đang chạy animation (9)');
   // chọn tay mã cho ảnh tên lạ
   await page.locator('.the', { hasText: 'anh-la.png' }).locator('input').fill('chet-quai');
   await page.locator('.the', { hasText: 'anh-la.png' }).locator('input').dispatchEvent('change');
