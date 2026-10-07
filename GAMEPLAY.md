@@ -1517,3 +1517,6 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 162 — Sửa luật Firestore cho chơi nhóm
 - Lần gộp nhánh trước làm khối luật `feedback` (Góp ý) thiếu dấu đóng `}`, khiến toàn bộ luật phòng chơi nhóm (`rooms/…`, `cmds`, `reqs`, `snap`, `chat`) bị lồng nhầm vào trong `feedback/{id}` → không tạo được phòng. Đã sửa; thêm `tests/coop/test-rules.js` kiểm tra ngoặc cân bằng và các khối `match` nằm đúng cấp (chạy trong `node tests/coop/run-all.js`).
 - **Cần làm:** dán lại `firestore.rules` vào Firebase console → Firestore → Rules → Publish (hoặc để workflow tự đăng khi khoá GitHub đủ quyền Firebase Rules Admin + Service Usage Consumer).
+
+## Phiên bản 163 — Thu nhỏ bảng chỉ số khi giữ chân dung
+- Bảng chỉ số tướng (giữ chân dung ở thanh đáy, v154) gọn hơn: rộng 400 → 300 px, chữ tiêu đề 12 → 10,5 px, chữ chỉ số 11,5 → 9,5 px, biểu tượng 13 → 10 px, lề và khoảng cách hẹp lại; cao còn ~70–87 px (trước ~108 px). Vẫn nằm trên thanh đáy, căn theo chân dung, chữ không xuống dòng.
