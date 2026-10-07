@@ -186,7 +186,7 @@ frame idle                 # dựng một khung bằng các lệnh, chạy lần
   wrap 2 0                 #   wrap dx dy         cuộn vòng (ô nền lát liền)
   swap F h                 #   swap a b           đổi màu ký tự a → b (nháy sáng khi trúng đòn)
   set 17 2 z               #   set x y c          đặt một pixel
-  flipx                    #   lật ngang · rot 90|180|270 (khung vuông)
+  flipx                    #   lật ngang · rot 90|180|270 (90 / 270 chỉ khung vuông; 180 mọi khung)
   outline                  #   viền ngoài 1px bằng màu `vien` (hoặc outline <ký tự>)
 end
 ```

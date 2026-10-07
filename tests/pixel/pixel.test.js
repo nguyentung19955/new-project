@@ -40,6 +40,22 @@ ok(r.status === 1 && /động tác "attack" cần 3–4 khung/.test(r.stderr), '
 mk('icon', 'tran', icon('16x16', '  a = la', 'aaaa\naaaa').replace('  use o', '  use o 14 0'));
 r = check('tran');
 ok(r.status === 1 && /tràn ra ngoài khung/.test(r.stderr), 'đóng dấu tràn khung → lỗi');
+// rot với khung không vuông (lỗi báo từ vfx-kenney: trước đây TypeError) — 180 chạy được, 90 / 45 báo lỗi rõ
+const rect = (cmd) => `name: Thử\nsize: 160x90\ncolors:\n  a = la\n  b = son\npart o\nab\nend\nanim main fps=1\nframe main\n  use o 3 2\n  ${cmd}\nend\n`;
+fs.mkdirSync(path.join(tmp, 'src-rot', 'canh'), { recursive: true });
+fs.writeFileSync(path.join(tmp, 'src-rot', 'canh', 'rot-180.txt'), rect('rot 180'));
+r = spawnSync(process.execPath, [BUILD, '--src', path.join(tmp, 'src-rot'), '--out', path.join(tmp, 'rot-out'), '--quiet'], { encoding: 'utf8' });
+ok(r.status === 0 && !/TypeError/.test(r.stderr), 'rot 180 với khung không vuông (160x90) chạy được');
+const rb = fs.readFileSync(path.join(tmp, 'rot-out', 'assets/pixel/canh/rot-180.png'));
+const px = require('zlib').inflateSync(rb.subarray(rb.indexOf('IDAT') + 4, rb.indexOf('IEND') - 8));
+const at = (x, y) => px.subarray(y * (160 * 4 + 1) + 1 + x * 4, y * (160 * 4 + 1) + 1 + x * 4 + 4);
+ok(at(156, 87)[0] === 0x35 && at(155, 87)[0] === 0x92, 'rot 180: pixel (3,2)→(156,87), (4,2)→(155,87)');
+mk('canh', 'rot-90', rect('rot 90'));
+r = check('rot-90');
+ok(r.status === 1 && /không vuông/.test(r.stderr) && !/TypeError/.test(r.stderr), 'rot 90 khung không vuông → lỗi rõ, không crash');
+mk('canh', 'rot-45', rect('rot 45'));
+r = check('rot-45');
+ok(r.status === 1 && /bội của 90/.test(r.stderr), 'rot 45 → lỗi rõ');
 fs.rmSync(path.join(tmp, 'src'), { recursive: true });
 // dựng nguồn thật ra thư mục tạm (không ghi vào assets/, js/ thật)
 const out = path.join(tmp, 'out');
