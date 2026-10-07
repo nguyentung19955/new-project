@@ -13,6 +13,7 @@ Ví dụ khung tool tự xuất (chưa chỉnh tay): `docs/dung-xuong-mau.png`.
 - **Nền trong suốt** (PNG) hoặc **nền hồng tím phẳng #FF00FF** — tool tự xoá nền (dùng chung cách tách nền với `cat-anh.html`).
 - **Hai tay tách khỏi thân** một chút, tay cầm vũ khí chìa ra ngoài; hai chân hơi dang (thấy khe giữa hai chân). Tay khoanh / giấu sau lưng thì tool không xoay được tay.
 - Cao ≥ 300 px là đủ (to hơn tool tự thu về 720 px). Đặt **tên file = mã tướng** như cat-anh: `lactuong.png`, `Thầy Mo Lửa.png`… (quái `tom.png`, boss `chantinh.png`).
+- Prompt gen sẵn đúng kiểu ảnh này (A-pose quay phải, 90 nhân vật): `docs/PROMPT-DUNG-XUONG.txt`.
 - Lấy ngay ảnh có sẵn trong game cũng được: `assets/packs/<mã>/idle.png` (tướng) hoặc `walk1.png` (quái, boss).
 
 ## 5 bước
