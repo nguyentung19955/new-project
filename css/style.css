@@ -891,8 +891,6 @@ button:disabled { cursor: default; }
 .bag-det .enh { overflow-y: auto; max-height: 190px; }
 .dk-info .nm { display: flex; align-items: center; gap: 4px; }
 .dk-pt .lv i { font-style: normal; font-size: 9px; color: #FFD66B; margin-left: 1px; }
-.dk-pt.goldf, .ro-pic.goldf { box-shadow: 0 0 0 2px #FFD66B, 0 0 10px #FFD66B88; }
-.ro-card.goldf { border-color: #FFD66B !important; box-shadow: 0 0 8px #FFD66B66; }
 .bt-top { margin: 0 10px; padding: 6px 12px; border-radius: 6px; display: flex; align-items: center; gap: 12px; }
 .bt-top .ttl { font-size: 17px; white-space: nowrap; }
 .bt-top .pbar { width: 160px; height: 8px; flex: none; }
@@ -1656,3 +1654,36 @@ i.c { background: #1F4A2A; color: #8AE09A; } i.h { background: #4A2A5A; color: #
 .mc-subs:has(#btn-feedback) { justify-content: space-between; gap: 4px; }
 .mc-subs:has(#btn-feedback) .mc-sub { flex: 0 1 auto; min-width: 0; overflow: visible; font-size: 11.5px; letter-spacing: -.3px; padding: 0 1px; white-space: nowrap; }
 .mc-subs:has(#btn-feedback) .mc-sub .uimg.sub { width: 15px; height: 15px; margin-right: 2px; vertical-align: -3px; }
+/* v151: KHUNG THEO ĐỘ HIẾM — thống nhất toàn game. Thường: đồng/nâu trầm, không phát sáng · Tím: viền + quầng tím · Vàng: viền + quầng vàng (chỉ bậc này sáng vàng).
+   Đang chọn = viền sáng hơn cùng màu bậc + vòng trong (Thường không có quầng ngoài). ✦ góc thẻ = đã khám phá hiệu ứng ẩn (trước là khung vàng .goldf). */
+:root { --r-com: #8A5A2A; --r-com-d: #6A4220; --r-com-hi: #B97A45; }
+.ro-card.common { border-color: var(--r-com); box-shadow: none; }
+.ro-card.epic { border-color: var(--r-epic); box-shadow: 0 0 6px #A86CE066; }
+.ro-card.legendary { border-color: var(--r-legend); box-shadow: 0 0 8px #F0A03088; }
+.ro-card.common.on { border-color: var(--r-com-hi); box-shadow: inset 0 0 0 2px var(--r-com-hi), inset 0 0 10px #00000088; }
+.ro-card.epic.on { box-shadow: inset 0 0 0 2px var(--r-epic), 0 0 12px #A86CE0CC; }
+.ro-card.legendary.on { box-shadow: inset 0 0 0 2px var(--r-legend), 0 0 14px #F0A030DD; }
+.ro-card .nm { box-shadow: inset 0 2px 0 var(--r-com); }
+.ro-card.epic .nm { box-shadow: inset 0 2px 0 var(--r-epic); }
+.ro-card.legendary .nm { box-shadow: inset 0 2px 0 var(--r-legend); }
+.ro-card .kn, .ro-pic .kn, .dk-pt .kn { position: absolute; z-index: 3; top: 3px; right: 4px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: #0D0B08d8; border: 1px solid #6FD3B8; color: #9FF0D8; font-style: normal; font-size: 10px; line-height: 1; pointer-events: none; }
+.ro-card.lock .kn { right: 22px; }
+.ro-pic.common { border-color: var(--r-com); box-shadow: inset 0 0 0 1px #2A160A, 0 2px 8px #0008; }
+.ro-pic.epic { border-color: var(--r-epic); box-shadow: inset 0 0 0 1px #2A160A, 0 0 12px #A86CE0AA; }
+.ro-pic.legendary { border-color: var(--r-legend); box-shadow: inset 0 0 0 1px #2A160A, 0 0 14px #F0A030BB; }
+.ro-pic .kn { top: 5px; right: 6px; width: 20px; height: 20px; font-size: 12px; }
+.dk-pt.common { border-color: var(--r-com); }
+.dk-pt.epic { border-color: var(--r-epic); box-shadow: 0 0 8px #A86CE0AA; }
+.dk-pt.legendary { border-color: var(--r-legend); box-shadow: 0 0 10px #F0A030BB; }
+.dk-pt .kn { left: auto; top: 1px; right: 1px; width: 14px; height: 14px; font-size: 9px; }
+.ev-p.base { border-color: var(--r-com); }
+.ev-p.epic { box-shadow: 0 0 4px #A86CE077; }
+.ev-p.legendary { box-shadow: 0 0 5px #F0A03088; }
+.ev-p.base.me { border-color: var(--r-com-hi); box-shadow: inset 0 0 0 1px var(--r-com-hi); }
+.ev-p.epic.me { box-shadow: 0 0 8px #A86CE0CC; }
+.ev-p.legendary.me { box-shadow: 0 0 9px #F0A030DD; }
+.dk-pick.common { border-color: var(--r-com-d); }
+.dk-pick.common.on { border-color: var(--r-com-hi); background: #4A2C16; box-shadow: inset 0 0 0 1px var(--r-com-hi), inset 0 0 12px #00000077; }
+.dk-pick.common .no { background: var(--r-com-hi); color: #1A0F0A; }
+.dk-pick.common.gone { border-color: #E25A3A; }

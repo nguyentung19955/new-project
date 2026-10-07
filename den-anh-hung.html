@@ -72,7 +72,11 @@ button:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
 .rc svg{width:76px;height:70px}
 .rc .n{font-size:13px;font-weight:800;line-height:1.1;text-align:center}
 .rc .s{font-size:11px;font-weight:700;color:var(--muted)}
-.rc.on{outline:2px solid var(--gold2);box-shadow:0 0 14px #FFD66B55}
+.rc.on{outline:2px solid var(--rc,var(--gold2));box-shadow:0 0 14px #FFD66B55}
+/* v151: khung theo độ hiếm — Thường đồng/nâu không sáng, Tím quầng tím, Vàng quầng vàng */
+.rc.com{border-color:#8A5A2A!important;--rc:#B97A45}.rc.com.on{box-shadow:inset 0 0 10px #0008}
+.rc.epic{--rc:var(--r-epic);box-shadow:0 0 6px #A86CE055}.rc.epic.on{box-shadow:0 0 14px #A86CE099}
+.rc.leg{--rc:var(--r-leg);box-shadow:0 0 8px #F0A03066}.rc.leg.on{box-shadow:0 0 14px #F0A030AA}
 .rh{font-family:var(--f-display);font-weight:800;font-size:18px;color:var(--gold);margin:0}
 .note{color:var(--muted);font-size:13px;margin:0}
 @media (prefers-reduced-motion:reduce){.wv,.wv2{animation:none}}
@@ -737,7 +741,7 @@ function playState(i){
 const rosterEl=document.getElementById('roster'), rosterBaseEl=document.getElementById('rosterBase'), skillsEl=document.getElementById('skills'), descEl=document.getElementById('skDesc');
 const stateBtns=STATES.map((s,i)=>{const b=document.createElement('button');b.type='button';b.className='st metal';b.textContent=s.n;b.addEventListener('click',()=>{busy=false;clearInterval(autoTimer);playState(i);restartAuto()});document.getElementById('states').appendChild(b);return b});
 HEROES.forEach((h,i)=>{
-  const b=document.createElement('button');b.type='button';b.className='rc inset';b.style.borderColor=RAR_C[h.rar];b.setAttribute('aria-label',`${h.name}, ${h.rar}, ${h.attr}`);
+  const b=document.createElement('button');b.type='button';b.className='rc inset '+({'Thường':'com','Sử thi':'epic','Huyền thoại':'leg'}[h.rar]||'com');b.style.borderColor=RAR_C[h.rar];b.setAttribute('aria-label',`${h.name}, ${h.rar}, ${h.attr}`);
   b.innerHTML=(h.pack?`<img class="pk" src="${PK(h.id,'head')}" alt="">`:`<svg viewBox="40 24 120 112" aria-hidden="true">${heroSVG(h)}</svg>`)+`<span class="n">${h.name}</span><span class="s" style="color:${RAR_C[h.rar]}">${h.rar}</span>`;
   b.addEventListener('click',()=>{if(H===h)return;busy=false;setHero(h);restartAuto()});
   (h.rar==='Thường'?rosterBaseEl:rosterEl).appendChild(b);h.btn=b;

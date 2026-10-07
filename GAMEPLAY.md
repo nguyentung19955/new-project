@@ -1407,3 +1407,14 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 ## Phiên bản 150 — Gộp nút Góp ý
 - Gộp nhánh nút Góp ý (v149).
 - Menu: 3 liên kết nhỏ Bách khoa · Xếp hạng · Góp ý thu nhỏ biểu tượng và chữ để không đè lên nhau.
+
+## Phiên bản 151 — Khung theo độ hiếm
+- Người chơi báo "khung tướng thường trông vàng y tướng vàng": trước đây mọi thẻ ở màn **Anh Hùng Văn Lang** có viền vàng sáng (lớp `.goldf` gán theo *đã khám phá hiệu ứng ẩn*, cộng viền mặc định #B8853A), nên không phân biệt được bậc.
+- Khung/viền giờ theo độ hiếm, thống nhất toàn game (màu từ `RARITY` / biến CSS `--r-com`, `--r-epic`, `--r-legend`):
+  - **Thường:** viền đồng/nâu trầm #8A5A2A, **không phát sáng**.
+  - **Tím (Sử thi):** viền tím #A86CE0 + quầng tím nhẹ.
+  - **Vàng (Huyền thoại):** viền vàng #F0A030 + quầng vàng — chỉ bậc này được sáng vàng.
+- **Đang chọn:** viền sáng hơn cùng màu bậc + vòng trong (Thường: đồng sáng #B97A45, không quầng ngoài; Tím/Vàng: quầng đậm hơn).
+- **Đã khám phá hiệu ứng ẩn** (ý nghĩa cũ của khung vàng): nay là dấu **✦** xanh ngọc nhỏ ở góc thẻ / ảnh chi tiết / chân dung trong trận. Tướng chưa sở hữu vẫn làm xám ảnh + 🔒.
+- Áp dụng ở: lưới thẻ + ảnh chi tiết màn Anh Hùng (thêm vạch màu bậc trên tên thẻ), cây **Phát triển thành** (chân dung Thường viền đồng, chân dung đang xem không sáng vàng), bảng **Chọn đội** và **Nghỉ chân** (thẻ đang chọn viền đồng sáng, số thứ tự nền đồng), chân dung tướng đang chọn trong trận (khung ảnh vàng chỉ dùng cho tướng Huyền thoại), thẻ Đền Anh Hùng. Thẻ chợ tướng giữ viền màu hệ (chợ chỉ có tướng Thường).
+- Test: `node tests/khung-do-hiem/khung.test.js` (đọc viền/bóng tính toán của thẻ Thường/Tím/Vàng, ảnh chi tiết, cây phát triển, chọn đội, chân dung trong trận; 844×390 / 667×375 / xoay dọc). Ảnh `tests/khung-do-hiem/shots/` không commit; ảnh mẫu trước/sau `tests/khung-do-hiem/truoc-sau.png`.
