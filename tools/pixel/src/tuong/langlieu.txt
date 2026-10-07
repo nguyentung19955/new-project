@@ -89,6 +89,15 @@ FFh
 fFF
 end
 
+part tay_len
+.FF
+FFh
+FF.
+fF.
+fF.
+fY.
+end
+
 part khoi
 .t.
 t..
@@ -101,25 +110,25 @@ frame idle
   use chan 8 23
   use than 8 14
   use dau 10 3
-  use mam 17 12
-  use tay2 18 19
+  use mam 18 14
+  use tay2 19 21
   outline
 end
 frame idle
   use chan 8 23
   use than 8 15
   use dau 10 4
-  use mam 17 13
-  use tay2 18 20
+  use mam 18 15
+  use tay2 19 22
   outline
 end
 frame idle
   use chan 8 23
   use than 8 14
   use dau 10 3
-  use mam 17 12
-  use tay2 18 19
-  set 21 12 W
+  use mam 18 14
+  use tay2 19 21
+  set 22 14 W
   outline
 end
 
@@ -129,16 +138,16 @@ frame attack
   use chan 8 23
   use than 8 14
   use dau 10 3
-  use mam 17 10
-  use tay2 18 17
+  use mam 18 12
+  use tay2 19 19
   outline
 end
 frame attack
   use chan 8 23
   use than 9 14
   use dau 11 3
-  use mam 19 11
-  use tay2 20 18
+  use mam 20 13
+  use tay2 21 20
   use banh 25 6
   outline
 end
@@ -146,8 +155,8 @@ frame attack
   use chan 8 23
   use than 9 14
   use dau 11 3
-  use mam 19 12
-  use tay2 20 19
+  use mam 20 14
+  use tay2 21 21
   use banh 26 9
   outline
 end
@@ -155,8 +164,8 @@ frame attack
   use chan 8 23
   use than 8 14
   use dau 10 3
-  use mam 17 12
-  use tay2 18 19
+  use mam 18 14
+  use tay2 19 21
   outline
 end
 
@@ -166,18 +175,18 @@ frame cast
   use chan 8 23
   use than 8 14
   use dau 10 3
-  use mam 18 8
-  use tay2 19 15
-  use khoi 22 3
+  use mam 21 1
+  use tay_len 20 9
+  use khoi 18 0
   outline
 end
 frame cast
   use chan 8 23
   use than 8 14
   use dau 10 3
-  use mam 18 8
-  use tay2 19 15
-  use khoi 23 2
+  use mam 21 1
+  use tay_len 20 9
+  use khoi 19 0
   set 20 6 V
   set 27 5 V
   outline
@@ -186,10 +195,10 @@ frame cast
   use chan 8 23
   use than 8 14
   use dau 10 3
-  use mam 18 8
-  use tay2 19 15
-  use khoi 22 1
-  set 19 4 W
+  use mam 21 1
+  use tay_len 20 9
+  use khoi 18 1
+  set 30 4 W
   set 29 6 W
   set 24 0 V
   outline

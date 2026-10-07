@@ -1,0 +1,263 @@
+# Ông Đùng (mã ongdung) — pixel 32×32 (tướng Tím · hành Thổ). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:996 ưu tiên + PROMPT-DUNG-XUONG.txt:665): người khổng lồ dân gian, thân cao to nhất đội, tay chân to,
+# da sạm, mũi to, cười hiền; khố rơm vàng, rêu bám tóc, viền khố tím (Tím); vác ĐÒN GÁNH tre với 2 SỌT ĐẤT to rộng hơn thân
+# (KHÔNG giáo). Chiêu (Bước Chân Thành Ao / Dựng Núi): dậm chân — đất đá bắn lên.
+name: Ông Đùng
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  T = toi
+  K = khoi
+  f = da-toi
+  F = da
+  h = da-sang
+  e = trang
+  r = dat-toi
+  d = dat
+  D = dat-sang
+  c = cat
+  V = vang-sang
+  g = reu
+  G = reu-sang
+  q = tim-toi
+  p = tim
+  P = tim-sang
+
+part dau
+...KKKKKK...
+..KKKgKKKK..
+.KKKKKKKgKK.
+KKKKKKKKKKKK
+KKKhFFhFFhFF
+KKfFTTFFFTTF
+.KfFekFFFekF
+.KfFFFFFFfFh
+.KfFFFFFFffh
+..fFTFFFFFTF
+..ffTTTTTTf.
+...ffffffff.
+end
+
+part than
+......fFFFf.....
+..hhhhFFFFFFFf..
+.hFFFhhFFFFFFFf.
+hFFFFhFFFFhFFFFf
+hFFfFFFFFFFFFFff
+FFf.FFFFfFFFFf..
+.Ff.fFFFFFFFFf..
+.ff.fFFhFFFFf...
+....cVccVccVcc..
+....qpPpPpPpPq..
+end
+
+part chan
+....cVcVcVcVc..
+....cDcDcDcDc..
+....cD.cD.cDc..
+...FFFf..FFFf..
+...FFFf..FFFf..
+...fFFf..fFFf..
+..TTTTT..TTTTT.
+end
+
+part don
+rdDdDdDdDdDdDdDdDdDdDdDdDdDdDdr
+.rrrrrrrrrrrrrrrrrrrrrrrrrrrrr.
+end
+
+part sot
+.r.....r.
+..r...r..
+.TgGgrgT.
+rdDdDdDdr
+rdDdDdDdr
+rdddddddr
+.rdddddr.
+end
+
+part tay_sau
+FF
+FF
+fF
+fF
+end
+
+part tay_truoc
+FF
+Fh
+FF
+fF
+end
+
+part bui
+.r..d..r.
+d.Dr.rD.d
+.dDdDdDd.
+end
+
+part da
+.rd
+rDd
+end
+
+part mat_nham
+TT...TT
+end
+
+anim idle fps=3 loop
+frame idle
+  use don 0 10
+  use sot 0 12
+  use sot 22 12
+  use chan 8 23
+  use than 8 13
+  use dau 10 1
+  use tay_sau 8 11
+  use tay_truoc 22 11
+  outline
+end
+frame idle
+  use don 0 11
+  use sot 0 13
+  use sot 22 13
+  use chan 8 23
+  use than 8 14
+  use dau 10 2
+  use tay_sau 8 12
+  use tay_truoc 22 12
+  outline
+end
+frame idle
+  use don 0 10
+  use sot 0 13
+  use sot 22 12
+  use chan 8 23
+  use than 8 13
+  use dau 10 1
+  use tay_sau 8 11
+  use tay_truoc 22 11
+  outline
+end
+
+# đánh: nhấc đòn gánh → nện mạnh xuống → đất văng → đứng lại
+anim attack fps=10 once
+frame attack
+  use don 0 8
+  use sot 0 10
+  use sot 22 10
+  use chan 8 23
+  use than 8 13
+  use dau 10 1
+  use tay_sau 8 9
+  use tay_truoc 22 9
+  outline
+end
+frame attack
+  use don 0 13
+  use sot 0 15
+  use sot 22 16
+  use chan 8 23
+  use than 8 14
+  use dau 10 2
+  use tay_sau 8 14
+  use tay_truoc 22 14
+  outline
+end
+frame attack
+  use don 0 13
+  use sot 0 15
+  use sot 22 16
+  use chan 8 23
+  use than 8 14
+  use dau 10 2
+  use tay_sau 8 14
+  use tay_truoc 22 14
+  use bui 22 6
+  outline
+end
+frame attack
+  use don 0 10
+  use sot 0 12
+  use sot 22 12
+  use chan 8 23
+  use than 8 13
+  use dau 10 1
+  use tay_sau 8 11
+  use tay_truoc 22 11
+  outline
+end
+
+# chiêu: dậm chân khổng lồ — đất đá bắn tung
+anim cast fps=8 loop
+frame cast
+  use don 0 9
+  use sot 0 11
+  use sot 22 11
+  use chan 8 21
+  use than 8 12
+  use dau 10 0
+  use tay_sau 8 10
+  use tay_truoc 22 10
+  outline
+end
+frame cast
+  use don 0 11
+  use sot 0 13
+  use sot 22 13
+  use chan 8 23
+  use than 8 14
+  use dau 10 2
+  use tay_sau 8 12
+  use tay_truoc 22 12
+  use bui 0 3
+  use bui 22 3
+  outline
+end
+frame cast
+  use don 0 10
+  use sot 0 12
+  use sot 22 12
+  use chan 8 23
+  use than 8 13
+  use dau 10 1
+  use tay_sau 8 11
+  use tay_truoc 22 11
+  use da 2 4
+  use da 27 2
+  use da 15 0
+  outline
+end
+
+anim hurt fps=8 once
+frame hurt
+  use @idle.0
+  use mat_nham 14 7
+  swap F h
+end
+
+anim die fps=5 once
+frame die
+  use sot 0 23
+  use sot 22 23
+  use chan 8 23
+  use than 8 16
+  use dau 10 4
+  use mat_nham 14 10
+  outline
+end
+frame die
+  use chan 8 23
+  use than 8 16
+  use dau 10 4
+  use mat_nham 14 10
+  rot 90
+  use sot 22 24
+  outline
+end
+frame die
+  use @die.1
+  swap V c
+  swap P p
+end

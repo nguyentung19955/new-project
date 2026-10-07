@@ -1,0 +1,230 @@
+# Sọ Dừa (mã sodua) — pixel 32×32 (tướng Tím · hành Mộc). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:947 ưu tiên + PROMPT-DUNG-XUONG.txt:643): chàng trai nằm trọn trong QUẢ DỪA tròn (vỏ dừa là thân,
+# chỉ thò mặt + tay chân ngắn), CHỎM VỎ làm mũ, vành miệng vỏ viền tím-bạc (Tím), sáo trúc buộc sau lưng; cầm QUẢ DỪA XANH sắp ném
+# (KHÔNG giáo). Chiêu (Tiếng Sáo Chăn Dê): thổi sáo trúc — nốt nhạc bay ra. Mặt nghiêm hiền, mắt nhỏ (không má hồng).
+name: Sọ Dừa
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  T = toi
+  K = khoi
+  f = da-toi
+  F = da
+  h = da-sang
+  e = trang
+  r = dat-toi
+  d = dat
+  D = dat-sang
+  c = cat
+  l = la-toi
+  g = la
+  G = la-ma
+  q = tim-toi
+  p = tim
+  P = tim-sang
+  w = bac
+  V = vang-sang
+
+part dua
+......rrrrr.......
+....rrdDDDdrr.....
+...rdDDcDDDddr....
+..rdDDDDDDddddr...
+..TTTTTTTTTTTTT...
+.rdDDqpPwPPPpqdr..
+.rdDqKKKKKKKKqdr..
+rdDDpKFTTFFTTpddr.
+rdDDpFFekFFekpddr.
+rdDDwFFFFFFFFwddr.
+rdDDqfFFFTTFFqddr.
+rdDdDqpPwPPpqdddr.
+rdDcddddddddddddr.
+.rdDdddddddddddr..
+.rddddddddddddrr..
+..rrdddddddddrr...
+....rrrrrrrrr.....
+end
+
+part chan
+..FF....FF..
+..fT....fT..
+.TTT...TTTT.
+end
+
+part sao
+.....c
+....cT
+...cc.
+..Tc..
+.cc...
+cc....
+end
+
+part dua_xanh
+.lgl.
+lgGgl
+lgggl
+.lll.
+end
+
+part tay
+FF
+fF
+end
+
+part tay_len
+.F
+FF
+fF
+end
+
+part tay_sau
+FF.
+.fF
+end
+
+part sao_ngang
+VccTccTccc
+rrrrrrrrrr
+end
+
+part not
+.V
+VV
+V.
+end
+
+part mat_nham
+TT..TT
+end
+
+anim idle fps=3 loop
+frame idle
+  use sao 3 11
+  use dua 7 11
+  use chan 9 27
+  use tay_sau 5 21
+  use tay 24 21
+  use dua_xanh 25 17
+  outline
+end
+frame idle
+  use sao 3 12
+  use dua 7 12
+  use chan 9 27
+  use tay_sau 5 22
+  use tay 24 22
+  use dua_xanh 25 18
+  outline
+end
+frame idle
+  use sao 3 11
+  use dua 7 11
+  use chan 9 27
+  use tay_sau 5 21
+  use tay 24 21
+  use dua_xanh 25 17
+  set 27 18 G
+  outline
+end
+
+# đánh: giơ dừa xanh lên → ném → dừa bay → thu tay
+anim attack fps=10 once
+frame attack
+  use sao 3 11
+  use dua 7 11
+  use chan 9 27
+  use tay_sau 5 21
+  use tay_len 23 13
+  use dua_xanh 22 9
+  outline
+end
+frame attack
+  use sao 3 11
+  use dua 8 11
+  use chan 9 27
+  use tay_sau 6 21
+  use tay 25 18
+  use dua_xanh 26 14
+  outline
+end
+frame attack
+  use sao 3 11
+  use dua 8 11
+  use chan 9 27
+  use tay_sau 6 21
+  use tay 25 18
+  use dua_xanh 26 9
+  outline
+end
+frame attack
+  use sao 3 11
+  use dua 7 11
+  use chan 9 27
+  use tay_sau 5 21
+  use tay 24 21
+  outline
+end
+
+# chiêu Tiếng Sáo: cầm sáo ngang thổi, nốt nhạc bay
+anim cast fps=6 loop
+frame cast
+  use dua 7 11
+  use chan 9 27
+  use tay_sau 5 21
+  use sao_ngang 16 21
+  use tay 24 21
+  use not 27 16
+  outline
+end
+frame cast
+  use dua 7 11
+  use chan 9 27
+  use tay_sau 5 21
+  use sao_ngang 16 21
+  use tay 24 21
+  use not 28 12
+  use not 25 6
+  outline
+end
+frame cast
+  use dua 7 11
+  use chan 9 27
+  use tay_sau 5 21
+  use sao_ngang 16 21
+  use tay 24 21
+  use not 27 3
+  use not 29 15
+  outline
+end
+
+anim hurt fps=8 once
+frame hurt
+  use @idle.0
+  shift -1 0
+  use mat_nham 13 19
+  swap D c
+end
+
+anim die fps=5 once
+frame die
+  use dua 7 12
+  use chan 9 27
+  use mat_nham 14 20
+  use dua_xanh 25 25
+  outline
+end
+frame die
+  use dua 7 12
+  use mat_nham 14 20
+  rot 90
+  shift 1 0
+  use dua_xanh 26 25
+  outline
+end
+frame die
+  use @die.1
+  swap P p
+  swap w p
+end

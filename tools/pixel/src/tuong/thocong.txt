@@ -1,0 +1,262 @@
+# Thổ Công (mã thocong) — pixel 32×32 (tướng Tím · hành Thổ). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:1020 ưu tiên + PROMPT-DUNG-XUONG.txt:686): cụ ông ~80 thấp tròn, rộng gần bằng cao, RÂU TRẮNG dài tới
+# bụng, mày bạc; áo vàng nâu, MŨ TRÒN ĐEN mềm (KHÔNG cánh chuồn), thắt lưng đỏ, gấu áo viền tím (Tím); cầm GẬY TRE ngắn treo HỒ LÔ
+# (KHÔNG đại đao). Chiêu (Khiên Đất / Thổ Địa Hiển Linh): gõ gậy — vòng đất vàng bừng lên quanh chân.
+name: Thổ Công
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  T = toi
+  K = khoi
+  f = da-toi
+  F = da
+  h = da-sang
+  e = trang
+  t = trang-xam
+  W = sang
+  r = dat-toi
+  d = dat
+  D = dat-sang
+  c = cat
+  o = dong-toi
+  y = dong
+  Y = dong-sang
+  v = vang-sang
+  V = vang-nghe
+  m = son-toi
+  R = son
+  q = tim-toi
+  p = tim
+  P = tim-sang
+  l = la
+  L = la-ma
+
+part dau
+...KKKKKK...
+..KKKKKKKK..
+.KKKKKKKKKK.
+.KTTTTTTTTK.
+.fFFFFFFFFFF
+.fFeeFFFFeeF
+.fFFekFFFekF
+.fFFFFFFFFFh
+..eeFFhFFeee
+..eeeeeeeeee
+..teeeeeeet.
+end
+
+part rau
+.teeeeeet.
+..teeeet..
+..teeeet..
+...teet...
+....et....
+end
+
+part than
+...yYYYYYYYYy...
+.yYYvYYYYYYYYy..
+yYYvYYYYYYYYYYy.
+yYvYYYYYYYYYYYy.
+yYYYYYYYYYYYYYy.
+yYmRRRRRRRRRRmy.
+yYYYYYYYYYYYYYy.
+.yYYYYYYYYYYYy..
+.qpPpPpPpPpPpq..
+..TTT....TTT....
+end
+
+part gay
+.Lc
+.lc
+.Lc
+.lc
+.Lc
+.lc
+.Lc
+.lc
+.Lc
+.lc
+.Lc
+.lc
+.Lc
+.lc
+.Lc
+.lc
+.r.
+end
+
+part holo
+.R..
+.Dd.
+DDdd
+.Dd.
+DDDd
+DDdd
+.dd.
+end
+
+part tay
+FF
+Fh
+end
+
+part tay_len
+FF
+Fh
+fF
+.f
+end
+
+part vong
+...VvvvvvV...
+.vV.......Vv.
+V...........V
+end
+
+part bui
+.V.v.
+V.v.V
+end
+
+part mat_nham
+TT...TT
+end
+
+anim idle fps=3 loop
+frame idle
+  use gay 22 13
+  use holo 24 14
+  use than 7 20
+  use dau 9 8
+  use rau 10 19
+  use tay 21 23
+  outline
+end
+frame idle
+  use gay 22 13
+  use holo 24 15
+  use than 7 20
+  use dau 9 9
+  use rau 10 20
+  use tay 21 23
+  outline
+end
+frame idle
+  use gay 22 13
+  use holo 25 14
+  use than 7 20
+  use dau 9 8
+  use rau 10 19
+  use tay 21 23
+  outline
+end
+
+# đánh: giơ gậy → hồ lô vung → gõ xuống, đất bắn → hạ gậy
+anim attack fps=10 once
+frame attack
+  use gay 22 7
+  use holo 24 8
+  use than 7 20
+  use dau 9 8
+  use rau 10 19
+  use tay_len 21 18
+  outline
+end
+frame attack
+  use gay 23 10
+  use holo 26 10
+  use than 7 20
+  use dau 9 8
+  use rau 10 19
+  use tay_len 22 20
+  outline
+end
+frame attack
+  use gay 23 14
+  use holo 26 15
+  use than 7 20
+  use dau 9 8
+  use rau 10 19
+  use tay 22 23
+  use bui 26 25
+  outline
+end
+frame attack
+  use gay 22 13
+  use holo 24 14
+  use than 7 20
+  use dau 9 8
+  use rau 10 19
+  use tay 21 23
+  outline
+end
+
+# chiêu: gõ gậy — vòng đất vàng lan ra quanh chân, bụi vàng bay
+anim cast fps=8 loop
+frame cast
+  use gay 22 10
+  use holo 24 11
+  use than 7 20
+  use dau 9 8
+  use rau 10 19
+  use tay_len 21 20
+  use bui 2 15
+  outline
+end
+frame cast
+  use gay 22 13
+  use holo 24 14
+  use than 7 20
+  use dau 9 8
+  use rau 10 19
+  use tay 21 23
+  use vong 3 27
+  outline
+end
+frame cast
+  use gay 22 13
+  use holo 24 14
+  use than 7 20
+  use dau 9 8
+  use rau 10 19
+  use tay 21 23
+  use vong 3 27
+  use bui 0 22
+  use bui 26 21
+  set 15 4 V
+  outline
+end
+
+anim hurt fps=8 once
+frame hurt
+  use @idle.0
+  shift -1 0
+  use mat_nham 12 14
+  swap F h
+end
+
+anim die fps=5 once
+frame die
+  use holo 24 24
+  use than 7 21
+  use dau 9 10
+  use rau 10 21
+  use mat_nham 13 16
+  outline
+end
+frame die
+  use than 7 21
+  use dau 9 10
+  use rau 10 21
+  use mat_nham 13 16
+  rot 90
+  shift 0 1
+  use holo 25 25
+  outline
+end
+frame die
+  use @die.1
+  swap Y y
+end
