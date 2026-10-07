@@ -2004,3 +2004,7 @@ Test: `tests/ngan-kho/ngan-kho.test.js` (người mới 8 tướng, chợ 300 l�
 ## Phiên bản 192 — File prompt thay hình vẽ bằng code
 
 - Gộp claude/prompt-thay-hinh-code: docs/PROMPT-THAY-HINH-CODE.txt (112 ảnh → 222 file), tool cắt ảnh nhận tên mới.
+
+## claude/tool-dung-xuong — prompt video từ ảnh
+
+- docs/PROMPT-VIDEO.txt: 90 nhân vật / 309 video (Kling…), sinh bằng tools/build-prompt-video.js.
