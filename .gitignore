@@ -16,3 +16,4 @@ tests/xem-gop-y/shots/
 firestore-debug.log
 tests/bo-nut-tren-tuong/shots/
 tests/cat-anh/shots/
+tools/__pycache__/cat_anh.*
