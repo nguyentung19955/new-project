@@ -1275,10 +1275,11 @@ const summonPool = (level) => [...BASIC_HEROES.slice(0, 6), ...NEW_GROUPS[(level
 // (20 tướng ngẫu nhiên quá khó ghép). Thiếu / sai thì dùng đội gợi ý.
 const DECK_SIZE = 6;
 const MARKET_SIZE = 4;     // v143: chợ tướng — số thẻ luôn mở ở thanh đáy
-// v180: chợ có chủ đích — trọng số rút thẻ: tướng đang ghép dở trên sân ×1.5, nguyên liệu còn thiếu của công thức hợp thể
-// gần xong ×3; đủ MARKET_CAP bản sao (= một ★★★) thì loại đó không ra nữa. Bảo hiểm: MARKET_PITY lần làm mới cả hàng
-// liền không ra tướng cần nhất (nguyên liệu hợp thể, không có thì tướng đang có) → lần sau chắc chắn có 1 thẻ.
-const MARKET_W = { ghep: 1.5, hop: 3 };
+// v180: chợ có chủ đích — chợ ra MỌI tướng Thường (như TFT), trọng số rút thẻ: thường ×1 · trong đội ưu tiên 6 tướng ×2 ·
+// đang ghép dở trên sân ×5 · nguyên liệu còn thiếu của công thức hợp thể gần xong ×12; đủ MARKET_CAP bản sao (= một ★★★)
+// thì loại đó không ra nữa. Bảo hiểm: MARKET_PITY lần làm mới cả hàng liền không ra tướng cần nhất (nguyên liệu hợp thể,
+// không có thì tướng đang có) → lần sau chắc chắn có 1 thẻ.
+const MARKET_W = { doi: 2, ghep: 5, hop: 12 };
 const MARKET_PITY = 2;
 const MARKET_CAP = 4;
 const REST_SWAPS = 2;      // v143: Nghỉ chân sau đợt boss — đổi tối đa 2 tướng trong đội

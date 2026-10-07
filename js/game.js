@@ -1509,7 +1509,7 @@ class Game {
   }
   // v133: quân triệu hồi = đội 6 tướng người chơi chọn (thiếu thì quân mặc định của ải)
   summonList() { return validDeck(this.deck) ? this.deck : summonPool(this.level); }
-  // v143: CHỢ TƯỚNG — luôn mở 4 thẻ rút từ đội 6 tướng. Chạm thẻ = mua & đặt ngay, kéo thẻ = đặt đúng ô.
+  // v143: CHỢ TƯỚNG — luôn mở 4 thẻ (v180: rút từ mọi tướng Thường, đội 6 tướng được ưu tiên). Chạm thẻ = mua & đặt ngay, kéo thẻ = đặt đúng ô.
   // Mua thẻ nào thì chỗ đó ra thẻ mới; đầu mỗi đợt cả hàng làm mới miễn phí (trừ khi đang 🔒 khoá); ↻ đổi cả hàng tốn vàng (tăng dần trong đợt).
   // v180: rút có trọng số theo nhu cầu (xem MARKET_W / MARKET_PITY / MARKET_CAP trong data.js).
   // số bản sao ★ quy đổi của loại t trên sân người đang chơi (★ = 1, ★★ = 2, ★★★ = 4)
@@ -1518,19 +1518,22 @@ class Game {
     for (const h of this.heroes) if (h && h.type === t && !h.from && (!this.co || this.co.canAct(this.co.actor, h.slot))) n += Math.pow(2, Math.max(0, (h.tier || 1) - 1));
     return n;
   }
-  // nhu cầu từng loại trong đội: ghep = đang có trên sân, chưa đủ bản sao; hop = nguyên liệu còn thiếu của công thức
-  // hợp thể gần xong (bên kia đã đủ ★★ quy đổi, đã sở hữu tướng đích); top = loại bảo hiểm nhắm tới
+  // nhu cầu từng loại: ghep = đang có trên sân, chưa đủ bản sao; hop = nguyên liệu còn thiếu của công thức hợp thể
+  // gần xong (bên kia đã đủ ★★ quy đổi, đã sở hữu tướng đích, nguyên liệu nằm trong đội ưu tiên hoặc đã có trên sân —
+  // không thì 20 tướng ra quá nhiều công thức "gần xong", loãng); top = loại bảo hiểm nhắm tới
+  // v180: chợ rút từ mọi tướng Thường; đội 6 tướng thành đội ưu tiên (ra nhiều hơn)
+  marketPool() { return BASIC_HEROES; }
   marketNeeds() {
-    const pool = this.summonList(), cp = {}, ghep = new Set(), hop = new Set();
+    const pool = this.marketPool(), doi = new Set(this.summonList()), cp = {}, ghep = new Set(), hop = new Set();
     for (const t of pool) cp[t] = this.marketCopies(t);
     for (const t of pool) if (cp[t] > 0 && cp[t] < MARKET_CAP) ghep.add(t);
     const need = COSTS.ascendTier === 2 ? 2 : Math.pow(2, COSTS.ascendTier - 1);
     for (const f of FUSION) {
       if (!pool.includes(f.a) || !pool.includes(f.b) || !this.ownsHero(f.to)) continue;
-      for (const [x, y] of [[f.a, f.b], [f.b, f.a]]) if (cp[x] >= need && cp[y] < need) hop.add(y);
+      for (const [x, y] of [[f.a, f.b], [f.b, f.a]]) if (cp[x] >= need && cp[y] < need && (doi.has(y) || cp[y] > 0)) hop.add(y);
     }
     const w = {};
-    for (const t of pool) w[t] = cp[t] >= MARKET_CAP ? 0 : hop.has(t) ? MARKET_W.hop : ghep.has(t) ? MARKET_W.ghep : 1;
+    for (const t of pool) w[t] = cp[t] >= MARKET_CAP ? 0 : hop.has(t) ? MARKET_W.hop : ghep.has(t) ? MARKET_W.ghep : doi.has(t) ? MARKET_W.doi : 1;
     if (pool.every((t) => !w[t])) for (const t of pool) w[t] = 1;     // đủ hết bản sao: rút đều như cũ
     const top = hop.size ? hop : ghep;
     return { pool, w, ghep, hop, top };
@@ -1557,7 +1560,7 @@ class Game {
     return this.market;
   }
   ensureMarket() {
-    const m = this.market, pool = this.summonList();
+    const m = this.market, pool = this.marketPool();
     if (SIM.coop && !SIM.active && m) return m;     // co-op: giao diện không được tự rút lại chợ (lệch seed)
     if (!m || !Array.isArray(m.types) || m.types.length !== MARKET_SIZE || m.types.some((t) => !pool.includes(t))) this.rollMarket();
     return this.market;
@@ -1565,7 +1568,7 @@ class Game {
   // đầu đợt mới: làm mới cả hàng miễn phí (hàng đang 🔒 khoá thì giữ nguyên một lượt rồi mở khoá), giá ↻ về lại từ đầu
   freshMarket() {
     const one = () => {
-      const m = this.market, pool = this.summonList();
+      const m = this.market, pool = this.marketPool();
       if (m && m.lock && Array.isArray(m.types) && m.types.length === MARKET_SIZE && m.types.every((t) => pool.includes(t))) { m.lock = false; m.rr = 0; return; }
       this.rollMarket(); this.market.rr = 0;
     };

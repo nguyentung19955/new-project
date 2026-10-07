@@ -1,4 +1,4 @@
-// Mô phỏng tỉ lệ chợ tướng (v180): đổi chợ N lần ở các tình huống, đo tỉ lệ ra tướng ghép được.
+// Mô phỏng tỉ lệ chợ tướng (v180, chợ ra mọi tướng Thường, đội 6 tướng là đội ưu tiên): đổi chợ N lần ở các tình huống, đo tỉ lệ ra tướng ghép được.
 // Dùng chung cho test (ti-le.test.js) và in số liệu: node tests/cho-tuong/ti-le-sim.js
 // Chỉ dùng API chung của mọi phiên bản chợ (rerollMarket / market.types / spawnHero) để so được trước / sau.
 const { open, enter } = require('./helpers');
@@ -22,7 +22,7 @@ async function simulate(page, key, n = 1000) {
     game.freshMarket();
     const onBoard = new Set(c.board.map(([t]) => t));
     const star1 = new Set(c.board.filter(([, tier]) => tier === 1).map(([t]) => t));
-    let twin = 0, board = 0, need = 0, dry = 0, maxDry = 0, needDry = 0, maxNeedDry = 0, cards = 0, boardCards = 0;
+    let twin = 0, board = 0, need = 0, dry = 0, maxDry = 0, needDry = 0, maxNeedDry = 0, cards = 0, boardCards = 0, outDeck = 0; const kinds = new Set();
     for (let i = 0; i < n; i++) {
       game.gold = 1e6;
       if (game.market) game.market.rr = 0;
@@ -31,7 +31,7 @@ async function simulate(page, key, n = 1000) {
       const hitB = T.some((t) => onBoard.has(t));
       if (T.some((t) => star1.has(t))) twin++;
       if (hitB) board++;
-      cards += T.length; boardCards += T.filter((t) => onBoard.has(t)).length;
+      cards += T.length; boardCards += T.filter((t) => onBoard.has(t)).length; outDeck += T.filter((t) => !DECK.includes(t)).length; T.forEach((t) => kinds.add(t));
       dry = hitB ? 0 : dry + 1; maxDry = Math.max(maxDry, dry);
       if (c.need) {
         const h = T.includes(c.need);
@@ -40,7 +40,7 @@ async function simulate(page, key, n = 1000) {
       }
     }
     const pct = (x) => Math.round(x / n * 1000) / 10;
-    return { twin: pct(twin), board: pct(board), boardCards: Math.round(boardCards / cards * 1000) / 10, maxDry,
+    return { twin: pct(twin), board: pct(board), boardCards: Math.round(boardCards / cards * 1000) / 10, maxDry, outDeck: Math.round(outDeck / cards * 1000) / 10, kinds: kinds.size,
       need: c.need ? pct(need) : null, maxNeedDry: c.need ? maxNeedDry : null };
   }, [c, n, DECK]);
 }
@@ -60,7 +60,7 @@ if (require.main === module) {
   runAll(+process.argv[2] || 1000).then(({ out }) => {
     for (const k in out) {
       const r = out[k];
-      console.log(`${CASES[k].name}: ≥1 thẻ ghép ngay (trùng ★) ${r.twin}% · ≥1 thẻ tướng đang có ${r.board}% · thẻ là tướng đang có ${r.boardCards}% · chuỗi trượt dài nhất ${r.maxDry}`
+      console.log(`${CASES[k].name}: ≥1 thẻ ghép ngay (trùng ★) ${r.twin}% · ≥1 thẻ tướng đang có ${r.board}% · thẻ là tướng đang có ${r.boardCards}% · chuỗi trượt dài nhất ${r.maxDry} · thẻ ngoài đội ${r.outDeck}% · ${r.kinds} loại`
         + (r.need != null ? ` · ra nguyên liệu thiếu ${r.need}% (trượt liền dài nhất ${r.maxNeedDry})` : ''));
     }
   }).catch((e) => { console.error(e); process.exit(1); });

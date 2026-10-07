@@ -18,7 +18,7 @@ Game thủ thành trên điện thoại, chơi **màn hình ngang**, lấy cảm
 
 ## 1. Vòng chơi chính
 
-1. **Triệu hồi (Chợ tướng, từ phiên bản 143):** thanh dưới luôn mở **4 thẻ tướng ★** rút ngẫu nhiên từ đội 6 tướng. **Chạm thẻ** = mua và đặt vào 1 ô trống ngẫu nhiên; **kéo thẻ** thả vào ô = đặt đúng ô (thả lên tướng ★ cùng loại = ghép luôn). ↻ đổi cả hàng (10 vàng, +10 mỗi lần trong đợt); đầu mỗi đợt chợ tự làm mới miễn phí (🔒 khoá thì giữ nguyên). Thẻ rút theo nhu cầu, có bảo hiểm — xem ghi chú phiên bản 143 và 180.
+1. **Triệu hồi (Chợ tướng, từ phiên bản 143):** thanh dưới luôn mở **4 thẻ tướng ★** rút từ **mọi tướng Thường** (từ phiên bản 181; đội 6 tướng chọn trước trận là *đội ưu tiên*, ra nhiều gấp đôi). **Chạm thẻ** = mua và đặt vào 1 ô trống ngẫu nhiên; **kéo thẻ** thả vào ô = đặt đúng ô (thả lên tướng ★ cùng loại = ghép luôn). ↻ đổi cả hàng (10 vàng, +10 mỗi lần trong đợt); đầu mỗi đợt chợ tự làm mới miễn phí (🔒 khoá thì giữ nguyên). Thẻ rút theo nhu cầu, có bảo hiểm — xem ghi chú phiên bản 143 và 180.
    - Giá **60 vàng**, mỗi lần sau **+6** (tối đa 220), tính lại từ đầu mỗi ải.
    - Bản đồ có **17 ô** dọc hai bờ sông, mọi ô như nhau. Hết ô trống thì phải ghép, hoặc kéo tướng vào thùng 🗑 (hiện khi kéo) để hủy.
    - Giữ và kéo tướng để đổi chỗ.
@@ -1717,3 +1717,22 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - **🔒 Khoá chợ:** nút tròn nhỏ ở góc trên phải nút ↻ (không đổi bề ngang thanh đáy). Bật thì đầu đợt sau giữ nguyên 4 thẻ rồi tự mở khoá; bấm ↻ khi đang khoá thì rút hàng mới và mở khoá. Chơi nhóm: lệnh `toggleMarketLock` đồng bộ như ↻.
 - **Nhãn trên thẻ:** giữ "ghép" (xanh, trùng tướng ★ trên sân); thêm **"hợp thể"** (tím, viền tím) cho nguyên liệu còn thiếu của công thức gần xong.
 - Test: `node tests/cho-tuong/ti-le.test.js` (mô phỏng tỉ lệ + giới hạn bản sao + khoá chợ + bảo hiểm qua nút ↻ + nhãn). Ảnh đã xem: thanh đáy 1920×934, 844×390, 667×375 (có nhãn "hợp thể", nút 🔒 đang bật).
+
+## Phiên bản 181 — Chợ ra mọi tướng Thường (như TFT), đội 6 tướng thành đội ưu tiên
+- Góp ý người chơi: "nên để mua tướng giống game TFT có thể roll ALL các tướng mặc định, ko chỉ để 6 con". Chợ giờ rút từ **cả 20 tướng Thường**; đội 6 tướng chọn trước trận (và đổi ở Nghỉ chân) thành **đội ưu tiên**.
+- Mở rộng 6 → 20 loại mà rút đều thì ghép rất khó (tính trực tiếp: ra 1 loại cụ thể trong 4 thẻ chỉ 18,5%, giữa trận 5 loại trên sân 68%). Cân bằng bằng trọng số (`MARKET_W` trong data.js): ngoài đội ×1 · **đội ưu tiên ×2** · **đang ghép dở trên sân ×5** · **nguyên liệu hợp thể còn thiếu ×12**. Nguyên liệu chỉ được ưu tiên khi nằm trong đội ưu tiên hoặc đã có trên sân (với 20 tướng, một tướng ★★ "mở" 2–3 công thức cùng lúc, ưu tiên hết thì loãng: thử nghiệm ra đúng nguyên liệu chỉ 36,8%, trượt liền 11 lần). Bảo hiểm 2 lần, giới hạn 4 bản sao, 🔒 khoá chợ, nhãn "ghép" / "hợp thể" giữ như phiên bản 180.
+- Số liệu (1000 lần ↻ mỗi tình huống, `node tests/cho-tuong/ti-le-sim.js`):
+
+  | Tình huống | Chỉ số | v179 (6 loại, rút đều) | v180 (6 loại, trọng số) | **v181 (20 loại, trọng số)** |
+  |---|---|---|---|---|
+  | Đầu trận (1 tướng ★) | ≥1 thẻ ghép được / lần ↻ | 50,6% | 68,6% | **57,7%** |
+  | | Trượt liền dài nhất | 10 | 2 | **2** |
+  | Giữa trận (7 tướng, 5 loại) | ≥1 thẻ tướng đang có | 99,9% | 100% | **97,8%** |
+  | | ≥1 thẻ ghép ngay (trùng ★) | 98,8% | 99,6% | **93,9%** |
+  | Thiếu 1 nguyên liệu hợp thể | Ra đúng nguyên liệu / lần ↻ | 49,5% | 73,9% | **67,9%** |
+  | | Trượt liền dài nhất | 8 | 2 | **2** |
+  | Mọi tình huống | Số loại tướng xuất hiện | 6 | 6 | **20** (27–48% thẻ ngoài đội) |
+
+  → Chợ đa dạng như TFT, nhưng tướng cần vẫn ra nhiều hơn v179 và không bao giờ trượt quá 2 lần liền. Kinh tế giữ nguyên.
+- Giao diện: "Đội triệu hồi" → **"Đội ưu tiên"** (màn Chuẩn bị, bảng chọn đội; máy tính có thêm dòng "Chợ ra mọi tướng Thường, đội này ra nhiều gấp đôi"), Nghỉ chân ghi "chợ tướng làm mới và ưu tiên đội mới", bảng tướng ghi nguồn "Chợ tướng ★".
+- Test: `node tests/cho-tuong/ti-le.test.js` (20 loại, trọng số, nguyên liệu ngoài đội không ưu tiên…), `tests/cho-tuong/cho-tuong.test.js` cập nhật (chợ rút từ tướng Thường, ưu tiên đội). Ảnh đã xem: màn Chuẩn bị, bảng chọn đội, thanh chợ ở 1920×934, 844×390, 667×375.
