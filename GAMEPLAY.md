@@ -1564,3 +1564,12 @@ Mỗi đòn đánh thường của tướng mang hiệu ứng của hành mình:
 - Bấm **Gửi** trong bảng Góp ý → thay toast bằng **bảng cảm ơn**: biểu tượng mặt trống đồng (SVG), "Cảm ơn góp ý của bạn!", "Đội ngũ Thần Thoại Việt sẽ đọc và hoàn thiện game để mang lại trải nghiệm tốt hơn." và dòng trạng thái: *✓ Góp ý đã được gửi tới đội làm game* hoặc *Đang không có mạng — góp ý đã được lưu và sẽ tự gửi khi có mạng*.
 - Bảng không tự đóng; **Đóng** (hoặc Esc) → về lại menu / Cài đặt / trận; đang trong trận thì trận vẫn tạm dừng tới khi bấm Đóng rồi chạy tiếp như trước.
 - Test: `tests/gop-y/gop-y.test.js` thêm kiểm tra bảng cảm ơn (gửi được / ngoại tuyến / Firestore lỗi), không tự đóng, Đóng thì trận chạy tiếp, không tràn ở 844×390 / 667×375 / xoay dọc.
+
+## Phiên bản 165 — Sửa nút Ấn Phù, bỏ dấu ✦ thẻ tướng, thêm Đăng xuất dễ thấy
+- **Lỗi "ấn vào Ấn Phù không vào được màn nào":** khi chưa sở hữu tướng Vàng, `showRunes` chỉ hiện một thông báo (toast) rồi thoát. Khung thông báo `#toasts` nằm *dưới* lớp phủ menu (`.overlay` z-index 20, `#toasts` không có z-index) nên người chơi không thấy gì — bấm như nút chết. Sửa: màn Ấn Phù luôn mở; chưa có tướng Vàng thì hiện giải thích + nút **Đến Anh Hùng**. `#toasts` nay nổi trên mọi lớp phủ (z-index 55), nên các thông báo khác ở menu cũng hiện được.
+- Rà mọi nút menu chính (Xuất Quân/Tiếp tục, Chơi mới, Anh Hùng, Ấn Phù, Kho Báu, Cài đặt, Bách khoa, Xếp hạng, Góp ý) và ngăn kéo ≡ trong trận (Túi đồ, Anh Hùng, Ấn Phù, Bách khoa, Tạm dừng, Góp ý): đều mở đúng màn, không bị phần tử khác che. Test mới `tests/menu-nut/menu-nut.test.js`.
+- Bỏ dấu tròn xanh ngọc ✦ "đã khám phá hiệu ứng ẩn" ở góc thẻ tướng, ảnh chi tiết và chân dung trong trận (thừa). Hiệu ứng ẩn vẫn xem ở bảng chi tiết tướng.
+- **Đăng xuất:** chạm khung người chơi góc trên trái menu → bảng nhỏ (tên, đổi biệt danh, **Đăng xuất**; khách / chưa đăng nhập thì là **Đăng nhập**; đám mây tắt thì không có). Đăng xuất (ở bảng này, Cài đặt hay màn tài khoản) đều hỏi xác nhận ngay trong giao diện rồi mới gọi `CLOUD.signOut()` và về màn đăng nhập; tiến trình trên máy giữ nguyên, đăng nhập lại thì kéo bản trên đám mây.
+
+## Phiên bản 166 — Gộp bảng cảm ơn góp ý + sửa Ấn Phù + Đăng xuất
+- Gộp: bảng cảm ơn sau khi gửi góp ý; nút Ấn Phù luôn mở (chưa có tướng Vàng thì giải thích + nút Đến Anh Hùng; toast nổi trên lớp phủ); bỏ dấu ✦; nút Đăng xuất (chạm khung người chơi / Cài đặt, có xác nhận).
