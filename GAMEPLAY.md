@@ -2839,4 +2839,4 @@ Người dùng chọn phương án 4: máu quái tăng dần theo đợt + hạ 
 - Test: `node tests/chan-vuot-lui/chan-vuot-lui.test.js` (giả lập điện thoại hasTouch, 844×390 + dọc 390×844).
 
 ## claude/vo-tan-su-kien — Test báo trước sự kiện lỗi thời sau banner xếp hàng
-- Test "troibua: hết đợt 59 → báo trước" lỗi lặp trên nhánh chính: game không sai — banner "vượt qua" của sự kiện trước còn hiện nên banner báo trước được xếp hàng (`ui.queueBanner`, không chồng). Test nay chờ banner tới lượt (≤ 3,5 giây, trận đứng yên lúc chờ) rồi mới kiểm, vẫn bắt buộc có báo trước.
+- Test "troibua: hết đợt 59 → báo trước" lỗi lặp trên nhánh chính: game không sai — banner "vượt qua" / "Màn N · vùng đất mới" của vòng test trước còn hiện/xếp hàng nên banner báo trước được xếp hàng (`ui.queueBanner`, không chồng). Test nay xoá hàng đợi banner (ui.clearBanners) trước mỗi sự kiện, chờ banner tới lượt (≤ 3,5 giây, trận đứng yên) rồi mới kiểm, in trạng thái banner khi lỗi, vẫn bắt buộc có báo trước.
