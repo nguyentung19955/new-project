@@ -2338,6 +2338,17 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   test báo nếu quên). Hướng dẫn cho người không lập trình: `docs/pixel/HUONG-DAN-TOOL.md`.
 - Test: `tests/ve-pixel/ve-pixel.test.js` (tool) · `tests/ve-pixel/nap-goi.test.js` (nạp / gỡ / IndexedDB / zip lỗi trong game).
 - **Pixel art:** nhánh không thêm hình game mới (nút trong Cài đặt là nút HTML chữ, như các dòng khác).
+- **Bổ sung (session Claude tự chạy, người dùng không ngồi máy):** lõi dùng chung `tools/ve-pixel-core.js` (trang HTML và Node cùng
+  gọi) + CLI `node tools/ve-pixel.js --spec <json|thư mục> [--out zip] [--xem dir] [--nap [--ghi-de]]` — spec JSON (mã, mô tả, bộ phận,
+  hành, động tác, mẫu vẽ tay + thay bộ phận + đổi màu, vẽ tay từng điểm), mã lỗi `E_…` rõ ràng; `--xem` ảnh phóng to + tong-quan.png;
+  `--nap` ghi nguồn tools/pixel/src + build-pixel --strict (game tự dùng khi mở, không cần bấm Nạp gói; nút nạp tay vẫn giữ).
+  Định dạng + ví dụ: `docs/pixel/SPEC.md`.
+- **Thư viện mẫu vẽ tay** `tools/pixel/thu-vien.js` (`node tools/build-thu-vien.js`): 236 nguồn từ nhánh chính + các nhánh pixel chưa
+  gộp (git show, không merge) — bộ phận (`part`, xếp loại đầu / thân / chân / tay / vũ khí / phép…) + công thức khung động tác. Lõi
+  dựng lại trùng từng điểm ảnh với build-pixel (test 185 mẫu, trừ vfx bảng màu riêng). Trang HTML: ô "Mẫu vẽ tay" (mã đã có bản vẽ
+  tay tự chọn sẵn) + Thay bộ phận + Đổi màu. Bộ mẫu input→output `tools/pixel/mau/<nhóm>/` (17 mẫu, 7 nhóm: spec + PNG tool +
+  PNG vẽ tay + tong-quan.png); mẫu dựng từ thư viện lệch bản vẽ tay 0% (ngưỡng 2%), mẫu sinh từ mô tả để tham khảo.
+- Test thêm `tests/ve-pixel/cli.test.js`. Không vẽ mã mới ngoài bộ mẫu.
 - Chỉnh theo tester (sau v207): màu hành rõ hơn — Lạc Tướng (Kim) giáp + mũ ánh bạc-sắt viền đồng, mặt nạ bạc 2 hốc mắt (khác mặt tối
   trùm mũ của Thợ Săn); Ống Thổi (Mộc) cóc xanh rêu đốm tía; Thợ Gốm (Thổ) đất nung nâu / vàng đất; Thợ Rèn đá xám sáng hơn (vẫn nứt lửa).
 ## claude/pixel-tuong-vang — Pixel lô 5–7: 14 tướng Vàng + 6 linh thú

@@ -96,9 +96,12 @@ const CODES = ['tuong/lactuong', 'tuong/thaymo', 'tuong/kylan', 'tuong/rongme', 
     const by = Object.fromEntries(info.map((i) => [i.k, i]));
     ok(['idle', 'attack', 'cast', 'hurt', 'die'].every((a) => by['tuong/lactuong'].anims[a]), 'tướng: idle · attack · cast · hurt · die');
     ok(['walk', 'attack', 'hurt', 'die'].every((a) => by['quai/tom'].anims[a]) && by['boss/thuongluong'].w >= 48 && by['boss/thuongluong'].anims.rage, 'quái: walk · attack · hurt · die; boss ≥48 px có rage');
-    ok(by['tuong/lactuong'].opt.mu === 'long' && by['tuong/lactuong'].opt.vk === 'riu' && by['tuong/lactuong'].opt.dang === 'nguoi' && by['tuong/lactuong'].opt.hanh === 'kim', 'Lạc Tướng: mũ lông chim + rìu + hành Kim, dáng người ("trắng" không bị đọc thành "rắn")');
-    ok(by['boss/thuongluong'].opt.dang === 'ran' && by['tuong/kylan'].opt.dang === 'thu', 'Thuồng Luồng → dáng rắn; Kỳ Lân → dáng thú');
-    ok(by['icon/hanh-hoa'].opt.hinh === 'lua' && by['ky-nang/lactuong_q'].opt.hinh === 'riu', 'icon Hỏa → lửa; kỹ năng Bổ Rìu → rìu');
+    ok(by['tuong/lactuong'].opt.mau === 'tuong/lactuong' && by['quai/tom'].opt.mau === 'quai/tom', 'mã đã có bản vẽ tay (thư viện) → mặc định dựng từ bản vẽ tay');
+    const hm0 = await page.evaluate(() => { const V = window.__vePixel, d = (k) => V.DS.ma.find((x) => x.k === k); const o = (k) => V.K.hieuMoTa(`${d(k).mo} · hành ${d(k).hanh}`, k.split('/')[0], { ...V.K.defOpts(k.split('/')[0]), __ten: d(k).ten }).o;
+      return { lt: o('tuong/lactuong'), tl: o('boss/thuongluong'), kl: o('tuong/kylan'), ic: V.K.hieuMoTa('hành Hỏa', 'icon', V.K.defOpts('icon')).o, kn: V.K.hieuMoTa('Lạc Tướng · Q «Bổ Rìu Đồng» · a bronze axe chopping', 'ky-nang', V.K.defOpts('ky-nang')).o }; });
+    ok(hm0.lt.mu === 'long' && hm0.lt.vk === 'riu' && hm0.lt.dang === 'nguoi' && hm0.lt.hanh === 'kim', 'mô tả Lạc Tướng: mũ lông chim + rìu + hành Kim, dáng người ("trắng" không bị đọc thành "rắn")');
+    ok(hm0.tl.dang === 'ran' && hm0.kl.dang === 'thu', 'Thuồng Luồng → dáng rắn; Kỳ Lân → dáng thú');
+    ok(hm0.ic.hinh === 'lua' && hm0.kn.hinh === 'riu', 'icon Hỏa → lửa; kỹ năng Bổ Rìu → rìu');
     const hm = await page.evaluate(() => window.__vePixel.hieuMoTa('khăn vàng, giáp sắt, áo choàng đỏ, gậy sắt, hành Hỏa', 'tuong', {}).o);
     ok(hm.mu === 'khan' && hm.mauMu === 'vang' && hm.ao === 'giap' && hm.mauAo === 'sat' && hm.choang === 'son' && hm.vk === 'gay' && hm.mauVk === 'sat' && hm.hanh === 'hoa', 'mô tả "khăn vàng, giáp sắt, áo choàng đỏ, gậy sắt, hành Hỏa" → đúng bộ phận + màu');
 
@@ -196,6 +199,17 @@ const CODES = ['tuong/lactuong', 'tuong/thaymo', 'tuong/kylan', 'tuong/rongme', 
     // mã lỗi (thiếu khung bắt buộc) không vào zip
     const bad = await page.evaluate(async () => { const it = window.__vePixel.ITEMS.find((t) => t.g === 'tuong'); it.anims = it.anims.filter((a) => a.name !== 'attack'); const z = await window.__vePixel.goiZip(); return { e: z.errors, n: z.n }; });
     ok(bad.e.length === 1 && /attack/.test(bad.e[0]) && bad.n === codes.length - 1, 'mã thiếu động tác bắt buộc bị chặn khỏi zip, báo lỗi rõ');
+    // mẫu vẽ tay trong giao diện: thay bộ phận + đổi màu
+    await page.evaluate(() => { const V = window.__vePixel; V.ITEMS.length = 0; V.themMa(['tuong/giong']); V.select(0); });
+    ok(await page.evaluate(() => getComputedStyle(document.getElementById('opts')).display === 'none' && document.getElementById('mau-tv').value === 'tuong/giong'), 'mã có bản vẽ tay: chọn sẵn "Mẫu vẽ tay", ẩn ô bộ phận sinh tự động');
+    await page.selectOption('#thay-p', 'gay'); await page.selectOption('#thay-r', 'tuong/tanvien:gay'); await page.click('#b-thay');
+    await page.selectOption('#dm-a', 'son'); await page.selectOption('#dm-b', 'cham'); await page.click('#b-dm');
+    const mo = await page.evaluate(() => window.__vePixel.ITEMS[0].opt);
+    ok(mo.thay.gay === 'tuong/tanvien:gay' && mo.doiMau.son === 'cham', 'giao diện: thay gậy bằng gậy Sơn Tinh + đổi son → chàm');
+    await page.setViewportSize({ width: 844, height: 390 }); await page.waitForTimeout(200);
+    await page.screenshot({ path: path.join(SHOT, 'tool-mau-ve-tay-844x390.png'), fullPage: true });
+    await page.setViewportSize({ width: 1920, height: 934 }); await page.waitForTimeout(200);
+    await page.screenshot({ path: path.join(SHOT, 'tool-mau-ve-tay-1920x934.png') });
     ok(!errors.length, 'không lỗi console ' + errors.join(' | '));
     fs.writeFileSync(path.join(SHOT, 'goi-pixel.zip'), fs.readFileSync(zipFile));
   } finally { await browser.close(); fs.rmSync(TMP, { recursive: true, force: true }); }

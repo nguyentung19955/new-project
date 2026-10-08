@@ -18,6 +18,10 @@ Tool giúp **vẽ hình pixel cho game rồi nạp thẳng vào game** để xem
 
 ## 3. Đổi tạo hình nhanh
 
+- **Mẫu vẽ tay:** hình đã có bản vẽ tay (kể cả ở nhánh chưa gộp) được tool **tự lấy làm mẫu** — đủ mọi động tác, đúng như bản gốc.
+  Ô **"Mẫu vẽ tay"** cho chọn bản vẽ tay khác cùng nhóm; **Thay** một bộ phận (vd `gay` ← gậy của Sơn Tinh) và **Đổi màu** cả dải
+  (vd đỏ son → chàm). Chọn "— không —" để quay về sinh từ mô tả / bộ phận.
+
 - Ô **Mô tả ngắn**: viết vài cụm, cách nhau dấu phẩy, ví dụ: `khăn vàng, giáp sắt, áo choàng đỏ, gậy sắt, hành Hỏa` → bấm
   **✨ Sinh từ mô tả**. Tool hiểu: *bộ xương, người đá, hồn ma, hình nhân giấy, rối gỗ, tượng đồng, ma cây* · *tóc búi / dựng / dài,
   đầu trọc* · *khăn, nón lá, mũ lông chim, vương miện, mũ trùm, sừng* · *áo, giáp, áo giao lĩnh, cởi trần, khố, váy, quần* + màu (đỏ, son,
