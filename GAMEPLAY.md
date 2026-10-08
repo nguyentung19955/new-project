@@ -2701,6 +2701,14 @@ Người dùng chọn phương án 4: máu quái tăng dần theo đợt + hạ 
 
   % sát thương từ R (đợt 45–55, tướng max đứng một mình) trước → sau: Gióng 94 → 86, Mẫu T.Ngàn 91 → 87, Sơ Dừa 91 → 83, Cuội 93 → 81, An Tiêm 84 → 73, Hải Sen 90 → 87, Thần Sương 74 → 68. R nhanh nhất trước đây: Thầy Mo 8,5 s, Xạ Thủ 8,6 s, Lạc Tướng 8,8 s → nay 12 s.
 - Tím đơn độc (21 tướng, ải 4 Thường): đa số thua ~đợt 15–24; Sơ Dừa vượt trội (thua ~49) → hạ qua R ở trên.
+- Bảng bot bản chốt (Khó ×1,03, Thường ×1,02; 3 ván; mất mạng đầu → thua · mạng còn sau đợt 40/50; đội 8 = 2 Vàng + 3 Tím + 3 Thường ★★★ khác hành):
+
+| Đội | Thường (ải 4) | Khó ải 1 | Khó ải 4 |
+|---|---|---|---|
+| 1 Vàng Mặt Trời | 22 → 26 · 0/0 | 33 → 45 · 11–23/0 | 22 → 28 · 0/0 |
+| Hỗn hợp 6 | 56 → ≥55 · 32/35 | 37 → 46 · 0–32/0–26 | 40 → 46 · 2–32/0–6 |
+| Đội 8 mạnh | 57 → ≥60 · 32/35 | 45 → 56 · 30/17–35 | 43 → 52 · 15–31/0–34 |
+
 - Bảng bot bản đầu (Khó ×1,04, Thường ×1,03) trước → sau (3 ván mỗi ô; đợt mất mạng đầu → đợt thua; Dễ = ải 1 Thường, Thường = ải 4, Khó = ải 1 bật Khó, Khó4 = ải 4 bật Khó; đội 6 = 6 Thường ★★★ khác hành; hỗn hợp = 1 Vàng tầm xa + 2 Tím + 3 Thường ★★★):
 
 | Đội | Dễ | Thường | Khó (ải 1) | Khó4 |
