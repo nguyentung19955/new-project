@@ -3339,7 +3339,7 @@ class UI {
         <div class="sl-card misc"><div class="sl-well">${svgI(sceneArt('kholua'))}<span class="sl-tag" style="left:6px;background:#0D0B08;border:1px solid #8C6A2E;color:#F2E6C8">${misc.kind === 'treasure' ? 'KHO LÚA' : 'HỘI LÀNG'}</span><span class="sl-tag" style="right:6px;background:#12301A;border:1px solid #3EDC4E;color:#6AE06A">Ngẫu nhiên</span></div>
           <div class="sl-name">${misc.title}</div>
           <div class="sl-desc">${misc.kind === 'treasure' ? `<span style="font-size:17px;font-weight:800;color:#FFD66B">${coin()} +${misc.gold} vàng</span> <span style="font-size:17px;font-weight:800;color:#FF8A6A">${ic('mang')}+${misc.lives} mạng</span>`
-            : '<span class="g">Mọi tướng trên sân +2 cấp</span> (kèm 2 điểm kỹ năng)'}<br>Lần khác: ${misc.kind === 'treasure' ? '<span class="g">mọi tướng +2 cấp</span>' : '<span class="g">vàng và +3 mạng</span>'}</div>
+            : '<span class="g">Mọi tướng trên sân +2 cấp</span> (kèm 2 điểm kỹ năng)'}</div>
           <button class="sl-pick metal" style="color:#F2D27A" data-act="reward" data-i="2">Chọn</button></div>
       </div>
       ${flood ? `<div class="sl-warn"><span style="font-size:20px">${ic('nuoc-dang')}</span><span style="flex:1"><b>Thủy Tinh dâng nước:</b> sau đợt này, các ô bậc <b>${TIER_NAMES[g.water]}</b> sẽ ngập và tướng đứng đó bị sa lầy. Dùng <span class="m">Mọc Núi</span> để cứu ô quan trọng.</span></div>` : ''}
