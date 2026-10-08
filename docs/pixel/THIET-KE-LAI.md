@@ -145,3 +145,9 @@ Lưỡi Hái = cán dài + lưỡi tím cong · Ngựa Hồng Mao = đầu ngự
 Mặt Trống = mặt da 3/4 tang son · Trống Đồng = trống nhìn ngang có cóc trên mặt · Dùi Trống = đôi dùi bắt chéo đầu vải son ·
 Mũ Sừng = mũ đồng 2 sừng (game hiện mũ thường theo loại × độ hiếm `do_mu_*` nên icon này chỉ dùng khi đổi quy tắc).
 Các bộ đồ theo loại × độ hiếm (`do_<loại>_<độ hiếm>`, bộ Chim Lạc / Trống / Ngựa sắt…) cố ý cùng dáng khác màu (nhận loại + độ hiếm) — giữ.
+
+### 3b. Chuẩn khung tranh nhỏ (góp ý người dùng: "khung không đều")
+Mọi tranh `giao-dien/tranh-*` cùng canvas 96×96, **lề trong 4px** (nội dung ≤ 88×88, tool báo lỗi nếu vượt), cân giữa ngang theo khối hình;
+vật đứng (voi, gà, ngựa, hũ, kho) **đáy cùng đường chân y = 91**; vật tròn (trống đồng, xoay) cân giữa dọc. Tia hũ báu thu ngắn không vượt lề,
+mặt trống thu bán kính 46 → 42. CSS: 3 thẻ Vua Hùng ban thưởng có **giếng tranh cố định 44% chiều cao thẻ** (trước giếng thẻ Sính lễ thấp hơn
+vì mô tả dài), nút Chọn luôn sát đáy.

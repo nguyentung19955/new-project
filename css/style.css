@@ -725,6 +725,11 @@ button:disabled { cursor: default; }
 .sl-well.sl-icon .svgi { width: 70%; height: 82%; }
 .sl-well.sl-icon .svgi img { width: 100%; height: 100%; object-fit: contain; }
 .sl-card.gift .sl-desc { height: auto; min-height: 50px; }
+/* claude/ve-lai-pixel: 3 thẻ ban thưởng cùng chiều cao giếng tranh (trước: giếng thẻ Sính lễ thấp hơn vì mô tả dài) —
+   giếng chiếm cố định 44% thẻ, mô tả co lại phần còn dư, nút Chọn luôn sát đáy */
+.sl-card .sl-well { flex: 0 0 44%; }
+.sl-card.gift .sl-desc { flex: 1 1 auto; min-height: 0; }
+.sl-card .sl-pick { margin-top: auto; }
 .sl-rar { font-size: 12px; line-height: 15px; font-weight: 700; color: #C8BFA8; }
 .chip.sl-big { background: #5A3A08; border: 1px solid #FFD66B; color: #FFD66B; }
 .sl-name { font-family: var(--title); font-size: 18px; font-weight: 800; line-height: 22px; color: var(--gold); text-shadow: 0 1px 2px #000; }

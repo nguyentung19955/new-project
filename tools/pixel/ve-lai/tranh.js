@@ -18,7 +18,7 @@ const dist = (x, y, cx, cy) => Math.hypot(x + 0.5 - cx, y + 0.5 - cy);
 function trongDong() {
   const v = new Ve(96, 96), C = 48;
   for (let y = 0; y < 96; y++) for (let x = 0; x < 96; x++) {
-    const r = dist(x, y, C, C), a = Math.atan2(y + 0.5 - C, x + 0.5 - C);
+    const r = dist(x, y, C, C) * (46 / 42), a = Math.atan2(y + 0.5 - C, x + 0.5 - C);
     if (r > 46) continue;
     let c = 'dong';
     if (r > 44) c = 'dong-toi';
@@ -54,16 +54,16 @@ function trongDong() {
     '...kk.kk......',
     '..k....k......',
   ];
-  for (let i = 0; i < 6; i++) { const a = (i * Math.PI * 2) / 6 + 0.2; rotStamp(v, lac, { k: 'dong-toi' }, C + Math.cos(a) * 25, C + Math.sin(a) * 25, a + Math.PI / 2); }
+  for (let i = 0; i < 6; i++) { const a = (i * Math.PI * 2) / 6 + 0.2; rotStamp(v, lac, { k: 'dong-toi' }, C + Math.cos(a) * 23, C + Math.sin(a) * 23, a + Math.PI / 2); }
   void chim;
   // ánh sáng trên-trái: mặt đồng gốc → đồng sáng ở góc trên-trái, mép dưới-phải tối hơn
   // ánh sáng trên-trái: vầng sáng lệch tâm (lõm sáng ở góc trên-trái), mép dưới-phải tối
-  v.swap('dong', 'dong-sang', (x, y) => dist(x, y, C - 30, C - 30) < 34);
-  v.swap('dong-sang', 'vang-nghe', (x, y) => dist(x, y, C - 34, C - 34) < 22 && dist(x, y, C, C) > 33);
-  v.swap('dong', 'dong-toi', (x, y) => dist(x, y, C + 34, C + 34) < 26 && dist(x, y, C, C) > 39);
+  v.swap('dong', 'dong-sang', (x, y) => dist(x, y, C - 27, C - 27) < 31);
+  v.swap('dong-sang', 'vang-nghe', (x, y) => dist(x, y, C - 31, C - 31) < 20 && dist(x, y, C, C) > 30);
+  v.swap('dong', 'dong-toi', (x, y) => dist(x, y, C + 31, C + 31) < 24 && dist(x, y, C, C) > 35.5);
   // nâng cả mặt trống lên một tông (đồng mới đánh bóng, đọc rõ ở cỡ nhỏ); vành ngoài giữ tối
   const len = { 'vang-nghe': 'vang-sang', 'dong-sang': 'vang-nghe', dong: 'dong-sang', 'dong-toi': 'dong' };
-  for (let y = 0; y < 96; y++) for (let x = 0; x < 96; x++) { const c = v.g[y][x]; if (c && len[c] && dist(x, y, C, C) < 43.5 && dist(x, y, C, C) > 11 && c !== 'vang-sang') v.g[y][x] = len[c]; }
+  for (let y = 0; y < 96; y++) for (let x = 0; x < 96; x++) { const c = v.g[y][x]; if (c && len[c] && dist(x, y, C, C) < 39.7 && dist(x, y, C, C) > 10 && c !== 'vang-sang') v.g[y][x] = len[c]; }
   v.outline();
   return v;
 }
@@ -73,7 +73,7 @@ function huBau() {
   const v = new Ve(96, 96);
   // hào quang: 12 tia hình nêm sạch, xen kẽ vàng nghệ / lửa sáng
   for (let k = 0; k < 12; k++) {
-    const a = (k * Math.PI) / 6 + Math.PI / 12, w = k % 2 ? 0.12 : 0.17, r1 = k % 2 ? 36 : 45;
+    const a = (k * Math.PI) / 6 + Math.PI / 12, w = k % 2 ? 0.12 : 0.17, r1 = k % 2 ? 29 : 34;
     v.poly([[48, 40], [48 + Math.cos(a - w) * r1, 40 + Math.sin(a - w) * r1], [48 + Math.cos(a + w) * r1, 40 + Math.sin(a + w) * r1]], k % 2 ? 'vang-nghe' : 'lua-sang');
   }
   v.ell(48, 30, 15, 9, 'vang-sang');
@@ -93,7 +93,7 @@ function huBau() {
   v.ell(64, 18, 9, 3, 'dong'); v.hl(57, 72, 17, 'dong-sang'); v.hl(57, 71, 20, 'dong-toi'); v.rect(63, 13, 3, 3, 'dong-sang');
   // đồng vàng rơi quanh chân
   const xu = (x, y) => { v.ell(x, y, 4, 2.5, 'vang-nghe'); v.hl(x - 2, x + 2, y - 1, 'vang-sang'); v.hl(x - 3, x + 3, y + 2, 'dong'); v.p(x, y, 'dong'); };
-  xu(20, 86); xu(28, 89); xu(72, 87); xu(80, 84); xu(64, 90);
+  xu(20, 84); xu(28, 87); xu(72, 85); xu(80, 82); xu(64, 87);
   // lấp lánh
   for (const [x, y] of [[22, 22], [76, 30], [14, 50]]) { v.vl(x, y - 2, y + 2, 'sang'); v.hl(x - 2, x + 2, y, 'sang'); }
   v.outline();
@@ -239,11 +239,11 @@ function ngua() {
   for (const [x, y] of [[10, 42], [14, 42], [29, 42]]) v.hl(x, x + 2, y, 'toi'); v.hl(31, 33, 39, 'toi');
   v.hl(14, 30, 31, 'dat-sang');   // bụng tối
   v.p(39, 11, 'vien'); v.p(43, 16, 'dat-toi');
-  v.poly([[34, 7], [35, 3], [37, 7]], T); v.p(35, 5, 'dat-sang');
+  v.poly([[34, 7], [35, 4], [37, 7]], T); v.p(35, 6, 'dat-sang');
   // chín lọn bờm đỏ bay về sau + đuôi đỏ
   // từng lọn như lưỡi lửa vuốt ngược gió: viền son tối rồi lõi sáng, xếp từ vai lên gáy (lọn trên đè lọn dưới)
   for (let i = 8; i >= 0; i--) {
-    const bx = 35.5 - i * 1.05, by = 6.5 + i * 1.75, ex = bx - 9 - (i % 2) * 2, ey = by - 4 + (i % 3);
+    const bx = 35.5 - i * 1.05, by = 6.5 + i * 1.75, ex = bx - 9 - (i % 2) * 2, ey = by - 2.5 + (i % 3);
     net(v, [bx, by], [bx - 4, by + 1], [ex, ey], 1.7, 0.6, 'son-toi');
     net(v, [bx, by], [bx - 4, by + 1], [ex, ey], 1.0, 0.3, i % 2 ? 'son-sang' : 'lua');
   }
@@ -254,14 +254,28 @@ function ngua() {
   return x2(v);
 }
 
+// CHUẨN KHUNG (góp ý người dùng: "khung không đều"): mọi tranh cùng canvas 96×96, lề trong 4px (nội dung ≤ 88×88),
+// cân giữa ngang theo khối hình; vật đứng (thú, hũ, kho) đặt đáy cùng đường chân y = 91; vật tròn / xoay cân giữa dọc.
+const LE = 4, CHAN = 91;
+function chuan(fn, kieu) {
+  return () => {
+    const v = fn(); let x0 = 99, y0 = 99, x1 = -1, y1 = -1;
+    for (let y = 0; y < v.h; y++) for (let x = 0; x < v.w; x++) if (v.g[y][x]) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
+    const w = x1 - x0 + 1, h = y1 - y0 + 1;
+    if (w > v.w - LE * 2 || h > v.h - LE * 2) throw new Error(`tranh vượt lề: ${w}×${h}`);
+    const o = new Ve(v.w, v.h), dx = Math.round((v.w - w) / 2) - x0, dy = kieu === 'day' ? CHAN - y1 : Math.round((v.h - h) / 2) - y0;
+    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) o.g[y + dy][x + dx] = v.g[y][x];
+    return o;
+  };
+}
 const DS = {
-  'tranh-trong-dong': [trongDong, 'Mặt trống đồng', 'Mặt trống đồng Đông Sơn nhìn thẳng: sao 12 cánh, vòng tròn tiếp tuyến có chấm, 6 chim Lạc bay, răng cưa, vành chấm; sáng trên-trái'],
-  'tranh-hu-bau': [huBau, 'Hũ báu vua Hùng', 'Hũ đồng bụng tròn khắc răng cưa + vòng chấm, nắp mở lệch, hào quang vàng 12 tia, đồng vàng rơi quanh chân'],
-  'tranh-kho-lua': [khoLua, 'Kho lúa', 'Kho sàn mái thuyền Đông Sơn (chim Lạc trên nóc), vách tre đan, thúng thóc vàng, hai bó lúa'],
-  'tranh-qua-voi': [voi, 'Voi chín ngà', 'Voi trắng nhìn ngang quay phải, tai lớn lót hồng, vòi cuộn, 5 ngà ngà vểnh xếp lớp (chín ngà), yên vải son viền vàng hoa văn răng cưa + vòng chấm, mũ trán đồng'],
-  'tranh-qua-ga': [ga, 'Gà chín cựa', 'Gà trống thân son, bờm cổ vàng cam, mào răng cưa đỏ, đuôi cong xanh đen ánh ngọc, chân vàng có 9 cựa trắng (5 + 4)'],
-  'tranh-qua-ngua': [ngua, 'Ngựa chín hồng mao', 'Ngựa lông vàng cát, chân trước giơ gập, 9 lọn bờm đỏ bay về sau + đuôi đỏ, dây cương son chuông đồng'],
-  'tranh-xoay': [xoay, 'Xoay ngang máy', 'Điện thoại nằm ngang (màn cảnh sông núi) giữa hai mũi tên cung tròn vàng đồng'],
+  'tranh-trong-dong': [chuan(trongDong, 'giua'), 'Mặt trống đồng', 'Mặt trống đồng Đông Sơn nhìn thẳng: sao 12 cánh, vòng tròn tiếp tuyến có chấm, 6 chim Lạc bay, răng cưa, vành chấm; sáng trên-trái'],
+  'tranh-hu-bau': [chuan(huBau, 'day'), 'Hũ báu vua Hùng', 'Hũ đồng bụng tròn khắc răng cưa + vòng chấm, nắp mở lệch, hào quang vàng 12 tia, đồng vàng rơi quanh chân'],
+  'tranh-kho-lua': [chuan(khoLua, 'day'), 'Kho lúa', 'Kho sàn mái thuyền Đông Sơn (chim Lạc trên nóc), vách tre đan, thúng thóc vàng, hai bó lúa'],
+  'tranh-qua-voi': [chuan(voi, 'day'), 'Voi chín ngà', 'Voi trắng nhìn ngang quay phải, tai lớn lót hồng, vòi cuộn, 5 ngà ngà vểnh xếp lớp (chín ngà), yên vải son viền vàng hoa văn răng cưa + vòng chấm, mũ trán đồng'],
+  'tranh-qua-ga': [chuan(ga, 'day'), 'Gà chín cựa', 'Gà trống thân son, bờm cổ vàng cam, mào răng cưa đỏ, đuôi cong xanh đen ánh ngọc, chân vàng có 9 cựa trắng (5 + 4)'],
+  'tranh-qua-ngua': [chuan(ngua, 'day'), 'Ngựa chín hồng mao', 'Ngựa lông vàng cát, chân trước giơ gập, 9 lọn bờm đỏ bay về sau + đuôi đỏ, dây cương son chuông đồng'],
+  'tranh-xoay': [chuan(xoay, 'giua'), 'Xoay ngang máy', 'Điện thoại nằm ngang (màn cảnh sông núi) giữa hai mũi tên cung tròn vàng đồng'],
 };
 module.exports = { DS, rotStamp };
 if (require.main === module) {
