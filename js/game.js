@@ -3425,6 +3425,8 @@ class Game {
       if (sk.active.mana < reserve && h.mana - sk.active.mana < reserve) continue;
       // sua-tam-skill: chưa có quái trong tầm → chưa tung (giữ hồi chiêu sẵn sàng, xét lại khung sau)
       if (!SKILL_GLOBAL.has(sk.active.cast) && !SKILL_SUPPORT.has(sk.active.cast) && !this.findTarget(h.x, h.y, st.range * skillReach(h.type, sk), true)) continue;
+      // hỗ trợ (khiên / buff / hồi máu): chỉ trong đợt — sân hết quái (giữa hai đợt) thì không dùng
+      if (SKILL_SUPPORT.has(sk.active.cast) && !this.enemies.some((e) => !e.dead)) continue;
       const cst = { ...st, skillPower: st.skillPower * skillMult(lv), lv, skName: sk.name };
       this.ultCast = i === 3;
       const castOk = SKILL_CASTS[sk.active.cast](this, h, cst, skillN(h.level));

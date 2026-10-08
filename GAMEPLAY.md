@@ -2699,3 +2699,5 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 - Sửa theo tester: nền menu / đăng nhập / màn tải giữ tranh cũ (bản pixel 320×180 mất hoa văn trống đồng, kể cả khi tăng màu / khử
   nhiễu); thẻ người chơi và nút Xuất Quân dùng khung vẽ tay chuyển sang pixel (có lại huy hiệu avatar tròn và 2 huy hiệu hai bên), không
   bị khung bảng / nút chung đè; icon Vô Tận vẽ lại thành ∞ rõ.
+- Sửa thêm: kỹ năng hỗ trợ (khiên, buff, hồi máu — Kim Quy Q, Cây Đa của Cuội/Mẫu E…) chỉ dùng TRONG ĐỢT: sân hết quái (giữa hai đợt)
+  thì không dùng dù tướng đang bị thương. Test: tests/sua-tam-skill (giữa hai đợt, tướng 30% máu → không kỹ năng hỗ trợ nào tung).
