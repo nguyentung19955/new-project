@@ -60,9 +60,12 @@
 
   G.WTYPES = {
     sword: { name: 'Kiếm', dmg: 10, cd: 0.36, reach: 32, depth: 17, special: 'Chém lướt' },
-    bow: { name: 'Cung', dmg: 9, cd: 0.5, ranged: true, special: 'Mưa tên' },
+    // Sửa góp ý 3 (càng chậm hoặc càng phải áp sát thì mỗi đòn càng mạnh): cung 9 -> 11 mỗi phát (vẫn dưới kiếm) nhưng tên xuyên và
+    // mưa tên yếu đi hẳn (G.MOVES.bow), để cung an toàn nhất có sát thương mỗi giây thấp nhất, cả khi đánh một con lẫn cả cụm;
+    // búa 23 -> 22 (vẫn mạnh nhất mỗi đòn).
+    bow: { name: 'Cung', dmg: 11, cd: 0.5, ranged: true, special: 'Mưa tên' },
     spear: { name: 'Giáo', dmg: 11, cd: 0.44, reach: 56, depth: 12, special: 'Lao tới' },
-    hammer: { name: 'Búa', dmg: 23, cd: 0.8, reach: 32, depth: 25, stagger: 0.4, special: 'Nện đất' },
+    hammer: { name: 'Búa', dmg: 22, cd: 0.8, reach: 32, depth: 25, stagger: 0.4, special: 'Nện đất' },
   };
   G.WKEYS = ['sword', 'bow', 'spear', 'hammer'];
   // BỐN BẬC MÀU của vũ khí (thay ba bậc Sắt, Bạc, Linh cũ). mult: hệ số sát thương gốc; maxStage: mốc tiến hóa cao nhất
@@ -4048,10 +4051,13 @@
     const f = Math.floor(G.time * 12) % 2;
     p(c, x - 3, Math.round(o.y), 6, 1, 'rgba(0,0,0,0.3)');
     if (o.kind === 'arrow') {
-      const k = o.vx < 0 ? -1 : 1, col = o.col || '#c9ccd2';
-      // tên bay chéo thì vẽ nghiêng theo: mỗi mảnh dịch dọc theo độ dốc của đường bay
-      const sl = o.vx ? G.clamp((o.vy || 0) / Math.abs(o.vx), -1, 1) : 0;
-      const r = (a, b, w, h, cc) => p(c, k > 0 ? x + a : x - a - w, y + b + Math.round((a + w / 2) * sl), w, h, cc);
+      // Sửa góp ý 1: tên xoay đúng hướng bay ở mọi góc (trước chỉ nghiêng tối đa 45 độ nên tên bắn lên/xuống vẽ gần như nằm ngang).
+      // Mỗi mảnh (a: dọc thân tên tính từ đầu tên về sau là âm, b: lệch ngang) được chấm từng điểm ảnh theo hướng bay.
+      const col = o.col || '#c9ccd2', sp = Math.hypot(o.vx, o.vy) || 1, ux = o.vx / sp, uy = o.vy / sp;
+      const r = (a, b, w, h, cc) => {
+        c.fillStyle = cc;
+        for (let i = 0; i < w; i++) for (let j = 0; j < h; j++) { const s = a + i + 0.5, q = b + j + 0.5; c.fillRect(Math.floor(x + ux * s - uy * q), Math.floor(y + uy * s + ux * q), 1, 1); }
+      };
       if (o.big) { r(-14, -1, 10, 3, hexA(o.col || '#ffffff', 0.45)); r(-20, 0, 8, 1, hexA(o.col || '#ffffff', 0.3)); }
       r(-6, -1, 11, 3, DARK);
       r(-5, 0, 9, 1, '#e8e2d0');
@@ -8389,6 +8395,29 @@
   const P0 = { x: 2, y: -11, ang: -8, stand: 1 };
   const H0 = { x: 3, y: -14, ang: -85, stand: 1 };
   const B0 = { x: 15, y: -17, ang: 0, pull: 0, stand: 1 };
+  // Sửa góp ý 1: tư thế cung theo hướng ngắm. Trước đây cung, tay và thân đổi góc, đổi chỗ, nghiêng tới nghiêng lui giữa các khung
+  // (góc -3..4 độ, chỗ cầm 15..23, thân ngả -16..14 độ; đòn đặc biệt chĩa -25..-68 độ) và không bao giờ chĩa theo hướng tên bay,
+  // nên trông xiêu vẹo. Nay: cung quay quanh một điểm cố định ở vai (BPIV), luôn chĩa đúng góc ngắm rel (độ, 0 là trước mặt,
+  // âm là lên, dương là xuống; mỗi nấc 15 độ), thân đứng thẳng, tay kéo dây dọc theo trục cung, tên rời dây cung theo cùng trục.
+  // Chỉ có độ căng dây (pull) và một chút giật lùi (rec) đổi giữa các khung.
+  const BPIV = [3, -16], BRAD = 13;
+  function bowK(rel, pull, rec) {
+    const q = rotv(BRAD - (rec || 0), 0, rel);
+    return { x: BPIV[0] + q[0], y: BPIV[1] + q[1], ang: rel, pull, stand: 1, lean: 0, mood: 'attack' };
+  }
+  const bowRel = (v) => (((v | 0) % 13) - 6) * 15; // số nấc góc (0..12) -> độ
+  // Nhịp kéo, buông của một phát bắn (u: 0..1 của động tác). Tên rời dây ở u = 0,45 (lúc combat.js gọi đòn chạm).
+  function bowPull(u) {
+    if (u < 0.3) return [0.3 + 0.7 * (u / 0.3), 0];
+    if (u < 0.45) return [1, 0];
+    if (u < 0.6) return [0, 1];
+    return [0, 0];
+  }
+  function bowPose(ps, rel, pull, rec) {
+    attach('bow', bowK(rel, pull, rec), ps);
+    if (rel > 40) ps.w.front = true; // ngắm xuống thì cung ở trước người, không bị thân che
+    return ps;
+  }
   const ATK = {
     sword: [
       [[0, S0], [0.22, { x: -2, y: -25, ang: -150, hang: -12 }], [0.45, { x: 9, y: -17, ang: 15, hang: 55 }], [0.6, { x: 12, y: -19, ang: 38, hang: 75 }], [0.82, { x: 8, y: -14, ang: 10, hang: 25, stand: 0.4 }], [1, S1]],
@@ -8489,7 +8518,7 @@
         const c = f / 4, sh = v & 1 ? 1 : 0, wk = v & 2 ? -1 : 0;
         ps.free = false; ps.eyes = c >= 1 ? 'wide' : 'open';
         let k;
-        if (wt === 'bow') k = { x: 16 + 4 * c, y: -17 + wk, ang: -3 * c, pull: Math.max(0.15, c), stand: 1, lean: -14 * c };
+        if (wt === 'bow') return bowPose(ps, bowRel(v >> 2), Math.max(0.15, c), 0);
         else if (wt === 'spear') k = { x: 2 - 8 * c - sh, y: -12 + wk, ang: -4 + 6 * c, stand: 1, lean: -8 - 10 * c };
         else if (wt === 'hammer') k = { x: 3 - 5 * c, y: -14 - 14 * c + wk - sh, ang: -85 - 55 * c, stand: 1, lean: -10 * c };
         else k = { x: 3, y: -14 + wk, ang: -95 - 30 * c, stand: 1 };
@@ -8511,6 +8540,7 @@
       case 'atk': {
         if (!R) { ps.hn = [7, -11]; ps.rot = 8; return ps; }
         const n = anim === 'spec' ? 7 : ATKN[wt], u = (f + 0.5) / n;
+        if (wt === 'bow') { ps.free = false; ps.eyes = EYE_ATK(u); const q = bowPull(anim === 'spec' ? u * 0.9 : u); return bowPose(ps, bowRel(v), q[0], q[1]); }
         const k = kf(anim === 'spec' ? SPEC[wt] : ATK[wt][v % 3], u, wt);
         ps.free = false; ps.eyes = EYE_ATK(u);
         return attach(wt, k, ps);
@@ -8537,16 +8567,19 @@
       return ['dodge', Math.min(7, Math.floor(o.dodge * 8)), dv];
     }
     if (p && p.dashT > 0) return ['dash', Math.floor(t * 30) % 2, 0];
-    if (p && p.specT > 0) return ['spec', Math.min(6, Math.max(0, Math.floor((1 - p.specT / 0.35) * 7))), 0];
+    const ai = p && p.aimRel != null ? Math.max(0, Math.min(12, Math.round(p.aimRel / 15) + 6)) : 6; // nấc góc ngắm của cung
+    if (p && p.specT > 0) return ['spec', Math.min(6, Math.max(0, Math.floor((1 - p.specT / 0.35) * 7))), wt === 'bow' ? ai : 0];
     if (p && p.castT > 0) return ['cast', Math.min(7, Math.max(0, Math.floor((1 - p.castT / 0.4) * 8))), 0];
     const mv = p && p.mv;
     if (mv && mv.holding && !(o.atk >= 0) && REST[wt]) {
       const top = mv.charge >= 1;
+      if (wt === 'bow') return ['hold', Math.min(4, Math.round(mv.charge * 4)), ai << 2]; // cung: không rung, không nhún khi bước
       return ['hold', Math.min(4, Math.round(mv.charge * 4)), (top && Math.floor(t * 18) % 2 ? 1 : 0) + (o.move && Math.floor(t * 8) % 2 ? 2 : 0)];
     }
     if (o.atk >= 0 && mv && mv.kind === 'quet' && wt === 'spear') return ['sweep', Math.min(9, Math.floor(o.atk * 10)), 0];
     if (o.atk >= 0) {
       const n = ATKN[wt] || 8, combo = p ? Math.max(0, p.comboI | 0) % 3 : Math.floor(t / 1.6) % 3;
+      if (wt === 'bow') return ['atk', Math.min(n - 1, Math.floor(o.atk * n)), ai];
       return ['atk', Math.min(n - 1, Math.floor(o.atk * n)), combo];
     }
     if ((p && p.hurtT > 0) || (!p && o.flash)) return ['hurt', 0, 0];
@@ -10510,6 +10543,15 @@
     return best;
   }
   G.nearest = nearest;
+  // Đoạn tên bay (px,py)->(x,y) có cắt vùng trúng hình bầu dục của quái e không. Trả về vị trí cắt dọc đoạn (0..1), không cắt thì -1.
+  function segHit(o, e) {
+    const B = G.MOVES && G.MOVES.bow, kx = 1 / (e.r + (B ? B.hitX : 4)), ky = 1 / (e.hr + (B ? B.hitY : 7));
+    const ax = (o.px - e.x) * kx, ay = (o.py - e.y) * ky, dx = (o.x - o.px) * kx, dy = (o.y - o.py) * ky;
+    const L = dx * dx + dy * dy;
+    const t = L > 0 ? G.clamp(-(ax * dx + ay * dy) / L, 0, 1) : 0;
+    const qx = ax + dx * t, qy = ay + dy * t;
+    return qx * qx + qy * qy <= 1 ? t : -1;
+  }
 
   function startAttack(P) {
     const w = curW(P), T = G.WTYPES[w.type];
@@ -10569,9 +10611,16 @@
       hitProps(P.x - 58, P.x + 58, P.y, 58 * G.ZK);
       W.zones.push({ shape: 'circle', x: P.x, y: P.y, r: 58, t: 0, life: 0.15, team: 'fx' });
     } else {
-      const tgt = nearest(P, 330, 60, true);
-      // không có quái trước mặt thì mưa tên rơi phía trước, nhưng luôn nằm trong sàn phòng
-      const x = tgt ? tgt.x : G.clamp(P.x + P.face * Math.min(110, (W.x1 - W.x0) * 0.4), W.x0 + 20, W.x1 - 20), y = tgt ? tgt.y : P.y;
+      // Sửa góp ý 1: mưa tên đặt tâm vào quái (hoặc cụm quái) gần nhất theo mọi hướng, đón đầu nhẹ quái đang chạy.
+      // Không có quái thì mưa rơi phía trước theo hướng đang đi hoặc đang nhìn, luôn nằm trong sàn phòng.
+      const sp = G.moves ? G.moves.bowSpot(P, 330, 40, 0.25) : null;
+      let x, y;
+      if (sp) { x = sp.x; y = sp.y; }
+      else {
+        const ux = P.moving && P.ldx != null ? P.ldx : P.face, uy = P.moving && P.ldy != null ? P.ldy : 0, L = Math.min(110, (W.x1 - W.x0) * 0.4);
+        x = P.x + ux * L; y = P.y + uy * L * 0.6;
+      }
+      x = G.clamp(x, W.x0 + 20, W.x1 - 20); y = G.clamp(y, W.y0, W.y1); // tâm mưa luôn trong sàn (vùng mưa rộng 40 vẫn phủ quái sát tường)
       W.zones.push({ shape: 'circle', x, y, r: 40, t: 0, pool: true, team: 'player', rain: true, life: 0.95, tick: 0, w, el });
     }
     if (G.moves) G.moves.special(P, w); // phần riêng theo hệ của đòn đặc biệt
@@ -10588,8 +10637,11 @@
     } else if (P.key === 'hunter') {
       const traps = W.props.filter((p) => p.type === 'trap' && !p.dead);
       if (traps.length >= 2) traps[0].dead = true;
-      W.props.push({ type: 'trap', x: G.clamp(P.x + P.face * 26, W.x0, W.x1), y: P.y, el: G.activeEl(P, w), t: 15, w });
-      FX('trapPlace', G.clamp(P.x + P.face * 26, W.x0, W.x1), P.y, G.activeEl(P, w));
+      // Sửa góp ý 1: đang cầm cung thì bẫy ném thẳng vào chỗ quái gần nhất (trong tầm 150, đón đầu nhẹ); không có quái thì đặt trước mặt.
+      const sp = w.type === 'bow' && G.moves ? G.moves.bowSpot(P, 150, 14, 0.3) : null;
+      const tx = G.clamp(sp ? sp.x : P.x + P.face * 26, W.x0, W.x1), ty = G.clamp(sp ? sp.y : P.y, W.y0, W.y1);
+      W.props.push({ type: 'trap', x: tx, y: ty, el: G.activeEl(P, w), t: 15, w });
+      FX('trapPlace', tx, ty, G.activeEl(P, w));
     } else if (P.key === 'healer') {
       W.zones.push({ shape: 'circle', x: G.clamp(P.x + P.face * 22, W.x0, W.x1), y: P.y, r: 42, t: 0, pool: true, team: 'player', el: 'poison', heal: true, life: 5, tick: 0, src: G.pDamage(P, w) });
       FX('bottle', P, W.zones[W.zones.length - 1]);
@@ -10613,7 +10665,7 @@
 
   G.hurtPlayer = function (amt, el, src, melee) {
     const P = W.P;
-    if (P.inv > 0 || P.dead || W.over) return false;
+    if (P.inv > 0 || P.dead || W.over || W.safe) return false; // W.safe: đã hạ trùm, đang đi dạo chờ vào cổng
     const raw = amt;
     amt *= 1 - Math.min(0.75, P.dr);
     if (P.gongT > 0) amt *= 0.4;
@@ -10870,20 +10922,32 @@
         o.vx += ((dx / d) * o.homing - o.vx) * dt * 2.5;
         o.vy += ((dy / d) * o.homing - o.vy) * dt * 2.5;
       }
+      if (o.fresh) o.fresh = false; else { o.px = o.x; o.py = o.y; } // khung đầu của tên: giữ điểm đầu đoạn ở giữa người bắn
       o.x += o.vx * dt; o.y += o.vy * dt;
       if (o.team === 'player') {
+        // Sửa góp ý 1: kiểm tra trúng theo cả đoạn tên vừa bay trong khung (không chỉ điểm cuối), nên tên nhanh không "nhảy qua"
+        // quái; khung đầu tiên đoạn này bắt đầu từ giữa người bắn (px, py), nên quái đứng sát người vẫn trúng.
+        // Vùng trúng là hình bầu dục rộng hơn thân quái một chút (C.hitX, C.hitY), cùng hệ trục với chỗ đứng của quái.
+        const zf = G.MOVES && G.MOVES.bow ? G.MOVES.bow.zFly : 11;
+        if (o.kind === 'arrow' && o.z > zf) o.z = Math.max(zf, o.z - dt * 45); // rời dây cung ở trên cao rồi hạ dần về tầm bay
+        const hits = [];
         for (const e of G.targets()) {
           if (o.seen.includes(e)) continue;
-          if (Math.abs(e.x - o.x) < e.r + 4 && Math.abs(e.y - o.y) < e.hr + 7) {
-            o.seen.push(e);
-            playerHit(e, o.mult, { w: o.w, ranged: true, heavy: o.big, dir: o.vx < 0 ? -1 : 1 });
-            if (G.moves) G.moves.arrowHit(o, e);
-            P.mana = Math.min(P.maxmana, P.mana + P.manaHit + (G.wHas(o.w, 'mana') ? 1 : 0));
-            G.sfx('hit', 1.3);
-            if (o.pierce > 0) { o.pierce--; if (o.pierceMult) o.mult *= o.pierceMult; } else { o.t = 0; break; } // tên thường xuyên qua thì yếu đi (pierceMult)
-          }
+          const t = segHit(o, e);
+          if (t >= 0) hits.push([t, e]);
         }
-        for (const pr of W.props) if (pr.env && !pr.used && Math.abs(pr.x - o.x) < 8 && Math.abs(pr.y - o.y) < 10) { G.triggerProp(pr); o.t = 0; }
+        hits.sort((a, b) => a[0] - b[0]);
+        for (const hx of hits) {
+          const e = hx[1];
+          o.seen.push(e);
+          playerHit(e, o.mult, { w: o.w, ranged: true, heavy: o.big, dir: o.vx < 0 ? -1 : 1 });
+          if (G.moves) G.moves.arrowHit(o, e);
+          P.mana = Math.min(P.maxmana, P.mana + P.manaHit + (G.wHas(o.w, 'mana') ? 1 : 0));
+          G.sfx('hit', 1.3);
+          if (o.pierce > 0) { o.pierce--; if (o.pierceMult) o.mult *= o.pierceMult; } else { o.t = 0; break; } // tên thường xuyên qua thì yếu đi (pierceMult)
+        }
+        // đồ vật trên sàn (lò lửa, nấm, đá băng): tên bay qua thì kích nổ nhưng không bị chặn lại
+        for (const pr of W.props) if (pr.env && !pr.used && Math.abs(pr.x - o.x) < 8 && Math.abs(pr.y - o.y) < 10) G.triggerProp(pr);
       } else if (Math.abs(P.x - o.x) < 7 && Math.abs(P.y - o.y) < 8) {
         if (G.hurtPlayer(o.dmg, o.el, null, false) || P.inv <= 0) o.t = 0;
       }
@@ -10917,7 +10981,7 @@
           if (z.team === 'player') {
             if (z.rain) {
               z.tick = 0.15;
-              for (const e of G.targets()) if (Math.hypot(e.x - z.x, (e.y - z.y) * 1.6) < z.r + e.r) playerHit(e, 0.5, { w: z.w, ranged: true, rain: true });
+              for (const e of G.targets()) if (Math.hypot(e.x - z.x, (e.y - z.y) * 1.6) < z.r + e.r) playerHit(e, G.MOVES && G.MOVES.bow.rain ? G.MOVES.bow.rain.mult : 0.5, { w: z.w, ranged: true, rain: true });
               const rx = z.x + G.rr(-30, 30), ry = z.y + G.rr(-12, 12); // vẫn rút hai số ngẫu nhiên như trước
               FX('rainDrop', rx, ry, z.el);
             } else {
@@ -11018,7 +11082,7 @@
         if (ent) ent(c, e);
       } });
     }
-    for (const pr of W.props) list.push({ y: pr.y - (pr.type === 'door' ? 200 : 0), f: () => A.prop(c, pr) });
+    for (const pr of W.props) list.push({ y: pr.y - (pr.type === 'door' || pr.type === 'portal' ? 200 : 0), f: () => A.prop(c, pr) }); // cổng dịch chuyển nằm sát sàn: vẽ dưới mọi thứ
     if (W.boss && !W.boss.dead) {
       const b = W.boss;
       list.push({ y: b.y + (b.kind === 'moc' ? -30 : 0), f: () => {
@@ -11078,26 +11142,37 @@
     sword: {
       gap: 0.45, // ngừng bấm quá lâu thì chuỗi về đầu
       chain: [
-        { name: 'Chém ngang', dur: 0.3, mult: 0.9, reach: 32, depth: 20 },
-        { name: 'Chém ngược', dur: 0.3, mult: 0.95, reach: 34, depth: 20 },
-        { name: 'Nhát kết', dur: 0.46, mult: 1.7, reach: 40, depth: 30, push: 10, heavy: true, finish: 1 },
+        // Sửa góp ý 3: kiếm nhanh nhất, tầm ngắn nhất, mỗi nhát nhẹ nhất trong ba vũ khí cận chiến; sức mỗi nhát 0,9/0,95/1,7 -> 1/1,05/1,8.
+        // (Đã thử giữ sức cũ mà ra tay nhanh hơn, 0,27 giây: bot cầm kiếm lại thua ở vùng 3 vì cứ đứng chém liên tục, ít né.)
+        { name: 'Chém ngang', dur: 0.3, mult: 1, reach: 32, depth: 20 },
+        { name: 'Chém ngược', dur: 0.3, mult: 1.05, reach: 34, depth: 20 },
+        { name: 'Nhát kết', dur: 0.46, mult: 1.8, reach: 40, depth: 30, push: 10, heavy: true, finish: 1 },
       ],
       glide: { name: 'Nhát lướt', win: 0.35, len: 30, t: 0.12, mult: 1.4 }, // đánh ngay sau khi Né
     },
     bow: {
       // Ghép đợt 2 (phòng vuông, sàn rộng 190, phòng trùm 282): tầm tên ngắn lại vừa một phòng; tên ngắm chéo được (aim).
-      aim: { dy: 60, slope: 0.7 }, // dy: quái lệch dọc tối đa bấy nhiêu thì còn ngắm tới; slope: tên bay chéo tối đa bấy nhiêu lần tốc độ ngang
-      shot: { name: 'Bắn', still: 0.4, move: 0.47, mult: 1, speed: 290, range: 180, pierce: 1, pierceMult: 0.75 }, // tên thường xuyên thêm 1 quái, con sau chỉ nhận 0,75 lần
-      charge: { name: 'Tên mạnh', time: 0.75, min: 0.3, slow: 0.55, mult0: 1.2, mult1: 3.0, speed: 340, range: 250, recover: 0.5, pierce: [1, 2, 4] }, // pierce: số quái xuyên thêm khi đà thấp, trên 60%, đầy
+      // Sửa góp ý 1: tên bay theo góc bất kỳ tới quái gần nhất. lead: đón đầu bấy nhiêu lần quãng quái chạy được trong lúc tên bay.
+      // nock, nockX: tên sinh ra cách chân bé bấy nhiêu điểm ảnh theo hướng bắn (chỗ dây cung); z0: độ cao lúc rời dây cung,
+      // hạ dần về zFly. hitX, hitY: vùng trúng rộng hơn thân quái bấy nhiêu điểm ảnh theo ngang và theo chiều sâu.
+      lead: 0.85, nock: 8, nockX: 3, z0: 16, zFly: 11, hitX: 5, hitY: 8,
+      rain: { mult: 0.28 }, // mưa tên (đòn Đặc biệt): mỗi đợt mưa (0,15 giây một đợt, chừng 6 đợt) gây bấy nhiêu lần lên mỗi quái trong vùng
+      // Sửa góp ý 3: cung bắn nhanh hơn chút (0,4 -> 0,38 giây khi đứng yên), mỗi phát mạnh hơn (G.WTYPES.bow.dmg 9 -> 11) nhưng
+      // đánh cụm yếu đi: tên thường xuyên qua thì con sau 0,75 -> 0,35 lần; tên mạnh xuyên tối đa 2 quái (trước 4), mỗi con sau
+      // nhận 0,6 lần con trước; mưa tên mỗi đợt 0,5 -> 0,28.
+      shot: { name: 'Bắn', still: 0.38, move: 0.45, mult: 1, speed: 290, range: 180, pierce: 1, pierceMult: 0.35 }, // tên thường xuyên thêm 1 quái, con sau chỉ nhận 0,35 lần
+      charge: { name: 'Tên mạnh', time: 0.75, min: 0.3, slow: 0.55, mult0: 1.2, mult1: 3.0, speed: 340, range: 250, recover: 0.5, pierce: [1, 1, 2], pierceMult: 0.6 }, // pierce: số quái xuyên thêm khi đà thấp, trên 60%, đầy; pierceMult: con sau nhận bấy nhiêu lần con trước
     },
     spear: {
       gap: 0.45,
       chain: [
         // Ghép: giáo sống dài gần 60 điểm ảnh nên tầm đâm nới từ 54-56 lên 60-62, vòng quét từ 40 lên 44 cho khớp hình.
-        { name: 'Đâm', dur: 0.34, mult: 0.85, reach: 60, depth: 12 },
-        { name: 'Đâm', dur: 0.3, mult: 0.85, reach: 60, depth: 12 },
-        { name: 'Đâm', dur: 0.3, mult: 0.85, reach: 62, depth: 12 },
-        { name: 'Quét vòng', dur: 0.5, mult: 1.5, r: 44, push: 8, heavy: true, sweep: true, finish: 1 },
+        // Sửa góp ý 3: giáo ở giữa kiếm và búa: ra tay chậm hơn kiếm (0,34/0,3/0,3 -> 0,38/0,34/0,34; quét 0,5 -> 0,52)
+        // nên mỗi nhát mạnh hơn kiếm (đâm 0,85 -> 1,1; quét 1,5 -> 1,85).
+        { name: 'Đâm', dur: 0.38, mult: 1.1, reach: 60, depth: 12 },
+        { name: 'Đâm', dur: 0.34, mult: 1.1, reach: 60, depth: 12 },
+        { name: 'Đâm', dur: 0.34, mult: 1.1, reach: 62, depth: 12 },
+        { name: 'Quét vòng', dur: 0.52, mult: 1.85, r: 44, push: 8, heavy: true, sweep: true, finish: 1 },
       ],
       // giữ rồi thả: lao một đoạn ngắn xuyên qua quái (đòn Đặc biệt "Lao tới" thì dài hơn và làm choáng)
       charge: { name: 'Xốc tới', time: 0.5, min: 0.3, slow: 0.6, len0: 30, len1: 58, t: 0.16, mult0: 1.0, mult1: 2.2, depth: 12 },
@@ -11275,29 +11350,98 @@
   }
 
   // ---------- cung ----------
+  // Sửa góp ý 1: mọi phát bắn của cung tự ngắm vào quái gần nhất theo góc bất kỳ (lên, xuống, chéo, sau lưng), đón đầu nhẹ
+  // quái đang chạy. Trước đây tên luôn bay với vận tốc ngang đầy đủ và chỉ chếch dọc tối đa 0,7 lần, quái ở thẳng trên/dưới
+  // bị bỏ qua (chỉ tìm quái lệch dọc dưới 60) nên tên bay ngang qua mặt quái.
+  // Vận tốc quái đo từ chỗ đứng các khung trước (M.update), để đón đầu.
+  function track(dt) {
+    if (!(dt > 0)) return;
+    const k = Math.min(1, dt * 20);
+    for (const e of G.targets()) {
+      if (e.lx != null) {
+        const vx = G.clamp((e.x - e.lx) / dt, -220, 220), vy = G.clamp((e.y - e.ly) / dt, -220, 220);
+        e.avx = (e.avx || 0) + (vx - (e.avx || 0)) * k; e.avy = (e.avy || 0) + (vy - (e.avy || 0)) * k;
+      }
+      e.lx = e.x; e.ly = e.y;
+    }
+  }
+  // Quái gần nhất trong tầm, theo khoảng cách thật trên sàn (không phân biệt trước mặt hay sau lưng, trên hay dưới).
+  function bowTarget(P, range) {
+    let best = null, bd = 1e9;
+    for (const e of G.targets()) {
+      const d = Math.hypot(e.x - P.x, e.y - P.y) - e.r;
+      if (d < range && d < bd) { bd = d; best = e; }
+    }
+    return best;
+  }
+  // Chỗ sẽ ngắm vào quái e với tên bay tốc độ speed: đón đầu theo vận tốc quái (C.bow.lead lần quãng quái chạy được).
+  function leadPoint(P, e, speed) {
+    let tx = e.x, ty = e.y;
+    for (let i = 0; i < 2; i++) {
+      const t = Math.min(0.8, Math.hypot(tx - P.x, ty - P.y) / speed);
+      tx = e.x + (e.avx || 0) * t * C.bow.lead; ty = e.y + (e.avy || 0) * t * C.bow.lead;
+    }
+    return [tx, ty];
+  }
+  // Hướng bắn (ux, uy dài 1). Không có quái thì theo hướng đang đi, đứng yên thì theo hướng mặt. Quay mặt theo hướng bắn
+  // và ghi P.aimRel (độ, 0 là thẳng trước mặt, âm là chếch lên) cho lớp vẽ xoay cung, tay và mũi tên cùng một hướng.
+  function bowAim(P, range, speed) {
+    const e = bowTarget(P, range);
+    let ux, uy;
+    if (e) {
+      const q = leadPoint(P, e, speed), dx = q[0] - P.x, dy = q[1] - P.y, d = Math.hypot(dx, dy);
+      if (d < 1) { ux = P.face; uy = 0; } else { ux = dx / d; uy = dy / d; }
+    } else if (P.moving && P.ldx != null) { ux = P.ldx; uy = P.ldy; }
+    else { ux = P.face; uy = 0; }
+    setAim(P, ux, uy);
+    return { e, ux, uy };
+  }
+  function setAim(P, ux, uy) {
+    if (Math.abs(ux) > 0.12) P.face = ux > 0 ? 1 : -1;
+    P.aimRel = G.clamp((Math.atan2(uy, ux * P.face) * 180) / Math.PI, -90, 90);
+    P.aimUx = ux; P.aimUy = uy;
+  }
+  M.bowAim = bowAim;
+  // Tâm của đòn dạng vùng (mưa tên, bẫy): quái gần nhất trong tầm, dời về giữa cụm quái quanh nó. Không có quái: null.
+  M.bowSpot = function (P, range, r, lead) {
+    const e = bowTarget(P, range);
+    if (!e) return null;
+    const lt = lead || 0.3;
+    let sx = 0, sy = 0, n = 0;
+    for (const t of G.targets()) {
+      if (Math.hypot(t.x - e.x, t.y - e.y) <= r * 0.9) { sx += t.x + (t.avx || 0) * lt; sy += t.y + (t.avy || 0) * lt; n++; }
+    }
+    let x = sx / n, y = sy / n;
+    // vẫn phải phủ chắc con gần nhất
+    const ex = e.x + (e.avx || 0) * lt, ey = e.y + (e.avy || 0) * lt, d = Math.hypot(x - ex, y - ey), lim = r * 0.5;
+    if (d > lim) { x = ex + ((x - ex) / d) * lim; y = ey + ((y - ey) / d) * lim; }
+    setAim(P, x - P.x || P.face, y - P.y);
+    return { x, y, e };
+  };
   function shoot(P, w, o) {
     const W = G.getWorld(), h = heOf(P, w);
     const col = h ? G.EL[h.el].col : '#f1ead9';
-    // Phòng vuông: quái tới từ cả trên lẫn dưới, nên tên ngắm chéo được tới khoảng 35 độ (C.bow.aim), không chỉ bay gần như ngang.
-    const A = C.bow.aim;
-    const tgt = G.cb.nearest(P, o.range + 10, A.dy, true);
-    let vy = 0;
-    if (tgt) vy = G.clamp(((tgt.y - P.y) / Math.max(20, Math.abs(tgt.x - P.x))) * o.speed, -A.slope * o.speed, A.slope * o.speed);
-    W.projs.push({ team: 'player', kind: 'arrow', x: P.x + P.face * 8, y: P.y, vx: P.face * o.speed, vy, t: o.range / o.speed, w, mult: o.mult, pierce: (o.pierce || 0) + (has1(h) && h.el === 'ice' ? HE.ice.pierce : 0), big: !!o.big, col, seen: [], he: h, charged: o.charged || 0, pierceMult: o.pierceMult });
+    const A = bowAim(P, o.range + 10, o.speed), B = C.bow;
+    // tên sinh ra ở dây cung (chỗ cung đang chĩa theo hướng bắn) nhưng đoạn kiểm tra trúng đầu tiên bắt đầu từ giữa người,
+    // nên quái đứng sát hay chồng lên người vẫn trúng, không có vùng chết ở cự ly gần.
+    W.projs.push({
+      team: 'player', kind: 'arrow', x: P.x + P.face * B.nockX + A.ux * B.nock, y: P.y + A.uy * B.nock, px: P.x, py: P.y, fresh: true, z: B.z0,
+      vx: A.ux * o.speed, vy: A.uy * o.speed, t: o.range / o.speed, w, mult: o.mult,
+      pierce: (o.pierce || 0) + (has1(h) && h.el === 'ice' ? HE.ice.pierce : 0), big: !!o.big, col, seen: [], he: h, charged: o.charged || 0, pierceMult: o.pierceMult,
+    });
   }
   function bowTap(P, w) {
     const s = C.bow.shot;
-    aim(P, s.range, C.bow.aim.dy);
+    bowAim(P, s.range + 10, s.speed);
     // đứng yên thì giương nhanh hơn một chút so với vừa chạy vừa bắn
     begin(P, w, { kind: 'ban', name: s.name, pose: 0, arrow: { mult: s.mult, speed: s.speed, range: s.range, pierce: s.pierce || 0, pierceMult: s.pierceMult } }, P.moving ? s.move : s.still);
   }
   function bowRelease(P, w, c) {
     const ch = C.bow.charge, full = c >= 1;
-    aim(P, ch.range, C.bow.aim.dy);
     const o = { kind: 'banManh', name: ch.name, pose: 2, charge: c };
-    begin(P, w, o, ch.recover, 0.43); // dây cung đã căng sẵn: buông tên ngay
+    begin(P, w, o, ch.recover, 0.45); // dây cung đã căng sẵn: buông tên ngay
     P.hitDone = true;
-    shoot(P, w, { mult: ch.mult0 + (ch.mult1 - ch.mult0) * c, speed: ch.speed, range: ch.range * (0.7 + 0.3 * c), pierce: full ? ch.pierce[2] : c > 0.6 ? ch.pierce[1] : ch.pierce[0], big: true, charged: c });
+    shoot(P, w, { mult: ch.mult0 + (ch.mult1 - ch.mult0) * c, speed: ch.speed, range: ch.range * (0.7 + 0.3 * c), pierce: full ? ch.pierce[2] : c > 0.6 ? ch.pierce[1] : ch.pierce[0], pierceMult: ch.pierceMult, big: true, charged: c });
     swingFx(P, w, o, { charge: c });
   }
 
@@ -11383,6 +11527,7 @@
     const ch = cfg.charge;
     if (mv.holding) {
       if (!held) { release(P, w, cfg); return; }
+      if (w.type === 'bow') bowAim(P, ch.range + 10, ch.speed); // đang giương: cung xoay theo quái gần nhất
       const lv0 = mv.level;
       mv.chargeT += dt;
       mv.charge = Math.min(1, mv.chargeT / ch.time);
@@ -11579,6 +11724,7 @@
     }
   };
   M.update = function (W, dt) {
+    track(dt);
     const ts = W.mvTimers;
     if (ts && ts.length) {
       for (const q of ts) { q.t -= dt; if (q.t <= 0 && !W.over) q.fn(); }
@@ -12572,15 +12718,20 @@
     try {
       const x = Math.round(o.x), y = Math.round(o.y - (o.z || 10));
       if (o.kind === 'arrow') {
-        const k = o.vx < 0 ? -1 : 1, PL = rampOf(o.col || '#e8e2d0');
+        // Sửa góp ý 1: vệt sau tên chạy theo đúng hướng bay (mọi góc), không chỉ nằm ngang.
+        const PL = rampOf(o.col || '#e8e2d0'), sp = Math.hypot(o.vx, o.vy) || 1, ux = o.vx / sp, uy = o.vy / sp, k = 1;
         const L = o.big ? 34 : 18;
-        const seg = (a, len, h, col) => p(c, k > 0 ? x - a - len : x + a, y - (h >> 1), len, h, col);
+        const seg = (a, len, h, col) => {
+          c.fillStyle = col;
+          for (let i = 0; i < len; i++) for (let j = 0; j < h; j++) { const s = -a - i - 0.5, q = j - (h >> 1) + 0.5; c.fillRect(Math.floor(x + ux * s - uy * q), Math.floor(y + uy * s + ux * q), 1, 1); }
+        };
+        const pr = (dx, dy, w, h, col) => { c.fillStyle = col; for (let i = 0; i < w; i++) for (let j = 0; j < h; j++) { const s = dx + i + 0.5, q = dy + j + 0.5; c.fillRect(Math.floor(x + ux * s - uy * q), Math.floor(y + uy * s + ux * q), 1, 1); } };
         if (o.big) {
           seg(4, L, 3, PL[4]); seg(4, L * 0.7, 3, PL[2]); seg(4, L * 0.45, 1, '#ffffff');
           seg(6, 10, 5, PL[2]); seg(-7, 3, 5, PL[1]); seg(-9, 2, 3, '#ffffff');
           const f = ((S.t * 30) | 0) % 3;
           seg(L * 0.5 + f * 4, 5, 1, PL[1]);
-          p(c, x - k * (10 + f * 5), y - 3, 2, 1, PL[1]); p(c, x - k * (16 - f * 3), y + 3, 2, 1, PL[1]);
+          pr(-(10 + f * 5), -3, 2, 1, PL[1]); pr(-(16 - f * 3), 3, 2, 1, PL[1]);
         } else {
           seg(5, L, 1, 'rgba(255,255,255,0.55)'); seg(5, L * 0.55, 1, PL[1]);
           if (o.col && o.col !== '#f1ead9') seg(9, L * 0.5, 3, A_(o.col, 0.35));
@@ -13012,7 +13163,13 @@
   };
 
   // ---------- đòn đặc biệt và kỹ năng hero ----------
-  const hand = (P) => { HAND.x = P.x + P.face * 7; HAND.y = P.y - 14; return HAND; };
+  // Cung: tay là chỗ cầm cung, xoay theo hướng ngắm (cùng điểm quay với hình vẽ trong hero_tinhlinh.js), để chớp sáng, vòng lấy đà
+  // và vệt gió nằm đúng ở cung.
+  const hand = (P) => {
+    const w = G.curW && P.weapons ? G.curW(P) : null;
+    if (w && w.type === 'bow' && P.aimUx != null) { HAND.x = P.x + P.face * 3 + P.aimUx * 13; HAND.y = P.y - 16 + P.aimUy * 13; return HAND; }
+    HAND.x = P.x + P.face * 7; HAND.y = P.y - 14; return HAND;
+  };
   const HAND = { x: 0, y: 0 };
   api('dash', (P, type, el) => {
     const PL = pal(el), f = P.face;
@@ -13761,11 +13918,12 @@
     }
     if (o.move === 'banManh') {
       // buông dây cung đã căng: chớp sáng ở cung, vòng gió, giật lùi
-      const h = hand(P), c = o.charge || 0;
-      add({ ty: 'flash', x: h.x + f * 6, y: h.y, r: 6 + 4 * c, t: 0.1, c: '#ffffff', c2: PL.c2, ly: 1 });
-      addRing(h.x + f * 4, h.y, 2, 10 + 8 * c, 0.18, PL.c2, 2, 1);
-      for (let i = 0; i < 4 + 4 * c; i++) streak(h.x, h.y + rr(-5, 5), f * rr(120, 240), rr(-20, 20), rr(0.1, 0.2), PL.ramp, 1, rr(6, 12), 0, 3);
-      kick(-f * (1 + 1.5 * c), 0);
+      // Sửa góp ý 1: chớp sáng, vòng gió và vệt gió đi theo hướng ngắm thật (P.aimUx, P.aimUy), không chỉ nằm ngang.
+      const h = hand(P), c = o.charge || 0, ux = P.aimUx != null ? P.aimUx : f, uy = P.aimUy || 0;
+      add({ ty: 'flash', x: h.x + ux * 6, y: h.y + uy * 6, r: 6 + 4 * c, t: 0.1, c: '#ffffff', c2: PL.c2, ly: 1 });
+      addRing(h.x + ux * 4, h.y + uy * 4, 2, 10 + 8 * c, 0.18, PL.c2, 2, 1);
+      for (let i = 0; i < 4 + 4 * c; i++) { const v = rr(120, 240), q = rr(-20, 20), j = rr(-5, 5); streak(h.x - uy * j, h.y + ux * j, ux * v - uy * q, uy * v + ux * q, rr(0.1, 0.2), PL.ramp, 1, rr(6, 12), 0, 3); }
+      kick(-ux * (1 + 1.5 * c), -uy * (1 + 1.5 * c));
       if (c >= 1) trauma(0.15);
       return;
     }
@@ -13975,7 +14133,11 @@
     try {
       const S = K.S();
       if (!S) return;
-      const x = Math.round(o.x), y = Math.round(o.y - (o.z || 10)), k = o.vx < 0 ? -1 : 1, t = S.t, lv = o.he.lv;
+      // Sửa góp ý 1: hình hệ bọc quanh tên xoay theo hướng bay: vẽ trong hệ trục của mũi tên (x tới trước, y lệch ngang).
+      const X = Math.round(o.x), Y = Math.round(o.y - (o.z || 10)), t = S.t, lv = o.he.lv, ang = Math.atan2(o.vy || 0, o.vx || 1);
+      const k = 1, x = 0, y = 0;
+      c.save(); c.translate(X, Y); c.rotate(ang);
+      try {
       if (o.he.el === 'fire') {
         // lửa bọc đầu tên, kéo dài ra sau
         const n = (o.big ? 3 : 1) + (lv >= 2 ? 1 : 0);
@@ -13995,6 +14157,7 @@
         if (o.big || lv >= 3) { line(c, x - k * 8, y - 4, x - k * 3, y - 1, '#bfeaff', 1); line(c, x - k * 8, y + 4, x - k * 3, y + 1, '#bfeaff', 1); }
         if (((t * 18) | 0) % 3 === 0) star(c, hx + k * 2, y, 2, '#ffffff');
       }
+      } finally { c.restore(); }
     } catch (e) { fail(e); }
   };
   // Vừa lên một nấc lấy đà: vòng sáng và lấp lánh ở tay
@@ -15525,7 +15688,7 @@
       r, i, diff: diff ? 1 : 0, base: G.stageStats(r, i, diff), P: G.buildPlayer(), map, rooms: map.rooms.map((x) => x.type), idx: -1,
       worlds: {}, cleared: {}, seen: {}, known: {}, visits: 0, uid: ++runNo, trans: null, doorCd: 0,
       stats: { el: { fire: 0, poison: 0, ice: 0, none: 0 }, ranged: 0, melee: 0, dodges: 0 },
-      loot: { kills: 0, charm: false, bossDown: false, finalEl: null }, got: [], curse: null, marksMult: 1, haste: 1,
+      loot: { kills: 0, charm: false, bossDown: false, finalEl: null }, won: false, portal: null, got: [], curse: null, marksMult: 1, haste: 1,
       tut, mode: 'play', endT: 0, layers: null, usedPotion: false, marks: 0,
       fade: 0, W: null, near: null, sel: null, swapped: false, opts: null, result: null,
     };
@@ -15694,7 +15857,7 @@
   // Cửa của phòng hiện tại: mở khi phòng đã dọn; cửa dẫn tới Trùm còn phải đủ điều kiện của bản đồ.
   function updateDoors() {
     const W = S.W, ok = G.mapgen.gateOpen(S.map, S.cleared);
-    for (const d of W.doors) d.open = !!W.cleared && W.type !== 'boss' && (!d.gate || ok);
+    for (const d of W.doors) d.open = !!W.cleared && (W.type !== 'boss' || !!S.won) && (!d.gate || ok || W.type === 'boss');
   }
   // Rời phòng: gom dấu ấn, dọn những thứ chỉ sống trong lúc đánh.
   function leaveRoom() {
@@ -15725,6 +15888,7 @@
       if (W.cleared) W.waves = [];
     }
     W.marksMult = S.marksMult; W.haste = S.haste; W.noPotion = S.curse === 'dry';
+    if (S.won) W.safe = true; // đã thắng: đi dạo các phòng không bị mất máu nữa
     S.near = null; S.endT = 0; S.roomT = 0; S.doorCd = 0.3;
     S.seen[id] = true; S.known[id] = true;
     for (const d of W.doors) S.known[d.to] = true;
@@ -15774,6 +15938,15 @@
     }
     updateDoors();
   }
+  // Đồ rơi sau khi thắng: đi ngang qua là nhặt, hiện chữ phần thưởng bay lên (thưởng đã được cộng lúc thắng).
+  function pickLoot(W, P) {
+    for (const pr of W.props) {
+      if (pr.type !== 'loot' || pr.got || G.time < pr.born + 0.5) continue;
+      if (Math.hypot(pr.x - P.x, (pr.y - P.y) * 1.3) < 14) { pr.got = G.time; G.sfx('pick', 1.2); }
+    }
+    for (const pr of W.props) if (pr.type === 'loot' && pr.got && G.time - pr.got > 0.9) pr.dead = true;
+    if (W.props.some((p) => p.dead && p.type === 'loot')) W.props = W.props.filter((p) => !(p.dead && p.type === 'loot'));
+  }
   // Người chơi đang đẩy vào cửa nào (đứng sát mép sàn, đúng chỗ cửa, và đang đi về phía cửa).
   function doorAt(inp) {
     const W = S.W, P = S.P;
@@ -15817,6 +15990,7 @@
       G.sfx('evolve', 0.8);
     } else if (pr.act === 'stash') { S.mode = 'swap'; S.sel = null; } else if (pr.act === 'merchant') S.mode = 'merchant';
     else if (pr.act === 'altar' && !pr.used) { S.mode = 'curse'; S.prop = pr; }
+    else if (pr.act === 'portal') G.usePortal();
   }
   function rebuildWeapons() {
     const P = S.P;
@@ -15825,7 +15999,8 @@
     P.cur = Math.max(0, P.weapons.indexOf(cur));
   }
 
-  function finish(win) {
+  // Tính và lưu phần thưởng (gọi đúng một lần mỗi lượt chơi). Thắng thì gọi ngay lúc hạ trùm, trước khi người chơi vào cổng.
+  function settle(win) {
     const sv = G.save, reg = G.REGIONS[S.r], W = S.W;
     S.marks += W.marksGained; W.marksGained = 0;
     if (W.usedPotion) S.usedPotion = true;
@@ -15876,11 +16051,58 @@
     if (S.marks > 0) R.lines.push('Vũ khí nhận ' + Math.round(S.marks) + ' dấu ấn');
     if (R.up) R.lines.push(G.HEROES[sv.hero].name + ' lên cấp ' + sv.heroes[sv.hero].lvl + '!');
     for (const g of S.got) R.lines.push(g.w ? { s: 'Trong ải: ' + g.s, w: g.w } : 'Trong ải: ' + g);
-    S.result = R;
-    S.mode = win ? 'result' : 'dead';
+    S.result = R; S.gotN = S.got.length; S.marksAt = S.marks;
     G.persist();
   }
+  // Hiện bảng kết quả. Thắng mà đã tính thưởng lúc hạ trùm: thêm các thứ nhặt được sau đó (rương, tinh anh còn sót, dấu ấn).
+  function finish(win) {
+    if (!S.result) settle(win);
+    else if (S.won && win) {
+      const W = S.W, R = S.result;
+      S.marks += W.marksGained; W.marksGained = 0;
+      const more = Math.round(S.marks - (S.marksAt || 0));
+      if (more > 0) R.lines.push('Sau trận trùm: vũ khí nhận thêm ' + more + ' dấu ấn');
+      for (const g of S.got.slice(S.gotN || 0)) R.lines.push(g.w ? { s: 'Trong ải: ' + g.s, w: g.w } : 'Trong ải: ' + g);
+      S.gotN = S.got.length; S.marksAt = S.marks;
+      G.persist();
+    }
+    S.mode = win ? 'result' : 'dead';
+  }
   G.finishStage = finish;
+  // Sửa góp ý 2: hạ trùm cuối ải thì KHÔNG hiện bảng kết quả ngay. Thưởng được tính và lưu ngay, dòng báo thắng hiện lên,
+  // đồ rơi nằm lại trên sàn để nhặt, và một cổng dịch chuyển mọc lên giữa phòng trùm. Người chơi đi lại tự do (cửa phòng trùm mở,
+  // rương, suối, thương nhân còn dùng được), tới gần cổng thì nút Đánh thành "Vào cổng"; vào cổng mới hiện bảng kết quả.
+  function winPortal() {
+    const W = S.W, g = W.geo, b = W.boss;
+    settle(true);
+    S.won = true; W.safe = true; W.px1 = null; // trùm vùng đã gục: bỏ bức chắn bên phải để nhặt được đồ rơi chỗ nó
+    const P = S.P; P.st.fire = 0; P.st.poison = 0; P.st.ice = 0;
+    if (!W.cleared) clearRoom(); else updateDoors();
+    // cổng ở giữa sàn; nếu trùm gục ngay giữa phòng thì đồ rơi toả quanh chỗ trùm, cổng vẫn ở giữa
+    const px = g.cx, py = g.cy + 6;
+    W.props.push({ type: 'portal', act: 'portal', x: px, y: py, born: G.time });
+    S.portal = { room: S.idx, x: px, y: py };
+    // đồ rơi: mỗi phần thưởng một món nằm trên sàn quanh chỗ trùm gục; đi ngang qua là nhặt (thưởng đã được cộng sẵn)
+    const bx = b ? G.clamp(b.x, W.x0 + 20, W.x1 - 20) : px - 40, by = b ? G.clamp(b.y, W.y0 + 10, W.y1 - 10) : py;
+    const items = [];
+    for (const l of S.result.lines) {
+      if (l && l.w) { items.push({ kind: 'weapon', w: l.w, s: G.wName(l.w) }); continue; }
+      if (typeof l !== 'string' || l.indexOf('Trong ải') === 0) continue;
+      const k = /vàng/.test(l) ? 'gold' : /quặng/.test(l) ? 'ore' : /đá tôi/.test(l) ? 'stone' : /mảnh/.test(l) ? 'shard' + S.r : /kinh nghiệm/.test(l) ? 'xp' : /^\+\d+ /.test(l) ? 'mat' + S.r : null;
+      if (k) items.push({ kind: k, s: l });
+    }
+    items.forEach((it, i) => {
+      const a = (i / Math.max(1, items.length)) * Math.PI * 2 + 0.4, rr = 18 + (i % 2) * 8;
+      let x = G.clamp(bx + Math.cos(a) * rr, W.x0 + 8, W.x1 - 8), y = G.clamp(by + Math.sin(a) * rr * 0.7, W.y0 + 6, W.y1 - 4);
+      if (Math.hypot(x - px, (y - py) * 1.3) < 30) x = G.clamp(x + (x < px ? -26 : 26), W.x0 + 8, W.x1 - 8); // không nằm đè lên cổng
+      W.props.push(Object.assign({ type: 'loot', x, y, born: G.time + i * 0.08, sx: bx, sy: by - 10 }, it));
+    });
+    W.banner = { s: 'Thắng rồi! Nhặt đồ rơi, đi dạo tuỳ ý, xong thì vào cổng dịch chuyển', col: '#ffd23f', t: 5 };
+    G.sfx('evolve', 0.8);
+  }
+  G.winPortal = () => { if (S && !S.won && S.loot.bossDown) winPortal(); };
+  // Bước vào cổng (bài kiểm tra dùng thẳng hàm này): hiện bảng kết quả.
+  G.usePortal = function () { if (S && S.won && S.mode === 'play') { G.sfx('evolve', 1.4); finish(true); } };
   // Dùng khi chạy thử: nhảy thẳng tới phòng số n (0 là Bắt đầu, 7 là Trùm). type: ép loại phòng và dựng lại phòng đó.
   G.gotoRoom = function (n, type) {
     if (type) { S.map.rooms[n].type = type; S.rooms[n] = type; delete S.worlds[n]; delete S.cleared[n]; }
@@ -16001,10 +16223,11 @@
         }
       }
       if (S.challenge) S.challenge.t -= dt;
-      if (W.type === 'boss' && S.loot.bossDown) { S.endT += dt; if (S.endT > 1.6) finish(true); return; }
-      if (W.over === 'dead') { S.endT += dt; if (S.endT > 1.2) finish(false); return; }
-      // bước vào cửa đang mở thì sang phòng kề
-      if (W.cleared && W.type !== 'boss' && S.doorCd <= 0) {
+      if (W.type === 'boss' && S.loot.bossDown && !S.won) { S.endT += dt; if (S.endT > 1.2) winPortal(); return; }
+      if (W.over === 'dead' && !S.won) { S.endT += dt; if (S.endT > 1.2) finish(false); return; }
+      if (S.won) pickLoot(W, P);
+      // bước vào cửa đang mở thì sang phòng kề (phòng trùm: chỉ sau khi đã thắng)
+      if (W.cleared && (W.type !== 'boss' || S.won) && S.doorCd <= 0) {
         const d = doorAt(inp);
         if (d && d.open) { S.trans = { to: d.to, dir: d.dir, phase: 0, t: 0 }; G.sfx('swing', 0.5); }
         else if (d && d.gate && !S.gateMsgT) { S.gateMsgT = 2; }
@@ -16163,7 +16386,7 @@
       }
     }
     // tên các vật bấm được, để người mới biết đó là gì
-    const PNAME = { chest: 'Rương báu', stash: 'Rương đồ', merchant: 'Thương nhân', altar: 'Bàn thờ lời nguyền' };
+    const PNAME = { chest: 'Rương báu', stash: 'Rương đồ', merchant: 'Thương nhân', altar: 'Bàn thờ lời nguyền', portal: 'Cổng dịch chuyển' };
     if (S.mode === 'play') {
       const fLock = W.type === 'fountain' && fountainLocked();
       if (fLock && W.props.some((p) => p.type === 'fountain' && !p.used)) {
@@ -16175,8 +16398,8 @@
       for (const pr of W.props) {
         if (!pr.act || pr.used || (fLock && pr.act === 'fountain')) continue;
         const nm = pr.act === 'fountain' ? (pr.kind === 'hp' ? 'Hồi máu' : 'Hồi mana') : PNAME[pr.act];
-        const py = pr.y - (pr.act === 'stash' ? 28 : pr.act === 'fountain' ? 40 : 36);
-        if (pr === S.near) ui.text('Bấm Đánh', pr.x - W.cam, py, { size: 8, align: 'center', bold: true, color: '#fff3b0' });
+        const py = pr.y - (pr.act === 'stash' ? 28 : pr.act === 'fountain' ? 40 : pr.act === 'portal' ? 44 : 36);
+        if (pr === S.near) ui.text(pr.act === 'portal' ? 'Bấm Vào cổng' : 'Bấm Đánh', pr.x - W.cam, py, { size: 8, align: 'center', bold: true, color: '#fff3b0' });
         else if (nm) ui.text(nm, pr.x - W.cam, py, { size: 7, align: 'center', bold: true, color: pr.act === 'fountain' ? (pr.kind === 'hp' ? '#ff9a8a' : '#9ac8ff') : '#f0d9b0' });
       }
     }
@@ -16204,7 +16427,9 @@
       // Vòng nạp quanh nút Đánh khi đang giữ để lấy đà (P.mv của js/moves.js). Búa có 2 nấc.
       const mv = P.mv, chg = mv && mv.holding ? mv.charge : 0, mcfg = G.MOVES && G.MOVES[cw2.type];
       let bt = btnPos('atk');
-      BA.draw(c, 'atk', bt[0], bt[1], bt[2] + 1, {
+      // đứng gần cổng dịch chuyển: nút Đánh thành "Vào cổng" (giống nút Nói chuyện ở làng)
+      if (S.near && S.near.act === 'portal' && G.theme && G.theme.round) G.theme.round(bt[0], bt[1], bt[2] + 1, 'talk', { lit: true, pressed: held('atk') || G.keys.KeyJ, label: 'Vào cổng' });
+      else BA.draw(c, 'atk', bt[0], bt[1], bt[2] + 1, {
         weapon: wst, pressed: held('atk') || G.keys.KeyJ, glow: !!S.near, label: showLab ? 'Đánh' : null,
         charge: chg > 0 ? chg : undefined, chargeSteps: mcfg && mcfg.charge ? (mcfg.charge.lv1 != null ? 2 : 1) : 0,
       });
@@ -16330,7 +16555,9 @@
     ui.panel(150, 60, 180, 150, 'Tạm dừng');
     if (ui.btn(165, 86, 150, 28, 'Chơi tiếp')) setMode('play');
     if (ui.btn(165, 120, 150, 28, 'Âm thanh: ' + (G.save.sound ? 'bật' : 'tắt'))) { G.save.sound = !G.save.sound; G.persist(); G.audioStart(); }
-    if (ui.btn(165, 154, 150, 28, 'Bỏ ải, về làng', { color: '#6a2a22' })) { S.quit = true; finish(false); }
+    // đã hạ trùm: không còn "bỏ ải" mà là rời ải, sang bảng kết quả thắng
+    if (S.won) { if (ui.btn(165, 154, 150, 28, 'Rời ải', { color: '#a8452a' })) finish(true); }
+    else if (ui.btn(165, 154, 150, 28, 'Bỏ ải, về làng', { color: '#6a2a22' })) { S.quit = true; finish(false); }
   }
   function panelResult() {
     const R = S.result;
@@ -19232,6 +19459,7 @@
     boss: ['.#####.', '#######', '#.###.#', '#######', '.#####.', '.#.#.#.', '.......'],
     lock: ['..###..', '.#...#.', '.#...#.', '#######', '###.###', '###.###', '#######'],
     key: ['.###...', '#...#..', '#...#..', '.###...', '..#....', '..##...', '..###..'],
+    portal: ['..###..', '.#...#.', '#..#..#', '#.#.#.#', '#..#..#', '.#...#.', '..###..'], // cổng dịch chuyển sau khi thắng
   };
   // MỘT MÀU cho mọi ô phòng (yêu cầu của chủ dự án): một màu nền, một màu viền, một màu biểu tượng.
   // Loại phòng chỉ phân biệt bằng biểu tượng. Chỉ còn ba khác biệt:
@@ -19247,7 +19475,7 @@
   MM.PAL = PAL;
   const NAME = {
     start: 'Bắt đầu', fight: 'Đánh quái', elite: 'Tinh anh', chest: 'Rương báu', fountain: 'Suối hồi',
-    merchant: 'Thương nhân', challenge: 'Thử thách', curse: 'Lời nguyền', boss: 'Trùm',
+    merchant: 'Thương nhân', challenge: 'Thử thách', curse: 'Lời nguyền', boss: 'Trùm', portal: 'Cổng dịch chuyển',
   };
   MM.NAME = NAME; MM.ICON = ICON;
   function icon(name, x, y, s, col) {
@@ -19300,7 +19528,9 @@
       if (!st) continue;
       const cx = X(r.x), cy = Y(r.y);
       cell(st, cx, cy, cw, ch);
-      icon(r.type, cx + (cw - 7 * s) / 2, cy + (ch - 7 * s) / 2, s, PAL.icon);
+      // đã thắng: phòng trùm hiện biểu tượng cổng dịch chuyển (nhấp nháy nhẹ cho dễ tìm)
+      const ic = S.portal && S.portal.room === r.id ? 'portal' : r.type;
+      icon(ic, cx + (cw - 7 * s) / 2, cy + (ch - 7 * s) / 2, s, ic === 'portal' && Math.floor(G.time * 2) % 2 ? '#8ff0d8' : PAL.icon);
     }
   }
   // Một ô phòng theo trạng thái: đang đứng (sáng, viền nổi, nhấp nháy nhẹ), đã qua (đậm), mới biết (nhạt).
@@ -19365,6 +19595,7 @@
     const types = [];
     for (const r of S.map.rooms) if (stateOf(S, r.id) && !types.includes(r.type)) types.push(r.type);
     const order = ['start', 'fight', 'elite', 'chest', 'fountain', 'merchant', 'challenge', 'curse', 'boss'].filter((t) => types.includes(t));
+    if (S.portal) { const bi = order.indexOf('boss'); if (bi >= 0 && !S.map.rooms.some((r) => r.type === 'boss' && r.id !== S.portal.room && stateOf(S, r.id))) order.splice(bi, 1); order.push('portal'); }
     ui.text('Chú giải', 322, 45, { size: 8, bold: true, color: '#ffd27a' });
     // mọi loại phòng cùng một màu ô, chỉ khác biểu tượng
     order.forEach((t, k) => {
@@ -19389,6 +19620,108 @@
     }
     ui.para(MM.gateText(S), 62, 222, 250, { size: 7.5, color: '#ffd9c8' });
     ui.text('Chạm để chơi tiếp', 420, 246, { size: 8, align: 'right', bold: true, color: Math.floor(G.time * 2.5) % 2 ? '#ffd27a' : '#fff3da' });
+  };
+})();
+
+// ===== js/portal.js =====
+// Sửa góp ý 2: cổng dịch chuyển mọc lên trong phòng trùm sau khi thắng, và đồ rơi nằm trên sàn để nhặt.
+// Chỉ có phần hình vẽ; luật (khi nào cổng mọc, vào cổng thì hiện bảng kết quả) nằm ở js/stage.js.
+// Màu lấy theo bộ giao diện trống đồng (G.theme.C): vành đồng, hoa văn vàng, xoáy xanh ngọc.
+(function () {
+  const G = window.G, A = G.art;
+  const old = A.prop;
+  const C = () => (G.theme && G.theme.C) || { br: '#a8752f', brD: '#5a3d1a', gold: '#d9a441', hi: '#f6dc92', pat: '#3f8f7f', patL: '#6fc1a8', patD: '#1f4f4a', dk: '#1a120a' };
+  let c = null;
+  const px = (x, y, col, w, h) => { c.fillStyle = col; c.fillRect(Math.round(x), Math.round(y), w || 1, h || 1); };
+  const RY = 0.55; // cổng nằm trên sàn nhìn từ trên xuống: hình bầu dục dẹt
+  function ring(cx, cy, r, col, step, w) {
+    const n = Math.max(12, Math.round(r * 6.3 / (step || 1)));
+    for (let i = 0; i < n; i++) { const a = (i / n) * Math.PI * 2; px(cx + Math.cos(a) * r, cy + Math.sin(a) * r * RY, col, w || 1, w || 1); }
+  }
+  function hash(i) { const s = Math.sin(i * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); }
+
+  function portal(o) {
+    const K = C(), t = G.time, age = Math.max(0, t - (o.born || 0));
+    const k = Math.min(1, age / 0.9), e = 1 - Math.pow(1 - k, 3); // mọc lên trong 0,9 giây
+    const x = Math.round(o.x), y = Math.round(o.y), R = 24 * e;
+    if (R < 1) return;
+    // bóng và nền tối của lòng cổng
+    c.fillStyle = 'rgba(8,24,24,0.55)';
+    c.beginPath(); c.ellipse(x, y, R + 2, (R + 2) * RY, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = K.patD;
+    c.beginPath(); c.ellipse(x, y, R - 2, (R - 2) * RY, 0, 0, Math.PI * 2); c.fill();
+    // xoáy xanh ngọc: ba cánh xoắn quay quanh tâm
+    for (let arm = 0; arm < 3; arm++) {
+      for (let j = 0; j < 16; j++) {
+        const u = j / 16, a = t * 2.6 + arm * 2.094 + u * 4.2, r = (R - 3) * (1 - u * 0.85);
+        px(x + Math.cos(a) * r, y + Math.sin(a) * r * RY, u < 0.4 ? K.pat : u < 0.8 ? K.patL : '#d8fff2', u > 0.6 ? 2 : 1, 1);
+      }
+    }
+    // tâm sáng nhấp nháy
+    const pulse = 0.6 + 0.4 * Math.sin(t * 5);
+    c.fillStyle = 'rgba(216,255,242,' + (0.5 * pulse).toFixed(2) + ')';
+    c.beginPath(); c.ellipse(x, y, 5 * e, 3 * e, 0, 0, Math.PI * 2); c.fill();
+    px(x - 1, y - 1, '#ffffff', 2, 2);
+    // vành đồng hai lớp, hoa văn vàng (như vành mặt trống) quay chậm
+    ring(x, y, R + 1, K.dk, 1, 1);
+    ring(x, y, R, K.br, 1, 2);
+    ring(x, y, R - 1, K.gold, 2, 1);
+    for (let i = 0; i < 10; i++) { const a = t * 0.6 + (i / 10) * Math.PI * 2; px(x + Math.cos(a) * (R + 0.5) - 1, y + Math.sin(a) * (R + 0.5) * RY - 1, K.hi, 2, 2); }
+    // cột sáng mờ và đốm sáng bay lên
+    if (e > 0.5) {
+      c.fillStyle = 'rgba(111,193,168,0.10)'; c.fillRect(x - Math.round(R * 0.6), y - 34, Math.round(R * 1.2), 34);
+      for (let i = 0; i < 9; i++) {
+        const ph = (t * 0.55 + hash(i)) % 1, a = hash(i + 7) * Math.PI * 2, rr = (R - 4) * hash(i + 3);
+        px(x + Math.cos(a) * rr, y + Math.sin(a) * rr * RY - ph * 36, ph < 0.5 ? K.patL : ph < 0.8 ? K.hi : 'rgba(246,220,146,0.5)', ph < 0.3 ? 2 : 1, ph < 0.3 ? 2 : 1);
+      }
+    }
+    // hiệu ứng xuất hiện: vòng sáng toả ra và tia sáng
+    if (age < 1.1) {
+      const q = age / 1.1;
+      c.globalAlpha = 1 - q;
+      ring(x, y, 8 + 44 * q, '#ffffff', 1, 2);
+      ring(x, y, 4 + 30 * q, K.patL, 1, 1);
+      for (let i = 0; i < 12; i++) { const a = (i / 12) * Math.PI * 2, r = 10 + 40 * q; px(x + Math.cos(a) * r, y + Math.sin(a) * r * RY - 20 * q, i % 2 ? K.hi : '#ffffff', 2, 2); }
+      c.globalAlpha = 1;
+    }
+  }
+
+  // đồ rơi: biểu tượng tài nguyên (bộ hình của G.theme.RES) hoặc hình vũ khí, nảy nhẹ trên sàn
+  function loot(o) {
+    const t = G.time, age = t - (o.born || 0);
+    if (age < 0) return;
+    let x = o.x, y = o.y, lift = 0;
+    if (age < 0.5) { const q = age / 0.5; x = o.sx + (o.x - o.sx) * q; y = o.sy + (o.y - o.sy) * q; lift = Math.sin(q * Math.PI) * 18; }
+    else lift = 2 + Math.sin(t * 4 + o.x) * 1.5;
+    if (o.got) { const q = Math.min(1, (t - o.got) / 0.9); lift += q * 22; c.globalAlpha = 1 - q; }
+    c.fillStyle = 'rgba(0,0,0,0.3)'; c.beginPath(); c.ellipse(Math.round(x), Math.round(y), 5, 2, 0, 0, Math.PI * 2); c.fill();
+    const iy = Math.round(y - 8 - lift), ix = Math.round(x);
+    if (o.kind === 'weapon' && o.w && A.weaponIcon) {
+      c.fillStyle = 'rgba(255,240,180,' + (0.25 + 0.15 * Math.sin(t * 6)).toFixed(2) + ')'; c.fillRect(ix - 7, iy - 7, 14, 14);
+      A.weaponIcon(c, o.w, ix, iy, 13);
+    } else {
+      const d = G.theme && G.theme.RES && G.theme.RES[o.kind];
+      if (d) {
+        px(ix - 5, iy - 5, 'rgba(26,18,10,0.6)', 11, 11);
+        for (let j = 0; j < 7; j++) for (let i = 0; i < 7; i++) { const ch = d.rows[j][i]; if (ch !== '.' && d.pal[ch]) px(ix - 3.5 + i, iy - 3.5 + j, d.pal[ch]); }
+        if (Math.floor(t * 3 + o.x) % 4 === 0) px(ix + 2, iy - 4, '#ffffff');
+      }
+    }
+    if (o.got && o.s && G.ui) {
+      const W = G.getWorld();
+      G.ui.text(o.s, x - ((W && W.cam) || 0), iy - 8, { size: 7, align: 'center', bold: true, color: '#fff3b0' });
+    }
+    c.globalAlpha = 1;
+  }
+
+  A.prop = function (cx, o) {
+    if (o && (o.type === 'portal' || o.type === 'loot')) {
+      const pv = c; c = cx;
+      try { if (o.type === 'portal') portal(o); else loot(o); } catch (e) { if (!A.portalErr) { A.portalErr = e; if (window.console) console.warn('portal', e); } }
+      finally { c = pv; cx.globalAlpha = 1; }
+      return;
+    }
+    return old.apply(this, arguments);
   };
 })();
 
