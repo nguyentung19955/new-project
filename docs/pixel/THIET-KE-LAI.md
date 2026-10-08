@@ -98,3 +98,30 @@ song (sông uốn mép trên + phải, lau, cây) · dam (5 ao bờ cát + sen h
 hang (**sàn đá lát ô Voronoi**: đá xám ngoài, đất giữa, tinh thể tím/ngọc, măng đá, xương) · dong (ruộng ô bờ phủ kín, sân đất, trâu, nhà rơm) ·
 bien (cát + dải cát ướt, biển chàm sóng, dừa, ốc, sao biển, thuyền) · thanh (sân đá lát, vòng trống đồng, lũy đất rào cọc + 3 vọng lâu mái son cờ vàng).
 Trước: ảnh nền trận gen thu nhỏ — nhiễu lấm tấm, dải hoa văn cũ.
+
+## 7. Phông truyện (canh/truyen-nen-*, 320×180) — `tools/pixel/ve-lai/tranh-ngang.js`
+
+Tranh ngang, game vẽ tướng / quái đè lên (chân ở y ≈ 150 sau khi phủ 320×200). Lớp: **trời 3–4 dải màu phẳng** (không gradient) ·
+mặt trời / trăng · **núi xa 2–3 lớp đỉnh gãy khúc**, sườn đi lên sáng · trung cảnh theo chủ đề · đất có khóm cỏ 3 điểm.
+bien (đảo xa, sóng, bãi cát, dừa) · dam (mặt nước lá + hoa sen, lau tiền cảnh) · dem (trời chàm, trăng khuyết, nhà sàn đèn vàng, lũy tre đen) ·
+dong (ruộng bậc xanh / vàng) · hang (nhũ đá rủ, cửa hang đá gãy khúc sáng xa, măng đá, tinh thể tím) · nui (3 lớp núi, mây) ·
+rung (thân cây + tán dày) · thanh (trời chiều, 3 lớp lũy Cổ Loa rào cọc, vọng lâu cờ vàng).
+
+## 8. Cảnh thắng / thua + tranh truyện Sơn Tinh (canh/thang-*, thua-*, nen-thang, nen-thua, truyen-sontinh-1..3) — cùng file
+
+**Nhân vật = sprite pixel vẽ tay của game** (tướng 32×32 phóng ×3, boss 48/64 phóng ×2/×1) — cùng nét với trận, bỏ hẳn kiểu chibi má hồng.
+Màn kết quả cắt hai bên ảnh (1920) → chủ thể ở **giữa**.
+- **Thắng**: bình minh vàng, **mặt trống đồng làm mặt trời** + 14 tia, tướng chương đứng giữa (hào quang trống sau lưng):
+  Sơn Tinh trên đỉnh Tản Viên nước rút · Gióng giữa đồng lúa lũy tre · Thạch Sanh khoảng rừng sáng · Lạc Long Quân trên đá giữa biển lặng · An Dương Vương trước 3 lớp lũy.
+- **Thua** (màn hiện sau mỗi trận vô tận): đêm mây đen / trời đỏ lửa, **boss chương chiếm giữa**: thành Phong Châu chìm lũ + mưa + Thủy Tinh ·
+  làng Phù Đổng cháy + Ân Vương · rừng đen sương + Chằn Tinh · biển bão sóng nhọn + thuyền vỡ + Ngư tinh · Cổ Loa cháy + Triệu Đà.
+  `nen-thang` / `nen-thua` = cảnh Sơn Tinh.
+- **Truyện Sơn Tinh**: (1) hai chàng cầu hôn trước cổng Phong Châu · (2) bình minh trống đồng, Sơn Tinh đem voi chín ngà / gà chín cựa / ngựa hồng mao
+  (dùng chính tranh mục 3) · (3) giao chiến: Sơn Tinh trên núi rêu tung phép, Thủy Tinh cưỡi sóng, mưa, sét.
+
+## 9. Nền màn phụ (canh/nen-man-phu, 320×180)
+
+Theo designer N7: thay tranh sóng chuyển ảnh (rối sau bảng chuẩn bị / kết quả / ban thưởng) bằng **nền đen nâu `vien` + mặt trống đồng chìm**
+(vòng `dong-toi`, sao, chấm, chim Lạc `khoi`); CSS còn phủ thêm lớp tối → chỉ thấy hoạ tiết rất nhẹ.
+
+Giữ ảnh cũ: `canh/nen-menu` (menu cố ý giữ tranh gốc), `canh/chuong-sontinh` (bản đồ đã chi tiết).

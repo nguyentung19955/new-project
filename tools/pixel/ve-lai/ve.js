@@ -143,4 +143,19 @@ function png(ve, file, sc = 1, nen = null) {
   fs.writeFileSync(file, encodePNG(W, H, buf));
 }
 
-module.exports = { Ve, ghi, png, PAL, DAI, ROOT };
+// lấy một khung sprite đã vẽ tay (tools/pixel/src/<nhóm>/<mã>.txt) thành Ve — dùng sprite tướng / boss trong tranh cảnh
+function sprite(nhom, ma, anim, i = 0) {
+  const bp = require(path.join(ROOT, 'tools/build-pixel.js'));
+  const pal = bp.loadPalette(path.join(ROOT, 'tools/pixel/palette.txt'));
+  const src = bp.parseSource(fs.readFileSync(path.join(ROOT, 'tools/pixel/src', nhom, ma + '.txt'), 'utf8'), ma);
+  const b = bp.buildSprite(src, pal, nhom, true);
+  if (b.errors && b.errors.length) throw new Error(ma + ': ' + b.errors[0]);
+  const f = (b.built[anim] || b.built[Object.keys(b.built)[0]])[i];
+  const v = new Ve(b.w, b.h);
+  for (let y = 0; y < b.h; y++) for (let x = 0; x < b.w; x++) { const c = f[y][x]; if (c !== null && c !== undefined) v.g[y][x] = src.colors[c].name; }
+  return v;
+}
+// phóng nguyên lần k (nearest)
+function phong(v, k) { const o = new Ve(v.w * k, v.h * k); for (let y = 0; y < o.h; y++) for (let x = 0; x < o.w; x++) o.g[y][x] = v.g[Math.floor(y / k)][Math.floor(x / k)]; return o; }
+
+module.exports = { Ve, ghi, png, PAL, DAI, ROOT, sprite, phong };

@@ -2874,6 +2874,8 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - **Núi Tản Viên 1–5** (48×48): 5 khung cảnh vuông núi lớn dần, Núi Thần = Tản Viên ba đỉnh trên mây + mái đền.
 - **Bản đồ chương** Thạch Sanh / Thánh Gióng / Lạc Long Quân / An Dương Vương (320×180, bản đồ cổ nhìn từ trên, chừa dải giữa cho nút ải)
   + **7 nền sân** `canh/ban-do-*` (nền thẻ chế độ + nền trận dự phòng).
+- **Cảnh thắng / thua** 5 chương (+ nen-thang/thua), **3 tranh truyện Sơn Tinh**, **8 phông truyện**: tranh ngang trời dải phẳng + núi lớp,
+  nhân vật là sprite pixel tướng / boss của game (bỏ chibi); **nền màn phụ** đen nâu + trống đồng chìm (designer N7).
 - Các mã vẽ lại gỡ khỏi `tools/pixel/spec/*.json` (`tools/pixel/ve-lai/DA-VE-LAI.json`) để `--nap --ghi-de` không ghi đè.
 - **Mở rộng (chưa có tướng Tím thì khó biết mua gì):**
   - **Mục tiêu hợp thể:** bảng Hợp thể có nút ghim **Theo đuổi** trên mỗi công thức Tím/Vàng (tối đa 2, ghim thứ 3 thì bỏ cái cũ nhất; lưu ở
