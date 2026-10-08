@@ -496,7 +496,13 @@ function drawEntryOne(x, g, m) {
 
 // ảnh cổng thành vẽ tay (tùy chọn) theo kiểu cổng của chủ đề
 const GATE_FILE = { castle: 'cong-phong-chau', hut: 'cong-ban-rung', cave: 'cong-hang', village: 'cong-lang-tre', citadel: 'cong-co-loa' };
-const gateArt = (theme) => typeof asset === 'function' && asset(`tiles/${GATE_FILE[(MAP_THEMES[theme] || MAP_THEMES.song).gate]}.png`, true);
+const gateArt = (theme) => {
+  const f = GATE_FILE[(MAP_THEMES[theme] || MAP_THEMES.song).gate];
+  // claude/xuat-goi-pixel: cổng thành pixel (nen/cong-*) khi bật pixel
+  const pe = typeof pixelOn === 'function' && pixelOn() && pxEntry('nen', f), pf = pe && pxFrame(pe, 0);
+  if (pf) return pf;
+  return typeof asset === 'function' && asset(`tiles/${f}.png`, true);
+};
 
 // Nền vẽ tay có sẵn dải hoa văn / lối mòn theo đường cũ → với dạng đường mới (vô tận theo màn) thành "đường ma" song song
 // đường thật. Phủ vùng giữa bằng mảng đất / cỏ sạch lấy từ chính ảnh nền (lát gương cho liền mép, viền mờ dần),
@@ -575,7 +581,7 @@ function mapLayer(id, bgImg, svgImg, pw, ph) {
   drawEntry(x, id);
   if (gate) {
     const [ex, ey] = m.end, s = 124 * DK;
-    x.drawImage(gate, ex * DK - s / 2, ey * DK - s * 0.62, s, s);
+    x.imageSmoothingEnabled = !gate.getContext; x.drawImage(gate, ex * DK - s / 2, ey * DK - s * 0.62, s, s); x.imageSmoothingEnabled = true;
   } else if (svgOk) x.drawImage(svgImg, 0, 0, CONFIG.W, CONFIG.H);
   mapLayerCache = { key: pxk && (!pxDone || (bde && !bdi)) ? key + '|cho' : key, c };   // ô pixel chưa tải xong: lần sau dựng lại
   return c;

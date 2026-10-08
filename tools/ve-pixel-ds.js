@@ -212,6 +212,7 @@ window.VE_PIXEL_DS = {"palette":[["vien","#140C06",1],["toi","#2E241B",1],["khoi
 {"k":"giao-dien/ai-mo","ten":"huy hiệu ải trên bản đồ — mở","co":"24x24","mo":"đĩa trống đồng viền sao, giữa trống (số ải vẽ đè)","hanh":"","daCo":1},
 {"k":"giao-dien/dai-thong-bao","ten":"dải thông báo (tên chiêu lớn, boss tới)","co":"128x24","mo":"dải lụa đỏ viền đồng 2 đầu đuôi nheo","hanh":"","daCo":1},
 {"k":"giao-dien/khung-bang","ten":"khung bảng / popup giấy dó viền đồng","co":"48x48","mo":"giấy dó kem, viền đồng răng cưa, góc chạm mặt trời","hanh":"","daCo":1},
+{"k":"giao-dien/khung-bang-toi","ten":"khung-bang-toi","co":"","mo":"","hanh":"","daCo":1},
 {"k":"giao-dien/khung-nguoi-choi","ten":"khung người chơi (menu)","co":"96x32","mo":"khung tên/ảnh người chơi","hanh":"","daCo":1},
 {"k":"giao-dien/khung-nut-chinh","ten":"nút chính menu (Xuất trận)","co":"64x16","mo":"nút vàng lớn","hanh":"","daCo":1},
 {"k":"giao-dien/khung-thanh-day","ten":"khung thanh đáy (chợ tướng trong trận)","co":"160x24","mo":"thanh đồng dài viền răng cưa","hanh":"","daCo":1},

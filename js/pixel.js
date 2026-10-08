@@ -247,3 +247,43 @@ function pxMapGround(x, m, kind, k) {
 }
 // tải sẵn mọi dải khung có trong manifest (vài KB mỗi dải) để khỏi nháy hình cũ lúc đầu
 if (PX_ON && typeof Image !== 'undefined' && window.PIXEL_MANIFEST) for (const k of Object.keys(window.PIXEL_MANIFEST)) asset(`pixel/${k}.png`, true);
+
+// ---- claude/xuat-goi-pixel: emoji / ký hiệu còn vẽ bằng chữ trong giao diện → icon pixel cùng nghĩa (bảng đối chiếu DANH-SACH.md)
+//   chỉ khi bật pixel; quét nút chữ mới thêm vào DOM (MutationObserver), bỏ qua ô nhập / canvas / svg; alt giữ ký tự cũ
+const PX_EMO = { '★': 'sao-cap', '✓': 'svg-check', '✔': 'svg-check', '✗': 'sai', '🔒': 'ui-khoa', '↻': 'ui-tran-4-4', '💡': 'ui-tran-5-1', '♾': 'ui-tran-5-2',
+  '⚔': 'ui-tran-5-3', '🥇': 'ui-huy-chuong-1', '🥈': 'ui-huy-chuong-2', '🥉': 'ui-huy-chuong-3', '👑': 'ui-huy-chuong-4', '🔥': 'hanh-hoa', '🌊': 'hanh-thuy',
+  '⛰': 'ui-tran-3-3', '⚒': 'lo-duc', '🎒': 'ui-menu-2-4', '🔯': 'ui-menu-1-4', '📖': 'ui-menu-2-2', '📜': 'ui-menu-2-2', '⏸': 'ui-tran-1-2', '🎁': 'ui-menu-1-3',
+  '🏆': 'ui-menu-2-3', '👁': 'ui-tran-1-4', '🗑': 'ui-tran-2-4', '⬆': 'ui-tran-2-2', '🛡': 'ui-tran-2-3', '✸': 'ui-tran-3-2', '⇄': 'ghep-tu-dong', '✦': 'sao-than-tinh-nho',
+  '✕': 'svg-close', '💬': 'chat', '✉': 'gop-y', '📥': 'hop-thu', '🏳': 'dau-hang', '🐞': 'gy-loi', '⚖': 'gy-can-bang', '✎': 'but', '📝': 'but', '💌': 'thu-tim',
+  '☀': 'nhiem-vu-ngay', '◻': 'o-trong', '🤝': 'choi-nhom', '🌿': 'linh-chi', '🍄': 'linh-chi', '➜': 'mui-ten-phai', '↳': 'mui-ten-nhanh', '◆': 'thuoc-tinh-phu',
+  '⚜': 'than-khi', '⚑': 'co-dot', '⚠': 'canh-bao', '💧': 'ch-sontinh', '👹': 'ch-thachsanh', '🏹': 'ch-adv', '▲': 'nang-cap', '💀': 'kho', '❤': 'tim-mang', '⚡': 'tia-ky-nang' };
+const PX_EMO_RE = new RegExp('(' + Object.keys(PX_EMO).map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')\\uFE0F?', 'u');
+function pxEmoNode(t) {
+  const p = t.parentNode;
+  if (!p || /^(SCRIPT|STYLE|TEXTAREA|INPUT|OPTION|TITLE|text|tspan)$/.test(p.nodeName) || p.closest('svg, canvas, [contenteditable], .no-pxemo')) return;
+  let m;
+  while (t && (m = PX_EMO_RE.exec(t.data))) {
+    const u = pxUrl('icon', PX_EMO[m[1]]);
+    if (!u) { t = t.splitText(m.index + m[0].length); continue; }
+    const rest = t.splitText(m.index);
+    const after = rest.splitText(m[0].length);
+    const img = document.createElement('img');
+    img.className = 'pxemo'; img.src = u; img.alt = m[1];
+    rest.replaceWith(img);
+    t = after;
+  }
+}
+function pxEmoScan(root) {
+  if (!root || root.nodeType === 3) { if (root) pxEmoNode(root); return; }
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: (n) => (PX_EMO_RE.test(n.data) ? 1 : 3) });
+  const list = []; while (w.nextNode()) list.push(w.currentNode);
+  list.forEach(pxEmoNode);
+}
+if (PX_ON && typeof document !== 'undefined' && typeof MutationObserver !== 'undefined') {
+  const start = () => {
+    pxEmoScan(document.body);
+    new MutationObserver((ms) => { for (const m of ms) { if (m.type === 'characterData') pxEmoNode(m.target); else m.addedNodes.forEach((n) => pxEmoScan(n)); } })
+      .observe(document.body, { childList: true, subtree: true, characterData: true });
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+}

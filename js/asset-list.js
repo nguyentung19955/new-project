@@ -1137,6 +1137,7 @@ window.ASSET_LIST = [
 "pixel/giao-dien/ai-khoa.png",
 "pixel/giao-dien/ai-mo.png",
 "pixel/giao-dien/dai-thong-bao.png",
+"pixel/giao-dien/khung-bang-toi.png",
 "pixel/giao-dien/khung-bang.png",
 "pixel/giao-dien/khung-nguoi-choi.png",
 "pixel/giao-dien/khung-nut-chinh.png",

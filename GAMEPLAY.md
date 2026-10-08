@@ -2622,3 +2622,8 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
   nút tròn), Ngân khố = thỏi bạc, nút đổi chợ giữ skin cũ + icon đồng xu có mũi tên vòng; soát icon chức năng: tạm dừng ‖, menu ≡,
   vô tận ∞, vào trận / lực chiến = hai kiếm chéo, cài đặt = bánh răng; bộ ui-tran-* bỏ đĩa trống cho hình to rõ.
 - **Nền pixel riêng (sau khi gộp v223 có tool bản đồ):** sinh `ban-do/<gốc>-<dạng>` cho 14 bản đồ dạng của các ải (`node tools/build-ban-do-spec.js` → lọc mã có dạng → `node tools/ve-pixel.js --spec … --nap`): ô sát đường cùng kiểu bệ đá, xa đường chỉ trang trí, chỗ tự cắt có cầu. `mapLayer` chọn ảnh theo mã `id` (thay `~` bằng `-`); bản đồ dạng không có ảnh (Vô tận ghép gốc × dạng khác, Vòng quanh núi, Bến đò — có núi / sông game tự vẽ) dùng `pxMapGround`. Tool spec: nạp thêm `js/chapters.js` (đăng ký bản đồ dạng của ải), nhánh phụ chỉ xuất đoạn không trùng nhánh trước (tránh cầu giả ở chỗ chia / nhập nhánh), bỏ qua bản đồ có núi / bến đò.
+- Áp pixel nốt phần còn lại (yêu cầu "toàn bộ giao diện"): ảnh nền menu, màn thắng/thua theo chương, tranh truyện (phông
+  `canh/truyen-nen-*`), bản đồ chương, nền màn phụ, núi Tản Viên, sính lễ, cổng thành cuối đường (nen/cong-*) — đều dùng ảnh pixel
+  khi bật pixel. Mọi bảng `.metal` dùng khung pixel tối mới `giao-dien/khung-bang-toi`, nút `.metal` dùng nút đồng pixel, nút chính
+  menu dùng nút vàng pixel. Emoji / ký hiệu chữ trong giao diện (★ ✓ 🔒 🎁 🏆 ⚔ 📖 …) tự đổi sang icon pixel cùng nghĩa (js/pixel.js
+  PX_EMO, quét DOM khi bật pixel, alt giữ ký tự cũ). Giữ hình cũ: nút tròn (đóng) và nút đổi chợ (theo tester).

@@ -43,5 +43,6 @@
   {"ma":"giao-dien/ui-nen-nut-1","bo_phan":{"loai":"nuttron","mauKhung":"dong","mauNen":"den","vien":"cham","trang":"thuong"}},
   {"ma":"giao-dien/ui-nen-nut-2","bo_phan":{"loai":"nut","mauKhung":"dong","mauNen":"dong","vien":"rang","trang":"thuong"}},
   {"ma":"giao-dien/ui-nen-nut-3","bo_phan":{"loai":"o","mauKhung":"dong","mauNen":"den","vien":"cham","trang":"thuong"}},
-  {"ma":"giao-dien/ui-nen-nut-4","bo_phan":{"loai":"huy","mauKhung":"dong","mauNen":"den","vien":"tron","trang":"thuong"}}
+  {"ma":"giao-dien/ui-nen-nut-4","bo_phan":{"loai":"huy","mauKhung":"dong","mauNen":"den","vien":"tron","trang":"thuong"}},
+  {"ma":"giao-dien/khung-bang-toi","co":"48x48","bo_phan":{"loai":"khung","mauKhung":"dong","mauNen":"den","vien":"cham","trang":"thuong"}}
 ] }

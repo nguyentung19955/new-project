@@ -7,6 +7,7 @@ Object.assign(window.PIXEL_MANIFEST, {
 "giao-dien/ai-mo": {"name":"huy hiệu ải trên bản đồ — mở","w":24,"h":24,"ax":12,"ay":23,"bbox":[0,0,24,24],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}}},
 "giao-dien/dai-thong-bao": {"name":"dải thông báo (tên chiêu lớn, boss tới)","w":128,"h":24,"ax":64,"ay":23,"bbox":[0,1,128,22],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}}},
 "giao-dien/khung-bang": {"name":"khung bảng / popup giấy dó viền đồng","w":48,"h":48,"ax":24,"ay":47,"bbox":[0,0,48,48],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}}},
+"giao-dien/khung-bang-toi": {"name":"khung-bang-toi","w":48,"h":48,"ax":24,"ay":47,"bbox":[0,0,48,48],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}}},
 "giao-dien/khung-nguoi-choi": {"name":"khung người chơi (menu)","w":96,"h":32,"ax":48,"ay":31,"bbox":[0,0,96,32],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}}},
 "giao-dien/khung-nut-chinh": {"name":"nút chính menu (Xuất trận)","w":64,"h":16,"ax":32,"ay":15,"bbox":[0,0,64,16],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}}},
 "giao-dien/khung-thanh-day": {"name":"khung thanh đáy (chợ tướng trong trận)","w":160,"h":24,"ax":80,"ay":23,"bbox":[0,0,160,24],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}}},
