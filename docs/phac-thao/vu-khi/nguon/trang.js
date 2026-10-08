@@ -117,8 +117,9 @@ function bang(rows, o) {
       const cx = left + i * cw + cw / 2, op = colOpts(r.type, r.family, i);
       if (i > 0 && COLS[i].st === 1) { c.fillStyle = 'rgba(255,255,255,0.07)'; c.fillRect(left + i * cw, y + 8, 2, ch - 16); }
       if (o.be && i === 0) {
-        shadow(c, cx - 14 * s, by, 7, s); putBe(c, BE_OF[r.type], cx - 14 * s, by, s);
-        putW(c, op, cx + 9 * s, by, s);
+        const bx = WA.size(op).box, ww = bx.x1 - bx.x0 + 1, wx = cx + 9 * s, bex = Math.min(cx - 14 * s, wx - (ww / 2 + 8) * s);
+        shadow(c, bex, by, 7, s); putBe(c, BE_OF[r.type], bex, by, s);
+        putW(c, op, wx, by, s);
       } else putW(c, op, cx, by, s);
       const nmw = wrap(c, WA.name(op), cw - 4, 12, false);
       nmw.forEach((l, k) => text(c, l, cx, y + ch - 14 + k * 12 - (nmw.length - 1) * 6, 12, i ? ELCOL[COLS[i].b] : CREAM, false, 'center'));

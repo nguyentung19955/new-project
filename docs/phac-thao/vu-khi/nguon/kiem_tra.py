@@ -90,6 +90,8 @@ async def main():
         print('   dài thân hình gốc: %d đến %d; Thức tỉnh to hơn gốc: %.0f%% đến %.0f%%' % (lo, hi, (min(ratios) - 1) * 100, (max(ratios) - 1) * 100))
         if '-v' in sys.argv:
             print('   dài từng dòng (gốc):', [z[key] for z in base])
+            for br in ('fire','poison','ice'):
+                print('   Thức tỉnh', br, [next(z[key] for z in st3 if z['f']==y['f'] and z['b']==br) for y in base])
         for k, label in (('dupNames', 'TÊN TRÙNG'), ('dupPixels', 'HÌNH TRÙNG ĐIỂM ẢNH'), ('rarSame', 'BẬC KHÔNG ĐỔI HÌNH'), ('moodSame', 'MẶT KHÔNG ĐỔI THEO TRẠNG THÁI')):
             if T[k]:
                 ok = False; print('   %s:' % label, T[k][:8])
