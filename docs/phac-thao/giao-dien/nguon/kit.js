@@ -163,8 +163,7 @@ const DH = { id: 'dh', name: 'Tranh Đông Hồ và mộc bản', ink: '#2a1a14'
     }
     if (o.motif !== false) {
       bmp(x + w - 20, y + h - 15, B.ca, pal);
-      if (h > 90) { bmp(x + 8, y + h - 16, B.lon, pal); }
-      if (o.ga !== false && w > 150) bmp(x + w - 21, y + 7, B.ga, pal);
+      if (o.ga !== false && w > 150) { bmp(x + w - 21, y + 7, B.ga, pal); if (h > 90) bmp(x + w - 40, y + 9, B.lon, pal); }
     }
   };
   DH.inset = function (x, y, w, h, sel) { // ô con trong bảng
@@ -283,7 +282,7 @@ const DS = { id: 'ds', name: 'Trống đồng Đông Sơn', ink: '#f1e6c6', sub:
       tx(title, x + 9, y + 15.5, { size: 11, bold: true, color: '#f6dc92' });
       let bx = x + 16 + Math.ceil(tw(title, 11, true));
       const end = x + w - (o.rightPad || 10);
-      for (; bx + 17 < end; bx += 20) bmp(bx, y + 8, B.lac, { a: C.br });
+      for (let n = 0; bx + 24 < end; n++) { if (n % 3 === 2) { bmp(bx, y + 9, B.thuyen, { a: C.br }); bx += 28; } else { bmp(bx, y + 8, B.lac, { a: C.br }); bx += 21; } } // chim Lạc và thuyền người chèo
     }
     // cóc ngồi bốn góc
     const cp = { a: C.gold, h: C.hi, d: C.brD };
@@ -392,7 +391,7 @@ const DL = { id: 'dl', name: 'Đèn lồng và sơn mài đêm hội', ink: '#f6
     if (o.primary) {
       if (!dis) glow(x + 2, y0 + 1, w - 4, h - 2, st === 1 ? C.glow2 : C.glow, st === 1 ? 4 : 3);
       lantern(x, y0, w, h, st);
-      tassel(x + (w >> 1), y0 + h + 1, 2, dis ? '#4a1c18' : C.red);
+      tassel(x + (w >> 1) + (o.sway || 0), y0 + h + 1, 2, dis ? '#4a1c18' : C.red);
       tx(label, x + w / 2, y0 + h / 2 + size * 0.36 - (o.sub ? 4 : 0) - 0.3, { size, bold: true, align: 'center', color: dis ? '#a08a7a' : '#fff6d8', shadow: 'rgba(70,10,0,0.85)' });
       if (o.sub) tx(o.sub, x + w / 2, y0 + h / 2 + 7.5, { size: o.subSize || 7, align: 'center', color: dis ? '#a08a7a' : '#ffe6b0' });
       return;

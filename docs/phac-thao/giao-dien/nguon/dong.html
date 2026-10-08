@@ -1,0 +1,60 @@
+<!doctype html><meta charset="utf-8"><body style="margin:0;background:#17131d"><canvas id="c"></canvas>
+<script src="kit.js"></script>
+<script>
+const CW = 112, CH = 58, GX = 6, W = GX * 2 + CW * 4, ROW = CH + 24, H = 22 + 3 * (16 + ROW * 2) + 4;
+const fin = document.getElementById('c'); fin.width = W * SC; fin.height = H * SC;
+const fc = fin.getContext('2d'); fc.fillStyle = '#17131d'; fc.fillRect(0, 0, fin.width, fin.height);
+mk(W, H);
+tx('Chuyển động nhỏ của từng chủ đề (mỗi hàng là 4 khung hình liên tiếp, đọc từ trái sang)', 6, 13, { size: 9.5, bold: true, color: '#ffcf7a' });
+function cell(col, y, cap, draw) {
+  const x = GX + col * CW;
+  R(x + 1, y, CW - 2, CH, '#2b2233'); R(x + 1, y + CH - 16, CW - 2, 16, '#33282a');
+  R(x + 3, y + CH - 12, 9, 9, '#17131d'); tx(String(col + 1), x + 7.5, y + CH - 4.5, { size: 7, bold: true, align: 'center', color: '#ffcf7a' });
+  g.save(); g.beginPath(); g.rect(x + 1, y, CW - 2, CH); g.clip(); draw(x, y); g.restore();
+  tx(cap, x + CW / 2, y + CH + 9, { size: 6.5, align: 'center', color: '#cfc8ba' });
+  if (col < 3) tx('▸', x + CW - 1, y + CH / 2 + 3, { size: 8, align: 'center', color: '#8a7f74' });
+}
+let y = 22;
+function head(k, t) { R(GX + 1, y, CW * 4 - 2, 13, ['#c8442b', '#a8752f', '#c8281e'][k]); tx((k + 1) + '. ' + t, GX + 6, y + 9.5, { size: 8.5, bold: true, color: '#fff6dc' }); y += 16; }
+// ---------- 1. Đông Hồ ----------
+head(0, 'Tranh Đông Hồ: con dấu đóng xuống, giấy trải ra');
+const bx = 24, by = 17, C1 = DH.C;
+cell(0, y, 'nút nằm yên', (x, y) => DH.btn(x + bx, y + by, 64, 24, 'Bắt đầu', 0, { primary: true, size: 10 }));
+cell(1, y, 'bấm: lún xuống, màu in khít lại', (x, y) => DH.btn(x + bx, y + by, 64, 24, 'Bắt đầu', 1, { primary: true, size: 10 }));
+cell(2, y, 'mực bắn ra quanh mép', (x, y) => { DH.btn(x + bx, y + by, 64, 24, 'Bắt đầu', 1, { primary: true, size: 10 }); for (let i = 0; i < 26; i++) { const a = i / 26 * Math.PI * 2, r = 1 + hash(i, 3) * 0.25; P(x + bx + 32 + Math.round(Math.cos(a) * 38 * r), y + by + 13 + Math.round(Math.sin(a) * 17 * r), i % 3 ? C1.red : C1.ink); } });
+cell(3, y, 'nhả: nảy lên, màu lệch lại như in tay', (x, y) => { R(x + bx + 5, y + by + 3, 58, 18, C1.red); DH.btn(x + bx, y + by - 1, 64, 24, 'Bắt đầu', 0, { primary: true, size: 10 }); });
+y += ROW;
+cell(0, y, 'con dấu son rơi xuống', (x, y) => { R(x + 12, y + 30, 14, 2, 'rgba(0,0,0,0.4)'); R(x + 10, y + 6, 12, 12, C1.red); frame(x + 12, y + 8, 8, 8, '#f3c9a8'); R(x + 15, y + 10, 2, 4, '#fff3da'); });
+cell(1, y, 'dấu đóng, giấy bắt đầu trải', (x, y) => DH.toast(x + 6, y + 18, 34, ''));
+cell(2, y, 'giấy trải ra, mép xé lộ dần', (x, y) => DH.toast(x + 6, y + 18, 70, ''));
+cell(3, y, 'chữ hiện, gạch chân mực', (x, y) => DH.toast(x + 6, y + 18, 100, 'Đã mài lên +5'));
+y += ROW + 2;
+// ---------- 2. Đông Sơn ----------
+head(1, 'Trống đồng: mặt trống rung, vành trống mở ra');
+const C2 = DS.C;
+function ripple(cx, cy, r, col, step) { for (let k = 0; k < 48; k += step) { const a = k * Math.PI / 24; P(cx + Math.round(Math.cos(a) * r), cy + Math.round(Math.sin(a) * r), col); } }
+cell(0, y, 'mặt trống nằm yên', (x, y) => DS.round(x + 56, y + 28, 18, 'atk', 0));
+cell(1, y, 'bấm: lún xuống, sao sáng lên', (x, y) => DS.round(x + 56, y + 28, 18, 'atk', 1));
+cell(2, y, 'rung: vòng sóng lan ra', (x, y) => { ripple(x + 56, y + 28, 22, C2.hi, 1); DS.round(x + 55, y + 28, 18, 'atk', 0); });
+cell(3, y, 'sóng lan xa rồi tắt', (x, y) => { ripple(x + 56, y + 28, 22, C2.br, 2); ripple(x + 56, y + 28, 26, C2.gold, 3); DS.round(x + 57, y + 28, 18, 'atk', 0); });
+y += ROW;
+cell(0, y, 'hai con cóc nhảy vào', (x, y) => { bmp(x + 30, y + 22, B.coc, { a: C2.gold, h: C2.hi, d: C2.brD }); bmp(x + 72, y + 22, B.coc, { a: C2.gold, h: C2.hi, d: C2.brD }, true); });
+cell(1, y, 'thanh đồng mở từ giữa', (x, y) => DS.toast(x + 36, y + 18, 40, ''));
+cell(2, y, 'mở rộng, chim Lạc bay ngang', (x, y) => DS.toast(x + 16, y + 18, 80, ''));
+cell(3, y, 'chữ hiện', (x, y) => DS.toast(x + 6, y + 18, 100, 'Đã mài lên +5'));
+y += ROW + 2;
+// ---------- 3. Đèn lồng ----------
+head(2, 'Đèn lồng sơn mài: đèn sáng lên, tua đung đưa, câu đối thả xuống');
+cell(0, y, 'đèn sáng nhẹ', (x, y) => DL.btn(x + bx, y + 14, 64, 24, 'Bắt đầu', 0, { primary: true, size: 10 }));
+cell(1, y, 'bấm: đèn rực lên, quầng sáng to', (x, y) => DL.btn(x + bx, y + 14, 64, 24, 'Bắt đầu', 1, { primary: true, size: 10 }));
+cell(2, y, 'nhả: tua lắc sang trái', (x, y) => DL.btn(x + bx, y + 14, 64, 24, 'Bắt đầu', 0, { primary: true, size: 10, sway: -2 }));
+cell(3, y, 'tua lắc sang phải rồi đứng yên', (x, y) => DL.btn(x + bx, y + 14, 64, 24, 'Bắt đầu', 0, { primary: true, size: 10, sway: 2 }));
+y += ROW;
+const C3 = DL.C;
+function strings(x, y, len) { for (const sx of [x + 16, x + 95]) R(sx, y, 1, len, C3.goldD); }
+cell(0, y, 'câu đối từ trên thả xuống', (x, y) => { strings(x, y, 2); DL.toast(x + 6, y - 10, 100, ''); });
+cell(1, y, 'rơi nhanh', (x, y) => { strings(x, y, 12); DL.toast(x + 6, y + 8, 100, ''); });
+cell(2, y, 'quá đà một chút', (x, y) => { strings(x, y, 26); DL.toast(x + 6, y + 23, 100, 'Đã mài lên +5'); });
+cell(3, y, 'nảy lại, đung đưa nhẹ', (x, y) => { strings(x, y, 20); DL.toast(x + 6, y + 18, 100, 'Đã mài lên +5'); });
+flush(fc, 0, 0); document.title = 'ok';
+</script>
