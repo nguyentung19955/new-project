@@ -413,7 +413,7 @@
   function zone(kind, x, y, w, h) { if (zones.length < 200) zones.push([kind, x, y, w, h]); }
   // Gọi sau khi một cảnh vẽ xong: lần chạm nào chưa bị nút nào nhận mà trúng một biểu tượng thì hiện tên của nó.
   T.endFrame = function () {
-    if (G.click) for (const z of zones) if (G.inRect(G.click, z[1] - 3, z[2] - 4, z[3] + 6, z[4] + 8)) { tip = { s: T.resName(z[0]), x: z[1] + z[3] / 2, y: z[2], t: G.time + 1.8 }; G.click = null; break; }
+    if (G.click) for (const z of zones) if (G.inRect(G.click, z[1] - 3, z[2] - 6, z[3] + 6, z[4] + 12)) { tip = { s: T.resName(z[0]), x: z[1] + z[3] / 2, y: z[2], t: G.time + 1.8 }; G.click = null; break; }
     zones = [];
     if (tip && G.time < tip.t) {
       ui.font(7.5, true);
@@ -435,11 +435,19 @@
   const oldText = ui.text, oldWrap = ui.wrap;
   // Đổi "số + tên tài nguyên" thành "số + một ký tự riêng" (mỗi loại tài nguyên một ký tự); lúc vẽ ký tự đó hiện thành biểu tượng.
   const KINDS = Object.keys(RES), PUA = 0xe000;
+  const DIGIT = /\d/, marked = new Map();
   function mark(str) {
-    const re = resRe(); re.lastIndex = 0;
-    return str.replace(re, (m, num, word) => num + String.fromCharCode(PUA + KINDS.indexOf(RES_MAP[word.toLowerCase().replace(/ /g, ' ')])));
+    if (!DIGIT.test(str)) return str; // không có số thì chắc chắn không có "số + tên tài nguyên"
+    let out = marked.get(str);
+    if (out === undefined) {
+      const re = resRe(); re.lastIndex = 0;
+      out = str.replace(re, (m, num, word) => num + String.fromCharCode(PUA + KINDS.indexOf(RES_MAP[word.toLowerCase().replace(/\u00a0/g, ' ')])));
+      if (marked.size > 400) marked.clear();
+      marked.set(str, out);
+    }
+    return out;
   }
-  const HAS = /[-]/;
+  const HAS = /[\ue000-\ue00f]/;
   function richText(str, x, y, o) {
     if (typeof str !== 'string' || str.length < 3) return oldText(str, x, y, o);
     const t = mark(str);

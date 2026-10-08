@@ -425,7 +425,7 @@
     x: 610, y: 166, face: -1, moving: false, cam: 240, t: 0,
     path: null, goal: null, // goal: { kind: 'npc' | 'kid' | 'weapon', id, open }
     near: null, talk: null, bubble: null, // bubble: { who, s, t }
-    wp: [{ x: 0, y: 0 }, { x: 0, y: 0 }], joy: null, tapT: 0, frogT: 0, msg: null, msgT: 0, news: {}, newsT: 0, hintT: 0, arrive: 0,
+    wp: [{ x: 0, y: 0 }, { x: 0, y: 0 }], joy: null, tapT: 0, frogT: 0, msg: null, msgT: 0, news: {}, newsT: 0, hintT: 0,
   });
   const SPEED = 108, KY = 0.75; // ở làng em bé chạy nhanh gấp rưỡi trong trận (72)
   const btnAt = () => [430 + (G.cx || 0), 220 + (G.cy || 0), 28];
@@ -480,9 +480,8 @@
     build();
     if (o.from !== 'keep') {
       S.x = 662; S.y = 160; S.face = -1; S.cam = 240;
-      S.path = findPath(S.x, S.y, 604, 168); S.goal = null; S.arrive = 1;
+      S.path = findPath(S.x, S.y, 590, 166); S.goal = null;
     }
-    else S.arrive = -9;
     S.talk = null; S.near = null; S.joy = null; S.bubble = null;
     for (let i = 0; i < 2; i++) { S.wp[i].x = S.x + 17 + i * 12; S.wp[i].y = S.y - 2 + i * 6; }
     // Bản lưu chưa từng vào làng mới: lấy số đang có làm mốc, để không phải ai cũng báo "có việc mới" ngay từ đầu.
@@ -493,7 +492,6 @@
   };
   function goTo(x, y, goal, fast) {
     const pth = findPath(S.x, S.y, x, y);
-    S.arrive = -9;
     S.path = pth; S.goal = pth ? goal || null : null; S.fast = !!fast;
     return !!pth;
   }
@@ -530,10 +528,10 @@
   // Vật chạm được tại điểm (x, y) của màn hình
   function hitAt(sx, sy) {
     const wx = sx + S.cam, wy = sy - OY;
-    for (let i = 0; i < 2; i++) { const w = G.weaponById(G.save.carry[i]); if (w && Math.abs(wx - S.wp[i].x) < 11 && wy > S.wp[i].y - 50 && wy < S.wp[i].y + 6) return { kind: 'weapon', id: w.id }; }
+    for (let i = 0; i < 2; i++) { const w = G.weaponById(G.save.carry[i]); if (w && Math.abs(wx - S.wp[i].x) < 13 && wy > S.wp[i].y - 50 && wy < S.wp[i].y + 6) return { kind: 'weapon', id: w.id }; }
     let best = null, bd = 1e9;
     for (const k of ORDER) { const q = NPCS[k].pos; if (Math.abs(wx - q[0]) < 17 && wy > q[1] - 40 && wy < q[1] + 10) { const d = Math.hypot(wx - q[0], wy - q[1] + 14); if (d < bd) { bd = d; best = { kind: 'npc', id: k }; } } }
-    for (const st of seats()) if (Math.abs(wx - st.x) < 12 && wy > st.y - 30 && wy < st.y + 8) { const d = Math.hypot(wx - st.x, wy - st.y + 12); if (d < bd) { bd = d; best = { kind: 'kid', id: st.key, x: st.x, y: st.y }; } }
+    for (const st of seats()) if (Math.abs(wx - st.x) < 14 && wy > st.y - 32 && wy < st.y + 8) { const d = Math.hypot(wx - st.x, wy - st.y + 12); if (d < bd) { bd = d; best = { kind: 'kid', id: st.key, x: st.x, y: st.y }; } }
     if (!best && S.frogT <= 0 && Math.abs(wx - (B.gieng[0] - 9)) < 9 && Math.abs(wy - (B.gieng[1] - 12)) < 9) return { kind: 'frog' };
     return best;
   }
@@ -575,20 +573,13 @@
         if (!held) { S.joy = null; if (J.far < 0.3 && S.t - J.t < 0.35) tapWorld(pp.sx, pp.sy); }
         else { if (l > 1) { dx /= l; dy /= l; } if (l > 0.18) { mx += dx; my += dy; } }
       }
-      if (G.click) {
-        const cl = G.click;
-        let used = false;
-        for (let i = 0; i < ORDER.length && !used; i++) { const q = stripAt(i); if (Math.abs(cl.x - q[0]) <= STRIP.gap / 2 && cl.y >= 14 && cl.y < 50) { VS.goNpc(ORDER[i]); G.sfx && G.sfx('ui'); used = true; } }
-        if (!used && cl.y >= 50) { tapWorld(cl.x, cl.y); used = true; }
-        if (used) G.click = null;
-      }
       if (talkP && S.near) interact(S.near);
     } else S.joy = null;
     // đi
     const ml = Math.hypot(mx, my);
     S.moving = false;
     if (ml > 0.01 && !locked) {
-      S.path = null; S.goal = null; S.arrive = -9;
+      S.path = null; S.goal = null;
       const sp = SPEED * Math.min(1, ml), vx = (mx / ml) * sp * dt, vy = (my / ml) * sp * KY * dt;
       if (!blocked(S.x + vx, S.y)) S.x += vx;
       if (!blocked(S.x, S.y + vy)) S.y += vy;
@@ -602,7 +593,7 @@
         else { S.x += (dx / d) * step; S.y += (dy / d) * step * KY; if (Math.abs(dx) > 0.5) S.face = dx > 0 ? 1 : -1; step = 0; }
       }
       S.moving = true;
-      if (!S.path.length) { S.path = null; const g = S.goal; S.goal = null; if (g) interact(g); else if (S.arrive > -1) { S.face = 1; S.arrive = -9; } } // vừa xuống đò: quay mặt ra, vũ khí bay sang trái, không che Chú Lái Đò
+      if (!S.path.length) { S.path = null; const g = S.goal; S.goal = null; if (g) interact(g); }
     }
     // ai đang ở gần
     S.near = null;
@@ -780,6 +771,14 @@
       if (T && T.toast) T.toast(110, 236, 260, s, { size: 7.5 }); else { ui.rect(110, 238, 260, 16, 'rgba(10,8,6,0.82)', '#ffd27a'); ui.text(s, 240, 249, { size: 7.5, align: 'center', bold: true }); }
     }
     if (S.msgT > 0 && S.msg) { if (T && T.toast) T.toast(130, 60, 220, S.msg); else { ui.rect(130, 60, 220, 16, 'rgba(10,8,6,0.9)', '#ffd27a'); ui.text(S.msg, 240, 71, { size: 8, align: 'center' }); } }
+    // Một lần chạm trọn vẹn (G.click) phải xử lý ngay lúc vẽ: bộ máy xoá nó sau mỗi khung hình, kể cả khung không chạy bước cập nhật nào.
+    if (G.click) {
+      const cl = G.click;
+      let used = false;
+      for (let i = 0; i < ORDER.length && !used; i++) { const q = stripAt(i); if (Math.abs(cl.x - q[0]) <= STRIP.gap / 2 && cl.y >= 14 && cl.y < 50) { VS.goNpc(ORDER[i]); G.sfx && G.sfx('ui'); used = true; } }
+      if (!used && cl.y >= 50) { tapWorld(cl.x, cl.y); used = true; }
+      if (used) G.click = null;
+    }
   };
   VS.draw = function () { VS.drawWorld(); VS.drawHud(); };
 

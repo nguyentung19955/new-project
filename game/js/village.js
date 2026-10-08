@@ -57,16 +57,16 @@
 
   function frame(title) {
     T.panel(PX, PY, PW, PH, title, { rightPad: 74, noBand: true });
-    if (T.sbtn(PX + PW - 66, PY + 3, 60, 17, '✕ Xong', { size: 8, pad: 4 })) goHub();
+    if (T.sbtn(PX + PW - 66, PY + 3, 60, 17, '✕ Xong', { size: 8, pad: 5 })) goHub();
   }
   // Nút lật trang: ‹ Trang 1/3 ›. Trả về số trang.
   function pager(n, per, x, y) {
     const pages = Math.max(1, Math.ceil(n / per));
     V.page = G.clamp(V.page, 0, pages - 1);
     if (pages > 1) {
-      if (T.sbtn(x, y, 24, 16, '‹', { size: 10, pad: 4 })) V.page = (V.page + pages - 1) % pages;
+      if (T.sbtn(x, y - 1, 26, 18, '‹', { size: 10, pad: 4 })) V.page = (V.page + pages - 1) % pages;
       ui.text('Trang ' + (V.page + 1) + '/' + pages, x + 50, y + 11.5, { size: 7.5, align: 'center', color: SOFT });
-      if (T.sbtn(x + 76, y, 24, 16, '›', { size: 10, pad: 4 })) V.page = (V.page + 1) % pages;
+      if (T.sbtn(x + 74, y - 1, 26, 18, '›', { size: 10, pad: 4 })) V.page = (V.page + 1) % pages;
     }
     return pages;
   }
@@ -150,18 +150,18 @@
     VS.bubble(V.msgT > 0 && V.msg ? V.msg : V.sel ? 'Lên đò đi cháu, nước đang êm.' : 'Đi đâu hả cháu?', 40, 198, { maxW: 76, size: 7.5 });
     if (T.sbtn(404, 7, 68, 18, '✕ Về làng', { size: 8, pad: 4 })) { goHub(); return; }
     if (all) {
-      if (T.sbtn(330, 189, 142, 17, V.diff ? 'Độ khó 2 (chạm để đổi)' : 'Độ khó thường (chạm để đổi)', { size: 7.5, pad: 2, sel: !!V.diff })) { V.diff = V.diff ? 0 : 1; pickNext(); }
+      if (T.sbtn(330, 182, 142, 19, V.diff ? 'Độ khó 2 (chạm để đổi)' : 'Độ khó thường (chạm để đổi)', { size: 7.5, pad: 3, sel: !!V.diff })) { V.diff = V.diff ? 0 : 1; pickNext(); }
     }
     // thẻ thông tin ải và nút Lên đò
-    T.panel(248, 210, 226, 56, null, { plain: true, noBand: true });
+    T.panel(248, 206, 226, 60, null, { plain: true, noBand: true });
     if (V.sel) {
       const r = V.sel[0], i = V.sel[1], R = G.REGIONS[r], b = G.stageStats(r, i, V.diff);
-      ui.text(R.name + ' · ' + (i === 4 ? 'Ải trùm' : 'Ải ' + (i + 1)) + (V.diff ? ' · khó 2' : ''), 256, 223, { size: 9.5, bold: true, color: GOLD });
-      ui.text((i === 4 ? 'Trùm vùng ' + R.bossName : 'Trùm nhỏ ' + R.mini) + ' · ' + (i < 2 ? 7 : 8) + ' phòng', 256, 234, { size: 7, color: TXT });
-      ui.text('Hệ ' + G.EL[R.el].name + ' · gợi ý cấp hero ' + Math.max(1, Math.round((r * 5 + i) * 1.6 + 1 + (V.diff ? 6 : 0))), 256, 244, { size: 7, color: G.EL[R.el].col });
-      ui.para('Thưởng: ' + b.xp + ' kinh nghiệm, ~' + b.gold + ' vàng, ' + (5 + i) + ' ' + R.mat.toLowerCase() + (i === 4 ? ', ' + (V.diff ? 4 : 3) + ' mảnh ' + R.bossName + ', vũ khí bậc cao' : ''), 256, 254, 144, { size: 6.5, color: SOFT });
-      if (T.btn(404, 219, 64, 38, 'Lên đò', { size: 11, primary: true })) G.startStage(r, i, V.diff);
-    } else ui.text('Chạm một ải trên tranh để xem.', 256, 240, { size: 8, color: SOFT });
+      ui.text(R.name + ' · ' + (i === 4 ? 'Ải trùm' : 'Ải ' + (i + 1)) + (V.diff ? ' · khó 2' : ''), 256, 219, { size: 9.5, bold: true, color: GOLD });
+      ui.text((i === 4 ? 'Trùm vùng ' + R.bossName : 'Trùm nhỏ ' + R.mini) + ' · ' + (i < 2 ? 7 : 8) + ' phòng', 256, 230, { size: 7, color: TXT });
+      ui.text('Hệ ' + G.EL[R.el].name + ' · gợi ý cấp hero ' + Math.max(1, Math.round((r * 5 + i) * 1.6 + 1 + (V.diff ? 6 : 0))), 256, 240, { size: 7, color: G.EL[R.el].col });
+      ui.para('Thưởng: ' + b.xp + ' kinh nghiệm, ~' + b.gold + ' vàng, ' + (5 + i) + ' ' + R.mat.toLowerCase() + (i === 4 ? ', ' + (V.diff ? 4 : 3) + ' mảnh ' + R.bossName + ', vũ khí quý' : ''), 256, 250.5, 144, { size: 6.5, color: SOFT });
+      if (T.btn(404, 217, 64, 38, 'Lên đò', { size: 11, primary: true })) G.startStage(r, i, V.diff);
+    } else ui.text('Chạm một ải trên tranh để xem.', 256, 238, { size: 8, color: SOFT });
   }
 
   // ---------- xem một vũ khí: bậc, dòng phụ, đặc trưng hệ đã mở và sắp mở ----------
@@ -249,7 +249,7 @@
     frame('Lò rèn cấp ' + sv.forge);
     const tabs = [['sharpen', 'Mài'], ['tier', 'Nâng bậc'], ['reforge', 'Tôi lại'], ['craft', 'Rèn đồ'], ['up', 'Nâng lò']];
     tabs.forEach((t, i) => {
-      if (T.tab(CX + i * 61.5, PY + 24, 58, 20, t[1], V.ftab === t[0])) { V.ftab = t[0]; V.sel = null; V.page = 0; }
+      if (T.tab(CX + i * 61.5, PY + 23, 58, 22, t[1], V.ftab === t[0], { pad: 2 })) { V.ftab = t[0]; V.sel = null; V.page = 0; }
     });
     const R4 = G.RARITY, xm = (m) => 'x' + String(m).replace('.', ',');
     if (V.ftab !== 'up') T.inset(CX, DET_Y, CW, 52, false);
@@ -465,7 +465,7 @@
   // ---------- cây kỹ năng và hướng dẫn (Cụ Đồ) ----------
   function doTabs() {
     [['skill', 'Cây kỹ năng'], ['help', 'Hướng dẫn']].forEach((t, i) => {
-      if (T.tab(CX + i * 154, PY + 24, 150, 20, t[1], V.tab === t[0])) { V.tab = t[0]; V.dtab = t[0]; V.page = 0; }
+      if (T.tab(CX + i * 154, PY + 23, 150, 22, t[1], V.tab === t[0], { pad: 2 })) { V.tab = t[0]; V.dtab = t[0]; V.page = 0; }
     });
   }
   function skill() {

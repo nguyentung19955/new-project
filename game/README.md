@@ -6,7 +6,30 @@ Game đánh quái màn hình ngang cho điện thoại, chạy ngay trong trình
 
 ## Cách chơi
 
-Mở `index.html` (hoặc `dist/linh-khi.html`) bằng trình duyệt. Chạm màn hình, bấm **Vào ải**, chọn **Ải 1** rồi **Bắt đầu**. Ải đầu tiên có lời chỉ dẫn ở từng phòng.
+Mở `index.html` (hoặc `dist/linh-khi.html`) bằng trình duyệt. Chạm màn hình để vào làng: em bé xuống đò ở bến bên phải. Nói chuyện với **Chú Lái Đò** ngay cạnh bến, chọn **Ải 1** trên tranh bản đồ rồi bấm **Lên đò**. Ải đầu tiên có lời chỉ dẫn ở từng phòng.
+
+### Ở làng
+
+Làng là một cảnh đi lại được, rộng gấp rưỡi màn hình; màn hình trượt ngang theo em bé. Không còn danh sách nút: mỗi chức năng là một người.
+
+- Kéo ở nửa trái màn hình để đi (tám hướng). Hai vũ khí đang mang bay theo sau em bé.
+- Tới gần một người thì người đó ngẩng lên và nút tròn bên phải thành **Nói chuyện**. Chạm thẳng vào người cũng được: em bé tự chạy tới.
+- Dải bảy khuôn mặt ở mép trên là lối tắt: chạm một mặt là em bé tự chạy tới người đó và bảng mở luôn (chạm lần hai thì tới ngay). Đang mở bảng mà chạm mặt khác thì sang thẳng người đó.
+- Ai có việc mới thì có dấu chấm than vàng trên đầu và chấm đỏ trên khuôn mặt ở dải lối tắt.
+- Chạm vào vũ khí đang bay để mở màn **Xem vũ khí**. Ba bé hero còn lại ngồi chơi ở sân đình, chạm vào bé nào là đổi sang bé đó.
+- Tài nguyên ở dải trên cùng và mọi chỗ ghi giá, thưởng hiện bằng biểu tượng kèm số. Chạm vào biểu tượng để xem tên.
+
+| Người | Ở đâu | Việc |
+| --- | --- | --- |
+| Chú Lái Đò | bến đò | Tranh bản đồ vùng: chọn ải, đổi độ khó, **Lên đò** |
+| Ông Thợ Rèn | lò rèn | Mài, Nâng bậc, Tôi lại, Rèn đồ, Nâng lò |
+| Bà Hàng Xén | gánh hàng | Rương vũ khí, chọn hai món mang theo, xem, bán |
+| Cô Thợ May | khung cửi | Mũ, áo, bùa |
+| Cụ Đồ | gốc đa | Cây kỹ năng, đặt lại điểm, hướng dẫn |
+| Ông Từ | sân đình | Chọn hero, xem chỉ số |
+| Anh Mõ | cổng làng | Cài đặt: âm thanh, toàn màn hình, xoá tiến trình |
+
+### Trong ải
 
 Trên điện thoại (nên cầm ngang):
 
@@ -43,7 +66,9 @@ Trên máy tính:
 | Q | Đổi vũ khí |
 | E | Uống bình máu |
 | M | Mở hoặc đóng bản đồ ải |
-| Esc | Tạm dừng, đóng bảng, quay về màn hình làng |
+| Esc | Tạm dừng, đóng bảng, quay về cảnh làng |
+
+Ở làng: mũi tên hoặc W A S D để đi, J (hoặc Enter) để nói chuyện với người đang ở gần.
 
 Chuột dùng được như ngón tay.
 
@@ -62,7 +87,7 @@ Chuột dùng được như ngón tay.
 - Dòng phụ: hồi thêm mana khi trúng, 10% gấp đôi sát thương, tầm xa hơn 15%. Dòng mạnh của bậc Vàng: Diệt yêu, Thấm hệ hoặc Mở màn.
 - Nguồn: rương và quái tinh anh rơi vũ khí bậc ngẫu nhiên (đa số Thường, cao nhất Tím, vùng sau dễ ra bậc cao hơn), dòng ngẫu nhiên. Trùm vùng (ải 5, 10, 15) lần đầu bị hạ chắc chắn rơi một vũ khí Vàng; đánh lại thì 12% Vàng, còn lại Tím.
 - Lò rèn, mục **Nâng bậc**: mỗi lần lên một nấc (Thường, Lam, Tím, Vàng), không mất dấu ấn và tiến hóa. Nấc lên Vàng cần mảnh trùm, thứ chỉ trùm vùng rơi.
-- Ở làng, chạm một vũ khí đang mang để mở màn **Xem vũ khí**: bậc, dòng phụ, các đặc trưng hệ đã mở và sắp mở.
+- Ở làng, chạm vào vũ khí đang bay theo em bé (hoặc bấm **Xem** ở chỗ Bà Hàng Xén) để mở màn **Xem vũ khí**: bậc, dòng phụ, các đặc trưng hệ đã mở và sắp mở.
 - Bản lưu cũ tự được nâng cấp khi mở game: Sắt thành Thường, Bạc thành Lam, Linh thành Tím; dòng lấy theo số thứ tự của món chia 10 lấy dư.
 
 ## Các tệp
@@ -77,6 +102,7 @@ Chuột dùng được như ngón tay.
 | `js/hero_art.js` | Hình hero kiểu cũ (dự phòng khi hình mới lỗi) |
 | `js/hero_tinhlinh.js` | Em bé tinh linh: bốn hero vẽ theo lớp (thân, áo, mũ, đồ đeo lưng, cánh), tư thế theo từng đòn đánh, cầm vũ khí sống |
 | `js/btn_art.js` | Bộ nút bấm: Đánh, Đặc biệt, kỹ năng, Né, bình máu, tạm dừng, ô vũ khí, cần điều khiển |
+| `js/ui_theme.js` | Bộ giao diện chủ đề trống đồng Đông Sơn (`G.theme`): nút, bảng, thanh máu và mana, ô đồ bốn bậc, thẻ ải mặt trống, thông báo, khung thoại, biểu tượng tài nguyên. Tệp này cũng đổi cách vẽ chung `G.ui.btn`, `G.ui.panel`, `G.ui.bar`, `G.ui.text` của cả game sang chủ đề |
 | `js/combat.js` | Trận đánh: người chơi, quái, sát thương, hiệu ứng ba hệ, dấu ấn |
 | `js/moves.js` | Lối đánh riêng của từng vũ khí (chuỗi kiếm, giương cung, loạt đâm, lấy đà búa) và đặc trưng hệ mở theo cấp; mọi con số nằm ở đầu tệp |
 | `js/boss.js` | Trùm: các đòn đánh và cách trùm học theo người chơi |
@@ -86,7 +112,8 @@ Chuột dùng được như ngón tay.
 | `js/mapgen.js` | Sinh bản đồ ải ngẫu nhiên theo hạt giống (ba kiểu bố cục A, B, C) và hàm kiểm tra bản đồ |
 | `js/room_art.js` | Vẽ phòng vuông nhìn từ trên cho ba vùng: sàn, tường, cửa khóa và cửa mở |
 | `js/minimap.js` | Bản đồ nhỏ và bản đồ to |
-| `js/village.js` | Màn hình đầu và làng: bản đồ, lò rèn, trang bị, hero và kỹ năng, hướng dẫn, cài đặt |
+| `js/village_scene.js` | Cảnh làng có người (`G.villageScene`): nền làng 720 điểm, bảy người làng, em bé đi lại, vũ khí bay theo, tìm đường khi chạm, dải khuôn mặt lối tắt, tranh bản đồ vùng |
+| `js/village.js` | Màn hình đầu và làng: mỗi người mở một bảng (tranh bản đồ, lò rèn, rương vũ khí, mũ áo bùa, cây kỹ năng và hướng dẫn, chọn hero, cài đặt), màn xem vũ khí |
 | `js/main.js` | Khởi động game |
 | `build.py` | Đóng gói game vào thư mục `dist/` |
 | `tests/` | Các bài kiểm tra tự động |
@@ -133,6 +160,7 @@ python3 tests/ghep2.py             # đợt ghép 2: nút trong hai lề, bóng 
 python3 tests/balance.py 4         # bot chơi 15 ải với bản lưu cố định, mỗi ải 4 lần: tỉ lệ thắng, thời gian, máu mất
 python3 tests/ghep2_shots.py       # chụp ảnh và ảnh động của đợt ghép 2 vào docs/ghep-2/ (cần thêm Pillow)
 python3 tests/ghep_shots.py        # chụp sáu ảnh của đợt ghép 1 vào docs/ghep/ (cần thêm Pillow)
+python3 tests/lang_shots.py        # chụp từng màn hình của giao diện trống đồng và làng có người vào docs/giao-dien-va-lang/
 ```
 
 Mỗi bài in ra số mục đạt và các mục hỏng. `tests/bot.js` là bot chơi thử, chỉ dùng khi kiểm tra và không bao giờ nằm trong bản đóng gói.
