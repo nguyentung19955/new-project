@@ -1,0 +1,42 @@
+<!doctype html><meta charset="utf-8"><body style="margin:0;background:#17131d"><canvas id="c"></canvas>
+<script src="kit.js"></script>
+<script>
+const GUT = 58, CW = 216, HEAD = 34, H = 372, W = GUT + CW * 3 + 6;
+const fin = document.getElementById('c'); fin.width = W * SC; fin.height = (H + HEAD) * SC;
+const fc = fin.getContext('2d'); fc.fillStyle = '#17131d'; fc.fillRect(0, 0, fin.width, fin.height);
+mk(W, H + HEAD);
+// tiêu đề
+tx('Ba chủ đề giao diện: cùng một bộ thành phần, đặt cùng chỗ để so', 8, 13, { size: 11, bold: true, color: '#ffcf7a' });
+const rows = [['Nút to', 60], ['Nút nhỏ và', 108], ['nút tròn', 117], ['Khung bảng', 160], ['Máu và mana', 216], ['Ô đồ', 250], ['bốn bậc', 259], ['Thẻ ải', 314], ['Thông báo', 376]];
+for (const r of rows) tx(r[0], 6, r[1], { size: 7.5, color: '#cfc8ba', bold: true });
+THEMES.forEach((t, k) => {
+  const x0 = GUT + k * CW, y0 = HEAD;
+  // nền giống cảnh game lúc chiều tối
+  R(x0, y0, CW - 6, H - 4, '#2b2233'); R(x0, y0 + 150, CW - 6, H - 154, '#33282a');
+  for (let j = 0; j < H - 4; j += 2) for (let i = (j % 4); i < CW - 6; i += 4) if (hash(i + k * 99, j) < 0.1) P(x0 + i, y0 + j, 'rgba(255,255,255,0.04)');
+  R(x0, y0 - 16, CW - 6, 15, ['#c8442b', '#a8752f', '#c8281e'][k]);
+  tx((k + 1) + '. ' + t.name, x0 + 5, y0 - 5, { size: 9, bold: true, color: '#fff6dc' });
+  const x = x0 + 5; let y = y0 + 10;
+  const caps = ['thường', 'đang bấm', 'mờ (chưa dùng được)'];
+  for (let i = 0; i < 3; i++) { t.btn(x + i * 68, y, 64, 24, 'Bắt đầu', i, { primary: true, size: 10 }); tx(caps[i], x + i * 68 + 32, y + 38, { size: 6.5, align: 'center', color: '#cfc8ba' }); }
+  y += 50;
+  t.btn(x, y + 1, 58, 20, 'Lò rèn', 0, { size: 9 });
+  t.sbtn(x + 64, y + 3, 34, 16, 'Xem', 0); t.sbtn(x + 102, y + 3, 34, 16, 'Đổi', 1); 
+  t.round(x + 158, y + 11, 12, 'atk', 0); t.round(x + 188, y + 11, 10, 'skill', 0);
+  y += 40;
+  t.panel(x, y, 200, 58, 'Thương nhân', {});
+  tx('Bình máu lớn · 120 vàng', x + 10, y + 34, { size: 8, color: t.ink, shadow: t.onDark ? undefined : false });
+  tx('Vàng: 3200', x + 10, y + 46, { size: 8, bold: true, color: t.gold, shadow: t.onDark ? undefined : false });
+  y += 70;
+  t.bar(x, y, 124, 'hp', 0.72, '121/168'); t.bar(x, y + 14, 104, 'mp', 0.5, t.id === 'dl' ? '60/120' : '60/120');
+  y += 36;
+  ['Thường', 'Lam', 'Tím', 'Vàng'].forEach((n, i) => { t.slot(x + 8 + i * 50, y, 26, i); tx(n, x + 21 + i * 50, y + 36, { size: 7, align: 'center', color: RAR[i], bold: true }); });
+  y += 50;
+  t.card(x, y, 62, 42, '1', 'done', 3); t.card(x + 68, y, 62, 42, '2', 'sel', 1); t.card(x + 136, y, 62, 42, '3', 'lock', 0);
+  ['đã qua 3 sao', 'đang chọn', 'chưa mở'].forEach((n, i) => tx(n, x + 31 + i * 68, y + 54, { size: 6.5, align: 'center', color: '#cfc8ba' }));
+  y += 70;
+  t.toast(x, y, 200, 'Đã mài lên +5');
+});
+flush(fc, 0, 0);
+document.title = 'ok';
+</script>
