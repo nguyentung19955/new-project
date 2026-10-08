@@ -328,15 +328,15 @@
       else { s.box(t, q, 2, 2, Md(R.gem)); s.in(() => { const a = s.T(t, q); s.px(Math.round(a[0]), Math.round(a[1]) - 1, Lt(R.gem)); }); }
     });
   }
-  // Họa tiết khắc theo bậc (gọi bên trong S.in của phần thân): bậc Tím là chấm, bậc Vàng là vạch liền có chấm sáng.
+  // Họa tiết khắc theo bậc (gọi bên trong S.in của phần thân): bậc Lam chấm thưa, bậc Tím chấm dày, bậc Vàng vạch liền có chấm sáng.
   function engrave(S, P, pts) {
-    if (P.rar < 2) return;
+    if (P.rar < 1) return;
     const R = RARITY[P.rar].P;
     for (let i = 0; i + 1 < pts.length; i++) {
       const a = pts[i], b = pts[i + 1], n = Math.max(1, Math.round(Math.hypot(b[0] - a[0], b[1] - a[1])));
       for (let j = 0; j <= n; j++) {
         const t = a[0] + ((b[0] - a[0]) * j) / n, q = a[1] + ((b[1] - a[1]) * j) / n;
-        if (P.rar >= 3) S.p(t, q, j % 4 === 2 ? R[2] : R[1]); else if (j % 2 === 0) S.p(t, q, R[1]);
+        if (P.rar >= 3) S.p(t, q, j % 4 === 2 ? R[2] : R[1]); else if (j % (P.rar === 1 ? 3 : 2) === 0) S.p(t, q, P.rar === 1 ? R[2] : R[1]);
       }
     }
   }
@@ -2197,7 +2197,7 @@
       type: type, fam: fi, F: F, el: el, st: st, rar: rar, E: E, R: RARITY[rar],
       base: F.mat, M: st >= 2 ? E.B : F.mat, ol: st >= 2 ? E.ol : INK,
       A: st >= 2 ? E.gd : GOLD, // màu chắn tay, đai
-      k: [1, 1.04, 1.09, 1.16][st], ks: KS[type] * (F.ks || 1), seed: fi * 7 + TYPES.indexOf(type) * 31 + 3,
+      k: [1, 1.03, 1.08, 1.14][st], ks: KS[type] * (F.ks || 1), seed: fi * 7 + TYPES.indexOf(type) * 31 + 3,
       fire: el === 'fire', poison: el === 'poison', ice: el === 'ice',
       warp: null, arc: F.arc || null, wave: F.wave || null,
     };
