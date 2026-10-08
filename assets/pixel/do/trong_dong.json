@@ -1,16 +1,16 @@
 {
  "code": "trong_dong",
  "group": "do",
- "name": "Trống Đồng = Mặt Trống + Dùi Trống + Bùa Chim Lạc",
+ "name": "Trống Đồng",
  "w": 24,
  "h": 24,
  "ax": 12,
  "ay": 23,
  "bbox": [
+  1,
   2,
-  4,
-  20,
-  17
+  23,
+  20
  ],
  "n": 1,
  "anims": {

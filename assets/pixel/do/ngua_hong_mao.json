@@ -1,15 +1,15 @@
 {
  "code": "ngua_hong_mao",
  "group": "do",
- "name": "Ngựa Chín Hồng Mao (sính lễ boss · hiem)",
+ "name": "Ngựa Chín Hồng Mao",
  "w": 24,
  "h": 24,
  "ax": 12,
  "ay": 23,
  "bbox": [
-  3,
-  0,
-  19,
+  1,
+  1,
+  21,
   22
  ],
  "n": 1,

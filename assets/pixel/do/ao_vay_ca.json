@@ -1,16 +1,16 @@
 {
  "code": "ao_vay_ca",
  "group": "do",
- "name": "Áo Vảy Cá = Vảy Cá + Ngọc Sinh Lực",
+ "name": "Áo Vảy Cá",
  "w": 24,
  "h": 24,
  "ax": 12,
  "ay": 23,
  "bbox": [
-  3,
   2,
-  19,
-  20
+  2,
+  20,
+  21
  ],
  "n": 1,
  "anims": {

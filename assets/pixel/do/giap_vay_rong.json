@@ -1,7 +1,7 @@
 {
  "code": "giap_vay_rong",
  "group": "do",
- "name": "Giáp Vảy Rồng (Bộ Lạc Long)",
+ "name": "Giáp Vảy Rồng",
  "w": 24,
  "h": 24,
  "ax": 12,
@@ -9,8 +9,8 @@
  "bbox": [
   3,
   2,
-  19,
-  20
+  20,
+  22
  ],
  "n": 1,
  "anims": {

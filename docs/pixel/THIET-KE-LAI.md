@@ -133,3 +133,15 @@ Giữ ảnh cũ: `canh/nen-menu` (menu cố ý giữ tranh gốc), `canh/chuong-
   gờ kim loại 1px 3 tông + viền `vien`. Trước: viền ô cờ lấm tấm (dithering), lòng đen che mất một nửa thanh máu tướng.
 - `khung-nguoi-choi` 192×66: huy chương trống đồng (vành chấm vàng, chim Lạc, lỗ ảnh đại diện đúng chỗ CSS `.av`) + bảng tối viền đồng răng cưa, mũi nhọn đầu phải.
 - `khung-nut-chinh` 208×46: tấm vàng nghệ vát (sáng trên / đồng dưới), răng cưa đáy, 2 đầu ốp đồng khắc sao trống. Trước: ảnh chuyển nhoè, mặt nạ méo.
+
+## 11. Đồ xấu / na ná (do/*, 24×24) — `tools/pixel/ve-lai/do.js`
+
+Bộ sinh hình vật cũ cho ra hình thoi trơn (4 ngọc giống nhau khác màu), đĩa xám (vảy cá ×2), 2 cái sừng giống hệt, hộp (trống), cục nâu (mũ sừng).
+Vẽ lại 16 món, **mỗi món một dáng riêng** đọc được ở 24 px, sáng trên-trái, viền `vien`:
+ngọc Hồi Sinh = hồng ngọc mài giác trên đế đồng · Minh Châu = ngọc trai trong vỏ sò đồng · Sinh Lực = **ngọc bích hình đĩa có lỗ** + tua đỏ ·
+Trấn Thủy = giọt nước xanh có sóng, chóp đồng · Mũi Sừng Phá Giáp = mũi giáo sừng chéo + khâu đồng · Sừng Tê = sừng to bè gốc sẫm ·
+Áo Vảy Cá = dáng áo phủ vảy · Vảy Cá = 3 vảy hình khiên xoè · Giáp Vảy Rồng = giáp ngực ngọc lục vảy chữ U viền vàng ·
+Lưỡi Hái = cán dài + lưỡi tím cong · Ngựa Hồng Mao = đầu ngựa bờm lửa · Voi Chín Ngà = đầu voi nhìn thẳng nhiều ngà ·
+Mặt Trống = mặt da 3/4 tang son · Trống Đồng = trống nhìn ngang có cóc trên mặt · Dùi Trống = đôi dùi bắt chéo đầu vải son ·
+Mũ Sừng = mũ đồng 2 sừng (game hiện mũ thường theo loại × độ hiếm `do_mu_*` nên icon này chỉ dùng khi đổi quy tắc).
+Các bộ đồ theo loại × độ hiếm (`do_<loại>_<độ hiếm>`, bộ Chim Lạc / Trống / Ngựa sắt…) cố ý cùng dáng khác màu (nhận loại + độ hiếm) — giữ.

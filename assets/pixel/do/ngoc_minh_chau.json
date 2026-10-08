@@ -1,16 +1,16 @@
 {
  "code": "ngoc_minh_chau",
  "group": "do",
- "name": "Ngọc Minh Châu = Ngọc Trấn Thủy + Gậy Thời Không",
+ "name": "Ngọc Minh Châu",
  "w": 24,
  "h": 24,
  "ax": 12,
  "ay": 23,
  "bbox": [
+  3,
   2,
-  4,
-  20,
-  16
+  19,
+  21
  ],
  "n": 1,
  "anims": {

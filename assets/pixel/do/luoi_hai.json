@@ -1,16 +1,16 @@
 {
  "code": "luoi_hai",
  "group": "do",
- "name": "Lưỡi Hái Chí Tử = Vuốt Hổ + Dép Cỏ",
+ "name": "Lưỡi Hái Chí Tử",
  "w": 24,
  "h": 24,
  "ax": 12,
  "ay": 23,
  "bbox": [
-  3,
-  2,
-  20,
-  22
+  0,
+  1,
+  19,
+  23
  ],
  "n": 1,
  "anims": {

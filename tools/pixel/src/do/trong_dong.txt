@@ -1,37 +1,39 @@
-# Trống Đồng = Mặt Trống + Dùi Trống + Bùa Chim Lạc — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: trống đồng Đông Sơn có cóc trên mặt, ánh F2D27A
-name: Trống Đồng = Mặt Trống + Dùi Trống + Bùa Chim Lạc
+# Trống Đồng — VẼ LẠI tay (claude/ve-lai-pixel), thiết kế: docs/pixel/THIET-KE-LAI.md
+# trống đồng nhìn ngang: mặt trên có tượng cóc, tang phình, thân thắt eo, chân loe, đai hoa văn
+# Nguồn vẽ: tools/pixel/ve-lai/do.js — sửa ở đó rồi chạy lại, đừng sửa tay file này.
+name: Trống Đồng
 size: 24x24
 colors:
   a = vien
-  b = dong-sang
-  c = vang-nghe
+  b = dong-toi
+  c = dong-sang
   d = vang-sang
-  e = son
+  e = dong
+  f = vang-nghe
 
 part k0
 ........................
 ........................
-........................
-........................
-.......aaaaaaaaaa.......
-.....aaddddddddddaa.....
-...aaddddddddddddddaa...
-..addddddddeedddddddda..
-..adddddddeeeeddddddda..
-..addddaddeeeedddaddda..
-..addddddddeedddddddda..
-..adcddddddddddddddcba..
-..adcccddddddddddcccba..
-..adccccccccccccccccba..
-..adccccccccccccccccba..
-..abbbbbbbbbbbbbbbbbba..
-..adccccccccccccccccba..
-..adccccccccccccccccba..
-..adccccccccccccccccba..
-..abbbbbbbbbbbbbbbbbba..
+.....a............a.....
+....abaaaaaaaaaaaaba....
+...abbbccccccccccbbbaa..
+..acccccccccdccccccccca.
+.aeceeeeeedddddebbbbbbea
+.aeceeeeeeeedeeebbbbbbea
+.aecbebebebebebebbbbbbea
+.aefffffffffffffffffffea
+.aeceeeeeeeeeeeeebbbbbea
+..aceeeeeeeeeeeeebbbbba.
+...aceeeeeeeeeeebbbbba..
+...aceeeeeeeeeeebbbba...
+...aceeeeeeeeeeebbba....
+...acaeeeeeeeeebbba.....
+....aaeeeeeeeeebbba.....
+....aeeeeeeeeeeebbba....
+...aeeeeeeeeeeeebbbba...
+...afffffffffffffffffa..
+..aeeeeeeeeeeeeeebbbba..
 ...aaaaaaaaaaaaaaaaaa...
-........................
 ........................
 ........................
 end
@@ -40,4 +42,3 @@ anim main fps=1 once
 frame main
   use k0
 end
-

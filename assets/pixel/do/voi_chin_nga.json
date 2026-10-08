@@ -1,16 +1,16 @@
 {
  "code": "voi_chin_nga",
  "group": "do",
- "name": "Voi Chín Ngà (sính lễ boss · thuong)",
+ "name": "Voi Chín Ngà",
  "w": 24,
  "h": 24,
  "ax": 12,
  "ay": 23,
  "bbox": [
+  1,
   2,
-  4,
-  20,
-  18
+  23,
+  21
  ],
  "n": 1,
  "anims": {

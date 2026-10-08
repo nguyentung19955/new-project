@@ -1,16 +1,16 @@
 {
  "code": "ngoc_tran_thuy",
  "group": "do",
- "name": "Ngọc Trấn Thủy = Vảy Cá + Mắt Ngọc",
+ "name": "Ngọc Trấn Thủy",
  "w": 24,
  "h": 24,
  "ax": 12,
  "ay": 23,
  "bbox": [
+  5,
   0,
-  0,
-  23,
-  22
+  14,
+  21
  ],
  "n": 1,
  "anims": {

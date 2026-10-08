@@ -1,16 +1,16 @@
 {
  "code": "mui_sung",
  "group": "do",
- "name": "Mũi Sừng Phá Giáp = Sừng Tê + Vuốt Hổ",
+ "name": "Mũi Sừng Phá Giáp",
  "w": 24,
  "h": 24,
  "ax": 12,
  "ay": 23,
  "bbox": [
-  5,
   1,
-  15,
-  22
+  1,
+  21,
+  23
  ],
  "n": 1,
  "anims": {
