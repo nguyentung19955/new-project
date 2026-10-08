@@ -49,15 +49,15 @@ function HT_dau(g, p) { const I = HT_IV, m = p === 3 ? 5.5 : p === 2 ? 3.6 : 2.6
   HT_P(g, [[-11, -2.4], [-2, -7.6], [.6, -4.4], [-6, -.6]], '#1c0f18'); HT_P(g, [[-9, -2.5], [-2.4, -6.2], [-.8, -4.5], [-6, -1.8]], ec); HT_P(g, [[-7, -3.2], [-3, -5.4], [-2.4, -4.6], [-6, -2.6]], e2);
   if (p !== 3) HT_L(g, -5, -5, -4.5, -2.6, '#14182e', 1); HT_L(g, -12.5, -3.4, 1.5, -9.6, '#2a1420', 1.7); }
 const HT_DANG = {
-  1: { w: 196, h: 140, gy: 131, tb: [100, 116], A: [2, 15, 28, 41, 54, 67, 80, 93, 106], L: [58, 68, 76, 82, 86, 88, 88, 84, 76], cu: 0, tw: 6.6,
-    torso: [[95, 111], [92, 96], [80, 88], [70, 86]], tr: [14, 11], hip: [91, 113, 15, 14], chest: [70, 91, 11, 12], neck: [[70, 84], [67, 76], [62, 70], [59, 64]], nr: [10, 7.4], head: [54, 57, .16],
-    legs: [{ far: 1, pts: [[75, 96], [74, 112], [73, 128]], r: [5, 3.4], paw: [70.5, 128.4] }, { pts: [[93, 124], [84, 128.4], [78, 128.2]], r: [4.6, 3.4], paw: [75, 128.4] }, { pts: [[68, 96], [65.5, 112], [65, 128]], r: [5.4, 3.6], paw: [62, 128.4] }],
+  1: { w: 196, h: 140, gy: 131, tb: [100, 116], A: [1, 13, 25, 37, 49, 61, 73, 85, 96], L: [58, 68, 76, 82, 86, 88, 90, 90, 88], cu: 0, tw: 6.6,
+    torso: [[95, 111], [92, 96], [80, 88], [70, 86]], tr: [14, 11], hip: [91, 113, 15, 14], chest: [70, 91, 11, 12], neck: [[70, 84], [67, 76], [62, 70], [59, 64]], nr: [9, 6.6], head: [54, 56, .18],
+    legs: [{ far: 1, pts: [[75, 96], [71, 112], [73.5, 128]], r: [5, 3.4], paw: [70.5, 128.4] }, { pts: [[93, 124], [84, 128.4], [78, 128.2]], r: [4.6, 3.4], paw: [75, 128.4] }, { pts: [[68, 96], [62.5, 112], [65, 128]], r: [5.4, 3.6], paw: [62, 128.4] }],
     hat: [[73, 75], [70, 86], [62, 86], [58, 79]], mark: [89, 110] },
-  2: { w: 196, h: 124, gy: 116, tb: [124, 84], A: [-4, 15, 34, 53, 72, 91, 110, 129, 148], L: [56, 62, 70, 74, 74, 72, 70, 70, 66], cu: 0, tw: 6.4,
+  2: { w: 196, h: 124, gy: 116, tb: [124, 84], A: [-4, 13, 30, 47, 64, 81, 98, 115, 132], L: [52, 58, 68, 74, 76, 74, 72, 72, 70], cu: 0, tw: 6.4,
     torso: [[118, 84], [104, 82], [90, 92], [76, 94]], tr: [13, 11], hip: [116, 86, 13, 12], chest: [76, 95, 12, 10], neck: [[72, 93], [64, 93], [56, 95], [50, 96]], nr: [9.4, 7.4], head: [44, 96, -.14],
     legs: [{ far: 1, pts: [[80, 99], [78, 108], [66, 113]], r: [5, 3.4], paw: [62, 113.4] }, { far: 1, pts: [[110, 92], [118, 106], [108, 113]], r: [5.6, 3.4], paw: [104.5, 113.4] }, { pts: [[120, 90], [130, 102], [119, 113]], r: [6.6, 3.6], paw: [115.5, 113.4] }, { pts: [[73, 99], [68, 110], [54, 113]], r: [5.4, 3.6], paw: [50, 113.4] }],
     hat: [[70, 86], [68, 99], [60, 103], [57, 101]], mark: [116, 84] },
-  3: { w: 200, h: 144, gy: 135, tb: [114, 112], A: [-14, 2, 18, 34, 50, 66, 82, 98, 112], L: [66, 74, 80, 84, 86, 86, 82, 76, 66], cu: 1, tw: 6.4,
+  3: { w: 200, h: 144, gy: 135, tb: [114, 112], A: [-14, 0, 14, 28, 42, 56, 70, 84, 97], L: [66, 74, 80, 84, 86, 88, 88, 86, 82], cu: 1, tw: 6.4,
     torso: [[107, 108], [104, 92], [94, 80], [84, 75]], tr: [13.5, 11.5], hip: [106, 110, 13, 13], chest: [83, 77, 12, 12], neck: [[81, 72], [76, 62], [71, 57], [67, 53]], nr: [10, 7.4], head: [62, 49, -.22],
     legs: [{ far: 1, pts: [[86, 84], [72, 94], [62, 88]], r: [5, 3.2], paw: [59, 86.5], up: 1 }, { far: 1, pts: [[112, 114], [116, 124], [112, 132]], r: [5.6, 3.4], paw: [108.5, 132.4] }, { pts: [[104, 116], [97, 124], [102, 132]], r: [6.4, 3.6], paw: [98.5, 132.4] }, { pts: [[79, 80], [64, 84], [56, 74]], r: [5.4, 3.4], paw: [54, 71.5], up: 1 }],
     hat: [[86, 66], [82, 78], [74, 78], [70, 68]], mark: [106, 108] } };
@@ -65,7 +65,7 @@ function HT_than(v, p) { const P = HT_DANG[v] || HT_DANG[1], k = p === 3 ? 1.5 :
   const tips = [], sp = HT_bz(P.torso[0], P.torso[1], P.torso[2], P.torso[3], 26), nk = HT_bz(P.neck[0], P.neck[1], P.neck[2], P.neck[3], 16);
   // đường các đuôi
   const tails = P.A.map((ad, i) => { const a = ad * Math.PI / 180, L = P.L[i] * (p === 3 ? 1.04 : 1), d = [Math.cos(a), -Math.sin(a)], n = [-Math.sin(a), -Math.cos(a)], B = P.tb;
-    const c = P.cu ? 1 : (ad - 54) / 52, o1 = P.cu ? -12 : -c * 7, o2 = P.cu ? 20 : c * 15, o3 = P.cu ? 10 : c * 4;
+    const c = P.cu ? 1 : Math.max(-1, Math.min(.55, (ad - 54) / 52)), o1 = P.cu ? -12 : -c * 7, o2 = P.cu ? 14 : c * 15, o3 = P.cu ? 3 : c * 4;
     return HT_bz(B, [B[0] + d[0] * L * .36 + n[0] * o1, B[1] + d[1] * L * .36 + n[1] * o1], [B[0] + d[0] * L * .8 + n[0] * o2, B[1] + d[1] * L * .8 + n[1] * o2], [B[0] + d[0] * L + n[0] * (o2 + o3) * (P.cu ? 1.5 : 1), B[1] + d[1] * L + n[1] * (o2 + o3) * (P.cu ? 1.5 : 1)], 64); });
   const up = (pts, i) => { const a = pts[Math.max(0, i - 1)], b = pts[Math.min(pts.length - 1, i + 1)]; let tx = b[0] - a[0], ty = b[1] - a[1]; const l = Math.hypot(tx, ty) || 1; tx /= l; ty /= l; let nx = ty, ny = -tx; if (ny > 0 || (ny === 0 && nx < 0)) { nx = -nx; ny = -ny; } return [tx, ty, nx, ny]; };
   const trf = t => P.tr[0] + (P.tr[1] - P.tr[0]) * t, nrf = t => P.nr[0] + (P.nr[1] - P.nr[0]) * t;
@@ -110,7 +110,7 @@ function HT_than(v, p) { const P = HT_DANG[v] || HT_DANG[1], k = p === 3 ? 1.5 :
   if (p === 3) { for (let i = 1; i < sp.length; i += 4) { const u = up(sp, i), r = trf(i / 26); HT_lua(g, sp[i][0] + u[2] * (r - 2) + 2, sp[i][1] + u[3] * (r - 2), 12 + i % 3 * 3, 4.4, [HT_LUA[1], HT_LUA[2], HT_LUA[3]], 3); }
     for (const lg of P.legs) if (!lg.up) HT_lua(g, lg.paw[0] + 3, lg.paw[1] + 2, 12, 4.6, [HT_LUA[1], HT_LUA[2], HT_LUA[3]], 2);
     tails.forEach((tl, i) => { const j = 20 + (i * 7) % 24; HT_lua(g, tl[j][0], tl[j][1], 10, 3.6, [HT_LUA[1], HT_LUA[2], HT_LUA[3]], 2); });
-    for (let i = 0; i < 26; i++) { const x = (i * 53 + 17) % P.w, y = (i * 37 + 5) % (P.gy - 20); HT_D(g, x, y, i % 3 ? '#ffd23c' : '#ff8a1e'); } }
+    for (let i = 0; i < 26; i++) { const x = (i * 53 + 17) % P.w, y = (i * 41 + 5) % (P.gy - 24); HT_D(g, x, y, i % 3 ? '#ffd23c' : '#ff8a1e'); } }
   tips.forEach((q, i) => { const s = (p === 3 ? 1.25 : 1) * (i % 2 ? 1 : 1.15); HT_lua(g, q[0], q[1] + 2, 11 * s, 3.6 * s, HT_MA, 1.5); HT_E(g, q[0], q[1], 3.4 * s, 3 * s, HT_MA[1]); HT_E(g, q[0], q[1] + .2, 2.2 * s, 1.9 * s, HT_MA[2]); HT_E(g, q[0], q[1] + .4, 1 * s, .9 * s, HT_MA[3]); HT_D(g, q[0] + 3, q[1] - 13 * s, HT_MA[2]); HT_D(g, q[0] - 4, q[1] - 8 * s, HT_MA[1]); });
   T.k = 1; g.foot = Math.round(P.gy * k); return g; }
 // pha 2: phân thân mờ màu lửa ma ở hai bên
@@ -132,7 +132,7 @@ TO['ho-tinh-ve-lai'] = function () {
   for (let v = 1; v <= 3; v++) { const g = QH.hoTinh(v, 1), b = bbox(g), fh = (g.foot - b.y0) * 5, H = fh + 190, d = D[v - 1]; panel(c, 16, y, 1048, H);
     if (v === N) { c.strokeStyle = GOLDT; c.lineWidth = 4; c.beginPath(); c.roundRect(18, y + 2, 1044, H - 4, 18); c.stroke(); rr(c, 850, y + 26, 190, 46, 23, GOLDT); text(c, 'Đề xuất', 945, y + 59, 28, '#2b2632', true, 'center'); }
     badge(c, v, 58, y + 50); text(c, 'Phương án ' + v + ': ' + d[0], 94, y + 61, 32, v === N ? GOLDT : CREAM, true); para(c, d[1], 36, y + 104, 1000, 23, CREAM, 30); text(c, b.w + ' x ' + b.h + ' điểm ảnh', 36, y + 134, 20, SOFT, false);
-    const fy = y + H - 34, x = Math.min(620, 1044 - b.w * 2.5); aura(c, x, fy - fh / 2, 5, 58, 46, '255,90,40'); floor(c, 40, fy, 1000); draw(c, g, x, fy, 5); put(c, { key: 'smith', weapon: W('sword') }, 100, fy, 5); y += H + 22; }
+    const fy = y + H - 34, x = Math.min(620, 1044 - b.w * 2.5); aura(c, x, fy - fh / 2, 5, 58, 46, '255,90,40'); floor(c, 40, fy, 1000); draw(c, g, x, fy, 5); put(c, { key: 'smith', weapon: W('sword') }, 78, fy, 5); y += H + 22; }
   text(c, 'Ba pha của phương án số ' + N, 22, y + 34, 34, GOLDT, true); y += 52;
   const PH = [['Pha 1: kiêu kỳ', 'Thong thả, mắt vàng hẹp, lửa ma chập chờn ở đầu chín đuôi.', '#ffd27a'], ['Pha 2: phân thân', 'Mắt tím rực. Các bóng cáo mờ màu lửa ma hiện ra hai bên, thật giả khó phân.', '#c9a0ff'], ['Pha 3: hóa cuồng', 'To gấp rưỡi. Lửa trùm toàn thân, lông dựng ngược, nanh dài, mắt trắng rực.', '#ff9d6a']];
   const G = [1, 2, 3].map(p => QH.hoTinh(N, p)), B = G.map(bbox), h12 = Math.max(G[0].foot - B[0].y0, G[1].foot - B[1].y0) * 2, HA = h12 + 150;
