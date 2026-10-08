@@ -1,0 +1,303 @@
+# Vua Lửa Pơtao Apui (mã potaoapui) — pixel 32×32 (tướng Tím · hành Hỏa). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# PHÁ CÁCH (DANH-SACH): mặt nạ gỗ Tây Nguyên có sừng trâu cong, lửa bốc trên vai.
+# Đặc trưng (PROMPT-GEN-LAI.txt:1164 ưu tiên + PROMPT-DUNG-XUONG.txt:749): tù trưởng Gia Rai ~40 vạm vỡ, tóc đen dài, hàm vuông,
+# mày nghiêm, chấm son trên gò má; MŨ SỪNG TRÂU cong to; khố thổ cẩm đen + đỏ hoa văn răng cưa, vòng tay đồng, dải tím (Tím);
+# cầm GƯƠM THẦN to bốc lửa cắm trước mặt (KHÔNG giáo). Chiêu (Vòng Lửa / Núi Lửa Thức Giấc): giơ gươm — lửa bùng quanh.
+name: Vua Lửa Pơtao Apui
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  T = toi
+  K = khoi
+  f = da-toi
+  F = da
+  h = da-sang
+  e = trang
+  t = trang-xam
+  m = son-toi
+  s = son
+  R = son-sang
+  l = lua
+  L = lua-sang
+  o = dong-toi
+  y = dong
+  Y = dong-sang
+  x = sat-toi
+  S = sat
+  b = sat-sang
+  w = bac
+  W = sang
+  q = tim-toi
+  p = tim
+  P = tim-sang
+  r = dat-toi
+  d = dat
+  D = dat-sang
+
+part sung
+TK..................KT
+et..................te
+.et................te.
+.eet..............tee.
+..eettt........tttee..
+.....eettt..ttte......
+end
+
+part dau
+...KKKKKK...
+.KKKKKKKKKK.
+KyYyYyYyYyYy
+KKKKKKKKKKKK
+KKrDDDDDDDDD
+KKrDeTDDDeTD
+KKrDmDDDDmDd
+KKrDmDDDDmDd
+KK.rDdTTTdDd
+KK.rrdddddd.
+end
+
+part than
+.KK...fFFFf......
+KhhhhFFFFFFFFf...
+hFFFhhFFFFFFFFf..
+FFFFhFFFFhFFFFFf.
+yYFfFFFFFfFFFFf..
+FFF.fFFFFFFFFf...
+.Ff.fFFFFFFFf....
+.ff.qPpPpPpPPq...
+.Ff.KRKKRKKRKK...
+end
+
+part chan
+....KRKRKRKRK.
+....RKRKRKRKR.
+....KKKKKKKKK.
+....FFf..FFf..
+....FFf..FFf..
+....fFf..fFf..
+...TTTT..TTTT.
+end
+
+part guom
+.yYy.
+..o..
+..o..
+yYYYy
+.lwbl
+lLwbL
+.lwbl
+lLwbL
+.lwbl
+lLwbl
+.lwb.
+..wb.
+..wb.
+..b..
+end
+
+part guom_len
+..L..
+.Lwb.
+.lwbL
+lLwbl
+.lwbL
+lLwbl
+.lwbl
+lLwbL
+.lwbl
+yYYYy
+..o..
+..o..
+.yYy.
+end
+
+part guom_ngang
+yo.lLlLlLlL..
+Yo.wwwwwwwwwb
+Yo.bbbbbbbbb.
+yo.lLlLlLl...
+end
+
+part tay
+Yy.
+.FF
+.Fh
+end
+
+part tay_len
+.FF
+.Fh
+YF.
+fF.
+end
+
+part tay_dam
+yYFF
+.FFh
+end
+
+part lua
+..L..
+.LlL.
+LlRlL
+.lRl.
+end
+
+part lua_nho
+.L.
+LlL
+end
+
+part mat_nham
+TT..TT
+end
+
+anim idle fps=3 loop
+frame idle
+  use sung 5 4
+  use chan 8 23
+  use than 7 15
+  use dau 10 6
+  use guom 21 16
+  use tay 20 16
+  use lua_nho 9 14
+  use lua_nho 18 14
+  outline
+end
+frame idle
+  use sung 5 5
+  use chan 8 23
+  use than 7 16
+  use dau 10 7
+  use guom 21 16
+  use tay 20 17
+  use lua_nho 9 14
+  use lua_nho 18 14
+  outline
+end
+frame idle
+  use sung 5 4
+  use chan 8 23
+  use than 7 15
+  use dau 10 6
+  use guom 21 16
+  use tay 20 16
+  use lua_nho 9 14
+  use lua_nho 18 14
+  use lua_nho 21 22
+  outline
+end
+
+# đánh: rút gươm giơ cao → chém ngang lửa → bổ xuống → cắm lại
+anim attack fps=10 once
+frame attack
+  use sung 5 4
+  use chan 8 23
+  use than 7 15
+  use dau 10 6
+  use guom_len 21 2
+  use tay_len 20 13
+  outline
+end
+frame attack
+  use sung 6 4
+  use chan 8 23
+  use than 8 15
+  use dau 11 6
+  use guom_ngang 18 17
+  use tay_dam 20 18
+  outline
+end
+frame attack
+  use sung 6 4
+  use chan 8 23
+  use than 8 15
+  use dau 11 6
+  use guom_ngang 18 17
+  use tay_dam 20 18
+  use lua 26 12
+  outline
+end
+frame attack
+  use sung 5 4
+  use chan 8 23
+  use than 7 15
+  use dau 10 6
+  use guom 21 16
+  use tay 20 16
+  outline
+end
+
+# chiêu Vòng Lửa: giơ gươm lửa lên trời, lửa bùng quanh chân
+anim cast fps=8 loop
+frame cast
+  use sung 5 4
+  use chan 8 23
+  use than 7 15
+  use dau 10 6
+  use guom_len 21 1
+  use tay_len 20 13
+  use lua_nho 2 26
+  use lua_nho 27 26
+  outline
+end
+frame cast
+  use sung 5 4
+  use chan 8 23
+  use than 7 15
+  use dau 10 6
+  use guom_len 21 1
+  use tay_len 20 13
+  use lua 1 24
+  use lua 26 24
+  outline
+end
+frame cast
+  use sung 5 4
+  use chan 8 23
+  use than 7 15
+  use dau 10 6
+  use guom_len 21 1
+  use tay_len 20 13
+  use lua 2 23
+  use lua 26 23
+  use lua_nho 27 15
+  outline
+end
+
+anim hurt fps=8 once
+frame hurt
+  use @idle.0
+  shift -2 0
+  use mat_nham 12 11
+  swap F h
+  swap s R
+end
+
+anim die fps=5 once
+frame die
+  use guom_ngang 18 26
+  use sung 5 7
+  use chan 8 23
+  use than 7 18
+  use dau 10 9
+  use mat_nham 14 14
+  outline
+end
+frame die
+  use sung 5 7
+  use chan 8 23
+  use than 7 18
+  use dau 10 9
+  use mat_nham 14 14
+  rot 90
+  shift 0 1
+  use guom_ngang 18 26
+  outline
+end
+frame die
+  use @die.1
+  swap L l
+  swap R s
+end

@@ -1,0 +1,283 @@
+# Ông Táo (mã ongtao) — pixel 32×32 (tướng Tím · hành Hỏa). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:1236 ưu tiên + PROMPT-DUNG-XUONG.txt:833): thần bếp ~50 lùn mập bụng tròn, mặt hiền, ria mảnh;
+# áo đỏ cam, KHÔNG MẶC QUẦN (chân trần — tích dân gian), dải tím (Tím); MŨ CÁNH CHUỒN đen 2 cánh ngang dài + CÁ CHÉP VÀNG nhỏ bơi
+# quanh; cầm KẸP THAN sắt dài gắp than hồng (KHÔNG đại đao). Chiêu (Kẹp Than Hồng / Ba Ông Đầu Rau): than hồng bùng lửa.
+name: Ông Táo
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  T = toi
+  K = khoi
+  f = da-toi
+  F = da
+  h = da-sang
+  e = trang
+  W = sang
+  m = son-toi
+  s = son
+  R = son-sang
+  l = lua
+  L = lua-sang
+  o = dong-toi
+  y = dong
+  v = vang-nghe
+  V = vang-sang
+  x = sat-toi
+  S = sat
+  b = sat-sang
+  q = tim-toi
+  p = tim
+  P = tim-sang
+
+part canh
+TyKKKKKK..............KKKKKKyT
+.TTTTTTT..............TTTTTTT.
+end
+
+part dau
+....KKKK....
+...KKKKKK...
+..KKKKKKKK..
+..KvvvvvvK..
+.KKKKKKKKKK.
+KKfFFFFFFFFF
+.fFTTFFFTTFF
+.fFekFFFekFF
+.fFFFFFFFFFh
+..fFKKFFKKF.
+..fFFFTTFF..
+...ffffff...
+end
+
+part than
+.....fFFf.....
+...sRRRRRRRs..
+..sRlRRRRRRRs.
+.sRlRRRRRRRRRs
+.sR.RRlRRRRRRs
+.sR.RRRRRRRRRs
+.Ff.RRRRRRRRRm
+...qpPpPpPpPq.
+...sRRRRRRRRs.
+end
+
+part chan
+....FFf..FFf..
+....FFf..FFf..
+....fFf..fFf..
+...TTTT..TTTT.
+end
+
+part ca
+v.VV.
+.vVVV
+v.VV.
+end
+
+part ca_trai
+.VV.v
+VVVv.
+.VV.v
+end
+
+part kep
+.......L
+......lW
+.....Sl.
+....Sx..
+...Sx...
+..Sx....
+.Sx.....
+Sx......
+end
+
+part kep_ngang
+SSSSSSSSlL
+xxxxxxxSWl
+.......xl.
+end
+
+part than_hong
+.L.
+LWl
+.l.
+end
+
+part lua
+..L..
+.LlL.
+LlRlL
+.lRl.
+end
+
+part tay
+fF.
+.FF
+.Fh
+end
+
+part tay_dam
+fFFF
+.FFh
+end
+
+part mat_nham
+TT...TT
+end
+
+anim idle fps=3 loop
+frame idle
+  use dau 10 4
+  use canh 1 7
+  use chan 8 26
+  use than 8 17
+  use kep 20 11
+  use tay 19 18
+  use ca 2 15
+  outline
+end
+frame idle
+  use dau 10 5
+  use canh 1 8
+  use chan 8 26
+  use than 8 18
+  use kep 20 12
+  use tay 19 19
+  use ca 1 13
+  outline
+end
+frame idle
+  use dau 10 4
+  use canh 1 7
+  use chan 8 26
+  use than 8 17
+  use kep 20 11
+  use tay 19 18
+  use ca_trai 1 11
+  outline
+end
+
+# đánh: giơ kẹp than → đâm tới → than hồng bùng lửa → thu kẹp
+anim attack fps=10 once
+frame attack
+  use dau 10 4
+  use canh 1 7
+  use chan 8 26
+  use than 8 17
+  use kep 21 8
+  use tay 20 15
+  use ca 2 15
+  outline
+end
+frame attack
+  use dau 11 4
+  use canh 2 7
+  use chan 8 26
+  use than 9 17
+  use kep_ngang 20 20
+  use tay_dam 20 20
+  use ca 2 15
+  outline
+end
+frame attack
+  use dau 11 4
+  use canh 2 7
+  use chan 8 26
+  use than 9 17
+  use kep_ngang 20 20
+  use tay_dam 20 20
+  use lua 26 15
+  use ca 3 16
+  outline
+end
+frame attack
+  use dau 10 4
+  use canh 1 7
+  use chan 8 26
+  use than 8 17
+  use kep 20 11
+  use tay 19 18
+  use ca 2 15
+  outline
+end
+
+# chiêu: giơ than hồng, lửa bùng, cá chép vàng bơi vòng quanh
+anim cast fps=8 loop
+frame cast
+  use dau 10 4
+  use canh 1 7
+  use chan 8 26
+  use than 8 17
+  use kep 21 6
+  use tay 20 13
+  use lua 26 1
+  use ca 2 17
+  outline
+end
+frame cast
+  use dau 10 4
+  use canh 1 7
+  use chan 8 26
+  use than 8 17
+  use kep 21 6
+  use tay 20 13
+  use lua 26 1
+  use ca_trai 3 2
+  use than_hong 1 22
+  outline
+end
+frame cast
+  use dau 10 4
+  use canh 1 7
+  use chan 8 26
+  use than 8 17
+  use kep 21 6
+  use tay 20 13
+  use lua 25 1
+  use ca 23 24
+  use than_hong 2 20
+  outline
+end
+
+anim hurt fps=8 once
+frame hurt
+  use dau 9 4
+  use canh 0 7
+  use chan 7 26
+  use than 7 17
+  use kep 19 11
+  use tay 18 18
+  use ca 1 15
+  use mat_nham 12 11
+  outline
+  swap F h
+  swap R l
+end
+
+anim die fps=5 once
+frame die
+  use dau 10 8
+  use canh 1 11
+  use chan 8 26
+  use than 8 20
+  use mat_nham 13 15
+  use ca 2 24
+  outline
+end
+frame die
+  use dau 10 8
+  use canh 1 11
+  use chan 8 26
+  use than 8 20
+  use mat_nham 13 15
+  rot 90
+  shift 0 0
+  use ca 24 26
+  outline
+end
+frame die
+  use @die.1
+  swap R s
+  swap V v
+end

@@ -2216,6 +2216,7 @@ Session này dựng khung để nhiều session vẽ song song không xung độ
   Sơn**; font pixel không còn đổi `--title` toàn cục: logo menu, nút ("Xuất quân"…), "Đợt N · …" giữ font cũ, chỉ tiêu đề bảng /
   banner / tên boss dùng Handjet (đậm, viền tối), số vàng / mạng dùng VT323. Test pixel thêm kiểm tra font menu + ảnh `pixel-menu-*`.
 - Sửa tool (báo từ vfx-kenney): `rot` với khung không vuông trước đây làm build-pixel crash (TypeError) — nay `rot 180` chạy với mọi khung, `rot 90/270` khung không vuông và góc không phải bội 90 báo lỗi rõ. Test `tests/pixel` thêm 4 kiểm tra.
+- Sửa theo tester2: khi bật pixel, banner boss (`#banner b`) 36px và tên boss trên thanh máu 17px, màu vàng sáng #FFE7A0, đậm hơn — dấu (Ồ, Ỗ…) đọc rõ ở 844×390.
 - Nhóm hiệu ứng là `vfx` (nhánh vfx-kenney; cho phép `tools/pixel/src/vfx/palette.txt` tạm hoặc `KHONG-BUILD`).
 
 Test mới `tests/pixel` (tool: nguồn thật hợp lệ --strict, 5 kiểu nguồn lỗi bị chặn, dựng ra thư mục tạm khớp file trong repo;
@@ -2233,6 +2234,26 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
 ## Phiên bản 201 — quy tắc hình mới phải có bản pixel
 - CLAUDE.md: thêm quy tắc "Đang chuyển sang pixel art: hình mới phải có bản pixel" — session thêm/đổi hình (kể cả vẽ bằng code) vẽ luôn bản pixel theo docs/pixel/QUY-CHUAN.md hoặc ghi vào docs/pixel/DANH-SACH.md mục "Bổ sung"; giữ đường vẽ dự phòng.
 
+## claude/pixel-tuong-tim — Pixel art 18 tướng Tím (DANH-SACH lô 3–4)
+
+- Vẽ pixel 32×32 theo `docs/pixel/QUY-CHUAN.md` (tỉ lệ đầu:thân ≈ 1:1,6, mắt nhỏ trắng+đen có lông mày, không má hồng, bóng 3 tông,
+  viền `vien`) cho 18 tướng Tím: `thachsanh` (rìu lưỡi rộng + đàn tròn sau lưng), `caolo` (nỏ máy bánh răng đồng, kính lúp, râu vuông),
+  `antiem` (áo tơi rơm, dưa hấu trên vai), `cdt` (chỉ đóng khố, gậy trơn + nón lá thần sáng ngọc), `tiendung` (2 vòng tóc, quạt tròn,
+  áo tứ thân đỏ thắm), `langlieu` (mâm bánh chưng, băng vàng), `mychau` (áo lông ngỗng trắng kéo đất, tóc dài, rắc lông), `sodua`
+  (thân quả dừa, chỏm vỏ làm mũ, dừa xanh, sáo), `ongdung` (khổng lồ gánh 2 sọt đất), `thocong` (cụ tròn, mũ tròn đen, râu trắng tới
+  bụng, gậy tre hồ lô), `lyngu` (mào đuôi cá chép, giáp vảy cam, đao vây cá), `truongchi` (đứng trong thuyền nan, sáo ngang, nón sau
+  lưng, nhắm mắt), `potaoapui` (mũ sừng trâu, khố thổ cẩm đen-đỏ, gươm lửa, vạch sơn chiến thay chấm má), `baahoa` (lơ lửng, tóc bốc
+  như lửa, cầu lửa), `trongdong` (trống đồng Đông Sơn có sao sau lưng, dùi, mũ lông chim Lạc), `ongtao` (mũ cánh chuồn, không quần,
+  kẹp than, cá chép vàng), `lachau` (mũ nhọn, búa đá + khiên đồng, cờ chim Lạc nhỏ), `thansan` (gạc hươu, sơn chiến, áo choàng lông,
+  đao rừng). Mỗi tướng: idle 3 · attack 4 · cast 3 (hiệu ứng theo chiêu) · hurt 1 · die 3; chân dung tự cắt từ khung đứng (đã xem, đủ dấu hiệu).
+- Theo cột **Hướng phá cách** của DANH-SACH: `lyngu` = người cá chép (đầu cá chép đội mũ trụ), `trongdong` = trống đồng sống
+  (thân trống đồng gỉ xanh, mặt sao trên đỉnh, mặt hô trên tang trống), `lachau` = tượng đá ong lỗ chỗ có rêu, `thansan` = người-hươu
+  (mặt sọ hươu mắt đỏ, chân móng guốc), `sodua` = vỏ dừa khắc mặt dữ mắt sáng, tay chân xơ dừa; phá cách nhẹ: `baahoa` mặt tro trắng +
+  thân dưới là lửa, `potaoapui` mặt nạ gỗ + lửa trên vai, `cdt` búp sen đầu gậy, `ongdung` cỏ mọc trên vai, `thocong` chân lẫn ụ đất.
+- Trúng đòn (góp ý tester): lùi 2px (1px khi vật cầm sát mép khung) + nhắm mắt + nháy sáng da và màu áo chính; Ông Đùng / Ông Táo dựng
+  khung riêng (đòn gánh / cánh chuồn chạm mép). Pơtao Apui thân vạm vỡ rộng hơn Thạch Sanh để không trùng dáng.
+- Chi tiết Tím: mỗi tướng có 1 điểm tím (quai đàn / thắt lưng / gấu áo / vành vỏ dừa). Không vẽ trang bị lên người.
+- Chỉ thêm nguồn `tools/pixel/src/tuong/<mã>.txt` + file sinh ra (`assets/pixel/tuong/`, `js/pixel/*.js`, `js/asset-list.js`); không sửa js/pixel.js.
 ## claude/r-cap-12 — Kỹ năng R tối đa ở tướng cấp 12
 
 - **Đổi:** `R_REQ = [0, 6, 9, 12]` (trước `[0, 6, 11, 16]`): R1 vẫn mở ở cấp 6 (`COSTS.unlockReq` không đổi), R2 cấp 9, **R3 cấp 12**. Với Q/W/E tối đa ở cấp 7, "kỹ năng tối đa" (điều kiện hợp thể Tím) giờ đạt ở **tướng cấp 12**.
@@ -2272,6 +2293,18 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 211 — gộp pixel-tuong-tim (tester đạt)
+
+- 18 tướng Tím pixel (sprite 14 khung + chân dung). Test pixel tự chọn 1 tướng chưa vẽ để kiểm tra đường vẽ dự phòng (không cố định thachsanh nữa).
+
+## Phiên bản 210 — gộp pixel-nen-tang (tester đạt)
+
+- Banner boss + tên boss trên thanh máu (pixel) to, sáng hơn; ở màn thấp chữ banner ×1,6 so với gốc 22px.
+
+## Phiên bản 209 — gộp pixel-tuong-thuong (tester đạt)
+
+- Gộp bản chỉnh màu hành + mặt nạ 4 tướng pixel (Lạc Tướng, Ống Thổi, Thợ Gốm, Thợ Rèn) — tester đạt ở 844×390 + 1920×934.
+
 ## Phiên bản 208 — bàn giao điều phối, quy tắc tiết kiệm token
 - Thêm docs/BAN-GIAO-DIEU-PHOI.md và mục "Tiết kiệm token" trong CLAUDE.md. Dừng mọi session con.
 
@@ -2301,3 +2334,5 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   test báo nếu quên). Hướng dẫn cho người không lập trình: `docs/pixel/HUONG-DAN-TOOL.md`.
 - Test: `tests/ve-pixel/ve-pixel.test.js` (tool) · `tests/ve-pixel/nap-goi.test.js` (nạp / gỡ / IndexedDB / zip lỗi trong game).
 - **Pixel art:** nhánh không thêm hình game mới (nút trong Cài đặt là nút HTML chữ, như các dòng khác).
+- Chỉnh theo tester (sau v207): màu hành rõ hơn — Lạc Tướng (Kim) giáp + mũ ánh bạc-sắt viền đồng, mặt nạ bạc 2 hốc mắt (khác mặt tối
+  trùm mũ của Thợ Săn); Ống Thổi (Mộc) cóc xanh rêu đốm tía; Thợ Gốm (Thổ) đất nung nâu / vàng đất; Thợ Rèn đá xám sáng hơn (vẫn nứt lửa).

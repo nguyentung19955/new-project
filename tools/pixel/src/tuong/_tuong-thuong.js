@@ -120,11 +120,13 @@ module.exports = (L) => {
       'Đặc trưng (PROMPT-GEN-LAI.txt:72 · PROMPT-DUNG-XUONG.txt:47): giáp ngực ĐỒNG sọc răng cưa, khố xanh gỉ đồng, khoá đai mặt trời,',
       'MŨ LÔNG CHIM LẠC trắng hình quạt; cầm RÌU XÉO Đông Sơn. PHÁ CÁCH (DANH-SACH): GIÁP ĐỒNG RỖNG — hồn tướng Lạc, bộ giáp + khố',
       'không có người bên trong, trong mũ chỉ có 2 đốm mắt xanh gỉ đồng; tay / ống chân là giáp đồng rời, khe hở đen giữa các mảnh.',
+      'Màu hành Kim (góp ý tester): mảnh giáp + mũ ánh BẠC-SẮT, viền / răng cưa / khoá đai bằng đồng; mũ có mặt nạ bạc 2 hốc mắt + khe miệng',
+      '(khác mặt tối trùm mũ của Thợ Săn / Thợ Rèn).',
     ],
-    fade: [['dong', 'dong-toi'], ['dong-sang', 'dong'], ['ngoc-sang', 'ngoc']],
+    fade: [['bac', 'sat-sang'], ['sat-sang', 'sat'], ['ngoc-sang', 'ngoc']],
     hurtSwap: [['ngoc-sang', 'sang']],
     draw(g, p) {
-      const GI = ['dong-toi', 'dong', 'dong-sang'];
+      const GI = ['sat', 'sat-sang', 'bac'];
       hero(g, p, {
         build: 'stocky', skin: GI,
         back(g, b, p) {   // mũ lông chim Lạc: quạt lông trắng
@@ -137,7 +139,8 @@ module.exports = (L) => {
         legs: { pant: M.den, pantRows: 2, cuff: 'dong-sang' },
         body(g, b) {
           g.shade(torsoPts(b), GI);
-          zig(g, b.sh[0] + 1, b.sh[1] - 1, b.t0 + 2, 'dong-toi');
+          for (let x = b.sh[0]; x <= b.sh[1]; x++) g.set(x, b.t0, x % 2 ? 'dong-sang' : 'dong');   // viền vai đồng
+          zig(g, b.sh[0] + 1, b.sh[1] - 1, b.t0 + 2, 'dong');
           for (let x = b.wa[0]; x <= b.wa[1]; x++) g.set(x, b.t1 - 1, 'dong-toi');
           g.set(15, b.t1 - 1, 'vang-nghe'); g.set(16, b.t1 - 1, 'vang-sang'); g.set(15, b.t1 - 2, 'vang-nghe'); g.set(16, b.t1, 'vang-nghe');
           for (let x = b.wa[0]; x <= b.wa[1]; x++) g.set(x, b.t1, x < 14 ? 'ngoc-sang' : 'ngoc');
@@ -149,18 +152,18 @@ module.exports = (L) => {
         headFn(g, b, p) {   // mũ đồng rỗng, bên trong tối, 2 đốm mắt gỉ xanh
           const { hx, hy } = b;
           g.ascii(hx, hy, [
-            '..DDDdd..',
-            '.DDdddddo',
-            'DdYdYdYdo',
-            'Ddooooooo',
-            'Ddoqqqqqq',
-            'Ddoqqqqqq',
-            'Ddoqqqqqq',
-            '.dooqqqqq',
-            '..ooooo..',
+            '..bbbSS..',
+            '.bbSSSSSs',
+            'bSDdDdDds',
+            'bSbbbbbbs',
+            'bSbqqbqqs',
+            'bSbbbbbbs',
+            'bSSSqqqSs',
+            '.SSSSSSSs',
+            '..sssss..',
           ]);
-          if (p.eyes === 'closed') { g.set(hx + 5, hy + 5, 'ngoc'); g.set(hx + 7, hy + 5, 'ngoc'); }
-          else { g.set(hx + 5, hy + 4, 'ngoc-sang'); g.set(hx + 7, hy + 4, 'ngoc-sang'); g.set(hx + 5, hy + 5, 'ngoc'); g.set(hx + 7, hy + 5, 'ngoc'); }
+          if (p.eyes === 'closed') { g.set(hx + 4, hy + 4, 'ngoc'); g.set(hx + 7, hy + 4, 'ngoc'); }
+          else { g.set(hx + 4, hy + 4, 'ngoc-sang'); g.set(hx + 7, hy + 4, 'ngoc-sang'); }
         },
         front(g, b, p) { pole(g, b, p, { len: 7, back: 2, m: M.go, el: 'kim', reserve: 6, art: AXE }); },
       });
@@ -676,9 +679,9 @@ module.exports = (L) => {
       attack: [{ arm: 'aim' }, { arm: 'aim', puff: 1 }, { arm: 'aim', dart: 1 }, { arm: 'rest' }],
       cast: [{ arm: 'aim', fx: 0, puff: 1 }, { arm: 'aim', fx: 1, dart: 1 }, { arm: 'aim', fx: 2, dart: 2 }],
     },
-    fade: [['tim', 'tim-toi'], ['tim-sang', 'tim']],
+    fade: [['reu', 'reu-toi'], ['reu-sang', 'reu']],
     draw(g, p) {
-      const COC = ['tim-toi', 'tim', 'tim-sang'];
+      const COC = ['la-toi', 'reu', 'reu-sang'];   // màu hành Mộc (góp ý tester): cóc xanh rêu, đốm tía trên lưng
       hero(g, p, {
         build: 'stocky', dy: 1, skin: COC,
         legs: { pantRows: 0, feet: COC },
@@ -686,7 +689,7 @@ module.exports = (L) => {
           const pts = torsoPts(b).concat(spans(b.t0 + 4, [[b.wa[1] + 1, b.wa[1] + 1], [b.wa[1] + 1, b.wa[1] + 1]]));
           g.shade(pts, COC);
           g.shade(spans(b.t0 + 2, [[15, 18], [14, 19], [14, 20], [14, 20], [15, 19]]), ['dat-sang', 'cat', 'vang-sang']);   // bụng sáng
-          [[12, 1], [11, 4], [13, 6], [20, 1]].forEach(([x, dy]) => g.set(x, b.t0 + dy, 'dat-sang'));   // da sần
+          [[12, 1], [11, 4], [13, 6], [20, 1]].forEach(([x, dy]) => g.set(x, b.t0 + dy, 'tim'));   // đốm tía da sần
           for (let x = b.wa[0]; x <= b.wa[1]; x++) { g.set(x, b.t1 - 1, 'ngoc'); g.set(x, b.t1, 'khoi'); }
           g.set(b.wa[1] - 2, b.t1 - 1, 'ngoc-sang');
           g.shade(spans(b.t1 + 1, [[13, 17], [13, 17], [14, 16]]), M.den, { noTop: true });
@@ -696,18 +699,18 @@ module.exports = (L) => {
         headFn(g, b, p) {   // đầu cóc: dẹt rộng, mắt lồi trên đỉnh, miệng rộng
           const { hx, hy } = b;
           g.ascii(hx - 1, hy + 1, [
-            '...jPj.jPj.',
-            '..jJPPjJPPj',
-            '.jPJPPPPPPP',
-            'jPJPPPPPPPP',
-            'jPPPjjjjjjj',
-            'jPPPccccccj',
-            '.jPPPPPPPj.',
-            '..jjjjjjj..',
+            '...2u2.2u2.',
+            '..2UuuU2Uu2',
+            '.2uUuuuuuuu',
+            '2uUuuuuuuuu',
+            '2uuu2222222',
+            '2uuuccccccu',
+            '.2uuuuuuu2.',
+            '..2222222..',
           ]);
-          if (p.eyes === 'closed') { for (const x of [hx + 3, hx + 4, hx + 7, hx + 8]) g.set(x, hy + 2, 'tim-toi'); }
+          if (p.eyes === 'closed') { for (const x of [hx + 3, hx + 4, hx + 7, hx + 8]) g.set(x, hy + 2, 'la-toi'); }
           else { g.set(hx + 3, hy + 2, 'vang-sang'); g.set(hx + 4, hy + 2, 'vien'); g.set(hx + 7, hy + 2, 'vang-sang'); g.set(hx + 8, hy + 2, 'vien'); g.set(hx + 3, hy + 1, 'vang-nghe'); g.set(hx + 7, hy + 1, 'vang-nghe'); }
-          g.set(hx + 2, hy + 4, 'dat-sang'); g.set(hx + 5, hy + 3, 'tim-sang');
+          g.set(hx + 2, hy + 4, 'tim'); g.set(hx + 5, hy + 3, 'tim-sang'); g.set(hx + 9, hy + 4, 'tim');
         },
         front(g, b, p) {
           const rest = p.arm === 'rest' || p.kneel;
@@ -996,7 +999,7 @@ module.exports = (L) => {
     hurtSwap: [['lua-sang', 'sang']],
     fade: [['lua', 'son-toi'], ['lua-sang', 'son'], ['vang-sang', 'lua']],
     draw(g, p) {
-      const DA = ['vien', 'khoi', 'sat-toi'];
+      const DA = ['sat-toi', 'sat', 'sat-sang'];   // đá xám (góp ý tester: bớt tối để khác Lạc Tướng / Thợ Săn)
       const nut = (pts) => pts.forEach(([x, y, c]) => g.set(x, y, c || 'lua'));
       hero(g, p, {
         build: 'stocky', skin: DA,
@@ -1104,7 +1107,7 @@ module.exports = (L) => {
     },
     draw(g, p) {
       const AO = ['dat-toi', 'dat', 'dat-sang'];
-      const NUNG = ['son', 'son-sang', 'hong'];   // đất nung
+      const NUNG = ['dat', 'dong', 'dong-sang'];   // đất nung nâu / vàng đất (màu hành Thổ — góp ý tester)
       const ran = (pts) => pts.forEach(([x, y]) => { if (g.get(x, y)) g.set(x, y, 'nuoc'); });
       hero(g, p, {
         build: 'normal', skin: NUNG,
