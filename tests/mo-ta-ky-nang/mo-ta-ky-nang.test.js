@@ -113,7 +113,7 @@ async function run(w, h) {
   // 3) điện thoại: giữ tay ~0,35 giây → hiện; thả → ẩn, KHÔNG nâng; chạm nhanh → nâng
   const cdp = await page.context().newCDPSession(page);
   // trận đang chạy: ô Q đổi trạng thái hồi chiêu / mana → thanh tướng dựng lại cả hàng; trúng trong 0,35 giây giữ tay thì ô E cũ rời trang
-  // và mô tả không hiện (lỗi game đã báo, chưa sửa). Đoạn này chỉ kiểm cử chỉ chạm → tạm dừng trận cho thanh tướng đứng yên.
+  // (claude/bo-diem-thua đã sửa: tìm ô mới cùng chỗ, có test riêng tests/bo-diem-thua). Đoạn này chỉ kiểm cử chỉ chạm → tạm dừng trận cho thanh tướng đứng yên.
   await page.evaluate(() => { game.running = false; });
   await settle(page);
   const ce = await center(page, SK(2));

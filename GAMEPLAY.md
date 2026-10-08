@@ -2865,6 +2865,10 @@ Người dùng chọn phương án 4: máu quái tăng dần theo đợt + hạ 
 - Điểm không dùng được tự đổi thành chỉ số (+2 thuộc tính chính/điểm): khi cả 4 kỹ năng đã max (như v230) và **với tướng đã thăng thần** (nâng kỹ năng bằng vàng) — đổi ngay khi lên cấp / thăng thần. Toast nhỏ 1 lần mỗi trận: "Kỹ năng đã tối đa — điểm dư cộng vào chỉ số".
 - Còn điểm nhưng kỹ năng chưa đủ cấp tướng: điểm giữ lại để nâng sau, không hiện nút gì; chip "Còn N điểm kỹ năng" ở Cây kỹ năng chỉ hiện khi còn kỹ năng nâng được ngay.
 - Test: `node tests/an-cong-ky-nang/an-cong-ky-nang.test.js` (viết lại theo hành vi mới).
+- Sửa thêm 2 lỗi nhỏ (session sua-test-cho phát hiện): (1) rê chuột / giữ tay lên ô kỹ năng mà thanh tướng dựng lại trong lúc chờ
+  (ô khác đổi hồi chiêu / mana) → trước mô tả không hiện; nay hết giờ chờ thì tìm ô mới cùng chỗ (`elementFromPoint`), ô dựng lại dưới chuột
+  không làm đếm lại giờ chờ. (2) `ui.preImg` giữ sẵn `MARKET_SIZE` (6) bản ảnh mỗi tướng (trước 3) → chợ ra ≥ 4 thẻ cùng loại không còn
+  thẻ nháy trắng; `cho-tuong` nay tính cả trường hợp này là lỗi. Test: `node tests/bo-diem-thua/giu-mo-ta-cho.test.js`.
 
 ## claude/an-cong-ky-nang — Ẩn nút cộng điểm khi kỹ năng đã max
 

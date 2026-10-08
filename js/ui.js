@@ -616,14 +616,22 @@ class UI {
     $('#deck').addEventListener('contextmenu', (ev) => { if (ev.target.closest('.dk-pt')) ev.preventDefault(); });
     // v182: mô tả khi RÊ CHUỘT (máy tính) hoặc GIỮ TAY ~0,35 giây (điện thoại) lên ô kỹ năng / ô có data-tip
     // (thanh tướng trong trận, Cây kỹ năng, Anh Hùng, Ấn Phù, Thần Khí, thẻ tướng…). Chạm / bấm nhanh giữ hành vi cũ.
-    let hovEl = null, hovT = 0, prT = 0, pr = null;
+    let hovEl = null, hovT = 0, hovP = false, mx = 0, my = 0, prT = 0, pr = null;
+    // claude/bo-diem-thua: thanh tướng dựng lại (ô khác đổi hồi chiêu / mana) trong lúc chờ → ô cũ rời trang;
+    // tìm ô mới cùng chỗ thay vì bỏ mô tả
+    const tipAt = (el, x, y) => { if (el && el.isConnected) return el; const nx = document.elementFromPoint(x, y); return nx && nx.closest(TIP_SEL); };
+    window.addEventListener('pointermove', (ev) => { if (ev.pointerType === 'mouse') { mx = ev.clientX; my = ev.clientY; } }, true);
     document.addEventListener('pointerover', (ev) => {
       if (ev.pointerType !== 'mouse') return;
+      mx = ev.clientX; my = ev.clientY;
       const el = ev.target.closest && ev.target.closest(TIP_SEL);
       if (el === hovEl) return;
-      hovEl = el; clearTimeout(hovT);
+      // ô vừa được dựng lại dưới chuột: giữ nguyên giờ chờ đang chạy
+      if (el && hovP && hovEl && !hovEl.isConnected) { hovEl = el; return; }
+      hovEl = el; clearTimeout(hovT); hovP = false;
       if (!el) return this.hideTip();
-      hovT = setTimeout(() => { if (hovEl === el && el.isConnected) this.openTip(el, 'hover'); }, 150);
+      hovP = true;
+      hovT = setTimeout(() => { hovP = false; const e = tipAt(hovEl, mx, my); if (e) { hovEl = e; this.openTip(e, 'hover'); } }, 150);
     });
     document.addEventListener('pointerout', (ev) => { if (ev.pointerType === 'mouse' && !ev.relatedTarget) { hovEl = null; clearTimeout(hovT); this.hideTip(); } });
     $('#ui').addEventListener('pointerdown', (ev) => {
@@ -634,7 +642,7 @@ class UI {
       const el = ev.target.closest(TIP_SEL);
       if (!el) return;
       pr = { id: ev.pointerId, x: ev.clientX, y: ev.clientY };
-      prT = setTimeout(() => { if (pr && el.isConnected) { this.tipShown = true; this.openTip(el, 'press'); } }, 350);
+      prT = setTimeout(() => { const e = pr && tipAt(el, pr.x, pr.y); if (e) { this.tipShown = true; this.openTip(e, 'press'); } }, 350);
     }, true);
     window.addEventListener('pointermove', (ev) => { if (pr && ev.pointerId === pr.id && !this.tipShown && Math.hypot(ev.clientX - pr.x, ev.clientY - pr.y) > 12) { clearTimeout(prT); pr = null; } });
     const prEnd = (ev) => {
@@ -2552,12 +2560,12 @@ class UI {
   preloadMarket(pool) {
     for (const t of pool) { const u = marketPortrait(t); if (u) this.preImg(u); }
   }
-  // mỗi ảnh giữ sẵn 3 bản đã tải (hàng chợ có thể ra vài thẻ trùng loại)
+  // mỗi ảnh giữ sẵn MARKET_SIZE bản đã tải (chợ có thể ra cả 6 thẻ cùng loại — trước giữ 3 bản, thẻ thứ 4 nháy trắng)
   preImg(u) {
     const P = this.mkPre || (this.mkPre = new Map());
     const abs = new URL(u, document.baseURI).href, L = P.get(abs) || [];
     P.set(abs, L);
-    while (L.length < 3) { const im = new Image(); im.decoding = 'sync'; im.src = u; if (im.decode) im.decode().catch(() => {}); L.push(im); }
+    while (L.length < MARKET_SIZE) { const im = new Image(); im.decoding = 'sync'; im.src = u; if (im.decode) im.decode().catch(() => {}); L.push(im); }
   }
   // lấy ảnh đã nạp xong (đưa thẳng vào thẻ, không tạo ảnh mới chưa tải) rồi nạp sẵn bản khác cho lần sau
   takeMarketImg(abs) {
