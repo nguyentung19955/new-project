@@ -1,0 +1,30 @@
+# vai trò: Hỗ trợ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Hồi máu, khiên, tăng tốc / sát thương đồng đội; màu 6EDC8C
+name: vai trò: Hỗ trợ
+size: 12x12
+colors:
+  a = vien
+  b = la
+  c = la-ma
+  d = la-sang
+
+part k0
+............
+.....aaa....
+....addba...
+....adcba...
+..aaadcbaa..
+.adddcccdba.
+.adccccccba.
+.abbbcccbba.
+..aaadcbaa..
+....abbba...
+.....aaa....
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

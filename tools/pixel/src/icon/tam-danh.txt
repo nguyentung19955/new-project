@@ -1,0 +1,32 @@
+# tầm đánh — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bia tròn + mũi tên
+name: tầm đánh
+size: 12x12
+colors:
+  a = vien
+  b = trang-xam
+  c = sang
+  d = son-toi
+  e = son
+  f = son-sang
+
+part k0
+............
+....aaaa....
+...afffda...
+..afecbeda..
+.afeceebeda.
+.afceeeebda.
+.afbeeeebda.
+.adebeebeda.
+..adebbeda..
+...adddda...
+....aaaa....
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

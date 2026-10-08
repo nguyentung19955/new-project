@@ -1,0 +1,25 @@
+{
+ "code": "giam-sat-thuong",
+ "group": "icon",
+ "name": "giảm sát thương",
+ "w": 12,
+ "h": 12,
+ "ax": 6,
+ "ay": 11,
+ "bbox": [
+  0,
+  0,
+  11,
+  10
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "giam-sat-thuong.png"
+}

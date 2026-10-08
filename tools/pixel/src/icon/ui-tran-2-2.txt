@@ -1,0 +1,38 @@
+# nâng đồ tự động — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: mũi tên lên trên đe đồng (phong cách mặt trống đồng, viền 2A1608)
+name: nâng đồ tự động
+size: 16x16
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = la
+  g = la-ma
+  h = la-sang
+
+part k0
+......aaaa......
+....aaeeecaa....
+...aeededdeca...
+..aedbbbbbbdca..
+.aedbbbhbbbbdca.
+.aebbbhgfbbbbea.
+aedbbhgggfbbbdca
+aedbbbhgfbbbbdca
+aeebbbhgfbbbbeca
+acdbbbhgfbbbbdca
+.aebbbfffbbbbea.
+.acdbbbbbbbbdca.
+..acdbbbbbbdca..
+...aceddedeca...
+....aaccccaa....
+......aaaa......
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

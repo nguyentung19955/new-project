@@ -1,0 +1,30 @@
+# icon SVG: dừng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: ô vuông
+name: icon SVG: dừng
+size: 12x12
+colors:
+  a = vien
+  b = son-toi
+  c = son
+  d = son-sang
+
+part k0
+............
+............
+...aaaaaa...
+..adddddba..
+..adccccba..
+..adccccba..
+..adccccba..
+..adccccba..
+..abbbbbba..
+...aaaaaa...
+............
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

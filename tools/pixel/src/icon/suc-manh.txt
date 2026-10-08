@@ -1,0 +1,30 @@
+# Sức mạnh — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: nắm đấm cam
+name: Sức mạnh
+size: 12x12
+colors:
+  a = vien
+  b = son
+  c = lua
+  d = lua-sang
+
+part k0
+............
+............
+...aaaaaaa..
+..addbbddba.
+..adcbbccba.
+.adccccccba.
+.adcccccbba.
+.abbcccbaa..
+..aadccba...
+...abbbba...
+....aaaa....
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

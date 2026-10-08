@@ -1,0 +1,34 @@
+# luyện thể — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: tạ đá + nắm đấm
+name: luyện thể
+size: 16x16
+colors:
+  a = vien
+  b = da-toi
+  c = da
+  d = da-sang
+
+part k0
+................
+................
+................
+....aaaaaaaaa...
+...addbddbddba..
+...adcbccbccba..
+..adccbccbccba..
+.adcccccccccba..
+.adcccccccccba..
+.abccccccccbba..
+..abbcccccbaa...
+...aadccccba....
+....adccccba....
+....abbbbbba....
+.....aaaaaa.....
+................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

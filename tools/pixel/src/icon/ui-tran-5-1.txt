@@ -1,0 +1,37 @@
+# mẹo — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đèn dầu đồng sáng (phong cách mặt trống đồng, viền 2A1608)
+name: mẹo
+size: 16x16
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = vang-nghe
+  g = vang-sang
+
+part k0
+......aaaa......
+....aaeeecaa....
+...aeededdeca...
+..aedbbgbbbdca..
+.aedbbbfbbbbdca.
+.aebbbbgebbbbea.
+aedbbbgffebbbdca
+aedbbgffffebbdca
+aeebgfffffebbeca
+acdbefffffebbdca
+.aebbeeeeebbbea.
+.acdbbbbbbbbdca.
+..acdbbbbbbdca..
+...aceddedeca...
+....aaccccaa....
+......aaaa......
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

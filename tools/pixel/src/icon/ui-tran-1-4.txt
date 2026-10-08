@@ -1,0 +1,39 @@
+# xem chi tiết — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: con mắt mở trên đĩa trống (phong cách mặt trống đồng, viền 2A1608)
+name: xem chi tiết
+size: 16x16
+colors:
+  a = vien
+  b = khoi
+  c = trang-xam
+  d = trang
+  e = sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = cham
+
+part k0
+......aaaa......
+....aahhhfaa....
+...ahhghgghfa...
+..ahgbbbbbbgfa..
+.ahgbbbbbbbbgfa.
+.ahbbbbebbbbbha.
+ahgbbeeiicbbbgfa
+ahgeddiaaidcbgfa
+ahhbbciaaibbbhfa
+afgbbbbiibbbbgfa
+.ahbbbbbbbbbbha.
+.afgbbbbbbbbgfa.
+..afgbbbbbbgfa..
+...afhgghghfa...
+....aaffffaa....
+......aaaa......
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

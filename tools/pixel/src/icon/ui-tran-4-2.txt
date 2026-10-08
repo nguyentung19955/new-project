@@ -1,0 +1,38 @@
+# mặc đồ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: áo + mũi tên lên (phong cách mặt trống đồng, viền 2A1608)
+name: mặc đồ
+size: 16x16
+colors:
+  a = vien
+  b = khoi
+  c = dat
+  d = dong-toi
+  e = dong
+  f = dong-sang
+  g = vang-nghe
+  h = vang-sang
+
+part k0
+......aaaa......
+....aafffdaa....
+...affefeefda...
+..afebbbbbbeda..
+.afebbahfabbeda.
+.afbhhgaahfbbfa.
+afebfgggggfbbeda
+afebbhgggfbbbeda
+affbbccccccbbfda
+adebbhgggfbbbeda
+.afbbfffffbbbfa.
+.adebbbbbbbbeda.
+..adebbbbbbeda..
+...adfeefefda...
+....aaddddaa....
+......aaaa......
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -1,0 +1,37 @@
+# đã khám phá (Bách khoa) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: sách bọc đồng mở + lấp lánh
+name: đã khám phá (Bách khoa)
+size: 16x16
+colors:
+  a = vien
+  b = trang
+  c = dat-toi
+  d = dong-toi
+  e = dong
+  f = dong-sang
+  g = vang-nghe
+
+part k0
+................
+...aaaaaaaaaa...
+..accfffffffda..
+..acceeeeeeeda..
+..acceeeeeeeda..
+..acceegggeeda..
+..acceegggeeda..
+..acceegggeeda..
+..acceeegeeeda..
+..acceeeeeeeda..
+..acceeeeeeeda..
+..accbbbbbbbda..
+..accbbbbbbbda..
+...aaaaaaaaaa...
+................
+................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

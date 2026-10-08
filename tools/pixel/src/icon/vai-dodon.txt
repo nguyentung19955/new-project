@@ -1,0 +1,30 @@
+# vai trò: Đỡ đòn — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Máu trâu, giảm sát thương nhận, che chắn; màu D2AE72
+name: vai trò: Đỡ đòn
+size: 12x12
+colors:
+  a = vien
+  b = dat-sang
+  c = cat
+  d = vang-sang
+
+part k0
+.aaaaaaaaa..
+addddddddba.
+adcccccccba.
+adcccccccba.
+adcccccccba.
+abcccccccba.
+.abcccccba..
+..abcccba...
+...abbba....
+....aaa.....
+............
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

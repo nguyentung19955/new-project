@@ -1,0 +1,30 @@
+# icon SVG: sao — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: sao 5 cánh
+name: icon SVG: sao
+size: 12x12
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = vang-sang
+
+part k0
+.....a......
+....ada.....
+....aca.....
+....aca.....
+.aaadcbaaa..
+adcccccccba.
+.aaabcbaaa..
+....aca.....
+....aba.....
+.....a......
+............
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

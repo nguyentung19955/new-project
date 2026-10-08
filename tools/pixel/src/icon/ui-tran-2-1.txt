@@ -1,0 +1,39 @@
+# menu — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: 3 thanh đồng trên đĩa (phong cách mặt trống đồng, viền 2A1608)
+name: menu
+size: 16x16
+colors:
+  a = vien
+  b = khoi
+  c = trang-xam
+  d = trang
+  e = sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = vang-sang
+
+part k0
+......aaaa......
+....aahhhfaa....
+...ahhghgghfa...
+..ahgbbbbbbgfa..
+.ahgiiiiiiihgfa.
+.ahbbhhhhhhbbha.
+ahgbbeaaadcbbgfa
+ahgbbeddddcbbgfa
+ahhbbeaaadcbbhfa
+afgbbeaaadcbbgfa
+.ahbbiiiiihbbha.
+.afgihhhhhhhgfa.
+..afgbbbbbbgfa..
+...afhgghghfa...
+....aaffffaa....
+......aaaa......
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

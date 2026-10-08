@@ -1,0 +1,30 @@
+# năng lượng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: giọt nước xanh lam
+name: năng lượng
+size: 12x12
+colors:
+  a = vien
+  b = cham
+  c = nuoc
+  d = nuoc-sang
+
+part k0
+.....a......
+....ada.....
+....aca.....
+....aca.....
+...adcba....
+...adccba...
+..adccccba..
+..adccccba..
+..abccccba..
+...abbbba...
+....aaaa....
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

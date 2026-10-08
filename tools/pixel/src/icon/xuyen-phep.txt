@@ -1,0 +1,30 @@
+# xuyên phép — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: mũi giáo tím
+name: xuyên phép
+size: 12x12
+colors:
+  a = vien
+  b = tim-toi
+  c = tim
+  d = tim-sang
+
+part k0
+.........a..
+.......aaca.
+......adba..
+.......adba.
+.......aba..
+......aca...
+.....aca....
+....aca.....
+...aca......
+..aca.......
+.aca........
+..a.........
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

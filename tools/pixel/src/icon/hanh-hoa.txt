@@ -1,0 +1,34 @@
+# hành Hỏa — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đĩa trống đồng + ngọn lửa đỏ E0452C (cùng khung với hanh-kim/moc/thuy lô 0)
+name: hành Hỏa
+size: 12x12
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = son-toi
+  g = son
+  h = son-sang
+
+part k0
+....aaaa....
+...aeeeca...
+..aeeedeca..
+.aedbhbbdca.
+aeebbgbbbeca
+aedbhgfbbdca
+aeebfffbbeca
+acebbbbbbeca
+.acdbbbbdca.
+..acedeeca..
+...acccca...
+....aaaa....
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

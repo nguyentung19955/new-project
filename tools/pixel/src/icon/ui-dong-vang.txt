@@ -1,0 +1,34 @@
+# vàng trận (thanh trên) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đồng vàng lỗ vuông khắc sao
+name: vàng trận (thanh trên)
+size: 16x16
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = vang-sang
+
+part k0
+................
+................
+.....aaaaaa.....
+....adddddba....
+...adccccccba...
+..adccccccccba..
+..adccccccccba..
+..adccccccccba..
+..adccccacccba..
+..adccccccccba..
+..abccccccccba..
+...abccccccba...
+....abbbbbba....
+.....aaaaaa.....
+................
+................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

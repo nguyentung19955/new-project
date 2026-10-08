@@ -1,0 +1,38 @@
+# thẻ chợ: mua là ghép — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: ⇄ trên nền xanh
+name: thẻ chợ: mua là ghép
+size: 16x16
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = cham
+  g = nuoc
+  h = nuoc-sang
+
+part k0
+.aaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeca
+aeddddddddddddca
+aedbbbbbbbbbbdca
+aedbbbbbbhbbbdca
+aedhhhhhhgfbbdca
+aedffffffgfbbdca
+aedbbbbbbfbbbdca
+aedbbhbbbbbbbdca
+aedhgghhhhhhfdca
+aedbbffffffffdca
+aedbbbbbbbbbbdca
+aedbbbbbbbbbbdca
+aeddddddddddddca
+acccccccccccccca
+.aaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

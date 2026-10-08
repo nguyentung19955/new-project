@@ -1,0 +1,30 @@
+# câm lặng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bóng thoại gạch chéo
+name: câm lặng
+size: 12x12
+colors:
+  a = vien
+  b = son-toi
+  c = son
+  d = son-sang
+
+part k0
+............
+..aaa..aaa..
+.addbaaddba.
+.adccddccba.
+.abccccccba.
+..adccccba..
+..adccccba..
+.adccccccba.
+.adccbbccba.
+.abbbaabbba.
+..aaa..aaa..
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+
