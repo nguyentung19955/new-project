@@ -601,7 +601,7 @@ const HEROES = {
     traitApply: (s) => { s.dr += 10; s.regenAura = Math.max(s.regenAura || 0, 2); },
     skills: [
       { id: 'sd_q', name: 'Quả Dừa Nổ', active: { cooldown: 7, cast: 'melon', mana: 50 },
-        info: (n) => `Ném quả dừa nổ vùng: x2 sát thương +${n}` },
+        info: (n) => `Ném quả dừa nổ vùng: x1.5 sát thương +${n}, làm chậm 50% trong 2,5 giây` },
       { id: 'sd_w', name: 'Tiếng Sáo Chăn Dê',
         info: (n) => `+${(6 + n * 0.15).toFixed(1)}% sức mạnh kỹ năng`, apply: (s, n) => { s.skillPct += 6 + n * 0.15; } },
       { id: 'sd_e', name: 'Hóa Chàng Trai', active: { cooldown: 18, cast: 'flowerheal', mana: 90 },
