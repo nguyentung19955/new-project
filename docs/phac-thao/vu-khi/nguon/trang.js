@@ -88,7 +88,7 @@ function putW(c, opts, cx, by, s, o) {
 }
 const COLS = [{ b: null, st: 0 }];
 for (const b of WA.BRANCHES) for (let st = 1; st <= 3; st++) COLS.push({ b: b, st: st });
-const colOpts = (type, fam, ci, extra) => Object.assign({ type: type, family: fam, branch: COLS[ci].b, stage: COLS[ci].st, rarity: 0, mood: 'idle', t: 1 }, extra || {});
+const colOpts = (type, fam, ci, extra) => Object.assign({ type: type, family: fam, branch: COLS[ci].b, stage: COLS[ci].st, rarity: 0, mood: 'calm', t: 1 }, extra || {});
 
 // ---------- bảng nhiều dòng, mỗi dòng 10 hình ----------
 // rows: [{ type, family }], o: { title, sub, scale, cellH, be }
@@ -135,6 +135,6 @@ function xemSom() {
 function bang100(type) {
   const rows = []; for (let f = 0; f < WA.FAMILIES[type].length; f++) rows.push({ type: type, family: f });
   const tall = type === 'spear';
-  return bang(rows, { title: '100 hình ' + TYPEVN[type] + ' sống', scale: 2, cellH: tall ? 190 : type === 'bow' ? 132 : 150, be: true,
+  return bang(rows, { title: '100 hình ' + TYPEVN[type] + ' sống', scale: 3, cellH: tall ? 290 : type === 'bow' ? 200 : 236, be: true,
     sub: 'Mỗi hàng là một dòng. Cột đầu là hình gốc, kế đó là ba nhánh tiến hóa Lửa, Độc, Băng, mỗi nhánh ba giai đoạn. Em bé cao 25 điểm ảnh đứng cạnh hình gốc để so cỡ.' });
 }

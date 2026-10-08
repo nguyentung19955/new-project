@@ -78,12 +78,16 @@
     const r = (ang * Math.PI) / 180;
     this.ux = Math.cos(r); this.uy = Math.sin(r);
     this.vx = -this.uy; this.vy = this.ux;
-    this.k = P.k; this.kq = 1 + (P.k - 1) * 0.75;
+    // ks: hệ số cỡ riêng của loại, chỉ co chiều dài (cung thì co chiều cao) để giữ bề rộng cho khuôn mặt
+    const ks = P.ks || 1, bow = P.type === 'bow';
+    this.k = P.k; this.kt = P.k * (bow ? 1 : ks); this.kq = (1 + (P.k - 1) * 0.75) * (bow ? ks : 1);
     this.warp = P.warp || null;
     this.arc = P.arc || null; // uốn thân theo cung tròn (lưỡi liềm, mác...)
+    this.wave = P.wave || null; // thân lượn sóng sẵn có của dòng
   }
   Frame.prototype.T = function (t, q) {
-    const w = this.warp;
+    const w = this.warp, wv = this.wave;
+    if (wv && t > wv.t0) q += wv.amp * Math.sin(((t - wv.t0) / wv.per) * Math.PI * 2) * Math.min(1, (t - wv.t0) / 4);
     if (w) {
       if (w.bow) t += w.amp * Math.sin(q * w.f + w.ph) * (w.fade ? Math.min(1, Math.abs(q) / 6) : 1);
       else if (t > w.t0) { const s = (t - w.t0) / w.L; q += w.amp * Math.sin(s * Math.PI * w.f) * Math.min(1, s * 4) + w.hook * s * s; }
@@ -93,7 +97,7 @@
       const th = (t - c.t0) / c.R, r = c.R + q * (c.dir > 0 ? -1 : 1), sn = Math.sin(th), cs = Math.cos(th);
       t = c.t0 + r * sn; q = c.dir > 0 ? c.R - r * cs : -c.R + r * cs;
     }
-    t *= this.k; q *= this.kq;
+    t *= this.kt; q *= this.kq;
     return [this.ux * t + this.vx * q, this.uy * t + this.vy * q];
   };
 
@@ -106,6 +110,7 @@
     this.nol = new Uint8Array(n); // điểm hiệu ứng, không cần viền
     this.rim = new Uint8Array(n); // điểm thuộc phần được mạ viền theo bậc
     this.lay = null; this.clip = false;
+    this.t0 = 1e9; this.t1 = -1e9; this.q0 = 1e9; this.q1 = -1e9; // tầm vươn của thân theo trục vũ khí (không tính tua)
   }
   Spr.prototype._i = function (x, y) {
     x = Math.round(x) + this.ox; y = Math.round(y) + this.oy;
@@ -117,6 +122,10 @@
     const i = this._i(x, y); if (i < 0) return;
     if (this.clip && !this.lay[i]) return;
     this.lay[i] = c === 0 ? null : norm(c);
+    if (!this.nomeasure && c !== 0) {
+      const f = this.fr, t = x * f.ux + y * f.uy, q = x * f.vx + y * f.vy;
+      if (t < this.t0) this.t0 = t; if (t > this.t1) this.t1 = t; if (q < this.q0) this.q0 = q; if (q > this.q1) this.q1 = q;
+    }
   };
   Spr.prototype.rr = function (x, y, w, h, c) { for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) this.px(x + i, y + j, c); };
   Spr.prototype.re = function (cx, cy, rx, ry, c) {
@@ -146,7 +155,10 @@
   };
   // --- vẽ theo trục vũ khí (t, q) ---
   Spr.prototype.T = function (t, q) { return this.fr.T(t, q); };
-  Spr.prototype.p = function (t, q, c) { const a = this.fr.T(t, q); this.px(a[0], a[1], c); };
+  Spr.prototype.M = function (t, q) {
+    return this.fr.T(t, q);
+  };
+  Spr.prototype.p = function (t, q, c) { const a = this.M(t, q); this.px(a[0], a[1], c); };
   // khối vuông nhỏ w x h đặt tâm tại (t, q), không xoay theo vũ khí
   Spr.prototype.box = function (t, q, w, h, c) { const a = this.fr.T(t, q); this.rr(Math.round(a[0]) - (w >> 1), Math.round(a[1]) - (h >> 1), w, h, c); };
   // chia nhỏ cạnh để hình uốn theo phép bẻ cong
@@ -154,10 +166,10 @@
     const out = [], n = pts.length, m = closed ? n : n - 1;
     for (let i = 0; i < m; i++) {
       const a = pts[i], b = pts[(i + 1) % n];
-      const d = Math.max(Math.abs(b[0] - a[0]), Math.abs(b[1] - a[1])), s = this.fr.warp || this.fr.arc ? Math.max(1, Math.ceil(d / 2.5)) : 1;
-      for (let j = 0; j < s; j++) out.push(this.fr.T(a[0] + ((b[0] - a[0]) * j) / s, a[1] + ((b[1] - a[1]) * j) / s));
+      const d = Math.max(Math.abs(b[0] - a[0]), Math.abs(b[1] - a[1])), s = this.fr.warp || this.fr.arc || this.fr.wave ? Math.max(1, Math.ceil(d / 2.5)) : 1;
+      for (let j = 0; j < s; j++) out.push(this.M(a[0] + ((b[0] - a[0]) * j) / s, a[1] + ((b[1] - a[1]) * j) / s));
     }
-    if (!closed) out.push(this.fr.T(pts[n - 1][0], pts[n - 1][1]));
+    if (!closed) out.push(this.M(pts[n - 1][0], pts[n - 1][1]));
     return out;
   };
   Spr.prototype.g = function (pts, c) { this.rg(this._sub(pts, true), c); };
@@ -165,7 +177,7 @@
   Spr.prototype.l = function (t0, q0, t1, q1, w, c) { this.pl([[t0, q0], [t1, q1]], w, c); };
   // hình bầu dục: bán kính rt dọc trục t, rq dọc trục q
   Spr.prototype.e = function (t, q, rt, rq, c) {
-    if (Math.abs(rt - rq) < 0.01) { const a = this.fr.T(t, q); this.re(a[0], a[1], rt * this.fr.k, rt * this.fr.k, c); return; }
+    if (Math.abs(rt - rq) < 0.01) { this.M(t - rt, q); this.M(t + rt, q); const a = this.fr.T(t, q); this.re(a[0], a[1], rt * this.fr.k, rt * this.fr.k, c); return; }
     const pts = [];
     for (let i = 0; i < 20; i++) { const a = (i / 20) * Math.PI * 2; pts.push([t + Math.cos(a) * (rt + 0.3), q + Math.sin(a) * (rq + 0.3)]); }
     this.g(pts, c);
@@ -298,12 +310,14 @@
   // Tua: dây mềm có hạt, buông từ (t, q). Luôn rủ xuống màn hình bất kể vũ khí xoay góc nào.
   function tassel(S, t, q, col, len, bead) {
     const a = S.T(t, q), x = Math.round(a[0]), y = Math.round(a[1]);
+    S.nomeasure = true;
     S.part({ ol: col[0] }, (s) => {
       s.rr(x, y, 1, 2, Md(col)); s.px(x + 1, y + 2, Md(col)); s.px(x + 2, y + 1, Md(col));
       for (let i = 0; i < len; i++) s.px(x + 2 + (i % 4 === 1 ? 1 : 0), y + 2 + i, Md(col));
       s.px(x + 3, y + len + 1, Md(col)); s.px(x + 1, y + len + 2, Md(col)); s.px(x + 3, y + len + 2, Lt(col));
     });
     if (bead) S.part((s) => { s.rr(x + 1, y + 2, 2, 2, Md(bead)); s.px(x + 2, y + 2, Lt(bead)); });
+    S.nomeasure = false;
   }
   // Đá nạm theo bậc: chỉ hiện từ bậc min trở lên.
   function gem(S, P, t, q, min) {
@@ -428,6 +442,7 @@
   function motes(S, P, list) {
     if (P.st < 2) return;
     const E = P.E, n = P.st === 2 ? Math.ceil(list.length / 2) : list.length;
+    S.nomeasure = true;
     S.part({ fx: true }, (s) => {
       for (let i = 0; i < n; i++) {
         const m = list[i];
@@ -435,7 +450,36 @@
         else s.p(m[0], m[1], E.fx[i % 3]);
       }
     });
+    S.nomeasure = false;
   }
+
+  // Mọc phụ kiện theo hệ tại các điểm cho sẵn. sp = [[t, q, dt, dq], ...] xếp theo thứ tự ưu tiên; o.z: hệ số cỡ.
+  // Lửa: ngọn lửa. Băng: tinh thể. Độc: mầm dây leo, rồi nấm và gai.
+  function grow(S, P, sp, o) {
+    if (!P.el) return;
+    o = o || {};
+    const st = P.st, z = o.z || 1, g = (i) => sp[i % sp.length], bow = P.type === 'bow';
+    const ln = (a) => (a[4] != null ? a[4] : bow ? (a[2] > 0 ? -0.35 : 0.35) : (a[3] < 0 ? 0.35 : -0.35));
+    const fl = (i, len, wid) => { const a = g(i); flame(S, a[0], a[1], a[2], a[3], len * z, wid * z, ln(a)); };
+    const cr = (i, len, wid, light) => { const a = g(i); crystal(S, a[0], a[1], a[2], a[3], len * z, wid * z, light); };
+    const sh = (i, h, r) => { const a = g(i); shroom(S, a[0], a[1], a[2], a[3], h, r * z); };
+    const th = (i, len) => { const a = g(i); thorn(S, a[0], a[1], a[2], a[3], len * z, 2.4); };
+    if (P.fire) {
+      if (st === 1) fl(0, 4.2, 3);
+      if (st === 2 && o.fire2) fl(0, 5.5, 3.5);
+      if (st === 3) { fl(0, 7.5, 4.5); fl(1, 6, 4); if (sp.length > 2 && !o.few) fl(2, 5, 3.5); }
+    } else if (P.ice) {
+      if (st === 1) cr(0, 5, 3);
+      if (st === 2) { cr(0, 6.5, 3.5); cr(1, 6, 3.2, true); }
+      if (st === 3) { cr(0, 8, 3.8); cr(1, 7, 3.5, true); cr(2, 6.5, 3.2); if (sp.length > 3) cr(3, 6, 3, true); }
+    } else {
+      if (st === 1) { const a = g(0); vine(S, [[a[0] - 2, a[1]], [a[0] + a[2] * 1.5, a[1] + a[3] * 1.5], [a[0] + 2.5 + a[2], a[1] + a[3] * 0.5]], [[a[0] + a[2] * 2.5, a[1] + a[3] * 2.5]]); }
+      if (st === 2) { sh(0, 2, 2); th(1, 3.2); }
+      if (st === 3) { sh(0, 2.5, 2.7); th(1, 3.8); sh(2, 2, 2); if (sp.length > 3) th(3, 3.4); }
+    }
+  }
+  // màu phụ (vây, lá, tua) đổi theo hệ khi đã Thành hình
+  const sec = (P, base) => (P.st >= 2 ? P.E.B2 : base);
 
   // ---------- khuôn mặt (vẽ đè mỗi khung hình) ----------
   // Mặt luôn bám theo trục vũ khí nhưng xoay theo nấc 90 độ để nét không vỡ.
@@ -463,6 +507,7 @@
     this.c = c; this.X = X; this.Y = Y; this.fr = fr; this.P = P; this.mood = mood; this.t = t;
     this.n = ((Math.round((bow ? ang : ang + 90) / 90) % 4) + 4) % 4;
     this.ax = 0; this.ay = 0;
+    // mood 'calm' giống 'idle' nhưng không chớp mắt (dùng cho ảnh tĩnh)
     this.blink = mood === 'idle' && ((t + P.seed * 0.61) % 3.3) < 0.14;
     this.shut = mood === 'hurt' || mood === 'sleep' || this.blink;
     this.lid = P.M[0]; this.skin = P.M[1];
@@ -639,7 +684,7 @@
 
   // 1. Đao Lưỡi Liềm: cán gỗ dài, lưỡi cong móc như trăng non. Tính láu cá.
   fam('sword', {
-    name: 'Đao Lưỡi Liềm', short: 'Lưỡi Liềm', nature: 'láu cá', mat: STEEL, warp: { t0: 16, L: 30, amp: 0.7 },
+    name: 'Đao Lưỡi Liềm', short: 'Lưỡi Liềm', nature: 'láu cá', mat: STEEL, ks: 1.08, warp: { t0: 16, L: 30, amp: 0.7 },
     arc: { t0: 21, R: 11.5, dir: -1 },
     spark: [[28, 0], [38, 0], [18, 0], [46, 0]],
     build: function (S, P) {
@@ -759,6 +804,283 @@
     },
   });
 
+  // thân lưỡi kiếm theo biên dạng, có biến hình theo hệ; inner(s, E) vẽ nét bên trong
+  function bladePart(S, P, prof, o, inner) {
+    const E = edges(prof, P, o);
+    S.part({ ol: P.ol, rim: true }, (s) => { s.g(E.poly, (o && o.mat) || P.M); if (inner) s.in(() => inner(s, E)); });
+    return E;
+  }
+  const LEAF = ['#5f8a5a', '#b9d8a6', '#f2fbe2'];
+  const WATER = ['#4f6f94', '#a9c6e0', '#f0f8ff'];
+
+  // 2. Kiếm Lá Lúa: lưỡi mảnh cong như lá lúa, chắn tay là hai bông lúa trĩu hạt. Tính hiền.
+  fam('sword', {
+    name: 'Kiếm Lá Lúa', short: 'Lá Lúa', nature: 'hiền lành', mat: LEAF, warp: { t0: 8, L: 34, hook: 0.6 },
+    arc: { t0: 9, R: 62, dir: -1 },
+    spark: [[26, 0], [14, -2], [36, 0], [4, 5]],
+    build: function (S, P) {
+      const M = P.M, st = P.st, G2 = st >= 2 ? P.A : STRAW;
+      rtassel(S, P, -4, 1);
+      grow(S, P, [[20, -3.5, 0.5, -1], [27, 3, 0.5, 1], [32, -2.5, 0.6, -1], [9, 3.5, -0.2, 1]]);
+      bladePart(S, P, [[5, 2, 2], [11, 4, 4], [21, 4, 4], [32, 2.5, 2.5], [42, 0, 0]], { per: 7 }, (s) => {
+        s.l(8, 0, 39, 0, 1, Dk(M)); s.l(20, 2, 30, 1.5, 1, SH);
+        seed(s, P, 6, 22, 3.5, P.seed); core(s, P, 10, 38, -1);
+        engrave(s, P, [[22, -2], [32, -1.5]]);
+      });
+      // hai bông lúa trĩu xuống làm chắn tay
+      S.part((s) => {
+        for (const sg of [-1, 1]) { s.pl([[5, sg * 2], [5, sg * 5], [3, sg * 7.5], [0, sg * 8]], 1, Md(G2)); s.box(4.5, sg * 5.5, 2, 2, Md(G2)); s.box(2, sg * 7.5, 2, 2, Lt(G2)); s.box(0, sg * 8, 2, 2, Md(G2)); }
+        s.l(4.5, -2.5, 4.5, 2.5, 2, G2);
+      });
+      gem(S, P, 4.5, 0);
+      grip(S, P, -3, 3, STRAW, 2);
+      S.part((s) => { s.e(-5, 0, 1.5, 1.5, G2); });
+      motes(S, P, [[16, -9], [40, 5], [28, -8], [30, 8], [38, -7], [12, 8]]);
+    },
+    face: function (F, P) {
+      F.eye(16, 0, { pup: 'big' });
+      if (P.st >= 3) F.eye(24, 0, { w: 3, h: 3 });
+      F.mouth(10.5, 0, 'smile', 'open');
+      F.blush(12, -3); F.blush(12, 3);
+      F.zzz(18, 4);
+    },
+  });
+
+  // 3. Gươm Rồng: đầu rồng vàng có sừng ngậm lưỡi gươm, mũi gươm chẻ đôi như lưỡi rồng. Tính dữ.
+  fam('sword', {
+    name: 'Gươm Rồng', short: 'Gươm Rồng', nature: 'dữ dằn', mat: STEEL, ks: 0.94, warp: { t0: 14, L: 30, hook: 0.4 },
+    spark: [[30, 0], [6, -6], [38, 0], [6, 6]],
+    build: function (S, P) {
+      const M = P.M, st = P.st, A = P.A;
+      rtassel(S, P, -6, 1);
+      grow(S, P, [[18, -4, 0.4, -1], [26, 4.2, 0.5, 1], [33, -4, 0.6, -1], [15, 4, 0.2, 1]]);
+      // vây lưng rồng (hệ Lửa thì răng lửa mọc thay)
+      if (!(P.fire && st >= 2)) S.part({ ol: P.ol }, (s) => { for (const t of [17, 24, 31]) s.g([[t, -3.8], [t + 3.5, -7.5 - (st >= 3 ? 1 : 0)], [t + 5.5, -4]], P.ice && st >= 2 ? P.E.B2 : M); });
+      bladePart(S, P, [[10, 3.5, 3.5], [30, 4.5, 4.5], [38, 4, 4], [42.5, 2.5, 2.5]], { notip: true }, (s) => {
+        s.g([[43.5, -1.6], [37, 0], [43.5, 1.6]], 0); // chẻ đôi mũi gươm
+        s.l(16, 0, 35, 0, 1, Dk(M)); s.l(22, 2.5, 31, 2.5, 1, SH);
+        seed(s, P, 13, 26, 3.5, P.seed); core(s, P, 15, 34, -1.5);
+        engrave(s, P, [[22, -2.5], [34, -2.5]]);
+      });
+      // sừng rồng vểnh ra sau
+      S.part((s) => { for (const sg of [-1, 1]) { s.pl([[3, sg * 5.5], [1, sg * 8.5], [-2, sg * 10]], 2, st >= 2 ? P.M : BONE); } });
+      // đầu rồng ngậm lưỡi gươm
+      S.part((s) => {
+        s.g([[0, -3.5], [2, -6.5], [8, -8], [13, -7], [14.5, -5.5], [11, -4], [11, 4], [14.5, 5.5], [13, 7], [8, 8], [2, 6.5], [0, 3.5]], A);
+        s.in(() => {
+          s.l(2, -5, 2, 5, 1, Dk(A)); s.l(9.5, -7, 13, -6.5, 1, Lt(A));
+          s.p(13, -6, INK); s.p(13, 6, INK); // lỗ mũi
+          s.box(11.5, -3.6, 1, 2, SH); s.box(11.5, 3.6, 1, 2, SH); // nanh
+          if (P.rar === 0) s.box(2.5, 0, 2, 2, Md(RED));
+        });
+      });
+      gem(S, P, 2.5, 0);
+      // râu rồng
+      S.part({ ol: false }, (s) => { const rc = Md(sec(P, RED)); for (const sg of [-1, 1]) { s.l(14, sg * 7, 16, sg * 9.5, 1, rc); s.p(17.5, sg * 9.5, rc); } });
+      grip(S, P, -4, -1, RED, 2);
+      S.part((s) => { s.e(-7, 0, 2.5, 2.5, A); s.in(() => { s.box(-7, 0, 2, 2, 0); }); });
+      motes(S, P, [[20, -11], [44, 4], [28, -10], [31, 9], [38, -7], [19, 10]]);
+    },
+    face: function (F, P) {
+      const lid = F.lid, skin = F.skin; F.lid = P.A[0]; F.skin = P.A[1];
+      F.eye(6.5, -4, { w: 3, h: 3, brow: 'angry', side: 1, look: [1, 0] }); F.eye(6.5, 4, { w: 3, h: 3, brow: 'angry', side: -1, look: [-1, 0] });
+      F.lid = lid; F.skin = skin;
+      if (P.st >= 3) F.eye(21, 0, { pup: 'slit', look: [0, 0] });
+      if (F.mood === 'attack') { F.at(12, 0); F.r(-3, -1, 7, 2, '#5a1014'); F.r(-3, -1, 1, 1, SH); F.r(3, -1, 1, 1, SH); }
+      F.zzz(8, 6);
+    },
+  });
+
+  // 4. Mã Tấu: bản to, càng ra mũi càng rộng, sống đeo ba khoen vàng. Tính bặm trợn.
+  fam('sword', {
+    name: 'Mã Tấu', short: 'Mã Tấu', nature: 'bặm trợn', mat: IRON, ks: 0.93, warp: { t0: 8, L: 34, hook: 0.4 },
+    spark: [[30, 2], [18, -2], [38, 0], [22, 5]],
+    build: function (S, P) {
+      const M = P.M, st = P.st, A = P.A;
+      tassel(S, -8, 1, RED, 5, null);
+      rtassel(S, P, 5, -5);
+      grow(S, P, [[10, -3, 0.4, -1], [24, 6.5, 0.4, 1], [36, -3.5, 0.6, -1], [14, 4.5, 0.2, 1]]);
+      // ba khoen trên sống
+      if (!(P.fire && st >= 2)) S.part((s) => { for (const t of [17, 24, 31]) { s.box(t, -5.2, 3, 3, A); } s.in(() => { for (const t of [17, 24, 31]) s.box(t, -5.2, 1, 1, 0); }); });
+      bladePart(S, P, [[6, 2.5, 2.5], [18, 3, 4.5], [30, 3.5, 7], [36, 3.5, 7.5], [41, 3, 3.5], [43, 2, -0.5]], { per: 7.5, notip: true }, (s) => {
+        s.l(8, -1, 40, -1.5, 1, Dk(M)); s.l(24, 4.5, 35, 5, 1, SH); s.l(12, 2, 20, 3, 1, Lt(M));
+        seed(s, P, 7, 24, 3, P.seed); core(s, P, 12, 38, 2);
+        engrave(s, P, [[22, 1.5], [36, 2]]);
+      });
+      hilt(S, P, { guard: 'disc', gw: 4.5, grip: HORN, g0: -4, pommel: 'ring' });
+      motes(S, P, [[16, -10], [44, 4], [28, -9], [32, 11], [38, -7], [18, 9]]);
+    },
+    face: function (F, P) {
+      F.eye(16, 0.5, { brow: 'flat', lid: 1 });
+      // vết sẹo vắt qua mắt
+      F.at(16, 0.5); F.r(-4, -4, 1, 1, '#8c1c1f'); F.r(-3, -3, 1, 1, '#8c1c1f'); F.r(3, 3, 1, 1, '#8c1c1f'); F.r(4, 4, 1, 1, '#8c1c1f');
+      if (P.st >= 3) F.eye(26, 2, { w: 3, h: 3, brow: 'flat' });
+      F.mouth(10.5, 0.5, 'grin', 'openbig');
+      F.zzz(18, 5);
+    },
+  });
+
+  // 5. Dao Rựa: cán gỗ dài, lưỡi chữ nhật, mũi quặp xuống như mỏ chim. Tính ngơ ngác.
+  fam('sword', {
+    name: 'Dao Rựa', short: 'Dao Rựa', nature: 'ngơ ngác', mat: IRON, warp: { t0: 12, L: 30, amp: 0.8 },
+    spark: [[28, 1], [18, 1], [38, 6], [34, 0]],
+    build: function (S, P) {
+      const M = P.M, st = P.st;
+      rtassel(S, P, -3, 1);
+      grow(S, P, [[16, -2.5, 0.4, -1], [28, -2.5, 0.5, -1], [22, 5, 0.3, 1], [35, -2, 0.7, -1]]);
+      bladePart(S, P, [[10, 2.5, 2.5], [13, 2.5, 5], [30, 2.5, 5], [34, 2.5, 6], [37, 2, 10], [40, -1, 11.5], [42, -6, 11.5], [42.5, -9, 11]], { notip: true, per: 7 }, (s) => {
+        s.l(13, -1, 36, -1, 1, Dk(M)); s.l(15, 4, 34, 4, 1, Lt(M)); s.l(37, 7, 40, 10, 1, SH);
+        seed(s, P, 11, 26, 3.5, P.seed); core(s, P, 14, 34, 1.5);
+        engrave(s, P, [[24, 1.5], [34, 1.5]]);
+      });
+      S.part((s) => { s.l(-7, 0, 9, 0, 2, WD); s.in(() => { for (let t = -5; t < 9; t += 4) s.p(t, 0, Dk(WD)); }); });
+      S.part((s) => { s.l(9.5, -2, 9.5, 2, 3, P.st >= 2 ? P.A : STEEL); s.l(-8, -1, -8, 1, 2, P.st >= 2 ? P.A : STEEL); });
+      if (P.rar >= 1) S.part((s) => { s.l(3, -1.5, 3, 1.5, 2, Md(P.R.P)); if (P.rar >= 3) { s.l(-1, -1.5, -1, 1.5, 1, Md(P.R.P)); s.l(6.5, -1.5, 6.5, 1.5, 1, Md(P.R.P)); } });
+      gem(S, P, 9.5, 0, 2);
+      motes(S, P, [[18, -8], [43, 3], [28, -8], [30, 11], [38, -6], [20, 10]]);
+    },
+    face: function (F, P) {
+      F.eye(21, -0.5, { bead: true }); F.eye(21, 3.5, { bead: true });
+      if (P.st >= 3) F.eye(28, 1.5, { w: 3, h: 3, pup: 'dot', look: [0, 0] });
+      F.mouth(16.5, 1.5, 'o', 'open');
+      F.zzz(23, 5);
+    },
+  });
+
+  // 6. Kiếm Tre: khúc tre ngà có đốt, mũi vót xéo, nhánh lá non bên hông. Tính ngái ngủ.
+  fam('sword', {
+    name: 'Kiếm Tre', short: 'Kiếm Tre', nature: 'ngái ngủ', mat: BAM, warp: { t0: 6, L: 36, hook: 0.3 },
+    spark: [[28, 0], [10, 0], [37, -1], [19, 2]],
+    build: function (S, P) {
+      const M = P.M, st = P.st;
+      rtassel(S, P, 3, -5);
+      grow(S, P, [[23.5, -3.6, 0.5, -1], [14.5, 3.6, 0.4, 1], [32.5, -3.4, 0.6, -1], [5.5, -4, -0.1, -1]]);
+      // nhánh lá non
+      if (st < 2) S.part({ ol: BAMG[0] }, (s) => { s.l(23, 4, 26, 6.5, 1, Md(BAMG)); s.g([[26, 6], [30, 6.5], [31.5, 8.5], [27.5, 8]], BAMG); s.g([[25, 7], [25.5, 10], [23.5, 11.5], [23.5, 8]], BAMG); });
+      bladePart(S, P, [[5, 4, 4], [33, 3.6, 3.6], [41, 3.6, -1.5]], { notip: true, per: 9, amp: 0.8 }, (s) => {
+        for (const t of [5, 14, 23, 32]) { s.l(t, -6, t, 6, 1, Dk(M)); s.l(t + 1, -6, t + 1, 6, 1, Lt(M)); }
+        s.l(7, -2, 12, -2, 1, Lt(M)); s.l(16, -2, 21, -2, 1, Lt(M)); s.l(25, -2, 30, -2, 1, Lt(M)); s.l(34, -2, 38, -2, 1, SH);
+        seed(s, P, 6, 22, 3.5, P.seed); core(s, P, 7, 38, 1.5);
+        engrave(s, P, [[25, 1.5], [31, 1.5]]);
+      });
+      // chắn tay là khúc tre ngang buộc dây đỏ
+      S.part((s) => { s.l(3, -6, 3, 6, 2, st >= 2 ? P.A : BAM); s.in(() => { s.p(3, -6, Dk(BAM)); s.p(3, 6, Dk(BAM)); }); });
+      S.part({ ol: RED[0] }, (s) => { s.l(2.5, -1.5, 2.5, 1.5, 2, Md(sec(P, RED))); });
+      gem(S, P, 3, 4.5);
+      grip(S, P, -4, 1, BAM, 3, { plain: true });
+      S.part((s) => { s.l(-5.5, -2, -5.5, 2, 2, st >= 2 ? P.A : BAM); });
+      motes(S, P, [[16, -9], [43, 2], [27, -9], [31, 9], [38, -7], [12, 8]]);
+    },
+    face: function (F, P) {
+      F.eye(18.5, 0, { lid: 3, look: [0, 1] });
+      if (P.st >= 3) F.eye(27.5, 0, { w: 3, h: 3, lid: 1, look: [0, 1] });
+      F.mouth(10, 0, 'drool', 'open');
+      F.zzz(20, 4);
+    },
+  });
+
+  // 7. Đoản Kiếm Đông Sơn: dao găm đồng bản rộng hình lá, sống nổi, đốc là tượng người. Tính nghiêm, như cụ già.
+  fam('sword', {
+    name: 'Đoản Kiếm Đông Sơn', short: 'Đông Sơn', nature: 'nghiêm nghị', mat: BRZ, warp: { t0: 6, L: 34, hook: 0.4 },
+    spark: [[26, 0], [12, -4], [36, 0], [12, 4]],
+    build: function (S, P) {
+      const M = P.M, st = P.st, A = st >= 2 ? P.A : BRZ;
+      rtassel(S, P, 1, -8);
+      grow(S, P, [[18, -5.5, 0.5, -1], [24, 4.5, 0.5, 1], [30, -3.5, 0.6, -1], [8, 7, -0.1, 1]]);
+      bladePart(S, P, [[5, 6, 6], [9, 7, 7], [20, 5.5, 5.5], [32, 3, 3], [41, 0, 0]], { per: 7 }, (s) => {
+        s.l(7, 0, 38, 0, 2, Dk(M)); s.l(7, 1, 37, 1, 1, Lt(M)); s.l(24, 3, 30, 2.5, 1, SH);
+        if (st < 2) { for (const p of [[22, -3.5], [28, 2.5], [12, 5.5], [33, -1.5]]) s.box(p[0], p[1], 2, 1, '#5fa58a'); }
+        seed(s, P, 6, 22, 5.5, P.seed); core(s, P, 9, 37, -2.5);
+        engrave(s, P, [[21, -3], [26, -2], [31, -1.5]]);
+      });
+      // chắn tay hai đầu cuộn
+      S.part((s) => { s.l(3, -8, 3, 8, 2, A); s.box(1, -8.5, 2, 3, A); s.box(1, 8.5, 2, 3, A); });
+      gem(S, P, 3, 0);
+      // cán đồng có đai, đốc tròn có búi tóc
+      S.part((s) => { s.l(-3, 0, 1, 0, 3, A); s.in(() => { s.l(-2, -2, -2, 2, 1, Dk(A)); s.l(0, -2, 0, 2, 1, Dk(A)); if (P.rar >= 1) s.l(-1, -2, -1, 2, 1, Md(P.R.P)); }); });
+      S.part((s) => { s.e(-6, 0, 2.5, 2.5, A); s.box(-9, 0, 2, 2, A); s.in(() => { s.p(-6.5, -1, INK); s.p(-6.5, 1, INK); }); });
+      motes(S, P, [[16, -11], [43, 3], [27, -10], [31, 9], [37, -7], [19, 10]]);
+    },
+    face: function (F, P) {
+      F.eye(15, -3.5, { w: 3, h: 3, brow: 'bushy', side: 1, look: [1, 0] }); F.eye(15, 3.5, { w: 3, h: 3, brow: 'bushy', side: -1, look: [-1, 0] });
+      if (P.st >= 3) F.eye(23, 0, { w: 3, h: 3, look: [0, 0], pup: 'dot' });
+      // ria và râu bạc
+      F.at(10.5, 0);
+      if (F.mood === 'attack') F.b(MOUTHS.open, 0, 0);
+      else F.r(-1, 0, 2, 1, INK);
+      F.b(['WWW...WWW', 'WW.....WW', 'W.......W'], 0, -1, { W: '#ffffff' });
+      F.b(['.W.', 'WWW', 'WWW', '.W.'], 0, F.mood === 'attack' ? 4 : 2, { W: '#eeeaf2' });
+      F.zzz(17, 6);
+    },
+  });
+
+  // 8. Đao Cá Chép: cả lưỡi là con cá chép vượt vũ môn, đuôi xòe làm chắn tay. Tính hớn hở.
+  fam('sword', {
+    name: 'Đao Cá Chép', short: 'Cá Chép', nature: 'hớn hở', mat: STEEL, warp: { t0: 8, L: 34, amp: 1.2 },
+    spark: [[26, 0], [14, 0], [38, 0], [5, 5]],
+    build: function (S, P) {
+      const M = P.M, st = P.st, FN = sec(P, ORG);
+      rtassel(S, P, -4, 1);
+      grow(S, P, [[14, -3.5, 0.3, -1], [30, 5, 0.5, 1], [34, -4.5, 0.6, -1], [16, 4, 0.2, 1]]);
+      // vây lưng, vây bụng, đuôi
+      if (!(P.fire && st >= 2)) S.part({ ol: P.ol }, (s) => { s.g([[18, -4], [22, -8.5 - st * 0.5], [29, -8 - st * 0.5], [32, -4.5]], FN); s.in(() => { s.l(22, -7, 23, -5, 1, Dk(FN)); s.l(26, -7, 27, -5, 1, Dk(FN)); }); });
+      S.part({ ol: P.ol }, (s) => { s.g([[25, 5], [22, 9], [28, 7.5]], FN); });
+      S.part({ ol: P.ol }, (s) => { s.g([[9, 0], [3, -7], [5.5, 0], [3, 7]], FN); s.in(() => { s.l(4.5, -4, 7, -1, 1, Lt(FN)); s.l(4.5, 4, 7, 1, 1, Dk(FN)); }); });
+      bladePart(S, P, [[8, 1.5, 1.5], [14, 3.5, 4], [26, 5, 5.5], [35, 4.5, 4.5], [40, 2.5, 2.5], [42, 1, 1]], { notip: true, per: 7 }, (s) => {
+        for (let t = 13; t < 31; t += 4) for (let q = -2; q <= 3; q += 2.5) s.p(t + (q > 0 ? 2 : 0), q, Dk(M));
+        s.l(32.5, -3.5, 31.5, 0, 1, Dk(M)); s.l(31.5, 0, 32.5, 3.5, 1, Dk(M));
+        s.l(14, 3, 28, 4.5, 1, Lt(M)); s.l(20, -3, 26, -3.5, 1, SH);
+        seed(s, P, 9, 24, 3.5, P.seed); core(s, P, 12, 30, 1);
+        engrave(s, P, [[14, 0.5], [28, 0.5]]);
+      });
+      gem(S, P, 9, 0);
+      grip(S, P, -4, 2.5, RED, 2);
+      S.part((s) => { s.e(-6, 0, 1.6, 1.6, P.A); });
+      motes(S, P, [[16, -11], [44, 3], [27, -11], [31, 10], [38, -7], [19, 9]]);
+    },
+    face: function (F, P) {
+      F.eye(36.5, -0.5, { pup: 'big', hl: true });
+      if (P.st >= 3) F.eye(29, 2, { w: 3, h: 3 });
+      F.at(42, 0);
+      if (F.mood === 'attack') F.b(MOUTHS.open, 0, -3);
+      else if (F.mood === 'hurt') F.b(MOUTHS.wavy, 0, -1);
+      else { F.r(-1, -1, 3, 1, '#ef7f78'); F.r(-1, 0, 1, 1, '#ef7f78'); F.r(1, 0, 1, 1, '#ef7f78'); F.r(0, 0, 1, 1, INK); }
+      F.blush(33.5, 3);
+      F.zzz(38, 5);
+    },
+  });
+
+  // 9. Kiếm Sóng Nước: lưỡi lượn sóng như dòng nước chảy. Tính mít ướt.
+  fam('sword', {
+    name: 'Kiếm Sóng Nước', short: 'Sóng Nước', nature: 'mít ướt', mat: WATER, warp: { t0: 8, L: 34, hook: 0.5, amp: 0.6 },
+    wave: { t0: 9, amp: 2.3, per: 11.5 },
+    spark: [[28, 0], [16, 0], [38, 0], [4, -6]],
+    build: function (S, P) {
+      const M = P.M, st = P.st, A = P.A;
+      rtassel(S, P, 5, 6);
+      grow(S, P, [[12, -3.5, 0.4, -1], [24, 3.2, 0.5, 1], [30, -3.2, 0.6, -1], [18, 3.4, 0.3, 1]]);
+      bladePart(S, P, [[6, 3.5, 3.5], [30, 3.2, 3.2], [36, 2.2, 2.2], [42, 0, 0]], { per: 5.8, amp: 0.85 }, (s) => {
+        s.l(20, 0, 38, 0, 1, Dk(M)); s.l(22, 1.5, 32, 1.5, 1, SH); s.l(8, -2, 18, -2, 1, Lt(M));
+        seed(s, P, 7, 22, 3, P.seed); core(s, P, 10, 38, -0.5);
+        engrave(s, P, [[24, -1.5], [34, -1]]);
+      });
+      // chắn tay cuộn sóng: một đầu vểnh lên, một đầu cụp xuống
+      S.part((s) => { s.g([[3, -6], [3, 6], [5.5, 6], [5.5, -6]], A); s.box(6.5, -6.5, 2, 3, A); s.box(2, 6.5, 2, 3, A); if (P.rar === 0) s.in(() => { s.box(4, 0, 2, 2, Md(BLU)); }); });
+      gem(S, P, 4, 0);
+      grip(S, P, -3, 2, BLU, 2);
+      S.part((s) => { s.e(-5, 0, 1.6, 1.6, A); s.p(-7, 0, Md(A)); });
+      motes(S, P, [[16, -9], [43, 3], [27, -9], [31, 9], [37, -6], [19, 9]]);
+    },
+    face: function (F, P) {
+      F.eye(15, 0, { brow: 'sad', low: 1, look: [0, 1] });
+      if (P.st >= 3) F.eye(23.5, 0, { w: 3, h: 3, look: [0, 1] });
+      F.mouth(9.5, 0, 'frown', 'open');
+      // giọt nước mắt
+      if (F.mood !== 'attack' && !F.blink) { F.at(15, 0); const d = Math.floor((F.t * 2 + P.seed) % 3); F.r(3, 3 + d, 1, 2, '#9fdcff'); }
+      F.zzz(17, 4);
+    },
+  });
+
   // @@CAC-DONG@@
 
   // ---------- dựng hình và bộ đệm ----------
@@ -773,9 +1095,9 @@
       type: type, fam: fi, F: F, el: el, st: st, rar: rar, E: E, R: RARITY[rar],
       base: F.mat, M: st >= 2 ? E.B : F.mat, ol: st >= 2 ? E.ol : INK,
       A: st >= 2 ? E.gd : GOLD, // màu chắn tay, đai
-      k: [1, 1.04, 1.1, 1.2][st], seed: fi * 7 + TYPES.indexOf(type) * 31 + 3,
+      k: [1, 1.04, 1.09, 1.16][st], ks: KS[type] * (F.ks || 1), seed: fi * 7 + TYPES.indexOf(type) * 31 + 3,
       fire: el === 'fire', poison: el === 'poison', ice: el === 'ice',
-      warp: null, arc: F.arc || null,
+      warp: null, arc: F.arc || null, wave: F.wave || null,
     };
     if (el === 'poison' && F.warp) {
       const w = F.warp, a = [0, 0.7, 1.5, 2.3][st] * (w.amp == null ? 1 : w.amp);
@@ -783,6 +1105,7 @@
     }
     return P;
   }
+  const KS = { sword: 0.88, bow: 0.9, spear: 1, hammer: 1 };
   const keyOf = (P) => P.type[1] + P.fam + (P.el ? P.el[0] : 'n') + P.st + P.rar;
   const cache = new Map();
   const CACHE_MAX = 600, RAD = 72, ASTEP = 5;
@@ -795,6 +1118,8 @@
     S.gild(P.rar);
     S.finish();
     b = S.toCanvas(); b.fr = fr;
+    // chiều dài thân: dọc trục t (cung thì dọc cánh cung), cộng 2 điểm viền
+    b.len = Math.round((P.type === 'bow' ? S.q1 - S.q0 : S.t1 - S.t0) + 3);
     if (cache.size >= CACHE_MAX) { let n = 0; for (const k of cache.keys()) { cache.delete(k); if (++n > CACHE_MAX / 4) break; } }
     cache.set(key, b);
     return b;
@@ -849,9 +1174,10 @@
 
   // Góc đứng nghỉ của từng loại (để đo cỡ và vẽ ô đồ).
   const REST = { sword: -90, spear: -90, hammer: -90, bow: 0 };
+  // Trả về len (chiều dài thân, không tính tua và hạt hiệu ứng), w, h và hộp bao tính từ điểm cầm khi đứng nghỉ.
   function size(opts) {
     const P = params(opts || {}), b = body(P, qAng(REST[P.type]));
-    return { len: Math.max(b.w, b.h), w: b.w, h: b.h, box: { x0: b.dx, y0: b.dy, x1: b.dx + b.w - 1, y1: b.dy + b.h - 1 } };
+    return { len: b.len, w: b.w, h: b.h, box: { x0: b.dx, y0: b.dy, x1: b.dx + b.w - 1, y1: b.dy + b.h - 1 } };
   }
   // Vẽ vũ khí vào ô đồ vuông cạnh size, tâm ô tại (x, y). Kiếm, giáo, búa nằm chéo; cung đứng thẳng.
   function icon(c, opts, x, y, sz) {
