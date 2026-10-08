@@ -864,7 +864,7 @@
   }
   function finishPose(ps) {
     if (ps.pivot) { const q = rotv(0, -10, ps.rot); ps.x += -q[0]; ps.y += -10 - q[1]; }
-    if (ps.dead) { ps.y = -6; }
+    if (ps.dead) { ps.y = -8; }
     ps.x = Math.round(ps.x); ps.y = Math.round(ps.y);
     return ps;
   }

@@ -143,7 +143,7 @@ TO['mac-do'] = function () {
     const tx = t[4], ty = t[5];
     rr(c, tx, ty, 220, 210, 14, PANEL2);
     if (t[0] === 'vk') { const sp = TL.weaponSprite('spear', 'thuong', 'idle', -28, 0); c.drawImage(sp.cv, Math.round(tx + 76 - sp.ox * 3), Math.round(ty + 116 - sp.oy * 3), sp.cv.width * 3, sp.cv.height * 3); }
-    else if (t[0] === 'mat') { putLayer(c, 'wrestler', {}, 'mat', tx + 60, ty + 232, 8); putLayer(c, 'wrestler', {}, 'tay', tx + 150, ty + 190, 8); }
+    else if (t[0] === 'mat') { putLayer(c, 'wrestler', {}, 'mat', tx + 60, ty + 212, 8); putLayer(c, 'wrestler', {}, 'tay', tx + 150, ty + 170, 8); }
     else putLayer(c, key, of, t[0], tx + (t[0] === 'lung' ? 150 : 110), ty + 142, 6);
     badge(c, t[1], tx + 28, ty + 28);
     text(c, t[2], tx + 110, ty + 172, 26, CREAM, true, 'center');
@@ -271,7 +271,7 @@ TO['dong-tac'] = function () {
   ], 330, 262);
   row('Dính đòn và ra chiêu', [
     { o: { weapon: W('sword'), anim: 'hurt', f: 0, flash: false }, t: 'Trúng đòn', dx: -30 }, { o: { weapon: W('sword'), anim: 'die', f: 2 }, t: 'Ngã', dx: -30 },
-    { o: { weapon: W('sword'), anim: 'die', f: 7 }, t: 'Gục, vũ khí rơi theo', dx: -30 }, { o: { weapon: W('bow'), anim: 'cast', f: 3 }, t: 'Ra chiêu', dx: -20 },
+    { o: { weapon: W('sword'), anim: 'die', f: 7 }, t: 'Gục, vũ khí rơi theo', dx: -10 }, { o: { weapon: W('bow'), anim: 'cast', f: 3 }, t: 'Ra chiêu', dx: -20 },
   ], 330, 262);
   row('Kiếm', [{ o: A('sword', 1), t: 'Kiếm tự vung lên', dx: 10 }, { o: A('sword', 4), t: 'Chém xuống', arc: [8, -20, 38, -110, 20], dx: -40 }, { o: A('sword', 6), t: 'Kéo bé bay theo', dx: -50 }, { o: A('sword', 9), t: 'Thả bé xuống', dx: -20 }], 400, 320, 'Kiếm tự chém, kéo bé bay theo');
   row('Cung', [{ o: A('bow', 0), t: 'Bé nắm dây', dx: -30 }, { o: A('bow', 3), t: 'Cung chồm tới, căng dây', dx: -40 }, { o: A('bow', 6), t: 'Buông tên', dx: -40 }, { o: A('bow', 9), t: 'Cung rung rung', dx: -30 }], 330, 262, 'Cung rồng ngậm dây tự căng, bé bám vào dây');
