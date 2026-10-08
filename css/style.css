@@ -2199,7 +2199,7 @@ html.sk-the-cho .mk-card .rl { z-index: 2; }
 .hx-st.hx-open { border: 1px solid #8A7AA0; border-radius: 6px; background: #241A30; padding: 3px 7px; color: #E0CCF4; cursor: pointer; }
 .res-unl.res-tim b { color: #D8A8FF; }
 /* ===== PIXEL ART (claude/pixel-nen-tang · js/pixel.js, bật bằng ?pixel=1 / PIXEL_BAT) =====
-   ảnh pixel phóng nearest-neighbor; tiêu đề Handjet, số VT323 (Google Fonts, có dấu tiếng Việt); chữ dài giữ Alegreya Sans */
+   ảnh pixel phóng nearest-neighbor; tiêu đề Alegreya SC 800, số VT323 (Google Fonts, có dấu tiếng Việt); chữ dài giữ Alegreya Sans */
 html.pixel img[src*="pixel/"], html.pixel canvas:not(#game) { image-rendering: pixelated; image-rendering: crisp-edges; }
 /* claude/xuat-goi-pixel: khi bật pixel, mọi bảng .metal dùng khung pixel tối, nút .metal dùng nút đồng pixel, nút chính menu dùng nút vàng */
 html.pixel.sk-khung-toi .metal:not(button):not(.mc-btn):not(.pl-box) { border-color: transparent; border-image: var(--sk-khung-bang-toi) 25% fill / 9px / 0 stretch; background: none; box-shadow: none; }
@@ -2211,15 +2211,14 @@ html.pixel .metal, html.pixel .mc-btn { image-rendering: pixelated; }
 /* claude/xuat-goi-pixel: nền khung / nút pixel (biến --sk-*) phóng không làm mịn */
 html.pixel .btn-gold, html.pixel .res-btns button.metal, html.pixel .xbtn, html.pixel #bossbar .tr::after, html.pixel #deck, html.pixel .mk-card::after,
 html.pixel .mk-rr, html.pixel .cp-node .c, html.pixel .panel, html.pixel .modal { image-rendering: pixelated; }
-/* chỉ tiêu đề bảng / banner / tên boss dùng Handjet (đậm, viền tối cho tương phản); logo menu, nút ("Vào trận"…), "Đợt N · …"
-   giữ font cũ (góp ý tester: Handjet mảnh làm logo / nút nhạt). Số tài nguyên (vàng, mạng) dùng VT323. */
+/* sua-giao-dien-10 (V1): bỏ Handjet (nét mảnh, tiêu đề nhạt hơn nút cạnh nó → phân cấp ngược). Tiêu đề bảng / banner / tên boss dùng
+   Alegreya SC 800 như logo + nút, bóng đổ đậm; cả game còn 3 font: Alegreya SC (tiêu đề, nút) · Alegreya Sans (chữ) · VT323 (số HUD). */
 html.pixel .ttl:not(#menu-logo *), html.pixel #banner b, html.pixel #bossbar .bn span:first-child {
-  font-family: 'Handjet', var(--title); font-weight: 700; letter-spacing: .03em;
-  text-shadow: 0 1px 0 #000, 1px 0 0 #000, -1px 0 0 #000, 0 -1px 0 #000, 0 2px 3px #000; }
+  font-family: var(--title); font-weight: 800; letter-spacing: .01em;
+  text-shadow: 0 2px 0 #000, 0 0 1px #000, 1px 1px 0 #000, -1px 1px 0 #000; }
 html.pixel .tb-res b { font-family: 'VT323', var(--body); font-weight: 400; font-size: 1.2em; line-height: 1; }
-/* góp ý tester2: Handjet nét mảnh → banner boss / tên boss to 1,2× và sáng hơn để dấu (Ồ, Ỗ…) đọc rõ ở 844×390 */
-html.pixel #banner b { font-size: 36px; color: #FFE7A0; font-weight: 800; }
-html.pixel #bossbar .bn span:first-child { font-size: 17px; color: #FFE7A0; font-weight: 800; }
+html.pixel #banner b { font-size: 32px; color: #FFE7A0; }
+html.pixel #bossbar .bn span:first-child { font-size: 15px; color: #FFE7A0; }
 /* vo-tan-su-kien: dòng sự kiện trong bảng "Bộ quái mới" (trùng mốc đợt thì gộp một thông báo) */
 #roster-hint .rh-ev { font-size: 11.5px; line-height: 1.25; color: var(--text); border-left: 3px solid var(--c); padding: 2px 6px; background: #1A120C; border-radius: 3px; }
 #roster-hint .rh-ev b { color: var(--c); }
@@ -2252,8 +2251,8 @@ html.pixel .mc-btn.main { background-image: url('../assets/pixel/giao-dien/khung
 #ui:has(> #banner:not([hidden])) > #nextwaves { visibility: hidden; }
 /* sua-giao-dien-10 (N5): vùng chạm ≥ 40px trên màn thật (UI thu theo --k, phần trong trận thêm --hz): hình giữ nguyên, ::after trong suốt
    cao/rộng tối thiểu 40px màn hình. Phần sát mép trên màn (thanh trên, đầu bảng) không mở lên được → mở xuống dưới. */
-:is(#topbar .sq, .xbtn, .cp-tab, .mc-sub, .hx-tab, .hx-q, .hx-x) { position: relative; }
-:is(#topbar .sq, .xbtn, .cp-tab, .mc-sub, .hx-tab, .hx-q, .hx-x)::after { content: ''; position: absolute; left: 50%; top: 50%;
+:is(#topbar .sq, .xbtn, .cp-tab, .mc-sub) { position: relative; }
+:is(#topbar .sq, .xbtn, .cp-tab, .mc-sub)::after { content: ''; position: absolute; left: 50%; top: 50%;
   width: max(100%, calc(40px / var(--k, 1) / var(--hz-l, 1))); height: max(100%, calc(40px / var(--k, 1) / var(--hz-l, 1))); transform: translate(-50%, -50%); }
 #topbar { --hz-l: var(--hz, 1); }
 :is(#topbar .sq, .scr-head .xbtn, .scr-head .cp-tab, .mc-sub)::after { top: -3px; height: max(100%, calc(40px / var(--k, 1) / var(--hz-l, 1) + 6px)); transform: translateX(-50%); }
@@ -2262,6 +2261,9 @@ html.pixel .mc-btn.main { background-image: url('../assets/pixel/giao-dien/khung
 /* nút menu chính: cao thật ≥ 40px màn hình (không chồng vùng chạm nút bên cạnh) */
 #menu .mc-btn:not(.main) { height: max(44px, calc(40px / var(--k, 1))); }
 #menu .mc-btn.main { height: max(52px, calc(42px / var(--k, 1))); }
+/* bảng Hợp thể: tab + nút ?/✕ cao thật ≥ 40px màn hình (::after làm lệch scrollWidth → test chữ tràn) */
+.hx-tab { height: max(30px, calc(40px / var(--k, 1))); }
+.hx-q, .hx-x { width: max(30px, calc(40px / var(--k, 1))); height: max(30px, calc(40px / var(--k, 1))); }
 /* đầu bảng nằm trên phần thân (vùng chạm mở xuống không bị thân bảng che) */
 .scr-head { position: relative; z-index: 3; }
 /* Thường / Khó gộp thành một công tắc cao bằng nút Vào vô tận (trước đây 2 nút 17px chồng nhau) */
@@ -2275,3 +2277,5 @@ html.pixel .mc-btn.main { background-image: url('../assets/pixel/giao-dien/khung
 .cp-map:has(.cp-bgimg) .cp-trail { display: none; }
 /* đường đất trong ảnh phải đi qua đúng huy hiệu ải ở mọi cỡ màn → ảnh trải khít khung (lệch tỉ lệ ≤ ~12%) thay vì cắt */
 .cp-map .bgart .cp-bgimg.fill { object-fit: fill; }
+@media (max-height: 520px) { html.pixel #banner b { font-size: 26px; } }
+html.pixel #wrap.rot #banner b { font-size: 26px; }
