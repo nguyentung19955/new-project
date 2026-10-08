@@ -813,7 +813,7 @@ button:disabled { cursor: default; }
 
 /* ---------- màn chơi gọn (v16): thanh trên tối giản + hàng thẻ dưới đáy ---------- */
 #topbar { height: 40px; gap: 8px; }
-#topbar .sq { height: 32px; width: 42px; position: relative; }
+#topbar .sq { height: 32px; width: 42px; position: relative; min-width: 36px; }   /* claude/ve-lai-pixel: thanh bị ép (iPhone xoay + tai thỏ) không co nút dưới 36px — nút Bắt đầu chỉ chứa ảnh absolute từng co còn ~5px, ☰ đè lên */
 #topbar .sq .dot { position: absolute; right: 4px; top: 4px; width: 8px; height: 8px; border-radius: 50%; background: #3EDC4E; box-shadow: 0 0 6px #3EDC4E; }
 .tb-res { height: 30px; }
 #nextwaves {
