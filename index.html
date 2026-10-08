@@ -8,6 +8,12 @@
   <meta name="theme-color" content="#14110D">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Thần Thoại Việt">
+  <script>
+    // claude/ve-lai-pixel: gắn lớp pixel TRƯỚC khi nạp CSS (cùng điều kiện PX_ON trong js/pixel.js) → CSS chỉ tải ảnh của đúng chế độ
+    (function () { var on = true; try { var q = location.search, m = localStorage.getItem('ttv.pixel');
+      on = /[?&]pixel=1\b/.test(q) || window.PIXEL_BAT_EP === true || (!/[?&]pixel=0\b/.test(q) && window.PIXEL_BAT_EP !== false && m !== '0'); } catch (e) { /* chặn lưu */ }
+      if (on) document.documentElement.classList.add('pixel'); })();
+  </script>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icons/icon-180.png">
   <title>Thần Thoại Việt</title>
@@ -25,7 +31,7 @@
       <div id="topbar" class="metal ingame">
         <div class="tb-center">
           <span id="tb-wave">Đợt 0 / 30</span>
-          <div class="tb-prog inset"><i id="tb-fill"></i></div>
+          <div class="tb-prog inset"><i id="tb-fill"></i><span id="tb-boss"></span></div>
         </div>
         <div class="tb-res inset">
           <span id="tb-gold"><i class="coin"></i><b>0</b></span>

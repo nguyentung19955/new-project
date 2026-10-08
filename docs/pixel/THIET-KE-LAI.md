@@ -218,3 +218,4 @@ Người dùng: "nút tăng tốc và thanh tiến trình màn chơi đang là �
 - `icon/toc-do-x1..x3` 16×16 (thay bản mũi tên ▸ thô): chữ "x1 / x2 / x3" nét 2 điểm; x1 bạc, x2 / x3 vàng sáng + lấp lánh = đang tăng tốc.
 - `icon/an-giao-dien` (mắt gạch chéo đỏ), `icon/menu` (ba thanh đồng) thay hình nét SVG.
 - Soát thanh trên / cột phải: `uiImg()` (mắt chỉ số, Bắt đầu/Dừng, Túi đồ / Nâng đồ / Mặc đồ, menu chính) trước luôn lấy `ui/*.png` vẽ cũ → nay ưu tiên `icon/ui-*` pixel cùng mã. Nút Bắt đầu: nền nút đồng pixel + quầng (bỏ nền chuyển màu vàng).
+- Mốc boss (`#tb-boss`): icon `icon/boss` 14 px đặt giữa đoạn đợt boss trên rãnh; boss đã qua mờ 45%.

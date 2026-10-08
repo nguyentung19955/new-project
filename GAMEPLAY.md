@@ -3059,3 +3059,8 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 ## claude/ve-lai-pixel — thanh trên trong trận bằng pixel
 
 - Thanh tiến độ đợt pixel 9 mảnh (đầu huy chương ngọc bích, phần đầy khối vàng, đợt boss đỏ); nút tốc độ là chữ pixel x1 (bạc) / x2 / x3 (vàng sáng); nút ẩn giao diện, menu ☰, hiện giao diện là icon pixel; nút mắt, Bắt đầu/Dừng, Túi đồ / Nâng đồ / Mặc đồ, nút menu chính dùng icon pixel `ui-*` thay ảnh vẽ cũ khi bật pixel. Nút Bắt đầu nền đồng pixel + quầng sáng.
+
+## claude/ve-lai-pixel — bật pixel không tải ảnh vẽ cũ + mốc boss trên thanh đợt
+
+- Lớp `pixel` gắn sớm trong `<head>` (trước CSS, cùng điều kiện PX_ON) và ảnh vẽ cũ trong CSS (thanh tiến độ, khung người chơi, khung nút chính) chỉ áp dưới `html:not(.pixel)` → bật pixel không tải chúng. Nạp sẵn icon (`ui/ic-*`, ngũ hành), icon thanh trên (vàng / mạng / nước dâng), xu rơi, nút Hợp thể, ô nước dâng, nền chủ đề `maps/nen-*.jpg`, vân đường `tiles/duong-*.jpg`, cổng `tiles/cong-*` đều theo chế độ: bật pixel chỉ tải bản pixel. Đo lần đầu (menu → vào ải 1, 844×390): 627 tệp / 2,50 MB → 577 tệp / 1,68 MB; ảnh cũ còn mỗi `ui/nen-menu-px.png` (nền menu bản pixel).
+- Thanh đợt có mốc boss: icon boss pixel (tắt pixel: hình thoi đỏ) giữa đoạn của mỗi đợt boss trong chặng đang hiện; đợt boss đã qua mờ đi.

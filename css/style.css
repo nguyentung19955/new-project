@@ -1526,7 +1526,7 @@ body { overflow: hidden; }
 #menu-art { background: #0D0B08; }
 #menu-art img.keyart { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 #menu-art img.keyart + .svgi { display: none; }
-.mc-btn.main { background: url('../assets/ui/khung-nut-chinh.png') center / 100% 100% no-repeat; border: 0; color: #3A1A06; text-shadow: 0 1px 0 #FFE9A8; justify-content: center; }
+.mc-btn.main { background: center / 100% 100% no-repeat; border: 0; color: #3A1A06; text-shadow: 0 1px 0 #FFE9A8; justify-content: center; }
 .mc-btn.main .uimg.mc { display: none; }
 .seg button { background: linear-gradient(180deg, #F4F4F6, #B8BCC4 55%, #8E929C); border: 2px solid #5A2A14; border-radius: 999px; color: #3A2A1A; box-shadow: inset 0 1px 0 #FFFFFF, 0 1px 0 #2A1608; }
 .seg button.on { background: linear-gradient(180deg, #FFE08A, #E8A93A 55%, #B8741E); border-color: #5A2A14; color: #3A1A06; box-shadow: inset 0 1px 0 #FFF4C8, 0 0 8px #FFD66B88; }
@@ -1535,10 +1535,14 @@ body { overflow: hidden; }
    chỉ rãnh giữa giãn ngang; phần lấp đầy nằm trong lòng rãnh (y 33–122 trên ảnh), JS đặt width 0–100% của rãnh */
 .tb-prog { --h: 20px; width: 140px; height: var(--h); border-radius: 0; overflow: visible; position: relative; background: none; box-shadow: none;
   box-sizing: border-box; border-style: solid; border-width: 0 calc(var(--h) * 133 / 163) 0 calc(var(--h) * 131 / 163);
-  border-image: url('../assets/ui/thanh-tien-do.png') 0 133 0 131 fill / 0 calc(var(--h) * 133 / 163) 0 calc(var(--h) * 131 / 163) stretch; }
+  border-image: none; }
+/* claude/ve-lai-pixel: ảnh vẽ cũ chỉ áp (và chỉ TẢI) khi tắt pixel — bật pixel dùng bản pixel ở cuối tệp */
+html:not(.pixel) .tb-prog { border-image: url('../assets/ui/thanh-tien-do.png') 0 133 0 131 fill / 0 calc(var(--h) * 133 / 163) 0 calc(var(--h) * 131 / 163) stretch; }
+html:not(.pixel) .mc-btn.main { background-image: url('../assets/ui/khung-nut-chinh.png'); }
+html:not(.pixel) .pl-box { background-image: url('../assets/ui/khung-nguoi-choi.png'); }
 .tb-prog i { position: absolute; left: 0; top: 20.2%; height: 54.6%; border-radius: 3px; max-width: 100%; }
 /* /v172 */
-.pl-box { background: url('../assets/ui/khung-nguoi-choi.png') 0 0 / 100% 100% no-repeat; border: 0; box-shadow: none; border-radius: 0;
+.pl-box { background: 0 0 / 100% 100% no-repeat; border: 0; box-shadow: none; border-radius: 0;
   width: 192px; height: auto; aspect-ratio: 700 / 241; padding: 0; display: block; }
 .pl-box .av { position: absolute; left: 11%; top: 32.37%; width: 11.43%; height: 33.2%; border: 0; border-radius: 50%; background: #4A2C18;
   box-shadow: 0 0 0 1px #6A3E1A; overflow: hidden; }
@@ -2465,9 +2469,15 @@ html.pixel.muot img[src*="pixel-muot/"], html.pixel.muot img.pxemo[src*="pixel-m
 
 /* claude/ve-lai-pixel: thanh trên trong trận bằng pixel — thanh tiến độ đợt 96×16 cắt 9 mảnh 0 13 0 13 (đầu huy chương không giãn,
    lòng rãnh hàng 3..11 ≈ top 20,2% · cao 54,6% của phần đầy như cũ), phần đầy khối màu bậc pixel (đợt boss đỏ); nút tốc độ / ẩn / menu là icon pixel */
-html.sk-thanh-tien-do .tb-prog { border-width: 0 calc(var(--h) * 13 / 16); border-image: var(--sk-thanh-tien-do) 0 13 fill / 0 calc(var(--h) * 13 / 16) stretch; image-rendering: pixelated; }
-html.sk-thanh-tien-do .tb-prog i { border-radius: 0; background: linear-gradient(180deg, #FFF1B8 0 20%, #F2C44A 20% 62%, #C8862A 62% 100%); }
-html.sk-thanh-tien-do .tb-prog i.boss { background: linear-gradient(180deg, #FFB49A 0 20%, #E2502E 20% 62%, #9A2A18 62% 100%); }
+html.pixel .tb-prog { border-width: 0 calc(var(--h) * 13 / 16); border-image: url('../assets/pixel/giao-dien/thanh-tien-do.png') 0 13 fill / 0 calc(var(--h) * 13 / 16) stretch; image-rendering: pixelated; }
+html.pixel .tb-prog i { border-radius: 0; background: linear-gradient(180deg, #FFF1B8 0 20%, #F2C44A 20% 62%, #C8862A 62% 100%); }
+html.pixel .tb-prog i.boss { background: linear-gradient(180deg, #FFB49A 0 20%, #E2502E 20% 62%, #9A2A18 62% 100%); }
 #topbar .sq .uimg.tb.px { width: 26px; height: 26px; }
 #btn-showui .uimg.tb.px { width: 24px; height: 24px; }
 html.pixel.sk-nut-dong #btn-run.go { background: var(--sk-nut-dong-thuong) center / 100% 100% no-repeat; border-color: transparent; box-shadow: 0 0 8px #FFD66B99; }   /* nền đồng pixel (icon ▶ vàng trên nền vàng khó nhìn) + quầng gọi bấm */
+/* mốc boss trên thanh đợt: icon boss nhỏ đứng trên rãnh (đợt boss đã qua mờ đi) */
+#tb-boss { position: absolute; inset: 0; pointer-events: none; }
+#tb-boss b { position: absolute; top: 50%; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; transform: rotate(45deg); background: #D8402A; box-shadow: 0 0 0 1px #1A0E06; }
+#tb-boss b img { width: 100%; height: 100%; display: block; }
+#tb-boss b:has(img) { transform: none; background: none; box-shadow: none; width: 14px; height: 14px; margin: -7px 0 0 -7px; filter: drop-shadow(0 0 1px #1A0E06); }
+#tb-boss b.qua { opacity: .45; }

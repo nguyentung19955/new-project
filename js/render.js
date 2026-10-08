@@ -538,6 +538,7 @@ function mapBg() {
   // claude/pixel-con-lai: nền chủ đề pixel (canh/ban-do-<chủ đề>, chuyển từ maps/nen-*.jpg) khi bật pixel
   const pe = m && MAP_BG.has(m.theme) && typeof pixelOn === 'function' && pixelOn() && pxEntry('canh', 'ban-do-' + m.theme), pf = pe && pxFrame(pe, 0);
   if (pf) return { img: pf, theme: m.theme };
+  if (pe) return { img: null, theme: m.theme };   // ảnh pixel chưa tải xong: tô màu nền, không tải ảnh vẽ cũ maps/nen-*.jpg (lần sau có ảnh pixel)
   return m && MAP_BG.has(m.theme) ? { img: asset(`maps/nen-${MAP_BG_FILE[m.theme] || m.theme}.jpg`, true), theme: m.theme } : null;
 }
 function mapImage(pw, ph, level) {

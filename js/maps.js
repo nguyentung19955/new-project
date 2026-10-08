@@ -358,7 +358,7 @@ function drawThemedPath(x, id) {
   // bó vỉa đá (hang, thành): mép đường chia khối
   if (L.curb) { each((pts) => strokePts(x, pts, W(L.edge), L.curb, [W(9), W(2.5)])); each((pts) => strokePts(x, pts, W(L.edge - 4), L.rim)); }
   // lòng đường: kết cấu ảnh (nếu có) hoặc vẽ bằng code
-  const img = typeof asset === 'function' && asset(`tiles/duong-${kind}.jpg`, true);
+  const img = typeof asset === 'function' && !(typeof pixelOn === 'function' && pixelOn()) && asset(`tiles/duong-${kind}.jpg`, true);   // bật pixel (nền pixel chưa tải xong): vân vẽ code, không tải ảnh cũ
   each((pts) => strokePts(x, pts, W(L.w), L.inner));
   each((pts) => strokePts(x, pts, W(L.w - 5), makePattern(x, img || pathTexture(kind), img ? W(110) : W(64))));
   each((pts) => strokePts(x, pts, W(L.w * 0.45), L.hi));
@@ -501,6 +501,7 @@ const gateArt = (theme) => {
   // claude/xuat-goi-pixel: cổng thành pixel (nen/cong-*) khi bật pixel
   const pe = typeof pixelOn === 'function' && pixelOn() && pxEntry('nen', f), pf = pe && pxFrameVe(pe, 0);
   if (pf) return pf;
+  if (pe) return null;   // cổng pixel chưa tải xong: không tải ảnh cổng vẽ cũ
   return typeof asset === 'function' && asset(`tiles/${f}.png`, true);
 };
 
@@ -556,7 +557,8 @@ function drawBgClean(x, img, theme, pw) {
 let mapLayerCache = { key: '', c: null };
 function mapLayer(id, bgImg, svgImg, pw, ph) {
   const m = MAPS[id] || MAPS.song1, kind = pathKind(m.theme);
-  const tex = asset(`tiles/duong-${kind}.jpg`, true), gate = gateArt(m.theme);
+  const pxOn = typeof pixelOn === 'function' && pixelOn() && pxEntry('nen', 'co');
+  const tex = !pxOn && asset(`tiles/duong-${kind}.jpg`, true), gate = gateArt(m.theme);   // bật pixel: không tải đường vẽ cũ
   const svgOk = svgImg && svgImg.complete && svgImg.naturalWidth > 0;
   const pxk = typeof pixelOn === 'function' && pixelOn() && pxEntry('nen', 'co') ? 'px' : '';
   const key = `${id}|${pw}x${ph}|${!!bgImg}|${!!tex}|${!!gate}${gate && gate.__muot ? 'm' : ''}|${svgOk}|${pxk}|${typeof PX_MUOT !== 'undefined' && PX_MUOT ? 'M' : ''}`;   // khung làm mượt tải xong → dựng lại

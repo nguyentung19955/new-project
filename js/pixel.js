@@ -25,6 +25,7 @@ const PX_ON = (() => {
 const pixelOn = () => PX_ON;
 const PX = { seen: new Set(), blits: 0, smooth: null };   // mã đã vẽ bằng pixel ("tuong/giong"…) — test đọc
 const pxSmoothOff = () => PX.blits > 0 && PX.smooth === false;
+if (!PX_ON && typeof document !== 'undefined') document.documentElement.classList.remove('pixel');   // lớp gắn sớm ở <head> (index.html) đoán sai → gỡ
 if (PX_ON && typeof document !== 'undefined') {
   document.documentElement.classList.add('pixel');
   try { if (!/[?&]muot=0\b/.test(location.search) && localStorage.getItem('ttv.pxmuot') !== '0') document.documentElement.classList.add('muot'); } catch (e) { document.documentElement.classList.add('muot'); }

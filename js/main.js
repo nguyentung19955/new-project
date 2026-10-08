@@ -1905,7 +1905,7 @@ function drawEffects(t) {
         const yy = f.y - 18 * Math.sin(Math.min(1, p * 1.5) * Math.PI * 0.5);
         ctx.globalAlpha = k;
         // dùng ảnh có sẵn: đồng xu lỗ vuông (ui-tai-nguyen-1); chưa có / chưa tải xong thì vẽ tròn như cũ
-        const ci = asset('ui/ui-tai-nguyen-1.png', true);
+        const pv = typeof pixelOn === 'function' && pixelOn() && pxEntry('icon', 'vang'), ci = pv ? pxFrameVe(pv, 0) : asset('ui/ui-tai-nguyen-1.png', true);   // bật pixel: đồng xu pixel
         if (ci) {
           // cỡ theo màn: ~16 px CSS trên điện thoại (không nhỏ hơn 12 đơn vị bản đồ), chỉ mờ dần ở 40% cuối
           const cs = Math.max(12, 16 / view.scale);

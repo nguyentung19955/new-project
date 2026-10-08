@@ -71,9 +71,6 @@ function loadUiSkins() {
   // nút tròn (đóng) và nút đổi chợ giữ hình cũ: bản pixel mất nhận diện (ô vuông X trắng, đồng xu xoay) — góp ý tester
   const PX_GIU = /^nut-tron-|^nut-doi-cho$/;
   for (const [name, cls] of UI_SKIN) { const px = !PX_GIU.test(name) && typeof pxUrl === 'function' && pxUrl('giao-dien', name === 'khung-bang' ? 'khung-bang-toi' : name);   /* bảng chữ sáng: khung tối (giấy kem làm chữ khó đọc) */ if (px) one(px, name, cls); else if (hasAsset(`ui/${name}.png`)) one(assetSrc(`ui/${name}.png`), name, cls); }
-  // claude/ve-lai-pixel: thanh tiến độ đợt pixel (cắt 9 mảnh khác ảnh vẽ cũ → lớp riêng, chỉ khi bật pixel)
-  const ptd = typeof pxUrl === 'function' && pxUrl('giao-dien', 'thanh-tien-do');
-  if (ptd) one(ptd, 'thanh-tien-do', 'thanh-tien-do');
   const pmp = typeof pxUrl === 'function' && pxUrl('canh', 'nen-man-phu');
   if (pmp) one(pmp, 'nen-man-phu', 'nen-man-phu'); else if (hasAsset('scenes/nen-man-phu.png')) one(assetSrc('scenes/nen-man-phu.png'), 'nen-man-phu', 'nen-man-phu');
 }
@@ -106,9 +103,10 @@ const CODEX_SVG = '<svg viewBox="0 0 24 24" width="26" height="26"><rect x="4" y
 const artOr = (f, fallback) => (pxIc(f) ? `<img class="icart" src="${pxIc(f)}" alt="">` : hasAsset(`ui/${f}.png`) ? `<img class="icart" src="${assetSrc(`ui/${f}.png`)}" alt="">` : fallback);
 const codexIc = () => artOr('ui-menu-2-2', CODEX_SVG);
 // thua chương Sơn Tinh: cổng thành Phong Châu (tiles/cong-phong-chau) chìm trong sóng (ic-hanh-thuy); thiếu ảnh thì icon nước dâng cũ
-const floodIc = () => (hasAsset('tiles/cong-phong-chau.png') && hasAsset('ui/ic-hanh-thuy.png')
-  ? `<span class="res-flood"><img src="${assetSrc('tiles/cong-phong-chau.png')}" alt=""><img class="wv" src="${assetSrc('ui/ic-hanh-thuy.png')}" alt=""><img class="wv w2" src="${assetSrc('ui/ic-hanh-thuy.png')}" alt=""></span> `
-  : ic('nuoc-dang'));
+const floodIc = () => { const cg = pxUrl2('nen', 'cong-phong-chau') || (hasAsset('tiles/cong-phong-chau.png') && assetSrc('tiles/cong-phong-chau.png')), nu = pxIc('hanh-thuy') || (hasAsset('ui/ic-hanh-thuy.png') && assetSrc('ui/ic-hanh-thuy.png'));   // bật pixel: ảnh pixel
+  return (cg && nu
+  ? `<span class="res-flood"><img src="${cg}" alt=""><img class="wv" src="${nu}" alt=""><img class="wv w2" src="${nu}" alt=""></span> `
+  : ic('nuoc-dang')); };
 const emoArt = (emo, cls = 'uie') => (EMO_ART[emo] ? uiE(EMO_ART[emo], emo, cls) : emo);
 // v181: ổ khoá / tia kỹ năng vẽ SVG (ảnh ui-tran-4-3 thu nhỏ chỉ còn chấm xám)
 const SVG_LOCK = '<svg class="svlk" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="8" rx="1.6" fill="currentColor"/><path d="M5.2 7V5.2a2.8 2.8 0 0 1 5.6 0V7" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>';
@@ -185,7 +183,8 @@ function ic(name, alt = '', cls = '') {
   if (u) return `<img class="icn ${cls}" src="${u}" alt="${alt}">`;
   return `<svg class="icn ${cls}" viewBox="0 0 24 24"${alt ? ` aria-label="${alt}"` : ' aria-hidden="true"'}>${IC_SVG[name] || ''}</svg>`;
 }
-const icPreload = () => { IC_NAMES.forEach(icUrl); Object.keys(ELEMENTS).forEach((e) => asset(`ui/ic-hanh-${e}.png`, true)); };
+// claude/ve-lai-pixel: bật pixel → chỉ nạp sẵn ảnh cũ của icon CHƯA có bản pixel (đỡ ~40 tệp ui/ic-*.png tải thừa)
+const icPreload = () => { IC_NAMES.forEach((n) => pxIc(n) || icUrl(n)); Object.keys(ELEMENTS).forEach((e) => pxIc('hanh-' + e) || asset(`ui/ic-hanh-${e}.png`, true)); };
 // sua-giao-dien-10 (N7): bật pixel → nền menu / đăng nhập dùng bản pixel hoá 534×248 (64 màu, phóng nearest) cho hợp phần còn lại
 const menuArt = () => assetSrc(typeof pixelOn === 'function' && pixelOn() && hasAsset('ui/nen-menu-px.png') ? 'ui/nen-menu-px.png' : 'ui/nen-menu.jpg');
 const rarCls = (r) => ({ common: 'rt', rare: 'rh', epic: 'rs', legendary: 'rl' }[r]);
@@ -762,8 +761,9 @@ class UI {
   applyUiArt() {
     // dùng ảnh có sẵn: đồng xu / trái tim / nước dâng trong assets/ui luôn dùng khi có file; ảnh ui_* cũ chỉ khi bật "Dùng ảnh AI"
     const TB_ART = { 'dong-vang': COIN_SRC, mang: ['ui/ui-tai-nguyen-2.png'], 'muc-nuoc': ['ui/ic-nuoc-dang.png'] };
+    const TB_PX = { 'dong-vang': 'vang', mang: 'mang', 'muc-nuoc': 'nuoc-dang' };   // bật pixel: icon pixel, không tải ảnh cũ
     const put = (sel, name) => {
-      const u = uiSrcOf(TB_ART[name] || []) || assetUrl(`ui_${name}.png`), el = $(sel);
+      const u = pxIc(TB_PX[name]) || uiSrcOf(TB_ART[name] || []) || assetUrl(`ui_${name}.png`), el = $(sel);
       if (!u || !el || el.dataset.art === u) return;
       el.dataset.art = u;
       el.outerHTML = `<img class="tb-ic" src="${u}" alt="" data-art="${u}">`;
@@ -2474,6 +2474,11 @@ class UI {
     const past = g.endless && g.wave > total, done = past ? ((g.wave - 1) % 10 + Math.max(0, prog)) / 10 : (g.wave - 1 + Math.max(0, prog)) / total;
     $('#tb-fill').style.width = `${Math.max(0, Math.min(1, done)) * 100}%`;
     $('#tb-fill').classList.toggle('boss', !!(g.waveActive && typeof bossAt === 'function' && bossAt(g.wave, g.level)));   // đợt boss: phần đầy đỏ
+    // mốc boss trên thanh đợt (claude/ve-lai-pixel): icon boss tại giữa đoạn của mỗi đợt boss trong chặng đang hiện
+    { const n0 = past ? g.wave - (g.wave - 1) % 10 : 1, len = past ? 10 : total, ks = [];
+      if (typeof bossAt === 'function') for (let n = n0; n < n0 + len; n++) if (bossAt(n, g.level)) ks.push(n);
+      const bi = pxIc('boss');
+      this.setHTML('#tb-boss', ks.join(',') + '|' + g.wave + bi, ks.map((n) => `<b class="${n < g.wave ? 'qua' : ''}" style="left:${((n - n0 + 0.5) / len) * 100}%">${bi ? `<img src="${bi}" alt="">` : ''}</b>`).join('')); }
     this.setText('#tb-gold b', fmt(g.gold));
     this.setText('#tb-kho b', fmt(this.save.kho || 0));
     if (!this.khoIc) { this.khoIc = 1; const i = $('#tb-kho > .bac'); if (i) i.outerHTML = bac(1); }
@@ -2674,7 +2679,7 @@ class UI {
           <b class="nm">${esc(short(t))}</b><span class="cost">${twins[i] ? '<i class="tw">ghép</i>' : ''}${coin(1)}${sc}${hops[i] ? '<i class="hp">hợp</i>' : hints[i] === 'hopLock' ? `<i class="hl">${UIE.lock()}</i>` : ''}</span></button>`).join('')}
           <button class="mk-rr metal ${g.gold >= rc ? '' : 'poor'}" data-act="mk-reroll" aria-label="Đổi cả hàng, ${rc} vàng"><b>${UIE.redo()}</b><span>${coin(1)}${rc}</span></button>
           <button class="mk-lk metal ${m.lock ? 'on' : ''}" data-act="mk-lock" aria-pressed="${!!m.lock}" aria-label="${m.lock ? 'Bỏ khoá chợ' : 'Khoá chợ: giữ nguyên hàng thẻ sang đợt sau'}" title="${m.lock ? 'Đang khoá: đợt sau giữ nguyên hàng thẻ' : 'Khoá chợ: giữ nguyên hàng thẻ sang đợt sau'}">${MK_LOCK[m.lock ? 1 : 0]}<span>${m.lock ? 'Đã<br>khoá' : 'Khoá'}</span></button></div>
-        <span class="dk-sep"></span><button class="dk-card legend" data-act="legend-open" aria-label="Cây hợp thể">${`<img class="asc-ic" src="${assetSrc('ui/ui-tran-3-2.png')}" alt="★">`}Hợp<br>thể</button>`;
+        <span class="dk-sep"></span><button class="dk-card legend" data-act="legend-open" aria-label="Cây hợp thể">${`<img class="asc-ic" src="${pxIc('ui-tran-3-2') || assetSrc('ui/ui-tran-3-2.png')}" alt="★">`}Hợp<br>thể</button>`;
     } else {
       const def = HEROES[h.type];
       const st = heroStats(h);
