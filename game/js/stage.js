@@ -402,7 +402,7 @@
     }
     const st = G.wStage(w), m = w.marks[w.branch];
     const cap = G.RARITY[G.wRar(w)].maxStage;
-    if (st >= cap) return { frac: 1, col: G.EL[w.branch].col, txt: G.EL[w.branch].name + ' · ' + G.STAGE_NAMES[st] + ' (tối đa)' };
+    if (st >= cap) return { frac: 1, col: G.EL[w.branch].col, txt: G.EL[w.branch].name + ' · ' + G.STAGE_NAMES[st] + (cap < 3 ? ' (tối đa bậc ' + G.RARITY[G.wRar(w)].name + ')' : ' (tối đa)') };
     return { frac: (m - (st ? G.MARKS[st - 1] : 0)) / (G.MARKS[st] - (st ? G.MARKS[st - 1] : 0)), col: G.EL[w.branch].col, txt: G.EL[w.branch].name + ' · ' + G.STAGE_NAMES[st] + ' ' + Math.floor(m) + '/' + G.MARKS[st] };
   }
   G.markInfo = markInfo;
@@ -441,7 +441,7 @@
         weapon: { type: w.type, branch: G.activeEl(P, w), stage: G.wStage(w), rarity: G.wRar(w) },
         active: on, cd: on ? 0 : P.swapCd / 1.5, icon: false, gem: false, id: 'slot' + i,
       });
-      G.art.weaponIcon(c, Object.assign({}, w, { coat: P.coats[w.id] && P.coats[w.id].t > 0 ? P.coats[w.id].el : null }), x + 14, 14, 22, on ? (P.atkT > 0 ? 'attack' : 'idle') : 'sleep');
+      G.art.weaponIcon(c, Object.assign({}, w, { coat: P.coats[w.id] && P.coats[w.id].t > 0 ? P.coats[w.id].el : null }), x + 13, 13, 19, on ? (P.atkT > 0 ? 'attack' : 'idle') : 'sleep');
       const mi = markInfo(w);
       ui.text(rar.name + (w.sharpen ? ' +' + w.sharpen : ''), x + 51, 14, { size: 7, align: 'right', bold: on, color: rar.col });
       ui.text(G.STAGE_NAMES[G.wStage(w)], x + 27, 29.5, { size: 6.5, align: 'center', color: w.branch ? G.EL[w.branch].col : '#b8b0a0' });

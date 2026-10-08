@@ -161,14 +161,15 @@
     ui.rect(20, 58, 66, 66, null, rar.frame);
     G.art.weaponIcon(G.ux, w, 53, 91, 60, 'idle');
     ui.text(G.wName(w), 96, 68, { size: 10.5, bold: true, color: rar.col });
-    ui.text('Bậc ' + rar.name + ' · ' + G.WTYPES[w.type].name + (fam ? ' · dòng ' + fam.name + (fam.nature ? ' (' + fam.nature + ')' : '') : ''), 96, 81, { size: 7.5, color: '#d9cdb8' });
-    ui.text('Sát thương mỗi đòn ' + G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1) + ' · hệ số bậc x' + String(G.wRarMult(w)).replace('.', ','), 96, 93, { size: 7.5 });
+    ui.text('Bậc ' + rar.name + (fam ? ' · dòng ' + fam.name : ' · ' + G.WTYPES[w.type].name), 96, 80, { size: 7.5, color: '#d9cdb8' });
+    if (fam && fam.nature) ui.text('Tính nết: ' + fam.nature, 96, 91, { size: 7.5, color: '#d9cdb8' });
+    ui.text('Sát thương mỗi đòn ' + G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1) + ' · hệ số bậc x' + String(G.wRarMult(w)).replace('.', ','), 96, 102, { size: 7.5 });
     const mi = G.markInfo(w);
-    ui.text(mi.txt, 96, 105, { size: 7.5, color: mi.col });
-    ui.bar(96, 109, 150, 4, mi.frac, mi.col);
-    ui.text('Tiến hóa cao nhất của bậc này: ' + G.STAGE_NAMES[rar.maxStage], 96, 124, { size: 7, color: '#d9cdb8' });
+    ui.text(mi.txt, 96, 113, { size: 7.5, color: mi.col });
+    ui.bar(96, 117, 146, 4, mi.frac, mi.col);
+    ui.text('Tiến hóa cao nhất của bậc này: ' + G.STAGE_NAMES[rar.maxStage], 18, 138, { size: 7, color: '#d9cdb8' });
     // dòng phụ và dòng mạnh
-    let y = 142;
+    let y = 154;
     ui.text('Dòng phụ', 18, y, { size: 8.5, bold: true, color: '#ffd27a' });
     y += 12;
     if (!w.affixes || !w.affixes.length) { ui.text(r === 0 ? 'Bậc Thường không có dòng phụ.' : 'Chưa có.', 18, y, { size: 7.5, color: '#b8b0a0' }); y += 11; }
@@ -193,19 +194,19 @@
     let ry = el ? 78 : 110;
     rows.forEach((q, i) => {
       const got = st >= i, locked = i > rar.maxStage;
-      const h = i < 2 ? (el ? 24 : 0) : (el ? 44 : 38);
+      const h = i < 2 ? (el ? (i ? 34 : 23) : 0) : (el ? 44 : 38);
       if (!h) return;
       ui.rect(x0, ry, 214, h - 2, got ? 'rgba(60,52,36,0.9)' : 'rgba(40,36,34,0.9)', got && E ? E.dark : '#51463d');
       ui.text(q[0], x0 + 5, ry + 10, { size: 8, bold: true, color: got && E ? E.col : '#b8b0a0' });
-      ui.text(locked ? 'Bậc ' + rar.name + ' không lên tới' : got ? 'Đã mở' : i === st + 1 ? 'Sắp mở: ' + G.MARKS[i - 1] + ' dấu ấn' : 'Chưa mở', x0 + 209, ry + 10, { size: 6.5, align: 'right', bold: got, color: locked ? '#ff9a5a' : got ? '#9be07a' : '#d9cdb8' });
+      ui.text(locked ? 'Cần bậc Lam' : got ? 'Đã mở' : i === st + 1 ? 'Sắp mở: ' + G.MARKS[i - 1] + ' dấu ấn' : 'Chưa mở', x0 + 209, ry + 10, { size: 6.5, align: 'right', bold: got, color: locked ? '#ff9a5a' : got ? '#9be07a' : '#d9cdb8' });
       if (q[1]) ui.para(q[1], x0 + 5, ry + 19, 204, { size: 6.5, color: '#d9cdb8' });
       else if (el) {
         const f = G.HE_FEATURES[el][q[2]];
         ui.text('Đặc trưng ' + (q[2] + 1) + ': ' + f.name, x0 + 62, ry + 10, { size: 7.5, bold: true, color: got ? E.col2 : '#d9cdb8' });
         ui.para(f.desc, x0 + 5, ry + 20, 204, { size: 6.5, color: '#d9cdb8' });
       } else {
-        ui.para(G.ELS.map((e) => G.EL[e].name + ': ' + G.HE_FEATURES[e][q[2]].name).join(' · ') + '.', x0 + 5, ry + 21, 204, { size: 7, color: '#d9cdb8' });
-        ui.text(q[2] ? 'Đặc trưng 2 (phản ứng dây chuyền)' : 'Đặc trưng 1 (để lại trên sân)', x0 + 62, ry + 10, { size: 6.5, color: '#d9cdb8' });
+        ui.text(q[2] ? 'Đặc trưng 2: phản ứng dây chuyền' : 'Đặc trưng 1: thứ để lại trên sân', x0 + 5, ry + 21, { size: 7, color: '#d9cdb8' });
+        ui.text(G.ELS.map((e) => G.EL[e].name + ': ' + G.HE_FEATURES[e][q[2]].name).join(' · '), x0 + 5, ry + 31, { size: 7, color: '#d9cdb8' });
       }
       ry += h;
     });
