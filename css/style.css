@@ -2473,6 +2473,10 @@ html.pixel .tb-prog { border-width: 0 calc(var(--h) * 13 / 16); border-image: ur
 html.pixel .tb-prog i { border-radius: 0; background: linear-gradient(180deg, #FFF1B8 0 20%, #F2C44A 20% 62%, #C8862A 62% 100%); }
 html.pixel .tb-prog i.boss { background: linear-gradient(180deg, #FFB49A 0 20%, #E2502E 20% 62%, #9A2A18 62% 100%); }
 #topbar .sq .uimg.tb.px { width: 26px; height: 26px; }
+/* phòng thủ WebKit (nút Bắt đầu/Dừng iPhone bị bẹp, ☰ đè): nút vuông thanh trên cỡ cố định, không tính cỡ theo ảnh con;
+   icon căn giữa bằng top/left/right/bottom 0 + margin auto (Safari cũ chưa có inset), ảnh ẩn bằng display:none */
+#topbar .sq { flex: 0 1 42px; min-width: 36px; min-height: 32px; box-sizing: border-box; overflow: visible; }
+#topbar .sq > img.uimg.tb { position: absolute; top: 0; left: 0; right: 0; bottom: 0; margin: auto; max-width: 100%; max-height: 100%; }
 #btn-showui .uimg.tb.px { width: 24px; height: 24px; }
 html.pixel.sk-nut-dong #btn-run.go { background: var(--sk-nut-dong-thuong) center / 100% 100% no-repeat; border-color: transparent; box-shadow: 0 0 8px #FFD66B99; }   /* nền đồng pixel (icon ▶ vàng trên nền vàng khó nhìn) + quầng gọi bấm */
 /* mốc boss trên thanh đợt: icon boss nhỏ đứng trên rãnh (đợt boss đã qua mờ đi) */
