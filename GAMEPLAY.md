@@ -2340,6 +2340,14 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 221 — khối băng pha lê (tester đạt)
+
+- Đóng băng pixel: thập lục giác kiểu pha lê, cạnh cứng, mặt vát sáng/tối, không che quái.
+
+## Phiên bản 220 — khối băng thập lục giác (tester đạt)
+
+- Đóng băng pixel: khối 16 cạnh (4 cạnh thẳng + góc bo), bọc vừa từng con.
+
 ## Phiên bản 219 — gộp vfx-pixel-2 (tester đạt)
 
 - Hiệu ứng pixel lô 1+2: vòng choáng sát đỉnh đầu, lửa bỏng 1–2 ngọn ở vai, đóng băng khối BÁT GIÁC bọc vừa từng con (boss/lính/quái bay).
@@ -2541,3 +2549,5 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
   và ô đặt tướng đúng như trong trận → tool vẽ nền: ô đặt tướng cùng một kiểu bệ đá viền đậm, vùng xa đường chỉ trang trí theo chủ đề
   (không viền ô), đường cắt nhau → cầu tre (hỗ trợ nhiều nhánh `paths` / `d` mảng cho dạng đường mới). 14 bản đồ → `goi/ban-do.zip`;
   `mapLayer` vẽ nền này khi bật pixel (chưa tải xong / không có mã → nền ô cỏ / đường như trước).
+- (người dùng) Khối băng đổi từ bát giác sang THẬP LỤC GIÁC: 4 cạnh thẳng + mỗi góc bo bằng 3 cạnh (cung 90° chia 3) = 16 cạnh; bán kính bo ≤ 3 lề nên vẫn bao trọn hộp hình, lề ~11% (16 cạnh đều phải nới lề ~40% nên không dùng).
+- (người dùng) Khối băng thập lục giác "cứng" kiểu pha lê: 16 cạnh thẳng nối đỉnh bằng nét pixel, viền trong thụt vào + nét vát từ cả 16 đỉnh, mặt vát tô sáng (trên) / tối (dưới) và xen sáng–tối giữa các mặt kề, chấm sáng ở đỉnh → thấy rõ từng cạnh; dải vát mỏng (~1/3 bán kính góc) không che quái.

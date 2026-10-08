@@ -336,25 +336,64 @@ const VFX = (() => {
       ctx.fillRect(X + (i - 2) * c - (c >> 1), Y - (7 - j) * c, c, c);
     }
   }
-  // khối băng bát giác bao hộp [x0, x1] × [y0, y1] (toạ độ bản đồ): mặt trong trong suốt nhạt, viền sáng 1 ô, vệt sáng chéo
-  // cạnh trên trái, đáy chàm sáng. Vẽ theo hàng ô lưới n → cạnh chéo bậc thang pixel
+  // khối băng THẬP LỤC GIÁC kiểu pha lê bao hộp [x0, x1] × [y0, y1] (toạ độ bản đồ): 4 cạnh thẳng + mỗi góc 3 cạnh (cung 90°
+  // chia 3) = 16 cạnh thẳng nối đỉnh bằng nét pixel. Viền trong thụt vào + nét vát nối đỉnh ngoài–trong, mỗi mặt vát tô sáng/tối
+  // theo hướng (trên sáng, dưới tối) → cạnh cứng, rõ. Mặt trong trong suốt nhạt
+  const ARC = [0, 30, 60, 90].map((d) => (d * Math.PI) / 180);
+  function polyPts(X0, Y0, X1, Y1, R) {          // 16 đỉnh theo chiều kim đồng hồ (toạ độ màn hình)
+    const cs = [[X1 - R, Y0 + R, -Math.PI / 2], [X1 - R, Y1 - R, 0], [X0 + R, Y1 - R, Math.PI / 2], [X0 + R, Y0 + R, Math.PI]], out = [];
+    for (const [cx, cy, a0] of cs) for (const a of ARC) out.push([cx + Math.cos(a0 + a) * R, cy + Math.sin(a0 + a) * R]);
+    return out;
+  }
+  function fillPoly(ctx, P, n) {                  // tô đa giác lồi theo hàng ô lưới n
+    let y0 = Infinity, y1 = -Infinity;
+    for (const p of P) { y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); }
+    for (let y = Math.floor(y0 / n) * n; y < y1; y += n) {
+      const yc = y + n / 2;
+      let a = Infinity, b = -Infinity;
+      for (let i = 0; i < P.length; i++) {
+        const [ax, ay] = P[i], [bx, by] = P[(i + 1) % P.length];
+        if ((ay <= yc && by >= yc) || (by <= yc && ay >= yc)) { const x = ay === by ? Math.min(ax, bx) : ax + ((bx - ax) * (yc - ay)) / (by - ay); const x2 = ay === by ? Math.max(ax, bx) : x; a = Math.min(a, x); b = Math.max(b, x2); }
+      }
+      if (b > a) { const L = Math.round(a / n) * n, Rr = Math.round(b / n) * n; if (Rr > L) ctx.fillRect(L, y, Rr - L, n); }
+    }
+  }
+  function lineS(ctx, x1, y1, x2, y2, n) {        // nét pixel giữa 2 điểm màn hình, bám lưới n
+    let X = Math.round(x1 / n), Y = Math.round(y1 / n);
+    const X2 = Math.round(x2 / n), Y2 = Math.round(y2 / n), dx = Math.abs(X2 - X), dy = -Math.abs(Y2 - Y), stx = X < X2 ? 1 : -1, sty = Y < Y2 ? 1 : -1;
+    let err = dx + dy, g = 0;
+    for (;;) {
+      ctx.fillRect(X * n, Y * n, n, n);
+      if ((X === X2 && Y === Y2) || ++g > 400) break;
+      const e2 = 2 * err;
+      if (e2 >= dy) { err += dy; X += stx; }
+      if (e2 <= dx) { err += dx; Y += sty; }
+    }
+  }
   function iceOct(ctx, x0, y0, x1, y1) {
     const n = G.n, m = Math.max(3 * n / G.k, 0.11 * Math.min(x1 - x0, y1 - y0));
     const X0 = Math.floor(sx(x0 - m) / n) * n, X1 = Math.ceil(sx(x1 + m) / n) * n;
     const Y0 = Math.floor(sy(y0 - m) / n) * n, Y1 = Math.ceil(sy(y1 + m) / n) * n;
-    const cut = Math.max(n, Math.floor((1.9 * m * G.k) / n) * n);   // < 2 lề → góc hộp nằm trong
-    const ins = (y) => Math.max(0, cut - (y - Y0), cut - (Y1 - n - y));
-    ctx.globalAlpha = 0.4; ctx.fillStyle = C.troi;
-    for (let y = Y0; y < Y1; y += n) { const k = ins(y); ctx.fillRect(X0 + k, y, X1 - X0 - 2 * k, n); }
-    ctx.globalAlpha = 0.95;
-    for (let y = Y0; y < Y1; y += n) {
-      const k = ins(y), kp = y > Y0 ? ins(y - n) : k, kn = y + n < Y1 ? ins(y + n) : k, w = Math.max(n, Math.abs(k - kp), Math.abs(k - kn));
-      ctx.fillStyle = y === Y1 - n ? C['cham-sang'] : C['nuoc-sang'];
-      if (y === Y0 || y === Y1 - n) ctx.fillRect(X0 + k, y, X1 - X0 - 2 * k, n);
-      else { ctx.fillRect(X0 + k, y, w, n); ctx.fillRect(X1 - k - w, y, w, n); }
+    // bán kính góc R ≤ 3,16 lề thì góc hộp vẫn nằm trong 3 cạnh góc (khoảng cách tâm–góc (R−m)√2 ≤ R·cos15°)
+    const R = Math.min(Math.floor((X1 - X0) / 2), Math.floor((Y1 - Y0) / 2), Math.max(2 * n, Math.floor((3 * m * G.k) / n) * n));
+    const b = Math.max(2 * n, Math.min(Math.round((R * 0.32) / n) * n, R - n)), Ri = Math.max(n, R - b);
+    const O = polyPts(X0, Y0, X1, Y1, R), I = polyPts(X0 + b, Y0 + b, X1 - b, Y1 - b, Ri);
+    ctx.globalAlpha = 0.3; ctx.fillStyle = C.troi; fillPoly(ctx, O, n);          // nền băng trong suốt bao trọn
+    for (let i = 0; i < 16; i++) {                   // mặt vát: hướng pháp tuyến lên → sáng, xuống → tối
+      const j = (i + 1) % 16, ny = (O[i][1] + O[j][1]) / 2 - (I[i][1] + I[j][1]) / 2, nx = (O[i][0] + O[j][0]) / 2 - (I[i][0] + I[j][0]) / 2;
+      const up = -ny / (Math.hypot(nx, ny) || 1) - nx / (Math.hypot(nx, ny) || 1) * 0.4;
+      const alt = i % 4 === 1 || i % 4 === 2 ? 0.12 : 0;   // mặt góc xen sáng / tối với mặt kề → cạnh tách rõ
+      ctx.globalAlpha = (up > 0.3 ? 0.4 : up > -0.3 ? 0.22 : 0.32) + (i % 2 ? alt : -alt / 2);
+      ctx.fillStyle = up > 0.3 ? C.sang : up > -0.3 ? C['nuoc-sang'] : C.cham;
+      fillPoly(ctx, [O[i], O[j], I[j], I[i]], n);
     }
-    ctx.fillStyle = C.sang;                          // vệt sáng chéo trên mặt băng
-    for (let i = 0; i < 4; i++) ctx.fillRect(X0 + cut + (1 + i) * n, Y0 + (5 - i) * n, n, n);
+    ctx.globalAlpha = 0.7; ctx.fillStyle = C.trang;  // viền trong + nét vát từ cả 16 đỉnh
+    for (let i = 0; i < 16; i++) { const j = (i + 1) % 16; lineS(ctx, I[i][0], I[i][1], I[j][0], I[j][1], n); lineS(ctx, O[i][0], O[i][1], I[i][0], I[i][1], n); }
+    ctx.globalAlpha = 1;                             // viền ngoài 16 cạnh: nửa dưới chàm sáng, còn lại nước sáng; đỉnh chấm trắng
+    for (let i = 0; i < 16; i++) { const j = (i + 1) % 16; ctx.fillStyle = (O[i][1] + O[j][1]) / 2 > (Y0 + Y1) / 2 + R * 0.3 ? C['cham-sang'] : C['nuoc-sang']; lineS(ctx, O[i][0], O[i][1], O[j][0], O[j][1], n); }
+    ctx.fillStyle = C.sang;                          // đỉnh: chấm sáng → thấy rõ góc gãy + vệt sáng chéo
+    for (const p of O) ctx.fillRect(Math.round(p[0] / n) * n, Math.round(p[1] / n) * n, n, n);
+    for (let i = 0; i < 3; i++) ctx.fillRect(Math.round((X0 + b + R * 0.4) / n) * n + (1 + i) * n, Math.round((Y0 + b + R * 0.4) / n) * n + (3 - i) * n, n, n);
   }
   function status(ctx, e, box, lift, t) {
     const r = { dot: false, stun: false, slow: false, ice: false, iceArt: false };
@@ -363,7 +402,7 @@ const VFX = (() => {
     const bar = fy - H - 3;                          // đáy thanh máu: không vẽ gì cao hơn
     begin(ctx, 0.6);                                 // sprite trạng thái nhỏ hơn hạt chiêu: không lấn át quái
     const big = W > 80 ? 2 : 1;
-    // đóng băng: khối băng BÁT GIÁC pixel bọc trọn hộp hình (lề ~11%, cắt góc < 2 lề → góc hộp vẫn nằm trong), co giãn theo
+    // đóng băng: khối băng THẬP LỤC GIÁC pixel bọc trọn hộp hình (lề ~11%, góc bo 3 cạnh, góc hộp vẫn nằm trong), co giãn theo
     // cỡ từng con (boss to → khối to, quái bay → bọc đúng chỗ đang bay) + tinh thể băng dưới chân
     if (e.stunT > 0 && e.stunKind === 'ice' && ready('bang-tinh') && sb(3)) {
       r.ice = r.iceArt = true;
