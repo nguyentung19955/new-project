@@ -197,6 +197,40 @@ JS = r"""
     room('spear', el3('fire')); P.mana = P.maxmana; run(1, { specialP: true }); sec(0.3, {});
     ok('Lửa: đòn đặc biệt Lao tới để lại một đường lửa', W.zones.filter((z) => z.he && z.el === 'fire').length >= 3, W.zones.filter((z) => z.he).length);
 
+    // ================= HỆ ĐỘC =================
+    room('sword', el3('poison')); e = dummy(224);
+    combo3();
+    zs = W.zones.filter((z) => z.he && z.el === 'poison' && z.cloud);
+    ok('Độc: nhát kết của kiếm để lại một màn khói độc', zs.length === 1 && zs[0].life > 3, zs.length);
+    const inCloud = dummy(zs[0].x + 6, zs[0].y); sec(2.3, {});
+    ok('Độc: quái đứng trong màn khói mỗi giây thêm 1 tầng Độc', inCloud.st.poisonN >= 2 && inCloud.st.poisonN <= 3, inCloud.st.poisonN);
+    sec(2.5, {});
+    ok('Độc: màn khói tan sau vài giây', W.zones.filter((z) => z.he).length === 0);
+    room('sword', el3('poison')); let dy1 = dummy(300), nb = dummy(332), nb2 = dummy(300, 168), farP = dummy(380); // đứng ngoài vũng độc cũ của mốc Thức tỉnh (bán kính 22)
+    for (let k = 0; k < 4; k++) G.applyStatus(dy1, 'poison', 100);
+    const pm0 = w.marks.poison, ps0 = S.stats.el.poison;
+    dy1.hp = 1; sec(0.6, {});
+    ok('Độc: quái chết vì độc thì lây 2 tầng sang quái gần (Thức tỉnh)', dy1.dead && nb.st.poisonN === 2 && nb2.st.poisonN === 2 && farP.st.poisonN === 0, nb.st.poisonN + '/' + nb2.st.poisonN + '/' + farP.st.poisonN);
+    ok('Độc: quái chết vì độc vẫn cho dấu ấn Độc', near(w.marks.poison - pm0, 1.2, 0.01), w.marks.poison - pm0);
+    sec(1.2, {});
+    ok('Độc: độc lây gây sát thương và được tính vào thống kê hệ Độc', lost(nb) > 0 && S.stats.el.poison > ps0, lost(nb).toFixed(1));
+    room('sword', el3('poison', 30)); dy1 = dummy(300); nb = dummy(320);
+    for (let k = 0; k < 4; k++) G.applyStatus(dy1, 'poison', 100);
+    dy1.hp = 1; sec(0.6, {});
+    ok('Độc: ở mốc Mầm chỉ lây 1 tầng', nb.st.poisonN === 1, nb.st.poisonN);
+    room('sword'); dy1 = dummy(300); nb = dummy(320);
+    for (let k = 0; k < 4; k++) G.applyStatus(dy1, 'poison', 100);
+    dy1.hp = 1; sec(0.6, {});
+    ok('Độc: vũ khí chưa có hệ Độc thì độc không lây', dy1.dead && nb.st.poisonN === 0, nb.st.poisonN);
+    room('bow', el3('poison')); e = dummy(280); const behind = dummy(305, 201), behind2 = dummy(305, 179);
+    G.rnd = () => 0.999;
+    tap(); wait(() => lost(e) === 0, {});
+    const nsh = (W.mvShards || []).length; sec(0.4, {});
+    G.rnd = Math.random;
+    ok('Độc: tên độc trúng quái thì tách ra 2 mảnh (Thức tỉnh)', nsh === 2, nsh);
+    ok('Độc: mảnh tên trúng quái đứng chéo phía sau, mỗi mảnh 0,2 lần', near(lost(behind) / base(), 0.2, 0.06) && near(lost(behind2) / base(), 0.2, 0.06), (lost(behind) / base()).toFixed(2) + '/' + (lost(behind2) / base()).toFixed(2));
+    ok('Độc: mảnh tên tính là đánh xa', S.stats.ranged > base() && S.stats.melee === 0);
+
     // ================= CHUNG =================
     room('sword'); run(1, { swapP: true }); sec(0.1, {});
     ok('Đổi vũ khí lần đầu thì hiện dòng chỉ dẫn của vũ khí đó', W.banner && W.banner.s === G.MOVE_TIPS.bow, W.banner && W.banner.s);

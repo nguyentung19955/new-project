@@ -61,6 +61,11 @@
       trailR: 14, trailRLv: 2, trailLife: 1.2, trailLifeLv: 0.6, trailSrc: 0.5, trailEvery: 0.5, // vệt cháy đốt quái đi qua
       arrow: 0.25, arrowR: 20,                 // tên lửa nổ khi trúng
     },
+    poison: {
+      cloudR: 18, cloudRLv: 3, cloudLife: 2, cloudLifeLv: 0.6, cloudSrc: 0.8, cloudEvery: 1, // màn khói độc: quái đứng trong mỗi giây thêm 1 tầng Độc
+      spreadR: 32, spread: [0, 1, 1, 2],       // quái chết khi đang trúng độc thì lây sang quái gần: 1 tầng, Thức tỉnh thì 2 tầng
+      shards: [0, 1, 1, 2], shard: 0.2, shardRange: 50, shardV: 210, // tên mạnh đầy đà thêm 1 mảnh // tên độc tách thành mảnh khi trúng
+    },
   };
   // Một dòng chỉ dẫn cho mỗi vũ khí, hiện khi vào ải và lần đầu đổi sang vũ khí đó.
   G.MOVE_TIPS = {
@@ -390,12 +395,32 @@
         heZone(W, o.x, o.y, tr, life, 'fire', D * F.trailSrc, F.trailEvery);
       }
     }
+    else if (h.el === 'poison') {
+      // để lại màn khói độc lơ lửng; đường lao thì rải hai đám
+      const Q = HE.poison, r = Q.cloudR + Q.cloudRLv * h.lv, life = (Q.cloudLife + Q.cloudLifeLv * h.lv) * Math.min(1.2, 0.7 + 0.3 * (o.power || 1));
+      info.r = r;
+      if (o.line) {
+        for (const u of [0.35, 0.85]) { const x = o.x + o.dir * o.line * u; heZone(W, x, o.y, r - 3, life, 'poison', D * Q.cloudSrc, Q.cloudEvery, { cloud: true }); info.pts.push(x); }
+      } else heZone(W, o.x, o.y, r, life, 'poison', D * Q.cloudSrc, Q.cloudEvery, { cloud: true });
+    }
     FX('heFinish', h.el, h.lv, info);
   }
   M.finish = finish;
 
   M.onHit = function (e, d, el, o) {};
-  M.onKill = function (e, o, w) {};
+  M.onKill = function (e, o, w) {
+    const W = G.getWorld(), P = W.P;
+    if (!w || e.illusion) return;
+    const h = heOf(P, w);
+    if (!h) return;
+    if (h.el === 'poison' && e.st.poisonN > 0) {
+      // chết khi đang trúng độc: độc lây sang quái đứng gần
+      const n = Math.min(e.st.poisonN, HE.poison.spread[h.lv]), src = e.st.poisonDmg / 0.06, got = [];
+      around(e.x, e.y, HE.poison.spreadR, (t) => { got.push(t); }, e);
+      for (const t of got) G.applyStatus(t, 'poison', src, n);
+      if (got.length) FX('heSpread', e, got);
+    }
+  };
   // Tên của người chơi vừa trúng một con quái
   M.arrowHit = function (o, e) {
     const h = o.he;
@@ -408,6 +433,18 @@
       heDamage(e, D * F.arrow * k * (1 + c) * 0.5, 'fire', o.w, true);
       if (c >= 1 && !o.heTrail) { o.heTrail = true; heZone(W, e.x, e.y, F.trailR + F.trailRLv * h.lv, F.trailLife + F.trailLifeLv * h.lv, 'fire', D * F.trailSrc, F.trailEvery); }
       FX('heArrow', 'fire', h.lv, { x: e.x, y: e.y, r, big: c >= 1, dir: o.vx < 0 ? -1 : 1 });
+    } else if (h.el === 'poison') {
+      // tên độc tách thành mảnh khi trúng con quái đầu tiên
+      if (o.split) return;
+      o.split = true;
+      const Q = HE.poison, c = o.charged || 0, n = Q.shards[h.lv] + (c >= 1 ? 1 : 0), dir = o.vx < 0 ? -1 : 1;
+      for (let i = 0; i < n; i++) {
+        // mảnh độc bay chéo ra sau lưng con quái vừa trúng; chỉ gây sát thương Độc, không tính là một đòn đánh mới
+        const a = n === 1 ? ((W.mvFlip = !W.mvFlip) ? 0.42 : -0.42) : n === 3 ? (i - 1) * 0.5 : (i ? 0.42 : -0.42);
+        (W.mvShards || (W.mvShards = [])).push({ x: e.x + dir * 4, y: e.y, vx: dir * Q.shardV * Math.cos(a), vy: Q.shardV * Math.sin(a) * 0.7, left: Q.shardRange, w: o.w, dmg: D * Q.shard * k * (1 + 0.6 * c), skip: e, he: h });
+      }
+      if (c >= 1) heZone(W, e.x, e.y, Q.cloudR + Q.cloudRLv * h.lv, Q.cloudLife, 'poison', D * Q.cloudSrc, Q.cloudEvery, { cloud: true });
+      FX('heArrow', 'poison', h.lv, { x: e.x, y: e.y, r: 16, big: c >= 1, dir });
     }
   };
   // Phần riêng theo hệ của đòn đặc biệt (gọi sau khi combat.js đã tung đòn)
@@ -431,6 +468,17 @@
     if (ts && ts.length) {
       for (const q of ts) { q.t -= dt; if (q.t <= 0 && !W.over) q.fn(); }
       W.mvTimers = ts.filter((q) => q.t > 0);
+    }
+    const sh = W.mvShards;
+    if (sh && sh.length) {
+      for (const q of sh) {
+        q.x += q.vx * dt; q.y += q.vy * dt; q.left -= Math.hypot(q.vx, q.vy) * dt;
+        for (const e of G.targets()) {
+          if (e !== q.skip && Math.abs(e.x - q.x) < e.r + 3 && Math.abs(e.y - q.y) < e.hr + 6) { heDamage(e, q.dmg, 'poison', q.w, true); FX('heArrow', 'poison', 1, { x: e.x, y: e.y, r: 8, big: false, dir: q.vx < 0 ? -1 : 1, small: true }); q.left = 0; break; }
+        }
+        if (q.x < W.x0 - 10 || q.x > W.x1 + 10) q.left = 0;
+      }
+      W.mvShards = sh.filter((q) => q.left > 0);
     }
     const ws = W.mvWaves;
     if (!ws || !ws.length) return;

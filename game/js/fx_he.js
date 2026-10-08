@@ -55,7 +55,40 @@
       if (i % 2 === 0) emit(9, q.x, q.y, sh.f * rr(5, 40), rr(-50, -20), rr(0.25, 0.45), RAMP.fire, 3, -30, 2, null, 1);
     }
   }
-  const SWING = { fire: fireSwing };
+  // ---------- ĐỘC: vệt xanh lục pha tím, nhỏ giọt ----------
+  const VENOM = ['#e6ffc0', '#c2f58a', '#6fcf3a', '#9a5fd6', '#6a3fa0', '#3f2a66'];
+  const PURPLE = ['#e2c8ff', '#b98af0', '#9a5fd6', '#6a3fa0'];
+  function drawDrips(c, o, k) {
+    const sh = o.sh, n = o.n;
+    const grow = Math.min(1, k * 2.4);
+    // viền tím chạy dọc vệt đòn
+    if (k < 0.7) for (let i = 0; i < n * 3; i++) {
+      const u = (i + 0.5) / (n * 3);
+      if (u > k * 4 + 0.15 || (k > 0.4 && (i & 1))) continue;
+      const q = pt(sh, u);
+      p(c, Math.round(q.x + q.nx * 3), Math.round(q.y + q.ny * 2), 3, 2, i % 3 ? '#9a5fd6' : '#b98af0');
+    }
+    for (let i = 0; i < n; i++) {
+      const u = (i + 0.5) / n;
+      if (u > k * 4 + 0.15) continue;
+      if (k > 0.75 && (i & 1)) continue;
+      const q = pt(sh, u);
+      const L = Math.round((3 + hash(o.sd + i) * o.h0) * grow), x = Math.round(q.x), y = Math.round(q.y) + Math.round(k * 4);
+      p(c, x, y, i % 2 ? 1 : 2, L, i % 3 === 1 ? '#9a5fd6' : '#6fcf3a');
+      p(c, x - (L > 4 ? 1 : 0), y + L, L > 4 ? 3 : 2, 2, i % 3 === 1 ? '#b98af0' : '#c2f58a'); // giọt nặng ở đầu
+    }
+  }
+  function poisonSwing(sh, lv, big) {
+    const n = (sh.kind === 'round' ? NUM[lv] + 5 : NUM[lv]) + (big ? 2 : 0);
+    add({ ty: 'he', x: sh.x, y: sh.y, t: big ? 0.42 : 0.34, ly: 1, draw: drawDrips, sh, n, h0: 3 + lv * 2 + (big ? 2 : 0), sd: R() * 100 });
+    const m = 1 + lv + (big ? 2 : 0), gy = sh.y + (sh.kind === 'round' ? 9 : 14);
+    for (let i = 0; i < m; i++) {
+      const q = pt(sh, R());
+      emit(5, q.x, q.y, sh.f * rr(0, 30), rr(-20, 30), rr(0.4, 0.7), i % 3 === 1 ? PURPLE : RAMP.poison, 2, 300, 0, gy + rr(-3, 4), 1); // giọt rơi xuống đất
+      if (i % 2 === 0) emit(11, q.x + rr(-3, 3), q.y + rr(-3, 3), rr(-4, 4), rr(-20, -8), rr(0.4, 0.7), RAMP.poison, 2, 0, 0, null, 1);
+    }
+  }
+  const SWING = { fire: fireSwing, poison: poisonSwing };
   function decorate(P, o) {
     if (!o.el || !o.lv || !SWING[o.el]) return;
     const sh = shapeOf(P, o);
@@ -129,7 +162,29 @@
       K.blastFire(o.x, o.y, o.r, Math.min(1.2, (0.4 + 0.13 * lv) * Math.sqrt(o.power)));
       trauma(0.16 + 0.07 * lv); kick(o.dir, 1);
     },
+    poison(lv, o) {
+      // nước độc toé ra rồi khói bốc lên (màn khói lơ lửng do vũng tự nhả ở heStep)
+      const xs = o.pts.length ? o.pts : [o.x];
+      for (const x of xs) {
+        addRing(x, o.y, 4, o.r, 0.34, '#c2f58a', 2, 0);
+        addRing(x, o.y, 2, o.r * 0.7, 0.3, '#9a5fd6', 2, 0, 0.06);
+        const n = 4 + lv * 2;
+        for (let i = 0; i < n; i++) { const a = -Math.PI / 2 + rr(-1.3, 1.3), v = rr(50, 130); emit(5, x, o.y - 4, Math.cos(a) * v, Math.sin(a) * v, rr(0.4, 0.75), i % 3 ? RAMP.poison : PURPLE, 2, 380, 0, o.y + rr(-6, 8), 1); }
+        for (let i = 0; i < 3 + lv; i++) { const a = R() * TAU, v = rr(10, o.r * 1.2); emit(2, x, o.y - 8, Math.cos(a) * v, Math.sin(a) * v * 0.4 - 8, rr(0.6, 1.1), RAMP.vapor, R() < 0.5 ? 6 : 4, -6, 2.2, null, 1); }
+      }
+    },
   };
+  // Độc lây từ quái vừa chết sang quái gần: các giọt độc bắn sang từng con
+  api('heSpread', (e, list) => {
+    const y0 = e.y - Math.min(16, (e.h || 24) * 0.5);
+    addRing(e.x, e.y, 4, 30, 0.32, '#9a5fd6', 2, 0);
+    for (let i = 0; i < Math.min(5, list.length); i++) {
+      const t = list[i], ty = t.y - Math.min(16, (t.h || 24) * 0.5), T0 = 0.22;
+      for (let j = 0; j < 3; j++) { const o = emit(1, e.x, y0, (t.x - e.x) / T0 + rr(-12, 12), (ty - y0) / T0 + rr(-12, 12), T0 + j * 0.03, j === 1 ? PURPLE : RAMP.poison, 3, 0, 0, null, 1); o.t0 = o.t * 1.6; }
+      addRing(t.x, ty, 2, 9, 0.2, '#c2f58a', 2, 1, T0);
+    }
+    for (let i = 0; i < 5; i++) emit(11, e.x + rr(-8, 8), e.y - rr(2, 20), rr(-6, 6), rr(-26, -10), rr(0.4, 0.8), RAMP.poison, 2, 0, 0, null, 1);
+  });
   api('heFinish', (el, lv, o) => { if (FINISH[el]) FINISH[el](lv, o); });
   // Tên mang hệ trúng quái. o: { x, y, r, big, dir }
   const ARROW = {
@@ -141,6 +196,14 @@
       for (let i = 0; i < n; i++) { const a = R() * TAU, v = rr(20, 70); emit(9, o.x + Math.cos(a) * 3, y + Math.sin(a) * 3, Math.cos(a) * v, Math.sin(a) * v * 0.5 - rr(20, 60), rr(0.25, 0.5), RAMP.fire, R() < 0.5 ? 5 : 3, -30, 1.5, null, 1); }
       for (let i = 0; i < 3 + lv; i++) emit(0, o.x, y, rr(-90, 90), rr(-140, -50), rr(0.35, 0.7), RAMP.ember, 1, 240, 0, o.y + rr(-3, 5), 1);
       if (o.big) { add({ ty: 'scorch', x: o.x, y: o.y, r: o.r * 0.5, t: 1.6, ly: 0 }); trauma(0.22); }
+    },
+    poison(lv, o) {
+      const y = o.y - 10;
+      add({ ty: 'flash', x: o.x, y, r: o.big ? 9 : 6, t: 0.1, c: '#e6ffc0', c2: '#8fe04a', ly: 1, sq: true });
+      addRing(o.x, y, 2, o.big ? 15 : 10, 0.2, '#9a5fd6', 2, 1);
+      const n = (o.big ? 7 : 4) + lv;
+      for (let i = 0; i < n; i++) emit(5, o.x, y, o.dir * rr(-20, 80), rr(-90, -10), rr(0.4, 0.7), i % 3 ? RAMP.poison : PURPLE, 2, 320, 0, o.y + rr(-3, 5), 1);
+      for (let i = 0; i < 2 + lv; i++) emit(2, o.x + rr(-4, 4), y + rr(-4, 4), rr(-14, 14), rr(-20, -6), rr(0.5, 0.9), RAMP.vapor, 4, 0, 1.5, null, 1);
     },
   };
   api('heArrow', (el, lv, o) => { if (ARROW[el]) ARROW[el](lv, o); });
@@ -159,6 +222,11 @@
         const n = (o.big ? 3 : 1) + (lv >= 2 ? 1 : 0);
         for (let j = 0; j < n; j++) tongue(c, x - k * (1 + j * 5), y + 2, (o.big ? 9 : 6) - j * 2 + (((t * 24 + j * 3) | 0) % 3), j % 2 ? 1 : 2);
         p(c, x + k * 3, y - 1, 2, 3, '#fff3b0');
+      } else if (o.he.el === 'poison') {
+        // đầu tên bọc nhớt độc, giọt nhỏ xuống dọc thân tên
+        p(c, x + k * 2 - 1, y - 2, 4, 5, '#6a3fa0'); p(c, x + k * 2, y - 1, 3, 3, '#6fcf3a'); p(c, x + k * 2, y - 1, 1, 1, '#e6ffc0');
+        const n = (o.big ? 4 : 2) + (lv >= 3 ? 1 : 0);
+        for (let j = 0; j < n; j++) { const d = ((t * 22 + j * 2.3) | 0) % 5; p(c, x - k * (3 + j * 5), y + 2 + d, 1, 2, j % 2 ? '#9a5fd6' : '#8fe04a'); }
       }
     } catch (e) { fail(e); }
   };
@@ -170,6 +238,29 @@
     for (let i = 0; i < 5; i++) emit(6, h.x + rr(-8, 8), h.y + rr(-12, 4), 0, -8, rr(0.2, 0.4), level >= 2 ? RAMP.gold : PL.ramp, 3, 0, 0, null, 1);
   });
 
+  const HAZE_P = ['rgba(154,95,214,0.5)', 'rgba(154,95,214,0.38)', 'rgba(120,70,180,0.26)', 'rgba(106,63,160,0.14)'];
+  function drawCloud(c, o) {
+    const z = o.z;
+    if (z.dead || z.life <= 0) return;
+    const t = K.S().t, a = Math.min(1, z.life / 0.5), id = z.fxId || 1;
+    // sương thưa: các vạch ngang so le, trôi qua lại
+    c.fillStyle = 'rgba(143,224,74,' + (0.2 * a).toFixed(2) + ')';
+    const x = Math.round(z.x), y = Math.round(z.y) - 12, ry = Math.round(z.r * 0.42);
+    for (let dy = -ry; dy <= ry; dy += 2) {
+      const hw = Math.round(z.r * 0.95 * Math.sqrt(Math.max(0, 1 - (dy * dy) / (ry * ry + 0.01)))), sh = Math.round(Math.sin(t * 1.6 + dy * 0.7 + id) * 3);
+      if (hw > 1) c.fillRect(x - hw + sh, y + dy, hw * 2, 1);
+    }
+    c.fillStyle = 'rgba(154,95,214,' + (0.22 * a).toFixed(2) + ')';
+    for (let i = 0; i < 3; i++) { const px = x + Math.round(Math.sin(t * 0.9 + i * 2.1 + id) * z.r * 0.5), py = y + Math.round(Math.cos(t * 1.3 + i * 1.7 + id) * ry * 0.5); c.fillRect(px - 4, py - 1, 8, 3); c.fillRect(px - 2, py - 2, 4, 5); }
+  }
+  function drawShard(c, o) {
+    const q = o.q;
+    if (q.left <= 0) return;
+    const x = Math.round(q.x), y = Math.round(q.y) - 10, k = q.vx < 0 ? -1 : 1;
+    p(c, x - 2, y - 2, 5, 5, '#3f2a66'); p(c, x - 1, y - 1, 3, 3, '#6fcf3a'); p(c, x - 1, y - 1, 1, 1, '#e6ffc0');
+    p(c, x - k * 4, y, 2, 1, '#9a5fd6'); p(c, x - k * 6, y - Math.sign(q.vy), 1, 1, '#6fcf3a');
+    p(c, x - 2, Math.round(q.y), 4, 1, 'rgba(0,0,0,0.3)');
+  }
   // Sóng chấn động của búa: một gờ đất chạy đi, bụi và đá văng hai bên
   function drawWave(c, z) {
     const x = Math.round(z.x), y = Math.round(z.y), h = Math.round(z.depth / 2) + 2, f = z.dir;
@@ -189,7 +280,19 @@
       // vệt hạt sau mũi tên mang hệ
       if (!o.he || o.team !== 'player') continue;
       const y = o.y - (o.z || 10), b = o.x - Math.sign(o.vx) * 6;
-      if (o.he.el === 'fire') { emit(9, b, y + rr(-1, 2), -o.vx * 0.06, rr(-30, -10), rr(0.2, 0.35), RAMP.fire, o.big ? 4 : 3, -20, 0, null, 1); if (o.big || o.he.lv >= 3) emit(0, b, y, -o.vx * 0.1 + rr(-20, 20), rr(-60, -20), rr(0.3, 0.5), RAMP.ember, 1, 200, 0, o.y + 2, 1); }
+      if (o.he.el === 'poison') { emit(5, b, y + 1, -o.vx * 0.03, rr(0, 20), rr(0.35, 0.55), R() < 0.3 ? PURPLE : RAMP.poison, o.big ? 2 : 1, 260, 0, o.y + rr(-1, 3), 1); if (o.big) emit(2, b, y, 0, -8, 0.45, RAMP.vapor, 3, 0, 0, null, 1); }
+      else if (o.he.el === 'fire') { emit(9, b, y + rr(-1, 2), -o.vx * 0.06, rr(-30, -10), rr(0.2, 0.35), RAMP.fire, o.big ? 4 : 3, -20, 0, null, 1); if (o.big || o.he.lv >= 3) emit(0, b, y, -o.vx * 0.1 + rr(-20, 20), rr(-60, -20), rr(0.3, 0.5), RAMP.ember, 1, 200, 0, o.y + 2, 1); }
+    }
+    for (const z of W.zones) {
+      if (!z.he || !z.cloud || z.dead) continue;
+      // màn khói độc lơ lửng phía trên vũng: một lớp sương mỏng và các cụm khói trôi chậm
+      if (!z.fxOn) { z.fxOn = 1; add({ ty: 'he', x: z.x, y: z.y, t: z.life + 0.1, ly: 1, draw: drawCloud, z }); }
+      if (tick && R() < 0.75) { const a = R() * TAU, d = Math.sqrt(R()) * z.r * 0.8; emit(2, z.x + Math.cos(a) * d, z.y - rr(6, 20) + Math.sin(a) * d * 0.3, rr(-8, 8), rr(-9, -2), rr(0.7, 1.3), R() < 0.25 ? HAZE_P : RAMP.vapor, R() < 0.5 ? 6 : 4, 0, 0.6, null, 1); }
+    }
+    if (W.mvShards) for (const q of W.mvShards) {
+      // mảnh tên độc: một giọt nhớt bay, kéo theo vệt
+      if (!q.fxOn) { q.fxOn = 1; add({ ty: 'he', x: q.x, y: q.y, t: 0.4, ly: 1, draw: drawShard, q }); }
+      if (tick) emit(1, q.x, q.y - 10, -q.vx * 0.05, -q.vy * 0.05, 0.22, R() < 0.3 ? PURPLE : RAMP.poison, 2, 0, 0, null, 1);
     }
     if (W.mvWaves) for (const z of W.mvWaves) {
       if (!z.fxOn) { z.fxOn = 1; add({ ty: 'he', x: z.x, y: z.y, t: z.left / z.v + 0.05, ly: 0, draw: (c, o) => { if (o.z.left > 0) drawWave(c, o.z); }, z }); }

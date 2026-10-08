@@ -68,6 +68,7 @@ def main():
             for el in [None, 'fire', 'poison', 'ice']:
                 tot = {'dps': 0, 'hurt': 0, 'kills': 0, 'marks': 0}
                 for s in range(seeds):
+                    if os.environ.get('DPS_PRE'): pg.evaluate(os.environ['DPS_PRE'])  # đoạn JS chỉnh thử con số trước khi đo
                     r = pg.evaluate(JS, [wt, el, secs, 1000 + s * 77, small])
                     if r['bad'] or errs:
                         print('LỖI', wt, el, r['bad'], errs[:3]); sys.exit(1)
