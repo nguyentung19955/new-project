@@ -2340,6 +2340,14 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 219 — gộp vfx-pixel-2 (tester đạt)
+
+- Hiệu ứng pixel lô 1+2: vòng choáng sát đỉnh đầu, lửa bỏng 1–2 ngọn ở vai, đóng băng khối BÁT GIÁC bọc vừa từng con (boss/lính/quái bay).
+
+## Phiên bản 218 — gộp sao3-re-nhanh (tester đạt)
+
+- Tướng Thường ★★★: lên cấp ⅓ giá, mở W/E/R miễn phí → Tím (Thăng thần) đầu tiên ~đợt 15 (trước ~19), độ khó không đổi rõ.
+
 ## claude/vfx-kenney — Hiệu ứng PIXEL ART (thay ảnh Kenney): lô 1
 
 - **Theo chỉ đạo người dùng (qua điều phối):** toàn bộ hiệu ứng chuyển sang **pixel art vẽ bằng code**, màu trầm cổ kính, không trẻ con, không gen AI, bỏ ảnh Kenney. Đã xoá `assets/vfx/` (22 ảnh Kenney của nhánh) và `assets/fx/` (32 ảnh Kenney cũ + giấy phép — không còn chỗ nào dùng). Phần E prompt sticker trong `docs/PROMPT-HIEU-UNG.txt` ghi KHÔNG DÙNG.
@@ -2367,6 +2375,14 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
 
 - 41 quái/boss pixel; boss pixel co theo chiều cao hình cũ, quái bay/boss cao không lọt dưới thanh trên. Test nạp gói tự bỏ tạm 1 quái khỏi manifest khi đã vẽ đủ.
 
+## claude/sao3-re-nhanh — Tướng ★★★ rẻ hơn, Tím đến sớm hơn
+
+- Tướng Thường **★★★**: lên cấp **⅓ giá** (trước ½), **mở kỹ năng W/E/R miễn phí** (trước 60/150/300). ★★ và tướng thần giữ nguyên giá. Núm trong `js/data.js`: `COSTS.lvDisc3`, `unlockDisc3` (thêm `lvDisc2`, `unlockDisc2`, `lv3Min` để chỉnh tiếp, mặc định không đổi).
+- Giao diện: nút Mở khóa / bảng chi tiết / dòng chân Cây kỹ năng ghi "Miễn phí" khi tướng ★★★; thông báo lên ★★★ ghi "Lên cấp giảm 67%, mở kỹ năng miễn phí".
+- Mô phỏng (`node tests/hop-the/mo-phong.js 8 own1`, bot tự chơi ải 1/3/5, 8 ván/ải; thêm dòng "★★★ đầu tiên"):
+  - ★★★ đầu tiên: đợt ~7.7 (không đổi — giới hạn bởi số thẻ cần ghép, tăng trọng số chợ không làm nhanh hơn).
+  - Tím đầu tiên: trước đợt **19.1 / 18.8 / 18.6** → sau **14.9 / 15.4 / 15.6** (mục tiêu 12–16).
+  - Độ khó (chơi hết ải, `het`): bot thua 17/24 ván trước, 15/24 sau, đợt thua TB tương đương → không dễ đi rõ rệt.
 ## Phiên bản 216 — gộp vo-tan-su-kien (tester đạt)
 
 - Sự kiện Vô tận: banner báo trước, bảng Bộ quái mới đợi banner, banner boss hạ xuống dưới dải sự kiện (không che "Boss xuất hiện"). Test bỏ Ếch Mẹ (chết đẻ nòng nọc) khi chọn quái thử phân thân — hết chập chờn.
