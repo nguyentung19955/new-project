@@ -30,27 +30,27 @@ function HT_dau(g, p) { const I = HT_IV, m = p === 3 ? 5.5 : p === 2 ? 3.6 : 2.6
   HT_P(g, [[2, -5], [11, -28], [17, -3]], I[1]); HT_P(g, [[2, -5], [11, -28], [9, -5]], I[2]); HT_P(g, [[7, -7], [11, -21], [14.5, -6]], '#7a1c2a'); HT_P(g, [[9, -9], [11, -16], [12.5, -8]], '#b0403a'); HT_P(g, [[8.4, -19], [11, -28], [13.6, -18]], HT_DO[2]); HT_P(g, [[9.6, -22], [11, -28], [12.2, -22]], HT_CAM[2]);
   if (p === 3) { HT_P(g, [[14, -6], [22, -14], [17, -1]], I[2]); HT_P(g, [[-8, -7], [-9, -15], [-3, -9]], I[2]); }
   // sọ
-  HT_E(g, 0, 0, 11, 9.6, I[0]); HT_E(g, -.4, -.9, 10.3, 8.5, I[1]); HT_E(g, -1, -2, 8.8, 6.8, I[2]); HT_E(g, -3.5, -5.6, 3.4, 1.5, I[3]);
+  HT_E(g, 0, -.5, 11.5, 10.4, I[0]); HT_E(g, -.4, -1.4, 10.8, 9.3, I[1]); HT_E(g, -1, -2.5, 9.2, 7.5, I[2]); HT_E(g, 3, -8, 3, 1.3, I[3]);
   // lông má chĩa ra sau, chóp cam
   const s = p === 3 ? 1.35 : 1; HT_P(g, [[3, -1], [3 + 16 * s, 2 * s], [8, 7]], I[2]); HT_P(g, [[2, 4], [2 + 15 * s, 10 * s], [4, 10]], I[1]); HT_P(g, [[-1, 6], [-1 + 11 * s, 15 * s], [-2, 11]], I[1]);
   HT_P(g, [[3 + 11 * s, 1 * s], [3 + 16 * s, 2 * s], [3 + 11 * s, 3.6 * s]], HT_CAM[2]); HT_P(g, [[2 + 10.5 * s, 7.4 * s], [2 + 15 * s, 10 * s], [2 + 10 * s, 9 * s]], HT_CAM[1]);
   // hàm dưới, họng, mõm trên
-  HT_P(g, [[-7, 4], [-22.5, 4.5], [-20, 6.2 + m], [-7, 8 + m]], I[1]); HT_P(g, [[-8, 4.5], [-22.5, 4.8], [-19.6, 5 + m], [-8, 5.4 + m]], '#3a0a14'); HT_P(g, [[-9, 4 + m], [-17, 4.4 + m], [-9, 5.4 + m]], '#c8384a');
-  HT_P(g, [[-7, -6], [-25.5, 1.5], [-25.5, 4.6], [-7, 5]], I[2]); HT_P(g, [[-7, -6], [-25.5, 1.5], [-15, .8], [-7, -.5]], I[3]); HT_L(g, -24, 4.8, -9, 5, I[0], 1);
-  HT_E(g, -24.6, 2.8, 1.7, 1.6, '#1c0f18'); HT_D(g, -25.4, 2, '#8a8290');
+  HT_P(g, [[-7, 4], [-19.4, 4.5], [-17.4, 5.8 + m], [-7, 7.6 + m]], I[1]); HT_P(g, [[-8, 4.5], [-19.4, 4.8], [-17, 4.8 + m], [-8, 5.2 + m]], '#3a0a14'); HT_P(g, [[-9, 3.8 + m], [-15, 4.2 + m], [-9, 5.2 + m]], '#c8384a');
+  HT_P(g, [[-7, -4.6], [-14, -.6], [-21.6, 1.4], [-21.8, 4.4], [-7, 5]], I[2]); HT_P(g, [[-7, -4.6], [-14, -.6], [-21.6, 1.4], [-13, 1.4], [-7, .4]], I[3]); HT_L(g, -20.4, 4.8, -9, 5, I[0], 1);
+  HT_E(g, -21, 2.6, 1.7, 1.6, '#1c0f18'); HT_D(g, -21.8, 1.8, '#8a8290');
   // nanh
-  for (const q of [[-21, f], [-17.4, f * .55], [-14, f * .7], [-10.8, f * .45]]) HT_P(g, [[q[0] - .9, 4.8], [q[0] + .9, 4.8], [q[0] + .2, 4.8 + q[1]]], '#fff8e0');
-  for (const q of [[-19, f * .6], [-15.6, f * .4], [-12.4, f * .4]]) HT_P(g, [[q[0] - .8, 5.2 + m], [q[0] + .8, 5.2 + m], [q[0], 5.2 + m - q[1]]], '#fff8e0');
+  for (const q of [[-17.8, f], [-14.8, f * .55], [-12, f * .7], [-9.6, f * .45]]) HT_P(g, [[q[0] - .9, 4.8], [q[0] + .9, 4.8], [q[0] + .2, 4.8 + q[1]]], '#fff8e0');
+  for (const q of [[-16.2, f * .6], [-13.4, f * .4], [-10.8, f * .4]]) HT_P(g, [[q[0] - .8, 5.2 + m], [q[0] + .8, 5.2 + m], [q[0], 5.2 + m - q[1]]], '#fff8e0');
   // hoa văn đỏ như mặt nạ cáo
-  const R = HT_DO[2]; HT_L(g, -9, -6, -4.5, -8.6, R, 1.5); HT_L(g, -4, -8.8, -2.4, -6.6, R, 1.2); HT_D(g, -.5, -8.6, R); HT_D(g, 2, -8, HT_DO[1]);
-  HT_L(g, 0, -4.6, 5.5, -6.4, R, 1.3); HT_L(g, -6.5, .6, -1, 2.6, R, 1.3); HT_L(g, -5.5, 3.2, -.5, 5.2, R, 1.3); HT_L(g, -19, .4, -14.5, -1.4, HT_DO[1], 1); HT_D(g, 5, 1.5, R);
+  const R = HT_DO[2]; HT_L(g, -9.4, -6.8, -5.6, -8.8, R, 1.4); HT_D(g, 4.5, -8.6, R); HT_D(g, 7, -7, HT_DO[1]);
+  HT_L(g, 2, -4.8, 7.5, -6.2, R, 1.4); HT_L(g, -6.5, 2.2, -1, 4, R, 1.3); HT_L(g, -5.5, 4.8, -.5, 6.6, R, 1.3); HT_L(g, -16.5, .2, -12.5, -1.4, HT_DO[1], 1); HT_D(g, 6, 2, R);
   // mắt xếch
   const ec = p === 3 ? '#ffffff' : p === 2 ? '#d86cff' : '#ffd23c', e2 = p === 3 ? '#f0b0ff' : p === 2 ? '#f6d0ff' : '#fff6b0';
-  HT_P(g, [[-11, -2.4], [-2, -7.6], [.6, -4.4], [-6, -.6]], '#1c0f18'); HT_P(g, [[-9, -2.5], [-2.4, -6.2], [-.8, -4.5], [-6, -1.8]], ec); HT_P(g, [[-7, -3.2], [-3, -5.4], [-2.4, -4.6], [-6, -2.6]], e2);
-  if (p !== 3) HT_L(g, -5, -5, -4.5, -2.6, '#14182e', 1); HT_L(g, -12.5, -3.4, 1.5, -9.6, '#2a1420', 1.7); }
+  HT_P(g, [[-13.4, -1.2], [-2, -9], [2.6, -4.6], [-6, 1.2]], '#1c0f18'); HT_P(g, [[-11, -1.8], [-2.4, -7.4], [.8, -4.6], [-6, -.2]], ec); HT_P(g, [[-8.4, -2.4], [-3.4, -5.8], [-1.4, -4.4], [-6, -1.4]], e2);
+  HT_L(g, -5.2, -6, -4.8, -1.2, p === 3 ? '#a040d0' : '#14182e', p === 3 ? 1 : 1.5); HT_D(g, -8, -3, '#ffffff'); HT_L(g, -14.6, -2.6, 2.6, -10.6, '#2a1420', 2); HT_L(g, 2.6, -4.6, 5, -3.6, '#1c0f18', 1); }
 const HT_DANG = {
   1: { w: 196, h: 140, gy: 131, tb: [100, 116], A: [1, 13, 25, 37, 49, 61, 73, 85, 96], L: [58, 68, 76, 82, 86, 88, 90, 90, 88], cu: 0, tw: 6.6,
-    torso: [[95, 111], [92, 96], [80, 88], [70, 86]], tr: [14, 11], hip: [91, 113, 15, 14], chest: [70, 91, 11, 12], neck: [[70, 84], [67, 76], [62, 70], [59, 64]], nr: [9, 6.6], head: [54, 56, .18],
+    torso: [[96, 112], [98, 94], [84, 83], [70, 87]], tr: [14, 10.6], hip: [91, 113, 15, 14], chest: [69, 91, 10.6, 12], neck: [[71, 85], [76, 73], [63, 72], [60, 62]], nr: [9, 6.6], head: [54, 56, .18],
     legs: [{ far: 1, pts: [[75, 96], [71, 112], [73.5, 128]], r: [5, 3.4], paw: [70.5, 128.4] }, { pts: [[93, 124], [84, 128.4], [78, 128.2]], r: [4.6, 3.4], paw: [75, 128.4] }, { pts: [[68, 96], [62.5, 112], [65, 128]], r: [5.4, 3.6], paw: [62, 128.4] }],
     hat: [[73, 75], [70, 86], [62, 86], [58, 79]], mark: [89, 110] },
   2: { w: 196, h: 124, gy: 116, tb: [124, 84], A: [-4, 13, 30, 47, 64, 81, 98, 115, 132], L: [52, 58, 68, 74, 76, 74, 72, 72, 70], cu: 0, tw: 6.4,
@@ -61,7 +61,7 @@ const HT_DANG = {
     torso: [[107, 108], [104, 92], [94, 80], [84, 75]], tr: [13.5, 11.5], hip: [106, 110, 13, 13], chest: [83, 77, 12, 12], neck: [[81, 72], [76, 62], [71, 57], [67, 53]], nr: [10, 7.4], head: [62, 49, -.22],
     legs: [{ far: 1, pts: [[86, 84], [72, 94], [62, 88]], r: [5, 3.2], paw: [59, 86.5], up: 1 }, { far: 1, pts: [[112, 114], [116, 124], [112, 132]], r: [5.6, 3.4], paw: [108.5, 132.4] }, { pts: [[104, 116], [97, 124], [102, 132]], r: [6.4, 3.6], paw: [98.5, 132.4] }, { pts: [[79, 80], [64, 84], [56, 74]], r: [5.4, 3.4], paw: [54, 71.5], up: 1 }],
     hat: [[86, 66], [82, 78], [74, 78], [70, 68]], mark: [106, 108] } };
-function HT_than(v, p) { const P = HT_DANG[v] || HT_DANG[1], k = p === 3 ? 1.5 : 1, g = S(Math.ceil(P.w * k), Math.ceil(P.h * k)), T = HT_T; T.k = k; T.ox = 0; T.oy = 0; T.a = 0;
+function HT_than(v, p, kd) { const P = HT_DANG[v] || HT_DANG[1], k = p === 3 ? 1.5 : 1, g = S(Math.ceil(P.w * k), Math.ceil(P.h * k)), T = HT_T; T.k = k; T.ox = 0; T.oy = 0; T.a = 0;
   const tips = [], sp = HT_bz(P.torso[0], P.torso[1], P.torso[2], P.torso[3], 26), nk = HT_bz(P.neck[0], P.neck[1], P.neck[2], P.neck[3], 16);
   // đường các đuôi
   const tails = P.A.map((ad, i) => { const a = ad * Math.PI / 180, L = P.L[i] * (p === 3 ? 1.04 : 1), d = [Math.cos(a), -Math.sin(a)], n = [-Math.sin(a), -Math.cos(a)], B = P.tb;
@@ -75,7 +75,9 @@ function HT_than(v, p) { const P = HT_DANG[v] || HT_DANG[1], k = p === 3 ? 1.5 :
     HT_lua(g, P.head[0] + 8, P.head[1] - 14, 22, 8, HT_LUA, 5); }
   // chín đuôi: vẽ từ hai mép vào giữa
   const tw = t => P.tw * (t < .62 ? .3 + .7 * Math.sin(t / .62 * 1.5708) : Math.pow(Math.max(0, Math.cos((t - .62) / .38 * 1.5708)), .75));
-  for (const i of [0, 8, 1, 7, 2, 6, 3, 5, 4]) { const tl = tails[i]; HT_ong(g, tl, tw, HT_cf, '#3a1420');
+  for (const i of kd ? [] : [0, 8, 1, 7, 2, 6, 3, 5, 4]) { const tl = tails[i]; HT_ong(g, tl, tw, t => HT_cf(t - .03, 0), '#3a1420');
+    [[.5, HT_IV], [.68, HT_CAM]].forEach(bd => { const jb = Math.round(bd[0] * 64) - 1; [[.72, 5, 2], [.3, 9, 2], [-.15, 5, 1], [-.55, 8, 1], [-.9, 4, 0]].forEach(q => { const u = up(tl, jb), r = tw(jb / 64), jt = Math.min(64, jb + q[1] + (i % 2)), u2 = up(tl, jt), r2 = tw(jt / 64), bx = tl[jb][0] + u[2] * q[0] * r, by = tl[jb][1] + u[3] * q[0] * r, w = Math.max(1.3, r * .24);
+      HT_P(g, [[bx + u[2] * w, by + u[3] * w], [bx - u[2] * w, by - u[3] * w], [tl[jt][0] + u2[2] * q[0] * r2 * .8, tl[jt][1] + u2[3] * q[0] * r2 * .8]], bd[1][q[2]]); }); });
     for (let j = 10; j < 40; j += 6) { const u = up(tl, j), r = tw(j / 64) * .5; HT_L(g, tl[j][0] - u[2] * r, tl[j][1] - u[3] * r, tl[j + 3][0] - u[2] * r, tl[j + 3][1] - u[3] * r, HT_IV[1], 1); }
     if (p === 3) for (const j of [14, 26, 38]) { const u = up(tl, j), r = tw(j / 64); HT_P(g, [[tl[j][0] + u[2] * (r - 1) - u[0] * 2.4, tl[j][1] + u[3] * (r - 1) - u[1] * 2.4], [tl[j][0] + u[2] * (r - 1) + u[0] * 2.4, tl[j][1] + u[3] * (r - 1) + u[1] * 2.4], [tl[j][0] + u[2] * (r + 5) + u[0] * 5, tl[j][1] + u[3] * (r + 5) + u[1] * 5]], HT_IV[2]); }
     tips[i] = tl[64]; }
@@ -114,12 +116,13 @@ function HT_than(v, p) { const P = HT_DANG[v] || HT_DANG[1], k = p === 3 ? 1.5 :
   tips.forEach((q, i) => { const s = (p === 3 ? 1.25 : 1) * (i % 2 ? 1 : 1.15); HT_lua(g, q[0], q[1] + 2, 11 * s, 3.6 * s, HT_MA, 1.5); HT_E(g, q[0], q[1], 3.4 * s, 3 * s, HT_MA[1]); HT_E(g, q[0], q[1] + .2, 2.2 * s, 1.9 * s, HT_MA[2]); HT_E(g, q[0], q[1] + .4, 1 * s, .9 * s, HT_MA[3]); HT_D(g, q[0] + 3, q[1] - 13 * s, HT_MA[2]); HT_D(g, q[0] - 4, q[1] - 8 * s, HT_MA[1]); });
   T.k = 1; g.foot = Math.round(P.gy * k); return g; }
 // pha 2: phân thân mờ màu lửa ma ở hai bên
-function HT_phanThan(g0) { const mx = 58, g = S(g0.w + mx * 2, g0.h + 8); const st = (ox, oy, al) => { for (let y = 0; y < g0.h; y++) for (let x = 0; x < g0.w; x++) { const c = g0.d[y * g0.w + x]; if (!c) continue; const X = x + ox, Y = y + oy; if (X < 0 || Y < 0 || X >= g.w || Y >= g.h || g.d[Y * g.w + X]) continue;
+function HT_phanThan(g0, gb) { const mx = 58, g = S(g0.w + mx * 2, g0.h + 8); const st = (s, ox, oy, al, fl) => { for (let y = 0; y < s.h; y++) for (let x = 0; x < s.w; x++) { const c = s.d[y * s.w + x]; if (!c) continue; const X = fl ? ox + s.w - 1 - x : x + ox, Y = y + oy; if (X < 0 || Y < 0 || X >= g.w || Y >= g.h || g.d[Y * g.w + X]) continue;
       g.d[Y * g.w + X] = al ? ((c === OL || c === '#0a0c1e') ? 'rgba(170,235,255,' + (al + .3) + ')' : ((x + y) % 2 ? 'rgba(90,170,255,' + al + ')' : 'rgba(150,110,255,' + al + ')')) : c; } };
-  st(mx, 8, 0); st(mx - 30, 4, .34); st(mx + 28, 4, .3); st(mx - 56, 0, .17); st(mx + 54, 0, .15); g.foot = g0.foot + 8; return g; }
+  // hai bóng bên trái nhìn cùng hướng; bên phải là bóng cáo không đuôi quay mặt ra ngoài, đứng tách hẳn khỏi tán đuôi
+  const b = bbox(gb), oxR = g.w - 2 - gb.w + b.x0; st(g0, mx, 8, 0); st(g0, mx - 30, 4, .34); st(gb, oxR, 6, .36, 1); st(g0, mx - 56, 0, .17); st(gb, oxR - 24, 0, .16, 1); g.foot = g0.foot + 8; return g; }
 const QH = {};
 QH.chon = 1;
-QH.hoTinh = function (v, p) { v = v || 1; p = p || 1; const g = HT_than(v, p); return p === 2 ? HT_phanThan(g) : g; };
+QH.hoTinh = function (v, p) { v = v || 1; p = p || 1; const g = HT_than(v, p); return p === 2 ? HT_phanThan(g, HT_than(v, 2, 1)) : g; };
 // nền lâu đài đỏ than
 function HT_nen(c, x, y, w, h, fl) { c.save(); c.beginPath(); c.roundRect(x, y, w, h, 14); c.clip(); const gr = c.createLinearGradient(0, y, 0, y + h); gr.addColorStop(0, '#1a0c10'); gr.addColorStop(1, '#4a1612'); c.fillStyle = gr; c.fillRect(x, y, w, h);
   for (let i = 0; i < 7; i++) { const px = x + 60 + i * 160; c.fillStyle = '#241016'; c.fillRect(px, y, 44, fl); c.fillStyle = '#34161a'; c.fillRect(px + 6, y, 8, fl); c.fillStyle = '#1a0a10'; c.fillRect(px - 8, y + fl - 18, 60, 18); c.fillRect(px - 8, y, 60, 14); }

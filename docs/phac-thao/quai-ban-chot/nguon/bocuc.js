@@ -102,7 +102,7 @@ function BC_vung(v) {
   // tám quái thường, hai cột
   const AW = pw - 36, AHmax = 250; let AH = 170;
   const ks = o.thuong.map(it => { let s1 = BC_fit(it, it.g2 ? AW * .46 : AW, AHmax, 6), s2 = 0;
-    if (it.g2) { s2 = BC_fit(it.g2, AW * .42, AHmax, it.g2.bom ? Math.min(6, s1) : 5); }
+    if (it.g2) { if (it.g2.bom) s2 = BC_fit(it.g2, AW * .42, AHmax, Math.min(6, s1)); else { const ea = BC_ext(it), eb = BC_ext(it.g2); s1 = s2 = Math.max(2, Math.min(5, Math.floor((AW - 80) / (ea.l + ea.r + eb.l + eb.r)), Math.floor(AHmax / eb.up))); } }
     AH = Math.max(AH, (BC_ext(it).up) * s1 + 24, it.g2 ? BC_ext(it.g2).up * s2 + 24 : 0); return [s1, s2]; });
   AH = Math.round(AH); const ph = AH + 138;
   o.thuong.forEach((it, i) => { const x = M + (i % 2) * (pw + M), py = y + Math.floor(i / 2) * (ph + M); panel(c, x, py, pw, ph); const fy = py + AH; floor(c, x + 12, fy, pw - 24);
@@ -129,11 +129,14 @@ function BC_vung(v) {
   dau('Trùm vùng'); oRong(o.trum, o.trum.g1, 5, 660);
   // ba pha, cùng tỉ lệ
   dau('Ba pha của trận đánh');
-  { const w = 338, st = 355; let s = 3, ah = 150; const ps = o.trum.g.map(g => ({ g })); for (const it of ps) s = Math.min(s, BC_fit(it, w - 16, 420, 3, .25)); for (const it of ps) ah = Math.max(ah, BC_ext(it).up * s + 26); ah = Math.round(ah);
+  { const w = 338, st = 355; let s = 3, ah = 150; const ps = o.trum.g.map(g => ({ g })); for (const it of ps) s = Math.min(s, BC_fit(it, w - 16, 420, 3, .25));
+    if (s < 2) { const s2 = 2, mauP = i => i === 0 ? o.mau : i === 1 ? '#ff9d8a' : '#fff0c0';
+      const o1 = (it, i, x, w2) => { const e = BC_ext(it), d = o.trum.pha[i], ah2 = Math.round(Math.max(BC_ext(ps[0]).up, BC_ext(ps[1]).up, i === 2 ? e.up : 0) * s2 + 30), h = ah2 + 60 + 2 * 28 + 14; panel(c, x, y, w2, h); floor(c, x + 10, y + ah2, w2 - 20); BC_ve(c, it, Math.round(x + w2 / 2 + (e.l - e.r) * s2 / 2), y + ah2, s2); text(c, d[0], x + w2 / 2, y + ah2 + 44, 28, mauP(i), true, 'center'); para(c, d[1] || '', x + w2 / 2, y + ah2 + 78, w2 - 30, 21, CREAM, 28, 'center'); return h; };
+      const h1 = o1(ps[0], 0, M, pw); o1(ps[1], 1, M + pw + M, pw); y += h1 + M; y += o1(ps[2], 2, M, Wd - 2 * M) + 26; } else { for (const it of ps) ah = Math.max(ah, BC_ext(it).up * s + 26); ah = Math.round(ah);
     let nl = 1; o.trum.pha.forEach(d => { nl = Math.max(nl, wrap(c, d[1] || '', w - 30, 21, false).length); }); const h = ah + 60 + nl * 28 + 14;
     ps.forEach((it, i) => { const x = M + i * st, e = BC_ext(it), d = o.trum.pha[i] || ['Pha ' + (i + 1), '']; panel(c, x, y, w, h); floor(c, x + 10, y + ah, w - 20); BC_ve(c, it, Math.round(x + w / 2 + (e.l - e.r) * s / 2), y + ah, s);
       text(c, d[0], x + w / 2, y + ah + 44, 28, i === 0 ? o.mau : i === 1 ? '#ff9d8a' : '#fff0c0', true, 'center'); para(c, d[1] || '', x + w / 2, y + ah + 78, w - 30, 21, CREAM, 28, 'center'); });
-    y += h + 26; }
+    y += h + 26; } }
   // cỡ thật
   dau('Cỡ thật đứng cạnh em bé (phóng 3 lần)');
   const w = Wd - 2 * M;

@@ -1,5 +1,6 @@
 // Vùng LÂU ĐÀI CỔ (hệ Lửa): tám quái thường và hai tinh anh. Bảng màu: đỏ cam, vàng lửa, đen than.
 const LD_GI = ['#3a1a10', '#6e3418', '#a85a26', '#e09a4c'], LD_DA = ['#2c2830', '#57505a', '#8a8288', '#cbc3c0'], LD_MA = ['#2a0c18', '#5c1a22', '#9a3428', '#e07048'], LD_GOM = ['#2a1210', '#5c2418', '#96402a', '#d8805a'];
+const LD_GX = ['#33202a', '#6a3c40', '#a2625a', '#d8a698'], LD_GOMS = ['#4a1410', '#9a2c18', '#dc542a', '#ffa868'];
 const LD_HONG = '#f0506e', LD_HONGT = '#a8324a';
 // ngọn lửa nhỏ, đáy ở (x, y), r là nửa bề ngang
 function LD_lua(g, x, y, r) { poly(g, [[x - r, y - r * .7], [x + .5, y - r * 3.1], [x + r + 1, y - r * .7]], LUAV[0]); ell(g, x + .5, y - r * .8, r, r * .9, LUAV[0]);
@@ -18,18 +19,17 @@ QL.linh = function () { const g = S(52, 40);
   line(g, 5, 26, 42, 17, NAUG[2], 1.8); line(g, 8, 25, 40, 17, NAUG[3], 1);
   poly(g, [[0, 27.5], [8, 22], [9.5, 27.5]], XUONGT[2]); line(g, 1, 27, 7, 23, XUONGT[3], 1); set(g, 8, 26, XUONGT[0]);
   ell(g, 11, 25.5, 1.8, 1.8, DOCAM[2]); set(g, 11, 28, DOCAM[1]); set(g, 12, 29, DOCAM[2]); set(g, 10, 27, DOCAM[1]);
-  line(g, 30, 19, 35, 18, LD_GI[1], 2.4); ell(g, 36, 18.5, 1.8, 1.8, LD_MA[3]);
-  ball4(g, 24.5, 22, 7, 5.6, LD_GI);
-  line(g, 18, 21, 30, 20, LD_GI[0], 1); line(g, 19, 24, 30, 23, LD_GI[0], 1); line(g, 24, 17, 24, 26, LD_GI[0], 1);
-  LD_dom(g, [[20, 19, LD_GI[3]], [27, 18, LD_GI[3]], [21, 22, LD_GI[3]], [28, 22, LD_GI[3]], [22, 25, DOCAM[2]], [29, 25, DOCAM[1]], [26, 21, DOCAM[2]], [19, 23, THANH[1]], [27, 25, THANH[1]]]);
-  ball4(g, 30, 17.5, 3.6, 3, LD_GI); poly(g, [[31, 15], [35, 12], [33, 17]], LD_GI[2]);
-  line(g, 20, 21, 14, 24, LD_GI[1], 2.4); ell(g, 13.5, 24.5, 2, 2, LD_MA[3]); set(g, 12, 23, TR); set(g, 12, 26, TR);
-  ell(g, 18.5, 15.5, 5.4, 4.3, THANH[0]); ell(g, 18, 15.5, 4.2, 3.2, THANH[1]); ell(g, 18, 18.5, 4, 2.6, THANH[1]); mieng(g, 15, 19, 6, 2);
-  mat(g, 15.6, 16, 2.5, 1, LUAV[2]); mat(g, 21.4, 16, 2.5, -1, LUAV[2]);
-  poly(g, [[6, 13.5], [18.5, 4.5], [32, 13.5]], LD_GI[2]); poly(g, [[18.5, 4.5], [32, 13.5], [21, 13.5]], LD_GI[1]);
-  line(g, 17, 6, 9, 12, LD_GI[3], 1); rect(g, 7, 13, 25, 1, LD_GI[0]); set(g, 18, 5, LUAV[2]);
-  LD_dom(g, [[14, 10, DOCAM[1]], [22, 9, LD_GI[0]], [25, 11, LD_GI[0]], [27, 12, DOCAM[2]], [12, 12, LD_GI[1]]]); set(g, 28, 12, null); set(g, 29, 12, null); set(g, 28, 11, null);
-  vien(g); LD_dom(g, [[15, 16, LUAV[3]], [16, 16, LUAV[2]], [21, 16, LUAV[2]], [22, 16, LUAV[3]], [15, 17, LUAV[1]], [22, 17, LUAV[1]], [13, 15, LUAV[1]], [24, 15, LUAV[1]]]);
+  line(g, 30, 19, 35, 18, LD_GX[1], 2.4); ell(g, 36, 18.5, 1.8, 1.8, LD_MA[3]);
+  ball4(g, 24.5, 22, 7, 5.6, LD_GX);
+  line(g, 18, 21, 30, 20, LD_GX[0], 1); line(g, 19, 24, 30, 23, LD_GX[0], 1); line(g, 24, 17, 24, 26, LD_GX[0], 1);
+  LD_dom(g, [[20, 19, LD_GX[3]], [27, 18, LD_GX[3]], [21, 22, LD_GX[3]], [28, 22, LD_GX[3]], [22, 25, DOCAM[2]], [29, 25, DOCAM[1]], [26, 21, DOCAM[2]], [19, 23, THANH[1]], [27, 25, THANH[1]]]);
+  ball4(g, 30, 17.5, 3.6, 3, LD_GX); poly(g, [[31, 15], [35, 12], [33, 17]], LD_GX[2]);
+  line(g, 20, 21, 14, 24, LD_GX[1], 2.4); ell(g, 13.5, 24.5, 2, 2, LD_MA[3]); set(g, 12, 23, TR); set(g, 12, 26, TR);
+  ell(g, 18.5, 16, 5.8, 4.6, THANH[0]); ell(g, 18.5, 16.5, 4.4, 3, '#1a141e'); ell(g, 18, 18.5, 4, 2.6, THANH[1]); mieng(g, 15, 19, 6, 2);
+  poly(g, [[6, 13.5], [18.5, 4.5], [32, 13.5]], NAUG[1]); poly(g, [[18.5, 4.5], [32, 13.5], [21, 13.5]], NAUG[0]);
+  line(g, 17, 6, 9, 12, NAUG[2], 1); line(g, 18, 7, 14, 12, NAUG[2], 1); line(g, 13, 10, 24, 10, NAUG[0], 1); line(g, 22, 8, 27, 12, NAUG[1], 1); rect(g, 7, 13, 25, 1, '#1e100a'); rect(g, 8, 12, 12, 1, NAUG[2]); set(g, 18, 5, NAUG[3]);
+  LD_dom(g, [[15, 9, NAUG[0]], [11, 11, NAUG[0]], [25, 11, NAUG[1]], [27, 12, DOCAM[1]]]); set(g, 28, 12, null); set(g, 29, 12, null); set(g, 28, 11, null);
+  vien(g); for (const k of [0, 1]) { const X = d => k ? 37 - d : d; LD_dom(g, [[X(14), 15, LUAV[1]], [X(15), 15, DOCAM[2]], [X(14), 16, LUAV[2]], [X(15), 16, LUAV[3]], [X(16), 16, LUAV[2]], [X(17), 16, DOCAM[2]], [X(15), 17, LUAV[1]], [X(16), 17, LUAV[3]], [X(17), 17, LUAV[2]], [X(13), 14, LUAV[1]], [X(12), 13, DOCAM[2]], [X(13), 15, LUAV[0]]]); }
   LD_dom(g, [[44, 25, LUAV[1]], [47, 27, DOCAM[2]], [41, 24, DOCAM[2]], [49, 30, LUAV[0]]]); for (const r of [[44, 20, 5], [46, 23, 4]]) rect(g, r[0], r[1], r[2], 1, DOCAM[2]); g.cx = 24; return g; };
 // một con dơi than: cx là trục giữa, f = 0 cánh giương, 1 cánh cụp
 function LD_doi1(g, cx, cy, f) { const W = f ? [[2, -1], [8, -3], [11, 3], [9, 2], [8, 5], [6, 2], [4, 4], [2, 2]] : [[2, -1], [9, -7], [12, -2], [10, -2], [9, 1], [7, -1], [5, 2], [3, 0], [2, 2]];
@@ -94,33 +94,35 @@ QL.meo = function () { const g = S(64, 40), T = THANH;
   ell(g, 19.5, 22, 5, 4.8, T[1]); line(g, 20, 25, 17, 30, T[1], 2.4); line(g, 17, 30, 14, 34, T[1], 1.8); rect(g, 11, 34, 4, 1, T[2]);
   LD_dom(g, [[10, 35, TR], [12, 35, TR], [14, 35, TR], [7, 34, TR], [9, 34, TR], [34, 35, TR], [36, 35, TR], [40, 35, TR], [42, 35, TR]]);
   poly(g, [[8, 16], [6, 8], [13, 13]], T[1]); poly(g, [[14, 13], [18, 7], [19, 15]], T[1]); set(g, 8, 12, LD_HONG); set(g, 8, 13, LD_HONGT); set(g, 17, 10, LD_HONG); set(g, 17, 11, LD_HONGT);
-  ell(g, 13, 18.5, 6, 4.6, T[1]); ell(g, 12, 17.5, 4, 2.6, T[2]); poly(g, [[18, 19], [21, 22], [17, 22]], T[1]); poly(g, [[7, 20], [4, 23], [9, 22]], T[1]);
+  ell(g, 13, 18.5, 6, 4.6, T[2]); ell(g, 12, 16.5, 3.4, 1.4, T[3]); ell(g, 13, 21.5, 4.5, 1.8, T[1]); poly(g, [[18, 19], [21, 22], [17, 22]], T[1]); poly(g, [[7, 20], [4, 23], [9, 22]], T[1]);
   mat(g, 10.3, 18.5, 2.5, 1, LUAV[2]); mat(g, 15.7, 18.5, 2.5, -1, LUAV[2]);
-  rect(g, 10, 21, 6, 2, MAU); set(g, 10, 21, TR); set(g, 10, 22, TR); set(g, 15, 21, TR); set(g, 15, 22, TR); set(g, 12, 21, TR); set(g, 13, 22, DOCAM[2]); set(g, 12, 20, LD_HONGT);
+  rect(g, 10, 21, 6, 2, MAU); LD_dom(g, [[10, 21, TR], [10, 22, TR], [10, 23, TR], [15, 21, TR], [15, 22, TR], [15, 23, TR], [12, 21, TR], [13, 21, TR]]); set(g, 13, 22, DOCAM[2]); set(g, 12, 20, LD_HONGT);
   line(g, 8, 21, 4, 19, T[3], 1); line(g, 17, 21, 22, 19, T[3], 1); line(g, 7, 15, 9, 20, DOCAM[2], 1);
-  LD_ria(g, LD_HONGT); vien(g);
+  LD_ria(g, LD_HONGT); for (let y = 0; y < 21; y++) for (let x = 0; x < 44; x++) if (g.d[y * g.w + x] === LD_HONGT) g.d[y * g.w + x] = LD_HONG;
+  for (let y = 15; y < 22; y++) { let x = 0; while (x < 14 && !get(g, x, y)) x++; if (x < 14 && get(g, x, y) !== LD_HONG) set(g, x, y, LD_HONGT); } vien(g);
   LD_lua(g, 46, 12, 1.8); LD_lua(g, 54, 14, 2); LD_dom(g, [[50, 8, LUAV[1]], [58, 9, DOCAM[2]], [42, 9, LUAV[0]]]);
   for (const r of [[49, 26, 8], [51, 29, 10], [48, 32, 6], [56, 23, 5]]) { rect(g, r[0], r[1], r[2], 1, DOCAM[2]); set(g, r[0], r[1], LUAV[1]); }
   g.cx = 27; return g; };
 // Hũ Lửa Sống: puff là lúc phồng to sắp nổ
-QL.hu = function (puff) { const g = S(68, 66), cx = 34, cy = 38, R = puff ? 15 : 9.6, C = puff ? ['#5a0e0c', '#b0261a', '#f0582a', '#ffc08a'] : LD_GOM, ry = R * .95;
+QL.hu = function (puff) { const g = S(68, 66), cx = 34, cy = 38, R = puff ? 15 : 9.6, C = puff ? ['#5a0e0c', '#b0261a', '#f0582a', '#ffc08a'] : LD_GOMS, ry = R * .95;
   for (const s of [-1, 1]) { rect(g, Math.round(cx + s * R * .5 - 1.5), Math.round(cy + ry - 1), 3, 4, LD_GOM[1]); rect(g, Math.round(cx + s * R * .5 - 1.5 + (s < 0 ? -1 : 1)), Math.round(cy + ry + 2), 3, 1, LD_GOM[2]);
     ell(g, cx + s * (R + 1.2), cy - R * .3, 2.8, 3.6, C[1]); ell(g, cx + s * (R + 1.6), cy - R * .3, 1.2, 1.9, null); }
   rect(g, Math.round(cx - R * .5), Math.round(cy - ry - 3), Math.round(R), 5, C[1]); rect(g, Math.round(cx - R * .5), Math.round(cy - ry - 3), 2, 4, C[2]);
   ball4(g, cx, cy, R, ry, C);
-  ell(g, cx, cy - ry - 3, R * .66, 1.7, C[2]); ell(g, cx, cy - ry - 3.3, R * .46, .9, puff ? LUAV[2] : MAU); rect(g, Math.round(cx - R * .6), Math.round(cy - ry - 4), 3, 1, C[3]);
+  ell(g, cx, cy - ry - 3, R * .66, 1.7, C[2]); ell(g, cx, cy - ry - 3.3, R * .46, .9, puff ? LUAV[2] : LUAV[1]); rect(g, Math.round(cx - R * .6), Math.round(cy - ry - 4), 3, 1, C[3]);
   for (let x = -Math.round(R * .78); x <= R * .78; x++) { const q = Math.sqrt(1 - (x / R) ** 2), yy = cy - ry * .55 * q - ry * .12; set(g, cx + x, Math.round(yy + (Math.abs(x) % 4 < 2 ? 0 : 1)), puff ? LUAV[1] : NAUG[2]); if (Math.abs(x) % 4 === 0) set(g, cx + x, Math.round(yy) + 2, C[0]); }
   for (const p of [[-.5, .62], [.3, .7], [.62, .4], [-.72, .3], [0, .82], [.75, -.05]]) rect(g, Math.round(cx + R * p[0]), Math.round(cy + ry * p[1]), puff ? 2 : 1, 1, C[0]);
   const er = puff ? 3.9 : 3.2, ex = puff ? 6.5 : 4.4, ic = puff ? LUAV[3] : LUAV[2], ey = cy - R * .12; mat(g, cx - ex, ey, er, 1, ic); mat(g, cx + ex, ey, er, -1, ic);
   if (puff) { mieng(g, cx - 5, cy + 5, 11, 4); rect(g, cx - 3, cy + 6, 7, 2, LUAV[1]); rect(g, cx - 1, cy + 6, 3, 2, LUAV[3]);
     for (const k of [[[-12, -5], [-9, -1], [-11, 3], [-8, 7]], [[9, -9], [12, -4], [10, 0], [13, 4]], [[-3, -13], [0, -9], [-2, -6]], [[4, 9], [7, 12], [5, 14]], [[-9, 9], [-6, 12]]]) { pl(g, k.map(p => [cx + p[0], cy + p[1]]), LUAV[2], 1); set(g, cx + k[1][0], cy + k[1][1], LUAV[3]); }
     set(g, cx - 13, cy - 5, DOCAM[3]); set(g, cx + 14, cy + 4, DOCAM[3]); }
-  else { mieng(g, cx - 3, cy + 3, 7, 3); set(g, cx, cy + 4, LUAV[1]); pl(g, [[cx + 3, cy - 8], [cx + 6, cy - 5], [cx + 5, cy - 2]], DOCAM[2], 1); set(g, cx + 6, cy - 5, LUAV[2]); pl(g, [[cx - 7, cy + 2], [cx - 5, cy + 5], [cx - 6, cy + 7]], DOCAM[2], 1); set(g, cx - 5, cy + 5, LUAV[1]); }
+  else { mieng(g, cx - 4, cy + 3, 9, 3); rect(g, cx - 2, cy + 4, 5, 1, LUAV[1]); set(g, cx, cy + 4, LUAV[3]); LD_dom(g, [[cx - 4, cy + 4, TR], [cx - 4, cy + 5, TR], [cx - 4, cy + 6, TR], [cx + 4, cy + 4, TR], [cx + 4, cy + 5, TR], [cx + 4, cy + 6, TR]]);
+    for (const k of [[[3, -9], [6, -7], [5, -5]], [[-8, 3], [-6, 6], [-7, 8]], [[8, 3], [7, 6], [8, 7]]]) { pl(g, k.map(p => [cx + p[0], cy + p[1]]), LUAV[1], 1); set(g, cx + k[1][0], cy + k[1][1], LUAV[3]); } }
   rect(g, Math.round(cx - R * .5), Math.round(cy - ry), Math.round(R), 1, NAUG[2]); set(g, Math.round(cx + R * .3), Math.round(cy - ry) + 1, NAUG[2]); set(g, Math.round(cx + R * .3) + 1, Math.round(cy - ry) + 2, NAUG[3]);
   vien(g);
   if (puff) { LD_lua(g, cx - 6, cy - ry - 3, 2.2); LD_lua(g, cx + 5, cy - ry - 3, 2.4); LD_lua(g, cx - 1, cy - ry - 3, 3.6); LD_lua(g, cx - 17, cy - 2, 1.8); LD_lua(g, cx + 17, cy + 7, 1.8); LD_lua(g, cx - 11, cy - 11, 1.5);
     LD_tia(g, [[6, 14], [61, 12], [4, 44], [63, 46], [14, 6], [56, 28], [50, 5]]); LD_dom(g, [[10, 26, LUAV[0]], [58, 36, DOCAM[2]], [24, 8, LUAV[1]], [44, 10, LUAV[0]]]); }
-  else { LD_lua(g, cx - 1, cy - ry - 3, 1.5); LD_dom(g, [[cx + 4, cy - ry - 6, LUAV[1]], [cx - 5, cy - ry - 5, DOCAM[2]], [cx + 12, cy - 12, LUAV[0]], [cx - 13, cy - 9, DOCAM[2]]]); }
+  else { LD_lua(g, cx - 1, cy - ry - 3, 1.8); LD_lua(g, cx - 5, cy - ry - 2, 1.1); LD_lua(g, cx + 3, cy - ry - 2, 1.2); LD_dom(g, [[cx + 4, cy - ry - 6, LUAV[1]], [cx - 5, cy - ry - 5, DOCAM[2]], [cx + 12, cy - 12, LUAV[0]], [cx - 13, cy - 9, DOCAM[2]]]); }
   g.cx = cx; g.foot = Math.round(cy + ry + 3) + 1; return g; };
 // quả pháo đứng: tâm x, đỉnh y0, cao h; trả về chỗ đầu ngòi
 function LD_phao(g, x, y0, h) { rect(g, x - 3, y0, 7, h, DOCAM[1]); rect(g, x - 2, y0, 1, h, DOCAM[3]); rect(g, x - 1, y0, 2, h, DOCAM[2]); rect(g, x + 3, y0, 1, h, DOCAM[0]);
@@ -173,8 +175,8 @@ QL.tuongMa = function () { const g = S(74, 56), D = DOCAM;
   set(g, 54, 33, null); set(g, 55, 33, null); set(g, 55, 34, null); set(g, 49, 30, null); set(g, 49, 31, null); set(g, 59, 36, null);
   poly(g, [[19, 35], [41, 35], [43, 39], [47, 41], [42, 42], [37, 39.5], [33, 42], [29, 39.5], [25, 42], [22, 39], [17, 40.5]], LD_MA[1]);
   poly(g, [[21, 35], [39, 35], [40, 38], [36, 38], [33, 41], [29, 38], [25, 41], [23, 37]], LD_MA[2]); LD_dom(g, [[25, 39, LD_MA[3]], [33, 39, LD_MA[3]], [38, 37, LD_MA[3]], [44, 41, LD_MA[3]], [19, 39, LD_MA[3]]]);
-  line(g, 10, 40, 13.5, 13, NAUG[1], 2); line(g, 10, 39, 13, 14, NAUG[2], 1); poly(g, [[8.5, 40], [10.5, 43.5], [12.5, 40]], XUONGT[1]); rect(g, 9, 39, 4, 1, LUAV[1]);
-  poly(g, [[10.5, 17], [8, 13], [7, 8], [9.5, 4.5], [15.5, 3], [17, 7], [21, 6], [18.5, 10], [16.5, 12], [16.5, 17]], XUONGT[2]); pl(g, [[10, 16], [8, 13], [7, 8], [9, 5], [14, 3]], XUONGT[3], 1); pl(g, [[11, 15], [9, 12], [8, 8]], XUONGT[3], 1); pl(g, [[15, 4], [16, 7], [16, 16]], XUONGT[1], 1); line(g, 17, 8, 19, 7, XUONGT[1], 1); line(g, 13, 15, 13, 7, XUONGT[1], 1); set(g, 15, 10, XUONGT[0]); set(g, 11, 6, D[2]); set(g, 10, 9, D[2]); set(g, 8, 6, LUAV[1]);
+  line(g, 10, 40, 13.5, 13, NAUG[2], 2); line(g, 10, 39, 13, 14, NAUG[3], 1); poly(g, [[8.5, 40], [10.5, 43.5], [12.5, 40]], XUONGT[1]); rect(g, 9, 39, 4, 1, LUAV[1]);
+  poly(g, [[10.5, 17], [7, 14], [5, 10], [5.5, 6], [9, 3.5], [17, 3], [13.5, 6], [13.5, 9.5], [19, 8.5], [16, 12.5], [16.5, 17]], XUONGT[2]); pl(g, [[10, 16], [7, 14], [5, 10], [6, 6], [9, 4], [15, 3]], XUONGT[3], 1); pl(g, [[10, 15], [8, 13], [6, 10], [7, 6], [10, 4]], XUONGT[3], 1); pl(g, [[15, 4], [13, 6], [13, 10], [15, 12], [15, 16]], XUONGT[1], 1); pl(g, [[14, 10], [18, 9]], XUONGT[1], 1); pl(g, [[14, 12], [14, 16]], XUONGT[0], 1); set(g, 13, 7, XUONGT[0]); set(g, 16, 10, OL); set(g, 9, 8, D[2]); set(g, 10, 12, D[2]); set(g, 11, 6, XUONGT[1]); set(g, 6, 8, '#ffffff'); set(g, 8, 5, '#ffffff');
   rect(g, 9, 17, 9, 2, LUAV[1]); rect(g, 9, 17, 9, 1, LUAV[2]); set(g, 13, 18, D[2]); line(g, 9, 19, 7, 23, D[2], 1); set(g, 7, 24, D[1]); set(g, 8, 24, D[2]);
   for (let i = 0; i < 6; i++) { const x = 19 + i * 4, h = 5 + (i % 2); rect(g, x, 32, 4, h, LD_GI[1 + (i % 2)]); rect(g, x, 32, 1, h, LD_GI[0]); set(g, x + 2, 32 + h - 1, LUAV[1]); set(g, x + 1, 33, LD_GI[3]); }
   poly(g, [[20, 20], [41, 20], [42, 32], [19, 32]], LD_GI[1]);
@@ -183,7 +185,7 @@ QL.tuongMa = function () { const g = S(74, 56), D = DOCAM;
   rect(g, 19, 30, 24, 2, LUAV[1]); rect(g, 19, 30, 24, 1, LUAV[2]); rect(g, 28, 29, 6, 4, LD_GI[0]); rect(g, 29, 30, 4, 2, D[2]); set(g, 29, 30, LUAV[3]); set(g, 32, 30, LUAV[3]); set(g, 23, 31, D[1]); set(g, 38, 31, D[1]);
   line(g, 43, 24, 46, 30, LD_GI[1], 3.2); ell(g, 46.5, 31.5, 2.5, 2.5, LD_GI[2]); set(g, 46, 31, LD_GI[3]); set(g, 45, 34, TR); set(g, 47, 34, TR);
   ball4(g, 42, 21.5, 5, 4, LD_GI); poly(g, [[43, 18.5], [48, 13], [46.5, 20]], XUONGT[2]); rect(g, 38, 24, 9, 1, LUAV[1]);
-  line(g, 18, 24, 13, 28, LD_GI[1], 3.2); ell(g, 12, 28.5, 2.8, 2.6, LD_GI[2]); LD_dom(g, [[10, 27, TR], [10, 29, TR], [11, 28, LD_GI[3]], [16, 25, LD_GI[3]]]);
+  line(g, 18, 24, 14, 27, LD_GI[1], 3.2); line(g, 17, 24, 14, 26, LD_GI[3], 1); rect(g, 9, 26, 6, 5, LD_GI[3]); rect(g, 9, 27, 5, 1, LD_GI[0]); rect(g, 9, 29, 5, 1, LD_GI[0]); rect(g, 14, 26, 1, 5, LD_GI[2]); rect(g, 15, 25, 2, 5, LUAV[1]); rect(g, 15, 25, 2, 1, LUAV[2]); LD_dom(g, [[9, 26, XUONGT[2]], [9, 28, XUONGT[2]], [9, 30, XUONGT[2]]]);
   ball4(g, 19, 21.5, 5.2, 4.2, LD_GI); rect(g, 15, 24, 9, 1, LUAV[1]); poly(g, [[19, 18.5], [20.5, 14], [22, 18.5]], XUONGT[2]);
   ell(g, 30.5, 15.5, 5.8, 4.8, THANH[0]); ell(g, 30, 15, 4.4, 3.2, THANH[1]); rect(g, 27, 18, 7, 2, XUONGT[1]); mieng(g, 27, 18, 7, 2); set(g, 27, 20, TR); set(g, 33, 20, TR);
   mat(g, 27.2, 16, 2.7, 1, LUAV[2]); mat(g, 33.8, 16, 2.7, -1, LUAV[2]);
