@@ -2372,6 +2372,10 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 227 — gộp pixel-con-lai (tester đạt)
+
+- Ảnh cũ chuyển sang pixel (tool chế độ chuyển ảnh): 5 cổng thành có mái, núi Tản Viên, bản đồ chương, thắng/thua, truyện, thẻ chế độ, tranh sính lễ, khung thanh máu, đế ô; khung bảng/nút pixel; emoji → icon pixel. Nền menu giữ tranh cũ (pixel mất hoa văn).
+
 ## Phiên bản 226 — gộp sua-tam-skill (tester đạt)
 
 - Kỹ năng chỉ tung khi có quái trong tầm (tầm đánh × hệ số trong mô tả); chưa có thì không tốn năng lượng, không chạy hồi chiêu. Buff/khiên chỉ khi đồng đội giao chiến/bị thương. Kỹ năng toàn bản đồ: Gióng R, An Tiêm R, Sọ Dừa R, Cuội R, Mẫu R (+ Kim Quy R khi quái sắp lọt thành).
