@@ -29,7 +29,7 @@ function put(c, sp, x, y, s) {
 function base(c, kind, x, y, hw, s) {
   const px = (ix, iy, w, col) => { c.fillStyle = col; c.fillRect(Math.round(x + ix * s), Math.round(y + iy * s), w * s, s); };
   if (kind === 'nuoc') {
-    const W = hw + 5;
+    const W = hw + 4;
     px(-W + 3, -2, 2 * W - 6, 'rgba(70,150,170,0.55)');
     px(-W + 1, -1, 2 * W - 2, 'rgba(70,150,170,0.55)');
     px(-W, 0, 2 * W, 'rgba(60,135,160,0.6)');
@@ -60,8 +60,10 @@ function heroSpr(h, i) { return spr(h, 'h' + i, h.heroes[i].draw); }
 function putHero(c, h, i, x, y, s) {
   const he = h.heroes[i];
   x -= (he.dx || 0) * s;
-  base(c, h.base || 'bong', x + (he.bx || 0) * s, y, he.bw || 9, s);
+  const nuoc = h.base === 'nuoc'; // rối ngâm chân trong nước: gợn nước vẽ đè lên bàn chân
+  if (!nuoc) base(c, 'bong', x + (he.bx || 0) * s, y, he.bw || 9, s);
   put(c, heroSpr(h, i), x, y, s);
+  if (nuoc) base(c, 'nuoc', x + (he.bx || 0) * s, y, he.bw || 9, s);
 }
 
 function renderSheet(h, bg) {
@@ -89,8 +91,9 @@ function renderSheet(h, bg) {
   text(c, 'Lúc đang đánh', M + 22, y + 50, 36, GOLDT, true);
   rr(c, M + 14, y + 496, CW - 28, 6, 3, PANEL2);
   const at = h.attack, as = at.scale || S, ax = M + CW / 2 - (at.dx || 0) * as;
-  base(c, h.base || 'bong', ax + (at.bx || 0) * as, y + 490, at.bw || 10, as);
+  if (h.base !== 'nuoc') base(c, 'bong', ax + (at.bx || 0) * as, y + 490, at.bw || 10, as);
   put(c, spr(h, 'atk', at.draw), ax, y + 490, as);
+  if (h.base === 'nuoc') base(c, 'nuoc', ax + (at.bx || 0) * as, y + 490, at.bw || 10, as);
   text(c, at.desc, M + CW / 2, y + 544, 28, SOFT, false, 'center');
   // vũ khí tiến hoá
   const wx = M * 2 + CW;
