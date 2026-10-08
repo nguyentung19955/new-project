@@ -2702,21 +2702,21 @@ Người dùng chọn phương án 4: máu quái tăng dần theo đợt + hạ 
 - **Thường**: từ ải 4 trở đi máu ×**1,02 mỗi đợt từ đợt 15** (bản đầu 1,03). **Dễ** (ải 1–3 Thường) giữ nguyên.
 - **Thế trận** (mới, `TEAM_BONUS` js/data.js): toàn quân +6% sát thương mỗi tướng từ tướng thứ 3 (tối đa 8 tướng) + theo số hành khác nhau 3/4/5 hành: +10/20/30% (đủ 5 hành cộng thêm Ngũ hành tề tựu +10%). Đội 6 tướng đủ 5 hành: **+64%**; 8 tướng: +76%. Chip ⚔ +X% trên thanh trên (cạnh mạng), chạm → giải thích. Ảnh pixel icon ghi ở `docs/pixel/DANH-SACH.md`.
 - **Chiêu R**: hồi chiêu thực tế **không dưới 12 giây** sau mọi giảm hồi chiêu (`R_MIN_CD`, trước đây trí lực + đồ giảm tới 50% → R 10 s chỉ còn 5 s). Mô tả kỹ năng ghi "(tối thiểu 12 giây)".
-- R toàn bản đồ / vùng lớn chiếm 60–94% sát thương trận (đo `node tests/can-bang-vang/do-r.js all 45 55`) → tăng hồi chiêu trước, rồi hạ sát thương:
+- R toàn bản đồ / vùng lớn chiếm 60–94% sát thương trận (đo `node tests/can-bang-vang/do-r.js all 45 55`). Bản đầu tăng hồi chiêu + hạ sát thương; sau khi gộp **sua-tam-skill** (mọi chiêu chỉ đánh quái trong tầm, R vùng cũ = tầm x2) R đã yếu đi nhiều → **trả sát thương về gốc**, hồi chiêu về gốc hoặc chỉ cao hơn chút với R còn chiếm %R cao:
 
-| R | Tướng | Hồi chiêu trước → sau | Sát thương / khống chế |
-|---|---|---|---|
-| Mưa Dừa (melonrain) | Sơ Dừa (Tím) | 20 → 30 | x2 → x1.5 |
-| Mưa Dưa (melonrain) | An Tiêm (Tím) | 18 → 26 | x2 → x1.5 |
-| Bay Về Trời (skyride) | Thánh Gióng | 20 → 30 | x4 → x3 |
-| Cung Trăng Gọi Gió (forestwrath) | Chú Cuội | 22 → 30 | x2 → x1.5, trói 1,8 → 1,2 s (boss 0,6 → 0,4) |
-| Rừng Thiêng Nổi Giận (forestwrath) | Mẫu Thượng Ngàn | 22 → 30 | như trên |
-| Mưa Đầm Sen (blizzard) | Hải Sen | 16 → 22 | — |
-| Mù Sương Tản Viên (blizzard) | Thần Sương | 16 → 20 | — |
-| Khúc Ca Cuối (tidegate) | Trương Chi (Tím) | 22 → 26 | — |
-| Long Cung Nổi Sóng (tidegate) | Long Nữ | 22 → 26 | — |
+| R | Tướng | Hồi chiêu gốc → bản đầu → chốt | %R gốc (toàn bản đồ) → chốt (trong tầm) | Tổng sát thương chốt |
+|---|---|---|---|---|
+| Mưa Dừa | Sơ Dừa (Tím) | 20 → 30 → **24** | 91 → 67% | 9,6 tr |
+| Mưa Dưa | An Tiêm (Tím) | 18 → 26 → **20** | 84 → 61% | 6,1 tr |
+| Rừng Thiêng Nổi Giận | Mẫu Thượng Ngàn | 22 → 30 → **26** | 91 → 54% | 9,5 tr |
+| Mưa Đầm Sen | Hải Sen | 16 → 22 → **20** | 90 → 86% | 4,5 tr |
+| Mù Sương Tản Viên | Thần Sương | 16 → 20 → **18** | 74 → 69% | 4,8 tr |
+| Bay Về Trời | Thánh Gióng | 20 → 30 → **20** | 94 → 53% | 7,7 tr |
+| Cung Trăng Gọi Gió | Chú Cuội | 22 → 30 → **22** | 93 → 60% | 7,4 tr |
+| Khúc Ca Cuối | Trương Chi (Tím) | 22 → 26 → **22** | 67 → 38% | 7,7 tr |
+| Long Cung Nổi Sóng | Long Nữ | 22 → 26 → **22** | 61 → 36% | 9,0 tr |
 
-  % sát thương từ R (đợt 45–55, tướng max đứng một mình) trước → sau: Gióng 94 → 86, Mẫu T.Ngàn 91 → 87, Sơ Dừa 91 → 83, Cuội 93 → 81, An Tiêm 84 → 73, Hải Sen 90 → 87, Thần Sương 74 → 68. R nhanh nhất trước đây: Thầy Mo 8,5 s, Xạ Thủ 8,6 s, Lạc Tướng 8,8 s → nay 12 s.
+  (trung vị tổng sát thương mọi tướng ~4,7 tr; sát thương / thời gian trói của mưa dưa/dừa x2, rừng thiêng x2 trói 1,8 s, ngựa sắt x4 giữ như gốc.) R nhanh nhất trước đây: Thầy Mo 8,5 s, Xạ Thủ 8,6 s, Lạc Tướng 8,8 s → nay sàn 12 s.
 - Tím đơn độc (21 tướng, ải 4 Thường): đa số thua ~đợt 15–24; Sơ Dừa vượt trội (thua ~49) → hạ qua R ở trên.
 - Bảng bot bản chốt (Khó ×1,03, Thường ×1,02; 3 ván; mất mạng đầu → thua · mạng còn sau đợt 40/50; đội 8 = 2 Vàng + 3 Tím + 3 Thường ★★★ khác hành):
 

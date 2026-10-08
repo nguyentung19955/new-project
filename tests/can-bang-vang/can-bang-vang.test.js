@@ -1,5 +1,5 @@
 // claude/can-bang-tuong-vang: test hồi quy cân bằng — máu Khó/Thường tăng dần theo đợt (Dễ giữ nguyên), Khó không giảm máu
-// theo ải dễ, thưởng Thế trận + chip trên thanh trên, sàn hồi chiêu R, R toàn bản đồ đã hạ, và 2 trận bot ngắn:
+// theo ải dễ, thưởng Thế trận + chip trên thanh trên, sàn hồi chiêu R, hồi chiêu các R vùng lớn, và 2 trận bot ngắn:
 // 1 tướng Vàng phép đơn độc ở ải 1 bật Khó phải mất mạng trước đợt 46 (trước đây ~đợt 56); đội 6 tướng Thường ở Dễ vẫn qua đợt 30.
 const { open, enter, ok } = require('../cho-tuong/helpers');
 const { run } = require('./mo-phong');
@@ -18,7 +18,8 @@ const { run } = require('./mo-phong');
     const rs = Object.keys(HEROES).filter((k) => HEROES[k].skills && HEROES[k].skills[3] && HEROES[k].skills[3].active);
     out.rMin = Math.min(...rs.map((k) => skillCdOf(HEROES[k].skills[3], 3, 50)));
     out.qCd = skillCdOf(HEROES.xathu.skills[0].active ? HEROES.xathu.skills[0] : HEROES.thaymo.skills[1], 0, 50);
-    out.global = rs.filter((k) => ['melonrain', 'forestwrath', 'skyride'].includes(HEROES[k].skills[3].active.cast)).map((k) => HEROES[k].skills[3].active.cooldown);
+    // sau sua-tam-skill (mọi chiêu chỉ trong tầm): R vùng lớn còn chiếm %R cao giữ hồi chiêu hơi trên gốc
+    out.rcd = Object.fromEntries(['sodua', 'antiem', 'mau', 'haisen', 'thansuong', 'giong', 'cuoi'].map((k) => [k, HEROES[k].skills[3].active.cooldown]));
     // chip Thế trận
     const g = game; for (const t of ['lactuong', 'ongthoi', 'thogom', 'thoren', 'thansuong', 'xathu']) g.spawnHero(g.freeSlots()[0], t, { tier: 3 });
     g.updateAuras(); ui.updateHud ? ui.updateHud() : 0;
@@ -35,7 +36,7 @@ const { run } = require('./mo-phong');
   ok(r.teamB.all === 64 && r.bonus >= 64 && chip.vis && chip.txt === '+64%', `đội 6 tướng đủ 5 hành: chip "${chip.txt}" hiện trên thanh trên, sát thương +${r.bonus}%`);
   ok(r.rMin >= 12, `hồi chiêu R thực tế không dưới 12 giây kể cả giảm hồi chiêu 50% (thấp nhất ${r.rMin})`);
   ok(r.qCd < 12, `sàn chỉ áp cho R, kỹ năng khác vẫn giảm hồi chiêu bình thường (${r.qCd.toFixed(1)} s)`);
-  ok(r.global.length >= 5 && r.global.every((c) => c >= 26), `R toàn bản đồ (mưa dưa/dừa, rừng thiêng, ngựa sắt) hồi chiêu ≥ 26 giây (${r.global})`);
+  ok(JSON.stringify(r.rcd) === JSON.stringify({ sodua: 24, antiem: 20, mau: 26, haisen: 20, thansuong: 18, giong: 20, cuoi: 22 }), `hồi chiêu R vùng lớn (trong tầm x2): Sơ Dừa 24 · An Tiêm 20 · Mẫu T.Ngàn 26 · Hải Sen 20 · Thần Sương 18; Gióng 20 · Cuội 22 như gốc (${JSON.stringify(r.rcd)})`);
   ok(errors.length === 0, 'không lỗi trang ' + errors.join(' | '));
   await browser.close();
   // 2 trận bot ngắn (cố định hạt giống)
