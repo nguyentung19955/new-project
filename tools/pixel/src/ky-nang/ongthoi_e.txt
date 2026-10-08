@@ -1,0 +1,47 @@
+# Mắt Rừng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: +4.1% chí mạng
+name: Mắt Rừng
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = trang-xam
+  d = trang
+  e = sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = la-ma
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbebbbbbbbbbgfa
+ahgbbbbbbbedcbbbbbbbbgfa
+ahgbbbbbeediiecbbbbbbgfa
+ahgbbbeediiiiiiecbbbbgfa
+ahgbbedddiiiiiiddcbbbgfa
+ahgeddddiiiaaiiidddcbgfa
+ahgbbcddiiiaaiiidcbbbgfa
+ahgbbbccdiiiiiiccbbbbgfa
+ahgbbbbbciiiiiibbbbbbgfa
+ahgbbbbbbbciibbbbbbbbgfa
+ahgbbbbbbbbcbbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

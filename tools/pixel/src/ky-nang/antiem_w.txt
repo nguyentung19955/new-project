@@ -1,0 +1,49 @@
+# Hạt Giống Vàng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: a golden seed sprouting
+name: Hạt Giống Vàng
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dat-toi
+  d = dat
+  e = dat-sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = la
+  j = la-ma
+  k = la-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbbkkibkibbbgfa
+ahgbbbbbbbbbkjibkjibbgfa
+ahgbbbbbbbbkijikkjibbgfa
+ahgbbbbbbbkkjijjiibbbgfa
+ahgbbbbbbbkiiikkibbbbgfa
+ahgbbbbbbkkjiijiibbbbgfa
+ahgbbbbbkjiikjiibbbbbgfa
+ahgbbbbkjiikijibbbbbbgfa
+ahgbbbbijiekjiibbbbbbgfa
+ahgbbbbbiidiiibbbbbbbgfa
+ahgbbbbbbbdbbbbbbbbbbgfa
+ahgbbbbbbbdbbbbbbbbbbgfa
+ahgbbbbbbbdbbbbbbbbbbgfa
+ahgbbbbbbbcbbbbbbbbbbgfa
+ahgbbbbbbebbbbbbbbbbbgfa
+ahgbbbbbbdbbbbbbbbbbbgfa
+ahgbbbbbbdbbbbbbbbbbbgfa
+ahgbbbbbbcbbbbbbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

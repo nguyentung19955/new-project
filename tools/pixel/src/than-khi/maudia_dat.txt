@@ -1,0 +1,46 @@
+# Mạch Đất — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: earth vein lava — Mạch đất nuôi muôn loài
+name: Mạch Đất
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dat-toi
+  d = dat
+  e = dat-sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbbbbebbbbbbgfa
+ahgbbbbbbbbbbbecbbbbbgfa
+ahgbbbbbbbbbbedcbbbbbgfa
+ahgbbbbbbbbbbedcbbbbbgfa
+ahgbbbbbecbbbeddcbbbbgfa
+ahgbbbbbecbbedddcbbbbgfa
+ahgbbbbeddcbedddcbbbbgfa
+ahgbbbbedddeddddcbbbbgfa
+ahgbbbeddddddddddcbbbgfa
+ahgbbbeddddddddddcbbbgfa
+ahgbbbeddddddddddcbbbgfa
+ahgbbeddddddddddddcbbgfa
+ahgbbeddddddddddddcbbgfa
+ahgbedddddddddddddcbbgfa
+ahgbeddddddddddddddcbgfa
+ahgeccccccccccccccccbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

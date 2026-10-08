@@ -1,0 +1,51 @@
+# Bà Hỏa · W «Lửa Lan» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: spreading fire
+name: Bà Hỏa · W «Lửa Lan»
+size: 24x24
+colors:
+  a = vien
+  b = dat-toi
+  c = dat-sang
+  d = dong-toi
+  e = dong
+  f = dong-sang
+  g = vang-nghe
+  h = vang-sang
+  i = son-toi
+  j = son
+  k = son-sang
+  l = lua
+  m = lua-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+affffffffffggfffffffffea
+afeeeeeeeeeeeeeeeeeeeeda
+afekkkkkkkkkkkkkkkkkkeda
+afekiiiiiiiiiiiiaiiikeda
+afekiiiiiiiiiiialaiikeda
+afekiiiiiiiiiiiiaiiakeda
+afekiaiiiiiiaiiiiiamaeda
+afekamaiiiiamaiiiiiakeda
+afekiaiiiiamjaiiiiiikeda
+afekiiiaiiamjaaiiiiikeda
+agekiiamaiamlmmaiaiikega
+agekiamjaamjjljaamaikega
+afekiamlmmjhhmjamjaikeda
+afekamjjlljhljjajjmakeda
+afeamjhhmjhmmhmmhhmmaeda
+afeamjhlmjhmmlmjhlmjaeda
+afeamjhlmjhmmlmjhlmjaeda
+afeajjlljjlllljjlljjaeda
+afecccccccccccccccccceda
+afebblbbbbblbbbbbblbbeda
+afeeeeeeeeeeeeeeeeeeeeda
+aeddddddddddggddddddddda
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

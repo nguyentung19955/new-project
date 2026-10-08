@@ -1,0 +1,25 @@
+{
+ "code": "melua_com",
+ "group": "than-khi",
+ "name": "Nồi Cơm Mới",
+ "w": 24,
+ "h": 24,
+ "ax": 12,
+ "ay": 23,
+ "bbox": [
+  0,
+  0,
+  24,
+  24
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "melua_com.png"
+}

@@ -1,0 +1,25 @@
+{
+ "code": "toc-do-x3",
+ "group": "icon",
+ "name": "tốc độ x3",
+ "w": 16,
+ "h": 16,
+ "ax": 8,
+ "ay": 15,
+ "bbox": [
+  1,
+  3,
+  13,
+  9
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "toc-do-x3.png"
+}

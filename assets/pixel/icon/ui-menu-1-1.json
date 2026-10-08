@@ -1,0 +1,25 @@
+{
+ "code": "ui-menu-1-1",
+ "group": "icon",
+ "name": "xuất trận / tiếp tục",
+ "w": 16,
+ "h": 16,
+ "ax": 8,
+ "ay": 15,
+ "bbox": [
+  1,
+  2,
+  14,
+  13
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "ui-menu-1-1.png"
+}

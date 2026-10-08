@@ -1,0 +1,50 @@
+# Hoa Trái Sơn Lâm — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: forest fruits and flowers — Hoa trái nuôi muôn dân, độc dược trị giặc
+name: Hoa Trái Sơn Lâm
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = da-sang
+  d = dong-toi
+  e = dong
+  f = dong-sang
+  g = vang-nghe
+  h = son
+  i = hong
+  j = la-toi
+  k = la
+  l = la-ma
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+afffffffffffffffffffffda
+afeeeeeeeeeeeeeeeeeeeeda
+afebbbbbbbbcbbbbbbbbbeda
+afebbbbbbbbibbbbbbbbbeda
+afebbbbbbbbibbbbbbbbbeda
+afebbbbbbbcihbbbbbbbbeda
+afebbbbbbbcihbbbbbbbbeda
+afebbbbbbbcihbbbbbbbbeda
+afebbcbbbciiihbbbcbbbeda
+afebbcchbciiihbcchbbbeda
+afebbciiciiiiiciihbbbeda
+afebbhiiiiiigiiiihbbbeda
+afebbbhiiihihiiihbbbbeda
+afebbbbhhhbibhhhbbbbbeda
+afebbblllllhllllljbbbeda
+afebblkkkkkkkkkkkkjbbeda
+afeblkkkkkkkkkkkkkkjbeda
+afebjjkkkkkkkkkkkkjjbeda
+afebbbjjjjjjjjjjjjbbbeda
+afebbbbbbbbbbbbbbbbbbeda
+afeeeeeeeeeeeeeeeeeeeeda
+adddddddddddddddddddddda
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -1,0 +1,49 @@
+# Lạc Hầu · R «Lời Thề Bộ Lạc» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: three raised fists with a sun-star behind (tribe oath)
+name: Lạc Hầu · R «Lời Thề Bộ Lạc»
+size: 24x24
+colors:
+  a = vien
+  b = toi
+  c = da-toi
+  d = da-sang
+  e = dat-toi
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = vang-nghe
+  j = vang-sang
+  k = son-toi
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhiihhhhhhhhhga
+ahggggggggggggggggggggfa
+ahghhhhhaiahahaiahhhhgfa
+ahgheeeeaiaajaiiaeeehgfa
+ahgheeeeajijgjijaeeehgfa
+ahgheaaajgdddgijjaaaagfa
+ahghaiijggkkcbjigjiiigfa
+ahgheaiiigddcbbgiiiaagfa
+ahghadddjbdcjjbdddaehgfa
+ahghakkcgbdcjjbkkcjahgfa
+aighaddcgbdcjjbddcaehgia
+aighadciijdcbbbdciiaagia
+ahghadcjjgdcbbjdcjaiigfa
+ahghadcaggdcjiidcaeaagfa
+ahghadcaagdcjjidcaeehgfa
+ahghadcaeadcgaidcaeehgfa
+ahghadcaaidcaeadcaeehgfa
+ahghadcaaidcaeadcaeehgfa
+ahghadcaeadcaeadcaeehgfa
+ahghaccahaccahaccahhhgfa
+ahggggggggggggggggggggfa
+agffffffffffiifffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

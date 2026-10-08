@@ -1,0 +1,77 @@
+# nước biển (bien — sea: true) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: xanh biển 2C7AA0 + bọt E8F6FF
+name: nước biển (bien — sea: true)
+size: 16x16
+colors:
+  a = troi
+  b = ngoc
+  c = ngoc-sang
+
+part k0
+bbbbbbbbbbbbbbbb
+bbbbbbbbbbbbbbbb
+bbccabbbbbbbbbbb
+bbbbbbbbbbbbbbbb
+bbbbbbbbbbcbbbbb
+bbbbbbbbbbbbbbbb
+bbbbbbbbbbbbccbb
+bbbbbbbbbbbbbbbb
+bbcbbbbbbbbbbbbb
+bbbbbbbbbbbbbbbb
+bbbbbbbccabbbbbb
+bbbbbbbbbbbbbbbb
+bbbbbbbbbbbbbbcb
+bbbbbbbbbbbbbbbb
+abbbbbbbbbbbbbcc
+bbbbbbbbbbbbbbbb
+end
+
+part k1
+bbbbbbbbbbbbbbbb
+bbbbbbbbbbbbbbbb
+bbbbccabbbbbbbbb
+bbbbbbbbbbbbbbbb
+bbbbbbbbbbbbcbbb
+bbbbbbbbbbbbbbbb
+bbbbbbbbbbbbbbcc
+bbbbbbbbbbbbbbbb
+bbbbcbbbbbbbbbbb
+bbbbbbbbbbbbbbbb
+bbbbbbbbbccabbbb
+bbbbbbbbbbbbbbbb
+cbbbbbbbbbbbbbbb
+bbbbbbbbbbbbbbbb
+ccabbbbbbbbbbbbb
+bbbbbbbbbbbbbbbb
+end
+
+part k2
+bbbbbbbbbbbbbbbb
+bbbbbbbbbbbbbbbb
+bbbbbbbbbbbbbbbb
+bbbbbbccabbbbbbb
+bbbbbbbbbbbbbbbb
+bbbbbbbbbbbbbbcb
+bbbbbbbbbbbbbbbb
+ccbbbbbbbbbbbbbb
+bbbbbbbbbbbbbbbb
+bbbbbbcbbbbbbbbb
+bbbbbbbbbbbbbbbb
+bbbbbbbbbbbccabb
+bbbbbbbbbbbbbbbb
+bbcbbbbbbbbbbbbb
+bbbbbbbbbbbbbbbb
+bbccabbbbbbbbbbb
+end
+
+anim main fps=3 loop
+frame main
+  use k0
+end
+frame main
+  use k1
+end
+frame main
+  use k2
+end
+

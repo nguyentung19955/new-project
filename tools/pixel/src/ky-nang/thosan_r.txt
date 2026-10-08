@@ -1,0 +1,49 @@
+# Săn Mồi — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: a hunting dagger with a red target mark
+name: Săn Mồi
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = trang-xam
+  d = trang
+  e = sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = la
+  j = la-ma
+  k = la-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbkkkkkibbbbbbgfa
+ahgbbbbkkjjjjjjkibbbbgfa
+ahgbbbkjjjjjjjjjjibbbgfa
+ahgbbkjjjeeeeecjjjibbgfa
+ahgbbkjjeddddddcjjibbgfa
+ahgbkjjeddjjjjddcjjibgfa
+ahgbkjjedjjjjjjdcjjibgfa
+ahgbkjjedjjjjjjdcjjibgfa
+ahgbkjjedjjjjjjdcjjibgfa
+ahgbkjjedjjjjjjdcjjibgfa
+ahgbijjcddjjjjddcjjibgfa
+ahgbbkjjcddddddcjjibbgfa
+ahgbbijjjccccccjjjibbgfa
+ahgbbbijjjjjjjjjjibbbgfa
+ahgbbbbiijjjjjjiibbbbgfa
+ahgbbbbbbiiiiiibbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

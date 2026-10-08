@@ -1,0 +1,25 @@
+{
+ "code": "nuoc-bien",
+ "group": "nen",
+ "name": "nước biển (bien — sea: true)",
+ "w": 16,
+ "h": 16,
+ "ax": 8,
+ "ay": 15,
+ "bbox": [
+  0,
+  0,
+  16,
+  16
+ ],
+ "n": 3,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 3,
+   "fps": 3,
+   "loop": true
+  }
+ },
+ "sheet": "nuoc-bien.png"
+}

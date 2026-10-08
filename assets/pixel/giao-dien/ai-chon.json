@@ -1,0 +1,25 @@
+{
+ "code": "ai-chon",
+ "group": "giao-dien",
+ "name": "huy hiệu ải trên bản đồ — đang chọn (sáng vàng)",
+ "w": 24,
+ "h": 24,
+ "ax": 12,
+ "ay": 23,
+ "bbox": [
+  0,
+  0,
+  24,
+  24
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "ai-chon.png"
+}

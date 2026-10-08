@@ -1,0 +1,45 @@
+# Sừng Kỳ Lân — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Chiếc sừng xua tà, báo điềm lành
+name: Sừng Kỳ Lân
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = vang-nghe
+  g = vang-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbgeebbbbbbbbbbbdca
+aedbbbbeeeebbbbbbbbbbdca
+aedbbbbbeeeebbbbbbbbbdca
+aedbbbbbbeeeebbbbbbbbdca
+aedbbbbbbeeeeebbbbbbbdca
+aedbbbbbbbeeeeebbbbbbdca
+aedbbbbbbbeeeeeebbbbbdca
+aedbbbbbbbbeeeeebbbbbdca
+aedbbbbbbbbeeefeebbbbdca
+aedbbbbbbbbeeeeeebbbbdca
+aedbbbbbbbbgeeeeeebbbdca
+aedbbbbbbbbeeeeeeebbbdca
+aedbbbbbbbbeeeeeeebbbdca
+aedbbbbbbbbeeeeeeebbbdca
+aedbbbbbbbbeeeeeeebbbdca
+aedbbbbbbbbbeeeeebbbbdca
+aedbbbbbbbbbbeebbbbbbdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

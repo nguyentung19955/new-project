@@ -1,0 +1,34 @@
+# mặc đồ cả đội — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: khiên đồng có mặt trời nhỏ (phong cách mặt trống đồng, viền 2A1608)
+name: mặc đồ cả đội
+size: 16x16
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = vang-sang
+
+part k0
+.aaaaaaaaaaaaa..
+addddddddddddba.
+adcccccccccccba.
+adcccccccccccba.
+adcccccccccccba.
+adcccccccccccba.
+adcccccccccccba.
+abcccccccccccba.
+.abcccccccccba..
+..abcccccccba...
+...abcccccba....
+....abcccba.....
+.....abbba......
+......aaa.......
+................
+................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

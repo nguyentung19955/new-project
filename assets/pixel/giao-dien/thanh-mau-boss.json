@@ -1,0 +1,25 @@
+{
+ "code": "thanh-mau-boss",
+ "group": "giao-dien",
+ "name": "khung thanh máu boss",
+ "w": 96,
+ "h": 12,
+ "ax": 48,
+ "ay": 11,
+ "bbox": [
+  0,
+  0,
+  96,
+  12
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "thanh-mau-boss.png"
+}

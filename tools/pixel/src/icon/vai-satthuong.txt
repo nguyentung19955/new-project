@@ -1,0 +1,30 @@
+# vai trò: Sát thương — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Sát thương vật lý đều tay, đánh nhanh; màu FF8A4C
+name: vai trò: Sát thương
+size: 12x12
+colors:
+  a = vien
+  b = son
+  c = lua
+  d = lua-sang
+
+part k0
+.........aa.
+........adba
+.......adcba
+......adcba.
+.....adcba..
+...aadcba...
+..addcba....
+..adcba.....
+.adcbba.....
+.abbaa......
+..aa........
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

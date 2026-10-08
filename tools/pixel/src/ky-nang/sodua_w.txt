@@ -1,0 +1,46 @@
+# Tiếng Sáo Chăn Dê — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: +6.2% sức mạnh kỹ năng
+name: Tiếng Sáo Chăn Dê
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = la
+  g = la-ma
+  h = la-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbhhhhfhhfhhhhfbbdca
+aedbbbhgggfggfggggfbbdca
+aedbbhggggfggfggggfbbdca
+aedbhgggggfggfggggfbbdca
+aedbhgggggggggggggfbbdca
+aedbhgggggggggggggfbbdca
+aedbhgggggggggggggfbbdca
+aedbfgggggggggggggfbbdca
+aedbbfffggggggggfffbbdca
+aedbbbbbhggggggfbbbbbdca
+aedbbbbbhggggggfbbbbbdca
+aedbbbbbhggggggfbbbbbdca
+aedbbbbbffffffffbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

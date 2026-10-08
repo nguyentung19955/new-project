@@ -1,0 +1,30 @@
+# tinh anh: Vỏ Cứng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: +10 giáp; màu C8BFA8
+name: tinh anh: Vỏ Cứng
+size: 12x12
+colors:
+  a = vien
+  b = trang-xam
+  c = trang
+  d = sang
+
+part k0
+.aaaaaaaaa..
+addddddddba.
+adcccccccba.
+adcccccccba.
+adcccccccba.
+abcccccccba.
+.abcccccba..
+..abcccba...
+...abbba....
+....aaa.....
+............
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

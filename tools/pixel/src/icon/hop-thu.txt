@@ -1,0 +1,35 @@
+# góp ý nhận được (quản trị) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: khay thư
+name: góp ý nhận được (quản trị)
+size: 16x16
+colors:
+  a = vien
+  b = trang-xam
+  c = trang
+  d = sang
+  e = dong-toi
+
+part k0
+................
+................
+................
+..aaaaaaaaaaaa..
+.aeddddddddddea.
+.adeecccccceeba.
+.adccecccceccba.
+.adccceccecccba.
+.adcccceeccccba.
+.adccccccccccba.
+.adccccccccccba.
+.adccccccccccba.
+.abbbbbbbbbbbba.
+..aaaaaaaaaaaa..
+................
+................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -1,0 +1,34 @@
+# gọi tướng / cảm ơn — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: trống đồng + dùi (phong cách mặt trống đồng, viền 2A1608)
+name: gọi tướng / cảm ơn
+size: 16x16
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = vang-sang
+
+part k0
+................
+................
+................
+....aaaaaaaa....
+...adddddddda...
+..adddddddddda..
+.adddadddddadda.
+.adddddddddddba.
+.adccddddddccba.
+.abbbbbbbbbbbba.
+.adccccccccccba.
+.adccccccccccba.
+.abbbbbbbbbbbba.
+..aaaaaaaaaaaa..
+................
+................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

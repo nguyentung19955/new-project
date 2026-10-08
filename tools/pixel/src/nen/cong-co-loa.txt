@@ -1,0 +1,67 @@
+# thành Cổ Loa xoắn ốc (citadel — thanh) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: 3 vòng thành xoắn 7E6440 + tháp giữa
+name: thành Cổ Loa xoắn ốc (citadel — thanh)
+size: 48x48
+colors:
+  a = vien
+  b = dat-toi
+  c = dat
+  d = dat-sang
+  e = son
+
+part k0
+................................................
+.................aaaaaaaaaaaaaaa................
+................addddddddddddddba...............
+................adcccccccccccccba...............
+................adcccccccccccccba...............
+................adcccccccccccccba...............
+................adcccccccccccccba...............
+................adcccceccccccccba...............
+................adcccceccccccccba...............
+................adcccccccccccccba...............
+................adcccccccccccccba...............
+................adcccccccccccccba...............
+................adcccccccccccccba...............
+................adcccccccccccccba...............
+..aaaaaaa....aaaadcccccccccccccba..aaaaaaa....aa
+.addddddba..addddccccccccccccccba.addddddba..adb
+.adcccccba..adcccccccccccccccccba.adcccccba..adb
+.adcccccba..adcccccccccccccccccba.adcccccba..adb
+.adcccccbaaaadcccccccccccccccccbaaadcccccbaaaadb
+.adccccccddddcccccccccccccccccccdddcccccccddddcb
+.adccccccccccccccccccccccccccccccccccccccccccccb
+.adcccccccccccccccccccccccccccccccccccccccccccba
+.adcccccccccccccccccccccccccccccccccccccccccccba
+.adcccccccccccccccccccccccccccccccccccccccccccba
+.adcccccccccccccccccccccccccccccccccccccccccccba
+.adcccccccccccccccccccccccccccccccccccccccccccba
+.adcccccccccccccccccccccccccccccccccccccccccccba
+.adcccccccccccccccccccccccccccccccccccccccccccba
+.adcccccccccccccccccccaaaaccccccccccccccccccccba
+.adccccccccccccccccccaaaaaacccccccccccccccccccba
+.adcccccccccccccccccaaaaaaaaccccccccccccccccccba
+.adccccccccccccccccaaaaaaaaaacccccccccccccccccba
+.adccccccccccccccccaaaaaaaaaacccccccccccccccccba
+.adccccccccccccccccaaaaaaaaaacccccccccccccccccba
+.adcccccccccccccccaaaaaaaaaaaaccccccccccccccccba
+.adcccccccccccccccaaaaaaaaaaaaccccccccccccccccba
+.adcccccccccccccccaaaaaaaaaaaaccccccccccccccccba
+.adcccccccccccccccaaaaaaaaaaaaccccccccccccccccba
+.adcccccccccccccccaaaaaaaaaaaaccccccccccccccccba
+.adcccccccccccccccaaaaaaaaaaaaccccccccccccccccba
+.adcccccccccccccccaaaaaaaaaaaaccccccccccccccccba
+.adcccccccccccccccaaaaaaaaaaaaccccccccccccccccba
+.adcccccccccccccccaaaaaaaaaaaaccccccccccccccccba
+.adcccccccccccccccaaaaaaaaaaaaccccccccccccccccba
+.adcccccccccccccccaaaaaaaaaaaaccccccccccccccccba
+.abbbbbbbbbbbbbbbbaaaaaaaaaaaabbbbbbbbbbbbbbbbba
+..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.
+................................................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

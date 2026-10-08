@@ -1,0 +1,48 @@
+# Thần Trống Đồng · R «Sấm Đồng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: lightning over a bronze drum
+name: Thần Trống Đồng · R «Sấm Đồng»
+size: 24x24
+colors:
+  a = vien
+  b = sat-toi
+  c = sat-sang
+  d = bac
+  e = sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = vang-nghe
+  j = vang-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhiihhhhhhhhhga
+ahggggggggggggggggggggfa
+ahgccccccccccajeaccccgfa
+ahgcbbbbbbbbajeeabbbcgfa
+ahgcbbbbbbbajeeabbbbcgfa
+ahgcbbbbbbajeeabbbbbcgfa
+ahgcbbbbbajeeeaabbbbcgfa
+ahgcbbabbbaajeeeababcgfa
+ahgcbadabbbbajeeaadacgfa
+ahgcbaabbbbbajeabbaacgfa
+aigcacabbbbajeeabbacagia
+aigcbabaaaaajeaaaabacgia
+ahgcbaajjjjjejjjjjaacgfa
+ahgcajjiiigjiggiiijjagfa
+ahgcajiiigiiiiijiiigagfa
+ahgahggiiijjijjiiigghgfa
+ahgahhhgggggjggggghhfgfa
+ahgafgggggggggggggghfgfa
+ahgahhhhhhhhhhhhhhhgfgfa
+ahgafffffffffffffffffgfa
+ahggggggggggggggggggggfa
+agffffffffffiifffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

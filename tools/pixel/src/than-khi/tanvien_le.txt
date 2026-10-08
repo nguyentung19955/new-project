@@ -1,0 +1,47 @@
+# Sính Lễ Vua Hùng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: nine-tusk elephant wedding gift — Voi chín ngà, gà chín cựa, ngựa chín hồng mao
+name: Sính Lễ Vua Hùng
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = sat-toi
+  d = sat
+  e = sat-sang
+  f = trang
+  g = dong-toi
+  h = dong
+  i = dong-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aiiiiiiiiiiiiiiiiiiiiiga
+aihhhhhhhhhhhhhhhhhhhhga
+aihbbbbbbbbbbbbbbbbbbhga
+aihbbbbbbbbbbbbbbbbbbhga
+aihbbbbbbbbbbbbbbbbbbhga
+aihbbbbbbbbbbbbeecbbbhga
+aihbbbbbeeeeeeedddcbbhga
+aihbbbeedddddddddadcbhga
+aihbbedddddddddddddcbhga
+aihbeddddddddddddddcbhga
+aihbeddddddddddddddcbhga
+aihbcddddddddddddfdcbhga
+aihbbeddddddddddfbecbhga
+aihbbedddddddddfbbecbhga
+aihbbeddcccccddcbbecbhga
+aihbbedcbbbbbedcbbecbhga
+aihbbedcbbbbbedcbbecbhga
+aihbbedcbbbbbedcbbccbhga
+aihbbcccbbbbbcccbbbbbhga
+aihbbbbbbbbbbbbbbbbbbhga
+aihhhhhhhhhhhhhhhhhhhhga
+agggggggggggggggggggggga
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -1,0 +1,25 @@
+{
+ "code": "thocong_r",
+ "group": "ky-nang",
+ "name": "Thổ Địa Hiển Linh",
+ "w": 24,
+ "h": 24,
+ "ax": 12,
+ "ay": 23,
+ "bbox": [
+  0,
+  0,
+  24,
+  24
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "thocong_r.png"
+}

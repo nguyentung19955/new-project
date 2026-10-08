@@ -1,0 +1,43 @@
+# Trống Đồng = Mặt Trống + Dùi Trống + Bùa Chim Lạc — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: trống đồng Đông Sơn có cóc trên mặt, ánh F2D27A
+name: Trống Đồng = Mặt Trống + Dùi Trống + Bùa Chim Lạc
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = vang-sang
+  e = son
+
+part k0
+........................
+........................
+........................
+........................
+.......aaaaaaaaaa.......
+.....aaddddddddddaa.....
+...aaddddddddddddddaa...
+..addddddddeedddddddda..
+..adddddddeeeeddddddda..
+..addddaddeeeedddaddda..
+..addddddddeedddddddda..
+..adcddddddddddddddcba..
+..adcccddddddddddcccba..
+..adccccccccccccccccba..
+..adccccccccccccccccba..
+..abbbbbbbbbbbbbbbbbba..
+..adccccccccccccccccba..
+..adccccccccccccccccba..
+..adccccccccccccccccba..
+..abbbbbbbbbbbbbbbbbba..
+...aaaaaaaaaaaaaaaaaa...
+........................
+........................
+........................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

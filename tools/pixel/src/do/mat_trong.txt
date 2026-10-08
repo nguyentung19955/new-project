@@ -1,0 +1,43 @@
+# Mặt Trống — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: mặt trống đồng phẳng có sao
+name: Mặt Trống
+size: 24x24
+colors:
+  a = vien
+  b = dong-toi
+  c = dong
+  d = dong-sang
+  e = vang-nghe
+
+part k0
+........................
+........................
+........................
+........................
+.......aaaaaaaaaa.......
+.....aaddddddddddaa.....
+...aaddddddddddddddaa...
+..addddddddeedddddddda..
+..adddddddeeeeddddddda..
+..addddaddeeeedddaddda..
+..addddddddeedddddddda..
+..adcddddddddddddddcba..
+..adcccddddddddddcccba..
+..adccccccccccccccccba..
+..adccccccccccccccccba..
+..abbbbbbbbbbbbbbbbbba..
+..adccccccccccccccccba..
+..adccccccccccccccccba..
+..adccccccccccccccccba..
+..abbbbbbbbbbbbbbbbbba..
+...aaaaaaaaaaaaaaaaaa...
+........................
+........................
+........................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

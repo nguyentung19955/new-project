@@ -1,0 +1,49 @@
+# Hồi Chuông Thiêng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Hồi chuông làm quái quanh mình đứng sững 1,5 giây (boss 0,6 giây)
+name: Hồi Chuông Thiêng
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = sat
+  d = sat-sang
+  e = bac
+  f = dat-toi
+  g = dat
+  h = dat-sang
+  i = dong-toi
+  j = dong
+  k = dong-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+akkkkkkkkkkkkkkkkkkkkkia
+akjjjjjjjjjjjjjjjjjjjjia
+akjbbbbbbbbecbbbbbbbbjia
+akjbbbbbbbeddcbbbbbbbjia
+akjbbbbbbbccccbbbbbbbjia
+akjbbbbbbeeeecbbbbbbbjia
+akjbbbbbedddddcbbbbbbjia
+akjbbbbbedddddcbbbbbbjia
+akjbbbbbedddddcbbbbbbjia
+akjbbbbbedddddcbbbbbbjia
+akjbbbbedddddddcbbbbbjia
+akjbbbbedddddddcbbbbbjia
+akjbbbbedddddddcbbbbbjia
+akjbbbedddddddddcbbbbjia
+akjbbedddddddddddcbbbjia
+akjbeccccccccccccccbbjia
+akjbbbbbbbbbbbbbbbbbbjia
+akjbbbbbbbhhhfbbbbbbbjia
+akjbbbbbbbfggfbbbbbbbjia
+akjbbbbbbbbffbbbbbbbbjia
+akjjjjjjjjjjjjjjjjjjjjia
+aiiiiiiiiiiiiiiiiiiiiiia
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -1,0 +1,49 @@
+# Tay Đội Trời — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: giant hands holding the sky — Đôi tay khổng lồ nâng cả bầu trời
+name: Tay Đội Trời
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = da-toi
+  d = da
+  e = da-sang
+  f = dat-toi
+  g = dat
+  h = dat-sang
+  i = dong-toi
+  j = dong
+  k = dong-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+akkkkkkkkkkkkkkkkkkkkkia
+akjjjjjjjjjjjjjjjjjjjjia
+akjbbbbbbbbbbbbbbbbbbjia
+akjbbbbbbbbbbbbbbbbbbjia
+akjbbbbbbbbceecbbbbbbjia
+akjbbbbbbeecddccbbbbbjia
+akjbbbbbbedcddcdcbbbbjia
+akjbbbbbeddcddcdcbbbbjia
+akjbbbeedddcddcddcbbbjia
+akjbbedddddddddddcbbbjia
+akjbbedddddddddddcbbbjia
+akjbbedddddddddddcbbbjia
+akjbbcdddddddddddcbbbjia
+akjbbbedcdddddddcbbbbjia
+akjbbbccbcdddddcbbbbbjia
+akjbbbbbhhhhhhhhhfbbbjia
+akjbbbbbhggggggggfbbbjia
+akjbbbbbhggggggggfbbbjia
+akjbbbbbffffffffffbbbjia
+akjbbbbbbbbbbbbbbbbbbjia
+akjjjjjjjjjjjjjjjjjjjjia
+aiiiiiiiiiiiiiiiiiiiiiia
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

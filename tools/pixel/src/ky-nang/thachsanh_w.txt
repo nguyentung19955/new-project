@@ -1,0 +1,48 @@
+# Cung Tên Vàng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: a golden bow with a golden arrow
+name: Cung Tên Vàng
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = trang-xam
+  d = dat
+  e = dong-toi
+  f = dong
+  g = dong-sang
+  h = la
+  i = la-ma
+  j = la-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+agggggggggggggggggggggea
+agffffffffffffffffffffea
+agfbbbbbbbjhbcbbbbbbbfea
+agfbbbbbbjhbbcbbbbbbbfea
+agfbbbbbjhbbbcbbbbbbbfea
+agfbbbbjhbbbbcbbbbbbbfea
+agfbbbjihbbbbcbbbbbbbfea
+agfbbbjhbbbbbcbbbbbbbfea
+agfbbbjhbbbbbcbbbbbbbfea
+agfbbjhbbbbbbcbbbjbbbfea
+agfbbjhbbbbbbcbbbjihbfea
+agfbdddddddddddddhddbfea
+agfbbjhbbbbbbcbbbbbbbfea
+agfbbhihbbbbbcbbbbbbbfea
+agfbbbjhbbbbbcbbbbbbbfea
+agfbbbhhbbbbbcbbbbbbbfea
+agfbbbbjhbbbbcbbbbbbbfea
+agfbbbbhihbbbcbbbbbbbfea
+agfbbbbbhihbbcbbbbbbbfea
+agfbbbbbbhhhbcbbbbbbbfea
+agffffffffffffffffffffea
+aeeeeeeeeeeeeeeeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

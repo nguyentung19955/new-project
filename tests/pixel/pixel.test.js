@@ -2,7 +2,7 @@
 // 1. tools/build-pixel.js: nguồn thật hợp lệ (--strict); nguồn lỗi (màu ngoài bảng màu, ký tự chưa khai báo, sai cỡ,
 //    thiếu động tác, tràn khung) bị chặn; dựng ra thư mục tạm: PNG đúng cỡ, JSON, manifest theo nhóm
 // 2. game ?pixel=1: không lỗi console; mã có pixel (giong · tanvien · chodo · tom · ô nền · icon ngũ hành) vẽ pixel,
-//    mã chưa có (1 tướng chưa vẽ chọn tự động · casau · hành Hỏa) giữ hình cũ; không bật thì không dùng pixel
+//    mã chưa có (1 tướng chưa vẽ chọn tự động · casau) giữ hình cũ; không bật thì không dùng pixel
 // 3. chụp 1920×934 · 844×390 · 667×375 · dọc 390×844 + phóng to vùng sprite → tests/pixel/shots/ (xem tận mắt)
 const path = require('path');
 const fs = require('fs');
@@ -143,13 +143,18 @@ async function setup(page) {
     await page.evaluate(() => { game.paused = true; });
     await page.waitForTimeout(200);
     const s = await page.evaluate(() => ({ on: pixelOn(), seen: [...PX.seen], cls: document.documentElement.className,
-      head: heroImgUrl('giong', 'head'), old: window.__OLD, headOld: window.__OLD ? heroImgUrl(window.__OLD, 'head') : '', kim: elIcon('kim'), hoa: elIcon('hoa'),
+      head: heroImgUrl('giong', 'head'), old: window.__OLD, headOld: window.__OLD ? heroImgUrl(window.__OLD, 'head') : '', kim: elIcon('kim'), hoa: elIcon('hoa'), item: itemIcon('riu_dong', 'common'), sk: skillIcon('giong', 0), skNew: skillIcon('xathu', 0), itemBo: itemIcon('long_truong'), vang: coin(),
       sm: pxSmoothOff() }));
     ok(s.on && /pixel/.test(s.cls), `[${tag}] bật pixel bằng ?pixel=1`);
-    for (const k of ['tuong/giong', 'tuong/tanvien', 'tuong/chodo', 'tuong/lactuong', 'quai/tom', 'quai/casau', 'nen/co', 'nen/nuoc']) ok(s.seen.includes(k), `[${tag}] vẽ pixel: ${k}`);
+    for (const k of ['tuong/giong', 'tuong/tanvien', 'tuong/chodo', 'tuong/lactuong', 'quai/tom', 'quai/casau']) ok(s.seen.includes(k), `[${tag}] vẽ pixel: ${k}`);
     ok(!s.old || !s.seen.includes('tuong/' + s.old), `[${tag}] mã chưa có pixel (${s.old || '—'}) giữ hình cũ`);
     ok(/pixel\/tuong\/giong-chan-dung\.png/.test(s.head) && !/pixel\//.test(s.headOld), `[${tag}] chân dung giao diện: giong pixel, ${s.old || '—'} hình cũ`);
-    ok(/pixel\/icon\/hanh-kim\.png/.test(s.kim) && !/pixel\//.test(s.hoa), `[${tag}] icon ngũ hành: Kim pixel, Hỏa (chưa vẽ) hình cũ`);
+    ok(/pixel\/icon\/hanh-kim\.png/.test(s.kim) && /pixel\/icon\/hanh-hoa\.png/.test(s.hoa), `[${tag}] icon ngũ hành pixel (Kim vẽ tay, Hỏa sinh bằng tool)`);
+    // claude/xuat-goi-pixel: icon đồ theo loại × độ hiếm / theo mã món, tiền vàng — sinh bằng tool (tools/pixel/spec)
+    ok(/pixel\/do\/do_riu_thuong\.png/.test(s.item) && /pixel\/do\/long_truong\.png/.test(s.itemBo), `[${tag}] icon đồ pixel: rìu Thường theo loại × độ hiếm, Long Trượng theo mã món`);
+    ok(/pixel\/icon\/vang\.png/.test(s.vang), `[${tag}] đồng vàng pixel`);
+    ok(/pixel\/ky-nang\/giong_q\.png/.test(s.sk) && /pixel\/ky-nang\/xathu_q\.png/.test(s.skNew), `[${tag}] icon kỹ năng pixel (giong_q vẽ tay đổi tên, xathu_q sinh bằng tool)`);
+    ok(s.seen.includes('ban-do/song1'), `[${tag}] nền bản đồ pixel ban-do/song1 (ô đặt tướng đồng nhất, trang trí xa đường)`);
     ok(s.sm, `[${tag}] ảnh pixel vẽ không làm mịn (nearest-neighbor)`);
     ok(!errors.length, `[${tag}] không lỗi console ${errors.join(' | ')}`);
     const wf = await page.evaluate(() => getComputedStyle(document.querySelector('#tb-wave')).fontFamily);

@@ -1,0 +1,48 @@
+# Thuyền Nan Lướt Sóng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bamboo basket boat on a wave
+name: Thuyền Nan Lướt Sóng
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dat-toi
+  d = dat
+  e = dat-sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = cham
+  j = nuoc
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbcbbbbbbbbbgfa
+ahgbbbbbbbbcbbbbbbbbbgfa
+ahgbbbbbbbbcibbbbbbbbgfa
+ahgbbbbbbbbcibbbbbbbbgfa
+ahgbbbbbbbbcjibbbbbbbgfa
+ahgbbbbbbbbcjjibbbbbbgfa
+ahgbbbbbbbbcjjibbbbbbgfa
+ahgbbbbbbbbcjjjibbbbbgfa
+ahgbbbbbbbbcjjjjibbbbgfa
+ahgbbbbbbbbciiiiibbbbgfa
+ahgbbbbbbbbcbbbbbbbbbgfa
+ahgeeeeeeeeceeeeeeecbgfa
+ahgbcdddddddddddddcbbgfa
+ahgbbedddddddddddcbbbgfa
+ahgbbcccccccccccccbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

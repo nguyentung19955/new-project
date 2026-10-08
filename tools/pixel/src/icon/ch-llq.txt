@@ -1,0 +1,39 @@
+# biểu tượng chương llq — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: sóng
+name: biểu tượng chương llq
+size: 16x16
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = cham
+  g = nuoc
+  h = nuoc-sang
+  i = ngoc-sang
+
+part k0
+......aaaa......
+....aaeeecaa....
+...aeededdeca...
+..aedbbbbbbdca..
+.aedbbbbbbbbdca.
+.aebbbbbhifibea.
+aedbbbbhggiibdca
+aedbhbbhgfgabdca
+aeebfhhgfbffbeca
+acdbbfgfbbbbbdca
+.aebbbfbbbbbbea.
+.acdbbbbbbbbdca.
+..acdbbbbbbdca..
+...aceddedeca...
+....aaccccaa....
+......aaaa......
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

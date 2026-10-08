@@ -1,0 +1,25 @@
+{
+ "code": "hut",
+ "group": "nen",
+ "name": "trang trí: hut",
+ "w": 32,
+ "h": 32,
+ "ax": 16,
+ "ay": 31,
+ "bbox": [
+  1,
+  1,
+  29,
+  30
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "hut.png"
+}

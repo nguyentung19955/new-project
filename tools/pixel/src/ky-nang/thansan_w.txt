@@ -1,0 +1,51 @@
+# Thần Săn Ba Vì · W «Nanh Hổ» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: a sharp tiger fang
+name: Thần Săn Ba Vì · W «Nanh Hổ»
+size: 24x24
+colors:
+  a = vien
+  b = trang-xam
+  c = trang
+  d = sang
+  e = dat-toi
+  f = dat
+  g = dat-sang
+  h = dong-toi
+  i = dong
+  j = dong-sang
+  k = vang-nghe
+  l = la-toi
+  m = la-ma
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ajjjjjjjjjjkkjjjjjjjjjia
+ajiiiiiiiiiiiiiiiiiiiiha
+ajimagammmmmmmmmagaamiha
+ajiagfgaaaaaaallagggaiha
+ajiaeeedddddddalaeeeaiha
+ajimaaaaddccccdalaaamiha
+ajimllladbccccballllmiha
+ajimlllladdccccdalllmiha
+ajimlllladbccccballlmiha
+ajimllllladdcccballlmiha
+akimllllladbccballllmika
+akimllllladddcballllmika
+ajimlllllladdcballllmiha
+ajimlllllladccballllmiha
+ajimlllllladcballlllmiha
+ajimllllllabballllllmiha
+ajimlllllllaballllllmiha
+ajimllllllllalllllllmiha
+ajimllllllllllllllllmiha
+ajimmmmmmmmmmmmmmmmmmiha
+ajiiiiiiiiiiiiiiiiiiiiha
+aihhhhhhhhhhkkhhhhhhhhha
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

@@ -1,0 +1,47 @@
+# Thủy Cung — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: underwater palace — Long cung dưới biển, nơi rồng thiêng ngự
+name: Thủy Cung
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = trang
+  d = dong-toi
+  e = dong
+  f = dong-sang
+  g = la-toi
+  h = ngoc
+  i = ngoc-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+afffffffffffffffffffffda
+afeeeeeeeeeeeeeeeeeeeeda
+afebbbbbbiiiiiigbbbbbeda
+afebbbbbbihhhhhgbbbbbeda
+afebbbbbbihchhhgbbbbbeda
+afebbbbbbihchhhgbbbbbeda
+afebbbbbbihhhhhgbbbbbeda
+afeiiiiiihhhhhhhiiiiiiig
+afeihhhhhhhhhhhhhhhhhhhg
+afeihhhhhhhhhhhhhhhhhggg
+afeihhhhhhhhhhhhhhhhgeda
+afeihhhhhhhhhhhhhhhhgeda
+afeihhhhhhhaahhhhhhhgeda
+afeihhhhhhaaaahhhhhhgeda
+afeihhhhhhaaaahhhhhhgeda
+afeihhhhhhaaaahhhhhhgeda
+afeihhhhhaaaaaahhhhhgeda
+afeihhhhhaaaaaahhhhhgeda
+afeihhhhhaaaaaahhhhhgeda
+afeggggggaaaaaaggggggeda
+afeeeeeeeeeeeeeeeeeeeeda
+adddddddddddddddddddddda
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

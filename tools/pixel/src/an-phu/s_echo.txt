@@ -1,0 +1,45 @@
+# Vang Vọng (Ấn Sấm, hàng 4) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: —
+name: Vang Vọng (Ấn Sấm, hàng 4)
+size: 24x24
+colors:
+  a = vien
+  b = dong
+  c = vang-nghe
+  d = vang-sang
+  e = cham-toi
+  f = cham
+  g = nuoc-sang
+
+part k0
+.........aaaaaa.........
+......aaadbbbbdaaa......
+.....adbbbgffgbbbda.....
+....adbgeffeeffegbda....
+...adbffeeeeeeeeffbda...
+..adbfeeeeeeeeeeeefbda..
+.adbgeeeeeeeeeeeeeegbda.
+.adgfeeeeeeedeeeeeffgda.
+.abeeeeeeeecdceeeeeeeba.
+adbgeeeeeecdddceeeefgbda
+adgfeeeeeecdcdcaeeeffgda
+adgeeeebeecdddcaebeeegda
+adgeeeeebecdcdcabeaefgda
+adfgeeebecdddddcebefgfda
+abdgeeeecdcdcdcbceafgdba
+.abeeeeecccccccccaefeba.
+.adfgeeeeaaacaaaaafgfda.
+.abdfeeeeeeeeaeeeeffdba.
+..abdfefeeeeeeeefffdba..
+...abdfgeffeefffgfdba...
+....abdfefgefgfefdba....
+.....abbbdffffdbbba.....
+......aaabbbbbbaaa......
+.........aaaaaa.........
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

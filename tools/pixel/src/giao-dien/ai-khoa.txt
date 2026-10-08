@@ -1,0 +1,44 @@
+# huy hiệu ải trên bản đồ — khoá (đá xám nứt) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đĩa trống đồng viền sao, giữa trống (số ải vẽ đè)
+name: huy hiệu ải trên bản đồ — khoá (đá xám nứt)
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = sang
+  d = dat-toi
+  e = dat
+  f = dat-sang
+
+part k0
+.........aaaaaa.........
+.......aafffffdaa.......
+.....aaffeefeeefdaa.....
+....affceebbbbeecfda....
+...afeebbbbbbbbbbeeda...
+..afeebbbbbbbbbbbbeeda..
+..afebbbbbbbbbbbbbbeda..
+.affbbbbbbbbbbbbbbbbfda.
+.afebbbbbbbbbbbbbbbbeda.
+afeebbbbbbdbbbbbbbbbeeda
+afebbbbbbbbdbbbbbbbbbeda
+afebbbbbbbbbdbbbbbbbbeda
+afcbbbbbbbbbdbbbbbbbbcda
+afebbbbbbbbbbdbbbbbbbeda
+adeebbbbbbbbbbbbbbbbeeda
+.afebbbbbbbbbbbbbbbbeda.
+.adfbbbbbbbbbbbbbbbbfda.
+..afebbbbbbbbbbbbbbeda..
+..adeebbbbbbbbbbbbeeda..
+...adeebbbbbbbbbbeeda...
+....addceebbbbeecdda....
+.....aaddeeefeeddaa.....
+.......aaddddddaa.......
+.........aaaaaa.........
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

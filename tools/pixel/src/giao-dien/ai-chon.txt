@@ -1,0 +1,44 @@
+# huy hiệu ải trên bản đồ — đang chọn (sáng vàng) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đĩa trống đồng viền sao, giữa trống (số ải vẽ đè)
+name: huy hiệu ải trên bản đồ — đang chọn (sáng vàng)
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = sang
+  d = dong-sang
+  e = vang-nghe
+  f = vang-sang
+
+part k0
+.......aaffffffaa.......
+.....aafffffffdffaa.....
+....affffeefeeefdffa....
+...afffceebbbbeecfdfa...
+..affeebbbbbbbbbbeedfa..
+.affeebbbbbbbbbbbbeedfa.
+.affebbbbbbbbbbbbbbedfa.
+afffbbbbbbbbbbbbbbbbfdfa
+affebbbbbbbbbbbbbbbbedfa
+ffeebbbbbbbbbbbbbbbbeedf
+ffebbbbbbbbbbbbbbbbbbedf
+ffebbbbbbbbbbbbbbbbbbedf
+ffcbbbbbbbbbbbbbbbbbbcdf
+ffebbbbbbbbbbbbbbbbbbedf
+fdeebbbbbbbbbbbbbbbbeedf
+affebbbbbbbbbbbbbbbbedfa
+afdfbbbbbbbbbbbbbbbbfdfa
+.affebbbbbbbbbbbbbbedfa.
+.afdeebbbbbbbbbbbbeedfa.
+..afdeebbbbbbbbbbeedfa..
+...afddceebbbbeecddfa...
+....affddeeefeeddffa....
+.....aaffddddddffaa.....
+.......aaffffffaa.......
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

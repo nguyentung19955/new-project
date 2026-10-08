@@ -1,0 +1,46 @@
+# Lá Đa Thần — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: +10% máu, +1.6 hồi máu/giây
+name: Lá Đa Thần
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = la
+  g = la-ma
+  h = la-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbbbbbbbbbbbgbdca
+aedbbbbbbbbbbbbbbhfbbdca
+aedbbbbbbbbbbbbbhgfbbdca
+aedbbbbbbbbbbbhhgfbbbdca
+aedbbbbbbbbbhhgggfbbbdca
+aedbbbbbbbhhggggfbbbbdca
+aedbbbbbbhggggggfbbbbdca
+aedbbbbbhggggggfbbbbbdca
+aedbbbbhggggggfbbbbbbdca
+aedbbbbhggggggfbbbbbbdca
+aedbbbhggggggfbbbbbbbdca
+aedbbbhggggggfbbbbbbbdca
+aedbbhgggggffbbbbbbbbdca
+aedbbhgggffbbbbbbbbbbdca
+aedbhggffbbbbbbbbbbbbdca
+aedbfffbbbbbbbbbbbbbbdca
+aedgbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

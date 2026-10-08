@@ -1,0 +1,34 @@
+# bờ đất ven nước (mép đường nước) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bờ theo chủ đề: song 8A7650, dam 6E6040, bien C8B47A, thanh 7E6A48 (đổi bảng màu)
+name: bờ đất ven nước (mép đường nước)
+size: 16x16
+colors:
+  a = dat-toi
+  b = dat
+  c = dat-sang
+  d = nuoc-sang
+
+part k0
+ccccccccbccccccc
+ccdccccccccccbcc
+cccccbcccccccccc
+cbccccccccdccccc
+cccccccabccccccc
+ccccccccccccccbc
+cdcccccccccbcccc
+cccccbcccccccccc
+cccccccccccccdcc
+cccbcccccdcccccc
+cccccccccccccccc
+cccccccabcccccbc
+cbcccccccccccccc
+cccccdccccccbccc
+cccccccccccccccc
+cccccccccbccccdc
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

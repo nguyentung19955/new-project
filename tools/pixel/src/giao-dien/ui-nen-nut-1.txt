@@ -1,0 +1,42 @@
+# nền nút 1 — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đĩa trống tròn (nền nút tròn) (giữa trống)
+name: nền nút 1
+size: 24x24
+colors:
+  a = vien
+  b = dong-toi
+  c = dong
+  d = dong-sang
+
+part k0
+.........aaaaaa.........
+.......aadddddbaa.......
+.....aaddccdcccdbaa.....
+....adddbbbbbbbbddba....
+...adcbbbbbbbbbbbbcba...
+..adcbbbbbbbbbbbbbbcba..
+..adbbbbbbbbbbbbbbbbba..
+.addbbbbbbbbbbbbbbbbdba.
+.adbbbbbbbbbbbbbbbbbbba.
+adcbbbbbbbbbbbbbbbbbbcba
+adcbbbbbbbbbbbbbbbbbbcba
+adcbbbbbbbbbbbbbbbbbbcba
+addbbbbbbbbbbbbbbbbbbdba
+adcbbbbbbbbbbbbbbbbbbcba
+abcbbbbbbbbbbbbbbbbbbcba
+.adbbbbbbbbbbbbbbbbbbba.
+.abdbbbbbbbbbbbbbbbbdba.
+..adbbbbbbbbbbbbbbbbba..
+..abcbbbbbbbbbbbbbbcba..
+...abcbbbbbbbbbbbbcba...
+....abbdbbbbbbbbdbba....
+.....aabbcccdccbbaa.....
+.......aabbbbbbaa.......
+.........aaaaaa.........
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

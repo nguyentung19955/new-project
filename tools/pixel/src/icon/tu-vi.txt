@@ -1,0 +1,38 @@
+# Tu Vi — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đĩa âm dương trong vòng đồng (ui-tai-nguyen-4)
+name: Tu Vi
+size: 16x16
+colors:
+  a = vien
+  b = khoi
+  c = trang-xam
+  d = trang
+  e = sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+
+part k0
+......aaaa......
+....aahhhfaa....
+...ahhghgghfa...
+..ahgbbbbbbgfa..
+.ahgbbbecbbbgfa.
+.ahbbeeddecbbha.
+ahgbbeddddcbbgfa
+ahgbeddddddcbgfa
+ahhbcdddaddcbhfa
+afgbbeddddcbbgfa
+.ahbbccddccbbha.
+.afgbbbccbbbgfa.
+..afgbbbbbbgfa..
+...afhgghghfa...
+....aaffffaa....
+......aaaa......
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

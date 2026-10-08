@@ -1,0 +1,32 @@
+# ô nhiệm vụ chưa xong — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: ô vuông trống
+name: ô nhiệm vụ chưa xong
+size: 12x12
+colors:
+  a = vien
+  b = khoi
+  c = sat-toi
+  d = dong-toi
+  e = dong
+  f = dong-sang
+
+part k0
+.aaaaaaaaaa.
+afffffffffda
+afeeeeeeeeda
+afebbbbbbeda
+afebcccabeda
+afebcbbabeda
+afebcbbabeda
+afebaaaabeda
+afebbbbbbeda
+afeeeeeeeeda
+adddddddddda
+.aaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

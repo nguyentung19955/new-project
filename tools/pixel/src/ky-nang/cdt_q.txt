@@ -1,0 +1,49 @@
+# Gậy Thần — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: a magic walking staff with a green heal glow
+name: Gậy Thần
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dat-toi
+  d = dat
+  e = dat-sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = cham
+  j = nuoc
+  k = nuoc-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbbbbkkkibbbgfa
+ahgbbbbbbbbbbkjjjjibbgfa
+ahgbbbbbbbbbbkjjjjjibgfa
+ahgbbbbbbbbbkjjjjjjibgfa
+ahgbbbbbbbbbijjjjjjibgfa
+ahgbbbbbbbbbbkjjjjjibgfa
+ahgbbbbbbbbbbiijjiibbgfa
+ahgbbbbbbbbbedciibbbbgfa
+ahgbbbbbbbbedcbbbbbbbgfa
+ahgbbbbbbbedcbbbbbbbbgfa
+ahgbbbbbbedcbbbbbbbbbgfa
+ahgbbbbbedcbbbbbbbbbbgfa
+ahgbbbbedcbbbbbbbbbbbgfa
+ahgbbbedcbbbbbbbbbbbbgfa
+ahgbbedcbbbbbbbbbbbbbgfa
+ahgbedcbbbbbbbbbbbbbbgfa
+ahgbccbbbbbbbbbbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -1,0 +1,47 @@
+# Cột Lửa — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: a tall fire pillar
+name: Cột Lửa
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dat
+  d = dong-toi
+  e = dong
+  f = dong-sang
+  g = son
+  h = lua
+  i = lua-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+afffffffffffffffffffffda
+afeeeeeeeeeeeeeeeeeeeeda
+afebbbbbbbbbbbbbbbbbbeda
+afebbbbiiiiiiiiiibbbbeda
+afebbbbiiiiiiiiiibbbbeda
+afebbbbiiiiiiiiiibbbbeda
+afebbbbbbihhhhhgbbbbbeda
+afebbbbbbihhhhhgbbbbbeda
+afebbbbbbihhhhhgbbbbbeda
+afebbbbbbihhhhhgbbbbbeda
+afebbbbbbcccccccbbbbbeda
+afebbbbbbcccccccbbbbbeda
+afebbbbbbihhhhhgbbbbbeda
+afebbbbbbihhhhhgbbbbbeda
+afebbbbbbihhhhhgbbbbbeda
+afebbbbbbihhhhhgbbbbbeda
+afebbbbbbihhhhhgbbbbbeda
+afebbbbiiiiiiiiiibbbbeda
+afebbbbiiiiiiiiiibbbbeda
+afebbbbbbbbbbbbbbbbbbeda
+afeeeeeeeeeeeeeeeeeeeeda
+adddddddddddddddddddddda
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

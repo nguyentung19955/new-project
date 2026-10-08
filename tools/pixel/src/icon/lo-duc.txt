@@ -1,0 +1,37 @@
+# Lò đúc đồng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: lò + búa
+name: Lò đúc đồng
+size: 16x16
+colors:
+  a = vien
+  b = sat-toi
+  c = sat-sang
+  d = sang
+  e = dong-toi
+  f = dong
+  g = dong-sang
+
+part k0
+................
+.....a...a......
+....ada.ada.....
+.....adaada.....
+...aaaacbaaaa...
+..aggggbbgggga..
+..agggggggggga..
+..agffffffffea..
+..agffffffffea..
+..agffffffffea..
+..agffffffffea..
+..aeffffffffea..
+...aeeeffeeea...
+....aaaeeaaa....
+.......aa.......
+................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

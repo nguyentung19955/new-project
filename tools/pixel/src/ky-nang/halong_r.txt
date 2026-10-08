@@ -1,0 +1,47 @@
+# Đàn Rồng Giáng Hạ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: dragon flock
+name: Đàn Rồng Giáng Hạ
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dat-sang
+  d = dong-toi
+  e = dong
+  f = dong-sang
+  g = cham
+  h = nuoc
+  i = nuoc-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+afffffffffffffffffffffda
+afeeeeeeeeeeeeeeeeeeeeda
+afebbbbbbbbbbbbbbbbbbeda
+afebbbbbbbbbbbbbbbbbbeda
+afebbbbbbbbbbbbcbbbcbeda
+afebbbbbbbbbbbigcbbcbeda
+afebbbbbbbbbiihhcgbcbeda
+afebbbbbbbbihhhhhcgcbeda
+afebbbbbbbbihhhhhhhigeda
+afebbbbbbbihhhghhhahgeda
+afeiigbbbihhhgbihhhhgeda
+afeghhgbbihhhgbgggggbeda
+afebghhiihhhgbbbbbbbbeda
+afebbihhhhhgbbbbbbbbbeda
+afebbghhhhgbbbbbbbbbbeda
+afebbbggggbbbbbbbbbbbeda
+afebbbbbbbbbbbbbbbbbbeda
+afebbbbbbbbbbbbbbbbbbeda
+afebbbbbbbbbbbbbbbbbbeda
+afebbbbbbbbbbbbbbbbbbeda
+afeeeeeeeeeeeeeeeeeeeeda
+adddddddddddddddddddddda
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

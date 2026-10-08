@@ -1,0 +1,47 @@
+# Xiêm Ngọc Long Cung — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: pearl silk robe — Áo dệt từ ngọc trai dưới long cung
+name: Xiêm Ngọc Long Cung
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = trang
+  d = dong-toi
+  e = dong
+  f = dong-sang
+  g = nuoc
+  h = nuoc-sang
+  i = troi
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+afffffffffffffffffffffda
+afeeeeeeeeeeeeeeeeeeeeda
+afebbbbbbbbbbbbbbbbbbeda
+afebbbbbiaiiiiabbbbbbeda
+afebbbbihhahhahgbbbbbeda
+afebbbihhhahhahhgbbbbeda
+afebiihhhhhaahhhhigbbeda
+afeihhhhhhhhhhhhhhhgbeda
+afebghghhhhhhhhhghgbbeda
+afebbgbihhhhhhhgbgbbbeda
+afebbbbihhhhhhhgbbbbbeda
+afebbbbihhhhhhhgbbbbbeda
+afebbbbccccccccccbbbbeda
+afebbbbccccccccccbbbbeda
+afebbbbihhhhhhhgbbbbbeda
+afebbbbihhhhhhhgbbbbbeda
+afebbbbihhhhhhhgbbbbbeda
+afebbbbihhhhhhhgbbbbbeda
+afebbbiggggggggggbbbbeda
+afebbbbbbbbbbbbbbbbbbeda
+afeeeeeeeeeeeeeeeeeeeeda
+adddddddddddddddddddddda
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

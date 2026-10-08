@@ -1,0 +1,46 @@
+# Viêm Đế Giáng Hỏa — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: falling fire sun
+name: Viêm Đế Giáng Hỏa
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = son
+  g = lua
+  h = lua-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbhhhhhhhfbbbbbdca
+aedbbhhhgggggggghhfbbdca
+aedbhggggggggggggggfbdca
+aedbhggggggggggggggfbdca
+aedbhggggggggggggggfbdca
+aedbhggggggggggggggfbdca
+aedbffggggggggggggffbdca
+aedbffffggggggggffffbdca
+aedbbffffffffffffffbbdca
+aedbbbffffffffffffbbbdca
+aedbbbbbffffffffbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

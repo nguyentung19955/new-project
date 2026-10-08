@@ -1,0 +1,36 @@
+# góp ý — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: phong thư
+name: góp ý
+size: 16x16
+colors:
+  a = vien
+  b = trang-xam
+  c = trang
+  d = sang
+  e = son-toi
+  f = son
+
+part k0
+................
+................
+................
+..aaaaaaaaaaaa..
+.aeddddddddddea.
+.adeecccccceeba.
+.adccecccceccba.
+.adccceffecccba.
+.adccccffccccba.
+.adccccffccccba.
+.adccccccccccba.
+.adccccccccccba.
+.abbbbbbbbbbbba.
+..aaaaaaaaaaaa..
+................
+................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

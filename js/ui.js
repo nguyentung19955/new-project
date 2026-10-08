@@ -44,6 +44,11 @@ const ICON = {
 for (const [k, f] of [['up', 'ic-nang-cap'], ['mount', 'ui-tran-3-3']]) {
   const svg = ICON[k]; Object.defineProperty(ICON, k, { get: () => (hasAsset(`ui/${f}.png`) ? `<img class="icart ic-${k}" src="${assetSrc(`ui/${f}.png`)}" alt="">` : svg) });
 }
+// claude/xuat-goi-pixel: ICON SVG → icon pixel khi bật pixel (giữ SVG làm dự phòng)
+for (const [k, code] of [['close', 'svg-close'], ['back', 'ui-tran-3-4'], ['check', 'svg-check'], ['bag', 'svg-bag'], ['up', 'nang-cap'], ['mount', 'ui-tran-3-3']]) {
+  const d = Object.getOwnPropertyDescriptor(ICON, k), cu = () => (d.get ? d.get() : d.value);
+  Object.defineProperty(ICON, k, { get: () => (pxIc(code) ? `<img class="icart ic-${k}" src="${pxIc(code)}" alt="">` : cu()) });
+}
 // ổ khóa vẽ tay (ui_khoa.png) nếu đã có
 { const lockSvg = ICON.lock; Object.defineProperty(ICON, 'lock', { get: () => uiIc('khoa', lockSvg) }); }
 
@@ -62,22 +67,28 @@ function loadUiSkins() {
     im.onload = () => { root.style.setProperty('--sk-' + name, `url("${new URL(src, document.baseURI).href}")`); if (cls) root.classList.add('sk-' + cls); };
     im.src = src;
   };
-  for (const [name, cls] of UI_SKIN) if (hasAsset(`ui/${name}.png`)) one(assetSrc(`ui/${name}.png`), name, cls);
+  // claude/xuat-goi-pixel: khung / nút / thanh pixel (nhóm "giao-dien") khi bật pixel — trước ảnh vẽ tay
+  // nút tròn (đóng) và nút đổi chợ giữ hình cũ: bản pixel mất nhận diện (ô vuông X trắng, đồng xu xoay) — góp ý tester
+  const PX_GIU = /^nut-tron-|^nut-doi-cho$/;
+  for (const [name, cls] of UI_SKIN) { const px = !PX_GIU.test(name) && typeof pxUrl === 'function' && pxUrl('giao-dien', name); if (px) one(px, name, cls); else if (hasAsset(`ui/${name}.png`)) one(assetSrc(`ui/${name}.png`), name, cls); }
   if (hasAsset('scenes/nen-man-phu.png')) one(assetSrc('scenes/nen-man-phu.png'), 'nen-man-phu', 'nen-man-phu');
 }
 if (typeof document !== 'undefined' && document.documentElement) loadUiSkins();
 // v95: Ngân khố (tài khoản) dùng nén BẠC, khác hẳn đồng VÀNG trong trận
 let KHO_MODE = false;       // đang mở Lò đúc đồng trước trận: giá hiện bằng bạc Ngân khố
 // dùng ảnh có sẵn: ảnh tài nguyên (đồng xu lỗ vuông, nén bạc) luôn dùng khi có file, không phụ thuộc "Dùng ảnh AI"; thiếu thì vẽ CSS như cũ
+const pxUrl2 = (g, code) => (typeof pxUrl === 'function' && pxUrl(g, code)) || '';
+const pxIc = (code) => (typeof pxUrl === 'function' && pxUrl('icon', code)) || '';
 const uiSrcOf = (paths) => { const p = paths.find((x) => hasAsset(x)); return p ? assetSrc(p) : ''; };
 const COIN_SRC = ['ui/ui-tai-nguyen-1.png'], BAC_SRC = ['ui/ui-tai-nguyen-3.png'];
-const bac = (sm) => { const u = uiSrcOf(BAC_SRC); return u ? `<img class="bac-img${sm ? ' sm' : ''}" src="${u}" alt="">` : `<i class="bac${sm ? ' sm' : ''}"></i>`; };
+const bac = (sm) => { const u = pxIc('bac') || uiSrcOf(BAC_SRC); return u ? `<img class="bac-img${sm ? ' sm' : ''}" src="${u}" alt="">` : `<i class="bac${sm ? ' sm' : ''}"></i>`; };
 // cho-6-the: chân dung trên thẻ Chợ tướng (và ảnh nạp sẵn) lấy qua 1 hàm — khi có chân dung pixel chỉ cần đổi ở đây
 const marketPortrait = (t) => heroImgUrl(t, 'head');
-const coin = (sm) => { if (KHO_MODE) return bac(sm); const u = uiSrcOf(COIN_SRC) || assetUrl('ui_dong-xu.png'); return u ? `<img class="coin-img${sm ? ' sm' : ''}" src="${u}" alt="">` : `<i class="coin${sm ? ' sm' : ''}"></i>`; };
+const coin = (sm) => { if (KHO_MODE) return bac(sm); const u = pxIc('vang') || uiSrcOf(COIN_SRC) || assetUrl('ui_dong-xu.png'); return u ? `<img class="coin-img${sm ? ' sm' : ''}" src="${u}" alt="">` : `<i class="coin${sm ? ' sm' : ''}"></i>`; };
 // icon giao diện vẽ tay (ui_*.png) nếu đã có, không thì dùng ký hiệu dự phòng
 // v155: nút vẽ tay thay ký hiệu (ui-tran-4/5, huy chương); thiếu ảnh thì quay về ký hiệu cũ
-const uiE = (f, emo, cls = 'uie') => !hasAsset(`ui/${f}.png`) ? emo : `<img class="${cls}" src="${assetSrc(`ui/${f}.png`)}" alt="${emo}" onerror="this.replaceWith(this.alt)">`;
+// claude/xuat-goi-pixel: icon pixel (js/pixel.js, nhóm "icon") nếu đang bật pixel và có mã — không thì đường vẽ cũ
+const uiE = (f, emo, cls = 'uie') => pxIc(f) ? `<img class="${cls}" src="${pxIc(f)}" alt="${emo}">` : !hasAsset(`ui/${f}.png`) ? emo : `<img class="${cls}" src="${assetSrc(`ui/${f}.png`)}" alt="${emo}" onerror="this.replaceWith(this.alt)">`;
 // v186: ổ khoá chợ tướng — [mở, đóng]
 const MK_LOCK = ['<svg viewBox="0 0 24 24" width="20" height="20"><path d="M7 11V7a5 5 0 0 1 9.6-1.9" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><rect x="4" y="11" width="16" height="11" rx="2.5" fill="currentColor"/><circle cx="12" cy="16.5" r="1.8" fill="#1A120A"/></svg>',
   '<svg viewBox="0 0 24 24" width="20" height="20"><path d="M7 11V7a5 5 0 0 1 10 0v4" fill="none" stroke="currentColor" stroke-width="2.6"/><rect x="4" y="11" width="16" height="11" rx="2.5" fill="currentColor"/><circle cx="12" cy="16.5" r="1.8" fill="#5A3A08"/></svg>'];
@@ -88,7 +99,7 @@ const UIE = { star: () => uiE('ui-tran-4-1', '★'), equip: () => uiE('ui-tran-4
 const EMO_ART = { '🔥': 'ic-hanh-hoa', '🌊': 'ic-hanh-thuy', '⛰': 'ui-tran-3-3', '⚔': 'ui-tran-5-3', '♾': 'ui-tran-5-2', '↻': 'ui-tran-4-4',
   '⚒': 'ui-tran-2-2', '🎒': 'ui-menu-2-4', '🔯': 'ui-menu-1-4', '📖': 'ui-menu-2-2', '📜': 'ui-menu-2-2', '⏸': 'ui-tran-1-2', '🎁': 'ui-menu-1-3', '🏆': 'ui-menu-2-3' };
 const CODEX_SVG = '<svg viewBox="0 0 24 24" width="26" height="26"><rect x="4" y="3" width="16" height="18" rx="2" fill="none" stroke="#F2D27A" stroke-width="1.8"/><circle cx="12" cy="10" r="3" fill="none" stroke="#F2D27A" stroke-width="1.6"/></svg>';
-const artOr = (f, fallback) => (hasAsset(`ui/${f}.png`) ? `<img class="icart" src="${assetSrc(`ui/${f}.png`)}" alt="">` : fallback);
+const artOr = (f, fallback) => (pxIc(f) ? `<img class="icart" src="${pxIc(f)}" alt="">` : hasAsset(`ui/${f}.png`) ? `<img class="icart" src="${assetSrc(`ui/${f}.png`)}" alt="">` : fallback);
 const codexIc = () => artOr('ui-menu-2-2', CODEX_SVG);
 // thua chương Sơn Tinh: cổng thành Phong Châu (tiles/cong-phong-chau) chìm trong sóng (ic-hanh-thuy); thiếu ảnh thì icon nước dâng cũ
 const floodIc = () => (hasAsset('tiles/cong-phong-chau.png') && hasAsset('ui/ic-hanh-thuy.png')
@@ -98,7 +109,7 @@ const emoArt = (emo, cls = 'uie') => (EMO_ART[emo] ? uiE(EMO_ART[emo], emo, cls)
 // v181: ổ khoá / tia kỹ năng vẽ SVG (ảnh ui-tran-4-3 thu nhỏ chỉ còn chấm xám)
 const SVG_LOCK = '<svg class="svlk" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="8" rx="1.6" fill="currentColor"/><path d="M5.2 7V5.2a2.8 2.8 0 0 1 5.6 0V7" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>';
 const SVG_SK = '<svg class="svsk" viewBox="0 0 16 16" aria-hidden="true"><path d="M9.5 1 3 9.2h4.2L6.3 15 13 6.6H8.7z" fill="currentColor"/></svg>';
-const uiIc = (name, fallback = '') => (assetUrl(`ui_${name}.png`) ? `<img class="uiic" src="${assetUrl(`ui_${name}.png`)}" alt="">` : fallback);
+const uiIc = (name, fallback = '') => (pxIc('ui-' + name) ? `<img class="uiic" src="${pxIc('ui-' + name)}" alt="">` : assetUrl(`ui_${name}.png`) ? `<img class="uiic" src="${assetUrl(`ui_${name}.png`)}" alt="">` : fallback);
 // v163: icon nhỏ (chỉ số, trạng thái, tiền tệ…) — ảnh assets/ui/ic-<tên>.png (cắt bằng tools/cat-items.py ic-…),
 // chưa có ảnh thì vẽ SVG nội tuyến (KHÔNG dùng emoji: điện thoại thiếu font sẽ hiện ô vuông). Bảng kê: docs/ICON-NHO.md
 // v189 (L17): "mạng" dùng trái tim đỏ trước (giống thanh trên); khiên đồng ui_mang.png trông như đồng xu, dễ nhầm với vàng
@@ -160,7 +171,7 @@ const icPaths = (name) => [`ui/ic-${name}.png`, ...(IC_ALT[name] || [])];
 // như nút giao diện (ui-tran-…): luôn dùng ảnh khi có, không phụ thuộc cài đặt "ảnh AI"
 const icUrl = (name) => { const p = icPaths(name).find((x) => asset(x, true)); return p ? assetSrc(p) : ''; };
 function ic(name, alt = '', cls = '') {
-  const u = icUrl(name);
+  const u = pxIc(name) || icUrl(name);
   if (u) return `<img class="icn ${cls}" src="${u}" alt="${alt}">`;
   return `<svg class="icn ${cls}" viewBox="0 0 24 24"${alt ? ` aria-label="${alt}"` : ' aria-hidden="true"'}>${IC_SVG[name] || ''}</svg>`;
 }
@@ -175,12 +186,14 @@ const BOSS_LINES = {
 const RUN_CHIP = '<span class="chip run">Quái vẫn đang chạy</span>';
 
 // v111: Ấn Phù vẽ tay (assets/runes/<mã ấn>.png, cắt bằng tools/cat-runes.py); thiếu ảnh thì hiện ký hiệu cũ
-const runeIc = (r) => !hasAsset(`runes/${r.id}.png`) ? r.ic : `<img class="rimg" src="${assetSrc(`runes/${r.id}.png`)}" alt="${r.ic}" onerror="this.replaceWith(this.alt)">`;
+const runeIc = (r) => pxUrl2('an-phu', r.id) ? `<img class="rimg" src="${pxUrl2('an-phu', r.id)}" alt="${r.ic}">` : !hasAsset(`runes/${r.id}.png`) ? r.ic : `<img class="rimg" src="${assetSrc(`runes/${r.id}.png`)}" alt="${r.ic}" onerror="this.replaceWith(this.alt)">`;
 
 // Icon: ưu tiên ảnh vẽ tay trong assets/ (nếu đã có), không thì dùng hình vector
 // v182: ô có mô tả khi rê chuột / giữ tay (data-skt = kỹ năng thứ i của tướng đang chọn, data-skr = "loại:i" ở màn Anh Hùng)
 const TIP_SEL = '[data-tip], [data-skt], [data-skr]';
 function skillIcon(type, i) {
+  const px = pxUrl2('ky-nang', `${type}_${SKILL_KEYS[i].toLowerCase()}`);   // claude/xuat-goi-pixel: icon kỹ năng pixel 24×24 khi bật pixel
+  if (px) return `<img src="${px}" alt="">`;
   // v107: icon vẽ tay trong bộ ảnh tướng → luôn dùng (như ảnh tướng), trừ khi bật "Tướng vẽ nét"
   if (SKILL_PACK.has(type) && !vectorHeroesOn()) return `<img src="${assetSrc(`packs/${type}/sk-${SKILL_KEYS[i].toLowerCase()}.png`)}" alt="">`;
   const u = assetUrl(skillPngPath(type, i));
@@ -235,7 +248,9 @@ function setItemIcon(id) {
   const pal = SET_PAL[it.set];
   return (setIconCache[id] = src && pal ? src.replace(/#[0-9A-Fa-f]{6}/g, (c) => (c.toUpperCase() in LL_COLORS ? pal[LL_COLORS[c.toUpperCase()]] : c)) : '');
 }
-function itemIcon(id) {
+function itemIcon(id, rarity) {
+  const pc = typeof pxItemCode === 'function' && pxItemCode(id, rarity), pu = pc && pxUrl('do', pc);   // pixel art 24×24 (js/pixel.js)
+  if (pu) return `<img src="${pu}" alt="">`;
   // v155: bộ icon đồ vẽ tay mới (file đầu danh sách, tools/cat-items.py) luôn dùng như ảnh quái; ảnh AI cũ vẫn theo Cài đặt
   const p = itemPngPath(id)[0];
   if (asset(p, true)) return `<img src="${assetSrc(p)}" alt="">`;
@@ -1324,7 +1339,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 222</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 223</div>
       </div></div>`;
   }
 
@@ -2691,7 +2706,7 @@ class UI {
       const lv = L[sys.id] || 0, c = LEGACY_COST[lv];
       const pips = Array.from({ length: LEGACY_MAX }, (_, i) => `<i class="${i < lv ? 'on' : ''} ${sys.ms.some((m) => m.lv === i + 1) ? 'ms' : ''}"></i>`).join('');
       return `<div class="lg-sys">
-        <div class="lg-h" data-tip-avoid=".lg-sys" data-tip="${esc(`<b>${esc(sys.name)}</b><small>Thần Khí · cấp ${lv}/${LEGACY_MAX}</small><div class='st-rows'><div class='st-r'><span>Tối đa (cấp ${LEGACY_MAX})</span><b><em>${legacyPerText(sys, LEGACY_MAX)}</em></b></div>${lv < LEGACY_MAX ? `<div class='st-r'><span>Còn cần</span><b>${fmt(LEGACY_COST.slice(lv).reduce((x, y) => x + y, 0))} Ngân khố (${LEGACY_MAX - lv} cấp)</b></div><div class='st-r ${kho >= c ? 'ok' : 'no'}'><span>Đang có</span><b>${fmt(kho)}${kho >= c ? ' · đủ nâng cấp kế ✓' : ` · thiếu ${fmt(c - kho)} cho cấp ${lv + 1}`}</b></div>` : '<small>Đã tối đa</small>'}</div>`)}"><span class="lg-ic">${RELIC_PACK.has(t) ? `<img src="${assetSrc(`packs/${t}/tk-${si + 1}.png`)}" alt="">` : emoArt(sys.ic)}</span><div><b>${sys.name}</b><small>${esc(sys.desc)}</small></div></div>
+        <div class="lg-h" data-tip-avoid=".lg-sys" data-tip="${esc(`<b>${esc(sys.name)}</b><small>Thần Khí · cấp ${lv}/${LEGACY_MAX}</small><div class='st-rows'><div class='st-r'><span>Tối đa (cấp ${LEGACY_MAX})</span><b><em>${legacyPerText(sys, LEGACY_MAX)}</em></b></div>${lv < LEGACY_MAX ? `<div class='st-r'><span>Còn cần</span><b>${fmt(LEGACY_COST.slice(lv).reduce((x, y) => x + y, 0))} Ngân khố (${LEGACY_MAX - lv} cấp)</b></div><div class='st-r ${kho >= c ? 'ok' : 'no'}'><span>Đang có</span><b>${fmt(kho)}${kho >= c ? ' · đủ nâng cấp kế ✓' : ` · thiếu ${fmt(c - kho)} cho cấp ${lv + 1}`}</b></div>` : '<small>Đã tối đa</small>'}</div>`)}"><span class="lg-ic">${typeof pxUrl === 'function' && pxUrl('than-khi', `${t}_${sys.id}`) ? `<img src="${pxUrl('than-khi', `${t}_${sys.id}`)}" alt="">` : RELIC_PACK.has(t) ? `<img src="${assetSrc(`packs/${t}/tk-${si + 1}.png`)}" alt="">` : emoArt(sys.ic)}</span><div><b>${sys.name}</b><small>${esc(sys.desc)}</small></div></div>
         <div class="lg-pips">${pips}<span>${lv}/${LEGACY_MAX}</span></div>
         <div class="lg-now">${lv ? legacyPerText(sys, lv) : 'Chưa nâng'}${lv < LEGACY_MAX ? `<br><small>Cấp ${lv + 1}: ${legacyPerText(sys, lv + 1)}</small>` : ''}</div>
         ${sys.ms.map((m) => `<div class="lg-ms ${lv >= m.lv ? 'got' : ''}"><span>Cấp ${m.lv}</span>${esc(m.t)}</div>`).join('')}
@@ -3904,7 +3919,7 @@ class UI {
         const gain = h && !o.sold ? upgradeGain(h, o.inst) : 0;
         const best = !o.sold && !gain ? g.bestHeroFor(o.inst) : null;
         return `<button class="sh-card ${i === si ? 'on' : 'metal'} ${o.sold ? 'sold' : ''}" data-act="sh-sel" data-i="${i}">
-          <span class="slot ${rarCls(o.inst.rarity)}">${svgI(itemIcon(o.inst.id))}${elDot(o.inst)}</span>
+          <span class="slot ${rarCls(o.inst.rarity)}">${svgI(itemIcon(o.inst.id, o.inst.rarity))}${elDot(o.inst)}</span>
           <span class="nm">${it.name}</span><small class="c-${o.inst.rarity}">${RARITY[o.inst.rarity].name} · ${SLOT_NAMES[it.slot]}</small>
           <span class="gn">${o.sold ? 'Đã mua' : gain ? `▲ +${gain} ${HEROES[h.type].name}` : best ? `▲ hợp ${HEROES[best.hero.type].name}` : (o.inst.aff || []).length ? `${o.inst.aff.length} dòng phụ` : ''}</span>
           <span class="pr">${o.sold ? '—' : coin(1) + o.price}</span></button>`;
@@ -3913,7 +3928,7 @@ class UI {
       if (cur) {
         const it = ITEMS[cur.inst.id];
         const gain = h ? upgradeGain(h, cur.inst) : 0;
-        det = `<div class="it-head"><span class="slot ${rarCls(cur.inst.rarity)}">${svgI(itemIcon(cur.inst.id))}</span><div><div class="ttl">${it.name}</div><small class="c-${cur.inst.rarity}">${RARITY[cur.inst.rarity].name} · ${SLOT_NAMES[it.slot]}${it.wclass ? ' ' + WCLASS_NAMES[it.wclass].toLowerCase() : ''}</small></div></div>
+        det = `<div class="it-head"><span class="slot ${rarCls(cur.inst.rarity)}">${svgI(itemIcon(cur.inst.id, cur.inst.rarity))}</span><div><div class="ttl">${it.name}</div><small class="c-${cur.inst.rarity}">${RARITY[cur.inst.rarity].name} · ${SLOT_NAMES[it.slot]}${it.wclass ? ' ' + WCLASS_NAMES[it.wclass].toLowerCase() : ''}</small></div></div>
           <div class="stat-list">${statLine(itemStats(cur.inst, h && h.type), true)}</div>
           ${cur.inst.el ? `<div class="elrow">${elChip(cur.inst.el)}</div>` : ''}
           ${(cur.inst.aff || []).map((a) => `<div class="aff">◆ ${AFFIXES[a].label(affixVal(cur.inst, a))}</div>`).join('')}
@@ -3973,7 +3988,7 @@ class UI {
           <div class="note" style="text-align:center">Mở thêm <b style="color:#C8A0F0">${Math.max(1, JAR_PITY - (g.jarCount || 0))}</b> hũ nữa: chắc chắn ra đồ Sử thi trở lên.</div>
         </div>
         <div class="panel metal" style="width:260px;flex:none"><div class="ttl" style="font-size:17px">Vừa mở được</div>
-          ${inst ? `<div class="inset" style="border-radius:6px;padding:10px;border-color:${RARITY[inst.rarity].color}"><div class="it-head"><span class="slot ${rarCls(inst.rarity)}">${svgI(itemIcon(inst.id))}</span>
+          ${inst ? `<div class="inset" style="border-radius:6px;padding:10px;border-color:${RARITY[inst.rarity].color}"><div class="it-head"><span class="slot ${rarCls(inst.rarity)}">${svgI(itemIcon(inst.id, inst.rarity))}</span>
             <div><div class="ttl">${ITEMS[inst.id].name}</div><small class="c-${inst.rarity}">${RARITY[inst.rarity].name} · ${SLOT_NAMES[ITEMS[inst.id].slot]}</small></div></div>
             <div class="stat-list" style="margin-top:6px">${statLine(itemStats(inst), true)}</div>${this.bestFor(inst)}</div>
             ${!op.hero ? `<button class="big-btn btn-gold" style="margin-top:0" data-act="equip-new" data-uid="${inst.uid}">Đeo cho tướng</button>
@@ -3994,7 +4009,7 @@ class UI {
       const inst = h && h.equip[s];
       const lab = { weapon: 'Vũ khí', helmet: 'Mũ', armor: 'Giáp' }[s] || '';
       return `<button class="slot ${inst ? rarCls(inst.rarity) : ''} ${inst && sc.pick === inst.uid ? 'sel' : ''}" data-act="bag-slot" data-slot="${s}" ${h ? '' : 'disabled'} aria-label="${SLOT_NAMES[s]}">
-        ${inst ? svgI(itemIcon(inst.id)) + (inst.plus ? `<span class="lv">+${inst.plus}${inst.temper ? '✦' : ''}</span>` : '') + elDot(inst) : `<span class="ph">${lab}</span>`}</button>`;
+        ${inst ? svgI(itemIcon(inst.id, inst.rarity)) + (inst.plus ? `<span class="lv">+${inst.plus}${inst.temper ? '✦' : ''}</span>` : '') + elDot(inst) : `<span class="ph">${lab}</span>`}</button>`;
     };
     const left = `<div class="panel metal bag-hero">
       <div class="hsel"><button class="metal" data-act="hero-prev" aria-label="Tướng trước">‹</button><span class="ttl">${h ? def.name : 'Chưa có tướng'}</span><button class="metal" data-act="hero-next" aria-label="Tướng sau">›</button></div>
@@ -4010,7 +4025,7 @@ class UI {
       const bad = h && !canEquip(h.type, inst.id);
       const gain = h && !bad ? upgradeGain(h, inst) : 0;
       cells.push(`<button class="slot ${rarCls(inst.rarity)} ${sc.pick === inst.uid ? 'sel' : ''} ${bad ? 'dim' : ''}" data-act="bag-pick" data-uid="${inst.uid}" aria-label="${ITEMS[inst.id].name}">
-        ${svgI(itemIcon(inst.id))}${inst.plus ? `<span class="lv">+${inst.plus}${inst.temper ? '✦' : ''}</span>` : ''}${inst.locked ? `<span class="lk">${ICON.lock}</span>` : ''}${elDot(inst)}${gain ? '<span class="upa">▲</span>' : ''}</button>`);
+        ${svgI(itemIcon(inst.id, inst.rarity))}${inst.plus ? `<span class="lv">+${inst.plus}${inst.temper ? '✦' : ''}</span>` : ''}${inst.locked ? `<span class="lk">${ICON.lock}</span>` : ''}${elDot(inst)}${gain ? '<span class="upa">▲</span>' : ''}</button>`);
     }
     const f = this.scrapFilter;
     const list = g.scrapList(f);
@@ -4044,7 +4059,7 @@ class UI {
         cmp = `<div class="cmp ${dd > 0 ? 'ok' : dd < 0 ? 'no' : ''}">Lực chiến ${def.name}: ${now} → <b>${after}</b> (${dd >= 0 ? '+' : ''}${dd})</div>`;
       }
       det = `<div class="panel metal bag-det">
-        <div class="it-head"><span class="slot ${rarCls(inst.rarity)}">${svgI(itemIcon(inst.id))}${inst.plus ? `<span class="lv">+${inst.plus}</span>` : ''}</span>
+        <div class="it-head"><span class="slot ${rarCls(inst.rarity)}">${svgI(itemIcon(inst.id, inst.rarity))}${inst.plus ? `<span class="lv">+${inst.plus}</span>` : ''}</span>
           <div style="min-width:0"><div class="ttl" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${it.name}</div><small class="c-${inst.rarity}">${RARITY[inst.rarity].name} · ${it.slot === 'weapon' ? 'Vũ khí ' + WCLASS_NAMES[it.wclass].toLowerCase() : SLOT_NAMES[it.slot]}${onHero ? ' · đang đeo' : ''}</small></div></div>
         <div class="enh inset"><div class="row1"><span>Cường hóa</span>${inst.plus >= 5 ? `<span class="full">FULL +5${inst.temper ? ` ✦${inst.temper}` : ''}</span>` : `<span style="color:#FFD66B;font-weight:800">+${inst.plus}</span>`}</div>
           <div class="pips">${[1, 2, 3, 4, 5].map((k) => `<i class="${inst.plus >= k ? 'on' : ''}"></i>`).join('')}</div>
@@ -4101,7 +4116,7 @@ class UI {
           <div class="tg"><span class="sw on" aria-hidden="true"></span><span>Bỏ qua đồ đã khóa</span><span class="n2">${lockedN} món</span></div>
           <div class="tg"><button class="sw ${f.skipUpgraded ? 'on' : ''}" data-act="flt-up" aria-label="Bỏ qua đồ đã nâng cấp"></button><span>Bỏ qua đồ đã nâng cấp</span><span class="n2">${upN} món</span></div></div>
         <div class="panel metal" style="flex:1.05"><div class="ph"><span class="ttl">Sẽ đổi ${list.length} món</span><small>Túi còn ${g.inventory.length - list.length} / ${CONFIG.bagSize} ô</small></div>
-          <div class="inset" style="border-radius:6px;padding:6px;display:flex;gap:4px;flex-wrap:wrap;min-height:50px">${list.slice(0, 11).map((i) => `<span class="slot ${rarCls(i.rarity)}" style="width:36px;height:36px">${svgI(itemIcon(i.id))}${i.plus ? `<span class="lv">+${i.plus}</span>` : ''}</span>`).join('')}${list.length > 11 ? `<span class="slot" style="width:36px;height:36px;font-weight:800;color:#C8BFA8">+${list.length - 11}</span>` : ''}</div>
+          <div class="inset" style="border-radius:6px;padding:6px;display:flex;gap:4px;flex-wrap:wrap;min-height:50px">${list.slice(0, 11).map((i) => `<span class="slot ${rarCls(i.rarity)}" style="width:36px;height:36px">${svgI(itemIcon(i.id, i.rarity))}${i.plus ? `<span class="lv">+${i.plus}</span>` : ''}</span>`).join('')}${list.length > 11 ? `<span class="slot" style="width:36px;height:36px;font-weight:800;color:#C8BFA8">+${list.length - 11}</span>` : ''}</div>
           <div class="sum inset">${rows || '<div><span>Chưa chọn món nào</span></div>'}${upgraded.length ? `<div><span>Hoàn 60% vàng đã nâng cấp (${upgraded.length} món)</span><b>${refund}</b></div>` : ''}
             <div class="tot"><span>Nhận được</span><b>${coin()} +${fmt(total)}</b></div></div>
           ${upgraded.length ? `<div class="warnbox">⚠ Có ${upgraded.length} món đã nâng cấp: ${upgraded.slice(0, 3).map((i) => `${ITEMS[i.id].name} +${i.plus}`).join(', ')}. Đổi rồi không lấy lại được.</div>` : ''}

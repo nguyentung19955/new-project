@@ -1,0 +1,49 @@
+# Suối Nguồn (Ấn Núi, hàng 1) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: —
+name: Suối Nguồn (Ấn Núi, hàng 1)
+size: 24x24
+colors:
+  a = vien
+  b = toi
+  c = dat-toi
+  d = dat
+  e = dong-toi
+  f = dong
+  g = dong-sang
+  h = vang-nghe
+  i = vang-sang
+  j = nuoc
+  k = nuoc-sang
+
+part k0
+........................
+........aaaaaaaa........
+......aaggggggggaa......
+.....aggeeeeeeeegga.....
+....agfebbbbbbbbefga....
+...agfebccccccccbefga...
+..agfebccccccccccbefga..
+..agebcccccihhccccbeea..
+.agebcccccihhhhccccbega.
+.agebccccihhakhhcccdgea.
+.agebcccihhakkahhccdgea.
+.agebccihhaakjachfcdgea.
+.agebcccaaackjaccaadgea.
+.agebcccccckkjjccccdgea.
+.agebccckkckjjkakccdgea.
+.aeebcckcakckkakckcdeea.
+..aggbccakkacakkacagea..
+..aefgbckcakckcakdgfea..
+...aefgbcaccacacdgfea...
+....aefgbdddddddgfea....
+.....aeeeggggggeeea.....
+......aaeeeeeeeeaa......
+........aaaaaaaa........
+........................
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

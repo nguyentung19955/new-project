@@ -1,0 +1,44 @@
+# Đắp Đê Chắn Lũ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: earth shield wall
+name: Đắp Đê Chắn Lũ
+size: 24x24
+colors:
+  a = vien
+  b = dong-toi
+  c = dong
+  d = dong-sang
+  e = vang-nghe
+  f = vang-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+adddddddddddddddddddddba
+adccccccccccccccccccccba
+adcffffffffffffffffdccba
+adcfeeeeeeeeeeeeeeedccba
+adcfeeeeeeeeeeeeeeedccba
+adcfeeeeeeeeeeeeeeedccba
+adcfeeeeeeeeeeeeeeedccba
+adcfeeeeeeeeeeeeeeedccba
+adcfeeeeeeeeeeeeeeedccba
+adcfeeeeeeeeeeeeeeedccba
+adcfeeeeeeeeeeeeeeedccba
+adcdeeeeeeeeeeeeeeedccba
+abccdeeeeeeeeeeeeedcccba
+.abbcdeeeeeeeeeeedccbba.
+..aabcddeeeeeeeddccbaa..
+....abccdeeeeedcccba....
+.....abccdeeedcccba.....
+......abccdedcccba......
+.......abccdcccba.......
+........abccccba........
+.........abccba.........
+..........abba..........
+...........aa...........
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

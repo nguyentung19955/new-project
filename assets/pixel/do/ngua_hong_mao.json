@@ -1,0 +1,25 @@
+{
+ "code": "ngua_hong_mao",
+ "group": "do",
+ "name": "Ngựa Chín Hồng Mao (sính lễ boss · hiem)",
+ "w": 24,
+ "h": 24,
+ "ax": 12,
+ "ay": 23,
+ "bbox": [
+  3,
+  0,
+  19,
+  22
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "ngua_hong_mao.png"
+}

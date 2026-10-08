@@ -1,0 +1,35 @@
+# nút chữ nhật vàng — thuong — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: vàng đồng, viền răng cưa, đinh sao 2 đầu; thường — sáng, highlight trên
+name: nút chữ nhật vàng — thuong
+size: 48x16
+colors:
+  a = vien
+  b = sang
+  c = dong-sang
+  d = vang-nghe
+  e = vang-sang
+
+part k0
+...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...
+..aeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeca..
+.aeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeca.
+aeddddddddddddddddddddddddddddddddddddddddddddca
+aeddddddddddddddddddddddddddddddddddddddddddddca
+aeddddddddddddddddddddddddddddddddddddddddddddca
+aeddddddddddddddddddddddddddddddddddddddddddddca
+aededdddddddddddddddddddddddddddddddddddddddedca
+aeebeddddddddddddddddddddddddddddddddddddddebeca
+aededdddddddddddddddddddddddddddddddddddddddedca
+aeddddddddddddddddddddddddddddddddddddddddddddca
+aeddddddddddddddddddddddddddddddddddddddddddddca
+acddddddddddddddddddddddddddddddddddddddddddddca
+.acddddddddddddddddddddddddddddddddddddddddddca.
+..acccccccccccccccccccccccccccccccccccccccccca..
+...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

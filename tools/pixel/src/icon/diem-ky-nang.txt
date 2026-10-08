@@ -1,0 +1,33 @@
+# điểm kỹ năng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: sao vàng trên đĩa đồng
+name: điểm kỹ năng
+size: 12x12
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = vang-nghe
+  g = vang-sang
+
+part k0
+....aaaa....
+...aeeeca...
+..aeeedeca..
+.aedbgbbdca.
+aeebbfbbbeca
+aedgfffebdca
+aeebbebbbeca
+acebbbbbbeca
+.acdbbbbdca.
+..acedeeca..
+...acccca...
+....aaaa....
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

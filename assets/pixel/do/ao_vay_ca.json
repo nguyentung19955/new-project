@@ -1,0 +1,25 @@
+{
+ "code": "ao_vay_ca",
+ "group": "do",
+ "name": "Áo Vảy Cá = Vảy Cá + Ngọc Sinh Lực",
+ "w": 24,
+ "h": 24,
+ "ax": 12,
+ "ay": 23,
+ "bbox": [
+  3,
+  2,
+  19,
+  20
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "ao_vay_ca.png"
+}

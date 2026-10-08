@@ -1,0 +1,39 @@
+# biểu tượng chương adv — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: cung tên
+name: biểu tượng chương adv
+size: 16x16
+colors:
+  a = vien
+  b = khoi
+  c = trang-xam
+  d = dat
+  e = dong-toi
+  f = dong
+  g = dong-sang
+  h = vang-nghe
+  i = vang-sang
+
+part k0
+......aaaa......
+....aagggeaa....
+...aggfgffgea...
+..agfbbbbbbfea..
+.agfbbiicbbbfea.
+.agbbihgcbbbbga.
+agfbbigbcbbbbfea
+agfbbigbcbigbfea
+aggbddddddddbgea
+aefbbigbcbbbbfea
+.agbbggbcbbbbga.
+.aefbbggcbbbfea.
+..aefbbgcbbfea..
+...aegffgfgea...
+....aaeeeeaa....
+......aaaa......
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

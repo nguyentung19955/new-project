@@ -1,0 +1,37 @@
+# khoá — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: ổ khoá đồng (phong cách mặt trống đồng, viền 2A1608)
+name: khoá
+size: 16x16
+colors:
+  a = vien
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = dong-sang
+  f = vang-nghe
+  g = vang-sang
+
+part k0
+................
+................
+......aaaa......
+.....adccba.....
+....adbaabba....
+....aca..aca....
+...aacaaaacaa...
+..agggggggggea..
+..agffffffffea..
+..agfffaffffea..
+..agfffaffffea..
+..agfffaffffea..
+..agffffffffea..
+..aeeeeeeeeeea..
+...aaaaaaaaaa...
+................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -1,0 +1,67 @@
+# khung thẻ tướng Vàng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: viền vàng nghệ chạm sao
+name: khung thẻ tướng Vàng
+size: 40x48
+colors:
+  a = vien
+  b = sang
+  c = dong-sang
+  d = vang-nghe
+  e = vang-sang
+
+part k0
+...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...
+..aeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeca..
+.aeddddddddddddddddddddddddddddddddddca.
+aeddccccccccccccccccccccccccccccccccddca
+aedcaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaedca
+aedca..............................aedca
+aedca..............................aedca
+aedca..............................aedca
+aedca..............................aedca
+aedca..............................aedca
+aedca..............................aedca
+aedca..............................aedca
+aedca..............................aedca
+aedca..............................aedca
+aedca..............................aedca
+aedca..............................aedca
+aedca..............................aedca
+aedca..............................aedca
+aedca..............................aedca
+aedca..............................aedca
+aedca..............................aedca
+aedca..............................aedca
+aedca..............................aedca
+aedea..............................aedca
+aeebea............................aebeca
+aedea..............................aedca
+aedca..............................aedca
+aedca..............................aedca
+aedca..............................aedca
+aedca..............................aedca
+aedca..............................aedca
+aedca..............................aedca
+aedca..............................aedca
+aedca..............................aedca
+aedca..............................aedca
+aedca..............................aedca
+aedca..............................aedca
+aedcaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaedca
+aeddeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeddca
+aeddddddddddddddddddddddddddddddddddddca
+aeddddddddddddddddddddddddddddddddddddca
+aeddddddddddddddddddddddddddddddddddddca
+aeddddddddddddddddddddddddddddddddddddca
+aeddddddddddddddddddddddddddddddddddddca
+acddddddddddddddddddddddddddddddddddddca
+.acddddddddddddddddddddddddddddddddddca.
+..acccccccccccccccccccccccccccccccccca..
+...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

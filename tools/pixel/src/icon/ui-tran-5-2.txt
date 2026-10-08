@@ -1,0 +1,34 @@
+# vô tận — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: vòng vô cực bằng dây đồng (phong cách mặt trống đồng, viền 2A1608)
+name: vô tận
+size: 16x16
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = vang-sang
+
+part k0
+................
+................
+................
+................
+..aaaaa..aaaaa..
+.addddbaaddddba.
+.adcbccddccbcba.
+.adbadccccbadba.
+.adbadccccbadba.
+.adcdccbbccdcba.
+.abbbbbaabbbbba.
+..aaaaa..aaaaa..
+................
+................
+................
+................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

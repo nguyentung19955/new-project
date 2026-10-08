@@ -1,0 +1,34 @@
+# ô trang bị trống: Vũ khí — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: rìu mờ (bóng xám)
+name: ô trang bị trống: Vũ khí
+size: 16x16
+colors:
+  a = vien
+  b = sat-toi
+  c = sat
+  d = sat-sang
+
+part k0
+................
+.........aaa....
+........addba...
+.......adcccda..
+......adccccda..
+.......abcccda..
+......adcbccbda.
+.....adcbabcbda.
+.....adba.abba..
+....adcba..aa...
+...adcba........
+...adba.........
+..adcba.........
+.adcba..........
+.abba...........
+..aa............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

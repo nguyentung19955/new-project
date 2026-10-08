@@ -1,0 +1,49 @@
+# vách hang phía trên (hang) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: vách 2A241C + nhũ đá 3A3228
+name: vách hang phía trên (hang)
+size: 32x32
+colors:
+  a = vien
+  b = khoi
+  c = sat-toi
+
+part k0
+bbbbbababbbbbbbabbcbabbabacbbbbb
+bbbbbbbbbbbbbabbcbbbbbaabababbbc
+bbccbbcbbbabcbabbcbcbcbbbbbbbbab
+cbbbbbbbacabbbacbabbbabbcbbbbbac
+bbbbbbbbbbbcbcabbbbbbbbbabbbbcbb
+babbbbbbabbbbbbacbbbbbbccbbbbbbb
+abbcbbbbbabcbbbbbbbbcbbbbbababba
+bbbcbcbbbbabbcabbbbbbabbbbbbbbbb
+bbbbcbbbbbbbbbbbbbbbbbabbbcabcbb
+bbabbababbbbbbbbbbbbbbbbbbbcbbbc
+abbbbbabbacbabacbbbbbbbbcbbabbbb
+bbbbaababbabbbabbbbababbbabbbbbb
+bbbbbbabbbbbcabbbaababbbbbacaaba
+cbbbbbcbbbbbabbbcabbbbbbbbbbbbbb
+bbbbbabbbabccabbccabcabbbbbbbbca
+bbbbbcbbbbcabbcbacccbbbbbbccccbb
+cbbbabccbbabbbbcbaaabbbbbcbaaabb
+bbbbacbbbbbbabbcbbbbbbababccbcab
+bbcbccbccccbbbbbbcbbbbbbbbabbbab
+bbbbbcbcaaabbabbcbcbcbcbbbbbbbba
+cbbbbbbccabbbcbbcbbbbabbbbbbbbba
+bbbabbbbcbbbbbcbbbcbaabcbbbbcbbb
+cacbbcbabbabbbabbbcbbbbbbabbbabb
+bbabbbbbcbcbbbbbabbcbbcbbbbbbbba
+bbbbbbbbbbbbcbbbbbbabbbbbbcbbbbb
+bbabbcaabbbbcacbbcbcbbbbbbbcbbbb
+bbacbbcbbbbbbbbbbcbbbbbbbbbbbbbb
+bbbbbbbbbbbbbacbccbbbbcbcbbbbbab
+cbbabbbbababbbabbbaacabbbbbbbbbb
+bcbcbbaaababbbbbbbabbacbbbccabab
+bbbbcbcbbbbbbbcbbbbbbabaabbbabab
+bbabbbbbbbbbbaabbbbabbbbbbbbbbbb
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

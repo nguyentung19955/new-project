@@ -1,0 +1,25 @@
+{
+ "code": "dai-thong-bao",
+ "group": "giao-dien",
+ "name": "dải thông báo (tên chiêu lớn, boss tới)",
+ "w": 128,
+ "h": 24,
+ "ax": 64,
+ "ay": 23,
+ "bbox": [
+  0,
+  1,
+  128,
+  22
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "dai-thong-bao.png"
+}

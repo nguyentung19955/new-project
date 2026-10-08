@@ -1,0 +1,48 @@
+# Hoa Tiên — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: a pink fairy flower with a green healing sparkle
+name: Hoa Tiên
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dat-toi
+  d = dat
+  e = dat-sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = vang-nghe
+  j = vang-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbjbbbbbbbbbgfa
+ahgbbbbbbbbibbbbbbbbbgfa
+ahgbbbbbbbbibbbbbbbbbgfa
+ahgbbbbbbbjihbbbbbbbbgfa
+ahgbbbbbbbjihbbbbbbbbgfa
+ahgbbbbbbbjihbbbbbbbbgfa
+ahgbbjbbbjiiihbbbjbbbgfa
+ahgbbjjhbjiiihbjjhbbbgfa
+ahgbbjiijiiiiijiihbbbgfa
+ahgbbhiiiiiiiiiiihbbbgfa
+ahgbbbhiiihihiiihbbbbgfa
+ahgbbbbhhhbibhhhbbbbbgfa
+ahgbbbeeeeeheeeeecbbbgfa
+ahgbbeddddddddddddcbbgfa
+ahgbeddddddddddddddcbgfa
+ahgbccddddddddddddccbgfa
+ahgbbbccccccccccccbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+
