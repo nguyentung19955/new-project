@@ -177,7 +177,8 @@ const layout = (page) => page.evaluate(() => {
     await page.click('[data-act=fba-note-ok]'); await page.waitForTimeout(150);
     u = (await calls(page)).filter((c) => c[0] === 'update').pop();
     ok(u[2] === 'fb2' && u[3].note === 'để bản sau' && u[3].status === 'new', 'lưu ghi chú → update {status, note}');
-    ok((await page.textContent('[data-id=fb2]')).includes('📝 để bản sau'), 'ghi chú hiện trên mục');
+    // icon 📝 nay có thể là ảnh pixel <img alt="📝"> (không còn là chữ) → đọc ô ghi chú
+    ok(((await page.textContent('[data-id=fb2] .fba-note')) || '').includes('để bản sau'), 'ghi chú hiện trên mục');
     // xoá: xác nhận trong giao diện
     let dialogs = 0; page.on('dialog', (d) => { dialogs++; d.dismiss(); });
     await page.click('[data-id=fb3] [data-act=fba-del]');
@@ -226,7 +227,8 @@ const layout = (page) => page.evaluate(() => {
     await page.$eval('#settings [data-act=fba-open]', (e) => e.scrollIntoView({ block: 'center' }));
     const row = await page.evaluate(() => {
       const el = document.querySelector('#settings [data-act=fba-open]'), b = el.getBoundingClientRect(), tg = el.closest('.tg').getBoundingClientRect();
-      const r = document.createRange(); r.selectNodeContents(el.firstChild); const t = r.getBoundingClientRect();
+      const r = document.createRange(); r.selectNodeContents([...el.childNodes].find((n) => n.nodeType === 3 && n.textContent.trim()) || el.firstChild); const t = r.getBoundingClientRect();
+      // (đo nút chữ: icon 📥 nay có thể là <img> pixel đứng đầu nút)
       // (khi cầm dọc, khung game xoay 90° nên so cả hai trục; chiều cao nút đo bằng offsetHeight)
       const inside = (i, o) => i.left >= o.left - 1 && i.right <= o.right + 1 && i.top >= o.top - 1 && i.bottom <= o.bottom + 1;
       return { inRow: inside(b, tg), cut: !inside(t, b) || el.offsetHeight > 44, h: el.offsetHeight };

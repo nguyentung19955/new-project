@@ -2372,6 +2372,10 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 240 — chỉnh lại R sau khi bỏ toàn bản đồ (tester đạt)
+
+- 9 R vùng lớn (chỉ trong tầm ×2): sát thương về gốc (Mưa Dừa/Dưa ×2, Rừng thiêng ×2 trói 1,8 s, Ngựa sắt ×4), hồi chiêu chốt: Sọ Dừa 24, An Tiêm 20, Mẫu 26, Hải Sen 20, Thần Sương 18, Gióng 20, Cuội 22, Trương Chi 22, Long Nữ 22 (sàn 12 s). Mô tả Quả Dừa Nổ sửa đúng ×1.5 + làm chậm. Test chạy lại test chập chờn 1 lần (run-all).
+
 ## Phiên bản 239 — bỏ kỹ năng toàn bản đồ (tester đạt)
 
 - Mọi chiêu chỉ tác động quái/đồng đội trong tầm. R cũ toàn sân (Gióng, An Tiêm, Sọ Dừa, Cuội, Mẹ Lúa) nay tầm ×2 quanh tướng; Kim Quy R khi quái trong tầm ×2 sắp lọt thành; Lời Thề, Lễ Tổ Tiên, hồi máu Rừng Thiêng chỉ tướng trong 220. Mô tả đã sửa.
@@ -2632,6 +2636,25 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
   chạm canvas mà còn sót thùng 🗑 thì gỡ luôn. **js/ui.js `startLevel`:** vào trận mới gọi `hideTrash()` (không mang lớp kẹt sang).
 - **Test:** `tests/cho-tuong/keo-hai-ngon.test.js` (chạm 2 ngón bằng CDP: code cũ FAIL "chợ hiện lại", code mới đạt; mua thẻ được sau đó).
 
+## claude/sua-test-cho — test ổn định khi chạy song song (`node tests/run-all.js --j 6`)
+- Chỉ sửa test, không đụng code game. Thay chờ cố định bằng chờ điều kiện (đọc lại tới khi đúng, có trần thời gian):
+  `icon-nho` (kiểm từng ảnh ic-*.png tải được bằng `Image()` thay vì soi `<img>` đang hiện — thanh máu boss có thể vẽ lại),
+  `mo-ta-ky-nang` (khung mô tả hiện/ẩn, cấp kỹ năng sau bấm; rê lại chuột nếu ô bị dựng lại), `cho-tuong` (chờ ảnh nạp sẵn của chợ
+  tải xong trước mỗi lần ↻; chờ ghép / mua xong), `sua-loi-tester` L07 (chờ hội thoại boss + thông báo "Quái mới" tới 10 giây),
+  `vo-tan` (chờ thông báo "Phó bản đã gộp"), `vo-tan-su-kien` (chờ banner boss hiện hẳn), `sua-loi-tester` L05 (chờ thông báo trượt vào xong rồi mới đo đè), `ve-pixel/nap-goi` (chờ gỡ gói xong), `hieu-ung-he` (vẽ lại tới khi số ảnh hiệu ứng tải xong đứng yên). `vo-tan-su-kien` gọi `ui.clearBanners()` trước khi thử banner (banner cũ còn trong hàng đợi đè banner boss khi máy chậm), giữ banner boss hiện tới lúc đo, đo trước rồi mới chụp; `vo-tan` chờ thông báo (nhánh chính đã ghi lại thông báo vào `window.__T`).
+- `tests/run-all.js`: chạy song song (≥ 2 luồng) mà có test lỗi → xong cả bộ thì chạy lại RIÊNG từng test lỗi một lần (không `CHAY_SONG_SONG`);
+  đạt → `CHẬP CHỜN` (không tính lỗi, in danh sách cuối bảng để sửa tiếp), vẫn lỗi → `LỖI`. Tắt bằng `--khong-chay-lai`.
+- `xem-gop-y` (lỗi cố định sau khi nhánh chính đổi emoji sang icon pixel `<img alt>`): đọc ô `.fba-note` thay vì tìm chữ "📝",
+  đo nút chữ của nút "Góp ý nhận được" thay vì `firstChild` (nay là `<img>` icon).
+- `tu-cu-dong`: so FPS ảnh đơn / nhiều khung chỉ kiểm khi chạy riêng; chạy song song (`CHAY_SONG_SONG=1`) thì in tham khảo.
+- **Lỗi game phát hiện (chưa sửa, chỉ báo):** trong trận, khi ô kỹ năng khác đổi trạng thái hồi chiêu / mana thì `updateDeck` dựng lại
+  cả thanh tướng; nếu việc này rơi vào 0,35 giây đang giữ tay (hoặc 0,15 giây rê chuột) thì ô cũ đã rời trang → mô tả **không hiện**
+  (phải nhấc tay giữ lại). Gợi ý sửa: khi hết giờ chờ, tìm lại ô bằng `elementFromPoint` như vòng `setInterval` cập nhật mô tả.
+  Test `mo-ta-ky-nang` tạm dừng trận trong đoạn giữ tay, chờ `assetVersion` đứng yên và rê chuột ra/vào lại nếu mô tả chưa hiện.
+- **Lỗi game phát hiện 2 (chưa sửa, chỉ báo):** `ui.preImg` chỉ giữ sẵn 3 bản ảnh mỗi tướng, nhưng chợ 6 thẻ có thể ra ≥ 4 thẻ cùng loại
+  → thẻ thứ 4 tạo `<img>` mới chưa tải (nháy trắng). `cho-tuong` (bản gốc lỗi ~50% kể cả chạy riêng) giờ đếm riêng trường hợp này và in cảnh báo.
+- `cho-tuong` còn 2 chỗ ngẫu nhiên trong chính test: thẻ chợ ngẫu nhiên trùng loại tướng ★ trên sân → "chạm thẻ mua được" thành ghép
+  (số tướng không tăng); tướng ★ chọn để thử ghép có sẵn ★★ cùng loại → ghép dây chuyền lên ★★★. Nay chọn loại chưa có trên sân / tướng ★ duy nhất.
 ## claude/duong-di-moi — gộp với vo-tan-su-kien (sự kiện đợt) + banner đợt 60
 - Gộp nhánh chính (đã có sự kiện vô tận): `buildWave(n, level, st)` giữ cả WAVE_CAP/hpx/sự kiện `ev` lẫn quân + boss theo màn (`st`); `spawn(type, dist, elite, it, lane)` nhận cả máu đợt (hpx, ev.hp) lẫn nhánh đường + `pathHp`; phân thân của sự kiện đi đúng nhánh con mẹ; lưu trận giữ cả `evWave/evDone` và `stage/pathHp/mapId`; thưởng sự kiện tính trước rồi mới đổi màn.
 - Đợt 60 (sự kiện thử thách + đổi màn sau boss): banner sự kiện và banner "Màn N" dùng chung một `#banner` → nay xếp hàng (`ui.queueBanner`), cái sau đợi cái trước tắt; banner sự kiện còn hoãn (bảng bộ quái mới đang mở) mà đợt đã vượt thì bỏ, không báo muộn sau "Màn N".
@@ -2702,21 +2725,21 @@ Người dùng chọn phương án 4: máu quái tăng dần theo đợt + hạ 
 - **Thường**: từ ải 4 trở đi máu ×**1,02 mỗi đợt từ đợt 15** (bản đầu 1,03). **Dễ** (ải 1–3 Thường) giữ nguyên.
 - **Thế trận** (mới, `TEAM_BONUS` js/data.js): toàn quân +6% sát thương mỗi tướng từ tướng thứ 3 (tối đa 8 tướng) + theo số hành khác nhau 3/4/5 hành: +10/20/30% (đủ 5 hành cộng thêm Ngũ hành tề tựu +10%). Đội 6 tướng đủ 5 hành: **+64%**; 8 tướng: +76%. Chip ⚔ +X% trên thanh trên (cạnh mạng), chạm → giải thích. Ảnh pixel icon ghi ở `docs/pixel/DANH-SACH.md`.
 - **Chiêu R**: hồi chiêu thực tế **không dưới 12 giây** sau mọi giảm hồi chiêu (`R_MIN_CD`, trước đây trí lực + đồ giảm tới 50% → R 10 s chỉ còn 5 s). Mô tả kỹ năng ghi "(tối thiểu 12 giây)".
-- R toàn bản đồ / vùng lớn chiếm 60–94% sát thương trận (đo `node tests/can-bang-vang/do-r.js all 45 55`) → tăng hồi chiêu trước, rồi hạ sát thương:
+- R toàn bản đồ / vùng lớn chiếm 60–94% sát thương trận (đo `node tests/can-bang-vang/do-r.js all 45 55`). Bản đầu tăng hồi chiêu + hạ sát thương; sau khi gộp **sua-tam-skill** (mọi chiêu chỉ đánh quái trong tầm, R vùng cũ = tầm x2) R đã yếu đi nhiều → **trả sát thương về gốc**, hồi chiêu về gốc hoặc chỉ cao hơn chút với R còn chiếm %R cao:
 
-| R | Tướng | Hồi chiêu trước → sau | Sát thương / khống chế |
-|---|---|---|---|
-| Mưa Dừa (melonrain) | Sơ Dừa (Tím) | 20 → 30 | x2 → x1.5 |
-| Mưa Dưa (melonrain) | An Tiêm (Tím) | 18 → 26 | x2 → x1.5 |
-| Bay Về Trời (skyride) | Thánh Gióng | 20 → 30 | x4 → x3 |
-| Cung Trăng Gọi Gió (forestwrath) | Chú Cuội | 22 → 30 | x2 → x1.5, trói 1,8 → 1,2 s (boss 0,6 → 0,4) |
-| Rừng Thiêng Nổi Giận (forestwrath) | Mẫu Thượng Ngàn | 22 → 30 | như trên |
-| Mưa Đầm Sen (blizzard) | Hải Sen | 16 → 22 | — |
-| Mù Sương Tản Viên (blizzard) | Thần Sương | 16 → 20 | — |
-| Khúc Ca Cuối (tidegate) | Trương Chi (Tím) | 22 → 26 | — |
-| Long Cung Nổi Sóng (tidegate) | Long Nữ | 22 → 26 | — |
+| R | Tướng | Hồi chiêu gốc → bản đầu → chốt | %R gốc (toàn bản đồ) → chốt (trong tầm) | Tổng sát thương chốt |
+|---|---|---|---|---|
+| Mưa Dừa | Sơ Dừa (Tím) | 20 → 30 → **24** | 91 → 67% | 9,6 tr |
+| Mưa Dưa | An Tiêm (Tím) | 18 → 26 → **20** | 84 → 61% | 6,1 tr |
+| Rừng Thiêng Nổi Giận | Mẫu Thượng Ngàn | 22 → 30 → **26** | 91 → 54% | 9,5 tr |
+| Mưa Đầm Sen | Hải Sen | 16 → 22 → **20** | 90 → 86% | 4,5 tr |
+| Mù Sương Tản Viên | Thần Sương | 16 → 20 → **18** | 74 → 69% | 4,8 tr |
+| Bay Về Trời | Thánh Gióng | 20 → 30 → **20** | 94 → 53% | 7,7 tr |
+| Cung Trăng Gọi Gió | Chú Cuội | 22 → 30 → **22** | 93 → 60% | 7,4 tr |
+| Khúc Ca Cuối | Trương Chi (Tím) | 22 → 26 → **22** | 67 → 38% | 7,7 tr |
+| Long Cung Nổi Sóng | Long Nữ | 22 → 26 → **22** | 61 → 36% | 9,0 tr |
 
-  % sát thương từ R (đợt 45–55, tướng max đứng một mình) trước → sau: Gióng 94 → 86, Mẫu T.Ngàn 91 → 87, Sơ Dừa 91 → 83, Cuội 93 → 81, An Tiêm 84 → 73, Hải Sen 90 → 87, Thần Sương 74 → 68. R nhanh nhất trước đây: Thầy Mo 8,5 s, Xạ Thủ 8,6 s, Lạc Tướng 8,8 s → nay 12 s.
+  (trung vị tổng sát thương mọi tướng ~4,7 tr; sát thương / thời gian trói của mưa dưa/dừa x2, rừng thiêng x2 trói 1,8 s, ngựa sắt x4 giữ như gốc.) R nhanh nhất trước đây: Thầy Mo 8,5 s, Xạ Thủ 8,6 s, Lạc Tướng 8,8 s → nay sàn 12 s.
 - Tím đơn độc (21 tướng, ải 4 Thường): đa số thua ~đợt 15–24; Sơ Dừa vượt trội (thua ~49) → hạ qua R ở trên.
 - Bảng bot bản chốt (Khó ×1,03, Thường ×1,02; 3 ván; mất mạng đầu → thua · mạng còn sau đợt 40/50; đội 8 = 2 Vàng + 3 Tím + 3 Thường ★★★ khác hành):
 

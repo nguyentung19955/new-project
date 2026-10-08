@@ -24,6 +24,7 @@
 
 - Đủ bộ (song song 4 luồng, in bảng thời gian, mã thoát ≠ 0 nếu có lỗi): `node tests/run-all.js` (thêm `--j 6` để đổi số luồng).
 - Chỉ test liên quan: `node tests/run-all.js <tên> [<tên>…]` (lọc theo đường dẫn, vd `node tests/run-all.js hop-the cho-tuong`).
+- Chạy song song mà có test lỗi thì run-all tự chạy lại riêng từng test lỗi một lần: đạt → `CHẬP CHỜN` (không tính lỗi, nhưng nên sửa test đó chờ điều kiện thay chờ cố định); `--khong-chay-lai` để tắt.
 - **Tạm dừng test chơi nhóm (co-op)** (người dùng chốt 08/10): `run-all` không chạy `tests/coop` nữa (chỉ chạy khi gọi rõ `node tests/run-all.js coop`); tester KHÔNG kiểm co-op; session con không cần giữ/kiểm hành vi co-op trừ khi được giao.
 - Test thiếu môi trường (emulator Firestore, Java, scipy không cài được) tự in `SKIP` và không tính lỗi.
 - Ảnh test chụp ra `tests/<tên>/shots/` — không commit (đã .gitignore). Ảnh minh hoạ muốn giữ thì để ở `docs/`.
