@@ -125,3 +125,11 @@ Theo designer N7: thay tranh sóng chuyển ảnh (rối sau bảng chuẩn bị
 (vòng `dong-toi`, sao, chấm, chim Lạc `khoi`); CSS còn phủ thêm lớp tối → chỉ thấy hoạ tiết rất nhẹ.
 
 Giữ ảnh cũ: `canh/nen-menu` (menu cố ý giữ tranh gốc), `canh/chuong-sontinh` (bản đồ đã chi tiết).
+
+## 10. Khung thanh máu + khung menu (giao-dien) — `tools/pixel/ve-lai/khung.js`
+
+- `thanh-mau-tuong` 32×8 (đồng, đinh vàng 2 đầu, mấu giữa) · `thanh-mau-quai` 24×8 (sắt) · `thanh-mau-boss` 96×12 (sơn son đinh đồng, 2 đầu ốp đồng):
+  game tô nền + máu rồi **vẽ khung đè kéo giãn** → lòng khung trong suốt đúng chỗ thanh (cột 2..w-3, hàng 2..5; boss cột 6..89, hàng 4..7),
+  gờ kim loại 1px 3 tông + viền `vien`. Trước: viền ô cờ lấm tấm (dithering), lòng đen che mất một nửa thanh máu tướng.
+- `khung-nguoi-choi` 192×66: huy chương trống đồng (vành chấm vàng, chim Lạc, lỗ ảnh đại diện đúng chỗ CSS `.av`) + bảng tối viền đồng răng cưa, mũi nhọn đầu phải.
+- `khung-nut-chinh` 208×46: tấm vàng nghệ vát (sáng trên / đồng dưới), răng cưa đáy, 2 đầu ốp đồng khắc sao trống. Trước: ảnh chuyển nhoè, mặt nạ méo.

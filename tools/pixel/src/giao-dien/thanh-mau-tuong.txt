@@ -1,27 +1,28 @@
-# khung thanh máu tướng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: đồng bóng mảnh, đinh sao 2 đầu
-name: khung thanh máu tướng
+# Khung thanh máu tướng — VẼ LẠI tay (claude/ve-lai-pixel), thiết kế: docs/pixel/THIET-KE-LAI.md
+# Khung đồng 3 tông, khe tối, đinh vàng hai đầu, mấu đồng giữa mép trên; lòng trong suốt (cột 2..29, hàng 2..5)
+# Nguồn vẽ: tools/pixel/ve-lai/khung.js — sửa ở đó rồi chạy lại, đừng sửa tay file này.
+name: Khung thanh máu tướng
 size: 32x8
 colors:
   a = vien
-  b = sang
-  c = dong-toi
+  b = dong-sang
+  c = vang-nghe
   d = dong
-  e = dong-sang
+  e = dong-toi
+  f = vang-sang
 
 part k0
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-eeddddddddddddddddddddddddddddce
-edaaaaaaaaaaaaaaaaaaaaaaaaaaaade
-edaaa......................aaade
-edebea....................aebede
-edaaaaaaaaaaaaaaaaaaaaaaaaaaaade
-ecddddddddddddddddddddddddddddce
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+.aaaaaaaaaaaabccccbaaaaaaaaaaaa.
+adbbbbbbbbbbbbbbbbbbbbbbbbbbbbda
+ab............................ea
+ac............................ca
+af............................da
+ab............................ea
+adeeeeeeeeeeeeeeeeeeeeeeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.
 end
 
 anim main fps=1 once
 frame main
   use k0
 end
-

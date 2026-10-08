@@ -1,30 +1,35 @@
-# khung thanh máu boss — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: sắt tối + đồng đỏ, đầu trái mặt nạ quỷ sừng, đầu phải gai; lòng trống
-name: khung thanh máu boss
+# Khung thanh máu boss — VẼ LẠI tay (claude/ve-lai-pixel), thiết kế: docs/pixel/THIET-KE-LAI.md
+# Khung sơn son đinh đồng, hai đầu ốp đồng có đinh vàng, mấu đồng giữa; lòng trong suốt (cột 6..89, hàng 4..7)
+# Nguồn vẽ: tools/pixel/ve-lai/khung.js — sửa ở đó rồi chạy lại, đừng sửa tay file này.
+name: Khung thanh máu boss
 size: 96x12
 colors:
   a = vien
-  b = son-toi
-  c = son
-  d = son-sang
+  b = dong
+  c = vang-nghe
+  d = dong-sang
+  e = dong-toi
+  f = son-sang
+  g = vang-sang
+  h = son
+  i = son-toi
 
 part k0
-caaa.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.aaaac
-aaddadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadaddbaa
-.adcbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbcba.
-.adbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaadba.
-.adba......................................................................................adba.
-.adba......................................................................................adba.
-.adba......................................................................................adba.
-.adba......................................................................................adba.
-.adbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaadba.
-.adcddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddcba.
-aabbababababababababababababababababababababababababababababababababababababababababababababbbaa
-caaa.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.aaaac
+.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbccccccccbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.
+adbbbeffffffdfffffffdfffffffdfffffffdfffffffdffggfffdfffffffdfffffffdfffffffdfffffffdfffffebbbda
+adbbbehhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhebbbda
+adbbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbda
+adbbba....................................................................................abbbda
+adbgba....................................................................................abgbda
+adbcba....................................................................................abcbda
+adbbba....................................................................................abbbda
+adbbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbda
+adbbbehhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhebbbda
+adbbbeiiiiiibiiiiiiibiiiiiiibiiiiiiibiiiiiiibiiiiiiibiiiiiiibiiiiiiibiiiiiiibiiiiiiibiiiiiebbbda
+.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.
 end
 
 anim main fps=1 once
 frame main
   use k0
 end
-
