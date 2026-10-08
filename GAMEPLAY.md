@@ -2216,6 +2216,7 @@ Session này dựng khung để nhiều session vẽ song song không xung độ
   Sơn**; font pixel không còn đổi `--title` toàn cục: logo menu, nút ("Xuất quân"…), "Đợt N · …" giữ font cũ, chỉ tiêu đề bảng /
   banner / tên boss dùng Handjet (đậm, viền tối), số vàng / mạng dùng VT323. Test pixel thêm kiểm tra font menu + ảnh `pixel-menu-*`.
 - Sửa tool (báo từ vfx-kenney): `rot` với khung không vuông trước đây làm build-pixel crash (TypeError) — nay `rot 180` chạy với mọi khung, `rot 90/270` khung không vuông và góc không phải bội 90 báo lỗi rõ. Test `tests/pixel` thêm 4 kiểm tra.
+- Sửa theo tester2: khi bật pixel, banner boss (`#banner b`) 36px và tên boss trên thanh máu 17px, màu vàng sáng #FFE7A0, đậm hơn — dấu (Ồ, Ỗ…) đọc rõ ở 844×390.
 - Nhóm hiệu ứng là `vfx` (nhánh vfx-kenney; cho phép `tools/pixel/src/vfx/palette.txt` tạm hoặc `KHONG-BUILD`).
 
 Test mới `tests/pixel` (tool: nguồn thật hợp lệ --strict, 5 kiểu nguồn lỗi bị chặn, dựng ra thư mục tạm khớp file trong repo;
