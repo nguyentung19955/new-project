@@ -177,8 +177,9 @@
     };
   };
   // Phòng vuông: số đợt quái và hệ số điểm mỗi đợt (so với phòng dài trước đây).
-  // start: phòng Bắt đầu [ải 1-2, ải 3-5]; early: ải 1-3; late: ải 4-5; maxPerWave: số quái tối đa một đợt.
-  G.ROOM_WAVES = { start: [1, 2], early: 3, late: 4, challenge: 2, pts: 0.75, ptsLate: 0.85, maxPerWave: 7, challengeTime: 30 };
+  // start: phòng Bắt đầu [ải 1-2, ải 3-5]; early: ải 1-3; late: ải 4-5; maxPerWave: số quái tối đa một đợt;
+  // stagger: nửa sau của một đợt hiện ra chậm hơn bấy nhiêu giây.
+  G.ROOM_WAVES = { start: [1, 2], early: 3, late: 4, challenge: 2, pts: 0.85, ptsLate: 0.85, maxPerWave: 7, stagger: 2, challengeTime: 30 };
   // Độ dẹt của vùng nguy hiểm và vũng hệ: cao bằng bấy nhiêu lần rộng. Trước là 0,6 (nhìn ngang), nay tròn hơn cho sàn nhìn từ trên.
   G.ZK = 0.85;
   G.MINI_HP = 12; // máu trùm nhỏ = hệ số x máu quái thường
@@ -2017,7 +2018,7 @@
   function drawMon(c, e, reg) {
     const x = Math.round(e.x), y = Math.round(e.y), sc = e.scale || 1, f = e.face < 0 ? -1 : 1;
     const st = e.st || ST0, a = mem(e), P = monPose(e, a, reg), now = G.time;
-    A.ellipse(c, x, y, e.r * 1.1, 2, 'rgba(0,0,0,0.3)');
+    A.ellipse(c, x, y, e.r * 1.1, Math.max(2, e.r * 0.42), 'rgba(0,0,0,0.3)'); // bóng tròn hơn cho sàn nhìn từ trên
     if (e.resist) {
       // vòng hào quang kháng hệ dưới chân
       const rc = G.EL[e.resist].col, rr = Math.round(e.r * 1.1) + 3, k = Math.floor(now * 6) % 3;
@@ -2140,7 +2141,7 @@
     }
     if (st.stun > 0) { rot += Math.sin(now * 9) * 0.1; P.bl = 1; }
     if (b.flash > 0) ox -= 1;
-    A.ellipse(c, x + vx, y + vy, b.r * 1.6 * (oy < 0 ? 0.8 : 1), 4, 'rgba(0,0,0,0.3)');
+    A.ellipse(c, x + vx, y + vy, b.r * 1.6 * (oy < 0 ? 0.8 : 1), 8, 'rgba(0,0,0,0.3)');
     const g = scr('mini', MNW, MNH);
     OC = DARK;
     bake(g, MNX, MNY, () => MINI[reg](P));
@@ -2613,7 +2614,7 @@
     const S = mocState(b, t);
     const an = dying != null ? null : b.anim;
     if (dying != null) return mocDie(c, b, T, el, t, S, dying);
-    A.ellipse(c, 0, 0, 46, 5, 'rgba(0,0,0,0.35)');
+    A.ellipse(c, 0, 0, 46, 10, 'rgba(0,0,0,0.35)');
     const pcx = cx;
     c.save();
     c.translate(S.jx, S.dy);
@@ -3334,7 +3335,7 @@
         if (a < F) {
           const u = a / F;
           P.ring = smooth(clamp01(u / 0.35)); P.spin = u * u * 900; P.flare = u; z = 12 * smooth(u); P.feet = [[-16, -3], [-9, -2], [13, -2], [8, -3]]; P.hy = -1; P.tlen = 1 + 0.15 * u;
-          pre.push(() => { A.ellipse(c, x, y, 20 + 42 * u, (20 + 42 * u) * 0.6, A.hexA(E.col, 0.12 + 0.15 * u)); for (let i = 0; i < 8; i++) { const ang = i * 0.785 - a * 6, r = 62 * (1 - ((u * 2 + i * 0.13) % 1)); p(c, Math.round(x + Math.cos(ang) * r), Math.round(y + Math.sin(ang) * r * 0.6), 2, 2, E.col2); } });
+          pre.push(() => { A.ellipse(c, x, y, 20 + 42 * u, (20 + 42 * u) * (G.ZK || 0.6), A.hexA(E.col, 0.12 + 0.15 * u)); for (let i = 0; i < 8; i++) { const ang = i * 0.785 - a * 6, r = 62 * (1 - ((u * 2 + i * 0.13) % 1)); p(c, Math.round(x + Math.cos(ang) * r), Math.round(y + Math.sin(ang) * r * 0.6), 2, 2, E.col2); } });
         } else {
           const w = clamp01((a - F) / 0.35);
           P.ring = 1 - smooth(w); P.spin = 900 + w * 120; P.tlen = 1.55 - 0.55 * w; P.flare = 1 - w; z = 12 * (1 - easeIn(clamp01(w * 2.2))); P.mouth = 3; P.hy = -2;
@@ -3342,7 +3343,7 @@
           post.push(() => {
             if (w >= 1) return;
             const r = an.r * (0.3 + 0.7 * easeOut(w));
-            ring(c, x, y, r, r * 0.6, A.hexA(E.col2, 1 - w)); ring(c, x, y, r - 3, r * 0.6 - 2, A.hexA(E.col, 0.9 * (1 - w))); ring(c, x, y, r * 0.6, r * 0.36, A.hexA(E.col, 0.6 * (1 - w)));
+            ring(c, x, y, r, r * (G.ZK || 0.6), A.hexA(E.col2, 1 - w)); ring(c, x, y, r - 3, r * (G.ZK || 0.6) - 2, A.hexA(E.col, 0.9 * (1 - w))); ring(c, x, y, r * 0.6, r * 0.36, A.hexA(E.col, 0.6 * (1 - w)));
             for (let i = 0; i < 14; i++) { const ang = i * 0.449 + 0.1, r0 = r * 0.75, r1 = r * 1.02; A.line(c, Math.round(x + Math.cos(ang) * r0), Math.round(y - 10 * (1 - w) + Math.sin(ang) * r0 * 0.6), Math.round(x + Math.cos(ang) * r1), Math.round(y - 10 * (1 - w) + Math.sin(ang) * r1 * 0.6), i % 2 ? E.col : E.col2, 2); }
           });
         }
@@ -6361,7 +6362,7 @@
   // ---------- đồ vật ----------
   let pc = null;
   const q = (x, y, w, h, col) => { pc.fillStyle = col; pc.fillRect(x, y, w, h); };
-  function shadow(x, y, rx) { A.ellipse(pc, x, y, rx, 3, 'rgba(0,0,0,0.3)'); }
+  function shadow(x, y, rx) { A.ellipse(pc, x, y, rx, Math.max(3, Math.round(rx * 0.36)), 'rgba(0,0,0,0.3)'); }
   // Quầng mời gọi dưới chân vật đánh vỡ được.
   function halo(x, y, col, t) {
     const k = 0.5 + 0.5 * Math.sin(t * 4);
@@ -9540,7 +9541,8 @@
       if (type === 'elite' && k === count - 1) { list.push('elite'); pts -= 2.5; }
       for (let guard = 0; guard < 30 && pts > 0.9 && list.length < B.maxPerWave; guard++) {
         const r = G.pick(roles);
-        if (cost[r] > pts + 0.3) continue;
+        // sàn nhỏ: mỗi đợt chỉ một bầy nhỏ, để người chơi không bị sáu con vây cùng lúc
+        if (cost[r] > pts + 0.3 || (r === 'swarm' && (list.includes('swarm') || list.length + 3 > B.maxPerWave))) continue;
         if (r === 'swarm') list.push('swarm', 'swarm', 'swarm'); else list.push(r);
         pts -= cost[r];
       }
@@ -9564,9 +9566,11 @@
   }
   function spawnWave(list) {
     const W = S.W;
+    // Sàn nhỏ nên quái không ập ra cùng lúc: nửa đầu hiện trước, nửa sau hiện sau một nhịp.
+    const half = Math.ceil(list.length / 2);
     list.forEach((role, j) => {
-      const q = freeSpot(role === 'archer' ? 84 : 58, role === 'elite' ? 18 : 10);
-      const t = 0.5 + j * 0.07;
+      const q = freeSpot(role === 'archer' ? 84 : 66, role === 'elite' ? 18 : 10);
+      const t = 0.5 + j * 0.07 + (j >= half && list.length > 3 ? G.ROOM_WAVES.stagger : 0);
       W.spawns.push({ role, x: q[0], y: q[1], t, t0: t, big: role === 'elite' });
     });
     G.sfx('warn', 0.8);
@@ -9581,7 +9585,7 @@
       if (s.t > 0) continue;
       const e = G.spawnEnemy(s.role, s.x, s.y, {});
       e.inside = true;
-      e.cd = Math.max(e.cd, 0.6); // vừa hiện ra thì chưa đánh ngay
+      e.cd = Math.max(e.cd, 0.9); // vừa hiện ra thì chưa đánh ngay
       // Quái tinh anh cũng học: kháng nhẹ hệ bạn dùng nhiều nhất
       if (s.role === 'elite' && tot > 0 && el[top] / tot > 0.4) e.resist = top;
       G.burst(s.x, s.y - 6, ['#c2f58a', '#bfeaff', '#ffd0a0'][S.r] || '#ffffff', s.big ? 14 : 7, 60);
@@ -9596,6 +9600,7 @@
       if (Math.abs(x - g.cx) < 26 && (y < W.y0 + 44 || y > W.y1 - 40)) continue;
       if (Math.abs(y - g.cy) < 26 && (x < W.x0 + 40 || x > W.x1 - 40)) continue;
       if (W.props.some((p) => p.type !== 'roomFore' && Math.hypot(p.x - x, p.y - y) < 30)) continue;
+      if (Math.hypot(x - g.cx, y - g.cy - 26) < 24) continue; // chỗ người chơi đứng khi bắt đầu ở giữa phòng
       return [x, y];
     }
     return [g.cx + G.rr(-40, 40), g.cy + G.rr(-30, 30)];
@@ -9677,6 +9682,7 @@
     if (!W) return;
     S.marks += W.marksGained; W.marksGained = 0;
     if (W.usedPotion) S.usedPotion = true;
+    S.challenge = null;
     W.projs = []; W.zones = []; W.parts = []; W.texts = []; W.slashes = []; W.spawns = []; W.banner = null; W.shake = 0;
     for (const p of W.props) if (p.type === 'trap') p.dead = true;
     W.props = W.props.filter((p) => !p.dead);
@@ -9852,7 +9858,7 @@
   // Dùng khi chạy thử: nhảy thẳng tới phòng số n (0 là Bắt đầu, 7 là Trùm). type: ép loại phòng và dựng lại phòng đó.
   G.gotoRoom = function (n, type) {
     if (type) { S.map.rooms[n].type = type; S.rooms[n] = type; delete S.worlds[n]; delete S.cleared[n]; }
-    S.trans = null;
+    S.trans = null; S.mode = 'play';
     enterRoom(n, null);
   };
 
@@ -10087,8 +10093,9 @@
     if (hint && W.cleared && W.hadWaves) hint = TUT.door;
     if (hint && W.type === 'boss' && S.roomT > 12) hint = null;
     if (hint && S.mode === 'play') {
-      const lines = ui.wrap(hint, 108, 7);
-      ui.rect(3, 75, 116, lines.length * 9.5 + 7, 'rgba(10,8,6,0.78)', '#7a5a3a');
+      const hw = W.geo.big ? 62 : 116; // phòng trùm rộng hơn nên ô chữ hẹp lại, không đè lên sàn
+      const lines = ui.wrap(hint, hw - 8, 7);
+      ui.rect(3, 75, hw, lines.length * 9.5 + 7, 'rgba(10,8,6,0.78)', '#7a5a3a');
       lines.forEach((l, i) => ui.text(l, 7, 85 + i * 9.5, { size: 7 }));
     }
     if (W.banner) {
@@ -10637,8 +10644,8 @@
     const pages = [[
       ['Di chuyển và đánh', 'Cảm ứng: đặt ngón ở nửa trái màn hình rồi kéo để đi. Bên phải có các nút tròn: giữ Đánh để ra đòn liên tục, Né để lăn tránh, Đặc biệt để tung đòn mạnh (tốn mana), nút còn lại là kỹ năng riêng của hero.'],
       ['Các ô ở mép trên', 'Chạm ô vũ khí ở góc trên bên phải để đổi giữa hai vũ khí. Chạm ô Bình máu để hồi máu. Chạm Dừng để tạm nghỉ.'],
-      ['Mở rương, chọn cửa', 'Lại gần rương, suối, cửa hay thương nhân rồi bấm Đánh. Hết quái thì đi sang mép phải để qua phòng kế tiếp.'],
-      ['Bàn phím', 'Mũi tên hoặc WASD để đi, J đánh, K né, L đặc biệt, I kỹ năng, Q đổi vũ khí, E uống bình máu, Esc tạm dừng hoặc đóng bảng.'],
+      ['Mở rương, qua cửa', 'Lại gần rương, suối hay thương nhân rồi bấm Đánh. Hết quái thì cửa mở: đi vào cửa có mũi tên để sang phòng kề. Chạm bản đồ nhỏ để xem cả ải.'],
+      ['Bàn phím', 'Mũi tên hoặc WASD để đi, J đánh, K né, L đặc biệt, I kỹ năng, Q đổi vũ khí, E uống bình máu, M xem bản đồ, Esc tạm dừng hoặc đóng bảng.'],
       ['Ba sao', 'Sao 1: qua ải. Sao 2: không dùng bình máu. Sao 3: ra đòn kết liễu trùm bằng hệ khắc chế nó.'],
     ], [
       ['Dấu ấn', G.HINTS[0] + ' ' + G.HINTS[1]],

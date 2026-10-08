@@ -151,7 +151,7 @@ JS = r"""
 
 BOT = r"""
 ([r, i, kind, seed, side]) => {
-  G.testSave({ lvl: 6 + r * 7 + i, tier: Math.min(2, r + (i > 2 ? 1 : 0)), sharpen: 2 + r * 2 });
+  G.testSave({ lvl: 6 + r * 7 + i, tier: Math.min(2, r + (i > 2 ? 1 : 0)), sharpen: 2 + r * 2, armor: ['a_r1', 'a_r2', 'a_r3'][r], helm: ['h_r1', 'h_r2', 'h_r3'][r] });
   G.botCfg.side = side;
   G.startStage(r, i, 0, { kind, seed });
   const res = G.probeRun(900), S = G.getRun();

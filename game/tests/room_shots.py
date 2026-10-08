@@ -123,7 +123,10 @@ def shot_rooms(c):
           const W = G.getWorld();
           W.zones.push({ shape: 'circle', x: W.geo.cx + 40, y: W.geo.cy + 52, r: 22, t: 0.9, t0: 1.6, dmg: 1, el: null, life: 0.12 });
           W.zones.push({ shape: 'circle', x: W.geo.cx - 50, y: W.geo.cy - 44, r: 20, t: 0, pool: true, team: 'enemy', el: G.REGIONS[r].el, life: 30, tick: 9, dmg: 0 });
-          T.fightUntil(4, 700);
+          // một đợt đủ loại quái, cho trâu hơn một chút để còn đứng trong ảnh
+          W.waves = [['rusher', 'shield', 'swarm', 'swarm', 'swarm', 'archer', 'nimble']]; W.waveI = -1; W.waveT = 0.1;
+          for (let k = 0; k < 400 && W.ents.length < 7; k++) { G.sim(1); for (const e of W.ents) if (!e.shot) { e.shot = 1; e.hp = e.maxhp = e.maxhp * 4; } }
+          T.fightUntil(6, 500);
           for (const z of W.zones) if (z.t > 0) z.t = Math.max(z.t, 0.5);
         }""", [r])
         im = c.grab()
@@ -217,7 +220,8 @@ def shot_types(c):
           for (const o of S.map.rooms) if (o.main && o.id < 4) { S.seen[o.id] = true; S.known[o.id] = true; S.cleared[o.id] = true; }
           G.gotoRoom(id, t); G.getRun().fade = 0;
           const P = S.P, g = S.W.geo;
-          if (t === 'challenge' || t === 'elite') { T.fightUntil(t === 'elite' ? 1 : 3, t === 'elite' ? 1500 : 500); if (t === 'elite') { for (let k = 0; k < 2500 && !S.W.ents.some((e) => e.role === 'elite'); k++) { G.sim(1); P.hp = P.maxhp; } T.thaw(); T.fightUntil(1, 300); } }
+          if (t === 'elite') { S.W.waves = [['elite', 'rusher', 'archer']]; S.W.waveI = -1; S.W.waveT = 0.1; for (let k = 0; k < 400 && !S.W.ents.some((e) => e.role === 'elite'); k++) G.sim(1); for (const e of S.W.ents) e.hp = e.maxhp = e.maxhp * 3; T.fightUntil(2, 500); }
+          else if (t === 'challenge') T.fightUntil(3, 500);
           else { P.x = g.cx - 40; P.y = g.cy + 34; G.sim(30); T.freeze(); }
         }""", [t, r])
         panels.append((c.grab(), name + ' · ' + REG[r] + '\n' + sub))

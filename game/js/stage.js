@@ -87,7 +87,8 @@
       if (type === 'elite' && k === count - 1) { list.push('elite'); pts -= 2.5; }
       for (let guard = 0; guard < 30 && pts > 0.9 && list.length < B.maxPerWave; guard++) {
         const r = G.pick(roles);
-        if (cost[r] > pts + 0.3 || (r === 'swarm' && list.length + 3 > B.maxPerWave)) continue;
+        // sàn nhỏ: mỗi đợt chỉ một bầy nhỏ, để người chơi không bị sáu con vây cùng lúc
+        if (cost[r] > pts + 0.3 || (r === 'swarm' && (list.includes('swarm') || list.length + 3 > B.maxPerWave))) continue;
         if (r === 'swarm') list.push('swarm', 'swarm', 'swarm'); else list.push(r);
         pts -= cost[r];
       }
@@ -227,6 +228,7 @@
     if (!W) return;
     S.marks += W.marksGained; W.marksGained = 0;
     if (W.usedPotion) S.usedPotion = true;
+    S.challenge = null;
     W.projs = []; W.zones = []; W.parts = []; W.texts = []; W.slashes = []; W.spawns = []; W.banner = null; W.shake = 0;
     for (const p of W.props) if (p.type === 'trap') p.dead = true;
     W.props = W.props.filter((p) => !p.dead);
