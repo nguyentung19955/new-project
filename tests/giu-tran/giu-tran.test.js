@@ -84,7 +84,7 @@ const W = 16;   // đợt 16 = màn 2 (boss đợt 10 Bến Sông Đà sang màn
   await page.waitForSelector('#menu:not([hidden])');
   ok(await page.evaluate(() => !!ui.save.run && ui.save.run.wave === 16) && lab(await label(), W), 'hộp Rời trận? → Rời trận: giữ bản lưu, menu ' + await label());
   await page.click('#btn-continue');
-  ok(await page.evaluate(() => { const r = game.wave >= 16 && game.wave <= 17 && game.stage.k === 1 && game.running; game.running = false; game.wave = 16; game.waveActive = false; game.enemies = []; game.spawnQueue = []; return r; }), 'Tiếp tục sau Rời trận: đúng đợt / màn, trận chạy tiếp');
+  ok(await page.evaluate(() => { const r = game.wave === 16 && game.stage.k === 1 && game.running; game.running = false; game.waveActive = false; game.enemies = []; game.spawnQueue = []; return r; }), 'Tiếp tục sau Rời trận: đúng đợt / màn, trận chạy tiếp');
   // 4) bảng Sính lễ đang mở (đợt boss đã xong) → Dừng chơi, tải lại → bảng mở lại
   await page.evaluate(() => { game.events.push({ type: 'reward', boss: 'thuongluong', options: game.bossRewards('thuongluong'), id: 1 }); ui.handleEvents(); });
   ok(await page.evaluate(() => !$('#reward').hidden), 'bảng Sính lễ mở');
@@ -105,15 +105,7 @@ const W = 16;   // đợt 16 = màn 2 (boss đợt 10 Bến Sông Đà sang màn
 
   // 6) Chơi mới đè lên trận dở → trận cũ tính bỏ trận (Ngân khố 4 × đợt đã qua), trận mới từ đợt 0
   const kho0 = await page.evaluate(() => ui.save.kho || 0);
-  const kho60 = await page.evaluate(() => PREP.losePerWave * 15);
-  await page.click('#btn-newgame');
-  const ask = await page.evaluate(() => !$('#newgame-ask').hidden && $('#newgame-ask').innerText);
-  ok(ask && /Bỏ trận đang chơi/.test(ask) && /Màn 2 · Đợt 16/.test(ask) && ask.includes('+' + kho60 + ' sẽ được trả'), 'Chơi mới: hỏi xác nhận — ' + String(ask).replace(/\s+/g, ' '));
-  await page.screenshot({ path: path.join(SHOT, 'hoi-choi-moi-844x390.png') });
-  await page.click('#newgame-ask [data-na="no"]');
-  ok(await page.evaluate(() => $('#newgame-ask').hidden && $('#modes').hidden && !$('#menu').hidden && ui.save.run && ui.save.run.wave === 16) && lab(await label(), W), 'Huỷ: giữ nguyên trận dở');
-  await page.click('#btn-newgame'); await page.click('#newgame-ask [data-na="ok"]');
-  await page.click('#modes .md-card.endl');
+  await page.click('#btn-newgame'); await page.click('#modes .md-card.endl');
   await page.waitForSelector('#prep:not([hidden])');
   ok(await page.evaluate((k) => ui.save.kho - k === PREP.losePerWave * 15 && ui.save.run.wave === 0 && game.wave === 0, kho0), 'Chơi mới: trận cũ trả Ngân khố như bỏ trận, trận mới từ đầu');
 

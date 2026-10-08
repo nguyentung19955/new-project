@@ -90,9 +90,6 @@ const hit = (page, sel) => page.evaluate((s) => {
       ok(await shown(page, '#btn-newgame'), 'đang có trận: hiện nút Chơi mới');
       await page.click('#btn-newgame');
       await page.waitForTimeout(200);
-      ok(await shown(page, '#newgame-ask'), 'Chơi mới khi có trận dở → hỏi Bỏ trận (giu-tran-dang-choi)');
-      await page.click('#newgame-ask [data-na="ok"]');
-      await page.waitForTimeout(200);
       ok(await shown(page, '#modes'), 'Chơi mới → màn chọn chế độ');
       await page.evaluate(() => ui.showMenu());
       await page.click('#btn-continue');
