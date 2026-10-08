@@ -93,7 +93,8 @@ const noPixelVfx = (p) => p.route('**/js/pixel/vfx.js*', (r) => r.fulfill({ cont
       return { bad, frac: frac.length, smooth };
     });
     ok(!chk.bad.length, 'ảnh trạng thái (trừ vòng choáng) không lên tới thanh máu' + (chk.bad.length ? ' — ' + JSON.stringify(chk.bad.slice(0, 4)) : ''));
-    // vòng choáng (quái + tướng) nằm TRÊN đỉnh bbox hình, không đè mặt; lửa bỏng nhỏ cỡ chấm lửa cũ (không to như sprite 10×14)
+    // vòng choáng (quái + tướng): đáy vòng chạm nhẹ đỉnh bbox hình (±3 + 1 ô), không đè mặt, không bay xa;
+    // lửa bỏng ngang vai, cao 18–45% hình quái (không to như sprite 10×14 cũ, không chỉ vài chấm)
     const geo = await page.evaluate(() => {
       const c = document.querySelector('canvas').getContext('2d'), out = { stun: [], burn: [], hero: [] };
       const rec = (fn) => {
@@ -101,7 +102,7 @@ const noPixelVfx = (p) => p.route('**/js/pixel/vfx.js*', (r) => r.fulfill({ cont
         const put = (m, x, y, w, h) => { r.x0 = Math.min(r.x0, m.e + x); r.x1 = Math.max(r.x1, m.e + x + w); r.y0 = Math.min(r.y0, m.f + y); r.y1 = Math.max(r.y1, m.f + y + h); };
         const d0 = c.drawImage, f0 = c.fillRect;
         c.drawImage = function (im, x, y, w, h) { put(this.getTransform(), x, y, w, h); };
-        c.fillRect = function (x, y, w, h) { put(this.getTransform(), x, y, w, h); };
+        c.fillRect = function (x, y, w, h) { if (String(this.fillStyle).toLowerCase() !== '#d6a532') put(this.getTransform(), x, y, w, h); };   // bỏ tàn lửa bay (vàng nghệ)
         try { fn(); } finally { c.drawImage = d0; c.fillRect = f0; }
         return r;
       };
@@ -111,20 +112,21 @@ const noPixelVfx = (p) => p.route('**/js/pixel/vfx.js*', (r) => r.fulfill({ cont
         for (const t of [0.1, 0.4, 0.7, 1.0, 1.3, 2.2]) {
           const r = rec(() => { VFX.frame(); VFX.status(c, e, box, 0, t); });
           const m = c.getTransform();
-          out[key].push({ bottom: r.y1, head: m.d * (e.y - box.ay) + m.f, h: (r.y1 - r.y0) / m.d, w: (r.x1 - r.x0) / m.a, H: box.ay, W: box.w, n: Math.max(1, Math.round(1.2 * k)) });
+          out[key].push({ bottom: r.y1, top: r.y0, head: m.d * (e.y - box.ay) + m.f, d: m.d, h: (r.y1 - r.y0) / m.d, w: (r.x1 - r.x0) / m.a, H: box.ay, W: box.w, n: Math.max(1, Math.round(1.2 * k)) });
         }
       }
       for (const t of [0.1, 0.7, 1.3]) {   // tướng: đỉnh đầu 100
         const r = rec(() => VFX.px.heroStun(c, 300, 100, t));
         const m = c.getTransform();
-        out.hero.push({ bottom: r.y1, head: m.d * 100 + m.f, n: Math.max(1, Math.round(1.2 * k)) });
+        out.hero.push({ bottom: r.y1, head: m.d * 100 + m.f, d: m.d, n: Math.max(1, Math.round(1.2 * k)) });
       }
       return out;
     });
-    const above = (a) => a.every((g) => g.bottom <= g.head + g.n);
-    ok(above(geo.stun), 'vòng choáng quái nằm trên đỉnh bbox hình (không đè mặt) ' + JSON.stringify(geo.stun[0]));
-    ok(above(geo.hero), 'vòng choáng tướng nằm trên đỉnh đầu ' + JSON.stringify(geo.hero[0]));
-    ok(geo.burn.every((g) => g.h <= Math.max(10, g.H * 0.45)), 'lửa bỏng thấp (≤ 45% chiều cao quái) ' + JSON.stringify(geo.burn[0]));
+    const touch = (a) => a.every((g) => Math.abs(g.bottom - g.head) <= 3 * g.d + 2 * g.n);
+    ok(touch(geo.stun), 'đáy vòng choáng quái chạm đỉnh bbox hình (±3) ' + JSON.stringify(geo.stun.map((g) => Math.round(g.bottom - g.head))));
+    ok(touch(geo.hero), 'đáy vòng choáng tướng chạm đỉnh đầu (±3) ' + JSON.stringify(geo.hero.map((g) => Math.round(g.bottom - g.head))));
+    ok(geo.burn.every((g) => g.h >= g.H * 0.18 && g.h <= g.H * 0.45), 'lửa bỏng rõ dáng, cao 18–45% hình quái ' + JSON.stringify(geo.burn.map((g) => +(g.h / g.H).toFixed(2))));
+    ok(geo.burn.every((g) => g.top >= g.head), 'lửa bỏng nằm trong thân (không vượt đỉnh đầu)');
     ok(geo.burn.every((g) => g.w <= g.W * 0.9), 'lửa bỏng không rộng quá thân quái');
     ok(!chk.frac && !chk.smooth, 'trạng thái vẽ bám lưới điểm ảnh (toạ độ nguyên), không khử răng cưa');
     // đạn bay + hiệu ứng mỗi khung bằng pixel

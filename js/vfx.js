@@ -324,6 +324,18 @@ const VFX = (() => {
     return r >= g && r >= b && r > 150;
   }
   function sb(n) { if (SB.n + n > SB.max) return false; SB.n += n; return true; }
+  // ngọn lửa bỏng 5×7 ô (thu nhỏ từ dáng lua-chay), đáy giữa tại (x, y), mỗi ô c điểm ảnh màn hình; f = nhịp, flip = lật
+  const FLAME = [['..r..', '.ro..', '.ror.', 'rooyr', 'royyr', 'royyo', '.kkk.'], ['...r.', '..ro.', '.ror.', 'royor', 'royyr', 'oyyor', '.kkk.']];
+  const FLAME_C = { r: 'son-sang', o: 'lua', y: 'vang-sang', k: 'son' };
+  function flame(ctx, x, y, c, f, flip) {
+    const X = Math.round(sx(x) / c) * c, Y = Math.round(sy(y) / c) * c, rows = FLAME[f];
+    for (let j = 0; j < 7; j++) for (let i = 0; i < 5; i++) {
+      const ch = rows[j][flip ? 4 - i : i];
+      if (ch === '.') continue;
+      ctx.fillStyle = C[FLAME_C[ch]];
+      ctx.fillRect(X + (i - 2) * c - (c >> 1), Y - (7 - j) * c, c, c);
+    }
+  }
   function status(ctx, e, box, lift, t) {
     const r = { dot: false, stun: false, slow: false, ice: false, iceArt: false };
     if (!e || e.dead || !D) return r;
@@ -363,16 +375,9 @@ const VFX = (() => {
       const fire = isFire(e.dotColor);
       if (fire && ready('lua-chay') && sb(W > 60 ? 3 : 2)) {
         r.dot = true;
-        // ngọn lửa nhỏ 3×4 ô (cỡ tương đương chấm lửa cũ, không to hơn quái), lửa liếm: đỉnh lệch theo nhịp
-        const n = W > 60 ? 3 : 2, u = G.n / G.k;
-        for (let i = 0; i < n; i++) {
-          const x = cx + (i - (n - 1) / 2) * W * 0.3, y = fy - H * (i % 2 ? 0.3 : 0.18);
-          const f = Math.floor(t * 8 + id + i * 1.7) % 3, lean = f === 2 ? -1 : f;   // -1 / 0 / 1 ô
-          dot(ctx, x - u, y, C.son); dot(ctx, x, y, C.lua); dot(ctx, x + u, y, C.son);
-          dot(ctx, x - u, y - u, C.lua); dot(ctx, x, y - u, C['vang-nghe']); dot(ctx, x + u, y - u, C.lua);
-          dot(ctx, x + lean * u * 0.5, y - 2 * u, C.lua);
-          if (f !== 1) dot(ctx, x + lean * u, y - 3 * u, C['vang-nghe']);
-        }
+        // 1–2 ngọn lửa 5×7 ô ngang vai, cao ~26% hình quái (cỡ ô theo cỡ quái, bám lưới điểm ảnh), lửa liếm 2 nhịp
+        const n = W > 50 ? 2 : 1, c = Math.max(1, Math.round((H * 0.26 * G.k) / 7));
+        for (let i = 0; i < n; i++) flame(ctx, cx + (n > 1 ? (i ? 0.26 : -0.28) : 0.05) * W, fy - H * (i ? 0.5 : 0.45), c, Math.floor(t * 7 + id + i * 1.3) % 2, i === 1);
         const q = (t * 1.2 + id * 0.17) % 1;      // tàn lửa bay lên
         ctx.globalAlpha = step(1 - q);
         dot(ctx, cx + Math.sin(id + t * 3) * W * 0.3, fy - H * (0.35 + q * 0.3), C['vang-nghe']);
@@ -393,24 +398,9 @@ const VFX = (() => {
     const stunOn = e.stunT > 0 && !['ice', 'root', 'music', 'net'].includes(e.stunKind);
     if (stunOn && ready('chim-lac') && ready('gio-xoay') && sb(4)) {
       r.stun = true;
-      // điểm thấp nhất của vòng (chim / xoáy nhún ±3, bóng vòng) nằm trên đỉnh hình quái; thanh máu vẽ sau đè lên
-      const u = G.n / G.k, rx = Math.min(24, Math.max(12, W * 0.32)), y0 = stunY(fy - H, rx * 0.28);
-      const items = [];
-      for (let i = 0; i < 4; i++) {
-        const a = t * 3.2 + (i * Math.PI) / 2;
-        items.push({ a, z: Math.sin(a), bird: i % 2 === 0 });
-      }
-      items.sort((p, q) => p.z - q.z);                // sau trước: phía sau vẽ trước
-      // vòng xoáy khí sáng (bóng tối 1 ô bên dưới cho nổi trên mọi nền), nét đứt chạy vòng
-      ring(ctx, cx, y0 + u, rx, rx * 0.28, C.toi, { dash: 2, phase: t * 6 });
-      ring(ctx, cx, y0, rx, rx * 0.28, C.trang, { dash: 2, phase: t * 6 });
-      for (const it of items) {
-        const x = cx + Math.cos(it.a) * rx, y = y0 + it.z * 3;
-        ctx.globalAlpha = it.z < -0.3 ? 0.6 : 1;
-        if (it.bird) blit(ctx, 'chim-lac', frameOf(spr('chim-lac'), null, t, id), x, y, 1, Math.sin(it.a) < 0);
-        else blit(ctx, 'gio-xoay', frameOf(spr('gio-xoay'), null, t, id + it.a), x, y, 1);
-      }
-      ctx.globalAlpha = 1;
+      // đáy vòng chạm nhẹ đỉnh hình quái (±3); thanh máu vẽ sau đè lên
+      const rx = Math.min(24, Math.max(12, W * 0.32));
+      stunRing(ctx, cx, fy - H, rx, rx * 0.28, t, id, 4);
     }
     end(ctx);
     return r;
@@ -814,22 +804,27 @@ const VFX = (() => {
     end(ctx);
     return true;
   }
-  // tâm vòng choáng sao cho điểm thấp nhất (sprite dưới neo + nhún 3, vòng + bóng) nằm trên đỉnh đầu headTop; gọi sau begin
-  function stunY(headTop, ry) {
-    const u = G.n / G.k, below = Math.max(spr('chim-lac').h - spr('chim-lac').ay, spr('gio-xoay').h - spr('gio-xoay').ay) * u + 3;
-    return headTop - Math.max(below, ry + u) - u;
+  // vòng choáng: elip xoáy khí nét 2 ô (bóng tối bên dưới cho nổi trên mọi nền) + chim Lạc / xoáy khí đậu trên vòng,
+  // đáy vòng chạm đỉnh đầu headTop; mỗi sprite đặt đáy lên đường vòng → không thòng xuống mặt. Gọi sau begin
+  function stunRing(ctx, cx, headTop, rx, ry, t, id, cnt) {
+    const u = G.n / G.k, y0 = headTop - ry - 2 * u, items = [];
+    for (let i = 0; i < cnt; i++) { const a = t * 3.2 + (i * Math.PI * 2) / cnt; items.push({ a, z: Math.sin(a), bird: i % 2 === 0 }); }
+    items.sort((p, q) => p.z - q.z);                // sau trước: phía sau vẽ trước
+    ring(ctx, cx, y0 + u, rx, ry, C.toi, { dash: 3, phase: t * 6, c: 2 });
+    ring(ctx, cx, y0, rx, ry, C.trang, { dash: 3, phase: t * 6, c: 2 });
+    for (const it of items) {
+      const nm = it.bird ? 'chim-lac' : 'gio-xoay', sp = spr(nm);
+      const x = cx + Math.cos(it.a) * rx, y = y0 + it.z * ry - (sp.h - sp.ay) * u;
+      ctx.globalAlpha = it.z < -0.3 ? 0.7 : 1;
+      blit(ctx, nm, frameOf(sp, null, t, id + (it.bird ? 0 : it.a)), x, y, 1, it.bird && Math.sin(it.a) < 0);
+    }
+    ctx.globalAlpha = 1;
   }
-  // tướng bị choáng: chim Lạc + xoáy khí lượn trên vòng xoáy (thay ngôi sao), vòng nằm trên đỉnh đầu headTop
+  // tướng bị choáng: chim Lạc + xoáy khí lượn trên vòng xoáy (thay ngôi sao), đáy vòng chạm đỉnh đầu headTop
   function heroStun(ctx, x, headTop, t) {
     if (!spr('chim-lac') || !spr('gio-xoay')) return false;
     begin(ctx, 0.6);
-    const rx = 13, u = G.n / G.k, y = stunY(headTop, rx * 0.3);
-    ring(ctx, x, y + u, rx, rx * 0.3, C.toi, { dash: 2, phase: t * 6 });
-    ring(ctx, x, y, rx, rx * 0.3, C.trang, { dash: 2, phase: t * 6 });
-    for (let i = 0; i < 2; i++) {
-      const a = t * 3.2 + i * Math.PI, z = Math.sin(a);
-      blit(ctx, i ? 'gio-xoay' : 'chim-lac', frameOf(spr(i ? 'gio-xoay' : 'chim-lac'), null, t), x + Math.cos(a) * rx, y + z * 3, 1, Math.sin(a) < 0);
-    }
+    stunRing(ctx, x, headTop, 14, 14 * 0.3, t, 0, 2);
     end(ctx);
     return true;
   }
