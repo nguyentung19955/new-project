@@ -2963,6 +2963,11 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
   + **7 nền sân** `canh/ban-do-*` (nền thẻ chế độ + nền trận dự phòng).
 - **Cảnh thắng / thua** 5 chương (+ nen-thang/thua), **3 tranh truyện Sơn Tinh**, **8 phông truyện**: tranh ngang trời dải phẳng + núi lớp,
   nhân vật là sprite pixel tướng / boss của game (bỏ chibi); **nền màn phụ** đen nâu + trống đồng chìm (designer N7).
+- **Khung thanh máu** tướng / quái / boss (lòng trong suốt đúng chỗ thanh, bỏ viền ô cờ) + **khung người chơi**, **nút chính** ở menu.
+- **16 icon đồ** xấu / na ná (4 ngọc, sừng tê / mũi sừng, vảy cá, giáp vảy rồng, lưỡi hái, ngựa, voi, mặt trống, trống đồng, dùi trống…): mỗi món một dáng riêng.
+- **Khung tranh Sính lễ đều nhau** (góp ý người dùng): cùng lề 4px, cân giữa, đáy thú cùng một đường; 3 thẻ ban thưởng cùng chiều cao giếng tranh (44% thẻ).
+- Sửa theo tester: khung người chơi có lại huy hiệu mặt trời trống đồng trong vòng tròn (khách không có ảnh đại diện); nút Xuất Quân có lại 2 huy hiệu tròn hai đầu;
+  lòng khung thanh máu boss khít thanh (cột 10..85); **đồ có icon riêng theo mã (vd Mũ Sừng, Rìu Lửa) ưu tiên icon riêng** thay icon loại × độ hiếm (độ hiếm vẫn ở viền ô).
 - Các mã vẽ lại gỡ khỏi `tools/pixel/spec/*.json` (`tools/pixel/ve-lai/DA-VE-LAI.json`) để `--nap --ghi-de` không ghi đè.
 - **Mở rộng (chưa có tướng Tím thì khó biết mua gì):**
   - **Mục tiêu hợp thể:** bảng Hợp thể có nút ghim **Theo đuổi** trên mỗi công thức Tím/Vàng (tối đa 2, ghim thứ 3 thì bỏ cái cũ nhất; lưu ở

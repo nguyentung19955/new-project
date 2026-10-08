@@ -1,26 +1,26 @@
-# khung thanh máu quái — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: sắt tối mảnh, móng vuốt 2 đầu
-name: khung thanh máu quái
+# Khung thanh máu quái — VẼ LẠI tay (claude/ve-lai-pixel), thiết kế: docs/pixel/THIET-KE-LAI.md
+# Khung sắt 3 tông mộc mạc; lòng trong suốt (cột 2..21, hàng 2..5)
+# Nguồn vẽ: tools/pixel/ve-lai/khung.js — sửa ở đó rồi chạy lại, đừng sửa tay file này.
+name: Khung thanh máu quái
 size: 24x8
 colors:
   a = vien
-  b = sat-toi
-  c = sat
-  d = sat-sang
+  b = sat
+  c = sat-sang
+  d = sat-toi
 
 part k0
-caa.a.a.a.a.a.a.a.a.aaac
-adcacacacacacacacacaccba
-aca.a.a.a.a.a.a.a.a.aaca
-aca..................aca
-aca..................aca
-aca.a.a.a.a.a.a.a.a.aaca
-abcacacacacacacacacaccba
-caa.a.a.a.a.a.a.a.a.aaac
+.aaaaaaaaaaaaaaaaaaaaaa.
+abccccccccccccccccccccba
+ac....................da
+ac....................da
+ac....................da
+ac....................da
+abddddddddddddddddddddda
+.aaaaaaaaaaaaaaaaaaaaaa.
 end
 
 anim main fps=1 once
 frame main
   use k0
 end
-

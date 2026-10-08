@@ -1,38 +1,42 @@
-# Voi Chín Ngà (sính lễ boss · thuong) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: voi con 9 ngà, khăn yên đỏ, ánh vàng
-name: Voi Chín Ngà (sính lễ boss · thuong)
+# Voi Chín Ngà — VẼ LẠI tay (claude/ve-lai-pixel), thiết kế: docs/pixel/THIET-KE-LAI.md
+# đầu voi trắng nhìn thẳng, tai lớn, vòi buông, nhiều ngà cong vàng ngà hai bên, mũ trán đồng
+# Nguồn vẽ: tools/pixel/ve-lai/do.js — sửa ở đó rồi chạy lại, đừng sửa tay file này.
+name: Voi Chín Ngà
 size: 24x24
 colors:
   a = vien
-  b = sat-toi
-  c = sat
-  d = sat-sang
+  b = son
+  c = vang-nghe
+  d = trang-xam
   e = trang
+  f = sang
+  g = hong
+  h = vang-sang
 
 part k0
 ........................
 ........................
-........................
-........................
-................aaa.....
-........aaaaa..addba....
-.....aaaddddbaadcccba...
-....adddcccccddcccccba..
-...adcccccccccccccacba..
-..adccccccccccccccccba..
-..adccccccccccccccccba..
-..adccccccccccccccccba..
-..adccccccccccccccecba..
-..abccccccccccccceadba..
-...adccccccccccceaadba..
-...adccbcccccccbeaadba..
-...adcbabbbbbccba.adba..
-...adcbaaaaaadcba.adba..
-...adcba....adcba.adba..
-...adcba....adcba.abba..
-...abbba....abbba..aa...
-....aaa......aaa........
-........................
+............a...........
+..........aabaa.........
+....aa...accccca...aa...
+...adda.aecccccea.adda..
+..addddafffffeeeeadddda.
+.addggdefffffeeeeedggdda
+.adggggfffffffeeeeggggda
+.adggggefffffeeeeeggggda
+.adgggeefafffeeaeeegggda
+.adggggeeefeeeeeeeggggda
+.adggggeeeeeeeeeeeggggda
+.addggfeeeeeeeeeeefggdda
+..addddfeeeeeedeefdddda.
+...adhhafeeeeedefahhda..
+....aaahhfeeeedfhhaaa...
+...afffaaheeeedhaafffa..
+....aaafffeeeedfffaaa...
+.......aaaeeeedaaa......
+.........aedddda........
+..........addda.........
+...........aaa..........
 ........................
 end
 
@@ -40,4 +44,3 @@ anim main fps=1 once
 frame main
   use k0
 end
-

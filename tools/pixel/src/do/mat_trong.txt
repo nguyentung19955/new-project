@@ -1,37 +1,42 @@
-# Mặt Trống — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: mặt trống đồng phẳng có sao
+# Mặt Trống — VẼ LẠI tay (claude/ve-lai-pixel), thiết kế: docs/pixel/THIET-KE-LAI.md
+# mặt trống da căng nhìn nghiêng 3/4: elip da sáng có sao tâm, tang gỗ son, đinh đồng
+# Nguồn vẽ: tools/pixel/ve-lai/do.js — sửa ở đó rồi chạy lại, đừng sửa tay file này.
 name: Mặt Trống
 size: 24x24
 colors:
   a = vien
-  b = dong-toi
-  c = dong
-  d = dong-sang
-  e = vang-nghe
+  b = dat
+  c = vang-sang
+  d = cat
+  e = dat-sang
+  f = son
+  g = son-sang
+  h = vang-nghe
+  i = son-toi
 
 part k0
 ........................
 ........................
 ........................
 ........................
-.......aaaaaaaaaa.......
-.....aaddddddddddaa.....
-...aaddddddddddddddaa...
-..addddddddeedddddddda..
-..adddddddeeeeddddddda..
-..addddaddeeeedddaddda..
-..addddddddeedddddddda..
-..adcddddddddddddddcba..
-..adcccddddddddddcccba..
-..adccccccccccccccccba..
-..adccccccccccccccccba..
-..abbbbbbbbbbbbbbbbbba..
-..adccccccccccccccccba..
-..adccccccccccccccccba..
-..adccccccccccccccccba..
-..abbbbbbbbbbbbbbbbbba..
-...aaaaaaaaaaaaaaaaaa...
 ........................
+............a...........
+......aaaaaabaaaaaa.....
+....aabbbbbbcbbbbbbaa...
+...abbcccccccccccddbba..
+..abdcccccccccccccdddba.
+..abccccccecececcccddba.
+.abddcccceccfcceccddddba
+.afbddcccceccceccddddbfa
+.aggggggggggggggggggggga
+.affbbdddddddddddddbbffa
+.affhfbbbbbbdbbbbbbfhffa
+..aiiiiihiiibiiihiiiiia.
+..aiiiiiiiiihiiiiiiiiia.
+...aiiiiiiiiiiiiiiiiia..
+....aaiiiiiiiiiiiiiaa...
+......aaaaaaiaaaaaa.....
+............a...........
 ........................
 ........................
 end
@@ -40,4 +45,3 @@ anim main fps=1 once
 frame main
   use k0
 end
-

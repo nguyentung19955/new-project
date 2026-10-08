@@ -125,3 +125,35 @@ Theo designer N7: thay tranh sóng chuyển ảnh (rối sau bảng chuẩn bị
 (vòng `dong-toi`, sao, chấm, chim Lạc `khoi`); CSS còn phủ thêm lớp tối → chỉ thấy hoạ tiết rất nhẹ.
 
 Giữ ảnh cũ: `canh/nen-menu` (menu cố ý giữ tranh gốc), `canh/chuong-sontinh` (bản đồ đã chi tiết).
+
+## 10. Khung thanh máu + khung menu (giao-dien) — `tools/pixel/ve-lai/khung.js`
+
+- `thanh-mau-tuong` 32×8 (đồng, đinh vàng 2 đầu, mấu giữa) · `thanh-mau-quai` 24×8 (sắt) · `thanh-mau-boss` 96×12 (sơn son đinh đồng, 2 đầu ốp đồng):
+  game tô nền + máu rồi **vẽ khung đè kéo giãn** → lòng khung trong suốt đúng chỗ thanh (cột 2..w-3, hàng 2..5; boss cột 6..89, hàng 4..7),
+  gờ kim loại 1px 3 tông + viền `vien`. Trước: viền ô cờ lấm tấm (dithering), lòng đen che mất một nửa thanh máu tướng.
+- `khung-nguoi-choi` 192×66: huy chương trống đồng (vành chấm vàng, chim Lạc, lỗ ảnh đại diện đúng chỗ CSS `.av`) + bảng tối viền đồng răng cưa, mũi nhọn đầu phải.
+- `khung-nut-chinh` 208×46: tấm vàng nghệ vát (sáng trên / đồng dưới), răng cưa đáy, 2 đầu ốp đồng khắc sao trống. Trước: ảnh chuyển nhoè, mặt nạ méo.
+
+## 11. Đồ xấu / na ná (do/*, 24×24) — `tools/pixel/ve-lai/do.js`
+
+Bộ sinh hình vật cũ cho ra hình thoi trơn (4 ngọc giống nhau khác màu), đĩa xám (vảy cá ×2), 2 cái sừng giống hệt, hộp (trống), cục nâu (mũ sừng).
+Vẽ lại 16 món, **mỗi món một dáng riêng** đọc được ở 24 px, sáng trên-trái, viền `vien`:
+ngọc Hồi Sinh = hồng ngọc mài giác trên đế đồng · Minh Châu = ngọc trai trong vỏ sò đồng · Sinh Lực = **ngọc bích hình đĩa có lỗ** + tua đỏ ·
+Trấn Thủy = giọt nước xanh có sóng, chóp đồng · Mũi Sừng Phá Giáp = mũi giáo sừng chéo + khâu đồng · Sừng Tê = sừng to bè gốc sẫm ·
+Áo Vảy Cá = dáng áo phủ vảy · Vảy Cá = 3 vảy hình khiên xoè · Giáp Vảy Rồng = giáp ngực ngọc lục vảy chữ U viền vàng ·
+Lưỡi Hái = cán dài + lưỡi tím cong · Ngựa Hồng Mao = đầu ngựa bờm lửa · Voi Chín Ngà = đầu voi nhìn thẳng nhiều ngà ·
+Mặt Trống = mặt da 3/4 tang son · Trống Đồng = trống nhìn ngang có cóc trên mặt · Dùi Trống = đôi dùi bắt chéo đầu vải son ·
+Mũ Sừng = mũ đồng 2 sừng (game hiện mũ thường theo loại × độ hiếm `do_mu_*` nên icon này chỉ dùng khi đổi quy tắc).
+Các bộ đồ theo loại × độ hiếm (`do_<loại>_<độ hiếm>`, bộ Chim Lạc / Trống / Ngựa sắt…) cố ý cùng dáng khác màu (nhận loại + độ hiếm) — giữ.
+
+### 3b. Chuẩn khung tranh nhỏ (góp ý người dùng: "khung không đều")
+Mọi tranh `giao-dien/tranh-*` cùng canvas 96×96, **lề trong 4px** (nội dung ≤ 88×88, tool báo lỗi nếu vượt), cân giữa ngang theo khối hình;
+vật đứng (voi, gà, ngựa, hũ, kho) **đáy cùng đường chân y = 91**; vật tròn (trống đồng, xoay) cân giữa dọc. Tia hũ báu thu ngắn không vượt lề,
+mặt trống thu bán kính 46 → 42. CSS: 3 thẻ Vua Hùng ban thưởng có **giếng tranh cố định 44% chiều cao thẻ** (trước giếng thẻ Sính lễ thấp hơn
+vì mô tả dài), nút Chọn luôn sát đáy.
+
+### 10b. Sửa theo tester (@1ea8410)
+- `khung-nguoi-choi`: lòng huy chương vẽ **mặt trời trống đồng** (sao 12 tia + mặt trời vàng) — khách không có `.av` nên trước hiện vòng tối trống.
+- `khung-nut-chinh`: thêm lại **2 huy hiệu tròn trống đồng** nhô ở hai đầu (bố cục bản cũ b424fa8).
+- `thanh-mau-boss`: lòng khung cột 10..85 (đầu ốp đồng rộng 10) cho khít thanh máu game vẽ (khung w+16 quanh thanh w ≈ 60) — hết khe lộ nền ở đầu phải.
+- `pxItemCode` (js/render.js): món có icon riêng theo mã thì dùng icon riêng trước, rồi mới tới icon loại × độ hiếm.
