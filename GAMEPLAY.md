@@ -1073,7 +1073,7 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - Khi mở thì trận tạm dừng; bấm quay lại là về trận và chạy tiếp. Tướng vừa mua ghép được ngay.
 
 ## Phiên bản 91 — Bảng Ấn Phù, bảng thông tin quái
-- **Bảng Ấn Phù** (menu chính cạnh Anh Hùng, hoặc menu ≡ trong trận): 36 ấn chia 3 nhánh, mua bằng Ngân khố, áp cho mọi tướng.
+- **Bảng Ấn Phù** (menu chính cạnh Anh Hùng, hoặc menu ≡ trong trận): 36 ấn chia 3 nhánh, (từ v95–v123: khắc bằng điểm Tu Vi, riêng từng tướng, **chỉ dành cho tướng Vàng** — chốt lại 08/10).
   - **Ấn Núi** (sức mạnh, bền bỉ), **Ấn Gió** (tốc độ, chí mạng), **Ấn Sấm** (phép, năng lượng).
   - Mỗi nhánh có 9 ấn chỉ số (tối đa 5 cấp, giá 40/70/110 × cấp theo hàng) và 3 ấn kỹ năng (tối đa 3 cấp, giá 700 / 1.400 / 2.400).
   - Hàng 2, 3, 4 mở khi nhánh có 4, 10, 18 điểm.
