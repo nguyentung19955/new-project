@@ -2394,3 +2394,17 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 - **Sửa (js/main.js):** đang kéo tướng thì bỏ qua ngón khác (`if (drag) return`); `pointercancel` của ngón khác không huỷ lần kéo đang dở;
   chạm canvas mà còn sót thùng 🗑 thì gỡ luôn. **js/ui.js `startLevel`:** vào trận mới gọi `hideTrash()` (không mang lớp kẹt sang).
 - **Test:** `tests/cho-tuong/keo-hai-ngon.test.js` (chạm 2 ngón bằng CDP: code cũ FAIL "chợ hiện lại", code mới đạt; mua thẻ được sau đó).
+
+## claude/xuat-goi-pixel — xuất gói pixel bằng tool cho mọi nhóm còn thiếu
+- Sinh **451 mã pixel bằng tool** `tools/ve-pixel.js` (không vẽ tay từng điểm): đồ 98, icon 160, thần khí 60, giao diện 45, nền 51, cảnh 37.
+  Spec `tools/pixel/spec/<nhóm>.json` · gói `tools/pixel/goi/<nhóm>.zip` (nạp tay trong Cài đặt → Gói pixel) · đã `--nap` vào
+  `tools/pixel/src` + `assets/pixel` + `js/pixel/*.js`. Lệnh chạy lại từng bước: `docs/pixel/LENH-TOOL.md`.
+- Tool mở rộng: thư viện ~90 **hình vật** (mũ, giáp, nỏ, gậy, trống, rùa, cổng, đế, khoá, đồng hồ cát…) + `mauPhu` / `mauNgoc`;
+  ô nền `nen: vat` (vật trang trí nền trong suốt); **bộ sinh giao diện** (khung · nút · nút tròn · thanh · ô · thẻ · huy hiệu · dải · núi,
+  trạng thái thường / nhấn / khoá / chọn) và **bộ sinh cảnh** 320×180 (trời · núi · đất / nước theo chủ đề, ngày / chiều / đêm / u ám).
+  Kiểm tra cỡ giao diện 8..320 như build-pixel; `--nap` lỗi build thì gỡ nguồn vừa ghi.
+- Game (khi bật pixel, giữ đường vẽ cũ làm dự phòng): icon đồ trong túi / lò rèn / ghép / mặc đồ lên tướng (theo loại × độ hiếm hoặc
+  theo mã món), icon nhỏ (`ic()`, `UIE`, `ICON` đóng/quay lại/tích/túi/nâng/núi, ổ khoá), đồng vàng / nén bạc, icon Thần Khí,
+  skin nút vàng / đồng / tròn, khung bảng, thanh đáy, thẻ chợ, huy hiệu ải, thanh máu boss (ảnh pixel, phóng không làm mịn),
+  ô cỏ / đường bản đồ theo chủ đề (đầm, đồng, rừng, thành, hang, biển; đường cát / đá / gạch / đê).
+- Chưa nối: cảnh `canh/*` (menu, kết quả, truyện) và cổng thành `nen/cong-*` — bản tool sinh là phác thảo, kém ảnh vẽ tay hiện tại.
