@@ -7,7 +7,9 @@
   const G = (window.G = window.G || {});
   const VS = (G.villageScene = {});
   const W = 720, H = 270;
-  VS.W = W;
+  // Cảnh làng vẽ lùi xuống OY điểm để dải khuôn mặt ở mép trên không đè lên mái nhà, ngọn cây.
+  const OY = 14;
+  VS.W = W; VS.OY = OY;
 
   // ======================= đồ vẽ pixel dùng chung =======================
   function mk(w, h) { const cv = document.createElement('canvas'); cv.width = w; cv.height = h; const c = cv.getContext('2d'); c.imageSmoothingEnabled = false; return [cv, c]; }
@@ -371,7 +373,7 @@
     return keys.slice(0, 3).map((k, i) => ({ key: k, x: B.be[i][0], y: B.be[i][1] }));
   }
   function blocked(x, y) {
-    if (x < 8 || y < 62 || y > 264) return true;
+    if (x < 8 || y < 62 || y > 250) return true;
     const onDock = x >= B.cau[0] - 2 && x <= B.cau[0] + B.cau[2] - 5 && y >= B.cau[1] - 5 && y <= B.cau[1] + 9;
     if (!onDock && x > bo(y) - 6) return true;
     for (const r of RECTS) if (x >= r[0] && x <= r[2] && y >= r[1] && y <= r[3]) return true;
@@ -429,7 +431,7 @@
   const btnAt = () => [430 + (G.cx || 0), 220 + (G.cy || 0), 28];
   VS.btnAt = btnAt;
   // Dải bảy khuôn mặt: vị trí khuôn thứ i trên màn hình
-  const STRIP = { y: 30, r: 11, gap: 31 };
+  const STRIP = { y: 28, r: 10, gap: 31 };
   function stripAt(i) { return [240 - ((ORDER.length - 1) * STRIP.gap) / 2 + i * STRIP.gap, STRIP.y]; }
   VS.stripAt = stripAt;
 
@@ -478,8 +480,9 @@
     build();
     if (o.from !== 'keep') {
       S.x = 662; S.y = 160; S.face = -1; S.cam = 240;
-      S.path = findPath(S.x, S.y, 604, 168); S.goal = null; S.arrive = 1.2;
+      S.path = findPath(S.x, S.y, 604, 168); S.goal = null; S.arrive = 1;
     }
+    else S.arrive = -9;
     S.talk = null; S.near = null; S.joy = null; S.bubble = null;
     for (let i = 0; i < 2; i++) { S.wp[i].x = S.x + 17 + i * 12; S.wp[i].y = S.y - 2 + i * 6; }
     // Bản lưu chưa từng vào làng mới: lấy số đang có làm mốc, để không phải ai cũng báo "có việc mới" ngay từ đầu.
@@ -490,6 +493,7 @@
   };
   function goTo(x, y, goal, fast) {
     const pth = findPath(S.x, S.y, x, y);
+    S.arrive = -9;
     S.path = pth; S.goal = pth ? goal || null : null; S.fast = !!fast;
     return !!pth;
   }
@@ -525,7 +529,7 @@
   };
   // Vật chạm được tại điểm (x, y) của màn hình
   function hitAt(sx, sy) {
-    const wx = sx + S.cam, wy = sy;
+    const wx = sx + S.cam, wy = sy - OY;
     for (let i = 0; i < 2; i++) { const w = G.weaponById(G.save.carry[i]); if (w && Math.abs(wx - S.wp[i].x) < 11 && wy > S.wp[i].y - 50 && wy < S.wp[i].y + 6) return { kind: 'weapon', id: w.id }; }
     let best = null, bd = 1e9;
     for (const k of ORDER) { const q = NPCS[k].pos; if (Math.abs(wx - q[0]) < 17 && wy > q[1] - 40 && wy < q[1] + 10) { const d = Math.hypot(wx - q[0], wy - q[1] + 14); if (d < bd) { bd = d; best = { kind: 'npc', id: k }; } } }
@@ -535,7 +539,7 @@
   }
   function tapWorld(sx, sy) {
     const h = hitAt(sx, sy);
-    if (!h) { goTo(G.clamp(sx + S.cam, 10, W - 10), G.clamp(sy, 64, 262), null, false); return; }
+    if (!h) { goTo(G.clamp(sx + S.cam, 10, W - 10), G.clamp(sy - OY, 64, 249), null, false); return; }
     if (h.kind === 'frog') { S.frogT = 6; S.bubble = { at: [B.gieng[0] - 9, B.gieng[1] - 20], s: 'Ộp!', t: 1 }; G.sfx && G.sfx('pick', 0.6); return; }
     if (h.kind === 'weapon') { interact(h); return; }
     if (h.kind === 'npc') { VS.goNpc(h.id); return; }
@@ -548,7 +552,6 @@
     if (S.msgT > 0) S.msgT -= dt;
     if (S.frogT > 0) S.frogT -= dt;
     if (S.hintT > 0) S.hintT -= dt;
-    if (S.arrive > 0) S.arrive -= dt;
     if (S.bubble) { S.bubble.t -= dt; if (S.bubble.t <= 0) S.bubble = null; }
     if ((S.newsT -= dt) <= 0) { S.newsT = 1; checkNews(); }
     let mx = 0, my = 0;
@@ -560,7 +563,7 @@
       for (const d of G.downs) {
         if (d.role) continue;
         if (Math.hypot(d.x - bt[0], d.y - bt[1]) <= bt[2] + 6) { d.role = 'talk'; talkP = true; continue; }
-        if (d.y < 46) continue; // dải trên cùng và dải khuôn mặt: xử lý như một lần chạm
+        if (d.y < 50) continue; // dải trên cùng và dải khuôn mặt: xử lý như một lần chạm
         if (hitAt(d.x, d.y)) continue; // chạm vào người hay vật: chờ nhấc ngón
         if (d.x < 240 && !S.joy) { d.role = 'joy'; S.joy = { p: d, t: S.t, far: 0 }; }
       }
@@ -575,8 +578,8 @@
       if (G.click) {
         const cl = G.click;
         let used = false;
-        for (let i = 0; i < ORDER.length && !used; i++) { const q = stripAt(i); if (Math.abs(cl.x - q[0]) <= STRIP.gap / 2 && cl.y >= 16 && cl.y <= 52) { VS.goNpc(ORDER[i]); G.sfx && G.sfx('ui'); used = true; } }
-        if (!used && cl.y >= 46) { tapWorld(cl.x, cl.y); used = true; }
+        for (let i = 0; i < ORDER.length && !used; i++) { const q = stripAt(i); if (Math.abs(cl.x - q[0]) <= STRIP.gap / 2 && cl.y >= 14 && cl.y < 50) { VS.goNpc(ORDER[i]); G.sfx && G.sfx('ui'); used = true; } }
+        if (!used && cl.y >= 50) { tapWorld(cl.x, cl.y); used = true; }
         if (used) G.click = null;
       }
       if (talkP && S.near) interact(S.near);
@@ -585,7 +588,7 @@
     const ml = Math.hypot(mx, my);
     S.moving = false;
     if (ml > 0.01 && !locked) {
-      S.path = null; S.goal = null;
+      S.path = null; S.goal = null; S.arrive = -9;
       const sp = SPEED * Math.min(1, ml), vx = (mx / ml) * sp * dt, vy = (my / ml) * sp * KY * dt;
       if (!blocked(S.x + vx, S.y)) S.x += vx;
       if (!blocked(S.x, S.y + vy)) S.y += vy;
@@ -599,7 +602,7 @@
         else { S.x += (dx / d) * step; S.y += (dy / d) * step * KY; if (Math.abs(dx) > 0.5) S.face = dx > 0 ? 1 : -1; step = 0; }
       }
       S.moving = true;
-      if (!S.path.length) { S.path = null; const g = S.goal; S.goal = null; if (g) interact(g); }
+      if (!S.path.length) { S.path = null; const g = S.goal; S.goal = null; if (g) interact(g); else if (S.arrive > -1) { S.face = 1; S.arrive = -9; } } // vừa xuống đò: quay mặt ra, vũ khí bay sang trái, không che Chú Lái Đò
     }
     // ai đang ở gần
     S.near = null;
@@ -640,6 +643,8 @@
     o = o || {};
     const c = G.wx, Bt = build(), cam = Math.round(S.cam), sv = G.save, t = S.t;
     c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = 1; c.globalCompositeOperation = 'source-over';
+    c.fillStyle = '#101a1a'; c.fillRect(0, 0, 480, OY);
+    c.translate(0, OY);
     c.drawImage(Bt.ground, -cam, 0);
     // nước lấp lánh
     for (let i = 0; i < 10; i++) { const y = (i * 53 + 17) % H, x = bo(y) + 10 + ((i * 37) % 50) - cam, k = Math.sin(t * 1.4 + i * 2.1); if (k > 0.3 && x < 480) p(c, x + Math.round(k * 3), y, 5, 1, '#6a9ab8'); }
@@ -688,8 +693,11 @@
       if (a < 0.25) continue;
       c.fillStyle = 'rgba(210,255,120,' + (0.22 * a).toFixed(2) + ')'; c.fillRect(x - 1, y - 1, 3, 3); p(c, x, y, 1, 1, '#eaff9a');
     }
+    c.setTransform(1, 0, 0, 1, 0, 0);
     if (o.dim) { c.fillStyle = 'rgba(10,8,16,' + o.dim + ')'; c.fillRect(0, 0, 480, H); }
   };
+  // Đổi một điểm trong làng sang toạ độ màn hình
+  VS.screen = (wx, wy) => [wx - S.cam, wy + OY];
 
   // ---------- lớp chữ và nút (canvas giao diện) ----------
   function rrect(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.lineTo(x + w - r, y); c.quadraticCurveTo(x + w, y, x + w, y + r); c.lineTo(x + w, y + h - r); c.quadraticCurveTo(x + w, y + h, x + w - r, y + h); c.lineTo(x + r, y + h); c.quadraticCurveTo(x, y + h, x, y + h - r); c.lineTo(x, y + r); c.quadraticCurveTo(x, y, x + r, y); c.closePath(); }
@@ -701,7 +709,8 @@
     ui.font(size, true);
     let w = 0; for (const l of ls) w = Math.max(w, c.measureText(l).width);
     const pad = 5, bw = w + pad * 2, bh = ls.length * (size + 2.5) + 6;
-    const bx = G.clamp(x - bw / 2, 3, 477 - bw), by = y - bh - 5;
+    let by = y - bh - 5; if (by < 17) { y += 17 - by; by = 17; }
+    const bx = G.clamp(x - bw / 2, 3, 477 - bw);
     c.save();
     rrect(c, bx, by, bw, bh, 4); c.fillStyle = o.bg || '#fbf7ee'; c.fill(); c.lineWidth = 1.2; c.strokeStyle = INK; c.stroke();
     c.beginPath(); c.moveTo(x - 3.5, by + bh - 0.6); c.lineTo(x, y); c.lineTo(x + 3.5, by + bh - 0.6); c.fillStyle = o.bg || '#fbf7ee'; c.fill();
@@ -714,7 +723,7 @@
     const ui = G.ui, c = G.ux, n = ORDER.length, a = stripAt(0), b = stripAt(n - 1);
     let hit = null;
     c.save();
-    rrect(c, a[0] - 17, 16.5, b[0] - a[0] + 34, compact ? 27 : 35, 9); c.fillStyle = 'rgba(10,22,22,0.72)'; c.fill(); c.lineWidth = 0.8; c.strokeStyle = 'rgba(168,117,47,0.9)'; c.stroke();
+    rrect(c, a[0] - 16, 16.5, b[0] - a[0] + 32, compact ? 23.5 : 33, 9); c.fillStyle = 'rgba(10,22,22,0.72)'; c.fill(); c.lineWidth = 0.8; c.strokeStyle = 'rgba(168,117,47,0.9)'; c.stroke();
     c.restore();
     ORDER.forEach((k, i) => {
       const q = stripAt(i), cx = q[0], cy = q[1], on = sel === k;
@@ -722,34 +731,39 @@
       c.beginPath(); c.arc(cx, cy, STRIP.r, 0, 7); c.fillStyle = on ? '#8a2f22' : '#1f4f4a'; c.fill(); c.lineWidth = on ? 1.6 : 1; c.strokeStyle = on ? '#f6dc92' : '#a8752f'; c.stroke();
       c.beginPath(); c.arc(cx, cy, STRIP.r - 1, 0, 7); c.clip(); VS.face(c, k, cx, cy + 1, 1);
       c.restore();
-      if (S.news[k]) { c.save(); c.beginPath(); c.arc(cx + 8, cy - 8, 3.2, 0, 7); c.fillStyle = '#ff5a3a'; c.fill(); c.lineWidth = 0.8; c.strokeStyle = INK; c.stroke(); c.restore(); }
-      if (!compact) ui.text(NPCS[k].ngan, cx, 49, { size: 6.5, bold: true, align: 'center', color: on ? '#f6dc92' : '#e8dcc0' });
-      if (clickable && G.click && Math.abs(G.click.x - cx) <= STRIP.gap / 2 && G.click.y >= 14 && G.click.y <= (compact ? 45 : 52)) { hit = k; G.click = null; G.sfx && G.sfx('ui'); }
+      if (S.news[k]) { c.save(); c.beginPath(); c.arc(cx + 7.5, cy - 7.5, 3, 0, 7); c.fillStyle = '#ff5a3a'; c.fill(); c.lineWidth = 0.8; c.strokeStyle = INK; c.stroke(); c.restore(); }
+      if (!compact) ui.text(NPCS[k].ngan, cx, 46.5, { size: 6.5, bold: true, align: 'center', color: on ? '#f6dc92' : '#e8dcc0' });
+      if (clickable && G.click && Math.abs(G.click.x - cx) <= STRIP.gap / 2 && G.click.y >= 14 && G.click.y <= (compact ? 43 : 50)) { hit = k; G.click = null; G.sfx && G.sfx('ui'); }
     });
     return hit;
   };
   // Dải tài nguyên trên cùng (có G.theme thì dùng khung trống đồng)
   VS.resParts = function () {
-    const sv = G.save, R = G.REGIONS;
-    return [['Vàng ' + sv.gold, '#ffd23f'], ['Quặng ' + sv.ore, '#c9ccd2'], ['Đá tôi ' + sv.stones, '#d48af5'],
-      [R[0].mat + ' ' + sv.mats[0], '#9bd14a'], [R[1].mat + ' ' + sv.mats[1], '#7fd4ff'], [R[2].mat + ' ' + sv.mats[2], '#ff9a5a'], ['Mảnh trùm ' + sv.shards.join('/'), '#ffb0a0']];
+    const sv = G.save;
+    return [['gold', sv.gold, '#ffd23f'], ['ore', sv.ore, '#c9ccd2'], ['stone', sv.stones, '#d48af5'],
+      ['mat0', sv.mats[0], '#9bd14a'], ['mat1', sv.mats[1], '#7fd4ff'], ['mat2', sv.mats[2], '#ff9a5a'],
+      ['shard0', sv.shards[0], '#c8e8a0'], ['shard1', sv.shards[1], '#a8d8ff'], ['shard2', sv.shards[2], '#ffc0a0']];
   };
   VS.drawTop = function () {
     const sv = G.save, ui = G.ui, parts = VS.resParts(), right = G.HEROES[sv.hero].name + ' · cấp ' + sv.heroes[sv.hero].lvl;
     if (G.theme && G.theme.topBar) { G.theme.topBar(parts, right); return; }
     ui.rect(0, 0, 480, 15, 'rgba(12,10,18,0.82)');
-    let x = 6; for (const q of parts) { ui.text(q[0], x, 10.5, { size: 7, bold: true, color: q[1] }); ui.font(7, true); x += G.ux.measureText(q[0]).width + 8; }
+    let x = 6; for (const q of parts) { const t = String(q[1]); ui.text(t, x, 10.5, { size: 7, bold: true, color: q[2] }); ui.font(7, true); x += G.ux.measureText(t).width + 8; }
     ui.text(right, 474, 10.5, { size: 7, bold: true, align: 'right' });
   };
   // Lớp nút khi đang đi trong làng
   VS.drawHud = function () {
     const ui = G.ui, c = G.ux, cam = S.cam, T = G.theme;
     VS.drawTop();
+    // em bé đi tới sát mép trên, ngay dưới dải khuôn mặt, thì dải mờ đi để không che
+    const under = S.y + OY < 96 && Math.abs(S.x - cam - 240) < 124;
+    c.save(); if (under) c.globalAlpha = 0.4;
     VS.drawStrip(S.goal && S.goal.kind === 'npc' ? S.goal.id : S.near && S.near.kind === 'npc' ? S.near.id : null, false);
+    c.restore();
     // bong bóng tên chức năng trên đầu người đang ở gần
-    if (S.near && S.near.kind === 'npc' && !S.bubble) { const N = NPCS[S.near.id]; VS.bubble(N.viec + (S.news[S.near.id] ? '  !' : ''), N.pos[0] - cam, N.pos[1] + N.top - 12, { bg: '#ffe9a8' }); }
-    if (S.near && S.near.kind === 'kid') { const st = seats().find((q) => q.key === S.near.id); if (st) VS.bubble(G.HEROES[st.key].name, st.x - cam, st.y - 30, { bg: '#ffe9a8', size: 7.5 }); }
-    if (S.bubble) { const bq = S.bubble.who ? [NPCS[S.bubble.who].pos[0], NPCS[S.bubble.who].pos[1] + NPCS[S.bubble.who].top - 12] : S.bubble.at; VS.bubble(S.bubble.s, bq[0] - cam, bq[1], { maxW: 130 }); }
+    if (S.near && S.near.kind === 'npc' && !S.bubble) { const N = NPCS[S.near.id]; VS.bubble(N.viec + (S.news[S.near.id] ? '  !' : ''), N.pos[0] - cam, N.pos[1] + N.top - 12 + OY, { bg: '#ffe9a8' }); }
+    if (S.near && S.near.kind === 'kid') { const st = seats().find((q) => q.key === S.near.id); if (st) VS.bubble(G.HEROES[st.key].name, st.x - cam, st.y - 30 + OY, { bg: '#ffe9a8', size: 7.5 }); }
+    if (S.bubble) { const bq = S.bubble.who ? [NPCS[S.bubble.who].pos[0], NPCS[S.bubble.who].pos[1] + NPCS[S.bubble.who].top - 12] : S.bubble.at; VS.bubble(S.bubble.s, bq[0] - cam, bq[1] + OY, { maxW: 130 }); }
     // cần điều khiển
     const BA = G.btnArt;
     if (BA) {

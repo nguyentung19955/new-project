@@ -439,6 +439,7 @@
     if (G.scene && !G.noRender) {
       ui.begin();
       G.scene.draw();
+      if (G.theme && G.theme.endFrame) G.theme.endFrame(); // tên biểu tượng tài nguyên khi chạm vào
       if (G.portrait) {
         ui.text('Xoay ngang điện thoại để hình to và dễ chơi hơn', 240, -10, { size: 13, align: 'center', color: '#ffd27a' });
       }

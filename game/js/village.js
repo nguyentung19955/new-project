@@ -159,7 +159,7 @@
       ui.text(R.name + ' · ' + (i === 4 ? 'Ải trùm' : 'Ải ' + (i + 1)) + (V.diff ? ' · khó 2' : ''), 256, 223, { size: 9.5, bold: true, color: GOLD });
       ui.text((i === 4 ? 'Trùm vùng ' + R.bossName : 'Trùm nhỏ ' + R.mini) + ' · ' + (i < 2 ? 7 : 8) + ' phòng', 256, 234, { size: 7, color: TXT });
       ui.text('Hệ ' + G.EL[R.el].name + ' · gợi ý cấp hero ' + Math.max(1, Math.round((r * 5 + i) * 1.6 + 1 + (V.diff ? 6 : 0))), 256, 244, { size: 7, color: G.EL[R.el].col });
-      ui.para('Thưởng: ' + b.xp + ' kinh nghiệm, ~' + b.gold + ' vàng, ' + R.mat.toLowerCase() + (i === 4 ? ', mảnh trùm, vũ khí bậc cao' : ''), 256, 254, 144, { size: 6.5, color: SOFT });
+      ui.para('Thưởng: ' + b.xp + ' kinh nghiệm, ~' + b.gold + ' vàng, ' + (5 + i) + ' ' + R.mat.toLowerCase() + (i === 4 ? ', ' + (V.diff ? 4 : 3) + ' mảnh ' + R.bossName + ', vũ khí bậc cao' : ''), 256, 254, 144, { size: 6.5, color: SOFT });
       if (T.btn(404, 219, 64, 38, 'Lên đò', { size: 11, primary: true })) G.startStage(r, i, V.diff);
     } else ui.text('Chạm một ải trên tranh để xem.', 256, 240, { size: 8, color: SOFT });
   }
@@ -301,7 +301,7 @@
           line = 'Chọn mảnh trùm để luyện. Mỗi lần tốn 4 mảnh trùm và 2 đá tôi. Mảnh của vùng sau cho Vàng mạnh hơn.';
           opts.forEach((k, j) => {
             const cost = G.goldCost(k);
-            if (T.btn(CX + 4 + j * 99, DET_Y + 17, 96, 30, G.REGIONS[k].bossName + ' ' + xm(G.GOLD_MULT[k]), { size: 8.5, sub: cost.gold + ' vàng, 4 mảnh', subSize: 6.5, disabled: !canPay(cost), gold: true })) { pay(cost); raise(3, k); }
+            if (T.btn(CX + 4 + j * 99, DET_Y + 17, 96, 30, G.REGIONS[k].bossName + ' ' + xm(G.GOLD_MULT[k]), { size: 8.5, sub: costText(cost), subSize: 6.5, disabled: !canPay(cost), gold: true })) { pay(cost); raise(3, k); }
           });
         }
       }

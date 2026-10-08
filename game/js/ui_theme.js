@@ -329,19 +329,14 @@
   // ---------- dải tài nguyên trên cùng ----------
   // parts: [[chữ, màu], ...] xếp từ trái; right: chữ bên phải (tên hero, cấp)
   T.TOP_H = 15;
-  T.topBar = function (parts, right) {
+  T.topBar = function (items, right) {
     const mx = Math.ceil(G.mx || 0), w = 480 + mx * 2;
     put(layer('top|' + w, w, 17, () => {
       R(0, 0, w, 14, 'rgba(13,26,26,0.93)'); R(0, 14, w, 1, C.br); R(0, 15, w, 1, C.dk);
       for (let i = 2; i < w - 4; i += 8) { P(i, 13, C.brD); P(i + 1, 12, C.brD); P(i + 2, 13, C.brD); } // răng cưa nhỏ sát mép
     }), -mx, 0);
-    let x = 6, size = 7;
-    ui.font(size, true);
-    const rw = right ? G.ux.measureText(right).width + 10 : 0;
-    let total = 0; for (const q of parts) total += G.ux.measureText(q[0]).width + 8;
-    const gap = total + rw > 470 ? 5 : 8; if (total + rw > 470) size = 6.5;
-    for (const q of parts) { txt(q[0], x, 10, { size, bold: true, color: q[1] }); ui.font(size, true); x += G.ux.measureText(q[0]).width + gap; }
-    if (right) txt(right, 474, 10, { size, bold: true, align: 'right', color: C.hi });
+    T.resRow(items, 6, 10.5, { size: 7.5, gap: 8 });
+    if (right) oldText(right, 474, 10.5, { size: 7.5, bold: true, align: 'right', color: C.hi });
   };
 
   // ---------- khung thoại của người làng ----------
@@ -383,6 +378,115 @@
     }), x - 1, y - 1);
     if (o.title) txt(o.title, x + 7, y + 12, { size: 6.5, color: C.sub });
   };
+
+  // ---------- tài nguyên hiện bằng biểu tượng, không dùng chữ ----------
+  // Mỗi tài nguyên một hình pixel 7x7. Chạm vào biểu tượng thì hiện tên trong chốc lát.
+  const RES = {
+    gold: { rows: ['..ooo..', '.oyyyo.', 'oywyyyo', 'oyyyyyo', 'oyyyydo', '.oyddo.', '..ooo..'], pal: { o: '#7a4a10', y: '#ffd23f', w: '#fff6c0', d: '#e0a020' } },
+    ore: { rows: ['...kk..', '..kggk.', '.kgwggk', 'kggggdk', 'kgggddk', '.kdddk.', '..kkk..'], pal: { g: '#c9ccd2', w: '#ffffff', d: '#8a8f98', k: '#2a2e36' } },
+    stone: { rows: ['...k...', '..kpk..', '.kpwpk.', 'kpppppk', '.kpdpk.', '..kdk..', '...k...'], pal: { p: '#d48af5', w: '#ffffff', d: '#8a4ab0', k: '#34143f' } },
+    mat0: { rows: ['.....gg', '...kgg.', 'kkkkkk.', 'kbbbbok', 'kbdbbok', 'kkkkkk.', '.......'], pal: { b: '#a06a3a', d: '#6a4424', o: '#f0d090', g: '#9bd14a', k: '#2e1c10' } },
+    mat1: { rows: ['...k...', '..kbk..', '.kbwbk.', 'kbbbbbk', 'kbdbdbk', 'kbbbbbk', '.kkkkk.'], pal: { b: '#7fd4ff', w: '#ffffff', d: '#3f8be0', k: '#143a6a' } },
+    mat2: { rows: ['...r...', '..ry...', '.kryrk.', 'krryork', 'kroyork', '.krrrk.', '..kkk..'], pal: { r: '#ff7a2a', y: '#ffe07a', o: '#ffb040', k: '#4a1408' } },
+    shard0: { rows: ['....k..', '...kak.', '..kaak.', '.kawak.', '.kaaak.', 'kaaadk.', 'kkkkkk.'], pal: { a: '#8ac84a', w: '#eaffc0', d: '#4a8a2a', k: '#1e3a12' } },
+    shard1: { rows: ['....k..', '...kak.', '..kaak.', '.kawak.', '.kaaak.', 'kaaadk.', 'kkkkkk.'], pal: { a: '#5ab0f0', w: '#e0f4ff', d: '#2a6ab0', k: '#12284a' } },
+    shard2: { rows: ['....k..', '...kak.', '..kaak.', '.kawak.', '.kaaak.', 'kaaadk.', 'kkkkkk.'], pal: { a: '#ff8a4a', w: '#fff0d0', d: '#c04a1a', k: '#4a1a08' } },
+    xp: { rows: ['...c...', '...c...', '..cwc..', 'ccwwwcc', '..cwc..', '...c...', '...c...'], pal: { c: '#8fd0ff', w: '#ffffff' } },
+  };
+  T.RES = RES;
+  T.resName = function (kind) {
+    const R = G.REGIONS || [];
+    if (kind === 'gold') return 'Vàng'; if (kind === 'ore') return 'Quặng'; if (kind === 'stone') return 'Đá tôi'; if (kind === 'xp') return 'Kinh nghiệm';
+    const i = +kind.slice(-1);
+    if (kind.indexOf('mat') === 0) return R[i] ? R[i].mat : 'Nguyên liệu';
+    return R[i] ? 'Mảnh trùm ' + R[i].bossName : 'Mảnh trùm';
+  };
+  // Vẽ biểu tượng tài nguyên, cao h (đơn vị giao diện), góc trên trái tại (x, y).
+  T.resIcon = function (kind, x, y, h) {
+    const d = RES[kind]; if (!d) return;
+    const cv = layer('res|' + kind, 7, 7, () => bmp(0, 0, d.rows, d.pal));
+    const c = G.ux, sm = c.imageSmoothingEnabled; h = h || 7;
+    c.imageSmoothingEnabled = false; c.drawImage(cv, x, y, h, h); c.imageSmoothingEnabled = sm;
+  };
+  // Vùng chạm của các biểu tượng đã vẽ trong khung hình này, và tên đang hiện
+  let zones = [], tip = null;
+  function zone(kind, x, y, w, h) { if (zones.length < 200) zones.push([kind, x, y, w, h]); }
+  // Gọi sau khi một cảnh vẽ xong: lần chạm nào chưa bị nút nào nhận mà trúng một biểu tượng thì hiện tên của nó.
+  T.endFrame = function () {
+    if (G.click) for (const z of zones) if (G.inRect(G.click, z[1] - 3, z[2] - 4, z[3] + 6, z[4] + 8)) { tip = { s: T.resName(z[0]), x: z[1] + z[3] / 2, y: z[2], t: G.time + 1.8 }; G.click = null; break; }
+    zones = [];
+    if (tip && G.time < tip.t) {
+      ui.font(7.5, true);
+      const w = Math.ceil(G.ux.measureText(tip.s).width) + 12, x = G.clamp(tip.x - w / 2, 2, 478 - w), y = tip.y < 20 ? tip.y + 11 : tip.y - 16;
+      T.plate(x, y, w, 14); oldText(tip.s, x + w / 2, y + 10, { size: 7.5, bold: true, align: 'center', color: C.hi });
+    } else tip = null;
+  };
+  T.tipNow = () => (tip && G.time < tip.t ? tip.s : null);
+  // Chữ có số lượng tài nguyên ("400 vàng", "+5 quặng", "2 mảnh Mộc Tinh"): thay tên tài nguyên bằng biểu tượng đứng sau con số.
+  let RES_RE = null, RES_MAP = null;
+  function resRe() {
+    if (RES_RE) return RES_RE;
+    RES_MAP = { 'vàng': 'gold', 'quặng': 'ore', 'đá tôi': 'stone', 'kinh nghiệm': 'xp' };
+    (G.REGIONS || []).forEach((r, i) => { RES_MAP[r.mat.toLowerCase()] = 'mat' + i; RES_MAP['mảnh ' + r.bossName.toLowerCase()] = 'shard' + i; });
+    const words = Object.keys(RES_MAP).sort((a, b) => b.length - a.length).map((w) => w.replace(/ /g, '[ \\u00a0]'));
+    RES_RE = new RegExp('([+~]?\\d[\\d.,]*)[ \\u00a0](' + words.join('|') + ')(?![\\wÀ-ỹ])', 'gi');
+    return RES_RE;
+  }
+  const oldText = ui.text, oldWrap = ui.wrap;
+  // Đổi "số + tên tài nguyên" thành "số + một ký tự riêng" (mỗi loại tài nguyên một ký tự); lúc vẽ ký tự đó hiện thành biểu tượng.
+  const KINDS = Object.keys(RES), PUA = 0xe000;
+  function mark(str) {
+    const re = resRe(); re.lastIndex = 0;
+    return str.replace(re, (m, num, word) => num + String.fromCharCode(PUA + KINDS.indexOf(RES_MAP[word.toLowerCase().replace(/ /g, ' ')])));
+  }
+  const HAS = /[-]/;
+  function richText(str, x, y, o) {
+    if (typeof str !== 'string' || str.length < 3) return oldText(str, x, y, o);
+    const t = mark(str);
+    if (!HAS.test(t)) return oldText(str, x, y, o);
+    o = o || {};
+    const size = Math.max(6.5, o.size || 9), ih = Math.round(size * 1.05 * 2) / 2, c = G.ux;
+    const parts = []; let cur = '';
+    for (const ch of t) { const k = ch.charCodeAt(0) - PUA; if (k >= 0 && k < KINDS.length) { if (cur) parts.push([cur, null]); cur = ''; parts.push([null, KINDS[k]]); } else cur += ch; }
+    if (cur) parts.push([cur, null]);
+    ui.font(size, o.bold);
+    let total = 0;
+    for (const q of parts) { q[2] = q[0] != null ? c.measureText(q[0]).width : ih + 1; total += q[2]; }
+    let cx = o.align === 'center' ? x - total / 2 : o.align === 'right' ? x - total : x;
+    const oo = Object.assign({}, o, { align: 'left' });
+    for (let i = 0; i < parts.length; i++) {
+      const q = parts[i];
+      if (q[0] != null) oldText(q[0], cx, y, oo);
+      else { T.resIcon(q[1], cx + 1, y - ih + 1, ih); const pw = i ? Math.min(parts[i - 1][2], 26) : 0; zone(q[1], cx - pw, y - ih + 1, pw + ih + 1, ih); }
+      cx += q[2];
+    }
+  }
+  // Một dãy tài nguyên: items = [[loại, số, màu chữ], ...]. Trả về toạ độ x sau món cuối. o: { size, gap, lack: [loại đang thiếu] }
+  T.resRow = function (items, x, y, o) {
+    o = o || {};
+    const size = o.size || 7.5, ih = Math.round(size * 1.05 * 2) / 2;
+    for (const q of items) {
+      T.resIcon(q[0], x, y - ih + 1, ih);
+      const s = String(q[1]); ui.font(size, true);
+      const w = G.ux.measureText(s).width;
+      oldText(s, x + ih + 1.5, y, { size, bold: true, color: q[2] || C.text });
+      zone(q[0], x, y - ih + 1, ih + 1.5 + w, ih);
+      x += ih + 1.5 + w + (o.gap == null ? 7 : o.gap);
+    }
+    return x;
+  };
+  // Đổi một bảng giá { gold, ore, stones, mat: [..], shard: [..] } thành dãy cho T.resRow; món nào chưa đủ thì chữ màu cam.
+  T.costItems = function (c) {
+    const sv = G.save, a = [], col = (ok) => (ok ? C.text : '#ff9a5a');
+    if (!c) return a;
+    if (c.gold) a.push(['gold', c.gold, col(sv.gold >= c.gold)]);
+    if (c.ore) a.push(['ore', c.ore, col(sv.ore >= c.ore)]);
+    if (c.stones) a.push(['stone', c.stones, col(sv.stones >= c.stones)]);
+    if (c.mat) c.mat.forEach((n, i) => { if (n) a.push(['mat' + i, n, col(sv.mats[i] >= n)]); });
+    if (c.shard) c.shard.forEach((n, i) => { if (n) a.push(['shard' + i, n, col(sv.shards[i] >= n)]); });
+    return a;
+  };
+
   // ---------- đổi cách vẽ chung của game sang chủ đề này ----------
   // Mọi chỗ trong game đang gọi G.ui.btn, G.ui.panel, G.ui.bar sẽ ra hình trống đồng mà không phải sửa từng chỗ.
   // Màu nút cũ (o.color) được đổi sang tông tương ứng: đỏ là nút chính, nâu sáng là đang chọn, đỏ sẫm là việc nguy hiểm...
@@ -390,7 +494,10 @@
   T.install = function () {
     if (!ui || T.installed) return;
     T.installed = true;
-    T.old = { btn: ui.btn, panel: ui.panel, bar: ui.bar };
+    T.old = { btn: ui.btn, panel: ui.panel, bar: ui.bar, text: oldText, wrap: oldWrap };
+    ui.text = richText;
+    // giữ "số + tên tài nguyên" trên cùng một dòng để lúc vẽ đổi được thành biểu tượng
+    ui.wrap = function (str, maxW, size, bold) { return oldWrap(mark(String(str)), maxW, size, bold); };
     ui.btn = function (x, y, w, h, label, o) {
       o = o || {};
       const q = { disabled: o.disabled, size: o.size, sub: o.sub, subSize: o.subSize };
@@ -408,7 +515,7 @@
       }
       return T.btn(x, y, w, h, label, q);
     };
-    ui.panel = function (x, y, w, h, title) { T.panel(x, y, w, h, title, { plain: w < 200 || h < 110 }); };
+    ui.panel = function (x, y, w, h, title) { T.panel(x, y, w, h, title, { plain: w < 200 || h < 110, noBand: true }); };
     ui.bar = function (x, y, w, h, frac, col) { T.bar(x, y, w, null, frac, null, { h: Math.round(h), col: col || '#d0482f' }); };
   };
   T.install();

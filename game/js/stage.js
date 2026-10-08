@@ -838,7 +838,7 @@
     const sv = G.save, P = S.P, sh = S.shop;
     ui.rect(0, 0, G.W, G.H, 'rgba(0,0,0,0.55)');
     ui.panel(70, 50, 340, 166, 'Thương nhân');
-    ui.text('Vàng: ' + sv.gold, 398, 65, { size: 8, align: 'right', color: '#ffd23f', bold: true });
+    ui.text(sv.gold + ' vàng', 398, 65, { size: 8, align: 'right', color: '#ffd23f', bold: true });
     const items = [
       { id: 'potion', label: 'Bình máu', sub: 'Hồi 30% máu', cost: 60, ok: P.potions < 3, f: () => { P.potions++; } },
       { id: 'charm', label: 'Bùa ' + G.EL[sh.el].name, sub: 'Phủ hệ 60 giây', cost: 80, ok: true, f: () => G.addCoat(sh.el, 60) },
@@ -889,20 +889,31 @@
     if (R.win) {
       const notes = ['Qua ải', 'Không dùng bình máu', 'Hạ trùm bằng hệ khắc chế'];
       for (let i = 0; i < 3; i++) {
-        ui.text(R.starNote[i] ? '★' : '☆', 86, y, { size: 12, color: R.starNote[i] ? '#ffd23f' : '#6a5a4a' });
-        ui.text(notes[i], 102, y - 1, { size: 8, color: R.starNote[i] ? '#f1ead9' : '#8a7f74' });
+        ui.text(R.starNote[i] ? '★' : '☆', 86, y, { size: 12, color: R.starNote[i] ? '#ffd23f' : '#5a7a72' });
+        ui.text(notes[i], 102, y - 1, { size: 8, color: R.starNote[i] ? '#f1ead9' : '#8fa49e' });
         y += 14;
       }
       y += 2;
     }
-    const two = R.lines.length > 8;
-    R.lines.slice(0, 16).forEach((l, i) => {
-      const cx = two && i >= 8 ? 244 : 86, cy = y + (two && i >= 8 ? i - 8 : i) * 11.5;
-      if (l.w) { // vũ khí nhận được: hình nhỏ và tên mang màu bậc
-        G.art.weaponIcon(G.ux, l.w, cx + 5, cy - 3, 11);
-        ui.text(l.s, cx + 13, cy, { size: 7.5, bold: true, color: G.RARITY[G.wRar(l.w)].col });
-      } else ui.text(l, cx, cy, { size: 7.5, color: l.includes('lên cấp') || l.includes('Cứu được') ? '#ffd27a' : '#e8dfcc' });
+    // Phần thưởng: chữ ở cột trái; vũ khí nhận được thành thẻ viền màu bậc ở cột phải (khung thẻ của chủ đề trống đồng).
+    const TH = G.theme, texts = R.lines.filter((l) => !l.w), weps = R.lines.filter((l) => l.w);
+    const rows = Math.max(1, Math.floor((208 - y) / 11.5));
+    const line = (l, cx, cy) => ui.text(l, cx, cy, { size: 7.5, color: l.includes('lên cấp') || l.includes('Cứu được') ? '#ffd27a' : '#e8dfcc' });
+    texts.slice(0, rows).forEach((l, i) => line(l, 86, y + i * 11.5));
+    let ry = y - 9;
+    const maxCards = Math.max(1, Math.floor((208 - ry) / 26));
+    weps.slice(0, maxCards).forEach((l, i) => {
+      if (i === maxCards - 1 && weps.length > maxCards) { ui.text('và ' + (weps.length - i) + ' vũ khí nữa (xem ở Bà Hàng Xén)', 246, ry + 10, { size: 7, color: '#ffd27a' }); ry += 14; return; }
+      const rar = G.wRar(l.w), nm = G.wName(l.w), k = l.s.indexOf(nm);
+      TH.card(244, ry, 152, 24, { rar });
+      TH.slot(247, ry + 2, 20, rar);
+      G.art.weaponIcon(G.ux, l.w, 257, ry + 12, 16);
+      ui.text((k > 0 ? l.s.slice(0, k).trim().replace(/:$/, '') : 'Nhận được') + ' · bậc ' + G.RARITY[rar].name, 271, ry + 9.5, { size: 6.5, color: '#a9c2b4' });
+      ui.text(ui.wrap(nm, 120, 7.5, true)[0], 271, ry + 19.5, { size: 7.5, bold: true, color: G.RARITY[rar].col });
+      ry += 26;
     });
+    // chữ còn dư thì xuống cột phải, dưới các thẻ vũ khí
+    texts.slice(rows).forEach((l, i) => { const cy = ry + 9 + i * 11.5; if (cy <= 208) line(l, 246, cy); });
     if (!R.win && !S.quit) ui.para('Mẹo: về làng mài vũ khí ở lò rèn, hoặc chơi lại ải cũ để lên cấp rồi quay lại.', 86, 196, 308, { size: 7.5, color: '#d9cdb8' });
     // Thắng thì có nút đi thẳng sang ải kế (hoặc vùng kế sau trùm vùng), không phải vòng về làng.
     const nx = R.win ? (S.i < 4 ? [S.r, S.i + 1] : S.r < G.REGIONS.length - 1 ? [S.r + 1, 0] : null) : null;
