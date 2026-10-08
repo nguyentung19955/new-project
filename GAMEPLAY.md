@@ -2372,6 +2372,11 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 237 — quái không phình + gợi ý hợp thể (tester đạt)
+
+- Quái pixel không còn to lên khi trúng đòn/bơi (bỏ co giãn, cỡ cố định theo bảng tĩnh js/pixel/quai-cao.js).
+- Gợi ý chợ rõ hơn (xanh ghép ★, tím/cam hợp thể + dấu góc); ghim "Theo đuổi" công thức + dải nguyên liệu trên chợ; tự gợi ý công thức gần xong; tìm tên không dấu + lọc; chạm giữ thẻ chợ xem công thức.
+
 ## Phiên bản 236 — cân bằng PA4 (tester đạt)
 
 - Khó: máu quái ×1,03/đợt từ đợt 15; Thường ×1,02/đợt (ải 4+); Dễ giữ nguyên. Thế trận: +6%/tướng từ tướng 3 + 3/4/5 hành +10/20/30% (chip ⚔ trên thanh trên). R hồi chiêu tối thiểu 12 s.
