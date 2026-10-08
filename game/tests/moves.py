@@ -163,6 +163,40 @@ JS = r"""
     room('hammer'); e = dummy(226);
     sec(3.5, { atk: true });
     ok('Búa: giữ mãi thì đòn tự tung ra rồi lấy đà lại', lost(e) / base() >= 1.6 && P.mv.holding, (lost(e) / base()).toFixed(2));
+    // ================= HỆ LỬA =================
+    const el3 = (el, marks) => ({ branch: el, marks: marks == null ? 300 : marks });
+    const combo3 = () => { for (let k = 0; k < 3; k++) { run(1, { atk: true, atkP: true }); wait(() => !P.hitDone, {}); if (k < 2) wait(() => P.atkT > 0, {}); } };
+    room('sword', el3('fire')); e = dummy(224); let side2 = dummy(250), mk = dummy(250, 196); far = dummy(330);
+    G.applyStatus(mk, 'fire', 1); mk.hp = 1;
+    const fire0 = S.stats.el.fire, m0 = w.marks.fire;
+    combo3();
+    let zs = W.zones.filter((z) => z.he && z.el === 'fire');
+    ok('Lửa: nhát kết của kiếm để lại một vệt cháy trên đất', zs.length === 1 && near(zs[0].x, 200 + 24, 1) && zs[0].life > 2.5, zs.length + ' vệt');
+    ok('Lửa: nhát kết nổ lan ra, quái đứng ngoài tầm kiếm vẫn dính 0,35 lần (Thức tỉnh)', lost(side2) / base() > 0.34 && lost(side2) / base() < 0.47, (lost(side2) / base()).toFixed(3)); // có thể lẫn một nhịp cháy lan 0,09
+    ok('Lửa: quái ở xa không dính nổ', lost(far) === 0);
+    ok('Lửa: sát thương nổ tính vào thống kê hệ Lửa của trùm', S.stats.el.fire - fire0 > base() * 0.35, (S.stats.el.fire - fire0).toFixed(1));
+    ok('Lửa: quái đang cháy chết vì vụ nổ vẫn cho dấu ấn Lửa', mk.dead && near(w.marks.fire - m0, 1.2, 0.01), w.marks.fire - m0);
+    const walker = dummy(zs[0].x, zs[0].y); sec(0.7, {});
+    ok('Lửa: quái đi vào vệt cháy thì bị đốt', walker.st.fire > 0 && lost(walker) > 0, walker.st.fire);
+    sec(3.2, {});
+    ok('Lửa: vệt cháy tắt sau vài giây', W.zones.filter((z) => z.he).length === 0);
+    room('sword', el3('fire', 30)); e = dummy(224); side2 = dummy(250);
+    G.rnd = () => 0.999; combo3(); G.rnd = Math.random;
+    ok('Lửa: ở mốc Mầm vụ nổ chỉ bằng một nửa (0,175 lần)', near(lost(side2) / base(), 0.175, 0.01), (lost(side2) / base()).toFixed(3));
+    room('sword'); e = dummy(224); combo3();
+    ok('Chưa có hệ: nhát kết không để lại gì trên đất', W.zones.filter((z) => z.he).length === 0);
+    room('bow', el3('fire')); e = dummy(300); side2 = dummy(312, 198);
+    G.rnd = () => 0.999; // không cho đòn gây hiệu ứng lan (để đo riêng vụ nổ)
+    tap(); wait(() => lost(e) === 0, {});
+    G.rnd = Math.random;
+    ok('Lửa: tên lửa nổ khi trúng, quái đứng cạnh dính 0,25 lần', lost(side2) / base() >= 0.25 - 0.01 && lost(side2) / base() < 0.6, (lost(side2) / base()).toFixed(3));
+    ok('Lửa: vụ nổ của tên tính là đánh xa', S.stats.ranged > 0 && S.stats.melee === 0);
+    room('hammer', el3('fire')); e = dummy(226);
+    for (let k = 0; k < 5; k++) { sec(0.16 + 1.15, { atk: true }); run(1, {}); sec(0.5, {}); }
+    ok('Lửa: số vệt cháy trên sân có trần (6)', W.zones.filter((z) => z.he).length <= 6 && W.zones.filter((z) => z.he).length >= 3, W.zones.filter((z) => z.he).length);
+    room('spear', el3('fire')); P.mana = P.maxmana; run(1, { specialP: true }); sec(0.3, {});
+    ok('Lửa: đòn đặc biệt Lao tới để lại một đường lửa', W.zones.filter((z) => z.he && z.el === 'fire').length >= 3, W.zones.filter((z) => z.he).length);
+
     // ================= CHUNG =================
     room('sword'); run(1, { swapP: true }); sec(0.1, {});
     ok('Đổi vũ khí lần đầu thì hiện dòng chỉ dẫn của vũ khí đó', W.banner && W.banner.s === G.MOVE_TIPS.bow, W.banner && W.banner.s);

@@ -4,12 +4,69 @@
   const G = window.G, fx = G.fx;
   if (!fx || !fx.kit) return;
   const K = fx.kit;
-  const { api, fail, emit, streak, add, addRing, trauma, kick, pal, RAMP, R, rr, p, star, crescent, hand } = K;
+  const { api, fail, emit, streak, add, addRing, trauma, kick, pal, RAMP, R, rr, hash, p, star, line, crescent, hand, tongue } = K;
+  const TAU = Math.PI * 2;
+  const NUM = [0, 5, 7, 9]; // số chi tiết trang trí theo mốc Mầm, Thành hình, Thức tỉnh
+
+  // ---------- hình dạng của một đòn: cung tròn trước mặt, đường thẳng, hoặc một vòng quanh người ----------
+  // Trả về null nếu đòn không có vệt (ví dụ buông tên: mũi tên tự mang hiệu ứng).
+  function shapeOf(P, o) {
+    const f = P.face, R0 = o.reach || 32;
+    if (o.type === 'sword') {
+      if (o.move === 'luot') return { kind: 'arc', x: P.x + f * 6, y: P.y - 12, f, ra: R0 * 0.9, rb: 11 };
+      if (o.step === 2) return { kind: 'arc', x: P.x + f * 2, y: P.y - 12, f, ra: R0 * 1.1, rb: 13 };
+      return { kind: 'arc', x: P.x + f * 3, y: P.y - 15, f, ra: R0 * 0.88, rb: 20 };
+    }
+    if (o.type === 'spear') {
+      if (o.move === 'quet') return { kind: 'round', x: P.x, y: P.y - 9, f, ra: R0, rb: R0 * 0.34 };
+      return { kind: 'line', x: P.x + f * 10, y: P.y - 13, f, len: R0 - 6 };
+    }
+    if (o.type === 'hammer') return { kind: 'arc', x: P.x + f * 4, y: P.y - 17, f, ra: (o.move === 'nenDat' ? 30 : R0 * 0.9), rb: 27 };
+    return null;
+  }
+  const PTO = { x: 0, y: 0, nx: 0, ny: 0 };
+  // Điểm thứ u (0..1) trên hình, kèm hướng chĩa ra ngoài (nx, ny)
+  function pt(sh, u) {
+    if (sh.kind === 'line') { PTO.x = sh.x + sh.f * sh.len * u; PTO.y = sh.y; PTO.nx = 0; PTO.ny = -1; return PTO; }
+    const a = sh.kind === 'round' ? u * TAU : -1.35 + 2.7 * u;
+    PTO.nx = Math.cos(a) * sh.f; PTO.ny = Math.sin(a);
+    PTO.x = sh.x + PTO.nx * sh.ra; PTO.y = sh.y + PTO.ny * sh.rb;
+    return PTO;
+  }
+
+  // ---------- LỬA: lưỡi lửa bám dọc vệt đòn, tàn lửa bay ----------
+  function drawFlames(c, o, k) {
+    const sh = o.sh, n = o.n, t = K.S().t;
+    for (let i = 0; i < n; i++) {
+      const u = (i + 0.5) / n;
+      if (u > k * 4 + 0.15) continue; // lửa bén dần theo đường vung
+      const q = pt(sh, u);
+      const h = Math.round((o.h0 + hash(o.sd + i) * o.h0) * (1 - k * 0.9) * (0.75 + 0.25 * Math.sin(t * 38 + i * 2.1)));
+      tongue(c, Math.round(q.x + q.nx * 2) + ((i + ((t * 20) | 0)) % 2), Math.round(q.y - k * 6) + 2, h, i % 2 ? 1 : 2);
+    }
+  }
+  function fireSwing(sh, lv, big) {
+    const n = (sh.kind === 'round' ? NUM[lv] + 5 : NUM[lv]) + (big ? 2 : 0);
+    add({ ty: 'he', x: sh.x, y: sh.y, t: big ? 0.34 : 0.26, ly: 1, draw: drawFlames, sh, n, h0: 3 + lv * 1.5 + (big ? 2 : 0), sd: R() * 100 });
+    const m = 1 + lv + (big ? 2 : 0);
+    for (let i = 0; i < m; i++) {
+      const q = pt(sh, R());
+      emit(0, q.x, q.y, sh.f * rr(20, 90), rr(-110, -40), rr(0.35, 0.7), RAMP.ember, 1, 240, 0, sh.y + 16 + rr(-3, 5), 1); // tàn lửa
+      if (i % 2 === 0) emit(9, q.x, q.y, sh.f * rr(5, 40), rr(-50, -20), rr(0.25, 0.45), RAMP.fire, 3, -30, 2, null, 1);
+    }
+  }
+  const SWING = { fire: fireSwing };
+  function decorate(P, o) {
+    if (!o.el || !o.lv || !SWING[o.el]) return;
+    const sh = shapeOf(P, o);
+    if (sh) SWING[o.el](sh, o.lv, o.move === 'quet' || o.move === 'nenDat' || (o.type === 'sword' && o.step === 2));
+  }
 
   // ---------- vệt đòn theo lối đánh ----------
   const baseSwing = fx.swing;
   // o: { type, move, step, combo, reach, depth, el, lv, stage, charge, level }
-  api('mvSwing', (P, o) => {
+  api('mvSwing', (P, o) => { swing(P, o); decorate(P, o); });
+  function swing(P, o) {
     const f = P.face, PL = pal(o.el);
     if (o.move === 'luot') {
       // nhát lướt sau khi né: lưỡi liềm rộng quét ngang và vệt gió
@@ -53,7 +110,58 @@
       return;
     }
     baseSwing(P, o);
-  });
+  }
+
+  // ---------- điểm nhấn của hệ ở nhát kết, đòn thả, đòn đặc biệt (luật nằm trong js/moves.js) ----------
+  // o: { x, y, dir, power, line, round, r, pts }
+  const FINISH = {
+    fire(lv, o) {
+      if (o.pts.length) {
+        // vệt lửa chạy dọc đường lao: các cột lửa nối nhau phụt lên
+        o.pts.forEach((x, i) => {
+          add({ ty: 'pillar', x, y: o.y, w: 4 + lv, h: 16 + lv * 5, t: 0.3, ly: 1, d: i * 0.035 });
+          for (let j = 0; j < 2; j++) emit(0, x, o.y - 4, rr(-50, 50), rr(-150, -70), rr(0.4, 0.7), RAMP.ember, 1, 260, 0, o.y + rr(-3, 5), 1);
+        });
+        add({ ty: 'scorch', x: o.x + (o.dir * o.line) / 2, y: o.y, r: Math.min(30, o.line * 0.4), t: 1.6, ly: 0 });
+        trauma(0.2);
+        return;
+      }
+      K.blastFire(o.x, o.y, o.r, Math.min(1.2, (0.4 + 0.13 * lv) * Math.sqrt(o.power)));
+      trauma(0.16 + 0.07 * lv); kick(o.dir, 1);
+    },
+  };
+  api('heFinish', (el, lv, o) => { if (FINISH[el]) FINISH[el](lv, o); });
+  // Tên mang hệ trúng quái. o: { x, y, r, big, dir }
+  const ARROW = {
+    fire(lv, o) {
+      const y = o.y - 10;
+      add({ ty: 'flash', x: o.x, y, r: o.big ? 11 : 7, t: 0.11, c: '#fff3b0', c2: '#ffa53a', ly: 1, sq: true });
+      addRing(o.x, o.y, 3, o.r, 0.22, '#ffd23f', o.big ? 3 : 2, 0);
+      const n = (o.big ? 8 : 4) + lv;
+      for (let i = 0; i < n; i++) { const a = R() * TAU, v = rr(20, 70); emit(9, o.x + Math.cos(a) * 3, y + Math.sin(a) * 3, Math.cos(a) * v, Math.sin(a) * v * 0.5 - rr(20, 60), rr(0.25, 0.5), RAMP.fire, R() < 0.5 ? 5 : 3, -30, 1.5, null, 1); }
+      for (let i = 0; i < 3 + lv; i++) emit(0, o.x, y, rr(-90, 90), rr(-140, -50), rr(0.35, 0.7), RAMP.ember, 1, 240, 0, o.y + rr(-3, 5), 1);
+      if (o.big) { add({ ty: 'scorch', x: o.x, y: o.y, r: o.r * 0.5, t: 1.6, ly: 0 }); trauma(0.22); }
+    },
+  };
+  api('heArrow', (el, lv, o) => { if (ARROW[el]) ARROW[el](lv, o); });
+
+  // ---------- mũi tên mang hệ: hình vẽ thêm quanh mũi tên ----------
+  const proj0 = fx.proj;
+  fx.proj = function (c, o) {
+    proj0(c, o);
+    if (G.noRender || !o.he || o.kind !== 'arrow') return;
+    try {
+      const S = K.S();
+      if (!S) return;
+      const x = Math.round(o.x), y = Math.round(o.y - (o.z || 10)), k = o.vx < 0 ? -1 : 1, t = S.t, lv = o.he.lv;
+      if (o.he.el === 'fire') {
+        // lửa bọc đầu tên, kéo dài ra sau
+        const n = (o.big ? 3 : 1) + (lv >= 2 ? 1 : 0);
+        for (let j = 0; j < n; j++) tongue(c, x - k * (1 + j * 5), y + 2, (o.big ? 9 : 6) - j * 2 + (((t * 24 + j * 3) | 0) % 3), j % 2 ? 1 : 2);
+        p(c, x + k * 3, y - 1, 2, 3, '#fff3b0');
+      }
+    } catch (e) { fail(e); }
+  };
   // Vừa lên một nấc lấy đà: vòng sáng và lấp lánh ở tay
   api('mvCharge', (P, level) => {
     const h = hand(P), w = G.curW(P), PL = pal(G.activeEl(P, w));
@@ -77,6 +185,12 @@
   // ---------- mỗi khung: sóng chấn động, hạt lúc lấy đà ----------
   fx.heStep = function (W, dt, tick) {
     const P = W.P, mv = P.mv;
+    if (tick) for (const o of W.projs) {
+      // vệt hạt sau mũi tên mang hệ
+      if (!o.he || o.team !== 'player') continue;
+      const y = o.y - (o.z || 10), b = o.x - Math.sign(o.vx) * 6;
+      if (o.he.el === 'fire') { emit(9, b, y + rr(-1, 2), -o.vx * 0.06, rr(-30, -10), rr(0.2, 0.35), RAMP.fire, o.big ? 4 : 3, -20, 0, null, 1); if (o.big || o.he.lv >= 3) emit(0, b, y, -o.vx * 0.1 + rr(-20, 20), rr(-60, -20), rr(0.3, 0.5), RAMP.ember, 1, 200, 0, o.y + 2, 1); }
+    }
     if (W.mvWaves) for (const z of W.mvWaves) {
       if (!z.fxOn) { z.fxOn = 1; add({ ty: 'he', x: z.x, y: z.y, t: z.left / z.v + 0.05, ly: 0, draw: (c, o) => { if (o.z.left > 0) drawWave(c, o.z); }, z }); }
       if (tick) {

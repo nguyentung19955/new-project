@@ -51,6 +51,17 @@
       },
     },
   };
+  // Luật riêng của từng hệ khi vũ khí đã có nhánh hệ (hoặc đang được phủ hệ). Mọi sát thương là hệ số nhân với
+  // chỉ số vũ khí, rồi nhân tiếp với k theo mốc: Mầm 0,5 / Thành hình 0,75 / Thức tỉnh 1.
+  G.HE = {
+    k: [0, 0.5, 0.75, 1],
+    maxZones: 6, // số vệt cháy, màn khói cùng lúc trên sân
+    fire: {
+      blast: 0.35, blastR: 20, blastRLv: 4,   // nhát kết, đòn thả, đòn đặc biệt: nổ nhỏ lan ra
+      trailR: 14, trailRLv: 2, trailLife: 1.2, trailLifeLv: 0.6, trailSrc: 0.5, trailEvery: 0.5, // vệt cháy đốt quái đi qua
+      arrow: 0.25, arrowR: 20,                 // tên lửa nổ khi trúng
+    },
+  };
   // Một dòng chỉ dẫn cho mỗi vũ khí, hiện khi vào ải và lần đầu đổi sang vũ khí đó.
   G.MOVE_TIPS = {
     sword: 'Kiếm: bấm Đánh liên tiếp ra chuỗi 3 nhát. Đánh ngay sau khi Né để lướt chém.',
@@ -58,7 +69,7 @@
     spear: 'Giáo: bấm Đánh liên tiếp để đâm rồi quét vòng. Giữ rồi thả để lao tới.',
     hammer: 'Búa: giữ Đánh để lấy đà, thả ra nện đất gây chấn động. Đủ 2 nấc thì làm choáng.',
   };
-  const C = G.MOVES;
+  const C = G.MOVES, HE = G.HE;
 
   // ---------- trạng thái đòn đánh trên người chơi (P.mv) ----------
   // Lớp vẽ nào cũng đọc được: name (tên đòn), step (nhịp trong chuỗi), chain (đã đánh mấy nhịp),
@@ -224,6 +235,7 @@
     mv.name = ch.name; mv.kind = 'xoc'; mv.step = 0; mv.cur = null; mv.dashDur = ch.t; mv.chain = 0; mv.lastT = G.time + ch.t;
     G.sfx('swing', 1.4);
     swingFx(P, w, { kind: 'xoc', name: ch.name, reach: len, depth: ch.depth }, { charge: c });
+    if (c >= 0.5) finish(P, w, { x: P.x, y: P.y, dir: P.face, power: 0.5 + 0.5 * c, line: len });
   }
 
   // ---------- búa ----------
@@ -251,6 +263,7 @@
     W.shake = Math.max(W.shake, o.level >= 2 ? 0.3 : 0.16);
     G.sfx('boom', o.level >= 2 ? 1.5 : 1.9);
     swingFx(P, w, o, { level: o.level, x: cx, y: cy, r });
+    finish(P, w, { x: cx, y: cy, dir: f, power: o.level >= 2 ? 1.3 : 0.8 });
     gain(P, w, n);
   }
 
@@ -312,6 +325,7 @@
       const list = boxHit(P, o.reach, o.depth, m.mult, { w, heavy: !!m.heavy });
       if (m.push) push(list, P.face * m.push);
       swingFx(P, w, o);
+      if (m.finish) finish(P, w, { x: P.x + P.face * o.reach * 0.6, y: P.y, dir: P.face, power: 1 });
       gain(P, w, list.length);
     } else if (o.kind === 'ban') {
       shoot(P, w, o.arrow);
@@ -329,18 +343,95 @@
       G.cb.hitProps(P.x - o.reach, P.x + o.reach, P.y, o.reach * 0.66);
       for (const e of list) if (!e.dead && !e.isBoss) e.x += (e.x >= P.x ? 1 : -1) * m.push;
       swingFx(P, w, o);
+      finish(P, w, { x: P.x + P.face * 10, y: P.y, dir: P.face, power: 1, round: true });
       gain(P, w, list.length);
     } else if (o.kind === 'nenDat') {
       hammerSlam(P, w, o);
     }
   };
 
-  // ---------- các điểm nối khác từ combat.js (luật riêng của hệ sẽ nằm ở đây) ----------
+  // ---------- luật riêng của từng hệ ----------
+  // Sát thương phụ của hệ: vẫn qua G.damage nên được tính vào thống kê hệ và đánh xa/gần của trùm, và kết liễu vẫn cho dấu ấn.
+  function heDamage(e, amt, el, w, ranged) {
+    if (!e.dead) G.damage(e, amt, { el, src: 'hit', ranged: !!ranged, w });
+  }
+  function around(x, y, r, fn, skip) {
+    for (const e of G.targets()) if (e !== skip && Math.hypot(e.x - x, (e.y - y) * 1.5) < r + e.r) fn(e);
+  }
+  // Vũng nằm lại trên đất (vệt cháy, màn khói độc): dùng đúng loại vũng "pool" sẵn có của combat.js.
+  function heZone(W, x, y, r, life, el, src, every, extra) {
+    const mine = W.zones.filter((z) => z.he);
+    if (mine.length >= HE.maxZones) mine[0].dead = true;
+    const z = Object.assign({ shape: 'circle', x: G.clamp(x, W.x0, W.x1), y: G.clamp(y, W.y0, W.y1), r, t: 0, pool: true, team: 'player', el, life, tick: 0.2, every, src, he: true }, extra || {});
+    W.zones.push(z);
+    return z;
+  }
+  // Điểm nhấn của hệ ở nhát kết chuỗi, đòn giữ rồi thả và đòn đặc biệt.
+  // o: { x, y, dir, power, line (độ dài đường lao), round (toả quanh người), ranged }
+  function finish(P, w, o) {
+    const h = heOf(P, w);
+    if (!h) return;
+    const W = G.getWorld(), D = G.pDamage(P, w), k = HE.k[h.lv] * (o.power || 1);
+    const info = { x: o.x, y: o.y, dir: o.dir, power: o.power || 1, line: o.line || 0, round: !!o.round, r: 0, pts: [] };
+    if (h.el === 'fire') {
+      // nổ nhỏ lan ra, rồi để lại vệt cháy trên đất
+      const F = HE.fire, r = F.blastR + F.blastRLv * h.lv, tr = F.trailR + F.trailRLv * h.lv, life = F.trailLife + F.trailLifeLv * h.lv;
+      info.r = r;
+      if (o.line) {
+        const n = Math.max(2, Math.round(o.line / 24));
+        for (let i = 0; i < n; i++) {
+          const x = o.x + o.dir * ((i + 0.5) * o.line) / n;
+          around(x, o.y, tr, (e) => { if (!info.hit || !info.hit.includes(e)) { (info.hit || (info.hit = [])).push(e); heDamage(e, D * F.blast * k, 'fire', w, o.ranged); } });
+          heZone(W, x, o.y, tr - 2, life, 'fire', D * F.trailSrc, F.trailEvery);
+          info.pts.push(x);
+        }
+      } else {
+        around(o.x, o.y, r, (e) => heDamage(e, D * F.blast * k, 'fire', w, o.ranged));
+        heZone(W, o.x, o.y, tr, life, 'fire', D * F.trailSrc, F.trailEvery);
+      }
+    }
+    FX('heFinish', h.el, h.lv, info);
+  }
+  M.finish = finish;
+
   M.onHit = function (e, d, el, o) {};
   M.onKill = function (e, o, w) {};
-  M.arrowHit = function (o, e) {};
-  M.special = function (P, w) {};
+  // Tên của người chơi vừa trúng một con quái
+  M.arrowHit = function (o, e) {
+    const h = o.he;
+    if (!h || o.shard) return;
+    const W = G.getWorld(), P = W.P, D = G.pDamage(P, o.w), k = HE.k[h.lv];
+    if (h.el === 'fire') {
+      // tên lửa nổ khi trúng; tên mạnh đầy đà thì nổ to và để lại vệt cháy
+      const F = HE.fire, c = o.charged || 0, r = F.arrowR + (c >= 1 ? 8 : 0);
+      around(e.x, e.y, r, (t) => heDamage(t, D * F.arrow * k * (1 + c), 'fire', o.w, true), e);
+      heDamage(e, D * F.arrow * k * (1 + c) * 0.5, 'fire', o.w, true);
+      if (c >= 1 && !o.heTrail) { o.heTrail = true; heZone(W, e.x, e.y, F.trailR + F.trailRLv * h.lv, F.trailLife + F.trailLifeLv * h.lv, 'fire', D * F.trailSrc, F.trailEvery); }
+      FX('heArrow', 'fire', h.lv, { x: e.x, y: e.y, r, big: c >= 1, dir: o.vx < 0 ? -1 : 1 });
+    }
+  };
+  // Phần riêng theo hệ của đòn đặc biệt (gọi sau khi combat.js đã tung đòn)
+  M.special = function (P, w) {
+    const mv = st(P), W = G.getWorld();
+    cancel(mv); mv.chain = 0;
+    if (!heOf(P, w)) return;
+    if (w.type === 'sword' || w.type === 'spear') {
+      const len = Math.abs(P.dashV) * P.dashT, end = G.clamp(P.x + P.face * len, W.x0, W.x1);
+      finish(P, w, { x: P.x, y: P.y, dir: P.face, power: 1.2, line: Math.max(20, Math.abs(end - P.x)) });
+    } else if (w.type === 'hammer') {
+      finish(P, w, { x: P.x, y: P.y, dir: P.face, power: 1.5, round: true });
+    } else {
+      // mưa tên: điểm nhấn của hệ rơi xuống khi trận mưa sắp dứt
+      const z = W.zones[W.zones.length - 1];
+      if (z && z.rain) (W.mvTimers || (W.mvTimers = [])).push({ t: 0.8, fn: () => finish(P, w, { x: z.x, y: z.y, dir: P.face, power: 1.3, ranged: true, round: true }) });
+    }
+  };
   M.update = function (W, dt) {
+    const ts = W.mvTimers;
+    if (ts && ts.length) {
+      for (const q of ts) { q.t -= dt; if (q.t <= 0 && !W.over) q.fn(); }
+      W.mvTimers = ts.filter((q) => q.t > 0);
+    }
     const ws = W.mvWaves;
     if (!ws || !ws.length) return;
     for (const z of ws) {
@@ -355,6 +446,11 @@
         }
       }
       G.cb.hitProps(a - 4, b + 4, z.y, z.depth / 2 + 4);
+      if (z.he && z.level >= 2) {
+        // sóng nấc 2 của búa mang hệ: cứ 30 điểm ảnh để lại một dấu của hệ trên đường đi
+        z.heD = (z.heD || 0) + d;
+        if (z.heD >= 30) { z.heD = 0; finish(W.P, z.w, { x: z.x, y: z.y, dir: z.dir, power: 0.5 }); }
+      }
       if (z.x <= W.x0 || z.x >= W.x1) z.left = 0;
     }
     W.mvWaves = ws.filter((z) => z.left > 0);

@@ -152,11 +152,12 @@ UNIT = r"""
 def main():
     frames = int(sys.argv[1]) if len(sys.argv) > 1 else 420
     nbad = 0
-    src = open(os.path.join(ROOT, 'js', 'fx.js'), encoding='utf-8').read()
-    code = re.sub(r'//.*', '', src)
-    for word in ['G.rnd', 'G.rr(', 'G.ri(', 'G.pick(']:
-        if word in code:
-            print('SAI: fx.js dùng', word, '(bộ ngẫu nhiên của luật chơi)'); nbad += 1
+    for name in ['fx.js', 'fx_he.js']:
+        src = open(os.path.join(ROOT, 'js', name), encoding='utf-8').read()
+        code = re.sub(r'//.*', '', src)
+        for word in ['G.rnd', 'G.rr(', 'G.ri(', 'G.pick(']:
+            if word in code:
+                print('SAI:', name, 'dùng', word, '(bộ ngẫu nhiên của luật chơi)'); nbad += 1
     errs = []
     with sync_playwright() as p:
         b = p.chromium.launch()

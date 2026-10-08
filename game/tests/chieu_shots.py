@@ -41,17 +41,22 @@ LIB = r"""
     T.shots.push({ cv, label: label || '' });
   };
   // seq: [[nút, số khung, { khung: 'nhãn' }], ...]. dense > 0 thì chụp đều mỗi "dense" khung.
-  T.play = function (seq, dense) {
+  // mom: [[điều kiện(P, W, mv), số khung chờ thêm, nhãn], ...]: mỗi mục chụp một lần, sau khi điều kiện đúng lần đầu.
+  T.play = function (seq, dense, mom) {
     let n = 0;
+    const due = [], done = new Set();
     for (const s of seq) {
       for (let k = 0; k < s[1]; k++) {
         inp = Object.assign({}, s[0]);
         if (k > 0) for (const q of ['atkP', 'dodgeP', 'specialP', 'skillP', 'swapP']) delete inp[q];
         frame(); n++;
-        if (dense) { if (n % dense === 0) T.grab(String(n)); }
-        else if (s[2] && s[2][k + 1] != null) T.grab(s[2][k + 1]);
+        if (dense) { if (n % dense === 0) T.grab(String(n)); continue; }
+        (mom || []).forEach((m, i) => { if (!done.has(i) && m[0](T.P, T.W, T.P.mv || {})) { done.add(i); due.push([n + m[1], i, m[2]]); } });
+        for (const d of due) if (d[0] === n) { T.shots.push(null); T.grab(d[2]); const g = T.shots.pop(); T.shots.pop(); T.byMom = T.byMom || []; T.byMom[d[1]] = g; }
       }
     }
+    if (!dense) T.shots = (T.byMom || []).filter(Boolean);
+    T.byMom = null;
   };
   // Ghép các hàng ảnh thành một tấm. rows: [{ title, shots }]
   T.sheet = function (rows, head) {
@@ -84,33 +89,56 @@ LIB = r"""
 })();
 """
 
-A = "{ atk: true }"
-# Kịch bản bấm nút của từng vũ khí: [nút, số khung, {khung thứ mấy: nhãn}]
+T_ = "[{ atk: true, atkP: true }, 2]"
+# Kịch bản bấm nút của từng vũ khí: [nút, số khung]
 SEQ = {
+    'sword': "[" + ", ".join([T_ + ", [{}, 20]"] * 2) + ", " + T_ + """, [{}, 70],
+      [{ dodgeP: true, mx: 1 }, 1], [{ mx: 1 }, 17], [{ atk: true, atkP: true }, 3], [{}, 40]]""",
+    'bow': "[" + T_ + """, [{}, 44], [{ atk: true, atkP: true }, 66], [{}, 60]]""",
+    'spear': "[" + ", ".join([T_ + ", [{}, 19]"] * 3) + ", " + T_ + """, [{}, 60], [{ atk: true, atkP: true }, 48], [{}, 50]]""",
+    'hammer': "[" + T_ + """, [{}, 55], [{ atk: true, atkP: true }, 84], [{}, 70]]""",
+    'special': """[[{}, 4], [{ specialP: true }, 1], [{}, 80]]""",
+}
+# Thời điểm chụp: [điều kiện, chờ thêm mấy khung, nhãn]
+MOM = {
     'sword': """[
-      [{ atk: true, atkP: true }, 2], [{}, 6, { 6: 'Chém ngang' }], [{}, 12],
-      [{ atk: true, atkP: true }, 2], [{}, 7, { 7: 'Chém ngược' }], [{}, 12],
-      [{ atk: true, atkP: true }, 2], [{}, 10, { 9: 'Nhát kết' }], [{}, 6, { 5: 'Nhát kết (sau)' }], [{}, 40],
-      [{ dodgeP: true, mx: 1 }, 1], [{ mx: 1 }, 17], [{ atk: true }, 3, { 3: 'Né rồi lướt chém' }], [{}, 5, { 4: 'Nhát lướt (sau)' }], [{}, 20]]""",
+      [(P, W, m) => m.kind === 'chem' && m.step === 0 && P.hitDone, 2, 'Chém ngang'],
+      [(P, W, m) => m.kind === 'chem' && m.step === 1 && P.hitDone, 2, 'Chém ngược'],
+      [(P, W, m) => m.kind === 'chem' && m.step === 2 && P.hitDone, 2, 'Nhát kết'],
+      [(P, W, m) => m.kind === 'chem' && m.step === 2 && P.hitDone, 12, 'Ngay sau nhát kết'],
+      [(P, W, m) => m.kind === 'chem' && m.step === 2 && P.hitDone, 40, 'Còn lại trên đất'],
+      [(P, W, m) => m.kind === 'luot', 5, 'Né rồi lướt chém']]""",
     'bow': """[
-      [{ atk: true, atkP: true }, 2], [{}, 14, { 14: 'Bắn thường' }], [{}, 30],
-      [{ atk: true }, 26, { 26: 'Giữ: giương cung' }], [{ atk: true }, 34, { 32: 'Đầy đà' }],
-      [{}, 4, { 4: 'Thả: tên mạnh' }], [{}, 12, { 6: 'Xuyên qua quái', 12: 'Sau đó' }], [{}, 30]]""",
+      [(P, W, m) => W.projs.some((o) => o.team === 'player' && !o.big && o.x > 200), 0, 'Bấm: tên thường'],
+      [(P, W, m) => m.holding && m.charge > 0.5, 0, 'Giữ: giương cung'],
+      [(P, W, m) => m.holding && m.charge >= 1, 8, 'Đầy đà'],
+      [(P, W, m) => W.projs.some((o) => o.big), 2, 'Thả: tên mạnh'],
+      [(P, W, m) => W.projs.some((o) => o.big && o.seen.length >= 1), 3, 'Trúng và xuyên qua'],
+      [(P, W, m) => W.projs.some((o) => o.big && o.seen.length >= 1), 22, 'Sau đó']]""",
     'spear': """[
-      [{ atk: true, atkP: true }, 2], [{}, 8, { 8: 'Đâm 1' }], [{}, 10],
-      [{ atk: true, atkP: true }, 2], [{}, 7], [{}, 10],
-      [{ atk: true, atkP: true }, 2], [{}, 8, { 8: 'Đâm 3' }], [{}, 10],
-      [{ atk: true, atkP: true }, 2], [{}, 12, { 12: 'Quét vòng' }], [{}, 6, { 5: 'Quét vòng (sau)' }], [{}, 30],
-      [{ atk: true }, 40, { 30: 'Giữ: thu giáo' }], [{}, 4, { 4: 'Thả: xốc tới' }], [{}, 8, { 6: 'Xuyên qua quái' }], [{}, 20]]""",
+      [(P, W, m) => m.kind === 'dam' && m.step === 0 && P.hitDone, 2, 'Đâm'],
+      [(P, W, m) => m.kind === 'dam' && m.step === 2 && P.hitDone, 2, 'Đâm lần ba'],
+      [(P, W, m) => m.kind === 'quet' && P.hitDone, 2, 'Quét vòng'],
+      [(P, W, m) => m.kind === 'quet' && P.hitDone, 14, 'Ngay sau quét vòng'],
+      [(P, W, m) => m.holding && m.charge >= 1, 4, 'Giữ: thu giáo'],
+      [(P, W, m) => m.kind === 'xoc', 5, 'Thả: xốc tới'],
+      [(P, W, m) => m.kind === 'xoc', 22, 'Sau khi lao']]""",
     'hammer': """[
-      [{ atk: true, atkP: true }, 2], [{}, 22, { 22: 'Nện thường' }], [{}, 30],
-      [{ atk: true }, 40, { 40: 'Giữ: lấy đà nấc 1' }], [{ atk: true }, 40, { 38: 'Nấc 2' }],
-      [{}, 6, { 6: 'Thả: nện đất' }], [{}, 10, { 4: 'Sóng chấn động', 10: 'Sóng chạy tiếp' }], [{}, 30]]""",
+      [(P, W, m) => m.kind === 'nen' && P.hitDone, 2, 'Nện thường'],
+      [(P, W, m) => m.holding && m.level === 1, 8, 'Giữ: lấy đà nấc 1'],
+      [(P, W, m) => m.holding && m.level === 2, 8, 'Nấc 2'],
+      [(P, W, m) => m.kind === 'nenDat' && P.hitDone, 3, 'Thả: nện đất'],
+      [(P, W, m) => m.kind === 'nenDat' && P.hitDone, 16, 'Sóng chấn động'],
+      [(P, W, m) => m.kind === 'nenDat' && P.hitDone, 44, 'Còn lại trên đất']]""",
+    'special': """[
+      [(P, W, m) => P.specCd > 0, 6, 'Đặc biệt'],
+      [(P, W, m) => P.specCd > 0, 20, ''],
+      [(P, W, m) => P.specCd > 0, 60, '']]""",
 }
 
 def run(pg, type_, el, dense=0):
     pg.evaluate("([t, e]) => { T.room(t, e); }", [type_, el])
-    pg.evaluate("([s, d]) => { T.play(eval(s), d); }", [SEQ[type_], dense])
+    pg.evaluate("([s, d, m]) => { T.play(eval(s), d, eval(m)); }", [SEQ[type_], dense, MOM[type_]])
 
 def save(pg, js, name):
     data = pg.evaluate(js)
@@ -161,7 +189,7 @@ def main():
             pg.evaluate("window.__rows = []")
             for el in [None, 'fire', 'poison', 'ice']:
                 run(pg, 'sword', el)
-                pg.evaluate("([n, c]) => { const s = T.shots.filter((x) => x.label.startsWith('Nhát kết') || x.label === 'Chém ngang'); __rows.push({ title: n, col: c, shots: s }); }", [ELN[el], ELC[el]])
+                pg.evaluate("([n, c]) => { const s = T.shots.filter((x) => x.label !== 'Né rồi lướt chém' && x.label !== 'Chém ngược'); __rows.push({ title: n, col: c, shots: s }); }", [ELN[el], ELC[el]])
             save(pg, "T.sheet(__rows, 'Cùng một chuỗi kiếm: chưa có hệ, Lửa, Độc, Băng')", 'hieu-ung-ba-he.png')
         if errs or pg.evaluate("G.fx.errs"):
             print('LỖI:', errs[:3], pg.evaluate("G.fx.lastErr"))
