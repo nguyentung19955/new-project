@@ -1985,3 +1985,11 @@ function loop(now) {
   requestAnimationFrame(loop);
 }
 requestAnimationFrame(loop);
+
+// v259: iPhone Safari bỏ qua user-scalable=no — chặn chạm-2-lần phóng to / chụm tay và kéo trang lệch
+document.addEventListener('dblclick', (e) => { if (!e.target.closest('input, textarea')) e.preventDefault(); }, { passive: false });
+for (const t of ['gesturestart', 'gesturechange']) document.addEventListener(t, (e) => e.preventDefault(), { passive: false });
+const keepTop = () => { if (window.scrollX || window.scrollY) window.scrollTo(0, 0); for (const el of [document.documentElement, document.body]) { if (el.scrollLeft || el.scrollTop) { el.scrollLeft = 0; el.scrollTop = 0; } } };
+window.addEventListener('scroll', keepTop, { passive: true });
+document.body.addEventListener('scroll', keepTop, { passive: true });
+if (window.visualViewport) window.visualViewport.addEventListener('scroll', keepTop, { passive: true });
