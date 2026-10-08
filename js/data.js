@@ -2261,7 +2261,7 @@ const MOUNTAIN = {
 
 // ===== v91: BẢNG ẤN PHÙ (rune tài khoản) =====
 // 3 nhánh × 12 ấn = 36. Mỗi nhánh: 3 hàng chỉ số (tối đa 5 cấp) + 1 hàng 3 ấn kỹ năng (tối đa 3 cấp).
-// Mua bằng Ngân khố, áp cho mọi tướng trong mọi trận. Hàng sau mở khi nhánh đã đủ điểm.
+// (cũ) Mua bằng Ngân khố cho mọi tướng → nay: khắc bằng Tu Vi, riêng từng tướng, CHỈ tướng Vàng (runeFx/RUNE_MAP lọc legendary). Hàng sau mở khi nhánh đã đủ điểm.
 const RUNE_BRANCHES = [
   { id: 'nui', name: 'Ấn Núi', sub: 'sức mạnh · bền bỉ', color: '#D9844A' },
   { id: 'gio', name: 'Ấn Gió', sub: 'tốc độ · chí mạng', color: '#6FCB8A' },

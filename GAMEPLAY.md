@@ -1073,7 +1073,7 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - Khi mở thì trận tạm dừng; bấm quay lại là về trận và chạy tiếp. Tướng vừa mua ghép được ngay.
 
 ## Phiên bản 91 — Bảng Ấn Phù, bảng thông tin quái
-- **Bảng Ấn Phù** (menu chính cạnh Anh Hùng, hoặc menu ≡ trong trận): 36 ấn chia 3 nhánh, mua bằng Ngân khố, áp cho mọi tướng.
+- **Bảng Ấn Phù** (menu chính cạnh Anh Hùng, hoặc menu ≡ trong trận): 36 ấn chia 3 nhánh, (từ v95–v123: khắc bằng điểm Tu Vi, riêng từng tướng, **chỉ dành cho tướng Vàng** — chốt lại 08/10).
   - **Ấn Núi** (sức mạnh, bền bỉ), **Ấn Gió** (tốc độ, chí mạng), **Ấn Sấm** (phép, năng lượng).
   - Mỗi nhánh có 9 ấn chỉ số (tối đa 5 cấp, giá 40/70/110 × cấp theo hàng) và 3 ấn kỹ năng (tối đa 3 cấp, giá 700 / 1.400 / 2.400).
   - Hàng 2, 3, 4 mở khi nhánh có 4, 10, 18 điểm.
@@ -2372,6 +2372,11 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 237 — quái không phình + gợi ý hợp thể (tester đạt)
+
+- Quái pixel không còn to lên khi trúng đòn/bơi (bỏ co giãn, cỡ cố định theo bảng tĩnh js/pixel/quai-cao.js).
+- Gợi ý chợ rõ hơn (xanh ghép ★, tím/cam hợp thể + dấu góc); ghim "Theo đuổi" công thức + dải nguyên liệu trên chợ; tự gợi ý công thức gần xong; tìm tên không dấu + lọc; chạm giữ thẻ chợ xem công thức.
+
 ## Phiên bản 236 — cân bằng PA4 (tester đạt)
 
 - Khó: máu quái ×1,03/đợt từ đợt 15; Thường ×1,02/đợt (ải 4+); Dễ giữ nguyên. Thế trận: +6%/tướng từ tướng 3 + 3/4/5 hành +10/20/30% (chip ⚔ trên thanh trên). R hồi chiêu tối thiểu 12 s.
@@ -2829,6 +2834,24 @@ Người dùng chọn phương án 4: máu quái tăng dần theo đợt + hạ 
 - Sửa thêm: kỹ năng hỗ trợ (khiên, buff, hồi máu — Kim Quy Q, Cây Đa của Cuội/Mẫu E…) chỉ dùng TRONG ĐỢT: sân hết quái (giữa hai đợt)
   thì không dùng dù tướng đang bị thương. Test: tests/sua-tam-skill (giữa hai đợt, tướng 30% máu → không kỹ năng hỗ trợ nào tung).
 - Theo tester: bỏ luật ẩn mọi phần tử con của chợ (chỉ ẩn khung ngoài, con tự ẩn theo); `closeScreen` bỏ lớp panel-open ngay khi đóng. Lỗi chập chờn của cho-tuong ("ảnh chưa sẵn sàng") khi chạy 6 test song song cũng xảy ra trên nhánh chính (1/6 lần), không do nhánh này; chạy lần lượt 5/5 đạt.
+
+## claude/quai-to-dan — Quái pixel không còn "to lên" giữa trận
+- Lỗi người dùng báo: quái pixel cứ phình to / nhảy cỡ khi đang chơi.
+- Nguyên nhân thật: `drawEnemy` co giãn quái khi bơi (±3,5%) và khi trúng đòn giật lùi (×1,1); với pixel, `pxBlit` làm tròn cỡ một điểm ảnh sprite theo tỉ lệ khung (`round(unit × scale)`) → chỉ cần ×1,1 là nhảy lên cả bậc: 1→2 px (×2: voi chiến, kỵ binh, Triệu Đà…), 2→3 px (×1,5)… Quái bị đánh liên tục nên trông như cứ to lên.
+- Sửa: quái pixel chỉ lật trái/phải, không nhận co giãn bơi / giật lùi (đã có khung hurt/walk riêng; vẫn giữ giật lùi ngang + nghiêng). Hình cũ (không pixel) giữ như trước.
+- Phòng thêm: cỡ quái pixel co theo chiều cao hình cũ lấy từ bảng tĩnh `js/pixel/quai-cao.js` (sinh bằng `node tools/build-quai-cao.js`, chạy lại khi thêm quái / đổi ảnh cũ / đổi ENEMY_W) thay vì đo lúc chơi → không phụ thuộc ảnh cũ tải xong hay chưa, không còn kéo ảnh cũ packs/* về khi bật pixel. Cỡ boss giữ đúng như v217 (tests/pixel/boss-cao ×1,00).
+- Tinh anh ×1,15, quái champion (thủ lĩnh) ×1,5 vẫn to hơn có chủ đích (cố định từ lúc sinh).
+- Test: `node tests/pixel/quai-co-dinh.test.js` (41 loại quái: hộp + cỡ vẽ thật không đổi quá 2% qua 30 s, bị giật lùi liên tục, ép tải ảnh cũ; chụp đầu trận / sau 30 s ở 1920×934 · 844×390).
+## claude/goi-y-ro — Sáng gợi ý triệu hồi rõ hơn
+- Thẻ chợ có gợi ý: viền trong 2px + quầng sáng nằm TRÊN khung thẻ pixel, thở 1,3 s (chỉ đổi opacity của `::before` → không vẽ lại,
+  không tốn FPS). Màu theo loại: xanh lá = mua là ghép ★ (quy ước cũ), tím = nguyên liệu hợp thể Sử thi, cam vàng = hợp thể Huyền thoại
+  (`marketNeeds().hopTo` cho biết tướng đích). Thẻ vừa ghép vừa là nguyên liệu → ưu tiên xanh ghép.
+- Dấu góc cho người mù màu: `▲★` (ghép) / `⇧` (hợp thể), chữ thường hệ thống (`no-pxemo`, không đổi thành icon pixel) — cạnh chân dung, không che mặt.
+- Trên sân: khi đang xem chợ (không chọn / không kéo), tướng ★ mà thẻ chợ mua là ghép luôn có vòng xanh nhịp dưới chân (viền tối lót
+  để nổi trên nền pixel) + mũi tên xanh nhỏ nhấp nhô trên đầu. Vòng "ghép được" lúc kéo tướng/thẻ cũng thở theo cùng nhịp (`drawTwinRing`).
+- Chạy cả pixel và `?pixel=0` (lớp sáng là CSS/canvas chung, không cần ảnh pixel riêng).
+- Test: `node tests/goi-y-ro/goi-y-ro.test.js` (đúng điều kiện có/không tướng cùng loại, 3 màu khác nhau, nhịp 1,2–1,5 s, đo điểm ảnh viền
+  so với thẻ thường: tương phản ≥ 1,8 ở pixel/pixel0, 844×390 · 667×375 · 1920×934).
 - Lỗi gấp "Ấn GỌI SỚM không gọi được": KHÔNG do panel-open — bản v229 (trước khi gộp nhánh này) cũng không bấm được. Gốc: luật cũ `#nextwaves { … pointer-events: none }` (đầu style.css) đè `#ui > * { pointer-events: auto }` (cùng độ ưu tiên, viết sau thắng) → chạm/nhấp xuyên xuống bản đồ. Sửa: `#nextwaves.early { pointer-events: auto }` (dải thường vẫn cho chạm xuyên). Test `tests/goi-som/` (844×390 chuột + chạm, 1920×934): giữa đợt bấm Gọi sớm → đợt kế bắt đầu + toast vàng; sau khi mở/đóng Túi đồ; sau khi kéo tướng.
 
 ## claude/chan-vuot-lui — Chơi trên web: vuốt không còn lỡ về trang trước
@@ -2849,3 +2872,14 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - **Tranh nhỏ** (`giao-dien/tranh-*`, 96×96): voi chín ngà · gà chín cựa · ngựa chín hồng mao (vẽ 48×48 phóng ×2, bỏ kiểu chibi),
   hũ báu hào quang 12 tia, kho lúa nhà sàn mái thuyền, mặt trống đồng chim Lạc, xoay máy.
 - Các mã vẽ lại gỡ khỏi `tools/pixel/spec/*.json` (`tools/pixel/ve-lai/DA-VE-LAI.json`) để `--nap --ghi-de` không ghi đè.
+- **Mở rộng (chưa có tướng Tím thì khó biết mua gì):**
+  - **Mục tiêu hợp thể:** bảng Hợp thể có nút ghim **Theo đuổi** trên mỗi công thức Tím/Vàng (tối đa 2, ghim thứ 3 thì bỏ cái cũ nhất; lưu ở
+    `settings.pins`). Thẻ chợ là nguyên liệu Thường còn thiếu sáng **xanh ngọc** + dấu ghim (công thức Vàng thì đi xuống công thức Tím chưa có trên sân).
+    Ưu tiên màu: ghép ★ > ghim > hợp thể. Dải nhỏ trên chợ: [đích] = [nguyên liệu ★ hiện tại/cần] + […], thiếu thì mờ; chạm dải → mở Hợp thể.
+    Chưa ghim gì: tự gợi ý 1 công thức Tím gần xong nhất (viền mảnh, dải nét đứt chữ "Gợi ý"); ✕ trên dải hoặc nút **Tự gợi ý** trong Hợp thể để tắt/bật
+    (`settings.autoPin`). Chỉ là giao diện — không đổi tỉ lệ rút thẻ (chơi nhóm không lệch).
+  - **Tìm tên không dấu** ("thach sanh" → Thạch Sanh, đ → d) + lọc hành (5 nút) ở Hợp thể (tìm cả 2 tab), Anh Hùng và Bách khoa · Vai trò (thêm lọc bậc
+    Thường/Tím/Vàng). Anh Hùng: chạm tướng → khung "Phát triển thành" (dùng trong công thức nào / cần gì); Bách khoa: chạm tướng → thẻ thông tin.
+  - **Chạm giữ thẻ chợ** ~0,45 s: hiện tên + vai trò + "Góp vào: + bạn ghép ➜ tướng Tím" (có dấu ghim nếu đang theo đuổi); thả tay ẩn, không mua.
+  - Test: `node tests/goi-y-ro/muc-tieu.test.js` (gợi ý tự động, ghim đúng thẻ sáng, tối đa 2, lưu, dải có/thiếu, chạm giữ không mua, chạm nhanh vẫn mua,
+    tắt gợi ý, nút Theo đuổi, tìm không dấu không mất ô nhập, lọc bậc — pixel + pixel0, 844×390 · 667×375 · 1920×934).
