@@ -2500,3 +2500,5 @@ html.pixel.sk-nut-dong #btn-run.go { background: var(--sk-nut-dong-thuong) cente
 #deck .mk-card .cost:has(.tw) { padding-left: 15px; }
 #deck .mk-card .cost { white-space: nowrap; letter-spacing: -0.4px; }
 #deck .mk-card .cost.d3 { font-size: 12.5px; }
+/* iPhone: ô nhập chữ < 16px → Safari tự phóng to cả trang khi chạm vào và không thu lại → mọi ô nhập 16px (font-size tính theo CSS, không theo thu phóng của khung) */
+input, textarea, select, #ui input, #ui textarea, #ui select { font-size: 16px !important; }
