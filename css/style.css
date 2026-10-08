@@ -803,7 +803,7 @@ button:disabled { cursor: default; }
   padding: 3px 12px; border-radius: 14px; background: #0D0B08d9; border: 1px solid #5C4620; font-size: 12px; white-space: nowrap;
   display: flex; align-items: center; gap: 8px; color: var(--text);
 }
-#nextwaves.early { border-color: var(--gold); cursor: pointer; }
+#nextwaves.early { border-color: var(--gold); cursor: pointer; pointer-events: auto; }   /* goi-som: luật gốc #nextwaves (dòng ~132) để pointer-events: none → nút Gọi sớm không nhận bấm */
 #nextwaves b { color: var(--gold); font-weight: 800; }
 #nextwaves .boss { color: #FF8A6A; font-weight: 800; }
 #nextwaves .air { color: var(--water-t); }
