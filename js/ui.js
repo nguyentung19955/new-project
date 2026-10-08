@@ -1446,7 +1446,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 243</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 244</div>
       </div></div>`;
   }
 
@@ -4125,7 +4125,7 @@ class UI {
           ? `<button class="big-btn btn-gold" data-act="sk-up" data-i="${si}" ${nextOk && g.gold >= COSTS.skillGold(si, lv) ? '' : 'disabled'}>${ICON.up} Nâng lên cấp ${lv + 1} · ${coin(1)} ${COSTS.skillGold(si, lv)}</button>`
           : `<button class="big-btn btn-gold" data-act="sk-up" data-i="${si}" ${nextOk && h.skillPts ? '' : 'disabled'}>${ICON.up} Nâng lên cấp ${lv + 1} · 1 điểm</button>`)
         : '<button class="big-btn metal" disabled style="color:#FFD66B">Đã tối đa</button>'}
-      ${!h.skillPts && h.level < CONFIG.maxLevel ? `<button class="btn metal" style="height:34px;color:#F2D27A" data-act="sk-level">Nâng cấp tướng · ${coin(1)} ${g.levelCost(h)} (+1 điểm)</button>` : ''}
+      ${!h.skillPts && h.level < CONFIG.maxLevel ? `<button class="btn metal" style="height:34px;color:#F2D27A" data-act="sk-level">Nâng cấp tướng · ${coin(1)} ${g.levelCost(h)} ${h.from || g.skillsMaxed(h) ? `(+${COSTS.statPt} ${ATTRS[heroMain(def)].short})` : "(+1 điểm)"}</button>` : ''}
     </div>`;
     const hk = 'h.' + h.type, hd = SECRETS[hk];
     // claude/sua-thoat-than-khi: 40 tướng chưa có bí ẩn riêng (SECRETS['h.…']) → trước đây mở Cây kỹ năng là lỗi JS, màn trống không có nút đóng
