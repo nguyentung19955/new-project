@@ -2271,3 +2271,7 @@ html.pixel .mc-btn.main { background-image: url('../assets/pixel/giao-dien/khung
 .cp-tg:not(.hard) .n { background: linear-gradient(180deg, #F2D27A, #B8852A); color: #2A1A08; }
 .cp-tg.hard .h { background: linear-gradient(180deg, #C8401E, #7A1E0E); color: #FFE0C8; box-shadow: 0 0 8px #E25A3A88; }
 .cp-tg small { font-size: 10px; }
+/* sua-giao-dien-10 (N6): chương 2–5 có bản đồ pixel vẽ đường đất qua các ải → bỏ nét đứt vẽ tạm */
+.cp-map:has(.cp-bgimg) .cp-trail { display: none; }
+/* đường đất trong ảnh phải đi qua đúng huy hiệu ải ở mọi cỡ màn → ảnh trải khít khung (lệch tỉ lệ ≤ ~12%) thay vì cắt */
+.cp-map .bgart .cp-bgimg.fill { object-fit: fill; }
