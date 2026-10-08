@@ -1213,7 +1213,11 @@ body { overflow: hidden; }
 /* v49: nút màn kết quả lên thanh trên; khoá nút 1,2 giây khi vừa hiện (chống bấm nhầm) */
 .scr-head .res-btns.top { margin-left: auto; height: 40px; gap: 8px; }
 .scr-head .res-btns.top button { flex: none; padding: 0 16px; font-size: 16px; }
-.guarded button[data-act] { opacity: .45; pointer-events: none; }
+/* sua-giao-dien-10 (V2/V14): 1,2 s chặn bấm nhầm — nút GIỮ màu (không trông như bị khoá), thanh vàng chạy ở đáy từng nút */
+.guarded button[data-act] { pointer-events: none; position: relative; }
+.guarded button[data-act]::before { content: ''; position: absolute; left: 4px; right: calc(100% - 4px); bottom: 2px; height: 3px; border-radius: 2px; background: #FFD66B; box-shadow: 0 0 4px #FFD66BAA, 0 1px 0 #000a; animation: guardBtn 1.2s linear forwards; pointer-events: none; }
+@keyframes guardBtn { to { right: 4px; } }
+.guarded button.btn-gold[data-act]::before { background: #7A3A0A; box-shadow: 0 0 0 1px #FFE7A066; }
 .guarded::after { content: ''; position: fixed; left: 0; top: 0; height: 3px; background: #FFD66B; animation: guardBar 1.2s linear forwards; z-index: 99; }
 @keyframes guardBar { from { width: 0; } to { width: 100%; } }
 /* v53: Bách khoa theo chương truyện */
