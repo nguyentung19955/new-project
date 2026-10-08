@@ -1,16 +1,16 @@
 {
  "code": "de-tuong-chon",
  "group": "nen",
- "name": "đế tướng: chon",
+ "name": "Bệ đang chọn",
  "w": 32,
  "h": 32,
  "ax": 16,
  "ay": 31,
  "bbox": [
-  1,
-  8,
-  30,
-  21
+  0,
+  2,
+  32,
+  27
  ],
  "n": 1,
  "anims": {

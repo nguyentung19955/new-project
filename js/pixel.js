@@ -27,12 +27,12 @@ const PX = { seen: new Set(), blits: 0, smooth: null };   // mã đã vẽ bằn
 const pxSmoothOff = () => PX.blits > 0 && PX.smooth === false;
 if (PX_ON && typeof document !== 'undefined') {
   document.documentElement.classList.add('pixel');
-  // font pixel có dấu tiếng Việt (VT323: số · Handjet: tiêu đề) — chỉ tải khi bật pixel
+  // font pixel có dấu tiếng Việt (VT323: số HUD) — chỉ tải khi bật pixel; sua-giao-dien-10: bỏ Handjet (tiêu đề dùng Alegreya SC 800)
   // pixel-mac-dinh: nạp sau sự kiện load (font mạng chậm / bị chặn không làm trễ mở game; display=swap → chữ đổi font sau)
   const font = () => {
     const l = document.createElement('link');
     l.rel = 'stylesheet';
-    l.href = 'https://fonts.googleapis.com/css2?family=Handjet:wght@500;700&family=VT323&display=swap&subset=vietnamese';
+    l.href = 'https://fonts.googleapis.com/css2?family=VT323&display=swap&subset=vietnamese';
     document.head.appendChild(l);
   };
   if (document.readyState === 'complete') font(); else window.addEventListener('load', font, { once: true });

@@ -14,7 +14,7 @@
   <meta name="description" content="Thần Thoại Việt — game thủ thành truyền thuyết Văn Lang – Âu Lạc: Sơn Tinh – Thủy Tinh, Thánh Gióng, Thạch Sanh, Lạc Long Quân, An Dương Vương.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@700;800&family=Alegreya+Sans:wght@400;500;700;800&display=swap">
-  <link rel="stylesheet" href="css/style.css?v=240">
+  <link rel="stylesheet" href="css/style.css?v=243">
 </head>
 <body>
 <!--BODY-->
@@ -30,6 +30,7 @@
         <div class="tb-res inset">
           <span id="tb-gold"><i class="coin"></i><b>0</b></span>
           <span id="tb-lives"><svg viewBox="0 0 16 16"><path d="M8 14 C2 9 1 6 3 3.5 C5 1.5 7 2.5 8 4.5 C9 2.5 11 1.5 13 3.5 C15 6 14 9 8 14Z" fill="#E25A3A"/></svg><b>20</b></span>
+          <span id="tb-kho" title="Ngân khố (giữ sau trận — mở tướng, Lò đúc)"><i class="bac sm"></i><b>0</b></span>
           <span id="tb-water" hidden><b></b><i id="tb-flood"></i></span>
           <span id="tb-team" role="button" tabindex="0" aria-label="Thế trận" title="Thế trận: đội đông và nhiều hành được cộng sát thương"><svg viewBox="0 0 16 16"><path d="M2 2 L10 10 M14 2 L6 10" stroke="#FFD66B" stroke-width="2" stroke-linecap="round"/><path d="M8.5 11.5 L11.5 8.5 M7.5 11.5 L4.5 8.5" stroke="#C8A050" stroke-width="2" stroke-linecap="round"/><circle cx="12.5" cy="12.5" r="1.6" fill="#C8A050"/><circle cx="3.5" cy="12.5" r="1.6" fill="#C8A050"/></svg><b>+0%</b></span>
         </div>
@@ -101,7 +102,7 @@
           <button id="btn-settings" class="mc-btn metal"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 2v3M10 15v3M2 10h3M15 10h3M4.3 4.3l2.1 2.1M13.6 13.6l2.1 2.1M4.3 15.7l2.1-2.1M13.6 6.4l2.1-2.1" stroke="currentColor" stroke-width="1.8"/></svg>Cài Đặt</button>
           <div class="mc-subs"><button id="btn-menu-codex" class="mc-sub">📖 Bách khoa</button><button id="btn-ranks" class="mc-sub">🏆 Xếp hạng</button><button id="btn-feedback" class="mc-sub">✉ Góp ý</button></div>
         </nav>
-        <div class="ver">Phiên bản 240</div>
+        <div class="ver">Phiên bản 243</div>
       </div>
 
       <div id="campaign" class="overlay" hidden></div>
@@ -139,40 +140,40 @@
       el.textContent = 'Lỗi: ' + (e.message || e.error) + (e.filename ? ' (' + e.filename.split('/').pop() + ':' + e.lineno + ')' : '');
     });
   </script>
-  <script src="js/asset-list.js?v=240"></script>
-  <script src="js/art.js?v=240"></script>
-  <script src="js/data.js?v=240"></script>
-  <script src="js/roles.js?v=240"></script>
-  <script src="js/enemies2.js?v=240"></script>
-  <script src="js/game.js?v=240"></script>
-  <script src="js/render.js?v=240"></script>
-  <script src="js/pixel/tuong.js?v=240"></script>
-  <script src="js/pixel/quai.js?v=240"></script>
-  <script src="js/pixel/boss.js?v=240"></script>
-  <script src="js/pixel/quai-cao.js?v=240"></script>
-  <script src="js/pixel/nen.js?v=240"></script>
-  <script src="js/pixel/icon.js?v=240"></script>
-  <script src="js/pixel/do.js?v=240"></script>
-  <script src="js/pixel/an-phu.js?v=240"></script>
-  <script src="js/pixel/ky-nang.js?v=240"></script>
-  <script src="js/pixel/than-khi.js?v=240"></script>
-  <script src="js/pixel/vfx.js?v=240"></script>
-  <script src="js/pixel/giao-dien.js?v=240"></script>
-  <script src="js/pixel/canh.js?v=240"></script>
-  <script src="js/pixel/ban-do.js?v=240"></script>
-  <script src="js/pixel.js?v=240"></script>
-  <script src="js/pixel-goi.js?v=240"></script>
-  <script src="js/rigs.js?v=240"></script>
-  <script src="js/tu-cu-dong.js?v=240"></script>
-  <script src="js/costume.js?v=240"></script>
-  <script src="js/maps.js?v=240"></script>
-  <script src="js/chapters.js?v=240"></script>
-  <script src="js/firebase-config.js?v=240"></script>
-  <script src="js/cloud.js?v=240"></script>
-  <script src="js/coop.js?v=240"></script>
-  <script src="js/ui.js?v=240"></script>
-  <script src="js/vfx.js?v=240"></script>
+  <script src="js/asset-list.js?v=243"></script>
+  <script src="js/art.js?v=243"></script>
+  <script src="js/data.js?v=243"></script>
+  <script src="js/roles.js?v=243"></script>
+  <script src="js/enemies2.js?v=243"></script>
+  <script src="js/game.js?v=243"></script>
+  <script src="js/render.js?v=243"></script>
+  <script src="js/pixel/tuong.js?v=243"></script>
+  <script src="js/pixel/quai.js?v=243"></script>
+  <script src="js/pixel/boss.js?v=243"></script>
+  <script src="js/pixel/quai-cao.js?v=243"></script>
+  <script src="js/pixel/nen.js?v=243"></script>
+  <script src="js/pixel/icon.js?v=243"></script>
+  <script src="js/pixel/do.js?v=243"></script>
+  <script src="js/pixel/an-phu.js?v=243"></script>
+  <script src="js/pixel/ky-nang.js?v=243"></script>
+  <script src="js/pixel/than-khi.js?v=243"></script>
+  <script src="js/pixel/vfx.js?v=243"></script>
+  <script src="js/pixel/giao-dien.js?v=243"></script>
+  <script src="js/pixel/canh.js?v=243"></script>
+  <script src="js/pixel/ban-do.js?v=243"></script>
+  <script src="js/pixel.js?v=243"></script>
+  <script src="js/pixel-goi.js?v=243"></script>
+  <script src="js/rigs.js?v=243"></script>
+  <script src="js/tu-cu-dong.js?v=243"></script>
+  <script src="js/costume.js?v=243"></script>
+  <script src="js/maps.js?v=243"></script>
+  <script src="js/chapters.js?v=243"></script>
+  <script src="js/firebase-config.js?v=243"></script>
+  <script src="js/cloud.js?v=243"></script>
+  <script src="js/coop.js?v=243"></script>
+  <script src="js/ui.js?v=243"></script>
+  <script src="js/vfx.js?v=243"></script>
   <script>if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});</script>
-  <script src="js/main.js?v=240"></script>
+  <script src="js/main.js?v=243"></script>
 </body>
 </html>

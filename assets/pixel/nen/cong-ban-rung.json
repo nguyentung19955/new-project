@@ -1,16 +1,16 @@
 {
  "code": "cong-ban-rung",
  "group": "nen",
- "name": "bản làng giữa rừng (hut — rung)",
- "w": 48,
- "h": 48,
- "ax": 24,
- "ay": 47,
+ "name": "Cổng bản rừng",
+ "w": 64,
+ "h": 64,
+ "ax": 32,
+ "ay": 63,
  "bbox": [
-  1,
-  6,
-  46,
-  36
+  0,
+  2,
+  64,
+  58
  ],
  "n": 1,
  "anims": {

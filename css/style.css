@@ -45,6 +45,9 @@ body { display: flex; align-items: center; justify-content: center; box-sizing: 
   /* cầm ngang: chừa tai thỏ / camera hai bên */
   padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
 button { font-family: inherit; color: inherit; cursor: pointer; }
+/* sua-giao-dien-10 (N2): Alegreya mặc định số kiểu cổ (0 trông như "o", số cao thấp lệch dòng) → số thẳng hàng, đều bề ngang ở mọi chỗ
+   (font-feature-settings kế thừa và không bị shorthand `font:` xoá như font-variant-numeric) */
+html, button, input, select, textarea { font-variant-numeric: lining-nums tabular-nums; font-feature-settings: "lnum" 1, "tnum" 1; }
 button:disabled { cursor: default; }
 [hidden] { display: none !important; }
 
@@ -88,7 +91,7 @@ button:disabled { cursor: default; }
 .coin.sm::after { width: 4px; height: 4px; margin: -2px 0 0 -2px; }
 .goldbox {
   height: 32px; padding: 0 10px; border-radius: 4px; display: flex; align-items: center; gap: 6px;
-  font-weight: 800; font-size: 15px; color: var(--gold-hi); font-variant-numeric: tabular-nums;
+  font-weight: 800; font-size: 15px; color: var(--gold-hi); font-variant-numeric: lining-nums tabular-nums;
 }
 .chip { padding: 3px 9px; border-radius: 4px; font-size: 12px; font-weight: 700; white-space: nowrap; }
 .chip.run { background: #3A1A10; border: 1px solid var(--danger); color: var(--danger-t); }
@@ -113,7 +116,7 @@ button:disabled { cursor: default; }
 #tb-wave { font-family: var(--title); font-size: 17px; font-weight: 800; color: var(--gold); text-shadow: 0 1px 2px #000; line-height: 1; white-space: nowrap; }
 .tb-prog { width: 150px; height: 6px; border-radius: 3px; overflow: hidden; }
 .tb-prog i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #B8852A, #FFD66B); transition: width .3s; }
-.tb-res { height: 32px; padding: 0 10px; border-radius: 4px; display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 15px; font-variant-numeric: tabular-nums; }
+.tb-res { height: 32px; padding: 0 10px; border-radius: 4px; display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 15px; font-variant-numeric: lining-nums tabular-nums; }
 .tb-res span { display: flex; align-items: center; gap: 5px; }
 .tb-res svg { width: 16px; height: 16px; }
 #tb-gold { color: var(--gold-hi); }
@@ -567,7 +570,7 @@ button:disabled { cursor: default; }
 .bk-tag.m { color: #D9C9FF; border-color: #A88CE8; background: #2A2240; }
 .bk-tag.s { color: var(--water-t); border-color: #5AB4D6; background: #0E2230; }
 .bk-tag.d { color: var(--danger-t); border-color: var(--danger); background: #3A1A10; }
-.bk-stat { font-size: 12px; color: var(--text-2); display: flex; gap: 14px; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.bk-stat { font-size: 12px; color: var(--text-2); display: flex; gap: 14px; margin-top: 4px; font-variant-numeric: lining-nums tabular-nums; }
 .bk-stat b { color: var(--text); }
 .sched { border-radius: 6px; padding: 8px 14px; flex: none; display: flex; flex-direction: column; gap: 6px; }
 .sched .hd { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
@@ -698,7 +701,7 @@ button:disabled { cursor: default; }
 .res-grid { flex: 1; display: flex; gap: 10px; min-height: 0; }
 .res-table { flex: 1; border-radius: 6px; padding: 0; display: flex; flex-direction: column; }
 .res-table div { display: flex; justify-content: space-between; align-items: center; padding: 6px 14px; border-bottom: 1px solid #2A2216; font-size: 15px; }
-.res-table div b { font-size: 18px; font-variant-numeric: tabular-nums; }
+.res-table div b { font-size: 18px; font-variant-numeric: lining-nums tabular-nums; }
 .res-tips { flex: 1; border-radius: 6px; padding: 10px 14px; display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--ch-e, #2C6A86); background: #0B1418; }
 .res-tips .h { font-size: 12px; font-weight: 800; letter-spacing: .08em; color: var(--ch-t, var(--water-t)); }
 .res-tips .t { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.35; }
@@ -796,8 +799,12 @@ button:disabled { cursor: default; }
 .tr-body { flex: 1; min-height: 0; padding: 10px 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
 .tr-sec .h { font-family: var(--title); font-size: 15px; color: var(--gold); margin-bottom: 4px; }
 .tr-row { display: flex; flex-wrap: wrap; gap: 6px; }
-.tr-row .slot.no .svgi { filter: brightness(0) opacity(.45); }
-.tr-row .slot.no { border-color: #3A3226 !important; box-shadow: inset 0 2px 6px #000c; }
+.tr-row .slot.no .svgi { filter: brightness(0) invert(21%) sepia(35%); }
+.tr-row .slot.no { border-color: #5A4A30 !important; background: #17130E; box-shadow: inset 0 2px 6px #000c; }
+/* sua-giao-dien-10 (N3): ô chưa có thấy được — viền #5A4A30, bóng món #3A3326, dấu "?" góc; chạm ô hiện tên + nơi kiếm; tiêu đề nhóm có tiến độ */
+.tr-row .slot { cursor: pointer; }
+.tr-row .slot.no::after { content: '?'; position: absolute; right: 2px; top: 0; font: 800 12px/1 var(--body); color: #8C7A55; }
+.tr-sec .h small { font-family: var(--body); font-size: 12px; color: var(--text-2); margin-left: 4px; }
 
 /* ---------- màn chơi gọn (v16): thanh trên tối giản + hàng thẻ dưới đáy ---------- */
 #topbar { height: 40px; gap: 8px; }
@@ -1150,7 +1157,7 @@ button:disabled { cursor: default; }
 #hero-stats .hs-h b { color: #FFD66B; }
 #hero-stats .hs-g { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0 8px; }
 #hero-stats .hs-g div { display: flex; justify-content: space-between; gap: 3px; font-size: 9.5px; line-height: 1.35; color: var(--text-2); border-bottom: 1px solid #ffffff10; white-space: nowrap; }
-#hero-stats .hs-g b { color: var(--text); font-variant-numeric: tabular-nums; }
+#hero-stats .hs-g b { color: var(--text); font-variant-numeric: lining-nums tabular-nums; }
 /* v41: Cỡ chữ & nút (--hz do main.js đặt; điện thoại mặc định 1,2). Chỉ phóng các phần trong trận,
    mỗi phần phóng quanh cạnh nó bám vào màn hình nên không lệch chỗ. */
 #topbar { right: auto; width: calc(100% / var(--hz, 1)); transform: scale(var(--hz, 1)); transform-origin: 0 0; }
@@ -1206,9 +1213,11 @@ body { overflow: hidden; }
 /* v49: nút màn kết quả lên thanh trên; khoá nút 1,2 giây khi vừa hiện (chống bấm nhầm) */
 .scr-head .res-btns.top { margin-left: auto; height: 40px; gap: 8px; }
 .scr-head .res-btns.top button { flex: none; padding: 0 16px; font-size: 16px; }
-.guarded button[data-act] { opacity: .45; pointer-events: none; }
-.guarded::after { content: ''; position: fixed; left: 0; top: 0; height: 3px; background: #FFD66B; animation: guardBar 1.2s linear forwards; z-index: 99; }
-@keyframes guardBar { from { width: 0; } to { width: 100%; } }
+/* sua-giao-dien-10 (V2/V14): 1,2 s chặn bấm nhầm — nút GIỮ màu (không trông như bị khoá), thanh vàng chạy ở đáy từng nút */
+.guarded button[data-act] { pointer-events: none; position: relative; }
+.guarded button[data-act]::before { content: ''; position: absolute; left: 4px; right: calc(100% - 4px); bottom: 2px; height: 3px; border-radius: 2px; background: #FFD66B; box-shadow: 0 0 4px #FFD66BAA, 0 1px 0 #000a; animation: guardBtn 1.2s linear forwards; pointer-events: none; }
+@keyframes guardBtn { to { right: 4px; } }
+.guarded button.btn-gold[data-act]::before { background: #7A3A0A; box-shadow: 0 0 0 1px #FFE7A066; }
 /* v53: Bách khoa theo chương truyện */
 .bk-body { flex-direction: column; }
 .bk-body .bk-ch { margin-left: 0; flex: none; }
@@ -1267,7 +1276,7 @@ body { overflow: hidden; }
 .rk-n { font-family: var(--title); font-size: 18px; font-weight: 800; color: var(--gold); text-align: center; }
 .rk-name { font-size: 15px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .rk-name small { color: var(--text-2); font-weight: 400; }
-.rk-d { font-size: 13px; color: #FFD66B; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.rk-d { font-size: 13px; color: #FFD66B; font-variant-numeric: lining-nums tabular-nums; white-space: nowrap; }
 .rk-nick { display: flex; gap: 8px; align-items: center; padding: 8px 10px; border-radius: 6px; margin: 0 auto 8px; max-width: 720px; }
 .rk-nick input { flex: 1; min-width: 0; height: 32px; border-radius: 4px; border: 1px solid #8C6A2E; background: #17130F; color: var(--text); padding: 0 8px; font-size: 15px; }
 .mc-subs .mc-sub { white-space: nowrap; font-size: 14px; }
@@ -1363,7 +1372,7 @@ body { overflow: hidden; }
 #bossbar .bn span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 #bb-tag { font-size: 10.5px; color: #FFB89A; text-transform: uppercase; letter-spacing: .5px; white-space: nowrap; }
 #bossbar:not(.big) .tr i { background: linear-gradient(180deg, #E8C25A, #9A6A1A); }
-#bb-hp { font-size: 11.5px; font-weight: 800; color: #F0E4C8; margin-top: 2px; font-variant-numeric: tabular-nums; }
+#bb-hp { font-size: 11.5px; font-weight: 800; color: #F0E4C8; margin-top: 2px; font-variant-numeric: lining-nums tabular-nums; }
 #bb-info .fc { display: flex; flex-wrap: wrap; gap: 2px 8px; font-size: 11px; color: #C8BFA8; margin-top: 3px; }
 #bb-info .fc b { color: #fff; }
 #bb-info .fs { font-size: 11px; color: #E8D8B0; font-style: italic; margin-top: 3px; line-height: 1.25; }
@@ -1489,7 +1498,6 @@ body { overflow: hidden; }
 .dk-sk { -webkit-touch-callout: none; user-select: none; }
 /* v122: Ngân khố trên thanh tiêu đề màn Anh Hùng */
 #roster .scr-head .ro-kho { margin-left: auto; white-space: nowrap; }
-#roster .scr-head .ro-kho + .btn { margin-left: 6px; }
 /* v124: icon nút vẽ tay trống đồng */
 .ab .i .uimg { width: 30px; height: 30px; display: block; }
 /* v155: nút vẽ tay thay ký hiệu ★ ▲ 🔒 ↻ 💡 ♾ ⚔ ✓ 🥇🥈🥉👑 (uiE trong js/ui.js) */
@@ -1649,7 +1657,7 @@ i.c { background: #1F4A2A; color: #8AE09A; } i.h { background: #4A2A5A; color: #
 #fb-text { display: block; width: 100%; box-sizing: border-box; height: 92px; resize: none; border-radius: 6px; border: 1px solid #8C6A2E; background: #17130F; color: var(--text);
   padding: 8px 10px 18px; font: 15px/1.35 var(--body); }
 #fb-text:focus, #fb-contact:focus { outline: 2px solid #D9B25A; outline-offset: -1px; }
-#fb-count { position: absolute; right: 8px; bottom: 4px; font-size: 11px; color: var(--text-2); pointer-events: none; font-variant-numeric: tabular-nums; }
+#fb-count { position: absolute; right: 8px; bottom: 4px; font-size: 11px; color: var(--text-2); pointer-events: none; font-variant-numeric: lining-nums tabular-nums; }
 #fb-count.low { color: #FFB08A; }
 .fb-row { display: flex; gap: 8px; align-items: stretch; min-width: 0; }
 .fb-row .login-in { flex: 1; min-width: 0; height: 40px; font-size: 14px; box-sizing: border-box; }
@@ -1818,7 +1826,7 @@ svg.icn { overflow: visible; }
 .fba-item.st-seen { border-left-color: #8C6A2E; } .fba-item.st-done { border-left-color: #2E9E3E; opacity: .82; }
 .fba-top { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; min-width: 0; }
 .fba-kind { padding: 1px 8px; border-radius: 4px; font-size: 12px; font-weight: 800; color: #1A140D; background: var(--kc); white-space: nowrap; }
-.fba-time { font-size: 12px; color: var(--text); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.fba-time { font-size: 12px; color: var(--text); font-variant-numeric: lining-nums tabular-nums; white-space: nowrap; }
 .fba-who { font-size: 11px; color: var(--text-2); white-space: nowrap; }
 .fba-st { margin-left: auto; display: flex; border: 1px solid #8C6A2E; border-radius: 5px; overflow: hidden; flex: none; }
 .fba-st button { height: 26px; padding: 0 8px; border: none; background: #17130F; color: var(--text-2); font-size: 12px; font-weight: 700; white-space: nowrap; }
@@ -1877,11 +1885,13 @@ svg.icn { overflow: visible; }
 /* ============================================================
    v170: BẢNG HỢP THỂ trong trận — thẻ theo tướng đích, tab Tím / Vàng, lọc. Mở bảng thì ẩn thanh chợ (không bị che).
    ============================================================ */
-#ui > #legends { position: absolute; left: 50%; top: 6px; bottom: 6px; right: auto; width: min(900px, calc(100% - 16px)); transform: translateX(-50%);
+#ui > #legends { position: absolute; left: 50%; top: calc(46px * var(--hz, 1)); bottom: 6px; right: auto; width: min(900px, calc(100% - 16px)); transform: translateX(-50%);
   z-index: 9; display: flex; flex-direction: column; gap: 4px; padding: 8px 10px; border-radius: 10px; border: 2px solid #B8853A;
-  box-shadow: 0 0 0 100vmax #0000007a, 0 8px 24px #000c, inset 0 1px 0 #D9B25A55; }
+  box-shadow: 0 0 0 100vmax #000000B3, 0 8px 24px #000c, inset 0 1px 0 #D9B25A55; }
 #ui > #legends[hidden] { display: none; }
-#ui:has(> #legends:not([hidden])) > :is(#deck, #deck-hint, #fuse-strip, #more) { visibility: hidden; pointer-events: none; }
+#ui:has(> #legends:not([hidden])) > :is(#deck, #deck-hint, #fuse-strip, #more, #nextwaves, #banner, #paused-tag) { visibility: hidden; pointer-events: none; }
+/* sua-giao-dien-10 (N1): bảng Hợp thể bắt đầu dưới thanh trên (không đè "Đợt N", ☰), nền đặc — không nhìn xuyên bản đồ */
+#ui > #legends, html.pixel.sk-khung-toi #ui > #legends { background-color: #15110C; background-clip: padding-box; }
 /* an-cho-kho-do: bảng toàn màn đang mở (lớp panel-open do ui.watchToasts bật) → ẩn hẳn chợ, Hợp thể/Khoá, cột nút phải */
 #wrap.panel-open #ui > :is(#deck, #deck-hint, #fuse-strip, #more, #auto-btns, #btn-moc, #nextwaves, #trash) { visibility: hidden !important; pointer-events: none !important; }
 .hx-hd { display: flex; align-items: center; gap: 6px; min-width: 0; flex: none; }
@@ -1901,7 +1911,9 @@ svg.icn { overflow: visible; }
   padding: 6px 8px 6px 6px; border-radius: 8px; background: linear-gradient(180deg, #241C14, #16110C); border: 1.5px solid #3A3226; cursor: pointer; min-width: 0; }
 .hx-card.epic { border-color: #6A4A8A; } .hx-card.legendary { border-color: #8A6A30; }
 .hx-card.ready { border-color: var(--rc); box-shadow: 0 0 10px color-mix(in srgb, var(--rc) 55%, transparent), inset 0 0 14px #0006; }
-.hx-card.lock { opacity: .62; }
+.hx-card.lock { background: #1E1912; border-color: #2E281E; }
+.hx-card.lock:not(.ready) .hx-to img, .hx-card.lock:not(.ready) .hx-m img { filter: grayscale(1) brightness(.55); }
+.hx-card.lock .hx-nm b { color: #9A8C70; }
 .hx-card:active { transform: scale(.985); }
 .hx-to { grid-row: 1 / 3; width: 58px; height: 58px; border-radius: 10px; border: 2px solid var(--r-epic); background: radial-gradient(circle at 50% 60%, #3A2416, #1A0F0A 75%); overflow: hidden; display: block; }
 .hx-to.epic { box-shadow: 0 0 8px #A86CE0AA; } .hx-to.legendary { border-color: var(--r-legend); box-shadow: 0 0 10px #F0A030BB; }
@@ -2010,7 +2022,7 @@ img.eli { position: static !important; inset: auto !important; transform: none !
    nên mỗi khi ô tiền/mạng đổi số chữ số, hiện ô nước, nút chat… phần trống co giãn và cả khối trượt ngang; ký hiệu "Khó" làm dòng cao lên.
    Nay: rộng/cao cố định, lề trái tính theo bề ngang thanh trên (không phụ thuộc phần tử khác), chữ số đều nhau, biểu tượng cao đúng 1 dòng. */
 .tb-center { flex: none; width: 200px; height: 40px; justify-content: center; margin: 0 auto 0 clamp(0px, calc(50% - 320px), 400px); }
-#tb-wave { font-variant-numeric: tabular-nums; height: 17px; }
+#tb-wave { font-variant-numeric: lining-nums tabular-nums; height: 17px; }
 #tb-wave .icn { height: 1em; width: auto; vertical-align: top; }
 /* /v180 */
 /* v182: mở khoá tướng bằng Ngân khố — giá trên thẻ khoá, nút mở, cách kiếm, nhiệm vụ ngày */
@@ -2196,7 +2208,7 @@ html.sk-the-cho .mk-card .rl { z-index: 2; }
 .hx-st.hx-open { border: 1px solid #8A7AA0; border-radius: 6px; background: #241A30; padding: 3px 7px; color: #E0CCF4; cursor: pointer; }
 .res-unl.res-tim b { color: #D8A8FF; }
 /* ===== PIXEL ART (claude/pixel-nen-tang · js/pixel.js, bật bằng ?pixel=1 / PIXEL_BAT) =====
-   ảnh pixel phóng nearest-neighbor; tiêu đề Handjet, số VT323 (Google Fonts, có dấu tiếng Việt); chữ dài giữ Alegreya Sans */
+   ảnh pixel phóng nearest-neighbor; tiêu đề Alegreya SC 800, số VT323 (Google Fonts, có dấu tiếng Việt); chữ dài giữ Alegreya Sans */
 html.pixel img[src*="pixel/"], html.pixel canvas:not(#game) { image-rendering: pixelated; image-rendering: crisp-edges; }
 /* claude/xuat-goi-pixel: khi bật pixel, mọi bảng .metal dùng khung pixel tối, nút .metal dùng nút đồng pixel, nút chính menu dùng nút vàng */
 html.pixel.sk-khung-toi .metal:not(button):not(.mc-btn):not(.pl-box) { border-color: transparent; border-image: var(--sk-khung-bang-toi) 25% fill / 9px / 0 stretch; background: none; box-shadow: none; }
@@ -2208,15 +2220,14 @@ html.pixel .metal, html.pixel .mc-btn { image-rendering: pixelated; }
 /* claude/xuat-goi-pixel: nền khung / nút pixel (biến --sk-*) phóng không làm mịn */
 html.pixel .btn-gold, html.pixel .res-btns button.metal, html.pixel .xbtn, html.pixel #bossbar .tr::after, html.pixel #deck, html.pixel .mk-card::after,
 html.pixel .mk-rr, html.pixel .cp-node .c, html.pixel .panel, html.pixel .modal { image-rendering: pixelated; }
-/* chỉ tiêu đề bảng / banner / tên boss dùng Handjet (đậm, viền tối cho tương phản); logo menu, nút ("Vào trận"…), "Đợt N · …"
-   giữ font cũ (góp ý tester: Handjet mảnh làm logo / nút nhạt). Số tài nguyên (vàng, mạng) dùng VT323. */
+/* sua-giao-dien-10 (V1): bỏ Handjet (nét mảnh, tiêu đề nhạt hơn nút cạnh nó → phân cấp ngược). Tiêu đề bảng / banner / tên boss dùng
+   Alegreya SC 800 như logo + nút, bóng đổ đậm; cả game còn 3 font: Alegreya SC (tiêu đề, nút) · Alegreya Sans (chữ) · VT323 (số HUD). */
 html.pixel .ttl:not(#menu-logo *), html.pixel #banner b, html.pixel #bossbar .bn span:first-child {
-  font-family: 'Handjet', var(--title); font-weight: 700; letter-spacing: .03em;
-  text-shadow: 0 1px 0 #000, 1px 0 0 #000, -1px 0 0 #000, 0 -1px 0 #000, 0 2px 3px #000; }
+  font-family: var(--title); font-weight: 800; letter-spacing: .01em;
+  text-shadow: 0 2px 0 #000, 0 0 1px #000, 1px 1px 0 #000, -1px 1px 0 #000; }
 html.pixel .tb-res b { font-family: 'VT323', var(--body); font-weight: 400; font-size: 1.2em; line-height: 1; }
-/* góp ý tester2: Handjet nét mảnh → banner boss / tên boss to 1,2× và sáng hơn để dấu (Ồ, Ỗ…) đọc rõ ở 844×390 */
-html.pixel #banner b { font-size: 36px; color: #FFE7A0; font-weight: 800; }
-html.pixel #bossbar .bn span:first-child { font-size: 17px; color: #FFE7A0; font-weight: 800; }
+html.pixel #banner b { font-size: 32px; color: #FFE7A0; }
+html.pixel #bossbar .bn span:first-child { font-size: 15px; color: #FFE7A0; }
 /* vo-tan-su-kien: dòng sự kiện trong bảng "Bộ quái mới" (trùng mốc đợt thì gộp một thông báo) */
 #roster-hint .rh-ev { font-size: 11.5px; line-height: 1.25; color: var(--text); border-left: 3px solid var(--c); padding: 2px 6px; background: #1A120C; border-radius: 3px; }
 #roster-hint .rh-ev b { color: var(--c); }
@@ -2243,6 +2254,72 @@ html.pixel.sk-nen-man-phu #prep .screen, html.pixel.sk-nen-man-phu #result .scre
 /* claude/pixel-con-lai: thẻ người chơi + nút Xuất Quân = khung vẽ tay chuyển sang pixel (giữ ô avatar tròn, 2 huy hiệu hai bên) */
 html.pixel .pl-box { background-image: url('../assets/pixel/giao-dien/khung-nguoi-choi.png'); image-rendering: pixelated; }
 html.pixel .mc-btn.main { background-image: url('../assets/pixel/giao-dien/khung-nut-chinh.png'); image-rendering: pixelated; }
+/* sua-giao-dien-10 (N4): thoại / banner / chip đợt / toast không chồng vùng trên — lời thoại xuống góc trái ngay trên thanh chợ,
+   banner đang hiện thì ẩn chip "Đợt N" (banner và thoại dùng một hàng đợi: ui.banner cất thoại, nói lại sau) */
+#dialogue { top: auto; bottom: calc(84px * var(--hz, 1)); left: 8px; transform: scale(var(--hz, 1)); transform-origin: 0 100%; max-width: min(340px, calc(46% / var(--hz, 1))); }
+#ui:has(> #banner:not([hidden])) > #nextwaves { visibility: hidden; }
+/* sua-giao-dien-10 (N5): vùng chạm ≥ 40px trên màn thật (UI thu theo --k, phần trong trận thêm --hz): hình giữ nguyên, ::after trong suốt
+   cao/rộng tối thiểu 40px màn hình. Phần sát mép trên màn (thanh trên, đầu bảng) không mở lên được → mở xuống dưới. */
+:is(#topbar .sq, .xbtn, .cp-tab, .mc-sub) { position: relative; }
+:is(#topbar .sq, .xbtn, .cp-tab, .mc-sub)::after { content: ''; position: absolute; left: 50%; top: 50%;
+  width: 100%; height: max(100%, calc(40px / var(--k, 1) / var(--hz-l, 1))); transform: translate(-50%, -50%); }
+#topbar { --hz-l: var(--hz, 1); }
+:is(#topbar .sq, .scr-head .xbtn, .scr-head .cp-tab, .mc-sub)::after { top: -3px; height: max(100%, calc(40px / var(--k, 1) / var(--hz-l, 1) + 6px)); transform: translateX(-50%); }
+/* ::after chỉ mở theo chiều dọc (mở ngang làm lệch scrollWidth → test chữ tràn); bề ngang nút quay lại / ✕ tăng thật */
+:is(.xbtn, .fb-head .xbtn) { width: max(44px, calc(40px / var(--k, 1))); }
+.cp-tabs { padding-bottom: 32px; margin-bottom: -32px; }
+/* nút menu chính: cao thật ≥ 40px màn hình (không chồng vùng chạm nút bên cạnh) */
+#menu .mc-btn:not(.main) { height: max(44px, calc(40px / var(--k, 1))); }
+#menu .mc-btn.main { height: max(52px, calc(42px / var(--k, 1))); }
+/* bảng Hợp thể: tab + nút ?/✕ cao thật ≥ 40px màn hình (::after làm lệch scrollWidth → test chữ tràn) */
+.hx-tab { height: max(30px, calc(40px / var(--k, 1))); }
+.hx-q, .hx-x { width: max(30px, calc(40px / var(--k, 1))); height: max(30px, calc(40px / var(--k, 1))); }
+/* đầu bảng nằm trên phần thân (vùng chạm mở xuống không bị thân bảng che) */
+.scr-head { position: relative; z-index: 3; }
+/* Thường / Khó gộp thành một công tắc cao bằng nút Vào vô tận (trước đây 2 nút 17px chồng nhau) */
+.cp-act .go { min-height: max(50px, calc(42px / var(--k, 1))); }
+.cp-tg { width: 104px; flex: none; background: #2A1C10; border: 2px solid #8C6A2E; color: #E8DCC0; display: flex; flex-direction: column; justify-content: center; gap: 2px; padding: 3px 6px; border-radius: 6px; font-size: 12px; font-weight: 800; line-height: 1.15; white-space: nowrap; }
+.cp-tg span { display: block; border-radius: 3px; padding: 2px 4px; color: #C8BCA0; }
+.cp-tg:not(.hard) .n { background: linear-gradient(180deg, #F2D27A, #B8852A); color: #2A1A08; }
+.cp-tg.hard .h { background: linear-gradient(180deg, #C8401E, #7A1E0E); color: #FFE0C8; box-shadow: 0 0 8px #E25A3A88; }
+.cp-tg small { font-size: 10px; }
+@media (max-height: 520px) { html.pixel #banner b { font-size: 26px; } }
+html.pixel #wrap.rot #banner b { font-size: 26px; }
+/* sua-giao-dien-10 (V3/V4): MỘT kiểu tab cho cả game (tab chương, Bách khoa, Lò đúc, Hợp thể, Xếp hạng): góc vuông, viền 2px,
+   chưa chọn = gỗ tối chìm, đang chọn = vàng nghệ nổi (trước đây 3 kiểu: viên thuốc bạc, tab gỗ, tab đồng — tab chưa chọn nổi hơn tab đang chọn) */
+:is(.cp-tab, .hx-tab, .tabs > .tab, .seg button) { border-radius: 2px; border: 2px solid #5A4426; background: #2A1C10; color: #B8A888;
+  box-shadow: inset 0 -2px 0 #1A110A; text-shadow: none; font-weight: 800; }
+:is(.cp-tab, .hx-tab, .tabs > .tab, .seg button).on { background: #E8B83A; border-color: #FFE7A0; color: #2A1A08;
+  box-shadow: inset 0 2px 0 #FFF1C4, inset 0 -3px 0 #B8852A, 0 0 8px #F2B44A55; text-shadow: none; }
+:is(.cp-tab, .hx-tab, .tabs > .tab, .seg button):not(.on):hover { color: #E8DCC0; border-color: #8C6A2E; }
+.tabs > .tab, .tabs > .tab.on { height: 34px; margin-bottom: 4px; }
+.seg { gap: 4px; background: transparent; }
+/* thẻ quái Bách khoa: bỏ dải đồng cam (chữ xám trên cam ≈ 2:1) → thẻ gỗ tối, tên vàng, mô tả sáng tối đa 2 dòng, thẻ cao đều */
+.bk-card { background: #2A2118; border: 2px solid #5A4A30; border-radius: 3px; height: 128px; overflow: hidden; }
+.bk-card .nm { color: #F2D27A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: none; }
+.bk-card .ds { color: #E8DCC0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.bk-card.on { border-color: var(--gold-hi); }
+.hx-q, .hx-x { border-radius: 3px; }
+/* sua-giao-dien-10 (N7, theo mockup designer A4): nền tranh mịn hoà với pixel — menu / đăng nhập dùng tranh pixel hoá 534×248 phóng
+   nearest (giữ hoa văn trống đồng), tối viền màn (vignette); khung menu / hộp đăng nhập viền đồng 3px + dải hoa văn Đông Sơn
+   (vòng tròn chấm + răng cưa) trên dưới; link Bách khoa / Xếp hạng / Góp ý thành nút gỗ. (Nền màn phụ: dùng bản vẽ lại tay của claude/ve-lai-pixel.) */
+:root { --dong-son: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2212%22%20shape-rendering%3D%22crispEdges%22%3E%3Crect%20width%3D%2224%22%20height%3D%2212%22%20fill%3D%22%232A1C10%22/%3E%3Cpath%20d%3D%22M0%2012%20L4%208%20L8%2012%20L12%208%20L16%2012%20L20%208%20L24%2012Z%22%20fill%3D%22%237A5420%22/%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2224%22%20height%3D%221%22%20fill%3D%22%23C9963A%22/%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%224%22%20r%3D%223%22%20fill%3D%22none%22%20stroke%3D%22%23D9A84E%22%20stroke-width%3D%221%22/%3E%3Crect%20x%3D%2211%22%20y%3D%223%22%20width%3D%222%22%20height%3D%222%22%20fill%3D%22%23F2D27A%22/%3E%3Crect%20x%3D%222%22%20y%3D%223%22%20width%3D%222%22%20height%3D%222%22%20fill%3D%22%239A6A28%22/%3E%3Crect%20x%3D%2220%22%20y%3D%223%22%20width%3D%222%22%20height%3D%222%22%20fill%3D%22%239A6A28%22/%3E%3C/svg%3E"); }
+html.pixel #menu-art img.keyart, html.pixel #login .bgart img { image-rendering: pixelated; }
+html.pixel #menu-art:has(img.keyart)::after { background: radial-gradient(ellipse 70% 75% at 40% 45%, transparent 55%, #0B0704CC 100%), linear-gradient(180deg, transparent 70%, #0B0704AA 100%),
+  radial-gradient(ellipse 48% 38% at 36% 42%, #0D0B08b0, transparent 70%), linear-gradient(90deg, transparent 60%, #0D0B0880); }
+html.pixel #menu .mc-nav, html.pixel #login .login-box { background-color: #160F09F2; border: 3px solid #8C6A2E; border-radius: 2px;
+  box-shadow: 0 0 0 3px #1A110A, 0 0 40px #F2B44A33, 0 12px 30px #000c; }
+html.pixel #menu .mc-nav { padding-top: 24px; padding-bottom: 24px; }
+html.pixel #login .login-box { padding-top: 26px; padding-bottom: 26px; }
+html.pixel #menu .mc-nav::before, html.pixel #menu .mc-nav::after, html.pixel #login .login-box::before, html.pixel #login .login-box::after {
+  content: ''; position: absolute; left: 6px; right: 6px; height: 12px; background: var(--dong-son) repeat-x; background-size: auto 100%; image-rendering: pixelated; pointer-events: none; }
+html.pixel #menu .mc-nav::before, html.pixel #login .login-box::before { top: 6px; }
+html.pixel #menu .mc-nav::after, html.pixel #login .login-box::after { bottom: 6px; transform: scaleY(-1); }
+html.pixel #menu .mc-nav .orn2 { display: none; }
+html.pixel #menu .mc-btn.main { filter: drop-shadow(0 0 10px #FFB44A88); }
+html.pixel #menu .mc-subs { gap: 6px; }
+html.pixel #menu .mc-sub { height: max(30px, calc(36px / var(--k, 1))); padding: 0 6px; background: #2A1C10; border: 2px solid #6A4E22; border-radius: 2px; text-decoration: none;
+  color: #F2D27A; display: flex; align-items: center; justify-content: center; gap: 3px; box-shadow: inset 0 -2px 0 #1A110A; }
 /* claude/chan-vuot-lui: hộp "Rời trận?" khi bấm / vuốt Quay lại trong trận */
 
 /* ---------- claude/goi-y-ro: MỤC TIÊU HỢP THỂ (ghim) · tìm tên không dấu · chạm giữ thẻ chợ ---------- */
@@ -2296,3 +2373,42 @@ html.pixel .mc-btn.main { background-image: url('../assets/pixel/giao-dien/khung
   display: inline-flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 800; }
 .hs-c.on { border-color: var(--c); background: #2A1F14; box-shadow: 0 0 6px color-mix(in srgb, var(--c) 50%, transparent); }
 .hs-off { display: none !important; }
+/* ===== sua-giao-dien-10: BỘ DA UI PIXEL CHUNG (pixel bật) — người dùng: "đừng làm trong suốt ở các bảng", "khung viền nên pixel hoá" =====
+   1) Bảng .metal có id đặt `border:` riêng → shorthand xoá border-image, còn lại nền trong suốt nhìn xuyên bản đồ (bảng chỉ số tướng, thanh tướng,
+      ngăn kéo ≡, Bộ quái mới…) → trả khung pixel tối + nền đặc #15110C, bóng cứng lệch 3px thay bóng mờ. */
+html.pixel.sk-khung-toi #ui > :is(#hero-stats, #more, #legends, #drawer, #roster-hint, #coop-bar, #chat) {
+  border-color: transparent; border-image: var(--sk-khung-bang-toi) 25% fill / 9px / 0 stretch; background-color: #15110C; box-shadow: 3px 3px 0 #0B0704; border-radius: 0; }
+html.pixel #ui > :is(#hero-stats, #more, #legends, #drawer, #roster-hint, #coop-bar, #chat) { background-color: #15110C; }
+html.pixel #hero-stats { padding: 7px 10px; }
+html.pixel #more::after { background: #15110C; }
+/* 2) lớp chữ nổi trên trận / thẻ: nền đặc (trước đây #0D0B08 alpha 66–94%) */
+html.pixel :is(#nextwaves, #bossbar, #paused-tag, #deck-hint, .toast, #hero-tip, .cp-node .lb, .ver, .res-art .tg2, .ro-card .tag, .ro-card .tag.el, .rn-lv) { background-color: #15110C; }
+html.pixel :is(.es, .bt-row, .asc-row) { background-color: #1A1610; }
+html.pixel .rl-chip { background-color: #140F0A; }
+html.pixel #banner { background: #15110C; border-top: 2px solid #8C6A2E; border-bottom: 2px solid #8C6A2E; box-shadow: 0 -2px 0 #0B0704, 0 2px 0 #0B0704, 3px 3px 0 #0B0704; }
+html.pixel #banner.ev { background: #15110C; box-shadow: inset 0 2px 0 var(--bn-c), inset 0 -2px 0 var(--bn-c), 3px 3px 0 #0B0704; border-color: #0B0704; }
+/* 3) góc vuông / bậc 2px, viền đặc 2px, bóng cứng (bỏ bo tròn mịn kiểu web, bỏ bóng mờ) */
+html.pixel :is(.toast, .chip, .rl-chip, #nextwaves, #deck-hint, #bossbar, #paused-tag, #hero-tip, #dialogue, .hx-card, .hx-go, .hx-m, .hx-to, .bk-card, .boss-card, .es, .bt-row,
+  .asc-row, .slot, .cp-tg, .cp-tg span, .sl-card, .tg, .mt-card, .res-khobox, .inset, .tipbox, .cp-rec, .cp-node .lb, .pl-res span, .ver, .ro-card .tag, .rn-lv, input, textarea, select) { border-radius: 2px; }
+html.pixel :is(.chip, #nextwaves, #deck-hint, #bossbar, #hero-tip, #paused-tag, .cp-node .lb) { border-width: 2px; }
+html.pixel :is(.toast, #nextwaves, #deck-hint, #bossbar, #paused-tag, #hero-tip, #dialogue) { box-shadow: 3px 3px 0 #0B0704; }
+html.pixel .toast { border: 2px solid #5A4426; border-left: 4px solid var(--gold); }
+/* 4) công tắc pixel (thay công tắc kiểu iOS xanh lá): tắt = gỗ tối, bật = vàng nghệ, núm vuông */
+html.pixel :is(.tg, .fb-shot) .sw { width: 52px; height: 28px; border-radius: 2px; background: #2A1C10; border: 2px solid #6A4E22; box-shadow: inset 0 -2px 0 #1A110A; }
+html.pixel :is(.tg, .fb-shot) .sw::after { left: 3px; top: 3px; width: 18px; height: 18px; border-radius: 1px; background: #8A7A5A; box-shadow: inset -2px -2px 0 #5A4A30; }
+html.pixel :is(.tg, .fb-shot) .sw.on { background: #E8B83A; border-color: #FFE7A0; box-shadow: inset 0 -2px 0 #B8852A; }
+html.pixel :is(.tg, .fb-shot) .sw.on::after { left: 27px; background: #2A1A08; box-shadow: inset -2px -2px 0 #000; }
+html.pixel .fb-shot .sw { width: 40px; height: 22px; } html.pixel .fb-shot .sw::after { width: 12px; height: 12px; } html.pixel .fb-shot .sw.on::after { left: 21px; }
+/* sua-giao-dien-10: chip Ngân khố trong trận (thỏi bạc + số), nháy + "+X" bay lên khi nhận; dòng Ngân khố trên bảng Sính lễ */
+#tb-kho { position: relative; color: #E4ECF4; display: inline-flex; align-items: center; gap: 3px; }
+#tb-kho b { color: #E4ECF4; }
+#tb-kho .bac-img, #tb-kho .bac { height: 16px; width: auto; }
+#tb-kho.bump { animation: khoBump .9s ease-out; }
+@keyframes khoBump { 0%, 60% { filter: brightness(1.8) drop-shadow(0 0 4px #E4ECF4); } 100% { filter: none; } }
+#ui > .kho-fly { position: absolute; z-index: 60; font-style: normal; font-weight: 800; font-size: calc(15px * var(--hz, 1)); color: #E4ECF4; text-shadow: 0 1px 0 #000, 1px 0 0 #000, -1px 0 0 #000, 0 -1px 0 #000;
+  white-space: nowrap; pointer-events: none; animation: khoFly 1.2s ease-out forwards; }
+@keyframes khoFly { from { transform: translate(-50%, 0); opacity: 1; } to { transform: translate(-50%, 18px); opacity: 0; } }
+#reward .sl-kho small { font-weight: 700; color: #B8C4D0; margin-left: 2px; }
+/* màn thấp: bớt khoảng giữa các ô tài nguyên để chỗ chip Ngân khố */
+@media (max-height: 400px) { .tb-res { gap: 8px; } }
+html.pixel :is(.hx-auto, .hx-pin, .hx-st.hx-open, .hx-sk) { border-radius: 2px; }

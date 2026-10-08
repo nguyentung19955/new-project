@@ -1,16 +1,16 @@
 {
  "code": "tranh-qua-ga",
  "group": "giao-dien",
- "name": "tranh qua-ga",
+ "name": "Gà chín cựa",
  "w": 96,
  "h": 96,
  "ax": 48,
  "ay": 95,
  "bbox": [
+  2,
   6,
-  3,
   84,
-  90
+  88
  ],
  "n": 1,
  "anims": {
