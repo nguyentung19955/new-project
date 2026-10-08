@@ -561,8 +561,9 @@ function mapLayer(id, bgImg, svgImg, pw, ph) {
   x.setTransform(pw / CONFIG.W, 0, 0, ph / CONFIG.H, 0, 0);
   // pixel art (js/pixel.js): cỏ + đường đất / nước lát ô; ô chưa tải xong → nền cũ (lần dựng sau đổi khoá cache)
   // claude/xuat-goi-pixel: nền bản đồ pixel dựng sẵn theo từng bản đồ (nhóm ban-do: đường + ô đặt tướng đồng nhất + trang trí xa đường)
-  // dạng đường mới (m.shape, v222) có đường + ô khác bản đồ gốc → ảnh ban-do dựng sẵn không khớp, dùng pxMapGround
-  const bde = pxk && !m.shape && pxEntry('ban-do', id.toLowerCase()), bdi = bde && pxFrame(bde, 0);
+  // dạng đường mới (m.shape, v222) có đường + ô khác bản đồ gốc → dùng ảnh ban-do của đúng "gốc~dạng" (mã song2-uonkhuc,
+  // claude/ban-do-moi: sinh cho bản đồ dạng của các ải) nếu có, không thì pxMapGround
+  const bde = pxk && pxEntry('ban-do', id.toLowerCase().replace(/[^a-z0-9]+/g, '-')), bdi = bde && pxFrame(bde, 0);
   if (bdi) { x.imageSmoothingEnabled = false; x.drawImage(bdi, 0, 0, CONFIG.W, CONFIG.H); x.imageSmoothingEnabled = true; PX.seen.add(bde.key); }
   const pxDone = pxk && (!!bdi || pxMapGround(x, m, kind, pw / CONFIG.W));
   if (pxDone) { /* nền pixel */ }

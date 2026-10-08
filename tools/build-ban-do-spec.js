@@ -15,7 +15,8 @@ const ctx = { console: { log: noop, warn: noop, error: noop }, Math, JSON, Date,
   localStorage: { getItem: () => null, setItem: noop }, navigator: { userAgent: '' }, location: { search: '', href: '' } };
 ctx.window = ctx; ctx.self = ctx; ctx.document = el; ctx.Image = function () {}; ctx.addEventListener = noop;
 vm.createContext(ctx);
-for (const f of ['js/data.js', 'js/game.js']) vm.runInContext(fs.readFileSync(path.join(ROOT, f), 'utf8'), ctx, { filename: f });
+// chapters.js: đăng ký bản đồ dạng đường của mọi ải (levelMapId, claude/ban-do-moi)
+for (const f of ['js/data.js', 'js/game.js', 'js/chapters.js']) vm.runInContext(fs.readFileSync(path.join(ROOT, f), 'utf8'), ctx, { filename: f });
 // loại đường theo chủ đề: PATH_KIND trong js/maps.js (chỉ đọc hằng số, maps.js cần DOM)
 const pk = fs.readFileSync(path.join(ROOT, 'js/maps.js'), 'utf8').match(/const PATH_KIND = (\{[^}]*\})/);
 const PATH_KIND = pk ? vm.runInNewContext('(' + pk[1] + ')') : {};
@@ -27,7 +28,24 @@ for (const [id, m] of Object.entries(maps)) {
   if (chi && !chi.has(id)) continue;
   vm.runInContext(`MAP_ID = ''; setMap(${JSON.stringify(id)})`, ctx);
   const slots = vm.runInContext('CONFIG.slots', ctx).map(([x, y]) => [r1(x / DK), r1(y / DK)]);
-  const d = m.paths || m.d;   // nhiều nhánh: mảng chuỗi path
+  // claude/ban-do-moi: bản đồ dạng đường có cảnh riêng (núi giữa / sông bến đò) game tự vẽ bằng pxMapGround → bỏ qua
+  if (m.mount || m.ferry) continue;
+  let d = m.paths || m.d;   // nhiều nhánh: mảng chuỗi path
+  // nhiều nhánh (chia / nhập nhánh): nhánh phụ chỉ giữ đoạn KHÔNG trùng nhánh trước (cắt hở 18 đơn vị quanh chỗ chia / nhập)
+  // — tool coi hai nhánh chạm nhau là "cắt nhau" và vẽ cầu, chỗ chia nhánh không phải cầu
+  if (m.lanes && m.lanes.length) {
+    const prev = [vm.runInContext(`sampleSvgPath(${JSON.stringify(m.d)})`, ctx)];
+    d = [m.d];
+    for (const ld of m.lanes) {
+      const pts = vm.runInContext(`sampleSvgPath(${JSON.stringify(ld)})`, ctx);
+      const far = (p) => prev.every((q) => vm.runInContext(`distToPolyline(${JSON.stringify(q)}, ${p[0]}, ${p[1]})`, ctx) >= 18);
+      let run = [];
+      const flush = () => { if (run.length > 1) d.push('M ' + run.map(([x, y]) => `${r1(x)} ${r1(y)}`).join(' L ')); run = []; };
+      for (const p of pts) { if (far(p)) run.push(p); else flush(); }
+      flush();
+      prev.push(pts);
+    }
+  }
   list.push({ ma: `ban-do/${id.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`, ten: `Bản đồ ${id} (${m.theme})`, bo_phan: { chu_de: m.theme, ...(PATH_KIND[m.theme] ? { duong_loai: PATH_KIND[m.theme] } : {}) }, duong: d, o_dat: slots });
 }
 fs.mkdirSync(path.dirname(out), { recursive: true });
