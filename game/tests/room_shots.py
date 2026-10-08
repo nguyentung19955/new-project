@@ -160,14 +160,20 @@ def shot_maps(c):
     names = {'A': 'Kiểu A: đường chính có nhánh phụ', 'B': 'Kiểu B: mê cung nhỏ', 'C': 'Kiểu C: sảnh trung tâm'}
     notes = {'A': 'Suối hồi và Trùm nằm cuối lối chính, hai phòng phụ bỏ qua được', 'B': 'Cửa Trùm trong phòng Suối hồi, mở khi dọn xong 3 phòng quái', 'C': 'Đủ 3 mảnh chìa thì cửa phía trên sảnh mở, qua Suối hồi tới Trùm'}
     for kind, r, i in (('A', 0, 1), ('B', 1, 2), ('C', 2, 4)):
-        # ảnh giữa chừng: bản đồ nhỏ trong lúc chơi, cửa Trùm còn khóa
+        # giữa ải: bản đồ nhỏ trong lúc chơi; với Kiểu B và C là lúc cửa Trùm còn khóa
         c.ev("""([r, i, kind]) => {
-          const S = T.start(r, i, kind, kind === 'A' ? 1 : kind === 'B' ? 1 : 3);
-          T.playUntil((S) => Object.keys(S.seen).length >= 4 && S.W.cleared && !S.trans, 200);
+          const M = G.mapgen;
+          const seed = kind === 'C' ? 3 : 1;
+          const S = T.start(r, i, kind, seed);
+          const ok = (S) => S.W.cleared && !S.trans && !S.W.banner && S.W.ents.length === 0;
+          if (kind === 'A') T.playUntil((S) => Object.keys(S.seen).length >= 5 && ok(S), 300);
+          else if (kind === 'B') { T.playUntil((S) => M.gateCount(S.map, S.cleared) === 2 && S.W.type !== 'fountain' && S.W.cleared && !S.trans, 300); G.getRun().W.banner = null; const S2 = G.getRun(); S2.seen[6] = true; S2.known[6] = true; S2.known[7] = true; }
+          else T.playUntil((S) => S.idx === 0 && M.gateCount(S.map, S.cleared) === 2 && ok(S), 300);
+          const P = G.getRun().P, g = G.getRun().W.geo; P.x = g.cx - 24; P.y = g.cy + 24; P.face = 1;
           G.sim(20); T.freeze();
         }""", [r, i, kind])
         mid = c.grab()
-        c.ev("""() => { T.thaw(); T.playUntil((S) => S.W.type === 'fountain' && Object.keys(S.seen).length >= 7 && !S.trans, 400); const S = G.getRun(); G.sim(10); S.mode = 'map'; }""")
+        c.ev("() => { T.thaw(); G.getRun().mode = 'map'; }")
         panels.append((mid, names[kind] + ' · giữa ải\nBản đồ nhỏ ở góc phải chỉ hiện phòng đã qua và phòng kề'))
         panels.append((c.grab(300), names[kind] + ' · bản đồ to\n' + notes[kind]))
         c.ev("() => { const S = G.getRun(); if (S) S.mode = 'play'; }")

@@ -620,7 +620,7 @@
       if (b.weak.length) ui.text('Yếu ' + b.weak.map((e) => G.EL[e].name).join(', '), 240, 35, { size: 7, align: 'center', color: G.EL[b.weak[0]].col, bold: true });
       if (b.exposed > 0) ui.text('LỘ ĐIỂM YẾU!', 240, 46, { size: 8, align: 'center', color: '#ffd23f', bold: true });
     }
-    let by = b && !b.dead ? 58 : 30;
+    let by = b && !b.dead ? 58 : S.challenge ? 26 : 8;
     if (W.type === 'fountain') {
       const t = S.preview.length ? 'Trùm đã học: ' + S.preview.map(G.layerText).join(' · ') : 'Trùm chưa học được gì từ bạn';
       const lines = ui.wrap(t, 228, 7, true);
