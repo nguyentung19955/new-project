@@ -2366,3 +2366,8 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
   Kỳ Lân Vàng (đầu lân–rồng, 1 sừng vàng, vảy ngói men, bờm + đuôi mây) · `halong` Rồng Mẹ Hạ Long (thân rồng uốn, núi đá vôi
   tí hon trên lưng, ngọc trong vuốt) · `ongho` Chúa Sơn Lâm (hổ 4 chân, vằn nét tranh Đông Hồ, khăn lá, chữ 王) — đều có chân dung riêng.
 - Không sửa js/pixel.js hay file lô khác; file sinh ra (`assets/pixel/tuong/`, `js/pixel/tuong.js`, `js/asset-list.js`) dựng lại.
+
+## claude/duong-di-moi — nền pixel vẽ đủ mọi nhánh + cầu
+- Lỗi khi bật pixel (`?pixel=1`): `pxMapGround` (js/pixel.js) chỉ vẽ `CONFIG.path` (nhánh 0) → chianhanh / haicong mất nhánh 2 (quái đi trên cỏ), caucheo mất cầu chỗ đường tự cắt.
+- Sửa: vẽ viền + lòng đường cho mọi nhánh `CONFIG.paths`, rồi vẽ cầu (`drawBridge` của js/maps.js) khi `m.bridge`.
+- Test mới `tests/duong-di-moi/nen-pixel.test.js`: mọi điểm trên mọi nhánh không phải màu cỏ, chỗ tự cắt có màu gỗ của cầu (code cũ: FAIL); chụp 4 dạng ở 844×390 và 1920×934.

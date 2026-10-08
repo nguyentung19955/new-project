@@ -215,12 +215,16 @@ function pxMapGround(x, m, kind, k) {
   x.fillRect(0, 0, CONFIG.W, CONFIG.H);
   const L = (typeof PATH_LOOK !== 'undefined' && PATH_LOOK[kind]) || { w: 42, edge: 54 };
   x.lineCap = 'round'; x.lineJoin = 'round';
-  strokePath(x, CONFIG.path, L.edge * DK, kind === 'nuoc' ? '#1A2448' : '#4A2E1A');
+  // mọi nhánh (chianhanh, haicong…): viền của mọi nhánh trước rồi mới lòng đường → chỗ chia / nhập nhánh liền một mảng
+  const lanes = CONFIG.paths && CONFIG.paths.length ? CONFIG.paths : [CONFIG.path];
+  for (const pts of lanes) strokePath(x, pts, L.edge * DK, kind === 'nuoc' ? '#1A2448' : '#4A2E1A');
   x.strokeStyle = road;
   x.lineWidth = L.w * DK;
   x.beginPath();
-  CONFIG.path.forEach(([px, py], i) => (i ? x.lineTo(px, py) : x.moveTo(px, py)));
+  for (const pts of lanes) pts.forEach(([px, py], i) => (i ? x.lineTo(px, py) : x.moveTo(px, py)));
   x.stroke();
+  // cầu ở chỗ đường tự cắt (caucheo) — dùng lại cầu của đường vẽ tay (js/maps.js)
+  if (m.bridge && typeof drawBridge === 'function') for (const [cx, cy, a] of pathCrossings(lanes[0])) drawBridge(x, cx, cy, a, kind);
   x.restore();
   return true;
 }
