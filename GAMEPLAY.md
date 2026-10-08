@@ -2627,3 +2627,13 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
   khi bật pixel. Mọi bảng `.metal` dùng khung pixel tối mới `giao-dien/khung-bang-toi`, nút `.metal` dùng nút đồng pixel, nút chính
   menu dùng nút vàng pixel. Emoji / ký hiệu chữ trong giao diện (★ ✓ 🔒 🎁 🏆 ⚔ 📖 …) tự đổi sang icon pixel cùng nghĩa (js/pixel.js
   PX_EMO, quét DOM khi bật pixel, alt giữ ký tự cũ). Giữ hình cũ: nút tròn (đóng) và nút đổi chợ (theo tester).
+
+## claude/pixel-con-lai — chuyển nốt hình cũ sang pixel bằng tool (chế độ chuyển ảnh)
+- Tool `tools/ve-pixel.js` thêm khoá spec `"anh"`: đọc ảnh gen cũ (hoặc ảnh chụp hình SVG cũ bằng `tools/chup-nguon-pixel.js`), thu nhỏ
+  trung bình vùng, lượng tử về bảng màu chung (Lab, giữ sắc độ), giới hạn số màu, khử chấm lẻ, nền trong suốt + viền — giữ đúng bố cục,
+  màu của hình cũ (không còn khối thô). Ghi trong SPEC.md / LENH-TOOL.md.
+- Đã chuyển + nối (khi bật pixel, `?pixel=0` vẫn hình cũ): nền menu / đăng nhập / màn tải, nền màn phụ, bản đồ chương, cảnh thắng / thua
+  từng chương, tranh truyện, nền chủ đề + thẻ chế độ, 5 cổng thành (có mái, cột, cửa), núi Tản Viên 1..5, tranh nhỏ (trống đồng, hũ, kho
+  lúa, xoay máy, quà sính lễ), khung thanh máu tướng / quái / boss, đế ô ngập / núi / chọn / sẵn sàng.
+- Sửa kèm: bảng kết quả dùng khung tối (giấy kem làm chữ khó đọc), số ải trên huy hiệu chương chữ sáng, thẻ chế độ không bị skin nút đè.
+- Giữ bản sinh hình học: icon 16 px (chuyển ảnh ra nhoè). Không cần: vân đường / trang trí cũ (bản đồ pixel đã có riêng).
