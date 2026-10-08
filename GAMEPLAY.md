@@ -2372,6 +2372,10 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 246 — vẽ lại pixel đợt cuối (tester đạt)
+
+- Khung thanh máu tướng/quái/boss không che thanh; khung người chơi có huy hiệu mặt trời; nút Xuất Quân 2 huy hiệu; 16 icon đồ vẽ lại; đồ có icon riêng ưu tiên icon riêng; 7 tranh Sính lễ cùng khung 96×96, cùng đường chân.
+
 ## Phiên bản 245 — Sính lễ không bị toast đè (tester đạt)
 
 - Bảng Sính lễ mở thì hoãn mọi toast (Đã hạ, Rơi đồ, Ngân khố) → gộp 1 toast sau khi chọn quà. Hợp thể nới vùng chạm nút nhỏ (Tự gợi ý, lọc hành, Theo đuổi, Mở) trong giới hạn bố cục.
