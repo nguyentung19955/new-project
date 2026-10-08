@@ -2768,3 +2768,4 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 
 ## claude/sua-giao-dien-10 — sửa 10 lỗi giao diện ưu tiên (theo docs/DESIGN-REVIEW.md)
 - **N1 Hợp thể trong trận**: bảng bắt đầu ngay dưới thanh trên (`top: 46px × --hz`) — không còn đè "Đợt N", nút ☰, chip đợt sau; nền đặc `#15110C`, lớp tối phía sau đậm hơn (`#000000B3`); mở bảng thì ẩn chip đợt sau / banner / "Đã dừng". Thẻ chưa mở khoá: nền đặc `#1E1912` (bỏ trong suốt), ảnh xám tối, tên `#9A8C70`.
+- **N2 Số 0 như "o"**: `html` (và nút/ô nhập) dùng `font-variant-numeric: lining-nums tabular-nums` + `font-feature-settings: "lnum","tnum"` (không bị shorthand `font:` xoá); mọi chỗ `tabular-nums` cũ đổi thành `lining-nums tabular-nums`.
