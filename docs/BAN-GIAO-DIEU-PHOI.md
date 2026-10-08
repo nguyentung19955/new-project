@@ -25,3 +25,7 @@ sua-loi-giao-dien 41df718, can-bang-phan-thuong 95b0d90, sao3-re-nhanh 93ed7ac (
 
 ## Quy tắc tiết kiệm (đã ghi vào CLAUDE.md)
 Session điều phối không chạy toàn bộ test, 1 tester, tối đa 4 session song song, báo cáo ngắn.
+
+## Việc chờ (ghi 08/10, sau v220)
+- **Thêm dạng bản đồ** (mở session khi `duong-di-moi` đã gộp): ngã ba sông, cầu phao/cầu đá nhiều chỗ cắt, vòng quanh núi, hai đường song song, đèo dốc, bến đò, cổng 3 phía, ruộng bậc thang. **Người dùng chốt: chỉ CỬA/MÀN ĐẦU là đường thẳng, mọi màn khác phải là dạng đường khác.** Nền pixel do tool sinh: ô sát đường đồng nhất, ô xa chỉ trang trí.
+- Nhỏ: nhãn "Đã mua" → "Đã mở" khi mở kỹ năng miễn phí (★★★); thanh máu quái pixel/ảnh vẽ tay lệch (enemyBox); vòng choáng Thuồng Luồng bị HUD che ở 844×390.

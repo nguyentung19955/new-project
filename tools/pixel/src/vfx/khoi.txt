@@ -1,0 +1,51 @@
+# Cụm khói — xám sắt chuyển xám tối, phình ra rồi tan (quái chết, bụi chiêu, khói sau nổ).
+name: Khói
+size: 12x12
+anchor: 6,6
+colors:
+  k = sat-toi
+  s = sat
+  S = sat-sang
+  w = trang-xam
+part a
+....
+.SS.
+.Ss.
+....
+end
+part b
+........
+..SSw...
+.SwwSS..
+.SSSSss.
+..ssss..
+........
+end
+part c
+..........
+...SS.SS..
+..SwwSwwS.
+.SSwSSSSs.
+.SSSSSsss.
+..sSssss..
+...ss.ss..
+..........
+end
+anim main fps=8 once
+frame main
+  use a 4 4
+  outline k
+end
+frame main
+  use b 2 3
+  outline k
+end
+frame main
+  use c 1 2
+  outline k
+end
+frame main
+  use c 1 2
+  swap w S
+  swap S s
+end

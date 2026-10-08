@@ -1,0 +1,26 @@
+# Giọt Nước Thánh (tinh anh "Nước Thánh", hồi máu) — giọt nước ngọc lam, ánh trắng.
+name: Giọt nước thánh
+size: 8x10
+anchor: 4,9
+colors:
+  k = cham-toi
+  n = ngoc
+  N = ngoc-sang
+  x = sang
+part a
+........
+....n...
+...nn...
+..nNnn..
+..nxNn..
+.nNNnnn.
+.nNnnnn.
+..nnnn..
+........
+........
+end
+anim main fps=1 loop
+frame main
+  use a
+  outline k
+end

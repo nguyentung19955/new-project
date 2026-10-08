@@ -1,0 +1,460 @@
+# Tướng Thủy Quân (mã tuongthuy) — tinh anh lớn 32×32, hành Thủy: cá trê tinh phó tướng Hà Bá (dáng haba thu nhỏ), da XANH NGỌC,
+# RÂU TRÊ dài, MŨ VỎ SÒ, cầm ĐINH BA. Phá cách (DANH-SACH): khoác áo tơi rong rêu, đinh ba bằng xương cá. Có rage 2 (mắt đỏ, râu vểnh, há miệng).
+# Nguồn: js/enemies2.js:101 · tools/make-variants.py:20 (gốc haba). Sinh bằng script (c1).
+name: Tướng Thủy Quân
+size: 32x32
+anchor: 14,30
+colors:
+  k = vien
+  w = trang-xam
+  e = trang
+  q = dat-toi
+  G = dat-sang
+  c = cat
+  d = dong
+  y = vang-nghe
+  m = son-toi
+  R = son-sang
+  O = lua-sang
+  5 = la-toi
+  x = reu-toi
+  s = reu
+  S = reu-sang
+  B = cham
+  u = nuoc
+  U = nuoc-sang
+  i = troi
+  z = ngoc
+  Z = ngoc-sang
+
+part walk0
+............wewe.........e..
+..........weweZewe.....e.e.e
+..........wewewewew....e.e.e
+..........wwwwwwww.....e.e.e
+........Zdydydydydyd...ewewe
+......ZZZZZZZZZZZkzzzz...c..
+.....ZZZZZZZZZzzzzkkzzz..G..
+.....ZZZZZzzzzzzzzykkzz..c..
+.....ZZzzzzzzzzzkz5zkkki.c..
+.....zzzzzzzzzzzkkkk555iiq..
+......55zzzZZZZZ555555..iq..
+.....sss555555555555.....c..
+....ssssssss5555x5zzZZ...G..
+....xsxsxsxsxsxxzz555zZZ5q..
+....SSSSSSSSSSxzZzz.U55z55Z.
+....sssssssssxxZZZZ.U..55z5.
+....ssssssssxziiiiizU...555.
+...sxsxsxsxxxZZZZZZZ....iq..
+...SSSSSSSxzzZZZZZZZ....iq..
+...sssssssxzziiiiii5.....c..
+...sssssssxzzZZZZZZ5.....c..
+.Z..xsxsxsxzzZZZZZZ5.....G..
+.5ZZxSSSSxzzziiiii5......c..
+..z5xssssxzzzzZZZZ5......c..
+..5zxxsxxzzz55ZZ55.......G..
+..z5zzxzz5z55555.........c..
+.Z5555555................c..
+Z55......................G..
+end
+part walk1
+............wewe.........e..
+..........weweZewe.....e.e.e
+..........wewewewew....e.e.e
+..........wwwwwwww.....e.e.e
+........Zdydydydydyd...ewewe
+......ZZZZZZZZZZZkzzzz...c..
+.....ZZZZZZZZZzzzzkkzzz..G..
+.....ZZZZZzzzzzzzzykkzz..c..
+.....ZZzzzzzzzzzkz5zkkkk.c..
+.....zzzzzzzzzzzkkkk555iiq..
+......55zzzZZZZZ555555..iq..
+.....sss555555555555.....c..
+....ssssssss5555x5zzZZ...G..
+....xsxsxsxsxsxxzz555zZZ5qi.
+....SSSSSSSSSSxzZzz.U55z555.
+....sssssssssxxZZZZ.U..55z5.
+....ssssssssxziiiiizU...555.
+...sxsxsxsxxxZZZZZZZ.....c..
+...SSSSSSSxzzZZZZZZZ.....G..
+...sssssssxzziiiiii5.....c..
+.Z.sssssssxzzZZZZZZ5.....c..
+.zZ.xsxsxsxzzZZZZZZ5.....G..
+.5zZxSSSSxzzziiiii5......c..
+..5zxssssxzzzzZZZZ5......c..
+..z5xxsxxzzz55ZZ55.......G..
+..5z5zxzz5z55555.........c..
+.Zz555555................c..
+Z55......................G..
+end
+part walk2
+............wewe.........e..
+..........weweZewe.....e.e.e
+..........wewewewew....e.e.e
+..........wwwwwwww.....e.e.e
+........Zdydydydydyd...ewewe
+......ZZZZZZZZZZZkzzzz...c..
+.....ZZZZZZZZZzzzzkkzzz..G..
+.....ZZZZZzzzzzzzzykkzz..c..
+.....ZZzzzzzzzzzkz5zkkkk.c..
+.....zzzzzzzzzzzkkkk555iiq..
+......55zzzZZZZZ555555..iq..
+.....sss555555555555.....c..
+....ssssssss5555x5zzZZ...G..
+....xsxsxsxsxsxxzz555zZZ5q..
+....SSSSSSSSSSxzZzz.U55z55Z.
+....sssssssssxxZZZZ.U..55z5.
+....ssssssssxziiiiizU...555.
+...sxsxsxsxxxZZZZZZZ....iq..
+...SSSSSSSxzzZZZZZZZ....iq..
+...sssssssxzziiiiii5.....c..
+.Z.sssssssxzzZZZZZZ5.....c..
+.5Z.xsxsxsxzzZZZZZZ5.....G..
+..zZxSSSSxzzziiiii5......c..
+..5zxssssxzzzzZZZZ5......c..
+..z5xxsxxzzz55ZZ55.......G..
+..5z5zxzz5z55555.........c..
+.Zz555555................c..
+Z55......................G..
+end
+part walk3
+............wewe.........e..
+..........weweZewe.....e.e.e
+..........wewewewew....e.e.e
+..........wwwwwwww.....e.e.e
+........Zdydydydydyd...ewewe
+......ZZZZZZZZZZZkzzzz...c..
+.....ZZZZZZZZZzzzzkkzzz..G..
+.....ZZZZZzzzzzzzzykkzz..c..
+.....ZZzzzzzzzzzkz5zkkki.c..
+.....zzzzzzzzzzzkkkk555iiq..
+......55zzzZZZZZ555555..iq..
+.....sss555555555555.....c..
+....ssssssss5555x5zzZZ...G..
+....xsxsxsxsxsxxzz555zZZ5q..
+....SSSSSSSSSSxzZzzU.55z55Z.
+....sssssssssxxZZZZU...55z5.
+....ssssssssxziiiiiUU...555.
+...sxsxsxsxxxZZZZZZZ...i.c..
+...SSSSSSSxzzZZZZZZZ...i.G..
+...sssssssxzziiiiii5.....c..
+.Z.sssssssxzzZZZZZZ5.....c..
+.5Z.xsxsxsxzzZZZZZZ5.....G..
+.55ZxSSSSxzzziiiii5......c..
+..z5xssssxzzzzZZZZ5......c..
+..5zxxsxxzzz55ZZ55.......G..
+..z5zzxzz5z55555.........c..
+.Z5555555................c..
+Z55......................G..
+end
+part attack0
+...........wewe..........e..
+.........weweZewe......e.e..
+.........wewewewew.....e.e.e
+.........wwwwwwww.....eeee.e
+.......Zydydydydydy...ewewe.
+.....ZZZZZZZZZZZkzzzz...c.e.
+....ZZZZZZZZZzzzzkkzzz..G...
+....ZZZZZzzzzzzzzykkzz..c...
+....ZZzzzzzzzzzzz5mmmmmqc...
+....zzzzzzzzzzzmmmememiq....
+.....55zzzZZZZZ555555e.c....
+.....ss55555555555U....qi...
+....sssssss5555.5z5Z...qi...
+....xsxsxsxsxsxzz55zZZq.i...
+....SSSSSSSSSSxZzz.55555i...
+....sssssssssxZZZZ.U.zz5i...
+....ssssssssxiiiiizU.555i...
+...sxsxsxsxxxZZZZZZ...qi....
+...SSSSSSSxzZZZZZZZ..G.i....
+...sssssssxziiiiii5..c......
+.Z.sssssssxzZZZZZZ5..c......
+.5Z.xsxsxsxzZZZZZZ5..G......
+..zZxSSSSxzziiiii5..cc......
+..5zxssssxzzzZZZZ5..c.......
+..z5xxsxxzz55ZZ55...G.......
+..5z5zxzzz55555.....c.......
+.Zz555555...........c.......
+Z55.................G.......
+end
+part attack1
+...............wewe..........
+.............weweZewe........
+.............wewewewew.......
+.............wwwwwwww........
+...........Zydydydydydy......
+.........ZZZZZZZZZZZkzzzz....
+........ZZZZZZZZZzzzzkkzzz...
+........ZZZZZzzzzzzzzykkzz...
+........ZZzzzzzzzzzzz5mmmmi..
+........5zzzzzzzzzzmmmememii.
+.......SS55zzzZZZZZ5mmmmmmmi.
+......sssss55555555555U..e..i
+.....ssssssssss555zz5.U.....i
+....xsxsxsxsxsx55z55..U.eeeqi
+....SSSSSSSSS55z55zz...Uq...i
+....ssssssss5555xZZqqcGqeeeeq
+....ssssqqqq5z5qqqqiz..Uq...i
+.Gcqqqqqxsxs555ZZZZZZ...eeeq.
+...SSSSSSSSSxzZZZZZZZ......i.
+...ssssssssxzziiiiii5........
+...sssssssxzzzZZZZZZ5........
+.Z..xsxsxsxzzzZZZZZZ5........
+.5ZZxSSSSSxzzziiiii5.........
+..z5xssssxxzzzzZZZZ5.........
+..5zxxsxxzzzz55ZZ55..........
+..z5zzxzz55z55555............
+.Z5555555....................
+Z55..........................
+end
+part attack2
+............wewe..........e..
+..........weweZewe......e.e.e
+..........wewewewew.....e.e.e
+..........wwwwwwww......e.e.e
+........Zdydydydydyd....ewewe
+......ZZZZZZZZZZZkzzzz...c...
+.....ZZZZZZZZZzzzzkkzzz..G...
+.....ZZZZZzzzzzzzzykkzz..c...
+.....ZZzzzzzzzzzzz5mmmmi.c...
+.....zzzzzzzzzzzmmmememiiq...
+......55zzzZZZZZ555555e.iq...
+.....sss555555555555.....q...
+....ssssssss5555x5zzZZ..qi...
+....xsxsxsxsxsxxzz55zzZZqi...
+....SSSSSSSSSSxzZzz.55z555...
+....sssssssssxxZZZZ.U.55z5...
+....ssssssssxziiiiizU..555...
+...sxsxsxsxxxZZZZZZZ....c....
+...SSSSSSSxzzZZZZZZZ....G....
+...sssssssxzziiiiii5...c.....
+...sssssssxzzZZZZZZ5...c.....
+.Z..xsxsxsxzzZZZZZZ5...G.....
+.5ZZxSSSSxzzziiiii5....c.....
+..z5xssssxzzzzZZZZ5....c.....
+..5zxxsxxzzz55ZZ55.....G.....
+..z5zzxzz5z55555.......c.....
+.Z5555555.............c......
+Z55...................G......
+end
+part hurt0
+.........wewe.......e.....
+.......weweZewe.....e.e...
+.......wewewewew..e.e.e...
+.......wwwwwwww...e.eeee..
+.....Zydydydydydy..ewewe..
+...ZZZZZZZZZZZkZZZZq.c....
+..ZZZZZZZZZZZZZkkZZZ.G....
+..ZZZZZZZZZZZZZkkkZZ.c....
+..ZZZZZZZZZZZZZzmmmmiqc...
+..ZZZZZZZZZZZmmmememiiq...
+...ZzZZZZZZZZzzzzzze.iq...
+....Szzzzzzzzzzzzz....c...
+....SSSSSzzzzSxzZZZZ..q...
+....xSxSxSxSxxZZzzzZZZzq..
+....SSSSSSSSxZZZZU.zzZzzZ.
+....SSSSSSSSxZZZZU...zzZz.
+....SSSSSSSxxiiiiUZ...zzz.
+...SxSxSxSxZZZZZZZZ..i.c..
+...SSSSSSSxZZZZZZZZ..i..G.
+...SSSSSSxZZiiiiiiz.....c.
+...SSSSSSxZZZZZZZZz.....c.
+.Z..xSxSxxZZZZZZZZz.....G.
+.zZZxSSSSxZZiiiiiz......cc
+..ZzxSSSSxZZZZZZZz.......c
+..zZxxSxxZZzzZZzz........G
+..ZzZZxZZZzzzzz..........c
+.Zzzzzzzz................c
+Zzz......................G
+end
+part die0
+.........wewe...............
+.......weweZewe.............
+.......wewewewew..e.e.......
+.......wwwwwwww...e.e.......
+.....Zydydydydydqe.e.e......
+...ZZZZZZZZZZZkzzqzqwe......
+..ZZZZZZZZZzzzzkkqqq........
+..ZZZZZzzzzzzzzkkkzzq.......
+..ZZzzzzzzzzzzz5mmmmq.......
+..zzzzzzzzzzzmmmememqi......
+...z5zzzZZZZZ555555e.q......
+....s5555555555555...qi.....
+....sssss5555sx5zzZ..cq.....
+....xsxsxsxsxxzz55zZZ.G.....
+....SSSSSSSSxzzZzU55zZq.....
+....ssssssssxZZZZU..5z5ZZ...
+....sssssssxxiiiiUz..55z5...
+...sxsxsxsxzZZZZZZZ..i555...
+...SSSSSSSxzZZZZZZZ..i..c...
+...ssssssxzziiiiii5.....G...
+...ssssssxzzZZZZZZ5.....cc..
+.Z..xsxsxxzzZZZZZZ5......c..
+.5ZZxSSSSxzziiiii5.......G..
+..5zxssssxzzzZZZZ5.......cc.
+..z5xxsxxzz55ZZ55.........G.
+..5z5zxzzz55555...........c.
+.Zz555555..................c
+Z55........................G
+end
+part die1
+.........wewe...........
+.......wewezewe.........
+.......wewewewew..e.e...
+.......wwwwwwww.qe.e.e..
+.....zydydydydydyq.e.e..
+...zzzzzzzzzzzkzzqzqwe..
+..zzzzzzzzzzzzzkkqqq....
+..zzzzzzzzzzzzzkkkzzq...
+..zzzzzzzzzzzzz5mmmmq...
+..zzzzzzzzzzzmmmememqi..
+...55zzzzzzzz555555eqi..
+...ss555555555555....qi.
+..sssssss5555.5zzz...qi.
+..xsxsxsxsxsxzz55zzz.qi.
+..SSSSSSSSSSxzzz.55zzqq.
+..sssssssssxzzzz.U.5z55z
+..ssssssssxiiiiizU..55z5
+.sxsxsxsxxxzzzzzz....555
+uiUSSSSSxzzzzzzzz...Uuic
+uuBuiUuiUuiUuiUuiUuiBuu.
+...BBBBBBBBBBBBBBBBB....
+.....BBBBBBBBBBBBB......
+end
+part die2
+.........wewe........
+.......wewe5ewe......
+.......wewewewew.....
+.......wwwwwwww......
+.....5dydydydydyd....
+...55555555555k5555..
+..5555555555555kk555.
+..5555555555555kkk55.
+..55555555555k555kkkk
+Uui5555555555kkkk5Uui
+uuBUuiUuiUuiUuiUuiBuu
+...BBBBBBBBBBBBBBB...
+.....BBBBBBBBBBB.....
+end
+part rage0
+............wewe.........e..
+..........weweZewe.....e.e.e
+..........wewewewew....e.e.e
+..........wwwwwwww.....e.e.e
+........Zdydydydydyd...ewewq
+......ZZZZZZZZZZZmzzzz...c.i
+.....ZZZZZZZZZzzzzmmzzz..qi.
+.....ZZZZZzzzzzzzzROmzz.iq..
+.....ZZzzzzzzzzzzz5mmmmi.c..
+.....zzzzzzzzzzzmmmememm.G..
+......55zzzZZZZZ5555U5e..c..
+.....sss555555555555.UU..c..
+....ssssssss5555x5zzZ5.UUq..
+....xsxsxsxsxsxxzz555zZ55q..
+....SSSSSSSSSSxzZzz..55z55Z.
+....sssssssssxxZZZZ....55z5.
+....ssssssssxziiiiiz....555.
+...sxsxsxsxxxZZZZZZZ.....c..
+...SSSSSSSxzzZZZZZZZ.....G..
+...sssssssxzziiiiii5.....c..
+.Z.sssssssxzzZZZZZZ5.....c..
+.zZ.xsxsxsxzzZZZZZZ5.....G..
+.5zZxSSSSxzzziiiii5......c..
+..5zxssssxzzzzZZZZ5......c..
+..z5xxsxxzzz55ZZ55.......G..
+..5z5zxzz5z55555.........c..
+.Zz555555................c..
+Z55......................G..
+end
+part rage1
+............wewe.........e..
+..........weweZewe.....e.e.e
+..........wewewewew....e.e.e
+..........wwwwwwww.....e.e.e
+........Zdydydydydyd...ewewq
+......ZZZZZZZZZZZmzzzz...c.i
+.....ZZZZZZZZZzzzzmmzzz..qi.
+.....ZZZZZzzzzzzzzROmzz.iq..
+.....ZZzzzzzzzzzzz5mmmmi.c..
+.....zzzzzzzzzzzmmmememm.G..
+......55zzzZZZZZ5mmmUmmm.c..
+.....sss555555555555.UU..c..
+....ssssssss5555x5zzZ5.UUq..
+....xsxsxsxsxsxxzz555zZ55q..
+....SSSSSSSSSSxzZzz..55z55Z.
+....sssssssssxxZZZZ....55z5.
+....ssssssssxziiiiiz....555.
+...sxsxsxsxxxZZZZZZZ.....c..
+...SSSSSSSxzzZZZZZZZ.....G..
+...sssssssxzziiiiii5.....c..
+.Z.sssssssxzzZZZZZZ5.....c..
+.5Z.xsxsxsxzzZZZZZZ5.....G..
+..zZxSSSSxzzziiiii5......c..
+..5zxssssxzzzzZZZZ5......c..
+..z5xxsxxzzz55ZZ55.......G..
+..5z5zxzz5z55555.........c..
+.Zz555555................c..
+Z55......................G..
+end
+
+anim walk fps=6 loop
+frame walk
+  use walk0 2 2
+  outline
+end
+frame walk
+  use walk1 2 1
+  outline
+end
+frame walk
+  use walk2 2 1
+  outline
+end
+frame walk
+  use walk3 2 2
+  outline
+end
+
+anim attack fps=7 once
+frame attack
+  use attack0 2 1
+  outline
+end
+frame attack
+  use attack1 2 2
+  outline
+end
+frame attack
+  use attack2 2 2
+  outline
+end
+
+anim hurt fps=8 once
+frame hurt
+  use hurt0 2 2
+  outline
+end
+
+anim die fps=4 once
+frame die
+  use die0 2 3
+  outline
+end
+frame die
+  use die1 4 7
+  outline
+end
+frame die
+  use die2 5 17
+  outline
+end
+
+anim rage fps=6 loop
+frame rage
+  use rage0 2 1
+  outline
+end
+frame rage
+  use rage1 2 1
+  outline
+end

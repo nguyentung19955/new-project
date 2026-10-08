@@ -1,0 +1,260 @@
+# Tôm Lửa (mã tomlua) — biến thể của Tôm Binh (tom.txt): giữ y dáng, đổi màu ĐỎ LỬA + ngọn lửa nhỏ trên lưng (burnAura · hành Hỏa).
+# Đặc trưng (DANH-SACH Lô 10; js/enemies2.js:84; tools/make-variants.py:12): Tôm Binh tắm dung nham, đỏ lửa #E2483A,
+# vẫn cầm giáo ngắn + khiên đồng; lửa nhỏ bập bùng trên lưng. Phá cách (DANH-SACH): vỏ tôm nung sẫm, KHE GIÁP NỨT LỘ DUNG NHAM
+# sáng rực (khói bỏ vì rối với râu ở cỡ 32px). Quay mặt sang PHẢI (game tự lật).
+name: Tôm Lửa
+size: 32x32
+anchor: 16,28
+colors:
+  k = vien
+  o = son
+  O = son-sang
+  r = son-toi
+  L = lua-sang
+  m = son-toi
+  j = dong-toi
+  d = dong
+  D = dong-sang
+  Y = vang-nghe
+  e = trang
+  s = sat
+  S = sat-sang
+  g = dat
+  G = dat-sang
+  f = lua
+  F = lua-sang
+  z = vang-sang
+
+part than
+................................
+................................
+.........rrrr...................
+......rrr....rr.................
+.....r.........r.jDDDDj.........
+...............rjDDDDDDj........
+................DdDDDDDDd.......
+...............jjjjjjjjjjj......
+................oOOooooooo......
+...............oOOoooooekoOO....
+...............oOooooookkoooOO..
+...............ooooooooooo......
+.............rLLoooooLLr........
+............OOoooooo............
+............Ooooooooo...........
+...........rLLzLLLLr............
+...........OOoooooo.............
+...........Ooooooooo............
+...........rLLzLLLLr............
+..........OOoooooo..............
+..........Ooooooooo.............
+..........rLLzLLLLr.............
+........OOoooooor...............
+......Oooooo....................
+....OOOoooor....................
+...OoOOOrr......................
+...OOOoo........................
+....Oo..........................
+................................
+................................
+................................
+................................
+end
+
+part khien
+..jjjjj..
+.jDDDDdj.
+jDDdYdddj
+jDdYYYddj
+jDYYYYYdj
+jddYYYddj
+jdddYddjj
+.jdddddj.
+..jjjjj..
+end
+
+part chan1
+...r.r.r
+..r.r.r.
+..r.r.r.
+.r.r.r..
+rr.rr.rr
+end
+
+part chan2
+...r.r.r
+...r.r.r
+..r.r.r.
+..r.r.r.
+.rr.rr.r
+end
+
+part giao
+.S.
+SSs
+.S.
+.s.
+.G.
+.g.
+.g.
+.g.
+.g.
+.g.
+.g.
+.g.
+.g.
+.g.
+.g.
+.g.
+.g.
+.g.
+.g.
+.g.
+.g.
+end
+
+part giao_ngang
+gggggggggsS.
+GGGGGGGGGSSS
+.........sS.
+end
+
+part cang
+.oO
+oOo
+end
+
+part mat_X
+k.k
+.k.
+k.k
+end
+
+part mat_x
+k.k
+.k.
+end
+
+
+part lua1
+..f....
+.fF..f.
+.fFf.Ff
+fFzFfF.
+.FzzF..
+..FF...
+end
+
+part lua2
+...f...
+f.fF...
+fFfFf..
+.FzFFf.
+.FzzF..
+..FF...
+end
+
+anim walk fps=6 loop
+frame walk
+  use than
+  use chan1 12 23
+  use giao 27 3
+  use khien 18 13
+  use cang 26 15
+  use lua1 9 7
+  outline
+end
+frame walk
+  use than 0 -1
+  use chan2 12 23
+  use giao 27 2
+  use khien 18 12
+  use cang 26 14
+  use lua2 9 6
+  outline
+end
+frame walk
+  use than
+  use chan1 13 23
+  use giao 27 3
+  use khien 18 13
+  use cang 26 15
+  use lua1 9 7
+  outline
+end
+frame walk
+  use than 0 -1
+  use chan2 13 23
+  use giao 27 2
+  use khien 18 12
+  use cang 26 14
+  use lua2 9 6
+  outline
+end
+
+# đánh: rụt giáo lại → đâm thẳng → thu về
+anim attack fps=8 once
+frame attack
+  use than
+  use chan1 12 23
+  use giao 25 5
+  use khien 17 13
+  use cang 24 17
+  use lua2 9 7
+  outline
+end
+frame attack
+  use than 1 0
+  use chan2 12 23
+  use khien 16 15
+  use giao_ngang 19 14
+  use cang 24 15
+  use lua1 10 7
+  outline
+end
+frame attack
+  use @walk.0
+end
+
+anim hurt fps=8 once
+# trúng đòn: ngả ra sau, mắt X, sáng tông
+frame hurt
+  use than -1 -1
+  use chan2 11 23
+  use giao 25 3
+  use khien 16 13
+  use cang 25 14
+  use lua2 8 6
+  use mat_X 20 7
+  set 23 9 k
+  set 23 10 k
+  swap o O
+  swap r o
+  outline
+end
+frame hurt
+  use @walk.0
+  shift -1 0
+end
+
+# chết: lật ngửa bụng
+anim die fps=5 once
+frame die
+  use than 0 1
+  use chan2 12 24
+  use khien 18 14
+  use mat_x 22 10
+  outline
+end
+frame die
+  use than
+  use chan1 12 23
+  use mat_x 22 9
+  rot 180
+  shift 0 2
+  use khien 4 22
+  outline
+end
+frame die
+  use @die.1
+  swap o r
+end

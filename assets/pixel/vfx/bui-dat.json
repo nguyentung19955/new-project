@@ -1,0 +1,25 @@
+{
+ "code": "bui-dat",
+ "group": "vfx",
+ "name": "Bụi đất",
+ "w": 14,
+ "h": 9,
+ "ax": 7,
+ "ay": 7,
+ "bbox": [
+  1,
+  2,
+  10,
+  6
+ ],
+ "n": 3,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 3,
+   "fps": 9,
+   "loop": false
+  }
+ },
+ "sheet": "bui-dat.png"
+}

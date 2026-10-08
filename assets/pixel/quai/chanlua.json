@@ -1,0 +1,50 @@
+{
+ "code": "chanlua",
+ "group": "quai",
+ "name": "Chằn Lửa",
+ "w": 32,
+ "h": 32,
+ "ax": 15,
+ "ay": 31,
+ "bbox": [
+  3,
+  1,
+  28,
+  31
+ ],
+ "n": 13,
+ "anims": {
+  "walk": {
+   "start": 0,
+   "n": 4,
+   "fps": 6,
+   "loop": true
+  },
+  "attack": {
+   "start": 4,
+   "n": 3,
+   "fps": 8,
+   "loop": false
+  },
+  "hurt": {
+   "start": 7,
+   "n": 1,
+   "fps": 8,
+   "loop": false
+  },
+  "die": {
+   "start": 8,
+   "n": 3,
+   "fps": 5,
+   "loop": false
+  },
+  "rage": {
+   "start": 11,
+   "n": 2,
+   "fps": 6,
+   "loop": true
+  }
+ },
+ "cd": 1,
+ "sheet": "chanlua.png"
+}

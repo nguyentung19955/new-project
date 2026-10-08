@@ -1,0 +1,25 @@
+{
+ "code": "trung",
+ "group": "vfx",
+ "name": "Trúng đòn",
+ "w": 11,
+ "h": 11,
+ "ax": 5,
+ "ay": 5,
+ "bbox": [
+  1,
+  1,
+  9,
+  9
+ ],
+ "n": 3,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 3,
+   "fps": 14,
+   "loop": false
+  }
+ },
+ "sheet": "trung.png"
+}

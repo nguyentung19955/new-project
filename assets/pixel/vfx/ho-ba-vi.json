@@ -1,0 +1,25 @@
+{
+ "code": "ho-ba-vi",
+ "group": "vfx",
+ "name": "Hổ Ba Vì",
+ "w": 24,
+ "h": 16,
+ "ax": 12,
+ "ay": 15,
+ "bbox": [
+  0,
+  5,
+  22,
+  11
+ ],
+ "n": 2,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 2,
+   "fps": 4,
+   "loop": true
+  }
+ },
+ "sheet": "ho-ba-vi.png"
+}

@@ -1,0 +1,44 @@
+{
+ "code": "dacon",
+ "group": "quai",
+ "name": "Đá Con",
+ "w": 32,
+ "h": 32,
+ "ax": 16,
+ "ay": 29,
+ "bbox": [
+  6,
+  12,
+  20,
+  18
+ ],
+ "n": 11,
+ "anims": {
+  "walk": {
+   "start": 0,
+   "n": 4,
+   "fps": 7,
+   "loop": true
+  },
+  "attack": {
+   "start": 4,
+   "n": 3,
+   "fps": 9,
+   "loop": false
+  },
+  "hurt": {
+   "start": 7,
+   "n": 1,
+   "fps": 8,
+   "loop": false
+  },
+  "die": {
+   "start": 8,
+   "n": 3,
+   "fps": 5,
+   "loop": false
+  }
+ },
+ "cd": 1,
+ "sheet": "dacon.png"
+}

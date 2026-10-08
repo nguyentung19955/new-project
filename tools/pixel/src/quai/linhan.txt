@@ -1,0 +1,253 @@
+# Quỷ Giáo (mã linhan, tên cũ Lính Ân) — quỷ binh giặc Ân, quái thường 32×32 (hành Kim). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# PHÁ CÁCH (DANH-SACH "Hướng phá cách"): ÂM BINH GIẤY — hình nhân giấy vàng mã, mặt vẽ mực (sừng, nanh, mày gắt, mắt son), áo giấy đỏ
+# sẫm dán ô vàng mã, mũ giấy chàm, chân que tre; vẫn GIÁO ĐỒNG + KHIÊN gỗ (vai trò không đổi).
+# Đặc trưng gốc (PROMPT-GEN-LAI.txt:1380 · PROMPT-DUNG-XUONG.txt:1612 · DANH-SACH Lô 9): yêu tinh lính không mặt người, da xám xanh,
+# tai nhọn, 2 sừng nhỏ, nanh, mắt đỏ; mũ da nhỏ, áo da đỏ sẫm, đai đồng; GIÁO ĐỒNG dài (tay trước) + KHIÊN gỗ tròn hoa văn (tay sau).
+name: Quỷ Giáo
+size: 32x32
+anchor: 15,29
+colors:
+  k = vien
+  t = toi
+  g = cat
+  G = vang-sang
+  H = sang
+  p = cat
+  P = vang-sang
+  q = dat
+  r = son
+  m = son-toi
+  R = son-sang
+  n = cham-toi
+  c = cham
+  C = cham-sang
+  e = trang
+  E = son-sang
+  o = son-sang
+  y = vang-nghe
+  j = dong-toi
+  d = dong
+  D = dong-sang
+  b = dat-toi
+  w = dat
+  W = dat-sang
+
+part than
+................................
+................................
+...........RR...RR..............
+............rR...rR.............
+............nCCCCCCn............
+...........nCCccccccn...........
+.......HG..nnnnnnnnnnn..........
+.......HHGgHHHHHHHHHHGg.........
+........HGgHtttHHHtttGg.........
+.........gHHHttoHHtoGGg.........
+..........HHHHHHHHHHHGg.........
+..........gHHtetttetGg..........
+...........gGtrrrrrtgg..........
+.............gggggg.............
+..........RRRRrrrrrrrm..........
+.........GRRryyDrrrrrmm.........
+.........GRrryDdrrrrrmm.........
+.........gRrrddmrrrrmmm.........
+.........gmrrrrrrrrrmmm.........
+..........jDyDyDyDyDyj..........
+..........mrrmmrrmmrrm..........
+..........mrm.mrm.mrm...........
+end
+
+part khien
+..bbbbb..
+.bWWWwwb.
+bWWyyywbb
+bWyrrrywb
+bWyrDrywb
+bWyrrrywb
+bwyyyywbb
+.bwwwwbb.
+..bbbbb..
+end
+
+part chanA
+....pP..pP...
+....pP...pP..
+...pP....pP..
+...qq.....qq.
+...pP.....pP.
+..pP......pP.
+.nnnn....nnnn
+end
+
+part chanB
+.....pPpP...
+.....pPpP...
+.....pPpP...
+.....qqqq...
+.....pPpP...
+.....pPpP...
+....nnnnnn..
+end
+
+part chanC
+....pP..pP..
+....pP.pP...
+.....pPpP...
+.....qqqq...
+....pP.pP...
+....pP..pP..
+...nnn..nnn.
+end
+
+part giao
+.D.
+.Dd
+DDd
+DDd
+DDd
+.d.
+.j.
+.y.
+.W.
+.w.
+.W.
+.w.
+.W.
+.w.
+.W.
+.w.
+.W.
+.w.
+.W.
+.w.
+.W.
+.w.
+.W.
+.w.
+.W.
+.w.
+.b.
+end
+
+part tay
+GHG
+gGg
+end
+
+part giao_ngang
+wWwWwWwWwWyjDDD.
+WwWwWwWwWwyjDDDD
+.............dd.
+end
+
+part mat_x
+t.t
+.t.
+end
+
+anim walk fps=6 loop
+frame walk
+  use than
+  use chanA 9 22
+  use khien 3 14
+  use giao 23 2
+  use tay 22 16
+  outline
+end
+frame walk
+  use than 0 -1
+  use chanB 9 22
+  use khien 3 13
+  use giao 23 1
+  use tay 22 15
+  outline
+end
+frame walk
+  use than
+  use chanC 9 22
+  use khien 3 14
+  use giao 23 2
+  use tay 22 16
+  outline
+end
+frame walk
+  use than 0 -1
+  use chanB 9 22
+  use khien 3 13
+  use giao 23 1
+  use tay 22 15
+  outline
+end
+
+# đánh: giơ khiên, rút giáo về sau → đâm thẳng → thu về
+anim attack fps=8 once
+frame attack
+  use than -1 0
+  use chanA 8 22
+  use khien 2 13
+  use giao 18 1
+  use tay 18 15
+  outline
+end
+frame attack
+  use than 1 0
+  use chanA 10 22
+  use khien 5 14
+  use giao_ngang 15 15
+  use tay 20 16
+  outline
+end
+frame attack
+  use @walk.0
+end
+
+# trúng đòn: ngả người giật lùi, mắt chữ X, miệng méo, loé sáng
+anim hurt fps=8 once
+frame hurt
+  use chanB 9 22
+  use khien 1 15
+  use than -2 1
+  use giao 20 3
+  use tay 19 17
+  use mat_x 12 9
+  use mat_x 16 9
+  swap G H
+  swap g G
+  swap r R
+  swap m r
+  outline
+end
+
+# chết: khuỵu gối → ngã ngửa ra sau → nằm sẫm màu
+# chết: khuỵu gối → đổ sấp về trước → nằm sẫm màu
+anim die fps=5 once
+frame die
+  use than 0 3
+  use chanB 9 23
+  use khien 3 18
+  use giao 23 5
+  use tay 22 19
+  use mat_x 14 11
+  use mat_x 18 11
+  outline
+end
+frame die
+  use than
+  use chanA 9 22
+  use mat_x 14 8
+  use mat_x 18 8
+  rot 90
+  shift 0 6
+  use khien 13 22
+  use giao_ngang 2 28
+  outline
+end
+frame die
+  use @die.1
+  swap G g
+  swap H G
+  swap r m
+  swap R r
+  swap D d
+  swap y d
+end
