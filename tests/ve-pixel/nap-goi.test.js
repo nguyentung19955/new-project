@@ -49,8 +49,12 @@ function unzip(buf) {
     const pick = await (await browser.newContext()).newPage();
     await pick.route('**/firebase-config.js*', (rr) => rr.fulfill({ contentType: 'application/javascript', body: "const FIREBASE_CONFIG={apiKey:''};" }));
     await pick.goto('file://' + path.join(ROOT, 'index.html'));
-    const [HERO, QUAI] = await pick.evaluate(() => [Object.keys(HEROES).find((k) => !window.PIXEL_MANIFEST['tuong/' + k]), Object.keys(ENEMIES).find((k) => !ENEMIES[k].boss && !window.PIXEL_MANIFEST['quai/' + k] && !window.PIXEL_MANIFEST['boss/' + k])]);
+    let [HERO, QUAI] = await pick.evaluate(() => [Object.keys(HEROES).find((k) => !window.PIXEL_MANIFEST['tuong/' + k]), Object.keys(ENEMIES).find((k) => !ENEMIES[k].boss && !window.PIXEL_MANIFEST['quai/' + k] && !window.PIXEL_MANIFEST['boss/' + k])]);
     await pick.close();
+    // đã vẽ đủ mọi tướng: bỏ tạm 1 tướng khỏi manifest js/pixel/tuong.js (page.route, không sửa file thật)
+    const BO = HERO ? null : (HERO = 'thachsanh');
+    const routeManifest = (ctx) => BO && ctx.route('**/js/pixel/tuong.js*', (rr) => rr.fulfill({ contentType: 'application/javascript',
+      body: fs.readFileSync(path.join(ROOT, 'js/pixel/tuong.js'), 'utf8').split('\n').filter((l) => !l.startsWith(`"tuong/${BO}":`)).join('\n') }));
     ok(HERO && QUAI, `mã chưa có pixel để thử: tuong/${HERO}, quai/${QUAI}`);
     // ---- gói tạo bằng tool
     console.log('— tạo gói bằng tools/ve-pixel.html');
@@ -76,6 +80,7 @@ function unzip(buf) {
 
     // ---- game
     const ctx = await browser.newContext({ viewport: { width: 844, height: 390 } });
+    await routeManifest(ctx);
     await ctx.route('**/firebase-config.js*', (rr) => rr.fulfill({ contentType: 'application/javascript', body: "const FIREBASE_CONFIG={apiKey:''};" }));
     await ctx.addInitScript(() => { if (!localStorage.getItem('nuicao.v1')) localStorage.setItem('nuicao.v1', JSON.stringify({ unlocked: 17, storySeen: true, settings: { skipStory: true } })); });
     const page = await ctx.newPage();
