@@ -91,22 +91,23 @@ function toHuong(H, anhPhong) {
   chu(c, H.ten, LE + 6, y, 56, CHU_VANG, true);
   y = chuNhieuDong(c, H.gioiThieu, LE + 6, y + 50, RONG - 2 * LE - 12, 31, CHU_SANG) + 6;
   // bốn hero, lưới 2 x 2
-  const cao = Math.max(...H.hero.map(caoHinh)) * K + 36;
+  const cm = Math.max(...H.hero.map(h => h.chan || 0)) * K; // phần nằm dưới mặt đất (gợn nước)
+  const cao = Math.max(...H.hero.map(caoHinh)) * K + 36 + cm;
   const rongO = (RONG - 2 * LE - 16) / 2, caoO = cao + 168;
   H.hero.forEach((h, i) => {
     const x0 = LE + (i % 2) * (rongO + 16), y0 = y + Math.floor(i / 2) * (caoO + 16);
     o(c, x0, y0, rongO, caoO, NEN_O, VIEN_O);
-    datHinh(c, h, H.mau, x0 + rongO / 2 + (h.lech || 0) * K, y0 + cao - 6, K);
+    datHinh(c, h, H.mau, x0 + rongO / 2 + (h.lech || 0) * K, y0 + cao - 6 - cm, K);
     chu(c, h.ten, x0 + rongO / 2, y0 + cao + 44, 40, CHU_VANG, true, 'center');
     chuNhieuDong(c, h.moTa, x0 + rongO / 2, y0 + cao + 84, rongO - 36, 27, CHU_SANG, false, 'center');
   });
   y += 2 * (caoO + 16) + 8;
   // đang đánh + vũ khí tiến hoá
-  const caoD = Math.max(caoHinh(H.danh) * K + 40, 2 * (Math.max(...H.vuKhi.map(caoHinh)) * 7 + 78) + 10) + 70;
+  const caoD = Math.max((caoHinh(H.danh) + (H.danh.chan || 0)) * K + 40, 2 * (Math.max(...H.vuKhi.map(caoHinh)) * 7 + 78) + 10) + 70;
   o(c, LE, y, rongO, caoD, NEN_O, VIEN_O);
   chu(c, 'Khi đang đánh', LE + 18, y + 46, 34, CHU_VANG, true);
   { const rd = Math.max(...H.danh.rows.map(r => r.length)); // canh giữa theo bề ngang cả hình (kể cả vệt vung)
-    datHinh(c, Object.assign({}, H.danh, { ax: Math.round(rd / 2), bongLech: (H.danh.ax != null ? H.danh.ax : rd / 2) - Math.round(rd / 2) }), H.mau, LE + rongO / 2, y + caoD - 24, K); }
+    datHinh(c, Object.assign({}, H.danh, { ax: Math.round(rd / 2), bongLech: (H.danh.ax != null ? H.danh.ax : rd / 2) - Math.round(rd / 2) }), H.mau, LE + rongO / 2, y + caoD - 24 - (H.danh.chan || 0) * K, K); }
   const x1 = LE + rongO + 16;
   o(c, x1, y, rongO, caoD, NEN_O, VIEN_O);
   chu(c, 'Vũ khí lớn lên theo cách đánh', x1 + 18, y + 46, 31, CHU_VANG, true);
@@ -203,4 +204,13 @@ function vetVung(w, h, cx, cy, r0, r1, a0, a1, kyTu) {
     }
     rows.push(s); }
   return rows;
+}
+// Nghiêng cả hình như một khối cứng (con rối đổ người tới): hàng trên cùng lệch sang phải nhiều nhất.
+function nghieng(rows, k) {
+  const h = rows.length, lech = (j) => Math.round((h - 1 - j) * k), max = lech(0);
+  return rows.map((r, j) => '.'.repeat(lech(j)) + r + '.'.repeat(max - lech(j)));
+}
+// Xoá một vùng chữ nhật (để bỏ cánh tay cũ trước khi gắn cánh tay mới).
+function xoa(rows, x0, x1, y0, y1) {
+  return rows.map((r, j) => (j < y0 || j >= y1) ? r : r.padEnd(x1, '.').slice(0, x0) + '.'.repeat(x1 - x0) + r.slice(x1));
 }
