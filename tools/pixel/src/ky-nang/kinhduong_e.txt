@@ -1,0 +1,46 @@
+# Lệnh Vua — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: royal command banner
+name: Lệnh Vua
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = son
+  g = lua
+  h = lua-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbhbbbbbbbbbdca
+aedbbbbbbbbgbbbbbbbbbdca
+aedbbbbbbbhgfbbbbbbbbdca
+aedbhbbbbhgggfbbbbhbbdca
+aedbhfbbbhgggfbbbhfbbdca
+aedbhgfbhgggggfbhgfbbdca
+aedbhgghggggggghggfbbdca
+aedbhgggggggggggggfbbdca
+aedbhgggggggggggggfbbdca
+aedbhgggggggggggggfbbdca
+aedbhgggggggggggggfbbdca
+aedbfffffffffffffffbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

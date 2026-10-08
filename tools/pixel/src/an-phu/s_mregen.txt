@@ -1,0 +1,45 @@
+# Mạch Linh (Ấn Sấm, hàng 1) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: —
+name: Mạch Linh (Ấn Sấm, hàng 1)
+size: 24x24
+colors:
+  a = vien
+  b = cham-toi
+  c = cham
+  d = cham-sang
+  e = nuoc
+  f = nuoc-sang
+  g = troi
+
+part k0
+........................
+........aaaaaaaa........
+......aaffffffffaa......
+.....affbccccccbffa.....
+....afdcbbbbbbbbcdfa....
+...afdcbbbbbbbbbbcdfa...
+..afdcbbbbbbbbbbbbcdfa..
+..afcbbbbbbbfbbbbbbcca..
+.afbbbbbbbbffebbbbbbbfa.
+.afcbbbbbbbfgeabbbbcfca.
+.afcbbbbbbffgfebbbbcfca.
+.afcbbbbbffgfffebbbcfca.
+.afcbbbbffgfffffebbcfca.
+.afcbbbbfgffffffeabcfca.
+.afcbbbbfffffffeeabcfca.
+.acbbbbbbeffffeeaabcbca.
+..affbbbbbeeeeeaabcfca..
+..acdfbbbbbaaaaabcfdca..
+...acdfbbbbbbbbbcfdca...
+....acdfbcccccccfdca....
+.....accbffffffbcca.....
+......aaccccccccaa......
+........aaaaaaaa........
+........................
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

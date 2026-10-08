@@ -75,6 +75,7 @@ if (typeof document !== 'undefined' && document.documentElement) loadUiSkins();
 // v95: Ngân khố (tài khoản) dùng nén BẠC, khác hẳn đồng VÀNG trong trận
 let KHO_MODE = false;       // đang mở Lò đúc đồng trước trận: giá hiện bằng bạc Ngân khố
 // dùng ảnh có sẵn: ảnh tài nguyên (đồng xu lỗ vuông, nén bạc) luôn dùng khi có file, không phụ thuộc "Dùng ảnh AI"; thiếu thì vẽ CSS như cũ
+const pxUrl2 = (g, code) => (typeof pxUrl === 'function' && pxUrl(g, code)) || '';
 const pxIc = (code) => (typeof pxUrl === 'function' && pxUrl('icon', code)) || '';
 const uiSrcOf = (paths) => { const p = paths.find((x) => hasAsset(x)); return p ? assetSrc(p) : ''; };
 const COIN_SRC = ['ui/ui-tai-nguyen-1.png'], BAC_SRC = ['ui/ui-tai-nguyen-3.png'];
@@ -183,12 +184,14 @@ const BOSS_LINES = {
 const RUN_CHIP = '<span class="chip run">Quái vẫn đang chạy</span>';
 
 // v111: Ấn Phù vẽ tay (assets/runes/<mã ấn>.png, cắt bằng tools/cat-runes.py); thiếu ảnh thì hiện ký hiệu cũ
-const runeIc = (r) => !hasAsset(`runes/${r.id}.png`) ? r.ic : `<img class="rimg" src="${assetSrc(`runes/${r.id}.png`)}" alt="${r.ic}" onerror="this.replaceWith(this.alt)">`;
+const runeIc = (r) => pxUrl2('an-phu', r.id) ? `<img class="rimg" src="${pxUrl2('an-phu', r.id)}" alt="${r.ic}">` : !hasAsset(`runes/${r.id}.png`) ? r.ic : `<img class="rimg" src="${assetSrc(`runes/${r.id}.png`)}" alt="${r.ic}" onerror="this.replaceWith(this.alt)">`;
 
 // Icon: ưu tiên ảnh vẽ tay trong assets/ (nếu đã có), không thì dùng hình vector
 // v182: ô có mô tả khi rê chuột / giữ tay (data-skt = kỹ năng thứ i của tướng đang chọn, data-skr = "loại:i" ở màn Anh Hùng)
 const TIP_SEL = '[data-tip], [data-skt], [data-skr]';
 function skillIcon(type, i) {
+  const px = pxUrl2('ky-nang', `${type}_${SKILL_KEYS[i].toLowerCase()}`);   // claude/xuat-goi-pixel: icon kỹ năng pixel 24×24 khi bật pixel
+  if (px) return `<img src="${px}" alt="">`;
   // v107: icon vẽ tay trong bộ ảnh tướng → luôn dùng (như ảnh tướng), trừ khi bật "Tướng vẽ nét"
   if (SKILL_PACK.has(type) && !vectorHeroesOn()) return `<img src="${assetSrc(`packs/${type}/sk-${SKILL_KEYS[i].toLowerCase()}.png`)}" alt="">`;
   const u = assetUrl(skillPngPath(type, i));

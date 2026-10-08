@@ -1,0 +1,46 @@
+# Cột Đá — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: stone pillar
+name: Cột Đá
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dat
+  d = dong-toi
+  e = dong
+  f = dong-sang
+  g = vang-nghe
+  h = vang-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+afffffffffffffffffffffda
+afeeeeeeeeeeeeeeeeeeeeda
+afebbbbbbbbbbbbbbbbbbeda
+afebbbbhhhhhhhhhhbbbbeda
+afebbbbhhhhhhhhhhbbbbeda
+afebbbbhhhhhhhhhhbbbbeda
+afebbbbbbhgggggfbbbbbeda
+afebbbbbbhgggggfbbbbbeda
+afebbbbbbhgggggfbbbbbeda
+afebbbbbbhgggggfbbbbbeda
+afebbbbbbcccccccbbbbbeda
+afebbbbbbcccccccbbbbbeda
+afebbbbbbhgggggfbbbbbeda
+afebbbbbbhgggggfbbbbbeda
+afebbbbbbhgggggfbbbbbeda
+afebbbbbbhgggggfbbbbbeda
+afebbbbbbhgggggfbbbbbeda
+afebbbbhhhhhhhhhhbbbbeda
+afebbbbhhhhhhhhhhbbbbeda
+afebbbbbbbbbbbbbbbbbbeda
+afeeeeeeeeeeeeeeeeeeeeda
+adddddddddddddddddddddda
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

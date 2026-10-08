@@ -1,0 +1,50 @@
+# Lạc Hầu · E «Đá Lăn Phong Châu» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: a big round boulder rolling with dust
+name: Lạc Hầu · E «Đá Lăn Phong Châu»
+size: 24x24
+colors:
+  a = vien
+  b = toi
+  c = sat
+  d = sat-sang
+  e = dat-toi
+  f = dat-sang
+  g = cat
+  h = dong-toi
+  i = dong
+  j = dong-sang
+  k = vang-nghe
+  l = vang-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ajjjjjjjjjjkkjjjjjjjjjia
+ajiiiiiiiiiiiiiiiiiiiiha
+ajijjjjjjjjjjjjjjjjjjiha
+ajijeeeeeeeeeeeeeeeejiha
+ajijeeeeeeeeaaaaaeeejiha
+ajijeeeeeeaadddddaaejiha
+ajiaaaeeeaddbbcccddajiha
+ajigggaeadcbdddccccdaiha
+ajiaaaeeadbdddcccccbaiha
+ajijaaaadbddbbbbccccdiha
+akiagggadcddddbbdcccbika
+akijaaaadcccccddccccbika
+ajiaaaeadcccccccbcccbiha
+ajigggaabccccccbbbccbiha
+ajiaaaeeadcccccbbbdbaiha
+ajijeaaalbccccccdbdbaiha
+ajijalllglbbcccccdblaiha
+ajiaalggfaaabbbbbalgliha
+ajiffffffffffffffffffiha
+ajieefffeeeeeeeeeeefeiha
+ajiiiiiiiiiiiiiiiiiiiiha
+aihhhhhhhhhhkkhhhhhhhhha
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

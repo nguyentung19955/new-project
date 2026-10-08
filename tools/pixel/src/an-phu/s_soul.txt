@@ -1,0 +1,48 @@
+# Hồn Nổ (Ấn Sấm, hàng 4) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: —
+name: Hồn Nổ (Ấn Sấm, hàng 4)
+size: 24x24
+colors:
+  a = vien
+  b = trang
+  c = sang
+  d = dong
+  e = vang-sang
+  f = cham-toi
+  g = cham
+  h = nuoc-sang
+  i = ngoc
+  j = ngoc-sang
+
+part k0
+.........aaaaaa.........
+......aaaeddddeaaa......
+.....aedddhgghdddea.....
+....aedhfggffggfhdea....
+...aedggffffffffggdea...
+..aedgffffffffffffgdea..
+.aedhffffffffffffffhdea.
+.aehgfffffjfffjfffgghea.
+.adffffffjiajfijfffffda.
+aedhfffffijjijjiaffghdea
+aehgfffffbbbbbbbaffgghea
+aehfffffbccccccbbffffhea
+aehfffffbiaccaibbaffghea
+aeghffffbiaccaibbafghgea
+adehfffffbccacbbaafgheda
+.adffffffbabababaffgfda.
+.aeghfffffbbbbbfafghgea.
+.adegffffffaaaaaffggeda.
+..adegfgffffffffgggeda..
+...adeghfggffggghgeda...
+....adegfghfghgfgeda....
+.....adddeggggeddda.....
+......aaaddddddaaa......
+.........aaaaaa.........
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

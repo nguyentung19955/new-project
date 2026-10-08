@@ -1,0 +1,48 @@
+# Lạc Long Quân · E «Gầm Biển» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: a big roaring sea wave
+name: Lạc Long Quân · E «Gầm Biển»
+size: 24x24
+colors:
+  a = vien
+  b = dong-toi
+  c = dong
+  d = dong-sang
+  e = vang-nghe
+  f = cham-toi
+  g = cham
+  h = nuoc
+  i = nuoc-sang
+  j = troi
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adchhhhhhhhhaaaahhhhhcba
+adchfffffaaaiiiiaaffhcba
+adchffffaiiigggjiiafhcba
+adchfffaihhgjjjjjjiahcba
+adchffaihggjjjjijjgahcba
+adchfaihgjgjjiigiijiacba
+adchaihgjhgjhaaagghgacba
+adcaihhghigjafffagiahcba
+aecaihgjihgafffffaafhcea
+aecihgjhihgafffffffahcea
+adcihghiihgaffffffajacba
+adcigjiiihhiaffffaiaacba
+adcihiiihhhhiaaaaaaajcba
+adcigiiihhhhhiiiiiaaacba
+adcigiihhhhhhhhhhhiiicba
+adcgiihhhhhhhhhhhhhhgcba
+adcgiggggggggggggggggcba
+adcaaaaaaaaaaaaaaaaaacba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

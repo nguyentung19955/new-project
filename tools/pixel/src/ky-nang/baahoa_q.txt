@@ -1,0 +1,50 @@
+# Bà Hỏa · Q «Đốm Lửa» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: small flame
+name: Bà Hỏa · Q «Đốm Lửa»
+size: 24x24
+colors:
+  a = vien
+  b = sang
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = vang-nghe
+  g = vang-sang
+  h = son-toi
+  i = son
+  j = son-sang
+  k = lua
+  l = lua-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeffeeeeeeeeeda
+aeddddddddddddddddddddca
+aedjjjjjjjjjjjjjjjjjjdca
+aedjhhhhhhhhhhhhhhhhjdca
+aedjhhhhhhhhahhhhhhhjdca
+aedjhhhhhhaalahhhhhhjdca
+aedjhhhhhalliahhhhhhjdca
+aedjhhhhhalkiahahhhhjdca
+aedjhhhhhalkiaalahhhjdca
+aedjhhhhhalkklliahhhjdca
+afdjhhhhalkiikkiahhhjdfa
+afdjhhhalkiggikklahhjdfa
+aedjhhalkigllglkiahhjdca
+aedjhhaliglllkikiahhjdca
+aedjhhaligllklgliahhjdca
+aedjhhaliglkggkliahhjdca
+aedjhhaliglkbgkliahhjdca
+aedjhhaiikkkgkkiiahhjdca
+aedjhhhaaaaaaaaaahhhjdca
+aedjjjjjjjjjjjjjjjjjjdca
+aeddddddddddddddddddddca
+adccccccccccffccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

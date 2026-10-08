@@ -1,0 +1,48 @@
+# Da Đồng (Ấn Núi, hàng 2) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: —
+name: Da Đồng (Ấn Núi, hàng 2)
+size: 24x24
+colors:
+  a = vien
+  b = toi
+  c = sang
+  d = dat-toi
+  e = dat
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = vang-nghe
+  j = vang-sang
+
+part k0
+........................
+........aaaaaaaa........
+......aahhhhhhhhaa......
+.....ahhffffffffhha.....
+....ahgfbbbbbbbbfgha....
+...ahgfbddddddddbfgha...
+..ahgfbddddddddddbfgha..
+..ahfbddddiiiiidddbffa..
+.ahfbddddijjjjjidddbfha.
+.ahfbdddijigigigiddehfa.
+.ahfbddijiajajaigidehfa.
+.ahfbddijgajijaggiaehfa.
+.ahfbddijijjcjjigiaehfa.
+.ahfbddijgajijaggiaehfa.
+.ahfbddijiajajaigiaehfa.
+.affbdddigigigigiaaeffa.
+..ahhbdddigggggiaaehfa..
+..afghbdddiiiiiaaehgfa..
+...afghbdddaaaaaehgfa...
+....afghbeeeeeeehgfa....
+.....afffhhhhhhfffa.....
+......aaffffffffaa......
+........aaaaaaaa........
+........................
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

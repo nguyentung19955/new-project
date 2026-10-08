@@ -1,0 +1,49 @@
+# Xuyên Phép (Ấn Sấm, hàng 2) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: —
+name: Xuyên Phép (Ấn Sấm, hàng 2)
+size: 24x24
+colors:
+  a = vien
+  b = sang
+  c = dong
+  d = vang-nghe
+  e = vang-sang
+  f = cham-toi
+  g = cham
+  h = cham-sang
+  i = nuoc-sang
+  j = tim
+  k = tim-sang
+
+part k0
+........................
+........aaaaaaaa........
+......aaiiiiiiiiaa......
+.....aiifggggggfiia.....
+....aihgffffffffghia....
+...aihgffffffffffghia...
+..aihgffffffffffffghia..
+..aigfffffkkkkkffffgga..
+.aiffffffkbkkkjjfffffia.
+.aigffffkbbkkkkkjffgiga.
+.aigffffkbkkkkkkjafgiga.
+.aigffffkkkkkkkjjafgiga.
+.aigffffkkkkkkjjjafgiga.
+.aigfffffkjjjjjjaafgiga.
+.aigffffffjjjjjaaffgiga.
+.agffffffdeeeeedfffgfga.
+..aiifffdedddddcdfgiga..
+..aghifffaaaaaaaaaihga..
+...aghifffffffffgihga...
+....aghifgggggggihga....
+.....aggfiiiiiifgga.....
+......aaggggggggaa......
+........aaaaaaaa........
+........................
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

@@ -1,0 +1,47 @@
+# Áo Đồng Mới Rèn — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bronze chest armor
+name: Áo Đồng Mới Rèn
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dat
+  d = dong-toi
+  e = dong
+  f = dong-sang
+  g = son
+  h = lua
+  i = lua-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+afffffffffffffffffffffda
+afeeeeeeeeeeeeeeeeeeeeda
+afebbbbbbbbbbbbbbbbbbeda
+afebbbbbiaiiiiabbbbbbeda
+afebbbbihhahhahgbbbbbeda
+afebbbihhhahhahhgbbbbeda
+afebiihhhhhaahhhhigbbeda
+afeihhhhhhhhhhhhhhhgbeda
+afebghghhhhhhhhhghgbbeda
+afebbgbihhhhhhhgbgbbbeda
+afebbbbihhhhhhhgbbbbbeda
+afebbbbihhhhhhhgbbbbbeda
+afebbbbccccccccccbbbbeda
+afebbbbccccccccccbbbbeda
+afebbbbihhhhhhhgbbbbbeda
+afebbbbihhhhhhhgbbbbbeda
+afebbbbihhhhhhhgbbbbbeda
+afebbbbihhhhhhhgbbbbbeda
+afebbbiggggggggggbbbbeda
+afebbbbbbbbbbbbbbbbbbeda
+afeeeeeeeeeeeeeeeeeeeeda
+adddddddddddddddddddddda
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

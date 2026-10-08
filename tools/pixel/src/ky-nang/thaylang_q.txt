@@ -1,0 +1,52 @@
+# Thuốc Nam — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: herb bundle with a green cross
+name: Thuốc Nam
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = trang-xam
+  d = trang
+  e = sang
+  f = dat-toi
+  g = dat
+  h = dat-sang
+  i = dong-toi
+  j = dong
+  k = dong-sang
+  l = la
+  m = la-ma
+  n = la-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+akkkkkkkkkkkkkkkkkkkkkia
+akjjjjjjjjjjjjjjjjjjjjia
+akjbbbbbbbhhhhfbbbbbbjia
+akjbbbbbbbhgggfbbbbbbjia
+akjbbbbbbbfffffbbbbbbjia
+akjbbbbbbbeeecbbbbbbbjia
+akjbbbbbbbeddcbbbbbbbjia
+akjbbbbbbbccccbbbbbbbjia
+akjbbbbbbnnnnnlbbbbbbjia
+akjbbbbnnmmmmmmnlbbbbjia
+akjbbbbnmmmmmmmmlbbbbjia
+akjbbbnmmmmmmmmmmlbbbjia
+akjbbbnmmmmmmmmmmlbbbjia
+akjbbbnmmmmmmmmmmlbbbjia
+akjbbbnmmmmmmmmmmlbbbjia
+akjbbblmmmmmmmmmmlbbbjia
+akjbbbbnmmmmmmmmlbbbbjia
+akjbbbbllmmmmmmllbbbbjia
+akjbbbbbbllllllbbbbbbjia
+akjbbbbbbbbbbbbbbbbbbjia
+akjjjjjjjjjjjjjjjjjjjjia
+aiiiiiiiiiiiiiiiiiiiiiia
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

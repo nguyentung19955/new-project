@@ -12,7 +12,7 @@ function VePixelCore(DS, TV) {
   const PI = Object.fromEntries(PAL.map((p, i) => [p.name, i + 1]));          // tên màu → chỉ số (0 = trong suốt)
   const C = (n) => PI[n] || PI.vien;
   const ANIM_RANGE = { idle: [1, 6], walk: [1, 6], attack: [1, 6], cast: [1, 6], hurt: [1, 2], die: [1, 6], rage: [1, 4], portrait: [1, 1], main: [1, 8], win: [1, 4] };
-  const NHOM_TEN = { tuong: 'Tướng', quai: 'Quái', boss: 'Boss', nen: 'Nền', icon: 'Icon', do: 'Đồ', 'an-phu': 'Ấn phù', 'ky-nang': 'Kỹ năng', 'than-khi': 'Thần khí', 'giao-dien': 'Giao diện', canh: 'Cảnh' };
+  const NHOM_TEN = { tuong: 'Tướng', quai: 'Quái', boss: 'Boss', nen: 'Nền', icon: 'Icon', do: 'Đồ', 'an-phu': 'Ấn phù', 'ky-nang': 'Kỹ năng', 'than-khi': 'Thần khí', 'giao-dien': 'Giao diện', canh: 'Cảnh', 'ban-do': 'Bản đồ' };
   const NHAN_VAT = (g) => g === 'tuong' || g === 'quai' || g === 'boss';
   const VERSION_GOI = 1;
 
@@ -175,8 +175,13 @@ function VePixelCore(DS, TV) {
     mauTroi: ['Màu trời', null],
     mauDat: ['Màu đất / cỏ', null],
   };
+  // bản đồ 320×148: nền sân đấu (đường + ô đặt tướng lấy từ spec "duong" / "o_dat")
+  const OPT_BANDO = {
+    chu_de: ['Chủ đề vùng', { song: 'sông', dam: 'đầm', rung: 'rừng', hang: 'hang', dong: 'đồng lúa', bien: 'biển', thanh: 'thành' }],
+    duong_loai: ['Loại đường', { nuoc: 'sông nước', dat: 'đất', da: 'đá', de: 'đê', cat: 'cát', gach: 'gạch' }],
+  };
   const OPT_TRONG = { trong: ['Khung', { trong: 'trống — tự vẽ tay' }] };
-  const optSet = (g) => (NHAN_VAT(g) ? OPT_NV : g === 'nen' ? OPT_NEN : ['icon', 'do', 'an-phu', 'ky-nang', 'than-khi'].includes(g) ? OPT_ICON : g === 'giao-dien' ? OPT_UI : g === 'canh' ? OPT_CANH : OPT_TRONG);
+  const optSet = (g) => (NHAN_VAT(g) ? OPT_NV : g === 'nen' ? OPT_NEN : ['icon', 'do', 'an-phu', 'ky-nang', 'than-khi'].includes(g) ? OPT_ICON : g === 'giao-dien' ? OPT_UI : g === 'canh' ? OPT_CANH : g === 'ban-do' ? OPT_BANDO : OPT_TRONG);
   const MAU_KEYS = Object.keys(MAU_TEN);
   const HANH_KEYS = { '': '—', ...Object.fromEntries(Object.entries(HANH).map(([k, v]) => [k, v.ten])) };
   function optValues(key) {
@@ -191,6 +196,7 @@ function VePixelCore(DS, TV) {
     if (optSet(g) === OPT_ICON) return { khung: g === 'icon' ? 'tron' : 'vuong', mauKhung: 'dong', hinh: 'sao', mauHinh: 'vang', mauPhu: 'dat', mauNgoc: 'khong' };
     if (g === 'giao-dien') return { loai: 'khung', mauKhung: 'dong', mauNen: 'den', vien: 'tron', trang: 'thuong' };
     if (g === 'canh') return { canh: 'nui', gio: 'ngay', mauTroi: 'troi', mauDat: 'la' };
+    if (g === 'ban-do') return { chu_de: 'song' };
     return { trong: 'trong' };
   }
 
@@ -732,6 +738,89 @@ function VePixelCore(DS, TV) {
     }
     return [{ name: 'main', fps: 1, loop: false, frames: [g] }];
   }
+  // ---- bản đồ 320×148 (claude/xuat-goi-pixel): nền sân đấu 1280×590 theo từng bản đồ của game
+  //   spec: "duong" (chuỗi path SVG hoặc mảng — nhiều nhánh), "o_dat" [[x, y]…] ô đặt tướng, toạ độ thiết kế 932×430
+  //   (tools/build-ban-do-spec.js đọc js/data.js). Ô SÁT đường (ô đặt tướng) cùng một kiểu bệ đá viền đậm; vùng xa đường
+  //   chỉ là nền trang trí theo chủ đề (cỏ / đá / cây / nước…), không viền ô. Đường cắt nhau → cầu tre.
+  function duongSvg(d, steps = 26) {   // M L H V C S Q T Z (hoa / thường) → điểm
+    const tok = String(d).match(/[MLHVCSQTZmlhvcsqtz]|-?\d*\.?\d+(?:e-?\d+)?/g) || [];
+    const pts = []; let i = 0, cx = 0, cy = 0, sx = 0, sy = 0, lc = null, lq = null, cmd = '';
+    const num = () => parseFloat(tok[i++]);
+    const cub = (x1, y1, x2, y2, x, y) => { for (let k = 1; k <= steps; k++) { const t = k / steps, u = 1 - t; pts.push([u * u * u * cx + 3 * u * u * t * x1 + 3 * u * t * t * x2 + t * t * t * x, u * u * u * cy + 3 * u * u * t * y1 + 3 * u * t * t * y2 + t * t * t * y]); } lc = [x2, y2]; lq = null; cx = x; cy = y; };
+    const qua = (x1, y1, x, y) => { for (let k = 1; k <= steps; k++) { const t = k / steps, u = 1 - t; pts.push([u * u * cx + 2 * u * t * x1 + t * t * x, u * u * cy + 2 * u * t * y1 + t * t * y]); } lq = [x1, y1]; lc = null; cx = x; cy = y; };
+    const lin = (x, y) => { pts.push([x, y]); cx = x; cy = y; lc = lq = null; };
+    while (i < tok.length) {
+      if (/[a-z]/i.test(tok[i])) cmd = tok[i++];
+      const r = cmd === cmd.toLowerCase(), ox = r ? cx : 0, oy = r ? cy : 0, C0 = cmd.toUpperCase();
+      if (C0 === 'M') { cx = num() + ox; cy = num() + oy; sx = cx; sy = cy; pts.push([cx, cy]); lc = lq = null; cmd = r ? 'l' : 'L'; }
+      else if (C0 === 'L') lin(num() + ox, num() + oy);
+      else if (C0 === 'H') lin(num() + ox, cy);
+      else if (C0 === 'V') lin(cx, num() + oy);
+      else if (C0 === 'C') cub(num() + ox, num() + oy, num() + ox, num() + oy, num() + ox, num() + oy);
+      else if (C0 === 'S') { const [x1, y1] = lc ? [2 * cx - lc[0], 2 * cy - lc[1]] : [cx, cy]; cub(x1, y1, num() + ox, num() + oy, num() + ox, num() + oy); }
+      else if (C0 === 'Q') qua(num() + ox, num() + oy, num() + ox, num() + oy);
+      else if (C0 === 'T') { const [x1, y1] = lq ? [2 * cx - lq[0], 2 * cy - lq[1]] : [cx, cy]; qua(x1, y1, num() + ox, num() + oy); }
+      else if (C0 === 'Z') { lin(sx, sy); }
+      else i++;
+    }
+    return pts;
+  }
+  const BD_DAT = { song: 'la', dam: 'reu', rung: 'la', hang: 'den', dong: 'lama', bien: 'cat', thanh: 'reu' };
+  const BD_VAT = { song: ['cay', 'cay', 'da', 'lau', 'nha'], dam: ['lau', 'lau', 'hoa', 'cay', 'da'], rung: ['cay', 'cay', 'cay', 'bui', 'da'], hang: ['da', 'da', 'tinhthe', 'xuong', 'mangda'],
+    dong: ['ruong', 'ruong', 'cay', 'thu', 'lau'], bien: ['dua', 'so', 'da', 'thuyen', 'bui'], thanh: ['cay', 'da', 'bui', 'co', 'cot'] };
+  const BD_MAU = { cay: ['la', 'dat'], da: ['sat', 'dat'], lau: ['lama', 'cat'], nha: ['cat', 'dat'], hoa: ['hong', 'la'], bui: ['la', 'dat'], tinhthe: ['troi', 'dat'], xuong: ['trang', 'dat'],
+    mangda: ['dat', 'dat'], ruong: ['lama', 'reu'], thu: ['sat', 'trang'], dua: ['la', 'dat'], so: ['hong', 'dat'], thuyen: ['trang', 'dat'], co: ['son', 'dat'], cot: ['sat', 'son'] };
+  function sinhBanDo(it) {
+    const o = it.opt, W = it.w, H = it.h, g = new Grid(W, H), k = W / 932;   // toạ độ thiết kế → điểm ảnh
+    SEED = seedOf(it.k);
+    const paths = (Array.isArray(o.duong) ? o.duong : o.duong ? [o.duong] : []).map((d) => duongSvg(d).map(([x, y]) => [x * k, y * k]));
+    const slots = (o.o_dat || []).map(([x, y]) => [x * k, y * k]);
+    const segs = []; paths.forEach((p, pi) => { for (let i = 1; i < p.length; i++) segs.push({ pi, i, a: p[i - 1], b: p[i] }); });
+    const dSeg = (x, y, s) => { const [ax, ay] = s.a, dx = s.b[0] - ax, dy = s.b[1] - ay, t = Math.max(0, Math.min(1, ((x - ax) * dx + (y - ay) * dy) / (dx * dx + dy * dy || 1))); return Math.hypot(ax + dx * t - x, ay + dy * t - y); };
+    const dist = new Float32Array(W * H).fill(1e9);
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { let m = 1e9; for (const s of segs) { const v = dSeg(x + 0.5, y + 0.5, s); if (v < m) m = v; } dist[y * W + x] = m; }
+    const theme = o.chu_de || 'song', loai = o.duong_loai || (theme === 'hang' ? 'da' : theme === 'thanh' ? 'gach' : theme === 'bien' ? 'cat' : theme === 'dong' ? 'de' : theme === 'rung' ? 'dat' : 'nuoc');
+    const rongD = (loai === 'cat' ? 46 : loai === 'nuoc' ? 44 : 42) * k / 2, vienD = rongD + 2;
+    // 1. nền: một màu chủ đề + hạt sáng / tối rải ngẫu nhiên + khóm cỏ — KHÔNG kẻ ô
+    const [gd, gb, gl] = rampOf(BD_DAT[theme] || 'la');
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const v = rnd(); g.set(x, y, v < 0.07 ? gd : v > 0.95 ? gl : gb); }
+    for (let i = 0; i < W * H / 60; i++) { const x = Math.floor(rnd() * W), y = Math.floor(rnd() * H); g.set(x, y, gl); g.set(x, y + 1, gd); }
+    if (theme === 'dam') for (let i = 0; i < 7; i++) { const x = rnd() * W, y = rnd() * H, m = new Mask(W, H).ell(x, y, 6 + rnd() * 6, 3 + rnd() * 2); let ok = true; for (let j = 0; j < m.d.length; j++) if (m.d[j] && dist[j] < vienD + 10) ok = false; if (ok) paint(g, m, 'nuoc', 'base'); }
+    // 2. vật trang trí ở vùng xa đường (cách đường > dải ô đặt, không đè ô đặt)
+    const xa = 98 * k + 4, vats = BD_VAT[theme] || BD_VAT.song;
+    for (let gy = 6; gy < H - 4; gy += 13) for (let gx = 4 + (gy % 2) * 6; gx < W - 4; gx += 15) {
+      const x = Math.round(gx + (rnd() - 0.5) * 8), y = Math.round(gy + (rnd() - 0.5) * 6);
+      if (x < 0 || y < 0 || x >= W || y >= H || dist[y * W + x] < xa || slots.some(([sx, sy]) => Math.hypot(sx - x, sy - y) < 12) || rnd() < 0.45) continue;
+      const h = vats[Math.floor(rnd() * vats.length)], N = h === 'nha' || h === 'cay' || h === 'dua' ? 14 : 10, t = new Grid(N, N), [mh, mp] = BD_MAU[h] || ['la', 'dat'];
+      veHinhThem(t, { hinh: h, mauHinh: mh, mauPhu: mp, mauNgoc: 'khong' }, (N - 1) / 2, (N - 1) / 2, N / 2 - 1.5); outline(t);
+      blit(g, t, x - Math.floor(N / 2), y - N + 2);
+    }
+    // 3. đường: viền tối + lòng đường theo loại (nước gợn sáng, đất / đá / cát có hạt, gạch xếp hàng)
+    const RD = { nuoc: 'nuoc', dat: 'dat', da: 'sat', de: 'cat', cat: ['dat', 'dat-sang', 'cat'].map(C), gach: 'dat' }[loai] || 'dat', [rd, rb, rl] = Array.isArray(RD) ? RD : rampOf(RD);
+    const vien = C(loai === 'nuoc' ? 'cham-toi' : 'dat-toi'), bo = C(loai === 'nuoc' ? 'dat-sang' : 'toi');
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const d = dist[y * W + x];
+      if (d < rongD) { let c = rb; const v = rnd(); if (loai === 'nuoc') { if ((x + Math.floor(y / 3) * 5) % 11 === 0 && v < 0.7) c = rl; else if (d > rongD - 1.2) c = rd; } else if (loai === 'gach') { if (y % 4 === 3 || (x + (Math.floor(y / 4) % 2) * 4) % 8 === 7) c = rd; else if (y % 4 === 0) c = rl; } else if (v < 0.1) c = rd; else if (v > 0.92) c = rl; g.set(x, y, c); }
+      else if (d < vienD - 0.8) g.set(x, y, vien);
+      else if (d < vienD + 0.4 && loai === 'nuoc') g.set(x, y, bo);
+    }
+    // 4. cầu tre chỗ hai đoạn đường cắt nhau (khác nhánh, hoặc cùng nhánh nhưng xa nhau trên đường)
+    const cat = (p, q) => { const d1 = [p.b[0] - p.a[0], p.b[1] - p.a[1]], d2 = [q.b[0] - q.a[0], q.b[1] - q.a[1]], den = d1[0] * d2[1] - d1[1] * d2[0]; if (Math.abs(den) < 1e-9) return null; const t = ((q.a[0] - p.a[0]) * d2[1] - (q.a[1] - p.a[1]) * d2[0]) / den, u = ((q.a[0] - p.a[0]) * d1[1] - (q.a[1] - p.a[1]) * d1[0]) / den; return t >= 0 && t <= 1 && u >= 0 && u <= 1 ? [p.a[0] + d1[0] * t, p.a[1] + d1[1] * t, d2] : null; };
+    const cau = [];
+    for (let a = 0; a < segs.length; a++) for (let b = a + 1; b < segs.length; b++) { if (segs[a].pi === segs[b].pi && Math.abs(segs[a].i - segs[b].i) < 6) continue; const r = cat(segs[a], segs[b]); if (r && cau.every(([x, y]) => Math.hypot(x - r[0], y - r[1]) > 8)) cau.push(r); }
+    for (const [cx, cy, dir] of cau) {
+      const L = Math.hypot(dir[0], dir[1]) || 1, ux = dir[0] / L, uy = dir[1] / L, nx = -uy, ny = ux, half = rongD + 3;
+      for (let t = -half; t <= half; t += 0.5) for (let s = -rongD + 1; s <= rongD - 1; s += 0.5) { const x = Math.round(cx + ux * t + nx * s), y = Math.round(cy + uy * t + ny * s); g.set(x, y, Math.round(t * 2) % 4 === 0 ? C('dat-toi') : Math.abs(s) > rongD - 2 ? C('dong') : C('cat')); }
+    }
+    // 5. ô đặt tướng: CÙNG MỘT kiểu bệ đá elip viền đậm, mặt sáng — nhận ra ngay chỗ đặt được
+    for (const [sx, sy] of slots) {
+      const m = new Mask(W, H).ell(sx, sy + 1, 7, 4.2), m2 = new Mask(W, H).ell(sx, sy, 6, 3.4);
+      for (let j = 0; j < m.d.length; j++) if (m.d[j]) g.d[j] = C('vien');
+      paint(g, m2, ['trang-xam', 'trang', 'sang'].map(C));
+      paint(g, new Mask(W, H).ell(sx, sy + 0.5, 3.6, 1.6), ['trang-xam', 'trang-xam', 'trang-xam'].map(C), 'base');
+    }
+    return [{ name: 'main', fps: 1, loop: false, frames: [g] }];
+  }
   function sinh(it) {
     // mẫu vẽ tay trong thư viện (tools/pixel/thu-vien.js): dựng từ công thức khung + thay bộ phận + đổi màu
     if (it.opt && it.opt.mau && TV[it.opt.mau]) return dungMau(it.opt.mau, { thay: it.opt.thay, doiMau: it.opt.doiMau }).anims;
@@ -741,6 +830,7 @@ function VePixelCore(DS, TV) {
     if (optSet(it.g) === OPT_ICON) return sinhIcon(it);
     if (it.g === 'giao-dien') return sinhUI(it);
     if (it.g === 'canh') return sinhCanh(it);
+    if (it.g === 'ban-do') return sinhBanDo(it);
     return [{ name: 'main', fps: 1, loop: false, frames: [new Grid(it.w, it.h)] }];
   }
 
@@ -1000,7 +1090,7 @@ function VePixelCore(DS, TV) {
   }
 
   // ═════════════ SPEC (JSON) → mã — dùng cho CLI tools/ve-pixel.js; định dạng: docs/pixel/SPEC.md ═════════════
-  const SPEC_KEYS = new Set(['ma', 'ten', 'mo', 'co', 'bo_phan', 'hanh', 'dong_tac', 'mau', 'thay', 'doi_mau', 've_tay', 'ghi_chu', 'so_sanh', 'nguong']);
+  const SPEC_KEYS = new Set(['ma', 'ten', 'mo', 'co', 'bo_phan', 'hanh', 'dong_tac', 'mau', 'thay', 'doi_mau', 've_tay', 'ghi_chu', 'so_sanh', 'nguong', 'duong', 'o_dat']);
   const HANH_TU = { kim: 'kim', moc: 'moc', 'mộc': 'moc', thuy: 'thuy', 'thủy': 'thuy', 'thuỷ': 'thuy', hoa: 'hoa', 'hỏa': 'hoa', 'hoả': 'hoa', tho: 'tho', 'thổ': 'tho' };
   // → { it, loi: [{ ma: 'E_…', msg }] }
   function tuSpec(sp, i = 0) {
@@ -1036,7 +1126,13 @@ function VePixelCore(DS, TV) {
         if (!(v in vals)) { L('E_GIA_TRI', `bộ phận ${k} = "${v}" không hợp lệ (chọn: ${Object.keys(vals).join(', ')})`); continue; }
         it.opt[k] = v;
       }
-      if (sp.bo_phan || hanh) it.anims = sinh(it);
+      if (g === 'ban-do') {   // đường + ô đặt tướng (toạ độ thiết kế 932×430)
+        const dd = Array.isArray(sp.duong) ? sp.duong : [sp.duong];
+        if (!sp.duong || dd.some((d) => typeof d !== 'string' || !/^\s*[Mm]/.test(d))) L('E_BAN_DO', '"duong": chuỗi path SVG bắt đầu bằng M (hoặc mảng nhiều nhánh)');
+        if (sp.o_dat !== undefined && (!Array.isArray(sp.o_dat) || sp.o_dat.some((q) => !Array.isArray(q) || q.length !== 2 || !q.every(Number.isFinite)))) L('E_BAN_DO', '"o_dat": mảng [[x, y], …] toạ độ thiết kế 932×430');
+        it.opt.duong = sp.duong; it.opt.o_dat = sp.o_dat || [];
+      }
+      if (sp.bo_phan || hanh || g === 'ban-do') it.anims = sinh(it);
     }
     // động tác: chỉnh fps / lặp
     for (const [an, o] of Object.entries(sp.dong_tac || {})) {
@@ -1084,7 +1180,7 @@ function VePixelCore(DS, TV) {
     return tong ? khac / tong : 0;
   }
 
-  return { PAL, PI, C, ANIM_RANGE, NHOM_TEN, NHAN_VAT, VERSION_GOI, RAMP, MAU_TEN, HANH, OPT_NV, OPT_ICON, OPT_NEN, OPT_UI, OPT_CANH, HINH_THEM, OPT_TRONG, optSet, MAU_KEYS, HANH_KEYS, optValues, defOpts, lc, MAU_TU, RE_TU, tu, mauTrong, coTu, som, hieuMoTa, Grid, Mask, rampOf, paint, outline, blit, shift, flipX, rot90, swapC, bbox, scaleGrid, SEED, rnd, seedOf, weaponGrid, stampWeapon, burst, SKIN, veNguoi, veThu, veRan, ve, nam, toi, sang, rage, sinhNhanVat, sinhIcon, sinhNen, sinhUI, sinhCanh, veHinhThem, sinh, coMacDinh, taoItem, kiemTra, CRC, crc32, zlibStore, zlib, chunk, encodePNG, makeZip, readZip, chanDung, CHARS, nguonTxt, goiZip, TV, docNguon, LOAI_PART, loaiPart, mauTV, boPhanTV, dungMau, tuSpec, docSpec, soSanh
+  return { PAL, PI, C, ANIM_RANGE, NHOM_TEN, NHAN_VAT, VERSION_GOI, RAMP, MAU_TEN, HANH, OPT_NV, OPT_ICON, OPT_NEN, OPT_UI, OPT_CANH, OPT_BANDO, HINH_THEM, OPT_TRONG, optSet, MAU_KEYS, HANH_KEYS, optValues, defOpts, lc, MAU_TU, RE_TU, tu, mauTrong, coTu, som, hieuMoTa, Grid, Mask, rampOf, paint, outline, blit, shift, flipX, rot90, swapC, bbox, scaleGrid, SEED, rnd, seedOf, weaponGrid, stampWeapon, burst, SKIN, veNguoi, veThu, veRan, ve, nam, toi, sang, rage, sinhNhanVat, sinhIcon, sinhNen, sinhUI, sinhCanh, sinhBanDo, duongSvg, veHinhThem, sinh, coMacDinh, taoItem, kiemTra, CRC, crc32, zlibStore, zlib, chunk, encodePNG, makeZip, readZip, chanDung, CHARS, nguonTxt, goiZip, TV, docNguon, LOAI_PART, loaiPart, mauTV, boPhanTV, dungMau, tuSpec, docSpec, soSanh
   };
 }
 if (typeof module !== 'undefined' && module.exports) module.exports = VePixelCore;

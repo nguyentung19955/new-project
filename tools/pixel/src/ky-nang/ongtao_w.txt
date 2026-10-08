@@ -1,0 +1,52 @@
+# Ông Táo · W «Ba Ông Đầu Rau» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: three hearth stones with fire
+name: Ông Táo · W «Ba Ông Đầu Rau»
+size: 24x24
+colors:
+  a = vien
+  b = dat-toi
+  c = dat
+  d = dat-sang
+  e = dong-toi
+  f = dong
+  g = dong-sang
+  h = vang-nghe
+  i = vang-sang
+  j = son-toi
+  k = son
+  l = son-sang
+  m = lua
+  n = lua-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+agggggggggghhgggggggggfa
+agffffffffffffffffffffea
+agfllllllllllllllllllfea
+agfljjjjjjjjajjjjjjjlfea
+agfljjjjjjaanajjjjjjlfea
+agfljjjjjannkajjjjjjlfea
+agfljjjjjakkkaajjjjjlfea
+agfljjjjjadddddajjjjlfea
+agfljjjjandcccbajjjjlfea
+agfljjjankbbbbbnajjjlfea
+ahfljjjankiiiinkajjjlfha
+ahfljaaakkinnmnkaaaalfha
+agfladdddkinnmnkddddafea
+agfadddccdmmmmkdddccdfea
+agfaddcccbaaaaaddcccbfea
+agfadcccccdddddcccccbfea
+agfadccccccdccccccccbfea
+agfabccccbcccccbccccbfea
+agflabbbbadcccbabbbbafea
+agfllaaaaabbbbbaaaaalfea
+agffffffffffffffffffffea
+afeeeeeeeeeehheeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

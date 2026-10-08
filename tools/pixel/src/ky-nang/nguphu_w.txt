@@ -1,0 +1,48 @@
+# Xiên Cá — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: three-prong fish spear
+name: Xiên Cá
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dat-toi
+  d = dat-sang
+  e = dong-toi
+  f = dong
+  g = dong-sang
+  h = cham
+  i = nuoc
+  j = nuoc-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+agggggggggggggggggggggea
+agffffffffffffffffffffea
+agfbbbbbbbbbbbbbbbbbbfea
+agfbbbbbbbbbbbbbbbbbbfea
+agfbbbbbbbbbbbbbbbbbbfea
+agfbbbbbbbbbbbbbbbbbbfea
+agfbbbbbbbbbbdbbbbbbbfea
+agfjbbbbbbjjdcjhbbbbbfea
+agfjhbbbjjiiiiiijhbbbfea
+agfjihbjiiiiiiiiiihbbfea
+agfjiiiiiiiiiiiiaihbbfea
+agfjihbjiiiiiiiiiihbbfea
+agfjhbbhiiiiiiiiiihbbfea
+agfhbbbbhhiiiiiihhbbbfea
+agfbbbbbbbhhhhhhbbbbbfea
+agfbbbbbbbbbbbbbbbbbbfea
+agfbbbbbbbbbbbbbbbbbbfea
+agfbbbbbbbbbbbbbbbbbbfea
+agfbbbbbbbbbbbbbbbbbbfea
+agfbbbbbbbbbbbbbbbbbbfea
+agffffffffffffffffffffea
+aeeeeeeeeeeeeeeeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

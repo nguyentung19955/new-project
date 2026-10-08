@@ -1,0 +1,48 @@
+# Lạc Hầu · W «Giáp Da Tê Gai» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: spiky rhino-hide armor
+name: Lạc Hầu · W «Giáp Da Tê Gai»
+size: 24x24
+colors:
+  a = vien
+  b = bac
+  c = dat-toi
+  d = dat
+  e = dat-sang
+  f = cat
+  g = dong-toi
+  h = dong
+  i = dong-sang
+  j = vang-nghe
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aiiiiiiiiiijjiiiiiiiiiha
+aihhhhhhhhhhhhhhhhhhhhga
+aihiiiiiiiiiiiiiiiiiihga
+aihiccccacccccccacccihga
+aihicccabacccaaabaccihga
+aihiccaaeeacaeeeaaccihga
+aihicaeeddeabeddeeacihga
+aihicaeddddeeddddcaaihga
+aihiabeddcdcdedcdcabahga
+aihiaeddcfecdecfedeaihga
+ajhiaeddceccdccecdcaihja
+ajhiaedcdddddddddecaahja
+aihabcddeeeedeeeedcabhga
+aihiaaedcfecdecfecacahga
+aihicaedceccdcceccacihga
+aihicaccdddddddddcaaihga
+aihiabaeeeeedeeeeaabahga
+aihicaacccfcdcfccacaihga
+aihicccaacecdcaaacccihga
+aihiiiiiiaaaaaiiiiiiihga
+aihhhhhhhhhhhhhhhhhhhhga
+ahggggggggggjjggggggggga
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

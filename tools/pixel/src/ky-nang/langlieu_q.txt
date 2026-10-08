@@ -1,0 +1,45 @@
+# Bánh Chưng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Chia bánh cho tướng trong 170: hồi 12% máu, +20% sát thương trong 6 giây
+name: Bánh Chưng
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = vang-nghe
+  g = vang-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbggggebbggggebbbdca
+aedbbgfffffggfffffebbdca
+aedbgffffffffffffffebdca
+aedbgffffffffffffffebdca
+aedbgffffffffffffffebdca
+aedbeffffffffffffffebdca
+aedbbeffffffffffffebbdca
+aedbbbefffffffffeebbbdca
+aedbbbbefffffffebbbbbdca
+aedbbbbbgfffffebbbbbbdca
+aedbbbbbefffffebbbbbbdca
+aedbbbbbbefffebbbbbbbdca
+aedbbbbbbbefebbbbbbbbdca
+aedbbbbbbbbebbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

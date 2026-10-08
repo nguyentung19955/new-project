@@ -1,0 +1,49 @@
+# Nghê Vồ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Lao vào 3 quái yếu nhất, x2 sát thương +1
+name: Nghê Vồ
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = sat
+  d = sat-sang
+  e = bac
+  f = dat-toi
+  g = dat
+  h = dat-sang
+  i = dong-toi
+  j = dong
+  k = dong-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+akkkkkkkkkkkkkkkkkkkkkia
+akjjjjjjjjjjjjjjjjjjjjia
+akjbbbbbbbbbbbbebbbbbjia
+akjbbbbbbbbbbeedcbbbbjia
+akjbbbbbbbbbeddddcbbbjia
+akjbbbbbbbbeddddddcbbjia
+akjbbbbbbbbcddddddcbbjia
+akjbbbbbbbbbedddddccbjia
+akjbbbbbbbbbcddddcbbbjia
+akjbbbbbbbbbbcddcbbbbjia
+akjbbbbbbbbbhfccbbbbbjia
+akjbbbbbbbbhgfbbbbbbbjia
+akjbbbbbbbhgfbbbbbbbbjia
+akjbbbbbbhgfbbbbbbbbbjia
+akjbbbbbhgfbbbbbbbbbbjia
+akjbbbbhgfbbbbbbbbbbbjia
+akjbbbbhfbbbbbbbbbbbbjia
+akjbbbhgfbbbbbbbbbbbbjia
+akjbbhgfbbbbbbbbbbbbbjia
+akjbbffbbbbbbbbbbbbbbjia
+akjjjjjjjjjjjjjjjjjjjjia
+aiiiiiiiiiiiiiiiiiiiiiia
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -1,0 +1,46 @@
+# Ước Nguyện — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: wishing lantern with a star
+name: Ước Nguyện
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = son
+  g = lua
+  h = lua-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbbbhbbbbbbbbbdca
+aedbbbbbbbbgbbbbbbbbbdca
+aedbbbbbbbbgbbbbbbbbbdca
+aedbbbbbbbhgfbbbbbbbbdca
+aedbbbbbbbhgfbbbbbbbbdca
+aedbbbbbbbhgfbbbbbbbbdca
+aedbbbbbbhgggfbbbbbbbdca
+aedbbbhhhggggghhfbbbbdca
+aedhgggggggggggggggfbdca
+aedbbbfffgggggfffbbbbdca
+aedbbbbbbfgggfbbbbbbbdca
+aedbbbbbbbhgfbbbbbbbbdca
+aedbbbbbbbhgfbbbbbbbbdca
+aedbbbbbbbfgfbbbbbbbbdca
+aedbbbbbbbbgbbbbbbbbbdca
+aedbbbbbbbbgbbbbbbbbbdca
+aedbbbbbbbbfbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

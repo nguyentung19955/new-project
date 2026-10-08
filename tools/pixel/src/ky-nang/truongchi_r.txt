@@ -1,0 +1,50 @@
+# Trương Chi · R «Khúc Ca Cuối» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: last song note over waves
+name: Trương Chi · R «Khúc Ca Cuối»
+size: 24x24
+colors:
+  a = vien
+  b = trang
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = vang-nghe
+  g = cham-toi
+  h = cham
+  i = cham-sang
+  j = nuoc
+  k = nuoc-sang
+  l = troi
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeffeeeeeeeeeda
+aeddddddddddddddddddddca
+aedjjjjjjaaaaaaajjjjjdca
+aedjggggaiiiliiiagggjdca
+aedjggaailllillliaagjdca
+aedjgailliiihiiilliajdca
+aedjgaljikihghhhijlajdca
+aedjaijikiggkgghhijiadca
+aedailikigkkbbkghhilidca
+aedaiighgkiibiikihgjgdca
+afdaihghiiggbigkghgjgdfa
+afdaigkihgbbbihikihildfa
+aedaihikgbbbbigkigglidca
+aedaihghiibbihgkgkgjgdca
+aedaghghghiihgkighgjgdca
+aedjaghikggghgigkiliadca
+aedjgaihikkkgkkkiljajdca
+aedjgagghiiikiiiljiajdca
+aedjggaaghhhihhhiaagjdca
+aedjjjjjagggggggajjjjdca
+aeddddddddddddddddddddca
+adccccccccccffccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

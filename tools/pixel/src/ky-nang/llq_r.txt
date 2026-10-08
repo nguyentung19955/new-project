@@ -1,0 +1,53 @@
+# Lạc Long Quân · R «Hóa Rồng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: a dragon head breathing a blue beam
+name: Lạc Long Quân · R «Hóa Rồng»
+size: 24x24
+colors:
+  a = vien
+  b = bac
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = vang-nghe
+  g = vang-sang
+  h = lua-sang
+  i = cham-toi
+  j = cham
+  k = cham-sang
+  l = nuoc
+  m = troi
+  n = ngoc
+  o = ngoc-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeffeeeeeeeeeda
+aeddddddddddddddddddddca
+aedllaalllllllllllllldca
+aedlabbaaiiiiiiiiiiildca
+aedliabooaaiiiiiiiiildca
+aedliaonnooaaiiiiiiildca
+aedlaonjnnnooaaiiiaildca
+aedaonjhonnnnooaaagaadca
+aedajnnonnnnnnjmmggmgdca
+aedlaonnjnnnnjjmggmggdca
+afdlajnjoonnjaammmmgmdfa
+afdliajjojjjaiiaaaaaadfa
+aedliiaaaaaaiiiiiiiildca
+aedliiiiaaaaiiiiiiiildca
+aedliiaakkkkaiiiiiiildca
+aedliakkkaaaiiaaaaaildca
+aedliiaaaiiiiakkkkkaadca
+aedliiiiiiiiakkaaakkkdca
+aedliiiiiiiiiaaiiiaaadca
+aedlllllllllllllllllldca
+aeddddddddddddddddddddca
+adccccccccccffccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

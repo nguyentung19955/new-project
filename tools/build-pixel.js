@@ -36,7 +36,7 @@ const GROUP_SIZES = {
   tuong: ['32x32'], quai: ['32x32'], boss: ['48x48', '64x64'],
   nen: ['16x16', '32x32', '48x48', '64x64'], icon: ['16x16', '12x12'],
   do: ['24x24'], 'an-phu': ['24x24'], 'ky-nang': ['24x24'], 'than-khi': ['24x24'],
-  vfx: null, 'giao-dien': null, canh: ['160x90', '320x180'],   // vfx: hiệu ứng — nhánh claude/vfx-kenney đảm nhận
+  vfx: null, 'giao-dien': null, canh: ['160x90', '320x180'], 'ban-do': ['320x148'],   // vfx: hiệu ứng — nhánh claude/vfx-kenney đảm nhận · ban-do: nền sân đấu 1280×590 ÷ 4
 };
 // động tác bắt buộc + số khung cho phép
 const REQUIRED = {

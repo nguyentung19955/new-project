@@ -1,0 +1,54 @@
+# Thánh Gióng · E «Ngựa Sắt Phun Lửa» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: an iron horse head breathing a trail of fire
+name: Thánh Gióng · E «Ngựa Sắt Phun Lửa»
+size: 24x24
+colors:
+  a = vien
+  b = toi
+  c = sat-toi
+  d = sat
+  e = sat-sang
+  f = bac
+  g = dong-toi
+  h = dong
+  i = dong-sang
+  j = vang-nghe
+  k = vang-sang
+  l = son-toi
+  m = son
+  n = son-sang
+  o = lua
+  p = lua-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aiiiiiiiiiijjiiiiiiiiiha
+aihhhhhhhhhhhhhhhhhhhhga
+aihnnnnnnaeanannnnnnnhga
+aihnllllaedeaealllllnhga
+aihnlllappededeallllnhga
+aihnllapmeddccdealllnhga
+aihnlapmeddcpnedeallnhga
+aihnlapmedddeedddealnhga
+aihnapmedddddddddceanhga
+aihnapmeddddccddcbcanhga
+ajhnapmedddcaaccdepaahja
+ajhapmedddcallaacpmpphja
+aihapmedddcallllamkmmhga
+aihapmeddddeallapkpkmhga
+aihpmeddddddealamkpomhga
+aihpmedcccccceaamopomhga
+aihmedcfffffffffmpoomhga
+aihmeddeeeeeeeeeappomhga
+aihmedddddddddddemmpmhga
+aihmccccccccccccceaaahga
+aihhhhhhhhhhhhhhhhhhhhga
+ahggggggggggjjggggggggga
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

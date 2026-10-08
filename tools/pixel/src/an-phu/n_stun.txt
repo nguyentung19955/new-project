@@ -1,0 +1,49 @@
+# Búa Tạ (Ấn Núi, hàng 3) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: —
+name: Búa Tạ (Ấn Núi, hàng 3)
+size: 24x24
+colors:
+  a = vien
+  b = toi
+  c = sat-sang
+  d = bac
+  e = dat-toi
+  f = dat
+  g = dong-toi
+  h = dong
+  i = dong-sang
+  j = vang-nghe
+  k = vang-sang
+
+part k0
+........................
+........aaaaaaaa........
+......aaiiiiiiiiaa......
+.....aiiggggggggiia.....
+....aihgbbbbbbbbghia....
+...aihgbeeeeeeeebghia...
+..aihgbeeeeeeeeeebghia..
+..aigbeccccccccceebgga..
+.aigbeecddddddccaeebgia.
+.aigbeecdcccccccaeefiga.
+.aigbeecccccccccaeefiga.
+.aigbeeeaaahiaaaaeefiga.
+.aigbeeeeeehiaeeeeefiga.
+.aigbeeeeeehiaeeeeefiga.
+.aigbeeeeeehiaeeeeefiga.
+.aggbeeeeeehiaeeeeefgga.
+..aiibeeeejkjaeeeefiga..
+..aghibeeeeaaaeeefihga..
+...aghibeeeeeeeefihga...
+....aghibfffffffihga....
+.....agggiiiiiiggga.....
+......aaggggggggaa......
+........aaaaaaaa........
+........................
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+
