@@ -73,7 +73,7 @@
       r, i, diff: diff ? 1 : 0, base: G.stageStats(r, i, diff), P: G.buildPlayer(), map, rooms: map.rooms.map((x) => x.type), idx: -1,
       worlds: {}, cleared: {}, seen: {}, known: {}, visits: 0, uid: ++runNo, trans: null, doorCd: 0,
       stats: { el: { fire: 0, poison: 0, ice: 0, none: 0 }, ranged: 0, melee: 0, dodges: 0 },
-      loot: { kills: 0, charm: false, bossDown: false, finalEl: null }, got: [], curse: null, marksMult: 1, haste: 1,
+      loot: { kills: 0, charm: false, bossDown: false, finalEl: null }, won: false, portal: null, got: [], curse: null, marksMult: 1, haste: 1,
       tut, mode: 'play', endT: 0, layers: null, usedPotion: false, marks: 0,
       fade: 0, W: null, near: null, sel: null, swapped: false, opts: null, result: null,
     };
@@ -242,7 +242,7 @@
   // Cửa của phòng hiện tại: mở khi phòng đã dọn; cửa dẫn tới Trùm còn phải đủ điều kiện của bản đồ.
   function updateDoors() {
     const W = S.W, ok = G.mapgen.gateOpen(S.map, S.cleared);
-    for (const d of W.doors) d.open = !!W.cleared && W.type !== 'boss' && (!d.gate || ok);
+    for (const d of W.doors) d.open = !!W.cleared && (W.type !== 'boss' || !!S.won) && (!d.gate || ok || W.type === 'boss');
   }
   // Rời phòng: gom dấu ấn, dọn những thứ chỉ sống trong lúc đánh.
   function leaveRoom() {
@@ -273,6 +273,7 @@
       if (W.cleared) W.waves = [];
     }
     W.marksMult = S.marksMult; W.haste = S.haste; W.noPotion = S.curse === 'dry';
+    if (S.won) W.safe = true; // đã thắng: đi dạo các phòng không bị mất máu nữa
     S.near = null; S.endT = 0; S.roomT = 0; S.doorCd = 0.3;
     S.seen[id] = true; S.known[id] = true;
     for (const d of W.doors) S.known[d.to] = true;
@@ -322,6 +323,15 @@
     }
     updateDoors();
   }
+  // Đồ rơi sau khi thắng: đi ngang qua là nhặt, hiện chữ phần thưởng bay lên (thưởng đã được cộng lúc thắng).
+  function pickLoot(W, P) {
+    for (const pr of W.props) {
+      if (pr.type !== 'loot' || pr.got || G.time < pr.born + 0.5) continue;
+      if (Math.hypot(pr.x - P.x, (pr.y - P.y) * 1.3) < 14) { pr.got = G.time; G.sfx('pick', 1.2); }
+    }
+    for (const pr of W.props) if (pr.type === 'loot' && pr.got && G.time - pr.got > 0.9) pr.dead = true;
+    if (W.props.some((p) => p.dead && p.type === 'loot')) W.props = W.props.filter((p) => !(p.dead && p.type === 'loot'));
+  }
   // Người chơi đang đẩy vào cửa nào (đứng sát mép sàn, đúng chỗ cửa, và đang đi về phía cửa).
   function doorAt(inp) {
     const W = S.W, P = S.P;
@@ -365,6 +375,7 @@
       G.sfx('evolve', 0.8);
     } else if (pr.act === 'stash') { S.mode = 'swap'; S.sel = null; } else if (pr.act === 'merchant') S.mode = 'merchant';
     else if (pr.act === 'altar' && !pr.used) { S.mode = 'curse'; S.prop = pr; }
+    else if (pr.act === 'portal') G.usePortal();
   }
   function rebuildWeapons() {
     const P = S.P;
@@ -373,7 +384,8 @@
     P.cur = Math.max(0, P.weapons.indexOf(cur));
   }
 
-  function finish(win) {
+  // Tính và lưu phần thưởng (gọi đúng một lần mỗi lượt chơi). Thắng thì gọi ngay lúc hạ trùm, trước khi người chơi vào cổng.
+  function settle(win) {
     const sv = G.save, reg = G.REGIONS[S.r], W = S.W;
     S.marks += W.marksGained; W.marksGained = 0;
     if (W.usedPotion) S.usedPotion = true;
@@ -424,11 +436,58 @@
     if (S.marks > 0) R.lines.push('Vũ khí nhận ' + Math.round(S.marks) + ' dấu ấn');
     if (R.up) R.lines.push(G.HEROES[sv.hero].name + ' lên cấp ' + sv.heroes[sv.hero].lvl + '!');
     for (const g of S.got) R.lines.push(g.w ? { s: 'Trong ải: ' + g.s, w: g.w } : 'Trong ải: ' + g);
-    S.result = R;
-    S.mode = win ? 'result' : 'dead';
+    S.result = R; S.gotN = S.got.length; S.marksAt = S.marks;
     G.persist();
   }
+  // Hiện bảng kết quả. Thắng mà đã tính thưởng lúc hạ trùm: thêm các thứ nhặt được sau đó (rương, tinh anh còn sót, dấu ấn).
+  function finish(win) {
+    if (!S.result) settle(win);
+    else if (S.won && win) {
+      const W = S.W, R = S.result;
+      S.marks += W.marksGained; W.marksGained = 0;
+      const more = Math.round(S.marks - (S.marksAt || 0));
+      if (more > 0) R.lines.push('Sau trận trùm: vũ khí nhận thêm ' + more + ' dấu ấn');
+      for (const g of S.got.slice(S.gotN || 0)) R.lines.push(g.w ? { s: 'Trong ải: ' + g.s, w: g.w } : 'Trong ải: ' + g);
+      S.gotN = S.got.length; S.marksAt = S.marks;
+      G.persist();
+    }
+    S.mode = win ? 'result' : 'dead';
+  }
   G.finishStage = finish;
+  // Sửa góp ý 2: hạ trùm cuối ải thì KHÔNG hiện bảng kết quả ngay. Thưởng được tính và lưu ngay, dòng báo thắng hiện lên,
+  // đồ rơi nằm lại trên sàn để nhặt, và một cổng dịch chuyển mọc lên giữa phòng trùm. Người chơi đi lại tự do (cửa phòng trùm mở,
+  // rương, suối, thương nhân còn dùng được), tới gần cổng thì nút Đánh thành "Vào cổng"; vào cổng mới hiện bảng kết quả.
+  function winPortal() {
+    const W = S.W, g = W.geo, b = W.boss;
+    settle(true);
+    S.won = true; W.safe = true; W.px1 = null; // trùm vùng đã gục: bỏ bức chắn bên phải để nhặt được đồ rơi chỗ nó
+    const P = S.P; P.st.fire = 0; P.st.poison = 0; P.st.ice = 0;
+    if (!W.cleared) clearRoom(); else updateDoors();
+    // cổng ở giữa sàn; nếu trùm gục ngay giữa phòng thì đồ rơi toả quanh chỗ trùm, cổng vẫn ở giữa
+    const px = g.cx, py = g.cy + 6;
+    W.props.push({ type: 'portal', act: 'portal', x: px, y: py, born: G.time });
+    S.portal = { room: S.idx, x: px, y: py };
+    // đồ rơi: mỗi phần thưởng một món nằm trên sàn quanh chỗ trùm gục; đi ngang qua là nhặt (thưởng đã được cộng sẵn)
+    const bx = b ? G.clamp(b.x, W.x0 + 20, W.x1 - 20) : px - 40, by = b ? G.clamp(b.y, W.y0 + 10, W.y1 - 10) : py;
+    const items = [];
+    for (const l of S.result.lines) {
+      if (l && l.w) { items.push({ kind: 'weapon', w: l.w, s: G.wName(l.w) }); continue; }
+      if (typeof l !== 'string' || l.indexOf('Trong ải') === 0) continue;
+      const k = /vàng/.test(l) ? 'gold' : /quặng/.test(l) ? 'ore' : /đá tôi/.test(l) ? 'stone' : /mảnh/.test(l) ? 'shard' + S.r : /kinh nghiệm/.test(l) ? 'xp' : /^\+\d+ /.test(l) ? 'mat' + S.r : null;
+      if (k) items.push({ kind: k, s: l });
+    }
+    items.forEach((it, i) => {
+      const a = (i / Math.max(1, items.length)) * Math.PI * 2 + 0.4, rr = 18 + (i % 2) * 8;
+      let x = G.clamp(bx + Math.cos(a) * rr, W.x0 + 8, W.x1 - 8), y = G.clamp(by + Math.sin(a) * rr * 0.7, W.y0 + 6, W.y1 - 4);
+      if (Math.hypot(x - px, (y - py) * 1.3) < 30) x = G.clamp(x + (x < px ? -26 : 26), W.x0 + 8, W.x1 - 8); // không nằm đè lên cổng
+      W.props.push(Object.assign({ type: 'loot', x, y, born: G.time + i * 0.08, sx: bx, sy: by - 10 }, it));
+    });
+    W.banner = { s: 'Thắng rồi! Nhặt đồ rơi, đi dạo tuỳ ý, xong thì vào cổng dịch chuyển', col: '#ffd23f', t: 5 };
+    G.sfx('evolve', 0.8);
+  }
+  G.winPortal = () => { if (S && !S.won && S.loot.bossDown) winPortal(); };
+  // Bước vào cổng (bài kiểm tra dùng thẳng hàm này): hiện bảng kết quả.
+  G.usePortal = function () { if (S && S.won && S.mode === 'play') { G.sfx('evolve', 1.4); finish(true); } };
   // Dùng khi chạy thử: nhảy thẳng tới phòng số n (0 là Bắt đầu, 7 là Trùm). type: ép loại phòng và dựng lại phòng đó.
   G.gotoRoom = function (n, type) {
     if (type) { S.map.rooms[n].type = type; S.rooms[n] = type; delete S.worlds[n]; delete S.cleared[n]; }
@@ -549,10 +608,11 @@
         }
       }
       if (S.challenge) S.challenge.t -= dt;
-      if (W.type === 'boss' && S.loot.bossDown) { S.endT += dt; if (S.endT > 1.6) finish(true); return; }
-      if (W.over === 'dead') { S.endT += dt; if (S.endT > 1.2) finish(false); return; }
-      // bước vào cửa đang mở thì sang phòng kề
-      if (W.cleared && W.type !== 'boss' && S.doorCd <= 0) {
+      if (W.type === 'boss' && S.loot.bossDown && !S.won) { S.endT += dt; if (S.endT > 1.2) winPortal(); return; }
+      if (W.over === 'dead' && !S.won) { S.endT += dt; if (S.endT > 1.2) finish(false); return; }
+      if (S.won) pickLoot(W, P);
+      // bước vào cửa đang mở thì sang phòng kề (phòng trùm: chỉ sau khi đã thắng)
+      if (W.cleared && (W.type !== 'boss' || S.won) && S.doorCd <= 0) {
         const d = doorAt(inp);
         if (d && d.open) { S.trans = { to: d.to, dir: d.dir, phase: 0, t: 0 }; G.sfx('swing', 0.5); }
         else if (d && d.gate && !S.gateMsgT) { S.gateMsgT = 2; }
@@ -711,7 +771,7 @@
       }
     }
     // tên các vật bấm được, để người mới biết đó là gì
-    const PNAME = { chest: 'Rương báu', stash: 'Rương đồ', merchant: 'Thương nhân', altar: 'Bàn thờ lời nguyền' };
+    const PNAME = { chest: 'Rương báu', stash: 'Rương đồ', merchant: 'Thương nhân', altar: 'Bàn thờ lời nguyền', portal: 'Cổng dịch chuyển' };
     if (S.mode === 'play') {
       const fLock = W.type === 'fountain' && fountainLocked();
       if (fLock && W.props.some((p) => p.type === 'fountain' && !p.used)) {
@@ -723,8 +783,8 @@
       for (const pr of W.props) {
         if (!pr.act || pr.used || (fLock && pr.act === 'fountain')) continue;
         const nm = pr.act === 'fountain' ? (pr.kind === 'hp' ? 'Hồi máu' : 'Hồi mana') : PNAME[pr.act];
-        const py = pr.y - (pr.act === 'stash' ? 28 : pr.act === 'fountain' ? 40 : 36);
-        if (pr === S.near) ui.text('Bấm Đánh', pr.x - W.cam, py, { size: 8, align: 'center', bold: true, color: '#fff3b0' });
+        const py = pr.y - (pr.act === 'stash' ? 28 : pr.act === 'fountain' ? 40 : pr.act === 'portal' ? 44 : 36);
+        if (pr === S.near) ui.text(pr.act === 'portal' ? 'Bấm Vào cổng' : 'Bấm Đánh', pr.x - W.cam, py, { size: 8, align: 'center', bold: true, color: '#fff3b0' });
         else if (nm) ui.text(nm, pr.x - W.cam, py, { size: 7, align: 'center', bold: true, color: pr.act === 'fountain' ? (pr.kind === 'hp' ? '#ff9a8a' : '#9ac8ff') : '#f0d9b0' });
       }
     }
@@ -752,7 +812,9 @@
       // Vòng nạp quanh nút Đánh khi đang giữ để lấy đà (P.mv của js/moves.js). Búa có 2 nấc.
       const mv = P.mv, chg = mv && mv.holding ? mv.charge : 0, mcfg = G.MOVES && G.MOVES[cw2.type];
       let bt = btnPos('atk');
-      BA.draw(c, 'atk', bt[0], bt[1], bt[2] + 1, {
+      // đứng gần cổng dịch chuyển: nút Đánh thành "Vào cổng" (giống nút Nói chuyện ở làng)
+      if (S.near && S.near.act === 'portal' && G.theme && G.theme.round) G.theme.round(bt[0], bt[1], bt[2] + 1, 'talk', { lit: true, pressed: held('atk') || G.keys.KeyJ, label: 'Vào cổng' });
+      else BA.draw(c, 'atk', bt[0], bt[1], bt[2] + 1, {
         weapon: wst, pressed: held('atk') || G.keys.KeyJ, glow: !!S.near, label: showLab ? 'Đánh' : null,
         charge: chg > 0 ? chg : undefined, chargeSteps: mcfg && mcfg.charge ? (mcfg.charge.lv1 != null ? 2 : 1) : 0,
       });
@@ -878,7 +940,9 @@
     ui.panel(150, 60, 180, 150, 'Tạm dừng');
     if (ui.btn(165, 86, 150, 28, 'Chơi tiếp')) setMode('play');
     if (ui.btn(165, 120, 150, 28, 'Âm thanh: ' + (G.save.sound ? 'bật' : 'tắt'))) { G.save.sound = !G.save.sound; G.persist(); G.audioStart(); }
-    if (ui.btn(165, 154, 150, 28, 'Bỏ ải, về làng', { color: '#6a2a22' })) { S.quit = true; finish(false); }
+    // đã hạ trùm: không còn "bỏ ải" mà là rời ải, sang bảng kết quả thắng
+    if (S.won) { if (ui.btn(165, 154, 150, 28, 'Rời ải', { color: '#a8452a' })) finish(true); }
+    else if (ui.btn(165, 154, 150, 28, 'Bỏ ải, về làng', { color: '#6a2a22' })) { S.quit = true; finish(false); }
   }
   function panelResult() {
     const R = S.result;

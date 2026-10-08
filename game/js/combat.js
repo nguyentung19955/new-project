@@ -510,7 +510,7 @@
 
   G.hurtPlayer = function (amt, el, src, melee) {
     const P = W.P;
-    if (P.inv > 0 || P.dead || W.over) return false;
+    if (P.inv > 0 || P.dead || W.over || W.safe) return false; // W.safe: đã hạ trùm, đang đi dạo chờ vào cổng
     const raw = amt;
     amt *= 1 - Math.min(0.75, P.dr);
     if (P.gongT > 0) amt *= 0.4;
@@ -927,7 +927,7 @@
         if (ent) ent(c, e);
       } });
     }
-    for (const pr of W.props) list.push({ y: pr.y - (pr.type === 'door' ? 200 : 0), f: () => A.prop(c, pr) });
+    for (const pr of W.props) list.push({ y: pr.y - (pr.type === 'door' || pr.type === 'portal' ? 200 : 0), f: () => A.prop(c, pr) }); // cổng dịch chuyển nằm sát sàn: vẽ dưới mọi thứ
     if (W.boss && !W.boss.dead) {
       const b = W.boss;
       list.push({ y: b.y + (b.kind === 'moc' ? -30 : 0), f: () => {

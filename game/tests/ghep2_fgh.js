@@ -6,7 +6,7 @@
   const fix = (v) => { G.rnd = () => v; };
   const idOf = (type) => S.map.rooms.find((r) => r.type === type).id;
   // chạy tới khi hiện bảng kết quả
-  const toResult = () => { let n = 0; while (S.mode === 'play' && n++ < 600) step(1); };
+  const toResult = () => { let n = 0; while (S.mode === 'play' && n++ < 600) { step(1); if (S.won) G.usePortal(); } }; // sửa góp ý 2: thắng xong phải vào cổng mới hiện bảng
 
   // ================= F. VŨ KHÍ RƠI THEO BỐN BẬC TRONG HỆ PHÒNG MỚI =================
   // trùm vùng: ải cuối luôn là Kiểu C, lần đầu hạ chắc chắn rơi Vàng của vùng đó
@@ -22,7 +22,8 @@
     const b = W.boss;
     ok('F: phòng trùm của ải cuối vùng ' + (r + 1) + ' có đúng trùm vùng', b && b.kind === G.REGIONS[r].boss, b && b.kind);
     P.inv = 99; b.hp = 1; G.damage(b, 99, { w: G.curW(P), el: 'fire' });
-    for (let k = 0; k < 400 && S.mode === 'play'; k++) { P.inv = 99; G.sim(1); }
+    for (let k = 0; k < 400 && S.mode === 'play' && !S.won; k++) { P.inv = 99; G.sim(1); }
+    G.usePortal(); // sửa góp ý 2: hạ trùm thì cổng dịch chuyển mọc lên, vào cổng mới hiện bảng kết quả
     const R = S.result, line = R && R.lines.find((l) => l.w && l.s.indexOf('rơi') >= 0);
     ok('F: hạ trùm vùng ' + (r + 1) + ' lần đầu thì bảng kết quả có dòng trùm rơi vũ khí Vàng', S.mode === 'result' && line && G.wRar(line.w) === 3 && line.w.gold === r && line.s.indexOf('(Vàng)') > 0, line ? line.s : S.mode);
     ok('F: món Vàng nằm trong rương đồ và bản lưu ghi đã nhận', G.save.weapons.length === n0 + 1 && G.save.weapons.includes(line && line.w) && G.save.bossGold[G.REGIONS[r].boss] === true);

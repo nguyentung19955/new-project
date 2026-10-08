@@ -52,6 +52,7 @@ Trên điện thoại (nên cầm ngang):
 - Lại gần rương, suối, thương nhân, bàn thờ rồi bấm **Đánh** để mở hoặc chọn.
 - Suối hồi chỉ dùng được khi đã dọn đủ 3 phòng quái. Ghé sớm thì suối hiện mờ kèm dòng "Dọn hết quái rồi quay lại".
 - Còn quái thì mọi cửa khóa. Hết quái thì cửa mở: đi vào cửa có mũi tên để sang phòng kề.
+- Hạ trùm cuối ải thì chưa hiện bảng kết quả: phần thưởng đã được tính và lưu ngay, đồ rơi nằm trên sàn (đi ngang qua là nhặt), và một **cổng dịch chuyển** mọc lên giữa phòng trùm (bản đồ nhỏ có biểu tượng cổng). Cửa phòng trùm mở, bạn đi lại tuỳ ý (không còn mất máu), ghé lại rương, suối, thương nhân. Tới gần cổng thì nút Đánh thành **Vào cổng**; vào cổng mới hiện bảng kết quả (Về làng, Chơi lại, Ải tiếp theo). Bảng tạm dừng lúc này có nút **Rời ải** để sang thẳng bảng kết quả. Thua thì vẫn hiện bảng thua ngay.
 - Chạm **bản đồ nhỏ** ở góc trên bên phải để tạm dừng và xem bản đồ cả ải; chạm lần nữa để chơi tiếp. Mọi ô phòng trên bản đồ cùng một màu, loại phòng xem ở biểu tượng; ô đang đứng sáng và có viền nổi, ô đã qua đậm hơn ô mới biết, cửa Trùm còn khóa có ổ khóa.
 
 Trên máy tính:
@@ -112,6 +113,7 @@ Chuột dùng được như ngón tay.
 | `js/mapgen.js` | Sinh bản đồ ải ngẫu nhiên theo hạt giống (ba kiểu bố cục A, B, C) và hàm kiểm tra bản đồ |
 | `js/room_art.js` | Vẽ phòng vuông nhìn từ trên cho ba vùng: sàn, tường, cửa khóa và cửa mở |
 | `js/minimap.js` | Bản đồ nhỏ và bản đồ to |
+| `js/portal.js` | Hình cổng dịch chuyển sau khi thắng và đồ rơi trên sàn |
 | `js/village_scene.js` | Cảnh làng có người (`G.villageScene`): nền làng 720 điểm, bảy người làng, em bé đi lại, vũ khí bay theo, tìm đường khi chạm, dải khuôn mặt lối tắt, tranh bản đồ vùng |
 | `js/village.js` | Màn hình đầu và làng: mỗi người mở một bảng (tranh bản đồ, lò rèn, rương vũ khí, mũ áo bùa, cây kỹ năng và hướng dẫn, chọn hero, cài đặt), màn xem vũ khí |
 | `js/main.js` | Khởi động game |
@@ -154,6 +156,8 @@ python3 tests/room_shots.py        # chụp ảnh phòng và bản đồ vào do
 python3 tests/moves.py             # lối đánh của bốn vũ khí và luật riêng của ba hệ
 python3 tests/cung.py              # cung tự ngắm: mỗi kiểu bắn 40 phát vào quái ở tám hướng, gần và xa, đứng yên và đang chạy
 python3 tests/cung_shots.py        # chụp ảnh cung tám hướng vào docs/sua-gop-y-1/ (cần thêm Pillow)
+python3 tests/cong.py              # cổng dịch chuyển sau khi thắng: luật, và bấm thật trên điện thoại
+python3 tests/cong_shots.py        # chụp ảnh cổng dịch chuyển vào docs/sua-gop-y-1/ (cần thêm Pillow)
 python3 tests/dps.py 90 16 nho     # đo sát thương của bốn vũ khí và ba hệ khi bot chơi trong phòng thường (thêm "trum" thay "nho": phòng trùm)
 python3 tests/perf.py              # đo thời gian một khung hình trong cảnh đông quái
 python3 tests/chieu_shots.py       # chụp ảnh các lối đánh và hiệu ứng theo hệ vào docs/chieu-thuc/

@@ -16,6 +16,7 @@
     boss: ['.#####.', '#######', '#.###.#', '#######', '.#####.', '.#.#.#.', '.......'],
     lock: ['..###..', '.#...#.', '.#...#.', '#######', '###.###', '###.###', '#######'],
     key: ['.###...', '#...#..', '#...#..', '.###...', '..#....', '..##...', '..###..'],
+    portal: ['..###..', '.#...#.', '#..#..#', '#.#.#.#', '#..#..#', '.#...#.', '..###..'], // cổng dịch chuyển sau khi thắng
   };
   // MỘT MÀU cho mọi ô phòng (yêu cầu của chủ dự án): một màu nền, một màu viền, một màu biểu tượng.
   // Loại phòng chỉ phân biệt bằng biểu tượng. Chỉ còn ba khác biệt:
@@ -31,7 +32,7 @@
   MM.PAL = PAL;
   const NAME = {
     start: 'Bắt đầu', fight: 'Đánh quái', elite: 'Tinh anh', chest: 'Rương báu', fountain: 'Suối hồi',
-    merchant: 'Thương nhân', challenge: 'Thử thách', curse: 'Lời nguyền', boss: 'Trùm',
+    merchant: 'Thương nhân', challenge: 'Thử thách', curse: 'Lời nguyền', boss: 'Trùm', portal: 'Cổng dịch chuyển',
   };
   MM.NAME = NAME; MM.ICON = ICON;
   function icon(name, x, y, s, col) {
@@ -84,7 +85,9 @@
       if (!st) continue;
       const cx = X(r.x), cy = Y(r.y);
       cell(st, cx, cy, cw, ch);
-      icon(r.type, cx + (cw - 7 * s) / 2, cy + (ch - 7 * s) / 2, s, PAL.icon);
+      // đã thắng: phòng trùm hiện biểu tượng cổng dịch chuyển (nhấp nháy nhẹ cho dễ tìm)
+      const ic = S.portal && S.portal.room === r.id ? 'portal' : r.type;
+      icon(ic, cx + (cw - 7 * s) / 2, cy + (ch - 7 * s) / 2, s, ic === 'portal' && Math.floor(G.time * 2) % 2 ? '#8ff0d8' : PAL.icon);
     }
   }
   // Một ô phòng theo trạng thái: đang đứng (sáng, viền nổi, nhấp nháy nhẹ), đã qua (đậm), mới biết (nhạt).
@@ -149,6 +152,7 @@
     const types = [];
     for (const r of S.map.rooms) if (stateOf(S, r.id) && !types.includes(r.type)) types.push(r.type);
     const order = ['start', 'fight', 'elite', 'chest', 'fountain', 'merchant', 'challenge', 'curse', 'boss'].filter((t) => types.includes(t));
+    if (S.portal) { const bi = order.indexOf('boss'); if (bi >= 0 && !S.map.rooms.some((r) => r.type === 'boss' && r.id !== S.portal.room && stateOf(S, r.id))) order.splice(bi, 1); order.push('portal'); }
     ui.text('Chú giải', 322, 45, { size: 8, bold: true, color: '#ffd27a' });
     // mọi loại phòng cùng một màu ô, chỉ khác biểu tượng
     order.forEach((t, k) => {
