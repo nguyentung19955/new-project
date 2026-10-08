@@ -2676,6 +2676,18 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
   lúa, xoay máy, quà sính lễ), khung thanh máu tướng / quái / boss, đế ô ngập / núi / chọn / sẵn sàng.
 - Sửa kèm: bảng kết quả dùng khung tối (giấy kem làm chữ khó đọc), số ải trên huy hiệu chương chữ sáng, thẻ chế độ không bị skin nút đè.
 - Giữ bản sinh hình học: icon 16 px (chuyển ảnh ra nhoè). Không cần: vân đường / trang trí cũ (bản đồ pixel đã có riêng).
+## claude/hao-quang-tim-vang — Hào quang tướng Tím / Vàng (viền + hạt bay quanh)
+
+- **Lỗi:** tướng Tím (Sử thi) / Vàng (Huyền thoại) gần như không khác tướng Thường. Bật pixel thì `pxDrawHero` bỏ qua hẳn hào quang bậc (chỉ có viền màu hệ khi ★★); hình cũ chỉ có quầng mờ rất nhạt (`packGlow`).
+- **Mới (cả pixel lẫn hình cũ, `js/render.js` → `RANK_FX`):**
+  - Viền sáng **bám dáng sprite**, nhấp nháy nhẹ: Tím `#B070FF`, Vàng `#FFD24A`. Pixel: đúng 1 ô pixel (`pxBlit` → `outline`); hình cũ: ~2–3 điểm ảnh màn hình, Vàng thêm vành hổ phách sẫm ngoài để nổi trên nền cát / áo trắng. Viền dựng sẵn một lần cho mỗi khung (`outlineSprite`), mỗi khung hình chỉ `drawImage`.
+  - **Hạt sáng bay vòng elip** quanh thân (nửa sau vẽ sau lưng, nửa trước vẽ trước người), hạt vuông bám lưới pixel, có đuôi 3 vệt mờ dần: Tím 4 hạt, Vàng 6 hạt to hơn (đồ hoạ thấp: bớt 2 hạt). Quỹ đạo nằm dưới đỉnh hình → không che thanh máu / sao.
+  - Pixel thêm quầng nhẹ màu bậc (Vàng đậm hơn Tím). Màu quầng cũ `AURA_C` đổi theo cùng bảng màu.
+  - Tướng Thường: không có gì. Tướng đang ngã: tắt. `o.noRankFx` để tắt khi cần.
+- Đường vẽ ảnh đơn tự cử động (`js/tu-cu-dong.js`, cả rig 3 lớp) cũng có viền.
+- Đã kiểm khung chân dung Tím / Vàng ở bảng chi tiết, Anh Hùng: đúng màu bậc (không đổi).
+- Hiệu năng: 20 tướng Tím / Vàng thêm ~0,3 ms / khung.
+- Test: `node tests/run-all.js hao-quang` (Tím/Vàng có viền + hạt, Thường không có; ?pixel=0 và PIXEL_BAT_EP; hạt chuyển động; đo thời gian; chụp 844×390 + 1920×934).
 - Sửa theo tester: (1) mở game — `js/pixel.js` thôi nạp sẵn cả ~920 ảnh pixel lúc mở; ngay: khung giao diện; sau khi menu hiện (theo lô
   60 ảnh, lúc rảnh): tướng, quái, boss, nền, bản đồ, hiệu ứng, icon; nhóm hiện bằng <img> (đồ, kỹ năng, ấn phù, thần khí) và canh/* không
   nạp sẵn → menu hiện ~0,6 s (trước ~1,4 s, ngang ?pixel=0). (2) chợ: chân dung pixel mọi tướng nạp + giải mã sẵn vào bộ đệm chợ

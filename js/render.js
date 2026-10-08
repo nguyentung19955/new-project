@@ -864,7 +864,98 @@ function footK(img) {
   img.__fk = k;
   return k;
 }
+// ------------------------------------------------------------
+//  claude/hao-quang-tim-vang: tướng Tím (Sử thi) / Vàng (Huyền thoại) — cả pixel lẫn hình cũ:
+//  viền sáng bám dáng (1 ô pixel, nhấp nháy) + 4 / 6 hạt sáng bay vòng elip quanh người có đuôi mờ. Thường: không có.
+// ------------------------------------------------------------
+const RANK_FX = {
+  epic: { c: '#B070FF', hi: '#EAD8FF', n: 4, a: 0.85, sz: 1, w: 2.4, glow: { blur: 4, alpha: 0.3 } },
+  legendary: { c: '#FFD24A', hi: '#FFFBE0', n: 6, a: 1, sz: 1.3, w: 3.2, edge: '#A35F00', glow: { blur: 8, alpha: 0.55 } },
+};
+const rankFxOf = (def) => (def && def.legend && RANK_FX[def.legend]) || null;
+const rankAlpha = (rk, t, seed) => rk.a * (0.72 + 0.28 * Math.sin(t * 4 + (seed || 0)));
+// viền dựng sẵn: dáng ảnh nở ra r điểm ảnh gốc, trừ đi chính ảnh → chỉ còn vành (mỗi ảnh × màu × r làm MỘT lần)
+function outlineSprite(img, color, r) {
+  const key = color + '|' + r;
+  const m = img.__outl || (img.__outl = new Map());
+  let c = m.get(key);
+  if (c) return c;
+  const iw = img.naturalWidth || img.width, ih = img.naturalHeight || img.height;
+  c = document.createElement('canvas'); c.width = iw + r * 2; c.height = ih + r * 2;
+  const x = c.getContext('2d');
+  x.imageSmoothingEnabled = false;
+  const off = r === 1 ? [[1, 0], [-1, 0], [0, 1], [0, -1]] : Array.from({ length: 12 }, (_, i) => [Math.round(Math.cos(i * Math.PI / 6) * r), Math.round(Math.sin(i * Math.PI / 6) * r)]);
+  for (const [dx, dy] of off) x.drawImage(img, r + dx, r + dy, iw, ih);
+  x.drawImage(c, 0, 0); x.drawImage(c, 0, 0);   // mép ảnh mờ (khử răng cưa) → viền vẫn đậm
+  x.globalCompositeOperation = 'source-in'; x.fillStyle = color; x.fillRect(0, 0, c.width, c.height);
+  x.globalCompositeOperation = 'destination-out'; x.drawImage(img, r, r, iw, ih);
+  c.__r = r;
+  if (m.size > 6) m.clear();
+  m.set(key, c);
+  return c;
+}
+// vẽ viền quanh ảnh đặt ở (x, y, w, h). r: số điểm ảnh gốc (pixel: 1 ô); bỏ trống = ~2 điểm ảnh màn hình
+function drawOutlineOnly(ctx, img, x, y, w, h, color, alpha, r, scr = 2.2) {
+  if (!img || alpha <= 0) return;
+  const iw = img.naturalWidth || img.width;
+  if (!iw) return;
+  const k = w / iw;
+  if (!r) { const tr = ctx.getTransform(); r = Math.max(1, Math.min(8, Math.round(scr / Math.max(0.02, Math.hypot(tr.a, tr.b) * k)))); }
+  const c = outlineSprite(img, color, r);
+  ctx.save();
+  ctx.globalAlpha *= Math.min(1, alpha);
+  ctx.drawImage(c, x - r * k, y - r * k, c.width * k, c.height * k);
+  ctx.restore();
+}
+// hạt sáng bay vòng elip quanh thân (front: nửa trước, vẽ sau thân). H: cao hình (đơn vị logic), u: cỡ một ô pixel
+function drawRankOrbit(ctx, rk, x, y, H, u, t, seed, front) {
+  const lv = GFX_LEVEL();
+  const n = lv >= 2 ? Math.max(3, rk.n - 2) : rk.n;
+  const q = Math.max(u * 2, H / 24) * rk.sz;   // cạnh hạt
+  const snap = (v) => Math.round(v / u) * u;
+  ctx.save();
+  for (let i = 0; i < n; i++) {
+    const fr = (i * 0.618 + seed * 0.13) % 1;
+    const yc = y - H * (0.3 + 0.32 * fr), rx = H * (0.34 + 0.06 * fr), ry = H * 0.09;
+    const th0 = t * (1.5 + 0.25 * fr) + i * Math.PI * 2 / n + seed;
+    if ((Math.sin(th0) > 0) !== front) continue;
+    for (let j = 3; j >= 0; j--) {   // đuôi: 3 vị trí trước đó, nhỏ + mờ dần
+      const th = th0 - j * 0.16;
+      const px = snap(x + Math.cos(th) * rx - x) + x, py = snap(yc + Math.sin(th) * ry - y) + y;
+      const sz = Math.max(u, q * (1 - j * 0.22));
+      ctx.globalAlpha = j ? 0.5 * (1 - j / 4) : 0.95;
+      ctx.fillStyle = rk.c;
+      ctx.fillRect(px - sz / 2, py - sz / 2, sz, sz);
+      if (!j) { const c = Math.max(u * 0.6, sz * 0.45); ctx.fillStyle = rk.hi; ctx.fillRect(px - c / 2, py - c / 2, c, c); }
+    }
+  }
+  ctx.restore();
+}
+// hình cũ (ảnh lớn, nền sáng): Vàng thêm vành hổ phách sẫm ngoài viền để nổi trên cát / áo trắng
+function drawRankOutline(ctx, img, x, y, w, h, rk, a) {
+  if (rk.edge) drawOutlineOnly(ctx, img, x, y, w, h, rk.edge, a * 0.9, 0, rk.w + 1.6);
+  drawOutlineOnly(ctx, img, x, y, w, h, rk.c, a, 0, rk.w);
+}
+const rankH = new WeakMap();   // chiều cao hình lần vẽ trước (đặt hạt trước khi vẽ thân)
 function drawHeroSprite(ctx, h, x, y, o = {}) {
+  const rk = !o.noRankFx && o.fall === undefined && rankFxOf(HEROES[h.type]);
+  if (!rk) return drawHeroSpriteCore(ctx, h, x, y, o);
+  const t = o.t || 0, seed = ((h.id || 0) * 0.37) % 6.28;
+  const prev = rankH.get(h) || { H: 236 * (o.scale || 0.26) * 0.92, u: 236 * (o.scale || 0.26) / 70 };
+  ctx.save(); ctx.globalAlpha *= o.alpha ?? 1;
+  drawRankOrbit(ctx, rk, x, y, prev.H, prev.u, t, seed, false);
+  ctx.restore();
+  const r = drawHeroSpriteCore(ctx, h, x, y, o);
+  const cur = r ? { H: Math.max(10, y - r.top), u: r.u || Math.max(1, (y - r.top) / 70) } : prev;
+  rankH.set(h, cur);
+  ctx.save(); ctx.globalAlpha *= o.alpha ?? 1;
+  drawRankOrbit(ctx, rk, x, y, cur.H, cur.u, t, seed, true);
+  ctx.restore();
+  RANK_SEEN.add(h.type);
+  return r;
+}
+const RANK_SEEN = new Set();   // test đọc: mã tướng đã vẽ hào quang bậc
+function drawHeroSpriteCore(ctx, h, x, y, o = {}) {
   // pixel art (js/pixel.js): mã có sprite pixel thì vẽ pixel, chưa có thì hình cũ
   if (!o.vector && typeof pxDrawHero === 'function') { const r = pxDrawHero(ctx, h, x, y, o); if (r) return r; }
   const def = HEROES[h.type];
@@ -987,6 +1078,8 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
     else if (gt > 0) drawGlowOnly(ctx, png, -fx, -hgt, w, hgt, RAR_COLOR[RARITY_ORDER[gt]], 4 + gt * 2, 0.55 + Math.sin(t * 3) * 0.1);
     // bộ ảnh riêng: ★★ trở lên viền sáng màu hệ (★★★ có thêm vầng mặt trời phía sau)
     else if (pack) packGlow(ctx, png, w, hgt, h, look, def, t, tierShown, ascShown);
+    const rk = !o.noRankFx && rankFxOf(def);
+    if (rk) { const im = mixD > 0.5 ? pngD : png; const wi = hgt * im.naturalWidth / im.naturalHeight; drawRankOutline(ctx, im, im === png ? -fx : pack ? -fxD : -wi / 2, -hgt, wi, hgt, rk, rankAlpha(rk, t, seed)); }
     if (mixD < 1) drawBent(ctx, png, -fx, -hgt, w, hgt, bend, breath);
     ctx.globalAlpha = base;
     if (dollBase && mixD < 1) drawDollGear(ctx, h, -w / 2, -hgt, w, hgt, bend, t);
@@ -1444,7 +1537,7 @@ function drawAccAura(ctx, a, s, t, glowOnly) {
 //  Vàng (Huyền thoại): viền vàng + vầng mặt trời + tia sáng + lửa vàng · Thần tinh: thêm ngôi sao bay quanh (1–3)
 //  Mặc đồ Huyền thoại: thêm lửa vàng + viền vàng đậm
 // ------------------------------------------------------------
-const AURA_C = { epic: '#C77DFF', legendary: '#FFD23A' };
+const AURA_C = { epic: '#B070FF', legendary: '#FFD24A' };   // claude/hao-quang-tim-vang: cùng màu viền RANK_FX
 const hasLegendGear = (h) => !!(h && h.equip && Object.values(h.equip).some((it) => it && it.rarity === 'legendary'));
 function drawPackBack(ctx, h, look, def, t, tier, asc) {
   // v79: khói / sương màu bốc lên sau lưng thay cho vầng mặt trời
