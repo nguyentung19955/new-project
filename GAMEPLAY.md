@@ -2632,3 +2632,7 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 - Còn hình cũ (cảnh/nền menu/cổng thành… bản tool chỉ là phác thảo thô nên chưa nối; một số chưa có pixel): ghi ở
   `docs/pixel/DANH-SACH.md` mục "Bổ sung".
 - **Nền pixel riêng (sau khi gộp v223 có tool bản đồ):** sinh `ban-do/<gốc>-<dạng>` cho 14 bản đồ dạng của các ải (`node tools/build-ban-do-spec.js` → lọc mã có dạng → `node tools/ve-pixel.js --spec … --nap`): ô sát đường cùng kiểu bệ đá, xa đường chỉ trang trí, chỗ tự cắt có cầu. `mapLayer` chọn ảnh theo mã `id` (thay `~` bằng `-`); bản đồ dạng không có ảnh (Vô tận ghép gốc × dạng khác, Vòng quanh núi, Bến đò — có núi / sông game tự vẽ) dùng `pxMapGround`. Tool spec: nạp thêm `js/chapters.js` (đăng ký bản đồ dạng của ải), nhánh phụ chỉ xuất đoạn không trùng nhánh trước (tránh cầu giả ở chỗ chia / nhập nhánh), bỏ qua bản đồ có núi / bến đò.
+- Sửa theo tester: (1) mở game — `js/pixel.js` thôi nạp sẵn cả ~920 ảnh pixel lúc mở; ngay: khung giao diện; sau khi menu hiện (theo lô
+  60 ảnh, lúc rảnh): tướng, quái, boss, nền, bản đồ, hiệu ứng, icon; nhóm hiện bằng <img> (đồ, kỹ năng, ấn phù, thần khí) và canh/* không
+  nạp sẵn → menu hiện ~0,6 s (trước ~1,4 s, ngang ?pixel=0). (2) chợ: chân dung pixel mọi tướng nạp + giải mã sẵn vào bộ đệm chợ
+  (ui.preloadMarket) ngay sau lô cuối → đổi ↻ không nháy thẻ trống.

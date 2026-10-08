@@ -256,5 +256,24 @@ function pxMapGround(x, m, kind, k) {
   x.restore();
   return true;
 }
-// tải sẵn mọi dải khung có trong manifest (vài KB mỗi dải) để khỏi nháy hình cũ lúc đầu
-if (PX_ON && typeof Image !== 'undefined' && window.PIXEL_MANIFEST) for (const k of Object.keys(window.PIXEL_MANIFEST)) asset(`pixel/${k}.png`, true);
+// tải sẵn dải khung để khỏi nháy hình cũ lúc đầu — pixel-mac-dinh: chia đợt cho menu hiện nhanh
+//  · ngay: khung / nút giao diện (menu dùng) · sau khi menu hiện (theo lô, lúc rảnh): sprite vẽ trên canvas (tướng, quái, boss,
+//    nền, bản đồ, hiệu ứng, icon) + chân dung thẻ chợ (giải mã sẵn vào bộ đệm chợ ui.preImg → đổi chợ không nháy trống)
+//  · không tải sẵn: nhóm hiện bằng <img> (đồ, kỹ năng, ấn phù, thần khí — trình duyệt tự tải khi mở) và canh/* (chưa nối)
+const PX_NGAY = ['giao-dien'], PX_SAU = ['tuong', 'quai', 'boss', 'nen', 'ban-do', 'vfx', 'icon'];
+function pxPreload() {
+  const M = window.PIXEL_MANIFEST || {}, keys = Object.keys(M), grp = (k) => k.slice(0, k.indexOf('/'));
+  keys.filter((k) => PX_NGAY.includes(grp(k))).forEach((k) => asset(`pixel/${k}.png`, true));
+  const later = keys.filter((k) => PX_SAU.includes(grp(k))).sort((a, b) => PX_SAU.indexOf(grp(a)) - PX_SAU.indexOf(grp(b)));
+  const idle = window.requestIdleCallback ? (f) => requestIdleCallback(f, { timeout: 300 }) : (f) => setTimeout(f, 30);
+  const step = () => {
+    later.splice(0, 60).forEach((k) => asset(`pixel/${k}.png`, true));
+    if (later.length) return idle(step);
+    if (typeof ui !== 'undefined' && ui && ui.preloadMarket && typeof HEROES !== 'undefined') ui.preloadMarket(Object.keys(HEROES).filter((t) => pxEntry('tuong', t)));
+  };
+  const go = () => setTimeout(() => idle(step), 50);
+  if (document.readyState === 'complete') go(); else window.addEventListener('load', go, { once: true });
+}
+if (PX_ON && typeof Image !== 'undefined' && typeof document !== 'undefined') {
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', pxPreload, { once: true }); else pxPreload();
+}
