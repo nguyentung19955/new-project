@@ -2846,4 +2846,6 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
   + mặt trống đồng; hang đá mảng phẳng + nhũ đá + đuốc; bản rừng cổng gỗ sọ trâu + rào cọc + cây đa; Cổ Loa 3 vòng thành ốc + vọng lâu + nỏ thần.
 - **Bệ đặt tướng** (`nen/de-tuong-*`, 32×32): bệ trụ đá 3/4 có vành khắc trống đồng; chọn = vành vàng + 4 góc ngắm, sẵn sàng = vành ngọc,
   ngập = chìm trong vũng nước gợn sóng, núi = bệ cao mặt rêu.
+- **Tranh nhỏ** (`giao-dien/tranh-*`, 96×96): voi chín ngà · gà chín cựa · ngựa chín hồng mao (vẽ 48×48 phóng ×2, bỏ kiểu chibi),
+  hũ báu hào quang 12 tia, kho lúa nhà sàn mái thuyền, mặt trống đồng chim Lạc, xoay máy.
 - Các mã vẽ lại gỡ khỏi `tools/pixel/spec/*.json` (`tools/pixel/ve-lai/DA-VE-LAI.json`) để `--nap --ghi-de` không ghi đè.

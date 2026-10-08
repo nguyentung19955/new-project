@@ -49,3 +49,20 @@ Một **bệ trụ đá tròn nhìn 3/4**: mặt trên elip (13×7,5) sáng trê
 | `de-tuong-co · dat · cat · da · gach` | đổi màu mặt / thành theo chủ đề (dùng khi tắt pixel nền) |
 
 Trước: elip phẳng xám một vòng màu, không khối, không hoạ tiết.
+
+## 3. Tranh nhỏ Sính lễ / Hũ báu / Kho lúa (giao-dien/tranh-*, 96×96) — `tools/pixel/ve-lai/tranh.js`
+
+Hiển thị trong "giếng" bảng Vua Hùng ban thưởng ≈ 70–100 px (844) · 180–300 px (1920). Vật đứng giữa, nền trong suốt, viền 1px, bóng đất `toi`.
+**Thú vẽ ở 48×48 rồi phóng ×2** (khối gọn, cỡ điểm ngang sprite tướng phóng); vật tĩnh vẽ thẳng 96×96.
+
+| mã | thiết kế | màu |
+|---|---|---|
+| `tranh-qua-voi` | voi trắng nhìn ngang quay phải, tai lớn lót hồng, vòi cuộn, **3 ngà vểnh xếp lớp** (chín ngà), yên vải son viền vàng hoa văn, mũ trán đồng | trắng ngà 3 tông, son, vàng nghệ |
+| `tranh-qua-ga` | gà trống đứng ngực ưỡn, thân son, bờm cổ vàng cam, mào răng cưa, đuôi cong xanh đen ánh ngọc, chân vàng **9 cựa trắng (5 + 4)** | son, lửa, chàm/lá tối, ngọc |
+| `tranh-qua-ngua` | ngựa lông vàng cát, chân trước giơ gập, **9 lọn bờm đỏ như lưỡi lửa** vuốt ngược gió + đuôi đỏ, cương son chuông đồng | cát, son, lửa |
+| `tranh-hu-bau` (cả Hũ vua Hùng) | hũ đồng bụng tròn khắc răng cưa + vòng chấm, nắp mở lệch, **hào quang 12 tia hình nêm**, đồng vàng rơi quanh chân | đồng, vàng nghệ, lửa sáng |
+| `tranh-kho-lua` | **kho sàn mái thuyền Đông Sơn** (chim Lạc trên nóc), vách nan tre, cột sàn, thúng thóc vàng, 2 bó lúa | rơm `cat`, gỗ `dat`, vàng |
+| `tranh-trong-dong` | mặt trống đồng nhìn thẳng: sao 12 cánh, vòng tròn tiếp tuyến có chấm, **6 chim Lạc** bay, răng cưa, vành chấm; vầng sáng trên-trái | đồng 3 tông + vàng |
+| `tranh-xoay` | điện thoại nằm ngang (màn cảnh sông núi) giữa 2 mũi tên cung tròn vàng đồng | sắt tối, đồng, cảnh |
+
+Trước: thú kiểu chibi má hồng (QUY-CHUAN mục 0 cấm "trẻ con"), hũ / kho bị nhiễu và kho lúa là tường thành châu Âu.

@@ -1,16 +1,16 @@
 {
  "code": "tranh-qua-voi",
  "group": "giao-dien",
- "name": "tranh qua-voi",
+ "name": "Voi chín ngà",
  "w": 96,
  "h": 96,
  "ax": 48,
  "ay": 95,
  "bbox": [
-  3,
-  6,
-  90,
-  84
+  8,
+  16,
+  88,
+  76
  ],
  "n": 1,
  "anims": {
