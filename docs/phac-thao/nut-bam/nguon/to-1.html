@@ -1,0 +1,77 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><title>Bộ nút</title><link rel="stylesheet" href="to.css"></head><body>
+<h1>Bộ nút bấm mới</h1>
+<p class="sub">Mỗi nút có hình riêng, khung như đồng, gỗ, ngọc. Nút nổi lên khỏi nền, bấm thì lún xuống và sáng lên. Hình dưới đây phóng to 3 lần, gần bằng cỡ thật trên điện thoại.</p>
+<div class="card"><h2>Cả bộ</h2><p>Nút Đánh to nhất, vòng đồng. Nút Đặc biệt vòng ngọc lam (màu mana). Nút kỹ năng hero vòng vàng. Nút Né vòng sắt. Bình máu và Dừng khung gỗ vuông. Con số nhỏ cạnh giọt nước xanh là giá mana.</p><div class="row" id="bo"></div></div>
+<div class="card"><h2>Năm trạng thái của từng nút</h2><p>Thiếu mana: nút xám đi và con số giá chuyển sang đỏ. Đang hồi: phần tối rút dần theo chiều kim đồng hồ, còn hơn 1 giây thì hiện số giây.</p><div class="grid" id="tt"></div></div>
+<div class="card"><h2>Giữ rồi thả: vòng nạp quanh nút Đánh</h2><p>Dùng cho cung giương, giáo lao, búa lấy đà. Vòng chạy từ đỉnh theo chiều kim đồng hồ. Mỗi vạch là một nấc. Qua nấc nào, vạch đó sáng trắng. Đầy thì cả vòng nháy.</p><div class="row" id="nap"></div></div>
+<div class="card"><h2>Nút Né: mũi tên xoay theo cần điều khiển</h2><p>Đẩy cần về hướng nào thì mũi tên chỉ hướng đó, vì nhân vật lộn theo hướng đang đi.</p><div class="row" id="ne"></div></div>
+<div class="card"><h2>Ô vũ khí: viền theo bậc</h2><p>Ô đang cầm sáng hơn và có viền trắng ngoài. Ô còn lại có dấu hai mũi tên: chạm để đổi. Viên ngọc góc trên là màu hệ.</p><div class="row" id="o"></div></div>
+<div class="card"><h2>Cần điều khiển</h2><p>Đế gỗ đinh đồng, núm đồng nạm ngọc. Lúc chưa chạm thì mờ, chạm vào thì rõ lên.</p><div class="row" id="can"></div></div>
+<script src="to.js"></script><script src="../../../../game/js/btn_art.js"></script>
+<script>
+const A = G.btnArt, T = 10;
+const kiem = { type: 'sword', branch: null, stage: 0, rarity: 0 };
+const kiemLua = { type: 'sword', branch: 'fire', stage: 2, rarity: 2 };
+// cả bộ
+const bo = document.getElementById('bo');
+taoO(bo, 64, 64, 3, (x) => A.stick(x, 32, 32, 24, 9, -7, true), 'Cần điều khiển');
+taoO(bo, 76, 80, 3, (x) => A.draw(x, 'atk', 38, 40, 29, { weapon: kiem, t: T, id: 'a1' }), 'Đánh<small>hình theo vũ khí đang cầm</small>');
+taoO(bo, 54, 62, 3, (x) => A.draw(x, 'special', 27, 29, 19, { weapon: kiem, cost: 25, t: T, id: 'a2' }), 'Đặc biệt<small>Chém lướt, 25 mana</small>');
+taoO(bo, 54, 62, 3, (x) => A.draw(x, 'skill', 27, 29, 19, { hero: 'smith', cost: 40, t: T, id: 'a3' }), 'Kỹ năng hero<small>Nung, 40 mana</small>');
+taoO(bo, 54, 62, 3, (x) => A.draw(x, 'dodge', 27, 29, 19, { dir: -0.6, t: T, id: 'a4' }), 'Né<small>lộn theo hướng mũi tên</small>');
+taoO(bo, 40, 44, 3, (x) => A.draw(x, 'potion', 20, 21, 13, { count: 2, t: T, id: 'a5' }), 'Bình máu');
+taoO(bo, 34, 44, 3, (x) => A.draw(x, 'pause', 17, 21, 11, { t: T, id: 'a6' }), 'Dừng');
+taoO(bo, 84, 44, 3, (x) => { A.slot(x, 5, 7, 34, 28, { weapon: kiemLua, active: true, t: T, id: 's1', flash: false }); A.slot(x, 45, 7, 34, 28, { weapon: { type: 'bow', branch: 'ice', stage: 1, rarity: 1 }, swap: true, t: T, id: 's2', flash: false }); }, 'Hai ô vũ khí<small>chạm để đổi</small>');
+// bảng trạng thái
+const tt = document.getElementById('tt');
+const cot = ['Bình thường', 'Đang bấm<br><small style="font-weight:500;color:#b8b0a0">lún xuống, sáng lên</small>', 'Không dùng được<br><small style="font-weight:500;color:#b8b0a0">xám, mờ; thiếu mana thì số đỏ</small>', 'Đang hồi<br><small style="font-weight:500;color:#b8b0a0">vòng quét, có số giây</small>', 'Vừa sẵn sàng<br><small style="font-weight:500;color:#b8b0a0">nháy sáng một nhịp</small>'];
+tt.style.gridTemplateColumns = 'auto repeat(5, auto)';
+el('div', 'hd', '', tt); cot.forEach((c) => el('div', 'hd', c, tt));
+const tts = [{}, { pressed: true }, { disabled: true }, { cd: 0.62, cdSec: 3.2 }, { ready: T - 0.17 }];
+const hang = [
+  ['Đánh<small>Kiếm, hệ Lửa</small>', 'atk', 29, 76, 78, { weapon: kiemLua }],
+  ['Đặc biệt<small>Chém lướt</small>', 'special', 19, 60, 60, { weapon: kiemLua, cost: 25 }],
+  ['Kỹ năng hero<small>Thợ Rèn: Nung</small>', 'skill', 19, 60, 60, { hero: 'smith', cost: 40 }],
+  ['Né', 'dodge', 19, 60, 56, { dir: 0 }],
+  ['Bình máu', 'potion', 13, 60, 40, { count: 2 }],
+  ['Dừng', 'pause', 11, 60, 34, {}],
+];
+let n = 0;
+for (const h of hang) {
+  el('div', 'rh', h[0], tt);
+  tts.forEach((s, i) => {
+    const st = Object.assign({ t: T, id: 'r' + (n++) }, h[5], s);
+    if (h[1] === 'atk' && i === 3) { st.cd = 0.5; st.cdSec = 0; }
+    if (h[1] === 'dodge' && i === 3) st.cdSec = 0.6;
+    if (h[1] === 'potion' && i === 2) st.count = 0;
+    if (h[1] === 'pause' && (i === 2 || i === 3)) { el('div', '', '<span style="color:#7a7468;font-size:13px">không dùng</span>', tt); return; }
+    taoO(tt, h[3], h[4], 3, (x) => A.draw(x, h[1], h[3] / 2, h[4] / 2 - 1, h[2], st));
+  });
+}
+el('div', 'rh', 'Ô vũ khí<small>bậc Tím, hệ Lửa</small>', tt);
+[{ active: true }, { active: true, pressed: true }, { disabled: true }, { swap: true, cd: 0.6 }, { swap: true, ready: T - 0.15 }].forEach((s, i) => {
+  taoO(tt, 60, 40, 3, (x) => A.slot(x, 13, 5, 34, 28, Object.assign({ weapon: kiemLua, t: T, id: 'sl' + i, flash: i === 4 }, s)));
+});
+// vòng nạp
+const nap = document.getElementById('nap');
+[[0.2, 'Mới giữ'], [0.5, 'Qua nấc 1'], [0.8, 'Qua nấc 2'], [1, 'Đầy: thả ra!']].forEach((v, i) => {
+  taoO(nap, 78, 80, 3, (x) => A.draw(x, 'atk', 39, 40, 29, { weapon: { type: i === 3 ? 'hammer' : i === 2 ? 'spear' : 'bow', branch: i === 1 ? 'ice' : i === 3 ? 'fire' : null, stage: 2 }, pressed: true, charge: v[0], chargeSteps: 3, t: T, id: 'n' + i }), v[1]);
+});
+// né
+const ne = document.getElementById('ne');
+[[null, 'Không đẩy cần'], [-Math.PI / 2, 'Đẩy lên'], [-Math.PI * 0.75, 'Lên trái'], [Math.PI, 'Trái'], [Math.PI / 4, 'Xuống phải']].forEach((v, i) => {
+  taoO(ne, 62, 56, 3, (x) => { A.stick(x, 14, 40, 11, v[0] == null ? 0 : Math.cos(v[0]) * 5, v[0] == null ? 0 : Math.sin(v[0]) * 5, v[0] != null); A.draw(x, 'dodge', 40, 26, 19, { dir: v[0], t: T, id: 'd' + i }); }, v[1]);
+});
+// ô vũ khí
+const oo = document.getElementById('o');
+G.btnArt.RARITY_NAMES.forEach((ten, r) => {
+  const ws = [{ type: 'sword' }, { type: 'bow', branch: 'poison', stage: 1 }, { type: 'spear', branch: 'ice', stage: 2 }, { type: 'hammer', branch: 'fire', stage: 3 }][r];
+  ws.rarity = r;
+  taoO(oo, 84, 40, 3, (x) => { A.slot(x, 5, 5, 34, 28, { weapon: ws, active: true, t: T, id: 'o' + r, flash: false }); A.slot(x, 45, 5, 34, 28, { weapon: ws, swap: true, t: T, id: 'p' + r, flash: false }); }, ten + '<small>đang cầm · chưa cầm</small>');
+});
+// cần
+const can = document.getElementById('can');
+taoO(can, 64, 64, 3, (x) => A.stick(x, 32, 32, 24, 0, 0, false), 'Chưa chạm');
+taoO(can, 64, 64, 3, (x) => A.stick(x, 32, 32, 24, 12, -10, true), 'Đang đẩy');
+taoO(can, 64, 64, 3, (x) => A.stick(x, 32, 32, 24, -17, 5, true), 'Đẩy hết cỡ');
+</script></body></html>

@@ -1,0 +1,19 @@
+/* Kiểu chung cho các tờ phác thảo nút bấm */
+html { background: #1b1822; }
+body { margin: 0; padding: 22px 24px 26px; background: #1b1822; color: #e9e3d6; font-family: "Be Vietnam Pro", Inter, system-ui, sans-serif; width: max-content; }
+h1 { margin: 0 0 4px; font-size: 34px; color: #ffcf7a; font-weight: 700; }
+p.sub { margin: 0 0 16px; font-size: 16px; line-height: 1.45; max-width: 1380px; color: #e9e3d6; }
+.card { background: #2c2836; border-radius: 12px; padding: 14px 16px 16px; margin: 0 0 14px; }
+.card h2 { margin: 0 0 4px; font-size: 20px; color: #ffcf7a; font-weight: 700; }
+.card p { margin: 0 0 10px; font-size: 14.5px; color: #cfc8ba; line-height: 1.4; max-width: 1340px; }
+.row { display: flex; gap: 10px; align-items: flex-end; flex-wrap: nowrap; }
+.cell { display: flex; flex-direction: column; align-items: center; }
+.cell canvas { display: block; image-rendering: pixelated; border-radius: 8px; }
+.cell .cap { font-size: 14px; font-weight: 600; margin-top: 4px; text-align: center; color: #f1ead9; white-space: nowrap; }
+.cell .cap small { display: block; font-weight: 500; font-size: 12.5px; color: #b8b0a0; }
+.grid { width: max-content; display: grid; gap: 6px 8px; align-items: center; justify-items: center; }
+.grid .hd { font-size: 14px; font-weight: 700; color: #ffcf7a; text-align: center; }
+.grid .rh { font-size: 15px; font-weight: 700; color: #f1ead9; justify-self: start; white-space: nowrap; padding-right: 8px; }
+.grid .rh small { display: block; font-weight: 500; font-size: 12.5px; color: #b8b0a0; }
+.cols { display: flex; gap: 14px; align-items: stretch; }
+.cols > .card { margin-bottom: 14px; }
