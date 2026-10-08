@@ -190,24 +190,24 @@ module.exports = (L) => {
       attack: [{ arm: 'over', rock: 1 }, { arm: 'over2', rock: 1 }, { arm: 'throw', fly: 1, crumb: 1 }, { arm: 'after', crumb: 2 }],
       cast: [{ arm: 'over', rock: 2, fx: 0 }, { arm: 'over2', rock: 2, fx: 1 }, { arm: 'throw', fly: 2, fx: 2 }],
     },
-    fade: [['dat', 'dat-toi'], ['dat-sang', 'dat']],
+    fade: [['dong', 'dong-toi'], ['dong-sang', 'dong']],
     draw(g, p) {
-      const SK = ['dat-toi', 'dat', 'dat-sang'];
+      const SK = ['dong-toi', 'dong', 'dong-sang'];   // tuong-pixel-ro: đất sét VÀNG ĐẤT nung (màu Thổ; khác nâu bùn Đắp Đê / tò he hồng)
       const CRACK = [[12, 2], [13, 3], [13, 4], [18, 1], [19, 2], [17, 5], [18, 6], [11, 6], [16, 8]];
       hero(g, p, {
         build: 'huge', skin: SK,
-        face: { fierce: 1, eyeW: 'cat', eyeK: 'vien', brow: 'dat-toi' },
+        face: { fierce: 1, eyeW: 'vang-sang', eyeK: 'vien', brow: 'dong-toi' },
         backHand: (b, p) => (p.arm === 'over' || p.arm === 'over2' ? [b.B[0] + 3, b.B[1] - 6] : [b.B[0] - 1, b.B[1] + 7]),
         legs: { pantRows: 0 },
         body(g, b, p) {
           g.shade(torsoPts(b), SK);
-          CRACK.forEach(([dx, dy]) => g.set(dx, b.t0 + dy, 'dat-toi'));
-          for (let x = 11; x <= 20; x++) if (x !== 15 && x !== 16 && x % 3) g.set(x, b.t0 + 3, 'dat-toi');
+          CRACK.forEach(([dx, dy]) => g.set(dx, b.t0 + dy, 'dong-toi'));
+          for (let x = 11; x <= 20; x++) if (x !== 15 && x !== 16 && x % 3) g.set(x, b.t0 + 3, 'dong-toi');
           // cỏ dại trên vai
           g.ascii(b.sh[0] + 1, b.t0 - 2, ['m.M', 'm3m']); g.ascii(b.sh[1] - 4, b.t0 - 1, ['.M.m', '3m3.']);
           // khố vàng đất
-          for (let x = b.wa[0]; x <= b.wa[1]; x++) { g.set(x, b.t1, 'dong-sang'); g.set(x, b.t1 - 1, x % 3 ? 'dong' : 'dong-toi'); }
-          g.shade(spans(b.t1 + 1, [[14, 17], [14, 17], [15, 16]]), ['dong', 'dong-sang', 'cat'], { noTop: true });
+          for (let x = b.wa[0]; x <= b.wa[1]; x++) { g.set(x, b.t1, 'son-sang'); g.set(x, b.t1 - 1, x % 3 ? 'son' : 'son-toi'); }
+          g.shade(spans(b.t1 + 1, [[14, 17], [14, 17], [15, 16]]), ['son-toi', 'son', 'son-sang'], { noTop: true });
           g.set(b.B[0] - 1, b.B[1] + 3, 'dong-sang'); g.set(b.B[0], b.B[1] + 3, 'dong');
           // vụn đất rơi
           if (p.crumb === 1) { g.set(9, 27, 'dat'); g.set(22, 25, 'dat-sang'); }
@@ -215,7 +215,7 @@ module.exports = (L) => {
         },
         after(g, b) {   // cỏ trên đầu + vết nứt trán
           g.ascii(b.hx + 2, b.hy - 2, ['.M.m.', 'm3m3M']);
-          g.set(b.hx + 3, b.hy + 1, 'dat-toi'); g.set(b.hx + 4, b.hy + 2, 'dat-toi');
+          g.set(b.hx + 3, b.hy + 1, 'dong-toi'); g.set(b.hx + 4, b.hy + 2, 'dong-toi');
         },
         front(g, b, p) {
           const S = b.S;
@@ -253,8 +253,8 @@ module.exports = (L) => {
         },
         legs: { pant: ['cham', 'cham-sang', 'sat-sang'], pantRows: 5, feet: ['dong', 'vang-nghe', 'vang-sang'] },
         body(g, b) {
-          g.shade(torsoPts(b), M.sat);
-          g.line(b.sh[0] + 1, b.t0, b.wa[1], b.t0 + 5, 'sat-sang');
+          g.shade(torsoPts(b), ['cham-toi', 'cham', 'cham-sang']);   // tuong-pixel-ro: áo quấn XANH THÉP + dây đeo đỏ chéo — khác giáp bạc Lạc Tướng
+          g.line(b.sh[0] + 1, b.t0, b.wa[1], b.t0 + 5, 'son-sang'); g.line(b.sh[0] + 1, b.t0 + 1, b.wa[1] - 1, b.t0 + 5, 'son');
           for (let x = b.wa[0]; x <= b.wa[1]; x++) g.set(x, b.t1, 'son');
           g.set(15, b.t1, 'son-sang');
           // lông rủ ở vai (cánh tay lông)
@@ -508,8 +508,8 @@ module.exports = (L) => {
       cast: [{ arm: 'raise', fx: 0 }, { arm: 'high', fx: 1 }, { arm: 'thrust', fx: 2 }],
     },
     draw(g, p) {
-      const VAY = ['sat-toi', 'sat', 'sat-sang'];
-      const scales = (g, x0, y0, x1, y1) => { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if (g.get(x, y) && (x + 2 * (y % 2)) % 4 === 0) g.set(x, y, 'sat-toi'); else if (g.get(x, y) && (x + 2 * (y % 2)) % 4 === 1) g.set(x, y, 'sat-sang'); };
+      const VAY = ['sat', 'sat-sang', 'bac'];   // tuong-pixel-ro: vảy XÁM THIẾC sáng (khác giáp sắt tối Thánh Gióng)
+      const scales = (g, x0, y0, x1, y1) => { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if (g.get(x, y) && (x + 2 * (y % 2)) % 4 === 0) g.set(x, y, 'sat'); else if (g.get(x, y) && (x + 2 * (y % 2)) % 4 === 1) g.set(x, y, 'bac'); };
       hero(g, p, {
         build: 'stocky', skin: ['dat', 'da-toi', 'da'],
         back(g, b) {
@@ -519,7 +519,7 @@ module.exports = (L) => {
           shield(g, b.B[0] - 2, b.B[1] + 2);
         },
         backHand: (b) => [b.B[0] - 1, b.B[1] + 3],
-        legs: { pant: ['dong-toi', 'dong', 'dong-sang'], pantRows: 5, cuff: 'dong-toi', feet: ['dat', 'da-toi', 'da'] },
+        legs: { pant: ['sat-toi', 'sat', 'sat-sang'], pantRows: 5, cuff: 'dong', feet: ['dat', 'da-toi', 'da'] },   // chân vảy (tuong-pixel-ro)
         body(g, b) {
           g.shade(torsoPts(b), VAY);
           scales(g, b.sh[0], b.t0, b.sh[1], b.t1 - 2);
@@ -572,13 +572,14 @@ module.exports = (L) => {
       hero(g, p, {
         build: 'old', skin: SON,
         face: { brow: 'vien', mouth: false },
-        legs: { pant: M.trang, pantRows: 4, feet: ['dat', 'da-toi', 'da-sang'] },
+        legs: { pant: M.bac, pantRows: 4, feet: ['dat', 'da-toi', 'da-sang'] },
         body(g, b) {
           const pts = torsoPts(b).concat(spans(b.t1 + 1, [[12, 19], [11, 19], [11, 19], [11, 20]]));
-          g.shade(pts, M.trang);
+          g.shade(pts, M.bac);   // tuong-pixel-ro: áo lễ ánh BẠC (màu Kim) thay trắng ngà — khác râu trắng Thổ Công
           zig(g, 11, 20, b.t1 + 3, 'dong', 'dong-sang');
-          g.line(13, b.t0, 17, b.t0 + 5, 'trang-xam');
-          for (let x = b.wa[0]; x <= b.wa[1]; x++) g.set(x, b.t1 - 1, 'dong');
+          // tuong-pixel-ro: dải lụa SƠN SON chéo ngực + đai son (rối nước sơn son thếp vàng) — khác Thổ Công râu trắng áo vàng
+          g.line(13, b.t0, 17, b.t0 + 5, 'son'); g.line(14, b.t0, 18, b.t0 + 4, 'son-sang'); g.line(12, b.t0 + 1, 16, b.t0 + 5, 'son-toi');
+          for (let x = b.wa[0]; x <= b.wa[1]; x++) { g.set(x, b.t1 - 1, 'son'); g.set(x, b.t1, x % 2 ? 'vang-nghe' : 'son-sang'); }
           peg(b.B[0], b.B[1] + 1);
         },
         hair(g, b) {   // đầu rối hói bóng: sơn tróc lộ vân gỗ, râu vẽ sơn trắng
@@ -589,7 +590,7 @@ module.exports = (L) => {
           g.set(b.hx + 7, b.hy + 6, 'son');   // miệng sơn đỏ
         },
         front(g, b, p) {
-          pole(g, b, p, { len: 10, back: 5, m: ['dat-toi', 'dat', 'dat-sang'], el: 'kim', reserve: 8,
+          pole(g, b, p, { len: 13, back: 5, m: ['dat-toi', 'dat', 'dat-sang'], el: 'kim', reserve: 8,
             head(g, tip, d) {
               const hk = [tip[0] + 4, tip[1]];
               g.line(tip[0], tip[1], hk[0], hk[1], 'dat'); g.set(tip[0], tip[1] - 1, 'dat-sang');
@@ -617,18 +618,20 @@ module.exports = (L) => {
       attack: [{ arm: 'pull' }, { arm: 'hold' }, { arm: 'thrust' }, { arm: 'low' }],
       cast: [{ arm: 'raise', fx: 0 }, { arm: 'high', fx: 1 }, { arm: 'thrust', fx: 2 }],
     },
-    fade: [['cat', 'dat-sang'], ['vang-sang', 'cat']],
+    fade: [['la-ma', 'la'], ['la-sang', 'la-ma'], ['trang', 'trang-xam']],
     draw(g, p) {
-      const NAN = ['dat-sang', 'cat', 'vang-sang'];
-      const weave = (x0, y0, x1, y1) => { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if (g.get(x, y) === 'cat' && (x + y) % 2 === 0) g.set(x, y, 'dat-sang'); };
+      // tuong-pixel-ro: nan TRE XANH (đầu, tay chân) + áo đan KEM — màu Mộc riêng, khác nhóm tướng nâu
+      const NAN = ['la', 'la-ma', 'la-sang'];
+      const AO = ['cat', 'trang', 'sang'];
+      const weave = (x0, y0, x1, y1) => { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if ((x + y) % 2 === 0) { const c = g.get(x, y); if (c === 'la-ma') g.set(x, y, 'la'); else if (c === 'trang') g.set(x, y, 'cat'); } };
       hero(g, p, {
         build: 'teen', skin: NAN,
         face: { eyeW: 'dat-toi', eyeK: 'vien', brow: 'dat', mouth: false },
         legs: { pant: M.laMa, pantRows: 2, cuff: 'la' },
         body(g, b) {
-          g.shade(torsoPts(b), NAN);
+          g.shade(torsoPts(b), AO);
           for (let x = b.wa[0]; x <= b.wa[1]; x++) g.set(x, b.t1, x === 15 ? 'vang-sang' : 'vang-nghe');
-          for (let x = b.sh[0]; x <= b.sh[1]; x++) g.set(x, b.t0 + 3, 'dat');   // nẹp giỏ
+          for (let x = b.sh[0]; x <= b.sh[1]; x++) g.set(x, b.t0 + 3, 'dat-sang');   // nẹp giỏ
         },
         hair(g, b, p) {   // nan tre tua ra
           const w = p.alt ? 1 : 0;
@@ -643,8 +646,8 @@ module.exports = (L) => {
         after(g, b) {
           weave(0, 0, 31, 31);
           // đốt tre ở khớp: vai, gối
-          g.set(b.B[0], b.B[1] + 2, 'la'); g.set(b.S[0], b.S[1] + 1, 'la');
-          for (const [a] of b.legs) g.set(a + 1, b.foot - 2, 'la');
+          g.set(b.B[0], b.B[1] + 2, 'cat'); g.set(b.S[0], b.S[1] + 1, 'cat');
+          for (const [a] of b.legs) g.set(a + 1, b.foot - 2, 'cat');
         },
         front(g, b, p) {
           const S = b.S;
@@ -737,7 +740,8 @@ module.exports = (L) => {
   };
 
   // ================================================================ NGƯỜI ĐẮP ĐÊ
-  const NON = ['.....c.....', '....cYc....', '...cYccG...', '..cYcccGG..', '.cYccccGGt.', 'GccccccGGGt', '.tttttttt..'];
+  // tuong-pixel-ro: nón lá TO, vàng rơm sáng (dấu hiệu nhận ra từ xa)
+  const NON = ['......Y......', '.....YYc.....', '....YYccG....', '...YYcccGG...', '..YYccccGGt..', '.YYcccccGGGt.', 'cYYcccccccGGt', '.ttttttttttt.'];
   T.dapde = {
     name: 'Người Đắp Đê',
     notes: [
@@ -745,29 +749,30 @@ module.exports = (L) => {
       'Đặc trưng (PROMPT-GEN-LAI.txt:972 · PROMPT-DUNG-XUONG.txt:258): NỮ nông dân ~40 chắc khoẻ hông rộng, áo nâu bùn, quần chàm xắn ống dính bùn,',
       'sọt đất bên hông — KHÔNG giáp, KHÔNG mũ trụ; cầm XẺNG gỗ bản dẹt (⚠ không giáo/chĩa; game look = axe); NÓN LÁ vàng rơm.',
       'PHÁ CÁCH (DANH-SACH): NGƯỜI BÙN — người phụ nữ đắp bằng bùn đê nâu (váy bùn, búi tóc bùn), bùn nhễu giọt ở tay, rơm lẫn trong thân.',
+      'tuong-pixel-ro (phân biệt tướng): mặt / tay để DA NGƯỜI lấm bùn, quần CHÀM lộ rõ, NÓN LÁ to vàng rơm, XẺNG lưỡi sắt.',
     ],
     fade: [['dat', 'dat-toi'], ['dat-sang', 'dat']],
     draw(g, p) {
       const BUN = ['dat-toi', 'dat', 'dat-sang'];
       hero(g, p, {
-        build: 'normal', skin: BUN,
-        legs: { pant: BUN, pantRows: 3 },
+        build: 'normal', skin: M.da,   // tuong-pixel-ro: da người lấm bùn (áo/váy bùn nâu) — khác vỏ dừa Sọ Dừa / ma cây Thợ Săn
+        legs: { pant: M.cham, pantRows: 3 },   // tuong-pixel-ro: quần CHÀM xắn ống lộ rõ (khác các tướng nâu)
         body(g, b, p) {
-          const pts = torsoPts(b).concat(spans(b.t1 - 1, [[11, 20], [11, 20], [10, 20], [10, 21], [10, 21]]));   // váy bùn hông rộng
+          const pts = torsoPts(b).concat(spans(b.t1 - 1, [[11, 20], [11, 20], [10, 21]]));   // váy bùn hông rộng (ngắn, lộ quần chàm)
           g.shade(pts, BUN);
           [[13, 1], [17, 3], [12, 6], [18, 7], [15, 9]].forEach(([x, dy]) => { g.set(x, b.t0 + dy, 'cat'); g.set(x + 1, b.t0 + dy - 1, 'vang-sang'); });   // rơm
-          for (let x = 10; x <= 21; x += 3) g.set(x, b.t1 + 4, 'dat-toi');   // giọt nhễu ở gấu váy
+          for (let x = 10; x <= 21; x += 3) g.set(x, b.t1 + 2, 'dat-toi');   // giọt nhễu ở gấu váy
           g.set(b.B[0] - 1, b.B[1] + 7 + (p.alt ? 1 : 0), 'dat');   // bùn nhỏ giọt ở tay
           g.ascii(7, b.t1 - 3, ['tggt', 'cGcG', 'GcGc', 'cGcG', '.tt.']);   // sọt đất bên hông
         },
-        face: { brow: 'dat-toi', eyeW: 'cat' },
+        face: { brow: 'khoi' },
         hair(g, b) {
           g.ascii(b.hx - 2, b.hy + 2, ['.ttt', 'tggt', 'tgt.', '.t..']);   // búi tóc bùn sau gáy
-          g.ascii(b.hx - 2, b.hy - 4, NON);
+          g.ascii(b.hx - 3, b.hy - 5, NON);
         },
         front(g, b, p) {
           pole(g, b, p, { len: 8, back: 3, m: M.go, el: 'tho',
-            reserve: 6, art: { up: { at: [2, 6], rows: ['cccGt', 'cccGt', 'ccGGt', 'cGGGt', 'cGGtt', '.tgt.'] }, ur: { at: [0, 6], rows: ['..ccc.', '.cccGt', 'cccGGt', '.cGGt.', '..Gt..', '.g....', 'g.....'] } } });
+            reserve: 6, art: { up: { at: [2, 7], rows: ['bSSs', 'bSSs', 'bSsi', 'bSsi', 'Sssi', '.ti.', '.tg.'] }, ur: { at: [0, 6], rows: ['..bSS', '.bSSs', 'bSSsi', '.Ssi.', '.g...', 'g....'] } } });   // xẻng LƯỠI SẮT to
         },
       });
     },
@@ -783,7 +788,7 @@ module.exports = (L) => {
       'PHÁ CÁCH (DANH-SACH): TƯỢNG TÒ HE — cậu bé nặn bột gạo bóng loáng (nâu trâu + khăn vàng), mắt chấm mực, QUE TRE cắm dưới chân như đế.',
     ],
     draw(g, p) {
-      const BOT = ['dat', 'dat-sang', 'cat'];
+      const BOT = ['da-toi', 'hong', 'da-sang'];   // tuong-pixel-ro: bột tò he HỒNG ĐẤT (khác nâu bùn / đất sét)
       hero(g, p, {
         build: 'child', skin: BOT,
         back(g, b, p) {   // đuôi khăn bay sau lưng
@@ -1157,7 +1162,7 @@ module.exports = (L) => {
       attack: [{ arm: 'windup' }, { arm: 'raise' }, { arm: 'strike', puff: 1 }, { arm: 'follow', puff: 2 }],
     },
     draw(g, p) {
-      const AO = ['reu', 'reu-sang', 'la-sang'];
+      const AO = ['trang-xam', 'trang', 'sang'];   // tuong-pixel-ro: thân CUỐNG NẤM trắng ngà (khác áo rêu Thợ Săn); lá xanh ở gùi
       const CUONG = ['dat-sang', 'cat', 'vang-sang'];
       hero(g, p, {
         build: 'old', skin: CUONG,
