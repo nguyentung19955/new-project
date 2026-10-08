@@ -68,6 +68,77 @@ function pxFrame(e, i) {
   pxFrames.set(key, c);
   return c;
 }
+// ---- LÀM MƯỢT MỨC 7 (claude/ve-lai-pixel, người dùng chọn): tướng / quái / boss vẽ trên sân + chân dung cả người được làm mượt lúc hiển thị:
+// sel-out (viền đen ngoài → tông tối của mảng kề) → Scale2x (EPX) 3 lần (×8, bo tròn bậc chéo, giữ màu) → thu nhỏ trung bình ×2 (mép pha màu thật)
+// → khung ×4 vẽ có làm mịn. Nguồn / ảnh pixel gốc giữ nguyên (đường dự phòng). Tắt: Cài đặt "Làm mượt: Tắt" (ttv.pxmuot = '0') · ?muot=0.
+const PX_MUOT = (() => {
+  try {
+    if (/[?&]muot=0\b/.test(location.search)) return false;
+    if (/[?&]muot=1\b/.test(location.search)) return true;
+    let v = null; try { v = localStorage.getItem('ttv.pxmuot'); } catch (e) { /* chặn lưu */ }
+    return v !== '0';
+  } catch (e) { return true; }
+})();
+const PX_MUOT_NHOM = new Set(['tuong', 'quai', 'boss']);
+function pxMuotCanvas(src) {
+  const w = src.width, h = src.height, d = src.getContext('2d').getImageData(0, 0, w, h).data;
+  let W = w, H = h, a = new Uint32Array(w * h);
+  for (let i = 0; i < w * h; i++) a[i] = d[i * 4 + 3] < 128 ? 0 : ((d[i * 4] << 16) | (d[i * 4 + 1] << 8) | d[i * 4 + 2]) + 1;   // 0 = trong suốt
+  const R = (v) => ((v - 1) >> 16) & 255, G = (v) => ((v - 1) >> 8) & 255, B = (v) => (v - 1) & 255;
+  const toi = (v) => v && R(v) + G(v) + B(v) < 110;
+  // sel-out: viền tối ngoài (kề trong suốt) lấy màu mảng kề hạ còn ~45%
+  const b = a.slice(), at = (x, y) => (x < 0 || y < 0 || x >= W || y >= H ? 0 : a[y * W + x]);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const v = a[y * W + x];
+    if (!toi(v) || (at(x + 1, y) && at(x - 1, y) && at(x, y + 1) && at(x, y - 1))) continue;
+    for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]]) {
+      const k = at(x + dx, y + dy);
+      if (k && !toi(k)) { b[y * W + x] = ((Math.round(R(k) * 0.45) << 16) | (Math.round(G(k) * 0.45) << 8) | Math.round(B(k) * 0.45)) + 1; break; }
+    }
+  }
+  a = b;
+  for (let n = 0; n < 3; n++) {   // Scale2x / EPX
+    const o = new Uint32Array(W * H * 4), W2 = W * 2, g = (x, y) => (x < 0 || y < 0 || x >= W || y >= H ? 0 : a[y * W + x]);
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const P = a[y * W + x], A = g(x, y - 1), Bv = g(x + 1, y), C = g(x - 1, y), D = g(x, y + 1);
+      let e0 = P, e1 = P, e2 = P, e3 = P;
+      if (A !== D && C !== Bv) { if (C === A) e0 = A; if (A === Bv) e1 = Bv; if (C === D) e2 = C; if (D === Bv) e3 = Bv; }
+      const i = y * 2 * W2 + x * 2; o[i] = e0; o[i + 1] = e1; o[i + W2] = e2; o[i + W2 + 1] = e3;
+    }
+    a = o; W *= 2; H *= 2;
+  }
+  // thu nhỏ ×2 có trung bình (alpha nhân trước) → ×4 so với gốc
+  const w4 = W / 2, h4 = H / 2, c = document.createElement('canvas'); c.width = w4; c.height = h4;
+  const x4 = c.getContext('2d'), im = x4.createImageData(w4, h4), q = im.data;
+  for (let y = 0; y < h4; y++) for (let x = 0; x < w4; x++) {
+    let r = 0, gg = 0, bb = 0, al = 0;
+    for (const [dx, dy] of [[0, 0], [1, 0], [0, 1], [1, 1]]) { const v = a[(y * 2 + dy) * W + x * 2 + dx]; if (v) { r += R(v); gg += G(v); bb += B(v); al++; } }
+    const j = (y * w4 + x) * 4;
+    if (al) { q[j] = r / al; q[j + 1] = gg / al; q[j + 2] = bb / al; q[j + 3] = al * 63.75; }
+  }
+  x4.putImageData(im, 0, 0);
+  c.naturalWidth = w4; c.naturalHeight = h4; c.__muot = 4;
+  return c;
+}
+// khung để VẼ nhân vật: bản làm mượt (×4) khi bật, không thì khung gốc. Toạ độ nguồn nhân với img.__muot || 1.
+const pxMuotFrames = new Map();
+// ngân sách ~4 ms làm mượt mỗi khung hình (máy yếu không giật khi nhiều quái mới cùng xuất hiện): hết thì tạm vẽ khung gốc, khung sau làm tiếp
+let pxMuotTick = 0, pxMuotDung = 0;
+function pxFrameVe(e, i) {
+  if (!PX_MUOT || !PX_MUOT_NHOM.has(e.key.slice(0, e.key.indexOf('/')))) return pxFrame(e, i);
+  const key = e.key + '|' + i;
+  let c = pxMuotFrames.get(key);
+  if (c) return c;
+  const f = pxFrame(e, i);
+  if (!f) return null;
+  const now = performance.now(), tk = Math.floor(now / 16);
+  if (tk !== pxMuotTick) { pxMuotTick = tk; pxMuotDung = 0; }
+  if (pxMuotDung > 4) return f;
+  try { c = pxMuotCanvas(f); } catch (err) { c = f; }   // canvas bị chặn đọc → khung gốc
+  pxMuotDung += performance.now() - now;
+  pxMuotFrames.set(key, c);
+  return c;
+}
 // chỉ số khung trong dải: động tác + vị trí (p: 0..1 cho động tác một lần, hoặc thời gian t cho vòng lặp)
 function pxIndex(e, anim, o) {
   const a = e.anims[anim] || e.anims.idle || e.anims.walk || e.anims.main || Object.values(e.anims)[0];
@@ -87,8 +158,9 @@ function pxBlit(ctx, img, e, x, y, unit, flip, o = {}) {
   const sx = (m.a < 0 ? -1 : 1) * (flip ? -1 : 1);
   ctx.save();
   ctx.setTransform(sx, 0, 0, 1, Math.round(p.x), Math.round(p.y));
-  ctx.imageSmoothingEnabled = false;
-  PX.blits = (PX.blits || 0) + 1; PX.smooth = ctx.imageSmoothingEnabled;
+  const muot = !!img.__muot;
+  ctx.imageSmoothingEnabled = muot; if (muot) ctx.imageSmoothingQuality = 'high';
+  PX.blits = (PX.blits || 0) + 1; if (muot) PX.muot = (PX.muot || 0) + 1; else PX.smooth = ctx.imageSmoothingEnabled;
   const X = -(e.ax + 0.5) * n, Y = -(e.ay + 1) * n, W = e.w * n, H = e.h * n;
   if (o.glow) drawGlowOnly(ctx, img, X, Y, W, H, o.glow.color, o.glow.blur * k, o.glow.alpha);
   if (o.outline) drawOutlineOnly(ctx, img, X, Y, W, H, o.outline.color, o.outline.alpha, 1);
@@ -115,7 +187,7 @@ function pxDrawHero(ctx, h, x, y, o) {
   else if (o.castT > 0 && e.anims.cast) anim = 'cast';
   else if (o.swing > 0 && e.anims.attack) { anim = 'attack'; st = { p: 1 - o.swing }; }
   else if (o.win && e.anims.cast) anim = 'cast';
-  const img = pxFrame(e, pxIndex(e, anim, st));
+  const img = pxFrameVe(e, pxIndex(e, anim, st));
   if (!img) return null;   // chưa tải xong: hình cũ (chỉ trong khoảnh khắc đầu)
   const tier = look.tier || 0, asc = look.asc || 0;
   const s = (o.scale || 0.26) * TIER_SCALE[tier] * (1 + 0.04 * asc) * (look.bulk || 1);
@@ -167,7 +239,7 @@ function pxDrawEnemy(ctx, e, t, box) {
   if (e.atkT > 0 && pe.anims.attack) { anim = 'attack'; st = { p: 1 - e.atkT / 0.45 }; }
   else if (e.hitT > 0 && pe.anims.hurt) { anim = 'hurt'; st = { p: 1 - e.hitT / 0.12 }; }
   else if (e.enraged && pe.anims.rage) anim = 'rage';
-  const img = pxFrame(pe, pxIndex(pe, anim, st));
+  const img = pxFrameVe(pe, pxIndex(pe, anim, st));
   if (!img) return false;
   const d = e.def || {};
   const fxc = d.fx && typeof ENEMY_FX !== 'undefined' && ENEMY_FX[d.fx];
@@ -180,15 +252,15 @@ function pxDrawEnemy(ctx, e, t, box) {
 // biểu tượng quái (bảng đợt, bách khoa)
 function pxEnemyIcon(cv, type, pad) {
   const pe = pxEnemyEntry(type);
-  const img = pe && pxFrame(pe, pxIndex(pe, 'walk', { p: 0 }));
+  const img = pe && pxFrameVe(pe, pxIndex(pe, 'walk', { p: 0 }));
   if (!img) return false;
-  const c = cv.getContext('2d'), W = cv.width, H = cv.height;
+  const c = cv.getContext('2d'), W = cv.width, H = cv.height, m = img.__muot || 1;
   c.clearRect(0, 0, W, H);
   const [bx, by, bw, bh] = pe.bbox;
   let n = Math.min(W * (1 - pad * 2) / bw, H * (1 - pad * 2) / bh);
-  if (n >= 1) n = Math.floor(n);
-  c.imageSmoothingEnabled = false;
-  c.drawImage(img, bx, by, bw, bh, Math.round((W - bw * n) / 2), Math.round((H - bh * n) / 2), bw * n, bh * n);
+  if (n >= 1 && m === 1) n = Math.floor(n);
+  c.imageSmoothingEnabled = m > 1;
+  c.drawImage(img, bx * m, by * m, bw * m, bh * m, Math.round((W - bw * n) / 2), Math.round((H - bh * n) / 2), bw * n, bh * n);
   PX.seen.add(pe.key);
   return true;
 }
@@ -198,14 +270,15 @@ function pxHeroPortrait(cv, h, o) {
   if (!e) return false;
   const c = cv.getContext('2d'), W = cv.width, H = cv.height;
   let img, sx = 0, sy = 0, sw, sh;
-  if (o.full) { img = pxFrame(e, pxIndex(e, 'idle', { p: 0 })); if (img) [sx, sy, sw, sh] = e.bbox; }
+  let m = 1;
+  if (o.full) { img = pxFrameVe(e, pxIndex(e, 'idle', { p: 0 })); if (img) { m = img.__muot || 1; [sx, sy, sw, sh] = e.bbox; } }
   else { img = asset(pxPath(e, true), true); if (img) { sw = img.naturalWidth; sh = img.naturalHeight; } }
   if (!img) return false;
   c.clearRect(0, 0, W, H);
   let n = Math.min(W / sw, H / sh) * (o.full ? 0.94 : 1);
-  if (n >= 1) n = Math.floor(n);
-  c.imageSmoothingEnabled = false;
-  c.drawImage(img, sx, sy, sw, sh, Math.round((W - sw * n) / 2), Math.round(o.full ? H * 0.97 - sh * n : H - sh * n), sw * n, sh * n);
+  if (n >= 1 && m === 1) n = Math.floor(n);
+  c.imageSmoothingEnabled = m > 1;
+  c.drawImage(img, sx * m, sy * m, sw * m, sh * m, Math.round((W - sw * n) / 2), Math.round(o.full ? H * 0.97 - sh * n : H - sh * n), sw * n, sh * n);
   PX.seen.add(e.key);
   return true;
 }

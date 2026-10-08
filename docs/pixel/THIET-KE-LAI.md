@@ -172,3 +172,11 @@ vì mô tả dài), nút Chọn luôn sát đáy.
 - **thanh máu** tướng / quái / boss trên canvas: `pxDraw3` (js/render.js) vẽ 3 mảnh (đầu 2 / 2 / 10 điểm giữ tỉ lệ theo chiều cao);
 - **#bossbar** (HTML): `border-image` 3 mảnh, đầu 10 điểm = 16.7px ở cao 20px;
 - `khung-nguoi-choi` đã đúng tỉ lệ (`aspect-ratio` 192×66) — không cần cắt.
+
+### 12b. Người dùng chọn MỨC 7 (khử răng cưa thật) — áp trong game lúc hiển thị
+- `js/pixel.js` `pxMuotCanvas` / `pxFrameVe`: tướng / quái / boss **vẽ trên sân + chân dung cả người + icon quái** dùng khung làm mượt ×4:
+  sel-out viền đen ngoài (→ màu mảng kề ×0,45) → Scale2x / EPX 3 lần (×8) → thu nhỏ trung bình ×2 → vẽ có làm mịn.
+- **Nguồn pixel và ảnh PNG gốc giữ nguyên** (không sửa sprite của nhóm khác); `?muot=0` hoặc Cài đặt → "Làm mượt: Tắt" (`ttv.pxmuot = '0'`) = nearest như cũ.
+- Tính lười + lưu đệm từng khung, ngân sách ~4 ms/khung hình (đo: quái 32 ≈ 1 ms, tướng ≈ 5,6 ms, boss 64 ≈ 7 ms một khung trên máy test).
+- Chưa áp: ảnh `<img>` (chân dung thẻ chợ `-chan-dung.png`, icon đồ / kỹ năng), nền, cổng, khung giao diện — vẫn pixel nét.
+- Lệch QUY-CHUAN (mục 3 "phóng nearest-neighbor", bảng màu chung): mức 7 pha màu ngoài bảng — người dùng chọn 08/10.

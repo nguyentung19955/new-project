@@ -2979,6 +2979,8 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - **Làm mượt góc / đường cong**: khung nút Xuất Quân + thanh máu (canvas và thanh boss) vẽ **cắt 9 / 3 mảnh** — huy hiệu, đinh, góc không còn bị kéo méo;
   thêm khử răng cưa có chọn lọc `Ve.aa()` (sel-out + hạ tông góc bậc thang) vào bộ vẽ — **đang chờ người dùng duyệt** trên ảnh thử
   `tools/pixel/mau/ve-lai/aa-thu-tanvien-x8.png` / `-x3.png` trước khi áp cho sprite.
+- **Làm mượt MỨC 7 (người dùng chọn)**: tướng / quái / boss trên sân, chân dung cả người, icon quái được làm mượt lúc hiển thị (sel-out → Scale2x ×3 → trung bình,
+  mép pha màu thật). Bật mặc định; Cài đặt → Hình pixel → **Làm mượt: Bật/Tắt** (hoặc `?muot=0`). Ảnh / nguồn pixel gốc không đổi.
 - Các mã vẽ lại gỡ khỏi `tools/pixel/spec/*.json` (`tools/pixel/ve-lai/DA-VE-LAI.json`) để `--nap --ghi-de` không ghi đè.
 - **Mở rộng (chưa có tướng Tím thì khó biết mua gì):**
   - **Mục tiêu hợp thể:** bảng Hợp thể có nút ghim **Theo đuổi** trên mỗi công thức Tím/Vàng (tối đa 2, ghim thứ 3 thì bỏ cái cũ nhất; lưu ở

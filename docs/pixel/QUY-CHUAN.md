@@ -104,6 +104,8 @@ Mã hex xem palette.txt (đã chỉnh tông trầm). Màu đánh dấu `*` trong
 
 > **Đặt tên mã kỹ năng (chốt 08/10):** dùng **gạch dưới** giữa mã tướng và phím: `lactuong_q`, `giong_w`… (không dùng `giong-q`). Nhánh `pixel-ky-nang-2` phải đổi tên theo trước khi gộp.
 
+**Làm mượt mức 7 (người dùng chọn 08/10, claude/ve-lai-pixel):** tướng / quái / boss trên sân được làm mượt lúc hiển thị (js/pixel.js `pxFrameVe`) — vẫn VẼ nguồn theo quy chuẩn này (bảng màu, viền đen 1px), game tự làm mượt; tắt trong Cài đặt.
+
 Trong game: phóng **nearest-neighbor theo bội số nguyên** điểm ảnh màn hình (js/pixel.js `pxBlit`), CSS
 `image-rendering: pixelated` cho `<img>` / canvas nhỏ. Tướng cao ≈ ảnh vẽ tay cũ nên thanh máu, vòng tầm đánh giữ nguyên chỗ.
 

@@ -139,6 +139,15 @@ async function setup(page) {
     await page.evaluate(() => localStorage.removeItem('ttv.pixel'));
     await browser.close();
   }
+  {   // claude/ve-lai-pixel: ?muot=0 → tắt làm mượt, vẽ pixel nearest-neighbor như cũ
+    const { browser, page, errors } = await open(844, 390, '?pixel=1&muot=0');
+    await setup(page);
+    await page.waitForTimeout(700);
+    const s = await page.evaluate(() => ({ muot: PX_MUOT, sm: pxSmoothOff(), n: pxMuotFrames.size }));
+    ok(!s.muot && s.sm && !s.n, '?muot=0: tắt làm mượt — khung gốc, vẽ không làm mịn');
+    ok(!errors.length, 'không lỗi console (tắt làm mượt) ' + errors.join(' | '));
+    await browser.close();
+  }
   {
     const { browser, page, errors } = await open(844, 390, '?pixel=0');
     await setup(page);
@@ -157,7 +166,7 @@ async function setup(page) {
     await page.waitForTimeout(200);
     const s = await page.evaluate(() => ({ on: pixelOn(), seen: [...PX.seen], cls: document.documentElement.className,
       head: heroImgUrl('giong', 'head'), old: window.__OLD, headOld: window.__OLD ? heroImgUrl(window.__OLD, 'head') : '', kim: elIcon('kim'), hoa: elIcon('hoa'), item: itemIcon('riu_dong', 'common'), itemLoai: (() => { const id = Object.keys(ITEMS).find((k) => ITEMS[k].slot === 'weapon' && ITEMS[k].wclass === 'blade' && !ITEMS[k].set && !PIXEL_MANIFEST['do/' + k]); return id ? itemIcon(id, 'common') : 'pixel/do/do_riu_thuong.png'; })(), sk: skillIcon('giong', 0), skNew: skillIcon('xathu', 0), itemBo: itemIcon('long_truong'), vang: coin(),
-      sm: pxSmoothOff() }));
+      sm: pxSmoothOff(), muot: PX_MUOT && PX.muot > 0 && [...pxMuotFrames.values()].some((c) => c.__muot === 4) }));
     ok(s.on && /pixel/.test(s.cls), `[${tag}] bật pixel bằng ?pixel=1`);
     for (const k of ['tuong/giong', 'tuong/tanvien', 'tuong/chodo', 'tuong/lactuong', 'quai/tom', 'quai/casau']) ok(s.seen.includes(k), `[${tag}] vẽ pixel: ${k}`);
     ok(!s.old || !s.seen.includes('tuong/' + s.old), `[${tag}] mã chưa có pixel (${s.old || '—'}) giữ hình cũ`);
@@ -168,7 +177,7 @@ async function setup(page) {
     ok(/pixel\/icon\/vang\.png/.test(s.vang), `[${tag}] đồng vàng pixel`);
     ok(/pixel\/ky-nang\/giong_q\.png/.test(s.sk) && /pixel\/ky-nang\/xathu_q\.png/.test(s.skNew), `[${tag}] icon kỹ năng pixel (giong_q vẽ tay đổi tên, xathu_q sinh bằng tool)`);
     ok(s.seen.includes('ban-do/song1'), `[${tag}] nền bản đồ pixel ban-do/song1 (ô đặt tướng đồng nhất, trang trí xa đường)`);
-    ok(s.sm, `[${tag}] ảnh pixel vẽ không làm mịn (nearest-neighbor)`);
+    ok(s.muot, `[${tag}] làm mượt mức 7 (mặc định bật): tướng / quái vẽ bằng khung ×4 đã làm mượt (sel-out + Scale2x ×3 + trung bình)`);
     ok(!errors.length, `[${tag}] không lỗi console ${errors.join(' | ')}`);
     const wf = await page.evaluate(() => getComputedStyle(document.querySelector('#tb-wave')).fontFamily);
     ok(!/VT323/.test(wf), `[${tag}] "Đợt N · …" không dùng font số đều VT323 (${wf})`);

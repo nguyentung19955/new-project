@@ -1456,11 +1456,13 @@ class UI {
     return `<div class="tg metal" id="pxgoi-row"><div><b>Hình pixel</b><small id="pxgoi-st">${PXGOI.status()}</small></div>
           <div style="margin-left:auto;display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end">
           <button class="btn ${on ? 'btn-gold' : 'metal'}" ${bt} data-act="pxg-bat" title="Tắt để dùng hình vẽ cũ · tải lại trang để áp dụng">${on ? 'Pixel: Bật' : 'Pixel: Tắt (hình cũ)'}</button>
+          ${on ? `<button class="btn ${PX_MUOT ? 'btn-gold' : 'metal'}" ${bt} data-act="pxg-muot" title="Làm mượt viền tướng / quái (mức 7) · tải lại trang để áp dụng">${PX_MUOT ? 'Làm mượt: Bật' : 'Làm mượt: Tắt'}</button>` : ''}
           <button class="btn metal" ${bt} data-act="pxg-nap">Nạp gói (.zip)</button>
           ${has ? `<button class="btn metal" ${bt} data-act="pxg-go">Gỡ gói</button>` : ''}</div></div>`;
   }
   async pxGoiAct(act) {
     if (act === 'pxg-bat') { PXGOI.setPixel(!pixelOn()); location.reload(); return; }
+    if (act === 'pxg-muot') { try { localStorage.setItem('ttv.pxmuot', PX_MUOT ? '0' : '1'); } catch (e) { /* chặn lưu */ } location.reload(); return; }
     if (act === 'pxg-go') {
       try { await PXGOI.remove(); this.toast('Đã gỡ gói pixel — dùng lại hình sẵn có'); } catch (e) { this.toast('Không gỡ được: ' + e.message, '#FF8A6A'); }
       this.renderSettings(); return;
@@ -3616,7 +3618,7 @@ class UI {
       case 'fba-note': case 'fba-note-x': case 'fba-note-ok': case 'fba-del': case 'fba-del-x': case 'fba-del-ok': case 'fba-st':
         this.fbaAct(d); break;
       case 'set-feedback': this.showFeedback(this.settingsInGame ? 'tam-dung' : 'cai-dat'); break;
-      case 'pxg-bat': case 'pxg-nap': case 'pxg-go': this.pxGoiAct(d.act); break;
+      case 'pxg-bat': case 'pxg-muot': case 'pxg-nap': case 'pxg-go': this.pxGoiAct(d.act); break;
       case 'set-close':
         $('#settings').hidden = true;
         if (this.menuStale) { this.menuStale = false; if (!$('#menu').hidden) this.showMenu(); }
