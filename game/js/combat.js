@@ -826,7 +826,7 @@
           if (z.team === 'player') {
             if (z.rain) {
               z.tick = 0.15;
-              for (const e of G.targets()) if (Math.hypot(e.x - z.x, (e.y - z.y) * 1.6) < z.r + e.r) playerHit(e, 0.5, { w: z.w, ranged: true, rain: true });
+              for (const e of G.targets()) if (Math.hypot(e.x - z.x, (e.y - z.y) * 1.6) < z.r + e.r) playerHit(e, G.MOVES && G.MOVES.bow.rain ? G.MOVES.bow.rain.mult : 0.5, { w: z.w, ranged: true, rain: true });
               const rx = z.x + G.rr(-30, 30), ry = z.y + G.rr(-12, 12); // vẫn rút hai số ngẫu nhiên như trước
               FX('rainDrop', rx, ry, z.el);
             } else {

@@ -56,7 +56,7 @@ JS = r"""
     }
   } finally { G.damage = dmg0; G.hurtPlayer = hurt0; G.rnd = Math.random; }
   const st = S.stats;
-  return { dps: dealt / secs, hurt: hurt / secs, kills: kills - 5, bad, melee: Math.round(st.melee), ranged: Math.round(st.ranged), el: st.el, marks: Math.round(S.W.marksGained) };
+  return { dps: dealt / secs, hurt: hurt / secs, kills: kills - (one ? 1 : 5), bad, melee: Math.round(st.melee), ranged: Math.round(st.ranged), el: st.el, marks: Math.round(S.W.marksGained) };
 }
 """
 

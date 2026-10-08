@@ -60,6 +60,7 @@
         const S = G.getRun();
         if (!S) break;
         if (S.idx !== idx) { if (idx >= 0) out.rooms.push([S.rooms[idx], Math.round(out.t - t0)]); idx = S.idx; t0 = out.t; }
+        if (S.won && out.bossT == null) out.bossT = Math.round(out.t - t0); // thời gian đánh trùm: tới lúc trùm gục (sau đó là đi nhặt đồ, vào cổng)
         if (S.mode === 'result' || S.mode === 'dead') {
           const P = S.P, b = S.W.boss;
           out.rooms.push([S.rooms[idx], Math.round(out.t - t0)]);

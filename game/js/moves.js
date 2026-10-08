@@ -24,9 +24,10 @@
     sword: {
       gap: 0.45, // ngừng bấm quá lâu thì chuỗi về đầu
       chain: [
-        { name: 'Chém ngang', dur: 0.3, mult: 0.9, reach: 32, depth: 20 },
-        { name: 'Chém ngược', dur: 0.3, mult: 0.95, reach: 34, depth: 20 },
-        { name: 'Nhát kết', dur: 0.46, mult: 1.7, reach: 40, depth: 30, push: 10, heavy: true, finish: 1 },
+        // Sửa góp ý 3: kiếm nhanh nhất, tầm ngắn, mỗi nhát nhẹ: ra tay nhanh hơn 0,3 -> 0,27 giây (nhát kết 0,46 -> 0,43).
+        { name: 'Chém ngang', dur: 0.27, mult: 0.9, reach: 32, depth: 20 },
+        { name: 'Chém ngược', dur: 0.27, mult: 0.95, reach: 34, depth: 20 },
+        { name: 'Nhát kết', dur: 0.43, mult: 1.7, reach: 40, depth: 30, push: 10, heavy: true, finish: 1 },
       ],
       glide: { name: 'Nhát lướt', win: 0.35, len: 30, t: 0.12, mult: 1.4 }, // đánh ngay sau khi Né
     },
@@ -36,17 +37,23 @@
       // nock, nockX: tên sinh ra cách chân bé bấy nhiêu điểm ảnh theo hướng bắn (chỗ dây cung); z0: độ cao lúc rời dây cung,
       // hạ dần về zFly. hitX, hitY: vùng trúng rộng hơn thân quái bấy nhiêu điểm ảnh theo ngang và theo chiều sâu.
       lead: 0.85, nock: 8, nockX: 3, z0: 16, zFly: 11, hitX: 5, hitY: 8,
-      shot: { name: 'Bắn', still: 0.4, move: 0.47, mult: 1, speed: 290, range: 180, pierce: 1, pierceMult: 0.75 }, // tên thường xuyên thêm 1 quái, con sau chỉ nhận 0,75 lần
-      charge: { name: 'Tên mạnh', time: 0.75, min: 0.3, slow: 0.55, mult0: 1.2, mult1: 3.0, speed: 340, range: 250, recover: 0.5, pierce: [1, 2, 4] }, // pierce: số quái xuyên thêm khi đà thấp, trên 60%, đầy
+      rain: { mult: 0.28 }, // mưa tên (đòn Đặc biệt): mỗi đợt mưa (0,15 giây một đợt, chừng 6 đợt) gây bấy nhiêu lần lên mỗi quái trong vùng
+      // Sửa góp ý 3: cung bắn nhanh hơn chút (0,4 -> 0,38 giây khi đứng yên), mỗi phát mạnh hơn (G.WTYPES.bow.dmg 9 -> 11) nhưng
+      // đánh cụm yếu đi: tên thường xuyên qua thì con sau 0,75 -> 0,35 lần; tên mạnh xuyên tối đa 2 quái (trước 4), mỗi con sau
+      // nhận 0,6 lần con trước; mưa tên mỗi đợt 0,5 -> 0,28.
+      shot: { name: 'Bắn', still: 0.38, move: 0.45, mult: 1, speed: 290, range: 180, pierce: 1, pierceMult: 0.35 }, // tên thường xuyên thêm 1 quái, con sau chỉ nhận 0,35 lần
+      charge: { name: 'Tên mạnh', time: 0.75, min: 0.3, slow: 0.55, mult0: 1.2, mult1: 3.0, speed: 340, range: 250, recover: 0.5, pierce: [1, 1, 2], pierceMult: 0.6 }, // pierce: số quái xuyên thêm khi đà thấp, trên 60%, đầy; pierceMult: con sau nhận bấy nhiêu lần con trước
     },
     spear: {
       gap: 0.45,
       chain: [
         // Ghép: giáo sống dài gần 60 điểm ảnh nên tầm đâm nới từ 54-56 lên 60-62, vòng quét từ 40 lên 44 cho khớp hình.
-        { name: 'Đâm', dur: 0.34, mult: 0.85, reach: 60, depth: 12 },
-        { name: 'Đâm', dur: 0.3, mult: 0.85, reach: 60, depth: 12 },
-        { name: 'Đâm', dur: 0.3, mult: 0.85, reach: 62, depth: 12 },
-        { name: 'Quét vòng', dur: 0.5, mult: 1.5, r: 44, push: 8, heavy: true, sweep: true, finish: 1 },
+        // Sửa góp ý 3: giáo ở giữa kiếm và búa: ra tay chậm hơn kiếm (0,34/0,3/0,3 -> 0,38/0,34/0,34; quét 0,5 -> 0,52)
+        // nên mỗi nhát mạnh hơn kiếm (đâm 0,85 -> 0,95; quét 1,5 -> 1,6).
+        { name: 'Đâm', dur: 0.38, mult: 0.95, reach: 60, depth: 12 },
+        { name: 'Đâm', dur: 0.34, mult: 0.95, reach: 60, depth: 12 },
+        { name: 'Đâm', dur: 0.34, mult: 0.95, reach: 62, depth: 12 },
+        { name: 'Quét vòng', dur: 0.52, mult: 1.6, r: 44, push: 8, heavy: true, sweep: true, finish: 1 },
       ],
       // giữ rồi thả: lao một đoạn ngắn xuyên qua quái (đòn Đặc biệt "Lao tới" thì dài hơn và làm choáng)
       charge: { name: 'Xốc tới', time: 0.5, min: 0.3, slow: 0.6, len0: 30, len1: 58, t: 0.16, mult0: 1.0, mult1: 2.2, depth: 12 },
@@ -315,7 +322,7 @@
     const o = { kind: 'banManh', name: ch.name, pose: 2, charge: c };
     begin(P, w, o, ch.recover, 0.45); // dây cung đã căng sẵn: buông tên ngay
     P.hitDone = true;
-    shoot(P, w, { mult: ch.mult0 + (ch.mult1 - ch.mult0) * c, speed: ch.speed, range: ch.range * (0.7 + 0.3 * c), pierce: full ? ch.pierce[2] : c > 0.6 ? ch.pierce[1] : ch.pierce[0], big: true, charged: c });
+    shoot(P, w, { mult: ch.mult0 + (ch.mult1 - ch.mult0) * c, speed: ch.speed, range: ch.range * (0.7 + 0.3 * c), pierce: full ? ch.pierce[2] : c > 0.6 ? ch.pierce[1] : ch.pierce[0], pierceMult: ch.pierceMult, big: true, charged: c });
     swingFx(P, w, o, { charge: c });
   }
 

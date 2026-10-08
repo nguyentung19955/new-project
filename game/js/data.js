@@ -17,9 +17,12 @@
 
   G.WTYPES = {
     sword: { name: 'Kiếm', dmg: 10, cd: 0.36, reach: 32, depth: 17, special: 'Chém lướt' },
-    bow: { name: 'Cung', dmg: 9, cd: 0.5, ranged: true, special: 'Mưa tên' },
+    // Sửa góp ý 3 (càng chậm hoặc càng phải áp sát thì mỗi đòn càng mạnh): cung 9 -> 11 mỗi phát (vẫn dưới kiếm) nhưng tên xuyên và
+    // mưa tên yếu đi hẳn (G.MOVES.bow), để cung an toàn nhất có sát thương mỗi giây thấp nhất, cả khi đánh một con lẫn cả cụm;
+    // búa 23 -> 22 (vẫn mạnh nhất mỗi đòn).
+    bow: { name: 'Cung', dmg: 11, cd: 0.5, ranged: true, special: 'Mưa tên' },
     spear: { name: 'Giáo', dmg: 11, cd: 0.44, reach: 56, depth: 12, special: 'Lao tới' },
-    hammer: { name: 'Búa', dmg: 23, cd: 0.8, reach: 32, depth: 25, stagger: 0.4, special: 'Nện đất' },
+    hammer: { name: 'Búa', dmg: 22, cd: 0.8, reach: 32, depth: 25, stagger: 0.4, special: 'Nện đất' },
   };
   G.WKEYS = ['sword', 'bow', 'spear', 'hammer'];
   // BỐN BẬC MÀU của vũ khí (thay ba bậc Sắt, Bạc, Linh cũ). mult: hệ số sát thương gốc; maxStage: mốc tiến hóa cao nhất

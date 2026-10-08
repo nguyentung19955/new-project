@@ -94,9 +94,9 @@ JS = r"""
     ok('Cung: giương đủ lâu thì đầy', P.mv.charge === 1 && P.mv.level === 1, P.mv.charge);
     P.face = 1; run(1, {});
     const pr = W.projs.find((o) => o.team === 'player');
-    ok('Cung: thả ra bắn tên mạnh gấp 3, xuyên 4 quái', pr && pr.big && near(pr.mult, 3, 0.01) && pr.pierce === 4 && P.mv.kind === 'banManh', pr ? pr.mult + '/' + pr.pierce : 'không có tên');
+    ok('Cung: thả ra bắn tên mạnh gấp 3, xuyên thêm 2 quái (sửa góp ý 3: trước là 4)', pr && pr.big && near(pr.mult, 3, 0.01) && pr.pierce === 2 && P.mv.kind === 'banManh', pr ? pr.mult + '/' + pr.pierce : 'không có tên');
     sec(0.6, {});
-    ok('Cung: tên mạnh xuyên qua cả ba quái đứng thẳng hàng', lost(a) > 0 && lost(b) > 0 && lost(c3) > 0 && near(lost(c3) / base(), 3, 0.01), [a, b, c3].map((q) => (lost(q) / base()).toFixed(1)).join('/'));
+    ok('Cung: tên mạnh xuyên qua cả ba quái đứng thẳng hàng, mỗi con sau nhận 0,6 lần con trước', lost(a) > 0 && lost(b) > 0 && lost(c3) > 0 && near(lost(a) / base(), 3, 0.01) && near(lost(c3) / base(), 3 * 0.6 * 0.6, 0.01), [a, b, c3].map((q) => (lost(q) / base()).toFixed(1)).join('/'));
     room('bow'); e = dummy(300);
     sec(0.3, { atk: true }); run(1, {}); sec(0.5, {});
     ok('Cung: giương chưa tới thì thả ra chỉ là tên thường', near(lost(e) / base(), 1, 0.01), (lost(e) / base()).toFixed(2));
@@ -118,7 +118,7 @@ JS = r"""
     ok('Cung: tên chạm tường thì mất, không bay ra lề màn hình', amax <= W.geo.fx1 + 8 && W.projs.length === 0, amax.toFixed(0));
     room('bow'); const p1 = dummy(240), p2 = dummy(262), p3 = dummy(284);
     tap(); sec(0.9, {});
-    ok('Cung: tên thường xuyên thêm 1 quái, con sau nhận 0,75 lần; con thứ ba không trúng', near(lost(p1) / base(), 1, 0.01) && near(lost(p2) / base(), 0.75, 0.01) && lost(p3) === 0, [p1, p2, p3].map((q) => (lost(q) / base()).toFixed(2)).join('/'));
+    ok('Cung: tên thường xuyên thêm 1 quái, con sau nhận 0,35 lần (sửa góp ý 3: trước 0,75); con thứ ba không trúng', near(lost(p1) / base(), 1, 0.01) && near(lost(p2) / base(), 0.35, 0.01) && lost(p3) === 0, [p1, p2, p3].map((q) => (lost(q) / base()).toFixed(2)).join('/'));
     room('bow'); const q1 = dummy(250, 190 + 30);
     tap(); sec(0.9, {});
     ok('Cung: tên ngắm chéo được, trúng quái đứng lệch dọc 30 điểm ảnh ở cách 50', near(lost(q1) / base(), 1, 0.01), (lost(q1) / base()).toFixed(2));
@@ -132,9 +132,9 @@ JS = r"""
       sd.push((h0 - e.hp) / base());
     }
     ok('Giáo: bấm liên tiếp ra ba nhát đâm rồi quét vòng', sn.join() === 'Đâm0,Đâm1,Đâm2,Quét vòng3', sn.join());
-    ok('Giáo: đâm xa (trúng quái cách 56 điểm ảnh) 0,85 lần; quét vòng không với tới quái đó', near(sd[0], 0.85, 0.01) && near(sd[2], 0.85, 0.01) && sd[3] === 0, sd.map((x) => x.toFixed(2)).join('/'));
-    ok('Giáo: đâm hẹp, không trúng quái đứng lệch 18 điểm ảnh theo chiều sâu; quét vòng thì trúng', near(lost(side) / base(), 1.5, 0.01), (lost(side) / base()).toFixed(2));
-    ok('Giáo: quét vòng trúng cả quái sau lưng và hất nó ra', near(lost(back) / base(), 1.5, 0.01) && near(back.x, 168, 0.5), (lost(back) / base()).toFixed(2) + ' x=' + back.x);
+    ok('Giáo: đâm xa (trúng quái cách 56 điểm ảnh) 0,95 lần (sửa góp ý 3: trước 0,85); quét vòng không với tới quái đó', near(sd[0], 0.95, 0.01) && near(sd[2], 0.95, 0.01) && sd[3] === 0, sd.map((x) => x.toFixed(2)).join('/'));
+    ok('Giáo: đâm hẹp, không trúng quái đứng lệch 18 điểm ảnh theo chiều sâu; quét vòng thì trúng (1,6 lần)', near(lost(side) / base(), 1.6, 0.01), (lost(side) / base()).toFixed(2));
+    ok('Giáo: quét vòng trúng cả quái sau lưng và hất nó ra', near(lost(back) / base(), 1.6, 0.01) && near(back.x, 168, 0.5), (lost(back) / base()).toFixed(2) + ' x=' + back.x);
     room('spear'); const l1 = dummy(225), l2 = dummy(245);
     sec(0.16 + 0.5 + 0.05, { atk: true });
     ok('Giáo: giữ nút thì thu giáo lấy đà đầy sau 0,5 giây', P.mv.holding && P.mv.charge === 1, P.mv.charge);
