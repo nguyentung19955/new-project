@@ -1,0 +1,29 @@
+# Hồi máu — mầm lá non nhú lên (sức sống Mộc), không dùng trái tim.
+name: Hồi máu
+size: 9x9
+anchor: 4,8
+colors:
+  k = la-toi
+  g = la-ma
+  l = la-sang
+  s = la
+part a
+.........
+..gg.....
+.glg..gg.
+..gsg.gl.
+....ss...
+....s....
+....s....
+.........
+.........
+end
+anim main fps=3 loop
+frame main
+  use a 0 1
+  outline k
+end
+frame main
+  use a
+  outline k
+end

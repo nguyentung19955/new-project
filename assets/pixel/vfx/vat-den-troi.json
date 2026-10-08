@@ -1,0 +1,25 @@
+{
+ "code": "vat-den-troi",
+ "group": "vfx",
+ "name": "Đèn trời",
+ "w": 12,
+ "h": 14,
+ "ax": 6,
+ "ay": 7,
+ "bbox": [
+  1,
+  0,
+  10,
+  13
+ ],
+ "n": 2,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 2,
+   "fps": 6,
+   "loop": true
+  }
+ },
+ "sheet": "vat-den-troi.png"
+}

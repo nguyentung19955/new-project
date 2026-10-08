@@ -146,8 +146,8 @@ async function setup(page) {
       head: heroImgUrl('giong', 'head'), old: window.__OLD, headOld: window.__OLD ? heroImgUrl(window.__OLD, 'head') : '', kim: elIcon('kim'), hoa: elIcon('hoa'), item: itemIcon('riu_dong', 'common'), itemBo: itemIcon('long_truong'), vang: coin(),
       sm: pxSmoothOff() }));
     ok(s.on && /pixel/.test(s.cls), `[${tag}] bật pixel bằng ?pixel=1`);
-    for (const k of ['tuong/giong', 'tuong/tanvien', 'tuong/chodo', 'tuong/lactuong', 'quai/tom', 'nen/co', 'nen/nuoc']) ok(s.seen.includes(k), `[${tag}] vẽ pixel: ${k}`);
-    ok((!s.old || !s.seen.includes('tuong/' + s.old)) && !s.seen.includes('quai/casau'), `[${tag}] mã chưa có pixel (${s.old || '—'}, casau) giữ hình cũ`);
+    for (const k of ['tuong/giong', 'tuong/tanvien', 'tuong/chodo', 'tuong/lactuong', 'quai/tom', 'quai/casau', 'nen/co', 'nen/nuoc']) ok(s.seen.includes(k), `[${tag}] vẽ pixel: ${k}`);
+    ok(!s.old || !s.seen.includes('tuong/' + s.old), `[${tag}] mã chưa có pixel (${s.old || '—'}) giữ hình cũ`);
     ok(/pixel\/tuong\/giong-chan-dung\.png/.test(s.head) && !/pixel\//.test(s.headOld), `[${tag}] chân dung giao diện: giong pixel, ${s.old || '—'} hình cũ`);
     ok(/pixel\/icon\/hanh-kim\.png/.test(s.kim) && /pixel\/icon\/hanh-hoa\.png/.test(s.hoa), `[${tag}] icon ngũ hành pixel (Kim vẽ tay, Hỏa sinh bằng tool)`);
     // claude/xuat-goi-pixel: icon đồ theo loại × độ hiếm / theo mã món, tiền vàng — sinh bằng tool (tools/pixel/spec)

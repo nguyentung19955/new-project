@@ -1,0 +1,25 @@
+{
+ "code": "may-doc",
+ "group": "vfx",
+ "name": "Mây độc",
+ "w": 16,
+ "h": 8,
+ "ax": 8,
+ "ay": 5,
+ "bbox": [
+  0,
+  1,
+  16,
+  6
+ ],
+ "n": 2,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 2,
+   "fps": 3,
+   "loop": true
+  }
+ },
+ "sheet": "may-doc.png"
+}

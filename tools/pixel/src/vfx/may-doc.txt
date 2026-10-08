@@ -1,0 +1,34 @@
+# Mây độc sát đất — chướng khí xanh rêu lẫn tím quanh chân quái trúng độc.
+name: Mây độc
+size: 16x8
+anchor: 8,5
+colors:
+  k = la-toi
+  g = reu
+  d = la
+  p = tim
+part a
+................
+....gg....gg....
+..ggddgggpddgg..
+.gdddpgdddddpdg.
+..gggddggddggg..
+................
+end
+part b
+................
+.....gg....gg...
+..ggpddggddddg..
+.gddddgdpdddddg.
+..ggddggggdggg..
+................
+end
+anim main fps=3 loop
+frame main
+  use a 0 1
+  outline k
+end
+frame main
+  use b 0 1
+  outline k
+end

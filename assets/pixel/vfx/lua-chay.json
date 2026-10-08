@@ -1,0 +1,25 @@
+{
+ "code": "lua-chay",
+ "group": "vfx",
+ "name": "Lửa bỏng",
+ "w": 10,
+ "h": 14,
+ "ax": 5,
+ "ay": 13,
+ "bbox": [
+  0,
+  0,
+  10,
+  14
+ ],
+ "n": 3,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 3,
+   "fps": 8,
+   "loop": true
+  }
+ },
+ "sheet": "lua-chay.png"
+}

@@ -1,0 +1,25 @@
+{
+ "code": "lac-tu",
+ "group": "vfx",
+ "name": "Lạc Tử",
+ "w": 8,
+ "h": 12,
+ "ax": 4,
+ "ay": 11,
+ "bbox": [
+  0,
+  1,
+  8,
+  11
+ ],
+ "n": 2,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 2,
+   "fps": 4,
+   "loop": true
+  }
+ },
+ "sheet": "lac-tu.png"
+}

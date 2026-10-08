@@ -1,0 +1,25 @@
+{
+ "code": "giong-bay",
+ "group": "vfx",
+ "name": "Gióng bay",
+ "w": 16,
+ "h": 20,
+ "ax": 8,
+ "ay": 10,
+ "bbox": [
+  1,
+  0,
+  14,
+  17
+ ],
+ "n": 2,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 2,
+   "fps": 8,
+   "loop": true
+  }
+ },
+ "sheet": "giong-bay.png"
+}

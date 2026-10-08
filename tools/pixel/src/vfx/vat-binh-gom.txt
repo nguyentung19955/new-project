@@ -1,0 +1,44 @@
+# Bình gốm ném (Thợ Gốm) — bình đất nung nâu đỏ, dải hoa văn đồng; xoay 4 khung.
+name: Bình gốm
+size: 12x12
+anchor: 6,6
+colors:
+  k = dat-toi
+  d = dat
+  D = dat-sang
+  o = dong-sang
+  s = son
+part a
+............
+....dddd....
+.....DD.....
+....dDDd....
+...dDDDdd...
+..dDoooodd..
+..dDsososd..
+..dDoooodd..
+..ddddddd...
+...ddddd....
+............
+............
+end
+anim main fps=10 loop
+frame main
+  use a
+  outline k
+end
+frame main
+  use a
+  rot 90
+  outline k
+end
+frame main
+  use a
+  rot 180
+  outline k
+end
+frame main
+  use a
+  rot 270
+  outline k
+end

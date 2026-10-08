@@ -1,0 +1,25 @@
+{
+ "code": "cay-da",
+ "group": "vfx",
+ "name": "Cây Đa Thần",
+ "w": 28,
+ "h": 30,
+ "ax": 14,
+ "ay": 29,
+ "bbox": [
+  0,
+  0,
+  28,
+  26
+ ],
+ "n": 2,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 2,
+   "fps": 2,
+   "loop": true
+  }
+ },
+ "sheet": "cay-da.png"
+}

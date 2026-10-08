@@ -1,0 +1,25 @@
+{
+ "code": "dan-thuy",
+ "group": "vfx",
+ "name": "Đạn hệ Thủy",
+ "w": 14,
+ "h": 9,
+ "ax": 9,
+ "ay": 4,
+ "bbox": [
+  0,
+  0,
+  14,
+  9
+ ],
+ "n": 2,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 2,
+   "fps": 8,
+   "loop": true
+  }
+ },
+ "sheet": "dan-thuy.png"
+}

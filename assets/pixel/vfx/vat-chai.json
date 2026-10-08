@@ -1,0 +1,25 @@
+{
+ "code": "vat-chai",
+ "group": "vfx",
+ "name": "Chai ném",
+ "w": 12,
+ "h": 12,
+ "ax": 6,
+ "ay": 6,
+ "bbox": [
+  2,
+  0,
+  9,
+  11
+ ],
+ "n": 4,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 4,
+   "fps": 10,
+   "loop": true
+  }
+ },
+ "sheet": "vat-chai.png"
+}

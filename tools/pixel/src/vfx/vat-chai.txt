@@ -1,0 +1,44 @@
+# Chai sành ném (Ngư Phủ) — chai men chàm cổ hẹp, nút gỗ; xoay 4 khung.
+name: Chai ném
+size: 12x12
+anchor: 6,6
+colors:
+  k = cham-toi
+  c = cham
+  C = cham-sang
+  w = troi
+  d = dat-sang
+part a
+............
+.....dd.....
+.....cc.....
+.....cc.....
+....cCcc....
+...cCwccc...
+...cCcccc...
+...cCcccc...
+...ccccccc..
+....ccccc...
+............
+............
+end
+anim main fps=10 loop
+frame main
+  use a
+  outline k
+end
+frame main
+  use a
+  rot 90
+  outline k
+end
+frame main
+  use a
+  rot 180
+  outline k
+end
+frame main
+  use a
+  rot 270
+  outline k
+end

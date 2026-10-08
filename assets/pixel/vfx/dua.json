@@ -1,0 +1,25 @@
+{
+ "code": "dua",
+ "group": "vfx",
+ "name": "Dưa hấu",
+ "w": 10,
+ "h": 10,
+ "ax": 5,
+ "ay": 5,
+ "bbox": [
+  0,
+  0,
+  10,
+  10
+ ],
+ "n": 2,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 2,
+   "fps": 8,
+   "loop": true
+  }
+ },
+ "sheet": "dua.png"
+}

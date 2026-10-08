@@ -1,0 +1,25 @@
+{
+ "code": "len-cap",
+ "group": "vfx",
+ "name": "Lên cấp",
+ "w": 9,
+ "h": 10,
+ "ax": 4,
+ "ay": 9,
+ "bbox": [
+  0,
+  0,
+  9,
+  10
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 2,
+   "loop": true
+  }
+ },
+ "sheet": "len-cap.png"
+}

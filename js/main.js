@@ -24,6 +24,7 @@ game.speed = 1;
 window.game = game;
 
 let view = { scale: 1, dpr: 1 };
+let PLAY_TOP = -1e9;
 let mapImg = null;
 
 // Diện tích thật sự dùng được: trừ phần đệm vùng an toàn của trang (tai thỏ, thanh home)
@@ -105,6 +106,8 @@ function resize() {
   canvas.width = Math.round(w * dpr);
   canvas.height = Math.round(h * dpr);
   view = { scale, dpr, ox, oy };
+  // mép trên vùng chơi (đơn vị logic): đáy thanh trên — quái bay / boss cao không vẽ lọt dưới thanh
+  PLAY_TOP = (($('#topbar') || {}).offsetHeight || 40) * HZ * DK - oy;
   ui.scale = scale;
   mapImg = mapImage(Math.round(CONFIG.W * scale * dpr), Math.round(CONFIG.H * scale * dpr), game.level);
 }
@@ -356,6 +359,7 @@ function render() {
   }
 
   // vẽ theo trục y để vật thể phía dưới đè lên phía trên
+  if (VFX.frame) VFX.frame();   // hạn mức ảnh trạng thái mỗi khung
   const drawables = [
     ...game.enemies.map((e) => ({ y: e.y + (e.def.flying ? 40 : 0), draw: () => drawEnemy(ctx, e, t, { px: px() }) })),
     ...game.heroes.filter((h) => h && !(dragging && h.slot === dragging.from))
@@ -363,6 +367,7 @@ function render() {
   ].sort((a, b) => a.y - b.y);
   drawables.forEach((d) => d.draw());
   drawGuard(t);
+  drawEventFog(t);
 
   // hệ hạt: vệt đuôi + quầng sáng đạn, nổ khi trúng, hạt của chiêu
   const vdt = Math.min(0.05, Math.max(0, t - (render.lastT || t)));
@@ -374,6 +379,24 @@ function render() {
   VFX.draw(ctx);
   if (dragging) drawDragGhost(dragging, dropSlot, t);
   else drawFuseMarks(t);
+}
+
+// vo-tan-su-kien: Sương Mù Lam Chướng — các mảng sương trôi chậm phủ bản đồ (đậm theo mức giảm tầm)
+function drawEventFog(t) {
+  const f = game.fogNow ? game.fogNow() : 0;
+  if (!f) return;
+  ctx.save();
+  ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.filter = 'none'; ctx.shadowBlur = 0;
+  ctx.fillStyle = `rgba(196,212,220,${0.1 + f * 0.6})`;        // lớp màn mỏng phủ cả bản đồ
+  ctx.fillRect(-200, -200, CONFIG.W + 400, CONFIG.H + 400);
+  const a = Math.min(0.75, 0.45 + f * 1.5);
+  for (let i = 0; i < 12; i++) {
+    const x = ((i * 157 + t * (10 + i * 3)) % (CONFIG.W + 500)) - 250, y = 60 + ((i * 97) % (CONFIG.H - 100)), r = 170 + (i % 3) * 60;
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+    g.addColorStop(0, `rgba(222,232,236,${a})`); g.addColorStop(0.55, `rgba(214,226,230,${a * 0.45})`); g.addColorStop(1, 'rgba(214,226,230,0)');
+    ctx.fillStyle = g; ctx.fillRect(x - r, y - r, r * 2, r * 2);
+  }
+  ctx.restore();
 }
 
 // cỡ vẽ (px) của ảnh đạn vẽ tay theo loại
@@ -391,6 +414,8 @@ function drawProjectile(p, t) {
     ctx.translate(p.x, p.y);
     ctx.rotate(p.angle || 0);
   }
+  // claude/vfx-kenney: đạn pixel (js/vfx.js, sprite tools/pixel/src/vfx/) — không có sprite thì ảnh vẽ tay / code như cũ
+  if (VFX.drawProj && VFX.drawProj(ctx, p, t)) { ctx.restore(); return; }
   // v153: đạn vẽ tay assets/fx/dan_<loại>.png (docs/PROMPT-HIEU-UNG.txt phần D) — chưa có ảnh thì vẽ bằng code như cũ
   const pk = PROJ_IMG[p.kind] ? p.kind : 'fireball';
   // v175: chưa có ảnh riêng của loại đạn thì dùng đạn theo hệ của tướng bắn (assets/fx/dan-<hệ>.png, docs/PROMPT-CAN-GEN.txt)
@@ -473,6 +498,7 @@ function drawProjectile(p, t) {
 function drawZones(t) {
   for (const z of game.zones) {
     const k = Math.min(1, z.ttl / 0.4, (z.max - z.ttl) / 0.25);
+    if (typeof VFX !== 'undefined' && VFX.px && VFX.px.zone(ctx, z, t)) continue;   // claude/vfx-pixel-2: vùng đất pixel (js/vfx.js)
     ctx.save();
     ctx.globalAlpha = Math.max(0, k);
     if (z.kind === 'fire') {
@@ -551,6 +577,8 @@ function drawBlocks(t) {
         rrect(ctx, x, y, 12, 11, 1, (r + c) % 2 ? '#8A7046' : '#A08458');
         ctx.strokeStyle = '#2A1F12'; ctx.lineWidth = 1; ctx.strokeRect(x, y, 12, 11);
       }
+    } else if (typeof VFX !== 'undefined' && VFX.px && VFX.px.lacTu(ctx, p, t, k)) {
+      // claude/vfx-pixel-2: đàn Lạc Tử pixel (js/vfx.js)
     } else if (asset('trieu-hoi_lac-tu.png')) {
       // ảnh vẽ tay Lạc Tử: 7 đứa đứng thành 2 hàng
       const img = asset('trieu-hoi_lac-tu.png');
@@ -749,7 +777,7 @@ function drawHeroOnMap(h, t) {
   // chấm hành
   circle(ctx, h.x + 28.5, h.y - 12, 3.2, '#0D0B08');
   circle(ctx, h.x + 28.5, h.y - 12, 2.4, ELEMENTS[HEROES[h.type].el].color);
-  if (h.stunT > 0) {
+  if (h.stunT > 0 && !(typeof VFX !== 'undefined' && VFX.px && VFX.px.heroStun(ctx, h.x, top - 6, t))) {
     for (let i = 0; i < 3; i++) {
       const a = t * 5 + (i * Math.PI * 2) / 3;
       drawStar(ctx, h.x + Math.cos(a) * 12, top - 16 + Math.sin(a) * 4, 3.5, '#F2D27A');
@@ -839,6 +867,7 @@ function drawHeroStun(h, top, t) {
     ctx.beginPath(); ctx.moveTo(h.x - 4, y - 4); ctx.lineTo(h.x + 4, y + 4); ctx.moveTo(h.x + 4, y - 4); ctx.lineTo(h.x - 4, y + 4); ctx.stroke();
   }
   if (!(h.stunT > 0)) return;
+  if (typeof VFX !== 'undefined' && VFX.px && VFX.px.heroStun(ctx, h.x, top - 6, t)) return;   // claude/vfx-pixel-2: chim Lạc + xoáy khí
   for (let i = 0; i < 3; i++) {
     const a = t * 5 + (i * Math.PI * 2) / 3;
     drawStar(ctx, h.x + Math.cos(a) * 12, top - 16 + Math.sin(a) * 4, 3.5, '#F2D27A');
@@ -1114,6 +1143,8 @@ function drawEffects(t) {
     const p = 1 - k;         // 0 -> 1
     ctx.save();
     ctx.globalAlpha = Math.max(0, Math.min(1, k * 1.5));
+    // claude/vfx-kenney: hiệu ứng pixel (js/vfx.js VFX.drawFx) trước; loại chưa có bản pixel → ảnh vẽ tay / code như cũ
+    if (VFX.drawFx && VFX.drawFx(ctx, f, p, t)) { ctx.restore(); continue; }
     // v153: hiệu ứng trước chỉ vẽ bằng code (phần D docs/PROMPT-HIEU-UNG.txt) — có ảnh thì dùng ảnh
     if (drawFxArt(f, p, t)) { ctx.restore(); continue; }
     // hiệu ứng vẽ tay (dải khung hình trong assets/vfx/) nếu có

@@ -34,7 +34,8 @@ function pxEntry(group, code) {
   if (!e.key) e.key = group + '/' + code;
   return e;
 }
-const pxEnemyEntry = (type) => pxEntry('quai', type) || pxEntry('boss', type);
+// Giao Long Con đổi màu theo hành (e.el: hoa / tho → quai/giaolong-hoa|-tho; thuy hoặc chưa có → giaolong)
+const pxEnemyEntry = (type, e) => (type === 'giaolong' && e && e.el && pxEntry('quai', 'giaolong-' + e.el)) || pxEntry('quai', type) || pxEntry('boss', type);
 // đường dẫn ảnh (trong assets/) — dùng cho <img>
 const pxPath = (e, cd) => `pixel/${e.key}${cd ? '-chan-dung' : ''}.png`;
 const pxUrl = (group, code, cd) => { const e = pxEntry(group, code); return e && hasAsset(pxPath(e, cd)) ? assetSrc(pxPath(e, cd)) : ''; };
@@ -134,12 +135,15 @@ function pxDrawHero(ctx, h, x, y, o) {
 }
 
 // ---- QUÁI / BOSS: kích thước (enemyBox) + vẽ (drawEnemy, sau khi đã dịch / lật / nhún)
-function pxEnemyBox(e, w, k) {
-  const pe = pxEnemyEntry(e.type);
+// hOld: chiều cao hình cũ → khớp chiều cao đó (giữ tỉ lệ), không rộng quá 1,15× rộng cũ; 0 = theo rộng
+function pxEnemyBox(e, w, k, hOld) {
+  const pe = pxEnemyEntry(e.type, e);
   if (!pe) return null;
-  const unit = w / Math.max(8, pe.bbox[2]);
-  const h = (pe.ay + 1 - pe.bbox[1]) * unit;
-  return { w, h, ay: h, k, px: pe, unit };
+  const hp = pe.ay + 1 - pe.bbox[1];
+  let unit = w / Math.max(8, pe.bbox[2]);
+  if (hOld > 0) unit = Math.min(hOld / hp, unit * 1.15);
+  const h = hp * unit;
+  return { w: Math.max(8, pe.bbox[2]) * unit, h, ay: h, k, px: pe, unit };
 }
 function pxDrawEnemy(ctx, e, t, box) {
   const pe = box.px;
@@ -151,9 +155,11 @@ function pxDrawEnemy(ctx, e, t, box) {
   if (!img) return false;
   const d = e.def || {};
   const fxc = d.fx && typeof ENEMY_FX !== 'undefined' && ENEMY_FX[d.fx];
-  pxBlit(ctx, img, pe, 0, 0, box.unit, false, { glow: fxc ? { color: fxc.glow, blur: fxc.blur * 0.6, alpha: 0.9 } : null, flash: e.hitT > 0 && !pe.anims.hurt ? e.hitT / 0.12 * 0.55 : 0 });
+  const u = pxBlit(ctx, img, pe, 0, 0, box.unit, false, { glow: fxc ? { color: fxc.glow, blur: fxc.blur * 0.6, alpha: 0.9 } : null, flash: e.hitT > 0 && !pe.anims.hurt ? e.hitT / 0.12 * 0.55 : 0 });
   PX.seen.add(pe.key);
-  return true;
+  // hộp hình thật đã vẽ (điểm ảnh làm tròn theo màn hình), so với chân (chưa lật): cao trên chân, rộng, lệch tâm ngang, đáy dưới chân
+  const [bx, by, bw, bh] = pe.bbox;
+  return { h: (pe.ay + 1 - by) * u, w: bw * u, dx: (bx + bw / 2 - pe.ax - 0.5) * u, db: (by + bh - pe.ay - 1) * u };
 }
 // biểu tượng quái (bảng đợt, bách khoa)
 function pxEnemyIcon(cv, type, pad) {

@@ -1,0 +1,25 @@
+{
+ "code": "nuoc-ban",
+ "group": "vfx",
+ "name": "Nước bắn",
+ "w": 14,
+ "h": 10,
+ "ax": 7,
+ "ay": 8,
+ "bbox": [
+  1,
+  2,
+  12,
+  6
+ ],
+ "n": 3,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 3,
+   "fps": 10,
+   "loop": false
+  }
+ },
+ "sheet": "nuoc-ban.png"
+}

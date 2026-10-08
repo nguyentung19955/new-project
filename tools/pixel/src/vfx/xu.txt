@@ -1,0 +1,46 @@
+# Đồng xu lỗ vuông (tiền đồng cổ) — xoay 2 khung, rơi khi hạ quái / rương.
+name: Đồng xu
+size: 10x10
+anchor: 5,5
+colors:
+  k = dong-toi
+  d = dong
+  y = vang-nghe
+  Y = vang-sang
+part a
+..........
+...yyyy...
+..yYyyyd..
+.yYy..ydd.
+.yy....dd.
+.yy....dd.
+.yYy..ydd.
+..yyyydd..
+...dddd...
+..........
+end
+part b
+..........
+....yy....
+....Yd....
+....yd....
+....yd....
+....yd....
+....yd....
+....yd....
+....dd....
+..........
+end
+anim main fps=8 loop
+frame main
+  use a
+  set 4 4 k
+  set 5 4 k
+  set 4 5 k
+  set 5 5 k
+  outline k
+end
+frame main
+  use b
+  outline k
+end
