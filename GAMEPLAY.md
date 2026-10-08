@@ -2607,6 +2607,8 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
   `vo-tan` (chờ thông báo "Phó bản đã gộp"), `vo-tan-su-kien` (chờ banner boss hiện hẳn), `sua-loi-tester` L05 (chờ thông báo trượt vào xong rồi mới đo đè), `ve-pixel/nap-goi` (chờ gỡ gói xong). `vo-tan-su-kien` gọi `ui.clearBanners()` trước khi thử banner (banner cũ còn trong hàng đợi đè banner boss khi máy chậm), giữ banner boss hiện tới lúc đo, đo trước rồi mới chụp; `vo-tan` chờ thông báo (nhánh chính đã ghi lại thông báo vào `window.__T`).
 - `tests/run-all.js`: chạy song song (≥ 2 luồng) mà có test lỗi → xong cả bộ thì chạy lại RIÊNG từng test lỗi một lần (không `CHAY_SONG_SONG`);
   đạt → `CHẬP CHỜN` (không tính lỗi, in danh sách cuối bảng để sửa tiếp), vẫn lỗi → `LỖI`. Tắt bằng `--khong-chay-lai`.
+- `xem-gop-y` (lỗi cố định sau khi nhánh chính đổi emoji sang icon pixel `<img alt>`): đọc ô `.fba-note` thay vì tìm chữ "📝",
+  đo nút chữ của nút "Góp ý nhận được" thay vì `firstChild` (nay là `<img>` icon).
 - `tu-cu-dong`: so FPS ảnh đơn / nhiều khung chỉ kiểm khi chạy riêng; chạy song song (`CHAY_SONG_SONG=1`) thì in tham khảo.
 - **Lỗi game phát hiện (chưa sửa, chỉ báo):** trong trận, khi ô kỹ năng khác đổi trạng thái hồi chiêu / mana thì `updateDeck` dựng lại
   cả thanh tướng; nếu việc này rơi vào 0,35 giây đang giữ tay (hoặc 0,15 giây rê chuột) thì ô cũ đã rời trang → mô tả **không hiện**
