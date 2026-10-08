@@ -221,6 +221,11 @@ function pxMapGround(x, m, kind, k) {
   x.save();
   x.fillStyle = grass;
   x.fillRect(0, 0, CONFIG.W, CONFIG.H);
+  if (typeof drawShapeUnder === 'function') {
+    const water = m.ferry && (kind === 'nuoc' ? road : pxTilePattern(x, 'nuoc', unit * k));
+    if (water && water !== road) water.setTransform(inv);
+    drawShapeUnder(x, m, water);
+  }   // núi giữa / sông của bến đò (claude/ban-do-moi)
   const L = (typeof PATH_LOOK !== 'undefined' && PATH_LOOK[kind]) || { w: 42, edge: 54 };
   x.lineCap = 'round'; x.lineJoin = 'round';
   // mọi nhánh (chianhanh, haicong…): viền của mọi nhánh trước rồi mới lòng đường → chỗ chia / nhập nhánh liền một mảng
@@ -233,6 +238,7 @@ function pxMapGround(x, m, kind, k) {
   x.stroke();
   // cầu ở chỗ đường tự cắt (caucheo) — dùng lại cầu của đường vẽ tay (js/maps.js)
   if (m.bridge && typeof drawBridge === 'function') for (const [cx, cy, a] of pathCrossings(lanes[0])) drawBridge(x, cx, cy, a, kind);
+  if (typeof drawShapeOver === 'function') drawShapeOver(x, m, lanes[0]);
   x.restore();
   return true;
 }

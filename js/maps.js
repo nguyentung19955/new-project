@@ -267,6 +267,80 @@ function strokePts(x, pts, w, style, dash) {
   x.setLineDash([]);
 }
 
+// ---- claude/ban-do-moi: cảnh riêng của dạng đường (vẽ cả ở nền vẽ tay lẫn nền pixel)
+// dưới đường: ngọn núi giữa (vòng quanh núi — ô đặt tướng nằm trên sườn), dòng sông ngang qua (bến đò)
+function drawShapeUnder(x, m, water) {
+  const W = (v) => v * DK;
+  if (m.mount) {
+    const [cx, cy, rx, ry] = m.mount.map(W);
+    x.save();
+    x.fillStyle = 'rgba(0,0,0,0.28)'; x.beginPath(); x.ellipse(cx + W(6), cy + W(8), rx, ry, 0, 0, 7); x.fill();
+    // chân núi: đồi cỏ hai lớp
+    x.fillStyle = '#4E6A34'; x.strokeStyle = '#2E401C'; x.lineWidth = W(2);
+    x.beginPath(); x.ellipse(cx, cy, rx, ry, 0, 0, 7); x.fill(); x.stroke();
+    x.fillStyle = '#5E7C3C'; x.beginPath(); x.ellipse(cx, cy - ry * 0.12, rx * 0.8, ry * 0.7, 0, 0, 7); x.fill();
+    // ba ngọn đá: mặt sáng / mặt tối, đỉnh phủ tuyết
+    const peak = (px, h, w) => {
+      const by = cy + ry * 0.25, ty = by - h;
+      x.fillStyle = '#7A7258'; x.strokeStyle = '#2E2A20'; x.lineWidth = W(2);
+      x.beginPath(); x.moveTo(px - w, by); x.lineTo(px - w * 0.15, ty); x.lineTo(px + w * 0.1, ty + h * 0.06); x.lineTo(px + w, by); x.closePath(); x.fill(); x.stroke();
+      x.fillStyle = '#5A5444';
+      x.beginPath(); x.moveTo(px - w * 0.15, ty); x.lineTo(px + w * 0.1, ty + h * 0.06); x.lineTo(px + w, by); x.lineTo(px + w * 0.05, by); x.closePath(); x.fill();
+      x.fillStyle = '#F0EEE4';
+      x.beginPath(); x.moveTo(px - w * 0.15, ty); x.lineTo(px - w * 0.4, ty + h * 0.3); x.lineTo(px - w * 0.18, ty + h * 0.24); x.lineTo(px, ty + h * 0.34); x.lineTo(px + w * 0.1, ty + h * 0.06); x.closePath(); x.fill();
+      x.fillStyle = '#3E5426';   // chân ngọn có cây bụi
+      for (const k of [-0.7, -0.2, 0.4, 0.8]) { x.beginPath(); x.arc(px + w * k, by - W(2), W(6), 0, 7); x.fill(); }
+    };
+    peak(cx - rx * 0.42, W(58), W(46));
+    peak(cx + rx * 0.4, W(52), W(44));
+    peak(cx, W(84), W(60));
+    x.restore();
+  }
+  if (m.ferry) {
+    const [a, b] = m.ferry.map(W), mid = (a + b) / 2, hw = (b - a) / 2;
+    x.save();
+    const wave = (k, y) => mid + Math.sin(y / W(60) + k) * W(10);
+    const band = (w, fill) => {
+      x.fillStyle = fill; x.beginPath();
+      for (let y = W(40); y <= CONFIG.H + 10; y += 10) x.lineTo(wave(0, y) - w, y);
+      for (let y = CONFIG.H + 10; y >= W(40); y -= 10) x.lineTo(wave(1.3, y) + w, y);
+      x.closePath(); x.fill();
+    };
+    band(hw + W(8), '#8A7650');      // bờ đất
+    band(hw - W(2), water || '#2C6F8E');      // nước (nền pixel: ô nước pixel)
+    if (!water) band(hw * 0.45, 'rgba(120,200,230,0.35)');
+    x.restore();
+  }
+}
+// trên đường: đò ngang (sàn tre + dây chão hai bên) ở đoạn qua sông
+function drawShapeOver(x, m, lanePts) {
+  if (!m.ferry || !lanePts) return;
+  const W = (v) => v * DK, [a, b] = m.ferry.map(W);
+  const seg = lanePts.filter(([px]) => px >= a - W(6) && px <= b + W(6));
+  if (seg.length < 2) return;
+  const [x0, y0] = seg[0], [x1, y1] = seg[seg.length - 1], ang = Math.atan2(y1 - y0, x1 - x0), len = Math.hypot(x1 - x0, y1 - y0);
+  x.save(); x.translate((x0 + x1) / 2, (y0 + y1) / 2); x.rotate(ang);
+  // dây chão căng qua sông (cọc hai bờ)
+  for (const sd of [-1, 1]) {
+    x.strokeStyle = '#C9A85A'; x.lineWidth = W(1.6); x.setLineDash([W(4), W(3)]);
+    x.beginPath(); x.moveTo(-len / 2 - W(14), sd * W(30)); x.lineTo(len / 2 + W(14), sd * W(30)); x.stroke(); x.setLineDash([]);
+    x.fillStyle = '#5A3E1E';
+    for (const e of [-1, 1]) { x.beginPath(); x.arc(e * (len / 2 + W(14)), sd * W(30), W(3.2), 0, 7); x.fill(); }
+  }
+  // hai con đò ngang (thân gỗ, sàn tre) trên lòng sông
+  for (const k of [-0.22, 0.24]) {
+    const ox = k * len, bl = Math.min(W(58), len * 0.4), bw = W(26);
+    x.fillStyle = 'rgba(0,0,0,0.3)'; x.beginPath(); x.ellipse(ox + W(3), W(5), bl / 2, bw / 2, 0, 0, 7); x.fill();
+    x.fillStyle = '#6E4A22'; x.strokeStyle = '#2E1E0E'; x.lineWidth = W(1.6);
+    x.beginPath(); x.moveTo(ox - bl / 2, 0); x.quadraticCurveTo(ox - bl / 2 + W(6), -bw / 2, ox, -bw / 2); x.quadraticCurveTo(ox + bl / 2 - W(6), -bw / 2, ox + bl / 2, 0);
+    x.quadraticCurveTo(ox + bl / 2 - W(6), bw / 2, ox, bw / 2); x.quadraticCurveTo(ox - bl / 2 + W(6), bw / 2, ox - bl / 2, 0); x.closePath(); x.fill(); x.stroke();
+    x.fillStyle = '#B08A4E'; x.fillRect(ox - bl * 0.32, -bw * 0.3, bl * 0.64, bw * 0.6);
+    x.strokeStyle = 'rgba(70,46,20,0.7)'; x.lineWidth = W(1);
+    for (let t = -bl * 0.32 + W(4); t < bl * 0.32; t += W(5)) { x.beginPath(); x.moveTo(ox + t, -bw * 0.3); x.lineTo(ox + t, bw * 0.3); x.stroke(); }
+  }
+  x.restore();
+}
+
 // vẽ đường đi (tĩnh) vào ngữ cảnh x đang ở hệ tọa độ game
 function drawThemedPath(x, id) {
   const m = MAPS[id] || MAPS.song1, kind = pathKind(m.theme), L = PATH_LOOK[kind];
@@ -291,6 +365,7 @@ function drawThemedPath(x, id) {
   G.forEach((g, i) => drawPathDetails(x, id, m, kind, L, g, i ? (px, py) => laneShared(G, i, px, py) : null, i));
   // cầu tre ở chỗ đường tự cắt (đoạn đi sau nằm trên cầu)
   if (m.bridge) for (const [cx, cy, a] of pathCrossings(G[0].pts)) drawBridge(x, cx, cy, a, kind);
+  drawShapeOver(x, m, G[0].pts);
 }
 // chi tiết hai mép một nhánh (rải theo quãng đường, cố định theo hạt giống bản đồ); skip(px, py): bỏ đoạn trùng nhánh trước
 function drawPathDetails(x, id, m, kind, L, g, skip, lane) {
@@ -369,6 +444,23 @@ function drawEntry(x, id) {
     if (starts.every(([qx, qy]) => Math.hypot(qx - sx, qy - sy) > 40)) { starts.push([sx, sy]); drawEntryOne(x, g, m); }
   }
 }
+// cổng giặc giữa bản đồ (cổng ba phía — claude/ban-do-moi): hai cột gỗ, mái cong, lòng cổng tối, quay theo hướng đường
+function drawGateArch(x, px, py, a, kind) {
+  const W = (v) => v * DK, half = PATH_LOOK[kind].edge / 2 * DK + W(4);
+  x.save(); x.translate(px, py); x.rotate(a - Math.PI / 2);
+  x.fillStyle = 'rgba(0,0,0,0.35)'; x.fillRect(-half - W(2), -W(4), half * 2 + W(8), W(14));
+  x.fillStyle = '#1A120A'; x.beginPath(); x.ellipse(0, 0, half - W(4), W(9), 0, 0, 7); x.fill();
+  for (const sd of [-1, 1]) {
+    x.fillStyle = '#7A3E1E'; x.strokeStyle = '#2A160A'; x.lineWidth = W(1.5);
+    x.fillRect(sd * half - W(4), -W(10), W(8), W(22)); x.strokeRect(sd * half - W(4), -W(10), W(8), W(22));
+  }
+  x.fillStyle = '#5A2E16'; x.strokeStyle = '#2A160A'; x.lineWidth = W(1.8);
+  x.beginPath(); x.moveTo(-half - W(12), -W(10)); x.quadraticCurveTo(0, -W(4), half + W(12), -W(10)); x.lineTo(half + W(6), -W(16)); x.quadraticCurveTo(0, -W(11), -half - W(6), -W(16)); x.closePath(); x.fill(); x.stroke();
+  x.fillStyle = '#C8401E'; x.fillRect(-W(7), -W(14), W(14), W(7));   // biển cổng đỏ
+  x.restore();
+  x.fillStyle = '#FF4A2A';   // mắt giặc trong lòng cổng
+  for (const d of [-6, 6]) { x.beginPath(); x.arc(px + d, py, 2, 0, 7); x.fill(); }
+}
 // hang ngầm (đường tắt): miệng hang tối, viền đá, nơi quái chui lên
 function drawHole(x, px, py) {
   x.fillStyle = 'rgba(0,0,0,0.35)'; x.beginPath(); x.ellipse(px + 3, py + 5, 42, 22, 0, 0, 7); x.fill();
@@ -385,6 +477,7 @@ function drawHole(x, px, py) {
 function drawEntryOne(x, g, m) {
   const { len, at } = g;
   if (m.hole) { const [hx, hy] = at(0); drawHole(x, hx, hy); }
+  else { const [hx, hy, ha] = at(0); if (hx > 18 && hx < CONFIG.W - 18) { drawGateArch(x, hx, hy, ha, pathKind(m.theme)); return; } }
   let s = 0;
   for (; s < len; s += 4) { const [px, py] = at(s); if (px > 18 && py > 16 && px < CONFIG.W - 18) break; }
   const [px, py, a] = at(s + (m.hole ? 60 : 10));
@@ -473,7 +566,7 @@ function mapLayer(id, bgImg, svgImg, pw, ph) {
     x.drawImage(bgImg, 0, 0, CONFIG.W, CONFIG.H);
     if (m.shape) drawBgClean(x, bgImg, m.theme, pw);   // dạng đường mới: xoá dải hoa văn của đường cũ trên nền
   } else { x.fillStyle = (MAP_THEMES[m.theme] || MAP_THEMES.song).ground; x.fillRect(0, 0, CONFIG.W, CONFIG.H); }
-  if (!pxDone) drawThemedPath(x, id);
+  if (!pxDone) { drawShapeUnder(x, m); drawThemedPath(x, id); }
   drawEntry(x, id);
   if (gate) {
     const [ex, ey] = m.end, s = 124 * DK;
@@ -491,8 +584,9 @@ function drawPathFx(ctx, id, t) {
   const m = MAPS[id] || MAPS.song1, kind = pathKind(m.theme), L = PATH_LOOK[kind];
   const G = geomsFor(id), cross = crossingsFor(id);
   G.forEach((g, i) => {
-    const near = (px, py) => cross.some(([cx, cy]) => Math.hypot(cx - px, cy - py) < 46) || (i > 0 && laneShared(G, i, px, py));
-    drawPathFxLane(ctx, id + (i ? '#' + i : ''), kind, L, g, t, cross.length || i ? near : null);
+    const fr = m.ferry && m.ferry.map((v) => v * DK);
+    const near = (px, py) => cross.some(([cx, cy]) => Math.hypot(cx - px, cy - py) < 46) || (i > 0 && laneShared(G, i, px, py)) || (fr && px >= fr[0] - 10 && px <= fr[1] + 10);
+    drawPathFxLane(ctx, id + (i ? '#' + i : ''), kind, L, g, t, cross.length || i || fr ? near : null);
   });
 }
 function drawPathFxLane(ctx, id, kind, L, g, t, skip) {
