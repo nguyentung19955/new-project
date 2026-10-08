@@ -1,16 +1,16 @@
 {
  "code": "cong-hang",
  "group": "nen",
- "name": "miệng hang tối (cave — hang)",
- "w": 48,
- "h": 48,
- "ax": 24,
- "ay": 47,
+ "name": "Miệng hang đá",
+ "w": 64,
+ "h": 64,
+ "ax": 32,
+ "ay": 63,
  "bbox": [
   1,
-  6,
-  46,
-  37
+  5,
+  62,
+  57
  ],
  "n": 1,
  "anims": {

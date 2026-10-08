@@ -1380,7 +1380,7 @@ class UI {
         <div class="cp-tabs">${CHAPTERS.map((c, ci) => `<button class="cp-tab ${c === ch ? 'on' : ''}" data-act="cp-ch" data-i="${ci}">${c.name}</button>`).join('')}</div>
         <div class="sp"></div></div>
       <div class="cp-body">
-        <div class="cp-map"><div class="bgart">${ch.classic ? svgI(sceneArt('campaign')) : svgI(storyScene({ bg: ch.bg }))}${pxUrl2('canh', `chuong-${ch.id}`) ? `<img class="cp-bgimg${ch.classic ? '' : ' fill'}" src="${pxUrl2('canh', `chuong-${ch.id}`)}" alt="">` : hasAsset(`scenes/chuong-${ch.id}.png`) ? `<img class="cp-bgimg" src="${assetSrc(`scenes/chuong-${ch.id}.png`)}" alt="" onerror="this.remove()">` : ''}</div>
+        <div class="cp-map"><div class="bgart">${ch.classic ? svgI(sceneArt('campaign')) : svgI(storyScene({ bg: ch.bg }))}${pxUrl2('canh', `chuong-${ch.id}`) ? `<img class="cp-bgimg" src="${pxUrl2('canh', `chuong-${ch.id}`)}" alt="">` : hasAsset(`scenes/chuong-${ch.id}.png`) ? `<img class="cp-bgimg" src="${assetSrc(`scenes/chuong-${ch.id}.png`)}" alt="" onerror="this.remove()">` : ''}</div>
           ${ch.classic ? '' : `<svg class="cp-trail" viewBox="0 0 640 382" preserveAspectRatio="none"><polyline points="${NODES.map(([x, y]) => `${x},${y}`).join(' ')}" fill="none" stroke="#F2D27A" stroke-width="4" stroke-dasharray="10 8" opacity="0.8"/></svg>`}
           ${NODES.map(([x, y], kk) => { const k = ch.from + kk;
             return `<button class="cp-node ${k === i ? 'sel' : ''} ${x > 560 ? 'edge-r' : x < 80 ? 'edge-l' : ''}" style="left:${x / 640 * 100}%;top:${y / 382 * 100}%" data-act="cp-sel" data-i="${k}">
@@ -1438,7 +1438,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 238</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 241</div>
       </div></div>`;
   }
 

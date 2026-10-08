@@ -1,16 +1,16 @@
 {
  "code": "de-tuong-dat",
  "group": "nen",
- "name": "đế theo chủ đề: dat",
+ "name": "Bệ đất",
  "w": 32,
  "h": 32,
  "ax": 16,
  "ay": 31,
  "bbox": [
-  1,
-  8,
-  30,
-  21
+  2,
+  6,
+  28,
+  22
  ],
  "n": 1,
  "anims": {
