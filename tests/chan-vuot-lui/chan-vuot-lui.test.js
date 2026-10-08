@@ -75,7 +75,7 @@ const askOn = (page) => page.evaluate(() => { const e = document.getElementById(
     ok(onGame(page) && await page.evaluate(() => document.querySelector('#screen').hidden) && !(await askOn(page)), `${name} trận: Back → đóng Túi đồ, không hỏi rời trận`);
     // Rời trận
     await back(page); await page.click('#leave-ask [data-la=leave]'); await page.waitForTimeout(300);
-    ok(onGame(page) && await page.evaluate(() => !document.querySelector('#menu').hidden && !game.started), `${name} trận: Rời trận → về menu`);
+    ok(onGame(page) && await page.evaluate(() => !document.querySelector('#menu').hidden && !game.running && !!ui.save.run && /Tiếp tục/.test($('#continue-label').textContent)), `${name} trận: Rời trận → về menu, giữ trận để Tiếp tục (giu-tran-dang-choi)`);
 
     // menu: Back 1 lần hỏi, 2 lần (trong 2 giây) mới rời trang
     await page.waitForTimeout(2100);

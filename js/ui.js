@@ -718,7 +718,7 @@ class UI {
     let el = document.getElementById('leave-ask');
     if (!el) {
       $('#wrap').insertAdjacentHTML('beforeend', `<div id="leave-ask" hidden><div class="la-box metal">
-        <h2>Rời trận?</h2><p>Trận đang tạm dừng. Rời trận sẽ bỏ trận này (vẫn nhận Ngân khố theo số đợt đã qua).</p>
+        <h2>Rời trận?</h2><p>Trận đang tạm dừng. Rời trận sẽ lưu trận này — bấm Tiếp tục ở menu để chơi tiếp.</p>
         <div class="la-btns"><button class="btn-gold" data-la="stay">Ở lại</button><button class="metal la-leave" data-la="leave">Rời trận</button></div></div></div>`);
       el = $('#leave-ask');
       el.addEventListener('click', (ev) => {
@@ -726,7 +726,7 @@ class UI {
         const b = ev.target.closest('[data-la]');
         if (!b) return;
         if (b.dataset.la === 'stay') this.leaveAsk(false);
-        else { this.leaveRun = false; el.hidden = true; $('#drawer').hidden = true; this.quitRun(); }
+        else { const wr = this.leaveRun; this.leaveRun = false; el.hidden = true; $('#drawer').hidden = true; if (wr && !COOP.on) g.running = true; this.quitRun(); }   // giu-tran-dang-choi: lưu trận, Tiếp tục chạy tiếp như trước khi hỏi
       });
     }
     if (on) {

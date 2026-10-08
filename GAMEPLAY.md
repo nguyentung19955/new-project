@@ -2838,7 +2838,8 @@ Người dùng chọn phương án 4: máu quái tăng dần theo đợt + hạ 
 - Bảng Sính lễ đang mở khi lưu (đợt boss đã xong) → lưu luôn 3 lựa chọn; Tiếp tục mở lại bảng, không mất thưởng boss.
 - Thành tích trọn đời (lifeKills/lifeGold) nhớ phần đã cộng qua tải lại (`save.banked`) → Tiếp tục không cộng trùng.
 - Nút Tiếp tục 2 dòng: "Tiếp tục · Đợt N ♾" + tên vùng đất (một dòng bị cắt mất số đợt).
-- Test: `node tests/giu-tran/giu-tran.test.js` (đợt 16 màn 2: Dừng chơi giữa / sau đợt, tải lại, ẩn app, Sính lễ mở, Chơi mới).
+- Hộp **"Rời trận?"** (Back trong trận, claude/chan-vuot-lui) → Rời trận cũng lưu trận (chữ trong hộp ghi rõ), Tiếp tục chạy tiếp như trước khi hỏi. Test chan-vuot-lui cập nhật theo.
+- Test: `node tests/giu-tran/giu-tran.test.js` (đợt 16 màn 2: hộp Rời trận?, Dừng chơi giữa / sau đợt, tải lại, ẩn app, Sính lễ mở, Chơi mới).
 
 ## claude/chan-vuot-lui — Chơi trên web: vuốt không còn lỡ về trang trước
 - CSS: `html, body, #wrap` thêm `overscroll-behavior: none` (Chrome Android không vuốt ngang/kéo xuống để về trang/tải lại); `#wrap` `touch-action: none` (bảng cuộn vẫn cuộn như cũ).
