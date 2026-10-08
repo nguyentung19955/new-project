@@ -78,7 +78,7 @@ const W = 16;   // đợt 16 = màn 2 (boss đợt 10 Bến Sông Đà sang màn
   ok(s.ingame && s.wave === W && s.k === 1 && !s.wa && s.lives === 13 && s.t === s0.t, 'tải lại giữa đợt → Tiếp tục từ đầu đợt 17 (màn 2)');
 
   // 3b) Back của trình duyệt / vuốt Back trong trận = Rời trận ngay (lưu + về menu, không hỏi)
-  await page.evaluate(() => { game.running = true; history.back(); });
+  await page.evaluate(() => { game.nextWaveT = 999; game.running = true; history.back(); });   // đợt kế không tự bắt đầu trong lúc test đọc
   await page.waitForSelector('#menu:not([hidden])', { timeout: 3000 });
   ok(await page.evaluate(() => !!ui.save.run && ui.save.run.wave === 16 && !document.getElementById('leave-ask')) && lab(await label(), W), 'Back trong trận → về menu, giữ bản lưu, không hộp hỏi: ' + await label());
   await page.click('#btn-continue');
