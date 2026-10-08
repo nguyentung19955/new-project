@@ -18,7 +18,7 @@ const ctx = canvas.getContext('2d');
 }
 const wrap = $('#wrap');
 let ui;
-const game = new Game((msg, color) => ui && ui.toast(msg, color));
+const game = new Game((msg, color) => ui && ui.gameToast(msg, color));   // thông báo từ trận: bảng Hợp thể đang mở thì hoãn (ui.gameToast)
 ui = new UI(game);
 game.speed = 1;
 window.game = game;

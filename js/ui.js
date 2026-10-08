@@ -599,7 +599,7 @@ class UI {
     // goi-y-ro: gõ tìm tên (Hợp thể dựng lại vì tìm cả 2 tab; Anh Hùng / Bách khoa chỉ ẩn mục không khớp)
     document.addEventListener('input', (ev) => {
       if (!ev.target.classList || !ev.target.classList.contains('hs-q')) return;
-      (this.hsF || (this.hsF = { q: '', el: '', tier: '' })).q = ev.target.value;
+      this.hsFilt().q = ev.target.value;
       this.hsRefresh();
     });
     // v165: chạm ra ngoài bảng tài khoản thì đóng
@@ -844,6 +844,7 @@ class UI {
 
   startLevel(i) {
     const g = this.game;
+    if (this.hsFs) delete this.hsFs.lg;   // vào trận mới: ô tìm Hợp thể trống
     if (COOP.on) return this.toast('Đang chơi nhóm: thoát trận nhóm trước (≡ → Rời trận)', '#E25A3A');
     // giu-tran-dang-choi: Chơi mới đè lên trận dở (còn trong bộ nhớ hoặc bản lưu) → trận cũ tính như bỏ trận (Ngân khố / Tu Vi như trước)
     if (!(g.started && !g.over) && this.save.run && LEVELS[this.save.run.level]) { try { g.restore(this.save.run); g.endless = true; } catch (e) { g.started = false; } }
@@ -1497,6 +1498,15 @@ class UI {
   }
 
   // ---------- thông báo
+  // tester: thông báo tự sinh trong trận (Cộng hưởng…) bật lúc bảng Hợp thể mở thì đè mép bảng → hoãn tới khi đóng bảng (gom 1 thông báo)
+  gameToast(msg, color) {
+    if (!$('#legends').hidden) { (this.lgHold = this.lgHold || []).push([msg, color]); return; }
+    this.toast(msg, color);
+  }
+  flushLgHold() {
+    const H = this.lgHold || []; this.lgHold = [];
+    if (H.length) this.toast(H.map((x) => x[0]).join('<br>'), H[H.length - 1][1]);
+  }
   toast(msg, color = '#F2D27A') {
     // sua-giao-dien-10: bảng Sính lễ đang mở → thông báo (Đã hạ boss!, Rơi đồ…) chờ tới khi đóng bảng (trước đây đè tiêu đề "Vua Hùng ban thưởng")
     if ((!$('#reward').hidden && !this.toastFree) || this.toastGom) { (this.toastHold = this.toastHold || []).push([msg, color]); return; }
@@ -1558,7 +1568,7 @@ class UI {
       // cầm dọc cả game xoay 90° theo chiều kim đồng hồ (#wrap.rot): trục x giao diện → trục y màn hình, trục y → ngược trục x
       // (trước đây đổi toạ độ như màn ngang nên toast không né được banner / bảng, đè lên chữ)
       const R = [[gx - G, gy - G, gx + G, gy + G]];
-      for (const id of ['#dialogue', '#roster-hint', '#bossbar', '#banner', '#deck', '#auto-btns', '#topbar']) {
+      for (const id of ['#dialogue', '#roster-hint', '#bossbar', '#banner', '#deck', '#auto-btns', '#topbar', '#legends', '#hero-stats', '#more']) {
         const el = $(id);
         if (el.hidden || !el.offsetParent) continue;
         const d = uiBox(el.getBoundingClientRect());
@@ -2176,24 +2186,26 @@ class UI {
   }
   hideHeroTip() { const el = $('#hero-tip'); if (el) el.hidden = true; }
   // thanh tìm kiếm (ctx: chỗ dùng; tiers: có lọc bậc)
+  // tester: ô tìm / lọc riêng từng màn (Hợp thể trong trận ≠ Anh Hùng / Bách khoa) — trước đây dùng chung nên chữ tìm ở Anh Hùng sang Hợp thể
+  hsFilt() { const k = $('#legends') && !$('#legends').hidden ? 'lg' : 'ro', M = this.hsFs || (this.hsFs = {}); return M[k] || (M[k] = { q: '', el: '', tier: '' }); }
   hsBar(tiers) {
-    const f = this.hsF || (this.hsF = { q: '', el: '', tier: '' });
+    const f = this.hsFilt();
     return `<div class="hs-bar"><input class="hs-q" type="search" placeholder="Tìm tên (gõ không dấu)" value="${esc(f.q)}" autocomplete="off" spellcheck="false" enterkeyhint="search" aria-label="Tìm tướng theo tên">${Object.keys(ELEMENTS).map((e) => `<button class="hs-c ${f.el === e ? 'on' : ''}" data-act="hs-el" data-k="${e}" title="Hành ${ELEMENTS[e].name}" aria-pressed="${f.el === e}" style="--c:${ELEMENTS[e].color}">${elIcon(e, 13)}</button>`).join('')}${tiers ? [['common', 'Thường'], ['epic', 'Tím'], ['legendary', 'Vàng']].map(([k, n]) => `<button class="hs-c hs-t ${f.tier === k ? 'on' : ''}" data-act="hs-tier" data-k="${k}" aria-pressed="${f.tier === k}" style="--c:${k === 'common' ? '#C8BFA8' : RARITY[k].color}">${n}</button>`).join('') : ''}</div>`;
   }
   // đổi bộ lọc: dựng lại chỗ đang mở (Hợp thể / Anh Hùng / Bách khoa)
   hsRefresh() {
     if (!$('#legends').hidden) { this.sig.lg = null; this.renderLegends(); }
-    const f = this.hsF;
+    const f = this.hsFilt();
     for (const root of [$('#roster'), $('#screen')]) {
       if (!root || root.hidden || !root.querySelector('.hs-bar')) continue;
       for (const b of root.querySelectorAll('.hs-c')) { const on = f[b.dataset.act === 'hs-el' ? 'el' : 'tier'] === b.dataset.k; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); }
       this.hsApply(root);
     }
   }
-  hsOn() { const f = this.hsF; return !!(f && (f.q || f.el || f.tier)); }
+  hsOn() { const f = this.hsFilt(); return !!(f && (f.q || f.el || f.tier)); }
   // ẩn mục không khớp: phần tử có data-hs-t="loại1 loại2…" (khớp một loại là hiện)
   hsApply(root) {
-    const f = this.hsF || (this.hsF = { q: '', el: '', tier: '' });
+    const f = this.hsFilt();
     if (!root) return;
     let n = 0;
     for (const el of root.querySelectorAll('[data-hs-t]')) { const ok = el.dataset.hsT.split(' ').some((t) => heroHit(t, f)); el.classList.toggle('hs-off', !ok); n += ok; }
@@ -2210,7 +2222,7 @@ class UI {
     // goi-y-ro: đang tìm / lọc → tìm trong cả Tím lẫn Vàng (đúng tên ở tab kia vẫn ra)
     const list = (srch ? all : inTab).slice().sort((x, y) => y.own - x.own || y.n - x.n || y.p - x.p || x.i - y.i);
     const why = lg.why && FUSION[lg.why.i] && HEROES[FUSION[lg.why.i].to].legend === lg.tab ? lg.why : null;
-    const key = [lg.tab, lg.help, srch && JSON.stringify(this.hsF), pins.join(), st.autoPin !== false, why && why.txt, inTab.some((x) => x.own), assetVersion, ...list.map((x) => `${x.i}:${x.m.map((m) => (m.h ? (m.ok ? 2 : 1) + '.' + m.gap : 0)).join('')}${x.own ? '' : 'L'}${x.ready && x.poor ? 'P' : ''}`)].join('|');
+    const key = [lg.tab, lg.help, srch && JSON.stringify(this.hsFilt()), pins.join(), st.autoPin !== false, why && why.txt, inTab.some((x) => x.own), assetVersion, ...list.map((x) => `${x.i}:${x.m.map((m) => (m.h ? (m.ok ? 2 : 1) + '.' + m.gap : 0)).join('')}${x.own ? '' : 'L'}${x.ready && x.poor ? 'P' : ''}`)].join('|');
     if (this.sig.lg === key && el.firstElementChild && el.firstElementChild.classList.contains('hx-hd')) return;
     const foc = document.activeElement && document.activeElement.classList.contains('hs-q') && el.contains(document.activeElement);
     this.sig.lg = key;
@@ -2289,7 +2301,8 @@ class UI {
     this.checkRosterHint();
     this.updateDeck();
     this.updateCoach();
-    if (!$('#legends').hidden && (this.lgT = (this.lgT || 0) + 1) % 10 === 0) this.renderLegends();   // v170: 6 lần / giây, chỉ dựng lại khi đổi
+    if (!$('#legends').hidden && (this.lgT = (this.lgT || 0) + 1) % 10 === 0) this.renderLegends();
+    if (this.lgHold && this.lgHold.length && $('#legends').hidden) this.flushLgHold();   // v170: 6 lần / giây, chỉ dựng lại khi đổi
     // banner (boss / sự kiện đợt) nằm đúng chỗ nhãn "Đã dừng" → banner đang hiện thì nhường (banner chỉ 2,6 giây)
     $('#paused-tag').hidden = g.running || g.wave === 0 || g.over || !!this.screen || !$('#settings').hidden || !$('#banner').hidden;
     if (this.screen) {
@@ -3770,7 +3783,7 @@ class UI {
         this.pinCache = null; this.sig.deck = null; this.sig.lg = null; if (!$('#legends').hidden) this.renderLegends();
         if (d.act === 'pin-auto-off') this.toast('Đã tắt gợi ý tự động — bật lại ở bảng Hợp thể', '#C8BFA8'); break; }
       case 'pin-open': { this.openLegends(true); const i = FUSION.findIndex((f) => f.to === d.t); if (i >= 0) this.fuseFocus = { i, until: performance.now() + 6000 }; break; }
-      case 'hs-el': case 'hs-tier': { const f = this.hsF || (this.hsF = { q: '', el: '', tier: '' }), k = d.act === 'hs-el' ? 'el' : 'tier'; f[k] = f[k] === d.k ? '' : d.k; this.hsRefresh(); break; }
+      case 'hs-el': case 'hs-tier': { const f = this.hsFilt(), k = d.act === 'hs-el' ? 'el' : 'tier'; f[k] = f[k] === d.k ? '' : d.k; this.hsRefresh(); break; }
       case 'hx-open': $('#legends').hidden = true; this.showRoster(d.t, true); break;     // cho-6-the: công thức chưa mở → tới Anh Hùng
       case 'hx-card': case 'hx-fuse': {
         // chạm thẻ: đánh dấu tướng nguyên liệu trên sân (có ít nhất 1 con thì đóng bảng cho thấy dấu); nút Hợp thể: hợp luôn

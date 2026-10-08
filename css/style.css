@@ -2502,3 +2502,7 @@ input, textarea, select, #ui input, #ui textarea, #ui select { font-size: 16px !
 #rotate span { color: #E8DCC0; }
 @keyframes xoayMay { 0%, 30% { transform: rotate(0deg); } 55%, 85% { transform: rotate(-90deg); } 100% { transform: rotate(0deg); } }
 html.doc #wrap { visibility: hidden; }
+/* tester (khung cố định, máy nhỏ 667×375 thu ~0,72): chữ nhỏ ở Anh Hùng / Bách khoa (nhãn hành, vai trò, giá, lọc) tối thiểu 12px (≈ 8,6px thật) */
+:is(#roster, #screen) :is(.rl-f, .hs-t, .tag.el, .ro-card .nm, .ro-price, .rl-chip, .rl-chip b, .rl-chip span, .ev-lb, .ev-lb b, .ev-sl, .tags > span, .ev-p b) { font-size: 12px; }
+:is(#roster, #screen) .ev-p i { font-size: 10px; }
+:is(#roster, #screen) .rl-chip i { font-size: 10px; }
