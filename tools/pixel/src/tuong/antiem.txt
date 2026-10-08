@@ -2,6 +2,7 @@
 # Đặc trưng (PROMPT-GEN-LAI.txt:753 ưu tiên + PROMPT-DUNG-XUONG.txt:515): người đảo hoang ~30, da rám nắng, râu lởm chởm, búi tóc buộc
 # thừng; ÁO TƠI RƠM xù như áo choàng cỏ trên áo nâu rách, vòng cổ vỏ sò, dây buộc tím (Tím); cầm QUẢ DƯA HẤU sọc xanh ruột đỏ trên vai
 # sắp ném (KHÔNG giáo). Chiêu (Mưa Dưa): giơ dưa bổ đôi, miếng dưa đỏ rơi như mưa.
+# tuong-pixel-ro (phân biệt tướng): áo lá XANH RÊU (thay nâu) — khác Chử Đồng Tử / Ông Đùng (cùng cởi trần).
 name: Mai An Tiêm
 size: 32x32
 anchor: 15,30
@@ -13,8 +14,8 @@ colors:
   F = da
   h = da-sang
   e = trang
-  r = dat-toi
-  d = dat
+  r = reu-toi
+  d = reu
   D = dat-sang
   c = cat
   C = vang-sang
