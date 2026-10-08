@@ -81,7 +81,7 @@ function pxFrame(e, i) {
 // ---- LÀM MƯỢT MỨC 7 (claude/ve-lai-pixel, người dùng chọn): tướng / quái / boss vẽ trên sân + chân dung cả người được làm mượt lúc hiển thị:
 // sel-out (viền đen ngoài → tông tối của mảng kề) → Scale2x (EPX) 3 lần (×8, bo tròn bậc chéo, giữ màu) → thu nhỏ trung bình ×2 (mép pha màu thật)
 // → khung ×4 vẽ có làm mịn. Nguồn / ảnh pixel gốc giữ nguyên (đường dự phòng). Tắt: Cài đặt "Làm mượt: Tắt" (ttv.pxmuot = '0') · ?muot=0.
-const PX_MUOT = (() => {
+let PX_MUOT = (() => {   // let: đổi được ngay trong trận (pxSetMuot) — không cần tải lại
   try {
     if (/[?&]muot=0\b/.test(location.search)) return false;
     if (/[?&]muot=1\b/.test(location.search)) return true;
@@ -130,13 +130,35 @@ function pxMuotCanvas(src) {
   c.naturalWidth = w4; c.naturalHeight = h4; c.__muot = 4;
   return c;
 }
+// làm nóng: cắt sẵn mọi khung của sprite trong lúc máy rảnh (vài khung một lượt) → động tác mới không phải cắt giữa trận đông
+function pxLamNong(e) {
+  const rest = Array.from({ length: e.n || 1 }, (_, i) => i);
+  const idle = window.requestIdleCallback ? (f) => requestIdleCallback(f, { timeout: 500 }) : (f) => setTimeout(f, 40);
+  const step = (dl) => {
+    let k = 0;
+    while (rest.length && (dl && dl.timeRemaining ? dl.timeRemaining() > 2 : k < 4)) { pxFrameVe(e, rest.shift()); k++; }
+    if (rest.length && PX_MUOT) idle(step);
+  };
+  idle(step);
+}
+// bật / tắt làm mượt ngay (Cài đặt trong trận, tự tắt khi máy chậm): luu = ghi nhớ cho lần sau
+function pxSetMuot(on, luu) {
+  PX_MUOT = !!on;
+  if (luu) try { localStorage.setItem('ttv.pxmuot', on ? '1' : '0'); } catch (e) { /* chặn lưu */ }
+  if (typeof document !== 'undefined') document.documentElement.classList.toggle('muot', PX_ON && PX_MUOT);
+  if (typeof mapLayerCache !== 'undefined') mapLayerCache.key = '';   // nền bản đồ / cổng dựng lại theo chế độ mới
+  // tải nền ảnh của chế độ mới cho các mã đã dùng (tắt: ảnh pixel gốc — lúc bật chỉ tải bản mượt)
+  if (typeof asset === 'function') { const ks = [...new Set([...pxMuotFrames.keys()].map((k) => k.slice(0, k.indexOf('|'))))]; ks.forEach((k, j) => setTimeout(() => asset(PX_MUOT ? `pixel-muot/${k}.png` : `pixel/${k}.png`, true), j * 15)); }
+  if (typeof assetVersion !== 'undefined') assetVersion++;
+}
 // khung để VẼ nhân vật: bản làm mượt (×4) khi bật, không thì khung gốc. Toạ độ nguồn nhân với img.__muot || 1.
 const pxMuotFrames = new Map();
 // ngân sách ~4 ms làm mượt mỗi khung hình (máy yếu không giật khi nhiều quái mới cùng xuất hiện): hết thì tạm vẽ khung gốc, khung sau làm tiếp
 let pxMuotTick = 0, pxMuotDung = 0;
 function pxFrameVe(e, i) {
-  if (!PX_MUOT) return pxFrame(e, i);
   const key = e.key + '|' + i;
+  // tắt làm mượt giữa trận: khung gốc; ảnh gốc chưa tải xong thì tạm dùng khung mượt đã có (không rơi về hình vẽ cũ nặng)
+  if (!PX_MUOT) return pxFrame(e, i) || pxMuotFrames.get(key) || null;
   let c = pxMuotFrames.get(key);
   if (c) return c;
   if (e.m) {   // bản sinh sẵn khi build: cắt khung từ dải ×m — không tính gì lúc chơi
@@ -146,6 +168,7 @@ function pxFrameVe(e, i) {
     c.getContext('2d').drawImage(sheet, i * c.width, 0, c.width, c.height, 0, 0, c.width, c.height);
     c.naturalWidth = c.width; c.naturalHeight = c.height; c.__muot = e.m;
     pxMuotFrames.set(key, c);
+    if (!e.__nong) { e.__nong = 1; pxLamNong(e); }   // lần đầu thấy sprite: cắt sẵn các khung còn lại lúc máy rảnh
     return c;
   }
   // không có bản sinh sẵn (gói pixel tự nạp .zip…): tướng / quái / boss làm mượt lúc chơi, có ngân sách thời gian
@@ -180,11 +203,11 @@ function pxBlit(ctx, img, e, x, y, unit, flip, o = {}) {
   ctx.save();
   ctx.setTransform(sx, 0, 0, 1, Math.round(p.x), Math.round(p.y));
   const muot = !!img.__muot;
-  ctx.imageSmoothingEnabled = muot; if (muot) ctx.imageSmoothingQuality = 'high';
+  ctx.imageSmoothingEnabled = muot; if (muot) ctx.imageSmoothingQuality = 'low';   // bilinear: khung đã làm mượt sẵn, lọc 'high' tốn CPU máy yếu
   PX.blits = (PX.blits || 0) + 1; if (muot) PX.muot = (PX.muot || 0) + 1; else PX.smooth = ctx.imageSmoothingEnabled;
   const X = -(e.ax + 0.5) * n, Y = -(e.ay + 1) * n, W = e.w * n, H = e.h * n;
   if (o.glow) drawGlowOnly(ctx, img, X, Y, W, H, o.glow.color, o.glow.blur * k, o.glow.alpha);
-  if (o.outline) drawOutlineOnly(ctx, img, X, Y, W, H, o.outline.color, o.outline.alpha, 1);
+  if (o.outline) drawOutlineOnly(ctx, img, X, Y, W, H, o.outline.color, o.outline.alpha, img.__muot || 1);   // r tính theo điểm ảnh nguồn: khung làm mượt ×m → viền dày m điểm (= 1 ô pixel)
   ctx.drawImage(img, X, Y, W, H);
   if (o.flash > 0) {
     ctx.globalCompositeOperation = 'lighter';

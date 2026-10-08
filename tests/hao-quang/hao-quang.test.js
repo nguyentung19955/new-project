@@ -20,7 +20,7 @@ async function open(w, h, px) {
   page.on('pageerror', (e) => errors.push(String(e)));
   await page.route('**/firebase-config.js*', (rr) => rr.fulfill({ contentType: 'application/javascript', body: "const FIREBASE_CONFIG={apiKey:''};" }));
   await page.addInitScript((px) => { if (px) window.PIXEL_BAT_EP = true; localStorage.setItem('nuicao.v1', JSON.stringify({ unlocked: 17, storySeen: true, settings: { skipStory: true } })); }, px);
-  await page.goto('file://' + path.join(ROOT, 'index.html') + (px ? '' : '?pixel=0'));
+  await page.goto('file://' + path.join(ROOT, 'index.html') + (px === 'tat' ? '?muot=0' : px ? '?muot=1' : '?pixel=0'));
   await page.waitForTimeout(800);
   await page.evaluate(() => ui.playLevel(0, false));
   await page.waitForSelector('#prep:not([hidden])');
@@ -65,15 +65,18 @@ async function probe(page, type) {
 }
 
 (async () => {
-  for (const px of [false, true]) {
-    const mode = px ? 'pixel bật' : '?pixel=0';
+  const COL = {};   // claude/ve-lai-pixel: số điểm viền màu bậc theo chế độ — làm mượt không được làm mất viền (tester: 295 → 81)
+  for (const px of [false, true, 'tat']) {
+    const mode = px === 'tat' ? 'pixel, tắt làm mượt' : px ? 'pixel bật (làm mượt)' : '?pixel=0';
     console.log(`— ${mode}`);
     const { browser, page, errors } = await open(844, 390, px);
     if (px) ok(await page.evaluate(() => pixelOn() && PX.seen.has('tuong/giong')), `[${mode}] Gióng vẽ bằng pixel`);
+    if (px) ok(await page.evaluate((m) => PX_MUOT === m, px === true), `[${mode}] chế độ làm mượt đúng (${px === true ? 'bật' : 'tắt'})`);
     const n = await probe(page, 'lucsi');
     ok(n.diff === 0, `[${mode}] Thường (lucsi): không viền, không hạt (khác ${n.diff} điểm)`);
     for (const t of ['thachsanh', 'giong']) {
       const r = await probe(page, t);
+      COL[mode + t] = r.col;
       ok(r.col > 40, `[${mode}] ${t}: viền + hạt màu bậc (${r.col} điểm đúng màu / ${r.diff} điểm khác)`);
       ok(r.top >= r.spriteTop - 8, `[${mode}] ${t}: hào quang không lên quá đỉnh hình (đỉnh ${r.top} · hình ${r.spriteTop.toFixed(0)}) — không che thanh máu`);
     }
@@ -100,6 +103,10 @@ async function probe(page, type) {
     await browser.close();
   }
   // ảnh: trận có Thường / Tím / Vàng cạnh nhau
+  for (const t of ['thachsanh', 'giong']) {
+    const a = COL['pixel bật (làm mượt)' + t], b = COL['pixel, tắt làm mượt' + t];
+    ok(a >= b * 0.6, `${t}: viền màu bậc khi làm mượt ${a} điểm ≥ 60% khi tắt (${b}) — viền không bị mất`);
+  }
   for (const [w, h] of [[844, 390], [1920, 934]]) for (const px of [false, true]) {
     const { browser, page } = await open(w, h, px);
     await page.evaluate(() => { game.paused = false; });

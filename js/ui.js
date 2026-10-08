@@ -1442,6 +1442,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px">${[['auto', 'Tự động'], ['high', 'Đẹp'], ['low', 'Tiết kiệm']].map(([k, n]) => `<button class="btn ${(st.gfx || 'auto') === k ? 'btn-gold' : 'metal'}" style="height:34px;padding:0 10px;font-size:13px" data-act="set-gfx" data-k="${k}">${n}</button>`).join('')}</div></div>
         ${this.cloudRow()}
         ${inGame || typeof PXGOI === 'undefined' ? '' : this.pxGoiRow()}
+        ${inGame && typeof PX_MUOT !== 'undefined' && pixelOn() ? `<div class="tg metal"><div><b>Làm mượt hình</b><small>${typeof MUOT_AUTO !== 'undefined' && MUOT_AUTO.off ? 'Đã tự tắt vì máy chậm — bật lại nếu muốn' : 'Viền tướng, quái, cổng, khung mượt hơn · tắt nếu máy giật'}</small></div><button class="sw ${PX_MUOT ? 'on' : ''}" style="margin-left:auto" data-act="pxg-muot-tran" aria-label="Làm mượt hình"></button></div>` : ''}
         <div class="tg metal"><div><b>Góp ý</b></div>
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
@@ -1462,6 +1463,8 @@ class UI {
   }
   async pxGoiAct(act) {
     if (act === 'pxg-bat') { PXGOI.setPixel(!pixelOn()); location.reload(); return; }
+    // trong trận: đổi ngay, không tải lại; người chơi tự chọn thì không tự tắt nữa trong trận này
+    if (act === 'pxg-muot-tran') { pxSetMuot(!PX_MUOT, true); if (typeof MUOT_AUTO !== 'undefined') { MUOT_AUTO.off = false; MUOT_AUTO.tay = true; } this.renderSettings(); return; }
     if (act === 'pxg-muot') { try { localStorage.setItem('ttv.pxmuot', PX_MUOT ? '0' : '1'); } catch (e) { /* chặn lưu */ } location.reload(); return; }
     if (act === 'pxg-go') {
       try { await PXGOI.remove(); this.toast('Đã gỡ gói pixel — dùng lại hình sẵn có'); } catch (e) { this.toast('Không gỡ được: ' + e.message, '#FF8A6A'); }
@@ -3618,7 +3621,7 @@ class UI {
       case 'fba-note': case 'fba-note-x': case 'fba-note-ok': case 'fba-del': case 'fba-del-x': case 'fba-del-ok': case 'fba-st':
         this.fbaAct(d); break;
       case 'set-feedback': this.showFeedback(this.settingsInGame ? 'tam-dung' : 'cai-dat'); break;
-      case 'pxg-bat': case 'pxg-muot': case 'pxg-nap': case 'pxg-go': this.pxGoiAct(d.act); break;
+      case 'pxg-bat': case 'pxg-muot': case 'pxg-muot-tran': case 'pxg-nap': case 'pxg-go': this.pxGoiAct(d.act); break;
       case 'set-close':
         $('#settings').hidden = true;
         if (this.menuStale) { this.menuStale = false; if (!$('#menu').hidden) this.showMenu(); }

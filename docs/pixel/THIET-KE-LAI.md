@@ -187,3 +187,12 @@ vì mô tả dài), nút Chọn luôn sát đáy.
   `pxMin(img)` = vẽ có làm mịn với khung mượt. Áp: tướng / quái / boss, cổng, bệ, nền bản đồ, khung máu (pxDraw3 nhân hệ số), mọi `<img>` pixel,
   khung CSS (nút chính, khung người chơi, thanh boss — border-image cắt theo %). CSS `html.pixel.muot` bỏ `pixelated` (trừ canvas trận, tranh menu).
 - Còn nearest: ô nền 16×16 lát liền, hiệu ứng `vfx` (nhánh vfx tự tải `pixel/vfx/*`).
+
+### 12d. Sửa theo tester @1641e18 + đo FPS (844, đợt 30, 10 tướng, ~50 quái + boss, trận đang chạy)
+- Hào quang Tím/Vàng: `drawOutlineOnly` r = `img.__muot || 1` (1 ô pixel) — test hao-quang thêm chế độ làm mượt bật/tắt, viền bật ≥ 60% tắt (đo: 3569 vs 2799).
+- Công tắc **"Làm mượt hình" trong bảng Tạm dừng** (đổi ngay, không tải lại: `pxSetMuot`); tắt giữa trận dùng tạm khung mượt tới khi ảnh gốc tải xong.
+- **Tự tắt** (`MUOT_AUTO`, js/main.js): bỏ 5 s đầu trận, FPS trung bình < 40 trong 3 s → tắt cho trận đó + báo 1 lần; về menu trả lại theo Cài đặt; người chơi tự bật lại thì không tự tắt nữa.
+- Vẽ nhân vật mượt: `imageSmoothingQuality = 'low'` (bilinear — 'high' tốn CPU). Làm nóng: lần đầu thấy sprite cắt sẵn mọi khung lúc máy rảnh.
+- FPS (tắt / bật làm mượt sinh sẵn): CPU×1 58,7 / 58,9 · CPU×2 41,3 / 41,3 (x3 tốc độ: 37,8 / 36,3) · CPU×4 trung bình 16 s 18,3 / 17,7
+  (x3: 15,0 / 12,6) · 3 s đầu CPU×4 ≈ 12–17 / 9–11 (lần đầu giải mã ảnh mượt lớn hơn). Sai số giữa các lần ±2 FPS.
+  Tự tắt không làm nhanh hơn (sau khi đổi 16,1–19,5 ≈ bật) vì bản sinh sẵn gần như không tốn lúc vẽ — chỉ có ích trên máy rất yếu.

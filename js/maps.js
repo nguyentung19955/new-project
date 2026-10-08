@@ -559,7 +559,7 @@ function mapLayer(id, bgImg, svgImg, pw, ph) {
   const tex = asset(`tiles/duong-${kind}.jpg`, true), gate = gateArt(m.theme);
   const svgOk = svgImg && svgImg.complete && svgImg.naturalWidth > 0;
   const pxk = typeof pixelOn === 'function' && pixelOn() && pxEntry('nen', 'co') ? 'px' : '';
-  const key = `${id}|${pw}x${ph}|${!!bgImg}|${!!tex}|${!!gate}${gate && gate.__muot ? 'm' : ''}|${svgOk}|${pxk}`;   // khung làm mượt tải xong → dựng lại
+  const key = `${id}|${pw}x${ph}|${!!bgImg}|${!!tex}|${!!gate}${gate && gate.__muot ? 'm' : ''}|${svgOk}|${pxk}|${typeof PX_MUOT !== 'undefined' && PX_MUOT ? 'M' : ''}`;   // khung làm mượt tải xong → dựng lại
   if (mapLayerCache.key === key) return mapLayerCache.c;
   const c = !pxk && mapLayerCache.c && mapLayerCache.c.width === pw && mapLayerCache.c.height === ph ? mapLayerCache.c : document.createElement('canvas');
   c.width = pw; c.height = ph;
