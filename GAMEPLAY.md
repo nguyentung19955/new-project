@@ -2372,6 +2372,10 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 248 — sửa nút lọc vai trò bị che
+
+- Vùng chạm nới của nút lọc hành chỉ áp trong Hợp thể, không còn che hàng lọc vai trò ở Anh Hùng / Bách khoa (tester đạt).
+
 ## Phiên bản 247 — chân Cây kỹ năng không bị cắt
 
 - Dòng chân bảng Cây kỹ năng xuống dòng thay vì cắt chữ (tester đạt).
@@ -3003,3 +3007,4 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 ## claude/vo-tan-su-kien — Test báo trước sự kiện lỗi thời sau banner xếp hàng
 - Test "troibua: hết đợt 59 → báo trước" lỗi lặp trên nhánh chính: game không sai — banner "vượt qua" / "Màn N · vùng đất mới" của vòng test trước còn hiện/xếp hàng nên banner báo trước được xếp hàng (`ui.queueBanner`, không chồng). Test nay xoá hàng đợi banner (ui.clearBanners) trước mỗi sự kiện, chờ banner tới lượt (≤ 3,5 giây, trận đứng yên) rồi mới kiểm, in trạng thái banner khi lỗi, vẫn bắt buộc có báo trước.
 - (tester) Chân bảng `.foot` (Cây kỹ năng, nhất là tướng đã thăng thần ở 1920) xuống dòng thay vì cắt "…kỹ năng ma".
+- (main v247, test vai-tro) vùng chạm giả của nút lọc hành / Tự gợi ý / Theo đuổi / Mở chỉ áp trong bảng Hợp thể (`#legends`) — ở Anh Hùng / Bách khoa thanh lọc hành dùng chung nằm sát hàng lọc vai trò, `::after` che nút vai trò.
