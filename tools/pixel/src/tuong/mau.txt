@@ -1,0 +1,353 @@
+# Mẫu Thượng Ngàn (mã mau) — pixel 32×32 (tướng Vàng · hành Mộc) + chân dung riêng. Quy chuẩn: docs/pixel/QUY-CHUAN.md (mục 0 + 0b phá cách)
+# Đặc trưng (PROMPT-GEN-LAI.txt:1356 FIX ưu tiên + PROMPT-DUNG-XUONG.txt:1299): NỮ thần núi rừng (không nam), cao thanh, CỔ DÀI; áo dài lục bảo thêu rừng,
+# viền vàng; VƯƠNG MIỆN HOA hồng; cầm CÀNH HOA đang nở (không kiếm); QUẠT LÁ xanh + hoa xoè sau lưng như đuôi công.
+# Phá cách (DANH-SACH): tóc là tán lá rừng, da có vân gỗ nhẹ, chim nhỏ đậu vai, hoa nở theo bước chân; chiêu: dây leo + lá bay, hoa nở quanh chân (Mộc).
+name: Mẫu Thượng Ngàn
+size: 32x32
+anchor: 17,30
+colors:
+  k = vien
+  K = toi
+  F = da
+  h = da-sang
+  f = da-toi
+  e = trang
+  H = la-toi
+  g = la
+  G = la-ma
+  s = la-sang
+  p = hong
+  Y = vang-sang
+  y = vang-nghe
+  N = ngoc-sang
+  n = ngoc
+  D = la-toi
+  t = dat
+  T = dat-sang
+  w = trang
+  z = sang
+  r = son-sang
+
+part quat
+................................
+................................
+.......p........................
+......pYp.......................
+.......ps.......................
+.......gGs......................
+.......gGGs.....................
+...p...ggGs.....................
+..pYp...gGGs....................
+...pGsssggGs....................
+....gGGssgGss...................
+....ggGGssGGs...................
+.....ggGGssGs...................
+...p..ggGGssGs..................
+..pYpssssGGsG...................
+...pgGGGsssG....................
+.....ggGGGss....................
+......gggss.....................
+......sssGGG....................
+....psGGGGss....................
+...pYpGggssGgg..................
+....p.ggssGGg...................
+........sGGg....................
+.......sGGgg....................
+.......pGgg.....................
+......pYp.......................
+.......p........................
+................................
+................................
+................................
+end
+
+part tren
+................................
+................................
+................................
+............pYp..pYp............
+..........HHgpHggHpgHH..........
+.........HgHgggHgHgHgH..........
+........HgHgHgghhFFFFFF.........
+........gHgHghFFFfFFFFFF........
+.......HgHHghFFKKFFFFKKF........
+.......gHgHgFFFekFFFFekF........
+......HgHgHgFFFFFFFFFFFFF.......
+......gHgHgHfFFFFFFFFfFF........
+......HgHgHgHfFFFfFFfFF.........
+.....HgHgHgHgHffFFFFf...........
+.....gHgHgHgHg...hFFf...........
+......gHgHgHg....hFFf...........
+.......HgH...ynNyFFyNny.........
+............yNNnnnnnnnnDy.......
+............NNnnGnnnnnnnDD......
+............NnnnnnnnnnnnnD......
+............FhnnnnnnnnGnnDD.....
+............FFnnGnnnnnnnnnDD....
+.............NnnnnnnnnnnnnDD....
+............NnnnnnnnnnnGnnnD....
+end
+
+part chan
+............NnGnnnnnnnnnnnnD....
+...........NnnnnnnnnnnnGnnnnD...
+...........yyyyyyyyyyyyyyyyyy...
+..............ttT....ttT........
+.............tttT...tttT........
+................................
+................................
+................................
+end
+
+part vay
+............NnGnnnnnnnnnnnnD....
+...........NnnnnnnnnnnnGnnnnD...
+...........yyyyyyyyyyyyyyyyyy...
+end
+
+part canh
+.p.pYp..
+pYp.p...
+.p.t.p..
+..t.pYp.
+..t..p..
+.Gt.....
+..tG....
+..t.....
+..t.....
+..t.....
+end
+
+part canh_ngang
+......p.p.
+.....pYpYp
+ttttttGp.p
+....G.....
+end
+
+part tay
+Nn..
+nnFh
+.DFF
+end
+
+part tay_len
+.hF
+.FF
+.n.
+Nn.
+nD.
+end
+
+part tay_dam
+NnFh
+nDFF
+end
+
+part chim
+..YYr
+yYYw.
+y.t..
+end
+
+part hoa_chan
+.p.
+pYp
+.p.
+end
+
+part la_bay
+.s..G
+sG..g
+.g...
+end
+
+part day_leo
+.G..G.
+G.gG.g
+.g..g.
+end
+
+part mat_nham
+FFFFFFFFFF
+FKKFFFFKKF
+end
+
+part chan_dung
+..ppYYpp....ppYYpp........
+..ppYYpp....ppYYpp........
+HHggppHHggggHHppggHHHHpp..
+HHggppHHggggHHppggHHHHpp..
+HHggggggHHggHHggHHggHHKK..
+HHggggggHHggHHggHHggHHKK..
+ggHHgggghhhhFFFFFFFFFFFF..
+ggHHgggghhhhFFFFFFFFFFFF..
+HHgghhFFFFFFffFFFFFFFFFFFF
+HHgghhFFFFFFffFFFFFFFFFFFF
+gghhFFFFKKKKFFFFFFFFKKKKFF
+gghhFFFFKKKKFFFFFFFFKKKKFF
+ggFFFFFFeeKKFFFFFFFFeeKKFF
+ggFFFFFFeeKKFFFFFFFFeeKKFF
+ggFFFFFFFFFFFFFFFFFFFFFFFF
+ggFFFFFFFFFFFFFFFFFFFFFFFF
+HHffFFFFFFFFFFFFFFFFffFFFF
+HHffFFFFFFFFFFFFFFFFffFFFF
+ggHHffFFFFFFffFFFFffFFFF..
+ggHHffFFFFFFffFFFFffFFFF..
+YYrrHHffffFFFFFFFFff......
+YYrrHHffffFFFFFFFFff......
+eeHHggHHHHHHhhFFFFff......
+eeHHggHHHHHHhhFFFFff......
+HHggHHHHHHHHhhFFFFff......
+HHggHHHHHHHHhhFFFFff......
+ssHHyynnNNyyFFFFyyNNnnNNnn
+ssHHyynnNNyyFFFFyyNNnnNNnn
+end
+
+
+anim idle fps=3 loop
+frame idle
+  use quat 0 0
+  use chan 0 24
+  use tren
+  use chim 8 13
+  use canh 22 3
+  use tay 22 16
+  outline
+end
+frame idle
+  use quat 0 0
+  use chan 0 24
+  use tren 0 1
+  use chim 8 14
+  use canh 22 4
+  use tay 22 17
+  outline
+end
+frame idle
+  use @idle.0
+end
+
+# đánh: giơ cành hoa (lấy đà) → vung cành ra trước → cánh hoa + lá bắn trúng → thu về
+anim attack fps=10 once
+frame attack
+  use quat 0 0
+  use chan 0 24
+  use tren
+  use canh 23 2
+  use tay_len 24 11
+  outline
+end
+frame attack
+  use quat 0 0
+  use chan 0 24
+  use tren 1 0
+  use chim 9 13
+  use canh_ngang 20 13
+  use tay_dam 20 15
+  outline
+end
+frame attack
+  use quat 0 0
+  use chan 0 24
+  use tren 1 0
+  use chim 9 13
+  use canh_ngang 20 13
+  use la_bay 25 8
+  use hoa_chan 27 16
+  use tay_dam 20 15
+  outline
+end
+frame attack
+  use @idle.0
+end
+
+# chiêu (Mộc): giơ cành hoa lên trời, quạt lá sáng lên, dây leo + hoa nở quanh chân
+anim cast fps=6 loop
+frame cast
+  use quat 0 0
+  use chan 0 24
+  use tren
+  use canh 23 2
+  use tay_len 24 11
+  use hoa_chan 3 26
+  outline
+end
+frame cast
+  use quat 0 0
+  swap g G
+  use chan 0 24
+  use tren
+  use canh 23 2
+  use tay_len 24 11
+  use hoa_chan 3 26
+  use hoa_chan 26 26
+  use day_leo 4 22
+  outline
+end
+frame cast
+  use quat 0 0
+  swap G s
+  swap g G
+  use chan 0 24
+  use tren 0 1
+  use canh 23 2
+  use tay_len 24 12
+  use hoa_chan 3 25
+  use hoa_chan 26 25
+  use day_leo 4 21
+  use la_bay 24 20
+  outline
+end
+
+# trúng đòn: giật lùi, nhắm mắt, nháy sáng da
+anim hurt fps=8 once
+frame hurt
+  use quat 0 0
+  use chan -1 24
+  use tren -1 0
+  use chim 7 13
+  use canh 21 3
+  use tay 21 16
+  use mat_nham 13 8
+  swap F h
+  outline
+end
+
+# chết: khuỵu (quạt lá héo) → ngã nằm → tối
+anim die fps=5 once
+frame die
+  use quat 0 0
+  swap s G
+  swap G g
+  swap p r
+  use chan 0 24
+  use tren 0 3
+  use mat_nham 14 11
+  outline
+end
+frame die
+  use vay 0 24
+  use tren 0 3
+  use mat_nham 14 11
+  rot 90
+  shift 0 1
+  use canh_ngang 8 26
+  outline
+end
+frame die
+  use @die.1
+  swap n D
+  swap N n
+  swap G g
+  swap s G
+  swap p r
+  swap Y y
+end
+
+# chân dung riêng: đầu + vai phóng ×2 (cắt từ khung đứng): vương miện hoa, tóc tán lá, chim vàng đậu vai
+anim portrait fps=1 once
+frame portrait
+  use chan_dung 3 2
+  outline
+end

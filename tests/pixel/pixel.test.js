@@ -2,7 +2,7 @@
 // 1. tools/build-pixel.js: nguồn thật hợp lệ (--strict); nguồn lỗi (màu ngoài bảng màu, ký tự chưa khai báo, sai cỡ,
 //    thiếu động tác, tràn khung) bị chặn; dựng ra thư mục tạm: PNG đúng cỡ, JSON, manifest theo nhóm
 // 2. game ?pixel=1: không lỗi console; mã có pixel (giong · tanvien · chodo · tom · ô nền · icon ngũ hành) vẽ pixel,
-//    mã chưa có (lactuong · casau · hành Hỏa) giữ hình cũ; không bật thì không dùng pixel
+//    mã chưa có (1 tướng chưa vẽ chọn tự động · casau · hành Hỏa) giữ hình cũ; không bật thì không dùng pixel
 // 3. chụp 1920×934 · 844×390 · 667×375 · dọc 390×844 + phóng to vùng sprite → tests/pixel/shots/ (xem tận mắt)
 const path = require('path');
 const fs = require('fs');
@@ -40,6 +40,22 @@ ok(r.status === 1 && /động tác "attack" cần 3–4 khung/.test(r.stderr), '
 mk('icon', 'tran', icon('16x16', '  a = la', 'aaaa\naaaa').replace('  use o', '  use o 14 0'));
 r = check('tran');
 ok(r.status === 1 && /tràn ra ngoài khung/.test(r.stderr), 'đóng dấu tràn khung → lỗi');
+// rot với khung không vuông (lỗi báo từ vfx-kenney: trước đây TypeError) — 180 chạy được, 90 / 45 báo lỗi rõ
+const rect = (cmd) => `name: Thử\nsize: 160x90\ncolors:\n  a = la\n  b = son\npart o\nab\nend\nanim main fps=1\nframe main\n  use o 3 2\n  ${cmd}\nend\n`;
+fs.mkdirSync(path.join(tmp, 'src-rot', 'canh'), { recursive: true });
+fs.writeFileSync(path.join(tmp, 'src-rot', 'canh', 'rot-180.txt'), rect('rot 180'));
+r = spawnSync(process.execPath, [BUILD, '--src', path.join(tmp, 'src-rot'), '--out', path.join(tmp, 'rot-out'), '--quiet'], { encoding: 'utf8' });
+ok(r.status === 0 && !/TypeError/.test(r.stderr), 'rot 180 với khung không vuông (160x90) chạy được');
+const rb = fs.readFileSync(path.join(tmp, 'rot-out', 'assets/pixel/canh/rot-180.png'));
+const px = require('zlib').inflateSync(rb.subarray(rb.indexOf('IDAT') + 4, rb.indexOf('IEND') - 8));
+const at = (x, y) => px.subarray(y * (160 * 4 + 1) + 1 + x * 4, y * (160 * 4 + 1) + 1 + x * 4 + 4);
+ok(at(156, 87)[0] === 0x35 && at(155, 87)[0] === 0x92, 'rot 180: pixel (3,2)→(156,87), (4,2)→(155,87)');
+mk('canh', 'rot-90', rect('rot 90'));
+r = check('rot-90');
+ok(r.status === 1 && /không vuông/.test(r.stderr) && !/TypeError/.test(r.stderr), 'rot 90 khung không vuông → lỗi rõ, không crash');
+mk('canh', 'rot-45', rect('rot 45'));
+r = check('rot-45');
+ok(r.status === 1 && /bội của 90/.test(r.stderr), 'rot 45 → lỗi rõ');
 fs.rmSync(path.join(tmp, 'src'), { recursive: true });
 // dựng nguồn thật ra thư mục tạm (không ghi vào assets/, js/ thật)
 const out = path.join(tmp, 'out');
@@ -77,17 +93,28 @@ async function open(w, h, query) {
   await page.addInitScript(() => { localStorage.setItem('nuicao.v1', JSON.stringify({ unlocked: 17, storySeen: true, settings: { skipStory: true } })); });
   await page.goto('file://' + path.join(ROOT, 'index.html') + query);
   await page.waitForTimeout(800);
+  if (query && !open.menuShot) open.menuShot = {};
+  if (query && !open.menuShot[w]) {   // màn menu khi bật pixel: logo + nút giữ font cũ (góp ý tester)
+    open.menuShot[w] = 1;
+    await page.screenshot({ path: path.join(SHOT, `pixel-menu-${w}x${h}.png`) });
+    const f = await page.evaluate(() => ({ logo: getComputedStyle(document.querySelector('#menu-logo')).fontFamily,
+      btn: [...document.querySelectorAll('#menu button')].map((b) => getComputedStyle(b).fontFamily).join('|') }));
+    ok(!/Handjet|VT323/.test(f.logo) && !/Handjet|VT323/.test(f.btn), `[${w}x${h}] menu: logo + nút giữ font cũ khi bật pixel`);
+  }
   await page.evaluate(() => ui.playLevel(0, false));
   await page.waitForSelector('#prep:not([hidden])');
   await page.click('[data-act=prep-go]');
   await page.waitForTimeout(400);
   return { browser, page, errors };
 }
-const TYPES = ['giong', 'tanvien', 'chodo', 'lactuong'];
+// tướng chưa vẽ: chọn tự động trong HEROES (không có trong manifest pixel) để test không vỡ khi gộp thêm lô pixel
+const TYPES = ['giong', 'tanvien', 'chodo', 'lactuong', '__OLD__'];   // lactuong: tướng Thường đã vẽ (lô 1)
 async function setup(page) {
   return page.evaluate((types) => {
     game.gold += 99999;
     const free = game.freeSlots();
+    window.__OLD = [...BASIC_HEROES, ...LEGEND_HEROES].find((k) => !PIXEL_MANIFEST['tuong/' + k]);
+    types = types.map((t) => (t === '__OLD__' ? window.__OLD : t)).filter(Boolean);
     types.forEach((t, i) => game.spawnHero(free[i], t));
     for (let i = 0; i < 4; i++) { game.spawn('tom', 120 + i * 70); }
     game.spawn('casau', 420);
@@ -116,15 +143,17 @@ async function setup(page) {
     await page.evaluate(() => { game.paused = true; });
     await page.waitForTimeout(200);
     const s = await page.evaluate(() => ({ on: pixelOn(), seen: [...PX.seen], cls: document.documentElement.className,
-      head: heroImgUrl('giong', 'head'), headOld: heroImgUrl('lactuong', 'head'), kim: elIcon('kim'), hoa: elIcon('hoa'),
+      head: heroImgUrl('giong', 'head'), old: window.__OLD, headOld: window.__OLD ? heroImgUrl(window.__OLD, 'head') : '', kim: elIcon('kim'), hoa: elIcon('hoa'),
       sm: pxSmoothOff() }));
     ok(s.on && /pixel/.test(s.cls), `[${tag}] bật pixel bằng ?pixel=1`);
-    for (const k of ['tuong/giong', 'tuong/tanvien', 'tuong/chodo', 'quai/tom', 'nen/co', 'nen/nuoc']) ok(s.seen.includes(k), `[${tag}] vẽ pixel: ${k}`);
-    ok(!s.seen.includes('tuong/lactuong') && !s.seen.includes('quai/casau'), `[${tag}] mã chưa có pixel (lactuong, casau) giữ hình cũ`);
-    ok(/pixel\/tuong\/giong-chan-dung\.png/.test(s.head) && !/pixel\//.test(s.headOld), `[${tag}] chân dung giao diện: giong pixel, lactuong hình cũ`);
+    for (const k of ['tuong/giong', 'tuong/tanvien', 'tuong/chodo', 'tuong/lactuong', 'quai/tom', 'nen/co', 'nen/nuoc']) ok(s.seen.includes(k), `[${tag}] vẽ pixel: ${k}`);
+    ok((!s.old || !s.seen.includes('tuong/' + s.old)) && !s.seen.includes('quai/casau'), `[${tag}] mã chưa có pixel (${s.old || '—'}, casau) giữ hình cũ`);
+    ok(/pixel\/tuong\/giong-chan-dung\.png/.test(s.head) && !/pixel\//.test(s.headOld), `[${tag}] chân dung giao diện: giong pixel, ${s.old || '—'} hình cũ`);
     ok(/pixel\/icon\/hanh-kim\.png/.test(s.kim) && !/pixel\//.test(s.hoa), `[${tag}] icon ngũ hành: Kim pixel, Hỏa (chưa vẽ) hình cũ`);
     ok(s.sm, `[${tag}] ảnh pixel vẽ không làm mịn (nearest-neighbor)`);
     ok(!errors.length, `[${tag}] không lỗi console ${errors.join(' | ')}`);
+    const wf = await page.evaluate(() => getComputedStyle(document.querySelector('#tb-wave')).fontFamily);
+    ok(!/VT323/.test(wf), `[${tag}] "Đợt N · …" không dùng font số đều VT323 (${wf})`);
     await page.screenshot({ path: path.join(SHOT, `pixel-${tag}.png`) });
     // phóng to vùng tướng đầu tiên + quái
     const pts = await page.evaluate((hs) => hs.map((p) => ({ x: p.x * view.scale + view.ox, y: p.y * view.scale + view.oy })), heroes);

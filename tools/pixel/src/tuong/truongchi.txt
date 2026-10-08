@@ -1,0 +1,261 @@
+# Trương Chi (mã truongchi) — pixel 32×32 (tướng Tím · hành Thủy). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:1092 ưu tiên + PROMPT-DUNG-XUONG.txt:728): chàng đánh cá ~22 gầy, hơi gù, mặt xấu hiền (mũi lệch),
+# NHẮM MẮT khi thổi sáo; áo chàm vá, NÓN LÁ ĐEO SAU LƯNG, điểm trăng bạc, dải tím (Tím) — KHÔNG giáp; thổi SÁO TRÚC dài cầm ngang
+# (KHÔNG giáo); đứng trong THUYỀN NAN nhỏ hình trăng khuyết dưới chân. Chiêu (Khúc Sáo Mê Hồn): nốt nhạc + sương khói mặt sông.
+name: Trương Chi
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  T = toi
+  K = khoi
+  f = da-toi
+  F = da
+  h = da-sang
+  e = trang
+  r = dat-toi
+  d = dat
+  D = dat-sang
+  c = cat
+  C = vang-sang
+  v = cham-toi
+  b = cham
+  B = cham-sang
+  q = tim-toi
+  p = tim
+  P = tim-sang
+  w = bac
+  N = nuoc-sang
+  n = nuoc
+  z = troi
+
+part non
+.....c
+....cC
+...cCc
+..cCcc
+.cCccd
+cCcccd
+dddddd
+end
+
+part dau
+...KK.KK....
+..KKKKKKKK..
+.KKKKKKKKKK.
+KKKKKKKKKKK.
+KKKKhKKhKhKF
+KKKfFTTFFTTF
+.KffFFFFFFFF
+.KfFTTFFFTTh
+..fFFFFFFFfF
+..ffFFFTeFF.
+...ffffffff.
+end
+
+part than
+......fFf.....
+...BBbbbbbbv..
+..BbBbbbbbbbv.
+..Bb.bbDdbbbv.
+..bb.bbddbbbv.
+..bv.bbbbbwbv.
+..Ff.qpPpPpPq.
+..ff.vbbbbbbv.
+end
+
+part chan
+.....vbbvbbv..
+.....bbv.bbv..
+.....FF..FF...
+end
+
+part thuyen
+TT......................TT
+.dDT..................TDd.
+..dDDDDDDDDDDDDDDDDDDDDd..
+...rdddddddddddddddddr....
+......rrrrrrrrrrrrrr......
+end
+
+part sao
+cCccTccTccTcc
+end
+
+part tay2
+Fh..FF
+end
+
+part tay
+fF.
+.FF
+.Fh
+end
+
+part not
+.C
+CC
+C.
+end
+
+part song
+.N.N.
+NnNnN
+end
+
+part suong
+..zz...
+.z..zz.
+end
+
+part mat_mo
+ekFFFek
+end
+
+anim idle fps=3 loop
+frame idle
+  use non 4 10
+  use chan 8 23
+  use than 8 15
+  use dau 10 4
+  use thuyen 2 25
+  use tay 19 17
+  outline
+end
+frame idle
+  use non 4 11
+  use chan 8 23
+  use than 8 16
+  use dau 10 5
+  use thuyen 2 25
+  use tay 19 18
+  outline
+end
+frame idle
+  use non 4 10
+  use chan 8 23
+  use than 8 15
+  use dau 10 4
+  use thuyen 2 26
+  use tay 19 17
+  outline
+end
+
+# đánh: nâng sáo → thổi → nốt nhạc bay ra trước → hạ sáo
+anim attack fps=10 once
+frame attack
+  use non 4 10
+  use chan 8 23
+  use than 8 15
+  use dau 10 4
+  use thuyen 2 25
+  use sao 17 13
+  use tay2 19 14
+  outline
+end
+frame attack
+  use non 4 10
+  use chan 8 23
+  use than 8 15
+  use dau 10 4
+  use thuyen 2 25
+  use sao 17 13
+  use tay2 19 14
+  use not 29 10
+  outline
+end
+frame attack
+  use non 4 10
+  use chan 8 23
+  use than 8 15
+  use dau 10 4
+  use thuyen 2 25
+  use sao 17 13
+  use tay2 19 14
+  use not 27 6
+  use not 29 14
+  outline
+end
+frame attack
+  use non 4 10
+  use chan 8 23
+  use than 8 15
+  use dau 10 4
+  use thuyen 2 25
+  use tay 19 17
+  outline
+end
+
+# chiêu Khúc Sáo Mê Hồn: thổi sáo, nốt nhạc + sương khói + sóng dưới thuyền
+anim cast fps=6 loop
+frame cast
+  use non 4 10
+  use chan 8 23
+  use than 8 15
+  use dau 10 4
+  use thuyen 2 25
+  use sao 17 13
+  use tay2 19 14
+  use not 28 6
+  use suong 0 20
+  outline
+end
+frame cast
+  use non 4 10
+  use chan 8 23
+  use than 8 15
+  use dau 10 4
+  use thuyen 2 26
+  use sao 17 13
+  use tay2 19 14
+  use not 26 2
+  use not 1 8
+  use song 25 23
+  outline
+end
+frame cast
+  use non 4 10
+  use chan 8 23
+  use than 8 15
+  use dau 10 4
+  use thuyen 2 25
+  use sao 17 13
+  use tay2 19 14
+  use not 29 9
+  use suong 22 18
+  use song 0 23
+  outline
+end
+
+# trúng đòn: mở mắt giật mình, lùi lại
+anim hurt fps=8 once
+frame hurt
+  use @idle.0
+  shift -1 0
+  use mat_mo 13 11
+  swap F h
+  swap b B
+end
+
+anim die fps=5 once
+frame die
+  use non 4 13
+  use chan 8 23
+  use than 8 18
+  use dau 10 7
+  use thuyen 2 25
+  outline
+end
+frame die
+  use chan 8 23
+  use than 8 18
+  use dau 10 7
+  rot 90
+  shift 0 3
+  use thuyen 2 25
+  outline
+end
+frame die
+  use @die.1
+  swap B b
+end

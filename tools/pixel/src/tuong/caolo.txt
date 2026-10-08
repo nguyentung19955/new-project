@@ -1,0 +1,242 @@
+# Cao Lỗ (mã caolo) — pixel 32×32 (tướng Tím · hành Kim). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:729 ưu tiên + PROMPT-DUNG-XUONG.txt:494): thợ chế nỏ ~45, cẳng tay to, bụng hơi phệ, râu vuông,
+# kính lúp đồng che một mắt; tạp dề da đầy dụng cụ trên áo xám sắt, thắt lưng viền tím-bạc (Tím); cầm NỎ MÁY ngang rộng hơn người,
+# bánh răng đồng + tay quay (KHÔNG kiếm). Chiêu (Nỏ Thần): nạp tên thần sáng bạc, bắn xuyên.
+name: Cao Lỗ
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  T = toi
+  K = khoi
+  f = da-toi
+  F = da
+  h = da-sang
+  e = trang
+  s = sat-toi
+  S = sat
+  b = sat-sang
+  w = bac
+  W = sang
+  r = dat-toi
+  d = dat
+  D = dat-sang
+  c = cat
+  o = dong-toi
+  y = dong
+  Y = dong-sang
+  q = tim-toi
+  p = tim
+  P = tim-sang
+
+part dau
+.....KK.....
+....KKKK....
+..KKKKKKKK..
+.KKKKKKKKKK.
+KKKKKhhKKKK.
+KKKfFTTFYYYF
+.KffFekFYwY.
+.KfFFFFFFYFh
+..fKFFFFFFKF
+..KKKKTTKKK.
+...KKKKKKKK.
+end
+
+part than
+.....fFFf......
+..SSSbSSSSSSs..
+.SSbSSdDDDDds..
+.SSbSdDcDDDDds.
+.SS.SdDDDDDDds.
+.Sb.SdDDcDDDds.
+.ss.SdDDDDDDds.
+.Fh.qpPpppppPq.
+.fF.sdDDDDDdds.
+end
+
+part chan
+...sdDDDDdds..
+...SSs..SSs...
+...SSs..SSs...
+...SSs..SSs...
+...Sss..Sss...
+...TTT..TTT...
+..TTTT..TTTT..
+end
+
+# nỏ máy cầm ngang: báng gỗ dài, cánh nỏ sắt dựng ở đầu, bánh răng đồng + tay quay
+part no
+...............w..
+..............Sb..
+..........YYY.S...
+.........YyTyYS...
+rdDdDdDdDYTwTYSDww
+rddddddddYyTyYSd..
+...r......YYY.S...
+...........c..S...
+..............Sb..
+...............w..
+end
+
+part no_ban
+................w.
+...............Sb.
+..........YYY..S..
+.........YyTyY.S..
+rdDdDdDdDYTwTYdSDD
+rddddddddYyTyYdSd.
+...r......YYY..S..
+...........c...S..
+...............Sb.
+................w.
+end
+
+part ten
+WWwwbs
+end
+
+part ten_than
+.WWWW..
+WWWWWWw
+.WWWW..
+end
+
+part tay
+FF.
+hFF
+.fF
+end
+
+part mat_nham
+TT.
+end
+
+anim idle fps=3 loop
+frame idle
+  use chan 9 23
+  use than 8 14
+  use dau 10 3
+  use no 13 12
+  use tay 18 16
+  outline
+end
+frame idle
+  use chan 9 23
+  use than 8 15
+  use dau 10 4
+  use no 13 13
+  use tay 18 17
+  outline
+end
+frame idle
+  use chan 9 23
+  use than 8 14
+  use dau 10 3
+  use no 13 12
+  use tay 18 16
+  outline
+end
+
+# đánh: ngắm → bóp lẫy (cánh nỏ bật) → tên bay → quay nạp tên
+anim attack fps=10 once
+frame attack
+  use chan 9 23
+  use than 8 14
+  use dau 10 3
+  use no 13 11
+  use tay 18 15
+  outline
+end
+frame attack
+  use chan 9 23
+  use than 8 14
+  use dau 10 3
+  use no_ban 12 12
+  use tay 18 16
+  outline
+end
+frame attack
+  use chan 9 23
+  use than 8 14
+  use dau 10 3
+  use no_ban 12 12
+  use tay 18 16
+  use ten 25 16
+  outline
+end
+frame attack
+  use chan 9 23
+  use than 8 14
+  use dau 10 3
+  use no 13 12
+  use tay 22 18
+  outline
+end
+
+# chiêu Nỏ Thần: nạp tên thần sáng bạc rồi bắn
+anim cast fps=8 loop
+frame cast
+  use chan 9 23
+  use than 8 14
+  use dau 10 3
+  use no 13 12
+  use tay 18 16
+  set 31 15 W
+  set 30 14 W
+  outline
+end
+frame cast
+  use chan 9 23
+  use than 8 14
+  use dau 10 3
+  use no_ban 12 12
+  use tay 18 16
+  use ten_than 25 15
+  outline
+end
+frame cast
+  use chan 9 23
+  use than 8 14
+  use dau 10 3
+  use no_ban 12 12
+  use tay 18 16
+  use ten 26 13
+  use ten 26 19
+  outline
+end
+
+anim hurt fps=8 once
+frame hurt
+  use @idle.0
+  shift -2 0
+  set 13 9 T
+  set 14 9 T
+  swap F h
+  swap S b
+end
+
+anim die fps=5 once
+frame die
+  use chan 9 23
+  use than 8 17
+  use dau 10 6
+  use no 12 20
+  set 15 12 T
+  set 16 12 T
+  outline
+end
+frame die
+  use chan 9 23
+  use than 8 17
+  use dau 10 6
+  set 15 12 T
+  set 16 12 T
+  rot 90
+  shift 0 3
+  outline
+end
+frame die
+  use @die.1
+  swap P p
+end

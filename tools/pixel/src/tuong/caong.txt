@@ -1,0 +1,294 @@
+# Thần Cá Ông — linh thú 32×32 (tướng Tím · hành Thủy). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:244, PROMPT-DUNG-XUONG.txt:812): CÁ VOI thần thân tròn dựng trên đuôi, vây làm tay — KHÔNG người,
+# không giáo; xanh đá phiến (chàm), VỎ HÀ VÀNG trên đầu, mặt ông lão hiền: lông mày + RÂU NGẮN trắng; VÒI PHUN NƯỚC trên đầu,
+# vây đuôi cong sau lưng, chóp đuôi tím-bạc (độ hiếm Tím). Phá cách (QUY-CHUAN 0b): hồn Cá Ông bán trong suốt, thấy BỘ XƯƠNG
+# trắng ngà bên trong (sống lưng, xương sườn, xương hàm, xương vây — như xương thờ ở lăng Ông). Đòn: húc thân; chiêu: phun vòi.
+name: Thần Cá Ông
+size: 32x32
+anchor: 14,30
+colors:
+  k = vien
+  K = toi
+  c = cham-toi
+  C = cham
+  n = cham-sang
+  S = nuoc
+  e = trang
+  E = trang-xam
+  w = sang
+  b = bac
+  y = vang-nghe
+  Y = vang-sang
+  o = dong-toi
+  t = tim-sang
+  N = nuoc-sang
+  r = troi
+
+part than
+.........SSSSSS......
+.......SrSSnnnnnn....
+......SrnnyYnnnnnC...
+.....SSnnyoynnnnnnC..
+.....SnnnnynnnnwbbnC.
+....SnnnnnnnnnnneKnnC
+....SnnnnnnnnnnnnnnnC
+....SnynnnnnnnKnnnnnC
+....SyoynnnnnnnKKKKKK
+....SnnneeeeeeeeeeeeC
+....Snnnnnnnnnnnbwwwb
+....Snennnnnnnnnbwwbc
+....SneeeeeeeeeEnbbnc
+....SneCCCCCCCCEnnnc.
+....SneeeeeeeeEnnnnc.
+....SneCCCCCCCEnnnnc.
+....SneeeeeeeEnnnnc..
+....SneCCCCCCEnnnc...
+....SneeeeeEnnnnc....
+....SneCCCCEnnnc.....
+.....SneeeEnnnCc.....
+....SnneCnnnnCc......
+..SnneeCnnnCcc.......
+SnneeCCCCccc.........
+cccccccccc...........
+end
+
+part duoi
+t......t
+S.....S.
+Sn...Sn.
+Snc.Snc.
+.SnnCnc.
+..SnCc..
+..SnC...
+..Snc...
+..Snc...
+..SnC...
+..SnC...
+..SnnC..
+...SnnC.
+...cc...
+end
+
+part vay
+SSnc...
+Snenc..
+.Snenc.
+..Snenc
+...SnEc
+....Snc
+.....c.
+end
+
+part vay_len
+.SSSnc..
+Seeeenc.
+.nnnnnnc
+...Ccccc
+end
+
+part voi
+N..r..N
+.NrrrN.
+..NrN..
+...r...
+end
+
+part voi_thap
+N.r.N
+.NrN.
+..r..
+end
+
+part voi_to
+N..N.r.N..N
+.NrNrrrNrN.
+...NrwrN...
+....rwr....
+end
+
+part mat_nham
+nwb
+.nK
+end
+
+part toe
+.r..
+N.w.
+.rN.
+w.Nr
+.N..
+r.w.
+end
+
+part giot
+...................N....
+........................
+..N.....................
+.....................r..
+........................
+r.......................
+........................
+.......................N
+end
+
+part dau
+.....SSSSSS......
+...SrSSnnnnnn....
+..SrnnyYnnnnnC...
+.SSnnyoynnnnnnC..
+.SnnnnynnnnwbbnC.
+SnnnnnnnnnnneKnnC
+SnnnnnnnnnnnnnnnC
+SnynnnnnnnKnnnnnC
+SyoynnnnnnnKKKKKK
+SnnneeeeeeeeeeeeC
+Snnnnnnnnnnnbwwwb
+Snennnnnnnnnbwwbc
+SneeeeeeeeeEnbbnc
+SneCCCCCCCCEnnnc.
+SneeeeeeeeEnnnnc.
+SneCCCCCCCEnnnnc.
+end
+
+anim idle fps=3 loop
+
+frame idle
+  use duoi 2 15
+  use than 6 5
+  use vay 18 19
+  use voi 13 2
+  outline
+end
+
+frame idle
+  use duoi 2 14
+  use than 6 5
+  use vay 18 18
+  use voi_thap 14 3
+  outline
+end
+
+frame idle
+  use duoi 2 14
+  use than 6 5
+  use vay 18 19
+  use voi_thap 14 4
+  outline
+end
+
+# húc thân: ngả lui lấy đà → lao tới húc → toé nước → thu về
+
+anim attack fps=10 once
+
+frame attack
+  use duoi 2 15
+  use than 5 5
+  use vay_len 19 16
+  use voi_thap 13 3
+  outline
+end
+
+frame attack
+  use duoi 3 15
+  use than 8 5
+  use vay_len 22 17
+  use voi_thap 16 4
+  outline
+end
+
+frame attack
+  use duoi 3 15
+  use than 8 5
+  use vay_len 22 17
+  use toe 26 13
+  outline
+end
+
+frame attack
+  use @idle.0
+end
+
+# chiêu (hành Thủy): phun vòi nước lên cao, giọt nước rơi quanh
+
+anim cast fps=8 loop
+
+frame cast
+  use duoi 2 15
+  use than 6 5
+  use vay_len 20 16
+  use voi 13 2
+  outline
+end
+
+frame cast
+  use duoi 2 15
+  use than 6 5
+  use vay_len 20 16
+  use voi_to 11 2
+  outline
+end
+
+frame cast
+  use duoi 2 15
+  use than 6 5
+  use vay_len 20 16
+  use voi_to 11 2
+  outline
+  use giot 5 4
+  swap e w
+end
+
+# trúng đòn: giật lùi, nhắm mắt, nháy sáng
+
+anim hurt fps=8 once
+
+frame hurt
+  use duoi 2 15
+  use than 5 5
+  use mat_nham 20 9
+  use vay 17 18
+  swap n S
+  swap e w
+  outline
+end
+
+# chết: tắt vòi, gục → nằm nghiêng → hồn mờ tối
+
+anim die fps=5 once
+
+frame die
+  use duoi 2 15
+  use than 6 5
+  use mat_nham 21 9
+  use vay 18 20
+  outline
+end
+
+frame die
+  use duoi 2 15
+  use than 6 5
+  use mat_nham 21 9
+  use vay 18 20
+  rot 90
+  shift 0 0
+  outline
+end
+
+frame die
+  use @die.1
+  swap S n
+  swap n C
+  swap e E
+  swap y o
+  swap b E
+end
+
+# chân dung: đầu cá voi + vỏ hà + râu trắng + vòi nước, xương hàm/sườn lộ
+
+anim portrait fps=1 once
+
+frame portrait
+  use dau 7 13
+  use voi 10 9
+  outline
+end

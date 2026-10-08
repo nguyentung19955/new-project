@@ -1,0 +1,387 @@
+# Kỳ Lân Vàng — linh thú 32×32 (tướng Vàng · hành Kim). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:172, PROMPT-DUNG-XUONG.txt:984): KỲ LÂN 4 CHÂN DÀI như hươu, thân ngựa, cổ dài — KHÔNG người,
+# không giáo, không đứng 2 chân; vảy vàng óng, bụng ngà, 1 SỪNG VÀNG, túm lông lửa vàng ở cổ chân, mây ngọc dưới móng, viền vàng.
+# Đầu lân–rồng Việt: mõm vuông, mắt lồi mày trắng, miệng hơi há, râu cuộn; sừng chĩa lên-trước.
+# Phá cách (QUY-CHUAN 0b): vảy lưng như NGÓI ỐNG MEN VÀNG mái đình (cung ngói so le), BỜM + ĐUÔI là MÂY CUỘN trắng.
+# Đòn: húc sừng + móng; chiêu (Kim / Phun Lửa Vàng): sừng loé bạc, phun dải lửa vàng.
+name: Kỳ Lân Vàng
+size: 32x32
+anchor: 13,30
+colors:
+  k = vien
+  R = son-toi
+  K = toi
+  o = dong-toi
+  d = dong
+  j = dong-sang
+  y = vang-nghe
+  Y = vang-sang
+  e = trang
+  E = trang-xam
+  w = sang
+  r = troi
+  b = bac
+  g = ngoc
+  G = ngoc-sang
+  l = lua
+  L = lua-sang
+
+part duoi
+.eee.
+eweE.
+.EEe.
+..ee.
+.eweE
+..EEe
+..eE.
+..eE.
+..eE.
+...E.
+end
+
+part chan_xa
+yd.....yd
+yd.....yd
+.yd....yd
+.yd....yd
+Lyd...Lyd
+.yd....yd
+.yd....yd
+.yd....yd
+.KK....KK
+end
+
+part chan_sau
+..Yyd
+..Yyd
+...Yy
+...Yy
+L.Yy.
+LYy..
+.Yy..
+.Yy..
+gKK..
+Gg...
+end
+
+part chan_truoc
+Yyd....
+Yyd....
+.Yy....
+.Yy....
+.LYy...
+.LYy...
+...Yy..
+...Yy..
+...KK.G
+.....gG
+end
+
+part chan_gio
+Yyyd...
+.YyyL..
+...Yyy.
+....YyL
+.....KK
+end
+
+part chan_dap
+Yyd....
+Yyd....
+.Yyy...
+..Yyy..
+..LYy..
+...LYy.
+.....Yy
+.....Yy
+.....KK
+end
+
+part gap
+.Yyyyd........Yyyyd..
+KKyydd.dddo..KKyyddKK
+end
+
+part than
+....jYYjYYjYYj..
+..djYydjYydjYyd.
+.yooyyooyyooyyoo
+djYydjYydjYydjYy
+ooyyooyyooyyooyy
+YydjYydjYydjYydj
+deeeeeeeeeeeeEEd
+.eeeeeeeeeeeEEd.
+..EEEEEEEEEEEd..
+end
+
+part co
+.jY....
+jYy....
+Yyyd...
+Yyyed..
+yyyeed.
+.yyeeEd
+..yeeEd
+...eEd.
+...eEd.
+end
+
+part bom
+....eee
+...eweE
+....EEe
+..eee..
+.eweE..
+..EEe..
+.eee...
+eweE...
+.EEe...
+end
+
+part dau
+........w...
+.......Yw...
+.jYYY.jY....
+jYYYYjY.....
+eeooyYYYYd..
+yowKyyyyyYYo
+dyddyyyyyyyo
+.ddyyKKKKKKK
+..dyRRRwK..e
+...dyyyo...e
+...eEe....eE
+end
+
+part mat_nham
+odd
+end
+
+part sung_sang
+...w
+..ww
+.bw.
+bw..
+end
+
+part sang
+b..w.
+..w.b
+...w.
+end
+
+part lua1
+..L
+.LY
+lLw
+LYl
+.l.
+end
+
+part lua2
+.....L
+...LYL
+.lLwYL
+lYwwLl
+LYwYLl
+lLYLl.
+.lLl.L
+L..l..
+..L...
+end
+
+anim idle fps=3 loop
+
+frame idle
+  use duoi 2 3
+  use chan_xa 9 20
+  use chan_sau 2 20
+  use chan_truoc 19 20
+  use than 5 11
+  use co 15 7
+  use bom 11 3
+  use dau 18 2
+  outline
+end
+
+frame idle
+  use duoi 2 3
+  use chan_xa 9 20
+  use chan_sau 2 20
+  use chan_truoc 19 20
+  use than 5 11
+  use co 15 7
+  use bom 11 4
+  use dau 18 3
+  outline
+end
+
+frame idle
+  use duoi 2 4
+  use chan_xa 9 20
+  use chan_sau 2 20
+  use chan_truoc 19 20
+  use than 5 12
+  use co 15 8
+  use bom 11 4
+  use dau 18 3
+  outline
+end
+
+# húc sừng: chồm lên giơ móng → lao đầu húc + dậm móng → loé sáng ở sừng → thu về
+
+anim attack fps=10 once
+
+frame attack
+  use duoi 2 2
+  use chan_xa 9 20
+  use chan_sau 2 20
+  use chan_gio 20 18
+  use than 5 10
+  use co 14 6
+  use bom 10 3
+  use dau 17 2
+  outline
+end
+
+frame attack
+  use duoi 2 3
+  use chan_xa 9 20
+  use chan_sau 2 20
+  use chan_dap 19 20
+  use than 5 11
+  use co 15 8
+  use bom 11 5
+  use dau 18 4
+  outline
+end
+
+frame attack
+  use duoi 2 3
+  use chan_xa 9 20
+  use chan_sau 2 20
+  use chan_dap 19 20
+  use than 5 11
+  use co 15 8
+  use bom 11 5
+  use dau 18 4
+  use sang 25 3
+  outline
+end
+
+frame attack
+  use @idle.0
+end
+
+# chiêu (Kim · Kỳ Lân Phun Lửa): sừng loé bạc → phun dải lửa vàng
+
+anim cast fps=8 loop
+
+frame cast
+  use duoi 2 2
+  use chan_xa 9 20
+  use chan_sau 2 20
+  use chan_truoc 19 20
+  use than 5 10
+  use co 15 6
+  use bom 11 3
+  use dau 18 2
+  use sung_sang 23 2
+  outline
+end
+
+frame cast
+  use duoi 2 3
+  use chan_xa 9 20
+  use chan_sau 2 20
+  use chan_truoc 19 20
+  use than 5 11
+  use co 15 7
+  use bom 11 3
+  use dau 18 2
+  use sung_sang 23 2
+  use lua1 27 10
+  outline
+end
+
+frame cast
+  use duoi 2 3
+  use chan_xa 9 20
+  use chan_sau 2 20
+  use chan_truoc 19 20
+  use than 5 11
+  use co 15 7
+  use bom 11 3
+  use dau 18 2
+  use sung_sang 23 2
+  use lua2 24 10
+  outline
+end
+
+# trúng đòn: giật lùi, nhắm mắt, nháy sáng
+
+anim hurt fps=8 once
+
+frame hurt
+  use duoi 2 3
+  use chan_xa 9 20
+  use chan_sau 2 20
+  use chan_truoc 19 20
+  use than 5 11
+  use co 14 7
+  use bom 10 3
+  use dau 17 2
+  use mat_nham 18 7
+  swap Y w
+  swap y Y
+  outline
+end
+
+# chết: khuỵu chân → nằm gục → mờ tối
+
+anim die fps=5 once
+
+frame die
+  use duoi 2 6
+  use chan_xa 9 20
+  use chan_sau 2 20
+  use chan_truoc 19 20
+  use than 5 14
+  use co 15 11
+  use bom 11 9
+  use dau 18 8
+  use mat_nham 19 13
+  outline
+end
+
+frame die
+  use gap 3 27
+  use duoi 2 13
+  use than 5 19
+  use co 15 16
+  use bom 11 15
+  use dau 18 15
+  use mat_nham 19 20
+  outline
+end
+
+frame die
+  use @die.1
+  swap Y y
+  swap y d
+  swap j d
+  swap w E
+  swap e E
+  swap G g
+end
+
+# chân dung: đầu kỳ lân 1 sừng vàng + bờm mây + lưng ngói vàng
+
+anim portrait fps=1 once
+
+frame portrait
+  use than 3 19
+  use co 9 13
+  use bom 5 9
+  use dau 12 8
+  outline
+end

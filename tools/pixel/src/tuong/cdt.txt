@@ -1,0 +1,309 @@
+# Chử Đồng Tử (mã cdt) — pixel 32×32 (tướng Tím · hành Thủy). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# PHÁ CÁCH (DANH-SACH): nón lá thần toả quầng ngọc, gậy thần có búp sen ở đầu.
+# Đặc trưng (PROMPT-GEN-LAI.txt:802 ưu tiên + PROMPT-DUNG-XUONG.txt:537): chàng nghèo ~20 rất gầy lộ sườn, chân dài, tóc rối, mặt hiền;
+# CHỈ ĐÓNG KHỐ, khăn ngang lưng xanh ngọc thiêng (mép tím — Tím); tay trước GẬY THẦN gỗ trơn cao (không lưỡi), tay sau NÓN LÁ thần
+# phát sáng ngọc giơ như khiên (KHÔNG giáo). Chiêu (Nón Thần / Thành Một Đêm): nón bừng sáng ngọc, gậy toả sóng nước.
+name: Chử Đồng Tử
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  T = toi
+  K = khoi
+  f = da-toi
+  F = da
+  h = da-sang
+  e = trang
+  r = dat-toi
+  d = dat
+  D = dat-sang
+  c = cat
+  C = vang-sang
+  n = ngoc
+  N = ngoc-sang
+  W = sang
+  u = nuoc
+  U = nuoc-sang
+  q = tim-toi
+  p = tim
+  H = hong
+  l = la
+
+part dau
+...K.KK..K..
+..KKKKKKKK..
+.KKKKKKKKKK.
+KKKKKKKKKKKK
+KKKKhKKhKhK.
+.KKfFTTFFTTF
+.KffFekFFekF
+..fFFFFFFFFh
+..fFFFFFFFfF
+...fFFFTFFf.
+....fffffff.
+end
+
+part than
+.....fFf......
+...hhFFFFf....
+..hFhhFFFFf...
+.FF..FfFfF....
+FF...FFfFf....
+Ff...fFFFf....
+.....FfFfF....
+.....nNNnpn...
+.....rdDdr....
+end
+
+part chan
+.....rdDdr....
+.....ddrdd....
+.....FF.FF....
+.....Ff.Ff....
+.....Ff.Ff....
+.....fT.fT....
+....TTT.TTT...
+end
+
+part non
+....c....
+...cCc...
+..cCCDc..
+.cCCDcdc.
+nNNNNNNNn
+end
+
+part non_sang
+....W....
+...WCW...
+..WCCCW..
+.WCCCCCW.
+NWWWWWWWN
+end
+
+part gay
+.H
+HH
+lD
+Dd
+Dd
+Dd
+Dd
+Dd
+Dd
+Dd
+Dd
+Dd
+Dd
+Dd
+Dd
+Dd
+Dd
+Dd
+Dd
+Dd
+.r
+end
+
+part gay_len
+.H.
+HHH
+.l.
+Dd.
+Dd.
+Dd.
+Dd.
+Dd.
+Dd.
+Dd.
+Dd.
+Dd.
+Dd.
+Dd.
+.r.
+end
+
+part gay_ngang
+rddddddddddDDc
+.DDDDDDDDDDDDc
+end
+
+part gay_xuong
+D........
+.D.......
+..d......
+...D.....
+....d....
+.....D...
+......d..
+.......Dc
+........c
+end
+
+part tay
+fF.
+.FF
+.Fh
+end
+
+part tay_len
+.FF
+.Fh
+.F.
+fF.
+end
+
+part tay_dam
+fFFF
+.FFh
+end
+
+part song
+.U...U.
+UuU.UuU
+end
+
+anim idle fps=3 loop
+frame idle
+  use chan 8 23
+  use than 8 14
+  use dau 9 3
+  use non 2 16
+  use gay 21 7
+  use tay 19 16
+  outline
+end
+frame idle
+  use chan 8 23
+  use than 8 15
+  use dau 9 4
+  use non 2 17
+  use gay 21 7
+  use tay 19 17
+  outline
+end
+frame idle
+  use chan 8 23
+  use than 8 14
+  use dau 9 3
+  use non 2 16
+  set 6 16 W
+  use gay 21 7
+  use tay 19 16
+  outline
+end
+
+# đánh: giơ gậy → bổ thẳng → quét ngang → chống gậy
+anim attack fps=10 once
+frame attack
+  use chan 8 23
+  use than 8 14
+  use dau 9 3
+  use non 2 16
+  use gay_len 21 1
+  use tay_len 19 12
+  outline
+end
+frame attack
+  use chan 8 23
+  use than 8 14
+  use dau 9 3
+  use non 2 16
+  use gay_xuong 19 11
+  use tay_len 19 12
+  outline
+end
+frame attack
+  use chan 8 23
+  use than 9 14
+  use dau 10 3
+  use non 3 16
+  use gay_ngang 17 18
+  use tay_dam 19 17
+  outline
+end
+frame attack
+  use chan 8 23
+  use than 8 14
+  use dau 9 3
+  use non 2 16
+  use gay_xuong 19 19
+  use tay 19 16
+  outline
+end
+
+# chiêu: nón thần bừng sáng ngọc, gậy giơ cao toả sóng nước
+anim cast fps=8 loop
+frame cast
+  use chan 8 23
+  use than 8 14
+  use dau 9 3
+  use non_sang 2 13
+  use gay_len 21 1
+  use tay_len 19 12
+  outline
+end
+frame cast
+  use chan 8 23
+  use than 8 14
+  use dau 9 3
+  use non_sang 2 12
+  use gay_len 21 1
+  use tay_len 19 12
+  use song 24 25
+  set 6 9 W
+  outline
+end
+frame cast
+  use chan 8 23
+  use than 8 14
+  use dau 9 3
+  use non 2 13
+  use gay_len 21 1
+  use tay_len 19 12
+  use song 24 23
+  use song 2 25
+  set 22 0 W
+  outline
+end
+
+anim hurt fps=8 once
+frame hurt
+  use @idle.0
+  shift -1 0
+  set 13 9 T
+  set 14 9 T
+  set 17 9 T
+  set 18 9 T
+  swap F h
+  swap n N
+end
+
+anim die fps=5 once
+frame die
+  use gay_xuong 19 21
+  use chan 8 23
+  use than 8 17
+  use dau 9 6
+  use non 1 25
+  set 14 12 T
+  set 15 12 T
+  outline
+end
+frame die
+  use chan 8 23
+  use than 8 17
+  use dau 9 6
+  set 14 12 T
+  set 15 12 T
+  set 18 12 T
+  set 19 12 T
+  rot 90
+  shift 0 3
+  use non 21 26
+  outline
+end
+frame die
+  use @die.1
+  swap N n
+end

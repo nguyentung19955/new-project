@@ -99,6 +99,8 @@ Mã hex xem palette.txt (đã chỉnh tông trầm). Màu đánh dấu `*` trong
 | `giao-dien` — khung thẻ, thanh máu, nút | tuỳ (8..320), ghi rõ trong DANH-SACH | |
 | `canh` — cảnh truyện, nền menu, chương | 160×90 · 320×180 | |
 
+> **Đặt tên mã kỹ năng (chốt 08/10):** dùng **gạch dưới** giữa mã tướng và phím: `lactuong_q`, `giong_w`… (không dùng `giong-q`). Nhánh `pixel-ky-nang-2` phải đổi tên theo trước khi gộp.
+
 Trong game: phóng **nearest-neighbor theo bội số nguyên** điểm ảnh màn hình (js/pixel.js `pxBlit`), CSS
 `image-rendering: pixelated` cho `<img>` / canvas nhỏ. Tướng cao ≈ ảnh vẽ tay cũ nên thanh máu, vòng tầm đánh giữ nguyên chỗ.
 
@@ -186,7 +188,7 @@ frame idle                 # dựng một khung bằng các lệnh, chạy lần
   wrap 2 0                 #   wrap dx dy         cuộn vòng (ô nền lát liền)
   swap F h                 #   swap a b           đổi màu ký tự a → b (nháy sáng khi trúng đòn)
   set 17 2 z               #   set x y c          đặt một pixel
-  flipx                    #   lật ngang · rot 90|180|270 (khung vuông)
+  flipx                    #   lật ngang · rot 90|180|270 (90 / 270 chỉ khung vuông; 180 mọi khung)
   outline                  #   viền ngoài 1px bằng màu `vien` (hoặc outline <ký tự>)
 end
 ```

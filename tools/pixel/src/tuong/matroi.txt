@@ -1,0 +1,362 @@
+# Nữ Thần Mặt Trời (mã matroi) — pixel 32×32 (tướng Vàng · hành Hỏa) + chân dung riêng. Quy chuẩn: docs/pixel/QUY-CHUAN.md (mục 0 + 0b phá cách)
+# Đặc trưng (PROMPT-GEN-LAI.txt:1260 FIX ưu tiên + PROMPT-DUNG-XUONG.txt:1194): NỮ thần ~25 cao thanh; áo vàng cam gấu lửa, vương miện vàng, viền vàng;
+# cầm QUYỀN TRƯỢNG đầu đĩa mặt trời (không giáo); ĐĨA MẶT TRỜI 12 TIA khổng lồ sau lưng (đồng hun như mặt trống Đông Sơn).
+# Phá cách (DANH-SACH): tóc là tia nắng vàng chảy về sau, má/trán mang dấu hoa văn mặt trời Đông Sơn, gấu áo tan thành lửa; chiêu: hai tay giơ trời, đĩa rực sáng (Hỏa).
+name: Nữ Thần Mặt Trời
+size: 32x32
+anchor: 17,30
+colors:
+  k = vien
+  K = toi
+  F = da
+  h = da-sang
+  f = da-toi
+  e = trang
+  w = trang
+  W = trang-xam
+  a = vang-sang
+  z = sang
+  n = vang-nghe
+  Y = vang-sang
+  o = lua-sang
+  O = lua
+  l = lua-sang
+  R = son-sang
+  r = son
+  y = vang-nghe
+  j = dong-sang
+  d = dong
+  J = dong
+  m = son-toi
+
+part dia
+................................
+................................
+................Y...............
+...........Y...yyy...Y..........
+...........yyRRRRRRRyy..........
+...........RRRRRRRRRRR..........
+..........RRRyymmmyyRRr.........
+.......YyRRRymmyyymmyrrryY......
+........yRRymyymmmyymyrry.......
+........RRymyymmmmmyymyrr.......
+........RRymymmmmmmmymyrr.......
+.......yRRmymmmmmmmmmymrry......
+......YyRRmymmmmmmmmmymrryY.....
+.......yRRmymmmmmmmmmymrry......
+........RRymymmmmmmmymyrr.......
+........RRymyymmmmmyymyrr.......
+........yRRymyymmmyymyrry.......
+.......YyRRrymmyyymmyrrryY......
+..........rrryymmmyyrrr.........
+...........rrrrrrrrrrr..........
+...........yyrrrrrrryy..........
+...........Y...yyy...Y..........
+................Y...............
+................................
+................................
+................................
+................................
+................................
+................................
+end
+
+part tren
+................................
+................................
+................................
+................................
+..............yYzYy.............
+............naaaaaaaan..........
+...........naaaahhFFFFF.........
+...........aazahFFjFFFF.........
+...........anahFKKFFFKKF........
+...........aaaaFekFFFekF........
+..........naazaFFFFFFFFFF.......
+..........aanafFjFFFFfFF........
+..........naaaafFFFFFrF.........
+..........nanaaaffFFFFf.........
+...........n.na...fFFf..........
+...............wYoFFoYw.........
+.............wYoowhwooOw........
+............YYooowFwoooOO.......
+............YYooywwwyooOO.......
+............YoRRRRRRRRRRr.......
+............FhooywwwyooOO.......
+............FFooywjwyoooOO......
+.............YooywwwyooOOO......
+............YooOywjwyoooOO......
+end
+
+part chan
+...........YoooOywwwyooooOO.....
+...........YooOoywjwyoOoooO.....
+..........OlOoOlOOlOOOlOOlOOO...
+..........l.OlR.lORlO.RlO.lR....
+...........l..l.rrK..rrK..l.....
+...............rrrK.rrrK........
+................................
+................................
+end
+
+part vay
+...........YoooooYooooooOoooO...
+...........YooooOYoooooOooooO...
+..........OlOoOlOOlOOOlOOlOOO...
+end
+
+part truong
+y.n.y
+.aza.
+nzRza
+.aza.
+y.n.y
+..j..
+..j..
+..y..
+..j..
+..j..
+..j..
+..j..
+..j..
+..j..
+..j..
+..j..
+..j..
+..j..
+..j..
+..j..
+..d..
+..d..
+end
+
+part truong_ngang
+.......y.n.y
+........aza.
+dddddddnzRza
+........aza.
+.......y.n.y
+end
+
+part tay
+Yo..
+ooFh
+.OFF
+end
+
+part tay_len
+.Fh
+.FF
+.o.
+Yo.
+oO.
+end
+
+part tay_sau_len
+hF.
+FF.
+.o.
+.oY
+.Oo
+end
+
+part tay_dam
+YoFh
+oOFF
+end
+
+part tia
+..z...
+z.Y..z
+.zaYz.
+zYzzaz
+.zaYz.
+z.Y..z
+..z...
+end
+
+part lua_bay
+.l...l
+lO..lO
+.O...O
+end
+
+part mat_nham
+FFFFFFFFF
+FKKFFFKKF
+end
+
+
+part chan_dung
+............................
+..............Y.............
+.............yy.............
+.......Yy..RRRRRR..yY.......
+.......yYRRRzRRRYRR.y.......
+.......RYRRyYyyyYRRRR.......
+.....yyyyyyzRzyyyyyRRR......
+.....yjjjjjjjjjjjjjyyrr.....
+..YaaaaaaaaaaaaaaaannyrryY..
+..yaaaaaaaaaaaaaaaannyrr.y..
+...aaaaaahhhhFFFFFFFFFFrr...
+...aaaaaahhhhFFFFFFFFFFrr...
+..RzzaahhFFFFjjFFFFFFFFyrr..
+..RzzaahhFFFFjjFFFFFFFFyrr..
+YyRaahhFFKKKKFFFFFFKKKKFFry.
+.yRaahhFFKKKKFFFFFFKKKKFFryY
+..RaaaaFFeekkFFFFFFeekkFFr..
+..RaaaaFFeekkFFFFFFeekkFFr..
+...zzaaFFFFFFFFFFFFFFFFFFFF.
+...zzaaFFFFFFFFFFFFFFFFFFFF.
+..yaaffFFjjFFFFFFFFffFFFFy..
+..YaaffFFjjFFFFFFFFffFFFFY..
+...aaaaffFFFFFFFFFFrrFF.....
+...aaaaffFFFFFFFFFFrrFF.....
+...aaaaaaffffFFFFFFFFff.....
+...aaaaaaffffFFFFFFFFff.....
+...nnaaYy..rrffFFFFff.......
+...nnaa......ffFFFFff.......
+end
+
+
+anim idle fps=3 loop
+frame idle
+  use dia 0 0
+  use chan 0 24
+  use tren
+  use truong 25 3
+  use tay 24 16
+  outline
+end
+frame idle
+  use dia 0 0
+  use chan 0 24
+  use tren 0 1
+  use truong 25 3
+  use tay 24 17
+  outline
+end
+frame idle
+  use @idle.0
+end
+
+# đánh: giơ trượng lên (lấy đà) → chĩa trượng ra trước → đầu trượng phóng tia nắng → thu về
+anim attack fps=10 once
+frame attack
+  use dia 0 0
+  use chan 0 24
+  use tren
+  use truong 25 2
+  use tay_len 26 11
+  outline
+end
+frame attack
+  use dia 0 0
+  use chan 0 24
+  use tren 1 0
+  use truong_ngang 18 12
+  use tay_dam 21 15
+  outline
+end
+frame attack
+  use dia 0 0
+  use chan 0 24
+  use tren 1 0
+  use truong_ngang 18 12
+  use tia 24 10
+  use tay_dam 21 15
+  outline
+end
+frame attack
+  use @idle.0
+end
+
+# chiêu (Hỏa): hai tay giơ lên trời, đĩa mặt trời rực sáng, lửa bay lên từ gấu áo
+anim cast fps=6 loop
+frame cast
+  use dia 0 0
+  use chan 0 24
+  use tren
+  use truong 25 2
+  use tay_len 25 11
+  use tay_sau_len 11 11
+  outline
+end
+frame cast
+  use dia 0 0
+  swap m r
+  swap y Y
+  use chan 0 24
+  use tren
+  use truong 25 2
+  use tay_len 25 11
+  use tay_sau_len 11 11
+  use lua_bay 4 23
+  outline
+end
+frame cast
+  use dia 0 0
+  swap R l
+  swap r R
+  swap m r
+  swap Y z
+  swap y Y
+  use chan 0 24
+  use tren 0 1
+  use truong 25 2
+  use tay_len 25 12
+  use tay_sau_len 11 12
+  use lua_bay 23 22
+  use lua_bay 3 21
+  outline
+end
+
+# trúng đòn: giật lùi, nhắm mắt, nháy sáng da
+anim hurt fps=8 once
+frame hurt
+  use dia 0 0
+  use chan -1 24
+  use tren -1 0
+  use truong 24 3
+  use tay 23 16
+  use mat_nham 14 8
+  swap F h
+  outline
+end
+
+# chết: khuỵu (đĩa tắt dần) → ngã nằm → tối (mặt trời lặn)
+anim die fps=5 once
+frame die
+  use dia 0 0
+  swap R r
+  swap Y y
+  swap y d
+  use chan 0 24
+  use tren 0 3
+  use mat_nham 15 11
+  outline
+end
+frame die
+  use vay 0 24
+  use tren 0 3
+  use mat_nham 15 11
+  rot 90
+  shift 0 1
+  use truong_ngang 6 25
+  outline
+end
+frame die
+  use @die.1
+  swap a n
+  swap z a
+  swap o O
+  swap Y n
+  swap l O
+end
+
+# chân dung riêng: đầu phóng ×2 + vương miện, đĩa mặt trời son–đồng 12 tia toả quanh đầu
+anim portrait fps=1 once
+frame portrait
+  use chan_dung 2 2
+  outline
+end
