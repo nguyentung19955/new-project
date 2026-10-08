@@ -1730,7 +1730,7 @@ class Game {
     // claude/sao3-re-nhanh: lên ★★★ thì tướng nhận ít nhất cấp COSTS.lv3Min (kèm điểm kỹ năng của các cấp được nhận)
     const up = b.tier >= 3 ? Math.max(0, Math.min(CONFIG.maxLevel, COSTS.lv3Min || 0) - b.level) : 0;
     if (up) { const hp0 = heroStats(b).hpMax; b.level += up; b.skillPts += up; if (!b.dead) b.hp += Math.max(0, heroStats(b).hpMax - hp0); this.levelFx(b, up); }
-    const disc = this.levelDisc(b) < 1 ? ` Lên cấp giảm ${Math.round((1 - this.levelDisc(b)) * 100)}%` : '';
+    const disc = this.levelDisc(b) < 1 ? ` Lên cấp giảm ${Math.round((1 - this.levelDisc(b)) * 100)}%${!b.from && b.tier >= 3 && !COSTS.unlockDisc3 ? ', mở kỹ năng miễn phí' : ''}` : '';
     this.notify(`${HEROES[b.type].name} lên ${'★'.repeat(b.tier)}!${up ? ` Lên cấp ${b.level}.` : ''}${disc}`, '#F2D27A');
     b.notice.evo = b.tier >= 3;
     return true;

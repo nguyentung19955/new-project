@@ -3668,7 +3668,7 @@ class UI {
         const can = h.level >= COSTS.unlockReq[i];
         btn = `<div class="reqline ${can ? 'ok' : ''}">${can ? ICON.check : ICON.lock}<span>Cần tướng cấp ${COSTS.unlockReq[i]}${can ? ' · đã đạt' : ''}</span></div>
           <button class="up unl ${can && g.gold >= unlockCost(h, i) ? 'btn-gold' : 'btn-ghost'}" data-act="sk-unlock" data-i="${i}" ${can && g.gold >= unlockCost(h, i) ? '' : 'disabled'}>
-            <span style="font-family:var(--title);font-size:15px">Mở khóa</span><span style="display:flex;align-items:center;gap:4px">${coin(1)}${unlockCost(h, i)} vàng</span></button>`;
+            <span style="font-family:var(--title);font-size:15px">Mở khóa</span><span style="display:flex;align-items:center;gap:4px">${unlockCost(h, i) ? `${coin(1)}${unlockCost(h, i)} vàng` : 'Miễn phí'}</span></button>`;
       } else if (lv >= max) {
         btn = `<button class="up metal" disabled style="color:#FFD66B">Đã tối đa</button>`;
       } else {
@@ -3697,10 +3697,10 @@ class UI {
         <div><span>Sức mạnh</span><b>${lv ? `+${(lv - 1) * 25}%` : '—'}${lv && lv < SKILL_MAX[si] ? ` → <span style="color:#6AE06A">+${lv * 25}%</span>` : ''}</b></div>
         ${sk.active ? `<div><span>Năng lượng · hồi chiêu</span><b>${sk.active.mana} · ${sk.active.cooldown}s</b></div>` : ''}
         ${lv && lv < SKILL_MAX[si] ? `<div><span>Cấp ${lv + 1} cần</span><b class="${nextOk ? 'ok' : 'no'}">Tướng cấp ${skillReqLevel(si, lv + 1)}</b></div>` : ''}
-        ${!lv ? `<div><span>Mở khóa</span><b class="${h.level >= COSTS.unlockReq[si] ? 'ok' : 'no'}">${unlockCost(h, si)} vàng · cấp ${COSTS.unlockReq[si]}</b></div>` : ''}
+        ${!lv ? `<div><span>Mở khóa</span><b class="${h.level >= COSTS.unlockReq[si] ? 'ok' : 'no'}">${unlockCost(h, si) ? `${unlockCost(h, si)} vàng` : 'Miễn phí'} · cấp ${COSTS.unlockReq[si]}</b></div>` : ''}
         <div><span>Chi phí nâng</span><b>${h.from ? `${lv ? COSTS.skillGold(si, lv) : '—'} vàng (đã thăng thần)` : `1 điểm (còn ${h.skillPts})`}</b></div>
       </div>
-      ${!lv ? `<button class="big-btn btn-gold" data-act="sk-unlock" data-i="${si}" ${h.level >= COSTS.unlockReq[si] && g.gold >= unlockCost(h, si) ? '' : 'disabled'}>Mở khóa · ${coin(1)} ${unlockCost(h, si)}</button>`
+      ${!lv ? `<button class="big-btn btn-gold" data-act="sk-unlock" data-i="${si}" ${h.level >= COSTS.unlockReq[si] && g.gold >= unlockCost(h, si) ? '' : 'disabled'}>Mở khóa · ${unlockCost(h, si) ? `${coin(1)} ${unlockCost(h, si)}` : 'Miễn phí'}</button>`
         : lv < SKILL_MAX[si] ? (h.from
           ? `<button class="big-btn btn-gold" data-act="sk-up" data-i="${si}" ${nextOk && g.gold >= COSTS.skillGold(si, lv) ? '' : 'disabled'}>${ICON.up} Nâng lên cấp ${lv + 1} · ${coin(1)} ${COSTS.skillGold(si, lv)}</button>`
           : `<button class="big-btn btn-gold" data-act="sk-up" data-i="${si}" ${nextOk && h.skillPts ? '' : 'disabled'}>${ICON.up} Nâng lên cấp ${lv + 1} · 1 điểm</button>`)
@@ -3716,7 +3716,7 @@ class UI {
     return `${this.head('Cây kỹ năng', `<span class="chip dark">${def.name} · Cấp ${h.level}${h.train ? ` ✦${h.train}` : ''}</span>${penChip}${elChip(def.el)}${hidChip}
         ${h.skillPts ? `<span class="chip ok">Còn ${h.skillPts} điểm kỹ năng</span>` : ''}${this.runChip()}`)}
       <div class="scr-body" style="padding-bottom:4px"><div class="sk-cols">${cols}</div>${detail}</div>
-      <div class="foot">${h.from ? `${coin(1)} <b>Đã thăng thần:</b> mở khóa <b>W ${COSTS.unlockAsc[1]} · E ${COSTS.unlockAsc[2]} · R ${COSTS.unlockAsc[3]}</b>, nâng kỹ năng bằng vàng · điểm kỹ năng đổi thành chỉ số` : `${coin(1)} Giá mở khóa: <b>W 60</b> · <b>E 150</b> (cấp ${COSTS.unlockReq[2]}) · <b>R 300</b> (cấp ${COSTS.unlockReq[3]}) vàng`} <span style="color:#5C4620">|</span> Mỗi cấp tướng +1 điểm · mỗi cấp kỹ năng +25% sức mạnh · kỹ năng mạnh dần theo cấp tướng</div>`;
+      <div class="foot">${h.from ? `${coin(1)} <b>Đã thăng thần:</b> mở khóa <b>W ${COSTS.unlockAsc[1]} · E ${COSTS.unlockAsc[2]} · R ${COSTS.unlockAsc[3]}</b>, nâng kỹ năng bằng vàng · điểm kỹ năng đổi thành chỉ số` : `${coin(1)} Giá mở khóa: <b>W ${unlockCost(h, 1) || 'miễn phí'}</b> · <b>E ${unlockCost(h, 2) || 'miễn phí'}</b> (cấp ${COSTS.unlockReq[2]}) · <b>R ${unlockCost(h, 3) || 'miễn phí'}</b> (cấp ${COSTS.unlockReq[3]})${unlockCost(h, 3) ? ' vàng' : ' (★★★)'}`} <span style="color:#5C4620">|</span> Mỗi cấp tướng +1 điểm · mỗi cấp kỹ năng +25% sức mạnh · kỹ năng mạnh dần theo cấp tướng</div>`;
   }
 
   // ---------- Lò đúc đồng

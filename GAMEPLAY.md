@@ -2246,3 +2246,12 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
 - **Nhận xét:** hạ R3 xuống cấp 12 chỉ sớm Tím 0–2 đợt; với bot này điểm nghẽn chính là gom đủ hai tướng ★★★ (vàng mua thẻ / ghép), không phải cấp R. Game không dễ hơn rõ rệt → **không bù** (không đổi sức mạnh R hay giá nâng). Muốn Tím ở đợt 12–16 cần thêm thay đổi khác (vd ★★★ rẻ hơn / chợ ra đúng nguyên liệu hơn).
 - Test: `hop-the` thêm kiểm tra R cần tướng cấp 6/9/12, cấp 11 bị chặn R3 ("Cần tướng cấp 12"), cấp 12 nâng được. Ảnh đã xem: `docs/r-cap-12/skills-844x390.png`, `docs/r-cap-12/skills-1920x934.png`.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
+
+## claude/sao3-re-nhanh — Tướng ★★★ rẻ hơn, Tím đến sớm hơn
+
+- Tướng Thường **★★★**: lên cấp **⅓ giá** (trước ½), **mở kỹ năng W/E/R miễn phí** (trước 60/150/300). ★★ và tướng thần giữ nguyên giá. Núm trong `js/data.js`: `COSTS.lvDisc3`, `unlockDisc3` (thêm `lvDisc2`, `unlockDisc2`, `lv3Min` để chỉnh tiếp, mặc định không đổi).
+- Giao diện: nút Mở khóa / bảng chi tiết / dòng chân Cây kỹ năng ghi "Miễn phí" khi tướng ★★★; thông báo lên ★★★ ghi "Lên cấp giảm 67%, mở kỹ năng miễn phí".
+- Mô phỏng (`node tests/hop-the/mo-phong.js 8 own1`, bot tự chơi ải 1/3/5, 8 ván/ải; thêm dòng "★★★ đầu tiên"):
+  - ★★★ đầu tiên: đợt ~7.7 (không đổi — giới hạn bởi số thẻ cần ghép, tăng trọng số chợ không làm nhanh hơn).
+  - Tím đầu tiên: trước đợt **19.1 / 18.8 / 18.6** → sau **14.9 / 15.4 / 15.6** (mục tiêu 12–16).
+  - Độ khó (chơi hết ải, `het`): bot thua 17/24 ván trước, 15/24 sau, đợt thua TB tương đương → không dễ đi rõ rệt.

@@ -1362,7 +1362,8 @@ const FUSE_ADJ = { cdt: 1.069, lachau: 0.96, thachsanh: 0.45, thansan: 0.516, ca
 // v180: hợp thể ra tướng Tím cần 2 tướng Thường ★★★ ĐÃ NÂNG HẾT KỸ NĂNG (bỏ ngoại lệ v136); ra Vàng cần 2 thần Tím Thần tinh ★★★ + kỹ năng tối đa
 Object.assign(COSTS, { ascend: { epic: 300, legendary: 1200 }, ascendTier: 3, ascendTier2: 3 });
 // v181: nới cho luật v180 — tướng Thường ★★★ lên cấp nửa giá (đỡ phần nâng kỹ năng tối đa trước khi hợp thể; mô phỏng: Tím đầu tiên ~đợt 20)
-Object.assign(COSTS, { lvDisc3: 0.5, lvDisc2: 1, lv3Min: 0, unlockDisc2: 1, unlockDisc3: 1 });
+// claude/sao3-re-nhanh: tướng Thường ★★★ lên cấp ⅓ giá + mở kỹ năng miễn phí (mô phỏng own1: Tím đầu tiên đợt ~18.8 → ~15)
+Object.assign(COSTS, { lvDisc3: 1 / 3, lvDisc2: 1, lv3Min: 0, unlockDisc2: 1, unlockDisc3: 0 });
 // Thần lực: hệ số sát thương và máu của tướng đã thăng thần (kỹ năng +một nửa mức này)
 const ASCEND_POWER = { epic: 1.15, legendary: 1.6 };
 // Thần tinh của tướng thần Huyền thoại mạnh hơn Sử thi (nhân chỉ số mỗi bậc sao)

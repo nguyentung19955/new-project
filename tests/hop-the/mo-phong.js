@@ -64,6 +64,7 @@ async function run(level, rule, seed) {
     };
     while (!g.over && !g.won && (full || !first) && g.time < (full ? 4000 : 1800)) {
       g.update(DT); t += DT;
+      if (g.heroes.some((h) => h && !h.from && h.tier >= 3)) note('s3');     // claude/sao3-re-nhanh: đợt có ★★★ đầu tiên
       if (rule === 'own1') for (const [k, ty] of [['A', recipes[0].a], ['B', recipes[0].b]]) { const h = g.heroes.filter((x) => x && x.type === ty).sort((x, y) => (y.tier || 0) - (x.tier || 0))[0]; if (h && h.tier >= 3) note(k + '3'); if (h && h.tier >= 3 && !g.skillGap(h)) note(k + 'kn'); }
       if (t >= 0.5) { t = 0; for (let k = 0; k < 6; k++) think(); }
     }
@@ -81,6 +82,7 @@ async function run(level, rule, seed) {
     const got = rs.filter((x) => x.first);
     const avg = (f) => (got.length ? (got.reduce((a, x) => a + f(x), 0) / got.length).toFixed(1) : '-');
     if (FULL) console.log(`   hết ải: thắng ${rs.filter((x) => x.win).length}/${N} · mạng còn TB ${(rs.reduce((a, x) => a + Math.max(0, x.lives), 0) / N).toFixed(1)} · ${rs.map((x) => (x.win ? `thắng(${x.lives}♥)` : x.over ? `thua đ${x.wave}` : `đ${x.wave}`)).join(' ')}`);
+    const s3 = rs.filter((x) => x.mk.s3); console.log(`   ★★★ đầu tiên: ${s3.length}/${N} ván · đợt TB ${s3.length ? (s3.reduce((a, x) => a + x.mk.s3, 0) / s3.length).toFixed(1) : '-'}`);
     out[`${lv}/${rule}`] = { coTim: `${got.length}/${N}`, giay: avg((x) => x.first.t), dot: avg((x) => x.first.wave), thua: rs.filter((x) => !x.first && x.over).length };
     console.log(`ải ${lv + 1} · luật ${{ own1: 'luật hiện tại, đã mở 1 tướng Tím', cu: 'v136 ★★', kn2: '★★+KN (nguyên giá)', v180: 'v180 ★★★+KN', v181: 'v181 ★★★+KN, ★★★ lên cấp ½ giá', r12: '★★★+KN, R3 cấp 12' }[rule] || rule}: có Tím ${got.length}/${N} ván · TB ${avg((x) => x.first.t)} s · đợt ${avg((x) => x.first.wave)} · ${rs.map((x) => (x.first ? `đ${x.first.wave}` : x.over ? `thua/hết@${x.wave}` : '—')).join(' ')}`);
     if (process.env.MK) for (const x of rs) console.log('   mốc', JSON.stringify(x.mk), JSON.stringify(x.spend), 'đợt', x.wave, 't', x.time, 'vàng', x.gold, x.rec, '|', x.board);
