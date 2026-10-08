@@ -3036,10 +3036,10 @@ class UI {
       <div class="scr-head metal"><button class="xbtn metal" data-act="ro-back" aria-label="Quay lại">${ICON.back}</button><h1 class="ttl">Kho Báu &amp; Sính Lễ</h1>
         <span class="chip ok">Đã sưu tầm ${got} / ${ids.length}</span><div class="sp"></div>
         <span class="chip dark">${coin(1)} Tổng vàng đã kiếm ${fmt(this.save.lifeGold)} · Quái đã hạ ${fmt(this.save.lifeKills)}</span></div>
-      <div class="tr-body">${groups.map(([name, f]) => `<div class="tr-sec"><div class="h">${name}</div><div class="tr-row">${ids.filter((id) => f(ITEMS[id])).map((id) => {
+      <div class="tr-body">${groups.map(([name, f]) => { const gi = ids.filter((id) => f(ITEMS[id])); return `<div class="tr-sec"><div class="h">${name} <small>${gi.filter((id) => have.has(id)).length}/${gi.length}</small></div><div class="tr-row">${gi.map((id) => {
         const it = ITEMS[id];
-        return `<span class="slot ${rarCls(it.rarity)} ${have.has(id) ? '' : 'no'}" title="${it.name}${have.has(id) ? '' : ' (chưa có)'}">${svgI(itemIcon(id))}</span>`;
-      }).join('')}</div></div>`).join('')}</div></div>`;
+        return `<button class="slot ${rarCls(it.rarity)} ${have.has(id) ? '' : 'no'}" data-act="tr-it" data-id="${id}" title="${it.name}${have.has(id) ? '' : ' (chưa có)'}">${svgI(itemIcon(id))}</button>`;
+      }).join('')}</div></div>`; }).join('')}</div></div>`;
   }
 
   // ============================================================
@@ -3385,6 +3385,12 @@ class UI {
         this.rosterSel = d.type; this.renderRoster();
         // v147: chạm chân dung trong cây phát triển → cuộn danh sách tới tướng đó
         if (d.ev) { const c = $('#roster').querySelector(`.ro-card[data-type="${d.type}"]`); if (c) c.scrollIntoView({ block: 'nearest' }); }
+        break;
+      }
+      case 'tr-it': {   // sua-giao-dien-10 (N3): chạm ô Kho Báu → tên, độ hiếm, nơi kiếm
+        const it = ITEMS[d.id], r = RARITY[it.rarity], got = (this.save.collected || []).includes(d.id);
+        const from = it.bossOnly ? 'Sính lễ khi hạ boss' : it.recipe ? 'Đúc ở Lò đúc' : it.price ? 'Cửa hàng Lò đúc · quái rơi' : 'Quái rơi trong trận';
+        this.toast(`<b style="color:${r.color}">${esc(it.name)}</b> · ${r.name} · ${got ? 'đã có' : 'chưa có'}<br>Kiếm ở: ${from}`, r.color);
         break;
       }
       case 'ro-back':
