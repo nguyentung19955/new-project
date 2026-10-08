@@ -127,16 +127,16 @@ Sau đợt sửa cung ở mục 1, cung bắn trúng gần như mọi phát, và
 | | Cụm 5 quái, phòng thường: trước | Cụm 5 quái, phòng thường: sau | Một quái: trước | Một quái: sau | Cụm 5 quái, phòng trùm: trước | Cụm 5 quái, phòng trùm: sau |
 | --- | --- | --- | --- | --- | --- | --- |
 | Kiếm | 61,9 | **64,3** | 36,3 | **39,1** | 50,2 | **54,7** |
-| Giáo | 62,4 | **68,7** | 35,8 | **42,8** | 52,1 | **56,8** |
+| Giáo | 62,4 | **67,1** | 35,8 | **42,8** | 52,1 | **56,8** |
 | Búa | 68,9 | **68,8** | 43,7 | **41,3** | 53,7 | **53,5** |
-| Cung | 58,6 | **50,9** | 28,8 | **32,1** | 52,9 | **46,4** |
-| Cung thấp hơn kiếm | 5% | **21%** | 21% | **18%** | -5% (cung cao hơn) | **15%** |
+| Cung | 58,6 | **52,2** | 28,8 | **32,1** | 52,9 | **46,4** |
+| Cung thấp hơn kiếm | 5% | **19%** | 21% | **18%** | -5% (cung cao hơn) | **15%** |
 | Ba vũ khí cận chiến lệch nhiều nhất | 7% | **4%** | 13% | **5%** | 4% | **3%** |
-| Vũ khí yếu nhất so với mạnh nhất | 85% | **74%** | 66% | **75%** | 93% | **82%** |
+| Vũ khí yếu nhất so với mạnh nhất | 85% | **76%** | 66% | **75%** | 93% | **82%** |
 
-Bản gốc đánh cụm thì cung gần ngang kiếm, còn đánh một con thì búa bỏ xa mọi loại (cung chỉ bằng 66% búa). Riêng việc sửa cung ở mục 1 (chưa cân bằng) đã đưa cung đánh cụm lên ngang kiếm: 62,4 so với 60,7, đo 60 giây × 8 hạt giống. Nay đánh một con hay cả cụm, phòng thường hay phòng trùm, cung đều thấp nhất và thấp hơn kiếm 15-21%. Ba vũ khí cận chiến sát nhau hơn trước.
+Bản gốc đánh cụm thì cung gần ngang kiếm, còn đánh một con thì búa bỏ xa mọi loại (cung chỉ bằng 66% búa). Riêng việc sửa cung ở mục 1 (chưa cân bằng) đã đưa cung đánh cụm lên ngang kiếm: 62,4 so với 60,7, đo 60 giây × 8 hạt giống. Nay đánh một con hay cả cụm, phòng thường hay phòng trùm, cung đều thấp nhất và thấp hơn kiếm 15-19%. Ba vũ khí cận chiến sát nhau hơn trước.
 
-Khi có hệ ở Thức tỉnh (cụm, phòng thường, sau): Lửa 90,5; Độc 97,3; Băng 80,3. Ba hệ lệch nhau 10%, trong ngưỡng 15%. Cung có hệ: Lửa 83,4, Độc 90,3, Băng 85,4.
+Khi có hệ ở Thức tỉnh (cụm, phòng thường, sau): Lửa 90,7; Độc 97,3; Băng 80,4. Ba hệ lệch nhau 10%, trong ngưỡng 15%. Cung có hệ: Lửa 83,4, Độc 90,3, Băng 85,4.
 
 ### Ngưỡng kiểm tra mới
 
@@ -150,7 +150,34 @@ Khi có hệ ở Thức tỉnh (cụm, phòng thường, sau): Lửa 90,5; Độ
 
 `tests/balance.py` nay trả lỗi nếu bot thắng dưới 85% số lượt. Chạy thêm chữ `vukhi` thì bài chơi lại với từng loại vũ khí, và loại nào thắng dưới 75% là lỗi.
 
-KẾT_QUẢ_KIỂM_TRA
+## Kết quả kiểm tra (lần chạy cuối, trên đúng mã của commit cuối)
+
+| Bài | Kết quả |
+| --- | --- |
+| `cung.py` (mới) | 16/16; mỗi kiểu bắn, mỗi tình huống đều trúng 40/40 |
+| `cong.py` (mới) | 66/66 |
+| `moves.py` | 92/92 (sửa số theo cân bằng mới: sức kiếm, giáo, tên xuyên) |
+| `ghep.py` | 109/109 (mục "Mở màn" nay đọc sức nhát chém từ `G.MOVES`) |
+| `ghep2.py` | 196/196 (mục "quái lệch dọc 80 thì tên không bẻ góc" đổi thành phải trúng; tên mạnh xuyên thêm 2 thay cho 4) |
+| `rules.py` | 82/82 |
+| `doors.py` | 57/57 luật; bot thắng 9/9 ải thử |
+| `mapgen.py` | 1000 hạt giống mỗi kiểu, 0 lỗi |
+| `fuzz.py`, `fx_check.py` | 0 lỗi |
+| `anim_smoke.py`, `smoke.py`, `env_rooms.py` | không lỗi; 108 phòng |
+| `ui_input.py all` | phone 157/157, p169 157/157, desk 148/148, port 157/157 |
+| `ui_robust.py` | 17/17, 1/1, 16/16 |
+| `ui_build.py` | `dist/linh-khi.html` và `dist/artifact.html`: nạp 6/6, điều khiển thật 157/157 mỗi tệp |
+| `dps.py 90 16 nho` | đạt: cung thấp hơn kiếm 19%, cận chiến lệch 4%, ba hệ lệch 10% |
+| `dps.py 90 16 nho mot khonghe` | đạt: cung thấp hơn kiếm 18%, cận chiến lệch 5% |
+| `dps.py 90 16 trum khonghe` | đạt: cung thấp hơn kiếm 15%, cận chiến lệch 3% |
+| `balance.py 2` | thắng 28/30; một ải trung bình 261 giây, đánh trùm 75 giây, mất 96% máu mỗi ải |
+| `balance.py 3 - 0,2,4,7,9,12,14 vukhi` | thắng 75/84: kiếm 19/21, cung 17/21, giáo 20/21, búa 19/21 (bản gốc, 2 lượt mỗi ải: kiếm 12/14, cung 7/14, giáo 11/14, búa 14/14) |
+| `campaign.py` | 15 ải liền, thua 1 lần ở vùng 2 rồi chơi lại qua; tổng 55 phút |
+| `python3 game/build.py` | ghi hai tệp trong `dist/`, 1143 KB, 22 tệp JS. Mở `dist/linh-khi.html`, chơi tới khi vào cổng: không có lỗi trong console (chỉ có một lời nhắc tốc độ của trình duyệt về `getImageData`) |
+
+So với báo cáo ghép 2 (bản gốc): một ải trung bình 259-263 giây, nay 261. Máu mất mỗi ải 91%, nay 96%; các lần đo dao động từ 87% tới 101%, nên chưa thấy game khó hơn rõ rệt.
+
+Ở bản gốc, bot cầm cung chỉ thắng 7/14 lượt. Có hai lượt bị kẹt tới hết 900 giây vì không bắn trúng quái đứng lệch trên hoặc dưới: đúng lỗi chủ dự án gặp. Nay bot cầm cung thắng 17/21.
 
 ## Điểm còn yếu
 
@@ -159,4 +186,7 @@ KẾT_QUẢ_KIỂM_TRA
 - **Cung ngắm thẳng xuống thì cung che chân em bé**, vì phải vẽ trước người mới thấy được cung. Ảnh trông vẫn ổn, nhưng nhìn kỹ sẽ thấy.
 - **Băng vẫn yếu nhất trong ba hệ khi đánh cụm** (80 so với 90-97), dù vẫn trong ngưỡng. Đợt này không đụng tới hệ.
 - **Số đo cân bằng là số của bot.** Người thật chơi cung có thể đứng xa an toàn hơn bot, nên cảm giác cung yếu hơn kiếm có thể ít hơn con số 20%.
-- **Cổng chỉ có ở cuối ải.** Ải hướng dẫn (ải 1) cũng dùng cổng; dòng báo thắng đủ rõ để người mới biết phải làm gì.
+- **Ngưỡng 15-25% của cung sát mép ở phòng trùm** (15%). Phòng trùm rộng nên cung có chỗ chạy, vẫn mạnh hơn ở phòng thường. Nếu sau này đổi cỡ phòng trùm thì nên đo lại bằng `dps.py ... trum`.
+- **Bài `balance.py ... vukhi` có độ lệch lớn** vì mỗi ải chỉ chạy vài lượt. Cùng một bản mã, giáo có lần thắng 10/14, có lần 20/21. Nên chạy từ 3 lượt mỗi ải trở lên trước khi kết luận.
+- `campaign.py` lần cuối thua 1 lần ở vùng 2 (bot tự chơi lại và qua). Hai lần chạy trước trong đợt này không thua lần nào.
+- - **Cổng chỉ có ở cuối ải.** Ải hướng dẫn (ải 1) cũng dùng cổng; dòng báo thắng đủ rõ để người mới biết phải làm gì.

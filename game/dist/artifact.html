@@ -11161,11 +11161,11 @@
       chain: [
         // Ghép: giáo sống dài gần 60 điểm ảnh nên tầm đâm nới từ 54-56 lên 60-62, vòng quét từ 40 lên 44 cho khớp hình.
         // Sửa góp ý 3: giáo ở giữa kiếm và búa: ra tay chậm hơn kiếm (0,34/0,3/0,3 -> 0,38/0,34/0,34; quét 0,5 -> 0,52)
-        // nên mỗi nhát mạnh hơn kiếm (đâm 0,85 -> 1,05; quét 1,5 -> 1,75).
-        { name: 'Đâm', dur: 0.38, mult: 1.05, reach: 60, depth: 12 },
-        { name: 'Đâm', dur: 0.34, mult: 1.05, reach: 60, depth: 12 },
-        { name: 'Đâm', dur: 0.34, mult: 1.05, reach: 62, depth: 12 },
-        { name: 'Quét vòng', dur: 0.52, mult: 1.75, r: 44, push: 8, heavy: true, sweep: true, finish: 1 },
+        // nên mỗi nhát mạnh hơn kiếm (đâm 0,85 -> 1,1; quét 1,5 -> 1,85).
+        { name: 'Đâm', dur: 0.38, mult: 1.1, reach: 60, depth: 12 },
+        { name: 'Đâm', dur: 0.34, mult: 1.1, reach: 60, depth: 12 },
+        { name: 'Đâm', dur: 0.34, mult: 1.1, reach: 62, depth: 12 },
+        { name: 'Quét vòng', dur: 0.52, mult: 1.85, r: 44, push: 8, heavy: true, sweep: true, finish: 1 },
       ],
       // giữ rồi thả: lao một đoạn ngắn xuyên qua quái (đòn Đặc biệt "Lao tới" thì dài hơn và làm choáng)
       charge: { name: 'Xốc tới', time: 0.5, min: 0.3, slow: 0.6, len0: 30, len1: 58, t: 0.16, mult0: 1.0, mult1: 2.2, depth: 12 },
