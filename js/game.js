@@ -939,7 +939,7 @@ const SKILL_CASTS = {
       // ngựa chạy từ cửa sông về thành: quái càng gần thành bị đánh càng sau
       const delay = 0.05 + 0.85 * ((e.dist - Math.min(...ds)) / Math.max(1, Math.max(...ds) - Math.min(...ds)));
       game.effects.push({ type: 'none', ttl: delay, max: delay,
-        onEnd: () => { if (!e.dead) game.hit(e, (st.damage * 3 + n * 2) * st.skillPower, h, { big: true, color: '#FFB04A' }); } });
+        onEnd: () => { if (!e.dead) game.hit(e, (st.damage * 4 + n * 2) * st.skillPower, h, { big: true, color: '#FFB04A' }); } });
     }
     return true;
   },
@@ -1082,7 +1082,7 @@ const SKILL_CASTS = {
       game.effects.push({ type: 'lob', kind: 'dua', x: e.x - 40, y: e.y - 220, x2: e.x, y2: e.y, color: '#3EDC4E', ttl: 0.4 + srand() * 0.5, max: 0.9,
         onEnd: () => {
           game.effects.push({ type: 'splat', x: e.x, y: e.y, r: 30, color: '#E04848', ttl: 0.4, max: 0.4 });
-          if (!e.dead) { game.hit(e, (st.damage * 1.5 + n) * st.skillPower, h, { color: '#3EDC4E' }); if (!e.dead) game.slow(e, 40, 2); }
+          if (!e.dead) { game.hit(e, (st.damage * 2 + n) * st.skillPower, h, { color: '#3EDC4E' }); if (!e.dead) game.slow(e, 40, 2); }
         } });
     }
     return true;
@@ -1339,8 +1339,8 @@ const SKILL_CASTS = {
     game.effects.push({ type: 'banner', str: st.skName || 'Rừng Thiêng Nổi Giận', color: '#5FD06A', ttl: 1.6, max: 1.6 });
     game.effects.push({ type: 'flash', color: '#BFF0A0', ttl: 0.3, max: 0.3 });
     for (const e of list) {
-      game.stun(e, e.def.boss ? 0.4 : 1.2, 'root');   // claude/can-bang-tuong-vang: 1.8/0.6 → 1.2/0.4, x2 → x1.5
-      game.hit(e, (st.damage * 1.5 + n) * st.skillPower, h, { color: '#5FD06A' });
+      game.stun(e, e.def.boss ? 0.6 : 1.8, 'root');
+      game.hit(e, (st.damage * 2 + n) * st.skillPower, h, { color: '#5FD06A' });
     }
     healHeroes(game, h.x, h.y, ALLY_R, 0.2, '#5FD06A');
     return true;
