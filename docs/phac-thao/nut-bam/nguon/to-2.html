@@ -1,0 +1,35 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><title>Nút theo vũ khí và hệ</title><link rel="stylesheet" href="to.css"></head><body>
+<h1>Nút theo vũ khí và hệ</h1>
+<p class="sub">Cầm vũ khí nào thì nút Đánh hiện hình vũ khí đó, nút Đặc biệt hiện đòn riêng của nó. Vũ khí theo hệ nào thì nút nhuốm màu hệ đó: Lửa bốc ngọn trên vòng, Độc nhỏ giọt phía dưới, Băng mọc gai bốn góc. Che mất một nửa nút vẫn đoán ra hệ.</p>
+<div class="card"><h2>Bốn vũ khí nhân bốn hệ</h2><p>Mỗi ô: nút Đánh (to) và nút Đặc biệt (nhỏ, có giá mana). Phóng to 3 lần.</p><div class="grid" id="vk"></div></div>
+<div class="card"><h2>Kỹ năng riêng của bốn hero</h2><p>Vòng vàng, mặt nút cùng màu áo hero. Phóng to 4 lần.</p><div class="row" id="hero" style="gap:26px"></div></div>
+<div class="card"><h2>Hệ càng mạnh, trang trí càng nhiều</h2><p>Vũ khí lên mốc tiến hóa thì ngọn lửa, giọt độc, gai băng quanh nút Đánh nhiều thêm.</p><div class="row" id="moc" style="gap:18px"></div></div>
+<script src="to.js"></script><script src="../../../../game/js/btn_art.js"></script>
+<script>
+const A = G.btnArt, T = 10.1;
+const VK = [['sword', 'Kiếm', 'Chém lướt'], ['bow', 'Cung', 'Mưa tên'], ['spear', 'Giáo', 'Lao tới'], ['hammer', 'Búa', 'Nện đất']];
+const HE = [[null, 'Chưa hệ', '#e9e3d6'], ['fire', 'Lửa', '#ff9a4a'], ['poison', 'Độc', '#8fe05a'], ['ice', 'Băng', '#9fdcff']];
+const vk = document.getElementById('vk');
+vk.style.gridTemplateColumns = 'auto repeat(4, auto)';
+el('div', 'hd', '', vk); HE.forEach((h) => el('div', 'hd', '<span style="font-size:17px;color:' + h[2] + '">' + h[1] + '</span>', vk));
+let n = 0;
+for (const v of VK) {
+  el('div', 'rh', v[1] + '<small>Đặc biệt: ' + v[2] + '</small>', vk);
+  for (const h of HE) {
+    const w = { type: v[0], branch: h[0], stage: 2 };
+    taoO(vk, 128, 80, 3, (x) => {
+      A.draw(x, 'atk', 40, 41, 29, { weapon: w, t: T, id: 'k' + (n++) });
+      A.draw(x, 'special', 100, 43, 19, { weapon: w, cost: 25, t: T, id: 'k' + (n++) });
+    });
+  }
+}
+const hero = document.getElementById('hero');
+[['smith', 'Thợ Rèn: Nung', 'Phủ Lửa lên vũ khí trong 6 giây', 'lưỡi kiếm nung trong lửa'], ['hunter', 'Thợ Săn: Đặt bẫy', 'Bẫy giữ chân quái 2 giây', 'bẫy kẹp răng cưa'], ['healer', 'Thầy Lang: Bình thuốc', 'Vũng Độc 5 giây, đứng trong thì hồi máu', 'bầu hồ lô thuốc xanh'], ['wrestler', 'Đô Vật: Gồng', '3 giây giảm sát thương, đẩy lùi quái', 'nắm đấm siết chặt']].forEach((h, i) => {
+  taoO(hero, 60, 62, 4, (x) => A.draw(x, 'skill', 30, 29, 19, { hero: h[0], cost: 40, t: T, id: 'h' + i }), h[1] + '<small>' + h[2] + '</small><small>Hình: ' + h[3] + '</small>');
+  taoO(hero, 46, 62, 2, (x) => A.draw(x, 'skill', 23, 29, 19, { hero: h[0], cost: 40, t: T, id: 'hh' + i }), '<small>cỡ nhỏ</small>');
+});
+const moc = document.getElementById('moc');
+for (const e of ['fire', 'poison', 'ice']) for (const st of [1, 2, 3]) {
+  taoO(moc, 78, 82, 2, (x) => A.draw(x, 'atk', 39, 41, 29, { weapon: { type: 'sword', branch: e, stage: st }, t: T, id: 'm' + e + st }), 'Mốc ' + st);
+}
+</script></body></html>

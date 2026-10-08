@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Linh Khí: thử bộ nút mới</title>
+<!-- Trang thử: nạp các file của game, thêm btn_art.js, và dùng bản sao stage_thu.js thay cho stage.js. -->
+<style>
+  html, body { height: 100%; overscroll-behavior: none; touch-action: none; }
+  body { margin: 0; background: #120d10; color: #f1ead9; font-family: "Be Vietnam Pro", system-ui, sans-serif; overflow: hidden; user-select: none; -webkit-user-select: none; }
+  #shell { height: 100%; box-sizing: border-box; padding-inline: 16px; }
+  #fit { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; touch-action: none; }
+  #stage { position: relative; outline: 1px solid #3a2a22; background: #000; max-width: 100%; }
+  #world { position: absolute; inset: 0; width: 100%; height: 100%; display: block; image-rendering: pixelated; image-rendering: crisp-edges; }
+  #ui { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+</style>
+</head>
+<body>
+<div id="shell"><div id="fit"><div id="stage">
+  <canvas id="world" width="480" height="270"></canvas>
+</div><canvas id="ui"></canvas></div></div>
+<script src="../../../../game/js/data.js"></script>
+<script src="../../../../game/js/engine.js"></script>
+<script src="../../../../game/js/art.js"></script>
+<script src="../../../../game/js/hero_art.js"></script>
+<script src="../../../../game/js/env_art.js"></script>
+<script src="../../../../game/js/combat.js"></script>
+<script src="../../../../game/js/boss.js"></script>
+<script src="../../../../game/js/fx.js"></script>
+<script src="../../../../game/js/btn_art.js"></script>
+<script src="stage_thu.js"></script>
+<script src="../../../../game/js/village.js"></script>
+<script src="../../../../game/js/main.js"></script>
+</body>
+</html>
