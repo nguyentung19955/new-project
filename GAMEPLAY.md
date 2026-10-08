@@ -2704,6 +2704,22 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
   60 ảnh, lúc rảnh): tướng, quái, boss, nền, bản đồ, hiệu ứng, icon; nhóm hiện bằng <img> (đồ, kỹ năng, ấn phù, thần khí) và canh/* không
   nạp sẵn → menu hiện ~0,6 s (trước ~1,4 s, ngang ?pixel=0). (2) chợ: chân dung pixel mọi tướng nạp + giải mã sẵn vào bộ đệm chợ
   (ui.preloadMarket) ngay sau lô cuối → đổi ↻ không nháy thẻ trống.
+
+## claude/tuong-pixel-ro — Tướng pixel dễ phân biệt hơn trên sân
+
+- **Đo tự động:** `python3 tools/pixel/do-giong-tuong.py [--ten=-sau] [--nguong 0.72]` — so từng cặp tướng (khung idle, căn theo
+  chân): bóng dáng (IoU) · màu chủ đạo (biểu đồ họ màu, bỏ viền) · nhìn thu nhỏ 16×16; điểm = 0.35·bóng + 0.45·màu + 0.20·nhỏ.
+  Ghi `tools/pixel/mau/phan-biet/do-giong*.txt`, `bang-tong*.png` (cỡ ×3, ×1 như trên sân, bóng đen), `cap-giong*.png`.
+- **Trước:** 19 cặp vượt ngưỡng 0.72 (cụm nâu đất Lực Sĩ · Đắp Đê · Chăn Trâu · Tre · Thợ Săn · Sọ Dừa; Lạc Tướng ~ Xạ Thủ;
+  Chuông Đồng ~ Thổ Công; Ông Táo ~ Tiên Dung; Kinh Dương ~ Mặt Trời; Chử Đồng Tử ~ Ông Đùng ~ An Tiêm…). **Sau: 0 cặp**
+  (cao nhất 0.72 → còn 0.720 adv ~ langlieu, không vượt).
+- Mỗi tướng chỉnh một màu chủ đạo riêng / dấu hiệu riêng (giữ dáng, vũ khí, đủ khung động tác):
+  Lực Sĩ đất sét VÀNG ĐẤT + khố đỏ · Đắp Đê mặt tay da người lấm bùn, NÓN LÁ to, quần CHÀM, xẻng lưỡi sắt · Chăn Trâu bột tò he
+  HỒNG ĐẤT · Tre nan TRE XANH + áo đan kem · Chuông Đồng áo lễ BẠC + dải sơn son chéo ngực, gậy chuông cao hơn ·
+  Xạ Thủ áo quấn XANH THÉP + dây đỏ chéo · Giáo Đồng vảy XÁM THIẾC sáng (cả chân) · Thầy Lang thân cuống nấm TRẮNG NGÀ ·
+  Tiên Dung váy TÍM · Thổ Công áo vàng nghệ · Mặt Trời áo lửa cam · Lạc Hầu đá ong ĐỎ CAM · An Tiêm áo lá XANH RÊU ·
+  Chử Đồng Tử khố CHÀM. Không đụng phần vẽ hào quang (nhánh hao-quang-tim-vang).
+- Chụp trận nhiều tướng cạnh nhau 844×390 + 1920×934: `tools/pixel/mau/phan-biet/tran-*.png`.
 - Sửa theo tester: nền menu / đăng nhập / màn tải giữ tranh cũ (bản pixel 320×180 mất hoa văn trống đồng, kể cả khi tăng màu / khử
   nhiễu); thẻ người chơi và nút Xuất Quân dùng khung vẽ tay chuyển sang pixel (có lại huy hiệu avatar tròn và 2 huy hiệu hai bên), không
   bị khung bảng / nút chung đè; icon Vô Tận vẽ lại thành ∞ rõ.

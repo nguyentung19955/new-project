@@ -2,6 +2,7 @@
 # Đặc trưng (PROMPT-GEN-LAI.txt:826 ưu tiên + PROMPT-DUNG-XUONG.txt:558): công chúa ~17 mảnh mai, tóc 2 VÒNG KHUYÊN to trên đỉnh,
 # áo tứ thân đỏ thắm, yếm + thắt lưng hồng đào, gấu váy viền tím (Tím); cầm QUẠT lụa tròn to (KHÔNG kiếm). Không má hồng (QUY-CHUAN mục 0).
 # Chiêu (Mưa Hoa Tiên): phẩy quạt — cánh hoa sen hồng bay lả tả.
+# tuong-pixel-ro (phân biệt tướng): váy TÍM sen (thay đỏ) — khác áo đỏ Ông Táo; quạt / viền vẫn màu lửa.
 name: Tiên Dung
 size: 32x32
 anchor: 15,30
@@ -13,9 +14,9 @@ colors:
   F = da
   h = da-sang
   e = trang
-  m = son-toi
-  r = son
-  R = son-sang
+  m = tim-toi
+  r = tim
+  R = tim-sang
   H = hong
   c = da-sang
   o = dong-toi
