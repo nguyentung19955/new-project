@@ -132,12 +132,15 @@ function pxDrawHero(ctx, h, x, y, o) {
 }
 
 // ---- QUÁI / BOSS: kích thước (enemyBox) + vẽ (drawEnemy, sau khi đã dịch / lật / nhún)
-function pxEnemyBox(e, w, k) {
+// hOld: chiều cao hình cũ → khớp chiều cao đó (giữ tỉ lệ), không rộng quá 1,15× rộng cũ; 0 = theo rộng
+function pxEnemyBox(e, w, k, hOld) {
   const pe = pxEnemyEntry(e.type, e);
   if (!pe) return null;
-  const unit = w / Math.max(8, pe.bbox[2]);
-  const h = (pe.ay + 1 - pe.bbox[1]) * unit;
-  return { w, h, ay: h, k, px: pe, unit };
+  const hp = pe.ay + 1 - pe.bbox[1];
+  let unit = w / Math.max(8, pe.bbox[2]);
+  if (hOld > 0) unit = Math.min(hOld / hp, unit * 1.15);
+  const h = hp * unit;
+  return { w: Math.max(8, pe.bbox[2]) * unit, h, ay: h, k, px: pe, unit };
 }
 function pxDrawEnemy(ctx, e, t, box) {
   const pe = box.px;
