@@ -29,17 +29,21 @@ let mapImg = null;
 
 // Diện tích thật sự dùng được: trừ phần đệm vùng an toàn của trang (tai thỏ, thanh home)
 // để khung game không tràn ra ngoài
+// claude/sua-giao-dien-10 (lỗi iPhone Safari): khung nhìn THẬT = visualViewport (thanh địa chỉ thu/hiện, bàn phím) + vị trí của nó
+// (offsetLeft/Top), trừ lề an toàn đặt ở padding body (tai thỏ / thanh trạng thái khi cầm dọc). Trả [w, h, x, y].
 function viewportSize() {
   const vv = window.visualViewport;
   const de = document.documentElement;
   let w = (vv && vv.width) || window.innerWidth || de.clientWidth;
   let h = (vv && vv.height) || window.innerHeight || de.clientHeight;
+  let x = vv ? vv.offsetLeft || 0 : 0, y = vv ? vv.offsetTop || 0 : 0;
   const px = (el, k) => parseFloat(getComputedStyle(el)[k]) || 0;
   for (const el of [de, document.body]) {
+    x += px(el, 'paddingLeft') + px(el, 'borderLeftWidth'); y += px(el, 'paddingTop') + px(el, 'borderTopWidth');
     w -= px(el, 'paddingLeft') + px(el, 'paddingRight') + px(el, 'borderLeftWidth') + px(el, 'borderRightWidth');
     h -= px(el, 'paddingTop') + px(el, 'paddingBottom') + px(el, 'borderTopWidth') + px(el, 'borderBottomWidth');
   }
-  return [Math.max(0, w), Math.max(0, h)];
+  return [Math.max(0, w), Math.max(0, h), x, y];
 }
 
 // Cỡ chữ & nút: 'auto' = màn hình thấp (điện thoại xoay ngang, cao < 520 px) phóng to 1,2 lần
@@ -77,8 +81,9 @@ function resize() {
   // v153: bàn phím điện thoại mở khi gõ chat (hoặc góp ý) làm khung nhìn co lại — giữ nguyên bố cục, gõ xong mới co giãn lại
   const ae = document.activeElement;
   if (ae && ae.id === 'chat-in') { if (!resize.hooked) { resize.hooked = true; ae.addEventListener('blur', () => { resize.hooked = false; setTimeout(resize, 150); }, { once: true }); } return; }
-  let [vw, vh] = viewportSize();
+  let [vw, vh, vx, vy] = viewportSize();
   if (!vw || !vh) return requestAnimationFrame(resize);
+  const cx = vx + vw / 2, cy = vy + vh / 2;     // tâm khung nhìn thật — #wrap (position: fixed) đặt tâm vào đây, xoay quanh tâm
   ROT = vh > vw;
   if (ROT) [vw, vh] = [vh, vw];
   $('#rotate').hidden = true;
@@ -95,6 +100,9 @@ function resize() {
   const dpr = Math.min(window.devicePixelRatio || 1, GFX.dprCap(), GFX.pxCap(w, h));
   wrap.style.width = w + 'px';
   wrap.style.height = h + 'px';
+  wrap.style.left = Math.round(cx - w / 2) + 'px';
+  wrap.style.top = Math.round(cy - h / 2) + 'px';
+  if (window.scrollX || window.scrollY) window.scrollTo(0, 0);
   // giao diện: cùng tỉ lệ với bản đồ (k), khung thiết kế rộng / cao theo màn hình (UIW × UIH)
   const k = scale * DK;
   UIW = w / k; UIH = h / k; MAPX = ox; MAPY = oy;
@@ -111,9 +119,13 @@ function resize() {
   ui.scale = scale;
   mapImg = mapImage(Math.round(CONFIG.W * scale * dpr), Math.round(CONFIG.H * scale * dpr), game.level);
 }
-window.addEventListener('resize', resize);
-window.addEventListener('orientationchange', () => setTimeout(resize, 200));
-if (window.visualViewport) window.visualViewport.addEventListener('resize', resize);
+// iOS Safari báo kích thước muộn / nhiều lần (xoay máy, thanh địa chỉ, bàn phím) → đặt lại ngay + sau 100 / 300 / 700 ms
+let reflowT = [];
+const reflow = () => { resize(); reflowT.forEach(clearTimeout); reflowT = [100, 300, 700].map((ms) => setTimeout(resize, ms)); };
+window.addEventListener('resize', reflow);
+window.addEventListener('orientationchange', reflow);
+if (window.visualViewport) { window.visualViewport.addEventListener('resize', reflow); window.visualViewport.addEventListener('scroll', reflow); }
+window.addEventListener('scroll', () => { if (window.scrollX || window.scrollY) window.scrollTo(0, 0); }, { passive: true });
 resize();
 
 // --- Chạm & kéo tướng: chạm nhanh = chọn, giữ và kéo = đổi ô
