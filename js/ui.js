@@ -737,6 +737,7 @@ class UI {
     g.running = false;
     g.speed = 1;
     this.sel = -1; this.spot = -1; this.armed = null; this.raising = false; this.moving = -1;
+    this.hideTrash();     // sua-trieu-hoi: không mang thùng 🗑 / lớp dragging-hero (ẩn chợ) sót từ trận trước sang
     this.screen = null;
     $('#screen').hidden = true;
     this.save.last = i;
@@ -1311,7 +1312,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 212</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 213</div>
       </div></div>`;
   }
 

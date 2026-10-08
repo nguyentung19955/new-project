@@ -2293,6 +2293,10 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 213 — gộp sua-trieu-hoi (tester đạt)
+
+- Sửa lỗi không triệu hồi được sau vài màn: kéo tướng 1 ngón + ngón 2 chạm tướng khác làm kẹt lớp dragging-hero (chợ ẩn, thùng 🗑 kẹt). Đang kéo thì bỏ qua ngón khác; vào trận mới tự gỡ thùng.
+
 ## Phiên bản 212 — gộp pixel-tuong-vang (tester đạt)
 
 - 14 tướng Vàng + 6 linh thú pixel (sprite + chân dung).
@@ -2372,3 +2376,13 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
   Kỳ Lân Vàng (đầu lân–rồng, 1 sừng vàng, vảy ngói men, bờm + đuôi mây) · `halong` Rồng Mẹ Hạ Long (thân rồng uốn, núi đá vôi
   tí hon trên lưng, ngọc trong vuốt) · `ongho` Chúa Sơn Lâm (hổ 4 chân, vằn nét tranh Đông Hồ, khăn lá, chữ 王) — đều có chân dung riêng.
 - Không sửa js/pixel.js hay file lô khác; file sinh ra (`assets/pixel/tuong/`, `js/pixel/tuong.js`, `js/asset-list.js`) dựng lại.
+
+## claude/sua-trieu-hoi — sửa lỗi "chơi một lúc thì không triệu hồi (mua thẻ Chợ) được nữa"
+- **Nguyên nhân gốc:** khi kéo tướng, `#wrap` nhận lớp `dragging-hero` (CSS ẩn thanh chợ + `pointer-events:none` để thùng 🗑 nằm đúng chỗ).
+  Nếu đang kéo (ngón 1) mà một ngón khác chạm vào tướng khác, `pointerdown` của canvas **ghi đè biến `drag`** → ngón 1 nhấc ra bị bỏ qua
+  (khác pointerId), ngón 2 chỉ là chạm chọn → không ai gọi `hideTrash()`. Lớp `dragging-hero` kẹt mãi (cả sang ải sau, không có chỗ nào gỡ):
+  chợ tướng biến mất / không nhận chạm, thùng 🗑 vẫn hiện → "không triệu hồi được nữa". Dễ gặp khi chơi nhanh bằng 2 tay trên điện thoại.
+  Đã loại trừ: chợ rỗng / thẻ null (MARKET_CAP, bảo hiểm), lỗi JS khi tự ghép, lớp phủ khác — chơi thử 30 đợt mua liên tục đều mua được.
+- **Sửa (js/main.js):** đang kéo tướng thì bỏ qua ngón khác (`if (drag) return`); `pointercancel` của ngón khác không huỷ lần kéo đang dở;
+  chạm canvas mà còn sót thùng 🗑 thì gỡ luôn. **js/ui.js `startLevel`:** vào trận mới gọi `hideTrash()` (không mang lớp kẹt sang).
+- **Test:** `tests/cho-tuong/keo-hai-ngon.test.js` (chạm 2 ngón bằng CDP: code cũ FAIL "chợ hiện lại", code mới đạt; mua thẻ được sau đó).

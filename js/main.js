@@ -124,6 +124,10 @@ const toLogical = (ev) => {
 
 canvas.addEventListener('pointerdown', (ev) => {
   if (ui.uiHidden) return;   // v180: đang ẩn giao diện = chỉ xem, chạm bản đồ không chọn / kéo tướng
+  // sua-trieu-hoi: đang kéo tướng bằng một ngón thì bỏ qua ngón khác — trước đây ngón 2 ghi đè `drag`, ngón 1 nhấc ra
+  // không ai gỡ lớp dragging-hero → chợ tướng bị ẩn + không nhận chạm vĩnh viễn ("không triệu hồi được nữa")
+  if (drag) return;
+  if (!$('#trash').hidden) ui.hideTrash();     // còn sót thùng 🗑 / lớp dragging-hero từ lần kéo trước → gỡ
   const [x, y] = toLogical(ev);
   const slot = ui.slotAt(x, y);
   if (game.started && !game.over && !ui.raising && slot >= 0 && game.heroes[slot]) {
@@ -154,7 +158,7 @@ canvas.addEventListener('pointerup', (ev) => {
   // thả lên tướng cùng loại cùng sao: ghép; đúng công thức: hợp thể; còn lại: đổi chỗ
   if (to >= 0 && to !== d.from) ui.dropOn(d.from, to);
 });
-canvas.addEventListener('pointercancel', () => { drag = null; ui.hideTrash(); });
+canvas.addEventListener('pointercancel', (ev) => { if (drag && ev.pointerId !== drag.id) return; drag = null; ui.hideTrash(); });
 
 // --- v143: CHỢ TƯỚNG — chạm thẻ = mua & đặt vào ô trống; kéo thẻ thả vào một ô = đặt đúng ô (lên tướng ★ cùng loại = ghép)
 let cardDrag = null;
