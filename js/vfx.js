@@ -336,14 +336,24 @@ const VFX = (() => {
       ctx.fillRect(X + (i - 2) * c - (c >> 1), Y - (7 - j) * c, c, c);
     }
   }
-  // khối băng bát giác bao hộp [x0, x1] × [y0, y1] (toạ độ bản đồ): mặt trong trong suốt nhạt, viền sáng 1 ô, vệt sáng chéo
-  // cạnh trên trái, đáy chàm sáng. Vẽ theo hàng ô lưới n → cạnh chéo bậc thang pixel
+  // khối băng THẬP LỤC GIÁC bao hộp [x0, x1] × [y0, y1] (toạ độ bản đồ): 4 cạnh thẳng + mỗi góc bo bằng 3 cạnh (cung 90° chia
+  // 3 đoạn) = 16 cạnh. Mặt trong trong suốt nhạt, viền sáng 1 ô, vệt sáng chéo trên trái, đáy chàm sáng; vẽ theo hàng ô lưới n
+  const ARC = [0, 30, 60, 90].map((d) => [Math.cos((d * Math.PI) / 180), Math.sin((d * Math.PI) / 180)]);
   function iceOct(ctx, x0, y0, x1, y1) {
     const n = G.n, m = Math.max(3 * n / G.k, 0.11 * Math.min(x1 - x0, y1 - y0));
     const X0 = Math.floor(sx(x0 - m) / n) * n, X1 = Math.ceil(sx(x1 + m) / n) * n;
     const Y0 = Math.floor(sy(y0 - m) / n) * n, Y1 = Math.ceil(sy(y1 + m) / n) * n;
-    const cut = Math.max(n, Math.floor((1.9 * m * G.k) / n) * n);   // < 2 lề → góc hộp nằm trong
-    const ins = (y) => Math.max(0, cut - (y - Y0), cut - (Y1 - n - y));
+    // bán kính bo R ≤ 3,16 lề thì góc hộp vẫn nằm trong cung 3 đoạn (khoảng cách tâm–góc (R−m)√2 ≤ R·cos15°)
+    const R = Math.min(Math.floor((X1 - X0) / 2), Math.floor((Y1 - Y0) / 2), Math.max(2 * n, Math.floor((3 * m * G.k) / n) * n));
+    const ins = (y) => {
+      const v = R - Math.min(y + n / 2 - Y0, Y1 - y - n / 2);          // cao hơn tâm cung bao nhiêu (≤ 0: đoạn thẳng)
+      if (v <= 0) return 0;
+      const q = Math.min(1, v / R);
+      let i = 0; while (i < 2 && ARC[i + 1][1] < q) i++;
+      const [c0, s0] = ARC[i], [c1, s1] = ARC[i + 1], h = c0 + ((c1 - c0) * (q - s0)) / (s1 - s0);
+      return Math.round((R - h * R) / n) * n;
+    };
+    const cut = R;
     ctx.globalAlpha = 0.4; ctx.fillStyle = C.troi;
     for (let y = Y0; y < Y1; y += n) { const k = ins(y); ctx.fillRect(X0 + k, y, X1 - X0 - 2 * k, n); }
     ctx.globalAlpha = 0.95;
@@ -363,7 +373,7 @@ const VFX = (() => {
     const bar = fy - H - 3;                          // đáy thanh máu: không vẽ gì cao hơn
     begin(ctx, 0.6);                                 // sprite trạng thái nhỏ hơn hạt chiêu: không lấn át quái
     const big = W > 80 ? 2 : 1;
-    // đóng băng: khối băng BÁT GIÁC pixel bọc trọn hộp hình (lề ~11%, cắt góc < 2 lề → góc hộp vẫn nằm trong), co giãn theo
+    // đóng băng: khối băng THẬP LỤC GIÁC pixel bọc trọn hộp hình (lề ~11%, góc bo 3 cạnh, góc hộp vẫn nằm trong), co giãn theo
     // cỡ từng con (boss to → khối to, quái bay → bọc đúng chỗ đang bay) + tinh thể băng dưới chân
     if (e.stunT > 0 && e.stunKind === 'ice' && ready('bang-tinh') && sb(3)) {
       r.ice = r.iceArt = true;

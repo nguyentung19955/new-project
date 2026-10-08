@@ -128,7 +128,7 @@ const noPixelVfx = (p) => p.route('**/js/pixel/vfx.js*', (r) => r.fulfill({ cont
     ok(geo.burn.every((g) => g.h >= g.H * 0.18 && g.h <= g.H * 0.45), 'lửa bỏng rõ dáng, cao 18–45% hình quái ' + JSON.stringify(geo.burn.map((g) => +(g.h / g.H).toFixed(2))));
     ok(geo.burn.every((g) => g.top >= g.head), 'lửa bỏng nằm trong thân (không vượt đỉnh đầu)');
     ok(geo.burn.every((g) => g.w <= g.W * 0.9), 'lửa bỏng không rộng quá thân quái');
-    // khối băng bát giác bao trọn hộp hình thật (drawEnemy thật → hộp truyền vào VFX.status), lề mỗi bên ≤ 15% (+1 ô lưới)
+    // khối băng thập lục giác bao trọn hộp hình thật (drawEnemy thật → hộp truyền vào VFX.status), lề mỗi bên ≤ 15% (+1 ô lưới)
     const ice = await page.evaluate(() => {
       const c = document.createElement('canvas').getContext('2d'), out = [];
       const st0 = VFX.status;
@@ -162,7 +162,7 @@ const noPixelVfx = (p) => p.route('**/js/pixel/vfx.js*', (r) => r.fulfill({ cont
       return out;
     });
     for (const g of ice) {
-      ok(!g.miss && g.rows > 0, `khối băng bát giác bao trọn hình ${g.type} ` + JSON.stringify(g));
+      ok(!g.miss && g.rows > 0, `khối băng thập lục giác bao trọn hình ${g.type} ` + JSON.stringify(g));
       ok(g.mx <= 0.15 + 4 / g.W && g.my <= 0.15 + 4 / g.H, `khối băng ${g.type}: lề ≤ 15% (ngang ${g.mx}, dọc ${g.my})`);
     }
     ok(!chk.frac && !chk.smooth, 'trạng thái vẽ bám lưới điểm ảnh (toạ độ nguyên), không khử răng cưa');
