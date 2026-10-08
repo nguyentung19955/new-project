@@ -1,40 +1,46 @@
-# Bánh Giầy — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Tướng đứng gần +2.1 hồi máu/giây
-name: Bánh Giầy
+# Lang Liêu · W «Bánh Giầy» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bánh giầy + dấu hồi máu
+name: Lang Liêu · W «Bánh Giầy»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = trang-xam
+  f = trang
+  g = sang
+  h = dat-toi
+  i = dat-sang
+  j = la-toi
+  k = la
+  l = la-ma
+  m = la-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbggggebbggggebbbdca
-aedbbgfffffggfffffebbdca
-aedbgffffffffffffffebdca
-aedbgffffffffffffffebdca
-aedbgffffffffffffffebdca
-aedbeffffffffffffffebdca
-aedbbeffffffffffffebbdca
-aedbbbefffffffffeebbbdca
-aedbbbbefffffffebbbbbdca
-aedbbbbbgfffffebbbbbbdca
-aedbbbbbefffffebbbbbbdca
-aedbbbbbbefffebbbbbbbdca
-aedbbbbbbbefebbbbbbbbdca
-aedbbbbbbbbebbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+addddddddddggdddddddddca
+adccccccccccccccccccccba
+adciiiiiiiiiiiiiiiiiicba
+adcihhhhhhhhhhhhhhhhicba
+adcihhhhhhhhhaaaahhhicba
+adcihhhhhhhhaggggahhicba
+adcihhhaaaaagffffeahicba
+adcihhagggggfffffeahicba
+adcihagggfffgefffeahicba
+adciaggfffffffgfeahhicba
+agciagfffffffffeahhhicga
+agciagfffffffffeahhhicga
+adciaffffffffffeahhhicba
+adciaaefffffffeaaahhicba
+adcakkkeeeeeeekkaaahicba
+adcalkkkkkkkkkkaamaaicba
+adciajkkkkkkkkkammmaicba
+adcihaaaaaaaaaaaamaaicba
+adcihhhhhhhhhhhhaaahicba
+adciiiiiiiiiiiiiiiiiicba
+adccccccccccccccccccccba
+acbbbbbbbbbbggbbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

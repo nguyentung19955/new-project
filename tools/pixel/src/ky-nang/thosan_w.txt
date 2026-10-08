@@ -1,41 +1,45 @@
-# Tên Ẩn — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a hidden spear among leaves
-name: Tên Ẩn
+# Thợ Săn Rừng · W «Tên Ẩn» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: cung + lá rơi
+name: Thợ Săn Rừng · W «Tên Ẩn»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = la
-  g = la-ma
-  h = la-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = trang
+  f = sang
+  g = dat-toi
+  h = dat
+  i = dat-sang
+  j = la-toi
+  k = la-ma
+  l = la-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbgbdca
-aedbbbbbbbbbbbbbbhfbbdca
-aedbbbbbbbbbbbbbhgfbbdca
-aedbbbbbbbbbbbhhgfbbbdca
-aedbbbbbbbbbhhgggfbbbdca
-aedbbbbbbbhhggggfbbbbdca
-aedbbbbbbhggggggfbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbhggggggfbbbbbbdca
-aedbbbbhggggggfbbbbbbdca
-aedbbbhggggggfbbbbbbbdca
-aedbbbhggggggfbbbbbbbdca
-aedbbhgggggffbbbbbbbbdca
-aedbbhgggffbbbbbbbbbbdca
-aedbhggffbbbbbbbbbbbbdca
-aedbfffbbbbbbbbbbbbbbdca
-aedgbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+addddddddddffdddddddddca
+adccccccccccccccccccccba
+adckkkkaaaakkkkkkkkkkcba
+adckjjaiiiiaajjjjjjjkcba
+adckjaaaaihhgaajjjjjkcba
+adckalajjaaahhgaajjaacba
+adckaajjaeaaaahhgaalacba
+adckjjjjaeajjaahhgaakcba
+adckjjjjaeajjjjahhgakcba
+adckjjjjaeajjjjjahhakcba
+afckjjjjaeajjjjjaihakcfa
+afckjjjjaeajjjjjaihakcfa
+adckjjjjaeajjjjaihgakcba
+adckjjjjaeajjaaihgajkcba
+adckjjjjaeaaaaihgajjkcba
+adckjjjjjaaaihgaajjjkcba
+adckjjaaaihhgaajjjjjkcba
+adckjalaiiiaajjjjjjjkcba
+adckjaaaaaajjjjjjjjjkcba
+adckkkkkkkkkkkkkkkkkkcba
+adccccccccccccccccccccba
+acbbbbbbbbbbffbbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

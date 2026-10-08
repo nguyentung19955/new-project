@@ -1,41 +1,40 @@
-# Lũy Tre Xanh — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: +5% máu, +1.1 hồi máu/giây
-name: Lũy Tre Xanh
+# Dũng Sĩ Tre Làng · E «Lũy Tre Xanh» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: lũy tre xanh + dấu hồi máu
+name: Dũng Sĩ Tre Làng · E «Lũy Tre Xanh»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = la
-  g = la-ma
-  h = la-sang
+  b = la-toi
+  c = la
+  d = la-ma
+  e = la-sang
+  f = ngoc
+  g = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbhhhhhhfbbbbbdca
-aedbbbbbbhgggggfbbbbbdca
-aedbbbbbbhgggggfbbbbbdca
-aedbbbbbbhgggggfbbbbbdca
-aedbbbbbbhgggggfbbbbbdca
-aedhhhhhhggggggghhhhhhhf
-aedhgggggggggggggggggggf
-aedhgggggggggggggggggfff
-aedhggggggggggggggggfdca
-aedhggggggggggggggggfdca
-aedhgggggggaagggggggfdca
-aedhggggggaaaaggggggfdca
-aedhggggggaaaaggggggfdca
-aedhggggggaaaaggggggfdca
-aedhgggggaaaaaagggggfdca
-aedhgggggaaaaaagggggfdca
-aedhgggggaaaaaagggggfdca
-aedffffffaaaaaaffffffdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+aggggggggggeegggggggggfa
+agffffffffffffffffffffba
+agfddddddddddddddddddfba
+agfdbbbbbbbbbbbbbbbbdfba
+agfdbaabbaaabbaabaaadfba
+agfdaddaadddaaddadddafba
+agfadccddcccddccdcccafba
+agfdaccccbcccccccbcadfba
+agfdbadaaadaaadaaadadfba
+agfdbacabacabacabacadfba
+aefdbaaabaaabaaabaaadfea
+aefdbacabacabacabacadfea
+agfdbacabacabacabacadfba
+agfdbaaabaaabaaabaaadfba
+agfdbacabacabacaaaaadfba
+agfdaacaaacaaacaaeaadfba
+agfabbbbbbbbbbbaeeeaafba
+agfdaaaaaaaaaaaaaeaadfba
+agfdbbbbbbbbbbbbaaabdfba
+agfddddddddddddddddddfba
+agffffffffffffffffffffba
+afbbbbbbbbbbeebbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

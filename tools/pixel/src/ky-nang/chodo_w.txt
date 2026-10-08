@@ -1,41 +1,45 @@
-# Quét Chèo — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: sweeping oar arc
-name: Quét Chèo
+# Chàng Chèo Đò · W «Quét Chèo» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: hai mái chèo chéo + xoáy
+name: Chàng Chèo Đò · W «Quét Chèo»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = cham
-  g = nuoc
-  h = nuoc-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = trang-xam
+  f = trang
+  g = sang
+  h = dat-toi
+  i = dat
+  j = dat-sang
+  k = cham-toi
+  l = cham-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbgbbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbhggggggggggfbbbdca
-aedbbbfggggggggggfbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbfggggggggfbbbbdca
-aedbbbbbfggggggfbbbbbdca
-aedbbbbbbffggffbbbbbbdca
-aedbbbbbbbbffbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+addddddddddggdddddddddca
+adccccccccccccccccccccba
+adcllllllllllllllllllcba
+adclaakkggggggggkkaalcba
+adcajjaggkkkkkkkgajjacba
+adcajihakkkkkkkkahijacba
+adclajihakkkkkkahijalcba
+adclgajihakkkkahijaglcba
+adclgkajihakkahijakglcba
+adclgkfajihaahijafkglcba
+agclgkfkajihhijakfkglcga
+agclgkfkeajiijakkfkglcga
+adclgkfaajihhijaafkglcba
+adclgkajjihaahijjakglcba
+adclkajiiihaahiiijaglcba
+adclajiiiihaahiiiijalcba
+adclaiiiihaffahiiiialcba
+adclahhhhakkkkahhhhalcba
+adclkaaaakkkkkkaaaaklcba
+adcllllllllllllllllllcba
+adccccccccccccccccccccba
+acbbbbbbbbbbggbbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

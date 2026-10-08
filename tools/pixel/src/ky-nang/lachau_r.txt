@@ -8,37 +8,37 @@ colors:
   c = da-toi
   d = da-sang
   e = dat-toi
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = vang-nghe
-  j = vang-sang
-  k = son-toi
+  f = dong
+  g = dong-sang
+  h = vang-nghe
+  i = vang-sang
+  j = son-toi
+  k = son-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhiihhhhhhhhhga
-ahggggggggggggggggggggfa
-ahghhhhhaiahahaiahhhhgfa
-ahgheeeeaiaajaiiaeeehgfa
-ahgheeeeajijgjijaeeehgfa
-ahgheaaajgdddgijjaaaagfa
-ahghaiijggkkcbjigjiiigfa
-ahgheaiiigddcbbgiiiaagfa
-ahghadddjbdcjjbdddaehgfa
-ahghakkcgbdcjjbkkcjahgfa
-aighaddcgbdcjjbddcaehgia
-aighadciijdcbbbdciiaagia
-ahghadcjjgdcbbjdcjaiigfa
-ahghadcaggdcjiidcaeaagfa
-ahghadcaagdcjjidcaeehgfa
-ahghadcaeadcgaidcaeehgfa
-ahghadcaaidcaeadcaeehgfa
-ahghadcaaidcaeadcaeehgfa
-ahghadcaeadcaeadcaeehgfa
-ahghaccahaccahaccahhhgfa
-ahggggggggggggggggggggfa
-agffffffffffiifffffffffa
+akiiiiiiiiikkiiiiiiiiika
+aihhhhhhhhhhhhhhhhhhhhfa
+aihgggggahagagahagggghfa
+aihgeeeeahaaiahhaeeeghfa
+aihgeeeeaihifihiaeeeghfa
+aihgeaaaifdddfhiiaaaahfa
+aihgahhiffjjcbihfihhhhfa
+aihgeahhhfddcbbfhhhaahfa
+aihgadddibdciibdddaeghfa
+aihgajjcfbdciibjjciaghfa
+akhgaddcfbdciibddcaeghka
+akhgadchhidcbbbdchhaahka
+aihgadciifdcbbidciahhhfa
+aihgadcaffdcihhdcaeaahfa
+aihgadcaafdciihdcaeeghfa
+aihgadcaeadcfahdcaeeghfa
+aihgadcaahdcaeadcaeeghfa
+aihgadcaahdcaeadcaeeghfa
+aihgadcaeadcaeadcaeeghfa
+aihgaccagaccagaccaggghfa
+aihhhhhhhhhhhhhhhhhhhhfa
+akffffffffffkkffffffffka
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

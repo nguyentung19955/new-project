@@ -1,41 +1,40 @@
-# Nhật Thực — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: solar eclipse
-name: Nhật Thực
+# Nữ Thần Mặt Trời · R «Nhật Thực» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: nhật thực
+name: Nữ Thần Mặt Trời · R «Nhật Thực»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = son
-  g = lua
-  h = lua-sang
+  b = toi
+  c = dong
+  d = vang-nghe
+  e = vang-sang
+  f = son-toi
+  g = son-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
+ageeeeeeeeeggeeeeeeeeega
 aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbhggfbbbbbbbdca
-aedbbbbbbbhgggfbbbbbbdca
-aedbbbbbbhgggggfbbbbbdca
-aedbbbbbbhggggggfbbbbdca
-aedbbbbbhgggggggfbbbbdca
-aedbbbbhgggggggggfbbbdca
-aedbbhhgggggggggggfbbdca
-aedbhggggggggggggggfbdca
-aedhgggggggggggggggfbdca
-aedbfgggggggggggggfbbdca
-aedbbhgggggggggggfbbbdca
-aedbbfgggggggggggfbbbdca
-aedbbbfgggggggggfbbbbdca
-aedbbbbfffffffffbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
+aedggggggggggggggggggdca
+aedgffffffffffffffffgdca
+aedgfffffafaafafffffgdca
+aedgfffaaeaeeaeafaffgdca
+aedgffaeaeeeeeeeaeafgdca
+aedgfaaeeebbbbbeeeaagdca
+aedgaeaeebbbbbbbeeaeadca
+aedgfaeebbbbbbbbbeeagdca
+agdgaeeebbbbbbbbbeeeadga
+agdgfaeebbbbbbbbbeeagdga
+aedgaeaeebbbbbbbeeaeadca
+aedgfaaeeebbbbbeeeaagdca
+aedgffaeaeeeeeeeaeafgdca
+aedgfffaaeaeeaeafaffgdca
+aedgfffffafaafafffffgdca
+aedgffffffffffffffffgdca
+aedgffffffffffffffffgdca
+aedggggggggggggggggggdca
 aeddddddddddddddddddddca
-acccccccccccccccccccccca
+agccccccccccggccccccccga
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

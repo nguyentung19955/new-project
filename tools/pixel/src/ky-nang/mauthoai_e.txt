@@ -1,41 +1,44 @@
-# Băng Ngọc — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: ice pearl
-name: Băng Ngọc
+# Mẫu Thoải · E «Băng Ngọc» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: viên ngọc + tuyết
+name: Mẫu Thoải · E «Băng Ngọc»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = cham
+  b = sang
+  c = la-toi
+  d = la-sang
+  e = cham-toi
+  f = cham-sang
   g = nuoc
   h = nuoc-sang
+  i = troi
+  j = ngoc
+  k = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbhfbbbbbbhfbbbbdca
-aedbbbbfgfbbbbhgfbbbbdca
-aedbbbbbhfbbbbhfbbbbbdca
-aedbbbbbfgfbbhgfbbbbbdca
-aedbbbbbbhfbbhfbbbbbbdca
-aedbbbbbbfghhgfbbbbbbdca
-aedbbbbbbbhggfbbbbbbbdca
-aedhhhhhhhgggghhhhhfbdca
-aedfffffffggggffffffbdca
-aedbbbbbbbhggfbbbbbbbdca
-aedbbbbbbhgffgfbbbbbbdca
-aedbbbbbhgfbbfgfbbbbbdca
-aedbbbbbhfbbbbhfbbbbbdca
-aedbbbbhgfbbbbfgfbbbbdca
-aedbbbbffbbbbbbffbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+akkkkkkkkkkddkkkkkkkkkja
+akjjjjjjjjjjjjjjjjjjjjca
+akjffffffbfffffffffffjca
+akjfeeeeeeeeeeeeeebefjca
+akjfebeeaaaaaaaaaeeefjca
+akjfeeeaiiiiiiiigaaefjca
+akjfeeaibiiiiiihhggafjca
+akjfeaibiiiiiihhhhgafjca
+akjfaiiiiiiihhhhhhggajca
+akjfaahhhhhihhhhhgaafjca
+adjfeaahhhhihhhhgaaefjda
+adjfbeaahhhihhhggaeefjda
+akjfeeeaahhihhhgaeebfjca
+akjfeeeeaahihhgaeeeefjca
+akjfeeeeeaahhgaeeeeefjca
+akjfeeeeeeaagaeeeeeefjca
+akjfeeeeeeeaaeeeeeeefjca
+akjfeebeeeeeeeeeebeefjca
+akjfeeeeeeeeeeeeeeeefjca
+akjffffffffffffffffffjca
+akjjjjjjjjjjjjjjjjjjjjca
+ajccccccccccddccccccccca
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

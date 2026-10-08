@@ -1,43 +1,48 @@
-# Long Cung Mở Cửa — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: underwater palace gate opening
-name: Long Cung Mở Cửa
+# Mẫu Thoải · R «Long Cung Mở Cửa» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: cổng mở toả sáng + sóng nước dưới đáy
+name: Mẫu Thoải · R «Long Cung Mở Cửa»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = trang-xam
-  d = dat
-  e = dong-toi
-  f = dong
-  g = dong-sang
-  h = cham
-  i = nuoc
-  j = nuoc-sang
+  b = dat-toi
+  c = dat
+  d = dat-sang
+  e = dong
+  f = dong-sang
+  g = vang-nghe
+  h = vang-sang
+  i = son
+  j = son-sang
+  k = cham-toi
+  l = cham
+  m = cham-sang
+  n = nuoc
+  o = nuoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-agggggggggggggggggggggea
-agffffffffffffffffffffea
-agfbbbbbbbjhbcbbbbbbbfea
-agfbbbbbbjhbbcbbbbbbbfea
-agfbbbbbjhbbbcbbbbbbbfea
-agfbbbbjhbbbbcbbbbbbbfea
-agfbbbjihbbbbcbbbbbbbfea
-agfbbbjhbbbbbcbbbbbbbfea
-agfbbbjhbbbbbcbbbbbbbfea
-agfbbjhbbbbbbcbbbjbbbfea
-agfbbjhbbbbbbcbbbjihbfea
-agfbdddddddddddddhddbfea
-agfbbjhbbbbbbcbbbbbbbfea
-agfbbhihbbbbbcbbbbbbbfea
-agfbbbjhbbbbbcbbbbbbbfea
-agfbbbhhbbbbbcbbbbbbbfea
-agfbbbbjhbbbbcbbbbbbbfea
-agfbbbbhihbbbcbbbbbbbfea
-agfbbbbbhihbbcbbbbbbbfea
-agfbbbbbbhhhbcbbbbbbbfea
-agffffffffffffffffffffea
-aeeeeeeeeeeeeeeeeeeeeeea
+ajhhhhhhhhhjjhhhhhhhhhja
+ahggggggggggggggggggggea
+ahgmmmmmmmmmmmmmmmmmmgea
+ahgmkkkkkkkkkkkkkkkkmgea
+ahgmkakkkkkkkkkkkkakmgea
+ahgmajakaaaaaaaakajamgea
+ahgmajjajjjjjjjjajjamgea
+ahgmkajjiiiiiiiijjakmgea
+ahgmajjjjjjjjjjjjjjamgea
+ahgmkadcaaaaaaaadcakmgea
+ajgmkadcbfhhhhfbdcakmgja
+ajgmkadcbghhhhgbdcakmgja
+ahgmkadcbghhhhgbdcakmgea
+ahgmkadcbghhhhgbdcakmgea
+ahgmkadcbghhhhgbdcakmgea
+ahgmkadabfhhhafbdcaamgea
+ahgmadaoacccaoacccaoagea
+ahgaaanonaaanonaaanongea
+ahgnnnnnnnnnnnnnnnnnngea
+ahgllllllllllllllllllgea
+ahggggggggggggggggggggea
+ajeeeeeeeeeejjeeeeeeeeja
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

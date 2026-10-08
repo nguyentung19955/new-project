@@ -5,38 +5,38 @@ size: 24x24
 colors:
   a = vien
   b = sat-toi
-  c = sat-sang
-  d = bac
-  e = dong-toi
-  f = dong
-  g = dong-sang
+  c = sat
+  d = sat-sang
+  e = bac
+  f = sang
+  g = dong
   h = vang-nghe
   i = vang-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-agggggggggghhgggggggggfa
-agffffffffffffffffffffea
-agfccccccccccccccccccfea
-agfcbbbbbbdddddbbbbbcfea
-agfcbbbbddbbbbbddbbbcfea
-agfcbbddbbbbcbbbbddbcfea
-agfcbbdbbcccbcccbbdbcfea
-agfcbdbbcbbbbbbbcbbdcfea
-agfcbdbcbbbdddbbbcbdcfea
-agfcdbbcbbdbbbdbbcbbdfea
-ahfcdbbcbdbbibbdbcbbcfha
-ahfcdbcbbdbihibdbbcbcfha
-agfcdbbcbdbbfbbdbcbbcfea
-agfcdbbcbbdbbbdbbcbbdfea
-agfcbdbcbbbdddbbbcbdcfea
-agfcbdbbcbbbbbbbcbbdcfea
-agfcbbdbbcccbcccbbdbcfea
-agfcbbddbbbbcbbbbddbcfea
-agfcbbbbddbbbbbddbbbcfea
-agfcccccccdddddccccccfea
-agffffffffffffffffffffea
-afeeeeeeeeeehheeeeeeeeea
+aeeeeeeeeeeffeeeeeeeeeda
+aeddddddddddddddddddddca
+aeddddddddddddddddddddca
+aeddbbbbbbeeeeebbbbbddca
+aeddbbbbeebbbbbeebbbddca
+aeddbbeebbbbdbbbbeebddca
+aeddbbebbdddbdddbbebddca
+aeddbebbdbbbbbbbdbbeddca
+aeddbebdbbbeeebbbdbeddca
+aeddebbdbbebbbebbdbbedca
+afddebbdbebbibbebdbbddfa
+afddebdbbebihibebbdbddfa
+aeddebbdbebbgbbebdbbddca
+aeddebbdbbebbbebbdbbedca
+aeddbebdbbbeeebbbdbeddca
+aeddbebbdbbbbbbbdbbeddca
+aeddbbebbdddbdddbbebddca
+aeddbbeebbbbdbbbbeebddca
+aeddbbbbeebbbbbeebbbddca
+aeddddddddeeeeedddddddca
+aeddddddddddddddddddddca
+adccccccccccffccccccccca
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

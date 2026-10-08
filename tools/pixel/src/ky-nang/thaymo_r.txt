@@ -1,41 +1,45 @@
-# Hỏa Sơn — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a fiery volcano erupting meteors
-name: Hỏa Sơn
+# Thầy Mo Lửa · R «Hỏa Sơn» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: núi lửa phun + đá lửa
+name: Thầy Mo Lửa · R «Hỏa Sơn»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = son
-  g = lua
-  h = lua-sang
+  b = dat-toi
+  c = dat
+  d = dat-sang
+  e = dong
+  f = vang-nghe
+  g = vang-sang
+  h = son-toi
+  i = son
+  j = son-sang
+  k = lua
+  l = lua-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbhggfbbbbbbbdca
-aedbbbbbbbhgggfbbbbbbdca
-aedbbbbbbhgggggfbbbbbdca
-aedbbbbbbhggggggfbbbbdca
-aedbbbbbhgggggggfbbbbdca
-aedbbbbhgggggggggfbbbdca
-aedbbhhgggggggggggfbbdca
-aedbhggggggggggggggfbdca
-aedhgggggggggggggggfbdca
-aedbfgggggggggggggfbbdca
-aedbbhgggggggggggfbbbdca
-aedbbfgggggggggggfbbbdca
-aedbbbfgggggggggfbbbbdca
-aedbbbbfffffffffbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+ajgggggggggjjgggggggggja
+agffffffffffffffffffffea
+agfjjajjajaajjjajjjjjfea
+agfjajaaaajaaaalahhhjfea
+agfjhajllaajlljaaahhjfea
+agfjhalggkilggkjllaajfea
+agfjhakggkikggklggkiafea
+agfjhhajkiaakkikggkiafea
+agfjhhhajllaaaaakkiajfea
+agfjhhhalggkjaaaaaahjfea
+ajfjhhhakggkijllaahhjfja
+ajfjhhhaakkialggkiahjfja
+agfjhhadcaaaakggkiahjfea
+agfjhhadcccccakkiaahjfea
+agfjhadcccccccaaacbajfea
+agfjhadcccccccccccbajfea
+agfjadcccccccccccccbafea
+agfadccccccccccccccbafea
+agfacbbbbbbbbbbbbbbbafea
+agfjaaaaaaaaaaaaaaaajfea
+agffffffffffffffffffffea
+ajeeeeeeeeeejjeeeeeeeeja
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

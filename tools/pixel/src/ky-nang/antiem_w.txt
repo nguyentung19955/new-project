@@ -1,44 +1,44 @@
-# Hạt Giống Vàng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a golden seed sprouting
-name: Hạt Giống Vàng
+# Mai An Tiêm · W «Hạt Giống Vàng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: hạt giống nảy mầm + toả sáng
+name: Mai An Tiêm · W «Hạt Giống Vàng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-toi
-  d = dat
-  e = dat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = la
-  j = la-ma
-  k = la-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = sang
+  f = dong-sang
+  g = vang-nghe
+  h = vang-sang
+  i = la-toi
+  j = la
+  k = la-ma
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbkkibkibbbgfa
-ahgbbbbbbbbbkjibkjibbgfa
-ahgbbbbbbbbkijikkjibbgfa
-ahgbbbbbbbkkjijjiibbbgfa
-ahgbbbbbbbkiiikkibbbbgfa
-ahgbbbbbbkkjiijiibbbbgfa
-ahgbbbbbkjiikjiibbbbbgfa
-ahgbbbbkjiikijibbbbbbgfa
-ahgbbbbijiekjiibbbbbbgfa
-ahgbbbbbiidiiibbbbbbbgfa
-ahgbbbbbbbdbbbbbbbbbbgfa
-ahgbbbbbbbdbbbbbbbbbbgfa
-ahgbbbbbbbdbbbbbbbbbbgfa
-ahgbbbbbbbcbbbbbbbbbbgfa
-ahgbbbbbbebbbbbbbbbbbgfa
-ahgbbbbbbdbbbbbbbbbbbgfa
-ahgbbbbbbdbbbbbbbbbbbgfa
-ahgbbbbbbcbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adckkkkkkkkhkkkkkkkkkcba
+adckhiiiaaigiiiaaiihkcba
+adckihiakkagiiakkahikcba
+adckiiakjjkaiakjjkaikcba
+adckiakjjjiaiaijjjkakcba
+adckiakjjiaiagaijjkakcba
+adckihaijiaajaaijiaikcba
+adckiiiaaiiijiiiaaiikcba
+aeckiiiiiaaajaaaiiiikcea
+aechgggggaaajaaigggggcea
+adckiiigahhhghhagiiikcba
+adckihhahggggggfahhikcba
+adckiiahggggggggfaiikcba
+adckiiahggggggggfaiikcba
+adckiigagggggggfagiikcba
+adckihiiaffffffaiihikcba
+adckhiiiiaaaaaaiiiihkcba
+adckkkkkkkkkgkkkkkkkkcba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

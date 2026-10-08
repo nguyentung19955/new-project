@@ -1,41 +1,45 @@
-# Viêm Đế Giáng Hỏa — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: falling fire sun
-name: Viêm Đế Giáng Hỏa
+# Viêm Đế Thần Nông · R «Viêm Đế Giáng Hỏa» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: quả cầu lửa rơi + vệt tốc độ
+name: Viêm Đế Thần Nông · R «Viêm Đế Giáng Hỏa»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = son
-  g = lua
-  h = lua-sang
+  b = trang-xam
+  c = trang
+  d = sang
+  e = dong
+  f = vang-nghe
+  g = vang-sang
+  h = son-toi
+  i = son
+  j = son-sang
+  k = lua
+  l = lua-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbhhhhhhhfbbbbbdca
-aedbbhhhgggggggghhfbbdca
-aedbhggggggggggggggfbdca
-aedbhggggggggggggggfbdca
-aedbhggggggggggggggfbdca
-aedbhggggggggggggggfbdca
-aedbffggggggggggggffbdca
-aedbffffggggggggffffbdca
-aedbbffffffffffffffbbdca
-aedbbbffffffffffffbbbdca
-aedbbbbbffffffffbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+ajgggggggggjjgggggggggja
+agffffffffffffffffffffea
+agfjjjjjjjjjjjjjjjjjjfea
+agfjahhhhhhhhhhhhhhhjfea
+agfajahhahhhhhhhhhhhjfea
+agfjajaajahhhhhhhhhhjfea
+agfjcajiajahahhhhhhhjfea
+agfjhhajiijajahhhhhhjfea
+agfjhhhajiiiijahhhhhjfea
+agfjhhhhajiiiijahhhhjfea
+ajfddddddajillllahhhjfja
+ajfjhhhhhhaldggdlaahjfja
+agfjhhhhhaldggggdkiajfea
+agfjhhhhhalggggggkiajfea
+agfjccchhaldggggdkiajfea
+agfjhhhhhhakdggdkkiajfea
+agfjhhhhhhhakkkkkiahjfea
+agfjhbbbhhhhaiiiiahhjfea
+agfjhhhhhhhhhaaaahhhjfea
+agfjjjjjjjjjjjjjjjjjjfea
+agffffffffffffffffffffea
+ajeeeeeeeeeejjeeeeeeeeja
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

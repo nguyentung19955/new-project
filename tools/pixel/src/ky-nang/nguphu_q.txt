@@ -1,42 +1,43 @@
-# Quăng Chài — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: thrown fishing net
-name: Quăng Chài
+# Ngư Phủ Sông Đà · Q «Quăng Chài» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: chài lưới tung
+name: Ngư Phủ Sông Đà · Q «Quăng Chài»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-toi
-  d = dat
-  e = dat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = nuoc
+  b = dat
+  c = cat
+  d = dong-toi
+  e = dong
+  f = dong-sang
+  g = vang-nghe
+  h = vang-sang
+  i = cham-toi
+  j = cham-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbeddddcbbbbbbgfa
-ahgbbbbedibbibidcbbbbgfa
-ahgbbbeiiiiiiiiiicbbbgfa
-ahgbbeibbibbibibbicbbgfa
-ahgbbdibbibbibibbidbbgfa
-ahgbeiiiiiiiiiiiiiicbgfa
-ahgbdbibbibbibibbibdbgfa
-ahgbdbibbibbibibbibdbgfa
-ahgbdiiiiiiiiiiiiiidbgfa
-ahgbdbibbibbibibbibdbgfa
-ahgbciiiiiiiiiiiiiicbgfa
-ahgbbdibbibbibibbidbbgfa
-ahgbbcibbibbibibbicbbgfa
-ahgbbbciiiiiiiiiicbbbgfa
-ahgbbbbcdibbibidcbbbbgfa
-ahgbbbbbbcddddcbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+affffffffffggfffffffffea
+afeeeeeeeeeeeeeeeeeeeeda
+afejjjjjjjjaajjjjjjjjeda
+afejiiiiiiabbaiiiiiijeda
+afejiiiiiiabaiiiiiiijeda
+afejiiiiiiaccaiiiiiijeda
+afejiiiiiacchcaiiiiijeda
+afejiiiiiachccaiiiiijeda
+afejiiiiachaahcaiiiijeda
+afejiiiiahachacaiiiijeda
+agejiiiahcahcahcaiiijega
+agejiiahaahaahaahaiijega
+afejiiacchachachcaiijeda
+afejiacahcahcahcahaijeda
+afejiachaahaahaahcaijeda
+afejachachachachachajeda
+afeachcahcahcahcahccaeda
+afeaghghghghghghghghaeda
+afejaaaaaaaaaaaaaaaajeda
+afejjjjjjjjjjjjjjjjjjeda
+afeeeeeeeeeeeeeeeeeeeeda
+aeddddddddddggddddddddda
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

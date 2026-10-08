@@ -4,41 +4,41 @@ name: Vua Lửa Pơtao Apui · E «Vòng Lửa»
 size: 24x24
 colors:
   a = vien
-  b = dong-toi
-  c = dong
-  d = dong-sang
-  e = vang-nghe
-  f = vang-sang
-  g = son-toi
-  h = son
-  i = son-sang
-  j = lua
-  k = lua-sang
+  b = vang-sang
+  c = son-toi
+  d = son
+  e = son-sang
+  f = lua
+  g = lua-sang
+  h = la-toi
+  i = la-sang
+  j = ngoc
+  k = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-addddddddddeedddddddddca
-adccccccccccccccccccccba
-adciiiiiiiiiaiiiiiiiicba
-adciggggaaaakaaaagggicba
-adcigggakkkkkkkkkaggicba
-adciggakkhfffffhkkagicba
-adcigakhffkkakkffhkaicba
-adciakhfjaaagaaajfhkacba
-adciakhjagggagggajhkacba
-adciahfkaggaiaggakfhacba
-aeciahjhagaiiiagahjhacea
-aecakhjagaiikiiagajkkcea
-adciahjkagaiiiagakjhacba
-adciahjhaggaiaggahjhacba
-adciahkfagggagggafkhacba
-adciakhjfaaagaaafjhkacba
-adcigahkjfkkakkfjkhaicba
-adciggahkkfffffkkhagicba
-adcigggakhkkkkkhkaggicba
-adciiiiiaaaahaaaaiiiicba
-adccccccccccccccccccccba
-acbbbbbbbbbbeebbbbbbbbba
+akkkkkkkkkkiikkkkkkkkkja
+akjjjjjjjjjjjjjjjjjjjjha
+akjeeeeeeeeeaeeeeeeeejha
+akjeccccaaaagaaaacccejha
+akjecccagggggggggaccejha
+akjeccaggdbbbbbdggacejha
+akjecagdbbggaggbbdgaejha
+akjeagdbfaaacaaafbdgajha
+akjeagdfacccacccafdgajha
+akjeadbgaccaeaccagbdajha
+aijeadfdacaeeeacadfdajia
+aijagdfacaeegeeacafggjia
+akjeadfgacaeeeacagfdajha
+akjeadfdaccaeaccadfdajha
+akjeadgbacccacccabgdajha
+akjeagdfbaaacaaabfdgajha
+akjecadgfbggaggbfgdaejha
+akjeccadggbbbbbggdacejha
+akjecccagdgggggdgaccejha
+akjeeeeeaaaadaaaaeeeejha
+akjjjjjjjjjjjjjjjjjjjjha
+ajhhhhhhhhhhiihhhhhhhhha
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

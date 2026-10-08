@@ -1,42 +1,48 @@
-# Đàn Rồng Giáng Hạ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: dragon flock
-name: Đàn Rồng Giáng Hạ
+# Rồng Mẹ Hạ Long · R «Đàn Rồng Giáng Hạ» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đầu rồng + sóng nước dưới đáy
+name: Rồng Mẹ Hạ Long · R «Đàn Rồng Giáng Hạ»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-sang
-  d = dong-toi
-  e = dong
-  f = dong-sang
-  g = cham
-  h = nuoc
-  i = nuoc-sang
+  b = trang
+  c = sang
+  d = dong
+  e = vang-nghe
+  f = vang-sang
+  g = son-sang
+  h = la-toi
+  i = cham-toi
+  j = cham
+  k = cham-sang
+  l = nuoc
+  m = nuoc-sang
+  n = ngoc
+  o = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-afffffffffffffffffffffda
+agfffffffffggfffffffffga
 afeeeeeeeeeeeeeeeeeeeeda
-afebbbbbbbbbbbbbbbbbbeda
-afebbbbbbbbbbbbbbbbbbeda
-afebbbbbbbbbbbbcbbbcbeda
-afebbbbbbbbbbbigcbbcbeda
-afebbbbbbbbbiihhcgbcbeda
-afebbbbbbbbihhhhhcgcbeda
-afebbbbbbbbihhhhhhhigeda
-afebbbbbbbihhhghhhahgeda
-afeiigbbbihhhgbihhhhgeda
-afeghhgbbihhhgbgggggbeda
-afebghhiihhhgbbbbbbbbeda
-afebbihhhhhgbbbbbbbbbeda
-afebbghhhhgbbbbbbbbbbeda
-afebbbggggbbbbbbbbbbbeda
-afebbbbbbbbbbbbbbbbbbeda
-afebbbbbbbbbbbbbbbbbbeda
-afebbbbbbbbbbbbbbbbbbeda
-afebbbbbbbbbbbbbbbbbbeda
+afekkkaakkkaakkkkkkkkeda
+afekiaffaiaffaiiiiiikeda
+afekiiafeaaafeaiiiiikeda
+afekiiiaeooooeaaaaiikeda
+afekiiaoonnnnnooooaakeda
+afekiaonnnbannnnnnnoaeda
+afekaonennnnnnnnnnnhaeda
+afeaonnennnnnaaaaaaakeda
+ageaonennnacccaaaaaikega
+ageaonennaaaaaaaiiiikega
+afeaonnennaccccaaaiikeda
+afekaonnennnnnnnnhaikeda
+afekiaonennnnnnhaaiikeda
+afekafeahnnhhaaaiiiakeda
+afeafeamaeeaamaiiiamaeda
+afeaaalmlaaalmlaaalmleda
+afelllllllllllllllllleda
+afejjjjjjjjjjjjjjjjjjeda
 afeeeeeeeeeeeeeeeeeeeeda
-adddddddddddddddddddddda
+agddddddddddggddddddddga
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

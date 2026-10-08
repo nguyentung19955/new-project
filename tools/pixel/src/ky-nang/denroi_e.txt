@@ -1,41 +1,47 @@
-# Ước Nguyện — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: wishing lantern with a star
-name: Ước Nguyện
+# Cô Thả Đèn Trời · E «Ước Nguyện» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: ngôi sao + đèn trời nhỏ
+name: Cô Thả Đèn Trời · E «Ước Nguyện»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = son
-  g = lua
-  h = lua-sang
+  b = sang
+  c = dong-sang
+  d = vang-nghe
+  e = vang-sang
+  f = son-toi
+  g = son
+  h = son-sang
+  i = lua
+  j = lua-sang
+  k = la-toi
+  l = la-sang
+  m = ngoc
+  n = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbgbbbbbbbbbdca
-aedbbbbbbbbgbbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbhhhggggghhfbbbbdca
-aedhgggggggggggggggfbdca
-aedbbbfffgggggfffbbbbdca
-aedbbbbbbfgggfbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbbfgfbbbbbbbbdca
-aedbbbbbbbbgbbbbbbbbbdca
-aedbbbbbbbbgbbbbbbbbbdca
-aedbbbbbbbbfbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+annnnnnnnnnllnnnnnnnnnma
+anmmmmmmmmmmmmmmmmmmmmka
+anmhhhhhhhhhhhhhhhhhhmka
+anmhffffffffffffffffhmka
+anmhfffffffaffffffffhmka
+anmhffffffaeafffffffhmka
+anmhfffffaedeaffffffhmka
+anmhfffffaeddaffffffhmka
+anmhaaaaaedddcaaaaaahmka
+anmaeeeeeedbdddddddcamka
+almhaedddddbddddddcahmla
+almhfaaeddddddddcaafhmla
+anmhfaaaaddddddcafffhmka
+anmhajjjjadccdddcaffhmka
+anmajieeigaaacdddcafhmka
+anmajieeigaffaacdcafhmka
+anmajieeigaffffaacafhmka
+anmhajiigafffffffaffhmka
+anmhfajiafffffffffffhmka
+anmhhhaahhhhhhhhhhhhhmka
+anmmmmmmmmmmmmmmmmmmmmka
+amkkkkkkkkkkllkkkkkkkkka
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

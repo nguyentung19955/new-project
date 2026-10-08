@@ -1,40 +1,44 @@
-# Lò Gốm Ngàn Năm — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: rolling clay boulder
-name: Lò Gốm Ngàn Năm
+# Thợ Gốm Phù Lãng · R «Lò Gốm Ngàn Năm» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: lò gốm + khói
+name: Thợ Gốm Phù Lãng · R «Lò Gốm Ngàn Năm»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = sat
+  c = sat-sang
+  d = dat-toi
+  e = dat
+  f = dat-sang
+  g = dong
+  h = vang-nghe
+  i = vang-sang
+  j = son-sang
+  k = lua
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbgbbbbbbdca
-aedbbbbbbbbbbbgebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbgebbbgffebbbbdca
-aedbbbbbgebbgfffebbbbdca
-aedbbbbgffebgfffebbbbdca
-aedbbbbgfffgffffebbbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbgffffffffffffebbdca
-aedbbgffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbgffffffffffffffebdca
-aedgeeeeeeeeeeeeeeeebdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+ajiiiiiiiiijjiiiiiiiiija
+aihhhhhhhhhhhhhhhhhhhhga
+aihffffffcfffffffffffhga
+aihfdccccccdddcccccdfhga
+aihfcccbbbbbddbbbcccfhga
+aihfbbbbbbbdddbbaabbfhga
+aihfbbbbbbdddddaffabfhga
+aihfdbbbaaaaaaaaedadfhga
+aihfddaaffffffffedadfhga
+aihfdaffeeeeeeeeedadfhga
+ajhfafeeeeeeeeeeeedafhja
+ajhafeeaaeeaaeeaaeedahja
+aihafeakaeakaeakaeedahga
+aihafeaiaeaiaeaiaeedahga
+aihafeeeeeeeeeeeeeedahga
+aihaddddddddddddddddahga
+aihfaaaaaaaaaaaaaaaafhga
+aihfddddddddddddddddfhga
+aihfddddddddddddddddfhga
+aihffffffffffffffffffhga
+aihhhhhhhhhhhhhhhhhhhhga
+ajggggggggggjjggggggggja
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

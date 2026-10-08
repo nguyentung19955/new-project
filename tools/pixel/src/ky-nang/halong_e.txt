@@ -1,41 +1,50 @@
-# Phun Ngọc Thành Đảo — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: pearl becoming an island
-name: Phun Ngọc Thành Đảo
+# Rồng Mẹ Hạ Long · E «Phun Ngọc Thành Đảo» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đảo đá giữa biển + ngọc nhỏ
+name: Rồng Mẹ Hạ Long · E «Phun Ngọc Thành Đảo»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = cham
-  g = nuoc
-  h = nuoc-sang
+  b = toi
+  c = sang
+  d = la-toi
+  e = la
+  f = la-ma
+  g = la-sang
+  h = reu-toi
+  i = reu
+  j = reu-sang
+  k = cham-toi
+  l = cham
+  m = cham-sang
+  n = nuoc
+  o = nuoc-sang
+  p = ngoc
+  q = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbhhggghfbbbbbbdca
-aedbbbbhgggggggfbbbbbdca
-aedbbbhgggggggggfbbbbdca
-aedbbhgggggggggggfbbbdca
-aedhhggggggggggggghfbdca
-aedbhgggggggggggggfbbdca
-aedbfgggggggggggggfbbdca
-aedbbfgggggggggggfbbbdca
-aedbbbfgggggggggfbbbbdca
-aedbbbbfgggggggfbbbbbdca
-aedbbbbbfgggggfbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbbfgggfbbbbbbbdca
-aedbbbbbbbfgfbbbbbbbbdca
-aedbbbbbbbbfbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+aqqqqqqqqqqggqqqqqqqqqpa
+aqppppppppppppppppppppda
+aqpmmmmmmmmmmmmaaaaampda
+aqpmkkkkkkkkkkaqqqqqapda
+aqpmkkkkkaakkkaqcppdapda
+aqpmkkkkaffakkkaqppampda
+aqpmkkkafeefakkkapakmpda
+aqpmkkkkafdakkkkkakkmpda
+aqpmkkkkaabakkkkkkkkmpda
+aqpmkkkajjjiakaakkkkmpda
+agpmkkajiiiihajjakkkmpga
+agpmkajiiiiiihiihakkmpga
+aqpmajiiiiiiiiiiihaampda
+aqpaooooooooooooooooapda
+aqpannnnnnnnnnnnnnnnapda
+aqpmallllllllllllllampda
+aqpmkaaaaaaaaaaaaaakmpda
+aqpmkkkkkkkkkkkkkkkkmpda
+aqpmkkkkkkkkkkkkkkkkmpda
+aqpmmmmmmmmmmmmmmmmmmpda
+aqppppppppppppppppppppda
+apddddddddddggddddddddda
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

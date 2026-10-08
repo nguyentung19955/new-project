@@ -1,41 +1,47 @@
-# Thế Giáo — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: +3.1% chí mạng · +10% sát thương lên boss
-name: Thế Giáo
+# Dũng Sĩ Giáo Đồng · E «Thế Giáo» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: hai giáo bắt chéo + tâm ngắm
+name: Dũng Sĩ Giáo Đồng · E «Thế Giáo»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = sat
-  d = sat-sang
-  e = bac
-  f = dong-toi
-  g = dong
-  h = dong-sang
+  b = sat-toi
+  c = sat-sang
+  d = sang
+  e = dat-toi
+  f = dat
+  g = dat-sang
+  h = dong-toi
+  i = dong-sang
+  j = son-sang
+  k = la-toi
+  l = la-sang
+  m = ngoc
+  n = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbeeeecbbeeeecbbbgfa
-ahgbbedddddeedddddcbbgfa
-ahgbeddddddddddddddcbgfa
-ahgbeddddddddddddddcbgfa
-ahgbeddddddddddddddcbgfa
-ahgbcddddddddddddddcbgfa
-ahgbbcddddddddddddcbbgfa
-ahgbbbcdddddddddccbbbgfa
-ahgbbbbcdddddddcbbbbbgfa
-ahgbbbbbedddddcbbbbbbgfa
-ahgbbbbbcdddddcbbbbbbgfa
-ahgbbbbbbcdddcbbbbbbbgfa
-ahgbbbbbbbcdcbbbbbbbbgfa
-ahgbbbbbbbbcbbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+annnnnnnnnnllnnnnnnnnnma
+anmmmmmmmmmmmmmmmmmmmmka
+anmcaacccccjccccccaacmka
+anmaiiabbbbjbbbbbaiiamka
+anmaidhabbjjjjjbahdiamka
+anmcahdhjjbjbbbjjdhacmka
+anmcbahjfabbbbafjhabcmka
+anmcbbjagfabbafgajbbcmka
+anmcbbjbagfaafgabjbbcmka
+anmcbjbbbagffgabbbjbcmka
+almcbjbbbbaffabbbjjjjmla
+almjjjjbbagffgabbbjbcmla
+anmcbjbbagfaafgabbjbcmka
+anmcbjbagfabbafgajbbcmka
+anmcbbjgfabbbbafgjbbcmka
+anmcbajjabbbbbbajgabcmka
+anmcagfajjbbjbbjafgacmka
+anmaefabbbjjjjjbbafeamka
+anmcaabbbbbbjbbbbbaacmka
+anmcccccccccjccccccccmka
+anmmmmmmmmmmmmmmmmmmmmka
+amkkkkkkkkkkllkkkkkkkkka
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

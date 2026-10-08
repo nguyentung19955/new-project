@@ -11,33 +11,36 @@ colors:
   f = dong-toi
   g = dong
   h = dong-sang
-  i = vang-nghe
-  j = vang-sang
+  i = vang-sang
+  j = la-toi
+  k = la-sang
+  l = ngoc
+  m = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhiihhhhhhhhhga
-ahggggggggggggggggggggfa
-ahgdddddddaaaaaddddddgfa
-ahgdccccaahhhhhaacccdgfa
-ahgdccaahhggggghhaacdgfa
-ahgdcahhgghhhhhgghhadgfa
-ahgdcafghhggggghhgfadgfa
-ahgdahghhghhhhhghhghagfa
-ahgdafgfghfbjbfhgfgfagfa
-ahgahghghfjbjbjfhghghgfa
-aigafghgfbbjjjbbfghgfgia
-aigafghgfjjjejjjjghgfgia
-ahgafghgfbbjjjbbhghgfgfa
-ahgafghgfhjjjbjhfghgfgfa
-ahgdahghgfjbjbhjghghagfa
-ahgdafgfhghhjhfghfgfagfa
-ahgdcahghhggggghhghadgfa
-ahgdcafhgghhhhhgghfadgfa
-ahgdccaahhggggghhaacdgfa
-ahgdddddaahhhhhaaddddgfa
-ahggggggggggggggggggggfa
-agffffffffffiifffffffffa
+ammmmmmmmmmkkmmmmmmmmmla
+amllllllllllllllllllllja
+amldddddddaaaaaddddddlja
+amldccccaahhhhhaacccdlja
+amldccaahhggggghhaacdlja
+amldcahhgghhhhhgghhadlja
+amldcafghhggggghhgfadlja
+amldahghhghhhhhghhghalja
+amldafgfghfbibfhgfgfalja
+amlahghghfibibifhghghlja
+aklafghgfbbiiibbfghgflka
+aklafghgfiiieiiiighgflka
+amlafghgfbbiiibbhghgflja
+amlafghgfhiiibihfghgflja
+amldahghgfibibhighghalja
+amldafgfhghhihfghfgfalja
+amldcahghhggggghhghadlja
+amldcafhgghhhhhgghfadlja
+amldccaahhggggghhaacdlja
+amldddddaahhhhhaaddddlja
+amllllllllllllllllllllja
+aljjjjjjjjjjkkjjjjjjjjja
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

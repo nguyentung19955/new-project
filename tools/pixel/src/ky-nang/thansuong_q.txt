@@ -1,41 +1,43 @@
-# Vòng Sương — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a frosty white mist ring
-name: Vòng Sương
+# Thần Sương Núi · Q «Vòng Sương» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bông tuyết + vòng hào quang
+name: Thần Sương Núi · Q «Vòng Sương»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = cham
-  g = nuoc
-  h = nuoc-sang
+  b = dong-toi
+  c = dong
+  d = dong-sang
+  e = vang-nghe
+  f = cham-toi
+  g = cham-sang
+  h = nuoc
+  i = nuoc-sang
+  j = troi
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbgbbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbhggggggggggfbbbdca
-aedbbbfggggggggggfbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbfggggggggfbbbbdca
-aedbbbbbfggggggfbbbbbdca
-aedbbbbbbffggffbbbbbbdca
-aedbbbbbbbbffbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adcggggggggagggggggggcba
+adcgfffffaajaajfffffgcba
+adcgfffjajajajajjfffgcba
+adcgffajhajijaffajffgcba
+adcgfajaffajaffajaffgcba
+adcgfaajafajafajaajfgcba
+adcgajaajaajaajaajajgcba
+adcgaajjjajijajjjahjgcba
+aecajjjjiiijiiijjjajgcea
+aecgaajjjajijajjjahjgcea
+adcgajaajaajaajaajajgcba
+adcgjaajafajafajaahfgcba
+adcgfajaffajaffajajfgcba
+adcgfjahfajijaffahffgcba
+adcgffjjajajajahfjffgcba
+adcgfffjjaajaajjjfffgcba
+adcgfffffjjajjffffffgcba
+adcggggggggggggggggggcba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

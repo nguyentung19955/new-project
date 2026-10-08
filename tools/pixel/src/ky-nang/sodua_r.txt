@@ -1,43 +1,44 @@
-# Mưa Dừa — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Dừa rơi khắp trận, x2 sát thương +1
-name: Mưa Dừa
+# Sọ Dừa · R «Mưa Dừa» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: dừa nhỏ + mưa
+name: Sọ Dừa · R «Mưa Dừa»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-toi
+  b = dat-toi
+  c = dat
   d = dat-sang
-  e = dong-toi
-  f = dong
-  g = dong-sang
-  h = la
-  i = la-ma
-  j = la-sang
+  e = dong
+  f = vang-nghe
+  g = vang-sang
+  h = son-sang
+  i = la-toi
+  j = la-ma
+  k = nuoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-agggggggggggggggggggggea
+ahggggggggghhgggggggggha
 agffffffffffffffffffffea
-agfbbbbbbbbbbbbbbbbbbfea
-agfbbbbjjhbbbbbjhbbbbfea
-agfbbbbhhijhbjjihbbbbfea
-agfbbbbbbhhijhhhbbbbbfea
-agfbbbjjjjjjihjjjjjhbfea
-agfjjjihhhhhhhhhhhhihfea
-agfhhhhbbbbbdcbbbbbhhfea
-agfbbbbbbbbbdcbbbbbbbfea
-agfbbbbbbbbbdcbbbbbbbfea
-agfbbbbbbbbbdcbbbbbbbfea
-agfbbbbbbbbbdcbbbbbbbfea
-agfbbbbbbbbbdcbbbbbbbfea
-agfbbbbbbbbbdcbbbbbbbfea
-agfbbbbbbbbdcbbbbbbbbfea
-agfbbbbbbbbdcbbbbbbbbfea
-agfbbbbbbbbdcbbbbbbbbfea
-agfbbbbbbbdcbbbbbbbbbfea
-agfbbbbbbbccbbbbbbbbbfea
+agfjjjjjjjaaajjjjjjjjfea
+agfjkiaaaadddaiaaaiijfea
+agfjkaddddcacbadddaijfea
+agfkadcacdcccbdcacbajfea
+agfjadccccccbbdcccbajfea
+agfjacccbbbbbacccbbajfea
+agfjiabbdddaaaabbbaijfea
+agfjiiadcacbadddaaiijfea
+ahfjiiadcccbdcacbaikjfha
+ahfjiiacccbbdcccbaikjfha
+agfjiaaabbbacccdddaijfea
+agfjadddaaaddddcacbajfea
+agfadcacbadcacdcccbajfea
+agfadcccbadccccccbbajfea
+agfacccbbacccbbbbbaijfea
+agfjabbbaiabbbaaaaiijfea
+agfjiaaaiiiaaaiiiiiijfea
+agfjjjjjjjjjjjjjjjjjjfea
 agffffffffffffffffffffea
-aeeeeeeeeeeeeeeeeeeeeeea
+aheeeeeeeeeehheeeeeeeeha
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

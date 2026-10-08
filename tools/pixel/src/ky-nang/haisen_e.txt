@@ -1,44 +1,47 @@
-# Hương Sen — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: lotus scent swirl
-name: Hương Sen
+# Cô Hái Sen · E «Hương Sen» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: hoa sen + khói
+name: Cô Hái Sen · E «Hương Sen»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-toi
-  d = dat
-  e = dat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = cham
-  j = nuoc
-  k = nuoc-sang
+  b = trang-xam
+  c = trang
+  d = sang
+  e = da-sang
+  f = hong
+  g = la-toi
+  h = la
+  i = la-ma
+  j = la-sang
+  k = cham-toi
+  l = cham-sang
+  m = ngoc
+  n = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbkbbbbbbbbbgfa
-ahgbbbbbbbbjbbbbbbbbbgfa
-ahgbbbbbbbbjbbbbbbbbbgfa
-ahgbbbbbbbkjibbbbbbbbgfa
-ahgbbbbbbbkjibbbbbbbbgfa
-ahgbbbbbbbkjibbbbbbbbgfa
-ahgbbkbbbkjjjibbbkbbbgfa
-ahgbbkkibkjjjibkkibbbgfa
-ahgbbkjjkjjjjjkjjibbbgfa
-ahgbbijjjjjjjjjjjibbbgfa
-ahgbbbijjjijijjjibbbbgfa
-ahgbbbbiiibjbiiibbbbbgfa
-ahgbbbeeeeeieeeeecbbbgfa
-ahgbbeddddddddddddcbbgfa
-ahgbeddddddddddddddcbgfa
-ahgbccddddddddddddccbgfa
-ahgbbbccccccccccccbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+annnnnnnnnnjjnnnnnnnnnma
+anmmmmmmmmmmmmmmmmmmmmga
+anmllllllelllllllllllmga
+anmlkeeeeeeakkeeeeeklmga
+anmleeefffadakfffeeelmga
+anmlfffffadcdafffffflmga
+anmlffaffadcdakfaffflmga
+anmlkadakadcdakadafklmga
+anmlkaddadcccdaddakklmga
+anmlkadcddccccdcdbaklmga
+ajmlkaadcdcccdcdcbaklmja
+ajmladadccccccccdadalmja
+anmladdccccccccccddalmga
+anmlkadccccccccccbaklmga
+anmlkaabccccccccbaaklmga
+anmlaiiiibbbbbbbhhhalmga
+anmaihhhhhhhhhhhhhhgamga
+anmlaghhhhhhhhhhhggalmga
+anmlkaaaaaaaaaaaaaaklmga
+anmllllllllllllllllllmga
+anmmmmmmmmmmmmmmmmmmmmga
+amggggggggggjjggggggggga
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

@@ -10,39 +10,37 @@ colors:
   e = trang-xam
   f = trang
   g = sang
-  h = dong-toi
-  i = dong
-  j = dong-sang
-  k = vang-nghe
-  l = vang-sang
-  m = son-toi
-  n = son
-  o = son-sang
+  h = dong
+  i = vang-nghe
+  j = vang-sang
+  k = son-toi
+  l = son
+  m = son-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ajjjjjjjjjjkkjjjjjjjjjia
+amjjjjjjjjjmmjjjjjjjjjma
 ajiiiiiiiiiiiiiiiiiiiiha
-ajiooooooalggglaoooooiha
-ajiommmmmalggglammmmoiha
-ajiommmmmalggglammmmoiha
-ajiommmmmalggdlammmmoiha
-ajiommmmaalggblaammmoiha
-ajiommmaoolggbladammoiha
-ajiommaonnoodcddcdamoiha
-ajiomaommmmgdccccbamoiha
-akiommaaaalgdcccbammoika
-akiommmmmaddcccbammmoika
-ajiommmmadcccccbammmoiha
-ajiommmadccccccbammmoiha
-ajiommadccccbbbbamamoiha
-ajiomagbcccbgglamagaoiha
-ajiaagfgbbbggglaagfgaiha
-ajiggfffgalggglggfffgiha
-ajigffffealggglgffffeiha
-ajieeeeeealgggleeeeeeiha
+ajimmmmmmajgggjammmmmiha
+ajimkkkkkajgggjakkkkmiha
+ajimkkkkkajgggjakkkkmiha
+ajimkkkkkajggdjakkkkmiha
+ajimkkkkaajggbjaakkkmiha
+ajimkkkammjggbjadakkmiha
+ajimkkamllmmdcddcdakmiha
+ajimkamkkkkgdccccbakmiha
+amimkkaaaajgdcccbakkmima
+amimkkkkkaddcccbakkkmima
+ajimkkkkadcccccbakkkmiha
+ajimkkkadccccccbakkkmiha
+ajimkkadccccbbbbakakmiha
+ajimkagbcccbggjakagamiha
+ajiaagfgbbbgggjaagfgaiha
+ajiggfffgajgggjggfffgiha
+ajigffffeajgggjgffffeiha
+ajieeeeeeajgggjeeeeeeiha
 ajiiiiiiiiiiiiiiiiiiiiha
-aihhhhhhhhhhkkhhhhhhhhha
+amhhhhhhhhhhmmhhhhhhhhma
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

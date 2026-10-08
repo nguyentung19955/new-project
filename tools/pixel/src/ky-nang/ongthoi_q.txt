@@ -1,41 +1,47 @@
-# Kim Độc — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Thổi kim độc vào quái đi xa nhất: x2 sát thương +1, độc
-name: Kim Độc
+# Thợ Săn Ống Thổi · Q «Kim Độc» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: ống thổi kim + vệt tốc độ
+name: Thợ Săn Ống Thổi · Q «Kim Độc»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = la
-  g = la-ma
-  h = la-sang
+  b = toi
+  c = sat
+  d = sat-sang
+  e = trang
+  f = sang
+  g = dong-toi
+  h = dong
+  i = dong-sang
+  j = vang-nghe
+  k = la-toi
+  l = la
+  m = la-ma
+  n = la-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbgbbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbhggaggaggfbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbfggggggggfbbbbdca
-aedbbbbbffggggffbbbbbdca
-aedbbbbbbbffffbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+aiiiiiiiiiijjiiiiiiiiiha
+aihhhhhhhhhhhhhhhhhhhhga
+aihmmmmmmmmmmmmmmmmmmhga
+aihmkkkkkkkkkkkkkkakmhga
+aihmkkkkkkkkkkkkkadamhga
+aihmkkkkkkkkkkkkaddcahga
+aihmeeeekkkkkaaadaaamhga
+aihmkkkkkkkkannaakkkmhga
+aihmkkkkkkkanmmlakkkmhga
+aihmkkkkkkanmmlakkkkmhga
+ajhffffffanamlakkkkkmhja
+ajhmkkkkanmmlakkkkkkmhja
+aihmkkkanmmlakkkkkkkmhga
+aihmkkanamlakkkkkkkkmhga
+aihmeanmmlakkkkkkkkkmhga
+aihmanmmlakkkkkkkkkkmhga
+aihabbmlakkkkkkkkkkkmhga
+aihabblakkkkkkkkkkkkmhga
+aihmaaakkkkkkkkkkkkkmhga
+aihmmmmmmmmmmmmmmmmmmhga
+aihhhhhhhhhhhhhhhhhhhhga
+ahggggggggggjjggggggggga
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

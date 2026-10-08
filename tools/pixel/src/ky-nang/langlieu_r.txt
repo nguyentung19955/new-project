@@ -1,40 +1,44 @@
-# Lễ Tổ Tiên — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Khi có tướng dưới 50% máu: toàn quân hồi đầy máu, bất tử 2 giây
-name: Lễ Tổ Tiên
+# Lang Liêu · R «Lễ Tổ Tiên» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: mâm lễ + toả sáng
+name: Lang Liêu · R «Lễ Tổ Tiên»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
+  b = dat-toi
+  c = dat-sang
   d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  e = vang-nghe
+  f = vang-sang
+  g = son-toi
+  h = son
+  i = son-sang
+  j = lua
+  k = lua-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbggggebbggggebbbdca
-aedbbgfffffggfffffebbdca
-aedbgffffffffffffffebdca
-aedbgffffffffffffffebdca
-aedbgffffffffffffffebdca
-aedbeffffffffffffffebdca
-aedbbeffffffffffffebbdca
-aedbbbefffffffffeebbbdca
-aedbbbbefffffffebbbbbdca
-aedbbbbbgfffffebbbbbbdca
-aedbbbbbefffffebbbbbbdca
-aedbbbbbbefffebbbbbbbdca
-aedbbbbbbbefebbbbbbbbdca
-aedbbbbbbbbebbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+aifffffffffiifffffffffia
+afeeeeeeeeeeeeeeeeeeeeda
+afeccccccccfccccccccceda
+afecfbbbbbaabbbbbbbfceda
+afecbfbbbakkabfbbbfbceda
+afecbbebakjjkaabbebbceda
+afecbbbakjjjjkkaebbbceda
+afecbbakjjkjjjjkabbbceda
+afecbakjjkjjjkjjhafbceda
+afecaahjjhjjjhjjhaaaceda
+aieaeeeeeeeeeeeeeeeeaeia
+aieaihhhhhhhhhhhhhhgaeia
+afecaghhhhhhhhhhhhgaceda
+afecbaaggghhhhgggaabceda
+afecbbbaaaihhgaaabbbceda
+afecbbbaihhhhhhaabbbceda
+afecbbagggggggggaebbceda
+afecbfbaaaaaaaaabbfbceda
+afecfbbbbbbbebbbbbbfceda
+afecccccccccecccccccceda
+afeeeeeeeeeeeeeeeeeeeeda
+aiddddddddddiiddddddddia
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

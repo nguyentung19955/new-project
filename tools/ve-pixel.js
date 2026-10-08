@@ -206,4 +206,4 @@ async function main(argv) {
   return 0;
 }
 if (require.main === module) main(process.argv.slice(2)).then((c) => process.exit(c), (e) => { console.error(e.stack || e); process.exit(2); });
-module.exports = { main, loadCore };
+module.exports = { main, loadCore, Anh, chu, veKhung };

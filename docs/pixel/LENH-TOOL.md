@@ -12,7 +12,7 @@ Chạy ở thư mục gốc dự án, **từng lệnh một, theo thứ tự**: 
 | nen (nền) | 51 | `tools/pixel/spec/nen.json` | `tools/pixel/goi/nen.zip` | ô lát: **mẫu vẽ tay** `nen/co · dat · nuoc` + `doi_mau`; vật / cổng / đế: hình vật nền trong suốt |
 | canh (cảnh) | 37 | `tools/pixel/spec/canh.json` | `tools/pixel/goi/canh.zip` | bộ sinh cảnh: trời 3 dải + núi xa + đất / nước / vật theo chủ đề |
 | an-phu (ấn phù) | 36 | `tools/pixel/spec/an-phu.json` | `tools/pixel/goi/an-phu.zip` | `mau` = bản vẽ tay nhánh `claude/pixel-anphu-thankhi` (tên cũ `g-air` → mã `g_air`) |
-| ky-nang (kỹ năng) | 240 | `tools/pixel/spec/ky-nang.json` | `tools/pixel/goi/ky-nang.zip` | 40 `mau` = bản vẽ tay nhánh `claude/pixel-ky-nang-2` (`giong-q` → `giong_q`); 200 sinh từ tên chiêu + mô tả, màu theo hành |
+| ky-nang (kỹ năng) | 240 | `tools/pixel/spec/ky-nang.json` | `tools/pixel/goi/ky-nang.zip` | 40 `mau` = bản vẽ tay nhánh `claude/pixel-ky-nang-2` (`giong-q` → `giong_q`, khung tô lại theo phím); 200 = **mỗi chiêu một hình riêng** (`tools/ve-pixel-ky-nang.js`: khung theo phím Q/W/E/R + nền theo hành + hình chính + hình phụ + hiệu ứng), bảng thiết kế `tools/build-ky-nang-spec.js` |
 | ban-do (bản đồ) | 14 | `tools/pixel/spec/ban-do.json` | `tools/pixel/goi/ban-do.zip` | bộ sinh bản đồ 320×148 từ dữ liệu game (`node tools/build-ban-do-spec.js`) |
 
 Bỏ qua: `tuong` `quai` `boss` (đã đủ, có bản vẽ tay ở nhánh chính), `vfx` (`claude/vfx-pixel-2`).
@@ -82,11 +82,16 @@ node tools/ve-pixel.js --spec tools/pixel/spec/an-phu.json --nap
 
 ## 8. Kỹ năng (ky-nang)
 
+Sửa thiết kế ở bảng `BANG` trong `tools/build-ky-nang-spec.js` (hình mới: thêm vào `HINH` / `NHO` của `tools/ve-pixel-ky-nang.js`), rồi:
+
 ```
+node tools/build-ky-nang-spec.js
+node tools/kiem-ky-nang.js --anh /tmp/xem-ky-nang-tong.png
 node tools/ve-pixel.js --spec tools/pixel/spec/ky-nang.json
 node tools/ve-pixel.js --spec tools/pixel/spec/ky-nang.json --xem /tmp/xem-ky-nang
 node tools/ve-pixel.js --spec tools/pixel/spec/ky-nang.json --out tools/pixel/goi/ky-nang.zip
-node tools/ve-pixel.js --spec tools/pixel/spec/ky-nang.json --nap
+node tools/ve-pixel.js --spec tools/pixel/spec/ky-nang.json --nap --ghi-de
+node tests/ve-pixel/ky-nang.test.js
 ```
 
 ## 9. Bản đồ (ban-do)

@@ -1,40 +1,46 @@
-# Cả Xóm Ra Đồng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: many kids with slingshots
-name: Cả Xóm Ra Đồng
+# Trẻ Chăn Trâu · R «Cả Xóm Ra Đồng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: ná cao su + viên sỏi
+name: Trẻ Chăn Trâu · R «Cả Xóm Ra Đồng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = sang
+  f = dat-toi
+  g = dat
+  h = dat-sang
+  i = dong
+  j = vang-nghe
+  k = vang-sang
+  l = son
+  m = son-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbgbbbbbbdca
-aedbbbbbbbbbbbgebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbgebbbgffebbbbdca
-aedbbbbbgebbgfffebbbbdca
-aedbbbbgffebgfffebbbbdca
-aedbbbbgfffgffffebbbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbgffffffffffffebbdca
-aedbbgffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbgffffffffffffffebdca
-aedgeeeeeeeeeeeeeeeebdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+amkkkkkkkkkmmkkkkkkkkkma
+akjjjjjjjjjjjjjjjjjjjjia
+akjhhaahhhhhhhhhhaahhjia
+akjhaddaffffffffaddahjia
+akjadecbaffffffadecbajia
+akjhabbaffffffahabbahjia
+akjhaaalaffffalhgaafhjia
+akjhahgalaffalahgaffhjia
+akjhfahgalaalahgafffhjia
+akjhfahgfamlahgfafffhjia
+amjhffahggffggfaffffhjma
+amjhfffahggggfafffffhjma
+akjhffffahggfaffffffhjia
+akjhffffahggfaffffffhjia
+akjhffffahggfaffffffhjia
+akjhfaafahggfafffaafhjia
+akjhaddaaffffaffaddahjia
+akjadecbaaaaaffadecbajia
+akjhabbaffffffffabbahjia
+akjhhaahhhhhhhhhhaahhjia
+akjjjjjjjjjjjjjjjjjjjjia
+amiiiiiiiiiimmiiiiiiiima
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

@@ -8,39 +8,39 @@ colors:
   c = khoi
   d = sat
   e = sat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = vang-nghe
-  j = son-toi
-  k = son-sang
-  l = lua
-  m = lua-sang
+  f = son-toi
+  g = son-sang
+  h = lua
+  i = lua-sang
+  j = la-toi
+  k = la-sang
+  l = ngoc
+  m = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhiihhhhhhhhhga
-ahggggggggggggggggggggfa
-ahgkkkkkkkkkkkkkkkkkkgfa
-ahgkjjjjjjjjjjajjjjjkgfa
-ahgkjjjjjjjaaadaaajjkgfa
-ahgkjjjjjjadddbdddajkgfa
-ahgkjjjjjadcecbbbbdakgfa
-ahgkjjjaaadbdedbbbcakgfa
-ahgkjjadddbbbdbbbbcakgfa
-ahgkjadcbbbbbbbbbbbdagfa
-aigkadcecbbbbbbbbbcakgia
-aigkadbdedbbbbbbbbcakgia
-ahgkadbbdbbbbbbbbbbdagfa
-ahgkadbbbbbbbbbbbbbcagfa
-ahgkacbbbbbbbbbbbbbbdgfa
-ahgkjacbbbbbbbbbbbbcagfa
-ahgkjalcbbbbbbbbbbbcagfa
-ahgkalmlcbbbbbccbccakgfa
-ahgkjalaaccbccaacaajkgfa
-ahgkkkakkaacaakkakkkkgfa
-ahggggggggggggggggggggfa
-agffffffffffiifffffffffa
+ammmmmmmmmmkkmmmmmmmmmla
+amllllllllllllllllllllja
+amlgggggggggggggggggglja
+amlgffffffffffafffffglja
+amlgfffffffaaadaaaffglja
+amlgffffffadddbdddafglja
+amlgfffffadcecbbbbdaglja
+amlgfffaaadbdedbbbcaglja
+amlgffadddbbbdbbbbcaglja
+amlgfadcbbbbbbbbbbbdalja
+aklgadcecbbbbbbbbbcaglka
+aklgadbdedbbbbbbbbcaglka
+amlgadbbdbbbbbbbbbbdalja
+amlgadbbbbbbbbbbbbbcalja
+amlgacbbbbbbbbbbbbbbdlja
+amlgfacbbbbbbbbbbbbcalja
+amlgfahcbbbbbbbbbbbcalja
+amlgahihcbbbbbccbccaglja
+amlgfahaaccbccaacaafglja
+amlgggaggaacaaggagggglja
+amllllllllllllllllllllja
+aljjjjjjjjjjkkjjjjjjjjja
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

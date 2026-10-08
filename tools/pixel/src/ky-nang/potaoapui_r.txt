@@ -7,41 +7,39 @@ colors:
   b = dat-toi
   c = dat
   d = dat-sang
-  e = dong-toi
-  f = dong
-  g = dong-sang
-  h = vang-nghe
-  i = vang-sang
-  j = son-toi
-  k = son
-  l = son-sang
-  m = lua
-  n = lua-sang
+  e = dong
+  f = vang-nghe
+  g = vang-sang
+  h = son-toi
+  i = son
+  j = son-sang
+  k = lua
+  l = lua-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-agggggggggghhgggggggggfa
+ajgggggggggjjgggggggggja
 agffffffffffffffffffffea
-agfllllllllllllllaaalfea
-agfljaaajjjajjjjannnafea
-agflannnajanajjjaknkafea
-agflaknkaanmnajjaknkafea
-agflaknkaanmmnajjaaalfea
-agfljaaajankkkajanajlfea
-agfljjjjankiinnanmnalfea
-agfljjjjakkmmnkaakajlfea
-ahfljjjjadknnkaajajjlfha
-ahfljjjadcddddddajjjlfha
-agfljjadccbmnmdcdajjlfea
-agfljjadccbmnmbcbajjlfea
-agfljadccbmmnmmdcdajlfea
-agfladcccbmdndmdcbajlfea
-agfladcccbmbnbmdccdalfea
-agfadccccbmddbmbcccdafea
-agfadcccbmdcccdmdccbafea
-agfdbbbbbmbbbbbmbbbbdfea
+agfjjjjjjjjjjjjjjaaajfea
+agfjhaaahhhahhhhalllafea
+agfjalllahalahhhailiafea
+agfjailiaalklahhailiafea
+agfjailiaalkklahhaaajfea
+agfjhaaahaliiiahalahjfea
+agfjhhhhaliggllalklajfea
+agfjhhhhaiikkliaaiahjfea
+ajfjhhhhadilliaahahhjfja
+ajfjhhhadcddddddahhhjfja
+agfjhhadccbklkdcdahhjfea
+agfjhhadccbklkbcbahhjfea
+agfjhadccbkklkkdcdahjfea
+agfjadcccbkdldkdcbahjfea
+agfjadcccbkblbkdccdajfea
+agfadccccbkddbkbcccdafea
+agfadcccbkdcccdkdccbafea
+agfdbbbbbkbbbbbkbbbbdfea
 agffffffffffffffffffffea
-afeeeeeeeeeehheeeeeeeeea
+ajeeeeeeeeeejjeeeeeeeeja
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

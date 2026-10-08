@@ -1,42 +1,43 @@
-# Mắt Rừng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: +4.1% chí mạng
-name: Mắt Rừng
+# Thợ Săn Ống Thổi · E «Mắt Rừng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: mắt rừng
+name: Thợ Săn Ống Thổi · E «Mắt Rừng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = trang-xam
-  d = trang
-  e = sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = la-ma
+  b = trang-xam
+  c = trang
+  d = sang
+  e = la-toi
+  f = la
+  g = la-ma
+  h = la-sang
+  i = ngoc
+  j = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbbebbbbbbbbbgfa
-ahgbbbbbbbedcbbbbbbbbgfa
-ahgbbbbbeediiecbbbbbbgfa
-ahgbbbeediiiiiiecbbbbgfa
-ahgbbedddiiiiiiddcbbbgfa
-ahgeddddiiiaaiiidddcbgfa
-ahgbbcddiiiaaiiidcbbbgfa
-ahgbbbccdiiiiiiccbbbbgfa
-ahgbbbbbciiiiiibbbbbbgfa
-ahgbbbbbbbciibbbbbbbbgfa
-ahgbbbbbbbbcbbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+ajjjjjjjjjjhhjjjjjjjjjia
+ajiiiiiiiiiiiiiiiiiiiiea
+ajiggggggggggggggggggiea
+ajigeeeeeeeeeeeeeeeegiea
+ajigeeeeeeeeeeeeeeeegiea
+ajigeeeeeaeaeaeeeeeegiea
+ajigeeeaafafafaaeeeegiea
+ajigeeafaafafaafaeeegiea
+ajigeeaadddddddaaaeegiea
+ajigeaddcccggcccddaegiea
+ahigadcccgaaagcccbaegiha
+ahiadccccgadagccccbagiha
+ajigabcccgaaagcccbaegiea
+ajigeabbcccggcccbbaegiea
+ajigeeaabbbbbbbaaaeegiea
+ajigeeeeaaaaaaaeeeeegiea
+ajigeeeeeeeeeeeeeeeegiea
+ajigeeeeeeeeeeeeeeeegiea
+ajigeeeeeeeeeeeeeeeegiea
+ajiggggggggggggggggggiea
+ajiiiiiiiiiiiiiiiiiiiiea
+aieeeeeeeeeehheeeeeeeeea
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

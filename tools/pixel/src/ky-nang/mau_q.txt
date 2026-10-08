@@ -1,44 +1,42 @@
-# Dây Rừng Trói — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: green forest vines tying in a knot
-name: Dây Rừng Trói
+# Mẫu Thượng Ngàn · Q «Dây Rừng Trói» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: dây rừng thắt nút
+name: Mẫu Thượng Ngàn · Q «Dây Rừng Trói»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-toi
-  d = dat
-  e = dat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = la
-  j = la-ma
-  k = la-sang
+  b = dong-toi
+  c = dong
+  d = dong-sang
+  e = vang-nghe
+  f = la-toi
+  g = la
+  h = la-ma
+  i = la-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbkkkkkkkibbbbbgfa
-ahgbbbkkjjjjjjjjkibbbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbkjjjjjjjjjjjjjjibgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbkjjjjjjjjjjjjjjibgfa
-ahgbbijjjjjjjjjjjjibbgfa
-ahgbbbiiiiiiiiiiiibbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbccccbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adchhhhhhhhhhhhhhhhhhcba
+adchfaffffaffffffaffhcba
+adchahaffaiaffffahafhcba
+adchahgaaihafffahgafhcba
+adchfahgaaafafahgaffhcba
+adchffahgaaaiahgafffhcba
+adchfffahggihggaffffhcba
+adchffffahggghafffffhcba
+aechfffffahagaffffffhcea
+aechffffahggghafffffhcea
+adchfffahggahggaffffhcba
+adchffahgaaiaahgafffhcba
+adchfahgaaihafahgaffhcba
+adchahgaffaafffahgafhcba
+adchagafffffffffagafhcba
+adchfafffffffffffaffhcba
+adchffffffffffffffffhcba
+adchhhhhhhhhhhhhhhhhhcba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

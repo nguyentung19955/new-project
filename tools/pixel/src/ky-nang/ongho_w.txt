@@ -1,44 +1,44 @@
-# Tiếng Gầm Rừng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: roar
-name: Tiếng Gầm Rừng
+# Chúa Sơn Lâm · W «Tiếng Gầm Rừng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đầu hổ gầm + sóng âm
+name: Chúa Sơn Lâm · W «Tiếng Gầm Rừng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-toi
-  d = dat
-  e = dat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = la
-  j = la-ma
-  k = la-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = trang
+  f = sang
+  g = son
+  h = lua
+  i = lua-sang
+  j = la-toi
+  k = la-ma
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbkkkkkkkibbbbbgfa
-ahgbbbkkjjjjjjjjkibbbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbkjjjjjjjjjjjjjjibgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbkjjjjjjjjjjjjjjibgfa
-ahgbbijjjjjjjjjjjjibbgfa
-ahgbbbiiiiiiiiiiiibbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbccccbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+addddddddddffdddddddddca
+adccccccccccccccccccccba
+adckkkkkkkkkkkkkkkkkkcba
+adckjjaajjjjjjjjaajjkcba
+adckjaiiajjjjjjaiiajkcba
+adckaihhiaaaaaaihhiakcba
+adckaihhiiiiiiiihhgakcba
+adckjaihhahhhhahhgajkcba
+adckaihahhhhhhhhahgakcba
+adckaihhheahheahhhgakcba
+afcaihahhhhhhhhhhahgacfa
+afcaihhhfffaafffhhhgacfa
+adcaihahfffeefffhahgacba
+adckahhhfaggggafhhgakcba
+adckaghffeggggeffhgakcba
+adckjaghffffffffhgajkcba
+adckjjagghhhhhhggajjkcba
+adckjjjaaaaaaaaaajjjkcba
+adckjjjjjjjjjjjjjjjjkcba
+adckkkkkkkkkkkkkkkkkkcba
+adccccccccccccccccccccba
+acbbbbbbbbbbffbbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

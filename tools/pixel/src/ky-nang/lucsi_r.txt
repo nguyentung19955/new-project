@@ -1,40 +1,44 @@
-# Vùi Đá — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a pile of rocks burying the ground
-name: Vùi Đá
+# Lực Sĩ Núi · R «Vùi Đá» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đống đá + nền đất nứt
+name: Lực Sĩ Núi · R «Vùi Đá»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = dat-toi
+  f = dat
+  g = dat-sang
+  h = dong
+  i = vang-nghe
+  j = vang-sang
+  k = son-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbgbbbbbbbbbbbdca
-aedbbbbbgfggggebbbbbbdca
-aedbbbbgfffffffebbbbbdca
-aedbbbbgffefffffebbbbdca
-aedbbbgffffefffffebbbdca
-aedbbgfffffefffffebbbdca
-aedbbgfffffeffffffebbdca
-aedbbgffffffefffffebbdca
-aedbbgffffffefffffebbdca
-aedbgfffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbeeeeeeeeeeeeeeeebdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+akjjjjjjjjjkkjjjjjjjjjka
+ajiiiiiiiiiiiiiiiiiiiiha
+ajiggggggggggggggggggiha
+ajigeeeeeeeeeeeeeeeegiha
+ajigeeeeeeeeeeeeeeeegiha
+ajigeeeeeeaaaeeeeeeegiha
+ajigeeeeeadddaeeeeeegiha
+ajigeeeeadcccbaeeeeegiha
+ajigeeeaaccccbaaaeeegiha
+ajigeeadddbbbbdddaeegiha
+akigeadccccadccccbaegika
+akigeacccccacccccbaegika
+ajigadddccbbabbbdddagiha
+ajiadccccadccccacccbaiha
+ajiacccccacccccacccbaiha
+ajiabbbbbbbbbbbbbbbbaiha
+ajigaaaaaaaaaaaaaaaagiha
+ajiaaaaaaaaaaaaaaaaaaiha
+ajiffgffagfffgfafgfffiha
+ajieeeeeeaaeeeeeaeeeeiha
+ajiiiiiiiiiiiiiiiiiiiiha
+akhhhhhhhhhhkkhhhhhhhhka
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

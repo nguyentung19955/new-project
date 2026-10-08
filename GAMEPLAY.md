@@ -2640,3 +2640,20 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
   60 ảnh, lúc rảnh): tướng, quái, boss, nền, bản đồ, hiệu ứng, icon; nhóm hiện bằng <img> (đồ, kỹ năng, ấn phù, thần khí) và canh/* không
   nạp sẵn → menu hiện ~0,6 s (trước ~1,4 s, ngang ?pixel=0). (2) chợ: chân dung pixel mọi tướng nạp + giải mã sẵn vào bộ đệm chợ
   (ui.preloadMarket) ngay sau lô cuối → đổi ↻ không nháy thẻ trống.
+
+## claude/icon-ky-nang-rieng — Mỗi kỹ năng một icon pixel riêng (sửa lỗi "đồ hoạ skill lặp ở nhiều tướng")
+
+- **Lỗi:** 200 icon kỹ năng pixel do tool sinh (claude/xuat-goi-pixel) chỉ có ~15 hình chung (núi, giọt nước, ngọn lửa, lá…) → cả
+  chục tướng trùng hình. Nay **mỗi chiêu một hình riêng**, nhìn là đoán được chiêu và tướng.
+- **Bộ ghép mới `tools/ve-pixel-ky-nang.js`** (dùng chung trang tools/ve-pixel.html và CLI): icon 24×24 = khung theo phím
+  (**Q đồng · W bạc · E ngọc · R vàng + ngọc son 4 góc**, cùng khuôn 40 bản vẽ tay) + nền theo hành (kim sắt · mộc lá · thủy chàm · hỏa son ·
+  thổ đất) + hình chính (~170 hình vẽ tay dạng lưới ký tự: vũ khí / vật của tướng — rìu đồng, nỏ, lẫy nỏ, đàn nguyệt, chuông, trống, vỏ
+  dừa, nón lá, mái chèo, xiên cá, đèn trời, bánh chưng… — hoặc hành động: mưa tên, lốc xoáy, sét đánh đỉnh núi, đê vỡ) + hình phụ nhỏ rải
+  (mưa dưa, mưa thóc, kim độc…) + tối đa 2 hiệu ứng (nổ, toả sáng, sóng, lửa, sao choáng, dấu hồi máu, sóng âm, vệt chém…).
+- **Bảng thiết kế 200 chiêu** `tools/build-ky-nang-spec.js` → sinh `tools/pixel/spec/ky-nang.json`. 40 bản vẽ tay (10 tướng) giữ nguyên
+  hình, chỉ tô lại khung theo phím W / E / R.
+- **Kiểm trùng tự động** `node tools/kiem-ky-nang.js --anh tong-quan.png`: lỗi khi cùng tướng trùng hình chính, hai icon bất kỳ giống
+  ≥ 50% điểm ảnh phần hình (bỏ khung + nền), hoặc cùng tướng trùng dáng ≥ 85%; in ảnh tổng theo tướng. Hiện cặp giống nhất (ngoài hai
+  bản vẽ tay trống đồng Q/R) < 50%.
+- Đã nạp vào game (`--nap --ghi-de`: assets/pixel/ky-nang, js/pixel/ky-nang.js) + gói `tools/pixel/goi/ky-nang.zip`.
+- Test mới `tests/ve-pixel/ky-nang.test.js`: spec khớp bảng, đủ Q W E R cho 60 tướng, không trùng, khung đúng phím, ảnh trong game khớp tool.

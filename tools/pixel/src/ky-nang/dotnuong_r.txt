@@ -1,44 +1,46 @@
-# Cháy Rừng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: burning forest
-name: Cháy Rừng
+# Chàng Đốt Nương · R «Cháy Rừng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: cây rừng + lửa dưới đáy
+name: Chàng Đốt Nương · R «Cháy Rừng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-toi
-  d = dat
-  e = dat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = son
-  j = lua
-  k = lua-sang
+  b = dat-toi
+  c = dat
+  d = dong
+  e = vang-nghe
+  f = vang-sang
+  g = son-toi
+  h = son-sang
+  i = lua
+  j = lua-sang
+  k = la-toi
+  l = la
+  m = la-ma
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbkkkkkkkibbbbbgfa
-ahgbbbkkjjjjjjjjkibbbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbkjjjjjjjjjjjjjjibgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbkjjjjjjjjjjjjjjibgfa
-ahgbbijjjjjjjjjjjjibbgfa
-ahgbbbiiiiiiiiiiiibbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbccccbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+ahfffffffffhhfffffffffha
+afeeeeeeeeeeeeeeeeeeeeda
+afehhhhhhhhahhhhhhhhheda
+afehggggggamagggggggheda
+afehgggggamlmaggggggheda
+afehggggamlllkagggggheda
+afehgggamlllllkaggggheda
+afehggggaamlkaagggggheda
+afehgggammlllkkaggggheda
+afehggamlllllllkagggheda
+ahehgamlllllllllkaggheha
+ahehggaaamlllkaaagggheha
+afehggammlllllkkagggheda
+afehgamlllllllllkaggheda
+afehamlllllllllllkagheda
+afehgaaaakackaaaaagaheda
+afehaiaggaiacaaiagaiaeda
+afehajiagajiabajiaajieda
+afeajijaajijaajijajijeda
+afejijijjijijjijijijieda
+afeeeeeeeeeeeeeeeeeeeeda
+ahddddddddddhhddddddddha
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

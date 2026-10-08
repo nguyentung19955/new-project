@@ -1,43 +1,47 @@
-# Thuyền Nan Lướt Sóng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: bamboo basket boat on a wave
-name: Thuyền Nan Lướt Sóng
+# Ngư Phủ Sông Đà · R «Thuyền Nan Lướt Sóng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: thuyền thúng + sóng nước dưới đáy + vệt tốc độ
+name: Ngư Phủ Sông Đà · R «Thuyền Nan Lướt Sóng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-toi
-  d = dat
-  e = dat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = cham
-  j = nuoc
+  b = trang
+  c = sang
+  d = dat-sang
+  e = cat
+  f = dong
+  g = vang-nghe
+  h = vang-sang
+  i = son-sang
+  j = cham-toi
+  k = cham
+  l = cham-sang
+  m = nuoc
+  n = nuoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
+aihhhhhhhhhiihhhhhhhhhia
 ahggggggggggggggggggggfa
-ahgbbbbbbbbcbbbbbbbbbgfa
-ahgbbbbbbbbcbbbbbbbbbgfa
-ahgbbbbbbbbcibbbbbbbbgfa
-ahgbbbbbbbbcibbbbbbbbgfa
-ahgbbbbbbbbcjibbbbbbbgfa
-ahgbbbbbbbbcjjibbbbbbgfa
-ahgbbbbbbbbcjjibbbbbbgfa
-ahgbbbbbbbbcjjjibbbbbgfa
-ahgbbbbbbbbcjjjjibbbbgfa
-ahgbbbbbbbbciiiiibbbbgfa
-ahgbbbbbbbbcbbbbbbbbbgfa
-ahgeeeeeeeeceeeeeeecbgfa
-ahgbcdddddddddddddcbbgfa
-ahgbbedddddddddddcbbbgfa
-ahgbbcccccccccccccbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
+ahgllllllllllllllllllgfa
+ahgljjjjjjjjjjjjjjjjlgfa
+ahgljjjjjjjjjjjjjjjjlgfa
+ahgljjjjjjjjjjjjjjjjlgfa
+ahglaaaaaaaaaaaaaaaalgfa
+ahgahhhhhhhhhhhhhhhhagfa
+ahgahaeaeaeaeaeaeaedagfa
+ahglaeaeaeaeaeaeaedalgfa
+aigcaheaeaeaeaeaeadalgia
+aigljadeeaeaeaeaedajlgia
+ahgljjadddeaeaeddajjlgfa
+ahgljjjaaaddddaaajjjlgfa
+ahglbbbjjjaaaajjjjjjlgfa
+ahgljjjajjjjjajjjjjalgfa
+ahgljjanajjjanajjjanagfa
+ahgaaamnmaaamnmaaamnmgfa
+ahgmmmmmmmmmmmmmmmmmmgfa
+ahgkkkkkkkkkkkkkkkkkkgfa
 ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+aiffffffffffiiffffffffia
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

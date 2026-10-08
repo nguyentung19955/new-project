@@ -1,41 +1,47 @@
-# Tên Móng Rùa — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: an arrow with a turtle-claw arrowhead
-name: Tên Móng Rùa
+# Cao Lỗ · E «Tên Móng Rùa» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: mũi tên móng rùa + vệt tốc độ
+name: Cao Lỗ · E «Tên Móng Rùa»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = sat
-  d = sat-sang
-  e = bac
-  f = dong-toi
-  g = dong
-  h = dong-sang
+  b = sat-toi
+  c = sat-sang
+  d = trang-xam
+  e = trang
+  f = sang
+  g = dat
+  h = dong-toi
+  i = dong
+  j = dong-sang
+  k = la-toi
+  l = la-sang
+  m = ngoc
+  n = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbebbbecbbbebbgfa
-ahgbbbbbbdbbbccbbbdbbgfa
-ahgbbbbbbdbbbbdbbbecbgfa
-ahgbbbbbbecbbbecbbcdcgfa
-ahgbbbbbbecbbbecbbbecgfa
-ahgbbbbbbecbbbecbbbecgfa
-ahgbbbbbbecbbbecbbbecgfa
-ahgbbbbbbecbbbecbbedcgfa
-ahgbbbbbbecbbedcbbecbgfa
-ahgbbbbbbecbbedcbbecbgfa
-ahgbbbbbedcbbecbbbecbgfa
-ahgbbbbbecbbedcbbedcbgfa
-ahgbbbbedcbbedcbbecbbgfa
-ahgbbbbedcbbecbbedcbbgfa
-ahgbbbbecbbedcbbedcbbgfa
-ahgbbbedcbbedcbbecbbbgfa
-ahgbbbcccbbccbbbccbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+annnnnnnnnnllnnnnnnnnnma
+anmmmmmmmmmmmmmmmmmmmmka
+anmccccccccccccccccccmka
+anmcbaabbbbaabbbbaabcmka
+anmcajjabbajjabbajjacmka
+anmcajiiabajiabaiijacmka
+anmceajiabajiabaijabcmka
+anmcbajiiaajiaaiijabcmka
+anmcbbajiiiiiiiiiabbcmka
+anmcbbbahiiiiiihabbbcmka
+almfffffahiiiihabbbbcmla
+almcbbbbbaaiiaabbbbbcmla
+anmcbbbbbbaggabbbbbbcmka
+anmcbbbbbbaggabbbbbbcmka
+anmceeebbbaggabbbbbbcmka
+anmcbbbbbbaggabbbbbbcmka
+anmcbbbbbafggfabbbbbcmka
+anmcbdddafeaaefabbbbcmka
+anmcbbbbbaabbaabbbbbcmka
+anmccccccccccccccccccmka
+anmmmmmmmmmmmmmmmmmmmmka
+amkkkkkkkkkkllkkkkkkkkka
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

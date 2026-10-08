@@ -1,40 +1,46 @@
-# Gánh Đá — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: carrying pole with stone baskets
-name: Gánh Đá
+# Ông Đùng · Q «Gánh Đá» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: gánh hai sọt đá
+name: Ông Đùng · Q «Gánh Đá»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = dat-toi
+  f = dat
+  g = dat-sang
+  h = cat
+  i = dong-toi
+  j = dong
+  k = dong-sang
+  l = vang-nghe
+  m = vang-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbgbbbbbbbbbbbdca
-aedbbbbbgfggggebbbbbbdca
-aedbbbbgfffffffebbbbbdca
-aedbbbbgffefffffebbbbdca
-aedbbbgffffefffffebbbdca
-aedbbgfffffefffffebbbdca
-aedbbgfffffeffffffebbdca
-aedbbgffffffefffffebbdca
-aedbbgffffffefffffebbdca
-aedbgfffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbeeeeeeeeeeeeeeeebdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+akkkkkkkkkkllkkkkkkkkkja
+akjjjjjjjjjjjjjjjjjjjjia
+akjggggggggggggggggggjia
+akjgeeeeeeeeeeeeeeeegjia
+akjgeeeeeeeeeeeeeeeegjia
+akjgaaaaaaaaaaaaaaaagjia
+akjamhhhhhhhhhhhhhhmajia
+akjgaghaaaaaaaaaahgagjia
+akjgahahaeeeeeeahahagjia
+akjahaaahaeeeeahaaahajia
+aljgaddcdaeeeeadcddagjla
+aljadccbcdaeeadcbccdajla
+akjagffffeaeeagffffeajia
+akjagafafeaeeagafafeajia
+akjagffffeaeeagffffeajia
+akjgaeeeeaeeeeaeeeeagjia
+akjgeaaaaeeeeeeaaaaegjia
+akjgeeeeeeeeeeeeeeeegjia
+akjgeeeeeeeeeeeeeeeegjia
+akjggggggggggggggggggjia
+akjjjjjjjjjjjjjjjjjjjjia
+ajiiiiiiiiiilliiiiiiiiia
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

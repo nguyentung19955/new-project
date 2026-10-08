@@ -1,41 +1,45 @@
-# Cứu Mệnh — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: glowing healing leaf circle
-name: Cứu Mệnh
+# Thầy Lang Lá Thuốc · R «Cứu Mệnh» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bó lá thuốc + vòng hào quang + dấu hồi máu
+name: Thầy Lang Lá Thuốc · R «Cứu Mệnh»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = la
-  g = la-ma
-  h = la-sang
+  b = dat
+  c = dong
+  d = vang-nghe
+  e = vang-sang
+  f = son-sang
+  g = la-toi
+  h = la
+  i = la-ma
+  j = la-sang
+  k = nuoc
+  l = troi
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
+afeeeeeeeeeffeeeeeeeeefa
 aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbgbdca
-aedbbbbbbbbbbbbbbhfbbdca
-aedbbbbbbbbbbbbbhgfbbdca
-aedbbbbbbbbbbbhhgfbbbdca
-aedbbbbbbbbbhhgggfbbbdca
-aedbbbbbbbhhggggfbbbbdca
-aedbbbbbbhggggggfbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbhggggggfbbbbbbdca
-aedbbbbhggggggfbbbbbbdca
-aedbbbhggggggfbbbbbbbdca
-aedbbbhggggggfbbbbbbbdca
-aedbbhgggggffbbbbbbbbdca
-aedbbhgggffbbbbbbbbbbdca
-aedbhggffbbbbbbbbbbbbdca
-aedbfffbbbbbbbbbbbbbbdca
-aedgbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
+aediiiiiiiiiiiiiiiiiidca
+aedigagggllalllggaggidca
+aediajallgajagklajagidca
+aediaijakajijagajiagidca
+aediajiiaaiiiaaiijagidca
+aedigajiiaiiiaiijalgidca
+aedilahiiiaiaiiihaglidca
+aedilkahiiihaiihagklidca
+afdilggahiiiiihaggglidfa
+afdilkggahiiihagggklidfa
+aedilggggabbbbagggglidca
+aedilgkggaiiiiagggkgidca
+aediglgggaihhiagaaagidca
+aediglgkaiahhaiaajaaidca
+aedigglahaahhaaajjjaidca
+aediggglaggaaklaajaaidca
+aediggggglllllggaaagidca
+aediiiiiiiiiiiiiiiiiidca
 aeddddddddddddddddddddca
-acccccccccccccccccccccca
+afccccccccccffccccccccfa
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

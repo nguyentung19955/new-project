@@ -1,40 +1,47 @@
-# Thân Khổng Lồ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: giant body
-name: Thân Khổng Lồ
+# Ông Đùng · W «Thân Khổng Lồ» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: người khổng lồ + mũi tên tăng
+name: Ông Đùng · W «Thân Khổng Lồ»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = trang
+  f = sang
+  g = da-toi
+  h = da
+  i = da-sang
+  j = dat-toi
+  k = dat
+  l = dat-sang
+  m = vang-nghe
+  n = vang-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbgbbbbbbdca
-aedbbbbbbbbbbbgebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbgebbbgffebbbbdca
-aedbbbbbgebbgfffebbbbdca
-aedbbbbgffebgfffebbbbdca
-aedbbbbgfffgffffebbbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbgffffffffffffebbdca
-aedbbgffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbgffffffffffffffebdca
-aedgeeeeeeeeeeeeeeeebdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+addddddddddffdddddddddca
+adccccccccccccccccccccba
+adcllllllllllllllllllcba
+adcljjjjjjaaaajjjjjjlcba
+adcljjjjjaiiiiajjjjjlcba
+adcljjjjaihhhhgajjjjlcba
+adcljjjjaheaheaajjjjlcba
+adcljjaaaihhhhgaaajjlcba
+adcljaiiiihhhhiiiiajlcba
+adclaihhhhhhhhhhhhgalcba
+afcaihhahhhhhhhhahhgacfa
+afcaihhaahhhhhhaahhgacfa
+adcaihhaaihhhhgaahhgacba
+adclahhaaihhhhgaaagalcba
+adclaggaalkkkkjaanaalcba
+adcljaajalkaakjanmnalcba
+adcljjjjaihaahgaamaalcba
+adcljjjaiihaahggamajlcba
+adcljjjjaaajjaaaaaajlcba
+adcllllllllllllllllllcba
+adccccccccccccccccccccba
+acbbbbbbbbbbffbbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

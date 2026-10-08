@@ -1,44 +1,42 @@
-# Linh Quang Thần Nỏ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a glowing golden turtle-claw crossbow with radiant light
-name: Linh Quang Thần Nỏ
+# An Dương Vương · R «Linh Quang Thần Nỏ» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: nỏ + móng nhỏ + toả sáng
+name: An Dương Vương · R «Linh Quang Thần Nỏ»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = sat
-  d = sat-sang
-  e = bac
-  f = trang-xam
-  g = dat-toi
-  h = dat-sang
-  i = dong-toi
-  j = dong
-  k = dong-sang
+  b = sat-toi
+  c = sat-sang
+  d = sang
+  e = dong
+  f = dong-sang
+  g = vang-nghe
+  h = vang-sang
+  i = son-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-akkkkkkkkkkkkkkkkkkkkkia
-akjjjjjjjjjjjjjjjjjjjjia
-akjbbbbbbbbbbbbbbbbbbjia
-akjbbbbbbbbbbbbbbbbbbjia
-akjbbbbbbbbbbbbbbbbbbjia
-akjbbbbbbbbhgbbbbbbbbjia
-akjbbbbbedddddddcbbbbjia
-akjecbecbbbhgbbbcdeecjia
-akjeccbbbbbhgbbbbbcccjia
-akjcbbfbbbbhgbbbbfbbcjia
-akjbbbbffbbhgbbffbbbbjia
-akjbbbbbbffhgffbbbbbbjia
-akjbbbbbbbbffbbbbbbbbjia
-akjbbbbbbbbhgbbbbbbbbjia
-akjbbbbbbbbhgbbbbbbbbjia
-akjbbbbbbbbhgbbbbbbbbjia
-akjbbbbbbbbhgbbbbbbbbjia
-akjbbbbbbbbhgbbbbbbbbjia
-akjbbbbbbbbhgbbbbbbbbjia
-akjbbbbbbbbggbbbbbbbbjia
-akjjjjjjjjjjjjjjjjjjjjia
-aiiiiiiiiiiiiiiiiiiiiiia
+aihhhhhhhhhiihhhhhhhhhia
+ahggggggggggggggggggggea
+ahgccccccccaacacacaccgea
+ahgchbbbbbahhahahahacgea
+ahgcahbbbhahgagagagacgea
+ahgafagbbhahgaggggggagea
+ahgaefaabbahgaaggggaagea
+ahgcaeffaahggfaaaaaacgea
+ahgcbaeeffhggfffeeabcgea
+ahgcbbaddeeggeeddabbcgea
+aigcbbbaaddggddaabbbcgia
+aighgggggaaggaabggggggia
+ahgcbbbggahggfaggbbbcgea
+ahgcbhhbbahagfabbhhbcgea
+ahgcbbbbgahggfagbbbbcgea
+ahgcbbbgbbaggfabgbbbcgea
+ahgcbbgbbhaggfabbgbbcgea
+ahgcbhbbbahggfabbbhbcgea
+ahgchbbbbaffffabbbbhcgea
+ahgcccccccaaaacccccccgea
+ahggggggggggggggggggggea
+aieeeeeeeeeeiieeeeeeeeia
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

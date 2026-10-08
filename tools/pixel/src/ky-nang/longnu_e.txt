@@ -1,41 +1,47 @@
-# Băng Long — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: ice dragon
-name: Băng Long
+# Long Nữ Động Đình · E «Băng Long» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đầu rồng + tuyết
+name: Long Nữ Động Đình · E «Băng Long»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = cham
-  g = nuoc
-  h = nuoc-sang
+  b = trang
+  c = sang
+  d = vang-nghe
+  e = vang-sang
+  f = la-toi
+  g = la-sang
+  h = cham-toi
+  i = cham-sang
+  j = nuoc
+  k = nuoc-sang
+  l = troi
+  m = ngoc
+  n = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbhfbbbbbbhfbbbbdca
-aedbbbbfgfbbbbhgfbbbbdca
-aedbbbbbhfbbbbhfbbbbbdca
-aedbbbbbfgfbbhgfbbbbbdca
-aedbbbbbbhfbbhfbbbbbbdca
-aedbbbbbbfghhgfbbbbbbdca
-aedbbbbbbbhggfbbbbbbbdca
-aedhhhhhhhgggghhhhhfbdca
-aedfffffffggggffffffbdca
-aedbbbbbbbhggfbbbbbbbdca
-aedbbbbbbhgffgfbbbbbbdca
-aedbbbbbhgfbbfgfbbbbbdca
-aedbbbbbhfbbbbhfbbbbbdca
-aedbbbbhgfbbbbfgfbbbbdca
-aedbbbbffbbbbbbffbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+annnnnnnnnnggnnnnnnnnnma
+anmmmmmmmmmmmmmmmmmmmmfa
+anmiiiaaiciaaiiiiiiiimfa
+anmihaeeahaeeahhhhchimfa
+anmihcaedaaaedahhhhhimfa
+anmihhhadlllldaaaahhimfa
+anmihhallkkkkkllllaaimfa
+anmihalkkkbakkkkkkklamfa
+anmialkdkkkkkkkkkkkjamfa
+anmalkkdkkkkkaaaaaaaimfa
+agmalkdkkkacccaaaaahimga
+agmalkdkkaaaaaaahhhhimga
+anmalkkdkkaccccaaahcimfa
+anmialkkdkkkkkkkkjahimfa
+anmihalkdkkkkkkjaahhimfa
+anmiaeddjkkjjjaahhhhimfa
+anmaedaaeddaaahhhhhhimfa
+anmadachaaedahhhhchhimfa
+anmiahhhhhaahhhhhhhhimfa
+anmiiiiiiiiiiiiiiiiiimfa
+anmmmmmmmmmmmmmmmmmmmmfa
+amffffffffffggfffffffffa
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

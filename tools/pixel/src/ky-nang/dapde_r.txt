@@ -1,40 +1,46 @@
-# Đất Rung Đê Vỡ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: cracked broken dike
-name: Đất Rung Đê Vỡ
+# Người Đắp Đê · R «Đất Rung Đê Vỡ» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đê vỡ nước tràn
+name: Người Đắp Đê · R «Đất Rung Đê Vỡ»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
+  b = dat-toi
+  c = dat
+  d = dat-sang
+  e = dong
   f = vang-nghe
   g = vang-sang
+  h = son-sang
+  i = la
+  j = la-ma
+  k = cham
+  l = nuoc
+  m = nuoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbgbbbbbbdca
-aedbbbbbbbbbbbgebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbgebbbgffebbbbdca
-aedbbbbbgebbgfffebbbbdca
-aedbbbbgffebgfffebbbbdca
-aedbbbbgfffgffffebbbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbgffffffffffffebbdca
-aedbbgffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbgffffffffffffffebdca
-aedgeeeeeeeeeeeeeeeebdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+ahggggggggghhgggggggggha
+agffffffffffffffffffffea
+agfddddddddddddddddddfea
+agfdbbbbbbbbbbbbbbbbdfea
+agfdbbbbbbbbbbbbbbbbdfea
+agfdbbaaaabbbbaaaaabdfea
+agfdbajijiabbajijijadfea
+agfdajiiiiaabaiiiiiadfea
+agfdadcccammaadccccadfea
+agfadccccbmlmadccccbafea
+ahfadcaccblllmdacccbafha
+ahfadccccblllllccccbafha
+agfaccccallllllcccbbafea
+agfabbbmlllllllllbbbafea
+agfdakkkkkkkkkkkkkkadfea
+agfdbaaaaaaaaaaaaaabdfea
+agfdbbbbbbbbbbbbbbbbdfea
+agfdbbbbbbbbbbbbbbbbdfea
+agfdbbbbbbbbbbbbbbbbdfea
+agfddddddddddddddddddfea
+agffffffffffffffffffffea
+aheeeeeeeeeehheeeeeeeeha
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

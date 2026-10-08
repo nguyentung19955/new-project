@@ -5,7 +5,9 @@
 //   Node:        const K = require('./ve-pixel-core.js')(DS, TV)
 (function (root) {
 'use strict';
-function VePixelCore(DS, TV) {
+function VePixelCore(DS, TV, KN) {
+  // bộ sinh icon kỹ năng riêng từng chiêu (tools/ve-pixel-ky-nang.js) — Node tự require, trình duyệt nạp <script> trước lõi
+  if (!KN) KN = typeof module !== 'undefined' && module.exports && typeof require === 'function' ? require('./ve-pixel-ky-nang.js')() : root.VePixelKyNang ? root.VePixelKyNang() : null;
   // ═════════════ dữ liệu ═════════════
   DS = DS || { palette: [['vien', '#140C06', 1]], sizes: {}, req: {}, ma: [] };
   const PAL = DS.palette.map(([name, hex, edge]) => ({ name, hex, edge: !!edge, rgb: [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)) }));
@@ -161,6 +163,8 @@ function VePixelCore(DS, TV) {
     mauPhu: ['Màu phụ (cán gỗ, dây, lông…)', null],
     mauNgoc: ['Ngọc điểm', null],
   };
+  // kỹ năng: như icon + bộ ghép hình riêng (vat / vat2 / hieu / khung theo phím) của tools/ve-pixel-ky-nang.js
+  const OPT_KN = KN ? { ...OPT_ICON, ...KN.OPT } : OPT_ICON;
   const OPT_NEN = {
     nen: ['Loại ô', { co: 'cỏ', dat: 'đất', da: 'đá', nuoc: 'nước (gợn)', cat: 'cát', gach: 'gạch', tron: 'trơn', vat: 'vật trang trí (nền trong suốt)' }],
     mauNen: ['Màu', null],
@@ -190,10 +194,11 @@ function VePixelCore(DS, TV) {
     duong_loai: ['Loại đường', { nuoc: 'sông nước', dat: 'đất', da: 'đá', de: 'đê', cat: 'cát', gach: 'gạch' }],
   };
   const OPT_TRONG = { trong: ['Khung', { trong: 'trống — tự vẽ tay' }] };
-  const optSet = (g) => (NHAN_VAT(g) ? OPT_NV : g === 'nen' ? OPT_NEN : ['icon', 'do', 'an-phu', 'ky-nang', 'than-khi'].includes(g) ? OPT_ICON : g === 'giao-dien' ? OPT_UI : g === 'canh' ? OPT_CANH : g === 'ban-do' ? OPT_BANDO : OPT_TRONG);
+  const optSet = (g) => (NHAN_VAT(g) ? OPT_NV : g === 'nen' ? OPT_NEN : g === 'ky-nang' ? OPT_KN : ['icon', 'do', 'an-phu', 'than-khi'].includes(g) ? OPT_ICON : g === 'giao-dien' ? OPT_UI : g === 'canh' ? OPT_CANH : g === 'ban-do' ? OPT_BANDO : OPT_TRONG);
   const MAU_KEYS = Object.keys(MAU_TEN);
   const HANH_KEYS = { '': '—', ...Object.fromEntries(Object.entries(HANH).map(([k, v]) => [k, v.ten])) };
   function optValues(key) {
+    if (KN && KN.OPT[key] && /^mau/.test(key)) return { tu: 'tự động', ...MAU_TEN };
     if (/^mau|^choang$/.test(key)) return key === 'choang' || key === 'mauNgoc' ? { khong: 'không', ...MAU_TEN } : MAU_TEN;
     if (key === 'hanh') return HANH_KEYS;
     return null;
@@ -202,7 +207,7 @@ function VePixelCore(DS, TV) {
     if (NHAN_VAT(g)) return { dang: 'nguoi', than: 'nguoi', dau: 'ngan', mauToc: 'den', mu: 'khong', mauMu: 'son', ao: 'ao', mauAo: g === 'tuong' ? 'cham' : 'reu', quan: 'quan', mauQuan: 'dat',
       choang: 'khong', vk: 'gay', mauVk: 'dat', canh: 'khong', hanh: '', dien: 'khong' };
     if (g === 'nen') return { nen: 'co', mauNen: 'la', hinh: 'da', mauHinh: 'sat', mauPhu: 'dat', mauNgoc: 'khong' };
-    if (optSet(g) === OPT_ICON) return { khung: g === 'icon' ? 'tron' : 'vuong', mauKhung: 'dong', hinh: 'sao', mauHinh: 'vang', mauPhu: 'dat', mauNgoc: 'khong' };
+    if (optSet(g) === OPT_ICON || optSet(g) === OPT_KN) return { khung: g === 'icon' ? 'tron' : 'vuong', mauKhung: 'dong', hinh: 'sao', mauHinh: 'vang', mauPhu: 'dat', mauNgoc: 'khong', ...(g === 'ky-nang' && KN ? KN.MAC_DINH : {}) };
     if (g === 'giao-dien') return { loai: 'khung', mauKhung: 'dong', mauNen: 'den', vien: 'tron', trang: 'thuong' };
     if (g === 'canh') return { canh: 'nui', gio: 'ngay', mauTroi: 'troi', mauDat: 'la' };
     if (g === 'ban-do') return { chu_de: 'song' };
@@ -278,7 +283,7 @@ function VePixelCore(DS, TV) {
       }
       if (mauLe[0] && !roAo) set('mauAo', mauLe[0], 'màu áo ' + MAU_TEN[mauLe[0]]);
       if (mauLe[1] && !roQuan && o.quan !== 'kho') set('mauQuan', mauLe[1], 'màu quần ' + MAU_TEN[mauLe[1]]);
-    } else if (optSet(g) === OPT_ICON) {
+    } else if (optSet(g) === OPT_ICON || optSet(g) === OPT_KN) {
       const H = [...HINH_TU, ['lua', ['lửa', 'fire', 'flame', 'burn', 'hỏa']], ['set', ['sấm', 'sét', 'lightning', 'thunder', 'bolt']], ['nuoc', ['nước', 'water', 'drop', 'wave', 'giọt', 'sóng', 'thủy']],
         ['la', ['lá', 'leaf', 'tree', 'cây', 'lúa', 'mộc']], ['nui', ['núi', 'mountain', 'rock', 'đá', 'thổ']], ['riu', ['rìu', 'axe']], ['kiem', ['kiếm', 'sword', 'blade', 'đao']],
         ['muiten', ['mũi tên', 'arrow', 'bow', 'cung', 'nỏ']], ['khien', ['khiên', 'shield', 'giáp', 'armor']], ['mattroi', ['mặt trời', 'sun', 'trống', 'drum']], ['tim', ['tim', 'heart', 'máu', 'mạng']],
@@ -836,7 +841,8 @@ function VePixelCore(DS, TV) {
     SEED = seedOf(it.k);
     if (NHAN_VAT(it.g)) return sinhNhanVat(it);
     if (it.g === 'nen') return it.opt.nen === 'vat' ? sinhIcon({ ...it, opt: { ...it.opt, khung: 'khong' } }) : sinhNen(it);
-    if (optSet(it.g) === OPT_ICON) return sinhIcon(it);
+    if (it.g === 'ky-nang' && KN && ((it.opt.vat && it.opt.vat !== 'khong') || (it.opt.vat2 && it.opt.vat2 !== 'khong'))) return KN.ve(it, { Grid, C, RAMP, outline, blit });
+    if (optSet(it.g) === OPT_ICON || optSet(it.g) === OPT_KN) return sinhIcon(it);
     if (it.g === 'giao-dien') return sinhUI(it);
     if (it.g === 'canh') return sinhCanh(it);
     if (it.g === 'ban-do') return sinhBanDo(it);
@@ -1189,7 +1195,7 @@ function VePixelCore(DS, TV) {
     return tong ? khac / tong : 0;
   }
 
-  return { PAL, PI, C, ANIM_RANGE, NHOM_TEN, NHAN_VAT, VERSION_GOI, RAMP, MAU_TEN, HANH, OPT_NV, OPT_ICON, OPT_NEN, OPT_UI, OPT_CANH, OPT_BANDO, HINH_THEM, OPT_TRONG, optSet, MAU_KEYS, HANH_KEYS, optValues, defOpts, lc, MAU_TU, RE_TU, tu, mauTrong, coTu, som, hieuMoTa, Grid, Mask, rampOf, paint, outline, blit, shift, flipX, rot90, swapC, bbox, scaleGrid, SEED, rnd, seedOf, weaponGrid, stampWeapon, burst, SKIN, veNguoi, veThu, veRan, ve, nam, toi, sang, rage, sinhNhanVat, sinhIcon, sinhNen, sinhUI, sinhCanh, sinhBanDo, duongSvg, veHinhThem, sinh, coMacDinh, taoItem, kiemTra, CRC, crc32, zlibStore, zlib, chunk, encodePNG, makeZip, readZip, chanDung, CHARS, nguonTxt, goiZip, TV, docNguon, LOAI_PART, loaiPart, mauTV, boPhanTV, dungMau, tuSpec, docSpec, soSanh
+  return { PAL, PI, C, ANIM_RANGE, NHOM_TEN, NHAN_VAT, VERSION_GOI, RAMP, MAU_TEN, HANH, OPT_NV, OPT_ICON, OPT_KN, KN, OPT_NEN, OPT_UI, OPT_CANH, OPT_BANDO, HINH_THEM, OPT_TRONG, optSet, MAU_KEYS, HANH_KEYS, optValues, defOpts, lc, MAU_TU, RE_TU, tu, mauTrong, coTu, som, hieuMoTa, Grid, Mask, rampOf, paint, outline, blit, shift, flipX, rot90, swapC, bbox, scaleGrid, SEED, rnd, seedOf, weaponGrid, stampWeapon, burst, SKIN, veNguoi, veThu, veRan, ve, nam, toi, sang, rage, sinhNhanVat, sinhIcon, sinhNen, sinhUI, sinhCanh, sinhBanDo, duongSvg, veHinhThem, sinh, coMacDinh, taoItem, kiemTra, CRC, crc32, zlibStore, zlib, chunk, encodePNG, makeZip, readZip, chanDung, CHARS, nguonTxt, goiZip, TV, docNguon, LOAI_PART, loaiPart, mauTV, boPhanTV, dungMau, tuSpec, docSpec, soSanh
   };
 }
 if (typeof module !== 'undefined' && module.exports) module.exports = VePixelCore;

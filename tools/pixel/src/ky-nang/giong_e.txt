@@ -9,41 +9,41 @@ colors:
   d = sat
   e = sat-sang
   f = bac
-  g = dong-toi
-  h = dong
-  i = dong-sang
-  j = vang-nghe
-  k = vang-sang
-  l = son-toi
-  m = son
-  n = son-sang
-  o = lua
-  p = lua-sang
+  g = vang-sang
+  h = son-toi
+  i = son
+  j = son-sang
+  k = lua
+  l = lua-sang
+  m = la-toi
+  n = la-sang
+  o = ngoc
+  p = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aiiiiiiiiiijjiiiiiiiiiha
-aihhhhhhhhhhhhhhhhhhhhga
-aihnnnnnnaeanannnnnnnhga
-aihnllllaedeaealllllnhga
-aihnlllappededeallllnhga
-aihnllapmeddccdealllnhga
-aihnlapmeddcpnedeallnhga
-aihnlapmedddeedddealnhga
-aihnapmedddddddddceanhga
-aihnapmeddddccddcbcanhga
-ajhnapmedddcaaccdepaahja
-ajhapmedddcallaacpmpphja
-aihapmedddcallllamkmmhga
-aihapmeddddeallapkpkmhga
-aihpmeddddddealamkpomhga
-aihpmedcccccceaamopomhga
-aihmedcfffffffffmpoomhga
-aihmeddeeeeeeeeeappomhga
-aihmedddddddddddemmpmhga
-aihmccccccccccccceaaahga
-aihhhhhhhhhhhhhhhhhhhhga
-ahggggggggggjjggggggggga
+appppppppppnnpppppppppoa
+apooooooooooooooooooooma
+apojjjjjjaeajajjjjjjjoma
+apojhhhhaedeaeahhhhhjoma
+apojhhhallededeahhhhjoma
+apojhhalieddccdeahhhjoma
+apojhalieddcljedeahhjoma
+apojhaliedddeedddeahjoma
+apojaliedddddddddceajoma
+apojalieddddccddcbcajoma
+anojaliedddcaaccdelaaona
+anoaliedddcahhaaclillona
+apoaliedddcahhhhaigiioma
+apoalieddddeahhalglgioma
+apolieddddddeahaiglkioma
+apoliedcccccceaaiklkioma
+apoiedcfffffffffilkkioma
+apoieddeeeeeeeeeallkioma
+apoiedddddddddddeiilioma
+apoiccccccccccccceaaaoma
+apooooooooooooooooooooma
+aommmmmmmmmmnnmmmmmmmmma
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

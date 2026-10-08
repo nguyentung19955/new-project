@@ -1,44 +1,47 @@
-# Nỏ Thần — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a giant glowing divine crossbow
-name: Nỏ Thần
+# Cao Lỗ · R «Nỏ Thần» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: nỏ + vòng hào quang
+name: Cao Lỗ · R «Nỏ Thần»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = sat
-  d = sat-sang
-  e = bac
-  f = trang-xam
-  g = dat-toi
-  h = dat-sang
-  i = dong-toi
-  j = dong
-  k = dong-sang
+  b = sat-toi
+  c = sat-sang
+  d = sang
+  e = dat-toi
+  f = dat
+  g = dat-sang
+  h = dong
+  i = dong-sang
+  j = vang-nghe
+  k = vang-sang
+  l = son-sang
+  m = nuoc
+  n = troi
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-akkkkkkkkkkkkkkkkkkkkkia
-akjjjjjjjjjjjjjjjjjjjjia
-akjbbbbbbbbbbbbbbbbbbjia
-akjbbbbbbbbbbbbbbbbbbjia
-akjbbbbbbbbbbbbbbbbbbjia
-akjbbbbbbbbhgbbbbbbbbjia
-akjbbbbbedddddddcbbbbjia
-akjecbecbbbhgbbbcdeecjia
-akjeccbbbbbhgbbbbbcccjia
-akjcbbfbbbbhgbbbbfbbcjia
-akjbbbbffbbhgbbffbbbbjia
-akjbbbbbbffhgffbbbbbbjia
-akjbbbbbbbbffbbbbbbbbjia
-akjbbbbbbbbhgbbbbbbbbjia
-akjbbbbbbbbhgbbbbbbbbjia
-akjbbbbbbbbhgbbbbbbbbjia
-akjbbbbbbbbhgbbbbbbbbjia
-akjbbbbbbbbhgbbbbbbbbjia
-akjbbbbbbbbhgbbbbbbbbjia
-akjbbbbbbbbggbbbbbbbbjia
-akjjjjjjjjjjjjjjjjjjjjia
-aiiiiiiiiiiiiiiiiiiiiiia
+alkkkkkkkkkllkkkkkkkkkla
+akjjjjjjjjjjjjjjjjjjjjha
+akjccccccccaaccccccccjha
+akjcbbbbbnagganbbbbbcjha
+akjcabbnnbagfamnnbbacjha
+akjaiabnmbagfabbbnaiajha
+akjahiaabbagfabbaaihajha
+akjcahiiaagffeaaiihacjha
+akjcnahhiigffeiihhancjha
+akjcnmaddhhffhhddamncjha
+aljcnbbaaddffddaabbncjla
+aljcnmbbbaaffaabbbmncjla
+akjcnbbbbagffeabbbbncjha
+akjcnbmbbagafeabbbmbcjha
+akjcbnbbbagffeabbbnbcjha
+akjcbnbmbbaffeabbmbbcjha
+akjcbbnnbmaffeambnbbcjha
+akjcbbbnnagffeannbbbcjha
+akjcbbbbbaeeeeabbbbbcjha
+akjcccccccaaaacccccccjha
+akjjjjjjjjjjjjjjjjjjjjha
+alhhhhhhhhhhllhhhhhhhhla
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

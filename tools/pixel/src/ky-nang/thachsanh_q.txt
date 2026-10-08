@@ -1,44 +1,48 @@
-# Rìu Đốn Củi — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a woodcutter axe chopping a log
-name: Rìu Đốn Củi
+# Thạch Sanh · Q «Rìu Đốn Củi» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: rìu bổ khúc gỗ
+name: Thạch Sanh · Q «Rìu Đốn Củi»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-toi
-  d = dat
-  e = dat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = la
-  j = la-ma
-  k = la-sang
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = sang
+  f = dat-toi
+  g = dat
+  h = dat-sang
+  i = dong-toi
+  j = dong
+  k = dong-sang
+  l = vang-nghe
+  m = vang-sang
+  n = la-toi
+  o = la-ma
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbkibbbbbgfa
-ahgbbbbbbbbbbkjjkibbbgfa
-ahgbbbbbbbbbkjjjjjkbbgfa
-ahgbbbbbbbbkjjjjjjkbbgfa
-ahgbbbbbbbbbijjjjjkbbgfa
-ahgbbbbbbbbbekjjjjkibgfa
-ahgbbbbbbbbedijjjjjkbgfa
-ahgbbbbbbbedcbijjjjkbgfa
-ahgbbbbbbbecbbbkjjikbgfa
-ahgbbbbbbedcbbbiiiibbgfa
-ahgbbbbbedcbbbbbbbbbbgfa
-ahgbbbbbecbbbbbbbbbbbgfa
-ahgbbbbedcbbbbbbbbbbbgfa
-ahgbbbedcbbbbbbbbbbbbgfa
-ahgbbbecbbbbbbbbbbbbbgfa
-ahgbbedcbbbbbbbbbbbbbgfa
-ahgbedcbbbbbbbbbbbbbbgfa
-ahgbccbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+akkkkkkkkkkllkkkkkkkkkja
+akjjjjjjjjjjjjjjjjjjjjia
+akjoooooooooooooooaaojia
+akjonnnnnnnnnnnnnahgajia
+akjonnnnnnnnnnnnahgaojia
+akjonnnnnnnnnnnahganojia
+akjonnnnnnnnnnahgannojia
+akjonnnnnaannahgannnojia
+akjonnnnaddaahgannnnojia
+akjonnnadecccgannnnnojia
+aljonnnadecccbannnnnojla
+aljonaaaadecbaaaaannojla
+akjoahhhhhhabhhhhhaaojia
+akjahggggggagggggghhajia
+akjahghhgggggggggggfajia
+akjahhmmhggggggggggfajia
+akjahhmmhfffffffffffajia
+akjoahhhfffffffffffaojia
+akjonaaaaaaaaaaaaaanojia
+akjoooooooooooooooooojia
+akjjjjjjjjjjjjjjjjjjjjia
+ajiiiiiiiiiilliiiiiiiiia
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

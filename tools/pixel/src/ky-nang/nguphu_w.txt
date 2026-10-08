@@ -1,43 +1,46 @@
-# Xiên Cá — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: three-prong fish spear
-name: Xiên Cá
+# Ngư Phủ Sông Đà · W «Xiên Cá» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: xiên cá ba mũi + vệt tốc độ
+name: Ngư Phủ Sông Đà · W «Xiên Cá»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-toi
-  d = dat-sang
-  e = dong-toi
-  f = dong
-  g = dong-sang
-  h = cham
-  i = nuoc
-  j = nuoc-sang
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = bac
+  f = trang-xam
+  g = trang
+  h = sang
+  i = dat-toi
+  j = dat
+  k = vang-nghe
+  l = cham-toi
+  m = cham-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-agggggggggggggggggggggea
-agffffffffffffffffffffea
-agfbbbbbbbbbbbbbbbbbbfea
-agfbbbbbbbbbbbbbbbbbbfea
-agfbbbbbbbbbbbbbbbbbbfea
-agfbbbbbbbbbbbbbbbbbbfea
-agfbbbbbbbbbbdbbbbbbbfea
-agfjbbbbbbjjdcjhbbbbbfea
-agfjhbbbjjiiiiiijhbbbfea
-agfjihbjiiiiiiiiiihbbfea
-agfjiiiiiiiiiiiiaihbbfea
-agfjihbjiiiiiiiiiihbbfea
-agfjhbbhiiiiiiiiiihbbfea
-agfhbbbbhhiiiiiihhbbbfea
-agfbbbbbbbhhhhhhbbbbbfea
-agfbbbbbbbbbbbbbbbbbbfea
-agfbbbbbbbbbbbbbbbbbbfea
-agfbbbbbbbbbbbbbbbbbbfea
-agfbbbbbbbbbbbbbbbbbbfea
-agfbbbbbbbbbbbbbbbbbbfea
-agffffffffffffffffffffea
-aeeeeeeeeeeeeeeeeeeeeeea
+aeeeeeeeeeehheeeeeeeeeda
+aeddddddddddddddddddddca
+aedmmmmmmmmmmmmmmmmmmdca
+aedmllallllallllalllmdca
+aedmladalladalladallmdca
+aedmadcdaadcdaadcdalmdca
+aedmgacallacallacallmdca
+aedmlacallacallacallmdca
+aedmlacallacallacallmdca
+aedmladcaaacaaacdallmdca
+ahdhhhadccccccccballmdha
+ahdmlllaaaakaaaaalllmdha
+aedmllllllajalllllllmdca
+aedmllllllajalllllllmdca
+aedmggglllajalllllllmdca
+aedmllllllajalllllllmdca
+aedmllllllajalllllllmdca
+aedmlffflaaiaallllllmdca
+aedmllllllaaalllllllmdca
+aedmmmmmmmmmmmmmmmmmmdca
+aeddddddddddddddddddddca
+adcccccccccchhccccccccca
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

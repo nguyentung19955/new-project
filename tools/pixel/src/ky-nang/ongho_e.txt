@@ -1,44 +1,42 @@
-# Bước Chân Rừng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: tiger paw print with leaves
-name: Bước Chân Rừng
+# Chúa Sơn Lâm · E «Bước Chân Rừng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: dấu chân hổ + lá rơi
+name: Chúa Sơn Lâm · E «Bước Chân Rừng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-toi
-  d = dat
-  e = dat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = la
-  j = la-ma
-  k = la-sang
+  b = dong-sang
+  c = vang-nghe
+  d = vang-sang
+  e = la-toi
+  f = la-ma
+  g = la-sang
+  h = ngoc
+  i = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbkkkkkkkibbbbbgfa
-ahgbbbkkjjjjjjjjkibbbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbkjjjjjjjjjjjjjjibgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbkjjjjjjjjjjjjjjibgfa
-ahgbbijjjjjjjjjjjjibbgfa
-ahgbbbiiiiiiiiiiiibbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbccccbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+aiiiiiiiiiiggiiiiiiiiiha
+aihhhhhhhhhhhhhhhhhhhhea
+aihffffffffffffffffffhea
+aihfeeeeeeeeeeeeeeeefhea
+aihfeaaaeaaeaaeaaeeefhea
+aihfagadaddaddaddaeaahea
+aihfaaccbccbccbccbagahea
+aihfabccbccbccbccbaafhea
+aihfeabbabbabbabbaeefhea
+aihfeeaaaddddddaaeeefhea
+aghfeeaddccccccddaeefhga
+aghfeadccccccccccbaefhga
+aihfeadccccccccccbaefhea
+aihfeabcccccccccbbaefhea
+aihfeeabbccccccbbaeefhea
+aihfeeeaabbbbbbaaeeefhea
+aihfeeaaeaaaaaaeeeeefhea
+aihfeagaeeeeeeeeeeeefhea
+aihfeaaeeeeeeeeeeeeefhea
+aihffffffffffffffffffhea
+aihhhhhhhhhhhhhhhhhhhhea
+aheeeeeeeeeeggeeeeeeeeea
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

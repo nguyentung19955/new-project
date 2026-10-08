@@ -1,41 +1,42 @@
-# Vảy Vàng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: +10.2% máu, −3% sát thương nhận
-name: Vảy Vàng
+# Kỳ Lân Vàng · W «Vảy Vàng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: vảy
+name: Kỳ Lân Vàng · W «Vảy Vàng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
+  b = sat-toi
   c = sat
   d = sat-sang
   e = bac
-  f = dong-toi
-  g = dong
-  h = dong-sang
+  f = sang
+  g = dong-sang
+  h = vang-nghe
+  i = vang-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbeeecbbbbbbbgfa
-ahgbbbbbeeddddecbbbbbgfa
-ahgbbbbeddddddddcbbbbgfa
-ahgbbbedcdddcddcdcbbbgfa
-ahgbbbeddcdcdccdcccbbgfa
-ahgbbeddddcddcdddccbbgfa
-ahgbbeddddddddddddcbbgfa
-ahgbbeddddddddddddcbbgfa
-ahgbbecddccddcddcdcbbgfa
-ahgbbedccddccdccddcbbgfa
-ahgbbcddddddddddddcbbgfa
-ahgbbbeddddddddddcbbbgfa
-ahgbbbcdcdddcddcdcbbbgfa
-ahgbbbbcdcdcdccdcbcbbgfa
-ahgbbbbbcccddcccbcbbbgfa
-ahgbbbbbbbccccbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+aeeeeeeeeeeffeeeeeeeeeda
+aeddddddddddddddddddddca
+aeddddddddddddddddddddca
+aeddbbaaaaaaaaaaaabbddca
+aeddbaiiiiiiiiiiiiabddca
+aeddaifhgfhgfhgfhgabddca
+aeddaihhghhhghhhghhaddca
+aeddaiagaagaagaagagaddca
+aeddbafhgfhgfhgfhgabddca
+aeddaihhghhhghhhghhaddca
+afddaiagaagaagaagagaddfa
+afddaifhgfhgfhgfhggaddfa
+aeddbahhghhhghhhghgaddca
+aeddbaagaagaagaagaabddca
+aeddbbafhgfhgfhgfabbddca
+aeddbbbahhhghhhagabbddca
+aeddbbbbaagaagaaabbbddca
+aeddbbbbbaaaaaabbbbbddca
+aeddbbbbbbbbbbbbbbbbddca
+aeddddddddddddddddddddca
+aeddddddddddddddddddddca
+adccccccccccffccccccccca
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

@@ -1,44 +1,45 @@
-# Dòng Dõi Thần Nông — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: rice and leaf crest
-name: Dòng Dõi Thần Nông
+# Kinh Dương Vương · W «Dòng Dõi Thần Nông» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bông lúa + vòng hào quang
+name: Kinh Dương Vương · W «Dòng Dõi Thần Nông»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-toi
-  d = dat
-  e = dat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = son
-  j = lua
-  k = lua-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = sang
+  f = dong-sang
+  g = vang-nghe
+  h = vang-sang
+  i = son-toi
+  j = son-sang
+  k = la-toi
+  l = la
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbkkibkibbbgfa
-ahgbbbbbbbbbkjibkjibbgfa
-ahgbbbbbbbbkijikkjibbgfa
-ahgbbbbbbbkkjijjiibbbgfa
-ahgbbbbbbbkiiikkibbbbgfa
-ahgbbbbbbkkjiijiibbbbgfa
-ahgbbbbbkjiikjiibbbbbgfa
-ahgbbbbkjiikijibbbbbbgfa
-ahgbbbbijiekjiibbbbbbgfa
-ahgbbbbbiidiiibbbbbbbgfa
-ahgbbbbbbbdbbbbbbbbbbgfa
-ahgbbbbbbbdbbbbbbbbbbgfa
-ahgbbbbbbbdbbbbbbbbbbgfa
-ahgbbbbbbbcbbbbbbbbbbgfa
-ahgbbbbbbebbbbbbbbbbbgfa
-ahgbbbbbbdbbbbbbbbbbbgfa
-ahgbbbbbbdbbbbbbbbbbbgfa
-ahgbbbbbbcbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adcjjjjjjaajjjjjjjjjjcba
+adcjiiiiahhahhhiiiiijcba
+adcjiiiahgghaaahhiiijcba
+adcjiiaheggfahhaihiijcba
+adcjihahggfahgghahiijcba
+adcjihfagfaheggfaahijcba
+adcjhiialaahggfahhahjcba
+adcjhfialaiagfahgghajcba
+aecjhiialaialaaheggfacea
+aecjhfialaialaahggfajcea
+adcjhiiialaalaiagfahjcba
+adcjhifialaalaialafijcba
+adcjihiiialalaalaihijcba
+adcjihifialllalaifiijcba
+adcjiihhifalllafihiijcba
+adcjiiihhiallahhhiiijcba
+adcjiiiiihaklaiiiiiijcba
+adcjjjjjjjjaajjjjjjjjcba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

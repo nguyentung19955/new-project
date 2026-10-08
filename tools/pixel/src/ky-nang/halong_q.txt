@@ -1,41 +1,44 @@
-# Sóng Vịnh — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: bay wave
-name: Sóng Vịnh
+# Rồng Mẹ Hạ Long · Q «Sóng Vịnh» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: lớp sóng + vệt tốc độ
+name: Rồng Mẹ Hạ Long · Q «Sóng Vịnh»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = cham
-  g = nuoc
-  h = nuoc-sang
+  b = dong-toi
+  c = dong
+  d = dong-sang
+  e = vang-nghe
+  f = la-toi
+  g = cham-toi
+  h = cham-sang
+  i = nuoc-sang
+  j = troi
+  k = ngoc
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbgbbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbhggggggggggfbbbdca
-aedbbbfggggggggggfbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbfggggggggfbbbbdca
-aedbbbbbfggggggfbbbbbdca
-aedbbbbbbffggffbbbbbbdca
-aedbbbbbbbbffbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adchhhaahhhhaahhhhaahcba
+adchgajjaggajjaggajjacba
+adchajiijaajiijaajiiacba
+adcajikkijjikkijjikkacba
+adcakkkkkkkkkkkkkkkkacba
+adcaffffffffffffffffacba
+adchaajjaaaajjaaaajjacba
+adchajiijaajiijaajiiacba
+aecajikkijjikkijjikkacea
+aecakkkkkkkkkkkkkkkkacea
+adcaffffffffffffffffacba
+adchaajjaaaajjaaaajjacba
+adchajiijaajiijaajiiacba
+adcajikkijjikkijjikkacba
+adcakkkkkkkkkkkkkkkkacba
+adcaffffffffffffffffacba
+adchaaaaaaaaaaaaaaaahcba
+adchhhhhhhhhhhhhhhhhhcba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

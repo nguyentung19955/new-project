@@ -4,13 +4,13 @@ name: Ông Táo · W «Ba Ông Đầu Rau»
 size: 24x24
 colors:
   a = vien
-  b = dat-toi
-  c = dat
-  d = dat-sang
-  e = dong-toi
-  f = dong
-  g = dong-sang
-  h = vang-nghe
+  b = sat
+  c = sat-sang
+  d = bac
+  e = sang
+  f = dat-toi
+  g = dat
+  h = dat-sang
   i = vang-sang
   j = son-toi
   k = son
@@ -20,28 +20,28 @@ colors:
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-agggggggggghhgggggggggfa
-agffffffffffffffffffffea
-agfllllllllllllllllllfea
-agfljjjjjjjjajjjjjjjlfea
-agfljjjjjjaanajjjjjjlfea
-agfljjjjjannkajjjjjjlfea
-agfljjjjjakkkaajjjjjlfea
-agfljjjjjadddddajjjjlfea
-agfljjjjandcccbajjjjlfea
-agfljjjankbbbbbnajjjlfea
-ahfljjjankiiiinkajjjlfha
-ahfljaaakkinnmnkaaaalfha
-agfladdddkinnmnkddddafea
-agfadddccdmmmmkdddccdfea
-agfaddcccbaaaaaddcccbfea
-agfadcccccdddddcccccbfea
-agfadccccccdccccccccbfea
-agfabccccbcccccbccccbfea
-agflabbbbadcccbabbbbafea
-agfllaaaaabbbbbaaaaalfea
-agffffffffffffffffffffea
-afeeeeeeeeeehheeeeeeeeea
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adcllllllllllllllllllcba
+adcljjjjjjjjajjjjjjjlcba
+adcljjjjjjaanajjjjjjlcba
+adcljjjjjannkajjjjjjlcba
+adcljjjjjakkkaajjjjjlcba
+adcljjjjjahhhhhajjjjlcba
+adcljjjjanhgggfajjjjlcba
+adcljjjankfffffnajjjlcba
+aecljjjankiiiinkajjjlcea
+aecljaaakkinnmnkaaaalcea
+adclahhhhkinnmnkhhhhacba
+adcahhhgghmmmmkhhhgghcba
+adcahhgggfaaaaahhgggfcba
+adcahggggghhhhhgggggfcba
+adcahgggggghggggggggfcba
+adcafggggfgggggfggggfcba
+adclaffffahgggfaffffacba
+adcllaaaaafffffaaaaalcba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

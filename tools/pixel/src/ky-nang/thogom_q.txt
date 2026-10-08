@@ -1,46 +1,42 @@
-# Bình Gốm Nổ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: clay pot bursting
-name: Bình Gốm Nổ
+# Thợ Gốm Phù Lãng · Q «Bình Gốm Nổ» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bình gốm + nổ va chạm
+name: Thợ Gốm Phù Lãng · Q «Bình Gốm Nổ»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = trang-xam
-  d = trang
-  e = sang
-  f = dat-toi
-  g = dat
-  h = dat-sang
-  i = dong-toi
-  j = dong
-  k = dong-sang
-  l = vang-nghe
-  m = vang-sang
+  b = sang
+  c = dat-toi
+  d = dat-sang
+  e = dong-toi
+  f = dong
+  g = dong-sang
+  h = vang-nghe
+  i = vang-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-akkkkkkkkkkkkkkkkkkkkkia
-akjjjjjjjjjjjjjjjjjjjjia
-akjbbbbbbbhhhhfbbbbbbjia
-akjbbbbbbbhgggfbbbbbbjia
-akjbbbbbbbfffffbbbbbbjia
-akjbbbbbbbeeecbbbbbbbjia
-akjbbbbbbbeddcbbbbbbbjia
-akjbbbbbbbccccbbbbbbbjia
-akjbbbbbbmmmmmkbbbbbbjia
-akjbbbbmmllllllmkbbbbjia
-akjbbbbmllllllllkbbbbjia
-akjbbbmllllllllllkbbbjia
-akjbbbmllllllllllkbbbjia
-akjbbbmllllllllllkbbbjia
-akjbbbmllllllllllkbbbjia
-akjbbbkllllllllllkbbbjia
-akjbbbbmllllllllkbbbbjia
-akjbbbbkkllllllkkbbbbjia
-akjbbbbbbkkkkkkbbbbbbjia
-akjbbbbbbbbbbbbbbbbbbjia
-akjjjjjjjjjjjjjjjjjjjjia
-aiiiiiiiiiiiiiiiiiiiiiia
+agggggggggghhgggggggggfa
+agffffffffffffffffffffea
+agfddddddddddddddddddfea
+agfdcccccaaaaaacccccdfea
+agfdccccaggggggaccccdfea
+agfdcccccagffeacccccdfea
+agfdcccaagffffeaacccdfea
+agfdccaggffffffeeaccdfea
+agfdcagffffffffffeacdfea
+agfdagfhhhhhhhhhhfeadfea
+ahfdagffffffffffffeadfha
+ahfdagbfffffffffffeadfha
+agfdagbbffffffffffeadfea
+agfdabfhhbhhhhhhhfeadfea
+agfdcahihffffffffeacdfea
+agfdbhibihbffffeeaccdfea
+agfdcchiheeeeeeaacccdfea
+agfdcbchcbaaaaacccccdfea
+agfdcccbccccccccccccdfea
+agfddddddddddddddddddfea
+agffffffffffffffffffffea
+afeeeeeeeeeehheeeeeeeeea
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

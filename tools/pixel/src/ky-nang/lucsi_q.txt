@@ -1,40 +1,45 @@
-# Ném Đá Tảng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a big boulder thrown with a motion arc
-name: Ném Đá Tảng
+# Lực Sĩ Núi · Q «Ném Đá Tảng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: tảng đá + vệt tốc độ
+name: Lực Sĩ Núi · Q «Ném Đá Tảng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = trang-xam
+  f = trang
+  g = dat-toi
+  h = dat-sang
+  i = dong-toi
+  j = dong
+  k = dong-sang
+  l = vang-nghe
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbgbbbbbbbbbbbdca
-aedbbbbbgfggggebbbbbbdca
-aedbbbbgfffffffebbbbbdca
-aedbbbbgffefffffebbbbdca
-aedbbbgffffefffffebbbdca
-aedbbgfffffefffffebbbdca
-aedbbgfffffeffffffebbdca
-aedbbgffffffefffffebbdca
-aedbbgffffffefffffebbdca
-aedbgfffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbeeeeeeeeeeeeeeeebdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+akkkkkkkkkkllkkkkkkkkkja
+akjjjjjjjjjjjjjjjjjjjjia
+akjhhhhhhhhhhhhhhhhhhjia
+akjhgggggaaaaagggggghjia
+akjhgggaadddddaagggghjia
+akjhggaddcccccddaggghjia
+akjhfadcccccccccdagghjia
+akjhadcccacccccccagghjia
+akjhadccaccccccccbaghjia
+akjadcccccccccaccbaghjia
+aljadcccccccccacccbahjla
+aljadccccccccaccccbahjla
+akjaccccccccccccccbbajia
+akjhacccccccccccccbbajia
+akjhabcccccccccccbbahjia
+akjhgabbbccccccbbbaghjia
+akjhggaabbbbbbbbaagghjia
+akjhgeeeaaaaaaaagggghjia
+akjhgggggggggggggggghjia
+akjhhhhhhhhhhhhhhhhhhjia
+akjjjjjjjjjjjjjjjjjjjjia
+ajiiiiiiiiiilliiiiiiiiia
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

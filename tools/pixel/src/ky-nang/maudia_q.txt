@@ -1,40 +1,43 @@
-# Đất Nứt — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: cracked earth
-name: Đất Nứt
+# Mẫu Địa · Q «Đất Nứt» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: khe đất nứt rực dung nham
+name: Mẫu Địa · Q «Đất Nứt»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = dat-toi
+  c = dat
+  d = dat-sang
+  e = dong-toi
+  f = dong
+  g = dong-sang
+  h = vang-nghe
+  i = vang-sang
+  j = lua
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbgbbbbbbdca
-aedbbbbbbbbbbbgebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbgebbbgffebbbbdca
-aedbbbbbgebbgfffebbbbdca
-aedbbbbgffebgfffebbbbdca
-aedbbbbgfffgffffebbbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbgffffffffffffebbdca
-aedbbgffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbgffffffffffffffebdca
-aedgeeeeeeeeeeeeeeeebdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+agggggggggghhgggggggggfa
+agffffffffffffffffffffea
+agfddddddddddddddddddfea
+agfdbbbbbbbbbbbbbbbbdfea
+agfdbbbbbbbbbbbbbbbbdfea
+agfdbbabbbbbbbbbabbbdfea
+agfdbadabbbbbbbadabbdfea
+agfdadddabbbbbadddabdfea
+agfdaacaaaabaaaacaaadfea
+agfadddddjiaddddddddafea
+ahfaccccdjiidcccccccafha
+ahfaccccajijcccccccbafha
+agfacccjiijccccccccbafea
+agfacccjijcccccccccbafea
+agfaccjijccccccccccbafea
+agfabbjibbbbbbbbbbbbafea
+agfdaaaaaaaaaaaaaaaadfea
+agfdbbbbbbbbbbbbbbbbdfea
+agfdbbbbbbbbbbbbbbbbdfea
+agfddddddddddddddddddfea
+agffffffffffffffffffffea
+afeeeeeeeeeehheeeeeeeeea
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

@@ -1,40 +1,44 @@
-# Sỏi Nảy — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: bouncing pebble
-name: Sỏi Nảy
+# Trẻ Chăn Trâu · Q «Sỏi Nảy» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: sỏi + đường nảy
+name: Trẻ Chăn Trâu · Q «Sỏi Nảy»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = sang
+  f = dat-toi
+  g = dat-sang
+  h = dong-toi
+  i = dong
+  j = dong-sang
+  k = vang-nghe
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbgbbbbbbdca
-aedbbbbbbbbbbbgebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbgebbbgffebbbbdca
-aedbbbbbgebbgfffebbbbdca
-aedbbbbgffebgfffebbbbdca
-aedbbbbgfffgffffebbbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbgffffffffffffebbdca
-aedbbgffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbgffffffffffffffebdca
-aedgeeeeeeeeeeeeeeeebdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+ajjjjjjjjjjkkjjjjjjjjjia
+ajiiiiiiiiiiiiiiiiiiiiha
+ajiggggggggggggggggggiha
+ajigffffffffffffffffgiha
+ajigffffffffffffffffgiha
+ajigffffffffefffffffgiha
+ajigfffffeaaafefffffgiha
+ajigfffffadddaffffffgiha
+ajigffffadeccbafffffgiha
+ajigffffadccccbaffffgiha
+akigffaaaabbbbaaafffgika
+akigfadddaaaaddddaffgika
+ajigadeccbaadecccbafgiha
+ajigadccccbadccccbafgiha
+ajigfabbbbafabbbbbafgiha
+ajigffaaaafffaaaaaffgiha
+ajigeffffffffffffffegiha
+ajigffffffffffffffffgiha
+ajigffffffffffffffffgiha
+ajiggggggggggggggggggiha
+ajiiiiiiiiiiiiiiiiiiiiha
+aihhhhhhhhhhkkhhhhhhhhha
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

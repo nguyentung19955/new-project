@@ -1,44 +1,44 @@
-# Tiếng Chuông Ngân — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: +8.2% xuyên kháng phép
-name: Tiếng Chuông Ngân
+# Thầy Chuông Đồng · W «Tiếng Chuông Ngân» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: sóng âm + chuông nhỏ
+name: Thầy Chuông Đồng · W «Tiếng Chuông Ngân»
 size: 24x24
 colors:
   a = vien
-  b = khoi
+  b = sat-toi
   c = sat
   d = sat-sang
   e = bac
-  f = dat-toi
-  g = dat
-  h = dat-sang
+  f = trang-xam
+  g = trang
+  h = sang
   i = dong-toi
   j = dong
   k = dong-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-akkkkkkkkkkkkkkkkkkkkkia
-akjjjjjjjjjjjjjjjjjjjjia
-akjbbbbbbbbecbbbbbbbbjia
-akjbbbbbbbeddcbbbbbbbjia
-akjbbbbbbbccccbbbbbbbjia
-akjbbbbbbeeeecbbbbbbbjia
-akjbbbbbedddddcbbbbbbjia
-akjbbbbbedddddcbbbbbbjia
-akjbbbbbedddddcbbbbbbjia
-akjbbbbbedddddcbbbbbbjia
-akjbbbbedddddddcbbbbbjia
-akjbbbbedddddddcbbbbbjia
-akjbbbbedddddddcbbbbbjia
-akjbbbedddddddddcbbbbjia
-akjbbedddddddddddcbbbjia
-akjbeccccccccccccccbbjia
-akjbbbbbbbbbbbbbbbbbbjia
-akjbbbbbbbhhhfbbbbbbbjia
-akjbbbbbbbfggfbbbbbbbjia
-akjbbbbbbbbffbbbbbbbbjia
-akjjjjjjjjjjjjjjjjjjjjia
-aiiiiiiiiiiiiiiiiiiiiiia
+aeeeeeeeeeehheeeeeeeeeda
+aeddddddddddddddddddddca
+aeddddaadddddaddddddddca
+aeddbakkaabbahabbbbbddca
+aeddakjjiaabbahabbbbddca
+aeddakjjiahabbahabbbddca
+aedakjjjjiahabbahabbddca
+aedaiiiiiiaahabbahabddca
+aeddaajiaabagabbagabddca
+aeddahaagabagabbagabddca
+ahdahhgagabagabbagabddha
+ahdahggagabagabbagabddha
+aeddaffagabagabbagabddca
+aeddbaaafabafabbafabddca
+aeddbbafabafabbafabbddca
+aeddbafabafabbafabbbddca
+aeddbbabafabbafabbbbddca
+aeddbbbbbabbafabbbbbddca
+aeddbbbbbbbbbabbbbbbddca
+aeddddddddddddddddddddca
+aeddddddddddddddddddddca
+adcccccccccchhccccccccca
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

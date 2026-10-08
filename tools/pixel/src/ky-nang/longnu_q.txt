@@ -1,42 +1,47 @@
-# Long Châu — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: dragon pearl
-name: Long Châu
+# Long Nữ Động Đình · Q «Long Châu» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: long châu + toả sáng
+name: Long Nữ Động Đình · Q «Long Châu»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-sang
-  d = dong-toi
-  e = dong
-  f = dong-sang
-  g = cham
-  h = nuoc
-  i = nuoc-sang
+  b = sang
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = vang-nghe
+  g = vang-sang
+  h = lua
+  i = lua-sang
+  j = cham-toi
+  k = cham-sang
+  l = nuoc
+  m = nuoc-sang
+  n = troi
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-afffffffffffffffffffffda
-afeeeeeeeeeeeeeeeeeeeeda
-afebbbbbbbbbbbbbbbbbbeda
-afebbbbbbbbbbbbbbbbbbeda
-afebbbbbbbbbbbbcbbbcbeda
-afebbbbbbbbbbbigcbbcbeda
-afebbbbbbbbbiihhcgbcbeda
-afebbbbbbbbihhhhhcgcbeda
-afebbbbbbbbihhhhhhhigeda
-afebbbbbbbihhhghhhahgeda
-afeiigbbbihhhgbihhhhgeda
-afeghhgbbihhhgbgggggbeda
-afebghhiihhhgbbbbbbbbeda
-afebbihhhhhgbbbbbbbbbeda
-afebbghhhhgbbbbbbbbbbeda
-afebbbggggbbbbbbbbbbbeda
-afebbbbbbbbbbbbbbbbbbeda
-afebbbbbbbbbbbbbbbbbbeda
-afebbbbbbbbbbbbbbbbbbeda
-afebbbbbbbbbbbbbbbbbbeda
-afeeeeeeeeeeeeeeeeeeeeda
-adddddddddddddddddddddda
+aeeeeeeeeeeffeeeeeeeeeda
+aeddddddddddddddddddddca
+aedkkkkkkkkgkkkkkkkkkdca
+aedkgjjjjjjfjjjjjjjgkdca
+aedkjgjjjgafjjajjjgjkdca
+aedkjjajjaiajaiajajjkdca
+aedkjaiajaihaihaaiajkdca
+aedkjaihannnnnnaihajkdca
+aedkjgaannmmmmmnaagjkdca
+aedkjaanbbmmmmmmmlajkdca
+afdkaihnbmmmmmmmmlaakdfa
+afdgahanbmmmmmmmmlhiadfa
+aedkjaanmmmmmmmmmlaakdca
+aedkjaanmmmmmmmmllajkdca
+aedkaihammmmmmmllaiakdca
+aedkjahaalmmmmllaahakdca
+aedkjjajjaalllaajfajkdca
+aedkjgjjjgjaaagjjjgjkdca
+aedkgjjjjjjjfjjjjjjgkdca
+aedkkkkkkkkkfkkkkkkkkdca
+aeddddddddddddddddddddca
+adccccccccccffccccccccca
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

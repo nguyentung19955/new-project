@@ -1,41 +1,44 @@
-# Hỏa Long Giáng Thế — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: fire dragon
-name: Hỏa Long Giáng Thế
+# Kinh Dương Vương · R «Hỏa Long Giáng Thế» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đầu rồng + lửa dưới đáy
+name: Kinh Dương Vương · R «Hỏa Long Giáng Thế»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
+  b = trang
+  c = sang
   d = dong
-  e = dong-sang
-  f = son
-  g = lua
-  h = lua-sang
+  e = vang-nghe
+  f = vang-sang
+  g = son-toi
+  h = son
+  i = son-sang
+  j = lua
+  k = lua-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbhggfbbbbbbbdca
-aedbbbbbbbhgggfbbbbbbdca
-aedbbbbbbhgggggfbbbbbdca
-aedbbbbbbhggggggfbbbbdca
-aedbbbbbhgggggggfbbbbdca
-aedbbbbhgggggggggfbbbdca
-aedbbhhgggggggggggfbbdca
-aedbhggggggggggggggfbdca
-aedhgggggggggggggggfbdca
-aedbfgggggggggggggfbbdca
-aedbbhgggggggggggfbbbdca
-aedbbfgggggggggggfbbbdca
-aedbbbfgggggggggfbbbbdca
-aedbbbbfffffffffbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+aifffffffffiifffffffffia
+afeeeeeeeeeeeeeeeeeeeeda
+afeiiiaaiiiaaiiiiiiiieda
+afeigaffagaffaggggggieda
+afeiggafeaaafeagggggieda
+afeigggaekkkkeaaaaggieda
+afeiggakkjjjjjkkkkaaieda
+afeigakjjjbajjjjjjjkaeda
+afeiakjejjjjjjjjjjjhaeda
+afeakjjejjjjjaaaaaaaieda
+aieakjejjjacccaaaaagieia
+aieakjejjaaaaaaaggggieia
+afeakjjejjaccccaaaggieda
+afeiakjjejjjjjjjjhagieda
+afeigakjejjjjjjhaaggieda
+afeiaaeehjahhhaagggaieda
+afeaajaafajaaaajagajaeda
+afeaakjaaakjagakjaakjeda
+afeakjkaakjkaakjkakjkeda
+afekjkjkkjkjkkjkjkjkjeda
+afeeeeeeeeeeeeeeeeeeeeda
+aiddddddddddiiddddddddia
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

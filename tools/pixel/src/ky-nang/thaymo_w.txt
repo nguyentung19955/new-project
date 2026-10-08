@@ -1,41 +1,49 @@
-# Đuốc Linh Hồn — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a spirit torch with a blue-orange flame
-name: Đuốc Linh Hồn
+# Thầy Mo Lửa · W «Đuốc Linh Hồn» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đuốc + vòng hào quang
+name: Thầy Mo Lửa · W «Đuốc Linh Hồn»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = son
-  g = lua
-  h = lua-sang
+  b = toi
+  c = sat
+  d = sat-sang
+  e = bac
+  f = sang
+  g = dat-toi
+  h = dat
+  i = dat-sang
+  j = vang-nghe
+  k = vang-sang
+  l = son-toi
+  m = son-sang
+  n = nuoc
+  o = nuoc-sang
+  p = troi
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
+aeeeeeeeeeeffeeeeeeeeeda
 aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbhggfbbbbbbbdca
-aedbbbbbbbhgggfbbbbbbdca
-aedbbbbbbhgggggfbbbbbdca
-aedbbbbbbhggggggfbbbbdca
-aedbbbbbhgggggggfbbbbdca
-aedbbbbhgggggggggfbbbdca
-aedbbhhgggggggggggfbbdca
-aedbhggggggggggggggfbdca
-aedhgggggggggggggggfbdca
-aedbfgggggggggggggfbbdca
-aedbbhgggggggggggfbbbdca
-aedbbfgggggggggggfbbbdca
-aedbbbfgggggggggfbbbbdca
-aedbbbbfffffffffbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
+aedmmmmmmmammmmmmmmmmdca
+aedmlllllapappalllllmdca
+aedmlllpapopaapaplllmdca
+aedmlllapofopapalpllmdca
+aedmlppaoffffooanpllmdca
+aedmlpapofkkfoonanplmdca
+aedmplaofkkkkfonallpmdca
+aedmpnanofkkfoonalnpmdca
+afdmpllanoofoonalllpmdfa
+afdmpnllabjjbaalllnpmdfa
+aedmplllajkjjalllllpmdca
+aedmplnllaihalllllnlmdca
+aedmlplllaihalllllplmdca
+aedmlplnlaihallllnllmdca
+aedmllpplaihallnlpllmdca
+aedmlllppaihanppplllmdca
+aedmlllllaghapllllllmdca
+aedmmmmmmmaammmmmmmmmdca
 aeddddddddddddddddddddca
-acccccccccccccccccccccca
+adccccccccccffccccccccca
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

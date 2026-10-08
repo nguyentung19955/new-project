@@ -1,41 +1,46 @@
-# Đèn Trời Rơi — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: sky lantern falling
-name: Đèn Trời Rơi
+# Cô Thả Đèn Trời · Q «Đèn Trời Rơi» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đèn trời + nổ va chạm
+name: Cô Thả Đèn Trời · Q «Đèn Trời Rơi»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = son
-  g = lua
-  h = lua-sang
+  b = toi
+  c = sang
+  d = dong-toi
+  e = dong
+  f = dong-sang
+  g = vang-nghe
+  h = vang-sang
+  i = son-toi
+  j = son
+  k = son-sang
+  l = lua
+  m = lua-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbhggfbbbbbbbdca
-aedbbbbbbbhgggfbbbbbbdca
-aedbbbbbbhgggggfbbbbbdca
-aedbbbbbbhggggggfbbbbdca
-aedbbbbbhgggggggfbbbbdca
-aedbbbbhgggggggggfbbbdca
-aedbbhhgggggggggggfbbdca
-aedbhggggggggggggggfbdca
-aedhgggggggggggggggfbdca
-aedbfgggggggggggggfbbdca
-aedbbhgggggggggggfbbbdca
-aedbbfgggggggggggfbbbdca
-aedbbbfgggggggggfbbbbdca
-aedbbbbfffffffffbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+affffffffffggfffffffffea
+afeeeeeeeeeeeeeeeeeeeeda
+afekkkkkkkkkkkkkkkkkkeda
+afekiiiiiiiiiiiiiiiikeda
+afekiiiaaaaaaaaaaiiikeda
+afekiiammmmmmmmmmaiikeda
+afekiamlllllllllljaikeda
+afekiamclhhhhhhlljaikeda
+afekiamclhhchhhlljaikeda
+afekiamclhhhhhhlljaikeda
+agekiamclhhhhhhlljaikega
+agekiiamclhhhhlljaiikega
+afekiiacclhhhhlljaiikeda
+afekicaglclllllljaiikeda
+afekiighgbammabbaiiikeda
+afekcghchgcllmaaiiiikeda
+afekiighgiamlaiiiiiikeda
+afekicigiciaaiiiiiiikeda
+afekiiiciiiiiiiiiiiikeda
+afekkkkkkkkkkkkkkkkkkeda
+afeeeeeeeeeeeeeeeeeeeeda
+aeddddddddddggddddddddda
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 
