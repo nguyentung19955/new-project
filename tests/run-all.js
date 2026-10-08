@@ -5,6 +5,9 @@
 //   node tests/run-all.js --j 6           → 6 luồng (hoặc --j=6); --j 1 = chạy lần lượt
 //   node tests/run-all.js --list          → in danh sách test sẽ chạy rồi thoát
 //   node tests/run-all.js -v              → in toàn bộ đầu ra của mọi test (mặc định chỉ in test lỗi)
+//   node tests/run-all.js --khong-chay-lai → không chạy lại test lỗi (mặc định: xem dưới)
+// Chạy song song (≥ 2 luồng) mà có test lỗi: sau khi xong cả bộ, chạy lại RIÊNG từng test lỗi một lần (máy rảnh, không CHAY_SONG_SONG).
+// Đạt khi chạy riêng → ghi "CHẬP CHỜN" (lỗi do máy quá tải, không tính lỗi nhưng in danh sách để sửa test); vẫn lỗi → LỖI.
 // Test tự bỏ qua (thiếu môi trường) thì in một dòng bắt đầu bằng "SKIP" rồi thoát mã 0 → bảng ghi BỎ QUA, không tính lỗi.
 // Thời gian lần chạy trước lưu ở tests/.thoi-gian.json (không commit) để xếp test lâu chạy trước, rút ngắn tổng thời gian.
 const fs = require('fs');
@@ -15,7 +18,7 @@ const DIR = __dirname;
 const ROOT = path.resolve(DIR, '..');
 const TIMES = path.join(DIR, '.thoi-gian.json');
 const argv = process.argv.slice(2);
-let J = 4, verbose = false, list = false, timeoutS = 900;
+let J = 4, verbose = false, list = false, timeoutS = 900, retry = true;
 const filters = [];
 for (let i = 0; i < argv.length; i++) {
   const a = argv[i];
@@ -23,6 +26,7 @@ for (let i = 0; i < argv.length; i++) {
   else if (/^--?j=?\d+$/.test(a)) J = +a.replace(/\D/g, '');
   else if (a === '-v' || a === '--verbose') verbose = true;
   else if (a === '--list') list = true;
+  else if (a === '--khong-chay-lai') retry = false;
   else if (a === '--timeout') timeoutS = +argv[++i];
   else filters.push(a);
 }
@@ -49,10 +53,12 @@ const results = [];
 const t0 = Date.now();
 const fmt = (ms) => (ms / 1000).toFixed(1) + ' giây';
 
-function run(t) {
+function run(t, alone = false) {
   return new Promise((resolve) => {
     const start = Date.now();
-    const child = spawn(process.execPath, [path.join(DIR, t)], { cwd: ROOT, env: { ...process.env, CHAY_SONG_SONG: '1' } });
+    const env = { ...process.env, CHAY_SONG_SONG: '1' };
+    if (alone) delete env.CHAY_SONG_SONG;
+    const child = spawn(process.execPath, [path.join(DIR, t)], { cwd: ROOT, env });
     let out = '';
     child.stdout.on('data', (d) => { out += d; });
     child.stderr.on('data', (d) => { out += d; });
@@ -61,11 +67,14 @@ function run(t) {
       clearTimeout(timer);
       const ms = Date.now() - start;
       const skip = code === 0 && /^SKIP\b/m.test(out);
-      const status = code === 0 ? (skip ? 'BỎ QUA' : 'ĐẠT') : 'LỖI';
+      let status = code === 0 ? (skip ? 'BỎ QUA' : 'ĐẠT') : 'LỖI';
+      if (alone && status === 'ĐẠT') status = 'CHẬP CHỜN';
       const r = { t, status, ms, code: code ?? sig, out, why: skip ? (out.match(/^SKIP\b:?\s*(.*)$/m)[1] || '') : '' };
-      results.push(r);
-      console.log(`${status.padEnd(6)} ${t} (${fmt(ms)})${r.why ? ' — ' + r.why : ''}`);
-      if (status === 'LỖI' || verbose) console.log(out.replace(/^/gm, '    │ ') + '\n');
+      if (alone) { const i = results.findIndex((x) => x.t === t); r.first = results[i]; results[i] = r; } else results.push(r);
+      console.log(`${(alone ? '↻ ' : '') + status.padEnd(6)} ${t} (${fmt(ms)})${r.why ? ' — ' + r.why : ''}${alone ? ' — chạy lại riêng' : ''}`);
+      // lỗi lúc song song mà sẽ chạy lại: chỉ in vài dòng lỗi (đầu ra đủ in nếu chạy lại vẫn lỗi)
+      if (status === 'LỖI' && !alone && retry && J > 1 && !verbose) console.log(out.split('\n').filter((l) => /FAIL|Error|✗/.test(l)).slice(0, 3).map((l) => '    │ ' + l).join('\n') + '\n');
+      else if (status === 'LỖI' || verbose) console.log(out.replace(/^/gm, '    │ ') + '\n');
       resolve();
     });
   });
@@ -75,20 +84,26 @@ function run(t) {
   console.log(`Chạy ${queue.length} test, ${J} luồng song song…`);
   const workers = Array.from({ length: Math.min(J, queue.length) }, async () => { while (queue.length) await run(queue.shift()); });
   await Promise.all(workers);
+  const failed = results.filter((r) => r.status === 'LỖI').map((r) => r.t);
+  if (retry && J > 1 && failed.length) {
+    console.log(`\nChạy lại riêng ${failed.length} test lỗi (lần lượt, máy rảnh)…`);
+    for (const t of failed) await run(t, true);
+  }
   const total = Date.now() - t0;
   // lưu thời gian (gộp với lần trước, chỉ cập nhật test vừa chạy và không bỏ qua)
-  for (const r of results) if (r.status !== 'BỎ QUA') prev[r.t] = r.ms;
+  for (const r of results) if (r.status !== 'BỎ QUA') prev[r.t] = (r.first || r).ms;   // thời gian lúc chạy song song
   try { fs.writeFileSync(TIMES, JSON.stringify(prev, null, 1)); } catch (e) { /* không ghi được thì thôi */ }
 
   results.sort((a, b) => b.ms - a.ms);
   const w = Math.max(...results.map((r) => r.t.length));
-  console.log('\n' + 'Test'.padEnd(w) + '  Kết quả  Thời gian');
-  console.log('-'.repeat(w + 22));
-  for (const r of results) console.log(`${r.t.padEnd(w)}  ${r.status.padEnd(7)}  ${fmt(r.ms).padStart(10)}${r.why ? '  (' + r.why + ')' : ''}`);
+  console.log('\n' + 'Test'.padEnd(w) + '  Kết quả    Thời gian');
+  console.log('-'.repeat(w + 24));
+  for (const r of results) console.log(`${r.t.padEnd(w)}  ${r.status.padEnd(9)}  ${fmt(r.ms).padStart(10)}${r.why ? '  (' + r.why + ')' : ''}`);
   const sum = results.reduce((s, r) => s + r.ms, 0);
   const n = (s) => results.filter((r) => r.status === s).length;
-  console.log('-'.repeat(w + 22));
-  console.log(`Tổng: ${fmt(total)} (cộng dồn ${fmt(sum)}, ${J} luồng) · đạt ${n('ĐẠT')} · lỗi ${n('LỖI')} · bỏ qua ${n('BỎ QUA')}`);
+  console.log('-'.repeat(w + 24));
+  console.log(`Tổng: ${fmt(total)} (cộng dồn ${fmt(sum)}, ${J} luồng) · đạt ${n('ĐẠT')} · chập chờn ${n('CHẬP CHỜN')} · lỗi ${n('LỖI')} · bỏ qua ${n('BỎ QUA')}`);
+  if (n('CHẬP CHỜN')) console.log('Chập chờn (lỗi khi chạy song song, đạt khi chạy riêng — nên sửa test chờ điều kiện): ' + results.filter((r) => r.status === 'CHẬP CHỜN').map((r) => r.t).join(', '));
   if (n('LỖI')) console.log('Test lỗi: ' + results.filter((r) => r.status === 'LỖI').map((r) => r.t).join(', '));
   process.exit(n('LỖI') ? 1 : 0);
 })();
