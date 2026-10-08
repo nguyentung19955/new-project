@@ -263,7 +263,7 @@ function glow(c, x, y, r, col) { c.save(); c.globalCompositeOperation = 'lighter
 // ======================= BỐ CỤC LÀNG =======================
 // Mỗi bố cục: W (bề rộng làng), vị trí công trình và người.
 const BO_CUC = {
-  rong: { W: 720, cong: [64, 60], mo: [100, 92], dinh: [196, 116], tu: [142, 140], be: [[186, 134, 'hunter'], [206, 142, 'healer'], [226, 134, 'wrestler']], da: [338, 128], doo: [364, 150], gieng: [296, 196], ren: [462, 112], renN: [468, 132], xen: [552, 196], xenN: [540, 198], may: [594, 108], mayN: [574, 132], cui: [592, 132], phoi: [520, 104, 38], song: 652, cau: [636, 156, 36], lai: [638, 154], thuyen: [694, 178], tranh: [618, 196], ao: [86, 228, 58, 24], rom: [404, 240], hero: [500, 184] },
+  rong: { W: 720, cong: [64, 60], mo: [100, 92], dinh: [196, 116], tu: [142, 140], be: [[186, 134, 'hunter'], [206, 142, 'healer'], [226, 134, 'wrestler']], da: [338, 128], doo: [364, 150], gieng: [296, 196], ren: [462, 112], renN: [468, 132], xen: [552, 196], xenN: [540, 198], may: [594, 108], mayN: [574, 132], cui: [592, 132], phoi: [520, 104, 38], song: 652, cau: [636, 156, 36], lai: [638, 154], thuyen: [694, 178], tranh: [618, 196], ao: [86, 228, 58, 24], rom: [404, 240], hero: [484, 192] },
   vua: { W: 480, cong: [40, 60], mo: [70, 90], dinh: [150, 114], tu: [100, 136], be: [[140, 132, 'hunter'], [158, 138, 'healer'], [176, 132, 'wrestler']], da: [262, 104], doo: [282, 128], gieng: [214, 176], ren: [356, 112], renN: [362, 132], xen: [300, 190], xenN: [288, 192], may: [0, 0], mayN: [196, 208], cui: [214, 208], phoi: [150, 196, 28], song: 428, cau: [412, 152, 36], lai: [414, 150], thuyen: [462, 172], tranh: [412, 118], ao: [0, 0, 0, 0], rom: [0, 0], hero: [330, 160] },
 };
 const NGUOI = [ // thứ tự đánh số trên tờ toàn cảnh

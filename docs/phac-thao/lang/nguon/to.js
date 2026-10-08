@@ -85,7 +85,7 @@ function bangLoRen(c, X, Y, s) {
   R(250, 49, 52, 16, '#6a2a22', '#e8b080'); text(c, '✕ Xong', X + T(276), Y + T(60.5), T(7.5), '#fff', true, 'center');
   ['Mài', 'Nâng bậc', 'Tôi lại', 'Rèn đồ', 'Nâng lò'].forEach((t, i) => { R(16 + i * 57, 70, 54, 18, i === 0 ? '#b5672f' : '#4a3a30', i === 0 ? '#ffd27a' : '#7a6a58'); text(c, t, X + T(43 + i * 57), Y + T(82.5), T(7.5), '#fff', true, 'center'); if (i === 1) { c.beginPath(); c.arc(X + T(68 + i * 57), Y + T(72), T(3), 0, 7); c.fillStyle = '#ff5a3a'; c.fill(); } });
   const ws = [['Gươm Rồng Xích Diệm +4', 'Lửa · Thành hình · bậc Tím', '#d48af5', 'sword'], ['Rồng Rắn Sương Giá +2', 'Băng · Mầm · bậc Lam', '#7ac8f0', 'bow'], ['Giáo Sắt +0', 'Chưa mang hệ · bậc Thường', '#d9cdb8', 'spear']];
-  ws.forEach((w, i) => { const y = 96 + i * 34; R(16, y, 284, 30, i === 0 ? '#5a4226' : '#2e2830', i === 0 ? '#ffd27a' : '#5a5060'); R(20, y + 3, 24, 24, '#1a1420', w[2]); const sp = TL.weaponSprite(w[3], 'thuong', 'idle', -45, 0); c.save(); c.beginPath(); c.rect(X + T(21), Y + T(y + 4), T(22), T(22)); c.clip(); c.imageSmoothingEnabled = false; c.drawImage(sp.cv, X + T(25) - sp.ox * s * 0.5, Y + T(y + 23) - sp.oy * s * 0.5, sp.cv.width * s * 0.5, sp.cv.height * s * 0.5); c.restore(); text(c, w[0], X + T(50), Y + T(y + 13), T(8.5), w[2], true); text(c, w[1], X + T(50), Y + T(y + 24), T(6.5), SOFT); });
+  ws.forEach((w, i) => { const y = 96 + i * 34; R(16, y, 284, 30, i === 0 ? '#5a4226' : '#2e2830', i === 0 ? '#ffd27a' : '#5a5060'); R(20, y + 3, 24, 24, '#1a1420', w[2]); const sp = TL.weaponSprite(w[3], 'thuong', 'idle', -45, 0); c.save(); c.beginPath(); c.rect(X + T(21), Y + T(y + 4), T(22), T(22)); c.clip(); c.imageSmoothingEnabled = false; c.drawImage(sp.cv, X + T(w[3] === 'bow' ? 36 : 25) - sp.ox * s * 0.5, Y + T(y + (w[3] === 'bow' ? 21 : 23)) - sp.oy * s * 0.5, sp.cv.width * s * 0.5, sp.cv.height * s * 0.5); c.restore(); text(c, w[0], X + T(50), Y + T(y + 13), T(8.5), w[2], true); text(c, w[1], X + T(50), Y + T(y + 24), T(6.5), SOFT); });
   text(c, 'Lên +5 tốn: 400 vàng, 6 quặng', X + T(18), Y + T(216), T(8), CREAM); text(c, 'Sát thương mỗi đòn 21,4 → 22,6', X + T(18), Y + T(230), T(7.5), '#9be07a');
   R(216, 224, 84, 30, '#a8452a', '#ffd27a'); text(c, 'Mài', X + T(258), Y + T(243.5), T(12), '#fff', true, 'center');
 }
@@ -154,9 +154,9 @@ TO['tuong-tac'] = function () {
       hud(c, X, Y, S, { btn: 'Nói chuyện', hot: true, dots, sel: 'ren' });
     } else if (i === 2) {
       blit(c, man(B, cam, { f: 0, hero: null }), X, Y, S); c.fillStyle = 'rgba(10,8,16,0.6)'; c.fillRect(X, Y, FW, FH);
-      hud(c, X, Y, S, { noPad: true, dots, sel: 'ren' }); bangLoRen(c, X, Y, S);
-      putNpc(c, 'ren', X + 392 * S, Y + 250 * S, 0, { look: -1 }, S * 3);
-      bubble(c, 'Đưa đây ông xem lưỡi nào!', X + 392 * S, Y + 106 * S, 22, { maxW: 240 });
+      hud(c, X, Y, S, { noPad: true, dots, sel: 'ren' }); bangLoRen(c, X + 164 * S, Y, S);
+      putNpc(c, 'ren', X + 84 * S, Y + 250 * S, 0, { look: 1 }, S * 3);
+      bubble(c, 'Đưa đây ông xem lưỡi nào!', X + 84 * S, Y + 112 * S, 22, { maxW: 240 });
     } else {
       blit(c, man(B, cam, { f: 1, look: { ren: 1 }, hero: [492, 146, -1] }), X, Y, S);
       bubble(c, 'Đi cẩn thận nhé!', X + W2(rN[0]), Y + (rN[1] - 44) * S, 22);
@@ -211,5 +211,134 @@ TO['hai-bo-cuc'] = function () {
   text(c, 'Khuyên chọn A cho điện thoại', M + 30, yb + 52, 34, '#9be07a', true);
   text(c, 'Trên điện thoại hai ngón cái che mất hai góc dưới. Làng một màn hình vì thế còn rất ít chỗ, người phải vẽ nhỏ và đứng sát nhau.', M + 30, yb + 96, 26, CREAM);
   text(c, 'Làng rộng thì bốn người hay dùng nhất nằm ngay màn hình đầu, ba người còn lại cách một lần chạm vào dải lối tắt.', M + 30, yb + 134, 26, CREAM);
+  return cv;
+};
+
+// ---------- 5. Bản đồ vùng dạng tranh vẽ ----------
+function saoNho(c, x, y, on) { const col = on ? '#e8a020' : '#b0a078'; p(c, x, y - 1, 1, 3, col); p(c, x - 1, y, 3, 1, col); }
+function veBanDo() {
+  const [cv, c] = mk(480, 270), rd = rng(11), INKB = '#4a3626';
+  p(c, 0, 0, 480, 270, '#e6d8b0');
+  for (let i = 0; i < 900; i++) p(c, rd() * 480, rd() * 270, 1 + (rd() < 0.2 ? 1 : 0), 1, rd() < 0.5 ? '#d8c898' : '#f0e6c8');
+  for (let i = 0; i < 14; i++) ell(c, rd() * 480, rd() * 270, 10 + rd() * 26, 5 + rd() * 12, 'rgba(190,160,100,0.10)');
+  // biển phía dưới
+  for (let y = 214; y < 270; y++) { for (let x = 60; x < 480; x++) { const e = 222 + Math.sin(x * 0.045) * 6 + Math.sin(x * 0.13) * 2 + (x < 110 ? (110 - x) * 0.9 : 0); if (y > e) { p(c, x, y, 1, 1, y - e < 2 ? '#7a9aa4' : '#b4cac8'); } } }
+  for (let i = 0; i < 60; i++) { const x = 70 + rd() * 400, y = 232 + rd() * 36; p(c, x, y, 4, 1, '#7a9aa4'); p(c, x + 4, y - 1, 2, 1, '#7a9aa4'); }
+  // sông từ làng ra biển
+  const song = [[40, 132], [52, 160], [70, 182], [64, 206], [84, 232]]; for (let i = 0; i < song.length - 1; i++) { line(c, song[i][0], song[i][1], song[i + 1][0], song[i + 1][1], 5, '#7a9aa4'); line(c, song[i][0], song[i][1], song[i + 1][0], song[i + 1][1], 3, '#b4cac8'); }
+  // núi mờ phía xa
+  for (const m of [[250, 40, 30], [300, 30, 22], [200, 34, 18], [360, 44, 26]]) for (let i = 0; i < m[2]; i++) p(c, m[0] - i, m[1] + i, i * 2, 1, i < 3 ? '#b8a880' : '#d0c098');
+  // --- Rừng già
+  for (let i = 0; i < 34; i++) { const x = 76 + rd() * 130, y = 40 + rd() * 62 + (x - 76) * -0.1; p(c, x, y, 2, 5, '#5a4030'); ell(c, x + 1, y - 2, 5, 4, i % 3 ? '#4a7a4a' : '#2f5a3a'); ell(c, x, y - 4, 3, 2, '#6a9a5a'); }
+  // --- Hang biển
+  ell(c, 160, 200, 62, 18, '#c8c0a0'); for (const r of [[110, 196, 12, 9], [140, 186, 16, 12], [176, 194, 14, 10], [206, 184, 18, 14], [228, 198, 10, 8]]) { ell(c, r[0], r[1], r[2], r[3], '#6a7a84'); ell(c, r[0] - 2, r[1] - 2, r[2] - 3, r[3] - 3, '#8a9aa0'); }
+  ell(c, 206, 190, 8, 7, '#2a3440'); p(c, 198, 190, 17, 8, '#2a3440'); for (let i = 0; i < 4; i++) p(c, 199 + i * 4, 183 + (i % 2), 2, 4, '#c8d8dc');
+  // --- Lâu đài cổ
+  p(c, 256, 92, 86, 24, '#8a8088'); for (let i = 0; i < 11; i++) p(c, 256 + i * 8, 88, 5, 4, '#8a8088'); for (let i = 0; i < 4; i++) for (let j = 0; j < 10; j++) p(c, 258 + j * 9 - (i % 2) * 4, 96 + i * 5, 7, 1, '#6a606a');
+  for (const tx of [262, 330]) { p(c, tx - 8, 70, 16, 46, '#7a707a'); p(c, tx - 10, 66, 20, 5, '#5a505a'); for (let i = 0; i < 8; i++) p(c, tx - 10 + i, 58 + i, 20 - i * 2, 1, '#8a3a2e'); p(c, tx, 50, 1, 9, INKB); p(c, tx + 1, 50, 6, 4, '#c8402e'); p(c, tx - 2, 82, 4, 6, '#2a2430'); }
+  p(c, 290, 98, 18, 18, '#2a2430'); ell(c, 299, 98, 9, 6, '#2a2430'); for (let i = 0; i < 9; i++) p(c, 280 + i, 78 + i, 38 - i * 2, 1, '#8a3a2e'); p(c, 276, 86, 46, 3, '#5e241d');
+  // --- Ba vùng sắp thêm (mờ, mây che)
+  const mo = '#c4b48c', mo2 = '#b0a078';
+  for (let i = 0; i < 26; i++) { p(c, 400 - i * 1.3, 40 + i, i * 2.6, 1, i < 8 ? '#f4eee0' : mo); } for (let i = 0; i < 18; i++) p(c, 436 - i * 1.2, 52 + i, i * 2.4, 1, i < 5 ? '#f4eee0' : mo2); // núi tuyết
+  for (let i = 0; i < 26; i++) p(c, 436 - i * 1.4 - 3, 134 + i, i * 2.8 + 6, 1, mo2); p(c, 432, 130, 8, 5, '#d08a5a'); p(c, 434, 124, 3, 6, '#e0a070'); p(c, 438, 120, 2, 5, '#e0b890'); p(c, 430, 136, 2, 8, '#d08a5a'); p(c, 440, 138, 2, 12, '#d08a5a'); // núi lửa
+  ell(c, 356, 194, 34, 12, mo); for (let i = 0; i < 7; i++) { const x = 330 + i * 9, y = 190 + (i % 3) * 4; p(c, x, y - 8, 1, 8, mo2); p(c, x - 1, y - 10, 3, 3, '#8a7a58'); p(c, x + 3, y - 5, 1, 5, mo2); } ell(c, 350, 198, 8, 2, '#a8b8a0'); ell(c, 372, 192, 6, 2, '#a8b8a0'); // đầm lầy
+  for (const q of [[392, 76], [420, 84], [446, 68], [420, 164], [450, 158], [340, 204], [372, 204], [404, 150]]) { ell(c, q[0], q[1], 12, 4, '#f6f0dc'); ell(c, q[0] - 6, q[1] - 3, 7, 3, '#f6f0dc'); ell(c, q[0] + 5, q[1] - 2, 6, 3, '#fbf7ea'); p(c, q[0] - 10, q[1] + 4, 20, 1, '#c8b890'); }
+  // --- làng
+  p(c, 26, 122, 22, 10, '#8a5a34'); for (let i = 0; i < 7; i++) p(c, 24 + i, 115 + i, 26 - i * 2 + i, 1, '#c8402e'); p(c, 22, 121, 30, 2, '#8a3a2e'); p(c, 12, 118, 2, 10, '#5a4030'); ell(c, 13, 114, 6, 5, '#4a7a4a'); p(c, 34, 126, 5, 6, '#2a2430');
+  ell(c, 58, 166, 7, 2, '#5a4030'); p(c, 54, 162, 8, 2, '#c9a24f'); // con đò
+  // --- đường đi và điểm ải
+  const V = [40, 138];
+  const R = [
+    { n: [[86, 116], [110, 94], [138, 102], [160, 80], [190, 62]], st: [3, 3, 2, 3, 2], from: V },
+    { n: [[96, 180], [122, 206], [152, 174], [182, 208], [222, 180]], st: [3, 2, 3, 1, 2], from: [70, 182] },
+    { n: [[230, 140], [250, 128], [272, 142], [300, 128], [318, 78]], st: [3, 1, 0, -1, -1], from: [190, 62] },
+  ];
+  function dash(a, b, col) { const n = Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / 4); for (let j = 1; j < n; j++) if (j % 2) p(c, a[0] + ((b[0] - a[0]) * j) / n, a[1] + ((b[1] - a[1]) * j) / n, 2, 2, col); }
+  dash([190, 62], [230, 140], '#8a6a48'); dash([222, 180], [230, 140], '#8a6a48');
+  dash([318, 78], [392, 70], '#c0ae84'); dash([300, 128], [420, 150], '#c0ae84'); dash([222, 180], [330, 196], '#c0ae84');
+  const out = { R, cur: null };
+  R.forEach((r, ri) => {
+    if (ri < 2) dash(r.from, r.n[0], '#8a6a48');
+    for (let i = 0; i < 4; i++) dash(r.n[i], r.n[i + 1], r.st[i + 1] >= 0 ? '#7a4a30' : '#b0a078');
+    r.n.forEach((q, i) => {
+      const s = r.st[i], boss = i === 4;
+      if (boss) { ell(c, q[0], q[1], 8, 8, INKB); ell(c, q[0], q[1], 7, 7, s > 0 ? '#c8402e' : s === 0 ? '#ffd23f' : '#cbbd96'); ell(c, q[0], q[1], 5, 5, s > 0 ? '#8a2a1e' : '#a89870'); }
+      else { ell(c, q[0], q[1], 5, 5, INKB); ell(c, q[0], q[1], 4, 4, s > 0 ? '#c8402e' : s === 0 ? '#ffd23f' : '#cbbd96'); if (s > 0) { p(c, q[0] - 2, q[1], 2, 2, '#fbf7ee'); p(c, q[0], q[1] + 1, 1, 2, '#fbf7ee'); p(c, q[0] + 1, q[1] - 2, 2, 3, '#fbf7ee'); } else if (s < 0) { p(c, q[0] - 1, q[1] - 1, 3, 3, '#8a7a58'); p(c, q[0] - 1, q[1] - 3, 3, 1, '#8a7a58'); p(c, q[0] - 2, q[1] - 2, 1, 1, '#8a7a58'); p(c, q[0] + 2, q[1] - 2, 1, 1, '#8a7a58'); } }
+      
+      if (s === 0) out.cur = q;
+    });
+  });
+  // hình trùm nhỏ
+  let b = R[0].n[4]; const bx = (q) => [q[0], q[1] - 12];
+  let [x, y] = bx(b); const T1 = outlined(32, 32, 16, 28, (g) => { p(g, -5, -10, 10, 10, '#7a5234'); p(g, -7, -2, 14, 2, '#5a3a22'); ell(g, 0, -13, 8, 4, '#4a8a4a'); ell(g, -3, -16, 4, 3, '#6aaa5a'); p(g, -3, -8, 2, 3, '#ff5a3a'); p(g, 2, -8, 2, 3, '#ff5a3a'); p(g, -2, -3, 5, 1, '#2a1c18'); p(g, -9, -8, 4, 2, '#7a5234'); p(g, 6, -9, 4, 2, '#7a5234'); }); c.drawImage(T1.cv, x - 16, y - 28 + 3);
+  [x, y] = bx(R[1].n[4]); const T2 = outlined(32, 32, 16, 28, (g) => { ell(g, 0, -7, 9, 6, '#3a7a9a'); ell(g, -1, -8, 6, 3, '#5aa0c0'); p(g, 8, -11, 4, 3, '#3a7a9a'); p(g, 8, -5, 4, 3, '#3a7a9a'); p(g, -2, -15, 5, 3, '#2a5a7a'); p(g, -6, -9, 2, 2, '#ff5a3a'); for (let i = 0; i < 3; i++) p(g, -8 + i * 2, -4, 1, 2, '#fff'); }); c.drawImage(T2.cv, x - 16, y - 28 + 3);
+  [x, y] = bx(R[2].n[4]); const T3 = outlined(32, 32, 16, 28, (g) => { ell(g, 0, -7, 7, 6, '#e0782a'); p(g, -7, -16, 4, 6, '#e0782a'); p(g, 4, -16, 4, 6, '#e0782a'); p(g, -6, -14, 2, 3, '#2a1c18'); p(g, 5, -14, 2, 3, '#2a1c18'); ell(g, 0, -4, 4, 3, '#fbf7ee'); p(g, -4, -9, 2, 2, '#ffe07a'); p(g, 3, -9, 2, 2, '#ffe07a'); p(g, 0, -5, 1, 1, '#2a1c18'); p(g, 8, -8, 5, 3, '#e0782a'); p(g, 11, -11, 3, 4, '#fbf7ee'); }); c.drawImage(T3.cv, x - 16, y - 28 + 3);
+  // em bé đứng ở ải đang tới
+  if (out.cur) { const q = out.cur; for (const r of [9, 8]) { c.strokeStyle = '#c8402e'; c.lineWidth = 1; c.beginPath(); c.ellipse(q[0] + 0.5, q[1] + 0.5, r, r * 0.8, 0, 0, 7); if (r === 9) c.stroke(); } putHero(c, q[0], q[1] - 3, 1, {}); }
+  // la bàn, viền
+  p(c, 22, 14, 1, 18, INKB); p(c, 14, 22, 17, 1, INKB); p(c, 21, 12, 3, 3, '#c8402e'); ell(c, 22, 22, 3, 3, '#e6d8b0'); ell(c, 22, 22, 1, 1, INKB);
+  for (const k of [0, 1, 2]) { c.strokeStyle = ['#6a4a30', '#a88a58', '#6a4a30'][k]; c.lineWidth = 1; c.strokeRect(k * 2 + 0.5, k * 2 + 0.5, 479 - k * 4, 269 - k * 4); }
+  return { cv, out };
+}
+TO['ban-do-vung'] = function () {
+  const S = 4, M = 40, [cv, c] = mk(2000, 170 + 1080 + 330), X = M, Y = 170, T = (v) => v * S;
+  p(c, 0, 0, cv.width, cv.height, PAGE);
+  text(c, 'Bản đồ vùng là một tấm tranh', M, 80, 60, GOLDT, true);
+  text(c, 'Nói chuyện với Chú Lái Đò thì tranh mở ra. Chạm một điểm ải trên tranh, rồi bấm "Lên đò". Hình phóng 4 lần.', M, 124, 27, CREAM);
+  const m = veBanDo(); blit(c, m.cv, X, Y, S);
+  const nm = (s, x, y, px, col) => { c.font = '700 ' + px + 'px ' + FONT; c.lineWidth = px / 4; c.strokeStyle = 'rgba(240,230,200,0.85)'; c.textAlign = 'center'; c.strokeText(s, X + T(x), Y + T(y)); text(c, s, X + T(x), Y + T(y), px, col, true, 'center'); };
+  nm('Làng', 36, 112, 30, '#4a3626'); nm('Rừng già', 126, 34, 38, '#2f5a3a'); nm('Hang biển', 150, 228, 38, '#2a5a7a'); nm('Lâu đài cổ', 300, 46, 38, '#7a2a22');
+  nm('Mộc Tinh', 222, 60, 22, '#4a3626'); nm('Ngư Tinh', 256, 176, 22, '#4a3626'); nm('Hồ Tinh', 346, 62, 22, '#4a3626');
+  nm('Núi tuyết', 412, 34, 30, '#8a7a58'); nm('Núi lửa', 432, 112, 30, '#8a7a58'); nm('Đầm lầy', 356, 176, 30, '#8a7a58');
+  for (const q of [[412, 96], [432, 174], [356, 162]]) { rr(c, X + T(q[0]) - 62, Y + T(q[1]) - 22, 124, 32, 16, 'rgba(74,54,38,0.85)'); text(c, 'sắp có', X + T(q[0]), Y + T(q[1]), 22, '#f0e6c8', true, 'center'); }
+  m.out.R.forEach((r) => r.n.forEach((q, i) => { const s = r.st[i]; if (s > 0) for (let k = 0; k < 3; k++) { c.font = '700 20px ' + FONT; c.lineWidth = 4; c.strokeStyle = '#4a3626'; c.textAlign = 'center'; const sx = X + T(q[0]) + (k - 1) * 19, sy = Y + T(q[1] + (i === 4 ? 14.5 : 11.5)); c.strokeText('★', sx, sy); text(c, '★', sx, sy, 20, k < s ? '#ffd23f' : '#d8caa0', true, 'center'); } }));
+  // thẻ ải đang chọn + lái đò
+  const q = m.out.cur; bubble(c, 'Ải 3', X + T(q[0]), Y + T(q[1] - 30), 26, { bg: '#ffe9a8' });
+  putNpc(c, 'lai', X + T(34), Y + T(262), 0, { look: 1, noShadow: true }, S * 2); bubble(c, 'Đi đâu hả cháu?', X + T(40), Y + T(196), 26, { dx: 40 });
+  rr(c, X + T(250), Y + T(214), T(222), T(50), T(4), 'rgba(28,22,30,0.94)', '#c9a24f', T(1));
+  text(c, 'Lâu đài cổ · Ải 3', X + T(258), Y + T(229), T(10), GOLDT, true); text(c, 'Hệ chủ đạo: Lửa · Gợi ý cấp hero 20', X + T(258), Y + T(241), T(7), CREAM); text(c, 'Thưởng: kinh nghiệm, vàng, đá lửa', X + T(258), Y + T(251), T(7), SOFT);
+  rr(c, X + T(258), Y + T(254.5), T(78), T(7), T(2), null, null); text(c, 'Độ khó: thường (chạm để đổi)', X + T(258), Y + T(260.5), T(6.5), '#d48af5', true);
+  rr(c, X + T(396), Y + T(222), T(68), T(34), T(4), '#a8452a', '#ffd27a', T(1)); text(c, 'Lên đò', X + T(430), Y + T(243), T(12), '#fff', true, 'center');
+  rr(c, X + T(404), Y + T(6), T(58), T(16), T(3), '#5a4030', '#c9a24f', T(0.8)); text(c, '✕ Về làng', X + T(433), Y + T(17.5), T(8), '#fff', true, 'center');
+  rr(c, X, Y, 1920, 1080, 4, null, '#5a5060', 3);
+  // chú giải
+  const y0 = Y + 1080 + 40; rr(c, M, y0, 1920, 250, 16, PANEL);
+  const [lg, lc] = mk(120, 20); p(lc, 0, 0, 120, 20, '#e6d8b0');
+  const items = [['Ải đã qua, bên dưới là số sao', (x, y) => { ell(lc, x, y, 5, 5, '#4a3626'); ell(lc, x, y, 4, 4, '#c8402e'); }], ['Ải đang tới: em bé đứng ở đó', (x, y) => { ell(lc, x, y + 3, 5, 5, '#4a3626'); ell(lc, x, y + 3, 4, 4, '#ffd23f'); }], ['Ải chưa mở (có khoá)', (x, y) => { ell(lc, x, y, 5, 5, '#4a3626'); ell(lc, x, y, 4, 4, '#cbbd96'); p(lc, x - 1, y - 1, 3, 3, '#8a7a58'); }], ['Ải trùm: vòng to, có hình trùm', (x, y) => { ell(lc, x, y, 8, 8, '#4a3626'); ell(lc, x, y, 7, 7, '#c8402e'); ell(lc, x, y, 5, 5, '#8a2a1e'); }]];
+  items.forEach((it, i) => { const [g, gc] = mk(22, 22); p(gc, 0, 0, 22, 22, '#e6d8b0'); p(lc, 0, 0, 120, 20, '#e6d8b0'); it[1](11, 10); gc.drawImage(lg, 0, 0, 22, 20, 0, 1, 22, 20); const x = M + 30 + i * 470; c.save(); c.beginPath(); c.roundRect(x, y0 + 28, 66, 66, 10); c.clip(); blit(c, g, x, y0 + 28, 3); c.restore(); para(c, it[0], x + 82, y0 + 56, 350, 24, CREAM, 30); });
+  text(c, 'Đường nét đứt nối các ải theo thứ tự. Hạ trùm vùng này thì đường sang vùng sau hiện ra.', M + 30, y0 + 142, 25, CREAM);
+  text(c, 'Ba vùng sắp thêm (Đầm lầy, Núi tuyết, Núi lửa) đã có chỗ sẵn trên tranh, đang bị mây che. Thêm vùng không phải vẽ lại bản đồ.', M + 30, y0 + 180, 25, CREAM);
+  text(c, 'Độ khó 2 đổi tranh sang màu đêm. Số sao và ổ khoá lấy đúng theo tiến trình đang lưu.', M + 30, y0 + 218, 25, SOFT);
+  return cv;
+};
+
+// ---------- 6. Trên màn hình thật ----------
+TO['tren-man-hinh-that'] = function () {
+  const B = BO_CUC.rong, S = 3, M = 100, SW = 480 * S, SH = 270 * S, cam = 240, [cv, c] = mk(2000, 150 + 2 * (SH + 290) + 10);
+  p(c, 0, 0, cv.width, cv.height, PAGE);
+  text(c, 'Trên điện thoại thật', 40, 80, 60, GOLDT, true);
+  text(c, 'Hai ngón cái đặt ở hai góc dưới. Người và bảng đều nằm ngoài chỗ ngón tay che. Hình phóng 3 lần.', 40, 124, 27, CREAM);
+  for (let i = 0; i < 2; i++) {
+    const Y = 230 + i * (SH + 290), X = (2000 - SW) / 2;
+    text(c, i === 0 ? 'Lúc đi trong làng' : 'Lúc bảng đang mở', X - 60, Y - 56, 32, GOLDT, true);
+    rr(c, X - 70, Y - 34, SW + 140, SH + 68, 60, '#0c0a10', '#4a4454', 4); rr(c, X - 46, Y + SH / 2 - 60, 16, 120, 8, '#1c1921');
+    c.save(); c.beginPath(); c.roundRect(X, Y, SW, SH, 26); c.clip();
+    if (i === 0) {
+      blit(c, man(B, cam, { f: 0, bang: ['ren'], look: { xen: -1 }, hero: [514, 204, 1] }), X, Y, S);
+      const q = B.xenN; bubble(c, 'Hàng xén', X + (q[0] - cam) * S, Y + (q[1] - 40) * S, 34, { bg: '#ffe9a8' });
+      hud(c, X, Y, S, { btn: 'Nói chuyện', hot: true, dots: ['ren', 'do'], sel: 'xen', joy: [8, -4] });
+      for (const z of [[18, 172, 92, 94], [358, 172, 116, 94]]) { c.save(); c.setLineDash([14, 10]); c.lineWidth = 3; c.strokeStyle = 'rgba(255,255,255,0.55)'; c.strokeRect(X + z[0] * S, Y + z[1] * S, z[2] * S, z[3] * S); c.restore(); }
+      text(c, 'chỗ ngón trái che', X + 20 * S, Y + 169 * S, 22, '#fff', true); text(c, 'chỗ ngón phải che', X + 470 * S, Y + 169 * S, 22, '#fff', true, 'right');
+    } else {
+      blit(c, man(B, cam, { f: 0, hero: null }), X, Y, S); c.fillStyle = 'rgba(10,8,16,0.6)'; c.fillRect(X, Y, SW, SH);
+      hud(c, X, Y, S, { noPad: true, dots: ['ren', 'do'], sel: 'ren' }); bangLoRen(c, X + 164 * S, Y, S);
+      putNpc(c, 'ren', X + 84 * S, Y + 250 * S, 0, { look: 1 }, S * 3); bubble(c, 'Đưa đây ông xem lưỡi nào!', X + 84 * S, Y + 112 * S, 30, { maxW: 330 });
+    }
+    c.restore();
+    ngon(c, X + 36 * S, Y + 250 * S, 30 * S, 52 * S, 0.6); ngon(c, X + 448 * S, Y + (i ? 262 : 250) * S, 30 * S, 52 * S, -0.55);
+    const yy = Y + SH + 110;
+    if (i === 0) { text(c, 'Người đứng ở hàng trên và giữa màn hình. Dưới ngón tay chỉ có giếng, cây rơm, tấm tranh, con đò: che cũng không sao.', X - 60, yy, 25, CREAM); text(c, 'Bà Hàng Xén đứng thấp nhất nhưng nằm giữa hai ngón tay. Dải khuôn mặt ở mép trên, không ngón nào che.', X - 60, yy + 36, 25, CREAM); }
+    else { text(c, 'Bảng nằm bên phải: nút chính (Mài) rơi đúng chỗ ngón phải vẫn bấm nút Đánh, không phải với tay.', X - 60, yy, 25, CREAM); text(c, 'Người đứng bên trái bảng và nói. Cần điều khiển ẩn đi khi bảng mở. Chạm khuôn mặt khác ở mép trên để sang người khác.', X - 60, yy + 36, 25, CREAM); }
+  }
   return cv;
 };
