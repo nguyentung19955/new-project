@@ -45,10 +45,11 @@ function ring(cx, cy, r, th, c) {
     const d = Math.sqrt(dx * dx + dy * dy); if (d <= r + 0.4 && d > r - th + 0.4) P(cx + dx, cy + dy, c);
   }
 }
-function bmp(x, y, rows, pal, flip) {
+function bmp(x, y, rows, pal, flip, s) {
+  s = s || 1;
   for (let j = 0; j < rows.length; j++) for (let i = 0; i < rows[j].length; i++) {
     const ch = rows[j][i]; if (ch === '.' || !pal[ch]) continue;
-    P(x + (flip ? rows[j].length - 1 - i : i), y + j, pal[ch]);
+    R(x + (flip ? rows[j].length - 1 - i : i) * s, y + j * s, s, s, pal[ch]);
   }
 }
 function glow(x, y, w, h, col, n) { // quầng sáng chấm so le quanh một ô
@@ -83,7 +84,8 @@ function star(cx, cy, r, n, c, inner) { // ngôi sao nhiều cánh
     if (d <= r * (inner + (1 - inner) * (1 - a))) P(cx + dx, cy + dy, c);
   }
 }
-function icon(name, cx, cy, pal) { const b = B[name]; bmp(Math.round(cx - b[0].length / 2), Math.round(cy - b.length / 2), b, pal); }
+let ICS = 1;
+function icon(name, cx, cy, pal) { const b = B[name]; bmp(Math.round(cx - b[0].length * ICS / 2), Math.round(cy - b.length * ICS / 2), b, pal, false, ICS); }
 const RAR = ['#b9b1a2', '#4aa3ff', '#b36bff', '#ffc83d'];
 const RARD = ['#6b655c', '#1f5fae', '#6a2fb0', '#a8741a'];
 const swordPal = { s: '#f4f0e6', d: '#9fb0bd', h: '#e0a63a', w: '#ffffff', k: '#16131a' };
@@ -127,7 +129,7 @@ const DH = { id: 'dh', name: 'Tranh Đông Hồ và mộc bản', ink: '#2a1a14'
     o = o || {}; const yo = st === 1 ? 1 : 0;
     if (st !== 1) R(x + 2, y + h, w - 2, 1, 'rgba(0,0,0,0.4)');
     paper(x, y + yo, w, h, { tornX: true, base: st === 2 ? C.grey : st === 1 ? C.pap2 : C.paper });
-    const fx = x + 3, fy = y + yo + 3, fw = w - 7, fh = h - 7;
+    const sm = h < 22 ? 1 : 0, fx = x + 3 - sm, fy = y + yo + 3 - sm, fw = w - 7 + sm * 2, fh = h - 7 + sm * 2;
     const col = o.primary ? (st === 1 ? C.redD : C.red) : (st === 1 ? C.yelD : C.yel);
     if (st !== 2) R(fx + (st === 1 ? 0 : 1), fy + (st === 1 ? 0 : 1), fw, fh, col); // mảng màu in lệch 1 chấm
     inkFrame(fx, fy, fw, fh, st === 2 ? '#8f8674' : C.ink);
@@ -143,7 +145,7 @@ const DH = { id: 'dh', name: 'Tranh Đông Hồ và mộc bản', ink: '#2a1a14'
     const c = st === 2 ? '#b3a892' : st === 1 ? C.redD : C.red;
     rr(x, y + yo, w, h, c, 1);
     frame(x + 2, y + yo + 2, w - 4, h - 4, st === 2 ? '#cfc6b0' : '#f3c9a8');
-    for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) if (hash(x + i * 3, y + j * 5) < 0.035) P(x + i, y + yo + j, st === 2 ? C.grey : '#e9a48a'); // dấu mòn
+    for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) if (hash(x + i * 3, y + j * 5) < 0.014) P(x + i, y + yo + j, st === 2 ? C.grey : '#e9a48a'); // dấu mòn
     const size = o.size || 8;
     tx(label, x + w / 2, y + yo + h / 2 + size * 0.36 - 0.5, { size, bold: true, align: 'center', color: st === 2 ? '#e6dfcc' : '#fff3da', shadow: 'rgba(60,10,0,0.6)' });
   };
@@ -208,7 +210,8 @@ const DH = { id: 'dh', name: 'Tranh Đông Hồ và mộc bản', ink: '#2a1a14'
     R(x + 21, y + 14, w - 28, 1, C.ink);
     tx(text, x + 22, y + 11.5, { size: 8.5, bold: true, color: C.ink, shadow: false });
   };
-  DH.round = function (cx, cy, r, kind, st) { // nút tròn: con dấu tròn in màu
+  DH.round = function (cx, cy, r, kind, st) {
+    ICS = r >= 22 ? 2 : 1; // nút tròn: con dấu tròn in màu
     const yo = st === 1 ? 1 : 0; cy += yo;
     const col = kind === 'atk' ? C.red : kind === 'skill' ? C.yel : kind === 'sp' ? C.ind : C.grn;
     if (st !== 1) disc(cx + 1, cy + 2, r, 'rgba(0,0,0,0.4)');
@@ -246,9 +249,9 @@ const DS = { id: 'ds', name: 'Trống đồng Đông Sơn', ink: '#f1e6c6', sub:
     rr(x + 1, y0 + 1, w - 2, h - 2, dis ? '#4a5c57' : C.br, 2);
     if (!dis && st !== 1) R(x + 3, y0 + 1, w - 6, 1, C.hi);
     R(x + 2, y0 + 2, w - 4, h - 4, dis ? '#2b3634' : C.dk);
-    saw(x + 3, y0 + 2, w - 6, dis ? '#56706a' : C.gold, false); saw(x + 3, y0 + h - 5, w - 6, dis ? '#56706a' : C.gold, true);
     const cc = dis ? '#333f3c' : o.primary ? (st === 1 ? C.copL : C.cop) : (st === 1 ? C.pat : C.patD);
-    R(x + 2, y0 + 5, w - 4, h - 10, cc);
+    if (h >= 22) { saw(x + 3, y0 + 2, w - 6, dis ? '#56706a' : C.gold, false); saw(x + 3, y0 + h - 5, w - 6, dis ? '#56706a' : C.gold, true); R(x + 2, y0 + 5, w - 4, h - 10, cc); }
+    else { R(x + 2, y0 + 3, w - 4, h - 6, cc); for (let i = 3; i < w - 3; i += 2) { P(x + i, y0 + 2, dis ? '#56706a' : C.gold); P(x + i, y0 + h - 3, dis ? '#56706a' : C.gold); } }
     if (st === 1) R(x + 2, y0 + 5, w - 4, 1, 'rgba(0,0,0,0.45)');
     if (w >= 56) for (const ex of [x + 4, x + w - 9]) { ring(ex + 2, y0 + (h >> 1), 2, 1, dis ? '#56706a' : C.gold); }
     const size = o.size || 9;
@@ -344,6 +347,7 @@ const DS = { id: 'ds', name: 'Trống đồng Đông Sơn', ink: '#f1e6c6', sub:
     tx(text, x + 18, y + 12, { size: 8.5, bold: true, color: '#fff0c4' });
   };
   DS.round = function (cx, cy, r, kind, st) {
+    ICS = r >= 22 ? 2 : 1;
     const yo = st === 1 ? 1 : 0; cy += yo;
     if (st !== 1) disc(cx + 1, cy + 2, r, 'rgba(0,0,0,0.5)');
     const mid = kind === 'atk' ? C.cop : kind === 'skill' ? '#7a5a14' : kind === 'sp' ? '#1f4f7a' : C.patD;
@@ -484,6 +488,7 @@ const DL = { id: 'dl', name: 'Đèn lồng và sơn mài đêm hội', ink: '#f6
     tx(text, x + w / 2, y + 12.3, { size: 8.5, bold: true, align: 'center', color: C.goldL, shadow: 'rgba(70,10,0,0.85)' });
   };
   DL.round = function (cx, cy, r, kind, st) {
+    ICS = r >= 22 ? 2 : 1;
     const yo = st === 1 ? 1 : 0; cy += yo;
     const col = kind === 'atk' ? C.red : kind === 'skill' ? '#d98a1e' : kind === 'sp' ? '#2f6fd0' : '#3f8a5a';
     const hi = kind === 'atk' ? C.redL : kind === 'skill' ? '#ffc04a' : kind === 'sp' ? '#6fb0ff' : '#6fc18a';
@@ -504,4 +509,6 @@ const DL = { id: 'dl', name: 'Đèn lồng và sơn mài đêm hội', ink: '#f6
     glow(cx + 2, cy - 9, 10, 10, C.glow, 3); disc(cx + 7, cy - 4, 8, C.blk); disc(cx + 7, cy - 4, 7, C.red); ell(cx + 6, cy - 6, 4, 3, C.redL); R(cx + 5, cy - 12, 5, 1, C.gold); R(cx + 5, cy + 4, 5, 1, C.gold);
   };
 })();
+DH.rar = ['#4a4038', '#1f5fae', '#6a2fb0', '#9a6a10']; DS.rar = DL.rar = ['#d6d2c8', '#6fb2ff', '#c88cff', '#ffd24a'];
+DH.el = { fire: '#b2400e', ice: '#1f5f96', poison: '#2f6b1a' }; DS.el = DL.el = { fire: '#ff7a2a', ice: '#7fd4ff', poison: '#6fcf3a' };
 const THEMES = [DH, DS, DL];

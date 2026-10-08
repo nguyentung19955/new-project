@@ -1,0 +1,84 @@
+<!doctype html><meta charset="utf-8"><body style="margin:0;background:#17131d"><canvas id="c"></canvas>
+<script src="kit.js"></script>
+<script>
+const k = +(new URLSearchParams(location.search).get('t') || 0), t = THEMES[k];
+const fin = document.getElementById('c'); const PAD = 12, CAP = 34, HEAD = 56;
+fin.width = 480 * SC + PAD * 2; fin.height = HEAD + 3 * (270 * SC + CAP) + PAD;
+const fc = fin.getContext('2d'); fc.fillStyle = '#17131d'; fc.fillRect(0, 0, fin.width, fin.height);
+const I = {}; const names = { tran: 'nen-tran', lang: 'nen-lang', vk0: 'vk-0', vk1: 'vk-1' };
+const sh = () => (t.onDark ? undefined : false);
+function pt(str, x, y, o) { o = Object.assign({ color: t.ink }, o); if (!t.onDark && o.shadow === undefined) o.shadow = false; tx(str, x, y, o); } // chữ nằm trên bảng
+
+function combat() {
+  g.drawImage(I.tran, 0, 0);
+  t.bar(8, 5, 114, 'hp', 1, '168/168'); t.bar(8, 19, 98, 'mp', 0.8, '96/120');
+  t.slot(8, 34, 22, 0, { icon: false, dark: true }); bmp(15, 41, B.binh, { k: '#16131a', r: '#e0483a', w: '#ffffff' });
+  tx('×2', 30, 57, { size: 6.5, bold: true }); tx('Bình máu', 36, 48, { size: 6.5, bold: true, color: '#fff3da' });
+  t.sbtn(80, 37, 18, 16, 'II', 0, { size: 8 });
+  // bản đồ nhỏ: các phòng vuông nối nhau
+  t.hudPlate(196, 3, 88, 20);
+  const cols = t.id === 'dh' ? ['#c8442b', '#2a1a14', '#b8a880'] : t.id === 'ds' ? ['#d9a441', '#fff0c4', '#2f5a54'] : ['#e8b84a', '#fff6d8', '#4a1c18'];
+  for (let i = 0; i < 7; i++) { const x = 202 + i * 11; if (i < 6) R(x + 6, 12, 5, 1, cols[2]); R(x, 9, 7, 7, i < 2 ? cols[0] : i === 2 ? cols[1] : cols[2]); if (i === 2) frame(x - 1, 8, 9, 9, cols[0]); if (i === 6) R(x + 2, 11, 3, 3, '#e0483a'); }
+  tx('Đánh quái · Rừng già 3', 240, 33, { size: 7, align: 'center' });
+  // hai ô vũ khí
+  [['Tím +4', 2, 'Thành hình', 'fire'], ['Lam +2', 1, 'Mầm', 'ice']].forEach((w, i) => {
+    const x = 366 + i * 56;
+    t.inset(x, 3, 54, 38, i === 0);
+    t.slot(x + 3, 5, 24, w[1], { icon: false, dark: true }); g.imageSmoothingEnabled = false; g.drawImage(I['vk' + i], x + 4, 6, 22, 22);
+    pt(w[0], x + 51, 15, { size: 7, align: 'right', bold: true, color: t.rar[w[1]] });
+    pt(w[2], x + 27, 37, { size: 6.5, align: 'center', bold: true, color: t.el[w[3]] });
+  });
+  t.round(424, 215, 27, 'atk', 0); t.round(379, 188, 16, 'sp', 0); t.round(430, 156, 16, 'skill', 0); t.round(374, 240, 15, 'dodge', 0);
+  tx('20', 379, 211.5, { size: 6.5, bold: true, align: 'center', color: '#8fd0ff' }); tx('40', 430, 179.5, { size: 6.5, bold: true, align: 'center', color: '#8fd0ff' });
+  t.stick(64, 212);
+  t.toast(144, 44, 192, 'Thử thách: hạ hết quái trong 12 giây');
+}
+function forge() {
+  g.drawImage(I.lang, 0, 0); R(0, 0, 480, 270, 'rgba(0,0,0,0.5)'); R(0, 0, 480, 21, 'rgba(10,8,8,0.85)');
+  let rx = 8; for (const r of [['Vàng 3200', '#ffd23f'], ['Quặng 46', '#d6d2c8'], ['Đá tôi 5', '#c88cff'], ['Gỗ linh 24', '#9be07a'], ['Vảy cá 18', '#7fd4ff'], ['Đá lửa 9', '#ff9a5a'], ['Mảnh trùm 6/4/0', '#ffb0a0']]) { tx(r[0], rx, 14, { size: 7.5, bold: true, color: r[1] }); rx += tw(r[0], 7.5, true) + 10; }
+  t.panel(8, 26, 464, 240, 'Lò rèn cấp 2', { ga: false, rightPad: 380, tassel: false, motif: false });
+  ['Mài', 'Nâng bậc', 'Tôi lại', 'Rèn đồ', 'Nâng lò'].forEach((n, i) => t.btn(108 + i * 56, 31, 53, 19, n, 0, { size: 8, primary: i === 1 }));
+  t.sbtn(394, 32, 70, 18, '← Về làng', 0, { size: 8 });
+  const L = [['Gươm Rồng Xích Diệm +4', 2, 'Lửa · Thành hình 190/300', 'fire', 1], ['Rồng Rắn Sương Giá +2', 1, 'Băng · Mầm 64/120', 'ice', 1], ['Chiêng Đồng Độc Vương +5', 3, 'Độc · Thức tỉnh (tối đa)', 'poison'], ['Giáo Đồng Hàn Ngọc +3', 3, 'Băng · Thành hình 150/300', 'ice'], ['Cung Đèn Ông Sao', 2, 'Lửa 12/30', 'fire'], ['Xà Mâu', 2, 'Chưa có dấu ấn'], ['Chùy Gai', 1, 'Chưa có dấu ấn'], ['Cá Chép Rêu Xanh', 1, 'Độc · Mầm 40/120', 'poison'], ['Tre Vót Xích Diệm +1', 0, 'Lửa · Thành hình (tối đa bậc Thường)', 'fire', 0, 1], ['Kiếm Tre', 0, 'Chưa có dấu ấn']];
+  L.forEach((w, i) => {
+    const x = 20 + (i % 2) * 222, y = 58 + (i >> 1) * 27;
+    t.inset(x, y, 218, 25, !!w[5]);
+    t.slot(x + 2, y + 2, 21, w[1], { icon: i > 1, dark: true });
+    if (i < 2) { g.imageSmoothingEnabled = false; g.drawImage(I['vk' + i], x + 2, y + 1, 22, 22); }
+    pt(w[0], x + 28, y + 10.5, { size: 8, bold: true, color: t.rar[w[1]] });
+    pt(w[2], x + 28, y + 20.5, { size: 6.5, color: w[3] ? t.el[w[3]] : t.sub });
+    if (w[4]) pt('đang mang', x + 213, y + 10, { size: 6, align: 'right', color: t.good, bold: true });
+  });
+  t.inset(20, 200, 440, 56, false);
+  pt('Tre Vót Xích Diệm +1: Thường lên Lam (sát thương gốc x1 lên x1,15)', 28, 215, { size: 8, bold: true, color: t.rar[1] });
+  pt('Thêm 1 dòng phụ, tiến hóa được tới Thức tỉnh. Tốn: 150 vàng, 4 quặng, 6 gỗ linh', 28, 229, { size: 7.5 });
+  pt('Dấu ấn và tiến hóa được giữ nguyên.', 28, 243, { size: 7, color: t.sub });
+  t.btn(372, 210, 80, 34, 'Nâng bậc', 0, { primary: true, size: 10 });
+}
+function result() {
+  g.drawImage(I.tran, 0, 0); R(0, 0, 480, 270, 'rgba(0,0,0,0.65)');
+  t.panel(70, 24, 340, 226, 'Qua ải Rừng già 3', {});
+  const notes = ['Qua ải', 'Không dùng bình máu', 'Hạ trùm bằng hệ khắc chế'], got = [1, 1, 0];
+  let y = 62;
+  for (let i = 0; i < 3; i++) { pt(got[i] ? '★' : '☆', 86, y, { size: 12, color: got[i] ? (t.onDark ? '#ffd23f' : '#c8442b') : t.sub }); pt(notes[i], 102, y - 1, { size: 8, color: got[i] ? t.ink : t.sub }); y += 14; }
+  y += 4;
+  const lines = ['+96 kinh nghiệm', '+140 vàng', '+5 quặng', '+7 gỗ linh', '+1 đá tôi', 'Vũ khí nhận 38 dấu ấn', 'Thợ Rèn lên cấp 13!'];
+  lines.forEach((l, i) => pt(l, 86, y + i * 11.5, { size: 7.5, color: l.includes('lên cấp') ? t.accent : t.ink, bold: l.includes('lên cấp') }));
+  // vũ khí nhặt được, đặt bên phải cho dễ thấy
+  t.inset(244, 96, 150, 30, true); t.slot(247, 99, 24, 2, { icon: false, dark: true }); g.imageSmoothingEnabled = false; g.drawImage(I.vk1, 248, 100, 22, 22);
+  pt('Nhặt được', 276, 108, { size: 6.5, color: t.sub }); pt('Cung Đèn Ông Sao', 276, 119, { size: 8, bold: true, color: t.rar[2] });
+  t.btn(86, 212, 140, 26, 'Về làng', 0, { size: 9.5 }); t.btn(254, 212, 140, 26, 'Chơi lại ải này', 0, { primary: true, size: 9.5 });
+}
+let left = 0;
+for (const key in names) { left++; const im = new Image(); im.onload = () => { if (!--left) go(); }; im.src = 'anh/' + names[key] + '.png'; I[key] = im; }
+function go() {
+  fc.fillStyle = '#ffcf7a'; fc.font = '700 30px ' + FONT; fc.fillText('Chủ đề ' + (k + 1) + ': ' + t.name, PAD, 38);
+  const scr = [['(a) Trong trận: thanh máu, mana, bình máu, tạm dừng, bản đồ nhỏ, hai ô vũ khí, nút đánh và chiêu, cần điều khiển', combat], ['(b) Lò rèn: danh sách vũ khí, các nút, bảng thông tin', forge], ['(c) Bảng kết quả sau ải', result]];
+  scr.forEach((s, i) => {
+    const oy = HEAD + i * (270 * SC + CAP);
+    fc.fillStyle = '#cfc8ba'; fc.font = '500 19px ' + FONT; fc.textAlign = 'left'; fc.fillText(s[0], PAD, oy + 23);
+    mk(480, 270); s[1](); flush(fc, PAD, oy + CAP);
+  });
+  document.title = 'ok';
+}
+</script>
