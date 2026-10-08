@@ -1,0 +1,25 @@
+{
+ "code": "thanh-tien-do",
+ "group": "giao-dien",
+ "name": "thanh tiến độ (border-image)",
+ "w": 64,
+ "h": 8,
+ "ax": 32,
+ "ay": 7,
+ "bbox": [
+  0,
+  0,
+  64,
+  8
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "thanh-tien-do.png"
+}

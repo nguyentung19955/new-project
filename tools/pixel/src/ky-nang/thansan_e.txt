@@ -1,0 +1,52 @@
+# Thần Săn Ba Vì · E «Gọi Hổ Ba Vì» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: a roaring tiger head
+name: Thần Săn Ba Vì · E «Gọi Hổ Ba Vì»
+size: 24x24
+colors:
+  a = vien
+  b = toi
+  c = trang-xam
+  d = trang
+  e = sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = vang-nghe
+  j = son
+  k = lua
+  l = lua-sang
+  m = la-toi
+  n = la-ma
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhiihhhhhhhhhga
+ahggggggggggggggggggggfa
+ahgnnaannnnnnnnnnaanngfa
+ahgnallammmmmmmmallangfa
+ahgalellaaaaaaaaljelagfa
+ahgajclklbllllblkjcjagfa
+ahgnalkkjbbljbblkklangfa
+ahgabjkjjllkklljjkjbagfa
+ahgalbjialkjjkjaijblagfa
+ahgajlblljjeejjllbljagfa
+aigablljeeebbeeejljbagia
+aigaljeecdcbbedceellagia
+ahgajjecbcceeccbccljagfa
+ahgnajcbjjjjjjjjbcjangfa
+ahgnajcbejjjjjjebcjangfa
+ahgnmalebjjjjjjbelamngfa
+ahgnmmalebbbbbbelammngfa
+ahgnmmmalleeeellammmngfa
+ahgnmmmmajlllljammmmngfa
+ahgnnnnnnaaaaaannnnnngfa
+ahggggggggggggggggggggfa
+agffffffffffiifffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

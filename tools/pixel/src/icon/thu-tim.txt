@@ -1,0 +1,31 @@
+# cảm ơn (toast) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: thư tim
+name: cảm ơn (toast)
+size: 12x12
+colors:
+  a = vien
+  b = trang-xam
+  c = trang
+  d = sang
+  e = son
+
+part k0
+............
+............
+..aaaaaaaaa.
+.aeddddddeba
+.adeccccecba
+.adceeeeccba
+.adcceecccba
+.adcccccccba
+.abbbbbbbbba
+..aaaaaaaaa.
+............
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

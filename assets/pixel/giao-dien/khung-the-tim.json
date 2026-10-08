@@ -1,0 +1,25 @@
+{
+ "code": "khung-the-tim",
+ "group": "giao-dien",
+ "name": "khung thẻ tướng Tím",
+ "w": 40,
+ "h": 48,
+ "ax": 20,
+ "ay": 47,
+ "bbox": [
+  0,
+  0,
+  40,
+  48
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "khung-the-tim.png"
+}

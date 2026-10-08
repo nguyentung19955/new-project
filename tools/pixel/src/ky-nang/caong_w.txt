@@ -1,0 +1,47 @@
+# Hộ Thuyền — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: shield over a small boat
+name: Hộ Thuyền
+size: 24x24
+colors:
+  a = vien
+  b = dat-toi
+  c = dat
+  d = dat-sang
+  e = dong-toi
+  f = dong
+  g = dong-sang
+  h = cham
+  i = nuoc
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+agggggggggggggggggggggea
+agffffffffffffffffffffea
+agfffffffffbffffffffffea
+agfffffffffbffffffffffea
+agfffffffffbhfffffffffea
+agfffffffffbhfffffffffea
+agfffffffffbihffffffffea
+agfffffffffbiihfffffffea
+agfffffffffbiihfffffffea
+agfffffffffbiiihffffffea
+agfffffffffbiiiihfffffea
+agfffffffffbhhhhhfffffea
+aefffffffffbffffffffffea
+.aeddddddddbdddddddbeea.
+..aabcccccccccccccbeaa..
+....adcccccccccccbea....
+....abbbbbbbbbbbbba.....
+.....aaeffffffffea......
+.......aeffffffea.......
+........aeffffea........
+.........aeffea.........
+..........aeea..........
+...........aa...........
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

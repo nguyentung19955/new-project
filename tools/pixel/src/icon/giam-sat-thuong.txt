@@ -1,0 +1,30 @@
+# giảm sát thương — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: khiên + mũi tên xuống
+name: giảm sát thương
+size: 12x12
+colors:
+  a = vien
+  b = cham
+  c = nuoc
+  d = nuoc-sang
+
+part k0
+.aaaaaaaaa..
+addddddddba.
+adcccccccba.
+adcccccccba.
+adcccccccba.
+abcccccccba.
+.abcccccba..
+..abcccba...
+...abbba....
+....aaa.....
+............
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

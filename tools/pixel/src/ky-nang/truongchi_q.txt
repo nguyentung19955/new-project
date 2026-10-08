@@ -1,0 +1,51 @@
+# Trương Chi · Q «Khúc Sáo Mê Hồn» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bamboo flute with notes
+name: Trương Chi · Q «Khúc Sáo Mê Hồn»
+size: 24x24
+colors:
+  a = vien
+  b = toi
+  c = trang
+  d = dat
+  e = dat-sang
+  f = cat
+  g = dong-toi
+  h = dong
+  i = dong-sang
+  j = vang-nghe
+  k = vang-sang
+  l = cham-toi
+  m = nuoc
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aiiiiiiiiiijjiiiiiiiiiha
+aihhhhhhhhhhhhhhhhhhhhga
+aihmmmmaammmmmmmmmmmmhga
+aihmllaccallllllllllmhga
+aihmllacalllllllllllmhga
+aihmlaacallllllllaaamhga
+aihmacccalllllllakfkahga
+aihmaccalllllllakffeahga
+aihmlaalllllllakffkamhga
+aihmlllllllllakbfkalmhga
+ajhmllllllllakdfkallmhja
+ajhmlllllllakffkalllmhja
+aihmllllllakbfkaaaalmhga
+aihmlllllakffkaacccamhga
+aihmllllakffkalacacamhga
+aihmlllakbfkallacacamhga
+aihmllakdfkallaccccamhga
+aihmlakffkalllacaccamhga
+aihmlaffkalllllalaalmhga
+aihmmakkammmmmmmmmmmmhga
+aihhhhhhhhhhhhhhhhhhhhga
+ahggggggggggjjggggggggga
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

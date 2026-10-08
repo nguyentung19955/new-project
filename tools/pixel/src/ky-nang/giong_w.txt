@@ -1,0 +1,50 @@
+# Thánh Gióng · W «Giáp Sắt» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: an iron chest armor plate
+name: Thánh Gióng · W «Giáp Sắt»
+size: 24x24
+colors:
+  a = vien
+  b = toi
+  c = sat-toi
+  d = sat
+  e = sat-sang
+  f = bac
+  g = dong-toi
+  h = dong
+  i = dong-sang
+  j = vang-nghe
+  k = son-toi
+  l = son-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aiiiiiiiiiijjiiiiiiiiiha
+aihhhhhhhhhhhhhhhhhhhhga
+aihllllllllllllllllllhga
+aihlkkakkkaaaakkkakklhga
+aihlkaeaaallllaaaeaklhga
+aihlkaeeeaklkkaeecaklhga
+aihlkaedceeebeecdcaklhga
+aihlaedcfedcbecfecaklhga
+aihlaedcecccbccecdealhga
+aihlaecbbbbbbbbbbecalhga
+ajhlaedeeeeebeeeedcalhja
+ajhlaedcfedcbecfedcalhja
+aihlacdcecccbccecdcalhga
+aihlkacbbbbbbbbbbcaklhga
+aihlkaeeeeeebeeeecaklhga
+aihlkaccfedcbecfecaklhga
+aihlkkaeeddcbedecakklhga
+aihlkkacccccbccccakklhga
+aihlkkkaaaaabaaaakkklhga
+aihlllllllllallllllllhga
+aihhhhhhhhhhhhhhhhhhhhga
+ahggggggggggjjggggggggga
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

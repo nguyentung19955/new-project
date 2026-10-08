@@ -1,0 +1,46 @@
+# Kim Độc — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Thổi kim độc vào quái đi xa nhất: x2 sát thương +1, độc
+name: Kim Độc
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = la
+  g = la-ma
+  h = la-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbbbhbbbbbbbbbdca
+aedbbbbbbbbgbbbbbbbbbdca
+aedbbbbbbbhgfbbbbbbbbdca
+aedbbbbbbbhgfbbbbbbbbdca
+aedbbbbbbhgggfbbbbbbbdca
+aedbbbbbbhgggfbbbbbbbdca
+aedbbbbbhgggggfbbbbbbdca
+aedbbbbbhggggggfbbbbbdca
+aedbbbbhggggggggfbbbbdca
+aedbbbbhggggggggfbbbbdca
+aedbbbbhggaggaggfbbbbdca
+aedbbbbhggggggggfbbbbdca
+aedbbbbhggggggggfbbbbdca
+aedbbbbhggggggggfbbbbdca
+aedbbbbfggggggggfbbbbdca
+aedbbbbbffggggffbbbbbdca
+aedbbbbbbbffffbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

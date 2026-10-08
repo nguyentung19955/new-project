@@ -1,0 +1,50 @@
+# Trương Chi · E «Sương Khói Mặt Sông» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: river mist
+name: Trương Chi · E «Sương Khói Mặt Sông»
+size: 24x24
+colors:
+  a = vien
+  b = trang-xam
+  c = sang
+  d = dong-toi
+  e = dong
+  f = dong-sang
+  g = vang-nghe
+  h = cham-toi
+  i = cham
+  j = nuoc
+  k = nuoc-sang
+  l = troi
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+affffffffffggfffffffffea
+afeeeeeeeeeeeeeeeeeeeeda
+afejjjjjjjjjjjjjjjjjjeda
+afejaaaaaaaaahhhhahhjeda
+afeacccccccccahhalahjeda
+afeabbbbbbbbbahalllajeda
+afejaaaaaaaaaaaaalahjeda
+afejhhhacccccccccccajeda
+afejhhhabbbbbbbbbbbajeda
+afejhaaaaaaaaaaaaaahjeda
+agejaccccccccccccahhjega
+agejabbbbbbbbbbbbahhjega
+afejhaaaaaaaaaaaaahhjeda
+afejhhhhacccccccccahjeda
+afeaaaaaabbbbbbbbbaaaeda
+afekkkkklkkkklkkkkkkkeda
+afekjjilklkilklkjjjjieda
+afekjjjkjkjjkjkjjjjjieda
+afekjjjjjjjjjjjjjjjjieda
+afeiiiiiiiiiiiiiiiiiieda
+afeeeeeeeeeeeeeeeeeeeeda
+aeddddddddddggddddddddda
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

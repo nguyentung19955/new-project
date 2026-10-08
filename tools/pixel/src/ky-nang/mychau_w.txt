@@ -1,0 +1,47 @@
+# Áo Lông Trắng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: +5.2% sức mạnh kỹ năng, +3% chí mạng
+name: Áo Lông Trắng
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = sat
+  d = sat-sang
+  e = bac
+  f = dat
+  g = dong-toi
+  h = dong
+  i = dong-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aiiiiiiiiiiiiiiiiiiiiiga
+aihhhhhhhhhhhhhhhhhhhhga
+aihbbbbbbbbbbbbbbbbbbhga
+aihbbbbbeaeeeeabbbbbbhga
+aihbbbbeddaddadcbbbbbhga
+aihbbbedddaddaddcbbbbhga
+aihbeedddddaaddddecbbhga
+aihedddddddddddddddcbhga
+aihbcdcdddddddddcdcbbhga
+aihbbcbedddddddcbcbbbhga
+aihbbbbedddddddcbbbbbhga
+aihbbbbedddddddcbbbbbhga
+aihbbbbffffffffffbbbbhga
+aihbbbbffffffffffbbbbhga
+aihbbbbedddddddcbbbbbhga
+aihbbbbedddddddcbbbbbhga
+aihbbbbedddddddcbbbbbhga
+aihbbbbedddddddcbbbbbhga
+aihbbbeccccccccccbbbbhga
+aihbbbbbbbbbbbbbbbbbbhga
+aihhhhhhhhhhhhhhhhhhhhga
+agggggggggggggggggggggga
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

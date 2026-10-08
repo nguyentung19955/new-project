@@ -1,0 +1,45 @@
+# Móng Vàng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: golden turtle claw (crossbow trigger) — Móng rùa thần trao làm lẫy nỏ
+name: Móng Vàng
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = vang-nghe
+  g = vang-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbgbbbgebbbgbbdca
+aedbbbbbbfbbbeebbbfbbdca
+aedbbbbbbfbbbbfbbbgebdca
+aedbbbbbbgebbbgebbefedca
+aedbbbbbbgebbbgebbbgedca
+aedbbbbbbgebbbgebbbgedca
+aedbbbbbbgebbbgebbbgedca
+aedbbbbbbgebbbgebbgfedca
+aedbbbbbbgebbgfebbgebdca
+aedbbbbbbgebbgfebbgebdca
+aedbbbbbgfebbgebbbgebdca
+aedbbbbbgebbgfebbgfebdca
+aedbbbbgfebbgfebbgebbdca
+aedbbbbgfebbgebbgfebbdca
+aedbbbbgebbgfebbgfebbdca
+aedbbbgfebbgfebbgebbbdca
+aedbbbeeebbeebbbeebbbdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

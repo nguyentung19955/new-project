@@ -1,0 +1,49 @@
+# Ông Táo · R «Cá Chép Hóa Rồng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: fire carp turning into a dragon
+name: Ông Táo · R «Cá Chép Hóa Rồng»
+size: 24x24
+colors:
+  a = vien
+  b = dong-toi
+  c = dong
+  d = dong-sang
+  e = vang-nghe
+  f = vang-sang
+  g = son-toi
+  h = son
+  i = son-sang
+  j = lua
+  k = lua-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adciaffaaiiiiiiiiiiiicba
+adcigaciiaagggggggggicba
+adcigaihhiiaagggggggicba
+adciaihghhhiiaagggggicba
+adcaihgfihhhhiiaaaaaacba
+adcaghhihhhhhhgffffkkcba
+adciaihhghhhhggkjjjfkcba
+adciaghgkihhgaaakkkkkcba
+aecigaggigggagggaaaaacea
+aeciggafffffaaggggggicea
+adciggacffecffagggggicba
+adcigggafeccfcfaggggicba
+adciggggacefccffagggicba
+adcigggggaccefeefaggicba
+adciggggggaacceecfagicba
+adciggggggggacccccfaicba
+adcigggggggakkaakakkacba
+adciiiiiiiakhaiiaiahacba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

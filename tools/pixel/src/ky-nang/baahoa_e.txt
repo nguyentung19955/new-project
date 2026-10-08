@@ -1,0 +1,51 @@
+# Bà Hỏa · E «Khói Mù» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: black smoke cloud
+name: Bà Hỏa · E «Khói Mù»
+size: 24x24
+colors:
+  a = vien
+  b = toi
+  c = khoi
+  d = sat
+  e = sat-sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = vang-nghe
+  j = son-toi
+  k = son-sang
+  l = lua
+  m = lua-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhiihhhhhhhhhga
+ahggggggggggggggggggggfa
+ahgkkkkkkkkkkkkkkkkkkgfa
+ahgkjjjjjjjjjjajjjjjkgfa
+ahgkjjjjjjjaaadaaajjkgfa
+ahgkjjjjjjadddbdddajkgfa
+ahgkjjjjjadcecbbbbdakgfa
+ahgkjjjaaadbdedbbbcakgfa
+ahgkjjadddbbbdbbbbcakgfa
+ahgkjadcbbbbbbbbbbbdagfa
+aigkadcecbbbbbbbbbcakgia
+aigkadbdedbbbbbbbbcakgia
+ahgkadbbdbbbbbbbbbbdagfa
+ahgkadbbbbbbbbbbbbbcagfa
+ahgkacbbbbbbbbbbbbbbdgfa
+ahgkjacbbbbbbbbbbbbcagfa
+ahgkjalcbbbbbbbbbbbcagfa
+ahgkalmlcbbbbbccbccakgfa
+ahgkjalaaccbccaacaajkgfa
+ahgkkkakkaacaakkakkkkgfa
+ahggggggggggggggggggggfa
+agffffffffffiifffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

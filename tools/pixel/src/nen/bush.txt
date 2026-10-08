@@ -1,0 +1,34 @@
+# trang trí: bush — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bụi cây xanh 2D4E22
+name: trang trí: bush
+size: 16x16
+colors:
+  a = vien
+  b = la-toi
+  c = la
+  d = la-ma
+
+part k0
+................
+................
+................
+......aaaa......
+.....adddba.....
+....adccccba....
+...adccccdcba...
+..adccccccccba..
+.adccdcccccccba.
+.adccccccccccba.
+.adccccccccccba.
+.adccccccccccba.
+.adcccccccccba..
+.abbbbbbbbbbba..
+..aaaaaaaaaaa...
+................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

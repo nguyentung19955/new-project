@@ -1,0 +1,53 @@
+# Lý Ngư Tướng Quân · R «Hóa Rồng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: carp turning into a dragon
+name: Lý Ngư Tướng Quân · R «Hóa Rồng»
+size: 24x24
+colors:
+  a = vien
+  b = bac
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = vang-nghe
+  g = vang-sang
+  h = lua-sang
+  i = cham-toi
+  j = cham
+  k = nuoc
+  l = nuoc-sang
+  m = troi
+  n = ngoc
+  o = ngoc-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeffeeeeeeeeeda
+aeddddddddddddddddddddca
+aedkabbaakkkkkkkkkkkkdca
+aedkiabooaaiiiiiiiiikdca
+aedkiaonnooaaiiiiiiikdca
+aedkaonjnnnooaaiiiiikdca
+aedaonjhonnnnooaaaiikdca
+aedajnnonnnnnnnollaaadca
+aedkaonnjnnnnjjmmmmmmdca
+aedkajnjoonnjaakkkkkmdca
+afdkiajjojjjaiiaalllldfa
+afdkiiagggggaaiiiaaaadfa
+aedkiiadggfdggaiiiiikdca
+aedkiiiagfddgdgaiiiikdca
+aedkiiiiadfgddggaiiikdca
+aedkiiiiiaddfgffgaiikdca
+aedkiiiiiiaaddffdgaikdca
+aedkiiiiiiiiadddddgakdca
+aedkiiiiiiiaggaagadgadca
+aedkkkkkkkagdakkakadadca
+aeddddddddddddddddddddca
+adccccccccccffccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

@@ -1,0 +1,47 @@
+# Gậy Thần Dời Non — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: mountain-moving staff — Cây gậy phép dời đồi chuyển núi
+name: Gậy Thần Dời Non
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dat-toi
+  d = dat
+  e = dat-sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = reu
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbbbbeeecbbbgfa
+ahgbbbbbbbbbbeddddcbbgfa
+ahgbbbbbbbbbbediiidcbgfa
+ahgbbbbbbbbbediiiidcbgfa
+ahgbbbbbbbbbcdiiiidcbgfa
+ahgbbbbbbbbbbediiddcbgfa
+ahgbbbbbbbbbbccddccbbgfa
+ahgbbbbbbbbbedcccbbbbgfa
+ahgbbbbbbbbedcbbbbbbbgfa
+ahgbbbbbbbedcbbbbbbbbgfa
+ahgbbbbbbedcbbbbbbbbbgfa
+ahgbbbbbedcbbbbbbbbbbgfa
+ahgbbbbedcbbbbbbbbbbbgfa
+ahgbbbedcbbbbbbbbbbbbgfa
+ahgbbedcbbbbbbbbbbbbbgfa
+ahgbedcbbbbbbbbbbbbbbgfa
+ahgbccbbbbbbbbbbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

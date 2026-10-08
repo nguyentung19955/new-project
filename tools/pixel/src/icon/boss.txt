@@ -1,0 +1,31 @@
+# boss / tướng địch — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: vương miện quỷ đỏ 2 sừng
+name: boss / tướng địch
+size: 12x12
+colors:
+  a = vien
+  b = vang-nghe
+  c = son-toi
+  d = son
+  e = son-sang
+
+part k0
+............
+.....a......
+....aea.....
+..a.ada.a...
+.aeaedcaea..
+.aeedddeca..
+.aedddbdca..
+.accbcccba..
+..aaaaaaa...
+............
+............
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -1,0 +1,38 @@
+# Ngân khố / rương thưởng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: rương đồng
+name: Ngân khố / rương thưởng
+size: 16x16
+colors:
+  a = vien
+  b = dat-toi
+  c = dat
+  d = dat-sang
+  e = dong-toi
+  f = dong
+  g = dong-sang
+  h = vang-nghe
+
+part k0
+................
+................
+......aaaa......
+....aaddddaa....
+...adddddddda...
+..adddddddddda..
+.agggggggggggea.
+.aeeeeffhfeeeea.
+.adccceeeecccba.
+.adccccccccccba.
+.adccccccccccba.
+.adccccccccccba.
+.abbbbbbbbbbbba.
+..aaaaaaaaaaaa..
+................
+................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

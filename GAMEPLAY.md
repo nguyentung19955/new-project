@@ -2372,6 +2372,10 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 223 — gộp xuat-goi-pixel (tester đạt)
+
+- Pixel sinh bằng tool: đồ 98, icon 160, thần khí 60, giao diện 45, nền 51, kỹ năng 240 (mã gạch dưới), ấn phù 36, bản đồ 14 (ô sát đường cùng kiểu bệ đá, xa đường chỉ trang trí). Gói zip ở tools/pixel/goi/, lệnh ở docs/pixel/LENH-TOOL.md. Bản đồ dạng đường mới (m.shape) không dùng ảnh ban-do dựng sẵn mà vẽ lát ô theo đường thật.
+
 ## Phiên bản 222 — gộp duong-di-moi (tester đạt)
 
 - Dạng đường mới (xoắn ốc, zíc-zắc, chia nhánh, hai cửa giặc, cầu tre, đường tắt hang) + Vô tận theo màn; nền vẽ tay đường gốc giữ nguyên; pixel vẽ đủ mọi nhánh + cầu. Đợt 60: banner sự kiện và "Màn N" xếp hàng, không chồng.
@@ -2569,11 +2573,34 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 - Test mới `tests/duong-di-moi/dot60.test.js` (thường + pixel): thứ tự báo trước → mở màn sự kiện → "Màn 8", mỗi banner hiện đủ giờ, không banner sự kiện muộn.
 - `ui.clearBanners()` huỷ banner đang hiện + hàng đợi banner. `tests/vo-tan-su-kien`: nhảy thẳng tới đợt N thì sang màn của đợt đó trước (im lặng); huỷ banner sót / đang xếp hàng của phần test trước (banner nay xếp hàng, không đè); đầu đợt sự kiện có thể không mở bảng "bộ quái mới" (bộ quái đổi theo màn, đã báo trong thông báo đổi màn) — mở thì vẫn phải sau banner và có dòng sự kiện.
 - `tests/cho-tuong/cho-tuong.test.js` lỗi "thả thẻ lên tướng ★ cùng loại → ghép ★★" có sẵn trên nhánh chính (không do nhánh này).
+## claude/xuat-goi-pixel — xuất gói pixel bằng tool cho mọi nhóm còn thiếu
+- Sinh **451 mã pixel bằng tool** `tools/ve-pixel.js` (không vẽ tay từng điểm): đồ 98, icon 160, thần khí 60, giao diện 45, nền 51, cảnh 37.
+  Spec `tools/pixel/spec/<nhóm>.json` · gói `tools/pixel/goi/<nhóm>.zip` (nạp tay trong Cài đặt → Gói pixel) · đã `--nap` vào
+  `tools/pixel/src` + `assets/pixel` + `js/pixel/*.js`. Lệnh chạy lại từng bước: `docs/pixel/LENH-TOOL.md`.
+- Tool mở rộng: thư viện ~90 **hình vật** (mũ, giáp, nỏ, gậy, trống, rùa, cổng, đế, khoá, đồng hồ cát…) + `mauPhu` / `mauNgoc`;
+  ô nền `nen: vat` (vật trang trí nền trong suốt); **bộ sinh giao diện** (khung · nút · nút tròn · thanh · ô · thẻ · huy hiệu · dải · núi,
+  trạng thái thường / nhấn / khoá / chọn) và **bộ sinh cảnh** 320×180 (trời · núi · đất / nước theo chủ đề, ngày / chiều / đêm / u ám).
+  Kiểm tra cỡ giao diện 8..320 như build-pixel; `--nap` lỗi build thì gỡ nguồn vừa ghi.
+- Game (khi bật pixel, giữ đường vẽ cũ làm dự phòng): icon đồ trong túi / lò rèn / ghép / mặc đồ lên tướng (theo loại × độ hiếm hoặc
+  theo mã món), icon nhỏ (`ic()`, `UIE`, `ICON` đóng/quay lại/tích/túi/nâng/núi, ổ khoá), đồng vàng / nén bạc, icon Thần Khí,
+  skin nút vàng / đồng / tròn, khung bảng, thanh đáy, thẻ chợ, huy hiệu ải, thanh máu boss (ảnh pixel, phóng không làm mịn),
+  ô cỏ / đường bản đồ theo chủ đề (đầm, đồng, rừng, thành, hang, biển; đường cát / đá / gạch / đê).
+- Chưa nối: cảnh `canh/*` (menu, kết quả, truyện) và cổng thành `nen/cong-*` — bản tool sinh là phác thảo, kém ảnh vẽ tay hiện tại.
 ## claude/pixel-quai-boss — Sửa lỗi tester: boss pixel cao vọt, Đại Bàng lọt dưới thanh trên
 - Quái/boss pixel giờ co theo **chiều cao hình cũ** (giữ tỉ lệ, rộng tối đa 1,15× rộng cũ) thay vì theo rộng → Đại Bàng 92, Ngư Tinh 65, Hồ Tinh 71, Chằn Tinh 106, Triệu Đà 142 (đơn vị logic) khớp bản cũ; Triệu Đà sát thành không còn đè thành. Chiều cao cũ nhớ theo mã (`ENEMY_OLD_HW`), ảnh cũ chưa tải thì boss lấy 112.
 - Kẹp mép trên: `PLAY_TOP` (đáy thanh trên, tính khi đổi cỡ màn) — quái bay / boss cao ở khúc đường sát trên tự hạ độ nâng để đỉnh hình + thanh máu nằm dưới thanh trên.
 - Test mới `tests/pixel/boss-cao.test.js`: so chiều cao pixel vs cũ (≤15%) ở 1920×934 + 844×390, đo đỉnh hình Đại Bàng ở điểm đường cao nhất, chụp ảnh.
 - (vòng 2, theo tester) Vòng choáng hạ sát đầu: đáy vòng chạm đỉnh hình ±3 (quái pixel lấy cao hình thật sau làm tròn điểm ảnh), chim Lạc / xoáy khí đậu lên đường vòng; nét vòng dày 2 ô cho dễ thấy ở 844×390. Lửa bỏng: 1–2 ngọn lửa 5×7 ô rõ dáng, ngang vai, cao ~26% hình quái (cỡ ô theo cỡ quái). Test hat-vfx: đáy vòng–đỉnh đầu ±3, lửa cao 18–45%.
 - (yêu cầu thêm) Đóng băng pixel: khối băng BÁT GIÁC (viền nước sáng 1 ô, mặt trong trong suốt nhạt, vệt sáng chéo, đáy chàm sáng) bọc trọn hộp hình thật từng con (lề ~11%, cắt góc < 2 lề nên góc hộp vẫn nằm trong) — boss to khối to, lính nhỏ khối nhỏ, quái bay bọc đúng chỗ đang bay. pxDrawEnemy trả hộp hình thật (cao, rộng, lệch tâm, đáy) để vòng choáng / khối băng bám đúng. Test hat-vfx: bát giác bao trọn bbox, lề ≤ 15% cho tôm, voi chiến, Thuồng Luồng, Đại Bàng.
+- Bổ sung (yêu cầu thêm): **kỹ năng** 240 mã (40 bản vẽ tay từ `claude/pixel-ky-nang-2` đổi tên `giong-q` → `giong_q` qua `mau`,
+  200 sinh từ tên chiêu + mô tả, màu theo hành) và **ấn phù** 36 mã (bản vẽ tay `claude/pixel-anphu-thankhi`, `g-air` → `g_air`) —
+  nạp bằng tool, game dùng ở `skillIcon` / `runeIc` khi bật pixel.
+- **Bản đồ pixel** (nhóm mới `ban-do`, 320×148): `node tools/build-ban-do-spec.js` chạy js/data.js + js/game.js trong vm để lấy đường đi
+  và ô đặt tướng đúng như trong trận → tool vẽ nền: ô đặt tướng cùng một kiểu bệ đá viền đậm, vùng xa đường chỉ trang trí theo chủ đề
+  (không viền ô), đường cắt nhau → cầu tre (hỗ trợ nhiều nhánh `paths` / `d` mảng cho dạng đường mới). 14 bản đồ → `goi/ban-do.zip`;
+  `mapLayer` vẽ nền này khi bật pixel (chưa tải xong / không có mã → nền ô cỏ / đường như trước).
 - (người dùng) Khối băng đổi từ bát giác sang THẬP LỤC GIÁC: 4 cạnh thẳng + mỗi góc bo bằng 3 cạnh (cung 90° chia 3) = 16 cạnh; bán kính bo ≤ 3 lề nên vẫn bao trọn hộp hình, lề ~11% (16 cạnh đều phải nới lề ~40% nên không dùng).
 - (người dùng) Khối băng thập lục giác "cứng" kiểu pha lê: 16 cạnh thẳng nối đỉnh bằng nét pixel, viền trong thụt vào + nét vát từ cả 16 đỉnh, mặt vát tô sáng (trên) / tối (dưới) và xen sáng–tối giữa các mặt kề, chấm sáng ở đỉnh → thấy rõ từng cạnh; dải vát mỏng (~1/3 bán kính góc) không che quái.
+- Sửa theo tester (icon pixel phải giữ nghĩa icon cũ): nút quay lại = mũi tên «, nút đóng giữ ô vuông + X trắng to (bỏ skin pixel
+  nút tròn), Ngân khố = thỏi bạc, nút đổi chợ giữ skin cũ + icon đồng xu có mũi tên vòng; soát icon chức năng: tạm dừng ‖, menu ≡,
+  vô tận ∞, vào trận / lực chiến = hai kiếm chéo, cài đặt = bánh răng; bộ ui-tran-* bỏ đĩa trống cho hình to rõ.

@@ -1,0 +1,47 @@
+# Nồi Cơm Mới — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Nồi cơm gạo mới thơm cả xóm
+name: Nồi Cơm Mới
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = sang
+  d = dat-toi
+  e = dat
+  f = dat-sang
+  g = dong-toi
+  h = dong
+  i = dong-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aiiiiiiiiiiiiiiiiiiiiiga
+aihhhhhhhhhhhhhhhhhhhhga
+aihbbbbbcbbbbcbbbbbbbhga
+aihbbbbbbcbbbbcbbbbbbhga
+aihbbbbbbcbbbbcbbbbbbhga
+aihbbbbbbbiiigbbbbbbbhga
+aihbbbbbbbghhgbbbbbbbhga
+aihbbffffffggffffffbbhga
+aihbbffffffffffffffbbhga
+aihbbbffeeeeeeeefdbbbhga
+aihbbfeeeeeeeeeeeedbbhga
+aihbbfeeeeeeeeeeeedbbhga
+aihbfeeeeeeeeeeeeeedbhga
+aihbdeeeeeeeeeeeeeedbhga
+aihbbfeeeeeeeeeeeedbbhga
+aihbbdeeeeeeeeeeeedbbhga
+aihbbbdeeeeeeeeeedbbbhga
+aihbbbbdddeeeedddbbbbhga
+aihbbbbbbbddddbbbbbbbhga
+aihbbbbbbbbbbbbbbbbbbhga
+aihhhhhhhhhhhhhhhhhhhhga
+agggggggggggggggggggggga
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

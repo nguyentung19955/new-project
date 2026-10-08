@@ -1,0 +1,38 @@
+# trang trí: lotus — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: lá sen + hoa sen hồng F2A0C4
+name: trang trí: lotus
+size: 16x16
+colors:
+  a = vien
+  b = da-sang
+  c = vang-nghe
+  d = son
+  e = hong
+  f = la-toi
+  g = la
+  h = la-ma
+
+part k0
+.......a........
+......aba.......
+......aea.......
+......aea.......
+..a..abeda..a...
+.aea.abeda.aea..
+..abaabedaaba...
+..abbbeeebbda...
+..adeeeeceeda...
+...addddddda....
+..aahhhhhhhfaa..
+.ahhgggggggghfa.
+.affggggggggffa.
+..aaffffffffaa..
+....aaaaaaaa....
+................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

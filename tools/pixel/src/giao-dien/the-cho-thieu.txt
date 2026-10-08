@@ -1,0 +1,50 @@
+# thẻ chợ tướng — thieu — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: khung thẻ ngang 5:4 bo góc, cửa sổ giữa trống (chân dung vẽ vào); xám nứt (thiếu vàng)
+name: thẻ chợ tướng — thieu
+size: 40x32
+colors:
+  a = vien
+  b = dat-toi
+  c = dat
+  d = dat-sang
+
+part k0
+...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...
+..adddddddddddddddddddddddddddddddddba..
+.adccccccccccccccccccccccccccccccccccba.
+adccbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbccba
+adcbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaadcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba.a............................adcba
+adcbaaba...........................adcba
+adcbaaa............................adcba
+adcbaba............................adcba
+adcbaa.............................adcba
+adcbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaadcba
+abccddddddddddddddddddddddddddddddddccba
+.abbcccccccccccccccccccccccccccccccccba.
+..abbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbba..
+...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

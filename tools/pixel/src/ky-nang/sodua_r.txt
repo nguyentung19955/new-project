@@ -1,0 +1,48 @@
+# Mưa Dừa — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Dừa rơi khắp trận, x2 sát thương +1
+name: Mưa Dừa
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dat-toi
+  d = dat-sang
+  e = dong-toi
+  f = dong
+  g = dong-sang
+  h = la
+  i = la-ma
+  j = la-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+agggggggggggggggggggggea
+agffffffffffffffffffffea
+agfbbbbbbbbbbbbbbbbbbfea
+agfbbbbjjhbbbbbjhbbbbfea
+agfbbbbhhijhbjjihbbbbfea
+agfbbbbbbhhijhhhbbbbbfea
+agfbbbjjjjjjihjjjjjhbfea
+agfjjjihhhhhhhhhhhhihfea
+agfhhhhbbbbbdcbbbbbhhfea
+agfbbbbbbbbbdcbbbbbbbfea
+agfbbbbbbbbbdcbbbbbbbfea
+agfbbbbbbbbbdcbbbbbbbfea
+agfbbbbbbbbbdcbbbbbbbfea
+agfbbbbbbbbbdcbbbbbbbfea
+agfbbbbbbbbbdcbbbbbbbfea
+agfbbbbbbbbdcbbbbbbbbfea
+agfbbbbbbbbdcbbbbbbbbfea
+agfbbbbbbbbdcbbbbbbbbfea
+agfbbbbbbbdcbbbbbbbbbfea
+agfbbbbbbbccbbbbbbbbbfea
+agffffffffffffffffffffea
+aeeeeeeeeeeeeeeeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -1,0 +1,46 @@
+# Vịnh Hạ Long — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Ha Long bay with limestone islets — Nơi rồng mẹ hạ xuống giữ biển
+name: Vịnh Hạ Long
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = reu-toi
+  g = reu
+  h = reu-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbhbbbbbbbbbbdca
+aedbbbbbbbgbbbbbbbbbbdca
+aedbbbbbbbgbbbbbbbbbbdca
+aedbbbbbbbhfbbbbbbbbbdca
+aedbbbbbbhgfbbbbbbbbbdca
+aedbbbbbbhgfbbbbbbbbbdca
+aedbbbbbbhgfbbbbhbbbbdca
+aedbbhbbbhggfbbbgbbbbdca
+aedbbgbbbhggfbbhfbbbbdca
+aedbbgbbhgggfbbhfbbbbdca
+aedbbgbbhgggfbbhfbbbbdca
+aedbhgfbhgggfbbhgfbbbdca
+aedbhgfbhgggghhggfbbbdca
+aedbhgghgggggggggfbbbdca
+aedbhggggggggggggfbbbdca
+aedbfffffffffffffffbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

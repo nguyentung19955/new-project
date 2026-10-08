@@ -1,0 +1,35 @@
+# nút chữ nhật vàng — nhan — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: vàng đồng, viền răng cưa, đinh sao 2 đầu; nhấn — tối, lún 1px
+name: nút chữ nhật vàng — nhan
+size: 48x16
+colors:
+  a = vien
+  b = sang
+  c = dong-sang
+  d = vang-nghe
+  e = vang-sang
+
+part k0
+................................................
+...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...
+..adddddddddddddddddddddddddddddddddddddddddca..
+.adccccccccccccccccccccccccccccccccccccccccccca.
+adccccccccccccccccccccccccccccccccccccccccccccca
+adccccccccccccccccccccccccccccccccccccccccccccca
+adccccccccccccccccccccccccccccccccccccccccccccca
+adceccccccccccccccccccccccccccccccccccccccccecca
+adebeccccccccccccccccccccccccccccccccccccccebeca
+adceccccccccccccccccccccccccccccccccccccccccecca
+adccccccccccccccccccccccccccccccccccccccccccccca
+adccccccccccccccccccccccccccccccccccccccccccccca
+acccccccccccccccccccccccccccccccccccccccccccccca
+.acccccccccccccccccccccccccccccccccccccccccccca.
+..acccccccccccccccccccccccccccccccccccccccccca..
+...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

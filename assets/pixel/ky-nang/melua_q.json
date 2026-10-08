@@ -1,0 +1,25 @@
+{
+ "code": "melua_q",
+ "group": "ky-nang",
+ "name": "Đồng Lúa",
+ "w": 24,
+ "h": 24,
+ "ax": 12,
+ "ay": 23,
+ "bbox": [
+  0,
+  0,
+  24,
+  24
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "melua_q.png"
+}

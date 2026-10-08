@@ -1,0 +1,34 @@
+# hồi chiêu — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đồng hồ cát
+name: hồi chiêu
+size: 12x12
+colors:
+  a = vien
+  b = trang-xam
+  c = trang
+  d = sang
+  e = dat-toi
+  f = dat
+  g = dat-sang
+  h = cat
+
+part k0
+............
+...aaaaaaa..
+..addddbfea.
+...abcbaaa..
+....aha.....
+....aca.....
+....aca.....
+...adhba....
+...aaaaaaa..
+..agfffffea.
+...aaaaaaa..
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

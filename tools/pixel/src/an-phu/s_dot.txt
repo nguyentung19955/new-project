@@ -1,0 +1,48 @@
+# Lửa Độc (Ấn Sấm, hàng 3) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: —
+name: Lửa Độc (Ấn Sấm, hàng 3)
+size: 24x24
+colors:
+  a = vien
+  b = son
+  c = son-sang
+  d = lua
+  e = lua-sang
+  f = la-ma
+  g = cham-toi
+  h = cham
+  i = cham-sang
+  j = nuoc-sang
+
+part k0
+........................
+........aaaaaaaa........
+......aajjjjjjjjaa......
+.....ajjghhhhhhgjja.....
+....ajihgggggggghija....
+...ajihgggggggggghija...
+..ajihgggggggggggghija..
+..ajhgggggggegggggghha..
+.ajggggggggeeagggggggja.
+.ajhgggggggedeggggghjha.
+.ajhggggggeddeaeggghjha.
+.ajhgggggedcddeeagghjha.
+.ajhggggedccbddeagghjha.
+.ajhggggedcbbcdeagghjha.
+.ajhggggedcbbcdeagghjha.
+.ahggggggedccdeaagghgha.
+..ajjgggggffffaagghjha..
+..ahijgggggaaaagghjiha..
+...ahijggggggggghjiha...
+....ahijghhhhhhhjiha....
+.....ahhgjjjjjjghha.....
+......aahhhhhhhhaa......
+........aaaaaaaa........
+........................
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

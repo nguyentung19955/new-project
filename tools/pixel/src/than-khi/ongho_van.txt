@@ -1,0 +1,46 @@
+# Vằn Rừng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: tiger stripes with leaves — Bộ lông vằn ẩn mình giữa lau sậy
+name: Vằn Rừng
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = son
+  g = lua
+  h = lua-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbhhhfbbbbbbbdca
+aedbbbbbhhgggghfbbbbbdca
+aedbbbbhggggggggfbbbbdca
+aedbbbhgfgggfggfgfbbbdca
+aedbbbhggfgfgffgfffbbdca
+aedbbhggggfggfgggffbbdca
+aedbbhggggggggggggfbbdca
+aedbbhggggggggggggfbbdca
+aedbbhfggffggfggfgfbbdca
+aedbbhgffggffgffggfbbdca
+aedbbfggggggggggggfbbdca
+aedbbbhggggggggggfbbbdca
+aedbbbfgfgggfggfgfbbbdca
+aedbbbbfgfgfgffgfbfbbdca
+aedbbbbbfffggfffbfbbbdca
+aedbbbbbbbffffbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -1,0 +1,30 @@
+# sát thương — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: kiếm đồng ngắn
+name: sát thương
+size: 12x12
+colors:
+  a = vien
+  b = dong-toi
+  c = dong
+  d = dong-sang
+
+part k0
+.........aa.
+........adba
+.......adcba
+......adcba.
+.....adcba..
+...aadcba...
+..addcba....
+..adcba.....
+.adcbba.....
+.abbaa......
+..aa........
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

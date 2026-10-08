@@ -1,0 +1,34 @@
+# ô tầng thấp (dự phòng khi thiếu đế) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: ô đất theo bậc núi Tản Viên
+name: ô tầng thấp (dự phòng khi thiếu đế)
+size: 16x16
+colors:
+  a = vang-nghe
+  b = la
+  c = la-ma
+  d = la-sang
+
+part k0
+cccccccccccccccc
+ccdccccccccbcccc
+cdddcccccccccccc
+ccbcccccdccccccc
+cccccccccdcccbcc
+cccccbcccbccccdc
+ccccccccccccccdd
+cdcccccccccccccb
+cddccccdcccccccc
+ccbcccdddccccccc
+cccccccbccccbccc
+ccccccccccccdccc
+cccbcccccccdddcc
+cccccccacccccbcc
+cdccccccccbccccc
+cccccccccccccccc
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

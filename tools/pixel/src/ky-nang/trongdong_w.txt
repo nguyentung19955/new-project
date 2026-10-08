@@ -1,0 +1,47 @@
+# Thần Trống Đồng · W «Âm Vang» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: sound wave rings
+name: Thần Trống Đồng · W «Âm Vang»
+size: 24x24
+colors:
+  a = vien
+  b = sat-toi
+  c = sat-sang
+  d = bac
+  e = dong-toi
+  f = dong
+  g = dong-sang
+  h = vang-nghe
+  i = vang-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+agggggggggghhgggggggggfa
+agffffffffffffffffffffea
+agfccccccccccccccccccfea
+agfcbbbbbbdddddbbbbbcfea
+agfcbbbbddbbbbbddbbbcfea
+agfcbbddbbbbcbbbbddbcfea
+agfcbbdbbcccbcccbbdbcfea
+agfcbdbbcbbbbbbbcbbdcfea
+agfcbdbcbbbdddbbbcbdcfea
+agfcdbbcbbdbbbdbbcbbdfea
+ahfcdbbcbdbbibbdbcbbcfha
+ahfcdbcbbdbihibdbbcbcfha
+agfcdbbcbdbbfbbdbcbbcfea
+agfcdbbcbbdbbbdbbcbbdfea
+agfcbdbcbbbdddbbbcbdcfea
+agfcbdbbcbbbbbbbcbbdcfea
+agfcbbdbbcccbcccbbdbcfea
+agfcbbddbbbbcbbbbddbcfea
+agfcbbbbddbbbbbddbbbcfea
+agfcccccccdddddccccccfea
+agffffffffffffffffffffea
+afeeeeeeeeeehheeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

@@ -1,0 +1,50 @@
+# Vua Lửa Pơtao Apui · Q «Gươm Lửa» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: flaming sword
+name: Vua Lửa Pơtao Apui · Q «Gươm Lửa»
+size: 24x24
+colors:
+  a = vien
+  b = sat
+  c = bac
+  d = dong-toi
+  e = dong
+  f = dong-sang
+  g = vang-nghe
+  h = vang-sang
+  i = son-toi
+  j = son-sang
+  k = lua
+  l = lua-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+affffffffffggfffffffffea
+afeeeeeeeeeeeeeeeeeeeeda
+afejjjjjjjjjjjjjalkajeda
+afejiiiiiiiiiiialcckaeda
+afejiiiiiiiiiialcbckaeda
+afejiiiiiiiiialcbckajeda
+afejiiiiiiiialcbckaijeda
+afejiiiiiiialcbckaiijeda
+afejiiiiiialcbckaiiijeda
+afejiiiiialcbckaiiiijeda
+agejiaaialcbckaiiiiijega
+agejaffalcbckaiiiiiijega
+afejadefcbckaiiiiiiijeda
+afejiadeffkaiiiiiiiijeda
+afejiiafedaiiiiiiiiijeda
+afejiafddefaiiiiiiiijeda
+afejahhaadefaiiiiiiijeda
+afeaheaiiaddaiiiiiiijeda
+afeaeaiiiiaaiiiiiiiijeda
+afejajjjjjjjjjjjjjjjjeda
+afeeeeeeeeeeeeeeeeeeeeda
+aeddddddddddggddddddddda
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

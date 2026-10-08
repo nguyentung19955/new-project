@@ -1,0 +1,34 @@
+# ô tầng giữa (dự phòng khi thiếu đế) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: ô đất theo bậc núi Tản Viên
+name: ô tầng giữa (dự phòng khi thiếu đế)
+size: 16x16
+colors:
+  a = cat
+  b = dong-toi
+  c = dong
+  d = dong-sang
+
+part k0
+ddddddddcddddddd
+ddaddddddddddcdd
+dddddcdddddddddd
+dcddddddddaddddd
+dddddddbcddddddd
+ddddddddddddddcd
+dadddddddddcdddd
+dddddcdddddddddd
+dddddddddddddadd
+dddcdddddadddddd
+dddddddddddddddd
+dddddddbcdddddcd
+dcdddddddddddddd
+dddddaddddddcddd
+dddddddddddddddd
+dddddddddcddddad
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

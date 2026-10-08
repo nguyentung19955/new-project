@@ -1,0 +1,30 @@
+# khung thanh máu boss — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: sắt tối + đồng đỏ, đầu trái mặt nạ quỷ sừng, đầu phải gai; lòng trống
+name: khung thanh máu boss
+size: 96x12
+colors:
+  a = vien
+  b = son-toi
+  c = son
+  d = son-sang
+
+part k0
+caaa.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.aaaac
+aaddadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadadaddbaa
+.adcbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbcba.
+.adbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaadba.
+.adba......................................................................................adba.
+.adba......................................................................................adba.
+.adba......................................................................................adba.
+.adba......................................................................................adba.
+.adbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaadba.
+.adcddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddcba.
+aabbababababababababababababababababababababababababababababababababababababababababababababbbaa
+caaa.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.aaaac
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

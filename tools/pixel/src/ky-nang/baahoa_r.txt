@@ -1,0 +1,49 @@
+# Bà Hỏa · R «Biển Lửa» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: sea of fire
+name: Bà Hỏa · R «Biển Lửa»
+size: 24x24
+colors:
+  a = vien
+  b = dong-toi
+  c = dong
+  d = dong-sang
+  e = vang-nghe
+  f = vang-sang
+  g = son-toi
+  h = son
+  i = son-sang
+  j = lua
+  k = lua-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adciiiiiiiiiiiiiiiiiicba
+adcigggggaggggggggagicba
+adciggggakaggggggakaicba
+adcigagakhaaggaggahaacba
+adciakagahakaakagakkkcba
+adcakhaakhkhakhaakhjhcba
+adcakhakhfkhakhaahfhhcba
+adckhhkjhjhjkjhkkhffhcba
+aechffkhfkfkjhfkhfkjhcea
+aechfjkhfkjkhfjhhfkjhcea
+adchfjkhjkjkhfkfhjkjhcba
+adchfjkhkjjkhfjkhkjjhcba
+adchjkhfkkjkhjkhfkkjhcba
+adcaahfjhjkhhkhfjhhaacba
+adciahfkfkhffkhfkfhaicba
+adcaahjjjkhjjkhjjjhaacba
+adckkjkkkjjkkjjkkkjkkcba
+adchhhhhhhhhhhhhhhhhhcba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

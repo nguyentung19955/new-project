@@ -100,6 +100,7 @@ Mã hex xem palette.txt (đã chỉnh tông trầm). Màu đánh dấu `*` trong
 | `vfx` — hiệu ứng (lửa, băng, choáng, độc, nổ, đạn, hạt…) | tuỳ | **do nhánh `claude/vfx-kenney` đảm nhận** — session vẽ lô khác không vẽ hiệu ứng; tạm có bảng màu riêng `tools/pixel/src/vfx/palette.txt` (build-pixel cộng thêm vào bảng chung, có cảnh báo); nếu nhóm dùng tool dựng riêng thì đặt file `KHONG-BUILD` trong thư mục nhóm để build-pixel bỏ qua |
 | `giao-dien` — khung thẻ, thanh máu, nút | tuỳ (8..320), ghi rõ trong DANH-SACH | |
 | `canh` — cảnh truyện, nền menu, chương | 160×90 · 320×180 | |
+| `ban-do` — nền sân đấu theo từng bản đồ | **320×148** (1280×590 ÷ 4) | sinh bằng tool từ dữ liệu bản đồ (`tools/build-ban-do-spec.js`): ô đặt tướng một kiểu, xa đường chỉ trang trí |
 
 > **Đặt tên mã kỹ năng (chốt 08/10):** dùng **gạch dưới** giữa mã tướng và phím: `lactuong_q`, `giong_w`… (không dùng `giong-q`). Nhánh `pixel-ky-nang-2` phải đổi tên theo trước khi gộp.
 

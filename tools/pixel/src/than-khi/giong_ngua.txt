@@ -1,0 +1,49 @@
+# Ngựa Sắt — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: iron horse head breathing fire — Ngựa sắt phun lửa, vó in thành ao hồ
+name: Ngựa Sắt
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = sat-toi
+  d = sat
+  e = sat-sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = son
+  j = lua
+  k = lua-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbkibbbbbbbbbbgfa
+ahgbbbbbbkicbbbbbbbbbgfa
+ahgbbbbbbkidcbbbbbbbbgfa
+ahgbbbbbkjiddcbbbbbbbgfa
+ahgbbbbbkiddddcbbbbbbgfa
+ahgbbbbekidddddcbbbbbgfa
+ahgbbbbkidddddadcbbbbgfa
+ahgbbbbkiddddddddcbbbgfa
+ahgbbbbkidddddddddecbgfa
+ahgbbbkjiddddddddddcbgfa
+ahgbbbkiddddddccddcbbgfa
+ahgbbbkidddddcbbcccbbgfa
+ahgbbkjidddddcbbbbbbbgfa
+ahgbbkidddddcbbbbbbbbgfa
+ahgbbiidddddcbbbbbbbbgfa
+ahgbbeddddddcbbbbbbbbgfa
+ahgbbccccccccbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

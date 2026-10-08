@@ -1,0 +1,47 @@
+# Thành Ốc Cổ Loa — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: spiral citadel walls — Chín vòng thành xoắn ốc giữ nước Âu Lạc
+name: Thành Ốc Cổ Loa
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dat-toi
+  d = dat
+  e = dat-sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = son
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbeeeeeecbbbbbgfa
+ahgbbbbbbedddddcbbbbbgfa
+ahgbbbbbbedidddcbbbbbgfa
+ahgbbbbbbedidddcbbbbbgfa
+ahgbbbbbbedddddcbbbbbgfa
+ahgeeeeeedddddddeeeeeeec
+ahgedddddddddddddddddddc
+ahgedddddddddddddddddccc
+ahgeddddddddddddddddcgfa
+ahgeddddddddddddddddcgfa
+ahgedddddddaadddddddcgfa
+ahgeddddddaaaaddddddcgfa
+ahgeddddddaaaaddddddcgfa
+ahgeddddddaaaaddddddcgfa
+ahgedddddaaaaaadddddcgfa
+ahgedddddaaaaaadddddcgfa
+ahgedddddaaaaaadddddcgfa
+ahgccccccaaaaaaccccccgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

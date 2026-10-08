@@ -1,0 +1,34 @@
+# kháng phép — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: cầu tím trong vòng đồng
+name: kháng phép
+size: 12x12
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = tim-toi
+  g = tim
+  h = tim-sang
+
+part k0
+....aaaa....
+...aeeeca...
+..aeeedeca..
+.aedbbbbdca.
+aeebbhfbbeca
+aedbhggfbdca
+aeebfgafbeca
+acebbffbbeca
+.acdbbbbdca.
+..acedeeca..
+...acccca...
+....aaaa....
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

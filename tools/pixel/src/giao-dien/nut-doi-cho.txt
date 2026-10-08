@@ -1,0 +1,34 @@
+# nút đổi chợ (reroll) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: tấm đồng vuông bo góc, giữa tối
+name: nút đổi chợ (reroll)
+size: 16x16
+colors:
+  a = vien
+  b = dong-toi
+  c = dong
+  d = dong-sang
+
+part k0
+...aaaaaaaaaa...
+..adddddddddba..
+.adddddddddddba.
+adccccccccccccba
+adccccccccccccba
+adccccccccccccba
+adccccccccccccba
+adccccccccccccba
+adccccccccccccba
+adccccccccccccba
+adccccccccccccba
+adccccccccccccba
+abccccccccccccba
+.abccccccccccba.
+..abbbbbbbbbba..
+...aaaaaaaaaa...
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

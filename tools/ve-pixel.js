@@ -102,9 +102,13 @@ function nap(K, items, o) {
   const loi = [];
   for (const it of items) { const f = path.join(src, it.g, it.code + '.txt'); if (fs.existsSync(f) && !o.ghiDe) loi.push({ ma: 'E_NAP_TON_TAI', msg: `${path.relative(process.cwd(), f)} đã có (bản vẽ tay?) — thêm --ghi-de nếu chắc chắn thay` }); }
   if (loi.length) return { loi };
-  for (const it of items) { const f = path.join(src, it.g, it.code + '.txt'); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, K.nguonTxt(it) + '\n'); }
+  const cu = new Map();   // nội dung cũ (--ghi-de) để trả lại khi build lỗi — không để nguồn dở dang
+  for (const it of items) { const f = path.join(src, it.g, it.code + '.txt'); cu.set(f, fs.existsSync(f) ? fs.readFileSync(f) : null); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, K.nguonTxt(it) + '\n'); }
   const r = spawnSync(process.execPath, [path.join(ROOT, 'tools/build-pixel.js'), '--strict', '--src', src, '--out', goc, '--quiet'], { encoding: 'utf8' });
-  if (r.status) return { loi: [{ ma: 'E_BUILD', msg: 'tools/build-pixel.js --strict báo lỗi:\n' + r.stdout + r.stderr }] };
+  if (r.status) {
+    for (const [f, d] of cu) { if (d) fs.writeFileSync(f, d); else fs.rmSync(f, { force: true }); }
+    return { loi: [{ ma: 'E_BUILD', msg: 'tools/build-pixel.js --strict báo lỗi (đã gỡ nguồn vừa ghi):\n' + r.stdout + r.stderr }] };
+  }
   return { loi: [], files: items.map((it) => path.relative(ROOT, path.join(src, it.g, it.code + '.txt'))) };
 }
 

@@ -1,0 +1,48 @@
+# Gậy Gõ Đầu — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: pebble hitting a head with stars
+name: Gậy Gõ Đầu
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dat-toi
+  d = dat
+  e = dat-sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = vang-nghe
+  j = vang-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbbbbjjjhbbbgfa
+ahgbbbbbbbbbbjiiiihbbgfa
+ahgbbbbbbbbbbjiiiiihbgfa
+ahgbbbbbbbbbjiiiiiihbgfa
+ahgbbbbbbbbbhiiiiiihbgfa
+ahgbbbbbbbbbbjiiiiihbgfa
+ahgbbbbbbbbbbhhiihhbbgfa
+ahgbbbbbbbbbedchhbbbbgfa
+ahgbbbbbbbbedcbbbbbbbgfa
+ahgbbbbbbbedcbbbbbbbbgfa
+ahgbbbbbbedcbbbbbbbbbgfa
+ahgbbbbbedcbbbbbbbbbbgfa
+ahgbbbbedcbbbbbbbbbbbgfa
+ahgbbbedcbbbbbbbbbbbbgfa
+ahgbbedcbbbbbbbbbbbbbgfa
+ahgbedcbbbbbbbbbbbbbbgfa
+ahgbccbbbbbbbbbbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -1,0 +1,46 @@
+# Móng Đồng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Đánh lan 30% sát thương
+name: Móng Đồng
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = sat
+  d = sat-sang
+  e = bac
+  f = dong-toi
+  g = dong
+  h = dong-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbebbbecbbbebbgfa
+ahgbbbbbbdbbbccbbbdbbgfa
+ahgbbbbbbdbbbbdbbbecbgfa
+ahgbbbbbbecbbbecbbcdcgfa
+ahgbbbbbbecbbbecbbbecgfa
+ahgbbbbbbecbbbecbbbecgfa
+ahgbbbbbbecbbbecbbbecgfa
+ahgbbbbbbecbbbecbbedcgfa
+ahgbbbbbbecbbedcbbecbgfa
+ahgbbbbbbecbbedcbbecbgfa
+ahgbbbbbedcbbecbbbecbgfa
+ahgbbbbbecbbedcbbedcbgfa
+ahgbbbbedcbbedcbbecbbgfa
+ahgbbbbedcbbecbbedcbbgfa
+ahgbbbbecbbedcbbedcbbgfa
+ahgbbbedcbbedcbbecbbbgfa
+ahgbbbcccbbccbbbccbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -1,0 +1,34 @@
+# nút tròn (quay lại / đóng) — thuong — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đĩa đồng tròn; thường
+name: nút tròn (quay lại / đóng) — thuong
+size: 16x16
+colors:
+  a = vien
+  b = dong-toi
+  c = dong
+  d = dong-sang
+
+part k0
+......aaaa......
+....aadddbaa....
+...addcdccdba...
+..adcbbbbbbcba..
+.adcbbbbbbbbcba.
+.adbbbbbbbbbbda.
+adcbbbbbbbbbbcba
+adcbbbbbbbbbbcba
+addbbbbbbbbbbdba
+abcbbbbbbbbbbcba
+.adbbbbbbbbbbda.
+.abcbbbbbbbbcba.
+..abcbbbbbbcba..
+...abdccdcdba...
+....aabbbbaa....
+......aaaa......
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

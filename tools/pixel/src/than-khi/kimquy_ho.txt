@@ -1,0 +1,46 @@
+# Linh Khí Hồ Gươm — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: glowing lake with a sword — Linh khí hồ Tả Vọng, nơi rùa thần trở về
+name: Linh Khí Hồ Gươm
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = cham
+  g = nuoc
+  h = nuoc-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbbbbbbbbbbbbhfca
+aedbbbbbbbbbbbbbbbbhgfca
+aedbbbbbbbbbbbbbbbhgfdca
+aedbbbbbbbbbbbbbbhgfbdca
+aedbbbbbbbbbbbbbhgfbbdca
+aedbbbbbbbbbbbbhgfbbbdca
+aedbbbbbbbbbbbhgfbbbbdca
+aedbbbbbbbbbbhgfbbbbbdca
+aedbbbbbbbbbhgfbbbbbbdca
+aedbbbgbbbbhgfbbbbbbbdca
+aedbbbbgbbhgfbbbbbbbbdca
+aedbbbbbhhgfbbbbbbbbbdca
+aedbbbbbhgfbbbbbbbbbbdca
+aedbbbbhgffbbbbbbbbbbdca
+aedbbbhgfbbbbbbbbbbbbdca
+aedbbhgfbbbbbbbbbbbbbdca
+aedbhgfbbbbbbbbbbbbbbdca
+aedbffbbbbbbbbbbbbbbbdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

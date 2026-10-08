@@ -1,0 +1,55 @@
+# Thần Săn Ba Vì · R «Cuộc Săn Lớn» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: a hunting horn with crossed spears
+name: Thần Săn Ba Vì · R «Cuộc Săn Lớn»
+size: 24x24
+colors:
+  a = vien
+  b = toi
+  c = sat
+  d = sat-sang
+  e = bac
+  f = trang-xam
+  g = trang
+  h = sang
+  i = dat-toi
+  j = dat
+  k = dat-sang
+  l = dong-toi
+  m = dong
+  n = dong-sang
+  o = vang-nghe
+  p = la-toi
+  q = la-ma
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+annnnnnnnnnoonnnnnnnnnma
+anmmmmmmmmmmmmmmmmmmmmla
+anmeaaqqqqqqqqqqqaeeamla
+anmceeapppppppppaedcamla
+anmacaappppppppppacaqmla
+anmqakkappppppppakkkamla
+anmqaijkappppppakjjiamla
+anmqpaijkappppakhiiaqmla
+anmqppaijkapaakhbhapqmla
+anmqappaiikahkibbbapqmla
+aomahappamhhfmhhbhhaqmoa
+aomahhaahmhgfmhghfapqmoa
+anmahfahfmhgfmhggfapqmla
+anmafapafmhgfmhgfappqmla
+anmqappakmfffmffapppqmla
+anmqppakjkkafakkkappqmla
+anmqpakjjiapapaijkapqmla
+anmqakjjiapppppaijkaqmla
+anmqakjiapppppppaijkamla
+anmqaiiaqqqqqqqqqaiiamla
+anmmmmmmmmmmmmmmmmmmmmla
+amlllllllllloollllllllla
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

@@ -1,0 +1,47 @@
+# Cánh Tiên — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: fairy wings — Đôi cánh tiên nữ dòng Thần Nông
+name: Cánh Tiên
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = trang-xam
+  d = trang
+  e = sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = hong
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbdbbgfa
+ahgbbbbbbbbbbbbbecbbbgfa
+ahgbbbbbbbbbbbbedibbbgfa
+ahgbbbbbbbbbbeedibbbbgfa
+ahgbbbbbbbbbeddicbbbbgfa
+ahgbbbbbbbbeddicbbbbbgfa
+ahgbbbbbbeeddidcbbbbbgfa
+ahgbbbbbbeddidcbbbbbbgfa
+ahgbbbbbeddiddcbbbbbbgfa
+ahgbbbbeddiddcbbbbbbbgfa
+ahgbbbbediddccbbbbbbbgfa
+ahgbbbedidccbbbbbbbbbgfa
+ahgbbbeiccbbbbbbbbbbbgfa
+ahgbbeicbbbbbbbbbbbbbgfa
+ahgbbibbbbbbbbbbbbbbbgfa
+ahgbibbbbbbbbbbbbbbbbgfa
+ahgibbbbbbbbbbbbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

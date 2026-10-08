@@ -1,0 +1,49 @@
+# Lạc Long Quân · W «Vảy Rồng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: shiny jade dragon scales
+name: Lạc Long Quân · W «Vảy Rồng»
+size: 24x24
+colors:
+  a = vien
+  b = dong-toi
+  c = dong
+  d = dong-sang
+  e = vang-nghe
+  f = cham-toi
+  g = cham
+  h = cham-sang
+  i = nuoc
+  j = ngoc
+  k = ngoc-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adciiiiiiiiiiiiiiiiiicba
+adcifaaaaaaaaaaaaaaficba
+adciakkkkkkkkkkkkkkaicba
+adciakgkkjgkkjgkkjgaicba
+adciaghkgghkgghkgghaicba
+adciaghhhhhhhhhhhhhaicba
+adciagkkkkkkkkkkkkkaicba
+adciakkjgkkjgkkjgkgaacba
+aecahkgghkgghkgghkgahcea
+aecahhhhhhhhhhhhhhhhhcea
+adciaakkkkkkkkkkkkaaacba
+adciffakkjgkkjgkgaaficba
+adcifahagghkgghkaahaicba
+adcifahhhhhhhhhhhhhaicba
+adciffaaaakkkkaaaaaficba
+adcifffffahkgahafffficba
+adcifffffahhhhhafffficba
+adciiiiiiiaaaaaiiiiiicba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

@@ -1,0 +1,32 @@
+# hành Thổ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đĩa trống đồng + núi vàng đất C99A3C
+name: hành Thổ
+size: 12x12
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = vang-sang
+
+part k0
+....aaaa....
+...aeeeca...
+..aeeedeca..
+.aedbbbbdca.
+aeebbbfbbeca
+aedbffebbdca
+aeebeeebbeca
+acebbbbbbeca
+.acdbbbbdca.
+..acedeeca..
+...acccca...
+....aaaa....
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

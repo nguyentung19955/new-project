@@ -1,0 +1,49 @@
+# Vua Lửa Pơtao Apui · E «Vòng Lửa» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: ring of fire
+name: Vua Lửa Pơtao Apui · E «Vòng Lửa»
+size: 24x24
+colors:
+  a = vien
+  b = dong-toi
+  c = dong
+  d = dong-sang
+  e = vang-nghe
+  f = vang-sang
+  g = son-toi
+  h = son
+  i = son-sang
+  j = lua
+  k = lua-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adciiiiiiiiiaiiiiiiiicba
+adciggggaaaakaaaagggicba
+adcigggakkkkkkkkkaggicba
+adciggakkhfffffhkkagicba
+adcigakhffkkakkffhkaicba
+adciakhfjaaagaaajfhkacba
+adciakhjagggagggajhkacba
+adciahfkaggaiaggakfhacba
+aeciahjhagaiiiagahjhacea
+aecakhjagaiikiiagajkkcea
+adciahjkagaiiiagakjhacba
+adciahjhaggaiaggahjhacba
+adciahkfagggagggafkhacba
+adciakhjfaaagaaafjhkacba
+adcigahkjfkkakkfjkhaicba
+adciggahkkfffffkkhagicba
+adcigggakhkkkkkhkaggicba
+adciiiiiaaaahaaaaiiiicba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

@@ -1,0 +1,30 @@
+# sa lầy — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: vũng bùn
+name: sa lầy
+size: 12x12
+colors:
+  a = vien
+  b = dat-toi
+  c = dat
+  d = dat-sang
+
+part k0
+............
+............
+.....aaa....
+....addba...
+..aadcccba..
+.addccccba..
+.adccccccba.
+.abbbbbbbba.
+..aaaaaaaa..
+............
+............
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

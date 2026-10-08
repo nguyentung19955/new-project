@@ -1,0 +1,45 @@
+# Khiên Đồng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Khiên 20% máu cho tướng quanh mình
+name: Khiên Đồng
+size: 24x24
+colors:
+  a = vien
+  b = sat
+  c = sat-sang
+  d = bac
+  e = dong-toi
+  f = dong
+  g = dong-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+agggggggggggggggggggggea
+agffffffffffffffffffffea
+agfddddddddddddddddbffea
+agfdcccccccccccccccbffea
+agfdcccccccccccccccbffea
+agfdcccccccccccccccbffea
+agfdcccccccccccccccbffea
+agfdcccccccccccccccbffea
+agfdcccccccccccccccbffea
+agfdcccccccccccccccbffea
+agfdcccccccccccccccbffea
+agfbcccccccccccccccbffea
+aeffbcccccccccccccbfffea
+.aeefbcccccccccccbffeea.
+..aaefbbcccccccbbffeaa..
+....aeffbcccccbfffea....
+.....aeffbcccbfffea.....
+......aeffbcbfffea......
+.......aeffbfffea.......
+........aeffffea........
+.........aeffea.........
+..........aeea..........
+...........aa...........
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

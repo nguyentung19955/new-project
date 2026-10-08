@@ -1,0 +1,38 @@
+# biểu tượng chương giong — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: lửa
+name: biểu tượng chương giong
+size: 16x16
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = son
+  g = lua
+  h = lua-sang
+
+part k0
+......aaaa......
+....aaeeecaa....
+...aeededdeca...
+..aedbbhbbbdca..
+.aedbbbgbbbbdca.
+.aebbbbhfbbbbea.
+aedbbbhggfbbbdca
+aedbbhggggfbbdca
+aeebhgggggfbbeca
+acdbfgggggfbbdca
+.aebbfffffbbbea.
+.acdbbbbbbbbdca.
+..acdbbbbbbdca..
+...aceddedeca...
+....aaccccaa....
+......aaaa......
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -1,0 +1,38 @@
+# ô đồ thiếu nguyên liệu (viền đứt) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: viền nét đứt vàng
+name: ô đồ thiếu nguyên liệu (viền đứt)
+size: 20x20
+colors:
+  a = vien
+  b = khoi
+  c = dong-sang
+  d = vang-sang
+
+part k0
+.aa.aaa.aaa.aaa.aaa.
+addadddadddadddaddca
+adbbbbbbbbbbbbbbbbca
+.abbbbbbbbbbbbbbbba.
+adbbbbbbbbbbbbbbbbca
+adbbbbbbbbbbbbbbbbca
+adbbbbbbbbbbbbbbbbca
+.abbbbbbbbbbbbbbbba.
+adbbbbbbbbbbbbbbbbca
+adbbbbbbbbbbbbbbbbca
+adbbbbbbbbbbbbbbbbca
+.abbbbbbbbbbbbbbbba.
+adbbbbbbbbbbbbbbbbca
+adbbbbbbbbbbbbbbbbca
+adbbbbbbbbbbbbbbbbca
+.abbbbbbbbbbbbbbbba.
+adbbbbbbbbbbbbbbbbca
+adbbbbbbbbbbbbbbbbca
+accacccacccacccaccca
+.aa.aaa.aaa.aaa.aaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

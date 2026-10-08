@@ -1,0 +1,46 @@
+# Điềm Lành Giáng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Tướng xung quanh +25% tốc đánh 5 giây
+name: Điềm Lành Giáng
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = sat
+  d = sat-sang
+  e = bac
+  f = dong-toi
+  g = dong
+  h = dong-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbbbbbbbbbbecfa
+ahgbbbbbbbbbbbbbbbbedcfa
+ahgbbbbbbbbbbbbbbbedcgfa
+ahgbbbbbbbbbbbbbbedcbgfa
+ahgbbbbbbbbbbbbbedcbbgfa
+ahgbbbbbbbbbbbbedcbbbgfa
+ahgbbbbbbbbbbbedcbbbbgfa
+ahgbbbbbbbbbbedcbbbbbgfa
+ahgbbbbbbbbbedcbbbbbbgfa
+ahgbbbdbbbbedcbbbbbbbgfa
+ahgbbbbdbbedcbbbbbbbbgfa
+ahgbbbbbeedcbbbbbbbbbgfa
+ahgbbbbbedcbbbbbbbbbbgfa
+ahgbbbbedccbbbbbbbbbbgfa
+ahgbbbedcbbbbbbbbbbbbgfa
+ahgbbedcbbbbbbbbbbbbbgfa
+ahgbedcbbbbbbbbbbbbbbgfa
+ahgbccbbbbbbbbbbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -1,0 +1,31 @@
+# góp ý: lỗi — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: con bọ
+name: góp ý: lỗi
+size: 12x12
+colors:
+  a = vien
+  b = sat-toi
+  c = son-toi
+  d = son
+  e = son-sang
+
+part k0
+............
+............
+...aaaaaa...
+..abaecbaa..
+..aecddeca..
+..aedccdcaa.
+..aedccdcaa.
+..accddcca..
+..aaaccaaa..
+...aaaaaa...
+............
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

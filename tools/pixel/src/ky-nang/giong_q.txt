@@ -1,0 +1,53 @@
+# Thánh Gióng · Q «Gậy Tre Ngà» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: a bamboo stalk with ivory joints swung like a club
+name: Thánh Gióng · Q «Gậy Tre Ngà»
+size: 24x24
+colors:
+  a = vien
+  b = dat
+  c = dat-sang
+  d = cat
+  e = dong-toi
+  f = dong
+  g = dong-sang
+  h = vang-nghe
+  i = vang-sang
+  j = son-toi
+  k = son-sang
+  l = lua-sang
+  m = la
+  n = la-ma
+  o = la-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+agggggggggghhgggggggggfa
+agffffffffffffffffffffea
+agfkkkkkkkkkkkkkkaoakfea
+agfkjjjjjjjjjjjjaomoafea
+agfkjjjjjjjjjjjaonmakfea
+agfkjjjjjjjjjjaiimiakfea
+agfkjjjjjjaajaiddicakfea
+agfkjjjjjallaiicddcakfea
+agfkjjjjjjaallbbicajkfea
+agfkjjjjjjjaiillcajjkfea
+ahfkjjjjjjaiddillajakfha
+ahfkjjjjjaiicdcallalafha
+agfkjjjjaibbbcajalaaafea
+agfkjjjaidiiicajjalalfea
+agfkjjaiicddcajjjalaafea
+agfkjjabbbicajjjjjalafea
+agfkjaiiiicajjjjjjalafea
+agfkaidddcajjjjjjjjakfea
+agfkaiddcajjjjjjjjjjkfea
+agfkacccakkkkkkkkkkkkfea
+agffffffffffffffffffffea
+afeeeeeeeeeehheeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

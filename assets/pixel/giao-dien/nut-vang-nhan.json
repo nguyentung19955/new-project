@@ -1,0 +1,25 @@
+{
+ "code": "nut-vang-nhan",
+ "group": "giao-dien",
+ "name": "nút chữ nhật vàng — nhan",
+ "w": 48,
+ "h": 16,
+ "ax": 24,
+ "ay": 15,
+ "bbox": [
+  0,
+  1,
+  48,
+  15
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "nut-vang-nhan.png"
+}

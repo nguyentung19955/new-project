@@ -1,0 +1,38 @@
+# biểu tượng chương thachsanh — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: mặt quỷ
+name: biểu tượng chương thachsanh
+size: 16x16
+colors:
+  a = vien
+  b = khoi
+  c = trang-xam
+  d = trang
+  e = sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+
+part k0
+......aaaa......
+....aahhhfaa....
+...ahhghgghfa...
+..ahgbbbbbbgfa..
+.ahgbbeeecbbgfa.
+.ahbbeddddcbbha.
+ahgbbeaddacbbgfa
+ahgbeaaaaaacbgfa
+ahhbbcaddacbbhfa
+afgbbbedadcbbgfa
+.ahbbbeaadcbbha.
+.afgbbcccccbgfa.
+..afgbbbbbbgfa..
+...afhgghghfa...
+....aaffffaa....
+......aaaa......
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

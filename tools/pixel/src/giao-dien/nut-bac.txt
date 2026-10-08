@@ -1,0 +1,34 @@
+# nút bạc — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: nút bạc
+name: nút bạc
+size: 48x16
+colors:
+  a = vien
+  b = sat
+  c = sat-sang
+  d = bac
+
+part k0
+...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...
+..adddddddddddddddddddddddddddddddddddddddddba..
+.adddddddddddddddddddddddddddddddddddddddddddba.
+adccccccccccccccccccccccccccccccccccccccccccccba
+adccccccccccccccccccccccccccccccccccccccccccccba
+adccccccccccccccccccccccccccccccccccccccccccccba
+adccccccccccccccccccccccccccccccccccccccccccccba
+adccccccccccccccccccccccccccccccccccccccccccccba
+adccccccccccccccccccccccccccccccccccccccccccccba
+adccccccccccccccccccccccccccccccccccccccccccccba
+adccccccccccccccccccccccccccccccccccccccccccccba
+adccccccccccccccccccccccccccccccccccccccccccccba
+abccccccccccccccccccccccccccccccccccccccccccccba
+.abccccccccccccccccccccccccccccccccccccccccccba.
+..abbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbba..
+...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

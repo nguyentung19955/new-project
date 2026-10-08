@@ -1,0 +1,30 @@
+# tim mạng trên thanh trên — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: trái tim đỏ E25A3A
+name: tim mạng trên thanh trên
+size: 12x12
+colors:
+  a = vien
+  b = son-toi
+  c = son
+  d = son-sang
+
+part k0
+............
+............
+...aaaaaa...
+..adddddba..
+.adccccccba.
+.abccccccba.
+..abcccbba..
+...abcbaa...
+....aba.....
+.....a......
+............
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

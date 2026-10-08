@@ -1,0 +1,48 @@
+# Bọc Trăm Trứng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: egg sac with a hundred eggs — Bọc trứng nở trăm con, tổ tiên người Việt
+name: Bọc Trăm Trứng
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = trang-xam
+  d = trang
+  e = sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = vang-nghe
+  j = hong
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbecbbbbbbbbgfa
+ahgbbbbbbeeddecbbbbbbgfa
+ahgbbbbbeddddddcbbbbbgfa
+ahgbbbbbbcddddcbbbbbbgfa
+ahgbbbbbbeccccbbbbbbbgfa
+ahgbbbbbjjjjjjjjbbbbbgfa
+ahgbbbbbjjjjjjjjbbbbbgfa
+ahgbbbbeddddddddcbbbbgfa
+ahgbbbeddddddddddcbbbgfa
+ahgbbeddddddddddddcbbgfa
+ahgbbedddddiidddddcbbgfa
+ahgbbeddddiiiiddddcbbgfa
+ahgbbeddddiiiiddddcbbgfa
+ahgbbcdddddiidddddcbbgfa
+ahgbbbcddddddddddcbbbgfa
+ahgbbbbcddddddddcbbbbgfa
+ahgbbbbbccddddccbbbbbgfa
+ahgbbbbbbbccccbbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

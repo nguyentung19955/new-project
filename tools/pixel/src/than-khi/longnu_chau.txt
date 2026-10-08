@@ -1,0 +1,46 @@
+# Long Châu — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: dragon pearl — Viên ngọc rồng của Long Nữ
+name: Long Châu
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = trang-xam
+  d = trang
+  e = sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbecbbbbbbbbgfa
+ahgbbbbbeeeddeecbbbbbgfa
+ahgbbbbeddddddddcbbbbgfa
+ahgbbbeddddddddddcbbbgfa
+ahgbbeddddddddddddcbbgfa
+ahgbbeddddddddddddcbbgfa
+ahgbbeddddddddddddcbbgfa
+ahgbeddddddddddddddcbgfa
+ahgbcdddddddaddddddcbgfa
+ahgbbeddddddddddddcbbgfa
+ahgbbeddddddddddddcbbgfa
+ahgbbcddddddddddddcbbgfa
+ahgbbbcddddddddddcbbbgfa
+ahgbbbbcddddddddcbbbbgfa
+ahgbbbbbcccddcccbbbbbgfa
+ahgbbbbbbbbccbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

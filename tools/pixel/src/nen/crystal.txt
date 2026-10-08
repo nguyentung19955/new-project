@@ -1,0 +1,35 @@
+# trang trí: crystal — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: tinh thể xanh 7FD8F2 phát sáng
+name: trang trí: crystal
+size: 16x16
+colors:
+  a = vien
+  b = sang
+  c = nuoc
+  d = nuoc-sang
+  e = troi
+
+part k0
+.......a........
+......aea.......
+......ada.......
+.....aedca......
+....aedddca.....
+....aedbdcaa....
+...aaedbdcaea...
+..aeecdbdcedca..
+.aedcaebcaedca..
+.aedcaebcaedca..
+.aedcaebcaedca..
+.aedcaebcaedca..
+.acccacccaccca..
+..aaa.aaa.aaa...
+................
+................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -1,0 +1,46 @@
+# Quét Tre — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Quét bụi tre quanh mình: đánh mọi quái trong tầm, x2 sát thương +1
+name: Quét Tre
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = la
+  g = la-ma
+  h = la-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbhhhfbbbbbbbdca
+aedbbbbbbhggggfbbbbbbdca
+aedbbbbbhggggggfbbbbbdca
+aedbbbbhggggggggfbbbbdca
+aedbbbhggggggggggfbbbdca
+aedbbhggggggggggggfbbdca
+aedbhggggggggggggggfbdca
+aedbhggggggggggggggfbdca
+aedbhggggggggggggggfbdca
+aedbhggggggggggggggfbdca
+aedbhggggggggggggggfbdca
+aedbhggggggggggggggfbdca
+aedbhggggggggggggggfbdca
+aedbffffffffffffffffbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

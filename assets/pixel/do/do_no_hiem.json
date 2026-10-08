@@ -1,0 +1,25 @@
+{
+ "code": "do_no_hiem",
+ "group": "do",
+ "name": "nỏ tre · Hiếm (rare)",
+ "w": 24,
+ "h": 24,
+ "ax": 12,
+ "ay": 23,
+ "bbox": [
+  1,
+  4,
+  23,
+  20
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "do_no_hiem.png"
+}

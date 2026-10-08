@@ -1,0 +1,30 @@
+# icon SVG: chọn / đúng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: dấu tích
+name: icon SVG: chọn / đúng
+size: 12x12
+colors:
+  a = vien
+  b = la
+  c = la-ma
+  d = la-sang
+
+part k0
+............
+........aaa.
+.......addba
+......adccba
+.aaa.adcccba
+addbadcccba.
+adccdcccba..
+abcccccba...
+.abcccba....
+..abbbba....
+...aaaa.....
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

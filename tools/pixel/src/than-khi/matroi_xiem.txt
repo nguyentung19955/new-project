@@ -1,0 +1,47 @@
+# Xiêm Y Ráng Chiều — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: sunset-cloud robe — Áo dệt từ ráng mây lúc hoàng hôn
+name: Xiêm Y Ráng Chiều
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = vang-nghe
+  g = son
+  h = lua
+  i = lua-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbiaiiiiabbbbbbdca
+aedbbbbihhahhahgbbbbbdca
+aedbbbihhhahhahhgbbbbdca
+aedbiihhhhhaahhhhigbbdca
+aedihhhhhhhhhhhhhhhgbdca
+aedbghghhhhhhhhhghgbbdca
+aedbbgbihhhhhhhgbgbbbdca
+aedbbbbihhhhhhhgbbbbbdca
+aedbbbbihhhhhhhgbbbbbdca
+aedbbbbggggggggggbbbbdca
+aedbbbbgggggfggggbbbbdca
+aedbbbbihhhhhhhgbbbbbdca
+aedbbbbihhhhhhhgbbbbbdca
+aedbbbbihhhhhhhgbbbbbdca
+aedbbbbihhhhhhhgbbbbbdca
+aedbbbiggggggggggbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

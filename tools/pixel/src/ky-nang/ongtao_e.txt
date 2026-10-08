@@ -1,0 +1,54 @@
+# Ông Táo · E «Tấu Trình Thiên Đình» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: scroll to heaven
+name: Ông Táo · E «Tấu Trình Thiên Đình»
+size: 24x24
+colors:
+  a = vien
+  b = toi
+  c = trang-xam
+  d = trang
+  e = sang
+  f = dat-toi
+  g = dat
+  h = dat-sang
+  i = dong-toi
+  j = dong
+  k = dong-sang
+  l = vang-nghe
+  m = vang-sang
+  n = son-toi
+  o = son
+  p = son-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+akkkkkkkkkkllkkkkkkkkkja
+akjjjjjjjjjjjjjjjjjjjjia
+akjppppppppamapppppppjia
+akjpnnnnnnammmannnnnpjia
+akjpnannnamamamannanpjia
+akjpagannnaamaannagapjia
+akjahhhaaaaaaaaaahhhajia
+akjahgfeeeeeeeeeehgfajia
+akjahgfcbbbbbbedchgfajia
+akjahgfeeeeeeeddchgfajia
+aljahgfcbbbbbbedchgfajla
+aljahgfeeeeeeeddchgfajla
+akjahgfcbbbbbbccchgfajia
+akjahgfeeeeeeopochgfajia
+akjahgfcbbbbcooochgfajia
+akjahgfceeeeceeechgfajia
+akjafffaaaaaaaaaafffajia
+akjpaeannnnnnnnnnageajia
+akjaeannnnnnnnnnnaeaejia
+akjpapppppppppppppapajia
+akjjjjjjjjjjjjjjjjjjjjia
+ajiiiiiiiiiilliiiiiiiiia
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

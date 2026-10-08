@@ -1,0 +1,25 @@
+{
+ "code": "cong-lang-tre",
+ "group": "nen",
+ "name": "cổng làng tre (village — dong)",
+ "w": 48,
+ "h": 48,
+ "ax": 24,
+ "ay": 47,
+ "bbox": [
+  1,
+  0,
+  45,
+  47
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "cong-lang-tre.png"
+}

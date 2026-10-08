@@ -1,0 +1,25 @@
+{
+ "code": "ui-kho-lua",
+ "group": "icon",
+ "name": "kho lúa (thẻ thưởng)",
+ "w": 16,
+ "h": 16,
+ "ax": 8,
+ "ay": 15,
+ "bbox": [
+  1,
+  1,
+  13,
+  14
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "ui-kho-lua.png"
+}

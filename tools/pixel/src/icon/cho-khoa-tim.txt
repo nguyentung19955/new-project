@@ -1,0 +1,41 @@
+# thẻ chợ: nguyên liệu Tím chưa mở — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: khoá trên tím xám
+name: thẻ chợ: nguyên liệu Tím chưa mở
+size: 16x16
+colors:
+  a = vien
+  b = khoi
+  c = sat-toi
+  d = sat
+  e = sat-sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = tim-toi
+  j = tim
+  k = tim-sang
+
+part k0
+.aaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhfa
+ahggggggggggggfa
+ahgbbbbbbbbbbgfa
+ahgbbbeddcbbbgfa
+ahgbbbdbbdbbbgfa
+ahgbbbdbbdbbbgfa
+ahgbkkkkkkkibgfa
+ahgbkjjajjjibgfa
+ahgbkjjajjjibgfa
+ahgbkjjjjjjibgfa
+ahgbiiiiiiiibgfa
+ahgbbbbbbbbbbgfa
+ahggggggggggggfa
+affffffffffffffa
+.aaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

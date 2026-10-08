@@ -1,0 +1,33 @@
+# khoá chợ — đóng / khoá nhỏ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: ổ khoá đóng
+name: khoá chợ — đóng / khoá nhỏ
+size: 12x12
+colors:
+  a = vien
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = dong-toi
+  f = dong
+  g = dong-sang
+
+part k0
+............
+.....aa.....
+....adba....
+...adbbba...
+...acaacaa..
+..aggggggea.
+..agfafffea.
+..agfafffea.
+..agfffffea.
+..aeeeeeeea.
+...aaaaaaa..
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

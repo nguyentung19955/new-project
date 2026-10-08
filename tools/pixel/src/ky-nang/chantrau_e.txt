@@ -1,0 +1,46 @@
+# Sáo Trúc Lưng Trâu — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bamboo flute on a buffalo
+name: Sáo Trúc Lưng Trâu
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dat-sang
+  d = dong-toi
+  e = dong
+  f = dong-sang
+  g = vang-nghe
+  h = vang-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+afffffffffffffffffffffda
+afeeeeeeeeeeeeeeeeeeeeda
+afebbbbbbbbbbbbbbbbbbeda
+afebbbbbbbbbbbbbbbbbbeda
+afebbbbbbbbbbbbcbbbcbeda
+afebbbbbbbbbbbbbcbbcbeda
+afebbbbbbbbbbbbbchcbbeda
+afebbbbbhhhhhfbhgggfbeda
+afebbbhhgggggghggagfbeda
+afebbhgggggggggggggfbeda
+afebbhggggggggggggffbeda
+afebbhgggggggggggfbbbeda
+afebbfggggggggggfbbbbeda
+afebbbhgggggggggfbbbbeda
+afebbbhggfffffggfbbbbeda
+afebbbhgfbbbbbhgfbbbbeda
+afebbbhgfbbbbbhgfbbbbeda
+afebbbfffbbbbbfffbbbbeda
+afebbbbbbbbbbbbbbbbbbeda
+afebbbbbbbbbbbbbbbbbbeda
+afeeeeeeeeeeeeeeeeeeeeda
+adddddddddddddddddddddda
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

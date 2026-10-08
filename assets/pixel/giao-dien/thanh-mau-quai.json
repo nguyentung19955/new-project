@@ -1,0 +1,25 @@
+{
+ "code": "thanh-mau-quai",
+ "group": "giao-dien",
+ "name": "khung thanh máu quái",
+ "w": 24,
+ "h": 8,
+ "ax": 12,
+ "ay": 7,
+ "bbox": [
+  0,
+  0,
+  24,
+  8
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "thanh-mau-quai.png"
+}

@@ -1,0 +1,35 @@
+# vào trận — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: 2 kiếm đồng bắt chéo (phong cách mặt trống đồng, viền 2A1608)
+name: vào trận
+size: 16x16
+colors:
+  a = vien
+  b = dat
+  c = dong-sang
+  d = vang-nghe
+  e = vang-sang
+
+part k0
+................
+................
+...aa......aa...
+..aeca....aeca..
+..acdca..aedca..
+...acdcaaedca...
+....acdcedca....
+.....acdcca.....
+...a.aecdca.a...
+..abaedccdcaba..
+...abdcaacdba...
+..aedba..abdca..
+.aedcabaabacdca.
+.acca.a..a.acca.
+..aa........aa..
+................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

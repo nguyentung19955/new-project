@@ -1,0 +1,54 @@
+# Ông Táo · Q «Kẹp Than Hồng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: fire tongs holding a coal
+name: Ông Táo · Q «Kẹp Than Hồng»
+size: 24x24
+colors:
+  a = vien
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = dat-toi
+  f = dat-sang
+  g = dong-toi
+  h = dong
+  i = dong-sang
+  j = vang-nghe
+  k = vang-sang
+  l = son-toi
+  m = son
+  n = son-sang
+  o = lua
+  p = lua-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aiiiiiiiiiijjiiiiiiiiiha
+aihhhhhhhhhhhhhhhhhhhhga
+aihnnnnnnnnnannaaannnhga
+aihnlllllllapaapppalahga
+aihnllllllllaapkkmpaohga
+aihnllllllllapkkkkppahga
+aihnllllllllamokpopmahga
+aihnllllllllampoopomahga
+aihnlllllllllamppomanhga
+aihnlllllllladdmmmdanhga
+ajhnllllllladccdddaanhja
+ajhnlllllladccccbaapahja
+aihnllllladccccballanhga
+aihnllllladccccballlnhga
+aihnlllladccccballllnhga
+aihnllladccccballlllnhga
+aihnaaadbbbcballllllnhga
+aihafffbfffdballllllnhga
+aihaeeebeeeballlllllnhga
+aihnaddaaddannnnnnnnnhga
+aihhhhhhhhhhhhhhhhhhhhga
+ahggggggggggjjggggggggga
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

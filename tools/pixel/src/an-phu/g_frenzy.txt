@@ -1,0 +1,46 @@
+# Nhanh Như Gió (Ấn Gió, hàng 4) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: —
+name: Nhanh Như Gió (Ấn Gió, hàng 4)
+size: 24x24
+colors:
+  a = vien
+  b = dong
+  c = vang-nghe
+  d = vang-sang
+  e = la-toi
+  f = reu-toi
+  g = reu
+  h = reu-sang
+
+part k0
+.........aaaaaa.........
+......aaadbbbbdaaa......
+.....adbbbhffhbbbda.....
+....adbhfffeefffhbda....
+...adbffeeeffeeeffbda...
+..adbfeeffffffffeefbda..
+.adbheffffffffffffehbda.
+.adhfefffffffdddffgfhda.
+.abfefffffffdccaaffefba.
+adbheffffffdccaafffghbda
+adhfefffffdccaaffffgfhda
+adhefffffdccccccdfffehda
+adheffffffaadccbaaffghda
+adfheffffffdccbaaffghfda
+abdhefffffdccbaafffghdba
+.abfeffffdcbaaaffffgfba.
+.adfhefffcbaafffffghfda.
+.abdfeffffaaffffffgfdba.
+..abdfegffffffffggfdba..
+...abdfheggffggghfdba...
+....abdfffheghfffdba....
+.....abbbdffffdbbba.....
+......aaabbbbbbaaa......
+.........aaaaaa.........
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

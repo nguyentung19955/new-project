@@ -1,0 +1,50 @@
+# Thần Trống Đồng · Q «Gõ Trống Trận» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: drum mallet hitting a drum
+name: Thần Trống Đồng · Q «Gõ Trống Trận»
+size: 24x24
+colors:
+  a = vien
+  b = sat-toi
+  c = sat-sang
+  d = dat-toi
+  e = dat
+  f = dat-sang
+  g = dong-toi
+  h = dong
+  i = dong-sang
+  j = vang-nghe
+  k = vang-sang
+  l = troi
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aiiiiiiiiiijjiiiiiiiiiha
+aihhhhhhhhhhhhhhhhhhhhga
+aihcccccccccccccaaacchga
+aihcbbbbbbbbbbbafffachga
+aihcbbbbbbbbbbbafedachga
+aihcbbbbbbbbbbafedabchga
+aihcbbbbbbbbbbafedabchga
+aihcbbbbbbbbbafedabbchga
+aihcbabbbbbabafedabbchga
+aihcalabbbalafedabbbchga
+ajhcbalabalaafedabbbchja
+ajhcbbaaaaaafedaaabbchja
+aihcbaakkkkfeedkkkaachga
+aihcakkjjjhkddkjjjkkahga
+aihcakjjjhjjkjjkjjjhahga
+aihaihhjjjkkjkkjjjhhihga
+aihaiiihhhhhkhhhhhiighga
+aihaghhhhhhhhhhhhhhighga
+aihaiiiiiiiiiiiiiiihghga
+aihaggggggggggggggggghga
+aihhhhhhhhhhhhhhhhhhhhga
+ahggggggggggjjggggggggga
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

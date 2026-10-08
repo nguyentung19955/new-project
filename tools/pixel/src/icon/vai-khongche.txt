@@ -1,0 +1,30 @@
+# vai trò: Khống chế — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Choáng, trói, làm chậm, đẩy lùi quái; màu 5CC8FF
+name: vai trò: Khống chế
+size: 12x12
+colors:
+  a = vien
+  b = nuoc
+  c = nuoc-sang
+  d = troi
+
+part k0
+............
+............
+...aaa......
+..addbaa....
+.adbcbcba...
+.acacaabba..
+.ababcbaca..
+..acaaadba..
+...adccba...
+....aaaa....
+............
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

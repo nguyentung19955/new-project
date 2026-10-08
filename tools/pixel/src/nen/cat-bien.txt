@@ -1,0 +1,32 @@
+# bãi cát biển (bien) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: cát D8C890, E8DCA8, chấm B8A870
+name: bãi cát biển (bien)
+size: 16x16
+colors:
+  a = cat
+  b = vang-sang
+
+part k0
+bbbbbbbbabbbbbbb
+bbabbbbbbbbbbabb
+bbbbbabbbbbbbbbb
+babbbbbbbbabbbbb
+bbbbbbbaabbbbbbb
+bbbbbbbbbbbbbbab
+babbbbbbbbbabbbb
+bbbbbabbbbbbbbbb
+bbbbbbbbbbbbbabb
+bbbabbbbbabbbbbb
+bbbbbbbbbbbbbbbb
+bbbbbbbaabbbbbab
+babbbbbbbbbbbbbb
+bbbbbabbbbbbabbb
+bbbbbbbbbbbbbbbb
+bbbbbbbbbabbbbab
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

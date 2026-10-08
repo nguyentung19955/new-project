@@ -1,0 +1,25 @@
+{
+ "code": "ui-huy-chuong-4",
+ "group": "icon",
+ "name": "huy chương vương miện (top)",
+ "w": 16,
+ "h": 16,
+ "ax": 8,
+ "ay": 15,
+ "bbox": [
+  1,
+  2,
+  13,
+  10
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "ui-huy-chuong-4.png"
+}

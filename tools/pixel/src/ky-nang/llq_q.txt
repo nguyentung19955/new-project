@@ -1,0 +1,51 @@
+# Lạc Long Quân · Q «Vuốt Rồng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: a green dragon claw slash with three claw marks
+name: Lạc Long Quân · Q «Vuốt Rồng»
+size: 24x24
+colors:
+  a = vien
+  b = bac
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = vang-nghe
+  g = cham-toi
+  h = cham
+  i = nuoc
+  j = nuoc-sang
+  k = troi
+  l = ngoc
+  m = ngoc-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeffeeeeeeeeeda
+aeddddddddddddddddddddca
+aediiiiiiiiiaiiiiiiiidca
+aedigggggggakaggggggidca
+aediggggggajkaggggggidca
+aedigggggajkiagaggggidca
+aediggggajkiagakagggidca
+aediggggakiagajkagggidca
+aedigggajiagajkiagagidca
+aediggajkagajkiagakaidca
+afdigajkaggakiagajkaidfa
+afdiajkaggajiagajkiaidfa
+aedigaaggajkagajkiagidca
+aediggagajkaggakiaggidca
+aediaabajkaggajiagggidca
+aedabaaabaggajkaggggidca
+aedammagaggajkagggggidca
+aedmllmaggajkaggggggidca
+aedhlllmaggaagggggggidca
+aedahhhhmaiiiiiiiiiiidca
+aeddddddddddddddddddddca
+adccccccccccffccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

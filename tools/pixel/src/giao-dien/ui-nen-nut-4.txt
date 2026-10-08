@@ -1,0 +1,44 @@
+# nền nút 4 — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: huy hiệu tròn nhỏ như đồng xu (giữa trống)
+name: nền nút 4
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = sang
+  d = dong-toi
+  e = dong
+  f = dong-sang
+
+part k0
+.........aaaaaa.........
+.......aafffffdaa.......
+.....aaffeefeeefdaa.....
+....affceebbbbeecfda....
+...afeebbbbbbbbbbeeda...
+..afeebbbbbbbbbbbbeeda..
+..afebbbbbbbbbbbbbbeda..
+.affbbbbbbbbbbbbbbbbfda.
+.afebbbbbbbbbbbbbbbbeda.
+afeebbbbbbbbbbbbbbbbeeda
+afebbbbbbbbbbbbbbbbbbeda
+afebbbbbbbbbbbbbbbbbbeda
+afcbbbbbbbbbbbbbbbbbbcda
+afebbbbbbbbbbbbbbbbbbeda
+adeebbbbbbbbbbbbbbbbeeda
+.afebbbbbbbbbbbbbbbbeda.
+.adfbbbbbbbbbbbbbbbbfda.
+..afebbbbbbbbbbbbbbeda..
+..adeebbbbbbbbbbbbeeda..
+...adeebbbbbbbbbbeeda...
+....addceebbbbeecdda....
+.....aaddeeefeeddaa.....
+.......aaddddddaa.......
+.........aaaaaa.........
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

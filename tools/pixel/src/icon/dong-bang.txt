@@ -1,0 +1,30 @@
+# đóng băng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bông tuyết băng
+name: đóng băng
+size: 12x12
+colors:
+  a = vien
+  b = nuoc
+  c = nuoc-sang
+  d = troi
+
+part k0
+............
+...aa..aa...
+..adbaadba..
+..abcddcba..
+.aaadccbaa..
+adddccccdba.
+abbbccccbba.
+.aaadccbaa..
+..adcbbcba..
+..abbaabba..
+...aa..aa...
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+
