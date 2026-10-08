@@ -153,6 +153,7 @@ function pxGiaiMaTruoc(keys) {
     pxDaGiaiMa.add(k);
     if (!e.key) e.key = k;
     const im = asset(pxPathM(e), true) || null;
+    if (k.startsWith('tuong/')) asset(pxPath(e), true);   // ảnh gốc của tướng: viền / hào quang màu bậc vẽ từ hình bóng gốc (nét như khi tắt)
     const go = (img) => { if (img && img.decode) img.decode().then(() => { if (!e.__nong) { e.__nong = 1; pxLamNong(e); } }).catch(() => {}); };
     if (im) go(im);
     else setTimeout(() => go(asset(pxPathM(e), true)), 400);   // đang tải: thử lại sau
@@ -166,6 +167,20 @@ function pxKhoaMan(level, game) {
   for (const b of Object.values(lv.bosses || {})) ks.push('boss/' + b, 'quai/' + b);
   if (game) { for (const h of game.heroes || []) if (h) ks.push('tuong/' + h.type); const mk = game.market; if (mk && mk.types) for (const t of mk.types) ks.push('tuong/' + t); }
   return ks;
+}
+// vòng viền ngoài 1 ô quanh hình bóng ảnh gốc (bóng giãn 1 ô trừ hình gốc) — vẽ đè sau ảnh làm mượt, nét như khi tắt
+function pxVienNgoai(goc, color) {
+  const m = goc.__vng || (goc.__vng = new Map());
+  let c = m.get(color);
+  if (c) return c;
+  const w = goc.width, h = goc.height;
+  c = document.createElement('canvas'); c.width = w + 2; c.height = h + 2;
+  const x = c.getContext('2d'); x.imageSmoothingEnabled = false;
+  for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) x.drawImage(goc, 1 + dx, 1 + dy);
+  x.globalCompositeOperation = 'source-in'; x.fillStyle = color; x.fillRect(0, 0, c.width, c.height);
+  x.globalCompositeOperation = 'destination-out'; x.drawImage(goc, 1, 1);
+  m.set(color, c);
+  return c;
 }
 // bật / tắt làm mượt ngay (Cài đặt trong trận, tự tắt khi máy chậm): luu = ghi nhớ cho lần sau
 function pxSetMuot(on, luu) {
@@ -232,9 +247,17 @@ function pxBlit(ctx, img, e, x, y, unit, flip, o = {}) {
   ctx.imageSmoothingEnabled = muot; if (muot) ctx.imageSmoothingQuality = 'low';   // bilinear: khung đã làm mượt sẵn, lọc 'high' tốn CPU máy yếu
   PX.blits = (PX.blits || 0) + 1; if (muot) PX.muot = (PX.muot || 0) + 1; else PX.smooth = ctx.imageSmoothingEnabled;
   const X = -(e.ax + 0.5) * n, Y = -(e.ay + 1) * n, W = e.w * n, H = e.h * n;
-  if (o.glow) drawGlowOnly(ctx, img, X, Y, W, H, o.glow.color, o.glow.blur * k, o.glow.alpha);
-  if (o.outline) drawOutlineOnly(ctx, img, X, Y, W, H, o.outline.color, o.outline.alpha, img.__muot || 1);   // r tính theo điểm ảnh nguồn: khung làm mượt ×m → viền dày m điểm (= 1 ô pixel)
+  // hào quang / viền màu bậc vẽ từ HÌNH BÓNG ẢNH PIXEL GỐC (nearest, cùng cỡ / vị trí) rồi mới vẽ ảnh mượt đè lên → viền đậm như khi tắt làm mượt
+  const goc = (img.__muot && o.goc) || img;
+  if (o.glow) drawGlowOnly(ctx, goc, X, Y, W, H, o.glow.color, o.glow.blur * k, o.glow.alpha);
+  const vienSau = o.outline && img.__muot && goc !== img;   // làm mượt: vẽ VÒNG viền ngoài sau ảnh (ảnh mượt hơi to hơn ở góc chéo sẽ che viền vẽ trước)
+  if (o.outline && !vienSau) drawOutlineOnly(ctx, goc, X, Y, W, H, o.outline.color, o.outline.alpha, goc.__muot || 1);
   ctx.drawImage(img, X, Y, W, H);
+  if (vienSau && o.outline.alpha > 0) {
+    const ring = pxVienNgoai(goc, o.outline.color), kk = W / goc.width;
+    ctx.save(); ctx.globalAlpha *= Math.min(1, o.outline.alpha); ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(ring, X - kk, Y - kk, ring.width * kk, ring.height * kk); ctx.restore();
+  }
   if (o.flash > 0) {
     ctx.globalCompositeOperation = 'lighter';
     ctx.globalAlpha *= o.flash;
@@ -257,7 +280,7 @@ function pxDrawHero(ctx, h, x, y, o) {
   else if (o.castT > 0 && e.anims.cast) anim = 'cast';
   else if (o.swing > 0 && e.anims.attack) { anim = 'attack'; st = { p: 1 - o.swing }; }
   else if (o.win && e.anims.cast) anim = 'cast';
-  const img = pxFrameVe(e, pxIndex(e, anim, st));
+  const fi = pxIndex(e, anim, st), img = pxFrameVe(e, fi);
   if (!img) return null;   // chưa tải xong: hình cũ (chỉ trong khoảnh khắc đầu)
   const tier = look.tier || 0, asc = look.asc || 0;
   const s = (o.scale || 0.26) * TIER_SCALE[tier] * (1 + 0.04 * asc) * (look.bulk || 1);
@@ -284,7 +307,7 @@ function pxDrawHero(ctx, h, x, y, o) {
     : rk ? { color: rk.c, blur: rk.glow.blur, alpha: rk.glow.alpha + Math.sin(t * 3) * 0.08 }
     : tier >= 2 || asc > 0 ? { color: look.attrColor || '#FFE08A', blur: 5 + tier, alpha: 0.5 + Math.sin(t * 3) * 0.1 } : null;
   // trúng đòn: ngoài khung hurt (lùi + sáng da) thêm nháy trắng ngắn để không lẫn với khung đứng
-  const u = pxBlit(ctx, img, e, x, y + lift, unit, (o.dir || 1) < 0, { glow, flash: o.hurt > 0 ? Math.min(1, o.hurt / 0.2) * 0.6 : 0,
+  const u = pxBlit(ctx, img, e, x, y + lift, unit, (o.dir || 1) < 0, { goc: (glow || rk) && img.__muot ? pxFrame(e, fi) : null, glow, flash: o.hurt > 0 ? Math.min(1, o.hurt / 0.2) * 0.6 : 0,
     outline: rk ? { color: rk.c, alpha: rankAlpha(rk, t, (h.id || 0) * 0.37 % 6.28) } : null });
   ctx.restore();
   if (o.bog) drawBogWater(ctx, x, y, s, t);
@@ -415,7 +438,7 @@ function pxMapGround(x, m, kind, k) {
 const PX_NGAY = ['giao-dien'], PX_SAU = ['tuong', 'quai', 'boss', 'nen', 'ban-do', 'vfx', 'icon'];
 function pxPreload() {
   const M = window.PIXEL_MANIFEST || {}, keys = Object.keys(M), grp = (k) => k.slice(0, k.indexOf('/'));
-  const tai = (k) => asset(PX_MUOT && M[k].m ? `pixel-muot/${k}.png` : `pixel/${k}.png`, true);   // làm mượt: tải bản sinh sẵn
+  const tai = (k) => { asset(PX_MUOT && M[k].m ? `pixel-muot/${k}.png` : `pixel/${k}.png`, true); if (PX_MUOT && M[k].m && grp(k) === 'tuong') asset(`pixel/${k}.png`, true); };   // làm mượt: tải bản sinh sẵn (+ ảnh gốc tướng cho viền hào quang)
   keys.filter((k) => PX_NGAY.includes(grp(k))).forEach(tai);
   const later = keys.filter((k) => PX_SAU.includes(grp(k))).sort((a, b) => PX_SAU.indexOf(grp(a)) - PX_SAU.indexOf(grp(b)));
   const idle = window.requestIdleCallback ? (f) => requestIdleCallback(f, { timeout: 300 }) : (f) => setTimeout(f, 30);

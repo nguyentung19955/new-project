@@ -105,7 +105,7 @@ async function probe(page, type) {
   // ảnh: trận có Thường / Tím / Vàng cạnh nhau
   for (const t of ['thachsanh', 'giong']) {
     const a = COL['pixel bật (làm mượt)' + t], b = COL['pixel, tắt làm mượt' + t];
-    ok(a >= b * 0.6, `${t}: viền màu bậc khi làm mượt ${a} điểm ≥ 60% khi tắt (${b}) — viền không bị mất`);
+    ok(a >= b * 0.85 && a <= b * 1.15, `${t}: viền màu bậc khi làm mượt ${a} điểm ≈ khi tắt (${b}) ±15% — viền đậm như nhau`);
   }
   for (const [w, h] of [[844, 390], [1920, 934]]) for (const px of [false, true]) {
     const { browser, page } = await open(w, h, px);

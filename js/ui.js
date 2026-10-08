@@ -1443,7 +1443,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px">${[['auto', 'Tự động'], ['high', 'Đẹp'], ['low', 'Tiết kiệm']].map(([k, n]) => `<button class="btn ${(st.gfx || 'auto') === k ? 'btn-gold' : 'metal'}" style="height:34px;padding:0 10px;font-size:13px" data-act="set-gfx" data-k="${k}">${n}</button>`).join('')}</div></div>
         ${this.cloudRow()}
         ${inGame || typeof PXGOI === 'undefined' ? '' : this.pxGoiRow()}
-        ${inGame && typeof PX_MUOT !== 'undefined' && pixelOn() ? `<div class="tg metal"><div><b>Làm mượt hình</b><small>Viền tướng, quái, cổng, khung mượt hơn · đổi ngay</small></div><button class="sw ${PX_MUOT ? 'on' : ''}" style="margin-left:auto" data-act="pxg-muot-tran" aria-label="Làm mượt hình"></button></div>` : ''}
+        ${inGame && typeof PX_MUOT !== 'undefined' && pixelOn() ? `<div class="tg metal"><div><b>Làm mượt hình</b><small>Làm mượt tướng, quái, boss và icon · đổi ngay</small></div><button class="sw ${PX_MUOT ? 'on' : ''}" style="margin-left:auto" data-act="pxg-muot-tran" aria-label="Làm mượt hình"></button></div>` : ''}
         <div class="tg metal"><div><b>Góp ý</b></div>
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
