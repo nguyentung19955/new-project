@@ -18,7 +18,7 @@ LIB = r"""
   T.room = function (type, el, o) {
     o = o || {};
     G.testSave({ hero: 'smith', lvl: 12, melee: type === 'bow' ? 'sword' : type, tier: 1, branch: el || undefined, marks: el ? (o.marks || 300) : 0 });
-    G.startStage(o.region == null ? 1 : o.region, 2, 0);
+    G.startStage(o.region == null ? 2 : o.region, 2, 0);
     const S = G.getRun(), W = G.getWorld(), P = S.P;
     W.waves = []; W.props = []; W.banner = null; S.hint = null;
     if (type === 'bow') P.cur = 1;
@@ -26,17 +26,17 @@ LIB = r"""
     for (let i = 0; i < 8; i++) frame();
     W.banner = null;
     P.x = 150; P.y = 196; P.face = 1; P.inv = 0; P.mana = P.maxmana; P.hp = P.maxhp;
-    const ds = o.dummies || (type === 'bow' ? [[232, 196], [262, 190], [290, 200]] : [[180, 196], [196, 186], [200, 206]]);
+    const ds = o.dummies || (type === 'bow' ? [[232, 196], [262, 190], [290, 200]] : type === 'hammer' ? [[180, 196], [196, 186], [200, 206], [236, 198]] : [[180, 196], [196, 186], [200, 206]]);
     for (const d of ds) { const e = G.spawnEnemy(d[2] || 'rusher', d[0], d[1], { hpMult: o.hp || 400 }); e.st.stun = 1e9; e.inside = true; e.face = -1; }
     W.cam = 0;
     for (let i = 0; i < 3; i++) frame();
-    T.W = W; T.P = P; T.shots = [];
+    T.W = W; T.P = P; T.shots = []; T.P0x = type === 'bow' ? 176 : 150;
     return W;
   };
   T.grab = function (label) {
     const cv = document.createElement('canvas');
     cv.width = T.CW; cv.height = T.CH;
-    const x0 = Math.round(T.P0x != null ? T.P0x : 150) - 46, y0 = 196 - 74;
+    const x0 = Math.round(T.P0x != null ? T.P0x : 150) - 46, y0 = 196 - 74; // T.P0x: dời khung cắt (cung cần thấy xa hơn về bên phải)
     cv.getContext('2d').drawImage(G.wx.canvas, x0, y0, T.CW, T.CH, 0, 0, T.CW, T.CH);
     T.shots.push({ cv, label: label || '' });
   };
@@ -128,17 +128,20 @@ MOM = {
       [(P, W, m) => m.holding && m.level === 1, 8, 'Giữ: lấy đà nấc 1'],
       [(P, W, m) => m.holding && m.level === 2, 8, 'Nấc 2'],
       [(P, W, m) => m.kind === 'nenDat' && P.hitDone, 3, 'Thả: nện đất'],
-      [(P, W, m) => m.kind === 'nenDat' && P.hitDone, 16, 'Sóng chấn động'],
+      [(P, W, m) => W.mvWaves && W.mvWaves.some((z) => Math.abs(z.x - P.x) > 62), 0, 'Sóng chấn động'],
       [(P, W, m) => m.kind === 'nenDat' && P.hitDone, 44, 'Còn lại trên đất']]""",
     'special': """[
-      [(P, W, m) => P.specCd > 0, 6, 'Đặc biệt'],
-      [(P, W, m) => P.specCd > 0, 20, ''],
-      [(P, W, m) => P.specCd > 0, 60, '']]""",
+      [(P, W, m) => P.specCd > 0, 8, 'Đặc biệt'],
+      [(P, W, m) => P.specCd > 0, 50, '']]""",
 }
 
-def run(pg, type_, el, dense=0):
+def run(pg, type_, el, dense=0, special=False):
     pg.evaluate("([t, e]) => { T.room(t, e); }", [type_, el])
     pg.evaluate("([s, d, m]) => { T.play(eval(s), d, eval(m)); }", [SEQ[type_], dense, MOM[type_]])
+    if special:
+        # thêm đòn Đặc biệt của vũ khí đó vào cuối hàng (dựng lại phòng cho sạch)
+        pg.evaluate("([t, e, s, m, n]) => { const keep = T.shots; T.room(t, e); T.play(eval(s), 0, eval(m)); T.shots.forEach((x, i) => { x.label = i ? '' : 'Đặc biệt: ' + n; }); T.shots = keep.concat(T.shots); }",
+                    [type_, el, SEQ['special'], MOM['special'], SPEC[type_]])
 
 def save(pg, js, name):
     data = pg.evaluate(js)
@@ -147,6 +150,7 @@ def save(pg, js, name):
         f.write(base64.b64decode(data.split(',')[1]))
     print('đã lưu', path)
 
+SPEC = {'sword': 'Chém lướt', 'bow': 'Mưa tên', 'spear': 'Lao tới', 'hammer': 'Nện đất'}
 NAMES = {'sword': 'Kiếm', 'bow': 'Cung', 'spear': 'Giáo', 'hammer': 'Búa'}
 FILES = {'sword': 'kiem', 'bow': 'cung', 'spear': 'giao', 'hammer': 'bua'}
 ELN = {None: 'Chưa có hệ', 'fire': 'Lửa', 'poison': 'Độc', 'ice': 'Băng'}
@@ -182,7 +186,7 @@ def main():
             for t in types:
                 pg.evaluate("window.__rows = []")
                 for el in [None, 'fire', 'poison', 'ice']:
-                    run(pg, t, el)
+                    run(pg, t, el, special=True)
                     pg.evaluate("([n, c]) => { __rows.push({ title: n, col: c, shots: T.shots }); }", [ELN[el] + ('' if el is None else ' (Thức tỉnh)'), ELC[el]])
                 save(pg, "T.sheet(__rows, '" + NAMES[t] + ": cùng lối đánh ở ba hệ')", FILES[t] + '-ba-he.png')
             # 3. cùng một nhát kết của kiếm ở bốn trạng thái

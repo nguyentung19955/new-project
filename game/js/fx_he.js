@@ -62,11 +62,11 @@
     const sh = o.sh, n = o.n;
     const grow = Math.min(1, k * 2.4);
     // viền tím chạy dọc vệt đòn
-    if (k < 0.7) for (let i = 0; i < n * 3; i++) {
-      const u = (i + 0.5) / (n * 3);
+    if (k < 0.7) for (let i = 0; i < n * 2; i++) {
+      const u = (i + 0.5) / (n * 2);
       if (u > k * 4 + 0.15 || (k > 0.4 && (i & 1))) continue;
       const q = pt(sh, u);
-      p(c, Math.round(q.x + q.nx * 3), Math.round(q.y + q.ny * 2), 3, 2, i % 3 ? '#9a5fd6' : '#b98af0');
+      p(c, Math.round(q.x + q.nx * 3), Math.round(q.y + q.ny * 2), 4, 2, i % 3 ? '#9a5fd6' : '#b98af0');
     }
     for (let i = 0; i < n; i++) {
       const u = (i + 0.5) / n;
@@ -98,13 +98,13 @@
       if (u > k * 4 + 0.2) break;
       const q = pt(sh, u), x = Math.round(q.x + q.nx * 2), y = Math.round(q.y + q.ny * 2);
       // cạnh thẳng nối các đỉnh: vệt chém thành đường gãy khúc
-      if (has && !(thin && (i & 1))) { line(c, px, py, x, y, '#7fd4ff', 2); if (k < 0.5) line(c, px, py, x, y, '#ffffff', 1); }
+      if (has && !(thin && (i & 1))) { line(c, px, py, x, y, k < 0.3 ? '#e9f9ff' : '#7fd4ff', 2); }
       // gai nhọn chĩa ra ngoài ở mỗi đỉnh
       if (!(thin && (i & 1))) {
         const L = (3 + hash(o.sd + i) * o.h0) * grow * (1 - k * 0.5);
         const ex = Math.round(x + q.nx * L), ey = Math.round(y + q.ny * L * 0.8 - (sh.kind === 'line' ? 0 : 1));
-        line(c, x, y, ex, ey, '#bfeaff', 2); line(c, x, y, ex, ey, '#ffffff', 1);
-        if (sh.kind === 'line') { const ey2 = Math.round(y + L * 0.8); line(c, x, y, Math.round(x - sh.f * L * 0.6), ey2, '#bfeaff', 1); } // ngạnh chĩa xuống của đường đâm
+        line(c, x, y, ex, ey, '#bfeaff', 2); p(c, ex, ey, 1, 1, '#ffffff'); p(c, x, y, 2, 2, '#ffffff');
+        if (sh.kind === 'line') { const ey2 = Math.round(y + L * 0.8); line(c, x, y, Math.round(x - sh.f * L * 0.6), ey2, '#bfeaff', 2); } // ngạnh chĩa xuống của đường đâm
       }
       px = x; py = y; has = true;
     }
@@ -177,7 +177,7 @@
       add({ ty: 'cres', x: P.x + f * 2, y: P.y - 11, f, ra: R0 * 1.05, rb: 13, off: 12, oy: 0, vert: false, rev: false, pl: PL, t: 0.26, big: true, st: o.stage, ly: 1, back: R0 * 0.3 });
       add({ ty: 'cres', x: P.x - f * 2, y: P.y - 9, f: -f, ra: R0 * 0.95, rb: 10, off: 11, oy: 0, vert: false, rev: true, pl: PL, t: 0.22, big: false, st: o.stage, ly: 1, back: R0 * 0.3, d: 0.05 });
       addRing(P.x, P.y, 6, R0, 0.26, PL.c2, 2, 0);
-      for (let i = 0; i < 8; i++) { const a = (i / 8) * 6.283 + rr(-0.2, 0.2); emit(2, P.x + Math.cos(a) * R0 * 0.6, P.y + Math.sin(a) * R0 * 0.36, Math.cos(a) * 40, Math.sin(a) * 20 - 6, rr(0.25, 0.45), RAMP.dust, 3, 0, 3, null, 0); }
+      for (let i = 0; i < 5; i++) { const a = (i / 5) * 6.283 + rr(-0.2, 0.2); emit(2, P.x + Math.cos(a) * R0 * 0.6, P.y + Math.sin(a) * R0 * 0.36, Math.cos(a) * 40, Math.sin(a) * 20 - 6, rr(0.25, 0.45), RAMP.dust, 3, 0, 3, null, 0); }
       kick(f * 1.5, 0); trauma(0.14);
       return;
     }
@@ -289,6 +289,77 @@
   };
   api('heArrow', (el, lv, o) => { if (ARROW[el]) ARROW[el](lv, o); });
 
+  // ---------- một đòn trúng cả đám: chỉ vài con đầu có đủ tia lửa, các con sau chỉ giật lùi ----------
+  // Các lối đánh mới (quét vòng, nện đất, nổ lan) hay trúng nhiều quái cùng lúc; giới hạn này giữ số hạt và tốc độ khung.
+  const hit0 = fx.hit;
+  let hitT = -1, hitN = 0;
+  fx.hit = function (e, o) {
+    if (!G.noRender && e && o && !o.rain && !o.crit && !e.isBoss) {
+      if (G.time !== hitT) { hitT = G.time; hitN = 0; }
+      if (++hitN > 5) { e.fxK = 0.13; e.fxD = (o.dir || 1) * (o.heavy ? 4 : 2); return undefined; }
+    }
+    return hit0(e, o);
+  };
+
+  // ---------- vệt cháy và vũng khói độc trên đất ----------
+  // Hình nền của vũng được vẽ sẵn một lần cho mỗi cỡ rồi dán lại mỗi khung (nhẹ hơn vẽ từng hàng điểm ảnh).
+  const ZSPR = new Map();
+  const ZCOL = {
+    fire: { base: 'rgba(110,34,10,0.62)', mid: 'rgba(255,122,42,0.4)', rim: 'rgba(255,196,63,0.75)' },
+    poison: { base: 'rgba(40,110,26,0.5)', mid: 'rgba(111,207,58,0.38)', rim: 'rgba(154,95,214,0.8)' },
+  };
+  function zoneSprite(el, r) {
+    const rx = Math.max(6, Math.round(r / 2) * 2), key = el + rx;
+    let sp = ZSPR.get(key);
+    if (sp) return sp;
+    const ry = Math.round(rx * 0.6), w = rx * 2 + 8, h = ry * 2 + 4, cx = w >> 1, cy = h >> 1;
+    const cv = document.createElement('canvas');
+    cv.width = w; cv.height = h;
+    const c = cv.getContext('2d'), C = ZCOL[el] || ZCOL.fire;
+    for (let dy = -ry; dy <= ry; dy++) {
+      const q = 1 - (dy * dy) / (ry * ry + 0.01);
+      if (q <= 0) continue;
+      const hw = Math.max(1, Math.round(rx * Math.sqrt(q) + Math.sin(dy * 0.9 + rx) * 1.5)), sh = Math.round(Math.sin(dy * 0.5 + rx * 2) * 1.2);
+      c.fillStyle = C.base; c.fillRect(cx - hw + sh, cy + dy, hw * 2, 1);
+      if (hw > 6 && Math.abs(dy) < ry - 2) { c.fillStyle = C.mid; c.fillRect(cx - hw + 4 + sh, cy + dy, hw * 2 - 8, 1); }
+      c.fillStyle = C.rim;
+      if (Math.abs(dy) >= ry - 1) c.fillRect(cx - hw + sh, cy + dy, hw * 2, 1);
+      else { c.fillRect(cx - hw + sh - 1, cy + dy, 2, 1); c.fillRect(cx + hw + sh - 1, cy + dy, 2, 1); }
+    }
+    sp = { cv, w, h, rx, ry };
+    ZSPR.set(key, sp);
+    return sp;
+  }
+  function drawHeZone(c, z) {
+    const S = K.S(), t = S.t, id = z.fxId || 1;
+    const k = Math.min(1, (z.fxA || 0) / 0.18);
+    if (k <= 0) return;
+    const sp = zoneSprite(z.el, z.r), x = Math.round(z.x), y = Math.round(z.y);
+    const w = Math.round(sp.w * (0.4 + 0.6 * k)), h = Math.round(sp.h * (0.4 + 0.6 * k));
+    const fade = z.life < 0.4;
+    if (fade && ((t * 20) | 0) % 2) return; // sắp tắt thì nhấp nháy
+    c.drawImage(sp.cv, x - (w >> 1), y - (h >> 1), w, h);
+    if (k < 1) return;
+    for (let i = 0; i < 3; i++) {
+      const a = hash(id + i * 3.7) * TAU, d = 0.25 + hash(id * 2 + i) * 0.5;
+      const bx = x + Math.round(Math.cos(a) * sp.rx * d), by = y + Math.round(Math.sin(a) * sp.ry * d);
+      if (z.el === 'fire') tongue(c, bx, by, 4 + Math.round((Math.sin(t * 11 + i * 2.3 + id) * 0.5 + 0.5) * 6), i % 2 ? 1 : 2);
+      else {
+        const u = (t * (0.7 + hash(i + id) * 0.6) + hash(id + i * 9.1)) % 1;
+        if (u < 0.5) p(c, bx, by, 1, 1, '#c2f58a');
+        else if (u < 0.85) { p(c, bx - 1, by - 1, 3, 3, i % 2 ? '#b98af0' : '#8fe04a'); p(c, bx - 1, by - 1, 1, 1, '#ffffff'); }
+        else { p(c, bx - 2, by - 1, 1, 1, '#c2f58a'); p(c, bx + 2, by - 1, 1, 1, '#c2f58a'); p(c, bx, by - 3, 1, 1, '#c2f58a'); }
+      }
+    }
+  }
+  const zone0 = fx.zone;
+  fx.zone = function (c, z, W) {
+    if (!G.noRender && z.he && z.pool && !(z.t > 0) && K.S()) {
+      try { drawHeZone(c, z); return true; } catch (e) { fail(e); }
+    }
+    return zone0(c, z, W);
+  };
+
   // ---------- mũi tên mang hệ: hình vẽ thêm quanh mũi tên ----------
   const proj0 = fx.proj;
   fx.proj = function (c, o) {
@@ -328,19 +399,35 @@
   });
 
   const HAZE_P = ['rgba(154,95,214,0.5)', 'rgba(154,95,214,0.38)', 'rgba(120,70,180,0.26)', 'rgba(106,63,160,0.14)'];
+  // Lớp sương của màn khói: vẽ sẵn một lần cho mỗi cỡ (các vạch ngang so le), mỗi khung dán lại và cho trôi qua lại.
+  const HSPR = new Map();
+  function hazeSprite(r) {
+    const rx = Math.max(6, Math.round(r / 2) * 2);
+    let sp = HSPR.get(rx);
+    if (sp) return sp;
+    const ry = Math.round(rx * 0.42), cv = document.createElement('canvas');
+    cv.width = rx * 2 + 8; cv.height = ry * 2 + 2;
+    const c = cv.getContext('2d');
+    for (let dy = -ry; dy <= ry; dy += 2) {
+      const hw = Math.round(rx * 0.95 * Math.sqrt(Math.max(0, 1 - (dy * dy) / (ry * ry + 0.01)))), sh = Math.round(Math.sin(dy * 0.7 + rx) * 3);
+      if (hw < 2) continue;
+      c.fillStyle = 'rgba(143,224,74,0.22)'; c.fillRect(rx + 4 - hw + sh, ry + 1 + dy, hw * 2, 1);
+      if ((dy & 3) === 0) { c.fillStyle = 'rgba(154,95,214,0.2)'; c.fillRect(rx + 4 - (hw >> 1) - sh, ry + 1 + dy, hw, 1); }
+    }
+    sp = { cv, w: cv.width, h: cv.height };
+    HSPR.set(rx, sp);
+    return sp;
+  }
   function drawCloud(c, o) {
     const z = o.z;
     if (z.dead || z.life <= 0) return;
-    const t = K.S().t, a = Math.min(1, z.life / 0.5), id = z.fxId || 1;
-    // sương thưa: các vạch ngang so le, trôi qua lại
-    c.fillStyle = 'rgba(143,224,74,' + (0.2 * a).toFixed(2) + ')';
-    const x = Math.round(z.x), y = Math.round(z.y) - 12, ry = Math.round(z.r * 0.42);
-    for (let dy = -ry; dy <= ry; dy += 2) {
-      const hw = Math.round(z.r * 0.95 * Math.sqrt(Math.max(0, 1 - (dy * dy) / (ry * ry + 0.01)))), sh = Math.round(Math.sin(t * 1.6 + dy * 0.7 + id) * 3);
-      if (hw > 1) c.fillRect(x - hw + sh, y + dy, hw * 2, 1);
-    }
-    c.fillStyle = 'rgba(154,95,214,' + (0.22 * a).toFixed(2) + ')';
-    for (let i = 0; i < 3; i++) { const px = x + Math.round(Math.sin(t * 0.9 + i * 2.1 + id) * z.r * 0.5), py = y + Math.round(Math.cos(t * 1.3 + i * 1.7 + id) * ry * 0.5); c.fillRect(px - 4, py - 1, 8, 3); c.fillRect(px - 2, py - 2, 4, 5); }
+    const t = K.S().t, id = z.fxId || 1;
+    if (z.life < 0.4 && ((t * 20) | 0) % 2) return;
+    const sp = hazeSprite(z.r), x = Math.round(z.x), y = Math.round(z.y) - 12;
+    c.drawImage(sp.cv, x - (sp.w >> 1) + Math.round(Math.sin(t * 1.6 + id) * 3), y - (sp.h >> 1));
+    c.drawImage(sp.cv, x - (sp.w >> 1) - Math.round(Math.sin(t * 1.1 + id * 2) * 4), y - (sp.h >> 1) - 5);
+    c.fillStyle = 'rgba(154,95,214,0.3)';
+    for (let i = 0; i < 2; i++) { const px = x + Math.round(Math.sin(t * 0.9 + i * 2.1 + id) * z.r * 0.5), py = y + Math.round(Math.cos(t * 1.3 + i * 1.7 + id) * 4); c.fillRect(px - 4, py - 1, 8, 3); c.fillRect(px - 2, py - 2, 4, 5); }
   }
   function drawShard(c, o) {
     const q = o.q;
@@ -354,12 +441,19 @@
   function drawWave(c, z) {
     const x = Math.round(z.x), y = Math.round(z.y), h = Math.round(z.depth / 2) + 2, f = z.dir;
     const PL = pal(z.he ? z.he.el : null), k = Math.min(1, z.left / 24);
-    const top = z.level >= 2 ? 7 : 5;
+    const top = z.level >= 2 ? 11 : 7;
+    // vết nứt kéo dài phía sau gờ sóng
+    const back = Math.min(40, Math.abs(z.x - z.x0));
+    for (let i = 4; i < back; i += 3) p(c, x - f * i, y + (((i * 7) % 5) - 2), 2, 1, i % 2 ? 'rgba(20,14,12,0.6)' : (z.he ? PL.d : 'rgba(60,48,40,0.7)'));
     for (let dy = -h; dy <= h; dy += 2) {
       const q = Math.sqrt(Math.max(0, 1 - (dy * dy) / (h * h + 1))), bx = x - Math.round(f * (1 - q) * 9);
       const up = Math.round(top * q * k);
-      p(c, bx - f * 4 - (f < 0 ? 0 : 3), y + dy, 7, 2, 'rgba(20,14,12,0.45)');
-      if (up > 0) { p(c, bx - 1, y + dy - up, 3, up + 1, z.he ? PL.d : '#6a5a4a'); p(c, bx + (f > 0 ? 1 : -1), y + dy - up, 1, up, z.he ? PL.c : '#b8a890'); if (q > 0.8) p(c, bx, y + dy - up - 1, 1, 1, z.he ? PL.c2 : '#ffffff'); }
+      p(c, bx - (f > 0 ? 6 : 0), y + dy, 7, 2, 'rgba(20,14,12,0.5)');
+      if (up > 0) {
+        p(c, bx - 1, y + dy - up, 4, up + 1, z.he ? PL.d : '#6a5a4a');
+        p(c, bx + (f > 0 ? 1 : -1), y + dy - up, 2, up, z.he ? PL.c : '#b8a890');
+        p(c, bx + (f > 0 ? 2 : -1), y + dy - up - 1, 1, 2, z.he ? PL.c2 : '#ffffff');
+      }
     }
   }
   // ---------- mỗi khung: sóng chấn động, hạt lúc lấy đà ----------
@@ -377,7 +471,7 @@
       if (!z.he || !z.cloud || z.dead) continue;
       // màn khói độc lơ lửng phía trên vũng: một lớp sương mỏng và các cụm khói trôi chậm
       if (!z.fxOn) { z.fxOn = 1; add({ ty: 'he', x: z.x, y: z.y, t: z.life + 0.1, ly: 1, draw: drawCloud, z }); }
-      if (tick && R() < 0.75) { const a = R() * TAU, d = Math.sqrt(R()) * z.r * 0.8; emit(2, z.x + Math.cos(a) * d, z.y - rr(6, 20) + Math.sin(a) * d * 0.3, rr(-8, 8), rr(-9, -2), rr(0.7, 1.3), R() < 0.25 ? HAZE_P : RAMP.vapor, R() < 0.5 ? 6 : 4, 0, 0.6, null, 1); }
+      if (tick && R() < 0.4) { const a = R() * TAU, d = Math.sqrt(R()) * z.r * 0.8; emit(2, z.x + Math.cos(a) * d, z.y - rr(6, 20) + Math.sin(a) * d * 0.3, rr(-8, 8), rr(-9, -2), rr(0.7, 1.3), R() < 0.25 ? HAZE_P : RAMP.vapor, R() < 0.5 ? 6 : 4, 0, 0.6, null, 1); }
     }
     if (W.mvShards) for (const q of W.mvShards) {
       // mảnh tên độc: một giọt nhớt bay, kéo theo vệt
@@ -385,10 +479,10 @@
       if (tick) emit(1, q.x, q.y - 10, -q.vx * 0.05, -q.vy * 0.05, 0.22, R() < 0.3 ? PURPLE : RAMP.poison, 2, 0, 0, null, 1);
     }
     if (W.mvWaves) for (const z of W.mvWaves) {
-      if (!z.fxOn) { z.fxOn = 1; add({ ty: 'he', x: z.x, y: z.y, t: z.left / z.v + 0.05, ly: 0, draw: (c, o) => { if (o.z.left > 0) drawWave(c, o.z); }, z }); }
+      if (!z.fxOn) { z.fxOn = 1; z.x0 = z.x; add({ ty: 'he', x: z.x, y: z.y, t: z.left / z.v + 0.05, ly: 0, draw: (c, o) => { if (o.z.left > 0) drawWave(c, o.z); }, z }); }
       if (tick) {
         const PL = pal(z.he ? z.he.el : null);
-        for (let i = 0; i < 2; i++) emit(2, z.x + rr(-3, 3), z.y + rr(-z.depth, z.depth) * 0.5, -z.dir * rr(10, 40), rr(-26, -8), rr(0.25, 0.45), RAMP.dust, R() < 0.4 ? 4 : 3, 0, 3, null, 1);
+        emit(2, z.x + rr(-3, 3), z.y + rr(-z.depth, z.depth) * 0.5, -z.dir * rr(10, 40), rr(-26, -8), rr(0.25, 0.45), RAMP.dust, R() < 0.4 ? 4 : 3, 0, 3, null, 1);
         emit(8, z.x, z.y + rr(-z.depth, z.depth) * 0.5, z.dir * rr(-20, 50), rr(-140, -70), rr(0.4, 0.7), z.he && R() < 0.5 ? PL.ramp : RAMP.rock, 2, 420, 0, z.y + rr(-2, 5), 1);
       }
     }

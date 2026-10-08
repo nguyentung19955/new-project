@@ -32,9 +32,9 @@
     spear: {
       gap: 0.45,
       chain: [
-        { name: 'Đâm', dur: 0.34, mult: 0.85, reach: 54, depth: 10 },
-        { name: 'Đâm', dur: 0.3, mult: 0.85, reach: 54, depth: 10 },
-        { name: 'Đâm', dur: 0.3, mult: 0.85, reach: 56, depth: 10 },
+        { name: 'Đâm', dur: 0.34, mult: 0.85, reach: 54, depth: 12 },
+        { name: 'Đâm', dur: 0.3, mult: 0.85, reach: 54, depth: 12 },
+        { name: 'Đâm', dur: 0.3, mult: 0.85, reach: 56, depth: 12 },
         { name: 'Quét vòng', dur: 0.5, mult: 1.5, r: 40, push: 8, heavy: true, sweep: true, finish: 1 },
       ],
       // giữ rồi thả: lao một đoạn ngắn xuyên qua quái (đòn Đặc biệt "Lao tới" thì dài hơn và làm choáng)
@@ -128,7 +128,7 @@
     else if (mv.wasDodge) { mv.wasDodge = false; mv.afterDodge = C.sword.glide.win; }
     if (P.dashOpt && !(P.dashT > 0)) P.dashOpt = null;
     if (!w) return;
-    if (mv.wid !== w.id) { mv.wid = w.id; cancel(mv); mv.chain = 0; mv.buf = 0; mv.cur = null; tip(P, mv, w, W); }
+    if (mv.wid !== w.id) { if (mv.wid != null) P.hitDone = true; mv.wid = w.id; cancel(mv); mv.chain = 0; mv.buf = 0; mv.cur = null; tip(P, mv, w, W); } // đổi vũ khí giữa chừng: bỏ nhát đang vung dở
     else if (mv.tipWait && !W.banner) tip(P, mv, w, W);
     // lăn né, lướt, tung đòn đặc biệt hay kỹ năng thì bỏ phần đà đang lấy
     if (mv.holding && (P.dodgeT > 0 || P.dashT > 0 || P.specT > 0 || P.castT > 0 || P.dead)) cancel(mv);
