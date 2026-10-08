@@ -203,6 +203,9 @@ const CHI_ANH = !!process.env.CHI_ANH;   // CHI_ANH=1: chỉ chụp ảnh
       g.running = false; document.querySelector('#roster-hint').hidden = true; ui.evQueued = null;
       g.events.push({ type: 'boss', name: ENEMIES.hotinh.name }); ui.handleEvents(); });
     await page.waitForTimeout(700);
+    // máy bận (chạy song song): chờ banner boss hiện hẳn + hết hiệu ứng (tối đa 5 giây) thay vì tin 700 ms là đủ
+    await page.waitForFunction(() => { const b = document.querySelector('#banner'), s = document.querySelector('#banner-sub');
+      return b && !b.hidden && s && /boss/i.test(s.innerText) && b.getAnimations({ subtree: true }).every((a) => a.playState !== 'running' || a.effect.getComputedTiming().iterations === Infinity); }, null, { timeout: 5000 }).catch(() => {});
     await page.screenshot({ path: path.join(SHOT, `boss-trong-su-kien-${w}x${h}.png`) });
     const r = await page.evaluate(() => {
       const R = (s) => { const el = document.querySelector(s); return el && !el.hidden && el.offsetWidth ? el.getBoundingClientRect() : null; };

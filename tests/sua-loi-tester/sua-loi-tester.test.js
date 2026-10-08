@@ -256,6 +256,8 @@ const bossWave = (page) => page.evaluate(() => { const g = ui.game; g.wave = 9; 
       await p3.evaluate(() => document.getElementById('btn-heroes').click()); await sleep(400);
       await p3.evaluate(() => document.querySelector('#roster .ro-card.lock').click()); await sleep(250);
       await p3.evaluate(() => document.querySelector('#roster [data-act=ro-buy]').click()); await sleep(300);
+      // máy bận: chờ thông báo hiện + trượt vào xong (tối đa 5 giây) — đo giữa lúc đang trượt thì vị trí sai
+      await p3.waitForFunction(() => { const t = document.querySelector('#toasts .toast'); return t && t.getAnimations({ subtree: true }).every((a) => a.playState !== 'running' || a.effect.getComputedTiming().iterations === Infinity); }, null, { timeout: 5000 }).catch(() => {});
       const hit = await p3.evaluate(() => { const t = document.querySelector('#toasts .toast'); if (!t) return null; const q = t.getBoundingClientRect(); return [...document.querySelectorAll('#roster button, #roster [data-act], #roster [data-tip], #roster h1, #roster .chip')].filter((e) => { const r = e.getBoundingClientRect(); return r.width && Math.min(r.right, q.right) - Math.max(r.left, q.left) > 2 && Math.min(r.bottom, q.bottom) - Math.max(r.top, q.top) > 2; }).map((e) => e.textContent.trim().slice(0, 16)); });
       ok(hit && hit.length === 0, `L05 Anh Hùng: thông báo "Đã mở khoá" không đè nút / thẻ (đè: ${hit ? hit.join(' | ') || 'không' : 'không có thông báo'})`);
       await p3.screenshot({ path: path.join(SHOT, `L05-anh-hung-${tag}.png`) });
