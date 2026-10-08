@@ -31,11 +31,11 @@ FUZZ = r"""
     for (let room = 0; room < n; room++) {
       let S = G.getRun();
       if (!S || S.mode === 'result' || S.mode === 'dead') break;
-      if (S.idx < room) G.gotoRoom(room);
+      if (S.idx !== room) G.gotoRoom(room); // bot đi theo cửa nên không theo thứ tự số phòng: nhảy tới để phòng nào cũng được vẽ
       if (Math.random() < 0.4) G.addCoat(G.pick(G.ELS), 30);
       for (let f = 0; f < frames; f++) {
         S = G.getRun();
-        if (!S || S.mode === 'result' || S.mode === 'dead' || S.idx > room) break;
+        if (!S || S.mode === 'result' || S.mode === 'dead' || (S.idx !== room && !S.trans)) break; // bot đã qua cửa sang phòng khác (chờ vẽ xong cảnh trượt)
         if (S.mode !== 'play') { G.botRun(1); continue; }
         const W = S.W, P = S.P;
         if (!W.over) { P.hp = Math.max(P.hp, P.maxhp * (f % 200 < 100 ? 0.2 : 0.6)); P.mana = Math.max(P.mana, 60); }

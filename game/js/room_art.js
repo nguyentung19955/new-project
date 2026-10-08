@@ -877,7 +877,7 @@
   const RA = (G.roomArt = { THEMES, SIDE_OF });
   // Khung phòng. big: phòng trùm rộng hơn. Sàn là hình chữ nhật fx0..fx1, fy0..fy1; nhân vật đứng trong bounds.
   RA.geo = function (big) {
-    const g = big ? { fx0: 90, fy0: 56, fx1: 390, fy1: 254 } : { fx0: 136, fy0: 56, fx1: 344, fy1: 252 };
+    const g = big ? { fx0: 80, fy0: 56, fx1: 380, fy1: 254 } : { fx0: 136, fy0: 56, fx1: 344, fy1: 252 };
     Object.assign(g, { W: 480, H: 270, wh: 42, cap: 7, sw: 14, fw: 12, big: !!big });
     g.cx = (g.fx0 + g.fx1) / 2; g.cy = (g.fy0 + g.fy1) / 2;
     g.bounds = { x0: g.fx0 + 9, x1: g.fx1 - 9, y0: g.fy0 + 8, y1: g.fy1 - 4 };

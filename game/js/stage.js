@@ -87,7 +87,7 @@
       if (type === 'elite' && k === count - 1) { list.push('elite'); pts -= 2.5; }
       for (let guard = 0; guard < 30 && pts > 0.9 && list.length < B.maxPerWave; guard++) {
         const r = G.pick(roles);
-        if (cost[r] > pts + 0.3) continue;
+        if (cost[r] > pts + 0.3 || (r === 'swarm' && list.length + 3 > B.maxPerWave)) continue;
         if (r === 'swarm') list.push('swarm', 'swarm', 'swarm'); else list.push(r);
         pts -= cost[r];
       }
@@ -111,9 +111,11 @@
   }
   function spawnWave(list) {
     const W = S.W;
+    // Sàn nhỏ nên quái không ập ra cùng lúc: nửa đầu hiện trước, nửa sau hiện sau một nhịp.
+    const half = Math.ceil(list.length / 2);
     list.forEach((role, j) => {
-      const q = freeSpot(role === 'archer' ? 84 : 58, role === 'elite' ? 18 : 10);
-      const t = 0.5 + j * 0.07;
+      const q = freeSpot(role === 'archer' ? 84 : 66, role === 'elite' ? 18 : 10);
+      const t = 0.5 + j * 0.07 + (j >= half && list.length > 3 ? G.ROOM_WAVES.stagger : 0);
       W.spawns.push({ role, x: q[0], y: q[1], t, t0: t, big: role === 'elite' });
     });
     G.sfx('warn', 0.8);
@@ -128,7 +130,7 @@
       if (s.t > 0) continue;
       const e = G.spawnEnemy(s.role, s.x, s.y, {});
       e.inside = true;
-      e.cd = Math.max(e.cd, 0.6); // vừa hiện ra thì chưa đánh ngay
+      e.cd = Math.max(e.cd, 0.9); // vừa hiện ra thì chưa đánh ngay
       // Quái tinh anh cũng học: kháng nhẹ hệ bạn dùng nhiều nhất
       if (s.role === 'elite' && tot > 0 && el[top] / tot > 0.4) e.resist = top;
       G.burst(s.x, s.y - 6, ['#c2f58a', '#bfeaff', '#ffd0a0'][S.r] || '#ffffff', s.big ? 14 : 7, 60);
@@ -143,6 +145,7 @@
       if (Math.abs(x - g.cx) < 26 && (y < W.y0 + 44 || y > W.y1 - 40)) continue;
       if (Math.abs(y - g.cy) < 26 && (x < W.x0 + 40 || x > W.x1 - 40)) continue;
       if (W.props.some((p) => p.type !== 'roomFore' && Math.hypot(p.x - x, p.y - y) < 30)) continue;
+      if (Math.hypot(x - g.cx, y - g.cy - 26) < 24) continue; // chỗ người chơi đứng khi bắt đầu ở giữa phòng
       return [x, y];
     }
     return [g.cx + G.rr(-40, 40), g.cy + G.rr(-30, 30)];
@@ -399,7 +402,7 @@
   // Dùng khi chạy thử: nhảy thẳng tới phòng số n (0 là Bắt đầu, 7 là Trùm). type: ép loại phòng và dựng lại phòng đó.
   G.gotoRoom = function (n, type) {
     if (type) { S.map.rooms[n].type = type; S.rooms[n] = type; delete S.worlds[n]; delete S.cleared[n]; }
-    S.trans = null;
+    S.trans = null; S.mode = 'play';
     enterRoom(n, null);
   };
 
@@ -634,8 +637,9 @@
     if (hint && W.cleared && W.hadWaves) hint = TUT.door;
     if (hint && W.type === 'boss' && S.roomT > 12) hint = null;
     if (hint && S.mode === 'play') {
-      const lines = ui.wrap(hint, 108, 7);
-      ui.rect(3, 75, 116, lines.length * 9.5 + 7, 'rgba(10,8,6,0.78)', '#7a5a3a');
+      const hw = W.geo.big ? 62 : 116; // phòng trùm rộng hơn nên ô chữ hẹp lại, không đè lên sàn
+      const lines = ui.wrap(hint, hw - 8, 7);
+      ui.rect(3, 75, hw, lines.length * 9.5 + 7, 'rgba(10,8,6,0.78)', '#7a5a3a');
       lines.forEach((l, i) => ui.text(l, 7, 85 + i * 9.5, { size: 7 }));
     }
     if (W.banner) {

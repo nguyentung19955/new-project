@@ -6,10 +6,22 @@ from ui_lib import *
 
 RUN = "G.getRun()"
 P = "G.getRun().P"
+SETUP = os.path.join(ROOT, 'tests', 'setup.js')
+DIRV = {'up': (0, -1), 'down': (0, 1), 'left': (-1, 0), 'right': (1, 0)}
+# Người chơi có nằm trong sàn phòng không.
+INSIDE = "(() => { const S = G.getRun(), W = S.W, P = S.P; return P.x >= W.x0 && P.x <= W.x1 && P.y >= W.y0 && P.y <= W.y1 && W.x0 >= W.geo.fx0 && W.x1 <= W.geo.fx1 && W.y0 >= W.geo.fy0 && W.y1 <= W.geo.fy1; })()"
+# Hạ hết quái cho tới khi phòng được dọn xong.
+CLEAR = "(() => { const S = G.getRun(); S.P.inv = 999; for (let k = 0; k < 40 && !S.W.cleared; k++) { for (const e of S.W.ents.slice()) G.damage(e, 1e6, {}); G.sim(50); S.P.inv = 999; } })()"
+
+
+def cut(a, b):
+    """Hai ô [x, y, rộng, cao] có đè lên nhau không."""
+    return a[0] < b[0] + b[2] and b[0] < a[0] + a[2] and a[1] < b[1] + b[3] and b[1] < a[1] + a[3]
 
 
 def run(p, size, url=None):
     g = Game(p, size, url=url)
+    g.pg.add_script_tag(path=SETUP)  # chỉ dùng khi kiểm tra: G.testGoto nhảy tới phòng theo loại
     c = Checker('điều khiển ' + size)
     ev = g.ev
     ev("window.__sw = 0; const f = G.sfx; G.sfx = function (n, k) { if (n === 'swing') window.__sw++; return f(n, k); }")
@@ -18,8 +30,16 @@ def run(p, size, url=None):
     bp = lambda n: ev(f"G.stageUi.btnPos('{n}')")[:2]
     def press(name, hold=60):
         x, y = bp(name); g.down(x, y); g.wait(hold); g.up(); g.wait(80)
-    def near(i):
-        ev(f"(() => {{ const S = G.getRun(), pr = S.W.props[{i}]; S.P.x = pr.x - 12; S.P.y = Math.min(S.W.y1, Math.max(S.W.y0, pr.y + 3)); }})()"); g.wait(120)
+    goto = lambda t: ev(f"G.testGoto('{t}')")
+    def near(what):
+        """Đứng cạnh đồ vật trong phòng. what: điều kiện chọn đồ vật p, ví dụ p.act === 'chest'."""
+        ev(f"(() => {{ const S = G.getRun(), pr = S.W.props.find((p) => {what}); S.P.x = pr.x - 12; S.P.y = Math.min(S.W.y1, Math.max(S.W.y0, pr.y + 3)); }})()"); g.wait(120)
+    def put(x, y):
+        """Đặt người chơi. x, y: biểu thức theo W (phòng) và g (khung phòng), ví dụ g.cx - 50."""
+        ev(f"(() => {{ const S = G.getRun(), W = S.W, g = W.geo; S.P.x = {x}; S.P.y = {y}; }})()")
+    def drag(dx, dy):
+        """Đặt ngón lên vùng cần rồi kéo về một hướng, chưa nhấc."""
+        g.down(60, 200); g.wait(40); g.move(60 + dx / 2, 200 + dy / 2); g.move(60 + dx, 200 + dy)
 
     # ---- màn hình đầu: chạm đúng chỗ nút Vào ải sẽ hiện, không được bấm xuyên qua
     g.tap(70, 66)
@@ -38,16 +58,31 @@ def run(p, size, url=None):
     c.ok(ev("G.scene === G.StageScene && G.getRun().tut === true"), 'Bắt đầu vào ải hướng dẫn')
     c.ok(ev(RUN + ".hint") is not None, 'ải đầu có lời chỉ dẫn')
 
-    # ---- cần điều khiển: 4 hướng (phòng rương, không có quái)
-    ev("G.gotoRoom(2)"); g.wait(500)
-    ev(P + ".x = 120; " + P + ".y = 190")
-    for dx, dy, key, sign, name in [(40, 0, 'x', 1, 'phải'), (-40, 0, 'x', -1, 'trái'), (0, -40, 'y', -1, 'lên'), (0, 40, 'y', 1, 'xuống')]:
-        ev(P + ".x = 120; " + P + ".y = 190")
+    # ---- bản đồ nhỏ không đè lên ô vũ khí, nút bấm, sàn phòng
+    mm = ev("G.minimap.rect(G.getRun())")
+    c.ok(not cut(mm, [368, 0, 112, 38]), f'bản đồ nhỏ không đè lên ô vũ khí {mm}')
+    hit = [n for n in ['atk', 'dodge', 'special', 'skill'] for b in [ev(f"G.stageUi.btnPos('{n}')")] if cut(mm, [b[0] - b[2] - 6, b[1] - b[2] - 6, 2 * b[2] + 12, 2 * b[2] + 12])]
+    c.ok(not hit, f'bản đồ nhỏ không đè lên nút bấm {hit}')
+    fl = ev("(() => { const g = G.getRun().W.geo; return [g.fx0, g.fy0, g.fx1 - g.fx0, g.fy1 - g.fy0, g.big]; })()")
+    c.ok(not fl[4] and not cut(mm, fl[:4]), f'bản đồ nhỏ không đè lên sàn phòng thường {mm} {fl}')
+    mb = ev("G.minimap.rect({ W: { geo: G.roomArt.geo(true) } })"); fb = ev("(() => { const g = G.roomArt.geo(true); return [g.fx0, g.fy0, g.fx1 - g.fx0, g.fy1 - g.fy0]; })()")
+    c.ok(not cut(mb, fb) and not cut(mb, [368, 0, 112, 38]), f'ở phòng trùm bản đồ nhỏ không đè lên sàn và ô vũ khí {mb} {fb}')
+
+    # ---- cần điều khiển: 4 hướng (phòng rương, không có quái). Đứng lệch khỏi cửa, giữ cần mãi cũng không ra khỏi sàn.
+    goto('chest'); g.wait(500)
+    room = ev(RUN + ".idx")
+    for dx, dy, key, sign, name, x, y, wall in [(40, 0, 'x', 1, 'phải', 'W.x1 - 25', 'g.cy + 40', 'x1'), (-40, 0, 'x', -1, 'trái', 'W.x0 + 25', 'g.cy + 40', 'x0'),
+                                                (0, -40, 'y', -1, 'lên', 'g.cx - 50', 'W.y0 + 25', 'y0'), (0, 40, 'y', 1, 'xuống', 'g.cx - 50', 'W.y1 - 25', 'y1')]:
+        put(x, y)
         a = ev(P + "." + key)
-        g.down(60, 200); g.wait(40); g.move(60 + dx / 2, 200 + dy / 2); g.move(60 + dx, 200 + dy); g.wait(350)
+        drag(dx, dy); g.wait(350)
         b = ev(P + "." + key)
-        g.up(); g.wait(60)
         c.ok((b - a) * sign > 8, f'kéo cần sang {name} (đổi {b - a:.1f})')
+        g.wait(500)
+        b = ev(P + "." + key); edge = ev(RUN + ".W." + wall)
+        g.up(); g.wait(60)
+        c.ok(ev(INSIDE) and abs(b - edge) < 0.5 and ev(RUN + ".idx") == room, f'giữ cần sang {name} thì dừng ở mép sàn, không ra ngoài ({b:.1f}, mép {edge})')
+    put('g.cx - 50', 'g.cy + 40')
     a = ev(P + ".x"); g.wait(200)
     c.ok(abs(ev(P + ".x") - a) < 0.5, 'nhấc ngón thì đứng yên')
     c.ok(ev("G.pointers.size") == 0, 'không còn ngón nào bị kẹt')
@@ -77,7 +112,7 @@ def run(p, size, url=None):
 
     # ---- hai ngón cùng lúc
     if g.touch:
-        ev(P + ".x = 60; " + P + ".y = 190; " + P + ".dodgeCd = 0; window.__sw = 0")
+        put('W.x0 + 10', 'g.cy + 40'); ev(P + ".dodgeCd = 0; window.__sw = 0")
         g.down(60, 200, 0); g.wait(40); g.move(100, 200, 0); g.wait(200)
         a = ev(P + ".x")
         dx, dy = bp('dodge')
@@ -85,12 +120,13 @@ def run(p, size, url=None):
         c.ok(ev(P + ".dodgeCd > 0"), 'hai ngón: Né trong lúc giữ cần')
         c.ok(ev("G.pointers.size") == 1, 'nhấc ngón bấm nút thì ngón giữ cần vẫn còn')
         g.wait(500)
-        ev(P + ".x = 60")
+        put('W.x0 + 10', 'g.cy + 40')
         ax, ay = bp('atk')
         g.down(ax, ay, 1); g.wait(900)
         c.ok(ev("window.__sw") >= 2, 'hai ngón: giữ Đánh trong lúc giữ cần')
         c.ok(ev("G.pointers.size") == 2, 'đang có đúng 2 ngón')
         g.up(1); g.wait(100)
+        put('W.x0 + 10', 'g.cy + 40')
         b = ev(P + ".x"); g.wait(300); b2 = ev(P + ".x")
         c.ok(b2 > b + 5, f'cần vẫn chạy sau khi nhấc ngón kia ({b:.0f} -> {b2:.0f})')
         # dùng lại mã ngón 1 cho nút khác
@@ -104,7 +140,8 @@ def run(p, size, url=None):
         c.ok(ev("G.pointers.size") == 0 and abs(ev(P + ".x") - a) < 0.5, 'ngón bị huỷ thì nhân vật dừng')
 
     # ---- rương: đi bộ tới bằng cần, bấm Đánh, chọn quặng
-    ev("G.gotoRoom(2)"); g.wait(450)
+    goto('chest'); g.wait(450)
+    put('g.cx - 60', 'g.cy + 4')
     g.down(60, 200); g.wait(40); g.move(100, 200)
     ok = False
     for _ in range(60):
@@ -117,10 +154,10 @@ def run(p, size, url=None):
     ore = ev("G.save.ore"); g.tap(240, 134)
     c.ok(mode() == 'play' and ev("G.save.ore") > ore, 'chọn phần thưởng quặng')
     # ---- suối và rương đồ
-    ev("G.giveWeapon('spear', 0); G.gotoRoom(5)"); g.wait(450)
-    ev(P + ".hp = 20"); near(0); press('atk')
+    ev("G.giveWeapon('spear', 0)"); goto('fountain'); g.wait(450)
+    ev(P + ".hp = 20"); near("p.act === 'fountain' && p.kind === 'hp'"); press('atk')
     c.ok(ev(P + ".hp") > 20, 'suối hồi máu')
-    near(2); press('atk'); g.wait(150)
+    near("p.act === 'stash'"); press('atk'); g.wait(150)
     c.ok(mode() == 'swap', 'mở rương đồ ở phòng suối')
     old = ev("G.save.carry[0]")
     g.tap(338, 79); c.ok(ev(RUN + ".sel") is not None, 'chọn vũ khí trong rương')
@@ -128,28 +165,78 @@ def run(p, size, url=None):
     c.ok(ev("G.save.carry[0]") != old and ev(P + ".weapons[0].id === G.save.carry[0]"), 'đổi vũ khí đang mang')
     g.tap(97, 218); c.ok(mode() == 'play', 'đóng bảng rương đồ')
 
-    # ---- cửa chọn, thương nhân, bàn thờ, thử thách
-    ev("G.save.tut.done = true; G.startStage(0, 2, 0); G.gotoRoom(4)"); g.wait(500)
-    kind = ev(RUN + ".W.props[0].choice"); near(0); ev(P + ".y = " + RUN + ".W.y0 + 4"); g.wait(100); press('atk'); g.wait(200)
-    c.ok(ev(RUN + ".W.type") == kind, f'chọn cửa vào phòng {kind}')
-    ev(RUN + ".rooms[4] = 'merchant'; G.gotoRoom(4); G.save.gold = 500; " + P + ".potions = 1"); g.wait(450)
-    near(0); press('atk'); g.wait(150)
+    # ---- phòng phụ của bản đồ, thương nhân, bàn thờ, thử thách
+    ev("G.save.tut.done = true; G.startStage(0, 2, 0, { kind: 'A', seed: 1 })"); g.wait(500)
+    side = ev("G.getRun().map.rooms.filter((o) => G.mapgen.SIDE.includes(o.type)).map((o) => [o.id, o.type])")
+    kind = side[0][1] if len(side) == 1 else None
+    if kind: ev(f"G.gotoRoom({side[0][0]})"); g.wait(200)
+    has = ev("(() => { const S = G.getRun(), t = S.W.type; return t === 'challenge' ? !!S.challenge : S.W.props.some((p) => p.act === { merchant: 'merchant', curse: 'altar' }[t]); })()")
+    c.ok(kind and ev(RUN + ".W.type") == kind and has, f'bản đồ có đúng một phòng phụ, vào thì đúng là phòng {kind} {side}')
+    goto('merchant'); ev("G.save.gold = 500; " + P + ".potions = 1"); g.wait(450)
+    near("p.act === 'merchant'"); press('atk'); g.wait(150)
     c.ok(mode() == 'merchant', 'mở bảng thương nhân')
     g.tap(132, 118); c.ok(ev("G.save.gold") == 440 and ev(P + ".potions") == 2, 'mua bình máu')
     g.tap(132, 118); c.ok(ev("G.save.gold") == 440, 'không mua được lần hai')
     g.tap(127, 194); c.ok(mode() == 'play', 'đóng bảng thương nhân')
-    ev(RUN + ".rooms[4] = 'curse'; G.gotoRoom(4)"); g.wait(450)
-    near(0); press('atk'); g.wait(150)
+    goto('curse'); g.wait(450)
+    near("p.act === 'altar'"); press('atk'); g.wait(150)
     c.ok(mode() == 'curse', 'mở bàn thờ lời nguyền')
     g.tap(318, 182); c.ok(mode() == 'play' and ev(RUN + ".curse") is None, 'bỏ qua lời nguyền')
     press('atk'); g.wait(150); mm = ev(RUN + ".marksMult"); g.tap(162, 182)
     c.ok(mode() == 'play' and ev(RUN + ".curse") is not None and ev(RUN + ".marksMult") == mm * 2, 'nhận lời nguyền')
-    ev(RUN + ".rooms[4] = 'challenge'; G.gotoRoom(4)"); g.wait(300)
+    goto('challenge'); g.wait(300)
     t0 = ev(RUN + ".challenge.t"); g.wait(1000); t1 = ev(RUN + ".challenge.t")
     c.ok(0.6 < t0 - t1 < 1.5, f'đồng hồ thử thách chạy đúng nhịp ({t0 - t1:.2f} giây sau 1 giây)')
     gold = ev("G.save.gold")
-    ev("""(() => { const S = G.getRun(); S.P.inv = 999; for (let k = 0; k < 40 && !S.W.cleared; k++) { for (const e of S.W.ents.slice()) G.damage(e, 1e6, {}); G.sim(50); S.P.inv = 999; } })()""")
+    ev(CLEAR)
     c.ok(ev(RUN + ".W.cleared") and ev("G.save.gold") >= gold + 80, 'vượt thử thách có thưởng')
+
+    # ---- bản đồ nhỏ và bản đồ to (phòng đầu, quái còn sống)
+    ev("G.startStage(0, 1, 0, { kind: 'A', seed: 1 })")
+    for _ in range(40):
+        g.wait(100)
+        if ev(RUN + ".W.ents.length") > 0: break
+    snap = "(() => { const S = G.getRun(); return [S.roomT, S.P.x, S.P.y, S.P.hp].concat(S.W.ents.map((e) => e.x + e.y)).join(' '); })()"
+    mm = ev("G.minimap.rect(G.getRun())"); mx, my = mm[0] + mm[2] / 2, mm[1] + mm[3] / 2
+    g.tap(mx, my)
+    c.ok(mode() == 'map', 'chạm bản đồ nhỏ thì mở bản đồ to')
+    s0 = ev(snap); g.wait(500); s1 = ev(snap)
+    c.ok(s0 == s1 and ev(RUN + ".W.ents.length") > 0, 'đang mở bản đồ thì trận đấu đứng yên')
+    g.tap(mx, my)
+    c.ok(mode() == 'play', 'chạm lần nữa thì đóng bản đồ, chơi tiếp')
+    g.wait(300)
+    c.ok(mode() == 'play' and ev(snap) != s1, 'đóng bản đồ thì trận đấu chạy tiếp')
+    # ---- cửa khoá khi phòng còn quái
+    d = ev("""(() => { const S = G.getRun(), W = S.W, d = W.doors[0], q = G.roomArt.doorPos(W.geo, d.dir); S.P.x = q.x; S.P.y = q.y;
+      return { dir: d.dir, open: W.doors.some((o) => o.open), n: W.ents.length, cleared: !!W.cleared, idx: S.idx }; })()""")
+    vx, vy = DIRV[d['dir']]
+    drag(vx * 40, vy * 40); g.wait(700)
+    st = ev("(() => { const S = G.getRun(); return [S.idx, !!S.trans]; })()")
+    g.up(); g.wait(60)
+    c.ok(d['n'] > 0 and not d['cleared'] and not d['open'], f'phòng còn quái thì mọi cửa đều khoá {d}')
+    c.ok(st == [d['idx'], False] and ev(INSIDE), f'đẩy vào cửa khoá thì không sang phòng khác {st}')
+    # ---- dọn xong phòng thì cửa mở, kéo cần đi qua cửa sang phòng kề
+    ev(CLEAR)
+    d = ev("""(() => { const S = G.getRun(), W = S.W, d = W.doors.find((o) => o.open);
+      if (!d) return null;
+      const q = G.roomArt.doorPos(W.geo, d.dir), v = G.mapgen.DIRS[d.dir]; S.P.x = q.x - v[0] * 30; S.P.y = q.y - v[1] * 30;
+      return { dir: d.dir, to: d.to, idx: S.idx }; })()""")
+    c.ok(d is not None, 'dọn xong phòng thì cửa mở')
+    if d:
+        g.wait(100)
+        vx, vy = DIRV[d['dir']]
+        drag(vx * 40, vy * 40)
+        for _ in range(60):
+            g.wait(50)
+            if ev(RUN + ".idx") != d['idx']: break
+        g.up()
+        for _ in range(40):
+            g.wait(50)
+            if not ev("!!" + RUN + ".trans"): break
+        r = ev("""(dir) => { const S = G.getRun(), W = S.W, q = G.roomArt.doorPos(W.geo, G.mapgen.OPP[dir]);
+          return { idx: S.idx, trans: !!S.trans, dist: Math.hypot(S.P.x - q.x, S.P.y - q.y), seen: !!S.seen[S.idx], mode: S.mode }; }""", d['dir'])
+        c.ok(r['idx'] == d['to'] and not r['trans'] and r['mode'] == 'play', f"kéo cần vào cửa đang mở thì sang phòng kề ({d['idx']} -> {r['idx']}, cần tới {d['to']})")
+        c.ok(r['dist'] < 20 and ev(INSIDE) and r['seen'], f"sang phòng mới thì đứng ngay trong cửa đối diện (cách cửa {r['dist']:.1f})")
 
     # ---- bảng kết quả
     last = ev(RUN + ".rooms.length - 1")
@@ -171,7 +258,7 @@ def run(p, size, url=None):
     g.wait(400); g.tap(156, 229, 300); c.ok(ev("G.scene === G.Village"), 'Về làng sau khi bỏ ải')
 
     # ---- bàn phím
-    ev("G.startStage(0, 1, 0); G.gotoRoom(2)"); g.wait(500)
+    ev("G.startStage(0, 1, 0, { kind: 'A', seed: 1 })"); goto('chest'); g.wait(500)
     a = ev(P + ".x"); g.pg.keyboard.down('KeyD'); g.wait(300); g.pg.keyboard.up('KeyD')
     c.ok(ev(P + ".x") > a + 8, 'phím D đi sang phải')
     ev("window.__sw = 0"); g.pg.keyboard.down('KeyJ'); g.wait(700); g.pg.keyboard.up('KeyJ')
@@ -179,6 +266,11 @@ def run(p, size, url=None):
     g.pg.keyboard.press('Escape'); g.wait(100); c.ok(mode() == 'paused', 'Esc tạm dừng')
     g.pg.keyboard.press('Escape'); g.wait(100); c.ok(mode() == 'play', 'Esc chơi tiếp')
     ev(RUN + ".mode = 'swap'"); g.wait(100); g.pg.keyboard.press('Escape'); g.wait(100); c.ok(mode() == 'play', 'Esc đóng bảng')
+    g.pg.keyboard.press('KeyM'); g.wait(100); c.ok(mode() == 'map', 'phím M mở bản đồ')
+    t0 = ev(RUN + ".roomT"); g.wait(300)
+    c.ok(ev(RUN + ".roomT") == t0, 'mở bản đồ bằng phím thì trận đấu cũng đứng yên')
+    g.pg.keyboard.press('KeyM'); g.wait(100); c.ok(mode() == 'play', 'phím M đóng bản đồ')
+    g.pg.keyboard.press('KeyM'); g.wait(100); g.pg.keyboard.press('Escape'); g.wait(100); c.ok(mode() == 'play', 'Esc cũng đóng bản đồ')
     ev("G.setScene(G.Village)"); g.wait(100); g.tap(76, 99); g.pg.keyboard.press('Escape'); g.wait(100)
     c.ok(tab() == 'hub', 'Esc ở làng quay về màn hình chính')
 

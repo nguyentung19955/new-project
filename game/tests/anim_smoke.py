@@ -9,7 +9,7 @@ JS = """([r, i]) => {
   const w = G.weaponById(sv.carry[0]); w.marks.fire = 140; w.branch='fire'; w.tier=2; w.sharpen=6;
   G.startStage(r, i, 0); G.getRun().stats.el.fire = 300; G.getRun().stats.ranged = 300; G.getRun().stats.dodges = 30;
   let n = 0, draws = 0, err = null, modes = {};
-  for (let s = 0; s < 60 * 400; s++) {
+  for (let s = 0; s < 60 * 900; s++) { // ải 8 phòng dài hơn trước, cho tối đa 900 giây
     const S = G.getRun(); if (!S) break;
     if (S.mode !== 'play') { if (S.mode === 'result' || S.mode === 'dead') { modes.end = S.mode; break; } G.botRun(1); continue; }
     S.W.P.hp = Math.max(S.W.P.hp, S.W.P.maxhp * 0.6);

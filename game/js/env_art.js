@@ -1218,7 +1218,7 @@
   // ---------- đồ vật ----------
   let pc = null;
   const q = (x, y, w, h, col) => { pc.fillStyle = col; pc.fillRect(x, y, w, h); };
-  function shadow(x, y, rx) { A.ellipse(pc, x, y, rx, 3, 'rgba(0,0,0,0.3)'); }
+  function shadow(x, y, rx) { A.ellipse(pc, x, y, rx, Math.max(3, Math.round(rx * 0.36)), 'rgba(0,0,0,0.3)'); }
   // Quầng mời gọi dưới chân vật đánh vỡ được.
   function halo(x, y, col, t) {
     const k = 0.5 + 0.5 * Math.sin(t * 4);

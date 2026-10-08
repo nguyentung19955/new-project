@@ -1,5 +1,6 @@
 """Chơi thử một ải nhiều lần với bản lưu dựng sẵn, in thời gian từng phòng và nguồn sát thương.
-Ví dụ: python3 tests/probe.py '{"save":{"hero":"smith","lvl":20,"tier":2,"sharpen":6,"armor":"a_r2"},"r":2,"i":3,"n":4,"bot":{"prefer":"sword"}}'"""
+Ví dụ: python3 tests/probe.py '{"save":{"hero":"smith","lvl":20,"tier":2,"sharpen":6,"armor":"a_r2"},"r":2,"i":3,"n":4,"bot":{"prefer":"sword"}}'
+Thêm "map":{"kind":"A","seed":1} để lần nào cũng chơi đúng một bản đồ."""
 import sys, json
 from playwright.sync_api import sync_playwright
 
@@ -17,7 +18,7 @@ def main():
         wins = 0
         for k in range(cfg.get('n', 3)):
             pg.evaluate("([s, c, pre]) => { G.testSave(s); Object.assign(G.botCfg, c); if (pre) eval(pre); }", [cfg.get('save', {}), cfg.get('bot', {}), cfg.get('pre')])
-            pg.evaluate("([r, i, d]) => G.startStage(r, i, d)", [cfg.get('r', 0), cfg.get('i', 0), cfg.get('diff', 0)])
+            pg.evaluate("([r, i, d, m]) => G.startStage(r, i, d, m)", [cfg.get('r', 0), cfg.get('i', 0), cfg.get('diff', 0), cfg.get('map')])
             if cfg.get('post'):
                 pg.evaluate(cfg['post'])
             res = pg.evaluate("G.probeRun(900)")

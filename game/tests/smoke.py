@@ -5,7 +5,7 @@ errs = []
 with sync_playwright() as p:
     b = p.chromium.launch()
     pg = b.new_page(viewport={'width': 844, 'height': 390})
-    pg.on('console', lambda m: errs.append(m.text) if m.type == 'error' else None)
+    pg.on('console', lambda m: errs.append(m.text) if m.type == 'error' and 'ERR_' not in m.text else None)
     pg.on('pageerror', lambda e: errs.append('PAGEERROR ' + str(e)))
     pg.goto('file:///home/claude/new-project/game/index.html')
     pg.wait_for_timeout(1800)

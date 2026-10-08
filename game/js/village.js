@@ -358,8 +358,8 @@
     const pages = [[
       ['Di chuyển và đánh', 'Cảm ứng: đặt ngón ở nửa trái màn hình rồi kéo để đi. Bên phải có các nút tròn: giữ Đánh để ra đòn liên tục, Né để lăn tránh, Đặc biệt để tung đòn mạnh (tốn mana), nút còn lại là kỹ năng riêng của hero.'],
       ['Các ô ở mép trên', 'Chạm ô vũ khí ở góc trên bên phải để đổi giữa hai vũ khí. Chạm ô Bình máu để hồi máu. Chạm Dừng để tạm nghỉ.'],
-      ['Mở rương, chọn cửa', 'Lại gần rương, suối, cửa hay thương nhân rồi bấm Đánh. Hết quái thì đi sang mép phải để qua phòng kế tiếp.'],
-      ['Bàn phím', 'Mũi tên hoặc WASD để đi, J đánh, K né, L đặc biệt, I kỹ năng, Q đổi vũ khí, E uống bình máu, Esc tạm dừng hoặc đóng bảng.'],
+      ['Mở rương, qua cửa', 'Lại gần rương, suối hay thương nhân rồi bấm Đánh. Hết quái thì cửa mở: đi vào cửa có mũi tên để sang phòng kề. Chạm bản đồ nhỏ để xem cả ải.'],
+      ['Bàn phím', 'Mũi tên hoặc WASD để đi, J đánh, K né, L đặc biệt, I kỹ năng, Q đổi vũ khí, E uống bình máu, M xem bản đồ, Esc tạm dừng hoặc đóng bảng.'],
       ['Ba sao', 'Sao 1: qua ải. Sao 2: không dùng bình máu. Sao 3: ra đòn kết liễu trùm bằng hệ khắc chế nó.'],
     ], [
       ['Dấu ấn', G.HINTS[0] + ' ' + G.HINTS[1]],

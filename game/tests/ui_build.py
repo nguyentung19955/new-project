@@ -29,7 +29,7 @@ with sync_playwright() as p:
         print('==', name)
         g = Game(p, 'phone', url=url)
         c = Checker('nạp ' + name)
-        c.ok(g.ev("typeof G.botInput") == 'undefined' and g.ev("typeof G.botRun") == 'undefined', 'bản đóng gói không chứa bot chơi thử')
+        c.ok(g.ev("typeof G.botInput") == 'undefined' and g.ev("typeof G.botRun") == 'undefined' and g.ev("typeof G.testGoto") == 'undefined', 'bản đóng gói không chứa bot chơi thử và đồ dựng sẵn để kiểm tra')
         c.ok(g.ev("document.querySelectorAll('script[src]').length") == 0, 'không nạp JS từ ngoài')
         r = g.ev("(() => { const f = document.getElementById('fit').getBoundingClientRect(), s = document.getElementById('shell'); return [f.width, f.height, innerWidth, innerHeight, getComputedStyle(s).paddingLeft, document.documentElement.scrollHeight, document.documentElement.scrollWidth]; })()")
         c.ok(r[1] == r[3] and r[0] == r[2] - 32 and r[4] == '16px', f'khung game cao bằng màn hình, lề hai bên 16px {r}')

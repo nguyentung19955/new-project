@@ -6,6 +6,7 @@ from playwright.sync_api import sync_playwright
 JS = r"""
 ([hero, wtype, secs]) => {
   const bad = [];
+  let kind = '?';
   const r = Math.floor(Math.random() * 3), i = Math.floor(Math.random() * 5), diff = Math.random() < 0.3 ? 1 : 0;
   const el = G.pick(G.ELS);
   G.testSave({ hero, melee: wtype === 'bow' ? 'sword' : wtype, lvl: 12 + Math.floor(Math.random() * 18), tier: 1 + Math.floor(Math.random() * 2), sharpen: 5, branch: el, marks: G.pick([10, 40, 150, 290, 400]),
@@ -25,16 +26,18 @@ JS = r"""
     return inp;
   };
   try {
-    G.startStage(r, i, diff);
+    G.startStage(r, i, diff, { kind: G.pick(G.mapgen.KINDS), seed: 1 + Math.floor(Math.random() * 100000) });
+    kind = G.getRun().map.kind;
     const n = G.getRun().rooms.length;
     for (let room = 0; room < n; room++) {
       let S = G.getRun();
       if (!S || S.mode === 'result' || S.mode === 'dead') break;
-      if (S.idx < room) G.gotoRoom(room);
+      // nhảy tới từng phòng theo số; bot tự đi qua cửa sang phòng khác thì chuyển sang phòng kế trong danh sách
+      S.mode = 'play'; G.gotoRoom(room);
       if (Math.random() < 0.3) G.addCoat(G.pick(G.ELS), 30);
       for (let t = 0; t < secs * 2; t++) {
         S = G.getRun();
-        if (!S || S.mode === 'result' || S.mode === 'dead' || S.idx > room) break;
+        if (!S || S.mode === 'result' || S.mode === 'dead' || (S.idx !== room && !S.trans)) break;
         if (S.mode !== 'play') { G.botRun(1); continue; }
         G.sim(30);
         const W = S.W, P = S.P;
@@ -44,8 +47,11 @@ JS = r"""
         for (const e of W.ents.concat(W.boss && !W.boss.dead ? [W.boss] : [])) {
           for (const k of ['hp', 'x', 'y']) if (!isFinite(e[k])) bad.push((e.role || e.kind) + ' ' + k + ' hỏng');
           if (e.inside && (e.x < W.x0 - 1 || e.x > W.x1 + 1)) bad.push('quái ngoài phòng ' + e.role);
-          if (e.y < G.GY0 - 20 || e.y > G.GY1 + 20) bad.push('quái lệch dọc ' + (e.role || e.kind) + ' ' + Math.round(e.y));
+          if (e.y < W.geo.fy0 - 20 || e.y > W.geo.fy1 + 20) bad.push('quái lệch dọc ' + (e.role || e.kind) + ' ' + Math.round(e.y));
+          if (e.inside && !e.isBoss && (e.y < W.y0 - 1 || e.y > W.y1 + 1)) bad.push('quái ra ngoài sàn theo chiều dọc ' + e.role);
         }
+        for (const o of W.projs) if (o.x < W.geo.fx0 - 40 || o.x > W.geo.fx1 + 40) bad.push('đạn bay ra ngoài phòng');
+        if (W.doors.some((d) => d.open) && !W.cleared) bad.push('cửa mở khi phòng chưa dọn');
         for (const w of P.weapons) for (const e2 of G.ELS) if (!isFinite(w.marks[e2])) bad.push('dấu ấn hỏng');
         if (bad.length > 4) break;
       }
@@ -53,7 +59,7 @@ JS = r"""
     }
   } finally { G.botInput = base; }
   const S = G.getRun();
-  return { r, i, diff, bad, mode: S ? S.mode : null, idx: S ? S.idx : null };
+  return { r, i, diff, kind, bad, mode: S ? S.mode : null, idx: S ? S.idx : null };
 }
 """
 
@@ -75,7 +81,7 @@ def main():
                 except Exception as ex:
                     res = {'bad': ['SẬP: ' + str(ex)[:400]]}
                 nbad += len(res['bad']) + len(errs)
-                print(hero, wt, f"ải {res.get('r')}-{res.get('i')} độ khó {res.get('diff')}", 'ổn' if not res['bad'] and not errs else res['bad'] + errs)
+                print(hero, wt, f"ải {res.get('r')}-{res.get('i')} độ khó {res.get('diff')} kiểu {res.get('kind')}", 'ổn' if not res['bad'] and not errs else res['bad'] + errs)
                 errs.clear()
                 sys.stdout.flush()
         b.close()

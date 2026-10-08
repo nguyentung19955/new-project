@@ -29,11 +29,13 @@ with sync_playwright() as p:
         pg.evaluate("G.sim(60*9)"); shot('b-' + name + '-1')
         pg.evaluate("G.getRun().W.boss.hp *= 0.5; G.sim(60*7)"); shot('b-' + name + '-2')
         pg.evaluate("G.getRun().W.boss.hp = G.getRun().W.boss.maxhp*0.25; G.sim(60*6)"); shot('b-' + name + '-3')
-    pg.evaluate("G.startStage(1,2,0); G.gotoRoom(2)"); shot('r-chest')
-    pg.evaluate("G.gotoRoom(4)"); shot('r-choice')
-    pg.evaluate("G.gotoRoom(6)"); shot('r-fountain')
+    # phòng theo loại: số phòng 1..5 đổi theo bản đồ, 6 là Suối hồi, 7 là Trùm
+    pg.evaluate("G.startStage(1,2,0,{kind:'A',seed:1}); G.gotoRoom(G.getRun().rooms.indexOf('chest'))"); shot('r-chest')
+    pg.evaluate("G.getRun().mode='play'; G.gotoRoom(G.getRun().rooms.findIndex((t) => G.mapgen.SIDE.includes(t)))"); shot('r-side')  # bot vừa mở rương: đóng bảng rương lại
+    pg.evaluate("G.getRun().mode='play'; G.gotoRoom(6)"); shot('r-fountain')
     pg.evaluate("G.getRun().mode='swap'"); shot('r-swap')
+    pg.evaluate("G.getRun().mode='map'"); shot('r-map')
     pg.evaluate("G.getRun().mode='play'; G.gotoRoom(7); G.sim(60*5)"); shot('r-mini')
-    pg.evaluate("G.gotoRoom(3); G.sim(60*4)"); shot('r-fight')
+    pg.evaluate("G.gotoRoom(G.getRun().rooms.indexOf('fight')); G.sim(60*4)"); shot('r-fight')
     print('errors', errs[:5])
     b.close()
