@@ -30,6 +30,7 @@ const tipState = (page, sel) => page.evaluate((sel) => {
 }, sel);
 
 async function hover(page, sel, tag, name, shot) {
+  await settle(page);
   await page.mouse.move(2, 2);
   await page.evaluate((sel) => { const el = document.querySelector(sel); if (el) el.scrollIntoView({ block: 'nearest' }); }, sel);
   await page.waitForTimeout(150);
@@ -37,12 +38,12 @@ async function hover(page, sel, tag, name, shot) {
   await page.mouse.move(c[0], c[1], { steps: 3 }); await page.waitForTimeout(350);
   // máy bận: chờ khung hiện (tối đa 3 giây) thay vì tin 350 ms là đủ
   let s = await tipState(page, sel);
-  // (ô có thể bị dựng lại trong 150 ms chờ hiện → nhích chuột như người rê lại để trình duyệt báo ô mới)
-  for (let k = 0; k < 15 && !s.shown; k++) {
+  // (thanh tướng dựng lại đúng trong 150 ms chờ hiện → ô cũ rời trang, trình duyệt không báo pointerover cho ô mới khi chuột đứng yên;
+  //  máy bận dễ trúng → rê chuột ra ngoài rồi vào lại như người dùng)
+  for (let k = 0; k < 20 && !s.shown; k++) {
     await page.waitForTimeout(200); s = await tipState(page, sel);
-    if (!s.shown && k % 3 === 2) { await page.mouse.move(c[0] + 2, c[1] + 1); await page.mouse.move(c[0], c[1]); }
+    if (!s.shown && k % 3 === 2) { await page.mouse.move(2, 2); await page.mouse.move(c[0], c[1], { steps: 3 }); }
   }
-  if (!s.shown) console.log('  (gỡ lỗi) ', JSON.stringify(await page.evaluate(([sel, x, y]) => { const e = document.elementFromPoint(x, y); const el = document.querySelector(sel); return { at: e && (e.id || e.className || e.tagName) + ' < ' + (e.parentElement && (e.parentElement.id || e.parentElement.className)), el: el && el.outerHTML.slice(0, 200), tip: ui.tip && ui.tip.mode, scr: ui.screen }; }, [sel, c[0], c[1]])));
   ok(s.shown, `[${tag}] ${name}: rê chuột → hiện mô tả`);
   ok(s.inside, `[${tag}] ${name}: khung nằm trong màn`);
   ok(!s.over, `[${tag}] ${name}: không che ô đang chỉ (đặt phía ${s.side})`);
@@ -55,6 +56,15 @@ async function until(read, good, ms = 3000) {
   const end = Date.now() + ms; let v = await read();
   while (!good(v) && Date.now() < end) { await new Promise((r) => setTimeout(r, 150)); v = await read(); }
   return v;
+}
+// máy bận: ảnh tải chậm, mỗi ảnh xong tăng assetVersion → thanh tướng dựng lại; dựng lại đúng lúc chờ hiện mô tả (0,15 / 0,35 giây)
+// thì ô cũ rời trang và mô tả không hiện. Chờ assetVersion đứng yên 0,8 giây (tối đa 15 giây) trước khi rê / giữ tay.
+async function settle(page) {
+  await page.evaluate(() => new Promise((res) => {
+    let v = assetVersion, t = performance.now(); const end = t + 15000;
+    const f = () => { const n = performance.now(); if (assetVersion !== v) { v = assetVersion; t = n; } if (n - t >= 800 || n > end) res(); else setTimeout(f, 100); };
+    f();
+  }));
 }
 async function touch(cdp, type, x, y) {
   await cdp.send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x, y }] });
@@ -102,6 +112,10 @@ async function run(w, h) {
 
   // 3) điện thoại: giữ tay ~0,35 giây → hiện; thả → ẩn, KHÔNG nâng; chạm nhanh → nâng
   const cdp = await page.context().newCDPSession(page);
+  // trận đang chạy: ô Q đổi trạng thái hồi chiêu / mana → thanh tướng dựng lại cả hàng; trúng trong 0,35 giây giữ tay thì ô E cũ rời trang
+  // và mô tả không hiện (lỗi game đã báo, chưa sửa). Đoạn này chỉ kiểm cử chỉ chạm → tạm dừng trận cho thanh tướng đứng yên.
+  await page.evaluate(() => { game.running = false; });
+  await settle(page);
   const ce = await center(page, SK(2));
   const e0 = await lv(2), pts0 = await page.evaluate(() => game.heroes[ui.sel].skillPts);
   // máy bận (chạy song song) thì lệnh chạm / đọc trạng thái có thể trễ quá mốc 0,35 giây của game → chỉ kiểm khi đo được thật sự < 0,3 giây
@@ -133,6 +147,7 @@ async function run(w, h) {
   const dragShown = (await tipState(page, SK(2))).shown;
   await touch(cdp, 'touchEnd'); await page.waitForTimeout(200);
   ok(dragShown === false, `[${tag}] kéo ngón tay đi → không hiện mô tả`);
+  await page.evaluate(() => { game.running = true; });
 
   // 4) Cây kỹ năng: ô đầu cột (giữa màn) → mô tả, không che
   await page.evaluate(() => { ui.openScreen('skills'); }); await page.waitForTimeout(300);

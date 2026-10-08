@@ -2360,3 +2360,7 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
   tải xong trước mỗi lần ↻; chờ ghép / mua xong), `sua-loi-tester` L07 (chờ hội thoại boss + thông báo "Quái mới" tới 10 giây),
   `vo-tan` (chờ thông báo "Phó bản đã gộp").
 - `tu-cu-dong`: so FPS ảnh đơn / nhiều khung chỉ kiểm khi chạy riêng; chạy song song (`CHAY_SONG_SONG=1`) thì in tham khảo.
+- **Lỗi game phát hiện (chưa sửa, chỉ báo):** trong trận, khi ô kỹ năng khác đổi trạng thái hồi chiêu / mana thì `updateDeck` dựng lại
+  cả thanh tướng; nếu việc này rơi vào 0,35 giây đang giữ tay (hoặc 0,15 giây rê chuột) thì ô cũ đã rời trang → mô tả **không hiện**
+  (phải nhấc tay giữ lại). Gợi ý sửa: khi hết giờ chờ, tìm lại ô bằng `elementFromPoint` như vòng `setInterval` cập nhật mô tả.
+  Test `mo-ta-ky-nang` tạm dừng trận trong đoạn giữ tay, chờ `assetVersion` đứng yên và rê chuột ra/vào lại nếu mô tả chưa hiện.
