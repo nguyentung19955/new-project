@@ -1,16 +1,16 @@
 {
  "code": "tranh-trong-dong",
  "group": "giao-dien",
- "name": "tranh trong-dong",
+ "name": "Mặt trống đồng",
  "w": 96,
  "h": 96,
  "ax": 48,
  "ay": 95,
  "bbox": [
-  4,
-  4,
-  88,
-  88
+  1,
+  1,
+  94,
+  94
  ],
  "n": 1,
  "anims": {

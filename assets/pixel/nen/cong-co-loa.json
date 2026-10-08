@@ -1,16 +1,16 @@
 {
  "code": "cong-co-loa",
  "group": "nen",
- "name": "thành Cổ Loa xoắn ốc (citadel — thanh)",
- "w": 48,
- "h": 48,
- "ax": 24,
- "ay": 47,
+ "name": "Thành Cổ Loa",
+ "w": 64,
+ "h": 64,
+ "ax": 32,
+ "ay": 63,
  "bbox": [
+  0,
   1,
-  3,
-  46,
-  42
+  64,
+  59
  ],
  "n": 1,
  "anims": {

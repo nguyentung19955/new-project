@@ -1,15 +1,15 @@
 {
  "code": "tranh-qua-ngua",
  "group": "giao-dien",
- "name": "tranh qua-ngua",
+ "name": "Ngựa chín hồng mao",
  "w": 96,
  "h": 96,
  "ax": 48,
  "ay": 95,
  "bbox": [
-  8,
-  3,
-  80,
+  4,
+  4,
+  86,
   90
  ],
  "n": 1,

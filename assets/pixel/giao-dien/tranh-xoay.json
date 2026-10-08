@@ -1,16 +1,16 @@
 {
  "code": "tranh-xoay",
  "group": "giao-dien",
- "name": "tranh xoay",
+ "name": "Xoay ngang máy",
  "w": 96,
  "h": 96,
  "ax": 48,
  "ay": 95,
  "bbox": [
-  8,
-  16,
-  78,
-  65
+  10,
+  13,
+  77,
+  71
  ],
  "n": 1,
  "anims": {

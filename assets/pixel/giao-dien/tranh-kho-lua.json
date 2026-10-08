@@ -1,16 +1,16 @@
 {
  "code": "tranh-kho-lua",
  "group": "giao-dien",
- "name": "tranh kho-lua",
+ "name": "Kho lúa",
  "w": 96,
  "h": 96,
  "ax": 48,
  "ay": 95,
  "bbox": [
-  0,
-  27,
-  96,
-  42
+  4,
+  7,
+  88,
+  87
  ],
  "n": 1,
  "anims": {

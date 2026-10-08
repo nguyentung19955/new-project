@@ -1,16 +1,16 @@
 {
  "code": "tranh-hu-bau",
  "group": "giao-dien",
- "name": "tranh hu-bau",
+ "name": "Hũ báu vua Hùng",
  "w": 96,
  "h": 96,
  "ax": 48,
  "ay": 95,
  "bbox": [
+  2,
   0,
-  0,
-  96,
-  96
+  92,
+  94
  ],
  "n": 1,
  "anims": {

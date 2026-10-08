@@ -1,76 +1,78 @@
-# núi Tản Viên bậc 1 (Đắp núi) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: núi xanh bậc 1 (to dần)
-name: núi Tản Viên bậc 1 (Đắp núi)
+# Núi Tản Viên 1 · Gò Đất — VẼ LẠI tay (claude/ve-lai-pixel), thiết kế: docs/pixel/THIET-KE-LAI.md
+# Khung cảnh vuông: gò đất nâu nhú cỏ
+# Nguồn vẽ: tools/pixel/ve-lai/nui.js — sửa ở đó rồi chạy lại, đừng sửa tay file này.
+name: Núi Tản Viên 1 · Gò Đất
 size: 48x48
 colors:
   a = vien
-  b = toi
-  c = khoi
-  d = dat-toi
-  e = dat
-  f = vang-nghe
-  g = la-toi
-  h = la-ma
-  i = la-sang
-  j = reu-toi
-  k = reu
-  l = reu-sang
-  m = cham-toi
-  n = cham
+  b = dong
+  c = dong-toi
+  d = nuoc
+  e = sang
+  f = vang-sang
+  g = nuoc-sang
+  h = troi
+  i = cham-sang
+  j = la-sang
+  k = la-ma
+  l = dat
+  m = dat-sang
+  n = dat-toi
+  o = la
+  p = la-toi
 
 part k0
-................aaaaeeeeeeeeaaaa................
-.............aaaeeeeeeddddeeefifaaa.............
-............aeeeeddcamajmmmaabdefifaa...........
-..........aaeeedammmmgkigmmmmmaabeeifa..........
-.........aeeedmmmmmnmckhiknmnmmmmabeffa.........
-.......aaeedmmmmnnnmmgkhhimnnnmmmmmadeiaa.......
-......adeebmnbcnnnmbbgglkhlnkmmnggmmmaefea......
-.....adedamneeecnnmcccgkgkhkllnnggnmmmadfea.....
-.....aedammceffdnmammjkklbjhjhjgngmnnnmadfa.....
-....aedammmneeencakljjlikljkjglhnnnnmmmnaefa....
-...adecmmmcenmnnalkjijggklfiikkklnnmmnnmmaefa...
-..adedmnmnncnmgggbaaccjjjlhiffiiffinnnmmnmdeea..
-..addmmmnggnchjaabgggjkliiffffiiiffgnnnnnmmdfa..
-.addannnmbncjcbggjkliiiifffiiiiiffignnnnnmnbeea.
-.addmnnnaccaabjjlhlllhhhihhhhhiiffhhmnnnnmnmeea.
-.adbmnnmaaaagjlhkjliffiiifiiiihkiffihknnnnnndea.
-addamnmaamgjkhkjliiiiiiiiifiifihhkiffhjjkmmnceea
-addgjaakkgjkikjkifiiillllllifiiillkiiffkagbmmdea
-adbagjaagkkijjlliffilllllllkkfiiillkiiffhjjbndea
-adbacklgjkijgliiiilllllfllllllffilklkiiffhgkjbea
-bdcacjggkikgkliiiillllfllfekllkiiillkkiifiljjaee
-bdcbajgjhigjkliiililffgnnnkfkllifiiiljiiifijkaee
-beajjbklijglkiiilllkfnngjnnlklllfiilhkliifhhaade
-beacggkligglkiiillleinnffknkfllliilkkhjiifihkgde
-beaghkliigkkliiilkleinnffnnlfllliillhkgiifikkgde
-beabgklilmjhkifflkljfgnnnnnfeiilfiilihgiifiljaee
-beaacclfkbgillifllikefgnnnlflllifillkjgiifhkgaee
-bdcjhkkflggkllifilkljeffffeklllifillijgifiljbaea
-addccjjfiggllkfiiflllljeeeklllfiilljgckiflilgbea
-addaghkhigggllkififllllllllkllfillihjmifhjkgadea
-abeagjjkflcgjiiiliffflklllkiiiiilligakiihkijaeea
-abeaagliiigmcghlkfiiififfiilfiililjagiiijggcaeea
-.adebgjkkfigaajillfiifiifiiiffllgcmjifhggggadea.
-.abeabkgiifigcmjhiiiiiiifiifklkmmgifihkgbgmaeea.
-.abdemgajhifijcmmgkjklhiiikkgmmgiifilihhlaadea..
-..abeacajhlifiikgmmmaggjggmmgkifffkgghkgcmaeea..
-...abemcckkhhifiiiilggmggkiifffiihggglgmmaeea...
-...abddagljgkhiffiiiiiiiffffffflggkgkkccaeeda...
-....abebcghjckjhifffffffiiffikhkcgkihjgadeda....
-.....abebagghlcghiiiiihiffilkgggkklhgaaeeda.....
-......abebamghjklhiiiihfihkggggkhkjjcaeeda......
-.......abeeaagjlhkhhhhhfhhcgghljggmmaeeda.......
-........abdeaacgjjllllhhflkgkgcccaadedda........
-.........abbeeamaagjglhlhhffjaaaabeedda.........
-..........aabdeebaamcgggaghffkadeeddaa..........
-............aabbdeeebaaaagefeeedddaa............
-..............aabbbbdeeeeedbbbbbaa..............
-................aaaabbbbbbbbaaaa................
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+abbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbca
+abddddddddddddddddddddddddddddddddddddddddddddca
+abddddddddddddddddddddddddddddddddddddddddddddca
+abddddddddddddddddddddddddddddddddddddddddddddca
+abddddddddddddddddddddddddddddddddddddedddddddca
+abddddddddddddddddddddddddddddddddddeefeedddddca
+abddddddddddddddddddddddddddddddddddefffedddddca
+abdddddddddddddddddddddddddddddddddefffffeddddca
+abddddddddddddddddddddddddddddddddddefffedddddca
+abddddddddddddddddddddddddddddddddddeefeedddddca
+abddddddddddddddddddddddddddddddddddddedddddddca
+abddddddddddddddddddddddddddddddddddddddddddddca
+abddddddddddddddddddddddddddddddddddddddddddddca
+abggggggggggggggggggggggggggggggggggggggggggggca
+abggggggggggggggggggggggggggggggggggggggggggggca
+abggggggggggggggggggggggggggggggggggggggggggggca
+abggggggggggggggggggggggggggggggggggggggggggggca
+abggggggggggggggggggggggggggggggggggggggggggggca
+abggggggggggggggggggggggggggggggggggggggggggggca
+abggggggggggggggggggggggggggggggggggggggggggggca
+abggggggggggggggggggggggggggggggggggggggggggggca
+abggggggggggggggggggggggggggggggggggggggggggggca
+abggggggggggggggggggggggggggggggggggggggggggggca
+abggggggggggggggggggggggggggggggggggggggggggggca
+abggggggggggggggggggggggggggggggggggggggggggggca
+abhhhhhhhhhhhhhhhhhhgiighhhhhhhhhhhhhhhgghhhhhca
+abhhhhhhghhhhhhhhhhgiiiighhhhhhhhhhhhhgiighhhhca
+abhhhhhgighhhhhhhhgiiiiiighhhhhhhhhhhgiiiigghhca
+abhhhhgiiigghhhhhgiiiiiiiigghhhhhhhhgiiiiiiiggca
+abhhhgiiiiiighhhgiiiiiiiiiiighhhhhhgiiiiiiiiiica
+abhhgiiiiiiiighgiiiiiiijiiiiighhhhgiiiiiiiiiiica
+abhgiiiiiiiiiigiiiiiiikllliiiighhgiiiiiiiiiiiica
+abgiiiiiiiiiiiiiijimmmlnnnlllijggiiiiiiiiiiiiica
+abiiiiiiiiiiiiiikmmlllllnnnnnkliiiiiiiiiiiiiiica
+abiiiiiiiiiiiiiimlllllllnnnnnnnliiiiiiiiiiiiiica
+abiiiiiiiiiiiiimllllllllnnnnnnnnliiiiiiiiiiiiica
+abiiiiiiiiiiiimlllllllllnnnnnnnnnliiiiiiiiiiiica
+abiiiiiiiiiiimllllllllllnnnnnnnnnnliiiiiiiiiiica
+abiiiiiiiiiimlllllllllllnnnnnnnnnnnliiiiiiiiiica
+abkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkca
+abooooooooooooooooooooooooooooooooooooooooooooca
+abooooooojoooooooooooooooooooojoooooooooooooooca
+aboooooooooooooojoooooooooooooooooooojooooooooca
+abjoooooooooooooooooooojoooooooooooooooooooojoca
+abooopooolllpoooooopoooooopoooooopoooooopoooooca
+abccccccccccccccccccccccccccccccccccccccccccccca
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 end
 
 anim main fps=1 once
 frame main
   use k0
 end
-
