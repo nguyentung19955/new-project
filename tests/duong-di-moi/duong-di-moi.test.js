@@ -349,7 +349,7 @@ fs.mkdirSync(SHOT, { recursive: true });
           game.setStage({ k: 1, lv: game.level, shape: sh, at: 0 }); game.events.length = 0; game.effects = game.effects.filter((f) => f.type !== 'summon');
           ui.toasts && (document.querySelector('#toasts').innerHTML = '');
           if (ROT) return { rot: true };
-          const rects = ['.topbar', '.auto-btns', '#deck, .deck'].map((s) => { const el = document.querySelector(s); const b = el && el.getBoundingClientRect(); return b && { s, l: b.left, t: b.top, r: b.right, b: b.bottom }; }).filter(Boolean);
+          const rects = ['.topbar', '.auto-btns', '#deck, .deck'].map((s) => { const el = document.querySelector(s); const b = el && rectToFrame(el.getBoundingClientRect()); return b && { s, l: b.left, t: b.top, r: b.right, b: b.bottom }; }).filter(Boolean);   // khung-co-dinh: so trong toạ độ khung
           const m = MAPS[MAP_ID], half = PATH_LOOK[pathKind(m.theme)].edge / 2 * DK;
           const toS = (x, y) => [(x + view.ox) * view.scale, (y + view.oy) * view.scale];
           const hits = [];

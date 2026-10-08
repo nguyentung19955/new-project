@@ -48,11 +48,14 @@ async function run(pixel, w, h) {
   await page.evaluate(() => document.getAnimations().forEach((a) => { a.pause(); a.currentTime = 0; }));
   const boxes = await page.$$eval('#deck .mk-card', (cs) => cs.map((c) => { const r = c.getBoundingClientRect(); return [r.width, r.height]; }));
   const shot = async (i) => page.locator('#deck .mk-card').nth(i).screenshot();
-  const [bw, bh] = boxes[0], k = bw / 66, pt = [[Math.round(3 * k), Math.round(bh * 0.45)], [Math.round(bw - 4 * k), Math.round(bh * 0.45)]];
+  // khung-co-dinh: thẻ thu nhỏ theo hệ số khung → viền mảnh hơn; dò vài điểm trên dải viền (2–5 × k), lấy điểm khác rõ nhất
+  const [bw, bh] = boxes[0], k = bw / 66, offs = [2, 3, 4, 5];
+  const pt = offs.flatMap((o) => [[Math.round(o * k), Math.round(bh * 0.45)], [Math.round(bw - (o + 1) * k), Math.round(bh * 0.45)]]);
   const plain = await pixelAt(page, await shot(0), pt);
   for (const [i, nm] of [[1, 'ghép'], [3, 'hợp Tím'], [4, 'hợp Vàng']]) {
     const p = await pixelAt(page, await shot(i), pt);
-    const d = Math.min(dist(p[0], plain[0]), dist(p[1], plain[1])), cr = Math.min(contrast(p[0], plain[0]), contrast(p[1], plain[1]));
+    let d = 0, cr = 0;
+    for (let j = 0; j < pt.length; j += 2) { const dd = Math.min(dist(p[j], plain[j]), dist(p[j + 1], plain[j + 1])), cc = Math.min(contrast(p[j], plain[j]), contrast(p[j + 1], plain[j + 1])); if (cc > cr) { cr = cc; d = dd; } }
     ok(d > 90 && cr > 1.8, `[${tag}] viền thẻ ${nm} khác hẳn thẻ thường (khoảng màu ${Math.round(d)}, tương phản ${cr.toFixed(2)})`);
   }
   await page.screenshot({ path: path.join(SHOT, `cho-${tag}.png`) });

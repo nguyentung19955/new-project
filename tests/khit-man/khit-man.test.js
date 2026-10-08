@@ -8,7 +8,11 @@ require('fs').mkdirSync(require('path').join(__dirname, 'shots'), { recursive: t
 const fit = (page) => page.evaluate(() => {
   const r = document.querySelector('#wrap').getBoundingClientRect(), vv = window.visualViewport;
   const V = vv ? { l: vv.offsetLeft, t: vv.offsetTop, r: vv.offsetLeft + vv.width, b: vv.offsetTop + vv.height } : { l: 0, t: 0, r: innerWidth, b: innerHeight };
-  const d = Math.max(Math.abs(r.left - V.l), Math.abs(r.top - V.t), Math.abs(r.right - V.r), Math.abs(r.bottom - V.b));
+  // khung-co-dinh (hộp đen): khung nằm TRONG vùng nhìn thấy, căn giữa, khít đúng MỘT chiều (chiều kia thừa → nền đen)
+  const out = Math.max(V.l - r.left, V.t - r.top, r.right - V.r, r.bottom - V.b, 0);
+  const ctr = Math.max(Math.abs((r.left + r.right - V.l - V.r) / 2), Math.abs((r.top + r.bottom - V.t - V.b) / 2));
+  const fitOne = Math.min(Math.abs(r.width - (V.r - V.l)), Math.abs(r.height - (V.b - V.t)));
+  const d = Math.max(out, ctr, fitOne);
   return { d, r: [r.left, r.top, r.right, r.bottom].map(Math.round), V: [V.l, V.t, V.r, V.b].map(Math.round), rot: document.querySelector('#wrap').classList.contains('rot'),
     // gốc lỗi "chạm 2 lần kéo sang nửa màn đen": #wrap xoay nằm trong luồng body → body.scrollWidth 527–617 > 390 (giờ #wrap position: fixed)
     scroll: document.scrollingElement.scrollHeight > innerHeight + 1 || document.scrollingElement.scrollWidth > innerWidth + 1 || document.body.scrollWidth > innerWidth + 1 || document.body.scrollHeight > innerHeight + 1,
@@ -39,12 +43,13 @@ const fit = (page) => page.evaluate(() => {
   });
   await page.waitForTimeout(800);
   let f = await fit(page);
-  ok(f.d <= 2 && !f.scroll, `visualViewport 390×760 lệch 30px: game khít đúng vùng nhìn thấy (game ${f.r} / khung ${f.V})`);
+  ok(f.d <= 2 && !f.scroll, `visualViewport 390×760 lệch 30px: game nằm giữa vùng nhìn thấy (game ${f.r} / khung ${f.V})`);
   // 2b) người chơi lỡ phóng to (scale 2, visualViewport còn nửa) → bố cục giữ theo khung bố cục, không to ra
+  const z0 = await page.evaluate(() => { const r = document.querySelector('#wrap').getBoundingClientRect(); return [r.left, r.top, r.right, r.bottom].map(Math.round).join(','); });
   await page.evaluate(() => { Object.assign(window.__fakeVV, { width: 195, height: 422, offsetLeft: 40, offsetTop: 100, scale: 2 }); window.dispatchEvent(new Event('resize')); window.__fakeVV.dispatchEvent(new Event('resize')); });
   await page.waitForTimeout(800);
   const z = await page.evaluate(() => { const r = document.querySelector('#wrap').getBoundingClientRect(); return [r.left, r.top, r.right, r.bottom].map(Math.round); });
-  ok(z[2] - z[0] > 380 && z[3] - z[1] > 700, `phóng to (scale 2): khung game không co / lệch theo visualViewport (${z})`);
+  ok(z.join(',') === z0, `phóng to (scale 2): khung game không co / lệch theo visualViewport (${z} = ${z0})`);
   await page.evaluate(() => { Object.assign(window.__fakeVV, { width: 390, height: 760, offsetLeft: 0, offsetTop: 30, scale: 1 }); window.dispatchEvent(new Event('resize')); });
   await page.waitForTimeout(800);
   // 3) trang không cuộn được (ảnh lỗi: 1/3 dưới đen)
@@ -73,7 +78,8 @@ const fit = (page) => page.evaluate(() => {
       const g = document.querySelector('#wrap').getBoundingClientRect();
       const bad = [...document.querySelectorAll('#ui button, #deck .mk-card .cost, #topbar')].filter((e) => e.offsetParent && getComputedStyle(e).visibility !== 'hidden')
         .filter((e) => { const q = e.getBoundingClientRect(); return q.width && (q.left < S.l - 1 || q.top < S.t - 1 || q.right > S.r + 1 || q.bottom > S.b + 1); }).map((e) => e.id || e.className);
-      const fill = Math.abs(g.left - S.l) < 2 && Math.abs(g.top - S.t) < 2 && Math.abs(g.right - S.r) < 2 && Math.abs(g.bottom - S.b) < 2;
+      // khung-co-dinh: trong vùng an toàn, khít một chiều
+      const fill = g.left >= S.l - 1 && g.top >= S.t - 1 && g.right <= S.r + 1 && g.bottom <= S.b + 1 && (Math.abs(g.width - (S.r - S.l)) < 2 || Math.abs(g.height - (S.b - S.t)) < 2);
       const gia = [...document.querySelectorAll('#deck .mk-card .cost')].every((e) => e.textContent.includes('220'));
       const tb = document.querySelector('#topbar');
       return { bad, fill, gia, g: [g.left, g.top, g.right, g.bottom].map(Math.round), S, tb: tb.scrollWidth <= tb.clientWidth + 1, tbw: [tb.scrollWidth, tb.clientWidth] };

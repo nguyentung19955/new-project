@@ -7,7 +7,7 @@ fs.mkdirSync(SHOT, { recursive: true });
 
 const slotXY = (page, s) => page.evaluate((s) => {
   const [x, y] = CONFIG.slots[s]; const r = document.querySelector('#game').getBoundingClientRect();
-  return ROT ? [r.right - (y + view.oy) * view.scale, r.top + (x + view.ox) * view.scale] : [r.left + (x + view.ox) * view.scale, r.top + (y + view.oy) * view.scale];
+  return logToClient(x, y);   // khung-co-dinh: toạ độ bản đồ → màn (thu phóng + xoay)
 }, s);
 const center = async (page, sel) => { const b = await page.locator(sel).first().boundingBox(); return [b.x + b.width / 2, b.y + b.height / 2]; };
 async function dragTo(page, from, to) {

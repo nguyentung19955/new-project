@@ -92,6 +92,13 @@ function toFrame(x, y) {
   if (FRAME.rot) [dx, dy] = [dy, -dx];            // khung xoay 90° theo chiều kim đồng hồ → xoay ngược
   return [dx + FW / 2, dy + FH / 2];
 }
+// nghịch của toFrame: điểm trong khung → toạ độ client; logToClient: toạ độ bản đồ (logic game) → client (test / gợi ý chạm dùng)
+function fromFrame(fx, fy) {
+  let dx = (fx - FW / 2) * FRAME.s, dy = (fy - FH / 2) * FRAME.s;
+  if (FRAME.rot) [dx, dy] = [-dy, dx];
+  return [FRAME.cx + dx, FRAME.cy + dy];
+}
+const logToClient = (x, y) => fromFrame((x + view.ox) * view.scale, (y + view.oy) * view.scale);
 // DOMRect (toạ độ màn) → hộp trong khung
 function rectToFrame(r) {
   const P = [toFrame(r.left, r.top), toFrame(r.right, r.top), toFrame(r.left, r.bottom), toFrame(r.right, r.bottom)];
@@ -114,7 +121,7 @@ function resize() {
   const aw = ROT ? vh : vw, ah = ROT ? vw : vh;
   FS = Math.min(aw / FW, ah / FH);
   $('#rotate').hidden = true;
-  wrap.classList.remove('rot');
+  wrap.classList.toggle('rot', ROT);   // chỉ là dấu hiệu (test, góp ý); CSS không đổi bố cục theo nó — xoay bằng transform inline
   vw = FW; vh = FH;
   const CROP = 34;
   const scale = Math.min(vw / CONFIG.W, vh / (CONFIG.H - CROP));

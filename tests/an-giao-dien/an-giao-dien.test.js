@@ -9,7 +9,7 @@ fs.mkdirSync(SHOT, { recursive: true });
 
 const slotXY = (page, s) => page.evaluate((s) => {
   const [x, y] = CONFIG.slots[s]; const r = document.querySelector('#game').getBoundingClientRect();
-  return ROT ? [r.right - (y + view.oy) * view.scale, r.top + (x + view.ox) * view.scale] : [r.left + (x + view.ox) * view.scale, r.top + (y + view.oy) * view.scale];
+  return logToClient(x, y);   // khung-co-dinh: toạ độ bản đồ → màn (thu phóng + xoay)
 }, s);
 
 // các phần tử trong #ui đang thấy được (trừ lớp phủ / màn hình / nút hiện lại)
@@ -57,7 +57,8 @@ async function run(w, h) {
   const vis = await visibleUi(page);
   ok(await page.evaluate(() => document.querySelector('#wrap').classList.contains('ui-off') && ui.uiHidden), `[${tag}] bấm → vào chế độ ẩn giao diện`);
   ok(!vis.length, `[${tag}] ẩn hết thanh trên, thẻ tướng, nút bên phải, toast… (còn: ${JSON.stringify(vis)})`);
-  const sb = await page.evaluate(() => { const b = document.querySelector('#btn-showui'), r = b.getBoundingClientRect(), cs = getComputedStyle(b);
+  // khung-co-dinh: đo trong khung thiết kế (trừ hộp đen, chia hệ số thu phóng)
+  const sb = await page.evaluate(() => { const b = document.querySelector('#btn-showui'), r = rectToFrame(b.getBoundingClientRect()), cs = getComputedStyle(b);
     return { vis: !b.hidden && cs.visibility === 'visible' && r.width > 10, l: r.left, t: r.top, w: r.width, h: r.height, op: +cs.opacity, label: b.getAttribute('aria-label') }; });
   ok(sb.vis && /Hiện giao diện/.test(sb.label), `[${tag}] còn đúng 1 nút "Hiện giao diện"`);
   ok(sb.l < 30 && sb.t < 30 && sb.w < Math.max(70, w * 0.05) && sb.h < Math.max(60, h * 0.08), `[${tag}] nút hiện lại nhỏ, ở góc (${Math.round(sb.l)},${Math.round(sb.t)} ${Math.round(sb.w)}×${Math.round(sb.h)})`);

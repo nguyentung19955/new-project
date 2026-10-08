@@ -21,7 +21,7 @@ async function run(W, H) {
   await page.click('[data-act=prep-go]');
   await page.waitForTimeout(300);
   await page.evaluate(() => { game.running = false; game.gold = 9999; for (const s of [0, 1]) game.spawnHero(s, BASIC_HEROES[s], { tier: 1 }); });
-  const xy = (s) => page.evaluate((s) => { const [x, y] = CONFIG.slots[s]; const r = document.querySelector('#game').getBoundingClientRect(); return ROT ? [r.right - (y + view.oy) * view.scale, r.top + (x + view.ox) * view.scale] : [r.left + (x + view.ox) * view.scale, r.top + (y + view.oy) * view.scale]; }, s);
+  const xy = (s) => page.evaluate((s) => { const [x, y] = CONFIG.slots[s]; const r = document.querySelector('#game').getBoundingClientRect(); return logToClient(x, y); }, s);   // khung-co-dinh: toạ độ bản đồ → màn (thu phóng + xoay)
   const A = await xy(0), B = await xy(1);
   const cdp = await page.context().newCDPSession(page);
   const T = (type, pts) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: pts.map(([x, y, id]) => ({ x, y, id })) });

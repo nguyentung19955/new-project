@@ -57,11 +57,9 @@ async function frameShot(page, file) {
     // kéo thẻ chợ thứ 1 thả vào ô trống đầu tiên → tướng đặt đúng ô
     const tgt = await page.evaluate(() => {
       const s = game.freeSlots()[0], p = { x: CONFIG.slots[s][0], y: CONFIG.slots[s][1] };
-      // toạ độ logic → màn hình (nghịch của toFrame)
-      const fx = (p.x + view.ox) * view.scale, fy = (p.y + view.oy) * view.scale;
-      let dx = (fx - FW / 2) * FRAME.s, dy = (fy - FH / 2) * FRAME.s; if (FRAME.rot) [dx, dy] = [-dy, dx];
+      const [x, y] = logToClient(p.x, p.y);
       const card = document.querySelector('#deck .mk-card').getBoundingClientRect();
-      return { s, x: FRAME.cx + dx, y: FRAME.cy + dy, cx: card.left + card.width / 2, cy: card.top + card.height / 2, n: game.heroes.filter(Boolean).length };
+      return { s, x, y, cx: card.left + card.width / 2, cy: card.top + card.height / 2, n: game.heroes.filter(Boolean).length };
     });
     await page.mouse.move(tgt.cx, tgt.cy); await page.mouse.down();
     for (let i = 1; i <= 8; i++) { await page.mouse.move(tgt.cx + (tgt.x - tgt.cx) * i / 8, tgt.cy + (tgt.y - tgt.cy) * i / 8); await page.waitForTimeout(20); }
