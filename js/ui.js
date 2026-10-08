@@ -2154,6 +2154,7 @@ class UI {
     clearTimeout(this.sayWait);
     const wait = !$('#banner').hidden ? (this.bannerEnd || 0) - performance.now() : 0;
     if (wait > 0) { this.sayWait = setTimeout(() => this.say(who, text), wait + 50); return; }
+    this.sayNow = [who, text];
     const foe = !!ENEMIES[who];
     const name = foe ? ENEMIES[who].name : who === 'sontinh' ? 'Sơn Tinh' : HEROES[who] ? HEROES[who].name : who;
     box.className = foe ? 'foe' : 'ally';
@@ -2163,10 +2164,13 @@ class UI {
     box.hidden = false;
     this.placeToasts();
     clearTimeout(this.sayT);
-    this.sayT = setTimeout(() => { box.hidden = true; this.placeToasts(); }, 3000);
+    this.sayT = setTimeout(() => { box.hidden = true; this.sayNow = null; this.placeToasts(); }, 3000);
   }
 
   banner(sub, text, icon, color) {
+    // sua-giao-dien-10 (N4): một hàng đợi hiển thị — banner tới khi lời thoại đang hiện thì cất thoại, nói lại sau khi banner tắt
+    const dl = $('#dialogue');
+    if (!dl.hidden && this.sayNow) { const [w, t] = this.sayNow; clearTimeout(this.sayT); dl.hidden = true; this.sayNow = null; setTimeout(() => this.say(w, t), 0); }
     if (icon) $('#banner-sub').innerHTML = icon + esc(sub); else $('#banner-sub').textContent = sub;
     $('#banner-text').textContent = text;
     const b = $('#banner');
