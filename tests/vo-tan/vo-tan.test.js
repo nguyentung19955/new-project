@@ -19,6 +19,8 @@ async function open(save, w = 844, h = 390) {
   page.on('console', (m) => { if (m.type() === 'error' && !/Failed to load resource|net::|favicon|firebase|gstatic/i.test(m.text())) errors.push(m.text()); });
   await page.route('**/firebase-config.js*', (r) => r.fulfill({ contentType: 'application/javascript', body: "const FIREBASE_CONFIG={apiKey:''};" }));
   await page.addInitScript((s) => { if (!sessionStorage.getItem('seeded')) { if (s) localStorage.setItem('nuicao.v1', JSON.stringify(s)); sessionStorage.setItem('seeded', '1'); } }, save);
+  // pixel-mac-dinh: ghi lại mọi thông báo đã hiện (thông báo sống 2,6 giây; tải ảnh pixel làm goto lâu hơn)
+  await page.addInitScript(() => { window.__T = []; new MutationObserver((ms) => ms.forEach((m) => m.addedNodes.forEach((n) => n.classList && n.classList.contains('toast') && window.__T.push(n.textContent)))).observe(document, { childList: true, subtree: true }); });
   await page.goto(URL);
   await page.waitForTimeout(900);
   return { browser, page, errors };
@@ -133,7 +135,7 @@ const txt = (page, sel) => page.evaluate((s) => document.querySelector(s).innerT
   ok(o.kho === 100 + 12 * 40 && o.conv === 1, `quy đổi một lần: 12 sao → +480 Ngân khố (${o.kho})`);
   ok(o.be[0] === 25 && o.be[1] === 40 && o.be[4] === 18, 'đợt xa nhất Phó bản cũ tính vào kỷ lục vô tận (giữ kỷ lục cao hơn)');
   ok(JSON.stringify(o.stars) === JSON.stringify(stars) && o.unlocked === 6, 'dữ liệu sao / ải đã mở vẫn giữ nguyên (không xoá)');
-  ok(/Phó bản đã gộp vào/.test(await txt(page, '#toasts')), 'báo một lần: Phó bản đã gộp vào Vô tận');
+  ok((await page.evaluate(() => window.__T)).some((t) => /Phó bản đã gộp vào/.test(t)), 'báo một lần: Phó bản đã gộp vào Vô tận');
   // trận Phó bản dở trong bản lưu cũ → chơi tiếp thành vô tận
   await page.evaluate(() => { ui.startLevel(1); document.querySelector('[data-act=prep-go]').click(); const r = game.snapshot(); r.endless = false; r.wave = 5; ui.save.run = r; game.started = false; writeSave(ui.save); });
   await page.reload(); await page.waitForTimeout(900);

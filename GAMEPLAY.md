@@ -2372,6 +2372,10 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 225 — PIXEL MẶC ĐỊNH (tester đạt)
+
+- Game mở là hình pixel; tắt bằng Cài đặt → Hình pixel hoặc ?pixel=0. Nạp pixel theo đợt (menu hiện ~0,5 s), chân dung thẻ chợ nạp sẵn.
+
 ## Phiên bản 224 — gộp ban-do-moi (tester đạt)
 
 - 8 dạng bản đồ mới: ngã ba sông, cầu nhiều chỗ, vòng quanh núi, hai đường song song, đèo dốc, ruộng bậc thang, bến đò (quái chậm ×0,5), cổng 3 phía (ải 7, 16 + Vô tận đợt ≥60). Chỉ ải 0 đường thẳng; máu quái chỉnh theo độ phơi đường (×0,8–1,4). Nền pixel khớp đường.
@@ -2621,6 +2625,16 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 - Sửa theo tester (icon pixel phải giữ nghĩa icon cũ): nút quay lại = mũi tên «, nút đóng giữ ô vuông + X trắng to (bỏ skin pixel
   nút tròn), Ngân khố = thỏi bạc, nút đổi chợ giữ skin cũ + icon đồng xu có mũi tên vòng; soát icon chức năng: tạm dừng ‖, menu ≡,
   vô tận ∞, vào trận / lực chiến = hai kiếm chéo, cài đặt = bánh răng; bộ ui-tran-* bỏ đĩa trống cho hình to rõ.
+
+## claude/pixel-mac-dinh — Pixel là mặc định
+- `js/pixel.js`: `PIXEL_BAT = true` — mọi người chơi thấy hình pixel ngay. Tắt: `?pixel=0`, hoặc nút "Hình pixel → Pixel: Bật/Tắt (hình cũ)"
+  trong Cài đặt (lưu `ttv.pixel = '0'`); chưa chọn = bật. Test ép tắt bằng `window.PIXEL_BAT_EP = false`. Đường vẽ dự phòng giữ nguyên.
+- Mở game nhanh hơn khi pixel: font pixel (Google Fonts) nạp sau sự kiện load; tải sẵn ảnh cũ `packs/*` (idle/head/walk1/khung)
+  bỏ qua mã đã có sprite pixel (vẫn tải lười khi cần).
+- Test: `tests/cho-tuong/helpers.js` thêm `noPixel(prep)` — test kiểm tra đường vẽ dự phòng (vân đường ảnh, khung ui/*, tự cử động,
+  hiệu ứng vẽ tay, khung chuyển động) ép tắt pixel; pixel.test kiểm mặc định bật + `?pixel=0` / Cài đặt tắt.
+- Còn hình cũ (cảnh/nền menu/cổng thành… bản tool chỉ là phác thảo thô nên chưa nối; một số chưa có pixel): ghi ở
+  `docs/pixel/DANH-SACH.md` mục "Bổ sung".
 - **Nền pixel riêng (sau khi gộp v223 có tool bản đồ):** sinh `ban-do/<gốc>-<dạng>` cho 14 bản đồ dạng của các ải (`node tools/build-ban-do-spec.js` → lọc mã có dạng → `node tools/ve-pixel.js --spec … --nap`): ô sát đường cùng kiểu bệ đá, xa đường chỉ trang trí, chỗ tự cắt có cầu. `mapLayer` chọn ảnh theo mã `id` (thay `~` bằng `-`); bản đồ dạng không có ảnh (Vô tận ghép gốc × dạng khác, Vòng quanh núi, Bến đò — có núi / sông game tự vẽ) dùng `pxMapGround`. Tool spec: nạp thêm `js/chapters.js` (đăng ký bản đồ dạng của ải), nhánh phụ chỉ xuất đoạn không trùng nhánh trước (tránh cầu giả ở chỗ chia / nhập nhánh), bỏ qua bản đồ có núi / bến đò.
 
 ## claude/can-bang-tuong-vang — Đo cân bằng tướng Vàng đơn độc ở độ Khó (chưa đổi game, chờ quyết định)
@@ -2629,3 +2643,23 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 - Kết quả (ải 1, Khó; mất mạng đầu → thua): Mặt Trời 57 → 65, Thiên Lôi 54 → 60, Mẫu Thượng Ngàn 44 → 63, Âu Cơ 34 → 53, Vàng cận chiến 7 → 13–17; đội 6 (1 Vàng + 2 Tím ★★★ + 3 Thường ★★ ngẫu nhiên) 41 → 58. Thường: Mặt Trời 58 → 65, đội 6 48 → 65.
 - Nguyên nhân: Khó chỉ nhân máu ×1,6 cố định nhưng Ngân khố ×1,5 → Khó ≈ Thường vài đợt; máu quái hiệu dụng ải 1 chỉ ×1,09/đợt, tướng Vàng phép max cấp ~đợt 40 vẫn đủ lực tới ~đợt 55–60; Mặt Trời / Thiên Lôi hơn các Vàng phép khác ~10 đợt.
 - Đã thử: Khó dùng đường nhiều cửa từ đợt 20 → tướng tầm xa đứng cạnh thành vẫn giữ được (mọi cửa dồn về thành), đội 6 lại yếu đi (bỏ). Máu Khó tăng ×1,04/đợt từ đợt 15 → Mặt Trời mất mạng đầu 44 / thua 55, đội 6 thua 41; ×1,06 → Mặt Trời 39 / 52, đội 6 38. Thu nhỏ vùng nổ W của Mặt Trời / Thiên Lôi không đổi kết quả.
+## claude/sua-tam-skill — Kỹ năng chỉ dùng khi quái vào tầm
+- Lỗi: kỹ năng tự dùng khi quái còn ngoài tầm (đa số chiêu tìm mục tiêu trong tầm ×1,1–1,3; 15 chiêu ×1,5 — Ném Đá Tảng, Lướt, Bắn
+  Săn, Hổ, Kim Độc, Cuốn Ngược, Bọc Trăm Trứng, Thành Đêm…), khiên/buff dùng khi quanh mình không ai đang đánh.
+- Sửa gốc ở vòng tung chiêu (`js/game.js`, Game.updateHero): kỹ năng tấn công chỉ tung khi có quái trong **tầm đánh của tướng ×
+  hệ số tầm ghi trong mô tả** (Thợ Săn Q "tầm gấp đôi" ×2 · LLQ E "tầm x1.2" · Thần Săn Q "tầm x1.6", R "tầm x2"); chưa có ai trong
+  tầm thì giữ hồi chiêu sẵn sàng, không tốn năng lượng. Vùng sát thương của chiêu giữ nguyên.
+- Hỗ trợ: hồi máu khi có đồng đội bị thương (như cũ); khiên (Mai Rùa), Chia Bánh, Trống Trận, Cây Đa, Lời Thề: chỉ khi có đồng đội
+  trong vùng của chiêu đang có quái trong tầm đánh (hoặc bị thương).
+- **Kỹ năng TOÀN BẢN ĐỒ** (dùng khi quái ở bất kỳ đâu trên đường) — người dùng soát:
+  · Thánh Gióng R «Bay Về Trời»: cưỡi ngựa sắt bay dọc cả dòng sông, đánh mọi quái trên bản đồ (≥3 quái hoặc có boss)
+  · An Tiêm R «Mưa Dưa»: dưa rơi khắp bản đồ (≥4 quái) · Sọ Dừa R: dừa rơi khắp trận (≥4 quái)
+  · Chú Cuội R «Gió Trăng»: quật mọi quái dưới đất · Mẫu R: rễ cây trồi khắp bờ sông, trói mọi quái dưới đất (≥3 quái hoặc boss)
+  · Kim Quy R «Hộ Thành»: không theo tầm — dùng khi quái sắp lọt thành
+  · Hỗ trợ toàn quân (theo đồng đội, không theo quái): Lang Liêu R «Lễ Tổ Tiên» (có tướng dưới 50% máu), Lạc Hầu R «Lời Thề».
+- Test: `tests/sua-tam-skill/` (164 kỹ năng: vừa ngoài tầm → không tung, hồi chiêu không chạy; trong tầm → tung; toàn bản đồ tung
+  khi quái ở xa; hỗ trợ không dùng khi đồng đội khoẻ và quái ngoài tầm; trận thật: Bổ Rìu tung đúng lúc quái vào tầm).
+- Sửa theo tester: (1) mở game — `js/pixel.js` thôi nạp sẵn cả ~920 ảnh pixel lúc mở; ngay: khung giao diện; sau khi menu hiện (theo lô
+  60 ảnh, lúc rảnh): tướng, quái, boss, nền, bản đồ, hiệu ứng, icon; nhóm hiện bằng <img> (đồ, kỹ năng, ấn phù, thần khí) và canh/* không
+  nạp sẵn → menu hiện ~0,6 s (trước ~1,4 s, ngang ?pixel=0). (2) chợ: chân dung pixel mọi tướng nạp + giải mã sẵn vào bộ đệm chợ
+  (ui.preloadMarket) ngay sau lô cuối → đổi ↻ không nháy thẻ trống.
