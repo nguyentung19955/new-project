@@ -1306,7 +1306,7 @@ class UI {
           <div class="desc">Quái mạnh dần mãi, boss mỗi 10 đợt. Sau đợt ${lv.waves}, cứ 10 đợt đổi sang quân truyền thuyết khác. Mỗi 10 đợt và mỗi boss hạ được nhận Ngân khố ngay. Hết mạng là kết thúc, ghi điểm bảng xếp hạng.</div>
           <div class="cp-rec">${UIE.endless()} Kỷ lục bản đồ này: <b>đợt ${rec[i] || 0}</b></div>
           ${this.counterHtml(i)}</div>
-          <div class="cp-act"><div class="cp-diff"><button class="${this.save.settings.hard ? 'metal' : 'btn-gold'}" data-act="diff" data-k="0">Thường</button><button class="${this.save.settings.hard ? 'on' : 'metal'}" data-act="diff" data-k="1" title="Máu quái ×${HARD.hp(i).toFixed(2)} · Ngân khố ×1,5">🔥 Khó <small>×${HARD.hp(i).toFixed(2).replace('.', ',')}</small></button></div>
+          <div class="cp-act"><button class="cp-tg${this.save.settings.hard ? ' hard' : ''}" data-act="diff" data-k="${this.save.settings.hard ? 0 : 1}" title="Chạm để đổi · Khó: máu quái ×${HARD.hp(i).toFixed(2)} · Ngân khố ×1,5"><span class="n">Thường</span><span class="h">🔥 Khó <small>×${HARD.hp(i).toFixed(2).replace('.', ',')}</small></span></button>
           <button class="go btn-gold" data-act="cp-go">${UIE.endless()} Vào vô tận</button></div>
         </div>
       </div></div>`;

@@ -2242,3 +2242,24 @@ html.pixel .mc-btn.main { background-image: url('../assets/pixel/giao-dien/khung
    banner đang hiện thì ẩn chip "Đợt N" (banner và thoại dùng một hàng đợi: ui.banner cất thoại, nói lại sau) */
 #dialogue { top: auto; bottom: calc(84px * var(--hz, 1)); left: 8px; transform: scale(var(--hz, 1)); transform-origin: 0 100%; max-width: min(340px, calc(46% / var(--hz, 1))); }
 #ui:has(> #banner:not([hidden])) > #nextwaves { visibility: hidden; }
+/* sua-giao-dien-10 (N5): vùng chạm ≥ 40px trên màn thật (UI thu theo --k, phần trong trận thêm --hz): hình giữ nguyên, ::after trong suốt
+   cao/rộng tối thiểu 40px màn hình. Phần sát mép trên màn (thanh trên, đầu bảng) không mở lên được → mở xuống dưới. */
+:is(#topbar .sq, .xbtn, .cp-tab, .mc-sub, .hx-tab, .hx-q, .hx-x) { position: relative; }
+:is(#topbar .sq, .xbtn, .cp-tab, .mc-sub, .hx-tab, .hx-q, .hx-x)::after { content: ''; position: absolute; left: 50%; top: 50%;
+  width: max(100%, calc(40px / var(--k, 1) / var(--hz-l, 1))); height: max(100%, calc(40px / var(--k, 1) / var(--hz-l, 1))); transform: translate(-50%, -50%); }
+#topbar { --hz-l: var(--hz, 1); }
+:is(#topbar .sq, .scr-head .xbtn, .scr-head .cp-tab, .mc-sub)::after { top: -3px; height: max(100%, calc(40px / var(--k, 1) / var(--hz-l, 1) + 6px)); transform: translateX(-50%); }
+#topbar .sq::after { width: 100%; }
+.cp-tabs { padding-bottom: 32px; margin-bottom: -32px; }
+/* nút menu chính: cao thật ≥ 40px màn hình (không chồng vùng chạm nút bên cạnh) */
+#menu .mc-btn:not(.main) { height: max(44px, calc(40px / var(--k, 1))); }
+#menu .mc-btn.main { height: max(52px, calc(42px / var(--k, 1))); }
+/* đầu bảng nằm trên phần thân (vùng chạm mở xuống không bị thân bảng che) */
+.scr-head { position: relative; z-index: 3; }
+/* Thường / Khó gộp thành một công tắc cao bằng nút Vào vô tận (trước đây 2 nút 17px chồng nhau) */
+.cp-act .go { min-height: max(50px, calc(42px / var(--k, 1))); }
+.cp-tg { width: 104px; flex: none; background: #2A1C10; border: 2px solid #8C6A2E; color: #E8DCC0; display: flex; flex-direction: column; justify-content: center; gap: 2px; padding: 3px 6px; border-radius: 6px; font-size: 12px; font-weight: 800; line-height: 1.15; white-space: nowrap; }
+.cp-tg span { display: block; border-radius: 3px; padding: 2px 4px; color: #C8BCA0; }
+.cp-tg:not(.hard) .n { background: linear-gradient(180deg, #F2D27A, #B8852A); color: #2A1A08; }
+.cp-tg.hard .h { background: linear-gradient(180deg, #C8401E, #7A1E0E); color: #FFE0C8; box-shadow: 0 0 8px #E25A3A88; }
+.cp-tg small { font-size: 10px; }

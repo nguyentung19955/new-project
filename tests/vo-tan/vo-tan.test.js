@@ -60,7 +60,7 @@ const txt = (page, sel) => page.evaluate((s) => document.querySelector(s).innerT
   ok(!bad, 'màn chọn bản đồ không còn chữ Ải / điều kiện sao' + bad);
   const side = await txt(page, '#campaign .cp-side');
   ok(/Kỷ lục bản đồ này/.test(side) && /TƯỚNG KHẮC CHẾ/i.test(side) && /Quân/.test(side) && /boss/.test(side), 'mỗi bản đồ: kỷ lục, quân / boss, tướng khắc chế');
-  ok(await page.locator('#campaign [data-act=diff]').count() === 2, 'giữ Thường / Khó');
+  ok(await page.locator('#campaign [data-act=diff]').count() === 1 && /Thường[\s\S]*Khó/.test(await page.locator('#campaign [data-act=diff]').innerText()), 'giữ Thường / Khó (một công tắc)');
   // vào vô tận ở mọi bản đồ
   for (let i = 0; i < 17; i++) {
     await page.evaluate((i) => ui.playLevel(i, false), i);
