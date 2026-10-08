@@ -383,7 +383,8 @@ function pxHeroPortrait(cv, h, o) {
     if (im) { img = im; m = 2; sw = im.naturalWidth / m; sh = im.naturalHeight / m; }
     else { img = asset(pxPath(e, true), true); if (img) { sw = img.naturalWidth; sh = img.naturalHeight; } }
   }
-  if (!img) return false;
+  // ảnh pixel chưa tải xong: để trống chờ (nơi gọi vẽ lại liên tục / nhiều lần) — không rơi về ảnh vẽ cũ packs/<tướng>/head|front.png (tải thừa)
+  if (!img) { c.clearRect(0, 0, W, H); return true; }
   c.clearRect(0, 0, W, H);
   let n = Math.min(W / sw, H / sh) * (o.full ? 0.94 : 1);
   if (n >= 1 && m === 1) n = Math.floor(n);
