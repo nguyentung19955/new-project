@@ -3018,3 +3018,4 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 
 - Viền hào quang Tím/Vàng khi bật làm mượt: viền vẽ từ bóng ảnh pixel GỐC (vẽ đè quanh ngoài sau ảnh mượt) → dày/rõ như khi tắt. Test hao-quang so số điểm viền bật/tắt trong ±15% (thachsanh 2799/2799, giong 3100/3132).
 - Công tắc Tạm dừng: "Làm mượt tướng, quái, boss và icon · đổi ngay".
+- Viền hào quang khi làm mượt (lần 2): khoét phần mép mượt bán trong suốt nằm dưới vòng viền trước khi vẽ viền (cả lúc nháy trúng đòn) → viền không bị pha màu tối, Sọ Dừa/Mẹ Lúa hết hụt 13–16%. Test hao-quang thêm đo trong trận (cỡ thật 0.285 × view × dpr) Sọ Dừa / Thạch Sanh / Mẹ Lúa lúc đứng / đánh / tung chiêu / trúng đòn, bật vs tắt ±15%.

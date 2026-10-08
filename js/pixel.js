@@ -182,6 +182,17 @@ function pxVienNgoai(goc, color) {
   m.set(color, c);
   return c;
 }
+// ảnh mượt đã khoét phần mép tràn vào chỗ vòng viền (góc bo chéo bán trong suốt): viền vẽ sau không bị pha màu tối của mép → đậm như khi tắt
+function pxKhoetVien(img, goc) {
+  if (img.__khoet) return img.__khoet;
+  const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
+  const x = c.getContext('2d'), m = img.width / goc.width, ring = pxVienNgoai(goc, '#000');
+  x.drawImage(img, 0, 0);
+  x.imageSmoothingEnabled = false; x.globalCompositeOperation = 'destination-out';
+  x.drawImage(ring, -m, -m, ring.width * m, ring.height * m);
+  c.naturalWidth = c.width; c.naturalHeight = c.height; c.__muot = img.__muot;
+  return (img.__khoet = c);
+}
 // bật / tắt làm mượt ngay (Cài đặt trong trận, tự tắt khi máy chậm): luu = ghi nhớ cho lần sau
 function pxSetMuot(on, luu) {
   PX_MUOT = !!on;
@@ -252,7 +263,8 @@ function pxBlit(ctx, img, e, x, y, unit, flip, o = {}) {
   if (o.glow) drawGlowOnly(ctx, goc, X, Y, W, H, o.glow.color, o.glow.blur * k, o.glow.alpha);
   const vienSau = o.outline && img.__muot && goc !== img;   // làm mượt: vẽ VÒNG viền ngoài sau ảnh (ảnh mượt hơi to hơn ở góc chéo sẽ che viền vẽ trước)
   if (o.outline && !vienSau) drawOutlineOnly(ctx, goc, X, Y, W, H, o.outline.color, o.outline.alpha, goc.__muot || 1);
-  ctx.drawImage(img, X, Y, W, H);
+  const ve = vienSau ? pxKhoetVien(img, goc) : img;
+  ctx.drawImage(ve, X, Y, W, H);
   if (vienSau && o.outline.alpha > 0) {
     const ring = pxVienNgoai(goc, o.outline.color), kk = W / goc.width;
     ctx.save(); ctx.globalAlpha *= Math.min(1, o.outline.alpha); ctx.imageSmoothingEnabled = false;
@@ -261,7 +273,7 @@ function pxBlit(ctx, img, e, x, y, unit, flip, o = {}) {
   if (o.flash > 0) {
     ctx.globalCompositeOperation = 'lighter';
     ctx.globalAlpha *= o.flash;
-    ctx.drawImage(img, X, Y, W, H);
+    ctx.drawImage(ve, X, Y, W, H);
   }
   ctx.restore();
   return n / k;   // cỡ thật một điểm ảnh sprite (đơn vị logic)

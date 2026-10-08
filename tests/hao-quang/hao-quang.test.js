@@ -11,7 +11,7 @@ fs.mkdirSync(SHOT, { recursive: true });
 const ok = (c, m) => { if (!c) throw new Error('FAIL: ' + m); console.log('  ✓ ' + m); };
 let chromium;
 try { ({ chromium } = require('/opt/node-tools/node_modules/playwright')); } catch (e) { console.log('SKIP: không có playwright'); process.exit(0); }
-const LINE = ['lucsi', 'thachsanh', 'giong', 'xathu', 'caolo', 'auco'];
+const LINE = ['lucsi', 'thachsanh', 'giong', 'xathu', 'caolo', 'auco', 'sodua', 'melua'];
 
 async function open(w, h, px) {
   const browser = await chromium.launch({ args: ['--allow-file-access-from-files'] });
@@ -64,6 +64,28 @@ async function probe(page, type) {
   }, type);
 }
 
+// đo như TRONG TRẬN: cỡ vẽ thật (scale 0.285 × view.scale × dpr) ở các trạng thái đứng / đánh / tung chiêu / trúng đòn
+async function probeTran(page, type) {
+  return page.evaluate((type) => {
+    const hh = game.heroes.find((x) => x && x.type === type), cv = document.getElementById('game'), k = view.scale * (cv.width / cv.clientWidth);
+    const rk = rankFxOf(HEROES[type]), rgb = [1, 3, 5].map((i) => parseInt(rk.c.slice(i, i + 2), 16)), out = {};
+    const S = { dung: {}, danh: { swing: 0.5 }, chieu: { castT: 0.3 }, trung: { hurt: 0.1 } };
+    for (const [nm, s] of Object.entries(S)) {
+      const W = Math.ceil(120 * k), H = Math.ceil(150 * k);
+      const draw = (no) => { const c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d'); x.setTransform(k, 0, 0, k, 0, 0);
+        for (let i = 0; i < 2; i++) { x.clearRect(0, 0, 999, 999); drawHeroSprite(x, hh, 60, 135, { scale: 0.285, t: 1.3, dir: 1, smooth: true, noRankFx: no, ...s }); }
+        return x.getImageData(0, 0, W, H).data; };
+      const a = draw(false), b = draw(true); let col = 0;
+      for (let i = 0; i < a.length; i += 4) {
+        const df = Math.abs(a[i] - b[i]) + Math.abs(a[i + 1] - b[i + 1]) + Math.abs(a[i + 2] - b[i + 2]) + Math.abs(a[i + 3] - b[i + 3]);
+        if (df > 24 && a[i + 3] > 60 && Math.abs(a[i] - rgb[0]) + Math.abs(a[i + 1] - rgb[1]) + Math.abs(a[i + 2] - rgb[2]) < 110) col++;
+      }
+      out[nm] = col;
+    }
+    return out;
+  }, type);
+}
+
 (async () => {
   const COL = {};   // claude/ve-lai-pixel: số điểm viền màu bậc theo chế độ — làm mượt không được làm mất viền (tester: 295 → 81)
   for (const px of [false, true, 'tat']) {
@@ -79,6 +101,11 @@ async function probe(page, type) {
       COL[mode + t] = r.col;
       ok(r.col > 40, `[${mode}] ${t}: viền + hạt màu bậc (${r.col} điểm đúng màu / ${r.diff} điểm khác)`);
       ok(r.top >= r.spriteTop - 8, `[${mode}] ${t}: hào quang không lên quá đỉnh hình (đỉnh ${r.top} · hình ${r.spriteTop.toFixed(0)}) — không che thanh máu`);
+    }
+    if (px) for (const t of ['sodua', 'thachsanh', 'melua']) {
+      const r = await probeTran(page, t);
+      for (const nm in r) COL[mode + t + '|' + nm] = r[nm];
+      console.log(`    [${mode}] ${t} trong trận: ${JSON.stringify(r)}`);
     }
     // hạt bay: ở hai thời điểm khác nhau vùng hạt khác nhau (đang chuyển động), Vàng nhiều hạt hơn Tím
     const mov = await page.evaluate(() => {
@@ -106,6 +133,10 @@ async function probe(page, type) {
   for (const t of ['thachsanh', 'giong']) {
     const a = COL['pixel bật (làm mượt)' + t], b = COL['pixel, tắt làm mượt' + t];
     ok(a >= b * 0.85 && a <= b * 1.15, `${t}: viền màu bậc khi làm mượt ${a} điểm ≈ khi tắt (${b}) ±15% — viền đậm như nhau`);
+  }
+  for (const t of ['sodua', 'thachsanh', 'melua']) for (const nm of ['dung', 'danh', 'chieu', 'trung']) {
+    const a = COL['pixel bật (làm mượt)' + t + '|' + nm], b = COL['pixel, tắt làm mượt' + t + '|' + nm];
+    ok(b > 40 && a >= b * 0.85 && a <= b * 1.15, `${t} trong trận (${nm}): viền bật ${a} ≈ tắt ${b} ±15%`);
   }
   for (const [w, h] of [[844, 390], [1920, 934]]) for (const px of [false, true]) {
     const { browser, page } = await open(w, h, px);
