@@ -20,6 +20,7 @@ async function open(browser, w, h, q = '', bat = true) {
   page.on('console', (m) => { if (m.type() === 'error' && !/Failed to load resource|net::|favicon|firebase|gstatic/i.test(m.text())) page.errors.push(m.text()); });
   await page.route('**/firebase-config.js*', (r) => r.fulfill({ contentType: 'application/javascript', body: "const FIREBASE_CONFIG={apiKey:''};" }));
   if (bat) await page.addInitScript(() => { window.CD_BAT_EP = true; });
+  await page.addInitScript(() => { window.PIXEL_BAT_EP = false; });   // pixel-mac-dinh: tự cử động là đường vẽ ảnh cũ
   await page.addInitScript(() => { if (!sessionStorage.getItem('seeded')) { localStorage.setItem('nuicao.v1', JSON.stringify({ unlocked: 5, storySeen: true, settings: { skipStory: true } })); sessionStorage.setItem('seeded', '1'); } });
   await page.goto('file://' + path.join(ROOT, 'index.html') + q);
   await page.waitForTimeout(1200);

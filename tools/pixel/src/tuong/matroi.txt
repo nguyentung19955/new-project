@@ -2,6 +2,7 @@
 # Đặc trưng (PROMPT-GEN-LAI.txt:1260 FIX ưu tiên + PROMPT-DUNG-XUONG.txt:1194): NỮ thần ~25 cao thanh; áo vàng cam gấu lửa, vương miện vàng, viền vàng;
 # cầm QUYỀN TRƯỢNG đầu đĩa mặt trời (không giáo); ĐĨA MẶT TRỜI 12 TIA khổng lồ sau lưng (đồng hun như mặt trống Đông Sơn).
 # Phá cách (DANH-SACH): tóc là tia nắng vàng chảy về sau, má/trán mang dấu hoa văn mặt trời Đông Sơn, gấu áo tan thành lửa; chiêu: hai tay giơ trời, đĩa rực sáng (Hỏa).
+# tuong-pixel-ro (phân biệt tướng): áo LỬA CAM sáng (thay son) — khác áo đỏ sẫm Kinh Dương Vương.
 name: Nữ Thần Mặt Trời
 size: 32x32
 anchor: 17,30
@@ -21,8 +22,8 @@ colors:
   o = lua-sang
   O = lua
   l = lua-sang
-  R = son-sang
-  r = son
+  R = lua-sang
+  r = lua
   y = vang-nghe
   j = dong-sang
   d = dong

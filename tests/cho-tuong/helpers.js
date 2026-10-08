@@ -30,5 +30,7 @@ async function enter(page, i = 0, endless = false) {
   await page.click('[data-act=prep-go]');
   await page.waitForTimeout(300);
 }
+// pixel-mac-dinh: pixel bật mặc định — test kiểm tra ĐƯỜNG VẼ DỰ PHÒNG (hình cũ) ép tắt pixel (như ?pixel=0)
+const noPixel = (prep = null) => async (page) => { await page.addInitScript(() => { window.PIXEL_BAT_EP = false; }); if (prep) await prep(page); };
 const ok = (cond, msg) => { if (!cond) throw new Error('FAIL: ' + msg); console.log('  ✓ ' + msg); };
-module.exports = { open, enter, ok, ROOT };
+module.exports = { open, enter, ok, ROOT, noPixel };

@@ -9,14 +9,14 @@ colors:
   d = sat-sang
 
 part k0
-caaa.a.a.a.a.a.a.a.aaaac
-aaddadadadadadadadaddbaa
-.adcbbbbbbbbbbbbbbbbcba.
-.adbaaaaaaaaaaaaaaaadba.
-.adbaaaaaaaaaaaaaaaadba.
-.adcddddddddddddddddcba.
-aabbababababababababbbaa
-caaa.a.a.a.a.a.a.a.aaaac
+caa.a.a.a.a.a.a.a.a.aaac
+adcacacacacacacacacaccba
+aca.a.a.a.a.a.a.a.a.aaca
+aca..................aca
+aca..................aca
+aca.a.a.a.a.a.a.a.a.aaca
+abcacacacacacacacacaccba
+caa.a.a.a.a.a.a.a.a.aaac
 end
 
 anim main fps=1 once

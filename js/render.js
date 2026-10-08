@@ -420,13 +420,17 @@ function enemyPackImg(e, t) {
 }
 const vectorHeroesOn = () => typeof ui !== 'undefined' && !!(ui && ui.save && ui.save.settings.vectorHeroes);
 // v85: chỉ tải sẵn ảnh chính (đứng / bước 1); các dáng khác tải khi cần — đỡ ~4 MB lúc mở game trên 4G
-if (typeof Image !== 'undefined') for (const k of ENEMY_PACK) asset(`packs/${k}/walk1.png`, true);
+// pixel-mac-dinh: tải sẵn chạy sau khi đọc xong manifest pixel (js/pixel/*.js nạp sau file này) — mã đã có pixel thì bỏ
+// ảnh cũ (vẫn tải lười nếu cần, vd ?pixel=0 hay đường dự phòng) → mở game nhanh hơn khi pixel mặc định
+const afterParse = (f) => { if (typeof document === 'undefined') return; if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', f, { once: true }); else f(); };
+const pxHasSprite = (g, k) => typeof pxEntry === 'function' && !!(g === 'tuong' ? pxEntry('tuong', k) : pxEntry('quai', k) || pxEntry('boss', k));
+if (typeof Image !== 'undefined') afterParse(() => { for (const k of ENEMY_PACK) if (!pxHasSprite('quai', k)) asset(`packs/${k}/walk1.png`, true); });
 function registerFrames(type, anims) {   // gọi khi thêm dải khung mới
   FRAME_ANIMS[type] = anims;
-  for (const a of anims) for (let i = 1; i <= FRAME_N; i++) asset(`packs/${type}/${a}_${i}.png`, true);
+  afterParse(() => { if (pxHasSprite(HERO_PACK[type] ? 'tuong' : 'quai', type)) return; for (const a of anims) for (let i = 1; i <= FRAME_N; i++) asset(`packs/${type}/${a}_${i}.png`, true); });
 }
 for (const [k, v] of Object.entries(FRAME_ANIMS)) registerFrames(k, v);
-if (typeof Image !== 'undefined') for (const k in HERO_PACK) for (const n of ['idle', 'head']) packImg(k, n);   // tải sẵn (khung chuyển động tải lười)
+if (typeof Image !== 'undefined') afterParse(() => { for (const k in HERO_PACK) if (!pxHasSprite('tuong', k)) for (const n of ['idle', 'head']) packImg(k, n); });   // tải sẵn (khung chuyển động tải lười)
 const ENEMY_FILE = { tom: 'quai_tom-binh', casau: 'quai_ca-sau', rua: 'quai_rua-giap', phuthuy: 'quai_phu-thuy-nuoc',
   chimbao: 'quai_chim-bao', echme: 'quai_ech-me', nongnoc: 'quai_nong-noc',
   thuongluong: 'boss_thuong-luong', haba: 'boss_ha-ba', thuytinh: 'boss_thuy-tinh' };
@@ -529,6 +533,9 @@ const MAP_BG = new Set(['dam', 'hang', 'rung', 'dong', 'thanh', 'bien', 'song'])
 const MAP_BG_FILE = {};
 function mapBg() {
   const m = typeof MAP_ID !== 'undefined' && MAPS[MAP_ID];
+  // claude/pixel-con-lai: nền chủ đề pixel (canh/ban-do-<chủ đề>, chuyển từ maps/nen-*.jpg) khi bật pixel
+  const pe = m && MAP_BG.has(m.theme) && typeof pixelOn === 'function' && pixelOn() && pxEntry('canh', 'ban-do-' + m.theme), pf = pe && pxFrame(pe, 0);
+  if (pf) return { img: pf, theme: m.theme };
   return m && MAP_BG.has(m.theme) ? { img: asset(`maps/nen-${MAP_BG_FILE[m.theme] || m.theme}.jpg`, true), theme: m.theme } : null;
 }
 function mapImage(pw, ph, level) {
@@ -578,6 +585,8 @@ function drawWaterLevel(ctx, water, t) {
 const SPOT_THEME = { song: 'co', dam: 'co', dong: 'co', rung: 'dat', hang: 'da', bien: 'cat', thanh: 'gach' };
 // Ô đặt tướng theo bản thiết kế: ellipse 15×10 (tọa độ thiết kế)
 // state: dry | flooded | raised | target | free | hint | soon
+// claude/pixel-con-lai: khung pixel nhóm giao-dien (thanh máu…) khi bật pixel → canvas khung 0; không có thì null
+const pxUiFrame = (code) => { const e = typeof pixelOn === 'function' && pixelOn() && pxEntry('giao-dien', code); return (e && pxFrame(e, 0)) || null; };
 function drawSpot(ctx, x, y, o, t) {
   const rx = 15 * DK, ry = 10 * DK;
   // v156: đế đặt tướng vẽ tay (tiles/de-tuong-*.png, cắt bằng tools/cat-items.py de-tuong / de-tuong-chu-de):
@@ -588,11 +597,13 @@ function drawSpot(ctx, x, y, o, t) {
   de.push(SPOT_THEME[th] || 'co', 'thuong');
   // ảnh đế là một phần bản đồ (như nền vẽ tay) → luôn dùng nếu có, kể cả khi tắt "Dùng ảnh AI"
   let base = null;
-  for (const k of de) { const img = asset(`tiles/de-tuong-${k}.png`, true); if (img) { base = { img }; break; } }
+  // claude/pixel-con-lai: đế pixel cho trạng thái đặc biệt (ngập / núi / chọn / sẵn sàng); ô thường đã có bệ đá trong nền bản đồ pixel
+  if (typeof pixelOn === 'function' && pixelOn()) for (const k of de.slice(0, -2)) { const pe = pxEntry('nen', 'de-tuong-' + k), pf = pe && pxFrame(pe, 0); if (pf) { base = { img: pf }; break; } }
+  if (!base) for (const k of de) { const img = asset(`tiles/de-tuong-${k}.png`, true); if (img) { base = { img }; break; } }
   if (base) {
     // ảnh vuông, đế elip nằm giữa; mặt đế hơi cao hơn tâm ảnh (phối cảnh 3/4) → hạ ảnh xuống một chút
     const s = rx * 2.9;
-    ctx.drawImage(base.img, x - s / 2, y - s / 2 + ry * 0.3, s, s);
+    ctx.imageSmoothingEnabled = !base.img.getContext; ctx.drawImage(base.img, x - s / 2, y - s / 2 + ry * 0.3, s, s); ctx.imageSmoothingEnabled = true;
     o = { ...o, tileArt: true };
   }
   const tk = o.flooded ? 'ngap' : o.raised || o.tier === 2 ? 'cao' : o.tier === 1 ? 'giua' : 'thap';
@@ -853,7 +864,98 @@ function footK(img) {
   img.__fk = k;
   return k;
 }
+// ------------------------------------------------------------
+//  claude/hao-quang-tim-vang: tướng Tím (Sử thi) / Vàng (Huyền thoại) — cả pixel lẫn hình cũ:
+//  viền sáng bám dáng (1 ô pixel, nhấp nháy) + 4 / 6 hạt sáng bay vòng elip quanh người có đuôi mờ. Thường: không có.
+// ------------------------------------------------------------
+const RANK_FX = {
+  epic: { c: '#B070FF', hi: '#EAD8FF', n: 4, a: 0.85, sz: 1, w: 2.4, glow: { blur: 4, alpha: 0.3 } },
+  legendary: { c: '#FFD24A', hi: '#FFFBE0', n: 6, a: 1, sz: 1.3, w: 3.2, edge: '#A35F00', glow: { blur: 8, alpha: 0.55 } },
+};
+const rankFxOf = (def) => (def && def.legend && RANK_FX[def.legend]) || null;
+const rankAlpha = (rk, t, seed) => rk.a * (0.72 + 0.28 * Math.sin(t * 4 + (seed || 0)));
+// viền dựng sẵn: dáng ảnh nở ra r điểm ảnh gốc, trừ đi chính ảnh → chỉ còn vành (mỗi ảnh × màu × r làm MỘT lần)
+function outlineSprite(img, color, r) {
+  const key = color + '|' + r;
+  const m = img.__outl || (img.__outl = new Map());
+  let c = m.get(key);
+  if (c) return c;
+  const iw = img.naturalWidth || img.width, ih = img.naturalHeight || img.height;
+  c = document.createElement('canvas'); c.width = iw + r * 2; c.height = ih + r * 2;
+  const x = c.getContext('2d');
+  x.imageSmoothingEnabled = false;
+  const off = r === 1 ? [[1, 0], [-1, 0], [0, 1], [0, -1]] : Array.from({ length: 12 }, (_, i) => [Math.round(Math.cos(i * Math.PI / 6) * r), Math.round(Math.sin(i * Math.PI / 6) * r)]);
+  for (const [dx, dy] of off) x.drawImage(img, r + dx, r + dy, iw, ih);
+  x.drawImage(c, 0, 0); x.drawImage(c, 0, 0);   // mép ảnh mờ (khử răng cưa) → viền vẫn đậm
+  x.globalCompositeOperation = 'source-in'; x.fillStyle = color; x.fillRect(0, 0, c.width, c.height);
+  x.globalCompositeOperation = 'destination-out'; x.drawImage(img, r, r, iw, ih);
+  c.__r = r;
+  if (m.size > 6) m.clear();
+  m.set(key, c);
+  return c;
+}
+// vẽ viền quanh ảnh đặt ở (x, y, w, h). r: số điểm ảnh gốc (pixel: 1 ô); bỏ trống = ~2 điểm ảnh màn hình
+function drawOutlineOnly(ctx, img, x, y, w, h, color, alpha, r, scr = 2.2) {
+  if (!img || alpha <= 0) return;
+  const iw = img.naturalWidth || img.width;
+  if (!iw) return;
+  const k = w / iw;
+  if (!r) { const tr = ctx.getTransform(); r = Math.max(1, Math.min(8, Math.round(scr / Math.max(0.02, Math.hypot(tr.a, tr.b) * k)))); }
+  const c = outlineSprite(img, color, r);
+  ctx.save();
+  ctx.globalAlpha *= Math.min(1, alpha);
+  ctx.drawImage(c, x - r * k, y - r * k, c.width * k, c.height * k);
+  ctx.restore();
+}
+// hạt sáng bay vòng elip quanh thân (front: nửa trước, vẽ sau thân). H: cao hình (đơn vị logic), u: cỡ một ô pixel
+function drawRankOrbit(ctx, rk, x, y, H, u, t, seed, front) {
+  const lv = GFX_LEVEL();
+  const n = lv >= 2 ? Math.max(3, rk.n - 2) : rk.n;
+  const q = Math.max(u * 2, H / 24) * rk.sz;   // cạnh hạt
+  const snap = (v) => Math.round(v / u) * u;
+  ctx.save();
+  for (let i = 0; i < n; i++) {
+    const fr = (i * 0.618 + seed * 0.13) % 1;
+    const yc = y - H * (0.3 + 0.32 * fr), rx = H * (0.34 + 0.06 * fr), ry = H * 0.09;
+    const th0 = t * (1.5 + 0.25 * fr) + i * Math.PI * 2 / n + seed;
+    if ((Math.sin(th0) > 0) !== front) continue;
+    for (let j = 3; j >= 0; j--) {   // đuôi: 3 vị trí trước đó, nhỏ + mờ dần
+      const th = th0 - j * 0.16;
+      const px = snap(x + Math.cos(th) * rx - x) + x, py = snap(yc + Math.sin(th) * ry - y) + y;
+      const sz = Math.max(u, q * (1 - j * 0.22));
+      ctx.globalAlpha = j ? 0.5 * (1 - j / 4) : 0.95;
+      ctx.fillStyle = rk.c;
+      ctx.fillRect(px - sz / 2, py - sz / 2, sz, sz);
+      if (!j) { const c = Math.max(u * 0.6, sz * 0.45); ctx.fillStyle = rk.hi; ctx.fillRect(px - c / 2, py - c / 2, c, c); }
+    }
+  }
+  ctx.restore();
+}
+// hình cũ (ảnh lớn, nền sáng): Vàng thêm vành hổ phách sẫm ngoài viền để nổi trên cát / áo trắng
+function drawRankOutline(ctx, img, x, y, w, h, rk, a) {
+  if (rk.edge) drawOutlineOnly(ctx, img, x, y, w, h, rk.edge, a * 0.9, 0, rk.w + 1.6);
+  drawOutlineOnly(ctx, img, x, y, w, h, rk.c, a, 0, rk.w);
+}
+const rankH = new WeakMap();   // chiều cao hình lần vẽ trước (đặt hạt trước khi vẽ thân)
 function drawHeroSprite(ctx, h, x, y, o = {}) {
+  const rk = !o.noRankFx && o.fall === undefined && rankFxOf(HEROES[h.type]);
+  if (!rk) return drawHeroSpriteCore(ctx, h, x, y, o);
+  const t = o.t || 0, seed = ((h.id || 0) * 0.37) % 6.28;
+  const prev = rankH.get(h) || { H: 236 * (o.scale || 0.26) * 0.92, u: 236 * (o.scale || 0.26) / 70 };
+  ctx.save(); ctx.globalAlpha *= o.alpha ?? 1;
+  drawRankOrbit(ctx, rk, x, y, prev.H, prev.u, t, seed, false);
+  ctx.restore();
+  const r = drawHeroSpriteCore(ctx, h, x, y, o);
+  const cur = r ? { H: Math.max(10, y - r.top), u: r.u || Math.max(1, (y - r.top) / 70) } : prev;
+  rankH.set(h, cur);
+  ctx.save(); ctx.globalAlpha *= o.alpha ?? 1;
+  drawRankOrbit(ctx, rk, x, y, cur.H, cur.u, t, seed, true);
+  ctx.restore();
+  RANK_SEEN.add(h.type);
+  return r;
+}
+const RANK_SEEN = new Set();   // test đọc: mã tướng đã vẽ hào quang bậc
+function drawHeroSpriteCore(ctx, h, x, y, o = {}) {
   // pixel art (js/pixel.js): mã có sprite pixel thì vẽ pixel, chưa có thì hình cũ
   if (!o.vector && typeof pxDrawHero === 'function') { const r = pxDrawHero(ctx, h, x, y, o); if (r) return r; }
   const def = HEROES[h.type];
@@ -976,6 +1078,8 @@ function drawHeroSprite(ctx, h, x, y, o = {}) {
     else if (gt > 0) drawGlowOnly(ctx, png, -fx, -hgt, w, hgt, RAR_COLOR[RARITY_ORDER[gt]], 4 + gt * 2, 0.55 + Math.sin(t * 3) * 0.1);
     // bộ ảnh riêng: ★★ trở lên viền sáng màu hệ (★★★ có thêm vầng mặt trời phía sau)
     else if (pack) packGlow(ctx, png, w, hgt, h, look, def, t, tierShown, ascShown);
+    const rk = !o.noRankFx && rankFxOf(def);
+    if (rk) { const im = mixD > 0.5 ? pngD : png; const wi = hgt * im.naturalWidth / im.naturalHeight; drawRankOutline(ctx, im, im === png ? -fx : pack ? -fxD : -wi / 2, -hgt, wi, hgt, rk, rankAlpha(rk, t, seed)); }
     if (mixD < 1) drawBent(ctx, png, -fx, -hgt, w, hgt, bend, breath);
     ctx.globalAlpha = base;
     if (dollBase && mixD < 1) drawDollGear(ctx, h, -w / 2, -hgt, w, hgt, bend, t);
@@ -1433,7 +1537,7 @@ function drawAccAura(ctx, a, s, t, glowOnly) {
 //  Vàng (Huyền thoại): viền vàng + vầng mặt trời + tia sáng + lửa vàng · Thần tinh: thêm ngôi sao bay quanh (1–3)
 //  Mặc đồ Huyền thoại: thêm lửa vàng + viền vàng đậm
 // ------------------------------------------------------------
-const AURA_C = { epic: '#C77DFF', legendary: '#FFD23A' };
+const AURA_C = { epic: '#B070FF', legendary: '#FFD24A' };   // claude/hao-quang-tim-vang: cùng màu viền RANK_FX
 const hasLegendGear = (h) => !!(h && h.equip && Object.values(h.equip).some((it) => it && it.rarity === 'legendary'));
 function drawPackBack(ctx, h, look, def, t, tier, asc) {
   // v79: khói / sương màu bốc lên sau lưng thay cho vầng mặt trời
@@ -2355,8 +2459,8 @@ function drawEnemy(ctx, e, t, o = {}) {
   const r = e.hp / e.maxHp;
   ctx.fillStyle = r > 0.5 ? '#3EBE3E' : r > 0.25 ? '#E0B030' : '#D84A2A';
   ctx.fillRect(e.x - w / 2, by, w * Math.max(0, r), 3);
-  const fr = asset(e.def.boss ? 'ui/thanh-mau-boss.png' : 'ui/thanh-mau-quai.png', true);   // v163: khung thanh máu vẽ tay (nếu có)
-  if (fr) ctx.drawImage(fr, e.x - w / 2 - (e.def.boss ? 8 : 4), by - 3, w + (e.def.boss ? 16 : 8), 9);
+  const fr = pxUiFrame(e.def.boss ? 'thanh-mau-boss' : 'thanh-mau-quai') || asset(e.def.boss ? 'ui/thanh-mau-boss.png' : 'ui/thanh-mau-quai.png', true);   // v163: khung thanh máu vẽ tay (nếu có) · pixel trước
+  if (fr) { ctx.imageSmoothingEnabled = !fr.getContext; ctx.drawImage(fr, e.x - w / 2 - (e.def.boss ? 8 : 4), by - 3, w + (e.def.boss ? 16 : 8), 9); ctx.imageSmoothingEnabled = true; }
   // chấm hành bên trái thanh máu (quái tinh anh có thể có hành phụ)
   if (detail) [e.el, e.el2].filter(Boolean).forEach((el, k) => {
     circle(ctx, e.x - w / 2 - 5 - k * 7, by + 1.5, 3.4, '#0D0B08');

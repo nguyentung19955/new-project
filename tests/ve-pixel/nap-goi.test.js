@@ -86,7 +86,8 @@ function unzip(buf) {
     const ctx = await browser.newContext({ viewport: { width: 844, height: 390 } });
     await routeManifest(ctx);
     await ctx.route('**/firebase-config.js*', (rr) => rr.fulfill({ contentType: 'application/javascript', body: "const FIREBASE_CONFIG={apiKey:''};" }));
-    await ctx.addInitScript(() => { if (!localStorage.getItem('nuicao.v1')) localStorage.setItem('nuicao.v1', JSON.stringify({ unlocked: 17, storySeen: true, settings: { skipStory: true } })); });
+    await ctx.addInitScript(() => { if (localStorage.getItem('ttv.pixel') === null) localStorage.setItem('ttv.pixel', '0');   // pixel-mac-dinh: người chơi đã tự tắt pixel
+      if (!localStorage.getItem('nuicao.v1')) localStorage.setItem('nuicao.v1', JSON.stringify({ unlocked: 17, storySeen: true, settings: { skipStory: true } })); });
     const page = await ctx.newPage();
     const errors = [];
     page.on('pageerror', (e) => errors.push(String(e.stack || e)));
@@ -97,7 +98,7 @@ function unzip(buf) {
     console.log('— Cài đặt');
     await page.evaluate(() => ui.showSettings(false));
     ok(await page.locator('#pxgoi-row').isVisible(), 'Cài đặt có dòng "Gói pixel"');
-    ok(/tắt/.test(await page.textContent('#pxgoi-st')) && !(await page.locator('[data-act=pxg-go]').count()), 'chưa nạp gói: ghi "Pixel đang tắt · chưa nạp gói", chưa có nút Gỡ');
+    ok(/tắt/.test(await page.textContent('#pxgoi-st')) && !(await page.locator('[data-act=pxg-go]').count()), 'chưa nạp gói, người chơi đã tắt pixel: ghi "Pixel đang tắt · dùng hình cũ", chưa có nút Gỡ');
     await page.evaluate(() => document.querySelector('#pxgoi-row').scrollIntoView({ block: 'center' }));
     await page.screenshot({ path: path.join(SHOT, 'cai-dat-chua-goi-844x390.png') });
     const nap = async (file) => {

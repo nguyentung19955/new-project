@@ -4,15 +4,22 @@
 //  Bật pixel: mã CÓ sprite pixel thì vẽ pixel (tướng, quái/boss, chân dung, icon ngũ hành, ô nền bản đồ);
 //  mã CHƯA có thì giữ hình cũ → chuyển dần từng lô. Phóng nearest-neighbor theo bội số nguyên điểm ảnh màn hình.
 // ------------------------------------------------------------
-// ==== CÔNG TẮC PIXEL (một dòng): false = tắt (hình cũ); true = bật toàn cục khi đã đủ hình ====
-const PIXEL_BAT = false;
-// bật TẠM để thử: ?pixel=1 trên URL · test: window.PIXEL_BAT_EP = true (page.addInitScript). ?pixel=0 ép tắt.
+// ==== CÔNG TẮC PIXEL (một dòng): false = tắt (hình cũ); true = bật toàn cục ====
+// claude/pixel-mac-dinh: pixel là MẶC ĐỊNH cho mọi người chơi
+const PIXEL_BAT = true;
+// tắt: ?pixel=0 trên URL · công tắc trong Cài đặt (localStorage ttv.pixel = '0') · test: window.PIXEL_BAT_EP = false.
+// bật ép: ?pixel=1 · window.PIXEL_BAT_EP = true · ttv.pixel = '1'. Chưa chọn gì = theo PIXEL_BAT.
 const PX_ON = (() => {
   try {
     if (/[?&]pixel=0\b/.test(location.search)) return false;
-    // claude/tool-pixel: công tắc "Bật pixel" trong Cài đặt → Gói pixel (lưu trên máy, js/pixel-goi.js)
-    let may = false; try { may = localStorage.getItem('ttv.pixel') === '1'; } catch (e) { /* chặn lưu */ }
-    return PIXEL_BAT || !!window.PIXEL_BAT_EP || may || /[?&]pixel=1\b/.test(location.search);
+    if (/[?&]pixel=1\b/.test(location.search)) return true;
+    if (window.PIXEL_BAT_EP === false) return false;
+    if (window.PIXEL_BAT_EP) return true;
+    // claude/tool-pixel: công tắc "Pixel" trong Cài đặt (lưu trên máy, js/pixel-goi.js)
+    let may = null; try { may = localStorage.getItem('ttv.pixel'); } catch (e) { /* chặn lưu */ }
+    if (may === '0') return false;
+    if (may === '1') return true;
+    return PIXEL_BAT;
   } catch (e) { return PIXEL_BAT; }
 })();
 const pixelOn = () => PX_ON;
@@ -21,10 +28,14 @@ const pxSmoothOff = () => PX.blits > 0 && PX.smooth === false;
 if (PX_ON && typeof document !== 'undefined') {
   document.documentElement.classList.add('pixel');
   // font pixel có dấu tiếng Việt (VT323: số · Handjet: tiêu đề) — chỉ tải khi bật pixel
-  const l = document.createElement('link');
-  l.rel = 'stylesheet';
-  l.href = 'https://fonts.googleapis.com/css2?family=Handjet:wght@500;700&family=VT323&display=swap&subset=vietnamese';
-  document.head.appendChild(l);
+  // pixel-mac-dinh: nạp sau sự kiện load (font mạng chậm / bị chặn không làm trễ mở game; display=swap → chữ đổi font sau)
+  const font = () => {
+    const l = document.createElement('link');
+    l.rel = 'stylesheet';
+    l.href = 'https://fonts.googleapis.com/css2?family=Handjet:wght@500;700&family=VT323&display=swap&subset=vietnamese';
+    document.head.appendChild(l);
+  };
+  if (document.readyState === 'complete') font(); else window.addEventListener('load', font, { once: true });
 }
 
 function pxEntry(group, code) {
@@ -80,6 +91,7 @@ function pxBlit(ctx, img, e, x, y, unit, flip, o = {}) {
   PX.blits = (PX.blits || 0) + 1; PX.smooth = ctx.imageSmoothingEnabled;
   const X = -(e.ax + 0.5) * n, Y = -(e.ay + 1) * n, W = e.w * n, H = e.h * n;
   if (o.glow) drawGlowOnly(ctx, img, X, Y, W, H, o.glow.color, o.glow.blur * k, o.glow.alpha);
+  if (o.outline) drawOutlineOnly(ctx, img, X, Y, W, H, o.outline.color, o.outline.alpha, 1);
   ctx.drawImage(img, X, Y, W, H);
   if (o.flash > 0) {
     ctx.globalCompositeOperation = 'lighter';
@@ -123,15 +135,19 @@ function pxDrawHero(ctx, h, x, y, o) {
     if (look.accAura) { ctx.save(); ctx.translate(x, y); drawAccAura(ctx, look.accAura, s, t, true); ctx.restore(); }
   }
   // chiêu: viền sáng màu chiêu; ★★ trở lên: viền sáng màu hệ (như ảnh vẽ tay)
+  // claude/hao-quang-tim-vang: Tím / Vàng — viền 1 ô pixel màu bậc (nhấp nháy) + quầng nhẹ; hạt bay quanh vẽ ở drawHeroSprite
+  const rk = !o.noRankFx && o.fall === undefined && typeof rankFxOf === 'function' && rankFxOf(def);
   const glowK = o.castT > 0 ? Math.min(1, o.castT / 0.25) : 0;
   const glow = glowK > 0 ? { color: o.castColor || '#FFE08A', blur: 10 * glowK * (o.castUlt ? 1.4 : 1), alpha: 0.8 * glowK }
+    : rk ? { color: rk.c, blur: rk.glow.blur, alpha: rk.glow.alpha + Math.sin(t * 3) * 0.08 }
     : tier >= 2 || asc > 0 ? { color: look.attrColor || '#FFE08A', blur: 5 + tier, alpha: 0.5 + Math.sin(t * 3) * 0.1 } : null;
   // trúng đòn: ngoài khung hurt (lùi + sáng da) thêm nháy trắng ngắn để không lẫn với khung đứng
-  const u = pxBlit(ctx, img, e, x, y + lift, unit, (o.dir || 1) < 0, { glow, flash: o.hurt > 0 ? Math.min(1, o.hurt / 0.2) * 0.6 : 0 });
+  const u = pxBlit(ctx, img, e, x, y + lift, unit, (o.dir || 1) < 0, { glow, flash: o.hurt > 0 ? Math.min(1, o.hurt / 0.2) * 0.6 : 0,
+    outline: rk ? { color: rk.c, alpha: rankAlpha(rk, t, (h.id || 0) * 0.37 % 6.28) } : null });
   ctx.restore();
   if (o.bog) drawBogWater(ctx, x, y, s, t);
   PX.seen.add(e.key);
-  return { top: y + lift - (e.ay + 1 - e.bbox[1]) * u, s };
+  return { top: y + lift - (e.ay + 1 - e.bbox[1]) * u, s, u };
 }
 
 // ---- QUÁI / BOSS: kích thước (enemyBox) + vẽ (drawEnemy, sau khi đã dịch / lật / nhún)
@@ -245,5 +261,64 @@ function pxMapGround(x, m, kind, k) {
   x.restore();
   return true;
 }
-// tải sẵn mọi dải khung có trong manifest (vài KB mỗi dải) để khỏi nháy hình cũ lúc đầu
-if (PX_ON && typeof Image !== 'undefined' && window.PIXEL_MANIFEST) for (const k of Object.keys(window.PIXEL_MANIFEST)) asset(`pixel/${k}.png`, true);
+// tải sẵn dải khung để khỏi nháy hình cũ lúc đầu — pixel-mac-dinh: chia đợt cho menu hiện nhanh
+//  · ngay: khung / nút giao diện (menu dùng) · sau khi menu hiện (theo lô, lúc rảnh): sprite vẽ trên canvas (tướng, quái, boss,
+//    nền, bản đồ, hiệu ứng, icon) + chân dung thẻ chợ (giải mã sẵn vào bộ đệm chợ ui.preImg → đổi chợ không nháy trống)
+//  · không tải sẵn: nhóm hiện bằng <img> (đồ, kỹ năng, ấn phù, thần khí, canh/* — trình duyệt tự tải khi mở)
+const PX_NGAY = ['giao-dien'], PX_SAU = ['tuong', 'quai', 'boss', 'nen', 'ban-do', 'vfx', 'icon'];
+function pxPreload() {
+  const M = window.PIXEL_MANIFEST || {}, keys = Object.keys(M), grp = (k) => k.slice(0, k.indexOf('/'));
+  keys.filter((k) => PX_NGAY.includes(grp(k))).forEach((k) => asset(`pixel/${k}.png`, true));
+  const later = keys.filter((k) => PX_SAU.includes(grp(k))).sort((a, b) => PX_SAU.indexOf(grp(a)) - PX_SAU.indexOf(grp(b)));
+  const idle = window.requestIdleCallback ? (f) => requestIdleCallback(f, { timeout: 300 }) : (f) => setTimeout(f, 30);
+  const step = () => {
+    later.splice(0, 60).forEach((k) => asset(`pixel/${k}.png`, true));
+    if (later.length) return idle(step);
+    if (typeof ui !== 'undefined' && ui && ui.preloadMarket && typeof HEROES !== 'undefined') ui.preloadMarket(Object.keys(HEROES).filter((t) => pxEntry('tuong', t)));
+  };
+  const go = () => setTimeout(() => idle(step), 50);
+  if (document.readyState === 'complete') go(); else window.addEventListener('load', go, { once: true });
+}
+if (PX_ON && typeof Image !== 'undefined' && typeof document !== 'undefined') {
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', pxPreload, { once: true }); else pxPreload();
+}
+
+// ---- claude/xuat-goi-pixel: emoji / ký hiệu còn vẽ bằng chữ trong giao diện → icon pixel cùng nghĩa (bảng đối chiếu DANH-SACH.md)
+//   chỉ khi bật pixel; quét nút chữ mới thêm vào DOM (MutationObserver), bỏ qua ô nhập / canvas / svg; alt giữ ký tự cũ
+const PX_EMO = { '★': 'sao-cap', '✓': 'svg-check', '✔': 'svg-check', '✗': 'sai', '🔒': 'ui-khoa', '↻': 'ui-tran-4-4', '💡': 'ui-tran-5-1', '♾': 'ui-tran-5-2',
+  '⚔': 'ui-tran-5-3', '🥇': 'ui-huy-chuong-1', '🥈': 'ui-huy-chuong-2', '🥉': 'ui-huy-chuong-3', '👑': 'ui-huy-chuong-4', '🔥': 'hanh-hoa', '🌊': 'hanh-thuy',
+  '⛰': 'ui-tran-3-3', '⚒': 'lo-duc', '🎒': 'ui-menu-2-4', '🔯': 'ui-menu-1-4', '📖': 'ui-menu-2-2', '📜': 'ui-menu-2-2', '⏸': 'ui-tran-1-2', '🎁': 'ui-menu-1-3',
+  '🏆': 'ui-menu-2-3', '👁': 'ui-tran-1-4', '🗑': 'ui-tran-2-4', '⬆': 'ui-tran-2-2', '🛡': 'ui-tran-2-3', '✸': 'ui-tran-3-2', '⇄': 'ghep-tu-dong', '✦': 'sao-than-tinh-nho',
+  '✕': 'svg-close', '💬': 'chat', '✉': 'gop-y', '📥': 'hop-thu', '🏳': 'dau-hang', '🐞': 'gy-loi', '⚖': 'gy-can-bang', '✎': 'but', '📝': 'but', '💌': 'thu-tim',
+  '☀': 'nhiem-vu-ngay', '◻': 'o-trong', '🤝': 'choi-nhom', '🌿': 'linh-chi', '🍄': 'linh-chi', '➜': 'mui-ten-phai', '↳': 'mui-ten-nhanh', '◆': 'thuoc-tinh-phu',
+  '⚜': 'than-khi', '⚑': 'co-dot', '⚠': 'canh-bao', '💧': 'ch-sontinh', '👹': 'ch-thachsanh', '🏹': 'ch-adv', '▲': 'nang-cap', '💀': 'kho', '❤': 'tim-mang', '⚡': 'tia-ky-nang' };
+const PX_EMO_RE = new RegExp('(' + Object.keys(PX_EMO).map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')\\uFE0F?', 'u');
+function pxEmoNode(t) {
+  const p = t.parentNode;
+  if (!p || /^(SCRIPT|STYLE|TEXTAREA|INPUT|OPTION|TITLE|text|tspan)$/.test(p.nodeName) || p.closest('svg, canvas, [contenteditable], .no-pxemo')) return;
+  let m;
+  while (t && (m = PX_EMO_RE.exec(t.data))) {
+    const u = pxUrl('icon', PX_EMO[m[1]]);
+    if (!u) { t = t.splitText(m.index + m[0].length); continue; }
+    const rest = t.splitText(m.index);
+    const after = rest.splitText(m[0].length);
+    const img = document.createElement('img');
+    img.className = 'pxemo'; img.src = u; img.alt = m[1];
+    rest.replaceWith(img);
+    t = after;
+  }
+}
+function pxEmoScan(root) {
+  if (!root || root.nodeType === 3) { if (root) pxEmoNode(root); return; }
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: (n) => (PX_EMO_RE.test(n.data) ? 1 : 3) });
+  const list = []; while (w.nextNode()) list.push(w.currentNode);
+  list.forEach(pxEmoNode);
+}
+if (PX_ON && typeof document !== 'undefined' && typeof MutationObserver !== 'undefined') {
+  const start = () => {
+    pxEmoScan(document.body);
+    new MutationObserver((ms) => { for (const m of ms) { if (m.type === 'characterData') pxEmoNode(m.target); else m.addedNodes.forEach((n) => pxEmoScan(n)); } })
+      .observe(document.body, { childList: true, subtree: true, characterData: true });
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+}
