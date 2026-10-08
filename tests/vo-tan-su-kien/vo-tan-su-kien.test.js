@@ -194,6 +194,28 @@ const CHI_ANH = !!process.env.CHI_ANH;   // CHI_ANH=1: chỉ chụp ảnh
   }
   await browser.close();
 
+  // ================= tester: boss ra trong đợt sự kiện → dải trên "tên sự kiện · thử thách" không được che dòng nhỏ "Boss xuất hiện"
+  for (const [w, h] of [[844, 390], [390, 844], [1920, 934], [667, 375]]) {
+    ({ browser, page, errors } = await open(w, h, {}));
+    await enter(page, 0, true);
+    await setup(page, 60, 'giobao');
+    await page.evaluate(() => { const g = game; g.startWave(); for (let i = 0; i < 60; i++) g.update(1 / 30); ui.update && ui.update(0);
+      g.running = false; document.querySelector('#roster-hint').hidden = true; ui.evQueued = null;
+      g.events.push({ type: 'boss', name: ENEMIES.hotinh.name }); ui.handleEvents(); });
+    await page.waitForTimeout(700);
+    await page.screenshot({ path: path.join(SHOT, `boss-trong-su-kien-${w}x${h}.png`) });
+    const r = await page.evaluate(() => {
+      const R = (s) => { const el = document.querySelector(s); return el && !el.hidden && el.offsetWidth ? el.getBoundingClientRect() : null; };
+      const a = R('#nextwaves'), sub = R('#banner-sub'), txt = R('#banner-text');
+      const ov = (b) => a && b ? Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left)) * Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top)) : 0;
+      return { strip: !!a && !!document.querySelector('#nextwaves .evt'), sub: sub && document.querySelector('#banner-sub').innerText, o1: ov(sub), o2: ov(txt) };
+    });
+    ok(r.strip && /boss/i.test(r.sub || ''), `${w}x${h}: đợt sự kiện có dải trên + banner "${r.sub}"`);
+    ok(r.o1 < 2 && r.o2 < 2, `${w}x${h}: dải sự kiện không che banner boss (dòng nhỏ ${Math.round(r.o1)} px², dòng to ${Math.round(r.o2)} px²)`);
+    ok(errors.length === 0, `${w}x${h}: không lỗi trang ` + errors.join(' | '));
+    await browser.close();
+  }
+
   // ================= ẢNH: banner báo trước + trận đang có sự kiện, 3 cỡ màn
   for (const [w, h] of [[1920, 934], [844, 390], [667, 375]]) {
     ({ browser, page, errors } = await open(w, h, {}));

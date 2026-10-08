@@ -2197,3 +2197,8 @@ html.pixel .tb-res b, html.pixel #tb-wave { font-family: 'VT323', var(--body); f
 #wrap.rot #banner b { font-size: 22px; }
 #wrap.rot #banner small { font-size: 11px; }
 #wrap.rot #banner.ev { top: 84px; }
+/* vo-tan-su-kien (tester): đang đợt sự kiện, dải trên hiện "tên sự kiện · thử thách" → banner boss/thăng thần cũng hạ xuống như banner sự kiện
+   (trước đây ở 844×390 và cầm dọc dải che dòng nhỏ "Boss xuất hiện") */
+#nextwaves:not([hidden]):has(.evt) ~ #banner { top: 104px; }
+@media (max-height: 520px) { #nextwaves:not([hidden]):has(.evt) ~ #banner { top: 84px; } }
+#wrap.rot #nextwaves:not([hidden]):has(.evt) ~ #banner { top: 84px; }
