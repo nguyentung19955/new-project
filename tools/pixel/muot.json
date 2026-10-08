@@ -1,4 +1,11 @@
 {
  "_ghi_chu": "Làm mượt mức 7 sinh sẵn (claude/ve-lai-pixel). 'tat' = danh sách tiền tố 'nhóm/mã' KHÔNG làm mượt (game vẽ ảnh pixel gốc, nét). Ví dụ tắt riêng nền bản đồ + cổng + bệ: [\"ban-do/\", \"canh/ban-do-\", \"nen/cong-\", \"nen/de-tuong-\"]. Ô nền 16×16 lát liền luôn bỏ qua. Sửa xong chạy: node tools/build-pixel.js",
- "tat": []
+ "tat": [
+  "ban-do/",
+  "canh/",
+  "nen/",
+  "giao-dien/",
+  "vfx/"
+ ],
+ "_chot": "Người dùng chốt 08/10 (phương án 1): CHỈ làm mượt nhân vật (tuong, quai, boss — gồm linh thú, chân dung) + icon (icon, do, ky-nang, an-phu, than-khi). Giữ nét pixel gốc: nền bản đồ / ô nền / đường / sông, cổng, bệ (nen/), cảnh / tranh / bản đồ chương / nền màn (canh/), khung UI + tranh nhỏ (giao-dien/), hiệu ứng (vfx/)."
 }

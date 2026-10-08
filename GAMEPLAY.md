@@ -2985,6 +2985,8 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
   `tools/pixel/mau/ve-lai/aa-thu-tanvien-x8.png` / `-x3.png` trước khi áp cho sprite.
 - **Làm mượt MỨC 7 — mặc định cho MỌI hình pixel (người dùng chốt)**: tool `build-pixel` tự sinh bản mượt `assets/pixel-muot/` (sel-out → Scale2x ×3 → trung bình, ×2);
   game tải thẳng bản này cho nhân vật, cổng, bệ, nền, khung, icon, tranh (không tính lúc chơi → không giật). Cài đặt → Hình pixel → **Làm mượt: Bật/Tắt** (`?muot=0`).
+- **Chốt: chỉ làm mượt nhân vật (tướng, quái, boss, chân dung) + icon**; nền bản đồ, sông, cổng, bệ, cảnh, tranh, khung giao diện giữ nét pixel gốc
+  (`tools/pixel/muot.json`); bản mượt còn 4,1 MB.
 - Làm mượt: bỏ tự tắt khi FPS thấp (giữ công tắc trong bảng Tạm dừng); giải mã trước ảnh mượt khi vào trận / biết đợt kế / chợ đổi; chân dung thanh tướng
   dùng bản mượt; cờ `tools/pixel/muot.json` để tắt làm mượt riêng nhóm (nền / cổng / bệ — chờ người dùng quyết).
 - Bảng ban thưởng: bỏ dòng "Lần khác: …" ở thẻ Kho lúa / Hội làng (người dùng) — chỉ giữ dòng thưởng chính.

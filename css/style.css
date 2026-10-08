@@ -2258,7 +2258,6 @@ html.pixel.sk-nen-man-phu #prep .screen, html.pixel.sk-nen-man-phu #result .scre
   background: linear-gradient(#0D0B08d8, #0D0B08d8), var(--sk-nen-man-phu) center / cover no-repeat, var(--bg); image-rendering: pixelated; }
 /* claude/pixel-con-lai: thẻ người chơi + nút Xuất Quân = khung vẽ tay chuyển sang pixel (giữ ô avatar tròn, 2 huy hiệu hai bên) */
 html.pixel .pl-box { background-image: url('../assets/pixel/giao-dien/khung-nguoi-choi.png'); image-rendering: pixelated; }
-html.pixel.muot .pl-box { background-image: url('../assets/pixel-muot/giao-dien/khung-nguoi-choi.png'); }
 html.pixel .mc-btn.main { background-image: url('../assets/pixel/giao-dien/khung-nut-chinh.png'); image-rendering: pixelated; }
 /* claude/ve-lai-pixel: cắt 9 mảnh — 2 huy hiệu đầu (44 điểm / ảnh cao 46) giữ đúng tỉ lệ theo chiều cao nút (--mh), chỉ tấm vàng giữa giãn ngang
    (trước: cả ảnh kéo 100%×100% → huy hiệu tròn bị bẹp / méo, góc lệch điểm) */
@@ -2267,7 +2266,6 @@ html.pixel.sk-thanh-mau-boss #bossbar .tr::after { inset: -5px -16.7px; backgrou
   border-image: var(--sk-thanh-mau-boss) 0 10.417% fill / 0 16.7px stretch; }   /* cắt theo % → dùng được cả ảnh gốc lẫn bản làm mượt ×2 */
 html.pixel .mc-btn.main { background: none; border-style: solid; border-color: transparent; border-width: 0 calc(var(--mh, 48px) * 44 / 46);
   border-image: url('../assets/pixel/giao-dien/khung-nut-chinh.png') 0 21.154% fill / 0 calc(var(--mh, 48px) * 44 / 46) stretch; padding: 0 4px; }
-html.pixel.muot .mc-btn.main { border-image-source: url('../assets/pixel-muot/giao-dien/khung-nut-chinh.png'); image-rendering: auto; }
 /* sua-giao-dien-10 (N4): thoại / banner / chip đợt / toast không chồng vùng trên — lời thoại xuống góc trái ngay trên thanh chợ,
    banner đang hiện thì ẩn chip "Đợt N" (banner và thoại dùng một hàng đợi: ui.banner cất thoại, nói lại sau) */
 #dialogue { top: auto; bottom: calc(84px * var(--hz, 1)); left: 8px; transform: scale(var(--hz, 1)); transform-origin: 0 100%; max-width: min(340px, calc(46% / var(--hz, 1))); }
@@ -2437,8 +2435,7 @@ html.pixel :is(.hx-auto, .hx-pin, .hx-st.hx-open, .hx-sk) { border-radius: 2px; 
 .foot { display: block; height: auto; min-height: 30px; white-space: normal; line-height: 1.3; padding: 5px 12px; box-sizing: border-box; }
 .foot > .coin, .foot > img { vertical-align: -3px; margin-right: 4px; }
 
-/* claude/ve-lai-pixel: LÀM MƯỢT mức 7 (mặc định, người dùng chốt 08/10) — ảnh pixel dùng bản làm mượt sinh sẵn (assets/pixel-muot/),
-   hiển thị có làm mịn thay vì nearest; tắt trong Cài đặt → "Làm mượt" (html không có lớp .muot → giữ luật pixelated ở trên).
-   Giữ nguyên: canvas trận (#game tự vẽ), tranh nền menu / đăng nhập (đã chủ ý pixel hoá). */
-html.pixel.muot *:not(#game):not(.keyart), html.pixel.muot *::before, html.pixel.muot *::after { image-rendering: auto !important; }
-html.pixel.muot #login .bgart img { image-rendering: pixelated !important; }
+/* claude/ve-lai-pixel: LÀM MƯỢT mức 7 (mặc định) — người dùng chốt 08/10: CHỈ nhân vật (tướng, quái, boss, chân dung) + icon (đồ, kỹ năng,
+   ấn phù, thần khí, icon giao diện) dùng bản làm mượt sinh sẵn (assets/pixel-muot/) và hiển thị có làm mịn. Nền / cổng / bệ / cảnh / tranh /
+   khung UI giữ ảnh pixel gốc → vẫn theo luật pixelated ở trên. Tắt trong Cài đặt → "Làm mượt" (html không có lớp .muot). */
+html.pixel.muot img[src*="pixel-muot/"], html.pixel.muot img.pxemo[src*="pixel-muot/"], html.pixel.muot canvas:not(#game) { image-rendering: auto !important; }

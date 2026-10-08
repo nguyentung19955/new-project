@@ -205,3 +205,8 @@ vì mô tả dài), nút Chọn luôn sát đáy.
 - Chân dung canvas (`pxHeroPortrait`, thanh tướng…) dùng `-chan-dung.png` bản mượt khi bật.
 - **Cờ tắt làm mượt theo nhóm / mã**: `tools/pixel/muot.json` → `"tat": ["ban-do/", "canh/ban-do-", "nen/cong-", "nen/de-tuong-"]` (ví dụ) rồi
   `node tools/build-pixel.js` — mã trong danh sách không có `m` → game vẽ ảnh gốc nét. Đang để trống, chờ người dùng quyết nền / cổng / bệ.
+
+### 12f. Chốt phương án 1 (người dùng): chỉ làm mượt nhân vật + icon
+`tools/pixel/muot.json` `"tat": ["ban-do/", "canh/", "nen/", "giao-dien/", "vfx/"]` → bản mượt còn 8 nhóm (tuong quai boss icon do ky-nang an-phu than-khi),
+**4,1 MB** (trước 6,4 MB; ảnh gốc 8,1 MB). CSS chỉ bỏ `pixelated` cho `img[src*="pixel-muot/"]` + canvas chân dung; nền / cổng / bệ / khung giữ nét.
+FPS CPU×4, 3 s đầu (quái của màn, tướng đặt sẵn): tắt / bật ≈ 18,8 / 18,7; khung tệ nhất 167–283 / 150–183 ms.

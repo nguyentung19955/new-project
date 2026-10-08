@@ -423,6 +423,7 @@ function run(argv) {
         const code = f.replace(/(-chan-dung)?\.(png|json)$/, '');
         if (!giu(entries[`${g}/${code}`])) { fs.unlinkSync(path.join(d, f)); log(`  − xoá ${thu}/${g}/${f} (không còn nguồn)`); }
       }
+      if (!fs.readdirSync(d).length) fs.rmdirSync(d);   // nhóm không còn ảnh (vd tắt làm mượt cả nhóm trong tools/pixel/muot.json)
     }
   }
   fs.mkdirSync(path.join(opt.out, 'js', 'pixel'), { recursive: true });
