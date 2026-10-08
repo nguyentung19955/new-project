@@ -2765,3 +2765,11 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 - Sửa thêm: kỹ năng hỗ trợ (khiên, buff, hồi máu — Kim Quy Q, Cây Đa của Cuội/Mẫu E…) chỉ dùng TRONG ĐỢT: sân hết quái (giữa hai đợt)
   thì không dùng dù tướng đang bị thương. Test: tests/sua-tam-skill (giữa hai đợt, tướng 30% máu → không kỹ năng hỗ trợ nào tung).
 - Theo tester: bỏ luật ẩn mọi phần tử con của chợ (chỉ ẩn khung ngoài, con tự ẩn theo); `closeScreen` bỏ lớp panel-open ngay khi đóng. Lỗi chập chờn của cho-tuong ("ảnh chưa sẵn sàng") khi chạy 6 test song song cũng xảy ra trên nhánh chính (1/6 lần), không do nhánh này; chạy lần lượt 5/5 đạt.
+
+## claude/quai-to-dan — Quái pixel không còn "to lên" giữa trận
+- Lỗi người dùng báo: quái pixel cứ phình to / nhảy cỡ khi đang chơi.
+- Nguyên nhân thật: `drawEnemy` co giãn quái khi bơi (±3,5%) và khi trúng đòn giật lùi (×1,1); với pixel, `pxBlit` làm tròn cỡ một điểm ảnh sprite theo tỉ lệ khung (`round(unit × scale)`) → chỉ cần ×1,1 là nhảy lên cả bậc: 1→2 px (×2: voi chiến, kỵ binh, Triệu Đà…), 2→3 px (×1,5)… Quái bị đánh liên tục nên trông như cứ to lên.
+- Sửa: quái pixel chỉ lật trái/phải, không nhận co giãn bơi / giật lùi (đã có khung hurt/walk riêng; vẫn giữ giật lùi ngang + nghiêng). Hình cũ (không pixel) giữ như trước.
+- Phòng thêm: cỡ quái pixel co theo chiều cao hình cũ lấy từ bảng tĩnh `js/pixel/quai-cao.js` (sinh bằng `node tools/build-quai-cao.js`, chạy lại khi thêm quái / đổi ảnh cũ / đổi ENEMY_W) thay vì đo lúc chơi → không phụ thuộc ảnh cũ tải xong hay chưa, không còn kéo ảnh cũ packs/* về khi bật pixel. Cỡ boss giữ đúng như v217 (tests/pixel/boss-cao ×1,00).
+- Tinh anh ×1,15, quái champion (thủ lĩnh) ×1,5 vẫn to hơn có chủ đích (cố định từ lúc sinh).
+- Test: `node tests/pixel/quai-co-dinh.test.js` (41 loại quái: hộp + cỡ vẽ thật không đổi quá 2% qua 30 s, bị giật lùi liên tục, ép tải ảnh cũ; chụp đầu trận / sau 30 s ở 1920×934 · 844×390).
