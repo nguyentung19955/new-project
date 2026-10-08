@@ -1414,7 +1414,7 @@
           const g = k < 0.2 ? k / 0.2 : k > 0.7 ? (1 - k) / 0.3 : 1;
           for (let j = 0; j < 9; j++) {
             const a = (j / 9) * TAU + hash(o.sd + j), d = 0.45 + hash(o.sd + j * 3) * 0.55;
-            const sx = x + Math.round(Math.cos(a) * o.r * d), sy = y + Math.round(Math.sin(a) * o.r * 0.6 * d);
+            const sx = x + Math.round(Math.cos(a) * o.r * d), sy = y + Math.round(Math.sin(a) * o.r * (G.ZK || 0.6) * d);
             const h = Math.round((7 + hash(o.sd + j * 5) * 9) * g);
             if (h < 2) continue;
             p(c, sx - 2, sy - (h * 0.4 | 0), 5, (h * 0.4 | 0) + 1, '#4a9ad0'); p(c, sx - 1, sy - (h * 0.75 | 0), 3, (h * 0.75 | 0), '#7fd4ff');

@@ -349,8 +349,15 @@
       { kind: 'charm', el: S.tut ? 'fire' : G.pick(G.ELS), label: '', sub: 'Phủ hệ lên cả hai vũ khí trong 60 giây' },
     ].map((o) => { if (o.kind === 'charm') o.label = 'Bùa ' + G.EL[o.el].name; return o; });
   }
+  // Suối hồi chỉ dùng được khi đã dọn đủ 3 phòng quái (2 Đánh quái và Tinh anh). Ở Kiểu A và C thì lúc tới suối luôn đã đủ;
+  // ở Kiểu B (mê cung) người chơi có thể đi ngang suối từ sớm: lúc đó suối hiện mờ, chưa dùng được.
+  const FOUNTAIN_NEED = 3;
+  function fightsCleared() { return S.map.rooms.filter((r) => (r.type === 'fight' || r.type === 'elite') && S.cleared[r.id]).length; }
+  function fountainLocked() { return fightsCleared() < FOUNTAIN_NEED; }
+  G.fountainLocked = () => !!S && fountainLocked();
   function interact(pr) {
     const W = S.W, P = S.P;
+    if (pr.act === 'fountain' && fountainLocked()) return;
     if (pr.act === 'chest' && !pr.used) { S.opts = chestOptions(); S.mode = 'chest'; S.prop = pr; } else if (pr.act === 'fountain' && !pr.used) {
       if (pr.kind === 'hp') P.hp = Math.min(P.maxhp, P.hp + P.maxhp * 0.5); else P.mana = P.maxmana;
       for (const o of W.props) if (o.type === 'fountain') o.used = true;
@@ -516,8 +523,10 @@
       // tương tác với đồ vật gần nhất
       S.near = null;
       let bd = 26;
+      const fLock = W.type === 'fountain' && fountainLocked();
+      for (const pr of W.props) if (pr.type === 'fountain') pr.dim = fLock && !pr.used; // suối chưa dùng được thì vẽ mờ
       for (const pr of W.props) {
-        if (!pr.act || pr.used) continue;
+        if (!pr.act || pr.used || (fLock && pr.act === 'fountain')) continue;
         const d = Math.hypot(pr.x - P.x, (pr.y - P.y) * 1.3);
         if (d < bd) { bd = d; S.near = pr; }
       }
@@ -704,8 +713,15 @@
     // tên các vật bấm được, để người mới biết đó là gì
     const PNAME = { chest: 'Rương báu', stash: 'Rương đồ', merchant: 'Thương nhân', altar: 'Bàn thờ lời nguyền' };
     if (S.mode === 'play') {
+      const fLock = W.type === 'fountain' && fountainLocked();
+      if (fLock && W.props.some((p) => p.type === 'fountain' && !p.used)) {
+        // suối còn khóa: một dòng chữ mờ giữa hai suối, kèm số phòng quái đã dọn
+        const fs = W.props.filter((p) => p.type === 'fountain'), fx = fs.reduce((a, p) => a + p.x, 0) / fs.length, fy = fs[0].y - 44;
+        ui.text('Dọn hết quái rồi quay lại', fx, fy, { size: 7.5, align: 'center', bold: true, color: '#b8b0a0' });
+        ui.text('Đã dọn ' + fightsCleared() + '/' + FOUNTAIN_NEED + ' phòng quái', fx, fy + 9, { size: 6.5, align: 'center', color: '#8f887c' });
+      }
       for (const pr of W.props) {
-        if (!pr.act || pr.used) continue;
+        if (!pr.act || pr.used || (fLock && pr.act === 'fountain')) continue;
         const nm = pr.act === 'fountain' ? (pr.kind === 'hp' ? 'Hồi máu' : 'Hồi mana') : PNAME[pr.act];
         const py = pr.y - (pr.act === 'stash' ? 28 : pr.act === 'fountain' ? 40 : 36);
         if (pr === S.near) ui.text('Bấm Đánh', pr.x - W.cam, py, { size: 8, align: 'center', bold: true, color: '#fff3b0' });

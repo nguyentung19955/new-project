@@ -1006,7 +1006,13 @@
   };
   A.prop = function (cx, o) {
     const f = o && PROPS[o.type];
-    if (!f) return oldProp.apply(this, arguments);
+    if (!f) {
+      if (o && o.dim) { // vật chưa dùng được (suối còn khóa): vẽ mờ
+        cx.save(); cx.globalAlpha *= 0.38;
+        try { return oldProp.apply(this, arguments); } finally { cx.restore(); }
+      }
+      return oldProp.apply(this, arguments);
+    }
     const pv = c;
     c = cx;
     try { f(o, Math.round(o.x || 0), Math.round(o.y || 0), G.time || 0); } catch (e) {

@@ -111,6 +111,7 @@
         if (!pr.act || pr.used) continue;
         if (pr.act === 'stash' || pr.act === 'merchant' || pr.act === 'altar') { if (!cfg.explore || pr.botSeen) continue; }
         if (pr.act === 'fountain') {
+          if (G.fountainLocked && G.fountainLocked()) continue; // suối còn khóa (chưa dọn đủ 3 phòng quái)
           // suối chỉ dùng một lần: để dành tới lúc sắp vào Trùm (ở Kiểu B có thể đi ngang qua suối từ sớm)
           if (S.map.rooms.some((o) => !S.seen[o.id] && o.type !== 'boss' && (cfg.side || o.main))) continue;
           const want = cfg.fountain === 'auto' ? (P.hp < P.maxhp * 0.7 ? 'hp' : 'mana') : cfg.fountain;

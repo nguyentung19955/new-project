@@ -1348,7 +1348,7 @@
         two(c, () => {
           for (let i = 0; i < 16; i++) {
             const an = i * 0.393 + 0.2, rr = r * (0.45 + 0.5 * hsh(i + 2));
-            const sx = Math.round(x + Math.cos(an) * rr), sy = Math.round(y + Math.sin(an) * rr * 0.6);
+            const sx = Math.round(x + Math.cos(an) * rr), sy = Math.round(y + Math.sin(an) * rr * (G.ZK || 0.6)); // khớp vùng cảnh báo nhìn từ trên
             const h = Math.round((9 + hsh(i) * 9) * H), ln = Math.round(Math.cos(an) * 4 * H);
             if (h < 2) continue;
             seg(sx, sy, sx + ln, sy - h, 3, '#d8cfa8');
@@ -1374,10 +1374,10 @@
       } else if (f.k === 'quake') {
         // đất nứt và đá văng lên
         const r = f.r || 30, e = easeOut(v);
-        ring(c, x, y, r * (0.4 + 0.6 * e), r * 0.6 * (0.4 + 0.6 * e), 'rgba(255,240,200,' + (0.8 * (1 - v)).toFixed(2) + ')');
+        ring(c, x, y, r * (0.4 + 0.6 * e), r * (G.ZK || 0.6) * (0.4 + 0.6 * e), 'rgba(255,240,200,' + (0.8 * (1 - v)).toFixed(2) + ')');
         for (let i = 0; i < 6; i++) {
           const an = i * 1.047 + 0.3, len = r * (0.4 + 0.5 * hsh(i)) * Math.min(1, v * 4);
-          A.line(c, x, y, Math.round(x + Math.cos(an) * len), Math.round(y + Math.sin(an) * len * 0.6), 'rgba(30,18,14,' + (0.8 * (1 - v)).toFixed(2) + ')', 1);
+          A.line(c, x, y, Math.round(x + Math.cos(an) * len), Math.round(y + Math.sin(an) * len * (G.ZK || 0.6)), 'rgba(30,18,14,' + (0.8 * (1 - v)).toFixed(2) + ')', 1);
         }
         c.save(); c.translate(x, y - 3); bits(c, 10, v, r, '#8a7a6a', '#d8cfa8', 1.1, 20); c.restore();
       }
@@ -2391,7 +2391,7 @@
           post.push(() => {
             for (let i = 0; i < 16; i++) {
               const ang = i * 0.3927 + 0.2, r0 = r * (0.25 + 0.7 * v), r1 = r * (0.4 + 0.7 * v);
-              A.line(c, Math.round(zx + Math.cos(ang) * r0), Math.round(zy - 14 * (1 - v) + Math.sin(ang) * r0 * 0.6), Math.round(zx + Math.cos(ang) * r1), Math.round(zy - 14 * (1 - v) + Math.sin(ang) * r1 * 0.6), i % 2 ? '#fff0c0' : '#e0563a', 1);
+              A.line(c, Math.round(zx + Math.cos(ang) * r0), Math.round(zy - 14 * (1 - v) + Math.sin(ang) * r0 * (G.ZK || 0.6)), Math.round(zx + Math.cos(ang) * r1), Math.round(zy - 14 * (1 - v) + Math.sin(ang) * r1 * (G.ZK || 0.6)), i % 2 ? '#fff0c0' : '#e0563a', 1);
             }
           });
         }
@@ -2712,8 +2712,8 @@
           post.push(() => {
             if (w >= 1) return;
             const r = an.r * (0.3 + 0.7 * easeOut(w));
-            ring(c, x, y, r, r * (G.ZK || 0.6), A.hexA(E.col2, 1 - w)); ring(c, x, y, r - 3, r * (G.ZK || 0.6) - 2, A.hexA(E.col, 0.9 * (1 - w))); ring(c, x, y, r * 0.6, r * 0.36, A.hexA(E.col, 0.6 * (1 - w)));
-            for (let i = 0; i < 14; i++) { const ang = i * 0.449 + 0.1, r0 = r * 0.75, r1 = r * 1.02; A.line(c, Math.round(x + Math.cos(ang) * r0), Math.round(y - 10 * (1 - w) + Math.sin(ang) * r0 * 0.6), Math.round(x + Math.cos(ang) * r1), Math.round(y - 10 * (1 - w) + Math.sin(ang) * r1 * 0.6), i % 2 ? E.col : E.col2, 2); }
+            ring(c, x, y, r, r * (G.ZK || 0.6), A.hexA(E.col2, 1 - w)); ring(c, x, y, r - 3, r * (G.ZK || 0.6) - 2, A.hexA(E.col, 0.9 * (1 - w))); ring(c, x, y, r * 0.6, r * 0.6 * (G.ZK || 0.6), A.hexA(E.col, 0.6 * (1 - w)));
+            for (let i = 0; i < 14; i++) { const ang = i * 0.449 + 0.1, r0 = r * 0.75, r1 = r * 1.02; A.line(c, Math.round(x + Math.cos(ang) * r0), Math.round(y - 10 * (1 - w) + Math.sin(ang) * r0 * (G.ZK || 0.6)), Math.round(x + Math.cos(ang) * r1), Math.round(y - 10 * (1 - w) + Math.sin(ang) * r1 * (G.ZK || 0.6)), i % 2 ? E.col : E.col2, 2); }
           });
         }
       } else if (an.name === 'illusion') {

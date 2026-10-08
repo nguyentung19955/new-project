@@ -34,6 +34,8 @@
   G.testGoto = function (type) {
     const S = G.getRun(), M = G.mapgen;
     let r = S.map.rooms.find((o) => o.type === type);
+    // nhảy thẳng tới Suối hồi thì coi như đã dọn các phòng quái trên đường (như khi đi thật), để suối dùng được
+    if (type === 'fountain') for (const o of S.map.rooms) if (o.type === 'fight' || o.type === 'elite') S.cleared[o.id] = true;
     if (r) { G.gotoRoom(r.id); return r.id; }
     r = S.map.rooms.find((o) => M.SIDE.includes(o.type));
     G.gotoRoom(r.id, type);
