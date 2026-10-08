@@ -2135,26 +2135,40 @@ class UI {
     };
     return `<div class="mk-pin no-pxemo ${pt.auto ? 'auto' : ''}"><span class="mp-lb">${pt.auto ? 'Gợi ý' : SVG_PIN}</span>${pt.to.map(one).join('')}${pt.auto ? '<button class="mp-x" data-act="pin-auto-off" aria-label="Tắt gợi ý tự động" title="Tắt gợi ý tự động (bật lại trong Hợp thể)">✕</button>' : ''}</div>`;
   }
-  // tướng này góp vào công thức nào / cần gì (chạm giữ thẻ chợ, Bách khoa)
-  heroUses(t) {
-    const nm = (x) => `<b style="color:${HEROES[x].legend ? RARITY[HEROES[x].legend].color : 'var(--text)'}">${esc(HEROES[x].name)}</b>`;
-    const into = FUSION.filter((f) => f.a === t || f.b === t);
-    const from = FUSION.find((f) => f.to === t);
-    const pins = this.pinList();
-    let h = '';
-    if (from) h += `<div class="ht-r"><span>Cần</span>${nm(from.a)} + ${nm(from.b)}</div>`;
-    if (into.length) h += `<div class="ht-r"><span>Góp vào</span><div>${into.map((f) => `<div>${pins.includes(f.to) ? SVG_PIN : ''}+ ${nm(f.a === t ? f.b : f.a)} ➜ ${nm(f.to)} <small>${RARITY[HEROES[f.to].legend].name}</small></div>`).join('')}</div></div>`;
-    return h || '<div class="ht-r"><span>Bậc cao nhất</span></div>';
-  }
+  // claude/goi-y-ro (v249+): bảng gợi ý khi GIỮ TAY vào tướng — NẰM NGANG, thấp: [chân dung + tên/bậc/hành/vai] · [chỉ số + 4 kỹ năng] ·
+  // [Cần / Góp vào: icon + icon ➜ đích]. Gắn trong #ui (xoay theo màn dọc như phần còn lại), đặt trên hoặc dưới ô đang giữ, không tràn mép.
   showHeroTip(t, r) {
+    const ui = $('#ui');
     let el = $('#hero-tip');
-    if (!el) { el = document.createElement('div'); el.id = 'hero-tip'; el.className = 'no-pxemo'; document.body.appendChild(el); }
-    const d = HEROES[t];
-    el.innerHTML = `<div class="ht-h">${elIcon(d.el, 13)}<b>${esc(d.name)}</b>${heroRole(t) ? `<small>${ROLES[heroRole(t)].name}</small>` : ''}</div>${this.heroUses(t)}`;
+    if (!el || el.parentNode !== ui) { if (el) el.remove(); el = document.createElement('div'); el.id = 'hero-tip'; el.className = 'no-pxemo'; ui.appendChild(el); }
+    const d = HEROES[t], R = d.legend ? RARITY[d.legend] : null, pins = this.pinList();
+    const hd = (x, cls = '') => `<span class="ht-i ${HEROES[x].legend || 'common'} ${cls}" title="${esc(HEROES[x].name)}"><img src="${heroImgUrl(x, 'head')}" alt=""></span>`;
+    const into = FUSION.filter((f) => f.a === t || f.b === t), from = FUSION.find((f) => f.to === t);
+    const rec = (f, mine) => `<div class="ht-f ${pins.includes(f.to) ? 'pin' : ''}" style="--rc:${RARITY[HEROES[f.to].legend].color}">${pins.includes(f.to) ? SVG_PIN : ''}${mine ? '' : `${hd(f.a)}<em>+</em>`}${hd(f.b === t && mine ? f.a : f.b)}<em class="ar">➜</em>${hd(f.to, 'to')}<b>${esc(HEROES[f.to].name)}</b></div>`;
+    const right = (from ? `<div class="ht-lb">Cần</div>${rec(from, false)}` : '')
+      + (into.length ? `<div class="ht-lb">Góp vào <small>(+ bạn ghép)</small></div>${into.map((f) => rec(f, true)).join('')}` : '')
+      || '<div class="ht-lb">Bậc cao nhất</div>';
+    const b = d.base || {}, rl = heroRoles(t);
+    el.innerHTML = `<div class="ht-c ht-a">${hd(t, 'me')}<div class="ht-id"><b>${esc(d.name)}</b>
+        <small style="color:${R ? R.color : '#C8BFA8'}">${R ? R.name : 'Thường'}</small>
+        <span>${elIcon(d.el, 12)}${ELEMENTS[d.el].name}${rl.length ? ` · ${rl.map((x) => ROLES[x].name).join(' / ')}` : ''}</span></div></div>
+      <div class="ht-c ht-b"><div class="ht-st"><span>Công <b>${b.damage || 0}</b></span><span>Tầm <b>${b.range || 0}</b></span><span>${d.dmgType === 'magic' ? 'Phép' : 'Vật lý'} · ${d.attack === 'melee' ? 'Cận' : 'Xa'}</span></div>
+        <div class="ht-sk">${d.skills.map((sk, i) => `<span title="${esc(SKILL_KEYS[i] + ' · ' + sk.name)}">${skillIcon(t, i)}<i>${SKILL_KEYS[i]}</i></span>`).join('')}</div></div>
+      <div class="ht-c ht-r2">${right}</div>`;
     el.hidden = false;
-    const w = el.offsetWidth, hh = el.offsetHeight, W = innerWidth;
-    el.style.left = Math.max(6, Math.min(W - w - 6, r.left + r.width / 2 - w / 2)) + 'px';
-    el.style.top = Math.max(6, r.top - hh - 8) + 'px';
+    // màn hình → toạ độ trong #ui (#wrap.rot: xoay 90°)
+    const U = ui.getBoundingClientRect(), W = ui.offsetWidth, H = ui.offsetHeight, rot = $('#wrap').classList.contains('rot');
+    const k = rot ? U.height / W : U.width / W;
+    const loc = (sx, sy) => (rot ? [(sy - U.top) / k, (U.right - sx) / k] : [(sx - U.left) / k, (sy - U.top) / k]);
+    const [x1, y1] = loc(r.left, r.top), [x2, y2] = loc(r.right, r.bottom);
+    const T = Math.min(y1, y2), Bt = Math.max(y1, y2), cx = (x1 + x2) / 2;
+    const hz = parseFloat(getComputedStyle(ui).getPropertyValue('--hz')) || 1;
+    el.style.maxWidth = Math.min(560, (W - 16) / hz) + 'px';
+    const w = el.offsetWidth * hz, h = el.offsetHeight * hz;
+    const top = T - h - 8 >= 4 ? T - h - 8 : Math.min(H - h - 4, Bt + 8);     // trên ô đang giữ; sát mép trên thì xuống dưới
+    el.style.left = Math.max(6, Math.min(W - w - 6, cx - w / 2)) + 'px';
+    el.style.top = Math.max(4, top) + 'px';
+    el.style.transform = `scale(${hz})`;
   }
   hideHeroTip() { const el = $('#hero-tip'); if (el) el.hidden = true; }
   // thanh tìm kiếm (ctx: chỗ dùng; tiers: có lọc bậc)
