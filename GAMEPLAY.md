@@ -2372,6 +2372,10 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 241 — vẽ tay lại pixel (tester đạt)
+
+- Vẽ tay lại (bỏ ảnh chuyển tự động): 5 cổng thành, bệ đặt tướng, 7 tranh Sính lễ (khung đều), núi Tản Viên 1–5, 4 bản đồ chương, thẻ chế độ, thắng/thua, truyện, nền màn phụ tối + trống đồng. Thiết kế: docs/pixel/THIET-KE-LAI.md.
+
 ## Phiên bản 240 — chỉnh lại R sau khi bỏ toàn bản đồ (tester đạt)
 
 - 9 R vùng lớn (chỉ trong tầm ×2): sát thương về gốc (Mưa Dừa/Dưa ×2, Rừng thiêng ×2 trói 1,8 s, Ngựa sắt ×4), hồi chiêu chốt: Sọ Dừa 24, An Tiêm 20, Mẫu 26, Hải Sen 20, Thần Sương 18, Gióng 20, Cuội 22, Trương Chi 22, Long Nữ 22 (sàn 12 s). Mô tả Quả Dừa Nổ sửa đúng ×1.5 + làm chậm. Test chạy lại test chập chờn 1 lần (run-all).
