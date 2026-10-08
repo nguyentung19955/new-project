@@ -2765,3 +2765,14 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 - Sửa thêm: kỹ năng hỗ trợ (khiên, buff, hồi máu — Kim Quy Q, Cây Đa của Cuội/Mẫu E…) chỉ dùng TRONG ĐỢT: sân hết quái (giữa hai đợt)
   thì không dùng dù tướng đang bị thương. Test: tests/sua-tam-skill (giữa hai đợt, tướng 30% máu → không kỹ năng hỗ trợ nào tung).
 - Theo tester: bỏ luật ẩn mọi phần tử con của chợ (chỉ ẩn khung ngoài, con tự ẩn theo); `closeScreen` bỏ lớp panel-open ngay khi đóng. Lỗi chập chờn của cho-tuong ("ảnh chưa sẵn sàng") khi chạy 6 test song song cũng xảy ra trên nhánh chính (1/6 lần), không do nhánh này; chạy lần lượt 5/5 đạt.
+
+## claude/goi-y-ro — Sáng gợi ý triệu hồi rõ hơn
+- Thẻ chợ có gợi ý: viền trong 2px + quầng sáng nằm TRÊN khung thẻ pixel, thở 1,3 s (chỉ đổi opacity của `::before` → không vẽ lại,
+  không tốn FPS). Màu theo loại: xanh lá = mua là ghép ★ (quy ước cũ), tím = nguyên liệu hợp thể Sử thi, cam vàng = hợp thể Huyền thoại
+  (`marketNeeds().hopTo` cho biết tướng đích). Thẻ vừa ghép vừa là nguyên liệu → ưu tiên xanh ghép.
+- Dấu góc cho người mù màu: `▲★` (ghép) / `⇧` (hợp thể), chữ thường hệ thống (`no-pxemo`, không đổi thành icon pixel) — cạnh chân dung, không che mặt.
+- Trên sân: khi đang xem chợ (không chọn / không kéo), tướng ★ mà thẻ chợ mua là ghép luôn có vòng xanh nhịp dưới chân (viền tối lót
+  để nổi trên nền pixel) + mũi tên xanh nhỏ nhấp nhô trên đầu. Vòng "ghép được" lúc kéo tướng/thẻ cũng thở theo cùng nhịp (`drawTwinRing`).
+- Chạy cả pixel và `?pixel=0` (lớp sáng là CSS/canvas chung, không cần ảnh pixel riêng).
+- Test: `node tests/goi-y-ro/goi-y-ro.test.js` (đúng điều kiện có/không tướng cùng loại, 3 màu khác nhau, nhịp 1,2–1,5 s, đo điểm ảnh viền
+  so với thẻ thường: tương phản ≥ 1,8 ở pixel/pixel0, 844×390 · 667×375 · 1920×934).
