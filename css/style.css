@@ -2187,6 +2187,13 @@ html.sk-the-cho .mk-card .rl { z-index: 2; }
 /* ===== PIXEL ART (claude/pixel-nen-tang · js/pixel.js, bật bằng ?pixel=1 / PIXEL_BAT) =====
    ảnh pixel phóng nearest-neighbor; tiêu đề Handjet, số VT323 (Google Fonts, có dấu tiếng Việt); chữ dài giữ Alegreya Sans */
 html.pixel img[src*="pixel/"], html.pixel canvas:not(#game) { image-rendering: pixelated; image-rendering: crisp-edges; }
+/* claude/xuat-goi-pixel: khi bật pixel, mọi bảng .metal dùng khung pixel tối, nút .metal dùng nút đồng pixel, nút chính menu dùng nút vàng */
+html.pixel.sk-khung-toi .metal:not(button):not(.mc-btn):not(.pl-box) { border-color: transparent; border-image: var(--sk-khung-bang-toi) 25% fill / 9px / 0 stretch; background: none; box-shadow: none; }
+html.pixel.sk-khung-toi .metal:not(button) > .rv { display: none; }
+html.pixel.sk-nut-dong button.metal:not(.xbtn):not(.mk-rr):not(.btn-gold):not(.mk-card):not(.dk-card):not(.md-card), html.pixel.sk-nut-dong .mc-btn.metal { background: var(--sk-nut-dong-thuong) center / 100% 100% no-repeat; border-color: transparent; box-shadow: none; }
+html.pixel.sk-nut-dong button.metal:not(.xbtn):not(.mk-rr):not(.btn-gold):not(.mk-card):not(.dk-card):not(.md-card):active, html.pixel.sk-nut-dong .mc-btn.metal:active { background-image: var(--sk-nut-dong-nhan, var(--sk-nut-dong-thuong)); }
+html.pixel.sk-nut-dong button.metal:not(.xbtn):not(.mk-rr):not(.btn-gold):not(.mk-card):not(.dk-card):not(.md-card):disabled { background-image: var(--sk-nut-dong-khoa, var(--sk-nut-dong-thuong)); }
+html.pixel .metal, html.pixel .mc-btn { image-rendering: pixelated; }
 /* claude/xuat-goi-pixel: nền khung / nút pixel (biến --sk-*) phóng không làm mịn */
 html.pixel .btn-gold, html.pixel .res-btns button.metal, html.pixel .xbtn, html.pixel #bossbar .tr::after, html.pixel #deck, html.pixel .mk-card::after,
 html.pixel .mk-rr, html.pixel .cp-node .c, html.pixel .panel, html.pixel .modal { image-rendering: pixelated; }
@@ -2214,3 +2221,14 @@ html.pixel #bossbar .bn span:first-child { font-size: 17px; color: #FFE7A0; font
 #nextwaves:not([hidden]):has(.evt) ~ #banner { top: 104px; }
 @media (max-height: 520px) { #nextwaves:not([hidden]):has(.evt) ~ #banner { top: 84px; } }
 #wrap.rot #nextwaves:not([hidden]):has(.evt) ~ #banner { top: 84px; }
+/* claude/xuat-goi-pixel: emoji / ký hiệu thay bằng icon pixel (js/pixel.js PX_EMO) — cao bằng dòng chữ */
+html.pixel img.pxemo { height: 1.15em; width: auto; vertical-align: -0.2em; image-rendering: pixelated; display: inline-block; }
+/* claude/pixel-con-lai: huy hiệu ải pixel lòng tối → số ải chữ sáng */
+html.pixel.sk-huy-hieu .cp-node .c { color: #FFE7A0; text-shadow: 0 1px 0 #000, 0 0 3px #000; }
+html.pixel.sk-huy-hieu .cp-node.lock .c { color: #9A9080; }
+/* claude/pixel-con-lai: nền màn phụ pixel (phông menu) phủ tối hơn để chữ nhỏ dễ đọc */
+html.pixel.sk-nen-man-phu #prep .screen, html.pixel.sk-nen-man-phu #result .screen, html.pixel.sk-nen-man-phu #reward .screen {
+  background: linear-gradient(#0D0B08d8, #0D0B08d8), var(--sk-nen-man-phu) center / cover no-repeat, var(--bg); image-rendering: pixelated; }
+/* claude/pixel-con-lai: thẻ người chơi + nút Xuất Quân = khung vẽ tay chuyển sang pixel (giữ ô avatar tròn, 2 huy hiệu hai bên) */
+html.pixel .pl-box { background-image: url('../assets/pixel/giao-dien/khung-nguoi-choi.png'); image-rendering: pixelated; }
+html.pixel .mc-btn.main { background-image: url('../assets/pixel/giao-dien/khung-nut-chinh.png'); image-rendering: pixelated; }

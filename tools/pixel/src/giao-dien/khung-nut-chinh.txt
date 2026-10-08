@@ -1,31 +1,76 @@
 # nút chính menu (Xuất trận) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
 # Mô tả: nút vàng lớn
 name: nút chính menu (Xuất trận)
-size: 64x16
+size: 208x46
 colors:
-  a = vien
+  a = trang
   b = sang
-  c = dong-sang
-  d = vang-nghe
-  e = vang-sang
+  c = da-toi
+  d = da
+  e = da-sang
+  f = dat-toi
+  g = dat
+  h = dat-sang
+  i = cat
+  j = dong
+  k = dong-sang
+  l = vang-nghe
+  m = vang-sang
+  n = son-toi
+  o = son
+  p = son-sang
+  q = hong
+  r = lua
+  s = lua-sang
+  t = la-sang
 
 part k0
-...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...
-..aeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeca..
-.aeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeca.
-aeddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddca
-aeddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddca
-aeddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddca
-aeddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddca
-aededdddddddddddddddddddddddddddddddddddddddddddddddddddddddedca
-aeebeddddddddddddddddddddddddddddddddddddddddddddddddddddddebeca
-aededdddddddddddddddddddddddddddddddddddddddddddddddddddddddedca
-aeddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddca
-aeddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddca
-acddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddca
-.acddddddddddddddddddddddddddddddddddddddddddddddddddddddddddca.
-..acccccccccccccccccccccccccccccccccccccccccccccccccccccccccca..
-...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...
+..................jjc.ccoo......................................................................................................................................................................................
+..............djckjjojcdddddcdsko...................................................................................................................................................pjdddcccccn.................
+.............klsoonnncslcoccjrslso...............................................................................................................................................odddddqqccccqqqcn..............
+............ojjnnnncojrrrojppoojrjn............................................................................................................................................odddpprrrddddccnqqqqn............
+...........ccnjkocdemmeemeedjpkrnnqc..........................................................................................................................................cdcprkemmmmmlllmkdcnnqqn..........
+.........nqcnnodmmlllklsmmmmbedrnnnqcn.........qqqcccccqccqnnnnnnnnnnqcccccccccccnncccccccqqqqqcqqqqqqccccccccccccccccccqqqqcccccccccccccccccnccccccccccccccccccqqn.........occqpdmmmmmmmkmllllkkkcnnqn.........
+........cqnncdmlllllmmjjmmmmmmmmdonnqqno.....nqcnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnncnccccccccccccccqqccccccccccccccqqqccqcqcqnqcccccccnncccnncnnnnnnnnnnnnnnnnnnnnnnqn.......ccccdmmmmmmssrrrrssskkssdcnnn........
+.......ccnncelllllllskkkkkmmmmmmmecnnnqqqqqqqqnnnnchnnnnnnccnnnnnccnnnnnchnnccccdccccccccnccccccccqcccccccccccccqcccdcqqqqcdccqqccccnccccccncncnccnnnnncgnnnnnnnnnnnncqqqqqcccemmmmssrrrrrrroooorsssscnnn.......
+......ncdkcmllllskooojcokrprkmmmmmmconnnnnnnnnnnncsskcnnnksshnnnhssdgnncsskcncclllccccsslknccmllkcccksskccckslkccodsssccccmlljcccklljnccdsskncndksjnnnkrsjnncsskcnnnnnnnnncccemmmsrrrsslmmlllskpooksskdnnn......
+......qnjceelllrooksrpddrrskjormmmmedonnnnnnnnnnksrjjkcndrjjrhnhjjjjkgckjjkkccksssscckkrsshokssssjokssssjoksssskodsssskccksssscnksssscndkkkkjncrjjrjnjjjjjccrjrskcnnnnnnccccmmmmrrrsmmllllllllsskonpskkdnnn.....
+.....cnncmksksojjrrksskimkkrsjjrmsskmjjkkkkkkkkjsdelsssskkkkkkkkkkkkkssssllllllllllmmmmmmmmmmmmmmmmmmmmmmlllsssssssssllllllllllllllllllsssslsssssskksksssskkkeecjdkkkkkdkkjimmmrrsmmmlmlllllllllssjookkkcnnn....
+....nnnnlljokokjjslllssmmmmmmjrsojjmmmprsrrrkkskibedccccccccccccccccccccccccccccccdddddddddddddddddddddddddddkkkkkkkkkkkdkdddddddddddccccccccjjjjjjjcccccccccdeecrrrkkkkssiimmprsmmmmmmmmmmllllsssskookkdcnnn...
+....nnnklllsnjpklllllssmkmllllkrkommmmepjjssssjmmkprrpooooooooooooooooooooooooooojrrrrrrrrrrrrrrrrrrrrrrrrrrrrsssssssssssssssssssssrrrrrrrkrrjjjjjjjjooppopprocddcjklsssskmmmjpsmmmmmmmmmmmlmlidssksjnojddnnn...
+...nnncssssnpcklllkklssmklllllldkkomlmmjjjjsrcmmdorlllrrrrrrrrrrrrrrrrrrrrrrrrrrrrssrssssssslllllllllllllllllllllllllllllllllllllllllllllllllllssssssssrssrsllroddcjslksrmlmjosdemmmmmmmmmmmllkkkedksjnoddcnnn..
+..nnnnkssscjjcdeksslkssmlkllseerjrjpllliojjkckkcorllmmbeeeeeeeeeeeeeeeeeeemmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmbbbbbbbbbbbbbbbbbbbbbbmmmbmmbbbbbbbbeeeaaaaaaaaaeslrocqcjksskllkormkeaimmmmmmmmlllkkcsosssonjddnnn..
+..nnncsssjcjjspkbbdsrssllskeberjljsnklllojjckkcorllbbbbeeeeeeeeeeeeeeemmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbaaaaaaaaaabbeslrocqcjsjlllorllsrebemmmmmmllllsihccssssookkcnnn.
+..nnnjkksnccssjrsbmerskkskbberpslljsollljnnqdcorllbbbbmssrrkkkkrrrrkkkkkkkrrrrrrsssssssssssssssssssllllllllllllllllllllllllllllllssssssssssssssssssssskkdkkeedsslrocqccjllkorllljrebimmmmlllllesockssssjnjkdnnn.
+..nnnkksjnjjsssorkmkmmmmmmeerpolllksclllsnqqcnrlllbbmlsrrrrrrrrpoorrrjojjjjrrrrrrrrrrrrrssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssskkkkkdpslonccckllopllllkrrddmmmjjojlksookdksjkkojdknnn.
+.nnnnkkkcjjksssorrklkkmmkkmrrpjlllsjrksssnqqqossrsbmssrrrrrrrrjjjjjjkkjrjjrrrrrrrrrrrrssssssssssssssssssssssssssssssssssssssssssssssssssssskkkkkkkkkkksssskkkkkddrrocccsskorllllljjceillllsjhkoorrrsskksoojdcnn.
+.nnncjjjnjjsrjkjojljlllmmmklrokkslloscsssocqqosrrrsrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrsssssskkksssssssssssssssssssssssssssssssssssssssssssssssssskkkkskssskkkssssssrrrocccsskosslllllkckkklllljkjcrrrrsskksjnddcnnn
+.nnncjjjnjjrrrjkkkjsslllllkskmikssskjcsssonqcplrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrkkkkkkkkkkkkssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssrroccossjossssllllkcoklllldonnjrrrssjksjnccdnnn
+.ckcchjjoocdmmmkksjsssllllsjsmmmmmkjjokidjnqcpsrrrrrrrrrrrrrrrrrrrrrrrrkkkkdddkkkkkkkkkkkksssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssrroqnokkoosssssslssscpkslkkcjjnrrkrsckkjnjccnnn
+cjknckrjncdkkkkkjkjssssssssjrkkkkkkkcojsjjnccosrrrrrrrrrrrrrkkrkrrrkkkddddkkkkkkkkkkkkkkkssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssrroqnojjcossssssssssscpkkknssscjjojcjkkjnjdcnnn
+nccncnnjcnnopoooojojjjjjrjjcocoooooncckncjnnqosrrrrrrrrrrrrrrkkrkkrkddddkkkkkkkkkkkkkkkkkssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssrrocnojjcosssssssssssscdsnjsssjjojccrrkjojnnnnn
+.ncnccjjcjojnnoooccjjjjcjroccoonncrokcsrronncrsrrrrrrrrrrrrrrrrrrrrrrrrkkkkkskkkkkkkkkkkkssssssssssssssssssssssslssllssssssssssslssssssssssssssssssssssssssssssssrrocnojcoorkrsssssssssdknckssscrrccdkjjcokccnnn
+.nnncojjckojjjccncjjjjjccpcccnkjkkrojckjknnnqplssrrrrrrrrrrrrrrrrssssssssssssskssskkkkssssssssssssssssssssssssslllllllllllllssslsssssssssssssssssssssssssssssssssrrocnnpjcojjkkrrsssssdknnrkssjjcnckjjjjcnkccnnn
+.nnnnjodcjcpjcccskojcjjjcjjjsjjjjjpjjjjjjnnncplllrrrrrrrrrrrrrsssssssssssssssssssssssssssssssssssssssssssssslllllllllllllllllllllsllsssssssssssssssssssssssssssllllocnnocjopjjjjjrrrkjkncjnjjjsjjkkjjjjcookccnnn
+.nnnncocjjcjocjjssccjjjjjjokssjjjpjjjjjjpnnncollllrrrrrrrssssssssssssssssssssssssssssssssssssssssssssssssslllllllllllllllllllllllllllllllllslsssssssssssssslslllllsocnnoccoojjjjjrrrcjocssjnjhjrrjjjjjjpojcqcnn.
+.nnnncojkcrojoclloooncoocnoorlkjjjcjcjcconnncorllllrrrsrssssssssssssssssssssssssssssssssssssssssslllllllllllllllllllllllllllllllllllllllllllllllllllssssssllllllllrdcnnoccjojojjjrrckonjrrrjnjhcrjjjjjjpokqqnnn.
+..nnnnjcckcjjojloooncjrocnnoojscookokccjnnnnndorllllsssssssssssssssssssssssssssssssssssssssllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllrdcnnnnocjoojjjjrckonjjjjjjnojhjjjjjjjooiqcnnn.
+..nnnnccckcjcckcnnnrcorooojnnojkjcjcccconncnnndprlllllssssssssssssssllssssssssssssslllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllrjdnngjnoccjopjjcdhjncjjoojjcncjjcjjjjjokcccnnn.
+..nnnncccckcjccncojccjppooocjjnccjcccccnnccjnnndorslllsrrrrssssssslllllllllllllllllllllllllllllllllllllmmmmmmmmmmmmmmmmmmmmmmttttttmmmllllllllllllllllllllllllsrjqnncjococcknojokcjcnjoooooojonjjjcjjjooiccnnn..
+...nnnnccccdocnoocccccppojccjjjcjckccconccccjnnnccrrllsrrrssssllllllllllllllllllllllllllllllllllllmmmmmmmmmmmmmmmmmbbmmmmmmmmmmmmllllllllllllllllllllllllllllsrkcnnccgjpnocckooorhccooooooooooopccojjppicccnnn..
+...nnnnncccckojcocccccrrccccjccjckccccnncccjcjnnncdprrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrsssssssssssslllsssssssssssrrrrrrrrrrrrrrrrrrrrrrrrrrrrpdcnncccjcjonccckooooooooppoooorooojjorppidccnnnn..
+....nnnnccccckcjjccccnrrcooonjjjkccccnncccjjjcjnnncdccccccccccccccccccccccccccccccccccddddddddddddddddkdkkkssssssssskkssskkkkdkkkkkkdkkkdkkdddddjjjcccccccccdcnnnccccccjononojjoooooooppoojrrrrpoooromdjccnnn...
+.....nnnncccccihjjjccnccccjjjckkccoconooojjjjjjjnnnnnnnnoooooooooooooooooooooooonnnnnnnnnnnnnnccqcccccccccoocccooojjjjjppooojjojjjjjjjjccccocococccccccnnnnnnnnncjjjcjjjccnooocjooopjppprrrrrrrrrrrpidjccnnn....
+.....nnnnncccccdmjcrrkcjjrcckkccccconnnnnnnnnnnnnjcnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnoooooooooooooonnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnoonnnnnnnnnnnnooockooprrrrrrrrrrrrrrrmdccjnnn.....
+......nnnnnccccccciihjjjjhkkcccccjnnonnnnnnnnnnnnjjrrnnnnnjjjnnnnccccnnnjjjjnnncjjjnnnnccjjnnnnjjjjnnnjjjjnnnncjjjnncjjjjcnnjjjjjnnjjjjjnnccccnnnncccccnnccccnnnnnnnnnnnnnnnnoccckjoorrrrrrrrrrrrkmjjcjnnnn.....
+.......nnnnnnccccccccjddcccccccconnnnnnnnnnnnnnnnnjknnnnnnjcnnnnnccnnnnnncjnnnnncjjnnnnnccnnnnnnjcnnnnncjnnnnnccnnnnnnjcnnnnnjjcnnnncjcnnnnnccnnnnnccnnnnnnccnnnnnnnnnnnnnnnnnncccckkjoprrrrrrsemkpjjcnnnn......
+........nnnnnncccccccccccccccccnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnncccccjkkkkkmmmksrrprnnnnn.......
+.........nnnnngnnccccccccccccnnnnnnnnn..ffffffnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnffffffffnnnnnncccccojjrrrrrrrrpnnnnn........
+..........nnnccnnnnnnnnnnnnnnnnjcnnn...........nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnf..........nnnnnnncjjjjjprrrrronnnnn..........
+............njjnnnnffnccnffnnnnjjgn............................................................................................................................................nnnnnnnnoooprpoonnnnnn...........
+.............cccnnnnnnnnnnnnnnjor...............................................................................................................................................nnnnnnnnnnnnnnnnnnn.............
+..............nnnnnnnnnnnnnnnnoo...................................................................................................................................................nnnnnnnnnnnnnn...............
+...................nnnnnnnnf..........................................................................................................................................................nnnnnnnn..................
 end
 
 anim main fps=1 once

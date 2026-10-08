@@ -2,15 +2,15 @@
  "code": "khung-nut-chinh",
  "group": "giao-dien",
  "name": "nút chính menu (Xuất trận)",
- "w": 64,
- "h": 16,
- "ax": 32,
- "ay": 15,
+ "w": 208,
+ "h": 46,
+ "ax": 104,
+ "ay": 45,
  "bbox": [
   0,
   0,
-  64,
-  16
+  208,
+  46
  ],
  "n": 1,
  "anims": {
