@@ -1401,8 +1401,14 @@ class UI {
   watchToasts() {
     const ids = ['#screen', '#legends', '#reward', '#menu', '#campaign', '#modes', '#coop', '#settings', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks', '#result', '#feedback', '#fbadmin'];
     const view = () => ids.filter((id) => !$(id).hidden).join() + '|' + (this.screen ? this.screen.kind : '');
+    // an-cho-kho-do: mở bảng toàn màn (Túi đồ, Cây kỹ năng, Tiến hoá, Lò đúc, Anh Hùng, Ấn phù…) thì ẩn hẳn thanh chợ + Hợp thể/Khoá
+    // + cột nút phải (lớp panel-open, xem css) — không chỉ trông vào #screen đè lên; đóng bảng thì hiện lại. #legends tự ẩn chợ riêng
+    const full = ids.filter((id) => id !== '#legends');
+    const syncPanel = () => $('#wrap').classList.toggle('panel-open', full.some((id) => !$(id).hidden));
+    syncPanel();
     this.toastView = view();
     this.checkToasts = () => {
+      syncPanel();
       const v = view();
       if (v === this.toastView) return;
       this.toastView = v;
@@ -3738,6 +3744,7 @@ class UI {
   closeScreen() {
     this.screen = null;
     $('#screen').hidden = true;
+    if (this.checkToasts) this.checkToasts();   // an-cho-kho-do: bỏ lớp panel-open ngay (không chờ MutationObserver)
     if (this.prepForge) {
       const g = this.game;
       this.prepForge = false; KHO_MODE = false; this.save.kho = g.gold; g.gold = this.prepGold; writeSave(this.save);

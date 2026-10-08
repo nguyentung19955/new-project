@@ -2729,6 +2729,10 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
   bản vẽ tay trống đồng Q/R) < 50%.
 - Đã nạp vào game (`--nap --ghi-de`: assets/pixel/ky-nang, js/pixel/ky-nang.js) + gói `tools/pixel/goi/ky-nang.zip`.
 - Test mới `tests/ve-pixel/ky-nang.test.js`: spec khớp bảng, đủ Q W E R cho 60 tướng, không trùng, khung đúng phím, ảnh trong game khớp tool.
+## claude/an-cho-kho-do — Mở Túi đồ / bảng toàn màn thì ẩn hẳn thanh chợ
+- Lỗi báo: vào Kho đồ (Túi đồ) vẫn thấy thanh Triệu hồi (chợ) ở dưới. Trước đây chợ chỉ bị bảng `#screen` (z-index 10) đè lên — dễ lộ khi thứ tự lớp đổi.
+- Sửa: `ui.watchToasts` (đã theo dõi `hidden` của mọi bảng) bật lớp `#wrap.panel-open` khi có bảng toàn màn mở (Túi đồ, Cây kỹ năng, Tiến hoá, Lò đúc, Bách khoa, Anh Hùng, Ấn phù, Cài đặt, Phần thưởng, Kết quả…). CSS ẩn hẳn `#deck` (chợ + Hợp thể/Khoá/↻), `#fuse-strip`, `#auto-btns`, `#btn-moc`, `#nextwaves`, `#trash`, `#more` (visibility + không nhận chạm). Đóng bảng → bỏ lớp → hiện lại đúng trạng thái. Không đụng lớp `dragging-hero` (sửa lỗi kẹt chợ v213 giữ nguyên).
+- Test: `tests/an-cho-kho-do/` (844×390 pixel + ?pixel=0, 1920×934, 667×375): mở từng bảng → chợ ẩn, đóng → chợ hiện, kéo tướng + mở túi rồi thả → chợ hiện, chạm thẻ vẫn mua được.
 ## claude/tuong-pixel-ro — Tướng pixel dễ phân biệt hơn trên sân
 
 - **Đo tự động:** `python3 tools/pixel/do-giong-tuong.py [--ten=-sau] [--nguong 0.72]` — so từng cặp tướng (khung idle, căn theo
@@ -2756,3 +2760,4 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 - Test: `node tests/an-cong-ky-nang/an-cong-ky-nang.test.js`.
 - Sửa thêm: kỹ năng hỗ trợ (khiên, buff, hồi máu — Kim Quy Q, Cây Đa của Cuội/Mẫu E…) chỉ dùng TRONG ĐỢT: sân hết quái (giữa hai đợt)
   thì không dùng dù tướng đang bị thương. Test: tests/sua-tam-skill (giữa hai đợt, tướng 30% máu → không kỹ năng hỗ trợ nào tung).
+- Theo tester: bỏ luật ẩn mọi phần tử con của chợ (chỉ ẩn khung ngoài, con tự ẩn theo); `closeScreen` bỏ lớp panel-open ngay khi đóng. Lỗi chập chờn của cho-tuong ("ảnh chưa sẵn sàng") khi chạy 6 test song song cũng xảy ra trên nhánh chính (1/6 lần), không do nhánh này; chạy lần lượt 5/5 đạt.
