@@ -2091,6 +2091,7 @@ window.ASSET_LIST = [
 "ui/khung-nguoi-choi.png",
 "ui/khung-nut-chinh.png",
 "ui/khung-the.png",
+"ui/nen-menu-px.png",
 "ui/nen-menu.jpg",
 "ui/nut-bac.png",
 "ui/nut-vang.png",
