@@ -9,7 +9,9 @@ const fit = (page) => page.evaluate(() => {
   const V = vv ? { l: vv.offsetLeft, t: vv.offsetTop, r: vv.offsetLeft + vv.width, b: vv.offsetTop + vv.height } : { l: 0, t: 0, r: innerWidth, b: innerHeight };
   const d = Math.max(Math.abs(r.left - V.l), Math.abs(r.top - V.t), Math.abs(r.right - V.r), Math.abs(r.bottom - V.b));
   return { d, r: [r.left, r.top, r.right, r.bottom].map(Math.round), V: [V.l, V.t, V.r, V.b].map(Math.round), rot: document.querySelector('#wrap').classList.contains('rot'),
-    scroll: document.scrollingElement.scrollHeight > innerHeight + 1 || document.scrollingElement.scrollWidth > innerWidth + 1 };
+    // gốc lỗi "chạm 2 lần kéo sang nửa màn đen": #wrap xoay nằm trong luồng body → body.scrollWidth 527–617 > 390 (giờ #wrap position: fixed)
+    scroll: document.scrollingElement.scrollHeight > innerHeight + 1 || document.scrollingElement.scrollWidth > innerWidth + 1 || document.body.scrollWidth > innerWidth + 1 || document.body.scrollHeight > innerHeight + 1,
+    out: [...document.querySelectorAll('#ui button')].filter((e) => e.offsetParent && getComputedStyle(e).visibility !== 'hidden').filter((e) => { const q = e.getBoundingClientRect(); return q.width && (q.right > V.r + 2 || q.bottom > V.b + 2 || q.left < V.l - 2 || q.top < V.t - 2); }).map((e) => e.id || e.className) };
 });
 
 (async () => {
@@ -22,6 +24,7 @@ const fit = (page) => page.evaluate(() => {
     await page.waitForTimeout(800);
     const f = await fit(page);
     ok(f.d <= 2 && !f.scroll && f.rot === h > w, `${w}×${h}: game khít khung nhìn (lệch ${f.d}px, xoay=${f.rot}, cuộn=${f.scroll})`);
+    ok(!f.out.length, `${w}×${h}: không nút nào tràn ra ngoài khung nhìn ${f.out.join(',')}`);
   }
   // 2) visualViewport nhỏ hơn innerHeight (thanh địa chỉ iOS hiện) + lệch xuống (offsetTop) — giả lập
   await page.setViewportSize({ width: 390, height: 844 });
