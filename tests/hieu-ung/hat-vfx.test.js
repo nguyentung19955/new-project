@@ -86,13 +86,13 @@ const noPixelVfx = (p) => p.route('**/js/pixel/vfx.js*', (r) => r.fulfill({ cont
         const top = (y) => { if (y < by + 4) bad.push([e.type, Math.round(y), Math.round(by)]); };
         c.drawImage = function (im, x, y, w, h) { if (this.imageSmoothingEnabled) smooth = true; top(this.getTransform().f + Math.min(y, y + h)); if (x % 1 || y % 1) frac.push([x, y]); };
         c.fillRect = function (x, y) { top(this.getTransform().f + y); if (x % 1 || y % 1) frac.push([x, y]); };
-        const st = e.stunT; if (e.stunKind === 'stun') e.stunT = 0;   // vòng choáng nằm trên đầu (thanh máu đè lên) — kiểm riêng bên dưới
+        const st = e.stunT; if (e.stunKind === 'stun' || e.stunKind === 'ice') e.stunT = 0;   // vòng choáng trên đầu / khối băng bọc trọn hình (thanh máu đè lên) — kiểm riêng bên dưới
         for (const t of [0.1, 0.4, 0.7, 1.0, 1.3, 2.2]) { VFX.frame(); VFX.status(c, e, box, 0, t); }
         e.stunT = st;
       }
       return { bad, frac: frac.length, smooth };
     });
-    ok(!chk.bad.length, 'ảnh trạng thái (trừ vòng choáng) không lên tới thanh máu' + (chk.bad.length ? ' — ' + JSON.stringify(chk.bad.slice(0, 4)) : ''));
+    ok(!chk.bad.length, 'ảnh trạng thái (trừ vòng choáng, khối băng) không lên tới thanh máu' + (chk.bad.length ? ' — ' + JSON.stringify(chk.bad.slice(0, 4)) : ''));
     // vòng choáng (quái + tướng): đáy vòng chạm nhẹ đỉnh bbox hình (±3 + 1 ô), không đè mặt, không bay xa;
     // lửa bỏng ngang vai, cao 18–45% hình quái (không to như sprite 10×14 cũ, không chỉ vài chấm)
     const geo = await page.evaluate(() => {
@@ -128,6 +128,43 @@ const noPixelVfx = (p) => p.route('**/js/pixel/vfx.js*', (r) => r.fulfill({ cont
     ok(geo.burn.every((g) => g.h >= g.H * 0.18 && g.h <= g.H * 0.45), 'lửa bỏng rõ dáng, cao 18–45% hình quái ' + JSON.stringify(geo.burn.map((g) => +(g.h / g.H).toFixed(2))));
     ok(geo.burn.every((g) => g.top >= g.head), 'lửa bỏng nằm trong thân (không vượt đỉnh đầu)');
     ok(geo.burn.every((g) => g.w <= g.W * 0.9), 'lửa bỏng không rộng quá thân quái');
+    // khối băng bát giác bao trọn hộp hình thật (drawEnemy thật → hộp truyền vào VFX.status), lề mỗi bên ≤ 15% (+1 ô lưới)
+    const ice = await page.evaluate(() => {
+      const c = document.createElement('canvas').getContext('2d'), out = [];
+      const st0 = VFX.status;
+      for (const type of ['tom', 'voichien', 'thuongluong', 'daibang']) {
+        if (!ENEMIES[type]) { out.push({ type, miss: true }); continue; }
+        game.enemies.length = 0;
+        const e = game.spawn(type, PATH.total * 0.4) || game.enemies[game.enemies.length - 1];
+        Object.assign(e, { stunT: 99, stunKind: 'ice' });
+        let box = null; const rows = new Map();
+        VFX.status = function (ctx, en, b, lift, t) {
+          box = Object.assign({ lift }, b);
+          const f0 = ctx.fillRect;
+          ctx.fillRect = function (x, y, w, h) {
+            if (String(this.fillStyle).toLowerCase() === '#b8d8e0') { const r = rows.get(y) || [1e9, -1e9]; rows.set(y, [Math.min(r[0], x), Math.max(r[1], x + w)]); }
+            return f0.call(this, x, y, w, h);
+          };
+          try { return st0.call(this, ctx, en, b, lift, t); } finally { delete ctx.fillRect; }
+        };
+        VFX.frame(); drawEnemy(c, e, 1.3);
+        VFX.status = st0;
+        const x0 = e.x + (box.dx || 0) - box.w / 2, x1 = x0 + box.w, y0 = e.y - box.lift - box.ay, y1 = e.y - box.lift + (box.db || 0);
+        let miss = 0, X0 = 1e9, X1 = -1e9, Y0 = 1e9, Y1 = -1e9;
+        for (const [y, [a, b]] of rows) { X0 = Math.min(X0, a); X1 = Math.max(X1, b); Y0 = Math.min(Y0, y); Y1 = Math.max(Y1, y + 1); }
+        for (let y = Math.ceil(y0) + 1; y < y1 - 1; y++) {
+          const r = [...rows].filter(([ry]) => ry <= y && y < ry + 4).map(([, v]) => v)[0];
+          if (!r || r[0] > x0 + 1 || r[1] < x1 - 1) miss++;
+        }
+        const W = x1 - x0, H = y1 - y0;
+        out.push({ type, flying: !!ENEMIES[type].flying, rows: rows.size, miss, mx: +(Math.max(x0 - X0, X1 - x1) / W).toFixed(3), my: +(Math.max(y0 - Y0, Y1 - y1) / H).toFixed(3), W: Math.round(W), H: Math.round(H) });
+      }
+      return out;
+    });
+    for (const g of ice) {
+      ok(!g.miss && g.rows > 0, `khối băng bát giác bao trọn hình ${g.type} ` + JSON.stringify(g));
+      ok(g.mx <= 0.15 + 4 / g.W && g.my <= 0.15 + 4 / g.H, `khối băng ${g.type}: lề ≤ 15% (ngang ${g.mx}, dọc ${g.my})`);
+    }
     ok(!chk.frac && !chk.smooth, 'trạng thái vẽ bám lưới điểm ảnh (toạ độ nguyên), không khử răng cưa');
     // đạn bay + hiệu ứng mỗi khung bằng pixel
     const fx = await page.evaluate(() => {

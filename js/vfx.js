@@ -336,25 +336,38 @@ const VFX = (() => {
       ctx.fillRect(X + (i - 2) * c - (c >> 1), Y - (7 - j) * c, c, c);
     }
   }
+  // khối băng bát giác bao hộp [x0, x1] × [y0, y1] (toạ độ bản đồ): mặt trong trong suốt nhạt, viền sáng 1 ô, vệt sáng chéo
+  // cạnh trên trái, đáy chàm sáng. Vẽ theo hàng ô lưới n → cạnh chéo bậc thang pixel
+  function iceOct(ctx, x0, y0, x1, y1) {
+    const n = G.n, m = Math.max(3 * n / G.k, 0.11 * Math.min(x1 - x0, y1 - y0));
+    const X0 = Math.floor(sx(x0 - m) / n) * n, X1 = Math.ceil(sx(x1 + m) / n) * n;
+    const Y0 = Math.floor(sy(y0 - m) / n) * n, Y1 = Math.ceil(sy(y1 + m) / n) * n;
+    const cut = Math.max(n, Math.floor((1.9 * m * G.k) / n) * n);   // < 2 lề → góc hộp nằm trong
+    const ins = (y) => Math.max(0, cut - (y - Y0), cut - (Y1 - n - y));
+    ctx.globalAlpha = 0.4; ctx.fillStyle = C.troi;
+    for (let y = Y0; y < Y1; y += n) { const k = ins(y); ctx.fillRect(X0 + k, y, X1 - X0 - 2 * k, n); }
+    ctx.globalAlpha = 0.95;
+    for (let y = Y0; y < Y1; y += n) {
+      const k = ins(y), kp = y > Y0 ? ins(y - n) : k, kn = y + n < Y1 ? ins(y + n) : k, w = Math.max(n, Math.abs(k - kp), Math.abs(k - kn));
+      ctx.fillStyle = y === Y1 - n ? C['cham-sang'] : C['nuoc-sang'];
+      if (y === Y0 || y === Y1 - n) ctx.fillRect(X0 + k, y, X1 - X0 - 2 * k, n);
+      else { ctx.fillRect(X0 + k, y, w, n); ctx.fillRect(X1 - k - w, y, w, n); }
+    }
+    ctx.fillStyle = C.sang;                          // vệt sáng chéo trên mặt băng
+    for (let i = 0; i < 4; i++) ctx.fillRect(X0 + cut + (1 + i) * n, Y0 + (5 - i) * n, n, n);
+  }
   function status(ctx, e, box, lift, t) {
     const r = { dot: false, stun: false, slow: false, ice: false, iceArt: false };
     if (!e || e.dead || !D) return r;
-    const W = box.w, H = Math.max(10, box.ay), fy = e.y - lift, cx = e.x, id = e.id || 0;
+    const W = box.w, H = Math.max(10, box.ay), fy = e.y - lift, cx = e.x + (box.dx || 0), id = e.id || 0;
     const bar = fy - H - 3;                          // đáy thanh máu: không vẽ gì cao hơn
     begin(ctx, 0.6);                                 // sprite trạng thái nhỏ hơn hạt chiêu: không lấn át quái
     const big = W > 80 ? 2 : 1;
-    // đóng băng: vỏ băng pixel bọc thân (thay khối băng vẽ bằng code) + tinh thể băng dưới chân
+    // đóng băng: khối băng BÁT GIÁC pixel bọc trọn hộp hình (lề ~11%, cắt góc < 2 lề → góc hộp vẫn nằm trong), co giãn theo
+    // cỡ từng con (boss to → khối to, quái bay → bọc đúng chỗ đang bay) + tinh thể băng dưới chân
     if (e.stunT > 0 && e.stunKind === 'ice' && ready('bang-tinh') && sb(3)) {
       r.ice = r.iceArt = true;
-      const n = G.n, x0 = Math.round(sx(cx - W * 0.5) / n) * n, x1 = Math.round(sx(cx + W * 0.5) / n) * n;
-      const y0 = Math.round(sy(Math.max(bar + 2, fy - H)) / n) * n, y1 = Math.round(sy(fy + 1) / n) * n;
-      ctx.globalAlpha = 0.45; ctx.fillStyle = C.troi; ctx.fillRect(x0, y0, x1 - x0, y1 - y0);
-      ctx.globalAlpha = 0.9; ctx.fillStyle = C['nuoc-sang'];
-      ctx.fillRect(x0, y0, x1 - x0, n); ctx.fillRect(x0, y0, n, y1 - y0); ctx.fillRect(x1 - n, y0, n, y1 - y0);
-      ctx.fillStyle = C['cham-sang']; ctx.fillRect(x0, y1 - n, x1 - x0, n);
-      // vệt sáng chéo trên mặt băng
-      ctx.fillStyle = C.sang;
-      for (let i = 0; i < 4; i++) ctx.fillRect(x0 + (2 + i) * n, y0 + (5 - i) * n, n, n);
+      iceOct(ctx, cx - W / 2, fy - H, cx + W / 2, fy + (box.db || 0));
       ctx.globalAlpha = 1;
       blit(ctx, 'bang-tinh', frameOf(spr('bang-tinh'), null, t, id), cx - W * 0.42, fy + 1, big);
       blit(ctx, 'bang-tinh', frameOf(spr('bang-tinh'), null, t + 0.5, id), cx + W * 0.42, fy + 1, big, true);

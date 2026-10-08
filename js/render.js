@@ -2216,7 +2216,9 @@ function drawEnemy(ctx, e, t, o = {}) {
   const pxOk = box.px && pxDrawEnemy(ctx, e, t, box);
   const packRef = !box.solo && !pxOk && !vectorHeroesOn() && enemyPackRef(e.type);
   let png = box.solo || pxOk ? null : (packRef && enemyPackImg(e, t)) || enemyPng(e.type, e.elite || e.champion, e);
-  let artH = pxOk || box.ay;   // claude/vfx-pixel-2: cao hình thật đã vẽ (ảnh vẽ tay có thể cao hơn box) — vòng choáng pixel đặt trên đỉnh này
+  // claude/vfx-pixel-2: hộp hình thật đã vẽ (ảnh vẽ tay có thể cao hơn box, pixel làm tròn điểm ảnh) — vòng choáng / khối băng pixel bám theo
+  let artH = pxOk ? pxOk.h : box.ay;
+  const artBox = pxOk ? { w: pxOk.w, dx: pxOk.dx * flip, db: pxOk.db } : null;
   if (box.solo) cdDrawEnemy(ctx, e, t, box, box.solo, o);
   if (png) {
     // ảnh vẽ tay: chân ở giữa đáy ảnh, rộng theo ENEMY_W (bộ ảnh quái: cao theo ảnh bước 1 để đổi khung không đổi cỡ)
@@ -2258,7 +2260,7 @@ function drawEnemy(ctx, e, t, o = {}) {
   const top = e.y - lift - box.ay - 4;
   // trạng thái bằng ảnh assets/vfx/ (js/vfx.js: ảnh vẽ tay tt-*.png, không có thì hạt Kenney);
   // ảnh chưa có / hết hạn mức → cờ false → vẽ bằng code như cũ
-  const vs = !o.icon && typeof VFX !== 'undefined' && VFX.status ? VFX.status(ctx, e, artH !== box.ay ? Object.assign({}, box, { ay: artH }) : box, lift, t) : {};
+  const vs = !o.icon && typeof VFX !== 'undefined' && VFX.status ? VFX.status(ctx, e, artH !== box.ay || artBox ? Object.assign({}, box, { ay: artH }, artBox) : box, lift, t) : {};
   if (!o.icon) drawEnemyStatus(ctx, e, box, lift, t, vs);
   ctx.save();
   ctx.translate(e.x, 0);
