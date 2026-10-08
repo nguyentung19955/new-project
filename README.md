@@ -6,8 +6,8 @@ Hai luật cốt lõi: vũ khí tiến hóa theo cách bạn dùng, và boss th�
 ## Trạng thái
 
 - Thiết kế game: xong bản 4, xem [docs/thiet-ke-game.md](docs/thiet-ke-game.md).
-- Hình ảnh: đang làm. Bắt đầu từ hero Thợ Rèn để chốt phong cách.
-- Mã game: chưa bắt đầu.
+- Mã game: đã có bản thử chơi được trong thư mục `game/` (15 ải, 3 boss, 4 hero, làng). Hình hiện là hình tạm vẽ bằng mã.
+- Hình ảnh thật: chưa làm. Bắt đầu từ hero Thợ Rèn để chốt phong cách.
 
 ## Cấu trúc thư mục
 
@@ -19,7 +19,7 @@ Hai luật cốt lõi: vũ khí tiến hóa theo cách bạn dùng, và boss th�
 | `art/parts/` | Các mảnh rời của nhân vật sau khi tách (đầu, thân, tay, chân, vũ khí) |
 | `art/pixel/` | Hình pixel hoàn chỉnh, dùng trong game |
 | `tools/` | Công cụ Python chuyển ảnh sang pixel |
-| `game/` | Mã nguồn game (chưa có) |
+| `game/` | Mã nguồn game dạng web, xem [game/README.md](game/README.md). File chơi ngay: `game/dist/linh-khi.html` |
 
 ## Quy trình làm hình
 
