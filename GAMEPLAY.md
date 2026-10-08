@@ -1001,7 +1001,7 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 
 ### Phiên bản 77
 
-- **Dừng chơi**: menu ≡ trong trận có nút 🏳 Dừng chơi (bấm 2 lần để chắc chắn) — bỏ trận, không giữ để Tiếp tục, cộng thành tích, ghi điểm vô tận nếu đang vô tận, về menu.
+- **Dừng chơi**: menu ≡ trong trận có nút 🏳 Dừng chơi (bấm 2 lần để chắc chắn) — nay tên **Rời trận**, bấm 1 lần: lưu trận và về menu; bấm Tiếp tục để chơi tiếp (claude/giu-tran-dang-choi; trước đây nút này bỏ trận).
 - **Lò đúc đồng (cửa hàng + đúc đồ) đưa ra ngoài trận**: bỏ khỏi menu ≡ trong trận; mở từ bảng **Chuẩn bị xuất quân** trước khi vào trận (dùng vàng đầu trận), đóng thì quay lại bảng. Bảng chuẩn bị giờ luôn hiện khi vào ải.
 
 ### Phiên bản 78
@@ -2372,6 +2372,10 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 238 — Rời trận lưu trận (tester đạt)
+
+- ☰ → Rời trận (1 lần) và Back trong trận: lưu trận + về menu ngay, không hỏi; Tiếp tục đúng màn/đợt/tướng/vàng/mạng (trước: Dừng chơi xoá bản lưu → về màn 1). Chơi mới không hỏi, trả Ngân khố bỏ trận.
+
 ## Phiên bản 237 — quái không phình + gợi ý hợp thể (tester đạt)
 
 - Quái pixel không còn to lên khi trúng đòn/bơi (bỏ co giãn, cỡ cố định theo bảng tĩnh js/pixel/quai-cao.js).
@@ -2853,6 +2857,16 @@ Người dùng chọn phương án 4: máu quái tăng dần theo đợt + hạ 
 - Test: `node tests/goi-y-ro/goi-y-ro.test.js` (đúng điều kiện có/không tướng cùng loại, 3 màu khác nhau, nhịp 1,2–1,5 s, đo điểm ảnh viền
   so với thẻ thường: tương phản ≥ 1,8 ở pixel/pixel0, 844×390 · 667×375 · 1920×934).
 - Lỗi gấp "Ấn GỌI SỚM không gọi được": KHÔNG do panel-open — bản v229 (trước khi gộp nhánh này) cũng không bấm được. Gốc: luật cũ `#nextwaves { … pointer-events: none }` (đầu style.css) đè `#ui > * { pointer-events: auto }` (cùng độ ưu tiên, viết sau thắng) → chạm/nhấp xuyên xuống bản đồ. Sửa: `#nextwaves.early { pointer-events: auto }` (dải thường vẫn cho chạm xuyên). Test `tests/goi-som/` (844×390 chuột + chạm, 1920×934): giữa đợt bấm Gọi sớm → đợt kế bắt đầu + toast vàng; sau khi mở/đóng Túi đồ; sau khi kéo tướng.
+
+## claude/giu-tran-dang-choi — rời trận không còn bị về màn 1 đợt 1
+- **Nguyên nhân:** nút ≡ → 🏳 Dừng chơi (đường duy nhất để rời trận về menu) gọi `quitRun()` → `clearRun()` xoá hẳn bản lưu trận; vào lại chỉ còn "Xuất Quân" → trận mới từ màn 1 đợt 1. Tải lại trang / đóng app thì vốn không mất (bản lưu đầu mỗi đợt).
+- **Rời trận (trước gọi Dừng chơi) giờ = lưu trận + về menu.** Giữa hai đợt: lưu đúng lúc rời (vàng, tướng, chợ, màn/bản đồ vô tận, sự kiện, độ Khó). Đang giữa đợt: giữ bản lưu đầu đợt; còn mở game thì Tiếp tục quay lại đúng khoảnh khắc (trận tạm dừng trong bộ nhớ), tải lại trang thì chơi lại từ đầu đợt đó. Nhãn xác nhận: "Bấm lần nữa · lưu & về menu". Trận nhóm vẫn bỏ trận như cũ.
+- Ngân khố / Tu Vi / nhiệm vụ ngày của trận dừng giữa chừng trả khi trận kết thúc thật (thua), hoặc khi bấm **Chơi mới** đè lên trận dở (tính như bỏ trận: 4 Ngân khố mỗi đợt đã qua, Tu Vi 60%).
+- Bảng Sính lễ đang mở khi lưu (đợt boss đã xong) → lưu luôn 3 lựa chọn; Tiếp tục mở lại bảng, không mất thưởng boss.
+- Thành tích trọn đời (lifeKills/lifeGold) nhớ phần đã cộng qua tải lại (`save.banked`) → Tiếp tục không cộng trùng.
+- Nút Tiếp tục 2 dòng: "Tiếp tục · Đợt N ♾" + tên vùng đất (một dòng bị cắt mất số đợt).
+- Theo người dùng: **Rời trận là rời luôn, không hỏi.** Nút ☰ → 🏳 đổi tên **Rời trận**, bấm 1 lần là lưu + về menu (trận nhóm vẫn bấm 2 lần vì bỏ thật). **Back** của trình duyệt / vuốt Back trong trận cũng = Rời trận (bỏ hộp "Rời trận?" của claude/chan-vuot-lui; vẫn chặn vuốt mép, Back ở menu vẫn bấm 2 lần mới thoát trang). Không có hộp xác nhận cho Chơi mới, không thêm nút Bỏ trận. Test chan-vuot-lui cập nhật theo.
+- Test: `node tests/giu-tran/giu-tran.test.js` (đợt 16 màn 2: Back trong trận, Dừng chơi giữa / sau đợt, tải lại, ẩn app, Sính lễ mở, Chơi mới).
 
 ## claude/chan-vuot-lui — Chơi trên web: vuốt không còn lỡ về trang trước
 - CSS: `html, body, #wrap` thêm `overscroll-behavior: none` (Chrome Android không vuốt ngang/kéo xuống để về trang/tải lại); `#wrap` `touch-action: none` (bảng cuộn vẫn cuộn như cũ).
