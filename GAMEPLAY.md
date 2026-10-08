@@ -2293,6 +2293,10 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 215 — gộp tool-pixel
+
+- Tool vẽ pixel tools/ve-pixel.html + CLI `node tools/ve-pixel.js` (spec JSON → sprite, --out zip, --xem ảnh, --nap vào game); thư viện bộ phận từ bản vẽ tay; bộ mẫu tools/pixel/mau/. Game: Cài đặt → Gói pixel (Bật/Tắt, Nạp gói .zip, Gỡ gói). Hướng dẫn docs/pixel/HUONG-DAN-TOOL.md, SPEC.md.
+
 ## Phiên bản 214 — chốt tên mã kỹ năng pixel
 
 - Mã icon kỹ năng pixel dùng gạch dưới: `<tướng>_<phím>` (vd `lactuong_q`); ghi trong docs/pixel/QUY-CHUAN.md.
@@ -2319,6 +2323,44 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
 
 ## Phiên bản 208 — bàn giao điều phối, quy tắc tiết kiệm token
 - Thêm docs/BAN-GIAO-DIEU-PHOI.md và mục "Tiết kiệm token" trong CLAUDE.md. Dừng mọi session con.
+
+## claude/tool-pixel — Tool vẽ pixel → goi-pixel.zip → nạp vào game
+
+- **Tool `tools/ve-pixel.html`** (mở thẳng bằng Chrome / Edge, không mạng, không thư viện ngoài): chọn nhiều mã một lần từ danh sách
+  `docs/pixel/DANH-SACH.md` (836 mã, đánh dấu mã đã có pixel; thêm mã tự đặt được) → tự sinh sprite theo QUY-CHUAN từ **mô tả ngắn**
+  (đọc từ khoá tiếng Việt / Anh: thân xương / đá / hồn ma / giấy / gỗ / đồng / cây, tóc, khăn, nón, mũ lông chim, vương miện, sừng,
+  áo / giáp / khố / váy + màu, áo choàng, vũ khí gậy / giáo / rìu / kiếm / cung / chèo / chuông, cánh, hành; dáng người / thú 4 chân /
+  rắn-cá-rồng) hoặc chọn **bộ phận** → tướng `idle 3 · attack 4 · cast 3 (phép theo hành) · hurt 1 · die 3`, quái `walk 4 · attack 3 ·
+  hurt 1 · die 3`, boss 48/64 (+`rage 2`), icon / đồ / kỹ năng / ấn phù / thần khí 24 (khung + biểu tượng), ô nền 16 lát liền (nước 3
+  khung gợn), giao diện / cảnh: khung trống. Chỉ dùng 46 màu `palette.txt`, tô 3 tông tự động, viền `vien`.
+- Lưới chỉnh tay: bút / tẩy (chuột phải) / đổ màu / hút màu, hoàn tác, viền, lật, dịch, thêm / xoá / chép khung, bóng khung trước;
+  xem trước động phóng to (một động tác hoặc lần lượt mọi động tác); kiểm tra quy chuẩn (cỡ, động tác + số khung, điểm viền).
+  Bản nháp tự lưu trên máy + Lưu / Mở nháp `.json`; mở lại được cả `.zip` đã xuất để vẽ tiếp.
+- **Xuất `goi-pixel.zip`**: `goi-pixel.json` (loại `goi-pixel-ttv`, phiên bản 1, danh sách mã) + mỗi mã `assets/pixel/<nhóm>/<mã>.png`
+  (dải khung) + `.json` (y hệt build-pixel) + `-chan-dung.png` (tướng / quái / boss) + nguồn `tools/pixel/src/<nhóm>/<mã>.txt`.
+  Giải nén vào repo rồi `node tools/build-pixel.js` ra **đúng từng điểm ảnh** như tool (test kiểm). Mã lỗi quy chuẩn không vào zip.
+- **Nạp vào game** (`js/pixel-goi.js`, Cài đặt ngoài trận → dòng **"Gói pixel (thử)"**: `Pixel: Bật/Tắt` · `Nạp gói (.zip)` · `Gỡ gói`):
+  đọc zip (không nén / deflate, nhận cả zip bọc thư mục), kiểm tra (goi-pixel.json, nhóm, mã, w/h/n/anims, PNG đúng cỡ dải) — mã
+  lỗi bỏ qua + báo, cả gói hỏng thì từ chối; lưu IndexedDB `ttv-pixel-goi`; mỗi lần mở game ghép vào `PIXEL_MANIFEST` + `ASSET_DATA`
+  (ảnh `blob:`), dùng ngay (xoá đệm ảnh / khung). Mã trong gói ghi đè bản có sẵn; mã ngoài gói vẽ như cũ; gỡ gói trả lại nguyên trạng.
+  Nút `Pixel: Bật` lưu `localStorage ttv.pixel=1` (js/pixel.js đọc thêm công tắc này) rồi tải lại trang. Bảng Tạm dừng không có dòng này.
+- Sửa kèm: ảnh tải xong khi đang mở Cài đặt trên menu không còn đóng bảng Cài đặt (vẽ lại menu lúc đóng) · build-pixel nhận tên
+  file có `_` (mã DANH-SACH như `ky-nang/lactuong_q`, `an-phu/g_air`).
+- Danh sách mã + bảng màu cho tool: `node tools/build-ve-pixel.js` → `tools/ve-pixel-ds.js` (chạy lại khi DANH-SACH / palette đổi;
+  test báo nếu quên). Hướng dẫn cho người không lập trình: `docs/pixel/HUONG-DAN-TOOL.md`.
+- Test: `tests/ve-pixel/ve-pixel.test.js` (tool) · `tests/ve-pixel/nap-goi.test.js` (nạp / gỡ / IndexedDB / zip lỗi trong game).
+- **Pixel art:** nhánh không thêm hình game mới (nút trong Cài đặt là nút HTML chữ, như các dòng khác).
+- **Bổ sung (session Claude tự chạy, người dùng không ngồi máy):** lõi dùng chung `tools/ve-pixel-core.js` (trang HTML và Node cùng
+  gọi) + CLI `node tools/ve-pixel.js --spec <json|thư mục> [--out zip] [--xem dir] [--nap [--ghi-de]]` — spec JSON (mã, mô tả, bộ phận,
+  hành, động tác, mẫu vẽ tay + thay bộ phận + đổi màu, vẽ tay từng điểm), mã lỗi `E_…` rõ ràng; `--xem` ảnh phóng to + tong-quan.png;
+  `--nap` ghi nguồn tools/pixel/src + build-pixel --strict (game tự dùng khi mở, không cần bấm Nạp gói; nút nạp tay vẫn giữ).
+  Định dạng + ví dụ: `docs/pixel/SPEC.md`.
+- **Thư viện mẫu vẽ tay** `tools/pixel/thu-vien.js` (`node tools/build-thu-vien.js`): 236 nguồn từ nhánh chính + các nhánh pixel chưa
+  gộp (git show, không merge) — bộ phận (`part`, xếp loại đầu / thân / chân / tay / vũ khí / phép…) + công thức khung động tác. Lõi
+  dựng lại trùng từng điểm ảnh với build-pixel (test 185 mẫu, trừ vfx bảng màu riêng). Trang HTML: ô "Mẫu vẽ tay" (mã đã có bản vẽ
+  tay tự chọn sẵn) + Thay bộ phận + Đổi màu. Bộ mẫu input→output `tools/pixel/mau/<nhóm>/` (17 mẫu, 7 nhóm: spec + PNG tool +
+  PNG vẽ tay + tong-quan.png); mẫu dựng từ thư viện lệch bản vẽ tay 0% (ngưỡng 2%), mẫu sinh từ mô tả để tham khảo.
+- Test thêm `tests/ve-pixel/cli.test.js`. Không vẽ mã mới ngoài bộ mẫu.
 - Chỉnh theo tester (sau v207): màu hành rõ hơn — Lạc Tướng (Kim) giáp + mũ ánh bạc-sắt viền đồng, mặt nạ bạc 2 hốc mắt (khác mặt tối
   trùm mũ của Thợ Săn); Ống Thổi (Mộc) cóc xanh rêu đốm tía; Thợ Gốm (Thổ) đất nung nâu / vàng đất; Thợ Rèn đá xám sáng hơn (vẫn nứt lửa).
 ## claude/pixel-tuong-vang — Pixel lô 5–7: 14 tướng Vàng + 6 linh thú
