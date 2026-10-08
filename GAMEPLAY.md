@@ -2372,6 +2372,14 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 231 — tướng pixel dễ phân biệt (tester đạt)
+
+- 15 tướng đổi màu chủ đạo/dấu hiệu riêng (Lực Sĩ, Đắp Đê, Chăn Trâu, Tre, Chuông Đồng, Xạ Thủ, Giáo Đồng, Thầy Lang, Tiên Dung, Thổ Công, Mặt Trời, Lạc Hầu, An Tiêm, Chử Đồng Tử…): 19 cặp giống nhau → 0 (tools/pixel/do-giong-tuong.py).
+
+## Phiên bản 230 — gộp an-cong-ky-nang (tester đạt)
+
+- Nút "+1đ" cạnh ô kỹ năng ẩn khi 4 kỹ năng đã max; điểm dư tự đổi thành chỉ số (+2 thuộc tính/điểm). Test hợp thể đọc ★ dạng icon pixel.
+
 ## Phiên bản 229 — kỹ năng hỗ trợ không dùng giữa 2 đợt (tester đạt)
 
 - 10 kỹ năng hỗ trợ (khiên, hồi máu, cây thiêng, trống trận…) chỉ dùng khi sân còn quái.
@@ -2705,9 +2713,31 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 - Lỗi báo: vào Kho đồ (Túi đồ) vẫn thấy thanh Triệu hồi (chợ) ở dưới. Trước đây chợ chỉ bị bảng `#screen` (z-index 10) đè lên — dễ lộ khi thứ tự lớp đổi.
 - Sửa: `ui.watchToasts` (đã theo dõi `hidden` của mọi bảng) bật lớp `#wrap.panel-open` khi có bảng toàn màn mở (Túi đồ, Cây kỹ năng, Tiến hoá, Lò đúc, Bách khoa, Anh Hùng, Ấn phù, Cài đặt, Phần thưởng, Kết quả…). CSS ẩn hẳn `#deck` (chợ + Hợp thể/Khoá/↻), `#fuse-strip`, `#auto-btns`, `#btn-moc`, `#nextwaves`, `#trash`, `#more` (visibility + không nhận chạm). Đóng bảng → bỏ lớp → hiện lại đúng trạng thái. Không đụng lớp `dragging-hero` (sửa lỗi kẹt chợ v213 giữ nguyên).
 - Test: `tests/an-cho-kho-do/` (844×390 pixel + ?pixel=0, 1920×934, 667×375): mở từng bảng → chợ ẩn, đóng → chợ hiện, kéo tướng + mở túi rồi thả → chợ hiện, chạm thẻ vẫn mua được.
+## claude/tuong-pixel-ro — Tướng pixel dễ phân biệt hơn trên sân
+
+- **Đo tự động:** `python3 tools/pixel/do-giong-tuong.py [--ten=-sau] [--nguong 0.72]` — so từng cặp tướng (khung idle, căn theo
+  chân): bóng dáng (IoU) · màu chủ đạo (biểu đồ họ màu, bỏ viền) · nhìn thu nhỏ 16×16; điểm = 0.35·bóng + 0.45·màu + 0.20·nhỏ.
+  Ghi `tools/pixel/mau/phan-biet/do-giong*.txt`, `bang-tong*.png` (cỡ ×3, ×1 như trên sân, bóng đen), `cap-giong*.png`.
+- **Trước:** 19 cặp vượt ngưỡng 0.72 (cụm nâu đất Lực Sĩ · Đắp Đê · Chăn Trâu · Tre · Thợ Săn · Sọ Dừa; Lạc Tướng ~ Xạ Thủ;
+  Chuông Đồng ~ Thổ Công; Ông Táo ~ Tiên Dung; Kinh Dương ~ Mặt Trời; Chử Đồng Tử ~ Ông Đùng ~ An Tiêm…). **Sau: 0 cặp**
+  (cao nhất 0.72 → còn 0.720 adv ~ langlieu, không vượt).
+- Mỗi tướng chỉnh một màu chủ đạo riêng / dấu hiệu riêng (giữ dáng, vũ khí, đủ khung động tác):
+  Lực Sĩ đất sét VÀNG ĐẤT + khố đỏ · Đắp Đê mặt tay da người lấm bùn, NÓN LÁ to, quần CHÀM, xẻng lưỡi sắt · Chăn Trâu bột tò he
+  HỒNG ĐẤT · Tre nan TRE XANH + áo đan kem · Chuông Đồng áo lễ BẠC + dải sơn son chéo ngực, gậy chuông cao hơn ·
+  Xạ Thủ áo quấn XANH THÉP + dây đỏ chéo · Giáo Đồng vảy XÁM THIẾC sáng (cả chân) · Thầy Lang thân cuống nấm TRẮNG NGÀ ·
+  Tiên Dung váy TÍM · Thổ Công áo vàng nghệ · Mặt Trời áo lửa cam · Lạc Hầu đá ong ĐỎ CAM · An Tiêm áo lá XANH RÊU ·
+  Chử Đồng Tử khố CHÀM. Không đụng phần vẽ hào quang (nhánh hao-quang-tim-vang).
+- Chụp trận nhiều tướng cạnh nhau 844×390 + 1920×934: `tools/pixel/mau/phan-biet/tran-*.png`.
 - Sửa theo tester: nền menu / đăng nhập / màn tải giữ tranh cũ (bản pixel 320×180 mất hoa văn trống đồng, kể cả khi tăng màu / khử
   nhiễu); thẻ người chơi và nút Xuất Quân dùng khung vẽ tay chuyển sang pixel (có lại huy hiệu avatar tròn và 2 huy hiệu hai bên), không
   bị khung bảng / nút chung đè; icon Vô Tận vẽ lại thành ∞ rõ.
+
+## claude/an-cong-ky-nang — Ẩn nút cộng điểm khi kỹ năng đã max
+
+- Thanh tướng: nút **+1đ** (cộng điểm dư vào chỉ số) cạnh 4 ô kỹ năng **không hiện nữa khi cả 4 kỹ năng đã đạt tối đa** (Q W E 4/4, R 3/3). Chỉ hiện khi còn điểm và còn kỹ năng chưa max.
+- Kỹ năng đã max thì điểm kỹ năng (đang dư + nhận thêm mỗi lần lên cấp / lên ★★★ / ghép sao) **tự đổi thành chỉ số** (+2 thuộc tính chính mỗi điểm), không cần bấm — không mất giá trị điểm.
+- Ô kỹ năng chỉ sáng "có thể nâng" khi thật sự nâng được (có điểm / đủ vàng, chưa max, đủ cấp tướng) — như cũ, có test.
+- Test: `node tests/an-cong-ky-nang/an-cong-ky-nang.test.js`.
 - Sửa thêm: kỹ năng hỗ trợ (khiên, buff, hồi máu — Kim Quy Q, Cây Đa của Cuội/Mẫu E…) chỉ dùng TRONG ĐỢT: sân hết quái (giữa hai đợt)
   thì không dùng dù tướng đang bị thương. Test: tests/sua-tam-skill (giữa hai đợt, tướng 30% máu → không kỹ năng hỗ trợ nào tung).
 - Theo tester: bỏ luật ẩn mọi phần tử con của chợ (chỉ ẩn khung ngoài, con tự ẩn theo); `closeScreen` bỏ lớp panel-open ngay khi đóng. Lỗi chập chờn của cho-tuong ("ảnh chưa sẵn sàng") khi chạy 6 test song song cũng xảy ra trên nhánh chính (1/6 lần), không do nhánh này; chạy lần lượt 5/5 đạt.

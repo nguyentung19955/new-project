@@ -3,6 +3,7 @@
 # Đặc trưng (PROMPT-GEN-LAI.txt:1020 ưu tiên + PROMPT-DUNG-XUONG.txt:686): cụ ông ~80 thấp tròn, rộng gần bằng cao, RÂU TRẮNG dài tới
 # bụng, mày bạc; áo vàng nâu, MŨ TRÒN ĐEN mềm (KHÔNG cánh chuồn), thắt lưng đỏ, gấu áo viền tím (Tím); cầm GẬY TRE ngắn treo HỒ LÔ
 # (KHÔNG đại đao). Chiêu (Khiên Đất / Thổ Địa Hiển Linh): gõ gậy — vòng đất vàng bừng lên quanh chân.
+# tuong-pixel-ro (phân biệt tướng): áo VÀNG NGHỆ sáng hơn — khác Thầy Chuông Đồng (cùng dáng cụ già).
 name: Thổ Công
 size: 32x32
 anchor: 15,30
@@ -22,7 +23,7 @@ colors:
   c = cat
   o = dong-toi
   y = dong
-  Y = dong-sang
+  Y = vang-nghe
   v = vang-sang
   V = vang-nghe
   m = son-toi

@@ -3,6 +3,7 @@
 # Đặc trưng (PROMPT-GEN-LAI.txt:93 ưu tiên + PROMPT-DUNG-XUONG.txt:854 + js/data.js "búa đá và khiên đồng"): cố vấn bộ Lạc ~55, gầy,
 # lưng thẳng, râu dê dài mảnh, mắt sắc; áo vàng mù tạt cổ nâu, dải tím (Tím); MŨ NHỌN; cầm BÚA ĐÁ + KHIÊN ĐỒNG tròn hoa văn Đông Sơn,
 # cờ chim Lạc đỏ nhỏ cắm lưng (tuỳ chọn trong DANH-SACH). Chiêu (Trống Hiệu Triệu / Lời Thề Bộ Lạc): giơ khiên — vòng đồng hộ thân.
+# tuong-pixel-ro (phân biệt tướng): đá ong ĐỎ CAM (thay vàng đồng) — khác Lực Sĩ (đất sét vàng) / Thần Trống Đồng.
 name: Lạc Hầu
 size: 32x32
 anchor: 15,30
@@ -10,9 +11,9 @@ colors:
   k = vien
   T = toi
   K = khoi
-  f = dong
-  F = dong-sang
-  h = vang-nghe
+  f = son-toi
+  F = son-sang
+  h = lua
   g = reu
   G = reu-sang
   e = trang

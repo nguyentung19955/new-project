@@ -68,7 +68,8 @@ async function legendsCase(w, h) {
   await page.click('#legends [data-act=hx-tab][data-k=legendary]'); await page.waitForTimeout(80);
   ok(await page.evaluate(() => [...document.querySelectorAll('#legends .hx-card')].every((c) => HEROES[FUSION[+c.dataset.i].to].legend === 'legendary') && document.querySelectorAll('#legends .hx-card').length > 5), `${tag}: tab Vàng chỉ có tướng Vàng`);
   await page.click('#legends [data-act=hx-tab][data-k=epic]'); await page.waitForTimeout(80);
-  const marks = await page.evaluate(() => [...document.querySelectorAll('#legends .hx-m')].map((m) => m.querySelector('i').textContent).filter(Boolean));
+  // pixel: ★/✓ trong ô được thay bằng <img alt> (PX_EMO) → đọc alt
+  const marks = await page.evaluate(() => [...document.querySelectorAll('#legends .hx-m')].map((m) => [...m.querySelector('i').childNodes].map((n) => n.nodeType === 3 ? n.data : (n.alt || n.textContent)).join('')).filter(Boolean));
   ok(marks.length >= 4 && marks.every((t) => t === '✓' || /^\d\/3★$/.test(t)), `${tag}: tab Tím nguyên liệu hiện ✓ hoặc sao hiện tại/cần (${[...new Set(marks)].join(' ')})`);
   await page.click('#legends [data-act=hx-tab][data-k=legendary]'); await page.waitForTimeout(80);
   await page.click('#legends [data-act=hx-help]'); await page.waitForTimeout(60);
