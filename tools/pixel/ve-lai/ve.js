@@ -22,7 +22,7 @@ const DAI = {
 class Ve {
   constructor(w, h, nen = null) { this.w = w; this.h = h; this.g = Array.from({ length: h }, () => new Array(w).fill(nen)); }
   in(x, y) { return x >= 0 && y >= 0 && x < this.w && y < this.h; }
-  get(x, y) { return this.in(x, y) ? this.g[y][x] : null; }
+  get(x, y) { x = Math.round(x); y = Math.round(y); return this.in(x, y) ? this.g[y][x] : null; }
   p(x, y, c) { x = Math.round(x); y = Math.round(y); if (this.in(x, y)) this.g[y][x] = c === '_' ? null : c; return this; }
   rect(x, y, w, h, c) { for (let j = y; j < y + h; j++) for (let i = x; i < x + w; i++) this.p(i, j, c); return this; }
   hl(x1, x2, y, c) { for (let i = Math.min(x1, x2); i <= Math.max(x1, x2); i++) this.p(i, y, c); return this; }

@@ -66,3 +66,35 @@ Hiển thị trong "giếng" bảng Vua Hùng ban thưởng ≈ 70–100 px (844
 | `tranh-xoay` | điện thoại nằm ngang (màn cảnh sông núi) giữa 2 mũi tên cung tròn vàng đồng | sắt tối, đồng, cảnh |
 
 Trước: thú kiểu chibi má hồng (QUY-CHUAN mục 0 cấm "trẻ con"), hũ / kho bị nhiễu và kho lúa là tường thành châu Âu.
+
+## 4. Núi Tản Viên 5 giai đoạn (giao-dien/nui-tan-vien-1..5, 48×48) — `tools/pixel/ve-lai/nui.js`
+
+Bảng "Núi Tản Viên": ô cao 100 px, ảnh vuông. Mỗi giai đoạn **một khung cảnh vuông đủ trời–núi–đất**, viền khung đồng 2px;
+núi lớn dần, sườn trái sáng / phải tối, dãy núi xa chàm nhạt phía sau, bãi cỏ phía trước:
+Gò Đất (gò nâu nhú cỏ) → Đồi Nhỏ (đồi xanh + một cây) → Núi Non (2 đỉnh, đỉnh đá) → Núi Cao (rêu, đỉnh đá, thác, mây lưng chừng)
+→ Núi Thần (**Tản Viên ba đỉnh** hình tán ô trên biển mây, trời chiều vàng, mặt trời tia sáng, **mái đền son** trên đỉnh).
+Trước: huy hiệu tròn nhìn từ trên, nhiễu, 5 ảnh gần như giống nhau (2 = 1, 5 = 4).
+
+## 5. Bản đồ chương (canh/chuong-*, 320×180) — `tools/pixel/ve-lai/canh.js`
+
+Màn chọn ải: ảnh phủ kín khung (cover, cắt hai bên ở 1920), game vẽ đè đường nét đứt vàng + nút ải ở dải giữa
+→ **bản đồ cổ nhìn từ trên**, núi vẽ 3/4 như tranh bản đồ, vật trang trí dồn ra mép, dải giữa (x 40–280, y 58–140) thoáng.
+Nền cỏ: màu gốc + vệt cỏ tối dẹt + khóm cỏ 3 điểm (không nhiễu từng điểm); cây / nhà / lều / thuyền là lưới vẽ tay đóng dấu.
+
+| mã | địa danh / dấu hiệu |
+|---|---|
+| `chuong-thachsanh` | rừng sâu tán tối, **cây đa cổ thụ + miếu son**, **hang Chằn Tinh** trong núi đá (răng nhũ), đại bàng bay, suối |
+| `chuong-giong` | **làng Phù Đổng trong lũy tre** (nhà rơm, đình son), ruộng lúa ô bờ xanh / vàng, **núi Sóc + vệt lửa ngựa sắt bay**, trại giặc Ân lều đen cờ tím |
+| `chuong-llq` | bờ biển cát + làng chài, biển chàm sóng, đảo hang Ngư tinh, **rồng ngọc uốn trên sóng**, thuyền |
+| `chuong-adv` | **thành Cổ Loa 3 vòng đất xoáy ốc** + điện son + nỏ thần + cờ vàng, sông uốn, ruộng, trại Triệu Đà lều tím |
+
+`chuong-sontinh` (bản đồ chuyển ảnh đã chi tiết) giữ nguyên. Trước: 4 bản kia chỉ là trời phẳng + 3 tam giác (designer N6).
+
+## 6. Nền sân theo chủ đề (canh/ban-do-*, 320×180) — cùng file
+
+Dùng làm nền **thẻ chế độ** (Vô Tận = biển, Cùng Giữ Thành = thành; phủ gradient tối bên trái) và nền trận dự phòng khi thiếu `ban-do/<mã>`.
+Khoảng sân giữa hình hữu cơ (hợp nhiều elip), trang trí dồn ra mép:
+song (sông uốn mép trên + phải, lau, cây) · dam (5 ao bờ cát + sen hồng, lau) · rung (vòng cây tán tối, sân đất) ·
+hang (**sàn đá lát ô Voronoi**: đá xám ngoài, đất giữa, tinh thể tím/ngọc, măng đá, xương) · dong (ruộng ô bờ phủ kín, sân đất, trâu, nhà rơm) ·
+bien (cát + dải cát ướt, biển chàm sóng, dừa, ốc, sao biển, thuyền) · thanh (sân đá lát, vòng trống đồng, lũy đất rào cọc + 3 vọng lâu mái son cờ vàng).
+Trước: ảnh nền trận gen thu nhỏ — nhiễu lấm tấm, dải hoa văn cũ.
