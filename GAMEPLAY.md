@@ -2372,6 +2372,10 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 249 — làm mượt pixel nhân vật + icon (tester đạt)
+
+- Làm mượt (mức 7) sinh sẵn bằng tool (assets/pixel-muot/, +~1,1 MB tải) cho tướng, quái, boss, chân dung, icon; nền bản đồ, sông, cổng, bệ, cảnh, khung UI giữ nét pixel. Hào quang Tím/Vàng vẽ từ bóng pixel gốc (đậm như khi tắt). Công tắc "Làm mượt" ở Cài đặt + bảng Tạm dừng (đổi ngay). Khung 9 mảnh: nút Xuất Quân, thanh máu không méo đầu. Bỏ dòng "Lần khác" ở thẻ Kho lúa/Hội làng.
+
 ## Phiên bản 248 — sửa nút lọc vai trò bị che
 
 - Vùng chạm nới của nút lọc hành chỉ áp trong Hợp thể, không còn che hàng lọc vai trò ở Anh Hùng / Bách khoa (tester đạt).
