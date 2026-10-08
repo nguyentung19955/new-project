@@ -2267,6 +2267,7 @@ class UI {
 
   handleEvents() {
     const g = this.game;
+    const rwNow = g.events.some((e) => e.type === 'reward');
     while (g.events.length) {
       const ev = g.events.shift();
       if (ev.type === 'newEnemy') {
@@ -2279,9 +2280,12 @@ class UI {
       } else if (ev.type === 'kho') {
         // v103: Ngân khố kiếm giữa trận (Vô tận) — cộng thẳng vào tài khoản
         this.save.kho = (this.save.kho || 0) + ev.n; g.khoRun = (g.khoRun || 0) + ev.n; writeSave(this.save);
-        this.toast(`Ngân khố ${bac(1)} +${fmt(ev.n)} · ${esc(ev.why)}`, '#E4ECF4');
+        // sua-giao-dien-10: bảng Sính lễ mở / sắp mở (cùng lượt sự kiện) → ghi vào dòng Ngân khố trên bảng, báo sau khi đóng bảng
+        if (rwNow || !$('#reward').hidden) (this.khoHold = this.khoHold || []).push(ev);
+        else { this.toast(`Ngân khố ${bac(1)} +${fmt(ev.n)} · ${esc(ev.why)}`, '#E4ECF4'); this.khoBump(ev.n); }
       } else if (ev.type === 'reward') {
         this.showReward(ev);
+        this.rewardKhoLine();
       } else if (ev.type === 'waveEvent') {
         this.waveEventMsg(ev);
       } else if (ev.type === 'boss') {
@@ -2310,6 +2314,32 @@ class UI {
         this.finishLevel();
       }
     }
+    if (this.khoHold && this.khoHold.length && !$('#reward').hidden) this.rewardKhoLine();
+  }
+
+  // sua-giao-dien-10: Ngân khố nhận lúc hạ boss / mốc đợt — dòng rõ trên bảng Sính lễ (trước đây toast nhỏ đè tiêu đề, tắt khi đang chọn quà)
+  rewardKhoLine() {
+    const el = $('#reward .sl-kho'), L = this.khoHold || [];
+    if (!el || !L.length) return;
+    el.innerHTML = `${bac(1)} Ngân khố +${fmt(L.reduce((a, e) => a + e.n, 0))} <small>(${L.map((e) => `${esc(e.why)} +${fmt(e.n)}`).join(' · ')})</small>`;
+    el.hidden = false;
+  }
+  flushKhoHold() {
+    const L = this.khoHold || []; this.khoHold = [];
+    if (!L.length) return;
+    const n = L.reduce((a, e) => a + e.n, 0);
+    this.toast(`Ngân khố ${bac(1)} +${fmt(n)} · ${L.map((e) => esc(e.why)).join(' · ')}`, '#E4ECF4');
+    this.khoBump(n);
+  }
+  // chip Ngân khố trên thanh trên: nháy + số "+X" bay lên khi nhận
+  khoBump(n) {
+    const c = $('#tb-kho'); if (!c) return;
+    c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump');
+    // số bay đặt trên #ui ngay dưới chip (thanh trên cắt phần tràn)
+    const r = c.getBoundingClientRect(), ur = $('#ui').getBoundingClientRect(), k = ur.height / (typeof UIH !== 'undefined' ? UIH : ur.height) || 1;
+    const f = document.createElement('i'); f.className = 'kho-fly'; f.textContent = '+' + fmt(n);
+    f.style.left = ((r.left + r.width / 2 - ur.left) / k) + 'px'; f.style.top = ((r.bottom - ur.top) / k + 2) + 'px'; $('#ui').appendChild(f);
+    setTimeout(() => f.remove(), 1300);
   }
 
   // vo-tan-su-kien: sự kiện đợt — báo trước (đợt liền trước), mở màn, vượt qua (thưởng)
@@ -2404,6 +2434,8 @@ class UI {
     const past = g.endless && g.wave > total, done = past ? ((g.wave - 1) % 10 + Math.max(0, prog)) / 10 : (g.wave - 1 + Math.max(0, prog)) / total;
     $('#tb-fill').style.width = `${Math.max(0, Math.min(1, done)) * 100}%`;
     this.setText('#tb-gold b', fmt(g.gold));
+    this.setText('#tb-kho b', fmt(this.save.kho || 0));
+    if (!this.khoIc) { this.khoIc = 1; const i = $('#tb-kho > .bac'); if (i) i.outerHTML = bac(1); }
     $('#tb-gold').classList.toggle('kho', !!this.prepForge);     // v95: đang tiêu Ngân khố (bạc), không phải vàng trận
     { const mx = Math.max(g.maxLives || CONFIG.startLives, g.lives), r = g.lives / mx;   // v169: mạng "còn/tối đa", đổi màu khi thấp
       this.setHTML('#tb-lives b', g.lives + '/' + mx, `${g.lives}<small>/${mx}</small>`);
@@ -3271,7 +3303,7 @@ class UI {
     const jit = ITEMS[jar.id];
     $('#reward').innerHTML = `<div class="screen" style="z-index:auto">
       <div class="scr-head metal"><h1 class="ttl">${th.rewardHead || 'Chọn phần thưởng'}</h1><span class="chip dark">Đợt ${g.wave}</span>
-        <span class="chip ok">${UIE.done()} Đã hạ ${ENEMIES[ev.boss].name}</span><span class="chip goldc">Chọn 1 trong 3</span>${gift.big ? '<span class="chip sl-big">★ Mốc lớn: sính lễ hiếm dễ ra hơn</span>' : ''}<div class="sp"></div>
+        <span class="chip ok">${UIE.done()} Đã hạ ${ENEMIES[ev.boss].name}</span><span class="chip kho sl-kho" hidden></span><span class="chip goldc">Chọn 1 trong 3</span>${gift.big ? '<span class="chip sl-big">★ Mốc lớn: sính lễ hiếm dễ ra hơn</span>' : ''}<div class="sp"></div>
         <div class="goldbox inset">${coin()}${fmt(g.gold)}</div></div>
       <div class="sl-title">${th.reward || 'Phần thưởng hạ boss'}</div>
       <div class="sl-cards">
@@ -3315,6 +3347,7 @@ class UI {
     const o = this.rewardOpts[i];
     if (COOP.on) {
       $('#reward').hidden = true;
+      this.flushKhoHold();
       COOP.issue('reward', [i, this.rewardId]);
       return;
     }
@@ -3322,6 +3355,7 @@ class UI {
     g.claimReward(o);
     $('#reward').hidden = true;
     this.rewardToast(o);
+    this.flushKhoHold();
     if (!g.over && this.rewardWasRunning != null) g.running = this.rewardWasRunning;
     this.rewardWasRunning = null;
     g.holdStage = false;

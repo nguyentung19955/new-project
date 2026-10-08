@@ -2411,3 +2411,15 @@ html.pixel :is(.tg, .fb-shot) .sw::after { left: 3px; top: 3px; width: 18px; hei
 html.pixel :is(.tg, .fb-shot) .sw.on { background: #E8B83A; border-color: #FFE7A0; box-shadow: inset 0 -2px 0 #B8852A; }
 html.pixel :is(.tg, .fb-shot) .sw.on::after { left: 27px; background: #2A1A08; box-shadow: inset -2px -2px 0 #000; }
 html.pixel .fb-shot .sw { width: 40px; height: 22px; } html.pixel .fb-shot .sw::after { width: 12px; height: 12px; } html.pixel .fb-shot .sw.on::after { left: 21px; }
+/* sua-giao-dien-10: chip Ngân khố trong trận (thỏi bạc + số), nháy + "+X" bay lên khi nhận; dòng Ngân khố trên bảng Sính lễ */
+#tb-kho { position: relative; color: #E4ECF4; display: inline-flex; align-items: center; gap: 3px; }
+#tb-kho b { color: #E4ECF4; }
+#tb-kho .bac-img, #tb-kho .bac { height: 16px; width: auto; }
+#tb-kho.bump { animation: khoBump .9s ease-out; }
+@keyframes khoBump { 0%, 60% { filter: brightness(1.8) drop-shadow(0 0 4px #E4ECF4); } 100% { filter: none; } }
+#ui > .kho-fly { position: absolute; z-index: 60; font-style: normal; font-weight: 800; font-size: calc(15px * var(--hz, 1)); color: #E4ECF4; text-shadow: 0 1px 0 #000, 1px 0 0 #000, -1px 0 0 #000, 0 -1px 0 #000;
+  white-space: nowrap; pointer-events: none; animation: khoFly 1.2s ease-out forwards; }
+@keyframes khoFly { from { transform: translate(-50%, 0); opacity: 1; } to { transform: translate(-50%, 18px); opacity: 0; } }
+#reward .sl-kho small { font-weight: 700; color: #B8C4D0; margin-left: 2px; }
+/* màn thấp: bớt khoảng giữa các ô tài nguyên để chỗ chip Ngân khố */
+@media (max-height: 400px) { .tb-res { gap: 8px; } }
