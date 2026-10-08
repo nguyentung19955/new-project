@@ -2372,6 +2372,10 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 262 — chặn tự phóng to, thanh trên không tràn (tạm, chờ khung cố định)
+
+- Lỡ phóng to (visualViewport.scale≠1) → giữ khung theo bố cục, không phóng game theo; chặn chạm đôi phóng to. Thanh trên tự thu nhỏ khi tràn khung.
+
 ## Phiên bản 261 — hộp đen tránh tai thỏ / viền
 
 - Body chừa lề an toàn 4 phía (+8px khi máy có lề), #wrap chứa mọi UI vừa khít vùng còn lại, phần thừa nền đen (người dùng đề xuất).
