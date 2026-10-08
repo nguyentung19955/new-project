@@ -1218,8 +1218,6 @@ body { overflow: hidden; }
 .guarded button[data-act]::before { content: ''; position: absolute; left: 4px; right: calc(100% - 4px); bottom: 2px; height: 3px; border-radius: 2px; background: #FFD66B; box-shadow: 0 0 4px #FFD66BAA, 0 1px 0 #000a; animation: guardBtn 1.2s linear forwards; pointer-events: none; }
 @keyframes guardBtn { to { right: 4px; } }
 .guarded button.btn-gold[data-act]::before { background: #7A3A0A; box-shadow: 0 0 0 1px #FFE7A066; }
-.guarded::after { content: ''; position: fixed; left: 0; top: 0; height: 3px; background: #FFD66B; animation: guardBar 1.2s linear forwards; z-index: 99; }
-@keyframes guardBar { from { width: 0; } to { width: 100%; } }
 /* v53: Bách khoa theo chương truyện */
 .bk-body { flex-direction: column; }
 .bk-body .bk-ch { margin-left: 0; flex: none; }
@@ -2294,3 +2292,25 @@ html.pixel #wrap.rot #banner b { font-size: 26px; }
 .bk-card .ds { color: #E8DCC0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .bk-card.on { border-color: var(--gold-hi); }
 .hx-q, .hx-x { border-radius: 3px; }
+/* sua-giao-dien-10 (N7, theo mockup designer A4): nền tranh mịn hoà với pixel — menu / đăng nhập dùng tranh pixel hoá 534×248 phóng
+   nearest (giữ hoa văn trống đồng), tối viền màn (vignette); khung menu / hộp đăng nhập viền đồng 3px + dải hoa văn Đông Sơn
+   (vòng tròn chấm + răng cưa) trên dưới; link Bách khoa / Xếp hạng / Góp ý thành nút gỗ; màn Chuẩn bị / Kết quả / Sính lễ phủ tối + vignette. */
+:root { --dong-son: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2212%22%20shape-rendering%3D%22crispEdges%22%3E%3Crect%20width%3D%2224%22%20height%3D%2212%22%20fill%3D%22%232A1C10%22/%3E%3Cpath%20d%3D%22M0%2012%20L4%208%20L8%2012%20L12%208%20L16%2012%20L20%208%20L24%2012Z%22%20fill%3D%22%237A5420%22/%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2224%22%20height%3D%221%22%20fill%3D%22%23C9963A%22/%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%224%22%20r%3D%223%22%20fill%3D%22none%22%20stroke%3D%22%23D9A84E%22%20stroke-width%3D%221%22/%3E%3Crect%20x%3D%2211%22%20y%3D%223%22%20width%3D%222%22%20height%3D%222%22%20fill%3D%22%23F2D27A%22/%3E%3Crect%20x%3D%222%22%20y%3D%223%22%20width%3D%222%22%20height%3D%222%22%20fill%3D%22%239A6A28%22/%3E%3Crect%20x%3D%2220%22%20y%3D%223%22%20width%3D%222%22%20height%3D%222%22%20fill%3D%22%239A6A28%22/%3E%3C/svg%3E"); }
+html.pixel #menu-art img.keyart, html.pixel #login .bgart img { image-rendering: pixelated; }
+html.pixel #menu-art:has(img.keyart)::after { background: radial-gradient(ellipse 70% 75% at 40% 45%, transparent 55%, #0B0704CC 100%), linear-gradient(180deg, transparent 70%, #0B0704AA 100%),
+  radial-gradient(ellipse 48% 38% at 36% 42%, #0D0B08b0, transparent 70%), linear-gradient(90deg, transparent 60%, #0D0B0880); }
+html.pixel #menu .mc-nav, html.pixel #login .login-box { background-color: #160F09F2; border: 3px solid #8C6A2E; border-radius: 2px;
+  box-shadow: 0 0 0 3px #1A110A, 0 0 40px #F2B44A33, 0 12px 30px #000c; }
+html.pixel #menu .mc-nav { padding-top: 24px; padding-bottom: 24px; }
+html.pixel #login .login-box { padding-top: 26px; padding-bottom: 26px; }
+html.pixel #menu .mc-nav::before, html.pixel #menu .mc-nav::after, html.pixel #login .login-box::before, html.pixel #login .login-box::after {
+  content: ''; position: absolute; left: 6px; right: 6px; height: 12px; background: var(--dong-son) repeat-x; background-size: auto 100%; image-rendering: pixelated; pointer-events: none; }
+html.pixel #menu .mc-nav::before, html.pixel #login .login-box::before { top: 6px; }
+html.pixel #menu .mc-nav::after, html.pixel #login .login-box::after { bottom: 6px; transform: scaleY(-1); }
+html.pixel #menu .mc-nav .orn2 { display: none; }
+html.pixel #menu .mc-btn.main { filter: drop-shadow(0 0 10px #FFB44A88); }
+html.pixel #menu .mc-subs { gap: 6px; }
+html.pixel #menu .mc-sub { height: max(30px, calc(36px / var(--k, 1))); padding: 0 6px; background: #2A1C10; border: 2px solid #6A4E22; border-radius: 2px; text-decoration: none;
+  color: #F2D27A; display: flex; align-items: center; justify-content: center; gap: 3px; box-shadow: inset 0 -2px 0 #1A110A; }
+html.pixel.sk-nen-man-phu #prep .screen, html.pixel.sk-nen-man-phu #result .screen, html.pixel.sk-nen-man-phu #reward .screen {
+  background: radial-gradient(ellipse 80% 80% at 50% 45%, transparent 40%, #0B0704E6 100%), linear-gradient(#0E0B08DD, #0E0B08DD), var(--sk-nen-man-phu) center / cover no-repeat, var(--bg); }

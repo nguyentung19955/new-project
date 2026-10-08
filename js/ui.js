@@ -177,6 +177,8 @@ function ic(name, alt = '', cls = '') {
   return `<svg class="icn ${cls}" viewBox="0 0 24 24"${alt ? ` aria-label="${alt}"` : ' aria-hidden="true"'}>${IC_SVG[name] || ''}</svg>`;
 }
 const icPreload = () => { IC_NAMES.forEach(icUrl); Object.keys(ELEMENTS).forEach((e) => asset(`ui/ic-hanh-${e}.png`, true)); };
+// sua-giao-dien-10 (N7): bật pixel → nền menu / đăng nhập dùng bản pixel hoá 534×248 (64 màu, phóng nearest) cho hợp phần còn lại
+const menuArt = () => assetSrc(typeof pixelOn === 'function' && pixelOn() && hasAsset('ui/nen-menu-px.png') ? 'ui/nen-menu-px.png' : 'ui/nen-menu.jpg');
 const rarCls = (r) => ({ common: 'rt', rare: 'rh', epic: 'rs', legendary: 'rl' }[r]);
 const ATTR_CLS = { str: 'a-str', agi: 'a-agi', int: 'a-int' };
 const BOSS_LINES = {
@@ -413,7 +415,7 @@ class UI {
     this.bind();
     this.watchToasts();
     this.buildSummon();
-    $('#menu-art').innerHTML = `<img class="keyart" src="${assetSrc('ui/nen-menu.jpg')}" alt="" onerror="this.outerHTML=''">` + svgI(sceneArt('menu'));   // claude/pixel-con-lai: giữ tranh cũ (bản pixel 320×180 mất hoa văn trống đồng — tester)
+    $('#menu-art').innerHTML = `<img class="keyart" src="${menuArt()}" alt="" onerror="this.outerHTML=''">` + svgI(sceneArt('menu'));   // claude/pixel-con-lai: giữ tranh cũ (bản pixel 320×180 mất hoa văn trống đồng — tester)
     // v145: logo tựa "Thần Thoại Việt" — có ảnh assets/ui/logo-tua.png thì hiện ảnh, không thì giữ chữ HTML
     if (hasAsset('ui/logo-tua.png')) $('#menu-logo').insertAdjacentHTML('afterbegin', `<img class="logo-img" src="${assetSrc('ui/logo-tua.png')}" alt="Thần Thoại Việt" hidden onload="this.hidden=false;this.parentNode.classList.add('has-img')" onerror="this.remove()">`);
     $('#rotate-art').innerHTML = sceneArt('rotate');
@@ -718,7 +720,7 @@ class UI {
     const short = (n) => (n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace('.', ',') + 'k' : n);
     $('#menu-res').innerHTML = `<span title="Ngân khố: bạc thưởng sau mỗi trận, dùng mua tướng Tím / Vàng, Thần Khí, đồ trước trận — không dùng được trong trận"><small class="pr-l">Ngân khố</small>${bac(1)} <b style="color:#E4ECF4">${fmt(s.kho || 0)}</b></span>`;
     if (0) $('#menu-res').innerHTML = `<span title="Tổng vàng đã kiếm qua mọi trận (vàng trong trận luôn bắt đầu từ ${CONFIG.startGold})"><small class="pr-l">Tổng vàng đã kiếm</small>${coin(1)} ${short(s.lifeGold)}</span><span title="Linh Chi đã hái">🌿 ${short(s.lifeHerbs)}</span><span title="Ngân khố: vàng thưởng sau mỗi trận thắng, dùng mua đồ / tướng trước trận"><small class="pr-l">Ngân khố</small>${coin(1)} <b style="color:#FFD66B">${fmt(s.kho || 0)}</b></span>`;
-    $('#menu-art').innerHTML = `<img class="keyart" src="${assetSrc('ui/nen-menu.jpg')}" alt="" onerror="this.outerHTML=''">` + svgI(sceneArt('menu'));   // claude/pixel-con-lai: giữ tranh cũ (bản pixel 320×180 mất hoa văn trống đồng — tester)
+    $('#menu-art').innerHTML = `<img class="keyart" src="${menuArt()}" alt="" onerror="this.outerHTML=''">` + svgI(sceneArt('menu'));   // claude/pixel-con-lai: giữ tranh cũ (bản pixel 320×180 mất hoa văn trống đồng — tester)
     const g0 = this.game, live = g0.started && !g0.over && (!g0.won || g0.endless);
     const run = !live && s.run;
     const lvN = live ? (g0.stage ? g0.stage.lv : g0.level) : run ? endlessStageAt(run.wave || 0, run.level || 0).lv : 0, wN = live ? g0.wave : run ? run.wave : 0;   // vô tận theo màn: tên vùng đất đang chơi (màn là hàm của số đợt — khớp màn khi Tiếp tục, cả bản lưu cũ)
@@ -998,7 +1000,7 @@ class UI {
         ${err}
         <button class="btn btn-gold title login-btn" data-act="login-email" ${this.loginBusy ? 'disabled' : ''}>${this.loginBusy ? 'Đang xử lý…' : mode === 'up' ? 'Tạo tài khoản' : 'Đăng nhập'}</button>
         ${mode === 'in' ? '<button class="login-link" data-act="login-reset">Quên mật khẩu?</button>' : ''}`;
-    $('#login').innerHTML = `<div class="bgart"><img src="${assetSrc('ui/nen-menu.jpg')}" alt="" style="object-fit:cover" onerror="this.outerHTML=''"></div><div class="login-box metal">
+    $('#login').innerHTML = `<div class="bgart"><img src="${menuArt()}" alt="" style="object-fit:cover" onerror="this.outerHTML=''"></div><div class="login-box metal">
       <div class="login-logo">Thần Thoại Việt</div>${inner}
       ${fromMenu && signed ? '<button class="xbtn metal login-x" data-act="login-close" aria-label="Đóng">' + ICON.close + '</button>' : ''}</div>`;
     $('#login').hidden = false;
