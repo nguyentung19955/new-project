@@ -103,7 +103,7 @@ function toHuong(H, anhPhong) {
   });
   y += 2 * (caoO + 16) + 8;
   // đang đánh + vũ khí tiến hoá
-  const caoD = Math.max((caoHinh(H.danh) + (H.danh.chan || 0)) * K + 40, 2 * (Math.max(...H.vuKhi.map(caoHinh)) * 7 + 78) + 10) + 70;
+  const caoD = Math.max((caoHinh(H.danh) + (H.danh.chan || 0)) * K + 40, 2 * (Math.max(...H.vuKhi.map(caoHinh)) * (H.kVuKhi || 7) + 78) + 10) + 70;
   o(c, LE, y, rongO, caoD, NEN_O, VIEN_O);
   chu(c, 'Khi đang đánh', LE + 18, y + 46, 34, CHU_VANG, true);
   { const rd = Math.max(...H.danh.rows.map(r => r.length)); // canh giữa theo bề ngang cả hình (kể cả vệt vung)
@@ -111,7 +111,7 @@ function toHuong(H, anhPhong) {
   const x1 = LE + rongO + 16;
   o(c, x1, y, rongO, caoD, NEN_O, VIEN_O);
   chu(c, 'Vũ khí lớn lên theo cách đánh', x1 + 18, y + 46, 31, CHU_VANG, true);
-  const KV = 7, caoV = (caoD - 70) / 2;
+  const KV = H.kVuKhi || 7, caoV = (caoD - 70) / 2;
   H.vuKhi.forEach((v, i) => {
     const xx = x1 + rongO / 4 + (i % 2) * rongO / 2, yy = y + 64 + Math.floor(i / 2) * caoV;
     datHinh(c, v, H.mau, xx + (v.lech || 0) * KV, yy + caoV - 52, KV, false);
@@ -214,3 +214,13 @@ function nghieng(rows, k) {
 function xoa(rows, x0, x1, y0, y1) {
   return rows.map((r, j) => (j < y0 || j >= y1) ? r : r.padEnd(x1, '.').slice(0, x0) + '.'.repeat(x1 - x0) + r.slice(x1));
 }
+// Đổi màu: thay ký tự theo bảng (để làm các mức tiến hoá từ cùng một hình gốc).
+function doiMau(rows, bang) { return rows.map(r => r.split('').map(ch => bang[ch] || ch).join('')); }
+// Xoay hình 90 độ theo chiều kim đồng hồ (mũi vũ khí đang chỉ lên sẽ chỉ sang phải).
+function xoay(rows) {
+  const h = rows.length, w = Math.max(...rows.map(r => r.length)), ra = [];
+  for (let x = 0; x < w; x++) { let s = ''; for (let y = h - 1; y >= 0; y--) s += rows[y][x] || '.'; ra.push(s); }
+  return ra;
+}
+// Lật ngang.
+function lat(rows) { const w = Math.max(...rows.map(r => r.length)); return rows.map(r => r.padEnd(w, '.').split('').reverse().join('')); }
