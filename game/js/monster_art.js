@@ -1859,6 +1859,15 @@
       { id: 'spikes', label: 'Dựng gai', Q: { up: 1, red: 1, eye: 'angry', jaw: 0.5 }, X: {} },
       { id: 'exposed', label: 'Mệt, lộ mang', Q: { jaw: 0.6, eye: 'dazed', gill: 2 }, X: {} },
       { id: 'dead', label: 'Gục', Q: { jaw: 0.7, eye: 'dead' }, X: {} },
+      { id: 'phase1', label: 'Nổi giận', Q: { eye: 'angry' }, X: { phase: 1 } },
+      { id: 'phase2', label: 'Hóa cuồng', Q: { eye: 'angry', jaw: 0.5 }, X: { phase: 2 } },
+      { id: 'elFire', label: 'Kháng Lửa, yếu Băng', Q: {}, X: { el: 'fire', weak: 'ice' } },
+      { id: 'elPoison', label: 'Kháng Độc, yếu Lửa', Q: {}, X: { el: 'poison', weak: 'fire' } },
+      { id: 'elIce', label: 'Kháng Băng, yếu Độc', Q: {}, X: { el: 'ice', weak: 'poison' } },
+      { id: 'aR', label: 'Chống đánh xa: bong bóng nước', Q: {}, X: { aR: 1 } },
+      { id: 'aM', label: 'Chống áp sát: gai xương', Q: {}, X: { aM: 1 } },
+      { id: 'aD', label: 'Bắt bài lăn né: mắt thứ ba', Q: {}, X: { aD: 1 } },
+      { id: 'all', label: 'Bật hết', Q: { jaw: 0.5, eye: 'angry' }, X: { el: 'fire', weak: 'ice', aR: 1, aM: 1, aD: 1, phase: 2 } },
     ],
   };
 
@@ -2789,5 +2798,12 @@
     S.finish();
     return S.toCanvas();
   }
-  G.monsterArt = { Spr, MON, MINI, BOSS, ELP, buildMon, pal: { INK } };
+  // Dựng một hình bất kỳ từ khai báo D (quái, trùm nhỏ, trùm): trả về { cv, ox, oy, bb }.
+  function build(D, a, b) {
+    const S = new Spr(D.size[0], D.size[1], D.org[0], D.org[1]);
+    D.draw(S, a, b);
+    S.finish();
+    return S.toCanvas();
+  }
+  G.monsterArt = { Spr, MON, MINI, BOSS, ELP, buildMon, build, pal: { INK } };
 })();
