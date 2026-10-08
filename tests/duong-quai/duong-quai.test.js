@@ -53,7 +53,7 @@ const routeTiles = (useFake) => (page) => page.route(new RegExp('/assets/tiles/(
         for (let s = 0; s < 900; s++) {
           game.update(0.05);
           if (s === 300) game.callEarly();
-          for (const e of game.enemies) if (!e.dead && !e.def.flying && e.x > 0 && e.x < CONFIG.W) { seen++; maxOff = Math.max(maxOff, distToPolyline(g.pts, e.x, e.y)); }
+          for (const e of game.enemies) if (!e.dead && !e.def.flying && e.x > 0 && e.x < CONFIG.W) { seen++; maxOff = Math.max(maxOff, Math.min(...geomsFor(id).map((q) => distToPolyline(q.pts, e.x, e.y)))); }   // nhiều nhánh (ban-do-moi): gần nhánh nào cũng được
         }
         render();
         return { id, kind, key: L.key, rgb: [p[0], p[1], p[2]], maxOff, seen, wave: game.wave, lives: game.lives };
