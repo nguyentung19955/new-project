@@ -51,10 +51,14 @@ function unzip(buf) {
     await pick.goto('file://' + path.join(ROOT, 'index.html'));
     let [HERO, QUAI] = await pick.evaluate(() => [Object.keys(HEROES).find((k) => !window.PIXEL_MANIFEST['tuong/' + k]), Object.keys(ENEMIES).find((k) => !ENEMIES[k].boss && !window.PIXEL_MANIFEST['quai/' + k] && !window.PIXEL_MANIFEST['boss/' + k])]);
     await pick.close();
-    // đã vẽ đủ mọi tướng: bỏ tạm 1 tướng khỏi manifest js/pixel/tuong.js (page.route, không sửa file thật)
+    // đã vẽ đủ mọi tướng / quái: bỏ tạm 1 mã khỏi manifest js/pixel/<nhóm>.js (page.route, không sửa file thật)
     const BO = HERO ? null : (HERO = 'thachsanh');
-    const routeManifest = (ctx) => BO && ctx.route('**/js/pixel/tuong.js*', (rr) => rr.fulfill({ contentType: 'application/javascript',
-      body: fs.readFileSync(path.join(ROOT, 'js/pixel/tuong.js'), 'utf8').split('\n').filter((l) => !l.startsWith(`"tuong/${BO}":`)).join('\n') }));
+    const BOQ = QUAI ? null : (QUAI = 'tom');
+    const strip = (nhom, ma) => fs.readFileSync(path.join(ROOT, `js/pixel/${nhom}.js`), 'utf8').split('\n').filter((l) => !l.startsWith(`"${nhom}/${ma}":`)).join('\n');
+    const routeManifest = async (ctx) => {
+      if (BO) await ctx.route('**/js/pixel/tuong.js*', (rr) => rr.fulfill({ contentType: 'application/javascript', body: strip('tuong', BO) }));
+      if (BOQ) await ctx.route('**/js/pixel/quai.js*', (rr) => rr.fulfill({ contentType: 'application/javascript', body: strip('quai', BOQ) }));
+    };
     ok(HERO && QUAI, `mã chưa có pixel để thử: tuong/${HERO}, quai/${QUAI}`);
     // ---- gói tạo bằng tool
     console.log('— tạo gói bằng tools/ve-pixel.html');
