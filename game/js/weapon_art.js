@@ -1472,7 +1472,7 @@
           if (P.st === 1) { s.p(cx - 2, -6, P.E.B[1]); s.p(cx + 5, 2.5, P.E.B[1]); s.p(cx - 5, 2, P.E.B[2]); s.p(cx + 1, 6.5, P.E.B[1]); s.p(cx + 2, -6.5, P.E.B[2]); }
         });
       });
-      gem(S, P, cx, -6, 1);
+      gem(S, P, cx, 6, 1);
       motes(S, P, [[14, -8], [-10, -8], [14, 8], [4, -12], [4, 12], [-9, 6]]);
     },
     face: function (F, P) {
@@ -1482,6 +1482,347 @@
       if (P.st >= 3) F.eye(4, -5.5, { w: 3, h: 3, pup: 'dot', look: [0, 0] });
       F.mouth(4, 1.5, 'smile', 'open');
       F.zzz(8, -8);
+    },
+  });
+
+  // ======================= GIÁO =======================
+  // Cán giáo: thanh gỗ dài từ t0 đến t1, có đai quấn chỗ tay cầm, bịt đầu cán; nhiễm Độc thì dây leo quấn quanh.
+  function shaft(S, P, t0, t1, o) {
+    o = o || {};
+    const W = o.mat || WD, st = P.st, cap = st >= 2 ? P.A : (o.cap || GOLD), band = P.rar >= 1 ? P.R.P : (o.band || RED);
+    S.part((s) => {
+      s.l(t0, 0, t1, 0, o.w || 2, W);
+      s.in(() => { for (let t = t0 + 2.5; t < t1; t += o.step || 5) { s.p(t, 0, Dk(W)); if (o.node) s.p(t, -1, Dk(W)); } });
+    });
+    S.part((s) => { s.l(t0 - 1, -1.5, t0 - 1, 1.5, 2, cap); });
+    if (!o.noband) S.part({ ol: band[0] }, (s) => { s.l(-2.5, -1, -2.5, 1, 2, Md(band)); s.l(2.5, -1, 2.5, 1, 2, Md(band)); if (P.rar >= 3) s.l(0, -1, 0, 1, 2, Lt(band)); });
+    if (P.poison && st >= 2) vine(S, [[5, 1.5], [8, -2], [11, 2], [14, -2], [17, 1.5]].slice(0, st >= 3 ? 5 : 3), [[8, -3], [14, -3]].slice(0, st >= 3 ? 2 : 1));
+    if (P.ice && st >= 3) crystal(S, 9, 1, 0.3, 1, 4, 2.6);
+    if (P.fire && st >= 3) flame(S, 9, -1, 0.4, -1, 4.5, 3);
+  }
+  // chùm ngù (tua ngắn xòe ra) dưới đầu giáo
+  function tuft(S, P, t, w, col) {
+    const C = sec(P, col || RED);
+    S.part({ ol: C[0] }, (s) => { s.g([[t + 2.5, -1.5], [t + 2.5, 1.5], [t, w], [t - 1.5, w - 1], [t, 0], [t - 1.5, -w + 1], [t, -w]], C); });
+  }
+  const LAU = ['#b8a890', '#efe6d2', '#ffffff'];
+  const SPW = { t0: 10, L: 30, hook: 0.3, amp: 0.7 };
+
+  // 0. Giáo Tre Vót: cây tầm vông, khúc đầu to vót xéo nhọn hoắt. Tính lì.
+  fam('spear', {
+    name: 'Giáo Tre Vót', short: 'Tre Vót', nature: 'lì lợm', mat: BAM, warp: SPW,
+    spark: [[30, 0], [20, 0], [38, -2], [8, 0]],
+    build: function (S, P) {
+      const M = P.M, st = P.st;
+      rtassel(S, P, 14, 2);
+      grow(S, P, [[29.5, -3.6, 0.5, -1], [22, 3.6, 0.4, 1], [35, -3.4, 0.6, -1], [17.5, -3.5, 0.2, -1]]);
+      if (st < 2) S.part({ ol: BAMG[0] }, (s) => { s.l(17, 3, 19, 6, 1, Md(BAMG)); s.g([[19, 5.5], [23, 6.5], [24.5, 8.5], [20.5, 8]], BAMG); s.g([[18, 6.5], [18, 10], [16, 11], [16.5, 8]], BAMG); });
+      shaft(S, P, -19, 16, { mat: BAM, step: 7, node: true, cap: BAM, w: 3 });
+      bladePart(S, P, [[15, 2, 2], [17, 3.8, 3.8], [32, 3.6, 3.6], [41, 3.6, -2.2]], { notip: true, per: 9, amp: 0.8 }, (s) => {
+        for (const t of [17, 29.5]) { s.l(t, -6, t, 6, 1, Dk(M)); s.l(t + 1, -6, t + 1, 6, 1, Lt(M)); }
+        s.l(19, -2.5, 27, -2.5, 1, Lt(M)); s.l(32, -2.5, 38, -2.5, 1, SH); s.l(33, 3, 40, -2, 1, Lt(M));
+        seed(s, P, 18, 30, 3.2, P.seed); core(s, P, 19, 38, 2);
+        engrave(s, P, [[31.5, 1], [36, 0]]);
+      });
+      gem(S, P, 15.5, 0);
+      motes(S, P, [[24, -9], [43, 2], [32, -9], [30, 9], [38, -7], [14, 8]]);
+    },
+    face: function (F, P) {
+      F.eye(24.5, 0, { brow: 'flat', lid: 1, look: [0, 0] });
+      if (P.st >= 3) F.eye(33.5, 0, { w: 3, h: 3, brow: 'flat' });
+      F.mouth(19.5, 0, 'flat', 'open');
+      F.zzz(26, 4);
+    },
+  });
+
+  // 1. Đinh Ba: ba ngạnh nhọn, bầu giữa là khuôn mặt, dưới có ngù đỏ. Tính dữ.
+  fam('spear', {
+    name: 'Đinh Ba', short: 'Đinh Ba', nature: 'dữ dằn', mat: STEEL, warp: SPW,
+    spark: [[34, 0], [30, -8], [30, 8], [22, 0]],
+    build: function (S, P) {
+      const M = P.M, st = P.st, A = st >= 2 ? P.A : BRZ;
+      rtassel(S, P, 13, 2);
+      tuft(S, P, 14, 4.5);
+      shaft(S, P, -19, 17);
+      // hai ngạnh bên
+      for (const sg of [-1, 1]) {
+        if (P.fire && st >= 2) flame(S, 31, sg * 8, 1, sg * 0.15, st >= 3 ? 9 : 6.5, 3.6, sg < 0 ? 0.3 : -0.3);
+        else if (P.ice && st >= 2) crystal(S, 31, sg * 8, 1, sg * 0.1, st >= 3 ? 9 : 6.5, 3.6, sg > 0);
+        S.part({ ol: P.ol, rim: true }, (s) => {
+          s.pl([[20, sg * 3], [21.5, sg * 7.5], [25, sg * 8.5], [31, sg * 8]], 2, M);
+          if (!((P.fire || P.ice) && st >= 2)) s.g([[30, sg * 6.5], [36.5 + (st >= 3 ? 1.5 : 0), sg * 8], [30, sg * 9.5]], M);
+          if (P.poison && st >= 2) { s.g([[25, sg * 9], [27, sg * 12], [28.5, sg * 9]], M); if (st >= 3) s.g([[31, sg * 9], [33, sg * 11.5], [34, sg * 8.5]], M); }
+        });
+      }
+      grow(S, P, [[30, -2.6, 0.4, -1], [30, 2.6, 0.4, 1], [24, -9.5, 0, -1], [24, 9.5, 0, 1]], { few: true });
+      bladePart(S, P, [[24, 2.2, 2.2], [29, 3, 3], [35, 2, 2], [41, 0, 0]], { per: 5.5, amp: 0.7 }, (s) => {
+        s.l(27, 0, 38, 0, 1, Dk(M)); s.l(29, 1.5, 34, 1, 1, SH);
+        seed(s, P, 25, 34, 2.2, P.seed); core(s, P, 27, 38, -1);
+      });
+      // bầu giữa
+      S.part({ rim: true }, (s) => { s.e(21, 0, 4.7, 4.9, A); s.in(() => { s.l(17.5, -3, 17.5, 3, 1, Dk(A)); engrave(s, P, [[16.8, -2.5], [16.8, 2.5]]); }); });
+      gem(S, P, 17, 0, 1);
+      motes(S, P, [[28, -13], [44, 2], [34, -12], [34, 12], [40, -6], [22, 12]]);
+    },
+    face: function (F, P) {
+      const lid = F.lid, skin = F.skin; if (P.st < 2) { F.lid = BRZ[0]; F.skin = BRZ[1]; } else { F.lid = P.A[0]; F.skin = P.A[1]; }
+      F.eye(22.5, 0, { w: 5, h: 3, brow: 'angry', pup: 'tall', look: [0, 0] });
+      F.lid = lid; F.skin = skin;
+      if (P.st >= 3) F.eye(30, 0, { w: 3, h: 3, pup: 'dot', look: [0, 0] });
+      F.mouth(19.5, 0, 'fang', 'openfang');
+      F.zzz(24, 5);
+    },
+  });
+
+  // 2. Câu Liêm: mũi giáo kèm lưỡi móc cong quặp ra sau. Tính láu cá.
+  fam('spear', {
+    name: 'Câu Liêm', short: 'Câu Liêm', nature: 'láu cá', mat: STEEL, warp: SPW,
+    spark: [[30, 0], [24, 10], [38, 0], [18, 12]],
+    build: function (S, P) {
+      const M = P.M, st = P.st;
+      rtassel(S, P, 14, -2);
+      tuft(S, P, 15, 4);
+      shaft(S, P, -19, 18);
+      grow(S, P, [[27, -3.8, 0.4, -1], [26, 11, 0.6, 1], [32, -3, 0.6, -1], [19, 13.5, -0.6, 1]]);
+      // lưỡi móc
+      S.part({ ol: P.ol, rim: true }, (s) => {
+        const k = st >= 3 ? 1.5 : 0;
+        s.g([[23, 3], [27.5, 7], [27, 11.5 + k], [22, 14.5 + k], [15.5 - k, 13.5 + k], [19, 12], [22, 10], [22.5, 7], [20.5, 4]], M);
+        s.in(() => { s.l(24, 6, 25.5, 11, 1, Lt(M)); s.l(21, 12.5, 17, 13, 1, Dk(M)); if (P.el && st >= 2) s.l(23.5, 8, 22, 12, 1, P.E.hot); if (st === 1) { s.p(23, 9, P.E.B[1]); s.p(20.5, 12.5, P.E.B[1]); s.p(25, 8, P.E.B[2]); } });
+      });
+      bladePart(S, P, [[20, 2, 2], [24.5, 4, 4], [31, 3.2, 3.2], [40, 0, 0]], { per: 6 }, (s) => {
+        s.l(29, 0, 37, 0, 1, Dk(M)); s.l(30, 1.5, 35, 1, 1, SH);
+        seed(s, P, 21, 32, 3, P.seed); core(s, P, 28, 37, -1.2);
+        engrave(s, P, [[31, -1.5], [36, -0.8]]);
+      });
+      S.part((s) => { s.l(19, -2.5, 19, 2.5, 2, P.A); });
+      gem(S, P, 19, 0);
+      motes(S, P, [[28, -9], [43, 2], [34, -8], [30, 16], [38, -6], [16, 17]]);
+    },
+    face: function (F, P) {
+      F.eye(26.5, 0, { lid: 1, low: 1, pup: 'tall', look: [1, 0] });
+      if (P.st >= 3) F.eye(33, 0, { w: 3, h: 3, look: [1, 0] });
+      F.mouth(22, 0, 'grin', 'openbig');
+      F.zzz(28, 4);
+    },
+  });
+
+  // 3. Mác: lưỡi dài bản to, một lưỡi, cong ngả ra sau, sống có mấu. Tính kiêu.
+  fam('spear', {
+    name: 'Mác', short: 'Mác', nature: 'kiêu ngạo', mat: STEEL, warp: SPW,
+    arc: { t0: 23, R: 38, dir: -1 },
+    spark: [[30, 2], [24, 2], [38, 1], [26, -5]],
+    build: function (S, P) {
+      const M = P.M, st = P.st;
+      rtassel(S, P, 14, 2);
+      tuft(S, P, 14.5, 4.5);
+      shaft(S, P, -19, 18);
+      grow(S, P, [[30, -3, 0.5, -1], [28, 5.6, 0.4, 1], [35, -2.6, 0.6, -1], [23, 5, 0, 1]]);
+      // mấu trên sống
+      if (!(P.fire && st >= 2)) S.part({ ol: P.ol }, (s) => { s.g([[23, -2.5], [25.5, -7 - st * 0.5], [27, -2.8]], P.ice && st >= 2 ? P.E.B2 : M); });
+      bladePart(S, P, [[20, 1.8, 2], [23, 2.5, 5], [30, 3, 5.8], [37, 2.5, 4], [42.5, 0.6, 0.4]], { per: 6.5, tip: 0.8 }, (s) => {
+        s.l(22, -0.5, 40, -1, 1, Dk(M)); s.l(25, 3.5, 36, 3, 1, SH); s.l(23, 4, 30, 4.8, 1, Lt(M));
+        seed(s, P, 21, 32, 3, P.seed); core(s, P, 30, 40, 1);
+        engrave(s, P, [[31, 1.5], [38, 1]]);
+      });
+      S.part((s) => { s.e(19, 0, 1.4, 3.6, P.A); });
+      gem(S, P, 19, 0);
+      motes(S, P, [[28, -10], [45, -4], [34, -10], [30, 9], [40, -9], [20, 9]]);
+    },
+    face: function (F, P) {
+      F.eye(27.5, 1.2, { lid: 1 });
+      if (P.st >= 3) F.eye(35, 1, { w: 3, h: 3 });
+      F.mouth(22.8, 1.5, 'smirk', 'openfang');
+      F.zzz(29, 5);
+    },
+  });
+
+  // 4. Lao: cây lao phóng mảnh, mũi kim dài, đuôi gắn lông chim, hạt bầu ở cổ là khuôn mặt. Tính hớn hở.
+  fam('spear', {
+    name: 'Lao Phóng', short: 'Lao Phóng', nature: 'hớn hở', mat: STEEL, warp: SPW,
+    spark: [[32, 0], [21, 0], [39, 0], [-15, 2]],
+    build: function (S, P) {
+      const M = P.M, st = P.st, FE = sec(P, RED), BD = st >= 2 ? P.E.B2 : GOURD;
+      rtassel(S, P, 15, 2);
+      // lông đuôi
+      S.part({ ol: st >= 2 ? P.ol : RED[0] }, (s) => {
+        for (const sg of [-1, 1]) { s.g([[-12, sg], [-14, sg * 4.5], [-20, sg * 5], [-18, sg]], FE); }
+        s.in(() => { for (const sg of [-1, 1]) { s.l(-15, sg * 2, -18, sg * 4, 1, Lt(FE)); s.l(-13, sg * 3.5, -14, sg * 2, 1, SH); } });
+      });
+      shaft(S, P, -19, 18, { cap: STEEL });
+      grow(S, P, [[26, -2, 0.4, -1], [30, 2, 0.5, 1], [17.5, -3.5, 0, -1], [17.5, 3.5, 0, 1]]);
+      // dải lụa bay ở cổ lao
+      S.nomeasure = true;
+      S.part({ ol: FE[0] }, (s) => { s.pl([[16, 2], [14, 6], [15, 9], [12, 12]], 2, FE); });
+      S.nomeasure = false;
+      bladePart(S, P, [[23, 1.5, 1.5], [27, 2.6, 2.6], [41, 0, 0]], { per: 5, amp: 0.7 }, (s) => {
+        s.l(26, 0, 38, 0, 1, Dk(M)); s.l(28, 1, 33, 0.8, 1, SH);
+        seed(s, P, 24, 34, 1.8, P.seed); core(s, P, 27, 38, -0.8);
+      });
+      // hạt bầu ở cổ lao
+      S.part({ ol: P.ol, rim: true }, (s) => { s.e(20.5, 0, 4, 4.6, BD); s.in(() => { s.l(22.5, 2.5, 20, 3.5, 1, Lt(BD)); engrave(s, P, [[17.3, -2], [17.3, 2]]); }); });
+      gem(S, P, 24.5, 0);
+      motes(S, P, [[26, -8], [44, 2], [34, -7], [32, 7], [39, -5], [16, -8]]);
+    },
+    face: function (F, P) {
+      const lid = F.lid, skin = F.skin; if (P.st < 2) { F.lid = GOURD[0]; F.skin = GOURD[1]; } else { F.lid = P.E.B2[0]; F.skin = P.E.B2[1]; }
+      F.eye(21.5, -2, { bead: true }); F.eye(21.5, 2.5, { bead: true });
+      F.lid = lid; F.skin = skin;
+      if (P.st >= 3) F.eye(29, 0, { w: 3, h: 3, pup: 'dot', look: [0, 0] });
+      F.mouth(19, 0.5, 'smile', 'open');
+      F.zzz(23, 5);
+    },
+  });
+
+  // 5. Giáo Đồng: mũi giáo đồng hình lá bản rộng, có hai lỗ và hoa văn, như cụ già râu bạc. Tính nghiêm.
+  fam('spear', {
+    name: 'Giáo Đồng Đông Sơn', short: 'Giáo Đồng', nature: 'nghiêm nghị', mat: BRZ, warp: SPW,
+    spark: [[32, 0], [26, -4], [38, 0], [26, 4]],
+    build: function (S, P) {
+      const M = P.M, st = P.st, A = st >= 2 ? P.A : BRZ;
+      rtassel(S, P, 13, 2);
+      shaft(S, P, -19, 16, { cap: BRZ });
+      grow(S, P, [[30, -5.2, 0.5, -1], [31, 5, 0.5, 1], [35, -3, 0.6, -1], [24, 6, 0, 1]]);
+      bladePart(S, P, [[20, 2, 2], [23, 5.8, 5.8], [28, 6.3, 6.3], [34, 3.6, 3.6], [41, 0, 0]], { per: 6 }, (s) => {
+        s.l(21, 0, 39, 0, 2, Dk(M)); s.l(21, 1, 38, 1, 1, Lt(M)); s.l(31, 3.5, 34, 2.5, 1, SH);
+        if (st < 2) { for (const p of [[32, -3], [35, 1.5], [24, 4.5]]) s.box(p[0], p[1], 2, 1, '#5fa58a'); }
+        seed(s, P, 21, 32, 5, P.seed); core(s, P, 31, 38, -1.5);
+        engrave(s, P, [[32, -3.5], [36, -1.5]]);
+      });
+      // ống tra cán có đai
+      S.part((s) => { s.g([[15, -2], [21, -2.6], [21, 2.6], [15, 2]], A); s.in(() => { s.l(16.5, -3, 16.5, 3, 1, Dk(A)); s.l(19, -3, 19, 3, 1, Lt(A)); }); });
+      gem(S, P, 18, 0);
+      motes(S, P, [[28, -11], [44, 2], [34, -10], [32, 10], [39, -6], [22, 10]]);
+    },
+    face: function (F, P) {
+      F.eye(28.5, -3.2, { w: 3, h: 3, brow: 'bushy', side: 1, look: [1, 0] }); F.eye(28.5, 3.2, { w: 3, h: 3, brow: 'bushy', side: -1, look: [-1, 0] });
+      if (P.st >= 3) F.eye(35, 0, { w: 3, h: 3, look: [0, 0], pup: 'dot' });
+      F.at(24.5, 0);
+      if (F.mood === 'attack') F.b(MOUTHS.open, 0, 0); else F.r(-1, 0, 2, 1, INK);
+      F.b(['WWW...WWW', 'WW.....WW'], 0, -1, { W: '#ffffff' });
+      F.b(['.W.', 'WWW', '.W.'], 0, F.mood === 'attack' ? 4 : 2, { W: '#eeeaf2' });
+      F.zzz(30, 6);
+    },
+  });
+
+  // 6. Xà Mâu: lưỡi giáo uốn lượn như rắn bò, mũi chẻ đôi như lưỡi rắn. Tính nham hiểm.
+  fam('spear', {
+    name: 'Xà Mâu', short: 'Xà Mâu', nature: 'nham hiểm', mat: IRON, warp: SPW,
+    wave: { t0: 18, amp: 2.1, per: 9 },
+    spark: [[30, 0], [22, 0], [38, 0], [15, 5]],
+    build: function (S, P) {
+      const M = P.M, st = P.st;
+      rtassel(S, P, 10, 2);
+      shaft(S, P, -19, 14);
+      grow(S, P, [[25, -4, 0.4, -1], [30.5, 3.6, 0.5, 1], [36, -3, 0.6, -1], [20, 4, 0.2, 1]]);
+      bladePart(S, P, [[16, 2, 2], [19.5, 4.3, 4.3], [30, 3, 3], [40, 2.3, 2.3], [45.5, 2.3, 2.3]], { notip: true, per: 5.2, amp: 0.7 }, (s) => {
+        s.g([[46.5, -1.1], [40.5, 0], [46.5, 1.1]], 0); // mũi chẻ đôi
+        s.l(27, 0, 36, 0, 1, Dk(M)); s.l(19, 2.5, 34, 2, 1, Lt(M));
+        for (let t = 27; t < 40; t += 3) s.p(t, -1.8, Dk(M));
+        seed(s, P, 17, 30, 3.4, P.seed); core(s, P, 28, 37, 1);
+        engrave(s, P, [[29, -1.8], [35, -1.6]]);
+      });
+      // chắn hình hai đầu rắn ngóc
+      S.part((s) => { s.l(15, -5, 15, 5, 2, P.A); s.box(17, -5.5, 2, 3, P.A); s.box(17, 5.5, 2, 3, P.A); s.in(() => { s.p(17.5, -5.5, INK); s.p(17.5, 5.5, INK); }); });
+      gem(S, P, 15, 0);
+      motes(S, P, [[25, -10], [46, 2], [34, -9], [31, 9], [40, -6], [20, 9]]);
+    },
+    face: function (F, P) {
+      F.eye(23.5, 0, { pup: 'slit', lid: 1, low: 1, look: [0, 0], brow: 'angry' });
+      if (P.st >= 3) F.eye(31.5, 0, { w: 3, h: 3, pup: 'slit', look: [0, 0] });
+      F.mouth(18.5, 0.5, 'fork', 'openfang');
+      F.zzz(25, 4);
+    },
+  });
+
+  // 7. Mái Chèo: cây chèo gỗ bản dẹt của người chèo đò, đuôi cán có tay ngang. Tính ngơ ngác.
+  fam('spear', {
+    name: 'Mái Chèo', short: 'Mái Chèo', nature: 'ngơ ngác', mat: WD2, warp: SPW,
+    spark: [[32, 0], [26, 0], [38, 0], [22, 0]],
+    build: function (S, P) {
+      const M = P.M, st = P.st;
+      rtassel(S, P, 11, 2);
+      shaft(S, P, -18, 15, { cap: WD });
+      S.part((s) => { s.l(-19.5, -4, -19.5, 4, 2, st >= 2 ? P.A : WD); });
+      grow(S, P, [[30, -5, 0.5, -1], [32, 5, 0.5, 1], [24, -4.5, 0.2, -1], [36, 4.2, 0.6, 1]]);
+      bladePart(S, P, [[13, 1.2, 1.2], [18, 2.6, 2.6], [22, 4.6, 4.6], [34, 5.2, 5.2], [38.5, 3.8, 3.8], [40.5, 1.6, 1.6]], { notip: true, per: 6.5 }, (s) => {
+        s.l(15, 0, 38, 0, 1, Dk(M)); s.l(22, -3, 36, -3.5, 1, Lt(M)); s.l(24, 3, 30, 3.5, 1, Dk(M)); s.l(33, 3, 37, 2.5, 1, Dk(M));
+        seed(s, P, 16, 30, 3.5, P.seed); core(s, P, 20, 26, 2);
+        engrave(s, P, [[35, -2.5], [37.5, 0], [35, 2.5]]);
+      });
+      // dây buộc cọc chèo
+      S.part({ ol: STRAW[0] }, (s) => { s.l(12, -1.5, 12, 1.5, 2, Md(st >= 2 ? P.A : STRAW)); });
+      gem(S, P, 20, 0);
+      motes(S, P, [[26, -10], [44, 2], [34, -9], [31, 10], [39, -7], [18, 8]]);
+    },
+    face: function (F, P) {
+      F.eye(31, -2.5, { bead: true }); F.eye(31, 3, { bead: true });
+      if (P.st >= 3) F.eye(36, 0, { w: 3, h: 3, pup: 'dot', look: [0, 0] });
+      F.mouth(26.5, 0.5, 'o', 'open');
+      F.zzz(33, 6);
+    },
+  });
+
+  // 8. Cờ Lau: cây lau có bông trắng mềm rủ sang một bên, cờ tập trận thuở bé. Tính ngái ngủ.
+  fam('spear', {
+    name: 'Cờ Lau', short: 'Cờ Lau', nature: 'ngái ngủ', mat: LAU, warp: SPW,
+    spark: [[30, 1], [24, 0], [37, 3], [12, -3]],
+    build: function (S, P) {
+      const M = P.M, st = P.st, LF = sec(P, BAMG);
+      rtassel(S, P, 17, -2);
+      // lá lau dài
+      S.part({ ol: st >= 2 ? P.ol : BAMG[0] }, (s) => { s.g([[6, -1], [14, -5.5], [20, -9], [15, -4], [9, -1]], LF); s.g([[11, 1], [17, 4.5], [20, 8.5], [18, 4], [14, 1]], LF); });
+      shaft(S, P, -19, 21, { mat: BAM, step: 8, node: true, cap: BAM });
+      grow(S, P, [[30, -3.6, 0.5, -1], [32, 6, 0.4, 1], [36, -1.5, 0.6, -1], [24, 5, 0, 1]]);
+      // các túm bông
+      S.part({ ol: P.ol }, (s) => { s.e(27, 6, 2.6, 2.2, M); s.e(33, 6.5, 2.6, 2, M); s.e(38.5, 5.5, 2.2, 2, M); s.e(23, -3.6, 2, 1.6, M); });
+      bladePart(S, P, [[19, 1, 1], [23, 3.6, 4.5], [30, 3.8, 5.8], [36, 2, 5.5], [41, -0.8, 4.6], [43, -2.5, 3.8]], { notip: true, per: 5.5, amp: 0.7 }, (s) => {
+        for (let t = 22; t < 41; t += 3) { s.l(t, 4.5, t + 2, 2, 1, Dk(M)); }
+        s.l(22, -2.5, 34, -2, 1, Lt(M));
+        seed(s, P, 21, 32, 3, P.seed); core(s, P, 33, 40, 3);
+        engrave(s, P, [[33, 0], [38, 2.5]]);
+      });
+      gem(S, P, 20, 0);
+      motes(S, P, [[27, -9], [46, 3], [34, -8], [31, 11], [40, -4], [22, 9]]);
+    },
+    face: function (F, P) {
+      F.eye(28, 0.5, { lid: 3, look: [0, 1] });
+      if (P.st >= 3) F.eye(35.5, 2, { w: 3, h: 3, lid: 1, look: [0, 1] });
+      F.mouth(23.2, 0.5, 'tiny', 'open');
+      F.blush(25, 3.5);
+      F.zzz(30, 5);
+    },
+  });
+
+  // 9. Bút Lông: cây bút lông khổng lồ của thầy đồ, ngòi trắng chấm mực. Tính mơ màng.
+  fam('spear', {
+    name: 'Bút Lông', short: 'Bút Lông', nature: 'mơ màng', mat: WHT, warp: SPW,
+    spark: [[30, 0], [20, 0], [38, 0], [-14, 2]],
+    build: function (S, P) {
+      const M = P.M, st = P.st, INKC = st >= 2 ? [P.E.ol, P.E.B[0], P.E.B[1]] : ['#17131c', '#2a2230', '#4a4458'];
+      rtassel(S, P, -15, 2);
+      // dây treo bút ở đuôi cán
+      S.part({ ol: RED[0] }, (s) => { const C = Md(sec(P, RED)); s.pl([[-20, 0], [-23, -2], [-25, 0], [-23, 2], [-20, 0]], 1, C); });
+      shaft(S, P, -19, 19, { mat: BAM, w: 3, step: 9, node: true, cap: BAM });
+      grow(S, P, [[30, -3.6, 0.5, -1], [28, 4, 0.4, 1], [35, -2, 0.6, -1], [24, 4.2, 0, 1]]);
+      bladePart(S, P, [[21.5, 2.8, 2.8], [26, 4.4, 4.4], [31, 3.8, 3.8], [36, 1.9, 1.9], [41, 0, 0]], { per: 6 }, (s) => {
+        s.g([[34, -6], [48, -6], [48, 6], [34, 6], [35.5, 2], [34.5, 0], [35.5, -2]], INKC); // đầu ngòi chấm mực
+        s.l(23, -2.5, 32, -2.5, 1, Lt(M)); s.l(23, 2.5, 31, 2.5, 1, Dk(M)); s.l(24, 0.5, 26, 0.5, 1, Dk(M));
+        seed(s, P, 22, 32, 3, P.seed);
+        engrave(s, P, [[30.5, -2], [32.5, 0], [30.5, 2]]);
+      });
+      // khâu bút
+      S.part((s) => { const A = st >= 2 ? P.A : HORN; s.g([[18.5, -2.6], [22, -3.2], [22, 3.2], [18.5, 2.6]], A); s.in(() => { s.l(20, -3, 20, 3, 1, Lt(A)); }); });
+      gem(S, P, 20.2, 0);
+      // giọt mực rơi
+      if (st < 2) { S.nomeasure = true; S.part({ fx: true }, (s) => { s.p(43, 1, '#2a2230'); }); S.nomeasure = false; }
+      motes(S, P, [[27, -9], [44, 2], [34, -8], [31, 9], [39, -6], [22, 9]]);
+    },
+    face: function (F, P) {
+      F.eye(28, 0, { look: [1, -1], hl: true });
+      if (P.st >= 3) F.eye(34.5, 0, { w: 3, h: 3, look: [1, -1] });
+      F.mouth(23.5, 0, 'o', 'open');
+      F.zzz(30, 4);
     },
   });
 
@@ -1509,7 +1850,7 @@
     }
     return P;
   }
-  const KS = { sword: 0.88, bow: 0.9, spear: 1, hammer: 1 };
+  const KS = { sword: 0.88, bow: 0.9, spear: 0.88, hammer: 1 };
   const keyOf = (P) => P.type[1] + P.fam + (P.el ? P.el[0] : 'n') + P.st + P.rar;
   const cache = new Map();
   const CACHE_MAX = 600, RAD = 72, ASTEP = 5;
