@@ -58,7 +58,7 @@ const svgI = (svg, cls = '') => `<span class="svgi ${cls}">${svg || ''}</span>`;
 const UI_SKIN = [['khung-bang', 'khung-bang'], ['nut-vang-thuong', 'nut-vang'], ['nut-vang-nhan'], ['nut-vang-khoa'],
   ['nut-dong-thuong', 'nut-dong'], ['nut-dong-nhan'], ['nut-dong-khoa'], ['nut-tron-thuong', 'nut-tron'], ['nut-tron-nhan'], ['nut-tron-khoa'],
   ['thanh-mau-boss', 'thanh-mau-boss'], ['khung-thanh-day', 'thanh-day'], ['the-cho-thuong', 'the-cho'], ['the-cho-ghep'], ['the-cho-thieu'],
-  ['nut-doi-cho', 'nut-doi-cho'], ['ai-mo', 'huy-hieu'], ['ai-chon'], ['ai-khoa']];
+  ['nut-doi-cho', 'nut-doi-cho'], ['ai-mo', 'huy-hieu'], ['ai-chon'], ['ai-khoa'], ['khung-bang-toi', 'khung-toi']];   // khung-bang-toi: chỉ có bản pixel
 function loadUiSkins() {
   const root = document.documentElement;
   const one = (src, name, cls) => {
@@ -70,8 +70,9 @@ function loadUiSkins() {
   // claude/xuat-goi-pixel: khung / nút / thanh pixel (nhóm "giao-dien") khi bật pixel — trước ảnh vẽ tay
   // nút tròn (đóng) và nút đổi chợ giữ hình cũ: bản pixel mất nhận diện (ô vuông X trắng, đồng xu xoay) — góp ý tester
   const PX_GIU = /^nut-tron-|^nut-doi-cho$/;
-  for (const [name, cls] of UI_SKIN) { const px = !PX_GIU.test(name) && typeof pxUrl === 'function' && pxUrl('giao-dien', name); if (px) one(px, name, cls); else if (hasAsset(`ui/${name}.png`)) one(assetSrc(`ui/${name}.png`), name, cls); }
-  if (hasAsset('scenes/nen-man-phu.png')) one(assetSrc('scenes/nen-man-phu.png'), 'nen-man-phu', 'nen-man-phu');
+  for (const [name, cls] of UI_SKIN) { const px = !PX_GIU.test(name) && typeof pxUrl === 'function' && pxUrl('giao-dien', name === 'khung-bang' ? 'khung-bang-toi' : name);   /* bảng chữ sáng: khung tối (giấy kem làm chữ khó đọc) */ if (px) one(px, name, cls); else if (hasAsset(`ui/${name}.png`)) one(assetSrc(`ui/${name}.png`), name, cls); }
+  const pmp = typeof pxUrl === 'function' && pxUrl('canh', 'nen-man-phu');
+  if (pmp) one(pmp, 'nen-man-phu', 'nen-man-phu'); else if (hasAsset('scenes/nen-man-phu.png')) one(assetSrc('scenes/nen-man-phu.png'), 'nen-man-phu', 'nen-man-phu');
 }
 if (typeof document !== 'undefined' && document.documentElement) loadUiSkins();
 // v95: Ngân khố (tài khoản) dùng nén BẠC, khác hẳn đồng VÀNG trong trận
@@ -260,7 +261,14 @@ function itemIcon(id, rarity) {
   if (NEW_ITEM_ART[id]) return svgImg(NEW_ITEM_ART[id]);
   return ITEMS[id] && ITEMS[id].set ? svgImg(setItemIcon(id)) : '';
 }
+// claude/xuat-goi-pixel: cảnh / tranh pixel khi bật pixel (mã chưa có thì ảnh cũ)
+const SCENE_PX = { story1: 'canh/truyen-sontinh-1', story2: 'canh/truyen-sontinh-2', story3: 'canh/truyen-sontinh-3',
+  win: 'canh/nen-thang', lose: 'canh/nen-thua', mountain1: 'giao-dien/nui-tan-vien-1', mountain2: 'giao-dien/nui-tan-vien-2', mountain3: 'giao-dien/nui-tan-vien-3',
+  mountain4: 'giao-dien/nui-tan-vien-4', mountain5: 'giao-dien/nui-tan-vien-5', voi: 'giao-dien/tranh-qua-voi', ga: 'giao-dien/tranh-qua-ga', ngua: 'giao-dien/tranh-qua-ngua',
+  hubau: 'giao-dien/tranh-hu-bau', kholua: 'giao-dien/tranh-kho-lua', huvua: 'giao-dien/tranh-hu-bau', drum: 'giao-dien/tranh-trong-dong', rotate: 'giao-dien/tranh-xoay' };
 function sceneArt(k) {
+  const pk = SCENE_PX[k] && SCENE_PX[k].split('/'), pu = pk && pxUrl2(pk[0], pk[1]);
+  if (pu) return `<img src="${pu}" alt="">`;
   const u = SCENE_FILE[k] && assetUrl(SCENE_FILE[k]);
   if (u) return `<img src="${u}" alt="">`;
   if (k === 'huvua') return sceneArt('hubau');
@@ -405,7 +413,7 @@ class UI {
     this.bind();
     this.watchToasts();
     this.buildSummon();
-    $('#menu-art').innerHTML = `<img class="keyart" src="${assetSrc('ui/nen-menu.jpg')}" alt="" onerror="this.outerHTML=''">` + svgI(sceneArt('menu'));
+    $('#menu-art').innerHTML = `<img class="keyart" src="${assetSrc('ui/nen-menu.jpg')}" alt="" onerror="this.outerHTML=''">` + svgI(sceneArt('menu'));   // claude/pixel-con-lai: giữ tranh cũ (bản pixel 320×180 mất hoa văn trống đồng — tester)
     // v145: logo tựa "Thần Thoại Việt" — có ảnh assets/ui/logo-tua.png thì hiện ảnh, không thì giữ chữ HTML
     if (hasAsset('ui/logo-tua.png')) $('#menu-logo').insertAdjacentHTML('afterbegin', `<img class="logo-img" src="${assetSrc('ui/logo-tua.png')}" alt="Thần Thoại Việt" hidden onload="this.hidden=false;this.parentNode.classList.add('has-img')" onerror="this.remove()">`);
     $('#rotate-art').innerHTML = sceneArt('rotate');
@@ -710,7 +718,7 @@ class UI {
     const short = (n) => (n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace('.', ',') + 'k' : n);
     $('#menu-res').innerHTML = `<span title="Ngân khố: bạc thưởng sau mỗi trận, dùng mua tướng Tím / Vàng, Thần Khí, đồ trước trận — không dùng được trong trận"><small class="pr-l">Ngân khố</small>${bac(1)} <b style="color:#E4ECF4">${fmt(s.kho || 0)}</b></span>`;
     if (0) $('#menu-res').innerHTML = `<span title="Tổng vàng đã kiếm qua mọi trận (vàng trong trận luôn bắt đầu từ ${CONFIG.startGold})"><small class="pr-l">Tổng vàng đã kiếm</small>${coin(1)} ${short(s.lifeGold)}</span><span title="Linh Chi đã hái">🌿 ${short(s.lifeHerbs)}</span><span title="Ngân khố: vàng thưởng sau mỗi trận thắng, dùng mua đồ / tướng trước trận"><small class="pr-l">Ngân khố</small>${coin(1)} <b style="color:#FFD66B">${fmt(s.kho || 0)}</b></span>`;
-    $('#menu-art').innerHTML = `<img class="keyart" src="${assetSrc('ui/nen-menu.jpg')}" alt="" onerror="this.outerHTML=''">` + svgI(sceneArt('menu'));
+    $('#menu-art').innerHTML = `<img class="keyart" src="${assetSrc('ui/nen-menu.jpg')}" alt="" onerror="this.outerHTML=''">` + svgI(sceneArt('menu'));   // claude/pixel-con-lai: giữ tranh cũ (bản pixel 320×180 mất hoa văn trống đồng — tester)
     const g0 = this.game, live = g0.started && !g0.over && (!g0.won || g0.endless);
     const run = !live && s.run;
     const lvN = live ? (g0.stage ? g0.stage.lv : g0.level) : run ? endlessStageAt(run.wave || 0, run.level || 0).lv : 0, wN = live ? g0.wave : run ? run.wave : 0;   // vô tận theo màn: tên vùng đất đang chơi (màn là hàm của số đợt — khớp màn khi Tiếp tục, cả bản lưu cũ)
@@ -1006,10 +1014,10 @@ class UI {
     $('#modes').innerHTML = `<div class="screen" style="z-index:auto">
       <div class="scr-head metal"><button class="xbtn metal" data-act="mode-close" aria-label="Quay lại">${ICON.back}</button><h1 class="ttl">Chọn chế độ</h1><div class="sp"></div></div>
       <div class="md-body">
-        <button class="md-card metal endl" data-act="mode-pick" data-k="endless" style="background-image:linear-gradient(90deg,#0A1A24f0 35%,#0A1A2455),url('${assetSrc('maps/nen-bien.jpg')}')"><span class="md-ic"><img src="${assetSrc('ui/ui-tran-1-3.png')}" alt="♾"></span><b>Vô Tận</b>
+        <button class="md-card metal endl" data-act="mode-pick" data-k="endless" style="background-image:linear-gradient(90deg,#0A1A24f0 35%,#0A1A2455),url('${pxUrl2('canh', 'ban-do-bien') || assetSrc('maps/nen-bien.jpg')}')"><span class="md-ic"><img src="${pxIc('ui-tran-5-2') || assetSrc('ui/ui-tran-1-3.png')}" alt="♾"></span><b>Vô Tận</b>
           <small>Giữ thành mãi mãi qua ${LEVELS.length} vùng đất truyền thuyết: sau mỗi boss sang vùng đất mới (bản đồ, đường đi, quân giặc khác). Quái mạnh dần, mỗi mốc đợt và mỗi boss hạ được nhận Ngân khố. Đua bảng xếp hạng.</small>
           <span class="md-st">Kỷ lục: đợt ${best}</span></button>
-        <button class="md-card metal coop ${COOP.visible ? '' : 'soon'}" ${COOP.visible ? 'data-act="mode-pick" data-k="coop"' : 'disabled aria-disabled="true"'} style="background-image:linear-gradient(90deg,#14240Ef0 35%,#14240E55),url('${assetSrc('maps/nen-thanh.jpg')}')"><span class="md-ic">🤝</span><b>Cùng Giữ Thành</b>
+        <button class="md-card metal coop ${COOP.visible ? '' : 'soon'}" ${COOP.visible ? 'data-act="mode-pick" data-k="coop"' : 'disabled aria-disabled="true"'} style="background-image:linear-gradient(90deg,#14240Ef0 35%,#14240E55),url('${pxUrl2('canh', 'ban-do-thanh') || assetSrc('maps/nen-thanh.jpg')}')"><span class="md-ic">🤝</span><b>Cùng Giữ Thành</b>
           <small>Vô tận cho 2 người: chung bản đồ, chung mạng, mỗi người giữ một nửa số ô và ví vàng riêng. Tạo phòng lấy mã 6 ký tự, bạn bè nhập mã để vào.</small>
           ${COOP.visible ? `<span class="md-st">${COOP.saved() ? `Đang có phòng ${COOP.saved()}` : 'Cần đăng nhập'}</span>` : '<span class="md-soon">Sắp ra mắt</span>'}</button>
       </div></div>`;
@@ -1281,7 +1289,7 @@ class UI {
         <div class="cp-tabs">${CHAPTERS.map((c, ci) => `<button class="cp-tab ${c === ch ? 'on' : ''}" data-act="cp-ch" data-i="${ci}">${c.name}</button>`).join('')}</div>
         <div class="sp"></div></div>
       <div class="cp-body">
-        <div class="cp-map"><div class="bgart">${ch.classic ? svgI(sceneArt('campaign')) : svgI(storyScene({ bg: ch.bg }))}${hasAsset(`scenes/chuong-${ch.id}.png`) ? `<img class="cp-bgimg" src="${assetSrc(`scenes/chuong-${ch.id}.png`)}" alt="" onerror="this.remove()">` : ''}</div>
+        <div class="cp-map"><div class="bgart">${ch.classic ? svgI(sceneArt('campaign')) : svgI(storyScene({ bg: ch.bg }))}${pxUrl2('canh', `chuong-${ch.id}`) ? `<img class="cp-bgimg" src="${pxUrl2('canh', `chuong-${ch.id}`)}" alt="">` : hasAsset(`scenes/chuong-${ch.id}.png`) ? `<img class="cp-bgimg" src="${assetSrc(`scenes/chuong-${ch.id}.png`)}" alt="" onerror="this.remove()">` : ''}</div>
           ${ch.classic ? '' : `<svg class="cp-trail" viewBox="0 0 640 382" preserveAspectRatio="none"><polyline points="${NODES.map(([x, y]) => `${x},${y}`).join(' ')}" fill="none" stroke="#F2D27A" stroke-width="4" stroke-dasharray="10 8" opacity="0.8"/></svg>`}
           ${NODES.map(([x, y], kk) => { const k = ch.from + kk;
             return `<button class="cp-node ${k === i ? 'sel' : ''} ${x > 560 ? 'edge-r' : x < 80 ? 'edge-l' : ''}" style="left:${x / 640 * 100}%;top:${y / 382 * 100}%" data-act="cp-sel" data-i="${k}">
