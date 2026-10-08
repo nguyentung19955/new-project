@@ -488,7 +488,7 @@ class UI {
       if (this.save.run) return this.resumeRun();
       this.showModes();
     };
-    $('#btn-newgame').onclick = () => this.showModes();
+    $('#btn-newgame').onclick = () => this.newGameAsk(true);   // giu-tran-dang-choi: có trận dở thì hỏi trước khi bỏ
     $('#btn-heroes').onclick = () => this.showRoster();
     $('#btn-runes').onclick = () => this.showRunes(false);
     // v124–126: icon nút vẽ tay phong cách trống đồng (assets/ui/); thiếu ảnh thì giữ ký hiệu cũ
@@ -661,7 +661,8 @@ class UI {
   // claude/sua-thoat-than-khi: Esc / nút Quay lại của trình duyệt (vuốt back trên điện thoại) → đóng màn phụ trên cùng,
   // đúng như bấm nút quay lại / ✕ của màn đó (Thần Khí → Anh Hùng → trận/menu). Không có gì để đóng thì trả về null.
   backTarget() {
-    if (this.leaveOn()) return () => this.leaveAsk(false);   // claude/chan-vuot-lui: Back lần nữa khi đang hỏi "Rời trận?" = Ở lại
+    if (this.leaveOn()) return () => this.leaveAsk(false);
+    { const na = document.getElementById('newgame-ask'); if (na && !na.hidden) return () => this.newGameAsk(false); }   // claude/chan-vuot-lui: Back lần nữa khi đang hỏi "Rời trận?" = Ở lại
     if (this.tip) return () => this.hideTip();
     for (const id of ['#ranks', '#treasury', '#runes', '#roster', '#settings', '#coop', '#modes', '#campaign']) {
       const el = $(id);
@@ -709,6 +710,30 @@ class UI {
       ev.preventDefault(); ev.returnValue = '';
     });
     this.bindEdgeGuard();
+  }
+  // giu-tran-dang-choi: Chơi mới khi còn trận dở (trong bộ nhớ hoặc bản lưu) → hỏi "Bỏ trận đang chơi?"; Huỷ giữ nguyên, Đồng ý mới bỏ
+  newGameAsk(on) {
+    const g = this.game, live = g.started && !g.over && !g.co, run = !live && this.save.run;
+    let el = document.getElementById('newgame-ask');
+    if (!on) { if (el) el.hidden = true; return; }
+    if (!live && !run) return this.showModes();
+    const wave = live ? g.wave : run.wave || 0;
+    const k = (live ? g.stage && g.stage.k : endlessStageAt(wave, run.level || 0).k) || 0;
+    const kho = PREP.losePerWave * Math.max(0, wave - 1);
+    if (!el) {
+      $('#wrap').insertAdjacentHTML('beforeend', '<div id="newgame-ask" hidden><div class="la-box metal"></div></div>');
+      el = $('#newgame-ask');
+      el.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        const b = ev.target.closest('[data-na]');
+        if (!b) return;
+        el.hidden = true;
+        if (b.dataset.na === 'ok') this.showModes();   // trận cũ bỏ thật khi vào trận mới (startLevel → abandonRun)
+      });
+    }
+    el.querySelector('.la-box').innerHTML = `<h2>Bỏ trận đang chơi?</h2><p>Màn ${k + 1} · Đợt ${wave}${kho ? ` — Ngân khố ${bac(1)} +${fmt(kho)} sẽ được trả` : ''}. Muốn chơi tiếp thì chọn Huỷ rồi bấm Tiếp tục.</p>
+      <div class="la-btns"><button class="btn-gold" data-na="no">Huỷ</button><button class="metal la-leave" data-na="ok">Bỏ trận</button></div>`;
+    el.hidden = false;
   }
   inBattle() { const g = this.game; return !!(g.started && !g.over && $('#menu').hidden); }
   leaveOn() { const el = document.getElementById('leave-ask'); return !!el && !el.hidden; }
