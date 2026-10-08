@@ -87,7 +87,8 @@ class Skeleton:
         Lhip = R(gp("lean"), pel)          # hông không dời theo nhịp thở, để chân đứng yên
         Lt = T(gp("tx") * K, ty) @ Lhip
         hx, hy = gp("hx"), gp("hy")
-        Lh = Lt @ T(hx * K, hy * K) @ R(gp("head"), neck)
+        # đầu: bám theo cổ nhưng giữ thẳng, trừ khi tư thế cho góc nghiêng riêng (mặt luôn nét)
+        Lh = T(*ap(Lt, neck)) @ T(hx * K, hy * K) @ R(gp("head")) @ T(*(-neck))
         mats = {"than": Lt, "dau": Lh}
         pts = {}
         # chân: mặc định bàn chân đứng yên tại chỗ (tính ngược), hoặc cho hướng trực tiếp bằng fl / bl
@@ -266,35 +267,35 @@ def build_anims(sk):
         ph = i / 8
         sw = math.cos(2 * math.pi * ph)
         f, b = foot(ph), foot(ph + 0.5)
-        run.append((75, P(lean=9, head=-5, y=bob[i] * 0.5 * u, ff=f, bf=b,
+        run.append((75, P(lean=9, y=bob[i] * 0.5 * u, ff=f, bf=b,
                           fa=(92 + 34 * sw, 30 + 30 * sw), ba=(92 - 40 * sw, 40 - 44 * sw),
                           wa=-48 + 16 * sw, phu=-0.6 + 0.5 * math.sin(2 * math.pi * ph * 2))))
     add("run", "Chạy", run, loop=True)
 
     # --- né lăn: thu người, lăn tròn về trước, bật dậy ---
-    tuck = dict(lean=38, head=28, fl=(8, 118), bl=(-6, 104), fa=(52, -28), ba=(40, -40), an=True, dat=True, piv=(0, -0.42 * sk.height))
+    tuck = dict(lean=38, head=60, fl=(8, 118), bl=(-6, 104), fa=(52, -28), ba=(40, -40), an=True, dat=True, piv=(0, -0.42 * sk.height))
     add("dodge", "Né lăn", [
-        (50, P(y=0.3 * L, lean=26, head=10, fa=(120, 60), ba=(60, 10), ff=(-0.2 * L, 0), bf=(0.25 * L, 0), wa=-20, sy=0.94)),
+        (50, P(y=0.3 * L, lean=26, head=20, fa=(120, 60), ba=(60, 10), ff=(-0.2 * L, 0), bf=(0.25 * L, 0), wa=-20, sy=0.94)),
         (45, P(rot=50, **tuck)),
         (45, P(rot=140, **tuck)),
         (45, P(rot=230, **tuck)),
         (45, P(rot=320, **tuck)),
-        (60, P(y=0.32 * L, lean=14, head=-4, fa=(130, 70), ba=(50, 20), ff=(0.3 * L, 0), bf=(-0.3 * L, 0), wa=-30, sy=0.95)),
+        (60, P(y=0.32 * L, lean=14, fa=(130, 70), ba=(50, 20), ff=(0.3 * L, 0), bf=(-0.3 * L, 0), wa=-30, sy=0.95)),
     ])
 
     # --- trúng đòn ---
     add("hurt", "Trúng đòn", [
-        (90, P(x=-1 * u, rot=-9, piv=(0, 0), lean=-10, head=-14, fa=(40, 0), ba=(30, -10), ff=(0.25 * L, 0), bf=(-0.1 * L, 0), wa=-95, phu=-1, sx=1.03, sy=0.97)),
-        (110, P(rot=-4, piv=(0, 0), lean=-5, head=-6, fa=(70, 20), ba=(70, 30), ff=(0.15 * L, 0), wa=-75, phu=-0.5)),
+        (90, P(x=-1 * u, rot=-9, piv=(0, 0), lean=-10, head=-22, fa=(40, 0), ba=(30, -10), ff=(0.25 * L, 0), bf=(-0.1 * L, 0), wa=-30, phu=-1, sx=1.03, sy=0.97)),
+        (110, P(rot=-4, piv=(0, 0), lean=-5, head=-8, fa=(70, 20), ba=(70, 30), ff=(0.15 * L, 0), wa=-44, phu=-0.5)),
     ])
 
     # --- gục ngã: giật lùi, khuỵu gối, ngã ngửa, nảy nhẹ, nằm yên ---
     heel = (-0.12 * sk.width, 0)
     add("die", "Gục ngã", [
-        (90, P(x=-1 * u, rot=-10, piv=(0, 0), lean=-12, head=-16, fa=(30, -10), ba=(20, -20), ff=(0.25 * L, 0), wa=-100)),
-        (100, P(y=0.38 * L, lean=-16, head=-20, fa=(60, 30), ba=(50, 20), bf=(-0.15 * L, 0), wa=-130, an=True)),
-        (90, P(rot=-42, piv=heel, lean=-8, head=-12, fa=(20, -20), ba=(10, -30), fl=(75, 100), bl=(60, 95), an=True, dat=True)),
-        (80, P(rot=-78, piv=heel, lean=-4, head=-6, fa=(40, 10), ba=(30, 0), fl=(70, 95), bl=(55, 90), an=True, dat=True)),
+        (90, P(x=-1 * u, rot=-10, piv=(0, 0), lean=-12, head=-24, fa=(30, -10), ba=(20, -20), ff=(0.25 * L, 0), wa=-100)),
+        (100, P(y=0.38 * L, lean=-16, head=-30, fa=(60, 30), ba=(50, 20), bf=(-0.15 * L, 0), wa=-130, an=True)),
+        (90, P(rot=-42, piv=heel, lean=-8, head=-18, fa=(20, -20), ba=(10, -30), fl=(75, 100), bl=(60, 95), an=True, dat=True)),
+        (80, P(rot=-78, piv=heel, lean=-4, head=-8, fa=(40, 10), ba=(30, 0), fl=(70, 95), bl=(55, 90), an=True, dat=True)),
         (80, P(rot=-90, piv=heel, head=6, fa=(70, 50), ba=(60, 40), fl=(80, 90), bl=(62, 96), an=True, dat=True, nhay=1)),
         (400, P(rot=-90, piv=heel, head=10, fa=(96, 84), ba=(100, 92), fl=(88, 92), bl=(78, 96), an=True, dat=True)),
     ])
@@ -302,62 +303,62 @@ def build_anims(sk):
     # --- ra chiêu kỹ năng: thu người, giơ cao, đẩy ra trước ---
     add("cast", "Ra chiêu kỹ năng", [
         (70, P(y=0.22 * L, lean=-6, fa=(70, -30), ba=(60, -20), wa=-80, sy=0.95)),
-        (70, P(lean=-8, head=-6, fa=(-50, -85), ba=(30, -10), wa=-92)),
-        (90, P(y=-0.06 * L, ff=(0, 0), lean=-10, head=-10, fa=(-78, -92), ba=(110, 130), wa=-98, sy=1.05, phu=1)),
-        (90, P(lean=12, head=4, x=1 * u, fa=(-12, -4), ba=(140, 150), ff=(0.3 * L, 0), wa=-10, phu=-1)),
+        (70, P(lean=-8, fa=(-100, -86), ba=(30, -10), wa=-90)),
+        (90, P(y=-0.06 * L, ff=(0, 0), lean=-10, head=-12, fa=(-96, -90), ba=(110, 130), wa=-94, sy=1.05, phu=1)),
+        (90, P(lean=12, x=1 * u, fa=(-12, -4), ba=(140, 150), ff=(0.3 * L, 0), wa=-10, phu=-1)),
         (80, P(lean=5, fa=(50, 16), ba=(110, 100), ff=(0.15 * L, 0), wa=-34)),
     ])
 
     # --- kiếm: 3 nhịp combo, mỗi nhịp có lấy đà, vung, quá đà, thu về ---
     add("atk_sword_1", "Kiếm nhịp 1: chém ngang từ sau ra trước", [
-        (70, P(y=0.12 * L, lean=-7, head=4, fa=(168, -128), ba=(50, 8), bf=(-0.12 * L, 0), wa=-158, wl="sau")),
-        (60, P(y=0.16 * L, lean=-10, head=6, fa=(176, -112), ba=(46, 4), bf=(-0.14 * L, 0), wa=-172, wl="sau", sy=0.97)),
-        (50, P(x=1 * u, y=0.1 * L, lean=13, fa=(6, 2), ba=(150, 160), ff=(0.34 * L, 0), bf=(-0.1 * L, 0), wa=12, sx=1.04, sy=0.98, phu=-1)),
-        (80, P(x=1 * u, y=0.14 * L, lean=17, head=-4, fa=(54, 66), ba=(140, 150), ff=(0.36 * L, 0), bf=(-0.1 * L, 0), wa=76)),
-        (110, P(y=0.05 * L, lean=7, fa=(84, 46), ba=(110, 96), ff=(0.2 * L, 0), wa=-6)),
+        (70, P(y=0.12 * L, lean=-7, fa=(168, -128), ba=(50, 8), bf=(-0.12 * L, 0), wa=-158, wl="sau")),
+        (60, P(y=0.16 * L, lean=-10, fa=(176, -112), ba=(46, 4), bf=(-0.14 * L, 0), wa=-172, wl="sau", sy=0.97)),
+        (50, P(x=1 * u, y=0.1 * L, lean=13, fao=(3 * u, 0), fa=(6, 2), ba=(150, 160), ff=(0.34 * L, 0), bf=(-0.1 * L, 0), wa=12, sx=1.04, sy=0.98, phu=-1)),
+        (80, P(x=1 * u, y=0.14 * L, lean=17, fao=(3 * u, 0), fa=(46, 56), ba=(140, 150), ff=(0.36 * L, 0), bf=(-0.1 * L, 0), wa=50)),
+        (110, P(y=0.05 * L, lean=7, fao=(1 * u, 0), fa=(84, 46), ba=(110, 96), ff=(0.2 * L, 0), wa=-6)),
     ], weapon="sword", hit=2, rest=False)
     add("atk_sword_2", "Kiếm nhịp 2: hất ngược từ dưới lên", [
-        (70, P(y=0.16 * L, lean=12, head=4, fa=(124, 136), ba=(60, 20), ff=(0.2 * L, 0), wa=148, wl="sau")),
-        (60, P(y=0.2 * L, lean=15, head=6, fa=(132, 148), ba=(56, 14), ff=(0.2 * L, 0), wa=166, wl="sau", sy=0.96)),
-        (50, P(x=1 * u, lean=-2, fa=(-6, -30), ba=(130, 140), ff=(0.3 * L, 0), wa=-38, sy=1.03)),
-        (80, P(x=1 * u, y=-0.04 * L, ff=(0.3 * L, 0), lean=-9, head=-6, fa=(-52, -84), ba=(120, 126), wa=-112, sy=1.04)),
+        (70, P(y=0.16 * L, lean=12, fa=(124, 136), ba=(60, 20), ff=(0.2 * L, 0), wa=148, wl="sau")),
+        (60, P(y=0.2 * L, lean=15, fa=(132, 148), ba=(56, 14), ff=(0.2 * L, 0), wa=166, wl="sau", sy=0.96)),
+        (50, P(x=1 * u, lean=-2, fao=(3 * u, 0), fa=(-6, -30), ba=(130, 140), ff=(0.3 * L, 0), wa=-38, sy=1.03)),
+        (80, P(x=1 * u, y=-0.04 * L, ff=(0.3 * L, 0), lean=-9, head=-10, fa=(-84, -100), ba=(120, 126), wa=-118, sy=1.04)),
         (110, P(lean=-2, fa=(44, -8), ba=(104, 90), ff=(0.16 * L, 0), wa=-72)),
     ], weapon="sword", hit=2, rest=False)
     add("atk_sword_3", "Kiếm nhịp 3: nhảy bổ xuống", [
-        (80, P(y=0.3 * L, lean=-8, head=-4, fa=(-128, -104), ba=(-70, -50), wa=-140, wl="sau", sy=0.93)),
-        (70, P(y=-0.3 * L, ff=(0.1 * L, -0.26 * L), bf=(0.0, -0.2 * L), lean=-12, head=-8, fa=(-106, -96), ba=(-84, -70), wa=-124, wl="sau", sy=1.06, phu=1)),
-        (50, P(x=2 * u, y=0.2 * L, lean=22, head=-6, fa=(18, 28), ba=(150, 164), ff=(0.5 * L, 0), bf=(-0.2 * L, 0), wa=38, sy=0.94, phu=-1)),
-        (90, P(x=2 * u, y=0.3 * L, lean=26, head=-8, fa=(58, 72), ba=(140, 150), ff=(0.5 * L, 0), bf=(-0.2 * L, 0), wa=84, sy=0.95)),
+        (80, P(y=0.3 * L, lean=-8, fa=(-128, -104), ba=(-70, -50), wa=-140, wl="sau", sy=0.93)),
+        (70, P(y=-0.3 * L, ff=(0.1 * L, -0.26 * L), bf=(0.0, -0.2 * L), lean=-12, head=-12, fa=(-106, -96), ba=(-84, -70), wa=-124, wl="sau", sy=1.06, phu=1)),
+        (50, P(x=2 * u, y=0.2 * L, lean=22, head=10, fao=(3 * u, 0), fa=(18, 28), ba=(150, 164), ff=(0.5 * L, 0), bf=(-0.2 * L, 0), wa=30, sy=0.94, phu=-1)),
+        (90, P(x=2 * u, y=0.3 * L, lean=26, head=10, fao=(3 * u, 0), fa=(50, 60), ba=(140, 150), ff=(0.5 * L, 0), bf=(-0.2 * L, 0), wa=50, sy=0.95)),
         (120, P(x=1 * u, y=0.1 * L, lean=10, fa=(74, 40), ba=(110, 96), ff=(0.3 * L, 0), wa=8)),
     ], weapon="sword", hit=2, rest=False)
 
     # --- giáo: rút về sau, lao người đâm thẳng, giữ, thu về ---
     add("atk_spear", "Giáo: đâm thẳng", [
         (70, P(x=-1 * u, lean=-8, fa=(158, 22), ba=(30, 0), bf=(-0.2 * L, 0), wa=-4)),
-        (70, P(x=-2 * u, y=0.1 * L, lean=-12, head=4, fa=(170, 34), ba=(24, -4), bf=(-0.24 * L, 0), wa=-2, sx=0.97)),
-        (50, P(x=2 * u, y=0.22 * L, lean=19, head=-8, fa=(4, 0), ba=(150, 160), ff=(0.6 * L, 0), bf=(-0.3 * L, 0), wa=0, sx=1.05, sy=0.96, phu=-1)),
-        (90, P(x=3 * u, y=0.24 * L, lean=22, head=-10, fa=(0, -2), ba=(156, 164), ff=(0.62 * L, 0), bf=(-0.3 * L, 0), wa=0)),
-        (120, P(x=1 * u, y=0.08 * L, lean=8, fa=(66, 8), ba=(110, 96), ff=(0.3 * L, 0), wa=-6)),
+        (70, P(x=-2 * u, y=0.1 * L, lean=-12, fa=(170, 34), ba=(24, -4), bf=(-0.24 * L, 0), wa=-2, sx=0.97)),
+        (50, P(x=2 * u, y=0.22 * L, lean=19, fao=(4 * u, 0), fa=(30, 8), ba=(150, 160), ff=(0.6 * L, 0), bf=(-0.3 * L, 0), wa=0, sx=1.05, sy=0.96, phu=-1)),
+        (90, P(x=3 * u, y=0.24 * L, lean=22, fao=(4 * u, 0), fa=(26, 4), ba=(156, 164), ff=(0.62 * L, 0), bf=(-0.3 * L, 0), wa=0)),
+        (120, P(x=1 * u, y=0.08 * L, lean=8, fao=(2 * u, 0), fa=(66, 8), ba=(110, 96), ff=(0.3 * L, 0), wa=-6)),
     ], weapon="spear", hit=2, rest=False)
 
     # --- búa: lấy đà dài, bổ từ trên xuống, khựng lại, thu về ---
     add("atk_hammer", "Búa: bổ từ trên xuống", [
         (70, P(y=0.16 * L, lean=8, fa=(62, 36), ba=(56, 30), wa=24)),
-        (70, P(lean=-4, fa=(-28, -72), ba=(-20, -60), wa=-84)),
-        (80, P(y=-0.05 * L, ff=(0, 0), lean=-12, head=-8, fa=(-104, -122), ba=(-90, -108), wa=-152, wl="sau", sy=1.05, phu=1)),
-        (80, P(y=-0.02 * L, ff=(0, 0), lean=-15, head=-10, fa=(-112, -134), ba=(-96, -116), wa=-166, wl="sau", sy=1.04, phu=1)),
-        (60, P(x=1 * u, y=0.3 * L, lean=24, head=-8, fa=(34, 44), ba=(40, 52), ff=(0.36 * L, 0), bf=(-0.12 * L, 0), wa=56, sy=0.93, phu=-1)),
-        (130, P(x=1 * u, y=0.36 * L, lean=27, head=-10, fa=(40, 52), ba=(46, 58), ff=(0.36 * L, 0), bf=(-0.12 * L, 0), wa=64, sy=0.95)),
+        (70, P(lean=-4, fa=(-92, -66), ba=(-70, -50), wa=-80)),
+        (80, P(y=-0.05 * L, ff=(0, 0), lean=-12, head=-12, fa=(-104, -122), ba=(-90, -108), wa=-152, wl="sau", sy=1.05, phu=1)),
+        (80, P(y=-0.02 * L, ff=(0, 0), lean=-15, head=-14, fa=(-112, -134), ba=(-96, -116), wa=-166, wl="sau", sy=1.04, phu=1)),
+        (60, P(x=1 * u, y=0.3 * L, lean=24, head=10, fao=(3 * u, 0), fa=(34, 44), ba=(40, 52), ff=(0.36 * L, 0), bf=(-0.12 * L, 0), wa=56, sy=0.93, phu=-1)),
+        (130, P(x=1 * u, y=0.36 * L, lean=27, head=10, fao=(3 * u, 0), fa=(40, 52), ba=(46, 58), ff=(0.36 * L, 0), bf=(-0.12 * L, 0), wa=64, sy=0.95)),
         (170, P(y=0.1 * L, lean=10, fa=(64, 30), ba=(70, 50), ff=(0.2 * L, 0), wa=6)),
     ], weapon="hammer", hit=4, rest=False)
 
     # --- cung: giơ cung, kéo dây, giữ, buông, thu về ---
     add("atk_bow", "Cung: giương và buông", [
-        (50, P(fa=(24, 6), ba=(40, 10), wa=0, keo=0)),
-        (60, P(lean=-3, fa=(6, 0), ba_to=("hand", -3 * u, 0), wa=0, keo=3)),
-        (60, P(lean=-6, head=-2, fa=(2, -2), ba_to=("hand", -6 * u, 0), wa=0, keo=6, bf=(-0.12 * L, 0))),
-        (40, P(lean=-7, head=-2, fa=(0, -2), ba_to=("hand", -8 * u, 0), wa=0, keo=8, bf=(-0.14 * L, 0), sx=0.98)),
-        (80, P(x=-1 * u, lean=-2, fa=(-4, -8), ba=(172, 150), wa=0, keo=0, bf=(-0.1 * L, 0), phu=1)),
-        (170, P(fa=(34, 12), ba=(120, 104), wa=0, keo=0)),
+        (50, P(fao=(2 * u, 0), fa=(24, 6), ba=(40, 10), wa=0, keo=0)),
+        (60, P(lean=-3, fao=(4 * u, 0), fa=(6, 0), ba_to=("hand", -3 * u, 0), wa=0, keo=3)),
+        (60, P(lean=-6, fao=(4 * u, 0), fa=(2, -2), ba_to=("hand", -6 * u, 0), wa=0, keo=6, bf=(-0.12 * L, 0))),
+        (40, P(lean=-7, fao=(4 * u, 0), fa=(0, -2), ba_to=("hand", -8 * u, 0), wa=0, keo=8, bf=(-0.14 * L, 0), sx=0.98)),
+        (80, P(x=-1 * u, lean=-2, fao=(4 * u, 0), fa=(-4, -8), ba=(172, 150), wa=0, keo=0, bf=(-0.1 * L, 0), phu=1)),
+        (170, P(fao=(2 * u, 0), fa=(34, 12), ba=(120, 104), wa=0, keo=0)),
     ], weapon="bow", hit=4, rest=False)
     return anims
