@@ -2,6 +2,7 @@
 // kể cả khi khung nhìn đổi liên tục (thanh địa chỉ, xoay máy) và visualViewport nhỏ hơn innerHeight. Giá thẻ chợ 3 chữ số không bị cắt.
 // Chạy: node tests/khit-man/khit-man.test.js
 const { open, enter, ok } = require('../cho-tuong/helpers');
+require('fs').mkdirSync(require('path').join(__dirname, 'shots'), { recursive: true });
 
 // khung game (#wrap, đã xoay) so với khung nhìn thật (visualViewport)
 const fit = (page) => page.evaluate(() => {
@@ -54,6 +55,25 @@ const fit = (page) => page.evaluate(() => {
     const c = await page.evaluate(() => [...document.querySelectorAll('#deck .mk-card .cost')].map((e) => ({ t: e.textContent.trim(), cut: e.scrollWidth > e.clientWidth + 1 || [...e.querySelectorAll('*')].some((x) => { const a = x.getBoundingClientRect(), b = e.getBoundingClientRect(); return a.width && (a.left < b.left - 1 || a.right > b.right + 1); }) })));
     ok(c.length && c.every((x) => x.t.includes('220') && !x.cut), `${w}×${h}: giá thẻ chợ "220" hiện đủ (${c.length} thẻ)`);
   }
+  // 5) HỘP ĐEN: giả lề an toàn lớn (iPhone: trên 59, dưới 34, trái/phải 47) — khung game + mọi nút nằm trọn trong vùng an toàn − 8px
+  await page.evaluate(() => { game.summonCost = () => 220; });
+  for (const [w, h, sf] of [[390, 844, [59, 0, 34, 0]], [390, 664, [59, 0, 34, 0]], [844, 390, [0, 47, 21, 47]]]) {
+    await page.setViewportSize({ width: w, height: h });
+    await page.evaluate((sf) => { const d = document.documentElement.style; ['t', 'r', 'b', 'l'].forEach((k, i) => d.setProperty('--safe-' + k, sf[i] + 'px')); window.dispatchEvent(new Event('resize')); ui.sig = {}; }, sf);
+    await page.waitForTimeout(900);
+    const r = await page.evaluate((sf) => {
+      const S = { l: sf[3] + 8, t: sf[0] + 8, r: innerWidth - sf[1] - 8, b: innerHeight - sf[2] - 8 };
+      const g = document.querySelector('#wrap').getBoundingClientRect();
+      const bad = [...document.querySelectorAll('#ui button, #deck .mk-card .cost, #topbar')].filter((e) => e.offsetParent && getComputedStyle(e).visibility !== 'hidden')
+        .filter((e) => { const q = e.getBoundingClientRect(); return q.width && (q.left < S.l - 1 || q.top < S.t - 1 || q.right > S.r + 1 || q.bottom > S.b + 1); }).map((e) => e.id || e.className);
+      const fill = Math.abs(g.left - S.l) < 2 && Math.abs(g.top - S.t) < 2 && Math.abs(g.right - S.r) < 2 && Math.abs(g.bottom - S.b) < 2;
+      const gia = [...document.querySelectorAll('#deck .mk-card .cost')].every((e) => e.textContent.includes('220'));
+      return { bad, fill, gia, g: [g.left, g.top, g.right, g.bottom].map(Math.round), S };
+    }, sf);
+    ok(r.fill && !r.bad.length && r.gia, `${w}×${h} lề ${sf}: game vừa khít vùng an toàn − 8px (${r.g}), không gì lọt ra ngoài ${r.bad.join(',')}`);
+    await page.screenshot({ path: require('path').join(__dirname, `shots/hop-den-${w}x${h}.png`) }).catch(() => {});
+  }
+  await page.evaluate(() => { const d = document.documentElement.style; ['t', 'r', 'b', 'l'].forEach((k) => d.removeProperty('--safe-' + k)); window.dispatchEvent(new Event('resize')); });
   ok(!errors.length, 'không lỗi JS ' + errors.slice(0, 2).join(' | '));
   await browser.close();
   console.log('PASS khit-man');

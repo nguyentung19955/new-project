@@ -43,6 +43,9 @@ function viewportSize() {
     w -= px(el, 'paddingLeft') + px(el, 'paddingRight') + px(el, 'borderLeftWidth') + px(el, 'borderRightWidth');
     h -= px(el, 'paddingTop') + px(el, 'paddingBottom') + px(el, 'borderTopWidth') + px(el, 'borderBottomWidth');
   }
+  // máy có lề an toàn (tai thỏ / thanh home) → chừa thêm 8px mỗi phía cho chắc (hộp đen), máy thường giữ kín màn
+  const bs = getComputedStyle(document.body), m = ['paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft'].some((k) => parseFloat(bs[k]) > 0) ? 8 : 0;
+  x += m; y += m; w -= 2 * m; h -= 2 * m;
   return [Math.max(0, w), Math.max(0, h), x, y];
 }
 

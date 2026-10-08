@@ -50,7 +50,9 @@ body { display: flex; align-items: center; justify-content: center; box-sizing: 
 /* claude/sua-giao-dien-10 (lỗi iPhone): trang không cuộn / lệch được (ảnh: 1/3 dưới đen); cầm dọc (game tự xoay) chừa thanh trạng thái +
    vạch home (lề an toàn trên / dưới) — trước đây không trừ nên game tràn, thanh trạng thái đè thẻ chợ */
 html, body { position: fixed; inset: 0; width: 100%; height: 100%; }
-@media (orientation: portrait) { body { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); } }
+/* HỘP ĐEN (letterbox, đề xuất người dùng): khung game nằm TRỌN trong vùng an toàn cả 4 phía (tai thỏ, thanh trạng thái, vạch home — dọc lẫn ngang),
+   phần thừa nền đen. --safe-* cho test giả lề (Chromium không có env thật); main.js cộng thêm lề 8px khi máy có lề an toàn. */
+body { padding: var(--safe-t, env(safe-area-inset-top, 0px)) var(--safe-r, env(safe-area-inset-right, 0px)) var(--safe-b, env(safe-area-inset-bottom, 0px)) var(--safe-l, env(safe-area-inset-left, 0px)); }
 button { font-family: inherit; color: inherit; cursor: pointer; }
 /* sua-giao-dien-10 (N2): Alegreya mặc định số kiểu cổ (0 trông như "o", số cao thấp lệch dòng) → số thẳng hàng, đều bề ngang ở mọi chỗ
    (font-feature-settings kế thừa và không bị shorthand `font:` xoá như font-variant-numeric) */
