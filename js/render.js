@@ -529,6 +529,9 @@ const MAP_BG = new Set(['dam', 'hang', 'rung', 'dong', 'thanh', 'bien', 'song'])
 const MAP_BG_FILE = {};
 function mapBg() {
   const m = typeof MAP_ID !== 'undefined' && MAPS[MAP_ID];
+  // claude/pixel-con-lai: nền chủ đề pixel (canh/ban-do-<chủ đề>, chuyển từ maps/nen-*.jpg) khi bật pixel
+  const pe = m && MAP_BG.has(m.theme) && typeof pixelOn === 'function' && pixelOn() && pxEntry('canh', 'ban-do-' + m.theme), pf = pe && pxFrame(pe, 0);
+  if (pf) return { img: pf, theme: m.theme };
   return m && MAP_BG.has(m.theme) ? { img: asset(`maps/nen-${MAP_BG_FILE[m.theme] || m.theme}.jpg`, true), theme: m.theme } : null;
 }
 function mapImage(pw, ph, level) {

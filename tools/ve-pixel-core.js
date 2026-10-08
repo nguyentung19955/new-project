@@ -836,7 +836,11 @@ function VePixelCore(DS, TV) {
   const lab = (() => { const f = (c) => { c /= 255; return c > 0.04045 ? ((c + 0.055) / 1.055) ** 2.4 : c / 12.92; }, g = (t) => (t > 0.008856 ? Math.cbrt(t) : 7.787 * t + 16 / 116);
     return (r, gg, b) => { const R = f(r), G = f(gg), B = f(b), X = g((R * 0.4124 + G * 0.3576 + B * 0.1805) / 0.95047), Y = g(R * 0.2126 + G * 0.7152 + B * 0.0722), Z = g((R * 0.0193 + G * 0.1192 + B * 0.9505) / 1.08883); return [116 * Y - 16, 500 * (X - Y), 200 * (Y - Z)]; }; })();
   let PAL_LAB = null;
-  function ganNhat(L, ds) { let bi = 0, bd = 1e18; for (const i of ds) { const q = PAL_LAB[i], d = (L[0] - q[0]) ** 2 + (L[1] - q[1]) ** 2 + (L[2] - q[2]) ** 2; if (d < bd) { bd = d; bi = i; } } return bi; }
+  function ganNhat(L, ds) {   // Lab, sắc độ nặng hơn; màu có sắc (C > 8) không về màu xám (C < 6) — trời đêm xanh không thành xám
+    const cs = Math.hypot(L[1], L[2]); let bi = 0, bd = 1e18;
+    for (const i of ds) { const q = PAL_LAB[i], d = (L[0] - q[0]) ** 2 + 2.5 * ((L[1] - q[1]) ** 2 + (L[2] - q[2]) ** 2) + (cs > 8 && Math.hypot(q[1], q[2]) < 6 ? 60 * (cs - 6) : 0); if (d < bd) { bd = d; bi = i; } }
+    return bi;
+  }
   function tuAnh(rgba, W, H, o = {}) {
     if (!PAL_LAB) PAL_LAB = PAL.map((p) => lab(...p.rgb));
     const all = PAL.map((_, i) => i), nen = o.nen_trong !== false && o.nen_trong !== undefined ? (o.nguong_alpha || 128) : 0;
@@ -847,10 +851,26 @@ function VePixelCore(DS, TV) {
       const giu = [...dem.entries()].sort((a, b) => b[1] - a[1]).slice(0, soMau).map(([i]) => i);
       for (let i = 0; i < W * H; i++) if (idx[i] >= 0 && !giu.includes(idx[i])) idx[i] = ganNhat(L[i], giu);
     }
+    const tron = new Uint8Array(W * H);   // điểm đã dither (khử chấm bỏ qua)
+    if (o.tron) {   // dither theo ma trận Bayer 4×4: trộn 2 màu bảng gần nhất theo tỉ lệ 0 · ¼ · ½ · ¾ — giữ tông màu bảng chung không có
+      const BAY = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5], ds = dem.size > soMau ? [...new Set(idx)].filter((v) => v >= 0) : all;
+      const dL = (A, B) => (A[0] - B[0]) ** 2 + 2.5 * ((A[1] - B[1]) ** 2 + (A[2] - B[2]) ** 2);
+      for (let i = 0; i < W * H; i++) {
+        if (idx[i] < 0) continue;
+        const gan = ds.map((c) => [c, dL(L[i], PAL_LAB[c])]).sort((p, q) => p[1] - q[1]).slice(0, 4).map((x) => x[0]);
+        let best = [gan[0], gan[0], 0], bd = dL(L[i], PAL_LAB[gan[0]]); const bd0 = bd;
+        if (bd0 < (o.nguong_tron || 60)) { idx[i] = gan[0]; continue; }   // màu đơn đủ gần → giữ phẳng, chỉ dither chỗ bảng màu thiếu tông
+        for (let u = 0; u < gan.length; u++) for (let v = u + 1; v < gan.length; v++) for (const t of [0.25, 0.5, 0.75]) {
+          const A = PAL[gan[u]].rgb, B = PAL[gan[v]].rgb, m = lab(A[0] * (1 - t) + B[0] * t, A[1] * (1 - t) + B[1] * t, A[2] * (1 - t) + B[2] * t), dd = dL(L[i], m) * 1.15;
+          if (dd < bd && dd < bd0 * 0.6) { bd = dd; best = [gan[u], gan[v], t]; }
+        }
+        if (best[2]) { idx[i] = BAY[(Math.floor(i / W) % 4) * 4 + (i % W) % 4] / 16 < best[2] ? best[1] : best[0]; tron[i] = 1; } else idx[i] = best[0];
+      }
+    }
     for (let k = 0; k < (o.khu_nhieu ?? 1); k++) {   // chấm lẻ (không điểm kề nào cùng màu) → màu chiếm ≥5/8 xung quanh
       const cu = Int16Array.from(idx);
       for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
-        const v = cu[y * W + x]; if (v < 0) continue; const c = new Map(); let cung = 0;
+        const v = cu[y * W + x]; if (v < 0 || tron[y * W + x]) continue; const c = new Map(); let cung = 0;
         for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { if (!dx && !dy) continue; const xx = x + dx, yy = y + dy; if (xx < 0 || yy < 0 || xx >= W || yy >= H) continue; const n = cu[yy * W + xx]; if (n === v) cung++; c.set(n, (c.get(n) || 0) + 1); }
         if (cung) continue; let best = v, bn = 0; for (const [n, m] of c) if (m > bn) { bn = m; best = n; } if (bn >= 5 && best >= 0) idx[y * W + x] = best;
       }

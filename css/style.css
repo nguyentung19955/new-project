@@ -2187,9 +2187,9 @@ html.pixel img[src*="pixel/"], html.pixel canvas:not(#game) { image-rendering: p
 /* claude/xuat-goi-pixel: khi bật pixel, mọi bảng .metal dùng khung pixel tối, nút .metal dùng nút đồng pixel, nút chính menu dùng nút vàng */
 html.pixel.sk-khung-toi .metal:not(button):not(.mc-btn) { border-color: transparent; border-image: var(--sk-khung-bang-toi) 25% fill / 9px / 0 stretch; background: none; box-shadow: none; }
 html.pixel.sk-khung-toi .metal:not(button) > .rv { display: none; }
-html.pixel.sk-nut-dong button.metal:not(.xbtn):not(.mk-rr):not(.btn-gold):not(.mk-card):not(.dk-card), html.pixel.sk-nut-dong .mc-btn.metal { background: var(--sk-nut-dong-thuong) center / 100% 100% no-repeat; border-color: transparent; box-shadow: none; }
-html.pixel.sk-nut-dong button.metal:not(.xbtn):not(.mk-rr):not(.btn-gold):not(.mk-card):not(.dk-card):active, html.pixel.sk-nut-dong .mc-btn.metal:active { background-image: var(--sk-nut-dong-nhan, var(--sk-nut-dong-thuong)); }
-html.pixel.sk-nut-dong button.metal:not(.xbtn):not(.mk-rr):not(.btn-gold):not(.mk-card):not(.dk-card):disabled { background-image: var(--sk-nut-dong-khoa, var(--sk-nut-dong-thuong)); }
+html.pixel.sk-nut-dong button.metal:not(.xbtn):not(.mk-rr):not(.btn-gold):not(.mk-card):not(.dk-card):not(.md-card), html.pixel.sk-nut-dong .mc-btn.metal { background: var(--sk-nut-dong-thuong) center / 100% 100% no-repeat; border-color: transparent; box-shadow: none; }
+html.pixel.sk-nut-dong button.metal:not(.xbtn):not(.mk-rr):not(.btn-gold):not(.mk-card):not(.dk-card):not(.md-card):active, html.pixel.sk-nut-dong .mc-btn.metal:active { background-image: var(--sk-nut-dong-nhan, var(--sk-nut-dong-thuong)); }
+html.pixel.sk-nut-dong button.metal:not(.xbtn):not(.mk-rr):not(.btn-gold):not(.mk-card):not(.dk-card):not(.md-card):disabled { background-image: var(--sk-nut-dong-khoa, var(--sk-nut-dong-thuong)); }
 html.pixel.sk-nut-vang .mc-btn.main { background: var(--sk-nut-vang-thuong) center / 100% 100% no-repeat; border-color: transparent; box-shadow: none; color: #2A1608; text-shadow: 0 1px 0 #FFE7A088; }
 html.pixel.sk-nut-vang .mc-btn.main:active { background-image: var(--sk-nut-vang-nhan, var(--sk-nut-vang-thuong)); }
 html.pixel .metal, html.pixel .mc-btn { image-rendering: pixelated; }
@@ -2222,3 +2222,6 @@ html.pixel #bossbar .bn span:first-child { font-size: 17px; color: #FFE7A0; font
 #wrap.rot #nextwaves:not([hidden]):has(.evt) ~ #banner { top: 84px; }
 /* claude/xuat-goi-pixel: emoji / ký hiệu thay bằng icon pixel (js/pixel.js PX_EMO) — cao bằng dòng chữ */
 html.pixel img.pxemo { height: 1.15em; width: auto; vertical-align: -0.2em; image-rendering: pixelated; display: inline-block; }
+/* claude/pixel-con-lai: huy hiệu ải pixel lòng tối → số ải chữ sáng */
+html.pixel.sk-huy-hieu .cp-node .c { color: #FFE7A0; text-shadow: 0 1px 0 #000, 0 0 3px #000; }
+html.pixel.sk-huy-hieu .cp-node.lock .c { color: #9A9080; }
