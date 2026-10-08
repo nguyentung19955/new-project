@@ -2372,6 +2372,10 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 255 — bật pixel không tải ảnh cũ + mốc boss trên thanh đợt (tester đạt)
+
+- Pixel bật: ảnh vẽ cũ trong CSS/nạp sẵn chỉ áp khi tắt pixel → tải lần đầu ~0,93 → 0,40 MB (844). Thanh đợt có mốc boss (icon boss pixel, đã qua thì mờ).
+
 ## Phiên bản 254 — topbar / nút trong trận pixel hoá (tester đạt)
 
 - Thanh tiến trình đợt pixel 9 mảnh (đỏ đợt boss), nút tốc độ x1/x2/x3 pixel, icon mắt/ẩn-hiện giao diện/☰, Bắt đầu/Dừng, Túi đồ/Nâng đồ/Mặc đồ, nút menu chính: ưu tiên pixel (ảnh cũ chỉ khi ?pixel=0).
