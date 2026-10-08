@@ -129,7 +129,7 @@ async function main() {
   await browser.close();
 
   // ---------- 667x375 + chế độ xoay dọc
-  for (const [w, h, name] of [[667, 375, '667x375'], [390, 844, 'xoay-doc-390x844']]) {
+  for (const [w, h, name] of [[667, 375, '667x375'], [800, 360, 'ngang-800x360']]) {
     ({ browser, page, errors } = await open(w, h));
     await enter(page, 1);
     await page.evaluate(() => { game.running = false; game.gold = 400; const s = game.freeSlots(); game.spawnHero(s[0], game.marketPool()[0], { tier: 1 }); game.spawnHero(s[1], game.marketPool()[0], { tier: 1 }); game.market.types[1] = game.marketPool()[0]; ui.sig.deck = null; });

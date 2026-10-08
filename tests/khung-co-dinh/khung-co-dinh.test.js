@@ -6,8 +6,9 @@ const fs = require('fs');
 const { open, enter, ok } = require('../cho-tuong/helpers');
 const SHOT = path.join(__dirname, 'shots');
 fs.mkdirSync(SHOT, { recursive: true });
-const SIZES = [[375, 667], [390, 844], [390, 664], [430, 932], [820, 1180], [360, 800], [412, 915], [844, 390], [667, 375], [1920, 934]];
-const safe = (w, h) => (w >= 1000 ? [0, 0, 0, 0] : h > w ? [59, 0, 34, 0] : [0, 47, 21, 47]);   // trên, phải, dưới, trái
+// người dùng chốt: bỏ tự xoay — chỉ chơi NGANG; dọc chỉ hiện màn che (kiểm riêng ở cuối)
+const SIZES = [[844, 390], [667, 375], [932, 430], [800, 360], [915, 412], [1180, 820], [1920, 934]];
+const safe = (w, h) => (w >= 1100 ? [0, 0, 0, 0] : [0, 47, 21, 47]);   // trên, phải, dưới, trái (máy ngang có tai thỏ)
 
 // khung (#wrap) + phần tử nhìn thấy trong vùng sel — so với vùng an toàn và với chính khung
 const check = (page, sel, sf) => page.evaluate(([sel, sf]) => {
@@ -87,6 +88,28 @@ async function frameShot(page, file) {
     ok(!errors.length, `${tag}: không lỗi JS ${errors.slice(0, 2)}`);
     await browser.close();
   }
+  // cầm DỌC: màn che "Xoay ngang điện thoại để chơi", trận tạm dừng; xoay ngang lại → chạy tiếp (đang dừng sẵn thì vẫn dừng)
+  {
+    const { browser, page, errors } = await open(390, 844, { unlocked: 5 });
+    const cover = () => page.evaluate(() => { const r = document.querySelector('#rotate'); const b = r.getBoundingClientRect(); return !r.hidden && b.width >= innerWidth - 1 && b.height >= innerHeight - 1 && getComputedStyle(r).visibility !== 'hidden'; });
+    ok(await cover(), '390×844 menu: màn che xoay ngang phủ kín');
+    await page.screenshot({ path: path.join(SHOT, 'doc-390x844.png') });
+    await page.setViewportSize({ width: 844, height: 390 }); await page.waitForTimeout(500);
+    ok(!(await cover()), 'xoay ngang: hết màn che');
+    await enter(page, 0, true);
+    await page.evaluate(() => { game.running = true; }); await page.waitForTimeout(200);
+    await page.setViewportSize({ width: 375, height: 667 }); await page.waitForTimeout(500);
+    ok(await cover() && await page.evaluate(() => !game.running), '375×667 đang chơi → màn che + trận tạm dừng');
+    const w0 = await page.evaluate(() => game.wave);
+    await page.setViewportSize({ width: 667, height: 375 }); await page.waitForTimeout(500);
+    ok(!(await cover()) && await page.evaluate((w0) => game.running && game.wave === w0, w0), 'xoay ngang lại → chơi tiếp đúng chỗ');
+    await page.evaluate(() => { game.running = false; });
+    await page.setViewportSize({ width: 390, height: 844 }); await page.waitForTimeout(400);
+    await page.setViewportSize({ width: 844, height: 390 }); await page.waitForTimeout(400);
+    ok(await page.evaluate(() => !game.running), 'đang dừng sẵn → xoay qua lại vẫn dừng (không tự chạy)');
+    ok(!errors.length, 'dọc/ngang: không lỗi JS ' + errors.slice(0, 2));
+    await browser.close();
+  }
   // ảnh trận các cỡ quy về khung 844×390 (xoay về ngang) — so khác biệt với cỡ chuẩn 844×390
   const py = `
 import sys
@@ -95,7 +118,6 @@ items = [l.split('|') for l in sys.argv[1:]]
 ims = []
 for tag, f, rot in items:
     im = Image.open(f).convert('RGB')
-    if rot == 'true': im = im.rotate(90, expand=True)
     ims.append((tag, im.resize((844, 390), Image.BILINEAR)))
 ref = dict(ims)['844x390']
 for tag, im in ims:
@@ -103,11 +125,11 @@ for tag, im in ims:
     sm = lambda x: x.resize((211, 97), Image.BOX)
     d = ImageStat.Stat(ImageChops.difference(sm(im), sm(ref)).convert('L')).mean[0]
     print(tag, round(d, 2))
-W = Image.new('RGB', (844 * 2 + 10, (390 + 10) * 5), (40, 40, 40))
+W = Image.new('RGB', (844 * 2 + 10, (390 + 10) * 4), (40, 40, 40))
 for i, (tag, im) in enumerate(ims): W.paste(im, ((i % 2) * 854, (i // 2) * 400))
-W.save(sys.argv[0].replace('.py', '') if False else '${path.join(SHOT, 'ghep-10-co.png')}')
+W.save(sys.argv[0].replace('.py', '') if False else '${path.join(SHOT, 'ghep-co-ngang.png')}')
 `;
   const out = require('child_process').execFileSync('python3', ['-c', py, ...shots.map(([t, f, r]) => `${t}|${f}|${r}`)]).toString().trim().split('\n');
   for (const l of out) { const [t, d] = l.split(' '); ok(+d < 10, `${t}: ảnh quy về khung giống 844×390 (khác biệt trung bình ${d}/255)`); }
-  console.log('PASS khung-co-dinh · ảnh ghép: tests/khung-co-dinh/shots/ghep-10-co.png');
+  console.log('PASS khung-co-dinh · ảnh ghép: tests/khung-co-dinh/shots/ghep-co-ngang.png');
 })().catch((e) => { console.error(e); process.exit(1); });

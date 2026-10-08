@@ -14,7 +14,7 @@ const IMG = { w: 800, h: 163, gemL: 131, gemR: 133, grooveTop: 31, grooveBot: 12
 
 (async () => {
   const browser = await chromium.launch({ args: ['--allow-file-access-from-files'] });
-  for (const [w, h] of [[1920, 1000], [844, 390], [667, 375], [390, 844]]) {
+  for (const [w, h] of [[1920, 1000], [844, 390], [667, 375], [800, 360]]) {
     const ctx = await browser.newContext({ viewport: { width: w, height: h } });
     const page = await ctx.newPage();
     const errors = [];

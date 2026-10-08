@@ -157,7 +157,7 @@ async function setup(page) {
     ok(!errors.length, 'không lỗi console (tắt pixel) ' + errors.join(' | '));
     await browser.close();
   }
-  for (const [w, h, tag] of [[1920, 934, '1920x934'], [844, 390, '844x390'], [667, 375, '667x375'], [390, 844, 'doc-390x844']]) {
+  for (const [w, h, tag] of [[1920, 934, '1920x934'], [844, 390, '844x390'], [667, 375, '667x375'], [800, 360, 'ngang-800x360']]) {
     console.log(`— ?pixel=1 ${tag}`);
     const { browser, page, errors } = await open(w, h, '?pixel=1');
     const heroes = await setup(page);

@@ -20,7 +20,7 @@ const esc = async (page) => { await page.keyboard.press('Escape'); await page.wa
 const WAYS = ['nút', 'Esc', 'Back'];
 
 (async () => {
-  for (const [w, h, name] of [[1920, 934, '1920x934'], [844, 390, '844x390'], [667, 375, '667x375'], [390, 844, 'doc-390x844']]) {
+  for (const [w, h, name] of [[1920, 934, '1920x934'], [844, 390, '844x390'], [667, 375, '667x375'], [800, 360, 'ngang-800x360']]) {
     console.log(name);
     const { browser, page, errors } = await open(w, h, SAVE);
 

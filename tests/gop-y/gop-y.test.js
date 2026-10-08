@@ -129,12 +129,11 @@ const THANKS = /Cảm ơn góp ý của bạn![\s\S]*Đội ngũ Thần Thoại 
     await browser.close();
   }
   // ---------- 2. Cài đặt + trong trận ở nhiều cỡ màn hình
-  for (const [w, h] of [[844, 390], [667, 375], [390, 844]]) {
+  for (const [w, h] of [[844, 390], [667, 375], [800, 360]]) {
     console.log(`Màn ${w}x${h}`);
     const { browser, page, errors } = await open(w, h);
     await fakeCloud(page, true);
     if (w < h) {
-      ok(await page.evaluate(() => document.querySelector('#wrap').classList.contains('rot')), 'cầm dọc: khung game xoay ngang');
       const nav = await page.evaluate(() => [...document.querySelectorAll('.mc-subs .mc-sub')].every((b) => b.scrollWidth <= b.clientWidth + 1));
       ok(nav, 'menu xoay dọc: liên kết nhỏ không bị cắt chữ');
     }

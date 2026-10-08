@@ -88,7 +88,7 @@ async function deckCase(w, h, tag) {
 }
 
 (async () => {
-  for (const [w, h, tag] of [[844, 390, '844x390'], [667, 375, '667x375'], [390, 844, 'doc-390x844']]) {
+  for (const [w, h, tag] of [[844, 390, '844x390'], [667, 375, '667x375'], [800, 360, 'ngang-800x360']]) {
     console.log(`— Anh Hùng ${tag}`); await rosterCase(w, h, tag);
     console.log(`— Chân dung trong trận ${tag}`); await deckCase(w, h, tag);
   }

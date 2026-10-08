@@ -60,7 +60,7 @@ async function boss(page) {
 }
 
 (async () => {
-  for (const [w, h, tag] of [[844, 390, 'ngang'], [667, 375, 'nho'], [390, 844, 'doc']]) {
+  for (const [w, h, tag] of [[844, 390, 'ngang'], [667, 375, 'nho'], [800, 360, 'doc']]) {
     console.log(`— ${tag} ${w}x${h}`);
     const { browser, page, errors } = await open(w, h, false);
     const B = await boss(page);

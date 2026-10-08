@@ -206,7 +206,7 @@ const CHI_ANH = !!process.env.CHI_ANH;   // CHI_ANH=1: chỉ chụp ảnh
   await browser.close();
 
   // ================= tester: boss ra trong đợt sự kiện → dải trên "tên sự kiện · thử thách" không được che dòng nhỏ "Boss xuất hiện"
-  for (const [w, h] of [[844, 390], [390, 844], [1920, 934], [667, 375]]) {
+  for (const [w, h] of [[844, 390], [800, 360], [1920, 934], [667, 375]]) {
     ({ browser, page, errors } = await open(w, h, {}));
     await enter(page, 0, true);
     await setup(page, 60, 'giobao');
@@ -264,7 +264,7 @@ const CHI_ANH = !!process.env.CHI_ANH;   // CHI_ANH=1: chỉ chụp ảnh
 
   // ================= tester2: bảng "Bộ quái mới" trùng mốc sự kiện (bản đồ 30 đợt: bộ quái đổi ở 61, 91, 101 → bảng bật đúng lúc
   // đợt sự kiện 60 / 90 / 100 bắt đầu) không được che banner: bảng đợi banner tắt, ghi luôn dòng sự kiện; banner đến khi bảng mở thì xếp hàng
-  for (const [w, h] of [[1920, 934], [844, 390], [390, 844]]) {
+  for (const [w, h] of [[1920, 934], [844, 390], [800, 360]]) {
     ({ browser, page, errors } = await open(w, h, {}));
     await enter(page, 1, true);
     for (const N of [60, 90, 100]) {

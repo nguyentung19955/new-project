@@ -105,10 +105,10 @@ async function battleCase(w, h, tag, touch = false) {
 (async () => {
   await rosterCase(844, 390, '844x390');
   await rosterCase(667, 375, '667x375');
-  await rosterCase(390, 844, 'doc-390x844');
+  await rosterCase(800, 360, 'ngang-800x360');
   await battleCase(844, 390, '844x390');
   await battleCase(667, 375, '667x375');
   await battleCase(844, 390, '844x390', true);
-  await battleCase(390, 844, 'doc-390x844');
+  await battleCase(800, 360, 'ngang-800x360');
   console.log('\nTẤT CẢ ĐẠT');
 })().catch((e) => { console.error(e); process.exit(1); });

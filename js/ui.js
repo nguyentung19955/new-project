@@ -1719,7 +1719,7 @@ class UI {
     if (now - (st.last || 0) < FB_GAP) return this.fbErr(`Vừa gửi xong — đợi ${Math.ceil((FB_GAP - (now - st.last)) / 1000)} giây rồi gửi tiếp nhé`);
     if ((st.n || 0) >= FB_DAY) return this.fbErr(`Hôm nay đã gửi ${FB_DAY} góp ý, mai gửi tiếp nhé. Cảm ơn bạn!`);
     const item = { kind: f.kind, text: text.slice(0, FB_MAX), contact: f.contact.trim().slice(0, 120), shot: f.useShot && f.shot.length <= FB_SHOT ? f.shot : '',
-      ver: this.fbVer(), where: this.fbWhere(f.from), scr: `${innerWidth}x${innerHeight}@${(devicePixelRatio || 1).toFixed(1)}${typeof ROT !== 'undefined' && ROT ? ' doc' : ''}`.slice(0, 40),
+      ver: this.fbVer(), where: this.fbWhere(f.from), scr: `${innerWidth}x${innerHeight}@${(devicePixelRatio || 1).toFixed(1)}${document.documentElement.classList.contains('doc') ? ' doc' : ''}`.slice(0, 40),
       ua: this.fbUa(), at: now };
     st.last = now; st.n = (st.n || 0) + 1;
     this.fbWrite(st);

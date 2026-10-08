@@ -8,7 +8,7 @@ const fs = require('fs');
 const { open, enter, ok } = require('../cho-tuong/helpers');
 const SHOT = path.join(__dirname, 'shots');
 fs.mkdirSync(SHOT, { recursive: true });
-const SIZES = [[1920, 934], [1018, 612], [844, 390], [667, 375], [390, 844]];   // 390×844: màn dọc, #wrap xoay 90°
+const SIZES = [[1920, 934], [1018, 612], [844, 390], [667, 375], [800, 360]];   // 390×844: màn dọc, #wrap xoay 90°
 
 const center = (page, sel) => page.evaluate((sel) => {
   const el = document.querySelector(sel); if (!el) return null;

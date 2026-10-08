@@ -28,7 +28,7 @@ async function result(page, lv, win, endless) {
 }
 
 (async () => {
-  for (const [w, h] of [[844, 390], [667, 375], [390, 844]]) {
+  for (const [w, h] of [[844, 390], [667, 375], [800, 360]]) {
     console.log(`Màn ${w}x${h}`);
     for (const [lv, id, lose] of CASES) {
       const { browser, page, errors } = await open(w, h, { unlocked: 17 });

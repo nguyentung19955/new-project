@@ -7,7 +7,7 @@ const SHOT = path.join(__dirname, 'shots');
 fs.mkdirSync(SHOT, { recursive: true });
 
 (async () => {
-  for (const [w, h, name] of [[844, 390, '844x390'], [667, 375, '667x375'], [390, 844, 'xoay-doc-390x844']]) {
+  for (const [w, h, name] of [[844, 390, '844x390'], [667, 375, '667x375'], [800, 360, 'ngang-800x360']]) {
     console.log(name);
     const { browser, page, errors } = await open(w, h);
     await enter(page, 0);

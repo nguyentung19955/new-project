@@ -13,44 +13,44 @@ const fit = (page) => page.evaluate(() => {
   const ctr = Math.max(Math.abs((r.left + r.right - V.l - V.r) / 2), Math.abs((r.top + r.bottom - V.t - V.b) / 2));
   const fitOne = Math.min(Math.abs(r.width - (V.r - V.l)), Math.abs(r.height - (V.b - V.t)));
   const d = Math.max(out, ctr, fitOne);
-  return { d, r: [r.left, r.top, r.right, r.bottom].map(Math.round), V: [V.l, V.t, V.r, V.b].map(Math.round), rot: document.querySelector('#wrap').classList.contains('rot'),
+  return { d, r: [r.left, r.top, r.right, r.bottom].map(Math.round), V: [V.l, V.t, V.r, V.b].map(Math.round), 
     // gốc lỗi "chạm 2 lần kéo sang nửa màn đen": #wrap xoay nằm trong luồng body → body.scrollWidth 527–617 > 390 (giờ #wrap position: fixed)
     scroll: document.scrollingElement.scrollHeight > innerHeight + 1 || document.scrollingElement.scrollWidth > innerWidth + 1 || document.body.scrollWidth > innerWidth + 1 || document.body.scrollHeight > innerHeight + 1,
     out: [...document.querySelectorAll('#ui button')].filter((e) => e.offsetParent && getComputedStyle(e).visibility !== 'hidden').filter((e) => { const q = e.getBoundingClientRect(); return q.width && (q.right > V.r + 2 || q.bottom > V.b + 2 || q.left < V.l - 2 || q.top < V.t - 2); }).map((e) => e.id || e.className) };
 });
 
 (async () => {
-  const { browser, page, errors } = await open(390, 844, { unlocked: 5 });
+  const { browser, page, errors } = await open(844, 390, { unlocked: 5 });
   await enter(page, 0, true);
   await page.evaluate(() => { game.running = false; });
   // 1) đổi khung nhìn liên tục khi đang trong trận
-  for (const [w, h] of [[390, 664], [390, 844], [390, 600], [844, 390], [390, 844], [667, 375], [390, 700]]) {
+  for (const [w, h] of [[844, 340], [844, 390], [800, 360], [932, 430], [667, 375], [915, 412], [844, 390]]) {
     await page.setViewportSize({ width: w, height: h });
     await page.waitForTimeout(800);
     const f = await fit(page);
-    ok(f.d <= 2 && !f.scroll && f.rot === h > w, `${w}×${h}: game khít khung nhìn (lệch ${f.d}px, xoay=${f.rot}, cuộn=${f.scroll})`);
+    ok(f.d <= 2 && !f.scroll, `${w}×${h}: game khít khung nhìn (lệch ${f.d}px, cuộn=${f.scroll})`);
     ok(!f.out.length, `${w}×${h}: không nút nào tràn ra ngoài khung nhìn ${f.out.join(',')}`);
   }
   // 2) visualViewport nhỏ hơn innerHeight (thanh địa chỉ iOS hiện) + lệch xuống (offsetTop) — giả lập
-  await page.setViewportSize({ width: 390, height: 844 });
+  await page.setViewportSize({ width: 844, height: 390 });
   await page.waitForTimeout(800);
   await page.evaluate(() => {
     const real = window.visualViewport;
-    const fake = new EventTarget(); Object.assign(fake, { width: 390, height: 760, offsetLeft: 0, offsetTop: 30, scale: 1 });
+    const fake = new EventTarget(); Object.assign(fake, { width: 844, height: 340, offsetLeft: 0, offsetTop: 30, scale: 1 });
     Object.defineProperty(window, 'visualViewport', { configurable: true, get: () => fake });
     window.__fakeVV = fake; window.__realVV = real;
     window.dispatchEvent(new Event('resize'));
   });
   await page.waitForTimeout(800);
   let f = await fit(page);
-  ok(f.d <= 2 && !f.scroll, `visualViewport 390×760 lệch 30px: game nằm giữa vùng nhìn thấy (game ${f.r} / khung ${f.V})`);
+  ok(f.d <= 2 && !f.scroll, `visualViewport 844×340 lệch 30px: game nằm giữa vùng nhìn thấy (game ${f.r} / khung ${f.V})`);
   // 2b) người chơi lỡ phóng to (scale 2, visualViewport còn nửa) → bố cục giữ theo khung bố cục, không to ra
   const z0 = await page.evaluate(() => { const r = document.querySelector('#wrap').getBoundingClientRect(); return [r.left, r.top, r.right, r.bottom].map(Math.round).join(','); });
-  await page.evaluate(() => { Object.assign(window.__fakeVV, { width: 195, height: 422, offsetLeft: 40, offsetTop: 100, scale: 2 }); window.dispatchEvent(new Event('resize')); window.__fakeVV.dispatchEvent(new Event('resize')); });
+  await page.evaluate(() => { Object.assign(window.__fakeVV, { width: 422, height: 170, offsetLeft: 100, offsetTop: 40, scale: 2 }); window.dispatchEvent(new Event('resize')); window.__fakeVV.dispatchEvent(new Event('resize')); });
   await page.waitForTimeout(800);
   const z = await page.evaluate(() => { const r = document.querySelector('#wrap').getBoundingClientRect(); return [r.left, r.top, r.right, r.bottom].map(Math.round); });
   ok(z.join(',') === z0, `phóng to (scale 2): khung game không co / lệch theo visualViewport (${z} = ${z0})`);
-  await page.evaluate(() => { Object.assign(window.__fakeVV, { width: 390, height: 760, offsetLeft: 0, offsetTop: 30, scale: 1 }); window.dispatchEvent(new Event('resize')); });
+  await page.evaluate(() => { Object.assign(window.__fakeVV, { width: 844, height: 340, offsetLeft: 0, offsetTop: 30, scale: 1 }); window.dispatchEvent(new Event('resize')); });
   await page.waitForTimeout(800);
   // 3) trang không cuộn được (ảnh lỗi: 1/3 dưới đen)
   await page.evaluate(() => { window.scrollTo(0, 300); document.scrollingElement.scrollTop = 300; });
@@ -61,7 +61,7 @@ const fit = (page) => page.evaluate(() => {
   // 4) giá thẻ chợ 3 chữ số (220) hiện đủ, không cắt "22C"
   await page.evaluate(() => { game.summonCost = () => 220; ui.sig = {}; });
   await page.waitForTimeout(500);
-  for (const [w, h] of [[390, 844], [667, 375], [844, 390], [1920, 934]]) {
+  for (const [w, h] of [[800, 360], [667, 375], [844, 390], [1920, 934]]) {
     await page.setViewportSize({ width: w, height: h }); await page.waitForTimeout(700);
     await page.evaluate(() => { ui.sig = {}; }); await page.waitForTimeout(300);
     const c = await page.evaluate(() => [...document.querySelectorAll('#deck .mk-card .cost')].map((e) => ({ t: e.textContent.trim(), cut: e.scrollWidth > e.clientWidth + 1 || [...e.querySelectorAll('*')].some((x) => { const a = x.getBoundingClientRect(), b = e.getBoundingClientRect(); return a.width && (a.left < b.left - 1 || a.right > b.right + 1); }) })));
@@ -69,7 +69,7 @@ const fit = (page) => page.evaluate(() => {
   }
   // 5) HỘP ĐEN: giả lề an toàn lớn (iPhone: trên 59, dưới 34, trái/phải 47) — khung game + mọi nút nằm trọn trong vùng an toàn − 8px
   await page.evaluate(() => { game.summonCost = () => 220; });
-  for (const [w, h, sf] of [[390, 844, [59, 0, 34, 0]], [390, 664, [59, 0, 34, 0]], [375, 600, [59, 0, 34, 0]], [844, 390, [0, 47, 21, 47]]]) {
+  for (const [w, h, sf] of [[844, 390, [0, 47, 21, 47]], [800, 360, [0, 47, 21, 47]], [667, 375, [0, 44, 21, 44]], [932, 430, [0, 59, 21, 59]]]) {
     await page.setViewportSize({ width: w, height: h });
     await page.evaluate((sf) => { const d = document.documentElement.style; ['t', 'r', 'b', 'l'].forEach((k, i) => d.setProperty('--safe-' + k, sf[i] + 'px')); window.dispatchEvent(new Event('resize')); ui.sig = {}; }, sf);
     await page.waitForTimeout(900);
@@ -89,8 +89,8 @@ const fit = (page) => page.evaluate(() => {
     await page.screenshot({ path: require('path').join(__dirname, `shots/hop-den-${w}x${h}.png`) }).catch(() => {});
   }
   await page.evaluate(() => { const d = document.documentElement.style; ['t', 'r', 'b', 'l'].forEach((k) => d.removeProperty('--safe-' + k)); window.dispatchEvent(new Event('resize')); });
-  // 6) bàn phím (gốc lỗi người dùng tìm ra): chạm ô tìm ở Hợp thể → khung nhìn co 390×500 → game ĐỨNG YÊN; rời ô → về đúng như trước
-  await page.setViewportSize({ width: 390, height: 844 }); await page.waitForTimeout(900);
+  // 6) bàn phím (gốc lỗi người dùng tìm ra): chạm ô tìm ở Hợp thể → khung nhìn co 844×200 → game ĐỨNG YÊN; rời ô → về đúng như trước
+  await page.setViewportSize({ width: 844, height: 390 }); await page.waitForTimeout(900);
   const box = () => page.evaluate(() => { const r = document.querySelector('#wrap').getBoundingClientRect(); return [r.left, r.top, r.right, r.bottom].map(Math.round).join(','); });
   for (const [name, open, sel] of [['Hợp thể', () => ui.openLegends(true), '#legends input'], ['Anh Hùng', () => ui.showRoster(), '#roster input']]) {
     await page.evaluate(open); await page.waitForTimeout(400);
@@ -98,10 +98,10 @@ const fit = (page) => page.evaluate(() => {
     const inp = page.locator(sel).first();
     ok(await inp.count() && (await inp.evaluate((e) => parseFloat(getComputedStyle(e).fontSize))) >= 16, `${name}: ô nhập chữ ≥ 16px (iOS không tự phóng to)`);
     await inp.focus();
-    await page.setViewportSize({ width: 390, height: 500 }); await page.waitForTimeout(900);
-    ok(await box() === b0, `${name}: đang gõ, bàn phím làm khung co 390×500 → game đứng yên (${await box()})`);
+    await page.setViewportSize({ width: 844, height: 200 }); await page.waitForTimeout(900);
+    ok(await box() === b0, `${name}: đang gõ, bàn phím làm khung co 844×200 → game đứng yên (${await box()})`);
     await page.evaluate(() => document.activeElement.blur());
-    await page.setViewportSize({ width: 390, height: 844 }); await page.waitForTimeout(1000);
+    await page.setViewportSize({ width: 844, height: 390 }); await page.waitForTimeout(1000);
     ok(await box() === b0, `${name}: rời ô, bàn phím đóng → game về đúng như trước (${await box()} = ${b0})`);
     await page.evaluate(() => { ui.hideOverlays && ui.hideOverlays(); const l = document.querySelector('#legends'); if (l) l.hidden = true; });
   }

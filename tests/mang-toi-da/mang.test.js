@@ -61,7 +61,7 @@ const top = (page) => page.evaluate(() => { ui.updateTopbar(); const s = documen
   await page.evaluate(() => { const o = game.snapshot(); delete o.maxLives; o.lives = 12; game.restore(o); });
   r = await top(page); ok(r.t === '12/20', 'bản lưu cũ (lives 12) → 12/20 ' + r.t);
   // các cỡ màn khác: chữ mạng không tràn
-  for (const [w, h] of [[667, 375], [390, 844]]) {
+  for (const [w, h] of [[667, 375], [800, 360]]) {
     await page.setViewportSize({ width: w, height: h }); await page.waitForTimeout(300);
     await page.evaluate(() => { game.lives = 123; game.maxLives = 123; });
     const fit = await page.evaluate(() => { ui.updateTopbar(); const b = document.querySelector('#tb-lives b').getBoundingClientRect(), p = document.querySelector('.tb-res').getBoundingClientRect(); return b.width > 0 && (b.right <= p.right + 1 && b.bottom <= p.bottom + 1 || b.bottom <= p.bottom + 1 && b.right <= p.right + 1); });

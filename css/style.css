@@ -1207,7 +1207,6 @@ button:disabled { cursor: default; }
 #auto-btns .ab .dot { position: absolute; right: -3px; top: -3px; width: 11px; height: 11px; border-radius: 50%; background: #3EDC4E; box-shadow: 0 0 6px #3EDC4E; border: 1.5px solid #1A120C; }
 #trash { bottom: calc(112px * var(--hz, 1)); }
 /* v42: tự xoay ngang khi cầm điện thoại dọc */
-#wrap.rot { transform: rotate(90deg); flex: none; }
 body { overflow: hidden; }
 .cp-side { overflow-y: auto; }
 .cp-act { margin-top: auto; display: flex; gap: 6px; align-items: stretch; }
@@ -1629,7 +1628,6 @@ i.c { background: #1F4A2A; color: #8AE09A; } i.h { background: #4A2A5A; color: #
 .mk-row.locked .mk-card { box-shadow: 0 0 0 2px #FFD36A, 0 0 8px #FFC94A99; animation: none; }
 #mk-ghost { position: fixed; z-index: 100; width: 56px; height: 56px; margin: -46px 0 0 -28px; border-radius: 50%; border: 3px solid var(--c, #FFD66B); background: #0D0B08; overflow: hidden; pointer-events: none; box-shadow: 0 4px 14px #000c, 0 0 12px var(--c, #FFD66B); opacity: .92; }
 #mk-ghost { transform: scale(var(--gs, 1)); }
-#mk-ghost.rot { transform: rotate(90deg) scale(var(--gs, 1)); margin: -28px 0 0 -10px; }   /* khung-co-dinh: bóng thẻ ở ngoài #wrap → thu phóng theo FS */
 #mk-ghost img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; }
 /* v143: đang kéo tướng → ẩn chợ tướng / thanh đáy, thùng Hủy chiếm đúng chỗ đó (cùng ý với nhánh kéo-tướng-ẩn-triệu-hồi) */
 #wrap.dragging-hero #deck, #wrap.dragging-hero #deck-hint { visibility: hidden; pointer-events: none; }
@@ -2253,15 +2251,10 @@ html.pixel #bossbar .bn span:first-child { font-size: 15px; color: #FFE7A0; }
 #roster-hint .rh-ev .ev-ic { height: 1.3em; width: auto; vertical-align: -0.3em; margin-right: 3px; }
 /* cầm dọc: cả game xoay 90° (#wrap.rot) nên chiều cao thật là bề ngang máy (~390) — media max-height không bắt được,
    banner phải dùng cỡ gọn như màn ngang thấp (trước đây chữ 30px bị cắt "NGŨ HÀNH NGH…" và toast đè lên) */
-#wrap.rot #banner { top: 70px; padding: 4px 22px; }
-#wrap.rot #banner b { font-size: 22px; }
-#wrap.rot #banner small { font-size: 11px; }
-#wrap.rot #banner.ev { top: 84px; }
 /* vo-tan-su-kien (tester): đang đợt sự kiện, dải trên hiện "tên sự kiện · thử thách" → banner boss/thăng thần cũng hạ xuống như banner sự kiện
    (trước đây ở 844×390 và cầm dọc dải che dòng nhỏ "Boss xuất hiện") */
 #nextwaves:not([hidden]):has(.evt) ~ #banner { top: 104px; }
 @media all { #nextwaves:not([hidden]):has(.evt) ~ #banner { top: 84px; } }
-#wrap.rot #nextwaves:not([hidden]):has(.evt) ~ #banner { top: 84px; }
 /* claude/xuat-goi-pixel: emoji / ký hiệu thay bằng icon pixel (js/pixel.js PX_EMO) — cao bằng dòng chữ */
 html.pixel img.pxemo { height: 1.15em; width: auto; vertical-align: -0.2em; image-rendering: pixelated; display: inline-block; }
 /* claude/pixel-con-lai: huy hiệu ải pixel lòng tối → số ải chữ sáng */
@@ -2310,7 +2303,6 @@ html.pixel .mc-btn.main { background: none; border-style: solid; border-color: t
 .cp-tg.hard .h { background: linear-gradient(180deg, #C8401E, #7A1E0E); color: #FFE0C8; box-shadow: 0 0 8px #E25A3A88; }
 .cp-tg small { font-size: 10px; }
 @media all { html.pixel #banner b { font-size: 26px; } }
-html.pixel #wrap.rot #banner b { font-size: 26px; }
 /* sua-giao-dien-10 (V3/V4): MỘT kiểu tab cho cả game (tab chương, Bách khoa, Lò đúc, Hợp thể, Xếp hạng): góc vuông, viền 2px,
    chưa chọn = gỗ tối chìm, đang chọn = vàng nghệ nổi (trước đây 3 kiểu: viên thuốc bạc, tab gỗ, tab đồng — tab chưa chọn nổi hơn tab đang chọn) */
 :is(.cp-tab, .hx-tab, .tabs > .tab, .seg button) { border-radius: 2px; border: 2px solid #5A4426; background: #2A1C10; color: #B8A888;
@@ -2503,3 +2495,10 @@ html.pixel.sk-nut-dong #btn-run.go { background: var(--sk-nut-dong-thuong) cente
 #deck .mk-card .cost.d3 { font-size: 12.5px; }
 /* iPhone: ô nhập chữ < 16px → Safari tự phóng to cả trang khi chạm vào và không thu lại → mọi ô nhập 16px (font-size tính theo CSS, không theo thu phóng của khung) */
 input, textarea, select, #ui input, #ui textarea, #ui select { font-size: 16px !important; }
+/* khung-co-dinh (người dùng chốt): bỏ tự xoay — máy cầm dọc hiện màn che pixel, trận tạm dừng (main.js portrait) */
+#rotate { background: #0E0B08 radial-gradient(ellipse 70% 60% at 50% 45%, #2A1C10 0%, #0E0B08 75%); border: 0; }
+#rotate .svgi { width: 180px; height: 180px; image-rendering: pixelated; animation: xoayMay 2.4s ease-in-out infinite; }
+#rotate b { font-size: 22px; color: #F2D27A; text-shadow: 0 2px 0 #000; }
+#rotate span { color: #E8DCC0; }
+@keyframes xoayMay { 0%, 30% { transform: rotate(0deg); } 55%, 85% { transform: rotate(-90deg); } 100% { transform: rotate(0deg); } }
+html.doc #wrap { visibility: hidden; }

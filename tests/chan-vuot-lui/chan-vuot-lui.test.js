@@ -35,7 +35,7 @@ const back = async (page) => { await page.evaluate(() => history.back()); await 
 const onGame = (page) => page.url().startsWith('file:') && page.url().endsWith('index.html');
 
 (async () => {
-  for (const [w, h, name] of [[844, 390, '844x390'], [390, 844, 'doc-390x844']]) {
+  for (const [w, h, name] of [[844, 390, '844x390'], [800, 360, 'ngang-800x360']]) {
     console.log(name);
     const { browser, page, errors, cdp } = await open(w, h);
     await page.touchscreen.tap(w / 2, h - 30); await page.waitForTimeout(200);   // chạm đầu (Chrome cần để giữ mục lịch sử)

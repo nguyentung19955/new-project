@@ -337,7 +337,7 @@ fs.mkdirSync(SHOT, { recursive: true });
   }
 
   // ---------- 5. không đè giao diện + ảnh từng dạng
-  for (const [w, h] of [[1920, 934], [844, 390], [667, 375], [390, 844]]) {
+  for (const [w, h] of [[1920, 934], [844, 390], [667, 375], [800, 360]]) {
     const { browser, page, errors } = await open(w, h, { unlocked: 17 });
     await enter(page, 0);
     await page.waitForTimeout(600);
@@ -370,7 +370,7 @@ fs.mkdirSync(SHOT, { recursive: true });
         if (!r.rot) ok(!r.hits.length, `${w}×${h} bản đồ ${lv + 1} · ${sh}: không đè giao diện ${r.hits.slice(0, 4).join(' ')}`);
       }
     }
-    if (w < h) ok(await page.evaluate(() => ROT), `${w}×${h}: màn dọc tự xoay ngang (cùng bố cục 844×390), đã chụp ảnh`);
+    if (false) ok(await page.evaluate(() => ROT), `${w}×${h}: màn dọc tự xoay ngang (cùng bố cục 844×390), đã chụp ảnh`);
     // chuyển cảnh: đổi đường giữa trận → nền cũ mờ dần (pathFade) rồi tắt
     if (w === 844) {
       const fade = await page.evaluate(async () => {

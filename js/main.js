@@ -80,23 +80,30 @@ const GFX = {
     if (this.ema > 24) { this.lv++; this.ema = 16; this.apply(); }
   },
 };
-// Tự xoay ngang (v42): cầm điện thoại dọc thì xoay cả khung game 90° cho vừa màn hình,
-// người chơi chỉ việc cầm ngang — không cần bật xoay màn hình của máy.
-let ROT = false;
+// ROT: bỏ tự xoay (luôn false — giữ tên cho code / test cũ đọc)
+const ROT = false;
+// cầm dọc: hiện màn che, tạm dừng trận (giữ trạng thái); xoay ngang lại → chạy tiếp nếu trước đó đang chạy
+function portrait(on) {
+  const el = $('#rotate');
+  if (el.parentElement !== document.body) document.body.appendChild(el);   // ra ngoài #wrap (thu phóng / ẩn khi dọc)
+  if (el.hidden === !on) return;
+  el.hidden = !on;
+  document.documentElement.classList.toggle('doc', on);
+  const g = typeof game !== 'undefined' ? game : null;
+  if (!g) return;
+  if (on) { portrait.was = !!(g.started && !g.over && g.running); if (portrait.was) g.running = false; }
+  else if (portrait.was) { portrait.was = false; if (g.started && !g.over) g.running = true; }
+}
 // claude/khung-co-dinh: khung thiết kế cố định (844×390 ≈ tỉ lệ đa số điện thoại hiện nay, 19,5:9) và phép đổi toạ độ màn → khung
 const FW = 844, FH = 390;
-let UIK = 1, FS = 1, FRAME = { cx: FW / 2, cy: FH / 2, rot: false, s: 1 };
+let UIK = 1, FS = 1, FRAME = { cx: FW / 2, cy: FH / 2, s: 1 };
 // toạ độ client (màn hình) → toạ độ trong khung (px CSS của #wrap chưa thu phóng / xoay). Mọi chỗ đổi toạ độ chạm đều qua đây.
 function toFrame(x, y) {
-  let dx = (x - FRAME.cx) / FRAME.s, dy = (y - FRAME.cy) / FRAME.s;
-  if (FRAME.rot) [dx, dy] = [dy, -dx];            // khung xoay 90° theo chiều kim đồng hồ → xoay ngược
-  return [dx + FW / 2, dy + FH / 2];
+  return [(x - FRAME.cx) / FRAME.s + FW / 2, (y - FRAME.cy) / FRAME.s + FH / 2];
 }
 // nghịch của toFrame: điểm trong khung → toạ độ client; logToClient: toạ độ bản đồ (logic game) → client (test / gợi ý chạm dùng)
 function fromFrame(fx, fy) {
-  let dx = (fx - FW / 2) * FRAME.s, dy = (fy - FH / 2) * FRAME.s;
-  if (FRAME.rot) [dx, dy] = [-dy, dx];
-  return [FRAME.cx + dx, FRAME.cy + dy];
+  return [FRAME.cx + (fx - FW / 2) * FRAME.s, FRAME.cy + (fy - FH / 2) * FRAME.s];
 }
 const logToClient = (x, y) => fromFrame((x + view.ox) * view.scale, (y + view.oy) * view.scale);
 // DOMRect (toạ độ màn) → hộp trong khung
@@ -117,11 +124,10 @@ function resize() {
   const cx = vx + vw / 2, cy = vy + vh / 2;     // tâm vùng an toàn — #wrap (position: fixed) đặt tâm vào đây
   // claude/khung-co-dinh: KHUNG THIẾT KẾ CỐ ĐỊNH FW × FH (như game mobile chuẩn). Mọi bố cục dàn ở đúng khung này bằng px cố định,
   // rồi cả #wrap thu / phóng bằng MỘT hệ số FS (+ xoay 90° khi máy cầm dọc) cho vừa vùng an toàn; phần thừa nền đen (hộp đen).
-  ROT = vh > vw;
-  const aw = ROT ? vh : vw, ah = ROT ? vw : vh;
+  // người dùng chốt: BỎ tự xoay. Máy cầm dọc → màn che "Xoay ngang điện thoại để chơi" + trận tạm dừng (bàn phím iOS luôn theo chiều máy)
+  portrait(vh > vw);
+  const aw = Math.max(vw, vh), ah = Math.min(vw, vh);
   FS = Math.min(aw / FW, ah / FH);
-  $('#rotate').hidden = true;
-  wrap.classList.toggle('rot', ROT);   // chỉ là dấu hiệu (test, góp ý); CSS không đổi bố cục theo nó — xoay bằng transform inline
   vw = FW; vh = FH;
   const CROP = 34;
   const scale = Math.min(vw / CONFIG.W, vh / (CONFIG.H - CROP));
@@ -135,8 +141,8 @@ function resize() {
   wrap.style.height = h + 'px';
   wrap.style.left = Math.round(cx - w / 2) + 'px';
   wrap.style.top = Math.round(cy - h / 2) + 'px';
-  wrap.style.transform = `${ROT ? 'rotate(90deg) ' : ''}scale(${FS})`;
-  FRAME = { cx, cy, rot: ROT, s: FS };
+  wrap.style.transform = `scale(${FS})`;
+  FRAME = { cx, cy, s: FS };
   if (window.scrollX || window.scrollY) window.scrollTo(0, 0);
   // giao diện: cùng tỉ lệ với bản đồ (k), khung thiết kế UIW × UIH (cố định theo khung)
   const k = scale * DK; UIK = k;
@@ -254,7 +260,7 @@ window.addEventListener('pointermove', (ev) => {
     clearTimeout(d.holdT); if (d.held) { d.held = false; ui.hideHeroTip(); }
     cardGhost.innerHTML = `<img src="${heroImgUrl(d.type, 'head')}" alt="">`;
     cardGhost.style.setProperty('--c', ELEMENTS[HEROES[d.type].el].color);
-    cardGhost.classList.toggle('rot', ROT); cardGhost.style.setProperty('--gs', FS);
+    cardGhost.style.setProperty('--gs', FS);
     cardGhost.hidden = false;
   }
   if (!d.moved) return;

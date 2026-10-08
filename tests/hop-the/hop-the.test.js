@@ -225,7 +225,7 @@ async function evoCase(w, h) {
 }
 
 (async () => {
-  for (const [w, h] of [[1920, 1000], [844, 390], [667, 375], [390, 844]]) {
+  for (const [w, h] of [[1920, 1000], [844, 390], [667, 375], [800, 360]]) {
     console.log(`— ${w}x${h}`);
     await legendsCase(w, h);
     await evoCase(w, h);

@@ -5,7 +5,7 @@ const SHOTS = path.join(__dirname, 'shots');
 require('fs').mkdirSync(SHOTS, { recursive: true });
 
 (async () => {
-  for (const [w, h] of [[844, 390], [667, 375], [390, 844]]) {
+  for (const [w, h] of [[844, 390], [667, 375], [800, 360]]) {
     console.log(`Màn ${w}x${h}`);
     const { browser, page, errors } = await open(w, h, { gold: 4321, unlocked: 5 });
     const r = await page.evaluate(() => {
@@ -22,7 +22,7 @@ require('fs').mkdirSync(SHOTS, { recursive: true });
     ok(r.h1 === 'Thần Thoại Việt' && /Văn Lang/.test(r.sub), 'tựa menu + dòng phụ mới');
     ok(!r.legacy, 'không còn chữ "Núi Cao Nước Dâng" trên trang');
     ok(r.unlocked === 5, 'tiến trình cũ (nuicao.v1) vẫn đọc được');
-    if (w < h) ok(r.rot, 'cầm dọc: khung game tự xoay ngang');
+    
     ok(/Thần Thoại Việt/.test(r.rotateTxt), 'thông báo xoay màn hình dùng tên mới');
     ok(!r.h1Over && r.inWrap, 'tựa không tràn khỏi khung');
     ok(!r.overlapNav, 'chữ tựa không đè bảng nút menu');

@@ -119,6 +119,6 @@ async function run(pixel, w, h, full) {
   await run(false, 844, 390, true);
   await run(true, 667, 375, true);
   await run(true, 1920, 934, true);
-  await run(true, 390, 844, true);     // dọc: game xoay 90°, bảng giữ tay xoay theo
+  await run(true, 800, 360, true);     // bỏ tự xoay (dọc chỉ hiện màn che) — thay bằng ngang nhỏ
   console.log('muc-tieu: OK');
 })().catch((e) => { console.error(e); process.exit(1); });

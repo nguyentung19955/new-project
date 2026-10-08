@@ -219,7 +219,7 @@ const layout = (page) => page.evaluate(() => {
     await browser.close();
   }
   // ---------- 5. bố cục ở nhiều cỡ màn hình
-  for (const [w, h] of [[844, 390], [667, 375], [390, 844]]) {
+  for (const [w, h] of [[844, 390], [667, 375], [800, 360]]) {
     console.log(`Màn ${w}x${h}`);
     const { browser, page, errors } = await open(w, h);
     await fake(page, ADMIN);

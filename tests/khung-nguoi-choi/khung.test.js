@@ -24,7 +24,7 @@ const MED = { cx: 117 / 700, cy: 118 / 241, r: 46 / 241 };
 (async () => {
   const browser = await chromium.launch({ args: ['--allow-file-access-from-files'] });
   const errors = [];
-  for (const [w, h] of [[844, 390], [667, 375], [932, 430], [390, 844]]) {
+  for (const [w, h] of [[844, 390], [667, 375], [932, 430], [800, 360]]) {
     const ctx = await browser.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: 3 });
     const page = await ctx.newPage();
     page.on('pageerror', (e) => errors.push(String(e)));
