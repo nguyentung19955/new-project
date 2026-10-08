@@ -1354,7 +1354,7 @@
       switch (o.ty) {
         case 'ring': {
           const e = 1 - (1 - k) * (1 - k), r = o.r0 + (o.r1 - o.r0) * e;
-          ring(c, x, y, r, ly === 0 ? r * 0.6 : r * 0.85, Math.max(1, Math.round(o.th * (1 - k * 0.8))), o.c, k > 0.6);
+          ring(c, x, y, r, ly === 0 ? r * (G.ZK || 0.6) : r * 0.85, Math.max(1, Math.round(o.th * (1 - k * 0.8))), o.c, k > 0.6);
           break;
         }
         case 'flash': {

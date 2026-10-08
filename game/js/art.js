@@ -3283,7 +3283,9 @@
     p(c, x - 3, Math.round(o.y), 6, 1, 'rgba(0,0,0,0.3)');
     if (o.kind === 'arrow') {
       const k = o.vx < 0 ? -1 : 1, col = o.col || '#c9ccd2';
-      const r = (a, b, w, h, cc) => p(c, k > 0 ? x + a : x - a - w, y + b, w, h, cc);
+      // tên bay chéo thì vẽ nghiêng theo: mỗi mảnh dịch dọc theo độ dốc của đường bay
+      const sl = o.vx ? G.clamp((o.vy || 0) / Math.abs(o.vx), -1, 1) : 0;
+      const r = (a, b, w, h, cc) => p(c, k > 0 ? x + a : x - a - w, y + b + Math.round((a + w / 2) * sl), w, h, cc);
       if (o.big) { r(-14, -1, 10, 3, hexA(o.col || '#ffffff', 0.45)); r(-20, 0, 8, 1, hexA(o.col || '#ffffff', 0.3)); }
       r(-6, -1, 11, 3, DARK);
       r(-5, 0, 9, 1, '#e8e2d0');

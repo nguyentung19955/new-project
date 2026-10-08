@@ -17,6 +17,9 @@
     tap: 0.16,  // giữ nút lâu hơn ngần này thì tính là "giữ", ngắn hơn là "bấm"
     hold: 0.8,  // lấy đà đầy rồi mà vẫn giữ quá ngần này giây thì đòn tự tung ra
     buffer: 0.25, // bấm sớm khi đòn trước chưa xong thì được nhớ trong ngần này giây
+    // Đòn Đặc biệt lao tới của kiếm và giáo: dài bằng frac lần bề ngang chỗ đứng được của phòng, kẹp trong [min, max].
+    // Phòng thường (190): kiếm 76, giáo 95. Phòng trùm (282): kiếm 92, giáo 112. Chạm tường thì dừng ngay.
+    dash: { sword: { frac: 0.4, min: 70, max: 92 }, spear: { frac: 0.5, min: 84, max: 112 } },
     sword: {
       gap: 0.45, // ngừng bấm quá lâu thì chuỗi về đầu
       chain: [
@@ -27,8 +30,10 @@
       glide: { name: 'Nhát lướt', win: 0.35, len: 30, t: 0.12, mult: 1.4 }, // đánh ngay sau khi Né
     },
     bow: {
-      shot: { name: 'Bắn', still: 0.4, move: 0.47, mult: 1, speed: 290, range: 215 },
-      charge: { name: 'Tên mạnh', time: 0.75, min: 0.3, slow: 0.55, mult0: 1.2, mult1: 3.0, speed: 340, range: 265, recover: 0.5 },
+      // Ghép đợt 2 (phòng vuông, sàn rộng 190, phòng trùm 282): tầm tên ngắn lại vừa một phòng; tên ngắm chéo được (aim).
+      aim: { dy: 60, slope: 0.7 }, // dy: quái lệch dọc tối đa bấy nhiêu thì còn ngắm tới; slope: tên bay chéo tối đa bấy nhiêu lần tốc độ ngang
+      shot: { name: 'Bắn', still: 0.4, move: 0.47, mult: 1, speed: 290, range: 180, pierce: 1, pierceMult: 0.75 }, // tên thường xuyên thêm 1 quái, con sau chỉ nhận 0,75 lần
+      charge: { name: 'Tên mạnh', time: 0.75, min: 0.3, slow: 0.55, mult0: 1.2, mult1: 3.0, speed: 340, range: 250, recover: 0.5, pierce: [1, 2, 4] }, // pierce: số quái xuyên thêm khi đà thấp, trên 60%, đầy
     },
     spear: {
       gap: 0.45,
@@ -46,7 +51,7 @@
       swing: { name: 'Nện', dur: 0.8, mult: 1, reach: 32, depth: 26 },
       // giữ để lấy đà 2 nấc; chưa tới nấc 1 mà thả thì chỉ là nhát thường
       charge: {
-        name: 'Lấy đà', lv1: 0.5, time: 1.1, min: 0.45, slow: 0.45, recover: 0.7, ahead: 22, waveV: 200, waveDepth: 26,
+        name: 'Lấy đà', lv1: 0.5, time: 1.1, min: 0.45, slow: 0.45, recover: 0.7, ahead: 22, waveV: 200, waveDepth: 26, waveFrac: 0.45, // sóng chạy xa nhất 0,45 bề ngang phòng (phòng thường 85, phòng trùm đủ 96) và tan khi chạm tường
         slam: [null,
           { name: 'Nện đất', mult: 1.1, r: 30, stun: 0, wave: { mult: 0.4, len: 60, stun: 0 } },
           { name: 'Nện đất mạnh', mult: 1.6, r: 38, stun: 0.7, wave: { mult: 0.6, len: 96, stun: 0.5 } }],
@@ -59,6 +64,7 @@
   //   Thức tỉnh (lv 3):  mở đặc trưng 2, phản ứng dây chuyền: Lửa quái đang cháy chết thì nổ lan, Độc quái đang trúng độc chết
   //                      thì lây sang con bên cạnh, Băng quái đóng băng bị đánh thì vỡ văng mảnh.
   // Đặc trưng không mạnh dần theo cấp: mở là có đủ. Vũ khí đang được phủ hệ (bùa, Nung) tính như Mầm.
+  // Ghép đợt 2 (cân lại trong phòng vuông, vùng tròn nay rộng hơn theo G.ZK): vũng độc 0,8 -> 0,68; gai băng 0,4 -> 0,55; băng vỡ 0,7 và 0,5 -> 0,9 và 0,7.
   G.HE = {
     f1: 2, f2: 3, // mốc mở đặc trưng 1 và đặc trưng 2
     maxZones: 6,  // số vệt cháy, vũng độc cùng lúc trên sân
@@ -70,15 +76,15 @@
     },
     poison: {
       // đặc trưng 1: vũng độc, quái đứng trong mỗi giây thêm 1 tầng Độc; tên độc tách mảnh khi trúng
-      cloudR: 25, cloudLife: 3.2, cloudSrc: 0.8, cloudEvery: 1, shards: 1, shard: 0.13, shardRange: 50, shardV: 210,
+      cloudR: 25, cloudLife: 3.2, cloudSrc: 0.68, cloudEvery: 1, shards: 1, shard: 0.13, shardRange: 50, shardV: 210,
       // đặc trưng 2: quái đang trúng độc mà chết thì lây 2 tầng Độc sang quái đứng gần
       spreadR: 34, spread: 2,
     },
     ice: {
       // đặc trưng 1: gai băng mọc theo hướng đánh, gây sát thương và thêm tầng Băng (làm chậm); tên băng xuyên thêm 1 quái
-      spikes: 0.4, spikeLen: 52, spikeDepth: 22, stacks: 1, pierce: 1,
+      spikes: 0.55, spikeLen: 52, spikeDepth: 22, stacks: 1, pierce: 1,
       // đặc trưng 2: quái đang đóng băng bị đánh thì lớp băng vỡ, mảnh văng trúng quái quanh đó (mỗi lần đóng băng vỡ một lần)
-      shatter: 0.7, shatterSelf: 0.5, shatterR: 36,
+      shatter: 0.9, shatterSelf: 0.7, shatterR: 36,
     },
   };
   // Một dòng chỉ dẫn cho mỗi vũ khí, hiện khi vào ải và lần đầu đổi sang vũ khí đó.
@@ -216,24 +222,26 @@
   function shoot(P, w, o) {
     const W = G.getWorld(), h = heOf(P, w);
     const col = h ? G.EL[h.el].col : '#f1ead9';
-    const tgt = G.cb.nearest(P, o.range + 10, 44, true);
+    // Phòng vuông: quái tới từ cả trên lẫn dưới, nên tên ngắm chéo được tới khoảng 35 độ (C.bow.aim), không chỉ bay gần như ngang.
+    const A = C.bow.aim;
+    const tgt = G.cb.nearest(P, o.range + 10, A.dy, true);
     let vy = 0;
-    if (tgt) vy = G.clamp(((tgt.y - P.y) / Math.max(20, Math.abs(tgt.x - P.x))) * o.speed, -90, 90);
-    W.projs.push({ team: 'player', kind: 'arrow', x: P.x + P.face * 8, y: P.y, vx: P.face * o.speed, vy, t: o.range / o.speed, w, mult: o.mult, pierce: (o.pierce || 0) + (has1(h) && h.el === 'ice' ? HE.ice.pierce : 0), big: !!o.big, col, seen: [], he: h, charged: o.charged || 0 });
+    if (tgt) vy = G.clamp(((tgt.y - P.y) / Math.max(20, Math.abs(tgt.x - P.x))) * o.speed, -A.slope * o.speed, A.slope * o.speed);
+    W.projs.push({ team: 'player', kind: 'arrow', x: P.x + P.face * 8, y: P.y, vx: P.face * o.speed, vy, t: o.range / o.speed, w, mult: o.mult, pierce: (o.pierce || 0) + (has1(h) && h.el === 'ice' ? HE.ice.pierce : 0), big: !!o.big, col, seen: [], he: h, charged: o.charged || 0, pierceMult: o.pierceMult });
   }
   function bowTap(P, w) {
     const s = C.bow.shot;
-    aim(P, s.range, 44);
+    aim(P, s.range, C.bow.aim.dy);
     // đứng yên thì giương nhanh hơn một chút so với vừa chạy vừa bắn
-    begin(P, w, { kind: 'ban', name: s.name, pose: 0, arrow: { mult: s.mult, speed: s.speed, range: s.range } }, P.moving ? s.move : s.still);
+    begin(P, w, { kind: 'ban', name: s.name, pose: 0, arrow: { mult: s.mult, speed: s.speed, range: s.range, pierce: s.pierce || 0, pierceMult: s.pierceMult } }, P.moving ? s.move : s.still);
   }
   function bowRelease(P, w, c) {
     const ch = C.bow.charge, full = c >= 1;
-    aim(P, ch.range, 44);
+    aim(P, ch.range, C.bow.aim.dy);
     const o = { kind: 'banManh', name: ch.name, pose: 2, charge: c };
     begin(P, w, o, ch.recover, 0.43); // dây cung đã căng sẵn: buông tên ngay
     P.hitDone = true;
-    shoot(P, w, { mult: ch.mult0 + (ch.mult1 - ch.mult0) * c, speed: ch.speed, range: ch.range * (0.7 + 0.3 * c), pierce: full ? 4 : c > 0.6 ? 2 : 1, big: true, charged: c });
+    shoot(P, w, { mult: ch.mult0 + (ch.mult1 - ch.mult0) * c, speed: ch.speed, range: ch.range * (0.7 + 0.3 * c), pierce: full ? ch.pierce[2] : c > 0.6 ? ch.pierce[1] : ch.pierce[0], big: true, charged: c });
     swingFx(P, w, o, { charge: c });
   }
 
@@ -276,11 +284,11 @@
     const r = reachOf(w, sl.r), cx = G.clamp(P.x + f * ch.ahead, W.x0, W.x1), cy = P.y;
     let n = 0;
     for (const e of G.targets()) {
-      if (Math.hypot(e.x - cx, (e.y - cy) * 1.5) < r + e.r) { G.cb.playerHit(e, sl.mult, { w, stun: sl.stun, heavy: true, dir: e.x >= P.x ? 1 : -1 }); n++; }
+      if (Math.hypot(e.x - cx, (e.y - cy) / G.ZK) < r + e.r) { G.cb.playerHit(e, sl.mult, { w, stun: sl.stun, heavy: true, dir: e.x >= P.x ? 1 : -1 }); n++; }
     }
-    G.cb.hitProps(cx - r, cx + r, cy, r * 0.66);
+    G.cb.hitProps(cx - r, cx + r, cy, r * G.ZK);
     // sóng chấn động chạy trên mặt đất theo hướng đánh
-    (W.mvWaves || (W.mvWaves = [])).push({ x: cx, y: cy, dir: f, left: sl.wave.len, v: ch.waveV, depth: ch.waveDepth, mult: sl.wave.mult, stun: sl.wave.stun, w, seen: [], level: o.level, he: heOf(P, w) });
+    (W.mvWaves || (W.mvWaves = [])).push({ x: cx, y: cy, dir: f, left: Math.min(sl.wave.len, (W.x1 - W.x0) * ch.waveFrac), v: ch.waveV, depth: ch.waveDepth, mult: sl.wave.mult, stun: sl.wave.stun, w, seen: [], level: o.level, he: heOf(P, w) });
     W.shake = Math.max(W.shake, o.level >= 2 ? 0.3 : 0.16);
     G.sfx('boom', o.level >= 2 ? 1.5 : 1.9);
     swingFx(P, w, o, { level: o.level, x: cx, y: cy, r });
@@ -359,9 +367,9 @@
       // quét một vòng quanh người: trúng cả quái sau lưng, hất nhẹ ra ngoài
       const m = o.m, list = [];
       for (const e of G.targets()) {
-        if (Math.hypot(e.x - P.x, (e.y - P.y) * 1.5) < o.reach + e.r) { G.cb.playerHit(e, m.mult, { w, heavy: true, dir: e.x >= P.x ? 1 : -1 }); list.push(e); }
+        if (Math.hypot(e.x - P.x, (e.y - P.y) / G.ZK) < o.reach + e.r) { G.cb.playerHit(e, m.mult, { w, heavy: true, dir: e.x >= P.x ? 1 : -1 }); list.push(e); }
       }
-      G.cb.hitProps(P.x - o.reach, P.x + o.reach, P.y, o.reach * 0.66);
+      G.cb.hitProps(P.x - o.reach, P.x + o.reach, P.y, o.reach * G.ZK);
       for (const e of list) if (!e.dead && !e.isBoss) e.x += (e.x >= P.x ? 1 : -1) * m.push;
       swingFx(P, w, o);
       finish(P, w, { x: P.x + P.face * 10, y: P.y, dir: P.face, power: 1, round: true });
@@ -377,7 +385,7 @@
     if (!e.dead) G.damage(e, amt, { el, src: 'hit', ranged: !!ranged, w });
   }
   function around(x, y, r, fn, skip) {
-    for (const e of G.targets()) if (e !== skip && Math.hypot(e.x - x, (e.y - y) * 1.5) < r + e.r) fn(e);
+    for (const e of G.targets()) if (e !== skip && Math.hypot(e.x - x, (e.y - y) / G.ZK) < r + e.r) fn(e);
   }
   // Vũng nằm lại trên đất (vệt cháy, màn khói độc): dùng đúng loại vũng "pool" sẵn có của combat.js.
   function heZone(W, x, y, r, life, el, src, every, extra) {
@@ -527,7 +535,7 @@
         for (const e of G.targets()) {
           if (e !== q.skip && Math.abs(e.x - q.x) < e.r + 3 && Math.abs(e.y - q.y) < e.hr + 6) { heDamage(e, q.dmg, 'poison', q.w, true); FX('heArrow', 'poison', 1, { x: e.x, y: e.y, r: 8, big: false, dir: q.vx < 0 ? -1 : 1, small: true }); q.left = 0; break; }
         }
-        if (q.x < W.x0 - 10 || q.x > W.x1 + 10) q.left = 0;
+        if (q.x < W.x0 - 10 || q.x > W.x1 + 10 || q.y < W.y0 - 10 || q.y > W.y1 + 10) q.left = 0;
       }
       W.mvShards = sh.filter((q) => q.left > 0);
     }

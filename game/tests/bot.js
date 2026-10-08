@@ -159,9 +159,12 @@
     const dx = t.x - P.x, dy = t.y - P.y, ad = Math.abs(dx);
     if (T.ranged) {
       const want = Math.min(120, (W.x1 - W.x0) * 0.4); // phòng nhỏ thì đứng gần hơn, không chạy mãi về phía tường
-      if (Math.abs(dy) > 8) inp.my = Math.sign(dy);
+      // tên ngắm chéo được (G.MOVES.bow.aim): chỉ cần quái nằm trong góc ngắm là bắn, lệch nhiều mới phải đi dọc cho thẳng hàng
+      const aimA = (G.MOVES && G.MOVES.bow && G.MOVES.bow.aim) || { dy: 30, slope: 0.3 };
+      const okDy = Math.min(aimA.dy - 6, Math.max(10, ad * aimA.slope * 0.9));
+      if (Math.abs(dy) > Math.max(8, okDy * 0.7)) inp.my = Math.sign(dy);
       if (ad < want - 30) inp.mx = -Math.sign(dx); else if (ad > want + 60) inp.mx = Math.sign(dx);
-      if (Math.abs(dy) < 30) inp.atk = true;
+      if (Math.abs(dy) < okDy) inp.atk = true;
     } else {
       const reach = T.reach * 0.75 + t.r;
       if (ad > reach) inp.mx = Math.sign(dx);

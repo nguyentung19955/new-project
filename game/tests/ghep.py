@@ -213,7 +213,8 @@ JS = r"""
   // cung: luật của tên cũng chỉ có từ Thành hình
   function arrowProbe(el, st) {
     room({ hero: 'smith', tier: 1, branch: el, marks: MARKS[st] }); P.cur = 1; w = G.curW(P); step(2);
-    const a = dummy(280), b = dummy(el === 'ice' ? 310 : 292, el === 'ice' ? 190 : 197);
+    // Đợt ghép 2: tên thường tự xuyên thêm 1 quái. Băng: xem con thứ ba có trúng không. Lửa: quái đứng lệch khỏi đường tên, chỉ vụ nổ mới tới.
+    const a = dummy(250), mid = el === 'ice' ? dummy(275) : null, b = dummy(el === 'ice' ? 300 : 262, el === 'ice' ? 190 : 207);
     fixRnd(0.999); step(2, { atk: true, atkP: true }); sec(0.9); G.rnd = Math.random;
     return lost(a) > 0 && lost(b) > 0;
   }

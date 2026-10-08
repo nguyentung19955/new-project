@@ -323,7 +323,7 @@
     const rx = Math.max(6, Math.round(r / 2) * 2), key = el + rx;
     let sp = ZSPR.get(key);
     if (sp) return sp;
-    const ry = Math.round(rx * 0.6), w = rx * 2 + 8, h = ry * 2 + 4, cx = w >> 1, cy = h >> 1;
+    const ry = Math.round(rx * (G.ZK || 0.6)), w = rx * 2 + 8, h = ry * 2 + 4, cx = w >> 1, cy = h >> 1;
     const cv = document.createElement('canvas');
     cv.width = w; cv.height = h;
     const c = cv.getContext('2d'), C = ZCOL[el] || ZCOL.fire;

@@ -1,6 +1,8 @@
-"""Đo sát thương theo thời gian của bốn vũ khí khi bot chơi trong một sân tập có quái hồi sinh liên tục.
+"""Đo sát thương theo thời gian của bốn vũ khí khi bot chơi trong một phòng tập có quái hồi sinh liên tục.
 Mỗi vũ khí đo ở bốn trạng thái: chưa có hệ, và Thức tỉnh Lửa, Độc, Băng. Số ngẫu nhiên có hạt giống nên chạy lại ra đúng số cũ.
-Chạy: python3 tests/dps.py [giây mỗi lượt] [số hạt giống] [nho]   ("nho": sân nhỏ 208 điểm ảnh)
+Từ đợt ghép 2 game chỉ còn phòng vuông, nên bài này đo trong phòng thật:
+  python3 tests/dps.py [giây mỗi lượt] [số hạt giống] [nho | trum]
+    nho (mặc định): phòng thường, sàn 208x196      trum: phòng trùm, sàn 300x198 (không có trùm)
 Thoát mã 1 nếu bốn vũ khí (chưa có hệ) lệch nhau quá 15% so với trung bình, hoặc ba hệ lệch nhau quá 15%."""
 import os, sys
 from playwright.sync_api import sync_playwright
@@ -12,10 +14,13 @@ JS = r"""
   for (const k of G.HKEYS) G.HEROES[k].fav = [];           // bỏ thưởng vũ khí ưa thích để so cho công bằng
   G.testSave({ hero: 'smith', melee: wtype === 'bow' ? 'sword' : wtype, lvl: 10, tier: 1, sharpen: 3, branch: el || undefined, marks: el ? 300 : 0 });
   G.rnd = G.srand(seed);
-  G.startStage(0, 2, 0);
-  const S = G.getRun(), W = G.getWorld(), P = S.P;
-  W.waves = []; W.props = [];
-  if (small) { W.x1 = 218; W.w = 228; }
+  G.startStage(0, 2, 0, { kind: 'A', seed: 3 });
+  const S = G.getRun();
+  if (!small) G.gotoRoom(S.map.boss); // phòng trùm rộng, bỏ trùm đi để chỉ đo đánh quái thường
+  const W = G.getWorld(), P = S.P;
+  W.waves = []; W.spawns = []; W.props = []; W.zones = []; W.banner = null;
+  if (W.boss) { W.boss.dead = true; W.boss = null; W.px1 = null; W.shrink = null; }
+  P.x = W.geo.cx; P.y = W.geo.cy;
   Object.assign(G.botCfg, { prefer: wtype, explore: false, props: false });
   if (G.curW(P).type !== wtype) P.cur = 1 - P.cur;
   let dealt = 0, hurt = 0;
@@ -48,8 +53,8 @@ JS = r"""
 """
 
 def main():
-    args = [a for a in sys.argv[1:] if a != 'nho']
-    small = 'nho' in sys.argv
+    args = [a for a in sys.argv[1:] if a not in ('nho', 'trum')]
+    small = 'trum' not in sys.argv
     secs = int(args[0]) if len(args) > 0 else 60
     seeds = int(args[1]) if len(args) > 1 else 4
     errs = []
@@ -62,7 +67,7 @@ def main():
         pg.wait_for_function('window.G && G.scene')
         pg.add_script_tag(path=os.path.join(ROOT, 'tests', 'bot.js'))
         pg.add_script_tag(path=os.path.join(ROOT, 'tests', 'setup.js'))
-        print('sân', 'nhỏ 208' if small else 'dài 460', '|', secs, 'giây x', seeds, 'hạt giống')
+        print('phòng thường 208x196' if small else 'phòng trùm 300x198', '|', secs, 'giây x', seeds, 'hạt giống')
         print('%-7s %-6s %7s %7s %6s %7s' % ('vũ khí', 'hệ', 'st/giây', 'bị đánh', 'hạ', 'dấu ấn'))
         for wt in ['sword', 'bow', 'spear', 'hammer']:
             for el in [None, 'fire', 'poison', 'ice']:

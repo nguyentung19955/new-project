@@ -357,7 +357,7 @@
     FX('propBlast', pr, el);
     G.sfx('boom', 1.3);
     for (const t of G.targets()) {
-      if (Math.hypot(t.x - pr.x, (t.y - pr.y) * 1.5) < 52) {
+      if (Math.hypot(t.x - pr.x, (t.y - pr.y) / G.ZK) < 52) {
         G.damage(t, src * 0.8, { el, src: 'prop' });
         G.applyStatus(t, el, src, el === 'fire' ? 1 : 3);
       }
@@ -432,7 +432,9 @@
     const el = G.activeEl(P, w);
     G.sfx('boom', 1.8);
     if (w.type === 'sword' || w.type === 'spear') {
-      const len = w.type === 'sword' ? 92 : 112;
+      // Đường lao dài theo bề ngang phòng (G.MOVES.dash): phòng thường ngắn hơn phòng trùm, để không lao hết nửa phòng rồi đập tường.
+      const dc = G.MOVES && G.MOVES.dash && G.MOVES.dash[w.type];
+      const len = dc ? G.clamp((W.x1 - W.x0) * dc.frac, dc.min, dc.max) : w.type === 'sword' ? 92 : 112;
       P.dashT = 0.2; P.dashV = (len / 0.2) * P.face; P.dashHit = []; P.inv = Math.max(P.inv, 0.25);
       P.dashMult = w.type === 'sword' ? 2.2 : 2.0;
       P.dashStun = w.type === 'spear' ? 0.5 : 0;
@@ -441,12 +443,13 @@
     } else if (w.type === 'hammer') {
       W.shake = 0.3;
       FX('slam', P, el);
-      for (const e of G.targets()) if (Math.hypot(e.x - P.x, (e.y - P.y) * 1.5) < 58 + e.r) playerHit(e, 2.4, { w, stun: 0.8, heavy: true });
-      hitProps(P.x - 58, P.x + 58, P.y, 36);
+      for (const e of G.targets()) if (Math.hypot(e.x - P.x, (e.y - P.y) / G.ZK) < 58 + e.r) playerHit(e, 2.4, { w, stun: 0.8, heavy: true });
+      hitProps(P.x - 58, P.x + 58, P.y, 58 * G.ZK);
       W.zones.push({ shape: 'circle', x: P.x, y: P.y, r: 58, t: 0, life: 0.15, team: 'fx' });
     } else {
       const tgt = nearest(P, 330, 60, true);
-      const x = tgt ? tgt.x : P.x + P.face * 110, y = tgt ? tgt.y : P.y;
+      // không có quái trước mặt thì mưa tên rơi phía trước, nhưng luôn nằm trong sàn phòng
+      const x = tgt ? tgt.x : G.clamp(P.x + P.face * Math.min(110, (W.x1 - W.x0) * 0.4), W.x0 + 20, W.x1 - 20), y = tgt ? tgt.y : P.y;
       W.zones.push({ shape: 'circle', x, y, r: 40, t: 0, pool: true, team: 'player', rain: true, life: 0.95, tick: 0, w, el });
     }
     if (G.moves) G.moves.special(P, w); // phần riêng theo hệ của đòn đặc biệt
@@ -473,7 +476,7 @@
       W.shake = 0.2;
       FX('gong', P);
       for (const e of G.targets()) {
-        const d = Math.hypot(e.x - P.x, (e.y - P.y) * 1.5);
+        const d = Math.hypot(e.x - P.x, (e.y - P.y) / G.ZK);
         if (d < 60 + e.r) {
           playerHit(e, 0.8, { w, stun: 0.4 });
           if (!e.isBoss) { e.x += (e.x >= P.x ? 1 : -1) * 40; }
@@ -535,8 +538,9 @@
     P.moving = false;
 
     if (P.dashT > 0) {
+      const dd = Math.min(dt, P.dashT); // khung cuối chỉ đi nốt phần còn lại, để quãng lao đúng bằng con số đã định
       P.dashT -= dt;
-      const nx = G.clamp(P.x + P.dashV * dt, W.x0, W.px1 != null ? W.px1 : W.x1);
+      const nx = G.clamp(P.x + P.dashV * dd, W.x0, W.px1 != null ? W.px1 : W.x1);
       for (const e of G.targets()) {
         if (P.dashHit.includes(e)) continue;
         if (e.x >= Math.min(P.x, nx) - e.r - 6 && e.x <= Math.max(P.x, nx) + e.r + 6 && Math.abs(e.y - P.y) <= 12 + e.hr) {
@@ -545,6 +549,8 @@
         }
       }
       hitProps(Math.min(P.x, nx) - 4, Math.max(P.x, nx) + 4, P.y, 14);
+      // Chạm tường thì đòn lao dừng ngay tại đó (không chạy tại chỗ sát tường, không kẹt ở cửa): người chơi điều khiển lại được liền.
+      if (nx !== P.x + P.dashV * dd && P.dashT > 0) { P.dashT = 0; P.atkT = Math.min(P.atkT, 0.05); P.cdT = Math.min(P.cdT, 0.12); }
       P.x = nx;
       return;
     }
@@ -752,7 +758,7 @@
             if (G.moves) G.moves.arrowHit(o, e);
             P.mana = Math.min(P.maxmana, P.mana + P.manaHit + (G.wHas(o.w, 'mana') ? 1 : 0));
             G.sfx('hit', 1.3);
-            if (o.pierce > 0) o.pierce--; else { o.t = 0; break; }
+            if (o.pierce > 0) { o.pierce--; if (o.pierceMult) o.mult *= o.pierceMult; } else { o.t = 0; break; } // tên thường xuyên qua thì yếu đi (pierceMult)
           }
         }
         for (const pr of W.props) if (pr.env && !pr.used && Math.abs(pr.x - o.x) < 8 && Math.abs(pr.y - o.y) < 10) { G.triggerProp(pr); o.t = 0; }
