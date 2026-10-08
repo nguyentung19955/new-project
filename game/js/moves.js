@@ -59,12 +59,17 @@
     fire: {
       blast: 0.35, blastR: 20, blastRLv: 4,   // nhát kết, đòn thả, đòn đặc biệt: nổ nhỏ lan ra
       trailR: 14, trailRLv: 2, trailLife: 1.2, trailLifeLv: 0.6, trailSrc: 0.5, trailEvery: 0.5, // vệt cháy đốt quái đi qua
-      arrow: 0.25, arrowR: 20,                 // tên lửa nổ khi trúng
+      arrow: 0.15, arrowR: 20,                 // tên lửa nổ khi trúng
     },
     poison: {
       cloudR: 18, cloudRLv: 3, cloudLife: 2, cloudLifeLv: 0.6, cloudSrc: 0.8, cloudEvery: 1, // màn khói độc: quái đứng trong mỗi giây thêm 1 tầng Độc
       spreadR: 32, spread: [0, 1, 1, 2],       // quái chết khi đang trúng độc thì lây sang quái gần: 1 tầng, Thức tỉnh thì 2 tầng
-      shards: [0, 1, 1, 2], shard: 0.2, shardRange: 50, shardV: 210, // tên mạnh đầy đà thêm 1 mảnh // tên độc tách thành mảnh khi trúng
+      shards: [0, 1, 1, 1], shard: 0.15, shardRange: 50, shardV: 210, // tên độc tách thành mảnh khi trúng; tên mạnh đầy đà thêm 1 mảnh
+    },
+    ice: {
+      spikes: 0.45, spikeLen: 30, spikeLenLv: 10, spikeDepth: 22, stacks: [0, 1, 1, 2], // gai băng mọc theo hướng đánh: sát thương và thêm tầng Băng
+      shatter: 0.7, shatterSelf: 0.5, shatterR: 36, // quái đang đóng băng bị đánh thì lớp băng vỡ, mảnh văng trúng quái quanh đó (mỗi lần đóng băng một lần)
+      pierce: [0, 1, 1, 1],                    // tên băng xuyên thêm chừng này quái
     },
   };
   // Một dòng chỉ dẫn cho mỗi vũ khí, hiện khi vào ải và lần đầu đổi sang vũ khí đó.
@@ -203,7 +208,7 @@
     const tgt = G.cb.nearest(P, o.range + 10, 44, true);
     let vy = 0;
     if (tgt) vy = G.clamp(((tgt.y - P.y) / Math.max(20, Math.abs(tgt.x - P.x))) * o.speed, -90, 90);
-    W.projs.push({ team: 'player', kind: 'arrow', x: P.x + P.face * 8, y: P.y, vx: P.face * o.speed, vy, t: o.range / o.speed, w, mult: o.mult, pierce: o.pierce || 0, big: !!o.big, col, seen: [], he: h, charged: o.charged || 0 });
+    W.projs.push({ team: 'player', kind: 'arrow', x: P.x + P.face * 8, y: P.y, vx: P.face * o.speed, vy, t: o.range / o.speed, w, mult: o.mult, pierce: (o.pierce || 0) + (h && h.el === 'ice' ? HE.ice.pierce[h.lv] : 0), big: !!o.big, col, seen: [], he: h, charged: o.charged || 0 });
   }
   function bowTap(P, w) {
     const s = C.bow.shot;
@@ -403,11 +408,33 @@
         for (const u of [0.35, 0.85]) { const x = o.x + o.dir * o.line * u; heZone(W, x, o.y, r - 3, life, 'poison', D * Q.cloudSrc, Q.cloudEvery, { cloud: true }); info.pts.push(x); }
       } else heZone(W, o.x, o.y, r, life, 'poison', D * Q.cloudSrc, Q.cloudEvery, { cloud: true });
     }
+    else {
+      // gai băng mọc từ đất theo hướng đánh: làm chậm, đủ tầng thì đóng băng
+      const I = HE.ice, L = o.line || (I.spikeLen + I.spikeLenLv * h.lv) * Math.min(1.25, 0.8 + 0.2 * (o.power || 1)), n = I.stacks[h.lv], got = [];
+      info.r = L;
+      if (o.round) around(o.x, o.y, L * 0.75, (e) => got.push(e));
+      else {
+        const a = Math.min(o.x - o.dir * 6, o.x + o.dir * L), b = Math.max(o.x - o.dir * 6, o.x + o.dir * L);
+        for (const e of G.targets()) if (e.x >= a - e.r && e.x <= b + e.r && Math.abs(e.y - o.y) <= I.spikeDepth / 2 + e.hr) got.push(e);
+      }
+      for (const e of got) { heDamage(e, D * I.spikes * k, 'ice', w, o.ranged); G.applyStatus(e, 'ice', D, n); }
+    }
     FX('heFinish', h.el, h.lv, info);
   }
   M.finish = finish;
 
-  M.onHit = function (e, d, el, o) {};
+  M.onHit = function (e, d, el, o) {
+    if (!(e.st.frozen > 0)) { e.mvShat = false; return; }
+    if (el !== 'ice' || e.mvShat || !o.w) return;
+    const W = G.getWorld(), P = W.P, h = heOf(P, o.w);
+    if (!h || h.el !== 'ice') return;
+    // lớp băng vỡ: con bị đóng băng ăn thêm sát thương, mảnh băng văng trúng quái quanh đó và làm chúng chậm lại
+    e.mvShat = true;
+    const I = HE.ice, D = G.pDamage(P, o.w), k = HE.k[h.lv];
+    FX('heShatter', e, I.shatterR);
+    heDamage(e, D * I.shatterSelf * k, 'ice', o.w, o.ranged);
+    around(e.x, e.y, I.shatterR, (t) => { heDamage(t, D * I.shatter * k, 'ice', o.w, o.ranged); G.applyStatus(t, 'ice', D, 1); }, e);
+  };
   M.onKill = function (e, o, w) {
     const W = G.getWorld(), P = W.P;
     if (!w || e.illusion) return;
@@ -430,7 +457,6 @@
       // tên lửa nổ khi trúng; tên mạnh đầy đà thì nổ to và để lại vệt cháy
       const F = HE.fire, c = o.charged || 0, r = F.arrowR + (c >= 1 ? 8 : 0);
       around(e.x, e.y, r, (t) => heDamage(t, D * F.arrow * k * (1 + c), 'fire', o.w, true), e);
-      heDamage(e, D * F.arrow * k * (1 + c) * 0.5, 'fire', o.w, true);
       if (c >= 1 && !o.heTrail) { o.heTrail = true; heZone(W, e.x, e.y, F.trailR + F.trailRLv * h.lv, F.trailLife + F.trailLifeLv * h.lv, 'fire', D * F.trailSrc, F.trailEvery); }
       FX('heArrow', 'fire', h.lv, { x: e.x, y: e.y, r, big: c >= 1, dir: o.vx < 0 ? -1 : 1 });
     } else if (h.el === 'poison') {
@@ -445,6 +471,11 @@
       }
       if (c >= 1) heZone(W, e.x, e.y, Q.cloudR + Q.cloudRLv * h.lv, Q.cloudLife, 'poison', D * Q.cloudSrc, Q.cloudEvery, { cloud: true });
       FX('heArrow', 'poison', h.lv, { x: e.x, y: e.y, r: 16, big: c >= 1, dir });
+    } else {
+      // tên băng xuyên qua (số quái xuyên thêm đã cộng lúc bắn); tên mạnh đầy đà chắc chắn làm chậm
+      const c = o.charged || 0;
+      if (c >= 1) G.applyStatus(e, 'ice', D, 1);
+      FX('heArrow', 'ice', h.lv, { x: e.x, y: e.y, r: 12, big: c >= 1, dir: o.vx < 0 ? -1 : 1 });
     }
   };
   // Phần riêng theo hệ của đòn đặc biệt (gọi sau khi combat.js đã tung đòn)
@@ -460,7 +491,7 @@
     } else {
       // mưa tên: điểm nhấn của hệ rơi xuống khi trận mưa sắp dứt
       const z = W.zones[W.zones.length - 1];
-      if (z && z.rain) (W.mvTimers || (W.mvTimers = [])).push({ t: 0.8, fn: () => finish(P, w, { x: z.x, y: z.y, dir: P.face, power: 1.3, ranged: true, round: true }) });
+      if (z && z.rain) (W.mvTimers || (W.mvTimers = [])).push({ t: 0.8, fn: () => finish(P, w, { x: z.x, y: z.y, dir: P.face, power: 0.8, ranged: true, round: true }) });
     }
   };
   M.update = function (W, dt) {

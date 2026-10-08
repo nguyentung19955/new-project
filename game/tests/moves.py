@@ -189,7 +189,7 @@ JS = r"""
     G.rnd = () => 0.999; // không cho đòn gây hiệu ứng lan (để đo riêng vụ nổ)
     tap(); wait(() => lost(e) === 0, {});
     G.rnd = Math.random;
-    ok('Lửa: tên lửa nổ khi trúng, quái đứng cạnh dính 0,25 lần', lost(side2) / base() >= 0.25 - 0.01 && lost(side2) / base() < 0.6, (lost(side2) / base()).toFixed(3));
+    ok('Lửa: tên lửa nổ khi trúng, quái đứng cạnh dính 0,15 lần', lost(side2) / base() >= 0.15 - 0.01 && lost(side2) / base() < 0.5, (lost(side2) / base()).toFixed(3));
     ok('Lửa: vụ nổ của tên tính là đánh xa', S.stats.ranged > 0 && S.stats.melee === 0);
     room('hammer', el3('fire')); e = dummy(226);
     for (let k = 0; k < 5; k++) { sec(0.16 + 1.15, { atk: true }); run(1, {}); sec(0.5, {}); }
@@ -227,9 +227,40 @@ JS = r"""
     tap(); wait(() => lost(e) === 0, {});
     const nsh = (W.mvShards || []).length; sec(0.4, {});
     G.rnd = Math.random;
-    ok('Độc: tên độc trúng quái thì tách ra 2 mảnh (Thức tỉnh)', nsh === 2, nsh);
-    ok('Độc: mảnh tên trúng quái đứng chéo phía sau, mỗi mảnh 0,2 lần', near(lost(behind) / base(), 0.2, 0.06) && near(lost(behind2) / base(), 0.2, 0.06), (lost(behind) / base()).toFixed(2) + '/' + (lost(behind2) / base()).toFixed(2));
+    ok('Độc: tên độc thường trúng quái thì tách ra 1 mảnh', nsh === 1, nsh);
+    ok('Độc: mảnh tên trúng quái đứng chéo phía sau, gây 0,15 lần', near((lost(behind) + lost(behind2)) / base(), 0.15, 0.01), (lost(behind) / base()).toFixed(2) + '/' + (lost(behind2) / base()).toFixed(2));
+    P.x = 200; P.face = 1; sec(1.0, { atk: true }); run(1, {}); G.rnd = () => 0.999; wait(() => !(W.mvShards && W.mvShards.length), {}); const nsh2 = W.mvShards.length; G.rnd = Math.random;
+    ok('Độc: tên mạnh đầy đà tách ra 2 mảnh và để lại màn khói', nsh2 === 2 && W.zones.some((z) => z.he && z.cloud), nsh2);
     ok('Độc: mảnh tên tính là đánh xa', S.stats.ranged > base() && S.stats.melee === 0);
+
+    // ================= HỆ BĂNG =================
+    room('sword', el3('ice')); e = dummy(224); let inLine = dummy(266), offLine = dummy(266, 214);
+    combo3();
+    ok('Băng: nhát kết mọc gai băng theo hướng đánh, trúng quái ngoài tầm kiếm 0,45 lần và thêm 2 tầng Băng', near(lost(inLine) / base(), 0.45, 0.01) && inLine.st.iceN === 2, (lost(inLine) / base()).toFixed(2) + ' tầng ' + inLine.st.iceN);
+    ok('Băng: gai băng có bề rộng vừa phải, không trúng quái lệch 24 điểm ảnh theo chiều sâu', lost(offLine) === 0);
+    ok('Băng: gai băng tính vào thống kê hệ Băng và cận chiến', S.stats.el.ice > 0 && S.stats.melee > 0 && S.stats.ranged === 0);
+    room('sword', el3('ice', 30)); e = dummy(224); inLine = dummy(258);
+    G.rnd = () => 0.999; combo3(); G.rnd = Math.random;
+    ok('Băng: ở mốc Mầm gai băng ngắn hơn, 0,225 lần và 1 tầng', near(lost(inLine) / base(), 0.225, 0.01) && inLine.st.iceN === 1, (lost(inLine) / base()).toFixed(3) + ' tầng ' + inLine.st.iceN);
+    room('sword', el3('ice')); e = dummy(224); let nbI = dummy(248, 200), mkI = dummy(246, 180);
+    for (let k = 0; k < 5; k++) G.applyStatus(e, 'ice', 1);
+    G.applyStatus(mkI, 'ice', 1); mkI.hp = 1;
+    const im0 = w.marks.ice;
+    ok('Băng: quái đã bị đóng băng', e.st.frozen > 0);
+    run(1, { atk: true, atkP: true }); wait(() => !P.hitDone, {});
+    ok('Băng: quái đóng băng bị đánh thì vỡ, mảnh văng trúng quái gần 0,7 lần và làm nó chậm', near(lost(nbI) / base(), 0.7, 0.01) && nbI.st.iceN === 1, (lost(nbI) / base()).toFixed(2) + ' tầng ' + nbI.st.iceN);
+    ok('Băng: con bị vỡ băng ăn thêm 0,5 lần', near(lost(e) / base(), 0.9 + 0.5, 0.01), (lost(e) / base()).toFixed(2));
+    ok('Băng: mảnh băng kết liễu quái đang dính Băng thì vẫn cho dấu ấn Băng', mkI.dead && near(w.marks.ice - im0, 1.2, 0.01), w.marks.ice - im0);
+    wait(() => P.atkT > 0, {}); const nb1 = lost(nbI);
+    run(1, { atk: true, atkP: true }); wait(() => !P.hitDone, {});
+    ok('Băng: mỗi lần đóng băng chỉ vỡ một lần', lost(nbI) === nb1 && e.st.frozen > 0, lost(nbI) - nb1);
+    room('sword'); e = dummy(224); nbI = dummy(248, 200);
+    for (let k = 0; k < 5; k++) G.applyStatus(e, 'ice', 1);
+    run(1, { atk: true, atkP: true }); wait(() => !P.hitDone, {});
+    ok('Băng: vũ khí không mang hệ Băng thì không làm vỡ băng', lost(nbI) === 0);
+    room('bow', el3('ice')); const i1 = dummy(280), i2 = dummy(310), i3 = dummy(340);
+    tap(); sec(0.9, {});
+    ok('Băng: tên băng thường xuyên thêm 1 quái', lost(i1) > 0 && lost(i2) > 0 && lost(i3) === 0, [i1, i2, i3].map((q) => (lost(q) / base()).toFixed(1)).join('/'));
 
     // ================= CHUNG =================
     room('sword'); run(1, { swapP: true }); sec(0.1, {});
