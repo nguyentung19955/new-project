@@ -2281,3 +2281,8 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
 - **Móc pixel mới** (thứ tự: pixel → hình cũ dự phòng): đạn chung đổi theo hệ tướng; vật ném (`lob`), Gióng bay dọc sông / đá Lạc Hầu lăn (`skyride`), hổ vồ, chim Lạc / Chim Thần, ngựa sắt phun lửa, quét gậy, dấu săn, bóng lướt, móc kéo, mọc núi, nốt nhạc; vùng đất (vệt lửa, ruộng lúa, Cây Đa, đá núi); đàn Lạc Tử; hào quang đốt quanh boss (trống trận, lửa ma, mưa gió Thủy Tinh); hạt quái biến thể; vòng tinh anh + dấu loại; **tướng bị choáng = chim Lạc + xoáy khí** (thay ngôi sao); sa lầy; hào quang đồ, Thần tinh, tiến hoá, khói Tím/Vàng, vầng trống đồng; Thần tinh bay quanh là **ngọc** thay ngôi sao.
 - Đồ / bộ đồ hiện trên người tướng (`sau-lung-*`, `trang-phuc-*`, `do-*`, cánh): không vẽ pixel (quyết định điều phối). Tiến độ đầy đủ: `docs/pixel/DANH-SACH.md` Lô 44.
 - Test mới `tests/hieu-ung/hat-vfx-2.test.js` (móc trả về pixel, không lỗi console, chụp 1920×934 / 844×390 / 667×375).
+
+## claude/vfx-pixel-2 — sửa lỗi tester: vòng choáng + lửa bỏng pixel
+- Vòng choáng pixel (chim Lạc + xoáy khí) của quái và tướng giờ nằm TRÊN đỉnh đầu: tính theo đỉnh bbox hình (quái ảnh vẽ tay lấy cao ảnh thật đã vẽ), điểm thấp nhất của vòng không xuống dưới đỉnh đầu → không còn cắt ngang mặt. Thanh máu vẽ sau đè lên như ngôi sao cũ.
+- Lửa bỏng pixel thu nhỏ: thay ngọn lửa sprite 10×14 (to bằng nửa con quái) bằng ngọn lửa nhỏ 3×4 ô liếm theo nhịp, cỡ tương đương chấm lửa bản không pixel.
+- Test hat-vfx: thêm kiểm tra vòng choáng quái/tướng trên đỉnh đầu, lửa bỏng ≤ 45% chiều cao và không rộng quá thân quái.

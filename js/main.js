@@ -751,7 +751,7 @@ function drawHeroOnMap(h, t) {
   // chấm hành
   circle(ctx, h.x + 28.5, h.y - 12, 3.2, '#0D0B08');
   circle(ctx, h.x + 28.5, h.y - 12, 2.4, ELEMENTS[HEROES[h.type].el].color);
-  if (h.stunT > 0 && !(typeof VFX !== 'undefined' && VFX.px && VFX.px.heroStun(ctx, h.x, top - 16, t))) {
+  if (h.stunT > 0 && !(typeof VFX !== 'undefined' && VFX.px && VFX.px.heroStun(ctx, h.x, top - 6, t))) {
     for (let i = 0; i < 3; i++) {
       const a = t * 5 + (i * Math.PI * 2) / 3;
       drawStar(ctx, h.x + Math.cos(a) * 12, top - 16 + Math.sin(a) * 4, 3.5, '#F2D27A');
@@ -841,7 +841,7 @@ function drawHeroStun(h, top, t) {
     ctx.beginPath(); ctx.moveTo(h.x - 4, y - 4); ctx.lineTo(h.x + 4, y + 4); ctx.moveTo(h.x + 4, y - 4); ctx.lineTo(h.x - 4, y + 4); ctx.stroke();
   }
   if (!(h.stunT > 0)) return;
-  if (typeof VFX !== 'undefined' && VFX.px && VFX.px.heroStun(ctx, h.x, top - 16, t)) return;   // claude/vfx-pixel-2: chim Lạc + xoáy khí
+  if (typeof VFX !== 'undefined' && VFX.px && VFX.px.heroStun(ctx, h.x, top - 6, t)) return;   // claude/vfx-pixel-2: chim Lạc + xoáy khí
   for (let i = 0; i < 3; i++) {
     const a = t * 5 + (i * Math.PI * 2) / 3;
     drawStar(ctx, h.x + Math.cos(a) * 12, top - 16 + Math.sin(a) * 4, 3.5, '#F2D27A');

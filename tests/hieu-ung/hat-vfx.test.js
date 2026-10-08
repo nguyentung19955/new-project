@@ -86,11 +86,46 @@ const noPixelVfx = (p) => p.route('**/js/pixel/vfx.js*', (r) => r.fulfill({ cont
         const top = (y) => { if (y < by + 4) bad.push([e.type, Math.round(y), Math.round(by)]); };
         c.drawImage = function (im, x, y, w, h) { if (this.imageSmoothingEnabled) smooth = true; top(this.getTransform().f + Math.min(y, y + h)); if (x % 1 || y % 1) frac.push([x, y]); };
         c.fillRect = function (x, y) { top(this.getTransform().f + y); if (x % 1 || y % 1) frac.push([x, y]); };
+        const st = e.stunT; if (e.stunKind === 'stun') e.stunT = 0;   // vòng choáng nằm trên đầu (thanh máu đè lên) — kiểm riêng bên dưới
         for (const t of [0.1, 0.4, 0.7, 1.0, 1.3, 2.2]) { VFX.frame(); VFX.status(c, e, box, 0, t); }
+        e.stunT = st;
       }
       return { bad, frac: frac.length, smooth };
     });
-    ok(!chk.bad.length, 'ảnh trạng thái không lên tới thanh máu' + (chk.bad.length ? ' — ' + JSON.stringify(chk.bad.slice(0, 4)) : ''));
+    ok(!chk.bad.length, 'ảnh trạng thái (trừ vòng choáng) không lên tới thanh máu' + (chk.bad.length ? ' — ' + JSON.stringify(chk.bad.slice(0, 4)) : ''));
+    // vòng choáng (quái + tướng) nằm TRÊN đỉnh bbox hình, không đè mặt; lửa bỏng nhỏ cỡ chấm lửa cũ (không to như sprite 10×14)
+    const geo = await page.evaluate(() => {
+      const c = document.querySelector('canvas').getContext('2d'), out = { stun: [], burn: [], hero: [] };
+      const rec = (fn) => {
+        const r = { y0: 1e9, y1: -1e9, x0: 1e9, x1: -1e9 };
+        const put = (m, x, y, w, h) => { r.x0 = Math.min(r.x0, m.e + x); r.x1 = Math.max(r.x1, m.e + x + w); r.y0 = Math.min(r.y0, m.f + y); r.y1 = Math.max(r.y1, m.f + y + h); };
+        const d0 = c.drawImage, f0 = c.fillRect;
+        c.drawImage = function (im, x, y, w, h) { put(this.getTransform(), x, y, w, h); };
+        c.fillRect = function (x, y, w, h) { put(this.getTransform(), x, y, w, h); };
+        try { fn(); } finally { c.drawImage = d0; c.fillRect = f0; }
+        return r;
+      };
+      const k = c.getTransform().a || 1;
+      for (const [i, key] of [[1, 'stun'], [0, 'burn']]) {
+        const e = game.enemies[i], box = enemyBox(e);
+        for (const t of [0.1, 0.4, 0.7, 1.0, 1.3, 2.2]) {
+          const r = rec(() => { VFX.frame(); VFX.status(c, e, box, 0, t); });
+          const m = c.getTransform();
+          out[key].push({ bottom: r.y1, head: m.d * (e.y - box.ay) + m.f, h: (r.y1 - r.y0) / m.d, w: (r.x1 - r.x0) / m.a, H: box.ay, W: box.w, n: Math.max(1, Math.round(1.2 * k)) });
+        }
+      }
+      for (const t of [0.1, 0.7, 1.3]) {   // tướng: đỉnh đầu 100
+        const r = rec(() => VFX.px.heroStun(c, 300, 100, t));
+        const m = c.getTransform();
+        out.hero.push({ bottom: r.y1, head: m.d * 100 + m.f, n: Math.max(1, Math.round(1.2 * k)) });
+      }
+      return out;
+    });
+    const above = (a) => a.every((g) => g.bottom <= g.head + g.n);
+    ok(above(geo.stun), 'vòng choáng quái nằm trên đỉnh bbox hình (không đè mặt) ' + JSON.stringify(geo.stun[0]));
+    ok(above(geo.hero), 'vòng choáng tướng nằm trên đỉnh đầu ' + JSON.stringify(geo.hero[0]));
+    ok(geo.burn.every((g) => g.h <= Math.max(10, g.H * 0.45)), 'lửa bỏng thấp (≤ 45% chiều cao quái) ' + JSON.stringify(geo.burn[0]));
+    ok(geo.burn.every((g) => g.w <= g.W * 0.9), 'lửa bỏng không rộng quá thân quái');
     ok(!chk.frac && !chk.smooth, 'trạng thái vẽ bám lưới điểm ảnh (toạ độ nguyên), không khử răng cưa');
     // đạn bay + hiệu ứng mỗi khung bằng pixel
     const fx = await page.evaluate(() => {
