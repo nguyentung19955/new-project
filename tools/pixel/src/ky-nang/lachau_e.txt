@@ -10,36 +10,37 @@ colors:
   e = dat-toi
   f = dat-sang
   g = cat
-  h = dong-toi
-  i = dong
-  j = dong-sang
-  k = vang-nghe
-  l = vang-sang
+  h = dong-sang
+  i = vang-sang
+  j = la-toi
+  k = la-sang
+  l = ngoc
+  m = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ajjjjjjjjjjkkjjjjjjjjjia
-ajiiiiiiiiiiiiiiiiiiiiha
-ajijjjjjjjjjjjjjjjjjjiha
-ajijeeeeeeeeeeeeeeeejiha
-ajijeeeeeeeeaaaaaeeejiha
-ajijeeeeeeaadddddaaejiha
-ajiaaaeeeaddbbcccddajiha
-ajigggaeadcbdddccccdaiha
-ajiaaaeeadbdddcccccbaiha
-ajijaaaadbddbbbbccccdiha
-akiagggadcddddbbdcccbika
-akijaaaadcccccddccccbika
-ajiaaaeadcccccccbcccbiha
-ajigggaabccccccbbbccbiha
-ajiaaaeeadcccccbbbdbaiha
-ajijeaaalbccccccdbdbaiha
-ajijalllglbbcccccdblaiha
-ajiaalggfaaabbbbbalgliha
-ajiffffffffffffffffffiha
-ajieefffeeeeeeeeeeefeiha
-ajiiiiiiiiiiiiiiiiiiiiha
-aihhhhhhhhhhkkhhhhhhhhha
+ammmmmmmmmmkkmmmmmmmmmla
+amllllllllllllllllllllja
+amlhhhhhhhhhhhhhhhhhhlja
+amlheeeeeeeeeeeeeeeehlja
+amlheeeeeeeeaaaaaeeehlja
+amlheeeeeeaadddddaaehlja
+amlaaaeeeaddbbcccddahlja
+amlgggaeadcbdddccccdalja
+amlaaaeeadbdddcccccbalja
+amlhaaaadbddbbbbccccdlja
+aklagggadcddddbbdcccblka
+aklhaaaadcccccddccccblka
+amlaaaeadcccccccbcccblja
+amlgggaabccccccbbbccblja
+amlaaaeeadcccccbbbdbalja
+amlheaaaibccccccdbdbalja
+amlhaiiigibbcccccdbialja
+amlaaiggfaaabbbbbaigilja
+amlfffffffffffffffffflja
+amleefffeeeeeeeeeeefelja
+amllllllllllllllllllllja
+aljjjjjjjjjjkkjjjjjjjjja
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

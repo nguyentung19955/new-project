@@ -1,40 +1,44 @@
-# Bụi Đá — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a cloud of rock dust
-name: Bụi Đá
+# Lực Sĩ Núi · E «Bụi Đá» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đám bụi / khói + viên sỏi
+name: Lực Sĩ Núi · E «Bụi Đá»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = sang
+  f = dat-toi
+  g = dat-sang
+  h = la-toi
+  i = la-sang
+  j = ngoc
+  k = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbgggebbbbbbbdca
-aedbbbbbbgffffebbbbbbdca
-aedbbbbbgffffffebbbbbdca
-aedbbbbgffffffffebbbbdca
-aedbbbgffffffffffebbbdca
-aedbbgffffffffffffebbdca
-aedbgffffffffffffffebdca
-aedbgffffffffffffffebdca
-aedbgffffffffffffffebdca
-aedbgffffffffffffffebdca
-aedbgffffffffffffffebdca
-aedbgffffffffffffffebdca
-aedbgffffffffffffffebdca
-aedbeeeeeeeeeeeeeeeebdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+akkkkkkkkkkiikkkkkkkkkja
+akjjjjjjjjjjjjjjjjjjjjha
+akjgggggggaagggggggggjha
+akjgffaafaddafffaaffgjha
+akjgfaddadecbafaddafgjha
+akjgadecbabbafadecbagjha
+akjgfabbadaaafaabbafgjha
+akjgffaadcccdaddaaafgjha
+akjgfaddaacccdccccdagjha
+akjgadcaddaccaaccccbajha
+aijadcadecbaaddacccbajia
+aijadccabbaadecbacbbajia
+akjgacccaaccabbaccbagjha
+akjgfabbccbbbaabaaafgjha
+akjgfaaabbaaabbaddafgjha
+akjgaddaaaaddaadecbagjha
+akjadecbaadecbaabbafgjha
+akjgabbaffabbaffaaffgjha
+akjgfaaffffaafffffffgjha
+akjggggggggggggggggggjha
+akjjjjjjjjjjjjjjjjjjjjha
+ajhhhhhhhhhhiihhhhhhhhha
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

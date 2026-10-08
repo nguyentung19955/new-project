@@ -1,41 +1,46 @@
-# Tên Xuyên Thấu — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: an arrow piercing through two shields
-name: Tên Xuyên Thấu
+# Xạ Thủ Văn Lang · Q «Tên Xuyên Thấu» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: mũi tên + khiên nhỏ + vệt tốc độ
+name: Xạ Thủ Văn Lang · Q «Tên Xuyên Thấu»
 size: 24x24
 colors:
   a = vien
-  b = khoi
+  b = sat-toi
   c = sat
   d = sat-sang
-  e = bac
-  f = dong-toi
-  g = dong
-  h = dong-sang
+  e = trang-xam
+  f = trang
+  g = sang
+  h = dat
+  i = dong-toi
+  j = dong
+  k = dong-sang
+  l = vang-nghe
+  m = vang-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbeeeeeecbgfa
-ahgbbbbbbbbbbbcddddcbgfa
-ahgbbbbbbbbbbbbcdddcbgfa
-ahgbbbbbbbbbbbbbeddcbgfa
-ahgbbbbbbbbbbbbbccdcbgfa
-ahgbbbbbbbbbbbbdbbccbgfa
-ahgbbbbbbbbbbbdbbbbcbgfa
-ahgbbbbbbbbbbdbbbbbbbgfa
-ahgbbbbbbbbbdbbbbbbbbgfa
-ahgbbbbbbbbdbbbbbbbbbgfa
-ahgbbbbbbbdbbbbbbbbbbgfa
-ahgbbbbbbdbbbbbbbbbbbgfa
-ahgbbbbbdbbbbbbbbbbbbgfa
-ahgbbbbdbbbbbbbbbbbbbgfa
-ahgbbbdbbbbbbbbbbbbbbgfa
-ahgbbdbbbbbbbbbbbbbbbgfa
-ahgbdbbbbbbbbbbbbbbbbgfa
-ahgdbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+akkkkkkkkkkllkkkkkkkkkja
+akjjjjjjjjjjjjjjjjjjjjia
+akjdddddddddddddaaaadjia
+akjdbbbbbbbbbbaaddddajia
+akjdbbbbbbbbbaddddccajia
+akjdbbbbbbbbbbadcccbajia
+akjdffffbbbbbbahcccbajia
+akjdbbbbbaaaaaaaacbadjia
+akjdbbbbakkkkkkababadjia
+akjdbbbbakjjljiabbabdjia
+aljgggggakjlmliabbbbdjla
+aljdbbbbakjjljiabbbbdjla
+akjdbbabaakjjiabbbbbdjia
+akjdbagahaajiabbbbbbdjia
+akjdfaghabbaabbbbbbbdjia
+akjdaghffabbbbbbbbbbdjia
+akjdahaaabbbbbbbbbbbdjia
+akjahaeebbbbbbbbbbbbdjia
+akjdabbbbbbbbbbbbbbbdjia
+akjddddddddddddddddddjia
+akjjjjjjjjjjjjjjjjjjjjia
+ajiiiiiiiiiilliiiiiiiiia
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

@@ -1,41 +1,44 @@
-# Mai Vàng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a golden turtle shell
-name: Mai Vàng
+# Thần Kim Quy · Q «Mai Vàng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: rùa vàng (mai)
+name: Thần Kim Quy · Q «Mai Vàng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = sat
-  d = sat-sang
-  e = bac
-  f = dong-toi
-  g = dong
-  h = dong-sang
+  b = sat-toi
+  c = sat-sang
+  d = dong-toi
+  e = dong
+  f = dong-sang
+  g = vang-nghe
+  h = vang-sang
+  i = reu-toi
+  j = reu
+  k = reu-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbbecbbbbbbbbgfa
-ahgbbbbbeeeddeecbbbbbgfa
-ahgbbbbeddddddddcbbbbgfa
-ahgbbbeddddddddddcbbbgfa
-ahgbbeddddddddddddcbbgfa
-ahgbbeddddddddddddcbbgfa
-ahgbbeddddddddddddcbbgfa
-ahgbeddddddddddddddcbgfa
-ahgbcdddddddaddddddcbgfa
-ahgbbeddddddddddddcbbgfa
-ahgbbeddddddddddddcbbgfa
-ahgbbcddddddddddddcbbgfa
-ahgbbbcddddddddddcbbbgfa
-ahgbbbbcddddddddcbbbbgfa
-ahgbbbbbcccddcccbbbbbgfa
-ahgbbbbbbbbccbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+affffffffffggfffffffffea
+afeeeeeeeeeeeeeeeeeeeeda
+afecccccccccccccccccceda
+afecbbbbbbbaabbbbbbbceda
+afecbbbbbbakkabbbbbbceda
+afecbbbbbakjjkabbbbbceda
+afecbaabaajjjiaaabaaceda
+afecakkahhhhhhhhhakkaeda
+afecakjheeeggeeeghjiaeda
+afecbahegggeegggegfaceda
+agecahgegggeegggegfacega
+agecageeeeeggeeeeefacega
+afecagegggeegggegefaceda
+afecagegggeeggggeffaceda
+afecbageeeeggeeeefaaceda
+afecakkffgggggggffkkaeda
+afecajiaaffffffaaajiaeda
+afecbaabbaajiaabbbaaceda
+afecbbbbbbbaabbbbbbbceda
+afecccccccccccccccccceda
+afeeeeeeeeeeeeeeeeeeeeda
+aeddddddddddggddddddddda
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

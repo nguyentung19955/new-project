@@ -1,40 +1,46 @@
-# Đắp Núi Chặn Nước — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: rising mountain wall
-name: Đắp Núi Chặn Nước
+# Sơn Tinh · E «Đắp Núi Chặn Nước» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: vách núi đá + sóng nước dưới đáy
+name: Sơn Tinh · E «Đắp Núi Chặn Nước»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = dat-toi
+  f = dat-sang
+  g = la-toi
+  h = la-sang
+  i = cham
+  j = nuoc
+  k = nuoc-sang
+  l = ngoc
+  m = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbgbbbbbbdca
-aedbbbbbbbbbbbgebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbgebbbgffebbbbdca
-aedbbbbbgebbgfffebbbbdca
-aedbbbbgffebgfffebbbbdca
-aedbbbbgfffgffffebbbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbgffffffffffffebbdca
-aedbbgffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbgffffffffffffffebdca
-aedgeeeeeeeeeeeeeeeebdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+ammmmmmmmmmhhmmmmmmmmmla
+amllllllllllllllllllllga
+amlfffffffffffffffffflga
+amlfeeeeeeeeeeeeeeeeflga
+amlfeeeaaaaeeaaaaeeeflga
+amlfeeaddddaaddddaeeflga
+amlfeadccccddccccbaeflga
+amlfadcccacccccaccbaflga
+amlfadccacccccccacbaflga
+amladddddddddddddddbalga
+ahladccacccccacccccbalha
+ahladcccacccccaccccbalha
+amladddddddddddddddbalga
+amladccccccacccccacbalga
+amladcccccacccccaccbalga
+amlacccacccccaccccbaalga
+amlabbakabbbakabbbakalga
+amlaaajkjaaajkjaaajkjlga
+amljjjjjjjjjjjjjjjjjjlga
+amliiiiiiiiiiiiiiiiiilga
+amllllllllllllllllllllga
+algggggggggghhggggggggga
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

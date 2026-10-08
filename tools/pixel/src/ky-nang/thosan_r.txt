@@ -1,44 +1,47 @@
-# Săn Mồi — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a hunting dagger with a red target mark
-name: Săn Mồi
+# Thợ Săn Rừng · R «Săn Mồi» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: dao găm săn + tâm ngắm
+name: Thợ Săn Rừng · R «Săn Mồi»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = trang-xam
-  d = trang
+  b = sat
+  c = sat-sang
+  d = bac
   e = sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = la
-  j = la-ma
-  k = la-sang
+  f = dat-toi
+  g = dat
+  h = dat-sang
+  i = dong
+  j = vang-nghe
+  k = vang-sang
+  l = son-sang
+  m = la-toi
+  n = la-ma
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbkkkkkibbbbbbgfa
-ahgbbbbkkjjjjjjkibbbbgfa
-ahgbbbkjjjjjjjjjjibbbgfa
-ahgbbkjjjeeeeecjjjibbgfa
-ahgbbkjjeddddddcjjibbgfa
-ahgbkjjeddjjjjddcjjibgfa
-ahgbkjjedjjjjjjdcjjibgfa
-ahgbkjjedjjjjjjdcjjibgfa
-ahgbkjjedjjjjjjdcjjibgfa
-ahgbkjjedjjjjjjdcjjibgfa
-ahgbijjcddjjjjddcjjibgfa
-ahgbbkjjcddddddcjjibbgfa
-ahgbbijjjccccccjjjibbgfa
-ahgbbbijjjjjjjjjjibbbgfa
-ahgbbbbiijjjjjjiibbbbgfa
-ahgbbbbbbiiiiiibbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+alkkkkkkkkkllkkkkkkkkkla
+akjjjjjjjjjjjjjjjjjjjjia
+akjnnnnnnnnlnnnnnaannjia
+akjnmmmmmmmlmmmmaddanjia
+akjnmmmmmmllllladebanjia
+akjnmmmmllmlmmallcbanjia
+akjnmmmlmmmmmadelbamnjia
+akjnmmlmmmmmadecblmmnjia
+akjnmmlmmmmadecbalmmnjia
+akjnmlmmaaadecbammlmnjia
+aljnmlmajjdecbammlllljla
+aljllllajkjcbammmmlmnjla
+akjnmlmmajkjammmmmlmnjia
+akjnmlmahgjkjammmlmmnjia
+akjnmmlhgaajjammmlmmnjia
+akjnmallammaammmlmmmnjia
+akjnahgallmmlmmlmmmmnjia
+akjaafgammlllllmmmmmnjia
+akjnaaammmmmlmmmmmmmnjia
+akjnnnnnnnnnlnnnnnnnnjia
+akjjjjjjjjjjjjjjjjjjjjia
+aliiiiiiiiiilliiiiiiiila
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

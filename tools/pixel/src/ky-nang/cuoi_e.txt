@@ -1,44 +1,45 @@
-# Cây Đa Bay — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Cây đa thần mọc giữa trận: hồi máu tướng, làm chậm quái
-name: Cây Đa Bay
+# Chú Cuội · E «Cây Đa Bay» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: cây đa + gió + trăng khuyết
+name: Chú Cuội · E «Cây Đa Bay»
 size: 24x24
 colors:
   a = vien
-  b = khoi
+  b = sang
   c = dat-toi
   d = dat
   e = dat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = la
-  j = la-ma
-  k = la-sang
+  f = vang-sang
+  g = la-toi
+  h = la
+  i = la-ma
+  j = la-sang
+  k = ngoc
+  l = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbkkkkkkkibbbbbgfa
-ahgbbbkkjjjjjjjjkibbbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbkjjjjjjjjjjjjjjibgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbkjjjjjjjjjjjjjjibgfa
-ahgbbijjjjjjjjjjjjibbgfa
-ahgbbbiiiiiiiiiiiibbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbccccbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+alllllllllljjlllllllllka
+alkkkkkkkkkkkkkkkkkkkkga
+alkiiiiiiiiiiiiiiiiiikga
+alkiggggaaaggaaaaaaaikga
+alkiggaajjjaajjjjafaikga
+alkibajjiiijjiiiijagikga
+alkiajiiiiiiiiiiiiiaikga
+alkajiiiiiiiiiiiiiihakga
+alkajiiiiiiiiiiiiiihakga
+alkaiiiiiiiiiiiiiihhakga
+ajkiahhhihdhdhhhihhaikja
+ajkigaadaaeddaaadaagikja
+alkiggadaaeddagadaggikga
+alkigadaaeedddagadagikga
+alkigadaaeddddagadagikga
+alkbbbaaaeddddaagaggikga
+alkiggaeeddddddcagggikga
+alkigacddcccddddcaggikga
+alkiggaaaaaaaaaaagggikga
+alkiiiiiiiiiiiiiiiiiikga
+alkkkkkkkkkkkkkkkkkkkkga
+akggggggggggjjggggggggga
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

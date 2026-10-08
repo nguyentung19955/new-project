@@ -1,41 +1,48 @@
-# Dao Phát Rẫy — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: machete with ember
-name: Dao Phát Rẫy
+# Chàng Đốt Nương · Q «Dao Phát Rẫy» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: dao phát rẫy + nổ va chạm
+name: Chàng Đốt Nương · Q «Dao Phát Rẫy»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = son
-  g = lua
-  h = lua-sang
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = sang
+  f = dat-toi
+  g = dat
+  h = dat-sang
+  i = dong-toi
+  j = dong
+  k = dong-sang
+  l = vang-nghe
+  m = vang-sang
+  n = son-toi
+  o = son-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbhggfbbbbbbbdca
-aedbbbbbbbhgggfbbbbbbdca
-aedbbbbbbhgggggfbbbbbdca
-aedbbbbbbhggggggfbbbbdca
-aedbbbbbhgggggggfbbbbdca
-aedbbbbhgggggggggfbbbdca
-aedbbhhgggggggggggfbbdca
-aedbhggggggggggggggfbdca
-aedhgggggggggggggggfbdca
-aedbfgggggggggggggfbbdca
-aedbbhgggggggggggfbbbdca
-aedbbfgggggggggggfbbbdca
-aedbbbfgggggggggfbbbbdca
-aedbbbbfffffffffbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+akkkkkkkkkkllkkkkkkkkkja
+akjjjjjjjjjjjjjjjjjjjjia
+akjoooooooooooooooooojia
+akjonnnnnnnnnnnaannnojia
+akjonnnnnnnnnaaddannojia
+akjonnnnnnnaaddccbanojia
+akjonnnnnaaddecccbanojia
+akjonnnaaddeccccbannojia
+akjonnaddecccccbannnojia
+akjonadeccccccbannnnojia
+aljoadecccaccbannnnnojla
+aljoadeccaabbannnnnnojla
+akjonaeeahgaannnnnnnojia
+akjonealheannnnnnnnnojia
+akjonnlmlannnnnnnnnnojia
+akjoelmemlennnnnnnnnojia
+akjoahlmlnnnnnnnnnnnojia
+akjafealnennnnnnnnnnojia
+akjoaanennnnnnnnnnnnojia
+akjoooooooooooooooooojia
+akjjjjjjjjjjjjjjjjjjjjia
+ajiiiiiiiiiilliiiiiiiiia
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

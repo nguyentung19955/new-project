@@ -1,41 +1,47 @@
-# Lửa Nương — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: fire line on a river
-name: Lửa Nương
+# Chàng Đốt Nương · W «Lửa Nương» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: ruộng lúa + lửa dưới đáy
+name: Chàng Đốt Nương · W «Lửa Nương»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = son
-  g = lua
-  h = lua-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = sang
+  f = dat-toi
+  g = dat
+  h = dat-sang
+  i = cat
+  j = vang-sang
+  k = son-toi
+  l = son-sang
+  m = lua
+  n = lua-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbhggfbbbbbbbdca
-aedbbbbbbbhgggfbbbbbbdca
-aedbbbbbbhgggggfbbbbbdca
-aedbbbbbbhggggggfbbbbdca
-aedbbbbbhgggggggfbbbbdca
-aedbbbbhgggggggggfbbbdca
-aedbbhhgggggggggggfbbdca
-aedbhggggggggggggggfbdca
-aedhgggggggggggggggfbdca
-aedbfgggggggggggggfbbdca
-aedbbhgggggggggggfbbbdca
-aedbbfgggggggggggfbbbdca
-aedbbbfgggggggggfbbbbdca
-aedbbbbfffffffffbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adcllllllllllllllllllcba
+adclkkkkkkkkkkkkkkkklcba
+adclkkakkkakkkakkkaklcba
+adclkajakajakajakajalcba
+adclajijajijajijajijacba
+adclahihahihahihahihacba
+adcahhhhhhhhhhhhhhhhacba
+adcajaaajaaajaaajaaalcba
+aecaijajijajijajijajacea
+aecaihahihahihahihahacea
+adcaggggggggggggggggacba
+adclaajaaajaaajaaajalcba
+adclajijajijajijajijacba
+adclaaihahahahiaahiaacba
+adcaamaffamaffamafamacba
+adclanmaaanmaaanmaanmcba
+adcanmnaanmnaanmnanmncba
+adcnmnmnnmnmnnmnmnmnmcba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

@@ -2372,6 +2372,22 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 235 — chặn vuốt về trang trước (tester đạt)
+
+- Tắt overscroll, chặn vuốt mép 24px; Back: đóng bảng / trong trận hỏi "Rời trận?" / menu bấm 2 lần mới thoát.
+
+## Phiên bản 234 — sửa nút Gọi sớm (tester đạt)
+
+- #nextwaves pointer-events:none cũ chặn chạm nút Gọi sớm → #nextwaves.early bấm được; dải thường vẫn chạm xuyên xuống bản đồ.
+
+## Phiên bản 233 — ẩn chợ khi mở bảng (tester đạt)
+
+- Mở bảng toàn màn (Túi đồ, Kỹ năng, Tiến hoá, Lò đúc, Bách khoa, Cài đặt, Ấn phù, Anh Hùng) → chợ, Hợp thể/Khoá/↻, cột nút phải ẩn hẳn; đóng → hiện lại.
+
+## Phiên bản 232 — icon kỹ năng riêng từng chiêu (tester đạt)
+
+- 240 icon kỹ năng: khung theo phím (Q đồng, W bạc, E ngọc, R vàng), nền theo hành, hình chính riêng theo nội dung chiêu; không còn trùng trong cùng tướng.
+
 ## Phiên bản 231 — tướng pixel dễ phân biệt (tester đạt)
 
 - 15 tướng đổi màu chủ đạo/dấu hiệu riêng (Lực Sĩ, Đắp Đê, Chăn Trâu, Tre, Chuông Đồng, Xạ Thủ, Giáo Đồng, Thầy Lang, Tiên Dung, Thổ Công, Mặt Trời, Lạc Hầu, An Tiêm, Chử Đồng Tử…): 19 cặp giống nhau → 0 (tools/pixel/do-giong-tuong.py).
@@ -2753,6 +2769,26 @@ Người dùng chọn phương án 4: máu quái tăng dần theo đợt + hạ 
   nạp sẵn → menu hiện ~0,6 s (trước ~1,4 s, ngang ?pixel=0). (2) chợ: chân dung pixel mọi tướng nạp + giải mã sẵn vào bộ đệm chợ
   (ui.preloadMarket) ngay sau lô cuối → đổi ↻ không nháy thẻ trống.
 
+## claude/icon-ky-nang-rieng — Mỗi kỹ năng một icon pixel riêng (sửa lỗi "đồ hoạ skill lặp ở nhiều tướng")
+
+- **Lỗi:** 200 icon kỹ năng pixel do tool sinh (claude/xuat-goi-pixel) chỉ có ~15 hình chung (núi, giọt nước, ngọn lửa, lá…) → cả
+  chục tướng trùng hình. Nay **mỗi chiêu một hình riêng**, nhìn là đoán được chiêu và tướng.
+- **Bộ ghép mới `tools/ve-pixel-ky-nang.js`** (dùng chung trang tools/ve-pixel.html và CLI): icon 24×24 = khung theo phím
+  (**Q đồng · W bạc · E ngọc · R vàng + ngọc son 4 góc**, cùng khuôn 40 bản vẽ tay) + nền theo hành (kim sắt · mộc lá · thủy chàm · hỏa son ·
+  thổ đất) + hình chính (~170 hình vẽ tay dạng lưới ký tự: vũ khí / vật của tướng — rìu đồng, nỏ, lẫy nỏ, đàn nguyệt, chuông, trống, vỏ
+  dừa, nón lá, mái chèo, xiên cá, đèn trời, bánh chưng… — hoặc hành động: mưa tên, lốc xoáy, sét đánh đỉnh núi, đê vỡ) + hình phụ nhỏ rải
+  (mưa dưa, mưa thóc, kim độc…) + tối đa 2 hiệu ứng (nổ, toả sáng, sóng, lửa, sao choáng, dấu hồi máu, sóng âm, vệt chém…).
+- **Bảng thiết kế 200 chiêu** `tools/build-ky-nang-spec.js` → sinh `tools/pixel/spec/ky-nang.json`. 40 bản vẽ tay (10 tướng) giữ nguyên
+  hình, chỉ tô lại khung theo phím W / E / R.
+- **Kiểm trùng tự động** `node tools/kiem-ky-nang.js --anh tong-quan.png`: lỗi khi cùng tướng trùng hình chính, hai icon bất kỳ giống
+  ≥ 50% điểm ảnh phần hình (bỏ khung + nền), hoặc cùng tướng trùng dáng ≥ 85%; in ảnh tổng theo tướng. Hiện cặp giống nhất (ngoài hai
+  bản vẽ tay trống đồng Q/R) < 50%.
+- Đã nạp vào game (`--nap --ghi-de`: assets/pixel/ky-nang, js/pixel/ky-nang.js) + gói `tools/pixel/goi/ky-nang.zip`.
+- Test mới `tests/ve-pixel/ky-nang.test.js`: spec khớp bảng, đủ Q W E R cho 60 tướng, không trùng, khung đúng phím, ảnh trong game khớp tool.
+## claude/an-cho-kho-do — Mở Túi đồ / bảng toàn màn thì ẩn hẳn thanh chợ
+- Lỗi báo: vào Kho đồ (Túi đồ) vẫn thấy thanh Triệu hồi (chợ) ở dưới. Trước đây chợ chỉ bị bảng `#screen` (z-index 10) đè lên — dễ lộ khi thứ tự lớp đổi.
+- Sửa: `ui.watchToasts` (đã theo dõi `hidden` của mọi bảng) bật lớp `#wrap.panel-open` khi có bảng toàn màn mở (Túi đồ, Cây kỹ năng, Tiến hoá, Lò đúc, Bách khoa, Anh Hùng, Ấn phù, Cài đặt, Phần thưởng, Kết quả…). CSS ẩn hẳn `#deck` (chợ + Hợp thể/Khoá/↻), `#fuse-strip`, `#auto-btns`, `#btn-moc`, `#nextwaves`, `#trash`, `#more` (visibility + không nhận chạm). Đóng bảng → bỏ lớp → hiện lại đúng trạng thái. Không đụng lớp `dragging-hero` (sửa lỗi kẹt chợ v213 giữ nguyên).
+- Test: `tests/an-cho-kho-do/` (844×390 pixel + ?pixel=0, 1920×934, 667×375): mở từng bảng → chợ ẩn, đóng → chợ hiện, kéo tướng + mở túi rồi thả → chợ hiện, chạm thẻ vẫn mua được.
 ## claude/tuong-pixel-ro — Tướng pixel dễ phân biệt hơn trên sân
 
 - **Đo tự động:** `python3 tools/pixel/do-giong-tuong.py [--ten=-sau] [--nguong 0.72]` — so từng cặp tướng (khung idle, căn theo
@@ -2780,3 +2816,12 @@ Người dùng chọn phương án 4: máu quái tăng dần theo đợt + hạ 
 - Test: `node tests/an-cong-ky-nang/an-cong-ky-nang.test.js`.
 - Sửa thêm: kỹ năng hỗ trợ (khiên, buff, hồi máu — Kim Quy Q, Cây Đa của Cuội/Mẫu E…) chỉ dùng TRONG ĐỢT: sân hết quái (giữa hai đợt)
   thì không dùng dù tướng đang bị thương. Test: tests/sua-tam-skill (giữa hai đợt, tướng 30% máu → không kỹ năng hỗ trợ nào tung).
+- Theo tester: bỏ luật ẩn mọi phần tử con của chợ (chỉ ẩn khung ngoài, con tự ẩn theo); `closeScreen` bỏ lớp panel-open ngay khi đóng. Lỗi chập chờn của cho-tuong ("ảnh chưa sẵn sàng") khi chạy 6 test song song cũng xảy ra trên nhánh chính (1/6 lần), không do nhánh này; chạy lần lượt 5/5 đạt.
+- Lỗi gấp "Ấn GỌI SỚM không gọi được": KHÔNG do panel-open — bản v229 (trước khi gộp nhánh này) cũng không bấm được. Gốc: luật cũ `#nextwaves { … pointer-events: none }` (đầu style.css) đè `#ui > * { pointer-events: auto }` (cùng độ ưu tiên, viết sau thắng) → chạm/nhấp xuyên xuống bản đồ. Sửa: `#nextwaves.early { pointer-events: auto }` (dải thường vẫn cho chạm xuyên). Test `tests/goi-som/` (844×390 chuột + chạm, 1920×934): giữa đợt bấm Gọi sớm → đợt kế bắt đầu + toast vàng; sau khi mở/đóng Túi đồ; sau khi kéo tướng.
+
+## claude/chan-vuot-lui — Chơi trên web: vuốt không còn lỡ về trang trước
+- CSS: `html, body, #wrap` thêm `overscroll-behavior: none` (Chrome Android không vuốt ngang/kéo xuống để về trang/tải lại); `#wrap` `touch-action: none` (bảng cuộn vẫn cuộn như cũ).
+- Vuốt từ sát mép trái/phải (24px): chặn `touchstart`/`touchmove` ngang (passive:false) để Safari iOS khó bắt cử chỉ Quay lại; chạm vào nút/thẻ ở mép vẫn bấm được, vuốt dọc sát mép (cuộn bảng) không bị chặn.
+- Nút / cử chỉ Back trên web: luôn gài sẵn một mục lịch sử (gài lại ở lần chạm đầu). Back khi đang mở bảng → đóng bảng (như cũ); trong trận → **tạm dừng + hộp "Rời trận?"** (Ở lại = chạy tiếp, Rời trận = Dừng chơi; Back/Esc lần nữa = Ở lại); ở menu → nhắc "Thoát game?", bấm Back lần 2 trong 2 giây mới rời trang.
+- Đóng/tải lại trang khi đang trong trận: trình duyệt hỏi lại (beforeunload). Trong app Capacitor giữ hành vi cũ (chỉ đóng bảng).
+- Test: `node tests/chan-vuot-lui/chan-vuot-lui.test.js` (giả lập điện thoại hasTouch, 844×390 + dọc 390×844).

@@ -1,43 +1,44 @@
-# Cung Tên Vàng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a golden bow with a golden arrow
-name: Cung Tên Vàng
+# Thạch Sanh · W «Cung Tên Vàng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: cung + toả sáng
+name: Thạch Sanh · W «Cung Tên Vàng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = trang-xam
-  d = dat
-  e = dong-toi
-  f = dong
+  b = sat
+  c = sat-sang
+  d = bac
+  e = trang
+  f = sang
   g = dong-sang
-  h = la
-  i = la-ma
-  j = la-sang
+  h = vang-nghe
+  i = vang-sang
+  j = la-toi
+  k = la-ma
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-agggggggggggggggggggggea
-agffffffffffffffffffffea
-agfbbbbbbbjhbcbbbbbbbfea
-agfbbbbbbjhbbcbbbbbbbfea
-agfbbbbbjhbbbcbbbbbbbfea
-agfbbbbjhbbbbcbbbbbbbfea
-agfbbbjihbbbbcbbbbbbbfea
-agfbbbjhbbbbbcbbbbbbbfea
-agfbbbjhbbbbbcbbbbbbbfea
-agfbbjhbbbbbbcbbbjbbbfea
-agfbbjhbbbbbbcbbbjihbfea
-agfbdddddddddddddhddbfea
-agfbbjhbbbbbbcbbbbbbbfea
-agfbbhihbbbbbcbbbbbbbfea
-agfbbbjhbbbbbcbbbbbbbfea
-agfbbbhhbbbbbcbbbbbbbfea
-agfbbbbjhbbbbcbbbbbbbfea
-agfbbbbhihbbbcbbbbbbbfea
-agfbbbbbhihbbcbbbbbbbfea
-agfbbbbbbhhhbcbbbbbbbfea
-agffffffffffffffffffffea
-aeeeeeeeeeeeeeeeeeeeeeea
+addddddddddffdddddddddca
+adccccccccccccccccccccba
+adckkkkaaaaikkkkkkkkkcba
+adckijaiiiiaajjjjjjikcba
+adckjijaaihhgaajjjijkcba
+adckjjhjjaaahhgaahjjkcba
+adckjjjhaeaaaahhgajjkcba
+adckjjjjaeajhaahhgajkcba
+adckjiijaeajjjhahhgakcba
+adckjjjhaeajjjjhahhakcba
+afckjjjjaeajjjjjaihakcfa
+afcihhhhaeajjjjjaihahcfa
+adckjjjhaeajjjjaihgakcba
+adckjiijaeajjaaihgajkcba
+adckjjjjaeaaaaihgajjkcba
+adckjjjhjaaaihgaajjjkcba
+adckjjhaaihhgaajjhjjkcba
+adckjiaiiiiaajijjjijkcba
+adckijjaaaajhjjjjjjikcba
+adckkkkkkkkkhkkkkkkkkcba
+adccccccccccccccccccccba
+acbbbbbbbbbbffbbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

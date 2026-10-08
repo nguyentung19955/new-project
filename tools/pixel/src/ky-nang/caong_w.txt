@@ -1,43 +1,49 @@
-# Hộ Thuyền — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: shield over a small boat
-name: Hộ Thuyền
+# Thần Cá Ông · W «Hộ Thuyền» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: thuyền buồm + vòm che chắn
+name: Thần Cá Ông · W «Hộ Thuyền»
 size: 24x24
 colors:
   a = vien
-  b = dat-toi
-  c = dat
-  d = dat-sang
-  e = dong-toi
-  f = dong
-  g = dong-sang
-  h = cham
-  i = nuoc
+  b = sat
+  c = sat-sang
+  d = bac
+  e = sang
+  f = dat
+  g = dat-sang
+  h = cat
+  i = vang-sang
+  j = son
+  k = son-sang
+  l = cham-toi
+  m = cham-sang
+  n = nuoc-sang
+  o = troi
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-agggggggggggggggggggggea
-agffffffffffffffffffffea
-agfffffffffbffffffffffea
-agfffffffffbffffffffffea
-agfffffffffbhfffffffffea
-agfffffffffbhfffffffffea
-agfffffffffbihffffffffea
-agfffffffffbiihfffffffea
-agfffffffffbiihfffffffea
-agfffffffffbiiihffffffea
-agfffffffffbiiiihfffffea
-agfffffffffbhhhhhfffffea
-aefffffffffbffffffffffea
-.aeddddddddbdddddddbeea.
-..aabcccccccccccccbeaa..
-....adcccccccccccbea....
-....abbbbbbbbbbbbba.....
-.....aaeffffffffea......
-.......aeffffffea.......
-........aeffffea........
-.........aeffea.........
-..........aeea..........
-...........aa...........
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adcmmmmmmmmmmmmmmmmmmcba
+adcmllllllllllllllllmcba
+adcmllllloooooolllllmcba
+adcmllloolananloolllmcba
+adcmllollnafkalnlollmcba
+adcmloonllafkkalnlolmcba
+adcmolnlllafkkkalnolmcba
+adcmolllllafkkkkallomcba
+aecmonllllafkkkkkalomcea
+aecmolllllafjjjjjalomcea
+adcmoaaaaaafaaaaaaaomcba
+adcaiiiiiiiiiiiiiiiiacba
+adcmaihhhhahhhhahhgamcba
+adcmlaihhhhhhhhhhgalmcba
+adcmllaggggggggggallmcba
+adcmlllaaaaaaaaaalllmcba
+adcmllllllllllllllllmcba
+adcmmmmmmmmmmmmmmmmmmcba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
+.aaaaaaaaaaaaaaaaaaaaaa.
 end
 
 anim main fps=1 once

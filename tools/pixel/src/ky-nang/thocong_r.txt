@@ -1,40 +1,45 @@
-# Thổ Địa Hiển Linh — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: glowing earth god shrine
-name: Thổ Địa Hiển Linh
+# Thổ Công · R «Thổ Địa Hiển Linh» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: miếu thổ công + lấp lánh
+name: Thổ Công · R «Thổ Địa Hiển Linh»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = trang
+  c = sang
+  d = dat-toi
+  e = dat
+  f = dat-sang
+  g = dong
+  h = vang-nghe
+  i = vang-sang
+  j = son-toi
+  k = son
+  l = son-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbgbbbbbbdca
-aedbbbbbbbbbbbgebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbgebbbgffebbbbdca
-aedbbbbbgebbgfffebbbbdca
-aedbbbbgffebgfffebbbbdca
-aedbbbbgfffgffffebbbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbgffffffffffffebbdca
-aedbbgffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbgffffffffffffffebdca
-aedgeeeeeeeeeeeeeeeebdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+aliiiiiiiiilliiiiiiiiila
+aihhhhhhhhhhhhhhhhhhhhga
+aihffffffffffffffffffhga
+aihfdbdddddaadddddddfhga
+aihfbcbdddahhaddddadfhga
+aihfabaddalkkladdalafhga
+aihfallaalkkkklaalbafhga
+aihfdalllkkkkkkllbcbfhga
+aihfdalkkkkkkkkkkjbdfhga
+aihfallllllllllllllafhga
+alhfdaafeeeeeeeefaadfhla
+alhfddafeahiihaefaddfhla
+aihfddafeaiiiiaefaddfhga
+aihfddafeaiiiiaefaddfhga
+aihfddafeahiihaefaddfhga
+aihfdaddddddddddddadfhga
+aihfafeeeeeeeeeebedafhga
+aihfdaaaaaaaaaabcbadfhga
+aihfddddddddddddbdddfhga
+aihffffffffffffffffffhga
+aihhhhhhhhhhhhhhhhhhhhga
+alggggggggggllggggggggla
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

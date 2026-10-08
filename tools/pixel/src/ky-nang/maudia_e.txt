@@ -1,40 +1,45 @@
-# Rễ Thiêng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: sacred roots
-name: Rễ Thiêng
+# Mẫu Địa · E «Rễ Thiêng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: rễ cây + lấp lánh
+name: Mẫu Địa · E «Rễ Thiêng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = trang
+  c = sang
+  d = dat-toi
+  e = dat-sang
+  f = dong-sang
+  g = vang-nghe
+  h = vang-sang
+  i = la-toi
+  j = la-sang
+  k = ngoc
+  l = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbgbbbbbbdca
-aedbbbbbbbbbbbgebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbgebbbgffebbbbdca
-aedbbbbbgebbgfffebbbbdca
-aedbbbbgffebgfffebbbbdca
-aedbbbbgfffgffffebbbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbgffffffffffffebbdca
-aedbbgffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbgffffffffffffffebdca
-aedgeeeeeeeeeeeeeeeebdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+alllllllllljjlllllllllka
+alkkkkkkkkkkkkkkkkkkkkia
+alkeeeeeeeeeeeeeeeeeekia
+alkedbddddddddddddddekia
+alkebcbdddaaaaddddddekia
+alkedbdddahggfadddddekia
+alkedddddahggfadddbdekia
+alkeddddahggggfadbcbekia
+alkedddahggggggfadbdekia
+alkeddahggaggaggfaddekia
+ajkedahgfaaggaafgfadekja
+ajkeahgfaahgfadafgfaekja
+alkeagfaahgfahadafgaekia
+alkeagaahgfaahgadagaekia
+alkeagaagfaddagadagaekia
+alkeafaagadddagfaafaekia
+alkedadafaddddafbdadekia
+alkeddddaddddddbcbddekia
+alkeddddddddddddbdddekia
+alkeeeeeeeeeeeeeeeeeekia
+alkkkkkkkkkkkkkkkkkkkkia
+akiiiiiiiiiijjiiiiiiiiia
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

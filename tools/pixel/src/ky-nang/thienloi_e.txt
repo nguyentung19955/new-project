@@ -1,44 +1,48 @@
-# Búa Thiên Lôi — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Giáng búa sấm lên quái nhiều máu nhất: x4 sát thương +2
-name: Búa Thiên Lôi
+# Thiên Lôi · E «Búa Thiên Lôi» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: búa + tia sét nhỏ
+name: Thiên Lôi · E «Búa Thiên Lôi»
 size: 24x24
 colors:
   a = vien
-  b = khoi
+  b = sat-toi
   c = sat
   d = sat-sang
-  e = bac
+  e = sang
   f = dat-toi
   g = dat
   h = dat-sang
-  i = dong-toi
-  j = dong
-  k = dong-sang
+  i = dong-sang
+  j = vang-nghe
+  k = vang-sang
+  l = la-toi
+  m = la-sang
+  n = ngoc
+  o = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-akkkkkkkkkkkkkkkkkkkkkia
-akjjjjjjjjjjjjjjjjjjjjia
-akjbbbbbbbbbbbbebbbbbjia
-akjbbbbbbbbbbeedcbbbbjia
-akjbbbbbbbbbeddddcbbbjia
-akjbbbbbbbbeddddddcbbjia
-akjbbbbbbbbcddddddcbbjia
-akjbbbbbbbbbedddddccbjia
-akjbbbbbbbbbcddddcbbbjia
-akjbbbbbbbbbbcddcbbbbjia
-akjbbbbbbbbbhfccbbbbbjia
-akjbbbbbbbbhgfbbbbbbbjia
-akjbbbbbbbhgfbbbbbbbbjia
-akjbbbbbbhgfbbbbbbbbbjia
-akjbbbbbhgfbbbbbbbbbbjia
-akjbbbbhgfbbbbbbbbbbbjia
-akjbbbbhfbbbbbbbbbbbbjia
-akjbbbhgfbbbbbbbbbbbbjia
-akjbbhgfbbbbbbbbbbbbbjia
-akjbbffbbbbbbbbbbbbbbjia
-akjjjjjjjjjjjjjjjjjjjjia
-aiiiiiiiiiiiiiiiiiiiiiia
+aoooooooooommooooooooona
+aonnnnnnnnnnnnnnnnnnnnla
+aondddddddddddddddaadnla
+aondbbaaaaaaaaaaaakkanla
+aondbaddddddddddakjadnla
+aondadeccccccccakjjianla
+aondadeccaccccacaajianla
+aondadecccccccccajiadnla
+aondbabbbbbdhbbbaiabdnla
+aondbbaaaadhgbaaaabbdnla
+amndbbbbbbahgabbbbbbdnma
+amndbbbbbbahgabbbbbbdnma
+aondbbbbbbahgabbbbbbdnla
+aondbbbbbbahgabbbbbbdnla
+aondbbbbbbahgabbbbbbdnla
+aondbbbbbbahgabbbbbbdnla
+aondbbbbbaafgaabbbbbdnla
+aondbbbbbbaaaabbbbbbdnla
+aondbbbbbbbbbbbbbbbbdnla
+aonddddddddddddddddddnla
+aonnnnnnnnnnnnnnnnnnnnla
+anllllllllllmmllllllllla
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

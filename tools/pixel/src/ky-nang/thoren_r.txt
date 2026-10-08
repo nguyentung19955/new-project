@@ -1,41 +1,45 @@
-# Nổ Lò Rèn — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: exploding furnace
-name: Nổ Lò Rèn
+# Thợ Rèn Đông Sơn · R «Nổ Lò Rèn» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đe rèn + lửa dưới đáy + toả sáng
+name: Thợ Rèn Đông Sơn · R «Nổ Lò Rèn»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = son
-  g = lua
-  h = lua-sang
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = sang
+  f = dong
+  g = vang-nghe
+  h = vang-sang
+  i = son-toi
+  j = son-sang
+  k = lua
+  l = lua-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbhggfbbbbbbbdca
-aedbbbbbbbhgggfbbbbbbdca
-aedbbbbbbhgggggfbbbbbdca
-aedbbbbbbhggggggfbbbbdca
-aedbbbbbhgggggggfbbbbdca
-aedbbbbhgggggggggfbbbdca
-aedbbhhgggggggggggfbbdca
-aedbhggggggggggggggfbdca
-aedhgggggggggggggggfbdca
-aedbfgggggggggggggfbbdca
-aedbbhgggggggggggfbbbdca
-aedbbfgggggggggggfbbbdca
-aedbbbfgggggggggfbbbbdca
-aedbbbbfffffffffbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+ajhhhhhhhhhjjhhhhhhhhhja
+ahggggggggggggggggggggfa
+ahgjjjjjjjjhjjjjjjjjjgfa
+ahgjhiiiiiigiiiiiiihjgfa
+ahgjihiiihigiihiiihijgfa
+ahgjaaaaaaaaaaaaagiijgfa
+ahgadddddddddddddaaajgfa
+ahgjaecccccccccccdddagfa
+ahgjiadcccccccccccbajgfa
+ahgjiiaadccccccbaaaijgfa
+ajgjiiiiadccccbaiiiijgja
+ajghggggadccccbaggggggja
+ahgjiiiadccccccbaiiijgfa
+ahgjihadccccccccbahijgfa
+ahgjiiabbbbbbbbbbaiijgfa
+ahgjiaiaaaaaaaaaaiiajgfa
+ahgjakaiiakagiakagakagfa
+ahgjalkaialkaialkaalkgfa
+ahgalklaalklaalklalklgfa
+ahglklkllklkllklklklkgfa
+ahggggggggggggggggggggfa
+ajffffffffffjjffffffffja
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

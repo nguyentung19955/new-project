@@ -1,41 +1,42 @@
-# Ngàn Đèn Bay — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: many flying lanterns
-name: Ngàn Đèn Bay
+# Cô Thả Đèn Trời · R «Ngàn Đèn Bay» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đèn trời nhỏ + trăng khuyết
+name: Cô Thả Đèn Trời · R «Ngàn Đèn Bay»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
+  b = dong
+  c = vang-nghe
+  d = vang-sang
+  e = son-toi
   f = son
-  g = lua
-  h = lua-sang
+  g = son-sang
+  h = lua
+  i = lua-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbhggfbbbbbbbdca
-aedbbbbbbbhgggfbbbbbbdca
-aedbbbbbbhgggggfbbbbbdca
-aedbbbbbbhggggggfbbbbdca
-aedbbbbbhgggggggfbbbbdca
-aedbbbbhgggggggggfbbbdca
-aedbbhhgggggggggggfbbdca
-aedbhggggggggggggggfbdca
-aedhgggggggggggggggfbdca
-aedbfgggggggggggggfbbdca
-aedbbhgggggggggggfbbbdca
-aedbbfgggggggggggfbbbdca
-aedbbbfgggggggggfbbbbdca
-aedbbbbfffffffffbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+agdddddddddggdddddddddga
+adccccccccccccccccccccba
+adcggggggggggggggggggcba
+adcgeeaaaaeeeeaaaaaagcba
+adcgeaiiiiaeeaiiiiaagcba
+adcgaihddhfaaihddhfagcba
+adcgaihddhfaaihddhfagcba
+adcgaihddhfaaihddhfagcba
+adcgeaihhfiiiiihhfaagcba
+adcgeeaihihddhfihaeegcba
+agcgeeeaaihddhfaaeeegcga
+agcgeeaaaihddhfaaaaegcga
+adcgeaiiiiihhfaiiiiagcba
+adcgaihddhfihaihddhfacba
+adcgaihddhfaaaihddhfacba
+adcgaihddhfaeaihddhfacba
+adcgeaihhfaeeeaihhfagcba
+adcgeeaihaeeeeeaihaegcba
+adcgeeeaaeeeeeeeaaeegcba
+adcggggggggggggggggggcba
+adccccccccccccccccccccba
+agbbbbbbbbbbggbbbbbbbbga
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

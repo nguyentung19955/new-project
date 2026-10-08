@@ -4,41 +4,39 @@ name: Ông Táo · R «Cá Chép Hóa Rồng»
 size: 24x24
 colors:
   a = vien
-  b = dong-toi
-  c = dong
-  d = dong-sang
-  e = vang-nghe
-  f = vang-sang
-  g = son-toi
-  h = son
-  i = son-sang
-  j = lua
-  k = lua-sang
+  b = dong
+  c = vang-nghe
+  d = vang-sang
+  e = son-toi
+  f = son
+  g = son-sang
+  h = lua
+  i = lua-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-addddddddddeedddddddddca
+agdddddddddggdddddddddga
 adccccccccccccccccccccba
-adciaffaaiiiiiiiiiiiicba
-adcigaciiaagggggggggicba
-adcigaihhiiaagggggggicba
-adciaihghhhiiaagggggicba
-adcaihgfihhhhiiaaaaaacba
-adcaghhihhhhhhgffffkkcba
-adciaihhghhhhggkjjjfkcba
-adciaghgkihhgaaakkkkkcba
-aecigaggigggagggaaaaacea
-aeciggafffffaaggggggicea
-adciggacffecffagggggicba
-adcigggafeccfcfaggggicba
-adciggggacefccffagggicba
-adcigggggaccefeefaggicba
-adciggggggaacceecfagicba
-adciggggggggacccccfaicba
-adcigggggggakkaakakkacba
-adciiiiiiiakhaiiaiahacba
+adcgaddaaggggggggggggcba
+adcgeabggaaeeeeeeeeegcba
+adcgeagffggaaeeeeeeegcba
+adcgagfefffggaaeeeeegcba
+adcagfedgffffggaaaaaacba
+adcaeffgffffffeddddiicba
+adcgagffeffffeeihhhdicba
+adcgaefeigffeaaaiiiiicba
+agcgeaeegeeeaeeeaaaaacga
+agcgeeadddddaaeeeeeegcga
+adcgeeabddcbddaeeeeegcba
+adcgeeeadcbbdbdaeeeegcba
+adcgeeeeabcdbbddaeeegcba
+adcgeeeeeabbcdccdaeegcba
+adcgeeeeeeaabbccbdaegcba
+adcgeeeeeeeeabbbbbdagcba
+adcgeeeeeeeaiiaaiaiiacba
+adcgggggggaifaggagafacba
 adccccccccccccccccccccba
-acbbbbbbbbbbeebbbbbbbbba
+agbbbbbbbbbbggbbbbbbbbga
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

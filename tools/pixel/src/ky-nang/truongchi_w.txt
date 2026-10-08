@@ -4,11 +4,11 @@ name: Trương Chi · W «Lời Ca Sông Nước»
 size: 24x24
 colors:
   a = vien
-  b = trang
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
+  b = sat
+  c = sat-sang
+  d = bac
+  e = trang
+  f = sang
   g = cham-toi
   h = cham
   i = nuoc
@@ -17,28 +17,28 @@ colors:
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeffeeeeeeeeeda
-aeddddddddddddddddddddca
-aediiiiiiaaaaaaaiiiiidca
-aediggggabbbbbbbagggidca
-aediggggabbbbbbbagggidca
-aediggggabaaaaabagggidca
-aediggggabagggabagggidca
-aedigggaabaggaabagggidca
-aediggabbbagabbbagggidca
-aedigabbbbaabbbbagggidca
-afdigabbbagabbbagaggidfa
-afdiggaaagggaaagajagidfa
-aedaaajagaaagggajajaidca
-aedkkaaaakkkaaaakkaaadca
-aedjjkkkkjjjkkkkjjkkkdca
-aedjijjjjiiijjjjiijjjdca
-aedjiiiiiiiiiiiiiiiihdca
-aedjiiiiiiiiiiiiiiiihdca
-aedjiiiiiiiiiiiiiiiihdca
-aedhhhhhhhhhhhhhhhhhhdca
-aeddddddddddddddddddddca
-adccccccccccffccccccccca
+addddddddddffdddddddddca
+adccccccccccccccccccccba
+adciiiiiiaaaaaaaiiiiicba
+adciggggaeeeeeeeagggicba
+adciggggaeeeeeeeagggicba
+adciggggaeaaaaaeagggicba
+adciggggaeagggaeagggicba
+adcigggaaeaggaaeagggicba
+adciggaeeeagaeeeagggicba
+adcigaeeeeaaeeeeagggicba
+afcigaeeeagaeeeagaggicfa
+afciggaaagggaaagajagicfa
+adcaaajagaaagggajajaicba
+adckkaaaakkkaaaakkaaacba
+adcjjkkkkjjjkkkkjjkkkcba
+adcjijjjjiiijjjjiijjjcba
+adcjiiiiiiiiiiiiiiiihcba
+adcjiiiiiiiiiiiiiiiihcba
+adcjiiiiiiiiiiiiiiiihcba
+adchhhhhhhhhhhhhhhhhhcba
+adccccccccccccccccccccba
+acbbbbbbbbbbffbbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

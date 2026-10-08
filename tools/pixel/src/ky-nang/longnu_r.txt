@@ -1,43 +1,48 @@
-# Long Cung Nổi Sóng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: underwater palace waves
-name: Long Cung Nổi Sóng
+# Long Nữ Động Đình · R «Long Cung Nổi Sóng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: cung điện hai tầng mái + sóng nước dưới đáy
+name: Long Nữ Động Đình · R «Long Cung Nổi Sóng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = trang-xam
-  d = dat
-  e = dong-toi
-  f = dong
-  g = dong-sang
-  h = cham
-  i = nuoc
-  j = nuoc-sang
+  b = dong
+  c = vang-nghe
+  d = vang-sang
+  e = son-toi
+  f = son
+  g = son-sang
+  h = la-toi
+  i = cham-toi
+  j = cham
+  k = cham-sang
+  l = nuoc
+  m = nuoc-sang
+  n = ngoc
+  o = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-agggggggggggggggggggggea
-agffffffffffffffffffffea
-agfbbbbbbbjhbcbbbbbbbfea
-agfbbbbbbjhbbcbbbbbbbfea
-agfbbbbbjhbbbcbbbbbbbfea
-agfbbbbjhbbbbcbbbbbbbfea
-agfbbbjihbbbbcbbbbbbbfea
-agfbbbjhbbbbbcbbbbbbbfea
-agfbbbjhbbbbbcbbbbbbbfea
-agfbbjhbbbbbbcbbbjbbbfea
-agfbbjhbbbbbbcbbbjihbfea
-agfbdddddddddddddhddbfea
-agfbbjhbbbbbbcbbbbbbbfea
-agfbbhihbbbbbcbbbbbbbfea
-agfbbbjhbbbbbcbbbbbbbfea
-agfbbbhhbbbbbcbbbbbbbfea
-agfbbbbjhbbbbcbbbbbbbfea
-agfbbbbhihbbbcbbbbbbbfea
-agfbbbbbhihbbcbbbbbbbfea
-agfbbbbbbhhhbcbbbbbbbfea
-agffffffffffffffffffffea
-aeeeeeeeeeeeeeeeeeeeeeea
+agdddddddddggdddddddddga
+adccccccccccccccccccccba
+adckkkkkkkkkkkkkkkkkkcba
+adckiiiiiiiiiiiiiiiikcba
+adckiiiiiiiaaiiiiiiikcba
+adckiiiiiiaccaiiiiiikcba
+adckiiaiiagffgaiiaiikcba
+adckiagaagffffgaagaikcba
+adckiaggffffffffggaikcba
+adckiaaaonnaannoaaaikcba
+agckagaaonnaannoaagakcga
+agckagggffffffffgggakcga
+adckiagffffffffffeaikcba
+adckiaonnnnnnnnnnoaikcba
+adckiaonannaannanoaikcba
+adckiaoaannaaananoaakcba
+adckahamahhhamahhhamacba
+adcaaalmlaaalmlaaalmlcba
+adcllllllllllllllllllcba
+adcjjjjjjjjjjjjjjjjjjcba
+adccccccccccccccccccccba
+agbbbbbbbbbbggbbbbbbbbga
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

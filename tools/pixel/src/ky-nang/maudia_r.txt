@@ -1,40 +1,43 @@
-# Núi Mẹ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: mother mountain
-name: Núi Mẹ
+# Mẫu Địa · R «Núi Mẹ» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: ba đỉnh núi Tản + toả sáng
+name: Mẫu Địa · R «Núi Mẹ»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
+  b = dat-toi
+  c = dat-sang
   d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  e = vang-nghe
+  f = vang-sang
+  g = son-sang
+  h = la-toi
+  i = la
+  j = la-ma
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbgbbbbbbdca
-aedbbbbbbbbbbbgebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbgebbbgffebbbbdca
-aedbbbbbgebbgfffebbbbdca
-aedbbbbgffebgfffebbbbdca
-aedbbbbgfffgffffebbbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbgffffffffffffebbdca
-aedbbgffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbgffffffffffffffebdca
-aedgeeeeeeeeeeeeeeeebdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+agfffffffffggfffffffffga
+afeeeeeeeeeeeeeeeeeeeeda
+afeccccccccfccccccccceda
+afecfbbbbbbebbbbbbbfceda
+afecbfbbbfbabbfbbbfbceda
+afecbbebbfajabfbbebbceda
+afecbbbebajijabbebbbceda
+afecbbabajiiihaebabbceda
+afecbajaajiiiihaajabceda
+afecajijjiiiiaihjijaceda
+agecajiijiiiiiajiiihaega
+ageajiiiaiiiiiaiiiihaega
+afeajiiiiaiiiiiaiiihaeda
+afeajiiiiiiiiiiiaiihaeda
+afeaiiiiiiiiiiiiiihhaeda
+afeahhhhhhhhhhhhhhhhaeda
+afecaaaaaaaaaaaaaaaaceda
+afecbfbbbfbbebfbbbfbceda
+afecfbbbbbbbebbbbbbfceda
+afecccccccccecccccccceda
+afeeeeeeeeeeeeeeeeeeeeda
+agddddddddddggddddddddga
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

@@ -1,41 +1,44 @@
-# Bách Thảo — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: herb bundle
-name: Bách Thảo
+# Viêm Đế Thần Nông · W «Bách Thảo» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bó lá thuốc
+name: Viêm Đế Thần Nông · W «Bách Thảo»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = son
-  g = lua
-  h = lua-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = sang
+  f = dat
+  g = son-toi
+  h = son-sang
+  i = la-toi
+  j = la
+  k = la-ma
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbhggfbbbbbbbdca
-aedbbbbbbbhgggfbbbbbbdca
-aedbbbbbbhgggggfbbbbbdca
-aedbbbbbbhggggggfbbbbdca
-aedbbbbbhgggggggfbbbbdca
-aedbbbbhgggggggggfbbbdca
-aedbbhhgggggggggggfbbdca
-aedbhggggggggggggggfbdca
-aedhgggggggggggggggfbdca
-aedbfgggggggggggggfbbdca
-aedbbhgggggggggggfbbbdca
-aedbbfgggggggggggfbbbdca
-aedbbbfgggggggggfbbbbdca
-aedbbbbfffffffffbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adchhhhhhhhhhhhhhhhhhcba
+adchgagggggagggggagghcba
+adchakagggakagggakaghcba
+adchajkagakjkagakjaghcba
+adchakjjaajjjaajjkaghcba
+adchgakjjajjjajjkagghcba
+adchgaijjjajajjjiagghcba
+adchggaijjjiajjiaggghcba
+aechgggaijjjjjiagggghcea
+aechggggaijjjiaggggghcea
+adchgggggaffffaggggghcba
+adchgggggajjjjaggggghcba
+adchgggggajiijaggggghcba
+adchggggajaiiajagggghcba
+adchgggaiaaiiaaiaggghcba
+adchggggaggaaggagggghcba
+adchgggggggggggggggghcba
+adchhhhhhhhhhhhhhhhhhcba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

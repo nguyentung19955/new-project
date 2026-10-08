@@ -1,41 +1,48 @@
-# Cày Lửa — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: fire plough
-name: Cày Lửa
+# Viêm Đế Thần Nông · E «Cày Lửa» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: cái cày + lửa dưới đáy
+name: Viêm Đế Thần Nông · E «Cày Lửa»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = son
-  g = lua
-  h = lua-sang
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = dat-toi
+  f = dat
+  g = dat-sang
+  h = son-toi
+  i = son-sang
+  j = lua
+  k = lua-sang
+  l = la-toi
+  m = la-sang
+  n = ngoc
+  o = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbhggfbbbbbbbdca
-aedbbbbbbbhgggfbbbbbbdca
-aedbbbbbbhgggggfbbbbbdca
-aedbbbbbbhggggggfbbbbdca
-aedbbbbbhgggggggfbbbbdca
-aedbbbbhgggggggggfbbbdca
-aedbbhhgggggggggggfbbdca
-aedbhggggggggggggggfbdca
-aedhgggggggggggggggfbdca
-aedbfgggggggggggggfbbdca
-aedbbhgggggggggggfbbbdca
-aedbbfgggggggggggfbbbdca
-aedbbbfgggggggggfbbbbdca
-aedbbbbfffffffffbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+aoooooooooommooooooooona
+aonnnnnnnnnnnnnnnnnnnnla
+aoniiiiiiiiiiiiiiiiiinla
+aonihhhhhhhhhhhhhhahinla
+aonihhhhhhhhhhhhhagainla
+aonihhhhhhhhhhhhagfainla
+aonihhhhhhhhhhhhagfainla
+aoniahhhhhhhhhhhagfainla
+aonagaahhhhhhhhhagfainla
+aoniaggaahhhhhhagffainla
+amnihagggaaahhagffeainma
+amnihhaaggggaagfffeainma
+aonihhhhaaagggfffeahinla
+aonihhhhhhhaagfffeahinla
+aonihhhhhhhadcccfeahinla
+aonihahhhhadcccaaahainla
+aoniajahhajaccajahajanla
+aoniakjaaakjabakjaakjnla
+aonakjkaakjkaakjkakjknla
+aonkjkjkkjkjkkjkjkjkjnla
+aonnnnnnnnnnnnnnnnnnnnla
+anllllllllllmmllllllllla
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

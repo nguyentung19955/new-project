@@ -1,44 +1,44 @@
-# Nghê Vồ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Lao vào 3 quái yếu nhất, x2 sát thương +1
-name: Nghê Vồ
+# Nghê Đồng · Q «Nghê Vồ» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đầu nghê đồng + vệt tốc độ
+name: Nghê Đồng · Q «Nghê Vồ»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = sat
-  d = sat-sang
-  e = bac
-  f = dat-toi
-  g = dat
-  h = dat-sang
-  i = dong-toi
-  j = dong
-  k = dong-sang
+  b = sat-toi
+  c = sat-sang
+  d = trang-xam
+  e = trang
+  f = sang
+  g = dong-toi
+  h = dong
+  i = dong-sang
+  j = vang-nghe
+  k = son
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-akkkkkkkkkkkkkkkkkkkkkia
-akjjjjjjjjjjjjjjjjjjjjia
-akjbbbbbbbbbbbbebbbbbjia
-akjbbbbbbbbbbeedcbbbbjia
-akjbbbbbbbbbeddddcbbbjia
-akjbbbbbbbbeddddddcbbjia
-akjbbbbbbbbcddddddcbbjia
-akjbbbbbbbbbedddddccbjia
-akjbbbbbbbbbcddddcbbbjia
-akjbbbbbbbbbbcddcbbbbjia
-akjbbbbbbbbbhfccbbbbbjia
-akjbbbbbbbbhgfbbbbbbbjia
-akjbbbbbbbhgfbbbbbbbbjia
-akjbbbbbbhgfbbbbbbbbbjia
-akjbbbbbhgfbbbbbbbbbbjia
-akjbbbbhgfbbbbbbbbbbbjia
-akjbbbbhfbbbbbbbbbbbbjia
-akjbbbhgfbbbbbbbbbbbbjia
-akjbbhgfbbbbbbbbbbbbbjia
-akjbbffbbbbbbbbbbbbbbjia
-akjjjjjjjjjjjjjjjjjjjjia
-aiiiiiiiiiiiiiiiiiiiiiia
+aiiiiiiiiiijjiiiiiiiiiha
+aihhhhhhhhhhhhhhhhhhhhga
+aihcccccccccccccccccchga
+aihcbbbbbbbbbbbbbbbbchga
+aihcbbbabaabbaababbbchga
+aihcbbaiaiiaaiiaiabbchga
+aihceaihihihhihihiabchga
+aihcaijhhhhhhhhhhjgachga
+aihcaihhhefahefahhgachga
+aihcaihjhhhhhhhhjhgachga
+ajhfaihhhhaaaahhhhgachja
+ajhcaijhhhhhhhhhhjgachja
+aihcbahaffffffffagabchga
+aihcbahakgkgkgkgagabchga
+aihceaihaaaaaaaahgabchga
+aihcbbajhhhhhhhhjabbchga
+aihcbbbagjgjgjgjabbbchga
+aihcbdddaaaaaaaabbbbchga
+aihcbbbbbbbbbbbbbbbbchga
+aihcccccccccccccccccchga
+aihhhhhhhhhhhhhhhhhhhhga
+ahggggggggggjjggggggggga
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

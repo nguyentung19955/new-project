@@ -1,41 +1,47 @@
-# Ném Dưa Hấu — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a watermelon slice flying
-name: Ném Dưa Hấu
+# Mai An Tiêm · Q «Ném Dưa Hấu» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: miếng dưa hấu + vệt tốc độ
+name: Mai An Tiêm · Q «Ném Dưa Hấu»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = la
-  g = la-ma
-  h = la-sang
+  b = trang-xam
+  c = trang
+  d = sang
+  e = dong-toi
+  f = dong
+  g = dong-sang
+  h = vang-nghe
+  i = son-toi
+  j = son
+  k = son-sang
+  l = la-toi
+  m = la
+  n = la-ma
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbgbdca
-aedbbbbbbbbbbbbbbhfbbdca
-aedbbbbbbbbbbbbbhgfbbdca
-aedbbbbbbbbbbbhhgfbbbdca
-aedbbbbbbbbbhhgggfbbbdca
-aedbbbbbbbhhggggfbbbbdca
-aedbbbbbbhggggggfbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbhggggggfbbbbbbdca
-aedbbbbhggggggfbbbbbbdca
-aedbbbhggggggfbbbbbbbdca
-aedbbbhggggggfbbbbbbbdca
-aedbbhgggggffbbbbbbbbdca
-aedbbhgggffbbbbbbbbbbdca
-aedbhggffbbbbbbbbbbbbdca
-aedbfffbbbbbbbbbbbbbbdca
-aedgbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+agggggggggghhgggggggggfa
+agffffffffffffffffffffea
+agfnnnnnnnnnnnnnnnnnnfea
+agfnllllllllllllllllnfea
+agfnaaaaaaaaaaaaaaaanfea
+agfakkkkkkkkkkkkkkkkafea
+agfajjajjjjjjajjjajiafea
+agfnajjjjjajjjjajjianfea
+agfnajajjjjjjjjjjjianfea
+agfnlajjjajjjajjjialnfea
+ahfddaccjjjjjjjccialnfha
+ahfnllaccccccccccallnfha
+agfnllannnncccnnnallnfea
+agfnlllammmnnnmmalllnfea
+agfnccclalmmmmmlalllnfea
+agfnlllllaalllaallllnfea
+agfnlllllllaaallllllnfea
+agfnlbbbllllllllllllnfea
+agfnllllllllllllllllnfea
+agfnnnnnnnnnnnnnnnnnnfea
+agffffffffffffffffffffea
+afeeeeeeeeeehheeeeeeeeea
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

@@ -1,40 +1,43 @@
-# Bọc Trăm Trứng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a big golden egg sack with many small eggs inside
-name: Bọc Trăm Trứng
+# Âu Cơ · R «Bọc Trăm Trứng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bọc trăm trứng + lấp lánh
+name: Âu Cơ · R «Bọc Trăm Trứng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = trang
+  c = sang
+  d = dat-toi
+  e = dat-sang
+  f = dong
+  g = dong-sang
+  h = vang-nghe
+  i = vang-sang
+  j = son-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbgbbbbbbdca
-aedbbbbbbbbbbbgebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbgebbbgffebbbbdca
-aedbbbbbgebbgfffebbbbdca
-aedbbbbgffebgfffebbbbdca
-aedbbbbgfffgffffebbbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbgffffffffffffebbdca
-aedbbgffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbgffffffffffffffebdca
-aedgeeeeeeeeeeeeeeeebdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+ajiiiiiiiiijjiiiiiiiiija
+aihhhhhhhhhhhhhhhhhhhhfa
+aiheeeeeeeaaaaeeeeeeehfa
+aihedbdddaiiiiadddddehfa
+aihebcbdaiahhaiaddddehfa
+aihedbddaaihhiaaddddehfa
+aihedddaiihhhhiiadbdehfa
+aiheddaihhhhhhhhibcbehfa
+aihedaihcchhcchhhgbdehfa
+aiheaihcbbchcbbchhgaehfa
+ajheaihcbbccbbbchhgaehja
+ajhaihcchcbbchcchhhgahja
+aihaihhcbbchcbbchhhgahfa
+aihaihhcbbccbbbchhggahfa
+aiheahhccchcbbchhhgaehfa
+aiheaghhhhhhccchhggaehfa
+aihedagghhhhhhhgbaadehfa
+aiheddaagggggggbcbddehfa
+aiheddddaaaaaaaabdddehfa
+aiheeeeeeeeeeeeeeeeeehfa
+aihhhhhhhhhhhhhhhhhhhhfa
+ajffffffffffjjffffffffja
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

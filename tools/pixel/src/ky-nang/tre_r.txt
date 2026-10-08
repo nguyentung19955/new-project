@@ -1,41 +1,46 @@
-# Quét Tre — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Quét bụi tre quanh mình: đánh mọi quái trong tầm, x2 sát thương +1
-name: Quét Tre
+# Dũng Sĩ Tre Làng · R «Quét Tre» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: chổi tre + xoáy
+name: Dũng Sĩ Tre Làng · R «Quét Tre»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = la
-  g = la-ma
-  h = la-sang
+  b = trang-xam
+  c = trang
+  d = sang
+  e = dat
+  f = dat-sang
+  g = cat
+  h = dong
+  i = vang-nghe
+  j = vang-sang
+  k = son-sang
+  l = la-toi
+  m = la-ma
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbhhhfbbbbbbbdca
-aedbbbbbbhggggfbbbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbhggggggggggfbbbdca
-aedbbhggggggggggggfbbdca
-aedbhggggggggggggggfbdca
-aedbhggggggggggggggfbdca
-aedbhggggggggggggggfbdca
-aedbhggggggggggggggfbdca
-aedbhggggggggggggggfbdca
-aedbhggggggggggggggfbdca
-aedbhggggggggggggggfbdca
-aedbffffffffffffffffbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+akjjjjjjjjjkkjjjjjjjjjka
+ajiiiiiiiiiiiiiiiiiiiiha
+ajimmmmmmmmmmmmmmmaamiha
+ajimllllddddddddlafeaiha
+ajimlllddlllllllafeamiha
+ajimlddllllllllafealmiha
+ajimldllllllllafeadlmiha
+ajimdllllblllafealldmiha
+ajimdlllblllafeallldmiha
+ajimdlclbllaaaaalcldmiha
+akimdlclbaajggjalcldmika
+akimdlcaajjgggfalcldmika
+ajimdlajjgggagfalcldmiha
+ajimdajggagaggfalcldmiha
+ajimajgagagagfalclldmiha
+ajiajagagagafalclldlmiha
+ajiagagagagfacccllllmiha
+ajiafafafafallllllllmiha
+ajimaaaaaaalllllllllmiha
+ajimmmmmmmmmmmmmmmmmmiha
+ajiiiiiiiiiiiiiiiiiiiiha
+akhhhhhhhhhhkkhhhhhhhhka
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

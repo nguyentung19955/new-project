@@ -1,40 +1,47 @@
-# Đắp Đê Chắn Lũ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: earth shield wall
-name: Đắp Đê Chắn Lũ
+# Người Đắp Đê · E «Đắp Đê Chắn Lũ» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: con đê + sóng nước dưới đáy
+name: Người Đắp Đê · E «Đắp Đê Chắn Lũ»
 size: 24x24
 colors:
   a = vien
-  b = dong-toi
-  c = dong
-  d = dong-sang
-  e = vang-nghe
-  f = vang-sang
+  b = dat-toi
+  c = dat
+  d = dat-sang
+  e = la-toi
+  f = la
+  g = la-ma
+  h = la-sang
+  i = cham
+  j = nuoc
+  k = nuoc-sang
+  l = ngoc
+  m = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-adddddddddddddddddddddba
-adccccccccccccccccccccba
-adcffffffffffffffffdccba
-adcfeeeeeeeeeeeeeeedccba
-adcfeeeeeeeeeeeeeeedccba
-adcfeeeeeeeeeeeeeeedccba
-adcfeeeeeeeeeeeeeeedccba
-adcfeeeeeeeeeeeeeeedccba
-adcfeeeeeeeeeeeeeeedccba
-adcfeeeeeeeeeeeeeeedccba
-adcfeeeeeeeeeeeeeeedccba
-adcdeeeeeeeeeeeeeeedccba
-abccdeeeeeeeeeeeeedcccba
-.abbcdeeeeeeeeeeedccbba.
-..aabcddeeeeeeeddccbaa..
-....abccdeeeeedcccba....
-.....abccdeeedcccba.....
-......abccdedcccba......
-.......abccdcccba.......
-........abccccba........
-.........abccba.........
-..........abba..........
-...........aa...........
+ammmmmmmmmmhhmmmmmmmmmla
+amllllllllllllllllllllea
+amlddddddddddddddddddlea
+amldbbbbbbbbbbbbbbbbdlea
+amldbbbbbbbbbbbbbbbbdlea
+amldbbbbaaaaaaaabbbbdlea
+amldbbbagfgfgfgfabbbdlea
+amldbbagfffffffffabbdlea
+amldbbadcccccccccabbdlea
+amldbadccccccccccbabdlea
+ahldbadaccaccacccbabdlha
+ahldadccccccccccccbadlha
+amldadaccaccaccaccbadlea
+amladccccccccccccccbalea
+amlaccccccccccccccbbalea
+amlabbbabbbbbabbbbbaalea
+amldaaakaaaaakaaaaakalea
+amlaaajkjaaajkjaaajkjlea
+amljjjjjjjjjjjjjjjjjjlea
+amliiiiiiiiiiiiiiiiiilea
+amllllllllllllllllllllea
+aleeeeeeeeeehheeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
 end
 
 anim main fps=1 once

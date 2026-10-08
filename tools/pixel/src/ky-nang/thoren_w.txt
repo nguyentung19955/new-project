@@ -1,41 +1,43 @@
-# Lò Lửa Đông Sơn — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: forge fire
-name: Lò Lửa Đông Sơn
+# Thợ Rèn Đông Sơn · W «Lò Lửa Đông Sơn» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: lò rèn
+name: Thợ Rèn Đông Sơn · W «Lò Lửa Đông Sơn»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = son
-  g = lua
-  h = lua-sang
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = bac
+  f = sang
+  g = vang-sang
+  h = son-toi
+  i = son-sang
+  j = lua
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
+aeeeeeeeeeeffeeeeeeeeeda
 aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbhggfbbbbbbbdca
-aedbbbbbbbhgggfbbbbbbdca
-aedbbbbbbhgggggfbbbbbdca
-aedbbbbbbhggggggfbbbbdca
-aedbbbbbhgggggggfbbbbdca
-aedbbbbhgggggggggfbbbdca
-aedbbhhgggggggggggfbbdca
-aedbhggggggggggggggfbdca
-aedhgggggggggggggggfbdca
-aedbfgggggggggggggfbbdca
-aedbbhgggggggggggfbbbdca
-aedbbfgggggggggggfbbbdca
-aedbbbfgggggggggfbbbbdca
-aedbbbbfffffffffbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
+aediiiiiiiiiiiiiiiiiidca
+aedihhhhhhhhhhhhhhhhidca
+aedihhhhhhaaaahhhhhhidca
+aedihhhhaaddddaahhhhidca
+aedihhhaddccccddahhhidca
+aedihhadcccaccccdahhidca
+aedihadcacccccaccbahidca
+aedihadcccaaaacccbahidca
+afdiadccaajjjaacccbaidfa
+afdiadcajjgggjjaccbaidfa
+aediadcajggfggjaccbaidca
+aediadcajgggggjaccbaidca
+aedadddddddddddddddbadca
+aedacccccccccccccccbadca
+aedabbbbbbbbbbbbbbbbadca
+aediaaaaaaaaaaaaaaaaidca
+aedihhhhhhhhhhhhhhhhidca
+aediiiiiiiiiiiiiiiiiidca
 aeddddddddddddddddddddca
-acccccccccccccccccccccca
+adccccccccccffccccccccca
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

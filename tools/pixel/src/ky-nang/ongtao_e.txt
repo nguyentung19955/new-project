@@ -11,39 +11,39 @@ colors:
   f = dat-toi
   g = dat
   h = dat-sang
-  i = dong-toi
-  j = dong
-  k = dong-sang
-  l = vang-nghe
-  m = vang-sang
-  n = son-toi
-  o = son
-  p = son-sang
+  i = vang-sang
+  j = son-toi
+  k = son
+  l = son-sang
+  m = la-toi
+  n = la-sang
+  o = ngoc
+  p = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-akkkkkkkkkkllkkkkkkkkkja
-akjjjjjjjjjjjjjjjjjjjjia
-akjppppppppamapppppppjia
-akjpnnnnnnammmannnnnpjia
-akjpnannnamamamannanpjia
-akjpagannnaamaannagapjia
-akjahhhaaaaaaaaaahhhajia
-akjahgfeeeeeeeeeehgfajia
-akjahgfcbbbbbbedchgfajia
-akjahgfeeeeeeeddchgfajia
-aljahgfcbbbbbbedchgfajla
-aljahgfeeeeeeeddchgfajla
-akjahgfcbbbbbbccchgfajia
-akjahgfeeeeeeopochgfajia
-akjahgfcbbbbcooochgfajia
-akjahgfceeeeceeechgfajia
-akjafffaaaaaaaaaafffajia
-akjpaeannnnnnnnnnageajia
-akjaeannnnnnnnnnnaeaejia
-akjpapppppppppppppapajia
-akjjjjjjjjjjjjjjjjjjjjia
-ajiiiiiiiiiilliiiiiiiiia
+appppppppppnnpppppppppoa
+apooooooooooooooooooooma
+apollllllllaiallllllloma
+apoljjjjjjaiiiajjjjjloma
+apoljajjjaiaiaiajjajloma
+apolagajjjaaiaajjagaloma
+apoahhhaaaaaaaaaahhhaoma
+apoahgfeeeeeeeeeehgfaoma
+apoahgfcbbbbbbedchgfaoma
+apoahgfeeeeeeeddchgfaoma
+anoahgfcbbbbbbedchgfaona
+anoahgfeeeeeeeddchgfaona
+apoahgfcbbbbbbccchgfaoma
+apoahgfeeeeeeklkchgfaoma
+apoahgfcbbbbckkkchgfaoma
+apoahgfceeeeceeechgfaoma
+apoafffaaaaaaaaaafffaoma
+apolaeajjjjjjjjjjageaoma
+apoaeajjjjjjjjjjjaeaeoma
+apolalllllllllllllalaoma
+apooooooooooooooooooooma
+aommmmmmmmmmnnmmmmmmmmma
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

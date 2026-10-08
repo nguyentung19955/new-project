@@ -1,40 +1,45 @@
-# Mạch Đất Hồi Sinh — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: underground spring
-name: Mạch Đất Hồi Sinh
+# Mẫu Địa · W «Mạch Đất Hồi Sinh» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: mạch nước trồi + dấu hồi máu
+name: Mẫu Địa · W «Mạch Đất Hồi Sinh»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = sang
+  f = dat-toi
+  g = dat
+  h = dat-sang
+  i = la-sang
+  j = cham
+  k = nuoc
+  l = nuoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbgbbbbbbdca
-aedbbbbbbbbbbbgebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbgebbbgffebbbbdca
-aedbbbbbgebbgfffebbbbdca
-aedbbbbgffebgfffebbbbdca
-aedbbbbgfffgffffebbbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbgffffffffffffebbdca
-aedbbgffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbgffffffffffffffebdca
-aedgeeeeeeeeeeeeeeeebdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adchhhhhhhhhhhhhhhhhhcba
+adchffffffffffffffffhcba
+adchfffffaffffafffffhcba
+adchfffaalaaaalaafffhcba
+adchffalaallllaalaffhcba
+adchfffaalkkkkjaafffhcba
+adchfffalekkkkkjafffhcba
+adchfffalekkkkkjafffhcba
+aechffffalkkkkjaffffhcea
+aechfffffalkkjafffffhcea
+adchaaaaaalkkjaaaaaahcba
+adcahhhhhhlkkjhhhhhhacba
+adcagggggglkkjggaaagacba
+adcaggaggggkkggaaiaaacba
+adcafggggggggggaiiiaacba
+adchaaaaaaaaaaaaaiaahcba
+adchffffffffffffaaafhcba
+adchhhhhhhhhhhhhhhhhhcba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

@@ -1,41 +1,46 @@
-# Sóng Bạc — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: silver wave
-name: Sóng Bạc
+# Mẫu Thoải · Q «Sóng Bạc» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: sóng cuộn + lấp lánh
+name: Mẫu Thoải · Q «Sóng Bạc»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = cham
-  g = nuoc
-  h = nuoc-sang
+  b = sat
+  c = sat-sang
+  d = trang
+  e = sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = vang-nghe
+  j = cham-toi
+  k = cham-sang
+  l = nuoc-sang
+  m = troi
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbgbbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbhggggggggggfbbbdca
-aedbbbfggggggggggfbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbfggggggggfbbbbdca
-aedbbbbbfggggggfbbbbbdca
-aedbbbbbbffggffbbbbbbdca
-aedbbbbbbbbffbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+ahhhhhhhhhhiihhhhhhhhhga
+ahggggggggggggggggggggfa
+ahgkkkkkkkkkaaaakkkkkgfa
+ahgkjdjjjjaammmmajjjkgfa
+ahgkdedjjammllllmajjkgfa
+ahgkjdjjamlccccllmajkgfa
+ahgkjjjamlccbbblcldakgfa
+ahgkjjamlccbaabmcdedkgfa
+ahgkjjalccbajjamlcdakgfa
+ahgkjamccbajjjamclajkgfa
+aigkjalccajjjjallajjkgia
+aigkamlcbajjjjjaajjjkgia
+ahgkalccbajjjjammajjkgfa
+ahgamlcccbaaaamllmajkgfa
+ahgalcccccbmmllcclmakgfa
+ahgalccccccccccccclmagfa
+ahgaccccccccccccdcccagfa
+ahgabbbbbbbbbbbdedbbagfa
+ahgkaaaaaaaaaaaadaaakgfa
+ahgkkkkkkkkkkkkkkkkkkgfa
+ahggggggggggggggggggggfa
+agffffffffffiifffffffffa
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

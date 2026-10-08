@@ -4,40 +4,40 @@ name: Lạc Long Quân · E «Gầm Biển»
 size: 24x24
 colors:
   a = vien
-  b = dong-toi
-  c = dong
-  d = dong-sang
-  e = vang-nghe
-  f = cham-toi
-  g = cham
-  h = nuoc
-  i = nuoc-sang
-  j = troi
+  b = la-toi
+  c = la-sang
+  d = cham-toi
+  e = cham
+  f = nuoc
+  g = nuoc-sang
+  h = troi
+  i = ngoc
+  j = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-addddddddddeedddddddddca
-adccccccccccccccccccccba
-adchhhhhhhhhaaaahhhhhcba
-adchfffffaaaiiiiaaffhcba
-adchffffaiiigggjiiafhcba
-adchfffaihhgjjjjjjiahcba
-adchffaihggjjjjijjgahcba
-adchfaihgjgjjiigiijiacba
-adchaihgjhgjhaaagghgacba
-adcaihhghigjafffagiahcba
-aecaihgjihgafffffaafhcea
-aecihgjhihgafffffffahcea
-adcihghiihgaffffffajacba
-adcigjiiihhiaffffaiaacba
-adcihiiihhhhiaaaaaaajcba
-adcigiiihhhhhiiiiiaaacba
-adcigiihhhhhhhhhhhiiicba
-adcgiihhhhhhhhhhhhhhgcba
-adcgiggggggggggggggggcba
-adcaaaaaaaaaaaaaaaaaacba
-adccccccccccccccccccccba
-acbbbbbbbbbbeebbbbbbbbba
+ajjjjjjjjjjccjjjjjjjjjia
+ajiiiiiiiiiiiiiiiiiiiiba
+ajifffffffffaaaafffffiba
+ajifdddddaaaggggaaddfiba
+ajifddddagggeeehggadfiba
+ajifdddagffehhhhhhgafiba
+ajifddagfeehhhhghheafiba
+ajifdagfehehhggegghgaiba
+ajifagfehfehfaaaeefeaiba
+ajiagffefgehadddaegafiba
+aciagfehgfeadddddaadfica
+acigfehfgfeadddddddafica
+ajigfefggfeaddddddahaiba
+ajigehgggffgaddddagaaiba
+ajigfgggffffgaaaaaaahiba
+ajigegggfffffgggggaaaiba
+ajigeggfffffffffffgggiba
+ajieggffffffffffffffeiba
+ajiegeeeeeeeeeeeeeeeeiba
+ajiaaaaaaaaaaaaaaaaaaiba
+ajiiiiiiiiiiiiiiiiiiiiba
+aibbbbbbbbbbccbbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

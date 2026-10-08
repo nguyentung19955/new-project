@@ -5,44 +5,43 @@ size: 24x24
 colors:
   a = vien
   b = bac
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
-  h = lua-sang
-  i = cham-toi
-  j = cham
-  k = nuoc
-  l = nuoc-sang
-  m = troi
-  n = ngoc
-  o = ngoc-sang
+  c = dong
+  d = vang-nghe
+  e = vang-sang
+  f = son-sang
+  g = lua-sang
+  h = cham-toi
+  i = cham
+  j = nuoc
+  k = nuoc-sang
+  l = troi
+  m = ngoc
+  n = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeffeeeeeeeeeda
+afeeeeeeeeeffeeeeeeeeefa
 aeddddddddddddddddddddca
-aedkabbaakkkkkkkkkkkkdca
-aedkiabooaaiiiiiiiiikdca
-aedkiaonnooaaiiiiiiikdca
-aedkaonjnnnooaaiiiiikdca
-aedaonjhonnnnooaaaiikdca
-aedajnnonnnnnnnollaaadca
-aedkaonnjnnnnjjmmmmmmdca
-aedkajnjoonnjaakkkkkmdca
-afdkiajjojjjaiiaalllldfa
-afdkiiagggggaaiiiaaaadfa
-aedkiiadggfdggaiiiiikdca
-aedkiiiagfddgdgaiiiikdca
-aedkiiiiadfgddggaiiikdca
-aedkiiiiiaddfgffgaiikdca
-aedkiiiiiiaaddffdgaikdca
-aedkiiiiiiiiadddddgakdca
-aedkiiiiiiiaggaagadgadca
-aedkkkkkkkagdakkakadadca
+aedjabbaajjjjjjjjjjjjdca
+aedjhabnnaahhhhhhhhhjdca
+aedjhanmmnnaahhhhhhhjdca
+aedjanmimmmnnaahhhhhjdca
+aedanmignmmmmnnaaahhjdca
+aedaimmnmmmmmmmnkkaaadca
+aedjanmmimmmmiilllllldca
+aedjaiminnmmiaajjjjjldca
+afdjhaiiniiiahhaakkkkdfa
+afdjhhaeeeeeaahhhaaaadfa
+aedjhhaceedceeahhhhhjdca
+aedjhhhaedcceceahhhhjdca
+aedjhhhhacdecceeahhhjdca
+aedjhhhhhaccdeddeahhjdca
+aedjhhhhhhaaccddceahjdca
+aedjhhhhhhhhaccccceajdca
+aedjhhhhhhhaeeaaeaceadca
+aedjjjjjjjaecajjajacadca
 aeddddddddddddddddddddca
-adccccccccccffccccccccca
+afccccccccccffccccccccfa
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

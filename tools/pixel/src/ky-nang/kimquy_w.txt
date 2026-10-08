@@ -1,41 +1,44 @@
-# Móng Thần — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a golden turtle claw
-name: Móng Thần
+# Thần Kim Quy · W «Móng Thần» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: móng vuốt + vệt chém
+name: Thần Kim Quy · W «Móng Thần»
 size: 24x24
 colors:
   a = vien
-  b = khoi
+  b = sat-toi
   c = sat
   d = sat-sang
   e = bac
-  f = dong-toi
-  g = dong
-  h = dong-sang
+  f = sang
+  g = dong-toi
+  h = dong
+  i = dong-sang
+  j = vang-nghe
+  k = vang-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbebbbecbbbebbgfa
-ahgbbbbbbdbbbccbbbdbbgfa
-ahgbbbbbbdbbbbdbbbecbgfa
-ahgbbbbbbecbbbecbbcdcgfa
-ahgbbbbbbecbbbecbbbecgfa
-ahgbbbbbbecbbbecbbbecgfa
-ahgbbbbbbecbbbecbbbecgfa
-ahgbbbbbbecbbbecbbedcgfa
-ahgbbbbbbecbbedcbbecbgfa
-ahgbbbbbbecbbedcbbecbgfa
-ahgbbbbbedcbbecbbbecbgfa
-ahgbbbbbecbbedcbbedcbgfa
-ahgbbbbedcbbedcbbecbbgfa
-ahgbbbbedcbbecbbedcbbgfa
-ahgbbbbecbbedcbbedcbbgfa
-ahgbbbedcbbedcbbecbbbgfa
-ahgbbbcccbbccbbbccbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+aeeeeeeeeeeffeeeeeeeeeda
+aeddddddddddddddddddddca
+aeddddddddddddddddddddca
+aeddbabbbbbabbbbbabfddca
+aeddakabbbakabbbakfbddca
+aeddakkabbakkabbafkaddca
+aeddakjkabakjkabffjkadca
+aeddbajjabbajjaffajjadca
+aeddbajjiabajjffbajiadca
+aeddbahjiabahffaahjiadca
+afddahhhjaahffjahhhiadfa
+afddahhhhhhffhhhhhhaddfa
+aeddaiihhhffhhhhhhhaddca
+aeddaihhhffhhhhhhhgaddca
+aeddbaihffhhhhhhhgabddca
+aeddbbafhhhhhhhggabbddca
+aeddbbfaaggggggaabbbddca
+aeddbfbbbaaaaaabbbbbddca
+aeddbbbbbbbbbbbbbbbbddca
+aeddddddddddddddddddddca
+aeddddddddddddddddddddca
+adccccccccccffccccccccca
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

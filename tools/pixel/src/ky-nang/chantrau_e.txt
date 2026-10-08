@@ -1,41 +1,47 @@
-# Sáo Trúc Lưng Trâu — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: bamboo flute on a buffalo
-name: Sáo Trúc Lưng Trâu
+# Trẻ Chăn Trâu · E «Sáo Trúc Lưng Trâu» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đầu trâu + nốt nhạc
+name: Trẻ Chăn Trâu · E «Sáo Trúc Lưng Trâu»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-sang
-  d = dong-toi
-  e = dong
-  f = dong-sang
-  g = vang-nghe
-  h = vang-sang
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = trang-xam
+  f = trang
+  g = sang
+  h = dat-toi
+  i = dat-sang
+  j = vang-sang
+  k = la-toi
+  l = la-sang
+  m = ngoc
+  n = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-afffffffffffffffffffffda
-afeeeeeeeeeeeeeeeeeeeeda
-afebbbbbbbbbbbbbbbbbbeda
-afebbbbbbbbbbbbbbbbbbeda
-afebbbbbbbbbbbbcbbbcbeda
-afebbbbbbbbbbbbbcbbcbeda
-afebbbbbbbbbbbbbchcbbeda
-afebbbbbhhhhhfbhgggfbeda
-afebbbhhgggggghggagfbeda
-afebbhgggggggggggggfbeda
-afebbhggggggggggggffbeda
-afebbhgggggggggggfbbbeda
-afebbfggggggggggfbbbbeda
-afebbbhgggggggggfbbbbeda
-afebbbhggfffffggfbbbbeda
-afebbbhgfbbbbbhgfbbbbeda
-afebbbhgfbbbbbhgfbbbbeda
-afebbbfffbbbbbfffbbbbeda
-afebbbbbbbbbbbbbbbbbbeda
-afebbbbbbbbbbbbbbbbbbeda
-afeeeeeeeeeeeeeeeeeeeeda
-adddddddddddddddddddddda
+annnnnnnnnnllnnnnnnnnnma
+anmmmmmmmmmmmmmmmmmmmmka
+anmiiiiiiiiiiiiiiiiiimka
+anmiaahhhhhhhhhhhhaaimka
+anmaggaahhhhhhhhhajaamka
+anmafajahhhhhhhhaaafamka
+anmiaaagaahhhhaagaaaimka
+anmihaafggaaaaggajahimka
+anmiajaeedccccdeaaahimka
+anmiaaddccccccccdddaimka
+almihadccfaccfaccbahimla
+almihhaadccccccbaahhimla
+anmihhhadccccccbahhhimka
+anmihhhadeeeeeebahhhimka
+anmihhhaeaeeeeaeahhhimka
+anmihhhhaeeeeeeahhhhimka
+anmihhhhhabbbbahhhhhimka
+anmihhhhhhaaaahhhhhhimka
+anmihhhhhhhhhhhhhhhhimka
+anmiiiiiiiiiiiiiiiiiimka
+anmmmmmmmmmmmmmmmmmmmmka
+amkkkkkkkkkkllkkkkkkkkka
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

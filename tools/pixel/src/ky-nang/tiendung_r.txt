@@ -1,44 +1,45 @@
-# Mưa Hoa Tiên — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: many fairy flower petals raining
-name: Mưa Hoa Tiên
+# Tiên Dung · R «Mưa Hoa Tiên» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bông hoa + cánh hoa
+name: Tiên Dung · R «Mưa Hoa Tiên»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-toi
-  d = dat
-  e = dat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = son
-  j = lua
-  k = lua-sang
+  b = da-sang
+  c = dong
+  d = dong-sang
+  e = vang-nghe
+  f = vang-sang
+  g = son-toi
+  h = son
+  i = son-sang
+  j = hong
+  k = la
+  l = la-ma
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbkbbbbbbbbbgfa
-ahgbbbbbbbbjbbbbbbbbbgfa
-ahgbbbbbbbbjbbbbbbbbbgfa
-ahgbbbbbbbkjibbbbbbbbgfa
-ahgbbbbbbbkjibbbbbbbbgfa
-ahgbbbbbbbkjibbbbbbbbgfa
-ahgbbkbbbkjjjibbbkbbbgfa
-ahgbbkkibkjjjibkkibbbgfa
-ahgbbkjjkjjjjjkjjibbbgfa
-ahgbbijjjjjjjjjjjibbbgfa
-ahgbbbijjjijijjjibbbbgfa
-ahgbbbbiiibjbiiibbbbbgfa
-ahgbbbeeeeeieeeeecbbbgfa
-ahgbbeddddddddddddcbbgfa
-ahgbeddddddddddddddcbgfa
-ahgbccddddddddddddccbgfa
-ahgbbbccccccccccccbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+aifffffffffiifffffffffia
+afeeeeeeeeeeeeeeeeeeeeca
+afeiiiaaiiaaaaiiiiiiieca
+afeigabbaafabbagaaggieca
+afeiabjjhaabjjhabbagieca
+afeiajjhafajjhabjjhaieca
+afeaahaafaahaaajjhaaieca
+afeafaeeeaaaefahaadaieca
+afeiadeeabbafeaaeddaieca
+afeigaaabjjhaabbaaagieca
+aieigafajjhaabjjhafaieia
+aieiafeahaadajjhaedaieia
+afeiafeeaeddahaaeedaieca
+afeigadeeddagadeeddaieca
+afeiggaddaakagaaddagieca
+afeigggaagakaalkaaggieca
+afeigggggalkllkaggggieca
+afeiggggggakaaagggggieca
+afeigggggggaggggggggieca
+afeiiiiiiiiiiiiiiiiiieca
+afeeeeeeeeeeeeeeeeeeeeca
+aicccccccccciiccccccccia
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

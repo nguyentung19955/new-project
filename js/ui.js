@@ -661,6 +661,7 @@ class UI {
   // claude/sua-thoat-than-khi: Esc / nút Quay lại của trình duyệt (vuốt back trên điện thoại) → đóng màn phụ trên cùng,
   // đúng như bấm nút quay lại / ✕ của màn đó (Thần Khí → Anh Hùng → trận/menu). Không có gì để đóng thì trả về null.
   backTarget() {
+    if (this.leaveOn()) return () => this.leaveAsk(false);   // claude/chan-vuot-lui: Back lần nữa khi đang hỏi "Rời trận?" = Ở lại
     if (this.tip) return () => this.hideTip();
     for (const id of ['#ranks', '#treasury', '#runes', '#roster', '#settings', '#coop', '#modes', '#campaign']) {
       const el = $(id);
@@ -676,15 +677,84 @@ class UI {
   }
   escBack() { const f = this.backTarget(); if (f) f(); return !!f; }
   // nút Quay lại của trình duyệt: khi đang mở màn phụ thì gài một mục lịch sử; bấm back → đóng màn đó thay vì rời trang
+  // claude/chan-vuot-lui: trên web luôn gài sẵn một mục (vuốt mép / cử chỉ Back của điện thoại hay lỡ tay rời trang):
+  // không có màn phụ thì trong trận → tạm dừng + hỏi "Rời trận?"; ở menu → bấm Back lần nữa trong 2 giây mới thoát.
+  // Trong app (Capacitor) chỉ giữ hành vi cũ — đóng màn phụ.
   bindHistoryBack() {
-    let trap = false;
+    const native = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+    let trap = false, exitAt = 0, leaving = false;
     const arm = () => {
-      if (trap || !this.backTarget() || this.tip) return;
+      if (trap || leaving) return;
+      if (native && (!this.backTarget() || this.tip)) return;
       try { history.pushState({ tt: 1 }, ''); trap = true; } catch (e) { /* trình duyệt chặn: bỏ qua */ }
     };
     // gài khi một màn phụ vừa hiện (bấm nút, phím tắt, hay mở bằng mã) — chỉ theo dõi thuộc tính hidden
     new MutationObserver(() => { if (!trap) arm(); }).observe($('#wrap'), { subtree: true, attributes: true, attributeFilter: ['hidden'] });
-    window.addEventListener('popstate', () => { trap = false; if (this.escBack()) setTimeout(arm, 0); });
+    // Chrome bỏ qua mục lịch sử gài khi người dùng chưa chạm trang → gài (lại) ở lần chạm đầu
+    if (!native) { arm(); for (const t of ['pointerdown', 'keydown']) window.addEventListener(t, arm, { capture: true, passive: true }); }
+    window.addEventListener('popstate', () => {
+      trap = false;
+      if (leaving) return;
+      if (this.escBack()) return setTimeout(arm, 0);
+      if (native) return;
+      if (this.inBattle()) { this.leaveAsk(true); return setTimeout(arm, 0); }
+      if (Date.now() < exitAt) { leaving = true; history.back(); return; }   // Back lần 2 trong 2 giây: rời trang thật
+      exitAt = Date.now() + 2000;
+      this.toast('Thoát game? Bấm Quay lại lần nữa để thoát', '#F2D27A');
+      setTimeout(arm, 0);
+    });
+    // đang trong trận mà đóng / tải lại trang: trình duyệt hỏi lại (máy test tự động thì thôi, để tải lại trang không bị treo)
+    if (!native) window.addEventListener('beforeunload', (ev) => {
+      if (leaving || !this.inBattle() || (navigator.webdriver && !window.__hoiRoiTrang)) return;
+      ev.preventDefault(); ev.returnValue = '';
+    });
+    this.bindEdgeGuard();
+  }
+  inBattle() { const g = this.game; return !!(g.started && !g.over && $('#menu').hidden); }
+  leaveOn() { const el = document.getElementById('leave-ask'); return !!el && !el.hidden; }
+  // hộp "Rời trận?": on=true → tạm dừng trận + hiện hộp; false → Ở lại (chạy tiếp nếu trước đó đang chạy)
+  leaveAsk(on) {
+    const g = this.game;
+    let el = document.getElementById('leave-ask');
+    if (!el) {
+      $('#wrap').insertAdjacentHTML('beforeend', `<div id="leave-ask" hidden><div class="la-box metal">
+        <h2>Rời trận?</h2><p>Trận đang tạm dừng. Rời trận sẽ bỏ trận này (vẫn nhận Ngân khố theo số đợt đã qua).</p>
+        <div class="la-btns"><button class="btn-gold" data-la="stay">Ở lại</button><button class="metal la-leave" data-la="leave">Rời trận</button></div></div></div>`);
+      el = $('#leave-ask');
+      el.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        const b = ev.target.closest('[data-la]');
+        if (!b) return;
+        if (b.dataset.la === 'stay') this.leaveAsk(false);
+        else { this.leaveRun = false; el.hidden = true; $('#drawer').hidden = true; this.quitRun(); }
+      });
+    }
+    if (on) {
+      if (el.hidden) { this.leaveRun = g.running && !COOP.on; if (!COOP.on) g.running = false; }
+      el.hidden = false;
+    } else {
+      el.hidden = true;
+      if (this.leaveRun && g.started && !g.over) g.running = true;
+      this.leaveRun = false;
+    }
+  }
+  // vuốt từ sát mép trái/phải: chặn để trình duyệt (Safari iOS) không coi là cử chỉ Quay lại — trừ khi chạm vào nút / ô nhập
+  bindEdgeGuard() {
+    const EDGE = 24;
+    let edge = null;
+    const near = (x) => x < EDGE || x > window.innerWidth - EDGE;
+    const tappable = (t) => t && t.closest && t.closest('button, a, input, select, textarea, label, [data-act], [role=button], .mk-card');
+    document.addEventListener('touchstart', (ev) => {
+      const t = ev.touches[0];
+      edge = t && ev.touches.length === 1 && near(t.clientX) ? { x: t.clientX, y: t.clientY } : null;
+      if (edge && ev.cancelable && !tappable(ev.target)) ev.preventDefault();
+    }, { passive: false, capture: true });
+    // kéo ngang từ mép: chặn (kéo dọc để cuộn bảng sát mép thì để yên)
+    document.addEventListener('touchmove', (ev) => {
+      const t = ev.touches[0];
+      if (edge && t && ev.cancelable && Math.abs(t.clientX - edge.x) >= Math.abs(t.clientY - edge.y)) ev.preventDefault();
+    }, { passive: false, capture: true });
+    document.addEventListener('touchend', () => { edge = null; }, { passive: true, capture: true });
   }
 
   // ảnh vẽ tay cho các icon cố định trên thanh trên (vàng, mạng, mực nước)
@@ -1352,7 +1422,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 231</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 235</div>
       </div></div>`;
   }
 
@@ -1406,8 +1476,14 @@ class UI {
   watchToasts() {
     const ids = ['#screen', '#legends', '#reward', '#menu', '#campaign', '#modes', '#coop', '#settings', '#roster', '#runes', '#treasury', '#prep', '#login', '#ranks', '#result', '#feedback', '#fbadmin'];
     const view = () => ids.filter((id) => !$(id).hidden).join() + '|' + (this.screen ? this.screen.kind : '');
+    // an-cho-kho-do: mở bảng toàn màn (Túi đồ, Cây kỹ năng, Tiến hoá, Lò đúc, Anh Hùng, Ấn phù…) thì ẩn hẳn thanh chợ + Hợp thể/Khoá
+    // + cột nút phải (lớp panel-open, xem css) — không chỉ trông vào #screen đè lên; đóng bảng thì hiện lại. #legends tự ẩn chợ riêng
+    const full = ids.filter((id) => id !== '#legends');
+    const syncPanel = () => $('#wrap').classList.toggle('panel-open', full.some((id) => !$(id).hidden));
+    syncPanel();
     this.toastView = view();
     this.checkToasts = () => {
+      syncPanel();
       const v = view();
       if (v === this.toastView) return;
       this.toastView = v;
@@ -3745,6 +3821,7 @@ class UI {
   closeScreen() {
     this.screen = null;
     $('#screen').hidden = true;
+    if (this.checkToasts) this.checkToasts();   // an-cho-kho-do: bỏ lớp panel-open ngay (không chờ MutationObserver)
     if (this.prepForge) {
       const g = this.game;
       this.prepForge = false; KHO_MODE = false; this.save.kho = g.gold; g.gold = this.prepGold; writeSave(this.save);

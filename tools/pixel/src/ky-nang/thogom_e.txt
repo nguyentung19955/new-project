@@ -1,40 +1,44 @@
-# Men Rạn — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: cracked glaze pattern shield
-name: Men Rạn
+# Thợ Gốm Phù Lãng · E «Men Rạn» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đĩa gốm men rạn
+name: Thợ Gốm Phù Lãng · E «Men Rạn»
 size: 24x24
 colors:
   a = vien
-  b = dong-toi
-  c = dong
-  d = dong-sang
-  e = vang-nghe
-  f = vang-sang
+  b = dat-toi
+  c = dat-sang
+  d = la-toi
+  e = la-sang
+  f = reu-toi
+  g = reu
+  h = reu-sang
+  i = ngoc
+  j = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-adddddddddddddddddddddba
-adccccccccccccccccccccba
-adcffffffffffffffffdccba
-adcfeeeeeeeeeeeeeeedccba
-adcfeeeeeeeeeeeeeeedccba
-adcfeeeeeeeeeeeeeeedccba
-adcfeeeeeeeeeeeeeeedccba
-adcfeeeeeeeeeeeeeeedccba
-adcfeeeeeeeeeeeeeeedccba
-adcfeeeeeeeeeeeeeeedccba
-adcfeeeeeeeeeeeeeeedccba
-adcdeeeeeeeeeeeeeeedccba
-abccdeeeeeeeeeeeeedcccba
-.abbcdeeeeeeeeeeedccbba.
-..aabcddeeeeeeeddccbaa..
-....abccdeeeeedcccba....
-.....abccdeeedcccba.....
-......abccdedcccba......
-.......abccdcccba.......
-........abccccba........
-.........abccba.........
-..........abba..........
-...........aa...........
+ajjjjjjjjjjeejjjjjjjjjia
+ajiiiiiiiiiiiiiiiiiiiida
+ajiccccccccccccccccccida
+ajicbbbbbbbbbbbbbbbbcida
+ajicbbbbbaaaaaabbbbbcida
+ajicbbbaahhhhhhaabbbcida
+ajicbbahhgggggghhabbcida
+ajicbahggaggggagghabcida
+ajicahggggaggaggggfacida
+ajicahgggggaagggggfacida
+aeiahgggaggaaggagggfaiea
+aeiahggggaaggaaggggfaiea
+ajiahgggggaggagggggfaida
+ajicaggggaggggagggfacida
+ajicafggaggggggagffacida
+ajicbaffggggggggffabcida
+ajicbbaaffffffffaabbcida
+ajicbbbbaaaaaaaabbbbcida
+ajicbbbbbbbbbbbbbbbbcida
+ajiccccccccccccccccccida
+ajiiiiiiiiiiiiiiiiiiiida
+aiddddddddddeeddddddddda
+.aaaaaaaaaaaaaaaaaaaaaa.
 end
 
 anim main fps=1 once

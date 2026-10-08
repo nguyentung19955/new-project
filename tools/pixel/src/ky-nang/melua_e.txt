@@ -1,41 +1,43 @@
-# Rơm Trói — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Rơm vàng trói 4 quái đi xa nhất, x2 sát thương +1
-name: Rơm Trói
+# Mẹ Lúa · E «Rơm Trói» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bó rơm
+name: Mẹ Lúa · E «Rơm Trói»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = la
+  b = dat-sang
+  c = cat
+  d = vang-sang
+  e = son
+  f = la-toi
   g = la-ma
   h = la-sang
+  i = ngoc
+  j = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbhhhgghhfbbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbhggggggggggfbbbdca
-aedbbhggggggggggggfbbdca
-aedbbhggggggggggggfbbdca
-aedbbhggggggggggggfbbdca
-aedbhggggggggggggggfbdca
-aedbfgggggggaggggggfbdca
-aedbbhggggggggggggfbbdca
-aedbbhggggggggggggfbbdca
-aedbbfggggggggggggfbbdca
-aedbbbfggggggggggfbbbdca
-aedbbbbfggggggggfbbbbdca
-aedbbbbbfffggfffbbbbbdca
-aedbbbbbbbbffbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+ajjjjjjjjjjhhjjjjjjjjjia
+ajiiiiiiiiiiiiiiiiiiiifa
+ajiggggggggggggggggggifa
+ajigffffffffffffffffgifa
+ajigfafafafafafafaffgifa
+ajigadadadadadadadafgifa
+ajigadcdcdcdcdcdcdcagifa
+ajigfaccccccccccccbagifa
+ajigffadcccccccccbafgifa
+ajigfffadcccccccbaffgifa
+ahigffffaeeeeeeeafffgiha
+ahigffffadcccccbafffgiha
+ajigfffadcccccccbaffgifa
+ajigffadcccccccccbafgifa
+ajigfadcccccccccccbagifa
+ajigadcccccccccccccbaifa
+ajigabbbbbbbbbbbbbaagifa
+ajigfaaaaaaaaaaaaaffgifa
+ajigffffffffffffffffgifa
+ajiggggggggggggggggggifa
+ajiiiiiiiiiiiiiiiiiiiifa
+aiffffffffffhhfffffffffa
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

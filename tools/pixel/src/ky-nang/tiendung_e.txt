@@ -1,44 +1,47 @@
-# Sen Hồng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a pink lotus flower
-name: Sen Hồng
+# Tiên Dung · E «Sen Hồng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: hoa sen + lấp lánh
+name: Tiên Dung · E «Sen Hồng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-toi
-  d = dat
-  e = dat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = son
-  j = lua
-  k = lua-sang
+  b = trang
+  c = sang
+  d = da-sang
+  e = son-toi
+  f = son
+  g = son-sang
+  h = hong
+  i = la-toi
+  j = la
+  k = la-ma
+  l = la-sang
+  m = ngoc
+  n = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbkbbbbbbbbbgfa
-ahgbbbbbbbbjbbbbbbbbbgfa
-ahgbbbbbbbbjbbbbbbbbbgfa
-ahgbbbbbbbkjibbbbbbbbgfa
-ahgbbbbbbbkjibbbbbbbbgfa
-ahgbbbbbbbkjibbbbbbbbgfa
-ahgbbkbbbkjjjibbbkbbbgfa
-ahgbbkkibkjjjibkkibbbgfa
-ahgbbkjjkjjjjjkjjibbbgfa
-ahgbbijjjjjjjjjjjibbbgfa
-ahgbbbijjjijijjjibbbbgfa
-ahgbbbbiiibjbiiibbbbbgfa
-ahgbbbeeeeeieeeeecbbbgfa
-ahgbbeddddddddddddcbbgfa
-ahgbeddddddddddddddcbgfa
-ahgbccddddddddddddccbgfa
-ahgbbbccccccccccccbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+annnnnnnnnnllnnnnnnnnnma
+anmmmmmmmmmmmmmmmmmmmmia
+anmggggggggggggggggggmia
+anmgebeeeeeaeeeeeeeegmia
+anmgbcbeeeadaeeeeeeegmia
+anmgebeeeadhdaeeeeeegmia
+anmgeeaeeadhdaeeaebegmia
+anmgeadaeadhdaeadbcbgmia
+anmgeaddadhhhdaddabegmia
+anmgeadhddhhhhdhdfaegmia
+almgeaadhdhhhdhdhfaegmla
+almgadadhhhhhhhhdadagmla
+anmgaddhhhhhhhhhhddagmia
+anmgeadhhhhhhhhhhfaegmia
+anmgeaafhhhhhhhhfaaegmia
+anmgakkkkfffffffjjjagmia
+anmakjjjjjjjjjjjbjjiamia
+anmgaijjjjjjjjjbcbiagmia
+anmgeaaaaaaaaaaabaaegmia
+anmggggggggggggggggggmia
+anmmmmmmmmmmmmmmmmmmmmia
+amiiiiiiiiiilliiiiiiiiia
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

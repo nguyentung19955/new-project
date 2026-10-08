@@ -1,41 +1,42 @@
-# Đại Săn — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: hunting horn with tiger
-name: Đại Săn
+# Chúa Sơn Lâm · R «Đại Săn» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: tù và sừng + toả sáng
+name: Chúa Sơn Lâm · R «Đại Săn»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
+  b = dat-sang
+  c = cat
   d = dong
-  e = dong-sang
-  f = la
-  g = la-ma
-  h = la-sang
+  e = vang-nghe
+  f = vang-sang
+  g = son-sang
+  h = la-toi
+  i = la-ma
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbhffbbbbbbbbbbbdca
-aedbbbbffffbbbbbbbbbbdca
-aedbbbbbffffbbbbbbbbbdca
-aedbbbbbbffffbbbbbbbbdca
-aedbbbbbbfffffbbbbbbbdca
-aedbbbbbbbfffffbbbbbbdca
-aedbbbbbbbffffffbbbbbdca
-aedbbbbbbbbfffffbbbbbdca
-aedbbbbbbbbfffgffbbbbdca
-aedbbbbbbbbffffffbbbbdca
-aedbbbbbbbbhffffffbbbdca
-aedbbbbbbbbfffffffbbbdca
-aedbbbbbbbbfffffffbbbdca
-aedbbbbbbbbfffffffbbbdca
-aedbbbbbbbbfffffffbbbdca
-aedbbbbbbbbbfffffbbbbdca
-aedbbbbbbbbbbffbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+agfffffffffggfffffffffga
+afeeeeeeeeeeeeeeeeeeeeda
+afeiiiiiiiifiiiiiiiiieda
+afeifhaahhhehhhhhhhfieda
+afeihaffafhehhfhhhfhieda
+afeiafcfafhehhfhhehhieda
+afeiafccfaeehehhehhhieda
+afeihafccfaheehehhhhieda
+afeihfafccfahhehhffhieda
+afeihhafdccfaaheehhhieda
+ageihhhafdccffaahhhhiega
+agefeeeeafccccffaeeeeega
+afeihhheeafcccccfaahieda
+afeihffhheafdccccffaieda
+afeihhhheheafdccaafaieda
+afeihhhehhehafccaacaieda
+afeihhehhfhheafcccbaieda
+afeihfhhhfhhehabbbahieda
+afeifhhhhhhhehhaaahfieda
+afeiiiiiiiiieiiiiiiiieda
+afeeeeeeeeeeeeeeeeeeeeda
+agddddddddddggddddddddga
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

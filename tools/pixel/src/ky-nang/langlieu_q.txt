@@ -1,40 +1,46 @@
-# Bánh Chưng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Chia bánh cho tướng trong 170: hồi 12% máu, +20% sát thương trong 6 giây
-name: Bánh Chưng
+# Lang Liêu · Q «Bánh Chưng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bánh chưng + lấp lánh
+name: Lang Liêu · Q «Bánh Chưng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = trang
+  c = sang
+  d = dat-toi
+  e = dat-sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = vang-nghe
+  j = vang-sang
+  k = la-toi
+  l = la
+  m = la-ma
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbggggebbggggebbbdca
-aedbbgfffffggfffffebbdca
-aedbgffffffffffffffebdca
-aedbgffffffffffffffebdca
-aedbgffffffffffffffebdca
-aedbeffffffffffffffebdca
-aedbbeffffffffffffebbdca
-aedbbbefffffffffeebbbdca
-aedbbbbefffffffebbbbbdca
-aedbbbbbgfffffebbbbbbdca
-aedbbbbbefffffebbbbbbdca
-aedbbbbbbefffebbbbbbbdca
-aedbbbbbbbefebbbbbbbbdca
-aedbbbbbbbbebbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+ahhhhhhhhhhiihhhhhhhhhga
+ahggggggggggggggggggggfa
+ahgeeeeeeeeeeeeeeeeeegfa
+ahgedbddddddddddddddegfa
+ahgebcbdddddddddddddegfa
+ahgedbaaaaaaaaaaaaadegfa
+ahgeammmmjmmmmjmmmbaegfa
+ahgeamllljlllljllbcbegfa
+ahgajjjjjjjjjjjjjjbaegfa
+ahgeamllljlllljlllkaegfa
+aigeamllljlllljlllkaegia
+aigeamllljlllljlllkaegia
+ahgeamllljlllljlllkaegfa
+ahgajjjjjjjjjjjjjjjaegfa
+ahgeamllljlllljlllkaegfa
+ahgeakkkkjkkkkjkkkkaegfa
+ahgedaaaaaaaaaaabaadegfa
+ahgedddddddddddbcbddegfa
+ahgeddddddddddddbdddegfa
+ahgeeeeeeeeeeeeeeeeeegfa
+ahggggggggggggggggggggfa
+agffffffffffiifffffffffa
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

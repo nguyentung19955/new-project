@@ -1,41 +1,43 @@
-# Mù Sương Tản Viên — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a thick fog blizzard swirl
-name: Mù Sương Tản Viên
+# Thần Sương Núi · R «Mù Sương Tản Viên» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: sương mù cuộn + tuyết
+name: Thần Sương Núi · R «Mù Sương Tản Viên»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = cham
-  g = nuoc
-  h = nuoc-sang
+  b = trang-xam
+  c = trang
+  d = sang
+  e = dong
+  f = vang-nghe
+  g = vang-sang
+  h = son-sang
+  i = cham-toi
+  j = cham-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbgbbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbhggggggggggfbbbdca
-aedbbbfggggggggggfbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbfggggggggfbbbbdca
-aedbbbbbfggggggfbbbbbdca
-aedbbbbbbffggffbbbbbbdca
-aedbbbbbbbbffbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+ahggggggggghhgggggggggha
+agffffffffffffffffffffea
+agfjjjjjjdjjjjjjjjjjjfea
+agfjiiiiaaaaaaaiiidijfea
+agfjidaadddddddaaiiijfea
+agfjiaddcccccccddaiijfea
+agfjadccbbbbbbcccaiijfea
+agfjadcbaaaaaaabcaiijfea
+agfjadcaadddddaabaiijfea
+agfjaccadcccccdaaiiijfea
+ahfjabcaccbbbccaiiiijfha
+ahfjdabacbaadacaiiiijfha
+agfjiiaacaaacacaiaadjfea
+agfjiiiiabbbbacaaddajfea
+agfjiiiaaaaaaabaacdajfea
+agfjiiaddddaaaaabccajfea
+agfjiadccccddddcccaijfea
+agfjiiabbcccccccbaiijfea
+agfjiiiaaaaaaaaaaiiijfea
+agfjjjjjjjjjjjjjjjjjjfea
+agffffffffffffffffffffea
+aheeeeeeeeeehheeeeeeeeha
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

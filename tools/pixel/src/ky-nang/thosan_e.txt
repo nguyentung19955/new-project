@@ -1,41 +1,46 @@
-# Đòn Chí Mạng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a red critical-hit burst on a target
-name: Đòn Chí Mạng
+# Thợ Săn Rừng · E «Đòn Chí Mạng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bia ngắm + nổ va chạm
+name: Thợ Săn Rừng · E «Đòn Chí Mạng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = la
-  g = la-ma
-  h = la-sang
+  b = trang
+  c = sang
+  d = vang-nghe
+  e = vang-sang
+  f = son-toi
+  g = son
+  h = son-sang
+  i = la-toi
+  j = la-ma
+  k = la-sang
+  l = ngoc
+  m = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbhhhhfbbhhhhfbbbdca
-aedbbhggggghhgggggfbbdca
-aedbhggggggggggggggfbdca
-aedbhggggggggggggggfbdca
-aedbhggggggggggggggfbdca
-aedbfggggggggggggggfbdca
-aedbbfggggggggggggfbbdca
-aedbbbfgggggggggffbbbdca
-aedbbbbfgggggggfbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbfgggggfbbbbbbdca
-aedbbbbbbfgggfbbbbbbbdca
-aedbbbbbbbfgfbbbbbbbbdca
-aedbbbbbbbbfbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+ammmmmmmmmmkkmmmmmmmmmla
+amllllllllllllllllllllia
+amljjjjjjaaaaaajjjjjjlia
+amljiiiaahhhhhhaaiiijlia
+amljiiahhgggggghhaiijlia
+amljiahgbbbbbbbbghaijlia
+amljahgbbggggggbbgfajlia
+amljagbbggbbbbggbbfajlia
+amlahgbggbbbbbbggbgfalia
+amlahgbgbbggggbbgbgfalia
+aklahgbgbbgccgbbgbgfalka
+aklaggbgbbgccgbbgbffalka
+amlaggbcbbggggbbgbffalia
+amlagcbdgcbbbbbggbffalia
+amljagdedgbbbbggbbfajlia
+amljcdecedcggggbbffajlia
+amljiadedbbbbbbbffaijlia
+amljicadfcgggggffaiijlia
+amljiiicaffffffaaiiijlia
+amljjjjjjaaaaaajjjjjjlia
+amllllllllllllllllllllia
+aliiiiiiiiiikkiiiiiiiiia
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

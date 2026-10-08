@@ -4,12 +4,12 @@ name: Bà Hỏa · W «Lửa Lan»
 size: 24x24
 colors:
   a = vien
-  b = dat-toi
-  c = dat-sang
-  d = dong-toi
-  e = dong
-  f = dong-sang
-  g = vang-nghe
+  b = sat
+  c = sat-sang
+  d = bac
+  e = sang
+  f = dat-toi
+  g = dat-sang
   h = vang-sang
   i = son-toi
   j = son
@@ -19,28 +19,28 @@ colors:
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-affffffffffggfffffffffea
-afeeeeeeeeeeeeeeeeeeeeda
-afekkkkkkkkkkkkkkkkkkeda
-afekiiiiiiiiiiiiaiiikeda
-afekiiiiiiiiiiialaiikeda
-afekiiiiiiiiiiiiaiiakeda
-afekiaiiiiiiaiiiiiamaeda
-afekamaiiiiamaiiiiiakeda
-afekiaiiiiamjaiiiiiikeda
-afekiiiaiiamjaaiiiiikeda
-agekiiamaiamlmmaiaiikega
-agekiamjaamjjljaamaikega
-afekiamlmmjhhmjamjaikeda
-afekamjjlljhljjajjmakeda
-afeamjhhmjhmmhmmhhmmaeda
-afeamjhlmjhmmlmjhlmjaeda
-afeamjhlmjhmmlmjhlmjaeda
-afeajjlljjlllljjlljjaeda
-afecccccccccccccccccceda
-afebblbbbbblbbbbbblbbeda
-afeeeeeeeeeeeeeeeeeeeeda
-aeddddddddddggddddddddda
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adckkkkkkkkkkkkkkkkkkcba
+adckiiiiiiiiiiiiaiiikcba
+adckiiiiiiiiiiialaiikcba
+adckiiiiiiiiiiiiaiiakcba
+adckiaiiiiiiaiiiiiamacba
+adckamaiiiiamaiiiiiakcba
+adckiaiiiiamjaiiiiiikcba
+adckiiiaiiamjaaiiiiikcba
+aeckiiamaiamlmmaiaiikcea
+aeckiamjaamjjljaamaikcea
+adckiamlmmjhhmjamjaikcba
+adckamjjlljhljjajjmakcba
+adcamjhhmjhmmhmmhhmmacba
+adcamjhlmjhmmlmjhlmjacba
+adcamjhlmjhmmlmjhlmjacba
+adcajjlljjlllljjlljjacba
+adcggggggggggggggggggcba
+adcfflffffflfffffflffcba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 
