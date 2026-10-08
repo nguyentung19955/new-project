@@ -141,6 +141,32 @@ function pxLamNong(e) {
   };
   idle(step);
 }
+// GIẢI MÃ TRƯỚC (tester: 3 s đầu máy yếu chậm vì lần vẽ đầu phải giải mã ảnh mượt): lúc chuẩn bị trận / chờ đợt gọi decode()
+// cho dải ảnh mượt của tướng đang có + quái / boss của màn, xong thì cắt sẵn khung lúc rảnh. types: ['tuong/giong', 'quai/tom', …]
+const pxDaGiaiMa = new Set();
+function pxGiaiMaTruoc(keys) {
+  if (!PX_ON || !PX_MUOT) return;
+  const M = window.PIXEL_MANIFEST || {};
+  for (const k of new Set(keys)) {
+    const e = M[k];
+    if (!e || !e.m || pxDaGiaiMa.has(k)) continue;
+    pxDaGiaiMa.add(k);
+    if (!e.key) e.key = k;
+    const im = asset(pxPathM(e), true) || null;
+    const go = (img) => { if (img && img.decode) img.decode().then(() => { if (!e.__nong) { e.__nong = 1; pxLamNong(e); } }).catch(() => {}); };
+    if (im) go(im);
+    else setTimeout(() => go(asset(pxPathM(e), true)), 400);   // đang tải: thử lại sau
+  }
+}
+// mã sprite của một màn: quái theo bộ quân (roster) + boss các mốc + tướng đang trên sân / trong chợ
+function pxKhoaMan(level, game) {
+  const lv = (typeof LEVELS !== 'undefined' && LEVELS[level]) || {}, r = (typeof ROSTERS !== 'undefined' && ROSTERS[lv.roster || 'thuy']) || {};
+  const q = [r.base, r.air, r.champ, ...(r.fast || []), ...((r.list || []).map((x) => x[2]))].filter(Boolean);
+  const ks = q.map((t) => (window.PIXEL_MANIFEST['quai/' + t] ? 'quai/' + t : 'boss/' + t));
+  for (const b of Object.values(lv.bosses || {})) ks.push('boss/' + b, 'quai/' + b);
+  if (game) { for (const h of game.heroes || []) if (h) ks.push('tuong/' + h.type); const mk = game.market; if (mk && mk.types) for (const t of mk.types) ks.push('tuong/' + t); }
+  return ks;
+}
 // bật / tắt làm mượt ngay (Cài đặt trong trận, tự tắt khi máy chậm): luu = ghi nhớ cho lần sau
 function pxSetMuot(on, luu) {
   PX_MUOT = !!on;
@@ -316,7 +342,11 @@ function pxHeroPortrait(cv, h, o) {
   let img, sx = 0, sy = 0, sw, sh;
   let m = 1;
   if (o.full) { img = pxFrameVe(e, pxIndex(e, 'idle', { p: 0 })); if (img) { m = img.__muot || 1; [sx, sy, sw, sh] = e.bbox; } }
-  else { img = asset(pxPath(e, true), true); if (img) { sw = img.naturalWidth; sh = img.naturalHeight; } }
+  else {   // chân dung: bản làm mượt sinh sẵn khi bật (thanh tướng, thẻ…) — nhất quán với trên sân
+    const im = PX_MUOT && e.m && asset(pxPathM(e, true), true);
+    if (im) { img = im; m = 2; sw = im.naturalWidth / m; sh = im.naturalHeight / m; }
+    else { img = asset(pxPath(e, true), true); if (img) { sw = img.naturalWidth; sh = img.naturalHeight; } }
+  }
   if (!img) return false;
   c.clearRect(0, 0, W, H);
   let n = Math.min(W / sw, H / sh) * (o.full ? 0.94 : 1);

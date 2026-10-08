@@ -128,6 +128,7 @@ node tools/ve-pixel.js --spec tools/pixel/spec/giao-dien.json --nap --ghi-de
 
 `node tools/build-pixel.js` (và `ve-pixel.js --nap`, vốn gọi build-pixel) **tự sinh** bản làm mượt `assets/pixel-muot/<nhóm>/<mã>.png` cho mọi mã
 (trừ ô nền 16×16). Không cần lệnh riêng; nhớ commit cả `assets/pixel-muot/`. Bỏ qua bản mượt: `node tools/build-pixel.js --khong-muot`.
+Tắt làm mượt riêng một số nhóm / mã: thêm tiền tố vào `tools/pixel/muot.json` → `"tat"` (vd `"ban-do/"`, `"nen/cong-"`) rồi build lại.
 Xem thử các mức làm mượt trên một sprite: `node tools/pixel/ve-lai/aa-thu.js tuong tanvien` → `tools/pixel/mau/ve-lai/aa-thu-tanvien-x8.png`.
 
 ## 11. Sau khi nạp

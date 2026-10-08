@@ -70,31 +70,6 @@ const GFX = {
     if (this.ema > 24) { this.lv++; this.ema = 16; this.apply(); }
   },
 };
-// claude/ve-lai-pixel: tự TẮT LÀM MƯỢT cho trận đang chơi khi máy chậm (FPS trung bình < 40 trong 3 giây) + báo nhỏ một lần;
-// về menu / trận mới thì trả lại theo Cài đặt. Đo bằng số khung thực trong 3 giây (không tính lúc ẩn tab / tạm dừng).
-const MUOT_AUTO = {
-  t: 0, n: 0, off: false, toast: false, bo: 0,
-  sample(ms) {
-    if (typeof PX_MUOT === 'undefined' || !PX_MUOT || this.off || this.tay || document.hidden || ms > 1000) return;
-    // bỏ 5 giây đầu trận (đang tải ảnh / dựng nền — máy nào cũng chậm lúc này, tắt lúc đó chỉ thêm giật khi đổi chế độ)
-    if (this.bo < 5000) { this.bo += ms; return; }
-    this.t += ms; this.n++;
-    if (this.t < 3000) return;
-    const fps = (this.n * 1000) / this.t;
-    this.t = 0; this.n = 0;
-    if (fps < 40) {
-      this.off = true; pxSetMuot(false, false);
-      if (!this.toast && typeof ui !== 'undefined' && ui.toast) { this.toast = true; ui.toast('Máy hơi chậm — đã tắt làm mượt hình cho trận này'); }
-    }
-  },
-  reset() {   // ra khỏi trận: bật lại theo Cài đặt
-    this.t = 0; this.n = 0; this.tay = false; this.bo = 0;
-    if (!this.off) return;
-    this.off = false;
-    let v = null; try { v = localStorage.getItem('ttv.pxmuot'); } catch (e) { /* chặn lưu */ }
-    if (v !== '0' && !/[?&]muot=0\b/.test(location.search)) pxSetMuot(true, false);
-  },
-};
 // Tự xoay ngang (v42): cầm điện thoại dọc thì xoay cả khung game 90° cho vừa màn hình,
 // người chơi chỉ việc cầm ngang — không cần bật xoay màn hình của máy.
 let ROT = false;
@@ -1991,8 +1966,6 @@ function loop(now) {
   const raw = Math.max(0, (now - last) / 1000);
   const dt = Math.min(0.05, raw);
   if (game.started && game.running) GFX.sample(now - last);
-  if (game.started) MUOT_AUTO.sample(now - last);   // làm mượt tốn ở khâu VẼ → đo cả lúc chờ đợt
-  else if (!game.started && (MUOT_AUTO.off || MUOT_AUTO.tay || MUOT_AUTO.bo)) MUOT_AUTO.reset();
   last = now;
   // v141: chơi nhóm — mô phỏng bước cố định theo lệnh đồng bộ (js/coop.js), không theo khung hình
   if (COOP.on) COOP.frame(raw);

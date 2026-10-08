@@ -2197,6 +2197,8 @@ function buildWave(n, level, st) {
   }
   if (kind === 'champion') list.push({ type: ro ? ro.champ : 'rua', elite: 'armored', champion: true, gap: 2 });
   if (kind === 'boss') list.push({ type: bossAt(n, level, st), gap: 3, ...(ev && ev.p.hp ? { ev: { hp: ev.p.hp } } : {}) });
+  // claude/ve-lai-pixel: đợt kế đã biết quân → giải mã trước ảnh làm mượt của quái / boss đợt đó (không để lần vẽ đầu giải mã giữa trận)
+  if (typeof pxGiaiMaTruoc === 'function' && typeof window !== 'undefined' && window.PIXEL_MANIFEST) pxGiaiMaTruoc(list.map((it) => (window.PIXEL_MANIFEST['quai/' + it.type] ? 'quai/' : 'boss/') + it.type));
   return list;
 }
 

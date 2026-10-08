@@ -858,6 +858,7 @@ class UI {
     writeSave(this.save);
     this.hideOverlays();
     this.setInGame(true);
+    if (typeof pxGiaiMaTruoc === 'function') pxGiaiMaTruoc(pxKhoaMan(i, g));   // ve-lai-pixel: giải mã trước ảnh mượt của màn lúc chuẩn bị
     this.prepBought = {}; this.prepShopRolled = false;
     { const id = themeOf(i).id; resultImg(id, true); resultImg(id, false); }   // v163: tải sẵn tranh thắng / thua của chương (nếu có ảnh)
     this.saveRun();
@@ -1442,7 +1443,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px">${[['auto', 'Tự động'], ['high', 'Đẹp'], ['low', 'Tiết kiệm']].map(([k, n]) => `<button class="btn ${(st.gfx || 'auto') === k ? 'btn-gold' : 'metal'}" style="height:34px;padding:0 10px;font-size:13px" data-act="set-gfx" data-k="${k}">${n}</button>`).join('')}</div></div>
         ${this.cloudRow()}
         ${inGame || typeof PXGOI === 'undefined' ? '' : this.pxGoiRow()}
-        ${inGame && typeof PX_MUOT !== 'undefined' && pixelOn() ? `<div class="tg metal"><div><b>Làm mượt hình</b><small>${typeof MUOT_AUTO !== 'undefined' && MUOT_AUTO.off ? 'Đã tự tắt vì máy chậm — bật lại nếu muốn' : 'Viền tướng, quái, cổng, khung mượt hơn · tắt nếu máy giật'}</small></div><button class="sw ${PX_MUOT ? 'on' : ''}" style="margin-left:auto" data-act="pxg-muot-tran" aria-label="Làm mượt hình"></button></div>` : ''}
+        ${inGame && typeof PX_MUOT !== 'undefined' && pixelOn() ? `<div class="tg metal"><div><b>Làm mượt hình</b><small>Viền tướng, quái, cổng, khung mượt hơn · đổi ngay</small></div><button class="sw ${PX_MUOT ? 'on' : ''}" style="margin-left:auto" data-act="pxg-muot-tran" aria-label="Làm mượt hình"></button></div>` : ''}
         <div class="tg metal"><div><b>Góp ý</b></div>
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
@@ -1463,8 +1464,8 @@ class UI {
   }
   async pxGoiAct(act) {
     if (act === 'pxg-bat') { PXGOI.setPixel(!pixelOn()); location.reload(); return; }
-    // trong trận: đổi ngay, không tải lại; người chơi tự chọn thì không tự tắt nữa trong trận này
-    if (act === 'pxg-muot-tran') { pxSetMuot(!PX_MUOT, true); if (typeof MUOT_AUTO !== 'undefined') { MUOT_AUTO.off = false; MUOT_AUTO.tay = true; } this.renderSettings(); return; }
+    // trong trận: đổi ngay, không tải lại (bật lại thì giải mã trước ảnh mượt của màn đang chơi)
+    if (act === 'pxg-muot-tran') { pxSetMuot(!PX_MUOT, true); if (PX_MUOT) pxGiaiMaTruoc(pxKhoaMan(this.game.level, this.game)); this.renderSettings(); return; }
     if (act === 'pxg-muot') { try { localStorage.setItem('ttv.pxmuot', PX_MUOT ? '0' : '1'); } catch (e) { /* chặn lưu */ } location.reload(); return; }
     if (act === 'pxg-go') {
       try { await PXGOI.remove(); this.toast('Đã gỡ gói pixel — dùng lại hình sẵn có'); } catch (e) { this.toast('Không gỡ được: ' + e.message, '#FF8A6A'); }
@@ -2638,6 +2639,7 @@ class UI {
       const strip = this.pinStrip(pt);
       key = `m|${strip}|${pins.join()}|${m.types.join(',')}|${sc}|${ok.join()}|${twins.join()}|${hints.join()}|${m.types.map((t) => nd.hopTo.get(t) || '').join()}|${!!m.lock}|${g.gold >= rc}|${rc}|${assetVersion}`;
       this.preloadMarket(nd.pool);
+      if (typeof pxGiaiMaTruoc === 'function') pxGiaiMaTruoc(nd.pool.map((t) => 'tuong/' + t));   // ve-lai-pixel: ảnh mượt tướng trong chợ giải mã trước
       const short = (t) => CARD_NAME[t] || HEROES[t].name.split(' ').slice(-2).join(' ');
       // cho-6-the: bỏ nút "Ghép tự động" — mua thẻ ghép được thì tự ghép luôn (Game.buyCard). Nguyên liệu hợp thể của tướng
       // đích chưa mở khoá: ổ khoá nhỏ trên dải giá + lời nhắc "Mở ở Anh Hùng"

@@ -1,0 +1,4 @@
+{
+ "_ghi_chu": "Làm mượt mức 7 sinh sẵn (claude/ve-lai-pixel). 'tat' = danh sách tiền tố 'nhóm/mã' KHÔNG làm mượt (game vẽ ảnh pixel gốc, nét). Ví dụ tắt riêng nền bản đồ + cổng + bệ: [\"ban-do/\", \"canh/ban-do-\", \"nen/cong-\", \"nen/de-tuong-\"]. Ô nền 16×16 lát liền luôn bỏ qua. Sửa xong chạy: node tools/build-pixel.js",
+ "tat": []
+}

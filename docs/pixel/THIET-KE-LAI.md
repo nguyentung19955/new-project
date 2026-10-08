@@ -196,3 +196,12 @@ vì mô tả dài), nút Chọn luôn sát đáy.
 - FPS (tắt / bật làm mượt sinh sẵn): CPU×1 58,7 / 58,9 · CPU×2 41,3 / 41,3 (x3 tốc độ: 37,8 / 36,3) · CPU×4 trung bình 16 s 18,3 / 17,7
   (x3: 15,0 / 12,6) · 3 s đầu CPU×4 ≈ 12–17 / 9–11 (lần đầu giải mã ảnh mượt lớn hơn). Sai số giữa các lần ±2 FPS.
   Tự tắt không làm nhanh hơn (sau khi đổi 16,1–19,5 ≈ bật) vì bản sinh sẵn gần như không tốn lúc vẽ — chỉ có ích trên máy rất yếu.
+
+### 12e. Chốt (điều phối 08/10): bỏ tự tắt, giải mã trước, chân dung mượt, cờ tắt theo nhóm
+- **Bỏ** `MUOT_AUTO` (tự tắt khi FPS < 40) — với bản sinh sẵn không tăng FPS mà gây khựng lúc đổi; giữ công tắc "Làm mượt hình" trong bảng Tạm dừng.
+- **Giải mã trước** (`pxGiaiMaTruoc`, js/pixel.js): vào trận (`ui.startLevel` → `pxKhoaMan`: quái bộ quân + boss + tướng trên sân / chợ),
+  mỗi lần biết đợt kế (`buildWave`), mỗi lần chợ đổi (`nd.pool`) → `img.decode()` dải ảnh mượt rồi cắt sẵn khung lúc rảnh.
+  Đo CPU×4 (quái đúng của màn): 3 s đầu tắt / bật ≈ 20,3 / 18,3 FPS, khung tệ nhất 217–233 / 167–183 ms; CPU×2 50,6 / 52,1.
+- Chân dung canvas (`pxHeroPortrait`, thanh tướng…) dùng `-chan-dung.png` bản mượt khi bật.
+- **Cờ tắt làm mượt theo nhóm / mã**: `tools/pixel/muot.json` → `"tat": ["ban-do/", "canh/ban-do-", "nen/cong-", "nen/de-tuong-"]` (ví dụ) rồi
+  `node tools/build-pixel.js` — mã trong danh sách không có `m` → game vẽ ảnh gốc nét. Đang để trống, chờ người dùng quyết nền / cổng / bệ.

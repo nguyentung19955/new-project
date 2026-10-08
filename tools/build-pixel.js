@@ -49,6 +49,8 @@ const RESERVED = new Set(['.', '_']);
 // làm mượt mức 7 (người dùng chọn 08/10): mỗi điểm gốc → 2×2 điểm đã làm mượt (tools/pixel/lam-muot.js) — ×4 không đẹp hơn ở cỡ trong trận mà nặng gấp đôi
 const { lamMuot, lamMuotDai } = require('./pixel/lam-muot.js');
 const MUOT_K = 2;
+// cờ tắt làm mượt theo nhóm / mã (tools/pixel/muot.json → "tat": tiền tố "nhóm/mã") — chờ người dùng quyết nền / cổng / bệ
+const MUOT_TAT = (() => { try { return JSON.parse(fs.readFileSync(path.join(__dirname, 'pixel', 'muot.json'), 'utf8')).tat || []; } catch (e) { return []; } })();
 
 // ---------------------------------------------------------------- PNG (không cần thư viện)
 const CRC = (() => { const t = new Int32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c; } return t; })();
@@ -376,7 +378,7 @@ function run(argv) {
     const entry = { name: src.name, w: sp.w, h: sp.h, ax: sp.anchor[0], ay: sp.anchor[1], bbox: bboxOf(first[0]), n: grids.length, anims };
     if (s.group === 'tuong' || s.group === 'quai' || s.group === 'boss') entry.cd = 1;
     // claude/ve-lai-pixel: bản LÀM MƯỢT mức 7 sinh sẵn (assets/pixel-muot/, ×2) — trừ ô nền 16×16 lát liền (làm mượt sẽ hở mép)
-    if (!opt.khongMuot && !(s.group === 'nen' && sp.w === 16 && sp.h === 16)) entry.m = MUOT_K;
+    if (!opt.khongMuot && !(s.group === 'nen' && sp.w === 16 && sp.h === 16) && !MUOT_TAT.some((t) => rel.startsWith(t))) entry.m = MUOT_K;
     entries[rel] = entry;
     if (!pick) continue;
     outputs.push({ rel, s, src, sp, grids, entry, pal: palG });
