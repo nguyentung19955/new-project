@@ -10,7 +10,9 @@ const PIXEL_BAT = false;
 const PX_ON = (() => {
   try {
     if (/[?&]pixel=0\b/.test(location.search)) return false;
-    return PIXEL_BAT || !!window.PIXEL_BAT_EP || /[?&]pixel=1\b/.test(location.search);
+    // claude/tool-pixel: công tắc "Bật pixel" trong Cài đặt → Gói pixel (lưu trên máy, js/pixel-goi.js)
+    let may = false; try { may = localStorage.getItem('ttv.pixel') === '1'; } catch (e) { /* chặn lưu */ }
+    return PIXEL_BAT || !!window.PIXEL_BAT_EP || may || /[?&]pixel=1\b/.test(location.search);
   } catch (e) { return PIXEL_BAT; }
 })();
 const pixelOn = () => PX_ON;

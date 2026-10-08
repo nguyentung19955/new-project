@@ -1306,12 +1306,43 @@ class UI {
         <div class="tg metal"><div><b>Đồ hoạ</b><small>Tự động giảm hiệu ứng khi máy giật${typeof GFX !== 'undefined' && GFX.mode() === 'auto' && GFX.lv ? ` (đang giảm ${GFX.lv} bậc)` : ''}</small></div>
           <div style="margin-left:auto;display:flex;gap:4px">${[['auto', 'Tự động'], ['high', 'Đẹp'], ['low', 'Tiết kiệm']].map(([k, n]) => `<button class="btn ${(st.gfx || 'auto') === k ? 'btn-gold' : 'metal'}" style="height:34px;padding:0 10px;font-size:13px" data-act="set-gfx" data-k="${k}">${n}</button>`).join('')}</div></div>
         ${this.cloudRow()}
+        ${inGame || typeof PXGOI === 'undefined' ? '' : this.pxGoiRow()}
         <div class="tg metal"><div><b>Góp ý</b></div>
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
         <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 208</div>
       </div></div>`;
+  }
+
+  // claude/tool-pixel: gói pixel tự vẽ (tools/ve-pixel.html → goi-pixel.zip) — gọn một dòng trong Cài đặt (ngoài trận)
+  pxGoiRow() {
+    const on = pixelOn(), has = !!PXGOI.goi, bt = 'style="height:34px;padding:0 10px;font-size:13px"';
+    return `<div class="tg metal" id="pxgoi-row"><div><b>Gói pixel (thử)</b><small id="pxgoi-st">${PXGOI.status()}</small></div>
+          <div style="margin-left:auto;display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end">
+          <button class="btn ${on ? 'btn-gold' : 'metal'}" ${bt} data-act="pxg-bat" title="Tải lại trang để áp dụng">${on ? 'Pixel: Bật' : 'Pixel: Tắt'}</button>
+          <button class="btn metal" ${bt} data-act="pxg-nap">Nạp gói (.zip)</button>
+          ${has ? `<button class="btn metal" ${bt} data-act="pxg-go">Gỡ gói</button>` : ''}</div></div>`;
+  }
+  async pxGoiAct(act) {
+    if (act === 'pxg-bat') { PXGOI.setPixel(!pixelOn()); location.reload(); return; }
+    if (act === 'pxg-go') {
+      try { await PXGOI.remove(); this.toast('Đã gỡ gói pixel — dùng lại hình sẵn có'); } catch (e) { this.toast('Không gỡ được: ' + e.message, '#FF8A6A'); }
+      this.renderSettings(); return;
+    }
+    const inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = '.zip,application/zip'; inp.id = 'pxgoi-file'; inp.hidden = true;
+    document.body.appendChild(inp);
+    inp.onchange = async () => {
+      const f = inp.files[0]; inp.remove();
+      if (!f) return;
+      try {
+        const r = await PXGOI.install(f);
+        this.toast(`Đã nạp ${r.n} mã pixel${r.canhBao.length ? ` (bỏ ${r.canhBao.length} mã lỗi)` : ''}${pixelOn() ? '' : ' — bật Pixel để thấy'}`, '#8CE07A');
+      } catch (e) { this.toast('Gói không hợp lệ: ' + e.message, '#FF8A6A'); }
+      if (!$('#settings').hidden) this.renderSettings();
+    };
+    inp.click();
   }
 
   // ---------- thông báo
@@ -1953,7 +1984,8 @@ class UI {
       this.applyUiArt();
       this.sig = {};
       this.buildSummon();
-      if (!$('#menu').hidden) this.showMenu();
+      // claude/tool-pixel: đang mở Cài đặt trên menu (vd vừa nạp gói pixel) thì để lúc đóng mới vẽ lại menu — showMenu() đóng mọi lớp phủ
+      if (!$('#menu').hidden) { if ($('#settings').hidden) this.showMenu(); else this.menuStale = true; }
       // v155: Kho Báu vẽ một lần — icon PNG tải xong sau thì vẽ lại (giữ chỗ cuộn), không thì kẹt hình vẽ code
       if (!$('#treasury').hidden) { const b = $('#treasury .tr-body'), y = b ? b.scrollTop : 0; this.showTreasury(); const b2 = $('#treasury .tr-body'); if (b2) b2.scrollTop = y; }
     }
@@ -3197,8 +3229,10 @@ class UI {
       case 'fba-note': case 'fba-note-x': case 'fba-note-ok': case 'fba-del': case 'fba-del-x': case 'fba-del-ok': case 'fba-st':
         this.fbaAct(d); break;
       case 'set-feedback': this.showFeedback(this.settingsInGame ? 'tam-dung' : 'cai-dat'); break;
+      case 'pxg-bat': case 'pxg-nap': case 'pxg-go': this.pxGoiAct(d.act); break;
       case 'set-close':
         $('#settings').hidden = true;
+        if (this.menuStale) { this.menuStale = false; if (!$('#menu').hidden) this.showMenu(); }
         if (this.settingsInGame && this.pauseWasRunning) g.running = true;
         this.wipeArmed = false;
         break;

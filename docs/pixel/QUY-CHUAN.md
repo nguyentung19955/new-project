@@ -42,6 +42,8 @@ Pixel **ĐỪNG TRẺ CON QUÁ** — bám sát thần thoại / huyền sử Vi�
 - Mẫu: `tools/pixel/src/tuong/giong.txt` (Thánh Gióng), `tanvien.txt` (Sơn Tinh), `chodo.txt` (Chàng Chèo Đò),
   `quai/tom.txt` (Tôm Binh), `nen/co|dat|nuoc.txt`, `icon/hanh-kim|moc|thuy.txt`
 - Thử trong game: mở `index.html?pixel=1` (tắt hẳn: `?pixel=0`). Bật toàn cục: `const PIXEL_BAT = true` trong `js/pixel.js`.
+- **Tool vẽ không cần code:** `tools/ve-pixel.html` (sinh sprite theo quy chuẩn từ mô tả / bộ phận, chỉnh tay, xuất `goi-pixel.zip` gồm cả
+  nguồn `.txt` cho build-pixel) → game: Cài đặt → **Gói pixel** → Nạp gói (.zip) / Pixel: Bật. Hướng dẫn: [`HUONG-DAN-TOOL.md`](HUONG-DAN-TOOL.md).
 
 ---
 
@@ -160,7 +162,7 @@ Game ghép động tác: tướng — `attack` theo pha vung (swing 1→0), `cas
 
 ## 9. Định dạng file nguồn `tools/pixel/src/<nhóm>/<mã>.txt`
 
-Tên file viết thường không dấu, nối bằng `-` (`hanh-kim.txt`). `#` đầu dòng (hoặc sau khoảng trắng) là chú thích — vì vậy
+Tên file viết thường không dấu, nối bằng `-` hoặc `_` (`hanh-kim.txt`, `lactuong_q.txt` — đúng mã trong DANH-SACH). `#` đầu dòng (hoặc sau khoảng trắng) là chú thích — vì vậy
 `#` không dùng làm ký tự màu. Ký tự dành riêng: `.` trong suốt (khi đóng dấu: giữ pixel bên dưới), `_` xoá pixel bên dưới.
 
 ```

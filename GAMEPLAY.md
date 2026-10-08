@@ -2274,3 +2274,30 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
 
 ## Phiên bản 208 — bàn giao điều phối, quy tắc tiết kiệm token
 - Thêm docs/BAN-GIAO-DIEU-PHOI.md và mục "Tiết kiệm token" trong CLAUDE.md. Dừng mọi session con.
+
+## claude/tool-pixel — Tool vẽ pixel → goi-pixel.zip → nạp vào game
+
+- **Tool `tools/ve-pixel.html`** (mở thẳng bằng Chrome / Edge, không mạng, không thư viện ngoài): chọn nhiều mã một lần từ danh sách
+  `docs/pixel/DANH-SACH.md` (836 mã, đánh dấu mã đã có pixel; thêm mã tự đặt được) → tự sinh sprite theo QUY-CHUAN từ **mô tả ngắn**
+  (đọc từ khoá tiếng Việt / Anh: thân xương / đá / hồn ma / giấy / gỗ / đồng / cây, tóc, khăn, nón, mũ lông chim, vương miện, sừng,
+  áo / giáp / khố / váy + màu, áo choàng, vũ khí gậy / giáo / rìu / kiếm / cung / chèo / chuông, cánh, hành; dáng người / thú 4 chân /
+  rắn-cá-rồng) hoặc chọn **bộ phận** → tướng `idle 3 · attack 4 · cast 3 (phép theo hành) · hurt 1 · die 3`, quái `walk 4 · attack 3 ·
+  hurt 1 · die 3`, boss 48/64 (+`rage 2`), icon / đồ / kỹ năng / ấn phù / thần khí 24 (khung + biểu tượng), ô nền 16 lát liền (nước 3
+  khung gợn), giao diện / cảnh: khung trống. Chỉ dùng 46 màu `palette.txt`, tô 3 tông tự động, viền `vien`.
+- Lưới chỉnh tay: bút / tẩy (chuột phải) / đổ màu / hút màu, hoàn tác, viền, lật, dịch, thêm / xoá / chép khung, bóng khung trước;
+  xem trước động phóng to (một động tác hoặc lần lượt mọi động tác); kiểm tra quy chuẩn (cỡ, động tác + số khung, điểm viền).
+  Bản nháp tự lưu trên máy + Lưu / Mở nháp `.json`; mở lại được cả `.zip` đã xuất để vẽ tiếp.
+- **Xuất `goi-pixel.zip`**: `goi-pixel.json` (loại `goi-pixel-ttv`, phiên bản 1, danh sách mã) + mỗi mã `assets/pixel/<nhóm>/<mã>.png`
+  (dải khung) + `.json` (y hệt build-pixel) + `-chan-dung.png` (tướng / quái / boss) + nguồn `tools/pixel/src/<nhóm>/<mã>.txt`.
+  Giải nén vào repo rồi `node tools/build-pixel.js` ra **đúng từng điểm ảnh** như tool (test kiểm). Mã lỗi quy chuẩn không vào zip.
+- **Nạp vào game** (`js/pixel-goi.js`, Cài đặt ngoài trận → dòng **"Gói pixel (thử)"**: `Pixel: Bật/Tắt` · `Nạp gói (.zip)` · `Gỡ gói`):
+  đọc zip (không nén / deflate, nhận cả zip bọc thư mục), kiểm tra (goi-pixel.json, nhóm, mã, w/h/n/anims, PNG đúng cỡ dải) — mã
+  lỗi bỏ qua + báo, cả gói hỏng thì từ chối; lưu IndexedDB `ttv-pixel-goi`; mỗi lần mở game ghép vào `PIXEL_MANIFEST` + `ASSET_DATA`
+  (ảnh `blob:`), dùng ngay (xoá đệm ảnh / khung). Mã trong gói ghi đè bản có sẵn; mã ngoài gói vẽ như cũ; gỡ gói trả lại nguyên trạng.
+  Nút `Pixel: Bật` lưu `localStorage ttv.pixel=1` (js/pixel.js đọc thêm công tắc này) rồi tải lại trang. Bảng Tạm dừng không có dòng này.
+- Sửa kèm: ảnh tải xong khi đang mở Cài đặt trên menu không còn đóng bảng Cài đặt (vẽ lại menu lúc đóng) · build-pixel nhận tên
+  file có `_` (mã DANH-SACH như `ky-nang/lactuong_q`, `an-phu/g_air`).
+- Danh sách mã + bảng màu cho tool: `node tools/build-ve-pixel.js` → `tools/ve-pixel-ds.js` (chạy lại khi DANH-SACH / palette đổi;
+  test báo nếu quên). Hướng dẫn cho người không lập trình: `docs/pixel/HUONG-DAN-TOOL.md`.
+- Test: `tests/ve-pixel/ve-pixel.test.js` (tool) · `tests/ve-pixel/nap-goi.test.js` (nạp / gỡ / IndexedDB / zip lỗi trong game).
+- **Pixel art:** nhánh không thêm hình game mới (nút trong Cài đặt là nút HTML chữ, như các dòng khác).
