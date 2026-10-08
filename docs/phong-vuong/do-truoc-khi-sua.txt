@@ -1,0 +1,18 @@
+1-1 lần 1 THẮNG 102s cấp  1 máu 75/100 bình 2 sao 2 phòng 7 trùm 31s còn 0% dấu ấn 4 | ['Kiếm Sắt[0/0/0]', 'Cung Sắt[0/0/0]'] None | ['Chống áp sát']
+1-2 lần 1 THẮNG 125s cấp  2 máu 65/103 bình 2 sao 2 phòng 7 trùm 33s còn 0% dấu ấn 5 | ['Kiếm Sắt +1[4/0/0]', 'Cung Sắt +1[0/0/0]'] None | ['Chống áp sát']
+1-3 lần 1 THẮNG 169s cấp  3 máu 100/106 bình 2 sao 2 phòng 8 trùm 41s còn 0% dấu ấn 16 | ['Kiếm Sắt +1[6/2/0]', 'Cung Sắt +1[0/0/0]'] None | ['Chống áp sát']
+1-4 lần 1 THẮNG 253s cấp  5 máu 110/112 bình 2 sao 2 phòng 8 trùm 38s còn 0% dấu ấn 11 | ['Kiếm Sắt +2[6/4/15]', 'Cung Sắt +2[0/0/0]'] None | ['Chống áp sát']
+1-5 lần 1 THẮNG 290s cấp  6 máu 79/127 bình 0 sao 1 phòng 8 trùm 67s còn 0% dấu ấn 0 | ['Kiếm Sắt +3[11/8/18]', 'Cung Sắt +3[0/0/0]'] None | ['Chống áp sát']
+2-1 lần 1 THẮNG 123s cấp  8 máu 132/133 bình 2 sao 2 phòng 7 trùm 35s còn 0% dấu ấn 20 | ['Búa Bạc +1[0/0/0]', 'Cung Bạc +3[0/0/0]'] None | ['Chống áp sát']
+2-2 lần 1 THẮNG 165s cấp 10 máu 114/140 bình 2 sao 2 phòng 7 trùm 38s còn 0% dấu ấn 0 | ['Búa Bạc +3[17/0/4]', 'Cung Bạc +3[0/0/0]'] None | ['Chống áp sát']
+2-3 lần 1 THẮNG 196s cấp 11 máu 165/165 bình 2 sao 2 phòng 8 trùm 39s còn 0% dấu ấn 22 | ['Búa Bạc +4[17/0/4]', 'Cung Bạc +3[0/0/0]'] a_r1 | ['Chống áp sát']
+2-4 lần 1 THẮNG 234s cấp 13 máu 172/172 bình 2 sao 2 phòng 8 trùm 35s còn 0% dấu ấn 7 | ['Búa Bạc +5[18/0/25]', 'Cung Bạc +4[0/0/0]'] a_r1 | ['Chống áp sát']
+2-5 lần 1 THẮNG 358s cấp 14 máu 98/202 bình 1 sao 1 phòng 8 trùm 107s còn 0% dấu ấn 4 | ['Búa Bạc +5[20/1/28]', 'Cung Bạc +5[0/0/0]'] a_moc | ['Chống áp sát', 'Bắt bài lăn né']
+3-1 lần 1 THẮNG 254s cấp 16 máu 209/209 bình 2 sao 2 phòng 7 trùm 68s còn 0% dấu ấn 5 | ['Búa Bạc +6[23/2/28]', 'Cung Bạc +5[0/0/0]'] a_moc | ['Chống áp sát']
+3-2 lần 1 THẮNG 180s cấp 17 máu 212/212 bình 2 sao 3 phòng 7 trùm 46s còn 0% dấu ấn 38 | ['Búa Bạc +6[28/2/28]', 'Cung Bạc +5[0/0/0]'] a_moc | ['Chống áp sát']
+3-3 lần 1 THẮNG 241s cấp 19 máu 219/219 bình 2 sao 2 phòng 8 trùm 85s còn 0% dấu ấn 20 | ['Búa Bạc Lửa +6[43/25/28]', 'Cung Bạc +6[0/0/0]'] a_moc | ['Kháng Lửa, yếu Băng']
+3-4 lần 1 THẮNG 312s cấp 20 máu 222/222 bình 2 sao 2 phòng 8 trùm 74s còn 0% dấu ấn 48 | ['Búa Linh Lửa +6[63/25/28]', 'Cung Bạc +6[0/0/0]'] a_moc | ['Kháng Lửa, yếu Băng']
+3-5 lần 1 THẮNG 359s cấp 22 máu 211/229 bình 2 sao 2 phòng 8 trùm 94s còn 0% dấu ấn 40 | ['Búa Linh Lửa +6[87/49/28]', 'Cung Linh +6[0/0/0]'] a_moc | ['Kháng Lửa, yếu Băng', 'Chống áp sát']
+nguồn sát thương: {'vùng/đạn': 572, 'swarm': 364, 'shield': 331, 'rusher': 329, 'vùng-trùm': 253, 'elite': 139, 'nimble': 117}
+tổng số lần thua: 0 theo vùng [0, 0, 0] | tổng thời gian 56 phút | lưu: {"gold":768,"ore":33,"stones":0,"mats":[5,17,35],"shards":[0,1,3],"heroes":{"smith":23,"hunter":1,"healer":1,"wrestler":1},"weapons":["Cung Linh +6 Trắng","Búa Linh +6 Mầm"],"forge":3,"armor":"a_moc","helm":"h_r2","owned":{"helm":["h_r1","h_r2"],"armor":["a_r1","a_moc"],"charm":["c_spirit","c_ember","c_leech","c_mist","c_greed"]},"stars":"222212222123222"}
+exit 0
