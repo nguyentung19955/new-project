@@ -159,15 +159,15 @@ JS = r"""
     const hx = P.x; sec(0.3, { atk: true, mx: -1 });
     ok('Búa: đang lấy đà thì đi chậm lại và đã lên nấc 1', near((hx - P.x) / 0.3, P.speed * 0.45, 3) && P.mv.level === 1, ((hx - P.x) / 0.3).toFixed(1) + ' nấc ' + P.mv.level);
     P.x = 200; P.face = 1; run(1, {}); sec(0.9, {});
-    ok('Búa: thả ở nấc 1 thì nện đất 1,1 lần, không choáng', near(lost(e) / base(), 1.1 + 0.4, 0.01), (lost(e) / base()).toFixed(2));
+    ok('Búa: thả ở nấc 1 thì nện đất 1,0 lần (cộng sóng 0,4), không choáng', near(lost(e) / base(), 1.0 + 0.4, 0.01), (lost(e) / base()).toFixed(2));
     ok('Búa: nấc 1 có sóng chấn động chạy 60 điểm ảnh, không tới quái ở xa', lost(fw) === 0);
     room('hammer'); e = dummy(230); const fw2 = dummy(300), off2 = dummy(300, 224); e.st.stun = 0; fw2.st.stun = 0; e.speed = 0; fw2.speed = 0; e.cd = 1e9; fw2.cd = 1e9;
     sec(0.16 + 1.1 + 0.05, { atk: true });
     ok('Búa: giữ đủ lâu thì lên nấc 2', P.mv.level === 2 && P.mv.charge === 1, P.mv.level);
     P.x = 200; P.face = 1; e.x = 230; fw2.x = 300; run(1, {}); sec(0.12, {});
-    ok('Búa: nấc 2 nện 1,6 lần và làm choáng 0,7 giây', lost(e) / base() >= 1.6 - 0.01 && e.st.stun > 0.5, (lost(e) / base()).toFixed(2) + ' choáng ' + e.st.stun.toFixed(2));
+    ok('Búa: nấc 2 nện 1,25 lần và làm choáng 0,7 giây', lost(e) / base() >= 1.25 - 0.01 && e.st.stun > 0.5, (lost(e) / base()).toFixed(2) + ' choáng ' + e.st.stun.toFixed(2));
     sec(0.6, {});
-    ok('Búa: sóng chấn động nấc 2 chạy tới quái cách 100 điểm ảnh, gây 0,6 lần và làm choáng', near(lost(fw2) / base(), 0.6, 0.01), (lost(fw2) / base()).toFixed(2));
+    ok('Búa: sóng chấn động nấc 2 chạy tới quái cách 100 điểm ảnh, gây 0,5 lần và làm choáng', near(lost(fw2) / base(), 0.5, 0.01), (lost(fw2) / base()).toFixed(2));
     ok('Búa: sóng chỉ rộng theo chiều sâu vừa phải, không trúng quái lệch 34 điểm ảnh', lost(off2) === 0);
     ok('Búa: nện đất tính vào thống kê cận chiến', S.stats.melee > 0 && S.stats.ranged === 0);
     room('hammer'); e = dummy(226);

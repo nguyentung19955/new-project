@@ -13,11 +13,13 @@ JS = r"""
   G.rnd = G.srand(seed);
   G.startStage(1, 2, 0);
   const S = G.getRun(), W = G.getWorld(), P = S.P;
-  W.waves = []; W.props = [];
+  W.waves = []; W.spawns = []; W.props = W.props.filter((p) => p.type === 'roomFore'); // giữ lớp phủ trước của phòng để đo cả phần vẽ phòng
   Object.assign(G.botCfg, { prefer: wtype, explore: false, props: false });
   if (G.curW(P).type !== wtype) P.cur = 1 - P.cur;
   const roles = ['rusher', 'swarm', 'shield', 'rusher', 'nimble', 'swarm', 'archer'];
-  for (let i = 0; i < 14; i++) { const e = G.spawnEnemy(roles[i % roles.length], 120 + i * 22, 160 + (i * 37) % 70, { hpMult: 1e5 }); e.inside = true; }
+  // phòng vuông: rải 14 quái khắp sàn phòng
+  const rw = W.x1 - W.x0 - 20, rh = W.y1 - W.y0 - 30;
+  for (let i = 0; i < 14; i++) { const e = G.spawnEnemy(roles[i % roles.length], W.x0 + 10 + (i * 53) % rw, W.y0 + 20 + (i * 37) % rh, { hpMult: 1e5 }); e.inside = true; }
   const frame = () => { G.tick(); G.ui.begin(); G.scene.draw(); G.click = null; if (!W.over) { P.hp = P.maxhp; P.mana = Math.max(P.mana, 30); } };
   for (let i = 0; i < 90; i++) frame();
   const t0 = performance.now();

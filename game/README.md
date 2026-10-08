@@ -15,7 +15,7 @@ Trên điện thoại (nên cầm ngang):
 - **Né** lộn theo hướng đang đẩy cần. Không đẩy cần thì lộn theo hướng vừa di chuyển gần nhất; mũi tên trên nút Né chỉ sẵn hướng đó.
 - Mỗi vũ khí có lối đánh riêng với nút **Đánh**:
   - Kiếm: bấm liên tiếp (hoặc giữ) ra chuỗi 3 nhát, nhát thứ ba mạnh và rộng hơn. Đánh ngay sau khi Né thì lướt tới chém.
-  - Cung: bấm để bắn nhanh. Giữ để giương cung (có vạch lấy đà trên đầu), thả ra bắn tên mạnh xuyên qua nhiều quái.
+  - Cung: bấm để bắn nhanh; tên tự ngắm chéo tới quái đứng lệch trên dưới và xuyên thêm một con. Giữ để giương cung (có vạch lấy đà trên đầu), thả ra bắn tên mạnh xuyên qua nhiều quái.
   - Giáo: bấm liên tiếp ra ba nhát đâm rồi quét một vòng. Giữ rồi thả để lao tới một đoạn ngắn xuyên qua quái.
   - Búa: bấm để nện, làm quái khựng. Giữ để lấy đà 2 nấc, thả ra nện đất tạo sóng chấn động; đủ nấc 2 thì làm choáng.
 - Hệ của vũ khí mạnh lên theo cấp tiến hóa:
@@ -27,8 +27,9 @@ Trên điện thoại (nên cầm ngang):
 - Chạm ô vũ khí ở góc trên bên phải để đổi giữa hai vũ khí.
 - Chạm ô **Bình máu** để hồi máu, chạm **Dừng** để tạm nghỉ.
 - Lại gần rương, suối, thương nhân, bàn thờ rồi bấm **Đánh** để mở hoặc chọn.
+- Suối hồi chỉ dùng được khi đã dọn đủ 3 phòng quái. Ghé sớm thì suối hiện mờ kèm dòng "Dọn hết quái rồi quay lại".
 - Còn quái thì mọi cửa khóa. Hết quái thì cửa mở: đi vào cửa có mũi tên để sang phòng kề.
-- Chạm **bản đồ nhỏ** ở góc trên bên phải để tạm dừng và xem bản đồ cả ải; chạm lần nữa để chơi tiếp.
+- Chạm **bản đồ nhỏ** ở góc trên bên phải để tạm dừng và xem bản đồ cả ải; chạm lần nữa để chơi tiếp. Mọi ô phòng trên bản đồ cùng một màu, loại phòng xem ở biểu tượng; ô đang đứng sáng và có viền nổi, ô đã qua đậm hơn ô mới biết, cửa Trùm còn khóa có ổ khóa.
 
 Trên máy tính:
 
@@ -124,10 +125,13 @@ python3 tests/rules.py             # luật ba hệ, dấu ấn, trùm thích ng
 python3 tests/fuzz.py              # bấm loạn tìm lỗi sập
 python3 tests/room_shots.py        # chụp ảnh phòng và bản đồ vào docs/phong-vuong/
 python3 tests/moves.py             # lối đánh của bốn vũ khí và luật riêng của ba hệ
-python3 tests/dps.py               # đo sát thương theo thời gian của bốn vũ khí và ba hệ khi bot chơi
+python3 tests/dps.py 90 16 nho     # đo sát thương của bốn vũ khí và ba hệ khi bot chơi trong phòng thường (thêm "trum" thay "nho": phòng trùm)
 python3 tests/perf.py              # đo thời gian một khung hình trong cảnh đông quái
 python3 tests/chieu_shots.py       # chụp ảnh các lối đánh và hiệu ứng theo hệ vào docs/chieu-thuc/
 python3 tests/ghep.py              # bản lưu cũ, bốn bậc, trùm rơi Vàng, đặc trưng hệ theo cấp, né theo hướng cuối, hero và nút mới
+python3 tests/ghep2.py             # đợt ghép 2: nút trong hai lề, bóng và chiều sâu, lối đánh trong phòng hẹp, bản đồ một màu, né tám hướng, vũ khí rơi, suối khóa, hoạt ảnh trùm
+python3 tests/balance.py 4         # bot chơi 15 ải với bản lưu cố định, mỗi ải 4 lần: tỉ lệ thắng, thời gian, máu mất
+python3 tests/ghep2_shots.py       # chụp ảnh và ảnh động của đợt ghép 2 vào docs/ghep-2/ (cần thêm Pillow)
 python3 tests/ghep_shots.py        # chụp sáu ảnh của đợt ghép 1 vào docs/ghep/ (cần thêm Pillow)
 ```
 
