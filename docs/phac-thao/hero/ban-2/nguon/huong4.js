@@ -307,7 +307,7 @@
   }
 
   HUONGS.push({
-    id: 4, weaponScale: 5, scale: 7,
+    id: 4, weaponScale: 5, scale: 7, cmpScale: 4,
     title: 'Hướng 4: Mặt nạ hội làng',
     intro: 'Thân người thật, nhưng ai cũng đội một chiếc đầu hoặc mặt nạ lễ hội to quá khổ, lụa và vải bay phía sau.',
     heroes: [

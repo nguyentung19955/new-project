@@ -151,13 +151,14 @@ function renderPreview(h, which, s) {
 
 // Tờ so sánh: hero hiện tại và bốn hướng.
 function renderCompare(cur) {
-  const W = 1080, M = 20, S = 5, RH = 330;
-  const [cv, c] = mk(W, 150 + 5 * (RH + M));
+  const W = 1080, M = 20, S = 5, RH = 360;
+  const [cv, c] = mk(W, 200 + 5 * (RH + M));
   c.fillStyle = PAGE; c.fillRect(0, 0, W, cv.height);
   text(c, 'So sánh bốn hướng tạo hình', M + 6, 74, 54, GOLDT, true);
   text(c, 'Hàng đầu là nhân vật đang có trong game.', M + 6, 122, 30, CREAM, false);
-  let y = 150;
+  let y = 200;
   const CW = (W - 2 * M) / 4;
+  ['Thợ Rèn', 'Thợ Săn', 'Thầy Lang', 'Đô Vật'].forEach((t, i) => text(c, t, M + CW * i + CW / 2, 180, 32, SOFT, true, 'center'));
   const row = (label, fn) => {
     rr(c, M, y, W - 2 * M, RH, 18, PANEL);
     text(c, label, M + 20, y + 48, 38, GOLDT, true);
@@ -166,8 +167,7 @@ function renderCompare(cur) {
     y += RH + M;
   };
   row('Hiện tại', (i, x, fy) => {
-    base(c, 'bong', x - 3 * S, fy, 9, S);
-    c.drawImage(cur, i * 96, 0, 96, 80, Math.round(x - 43 * S), Math.round(fy - 70 * S), 96 * S, 80 * S);
+    c.drawImage(cur, i * 96, 0, 96, 80, Math.round(x - 42 * S), Math.round(fy - 70 * S), 96 * S, 80 * S);
   });
   for (const h of HUONGS) row(h.title, (i, x, fy) => putHero(c, h, i, x, fy, h.cmpScale || S));
   return cv;
