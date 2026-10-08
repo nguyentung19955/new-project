@@ -1,0 +1,66 @@
+# khung thẻ tướng Thường — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: viền đồng xám
+name: khung thẻ tướng Thường
+size: 40x48
+colors:
+  a = vien
+  b = sat-toi
+  c = sat
+  d = sat-sang
+
+part k0
+...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...
+..adddddddddddddddddddddddddddddddddba..
+.adccccccccccccccccccccccccccccccccccba.
+adccbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbccba
+adcbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaadcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaadcba
+adccddddddddddddddddddddddddddddddddccba
+adccccccccccccccccccccccccccccccccccccba
+adccccccccccccccccccccccccccccccccccccba
+adccccccccccccccccccccccccccccccccccccba
+adccccccccccccccccccccccccccccccccccccba
+adccccccccccccccccccccccccccccccccccccba
+abccccccccccccccccccccccccccccccccccccba
+.abccccccccccccccccccccccccccccccccccba.
+..abbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbba..
+...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -766,6 +766,7 @@ function VePixelCore(DS, TV) {
     if (!/^[a-z0-9][a-z0-9_-]*$/.test(it.code)) E.push('mã chỉ dùng chữ thường không dấu, số, - và _');
     const s = DS.sizes[it.g];
     if (s && !s.includes(`${it.w}x${it.h}`)) E.push(`cỡ ${it.w}x${it.h} sai (nhóm ${it.g}: ${s.join(' / ')})`);
+    if (!s && (it.w < 8 || it.h < 8 || it.w > 320 || it.h > 320)) E.push(`cỡ ${it.w}x${it.h} sai — nhóm ${it.g} chỉ cho phép mỗi chiều 8..320 (như tools/build-pixel.js)`);
     const req = DS.req[it.g] || {};
     for (const [a, [lo, hi]] of Object.entries(req)) { const an = it.anims.find((x) => x.name === a); const n = an ? an.frames.length : 0; if (n < lo || n > hi) E.push(`động tác "${a}" cần ${lo}–${hi} khung (có ${n})`); }
     for (const an of it.anims) {

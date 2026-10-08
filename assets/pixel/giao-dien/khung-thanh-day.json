@@ -1,0 +1,25 @@
+{
+ "code": "khung-thanh-day",
+ "group": "giao-dien",
+ "name": "khung thanh đáy (chợ tướng trong trận)",
+ "w": 160,
+ "h": 24,
+ "ax": 80,
+ "ay": 23,
+ "bbox": [
+  0,
+  0,
+  160,
+  24
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "khung-thanh-day.png"
+}

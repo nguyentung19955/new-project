@@ -1,0 +1,51 @@
+# thẻ chợ tướng — ghep — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: khung thẻ ngang 5:4 bo góc, cửa sổ giữa trống (chân dung vẽ vào); vàng sáng lấp lánh (ghép được)
+name: thẻ chợ tướng — ghep
+size: 40x32
+colors:
+  a = vien
+  b = sang
+  c = dong-sang
+  d = vang-nghe
+  e = vang-sang
+
+part k0
+..aeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeea..
+.aeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeecea.
+aeeddddddddddddddddddddddddddddddddddcea
+eeddccccccccccccccccccccccccccccccccddce
+eedceeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeedce
+eedceaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaeedce
+eedcea............................aeedce
+eedcea............................aeedce
+eedcea............................aeedce
+eedcea............................aeedce
+eedcea............................aeedce
+eedcea............................aeedce
+eedcea............................aeedce
+eedcea............................aeedce
+eedcea............................aeedce
+eedeea............................aeedce
+eeebeea..........................aeebece
+eedeea............................aeedce
+eedcea............................aeedce
+eedcea............................aeedce
+eedcea............................aeedce
+eedcea............................aeedce
+eedcea............................aeedce
+eedcea............................aeedce
+eedcea............................aeedce
+eedcea............................aeedce
+eedceaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaeedce
+eedceeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeedce
+ecddeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeddce
+aecddddddddddddddddddddddddddddddddddcea
+.aeccccccccccccccccccccccccccccccccccea.
+..aeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeea..
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

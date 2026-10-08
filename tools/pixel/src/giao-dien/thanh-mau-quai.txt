@@ -1,0 +1,26 @@
+# khung thanh máu quái — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: sắt tối mảnh, móng vuốt 2 đầu
+name: khung thanh máu quái
+size: 24x8
+colors:
+  a = vien
+  b = sat-toi
+  c = sat
+  d = sat-sang
+
+part k0
+caaa.a.a.a.a.a.a.a.aaaac
+aaddadadadadadadadaddbaa
+.adcbbbbbbbbbbbbbbbbcba.
+.adbaaaaaaaaaaaaaaaadba.
+.adbaaaaaaaaaaaaaaaadba.
+.adcddddddddddddddddcba.
+aabbababababababababbbaa
+caaa.a.a.a.a.a.a.a.aaaac
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

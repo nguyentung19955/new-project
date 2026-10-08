@@ -57,7 +57,8 @@ function loadUiSkins() {
     im.onload = () => { root.style.setProperty('--sk-' + name, `url("${new URL(src, document.baseURI).href}")`); if (cls) root.classList.add('sk-' + cls); };
     im.src = src;
   };
-  for (const [name, cls] of UI_SKIN) if (hasAsset(`ui/${name}.png`)) one(assetSrc(`ui/${name}.png`), name, cls);
+  // claude/xuat-goi-pixel: khung / nút / thanh pixel (nhóm "giao-dien") khi bật pixel — trước ảnh vẽ tay
+  for (const [name, cls] of UI_SKIN) { const px = typeof pxUrl === 'function' && pxUrl('giao-dien', name); if (px) one(px, name, cls); else if (hasAsset(`ui/${name}.png`)) one(assetSrc(`ui/${name}.png`), name, cls); }
   if (hasAsset('scenes/nen-man-phu.png')) one(assetSrc('scenes/nen-man-phu.png'), 'nen-man-phu', 'nen-man-phu');
 }
 if (typeof document !== 'undefined' && document.documentElement) loadUiSkins();

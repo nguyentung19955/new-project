@@ -1,0 +1,38 @@
+# ô đồ (slot) độ hiếm hiem — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: nền ô tối + viền xanh
+name: ô đồ (slot) độ hiếm hiem
+size: 20x20
+colors:
+  a = vien
+  b = khoi
+  c = cham
+  d = nuoc-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaa.
+adddddddddddddddddca
+adbbbbbbbbbbbbbbbbca
+adbbbbbbbbbbbbbbbbca
+adbbbbbbbbbbbbbbbbca
+adbbbbbbbbbbbbbbbbca
+adbbbbbbbbbbbbbbbbca
+adbbbbbbbbbbbbbbbbca
+adbbbbbbbbbbbbbbbbca
+adbbbbbbbbbbbbbbbbca
+adbbbbbbbbbbbbbbbbca
+adbbbbbbbbbbbbbbbbca
+adbbbbbbbbbbbbbbbbca
+adbbbbbbbbbbbbbbbbca
+adbbbbbbbbbbbbbbbbca
+adbbbbbbbbbbbbbbbbca
+adbbbbbbbbbbbbbbbbca
+adbbbbbbbbbbbbbbbbca
+acccccccccccccccccca
+.aaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+
