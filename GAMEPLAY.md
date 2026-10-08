@@ -2176,6 +2176,37 @@ Test: cập nhật `cho-tuong` (màn Chuẩn bị không còn chọn đội, sau
 - Sửa theo tester (sau v195): đồng xu bay khi hạ quái ~16 px CSS, rương rơi đồ ~30 px CSS (cỡ tính theo `view.scale`, không nhỏ lại trên điện thoại), quầng tròn + viền vòng đậm màu độ hiếm (xám / xanh / tím / cam) nhấp nháy nhẹ, chỉ mờ ở cuối. Icon tựa màn thua chương Sơn Tinh "Phong Châu thất thủ": thay mũi tên sóng (`ic-nuoc-dang`, trông như biểu đồ tăng) bằng cổng thành `tiles/cong-phong-chau.png` chìm trong 2 ngọn sóng `ic-hanh-thuy`.
 - Ảnh bảng Hợp thể (nút Mở ở Anh Hùng) và màn kết quả (nhắc mở 1 tướng Tím): `docs/cho-6-the/bang-hop-the-844x390.jpg`, `docs/cho-6-the/ket-qua-667x375.jpg`.
 
+## claude/vo-tan-su-kien — Vô tận có vô tận thật không + sự kiện thử thách mỗi 10 đợt từ đợt 60
+
+**Kiểm tra Vô tận (trước khi sửa):** không có mảng đợt / index hết phần tử nên về lý thuyết chơi mãi, nhưng:
+- Số quái mỗi đợt tăng mãi (`8 + 1,6 × đợt hiệu dụng`): đợt 200 ≈ 200 con, đợt 1000 ≈ 950–1.250 con → ra quân mất ~13 phút một đợt.
+- Máu quái ×1,16 mỗi đợt hiệu dụng mãi mãi → khoảng đợt 8.000+ máu = `Infinity` (không hạ được, thanh máu NaN).
+- Tỉ lệ tinh anh tăng tới 100% (đợt rất xa toàn tinh anh).
+- Thanh máu boss in số đầy đủ: đợt 1000 là "112.000.000.000…" (36 chữ số) tràn khung.
+- Thanh tiến độ đợt đứng yên 100% sau đợt cuối cũ của bản đồ; vòng tìm boss trên thanh trên chạy từ đợt 1 mỗi khung hình.
+
+**Đã sửa:** tối đa 80 quái / đợt, phần dư dồn thành máu (tổng máu giữ nguyên) · từ đợt hiệu dụng 150 máu tăng ×1,06 / đợt, trần 1e200 (không bao giờ Infinity) · tinh anh tối đa 45% · số ≥ 1 tỷ viết gọn (`1,5 tỷ`, `2,3 nghìn tỷ`, `4,17e20`) · thanh tiến độ sau đợt cuối cũ chạy theo chặng 10 đợt. Test tua tới đợt 1000 / 5000 / 1.000.000: luôn có quái, không NaN / Infinity, tổng máu đợt tăng ~×1,04–1,10 mỗi đợt.
+
+**Sự kiện đợt** (`WAVE_EVENTS` / `eventAt(n, bản đồ)` trong khối riêng cuối `buildWave`, js/data.js): đợt 60, 70, 80 … vô tận (trước đợt 60 không đổi gì; đợt sự kiện cũng là đợt boss). Mục đích **tăng độ khó một chút**, nặng dần theo số lần gặp (k = 0 ở đợt 60, 1 ở đợt 70… có trần). 9 sự kiện xoay vòng ngẫu nhiên có kiểm soát: mỗi vòng 9 lần đủ cả 9, xáo cố định theo (vòng, bản đồ), không bao giờ lặp 2 lần liên tiếp; hàm thuần nên chơi nhóm / lưu–nạp / dải "đợt kế" thấy giống nhau.
+
+| Sự kiện | Thử thách (đợt 60 → trần) |
+|---|---|
+| Âm Binh Tinh Nhuệ | thêm 30% → 50% quái thành tinh anh |
+| Nước Thánh Hà Bá | quái hồi 1,2% → 2,5% máu / giây |
+| Gió Bão Thủy Tinh | quái chạy nhanh +30% → +50% |
+| Sương Mù Lam Chướng | tầm đánh tướng −8% → −20% (sương phủ bản đồ) |
+| Yêu Tinh Phân Thân | quái thường chết tách 1 phân thân 35% → 55% máu (không vàng, không tách tiếp) |
+| Ngũ Hành Nghịch | một hành (theo đợt / bản đồ) −30% → −45% sát thương |
+| Bùa Yểm Thủy Tinh | cứ 6 → 4,5 giây trói ngẫu nhiên 1 tướng 5 → 6 giây (`srand`, chơi nhóm khớp) |
+| Quân Hùng Hậu | cả đợt kể cả boss +25% → +60% máu |
+| Đàn Chim Bão | 40% → 70% quân thành quái bay, mang máu hiệu dụng của con bị thay × 0,85 → 1,3 |
+
+Tham khảo game khác: làm yếu một nhóm tướng (Arknights *Contingency Contract*), trói / cấm tháp ngẫu nhiên (Kingdom Rush, Rogue Tower), quái tái sinh / tách đôi (Bloons), sương mù giảm tầm.
+- **Báo trước:** hết đợt 59, 69… → banner "Đợt 60 · sự kiện" + toast nêu thử thách và thưởng; dải "đợt kế" dưới thanh trên có biểu tượng + tên sự kiện. Vào đợt: banner "Sự kiện · …" + dải hiện thử thách suốt đợt. Banner sự kiện nằm dưới dải (không che), nhãn "Đã dừng" nhường chỗ khi banner hiện.
+- **Thưởng khi vượt qua:** vàng = 60% thưởng hết đợt (đợt 60: +192), Ngân khố 60 + 12 × k (trần 250; Khó ×1,5). Đếm cả đợt bị gộp khi Gọi sớm; bản lưu cũ không được thưởng bù (`evWave`).
+- **Cân bằng (mô phỏng `node tests/vo-tan-su-kien/mo-phong.js`):** đội 8 tướng cố định, hệ số lực M = nhỏ nhất để qua đợt 60 thường mất ≤ 2 mạng; mỗi sự kiện đánh 24 trận (lực ×0,8 / ×1 / ×1,25 × 8 seed). Đợt 60: đợt thường mất 34 mạng / 24 trận, các sự kiện mất 43–66 (máu lọt ×1,2–2,2); đợt 100 (k = 4) máu lọt ×1,2–4. Đội mạnh hơn 50% qua mọi sự kiện mất TB ≤ 0,5 mạng → khó hơn chút, không phải tường. Các bản đầu bị "dễ hơn" đã sửa: chim ra dồn cục 0,45 giây bị đánh lan (giờ giãn như quân thường), Chim Bão 55 máu thay Cua 240 máu / 18 giáp (giờ mang máu hiệu dụng của con bị thay), tinh anh ghi đè thay vì cộng thêm.
+- **Icon vẽ tạm bằng code** (chưa có ảnh): `ui/ic-suong-mu.png` (mây xám xanh + 2 vệt sương), `ui/ic-phan-than.png` (2 hồn ma tím chồng nhau) — đã thêm vào `IC_SHEETS['ic-su-kien']` của tools/build-prompts.js (lần sinh prompt sau tự có). Sự kiện khác dùng icon có sẵn (tinh-anh, hoi-mau, toc-chay, khac-che, cam-lang, mau, bay).
+- Test: `node tests/vo-tan-su-kien/vo-tan-su-kien.test.js` (lịch 60/70/…/12000 cả 17 bản đồ, không lặp liền, mỗi sự kiện kích hoạt / hiệu ứng / thưởng đúng, đợt 1000 chạy thật, mô phỏng cân bằng; `CHI_ANH=1` chỉ chụp ảnh). Ảnh đã xem: `tests/vo-tan-su-kien/shots/bao-truoc-*.png`, `trong-su-kien-*.png` ở 1920×934, 844×390, 667×375, `dot-1000-844x390.png`.
 ## claude/pixel-nen-tang — Nền tảng chuyển toàn bộ hình sang PIXEL ART (vẽ bằng code)
 
 Người dùng chốt: đổi toàn bộ hình ảnh sang **pixel art do Claude vẽ bằng code** (lưới ký tự + bảng màu chung → PNG), không gen AI.
@@ -2293,6 +2324,10 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 216 — gộp vo-tan-su-kien (tester đạt)
+
+- Sự kiện Vô tận: banner báo trước, bảng Bộ quái mới đợi banner, banner boss hạ xuống dưới dải sự kiện (không che "Boss xuất hiện"). Test bỏ Ếch Mẹ (chết đẻ nòng nọc) khi chọn quái thử phân thân — hết chập chờn.
+
 ## Phiên bản 215 — gộp tool-pixel
 
 - Tool vẽ pixel tools/ve-pixel.html + CLI `node tools/ve-pixel.js` (spec JSON → sprite, --out zip, --xem ảnh, --nap vào game); thư viện bộ phận từ bản vẽ tay; bộ mẫu tools/pixel/mau/. Game: Cài đặt → Gói pixel (Bật/Tắt, Nạp gói .zip, Gỡ gói). Hướng dẫn docs/pixel/HUONG-DAN-TOOL.md, SPEC.md.
@@ -2321,6 +2356,15 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
 
 - Gộp bản chỉnh màu hành + mặt nạ 4 tướng pixel (Lạc Tướng, Ống Thổi, Thợ Gốm, Thợ Rèn) — tester đạt ở 844×390 + 1920×934.
 
+## claude/vo-tan-su-kien — Sửa theo tester2: bảng "Bộ quái mới" che banner sự kiện
+
+- Bản đồ 30 / 40 đợt đổi bộ quái ở đợt 61, 71, 91, 101… nên bảng "Đợt 61 · bộ quái mới" bật đúng lúc đợt sự kiện 60 / 70 / 90 / 100 bắt đầu, nằm giữa màn che banner. Sửa (đụng ít code bảng): bảng **đợi banner (boss / sự kiện) tắt** rồi mới mở; bảng có thêm **1 dòng sự kiện** (icon + "Đợt 60 · tên" + thử thách) khi trùng mốc; banner sự kiện tới lúc bảng đang mở thì **xếp hàng**, bảng đóng mới hiện (bảng đã ghi sự kiện đó thì bỏ banner).
+- Cầm dọc (game xoay 90°, `#wrap.rot`): banner dùng cỡ gọn như màn ngang thấp (trước đây chữ 30px bị cắt "NGŨ HÀNH NGH…"); `placeToasts` đổi toạ độ đúng khi xoay nên toast né được banner / bảng (trước đây đè lên chữ banner — lỗi có từ trước, ảnh hưởng cả banner boss).
+- Test thêm (bản đồ 30 đợt, mốc 59/60, 89/90, 99/100 ở 1920×934, 844×390, dọc 390×844): báo trước không bị che, mở màn banner trước / bảng đợi, bảng sau có dòng sự kiện, bảng nằm gọn màn, toast không đè banner, banner xếp hàng khi bảng mở. Ảnh đã xem: `tests/vo-tan-su-kien/shots/trung-{59,89,99}-bao-truoc-*.png`, `trung-{60,90,100}-mo-man-*.png`, `trung-{60,90,100}-bang-*.png`.
+
+## claude/vo-tan-su-kien — Sửa theo tester: dải sự kiện che "Boss xuất hiện"
+- Boss ra trong đợt sự kiện (vd vô tận ải 1, đợt 60 Gió Bão Thủy Tinh, Hồ Tinh Chín Đuôi): ở 844×390 và cầm dọc, dải trên "tên sự kiện · thử thách" che dòng nhỏ "Boss xuất hiện". Nay khi dải đang hiện sự kiện, mọi banner (boss, thăng thần…) hạ xuống như banner sự kiện (104px; màn thấp / cầm dọc 84px).
+- Test `vo-tan-su-kien`: đo khung dải sự kiện × hai dòng banner boss ở 844×390, 390×844, 1920×934, 667×375 (trước khi sửa chồng 1320 px²); ảnh `shots/boss-trong-su-kien-*.png`.
 ## Phiên bản 208 — bàn giao điều phối, quy tắc tiết kiệm token
 - Thêm docs/BAN-GIAO-DIEU-PHOI.md và mục "Tiết kiệm token" trong CLAUDE.md. Dừng mọi session con.
 

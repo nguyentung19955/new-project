@@ -363,6 +363,7 @@ function render() {
   ].sort((a, b) => a.y - b.y);
   drawables.forEach((d) => d.draw());
   drawGuard(t);
+  drawEventFog(t);
 
   // hệ hạt: vệt đuôi + quầng sáng đạn, nổ khi trúng, hạt của chiêu
   const vdt = Math.min(0.05, Math.max(0, t - (render.lastT || t)));
@@ -374,6 +375,24 @@ function render() {
   VFX.draw(ctx);
   if (dragging) drawDragGhost(dragging, dropSlot, t);
   else drawFuseMarks(t);
+}
+
+// vo-tan-su-kien: Sương Mù Lam Chướng — các mảng sương trôi chậm phủ bản đồ (đậm theo mức giảm tầm)
+function drawEventFog(t) {
+  const f = game.fogNow ? game.fogNow() : 0;
+  if (!f) return;
+  ctx.save();
+  ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.filter = 'none'; ctx.shadowBlur = 0;
+  ctx.fillStyle = `rgba(196,212,220,${0.1 + f * 0.6})`;        // lớp màn mỏng phủ cả bản đồ
+  ctx.fillRect(-200, -200, CONFIG.W + 400, CONFIG.H + 400);
+  const a = Math.min(0.75, 0.45 + f * 1.5);
+  for (let i = 0; i < 12; i++) {
+    const x = ((i * 157 + t * (10 + i * 3)) % (CONFIG.W + 500)) - 250, y = 60 + ((i * 97) % (CONFIG.H - 100)), r = 170 + (i % 3) * 60;
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+    g.addColorStop(0, `rgba(222,232,236,${a})`); g.addColorStop(0.55, `rgba(214,226,230,${a * 0.45})`); g.addColorStop(1, 'rgba(214,226,230,0)');
+    ctx.fillStyle = g; ctx.fillRect(x - r, y - r, r * 2, r * 2);
+  }
+  ctx.restore();
 }
 
 // cỡ vẽ (px) của ảnh đạn vẽ tay theo loại
