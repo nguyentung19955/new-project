@@ -1,0 +1,118 @@
+{
+  "_huong_dan": [
+    "Toa do tinh theo diem anh cua hinh dung trong anh xem-khop.png (goc tren ben trai la 0,0).",
+    "hop = [trai, tren, phai, duoi]. Sua so roi chay lai cong cu. Xoa file nay de cong cu tu doan lai.",
+    "tay_truoc la tay gan nguoi xem, cung la tay cam vu khi. day = be day canh tay (0 = chi cat theo hop).",
+    "sao_chep = dung lai manh khac lam ban sau (to toi hon); lech = doi sang phai, xuong duoi bao nhieu diem.",
+    "phu = phan phu nhu duoi, non: hop, khop (cho gan vao than), gan (than hoac dau), lop (truoc hoac sau), lac (do dung dua), day (chi lay phan manh hon so nay; 0 = lay ca hop)."
+  ],
+  "manh": {
+    "dau": {
+      "hop": [
+        2.4,
+        0.0,
+        18.5,
+        14.9
+      ]
+    },
+    "than": {
+      "hop": [
+        5.8,
+        14.9,
+        17.1,
+        27.1
+      ]
+    },
+    "tay_truoc": {
+      "hop": [
+        0.0,
+        14.1,
+        8.1,
+        28.9
+      ],
+      "day": 6.1
+    },
+    "tay_sau": {
+      "hop": [
+        15.5,
+        16.4,
+        22.0,
+        28.5
+      ],
+      "day": 5.9
+    },
+    "chan_truoc": {
+      "hop": [
+        4.9,
+        27.1,
+        11.6,
+        38.0
+      ],
+      "day": 0
+    },
+    "chan_sau": {
+      "hop": [
+        12.5,
+        27.1,
+        19.6,
+        38.0
+      ],
+      "day": 0
+    }
+  },
+  "khop": {
+    "co": [
+      12.2,
+      14.9
+    ],
+    "vai_truoc": [
+      5.4,
+      17.1
+    ],
+    "khuyu_truoc": [
+      3.7,
+      21.5
+    ],
+    "ban_tay_truoc": [
+      1.9,
+      25.9
+    ],
+    "vai_sau": [
+      18.1,
+      19.1
+    ],
+    "khuyu_sau": [
+      19.1,
+      22.3
+    ],
+    "ban_tay_sau": [
+      20.1,
+      25.5
+    ],
+    "hong_truoc": [
+      8.7,
+      26.4
+    ],
+    "goi_truoc": [
+      8.2,
+      31.9
+    ],
+    "ban_chan_truoc": [
+      7.7,
+      38.0
+    ],
+    "hong_sau": [
+      14.3,
+      26.4
+    ],
+    "goi_sau": [
+      14.8,
+      32.0
+    ],
+    "ban_chan_sau": [
+      15.5,
+      38.0
+    ]
+  },
+  "phu": []
+}

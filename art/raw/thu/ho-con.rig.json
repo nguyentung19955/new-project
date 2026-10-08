@@ -1,0 +1,136 @@
+{
+  "_huong_dan": [
+    "Toa do tinh theo diem anh cua hinh dung trong anh xem-khop.png (goc tren ben trai la 0,0).",
+    "hop = [trai, tren, phai, duoi]. Sua so roi chay lai cong cu. Xoa file nay de cong cu tu doan lai.",
+    "tay_truoc la tay gan nguoi xem, cung la tay cam vu khi. day = be day canh tay (0 = chi cat theo hop).",
+    "sao_chep = dung lai manh khac lam ban sau (to toi hon); lech = doi sang phai, xuong duoi bao nhieu diem.",
+    "phu = phan phu nhu duoi, non: hop, khop (cho gan vao than), gan (than hoac dau), lop (truoc hoac sau), lac (do dung dua), day (chi lay phan manh hon so nay; 0 = lay ca hop)."
+  ],
+  "manh": {
+    "dau": {
+      "hop": [
+        5.9,
+        0.0,
+        24.4,
+        18.8
+      ]
+    },
+    "than": {
+      "hop": [
+        6.8,
+        18.8,
+        22.5,
+        31.8
+      ]
+    },
+    "tay_truoc": {
+      "hop": [
+        3.5,
+        18.2,
+        10.6,
+        29.8
+      ],
+      "day": 5.9
+    },
+    "tay_sau": {
+      "hop": [
+        17.5,
+        19.8,
+        25.0,
+        28.9
+      ],
+      "day": 6.1
+    },
+    "chan_truoc": {
+      "hop": [
+        8.5,
+        31.8,
+        15.0,
+        38.0
+      ],
+      "day": 0
+    },
+    "chan_sau": {
+      "hop": [
+        15.4,
+        31.8,
+        21.6,
+        38.0
+      ],
+      "day": 0
+    }
+  },
+  "khop": {
+    "co": [
+      15.1,
+      18.8
+    ],
+    "vai_truoc": [
+      8.0,
+      21.8
+    ],
+    "khuyu_truoc": [
+      7.3,
+      24.4
+    ],
+    "ban_tay_truoc": [
+      6.6,
+      26.9
+    ],
+    "vai_sau": [
+      20.2,
+      22.5
+    ],
+    "khuyu_sau": [
+      21.6,
+      24.3
+    ],
+    "ban_tay_sau": [
+      23.0,
+      26.0
+    ],
+    "hong_truoc": [
+      8.5,
+      30.2
+    ],
+    "goi_truoc": [
+      10.0,
+      33.9
+    ],
+    "ban_chan_truoc": [
+      11.7,
+      38.0
+    ],
+    "hong_sau": [
+      17.4,
+      31.1
+    ],
+    "goi_sau": [
+      17.9,
+      34.4
+    ],
+    "ban_chan_sau": [
+      18.4,
+      38.0
+    ]
+  },
+  "phu": [
+    {
+      "ten": "duoi",
+      "hop": [
+        0.0,
+        18.9,
+        13.2,
+        35.2
+      ],
+      "khop": [
+        10.9,
+        30.5
+      ],
+      "gan": "than",
+      "lop": "sau",
+      "lac": 10,
+      "day": 9.7
+    }
+  ]
+}
