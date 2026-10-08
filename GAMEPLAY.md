@@ -2792,3 +2792,14 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 - Nút / cử chỉ Back trên web: luôn gài sẵn một mục lịch sử (gài lại ở lần chạm đầu). Back khi đang mở bảng → đóng bảng (như cũ); trong trận → **tạm dừng + hộp "Rời trận?"** (Ở lại = chạy tiếp, Rời trận = Dừng chơi; Back/Esc lần nữa = Ở lại); ở menu → nhắc "Thoát game?", bấm Back lần 2 trong 2 giây mới rời trang.
 - Đóng/tải lại trang khi đang trong trận: trình duyệt hỏi lại (beforeunload). Trong app Capacitor giữ hành vi cũ (chỉ đóng bảng).
 - Test: `node tests/chan-vuot-lui/chan-vuot-lui.test.js` (giả lập điện thoại hasTouch, 844×390 + dọc 390×844).
+- **Mở rộng (chưa có tướng Tím thì khó biết mua gì):**
+  - **Mục tiêu hợp thể:** bảng Hợp thể có nút ghim **Theo đuổi** trên mỗi công thức Tím/Vàng (tối đa 2, ghim thứ 3 thì bỏ cái cũ nhất; lưu ở
+    `settings.pins`). Thẻ chợ là nguyên liệu Thường còn thiếu sáng **xanh ngọc** + dấu ghim (công thức Vàng thì đi xuống công thức Tím chưa có trên sân).
+    Ưu tiên màu: ghép ★ > ghim > hợp thể. Dải nhỏ trên chợ: [đích] = [nguyên liệu ★ hiện tại/cần] + […], thiếu thì mờ; chạm dải → mở Hợp thể.
+    Chưa ghim gì: tự gợi ý 1 công thức Tím gần xong nhất (viền mảnh, dải nét đứt chữ "Gợi ý"); ✕ trên dải hoặc nút **Tự gợi ý** trong Hợp thể để tắt/bật
+    (`settings.autoPin`). Chỉ là giao diện — không đổi tỉ lệ rút thẻ (chơi nhóm không lệch).
+  - **Tìm tên không dấu** ("thach sanh" → Thạch Sanh, đ → d) + lọc hành (5 nút) ở Hợp thể (tìm cả 2 tab), Anh Hùng và Bách khoa · Vai trò (thêm lọc bậc
+    Thường/Tím/Vàng). Anh Hùng: chạm tướng → khung "Phát triển thành" (dùng trong công thức nào / cần gì); Bách khoa: chạm tướng → thẻ thông tin.
+  - **Chạm giữ thẻ chợ** ~0,45 s: hiện tên + vai trò + "Góp vào: + bạn ghép ➜ tướng Tím" (có dấu ghim nếu đang theo đuổi); thả tay ẩn, không mua.
+  - Test: `node tests/goi-y-ro/muc-tieu.test.js` (gợi ý tự động, ghim đúng thẻ sáng, tối đa 2, lưu, dải có/thiếu, chạm giữ không mua, chạm nhanh vẫn mua,
+    tắt gợi ý, nút Theo đuổi, tìm không dấu không mất ô nhập, lọc bậc — pixel + pixel0, 844×390 · 667×375 · 1920×934).

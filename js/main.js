@@ -175,12 +175,16 @@ $('#deck').addEventListener('pointerdown', (ev) => {
   if (!type) return;
   ev.preventDefault();
   cardDrag = { i, type, id: ev.pointerId, sx: ev.clientX, sy: ev.clientY, moved: false, x: -9999, y: -9999 };
+  // goi-y-ro: chạm GIỮ ~0,45 giây (không kéo) → tên + công thức Tím/Vàng tướng này góp vào; thả tay là ẩn, không mua
+  const d = cardDrag;
+  d.holdT = setTimeout(() => { if (cardDrag === d && !d.moved) { d.held = true; ui.showHeroTip(type, b.getBoundingClientRect()); } }, 450);
 });
 window.addEventListener('pointermove', (ev) => {
   const d = cardDrag;
   if (!d || ev.pointerId !== d.id) return;
   if (!d.moved && Math.hypot(ev.clientX - d.sx, ev.clientY - d.sy) > 10) {
     d.moved = true;
+    clearTimeout(d.holdT); if (d.held) { d.held = false; ui.hideHeroTip(); }
     cardGhost.innerHTML = `<img src="${heroImgUrl(d.type, 'head')}" alt="">`;
     cardGhost.style.setProperty('--c', ELEMENTS[HEROES[d.type].el].color);
     cardGhost.classList.toggle('rot', ROT);
@@ -196,6 +200,8 @@ const endCardDrag = (ev, cancel) => {
   if (!d || (ev && ev.pointerId !== d.id)) return;
   cardDrag = null;
   cardGhost.hidden = true;
+  clearTimeout(d.holdT);
+  if (d.held) { ui.hideHeroTip(); return; }     // vừa giữ xem thông tin: không mua
   if (cancel) return;
   if (!d.moved) return ui.buyCard(d.i);
   const slot = ui.slotAt(d.x, d.y);
