@@ -83,6 +83,22 @@ const fit = (page) => page.evaluate(() => {
     await page.screenshot({ path: require('path').join(__dirname, `shots/hop-den-${w}x${h}.png`) }).catch(() => {});
   }
   await page.evaluate(() => { const d = document.documentElement.style; ['t', 'r', 'b', 'l'].forEach((k) => d.removeProperty('--safe-' + k)); window.dispatchEvent(new Event('resize')); });
+  // 6) bàn phím (gốc lỗi người dùng tìm ra): chạm ô tìm ở Hợp thể → khung nhìn co 390×500 → game ĐỨNG YÊN; rời ô → về đúng như trước
+  await page.setViewportSize({ width: 390, height: 844 }); await page.waitForTimeout(900);
+  const box = () => page.evaluate(() => { const r = document.querySelector('#wrap').getBoundingClientRect(); return [r.left, r.top, r.right, r.bottom].map(Math.round).join(','); });
+  for (const [name, open, sel] of [['Hợp thể', () => ui.openLegends(true), '#legends input'], ['Anh Hùng', () => ui.showRoster(), '#roster input']]) {
+    await page.evaluate(open); await page.waitForTimeout(400);
+    const b0 = await box();
+    const inp = page.locator(sel).first();
+    ok(await inp.count() && (await inp.evaluate((e) => parseFloat(getComputedStyle(e).fontSize))) >= 16, `${name}: ô nhập chữ ≥ 16px (iOS không tự phóng to)`);
+    await inp.focus();
+    await page.setViewportSize({ width: 390, height: 500 }); await page.waitForTimeout(900);
+    ok(await box() === b0, `${name}: đang gõ, bàn phím làm khung co 390×500 → game đứng yên (${await box()})`);
+    await page.evaluate(() => document.activeElement.blur());
+    await page.setViewportSize({ width: 390, height: 844 }); await page.waitForTimeout(1000);
+    ok(await box() === b0, `${name}: rời ô, bàn phím đóng → game về đúng như trước (${await box()} = ${b0})`);
+    await page.evaluate(() => { ui.hideOverlays && ui.hideOverlays(); const l = document.querySelector('#legends'); if (l) l.hidden = true; });
+  }
   ok(!errors.length, 'không lỗi JS ' + errors.slice(0, 2).join(' | '));
   await browser.close();
   console.log('PASS khit-man');

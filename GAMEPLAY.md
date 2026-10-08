@@ -2372,6 +2372,10 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 262 — chặn tự phóng to, thanh trên không tràn (tạm, chờ khung cố định)
+
+- Lỡ phóng to (visualViewport.scale≠1) → giữ khung theo bố cục, không phóng game theo; chặn chạm đôi phóng to. Thanh trên tự thu nhỏ khi tràn khung.
+
 ## Phiên bản 261 — hộp đen tránh tai thỏ / viền
 
 - Body chừa lề an toàn 4 phía (+8px khi máy có lề), #wrap chứa mọi UI vừa khít vùng còn lại, phần thừa nền đen (người dùng đề xuất).
@@ -3101,3 +3105,4 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 
 ## claude/khung-co-dinh — khung thiết kế cố định 844×390 (thu / phóng một hệ số)
 - Toàn bộ #wrap (canvas + #ui + mọi bảng) dàn ở khung cố định 844×390 (tỉ lệ ≈ 19,5:9 của đa số điện thoại), `transform: [rotate(90deg)] scale(FS)`, FS = min(vùng an toàn / khung); vùng an toàn = khung bố cục (bỏ visualViewport khi đang phóng to) − lề an toàn − 8px; căn giữa, ngoài khung nền đen. Bỏ media query theo cỡ màn (bố cục chỉ còn một). Toạ độ chạm qua một hàm `toFrame` / `rectToFrame` (main.js) → `uiBox` (ui.js) cho toast, tooltip, bảng chỉ số, số Ngân khố bay. Canvas vẽ theo khung × FS × dpr. Test mới `tests/khung-co-dinh` (10 cỡ máy + lề an toàn giả: khung trọn vùng an toàn, nút không ra ngoài, ảnh quy về khung giống nhau, kéo thẻ chợ đặt đúng ô, các bảng trọn khung).
+- **iPhone — gốc lỗi người dùng tìm ra (bàn phím)**: chạm ô nhập (tìm tên, biệt danh, chat, đăng nhập…) → (a) ô < 16px làm Safari tự phóng to trang, (b) bàn phím co khung nhìn → game co/lệch không về. Sửa: mọi input/textarea/select 16px; đang focus ô nhập thì đóng băng bố cục (resize bỏ qua), focusout → scrollTo(0,0) + đặt lại bố cục (ngay + 100/300/700 ms, vẫn bỏ qua khi visualViewport.scale ≠ 1). khit-man thêm: focus ô tìm Hợp thể / Anh Hùng, khung 390×844→390×500→844 → game đứng yên rồi về y như trước.

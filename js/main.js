@@ -102,7 +102,9 @@ function rectToFrame(r) {
 function resize() {
   // v153: bàn phím điện thoại mở khi gõ chat (hoặc góp ý) làm khung nhìn co lại — giữ nguyên bố cục, gõ xong mới co giãn lại
   const ae = document.activeElement;
-  if (ae && ae.id === 'chat-in') { if (!resize.hooked) { resize.hooked = true; ae.addEventListener('blur', () => { resize.hooked = false; setTimeout(resize, 150); }, { once: true }); } return; }
+  // iPhone (người dùng tìm ra gốc lỗi): chạm ô nhập (tìm tên, biệt danh, chat, đăng nhập…) → bàn phím làm khung nhìn co → game co / lệch
+  // và không về lại. Đang nhập thì ĐÓNG BĂNG bố cục; rời ô (focusout) mới đặt lại (xem typing ở cuối hàm reflow)
+  if (ae && ae.matches && ae.matches('input, textarea, select, [contenteditable]')) return;
   let [vw, vh, vx, vy] = viewportSize();
   if (!vw || !vh) return requestAnimationFrame(resize);
   const cx = vx + vw / 2, cy = vy + vh / 2;     // tâm vùng an toàn — #wrap (position: fixed) đặt tâm vào đây
@@ -164,6 +166,10 @@ let reflowT = [];
 const reflow = () => { const vv = window.visualViewport; if (vv && Math.abs((vv.scale || 1) - 1) > 0.02) return;   // đang phóng to: giữ bố cục, đợi về 1
   resize(); reflowT.forEach(clearTimeout); reflowT = [100, 300, 700].map((ms) => setTimeout(resize, ms)); };
 window.addEventListener('resize', reflow);
+document.addEventListener('focusout', (e) => {
+  if (!e.target.matches || !e.target.matches('input, textarea, select, [contenteditable]')) return;
+  setTimeout(() => { if (window.scrollX || window.scrollY) window.scrollTo(0, 0); reflow(); }, 0);
+});
 window.addEventListener('orientationchange', reflow);
 if (window.visualViewport) { window.visualViewport.addEventListener('resize', reflow); window.visualViewport.addEventListener('scroll', reflow); }
 window.addEventListener('scroll', () => { if (window.scrollX || window.scrollY) window.scrollTo(0, 0); }, { passive: true });
