@@ -49,8 +49,8 @@ JS = r"""
       dm.push((h0 - e.hp) / base());
     }
     ok('Kiếm: bấm 3 lần ra chém ngang, chém ngược, nhát kết', names.join() === 'Chém ngang,Chém ngược,Nhát kết' && steps.join() === '0,1,2', names.join());
-    ok('Kiếm: sát thương ba nhát là 0,9 / 0,95 / 1,7 lần', near(dm[0], 0.9, 0.01) && near(dm[1], 0.95, 0.01) && near(dm[2], 1.7, 0.01), dm.map((x) => x.toFixed(2)).join('/'));
-    ok('Kiếm: nhát kết với xa hơn (trúng quái đứng xa 44 điểm ảnh), hai nhát đầu thì không', near(lost(far) / base(), 1.7, 0.01), (lost(far) / base()).toFixed(2));
+    ok('Kiếm: sát thương ba nhát là 1 / 1,05 / 1,8 lần (sửa góp ý 3: trước 0,9 / 0,95 / 1,7)', near(dm[0], 1, 0.01) && near(dm[1], 1.05, 0.01) && near(dm[2], 1.8, 0.01), dm.map((x) => x.toFixed(2)).join('/'));
+    ok('Kiếm: nhát kết với xa hơn (trúng quái đứng xa 44 điểm ảnh), hai nhát đầu thì không', near(lost(far) / base(), 1.8, 0.01), (lost(far) / base()).toFixed(2));
     ok('Kiếm: nhát kết đẩy lùi quái 10 điểm ảnh', near(e.x, 234, 0.5), e.x);
     ok('Kiếm: đòn tính vào thống kê cận chiến của trùm', S.stats.melee > 0 && S.stats.ranged === 0, S.stats.melee);
     room('sword'); e = dummy(224);
@@ -132,9 +132,9 @@ JS = r"""
       sd.push((h0 - e.hp) / base());
     }
     ok('Giáo: bấm liên tiếp ra ba nhát đâm rồi quét vòng', sn.join() === 'Đâm0,Đâm1,Đâm2,Quét vòng3', sn.join());
-    ok('Giáo: đâm xa (trúng quái cách 56 điểm ảnh) 0,95 lần (sửa góp ý 3: trước 0,85); quét vòng không với tới quái đó', near(sd[0], 0.95, 0.01) && near(sd[2], 0.95, 0.01) && sd[3] === 0, sd.map((x) => x.toFixed(2)).join('/'));
-    ok('Giáo: đâm hẹp, không trúng quái đứng lệch 18 điểm ảnh theo chiều sâu; quét vòng thì trúng (1,6 lần)', near(lost(side) / base(), 1.6, 0.01), (lost(side) / base()).toFixed(2));
-    ok('Giáo: quét vòng trúng cả quái sau lưng và hất nó ra', near(lost(back) / base(), 1.6, 0.01) && near(back.x, 168, 0.5), (lost(back) / base()).toFixed(2) + ' x=' + back.x);
+    ok('Giáo: đâm xa (trúng quái cách 56 điểm ảnh) 1,05 lần (sửa góp ý 3: trước 0,85); quét vòng không với tới quái đó', near(sd[0], 1.05, 0.01) && near(sd[2], 1.05, 0.01) && sd[3] === 0, sd.map((x) => x.toFixed(2)).join('/'));
+    ok('Giáo: đâm hẹp, không trúng quái đứng lệch 18 điểm ảnh theo chiều sâu; quét vòng thì trúng (1,75 lần)', near(lost(side) / base(), 1.75, 0.01), (lost(side) / base()).toFixed(2));
+    ok('Giáo: quét vòng trúng cả quái sau lưng và hất nó ra', near(lost(back) / base(), 1.75, 0.01) && near(back.x, 168, 0.5), (lost(back) / base()).toFixed(2) + ' x=' + back.x);
     room('spear'); const l1 = dummy(225), l2 = dummy(245);
     sec(0.16 + 0.5 + 0.05, { atk: true });
     ok('Giáo: giữ nút thì thu giáo lấy đà đầy sau 0,5 giây', P.mv.holding && P.mv.charge === 1, P.mv.charge);
@@ -261,7 +261,7 @@ JS = r"""
     ok('Băng: quái đã bị đóng băng', e.st.frozen > 0);
     run(1, { atk: true, atkP: true }); wait(() => !P.hitDone, {});
     ok('Băng: quái đóng băng bị đánh thì vỡ, mảnh văng trúng quái gần 0,9 lần và làm nó chậm', near(lost(nbI) / base(), 0.9, 0.01) && nbI.st.iceN === 1, (lost(nbI) / base()).toFixed(2) + ' tầng ' + nbI.st.iceN);
-    ok('Băng: con bị vỡ băng ăn thêm 0,7 lần', near(lost(e) / base(), 0.9 + 0.7, 0.01), (lost(e) / base()).toFixed(2));
+    ok('Băng: con bị vỡ băng ăn thêm 0,7 lần (ngoài nhát chém đầu của kiếm)', near(lost(e) / base(), G.MOVES.sword.chain[0].mult + 0.7, 0.01), (lost(e) / base()).toFixed(2));
     ok('Băng: mảnh băng kết liễu quái đang dính Băng thì vẫn cho dấu ấn Băng', mkI.dead && near(w.marks.ice - im0, 1.2, 0.01), w.marks.ice - im0);
     wait(() => P.atkT > 0, {}); const nb1 = lost(nbI);
     run(1, { atk: true, atkP: true }); wait(() => !P.hitDone, {});

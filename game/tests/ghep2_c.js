@@ -78,7 +78,7 @@
   go({ bow: true }); P.x = W.x0 + 4; P.y = W.geo.cy;
   let row = [0, 1, 2, 3, 4, 5].map((i) => dummy(P.x + 40 + i * 22, P.y));
   sec(0.16 + 0.75 + 0.1, { atk: true }); step(1); sec(1);
-  ok('C: tên mạnh đầy đà xuyên thêm 4 quái (trúng 5 con trong hàng 6)', row.filter((e) => lost(e) > 0).length === 5, row.map((e) => (lost(e) > 0 ? 1 : 0)).join(''));
+  ok('C: tên mạnh đầy đà xuyên thêm 2 quái (trúng 3 con trong hàng 6; sửa góp ý 3: trước là 4)', row.filter((e) => lost(e) > 0).length === 3, row.map((e) => (lost(e) > 0 ? 1 : 0)).join(''));
   // ngắm chéo: giới hạn góc
   go({ bow: true }); P.x = W.x0 + 30; P.y = W.geo.cy;
   let e1 = dummy(P.x + 60, P.y + 36);
