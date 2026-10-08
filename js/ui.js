@@ -1448,7 +1448,7 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 251</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 252</div>
       </div></div>`;
   }
 
@@ -3658,7 +3658,8 @@ class UI {
       case 'to-menu': $('#settings').hidden = true; if (g.started) this.bankStats(); this.showMenu(); break;
       case 'res-heroes': if (g.started) this.bankStats(); this.showMenu(); this.showRoster(d.type); break;     // v182: kết quả trận → mở khoá tướng
       case 'ro-role': this.rosterRole = this.rosterRole === d.r ? '' : d.r; this.renderRoster(); break;
-      case 'vt-hero': this.toast(`${HEROES[d.type].name}: ${heroRoles(d.type).map((r) => ROLES[r].name).join(' · ')}`, ROLES[heroRole(d.type)].color);
+      case 'vt-hero':     // v252: bỏ toast trùng thông tin với bảng ngang (chỉ dùng khi không có phần tử để neo bảng)
+        if (!el) this.toast(`${HEROES[d.type].name}: ${heroRoles(d.type).map((r) => ROLES[r].name).join(' · ')}`, ROLES[heroRole(d.type)].color);
         if (el) { this.showHeroTip(d.type, el.getBoundingClientRect()); clearTimeout(this.htT); this.htT = setTimeout(() => this.hideHeroTip(), 4000); } break;     // goi-y-ro: dùng trong công thức nào / cần gì
       case 'vt-f': sc.role = sc.role === d.r ? '' : d.r; this.renderScreen(true); break;
       case 'ro-sel': {
