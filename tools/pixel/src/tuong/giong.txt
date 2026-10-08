@@ -1,0 +1,281 @@
+# Thánh Gióng — mẫu pixel 32×32 (tướng Vàng · hành Hỏa), phong cách sử thi (docs/pixel/QUY-CHUAN.md mục 0).
+# Đặc trưng (PROMPT-DUNG-XUONG.txt:896–905 + mẫu người dùng duyệt): chàng trai khổng lồ, tóc đen dựng, KHĂN VÀNG, GIÁP SẮT ĐEN
+# (đường nối giáp cháy lửa — phá cách: giáp như vừa ra lò), ÁO CHOÀNG ĐỎ, GẬY SẮT TO; mặt nghiêm; chiêu: đầu gậy bốc lửa (Hỏa).
+# Ngựa sắt / khóm tre không vẽ trong 32×32 (để hiệu ứng / triệu hồi).
+name: Thánh Gióng
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  K = khoi
+  t = toi
+  x = khoi
+  s = sat-toi
+  S = sat
+  w = sat-sang
+  f = da-toi
+  F = da
+  h = da-sang
+  e = trang
+  y = vang-nghe
+  Y = vang-sang
+  j = dong
+  d = dong-toi
+  D = dong-sang
+  r = son
+  m = son-toi
+  R = son-sang
+  l = lua
+  L = lua-sang
+  z = sang
+
+part tren
+................................
+............K..K..K.............
+...........KKKKKKKKKK...........
+..........KKKKKKKKKKKK..........
+.......jj.YYYYYYYYYYYy..........
+......jyy.yyyyyyyyyyyj..........
+......j...KKKhFFFFFFFF..........
+..........KKhFFKKFFKKF..........
+..........KfFFFekFFekf..........
+..........KffFFFFFFFFFh.........
+...........ffFFFFFffFf..........
+............ffFFFFFFff..........
+..............fffff.............
+.......mr.xwlSDDDDSlSx..........
+......mrrxwSSSdDdSSSsx..........
+......RrrxSSsssssssssx..........
+......mrrxlLlLlLlLlLlx..........
+......mrrxSSsssssssssx..........
+......mmrxSsssssssssxx..........
+......mmrdDDDDDYDDDDDd..........
+.......mm.xSsssxSsssx...........
+.......m..xsssxtxsssx...........
+end
+
+part chan
+...........Ssx..Ssx.............
+...........Ssx..Ssx.............
+...........Slx..Slx.............
+...........Ssx..Ssx.............
+...........Ssx..Ssx.............
+...........Ssx..Ssx.............
+..........KKKK..KKKKK...........
+..........KKKK..KKKKK...........
+................................
+................................
+end
+
+part gay
+wYw
+yyy
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+wSs
+xxx
+end
+
+part gay_ngang
+xSSSSSSSSSSSyY
+xwwwwwwwwwwwyY
+xssssssssssyyw
+end
+
+part gay_cheo
+..........wY
+.........Ssy
+........Ss..
+.......Ss...
+......Ss....
+.....Ss.....
+....Ss......
+...Ss.......
+..Ss........
+.Ss.........
+Ss..........
+x...........
+end
+
+part gay_xuong
+Ss.........
+.Ss........
+..Ss.......
+...Ss......
+....Ss.....
+.....Ss....
+......Ss...
+.......Ss..
+........yy.
+.........Yw
+end
+
+
+part tay
+.xs.
+..xS
+..FF
+..fF
+end
+
+part tay_len
+.FF
+.fF
+.S.
+xS.
+xs.
+end
+
+part tay_dam
+xsFF
+.SfF
+end
+
+part mat_nham
+ttFFtt
+end
+
+part lua_nho
+.L.
+LlL
+.l.
+end
+
+part lua_to
+..L..
+.LlL.
+LlzlL
+lLzLl
+.lll.
+end
+
+anim idle fps=3 loop
+frame idle
+  use chan 0 22
+  use tren
+  use gay 23 5
+  use tay 20 13
+  outline
+end
+frame idle
+  use chan 0 22
+  use tren 0 1
+  use gay 23 5
+  use tay 20 14
+  outline
+end
+
+# đánh: vung lên → giơ cao → bổ ngang → thu về
+anim attack fps=10 once
+frame attack
+  use chan 0 22
+  use tren
+  use gay_cheo 19 2
+  use tay_len 21 10
+  outline
+end
+frame attack
+  use chan 0 22
+  use tren
+  use gay 23 1
+  use tay_len 21 9
+  outline
+end
+frame attack
+  use chan 0 22
+  use tren 1 0
+  use gay_ngang 17 16
+  use tay_dam 21 15
+  outline
+end
+frame attack
+  use chan 0 22
+  use tren
+  use gay_xuong 20 17
+  use tay 20 13
+  outline
+end
+
+# chiêu: giơ gậy sắt, đầu gậy bốc lửa (hành Hỏa)
+anim cast fps=8 loop
+frame cast
+  use chan 0 22
+  use tren
+  use gay 23 5
+  use lua_nho 22 3
+  use tay_len 21 10
+  outline
+end
+frame cast
+  use chan 0 22
+  use tren
+  use gay 23 5
+  use lua_to 21 1
+  use tay_len 21 10
+  outline
+end
+frame cast
+  use chan 0 22
+  use tren 0 1
+  use gay 23 5
+  use lua_to 21 1
+  use tay_len 21 11
+  set 18 3 z
+  set 28 5 z
+  outline
+end
+
+# trúng đòn: giật lùi, nhắm mắt, da nháy sáng
+anim hurt fps=8 once
+frame hurt
+  use @idle.0
+  shift -2 0
+  use mat_nham 13 8
+  swap F h
+  swap s S
+end
+frame hurt
+  use @idle.0
+  shift -1 0
+  use mat_nham 14 8
+end
+
+# chết: khuỵu gối → ngã nằm
+anim die fps=5 once
+frame die
+  use gay_xuong 20 17
+  use chan 0 22
+  use tren 0 3
+  use mat_nham 15 11
+  outline
+end
+frame die
+  use chan 0 22
+  use tren 0 3
+  use mat_nham 15 11
+  rot 90
+  shift 0 5
+  use gay_ngang 1 29
+  outline
+end
+frame die
+  use @die.1
+  swap y j
+end

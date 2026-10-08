@@ -1,0 +1,30 @@
+# Ô ĐƯỜNG ĐẤT 16×16 — lát liền; đường quái đi trên bản đồ bộ (rừng, đồng, hang…).
+name: Đường đất
+size: 16x16
+colors:
+  a = dat-sang
+  b = dat
+  c = cat
+  t = dat-toi
+part o
+aaaaaaaabaaaaaaa
+aacaaaaaaaaaabaa
+aaaaabaaaaaaaaaa
+abaaaaaaaacaaaaa
+aaaaaaatbaaaaaaa
+aaaaaaaaaaaaaaba
+acaaaaaaaaabaaaa
+aaaaabaaaaaaaaaa
+aaaaaaaaaaaaacaa
+aaabaaaaacaaaaaa
+aaaaaaaaaaaaaaaa
+aaaaaaatbaaaaaba
+abaaaaaaaaaaaaaa
+aaaaacaaaaaabaaa
+aaaaaaaaaaaaaaaa
+aaaaaaaaabaaaaca
+end
+anim main fps=1 loop
+frame main
+  use o
+end

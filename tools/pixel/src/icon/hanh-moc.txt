@@ -1,0 +1,32 @@
+# Icon ngũ hành Hành Mộc 16×16 — huy hiệu tròn nền tối, vành màu hành, biểu tượng giữa (thay ui/ic-hanh-moc.png khi bật pixel).
+name: Hành Mộc
+size: 16x16
+colors:
+  k = vien
+  K = toi
+  r = la-ma
+  L = la-sang
+  l = la-ma
+  g = dat-sang
+part o
+.......kk.......
+....kkrrrrkk....
+...krrrKKrrrk...
+..krrKKKKKKrrk..
+.krrKKKKLKKKrrk.
+.krKKKKLlLKlKrk.
+.rrKKKKLlLLlKrr.
+krKKKKKKlLlKKKrk
+krKKKKKKllKKKKrk
+.rrKKKKKgKKKKrr.
+.krKKKKKgKKKKrk.
+.krrKKKgggKKrrk.
+..krrKKKKKKrrk..
+...krrrKKrrrk...
+....kkrrrrkk....
+.......kk.......
+end
+anim main fps=1 loop
+frame main
+  use o
+end

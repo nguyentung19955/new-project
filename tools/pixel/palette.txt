@@ -1,0 +1,66 @@
+# BẢNG MÀU CHUNG (46 màu) — pixel art Thần Thoại Việt (docs/pixel/QUY-CHUAN.md)
+# Mỗi dòng: <tên> <#hex> <ghi chú>. Tên dùng trong mục "colors:" của file nguồn.
+# CHỈ được dùng màu trong bảng này (tools/build-pixel.js báo lỗi màu lạ). Thêm màu = sửa file này
+# + ghi GAMEPLAY.md + báo session điều phối (đừng thêm tuỳ tiện: bảng màu chung giữ cả game đồng bộ).
+# Dấu * = màu viền ngoài hợp lệ (pixel chạm nền trong suốt phải là màu viền).
+
+# PHONG CÁCH: trầm, cổ kính (đồng hun, son sẫm, vàng nghệ cũ, chàm, rêu, nâu đất, đen khói) — không kẹo ngọt / pastel / neon.
+# Mỗi dải có ≥3 tông để đổ bóng 3 tông (tối · gốc · sáng).
+
+# --- viền / tối
+vien       #140C06  * viền đen nâu 1px quanh mọi hình
+toi        #2E241B  * nâu rất tối: viền trong, khe, bóng sâu
+khoi       #24201C  * đen khói (tóc, khói, hắc ín)
+# --- sắt / bạc (hành Kim)
+sat-toi    #33363C  * sắt tối (bóng giáp sắt)
+sat        #555A62    sắt
+sat-sang   #8A9098    sắt sáng
+bac        #C3C6C4    bạc / ánh kim
+# --- trắng
+trang-xam  #B8AE98    vải trắng ngà (bóng)
+trang      #E4DCC8    trắng ngà
+sang       #F5EED8    điểm sáng / phép thuật
+# --- da
+da-toi     #9A5E3E    da bóng
+da         #C98A62    da
+da-sang    #E2B58A    da sáng
+# --- nâu đất (hành Thổ)
+dat-toi    #3E2716  * nâu đất tối
+dat        #6B4426    nâu đất
+dat-sang   #946538    đất sáng / gỗ
+cat        #C2A26A    cát / rơm / tre khô
+# --- đồng / vàng (trống đồng, đồ Huyền thoại)
+dong-toi   #5A3814  * đồng tối
+dong       #8E5A22    đồng
+dong-sang  #BF863A    đồng sáng
+vang-nghe  #D6A532    vàng nghệ (viền đồ Vàng / Huyền thoại)
+vang-sang  #ECD08A    vàng sáng
+# --- son đỏ / lửa (hành Hỏa)
+son-toi    #5A1610  * son đỏ tối
+son        #92301C    son đỏ (áo choàng, khăn)
+son-sang   #BC4A2E    son sáng
+hong       #C7786A    hồng (má, hoa sen)
+lua        #D2661E    lửa cam
+lua-sang   #E8A048    lửa sáng
+# --- xanh lá (hành Mộc)
+la-toi     #1C3A1E  * lá tối
+la         #35632A    lá
+la-ma      #6A9A38    xanh lá mạ
+la-sang    #A8C46A    lá non
+reu-toi    #3A4A22  * rêu tối
+reu        #5E7434    xanh rêu / ngọc ô-liu (Sơn Tinh)
+reu-sang   #869A4C    rêu sáng
+# --- chàm / nước (hành Thủy)
+cham-toi   #161E3A  * chàm tối
+cham       #26406A    chàm (áo chàm, quần ngư phủ)
+cham-sang  #44699A    chàm sáng
+nuoc       #3478A6    nước
+nuoc-sang  #78B4CC    nước sáng / bọt
+troi       #B8D8E0    trời / bọt trắng xanh
+# --- tím (độ hiếm Sử thi / Tím, ma quái)
+tim-toi    #36204A  * tím tối
+tim        #63407E    tím
+tim-sang   #9478B0    tím sáng
+# --- ngọc (ngọc bích, phép nước)
+ngoc       #2A8A7E    ngọc lam
+ngoc-sang  #6CC0B0    ngọc sáng

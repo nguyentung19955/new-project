@@ -1,0 +1,207 @@
+# Tôm Binh (mã tom) — mẫu pixel quái thường 32×32 (hành Thủy, chương Sơn Tinh – Thủy Tinh). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-DUNG-XUONG.txt:1399–1404; PROMPT-GEN-LAI.txt:96 "tôm có càng — hợp · giữ"): lính tôm sông màu cam, đi bằng chân nhỏ,
+# MŨ ĐỒNG nhỏ, KHIÊN ĐỒNG tròn có ngôi sao, GIÁO ngắn; râu dài quặt ra sau, đuôi quạt cong. Quay mặt sang PHẢI (game tự lật).
+name: Tôm Binh
+size: 32x32
+anchor: 16,28
+colors:
+  k = vien
+  o = lua
+  O = lua-sang
+  r = son
+  m = son-toi
+  j = dong-toi
+  d = dong
+  D = dong-sang
+  Y = vang-nghe
+  e = trang
+  s = sat
+  S = sat-sang
+  g = dat
+  G = dat-sang
+
+part than
+................................
+................................
+.........rrrr...................
+......rrr....rr.................
+.....r.........r.jDDDDj.........
+...............rjDDDDDDj........
+................DdDDDDDDd.......
+...............jjjjjjjjjjj......
+................oOOooooooo......
+...............oOOoooooekoOO....
+...............oOooooookkoooOO..
+...............ooooooooooo......
+.............rroooooorrr........
+............OOoooooo............
+............Ooooooooo...........
+...........rrrrrrrrr............
+...........OOoooooo.............
+...........Ooooooooo............
+...........rrrrrrrrr............
+..........OOoooooo..............
+..........Ooooooooo.............
+..........rrrrrrrrr.............
+........OOoooooor...............
+......Oooooo....................
+....OOOoooor....................
+...OoOOOrr......................
+...OOOoo........................
+....Oo..........................
+................................
+................................
+................................
+................................
+end
+
+part khien
+..jjjjj..
+.jDDDDdj.
+jDDdYdddj
+jDdYYYddj
+jDYYYYYdj
+jddYYYddj
+jdddYddjj
+.jdddddj.
+..jjjjj..
+end
+
+part chan1
+...r.r.r
+..r.r.r.
+..r.r.r.
+.r.r.r..
+rr.rr.rr
+end
+
+part chan2
+...r.r.r
+...r.r.r
+..r.r.r.
+..r.r.r.
+.rr.rr.r
+end
+
+part giao
+.S.
+SSs
+.S.
+.s.
+.G.
+.g.
+.g.
+.g.
+.g.
+.g.
+.g.
+.g.
+.g.
+.g.
+.g.
+.g.
+.g.
+.g.
+.g.
+.g.
+.g.
+end
+
+part giao_ngang
+gggggggggsS.
+GGGGGGGGGSSS
+.........sS.
+end
+
+part cang
+.oO
+oOo
+end
+
+part mat_x
+k.k
+.k.
+end
+
+anim walk fps=6 loop
+frame walk
+  use than
+  use chan1 12 23
+  use giao 27 3
+  use khien 18 13
+  use cang 26 15
+  outline
+end
+frame walk
+  use than 0 -1
+  use chan2 12 23
+  use giao 27 2
+  use khien 18 12
+  use cang 26 14
+  outline
+end
+frame walk
+  use than
+  use chan1 13 23
+  use giao 27 3
+  use khien 18 13
+  use cang 26 15
+  outline
+end
+
+# đánh: rụt giáo lại → đâm thẳng → thu về
+anim attack fps=8 once
+frame attack
+  use than
+  use chan1 12 23
+  use giao 25 5
+  use khien 17 13
+  use cang 24 17
+  outline
+end
+frame attack
+  use than 1 0
+  use chan2 12 23
+  use khien 16 15
+  use giao_ngang 19 14
+  use cang 24 15
+  outline
+end
+frame attack
+  use @walk.0
+end
+
+anim hurt fps=8 once
+frame hurt
+  use @walk.0
+  shift -1 0
+  swap o O
+  swap r o
+end
+frame hurt
+  use @walk.0
+  shift -1 0
+end
+
+# chết: lật ngửa bụng
+anim die fps=5 once
+frame die
+  use than 0 1
+  use chan2 12 24
+  use khien 18 14
+  use mat_x 22 10
+  outline
+end
+frame die
+  use than
+  use chan1 12 23
+  use mat_x 22 9
+  rot 180
+  shift 0 2
+  use khien 4 22
+  outline
+end
+frame die
+  use @die.1
+  swap o r
+end

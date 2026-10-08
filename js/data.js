@@ -1457,7 +1457,7 @@ const SKILL_MAX = [4, 4, 4, 3];
 const skillMult = (lv) => 1 + 0.25 * (Math.max(1, lv) - 1);   // mỗi cấp kỹ năng +25% hiệu lực
 // cấp tướng cần để kỹ năng thứ i đạt cấp L
 // cấp tướng cần cho từng cấp kỹ năng: Q/W/E, và R (tối thượng)
-const SKILL_REQ = [0, 1, 3, 5, 7], R_REQ = [0, 6, 11, 16];
+const SKILL_REQ = [0, 1, 3, 5, 7], R_REQ = [0, 6, 9, 12];   // claude/r-cap-12: R tối đa ở cấp 12 (trước 6/11/16)
 const skillReqLevel = (i, L) => (i === 3 ? R_REQ[L] : SKILL_REQ[L]) || 99;
 
 // ------------------------------------------------------------
