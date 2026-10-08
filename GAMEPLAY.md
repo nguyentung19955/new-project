@@ -1001,7 +1001,7 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 
 ### Phiên bản 77
 
-- **Dừng chơi**: menu ≡ trong trận có nút 🏳 Dừng chơi (bấm 2 lần để chắc chắn) — bỏ trận, không giữ để Tiếp tục, cộng thành tích, ghi điểm vô tận nếu đang vô tận, về menu.
+- **Dừng chơi**: menu ≡ trong trận có nút 🏳 Dừng chơi (bấm 2 lần để chắc chắn) — lưu trận và về menu; bấm Tiếp tục để chơi tiếp (claude/giu-tran-dang-choi; trước đây nút này bỏ trận).
 - **Lò đúc đồng (cửa hàng + đúc đồ) đưa ra ngoài trận**: bỏ khỏi menu ≡ trong trận; mở từ bảng **Chuẩn bị xuất quân** trước khi vào trận (dùng vàng đầu trận), đóng thì quay lại bảng. Bảng chuẩn bị giờ luôn hiện khi vào ải.
 
 ### Phiên bản 78
@@ -2770,3 +2770,13 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
   thì không dùng dù tướng đang bị thương. Test: tests/sua-tam-skill (giữa hai đợt, tướng 30% máu → không kỹ năng hỗ trợ nào tung).
 - Theo tester: bỏ luật ẩn mọi phần tử con của chợ (chỉ ẩn khung ngoài, con tự ẩn theo); `closeScreen` bỏ lớp panel-open ngay khi đóng. Lỗi chập chờn của cho-tuong ("ảnh chưa sẵn sàng") khi chạy 6 test song song cũng xảy ra trên nhánh chính (1/6 lần), không do nhánh này; chạy lần lượt 5/5 đạt.
 - Lỗi gấp "Ấn GỌI SỚM không gọi được": KHÔNG do panel-open — bản v229 (trước khi gộp nhánh này) cũng không bấm được. Gốc: luật cũ `#nextwaves { … pointer-events: none }` (đầu style.css) đè `#ui > * { pointer-events: auto }` (cùng độ ưu tiên, viết sau thắng) → chạm/nhấp xuyên xuống bản đồ. Sửa: `#nextwaves.early { pointer-events: auto }` (dải thường vẫn cho chạm xuyên). Test `tests/goi-som/` (844×390 chuột + chạm, 1920×934): giữa đợt bấm Gọi sớm → đợt kế bắt đầu + toast vàng; sau khi mở/đóng Túi đồ; sau khi kéo tướng.
+
+## claude/giu-tran-dang-choi — rời trận không còn bị về màn 1 đợt 1
+- **Nguyên nhân:** nút ≡ → 🏳 Dừng chơi (đường duy nhất để rời trận về menu) gọi `quitRun()` → `clearRun()` xoá hẳn bản lưu trận; vào lại chỉ còn "Xuất Quân" → trận mới từ màn 1 đợt 1. Tải lại trang / đóng app thì vốn không mất (bản lưu đầu mỗi đợt).
+- **Dừng chơi giờ = lưu trận + về menu.** Giữa hai đợt: lưu đúng lúc rời (vàng, tướng, chợ, màn/bản đồ vô tận, sự kiện, độ Khó). Đang giữa đợt: giữ bản lưu đầu đợt; còn mở game thì Tiếp tục quay lại đúng khoảnh khắc (trận tạm dừng trong bộ nhớ), tải lại trang thì chơi lại từ đầu đợt đó. Nhãn xác nhận: "Bấm lần nữa · lưu & về menu". Trận nhóm vẫn bỏ trận như cũ.
+- Ngân khố / Tu Vi / nhiệm vụ ngày của trận dừng giữa chừng trả khi trận kết thúc thật (thua), hoặc khi bấm **Chơi mới** đè lên trận dở (tính như bỏ trận: 4 Ngân khố mỗi đợt đã qua, Tu Vi 60%).
+- Bảng Sính lễ đang mở khi lưu (đợt boss đã xong) → lưu luôn 3 lựa chọn; Tiếp tục mở lại bảng, không mất thưởng boss.
+- Thành tích trọn đời (lifeKills/lifeGold) nhớ phần đã cộng qua tải lại (`save.banked`) → Tiếp tục không cộng trùng.
+- Nút Tiếp tục 2 dòng: "Tiếp tục · Đợt N ♾" + tên vùng đất (một dòng bị cắt mất số đợt).
+- Test: `node tests/giu-tran/giu-tran.test.js` (đợt 16 màn 2: Dừng chơi giữa / sau đợt, tải lại, ẩn app, Sính lễ mở, Chơi mới).
+

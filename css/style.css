@@ -1284,7 +1284,8 @@ body { overflow: hidden; }
 .mc-nav:has(#btn-newgame:not([hidden])) .mc-btn { height: 36px; font-size: 15px; }
 .mc-nav:has(#btn-newgame:not([hidden])) .mc-btn.main { height: 42px; font-size: 15px; }
 .mc-nav:has(#btn-newgame:not([hidden])) { gap: 6px; }
-#continue-label { overflow: hidden; text-overflow: ellipsis; }
+#continue-label { overflow: hidden; text-overflow: ellipsis; line-height: 1.1; }
+#continue-label small { display: block; font-size: 12px; font-weight: 700; color: #FFE6A8; overflow: hidden; text-overflow: ellipsis; }
 .mc-subs { min-width: 0; } .mc-subs .mc-sub { min-width: 0; overflow: hidden; text-overflow: ellipsis; font-size: 13px; }
 .login-rename { display: flex; gap: 6px; }
 .login-rename .login-in { flex: 1; min-width: 0; }

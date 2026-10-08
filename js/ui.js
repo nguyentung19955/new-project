@@ -722,7 +722,8 @@ class UI {
     const g0 = this.game, live = g0.started && !g0.over && (!g0.won || g0.endless);
     const run = !live && s.run;
     const lvN = live ? (g0.stage ? g0.stage.lv : g0.level) : run ? endlessStageAt(run.wave || 0, run.level || 0).lv : 0, wN = live ? g0.wave : run ? run.wave : 0;   // vô tận theo màn: tên vùng đất đang chơi (màn là hàm của số đợt — khớp màn khi Tiếp tục, cả bản lưu cũ)
-    $('#continue-label').textContent = live || run ? `Tiếp tục · ${(LEVELS[lvN] || LEVELS[0]).name} · Đợt ${wN} ♾` : 'Xuất Quân';
+    // giu-tran-dang-choi: 2 dòng (Tiếp tục · Đợt N / tên vùng đất) — một dòng bị cắt mất số đợt trên nút
+    $('#continue-label').innerHTML = live || run ? `Tiếp tục · Đợt ${wN} ♾<small><i hidden> · </i>${esc((LEVELS[lvN] || LEVELS[0]).name)}</small>` : 'Xuất Quân';
     $('#btn-newgame').hidden = !(live || run);
     $('#roster-hint').onclick = () => { $('#roster-hint').hidden = true; };
     this.setInGame(false);
@@ -753,6 +754,10 @@ class UI {
     if (g.started && !g.over && g.endless && g.level === i) {
       this.hideOverlays();
       this.setInGame(true);
+      // giu-tran-dang-choi: quay lại sau Dừng chơi — chạy tiếp như lúc rời, bảng Sính lễ đang mở thì mở lại
+      if (this.quitReward) $('#reward').hidden = false;
+      else if (this.quitWasRunning) g.running = true;
+      this.quitWasRunning = this.quitReward = false;
       return;
     }
     this.startLevel(i);
@@ -761,6 +766,10 @@ class UI {
   startLevel(i) {
     const g = this.game;
     if (COOP.on) return this.toast('Đang chơi nhóm: thoát trận nhóm trước (≡ → Dừng chơi)', '#E25A3A');
+    // giu-tran-dang-choi: Chơi mới đè lên trận dở (còn trong bộ nhớ hoặc bản lưu) → trận cũ tính như bỏ trận (Ngân khố / Tu Vi như trước)
+    if (!(g.started && !g.over) && this.save.run && LEVELS[this.save.run.level]) { try { g.restore(this.save.run); g.endless = true; } catch (e) { g.started = false; } }
+    if (g.started && !g.over && !g.co) this.abandonRun(true);
+    this.quitWasRunning = this.quitReward = false;
     if (g.started) this.bankStats();
     g.hard = !!this.save.settings.hard;
     g.reset(i);
@@ -877,11 +886,30 @@ class UI {
     const g = this.game;
     if (COOP.on || g.co) return;     // v141: trận nhóm không lưu để tiếp tục một mình
     if (!g.started || g.over || (g.won && !g.endless)) return;
-    this.save.run = g.snapshot();
+    const r = g.snapshot();
+    // giu-tran-dang-choi: bảng Sính lễ đang mở (đợt đã xong) → lưu luôn 3 lựa chọn, Tiếp tục mở lại bảng (không mất thưởng boss)
+    if (this.rewardOpts && !$('#reward').hidden && !COOP.on) r.pendReward = { options: this.rewardOpts, id: this.rewardId, boss: this.rewardBoss };
+    this.save.run = r;
     writeSave(this.save);
   }
-  // v77: dừng chơi — bỏ trận đang chơi (không lưu để tiếp tục), ghi điểm vô tận nếu có, về menu
+  // giu-tran-dang-choi: Dừng chơi (≡) = tạm rời trận — GIỮ trận để Tiếp tục (trước đây xoá bản lưu → vào lại bị về màn 1 đợt 1).
+  // Giữa hai đợt: lưu đúng lúc rời (vàng, tướng, chợ). Đang giữa đợt: giữ bản lưu đầu đợt (quái đang đi không lưu được) —
+  // còn mở game thì Tiếp tục quay lại đúng khoảnh khắc trong bộ nhớ; tải lại trang thì chơi lại từ đầu đợt đó.
+  // Ngân khố / Tu Vi / nhiệm vụ ngày của trận trả khi trận kết thúc thật (thua) hoặc khi bấm Chơi mới bỏ trận này (abandonRun).
   quitRun() {
+    const g = this.game;
+    if (COOP.on || g.co) return this.abandonRun();   // trận nhóm: rời phòng như cũ
+    if (!g.started || g.over) return this.abandonRun();
+    this.bankStats();
+    if (!g.waveActive || !this.save.run || this.save.run.runId !== g.runId) this.saveRun();
+    this.quitWasRunning = g.running; this.quitReward = !$('#reward').hidden;
+    g.running = false;
+    this.closeScreen && this.closeScreen();
+    this.showMenu();
+    this.toast('Đã lưu trận · bấm <b>Tiếp tục</b> để chơi tiếp', '#C8BFA8');
+  }
+  // v77: bỏ trận đang chơi (không lưu để tiếp tục), ghi điểm vô tận nếu có — gọi khi bắt đầu trận mới đè lên trận dở, hoặc trận nhóm
+  abandonRun(silent) {
     const g = this.game;
     if (g.started) {
       this.bankStats(); const tv = this.bankTuvi(TUVI_LOSE); if (tv.up.length) this.toast(tv.up.join('<br>'), '#FFD66B');
@@ -890,13 +918,14 @@ class UI {
       if (k && !g.over) {
         const qd = this.questAdd(g.wave - 1, g.bossesKilled || 0);      // v182: dừng trận vẫn tính nhiệm vụ ngày
         this.save.kho = (this.save.kho || 0) + k; writeSave(this.save);
-        this.toast(`Ngân khố ${bac(1)} +${fmt(k)} (dừng ở đợt ${g.wave})${qd.map((x) => `<br>☀ ${esc(x.name)} +${fmt(x.kho)}`).join('')}`, '#E4ECF4');
+        this.toast(`Ngân khố ${bac(1)} +${fmt(k)} (bỏ trận ở đợt ${g.wave})${qd.map((x) => `<br>☀ ${esc(x.name)} +${fmt(x.kho)}`).join('')}`, '#E4ECF4');
       }
     }
     if (g.endless) { this.submitScores(); const sv = this.save; sv.bestEndless = sv.bestEndless || {}; sv.bestEndless[g.level] = Math.max(sv.bestEndless[g.level] || 0, g.wave); writeSave(sv); }
     g.running = false; g.over = true; g.started = false;
     if (COOP.on || g.co) { COOP.end(true); this.lobby = null; }
     else this.clearRun();
+    if (silent) return;
     this.closeScreen && this.closeScreen();
     this.showMenu();
     this.toast('Đã dừng trận', '#C8BFA8');
@@ -911,6 +940,7 @@ class UI {
     $('#screen').hidden = true;
     this.hideOverlays(); this.setInGame(true);
     this.toast(`Tiếp tục vô tận · ${this.game.placeName()} — từ đợt ${r.wave + 1}`, '#F2D27A');
+    if (r.pendReward && r.pendReward.options) { this.game.holdStage = true; this.showReward(r.pendReward); this.rewardWasRunning = false; }
   }
 
   // ---------- v72: Bảng xếp hạng (vô tận + từng ải)
@@ -3130,13 +3160,13 @@ class UI {
   // cộng thành tích trận vào hồ sơ người chơi (chỉ cộng phần mới)
   bankStats() {
     const g = this.game, s = this.save;
-    const b = this.banked || { kills: 0, gold: 0, herbs: 0, id: null };
+    const b = this.banked || s.banked || { kills: 0, gold: 0, herbs: 0, id: null };   // giu-tran-dang-choi: nhớ qua tải lại (Tiếp tục không cộng trùng)
     if (b.id !== g.runId) { b.kills = 0; b.gold = 0; b.herbs = 0; b.id = g.runId; }
     s.lifeKills += g.stats.kills - b.kills;
     s.lifeGold += g.stats.goldEarned - b.gold;
     s.lifeHerbs += (g.stats.herbs || 0) - b.herbs;
     b.kills = g.stats.kills; b.gold = g.stats.goldEarned; b.herbs = g.stats.herbs || 0;
-    this.banked = b;
+    this.banked = b; s.banked = { ...b };
     writeSave(s);
     if (g.endless && g.wave > g.levelWaves) this.submitScores();   // rời trận vô tận giữa chừng vẫn ghi điểm
   }
@@ -3483,7 +3513,7 @@ class UI {
       }
       case 'deck-close': this.clearSel(); $('#more').hidden = true; break;
       case 'quit-run':
-        if (!this.quitArmed) { this.quitArmed = true; $('#quit-label').textContent = 'Bấm lần nữa để bỏ trận'; setTimeout(() => { this.quitArmed = false; const q = $('#quit-label'); if (q) q.textContent = 'Dừng chơi'; }, 3000); break; }
+        if (!this.quitArmed) { this.quitArmed = true; $('#quit-label').textContent = COOP.on || g.co ? 'Bấm lần nữa để bỏ trận' : 'Bấm lần nữa · lưu & về menu'; setTimeout(() => { this.quitArmed = false; const q = $('#quit-label'); if (q) q.textContent = 'Dừng chơi'; }, 3000); break; }
         this.quitArmed = false; $('#quit-label').textContent = 'Dừng chơi';
         $('#drawer').hidden = true;
         this.quitRun();
