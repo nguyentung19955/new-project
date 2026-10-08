@@ -1504,7 +1504,6 @@ body { overflow: hidden; }
 .dk-sk { -webkit-touch-callout: none; user-select: none; }
 /* v122: Ngân khố trên thanh tiêu đề màn Anh Hùng */
 #roster .scr-head .ro-kho { margin-left: auto; white-space: nowrap; }
-#roster .scr-head .ro-kho + .btn { margin-left: 6px; }
 /* v124: icon nút vẽ tay trống đồng */
 .ab .i .uimg { width: 30px; height: 30px; display: block; }
 /* v155: nút vẽ tay thay ký hiệu ★ ▲ 🔒 ↻ 💡 ♾ ⚔ ✓ 🥇🥈🥉👑 (uiE trong js/ui.js) */

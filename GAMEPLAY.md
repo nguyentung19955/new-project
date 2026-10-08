@@ -2372,6 +2372,10 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 243 — bỏ Đền Anh Hùng
+
+- Bỏ trang Đền Anh Hùng (den-anh-hung.html, tools/build-den.js) và nút mở nó ở màn Anh Hùng (người dùng yêu cầu 08/10).
+
 ## Phiên bản 242 — sửa 10 lỗi giao diện theo designer (tester đạt)
 
 - Bảng không còn trong suốt (khung pixel + nền đặc), da pixel đồng bộ (góc 2px, công tắc pixel), menu/đăng nhập pixel hoá + hoa văn Đông Sơn; Ngân khố: chip thỏi bạc trên topbar nháy "+X" + dòng trên bảng Sính lễ; Hợp thể dưới topbar; thoại góc trái trên chợ; vùng chạm ≥40px; Kho Báu ô "?" chạm xem nơi kiếm; 3 font, số thẳng hàng, 1 kiểu tab.
@@ -2958,3 +2962,5 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
   không chiêu nào làm quái ngoài tầm mất máu / choáng / chậm; Gióng R trong trận thật chỉ trúng quái trong tầm x2.
 - Gộp nhánh chính v241: bản đồ chương 2–5 và nền màn phụ đã được `claude/ve-lai-pixel` vẽ lại tay → dùng bản đó (không sửa ảnh pixel nhóm khác); bỏ bộ sinh `tools/pixel/sinh-ban-do-chuong.py`, bỏ ảnh trải khít / ẩn nét đứt (nét đứt nối ải hiện lại vì bản vẽ tay không có đường đất qua ải), bỏ lớp phủ tối + trống đồng thêm của nhánh này ở màn phụ (nền vẽ lại đã có trống đồng chìm).
 - (tester, sau v242) Bảng Sính lễ mở thì mọi thông báo ("Đã hạ …!", "Rơi đồ: …", Ngân khố) hoãn lại — cả thông báo vừa bật ngay trước khi bảng mở — rồi gộp thành MỘT thông báo cùng quà vừa chọn khi đóng bảng (không còn đè tiêu đề "Vua Hùng ban thưởng"). Hợp thể: Tự gợi ý, 5 nút lọc hành, Theo đuổi, 🔒 Mở có vùng chạm `::after` mở dọc tới 40px màn hình (không đổi bố cục); ở 667×375 các hàng sát nhau nên vùng chạm thực đo được 32 / 32 / 35 / 21px (bị nút hàng kế bên chia), muốn đủ 40 phải giãn bố cục.
+## claude/vo-tan-su-kien — Test báo trước sự kiện lỗi thời sau banner xếp hàng
+- Test "troibua: hết đợt 59 → báo trước" lỗi lặp trên nhánh chính: game không sai — banner "vượt qua" / "Màn N · vùng đất mới" của vòng test trước còn hiện/xếp hàng nên banner báo trước được xếp hàng (`ui.queueBanner`, không chồng). Test nay xoá hàng đợi banner (ui.clearBanners) trước mỗi sự kiện, chờ banner tới lượt (≤ 3,5 giây, trận đứng yên) rồi mới kiểm, in trạng thái banner khi lỗi, vẫn bắt buộc có báo trước.
