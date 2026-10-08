@@ -2952,3 +2952,4 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Màn Chuẩn bị / Kết quả / Sính lễ thêm mặt trống đồng mờ (~12%) góc phải trên nền tối. Vùng chạm giả `::after` chỉ mở theo chiều dọc (mở ngang làm lệch scrollWidth → test gop-y báo tràn); nút quay lại / ✕ rộng thật ≥ 40px màn hình.
 - Test thêm: 3 quái trong tầm + 3 quái ngoài tầm (cách xa cả trên đường), chạy 1,5 giây kể cả hiệu ứng trễ → 133 chiêu tấn công tung,
   không chiêu nào làm quái ngoài tầm mất máu / choáng / chậm; Gióng R trong trận thật chỉ trúng quái trong tầm x2.
+- Gộp nhánh chính v241: bản đồ chương 2–5 và nền màn phụ đã được `claude/ve-lai-pixel` vẽ lại tay → dùng bản đó (không sửa ảnh pixel nhóm khác); bỏ bộ sinh `tools/pixel/sinh-ban-do-chuong.py`, bỏ ảnh trải khít / ẩn nét đứt (nét đứt nối ải hiện lại vì bản vẽ tay không có đường đất qua ải), bỏ lớp phủ tối + trống đồng thêm của nhánh này ở màn phụ (nền vẽ lại đã có trống đồng chìm).
