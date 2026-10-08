@@ -3744,6 +3744,7 @@ class UI {
   closeScreen() {
     this.screen = null;
     $('#screen').hidden = true;
+    if (this.checkToasts) this.checkToasts();   // an-cho-kho-do: bỏ lớp panel-open ngay (không chờ MutationObserver)
     if (this.prepForge) {
       const g = this.game;
       this.prepForge = false; KHO_MODE = false; this.save.kho = g.gold; g.gold = this.prepGold; writeSave(this.save);

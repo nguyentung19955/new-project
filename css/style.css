@@ -1873,7 +1873,6 @@ svg.icn { overflow: visible; }
 #ui:has(> #legends:not([hidden])) > :is(#deck, #deck-hint, #fuse-strip, #more) { visibility: hidden; pointer-events: none; }
 /* an-cho-kho-do: bảng toàn màn đang mở (lớp panel-open do ui.watchToasts bật) → ẩn hẳn chợ, Hợp thể/Khoá, cột nút phải */
 #wrap.panel-open #ui > :is(#deck, #deck-hint, #fuse-strip, #more, #auto-btns, #btn-moc, #nextwaves, #trash) { visibility: hidden !important; pointer-events: none !important; }
-#wrap.panel-open #ui > :is(#deck, #fuse-strip, #auto-btns) * { visibility: hidden !important; }
 .hx-hd { display: flex; align-items: center; gap: 6px; min-width: 0; flex: none; }
 .hx-hd .ttl { font-family: var(--title); font-size: 19px; color: var(--gold); white-space: nowrap; margin-right: 4px; }
 .hx-tab { height: 30px; padding: 0 14px; border-radius: 15px; border: 1.5px solid #5C4620; background: #1A140E; font-size: 14px; font-weight: 800; color: var(--text-2); display: flex; align-items: center; gap: 5px; flex: none; }
