@@ -1,0 +1,142 @@
+"""Kiểm tra lối đánh riêng của từng vũ khí (js/moves.js) và luật riêng của ba hệ, ngay trong trang thật.
+Chạy: python3 tests/moves.py [-v]   (thoát mã 1 nếu có mục sai)"""
+import os, sys
+from playwright.sync_api import sync_playwright
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+JS = r"""
+() => {
+  const out = [];
+  const ok = (name, cond, detail) => out.push([name, !!cond, detail === undefined ? '' : String(detail)]);
+  const near = (a, b, tol) => Math.abs(a - b) <= tol;
+  let W, P, S, w, inp = {};
+  const hold0 = G.botInput;
+  G.botInput = () => Object.assign({ mx: 0, my: 0 }, inp);
+  // chạy n khung với nút đang đặt trong inp; các nút "vừa bấm" chỉ có hiệu lực một khung
+  const run = (n, i) => { if (i) inp = i; for (let k = 0; k < n; k++) { G.sim(1); for (const q of ['atkP', 'dodgeP', 'specialP', 'skillP', 'swapP']) delete inp[q]; } };
+  const sec = (s, i) => run(Math.round(s * 60), i);
+  const wait = (cond, i) => { let n = 0; while (cond()) { run(1, i); if (++n > 600) throw new Error('chờ quá lâu: ' + cond); } };
+  const tap = () => { run(2, { atk: true }); run(1, {}); };
+  function room(type, o) {
+    G.testSave(Object.assign({ hero: 'smith', melee: type === 'bow' ? 'sword' : type, tier: 1 }, o || {}));
+    G.HEROES.smith.fav = [];
+    G.startStage(0, 2, 0);
+    S = G.getRun(); W = G.getWorld(); P = S.P;
+    W.waves = []; W.props = []; W.banner = null;
+    if (type === 'bow') P.cur = 1;
+    w = G.curW(P);
+    inp = {}; run(6);
+    P.x = 200; P.y = 190; P.face = 1; P.inv = 0; P.mana = P.maxmana;
+    return W;
+  }
+  function dummy(x, y, role, hp) {
+    const e = G.spawnEnemy(role || 'rusher', x, y == null ? 190 : y, { hpMult: hp || 1e6 });
+    e.st.stun = 1e9; e.inside = true;
+    return e;
+  }
+  const lost = (e) => e.maxhp - e.hp;
+  const base = () => G.pDamage(P, w);
+  try {
+    // ================= KIẾM =================
+    room('sword'); let e = dummy(224), far = dummy(244, 190);
+    const names = [], steps = [], dm = [];
+    for (let k = 0; k < 3; k++) {
+      const h0 = e.hp; run(1, { atk: true });
+      names.push(P.mv.name); steps.push(P.mv.step);
+      wait(() => P.atkT > 0, { atk: false });
+      dm.push((h0 - e.hp) / base());
+    }
+    ok('Kiếm: bấm 3 lần ra chém ngang, chém ngược, nhát kết', names.join() === 'Chém ngang,Chém ngược,Nhát kết' && steps.join() === '0,1,2', names.join());
+    ok('Kiếm: sát thương ba nhát là 0,9 / 0,95 / 1,7 lần', near(dm[0], 0.9, 0.01) && near(dm[1], 0.95, 0.01) && near(dm[2], 1.7, 0.01), dm.map((x) => x.toFixed(2)).join('/'));
+    ok('Kiếm: nhát kết với xa hơn (trúng quái đứng xa 44 điểm ảnh), hai nhát đầu thì không', near(lost(far) / base(), 1.7, 0.01), (lost(far) / base()).toFixed(2));
+    ok('Kiếm: nhát kết đẩy lùi quái 10 điểm ảnh', near(e.x, 234, 0.5), e.x);
+    ok('Kiếm: đòn tính vào thống kê cận chiến của trùm', S.stats.melee > 0 && S.stats.ranged === 0, S.stats.melee);
+    room('sword'); e = dummy(224);
+    tap(); wait(() => P.atkT > 0, {});
+    sec(0.6, {}); run(1, { atk: true });
+    ok('Kiếm: ngừng bấm quá lâu thì chuỗi về đầu', P.mv.step === 0 && P.mv.name === 'Chém ngang', P.mv.name);
+    room('sword'); e = dummy(224);
+    sec(0.5, { atk: true });
+    ok('Kiếm: giữ nút thì chuỗi tự nối tiếp', P.mv.step === 1 && P.mv.chain === 2, P.mv.step);
+    room('sword'); e = dummy(250);
+    P.x = 180; run(1, { dodgeP: true, mx: 1 });
+    wait(() => P.dodgeT > 0, { mx: 1 });
+    const x0 = P.x, hg = e.hp;
+    run(2, { atk: true });
+    const kind = P.mv.kind;
+    wait(() => P.dashT > 0 || P.atkT > 0, {});
+    ok('Kiếm: đánh ngay sau khi Né ra nhát lướt', kind === 'luot', kind);
+    ok('Kiếm: nhát lướt trượt tới khoảng 30 điểm ảnh và gây 1,4 lần', near(P.x - x0, 30, 4) && near((hg - e.hp) / base(), 1.4, 0.01), (P.x - x0).toFixed(1) + ' / ' + ((hg - e.hp) / base()).toFixed(2));
+    sec(0.15, { atk: true });
+    ok('Kiếm: sau nhát lướt là nhát thứ hai của chuỗi', P.mv.step === 1, P.mv.step);
+    room('sword'); e = dummy(224);
+    run(1, { dodgeP: true, mx: -1 }); wait(() => P.dodgeT > 0, {});
+    sec(0.5, {}); run(1, { atk: true });
+    ok('Kiếm: né xong để lâu thì chỉ là nhát thường', P.mv.kind === 'chem', P.mv.kind);
+    ok('Kiếm: có dòng chỉ dẫn khi vào ải', !!G.MOVE_TIPS.sword && P.mv.tips.sword === true);
+
+    // ================= CUNG =================
+    room('bow'); e = dummy(300);
+    tap(); sec(0.8, {});
+    ok('Cung: bấm nhanh bắn một mũi tên thường', near(lost(e) / base(), 1, 0.01), (lost(e) / base()).toFixed(2));
+    ok('Cung: đòn tính vào thống kê đánh xa của trùm', S.stats.ranged > 0 && S.stats.melee === 0, S.stats.ranged);
+    room('bow'); const a = dummy(280), b = dummy(310), c3 = dummy(340);
+    sec(0.1, { atk: true });
+    ok('Cung: giữ dưới 0,16 giây thì chưa giương', !P.mv.holding);
+    sec(0.3, { atk: true });
+    ok('Cung: giữ nút thì giương cung, có tỉ lệ lấy đà', P.mv.holding && P.mv.charge > 0.2 && P.mv.charge < 1, P.mv.charge.toFixed(2));
+    const xa = P.x; sec(0.3, { atk: true, mx: -1 });
+    const slowV = (xa - P.x) / 0.3;
+    ok('Cung: đang giương thì đi chậm lại', near(slowV, P.speed * 0.55, 3), slowV.toFixed(1) + ' so với ' + P.speed.toFixed(1));
+    sec(0.4, { atk: true });
+    ok('Cung: giương đủ lâu thì đầy', P.mv.charge === 1 && P.mv.level === 1, P.mv.charge);
+    P.face = 1; run(1, {});
+    const pr = W.projs.find((o) => o.team === 'player');
+    ok('Cung: thả ra bắn tên mạnh gấp 3, xuyên 4 quái', pr && pr.big && near(pr.mult, 3, 0.01) && pr.pierce === 4 && P.mv.kind === 'banManh', pr ? pr.mult + '/' + pr.pierce : 'không có tên');
+    sec(0.6, {});
+    ok('Cung: tên mạnh xuyên qua cả ba quái đứng thẳng hàng', lost(a) > 0 && lost(b) > 0 && lost(c3) > 0 && near(lost(c3) / base(), 3, 0.01), [a, b, c3].map((q) => (lost(q) / base()).toFixed(1)).join('/'));
+    room('bow'); e = dummy(300);
+    sec(0.3, { atk: true }); run(1, {}); sec(0.5, {});
+    ok('Cung: giương chưa tới thì thả ra chỉ là tên thường', near(lost(e) / base(), 1, 0.01), (lost(e) / base()).toFixed(2));
+    room('bow'); e = dummy(300);
+    sec(0.16 + 0.75 + 0.8 + 0.1, { atk: true });
+    ok('Cung: giữ mãi thì tên tự bay sau khi đầy 0,8 giây', W.projs.some((o) => o.big) || lost(e) > 0);
+    room('bow'); e = dummy(300);
+    sec(0.5, { atk: true }); run(2, { atk: true, dodgeP: true });
+    ok('Cung: lăn né thì bỏ phần đà đang lấy', !P.mv.holding && P.mv.charge === 0 && W.projs.length === 0);
+    room('bow'); e = dummy(300);
+    let t0 = G.time; tap(); wait(() => P.cdT > 0, {}); const still = G.time - t0;
+    t0 = G.time; run(2, { atk: true, mx: -1 }); run(1, { mx: -1 }); wait(() => P.cdT > 0, { mx: -1 }); const moving = G.time - t0;
+    ok('Cung: đứng yên bắn nhanh hơn vừa chạy vừa bắn', still < moving - 0.05, still.toFixed(2) + ' so với ' + moving.toFixed(2));
+    room('bow'); e = dummy(200 + 240);
+    tap(); sec(1.2, {});
+    ok('Cung: tên thường bay tối đa khoảng 215 điểm ảnh (hợp phòng nhỏ)', lost(e) === 0);
+  } catch (err) { ok('không ném lỗi', false, String(err && err.stack || err)); }
+  G.botInput = hold0;
+  G.setScene(G.Village);
+  return out;
+}
+"""
+
+def main():
+    errs = []
+    with sync_playwright() as p:
+        b = p.chromium.launch()
+        pg = b.new_page(viewport={'width': 844, 'height': 390})
+        pg.on('pageerror', lambda e: errs.append(str(e)))
+        pg.goto('file://' + ROOT + '/index.html')
+        pg.wait_for_function('window.G && G.scene')
+        pg.add_script_tag(path=os.path.join(ROOT, 'tests', 'setup.js'))
+        res = pg.evaluate(JS)
+        b.close()
+    bad = 0
+    for name, good, detail in res:
+        if not good:
+            bad += 1
+        if not good or '-v' in sys.argv:
+            print(('ĐẠT ' if good else 'SAI ') + name + (('  -> ' + detail) if detail else ''))
+    print(f'{len(res) - bad}/{len(res)} mục đạt' + (', lỗi trang: ' + '; '.join(errs[:3]) if errs else ''))
+    sys.exit(1 if bad or errs else 0)
+
+main()

@@ -1336,6 +1336,7 @@
     if (tick && !P.dead) stepStatus(P);
     stepPlayer(W, P, dt, tick);
     stepRoom(W, tick);
+    if (fx.heStep) fx.heStep(W, dt, tick); // hiệu ứng theo hệ và theo lối đánh (js/fx_he.js)
   }
   // Gọi cuối mỗi lần cập nhật thế giới
   fx.update = function (dt) {
@@ -1477,7 +1478,7 @@
           p(c, x, y - h, 1, h, o.c[0]); p(c, x - 1, y - h - 1, 3, 2, '#c8372d'); p(c, x - 1, y, 3, 1, 'rgba(0,0,0,0.3)');
           break;
         }
-        default: break;
+        default: if (o.draw) o.draw(c, o, k, x, y); break; // hình riêng do js/fx_he.js thêm vào
       }
     }
   }
@@ -1546,4 +1547,6 @@
     c.drawImage(VIG, 0, 0, G.W, G.H);
     c.globalAlpha = 1;
   }
+  // Bộ đồ nghề cho js/fx_he.js: dùng chung kho hạt, bảng màu và các hàm vẽ điểm ảnh ở trên.
+  fx.kit = { S: () => S, api, layer, fail, emit, streak, spray, puffs, add, addRing, trauma, kick, stop, num, pal, PAL, RAMP, R, rr, hash, p, ell, ring, line, star, crescent, tongue, slam, blastFire, blastPoison, blastIce, elemBits, bodyOf, hand, A_ };
 })();

@@ -16,6 +16,34 @@
     if (canDown) return [0, 1];
     return [P.x > z.x + z.w / 2 ? 1 : -1, 0];
   }
+  // Lối đánh riêng của từng vũ khí (js/moves.js): kiếm thì giữ nút; cung, giáo, búa thì bấm theo nhịp,
+  // và giữ để lấy đà khi có từ hai quái trở lên nằm trong tầm đòn mạnh (hoặc quái còn ở xa đối với cung).
+  function press(S, P, w, inp, tg) {
+    const mv = P.mv, cfg = G.MOVES && G.MOVES[w.type];
+    if (!cfg || !cfg.charge) { S.botHold = false; return; }
+    if (!inp.atk) { if (!(mv && mv.holding && S.botHold && inp.keep)) S.botHold = false; if (!S.botHold) return; }
+    if (!S.botHold && mv && !mv.holding && G.time - (S.botDecT || 0) > 0.35) {
+      S.botDecT = G.time;
+      let n = 0, far = 1e9;
+      for (const e of tg) {
+        const dx = (e.x - P.x) * P.face, dy = Math.abs(e.y - P.y);
+        far = Math.min(far, Math.abs(e.x - P.x));
+        if (w.type === 'bow' && dx > 10 && dx < 240 && dy < 16) n++;
+        if (w.type === 'spear' && dx > 0 && dx < 80 && dy < 14) n++;
+        if (w.type === 'hammer' && Math.hypot(e.x - P.x, dy * 1.5) < 60) n++;
+      }
+      const windup = W_near(S, P);
+      if (w.type === 'bow') S.botHold = (n >= 2 || far > 130) && G.rnd() < 0.7;
+      else S.botHold = n >= 2 && !windup && G.rnd() < 0.6;
+    }
+    if (S.botHold) {
+      if (mv && mv.holding && mv.charge >= 1) { inp.atk = false; S.botHold = false; } else inp.atk = true;
+    } else { S.botTap = !S.botTap; inp.atk = S.botTap; }
+  }
+  function W_near(S, P) {
+    for (const e of S.W.ents) if (e.wind > 0 && Math.abs(e.x - P.x) < 34 && Math.abs(e.y - P.y) < 14) return true;
+    return false;
+  }
   G.botInput = function (S) {
     const W = S.W, P = S.P, cfg = G.botCfg;
     const inp = { mx: 0, my: 0, atk: false, atkP: false, dodgeP: false, specialP: false, skillP: false, swapP: false, potionP: false, pauseP: false };
@@ -131,6 +159,7 @@
     }
     if (!t.prop && P.mana >= P.specCost && P.specCd <= 0 && (T.ranged || ad < 60) && G.rnd() < 0.2) { inp.specialP = true; }
     else if (!t.prop && P.mana >= 40 + P.specCost && P.skillCd <= 0 && G.rnd() < 0.1) inp.skillP = true;
+    press(S, P, w, inp, tg);
     return inp;
   };
   // Xử lý các bảng chọn bằng cách giả lập một lần chạm rồi vẽ một khung.

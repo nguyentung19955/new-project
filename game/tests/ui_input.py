@@ -88,9 +88,11 @@ def run(p, size, url=None):
         ev(P + ".x = 60")
         ax, ay = bp('atk')
         g.down(ax, ay, 1); g.wait(900)
-        c.ok(ev("window.__sw") >= 2, 'hai ngón: giữ Đánh trong lúc giữ cần')
+        # Luật mới (js/moves.js): đang cầm cung thì giữ Đánh là giương cung, thả ra mới bắn. Kiếm thì giữ vẫn đánh liên tục.
+        c.ok(ev("window.__sw") >= 2 or ev("!!(" + P + ".mv && " + P + ".mv.holding)"), 'hai ngón: giữ Đánh trong lúc giữ cần (cung thì giương cung)')
         c.ok(ev("G.pointers.size") == 2, 'đang có đúng 2 ngón')
         g.up(1); g.wait(100)
+        c.ok(ev("window.__sw") >= 1, 'thả nút Đánh thì đòn tung ra')
         b = ev(P + ".x"); g.wait(300); b2 = ev(P + ".x")
         c.ok(b2 > b + 5, f'cần vẫn chạy sau khi nhấc ngón kia ({b:.0f} -> {b2:.0f})')
         # dùng lại mã ngón 1 cho nút khác

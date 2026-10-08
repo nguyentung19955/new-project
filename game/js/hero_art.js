@@ -1094,6 +1094,11 @@
     if (p && p.dashT > 0) return ['dash', Math.floor(t * 30) % 2, 0];
     if (p && p.specT > 0) return ['spec', Math.min(6, Math.max(0, Math.floor((1 - p.specT / 0.35) * 7))), 0];
     if (p && p.castT > 0) return ['cast', Math.min(7, Math.max(0, Math.floor((1 - p.castT / 0.4) * 8))), 0];
+    if (p && p.mv && p.mv.holding && o.atk < 0) {
+      // đang giữ nút lấy đà (js/moves.js): đứng yên ở khung giương cung, giơ búa, thu giáo
+      const n = ATKN[wt] || 8, u = wt === 'bow' ? 0.38 : wt === 'hammer' ? 0.33 : 0.24;
+      return ['atk', Math.min(n - 1, Math.floor(u * n)), p.mv.level >= (wt === 'hammer' ? 2 : 1) ? 2 : 0];
+    }
     if (o.atk >= 0) {
       const n = ATKN[wt] || 8;
       const combo = p ? (Math.max(0, p.comboI | 0) % 3) : Math.floor(t / 1.6) % 3;

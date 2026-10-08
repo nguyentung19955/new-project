@@ -293,6 +293,7 @@
     if (e.st.fire > 0) {
       for (const t of G.targets()) if (t !== e && Math.hypot(t.x - e.x, (t.y - e.y) * 1.5) < 30) G.applyStatus(t, 'fire', e.st.fireDmg * 5);
     }
+    if (G.moves) G.moves.onKill(e, o, w); // luật riêng của hệ khi quái chết
     if (w && G.wStage(w) === 3 && w.branch === 'poison' && !e.isBoss) {
       W.zones.push({ shape: 'circle', x: e.x, y: e.y, r: 22, t: 0, pool: true, team: 'player', el: 'poison', life: 3, tick: 0, src: G.pDamage(P, w) });
     }
@@ -326,6 +327,7 @@
     const el = G.activeEl(P, w);
     G.damage(e, d, { el, ranged: o.ranged, src: 'hit', w, crit });
     if (!G.noRender) FX('hit', e, { el, type: w.type, ranged: o.ranged, crit, dead: e.dead, heavy: o.heavy, rain: o.rain, dir: o.dir || (e.x >= P.x ? 1 : -1) });
+    if (G.moves) G.moves.onHit(e, d, el, o); // luật riêng của hệ khi đòn trúng (js/moves.js)
     const T = G.WTYPES[w.type];
     if (T.stagger && !e.isBoss && !e.dead) e.st.stun = Math.max(e.st.stun, T.stagger);
     if (o.stun && !e.dead) e.st.stun = Math.max(e.st.stun, e.isBoss ? o.stun * 0.4 : o.stun);
@@ -423,6 +425,8 @@
       G.sfx('hit');
     }
   }
+  // Các hàm ra đòn dùng chung cho js/moves.js (lối đánh riêng của từng vũ khí).
+  G.cb = { playerHit, meleeBox, hitProps, nearest, startAttack, doHit };
   function special(P) {
     const w = curW(P);
     P.mana -= P.specCost;
@@ -448,6 +452,7 @@
       const x = tgt ? tgt.x : P.x + P.face * 110, y = tgt ? tgt.y : P.y;
       W.zones.push({ shape: 'circle', x, y, r: 40, t: 0, pool: true, team: 'player', rain: true, life: 0.95, tick: 0, w, el });
     }
+    if (G.moves) G.moves.special(P, w); // phần riêng theo hệ của đòn đặc biệt
   }
   function heroSkill(P) {
     const w = curW(P);
@@ -524,6 +529,8 @@
     }
     if (W.over) { P.moving = false; return; }
     const w = curW(P);
+    const MV = G.moves; // lối đánh riêng của từng vũ khí; thiếu moves.js thì đánh kiểu cũ
+    if (MV) MV.input(P, inp, dt);
     const slow = P.st.ice > 0 ? 0.65 : 1;
     let mx = inp.mx, my = inp.my;
     const ml = Math.hypot(mx, my);
@@ -537,7 +544,7 @@
         if (P.dashHit.includes(e)) continue;
         if (e.x >= Math.min(P.x, nx) - e.r - 6 && e.x <= Math.max(P.x, nx) + e.r + 6 && Math.abs(e.y - P.y) <= 12 + e.hr) {
           P.dashHit.push(e);
-          playerHit(e, P.dashMult, { w, stun: P.dashStun });
+          playerHit(e, P.dashMult, P.dashOpt ? Object.assign({ w }, P.dashOpt) : { w, stun: P.dashStun });
         }
       }
       hitProps(Math.min(P.x, nx) - 4, Math.max(P.x, nx) + 4, P.y, 14);
@@ -563,7 +570,7 @@
         if (P.set === 'ho') P.boost = true;
       }
     } else {
-      const sp = P.speed * slow * (P.atkT > 0 ? 0.4 : 1);
+      const sp = P.speed * slow * (P.atkT > 0 ? 0.4 : 1) * (MV ? MV.speed(P) : 1);
       if (ml > 0.12) {
         P.x += mx * sp * dt;
         P.y += my * sp * 0.75 * dt;
@@ -582,6 +589,8 @@
         special(P);
       } else if (inp.skillP && P.mana >= 40 && P.skillCd <= 0) {
         heroSkill(P);
+      } else if (MV) {
+        MV.act(P, inp, dt);
       } else if ((inp.atk || inp.atkP) && P.cdT <= 0) {
         startAttack(P);
       }
@@ -601,7 +610,7 @@
         G.sfx('pick', 1.4);
       }
     }
-    if (P.atkT > 0 && !P.hitDone && P.atkT <= P.atkDur * 0.55) doHit(P);
+    if (P.atkT > 0 && !P.hitDone && P.atkT <= P.atkDur * 0.55) { if (MV) MV.hit(P); else doHit(P); }
     P.x = G.clamp(P.x, W.x0, W.px1 != null ? W.px1 : W.x1);
     P.y = G.clamp(P.y, W.y0, W.y1);
     if (P.set === 'moc') {
@@ -739,6 +748,7 @@
           if (Math.abs(e.x - o.x) < e.r + 4 && Math.abs(e.y - o.y) < e.hr + 7) {
             o.seen.push(e);
             playerHit(e, o.mult, { w: o.w, ranged: true, heavy: o.big, dir: o.vx < 0 ? -1 : 1 });
+            if (G.moves) G.moves.arrowHit(o, e);
             P.mana = Math.min(P.maxmana, P.mana + P.manaHit + (o.w.affix === 'mana' ? 1 : 0));
             G.sfx('hit', 1.3);
             if (o.pierce > 0) o.pierce--; else { o.t = 0; break; }
@@ -782,7 +792,7 @@
               const rx = z.x + G.rr(-30, 30), ry = z.y + G.rr(-12, 12); // vẫn rút hai số ngẫu nhiên như trước
               FX('rainDrop', rx, ry, z.el);
             } else {
-              z.tick = 1;
+              z.tick = z.every || 1;
               for (const e of G.targets()) if (Math.hypot(e.x - z.x, (e.y - z.y) * 1.6) < z.r + e.r) G.applyStatus(e, z.el, z.src, 1);
             }
           } else {
@@ -795,6 +805,7 @@
       if (z.life <= 0) z.dead = true;
     }
     W.zones = W.zones.filter((z) => !z.dead);
+    if (G.moves) G.moves.update(W, dt); // sóng chấn động, đòn hẹn giờ của js/moves.js
     // bẫy của Thợ Săn
     for (const pr of W.props) {
       if (pr.type !== 'trap' || pr.dead) continue;
