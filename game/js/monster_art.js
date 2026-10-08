@@ -1130,9 +1130,10 @@ function trongHinh(s, x, y) {
   if (s.p) { let ins = false; const p = s.p; for (let i = 0, j = p.length - 1; i < p.length; j = i++) { const a = p[i], b = p[j]; if ((a[1] > y) !== (b[1] > y) && x < (b[0] - a[0]) * (y - a[1]) / (b[1] - a[1]) + a[0]) ins = !ins; } return ins; }
   return false;
 }
-function goc(d, ph) {
-  const key = d.id + '|' + ph; if (GOC_CACHE[key]) return GOC_CACHE[key];
-  const g = d.luoi(ph), w = g.w, h = g.h, n = w * h, b = bbox(g);
+// hv: biến thể hình (vd 'xu' lúc xù gai, 'phong' lúc phồng), do cử động chọn qua an.hinh(u)
+function goc(d, ph, hv) {
+  const key = d.id + '|' + ph + '|' + (hv || ''); if (GOC_CACHE[key]) return GOC_CACHE[key];
+  const g = d.luoi(ph, hv), w = g.w, h = g.h, n = w * h, b = bbox(g);
   const B = { w, h, cx: g.cx != null ? g.cx : (b.x0 + b.x1 + 1) / 2, foot: g.foot != null ? g.foot : b.y1 + 1, bw: b.w, bh: b.h, bb: b, g };
   if (d.chan != null) B.foot = typeof d.chan === 'function' ? d.chan(ph) : d.chan;
   if (d.tam != null) B.cx = typeof d.tam === 'function' ? d.tam(ph) : d.tam;
@@ -1140,7 +1141,7 @@ function goc(d, ph) {
   if (g.pre && !g.nhieu && !d.giuVien) { B.pre = g.pre; B.fxl = new Array(n).fill(null); let co = false; for (let i = 0; i < n; i++) if (g.d[i] !== g.sauVien[i]) { B.fxl[i] = g.d[i] || XOA; co = true; } if (!co) B.fxl = null; B.A = true; }
   else { B.pre = g.d.slice(); B.fxl = null; B.A = false; }
   const occ = i => B.pre[i] || (B.fxl && B.fxl[i]);
-  const pd = (typeof d.parts === 'function' ? d.parts(ph) : d.parts) || [];
+  const pd = (typeof d.parts === 'function' ? d.parts(ph, hv) : d.parts) || [];
   B.owner = new Int16Array(n); B.keep = new Uint8Array(n); B.parts = []; B.pi = {};
   pd.forEach((p, k) => { const idx = k + 1, P = { n: p.n, pv: p.pv, z: p.z == null ? 1 : p.z, idx, keep: p.keep == null ? 1.5 : p.keep, cha: p.cha, L: p.L || 0 }; B.parts.push(P); B.pi[p.n] = P;
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const i = y * w + x; if (!occ(i)) continue; let ins = false; for (const s of p.m) { if (s.tru) { if (trongHinh(s.tru, x + .5, y + .5)) ins = false; } else if (trongHinh(s, x + .5, y + .5)) ins = true; }
@@ -1150,7 +1151,7 @@ function goc(d, ph) {
   B.M = Math.ceil(Math.max(b.w, B.bh) * (d.le || .3)) + 10;
   return GOC_CACHE[key] = B;
 }
-MA._goc = (id, ph) => goc(DEFS[id], ph || 1);
+MA._goc = (id, ph, hv) => goc(DEFS[id], ph || 1, hv);
 
 // ---------- tư thế ----------
 function Pose(d, B, anim, u, t, o, dir, face, ph) {
@@ -1216,7 +1217,7 @@ function tanRa(put, F, T, B, E) {
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { let c = F.d[y * W + x]; if (!c) continue; const r = hh(x, y, sd); let nx = x, ny = y;
     if (k === 'vo' || k === 'no') { const q = k === 'vo' ? cs2 : (T.co || 1), gx = Math.floor(x / q), gy = Math.floor(y / q), r1 = hh(gx, gy, 1), r2 = hh(gx, gy, 2), r3 = hh(gx, gy, 3); if (u > .45 + .55 * r3) continue;
       let dx = (gx + .5) * q - mcx, dy = (gy + .5) * q - mcy; const dl = Math.hypot(dx, dy) || 1; dx = dx / dl + (r1 - .5) * .9; dy = dy / dl + (r2 - .5) * .9 - (k === 'vo' ? .5 : 0); const e = 1 - (1 - u) * (1 - u), sp = size * (k === 'vo' ? .55 : .95) * (.35 + .65 * r1);
-      nx = x + dx * sp * e; ny = y + dy * sp * e + (k === 'vo' ? size * .9 * u * u : 0); if (k === 'vo' && ny > oy - 1) ny = oy - 1 - (r2 * 2 | 0); if (u < .1) c = '#ffffff'; else if (r > 1.25 - u) c = mau[(r1 * mau.length) | 0]; }
+      nx = x + dx * sp * e; ny = y + dy * sp * e + (k === 'vo' ? size * .9 * u * u : 0); if (k === 'vo' && ny > oy - 1) ny = oy - 1 - (r2 * 2 | 0); if (u < .1 && !T.hien) c = '#ffffff'; else if (r > 1.25 - u) c = mau[(r1 * mau.length) | 0]; }
     else if (k === 'tan') { if (r < u * 1.25 - .3) continue; const e = Math.pow(1 - u, 1.6); ny = oy - (oy - y) * (e * .95 + .05) ; nx = mcx + (x - mcx) * (1 + u * .9) + Math.sin(y * .7 + u * 9) * u * 1.5; if (r > 1.3 - u * 1.2) c = mau[(r * 7 % 1 * mau.length) | 0]; }
     else if (k === 'chay') { const yb = top - 4 + u * (bh + 12), dd = yb - y; if (dd > 0) { const life = dd / (8 + r * 14); if (life > 1 || r < .45) continue; ny = y - dd * (.5 + r) * .8; nx = x + Math.sin(dd * .4 + r * 6) * 2 * life; c = mau[Math.min(mau.length - 1, (life * mau.length) | 0)]; } else if (dd > -2) c = '#fff6b0'; else if (dd > -5 && r < .6) c = '#ff8a1e'; }
     else if (k === 'ra') { const del = r * .45 + (y - top) / bh * .15, tt = u - del; if (tt > 0) { ny = Math.min(oy - 1 - ((r * 3) | 0), y + size * 2.4 * tt * tt); nx = x + (hh(x, y, 5) - .5) * tt * size * .5; if (ny >= oy - 3) { if (u > .7 + r * .3) continue; c = mau[(r * mau.length) | 0]; } } }
@@ -1289,7 +1290,7 @@ const DON = {
     if (k === 'chem') P.over(c => { F.liem(c, dx * 4, dy * 4 - B.bh * .3, tam - 3, dir, d.xoe || 1.9, u, cols); });
     else if (k === 'lao') P.under(c => { for (let i = 0; i < 5; i++) { const f = (i + 1) / 6, a = (1 - u) * (1 - f); if (a <= .05) continue; c.globalAlpha = a; F.duong(c, P.x - dx * (6 + f * tam * .7) - dy * (i - 2) * 3, P.y - dy * (6 + f * tam * .7) + dx * (i - 2) * 3 - B.bh * .3, P.x - dx * (10 + f * tam * .9) - dy * (i - 2) * 3, P.y - dy * (10 + f * tam * .9) + dx * (i - 2) * 3 - B.bh * .3, cols[1], 1); } c.globalAlpha = 1; F.khoi(c, P.x - dx * 8, P.y - dy * 8, 7, u, ['#8a8290', '#5a5460'], 3); });
     else if (k === 'ban') P.over(c => { const m = DON.mom(P), q = seg(u, .1, .85), x = m[0] + dx * tam * q, y = m[1] + dy * tam * q; if (u < .25) F.hat(c, m[0], m[1], 8, 5, u * 4, { v: 9, goc: dir, xoe: 1.4, cols: [cols[2] || cols[1], cols[1]] }); if (q < 1) { for (let i = 1; i < 5; i++) { c.globalAlpha = .7 - i * .15; F.dia(c, x - dx * i * 3, y - dy * i * 3, (d.co || 2.5) * (1 - i * .18), cols[0]); } c.globalAlpha = 1; F.cau(c, x, y, d.co || 2.5, cols); } else F.hat(c, m[0] + dx * tam, m[1] + dy * tam, 10, 7, seg(u, .85, 1), { v: 10, cols: [cols[2] || '#fff', cols[1], cols[0]] }); });
-    else if (k === 'no') P.over(c => { const cy = -P.h - B.bh * .4; if (u < .3) { F.dia(c, 0, cy, tam * (.3 + u * 2.2), cols[2] || '#fff'); } else if (u < .55) F.dia(c, 0, cy, tam * .8 * (1 - seg(u, .3, .6)), cols[1]); F.song(c, 0, 0, tam, seg(u, .05, .8), [cols[2] || '#fff', cols[1]], 2); F.hat(c, 0, cy, 26, 9, u, { v: tam * 1.1, cols: [cols[2] || '#fff', cols[1], cols[0]], to: 2 }); F.khoi(c, 0, cy, tam * .7, seg(u, .2, 1), [cols[0], '#48424e'], 4, 7); });
+    else if (k === 'no') P.over(c => { const cy = -P.h - B.bh * .4; if (u < .22) { F.dia(c, 0, cy, tam * (.25 + u * 2.4), cols[1]); F.dia(c, 0, cy, tam * (.15 + u * 2), cols[2] || '#fff'); } else if (u < .55) { const e = seg(u, .22, .55); F.vong(c, 0, cy, tam * (.8 + e * .3), tam * (.8 + e * .3), cols[1], Math.max(1, Math.round(4 * (1 - e)))); F.a(c, 1 - e); F.dia(c, 0, cy, tam * .45 * (1 - e), cols[2] || '#fff'); F.a(c, 1); } F.song(c, 0, 0, tam, seg(u, .05, .8), [cols[2] || '#fff', cols[1]], 2); F.hat(c, 0, cy, 26, 9, u, { v: tam * 1.1, cols: [cols[2] || '#fff', cols[1], cols[0]], to: 2 }); F.khoi(c, 0, cy, tam * .7, seg(u, .2, 1), [cols[0], '#48424e'], 4, 7); });
     else if (k === 'gai') P.over(c => { const cy = -P.h - B.bh * .4, q = seg(u, 0, .6), n = d.so || 8; for (let i = 0; i < n; i++) { const a = dir + i / n * TAU, r0 = B.bw * .35 + (tam - B.bw * .35) * q, x = Math.cos(a) * r0, y = cy + Math.sin(a) * r0 * MA.det; if (q < 1) { F.duong(c, x - Math.cos(a) * 5, y - Math.sin(a) * 5, x, y, cols[1], 1); F.px(c, x, y, cols[2] || '#fff'); F.px(c, x - Math.cos(a) * 6, y - Math.sin(a) * 6, cols[0]); } else F.hat(c, x, y, 3, i, seg(u, .6, 1), { v: 5, cols: [cols[1]] }); } });
     else if (k === 'dap') { P.under(c => { F.song(c, 0, 0, tam, seg(u, .1, .9), [cols[2] || '#fff', cols[1]], 2); F.song(c, 0, 0, tam * .7, seg(u, .25, 1), [cols[1], cols[0]], 1); }); P.over(c => { for (let i = 0; i < 8; i++) { const a = i / 8 * TAU + .3; F.hat(c, Math.cos(a) * tam * .5 * u, Math.sin(a) * tam * .5 * u * MA.det, 3, i, u, { v: 8, goc: -PI / 2, xoe: 1.2, g: 14, cols: [cols[1], cols[0]] }); } }); }
     else if (k === 'phun') P.over(c => { const m = DON.mom(P), xo = d.xoe || 1.1, n = d.so || 34; for (let i = 0; i < n; i++) { const r1 = hh(i, 3, 1), r2 = hh(i, 3, 2), ph = (u * 1.6 + r2) % 1, a = dir + (r1 - .5) * xo, rr = (tam - 6) * ph * (u < .8 ? 1 : 1); if (u > .75 && ph < seg(u, .75, 1)) continue; if (u < .2 && ph > u * 5) continue; c.fillStyle = cols[(i + ((ph * 3) | 0)) % cols.length]; const s = ph < .6 ? 2 : 1; c.fillRect(Math.round(m[0] + Math.cos(a) * (6 + rr)), Math.round(m[1] + Math.sin(a) * (6 + rr) * MA.det + ph * ph * (d.roi == null ? 6 : d.roi)), s, s); } });
@@ -1297,6 +1298,34 @@ const DON = {
   },
 };
 MA._don = DON;
+
+// ---------- chiêu dùng chung (tinh anh, trùm). Mọi chiêu đều xoay theo P.dir bất kỳ ----------
+const CHIEU = MA.chieu = {
+  // Lao n lần liên tiếp, mỗi lần lệch hướng một chút (zíc zắc). Mỗi lần: 45% báo trước (vệt đỏ), rồi lao tới và lùi về.
+  laoNhieu(P, n, tam, rong, cols, lech) { const u = P.u, k = Math.min(n - 1, Math.floor(u * n)), q = u * n - k, dir = P.dir + (k - (n - 1) / 2) * (lech == null ? .55 : lech), ex = Math.cos(dir), ey = Math.sin(dir) * MA.det, bh = P.B.bh;
+    cols = cols || ['#8a8290', '#cbc3c0', '#ffffff'];
+    if (q < .45) { const v = q / .45; P.under(c => F.baoDuong(c, 0, 0, tam, rong, dir, v)); P.x -= ex * 3 * v; P.y -= ey * 3 * v; P.sy *= 1 - .08 * v; P.sx *= 1 + .06 * v; if (v > .5) P.x += ((u * 48 | 0) % 2 ? .6 : -.6); }
+    else { const v = (q - .45) / .55, f = kf(v, [[0, 0], [.35, 1, 'out'], [.7, 1], [1, 0, 'io']]); P.x += ex * (tam - 6) * f; P.y += ey * (tam - 6) * f; P.sx *= v < .35 ? 1.12 : 1; P.sy *= v < .35 ? .9 : 1;
+      if (v < .5) { P.bongMa = [1, 2, 3].map(i => ({ x: -ex * i * 6, y: -ey * i * 6, a: .32 - i * .08, mau: cols[1] })); const ox = P.x, oy = P.y; P.under(c => { for (let i = 0; i < 4; i++) { const o = (i - 1.5) * 3; F.a(c, .6 - v); F.duong(c, ox - ex * 6 - ey * o, oy - ey * 6 + ex * o - bh * .35, ox - ex * (16 + i * 4) - ey * o, oy - ey * (16 + i * 4) + ex * o - bh * .35, cols[1], 1); } F.a(c, 1); F.khoi(c, ox - ex * 10, oy - ey * 10, 7, v * 2, [cols[0], '#48424e'], k + 3); }); }
+      if (v > .3 && v < .6) { const tx = ex * tam, ty = ey * tam; P.over(c => F.hat(c, tx, ty - bh * .4, 10, k * 7 + 1, (v - .3) / .3, { v: 12, cols: [cols[2], cols[1], cols[0]] })); } } },
+  // Xoay tròn chém quanh mình: hình lật qua lại như đang quay, vệt chém tròn.
+  xoay(P, tam, cols, vong) { const u = P.u, bh = P.B.bh; vong = vong || 2; cols = cols || ['#c43c10', '#ffd23c', '#fff6b0'];
+    if (u < .35) { const v = u / .35; P.under(c => F.baoTron(c, 0, 0, tam, v)); P.sy *= 1 - .1 * v; P.sx *= 1 + .08 * v; P.rot += -12 * v; }
+    else { const v = (u - .35) / .65, a = EASE.out(Math.min(1, v * 1.25)) * vong; const cc = Math.cos(a * TAU); P.sx *= Math.sign(cc || 1) * Math.max(.2, Math.abs(cc)); P.rot += 8 * (1 - v);
+      P.over(c => { for (let i = 0; i < vong; i++) { const w = clamp(v * 1.25 * vong - i, 0, 1); if (w > 0 && w < 1) F.liem(c, 0, -bh * .3, tam - 3, P.dir + i * PI + w * TAU, TAU * .85, w, cols, 5); } if (v > .2) F.song(c, 0, 0, tam, seg(v, .2, 1), [cols[2], cols[1]], 2); }); } },
+  // Mưa đạn: bắn n quả bay vòng cung, rơi vào n vùng tròn quanh hướng dir; dan(c, x, y, q) vẽ quả đạn (bỏ trống: quả cầu màu cols).
+  muaNem(P, n, tam, rong, cols, dan, sauNo) { const u = P.u, m = DON.mom(P); cols = cols || ['#3c5a0c', '#78b818', '#f4ffb0'];
+    const T = []; for (let i = 0; i < n; i++) { const a = P.dir + (i - (n - 1) / 2) * (TAU * .7 / n), r = tam * (.55 + .45 * hh(i, 3, 9)); T.push([Math.cos(a) * r, Math.sin(a) * r * MA.det, .3 + i * .07]); }
+    P.under(c => { for (const [x, y, t0] of T) if (u < t0 + .25) F.baoTron(c, x, y, rong, clamp(u / (t0 + .25), 0, 1)); });
+    P.over(c => { for (let i = 0; i < n; i++) { const [x, y, t0] = T[i], q = seg(u, t0 - .2, t0 + .25), e = seg(u, t0 + .25, t0 + .6); if (q > 0 && q < 1) { const px = lerp(m[0], x, q), py = lerp(m[1], y, q) - Math.sin(q * PI) * 26; if (dan) dan(c, px, py, q); else F.cau(c, px, py, 2.5, cols); }
+      if (e > 0 && e < 1) { if (e < .3) F.dia(c, x, y - 2, rong * (.5 + e * 1.5), cols[2]); F.song(c, x, y, rong * 1.1, e, [cols[2], cols[1]], 1); F.hat(c, x, y - 2, 12, i + 5, e, { v: rong * 1.2, cols: [cols[2], cols[1], cols[0]] }); if (sauNo) sauNo(c, x, y, e, i); } } });
+    if (u < .3) { const v = u / .3; P.sy *= 1 + .1 * v; P.sx *= 1 - .07 * v; } else { const v = seg(u, .3, .8); P.sy *= 1 + .08 * Math.sin(v * PI * 5) * (1 - v); } },
+  // Vòng đạn: bắn n viên toả tròn quanh mình (bắt đầu từ hướng dir), có thể 2 đợt lệch nhau.
+  vongDan(P, n, tam, cols, dot) { const u = P.u, bh = P.B.bh, cy = -P.h - bh * .45; cols = cols || ['#c43c10', '#ff8a1e', '#fff6b0']; dot = dot || 1;
+    if (u < .35) { const v = u / .35; P.sx *= 1 + .12 * v; P.sy *= 1 + .12 * v; P.flash = v > .6 && ((u * 30) | 0) % 2 ? .4 : 0; P.under(c => { for (let i = 0; i < n * dot; i++) { const a = P.dir + i / (n * dot) * TAU + (i % dot) * PI / n; F.baoDuong(c, Math.cos(a) * 6, Math.sin(a) * 6 * MA.det, tam - 6, 4, a, v); } }); P.over(c => { F.dia(c, 0, cy, 2 + v * 4, cols[1]); F.dia(c, 0, cy, 1 + v * 2, cols[2]); }); }
+    else { const k = kf(u, [[.35, 1.15], [.45, .95], [.6, 1]]); P.sx *= k; P.sy *= k;
+      P.over(c => { for (let j = 0; j < dot; j++) { const q = seg(u, .35 + j * .15, .85 + j * .15); if (q <= 0 || q >= 1) continue; for (let i = 0; i < n; i++) { const a = P.dir + (i + j * .5) / n * TAU, r = 6 + (tam - 6) * q, x = Math.cos(a) * r, y = cy + Math.sin(a) * r * MA.det + q * bh * .4; for (let t = 1; t < 4; t++) { F.a(c, .6 - t * .15); F.dia(c, x - Math.cos(a) * t * 3, y - Math.sin(a) * t * 3 * MA.det, 2 - t * .4, cols[0]); } F.a(c, 1); F.cau(c, x, y, 2.5, [cols[0], cols[1], cols[2]]); } } if (u < .5) F.song(c, 0, 0, tam * .5, seg(u, .35, .5), [cols[2], cols[1]], 1); }); } },
+};
 
 // ---------- bộ cử động chuẩn (dùng khi con quái không tự viết) ----------
 const NHAN = { idle: 'Đứng thở', move: 'Di chuyển', tele: 'Báo trước đòn', atk: 'Ra đòn', hit: 'Trúng đòn', die: 'Chết', spawn: 'Xuất hiện', intro: 'Ra mắt', stun: 'Choáng', phase2: 'Chuyển sang pha 2', phase3: 'Chuyển sang pha 3' };
@@ -1322,7 +1351,7 @@ const CH = MA.chuan = {
       P.under(c => { const m = 1 - seg(u, .75, 1); if (m > 0) { F.px(c, -3, -9, '#2e1a10', 6, 1); F.px(c, -2, -8, '#b0261a', 4, 6); F.px(c, -1, -7, u < .5 && ((u * 16) | 0) % 2 ? '#fff6b0' : '#ffd23c', 2, 4); F.px(c, -3, -2, '#2e1a10', 6, 1); F.px(c, 0, -12, '#5c3a1e', 1, 3); } }); P.over(c => { const m = Math.sin(seg(u, 0, .8) * PI); if (m > 0) F.lua(c, 0, -4, 6 + m * 8, 6 + m * 14, P.t, null, 1); F.hat(c, 0, -8, 12, 5, seg(u, .25, .9), { v: 18, goc: -PI / 2, xoe: 2.6, cols: ['#fff6b0', '#ffd23c', '#ff8a1e'] }); }); }
     else if (k === 'bay') { const q = EASE.out(seg(u, 0, .8)); P.tien(-(1 - q) * (hv.xa || 46)); P.h += (1 - q) * (hv.cao || 34); P.rot += (1 - q) * -18; P.a = seg(u, 0, .25); P.bong = q; const st = kf(u, [[.8, 1], [.88, .92], [1, 1]]); P.sy *= st; }
     else if (k === 'no') { const q = seg(u, .45, .75), s = kf(q, [[0, .1], [.6, 1.2, 'out'], [1, 1, 'io']]); P.sx *= u < .45 ? .12 + u * .5 : s; P.sy *= u < .45 ? .12 + u * .5 : s; if (u < .45) { P.x += ((u * 24 | 0) % 2 ? .7 : -.7); P.flash = .5; } P.bong = seg(u, .3, .7); P.over(c => { F.hat(c, 0, -bh * .4, 18, 4, seg(u, .45, 1), { v: bw * .9, cols: mau, to: 2 }); F.song(c, 0, 0, bw * .8, seg(u, .45, .9), [mau[0], mau[1] || mau[0]], 1); }); }
-    else { const m = { khoi: 'hon', ghep: 'vo', tu: 'tu', bui: 'bui', quet: 'quet' }[k] || 'tu'; if (m === 'tu') P.tan = { k: 'tu', u, mau }; else if (m === 'quet') P.tan = { k: 'quet', u: seg(u, .1, .9), mau, len: 1 }; else P.tan = { k: m, u: 1 - EASE.io(seg(u, 0, .85)), mau, trai: P.face < 0 }; if (u > .85) { const st = kf(u, [[.85, 1.06], [.93, .96], [1, 1]]); P.sy *= st; } P.bong = seg(u, .3, .9); }
+    else { const m = { khoi: 'hon', ghep: 'vo', tu: 'tu', bui: 'bui', quet: 'quet' }[k] || 'tu'; if (m === 'tu') P.tan = { k: 'tu', u, mau }; else if (m === 'quet') P.tan = { k: 'quet', u: seg(u, .1, .9), mau, len: 1 }; else P.tan = { k: m, u: 1 - EASE.io(seg(u, 0, .85)), mau, trai: P.face < 0, hien: true }; if (u > .85) { const st = kf(u, [[.85, 1.06], [.93, .96], [1, 1]]); P.sy *= st; } P.bong = seg(u, .3, .9); }
   },
 };
 const DMAC = { idle: [1.2, true], move: [.6, true], tele: [.7, false], atk: [.55, false], hit: [.35, false], die: [1.1, false], spawn: [1.1, false] };
@@ -1350,9 +1379,9 @@ MA.draw = function (c, id, x, y, o) {
   const t = Math.max(0, o.t || 0), nf = Math.max(1, Math.round(an.d * MA.fps)); let fi = Math.floor(t * MA.fps + 1e-6); fi = an.lap ? fi % nf : Math.min(fi, nf - 1);
   const u = an.lap ? fi / nf : (nf > 1 ? fi / (nf - 1) : 0);
   let face = o.face || 0, dir = o.dir; if (dir == null) dir = (face || -1) < 0 ? PI : 0; if (!face) { const cx = Math.cos(dir); face = cx > .01 ? 1 : -1; }
-  const B = goc(d, ph), P = new Pose(d, B, nm, u, fi / MA.fps, o, dir, face, ph);
+  const hv = an.hinh ? an.hinh(u, ph) : 0, B = goc(d, ph, hv), P = new Pose(d, B, nm, u, fi / MA.fps, o, dir, face, ph);
   MA._tatBao = o.bao === false; an.f(P);
-  const key = P.khongNho ? null : id + '|' + ph + '|' + nm + '|' + fi + '|' + P.aim + (P.khoa || ''), fr = veKhung(B, P, key);
+  const key = P.khongNho ? null : id + '|' + ph + '|' + (hv || '') + '|' + nm + '|' + fi + '|' + P.aim + (P.khoa || ''), fr = veKhung(B, P, key);
   c.save(); c.translate(Math.round(x), Math.round(y)); c.imageSmoothingEnabled = false; const ga = c.globalAlpha;
   if (P.bong > 0 && d.bong !== 0) { const bw = (d.bong || B.bw * .62) * (1 - Math.min(.5, P.h / 80)) * Math.min(1, P.bong + .3); c.globalAlpha = ga * .28 * Math.min(1, P.bong); F.elip(c, P.x, P.y, bw / 2, Math.max(1.5, bw * .14), '#000000'); c.globalAlpha = ga; }
   if (o.fx !== false) for (const f of P._u) { c.save(); f(c, P); c.restore(); }
@@ -1434,7 +1463,265 @@ def('sua', { ten: 'Sứa Bom', vung: 'bien', loai: 'thuong', tt: 7, luoi: () => 
 def('nhim', { ten: 'Nhím Biển', vung: 'bien', loai: 'thuong', tt: 8, luoi: () => Q2.nhim(), don: { kieu: 'gai', tam: 30, mau: ['#281d62', '#988aee', '#ffffff'] }, chet: { k: 'vo', mau: ['#4836a0', '#988aee'] }, hien: { k: 'cat', mau: CAT } });
 def('cuaTuong', { ten: 'Cua Tướng', vung: 'bien', loai: 'tinhanh', tt: 1, luoi: () => Q2.cuaTuong(), don: { kieu: 'chem', tam: 40 }, chet: { k: 'vo', mau: BANG }, hien: { k: 'cat', mau: CAT } });
 def('caNocChua', { ten: 'Cá Nóc Chúa', vung: 'bien', loai: 'tinhanh', tt: 2, luoi: () => Q2.caNocChua(), bay: true, cao: 6, don: { kieu: 'gai', tam: 46, mau: ['#0e746e', '#fff8e0', '#ffffff'], so: 12 }, chet: { k: 'no', mau: NUOC }, hien: { k: 'nuoc', mau: NUOC } });
+// ---- Chiêu riêng của hai tinh anh ----
+// Cua Tướng: kẹp chéo, hai càng chém chéo nhau thành hình chữ X trước mặt.
+DEFS.cuaTuong.anims.chieu1 = A(1.4, P => { const u = P.u, bh = P.B.bh, tam = 44, cols = ['#b0261a', '#ff9a6a', '#ffffff'];
+  if (u < .4) { const v = u / .4; P.theo(-3 * v); P.sy *= 1 - .1 * v; P.sx *= 1 + .07 * v; P.x += v > .5 ? ((u * 48 | 0) % 2 ? .6 : -.6) : 0; P.flash = v > .7 && ((u * 30) | 0) % 2 ? .35 : 0; P.under(c => F.baoQuat(c, 0, 0, tam, P.dir, 2.4, v)); }
+  else { const v = (u - .4) / .6, ex = P.fx * 5, ey = P.fy * 5 * MA.det - bh * .35; P.theo(kf(v, [[0, 0], [.2, 9, 'out'], [.6, 7], [1, 0]])); P.sx *= kf(v, [[0, 1.12], [.2, .94], [.5, 1]]); P.sy *= kf(v, [[0, .9], [.2, 1.06], [.5, 1]]);
+    P.over(c => { F.liem(c, ex, ey, tam - 4, P.dir - .45, 1.7, clamp(v * 1.7, 0, 1), cols, 6); F.liem(c, ex, ey, tam - 8, P.dir + .45, 1.7, clamp(v * 1.7 - .3, 0, 1), cols, 6); if (v > .15 && v < .6) F.hat(c, Math.cos(P.dir) * tam * .7, Math.sin(P.dir) * tam * .7 * MA.det - bh * .3, 14, 3, (v - .15) / .45, { v: 12, cols: ['#ffffff', '#ff9a6a', '#b0261a'] }); }); } }, { nhan: 'Chiêu: kẹp chéo' });
+// Cá Nóc Chúa: gai xoáy, phồng lên rồi bắn hai đợt gai băng toả tròn.
+DEFS.caNocChua.anims.chieu1 = A(1.6, P => { CHIEU.vongDan(P, 12, 58, ['#0e746e', '#8ff0d8', '#ffffff'], 2); }, { nhan: 'Chiêu: gai xoáy' });
 
 })(); } catch (e) { MA.loi.push('bien.js: ' + (e && e.stack || e)); if (typeof console !== 'undefined') console.error('monster_art bien.js', e); }
+// ----- rung.js -----
+try { (function () {
+// Vùng Rừng già (hệ Độc): 8 quái thường + 2 tinh anh. Bảng màu dùng chung của bản chốt: LUCR, NAUG, TIMD, DOCX.
+const DAT = [NAUG[2], NAUG[1], NAUG[3]], LA = [LUCR[2], LUCR[1], LUCR[3]], DOC = [DOCX[0], DOCX[1], DOCX[3]], TIM = [TIMD[1], TIMD[2], TIMD[3]], ONG = ['#c4801a', '#ffc83c', '#fff6b0'];
+const rung = (u, a) => (u > a ? ((u * 24 | 0) % 2 ? .6 : -.6) : 0);
+// ---- Heo Rừng Con: đầu chúi, chân đạp, bờm dựng; lao húc ----
+def('heoCon', { ten: 'Heo Rừng Con', vung: 'rung', loai: 'thuong', tt: 1, luoi: () => QR.heo(), don: { kieu: 'lao', tam: 46, rong: 14, mau: DAT }, chet: { k: 'ra', mau: DAT }, hien: { k: 'bui', mau: DAT },
+  parts: [{ n: 'dau', m: [[2, 16, 22, 39]], pv: [21, 27] }, { n: 'chanT', m: [[8, 33, 21, 41]], pv: [15, 33], z: -1 }, { n: 'chanS', m: [[37, 32, 52, 41]], pv: [44, 32], z: -1 },
+    { n: 'bom', m: [[12, 6, 47, 17]], pv: [30, 17], keep: 0 }, { n: 'bui', m: [[50, 20, 60, 36]], pv: [50, 28] }],
+  anims: {
+    idle: A(1.2, P => { const u = P.u; P.tho(.03); P.r('dau', 3 * sn(u)).r('chanT', 4 * sn(u * 2) * (u > .5 ? 1 : 0)); P.s('bom', 1, 1 + .1 * sn(u)); P.s('bui', 0); }),
+    move: A(.45, P => { const u = P.u; CH.move(P); P.r('chanT', 26 * sn(u)).r('chanS', -26 * sn(u)).r('dau', 4 * sn(u * 2)); P.s('bom', 1, 1 + .12 * sn(u * 2)); P.m('bui', 2 * sn(u * 2), 0); }),
+    tele: A(.75, P => { const u = P.u, k = kf(u, [[0, 0], [.35, 1, 'out'], [1, 1]]); CH.tele(P); P.r('dau', -12 * k).m('dau', -1 * k, 2 * k); P.r('chanS', 20 * sn(u * 4) * k); P.s('bom', 1, 1 + .3 * k); P.s('bui', 0);
+      P.under(c => F.khoi(c, P.x + 14 * P.face * -1, P.y, 6, (u * 3) % 1, DAT, (u * 3) | 0)); }),
+    atk: A(.6, P => { const u = P.u, k = kf(u, [[0, -1], [.15, 1, 'out'], [.5, 1], [1, 0]]); CH.atk(P); P.theo(10 * k); P.r('dau', -16 * k).r('chanT', 30 * sn(u * 3)).r('chanS', -30 * sn(u * 3)); P.s('bom', 1, 1 + .3 * k); }),
+    hit: A(.35, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.r('dau', 18 * k).r('chanT', -15 * k); P.s('bom', 1, 1 - .3 * k); }),
+    die: A(1.2, P => { const k = kf(P.u, [[0, 0], [.25, 1, 'nay']]); CH.die(P); P.r('dau', 25 * k).r('chanT', -40 * k).r('chanS', 40 * k); P.s('bom', 1, 1 - .5 * k); P.s('bui', 0); }),
+    spawn: A(1.1, P => { CH.spawn(P); P.r('chanT', 25 * sn(P.u * 4) * (P.u > .7 ? 1 : 0)); }),
+  } });
+// ---- Bầy Ong Vò Vẽ: ba con ong, cánh vẫy rất nhanh ----
+function ongNhip(P, sp, amp) { const u = P.u; [1, 2, 3].forEach(i => { const ph = u + i / 3; P.m('ong' + i, sn(ph) * 1.2, sn(ph * 2 + .25) * (amp || 1.5)); P.r('ong' + i, 6 * sn(ph)); P.s('canh' + i, 1, ((P.t * 24 + i) | 0) % 2 ? .35 : 1); }); }
+def('ongVo', { ten: 'Bầy Ong Vò Vẽ', vung: 'rung', loai: 'thuong', tt: 2, luoi: () => QR.ong(), bay: true, cao: 8, don: { kieu: 'lao', tam: 36, rong: 18, mau: ONG }, chet: { k: 'bui', mau: ONG }, hien: { k: 'bay', xa: 40, cao: 30 },
+  parts: [{ n: 'ong1', m: [[5, 3, 26, 22]], pv: [16, 14] }, { n: 'ong2', m: [[26, 5, 49, 31]], pv: [36, 19] }, { n: 'ong3', m: [[3, 16, 26, 40]], pv: [15, 29] },
+    { n: 'canh1', m: [[12, 2, 25, 11]], pv: [17, 11], cha: 'ong1' }, { n: 'canh2', m: [[30, 6, 41, 17]], pv: [34, 17], cha: 'ong2' }, { n: 'canh3', m: [[12, 16, 25, 25]], pv: [16, 25], cha: 'ong3' }],
+  anims: {
+    idle: A(1.2, P => { ongNhip(P, 3, 1.5); P.h += sn(P.u) * 1.5; }),
+    move: A(.6, P => { ongNhip(P, 4, 1); P.rot += -4; [1, 2, 3].forEach(i => P.m('ong' + i, -2 * sn(P.u + i / 3), 0)); }),
+    tele: A(.7, P => { const u = P.u, k = kf(u, [[0, 0], [.4, 1, 'out'], [1, 1]]); ongNhip(P, 8, .5); P.theo(-3 * k); P.r('ong1', -20 * k).r('ong2', -20 * k).r('ong3', -20 * k); P.x += rung(u, .4); P.flash = u > .7 ? ((u * 24 | 0) % 2 ? .35 : 0) : 0; P.fxBao(); }),
+    atk: A(.6, P => { const u = P.u; ongNhip(P, 8, .4); [1, 2, 3].forEach(i => { const q = kf(u, [[0, 2], [.1 + i * .08, -14, 'in'], [.5 + i * .05, -10], [1, 0]]); P.m('ong' + i, q, 0); P.r('ong' + i, -25 * (1 - u)); }); P.theo(kf(u, [[0, -3], [.25, 6, 'out'], [1, 0]])); P.fxDon(); }),
+    hit: A(.35, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.m('ong1', -3 * k, -4 * k).m('ong2', 5 * k, 0).m('ong3', -3 * k, 4 * k); ongNhip(P, 6, .3); }),
+    die: A(1.1, P => { const k = seg(P.u, 0, .3); CH.die(P); P.m('ong1', -4 * k, -5 * k).m('ong2', 6 * k, 2 * k).m('ong3', -4 * k, 5 * k); P.r('ong1', 120 * k).r('ong2', -150 * k).r('ong3', 180 * k); }),
+  } });
+// ---- Bọ Hung Mai Cứng: giơ mai sừng chắn trước, sáu chân bò ----
+def('boHung', { ten: 'Bọ Hung Mai Cứng', vung: 'rung', loai: 'thuong', tt: 3, luoi: () => QR.boHung(), don: { kieu: 'dap', tam: 26, mau: LA }, chet: { k: 'vo', mau: ['#1a5a40', '#3a9a5c', '#b4f0b0'] }, hien: { k: 'cat', mau: DAT },
+  parts: [{ n: 'mai', m: [[1, 5, 22, 37]], pv: [21, 26] }, { n: 'c1', m: [[20, 32, 30, 41]], pv: [26, 32], z: -1 }, { n: 'c2', m: [[30, 32, 40, 41]], pv: [35, 32], z: -1 }, { n: 'c3', m: [[40, 32, 52, 41]], pv: [45, 32], z: -1 }],
+  anims: {
+    idle: A(1.6, P => { const u = P.u; P.tho(.025); P.r('mai', 3 * sn(u)); }),
+    move: A(.6, P => { const u = P.u; P.h += Math.abs(sn(u * 2)) * .8; P.rot += 2 * sn(u); P.r('c1', 22 * sn(u * 2)).r('c2', 22 * sn(u * 2 + .33)).r('c3', 22 * sn(u * 2 + .66)); P.r('mai', 4 * sn(u * 2)); }),
+    tele: A(.8, P => { const u = P.u, k = kf(u, [[0, 0], [.4, 1, 'back'], [1, 1]]); CH.tele(P); P.r('mai', 28 * k).m('mai', 2 * k, -3 * k); P.rot += 8 * k; }),
+    atk: A(.6, P => { const u = P.u, a = kf(u, [[0, 28], [.2, -14, 'in'], [.45, -8], [1, 0, 'back']]); CH.atk(P); P.r('mai', a); P.rot += kf(u, [[0, 8], [.2, -6, 'in'], [1, 0]]); }),
+    hit: A(.35, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.r('mai', -12 * k); P.r('c1', 20 * k).r('c3', -20 * k); }),
+    die: A(1.2, P => { const k = kf(P.u, [[0, 0], [.25, 1, 'nay']]); CH.die(P); P.r('mai', -30 * k).m('mai', -3 * k, 2 * k); P.r('c1', 40 * k).r('c2', 20 * k).r('c3', -30 * k); }),
+  } });
+// ---- Hoa Phun Bào Tử: đầu hoa lắc, há miệng phun viên bào tử ----
+def('hoaBaoTu', { ten: 'Hoa Phun Bào Tử', vung: 'rung', loai: 'thuong', tt: 4, luoi: () => QR.hoa(), don: { kieu: 'ban', tam: 70, rong: 7, co: 3, mau: DOC, mom: [8, 16] }, chet: { k: 'heo', mau: [NAUG[0], NAUG[1], NAUG[2], '#7a6a3a'] }, hien: { k: 'moc', mau: LA },
+  parts: [{ n: 'dau', m: [[2, 3, 36, 28]], pv: [33, 26] }, { n: 'la', m: [[35, 3, 48, 29]], pv: [36, 25] }, { n: 'bao', m: [[3, 8, 12, 23]], pv: [8, 16], cha: 'dau' }],
+  anims: {
+    idle: A(1.8, P => { const u = P.u; P.r('dau', 6 * sn(u)).s('dau', 1 + .03 * sn(u * 2)); P.r('la', -8 * sn(u + .2)); P.m('bao', 0, 1.5 * sn(u * 2)); }),
+    move: A(.9, P => { const u = P.u; P.sh += 3 * sn(u); P.sy *= 1 + .05 * sn(u * 2); P.r('dau', 10 * sn(u)).r('la', -12 * sn(u)); }),
+    tele: A(.8, P => { const u = P.u, k = kf(u, [[0, 0], [.45, 1, 'out'], [1, 1]]); P.r('dau', 22 * k).r('la', -16 * k); P.s('bao', 1 + .6 * k); P.x += rung(u, .45); P.flash = u > .75 ? ((u * 24 | 0) % 2 ? .3 : 0) : 0; P.fxBao(); }),
+    atk: A(.6, P => { const u = P.u, a = kf(u, [[0, 22], [.15, -18, 'in'], [.45, -10], [1, 0, 'back']]); P.r('dau', a).r('la', -a * .6); P.s('bao', u < .12 ? 1.6 : 0); P.sy *= kf(u, [[0, .92], [.15, 1.08], [.5, 1]]); P.fxDon(); }),
+    hit: A(.35, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.r('dau', -24 * k).r('la', 18 * k); }),
+    die: A(1.4, P => { const k = kf(P.u, [[0, 0], [.3, 1, 'out']]); CH.die(P); P.r('dau', -50 * k).m('dau', 0, 6 * k).r('la', 40 * k); P.s('bao', 1 - k); }),
+    spawn: A(1.2, P => { const u = P.u, k = 1 - seg(u, .4, .9); CH.spawn(P); P.r('dau', 40 * k).r('la', -30 * k); }),
+  } });
+// ---- Chồn Bóng: thân dài, đuôi lượn, lao vụt để lại vệt bóng tím ----
+def('chonBong', { ten: 'Chồn Bóng', vung: 'rung', loai: 'thuong', tt: 5, luoi: () => QR.chon(), don: { kieu: 'lao', tam: 62, rong: 10, mau: TIM }, chet: { k: 'hon', mau: TIM }, hien: { k: 'bong', mau: ['#221836', '#40305e'] },
+  parts: [{ n: 'dau', m: [[2, 10, 19, 31]], pv: [18, 20] }, { n: 'duoi', m: [[42, 2, 64, 24]], pv: [42, 19], keep: 0 }, { n: 'chanT', m: [[3, 22, 15, 32]], pv: [11, 22], z: -1 }, { n: 'chanS', m: [[45, 23, 58, 32]], pv: [50, 23], z: -1 }],
+  anims: {
+    idle: A(1.4, P => { const u = P.u; P.tho(.03); P.w('duoi', 8, -u, .25).r('dau', 3 * sn(u)); }),
+    move: A(.4, P => { const u = P.u; CH.move(P); P.r('chanT', 30 * sn(u)).r('chanS', -30 * sn(u)); P.w('duoi', 10, -u * 2, .25); P.bongMa = [{ x: 6 * -P.face, a: .25, mau: TIMD[2] }]; }),
+    tele: A(.6, P => { const u = P.u, k = kf(u, [[0, 0], [.4, 1, 'out'], [1, 1]]); CH.tele(P); P.r('dau', -8 * k).b('duoi', -25 * k); P.r('chanS', -15 * k); }),
+    atk: A(.55, P => { const u = P.u, k = kf(u, [[0, 0], [.2, 1, 'out'], [.55, 1], [1, 0]]); P.theo(18 * k - 2); P.sx *= 1 + .15 * k; P.sy *= 1 - .1 * k; P.r('chanT', -30 * k).r('chanS', 30 * k).b('duoi', -20 * k);
+      if (u < .6) P.bongMa = [1, 2, 3].map(i => ({ x: -P.fx * i * 7, y: -P.fy * i * 7, a: .35 - i * .09, mau: TIMD[2] })); P.fxDon(); }),
+    hit: A(.35, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.r('dau', 15 * k).b('duoi', 30 * k); }),
+    die: A(1.2, P => { const k = kf(P.u, [[0, 0], [.25, 1, 'nay']]); CH.die(P); P.r('dau', 30 * k).b('duoi', 40 * k).r('chanT', -40 * k).r('chanS', 40 * k); }),
+  } });
+// ---- Nấm Phồng: mũ nhún; lại gần thì phồng to (đổi sang hình phồng) rồi nổ khí độc ----
+const khiDoc = (c, x, y, r, e, s) => { F.a(c, (1 - e) * .5); F.khoi(c, x, y, r, e * .7, [DOCX[2], DOCX[1], TIMD[3]], s, 7); F.a(c, 1); };
+def('namPhong', { ten: 'Nấm Phồng', vung: 'rung', loai: 'thuong', tt: 6, luoi: (p, hv) => QR.nam(hv === 'phong'), don: { kieu: 'no', tam: 34, mau: DOC }, chet: { k: 'no', mau: DOC }, hien: { k: 'tu', mau: [TIMD[2], DOCX[2], DOCX[3]] },
+  parts: hv => hv === 'phong' ? [] : [{ n: 'mu', m: [[18, 23, 46, 38]], pv: [32, 38] }],
+  anims: {
+    idle: A(1.3, P => { const u = P.u; P.tho(.05); P.s('mu', 1 + .05 * sn(u + .25), 1 - .05 * sn(u + .25)); }),
+    move: A(.5, P => { const u = P.u, s = Math.abs(sn(u)); P.h += s * 3; P.sy *= 1 + s * .1 - .05; P.sx *= 1 - s * .08 + .04; P.r('mu', 5 * sn(u)); }),
+    tele: A(.8, P => { const u = P.u; P.sx *= 1 + .1 * sn(u * 4) * (u > .4 ? 1 : .3); P.sy *= 1 - .1 * sn(u * 4) * (u > .4 ? 1 : .3); P.x += rung(u, .4); P.flash = u > .6 ? ((u * 24 | 0) % 2 ? .4 : 0) : 0; P.fxBao(); }, { hinh: u => u > .45 ? 'phong' : 0 }),
+    atk: A(.9, P => { const u = P.u, cy = -P.B.bh * .4; P.sx *= 1 + seg(u, 0, .15) * .2; P.sy *= 1 + seg(u, 0, .15) * .2; P.flash = u < .18 ? (((u * 30) | 0) % 2 ? .8 : .2) : 0; P.a = u < .2 ? 1 : seg(u, .88, 1); P.bong = P.a; if (u >= .88) { const s = seg(u, .88, 1); P.sx *= s; P.sy *= s; }
+      if (u > .18) { P.under(c => khiDoc(c, 0, 0, 30, seg(u, .2, 1), 4)); P.fxDon(seg(u, .18, .8)); } }, { hinh: u => u < .2 ? 'phong' : 0 }),
+    hit: A(.35, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.s('mu', 1 + .15 * k, 1 - .2 * k); }),
+    die: A(1.1, P => { CH.die(P); if (P.u > .25) P.under(c => khiDoc(c, 0, 0, 22, seg(P.u, .25, 1), 2)); }),
+  } });
+// ---- Sóc Ném Quả Nổ: ôm quả nổ, đuôi xù; ném quả nổ vòng cung ----
+let BOM_R = null; const quaNo = (c, x, y, q) => { F.luoi(c, BOM_R || (BOM_R = QR.bom()), x, y, { rot: q * 9 }); };
+def('socNo', { ten: 'Sóc Ném Quả Nổ', vung: 'rung', loai: 'thuong', tt: 7, luoi: () => QR.soc(), don: { kieu: 'nem', tam: 56, rong: 14, vong: 26, mau: [TIMD[1], '#ff8a1e', '#fff6b0'], mom: [10, 24], dan: (c, x, y, q) => quaNo(c, x, y, q) }, chet: { k: 'chay', mau: ['#ff8a1e', '#c43c10', '#48424e'] }, hien: { k: 'roi', cao: 80, mau: LA },
+  parts: [{ n: 'qua', m: [[3, 19, 17, 36]], pv: [16, 28] }, { n: 'duoi', m: [[28, 3, 52, 36]], pv: [31, 30], keep: 0 }, { n: 'dau', m: [[9, 4, 28, 22]], pv: [22, 22] }],
+  anims: {
+    idle: A(1.3, P => { const u = P.u; P.tho(.04); P.w('duoi', 6, -u, .2).r('dau', 3 * sn(u)).m('qua', 0, .8 * sn(u * 2)); }),
+    move: A(.45, P => { const u = P.u, s = Math.abs(sn(u)); P.h += s * 4; P.sy *= 1 + s * .08 - .04; P.rot += 4 * sn(u); P.b('duoi', 14 * sn(u)); }),
+    tele: A(.75, P => { const u = P.u, k = kf(u, [[0, 0], [.4, 1, 'back'], [1, 1]]); CH.tele(P); P.r('qua', 70 * k).m('qua', 6 * k, -10 * k).r('dau', 8 * k).b('duoi', 15 * k); }),
+    atk: A(.75, P => { const u = P.u, a = kf(u, [[0, 70], [.1, -50, 'in'], [.3, -30], [1, 0, 'back']]); CH.atk(P); P.r('qua', a).m('qua', 6 * (1 - seg(u, 0, .15)), -10 * (1 - seg(u, 0, .15))); P.s('qua', u > .08 && u < .9 ? 0 : 1); P.b('duoi', -10 * (1 - u)); }),
+    hit: A(.35, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.r('dau', 15 * k).b('duoi', 25 * k).m('qua', 2 * k, -2 * k); }),
+    die: A(1.2, P => { const k = kf(P.u, [[0, 0], [.25, 1, 'nay']]); CH.die(P); P.r('dau', 25 * k).b('duoi', 35 * k).r('qua', -40 * k); if (P.u < .3) P.over(c => { const m = P.pt(10, 28); F.dia(c, m[0], m[1], 2 + P.u * 30, P.u < .15 ? '#fff6b0' : '#ff8a1e'); }); }),
+  } });
+// ---- Nhím Gai Độc: lúc báo trước và ra đòn thì xù gai (đổi sang hình xù), bắn gai độc ----
+def('nhimDoc', { ten: 'Nhím Gai Độc', vung: 'rung', loai: 'thuong', tt: 8, luoi: (p, hv) => QR.nhim(hv === 'xu'), don: { kieu: 'gai', tam: 36, so: 10, mau: [TIMD[1], DOCX[2], '#ffffff'] }, chet: { k: 'tan', mau: [TIMD[2], NAUG[2], DOCX[2]] }, hien: { k: 'ghep', mau: [NAUG[1], TIMD[2]] },
+  parts: hv => hv === 'xu' ? [] : [{ n: 'dau', m: [[18, 42, 34, 56]], pv: [33, 50] }],
+  anims: {
+    idle: A(1.5, P => { const u = P.u; P.tho(.035); P.r('dau', 4 * sn(u)); }),
+    move: A(.55, P => { const u = P.u; CH.move(P); P.r('dau', 5 * sn(u * 2)); }),
+    tele: A(.75, P => { const u = P.u; CH.tele(P); P.sy *= 1 + .06 * seg(u, .3, .4); }, { hinh: u => u > .3 ? 'xu' : 0 }),
+    atk: A(.6, P => { const u = P.u; P.sx *= kf(u, [[0, 1.12], [.15, .95], [.4, 1.03], [1, 1]]); P.sy *= kf(u, [[0, 1.12], [.15, .95], [.4, 1.03], [1, 1]]); P.fxDon(); }, { hinh: u => u < .7 ? 'xu' : 0 }),
+    hit: A(.35, P => { CH.hit(P); }, { hinh: u => u < .5 ? 'xu' : 0 }),
+  } });
+// ---- TINH ANH: Heo Rừng Nanh Dài. Chiêu riêng: húc ba lần liền (zíc zắc) ----
+def('heoNanh', { ten: 'Heo Rừng Nanh Dài', vung: 'rung', loai: 'tinhanh', tt: 1, luoi: () => QR.heoNanh(), don: { kieu: 'lao', tam: 64, rong: 22, mau: DAT }, chet: { k: 'chim', mau: DAT }, hien: { k: 'khoi', mau: ['#5a6a50', '#8a9a80', '#c0d0b0'] },
+  parts: [{ n: 'dau', m: [[0, 18, 33, 57]], pv: [32, 40] }, { n: 'chanT', m: [[13, 47, 31, 57]], pv: [22, 47], z: -1 }, { n: 'chanS', m: [[58, 46, 77, 58]], pv: [67, 46], z: -1 }, { n: 'bui', m: [[77, 30, 96, 50]], pv: [78, 40] }, { n: 'bom', m: [[24, 12, 82, 27]], pv: [52, 27], keep: 0 }],
+  anims: {
+    idle: A(1.4, P => { const u = P.u; P.tho(.03); P.r('dau', 3 * sn(u)); P.s('bom', 1, 1 + .12 * sn(u)); P.s('bui', 0); }),
+    move: A(.55, P => { const u = P.u; CH.move(P); P.r('chanT', 24 * sn(u)).r('chanS', -24 * sn(u)).r('dau', 4 * sn(u * 2)); P.m('bui', 3 * sn(u * 2), 0); }),
+    tele: A(.85, P => { const u = P.u, k = kf(u, [[0, 0], [.35, 1, 'out'], [1, 1]]); CH.tele(P); P.r('dau', -12 * k).r('chanS', 25 * sn(u * 4) * k); P.s('bom', 1, 1 + .35 * k); P.s('bui', 0); P.under(c => F.khoi(c, P.x - 26 * P.face, P.y, 9, (u * 3) % 1, DAT, (u * 3) | 0)); }),
+    atk: A(.65, P => { const u = P.u, k = kf(u, [[0, -1], [.15, 1, 'out'], [.5, 1], [1, 0]]); CH.atk(P); P.theo(12 * k); P.r('dau', -18 * k).r('chanT', 30 * sn(u * 3)).r('chanS', -30 * sn(u * 3)); P.s('bom', 1, 1 + .35 * k); }),
+    hit: A(.35, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.r('dau', 15 * k); P.s('bom', 1, 1 - .3 * k); }),
+    die: A(1.4, P => { const k = kf(P.u, [[0, 0], [.25, 1, 'nay']]); CH.die(P); P.r('dau', 25 * k).r('chanT', -40 * k).r('chanS', 40 * k); P.s('bom', 1, 1 - .5 * k); P.s('bui', 0); }),
+    chieu1: A(2.1, P => { const u = P.u, q = (u * 3) % 1; CHIEU.laoNhieu(P, 3, 60, 22, DAT, .6); P.r('dau', q > .45 ? -18 : -8 * q / .45).r('chanT', 30 * sn(u * 9)).r('chanS', -30 * sn(u * 9)); P.s('bom', 1, 1.35); P.s('bui', 0); }, { nhan: 'Chiêu: húc ba lần' }),
+  } });
+// ---- TINH ANH: Nấm Phồng Chúa. Chiêu riêng: mưa bào tử (phun 5 quả rơi quanh, để lại khí độc) ----
+def('namPhongChua', { ten: 'Nấm Phồng Chúa', vung: 'rung', loai: 'tinhanh', tt: 2, luoi: () => QR.namPhongChua(), don: { kieu: 'no', tam: 44, mau: [TIMD[2], DOCX[2], '#f4ffb0'] }, chet: { k: 'no', mau: [TIMD[2], DOCX[1], DOCX[3]] }, hien: { k: 'moc', mau: TIM },
+  parts: [{ n: 'mu', m: [[18, 18, 70, 52]], pv: [44, 52] }],
+  anims: {
+    idle: A(1.5, P => { const u = P.u; P.tho(.04); P.s('mu', 1 + .04 * sn(u + .25), 1 - .04 * sn(u + .25)); P.under(c => khiDoc(c, 0, -4, 26, (u + .3) % 1, 1)); }),
+    move: A(.6, P => { const u = P.u, s = Math.abs(sn(u)); P.h += s * 3; P.sy *= 1 + s * .08 - .04; P.r('mu', 4 * sn(u)); }),
+    tele: A(.85, P => { const u = P.u, k = kf(u, [[0, 0], [.4, 1, 'out'], [1, 1]]); P.s('mu', 1 + .15 * k, 1 - .1 * k); P.sy *= 1 - .08 * k; P.x += rung(u, .4); P.flash = u > .7 ? ((u * 24 | 0) % 2 ? .35 : 0) : 0; P.fxBao(); }),
+    atk: A(.7, P => { const u = P.u; P.s('mu', kf(u, [[0, 1.15], [.15, .9], [.4, 1.05], [1, 1]]), kf(u, [[0, .9], [.15, 1.15], [1, 1]])); P.under(c => khiDoc(c, 0, 0, 40, u, 6)); P.fxDon(); }),
+    hit: A(.35, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.s('mu', 1 + .12 * k, 1 - .15 * k); }),
+    die: A(1.4, P => { CH.die(P); if (P.u > .25) P.under(c => khiDoc(c, 0, 0, 40, seg(P.u, .25, 1), 3)); }),
+    chieu1: A(1.9, P => { const u = P.u; CHIEU.muaNem(P, 5, 60, 10, DOC, null, (c, x, y, e, i) => khiDoc(c, x, y, 12, e, i)); P.s('mu', 1 + .12 * Math.abs(sn(u * 5)) * (u > .3 && u < .8 ? 1 : 0), 1); }, { nhan: 'Chiêu: mưa bào tử' }),
+  } });
+
+})(); } catch (e) { MA.loi.push('rung.js: ' + (e && e.stack || e)); if (typeof console !== 'undefined') console.error('monster_art rung.js', e); }
+// ----- laudai.js -----
+try { (function () {
+// Vùng Lâu đài cổ (hệ Lửa): 8 quái thường + 2 tinh anh. Bảng màu dùng chung của bản chốt: DOCAM, LUAV, THANH, XUONGT.
+const LUA = [LUAV[0], LUAV[2], LUAV[3]], TRO = [THANH[2], THANH[3], '#cbc3c0'], DA = ['#5a5460', '#8a8290', '#cbc3c0'], HON = ['#ff8a1e', '#ffd23c', '#fff6b0'];
+const rung = (u, a) => (u > a ? ((u * 24 | 0) % 2 ? .6 : -.6) : 0);
+const tiaLua = (c, x, y, n, s, u) => F.hat(c, x, y, n, s, u, { v: 10, goc: -PI / 2, xoe: 1.4, cols: ['#fff6b0', '#ffd23c', '#ff8a1e', '#c43c10'] });
+// ---- Lính Ma Giáp Gỉ: giáo chĩa trước, nón, áo choàng bay; đâm giáo ----
+def('linhMa', { ten: 'Lính Ma Giáp Gỉ', vung: 'laudai', loai: 'thuong', tt: 1, luoi: () => QL.linh(), don: { kieu: 'lao', tam: 44, rong: 10, mau: HON }, chet: { k: 'hon', mau: HON }, hien: { k: 'khoi', mau: TRO },
+  parts: [{ n: 'giao', m: [[0, 19, 19, 29]], pv: [19, 24] }, { n: 'non', m: [[5, 3, 27, 15]], pv: [16, 15] }, { n: 'ao', m: [[25, 14, 52, 34]], pv: [26, 24], keep: 0 }],
+  anims: {
+    idle: A(1.4, P => { const u = P.u; P.tho(.03); P.h += sn(u) * 1; P.w('ao', 8, -u, .3).r('giao', 3 * sn(u)).r('non', 2 * sn(u + .2)); }),
+    move: A(.6, P => { const u = P.u; P.h += 1.5 + sn(u * 2) * 1.2; P.rot += -3; P.w('ao', 12, -u * 2, .3).r('giao', 4 * sn(u * 2)); }),
+    tele: A(.7, P => { const u = P.u, k = kf(u, [[0, 0], [.4, 1, 'out'], [1, 1]]); CH.tele(P); P.m('giao', 5 * k, 0).r('giao', -5 * k); P.w('ao', 10, -u * 3, .3); }),
+    atk: A(.55, P => { const u = P.u, k = kf(u, [[0, 5], [.15, -10, 'in'], [.45, -8], [1, 0]]); CH.atk(P); P.m('giao', k, 0); P.b('ao', 20 * seg(u, 0, .3) * (1 - u)); }),
+    hit: A(.35, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.r('giao', 20 * k).r('non', -15 * k).b('ao', 25 * k); }),
+    die: A(1.3, P => { const k = kf(P.u, [[0, 0], [.25, 1, 'nay']]); CH.die(P); P.r('giao', 50 * k).m('non', -2 * k, -6 * k).r('non', -30 * k).b('ao', 30 * k); }),
+  } });
+// ---- Bầy Dơi Than: ba con dơi vỗ cánh lệch nhịp ----
+function doiNhip(P, sp, amp) { const u = P.u; [1, 2, 3].forEach(i => { const ph = u + i / 3, v = sn(u * sp + i * .3); P.m('d' + i, sn(ph) * 1.2, sn(ph + .25) * (amp || 1.5) - v * .8); P.r('cT' + i, 35 * v).r('cP' + i, -35 * v); }); }
+const DOI_P = []; [[1, [4, 3, 26, 22], [14, 12], [4, 4, 12, 17], [12, 11], [17, 4, 26, 17], [17, 11]], [2, [24, 10, 47, 28], [33, 18], [24, 11, 30, 25], [30, 18], [37, 11, 47, 25], [37, 18]], [3, [4, 18, 26, 37], [14, 26], [4, 19, 12, 31], [12, 25], [17, 19, 26, 31], [17, 25]]].forEach(q => {
+  DOI_P.push({ n: 'd' + q[0], m: [q[1]], pv: q[2] }, { n: 'cT' + q[0], m: [q[3]], pv: q[4], cha: 'd' + q[0], keep: 1 }, { n: 'cP' + q[0], m: [q[5]], pv: q[6], cha: 'd' + q[0], keep: 1 }); });
+def('doiThan', { ten: 'Bầy Dơi Than', vung: 'laudai', loai: 'thuong', tt: 2, luoi: () => QL.doi(), bay: true, cao: 10, don: { kieu: 'lao', tam: 40, rong: 18, mau: ['#5a0e0c', '#f0708a', '#ffd0d8'] }, chet: { k: 'bui', mau: TRO }, hien: { k: 'bay', xa: 50, cao: 40 }, parts: DOI_P,
+  anims: {
+    idle: A(1.2, P => { doiNhip(P, 3, 2); }),
+    move: A(.5, P => { doiNhip(P, 4, 1.2); P.rot += -5; }),
+    tele: A(.7, P => { const u = P.u, k = kf(u, [[0, 0], [.4, 1, 'out'], [1, 1]]); doiNhip(P, 6, 1); P.theo(-3 * k); P.h += 4 * k; P.x += rung(u, .4); P.flash = u > .7 ? ((u * 24 | 0) % 2 ? .35 : 0) : 0; P.fxBao(); }),
+    atk: A(.6, P => { const u = P.u; doiNhip(P, 6, .4); [1, 2, 3].forEach(i => { const q = kf(u, [[0, 2], [.1 + i * .08, -14, 'in'], [.5 + i * .05, -10], [1, 0]]); P.m('d' + i, q, 3 * Math.sin(seg(u, 0, .5) * PI)); }); P.h -= 4 * Math.sin(seg(u, 0, .6) * PI); P.fxDon(); }),
+    hit: A(.35, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.m('d1', -3 * k, -4 * k).m('d2', 5 * k, 0).m('d3', -3 * k, 4 * k); }),
+    die: A(1.1, P => { const k = seg(P.u, 0, .3); CH.die(P); P.m('d1', -4 * k, -5 * k).m('d2', 6 * k, 2 * k).m('d3', -4 * k, 5 * k); P.r('d1', 90 * k).r('d2', -120 * k).r('d3', 150 * k); }),
+  } });
+// ---- Tượng Đá Cầm Khiên: khiên chắn trước, chùy giơ sau; đập khiên xuống đất ----
+def('tuongDa', { ten: 'Tượng Đá Cầm Khiên', vung: 'laudai', loai: 'thuong', tt: 3, luoi: () => QL.tuong(), don: { kieu: 'dap', tam: 28, mau: ['#5a5460', '#ff8a1e', '#fff6b0'] }, chet: { k: 'vo', mau: DA }, hien: { k: 'ghep', mau: DA },
+  parts: [{ n: 'khien', m: [[0, 8, 21, 35]], pv: [21, 22] }, { n: 'chuy', m: [[36, 5, 48, 32]], pv: [37, 21] }],
+  anims: {
+    idle: A(1.8, P => { const u = P.u; P.tho(.015); P.r('khien', 2 * sn(u)).r('chuy', -3 * sn(u + .3)); }),
+    move: A(.8, P => { const u = P.u; P.h += Math.abs(sn(u)) * 1; P.rot += 3 * sn(u); P.r('khien', 3 * sn(u)).r('chuy', 5 * sn(u)); if (Math.abs(sn(u)) < .1) P.y += .5; }),
+    tele: A(.85, P => { const u = P.u, k = kf(u, [[0, 0], [.45, 1, 'back'], [1, 1]]); CH.tele(P); P.m('khien', 2 * k, -6 * k).r('khien', 10 * k).r('chuy', -30 * k); }),
+    atk: A(.6, P => { const u = P.u, a = kf(u, [[0, -6], [.18, 3, 'in'], [.5, 2], [1, 0]]); CH.atk(P); P.m('khien', 0, a).r('khien', kf(u, [[0, 10], [.18, -6, 'in'], [1, 0]])).r('chuy', kf(u, [[0, -30], [.2, 20, 'in'], [1, 0]])); if (u > .15 && u < .3) P.y += 1; }),
+    hit: A(.35, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.r('khien', -8 * k); }),
+    die: A(1.2, P => { const k = kf(P.u, [[0, 0], [.25, 1, 'nay']]); CH.die(P); P.r('khien', -25 * k).m('khien', -3 * k, 4 * k).r('chuy', 35 * k); }),
+  } });
+// ---- Đèn Lồng Ma: lơ lửng, tua lay; phun cầu lửa ----
+def('denLong', { ten: 'Đèn Lồng Ma', vung: 'laudai', loai: 'thuong', tt: 4, luoi: () => QL.den(), bay: true, cao: 8, don: { kieu: 'ban', tam: 70, rong: 7, co: 3, mau: LUA, mom: [24, 26] }, chet: { k: 'chay', mau: ['#ffd23c', '#ff8a1e', '#48424e'] }, hien: { k: 'den' },
+  parts: [{ n: 'tua', m: [[18, 30, 38, 40]], pv: [28, 30], keep: 0 }],
+  anims: {
+    idle: A(1.6, P => { const u = P.u; P.h += sn(u) * 2; P.rot += 3 * sn(u + .25); P.w('tua', 10, -u, .4); P.over(c => tiaLua(c, P.x, P.y - P.h - 26, 3, (u * 4) | 0, (u * 4) % 1)); }),
+    move: A(.8, P => { const u = P.u; P.h += sn(u * 2) * 1.5; P.rot += -6 + 2 * sn(u); P.b('tua', 25); P.w('tua', 8, -u * 2, .4); }),
+    tele: A(.75, P => { const u = P.u, k = kf(u, [[0, 0], [.4, 1, 'out'], [1, 1]]); P.sx *= 1 + .1 * k; P.sy *= 1 + .1 * k; P.theo(-2 * k); P.w('tua', 14, -u * 3, .4); P.x += rung(u, .4); P.tint = ['#ffd23c', k * .3 * (1 + sn(u * 4)) / 2]; P.fxBao(); }),
+    atk: A(.55, P => { const u = P.u; CH.atk(P); P.b('tua', 30 * (1 - u)); P.tint = ['#fff6b0', (1 - seg(u, 0, .3)) * .5]; }),
+    hit: A(.35, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.rot += 15 * k; P.b('tua', -30 * k); }),
+    die: A(1.2, P => { const k = kf(P.u, [[0, 0], [.25, 1, 'out']]); CH.die(P); P.rot += 30 * k; P.b('tua', 40 * k); }),
+  } });
+// ---- Mèo Đen Hai Đuôi: lưng cong, đuôi lửa vẫy; cào vụt ----
+def('meoDen', { ten: 'Mèo Đen Hai Đuôi', vung: 'laudai', loai: 'thuong', tt: 5, luoi: () => QL.meo(), don: { kieu: 'chem', tam: 28, xoe: 1.6, mau: ['#5a0e0c', '#f0708a', '#ffffff'] }, chet: { k: 'tan', mau: [THANH[2], '#f0708a', '#ff8a1e'] }, hien: { k: 'bong', mau: [THANH[1], THANH[0]] },
+  parts: [{ n: 'dau', m: [[2, 7, 20, 29]], pv: [19, 20] }, { n: 'duoi', m: [[38, 3, 62, 29]], pv: [40, 26], keep: 0 }, { n: 'chanT', m: [[4, 26, 19, 38]], pv: [12, 26], z: -1 }, { n: 'chanS', m: [[34, 26, 50, 38]], pv: [42, 26], z: -1 }],
+  anims: {
+    idle: A(1.4, P => { const u = P.u; P.tho(.035); P.w('duoi', 9, -u, .25).r('dau', 3 * sn(u)); }),
+    move: A(.4, P => { const u = P.u; CH.move(P); P.r('chanT', 30 * sn(u)).r('chanS', -30 * sn(u)).w('duoi', 12, -u * 2, .25); }),
+    tele: A(.6, P => { const u = P.u, k = kf(u, [[0, 0], [.4, 1, 'out'], [1, 1]]); CH.tele(P); P.sh += -4 * k; P.r('dau', -6 * k).r('chanT', -25 * k).b('duoi', -20 * k); }),
+    atk: A(.5, P => { const u = P.u; CH.atk(P); P.theo(kf(u, [[0, 0], [.2, 8, 'out'], [1, 0]])); P.r('chanT', kf(u, [[0, -40], [.2, 30, 'in'], [1, 0]])).r('dau', kf(u, [[0, -6], [.2, 8], [1, 0]])); if (u < .4) P.bongMa = [{ x: -P.fx * 7, y: -P.fy * 7, a: .3, mau: '#f0708a' }]; }),
+    hit: A(.35, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.r('dau', 15 * k).b('duoi', 30 * k); }),
+    die: A(1.2, P => { const k = kf(P.u, [[0, 0], [.25, 1, 'nay']]); CH.die(P); P.r('dau', 30 * k).b('duoi', 40 * k).r('chanT', -35 * k).r('chanS', 35 * k); }),
+  } });
+// ---- Hũ Lửa Sống: nắp nảy, lửa phụt; lại gần thì phồng to (hình phồng) rồi nổ ra lửa ----
+const luaSan = (c, x, y, r, e, t) => { if (e >= 1) return; F.a(c, 1 - seg(e, .6, 1)); for (let i = 0; i < 5; i++) { const a = i / 5 * TAU + .4, d = r * (.3 + .5 * hh(i, 2, 7)); F.lua(c, x + Math.cos(a) * d, y + Math.sin(a) * d * MA.det, 6, 8 * (1 - e * .5), t + i, null, i); } F.a(c, 1); };
+def('huLua', { ten: 'Hũ Lửa Sống', vung: 'laudai', loai: 'thuong', tt: 6, luoi: (p, hv) => QL.hu(hv === 'phong'), don: { kieu: 'no', tam: 34, mau: LUA }, chet: { k: 'no', mau: LUA }, hien: { k: 'roi', cao: 70, mau: TRO },
+  parts: hv => hv === 'phong' ? [] : [{ n: 'nap', m: [[25, 18, 42, 31]], pv: [33, 31] }],
+  anims: {
+    idle: A(1.2, P => { const u = P.u; P.tho(.04); P.m('nap', 0, -Math.max(0, sn(u * 2)) * 1.5); P.r('nap', 4 * sn(u)); }),
+    move: A(.5, P => { const u = P.u, s = Math.abs(sn(u)); P.h += s * 3; P.sy *= 1 + s * .1 - .05; P.rot += 5 * sn(u); P.m('nap', 0, -s * 2); }),
+    tele: A(.8, P => { const u = P.u; P.sx *= 1 + .1 * sn(u * 4) * (u > .4 ? 1 : .3); P.sy *= 1 - .1 * sn(u * 4) * (u > .4 ? 1 : .3); P.x += rung(u, .4); P.flash = u > .6 ? ((u * 24 | 0) % 2 ? .4 : 0) : 0; P.fxBao(); }, { hinh: u => u > .45 ? 'phong' : 0 }),
+    atk: A(1, P => { const u = P.u; P.sx *= 1 + seg(u, 0, .15) * .2; P.sy *= 1 + seg(u, 0, .15) * .2; P.flash = u < .18 ? (((u * 30) | 0) % 2 ? .8 : .2) : 0; P.a = u < .2 ? 1 : seg(u, .9, 1); P.bong = P.a; if (u >= .9) { const s = seg(u, .9, 1); P.sx *= s; P.sy *= s; }
+      if (u > .18) { P.under(c => luaSan(c, 0, 0, 22, seg(u, .25, 1), P.t)); P.fxDon(seg(u, .18, .75)); } }, { hinh: u => u < .2 ? 'phong' : 0 }),
+    hit: A(.35, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.m('nap', 0, -4 * k).r('nap', 20 * k); }),
+    die: A(1.1, P => { const k = seg(P.u, 0, .2); CH.die(P); P.m('nap', -3 * k, -10 * k).r('nap', -60 * k); if (P.u > .25) P.under(c => luaSan(c, 0, 0, 16, seg(P.u, .25, 1), P.t)); }),
+  } });
+// ---- Tiểu Yêu Ném Pháo: ôm pháo, đuôi ngoe nguẩy; ném pháo vòng cung ----
+let PHAO = null; const phao = (c, x, y, q) => { F.luoi(c, PHAO || (PHAO = QL.bom()), x, y, { rot: q * 8 }); };
+def('tieuYeu', { ten: 'Tiểu Yêu Ném Pháo', vung: 'laudai', loai: 'thuong', tt: 7, luoi: () => QL.yeu(), don: { kieu: 'nem', tam: 56, rong: 14, vong: 26, mau: LUA, mom: [12, 26], dan: phao }, chet: { k: 'ra', mau: [THANH[2], DOCAM[1], LUAV[1]] }, hien: { k: 'no', mau: LUA },
+  parts: [{ n: 'phao', m: [[6, 19, 19, 36]], pv: [18, 28] }, { n: 'dau', m: [[12, 4, 37, 25]], pv: [24, 24] }, { n: 'duoi', m: [[37, 18, 48, 35]], pv: [39, 32] }],
+  anims: {
+    idle: A(1.3, P => { const u = P.u; P.tho(.04); P.r('dau', 4 * sn(u)).r('duoi', 15 * sn(u)).m('phao', 0, .8 * sn(u * 2)); }),
+    move: A(.45, P => { const u = P.u, s = Math.abs(sn(u)); P.h += s * 3; P.rot += 4 * sn(u); P.r('duoi', 20 * sn(u * 2)); }),
+    tele: A(.75, P => { const u = P.u, k = kf(u, [[0, 0], [.4, 1, 'back'], [1, 1]]); CH.tele(P); P.r('phao', 60 * k).m('phao', 6 * k, -9 * k).r('dau', 8 * k).r('duoi', 25 * sn(u * 3)); }),
+    atk: A(.75, P => { const u = P.u, a = kf(u, [[0, 60], [.1, -45, 'in'], [.3, -25], [1, 0, 'back']]); CH.atk(P); P.r('phao', a).s('phao', u > .08 && u < .9 ? 0 : 1); }),
+    hit: A(.35, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.r('dau', 15 * k).r('duoi', -30 * k); }),
+    die: A(1.2, P => { const k = kf(P.u, [[0, 0], [.25, 1, 'nay']]); CH.die(P); P.r('dau', 25 * k).r('duoi', 40 * k).r('phao', -50 * k); }),
+  } });
+// ---- Nhím Than Hồng: xù gai đỏ rực lúc báo trước và ra đòn, bắn gai lửa ----
+def('nhimThan', { ten: 'Nhím Than Hồng', vung: 'laudai', loai: 'thuong', tt: 8, luoi: (p, hv) => QL.nhim(hv === 'xu'), don: { kieu: 'gai', tam: 34, so: 10, mau: [DOCAM[0], LUAV[1], '#fff6b0'] }, chet: { k: 'heo', mau: [THANH[0], THANH[1], THANH[2], THANH[3]] }, hien: { k: 'cat', mau: [THANH[2], DOCAM[1], LUAV[1]] },
+  anims: {
+    idle: A(1.5, P => { P.tho(.04); if (((P.u * 6) | 0) === 2) P.tint = ['#ff8a1e', .25]; }),
+    tele: A(.75, P => { CH.tele(P); P.tint = ['#ff8a1e', seg(P.u, .3, 1) * .3]; }, { hinh: u => u > .3 ? 'xu' : 0 }),
+    atk: A(.6, P => { const u = P.u; P.sx *= kf(u, [[0, 1.12], [.15, .95], [.4, 1.03], [1, 1]]); P.sy *= kf(u, [[0, 1.12], [.15, .95], [.4, 1.03], [1, 1]]); P.fxDon(); }, { hinh: u => u < .7 ? 'xu' : 0 }),
+    hit: A(.35, P => { CH.hit(P); }, { hinh: u => u < .5 ? 'xu' : 0 }),
+  } });
+// ---- TINH ANH: Tướng Ma. Đại đao chém, áo choàng bay. Chiêu riêng: đao xoáy (xoay hai vòng chém quanh mình) ----
+def('tuongMa', { ten: 'Tướng Ma', vung: 'laudai', loai: 'tinhanh', tt: 1, luoi: () => QL.tuongMa(), don: { kieu: 'chem', tam: 44, xoe: 2.2, mau: LUA }, chet: { k: 'chim', mau: LUA }, hien: { k: 'quet', mau: ['#fff6b0', '#ffd23c'] },
+  parts: [{ n: 'dao', m: [[5, 3, 24, 44]], pv: [18, 30] }, { n: 'ao', m: [[42, 21, 64, 45]], pv: [44, 27], keep: 0 }, { n: 'ngu', m: [[30, 2, 48, 12]], pv: [32, 11] }],
+  anims: {
+    idle: A(1.6, P => { const u = P.u; P.tho(.025); P.w('ao', 7, -u, .25).r('dao', 3 * sn(u)).b('ngu', 12 * sn(u)); }),
+    move: A(.7, P => { const u = P.u; P.h += Math.abs(sn(u)) * 1.5; P.rot += 2 * sn(u); P.w('ao', 10, -u * 2, .25).r('dao', 5 * sn(u)).b('ngu', 15 * sn(u * 2)); }),
+    tele: A(.85, P => { const u = P.u, k = kf(u, [[0, 0], [.4, 1, 'back'], [1, 1]]); CH.tele(P); P.r('dao', 45 * k).m('dao', 4 * k, -4 * k).b('ao', 15 * k); }),
+    atk: A(.6, P => { const u = P.u, a = kf(u, [[0, 45], [.18, -70, 'in'], [.45, -55], [1, 0, 'back']]); CH.atk(P); P.r('dao', a).b('ao', -20 * (1 - u)).b('ngu', -20 * (1 - u)); }),
+    hit: A(.35, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.r('dao', -15 * k).b('ao', 25 * k); }),
+    die: A(1.5, P => { const k = kf(P.u, [[0, 0], [.25, 1, 'nay']]); CH.die(P); P.r('dao', 70 * k).m('dao', -4 * k, 6 * k).b('ao', 30 * k).b('ngu', 40 * k); if (P.u > .2) P.under(c => luaSan(c, 0, 0, 24, seg(P.u, .2, 1), P.t)); }),
+    chieu1: A(1.6, P => { const u = P.u; CHIEU.xoay(P, 46, LUA, 2); P.r('dao', u < .35 ? 45 * seg(u, 0, .35) : -60).b('ao', u > .35 ? 30 : 0); }, { nhan: 'Chiêu: đao xoáy' }),
+  } });
+// ---- TINH ANH: Hũ Lửa Chúa. Vương miện lửa, hào quang nóng. Chiêu riêng: vòng cầu lửa (hai đợt toả tròn) ----
+def('huChua', { ten: 'Hũ Lửa Chúa', vung: 'laudai', loai: 'tinhanh', tt: 2, luoi: () => QL.huChua(), don: { kieu: 'no', tam: 44, mau: LUA }, chet: { k: 'no', mau: LUA }, hien: { k: 'no', mau: LUA },
+  parts: [{ n: 'mien', m: [[26, 20, 60, 34]], pv: [44, 34] }],
+  anims: {
+    idle: A(1.3, P => { const u = P.u; P.tho(.04); P.m('mien', 0, -Math.max(0, sn(u * 2)) * 1.2); P.over(c => tiaLua(c, P.x, P.y - 40, 4, (u * 3) | 0, (u * 3) % 1)); }),
+    move: A(.55, P => { const u = P.u, s = Math.abs(sn(u)); P.h += s * 3; P.sy *= 1 + s * .08 - .04; P.m('mien', 0, -s * 2); }),
+    tele: A(.85, P => { const u = P.u; P.sx *= 1 + .08 * sn(u * 4) * (u > .4 ? 1 : .3); P.sy *= 1 - .08 * sn(u * 4) * (u > .4 ? 1 : .3); P.x += rung(u, .4); P.tint = ['#ffd23c', seg(u, .3, 1) * .35]; P.fxBao(); }),
+    atk: A(.75, P => { const u = P.u; P.sx *= kf(u, [[0, 1.15], [.15, .92], [.4, 1.04], [1, 1]]); P.sy *= kf(u, [[0, 1.15], [.15, .92], [.4, 1.04], [1, 1]]); P.m('mien', 0, kf(u, [[0, -6], [.3, 0, 'nay']])); P.under(c => luaSan(c, 0, 0, 30, u, P.t)); P.fxDon(); }),
+    hit: A(.35, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.m('mien', 0, -5 * k).r('mien', 15 * k); }),
+    die: A(1.4, P => { const k = seg(P.u, 0, .2); CH.die(P); P.m('mien', -5 * k, -16 * k).r('mien', -70 * k); if (P.u > .25) P.under(c => luaSan(c, 0, 0, 30, seg(P.u, .25, 1), P.t)); }),
+    chieu1: A(1.7, P => { const u = P.u; CHIEU.vongDan(P, 8, 60, LUA, 2); P.m('mien', 0, u > .35 && u < .5 ? -6 : 0); }, { nhan: 'Chiêu: vòng cầu lửa' }),
+  } });
+
+})(); } catch (e) { MA.loi.push('laudai.js: ' + (e && e.stack || e)); if (typeof console !== 'undefined') console.error('monster_art laudai.js', e); }
 MA._xong();
 })();

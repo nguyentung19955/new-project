@@ -26,9 +26,10 @@ function trongHinh(s, x, y) {
   if (s.p) { let ins = false; const p = s.p; for (let i = 0, j = p.length - 1; i < p.length; j = i++) { const a = p[i], b = p[j]; if ((a[1] > y) !== (b[1] > y) && x < (b[0] - a[0]) * (y - a[1]) / (b[1] - a[1]) + a[0]) ins = !ins; } return ins; }
   return false;
 }
-function goc(d, ph) {
-  const key = d.id + '|' + ph; if (GOC_CACHE[key]) return GOC_CACHE[key];
-  const g = d.luoi(ph), w = g.w, h = g.h, n = w * h, b = bbox(g);
+// hv: biến thể hình (vd 'xu' lúc xù gai, 'phong' lúc phồng), do cử động chọn qua an.hinh(u)
+function goc(d, ph, hv) {
+  const key = d.id + '|' + ph + '|' + (hv || ''); if (GOC_CACHE[key]) return GOC_CACHE[key];
+  const g = d.luoi(ph, hv), w = g.w, h = g.h, n = w * h, b = bbox(g);
   const B = { w, h, cx: g.cx != null ? g.cx : (b.x0 + b.x1 + 1) / 2, foot: g.foot != null ? g.foot : b.y1 + 1, bw: b.w, bh: b.h, bb: b, g };
   if (d.chan != null) B.foot = typeof d.chan === 'function' ? d.chan(ph) : d.chan;
   if (d.tam != null) B.cx = typeof d.tam === 'function' ? d.tam(ph) : d.tam;
@@ -36,7 +37,7 @@ function goc(d, ph) {
   if (g.pre && !g.nhieu && !d.giuVien) { B.pre = g.pre; B.fxl = new Array(n).fill(null); let co = false; for (let i = 0; i < n; i++) if (g.d[i] !== g.sauVien[i]) { B.fxl[i] = g.d[i] || XOA; co = true; } if (!co) B.fxl = null; B.A = true; }
   else { B.pre = g.d.slice(); B.fxl = null; B.A = false; }
   const occ = i => B.pre[i] || (B.fxl && B.fxl[i]);
-  const pd = (typeof d.parts === 'function' ? d.parts(ph) : d.parts) || [];
+  const pd = (typeof d.parts === 'function' ? d.parts(ph, hv) : d.parts) || [];
   B.owner = new Int16Array(n); B.keep = new Uint8Array(n); B.parts = []; B.pi = {};
   pd.forEach((p, k) => { const idx = k + 1, P = { n: p.n, pv: p.pv, z: p.z == null ? 1 : p.z, idx, keep: p.keep == null ? 1.5 : p.keep, cha: p.cha, L: p.L || 0 }; B.parts.push(P); B.pi[p.n] = P;
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const i = y * w + x; if (!occ(i)) continue; let ins = false; for (const s of p.m) { if (s.tru) { if (trongHinh(s.tru, x + .5, y + .5)) ins = false; } else if (trongHinh(s, x + .5, y + .5)) ins = true; }
@@ -46,7 +47,7 @@ function goc(d, ph) {
   B.M = Math.ceil(Math.max(b.w, B.bh) * (d.le || .3)) + 10;
   return GOC_CACHE[key] = B;
 }
-MA._goc = (id, ph) => goc(DEFS[id], ph || 1);
+MA._goc = (id, ph, hv) => goc(DEFS[id], ph || 1, hv);
 
 // ---------- tư thế ----------
 function Pose(d, B, anim, u, t, o, dir, face, ph) {
@@ -112,7 +113,7 @@ function tanRa(put, F, T, B, E) {
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { let c = F.d[y * W + x]; if (!c) continue; const r = hh(x, y, sd); let nx = x, ny = y;
     if (k === 'vo' || k === 'no') { const q = k === 'vo' ? cs2 : (T.co || 1), gx = Math.floor(x / q), gy = Math.floor(y / q), r1 = hh(gx, gy, 1), r2 = hh(gx, gy, 2), r3 = hh(gx, gy, 3); if (u > .45 + .55 * r3) continue;
       let dx = (gx + .5) * q - mcx, dy = (gy + .5) * q - mcy; const dl = Math.hypot(dx, dy) || 1; dx = dx / dl + (r1 - .5) * .9; dy = dy / dl + (r2 - .5) * .9 - (k === 'vo' ? .5 : 0); const e = 1 - (1 - u) * (1 - u), sp = size * (k === 'vo' ? .55 : .95) * (.35 + .65 * r1);
-      nx = x + dx * sp * e; ny = y + dy * sp * e + (k === 'vo' ? size * .9 * u * u : 0); if (k === 'vo' && ny > oy - 1) ny = oy - 1 - (r2 * 2 | 0); if (u < .1) c = '#ffffff'; else if (r > 1.25 - u) c = mau[(r1 * mau.length) | 0]; }
+      nx = x + dx * sp * e; ny = y + dy * sp * e + (k === 'vo' ? size * .9 * u * u : 0); if (k === 'vo' && ny > oy - 1) ny = oy - 1 - (r2 * 2 | 0); if (u < .1 && !T.hien) c = '#ffffff'; else if (r > 1.25 - u) c = mau[(r1 * mau.length) | 0]; }
     else if (k === 'tan') { if (r < u * 1.25 - .3) continue; const e = Math.pow(1 - u, 1.6); ny = oy - (oy - y) * (e * .95 + .05) ; nx = mcx + (x - mcx) * (1 + u * .9) + Math.sin(y * .7 + u * 9) * u * 1.5; if (r > 1.3 - u * 1.2) c = mau[(r * 7 % 1 * mau.length) | 0]; }
     else if (k === 'chay') { const yb = top - 4 + u * (bh + 12), dd = yb - y; if (dd > 0) { const life = dd / (8 + r * 14); if (life > 1 || r < .45) continue; ny = y - dd * (.5 + r) * .8; nx = x + Math.sin(dd * .4 + r * 6) * 2 * life; c = mau[Math.min(mau.length - 1, (life * mau.length) | 0)]; } else if (dd > -2) c = '#fff6b0'; else if (dd > -5 && r < .6) c = '#ff8a1e'; }
     else if (k === 'ra') { const del = r * .45 + (y - top) / bh * .15, tt = u - del; if (tt > 0) { ny = Math.min(oy - 1 - ((r * 3) | 0), y + size * 2.4 * tt * tt); nx = x + (hh(x, y, 5) - .5) * tt * size * .5; if (ny >= oy - 3) { if (u > .7 + r * .3) continue; c = mau[(r * mau.length) | 0]; } } }
@@ -185,7 +186,7 @@ const DON = {
     if (k === 'chem') P.over(c => { F.liem(c, dx * 4, dy * 4 - B.bh * .3, tam - 3, dir, d.xoe || 1.9, u, cols); });
     else if (k === 'lao') P.under(c => { for (let i = 0; i < 5; i++) { const f = (i + 1) / 6, a = (1 - u) * (1 - f); if (a <= .05) continue; c.globalAlpha = a; F.duong(c, P.x - dx * (6 + f * tam * .7) - dy * (i - 2) * 3, P.y - dy * (6 + f * tam * .7) + dx * (i - 2) * 3 - B.bh * .3, P.x - dx * (10 + f * tam * .9) - dy * (i - 2) * 3, P.y - dy * (10 + f * tam * .9) + dx * (i - 2) * 3 - B.bh * .3, cols[1], 1); } c.globalAlpha = 1; F.khoi(c, P.x - dx * 8, P.y - dy * 8, 7, u, ['#8a8290', '#5a5460'], 3); });
     else if (k === 'ban') P.over(c => { const m = DON.mom(P), q = seg(u, .1, .85), x = m[0] + dx * tam * q, y = m[1] + dy * tam * q; if (u < .25) F.hat(c, m[0], m[1], 8, 5, u * 4, { v: 9, goc: dir, xoe: 1.4, cols: [cols[2] || cols[1], cols[1]] }); if (q < 1) { for (let i = 1; i < 5; i++) { c.globalAlpha = .7 - i * .15; F.dia(c, x - dx * i * 3, y - dy * i * 3, (d.co || 2.5) * (1 - i * .18), cols[0]); } c.globalAlpha = 1; F.cau(c, x, y, d.co || 2.5, cols); } else F.hat(c, m[0] + dx * tam, m[1] + dy * tam, 10, 7, seg(u, .85, 1), { v: 10, cols: [cols[2] || '#fff', cols[1], cols[0]] }); });
-    else if (k === 'no') P.over(c => { const cy = -P.h - B.bh * .4; if (u < .3) { F.dia(c, 0, cy, tam * (.3 + u * 2.2), cols[2] || '#fff'); } else if (u < .55) F.dia(c, 0, cy, tam * .8 * (1 - seg(u, .3, .6)), cols[1]); F.song(c, 0, 0, tam, seg(u, .05, .8), [cols[2] || '#fff', cols[1]], 2); F.hat(c, 0, cy, 26, 9, u, { v: tam * 1.1, cols: [cols[2] || '#fff', cols[1], cols[0]], to: 2 }); F.khoi(c, 0, cy, tam * .7, seg(u, .2, 1), [cols[0], '#48424e'], 4, 7); });
+    else if (k === 'no') P.over(c => { const cy = -P.h - B.bh * .4; if (u < .22) { F.dia(c, 0, cy, tam * (.25 + u * 2.4), cols[1]); F.dia(c, 0, cy, tam * (.15 + u * 2), cols[2] || '#fff'); } else if (u < .55) { const e = seg(u, .22, .55); F.vong(c, 0, cy, tam * (.8 + e * .3), tam * (.8 + e * .3), cols[1], Math.max(1, Math.round(4 * (1 - e)))); F.a(c, 1 - e); F.dia(c, 0, cy, tam * .45 * (1 - e), cols[2] || '#fff'); F.a(c, 1); } F.song(c, 0, 0, tam, seg(u, .05, .8), [cols[2] || '#fff', cols[1]], 2); F.hat(c, 0, cy, 26, 9, u, { v: tam * 1.1, cols: [cols[2] || '#fff', cols[1], cols[0]], to: 2 }); F.khoi(c, 0, cy, tam * .7, seg(u, .2, 1), [cols[0], '#48424e'], 4, 7); });
     else if (k === 'gai') P.over(c => { const cy = -P.h - B.bh * .4, q = seg(u, 0, .6), n = d.so || 8; for (let i = 0; i < n; i++) { const a = dir + i / n * TAU, r0 = B.bw * .35 + (tam - B.bw * .35) * q, x = Math.cos(a) * r0, y = cy + Math.sin(a) * r0 * MA.det; if (q < 1) { F.duong(c, x - Math.cos(a) * 5, y - Math.sin(a) * 5, x, y, cols[1], 1); F.px(c, x, y, cols[2] || '#fff'); F.px(c, x - Math.cos(a) * 6, y - Math.sin(a) * 6, cols[0]); } else F.hat(c, x, y, 3, i, seg(u, .6, 1), { v: 5, cols: [cols[1]] }); } });
     else if (k === 'dap') { P.under(c => { F.song(c, 0, 0, tam, seg(u, .1, .9), [cols[2] || '#fff', cols[1]], 2); F.song(c, 0, 0, tam * .7, seg(u, .25, 1), [cols[1], cols[0]], 1); }); P.over(c => { for (let i = 0; i < 8; i++) { const a = i / 8 * TAU + .3; F.hat(c, Math.cos(a) * tam * .5 * u, Math.sin(a) * tam * .5 * u * MA.det, 3, i, u, { v: 8, goc: -PI / 2, xoe: 1.2, g: 14, cols: [cols[1], cols[0]] }); } }); }
     else if (k === 'phun') P.over(c => { const m = DON.mom(P), xo = d.xoe || 1.1, n = d.so || 34; for (let i = 0; i < n; i++) { const r1 = hh(i, 3, 1), r2 = hh(i, 3, 2), ph = (u * 1.6 + r2) % 1, a = dir + (r1 - .5) * xo, rr = (tam - 6) * ph * (u < .8 ? 1 : 1); if (u > .75 && ph < seg(u, .75, 1)) continue; if (u < .2 && ph > u * 5) continue; c.fillStyle = cols[(i + ((ph * 3) | 0)) % cols.length]; const s = ph < .6 ? 2 : 1; c.fillRect(Math.round(m[0] + Math.cos(a) * (6 + rr)), Math.round(m[1] + Math.sin(a) * (6 + rr) * MA.det + ph * ph * (d.roi == null ? 6 : d.roi)), s, s); } });
@@ -193,6 +194,34 @@ const DON = {
   },
 };
 MA._don = DON;
+
+// ---------- chiêu dùng chung (tinh anh, trùm). Mọi chiêu đều xoay theo P.dir bất kỳ ----------
+const CHIEU = MA.chieu = {
+  // Lao n lần liên tiếp, mỗi lần lệch hướng một chút (zíc zắc). Mỗi lần: 45% báo trước (vệt đỏ), rồi lao tới và lùi về.
+  laoNhieu(P, n, tam, rong, cols, lech) { const u = P.u, k = Math.min(n - 1, Math.floor(u * n)), q = u * n - k, dir = P.dir + (k - (n - 1) / 2) * (lech == null ? .55 : lech), ex = Math.cos(dir), ey = Math.sin(dir) * MA.det, bh = P.B.bh;
+    cols = cols || ['#8a8290', '#cbc3c0', '#ffffff'];
+    if (q < .45) { const v = q / .45; P.under(c => F.baoDuong(c, 0, 0, tam, rong, dir, v)); P.x -= ex * 3 * v; P.y -= ey * 3 * v; P.sy *= 1 - .08 * v; P.sx *= 1 + .06 * v; if (v > .5) P.x += ((u * 48 | 0) % 2 ? .6 : -.6); }
+    else { const v = (q - .45) / .55, f = kf(v, [[0, 0], [.35, 1, 'out'], [.7, 1], [1, 0, 'io']]); P.x += ex * (tam - 6) * f; P.y += ey * (tam - 6) * f; P.sx *= v < .35 ? 1.12 : 1; P.sy *= v < .35 ? .9 : 1;
+      if (v < .5) { P.bongMa = [1, 2, 3].map(i => ({ x: -ex * i * 6, y: -ey * i * 6, a: .32 - i * .08, mau: cols[1] })); const ox = P.x, oy = P.y; P.under(c => { for (let i = 0; i < 4; i++) { const o = (i - 1.5) * 3; F.a(c, .6 - v); F.duong(c, ox - ex * 6 - ey * o, oy - ey * 6 + ex * o - bh * .35, ox - ex * (16 + i * 4) - ey * o, oy - ey * (16 + i * 4) + ex * o - bh * .35, cols[1], 1); } F.a(c, 1); F.khoi(c, ox - ex * 10, oy - ey * 10, 7, v * 2, [cols[0], '#48424e'], k + 3); }); }
+      if (v > .3 && v < .6) { const tx = ex * tam, ty = ey * tam; P.over(c => F.hat(c, tx, ty - bh * .4, 10, k * 7 + 1, (v - .3) / .3, { v: 12, cols: [cols[2], cols[1], cols[0]] })); } } },
+  // Xoay tròn chém quanh mình: hình lật qua lại như đang quay, vệt chém tròn.
+  xoay(P, tam, cols, vong) { const u = P.u, bh = P.B.bh; vong = vong || 2; cols = cols || ['#c43c10', '#ffd23c', '#fff6b0'];
+    if (u < .35) { const v = u / .35; P.under(c => F.baoTron(c, 0, 0, tam, v)); P.sy *= 1 - .1 * v; P.sx *= 1 + .08 * v; P.rot += -12 * v; }
+    else { const v = (u - .35) / .65, a = EASE.out(Math.min(1, v * 1.25)) * vong; const cc = Math.cos(a * TAU); P.sx *= Math.sign(cc || 1) * Math.max(.2, Math.abs(cc)); P.rot += 8 * (1 - v);
+      P.over(c => { for (let i = 0; i < vong; i++) { const w = clamp(v * 1.25 * vong - i, 0, 1); if (w > 0 && w < 1) F.liem(c, 0, -bh * .3, tam - 3, P.dir + i * PI + w * TAU, TAU * .85, w, cols, 5); } if (v > .2) F.song(c, 0, 0, tam, seg(v, .2, 1), [cols[2], cols[1]], 2); }); } },
+  // Mưa đạn: bắn n quả bay vòng cung, rơi vào n vùng tròn quanh hướng dir; dan(c, x, y, q) vẽ quả đạn (bỏ trống: quả cầu màu cols).
+  muaNem(P, n, tam, rong, cols, dan, sauNo) { const u = P.u, m = DON.mom(P); cols = cols || ['#3c5a0c', '#78b818', '#f4ffb0'];
+    const T = []; for (let i = 0; i < n; i++) { const a = P.dir + (i - (n - 1) / 2) * (TAU * .7 / n), r = tam * (.55 + .45 * hh(i, 3, 9)); T.push([Math.cos(a) * r, Math.sin(a) * r * MA.det, .3 + i * .07]); }
+    P.under(c => { for (const [x, y, t0] of T) if (u < t0 + .25) F.baoTron(c, x, y, rong, clamp(u / (t0 + .25), 0, 1)); });
+    P.over(c => { for (let i = 0; i < n; i++) { const [x, y, t0] = T[i], q = seg(u, t0 - .2, t0 + .25), e = seg(u, t0 + .25, t0 + .6); if (q > 0 && q < 1) { const px = lerp(m[0], x, q), py = lerp(m[1], y, q) - Math.sin(q * PI) * 26; if (dan) dan(c, px, py, q); else F.cau(c, px, py, 2.5, cols); }
+      if (e > 0 && e < 1) { if (e < .3) F.dia(c, x, y - 2, rong * (.5 + e * 1.5), cols[2]); F.song(c, x, y, rong * 1.1, e, [cols[2], cols[1]], 1); F.hat(c, x, y - 2, 12, i + 5, e, { v: rong * 1.2, cols: [cols[2], cols[1], cols[0]] }); if (sauNo) sauNo(c, x, y, e, i); } } });
+    if (u < .3) { const v = u / .3; P.sy *= 1 + .1 * v; P.sx *= 1 - .07 * v; } else { const v = seg(u, .3, .8); P.sy *= 1 + .08 * Math.sin(v * PI * 5) * (1 - v); } },
+  // Vòng đạn: bắn n viên toả tròn quanh mình (bắt đầu từ hướng dir), có thể 2 đợt lệch nhau.
+  vongDan(P, n, tam, cols, dot) { const u = P.u, bh = P.B.bh, cy = -P.h - bh * .45; cols = cols || ['#c43c10', '#ff8a1e', '#fff6b0']; dot = dot || 1;
+    if (u < .35) { const v = u / .35; P.sx *= 1 + .12 * v; P.sy *= 1 + .12 * v; P.flash = v > .6 && ((u * 30) | 0) % 2 ? .4 : 0; P.under(c => { for (let i = 0; i < n * dot; i++) { const a = P.dir + i / (n * dot) * TAU + (i % dot) * PI / n; F.baoDuong(c, Math.cos(a) * 6, Math.sin(a) * 6 * MA.det, tam - 6, 4, a, v); } }); P.over(c => { F.dia(c, 0, cy, 2 + v * 4, cols[1]); F.dia(c, 0, cy, 1 + v * 2, cols[2]); }); }
+    else { const k = kf(u, [[.35, 1.15], [.45, .95], [.6, 1]]); P.sx *= k; P.sy *= k;
+      P.over(c => { for (let j = 0; j < dot; j++) { const q = seg(u, .35 + j * .15, .85 + j * .15); if (q <= 0 || q >= 1) continue; for (let i = 0; i < n; i++) { const a = P.dir + (i + j * .5) / n * TAU, r = 6 + (tam - 6) * q, x = Math.cos(a) * r, y = cy + Math.sin(a) * r * MA.det + q * bh * .4; for (let t = 1; t < 4; t++) { F.a(c, .6 - t * .15); F.dia(c, x - Math.cos(a) * t * 3, y - Math.sin(a) * t * 3 * MA.det, 2 - t * .4, cols[0]); } F.a(c, 1); F.cau(c, x, y, 2.5, [cols[0], cols[1], cols[2]]); } } if (u < .5) F.song(c, 0, 0, tam * .5, seg(u, .35, .5), [cols[2], cols[1]], 1); }); } },
+};
 
 // ---------- bộ cử động chuẩn (dùng khi con quái không tự viết) ----------
 const NHAN = { idle: 'Đứng thở', move: 'Di chuyển', tele: 'Báo trước đòn', atk: 'Ra đòn', hit: 'Trúng đòn', die: 'Chết', spawn: 'Xuất hiện', intro: 'Ra mắt', stun: 'Choáng', phase2: 'Chuyển sang pha 2', phase3: 'Chuyển sang pha 3' };
@@ -218,7 +247,7 @@ const CH = MA.chuan = {
       P.under(c => { const m = 1 - seg(u, .75, 1); if (m > 0) { F.px(c, -3, -9, '#2e1a10', 6, 1); F.px(c, -2, -8, '#b0261a', 4, 6); F.px(c, -1, -7, u < .5 && ((u * 16) | 0) % 2 ? '#fff6b0' : '#ffd23c', 2, 4); F.px(c, -3, -2, '#2e1a10', 6, 1); F.px(c, 0, -12, '#5c3a1e', 1, 3); } }); P.over(c => { const m = Math.sin(seg(u, 0, .8) * PI); if (m > 0) F.lua(c, 0, -4, 6 + m * 8, 6 + m * 14, P.t, null, 1); F.hat(c, 0, -8, 12, 5, seg(u, .25, .9), { v: 18, goc: -PI / 2, xoe: 2.6, cols: ['#fff6b0', '#ffd23c', '#ff8a1e'] }); }); }
     else if (k === 'bay') { const q = EASE.out(seg(u, 0, .8)); P.tien(-(1 - q) * (hv.xa || 46)); P.h += (1 - q) * (hv.cao || 34); P.rot += (1 - q) * -18; P.a = seg(u, 0, .25); P.bong = q; const st = kf(u, [[.8, 1], [.88, .92], [1, 1]]); P.sy *= st; }
     else if (k === 'no') { const q = seg(u, .45, .75), s = kf(q, [[0, .1], [.6, 1.2, 'out'], [1, 1, 'io']]); P.sx *= u < .45 ? .12 + u * .5 : s; P.sy *= u < .45 ? .12 + u * .5 : s; if (u < .45) { P.x += ((u * 24 | 0) % 2 ? .7 : -.7); P.flash = .5; } P.bong = seg(u, .3, .7); P.over(c => { F.hat(c, 0, -bh * .4, 18, 4, seg(u, .45, 1), { v: bw * .9, cols: mau, to: 2 }); F.song(c, 0, 0, bw * .8, seg(u, .45, .9), [mau[0], mau[1] || mau[0]], 1); }); }
-    else { const m = { khoi: 'hon', ghep: 'vo', tu: 'tu', bui: 'bui', quet: 'quet' }[k] || 'tu'; if (m === 'tu') P.tan = { k: 'tu', u, mau }; else if (m === 'quet') P.tan = { k: 'quet', u: seg(u, .1, .9), mau, len: 1 }; else P.tan = { k: m, u: 1 - EASE.io(seg(u, 0, .85)), mau, trai: P.face < 0 }; if (u > .85) { const st = kf(u, [[.85, 1.06], [.93, .96], [1, 1]]); P.sy *= st; } P.bong = seg(u, .3, .9); }
+    else { const m = { khoi: 'hon', ghep: 'vo', tu: 'tu', bui: 'bui', quet: 'quet' }[k] || 'tu'; if (m === 'tu') P.tan = { k: 'tu', u, mau }; else if (m === 'quet') P.tan = { k: 'quet', u: seg(u, .1, .9), mau, len: 1 }; else P.tan = { k: m, u: 1 - EASE.io(seg(u, 0, .85)), mau, trai: P.face < 0, hien: true }; if (u > .85) { const st = kf(u, [[.85, 1.06], [.93, .96], [1, 1]]); P.sy *= st; } P.bong = seg(u, .3, .9); }
   },
 };
 const DMAC = { idle: [1.2, true], move: [.6, true], tele: [.7, false], atk: [.55, false], hit: [.35, false], die: [1.1, false], spawn: [1.1, false] };
@@ -246,9 +275,9 @@ MA.draw = function (c, id, x, y, o) {
   const t = Math.max(0, o.t || 0), nf = Math.max(1, Math.round(an.d * MA.fps)); let fi = Math.floor(t * MA.fps + 1e-6); fi = an.lap ? fi % nf : Math.min(fi, nf - 1);
   const u = an.lap ? fi / nf : (nf > 1 ? fi / (nf - 1) : 0);
   let face = o.face || 0, dir = o.dir; if (dir == null) dir = (face || -1) < 0 ? PI : 0; if (!face) { const cx = Math.cos(dir); face = cx > .01 ? 1 : -1; }
-  const B = goc(d, ph), P = new Pose(d, B, nm, u, fi / MA.fps, o, dir, face, ph);
+  const hv = an.hinh ? an.hinh(u, ph) : 0, B = goc(d, ph, hv), P = new Pose(d, B, nm, u, fi / MA.fps, o, dir, face, ph);
   MA._tatBao = o.bao === false; an.f(P);
-  const key = P.khongNho ? null : id + '|' + ph + '|' + nm + '|' + fi + '|' + P.aim + (P.khoa || ''), fr = veKhung(B, P, key);
+  const key = P.khongNho ? null : id + '|' + ph + '|' + (hv || '') + '|' + nm + '|' + fi + '|' + P.aim + (P.khoa || ''), fr = veKhung(B, P, key);
   c.save(); c.translate(Math.round(x), Math.round(y)); c.imageSmoothingEnabled = false; const ga = c.globalAlpha;
   if (P.bong > 0 && d.bong !== 0) { const bw = (d.bong || B.bw * .62) * (1 - Math.min(.5, P.h / 80)) * Math.min(1, P.bong + .3); c.globalAlpha = ga * .28 * Math.min(1, P.bong); F.elip(c, P.x, P.y, bw / 2, Math.max(1.5, bw * .14), '#000000'); c.globalAlpha = ga; }
   if (o.fx !== false) for (const f of P._u) { c.save(); f(c, P); c.restore(); }

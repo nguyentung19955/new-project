@@ -62,3 +62,11 @@ def('sua', { ten: 'Sứa Bom', vung: 'bien', loai: 'thuong', tt: 7, luoi: () => 
 def('nhim', { ten: 'Nhím Biển', vung: 'bien', loai: 'thuong', tt: 8, luoi: () => Q2.nhim(), don: { kieu: 'gai', tam: 30, mau: ['#281d62', '#988aee', '#ffffff'] }, chet: { k: 'vo', mau: ['#4836a0', '#988aee'] }, hien: { k: 'cat', mau: CAT } });
 def('cuaTuong', { ten: 'Cua Tướng', vung: 'bien', loai: 'tinhanh', tt: 1, luoi: () => Q2.cuaTuong(), don: { kieu: 'chem', tam: 40 }, chet: { k: 'vo', mau: BANG }, hien: { k: 'cat', mau: CAT } });
 def('caNocChua', { ten: 'Cá Nóc Chúa', vung: 'bien', loai: 'tinhanh', tt: 2, luoi: () => Q2.caNocChua(), bay: true, cao: 6, don: { kieu: 'gai', tam: 46, mau: ['#0e746e', '#fff8e0', '#ffffff'], so: 12 }, chet: { k: 'no', mau: NUOC }, hien: { k: 'nuoc', mau: NUOC } });
+// ---- Chiêu riêng của hai tinh anh ----
+// Cua Tướng: kẹp chéo, hai càng chém chéo nhau thành hình chữ X trước mặt.
+DEFS.cuaTuong.anims.chieu1 = A(1.4, P => { const u = P.u, bh = P.B.bh, tam = 44, cols = ['#b0261a', '#ff9a6a', '#ffffff'];
+  if (u < .4) { const v = u / .4; P.theo(-3 * v); P.sy *= 1 - .1 * v; P.sx *= 1 + .07 * v; P.x += v > .5 ? ((u * 48 | 0) % 2 ? .6 : -.6) : 0; P.flash = v > .7 && ((u * 30) | 0) % 2 ? .35 : 0; P.under(c => F.baoQuat(c, 0, 0, tam, P.dir, 2.4, v)); }
+  else { const v = (u - .4) / .6, ex = P.fx * 5, ey = P.fy * 5 * MA.det - bh * .35; P.theo(kf(v, [[0, 0], [.2, 9, 'out'], [.6, 7], [1, 0]])); P.sx *= kf(v, [[0, 1.12], [.2, .94], [.5, 1]]); P.sy *= kf(v, [[0, .9], [.2, 1.06], [.5, 1]]);
+    P.over(c => { F.liem(c, ex, ey, tam - 4, P.dir - .45, 1.7, clamp(v * 1.7, 0, 1), cols, 6); F.liem(c, ex, ey, tam - 8, P.dir + .45, 1.7, clamp(v * 1.7 - .3, 0, 1), cols, 6); if (v > .15 && v < .6) F.hat(c, Math.cos(P.dir) * tam * .7, Math.sin(P.dir) * tam * .7 * MA.det - bh * .3, 14, 3, (v - .15) / .45, { v: 12, cols: ['#ffffff', '#ff9a6a', '#b0261a'] }); }); } }, { nhan: 'Chiêu: kẹp chéo' });
+// Cá Nóc Chúa: gai xoáy, phồng lên rồi bắn hai đợt gai băng toả tròn.
+DEFS.caNocChua.anims.chieu1 = A(1.6, P => { CHIEU.vongDan(P, 12, 58, ['#0e746e', '#8ff0d8', '#ffffff'], 2); }, { nhan: 'Chiêu: gai xoáy' });
