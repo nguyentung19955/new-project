@@ -142,6 +142,29 @@ class Ve {
     for (const [x, y, c] of doi) this.g[y][x] = c;
     return doi.length;
   }
+  // sel-out TOÀN BỘ viền ngoài: mọi điểm viền ngoài lấy tông tối nhất của mảng kề (đường viền "tan" vào hình, mượt nhất ở cỡ nhỏ)
+  selOut() {
+    const T = (x, y) => !this.get(x, y), doi = [];
+    for (let y = 0; y < this.h; y++) for (let x = 0; x < this.w; x++) {
+      const c = this.g[y][x];
+      if (!c || !VIEN.has(c) || !(T(x + 1, y) || T(x - 1, y) || T(x, y + 1) || T(x, y - 1))) continue;
+      const ke = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]].map(([a, b]) => this.get(x + a, y + b)).find((k) => k && !VIEN.has(k) && TOI_NHAT[k]);
+      if (ke) doi.push([x, y, TOI_NHAT[ke]]);
+    }
+    for (const [x, y, c] of doi) this.g[y][x] = c;
+    return doi.length;
+  }
+  // Scale2x (EPX): phóng ×2 giữ nguyên bảng màu, tự bo tròn các bậc chéo (không làm mờ)
+  scale2x() {
+    const o = new Ve(this.w * 2, this.h * 2), g = (x, y) => this.get(x, y);
+    for (let y = 0; y < this.h; y++) for (let x = 0; x < this.w; x++) {
+      const P = g(x, y), A = g(x, y - 1), B = g(x + 1, y), C = g(x - 1, y), D = g(x, y + 1);
+      let e0 = P, e1 = P, e2 = P, e3 = P;
+      if (A !== D && C !== B) { if (C === A) e0 = A; if (A === B) e1 = B; if (C === D) e2 = C; if (D === B) e3 = B; }
+      o.g[y * 2][x * 2] = e0; o.g[y * 2][x * 2 + 1] = e1; o.g[y * 2 + 1][x * 2] = e2; o.g[y * 2 + 1][x * 2 + 1] = e3;
+    }
+    return o;
+  }
   clone() { const v = new Ve(this.w, this.h); v.g = this.g.map((r) => r.slice()); return v; }
   colors() { const s = new Set(); for (const r of this.g) for (const c of r) if (c) s.add(c); return [...s]; }
   check() { for (const c of this.colors()) if (!PAL[c]) throw new Error('màu ngoài bảng màu: ' + c); return this; }
