@@ -2372,6 +2372,10 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 232 — icon kỹ năng riêng từng chiêu (tester đạt)
+
+- 240 icon kỹ năng: khung theo phím (Q đồng, W bạc, E ngọc, R vàng), nền theo hành, hình chính riêng theo nội dung chiêu; không còn trùng trong cùng tướng.
+
 ## Phiên bản 231 — tướng pixel dễ phân biệt (tester đạt)
 
 - 15 tướng đổi màu chủ đạo/dấu hiệu riêng (Lực Sĩ, Đắp Đê, Chăn Trâu, Tre, Chuông Đồng, Xạ Thủ, Giáo Đồng, Thầy Lang, Tiên Dung, Thổ Công, Mặt Trời, Lạc Hầu, An Tiêm, Chử Đồng Tử…): 19 cặp giống nhau → 0 (tools/pixel/do-giong-tuong.py).
