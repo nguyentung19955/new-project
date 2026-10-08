@@ -2661,3 +2661,5 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
   60 ảnh, lúc rảnh): tướng, quái, boss, nền, bản đồ, hiệu ứng, icon; nhóm hiện bằng <img> (đồ, kỹ năng, ấn phù, thần khí) và canh/* không
   nạp sẵn → menu hiện ~0,6 s (trước ~1,4 s, ngang ?pixel=0). (2) chợ: chân dung pixel mọi tướng nạp + giải mã sẵn vào bộ đệm chợ
   (ui.preloadMarket) ngay sau lô cuối → đổi ↻ không nháy thẻ trống.
+- Sửa thêm: kỹ năng hỗ trợ (khiên, buff, hồi máu — Kim Quy Q, Cây Đa của Cuội/Mẫu E…) chỉ dùng TRONG ĐỢT: sân hết quái (giữa hai đợt)
+  thì không dùng dù tướng đang bị thương. Test: tests/sua-tam-skill (giữa hai đợt, tướng 30% máu → không kỹ năng hỗ trợ nào tung).
