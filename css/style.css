@@ -41,6 +41,9 @@ html, body {
   -webkit-user-select: none; user-select: none; touch-action: none;
   overscroll-behavior: none;   /* claude/chan-vuot-lui: không kéo-tải-lại / vuốt ngang về trang trước */
 }
+/* v259: iPhone — chạm 2 lần (phóng to) / kéo làm cả trang trượt sang nửa màn đen: ghim html/body cố định, không thể cuộn */
+html, body { position: fixed; inset: 0; width: 100%; max-width: 100%; }
+button, input, select, textarea, a, [data-act] { touch-action: manipulation; }
 body { display: flex; align-items: center; justify-content: center; box-sizing: border-box;
   /* cầm ngang: chừa tai thỏ / camera hai bên */
   padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
