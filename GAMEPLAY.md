@@ -2765,3 +2765,6 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 - Sửa thêm: kỹ năng hỗ trợ (khiên, buff, hồi máu — Kim Quy Q, Cây Đa của Cuội/Mẫu E…) chỉ dùng TRONG ĐỢT: sân hết quái (giữa hai đợt)
   thì không dùng dù tướng đang bị thương. Test: tests/sua-tam-skill (giữa hai đợt, tướng 30% máu → không kỹ năng hỗ trợ nào tung).
 - Theo tester: bỏ luật ẩn mọi phần tử con của chợ (chỉ ẩn khung ngoài, con tự ẩn theo); `closeScreen` bỏ lớp panel-open ngay khi đóng. Lỗi chập chờn của cho-tuong ("ảnh chưa sẵn sàng") khi chạy 6 test song song cũng xảy ra trên nhánh chính (1/6 lần), không do nhánh này; chạy lần lượt 5/5 đạt.
+
+## claude/sua-giao-dien-10 — sửa 10 lỗi giao diện ưu tiên (theo docs/DESIGN-REVIEW.md)
+- **N1 Hợp thể trong trận**: bảng bắt đầu ngay dưới thanh trên (`top: 46px × --hz`) — không còn đè "Đợt N", nút ☰, chip đợt sau; nền đặc `#15110C`, lớp tối phía sau đậm hơn (`#000000B3`); mở bảng thì ẩn chip đợt sau / banner / "Đã dừng". Thẻ chưa mở khoá: nền đặc `#1E1912` (bỏ trong suốt), ảnh xám tối, tên `#9A8C70`.

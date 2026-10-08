@@ -1866,11 +1866,13 @@ svg.icn { overflow: visible; }
 /* ============================================================
    v170: BẢNG HỢP THỂ trong trận — thẻ theo tướng đích, tab Tím / Vàng, lọc. Mở bảng thì ẩn thanh chợ (không bị che).
    ============================================================ */
-#ui > #legends { position: absolute; left: 50%; top: 6px; bottom: 6px; right: auto; width: min(900px, calc(100% - 16px)); transform: translateX(-50%);
+#ui > #legends { position: absolute; left: 50%; top: calc(46px * var(--hz, 1)); bottom: 6px; right: auto; width: min(900px, calc(100% - 16px)); transform: translateX(-50%);
   z-index: 9; display: flex; flex-direction: column; gap: 4px; padding: 8px 10px; border-radius: 10px; border: 2px solid #B8853A;
-  box-shadow: 0 0 0 100vmax #0000007a, 0 8px 24px #000c, inset 0 1px 0 #D9B25A55; }
+  box-shadow: 0 0 0 100vmax #000000B3, 0 8px 24px #000c, inset 0 1px 0 #D9B25A55; }
 #ui > #legends[hidden] { display: none; }
-#ui:has(> #legends:not([hidden])) > :is(#deck, #deck-hint, #fuse-strip, #more) { visibility: hidden; pointer-events: none; }
+#ui:has(> #legends:not([hidden])) > :is(#deck, #deck-hint, #fuse-strip, #more, #nextwaves, #banner, #paused-tag) { visibility: hidden; pointer-events: none; }
+/* sua-giao-dien-10 (N1): bảng Hợp thể bắt đầu dưới thanh trên (không đè "Đợt N", ☰), nền đặc — không nhìn xuyên bản đồ */
+#ui > #legends, html.pixel.sk-khung-toi #ui > #legends { background-color: #15110C; background-clip: padding-box; }
 /* an-cho-kho-do: bảng toàn màn đang mở (lớp panel-open do ui.watchToasts bật) → ẩn hẳn chợ, Hợp thể/Khoá, cột nút phải */
 #wrap.panel-open #ui > :is(#deck, #deck-hint, #fuse-strip, #more, #auto-btns, #btn-moc, #nextwaves, #trash) { visibility: hidden !important; pointer-events: none !important; }
 .hx-hd { display: flex; align-items: center; gap: 6px; min-width: 0; flex: none; }
@@ -1890,7 +1892,9 @@ svg.icn { overflow: visible; }
   padding: 6px 8px 6px 6px; border-radius: 8px; background: linear-gradient(180deg, #241C14, #16110C); border: 1.5px solid #3A3226; cursor: pointer; min-width: 0; }
 .hx-card.epic { border-color: #6A4A8A; } .hx-card.legendary { border-color: #8A6A30; }
 .hx-card.ready { border-color: var(--rc); box-shadow: 0 0 10px color-mix(in srgb, var(--rc) 55%, transparent), inset 0 0 14px #0006; }
-.hx-card.lock { opacity: .62; }
+.hx-card.lock { background: #1E1912; border-color: #2E281E; }
+.hx-card.lock:not(.ready) .hx-to img, .hx-card.lock:not(.ready) .hx-m img { filter: grayscale(1) brightness(.55); }
+.hx-card.lock .hx-nm b { color: #9A8C70; }
 .hx-card:active { transform: scale(.985); }
 .hx-to { grid-row: 1 / 3; width: 58px; height: 58px; border-radius: 10px; border: 2px solid var(--r-epic); background: radial-gradient(circle at 50% 60%, #3A2416, #1A0F0A 75%); overflow: hidden; display: block; }
 .hx-to.epic { box-shadow: 0 0 8px #A86CE0AA; } .hx-to.legendary { border-color: var(--r-legend); box-shadow: 0 0 10px #F0A030BB; }
