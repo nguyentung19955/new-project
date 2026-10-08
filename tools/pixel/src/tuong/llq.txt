@@ -1,0 +1,343 @@
+# Lạc Long Quân (mã llq) — pixel 32×32 (tướng Vàng · hành Thủy). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (DANH-SACH Lô 5 · PROMPT-GEN-LAI.txt:77 giữ GIÁO · PROMPT-DUNG-XUONG.txt:921): vua rồng ~40 vai rộng, SỪNG RỒNG phân nhánh,
+# tóc + râu đen dài, áo xanh biển vảy ngọc viền vàng, vương miện nhỏ ngọc; cầm GIÁO đồng; DẢI LỤA ĐUÔI RỒNG ngọc bay sau; chiêu: sóng nước xoáy (Thủy).
+# PHÁ CÁCH (QUY-CHUAN 0b): tóc thành BỜM RỒNG bay ngược ra sau (lọn nhọn, chóp ngọc), vảy ngọc mọc lên má + cổ, mắt VÀNG con ngươi dọc,
+# sóng cuộn quanh chân (khung chết: chân khô); vẫn sừng rồng + dải lụa + GIÁO. Cả hình nằm trong 1..30 (không chạm mép), neo 15,29.
+name: Lạc Long Quân
+size: 32x32
+anchor: 15,29
+colors:
+  k = vien
+  K = toi
+  f = da-toi
+  F = da
+  h = da-sang
+  e = trang
+  X = trang-xam
+  z = sang
+  y = vang-nghe
+  Y = vang-sang
+  j = dong-sang
+  d = dong
+  g = dong-toi
+  c = cham
+  C = cham-sang
+  v = cham-toi
+  n = ngoc
+  N = ngoc-sang
+  G = dat-sang
+  t = dat
+  w = nuoc
+  W = nuoc-sang
+  T = troi
+
+part tren
+................................
+................................
+.......Y..Y.....Y..Y............
+.......yY.yY....yY.yY...........
+.....K..yYyyKKKKKyYyyy..........
+...nKK..KKKKKKKKKKKKKK..........
+....KKKKjyyyyyyNnyyyyj..........
+......KKKKhhFFFFFFFFFF..........
+...nKKKKKhFFFFFFFFFFFF..........
+....KKKKKhFFKKFFFFKKFF..........
+.....KKKKnFFYkFFFFYkYF..........
+...nKKKKNnFFFFFFFFFFfF..........
+....KKKKfnFFFFFFFFFFFf..........
+.....KKKKKfKKKFFFFKKKf..........
+...nKKKKKKfKKKKKKKKKKK..........
+......KKKKKnNKKKKKK.............
+.......KKjyyyyKKKKyyj...........
+......KKvCCCCyKKycccv...........
+.......KvCnCccyyycncv...........
+........vCCcncyccnccv...........
+........vyyyyyNyyyyyv...........
+........vCcncccnccncv...........
+........vCcccnccccncv...........
+........vCccccnccccv............
+end
+
+part chan
+........vCcccncccnccv..
+........vCcccccvcccv...
+........yyyyyyyyyyyyy..
+......W...Ccv..Ccv..W..
+.....WTW..jdg..jdg.WTw.
+....WwwwWWwwwWWwwwWWwwW
+end
+
+part chan0
+........vCcccncccnccv
+........vCcccccvcccv.
+........yyyyyyyyyyyyy
+..........Ccv..Ccv...
+..........jdg..jdg...
+.........gggg..ggggg.
+end
+
+part dai
+.....vnN
+...nnNNv
+.nNNnv..
+nNnv....
+nNv.....
+.nNn....
+..nNn...
+...nNv..
+..nNnv..
+.nNv....
+NnNn....
+v.vN....
+end
+
+part dai2
+.....vnN
+....nNNv
+..nNNnv.
+.nNnv...
+.nNv....
+..nNn...
+...nNn..
+...nNnv.
+..nNnv..
+.nNnv...
+nNn.....
+Nv.N....
+end
+
+part tay
+CC...
+vcCC.
+..vFF
+...Fh
+end
+
+part giao
+.Y.
+YYy
+Yyy
+Yyj
+.yj
+.j.
+nNn
+.G.
+.G.
+.G.
+.G.
+.G.
+.G.
+.G.
+.G.
+.G.
+.G.
+.G.
+.G.
+.G.
+.G.
+.G.
+.G.
+.G.
+.t.
+end
+
+part giao_ngang
+.............n.YY...
+tGGGGGGGGGGGGNYYyyyY
+.............n.jj...
+end
+
+part giao_xuong
+G..........
+.G.........
+..G........
+...G.......
+....G......
+.....G.....
+......n....
+.......Yy..
+.......yYy.
+........yjY
+end
+
+part tay_dam
+CCFF
+vcFh
+end
+
+part tay_len
+.FF
+.Fh
+.C.
+CC.
+vc.
+end
+
+part tia
+z...
+.T..
+..z.
+end
+
+part xoay_nho
+.W.
+WwW
+.W.
+end
+
+part xoay
+..WW..
+.WwwT.
+Ww..wW
+Ww..wW
+.TwwW.
+..WW..
+end
+
+part song
+..W....W..
+.WwT..WwT.
+WwwwWWwwwW
+end
+
+part mat_nham
+ffFFFFff
+end
+
+anim idle fps=3 loop
+frame idle
+  use dai 2 17
+  use chan 0 24
+  use tren
+  use giao 22 5
+  use tay 19 17
+  outline
+end
+frame idle
+  use dai 2 18
+  use chan 0 24
+  use tren 0 1
+  use giao 22 5
+  use tay 19 18
+  outline
+end
+frame idle
+  use dai2 2 17
+  use chan 0 24
+  use tren
+  use giao 22 5
+  use tay 19 17
+  outline
+end
+
+# đánh: lấy đà (rút giáo về sau) → đâm thẳng → trúng (tia sáng) → thu giáo
+anim attack fps=10 once
+frame attack
+  use dai2 2 17
+  use chan 0 24
+  use tren -1 0
+  use giao_ngang 3 18
+  use tay_dam 17 18
+  outline
+end
+frame attack
+  use dai 2 17
+  use chan 0 24
+  use tren 1 0
+  use giao_ngang 9 18
+  use tay_dam 20 18
+  outline
+end
+frame attack
+  use dai 2 17
+  use chan 0 24
+  use tren 1 0
+  use giao_ngang 9 18
+  use tay_dam 20 18
+  use tia 25 15
+  set 27 21 T
+  outline
+end
+frame attack
+  use dai2 2 17
+  use chan 0 24
+  use tren
+  use giao_xuong 19 18
+  use tay 19 17
+  outline
+end
+
+# chiêu: giơ giáo, xoáy nước quanh mũi giáo + sóng dâng dưới chân (hành Thủy)
+anim cast fps=8 loop
+frame cast
+  use dai 2 17
+  use chan 0 24
+  use tren
+  use giao 21 3
+  use tay_len 20 14
+  use xoay_nho 21 2
+  outline
+end
+frame cast
+  use dai2 2 17
+  use chan 0 24
+  use tren
+  use giao 21 3
+  use tay_len 20 14
+  use xoay 19 2
+  use song 19 27
+  outline
+end
+frame cast
+  use dai 2 18
+  use chan 0 24
+  use tren 0 1
+  use giao 21 3
+  use tay_len 20 15
+  use xoay 19 2
+  use song 19 27
+  set 17 2 z
+  set 27 5 z
+  outline
+end
+
+# trúng đòn: giật lùi, nhắm mắt, nháy sáng da
+anim hurt fps=8 once
+frame hurt
+  use dai 2 17
+  use chan -1 24
+  use tren -1 0
+  use giao 21 5
+  use tay 18 17
+  use mat_nham 11 9
+  outline
+  swap F h
+  swap c C
+end
+
+# chết: khuỵu gối → ngã nằm → tối dần
+anim die fps=5 once
+frame die
+  use dai 2 18
+  use giao_xuong 19 18
+  use chan0 0 24
+  use tren 0 3
+  use mat_nham 12 12
+  outline
+end
+frame die
+  use chan0 0 24
+  use tren 0 3
+  use mat_nham 12 12
+  rot 90
+  shift 0 6
+  use giao_ngang 2 27
+  outline
+end
+frame die
+  use @die.1
+  swap y j
+  swap C c
+  swap N n
+  swap Y y
+end

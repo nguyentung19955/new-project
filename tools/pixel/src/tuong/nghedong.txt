@@ -1,0 +1,298 @@
+# Nghê Đồng — linh thú 32×32 (tướng Tím · hành Kim). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:148, PROMPT-DUNG-XUONG.txt:600): nghê đồng canh đình đi 4 CHÂN, thấp rộng, đầu to — KHÔNG người;
+# đồng cổ loang gỉ xanh, BỜM XOẮN hình ngọn lửa, đuôi xoắn cuộn lên lưng, CHUÔNG VÀNG trên vòng cổ đỏ, viền tím-bạc; vồ + cắn.
+# Phá cách tạo hình: TƯỢNG NGHÊ ĐỒNG ĐÌNH LÀNG SỐNG DẬY — GỈ XANH LOANG từng mảng trên thân/chân/đầu/đuôi, MẮT NGỌC ĐỎ,
+# BỜM XOẮN cong vút như ĐAO MÁI ĐÌNH (3 móc đao trên đỉnh đầu); vẫn 4 chân, chuông vàng vòng cổ đỏ.
+name: Nghê Đồng
+size: 32x32
+anchor: 16,30
+colors:
+  k = vien
+  K = toi
+  o = dong-toi
+  d = dong
+  D = dong-sang
+  Y = vang-sang
+  y = vang-nghe
+  g = ngoc
+  G = ngoc-sang
+  r = son
+  m = son-toi
+  R = son-sang
+  e = trang
+  t = tim-sang
+  b = bac
+  w = sang
+
+part duoi
+..DDD....
+.DdGdD...
+Ddg.ggo..
+do..Ddo..
+dD.Ddo...
+.dDdo....
+..ddDD...
+.DGGGD...
+.dGgg....
+..dgo....
+...do....
+end
+
+part than
+....DDDDDDDDD......
+..DDdddddddddDD....
+.DddGggGgdddddddd..
+DddGGgggggddddddoD.
+ddddGGgggdddgGGGdo.
+dddGddddddddGggggo.
+ddgggGddddddddggooo
+ddgggdddddddddddooo
+odGgddddddGddddooo.
+.oddddddGGgggdooo..
+..oooooooogoooo....
+end
+
+part chan
+.Dddo.ooGK...oooK.Dddo..
+.GGGo.oGgK...oooK.Dddo..
+.Gggo.oooK...oooK.Ggdo..
+.Gggo.oooK...oooK.Gggo..
+.dddo..ooK....ooK.Gggo..
+DdDdo.oooK...oooK.DdDdo.
+dDdDdKKKK...KKKK.dDdDdK.
+oooooK...........oooooK.
+end
+
+part dau
+..Yy...Yy..Yy....
+...yd...yd..yd...
+.ydody.dyddody...
+ydodoDDDDDDGdy...
+dodoDDDDDDGggDy..
+doyoDDKKKDGgDDD..
+ydoDDDDRmDDDDDDo.
+dodDDDGDDDDDDDDDK
+yodDdgggDDDDdKKKK
+dododGgggDdmmmmmk
+ydoddddDDmeeeeeek
+doGGKddddmmmmmmK.
+yoGggKdddddeeeeK.
+dodyodKddooooooK.
+.ydodydoydyo.....
+..yd.yd..yd......
+end
+
+part co
+rRrrrrm
+.mrrrm.
+..yYy..
+..yyy..
+end
+
+part chan_sau
+.Dddo.ooGK...oooK.......
+.GGGo.oGgK...oooK.......
+.Gggo.oooK...oooK.......
+.Gggo.oooK...oooK.......
+.dddo..ooK....ooK.......
+DdDdo.oooK...oooK.......
+dDdDdKKKK...KKKK........
+oooooK..................
+end
+
+part vuot
+.....eDe
+....DddK
+...GGdo.
+..gggo..
+.Ddgo...
+Dddo....
+ddo.....
+end
+
+part chan_gap
+.DddddoK.oooKK..oooK.Dddddo.
+DdDdDdddKKKKK..KKKKKDdDdDddd
+end
+
+part dau_can
+..Yy...Yy..Yy....
+...yd...yd..yd...
+.ydody.dyddody...
+ydodoDDDDDDGdy...
+dodoDDDDDDGggDy..
+doyoDDKKKDGgDDD..
+ydoDDDDRmDDDDDDo.
+dodDDDGDDDDDDDDDK
+yodDdgggDDDDdKKKK
+dododGgggDddddddk
+ydoddddDDdeKeKeKk
+doGGKddddddddddK.
+yoGggKddddddddK..
+dodyodKddooooooK.
+.ydodydoydyo.....
+..yd.yd..yd......
+end
+
+part mat_nham
+DDDDD
+DKKKD
+end
+
+part song1
+b.
+.b
+.b
+b.
+end
+
+part song2
+w..
+.b.
+..b
+..b
+.b.
+w..
+end
+
+anim idle fps=3 loop
+frame idle
+  use chan 2 22
+  use than 2 12
+  use duoi 2 2
+  use dau 13 2
+  use co 16 17
+  outline
+end
+frame idle
+  use chan 2 22
+  use than 2 13
+  use duoi 2 3
+  use dau 13 3
+  use co 16 18
+  outline
+end
+frame idle
+  use chan 2 22
+  use than 2 13
+  use duoi 2 3
+  use dau 13 2
+  use co 16 18
+  outline
+end
+
+# vồ: thu mình lấy đà → chồm tới giơ vuốt → cắn (ngậm hàm) → thu về
+anim attack fps=10 once
+frame attack
+  use chan 2 22
+  use than 2 14
+  use duoi 2 4
+  use dau 12 5
+  use co 15 20
+  outline
+end
+frame attack
+  use chan_sau 2 22
+  use than 2 11
+  use duoi 2 2
+  use vuot 19 17
+  use dau 13 2
+  use co 16 16
+  outline
+end
+frame attack
+  use chan_sau 2 22
+  use than 2 12
+  use duoi 2 2
+  use vuot 19 18
+  use dau_can 13 2
+  use co 16 17
+  outline
+end
+frame attack
+  use @idle.0
+end
+
+# chiêu (hành Kim): gầm rung chuông đình — chuông sáng, sóng âm bạc
+anim cast fps=8 loop
+frame cast
+  use chan 2 22
+  use than 2 12
+  use duoi 2 2
+  use dau 13 2
+  use co 16 17
+  swap y Y
+  outline
+end
+frame cast
+  use chan 2 22
+  use than 2 12
+  use duoi 2 2
+  use dau 13 2
+  use co 16 17
+  outline
+  use song1 29 5
+  set 20 20 w
+  set 23 21 w
+end
+frame cast
+  use chan 2 22
+  use than 2 12
+  use duoi 2 2
+  use dau 13 2
+  use co 16 17
+  swap y Y
+  outline
+  use song2 28 4
+  set 19 21 w
+  set 24 20 w
+  set 21 23 b
+end
+
+# trúng đòn: giật lùi, nhắm mắt, nháy sáng
+anim hurt fps=8 once
+frame hurt
+  use chan 2 22
+  use than 2 12
+  use duoi 2 2
+  use dau 12 3
+  use co 15 18
+  outline
+  use mat_nham 16 8
+  swap D Y
+end
+
+# chết: khuỵu chân → nằm phục → tối màu
+anim die fps=5 once
+frame die
+  use chan 2 22
+  use than 2 16
+  use duoi 2 5
+  use dau 13 6
+  use co 16 21
+  use mat_nham 17 11
+  outline
+end
+frame die
+  use chan_gap 2 28
+  use than 2 18
+  use duoi 2 9
+  use dau 13 13
+  use mat_nham 17 18
+  outline
+end
+frame die
+  use @die.1
+  swap D d
+  swap y o
+  swap G g
+end
+
+# chân dung: đầu + bờm xoắn + chuông vàng vòng cổ đỏ
+anim portrait fps=1 once
+frame portrait
+  use than 2 18
+  use dau 8 4
+  use co 11 19
+  outline
+end

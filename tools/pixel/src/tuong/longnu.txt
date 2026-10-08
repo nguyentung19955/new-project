@@ -1,0 +1,261 @@
+# Long Nữ Động Đình (mã longnu) — pixel 32×32 (tướng Vàng · hành Thủy). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:1116 ưu tiên + PROMPT-DUNG-XUONG.txt:1131): NỮ công chúa rồng ~20, cao thanh, cổ dài; SỪNG RỒNG nhỏ + vương miện
+# nhỏ ngọc trai, tóc dài như nước; lụa xanh ngọc biển + trắng ngọc trai + điểm hồng san hô, viền vàng; HAI TAY NÂNG NGỌC RỒNG to (không kiếm);
+# GẤU VÁY THÀNH VÂY CÁ xoè trên đất; chiêu: ngọc giơ cao + sóng nước xoáy (hành Thủy).
+# PHÁ CÁCH (QUY-CHUAN 0b): tóc là DÒNG NƯỚC chảy không ngừng (sọc nước dọc chàm–nước–nước sáng, chảy tràn xuống gấu váy vây cá),
+# vảy NGỌC TRAI lấm tấm trên má và tay; vẫn nữ, sừng rồng nhỏ, hai tay nâng NGỌC RỒNG. Cả hình trong 1..30 (không chạm mép).
+name: Long Nữ Động Đình
+size: 32x32
+anchor: 16,30
+colors:
+  k = vien
+  K = toi
+  H = cham-toi
+  c = cham
+  C = cham-sang
+  F = da
+  h = da-sang
+  f = da-toi
+  e = trang
+  n = ngoc
+  N = ngoc-sang
+  t = troi
+  w = trang
+  W = sang
+  X = trang-xam
+  p = hong
+  y = vang-nghe
+  Y = vang-sang
+  j = dong-sang
+  o = nuoc
+  O = nuoc-sang
+  Q = troi
+  P = sang
+
+part tren
+................................
+................................
+.........XXw.yPy..XXw...........
+.........cojXyyyyyXjc...........
+........HcoOcOoOcOoOcO..........
+.......HcoOcOoOcOoOcOoO.........
+......HocOcooOhhFFFFFFF.........
+......HocOcohFFFFFFFFFF.........
+......HcoOcOFFKKFFFFKKF.........
+......HcoOcOFFekFFFFekF.........
+......HcoOcfFWFFFFFFWFFF........
+......HocOPfWFFFFFFFfFF.........
+......HocOcoffFFFFFFf...........
+......HcoOcOOhfFFFff............
+......HcoOcOohhFFf..............
+......HocO.tNwWyhFywNNn.........
+......HocO.tNNwWyyWwNNnn........
+.......Hco.tNNNwwyywNNNnX.......
+.......Hco.tNNNNNwyNNNNnw.......
+.......Hco.tNNNNNNyNNNnnX.......
+.......Hoc.yyyypyyyyyyyY........
+.......OHo.tNNNNNNnNNNNn........
+.......oHc.tNNNNNNNnNNNn........
+.......OHc.tNNNNNNNnNNNnn.......
+end
+
+part chan
+.......otNNNNNNNNNnNNNNnn.......
+......OotNNNNNNNNNNnNNNnn.......
+.....Oo.yyyyyyypyyyyyyyyY.......
+.....ttNNnNNnNNnNNnNNnNNnNnn....
+....tNnNtnNtnNNtnNNtnNNtnNNnn...
+...tt.t.tt.t.tt.t.tt.t.tt.t.nn..
+end
+
+part vay
+........tNNNNNNNNNnNNNNnn.......
+........tNNNNNNNNNNnNNNnn.......
+........yyyyyyypyyyyyyyyY.......
+.......ttNnNNnNNnNNnNNnNnn......
+end
+
+part ngoc
+.QQQO.
+QPPQQO
+QPQQQO
+QQQQOo
+OQQOOo
+.oooo.
+end
+
+part ngoc_sang
+...P....
+.P.QQQO.
+..QPPQQO
+P.QPQQQO
+..QQQQOo
+..OQQOOo
+...oooo.
+.P....P.
+end
+
+part ngoc_nho
+.QO.
+QPQO
+OQOo
+.oo.
+end
+
+part tay2
+hW......
+FX.....h
+......Wf
+end
+
+part tay_len
+.hW..Fh.
+.FX..WF.
+.wX..wX.
+.wX..wX.
+end
+
+part song
+...O.....
+..OQo....
+.OQ.Oo...
+OQ...oO..
+o.....OQo
+end
+
+part song_to
+..O....Q.
+.OQo..OQo
+OQ.oOOQ.o
+o...oo...
+.QO...OQ.
+oo.o.o.oo
+end
+
+part xoay
+O......o
+.o....O.
+..OQQo..
+end
+
+part mat_nham
+FFFFFFFFFF
+FKKFFFFKKF
+end
+
+anim idle fps=3 loop
+frame idle
+  use chan 0 24
+  use tren
+  use ngoc 22 12
+  use tay2 20 15
+  outline
+end
+frame idle
+  use chan 0 24
+  use tren 0 1
+  use ngoc 22 13
+  use tay2 20 16
+  outline
+end
+frame idle
+  use @idle.0
+end
+
+# đánh: kéo ngọc về ngực (lấy đà) → đẩy ngọc ra trước → sóng nước bắn trúng → thu về
+anim attack fps=10 once
+frame attack
+  use chan 0 24
+  use tren
+  use ngoc 20 14
+  use tay2 18 17
+  outline
+end
+frame attack
+  use chan 0 24
+  use tren 1 0
+  use ngoc 24 11
+  use tay2 22 14
+  outline
+end
+frame attack
+  use chan 0 24
+  use tren 1 0
+  use ngoc 24 11
+  use tay2 22 14
+  use song 21 4
+  outline
+end
+frame attack
+  use chan 0 24
+  use tren
+  use ngoc 22 12
+  use tay2 20 15
+  outline
+end
+
+# chiêu (Thủy): hai tay nâng ngọc lên cao, ngọc rực sáng, sóng nước xoáy quanh chân
+anim cast fps=6 loop
+frame cast
+  use chan 0 24
+  use tren
+  use ngoc_nho 22 6
+  use tay_len 20 10
+  use xoay 2 22
+  outline
+end
+frame cast
+  use chan 0 24
+  use tren
+  use ngoc_sang 20 2
+  use tay_len 20 10
+  use xoay 2 20
+  use xoay 22 21
+  outline
+end
+frame cast
+  use chan 0 24
+  use tren 0 1
+  use ngoc_sang 20 2
+  use tay_len 20 11
+  use song_to 2 17
+  use xoay 22 20
+  outline
+end
+
+# trúng đòn: giật lùi, nhắm mắt, nháy sáng da
+anim hurt fps=8 once
+frame hurt
+  use @idle.0
+  shift -1 0
+  use mat_nham 11 8
+  swap F h
+end
+
+# chết: khuỵu → ngã nằm → mờ tối
+anim die fps=5 once
+frame die
+  use chan 0 24
+  use tren 0 3
+  use ngoc 22 18
+  use tay2 20 20
+  use mat_nham 12 11
+  outline
+end
+frame die
+  use vay 0 24
+  use tren 0 3
+  use mat_nham 12 11
+  rot 90
+  shift 0 1
+  use ngoc_nho 26 25
+  outline
+end
+frame die
+  use @die.1
+  swap y j
+  swap N n
+  swap t N
+  swap Q O
+  swap P Q
+end

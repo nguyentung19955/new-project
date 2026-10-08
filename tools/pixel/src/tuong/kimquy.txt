@@ -1,0 +1,297 @@
+# Thần Kim Quy — linh thú 32×32 (tướng Vàng · hành Kim). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:124, PROMPT-DUNG-XUONG.txt:942): RÙA VÀNG thần thân rùa thật 4 chân, đứng thấp — KHÔNG người,
+# không đuôi rồng, không sừng, không đinh ba; MAI VÒM VÀNG vảy lục giác rộng hơn cao, viền vàng mai, da xanh ngọc,
+# đầu rùa già lông mày + chòm RÂU TRẮNG, vương miện nhỏ; 1 VUỐT TRƯỚC giơ lên phát sáng đỏ-vàng.
+# Phá cách tạo hình: MAI LÀ MẶT TRỐNG ĐỒNG vàng (ngôi sao giữa đỉnh, các vành đồng tâm chấm/răng cưa Đông Sơn),
+# RÊU NGỌC bám mép mai (rêu xanh + đốm ngọc); vẫn rùa thật 4 chân, vuốt sáng.
+name: Thần Kim Quy
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  K = toi
+  o = dong-toi
+  d = dong
+  j = dong-sang
+  y = vang-nghe
+  Y = vang-sang
+  G = ngoc-sang
+  g = ngoc
+  x = la-toi
+  e = trang
+  E = trang-xam
+  w = sang
+  b = bac
+  l = lua
+  L = lua-sang
+  r = son
+  m = reu
+  M = reu-sang
+
+part mai
+.......jjjjjj.......
+....jjYoooooooyyj...
+...jYoYjYjYjyjoyj...
+..jYoYoooooooyoyyj..
+.jYoYoYYYwYYYoyoyyj.
+.jYoYoYYwwwYyoyoyyj.
+jYoYYoYYYwYYyoyyoyyj
+jYoYjYoooooooyjyoyyj
+jYYoYjYjYjyjyjyoyyyj
+jyYYooooooooooooyyyj
+oMjjjmMjjjjjjjMmjjjo
+.omMGyyyyyyyMGmyyyo.
+end
+
+part dau
+.....y.y.y..
+.....yYyYy..
+....ojjjjo..
+...GGggggggx
+..Ggweeggggx
+..GggKkggggx
+..gggggggggx
+..xggggggxKK
+..xxggggxeeK
+...xxxxeeeK.
+....x.eeeK..
+......ee....
+end
+
+part co
+.ggx
+gggx
+ggxx
+gxxx
+xxxx
+end
+
+part chan
+.GGgx..ggx....ggx.......
+.Gggx..ggx....ggx.......
+.Gggx..ggx....ggx.......
+GGggx.gggx...gggx.......
+Gggxx.gggx...gggx.......
+eGeGe.exex...exex.......
+end
+
+part chan_truoc
+gggx.
+ggxx.
+ggxx.
+ggxxx
+ggxxx
+egege
+end
+
+part vuot
+.......wLw
+......LlLl
+....Gggxlw
+..Gggxx...
+.ggxx.....
+ggx.......
+end
+
+part duoi
+..gg
+.gxx
+gxx.
+end
+
+part vuot_len
+....wLw
+....LlL
+...Ggl.
+..Ggx..
+.Ggx...
+ggx....
+gx.....
+end
+
+part vuot_dam
+.........wLw
+GGgggxxxLlLl
+ggxxx....wLw
+end
+
+part mat_nham
+gggg
+xKKx
+end
+
+part sang_nho
+.w.
+wLw
+.w.
+end
+
+part sang_to
+...w...
+.w.b.w.
+..LlL..
+wbLwLbw
+..LlL..
+.w.b.w.
+...w...
+end
+
+part nam
+..GGgx..ggx...ggx..Ggx..
+eGeGexeexexeexexeGeGex..
+end
+
+anim idle fps=3 loop
+frame idle
+  use duoi 2 19
+  use chan 2 24
+  use co 17 15
+  use mai 2 12
+  use dau 18 6
+  use vuot 20 19
+  outline
+end
+frame idle
+  use duoi 2 19
+  use chan 2 24
+  use co 17 16
+  use mai 2 13
+  use dau 18 7
+  use vuot 20 19
+  outline
+end
+frame idle
+  use duoi 2 20
+  use chan 2 24
+  use co 17 16
+  use mai 2 13
+  use dau 18 7
+  use vuot 20 18
+  swap L l
+  outline
+end
+
+# cào: giơ vuốt sáng lên cao → bổ xuống phía trước → toé sáng → thu về
+anim attack fps=10 once
+frame attack
+  use duoi 2 19
+  use chan 2 24
+  use co 17 15
+  use mai 2 12
+  use dau 18 6
+  use vuot_len 20 15
+  outline
+end
+frame attack
+  use duoi 2 19
+  use chan 2 24
+  use co 17 15
+  use mai 2 12
+  use dau 18 6
+  use vuot_dam 18 20
+  outline
+end
+frame attack
+  use duoi 2 19
+  use chan 2 24
+  use co 17 15
+  use mai 2 12
+  use dau 18 6
+  use vuot_dam 18 21
+  use sang_nho 27 19
+  outline
+end
+frame attack
+  use @idle.0
+end
+
+# chiêu (hành Kim): vuốt thần toả hào quang vàng-bạc, mai rùa loé sáng
+anim cast fps=8 loop
+frame cast
+  use duoi 2 19
+  use chan 2 24
+  use co 17 15
+  use mai 2 12
+  use dau 18 6
+  use vuot_len 21 14
+  outline
+  use sang_nho 24 12
+end
+frame cast
+  use duoi 2 19
+  use chan 2 24
+  use co 17 15
+  use mai 2 12
+  use dau 18 6
+  use vuot_len 21 14
+  swap o j
+  outline
+  use sang_to 22 10
+end
+frame cast
+  use duoi 2 19
+  use chan 2 24
+  use co 17 15
+  use mai 2 12
+  use dau 18 6
+  use vuot_len 21 14
+  outline
+  use sang_to 22 10
+  swap b w
+  set 3 10 w
+  set 12 8 b
+  set 30 22 w
+end
+
+# trúng đòn: rụt cổ, nhắm mắt, nháy sáng
+anim hurt fps=8 once
+frame hurt
+  use duoi 2 19
+  use chan 2 24
+  use co 17 16
+  use mai 2 12
+  use dau 18 8
+  use mat_nham 21 12
+  use vuot 19 20
+  swap Y w
+  swap g G
+  outline
+end
+
+# chết: khuỵu chân → mai sập xuống đất, đầu gục → tối màu
+anim die fps=5 once
+frame die
+  use duoi 2 21
+  use chan 2 24
+  use co 17 18
+  use mai 2 15
+  use dau 18 10
+  use mat_nham 20 14
+  outline
+end
+frame die
+  use nam 2 27
+  use duoi 2 23
+  use mai 2 17
+  use co 16 21
+  use dau 18 17
+  use mat_nham 20 21
+  outline
+end
+frame die
+  use @die.1
+  swap Y y
+  swap y j
+  swap G g
+  swap L l
+end
+
+# chân dung: đầu rùa già râu trắng + vương miện + vuốt sáng, mai vàng phía sau
+anim portrait fps=1 once
+frame portrait
+  use mai 2 15
+  use co 12 18
+  use dau 13 9
+  use vuot 15 22
+  outline
+end

@@ -1,0 +1,287 @@
+# Mẹ Lúa (mã melua) — pixel 32×32 (tướng Vàng · hành Mộc). Quy chuẩn: docs/pixel/QUY-CHUAN.md (mục 0b phá cách)
+# Đặc trưng (DANH-SACH Lô 5 · PROMPT-GEN-LAI.txt:82 · PROMPT-DUNG-XUONG.txt:1047 · js/data.js:632): nữ mẹ ~45 tròn phúc hậu hông rộng, cười hiền;
+# ÔM BÓ LÚA VÀNG to trước ngực như bế con; VƯƠNG MIỆN BÔNG LÚA; áo nhiều lớp xanh lúa non + vàng lúa chín viền vàng. Chiêu: lúa non mọc dưới chân, hạt thóc vàng bay (Mộc).
+# Phá cách: tóc là bông lúa chín rũ xuống vai, da nâu đất ruộng, áo kết từ lá lúa non (gấu váy xẻ thành lá nhọn).
+name: Mẹ Lúa
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  K = toi
+  F = da-toi
+  h = da
+  f = dat
+  e = trang
+  Y = vang-sang
+  y = vang-nghe
+  j = dong-sang
+  d = dong
+  c = cat
+  a = dat-sang
+  T = dat-toi
+  P = la-sang
+  L = la-ma
+  l = la
+  v = la-toi
+  z = sang
+  g = vang-nghe
+  n = dong-sang
+  m = dong
+
+part tren
+..........................
+..........................
+...........Y...Y..........
+........Y..yY..yY..Y......
+........yY.jy..jy.yY......
+.........yjyyyyyyyj.......
+........gngngngngngn......
+.......gnmngmhhhhhFFF.....
+.......ngmnmhFFFFFFFF.....
+......gnmgmnFKKFFFKKF.....
+......ngmnmmFekFFFekF.....
+......gnmgmnFFFFFFFFFF....
+......nmgmnmfFFFFFFFf.....
+.....gnmngmnmfFFFKKKf.....
+.....nmgmnmgmmfffffff.....
+....gmnmgmnmd.ffFf........
+....ngmnmLPPLLLyLLLLlv....
+....mngmLPLLLLLLyLLLllv...
+....gmnLPLLLLLLLLyLLllv...
+.....d.LPLLLLLLLLLyLllv...
+.......yyyyyyyyyyyyyyyy...
+......LPLlLLlLLlLLlLLllv..
+......LPlLLlLLlLLlLLlllv..
+.....LPLlLLlLLlLLlLLlLllv.
+end
+
+part vay
+.....LPlLLlLLlLLlLLlLlllv.
+....LPLlLLlLLlLLlLLlLLlllv
+....yyyyyyyyyyyyyyyyyyyyyy
+....LvLLvLLvLLvLLvLLvLLvLv
+.....v.Lv.Lv.lv.Lv.lv.lv..
+...........hf...hf........
+end
+
+part vay2
+.....LPlLLlLLlLLlLLlLlllv.
+....LPLlLLlLLlLLlLLlLLlllv
+....yyyyyyyyyyyyyyyyyyyyyy
+....vLLvLLvLLvLLvLLvLLvLLv
+....Lv.Lv.lv.Lv.lv.Lv.lv..
+...........hf...hf........
+end
+
+# bó lúa ôm trước ngực: gốc rơm dưới-trái, bông lúa chín rũ trên-phải
+part bo
+......YzY....
+...zYYjYYyY..
+..YYjYYzYjYy.
+.jYzYyYYjYYj.
+..cYjYcYj.y.j
+..cczcYj..y..
+..acccY......
+..jdjdj......
+..accaT......
+..cacaT......
+..acacT......
+.cacaT.......
+.acaT........
+end
+
+part tay
+.Lv
+LLv
+Lv.
+hF.
+end
+
+part tay2
+hF
+end
+
+# bó lúa giơ cao (lấy đà)
+part bo_len
+....YyY..
+..YyjYyY.
+.YjYyYjy.
+.cYyjYy.j
+cacYj.y..
+acjc..y..
+djc......
+jc.......
+c........
+end
+
+# bó lúa đưa ra trước, bông lúa vung về phải
+part bo_ngang
+.........YyY..
+cacajcYyjYyYy.
+acacdjcYjYyjYy
+.........y.y.j
+end
+
+part hat
+Y...
+..y.
+.Y..
+...Y
+end
+
+part hat2
+.y..
+Y..Y
+..y.
+end
+
+part mam
+..P.....P...
+.LPl..P.LP..
+.Ll..LP..l..
+end
+
+part mam2
+..P..P..P..P
+.LPl.LPlLP.l
+.Ll..Ll..l..
+end
+
+part mat_nham
+FKKFFFKK
+end
+
+anim idle fps=3 loop
+frame idle
+  use vay 0 24
+  use tren
+  use tay 19 17
+  use bo 15 14
+  use tay2 13 23
+  use tay2 19 20
+  outline
+end
+frame idle
+  use vay 0 24
+  use tren 0 1
+  use tay 19 18
+  use bo 15 15
+  use tay2 13 24
+  use tay2 19 21
+  outline
+end
+frame idle
+  use vay2 0 24
+  use tren
+  use tay 19 17
+  use bo 15 14
+  use tay2 13 23
+  use tay2 19 20
+  outline
+end
+
+anim attack fps=10 once
+frame attack
+  use vay 0 24
+  use tren -1 0
+  use bo_len 20 5
+  use tay 19 14
+  outline
+end
+frame attack
+  use vay2 0 24
+  use tren 1 0
+  use bo_ngang 13 18
+  use tay 19 17
+  outline
+end
+frame attack
+  use vay2 0 24
+  use tren 1 0
+  use bo_ngang 13 18
+  use tay 19 17
+  use hat 26 15
+  use hat2 27 21
+  outline
+end
+frame attack
+  use vay 0 24
+  use tren
+  use tay 19 17
+  use bo 15 15
+  use tay2 13 23
+  use tay2 19 20
+  outline
+end
+
+anim cast fps=8 loop
+frame cast
+  use mam 2 27
+  use vay 0 24
+  use tren
+  use bo_len 20 4
+  use tay 19 13
+  use hat2 23 3
+  outline
+end
+frame cast
+  use mam2 2 26
+  use vay 0 24
+  use tren 0 1
+  use bo_len 20 4
+  use tay 19 14
+  use hat 23 2
+  use hat2 2 8
+  outline
+end
+frame cast
+  use mam2 2 26
+  use mam 16 26
+  use vay2 0 24
+  use tren
+  use bo_len 20 3
+  use tay 19 13
+  use hat 24 3
+  use hat 1 6
+  set 27 9 z
+  outline
+end
+
+anim hurt fps=8 once
+frame hurt
+  use vay -1 24
+  use tren -1 0
+  use tay 17 17
+  use bo 14 14
+  use tay2 11 23
+  use mat_nham 11 10
+  outline
+  swap F h
+  swap L P
+end
+
+anim die fps=5 once
+frame die
+  use vay 0 24
+  use tren 0 3
+  use bo 15 17
+  use tay2 12 26
+  use mat_nham 12 13
+  outline
+end
+frame die
+  use vay 0 24
+  use tren 0 1
+  use mat_nham 12 11
+  rot 90
+  shift 0 3
+  use bo_ngang 2 27
+  outline
+end
+frame die
+  use @die.1
+  swap Y c
+  swap L l
+  swap P L
+  swap y d
+end
