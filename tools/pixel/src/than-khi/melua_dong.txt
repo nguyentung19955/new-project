@@ -1,0 +1,47 @@
+# Cánh Đồng Mẹ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Đồng lúa bát ngát nuôi muôn nhà
+name: Cánh Đồng Mẹ
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = la-toi
+  g = la
+  h = la-ma
+  i = la-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedhhhhhhhhhhhhhhhhhfdca
+aedhgigggiggggigggigfdca
+aedhgigggiggggigggigfdca
+aedhgigggiggggigggigfdca
+aedhgigggiggggigggigfdca
+aedhgigggiggggigggigfdca
+aedhgigggiggggigggigfdca
+aedhggggggggggggggggfdca
+aedhgigggiggggigggigfdca
+aedhgigggiggggigggigfdca
+aedhgigggiggggigggigfdca
+aedhggggggggggggggggfdca
+aedffffffffffffffffffdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

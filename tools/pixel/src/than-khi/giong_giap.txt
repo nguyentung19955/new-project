@@ -1,0 +1,47 @@
+# Giáp Sắt — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: iron armor — Bộ giáp sắt vua Hùng rèn cho cậu bé làng Phù Đổng
+name: Giáp Sắt
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = sat-toi
+  d = sat
+  e = sat-sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = son
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbeecbbbeecbbbbbgfa
+ahgbbbedddcbedddcbbbbgfa
+ahgbbbedddcbedddcbbbbgfa
+ahgbbedddddedddddcbbbgfa
+ahgbbedddddiiddddcbbbgfa
+ahgbbeddddiiiidddcbbbgfa
+ahgbbedddddiiddddcbbbgfa
+ahgbbedcccccccccccbbbgfa
+ahgbbedddddddddddcbbbgfa
+ahgbbcdddddddddddcbbbgfa
+ahgbbbeccccccccccbbbbgfa
+ahgbbbedddddddddcbbbbgfa
+ahgbbbedddddddddcbbbbgfa
+ahgbbbeccccccccccbbbbgfa
+ahgbbbedddddddddcbbbbgfa
+ahgbbbcccccccccccbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

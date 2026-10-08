@@ -1,0 +1,49 @@
+# Rìu Tiều Phu — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Lưỡi rìu Cuội đốn củi trong rừng
+name: Rìu Tiều Phu
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = sat-toi
+  d = sat
+  e = sat-sang
+  f = dat-toi
+  g = dat
+  h = dat-sang
+  i = dong-toi
+  j = dong
+  k = dong-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+akkkkkkkkkkkkkkkkkkkkkia
+akjjjjjjjjjjjjjjjjjjjjia
+akjbbbbbbbbbbbecbbbbbjia
+akjbbbbbbbbbbeddecbbbjia
+akjbbbbbbbbbedddddebbjia
+akjbbbbbbbbeddddddebbjia
+akjbbbbbbbbbcdddddebbjia
+akjbbbbbbbbbheddddecbjia
+akjbbbbbbbbhgcdddddebjia
+akjbbbbbbbhgfbcddddebjia
+akjbbbbbbbhfbbbeddcebjia
+akjbbbbbbhgfbbbccccbbjia
+akjbbbbbhgfbbbbbbbbbbjia
+akjbbbbbhfbbbbbbbbbbbjia
+akjbbbbhgfbbbbbbbbbbbjia
+akjbbbhgfbbbbbbbbbbbbjia
+akjbbbhfbbbbbbbbbbbbbjia
+akjbbhgfbbbbbbbbbbbbbjia
+akjbhgfbbbbbbbbbbbbbbjia
+akjbffbbbbbbbbbbbbbbbjia
+akjjjjjjjjjjjjjjjjjjjjia
+aiiiiiiiiiiiiiiiiiiiiiia
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

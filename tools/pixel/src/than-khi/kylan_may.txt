@@ -1,0 +1,46 @@
+# Mây Lành — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Mây ngũ sắc theo bước kỳ lân
+name: Mây Lành
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = da-sang
+  d = dong-toi
+  e = dong
+  f = dong-sang
+  g = son
+  h = hong
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+afffffffffffffffffffffda
+afeeeeeeeeeeeeeeeeeeeeda
+afebbbbbbbbbbbbbbbbbbeda
+afebbbbbbbbbbbbbbbbbbeda
+afebbbbbbbbbbbbbbbbbbeda
+afebbbbbbbbccgbbbbbbbeda
+afebbbbbbbchhhcgbbbbbeda
+afebbbbbbchhhhhhgbbbbeda
+afebbbbbchhhhhhhgbbbbeda
+afebbbcchhhhhhhhgbbbbeda
+afebbchhhhhhhhhhhcgbbeda
+afebchhhhhhhhhhhhhhgbeda
+afebchhhhhhhhhhhhhhgbeda
+afebghhhhhhhhhhhhhhgbeda
+afebbchhhhhhhhhhhhhgbeda
+afebbgggggggggggggggbeda
+afebbbbbbbbbbbbbbbbbbeda
+afebbbbbbbbbbbbbbbbbbeda
+afebbbbbbbbbbbbbbbbbbeda
+afebbbbbbbbbbbbbbbbbbeda
+afeeeeeeeeeeeeeeeeeeeeda
+adddddddddddddddddddddda
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

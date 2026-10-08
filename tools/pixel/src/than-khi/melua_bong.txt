@@ -1,0 +1,47 @@
+# Bông Lúa Vàng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Bông lúa trĩu hạt mùa gặt
+name: Bông Lúa Vàng
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dat-sang
+  d = cat
+  e = dong-toi
+  f = dong
+  g = dong-sang
+  h = vang-nghe
+  i = vang-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+agggggggggggggggggggggea
+agffffffffffffffffffffea
+agfbbbbbbbbbiigbigbbbfea
+agfbbbbbbbbbihgbihgbbfea
+agfbbbbbbbbighgiihgbbfea
+agfbbbbbbbiihghhggbbbfea
+agfbbbbbbbigggiigbbbbfea
+agfbbbbbbiihgghggbbbbfea
+agfbbbbbihggihggbbbbbfea
+agfbbbbihggighgbbbbbbfea
+agfbbbbghgiihggbbbbbbfea
+agfbbbbbggdgggbbbbbbbfea
+agfbbbbbbbdbbbbbbbbbbfea
+agfbbbbbbbdbbbbbbbbbbfea
+agfbbbbbbbdbbbbbbbbbbfea
+agfbbbbbbbcbbbbbbbbbbfea
+agfbbbbbbibbbbbbbbbbbfea
+agfbbbbbbdbbbbbbbbbbbfea
+agfbbbbbbdbbbbbbbbbbbfea
+agfbbbbbbcbbbbbbbbbbbfea
+agffffffffffffffffffffea
+aeeeeeeeeeeeeeeeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

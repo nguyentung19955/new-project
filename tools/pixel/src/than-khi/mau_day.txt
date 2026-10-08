@@ -1,0 +1,46 @@
+# Dây Leo Ngàn Năm — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: thousand-year vines — Dây rừng quấn chặt chân giặc
+name: Dây Leo Ngàn Năm
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = la-toi
+  g = la
+  h = la-ma
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbhhfbbbbbbbbdca
+aedbbbbhhhgffbbbbbbbbdca
+aedbbbhggffbbbbbbbbbbdca
+aedbbhggfbhhhhhfbbbbbdca
+aedbbhgfbhggffgghfbbbdca
+aedbhgfbhggfbbffgfbbbdca
+aedbhfbbhgfbbbbbhgfbbdca
+aedbhfbbhgfbbhfbhgfbbdca
+aedbfgfbfgghhgfbhgfbbdca
+aedbbhgfbffffffbhgfbbdca
+aedbbfggfbbbbbbhgfbbbdca
+aedbbbffghhhhhhgffbbbdca
+aedbbbbbffffffffbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

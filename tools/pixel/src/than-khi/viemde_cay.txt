@@ -1,0 +1,49 @@
+# Cày Thần — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: divine plough — Lưỡi cày đầu tiên của người trồng lúa
+name: Cày Thần
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = sat-toi
+  d = sat
+  e = sat-sang
+  f = dat-toi
+  g = dat
+  h = dat-sang
+  i = dong-toi
+  j = dong
+  k = dong-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+akkkkkkkkkkkkkkkkkkkkkia
+akjjjjjjjjjjjjjjjjjjjjia
+akjbbbbbbbbbbbbbbbbbbjia
+akjbbbbbbbeeeeecbbbbbjia
+akjbbbbbeeddddddcbbbbjia
+akjbbbbeccccccdddecbbjia
+akjbbbdbbbbbbbccddcbbjia
+akjbbbbbbbbbbbbbcddcbjia
+akjbbbbbbbbbbbbbbedcbjia
+akjbbbbbbbbbbbbbbcdcbjia
+akjbbbbbbbbbbbbbbbecbjia
+akjbbbbbbbbbbbbbbbecbjia
+akjbbbbbbbbbbbbbbbecbjia
+akjbbhfbbbbbbbbbbbecbjia
+akjbbhfbbbbbbbbbbecbbjia
+akjbbfgfbbbbbbbbbcbbbjia
+akjbbbfgfbbbbbbbbbbbbjia
+akjbbbbhfbbbbbbbbbbbbjia
+akjbbbbfgfbbbbbbbbbbbjia
+akjbbbbbffbbbbbbbbbbbjia
+akjjjjjjjjjjjjjjjjjjjjia
+aiiiiiiiiiiiiiiiiiiiiiia
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -1,0 +1,46 @@
+# Mây Giông — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Mây đen kéo theo mỗi lần thần nổi giận
+name: Mây Giông
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = sat-toi
+  d = sat
+  e = sat-sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbeecbbbbbbbgfa
+ahgbbbbbbbedddecbbbbbgfa
+ahgbbbbbbeddddddcbbbbgfa
+ahgbbbbbedddddddcbbbbgfa
+ahgbbbeeddddddddcbbbbgfa
+ahgbbedddddddddddecbbgfa
+ahgbeddddddddddddddcbgfa
+ahgbeddddddddddddddcbgfa
+ahgbcddddddddddddddcbgfa
+ahgbbedddddddddddddcbgfa
+ahgbbcccccccccccccccbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -1,0 +1,46 @@
+# Ngọc Thủy Cung — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: sea pearl — Viên ngọc trấn giữ long cung
+name: Ngọc Thủy Cung
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = nuoc
+  g = nuoc-sang
+  h = troi
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbhfbbbbbbbbdca
+aedbbbbbhhhgghhfbbbbbdca
+aedbbbbhggggggggfbbbbdca
+aedbbbhggggggggggfbbbdca
+aedbbhggggggggggggfbbdca
+aedbbhggggggggggggfbbdca
+aedbbhggggggggggggfbbdca
+aedbhggggggggggggggfbdca
+aedbfgggggggaggggggfbdca
+aedbbhggggggggggggfbbdca
+aedbbhggggggggggggfbbdca
+aedbbfggggggggggggfbbdca
+aedbbbfggggggggggfbbbdca
+aedbbbbfggggggggfbbbbdca
+aedbbbbbfffggfffbbbbbdca
+aedbbbbbbbbffbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

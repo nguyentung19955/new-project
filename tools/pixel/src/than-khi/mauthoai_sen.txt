@@ -1,0 +1,50 @@
+# Đài Sen Trắng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: white lotus throne — Đài sen Thánh Mẫu ngự giữa sông
+name: Đài Sen Trắng
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = trang-xam
+  d = trang
+  e = sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = vang-nghe
+  j = la-toi
+  k = la
+  l = la-ma
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbebbbbbbbbbgfa
+ahgbbbbbbbbdbbbbbbbbbgfa
+ahgbbbbbbbbdbbbbbbbbbgfa
+ahgbbbbbbbedcbbbbbbbbgfa
+ahgbbbbbbbedcbbbbbbbbgfa
+ahgbbbbbbbedcbbbbbbbbgfa
+ahgbbebbbedddcbbbebbbgfa
+ahgbbeecbedddcbeecbbbgfa
+ahgbbeddedddddeddcbbbgfa
+ahgbbcddddddiddddcbbbgfa
+ahgbbbcdddcdcdddcbbbbgfa
+ahgbbbbcccbdbcccbbbbbgfa
+ahgbbblllllcllllljbbbgfa
+ahgbblkkkkkkkkkkkkjbbgfa
+ahgblkkkkkkkkkkkkkkjbgfa
+ahgbjjkkkkkkkkkkkkjjbgfa
+ahgbbbjjjjjjjjjjjjbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

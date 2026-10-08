@@ -1,0 +1,48 @@
+# Gậy Tre Đằng Ngà — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bamboo staff of golden bamboo — Roi sắt gãy, nhổ bụi tre làng quật giặc
+name: Gậy Tre Đằng Ngà
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = vang-nghe
+  g = vang-sang
+  h = la
+  i = la-ma
+  j = la-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbgggebbbdca
+aedbbbbbbbbbbgffffebbdca
+aedbbbbbbbbbbgfffffebdca
+aedbbbbbbbbbgffffffebdca
+aedbbbbbbbbbeffffffebdca
+aedbbbbbbbbbbgfffffebdca
+aedbbbbbbbbbbeeffeebbdca
+aedbbbbbbbbbjiheebbbbdca
+aedbbbbbbbbjihbbbbbbbdca
+aedbbbbbbbjihbbbbbbbbdca
+aedbbbbbbjihbbbbbbbbbdca
+aedbbbbbjihbbbbbbbbbbdca
+aedbbbbjihbbbbbbbbbbbdca
+aedbbbjihbbbbbbbbbbbbdca
+aedbbjihbbbbbbbbbbbbbdca
+aedbjihbbbbbbbbbbbbbbdca
+aedbhhbbbbbbbbbbbbbbbdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

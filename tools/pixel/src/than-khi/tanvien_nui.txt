@@ -1,0 +1,46 @@
+# Núi Tản Viên — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Tan Vien mountain — Ngọn núi thiêng, nước dâng bao nhiêu núi cao bấy nhiêu
+name: Núi Tản Viên
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = reu-toi
+  g = reu
+  h = reu-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbhbbbbbbdca
+aedbbbbbbbbbbbhfbbbbbdca
+aedbbbbbbbbbbhgfbbbbbdca
+aedbbbbbbbbbbhgfbbbbbdca
+aedbbbbbhfbbbhggfbbbbdca
+aedbbbbbhfbbhgggfbbbbdca
+aedbbbbhggfbhgggfbbbbdca
+aedbbbbhggghggggfbbbbdca
+aedbbbhggggggggggfbbbdca
+aedbbbhggggggggggfbbbdca
+aedbbbhggggggggggfbbbdca
+aedbbhggggggggggggfbbdca
+aedbbhggggggggggggfbbdca
+aedbhgggggggggggggfbbdca
+aedbhggggggggggggggfbdca
+aedhffffffffffffffffbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+
