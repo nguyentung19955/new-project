@@ -2572,7 +2572,7 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
   `icon-nho` (kiểm từng ảnh ic-*.png tải được bằng `Image()` thay vì soi `<img>` đang hiện — thanh máu boss có thể vẽ lại),
   `mo-ta-ky-nang` (khung mô tả hiện/ẩn, cấp kỹ năng sau bấm; rê lại chuột nếu ô bị dựng lại), `cho-tuong` (chờ ảnh nạp sẵn của chợ
   tải xong trước mỗi lần ↻; chờ ghép / mua xong), `sua-loi-tester` L07 (chờ hội thoại boss + thông báo "Quái mới" tới 10 giây),
-  `vo-tan` (chờ thông báo "Phó bản đã gộp"), `vo-tan-su-kien` (chờ banner boss hiện hẳn), `sua-loi-tester` L05 (chờ thông báo trượt vào xong rồi mới đo đè).
+  `vo-tan` (chờ thông báo "Phó bản đã gộp"), `vo-tan-su-kien` (chờ banner boss hiện hẳn), `sua-loi-tester` L05 (chờ thông báo trượt vào xong rồi mới đo đè), `ve-pixel/nap-goi` (chờ gỡ gói xong). `vo-tan-su-kien` gọi `ui.clearBanners()` trước khi thử banner (banner cũ còn trong hàng đợi đè banner boss khi máy chậm); `vo-tan` ghi lại mọi thông báo đã hiện (thông báo chỉ sống 2,6 giây).
 - `tu-cu-dong`: so FPS ảnh đơn / nhiều khung chỉ kiểm khi chạy riêng; chạy song song (`CHAY_SONG_SONG=1`) thì in tham khảo.
 - **Lỗi game phát hiện (chưa sửa, chỉ báo):** trong trận, khi ô kỹ năng khác đổi trạng thái hồi chiêu / mana thì `updateDeck` dựng lại
   cả thanh tướng; nếu việc này rơi vào 0,35 giây đang giữ tay (hoặc 0,15 giây rê chuột) thì ô cũ đã rời trang → mô tả **không hiện**

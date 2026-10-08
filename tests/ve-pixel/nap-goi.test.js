@@ -117,6 +117,7 @@ function unzip(buf) {
     ok(String(s1.goi.sort()) === String([`quai/${QUAI}`, 'tuong/giong'].sort()), `gói sai cỡ: chỉ nhận 2 mã đúng (${HERO} bị loại)`);
     await page.click('[data-act=pxg-go]');
     await page.waitForTimeout(300);
+    await page.waitForFunction((q) => !PXGOI.goi && !window.PIXEL_MANIFEST['quai/' + q], QUAI, { timeout: 10000 }).catch(() => {});   // máy bận: chờ gỡ xong
     ok(await page.evaluate((q) => !PXGOI.goi && !window.PIXEL_MANIFEST['quai/' + q], QUAI), 'Gỡ gói → bỏ mã của gói');
     // gói tốt khi pixel đang tắt: lưu nhưng game vẫn hình cũ
     let t = await nap(WRAP);
@@ -170,6 +171,8 @@ function unzip(buf) {
     await page.evaluate(() => ui.showSettings(false));
     await page.click('[data-act=pxg-go]');
     await page.waitForTimeout(300);
+    // máy bận (chạy song song): gỡ gói chạy bất đồng bộ (IndexedDB) → chờ xong (tối đa 10 giây) thay vì tin 300 ms là đủ
+    await page.waitForFunction((h) => pxEntry('tuong', h) === null && !(window.PIXEL_MANIFEST['tuong/giong'] || {}).goi && !(window.ASSET_DATA && window.ASSET_DATA['pixel/tuong/giong.png']), HERO, { timeout: 10000 }).catch(() => {});
     const g = await page.evaluate((h) => ({ ts: pxEntry('tuong', h), gi: window.PIXEL_MANIFEST['tuong/giong'], url: window.ASSET_DATA && window.ASSET_DATA['pixel/tuong/giong.png'] }), HERO);
     ok(g.ts === null && g.gi && !g.gi.goi && !g.url, `Gỡ gói: ${HERO} hết pixel, giong trả về bản có sẵn trong game`);
     await page.reload();

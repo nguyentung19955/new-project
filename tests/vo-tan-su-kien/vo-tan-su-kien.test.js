@@ -126,6 +126,8 @@ const CHI_ANH = !!process.env.CHI_ANH;   // CHI_ANH=1: chỉ chụp ảnh
     const r = await page.evaluate((id) => {
       const g = game, out = { id };
       const ev = waveEventOf(id, 60, 0);
+      // banner của lượt trước còn hiện / còn trong hàng đợi (máy bận: chưa hết 2,6 giây) thì banner mới phải đợi → xoá trước
+      ui.clearBanners();
       // đợt 59 xong → báo trước
       g.wave = 59; g.waveActive = true; g.evWave = 58; g.waveComplete(); if (g.rest) g.skipRest();
       out.soon = g.events.some((e) => e.type === 'waveEvent' && e.phase === 'soon' && e.ev.id === id && e.ev.n === 60);
@@ -204,7 +206,7 @@ const CHI_ANH = !!process.env.CHI_ANH;   // CHI_ANH=1: chỉ chụp ảnh
     await enter(page, 0, true);
     await setup(page, 60, 'giobao');
     await page.evaluate(() => { const g = game; g.startWave(); for (let i = 0; i < 60; i++) g.update(1 / 30); ui.update && ui.update(0);
-      g.running = false; document.querySelector('#roster-hint').hidden = true; ui.evQueued = null;
+      g.running = false; document.querySelector('#roster-hint').hidden = true; ui.clearBanners();   // huỷ cả banner còn đợi trong hàng (máy bận dễ đè banner boss)
       g.events.push({ type: 'boss', name: ENEMIES.hotinh.name }); ui.handleEvents(); });
     await page.waitForTimeout(700);
     // máy bận (chạy song song): chờ banner boss hiện hẳn + hết hiệu ứng (tối đa 5 giây) thay vì tin 700 ms là đủ

@@ -18,6 +18,8 @@ async function open(save, w = 844, h = 390) {
   page.on('pageerror', (e) => errors.push(String(e)));
   page.on('console', (m) => { if (m.type() === 'error' && !/Failed to load resource|net::|favicon|firebase|gstatic/i.test(m.text())) errors.push(m.text()); });
   await page.route('**/firebase-config.js*', (r) => r.fulfill({ contentType: 'application/javascript', body: "const FIREBASE_CONFIG={apiKey:''};" }));
+  // ghi lại mọi thông báo đã hiện (thông báo chỉ sống 2,6 giây thật, máy bận có thể đã tắt trước khi test đọc)
+  await page.addInitScript(() => { window.__toasts = []; new MutationObserver((ms) => { for (const m of ms) for (const n of m.addedNodes) if (n.classList && n.classList.contains('toast')) window.__toasts.push(n.textContent); }).observe(document, { childList: true, subtree: true }); });
   await page.addInitScript((s) => { if (!sessionStorage.getItem('seeded')) { if (s) localStorage.setItem('nuicao.v1', JSON.stringify(s)); sessionStorage.setItem('seeded', '1'); } }, save);
   await page.goto(URL);
   await page.waitForTimeout(900);
@@ -134,8 +136,8 @@ const txt = (page, sel) => page.evaluate((s) => document.querySelector(s).innerT
   ok(o.be[0] === 25 && o.be[1] === 40 && o.be[4] === 18, 'đợt xa nhất Phó bản cũ tính vào kỷ lục vô tận (giữ kỷ lục cao hơn)');
   ok(JSON.stringify(o.stars) === JSON.stringify(stars) && o.unlocked === 6, 'dữ liệu sao / ải đã mở vẫn giữ nguyên (không xoá)');
   // máy bận (chạy song song): chờ thông báo hiện (tối đa 8 giây) thay vì tin 900 ms sau khi mở là đủ
-  await page.waitForFunction(() => /Phó bản đã gộp vào/.test(document.querySelector('#toasts').innerText), null, { timeout: 8000 }).catch(() => {});
-  ok(/Phó bản đã gộp vào/.test(await txt(page, '#toasts')), 'báo một lần: Phó bản đã gộp vào Vô tận');
+  await page.waitForFunction(() => window.__toasts.some((t) => /Phó bản đã gộp vào/.test(t)), null, { timeout: 8000 }).catch(() => {});
+  ok(await page.evaluate(() => window.__toasts.some((t) => /Phó bản đã gộp vào/.test(t))), 'báo một lần: Phó bản đã gộp vào Vô tận');
   // trận Phó bản dở trong bản lưu cũ → chơi tiếp thành vô tận
   await page.evaluate(() => { ui.startLevel(1); document.querySelector('[data-act=prep-go]').click(); const r = game.snapshot(); r.endless = false; r.wave = 5; ui.save.run = r; game.started = false; writeSave(ui.save); });
   await page.reload(); await page.waitForTimeout(900);
