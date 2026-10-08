@@ -71,6 +71,9 @@ function loadUiSkins() {
   // nút tròn (đóng) và nút đổi chợ giữ hình cũ: bản pixel mất nhận diện (ô vuông X trắng, đồng xu xoay) — góp ý tester
   const PX_GIU = /^nut-tron-|^nut-doi-cho$/;
   for (const [name, cls] of UI_SKIN) { const px = !PX_GIU.test(name) && typeof pxUrl === 'function' && pxUrl('giao-dien', name === 'khung-bang' ? 'khung-bang-toi' : name);   /* bảng chữ sáng: khung tối (giấy kem làm chữ khó đọc) */ if (px) one(px, name, cls); else if (hasAsset(`ui/${name}.png`)) one(assetSrc(`ui/${name}.png`), name, cls); }
+  // claude/ve-lai-pixel: thanh tiến độ đợt pixel (cắt 9 mảnh khác ảnh vẽ cũ → lớp riêng, chỉ khi bật pixel)
+  const ptd = typeof pxUrl === 'function' && pxUrl('giao-dien', 'thanh-tien-do');
+  if (ptd) one(ptd, 'thanh-tien-do', 'thanh-tien-do');
   const pmp = typeof pxUrl === 'function' && pxUrl('canh', 'nen-man-phu');
   if (pmp) one(pmp, 'nen-man-phu', 'nen-man-phu'); else if (hasAsset('scenes/nen-man-phu.png')) one(assetSrc('scenes/nen-man-phu.png'), 'nen-man-phu', 'nen-man-phu');
 }
@@ -500,7 +503,9 @@ class UI {
     $('#btn-heroes').onclick = () => this.showRoster();
     $('#btn-runes').onclick = () => this.showRunes(false);
     // v124–126: icon nút vẽ tay phong cách trống đồng (assets/ui/); thiếu ảnh thì giữ ký hiệu cũ
-    const uiImg = (f, alt, cls = 'uimg') => !hasAsset(`ui/${f}.png`) ? alt : `<img class="${cls}" src="${assetSrc(`ui/${f}.png`)}" alt="${alt}" onerror="this.replaceWith(this.alt)">`;
+    // claude/ve-lai-pixel: bật pixel thì dùng icon pixel cùng mã (icon/ui-tran-*, ui-menu-*) — trước luôn lấy ảnh vẽ cũ ui/*.png
+    const uiImg = (f, alt, cls = 'uimg') => { const px = pxIc(f); if (px) return `<img class="${cls} px" src="${px}" alt="${alt}">`;
+      return !hasAsset(`ui/${f}.png`) ? alt : `<img class="${cls}" src="${assetSrc(`ui/${f}.png`)}" alt="${alt}" onerror="this.replaceWith(this.alt)">`; };
     this.uiImg = uiImg;
     { const dw = document.querySelector('[data-act=dw][data-k=heroes] .ic'); if (dw) dw.innerHTML = UIE.medal(3); }
     for (const el of document.querySelectorAll('#drawer .dw-btn .ic')) if (EMO_ART[el.textContent.trim()]) el.innerHTML = emoArt(el.textContent.trim());
@@ -511,6 +516,8 @@ class UI {
     // nút trên thanh trận: mắt (chỉ số), menu ≡ giữ nguyên hình vẽ; Bắt đầu / Dừng dùng mặt trống
     $('#btn-detail').innerHTML = uiImg('ui-tran-1-4', '👁', 'uimg tb');
     $('#btn-run').insertAdjacentHTML('beforeend', uiImg('ui-tran-1-1', '', 'uimg tb run-play') + uiImg('ui-tran-1-2', '', 'uimg tb run-pause'));
+    // claude/ve-lai-pixel: ẩn giao diện / menu ≡ — bật pixel thì icon pixel thay hình nét SVG (giữ chấm báo của menu)
+    for (const [q, f] of [['#btn-hideui', 'an-giao-dien'], ['#btn-menu', 'menu'], ['#btn-showui', 'ui-tran-1-4']]) { const px = pxIc(f), sv = px && document.querySelector(q + ' > svg'); if (sv) sv.outerHTML = `<img class="uimg tb px" src="${px}" alt="">`; }
     // menu chính: thay hình vẽ nét bằng icon vẽ tay
     for (const [id, f] of [['#btn-continue', 'ui-menu-1-1'], ['#btn-heroes', 'ui-menu-1-2'], ['#btn-treasury', 'ui-menu-1-3'], ['#btn-settings', 'ui-menu-2-1'], ['#btn-runes', 'ui-menu-1-4']]) {
       const b = $(id); if (!b) continue;
@@ -2466,6 +2473,7 @@ class UI {
     // vo-tan-su-kien: qua đợt cuối cũ của bản đồ thì thanh chạy theo chặng 10 đợt (trước đây đứng yên ở 100%)
     const past = g.endless && g.wave > total, done = past ? ((g.wave - 1) % 10 + Math.max(0, prog)) / 10 : (g.wave - 1 + Math.max(0, prog)) / total;
     $('#tb-fill').style.width = `${Math.max(0, Math.min(1, done)) * 100}%`;
+    $('#tb-fill').classList.toggle('boss', !!(g.waveActive && typeof bossAt === 'function' && bossAt(g.wave, g.level)));   // đợt boss: phần đầy đỏ
     this.setText('#tb-gold b', fmt(g.gold));
     this.setText('#tb-kho b', fmt(this.save.kho || 0));
     if (!this.khoIc) { this.khoIc = 1; const i = $('#tb-kho > .bac'); if (i) i.outerHTML = bac(1); }
@@ -2484,7 +2492,8 @@ class UI {
     }
     const fill = g.water >= 3 ? 1 : next ? Math.max(0, Math.min(1, (g.wave - prev) / (next - prev))) : 1;
     $('#tb-flood').style.width = `${fill * 100}%`;
-    $('#btn-speed').textContent = 'x' + g.speed;
+    { const px = pxIc('toc-do-x' + g.speed), b = $('#btn-speed');   // claude/ve-lai-pixel: chữ x1 / x2 / x3 pixel
+      this.setHTML('#btn-speed', 'sp' + g.speed + px, px ? `<img class="uimg tb px" src="${px}" alt="x${g.speed}">` : 'x' + g.speed); b.setAttribute('aria-label', 'Tốc độ x' + g.speed); }
     $('#btn-speed').classList.toggle('on', g.speed > 1);
     const run = $('#btn-run');
     run.classList.toggle('go', !g.running);

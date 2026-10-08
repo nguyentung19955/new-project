@@ -3051,3 +3051,7 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Ô đặt tướng: pixel bật thì MỌI ô (thường, có tướng đứng) dùng bệ pixel trống đồng theo chủ đề (`nen/de-tuong-<chủ đề>`), trước chỉ ô ngập/núi/chọn dùng. Ô trống trước rơi về elip vẽ code xanh viền trắng, ô có tướng lộ bệ đá trắng nướng sẵn trong ảnh bản đồ. Bệ pixel nới 3,15×rx, lệch phải 0,08rx cho che kín bệ đá cũ.
 - Thẻ chợ thiếu vàng: lọc nhẹ `grayscale(.35) brightness(.82)` (trước .7/.55 làm chân dung pixel thành bóng đen như ảnh chưa tải). Nguyên liệu công thức chưa có (`.mp-m.no`, `.hx-m.no`): `grayscale(.6) brightness(.78)` (trước thành bóng đen).
 - Đường gạch / cổng giữa bản đồ dạng xoáy ốc (thanh1~xoanoc) là ảnh pixel `ban-do/` đúng thiết kế. sw.js: ảnh cache theo VERSION, ảnh `pixel-muot/` tải mạng lần đầu → không rơi về hình vẽ.
+
+## claude/ve-lai-pixel — thanh trên trong trận bằng pixel
+
+- Thanh tiến độ đợt pixel 9 mảnh (đầu huy chương ngọc bích, phần đầy khối vàng, đợt boss đỏ); nút tốc độ là chữ pixel x1 (bạc) / x2 / x3 (vàng sáng); nút ẩn giao diện, menu ☰, hiện giao diện là icon pixel; nút mắt, Bắt đầu/Dừng, Túi đồ / Nâng đồ / Mặc đồ, nút menu chính dùng icon pixel `ui-*` thay ảnh vẽ cũ khi bật pixel. Nút Bắt đầu nền đồng pixel + quầng sáng.

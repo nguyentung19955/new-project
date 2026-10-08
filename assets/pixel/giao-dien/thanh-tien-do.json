@@ -1,16 +1,16 @@
 {
  "code": "thanh-tien-do",
  "group": "giao-dien",
- "name": "thanh tiến độ (border-image)",
- "w": 64,
- "h": 8,
- "ax": 32,
- "ay": 7,
+ "name": "Thanh tiến độ đợt",
+ "w": 96,
+ "h": 16,
+ "ax": 48,
+ "ay": 15,
  "bbox": [
   0,
-  0,
-  64,
-  8
+  1,
+  96,
+  14
  ],
  "n": 1,
  "anims": {

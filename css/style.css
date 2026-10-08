@@ -2462,3 +2462,12 @@ html.pixel :is(.hx-auto, .hx-pin, .hx-st.hx-open, .hx-sk) { border-radius: 2px; 
    ấn phù, thần khí, icon giao diện) dùng bản làm mượt sinh sẵn (assets/pixel-muot/) và hiển thị có làm mịn. Nền / cổng / bệ / cảnh / tranh /
    khung UI giữ ảnh pixel gốc → vẫn theo luật pixelated ở trên. Tắt trong Cài đặt → "Làm mượt" (html không có lớp .muot). */
 html.pixel.muot img[src*="pixel-muot/"], html.pixel.muot img.pxemo[src*="pixel-muot/"], html.pixel.muot canvas:not(#game) { image-rendering: auto !important; }
+
+/* claude/ve-lai-pixel: thanh trên trong trận bằng pixel — thanh tiến độ đợt 96×16 cắt 9 mảnh 0 13 0 13 (đầu huy chương không giãn,
+   lòng rãnh hàng 3..11 ≈ top 20,2% · cao 54,6% của phần đầy như cũ), phần đầy khối màu bậc pixel (đợt boss đỏ); nút tốc độ / ẩn / menu là icon pixel */
+html.sk-thanh-tien-do .tb-prog { border-width: 0 calc(var(--h) * 13 / 16); border-image: var(--sk-thanh-tien-do) 0 13 fill / 0 calc(var(--h) * 13 / 16) stretch; image-rendering: pixelated; }
+html.sk-thanh-tien-do .tb-prog i { border-radius: 0; background: linear-gradient(180deg, #FFF1B8 0 20%, #F2C44A 20% 62%, #C8862A 62% 100%); }
+html.sk-thanh-tien-do .tb-prog i.boss { background: linear-gradient(180deg, #FFB49A 0 20%, #E2502E 20% 62%, #9A2A18 62% 100%); }
+#topbar .sq .uimg.tb.px { width: 26px; height: 26px; }
+#btn-showui .uimg.tb.px { width: 24px; height: 24px; }
+html.pixel.sk-nut-dong #btn-run.go { background: var(--sk-nut-dong-thuong) center / 100% 100% no-repeat; border-color: transparent; box-shadow: 0 0 8px #FFD66B99; }   /* nền đồng pixel (icon ▶ vàng trên nền vàng khó nhìn) + quầng gọi bấm */

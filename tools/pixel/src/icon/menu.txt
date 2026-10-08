@@ -1,0 +1,34 @@
+# Menu — VẼ LẠI tay (claude/ve-lai-pixel), thiết kế: docs/pixel/THIET-KE-LAI.md
+# ba thanh đồng ngang
+# Nguồn vẽ: tools/pixel/ve-lai/topbar.js — sửa ở đó rồi chạy lại, đừng sửa tay file này.
+name: Menu
+size: 16x16
+colors:
+  a = vien
+  b = dong-sang
+  c = dong
+  d = dong-toi
+
+part k0
+................
+................
+..aaaaaaaaaaaa..
+.abbbbbbbbbbbba.
+.acccccccccccda.
+..aaaaaaaaaaaa..
+..aaaaaaaaaaaa..
+.abbbbbbbbbbbba.
+.acccccccccccda.
+..aaaaaaaaaaaa..
+..aaaaaaaaaaaa..
+.abbbbbbbbbbbba.
+.acccccccccccda.
+..aaaaaaaaaaaa..
+................
+................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end

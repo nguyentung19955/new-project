@@ -1,16 +1,16 @@
 {
- "code": "toc-do-x1",
+ "code": "menu",
  "group": "icon",
- "name": "Tốc độ x1",
+ "name": "Menu",
  "w": 16,
  "h": 16,
  "ax": 8,
  "ay": 15,
  "bbox": [
-  0,
+  1,
   2,
-  15,
-  11
+  14,
+  12
  ],
  "n": 1,
  "anims": {
@@ -22,5 +22,5 @@
   }
  },
  "m": 2,
- "sheet": "toc-do-x1.png"
+ "sheet": "menu.png"
 }

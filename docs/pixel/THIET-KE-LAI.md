@@ -210,3 +210,11 @@ vì mô tả dài), nút Chọn luôn sát đáy.
 `tools/pixel/muot.json` `"tat": ["ban-do/", "canh/", "nen/", "giao-dien/", "vfx/"]` → bản mượt còn 8 nhóm (tuong quai boss icon do ky-nang an-phu than-khi),
 **4,1 MB** (trước 6,4 MB; ảnh gốc 8,1 MB). CSS chỉ bỏ `pixelated` cho `img[src*="pixel-muot/"]` + canvas chân dung; nền / cổng / bệ / khung giữ nét.
 FPS CPU×4, 3 s đầu (quái của màn, tướng đặt sẵn): tắt / bật ≈ 18,8 / 18,7; khung tệ nhất 167–283 / 150–183 ms.
+
+## 13. Thanh trên trong trận — `tools/pixel/ve-lai/topbar.js`
+
+Người dùng: "nút tăng tốc và thanh tiến trình màn chơi đang là ảnh vẽ trước đó".
+- `giao-dien/thanh-tien-do` 96×16 (thay bản sinh tự động 64×8, chưa dùng): cắt 9 mảnh `0 13 0 13` — hai đầu huy chương đồng ngọc bích (không giãn), rãnh đồng đều cột (giãn ngang không méo), lòng tối hàng 3..11 khớp chỗ phần đầy cũ (top 20,2% · cao 54,6%). Phần đầy CSS khối 3 tông vàng; đợt boss đỏ (`#tb-fill.boss`). Chỉ dùng khi bật pixel (lớp `sk-thanh-tien-do`), tắt pixel giữ ảnh `ui/thanh-tien-do.png`.
+- `icon/toc-do-x1..x3` 16×16 (thay bản mũi tên ▸ thô): chữ "x1 / x2 / x3" nét 2 điểm; x1 bạc, x2 / x3 vàng sáng + lấp lánh = đang tăng tốc.
+- `icon/an-giao-dien` (mắt gạch chéo đỏ), `icon/menu` (ba thanh đồng) thay hình nét SVG.
+- Soát thanh trên / cột phải: `uiImg()` (mắt chỉ số, Bắt đầu/Dừng, Túi đồ / Nâng đồ / Mặc đồ, menu chính) trước luôn lấy `ui/*.png` vẽ cũ → nay ưu tiên `icon/ui-*` pixel cùng mã. Nút Bắt đầu: nền nút đồng pixel + quầng (bỏ nền chuyển màu vàng).

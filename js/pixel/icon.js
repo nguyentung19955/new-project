@@ -2,6 +2,7 @@
 // Sprite pixel nhóm "icon": "<nhóm>/<mã>" → dải khung assets/pixel/<nhóm>/<mã>.png. Game dùng khi bật pixel (js/pixel.js).
 window.PIXEL_MANIFEST = window.PIXEL_MANIFEST || {};
 Object.assign(window.PIXEL_MANIFEST, {
+"icon/an-giao-dien": {"name":"Ẩn giao diện","w":16,"h":16,"ax":8,"ay":15,"bbox":[0,1,16,14],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}},"m":2},
 "icon/bac": {"name":"bạc Ngân khố","w":16,"h":16,"ax":8,"ay":15,"bbox":[1,4,13,8],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}},"m":2},
 "icon/bay": {"name":"bay","w":12,"h":12,"ax":6,"ay":11,"bbox":[1,1,9,11],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}},"m":2},
 "icon/boss": {"name":"boss / tướng địch","w":12,"h":12,"ax":6,"ay":11,"bbox":[1,1,9,8],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}},"m":2},
@@ -64,6 +65,7 @@ Object.assign(window.PIXEL_MANIFEST, {
 "icon/mang": {"name":"mạng thành","w":16,"h":16,"ax":8,"ay":15,"bbox":[1,2,14,12],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}},"m":2},
 "icon/mat-an-hien": {"name":"ẩn / hiện giao diện","w":12,"h":12,"ax":6,"ay":11,"bbox":[0,2,11,7],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}},"m":2},
 "icon/mau": {"name":"máu","w":12,"h":12,"ax":6,"ay":11,"bbox":[2,1,8,10],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}},"m":2},
+"icon/menu": {"name":"Menu","w":16,"h":16,"ax":8,"ay":15,"bbox":[1,2,14,12],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}},"m":2},
 "icon/mui-ten-nhanh": {"name":"nhánh tầng 2 cây hợp thể","w":12,"h":12,"ax":6,"ay":11,"bbox":[1,1,9,9],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}},"m":2},
 "icon/mui-ten-phai": {"name":"mũi tên → (nâng cấp / công thức / hợp thể)","w":12,"h":12,"ax":6,"ay":11,"bbox":[1,1,9,9],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}},"m":2},
 "icon/nang-cap": {"name":"nâng cấp","w":12,"h":12,"ax":6,"ay":11,"bbox":[2,1,7,9],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}},"m":2},
@@ -106,9 +108,9 @@ Object.assign(window.PIXEL_MANIFEST, {
 "icon/tinh-anh-swift": {"name":"tinh anh: Sóng Cuốn","w":12,"h":12,"ax":6,"ay":11,"bbox":[1,2,9,8],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}},"m":2},
 "icon/toc-chay": {"name":"tốc chạy","w":12,"h":12,"ax":6,"ay":11,"bbox":[3,1,9,10],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}},"m":2},
 "icon/toc-danh": {"name":"tốc đánh","w":12,"h":12,"ax":6,"ay":11,"bbox":[2,2,7,7],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}},"m":2},
-"icon/toc-do-x1": {"name":"tốc độ x1","w":16,"h":16,"ax":8,"ay":15,"bbox":[4,3,8,9],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}},"m":2},
-"icon/toc-do-x2": {"name":"tốc độ x2","w":16,"h":16,"ax":8,"ay":15,"bbox":[1,3,12,9],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}},"m":2},
-"icon/toc-do-x3": {"name":"tốc độ x3","w":16,"h":16,"ax":8,"ay":15,"bbox":[1,3,13,9],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}},"m":2},
+"icon/toc-do-x1": {"name":"Tốc độ x1","w":16,"h":16,"ax":8,"ay":15,"bbox":[0,2,15,11],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}},"m":2},
+"icon/toc-do-x2": {"name":"Tốc độ x2","w":16,"h":16,"ax":8,"ay":15,"bbox":[0,2,15,11],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}},"m":2},
+"icon/toc-do-x3": {"name":"Tốc độ x3","w":16,"h":16,"ax":8,"ay":15,"bbox":[0,2,15,11],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}},"m":2},
 "icon/tri-tue": {"name":"Trí tuệ","w":12,"h":12,"ax":6,"ay":11,"bbox":[2,1,9,9],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}},"m":2},
 "icon/tu-vi": {"name":"Tu Vi","w":16,"h":16,"ax":8,"ay":15,"bbox":[0,0,16,16],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}},"m":2},
 "icon/tui-vang": {"name":"túi vàng","w":12,"h":12,"ax":6,"ay":11,"bbox":[1,1,10,10],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}},"m":2},

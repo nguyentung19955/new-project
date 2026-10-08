@@ -1,27 +1,39 @@
-# thanh tiến độ (border-image) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: khung thanh đồng 2 đầu chạm
-name: thanh tiến độ (border-image)
-size: 64x8
+# Thanh tiến độ đợt — VẼ LẠI tay (claude/ve-lai-pixel), thiết kế: docs/pixel/THIET-KE-LAI.md
+# Cắt 9 mảnh 0 13 0 13: hai đầu huy chương đồng ngọc bích, rãnh đồng giữa giãn ngang, lòng tối hàng 3..11 (phần đầy CSS phủ lên)
+# Nguồn vẽ: tools/pixel/ve-lai/topbar.js — sửa ở đó rồi chạy lại, đừng sửa tay file này.
+name: Thanh tiến độ đợt
+size: 96x16
 colors:
   a = vien
-  b = sang
-  c = dong-toi
+  b = dong-toi
+  c = dong-sang
   d = dong
-  e = dong-sang
+  e = khoi
+  f = toi
+  g = la-toi
+  h = la-sang
+  i = la
 
 part k0
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-eeddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddce
-edaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaade
-edaaa......................................................aaade
-edebea....................................................aebede
-edaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaade
-ecddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddce
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+................................................................................................
+......aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.....
+...aaabbaaacccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccaaabbaaa..
+..aadddddbaaeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeaadddddbaa.
+.aadcbbbbdbaafffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffaadcbbbbdbaa
+.adcbcggdbdbafffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffadcbcggdbdba
+.adbchiigdbbafffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffadbchiigdbba
+abdbgiiiigbbbafffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffabdbgiiiigbbb
+abdbgiiiggbbbafffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffabdbgiiiggbbb
+.adbdgiggdbbafffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffadbdgiggdbba
+.abdbdggdbbbafffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffabdbdggdbbba
+.aabdbbbbbbaafffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffaabdbbbbbbaa
+..aabbbbbbaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbaabbbbbbaa.
+...aaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbaaa..
+......aa.................................................................................aa.....
+................................................................................................
 end
 
 anim main fps=1 once
 frame main
   use k0
 end
-

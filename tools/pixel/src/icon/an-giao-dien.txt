@@ -1,0 +1,37 @@
+# Ẩn giao diện — VẼ LẠI tay (claude/ve-lai-pixel), thiết kế: docs/pixel/THIET-KE-LAI.md
+# con mắt trắng tròng xanh, gạch chéo đỏ
+# Nguồn vẽ: tools/pixel/ve-lai/topbar.js — sửa ở đó rồi chạy lại, đừng sửa tay file này.
+name: Ẩn giao diện
+size: 16x16
+colors:
+  a = vien
+  b = son
+  c = son-sang
+  d = trang
+  e = sang
+  f = cham
+  g = trang-xam
+
+part k0
+................
+..a.............
+..bc............
+...bcaaaaaaa....
+...abcdddddda...
+..adebceeeeeda..
+.addddbcffdddda.
+adddddfbcffdddda
+adddddfabcfdddda
+.addddffabcddda.
+..addddfffbcda..
+...agggggggbc...
+....aaaaaaaabc..
+.............bc.
+..............a.
+................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end

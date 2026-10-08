@@ -40,7 +40,7 @@ Object.assign(window.PIXEL_MANIFEST, {
 "giao-dien/thanh-mau-boss": {"name":"Khung thanh máu boss","w":96,"h":12,"ax":48,"ay":11,"bbox":[0,0,96,12],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}}},
 "giao-dien/thanh-mau-quai": {"name":"Khung thanh máu quái","w":24,"h":8,"ax":12,"ay":7,"bbox":[0,0,24,8],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}}},
 "giao-dien/thanh-mau-tuong": {"name":"Khung thanh máu tướng","w":32,"h":8,"ax":16,"ay":7,"bbox":[0,0,32,8],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}}},
-"giao-dien/thanh-tien-do": {"name":"thanh tiến độ (border-image)","w":64,"h":8,"ax":32,"ay":7,"bbox":[0,0,64,8],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}}},
+"giao-dien/thanh-tien-do": {"name":"Thanh tiến độ đợt","w":96,"h":16,"ax":48,"ay":15,"bbox":[0,1,96,14],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}}},
 "giao-dien/the-cho-ghep": {"name":"thẻ chợ tướng — ghep","w":40,"h":32,"ax":20,"ay":31,"bbox":[0,0,40,32],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}}},
 "giao-dien/the-cho-thieu": {"name":"thẻ chợ tướng — thieu","w":40,"h":32,"ax":20,"ay":31,"bbox":[0,0,40,32],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}}},
 "giao-dien/the-cho-thuong": {"name":"thẻ chợ tướng — thuong","w":40,"h":32,"ax":20,"ay":31,"bbox":[0,0,40,32],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}}},
