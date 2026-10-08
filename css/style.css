@@ -2418,3 +2418,4 @@ html.pixel .fb-shot .sw { width: 40px; height: 22px; } html.pixel .fb-shot .sw::
 #reward .sl-kho small { font-weight: 700; color: #B8C4D0; margin-left: 2px; }
 /* màn thấp: bớt khoảng giữa các ô tài nguyên để chỗ chip Ngân khố */
 @media (max-height: 400px) { .tb-res { gap: 8px; } }
+html.pixel :is(.hx-auto, .hx-pin, .hx-st.hx-open, .hx-sk) { border-radius: 2px; }
