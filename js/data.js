@@ -248,7 +248,7 @@ const HEROES = {
       { id: 'permafrost', name: 'Hơi Lạnh Đỉnh Núi',
         info: (n) => `Làm chậm ${Math.round(Math.min(50, 20 + n * 0.25))}%`,
         apply: (s, n) => { s.slow = Math.max(s.slow, Math.min(50, 20 + n * 0.25)); } },
-      { id: 'blizzard', name: 'Mù Sương Tản Viên', active: { cooldown: 16, cast: 'blizzard', mana: 115 },
+      { id: 'blizzard', name: 'Mù Sương Tản Viên', active: { cooldown: 20, cast: 'blizzard', mana: 115 },
         info: (n) => `Đóng băng mọi quái trong tầm 2 giây (boss 1 giây), x3 sát thương +${n}` },
     ],
   },
@@ -269,8 +269,8 @@ const HEROES = {
         apply: (s, n) => { s.dr += Math.min(60, 20 + n * 0.5); } },
       { id: 'g_e', name: 'Ngựa Sắt Phun Lửa', active: { cooldown: 9, cast: 'firetrail', mana: 80 },
         info: (n) => `Để lại vệt lửa dọc đường quái đi trong 4 giây: ${(10 + n * 0.5).toFixed(0)} sát thương/giây` },
-      { id: 'g_r', name: 'Bay Về Trời', active: { cooldown: 20, cast: 'skyride', mana: 120 },
-        info: (n) => `Cưỡi ngựa sắt bay vút qua quái trong tầm x2 (cả quái bay): x4 sát thương +${n * 2}` },
+      { id: 'g_r', name: 'Bay Về Trời', active: { cooldown: 30, cast: 'skyride', mana: 120 },
+        info: (n) => `Cưỡi ngựa sắt bay vút qua quái trong tầm x2 (cả quái bay): x3 sát thương +${n * 2}` },
     ],
   },
   llq: {
@@ -364,8 +364,8 @@ const HEROES = {
         apply: (s, n) => { s.goldOnKill += Math.round(1 + n * 0.05); } },
       { id: 'a_e', name: 'Chim Thần', active: { cooldown: 9, cast: 'birds', mana: 70 },
         info: (n) => `Đàn chim mổ 6 lần vào quái trong tầm, mỗi lần x1 sát thương +${(n * 0.5).toFixed(0)}` },
-      { id: 'a_r', name: 'Mưa Dưa', active: { cooldown: 18, cast: 'melonrain', mana: 110 },
-        info: (n) => `Mưa dưa rơi xuống quái trong tầm x2: x2 sát thương +${n} và bị làm chậm` },
+      { id: 'a_r', name: 'Mưa Dưa', active: { cooldown: 26, cast: 'melonrain', mana: 110 },
+        info: (n) => `Mưa dưa rơi xuống quái trong tầm x2: x1.5 sát thương +${n} và bị làm chậm` },
     ],
   },
   auco: {
@@ -606,8 +606,8 @@ const HEROES = {
         info: (n) => `+${(6 + n * 0.15).toFixed(1)}% sức mạnh kỹ năng`, apply: (s, n) => { s.skillPct += 6 + n * 0.15; } },
       { id: 'sd_e', name: 'Hóa Chàng Trai', active: { cooldown: 18, cast: 'flowerheal', mana: 90 },
         info: (n) => `Hồi ${Math.round(25 + n * 0.3)}% máu cho mọi tướng quanh mình` },
-      { id: 'sd_r', name: 'Mưa Dừa', active: { cooldown: 20, cast: 'melonrain', mana: 120 },
-        info: (n) => `Dừa rơi xuống quái trong tầm x2, x2 sát thương +${n}` },
+      { id: 'sd_r', name: 'Mưa Dừa', active: { cooldown: 30, cast: 'melonrain', mana: 120 },
+        info: (n) => `Dừa rơi xuống quái trong tầm x2, x1.5 sát thương +${n}` },
     ],
   },
   cuoi: {
@@ -625,8 +625,8 @@ const HEROES = {
         info: (n) => `+10% máu, +${(1.5 + n * 0.05).toFixed(1)} hồi máu/giây`, apply: (s, n) => { s.hpPct += 10; s.regen += 1.5 + n * 0.05; } },
       { id: 'cu_e', name: 'Cây Đa Bay', active: { cooldown: 14, cast: 'sacredtree', mana: 80 },
         info: (n) => `Cây đa thần mọc giữa trận: hồi máu tướng, làm chậm quái` },
-      { id: 'cu_r', name: 'Cung Trăng Gọi Gió', active: { cooldown: 22, cast: 'forestwrath', mana: 130 },
-        info: (n) => `Gió trăng quật quái dưới đất trong tầm x2: x3 sát thương +${n * 2}` },
+      { id: 'cu_r', name: 'Cung Trăng Gọi Gió', active: { cooldown: 30, cast: 'forestwrath', mana: 130 },
+        info: (n) => `Gió trăng quật quái dưới đất trong tầm x2: trói 1.2 giây (boss 0.4), x1.5 sát thương +${n}` },
     ],
   },
   melua: {
@@ -789,7 +789,7 @@ const HEROES = {
         apply: (s, n) => { s.damage += n * 0.35; s.netSlow = Math.max(s.netSlow, 15 + n * 0.15); } },
       { id: 'hs_e', name: 'Hương Sen',
         info: (n) => `Tướng đứng gần +${(1.2 + n * 0.05).toFixed(1)} hồi máu/giây`, apply: (s, n) => { s.regenAura = 1.2 + n * 0.05; } },
-      { id: 'hs_r', name: 'Mưa Đầm Sen', active: { cooldown: 16, cast: 'blizzard', mana: 110 },
+      { id: 'hs_r', name: 'Mưa Đầm Sen', active: { cooldown: 22, cast: 'blizzard', mana: 110 },
         info: (n) => `Mưa lạnh quanh mình: làm chậm, đóng băng quái, x2 sát thương +${n}` },
     ],
   },
@@ -827,7 +827,7 @@ const HEROES = {
         info: (n) => `+${(6 + n * 0.15).toFixed(1)}% sức mạnh kỹ năng`, apply: (s, n) => { s.skillPct += 6 + n * 0.15; } },
       { id: 'tc_e', name: 'Sương Khói Mặt Sông', active: { cooldown: 12, cast: 'blizzard', mana: 80 },
         info: (n) => `Sương lạnh quanh mình: làm chậm, đóng băng quái, x2 sát thương +${n}` },
-      { id: 'tc_r', name: 'Khúc Ca Cuối', active: { cooldown: 22, cast: 'tidegate', mana: 130 },
+      { id: 'tc_r', name: 'Khúc Ca Cuối', active: { cooldown: 26, cast: 'tidegate', mana: 130 },
         info: (n) => `Tiếng hát cuốn ngược quái trong tầm, chậm 50% 3 giây, x3 sát thương +${n * 2}` },
     ],
   },
@@ -864,7 +864,7 @@ const HEROES = {
         info: (n) => `Nước hồ hồi dần ${Math.round(30 + n * 0.3)}% máu cho tướng yếu nhất` },
       { id: 'ln_e', name: 'Băng Long', active: { cooldown: 12, cast: 'blizzard', mana: 80 },
         info: (n) => `Hơi rồng lạnh quanh mình: làm chậm, đóng băng quái, x2 sát thương +${n}` },
-      { id: 'ln_r', name: 'Long Cung Nổi Sóng', active: { cooldown: 22, cast: 'tidegate', mana: 130 },
+      { id: 'ln_r', name: 'Long Cung Nổi Sóng', active: { cooldown: 26, cast: 'tidegate', mana: 130 },
         info: (n) => `Sóng long cung cuốn ngược mọi quái trong tầm, chậm 50% 3 giây, x3 sát thương +${n * 2}` },
     ],
   },
@@ -1261,8 +1261,8 @@ const HEROES = {
         apply: (s, n) => { s.slow = Math.max(s.slow, Math.min(45, 20 + n * 0.2)); s.damage += n * 0.5; } },
       { id: 'm_e', name: 'Cây Đa Thần', active: { cooldown: 12, cast: 'sacredtree', mana: 80 },
         info: (n) => `Trồng cây đa 6 giây: quái quanh cây chậm 30%; tướng trong 170 hồi ${(3 + n * 0.03).toFixed(1)}% máu/giây` },
-      { id: 'm_r', name: 'Rừng Thiêng Nổi Giận', active: { cooldown: 22, cast: 'forestwrath', mana: 120 },
-        info: (n) => `Rễ cây trồi lên quanh mình (tầm x2): quái dưới đất bị trói 1.8 giây (boss 0.6), x2 sát thương +${n}; tướng trong 220 hồi 20% máu` },
+      { id: 'm_r', name: 'Rừng Thiêng Nổi Giận', active: { cooldown: 30, cast: 'forestwrath', mana: 120 },
+        info: (n) => `Rễ cây trồi lên quanh mình (tầm x2): quái dưới đất bị trói 1.2 giây (boss 0.4), x1.5 sát thương +${n}; tướng trong 220 hồi 20% máu` },
     ],
   },
 };
@@ -1426,6 +1426,10 @@ const JARS = [
   { id: 'king', name: 'Hũ Vua Hùng', cost: 600, min: 'epic', set: 0.35, desc: 'Sử thi trở lên, 35% ra đồ bộ' },
 ];
 const JAR_PITY = 5;
+// claude/can-bang-tuong-vang: hồi chiêu R (tối thượng) không xuống dưới R_MIN_CD giây sau mọi giảm hồi chiêu (trí lực / đồ / ấn)
+// — R là khoảnh khắc mạnh, không spam. skillCdOf: hồi chiêu thực tế của kỹ năng i.
+const R_MIN_CD = 12;
+const skillCdOf = (sk, i, cdr) => { const c = sk.active.cooldown * (1 - (cdr || 0) / 100); return i === 3 ? Math.max(R_MIN_CD, c) : c; };
 // claude/sao3-re-nhanh: tướng Thường ★★ / ★★★ mở kỹ năng giảm giá (COSTS.unlockDisc2 / unlockDisc3)
 const unlockCost = (h, i) => (h.from ? COSTS.unlockAsc[i] : Math.round(COSTS.unlock[i] * ((h.tier || 0) >= 3 ? COSTS.unlockDisc3 : (h.tier || 0) === 2 ? COSTS.unlockDisc2 : 1)));
 
@@ -1746,6 +1750,14 @@ const ELEM = {
   adj: 115,        // "đứng kề": khoảng cách giữa hai ô (px logic)
   item: { same: 10, sinh: 5, khac: -10 },    // hành đồ so với hành tướng: % chỉ số gốc
 };
+// claude/can-bang-tuong-vang: THẾ TRẬN — đội đông + nhiều hành được cộng sát thương toàn quân (chip trên thanh trên).
+//   quân: +per% mỗi tướng (còn sống) từ tướng thứ from+1, tối đa maxN tướng · hành: +el[số hành khác nhau]% (đủ 5 hành còn cộng ELEM.full)
+const TEAM_BONUS = { from: 2, per: 6, maxN: 8, el: [0, 0, 0, 10, 20, 30] };
+const teamBonus = (n, nel) => {
+  const q = TEAM_BONUS.per * Math.max(0, Math.min(n, TEAM_BONUS.maxN) - TEAM_BONUS.from);
+  const e = TEAM_BONUS.el[Math.min(5, nel)] + (nel >= 5 ? ELEM.full : 0);
+  return { q, e, all: q + e };
+};
 const HERO_EL = { lactuong: 'kim', lucsi: 'tho', xathu: 'kim', thosan: 'moc', thaymo: 'hoa', thansuong: 'thuy',
   giong: 'hoa', llq: 'thuy', kimquy: 'kim', thachsanh: 'moc', caolo: 'kim', antiem: 'moc',
   auco: 'tho', cdt: 'thuy', tiendung: 'hoa', langlieu: 'tho', lachau: 'tho', thansan: 'moc', adv: 'kim', mau: 'moc',
@@ -1937,6 +1949,23 @@ const HARD = {
   // hệ số máu quái theo ải (đã chạy bot cân bằng: người chơi mặc đồ tốt về đích còn ~10–15 mạng)
   table: [1.6, 1.7, 1.8, 1.75, 1.6, 1.45, 1.4, 1.35],
   hp(level) { return this.table[Math.min(level, this.table.length - 1)]; },
+};
+// claude/can-bang-tuong-vang: máu quái tăng DẦN theo đợt (×k mỗi đợt từ đợt `from`, dừng tăng ở đợt `to`).
+// Khó: mọi ải. Thường: từ ải minLevel (ải 1–3 "Dễ" giữ nguyên). Trước đây Khó chỉ ×1,6 cố định nhưng Ngân khố ×1,5
+// nên gần như ngang Thường — 1 tướng Vàng phép đơn độc đi tới ~đợt 60 không mất mạng.
+const WAVE_RAMP = {
+  hard: { from: 15, k: 1.03, to: 100 },     // tester: 1,04 quá dốc (đội 8 ★★★ mạnh lọt 74% máu đợt 50) → 1,03
+  normal: { from: 15, k: 1.02, to: 100, minLevel: 3 },
+};
+// Khó: ải dễ (1–3) không còn giảm máu cho người mới — hệ số máu + tốc độ tăng theo đợt ít nhất bằng ải HARD_REF (Cửa Sông Hồng).
+// (Vô tận bắt đầu từ ải 1 giữ hệ số ải 1 suốt trận: trước đây ải 1 Khó máu quái chỉ bằng ~1/5 ải 7.)
+const HARD_REF = 6;
+const hardEffWave = (n, level) => { const lv = LEVELS[level || 0], r = LEVELS[HARD_REF]; return 1 + (n - 1) * Math.max((lv && lv.waveScale) || 1, r.waveScale || 1); };
+const hardLvHp = (level) => Math.max(LEVELS[level || 0].hp, LEVELS[HARD_REF].hp);
+const waveRamp = (wave, level, hard) => {
+  const r = hard ? WAVE_RAMP.hard : WAVE_RAMP.normal;
+  if (!hard && (level || 0) < r.minLevel) return 1;
+  return Math.pow(r.k, Math.max(0, Math.min(wave, r.to) - r.from));
 };
 // ============================================================
 //  BẢN ĐỒ (v48): mỗi ải một đường đi riêng (đường cong SVG, toạ độ thiết kế 932×430,
@@ -2232,7 +2261,7 @@ const MOUNTAIN = {
 
 // ===== v91: BẢNG ẤN PHÙ (rune tài khoản) =====
 // 3 nhánh × 12 ấn = 36. Mỗi nhánh: 3 hàng chỉ số (tối đa 5 cấp) + 1 hàng 3 ấn kỹ năng (tối đa 3 cấp).
-// Mua bằng Ngân khố, áp cho mọi tướng trong mọi trận. Hàng sau mở khi nhánh đã đủ điểm.
+// (cũ) Mua bằng Ngân khố cho mọi tướng → nay: khắc bằng Tu Vi, riêng từng tướng, CHỈ tướng Vàng (runeFx/RUNE_MAP lọc legendary). Hàng sau mở khi nhánh đã đủ điểm.
 const RUNE_BRANCHES = [
   { id: 'nui', name: 'Ấn Núi', sub: 'sức mạnh · bền bỉ', color: '#D9844A' },
   { id: 'gio', name: 'Ấn Gió', sub: 'tốc độ · chí mạng', color: '#6FCB8A' },
