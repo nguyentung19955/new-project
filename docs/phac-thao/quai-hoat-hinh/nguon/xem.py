@@ -2,6 +2,7 @@
 #   python3 xem.py luoi ID[:pha] ra.png            -> tờ lưới toạ độ + bộ phận đã cắt (để lấy toạ độ)
 #   python3 xem.py dai ID CU_DONG ra.png [góc_độ] [pha] [số_khung]   -> dải khung hình một cử động
 #   python3 xem.py tatca ID ra.png [góc_độ] [pha]  -> mọi cử động của một con
+#   python3 xem.py in "biểu thức"               -> in kết quả ra màn hình
 #   python3 xem.py js "biểu thức trả về canvas" ra.png
 #   python3 xem.py gif TEN [TEN...]                -> dựng ../TEN.gif và ../TEN.png theo to.js (GIFS[TEN])
 import asyncio, base64, os, sys, subprocess, tempfile, shutil, json
@@ -37,6 +38,8 @@ async def main():
             if len(args) > k + 3: o['n'] = int(args[k + 3])
             ex = 'XEM.dai(%r, %r, %s)' % (args[1], args[2], json.dumps(o)) if cmd == 'dai' else 'XEM.tatCa(%r, %s)' % (args[1], json.dumps(o))
             await shot(pg, ex, out); print('đã ghi', out)
+        elif cmd == 'in':
+            print(await pg.evaluate(args[1]))
         elif cmd == 'js':
             await shot(pg, args[1], args[2]); print('đã ghi', args[2])
         elif cmd == 'gif':

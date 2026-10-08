@@ -9,8 +9,8 @@ function doanQuai(them) { const D = [
   { ten: 'Báo trước rồi ra đòn: hướng trái', anims: ['tele', 'atk'], dir: PI, nghi: .4 }, { ten: 'Báo trước rồi ra đòn: chéo xuống phải', anims: ['tele', 'atk'], dir: PI / 4, nghi: .4 }, { ten: 'Báo trước rồi ra đòn: hướng lên', anims: ['tele', 'atk'], dir: -PI / 2, face: -1, nghi: .4 },
   { ten: 'Trúng đòn', anims: ['hit', 'hit'], nghi: .3 }];
   for (const t of (them || [])) D.push(t); D.push({ ten: 'Chết', anims: ['die'], nghi: .5 }); return D; }
-function toVung(vung, ten, mauNen) { const o = ids(vung, ['thuong', 'tinhanh']).map(id => ({ id }));
-  return { tieuDe: ten, cols: 5, cw: 104, ch: 92, s: 3, day: 30, lech: 10, beX: 13, mauNen, o, doan: doanQuai([{ ten: 'Chiêu riêng của tinh anh (hai con cuối)', anims: ['chieu1'], dir: PI * .8, nghi: .5 }]) }; }
+function toVung(vung, ten, mauNen) { const o = ids(vung, ['thuong', 'tinhanh']).map(id => ({ id, to: M._defs[id].loai === 'tinhanh' }));
+  return { tieuDe: ten, cols: 4, cw: 104, ch: 92, colsTo: 2, chTo: 136, s: 3, day: 30, lech: 10, beX: 13, mauNen, o, doan: doanQuai([{ ten: 'Chiêu riêng của tinh anh (hai con cuối)', anims: ['chieu1'], dir: PI * .8, nghi: .5 }]) }; }
 GIFS['quai-bien'] = () => toVung('bien', 'Hang biển: quái thường và tinh anh', '#18222e');
 GIFS['quai-rung'] = () => toVung('rung', 'Rừng già: quái thường và tinh anh', '#172218');
 GIFS['quai-lau-dai'] = () => toVung('laudai', 'Lâu đài cổ: quái thường và tinh anh', '#241a1a');

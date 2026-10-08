@@ -33,30 +33,37 @@ XEM.be = function (c, x, y, s) { if (typeof put === 'function') put(c, { key: 's
 // ---------- tờ ảnh động ----------
 // spec: {tieuDe, cols, cw, ch, s, o: [{id, phase, nhan}], doan: [{ten, anims: ['tele','atk'], dir, giay, phase}], chanY, beX}
 // Mỗi đoạn: mọi ô chạy lần lượt các cử động trong anims (xong thì đứng thở). Trả về số khung.
-XEM.to = function (spec) { XEM.S = spec; const s = spec.s || 3, rows = Math.ceil(spec.o.length / spec.cols); spec.rows = rows; spec.top = 46; spec.W = spec.cols * spec.cw * s; spec.H = rows * spec.ch * s + spec.top;
+XEM.to = function (spec) { XEM.S = spec; const s = spec.s || 3, cols = spec.cols, cw = spec.cw, ch = spec.ch;
+  // Ô thường xếp lưới cols cột; ô "to" (con lớn) xếp ở hàng riêng phía dưới, mỗi hàng spec.colsTo ô, cao spec.chTo.
+  const nho = spec.o.filter(o => !o.to), lon = spec.o.filter(o => o.to), rN = Math.ceil(nho.length / cols), cT = spec.colsTo || 2, W0 = cols * cw, cwT = Math.floor(W0 / cT), chT = spec.chTo || ch;
+  nho.forEach((o, i) => { o._r = [(i % cols) * cw, Math.floor(i / cols) * ch, cw, ch]; });
+  lon.forEach((o, i) => { o._r = [(i % cT) * cwT, rN * ch + Math.floor(i / cT) * chT, cwT, chT]; });
+  const H0 = rN * ch + Math.ceil(lon.length / cT) * chT; spec.top = 46; spec.W = W0 * s; spec.H = H0 * s + spec.top;
   spec.kh = []; spec.doan.forEach((dn, di) => { let dai = 0; for (const o of spec.o) { const d = D(o.id); let t = 0; for (const a of (dn.rieng && dn.rieng[o.id] || dn.anims)) if (d.anims[a]) t += d.anims[a].lap ? (dn.giay || 2) : d.anims[a].d; dai = Math.max(dai, t); } dai += dn.nghi == null ? .35 : dn.nghi; const n = Math.round(dai * M.fps); for (let i = 0; i < n; i++) spec.kh.push([di, i / M.fps]); });
-  [XEM.lo, XEM.lc] = mkc(spec.cols * spec.cw, rows * spec.ch); [XEM.cv, XEM.c] = mkc(spec.W, spec.H); return spec.kh.length; };
+  [XEM.lo, XEM.lc] = mkc(W0, H0); [XEM.cv, XEM.c] = mkc(spec.W, spec.H); return spec.kh.length; };
 XEM.khung = function (k) { const S = XEM.S, [di, t] = S.kh[k], dn = S.doan[di], s = S.s || 3, lc = XEM.lc, c = XEM.c;
   c.fillStyle = NEN; c.fillRect(0, 0, S.W, S.H); lc.clearRect(0, 0, XEM.lo.width, XEM.lo.height);
-  S.o.forEach((o, i) => { const d = D(o.id), cx = (i % S.cols) * S.cw, cy = Math.floor(i / S.cols) * S.ch, fx = cx + (o.x != null ? o.x : S.cw / 2 + (S.lech || 8)), fy = cy + (o.y != null ? o.y : S.ch - (S.day || 26));
-    lc.save(); lc.beginPath(); lc.rect(cx + 1, cy + 1, S.cw - 2, S.ch - 2); lc.clip(); nenO(lc, cx + 1, cy + 1, S.cw - 2, S.ch - 2, S.mauNen);
+  S.o.forEach((o, i) => { const d = D(o.id), [cx, cy, ow, oh] = o._r, day = o.day != null ? o.day : (S.day || 26), fx = cx + (o.x != null ? o.x : ow / 2 + (S.lech || 8)), fy = cy + (o.y != null ? o.y : oh - day);
+    lc.save(); lc.beginPath(); lc.rect(cx + 1, cy + 1, ow - 2, oh - 2); lc.clip(); nenO(lc, cx + 1, cy + 1, ow - 2, oh - 2, S.mauNen);
     let tt = t, anim = 'idle', ta = t, het = true; for (const a of (dn.rieng && dn.rieng[o.id] || dn.anims)) { const an = d.anims[a]; if (!an) continue; const dd = an.lap ? (dn.giay || 2) : an.d; if (tt < dd) { anim = a; ta = tt; het = false; break; } tt -= dd; if (a === 'die') { anim = null; } else { anim = 'idle'; ta = tt; } }
     const ph = dn.phase || o.phase || 1; o._nhan = anim && !het ? d.anims[anim].nhan : (anim ? d.anims.idle.nhan : '');
     if (anim) M.draw(lc, o.id, fx, fy, { anim, t: ta, dir: dn.dir, face: dn.face || (dn.dir == null ? -1 : 0), phase: typeof ph === 'function' ? ph(anim) : ph });
     lc.restore(); });
   c.drawImage(XEM.lo, 0, S.top, XEM.lo.width * s, XEM.lo.height * s);
-  S.o.forEach((o, i) => { const d = D(o.id), cx = (i % S.cols) * S.cw * s, cy = Math.floor(i / S.cols) * S.ch * s + S.top; if (S.be !== false) XEM.be(c, cx + (S.beX || 16) * s, cy + (o.y != null ? o.y : S.ch - (S.day || 26)) * s, s);
-    chu(c, o.nhan || d.ten, cx + S.cw * s / 2, cy + S.ch * s - 9, S.coChu || 17, S.mauChu || CHU, true, 'center'); if (S.nhanO) chu(c, o._nhan || '', cx + S.cw * s - 8, cy + 20, 14, VANGT, false, 'right'); });
+  S.o.forEach((o, i) => { const d = D(o.id), cx = o._r[0] * s, cy = o._r[1] * s + S.top, ow = o._r[2], oh = o._r[3], day = o.day != null ? o.day : (S.day || 26); if (S.be !== false) XEM.be(c, cx + (S.beX || 16) * s, cy + (o.y != null ? o.y : oh - day) * s, s);
+    chu(c, o.nhan || d.ten, cx + ow * s / 2, cy + oh * s - 9, S.coChu || 17, S.mauChu || CHU, true, 'center'); if (S.nhanO) chu(c, o._nhan || '', cx + ow * s - 8, cy + 20, 14, VANGT, false, 'right'); });
   chu(c, S.tieuDe, 12, 30, 22, VANGT, true); chu(c, dn.ten, S.W - 12, 30, 22, '#ffffff', true, 'right');
   const tot = S.kh.length; c.fillStyle = '#3a3548'; c.fillRect(0, S.top - 5, S.W, 3); c.fillStyle = VANGT; c.fillRect(0, S.top - 5, Math.round(S.W * (k + 1) / tot), 3);
   return XEM.cv; };
 // Bảng khung hình tĩnh: mỗi hàng một con (hoặc một cử động), mỗi ô một khung. rows: [{ten, o: [{id, anim, t, dir, phase, nhan}]}]
-XEM.bang = function (spec) { const s = spec.s || 2, cw = spec.cw, ch = spec.ch, L = spec.le || 150, n = Math.max(...spec.rows.map(r => r.o.length)), [lo, lc] = mkc(cw * n, ch * spec.rows.length), [cv, c] = mkc(L + cw * n * s, ch * s * spec.rows.length + 40); c.fillStyle = NEN; c.fillRect(0, 0, cv.width, cv.height);
-  spec.rows.forEach((r, j) => r.o.forEach((o, i) => { lc.save(); lc.beginPath(); lc.rect(i * cw + 1, j * ch + 1, cw - 1, ch - 1); lc.clip(); nenO(lc, i * cw + 1, j * ch + 1, cw - 1, ch - 1); M.draw(lc, o.id, i * cw + cw / 2 + (spec.lech || 0), j * ch + ch - (spec.day || 16), { anim: o.anim, t: o.t, dir: o.dir, face: o.face || (o.dir == null ? -1 : 0), phase: o.phase }); lc.restore(); }));
-  c.drawImage(lo, L, 40, lo.width * s, lo.height * s);
-  spec.rows.forEach((r, j) => { chu(c, r.ten, 8, 40 + j * ch * s + ch * s / 2, spec.coChu || 15, CHU, true); if (r.phu) chu(c, r.phu, 8, 40 + j * ch * s + ch * s / 2 + 18, 12, MO); r.o.forEach((o, i) => { if (o.nhan) chu(c, o.nhan, L + i * cw * s + 5, 40 + j * ch * s + 14, 12, VANGT); }); });
+XEM.bang = function (spec) { const s = spec.s || 2, L = spec.le || 150, R = spec.rows.map(r => ({ r, cw: r.cw || spec.cw, ch: r.ch || spec.ch, day: r.day || spec.day || 16 }));
+  const W = L + Math.max(...R.map(q => q.cw * q.r.o.length)) * s, H = R.reduce((a, q) => a + q.ch * s, 0) + 40, [cv, c] = mkc(W, H); c.fillStyle = NEN; c.fillRect(0, 0, W, H); let y = 40;
+  for (const q of R) { const r = q.r, cw = q.cw, ch = q.ch, [lo, lc] = mkc(cw * r.o.length, ch);
+    r.o.forEach((o, i) => { lc.save(); lc.beginPath(); lc.rect(i * cw + 1, 1, cw - 1, ch - 1); lc.clip(); nenO(lc, i * cw + 1, 1, cw - 1, ch - 1); M.draw(lc, o.id, i * cw + cw / 2 + (spec.lech || 0), ch - q.day, { anim: o.anim, t: o.t, dir: o.dir, face: o.face || (o.dir == null ? -1 : 0), phase: o.phase }); lc.restore(); });
+    c.drawImage(lo, L, y, lo.width * s, lo.height * s); chu(c, r.ten, 8, y + ch * s / 2, spec.coChu || 15, CHU, true); if (r.phu) chu(c, r.phu, 8, y + ch * s / 2 + 18, 12, MO);
+    r.o.forEach((o, i) => { if (o.nhan) chu(c, o.nhan, L + i * cw * s + 5, y + 14, 12, VANGT); }); y += ch * s; }
   chu(c, spec.tieuDe, 8, 27, 20, VANGT, true); return cv; };
 // Bảng khung hình chuẩn cho một tờ quái: mỗi con một hàng, mỗi cử động k khung.
-XEM.bangQuai = function (ids, tieuDe, o) { o = o || {}; const k = o.k || 3, rows = ids.map(id => { const d = D(id), r = { ten: d.ten, o: [] }; for (const a of (o.anims || Object.keys(d.anims))) { const an = d.anims[a]; if (!an) continue; for (let i = 0; i < k; i++) { const f = an.lap ? i / k : (i + .5) / k; r.o.push({ id, anim: a, t: an.d * f, dir: o.dir, nhan: i === 0 ? an.nhan : '' }); } } return r; });
+XEM.bangQuai = function (ids, tieuDe, o) { o = o || {}; const k = o.k || 3; o = Object.assign({}, o); const rows = ids.map(id => { const d = D(id), B = M._goc(id, o.phase || 1), r = { ten: d.ten, o: [], cw: Math.max(o.cw || 72, Math.ceil(B.bw * 1.2 + 14)), ch: Math.max(o.ch || 66, Math.ceil(B.bh * 1.25 + (o.day || 18) + 10 + (d.bay ? (d.cao || 8) : 0))) }; for (const a of (o.anims || Object.keys(d.anims))) { const an = d.anims[a]; if (!an) continue; for (let i = 0; i < k; i++) { const f = an.lap ? i / k : (i + .5) / k; r.o.push({ id, anim: a, t: an.d * f, dir: o.dir, nhan: i === 0 ? an.nhan : '' }); } } return r; });
   return XEM.bang({ tieuDe, rows, cw: o.cw || 72, ch: o.ch || 66, s: o.s || 2, day: o.day || 18, le: o.le || 150 }); };
 })();
