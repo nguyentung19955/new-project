@@ -2385,3 +2385,29 @@ html.pixel.sk-nen-man-phu #prep .screen, html.pixel.sk-nen-man-phu #result .scre
   display: inline-flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 800; }
 .hs-c.on { border-color: var(--c); background: #2A1F14; box-shadow: 0 0 6px color-mix(in srgb, var(--c) 50%, transparent); }
 .hs-off { display: none !important; }
+/* ===== sua-giao-dien-10: BỘ DA UI PIXEL CHUNG (pixel bật) — người dùng: "đừng làm trong suốt ở các bảng", "khung viền nên pixel hoá" =====
+   1) Bảng .metal có id đặt `border:` riêng → shorthand xoá border-image, còn lại nền trong suốt nhìn xuyên bản đồ (bảng chỉ số tướng, thanh tướng,
+      ngăn kéo ≡, Bộ quái mới…) → trả khung pixel tối + nền đặc #15110C, bóng cứng lệch 3px thay bóng mờ. */
+html.pixel.sk-khung-toi #ui > :is(#hero-stats, #more, #legends, #drawer, #roster-hint, #coop-bar, #chat) {
+  border-color: transparent; border-image: var(--sk-khung-bang-toi) 25% fill / 9px / 0 stretch; background-color: #15110C; box-shadow: 3px 3px 0 #0B0704; border-radius: 0; }
+html.pixel #ui > :is(#hero-stats, #more, #legends, #drawer, #roster-hint, #coop-bar, #chat) { background-color: #15110C; }
+html.pixel #hero-stats { padding: 7px 10px; }
+html.pixel #more::after { background: #15110C; }
+/* 2) lớp chữ nổi trên trận / thẻ: nền đặc (trước đây #0D0B08 alpha 66–94%) */
+html.pixel :is(#nextwaves, #bossbar, #paused-tag, #deck-hint, .toast, #hero-tip, .cp-node .lb, .ver, .res-art .tg2, .ro-card .tag, .ro-card .tag.el, .rn-lv) { background-color: #15110C; }
+html.pixel :is(.es, .bt-row, .asc-row) { background-color: #1A1610; }
+html.pixel .rl-chip { background-color: #140F0A; }
+html.pixel #banner { background: #15110C; border-top: 2px solid #8C6A2E; border-bottom: 2px solid #8C6A2E; box-shadow: 0 -2px 0 #0B0704, 0 2px 0 #0B0704, 3px 3px 0 #0B0704; }
+html.pixel #banner.ev { background: #15110C; box-shadow: inset 0 2px 0 var(--bn-c), inset 0 -2px 0 var(--bn-c), 3px 3px 0 #0B0704; border-color: #0B0704; }
+/* 3) góc vuông / bậc 2px, viền đặc 2px, bóng cứng (bỏ bo tròn mịn kiểu web, bỏ bóng mờ) */
+html.pixel :is(.toast, .chip, .rl-chip, #nextwaves, #deck-hint, #bossbar, #paused-tag, #hero-tip, #dialogue, .hx-card, .hx-go, .hx-m, .hx-to, .bk-card, .boss-card, .es, .bt-row,
+  .asc-row, .slot, .cp-tg, .cp-tg span, .sl-card, .tg, .mt-card, .res-khobox, .inset, .tipbox, .cp-rec, .cp-node .lb, .pl-res span, .ver, .ro-card .tag, .rn-lv, input, textarea, select) { border-radius: 2px; }
+html.pixel :is(.chip, #nextwaves, #deck-hint, #bossbar, #hero-tip, #paused-tag, .cp-node .lb) { border-width: 2px; }
+html.pixel :is(.toast, #nextwaves, #deck-hint, #bossbar, #paused-tag, #hero-tip, #dialogue) { box-shadow: 3px 3px 0 #0B0704; }
+html.pixel .toast { border: 2px solid #5A4426; border-left: 4px solid var(--gold); }
+/* 4) công tắc pixel (thay công tắc kiểu iOS xanh lá): tắt = gỗ tối, bật = vàng nghệ, núm vuông */
+html.pixel :is(.tg, .fb-shot) .sw { width: 52px; height: 28px; border-radius: 2px; background: #2A1C10; border: 2px solid #6A4E22; box-shadow: inset 0 -2px 0 #1A110A; }
+html.pixel :is(.tg, .fb-shot) .sw::after { left: 3px; top: 3px; width: 18px; height: 18px; border-radius: 1px; background: #8A7A5A; box-shadow: inset -2px -2px 0 #5A4A30; }
+html.pixel :is(.tg, .fb-shot) .sw.on { background: #E8B83A; border-color: #FFE7A0; box-shadow: inset 0 -2px 0 #B8852A; }
+html.pixel :is(.tg, .fb-shot) .sw.on::after { left: 27px; background: #2A1A08; box-shadow: inset -2px -2px 0 #000; }
+html.pixel .fb-shot .sw { width: 40px; height: 22px; } html.pixel .fb-shot .sw::after { width: 12px; height: 12px; } html.pixel .fb-shot .sw.on::after { left: 21px; }

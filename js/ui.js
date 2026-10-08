@@ -2185,7 +2185,7 @@ class UI {
     const mat = (m) => `<span class="hx-m ${m.ok ? 'ok' : m.h ? 'part' : 'no'} ${HEROES[m.type].legend || 'common'}" title="${esc(HEROES[m.type].name + (m.ok ? ' ✓' : ' — ' + m.why))}">
         <img src="${heroImgUrl(m.type, 'head')}" alt=""><i>${m.ok ? '✓' : m.h ? `${m.h.tier || 0}/${m.need}★` : ''}</i>${m.h && !m.ok && m.gap ? `<b class="hx-sk" title="Còn thiếu ${m.gap} cấp kỹ năng">${SVG_SK}−${m.gap}</b>` : `<small>${m.ok ? '' : '★'.repeat(m.need)}</small>`}</span>`;
     const card = (x) => { const t = x.f.to, d = HEROES[t];
-      const st = !x.own ? `<button class="hx-st lock hx-open" data-act="hx-open" data-t="${t}" title="Chưa mở khoá — mở ở Anh Hùng bằng Ngân khố">${UIE.lock()} Mở ở Anh Hùng · ${bac(1)}${fmt(OWN_COST[heroTier(t)])}</button>`
+      const st = !x.own ? `<button class="hx-st lock hx-open" data-act="hx-open" data-t="${t}" title="Chưa mở khoá — mở ở Anh Hùng bằng Ngân khố" aria-label="Mở ở Anh Hùng · ${fmt(OWN_COST[heroTier(t)])} Ngân khố">${UIE.lock()} Mở · ${bac(1)}${fmt(OWN_COST[heroTier(t)])}</button>`
         : x.ready ? `<button class="hx-go" data-act="hx-fuse" data-i="${x.i}" ${x.poor ? `disabled title="Cần ${x.cost} vàng"` : ''}>Hợp thể · ${coin(1)}${x.cost}</button>`
         : x.m.every((m) => m.h) ? `<button class="hx-go off" data-act="hx-fuse" data-i="${x.i}" aria-disabled="true">${SVG_LOCK} Hợp thể</button>`
         : `<span class="hx-st">${x.n}/2</span>`;
