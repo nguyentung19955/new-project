@@ -187,6 +187,9 @@ function ic(name, alt = '', cls = '') {
 const icPreload = () => { IC_NAMES.forEach((n) => pxIc(n) || icUrl(n)); Object.keys(ELEMENTS).forEach((e) => pxIc('hanh-' + e) || asset(`ui/ic-hanh-${e}.png`, true)); };
 // sua-giao-dien-10 (N7): bật pixel → nền menu / đăng nhập dùng bản pixel hoá 534×248 (64 màu, phóng nearest) cho hợp phần còn lại
 const menuArt = () => assetSrc(typeof pixelOn === 'function' && pixelOn() && hasAsset('ui/nen-menu-px.png') ? 'ui/nen-menu-px.png' : 'ui/nen-menu.jpg');
+// claude/khung-co-dinh: hộp DOMRect (toạ độ màn) → toạ độ trong #ui (đơn vị UIW × UIH) — qua rectToFrame (main.js), tính cả thu phóng + xoay
+const uiBox = (r) => { const f = typeof rectToFrame === 'function' ? rectToFrame(r) : r, k = typeof UIK !== 'undefined' ? UIK : 1;
+  return { left: f.left / k, top: f.top / k, right: f.right / k, bottom: f.bottom / k, width: f.width / k, height: f.height / k }; };
 const rarCls = (r) => ({ common: 'rt', rare: 'rh', epic: 'rs', legendary: 'rl' }[r]);
 const ATTR_CLS = { str: 'a-str', agi: 'a-agi', int: 'a-int' };
 const BOSS_LINES = {
@@ -1554,16 +1557,13 @@ class UI {
       const p = PATH.at(PATH.total), gx = (p.x + MAPX) / DK, gy = (p.y + MAPY) / DK;
       // cầm dọc cả game xoay 90° theo chiều kim đồng hồ (#wrap.rot): trục x giao diện → trục y màn hình, trục y → ngược trục x
       // (trước đây đổi toạ độ như màn ngang nên toast không né được banner / bảng, đè lên chữ)
-      const rot = typeof ROT !== 'undefined' && ROT;
-      const ur = $('#ui').getBoundingClientRect(), k = (rot ? ur.width : ur.height) / UIH || 1;
       const R = [[gx - G, gy - G, gx + G, gy + G]];
       for (const id of ['#dialogue', '#roster-hint', '#bossbar', '#banner', '#deck', '#auto-btns', '#topbar']) {
         const el = $(id);
         if (el.hidden || !el.offsetParent) continue;
-        const d = el.getBoundingClientRect();
+        const d = uiBox(el.getBoundingClientRect());
         if (!d.width) continue;
-        R.push(rot ? [(d.top - ur.top) / k, (ur.right - d.right) / k, (d.bottom - ur.top) / k, (ur.right - d.left) / k]
-          : [(d.left - ur.left) / k, (d.top - ur.top) / k, (d.right - ur.left) / k, (d.bottom - ur.top) / k]);
+        R.push([d.left, d.top, d.right, d.bottom]);
       }
       const area = (x0, y0) => R.reduce((s2, [l, t, r, b]) => s2 + Math.max(0, Math.min(r, x0 + w) - Math.max(l, x0)) * Math.max(0, Math.min(b, y0 + h) - Math.max(t, y0)), 0)
         + Math.max(0, y0 + h - UIH) * w;
@@ -1582,13 +1582,12 @@ class UI {
     let left = '', width = '';
     if (ov && box.children.length) {
       // lớp phủ / màn hình: thử đáy giữa, dưới tiêu đề, đáy trái, đáy phải — chọn chỗ đè ít nút / ô nhập nhất
-      const ur = $('#ui').getBoundingClientRect(), k = ur.height / UIH || 1;
       let w = Math.min(440, UIW - 24), h = Math.max(30, box.offsetHeight);
       const R = [];
       for (const e of $('#ui').querySelectorAll('button, input, textarea, select, .btn, [data-act], [data-tip], .chip, h1, .ttl')) {
         if (e.closest('[hidden]') || e.closest('#toasts')) continue;
-        const d = e.getBoundingClientRect();
-        if (d.width > 1 && d.height > 1) R.push([(d.left - ur.left) / k, (d.top - ur.top) / k, (d.right - ur.left) / k, (d.bottom - ur.top) / k]);
+        const d = uiBox(e.getBoundingClientRect());
+        if (d.width > 1 && d.height > 1) R.push([d.left, d.top, d.right, d.bottom]);
       }
       const area = (x0, y0) => R.reduce((a, [l, t, r, b]) => a + Math.max(0, Math.min(r, x0 + w) - Math.max(l, x0)) * Math.max(0, Math.min(b, y0 + h) - Math.max(t, y0)), 0);
       const C = [[(UIW - w) / 2, UIH - 10 - h], [(UIW - w) / 2, 52], [12, UIH - 10 - h], [UIW - 12 - w, UIH - 10 - h]];
@@ -1720,7 +1719,7 @@ class UI {
     if (now - (st.last || 0) < FB_GAP) return this.fbErr(`Vừa gửi xong — đợi ${Math.ceil((FB_GAP - (now - st.last)) / 1000)} giây rồi gửi tiếp nhé`);
     if ((st.n || 0) >= FB_DAY) return this.fbErr(`Hôm nay đã gửi ${FB_DAY} góp ý, mai gửi tiếp nhé. Cảm ơn bạn!`);
     const item = { kind: f.kind, text: text.slice(0, FB_MAX), contact: f.contact.trim().slice(0, 120), shot: f.useShot && f.shot.length <= FB_SHOT ? f.shot : '',
-      ver: this.fbVer(), where: this.fbWhere(f.from), scr: `${innerWidth}x${innerHeight}@${(devicePixelRatio || 1).toFixed(1)}${$('#wrap').classList.contains('rot') ? ' doc' : ''}`.slice(0, 40),
+      ver: this.fbVer(), where: this.fbWhere(f.from), scr: `${innerWidth}x${innerHeight}@${(devicePixelRatio || 1).toFixed(1)}${typeof ROT !== 'undefined' && ROT ? ' doc' : ''}`.slice(0, 40),
       ua: this.fbUa(), at: now };
     st.last = now; st.n = (st.n || 0) + 1;
     this.fbWrite(st);
@@ -2164,10 +2163,8 @@ class UI {
       <div class="ht-c ht-r2">${right}</div>`;
     el.hidden = false;
     // màn hình → toạ độ trong #ui (#wrap.rot: xoay 90°)
-    const U = ui.getBoundingClientRect(), W = ui.offsetWidth, H = ui.offsetHeight, rot = $('#wrap').classList.contains('rot');
-    const k = rot ? U.height / W : U.width / W;
-    const loc = (sx, sy) => (rot ? [(sy - U.top) / k, (U.right - sx) / k] : [(sx - U.left) / k, (sy - U.top) / k]);
-    const [x1, y1] = loc(r.left, r.top), [x2, y2] = loc(r.right, r.bottom);
+    const W = ui.offsetWidth, H = ui.offsetHeight, rb = uiBox(r);
+    const [x1, y1, x2, y2] = [rb.left, rb.top, rb.right, rb.bottom];
     const T = Math.min(y1, y2), Bt = Math.max(y1, y2), cx = (x1 + x2) / 2;
     const hz = parseFloat(getComputedStyle(ui).getPropertyValue('--hz')) || 1;
     el.style.maxWidth = Math.min(560, (W - 16) / hz) + 'px';
@@ -2376,9 +2373,9 @@ class UI {
     const c = $('#tb-kho'); if (!c) return;
     c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump');
     // số bay đặt trên #ui ngay dưới chip (thanh trên cắt phần tràn)
-    const r = c.getBoundingClientRect(), ur = $('#ui').getBoundingClientRect(), k = ur.height / (typeof UIH !== 'undefined' ? UIH : ur.height) || 1;
+    const r = uiBox(c.getBoundingClientRect());
     const f = document.createElement('i'); f.className = 'kho-fly'; f.textContent = '+' + fmt(n);
-    f.style.left = ((r.left + r.width / 2 - ur.left) / k) + 'px'; f.style.top = ((r.bottom - ur.top) / k + 2) + 'px'; $('#ui').appendChild(f);
+    f.style.left = (r.left + r.width / 2) + 'px'; f.style.top = (r.bottom + 2) + 'px'; $('#ui').appendChild(f);
     setTimeout(() => f.remove(), 1300);
   }
 
@@ -3127,10 +3124,7 @@ class UI {
     const pt = $('#dk-portrait'), ui = $('#ui');
     if (!pt) return;
     // đổi toạ độ màn hình → toạ độ trong #ui (máy xoay dọc: #wrap.rot quay 90°)
-    const u = ui.getBoundingClientRect(), rot = $('#wrap').classList.contains('rot');
-    const sc = (rot ? u.height : u.width) / ui.offsetWidth || 1;
-    const loc = (e) => { const r = e.getBoundingClientRect();
-      return rot ? { left: (r.top - u.top) / sc, top: (u.right - r.right) / sc } : { left: (r.left - u.left) / sc, top: (r.top - u.top) / sc }; };
+    const loc = (e) => uiBox(e.getBoundingClientRect());
     const r = loc(pt), d = loc($('#deck'));
     const hz = parseFloat(getComputedStyle($('#wrap')).getPropertyValue('--hz')) || 1;
     const W = ui.offsetWidth, w = sp.offsetWidth * hz;
@@ -3159,12 +3153,9 @@ class UI {
     if (t.innerHTML !== html) t.innerHTML = html;
     t.hidden = false;
     t.style.width = '';
-    const ui = $('#ui'), u = ui.getBoundingClientRect(), W = ui.offsetWidth, H = ui.offsetHeight, M = 6, G = 8;
-    // v186: màn dọc xoay cả #wrap 90° (chiều kim đồng hồ) → đổi toạ độ màn hình về hệ toạ độ trong #ui
-    const rot = $('#wrap').classList.contains('rot'), sc = (rot ? u.height : u.width) / W || 1;
-    const local = (b) => rot
-      ? { l: (b.top - u.top) / sc, r: (b.bottom - u.top) / sc, t: (u.right - b.right) / sc, b: (u.right - b.left) / sc }
-      : { l: (b.left - u.left) / sc, r: (b.right - u.left) / sc, t: (b.top - u.top) / sc, b: (b.bottom - u.top) / sc };
+    const ui = $('#ui'), W = ui.offsetWidth, H = ui.offsetHeight, M = 6, G = 8;
+    // khung-co-dinh: màn → toạ độ #ui qua một hàm chung (thu phóng FS + xoay khi cầm dọc)
+    const local = (b) => { const q = uiBox(b); return { l: q.left, r: q.right, t: q.top, b: q.bottom }; };
     // khung bao cả phần lòi ra ngoài ô (nhãn giá +1đ / +60 phía trên ô kỹ năng)
     const box = (e) => local([e, ...e.children].map((x) => x.getBoundingClientRect()).filter((x) => x.width && x.height)
       .reduce((m, x) => ({ left: Math.min(m.left, x.left), top: Math.min(m.top, x.top), right: Math.max(m.right, x.right), bottom: Math.max(m.bottom, x.bottom) })));

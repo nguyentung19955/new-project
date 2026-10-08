@@ -83,34 +83,54 @@ const GFX = {
 // Tự xoay ngang (v42): cầm điện thoại dọc thì xoay cả khung game 90° cho vừa màn hình,
 // người chơi chỉ việc cầm ngang — không cần bật xoay màn hình của máy.
 let ROT = false;
+// claude/khung-co-dinh: khung thiết kế cố định (844×390 ≈ tỉ lệ đa số điện thoại hiện nay, 19,5:9) và phép đổi toạ độ màn → khung
+const FW = 844, FH = 390;
+let UIK = 1, FS = 1, FRAME = { cx: FW / 2, cy: FH / 2, rot: false, s: 1 };
+// toạ độ client (màn hình) → toạ độ trong khung (px CSS của #wrap chưa thu phóng / xoay). Mọi chỗ đổi toạ độ chạm đều qua đây.
+function toFrame(x, y) {
+  let dx = (x - FRAME.cx) / FRAME.s, dy = (y - FRAME.cy) / FRAME.s;
+  if (FRAME.rot) [dx, dy] = [dy, -dx];            // khung xoay 90° theo chiều kim đồng hồ → xoay ngược
+  return [dx + FW / 2, dy + FH / 2];
+}
+// DOMRect (toạ độ màn) → hộp trong khung
+function rectToFrame(r) {
+  const P = [toFrame(r.left, r.top), toFrame(r.right, r.top), toFrame(r.left, r.bottom), toFrame(r.right, r.bottom)];
+  const xs = P.map((p) => p[0]), ys = P.map((p) => p[1]);
+  const left = Math.min(...xs), top = Math.min(...ys), right = Math.max(...xs), bottom = Math.max(...ys);
+  return { left, top, right, bottom, width: right - left, height: bottom - top, x: left, y: top };
+}
 function resize() {
   // v153: bàn phím điện thoại mở khi gõ chat (hoặc góp ý) làm khung nhìn co lại — giữ nguyên bố cục, gõ xong mới co giãn lại
   const ae = document.activeElement;
   if (ae && ae.id === 'chat-in') { if (!resize.hooked) { resize.hooked = true; ae.addEventListener('blur', () => { resize.hooked = false; setTimeout(resize, 150); }, { once: true }); } return; }
   let [vw, vh, vx, vy] = viewportSize();
   if (!vw || !vh) return requestAnimationFrame(resize);
-  const cx = vx + vw / 2, cy = vy + vh / 2;     // tâm khung nhìn thật — #wrap (position: fixed) đặt tâm vào đây, xoay quanh tâm
+  const cx = vx + vw / 2, cy = vy + vh / 2;     // tâm vùng an toàn — #wrap (position: fixed) đặt tâm vào đây
+  // claude/khung-co-dinh: KHUNG THIẾT KẾ CỐ ĐỊNH FW × FH (như game mobile chuẩn). Mọi bố cục dàn ở đúng khung này bằng px cố định,
+  // rồi cả #wrap thu / phóng bằng MỘT hệ số FS (+ xoay 90° khi máy cầm dọc) cho vừa vùng an toàn; phần thừa nền đen (hộp đen).
   ROT = vh > vw;
-  if (ROT) [vw, vh] = [vh, vw];
+  const aw = ROT ? vh : vw, ah = ROT ? vw : vh;
+  FS = Math.min(aw / FW, ah / FH);
   $('#rotate').hidden = true;
-  wrap.classList.toggle('rot', ROT);
-  // Responsive (v42): khung game phủ KÍN màn hình. Bản đồ co vừa (được cắt bớt tối đa CROP đơn vị
-  // nền trống trên + dưới khi màn hình dẹt), nằm giữa; phần thừa phủ ảnh bản đồ mờ tối.
-  // Giao diện bám mép màn hình thật nên che ít bản đồ hơn.
+  wrap.classList.remove('rot');
+  vw = FW; vh = FH;
   const CROP = 34;
   const scale = Math.min(vw / CONFIG.W, vh / (CONFIG.H - CROP));
-  const w = Math.floor(vw), h = Math.floor(vh);
+  const w = FW, h = FH;
   const ox = (w / scale - CONFIG.W) / 2;                       // lệch bản đồ (đơn vị logic)
   const hv = h / scale;
   const oy = hv >= CONFIG.H ? (hv - CONFIG.H) / 2 : (hv - CONFIG.H) * 0.55;   // cắt trên nhiều hơn dưới một chút
-  const dpr = Math.min(window.devicePixelRatio || 1, GFX.dprCap(), GFX.pxCap(w, h));
+  // canvas vẽ theo điểm ảnh thật trên màn (khung × FS × dpr) cho nét
+  const dpr = Math.min((window.devicePixelRatio || 1) * FS, GFX.dprCap() * Math.max(1, FS), GFX.pxCap(w, h));
   wrap.style.width = w + 'px';
   wrap.style.height = h + 'px';
   wrap.style.left = Math.round(cx - w / 2) + 'px';
   wrap.style.top = Math.round(cy - h / 2) + 'px';
+  wrap.style.transform = `${ROT ? 'rotate(90deg) ' : ''}scale(${FS})`;
+  FRAME = { cx, cy, rot: ROT, s: FS };
   if (window.scrollX || window.scrollY) window.scrollTo(0, 0);
-  // giao diện: cùng tỉ lệ với bản đồ (k), khung thiết kế rộng / cao theo màn hình (UIW × UIH)
-  const k = scale * DK;
+  // giao diện: cùng tỉ lệ với bản đồ (k), khung thiết kế UIW × UIH (cố định theo khung)
+  const k = scale * DK; UIK = k;
   UIW = w / k; UIH = h / k; MAPX = ox; MAPY = oy;
   $('#ui').style.width = UIW + 'px';
   $('#ui').style.height = UIH + 'px';
@@ -152,10 +172,8 @@ resize();
 // --- Chạm & kéo tướng: chạm nhanh = chọn, giữ và kéo = đổi ô
 let drag = null;
 const toLogical = (ev) => {
-  const r = canvas.getBoundingClientRect();
-  // khung đang xoay 90° (chiều kim đồng hồ): trục ngang của game chạy dọc màn hình
-  if (ROT) return [(ev.clientY - r.top) / view.scale - view.ox, (r.right - ev.clientX) / view.scale - view.oy];
-  return [(ev.clientX - r.left) / view.scale - view.ox, (ev.clientY - r.top) / view.scale - view.oy];
+  const [fx, fy] = toFrame(ev.clientX, ev.clientY);   // canvas phủ kín khung (0,0)
+  return [fx / view.scale - view.ox, fy / view.scale - view.oy];
 };
 
 canvas.addEventListener('pointerdown', (ev) => {
@@ -223,7 +241,7 @@ window.addEventListener('pointermove', (ev) => {
     clearTimeout(d.holdT); if (d.held) { d.held = false; ui.hideHeroTip(); }
     cardGhost.innerHTML = `<img src="${heroImgUrl(d.type, 'head')}" alt="">`;
     cardGhost.style.setProperty('--c', ELEMENTS[HEROES[d.type].el].color);
-    cardGhost.classList.toggle('rot', ROT);
+    cardGhost.classList.toggle('rot', ROT); cardGhost.style.setProperty('--gs', FS);
     cardGhost.hidden = false;
   }
   if (!d.moved) return;

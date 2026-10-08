@@ -1370,7 +1370,7 @@ body { overflow: hidden; }
 .rn-lv.next { border: 1px dashed #FFD66B; color: #FFE9A0; }
 .rn-buy { height: 40px; font-size: 15px; margin-top: auto; }
 .rn-lockmsg { margin-top: auto; font-size: 13px; color: var(--text-2); text-align: center; }
-@media (max-height: 400px) {
+@media all {
   .rn-node { width: 38px; height: 38px; } .rn-node.sk { width: 34px; height: 34px; } .rn-node .ri { font-size: 16px; }
   .rn-col { gap: 4px; padding: 4px 6px 8px; } .rn-det { width: 220px; } .rn-lvs { font-size: 12px; }
 }
@@ -1394,7 +1394,7 @@ body { overflow: hidden; }
 .mc-row .mc-btn:last-child { flex: 0 0 42%; justify-content: center; }
 .rn-col { gap: 13px; padding-bottom: 12px; }
 #bb-info .fc span[style] { filter: brightness(1.5); }
-@media (max-height: 400px) { .rn-col { gap: 11px; padding-bottom: 10px; } }
+@media all { .rn-col { gap: 11px; padding-bottom: 10px; } }
 /* v92: tướng khắc chế bằng ảnh đại diện */
 .ch-sum { font-size: 12px; color: var(--text-2); }
 .ch-row { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -1482,7 +1482,7 @@ body { overflow: hidden; }
 .md-card:active { transform: scale(.98); }
 .cp-mode { display: flex; }
 .cp-mode button { height: 30px; padding: 0 10px; font-size: 13px; font-weight: 800; white-space: nowrap; }
-@media (max-height: 400px) { .md-card b { font-size: 24px; } .md-card .md-ic { font-size: 30px; } .md-card small { font-size: 12.5px; } }
+@media all { .md-card b { font-size: 24px; } .md-card .md-ic { font-size: 30px; } .md-card small { font-size: 12.5px; } }
 .cp-side { overflow-y: auto; }
 .cp-side .cp-act { position: sticky; bottom: -12px; background: #17130F; padding: 6px 0 4px; margin-top: auto; z-index: 1; }
 .cp-rec { font-size: 14px; color: #BFE8F8; background: #102A3A; border: 1px solid #5AB4D6; border-radius: 4px; padding: 5px 8px; }
@@ -1570,7 +1570,7 @@ html:not(.pixel) .pl-box { background-image: url('../assets/ui/khung-nguoi-choi.
 #campaign .cp-side { overflow: hidden; padding-bottom: 8px; }
 #campaign .cp-side .cp-scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; gap: 8px; padding-bottom: 4px; }
 #campaign .cp-side .cp-act { position: static; flex: none; margin-top: 0; padding: 6px 0 0; border-top: 1px solid #3A2A18; }
-@media (max-height: 400px) { #campaign .ch-av { width: 44px; } #campaign .ch-av > img { width: 36px; height: 36px; } }
+@media all { #campaign .ch-av { width: 44px; } #campaign .ch-av > img { width: 36px; height: 36px; } }
 /* nhãn ải sát mép bản đồ không bị cắt */
 .cp-node.edge-r .lb { position: relative; transform: translateX(-34%); }
 .cp-node.edge-l .lb { position: relative; transform: translateX(30%); }
@@ -1628,7 +1628,8 @@ i.c { background: #1F4A2A; color: #8AE09A; } i.h { background: #4A2A5A; color: #
 .mk-lk.on { background: linear-gradient(#FFE08A, #D89A2A); border-color: #FFF0B0; color: #3A2208; box-shadow: 0 0 10px #FFC94A; }
 .mk-row.locked .mk-card { box-shadow: 0 0 0 2px #FFD36A, 0 0 8px #FFC94A99; animation: none; }
 #mk-ghost { position: fixed; z-index: 100; width: 56px; height: 56px; margin: -46px 0 0 -28px; border-radius: 50%; border: 3px solid var(--c, #FFD66B); background: #0D0B08; overflow: hidden; pointer-events: none; box-shadow: 0 4px 14px #000c, 0 0 12px var(--c, #FFD66B); opacity: .92; }
-#mk-ghost.rot { transform: rotate(90deg); margin: -28px 0 0 -10px; }
+#mk-ghost { transform: scale(var(--gs, 1)); }
+#mk-ghost.rot { transform: rotate(90deg) scale(var(--gs, 1)); margin: -28px 0 0 -10px; }   /* khung-co-dinh: bóng thẻ ở ngoài #wrap → thu phóng theo FS */
 #mk-ghost img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; }
 /* v143: đang kéo tướng → ẩn chợ tướng / thanh đáy, thùng Hủy chiếm đúng chỗ đó (cùng ý với nhánh kéo-tướng-ẩn-triệu-hồi) */
 #wrap.dragging-hero #deck, #wrap.dragging-hero #deck-hint { visibility: hidden; pointer-events: none; }
@@ -1781,7 +1782,7 @@ html.sk-nen-man-phu #prep .screen, html.sk-nen-man-phu #result .screen, html.sk-
 #coop-bar .cg { color: var(--gold-hi); font-weight: 800; display: flex; align-items: center; gap: 3px; }
 #coop-bar small { color: #FFB08A; font-size: 11px; }
 #coop-bar button { height: 24px; padding: 0 8px; border-radius: 12px; font-size: 11.5px; font-weight: 800; color: var(--gold); }
-@media (max-width: 560px) { .md-body { grid-auto-flow: row; grid-auto-rows: minmax(160px, 1fr); overflow-y: auto; } }
+@media not all { .md-body { grid-auto-flow: row; grid-auto-rows: minmax(160px, 1fr); overflow-y: auto; } }
 /* v153: trò chuyện trong trận nhóm — khung gọn bên phải (≤ 1/3 màn), ô nhập ở trên để bàn phím không che */
 #btn-chat { position: relative; font-size: 18px; }
 #chat { position: absolute; right: 8px; top: calc(78px * var(--hz, 1)); bottom: calc(96px * var(--hz, 1)); width: min(300px, 32%); z-index: 6;
@@ -2022,7 +2023,7 @@ svg.icn { overflow: visible; }
 .ho-why b { color: #9dffc4; font-style: normal; }
 .ho-ft .hx-go { flex: none; height: 32px; }
 .ho-hint { flex: none; font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-@media (max-height: 400px) { .ev2-body .ho-panel { width: 340px; } .es-fx { display: none; } .ho-why { font-size: 10.5px; } }
+@media all { .ev2-body .ho-panel { width: 340px; } .es-fx { display: none; } .ho-why { font-size: 10.5px; } }
 
 /* v180: icon ngũ hành (img.eli) luôn giữ đúng cỡ được truyền (style inline) — không ăn theo quy tắc ảnh chân dung của khung chứa
    (lỗi cũ: ".mk-card img" phóng icon hệ thành 42px, tâm ở mép trái → mảng lửa/khối vàng bị cắt lòi ra sau avatar) */
@@ -2064,7 +2065,7 @@ img.eli { position: static !important; inset: auto !important; transform: none !
 .res-khobox { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 1px; padding: 6px 12px; border-radius: 6px; border: 1px solid #8FA4B8; background: #10161C; white-space: nowrap; }
 .res-khobox small { font-size: 11px; color: #C8BFA8; }
 .res-khobox b { font-family: var(--title); font-size: 24px; line-height: 1.1; color: #E4ECF4; display: inline-flex; align-items: center; gap: 4px; }
-@media (max-width: 720px) { .res-khobox { padding: 4px 8px; } .res-khobox b { font-size: 19px; } .res-khobox small { font-size: 10px; } }
+@media not all { .res-khobox { padding: 4px 8px; } .res-khobox b { font-size: 19px; } .res-khobox small { font-size: 10px; } }
 /* v182: màn kết quả dài hơn (kỷ lục, nhiệm vụ ngày, mở tướng) — cột phải cuộn được, không bị cắt đáy */
 #result .res-body { overflow: hidden; }
 #result .res-main { min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
@@ -2109,7 +2110,7 @@ html.sk-the-cho .mk-card .rl { z-index: 2; }
 .vt-h.lock img { filter: grayscale(.8) brightness(.65); }
 .vt-h img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; object-position: 50% 0; }
 .vt-h span { width: 100%; font-size: 9.5px; font-weight: 800; line-height: 11px; color: #E8D8B0; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 1px; }
-@media (max-height: 400px) { .vt-body { grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); } .vt-h { width: 48px; } .vt-h img { width: 30px; height: 30px; } .rl-f span { display: none; } .rl-f { padding: 0 4px; } .rl-f:first-child { padding: 0 8px; } }
+@media all { .vt-body { grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); } .vt-h { width: 48px; } .vt-h img { width: 30px; height: 30px; } .rl-f span { display: none; } .rl-f { padding: 0 4px; } .rl-f:first-child { padding: 0 8px; } }
 .vt-h span.lg { font-size: 8.5px; letter-spacing: -.2px; }
 /* v182: khung mô tả khi rê chuột / giữ tay — số liệu cấp này ➜ cấp sau, hồi chiêu, điều kiện, giá */
 #sk-tip { width: 290px; overflow-y: auto; overscroll-behavior: contain; }
@@ -2124,7 +2125,7 @@ html.sk-the-cho .mk-card .rl { z-index: 2; }
 #sk-tip .st-r.no > b, #sk-tip .st-r .no { color: #FF9A7A; }
 [data-skt], [data-skr], [data-tip] { -webkit-touch-callout: none; user-select: none; -webkit-user-select: none; }
 /* v185: vai trò đang lọc luôn hiện tên (màn nhỏ ẩn tên các nút khác) */
-@media (max-height: 400px) { .rl-f.on span { display: inline; } .rl-f.on { padding: 0 7px 0 4px; } }
+@media all { .rl-f.on span { display: inline; } .rl-f.on { padding: 0 7px 0 4px; } }
 /* v189: sửa lỗi báo cáo test (docs/BAO-CAO-TEST.md) */
 /* L04: màn kết quả cao hơn màn hình (844×390: 563/390px) mà không cuộn được → cột phải tự cuộn, các khối giữ chiều cao thật */
 .res-main { min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding-right: 2px; }
@@ -2136,7 +2137,7 @@ html.sk-the-cho .mk-card .rl { z-index: 2; }
 .ch-av > img { width: var(--av); height: var(--av); }
 .ch-av i { box-sizing: border-box; width: 15px; height: 15px; top: calc(var(--av) - 15px); right: calc(50% - var(--av) / 2 - 2px); }
 .ch-av i img.eli, .ch-av i svg.eli { width: 11px !important; height: 11px !important; }
-@media (max-height: 400px) { #campaign .ch-av { --av: 36px; } #campaign .ch-av > img { width: var(--av); height: var(--av); } }
+@media all { #campaign .ch-av { --av: 36px; } #campaign .ch-av > img { width: var(--av); height: var(--av); } }
 /* L09: nút "Ấn Phù" ở menu chính bớt lề trong để chữ không chạm viền phải */
 #menu .mc-row .mc-btn { padding: 0 8px; gap: 6px; }
 /* L16: khối Đợt cao đúng phần trong của thanh trên (40 − viền 2px) → chữ "Đợt" không còn bị đẩy lên quá mép trên màn */
@@ -2175,7 +2176,7 @@ html.sk-the-cho .mk-card .rl { z-index: 2; }
 #banner { max-width: 92%; padding: 6px 28px; box-sizing: border-box; }
 #banner b { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 #banner small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-@media (max-height: 520px) { #banner { top: 70px; padding: 4px 22px; } #banner b { font-size: 22px; } #banner small { font-size: 11px; } }
+@media all { #banner { top: 70px; padding: 4px 22px; } #banner b { font-size: 22px; } #banner small { font-size: 11px; } }
 #tb-wave .wn { display: inline-block; min-width: 1.15em; text-align: center; }
 
 /* vo-tan-su-kien: sự kiện đợt (từ đợt 60, mỗi 10 đợt) — banner viền màu sự kiện, biểu tượng trên dải đợt kế */
@@ -2188,7 +2189,7 @@ html.sk-the-cho .mk-card .rl { z-index: 2; }
 #toasts .ev-ic { height: 1.25em; width: auto; vertical-align: -0.3em; margin-right: 2px; }
 /* banner sự kiện nằm dưới dải "đợt kế" (dải luôn hiện tên sự kiện nên không được che dòng phụ của banner) */
 #banner.ev { top: 104px; }
-@media (max-height: 520px) { #banner.ev { top: 84px; } }
+@media all { #banner.ev { top: 84px; } }
 /* cho-6-the: chợ 6 thẻ, thanh chợ thấp gọn (48px thay 70px ≈ 69%) để thấy nhiều sân hơn.
    Thẻ 66×44: chân dung tròn 24px, icon hệ (trái) + vai trò (phải) ở góc trên, dải giá riêng 16px (xu 15px viền sáng, chữ 14px).
    Tên tướng không hiện trên thẻ (ở tiêu đề/aria và thanh tướng khi chọn) — tên chen dưới ảnh đè cằm chân dung (tester T8). */
@@ -2259,7 +2260,7 @@ html.pixel #bossbar .bn span:first-child { font-size: 15px; color: #FFE7A0; }
 /* vo-tan-su-kien (tester): đang đợt sự kiện, dải trên hiện "tên sự kiện · thử thách" → banner boss/thăng thần cũng hạ xuống như banner sự kiện
    (trước đây ở 844×390 và cầm dọc dải che dòng nhỏ "Boss xuất hiện") */
 #nextwaves:not([hidden]):has(.evt) ~ #banner { top: 104px; }
-@media (max-height: 520px) { #nextwaves:not([hidden]):has(.evt) ~ #banner { top: 84px; } }
+@media all { #nextwaves:not([hidden]):has(.evt) ~ #banner { top: 84px; } }
 #wrap.rot #nextwaves:not([hidden]):has(.evt) ~ #banner { top: 84px; }
 /* claude/xuat-goi-pixel: emoji / ký hiệu thay bằng icon pixel (js/pixel.js PX_EMO) — cao bằng dòng chữ */
 html.pixel img.pxemo { height: 1.15em; width: auto; vertical-align: -0.2em; image-rendering: pixelated; display: inline-block; }
@@ -2308,7 +2309,7 @@ html.pixel .mc-btn.main { background: none; border-style: solid; border-color: t
 .cp-tg:not(.hard) .n { background: linear-gradient(180deg, #F2D27A, #B8852A); color: #2A1A08; }
 .cp-tg.hard .h { background: linear-gradient(180deg, #C8401E, #7A1E0E); color: #FFE0C8; box-shadow: 0 0 8px #E25A3A88; }
 .cp-tg small { font-size: 10px; }
-@media (max-height: 520px) { html.pixel #banner b { font-size: 26px; } }
+@media all { html.pixel #banner b { font-size: 26px; } }
 html.pixel #wrap.rot #banner b { font-size: 26px; }
 /* sua-giao-dien-10 (V3/V4): MỘT kiểu tab cho cả game (tab chương, Bách khoa, Lò đúc, Hợp thể, Xếp hạng): góc vuông, viền 2px,
    chưa chọn = gỗ tối chìm, đang chọn = vàng nghệ nổi (trước đây 3 kiểu: viên thuốc bạc, tab gỗ, tab đồng — tab chưa chọn nổi hơn tab đang chọn) */
@@ -2458,7 +2459,7 @@ html.pixel .fb-shot .sw { width: 40px; height: 22px; } html.pixel .fb-shot .sw::
 @keyframes khoFly { from { transform: translate(-50%, 0); opacity: 1; } to { transform: translate(-50%, 18px); opacity: 0; } }
 #reward .sl-kho small { font-weight: 700; color: #B8C4D0; margin-left: 2px; }
 /* màn thấp: bớt khoảng giữa các ô tài nguyên để chỗ chip Ngân khố */
-@media (max-height: 400px) { .tb-res { gap: 8px; } }
+@media all { .tb-res { gap: 8px; } }
 html.pixel :is(.hx-auto, .hx-pin, .hx-st.hx-open, .hx-sk) { border-radius: 2px; }
 /* sua-giao-dien-10 (tester): nút nhỏ bảng Hợp thể — Tự gợi ý, lọc hành, Theo đuổi, 🔒 Mở — vùng chạm ≥ 40px màn hình (chỉ mở dọc, không đổi bố cục);
    Theo đuổi (hàng tên) mở lên trên, Mở (hàng nguyên liệu) mở xuống dưới để hai vùng không chồng nhau. Chỉ trong #legends:
