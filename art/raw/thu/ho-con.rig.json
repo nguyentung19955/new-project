@@ -26,16 +26,16 @@
     "tay_truoc": {
       "hop": [
         3.5,
-        18.2,
-        10.6,
-        29.8
+        20.5,
+        12.5,
+        29.5
       ],
-      "day": 5.9
+      "day": 3.6
     },
     "tay_sau": {
       "hop": [
-        17.5,
-        19.8,
+        18.0,
+        20.3,
         25.0,
         28.9
       ],
@@ -66,47 +66,47 @@
       18.8
     ],
     "vai_truoc": [
-      8.0,
+      10.3,
       21.8
     ],
     "khuyu_truoc": [
-      7.3,
-      24.4
+      8.4,
+      24.2
     ],
     "ban_tay_truoc": [
-      6.6,
-      26.9
+      6.5,
+      26.7
     ],
     "vai_sau": [
-      20.2,
-      22.5
+      20.7,
+      23.0
     ],
     "khuyu_sau": [
-      21.6,
-      24.3
+      21.8,
+      24.5
     ],
     "ban_tay_sau": [
       23.0,
       26.0
     ],
     "hong_truoc": [
-      8.5,
-      30.2
+      11.5,
+      30.9
     ],
     "goi_truoc": [
-      10.0,
-      33.9
+      11.6,
+      34.3
     ],
     "ban_chan_truoc": [
       11.7,
       38.0
     ],
     "hong_sau": [
-      17.4,
+      17.5,
       31.1
     ],
     "goi_sau": [
-      17.9,
+      18.0,
       34.4
     ],
     "ban_chan_sau": [
@@ -120,17 +120,18 @@
       "hop": [
         0.0,
         18.9,
-        13.2,
+        12.6,
         35.2
       ],
       "khop": [
-        10.9,
-        30.5
+        10.4,
+        30.7
       ],
       "gan": "than",
       "lop": "sau",
-      "lac": 10,
-      "day": 9.7
+      "lac": 14,
+      "day": 7.4
     }
-  ]
+  ],
+  "_da_sua_tay": "Da sua tay: diem vai truoc doi vao trong than (tay ve de len than nen cong cu doan tay bi ngan), duoi lac manh hon."
 }

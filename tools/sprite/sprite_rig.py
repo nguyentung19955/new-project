@@ -312,7 +312,8 @@ def auto_rig(idx, K):
             lowrun = [s for y, s in run if y >= crotch + (h - crotch) * 0.35] or [s for _, s in run]
             x0 = min(s[0] for s in lowrun)  # chỉ đo ở nửa dưới, tránh dính đuôi hay vạt áo phía trên
             x1 = max(s[1] for s in lowrun)
-            top = [s for y, s in run if y < crotch + (h - crotch) * 0.35] or [run[0][1]]
+            clip = lambda s: (max(s[0], x0), max(max(s[0], x0) + 1, min(s[1], x1)))
+            top = [clip(s) for y, s in run if y < crotch + (h - crotch) * 0.35] or [clip(run[0][1])]
             lw = float(np.median([s[1] - s[0] for s in top]))
             hipx = float(np.mean([(s[0] + s[1]) / 2 for s in top[: max(1, len(top) // 3)]]))
             low = [s for y, s in run if crotch + (h - crotch) * 0.45 < y < crotch + (h - crotch) * 0.75] or [run[-1][1]]
@@ -593,7 +594,14 @@ def split_parts(idx, rig, K, ncol):
         if name not in regions:
             continue
         reg = regions[name][0]
-        fill = arm_cut & _between_rows(reg) & _between_rows(reg.T).T & M
+        both = reg.copy()
+        for other in ("chan_truoc", "chan_sau"):
+            if other in regions:
+                both |= regions[other][0]
+        fill = arm_cut & _between_rows(both) & M
+        hop = regions[name][5].get("hop")
+        if hop:
+            fill &= _box_mask(shape, hop, K)
         img, have = fill_from(idx, reg, fill)
         leg_imgs[name] = img
         regions[name] = (have,) + regions[name][1:]
