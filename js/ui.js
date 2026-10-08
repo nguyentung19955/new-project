@@ -737,6 +737,7 @@ class UI {
     g.running = false;
     g.speed = 1;
     this.sel = -1; this.spot = -1; this.armed = null; this.raising = false; this.moving = -1;
+    this.hideTrash();     // sua-trieu-hoi: không mang thùng 🗑 / lớp dragging-hero (ẩn chợ) sót từ trận trước sang
     this.screen = null;
     $('#screen').hidden = true;
     this.save.last = i;

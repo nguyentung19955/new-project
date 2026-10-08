@@ -2274,3 +2274,13 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
 
 ## Phiên bản 208 — bàn giao điều phối, quy tắc tiết kiệm token
 - Thêm docs/BAN-GIAO-DIEU-PHOI.md và mục "Tiết kiệm token" trong CLAUDE.md. Dừng mọi session con.
+
+## claude/sua-trieu-hoi — sửa lỗi "chơi một lúc thì không triệu hồi (mua thẻ Chợ) được nữa"
+- **Nguyên nhân gốc:** khi kéo tướng, `#wrap` nhận lớp `dragging-hero` (CSS ẩn thanh chợ + `pointer-events:none` để thùng 🗑 nằm đúng chỗ).
+  Nếu đang kéo (ngón 1) mà một ngón khác chạm vào tướng khác, `pointerdown` của canvas **ghi đè biến `drag`** → ngón 1 nhấc ra bị bỏ qua
+  (khác pointerId), ngón 2 chỉ là chạm chọn → không ai gọi `hideTrash()`. Lớp `dragging-hero` kẹt mãi (cả sang ải sau, không có chỗ nào gỡ):
+  chợ tướng biến mất / không nhận chạm, thùng 🗑 vẫn hiện → "không triệu hồi được nữa". Dễ gặp khi chơi nhanh bằng 2 tay trên điện thoại.
+  Đã loại trừ: chợ rỗng / thẻ null (MARKET_CAP, bảo hiểm), lỗi JS khi tự ghép, lớp phủ khác — chơi thử 30 đợt mua liên tục đều mua được.
+- **Sửa (js/main.js):** đang kéo tướng thì bỏ qua ngón khác (`if (drag) return`); `pointercancel` của ngón khác không huỷ lần kéo đang dở;
+  chạm canvas mà còn sót thùng 🗑 thì gỡ luôn. **js/ui.js `startLevel`:** vào trận mới gọi `hideTrash()` (không mang lớp kẹt sang).
+- **Test:** `tests/cho-tuong/keo-hai-ngon.test.js` (chạm 2 ngón bằng CDP: code cũ FAIL "chợ hiện lại", code mới đạt; mua thẻ được sau đó).
