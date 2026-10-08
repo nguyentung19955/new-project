@@ -2685,6 +2685,18 @@ Người dùng chọn phương án 4: máu quái tăng dần theo đợt + hạ 
 
   % sát thương từ R (đợt 45–55, tướng max đứng một mình) trước → sau: Gióng 94 → 86, Mẫu T.Ngàn 91 → 87, Sơ Dừa 91 → 83, Cuội 93 → 81, An Tiêm 84 → 73, Hải Sen 90 → 87, Thần Sương 74 → 68. R nhanh nhất trước đây: Thầy Mo 8,5 s, Xạ Thủ 8,6 s, Lạc Tướng 8,8 s → nay 12 s.
 - Tím đơn độc (21 tướng, ải 4 Thường): đa số thua ~đợt 15–24; Sơ Dừa vượt trội (thua ~49) → hạ qua R ở trên.
+- Bảng bot trước → sau (3 ván mỗi ô; đợt mất mạng đầu → đợt thua; Dễ = ải 1 Thường, Thường = ải 4, Khó = ải 1 bật Khó, Khó4 = ải 4 bật Khó; đội 6 = 6 Thường ★★★ khác hành; hỗn hợp = 1 Vàng tầm xa + 2 Tím + 3 Thường ★★★):
+
+| Đội | Dễ | Thường | Khó (ải 1) | Khó4 |
+|---|---|---|---|---|
+| 1 Vàng Mặt Trời | 60→70 / 60→70 | 22→27 / 22→26 | **55,7→62,7 / 34→41,3** | 21,7→27,7 / 22→28 |
+| 1 Vàng Thiên Lôi | 55,7→69 / 55,7→69 | 21,7→27 / 21,7→27,7 | **54,3→60 / 27,7→42,3** | 21,7→28 / 22→27,3 |
+| 1 Tím Sơ Dừa | 53,3→67,7 / 38,7→61,3 | 23→48,7 / 22→36,3 | **49,3→61,7 / 10→22** | 16,7→43,3 / 15,3→23,7 |
+| Đội 6 Thường | 54,7→66 / 61→66,7 | 50,3→53,7 / 47,3→49,3 | 53,7→59,3 / 37,3→41 | 42→49,3 / 33,7→38,3 |
+| Đội hỗn hợp | 61,3→70 / 65,7→67,7 | 55,7→59,3 / 50→53,7 | 61,3→66,3 / 36→44 | 51→56,3 / 34,7→43,3 |
+
+  Qua đợt 30: mọi đội 3/3 ở mọi chế độ; Vàng đơn độc Thường/Khó4 0/3 (như trước), ở Khó ải 1 vẫn 3/3; Sơ Dừa Khó ải 1 3/3 → 0/3.
+  Hạn chế: bot không mặc đồ / không mua thêm tướng; đội bot max cấp ★★★ quanh đợt 30–40 rồi bị máu tăng đuổi kịp, nên Thế trận (+64%) chỉ kéo đội thêm vài đợt — Vàng đơn độc ở Khó ải 1 vẫn mất mạng đầu ~đợt 28–34 (mục tiêu 20–25).
 - Công cụ: `tests/can-bang-vang/mo-phong.js` (bot Vô tận: `node tests/can-bang-vang/mo-phong.js vang:matroi,tim:sodua,thuong6,hon de,thuong,kho,kho4 3`), `tests/can-bang-vang/do-r.js` (bảng R). Test hồi quy: `tests/can-bang-vang/can-bang-vang.test.js`.
 
 ### Đo ban đầu (trước khi chọn phương án)
