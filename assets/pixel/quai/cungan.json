@@ -1,0 +1,44 @@
+{
+ "code": "cungan",
+ "group": "quai",
+ "name": "Sói Cung Thủ",
+ "w": 32,
+ "h": 32,
+ "ax": 16,
+ "ay": 29,
+ "bbox": [
+  2,
+  1,
+  28,
+  28
+ ],
+ "n": 11,
+ "anims": {
+  "walk": {
+   "start": 0,
+   "n": 4,
+   "fps": 6,
+   "loop": true
+  },
+  "attack": {
+   "start": 4,
+   "n": 3,
+   "fps": 8,
+   "loop": false
+  },
+  "hurt": {
+   "start": 7,
+   "n": 1,
+   "fps": 8,
+   "loop": false
+  },
+  "die": {
+   "start": 8,
+   "n": 3,
+   "fps": 5,
+   "loop": false
+  }
+ },
+ "cd": 1,
+ "sheet": "cungan.png"
+}

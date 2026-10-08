@@ -2063,8 +2063,21 @@ function enemyBox(e) {
   const a = enemyArt(e.type);
   const k = (e.champion ? 1.5 : 1) * (e.elite ? 1.15 : 1);
   const w = (ENEMY_W[e.type] || 40) * k;
-  const pb = typeof pxEnemyBox === 'function' && pxEnemyBox(e, w, k);   // pixel art (js/pixel.js)
+  // pixel art (js/pixel.js): co/giãn theo chiều cao hình cũ (bảng hơi cao hơn → boss to vọt, che thanh trên / đè thành)
+  const pb = typeof pxEnemyBox === 'function' && pxEnemyBox(e, w, k, enemyBoxOldH(e, a, w, k));
   if (pb) return pb;
+  return enemyBoxOld(e, a, w, k);
+}
+// chiều cao hình cũ (đơn vị logic, k = 1 tính theo rộng) — nhớ theo mã khi đo được ảnh cũ để không nhảy cỡ
+const ENEMY_OLD_HW = new Map();
+function enemyBoxOldH(e, a, w, k) {
+  const b = enemyBoxOld(e, a, w, k);
+  if (b.solo || a) ENEMY_OLD_HW.set(e.type, b.h / w);
+  const r = ENEMY_OLD_HW.get(e.type);
+  if (r) return r * w;
+  return e.def && e.def.boss ? 112 * k : 0;   // ảnh cũ chưa tải: boss cao chuẩn như cdEnemySize, quái thường giữ nguyên
+}
+function enemyBoxOld(e, a, w, k) {
   // tự cử động: ảnh đơn → cao theo khung bao của ảnh (thanh máu nằm trên đỉnh hình thật)
   const so = typeof cdSoloImg === 'function' && !vectorHeroesOn() && cdSoloImg(e.type, true);
   const sp = so && cdPrepare(so);
@@ -2078,7 +2091,12 @@ function drawEnemy(ctx, e, t, o = {}) {
   const d = e.def;
   const box = enemyBox(e);
   const a = enemyArt(e.type);
-  const lift = d.flying && !o.icon ? 24 + Math.sin(t * 5 + e.id) * 3 : 0;
+  let lift = d.flying && !o.icon ? 24 + Math.sin(t * 5 + e.id) * 3 : 0;
+  // kẹp: đỉnh hình (kể cả vỗ cánh) + thanh máu không vượt mép trên vùng chơi (dưới thanh trên) — hạ độ nâng, tối đa thêm nửa thân
+  if (!o.icon && typeof PLAY_TOP === 'number') {
+    const over = PLAY_TOP + 14 - (e.y - lift - box.ay * (d.flying ? 1.12 : 1));
+    if (over > 0) lift -= Math.min(over, lift + box.h * 0.5);
+  }
   const bob = Math.sin(t * 9 + e.id) * 1.5;
   const wig = Math.sin(t * 7 + e.id) * 0.04;
   ctx.save();

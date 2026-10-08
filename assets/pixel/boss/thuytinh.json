@@ -1,0 +1,44 @@
+{
+ "code": "thuytinh",
+ "group": "boss",
+ "name": "Thủy Tinh",
+ "w": 64,
+ "h": 64,
+ "ax": 29,
+ "ay": 62,
+ "bbox": [
+  9,
+  2,
+  50,
+  61
+ ],
+ "n": 11,
+ "anims": {
+  "walk": {
+   "start": 0,
+   "n": 4,
+   "fps": 5,
+   "loop": true
+  },
+  "attack": {
+   "start": 4,
+   "n": 3,
+   "fps": 7,
+   "loop": false
+  },
+  "hurt": {
+   "start": 7,
+   "n": 1,
+   "fps": 8,
+   "loop": false
+  },
+  "die": {
+   "start": 8,
+   "n": 3,
+   "fps": 4,
+   "loop": false
+  }
+ },
+ "cd": 1,
+ "sheet": "thuytinh.png"
+}

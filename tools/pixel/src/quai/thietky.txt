@@ -1,0 +1,229 @@
+# Lợn Giáp Sắt (mã thietky) — biến thể của Quỷ Lợn Rừng (kybinh), quái 32×32 (hành Kim · hoá điên). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (DANH-SACH Lô 10 · js/enemies2.js:92 · tools/make-variants.py:16): giữ y dáng kybinh (lợn đất nung đầu lợn 2 chân, giáo ngắn,
+# nanh trắng) nhưng BỌC GIÁP SẮT xám thép từ đầu tới móng, đường ghép tấm đinh tán bạc, vá miếng đồng chằng thừng; chỉ mõm còn lộ đất nung.
+name: Lợn Giáp Sắt
+size: 32x32
+anchor: 13,28
+colors:
+  k = vien
+  t = toi
+  K = khoi
+  H = sat-sang
+  G = sat
+  g = sat-toi
+  l = bac
+  C = dat-sang
+  c = dat
+  z = dat-toi
+  w = bac
+  L = lua-sang
+  o = lua-sang
+  e = trang
+  E = trang-xam
+  a = cat
+  r = cham
+  m = cham-toi
+  R = son-sang
+  D = dong-sang
+  d = dong
+  j = dong-toi
+
+part than
+................................
+................................
+................................
+...........K.K..................
+.........K.KKKK.Gg..............
+........KKKKKKKKGHg.............
+......KKKKKKKKKHHGg.............
+.....KKHlHHlHKHHHHGg............
+....KKHHHHHHHtHHHHHGGg..........
+....KHHHHHGGGtHHGtttccz.........
+....KHHHHGGGGlHGGGotcccccz......
+...KHHHGGGGGGtGGGGGGccccCCCz....
+...KHHtlGGGGGtGGGGGGccccCaatz...
+...KHGtlGGGGGlGGGgggzzzzzaaCz...
+...KHGGtlGGGGGgGGgtttttzzzz.....
+...KtltttlttlGGgggggggg.........
+...KHGjdddjGtlGGGgg.............
+...KgGjDdajGGtlGGgg.............
+...KgGjajdjGGGGGggg.............
+....gaHaHaHaHaHaHag.............
+....gmrrmrrmrrmrrmg.............
+.....mrm.mrm..mrm...............
+end
+
+part nanh
+..E
+.e.
+ee.
+end
+
+part tay
+.HGg..
+HGGGHg
+gggGGg
+end
+
+part giao
+.D.
+DDd
+DDd
+DDd
+.j.
+.a.
+.E.
+.a.
+.E.
+.a.
+.E.
+.a.
+.E.
+.a.
+.E.
+.a.
+.E.
+.g.
+end
+
+part giao_ngang
+gaEaEaEaEaEjdDD.
+aEaEaEaEaEajDDDD
+............dd..
+end
+
+part chanA
+...gGGg.gGGg...
+...gGGg..gGGg..
+..gGGg....gGGg.
+..gGg......gGg.
+..gGg......gGg.
+.KKKK.....KKKK.
+end
+
+part chanB
+....gGGgGGg....
+....gGGgGGg....
+....gGGgGGg....
+....gGg.gGg....
+....gGg.gGg....
+...KKKKKKKK....
+end
+
+part chanC
+...gGGg.gGGg...
+....gGGgGGg....
+....gGGggGg....
+...gGg..gGg....
+..gGg....gGg...
+.KKKK...KKKK...
+end
+
+part mat_x
+t.t
+.t.
+end
+
+anim walk fps=7 loop
+frame walk
+  use than
+  use nanh 20 11
+  use chanA 4 22
+  use giao 23 6
+  use tay 19 14
+  outline
+end
+frame walk
+  use than 0 -1
+  use nanh 20 10
+  use chanB 4 22
+  use giao 23 5
+  use tay 19 13
+  outline
+end
+frame walk
+  use than
+  use nanh 20 11
+  use chanC 4 22
+  use giao 23 6
+  use tay 19 14
+  outline
+end
+frame walk
+  use than 0 -1
+  use nanh 20 10
+  use chanB 4 22
+  use giao 23 5
+  use tay 19 13
+  outline
+end
+
+# đánh: cúi đầu lấy đà → húc + đâm giáo → thu về
+anim attack fps=8 once
+frame attack
+  use than -1 1
+  use nanh 19 12
+  use chanB 3 22
+  use giao 20 6
+  use tay 17 15
+  outline
+end
+frame attack
+  use than 2 1
+  use nanh 22 12
+  use chanA 5 22
+  use giao_ngang 15 17
+  use tay 20 16
+  outline
+end
+frame attack
+  use @walk.0
+end
+
+# trúng đòn: ngả người giật lùi, mắt chữ X, miệng méo, loé sáng
+anim hurt fps=8 once
+frame hurt
+  use than -2 1
+  use nanh 18 12
+  use chanB 4 22
+  use giao 21 7
+  use tay 17 15
+  use mat_x 15 10
+  set 19 16 t
+  set 20 16 r
+  swap H w
+  swap G H
+  swap g G
+  swap l L
+  outline
+end
+
+# chết: khuỵu → đổ sấp, vỡ nứt → nằm nguội màu (vết nứt tắt lửa)
+anim die fps=5 once
+frame die
+  use than 0 3
+  use nanh 20 14
+  use chanB 4 23
+  use giao 23 9
+  use tay 19 17
+  use mat_x 17 12
+  outline
+end
+frame die
+  use than
+  use nanh 20 11
+  use chanA 4 22
+  use mat_x 17 9
+  rot 90
+  shift 0 2
+  use giao_ngang 4 28
+  outline
+end
+frame die
+  use @die.1
+  swap G g
+  swap H G
+  swap l H
+  swap r m
+  swap e E
+end

@@ -1,0 +1,44 @@
+{
+ "code": "ranbang",
+ "group": "quai",
+ "name": "Rắn Băng",
+ "w": 32,
+ "h": 32,
+ "ax": 15,
+ "ay": 29,
+ "bbox": [
+  1,
+  0,
+  30,
+  30
+ ],
+ "n": 11,
+ "anims": {
+  "walk": {
+   "start": 0,
+   "n": 4,
+   "fps": 6,
+   "loop": true
+  },
+  "attack": {
+   "start": 4,
+   "n": 3,
+   "fps": 8,
+   "loop": false
+  },
+  "hurt": {
+   "start": 7,
+   "n": 1,
+   "fps": 8,
+   "loop": false
+  },
+  "die": {
+   "start": 8,
+   "n": 3,
+   "fps": 5,
+   "loop": false
+  }
+ },
+ "cd": 1,
+ "sheet": "ranbang.png"
+}

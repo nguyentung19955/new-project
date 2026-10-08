@@ -24,6 +24,7 @@ game.speed = 1;
 window.game = game;
 
 let view = { scale: 1, dpr: 1 };
+let PLAY_TOP = -1e9;
 let mapImg = null;
 
 // Diện tích thật sự dùng được: trừ phần đệm vùng an toàn của trang (tai thỏ, thanh home)
@@ -105,6 +106,8 @@ function resize() {
   canvas.width = Math.round(w * dpr);
   canvas.height = Math.round(h * dpr);
   view = { scale, dpr, ox, oy };
+  // mép trên vùng chơi (đơn vị logic): đáy thanh trên — quái bay / boss cao không vẽ lọt dưới thanh
+  PLAY_TOP = (($('#topbar') || {}).offsetHeight || 40) * HZ * DK - oy;
   ui.scale = scale;
   mapImg = mapImage(Math.round(CONFIG.W * scale * dpr), Math.round(CONFIG.H * scale * dpr), game.level);
 }

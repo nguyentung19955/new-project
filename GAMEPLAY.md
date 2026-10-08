@@ -2340,6 +2340,23 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
 
 - Sửa lỗi không triệu hồi được sau vài màn: kéo tướng 1 ngón + ngón 2 chạm tướng khác làm kẹt lớp dragging-hero (chợ ẩn, thùng 🗑 kẹt). Đang kéo thì bỏ qua ngón khác; vào trận mới tự gỡ thùng.
 
+## claude/pixel-quai-boss — Pixel art quái thường, biến thể, tinh anh và 9 boss (DANH-SACH lô 8–11)
+
+- **41 sprite mới** (vẽ bằng lưới ký tự, `tools/pixel/src/quai|boss/`, dựng bằng `node tools/build-pixel.js`), bật bằng `?pixel=1`:
+  - Lô 8 (12): casau, rua (rùa đội bia đá), phuthuy (sứa ma da), chimbao (diều sáo yêu, bay), echme, nongnoc, giaolong (rồng sành men) + 2 bản màu
+    `giaolong-hoa` / `giaolong-tho`, camap (cá mập thuyền đắm), muc (mực trong chum), cua (cua chiêng đồng gỉ).
+  - Lô 9 (10): yeutinh, ran (rắn thần 3 đầu), doi (dơi xương, bay), thachtinh (tượng đá lăng), dacon, linhan (âm binh giấy vàng mã — giáo + khiên),
+    cungan (sói cung), kybinh (lợn đất nung), voichien (voi gỗ đình), cao (cáo đuôi ma trơi).
+  - Lô 10 (11): tomlua, ranbang, doima, thachvang, thietky, camapden, mucdoc, cungtlua (biến thể giữ dáng gốc, đổi bảng màu + chi tiết riêng);
+    tinh anh lớn tuongthuy, chanlua, hoden (có `rage`).
+  - Lô 11 (9 boss): thuongluong 64 (rage), thuytinh 64, haba 48, ngutinh 48, chantinh 64 (rage), daibang 64 (bay, rage), anvuong 64,
+    hotinh 64 (9 đuôi, rage), trieuda 64.
+- Mọi mã đủ `walk 4 · attack 3 · hurt 1 · die 3`; khung **trúng đòn khác rõ** (ngả người, mắt X / nhắm, há miệng, sáng tông).
+  Hướng phá cách theo cột "Hướng phá cách" của DANH-SACH, lý do ghi ở chú thích đầu từng file nguồn.
+- Cỡ trong game: thanh máu / hộp quái lấy từ bbox khung `walk.0` + điểm neo chân trong manifest (js/pixel.js `pxEnemyBox`) → walk.0 là khung rộng nhất
+  (Đại Bàng: sải cánh ngang) để không vượt cỡ.
+- `js/pixel.js`: **Giao Long Con chọn sprite theo hành** (`e.el` = hoa / tho → `quai/giaolong-hoa|-tho`, còn lại `quai/giaolong`) — 1 dòng trong `pxEnemyEntry`.
+- `tests/pixel`: casau giờ đã có pixel → kiểm tra casau VẼ pixel (bỏ khỏi danh sách "chưa có pixel").
 ## Phiên bản 212 — gộp pixel-tuong-vang (tester đạt)
 
 - 14 tướng Vàng + 6 linh thú pixel (sprite + chân dung).
@@ -2438,3 +2455,7 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 - **Sửa (js/main.js):** đang kéo tướng thì bỏ qua ngón khác (`if (drag) return`); `pointercancel` của ngón khác không huỷ lần kéo đang dở;
   chạm canvas mà còn sót thùng 🗑 thì gỡ luôn. **js/ui.js `startLevel`:** vào trận mới gọi `hideTrash()` (không mang lớp kẹt sang).
 - **Test:** `tests/cho-tuong/keo-hai-ngon.test.js` (chạm 2 ngón bằng CDP: code cũ FAIL "chợ hiện lại", code mới đạt; mua thẻ được sau đó).
+## claude/pixel-quai-boss — Sửa lỗi tester: boss pixel cao vọt, Đại Bàng lọt dưới thanh trên
+- Quái/boss pixel giờ co theo **chiều cao hình cũ** (giữ tỉ lệ, rộng tối đa 1,15× rộng cũ) thay vì theo rộng → Đại Bàng 92, Ngư Tinh 65, Hồ Tinh 71, Chằn Tinh 106, Triệu Đà 142 (đơn vị logic) khớp bản cũ; Triệu Đà sát thành không còn đè thành. Chiều cao cũ nhớ theo mã (`ENEMY_OLD_HW`), ảnh cũ chưa tải thì boss lấy 112.
+- Kẹp mép trên: `PLAY_TOP` (đáy thanh trên, tính khi đổi cỡ màn) — quái bay / boss cao ở khúc đường sát trên tự hạ độ nâng để đỉnh hình + thanh máu nằm dưới thanh trên.
+- Test mới `tests/pixel/boss-cao.test.js`: so chiều cao pixel vs cũ (≤15%) ở 1920×934 + 844×390, đo đỉnh hình Đại Bàng ở điểm đường cao nhất, chụp ảnh.

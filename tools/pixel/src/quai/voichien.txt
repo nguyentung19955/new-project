@@ -1,0 +1,257 @@
+# Voi Chiến (mã voichien) — quái thường 32×32 (hành Thổ · đập choáng), đạo quân giặc phương Bắc. Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng gốc (PROMPT-GEN-LAI.txt:349 · PROMPT-DUNG-XUONG.txt:1388 · DANH-SACH Lô 9): voi chiến THẬT 4 chân to, không người,
+# không sừng; bành chiến đỏ + vàng trên lưng có cờ nhỏ, 2 ngà bọc đồng, vòi. PHÁ CÁCH (DANH-SACH): VOI GỖ ĐÌNH — voi gỗ mít
+# (vàng nâu = màu hành Thổ) như voi gỗ rước kiệu ở đình, khớp chân chốt đồng, tai sơn son đã tróc; bành son thếp vàng hoa văn
+# răng cưa + vòng chấm Đông Sơn, cờ đuôi nheo đỏ. Vẽ đầy khung (to nhất trong lô).
+name: Voi Chiến
+size: 32x32
+anchor: 14,30
+colors:
+  k = vien
+  t = toi
+  n = dat-toi
+  g = dat
+  G = dat-sang
+  H = cat
+  r = son
+  m = son-toi
+  R = son-sang
+  y = vang-nghe
+  Y = vang-sang
+  j = dong-toi
+  d = dong
+  D = dong-sang
+  e = trang
+  E = trang-xam
+  o = vang-sang
+
+part than
+................................
+................................
+.....jRRr.......................
+.....jRRRr......................
+.....j..........................
+....DyYyyYyyYyyYyD..............
+....jmrRrmrRrmrRrj..............
+....jrrrrrrrrrrrrj....HyYG......
+....jryDyryDyryDyj..HHHyYyGg....
+...DyyyyyyyyyyyyyyD.HGGGGGGGg...
+..HHmRrrmRrrmRrrmRmHGGGGGGGGGg..
+.HHGmyrryrryrryrrymGGGGGGttGGg..
+.HGGmrrrrrrrrrrrrrmGGGGGGGoGGg..
+.HGGGmmmmmmmmmmmmmGGgGGGGGGGGg..
+.HGGGGGGGGGGGGGGGGGGGGGGGGGGgg..
+.HGGGGGGGgGGGGGGGGGGGGGGGGGgg...
+.GGGGgGGgGGGGGGGGGGGGGGGGGgg....
+.gGGGGGgGGGGGGGGGGGGGGGGgg......
+.gGGjDjGGGGGGGGGjDjGGGGg........
+..gGGGGGGGGGGGGGGGGGGgn.........
+..ggGGGGGGGGGGGGGGGGgn..........
+...nggggggggggggggggn...........
+................................
+end
+
+part tai
+..gRRRg..
+.gRRRRRRg
+gRRrHrrRg
+gRrrrrrrm
+gRrGrrrrm
+gRrrrrrmg
+gRrrrrrmg
+.gRrrrmg.
+.gRrrmg..
+..grmg...
+...gg....
+end
+
+part voi
+HGGg..
+HGGg..
+.HGGg.
+.HGGg.
+.yYyj.
+.HGGg.
+.HGGg.
+.HGGg.
+.HGGg.
+..HGGg
+..ggg.
+end
+
+part voi_len
+....gg
+...gHg
+...HGg
+..HGg.
+..HGg.
+.HGg..
+.HGg..
+HGGg..
+HGGg..
+end
+
+part nga
+EeeeD
+.EEDj
+end
+
+part chan
+HGGg
+HGGg
+HGGg
+HDDg
+HGGg
+HGGg
+HGGg
+EEEg
+end
+
+part chan_xa
+Gggn
+Gggn
+Gggn
+Gjjn
+Gggn
+Gggn
+Gggn
+EEEn
+end
+
+part chan_gap
+HGGg
+HDDg
+HGGg
+EEEg
+end
+
+part mat_x
+t.t
+.t.
+end
+
+anim walk fps=5 loop
+frame walk
+  use chan_xa 8 21
+  use chan_xa 20 21
+  use than
+  use chan 3 22
+  use chan 15 22
+  use tai 17 8
+  use voi 24 16
+  use nga 23 17
+  outline
+end
+frame walk
+  use chan_xa 9 20
+  use chan_xa 19 21
+  use than 0 -1
+  use chan 3 22
+  use chan 16 21
+  use tai 17 7
+  use voi 24 15
+  use nga 23 16
+  outline
+end
+frame walk
+  use chan_xa 8 21
+  use chan_xa 20 21
+  use than
+  use chan 4 21
+  use chan 15 22
+  use tai 17 8
+  use voi 24 16
+  use nga 23 17
+  outline
+end
+frame walk
+  use chan_xa 7 21
+  use chan_xa 21 20
+  use than 0 -1
+  use chan 3 22
+  use chan 15 22
+  use tai 17 7
+  use voi 24 15
+  use nga 23 16
+  outline
+end
+
+# đánh: chồm lên giơ vòi → dậm mạnh (choáng) → về thế đi
+anim attack fps=7 once
+frame attack
+  use chan_xa 8 20
+  use chan_xa 21 17
+  use than 0 -1
+  use chan 3 22
+  use chan_gap 16 19
+  use tai 17 7
+  use voi_len 25 7
+  use nga 23 16
+  outline
+end
+frame attack
+  use chan_xa 8 21
+  use chan_xa 21 22
+  use than 1 1
+  use chan 3 22
+  use chan 17 22
+  use tai 18 9
+  use voi 25 17
+  use nga 24 18
+  outline
+end
+frame attack
+  use @walk.0
+end
+
+# trúng đòn: ngả người giật lùi, mắt chữ X, miệng méo, loé sáng
+anim hurt fps=8 once
+frame hurt
+  use chan_xa 8 21
+  use chan_xa 21 19
+  use than 0 -1
+  use chan 3 22
+  use chan_gap 16 19
+  use tai 17 7
+  use voi_len 24 6
+  use nga 23 16
+  use mat_x 25 10
+  swap H Y
+  swap G H
+  swap g G
+  swap r R
+  outline
+end
+
+# chết: khuỵu chân trước → đổ sụp nằm (chân gập) → gỗ sẫm, sơn tối
+anim die fps=5 once
+frame die
+  use chan_xa 8 21
+  use than 0 2
+  use chan 3 22
+  use chan_gap 15 26
+  use tai 17 10
+  use voi 24 18
+  use nga 23 19
+  use mat_x 24 13
+  outline
+end
+frame die
+  use than 0 6
+  use chan_gap 3 26
+  use chan_gap 15 26
+  use tai 17 14
+  use voi 25 19
+  use nga 23 23
+  use mat_x 24 17
+  outline
+end
+frame die
+  use @die.1
+  swap G g
+  swap H G
+  swap R r
+  swap r m
+  swap Y y
+  swap y d
+end
