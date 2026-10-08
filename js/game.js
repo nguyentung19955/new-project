@@ -1058,7 +1058,7 @@ const SKILL_CASTS = {
       onEnd: () => {
         game.effects.push({ type: 'splat', x: t.x, y: t.y, r: 70, color: '#E04848', ttl: 0.6, max: 0.6 });
         for (const e of game.enemiesInRange(t.x, t.y, 70)) {
-          game.hit(e, (st.damage * 2 + n) * st.skillPower, h, { color: '#3EDC4E' });
+          game.hit(e, (st.damage * 1.5 + n) * st.skillPower, h, { color: '#3EDC4E' });
           if (!e.dead) game.slow(e, 50, 2.5);
         }
       } });
@@ -1082,7 +1082,7 @@ const SKILL_CASTS = {
       game.effects.push({ type: 'lob', kind: 'dua', x: e.x - 40, y: e.y - 220, x2: e.x, y2: e.y, color: '#3EDC4E', ttl: 0.4 + srand() * 0.5, max: 0.9,
         onEnd: () => {
           game.effects.push({ type: 'splat', x: e.x, y: e.y, r: 30, color: '#E04848', ttl: 0.4, max: 0.4 });
-          if (!e.dead) { game.hit(e, (st.damage * 1.5 + n) * st.skillPower, h, { color: '#3EDC4E' }); if (!e.dead) game.slow(e, 40, 2); }
+          if (!e.dead) { game.hit(e, (st.damage * 2 + n) * st.skillPower, h, { color: '#3EDC4E' }); if (!e.dead) game.slow(e, 40, 2); }
         } });
     }
     return true;

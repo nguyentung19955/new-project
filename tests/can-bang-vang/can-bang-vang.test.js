@@ -19,6 +19,10 @@ const { run } = require('./mo-phong');
     out.rMin = Math.min(...rs.map((k) => skillCdOf(HEROES[k].skills[3], 3, 50)));
     out.qCd = skillCdOf(HEROES.xathu.skills[0].active ? HEROES.xathu.skills[0] : HEROES.thaymo.skills[1], 0, 50);
     // sau sua-tam-skill (mọi chiêu chỉ trong tầm): R vùng lớn còn chiếm %R cao giữ hồi chiêu hơi trên gốc
+    // mô tả ↔ hệ số: hệ số "xN" trong mô tả khớp st.damage * N trong code chiêu
+    const coef = (cast) => +(/st\.damage \* ([\d.]+) \+/.exec(SKILL_CASTS[cast].toString()) || [])[1];
+    const said = (k, i) => +(/x([\d.]+) sát thương/.exec(HEROES[k].skills[i].info(10)) || [])[1];
+    out.coef = { melonrain: coef('melonrain'), sodua: said('sodua', 3), antiem: said('antiem', 3), melon: coef('melon'), forestwrath: coef('forestwrath'), mau: said('mau', 3) };
     out.rcd = Object.fromEntries(['sodua', 'antiem', 'mau', 'haisen', 'thansuong', 'giong', 'cuoi'].map((k) => [k, HEROES[k].skills[3].active.cooldown]));
     // chip Thế trận
     const g = game; for (const t of ['lactuong', 'ongthoi', 'thogom', 'thoren', 'thansuong', 'xathu']) g.spawnHero(g.freeSlots()[0], t, { tier: 3 });
@@ -34,6 +38,7 @@ const { run } = require('./mo-phong');
   ok(r.floor.hp0 === r.floor.ref && r.floor.ew0 === r.floor.ewRef && r.floor.ew7 === r.floor.ew7n, `Khó ải 1 dùng máu + tốc tăng của ải chuẩn (${JSON.stringify(r.floor)}); ải khó hơn giữ nguyên`);
   ok(r.tb.join() === '0,64,76,76,16', `Thế trận: 1 tướng 0% · 6 tướng 5 hành +64% · 8 tướng +76% (trần) · 3 tướng 3 hành +16% (${r.tb})`);
   ok(r.teamB.all === 64 && r.bonus >= 64 && chip.vis && chip.txt === '+64%', `đội 6 tướng đủ 5 hành: chip "${chip.txt}" hiện trên thanh trên, sát thương +${r.bonus}%`);
+  ok(r.coef.melonrain === 2 && r.coef.sodua === 2 && r.coef.antiem === 2 && r.coef.melon === 1.5 && r.coef.forestwrath === 2 && r.coef.mau === 2, `mô tả khớp hệ số: Mưa Dừa / Mưa Dưa x2, Rừng Thiêng x2, quả dưa (Q An Tiêm) x1.5 (${JSON.stringify(r.coef)})`);
   ok(r.rMin >= 12, `hồi chiêu R thực tế không dưới 12 giây kể cả giảm hồi chiêu 50% (thấp nhất ${r.rMin})`);
   ok(r.qCd < 12, `sàn chỉ áp cho R, kỹ năng khác vẫn giảm hồi chiêu bình thường (${r.qCd.toFixed(1)} s)`);
   ok(JSON.stringify(r.rcd) === JSON.stringify({ sodua: 24, antiem: 20, mau: 26, haisen: 20, thansuong: 18, giong: 20, cuoi: 22 }), `hồi chiêu R vùng lớn (trong tầm x2): Sơ Dừa 24 · An Tiêm 20 · Mẫu T.Ngàn 26 · Hải Sen 20 · Thần Sương 18; Gióng 20 · Cuội 22 như gốc (${JSON.stringify(r.rcd)})`);
