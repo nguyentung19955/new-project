@@ -2625,6 +2625,10 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 ## claude/pixel-mac-dinh — Pixel là mặc định
 - `js/pixel.js`: `PIXEL_BAT = true` — mọi người chơi thấy hình pixel ngay. Tắt: `?pixel=0`, hoặc nút "Hình pixel → Pixel: Bật/Tắt (hình cũ)"
   trong Cài đặt (lưu `ttv.pixel = '0'`); chưa chọn = bật. Test ép tắt bằng `window.PIXEL_BAT_EP = false`. Đường vẽ dự phòng giữ nguyên.
+- Mở game nhanh hơn khi pixel: font pixel (Google Fonts) nạp sau sự kiện load; tải sẵn ảnh cũ `packs/*` (idle/head/walk1/khung)
+  bỏ qua mã đã có sprite pixel (vẫn tải lười khi cần).
+- Test: `tests/cho-tuong/helpers.js` thêm `noPixel(prep)` — test kiểm tra đường vẽ dự phòng (vân đường ảnh, khung ui/*, tự cử động,
+  hiệu ứng vẽ tay, khung chuyển động) ép tắt pixel; pixel.test kiểm mặc định bật + `?pixel=0` / Cài đặt tắt.
 - Còn hình cũ (cảnh/nền menu/cổng thành… bản tool chỉ là phác thảo thô nên chưa nối; một số chưa có pixel): ghi ở
   `docs/pixel/DANH-SACH.md` mục "Bổ sung".
 - **Nền pixel riêng (sau khi gộp v223 có tool bản đồ):** sinh `ban-do/<gốc>-<dạng>` cho 14 bản đồ dạng của các ải (`node tools/build-ban-do-spec.js` → lọc mã có dạng → `node tools/ve-pixel.js --spec … --nap`): ô sát đường cùng kiểu bệ đá, xa đường chỉ trang trí, chỗ tự cắt có cầu. `mapLayer` chọn ảnh theo mã `id` (thay `~` bằng `-`); bản đồ dạng không có ảnh (Vô tận ghép gốc × dạng khác, Vòng quanh núi, Bến đò — có núi / sông game tự vẽ) dùng `pxMapGround`. Tool spec: nạp thêm `js/chapters.js` (đăng ký bản đồ dạng của ải), nhánh phụ chỉ xuất đoạn không trùng nhánh trước (tránh cầu giả ở chỗ chia / nhập nhánh), bỏ qua bản đồ có núi / bến đò.
