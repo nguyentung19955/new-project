@@ -2699,3 +2699,10 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 - Sửa theo tester: nền menu / đăng nhập / màn tải giữ tranh cũ (bản pixel 320×180 mất hoa văn trống đồng, kể cả khi tăng màu / khử
   nhiễu); thẻ người chơi và nút Xuất Quân dùng khung vẽ tay chuyển sang pixel (có lại huy hiệu avatar tròn và 2 huy hiệu hai bên), không
   bị khung bảng / nút chung đè; icon Vô Tận vẽ lại thành ∞ rõ.
+
+## claude/an-cong-ky-nang — Ẩn nút cộng điểm khi kỹ năng đã max
+
+- Thanh tướng: nút **+1đ** (cộng điểm dư vào chỉ số) cạnh 4 ô kỹ năng **không hiện nữa khi cả 4 kỹ năng đã đạt tối đa** (Q W E 4/4, R 3/3). Chỉ hiện khi còn điểm và còn kỹ năng chưa max.
+- Kỹ năng đã max thì điểm kỹ năng (đang dư + nhận thêm mỗi lần lên cấp / lên ★★★ / ghép sao) **tự đổi thành chỉ số** (+2 thuộc tính chính mỗi điểm), không cần bấm — không mất giá trị điểm.
+- Ô kỹ năng chỉ sáng "có thể nâng" khi thật sự nâng được (có điểm / đủ vàng, chưa max, đủ cấp tướng) — như cũ, có test.
+- Test: `node tests/an-cong-ky-nang/an-cong-ky-nang.test.js`.

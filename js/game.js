@@ -1814,6 +1814,7 @@ class Game {
     // claude/sao3-re-nhanh: lên ★★★ thì tướng nhận ít nhất cấp COSTS.lv3Min (kèm điểm kỹ năng của các cấp được nhận)
     const up = b.tier >= 3 ? Math.max(0, Math.min(CONFIG.maxLevel, COSTS.lv3Min || 0) - b.level) : 0;
     if (up) { const hp0 = heroStats(b).hpMax; b.level += up; b.skillPts += up; if (!b.dead) b.hp += Math.max(0, heroStats(b).hpMax - hp0); this.levelFx(b, up); }
+    this.autoStat(b);
     const disc = this.levelDisc(b) < 1 ? ` Lên cấp giảm ${Math.round((1 - this.levelDisc(b)) * 100)}%${!b.from && b.tier >= 3 && !COSTS.unlockDisc3 ? ', mở kỹ năng miễn phí' : ''}` : '';
     this.notify(`${HEROES[b.type].name} lên ${'★'.repeat(b.tier)}!${up ? ` Lên cấp ${b.level}.` : ''}${disc}`, '#F2D27A');
     b.notice.evo = b.tier >= 3;
@@ -1958,6 +1959,7 @@ class Game {
     h.skillPts++;
     if (!h.dead) h.hp += heroStats(h).hpMax - before;
     this.levelFx(h, 1);
+    this.autoStat(h);
     return true;
   }
 
@@ -2034,6 +2036,7 @@ class Game {
     }
     h.skillLv[sk.id] = lv + 1;
     this.effects.push({ type: 'ring', x: h.x, y: h.y - 20, r: 40, color: '#F2D27A', ttl: 0.5, max: 0.5 });
+    this.autoStat(h);
     return true;
   }
 
@@ -2046,6 +2049,17 @@ class Game {
     if (!h.dead) h.hp += Math.max(0, heroStats(h).hpMax - before);
     this.text(h.x, h.y - 70, `+${COSTS.statPt} ${ATTRS[heroMain(HEROES[h.type])].short}`, ELEMENTS[HEROES[h.type].el].color, 0.9, 14);
     return true;
+  }
+  // claude/an-cong-ky-nang: cả 4 kỹ năng đã đạt cấp tối đa (Q W E 4/4, R 3/3)
+  skillsMaxed(h) { return HEROES[h.type].skills.every((sk, i) => skillLevel(h, i) >= SKILL_MAX[i]); }
+  // kỹ năng đã max thì điểm kỹ năng (đang có + nhận thêm khi lên cấp) tự đổi thành chỉ số — không còn nút "+1đ" cạnh ô kỹ năng
+  autoStat(h) {
+    if (!h || h.from || h.skillPts <= 0 || !this.skillsMaxed(h)) return;
+    const n = h.skillPts, before = heroStats(h).hpMax;
+    h.statPts = (h.statPts || 0) + n;
+    h.skillPts = 0;
+    if (!h.dead) h.hp += Math.max(0, heroStats(h).hpMax - before);
+    this.text(h.x, h.y - 70, `+${COSTS.statPt * n} ${ATTRS[heroMain(HEROES[h.type])].short}`, ELEMENTS[HEROES[h.type].el].color, 0.9, 14);
   }
   // còn kỹ năng nào nâng được bằng điểm không (để gợi ý dùng điểm vào chỉ số)
   canSpendSkillPts(h) {
@@ -4032,7 +4046,7 @@ class Game {
           n++;
           if (!h.dead) h.hp += heroStats(h).hpMax - before;
         }
-        if (n) this.levelFx(h, n);
+        if (n) { this.levelFx(h, n); this.autoStat(h); }
       }
     }
   }
