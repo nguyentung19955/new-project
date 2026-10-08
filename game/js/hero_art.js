@@ -931,6 +931,12 @@
         [1, S, 'io']];
     }
     if (wt === 'spear') {
+      if (combo === 3) return [ // quét vòng ngang, hai tay (nhát kết của loạt đâm, js/moves.js)
+        [0, S],
+        [0.22, mk(S, { fA: -76, fB: -104, wa: -168, two: 1, g2: 8, lean: -2, hx: -2, hdx: S.hdx - 1 }), 'out'],
+        [0.45, mk(S, { fA: 78, fB: 90, wa: 8, two: 1, g2: 8, lean: 3, hx: 3, bfx: step + 2 }), 'in'],
+        [0.66, mk(S, { fA: 62, fB: 72, wa: 36, two: 1, g2: 8, lean: 2, hx: 2, bfx: step + 2 }), 'out'],
+        [1, S, 'io']];
       const up = combo === 1 ? -9 : 0, far = combo === 2 ? 2 : 0;
       return [
         [0, S],
@@ -973,7 +979,7 @@
       if (u >= 0.4 && u < 0.5) p.smear = { a0: -110, a1: p.wa - 4, sy: 1, al: 0.75, th: 6 };
       if (u >= 0.43 && u < 0.66) p.fx = { impact: u < 0.52 ? 0.4 : u < 0.6 ? 0.8 : 1.1 };
     } else if (wt === 'spear') {
-      if (u >= 0.4 && u < 0.56) p.fx = { thrust: 1 };
+      if (combo !== 3 && u >= 0.4 && u < 0.56) p.fx = { thrust: 1 };
     }
     return p;
   }
@@ -1101,7 +1107,7 @@
     }
     if (o.atk >= 0) {
       const n = ATKN[wt] || 8;
-      const combo = p ? (Math.max(0, p.comboI | 0) % 3) : Math.floor(t / 1.6) % 3;
+      const combo = p ? (Math.max(0, p.comboI | 0) % 4) : Math.floor(t / 1.6) % 3; // 3: giáo quét vòng
       return ['atk', Math.min(n - 1, Math.floor(o.atk * n)), combo];
     }
     if ((p && p.hurtT > 0) || (!p && o.flash)) return ['hurt', 0, 0];

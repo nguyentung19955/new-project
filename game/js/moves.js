@@ -26,8 +26,29 @@
       glide: { name: 'Nhát lướt', win: 0.35, len: 30, t: 0.12, mult: 1.4 }, // đánh ngay sau khi Né
     },
     bow: {
-      shot: { name: 'Bắn', still: 0.42, move: 0.5, mult: 1, speed: 290, range: 215 },
+      shot: { name: 'Bắn', still: 0.4, move: 0.47, mult: 1, speed: 290, range: 215 },
       charge: { name: 'Tên mạnh', time: 0.75, min: 0.3, slow: 0.55, mult0: 1.2, mult1: 3.0, speed: 340, range: 265, recover: 0.5 },
+    },
+    spear: {
+      gap: 0.45,
+      chain: [
+        { name: 'Đâm', dur: 0.34, mult: 0.85, reach: 54, depth: 10 },
+        { name: 'Đâm', dur: 0.3, mult: 0.85, reach: 54, depth: 10 },
+        { name: 'Đâm', dur: 0.3, mult: 0.85, reach: 56, depth: 10 },
+        { name: 'Quét vòng', dur: 0.5, mult: 1.5, r: 40, push: 8, heavy: true, sweep: true, finish: 1 },
+      ],
+      // giữ rồi thả: lao một đoạn ngắn xuyên qua quái (đòn Đặc biệt "Lao tới" thì dài hơn và làm choáng)
+      charge: { name: 'Xốc tới', time: 0.5, min: 0.3, slow: 0.6, len0: 30, len1: 58, t: 0.16, mult0: 1.0, mult1: 2.2, depth: 12 },
+    },
+    hammer: {
+      swing: { name: 'Nện', dur: 0.8, mult: 1, reach: 32, depth: 26 },
+      // giữ để lấy đà 2 nấc; chưa tới nấc 1 mà thả thì chỉ là nhát thường
+      charge: {
+        name: 'Lấy đà', lv1: 0.5, time: 1.1, min: 0.45, slow: 0.45, recover: 0.7, ahead: 22, waveV: 200, waveDepth: 26,
+        slam: [null,
+          { name: 'Nện đất', mult: 1.1, r: 30, stun: 0, wave: { mult: 0.4, len: 60, stun: 0 } },
+          { name: 'Nện đất mạnh', mult: 1.6, r: 38, stun: 0.7, wave: { mult: 0.6, len: 96, stun: 0.5 } }],
+      },
     },
   };
   // Một dòng chỉ dẫn cho mỗi vũ khí, hiện khi vào ải và lần đầu đổi sang vũ khí đó.
@@ -65,9 +86,9 @@
 
   function tip(P, mv, w, W) {
     if (mv.tips[w.type] || !G.MOVE_TIPS[w.type]) return;
-    if (W.banner) { mv.tipWait = w.type; return; }
+    if (W.banner && !W.banner.tip) { mv.tipWait = w.type; return; } // đang có thông báo khác: chờ nó tắt
     mv.tips[w.type] = true; mv.tipWait = null;
-    W.banner = { s: G.MOVE_TIPS[w.type], col: '#ffd27a', t: 5 };
+    W.banner = { s: G.MOVE_TIPS[w.type], col: '#ffd27a', t: 5, tip: true };
   }
 
   // Gọi mỗi khung cho người chơi, kể cả lúc đang lăn né hay lướt: theo dõi nút Đánh được bấm, giữ, thả.
@@ -184,9 +205,58 @@
     swingFx(P, w, o, { charge: c });
   }
 
+  // ---------- giáo ----------
+  function spearTap(P, w) {
+    const mv = P.mv, i = mv.chain % 4, m = C.spear.chain[i];
+    aim(P, reachOf(w, m.reach || m.r), 22);
+    if (m.sweep) begin(P, w, { kind: 'quet', name: m.name, step: i, pose: 3, m, reach: reachOf(w, m.r) }, m.dur);
+    else begin(P, w, { kind: 'dam', name: m.name, step: i, pose: i, m, reach: reachOf(w, m.reach), depth: m.depth }, m.dur);
+    mv.chain = i + 1; mv.gap = C.spear.gap;
+  }
+  function spearLunge(P, w, c) {
+    const mv = P.mv, ch = C.spear.charge;
+    aim(P, ch.len1 + 10, 22);
+    const len = ch.len0 + (ch.len1 - ch.len0) * c;
+    P.dashT = ch.t; P.dashV = (len / ch.t) * P.face; P.dashHit = []; P.dashMult = ch.mult0 + (ch.mult1 - ch.mult0) * c; P.dashStun = 0;
+    P.dashOpt = { stun: 0, heavy: c >= 1 };
+    P.inv = Math.max(P.inv, ch.t); // đang xuyên qua quái thì không dính đòn
+    P.atkT = ch.t; P.atkDur = ch.t; P.cdT = ch.t + 0.2; P.hitDone = true; P.lastAtk = G.time; P.comboI = 2;
+    mv.name = ch.name; mv.kind = 'xoc'; mv.step = 0; mv.cur = null; mv.dashDur = ch.t; mv.chain = 0; mv.lastT = G.time + ch.t;
+    G.sfx('swing', 1.4);
+    swingFx(P, w, { kind: 'xoc', name: ch.name, reach: len, depth: ch.depth }, { charge: c });
+  }
+
+  // ---------- búa ----------
+  function hammerTap(P, w) {
+    const m = C.hammer.swing;
+    aim(P, reachOf(w, m.reach), 22);
+    begin(P, w, { kind: 'nen', name: m.name, pose: 0, m, reach: reachOf(w, m.reach), depth: m.depth }, m.dur);
+  }
+  function hammerRelease(P, w, c, lv) {
+    const ch = C.hammer.charge, sl = ch.slam[lv];
+    if (!sl) { hammerTap(P, w); return; }
+    aim(P, 40, 22);
+    begin(P, w, { kind: 'nenDat', name: sl.name, pose: 2, level: lv, sl }, ch.recover, 0.36); // búa đã giơ sẵn: nện xuống ngay
+  }
+  function hammerSlam(P, w, o) {
+    const W = G.getWorld(), ch = C.hammer.charge, sl = o.sl, f = P.face;
+    const r = reachOf(w, sl.r), cx = G.clamp(P.x + f * ch.ahead, W.x0, W.x1), cy = P.y;
+    let n = 0;
+    for (const e of G.targets()) {
+      if (Math.hypot(e.x - cx, (e.y - cy) * 1.5) < r + e.r) { G.cb.playerHit(e, sl.mult, { w, stun: sl.stun, heavy: true, dir: e.x >= P.x ? 1 : -1 }); n++; }
+    }
+    G.cb.hitProps(cx - r, cx + r, cy, r * 0.66);
+    // sóng chấn động chạy trên mặt đất theo hướng đánh
+    (W.mvWaves || (W.mvWaves = [])).push({ x: cx, y: cy, dir: f, left: sl.wave.len, v: ch.waveV, depth: ch.waveDepth, mult: sl.wave.mult, stun: sl.wave.stun, w, seen: [], level: o.level, he: heOf(P, w) });
+    W.shake = Math.max(W.shake, o.level >= 2 ? 0.3 : 0.16);
+    G.sfx('boom', o.level >= 2 ? 1.5 : 1.9);
+    swingFx(P, w, o, { level: o.level, x: cx, y: cy, r });
+    gain(P, w, n);
+  }
+
   // ---------- nút Đánh ----------
-  const TAPS = { bow: bowTap };
-  const RELEASES = { bow: bowRelease };
+  const TAPS = { bow: bowTap, spear: spearTap, hammer: hammerTap };
+  const RELEASES = { bow: bowRelease, spear: spearLunge, hammer: hammerRelease };
   function levelOf(ch, t) {
     if (ch.lv1 != null) return t >= ch.time ? 2 : t >= ch.lv1 ? 1 : 0;
     return t >= ch.time ? 1 : 0;
@@ -245,6 +315,23 @@
       gain(P, w, list.length);
     } else if (o.kind === 'ban') {
       shoot(P, w, o.arrow);
+    } else if (o.kind === 'dam' || o.kind === 'nen') {
+      const list = boxHit(P, o.reach, o.depth, o.m.mult, { w });
+      swingFx(P, w, o);
+      if (o.kind === 'nen') G.getWorld().shake = Math.max(G.getWorld().shake, 0.08);
+      gain(P, w, list.length);
+    } else if (o.kind === 'quet') {
+      // quét một vòng quanh người: trúng cả quái sau lưng, hất nhẹ ra ngoài
+      const m = o.m, list = [];
+      for (const e of G.targets()) {
+        if (Math.hypot(e.x - P.x, (e.y - P.y) * 1.5) < o.reach + e.r) { G.cb.playerHit(e, m.mult, { w, heavy: true, dir: e.x >= P.x ? 1 : -1 }); list.push(e); }
+      }
+      G.cb.hitProps(P.x - o.reach, P.x + o.reach, P.y, o.reach * 0.66);
+      for (const e of list) if (!e.dead && !e.isBoss) e.x += (e.x >= P.x ? 1 : -1) * m.push;
+      swingFx(P, w, o);
+      gain(P, w, list.length);
+    } else if (o.kind === 'nenDat') {
+      hammerSlam(P, w, o);
     }
   };
 
@@ -253,5 +340,23 @@
   M.onKill = function (e, o, w) {};
   M.arrowHit = function (o, e) {};
   M.special = function (P, w) {};
-  M.update = function (W, dt) {};
+  M.update = function (W, dt) {
+    const ws = W.mvWaves;
+    if (!ws || !ws.length) return;
+    for (const z of ws) {
+      const x0 = z.x, d = z.v * dt;
+      z.x += z.dir * d; z.left -= d;
+      const a = Math.min(x0, z.x), b = Math.max(x0, z.x);
+      for (const e of G.targets()) {
+        if (z.seen.includes(e)) continue;
+        if (e.x >= a - e.r - 4 && e.x <= b + e.r + 4 && Math.abs(e.y - z.y) <= z.depth / 2 + e.hr) {
+          z.seen.push(e);
+          G.cb.playerHit(e, z.mult, { w: z.w, stun: z.stun, dir: z.dir });
+        }
+      }
+      G.cb.hitProps(a - 4, b + 4, z.y, z.depth / 2 + 4);
+      if (z.x <= W.x0 || z.x >= W.x1) z.left = 0;
+    }
+    W.mvWaves = ws.filter((z) => z.left > 0);
+  };
 })();

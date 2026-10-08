@@ -130,7 +130,7 @@
     if (cfg.prefer && !inp.swapP && P.swapCd <= 0 && P.weapons.length > 1 && w.type !== cfg.prefer && P.weapons[1 - P.cur].type === cfg.prefer && !(b && b.layers.some((l) => l.type === 'resist' && l.el === G.activeEl(P, P.weapons[1 - P.cur])))) inp.swapP = true;
     const dx = t.x - P.x, dy = t.y - P.y, ad = Math.abs(dx);
     if (T.ranged) {
-      const want = 120;
+      const want = Math.min(120, (W.x1 - W.x0) * 0.4); // phòng nhỏ thì đứng gần hơn, không chạy mãi về phía tường
       if (Math.abs(dy) > 8) inp.my = Math.sign(dy);
       if (ad < want - 30) inp.mx = -Math.sign(dx); else if (ad > want + 60) inp.mx = Math.sign(dx);
       if (Math.abs(dy) < 30) inp.atk = true;

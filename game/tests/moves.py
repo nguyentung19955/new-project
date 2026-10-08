@@ -112,6 +112,63 @@ JS = r"""
     room('bow'); e = dummy(200 + 240);
     tap(); sec(1.2, {});
     ok('Cung: tên thường bay tối đa khoảng 215 điểm ảnh (hợp phòng nhỏ)', lost(e) === 0);
+
+    // ================= GIÁO =================
+    room('spear'); e = dummy(250); const side = dummy(200, 172), back = dummy(176);
+    const sn = [], sd = [];
+    for (let k = 0; k < 4; k++) {
+      const h0 = e.hp; tap(); sn.push(P.mv.name + P.mv.step);
+      wait(() => P.atkT > 0, {});
+      sd.push((h0 - e.hp) / base());
+    }
+    ok('Giáo: bấm liên tiếp ra ba nhát đâm rồi quét vòng', sn.join() === 'Đâm0,Đâm1,Đâm2,Quét vòng3', sn.join());
+    ok('Giáo: đâm xa (trúng quái cách 50 điểm ảnh) 0,85 lần; quét vòng không với tới quái đó', near(sd[0], 0.85, 0.01) && near(sd[2], 0.85, 0.01) && sd[3] === 0, sd.map((x) => x.toFixed(2)).join('/'));
+    ok('Giáo: đâm hẹp, không trúng quái đứng lệch 18 điểm ảnh theo chiều sâu; quét vòng thì trúng', near(lost(side) / base(), 1.5, 0.01), (lost(side) / base()).toFixed(2));
+    ok('Giáo: quét vòng trúng cả quái sau lưng và hất nó ra', near(lost(back) / base(), 1.5, 0.01) && near(back.x, 168, 0.5), (lost(back) / base()).toFixed(2) + ' x=' + back.x);
+    room('spear'); const l1 = dummy(225), l2 = dummy(245);
+    sec(0.16 + 0.5 + 0.05, { atk: true });
+    ok('Giáo: giữ nút thì thu giáo lấy đà đầy sau 0,5 giây', P.mv.holding && P.mv.charge === 1, P.mv.charge);
+    const sx = P.x; run(1, {});
+    ok('Giáo: thả ra là lao tới', P.mv.kind === 'xoc' && P.dashT > 0, P.mv.kind);
+    wait(() => P.dashT > 0, {});
+    ok('Giáo: lao một đoạn ngắn 58 điểm ảnh, xuyên qua cả hai quái, mỗi con 2,2 lần', near(P.x - sx, 58, 3) && near(lost(l1) / base(), 2.2, 0.01) && near(lost(l2) / base(), 2.2, 0.01), (P.x - sx).toFixed(1) + ' ' + (lost(l1) / base()).toFixed(2) + '/' + (lost(l2) / base()).toFixed(2));
+    ok('Giáo: lao tới không tính là lăn né trong thống kê của trùm', S.stats.dodges === 0 && S.stats.melee > 0);
+    room('spear'); P.x = W.x1 - 20; sec(0.8, { atk: true }); P.face = 1; run(1, {}); wait(() => P.dashT > 0, {});
+    ok('Giáo: lao sát mép phòng thì dừng ở mép, không ra ngoài', P.x <= W.x1 + 0.01, P.x);
+
+    // ================= BÚA =================
+    room('hammer'); e = dummy(226);
+    tap(); wait(() => P.atkT > 0, {});
+    ok('Búa: nhát thường 1 lần sát thương và làm quái khựng', near(lost(e) / base(), 1, 0.01) && P.mv.cur.kind === 'nen', (lost(e) / base()).toFixed(2));
+    const e2 = G.spawnEnemy('rusher', 226, 190, { hpMult: 1e6 }); e2.inside = true;
+    sec(0.3, {}); tap(); wait(() => P.atkT > 0.3, {});
+    ok('Búa: quái trúng nhát thường bị khựng 0,4 giây', e2.st.stun > 0.2 && e2.st.stun <= 0.4, e2.st.stun);
+    room('hammer'); e = dummy(230); const fw = dummy(300);
+    sec(0.16 + 0.3, { atk: true });
+    ok('Búa: giữ nút thì lấy đà, chưa tới nấc 1', P.mv.holding && P.mv.level === 0, P.mv.level);
+    const hx = P.x; sec(0.3, { atk: true, mx: -1 });
+    ok('Búa: đang lấy đà thì đi chậm lại và đã lên nấc 1', near((hx - P.x) / 0.3, P.speed * 0.45, 3) && P.mv.level === 1, ((hx - P.x) / 0.3).toFixed(1) + ' nấc ' + P.mv.level);
+    P.x = 200; P.face = 1; run(1, {}); sec(0.9, {});
+    ok('Búa: thả ở nấc 1 thì nện đất 1,1 lần, không choáng', near(lost(e) / base(), 1.1 + 0.4, 0.01), (lost(e) / base()).toFixed(2));
+    ok('Búa: nấc 1 có sóng chấn động chạy 60 điểm ảnh, không tới quái ở xa', lost(fw) === 0);
+    room('hammer'); e = dummy(230); const fw2 = dummy(300), off2 = dummy(300, 224); e.st.stun = 0; fw2.st.stun = 0; e.speed = 0; fw2.speed = 0; e.cd = 1e9; fw2.cd = 1e9;
+    sec(0.16 + 1.1 + 0.05, { atk: true });
+    ok('Búa: giữ đủ lâu thì lên nấc 2', P.mv.level === 2 && P.mv.charge === 1, P.mv.level);
+    P.x = 200; P.face = 1; e.x = 230; fw2.x = 300; run(1, {}); sec(0.12, {});
+    ok('Búa: nấc 2 nện 1,6 lần và làm choáng 0,7 giây', lost(e) / base() >= 1.6 - 0.01 && e.st.stun > 0.5, (lost(e) / base()).toFixed(2) + ' choáng ' + e.st.stun.toFixed(2));
+    sec(0.6, {});
+    ok('Búa: sóng chấn động nấc 2 chạy tới quái cách 100 điểm ảnh, gây 0,6 lần và làm choáng', near(lost(fw2) / base(), 0.6, 0.01), (lost(fw2) / base()).toFixed(2));
+    ok('Búa: sóng chỉ rộng theo chiều sâu vừa phải, không trúng quái lệch 34 điểm ảnh', lost(off2) === 0);
+    ok('Búa: nện đất tính vào thống kê cận chiến', S.stats.melee > 0 && S.stats.ranged === 0);
+    room('hammer'); e = dummy(226);
+    sec(3.5, { atk: true });
+    ok('Búa: giữ mãi thì đòn tự tung ra rồi lấy đà lại', lost(e) / base() >= 1.6 && P.mv.holding, (lost(e) / base()).toFixed(2));
+    // ================= CHUNG =================
+    room('sword'); run(1, { swapP: true }); sec(0.1, {});
+    ok('Đổi vũ khí lần đầu thì hiện dòng chỉ dẫn của vũ khí đó', W.banner && W.banner.s === G.MOVE_TIPS.bow, W.banner && W.banner.s);
+    for (const k of G.WKEYS) ok('Có dòng chỉ dẫn cho ' + G.WTYPES[k].name, typeof G.MOVE_TIPS[k] === 'string' && G.MOVE_TIPS[k].length > 10);
+    room('hammer'); sec(0.4, { atk: true });
+    ok('Trạng thái đòn đánh được xuất trên người chơi cho lớp vẽ', ['name', 'kind', 'step', 'chain', 'charge', 'level', 'prog', 'holding'].every((k) => k in P.mv) && P.mv.holding === true && P.mv.charge > 0 && P.mv.charge < 1, JSON.stringify(P.mv.name));
   } catch (err) { ok('không ném lỗi', false, String(err && err.stack || err)); }
   G.botInput = hold0;
   G.setScene(G.Village);

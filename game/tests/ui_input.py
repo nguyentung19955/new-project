@@ -176,7 +176,7 @@ def run(p, size, url=None):
     ev("G.startStage(0, 1, 0); G.gotoRoom(2)"); g.wait(500)
     a = ev(P + ".x"); g.pg.keyboard.down('KeyD'); g.wait(300); g.pg.keyboard.up('KeyD')
     c.ok(ev(P + ".x") > a + 8, 'phím D đi sang phải')
-    ev("window.__sw = 0"); g.pg.keyboard.down('KeyJ'); g.wait(700); g.pg.keyboard.up('KeyJ')
+    ev("window.__sw = 0"); g.pg.keyboard.down('KeyJ'); g.wait(700); g.pg.keyboard.up('KeyJ'); g.wait(120)  # cung, giáo, búa: giữ là lấy đà, thả ra mới đánh
     c.ok(ev("window.__sw") >= 1, 'phím J đánh')
     g.pg.keyboard.press('Escape'); g.wait(100); c.ok(mode() == 'paused', 'Esc tạm dừng')
     g.pg.keyboard.press('Escape'); g.wait(100); c.ok(mode() == 'play', 'Esc chơi tiếp')

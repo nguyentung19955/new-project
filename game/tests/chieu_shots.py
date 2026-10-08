@@ -88,14 +88,24 @@ A = "{ atk: true }"
 # Kịch bản bấm nút của từng vũ khí: [nút, số khung, {khung thứ mấy: nhãn}]
 SEQ = {
     'sword': """[
-      [{ atk: true }, 2], [{}, 6, { 6: 'Chém ngang' }], [{}, 12],
-      [{ atk: true }, 2], [{}, 7, { 7: 'Chém ngược' }], [{}, 12],
-      [{ atk: true }, 2], [{}, 10, { 9: 'Nhát kết' }], [{}, 6, { 5: 'Nhát kết (sau)' }], [{}, 40],
+      [{ atk: true, atkP: true }, 2], [{}, 6, { 6: 'Chém ngang' }], [{}, 12],
+      [{ atk: true, atkP: true }, 2], [{}, 7, { 7: 'Chém ngược' }], [{}, 12],
+      [{ atk: true, atkP: true }, 2], [{}, 10, { 9: 'Nhát kết' }], [{}, 6, { 5: 'Nhát kết (sau)' }], [{}, 40],
       [{ dodgeP: true, mx: 1 }, 1], [{ mx: 1 }, 17], [{ atk: true }, 3, { 3: 'Né rồi lướt chém' }], [{}, 5, { 4: 'Nhát lướt (sau)' }], [{}, 20]]""",
     'bow': """[
-      [{ atk: true }, 2], [{}, 14, { 14: 'Bắn thường' }], [{}, 30],
+      [{ atk: true, atkP: true }, 2], [{}, 14, { 14: 'Bắn thường' }], [{}, 30],
       [{ atk: true }, 26, { 26: 'Giữ: giương cung' }], [{ atk: true }, 34, { 32: 'Đầy đà' }],
       [{}, 4, { 4: 'Thả: tên mạnh' }], [{}, 12, { 6: 'Xuyên qua quái', 12: 'Sau đó' }], [{}, 30]]""",
+    'spear': """[
+      [{ atk: true, atkP: true }, 2], [{}, 8, { 8: 'Đâm 1' }], [{}, 10],
+      [{ atk: true, atkP: true }, 2], [{}, 7], [{}, 10],
+      [{ atk: true, atkP: true }, 2], [{}, 8, { 8: 'Đâm 3' }], [{}, 10],
+      [{ atk: true, atkP: true }, 2], [{}, 12, { 12: 'Quét vòng' }], [{}, 6, { 5: 'Quét vòng (sau)' }], [{}, 30],
+      [{ atk: true }, 40, { 30: 'Giữ: thu giáo' }], [{}, 4, { 4: 'Thả: xốc tới' }], [{}, 8, { 6: 'Xuyên qua quái' }], [{}, 20]]""",
+    'hammer': """[
+      [{ atk: true, atkP: true }, 2], [{}, 22, { 22: 'Nện thường' }], [{}, 30],
+      [{ atk: true }, 40, { 40: 'Giữ: lấy đà nấc 1' }], [{ atk: true }, 40, { 38: 'Nấc 2' }],
+      [{}, 6, { 6: 'Thả: nện đất' }], [{}, 10, { 4: 'Sóng chấn động', 10: 'Sóng chạy tiếp' }], [{}, 30]]""",
 }
 
 def run(pg, type_, el, dense=0):
