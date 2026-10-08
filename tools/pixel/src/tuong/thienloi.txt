@@ -1,0 +1,319 @@
+# Thiên Lôi (mã thienloi) — pixel 32×32 (tướng Vàng · hành Kim). Quy chuẩn: docs/pixel/QUY-CHUAN.md (mục 0b phá cách)
+# Đặc trưng (DANH-SACH Lô 5 · PROMPT-GEN-LAI.txt:899 FIX lưỡi tầm sét, không kiếm · PROMPT-DUNG-XUONG.txt:1005): thần sấm vạm vỡ vai rộng,
+# TÓC TRẮNG DỰNG NHƯ TIA SÉT, vành vương miện vàng, mày rậm cau, giáp chàm bão sọc sét vàng, giáp vai/tay bạc; CÁNH LÔNG NHỎ sau lưng;
+# cầm LƯỠI TẦM SÉT (rìu đá sấm to cán ngắn). Phá cách: DA XANH như mây giông, MẮT TRẮNG LOÉ CHỚP, tia sét nhảy giữa hai tay (chiêu).
+name: Thiên Lôi
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  K = toi
+  W = trang
+  X = troi
+  w = trang-xam
+  z = sang
+  e = sang
+  F = nuoc
+  h = nuoc-sang
+  f = cham-sang
+  y = vang-nghe
+  Y = vang-sang
+  j = dong-sang
+  d = dong
+  c = cham
+  C = cham-sang
+  v = cham-toi
+  s = sat
+  S = sat-sang
+  b = bac
+  q = sat-toi
+  G = dat-sang
+  t = dat
+  T = dat-toi
+  u = troi
+  n = nuoc-sang
+
+part tren
+...........................
+...........................
+...........................
+..........z...z...z........
+.......z.zW..zWX.zWX.......
+......XWWWWWzWWWWWWWX......
+......XWWyyYYYbYYyyyy......
+......XWWhhhhFFFFFFFf......
+......XWhKKKfFFfKKKFf......
+......XWhfzufFFfzufFf......
+......XWWhhFFFFFFFFFFF.....
+.......XWfhFFFFKeeeKff.....
+.......XWffFFFFfKKKff......
+........XXKffffffff........
+..qbbbSqyYYYYYYYYYyqbbbSq..
+.qbSSSSsqvCcYccccvqbSSSSsq.
+.qsSSSsqvCccYYcccvqsSSSsq..
+..qssq.vCcccccYccv.qsssq...
+..vccv.vCccccYcccv.........
+..vCcv.yyyyybyyyyy.........
+..qbSq.vCcYcccccv..........
+..qbSq.vCccYYcccv..........
+..hFFf.vvCcccYcvv..........
+......vvCccccYcvv..........
+end
+
+part chan
+.......vCccYcccv.
+.......yyyyyyyyy.
+........qs..qs...
+........qS..qS...
+.......TTtt.TTtt.
+.......TTTT.TTTTT
+end
+
+part canh
+z......
+Wz.....
+wWz....
+ywWz...
+.ywWz..
+.ywwWq.
+..ywwq.
+...yq..
+end
+
+part canh2
+.......
+z......
+Wz.....
+wWWz...
+ywWWz..
+.ywwWq.
+..ywwq.
+...yq..
+end
+
+# rìu đá sấm đứng: lưỡi đá xám bên phải cán, đai vàng, đầu cán vàng
+part riu
+..Y.......
+.yYy......
+..y.qSSb..
+..yqsSSbb.
+..GqsSSbbz
+..GsSYSSbb
+..GsYYSSbb
+..GsSYSSbb
+..GqsSSbbz
+..yqsSSbb.
+..y.qSSb..
+..G.......
+..G.......
+..G.......
+..G.......
+..t.......
+..t.......
+..y.......
+end
+
+part tay
+qbSq
+qbSq
+.FFh
+.fFF
+end
+
+# rìu giơ cao sau đầu (lấy đà): cán nghiêng
+part riu_len
+.....qSbb...
+....qsSSbbz.
+...qsSYSSbb.
+...qsYSSSbb.
+.Y.qsSSSSb..
+.yGGqssSb...
+.GG..qqq....
+G...........
+end
+
+# rìu bổ xuống phía trước: lưỡi chém xuống
+part riu_bo
+.........yy....
+GGGGGGGGGy.....
+........yqsSS..
+........qsSSbb.
+........qsYSbb.
+........qsSYSb.
+.........qSSSb.
+..........qbb..
+end
+
+part tay_ngang
+qbSqFF
+qbSqFh
+end
+
+part tay_len
+.Fh
+.FF
+qbS
+qbS
+.v.
+end
+
+part set
+..u.
+.un.
+un..
+.unu
+..un
+..n.
+.un.
+un..
+end
+
+part set_nho
+.u..
+un..
+.nu.
+..n.
+end
+
+part tia
+z.z
+.u.
+z.z
+end
+
+part mat_nham
+KKFFFFKK
+end
+
+anim idle fps=3 loop
+frame idle
+  use canh 1 8
+  use chan 0 24
+  use tren
+  use riu 21 6
+  use tay 20 17
+  outline
+end
+frame idle
+  use canh 1 9
+  use chan 0 24
+  use tren 0 1
+  use riu 21 6
+  use tay 20 18
+  outline
+end
+frame idle
+  use canh2 1 8
+  use chan 0 24
+  use tren
+  use riu 21 6
+  use tay 20 17
+  outline
+end
+
+anim attack fps=10 once
+frame attack
+  use canh2 1 8
+  use chan 0 24
+  use tren -1 0
+  use riu_len 13 1
+  use tay_len 19 14
+  outline
+end
+frame attack
+  use canh 1 8
+  use chan 0 24
+  use tren 1 1
+  use riu_bo 14 17
+  use tay_ngang 19 18
+  outline
+end
+frame attack
+  use canh 1 8
+  use chan 0 24
+  use tren 1 1
+  use riu_bo 14 17
+  use tay_ngang 19 18
+  use tia 27 23
+  set 29 20 u
+  outline
+end
+frame attack
+  use canh2 1 8
+  use chan 0 24
+  use tren
+  use riu 21 7
+  use tay 20 17
+  outline
+end
+
+anim cast fps=8 loop
+frame cast
+  use canh 1 8
+  use chan 0 24
+  use tren
+  use riu 21 4
+  use tay_len 21 14
+  use set_nho 24 1
+  outline
+end
+frame cast
+  use canh2 1 7
+  use chan 0 24
+  use tren
+  use riu 21 4
+  use tay_len 21 14
+  use set 25 1
+  use set_nho 1 21
+  outline
+end
+frame cast
+  use canh 1 8
+  use chan 0 24
+  use tren 0 1
+  use riu 21 4
+  use tay_len 21 15
+  use set 26 1
+  use set_nho 1 22
+  use tia 27 9
+  set 2 4 u
+  outline
+end
+
+anim hurt fps=8 once
+frame hurt
+  use canh 1 8
+  use chan -1 24
+  use tren -1 0
+  use riu 20 6
+  use tay 19 17
+  use mat_nham 9 9
+  outline
+  swap F h
+  swap c C
+end
+
+anim die fps=5 once
+frame die
+  use canh 1 11
+  use chan 0 24
+  use tren 0 3
+  use riu_bo 14 22
+  use mat_nham 10 12
+  outline
+end
+frame die
+  use chan 0 24
+  use tren 0 3
+  use mat_nham 10 12
+  rot 90
+  shift 0 5
+  outline
+end
+frame die
+  use @die.1
+  swap y d
+  swap Y j
+  swap W X
+  swap b S
+end

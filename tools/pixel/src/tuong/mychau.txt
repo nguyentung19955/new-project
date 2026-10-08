@@ -1,0 +1,266 @@
+# Mỵ Châu (mã mychau) — pixel 32×32 (tướng Tím · hành Kim). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:874 ưu tiên + PROMPT-DUNG-XUONG.txt:621): công chúa Âu Lạc ~16 nhỏ nhắn, mắt buồn, tóc đen thẳng dài
+# tới gối, trâm ngọc trai + 1 dải buộc đỏ; váy lụa tím nhạt dưới ÁO LÔNG NGỖNG trắng dài kéo đất hình tam giác (KHÔNG cánh);
+# tay KHÔNG vũ khí — mở bàn tay rắc lông ngỗng. Chiêu (Áo Lông Trắng): áo lông xoè, lông ngỗng xoáy bay quanh.
+name: Mỵ Châu
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  T = toi
+  K = khoi
+  f = da-toi
+  F = da
+  h = da-sang
+  e = trang
+  W = sang
+  t = trang-xam
+  R = son-sang
+  m = son-toi
+  q = tim-toi
+  p = tim
+  P = tim-sang
+  w = bac
+
+part dau
+....KKKK....
+..KKKKKKKW..
+.KKKKKKKKKK.
+KKKKKKKKKKK.
+KKKKKKKKKKKK
+KKKKKhKhhKhF
+KKKfFTFFFTFF
+KKffFekFFekF
+KKKfFFFFFFFh
+KKK.fFFFmFF.
+KRK..fffff..
+end
+
+part ao_long
+.......eee....
+......eWeWe...
+.....eWeWeWe..
+....eWeWWeWe..
+....etWeWeWet.
+...etWeWtWeWe.
+...eWeWeWeWet.
+..etWeWtWeWe..
+..eWeWeWeWeWe.
+.etWeWtWeWeWe.
+.eWeWeWeWeWeWe
+etWeWtWeWeWeWe
+eWeWeWeWeWeWeW
+tttttttttttttt
+end
+
+part ao_xoe
+........eee.....
+.......eWeWe....
+.....eeWeWeWe...
+...eeWeWWeWeW...
+..eWeWeWeWeWet..
+.eWtWeWtWeWeWe..
+eWeWeWeWeWeWet..
+etWeWtWeWeWe....
+eWeWeWeWeWeWe...
+.etWeWtWeWeWe...
+.eWeWeWeWeWeWe..
+etWeWtWeWeWeWe..
+eWeWeWeWeWeWeW..
+tttttttttttttt..
+end
+
+part than
+KK....fFf.....
+KK.eePPPPPp...
+KK.ePPPPPPPp..
+KKePPPPPPPPp..
+KK.PPPPPPPp...
+KK.PPPPPPPp...
+KK.qwqqqqqq...
+KK.PPPPPPPp...
+KK.PPPPPPPPp..
+end
+
+part chan
+.K.PPPPPPPPp..
+.K.PPPPPPPPPp.
+...PPPPPPPPPp.
+..PePPPPPPPPp.
+..pppppppppppp
+....TT...TT...
+end
+
+part tay
+fF.
+.FF
+.Fh
+end
+
+part tay_mo
+fFFFh
+.fFFF
+end
+
+part tay_len
+..FF
+.FFh
+.F..
+fF..
+end
+
+part long
+.W
+We
+e.
+end
+
+part long2
+We
+.W
+end
+
+anim idle fps=3 loop
+frame idle
+  use ao_long 2 13
+  use chan 8 24
+  use than 8 15
+  use dau 9 4
+  use tay 18 17
+  outline
+end
+frame idle
+  use ao_long 2 13
+  use chan 8 24
+  use than 8 16
+  use dau 9 5
+  use tay 18 18
+  outline
+end
+frame idle
+  use ao_long 2 13
+  use chan 8 24
+  use than 8 15
+  use dau 9 4
+  use tay 18 17
+  use long 22 14
+  outline
+end
+
+# đánh: vung tay → mở bàn tay rắc lông → lông bay → thu tay
+anim attack fps=10 once
+frame attack
+  use ao_long 2 13
+  use chan 8 24
+  use than 8 15
+  use dau 9 4
+  use tay_len 17 13
+  outline
+end
+frame attack
+  use ao_long 2 13
+  use chan 8 24
+  use than 8 15
+  use dau 9 4
+  use tay_mo 18 18
+  use long 24 16
+  outline
+end
+frame attack
+  use ao_long 2 13
+  use chan 8 24
+  use than 8 15
+  use dau 9 4
+  use tay_mo 18 18
+  use long 27 13
+  use long2 25 19
+  use long 29 17
+  outline
+end
+frame attack
+  use ao_long 2 13
+  use chan 8 24
+  use than 8 15
+  use dau 9 4
+  use tay 18 17
+  use long2 28 20
+  outline
+end
+
+# chiêu Áo Lông Trắng: áo xoè rộng, lông ngỗng xoáy bay quanh
+anim cast fps=8 loop
+frame cast
+  use ao_xoe 0 13
+  use chan 8 24
+  use than 8 15
+  use dau 9 4
+  use tay_len 17 13
+  use long 3 5
+  use long2 24 9
+  outline
+end
+frame cast
+  use ao_xoe 0 13
+  use chan 8 24
+  use than 8 15
+  use dau 9 4
+  use tay_len 17 13
+  use long 25 4
+  use long2 2 9
+  use long 26 18
+  outline
+end
+frame cast
+  use ao_xoe 0 13
+  use chan 8 24
+  use than 8 15
+  use dau 9 4
+  use tay_len 17 13
+  use long 6 1
+  use long2 27 12
+  use long 22 22
+  outline
+end
+
+anim hurt fps=8 once
+frame hurt
+  use @idle.0
+  shift -1 0
+  set 13 11 T
+  set 14 11 T
+  set 17 11 T
+  set 18 11 T
+  swap F h
+  swap P e
+end
+
+anim die fps=5 once
+frame die
+  use ao_long 2 15
+  use chan 8 24
+  use than 8 18
+  use dau 9 7
+  set 14 14 T
+  set 15 14 T
+  outline
+end
+frame die
+  use chan 8 24
+  use than 8 18
+  use dau 9 7
+  set 14 14 T
+  set 15 14 T
+  set 18 14 T
+  set 19 14 T
+  rot 90
+  shift 0 2
+  use long 4 18
+  use long2 26 20
+  outline
+end
+frame die
+  use @die.1
+  swap P p
+  use long 12 14
+  outline
+end
