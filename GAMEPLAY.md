@@ -2750,12 +2750,15 @@ Người dùng chọn phương án 4: máu quái tăng dần theo đợt + hạ 
   tầm thì giữ hồi chiêu sẵn sàng, không tốn năng lượng. Vùng sát thương của chiêu giữ nguyên.
 - Hỗ trợ: hồi máu khi có đồng đội bị thương (như cũ); khiên (Mai Rùa), Chia Bánh, Trống Trận, Cây Đa, Lời Thề: chỉ khi có đồng đội
   trong vùng của chiêu đang có quái trong tầm đánh (hoặc bị thương).
-- **Kỹ năng TOÀN BẢN ĐỒ** (dùng khi quái ở bất kỳ đâu trên đường) — người dùng soát:
-  · Thánh Gióng R «Bay Về Trời»: cưỡi ngựa sắt bay dọc cả dòng sông, đánh mọi quái trên bản đồ (≥3 quái hoặc có boss)
-  · An Tiêm R «Mưa Dưa»: dưa rơi khắp bản đồ (≥4 quái) · Sọ Dừa R: dừa rơi khắp trận (≥4 quái)
-  · Chú Cuội R «Gió Trăng»: quật mọi quái dưới đất · Mẫu R: rễ cây trồi khắp bờ sông, trói mọi quái dưới đất (≥3 quái hoặc boss)
-  · Kim Quy R «Hộ Thành»: không theo tầm — dùng khi quái sắp lọt thành
-  · Hỗ trợ toàn quân (theo đồng đội, không theo quái): Lang Liêu R «Lễ Tổ Tiên» (có tướng dưới 50% máu), Lạc Hầu R «Lời Thề».
+- ~~Kỹ năng toàn bản đồ~~ → **không còn** (người dùng đổi luật: chỉ kỹ năng trong tầm). Lúc tung, chiêu CHỈ thấy quái trong tầm
+  kỹ năng (Game.updateHero lọc danh sách quái); chiêu từng đánh cả sân có tầm x2 quanh tướng:
+  · Thánh Gióng R «Bay Về Trời»: ngựa sắt bay qua quái trong tầm x2 · An Tiêm R «Mưa Dưa», Sọ Dừa R: rơi xuống quái trong tầm x2
+  · Chú Cuội R «Gió Trăng», Mẫu R «Rễ Cây»: quái dưới đất trong tầm x2 (Mẫu R hồi 20% máu tướng trong 220)
+  · Kim Quy R «Hộ Thành»: dùng khi quái trong tầm x2 sắp lọt thành
+  · Lang Liêu R «Lễ Tổ Tiên», Lạc Hầu R «Lời Thề»: chỉ tướng trong tầm 220 (trước: toàn quân trên sân)
+  · Thạch Sanh/… «Lăn tảng đá», mũi tên xuyên: chỉ quái trong tầm trên đường lăn / bay
+  Mô tả các kỹ năng trên (js/data.js) đã đổi theo: bỏ "khắp bản đồ / cả dòng sông / toàn quân", ghi tầm.
+  Vùng đất / lửa / lúa đặt tại mục tiêu (vệt lửa Gióng E, ruộng lúa, cây đa…) vẫn là vùng cố định quanh mục tiêu trong tầm.
 - Test: `tests/sua-tam-skill/` (164 kỹ năng: vừa ngoài tầm → không tung, hồi chiêu không chạy; trong tầm → tung; toàn bản đồ tung
   khi quái ở xa; hỗ trợ không dùng khi đồng đội khoẻ và quái ngoài tầm; trận thật: Bổ Rìu tung đúng lúc quái vào tầm).
 - Áp pixel nốt phần còn lại (yêu cầu "toàn bộ giao diện"): ảnh nền menu, màn thắng/thua theo chương, tranh truyện (phông
@@ -2885,3 +2888,5 @@ Người dùng chọn phương án 4: máu quái tăng dần theo đợt + hạ 
   - **Chạm giữ thẻ chợ** ~0,45 s: hiện tên + vai trò + "Góp vào: + bạn ghép ➜ tướng Tím" (có dấu ghim nếu đang theo đuổi); thả tay ẩn, không mua.
   - Test: `node tests/goi-y-ro/muc-tieu.test.js` (gợi ý tự động, ghim đúng thẻ sáng, tối đa 2, lưu, dải có/thiếu, chạm giữ không mua, chạm nhanh vẫn mua,
     tắt gợi ý, nút Theo đuổi, tìm không dấu không mất ô nhập, lọc bậc — pixel + pixel0, 844×390 · 667×375 · 1920×934).
+- Test thêm: 3 quái trong tầm + 3 quái ngoài tầm (cách xa cả trên đường), chạy 1,5 giây kể cả hiệu ứng trễ → 133 chiêu tấn công tung,
+  không chiêu nào làm quái ngoài tầm mất máu / choáng / chậm; Gióng R trong trận thật chỉ trúng quái trong tầm x2.
