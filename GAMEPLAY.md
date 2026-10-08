@@ -2372,6 +2372,14 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 235 — chặn vuốt về trang trước (tester đạt)
+
+- Tắt overscroll, chặn vuốt mép 24px; Back: đóng bảng / trong trận hỏi "Rời trận?" / menu bấm 2 lần mới thoát.
+
+## Phiên bản 234 — sửa nút Gọi sớm (tester đạt)
+
+- #nextwaves pointer-events:none cũ chặn chạm nút Gọi sớm → #nextwaves.early bấm được; dải thường vẫn chạm xuyên xuống bản đồ.
+
 ## Phiên bản 233 — ẩn chợ khi mở bảng (tester đạt)
 
 - Mở bảng toàn màn (Túi đồ, Kỹ năng, Tiến hoá, Lò đúc, Bách khoa, Cài đặt, Ấn phù, Anh Hùng) → chợ, Hợp thể/Khoá/↻, cột nút phải ẩn hẳn; đóng → hiện lại.
@@ -2776,3 +2784,11 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 - Chạy cả pixel và `?pixel=0` (lớp sáng là CSS/canvas chung, không cần ảnh pixel riêng).
 - Test: `node tests/goi-y-ro/goi-y-ro.test.js` (đúng điều kiện có/không tướng cùng loại, 3 màu khác nhau, nhịp 1,2–1,5 s, đo điểm ảnh viền
   so với thẻ thường: tương phản ≥ 1,8 ở pixel/pixel0, 844×390 · 667×375 · 1920×934).
+- Lỗi gấp "Ấn GỌI SỚM không gọi được": KHÔNG do panel-open — bản v229 (trước khi gộp nhánh này) cũng không bấm được. Gốc: luật cũ `#nextwaves { … pointer-events: none }` (đầu style.css) đè `#ui > * { pointer-events: auto }` (cùng độ ưu tiên, viết sau thắng) → chạm/nhấp xuyên xuống bản đồ. Sửa: `#nextwaves.early { pointer-events: auto }` (dải thường vẫn cho chạm xuyên). Test `tests/goi-som/` (844×390 chuột + chạm, 1920×934): giữa đợt bấm Gọi sớm → đợt kế bắt đầu + toast vàng; sau khi mở/đóng Túi đồ; sau khi kéo tướng.
+
+## claude/chan-vuot-lui — Chơi trên web: vuốt không còn lỡ về trang trước
+- CSS: `html, body, #wrap` thêm `overscroll-behavior: none` (Chrome Android không vuốt ngang/kéo xuống để về trang/tải lại); `#wrap` `touch-action: none` (bảng cuộn vẫn cuộn như cũ).
+- Vuốt từ sát mép trái/phải (24px): chặn `touchstart`/`touchmove` ngang (passive:false) để Safari iOS khó bắt cử chỉ Quay lại; chạm vào nút/thẻ ở mép vẫn bấm được, vuốt dọc sát mép (cuộn bảng) không bị chặn.
+- Nút / cử chỉ Back trên web: luôn gài sẵn một mục lịch sử (gài lại ở lần chạm đầu). Back khi đang mở bảng → đóng bảng (như cũ); trong trận → **tạm dừng + hộp "Rời trận?"** (Ở lại = chạy tiếp, Rời trận = Dừng chơi; Back/Esc lần nữa = Ở lại); ở menu → nhắc "Thoát game?", bấm Back lần 2 trong 2 giây mới rời trang.
+- Đóng/tải lại trang khi đang trong trận: trình duyệt hỏi lại (beforeunload). Trong app Capacitor giữ hành vi cũ (chỉ đóng bảng).
+- Test: `node tests/chan-vuot-lui/chan-vuot-lui.test.js` (giả lập điện thoại hasTouch, 844×390 + dọc 390×844).
