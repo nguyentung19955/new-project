@@ -1,0 +1,67 @@
+# thành Phong Châu (castle — song, dam, bien) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: thành gỗ-đá nâu 6E5636, mái, cờ
+name: thành Phong Châu (castle — song, dam, bien)
+size: 48x48
+colors:
+  a = vien
+  b = dat-toi
+  c = dat
+  d = dat-sang
+  e = son
+
+part k0
+................................................
+.................aaaaaaaaaaaaaaa................
+................addddddddddddddba...............
+................adcccccccccccccba...............
+................adcccccccccccccba...............
+................adcccccccccccccba...............
+................adcccccccccccccba...............
+................adcccceccccccccba...............
+................adcccceccccccccba...............
+................adcccccccccccccba...............
+................adcccccccccccccba...............
+................adcccccccccccccba...............
+................adcccccccccccccba...............
+................adcccccccccccccba...............
+..aaaaaaa....aaaadcccccccccccccba..aaaaaaa....aa
+.addddddba..addddccccccccccccccba.addddddba..adb
+.adcccccba..adcccccccccccccccccba.adcccccba..adb
+.adcccccba..adcccccccccccccccccba.adcccccba..adb
+.adcccccbaaaadcccccccccccccccccbaaadcccccbaaaadb
+.adccccccddddcccccccccccccccccccdddcccccccddddcb
+.adccccccccccccccccccccccccccccccccccccccccccccb
+.adcccccccccccccccccccccccccccccccccccccccccccba
+.adcccccccccccccccccccccccccccccccccccccccccccba
+.adcccccccccccccccccccccccccccccccccccccccccccba
+.adcccccccccccccccccccccccccccccccccccccccccccba
+.adcccccccccccccccccccccccccccccccccccccccccccba
+.adcccccccccccccccccccccccccccccccccccccccccccba
+.adcccccccccccccccccccccccccccccccccccccccccccba
+.adcccccccccccccccccccaaaaccccccccccccccccccccba
+.adccccccccccccccccccaaaaaacccccccccccccccccccba
+.adcccccccccccccccccaaaaaaaaccccccccccccccccccba
+.adccccccccccccccccaaaaaaaaaacccccccccccccccccba
+.adccccccccccccccccaaaaaaaaaacccccccccccccccccba
+.adccccccccccccccccaaaaaaaaaacccccccccccccccccba
+.adcccccccccccccccaaaaaaaaaaaaccccccccccccccccba
+.adcccccccccccccccaaaaaaaaaaaaccccccccccccccccba
+.adcccccccccccccccaaaaaaaaaaaaccccccccccccccccba
+.adcccccccccccccccaaaaaaaaaaaaccccccccccccccccba
+.adcccccccccccccccaaaaaaaaaaaaccccccccccccccccba
+.adcccccccccccccccaaaaaaaaaaaaccccccccccccccccba
+.adcccccccccccccccaaaaaaaaaaaaccccccccccccccccba
+.adcccccccccccccccaaaaaaaaaaaaccccccccccccccccba
+.adcccccccccccccccaaaaaaaaaaaaccccccccccccccccba
+.adcccccccccccccccaaaaaaaaaaaaccccccccccccccccba
+.adcccccccccccccccaaaaaaaaaaaaccccccccccccccccba
+.abbbbbbbbbbbbbbbbaaaaaaaaaaaabbbbbbbbbbbbbbbbba
+..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.
+................................................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

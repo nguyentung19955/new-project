@@ -1,0 +1,35 @@
+# cỏ quanh thành (thanh) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đất 4A5A2E, cỏ 5E7038, chấm 36441E
+name: cỏ quanh thành (thanh)
+size: 16x16
+colors:
+  a = son
+  b = la-sang
+  c = reu-toi
+  d = reu
+  e = reu-sang
+
+part k0
+dddddddddddddddd
+ddeddddddddcdddd
+debedddddddddddd
+ddcdddddeddddddd
+dddddddddedddcdd
+dddddcdddcdddded
+ddddddddddddddbe
+dedddddddddddddc
+dbeddddedddddddd
+ddcdddebeddddddd
+dddddddcddddcddd
+ddddddddddddeddd
+dddcdddddddebedd
+dddddddadddddcdd
+deddddddddcddddd
+dddddddddddddddd
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

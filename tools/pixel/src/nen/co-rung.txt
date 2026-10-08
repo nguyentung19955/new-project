@@ -1,0 +1,34 @@
+# nền rừng (rung) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đất 2E4A22, cỏ 3E6A2E, chấm 203818
+name: nền rừng (rung)
+size: 16x16
+colors:
+  a = vang-nghe
+  b = la-toi
+  c = la
+  d = la-ma
+
+part k0
+cccccccccccccccc
+cccccccccccbcccc
+ccdccccccccccccc
+ccbccccccccccccc
+cccccccccccccbcc
+cccccbcccbcccccc
+ccccccccccccccdc
+cccccccccccccccb
+cdcccccccccccccc
+ccbccccdcccccccc
+cccccccbccccbccc
+cccccccccccccccc
+cccbccccccccdccc
+cccccccacccccbcc
+ccccccccccbccccc
+cccccccccccccccc
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

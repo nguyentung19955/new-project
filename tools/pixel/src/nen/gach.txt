@@ -1,0 +1,33 @@
+# đường gạch thành (thanh) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: gạch 9C8668, mép 5A4A36, viền 6E5E48
+name: đường gạch thành (thanh)
+size: 16x16
+colors:
+  a = dat-toi
+  b = dat
+  c = dat-sang
+
+part k0
+cccccccaccccccca
+bbbbbbbabbbbbbba
+bbbbbbbabbbbbbba
+aaaaaaaaaaaaaaaa
+cccacccccccacccc
+bbbabbbbbbbabbbb
+bbbabbbbbbbabbbb
+aaaaaaaaaaaaaaaa
+cccccccaccccccca
+bbbbbbbabbbbbbba
+bbbbbbbabbbbbbba
+aaaaaaaaaaaaaaaa
+cccacccccccacccc
+bbbabbbbbbbabbbb
+bbbabbbbbbbabbbb
+aaaaaaaaaaaaaaaa
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

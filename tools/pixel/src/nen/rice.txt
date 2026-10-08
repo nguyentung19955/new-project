@@ -1,0 +1,35 @@
+# trang trí: rice — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: ô ruộng lúa 6A8A2E
+name: trang trí: rice
+size: 16x16
+colors:
+  a = vien
+  b = la-sang
+  c = reu-toi
+  d = reu
+  e = reu-sang
+
+part k0
+................
+................
+..aaaaaaaaaaaaa.
+.aeeeeeeeeeeeeca
+.aebddbddbddbdca
+.aebddbddbddbdca
+.aedddddddddddca
+.aebddbddbddbdca
+.aebddbddbddbdca
+.aedddddddddddca
+.aebddbddbddbdca
+.acbccbccbccbcca
+..aaaaaaaaaaaaa.
+................
+................
+................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

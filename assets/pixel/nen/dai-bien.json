@@ -1,0 +1,25 @@
+{
+ "code": "dai-bien",
+ "group": "nen",
+ "name": "dải biển phía trên (bien)",
+ "w": 32,
+ "h": 32,
+ "ax": 16,
+ "ay": 31,
+ "bbox": [
+  0,
+  0,
+  32,
+  32
+ ],
+ "n": 3,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 3,
+   "fps": 3,
+   "loop": true
+  }
+ },
+ "sheet": "dai-bien.png"
+}

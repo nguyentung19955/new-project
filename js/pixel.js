@@ -207,8 +207,11 @@ function pxTilePattern(x, code, dev) {
 function pxMapGround(x, m, kind, k) {
   if (!pxEntry('nen', 'co')) return false;
   const unit = 3.5;   // một điểm ảnh ô nền ≈ 3,5 đơn vị bản đồ (ô 16 px ≈ 56 đơn vị ≈ bề rộng đường đi)
-  const grass = pxTilePattern(x, 'co', unit * k);
-  const road = pxTilePattern(x, kind === 'nuoc' ? 'nuoc' : 'dat', unit * k);
+  // claude/xuat-goi-pixel: ô cỏ / đường theo chủ đề bản đồ (mã chưa có thì về co / dat / nuoc)
+  const th = m && m.theme, gk = { dam: 'co-dam', dong: 'co-dong', rung: 'co-rung', thanh: 'co-thanh', hang: 'nen-hang', bien: 'cat-bien' }[th];
+  const rk = kind === 'nuoc' ? (th === 'bien' ? 'nuoc-bien' : 'nuoc') : kind;
+  const grass = (gk && pxEntry('nen', gk) && pxTilePattern(x, gk, unit * k)) || pxTilePattern(x, 'co', unit * k);
+  const road = (rk !== 'nuoc' && pxEntry('nen', rk) && pxTilePattern(x, rk, unit * k)) || pxTilePattern(x, kind === 'nuoc' ? 'nuoc' : 'dat', unit * k);
   if (!grass || !road) return false;
   const inv = new DOMMatrix().scale(1 / k);
   grass.setTransform(inv); road.setTransform(inv);
