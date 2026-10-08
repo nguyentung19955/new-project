@@ -12,6 +12,14 @@
 - **Sửa giao diện thì phải NHÌN ảnh chụp, không chỉ chạy test.** Mọi thay đổi đụng tới giao diện/ảnh: chụp màn hình trước/sau bằng Playwright ở 1920×934, 844×390, 667×375 và dùng công cụ Read để xem tận mắt từng ảnh (ảnh vỡ/cắt/lệch, icon lòi ra, chữ tràn, nút chồng). Chỉ báo "xong" khi đã xem ảnh và không thấy lỗi; ghi đường dẫn ảnh đã xem trong tin nhắn báo cáo. Session điều phối cũng xem lại ảnh trước khi báo người dùng.
 - **Tester 10 năm kinh nghiệm kiểm tra sau mỗi lần sửa.** Khi một session sửa lỗi / làm tính năng báo xong, session điều phối giao nhánh đó cho session tester (vai tester game mobile 10 năm kinh nghiệm: chơi thật bằng Playwright ở 1920×934, 844×390, 667×375, dọc 390×844, chụp và xem tận mắt từng ảnh, soi cả lỗi hồi quy xung quanh chỗ sửa). Tester chỉ báo cáo (đạt / lỗi + ảnh + bước tái hiện), không sửa code. Chỉ gộp vào nhánh chính khi tester báo đạt; lỗi thì trả lại session sửa. Hàng đợi theo thứ tự đến trước — xử lý trước, test trước (FIFO), không chen ngang. Có 2 tester thường trực: nhánh tiếp theo trong hàng đợi giao cho tester nào đang rảnh.
 
+# Tiết kiệm token (bắt buộc)
+
+- Session điều phối KHÔNG tự chạy toàn bộ test khi gộp (session con + tester đã chạy); chỉ chạy `node tests/run-all.js <test liên quan>` nếu có xung đột code.
+- Chỉ 1 tester thường trực; thay đổi nhỏ chỉ chụp 844×390 (+1920×934 nếu là giao diện).
+- Tối đa 4 session con chạy song song.
+- Báo cáo giữa các session ngắn gọn (≤ 15 dòng), không dán log dài.
+- Khi session điều phối dài quá thì viết bàn giao vào `docs/BAN-GIAO-DIEU-PHOI.md` và mở session điều phối mới.
+
 # Chạy test
 
 - Đủ bộ (song song 4 luồng, in bảng thời gian, mã thoát ≠ 0 nếu có lỗi): `node tests/run-all.js` (thêm `--j 6` để đổi số luồng).
