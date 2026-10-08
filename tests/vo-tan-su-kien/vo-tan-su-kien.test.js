@@ -123,7 +123,7 @@ const CHI_ANH = !!process.env.CHI_ANH;   // CHI_ANH=1: chỉ chụp ảnh
   // ================= từng sự kiện: kích hoạt đúng, hiệu ứng đúng, thưởng đúng
   for (const id of cal.ids) {
     await setup(page, 60, id);
-    const r = await page.evaluate((id) => {
+    const r = await page.evaluate(async (id) => {
       const g = game, out = { id };
       const ev = waveEventOf(id, 60, 0);
       // banner của lượt trước còn hiện / còn trong hàng đợi (máy bận: chưa hết 2,6 giây) thì banner mới phải đợi → xoá trước
@@ -132,7 +132,12 @@ const CHI_ANH = !!process.env.CHI_ANH;   // CHI_ANH=1: chỉ chụp ảnh
       g.wave = 59; g.waveActive = true; g.evWave = 58; g.waveComplete(); if (g.rest) g.skipRest();
       out.soon = g.events.some((e) => e.type === 'waveEvent' && e.phase === 'soon' && e.ev.id === id && e.ev.n === 60);
       ui.handleEvents();
-      out.banner = !document.querySelector('#banner').hidden && document.querySelector('#banner-text').innerText === ev.name;
+      // banner "vượt qua" của sự kiện trước có thể còn hiện → banner báo trước xếp hàng (ui.queueBanner), chờ tới lượt (≤ 3,5 giây)
+      const shown = () => !document.querySelector('#banner').hidden && document.querySelector('#banner-text').innerText === ev.name;
+      const run0 = g.running; g.running = false;   // đứng trận trong lúc chờ (không tự sang đợt 60)
+      for (let t = 0; t < 70 && !shown(); t++) await new Promise((res) => setTimeout(res, 50));
+      g.running = run0;
+      out.banner = shown(); out.bnNow = (document.querySelector("#banner").hidden ? "ẩn" : "") + document.querySelector("#banner-sub").innerText + "/" + document.querySelector("#banner-text").innerText + " q=" + !!ui.evQueued + " rh=" + !document.querySelector("#roster-hint").hidden;
       ui.updateNextWaves();
       out.strip = !!document.querySelector('#nextwaves .evt .icn') && document.querySelector('#nextwaves').textContent.includes(ev.name);
       g.events.length = 0;
@@ -182,7 +187,7 @@ const CHI_ANH = !!process.env.CHI_ANH;   // CHI_ANH=1: chỉ chụp ảnh
       return out;
     }, id);
     const p = r.want.p;
-    ok(r.soon && r.banner && r.strip, `${id}: hết đợt 59 → báo trước (banner + biểu tượng trên dải đợt kế)`);
+    ok(r.soon && r.banner && r.strip, `${id}: hết đợt 59 → báo trước (banner + biểu tượng trên dải đợt kế)` + (r.soon && r.banner && r.strip ? "" : ` soon=${r.soon} banner=${r.banner} [${r.bnNow}] strip=${r.strip}`));
     ok(r.start && (r.evq > 0 || p.elite || p.air || p.fog || p.weak || p.lock), `${id}: đợt 60 bắt đầu → sự kiện kích hoạt`);
     ok(r.weakOk, `${id}: sát thương tướng ${p.weak ? `hành ${p.el} −${Math.round(p.weak * 100)}% (${r.weakHit} tướng trúng), hành khác giữ nguyên` : 'không đổi'}`);
     if (p.lock) ok(r.cursed === 1, `${id}: sau ${p.every} giây trói 1 tướng ${p.lock} giây`);
