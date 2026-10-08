@@ -238,7 +238,7 @@ const bossWave = (page) => page.evaluate(() => { const g = ui.game; g.wave = 9; 
       const last = await page.evaluate(() => { const els = [...document.querySelectorAll('#result .res-main > *')]; const b = els[els.length - 1].getBoundingClientRect().bottom; const tv = [...document.querySelectorAll('#result .res-table div')].find((d) => /Tu Vi/.test(d.textContent)); return { b, ih: innerHeight, tv: tv ? tv.getBoundingClientRect().bottom : null }; });
       ok(last.b <= last.ih + 1, `L04 cuộn hết: khối cuối nằm trong màn (${last.b.toFixed(0)} ≤ ${last.ih})`);
       await page.screenshot({ path: path.join(SHOT, `L04-ket-qua-cuon-${tag}.png`) });
-      ok(await page.evaluate(() => { const d = [...document.querySelectorAll('#result .res-table div')].find((x) => /Mạng còn/.test(x.textContent)); const im = d && d.querySelector('img.icn'); return !!im && /ui-tai-nguyen-2|pixel\/icon\/mang/.test(im.src); }), 'L17 "Mạng còn" dùng trái tim đỏ (ui-tai-nguyen-2.png / pixel icon/mang), không dùng khiên đồng giống đồng xu');
+      ok(await page.evaluate(() => { const d = [...document.querySelectorAll('#result .res-table div')].find((x) => /Mạng còn/.test(x.textContent)); const im = d && d.querySelector('img.icn'); return !!im && /ui-tai-nguyen-2|pixel(-muot)?\/icon\/mang/.test(im.src); }), 'L17 "Mạng còn" dùng trái tim đỏ (ui-tai-nguyen-2.png / pixel icon/mang), không dùng khiên đồng giống đồng xu');
     }
     // ---------- L12: xếp hạng ngoại tuyến có hình + kỷ lục trên máy
     {

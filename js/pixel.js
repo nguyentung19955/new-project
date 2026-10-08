@@ -27,6 +27,7 @@ const PX = { seen: new Set(), blits: 0, smooth: null };   // mã đã vẽ bằn
 const pxSmoothOff = () => PX.blits > 0 && PX.smooth === false;
 if (PX_ON && typeof document !== 'undefined') {
   document.documentElement.classList.add('pixel');
+  try { if (!/[?&]muot=0\b/.test(location.search) && localStorage.getItem('ttv.pxmuot') !== '0') document.documentElement.classList.add('muot'); } catch (e) { document.documentElement.classList.add('muot'); }
   // font pixel có dấu tiếng Việt (VT323: số HUD) — chỉ tải khi bật pixel; sua-giao-dien-10: bỏ Handjet (tiêu đề dùng Alegreya SC 800)
   // pixel-mac-dinh: nạp sau sự kiện load (font mạng chậm / bị chặn không làm trễ mở game; display=swap → chữ đổi font sau)
   const font = () => {
@@ -49,7 +50,16 @@ function pxEntry(group, code) {
 const pxEnemyEntry = (type, e) => (type === 'giaolong' && e && e.el && pxEntry('quai', 'giaolong-' + e.el)) || pxEntry('quai', type) || pxEntry('boss', type);
 // đường dẫn ảnh (trong assets/) — dùng cho <img>
 const pxPath = (e, cd) => `pixel/${e.key}${cd ? '-chan-dung' : ''}.png`;
-const pxUrl = (group, code, cd) => { const e = pxEntry(group, code); return e && hasAsset(pxPath(e, cd)) ? assetSrc(pxPath(e, cd)) : ''; };
+// claude/ve-lai-pixel: bản LÀM MƯỢT sinh sẵn khi build (assets/pixel-muot/, e.m = hệ số phóng) — dùng khi bật làm mượt (mặc định)
+const pxPathM = (e, cd) => `pixel-muot/${e.key}${cd ? '-chan-dung' : ''}.png`;
+const pxUrl = (group, code, cd) => {
+  const e = pxEntry(group, code);
+  if (!e) return '';
+  if (e.m && typeof PX_MUOT !== 'undefined' && PX_MUOT && hasAsset(pxPathM(e, cd))) return assetSrc(pxPathM(e, cd));
+  return hasAsset(pxPath(e, cd)) ? assetSrc(pxPath(e, cd)) : '';
+};
+// có nên vẽ ảnh này với làm mịn không: ảnh thường / khung đã làm mượt → có; khung pixel gốc (canvas) → không (nearest)
+const pxMin = (img) => !img.getContext || !!img.__muot;
 
 // khung thứ i của dải → canvas riêng (cỡ gốc), để vẽ / làm viền sáng; null khi ảnh chưa tải xong
 const pxFrames = new Map();
@@ -125,10 +135,21 @@ const pxMuotFrames = new Map();
 // ngân sách ~4 ms làm mượt mỗi khung hình (máy yếu không giật khi nhiều quái mới cùng xuất hiện): hết thì tạm vẽ khung gốc, khung sau làm tiếp
 let pxMuotTick = 0, pxMuotDung = 0;
 function pxFrameVe(e, i) {
-  if (!PX_MUOT || !PX_MUOT_NHOM.has(e.key.slice(0, e.key.indexOf('/')))) return pxFrame(e, i);
+  if (!PX_MUOT) return pxFrame(e, i);
   const key = e.key + '|' + i;
   let c = pxMuotFrames.get(key);
   if (c) return c;
+  if (e.m) {   // bản sinh sẵn khi build: cắt khung từ dải ×m — không tính gì lúc chơi
+    const sheet = asset(pxPathM(e), true);
+    if (!sheet) return pxFrame(e, i);   // chưa tải xong: tạm khung gốc
+    c = document.createElement('canvas'); c.width = e.w * e.m; c.height = e.h * e.m;
+    c.getContext('2d').drawImage(sheet, i * c.width, 0, c.width, c.height, 0, 0, c.width, c.height);
+    c.naturalWidth = c.width; c.naturalHeight = c.height; c.__muot = e.m;
+    pxMuotFrames.set(key, c);
+    return c;
+  }
+  // không có bản sinh sẵn (gói pixel tự nạp .zip…): tướng / quái / boss làm mượt lúc chơi, có ngân sách thời gian
+  if (!PX_MUOT_NHOM.has(e.key.slice(0, e.key.indexOf('/')))) return pxFrame(e, i);
   const f = pxFrame(e, i);
   if (!f) return null;
   const now = performance.now(), tk = Math.floor(now / 16);
@@ -341,11 +362,12 @@ function pxMapGround(x, m, kind, k) {
 const PX_NGAY = ['giao-dien'], PX_SAU = ['tuong', 'quai', 'boss', 'nen', 'ban-do', 'vfx', 'icon'];
 function pxPreload() {
   const M = window.PIXEL_MANIFEST || {}, keys = Object.keys(M), grp = (k) => k.slice(0, k.indexOf('/'));
-  keys.filter((k) => PX_NGAY.includes(grp(k))).forEach((k) => asset(`pixel/${k}.png`, true));
+  const tai = (k) => asset(PX_MUOT && M[k].m ? `pixel-muot/${k}.png` : `pixel/${k}.png`, true);   // làm mượt: tải bản sinh sẵn
+  keys.filter((k) => PX_NGAY.includes(grp(k))).forEach(tai);
   const later = keys.filter((k) => PX_SAU.includes(grp(k))).sort((a, b) => PX_SAU.indexOf(grp(a)) - PX_SAU.indexOf(grp(b)));
   const idle = window.requestIdleCallback ? (f) => requestIdleCallback(f, { timeout: 300 }) : (f) => setTimeout(f, 30);
   const step = () => {
-    later.splice(0, 60).forEach((k) => asset(`pixel/${k}.png`, true));
+    later.splice(0, 60).forEach(tai);
     if (later.length) return idle(step);
     if (typeof ui !== 'undefined' && ui && ui.preloadMarket && typeof HEROES !== 'undefined') ui.preloadMarket(Object.keys(HEROES).filter((t) => pxEntry('tuong', t)));
   };

@@ -590,14 +590,15 @@ const SPOT_THEME = { song: 'co', dam: 'co', dong: 'co', rung: 'dat', hang: 'da',
 // claude/pixel-con-lai: khung pixel nhóm giao-dien (thanh máu…) khi bật pixel → canvas khung 0; không có thì null
 // claude/ve-lai-pixel: vẽ khung 3 mảnh — hai đầu (cap điểm ảnh nguồn) giữ tỉ lệ theo chiều cao, chỉ giữa giãn ngang (góc / đinh không méo)
 function pxDraw3(ctx, fr, x, y, w, h, cap) {
+  cap *= fr.__muot || 1;   // khung làm mượt ×m: đầu khung tính theo điểm ảnh nguồn gốc
   const sw = fr.width, sh = fr.height, k = h / sh, cw = Math.min(cap * k, w / 2), sm = ctx.imageSmoothingEnabled;
-  ctx.imageSmoothingEnabled = false;
+  ctx.imageSmoothingEnabled = pxMin(fr);
   ctx.drawImage(fr, 0, 0, cap, sh, x, y, cw, h);
   ctx.drawImage(fr, cap, 0, sw - cap * 2, sh, x + cw, y, w - cw * 2, h);
   ctx.drawImage(fr, sw - cap, 0, cap, sh, x + w - cw, y, cw, h);
   ctx.imageSmoothingEnabled = sm;
 }
-const pxUiFrame = (code) => { const e = typeof pixelOn === 'function' && pixelOn() && pxEntry('giao-dien', code); return (e && pxFrame(e, 0)) || null; };
+const pxUiFrame = (code) => { const e = typeof pixelOn === 'function' && pixelOn() && pxEntry('giao-dien', code); return (e && pxFrameVe(e, 0)) || null; };
 function drawSpot(ctx, x, y, o, t) {
   const rx = 15 * DK, ry = 10 * DK;
   // v156: đế đặt tướng vẽ tay (tiles/de-tuong-*.png, cắt bằng tools/cat-items.py de-tuong / de-tuong-chu-de):
@@ -609,12 +610,12 @@ function drawSpot(ctx, x, y, o, t) {
   // ảnh đế là một phần bản đồ (như nền vẽ tay) → luôn dùng nếu có, kể cả khi tắt "Dùng ảnh AI"
   let base = null;
   // claude/pixel-con-lai: đế pixel cho trạng thái đặc biệt (ngập / núi / chọn / sẵn sàng); ô thường đã có bệ đá trong nền bản đồ pixel
-  if (typeof pixelOn === 'function' && pixelOn()) for (const k of de.slice(0, -2)) { const pe = pxEntry('nen', 'de-tuong-' + k), pf = pe && pxFrame(pe, 0); if (pf) { base = { img: pf }; break; } }
+  if (typeof pixelOn === 'function' && pixelOn()) for (const k of de.slice(0, -2)) { const pe = pxEntry('nen', 'de-tuong-' + k), pf = pe && pxFrameVe(pe, 0); if (pf) { base = { img: pf }; break; } }
   if (!base) for (const k of de) { const img = asset(`tiles/de-tuong-${k}.png`, true); if (img) { base = { img }; break; } }
   if (base) {
     // ảnh vuông, đế elip nằm giữa; mặt đế hơi cao hơn tâm ảnh (phối cảnh 3/4) → hạ ảnh xuống một chút
     const s = rx * 2.9;
-    ctx.imageSmoothingEnabled = !base.img.getContext; ctx.drawImage(base.img, x - s / 2, y - s / 2 + ry * 0.3, s, s); ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingEnabled = pxMin(base.img); ctx.drawImage(base.img, x - s / 2, y - s / 2 + ry * 0.3, s, s); ctx.imageSmoothingEnabled = true;
     o = { ...o, tileArt: true };
   }
   const tk = o.flooded ? 'ngap' : o.raised || o.tier === 2 ? 'cao' : o.tier === 1 ? 'giua' : 'thap';

@@ -180,3 +180,10 @@ vì mô tả dài), nút Chọn luôn sát đáy.
 - Tính lười + lưu đệm từng khung, ngân sách ~4 ms/khung hình (đo: quái 32 ≈ 1 ms, tướng ≈ 5,6 ms, boss 64 ≈ 7 ms một khung trên máy test).
 - Chưa áp: ảnh `<img>` (chân dung thẻ chợ `-chan-dung.png`, icon đồ / kỹ năng), nền, cổng, khung giao diện — vẫn pixel nét.
 - Lệch QUY-CHUAN (mục 3 "phóng nearest-neighbor", bảng màu chung): mức 7 pha màu ngoài bảng — người dùng chọn 08/10.
+
+### 12c. Mức 7 SINH SẴN + áp cho mọi giao diện (người dùng chốt: "báo tools pixel để nó gen", "để làm mặc định")
+- `tools/build-pixel.js` gọi `tools/pixel/lam-muot.js` → `assets/pixel-muot/` (×2; ×4 không đẹp hơn ở cỡ trận mà nặng gấp đôi) — +6,4 MB, build ~13 s.
+- `js/pixel.js`: `pxFrameVe` cắt khung từ dải mượt sinh sẵn (không tính lúc chơi), `pxUrl` trả bản mượt cho `<img>`, tải sẵn bản mượt;
+  `pxMin(img)` = vẽ có làm mịn với khung mượt. Áp: tướng / quái / boss, cổng, bệ, nền bản đồ, khung máu (pxDraw3 nhân hệ số), mọi `<img>` pixel,
+  khung CSS (nút chính, khung người chơi, thanh boss — border-image cắt theo %). CSS `html.pixel.muot` bỏ `pixelated` (trừ canvas trận, tranh menu).
+- Còn nearest: ô nền 16×16 lát liền, hiệu ứng `vfx` (nhánh vfx tự tải `pixel/vfx/*`).

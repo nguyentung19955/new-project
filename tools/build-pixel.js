@@ -46,6 +46,9 @@ const REQUIRED = {
 };
 const ANIM_RANGE = { idle: [1, 6], walk: [1, 6], attack: [1, 6], cast: [1, 6], hurt: [1, 2], die: [1, 6], rage: [1, 4], portrait: [1, 1], main: [1, 8], win: [1, 4] };
 const RESERVED = new Set(['.', '_']);
+// làm mượt mức 7 (người dùng chọn 08/10): mỗi điểm gốc → 2×2 điểm đã làm mượt (tools/pixel/lam-muot.js) — ×4 không đẹp hơn ở cỡ trong trận mà nặng gấp đôi
+const { lamMuot, lamMuotDai } = require('./pixel/lam-muot.js');
+const MUOT_K = 2;
 
 // ---------------------------------------------------------------- PNG (không cần thư viện)
 const CRC = (() => { const t = new Int32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c; } return t; })();
@@ -345,6 +348,7 @@ function run(argv) {
     else if (a === '--src') opt.src = path.resolve(argv[++i]);
     else if (a === '--out') opt.out = path.resolve(argv[++i]);
     else if (a === '--xem') opt.xem = path.resolve(argv[++i]);
+    else if (a === '--khong-muot') opt.khongMuot = true;
     else opt.filters.push(a);
   }
   const log = (...m) => { if (!opt.quiet) console.log(...m); };
@@ -371,6 +375,8 @@ function run(argv) {
     const first = sp.built.idle || sp.built.walk || sp.built.main || [grids[0]];
     const entry = { name: src.name, w: sp.w, h: sp.h, ax: sp.anchor[0], ay: sp.anchor[1], bbox: bboxOf(first[0]), n: grids.length, anims };
     if (s.group === 'tuong' || s.group === 'quai' || s.group === 'boss') entry.cd = 1;
+    // claude/ve-lai-pixel: bản LÀM MƯỢT mức 7 sinh sẵn (assets/pixel-muot/, ×2) — trừ ô nền 16×16 lát liền (làm mượt sẽ hở mép)
+    if (!opt.khongMuot && !(s.group === 'nen' && sp.w === 16 && sp.h === 16)) entry.m = MUOT_K;
     entries[rel] = entry;
     if (!pick) continue;
     outputs.push({ rel, s, src, sp, grids, entry, pal: palG });
@@ -392,18 +398,28 @@ function run(argv) {
       const pg = portraitGrid(o.sp);
       fs.writeFileSync(path.join(dir, o.s.code + '-chan-dung.png'), encodePNG(pg[0].length, pg.length, toRGBA([pg], pg[0].length, pg.length, o.src, o.pal)));
     }
+    if (o.entry.m) {   // làm mượt mức 7 sinh sẵn: game tải thẳng, không tính lúc chơi
+      const md = path.join(opt.out, 'assets', 'pixel-muot', o.s.group);
+      fs.mkdirSync(md, { recursive: true });
+      const m = lamMuotDai(toRGBA(o.grids, o.sp.w, o.sp.h, o.src, o.pal), o.sp.w, o.sp.h, o.grids.length, { k: MUOT_K });
+      fs.writeFileSync(path.join(md, o.s.code + '.png'), encodePNG(m.w, m.h, m.rgba));
+      if (o.entry.cd) {
+        const pg = portraitGrid(o.sp), pw = pg[0].length, ph = pg.length, mc = lamMuot(toRGBA([pg], pw, ph, o.src, o.pal), pw, ph, { k: MUOT_K });
+        fs.writeFileSync(path.join(md, o.s.code + '-chan-dung.png'), encodePNG(mc.w, mc.h, mc.rgba));
+      }
+    }
     if (opt.xem) { fs.mkdirSync(opt.xem, { recursive: true }); fs.writeFileSync(path.join(opt.xem, `${o.s.group}-${o.s.code}.png`), previewPNG(o.grids, o.sp.w, o.sp.h, o.src, o.pal)); }
     log(`  ✓ ${o.rel}: ${o.sp.w}x${o.sp.h} × ${o.grids.length} khung (${Object.entries(o.entry.anims).map(([k, v]) => k + ' ' + v.n).join(', ')})`);
   }
-  // xoá ảnh cũ của nguồn đã xoá (chỉ khi dựng đủ bộ)
-  if (!opt.filters.length) {
-    const pdir = path.join(opt.out, 'assets', 'pixel');
+  // xoá ảnh cũ của nguồn đã xoá (chỉ khi dựng đủ bộ); bản làm mượt: xoá cả khi mã không còn làm mượt
+  if (!opt.filters.length) for (const [thu, giu] of [['pixel', (e) => e], ['pixel-muot', (e) => e && e.m]]) {
+    const pdir = path.join(opt.out, 'assets', thu);
     if (fs.existsSync(pdir)) for (const g of fs.readdirSync(pdir)) {
       const d = path.join(pdir, g);
       if (!fs.statSync(d).isDirectory()) continue;
       for (const f of fs.readdirSync(d)) {
         const code = f.replace(/(-chan-dung)?\.(png|json)$/, '');
-        if (!entries[`${g}/${code}`]) { fs.unlinkSync(path.join(d, f)); log(`  − xoá ${g}/${f} (không còn nguồn)`); }
+        if (!giu(entries[`${g}/${code}`])) { fs.unlinkSync(path.join(d, f)); log(`  − xoá ${thu}/${g}/${f} (không còn nguồn)`); }
       }
     }
   }

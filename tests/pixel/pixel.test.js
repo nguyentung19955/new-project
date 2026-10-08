@@ -153,7 +153,7 @@ async function setup(page) {
     await setup(page);
     await page.waitForTimeout(600);
     const s = await page.evaluate(() => ({ on: pixelOn(), seen: [...PX.seen], cls: document.documentElement.className, url: heroImgUrl('giong', 'head') }));
-    ok(!s.on && !s.seen.length && !/pixel/.test(s.cls) && !/pixel\//.test(s.url), '?pixel=0: tắt, không vẽ pixel (hình cũ)');
+    ok(!s.on && !s.seen.length && !/pixel/.test(s.cls) && !/pixel(-muot)?\//.test(s.url), '?pixel=0: tắt, không vẽ pixel (hình cũ)');
     ok(!errors.length, 'không lỗi console (tắt pixel) ' + errors.join(' | '));
     await browser.close();
   }
@@ -166,18 +166,18 @@ async function setup(page) {
     await page.waitForTimeout(200);
     const s = await page.evaluate(() => ({ on: pixelOn(), seen: [...PX.seen], cls: document.documentElement.className,
       head: heroImgUrl('giong', 'head'), old: window.__OLD, headOld: window.__OLD ? heroImgUrl(window.__OLD, 'head') : '', kim: elIcon('kim'), hoa: elIcon('hoa'), item: itemIcon('riu_dong', 'common'), itemLoai: (() => { const id = Object.keys(ITEMS).find((k) => ITEMS[k].slot === 'weapon' && ITEMS[k].wclass === 'blade' && !ITEMS[k].set && !PIXEL_MANIFEST['do/' + k]); return id ? itemIcon(id, 'common') : 'pixel/do/do_riu_thuong.png'; })(), sk: skillIcon('giong', 0), skNew: skillIcon('xathu', 0), itemBo: itemIcon('long_truong'), vang: coin(),
-      sm: pxSmoothOff(), muot: PX_MUOT && PX.muot > 0 && [...pxMuotFrames.values()].some((c) => c.__muot === 4) }));
+      sm: pxSmoothOff(), muot: PX_MUOT && PX.muot > 0 && [...pxMuotFrames.values()].some((c) => c.__muot >= 2) && /pixel-muot\//.test(heroImgUrl('giong', 'head')) }));
     ok(s.on && /pixel/.test(s.cls), `[${tag}] bật pixel bằng ?pixel=1`);
     for (const k of ['tuong/giong', 'tuong/tanvien', 'tuong/chodo', 'tuong/lactuong', 'quai/tom', 'quai/casau']) ok(s.seen.includes(k), `[${tag}] vẽ pixel: ${k}`);
     ok(!s.old || !s.seen.includes('tuong/' + s.old), `[${tag}] mã chưa có pixel (${s.old || '—'}) giữ hình cũ`);
-    ok(/pixel\/tuong\/giong-chan-dung\.png/.test(s.head) && !/pixel\//.test(s.headOld), `[${tag}] chân dung giao diện: giong pixel, ${s.old || '—'} hình cũ`);
-    ok(/pixel\/icon\/hanh-kim\.png/.test(s.kim) && /pixel\/icon\/hanh-hoa\.png/.test(s.hoa), `[${tag}] icon ngũ hành pixel (Kim vẽ tay, Hỏa sinh bằng tool)`);
+    ok(/pixel(-muot)?\/tuong\/giong-chan-dung\.png/.test(s.head) && !/pixel(-muot)?\//.test(s.headOld), `[${tag}] chân dung giao diện: giong pixel, ${s.old || '—'} hình cũ`);
+    ok(/pixel(-muot)?\/icon\/hanh-kim\.png/.test(s.kim) && /pixel(-muot)?\/icon\/hanh-hoa\.png/.test(s.hoa), `[${tag}] icon ngũ hành pixel (Kim vẽ tay, Hỏa sinh bằng tool)`);
     // claude/xuat-goi-pixel: icon đồ theo loại × độ hiếm / theo mã món, tiền vàng — sinh bằng tool (tools/pixel/spec)
-    ok(/pixel\/do\/riu_dong\.png/.test(s.item) && /pixel\/do\/long_truong\.png/.test(s.itemBo) && /pixel\/do\/do_riu_thuong\.png/.test(s.itemLoai), `[${tag}] icon đồ pixel: món có icon riêng (Rìu Đồng, Long Trượng) theo mã món, còn lại theo loại × độ hiếm`);
-    ok(/pixel\/icon\/vang\.png/.test(s.vang), `[${tag}] đồng vàng pixel`);
-    ok(/pixel\/ky-nang\/giong_q\.png/.test(s.sk) && /pixel\/ky-nang\/xathu_q\.png/.test(s.skNew), `[${tag}] icon kỹ năng pixel (giong_q vẽ tay đổi tên, xathu_q sinh bằng tool)`);
+    ok(/pixel(-muot)?\/do\/riu_dong\.png/.test(s.item) && /pixel(-muot)?\/do\/long_truong\.png/.test(s.itemBo) && /pixel(-muot)?\/do\/do_riu_thuong\.png/.test(s.itemLoai), `[${tag}] icon đồ pixel: món có icon riêng (Rìu Đồng, Long Trượng) theo mã món, còn lại theo loại × độ hiếm`);
+    ok(/pixel(-muot)?\/icon\/vang\.png/.test(s.vang), `[${tag}] đồng vàng pixel`);
+    ok(/pixel(-muot)?\/ky-nang\/giong_q\.png/.test(s.sk) && /pixel(-muot)?\/ky-nang\/xathu_q\.png/.test(s.skNew), `[${tag}] icon kỹ năng pixel (giong_q vẽ tay đổi tên, xathu_q sinh bằng tool)`);
     ok(s.seen.includes('ban-do/song1'), `[${tag}] nền bản đồ pixel ban-do/song1 (ô đặt tướng đồng nhất, trang trí xa đường)`);
-    ok(s.muot, `[${tag}] làm mượt mức 7 (mặc định bật): tướng / quái vẽ bằng khung ×4 đã làm mượt (sel-out + Scale2x ×3 + trung bình)`);
+    ok(s.muot, `[${tag}] làm mượt mức 7 (mặc định bật): vẽ bằng bản làm mượt sinh sẵn (assets/pixel-muot/, khung ×2) cả trên sân lẫn <img>`);
     ok(!errors.length, `[${tag}] không lỗi console ${errors.join(' | ')}`);
     const wf = await page.evaluate(() => getComputedStyle(document.querySelector('#tb-wave')).fontFamily);
     ok(!/VT323/.test(wf), `[${tag}] "Đợt N · …" không dùng font số đều VT323 (${wf})`);

@@ -104,7 +104,12 @@ Mã hex xem palette.txt (đã chỉnh tông trầm). Màu đánh dấu `*` trong
 
 > **Đặt tên mã kỹ năng (chốt 08/10):** dùng **gạch dưới** giữa mã tướng và phím: `lactuong_q`, `giong_w`… (không dùng `giong-q`). Nhánh `pixel-ky-nang-2` phải đổi tên theo trước khi gộp.
 
-**Làm mượt mức 7 (người dùng chọn 08/10, claude/ve-lai-pixel):** tướng / quái / boss trên sân được làm mượt lúc hiển thị (js/pixel.js `pxFrameVe`) — vẫn VẼ nguồn theo quy chuẩn này (bảng màu, viền đen 1px), game tự làm mượt; tắt trong Cài đặt.
+**LÀM MƯỢT MỨC 7 — MẶC ĐỊNH (người dùng chốt 08/10, claude/ve-lai-pixel):** vẫn VẼ nguồn đúng quy chuẩn này (bảng màu, viền đen 1px, lưới nhỏ).
+`node tools/build-pixel.js` **tự sinh thêm bản làm mượt** `assets/pixel-muot/<nhóm>/<mã>.png` (+ `-chan-dung.png`) cho MỌI mã (trừ ô nền 16×16 lát liền):
+sel-out viền → Scale2x ×3 → thu nhỏ trung bình, mỗi điểm gốc thành 2×2 (`tools/pixel/lam-muot.js`, manifest ghi `m: 2`). Game dùng bản này cho cả
+canvas (tướng, quái, boss, cổng, bệ, nền bản đồ, khung máu) lẫn `<img>` / khung CSS, vẽ có làm mịn — không tính gì lúc chơi (không giật).
+Tắt: Cài đặt → Hình pixel → "Làm mượt: Tắt" (`ttv.pxmuot = '0'`) / `?muot=0` → ảnh gốc nearest như cũ. `--khong-muot`: build không sinh bản mượt.
+Commit cả `assets/pixel-muot/` cùng `assets/pixel/` (test so khớp nguồn). Gói `.zip` tự nạp không có bản sinh sẵn → game làm mượt tướng / quái lúc chơi (ngân sách 4 ms/khung).
 
 Trong game: phóng **nearest-neighbor theo bội số nguyên** điểm ảnh màn hình (js/pixel.js `pxBlit`), CSS
 `image-rendering: pixelated` cho `<img>` / canvas nhỏ. Tướng cao ≈ ảnh vẽ tay cũ nên thanh máu, vòng tầm đánh giữ nguyên chỗ.

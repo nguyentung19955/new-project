@@ -111,7 +111,7 @@ const PXGOI = {
     const M = window.PIXEL_MANIFEST;
     for (const it of goi.items) {
       if (!(it.key in this.goc)) this.goc[it.key] = M[it.key] || null;
-      M[it.key] = { ...it.entry, key: it.key, goi: 1 };
+      M[it.key] = { ...it.entry, key: it.key, goi: 1 }; delete M[it.key].m;   // gói tự vẽ: không có bản làm mượt sinh sẵn (game làm mượt lúc chơi)
       const u = URL.createObjectURL(new Blob([it.png], { type: 'image/png' }));
       this.urls.push(u);
       window.ASSET_DATA[`pixel/${it.key}.png`] = u;
@@ -136,6 +136,7 @@ const PXGOI = {
     for (const k of keys) {
       if (typeof assetMap !== 'undefined') { assetMap.delete(`pixel/${k}.png`); assetMap.delete(`pixel/${k}-chan-dung.png`); }
       if (typeof pxFrames !== 'undefined') for (const fk of [...pxFrames.keys()]) if (fk.startsWith(k + '|')) pxFrames.delete(fk);
+      if (typeof pxMuotFrames !== 'undefined') for (const fk of [...pxMuotFrames.keys()]) if (fk.startsWith(k + '|')) pxMuotFrames.delete(fk);
       if (typeof pixelOn === 'function' && pixelOn() && window.PIXEL_MANIFEST[k] && typeof asset === 'function') asset(`pixel/${k}.png`, true);
     }
     if (typeof assetVersion !== 'undefined') assetVersion++;

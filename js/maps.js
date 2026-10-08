@@ -499,7 +499,7 @@ const GATE_FILE = { castle: 'cong-phong-chau', hut: 'cong-ban-rung', cave: 'cong
 const gateArt = (theme) => {
   const f = GATE_FILE[(MAP_THEMES[theme] || MAP_THEMES.song).gate];
   // claude/xuat-goi-pixel: cổng thành pixel (nen/cong-*) khi bật pixel
-  const pe = typeof pixelOn === 'function' && pixelOn() && pxEntry('nen', f), pf = pe && pxFrame(pe, 0);
+  const pe = typeof pixelOn === 'function' && pixelOn() && pxEntry('nen', f), pf = pe && pxFrameVe(pe, 0);
   if (pf) return pf;
   return typeof asset === 'function' && asset(`tiles/${f}.png`, true);
 };
@@ -559,7 +559,7 @@ function mapLayer(id, bgImg, svgImg, pw, ph) {
   const tex = asset(`tiles/duong-${kind}.jpg`, true), gate = gateArt(m.theme);
   const svgOk = svgImg && svgImg.complete && svgImg.naturalWidth > 0;
   const pxk = typeof pixelOn === 'function' && pixelOn() && pxEntry('nen', 'co') ? 'px' : '';
-  const key = `${id}|${pw}x${ph}|${!!bgImg}|${!!tex}|${!!gate}|${svgOk}|${pxk}`;
+  const key = `${id}|${pw}x${ph}|${!!bgImg}|${!!tex}|${!!gate}${gate && gate.__muot ? 'm' : ''}|${svgOk}|${pxk}`;   // khung làm mượt tải xong → dựng lại
   if (mapLayerCache.key === key) return mapLayerCache.c;
   const c = !pxk && mapLayerCache.c && mapLayerCache.c.width === pw && mapLayerCache.c.height === ph ? mapLayerCache.c : document.createElement('canvas');
   c.width = pw; c.height = ph;
@@ -569,8 +569,8 @@ function mapLayer(id, bgImg, svgImg, pw, ph) {
   // claude/xuat-goi-pixel: nền bản đồ pixel dựng sẵn theo từng bản đồ (nhóm ban-do: đường + ô đặt tướng đồng nhất + trang trí xa đường)
   // dạng đường mới (m.shape, v222) có đường + ô khác bản đồ gốc → dùng ảnh ban-do của đúng "gốc~dạng" (mã song2-uonkhuc,
   // claude/ban-do-moi: sinh cho bản đồ dạng của các ải) nếu có, không thì pxMapGround
-  const bde = pxk && pxEntry('ban-do', id.toLowerCase().replace(/[^a-z0-9]+/g, '-')), bdi = bde && pxFrame(bde, 0);
-  if (bdi) { x.imageSmoothingEnabled = false; x.drawImage(bdi, 0, 0, CONFIG.W, CONFIG.H); x.imageSmoothingEnabled = true; PX.seen.add(bde.key); }
+  const bde = pxk && pxEntry('ban-do', id.toLowerCase().replace(/[^a-z0-9]+/g, '-')), bdi = bde && pxFrameVe(bde, 0);
+  if (bdi) { x.imageSmoothingEnabled = pxMin(bdi); x.drawImage(bdi, 0, 0, CONFIG.W, CONFIG.H); x.imageSmoothingEnabled = true; PX.seen.add(bde.key); }
   const pxDone = pxk && (!!bdi || pxMapGround(x, m, kind, pw / CONFIG.W));
   if (pxDone) { /* nền pixel */ }
   else if (bgImg) {
@@ -581,9 +581,9 @@ function mapLayer(id, bgImg, svgImg, pw, ph) {
   drawEntry(x, id);
   if (gate) {
     const [ex, ey] = m.end, s = 124 * DK;
-    x.imageSmoothingEnabled = !gate.getContext; x.drawImage(gate, ex * DK - s / 2, ey * DK - s * 0.62, s, s); x.imageSmoothingEnabled = true;
+    x.imageSmoothingEnabled = pxMin(gate); x.drawImage(gate, ex * DK - s / 2, ey * DK - s * 0.62, s, s); x.imageSmoothingEnabled = true;
   } else if (svgOk) x.drawImage(svgImg, 0, 0, CONFIG.W, CONFIG.H);
-  mapLayerCache = { key: pxk && (!pxDone || (bde && !bdi)) ? key + '|cho' : key, c };   // ô pixel chưa tải xong: lần sau dựng lại
+  mapLayerCache = { key: pxk && (!pxDone || (bde && !bdi) || (bdi && bde.m && PX_MUOT && !bdi.__muot)) ? key + '|cho' : key, c };   // bản làm mượt chưa tải xong: dựng lại sau   // ô pixel chưa tải xong: lần sau dựng lại
   return c;
 }
 
