@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const os = require('os');
 const { execFileSync } = require('child_process');
-const { open, enter, ok, ROOT } = require('../cho-tuong/helpers');
+const { open, enter, ok, ROOT, noPixel } = require('../cho-tuong/helpers');
 global.ASSET_ALL_TEST = true;   // v189: test giả ảnh chưa có → bỏ qua danh sách js/asset-list.js
 
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'khung-'));
@@ -45,7 +45,7 @@ async function main() {
 
   // ---------- 2. game phát đúng khung (ảnh giả phục vụ qua route, không chép vào assets/)
   console.log('Game:');
-  const { browser, page, errors } = await open(844, 390);
+  const { browser, page, errors } = await open(844, 390, {}, noPixel());   // khung ảnh cũ packs/* (đường dự phòng)
   await page.route('**/assets/packs/**', (r) => {
     const m = r.request().url().match(/assets\/packs\/(tre|kybinh|anvuong)\/([\w-]+\.png)/);
     if (m && fs.existsSync(path.join(PACKS, m[1], m[2]))) return r.fulfill({ path: path.join(PACKS, m[1], m[2]), contentType: 'image/png' });

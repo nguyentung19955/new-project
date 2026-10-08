@@ -1339,16 +1339,16 @@ class UI {
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 224</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 225</div>
       </div></div>`;
   }
 
   // claude/tool-pixel: gói pixel tự vẽ (tools/ve-pixel.html → goi-pixel.zip) — gọn một dòng trong Cài đặt (ngoài trận)
   pxGoiRow() {
     const on = pixelOn(), has = !!PXGOI.goi, bt = 'style="height:34px;padding:0 10px;font-size:13px"';
-    return `<div class="tg metal" id="pxgoi-row"><div><b>Gói pixel (thử)</b><small id="pxgoi-st">${PXGOI.status()}</small></div>
+    return `<div class="tg metal" id="pxgoi-row"><div><b>Hình pixel</b><small id="pxgoi-st">${PXGOI.status()}</small></div>
           <div style="margin-left:auto;display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end">
-          <button class="btn ${on ? 'btn-gold' : 'metal'}" ${bt} data-act="pxg-bat" title="Tải lại trang để áp dụng">${on ? 'Pixel: Bật' : 'Pixel: Tắt'}</button>
+          <button class="btn ${on ? 'btn-gold' : 'metal'}" ${bt} data-act="pxg-bat" title="Tắt để dùng hình vẽ cũ · tải lại trang để áp dụng">${on ? 'Pixel: Bật' : 'Pixel: Tắt (hình cũ)'}</button>
           <button class="btn metal" ${bt} data-act="pxg-nap">Nạp gói (.zip)</button>
           ${has ? `<button class="btn metal" ${bt} data-act="pxg-go">Gỡ gói</button>` : ''}</div></div>`;
   }

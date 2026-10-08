@@ -420,13 +420,17 @@ function enemyPackImg(e, t) {
 }
 const vectorHeroesOn = () => typeof ui !== 'undefined' && !!(ui && ui.save && ui.save.settings.vectorHeroes);
 // v85: chỉ tải sẵn ảnh chính (đứng / bước 1); các dáng khác tải khi cần — đỡ ~4 MB lúc mở game trên 4G
-if (typeof Image !== 'undefined') for (const k of ENEMY_PACK) asset(`packs/${k}/walk1.png`, true);
+// pixel-mac-dinh: tải sẵn chạy sau khi đọc xong manifest pixel (js/pixel/*.js nạp sau file này) — mã đã có pixel thì bỏ
+// ảnh cũ (vẫn tải lười nếu cần, vd ?pixel=0 hay đường dự phòng) → mở game nhanh hơn khi pixel mặc định
+const afterParse = (f) => { if (typeof document === 'undefined') return; if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', f, { once: true }); else f(); };
+const pxHasSprite = (g, k) => typeof pxEntry === 'function' && !!(g === 'tuong' ? pxEntry('tuong', k) : pxEntry('quai', k) || pxEntry('boss', k));
+if (typeof Image !== 'undefined') afterParse(() => { for (const k of ENEMY_PACK) if (!pxHasSprite('quai', k)) asset(`packs/${k}/walk1.png`, true); });
 function registerFrames(type, anims) {   // gọi khi thêm dải khung mới
   FRAME_ANIMS[type] = anims;
-  for (const a of anims) for (let i = 1; i <= FRAME_N; i++) asset(`packs/${type}/${a}_${i}.png`, true);
+  afterParse(() => { if (pxHasSprite(HERO_PACK[type] ? 'tuong' : 'quai', type)) return; for (const a of anims) for (let i = 1; i <= FRAME_N; i++) asset(`packs/${type}/${a}_${i}.png`, true); });
 }
 for (const [k, v] of Object.entries(FRAME_ANIMS)) registerFrames(k, v);
-if (typeof Image !== 'undefined') for (const k in HERO_PACK) for (const n of ['idle', 'head']) packImg(k, n);   // tải sẵn (khung chuyển động tải lười)
+if (typeof Image !== 'undefined') afterParse(() => { for (const k in HERO_PACK) if (!pxHasSprite('tuong', k)) for (const n of ['idle', 'head']) packImg(k, n); });   // tải sẵn (khung chuyển động tải lười)
 const ENEMY_FILE = { tom: 'quai_tom-binh', casau: 'quai_ca-sau', rua: 'quai_rua-giap', phuthuy: 'quai_phu-thuy-nuoc',
   chimbao: 'quai_chim-bao', echme: 'quai_ech-me', nongnoc: 'quai_nong-noc',
   thuongluong: 'boss_thuong-luong', haba: 'boss_ha-ba', thuytinh: 'boss_thuy-tinh' };
