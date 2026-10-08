@@ -613,9 +613,9 @@
   function drawHud() {
     const W = S.W, P = S.P, c = G.ux;
     // máu, mana
-    ui.bar(6, 5, 112, 8, P.hp / P.maxhp, '#d8453a');
-    ui.text(Math.ceil(P.hp) + '/' + P.maxhp, 62, 12, { size: 6.5, align: 'center', bold: true });
-    ui.bar(6, 15, 112, 5, P.mana / P.maxmana, '#3f8be0');
+    const T = G.theme;
+    T.bar(6, 3, 112, 'hp', P.hp / P.maxhp, Math.ceil(P.hp) + '/' + P.maxhp, { h: 9 });
+    T.bar(6, 13, 100, 'mana', P.mana / P.maxmana, null, { h: 7 });
     const canDrink = P.potions > 0 && !W.noPotion;
     const BA = G.btnArt; // bộ nút riêng (js/btn_art.js)
     const heldBox = (b) => [...G.pointers.values()].some((p) => p.role === 'ui' && hitBox({ x: p.sx, y: p.sy }, b));
@@ -648,9 +648,9 @@
     // trùm: thanh máu và các lớp thích nghi nằm trên mặt tường sau, không che sàn
     const b = W.boss;
     if (b && !b.dead) {
-      ui.bar(140, 9, 200, 6, b.hp / b.maxhp, '#c23a2e');
-      ui.rect(140 + 200 * 0.6, 9, 1, 6, '#000');
-      ui.rect(140 + 200 * 0.3, 9, 1, 6, '#000');
+      T.bar(133, 7, 214, 'boss', b.hp / b.maxhp, null, { h: 9, marks: 1 });
+      ui.rect(140 + 200 * 0.6, 9, 1, 5, '#fff0c4');
+      ui.rect(140 + 200 * 0.3, 9, 1, 5, '#fff0c4');
       ui.text(b.name, 140, 24, { size: 7.5, bold: true, color: '#ffd9c8' });
       let lx = 340;
       for (const l of b.layers.slice().reverse()) {
@@ -658,7 +658,7 @@
         ui.font(6.5, true);
         const tw = G.ux.measureText(s).width + 6;
         lx -= tw + 2;
-        ui.rect(lx, 17, tw, 9, l.type === 'resist' ? G.EL[l.el].dark : '#4a4038', '#000');
+        ui.rect(lx, 17, tw, 9, l.type === 'resist' ? G.EL[l.el].dark : '#1f4f4a', '#1a120a');
         ui.text(s, lx + 3, 24, { size: 6.5, bold: true });
       }
       if (b.weak.length) ui.text('Yếu ' + b.weak.map((e) => G.EL[e].name).join(', '), 240, 35, { size: 7, align: 'center', color: G.EL[b.weak[0]].col, bold: true });
@@ -668,7 +668,7 @@
     if (W.type === 'fountain') {
       const t = S.preview.length ? 'Trùm đã học: ' + S.preview.map(G.layerText).join(' · ') : 'Trùm chưa học được gì từ bạn';
       const lines = ui.wrap(t, 228, 7, true);
-      ui.rect(122, 9, 236, lines.length * 9 + 5, 'rgba(20,16,14,0.8)');
+      T.plate(122, 8, 236, lines.length * 9 + 7);
       lines.forEach((l, i) => ui.text(l, 240, 18 + i * 9, { size: 7, align: 'center', color: '#ffd9c8', bold: true }));
       by = 14 + lines.length * 9 + 4;
     }
@@ -680,7 +680,7 @@
     if (hint && S.mode === 'play') {
       const hw = W.geo.big ? 62 : 116; // phòng trùm rộng hơn nên ô chữ hẹp lại, không đè lên sàn
       const lines = ui.wrap(hint, hw - 8, 7);
-      ui.rect(3, 75, hw, lines.length * 9.5 + 7, 'rgba(10,8,6,0.78)', '#7a5a3a');
+      T.plate(3, 75, hw, Math.round(lines.length * 9.5 + 8));
       lines.forEach((l, i) => ui.text(l, 7, 85 + i * 9.5, { size: 7 }));
     }
     if (W.banner) {
@@ -695,7 +695,7 @@
       for (const l of lines) tw = Math.max(tw, G.ux.measureText(l).width);
       tw += 14;
       const lh = size + 3, bh = lines.length * lh + 5;
-      ui.rect(240 - tw / 2, by, tw, bh, 'rgba(10,8,6,0.82)', W.banner.col);
+      T.plate(Math.round(240 - tw / 2) - 2, by - 1, Math.round(tw) + 4, Math.round(bh) + 2);
       lines.forEach((l, i) => ui.text(l, 240, by + size + 1.5 + i * lh, { size, align: 'center', bold: true, color: W.banner.col }));
     }
     // cửa dẫn tới Trùm còn khóa: ghi rõ còn thiếu gì, ngay cạnh cửa
@@ -790,7 +790,7 @@
       }
       if (isW) { // hình vũ khí sống trong khung màu bậc, tên mang màu bậc
         const rar = G.RARITY[o.tier];
-        ui.rect(x + 36, 89, 36, 36, rar.bg, rar.frame);
+        G.theme.slot(x + 36, 89, 36, o.tier);
         G.art.weaponIcon(G.ux, o.look, x + 54, 107, 30, 'idle');
         ui.wrap(o.label, 100, 8.5, true).slice(0, 2).forEach((l, k) => ui.text(l, x + 54, 137 + k * 10, { size: 8.5, bold: true, align: 'center', color: rar.col }));
       }
@@ -800,12 +800,12 @@
   function weaponLine(w, x, y, wd, sel) {
     const mi = markInfo(w);
     const rar = G.RARITY[G.wRar(w)];
-    ui.rect(x, y, wd, 22, sel ? 'rgba(120,80,30,0.9)' : 'rgba(50,42,36,0.9)', sel ? '#ffd27a' : '#6a5a4a');
-    // ô hình vũ khí: nền và khung mang màu bậc
-    ui.rect(x + 2, y + 2, 20, 18, rar.bg, rar.frame);
+    G.theme.inset(x, y, wd, 22, sel);
+    // ô hình vũ khí: viền mang màu bậc
+    G.theme.slot(x + 2, y + 1, 20, G.wRar(w));
     G.art.weaponIcon(G.ux, w, x + 12, y + 11, 17);
     ui.text(G.wName(w), x + 26, y + 9.5, { size: 7.5, bold: true, color: rar.col });
-    ui.text(mi.txt, x + 26, y + 18.5, { size: 6.5, color: mi.col });
+    ui.text(mi.txt, x + 26, y + 18.5, { size: 6.5, color: mi.col === '#666' ? '#a9c2b4' : mi.col });
     return G.click && G.inRect(G.click, x, y, wd, 22);
   }
   G.weaponLine = weaponLine;

@@ -41,20 +41,95 @@ def run(p, size, url=None):
         """Đặt ngón lên vùng cần rồi kéo về một hướng, chưa nhấc."""
         g.down(60, 200); g.wait(40); g.move(60 + dx / 2, 200 + dy / 2); g.move(60 + dx, 200 + dy)
 
-    # ---- màn hình đầu: chạm đúng chỗ nút Vào ải sẽ hiện, không được bấm xuyên qua
-    g.tap(70, 66)
+    # ---- làng có người: mỗi chức năng là một người. Các hàm dưới đây điều khiển bằng chạm thật.
+    VS = "G.villageScene"
+    ORDER = ['lai', 'ren', 'xen', 'may', 'do', 'tu', 'mo']
+    TABS = {'lai': 'map', 'ren': 'forge', 'xen': 'gear', 'may': 'outfit', 'do': 'skill', 'tu': 'hero', 'mo': 'settings'}
+    def wait_tab(t, ms=10000):
+        for _ in range(ms // 100):
+            if tab() == t: return True
+            g.wait(100)
+        return tab() == t
+    def face(k):
+        """Chạm khuôn mặt của một người trên dải lối tắt ở mép trên."""
+        x, y = ev(f"{VS}.stripAt({ORDER.index(k)})"); g.tap(x, y)
+    def visit(k):
+        """Chạm khuôn mặt: em bé tự chạy tới rồi bảng mở."""
+        face(k); return wait_tab(TABS[k])
+    def close():
+        """Nút đóng bảng: '✕ Xong' ở góc bảng, hoặc '✕ Về làng' trên tranh bản đồ."""
+        if tab() == 'map': g.tap(438, 16)
+        else: g.tap(436, 57)
+    hero_xy = lambda: ev(f"[{VS}.state.x, {VS}.state.y, {VS}.state.cam]")
+    def settle(cond="true", ms=6000):
+        # Chờ em bé chạy xong (và điều kiện cond đúng), tối đa ms.
+        for _ in range(ms // 100):
+            g.wait(100)
+            if ev(f"!{VS}.state.path && ({cond})"): return True
+        return False
+
+    # ---- màn hình đầu: chạm đúng chỗ khuôn mặt Chú Lái Đò sẽ hiện, không được bấm xuyên qua
+    fx, fy = ev(f"{VS}.stripAt(0)"); g.tap(fx, fy)
     c.ok(ev("G.scene === G.Village"), 'chạm màn hình đầu thì vào làng')
-    c.ok(tab() == 'hub', 'chạm màn hình đầu không được bấm xuyên vào nút của làng (đang ở ' + str(tab()) + ')')
-    # ---- các nút ở làng và nút quay về
-    for i, t in enumerate(['map', 'forge', 'gear', 'hero', 'help', 'settings']):
-        g.tap(76, 66 + i * 33)
-        c.ok(tab() == t, f'nút làng thứ {i+1} mở {t} (đang {tab()})')
-        g.tap(429, 40)
-        c.ok(tab() == 'hub', f'nút Về làng từ {t}')
-    # ---- bản đồ
-    g.tap(76, 66); g.tap(150, 79)
+    g.wait(600)
+    c.ok(tab() == 'hub' and ev(f"{VS}.state.goal") is None, 'chạm màn hình đầu không được bấm xuyên vào dải khuôn mặt của làng (đang ở ' + str(tab()) + ')')
+    g.wait(900)
+    x0, y0, cam0 = hero_xy()
+    c.ok(x0 > 560 and cam0 > 200, f'vào làng thì em bé xuống đò ở bến bên phải (x = {x0:.0f}, màn hình trượt {cam0:.0f})')
+    # ---- đi tám hướng bằng cần điều khiển, màn hình trượt ngang theo em bé
+    g.down(60, 200); g.wait(40); g.move(40, 200); g.move(20, 200); g.wait(900)
+    x1, y1, cam1 = hero_xy()
+    c.ok(x1 < x0 - 40 and abs(y1 - y0) < 6, f'kéo cần sang trái thì em bé đi sang trái ({x0:.0f} -> {x1:.0f})')
+    g.move(20, 240); g.wait(500); x2, y2, cam2 = hero_xy()
+    c.ok(y2 > y1 + 10 and x2 < x1 - 5, f'kéo chéo xuống trái thì đi chéo ({y1:.0f} -> {y2:.0f})')
+    g.move(60, 160); g.wait(500); x3, y3, cam3 = hero_xy(); g.up(); g.wait(120)
+    c.ok(y3 < y2 - 10, 'kéo lên thì đi lên')
+    c.ok(cam3 < cam0 - 20, f'màn hình trượt ngang theo em bé ({cam0:.0f} -> {cam3:.0f})')
+    x4 = hero_xy()[0]; g.wait(200); c.ok(abs(hero_xy()[0] - x4) < 1, 'nhấc ngón thì em bé đứng lại')
+    wx = ev(f"{VS}.state.wp[0].x"); c.ok(abs(wx - x4) < 40, 'vũ khí sống bay theo sau em bé')
+    # ---- tới gần một người: nút tròn thành "Nói chuyện", bấm thì mở đúng bảng
+    ev(f"(() => {{ const S = {VS}.state, N = {VS}.NPCS.ren; S.x = N.den[0]; S.y = N.den[1]; S.path = null; }})()"); g.wait(300)
+    c.ok(ev(f"{VS}.state.near && {VS}.state.near.id") == 'ren', 'đứng cạnh Ông Thợ Rèn thì game nhận ra người ở gần')
+    bx, by, br = ev(f"{VS}.btnAt()"); g.tap(bx, by)
+    c.ok(tab() == 'forge', 'bấm nút Nói chuyện mở bảng Lò rèn')
+    close(); c.ok(tab() == 'hub', 'nút Xong đóng bảng, về lại làng')
+    g.pg.keyboard.press('KeyJ'); g.wait(120); c.ok(tab() == 'forge', 'phím J cũng nói chuyện với người ở gần'); close()
+    ev(f"(() => {{ const S = {VS}.state; S.x = 520; S.y = 170; S.path = null; }})()"); g.wait(300)
+    c.ok(ev(f"{VS}.state.near") is None, 'đi xa thì nút Nói chuyện tắt')
+    g.tap(bx, by); c.ok(tab() == 'hub', 'không có ai ở gần thì bấm nút tròn không mở gì')
+    # ---- chạm thẳng vào người: em bé tự chạy tới rồi mở bảng
+    nx, ny, cam = ev(f"(() => {{ const N = {VS}.NPCS.may, S = {VS}.state; return [N.pos[0], N.pos[1], S.cam]; }})()")
+    g.tap(nx - cam, ny - 12)
+    c.ok(wait_tab('outfit'), 'chạm vào Cô Thợ May thì em bé tự chạy tới và bảng mũ áo mở')
+    close()
+    # ---- chạm vào đất thì em bé đi tới đó
+    xa = hero_xy()[0]; g.tap(260, 228); g.wait(200); settle(); xb = hero_xy()
+    c.ok(abs(xb[0] - (260 + xb[2])) < 12 and abs(xb[1] - 228) < 8 and tab() == 'hub', f'chạm vào đất thì em bé đi tới chỗ đó ({xa:.0f} -> {xb[0]:.0f}, {xb[1]:.0f})')
+    # ---- chạm vào vũ khí sống để xem vũ khí
+    g.wait(900); wx, wy, cam = ev(f"[{VS}.state.wp[0].x, {VS}.state.wp[0].y, {VS}.state.cam]")
+    g.tap(wx - cam, wy - 20); c.ok(tab() == 'weapon', 'chạm vào vũ khí sống thì mở màn Xem vũ khí')
+    g.tap(431, 37); c.ok(tab() == 'hub', 'nút Quay lại từ màn Xem vũ khí')
+    # ---- dải bảy khuôn mặt: chạm một mặt là em bé tự chạy tới và mở đúng bảng; nút đóng đưa về làng
+    for i, k in enumerate(ORDER):
+        ok_open = visit(k)
+        c.ok(ok_open, f'khuôn mặt thứ {i+1} ({k}) mở {TABS[k]} (đang {tab()})')
+        if k == 'ren':  # đang mở bảng mà chạm mặt khác thì sang thẳng người đó
+            face('xen'); c.ok(tab() == 'gear', 'đang mở bảng, chạm khuôn mặt khác thì sang thẳng người đó'); face('ren')
+        close()
+        c.ok(tab() == 'hub', f'nút đóng bảng từ {TABS[k]}')
+    c.ok(ev(f"{VS}.state.x") < 200, 'sau khi gặp Anh Mõ thì em bé đang ở đầu bên trái của làng')
+    # ---- ba bé hero còn lại ngồi ở sân đình: chạm bé chưa mở thì không đổi
+    kid = ev(f"(() => {{ const S = {VS}.state; S.x = 262; S.y = 176; S.face = 1; S.cam = 22; S.path = null; return [186, 134]; }})()"); g.wait(300)
+    cam = ev(f"{VS}.state.cam"); g.tap(kid[0] - cam, kid[1] - 10); g.wait(200); settle()
+    c.ok(ev("G.save.hero") == 'smith', 'chạm bé hero chưa mở thì không đổi hero')
+    # ---- bản đồ vùng dạng tranh: chọn ải rồi Lên đò
+    c.ok(visit('lai'), 'Chú Lái Đò mở tranh bản đồ vùng')
+    c.ok(ev("JSON.stringify(G.villageApi.V.sel)") == '[0,0]', 'tranh bản đồ chọn sẵn ải đang tới (ải 1)')
+    n2 = ev(f"{VS}.MAP.nodes[0][1]"); g.tap(n2[0], n2[1])
+    c.ok(ev("JSON.stringify(G.villageApi.V.sel)") == '[0,0]', 'chạm ải chưa mở thì không chọn được')
+    n1 = ev(f"{VS}.MAP.nodes[0][0]"); g.tap(n1[0], n1[1])
     c.ok(ev("JSON.stringify(G.villageApi.V.sel)") == '[0,0]', 'chọn ải 1')
-    g.tap(414, 238, 500)
+    g.tap(436, 238, 500)
     c.ok(ev("G.scene === G.StageScene && G.getRun().tut === true"), 'Bắt đầu vào ải hướng dẫn')
     c.ok(ev(RUN + ".hint") is not None, 'ải đầu có lời chỉ dẫn')
 
@@ -277,8 +352,10 @@ def run(p, size, url=None):
     c.ok(ev(RUN + ".roomT") == t0, 'mở bản đồ bằng phím thì trận đấu cũng đứng yên')
     g.pg.keyboard.press('KeyM'); g.wait(100); c.ok(mode() == 'play', 'phím M đóng bản đồ')
     g.pg.keyboard.press('KeyM'); g.wait(100); g.pg.keyboard.press('Escape'); g.wait(100); c.ok(mode() == 'play', 'Esc cũng đóng bản đồ')
-    ev("G.setScene(G.Village)"); g.wait(100); g.tap(76, 99); g.pg.keyboard.press('Escape'); g.wait(100)
-    c.ok(tab() == 'hub', 'Esc ở làng quay về màn hình chính')
+    ev("G.setScene(G.Village)"); g.wait(100); visit('ren'); g.pg.keyboard.press('Escape'); g.wait(100)
+    c.ok(tab() == 'hub', 'Esc ở làng đóng bảng, quay về cảnh làng')
+    xk = hero_xy()[0]; g.pg.keyboard.down('KeyA'); g.wait(300); g.pg.keyboard.up('KeyA')
+    c.ok(hero_xy()[0] < xk - 8, 'phím A đi sang trái ở làng')
 
     # ---- lò rèn
     ev("""(() => { const sv = G.save; sv.gold = 5000; sv.ore = 60; sv.stones = 3; sv.mats = [30, 30, 30]; sv.shards = [3, 3, 3];
@@ -286,38 +363,56 @@ def run(p, size, url=None):
       const w = sv.weapons[0]; w.branch = 'fire'; w.marks.fire = 40;
       while (sv.weapons.length < 5) G.newWeapon(sv, 'hammer', 0);
       sv.heroes.hunter.unlocked = true; sv.heroes.hunter.lvl = 6; sv.heroes.smith.lvl = 6; sv.owned.helm = ['h_r2']; sv.helm = null; })()""")
-    g.tap(76, 99); c.ok(tab() == 'forge', 'vào lò rèn')
-    g.tap(126, 65); wid = ev("G.villageApi.V.sel"); c.ok(wid is not None, 'chọn vũ khí để mài')
-    g.tap(414, 235); c.ok(ev(f"G.weaponById({wid}).sharpen") == 1, 'Mài lên +1')
-    g.tap(183, 40); g.tap(126, 65); g.tap(414, 235)
+    FT = [189, 250, 312, 373, 435]  # tâm năm thẻ Mài, Nâng bậc, Tôi lại, Rèn đồ, Nâng lò
+    c.ok(visit('ren') and tab() == 'forge', 'Ông Thợ Rèn mở lò rèn')
+    c.ok(ev(f"{VS}.state.news.ren") is True, 'đủ nguyên liệu thì Ông Thợ Rèn có dấu chấm than báo việc mới')
+    g.tap(260, 105); wid = ev("G.villageApi.V.sel"); c.ok(wid is not None, 'chọn vũ khí để mài')
+    g.tap(415, 234); c.ok(ev(f"G.weaponById({wid}).sharpen") == 1, 'Mài lên +1')
+    g.tap(FT[1], 80); g.tap(260, 105); g.tap(415, 234)
     c.ok(ev("G.weaponById(G.villageApi.V.sel).tier") == 1, 'Nâng bậc')
-    g.tap(241, 40); g.tap(126, 65); br = ev("G.weaponById(G.villageApi.V.sel).branch"); g.tap(126, 243)
+    g.tap(FT[2], 80); g.tap(260, 105); br = ev("G.weaponById(G.villageApi.V.sel).branch"); g.tap(238, 246)
     c.ok(ev("G.weaponById(G.villageApi.V.sel).branch") != br and ev("G.save.stones") == 2, 'Tôi lại đổi nhánh')
-    g.tap(299, 40); g.tap(126, 65); c.ok(ev("G.villageApi.V.sel") == 'h_r1', 'chọn món để rèn'); g.tap(414, 235)
+    g.tap(FT[3], 80); g.tap(260, 105); c.ok(ev("G.villageApi.V.sel") == 'h_r1', 'chọn món để rèn'); g.tap(415, 234)
     c.ok(ev("G.save.owned.helm.includes('h_r1')"), 'Rèn đồ')
-    g.tap(357, 40); g.tap(84, 131); c.ok(ev("G.save.forge") == 2, 'Nâng lò')
-    g.tap(429, 40)
-    # ---- trang bị
-    g.tap(76, 132); c.ok(tab() == 'gear', 'vào trang bị')
-    old = ev("G.save.carry[0]"); g.tap(126, 143); sel = ev("G.villageApi.V.sel"); g.tap(126, 77)
+    g.tap(452, 197); c.ok(ev("G.villageApi.V.page") == 1, 'lật trang danh sách món rèn'); g.tap(260, 105)
+    c.ok(ev("G.villageApi.V.sel") == 'h_ngu', 'trang hai chọn được món khác')
+    g.tap(FT[4], 80); g.tap(229, 187); c.ok(ev("G.save.forge") == 2, 'Nâng lò')
+    close()
+    # ---- Bà Hàng Xén: rương vũ khí, chọn hai món mang theo, xem, bán
+    c.ok(visit('xen') and tab() == 'gear', 'Bà Hàng Xén mở rương vũ khí')
+    old = ev("G.save.carry[0]"); g.tap(260, 152); sel = ev("G.villageApi.V.sel"); g.tap(260, 91)
     c.ok(ev("G.save.carry[0]") == sel and sel != old, 'thay vũ khí đang mang')
-    n = ev("G.save.weapons.length"); gold = ev("G.save.gold"); g.tap(126, 143); g.tap(193, 246)
+    g.tap(260, 91); c.ok(tab() == 'weapon', 'chưa chọn gì mà chạm món đang mang thì mở Xem vũ khí')
+    g.tap(431, 37); c.ok(tab() == 'gear', 'Quay lại thì về đúng bảng của Bà Hàng Xén')
+    g.tap(260, 152); g.tap(300, 249); c.ok(tab() == 'weapon', 'nút Xem cho món trong rương'); g.tap(431, 37)
+    n = ev("G.save.weapons.length"); gold = ev("G.save.gold"); g.tap(260, 152) if ev("G.villageApi.V.sel") is None else None; g.tap(400, 249)
     c.ok(ev("G.save.weapons.length") == n - 1 and ev("G.save.gold") > gold, 'bán vũ khí')
-    h = ev("G.save.helm"); g.tap(435, 76); h2 = ev("G.save.helm"); g.tap(435, 76); h3 = ev("G.save.helm")
+    close()
+    # ---- Cô Thợ May: mũ, áo, bùa
+    c.ok(visit('may') and tab() == 'outfit', 'Cô Thợ May mở bảng mũ, áo, bùa')
+    h = ev("G.save.helm"); g.tap(432, 90); h2 = ev("G.save.helm"); g.tap(432, 90); h3 = ev("G.save.helm")
     c.ok(h2 != h and h3 != h2, f'bấm Đổi để xoay vòng mũ ({h} -> {h2} -> {h3})')
-    g.tap(429, 40)
-    # ---- hero và kỹ năng
-    g.tap(76, 165); g.tap(183, 71); c.ok(ev("G.save.hero") == 'hunter', 'chọn hero')
-    g.tap(437, 130); c.ok(ev("G.save.heroes.hunter.sk.atk") == 1, 'học kỹ năng')
-    g.tap(437, 174); g.tap(437, 218)
+    close()
+    # ---- Ông Từ: chọn hero; Cụ Đồ: cây kỹ năng và hướng dẫn
+    c.ok(visit('tu') and tab() == 'hero', 'Ông Từ mở bảng chọn hero')
+    g.tap(389, 90); c.ok(ev("G.save.hero") == 'hunter', 'chọn hero')
+    close()
+    seat = ev(f"(() => {{ const S = {VS}.state; S.x = 262; S.y = 176; S.face = 1; S.cam = 22; S.path = null; return [186, 134]; }})()"); g.wait(300)
+    g.tap(seat[0] - ev(f"{VS}.state.cam"), seat[1] - 10); g.wait(200); settle("G.save.hero === 'smith'")
+    c.ok(ev("G.save.hero") == 'smith', 'chạm bé Thợ Rèn đang ngồi ở sân đình thì đổi lại sang bé đó')
+    visit('tu'); g.tap(389, 90); close()
+    c.ok(visit('do') and tab() == 'skill', 'Cụ Đồ mở cây kỹ năng')
+    g.tap(434, 129); c.ok(ev("G.save.heroes.hunter.sk.atk") == 1, 'học kỹ năng')
+    g.tap(434, 171); g.tap(434, 213)
     c.ok(ev("G.save.heroes.hunter.sk.def") == 1 and ev("G.save.heroes.hunter.sk.elem") == 0, 'hết điểm thì không học thêm được')
-    g.tap(429, 40)
-    # ---- hướng dẫn, cài đặt
-    g.tap(76, 198); g.tap(93, 249); c.ok(ev("G.villageApi.V.page") == 1, 'lật trang hướng dẫn'); g.tap(429, 40)
-    g.tap(76, 231); s0 = ev("G.save.sound"); g.tap(114, 74); c.ok(ev("G.save.sound") != s0, 'bật tắt âm thanh')
-    g.tap(114, 194); c.ok(ev("G.villageApi.V.confirm") is True, 'hỏi lại trước khi xoá')
-    g.tap(197, 198); c.ok(ev("G.villageApi.V.confirm") is False and ev("G.save.gold") > 0, 'Thôi thì không xoá')
-    g.tap(114, 194); g.tap(79, 198)
+    g.tap(389, 80); c.ok(tab() == 'help', 'thẻ Hướng dẫn ở chỗ Cụ Đồ')
+    g.tap(452, 250); c.ok(ev("G.villageApi.V.page") == 1, 'lật trang hướng dẫn'); close()
+    # ---- Anh Mõ: cài đặt
+    c.ok(visit('mo') and tab() == 'settings', 'Anh Mõ mở cài đặt')
+    s0 = ev("G.save.sound"); g.tap(264, 88); c.ok(ev("G.save.sound") != s0, 'bật tắt âm thanh')
+    g.tap(264, 210); c.ok(ev("G.villageApi.V.confirm") is True, 'hỏi lại trước khi xoá')
+    g.tap(224, 214); c.ok(ev("G.villageApi.V.confirm") is False and ev("G.save.gold") > 0, 'Thôi thì không xoá')
+    g.tap(264, 210); g.tap(352, 214)
     c.ok(ev("G.save.gold") == 0 and ev("G.save.forge") == 1 and tab() == 'hub', 'Xoá hết thì về bản lưu mới')
     ok = c.done(g)
     g.close()

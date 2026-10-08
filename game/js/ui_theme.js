@@ -86,7 +86,11 @@
     disc(cx, cy, Math.round(r * 0.3), o.core || d);
   }
 
+  // Mặt trống lớn làm hình trang trí (màn tiêu đề). alpha: độ đậm.
+  T.drum = function (cx, cy, r, alpha) { put(layer('drum|' + r, r * 2 + 2, r * 2 + 2, () => { drum(r + 1, r + 1, r, { n: 14 }); ring(r + 1, r + 1, Math.round(r * 0.8), 1, C.br); for (let k = 0; k < 24; k++) { const an = (k * Math.PI) / 12; disc(r + 1 + Math.round(Math.cos(an) * r * 0.72), r + 1 + Math.round(Math.sin(an) * r * 0.72), 1, C.gold); } }), cx - r - 1, cy - r - 1, alpha); };
+
   // ---------- chạm ----------
+  function lighten(col, k) { const n = parseInt(String(col).slice(1), 16); if (isNaN(n)) return col; const f = (v) => ('0' + Math.round(v + (255 - v) * k).toString(16)).slice(-2); return '#' + f((n >> 16) & 255) + f((n >> 8) & 255) + f(n & 255); }
   const heldIn = (x, y, w, h) => [...G.pointers.values()].some((q) => !q.role && !q.stale && G.inRect(q, x, y, w, h));
   function clicked(x, y, w, h) {
     if (G.click && G.inRect(G.click, x, y, w, h)) { G.click = null; if (G.sfx) G.sfx('ui'); return true; }
@@ -102,20 +106,20 @@
     o = o || {};
     x = Math.round(x); y = Math.round(y); w = Math.round(w); h = Math.round(h);
     const pad = o.pad || 0, dis = !!o.disabled, st = dis ? 2 : heldIn(x - pad, y - pad, w + pad * 2, h + pad * 2) ? 1 : 0;
-    const tone = o.primary ? 'p' : o.danger ? 'd' : o.sel ? 's' : o.gold ? 'g' : 'n';
-    const cv = layer('b|' + w + '|' + h + '|' + st + '|' + tone, w, h + 3, () => {
+    const tone = o.primary ? 'p' : o.danger ? 'd' : o.sel ? 's' : o.gold ? 'g' : o.purple ? 'v' : o.fill ? 'c' : 'n';
+    const cv = layer('b|' + w + '|' + h + '|' + st + '|' + tone + (o.fill || ''), w, h + 3, () => {
       const yo = st === 1 ? 1 : 0, y0 = yo;
       if (st !== 1) rr(0, 2, w, h, 'rgba(0,0,0,0.5)', 2);
       rr(0, y0, w, h, dis ? '#232c2a' : C.dk, 2);
       rr(1, y0 + 1, w - 2, h - 2, dis ? '#4a5c57' : tone === 's' ? C.gold : C.br, 2);
       if (!dis && st !== 1) R(3, y0 + 1, w - 6, 1, C.hi);
       R(2, y0 + 2, w - 4, h - 4, dis ? '#2b3634' : C.dk);
-      const base = { p: [C.cop, C.copL], d: ['#5a1f1a', '#7a2a22'], s: ['#2f6a60', C.pat], g: ['#6a4a12', '#8a6420'], n: [C.patD, C.pat] }[tone];
+      const base = { p: [C.cop, C.copL], d: ['#5a1f1a', '#7a2a22'], s: ['#2f6a60', C.pat], g: ['#6a4a12', '#8a6420'], v: ['#4a2a6a', '#6a3a9a'], c: [o.fill, lighten(o.fill || '#000000', 0.25)], n: [C.patD, C.pat] }[tone];
       const cc = dis ? '#333f3c' : base[st === 1 ? 1 : 0], tooth = dis ? '#56706a' : C.gold;
       if (h >= 22) { saw(3, y0 + 2, w - 6, tooth, false); saw(3, y0 + h - 5, w - 6, tooth, true); R(2, y0 + 5, w - 4, h - 10, cc); }
       else { R(2, y0 + 3, w - 4, h - 6, cc); for (let i = 3; i < w - 3; i += 2) { P(i, y0 + 2, tooth); P(i, y0 + h - 3, tooth); } }
       if (st === 1) R(2, y0 + (h >= 22 ? 5 : 3), w - 4, 1, 'rgba(0,0,0,0.45)');
-      if (w >= 56 && h >= 16) for (const ex of [4, w - 9]) ring(ex + 2, y0 + (h >> 1), 2, 1, tooth); // đinh tán tròn hai đầu
+      if (w >= 70 && h >= 16) for (const ex of [4, w - 9]) ring(ex + 2, y0 + (h >> 1), 2, 1, tooth); // đinh tán tròn hai đầu
     });
     put(cv, x, y);
     const y0 = y + (st === 1 ? 1 : 0), size = o.size || (h >= 26 ? 10 : 9), col = dis ? '#8fa49e' : C.ink;
@@ -223,7 +227,12 @@
     o = o || {};
     x = Math.round(x); y = Math.round(y); w = Math.round(w);
     const h = o.h || 9, cap = h >= 7 ? 7 : 2, inner = w - cap * 2;
-    const fw = Math.round(inner * G.clamp(frac || 0, 0, 1)), cols = o.col ? [o.col, o.hi || o.col] : BARC[kind] || BARC.hp;
+    const fw = Math.round(inner * G.clamp(frac || 0, 0, 1)), cols = o.col ? [o.col, o.hi || lighten(o.col, 0.35)] : BARC[kind] || BARC.hp;
+    if (h < 6) { // thanh mỏng (dấu ấn, kinh nghiệm nhỏ): viền tối, hai đầu đồng
+      const iw = Math.round((w - 2) * G.clamp(frac || 0, 0, 1));
+      put(layer('barS|' + w + '|' + h + '|' + cols[0] + '|' + iw, w, h, () => { R(0, 0, w, h, C.dk); R(1, 1, w - 2, h - 2, '#0d1716'); R(1, 1, iw, h - 2, cols[0]); if (h >= 4) R(1, 1, iw, 1, cols[1]); R(0, 0, 1, h, C.br); R(w - 1, 0, 1, h, C.br); }), x, y);
+      return;
+    }
     const cv = layer('bar|' + w + '|' + h + '|' + cols[0] + '|' + fw + '|' + (o.marks || 10), w, h + 1, () => {
       rr(0, 1, w, h, 'rgba(0,0,0,0.5)', 1);
       rr(0, 0, w, h, C.dk, 1); rr(1, 1, w - 2, h - 2, C.br, 1); R(2, 1, w - 4, 1, C.hi);
@@ -276,17 +285,19 @@
       if (sel) { for (let k = 0; k < 24; k++) { const an = (k * Math.PI) / 12; P(cx + Math.round(Math.cos(an) * (r + 3)), cy + Math.round(Math.sin(an) * (r + 3)), C.hi); } ring(cx, cy, r + 1, 1, C.hi); }
       for (const sx of [cx - r - 5, cx + r]) { R(sx, cy - 4, 6, 9, lock ? '#1c2c2a' : C.dk); R(sx + 1, cy - 3, 4, 7, lock ? '#35524c' : C.br); R(sx + 2, cy - 2, 2, 5, lock ? '#26403c' : C.patD); } // quai trống
       drum(cx, cy, r, { dull: lock, lit: sel, mid: sel || o.boss ? C.cop : C.patD, n: o.boss ? 14 : 12 });
-      disc(cx, cy, 7, lock ? '#1c2c2a' : C.dk);
+      disc(cx, cy, Math.min(7, Math.round(r * 0.5)), lock ? '#1c2c2a' : C.dk);
       if (lock) bmp(cx - 2, cy - 3, BM.lock, { a: '#7f948e' });
     });
     const cx = x + w / 2, top = y + (o.top || 0);
     put(cv, Math.round(cx - cw / 2), top);
     const cy = top + r + 4;
     if (!lock) {
-      txt(String(label), cx, cy + 3.8, { size: String(label).length > 1 ? 9 : 11, bold: true, align: 'center', color: C.ink });
-      if (st !== 'open' || stars > 0) T.stars(cx, top + r * 2 + 14, stars || 0, 3);
-      else if (st === 'open') txt('mới', cx, top + r * 2 + 14, { size: 7, bold: true, align: 'center', color: '#9be07a' });
-    } else txt('chưa mở', cx, top + r * 2 + 14, { size: 6.5, align: 'center', color: '#8fa49e' });
+      const big = r >= 14, ls = big ? (String(label).length > 1 ? 9 : 11) : 8;
+      txt(String(label), cx, cy + ls * 0.35, { size: ls, bold: true, align: 'center', color: C.ink });
+      if (o.noStars) { /* nơi gọi tự vẽ sao */ }
+      else if (st !== 'open' || stars > 0) T.stars(cx, top + r * 2 + (big ? 14 : 12), stars || 0, 3, { size: big ? 8 : 6.5 });
+      else if (st === 'open') txt('mới', cx, top + r * 2 + (big ? 14 : 12), { size: big ? 7 : 6.5, bold: true, align: 'center', color: '#9be07a' });
+    } else if (r >= 14) txt('chưa mở', cx, top + r * 2 + 14, { size: 6.5, align: 'center', color: '#8fa49e' });
     return !o.noClick && !lock && clicked(x, y, w, h);
   };
 
@@ -372,6 +383,35 @@
     }), x - 1, y - 1);
     if (o.title) txt(o.title, x + 7, y + 12, { size: 6.5, color: C.sub });
   };
+  // ---------- đổi cách vẽ chung của game sang chủ đề này ----------
+  // Mọi chỗ trong game đang gọi G.ui.btn, G.ui.panel, G.ui.bar sẽ ra hình trống đồng mà không phải sửa từng chỗ.
+  // Màu nút cũ (o.color) được đổi sang tông tương ứng: đỏ là nút chính, nâu sáng là đang chọn, đỏ sẫm là việc nguy hiểm...
+  const TONES = { '#a8452a': 'primary', '#b5672f': 'sel', '#7a5a2a': 'sel', '#6a2a22': 'danger', '#8a1f1a': 'danger', '#7a2a22': 'danger', '#6a2a8a': 'purple', '#7a5a12': 'gold', '#5a4030': null, '#3a322c': null, '#8a4b25': null };
+  T.install = function () {
+    if (!ui || T.installed) return;
+    T.installed = true;
+    T.old = { btn: ui.btn, panel: ui.panel, bar: ui.bar };
+    ui.btn = function (x, y, w, h, label, o) {
+      o = o || {};
+      const q = { disabled: o.disabled, size: o.size, sub: o.sub, subSize: o.subSize };
+      if (o.color) { const t = TONES[o.color]; if (t) q[t] = true; else if (t === undefined) q.fill = o.color; }
+      for (const k of ['primary', 'sel', 'danger', 'gold', 'purple', 'dot', 'pad']) if (o[k]) q[k] = o[k];
+      if (h >= 40) { // nút to dạng thẻ (ô phần thưởng, món hàng)
+        const held = !o.disabled && heldIn(x, y, w, h);
+        const c = G.ux, ga = c.globalAlpha; if (o.disabled) c.globalAlpha = ga * 0.55;
+        T.card(x, y + (held ? 1 : 0), w, h, { sel: held || q.sel });
+        c.globalAlpha = ga;
+        const size = o.size || 9, col = o.disabled ? '#8fa49e' : C.ink;
+        if (label) txt(label, x + w / 2, y + h / 2 + size * 0.36 - (o.sub ? 4 : 0), { size, bold: true, align: 'center', color: col });
+        if (o.sub) txt(o.sub, x + w / 2, y + h / 2 + 8, { size: o.subSize || 7, align: 'center', color: o.disabled ? '#8fa49e' : '#e8d9a8' });
+        return !o.disabled && clicked(x, y, w, h);
+      }
+      return T.btn(x, y, w, h, label, q);
+    };
+    ui.panel = function (x, y, w, h, title) { T.panel(x, y, w, h, title, { plain: w < 200 || h < 110 }); };
+    ui.bar = function (x, y, w, h, frac, col) { T.bar(x, y, w, null, frac, null, { h: Math.round(h), col: col || '#d0482f' }); };
+  };
+  T.install();
   // Dòng tiêu đề nhỏ trong bảng
   T.head = function (s, x, y, o) { txt(s, x, y, Object.assign({ size: 8.5, bold: true, color: C.hi }, o || {})); };
 })();

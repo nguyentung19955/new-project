@@ -478,12 +478,15 @@
     build();
     if (o.from !== 'keep') {
       S.x = 662; S.y = 160; S.face = -1; S.cam = 240;
-      S.path = findPath(S.x, S.y, 592, 172); S.goal = null; S.arrive = 1.2;
+      S.path = findPath(S.x, S.y, 604, 168); S.goal = null; S.arrive = 1.2;
     }
     S.talk = null; S.near = null; S.joy = null; S.bubble = null;
     for (let i = 0; i < 2; i++) { S.wp[i].x = S.x + 17 + i * 12; S.wp[i].y = S.y - 2 + i * 6; }
+    // Bản lưu chưa từng vào làng mới: lấy số đang có làm mốc, để không phải ai cũng báo "có việc mới" ngay từ đầu.
+    const sn = seen();
+    if (sn.base !== 1) { const c = counts(); for (const k of ['xen', 'may', 'tu']) if (sn[k] == null) sn[k] = c[k]; sn.base = 1; }
     checkNews();
-    if (!seen().hint) S.hintT = 9;
+    if (!sn.hint) S.hintT = 9;
   };
   function goTo(x, y, goal, fast) {
     const pth = findPath(S.x, S.y, x, y);
@@ -707,11 +710,11 @@
     ls.forEach((l, i) => ui.text(l, bx + bw / 2, by + 4 + size * 0.86 + i * (size + 2.5), { size, bold: true, align: 'center', color: INK, shadow: false }));
   };
   // Dải bảy khuôn mặt lối tắt. sel: người đang được chọn. Trả về mã người vừa được chạm (khi clickable).
-  VS.drawStrip = function (sel, clickable) {
+  VS.drawStrip = function (sel, clickable, compact) {
     const ui = G.ui, c = G.ux, n = ORDER.length, a = stripAt(0), b = stripAt(n - 1);
     let hit = null;
     c.save();
-    rrect(c, a[0] - 17, 16.5, b[0] - a[0] + 34, 35, 9); c.fillStyle = 'rgba(10,22,22,0.72)'; c.fill(); c.lineWidth = 0.8; c.strokeStyle = 'rgba(168,117,47,0.9)'; c.stroke();
+    rrect(c, a[0] - 17, 16.5, b[0] - a[0] + 34, compact ? 27 : 35, 9); c.fillStyle = 'rgba(10,22,22,0.72)'; c.fill(); c.lineWidth = 0.8; c.strokeStyle = 'rgba(168,117,47,0.9)'; c.stroke();
     c.restore();
     ORDER.forEach((k, i) => {
       const q = stripAt(i), cx = q[0], cy = q[1], on = sel === k;
@@ -720,8 +723,8 @@
       c.beginPath(); c.arc(cx, cy, STRIP.r - 1, 0, 7); c.clip(); VS.face(c, k, cx, cy + 1, 1);
       c.restore();
       if (S.news[k]) { c.save(); c.beginPath(); c.arc(cx + 8, cy - 8, 3.2, 0, 7); c.fillStyle = '#ff5a3a'; c.fill(); c.lineWidth = 0.8; c.strokeStyle = INK; c.stroke(); c.restore(); }
-      ui.text(NPCS[k].ngan, cx, 49, { size: 6.5, bold: true, align: 'center', color: on ? '#f6dc92' : '#e8dcc0' });
-      if (clickable && G.click && Math.abs(G.click.x - cx) <= STRIP.gap / 2 && G.click.y >= 16 && G.click.y <= 52) { hit = k; G.click = null; G.sfx && G.sfx('ui'); }
+      if (!compact) ui.text(NPCS[k].ngan, cx, 49, { size: 6.5, bold: true, align: 'center', color: on ? '#f6dc92' : '#e8dcc0' });
+      if (clickable && G.click && Math.abs(G.click.x - cx) <= STRIP.gap / 2 && G.click.y >= 14 && G.click.y <= (compact ? 45 : 52)) { hit = k; G.click = null; G.sfx && G.sfx('ui'); }
     });
     return hit;
   };
@@ -765,6 +768,69 @@
     if (S.msgT > 0 && S.msg) { if (T && T.toast) T.toast(130, 60, 220, S.msg); else { ui.rect(130, 60, 220, 16, 'rgba(10,8,6,0.9)', '#ffd27a'); ui.text(S.msg, 240, 71, { size: 8, align: 'center' }); } }
   };
   VS.draw = function () { VS.drawWorld(); VS.drawHud(); };
+
+
+  // ======================= tranh bản đồ vùng (Chú Lái Đò) =======================
+  // Toạ độ 15 điểm ải trên tranh: 3 vùng, mỗi vùng 5 ải, ải thứ năm là trùm vùng.
+  const MAP = (VS.MAP = {
+    nodes: [
+      [[86, 118], [112, 96], [140, 106], [164, 82], [192, 60]],
+      [[112, 186], [136, 208], [160, 180], [188, 206], [222, 182]],
+      [[246, 146], [270, 128], [296, 148], [322, 130], [326, 84]],
+    ],
+    from: [[40, 138], [70, 182], [192, 60]], // đường vào ải đầu của từng vùng
+    names: [[126, 34, '#2f5a3a'], [150, 236, '#2a5a7a'], [300, 44, '#7a2a22']], // chỗ ghi tên vùng và màu chữ
+    soon: [['Núi tuyết', 412, 34, 412, 92], ['Núi lửa', 436, 112, 436, 176], ['Đầm lầy', 372, 172, 0, 0]], // vùng sắp có
+  });
+  const MCACHE = {};
+  VS.mapArt = function (night) {
+    const id = night ? 'n' : 'd';
+    if (MCACHE[id]) return MCACHE[id];
+    const [cv, c] = mk(480, 270), rd = rng(11), INKB = '#4a3626';
+    p(c, 0, 0, 480, 270, '#e6d8b0');
+    for (let i = 0; i < 900; i++) p(c, rd() * 480, rd() * 270, 1 + (rd() < 0.2 ? 1 : 0), 1, rd() < 0.5 ? '#d8c898' : '#f0e6c8');
+    for (let i = 0; i < 14; i++) ell(c, rd() * 480, rd() * 270, 10 + rd() * 26, 5 + rd() * 12, 'rgba(190,160,100,0.10)');
+    // biển phía dưới
+    for (let x = 60; x < 480; x++) { const e = Math.round(222 + Math.sin(x * 0.045) * 6 + Math.sin(x * 0.13) * 2 + (x < 110 ? (110 - x) * 0.9 : 0)); if (e < 270) { p(c, x, e + 1, 1, 2, '#7a9aa4'); p(c, x, e + 3, 1, 270 - e - 3, '#b4cac8'); } }
+    for (let i = 0; i < 60; i++) { const x = 70 + rd() * 400, y = 236 + rd() * 32; p(c, x, y, 4, 1, '#7a9aa4'); p(c, x + 4, y - 1, 2, 1, '#7a9aa4'); }
+    // sông từ làng ra biển
+    const song = [[40, 132], [52, 160], [70, 182], [64, 206], [84, 232]]; for (let i = 0; i < song.length - 1; i++) { line(c, song[i][0], song[i][1], song[i + 1][0], song[i + 1][1], 5, '#7a9aa4'); line(c, song[i][0], song[i][1], song[i + 1][0], song[i + 1][1], 3, '#b4cac8'); }
+    // núi mờ phía xa
+    for (const m of [[250, 40, 30], [300, 30, 22], [200, 34, 18], [360, 44, 26]]) for (let i = 0; i < m[2]; i++) p(c, m[0] - i, m[1] + i, i * 2, 1, i < 3 ? '#b8a880' : '#d0c098');
+    // Rừng già
+    for (let i = 0; i < 34; i++) { const x = 76 + rd() * 130, y = 40 + rd() * 62 + (x - 76) * -0.1; p(c, x, y, 2, 5, '#5a4030'); ell(c, x + 1, y - 2, 5, 4, i % 3 ? '#4a7a4a' : '#2f5a3a'); ell(c, x, y - 4, 3, 2, '#6a9a5a'); }
+    // Hang biển
+    ell(c, 160, 200, 62, 18, '#c8c0a0'); for (const r of [[110, 196, 12, 9], [140, 186, 16, 12], [176, 194, 14, 10], [206, 184, 18, 14], [228, 198, 10, 8]]) { ell(c, r[0], r[1], r[2], r[3], '#6a7a84'); ell(c, r[0] - 2, r[1] - 2, r[2] - 3, r[3] - 3, '#8a9aa0'); }
+    ell(c, 206, 190, 8, 7, '#2a3440'); p(c, 198, 190, 17, 8, '#2a3440'); for (let i = 0; i < 4; i++) p(c, 199 + i * 4, 183 + (i % 2), 2, 4, '#c8d8dc');
+    // Lâu đài cổ
+    p(c, 256, 92, 86, 24, '#8a8088'); for (let i = 0; i < 11; i++) p(c, 256 + i * 8, 88, 5, 4, '#8a8088'); for (let i = 0; i < 4; i++) for (let j = 0; j < 10; j++) p(c, 258 + j * 9 - (i % 2) * 4, 96 + i * 5, 7, 1, '#6a606a');
+    for (const tx of [262, 330]) { p(c, tx - 8, 70, 16, 46, '#7a707a'); p(c, tx - 10, 66, 20, 5, '#5a505a'); for (let i = 0; i < 8; i++) p(c, tx - 10 + i, 58 + i, 20 - i * 2, 1, '#8a3a2e'); p(c, tx, 50, 1, 9, INKB); p(c, tx + 1, 50, 6, 4, '#c8402e'); p(c, tx - 2, 82, 4, 6, '#2a2430'); }
+    p(c, 290, 98, 18, 18, '#2a2430'); ell(c, 299, 98, 9, 6, '#2a2430'); for (let i = 0; i < 9; i++) p(c, 280 + i, 78 + i, 38 - i * 2, 1, '#8a3a2e'); p(c, 276, 86, 46, 3, '#5e241d');
+    // ba vùng sắp thêm (mờ, mây che)
+    const mo = '#c4b48c', mo2 = '#b0a078';
+    for (let i = 0; i < 26; i++) p(c, 400 - i * 1.3, 40 + i, i * 2.6, 1, i < 8 ? '#f4eee0' : mo); for (let i = 0; i < 18; i++) p(c, 436 - i * 1.2, 52 + i, i * 2.4, 1, i < 5 ? '#f4eee0' : mo2);
+    for (let i = 0; i < 26; i++) p(c, 436 - i * 1.4 - 3, 134 + i, i * 2.8 + 6, 1, mo2); p(c, 432, 130, 8, 5, '#d08a5a'); p(c, 434, 124, 3, 6, '#e0a070'); p(c, 438, 120, 2, 5, '#e0b890'); p(c, 430, 136, 2, 8, '#d08a5a'); p(c, 440, 138, 2, 12, '#d08a5a');
+    ell(c, 372, 192, 30, 10, mo); for (let i = 0; i < 6; i++) { const x = 350 + i * 9, y = 189 + (i % 3) * 3; p(c, x, y - 8, 1, 8, mo2); p(c, x - 1, y - 10, 3, 3, '#8a7a58'); p(c, x + 3, y - 5, 1, 5, mo2); } ell(c, 366, 195, 8, 2, '#a8b8a0'); ell(c, 386, 190, 6, 2, '#a8b8a0');
+    for (const q of [[392, 76], [420, 84], [446, 68], [420, 164], [450, 158], [356, 200], [388, 200], [404, 150]]) { ell(c, q[0], q[1], 12, 4, '#f6f0dc'); ell(c, q[0] - 6, q[1] - 3, 7, 3, '#f6f0dc'); ell(c, q[0] + 5, q[1] - 2, 6, 3, '#fbf7ea'); p(c, q[0] - 10, q[1] + 4, 20, 1, '#c8b890'); }
+    // làng và con đò
+    p(c, 26, 122, 22, 10, '#8a5a34'); for (let i = 0; i < 7; i++) p(c, 24 + i, 115 + i, 26 - i * 2 + i, 1, '#c8402e'); p(c, 22, 121, 30, 2, '#8a3a2e'); p(c, 12, 118, 2, 10, '#5a4030'); ell(c, 13, 114, 6, 5, '#4a7a4a'); p(c, 34, 126, 5, 6, '#2a2430');
+    ell(c, 58, 166, 7, 2, '#5a4030'); p(c, 54, 162, 8, 2, '#c9a24f');
+    // hình trùm nhỏ cạnh ải trùm
+    const bs = [
+      (g) => { p(g, -5, -10, 10, 10, '#7a5234'); p(g, -7, -2, 14, 2, '#5a3a22'); ell(g, 0, -13, 8, 4, '#4a8a4a'); ell(g, -3, -16, 4, 3, '#6aaa5a'); p(g, -3, -8, 2, 3, '#ff5a3a'); p(g, 2, -8, 2, 3, '#ff5a3a'); p(g, -2, -3, 5, 1, '#2a1c18'); p(g, -9, -8, 4, 2, '#7a5234'); p(g, 6, -9, 4, 2, '#7a5234'); },
+      (g) => { ell(g, 0, -7, 9, 6, '#3a7a9a'); ell(g, -1, -8, 6, 3, '#5aa0c0'); p(g, 8, -11, 4, 3, '#3a7a9a'); p(g, 8, -5, 4, 3, '#3a7a9a'); p(g, -2, -15, 5, 3, '#2a5a7a'); p(g, -6, -9, 2, 2, '#ff5a3a'); for (let i = 0; i < 3; i++) p(g, -8 + i * 2, -4, 1, 2, '#fff'); },
+      (g) => { ell(g, 0, -7, 7, 6, '#e0782a'); p(g, -7, -16, 4, 6, '#e0782a'); p(g, 4, -16, 4, 6, '#e0782a'); p(g, -6, -14, 2, 3, '#2a1c18'); p(g, 5, -14, 2, 3, '#2a1c18'); ell(g, 0, -4, 4, 3, '#fbf7ee'); p(g, -4, -9, 2, 2, '#ffe07a'); p(g, 3, -9, 2, 2, '#ffe07a'); p(g, 0, -5, 1, 1, '#2a1c18'); p(g, 8, -8, 5, 3, '#e0782a'); p(g, 11, -11, 3, 4, '#fbf7ee'); },
+    ];
+    bs.forEach((fn, r) => { const q = MAP.nodes[r][4], sp = outlined(32, 32, 16, 28, fn); c.drawImage(sp.cv, q[0] - 16 + (r === 2 ? -22 : 0), q[1] - 28 - 13 + (r === 2 ? 12 : 0)); });
+    // la bàn và viền tranh
+    p(c, 22, 14, 1, 18, INKB); p(c, 14, 22, 17, 1, INKB); p(c, 21, 12, 3, 3, '#c8402e'); ell(c, 22, 22, 3, 3, '#e6d8b0'); ell(c, 22, 22, 1, 1, INKB);
+    for (const k of [0, 1, 2]) { c.strokeStyle = ['#6a4a30', '#a88a58', '#6a4a30'][k]; c.lineWidth = 1; c.strokeRect(k * 2 + 0.5, k * 2 + 0.5, 479 - k * 4, 269 - k * 4); }
+    if (night) { c.globalCompositeOperation = 'multiply'; c.fillStyle = '#8c88c4'; c.fillRect(0, 0, 480, 270); c.globalCompositeOperation = 'source-over'; } // độ khó 2: tranh màu đêm
+    return (MCACHE[id] = cv);
+  };
+  // Đường nét đứt nối hai điểm trên tranh
+  VS.mapDash = function (c, a, b, col) { const n = Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / 4); for (let j = 1; j < n; j++) if (j % 2) p(c, a[0] + ((b[0] - a[0]) * j) / n, a[1] + ((b[1] - a[1]) * j) / n, 2, 2, col); };
+  VS.putNpc = putNpc;
 
   // Cảnh chạy riêng (dùng để xem thử khi chưa ghép vào màn làng của game)
   G.VillageDemo = { enter() { VS.enter({ from: 'stage' }); }, update(dt) { VS.update(dt, false); }, draw() { VS.draw(); } };
