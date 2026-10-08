@@ -1,44 +1,44 @@
-# Gậy Tre Đập — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Đập gậy tre: choáng mục tiêu, x2 sát thương +1
-name: Gậy Tre Đập
+# Dũng Sĩ Tre Làng · Q «Gậy Tre Đập» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: gậy tre + nổ va chạm
+name: Dũng Sĩ Tre Làng · Q «Gậy Tre Đập»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-toi
-  d = dat
-  e = dat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
+  b = sang
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = vang-nghe
+  g = vang-sang
+  h = la-toi
   i = la
   j = la-ma
   k = la-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbbbbbkkkibbbgfa
-ahgbbbbbbbbbbkjjjjibbgfa
-ahgbbbbbbbbbbkjjjjjibgfa
-ahgbbbbbbbbbkjjjjjjibgfa
-ahgbbbbbbbbbijjjjjjibgfa
-ahgbbbbbbbbbbkjjjjjibgfa
-ahgbbbbbbbbbbiijjiibbgfa
-ahgbbbbbbbbbedciibbbbgfa
-ahgbbbbbbbbedcbbbbbbbgfa
-ahgbbbbbbbedcbbbbbbbbgfa
-ahgbbbbbbedcbbbbbbbbbgfa
-ahgbbbbbedcbbbbbbbbbbgfa
-ahgbbbbedcbbbbbbbbbbbgfa
-ahgbbbedcbbbbbbbbbbbbgfa
-ahgbbedcbbbbbbbbbbbbbgfa
-ahgbedcbbbbbbbbbbbbbbgfa
-ahgbccbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+aeeeeeeeeeeffeeeeeeeeeda
+aeddddddddddddddddddddca
+aedjjjjjjjjjjjjjaaajjdca
+aedjhhhhhhhhhhhakkkajdca
+aedjhhhhhhhhhhakjjjiadca
+aedjhhhhhhhhhakjjjiiadca
+aedjhhhhhhhhaiajjiiajdca
+aedjhhhhhhhakjjaiiahjdca
+aedjhhhhhhakjjjiaahhjdca
+aedjhhhhhakjjjiahhhhjdca
+afdjhhhhaiajjiahhhhhjdfa
+afdjhhhakjjaiahhhhhhjdfa
+aedjhhabjjjiahhhhhhhjdca
+aedjhbkfjbiahhhhhhhhjdca
+aedjaifgfiahhhhhhhhhjdca
+aedabfgbgfbhhhhhhhhhjdca
+aedajjfgfhhhhhhhhhhhjdca
+aedaibafhbhhhhhhhhhhjdca
+aedjaahbhhhhhhhhhhhhjdca
+aedjjjjjjjjjjjjjjjjjjdca
+aeddddddddddddddddddddca
+adccccccccccffccccccccca
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

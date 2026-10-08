@@ -1,40 +1,46 @@
-# Gánh Núi — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a strong shoulder carrying a small mountain
-name: Gánh Núi
+# Lực Sĩ Núi · W «Gánh Núi» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: núi + mũi tên tăng
+name: Lực Sĩ Núi · W «Gánh Núi»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = trang
+  f = sang
+  g = dat-toi
+  h = dat-sang
+  i = vang-nghe
+  j = vang-sang
+  k = reu-toi
+  l = reu
+  m = reu-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbgbbbbbbdca
-aedbbbbbbbbbbbgebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbgebbbgffebbbbdca
-aedbbbbbgebbgfffebbbbdca
-aedbbbbgffebgfffebbbbdca
-aedbbbbgfffgffffebbbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbgffffffffffffebbdca
-aedbbgffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbgffffffffffffffebdca
-aedgeeeeeeeeeeeeeeeebdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+addddddddddffdddddddddca
+adccccccccccccccccccccba
+adchhhhhhhhhhhhhhhhhhcba
+adchgggggggggggggggghcba
+adchgggggggggggggggghcba
+adchgggggggagggggggghcba
+adchggggggafaggggggghcba
+adchgggggafeeagggggghcba
+adchggggafeelkaggggghcba
+adchgggammllllkagggghcba
+afchggammllalllkaggghcfa
+afchggamllllallkkagghcfa
+adchgammllllalllkkaghcba
+adchgamllllllalllakahcba
+adchammllllllallajakacba
+adchamllllllllaajijaacba
+adcammllllllllaaaiaaacba
+adcamlllllllllllaiakacba
+adcallllllllllllaaakacba
+adchaaaaaaaaaaaaaaaahcba
+adccccccccccccccccccccba
+acbbbbbbbbbbffbbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

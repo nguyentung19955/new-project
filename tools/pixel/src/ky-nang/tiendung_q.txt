@@ -1,41 +1,49 @@
-# Quạt Tiên — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a round fairy fan with sparkles
-name: Quạt Tiên
+# Tiên Dung · Q «Quạt Tiên» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: quạt tròn + lấp lánh
+name: Tiên Dung · Q «Quạt Tiên»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = son
-  g = lua
-  h = lua-sang
+  b = trang
+  c = sang
+  d = da-sang
+  e = dat-toi
+  f = dat
+  g = dat-sang
+  h = dong-toi
+  i = dong
+  j = dong-sang
+  k = vang-nghe
+  l = vang-sang
+  m = son-toi
+  n = son
+  o = son-sang
+  p = hong
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbhggfbbbbbbbdca
-aedbbbbbbbhgggfbbbbbbdca
-aedbbbbbbhgggggfbbbbbdca
-aedbbbbbbhggggggfbbbbdca
-aedbbbbbhgggggggfbbbbdca
-aedbbbbhgggggggggfbbbdca
-aedbbhhgggggggggggfbbdca
-aedbhggggggggggggggfbdca
-aedhgggggggggggggggfbdca
-aedbfgggggggggggggfbbdca
-aedbbhgggggggggggfbbbdca
-aedbbfgggggggggggfbbbdca
-aedbbbfgggggggggfbbbbdca
-aedbbbbfffffffffbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+ajjjjjjjjjjkkjjjjjjjjjia
+ajiiiiiiiiiiiiiiiiiiiiha
+ajiooooooaaaaaaooooooiha
+ajiombmaaddddddaammmoiha
+ajiobcbddppppppddammoiha
+ajiombdpappappapadamoiha
+ajioadppapappapappbaoiha
+ajioadpppaappaappbcboiha
+ajiadppppaappaapppbnaiha
+ajiadpppppaapaappppnaiha
+akiadppppppaaapppppnaika
+akioapppppppppppppnaoika
+ajioanpppppppppppnnaoiha
+ajiomannpppppppnnnamoiha
+ajiommaannnefnnnaammoiha
+ajiommmmaaagfaaammmmoiha
+ajiommmmmmagfammbmmmoiha
+ajiommmmmmagfambcbmmoiha
+ajiommmmmaaklaambmmmoiha
+ajioooooooaaaaoooooooiha
+ajiiiiiiiiiiiiiiiiiiiiha
+aihhhhhhhhhhkkhhhhhhhhha
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

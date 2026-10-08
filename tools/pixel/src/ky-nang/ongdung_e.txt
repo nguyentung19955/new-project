@@ -1,40 +1,45 @@
-# Bước Chân Thành Ao — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: giant footprint pond
-name: Bước Chân Thành Ao
+# Ông Đùng · E «Bước Chân Thành Ao» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: vết chân thành ao
+name: Ông Đùng · E «Bước Chân Thành Ao»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = sang
+  c = dat-toi
+  d = dat
+  e = dat-sang
+  f = la-toi
+  g = la-sang
+  h = cham
+  i = nuoc
+  j = nuoc-sang
+  k = ngoc
+  l = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbggggggebbbbbdca
-aedbbbbbbgfffffebbbbbdca
-aedbbbbbbgfffffebbbbbdca
-aedbbbbbbgfffffebbbbbdca
-aedbbbbbbgfffffebbbbbdca
-aedggggggfffffffggggggge
-aedgfffffffffffffffffffe
-aedgfffffffffffffffffeee
-aedgffffffffffffffffedca
-aedgffffffffffffffffedca
-aedgfffffffaafffffffedca
-aedgffffffaaaaffffffedca
-aedgffffffaaaaffffffedca
-aedgffffffaaaaffffffedca
-aedgfffffaaaaaafffffedca
-aedgfffffaaaaaafffffedca
-aedgfffffaaaaaafffffedca
-aedeeeeeeaaaaaaeeeeeedca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+allllllllllgglllllllllka
+alkkkkkkkkkkkkkkkkkkkkfa
+alkeeeeeeeeeeeeeeeeeekfa
+alkecccccaacaacaacccekfa
+alkeccaaaeeaeeaeeaccekfa
+alkecaeeaddaddaddaccekfa
+alkecaddaaaaaaaaacccekfa
+alkeccaaaeeeeeeaccccekfa
+alkecccaedjjjideaaccekfa
+alkeccaedjbiiiihdeacekfa
+agkeccaedjiiiiiihdacekga
+agkeccaediiiiiiihdacekga
+alkeccaediiiiiiihdacekfa
+alkeccaediiiiiihdaccekfa
+alkecccaediiiiihdaccekfa
+alkecccaediiiihdacccekfa
+alkeccccaediiihdacccekfa
+alkecccccacddddcacccekfa
+alkeccccccaaaaaaccccekfa
+alkeeeeeeeeeeeeeeeeeekfa
+alkkkkkkkkkkkkkkkkkkkkfa
+akffffffffffggfffffffffa
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

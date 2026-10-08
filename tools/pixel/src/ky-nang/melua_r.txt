@@ -1,41 +1,44 @@
-# Mùa Vàng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Mưa thóc vàng xuống vùng quái: x4 sát thương +2
-name: Mùa Vàng
+# Mẹ Lúa · R «Mùa Vàng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: liềm + hạt thóc
+name: Mẹ Lúa · R «Mùa Vàng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = la
-  g = la-ma
-  h = la-sang
+  b = dat-toi
+  c = dat
+  d = dat-sang
+  e = dong
+  f = dong-sang
+  g = vang-nghe
+  h = vang-sang
+  i = son-sang
+  j = la-toi
+  k = la-ma
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbhhhgghhfbbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbhggggggggggfbbbdca
-aedbbhggggggggggggfbbdca
-aedbbhggggggggggggfbbdca
-aedbbhggggggggggggfbbdca
-aedbhggggggggggggggfbdca
-aedbfgggggggaggggggfbdca
-aedbbhggggggggggggfbbdca
-aedbbhggggggggggggfbbdca
-aedbbfggggggggggggfbbdca
-aedbbbfggggggggggfbbbdca
-aedbbbbfggggggggfbbbbdca
-aedbbbbbfffggfffbbbbbdca
-aedbbbbbbbbffbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+aihhhhhhhhhiihhhhhhhhhia
+ahggggggggggggggggggggea
+ahgkkkakkkkkakkkkkkkkgea
+ahgkjahajaaahajjjajjkgea
+ahgkahghahahghajahajkgea
+ahgkaggfagaggfaahghakgea
+ahgkjafagfaafagaggfakgea
+ahgkahafaajjaafgafajkgea
+ahgkagfaahajjjaaaajjkgea
+ahgkafaahghajjahajjjkgea
+aigkjajaggfajahghajjkgia
+aigkjjjjafajjaggfajjkgia
+ahgkjjjjjajjadafajjjkgea
+ahgkjjjjjjjadcaajjjjkgea
+ahgkjjjjjjadcajjjjjjkgea
+ahgkjjjjjadcajjjjjjjkgea
+ahgkjjjjabcajjjjjjjjkgea
+ahgkjjjjjaajjjjjjjjjkgea
+ahgkjjjjjjjjjjjjjjjjkgea
+ahgkkkkkkkkkkkkkkkkkkgea
+ahggggggggggggggggggggea
+aieeeeeeeeeeiieeeeeeeeia
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

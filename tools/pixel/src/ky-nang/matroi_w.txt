@@ -1,41 +1,44 @@
-# Nắng Hạ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: summer sun
-name: Nắng Hạ
+# Nữ Thần Mặt Trời · W «Nắng Hạ» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: mặt trời
+name: Nữ Thần Mặt Trời · W «Nắng Hạ»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = son
-  g = lua
-  h = lua-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = sang
+  f = vang-sang
+  g = son-toi
+  h = son
+  i = son-sang
+  j = lua
+  k = lua-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbgbbbbbbbbbdca
-aedbbbbbbbbgbbbbbbbbbdca
-aedbbbgbbbbgbbbbbgbbbdca
-aedbbbbgbbbhfbbbgbbbbdca
-aedbbbbbhhhgghhfbbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedhgggfggggggggfgggfdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbbfffggfffbbbbbdca
-aedbbbbgbbbffbbbgbbbbdca
-aedbbbgbbbbbgbbbbgbbbdca
-aedbbbbbbbbbgbbbbbbbbdca
-aedbbbbbbbbbgbbbbbbbbdca
-aedbbbbbbbbbfbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adciiiiiiiiiiiiiiiiiicba
+adciggggggggggggggggicba
+adcigggggggaggggggggicba
+adciggagggakagggagggicba
+adcigakaggakaggakaggicba
+adciggakaakkkaakagggicba
+adcigggaakjjjkaaggggicba
+adciaaaakjfffjhaaaagicba
+aecakkkkffefffjhkkkaicea
+aeciaaakjfffffjhaaagicea
+adcigggajffffjhaggggicba
+adcigggahjjjjhaaggggicba
+adciggakaahhhaakagggicba
+adcigakaggakaggakaggicba
+adciggagggakagggagggicba
+adcigggggggaggggggggicba
+adciggggggggggggggggicba
+adciiiiiiiiiiiiiiiiiicba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

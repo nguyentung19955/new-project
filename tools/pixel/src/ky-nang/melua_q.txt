@@ -1,44 +1,46 @@
-# Đồng Lúa — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Lúa mọc làm chậm 40% quái trong vùng 4 giây, 8 sát thương/giây
-name: Đồng Lúa
+# Mẹ Lúa · Q «Đồng Lúa» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bông lúa + nền đất nứt
+name: Mẹ Lúa · Q «Đồng Lúa»
 size: 24x24
 colors:
   a = vien
-  b = khoi
+  b = sang
   c = dat-toi
   d = dat
   e = dat-sang
   f = dong-toi
   g = dong
   h = dong-sang
-  i = la
-  j = la-ma
-  k = la-sang
+  i = vang-nghe
+  j = la-toi
+  k = la
+  l = la-ma
+  m = la-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
+ahhhhhhhhhhiihhhhhhhhhga
 ahggggggggggggggggggggfa
-ahgbbbbbbbbbkkibkibbbgfa
-ahgbbbbbbbbbkjibkjibbgfa
-ahgbbbbbbbbkijikkjibbgfa
-ahgbbbbbbbkkjijjiibbbgfa
-ahgbbbbbbbkiiikkibbbbgfa
-ahgbbbbbbkkjiijiibbbbgfa
-ahgbbbbbkjiikjiibbbbbgfa
-ahgbbbbkjiikijibbbbbbgfa
-ahgbbbbijiekjiibbbbbbgfa
-ahgbbbbbiidiiibbbbbbbgfa
-ahgbbbbbbbdbbbbbbbbbbgfa
-ahgbbbbbbbdbbbbbbbbbbgfa
-ahgbbbbbbbdbbbbbbbbbbgfa
-ahgbbbbbbbcbbbbbbbbbbgfa
-ahgbbbbbbebbbbbbbbbbbgfa
-ahgbbbbbbdbbbbbbbbbbbgfa
-ahgbbbbbbdbbbbbbbbbbbgfa
-ahgbbbbbbcbbbbbbbbbbbgfa
+ahgllllllaallllllllllgfa
+ahgljjjjammajjjjjjjjlgfa
+ahgljjjamllmaaajjjjjlgfa
+ahgljjambllkammajjjjlgfa
+ahgljjamllkamllmajjjlgfa
+ahgljjjalkambllkaajjlgfa
+ahgljjjakaamllkammajlgfa
+ahgljjjakajalkamllmalgfa
+aigljjjakajakaambllkagia
+aigljjjakajakaamllkalgia
+ahgljjjjakaakajalkajlgfa
+ahgljjjjakaakajakajjlgfa
+ahgljjjjjakakaakajjjlgfa
+ahgljjjjjakkkakajjjjlgfa
+ahgljjjjjjakkkajjjjjlgfa
+ahgaaaaaaaaaaaaaaaaaagfa
+ahgddeddaedddedadedddgfa
+ahgccccccaacccccaccccgfa
 ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+agffffffffffiifffffffffa
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

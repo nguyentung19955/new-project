@@ -1,41 +1,47 @@
-# Sóng Vỗ Mạn Thuyền — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: splashing wave on a boat side
-name: Sóng Vỗ Mạn Thuyền
+# Ngư Phủ Sông Đà · E «Sóng Vỗ Mạn Thuyền» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: cá + sóng nước dưới đáy
+name: Ngư Phủ Sông Đà · E «Sóng Vỗ Mạn Thuyền»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = cham
-  g = nuoc
-  h = nuoc-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = trang
+  f = la-toi
+  g = la-sang
+  h = cham-toi
+  i = cham
+  j = cham-sang
+  k = nuoc
+  l = nuoc-sang
+  m = ngoc
+  n = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbgbbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbhggggggggggfbbbdca
-aedbbbfggggggggggfbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbfggggggggfbbbbdca
-aedbbbbbfggggggfbbbbbdca
-aedbbbbbbffggffbbbbbbdca
-aedbbbbbbbbffbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+annnnnnnnnnggnnnnnnnnnma
+anmmmmmmmmmmmmmmmmmmmmfa
+anmjjjjjjjjjjjjjjjjjjmfa
+anmjhhhhhhhhhhhhhhhhjmfa
+anmjhhhhhhhhhhhhhhhhjmfa
+anmjhhhhhaaaahhhhhhhjmfa
+anmjhhhaaddddaahhhaajmfa
+anmjhhaddccccddaaaddamfa
+anmjhadccccccccdddccamfa
+anmjadeacccccccccccbamfa
+agmadccccacacacccccbamga
+agmacccccccccccccccbamga
+anmjacccccccccccaccbamfa
+anmjhabbccccccbbaabbamfa
+anmjhhaabbbbbbaahhaajmfa
+anmjhhhaaaaaaahhhhhajmfa
+anmjhhalahhhalahhhalamfa
+anmaaaklkaaaklkaaaklkmfa
+anmkkkkkkkkkkkkkkkkkkmfa
+anmiiiiiiiiiiiiiiiiiimfa
+anmmmmmmmmmmmmmmmmmmmmfa
+amffffffffffggfffffffffa
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

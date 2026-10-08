@@ -1,44 +1,45 @@
-# Nỏ Liên Châu — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: three crossbow bolts in a row
-name: Nỏ Liên Châu
+# Cao Lỗ · Q «Nỏ Liên Châu» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: ba mũi tên nỏ + vệt tốc độ
+name: Cao Lỗ · Q «Nỏ Liên Châu»
 size: 24x24
 colors:
   a = vien
-  b = khoi
+  b = sat-toi
   c = sat
   d = sat-sang
-  e = bac
-  f = trang-xam
-  g = dat-toi
-  h = dat-sang
+  e = trang-xam
+  f = trang
+  g = sang
+  h = dat
   i = dong-toi
   j = dong
   k = dong-sang
+  l = vang-nghe
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-akkkkkkkkkkkkkkkkkkkkkia
+akkkkkkkkkkllkkkkkkkkkja
 akjjjjjjjjjjjjjjjjjjjjia
-akjbbbbbbbbbbbbbbbbbbjia
-akjbbbbbbbbbbbbbbbbbbjia
-akjbbbbbbbbbbbbbbbbbbjia
-akjbbbbbbbbhgbbbbbbbbjia
-akjbbbbbedddddddcbbbbjia
-akjecbecbbbhgbbbcdeecjia
-akjeccbbbbbhgbbbbbcccjia
-akjcbbfbbbbhgbbbbfbbcjia
-akjbbbbffbbhgbbffbbbbjia
-akjbbbbbbffhgffbbbbbbjia
-akjbbbbbbbbffbbbbbbbbjia
-akjbbbbbbbbhgbbbbbbbbjia
-akjbbbbbbbbhgbbbbbbbbjia
-akjbbbbbbbbhgbbbbbbbbjia
-akjbbbbbbbbhgbbbbbbbbjia
-akjbbbbbbbbhgbbbbbbbbjia
-akjbbbbbbbbhgbbbbbbbbjia
-akjbbbbbbbbggbbbbbbbbjia
+akjddddddddddddddddddjia
+akjdbbbbbbbbbbbbbbbbdjia
+akjdaabbbbbbbbbaabbbdjia
+akjagfaaaaaaaaaddaabdjia
+akjagghhhhhhhhhcccbadjia
+akjagfaaaaaaaaabbaabdjia
+akjdaabaabbbbbbaabaadjia
+akjdbbagfaaaaaaaaaddajia
+aljgggagghhhhhhhhhccajla
+aljdbbagfaaaaaaaaabbajla
+akjdbaaaabbbbbbbaaaadjia
+akjdagfaaaaaaaaaddaadjia
+akjdagghhhhhhhhhcccbajia
+akjdagfaaaaaaaaabbaadjia
+akjdbaabbbbbbbbbaabbdjia
+akjdbeeebbbbbbbbbbbbdjia
+akjdbbbbbbbbbbbbbbbbdjia
+akjddddddddddddddddddjia
 akjjjjjjjjjjjjjjjjjjjjia
-aiiiiiiiiiiiiiiiiiiiiiia
+ajiiiiiiiiiilliiiiiiiiia
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

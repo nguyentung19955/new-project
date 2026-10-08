@@ -9,37 +9,34 @@ colors:
   d = sat
   e = sat-sang
   f = bac
-  g = dong-toi
-  h = dong
-  i = dong-sang
-  j = vang-nghe
-  k = son-toi
-  l = son-sang
+  g = sang
+  h = son-toi
+  i = son-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aiiiiiiiiiijjiiiiiiiiiha
-aihhhhhhhhhhhhhhhhhhhhga
-aihllllllllllllllllllhga
-aihlkkakkkaaaakkkakklhga
-aihlkaeaaallllaaaeaklhga
-aihlkaeeeaklkkaeecaklhga
-aihlkaedceeebeecdcaklhga
-aihlaedcfedcbecfecaklhga
-aihlaedcecccbccecdealhga
-aihlaecbbbbbbbbbbecalhga
-ajhlaedeeeeebeeeedcalhja
-ajhlaedcfedcbecfedcalhja
-aihlacdcecccbccecdcalhga
-aihlkacbbbbbbbbbbcaklhga
-aihlkaeeeeeebeeeecaklhga
-aihlkaccfedcbecfecaklhga
-aihlkkaeeddcbedecakklhga
-aihlkkacccccbccccakklhga
-aihlkkkaaaaabaaaakkklhga
-aihlllllllllallllllllhga
-aihhhhhhhhhhhhhhhhhhhhga
-ahggggggggggjjggggggggga
+affffffffffggfffffffffea
+afeeeeeeeeeeeeeeeeeeeeda
+afeiiiiiiiiiiiiiiiiiieda
+afeihhahhhaaaahhhahhieda
+afeihaeaaaiiiiaaaeahieda
+afeihaeeeahihhaeecahieda
+afeihaedceeebeecdcahieda
+afeiaedcfedcbecfecahieda
+afeiaedcecccbccecdeaieda
+afeiaecbbbbbbbbbbecaieda
+ageiaedeeeeebeeeedcaiega
+ageiaedcfedcbecfedcaiega
+afeiacdcecccbccecdcaieda
+afeihacbbbbbbbbbbcahieda
+afeihaeeeeeebeeeecahieda
+afeihaccfedcbecfecahieda
+afeihhaeeddcbedecahhieda
+afeihhacccccbccccahhieda
+afeihhhaaaaabaaaahhhieda
+afeiiiiiiiiiaiiiiiiiieda
+afeeeeeeeeeeeeeeeeeeeeda
+aeddddddddddggddddddddda
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

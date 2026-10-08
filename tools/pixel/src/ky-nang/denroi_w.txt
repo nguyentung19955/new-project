@@ -1,41 +1,47 @@
-# Bấc Đèn — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: lantern wick flame
-name: Bấc Đèn
+# Cô Thả Đèn Trời · W «Bấc Đèn» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bấc đèn cháy + toả sáng
+name: Cô Thả Đèn Trời · W «Bấc Đèn»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = son
-  g = lua
-  h = lua-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = trang-xam
+  f = trang
+  g = sang
+  h = vang-nghe
+  i = vang-sang
+  j = son-toi
+  k = son
+  l = son-sang
+  m = lua
+  n = lua-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbhggfbbbbbbbdca
-aedbbbbbbbhgggfbbbbbbdca
-aedbbbbbbhgggggfbbbbbdca
-aedbbbbbbhggggggfbbbbdca
-aedbbbbbhgggggggfbbbbdca
-aedbbbbhgggggggggfbbbdca
-aedbbhhgggggggggggfbbdca
-aedbhggggggggggggggfbdca
-aedhgggggggggggggggfbdca
-aedbfgggggggggggggfbbdca
-aedbbhgggggggggggfbbbdca
-aedbbfgggggggggggfbbbdca
-aedbbbfgggggggggfbbbbdca
-aedbbbbfffffffffbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+addddddddddggdddddddddca
+adccccccccccccccccccccba
+adcllllllllilllllllllcba
+adclijjjjjjajjjjjjjilcba
+adcljijjjianajijjjijlcba
+adcljjhjjanmnaijjhjjlcba
+adcljjjhjanmnajjhjjjlcba
+adcljjjjanmgmnahjjjjlcba
+adcljiijanmgmnajjiijlcba
+adcljjjhhanmkajhhjjjlcba
+agcljjjjjaaaaajjjjjjlcga
+agcihhhhaggggfajhhhhhcga
+adcljjjhaggffeahhjjjlcba
+adcljiijaggffeajjiijlcba
+adcljjjjaggffeahjjjjlcba
+adcljjjaagfffeajhjjjlcba
+adcljjahhhhhhhhajhjjlcba
+adcljijahhhhhhajjjijlcba
+adclijjjaaaaaajjjjjilcba
+adclllllllllhllllllllcba
+adccccccccccccccccccccba
+acbbbbbbbbbbggbbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

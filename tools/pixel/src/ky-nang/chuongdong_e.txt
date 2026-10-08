@@ -1,42 +1,45 @@
-# Bùa Đồng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: +6.2% sức mạnh kỹ năng
-name: Bùa Đồng
+# Thầy Chuông Đồng · E «Bùa Đồng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bùa giấy ấn son
+name: Thầy Chuông Đồng · E «Bùa Đồng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = sat
-  d = sat-sang
-  e = bac
-  f = dat
-  g = dong-toi
-  h = dong
-  i = dong-sang
+  b = sat-toi
+  c = sat-sang
+  d = dong-sang
+  e = vang-nghe
+  f = vang-sang
+  g = son
+  h = son-sang
+  i = la-toi
+  j = la-sang
+  k = ngoc
+  l = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aiiiiiiiiiiiiiiiiiiiiiga
-aihhhhhhhhhhhhhhhhhhhhga
-aihbbbfbbbbbbbbbbfbbbhga
-aihbbbfbbbbbbbbbbfbbbhga
-aihbbbbfbbbbbbbbfbbbbhga
-aihbbbbbfbbbbbbfbbbbbhga
-aihbbbbbfbbbbbbfbbbbbhga
-aihbbbbbbfbbbbfbbbbbbhga
-aihbbbbbbbfbbfbbbbbbbhga
-aihbbbbbbbfbbfbbbbbbbhga
-aihbbbbbbbeeecbbbbbbbhga
-aihbbbbbbeddddcbbbbbbhga
-aihbbbbbeddddddcbbbbbhga
-aihbbbbbeddddddcbbbbbhga
-aihbbbbeddddddddcbbbbhga
-aihbbbbcddddddddcbbbbhga
-aihbbbbbeddddddcbbbbbhga
-aihbbbbbcddddddcbbbbbhga
-aihbbbbbbccddccbbbbbbhga
-aihbbbbbbbbccbbbbbbbbhga
-aihhhhhhhhhhhhhhhhhhhhga
-agggggggggggggggggggggga
+alllllllllljjlllllllllka
+alkkkkkkkkkkkkkkkkkkkkia
+alkcccaaaaaaaaaaaaccckia
+alkcbaffffffffffffabckia
+alkcbafeeeeeeeeeedabckia
+alkcbafehheeeehhedabckia
+alkcbafeehehheheedabckia
+alkcbafeeehggheeedabckia
+alkcbafeehgeegheedabckia
+alkcbafeeehggheeedabckia
+ajkcbafeeeehheeeedabckja
+ajkcbafeehehheheedabckja
+alkcbafeheehheehedabckia
+alkcbafeeeeeeeeeedabckia
+alkcbafeeeehheeeedabckia
+alkcbafeeehggheeedabckia
+alkcbafeeeeeeeeeedabckia
+alkcbafdddddddddddabckia
+alkcbbaaaaaaaaaaaabbckia
+alkcccccccccccccccccckia
+alkkkkkkkkkkkkkkkkkkkkia
+akiiiiiiiiiijjiiiiiiiiia
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

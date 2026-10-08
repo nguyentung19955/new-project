@@ -1,43 +1,43 @@
-# Cung Trăng Gọi Gió — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Gió trăng quật mọi quái dưới đất: x3 sát thương +2
-name: Cung Trăng Gọi Gió
+# Chú Cuội · R «Cung Trăng Gọi Gió» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: trăng khuyết + gió
+name: Chú Cuội · R «Cung Trăng Gọi Gió»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = trang-xam
-  d = dat
-  e = dong-toi
-  f = dong
-  g = dong-sang
-  h = la
-  i = la-ma
-  j = la-sang
+  b = trang
+  c = sang
+  d = dong
+  e = dong-sang
+  f = vang-nghe
+  g = vang-sang
+  h = son-sang
+  i = la-toi
+  j = la-ma
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-agggggggggggggggggggggea
-agffffffffffffffffffffea
-agfbbbbbbbjhbcbbbbbbbfea
-agfbbbbbbjhbbcbbbbbbbfea
-agfbbbbbjhbbbcbbbbbbbfea
-agfbbbbjhbbbbcbbbbbbbfea
-agfbbbjihbbbbcbbbbbbbfea
-agfbbbjhbbbbbcbbbbbbbfea
-agfbbbjhbbbbbcbbbbbbbfea
-agfbbjhbbbbbbcbbbjbbbfea
-agfbbjhbbbbbbcbbbjihbfea
-agfbdddddddddddddhddbfea
-agfbbjhbbbbbbcbbbbbbbfea
-agfbbhihbbbbbcbbbbbbbfea
-agfbbbjhbbbbbcbbbbbbbfea
-agfbbbhhbbbbbcbbbbbbbfea
-agfbbbbjhbbbbcbbbbbbbfea
-agfbbbbhihbbbcbbbbbbbfea
-agfbbbbbhihbbcbbbbbbbfea
-agfbbbbbbhhhbcbbbbbbbfea
-agffffffffffffffffffffea
-aeeeeeeeeeeeeeeeeeeeeeea
+ahggggggggghhgggggggggha
+agffffffffffffffffffffda
+agfjjjjjjjjjjjjjjjjjjfda
+agfjiiiiaaaaaiiibiiijfda
+agfjiiaagggggaiciiiijfda
+agfjcaggffffeaciiiiijfda
+agfjagfffeaaaiiiiiiijfda
+agfjagffeaiiiiiiiiiijfda
+agfagffeaiiiiiiiiiiijfda
+agfagffeaiiiiiiiiiiicfda
+ahfagffeacccccccccccjfha
+ahfagffeaiiiiiiiiiiijfha
+agfagfffeaiiiiiiiaiijfda
+agfjagfffeaiiibaagaijfda
+agfjaeffffeaaaagffeajfda
+agfccaeefffffffffeeajfda
+agfjiiaaeeeeeeeeeaaijfda
+agfjiiiiaaaaaaaaaiiijfda
+agfjiiiiiiiiiiiiiiiijfda
+agfjjjjjjjjjjjjjjjjjjfda
+agffffffffffffffffffffda
+ahddddddddddhhddddddddha
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

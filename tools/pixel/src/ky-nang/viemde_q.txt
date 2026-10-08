@@ -1,41 +1,50 @@
-# Ngọn Lửa Đầu Tiên — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: first flame on a torch
-name: Ngọn Lửa Đầu Tiên
+# Viêm Đế Thần Nông · Q «Ngọn Lửa Đầu Tiên» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đuốc + lấp lánh
+name: Viêm Đế Thần Nông · Q «Ngọn Lửa Đầu Tiên»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = son
-  g = lua
-  h = lua-sang
+  b = toi
+  c = trang
+  d = sang
+  e = dat-toi
+  f = dat
+  g = dat-sang
+  h = dong-toi
+  i = dong
+  j = dong-sang
+  k = vang-nghe
+  l = vang-sang
+  m = son-toi
+  n = son
+  o = son-sang
+  p = lua
+  q = lua-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbhggfbbbbbbbdca
-aedbbbbbbbhgggfbbbbbbdca
-aedbbbbbbhgggggfbbbbbdca
-aedbbbbbbhggggggfbbbbdca
-aedbbbbbhgggggggfbbbbdca
-aedbbbbhgggggggggfbbbdca
-aedbbhhgggggggggggfbbdca
-aedbhggggggggggggggfbdca
-aedhgggggggggggggggfbdca
-aedbfgggggggggggggfbbdca
-aedbbhgggggggggggfbbbdca
-aedbbfgggggggggggfbbbdca
-aedbbbfgggggggggfbbbbdca
-aedbbbbfffffffffbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+ajjjjjjjjjjkkjjjjjjjjjia
+ajiiiiiiiiiiiiiiiiiiiiha
+ajioooooooaooooooooooiha
+ajiomcmmmaqammammmmmoiha
+ajiocdcmaqpqaaqammmmoiha
+ajiomcmaqpdpqaqammmmoiha
+ajiommmapddddppammcmoiha
+ajiommaqpdlldppnacdcoiha
+ajiommapdlllldpnamcmoiha
+ajiommanpdlldppnammmoiha
+akiommmanppdppnammmmoika
+akiommmmabkkbaammmmmoika
+ajiommmmaklkkammmmmmoiha
+ajiommmmmagfammmmmmmoiha
+ajiommmmmagfammmmmmmoiha
+ajiommmmmagfammmmmmmoiha
+ajiommmmmagfammmcmmmoiha
+ajiommmmmagfammcdcmmoiha
+ajiommmmmaefammmcmmmoiha
+ajioooooooaaoooooooooiha
+ajiiiiiiiiiiiiiiiiiiiiha
+aihhhhhhhhhhkkhhhhhhhhha
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

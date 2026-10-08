@@ -1,44 +1,46 @@
-# Mưa Đầm Sen — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: rain over a lotus pond
-name: Mưa Đầm Sen
+# Cô Hái Sen · R «Mưa Đầm Sen» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: lá sen trên đầm + mưa
+name: Cô Hái Sen · R «Mưa Đầm Sen»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-toi
-  d = dat
-  e = dat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = cham
-  j = nuoc
-  k = nuoc-sang
+  b = da-sang
+  c = dong
+  d = vang-nghe
+  e = vang-sang
+  f = son-sang
+  g = hong
+  h = la-toi
+  i = la
+  j = la-ma
+  k = cham-toi
+  l = cham-sang
+  m = nuoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbkbbbbbbbbbgfa
-ahgbbbbbbbbjbbbbbbbbbgfa
-ahgbbbbbbbbjbbbbbbbbbgfa
-ahgbbbbbbbkjibbbbbbbbgfa
-ahgbbbbbbbkjibbbbbbbbgfa
-ahgbbbbbbbkjibbbbbbbbgfa
-ahgbbkbbbkjjjibbbkbbbgfa
-ahgbbkkibkjjjibkkibbbgfa
-ahgbbkjjkjjjjjkjjibbbgfa
-ahgbbijjjjjjjjjjjibbbgfa
-ahgbbbijjjijijjjibbbbgfa
-ahgbbbbiiibjbiiibbbbbgfa
-ahgbbbeeeeeieeeeecbbbgfa
-ahgbbeddddddddddddcbbgfa
-ahgbeddddddddddddddcbgfa
-ahgbccddddddddddddccbgfa
-ahgbbbccccccccccccbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+afeeeeeeeeeffeeeeeeeeefa
+aeddddddddddddddddddddca
+aedlllllllllllllllllldca
+aedlmkkkkkkkkkkkkkkkldca
+aedlmkkkkkmkkkkkkkkkldca
+aedmkkkkkkakakkkmkkkldca
+aedlkkkkkababakkmkkkldca
+aedlkkkkabgbgbamkkkkldca
+aedlkkaaaagggaaaaakkldca
+aedlkajjjjaaajjjjjakldca
+afdlajiiiiaaaiiiiijaldfa
+afdajiiiiiiaiiiiiiihadfa
+aedajiiiiiiaiiiiiiihadca
+aedaiiiiiiiiaiiiiiihadca
+aedlaiiiiiiiiaiiiihaldca
+aedlkahhhhhhhhhhhhakldca
+aedlkkaaaaaaaaaaaakkldca
+aedlkkkkkkkkkkkkkkkkldca
+aedlkkkkkkkkkkkkkkkkldca
+aedlllllllllllllllllldca
+aeddddddddddddddddddddca
+afccccccccccffccccccccfa
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

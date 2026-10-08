@@ -1,44 +1,47 @@
-# Hạt Sen — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: lotus seed pod
-name: Hạt Sen
+# Cô Hái Sen · W «Hạt Sen» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: gương sen hạt sen
+name: Cô Hái Sen · W «Hạt Sen»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-toi
-  d = dat
-  e = dat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = cham
-  j = nuoc
-  k = nuoc-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = sang
+  f = dat-toi
+  g = dat
+  h = dat-sang
+  i = vang-sang
+  j = la-toi
+  k = la
+  l = la-ma
+  m = cham-toi
+  n = cham-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbkkibkibbbgfa
-ahgbbbbbbbbbkjibkjibbgfa
-ahgbbbbbbbbkijikkjibbgfa
-ahgbbbbbbbkkjijjiibbbgfa
-ahgbbbbbbbkiiikkibbbbgfa
-ahgbbbbbbkkjiijiibbbbgfa
-ahgbbbbbkjiikjiibbbbbgfa
-ahgbbbbkjiikijibbbbbbgfa
-ahgbbbbijiekjiibbbbbbgfa
-ahgbbbbbiidiiibbbbbbbgfa
-ahgbbbbbbbdbbbbbbbbbbgfa
-ahgbbbbbbbdbbbbbbbbbbgfa
-ahgbbbbbbbdbbbbbbbbbbgfa
-ahgbbbbbbbcbbbbbbbbbbgfa
-ahgbbbbbbebbbbbbbbbbbgfa
-ahgbbbbbbdbbbbbbbbbbbgfa
-ahgbbbbbbdbbbbbbbbbbbgfa
-ahgbbbbbbcbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adcnnnnnnnnnnnnnnnnnncba
+adcnmmmmaaaaaaaammmmncba
+adcnmmaallllllllaammncba
+adcnmallkkkkkkkkllamncba
+adcnalkaikkaikkaikjancba
+adcnalkkkkkkkkkkkkkjacba
+adcalkkaikkaikkaikkjacba
+adcalkkkkkkkkkkkkkkjacba
+aecnakkaikkaikkaikjancea
+aecnajkkkkkkkkkkkjjancea
+adcnmaajjjkkkkjjjaamncba
+adcnmmmaaahggaaaammmncba
+adcnmmmmmmahgammmmmmncba
+adcnmmmmmmahgammmmmmncba
+adcnmmmmmmafgammmmmmncba
+adcnmmmmmmmaammmmmmmncba
+adcnmmmmmmmmmmmmmmmmncba
+adcnnnnnnnnnnnnnnnnnncba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

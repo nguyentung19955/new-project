@@ -1,42 +1,42 @@
-# Cột Nắng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: sun pillar beam
-name: Cột Nắng
+# Nữ Thần Mặt Trời · Q «Cột Nắng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: cột nắng chiếu xuống
+name: Nữ Thần Mặt Trời · Q «Cột Nắng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat
-  d = dong-toi
-  e = dong
-  f = dong-sang
-  g = son
-  h = lua
-  i = lua-sang
+  b = sang
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = vang-nghe
+  g = vang-sang
+  h = son-toi
+  i = son-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-afffffffffffffffffffffda
-afeeeeeeeeeeeeeeeeeeeeda
-afebbbbbbbbbbbbbbbbbbeda
-afebbbbiiiiiiiiiibbbbeda
-afebbbbiiiiiiiiiibbbbeda
-afebbbbiiiiiiiiiibbbbeda
-afebbbbbbihhhhhgbbbbbeda
-afebbbbbbihhhhhgbbbbbeda
-afebbbbbbihhhhhgbbbbbeda
-afebbbbbbihhhhhgbbbbbeda
-afebbbbbbcccccccbbbbbeda
-afebbbbbbcccccccbbbbbeda
-afebbbbbbihhhhhgbbbbbeda
-afebbbbbbihhhhhgbbbbbeda
-afebbbbbbihhhhhgbbbbbeda
-afebbbbbbihhhhhgbbbbbeda
-afebbbbbbihhhhhgbbbbbeda
-afebbbbiiiiiiiiiibbbbeda
-afebbbbiiiiiiiiiibbbbeda
-afebbbbbbbbbbbbbbbbbbeda
-afeeeeeeeeeeeeeeeeeeeeda
-adddddddddddddddddddddda
+aeeeeeeeeeeffeeeeeeeeeda
+aeddddddddddddddddddddca
+aediiiiiiiiiiiiiiiiiidca
+aedihhhhhhaaaahhhhhhidca
+aedihhhhhaggggahhhhhidca
+aedihhhhaggggggahhhhidca
+aedihhhaggbbgggeahhhidca
+aedihhhaggbggggeahhhidca
+aedihhahaeggggeahahhidca
+aedihabahaeeeeahabahidca
+afdihhabahabbahabahhidfa
+afdihhabahabbahabahhidfa
+aedihhhabaabbaabahhhidca
+aedihhhabaabbaabahhhidca
+aedihhhhababbabahhhhidca
+aedihhaaababbabaaahhidca
+aedihaffffffffffffahidca
+aediafggggggggggggfaidca
+aedihaaaaaaaaaaaaaahidca
+aediiiiiiiiiiiiiiiiiidca
+aeddddddddddddddddddddca
+adccccccccccffccccccccca
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

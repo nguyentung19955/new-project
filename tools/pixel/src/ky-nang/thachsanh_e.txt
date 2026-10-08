@@ -1,41 +1,44 @@
-# Đàn Thần — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a magic lute (dan) with music notes
-name: Đàn Thần
+# Thạch Sanh · E «Đàn Thần» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đàn nguyệt + nốt nhạc
+name: Thạch Sanh · E «Đàn Thần»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = la
-  g = la-ma
-  h = la-sang
+  b = dat-toi
+  c = dat
+  d = dat-sang
+  e = vang-nghe
+  f = vang-sang
+  g = la-toi
+  h = la-ma
+  i = la-sang
+  j = ngoc
+  k = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbgbdca
-aedbbbbbbbbbbbbbbhfbbdca
-aedbbbbbbbbbbbbbhgfbbdca
-aedbbbbbbbbbbbhhgfbbbdca
-aedbbbbbbbbbhhgggfbbbdca
-aedbbbbbbbhhggggfbbbbdca
-aedbbbbbbhggggggfbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbhggggggfbbbbbbdca
-aedbbbbhggggggfbbbbbbdca
-aedbbbhggggggfbbbbbbbdca
-aedbbbhggggggfbbbbbbbdca
-aedbbhgggggffbbbbbbbbdca
-aedbbhgggffbbbbbbbbbbdca
-aedbhggffbbbbbbbbbbbbdca
-aedbfffbbbbbbbbbbbbbbdca
-aedgbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+akkkkkkkkkkiikkkkkkkkkja
+akjjjjjjjjjjjjjjjjjjjjga
+akjhhhhhhhhhhhhhhaahhjga
+akjhggggggggggggafaahjga
+akjhggaagggggggaaafahjga
+akjhgafaggggggafcaaghjga
+akjhgaaggggggadcbaaghjga
+akjhgaagggggadebafaghjga
+akjhafaaaagadebaaagghjga
+akjhaaadddadebaggggghjga
+aijhgadccccdebaggggghjia
+aijhadcccecccbaggggghjia
+akjhadcceccccbaggggghjga
+akjadceccaacccbagggghjga
+akjadccecaacccbagggghjga
+akjadcccecccccbagggghjga
+akjhacccccecccbagggghjga
+akjhabcccccccbbagggghjga
+akjhgabbbbbbbbaggggghjga
+akjhhhaaaaaaaahhhhhhhjga
+akjjjjjjjjjjjjjjjjjjjjga
+ajggggggggggiiggggggggga
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

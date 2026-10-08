@@ -1,41 +1,45 @@
-# Mũi Sương Giá — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a sharp ice shard
-name: Mũi Sương Giá
+# Thần Sương Núi · W «Mũi Sương Giá» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: mũi băng nhọn + vệt tốc độ
+name: Thần Sương Núi · W «Mũi Sương Giá»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = cham
-  g = nuoc
-  h = nuoc-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = trang
+  f = sang
+  g = lua
+  h = cham-toi
+  i = cham-sang
+  j = nuoc
+  k = nuoc-sang
+  l = troi
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbhfbbbbbbhfbbbbdca
-aedbbbbfgfbbbbhgfbbbbdca
-aedbbbbbhfbbbbhfbbbbbdca
-aedbbbbbfgfbbhgfbbbbbdca
-aedbbbbbbhfbbhfbbbbbbdca
-aedbbbbbbfghhgfbbbbbbdca
-aedbbbbbbbhggfbbbbbbbdca
-aedhhhhhhhgggghhhhhfbdca
-aedfffffffggggffffffbdca
-aedbbbbbbbhggfbbbbbbbdca
-aedbbbbbbhgffgfbbbbbbdca
-aedbbbbbhgfbbfgfbbbbbdca
-aedbbbbbhfbbbbhfbbbbbdca
-aedbbbbhgfbbbbfgfbbbbdca
-aedbbbbffbbbbbbffbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+addddddddddffdddddddddca
+adccccccccccccccccccccba
+adciiiiiiiiiiiiiiiaiicba
+adcihhhhhhhhhhhhaalaicba
+adcihhhhhhhhhhaalllaicba
+adcihhhhhhhhhalflkahicba
+adcieeeehhhhalflkkahicba
+adcihhhhhhhalflkkjahicba
+adcihhhhhhalflkkkjahicba
+adcihhhhhalflkkkjahhicba
+afcfffffalflkkkjahhhicfa
+afcihhhalflkkkjahhhhicfa
+adcihhalflkkkjahhhhhicba
+adcihhallkkkgahhhhhhicba
+adcieallkkjaahhhhhhhicba
+adcihalkkjahhhhhhhhhicba
+adcialkkjahhhhhhhhhhicba
+adciakkjahhhhhhhhhhhicba
+adcajjaahhhhhhhhhhhhicba
+adciaaiiiiiiiiiiiiiiicba
+adccccccccccccccccccccba
+acbbbbbbbbbbffbbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

@@ -1,41 +1,44 @@
-# Bước Lá Rừng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a footstep made of green leaves with a dash trail
-name: Bước Lá Rừng
+# Thợ Săn Rừng · Q «Bước Lá Rừng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: dấu chân + vệt tốc độ + lá rơi
+name: Thợ Săn Rừng · Q «Bước Lá Rừng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = la
-  g = la-ma
-  h = la-sang
+  b = trang
+  c = sang
+  d = dong-toi
+  e = dong
+  f = dong-sang
+  g = vang-nghe
+  h = la-toi
+  i = la
+  j = la-ma
+  k = la-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbgbdca
-aedbbbbbbbbbbbbbbhfbbdca
-aedbbbbbbbbbbbbbhgfbbdca
-aedbbbbbbbbbbbhhgfbbbdca
-aedbbbbbbbbbhhgggfbbbdca
-aedbbbbbbbhhggggfbbbbdca
-aedbbbbbbhggggggfbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbhggggggfbbbbbbdca
-aedbbbbhggggggfbbbbbbdca
-aedbbbhggggggfbbbbbbbdca
-aedbbbhggggggfbbbbbbbdca
-aedbbhgggggffbbbbbbbbdca
-aedbbhgggffbbbbbbbbbbdca
-aedbhggffbbbbbbbbbbbbdca
-aedbfffbbbbbbbbbbbbbbdca
-aedgbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+affffffffffggfffffffffea
+afeeeeeeeeeeeeeeeeeeeeda
+afejjjjjjjjjjjjjjjjjjeda
+afejhhhhhhhhaahaahhhjeda
+afejhaahhaaakkakkahhjeda
+afejakahakkakjajjahaaeda
+afejaaaaakjaaiaaiaakaeda
+afejhakkaaiaakkaahaajeda
+afejhakjahaakjjiahhhjeda
+afejhhaiahakjjjjiahhjeda
+ageccccachakjjjjjiahjega
+agejhhhhhakjjjjjjiahjega
+afejhhhhhajjjjjjjiahjeda
+afejhhhhhajjjjjjjiahjeda
+afejbbbhhhajjjjjjiahjeda
+afejhhhhhhajjjjjiahhjeda
+afejhhaahhhajjjjiahhjeda
+afejhakahhhhaiiiahhhjeda
+afejhaahhhhhhaaahhhhjeda
+afejjjjjjjjjjjjjjjjjjeda
+afeeeeeeeeeeeeeeeeeeeeda
+aeddddddddddggddddddddda
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

@@ -1,41 +1,44 @@
-# Sóng Sông Hồng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a red river wave
-name: Sóng Sông Hồng
+# Chử Đồng Tử · E «Sóng Sông Hồng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: sóng cuộn
+name: Chử Đồng Tử · E «Sóng Sông Hồng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = cham
-  g = nuoc
+  b = son-toi
+  c = son
+  d = la-toi
+  e = la-sang
+  f = cham-toi
+  g = cham-sang
   h = nuoc-sang
+  i = troi
+  j = ngoc
+  k = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbgbbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbhggggggggggfbbbdca
-aedbbbfggggggggggfbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbfggggggggfbbbbdca
-aedbbbbbfggggggfbbbbbdca
-aedbbbbbbffggffbbbbbbdca
-aedbbbbbbbbffbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+akkkkkkkkkkeekkkkkkkkkja
+akjjjjjjjjjjjjjjjjjjjjda
+akjgggggggggaaaagggggjda
+akjgffffffaaiiiiafffgjda
+akjgfffffaiihhhhiaffgjda
+akjgffffaihcccchhiafgjda
+akjgfffaihccbbbhchiagjda
+akjgffaihccbaabicchagjda
+akjgffahccbaffaihchagjda
+akjgfaiccbafffaichafgjda
+aejgfahccaffffahhaffgjea
+aejgaihcbafffffaafffgjea
+akjgahccbaffffaiiaffgjda
+akjaihcccbaaaaihhiafgjda
+akjahcccccbiihhcchiagjda
+akjahccccccccccccchiajda
+akjaccccccccccccccccajda
+akjabbbbbbbbbbbbbbbbajda
+akjgaaaaaaaaaaaaaaaagjda
+akjggggggggggggggggggjda
+akjjjjjjjjjjjjjjjjjjjjda
+ajddddddddddeeddddddddda
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

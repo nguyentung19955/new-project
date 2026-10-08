@@ -1,40 +1,46 @@
-# Núi Cao Bấy Nhiêu — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: mountain peaks rising from water
-name: Núi Cao Bấy Nhiêu
+# Sơn Tinh · R «Núi Cao Bấy Nhiêu» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: núi cao vút + sóng nước dưới đáy + mũi tên tăng
+name: Sơn Tinh · R «Núi Cao Bấy Nhiêu»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
+  b = dat-toi
+  c = dat-sang
   d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  e = vang-nghe
+  f = vang-sang
+  g = son-sang
+  h = reu-toi
+  i = reu
+  j = reu-sang
+  k = cham
+  l = nuoc
+  m = nuoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbgbbbbbbdca
-aedbbbbbbbbbbbgebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbgebbbgffebbbbdca
-aedbbbbbgebbgfffebbbbdca
-aedbbbbgffebgfffebbbbdca
-aedbbbbgfffgffffebbbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbgffffffffffffebbdca
-aedbbgffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbgffffffffffffffebdca
-aedgeeeeeeeeeeeeeeeebdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+agfffffffffggfffffffffga
+afeeeeeeeeeeeeeeeeeeeeda
+afeccccccccaccccccccceda
+afecbbbbbbajabbbbbbbceda
+afecbbbbbbajiabbbbbbceda
+afecbbbbbajiiabbbbbbceda
+afecbbbbbajiihabbbbbceda
+afecbbbbajiaihabbbbbceda
+afecbbbbajiiahabbbbbceda
+afecbbbajiiiaihabbbbceda
+agecbbbajiiiiahabbbbcega
+agecbbajiiiiiaihabbbcega
+afecbbajiiiiiiahabbbceda
+afecbajiiiiiiiiahabbceda
+afecbajiiiiiiiiiafabceda
+afecajiaiiiiiaiafefaceda
+afeajiamaiiiamaaaeaaaeda
+afeaaalmlaaalmlaaeamleda
+afelllllllllllllaaalleda
+afekkkkkkkkkkkkkkkkkkeda
+afeeeeeeeeeeeeeeeeeeeeda
+agddddddddddggddddddddga
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

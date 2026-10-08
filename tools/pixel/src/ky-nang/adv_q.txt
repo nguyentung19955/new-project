@@ -1,41 +1,43 @@
-# Tên Đồng Nảy — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a bronze arrow bouncing between two targets with motion arcs
-name: Tên Đồng Nảy
+# An Dương Vương · Q «Tên Đồng Nảy» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: mũi tên + đường nảy
+name: An Dương Vương · Q «Tên Đồng Nảy»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = sat
-  d = sat-sang
-  e = bac
-  f = dong-toi
-  g = dong
-  h = dong-sang
+  b = sat-toi
+  c = sat-sang
+  d = trang
+  e = sang
+  f = dat
+  g = dong-toi
+  h = dong
+  i = dong-sang
+  j = vang-nghe
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbeeeeeecbgfa
-ahgbbbbbbbbbbbcddddcbgfa
-ahgbbbbbbbbbbbbcdddcbgfa
-ahgbbbbbbbbbbbbbeddcbgfa
-ahgbbbbbbbbbbbbbccdcbgfa
-ahgbbbbbbbbbbbbdbbccbgfa
-ahgbbbbbbbbbbbdbbbbcbgfa
-ahgbbbbbbbbbbdbbbbbbbgfa
-ahgbbbbbbbbbdbbbbbbbbgfa
-ahgbbbbbbbbdbbbbbbbbbgfa
-ahgbbbbbbbdbbbbbbbbbbgfa
-ahgbbbbbbdbbbbbbbbbbbgfa
-ahgbbbbbdbbbbbbbbbbbbgfa
-ahgbbbbdbbbbbbbbbbbbbgfa
-ahgbbbdbbbbbbbbbbbbbbgfa
-ahgbbdbbbbbbbbbbbbbbbgfa
-ahgbdbbbbbbbbbbbbbbbbgfa
-ahgdbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+aiiiiiiiiiijjiiiiiiiiiha
+aihhhhhhhhhhhhhhhhhhhhga
+aihcccccccccccccaaaachga
+aihcbbbbbbbbbbaaiiiiahga
+aihcbbbbbbbbbaiiiihhahga
+aihcbbbbbbbbebaihhhgahga
+aihcbbbbbebbbbafhhhgahga
+aihcbbbbbbbbbafaahgachga
+aihcbbbbbbbbafabbagachga
+aihcbbbbbbbafabbbbabchga
+ajhcbbbbbbafabbbbbbbchja
+ajhcbbbebafabbbbbebbchja
+aihcbbabafabbbbbbbbbchga
+aihcbaeafabbbbbbbbbbchga
+aihcbaefabbbbbbbbbbbchga
+aihcaefddabbbbbbbbbbchga
+aihcafaaabbbbbbbbbbechga
+aihafabbbbbbbbbbbbbbchga
+aihcabbbbbbbbbbbbbbbchga
+aihcccccccccccccccccchga
+aihhhhhhhhhhhhhhhhhhhhga
+ahggggggggggjjggggggggga
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

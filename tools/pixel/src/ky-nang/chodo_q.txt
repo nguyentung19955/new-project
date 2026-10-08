@@ -1,41 +1,45 @@
-# Mái Chèo Đập — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: oar hitting
-name: Mái Chèo Đập
+# Chàng Chèo Đò · Q «Mái Chèo Đập» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: mái chèo + nổ va chạm
+name: Chàng Chèo Đò · Q «Mái Chèo Đập»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = cham
-  g = nuoc
-  h = nuoc-sang
+  b = sang
+  c = dat-toi
+  d = dat
+  e = dat-sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = vang-nghe
+  j = vang-sang
+  k = cham-toi
+  l = cham-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbgbbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbhggggggggggfbbbdca
-aedbbbfggggggggggfbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbfggggggggfbbbbdca
-aedbbbbbfggggggfbbbbbdca
-aedbbbbbbffggffbbbbbbdca
-aedbbbbbbbbffbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+ahhhhhhhhhhiihhhhhhhhhga
+ahggggggggggggggggggggfa
+ahglllllllllllllllaalgfa
+ahglkkkkkkkkkkkkkaeeagfa
+ahglkkkkkkkkkkkkaedcagfa
+ahglkkkkkkkkkkkaedcalgfa
+ahglkkkkkkkkkkaedcaklgfa
+ahglkkkkkkkkkaedcakklgfa
+ahglkkkkkkkkaedcakkklgfa
+ahglkkkkkaaaedcakkkklgfa
+aiglkkkkaeeedcakkkkklgia
+aiglkkkaedddddcakkkklgia
+ahglkkabddddddcakkkklgfa
+ahglkbeidbddddcakkkklgfa
+ahglaeijiddddcakkkkklgfa
+ahglbijbjibdcakkkkkklgfa
+ahgladijiddcakkkkkkklgfa
+ahglabcicbaakkkkkkkklgfa
+ahglkaabaakkkkkkkkkklgfa
+ahgllllllllllllllllllgfa
+ahggggggggggggggggggggfa
+agffffffffffiifffffffffa
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

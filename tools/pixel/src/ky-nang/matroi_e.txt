@@ -1,44 +1,44 @@
-# Quạ Lửa Ba Chân — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: three-legged fire crow
-name: Quạ Lửa Ba Chân
+# Nữ Thần Mặt Trời · E «Quạ Lửa Ba Chân» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: quạ lửa ba chân trong vầng mặt trời
+name: Nữ Thần Mặt Trời · E «Quạ Lửa Ba Chân»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-toi
-  d = dat
-  e = dat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = son
-  j = lua
-  k = lua-sang
+  b = vang-sang
+  c = son-toi
+  d = son
+  e = son-sang
+  f = lua
+  g = lua-sang
+  h = la-toi
+  i = la-sang
+  j = ngoc
+  k = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbebbbbbbbbbbgfa
-ahgbbbbbbbdbbbbkkibbbgfa
-ahgbbbbbbbecbbkjjjibbgfa
-ahgbbbbbbeddcbkjjaibbgfa
-ahgbbbbbbeddcbkjjjibbgfa
-ahgkbbbbecccccjjiiibbgfa
-ahgkkibkjjjjjjjibbbbbgfa
-ahgkjjkjjjjjjjjjibbbbgfa
-ahgkiijjjjjjjjjjibbbbgfa
-ahgibbijjjjjjjjjibbbbgfa
-ahgbbbbijjjjjjjibbbbbgfa
-ahgbbbbbiiiicicbbbbbbgfa
-ahgbbbbbbbbcbbcbbbbbbgfa
-ahgbbbbbbbbcbbcbbbbbbgfa
-ahgbbbbbbbbcbbcbbbbbbgfa
-ahgbbbbbbbbbbbcbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+akkkkkkkkkkiikkkkkkkkkja
+akjjjjjjjjjjjjjjjjjjjjha
+akjeeeeeeeeeeeeeeeeeejha
+akjecccccaaaaaacccccejha
+akjecccaaggggggaacccejha
+akjeccaggffffffggaccejha
+akjecagffffffffffgacejha
+akjeagfaffffffaaffdaejha
+akjeagffaaffaaaaffdaejha
+akjagfffaaaaaaabbffdajha
+aijagffffaaaaaaffffdajia
+aijagfffaaaaaffffffdajia
+akjagffaffafafaffffdajha
+akjeaffffafafaffffdaejha
+akjeadfffffffffffddaejha
+akjecadfffffffffddacejha
+akjeccaddffffffddaccejha
+akjecccaaddddddaacccejha
+akjecccccaaaaaacccccejha
+akjeeeeeeeeeeeeeeeeeejha
+akjjjjjjjjjjjjjjjjjjjjha
+ajhhhhhhhhhhiihhhhhhhhha
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

@@ -1,41 +1,44 @@
-# Hóa Chàng Trai — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Hồi 25% máu cho mọi tướng quanh mình
-name: Hóa Chàng Trai
+# Sọ Dừa · E «Hóa Chàng Trai» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: vỏ dừa mở toả sáng + dấu hồi máu
+name: Sọ Dừa · E «Hóa Chàng Trai»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = la
-  g = la-ma
-  h = la-sang
+  b = trang
+  c = sang
+  d = dat-toi
+  e = dat
+  f = dat-sang
+  g = la-toi
+  h = la-ma
+  i = la-sang
+  j = ngoc
+  k = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbhhhfbbbbbbbdca
-aedbbbbhhhgggghhfbbbbdca
-aedbbbhggggggggggfbbbdca
-aedbbhfggfggfgfggffbbdca
-aedbbhgfgfggfgfgfgfbbdca
-aedbbhggfgfgfgfgfgfbbdca
-aedbhgggfgfgffgfgggfbdca
-aedbfggggffgfffggggfbdca
-aedbbffffgfffffffffbbdca
-aedbbbbbbfffffbbbbbbbdca
-aedbbbbbbbhffbbbbbbbbdca
-aedbbbbbbbfffbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+akkkkkkkkkkiikkkkkkkkkja
+akjjjjjjjjjjjjjjjjjjjjga
+akjhhhhhhhhhhhhhhhhhhjga
+akjhgggggggggggggggghjga
+akjhggaggggaggggaggghjga
+akjhgacaggacaggacagghjga
+akjhggacagacagacaggghjga
+akjhggaacaacaacaaagghjga
+akjhgaffffccccffffaghjga
+akjhafeccbccccbccedahjga
+aijafecbbccccccbbcedajia
+aijafeecbbbbbbbbceedajia
+akjafeeecccccccceeedajga
+akjaeeeeeeeeeeeeeeddajga
+akjhaeeeeeeeeeeeaaaahjga
+akjhgaddeeeeeeeaaiaahjga
+akjhggaadddddddaiiiahjga
+akjhggggaaaaaaaaaiaahjga
+akjhggggggggggggaaaghjga
+akjhhhhhhhhhhhhhhhhhhjga
+akjjjjjjjjjjjjjjjjjjjjga
+ajggggggggggiiggggggggga
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

@@ -1,41 +1,48 @@
-# Lửa Thiêu — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: burning flames on the ground
-name: Lửa Thiêu
+# Thầy Mo Lửa · E «Lửa Thiêu» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: ngọn lửa + nền đất nứt
+name: Thầy Mo Lửa · E «Lửa Thiêu»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = son
-  g = lua
-  h = lua-sang
+  b = sang
+  c = dat-toi
+  d = dat
+  e = dat-sang
+  f = vang-sang
+  g = son-toi
+  h = son
+  i = son-sang
+  j = lua
+  k = lua-sang
+  l = la-toi
+  m = la-sang
+  n = ngoc
+  o = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbbhfbbbbbbbbdca
-aedbbbbbbbhggfbbbbbbbdca
-aedbbbbbbbhgggfbbbbbbdca
-aedbbbbbbhgggggfbbbbbdca
-aedbbbbbbhggggggfbbbbdca
-aedbbbbbhgggggggfbbbbdca
-aedbbbbhgggggggggfbbbdca
-aedbbhhgggggggggggfbbdca
-aedbhggggggggggggggfbdca
-aedhgggggggggggggggfbdca
-aedbfgggggggggggggfbbdca
-aedbbhgggggggggggfbbbdca
-aedbbfgggggggggggfbbbdca
-aedbbbfgggggggggfbbbbdca
-aedbbbbfffffffffbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+aoooooooooommooooooooona
+aonnnnnnnnnnnnnnnnnnnnla
+aoniiiiiiiiiiiiiiiiiinla
+aoniggggggaggggggggginla
+aonigggggakaggaggggginla
+aoniggggakjagakagggginla
+aoniggggakjjaakkaggginla
+aonigggakjjjkakjkagginla
+aoniggakjjjbbkjjjagginla
+aonigakjjjjbbjjjjhaginla
+amnigakjjjbbbbjjjhaginma
+amniakjjjjbffbjjjjhainma
+aoniakjjjbffffbjjjhainla
+aoniakjjbffffffbjjhainla
+aoniakjjbffffffbjjhainla
+aonigaijbbffffbbjhaginla
+aonigahiijbbbbjiihaginla
+aonaaaaaaaaaaaaaaaaaanla
+aonddeddaedddedadedddnla
+aonccccccaacccccaccccnla
+aonnnnnnnnnnnnnnnnnnnnla
+anllllllllllmmllllllllla
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

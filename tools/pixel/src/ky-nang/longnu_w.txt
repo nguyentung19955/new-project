@@ -1,41 +1,43 @@
-# Nước Động Đình — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: lake water drop
-name: Nước Động Đình
+# Long Nữ Động Đình · W «Nước Động Đình» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: giọt nước + vòng hào quang
+name: Long Nữ Động Đình · W «Nước Động Đình»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = cham
-  g = nuoc
-  h = nuoc-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = sang
+  f = cham-toi
+  g = cham-sang
+  h = nuoc
+  i = nuoc-sang
+  j = troi
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbgbbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbhggggggggggfbbbdca
-aedbbbfggggggggggfbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbfggggggggfbbbbdca
-aedbbbbbfggggggfbbbbbdca
-aedbbbbbbffggffbbbbbbdca
-aedbbbbbbbbffbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adcggggggggggggggggggcba
+adcgfffffjjajjjfffffgcba
+adcgfffjjfajafhjjfffgcba
+adcgfffjhajijafffjffgcba
+adcgfjjffajiiaffhjffgcba
+adcgfjhfajiiihaffhjfgcba
+adcgjffajiiiiihafffjgcba
+adcgjhajeiiiiiihafhjgcba
+aecgjfajeiiiiiihaffjgcea
+aecgjajeiiiiiiiihahjgcea
+adcgjajeiiiiiiiihafjgcba
+adcgjajiiiiiiiiihahfgcba
+adcgfaiiiiiiiiiihajfgcba
+adcgfjaiiiiiiiihahffgcba
+adcgffjahhiiihhafjffgcba
+adcgfffjaahhhaajjfffgcba
+adcgfffffjaaajffffffgcba
+adcggggggggggggggggggcba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

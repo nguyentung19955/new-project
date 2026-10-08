@@ -1,40 +1,44 @@
-# Núi Tản Viên — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Tan Vien mountain
-name: Núi Tản Viên
+# Sơn Tinh · W «Núi Tản Viên» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: ba đỉnh núi Tản + mây
+name: Sơn Tinh · W «Núi Tản Viên»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = trang
+  f = sang
+  g = dat-toi
+  h = dat-sang
+  i = reu-toi
+  j = reu
+  k = reu-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbgbbbbbbdca
-aedbbbbbbbbbbbgebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbgebbbgffebbbbdca
-aedbbbbbgebbgfffebbbbdca
-aedbbbbgffebgfffebbbbdca
-aedbbbbgfffgffffebbbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbgffffffffffffebbdca
-aedbbgffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbgffffffffffffffebdca
-aedgeeeeeeeeeeeeeeeebdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+addddddddddffdddddddddca
+adccccccccccccccccccccba
+adchhhhhhaaaahhhhhhhhcba
+adchgggaaffffaaaaggghcba
+adchggaffffffffffagghcba
+adchgaffefffeffffeaghcba
+adchggaeeeeeeeeeaggghcba
+adchggaaaaaaaaaagagghcba
+adchgakaakjjjjiaakaghcba
+adchakjkkjjjjajikjkahcba
+afchakjjkjjjjjakjjjiacfa
+afcakjjjajjjjjajjjjiacfa
+adcakjjjjajjjjjajjjiacba
+adcakjjjjjjjjjjjajjiacba
+adcajjjjjjjjjjjjjjiiacba
+adcaiiiiiiiiiiiiiiiiacba
+adchaaaaaaaaaaaaaaaahcba
+adchgggggggggggggggghcba
+adchgggggggggggggggghcba
+adchhhhhhhhhhhhhhhhhhcba
+adccccccccccccccccccccba
+acbbbbbbbbbbffbbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

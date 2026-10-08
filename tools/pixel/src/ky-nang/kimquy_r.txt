@@ -1,44 +1,44 @@
-# Kim Quy Hộ Thành — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a golden turtle shell shield over a small citadel
-name: Kim Quy Hộ Thành
+# Thần Kim Quy · R «Kim Quy Hộ Thành» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: thành cổng + vòm che chắn
+name: Thần Kim Quy · R «Kim Quy Hộ Thành»
 size: 24x24
 colors:
   a = vien
-  b = sat
-  c = sat-sang
-  d = bac
-  e = dat-toi
-  f = dat
-  g = dat-sang
-  h = dong-toi
-  i = dong
-  j = dong-sang
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = dong
+  f = vang-nghe
+  g = vang-sang
+  h = son-toi
+  i = son
+  j = son-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ajjjjjjjjjjjjjjjjjjjjjha
-ajiiiiiiiiiiiiiiiiiiiiha
-ajiiiiiiiiiiiiiiiiiiiiha
-ajiiiiiiiiiiiiiiiiiiiiha
-ajiiiiiiiiiiiiiiiiiiiiha
-ajiiiiggeiiiiiiggeiiiiha
-ajiiiigffdddddbffeiiiiha
-ajiiiieddccccccdbeiiiiha
-ajiiiiidcbccccbcbiiiiiha
-ajiiiidcccbccbcccbgeiiha
-ajiiiidccccbbccccbffeiha
-ajiiiidccccbbccccbffeiha
-ahiiiibcccbccbcccbeeiiha
-.ahhiiidcbccccbcbiiihha.
-..aahigbbccccccbbeihaa..
-....ahgffbbbbbbffeha....
-.....aeeeiiiiiieeea.....
-......ahiiiiiiiiha......
-.......ahiiiiiiha.......
-........ahiiiiha........
-.........ahiiha.........
-..........ahha..........
-...........aa...........
+ajgggggggggjjgggggggggja
+agffffffffffffffffffffea
+agfddddddddddddddddddfea
+agfdbbbbbbbaabbbbbbbdfea
+agfdbbbabggggggbabbbdfea
+agfdbbaggjififjggabbdfea
+agfdbbgajfiiiiifagbbdfea
+agfdbggfhhhhhhhhfagbdfea
+agfdgbfadccccccbafgbdfea
+agfdgbaadcaccacbaabgdfea
+ajfagfdadccccccbadagafja
+ajfagcdcdccccccbdcdgafja
+agfagccccccccccccccgafea
+agfadcccccaaaacccccbafea
+agfadccccaaaaaaccccbafea
+agfadccccaaaaaaccccbafea
+agfacccccaaaaaacccbbafea
+agfabbbbbaaaaaabbbbbafea
+agfdaaaaaaaaaaaaaaaadfea
+agfddddddddddddddddddfea
+agffffffffffffffffffffea
+ajeeeeeeeeeejjeeeeeeeeja
+.aaaaaaaaaaaaaaaaaaaaaa.
 end
 
 anim main fps=1 once

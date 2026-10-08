@@ -1,41 +1,44 @@
-# Lá Ngón — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: poison leaf
-name: Lá Ngón
+# Thầy Lang Lá Thuốc · W «Lá Ngón» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: chiếc lá + giọt độc
+name: Thầy Lang Lá Thuốc · W «Lá Ngón»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = la
+  b = sat
+  c = sat-sang
+  d = bac
+  e = sang
+  f = la-toi
   g = la-ma
   h = la-sang
+  i = tim-toi
+  j = tim
+  k = tim-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbgbdca
-aedbbbbbbbbbbbbbbhfbbdca
-aedbbbbbbbbbbbbbhgfbbdca
-aedbbbbbbbbbbbhhgfbbbdca
-aedbbbbbbbbbhhgggfbbbdca
-aedbbbbbbbhhggggfbbbbdca
-aedbbbbbbhggggggfbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbhggggggfbbbbbbdca
-aedbbbbhggggggfbbbbbbdca
-aedbbbhggggggfbbbbbbbdca
-aedbbbhggggggfbbbbbbbdca
-aedbbhgggggffbbbbbbbbdca
-aedbbhgggffbbbbbbbbbbdca
-aedbhggffbbbbbbbbbbbbdca
-aedbfffbbbbbbbbbbbbbbdca
-aedgbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adcggggggggggggggggggcba
+adcgfffffffffffffaafgcba
+adcgffffffffffaaakkagcba
+adcgffffffffaakkkjjagcba
+adcgffffffaakkjjjjiagcba
+adcgfffffakkjjjjajiagcba
+adcgffffakjjjajjjjiagcba
+adcgfffakjjjajjjjiafgcba
+aecgffakjjjajjjjiaffgcea
+aecgfakjjjajjjjiafffgcea
+adcgfajjjajjjjiaffffgcba
+adcgfajjajjjjiiaffffgcba
+adcgfajaijjjiiafffffgcba
+adcgaaiaiiiiaaffafffgcba
+adcaaaagaaaafffagaffgcba
+adcgafahaffafffahaffgcba
+adcgfffaffagafffafffgcba
+adcgggggggahaggggggggcba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

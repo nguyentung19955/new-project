@@ -1,44 +1,43 @@
-# Rễ Ngàn Năm — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: thick old tree roots
-name: Rễ Ngàn Năm
+# Mẫu Thượng Ngàn · W «Rễ Ngàn Năm» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: rễ cây + nền đất nứt
+name: Mẫu Thượng Ngàn · W «Rễ Ngàn Năm»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-toi
-  d = dat
-  e = dat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = la
+  b = sat
+  c = sat-sang
+  d = bac
+  e = sang
+  f = dat-toi
+  g = dat
+  h = dat-sang
+  i = la-toi
   j = la-ma
-  k = la-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbkkkkkkkibbbbbgfa
-ahgbbbkkjjjjjjjjkibbbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbkjjjjjjjjjjjjjjibgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbkjjjjjjjjjjjjjjibgfa
-ahgbbijjjjjjjjjjjjibbgfa
-ahgbbbiiiiiiiiiiiibbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbccccbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adcjjjjjjjjjjjjjjjjjjcba
+adcjiiiiiiiiiiiiiiiijcba
+adcjiiiiiiaaaaiiiiiijcba
+adcjiiiiiahggfaiiiiijcba
+adcjiiiiiahggfaiiiiijcba
+adcjiiiiahggggfaiiiijcba
+adcjiiiahggggggfaiiijcba
+adcjiiahggaggaggfaiijcba
+aecjiahgfaaggaafgfaijcea
+aecjahgfaahgfaiafgfajcea
+adcjagfaahgfahaiafgajcba
+adcjagaahgfaahgaiagajcba
+adcjagaagfaiiagaiagajcba
+adcjafaagaiiiagfaafajcba
+adcjiaiafaiiiiafaiaijcba
+adcaaaaaaaaaaaaaaaaaacba
+adcgghggahggghgaghgggcba
+adcffffffaafffffaffffcba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

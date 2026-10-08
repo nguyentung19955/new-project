@@ -1,41 +1,46 @@
-# Nhựa Độc — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: +0.3 sát thương · quái trúng không được hồi máu 3 giây
-name: Nhựa Độc
+# Thợ Săn Ống Thổi · W «Nhựa Độc» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bầu độc + giọt độc
+name: Thợ Săn Ống Thổi · W «Nhựa Độc»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = la
-  g = la-ma
-  h = la-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = sang
+  f = dat-sang
+  g = cat
+  h = vang-sang
+  i = son
+  j = son-sang
+  k = la-toi
+  l = la-ma
+  m = la-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbgbbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbhggaggaggfbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbfggggggggfbbbbdca
-aedbbbbbffggggffbbbbbdca
-aedbbbbbbbffffbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adcllllllllllllllllllcba
+adclkkkkkkaakkkkkkkklcba
+adclkkkkkajiakkkkkkklcba
+adclkkkkahggfakkkkkklcba
+adclkkkahggggfakkkkklcba
+adclkkkahggggfakkkkklcba
+adclkkkkahggfakkkkkklcba
+adclkkkaiiiiiiakkkkklcba
+aeclkkahggggggfakkkklcea
+aeclkahggggggggfakkklcea
+adclahggggggggggfakklcba
+adclahegggggggggfakklcba
+adclahegggggggggfakklcba
+adclahgaggggggggafaklcba
+adclkaalaggggggalakklcba
+adclkkamaffafffamakklcba
+adclkkkaaaalaaaaakkklcba
+adclllllllamallllllllcba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

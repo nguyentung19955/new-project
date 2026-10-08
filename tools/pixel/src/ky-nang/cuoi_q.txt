@@ -1,41 +1,45 @@
-# Đòn Gánh Quật — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Quật đòn gánh một nhát: x3 sát thương +1
-name: Đòn Gánh Quật
+# Chú Cuội · Q «Đòn Gánh Quật» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đòn gánh + vệt chém
+name: Chú Cuội · Q «Đòn Gánh Quật»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = la
-  g = la-ma
-  h = la-sang
+  b = sang
+  c = dat
+  d = dat-sang
+  e = cat
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = vang-nghe
+  j = vang-sang
+  k = la-toi
+  l = la-ma
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbhbbbbhbbbbhbbbbbbdca
-aedbhfbbbhfbbbhfbbbbbdca
-aedbhgfbbhgfbbhgfbbbbdca
-aedbhggfbhggfbhggfbbbdca
-aedbhgggfhgggfhgggfbbdca
-aedbhggfbhggfbhggfbbbdca
-aedbhgfbbhgfbbhgfbbbbdca
-aedbhfbbbhfbbbhfbbbbbdca
-aedbfbbbbfbbbbfbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+ahhhhhhhhhhiihhhhhhhhhga
+ahggggggggggggggggggggfa
+ahgllllllllllllllllllgfa
+ahglkkkkkkkkkkkkkkkblgfa
+ahglkkkkkkkkkkkkkkbklgfa
+ahglkkkkkkkkkkkkkbkklgfa
+ahglakkkkkkkkkkkbbkalgfa
+ahgajaakkkkkkkkbbaajagfa
+ahgaejjaaaakkabbajjeagfa
+ahgladeejjjaabbjeedalgfa
+aiglkaaddeeebbeddaaklgia
+aiglacaaaadbbdaaaacalgia
+ahglacakkkbbaakkkacalgfa
+ahgadcdakbbkkkkkadcdagfa
+ahgacacabbkkkkkkacacagfa
+ahglakabkkkkkkkkkakalgfa
+ahglkkbkkkkkkkkkkkkklgfa
+ahglkbkkkkkkkkkkkkkklgfa
+ahglkkkkkkkkkkkkkkkklgfa
+ahgllllllllllllllllllgfa
+ahggggggggggggggggggggfa
+agffffffffffiifffffffffa
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

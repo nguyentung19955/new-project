@@ -1,44 +1,45 @@
-# Bổ Rìu Đồng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a bronze axe chopping down with an impact spark
-name: Bổ Rìu Đồng
+# Lạc Tướng · Q «Bổ Rìu Đồng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: rìu đồng Đông Sơn + nổ va chạm
+name: Lạc Tướng · Q «Bổ Rìu Đồng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = sat
-  d = sat-sang
-  e = bac
-  f = dat-toi
-  g = dat
-  h = dat-sang
-  i = dong-toi
-  j = dong
-  k = dong-sang
+  b = sat-toi
+  c = sat-sang
+  d = sang
+  e = dat-toi
+  f = dat
+  g = dat-sang
+  h = dong-toi
+  i = dong
+  j = dong-sang
+  k = vang-nghe
+  l = vang-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-akkkkkkkkkkkkkkkkkkkkkia
-akjjjjjjjjjjjjjjjjjjjjia
-akjbbbbbbbbbbbecbbbbbjia
-akjbbbbbbbbbbeddecbbbjia
-akjbbbbbbbbbedddddebbjia
-akjbbbbbbbbeddddddebbjia
-akjbbbbbbbbbcdddddebbjia
-akjbbbbbbbbbheddddecbjia
-akjbbbbbbbbhgcdddddebjia
-akjbbbbbbbhgfbcddddebjia
-akjbbbbbbbhfbbbeddcebjia
-akjbbbbbbhgfbbbccccbbjia
-akjbbbbbhgfbbbbbbbbbbjia
-akjbbbbbhfbbbbbbbbbbbjia
-akjbbbbhgfbbbbbbbbbbbjia
-akjbbbhgfbbbbbbbbbbbbjia
-akjbbbhfbbbbbbbbbbbbbjia
-akjbbhgfbbbbbbbbbbbbbjia
-akjbhgfbbbbbbbbbbbbbbjia
-akjbffbbbbbbbbbbbbbbbjia
-akjjjjjjjjjjjjjjjjjjjjia
-aiiiiiiiiiiiiiiiiiiiiiia
+ajjjjjjjjjjkkjjjjjjjjjia
+ajiiiiiiiiiiiiiiiiiiiiha
+ajiccccccccccaaaacccciha
+ajicbaaabbbbaagfaabbciha
+ajicadjjabbajiiihabbciha
+ajiadjiiiaajiiiiihabciha
+ajiadjiiiiiiiiiiiihaciha
+ajiadjiiiiiiiiiiiihaciha
+ajiadiiiiiiiiiiiiihaciha
+ajicadiiihhhiiiiiihaciha
+akicadiihaaaaiiihaabcika
+akicbadhabbbagfaabbbcika
+ajicbbadbbbbagfabbbbciha
+ajicbdbkbdbbagfabbbbciha
+ajicbbklkbbbagfabbbbciha
+ajicdkldlkdbagfabbbbciha
+ajicbbklkbbbagfabbbbciha
+ajicbdbkbdbaaefabbbbciha
+ajicbbbdbbbbaaabbbbbciha
+ajicccccccccccccccccciha
+ajiiiiiiiiiiiiiiiiiiiiha
+aihhhhhhhhhhkkhhhhhhhhha
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

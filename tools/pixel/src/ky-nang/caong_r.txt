@@ -1,41 +1,44 @@
-# Triều Cường — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: giant tidal wave
-name: Triều Cường
+# Thần Cá Ông · R «Triều Cường» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: sóng cuộn + nổ va chạm
+name: Thần Cá Ông · R «Triều Cường»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = cham
-  g = nuoc
-  h = nuoc-sang
+  b = sang
+  c = dong
+  d = vang-nghe
+  e = vang-sang
+  f = son-sang
+  g = cham-toi
+  h = cham-sang
+  i = nuoc
+  j = nuoc-sang
+  k = troi
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
+afeeeeeeeeeffeeeeeeeeefa
 aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbgbbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbhggggggggggfbbbdca
-aedbbbfggggggggggfbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbfggggggggfbbbbdca
-aedbbbbbfggggggfbbbbbdca
-aedbbbbbbffggffbbbbbbdca
-aedbbbbbbbbffbbbbbbbbdca
+aedhhhhhhhhhaaaahhhhhdca
+aedhggggggaakkkkaggghdca
+aedhgggggakkjjjjkagghdca
+aedhggggakjjjjjjjkaghdca
+aedhgggakjjjiiijjjkahdca
+aedhggakjjjiaaikjjjahdca
+aedhggajjjiaggakjjjahdca
+aedhgakjjiagggakjjaghdca
+afdhgajjjaggggajjagghdfa
+afdhakjjiagggggaaggghdfa
+aedhajjbiaggggakkagghdca
+aedakbjdjbaaaakjjkaghdca
+aedajjdedjikkjjjjjkahdca
+aedabdebedbjjjjjjjjkadca
+aedajjdedjjjjjjjjjjjadca
+aedaibidibiiiiiiiiiiadca
+aedhaaabaaaaaaaaaaaahdca
+aedhhhhhhhhhhhhhhhhhhdca
 aeddddddddddddddddddddca
-acccccccccccccccccccccca
+afccccccccccffccccccccfa
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

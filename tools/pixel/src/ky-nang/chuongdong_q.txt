@@ -1,44 +1,44 @@
-# Chuông Trấn Yểm — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Rung chuông: quái quanh mình choáng 1 giây, câm lặng 3 giây
-name: Chuông Trấn Yểm
+# Thầy Chuông Đồng · Q «Chuông Trấn Yểm» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: chuông cầm tay + sao choáng
+name: Thầy Chuông Đồng · Q «Chuông Trấn Yểm»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = sat
-  d = sat-sang
-  e = bac
-  f = dat-toi
-  g = dat
-  h = dat-sang
-  i = dong-toi
-  j = dong
-  k = dong-sang
+  b = sat-toi
+  c = sat-sang
+  d = sang
+  e = dat
+  f = dat-sang
+  g = dong-toi
+  h = dong
+  i = dong-sang
+  j = vang-nghe
+  k = vang-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-akkkkkkkkkkkkkkkkkkkkkia
-akjjjjjjjjjjjjjjjjjjjjia
-akjbbbbbbbbecbbbbbbbbjia
-akjbbbbbbbeddcbbbbbbbjia
-akjbbbbbbbccccbbbbbbbjia
-akjbbbbbbeeeecbbbbbbbjia
-akjbbbbbedddddcbbbbbbjia
-akjbbbbbedddddcbbbbbbjia
-akjbbbbbedddddcbbbbbbjia
-akjbbbbbedddddcbbbbbbjia
-akjbbbbedddddddcbbbbbjia
-akjbbbbedddddddcbbbbbjia
-akjbbbbedddddddcbbbbbjia
-akjbbbedddddddddcbbbbjia
-akjbbedddddddddddcbbbjia
-akjbeccccccccccccccbbjia
-akjbbbbbbbbbbbbbbbbbbjia
-akjbbbbbbbhhhfbbbbbbbjia
-akjbbbbbbbfggfbbbbbbbjia
-akjbbbbbbbbffbbbbbbbbjia
-akjjjjjjjjjjjjjjjjjjjjia
-aiiiiiiiiiiiiiiiiiiiiiia
+aiiiiiiiiiijjiiiiiiiiiha
+aihhhhhhhhhhhhhhhhhhhhga
+aihccccccccajcccccccchga
+aihcbbbjbbajkjbbbjbbchga
+aihcbbjkjbafjabbjkjbchga
+aihcbbbjbbafeabbbjbbchga
+aihcbbbbbaajjaabbbbbchga
+aihcbbbbaiihhhgabbbbchga
+aihcbbbaidhhhhhgabbbchga
+aihcbbbaidhhhhhgabbbchga
+ajhcbbbaidhhhhhgabbbchja
+ajhcbbaidhhhhhhhgabbchja
+aihcbbaihjhjhjhjgaabchga
+aihcbaihhhhhhhhhhhgachga
+aihcaiiiiiiiiiiiiigachga
+aihcbaaaaaahhaaaaaabchga
+aihcbbbbbaihhgabbbbbchga
+aihcbbbbbbaggabbbbbbchga
+aihcbbbbbbbaabbbbbbbchga
+aihcccccccccccccccccchga
+aihhhhhhhhhhhhhhhhhhhhga
+ahggggggggggjjggggggggga
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

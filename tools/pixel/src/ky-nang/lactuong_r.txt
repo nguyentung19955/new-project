@@ -1,41 +1,46 @@
-# Sấm Tản Viên — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a lightning bolt striking from a storm cloud over a mountain
-name: Sấm Tản Viên
+# Lạc Tướng · R «Sấm Tản Viên» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: sét đánh xuống đỉnh núi + mưa
+name: Lạc Tướng · R «Sấm Tản Viên»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = sat
-  d = sat-sang
-  e = bac
-  f = dong-toi
-  g = dong
-  h = dong-sang
+  b = sat-toi
+  c = sat-sang
+  d = sang
+  e = dong
+  f = dong-sang
+  g = vang-nghe
+  h = vang-sang
+  i = son-sang
+  j = reu-toi
+  k = reu
+  l = reu-sang
+  m = nuoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbbbbdbbbbbbbgfa
-ahgbbbbbbbbecbbbbbbbbgfa
-ahgbbbbbbbedcbbbbbbbbgfa
-ahgbbbbbbedcbbbbbbbbbgfa
-ahgbbbbbeddcbbbbbbbbbgfa
-ahgbbbbedddcbbbbbbbbbgfa
-ahgbbbedddddeeeeeecbbgfa
-ahgbbedddddddddddcbbbgfa
-ahgbeccccccdddddcbbbbgfa
-ahgbbbbbbbbedddcbbbbbgfa
-ahgbbbbbbbbeddcbbbbbbgfa
-ahgbbbbbbbbedcbbbbbbbgfa
-ahgbbbbbbbedcbbbbbbbbgfa
-ahgbbbbbbbccbbbbbbbbbgfa
-ahgbbbbbbdbbbbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+aihhhhhhhhhiihhhhhhhhhia
+ahggggggggggggggggggggea
+ahgcccccccccccaaaacccgea
+ahgcmbbbbbbbbahhhhabcgea
+ahgcmbbbbbmbahggfabbcgea
+ahgmbbbbbbmahggfaaabcgea
+ahgcbbbbbmahgggghhhacgea
+ahgcbbbbbbafffgggfabcgea
+ahgcbbbmbbbaahgfaabbcgea
+ahgcbbbmbbbahgfabbbbcgea
+aigcbbmbbbahdfabbbbmcgia
+aigcbbbbbalkdabbbbbmcgia
+ahgcbbbbalkkkjabbbmbcgea
+ahgcbbbalkkkkkjabbbbcgea
+ahgcbbalkkkkkkkjabbbcgea
+ahgcbalkkkkkkkkkjabbcgea
+ahgcalkkkkkkkkkkkjabcgea
+ahgalkkkkkkkkkkkkkjacgea
+ahgajjjjjjjjjjjjjjjjagea
+ahgcaaaaaaaaaaaaaaaacgea
+ahggggggggggggggggggggea
+aieeeeeeeeeeiieeeeeeeeia
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

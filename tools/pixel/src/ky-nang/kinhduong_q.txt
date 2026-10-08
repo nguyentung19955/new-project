@@ -1,41 +1,45 @@
-# Đao Xích Quỷ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: red-gold sword
-name: Đao Xích Quỷ
+# Kinh Dương Vương · Q «Đao Xích Quỷ» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đại đao + vệt chém
+name: Kinh Dương Vương · Q «Đao Xích Quỷ»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = son
-  g = lua
-  h = lua-sang
+  b = sang
+  c = dat
+  d = dat-sang
+  e = dong-toi
+  f = dong
+  g = dong-sang
+  h = vang-nghe
+  i = vang-sang
+  j = son-toi
+  k = son
+  l = son-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbhfca
-aedbbbbbbbbbbbbbbbbhgfca
-aedbbbbbbbbbbbbbbbhgfdca
-aedbbbbbbbbbbbbbbhgfbdca
-aedbbbbbbbbbbbbbhgfbbdca
-aedbbbbbbbbbbbbhgfbbbdca
-aedbbbbbbbbbbbhgfbbbbdca
-aedbbbbbbbbbbhgfbbbbbdca
-aedbbbbbbbbbhgfbbbbbbdca
-aedbbbgbbbbhgfbbbbbbbdca
-aedbbbbgbbhgfbbbbbbbbdca
-aedbbbbbhhgfbbbbbbbbbdca
-aedbbbbbhgfbbbbbbbbbbdca
-aedbbbbhgffbbbbbbbbbbdca
-aedbbbhgfbbbbbbbbbbbbdca
-aedbbhgfbbbbbbbbbbbbbdca
-aedbhgfbbbbbbbbbbbbbbdca
-aedbffbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+agggggggggghhgggggggggfa
+agffffffffffffffffffffea
+agfllllllllllllllllllfea
+agfljjjjjjjjjjjjjaablfea
+agfljjjjjjjjjjjaaibalfea
+agfljjjjjjjjjaaiibhalfea
+agfljjjjjjjaaiibbbgalfea
+agfljjjjjjaiibhbbgajlfea
+agfljjjjjaibhhbbgajjlfea
+agfljjjjaibhhbbaajjjlfea
+ahfljjjaibhhbbajjjjjlfha
+ahfljjahihgbbjjjjjjjlfha
+agfljahihabbjjjjjjjjlfea
+agfladchabbjjjjjjjjjlfea
+agfadcakbbjjjjjjjjjjlfea
+agfacaabkajjjjjjjjjjlfea
+agflajbakajjjjjjjjjjlfea
+agfljbjjajjjjjjjjjjjlfea
+agfljjjjjjjjjjjjjjjjlfea
+agfllllllllllllllllllfea
+agffffffffffffffffffffea
+afeeeeeeeeeehheeeeeeeeea
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

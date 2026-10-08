@@ -4,41 +4,43 @@ name: Lý Ngư Tướng Quân · E «Quẫy Đuôi»
 size: 24x24
 colors:
   a = vien
-  b = dong-toi
-  c = dong
-  d = dong-sang
-  e = vang-nghe
-  f = vang-sang
+  b = dong
+  c = vang-nghe
+  d = vang-sang
+  e = la-toi
+  f = la-sang
   g = cham-toi
   h = cham
   i = nuoc
   j = nuoc-sang
   k = troi
+  l = ngoc
+  m = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-addddddddddeedddddddddca
-adccccccccccccccccccccba
-adciiiiiiiiiiiiiiiiiicba
-adciaaaaggggggggaaaaicba
-adcaffffaggggggaffffacba
-adciacccfaggggafeccaicba
-adcigaccffaggafecccaacba
-adcaggaccefaafeeccaakcba
-adckagafcceffeeccagaacba
-adcaaggaccfececccaajacba
-aecajaggaccccfccaggaicea
-aeciagggafcccccaggggicea
-adcigagggacccccaggagicba
-adciajagggacccaggajaicba
-adcigagggggacaggggagicba
-adcaggggagafffagggagicba
-adckaaaajafccjfaaakaacba
-adcikkjjkkjjkkjjjkikjcba
-adcjjjiijjiijjiiijjjhcba
-adchhhhhhhhhhhhhhhhhhcba
-adccccccccccccccccccccba
-acbbbbbbbbbbeebbbbbbbbba
+ammmmmmmmmmffmmmmmmmmmla
+amllllllllllllllllllllea
+amliiiiiiiiiiiiiiiiiilea
+amliaaaaggggggggaaaailea
+amladdddaggggggaddddalea
+amliabbbdaggggadcbbailea
+amligabbddaggadcbbbaalea
+amlaggabbcdaadccbbaaklea
+amlkagadbbcddccbbagaalea
+amlaaggabbdcbcbbbaajalea
+aflajaggabbbbdbbaggailfa
+afliagggadbbbbbaggggilfa
+amligagggabbbbbaggagilea
+amliajagggabbbaggajailea
+amligagggggabaggggagilea
+amlaggggagadddagggagilea
+amlkaaaajadbbjdaaakaalea
+amlikkjjkkjjkkjjjkikjlea
+amljjjiijjiijjiiijjjhlea
+amlhhhhhhhhhhhhhhhhhhlea
+amllllllllllllllllllllea
+aleeeeeeeeeeffeeeeeeeeea
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

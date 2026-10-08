@@ -1,41 +1,42 @@
-# Thiên Lôi Giáng Thế — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Sét trời giáng xuống: x5 sát thương +2 vùng lớn
-name: Thiên Lôi Giáng Thế
+# Thiên Lôi · R «Thiên Lôi Giáng Thế» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: mây giông sét + nổ va chạm
+name: Thiên Lôi · R «Thiên Lôi Giáng Thế»
 size: 24x24
 colors:
   a = vien
-  b = khoi
+  b = sat-toi
   c = sat
   d = sat-sang
-  e = bac
-  f = dong-toi
-  g = dong
-  h = dong-sang
+  e = sang
+  f = dong
+  g = vang-nghe
+  h = vang-sang
+  i = son-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
+aihhhhhhhhhiihhhhhhhhhia
 ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbbbbdbbbbbbbgfa
-ahgbbbbbbbbecbbbbbbbbgfa
-ahgbbbbbbbedcbbbbbbbbgfa
-ahgbbbbbbedcbbbbbbbbbgfa
-ahgbbbbbeddcbbbbbbbbbgfa
-ahgbbbbedddcbbbbbbbbbgfa
-ahgbbbedddddeeeeeecbbgfa
-ahgbbedddddddddddcbbbgfa
-ahgbeccccccdddddcbbbbgfa
-ahgbbbbbbbbedddcbbbbbgfa
-ahgbbbbbbbbeddcbbbbbbgfa
-ahgbbbbbbbbedcbbbbbbbgfa
-ahgbbbbbbbedcbbbbbbbbgfa
-ahgbbbbbbbccbbbbbbbbbgfa
-ahgbbbbbbdbbbbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
+ahgddddddddddddddddddgfa
+ahgdbbbbbaaaabbbbbbbdgfa
+ahgdbbaaaddddaaabbbbdgfa
+ahgdbadddccccdddaaabdgfa
+ahgdadcccccccccccddadgfa
+ahgadccccccccccccccdagfa
+ahgacccccccccccccccbagfa
+ahgdabbbbbhbbbbbbbaadgfa
+aigdbaaaaahgaaaaaabbdgia
+aigdbbbbahgaabbbbbbbdgia
+ahgdbbbehggggabbbbbbdgfa
+ahgdbebgaeahgabbbbbbdgfa
+ahgdbbghgahgabbbbbbbdgfa
+ahgdeghehgeabbbbbbbbdgfa
+ahgdbbghggabbbbbbbbbdgfa
+ahgdbebgbebbbbbbbbbbdgfa
+ahgdbbbebbbbbbbbbbbbdgfa
+ahgddddddddddddddddddgfa
 ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+aiffffffffffiiffffffffia
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

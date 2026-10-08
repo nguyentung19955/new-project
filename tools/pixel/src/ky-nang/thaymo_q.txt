@@ -1,42 +1,44 @@
-# Cột Lửa — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a tall fire pillar
-name: Cột Lửa
+# Thầy Mo Lửa · Q «Cột Lửa» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: cột lửa
+name: Thầy Mo Lửa · Q «Cột Lửa»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat
-  d = dong-toi
-  e = dong
-  f = dong-sang
-  g = son
-  h = lua
-  i = lua-sang
+  b = sang
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = vang-nghe
+  g = son-toi
+  h = son
+  i = son-sang
+  j = lua
+  k = lua-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-afffffffffffffffffffffda
-afeeeeeeeeeeeeeeeeeeeeda
-afebbbbbbbbbbbbbbbbbbeda
-afebbbbiiiiiiiiiibbbbeda
-afebbbbiiiiiiiiiibbbbeda
-afebbbbiiiiiiiiiibbbbeda
-afebbbbbbihhhhhgbbbbbeda
-afebbbbbbihhhhhgbbbbbeda
-afebbbbbbihhhhhgbbbbbeda
-afebbbbbbihhhhhgbbbbbeda
-afebbbbbbcccccccbbbbbeda
-afebbbbbbcccccccbbbbbeda
-afebbbbbbihhhhhgbbbbbeda
-afebbbbbbihhhhhgbbbbbeda
-afebbbbbbihhhhhgbbbbbeda
-afebbbbbbihhhhhgbbbbbeda
-afebbbbbbihhhhhgbbbbbeda
-afebbbbiiiiiiiiiibbbbeda
-afebbbbiiiiiiiiiibbbbeda
-afebbbbbbbbbbbbbbbbbbeda
-afeeeeeeeeeeeeeeeeeeeeda
-adddddddddddddddddddddda
+aeeeeeeeeeeffeeeeeeeeeda
+aeddddddddddddddddddddca
+aediiiiiiiaiiiiiiiiiidca
+aedigggggakagaggggggidca
+aediggggakkaakagggggidca
+aediggggakjkakkaggggidca
+aedigggakjkjkkjaggggidca
+aedigggakjbbkjjhagggidca
+aediggakjjbbkjjjhaggidca
+aediggakjbbbbjjjhaggidca
+afdiggakjbbbbjjjhaggidfa
+afdiggakjbbbbjjjhaggidfa
+aediggakjbbkbjjjhaggidca
+aediggakjjbkbjjjhaggidca
+aedigakijjbkbjjjihagidca
+aedigahiijjbjjiihhagidca
+aediahhiiiijiiihhhhaidca
+aediaghhhhhhhhhhhgagidca
+aedigaaaaaaaaaaaaaggidca
+aediiiiiiiiiiiiiiiiiidca
+aeddddddddddddddddddddca
+adccccccccccffccccccccca
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

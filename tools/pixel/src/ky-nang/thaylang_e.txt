@@ -1,44 +1,40 @@
-# Hương Rừng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: fragrant forest leaves
-name: Hương Rừng
+# Thầy Lang Lá Thuốc · E «Hương Rừng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bụi cây + khói
+name: Thầy Lang Lá Thuốc · E «Hương Rừng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-toi
-  d = dat
-  e = dat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = la
-  j = la-ma
-  k = la-sang
+  b = la-toi
+  c = la
+  d = la-ma
+  e = la-sang
+  f = ngoc
+  g = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbkkkkkkkibbbbbgfa
-ahgbbbkkjjjjjjjjkibbbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbkjjjjjjjjjjjjjjibgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbkjjjjjjjjjjjjjjibgfa
-ahgbbijjjjjjjjjjjjibbgfa
-ahgbbbiiiiiiiiiiiibbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbccccbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+aggggggggggeegggggggggfa
+agffffffffffffffffffffba
+agfddddddedddddddddddfba
+agfdbeeeeeebbbeeeeebdfba
+agfdeeedddddbbdddeeedfba
+agfddddddaaabbaaaddddfba
+agfddddaadddaadddadddfba
+agfdbdaddcccddcccdabdfba
+agfdbadcccccccccccdadfba
+agfdadccccaccccccccbafba
+aefadcccccccccaccccbafea
+aefadccacccccccccccbafea
+agfacccccccaccccccbbafba
+agfdacccccccccccacbadfba
+agfdbabbbbbbbbbbbbabdfba
+agfdbbaaaaaaaaaaaabbdfba
+agfdbbbbbbbbbbbbbbbbdfba
+agfdbbbbbbbbbbbbbbbbdfba
+agfdbbbbbbbbbbbbbbbbdfba
+agfddddddddddddddddddfba
+agffffffffffffffffffffba
+afbbbbbbbbbbeebbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

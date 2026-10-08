@@ -1,44 +1,45 @@
-# Rìu Lốc Xoáy — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a bronze axe spinning in a whirlwind
-name: Rìu Lốc Xoáy
+# Lạc Tướng · W «Rìu Lốc Xoáy» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: lốc xoáy + rìu nhỏ
+name: Lạc Tướng · W «Rìu Lốc Xoáy»
 size: 24x24
 colors:
   a = vien
-  b = khoi
+  b = sat-toi
   c = sat
   d = sat-sang
   e = bac
-  f = dat-toi
-  g = dat
-  h = dat-sang
-  i = dong-toi
-  j = dong
-  k = dong-sang
+  f = trang-xam
+  g = trang
+  h = sang
+  i = dat
+  j = dong-toi
+  k = dong
+  l = dong-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-akkkkkkkkkkkkkkkkkkkkkia
-akjjjjjjjjjjjjjjjjjjjjia
-akjbbbbbbbbbbbecbbbbbjia
-akjbbbbbbbbbbeddecbbbjia
-akjbbbbbbbbbedddddebbjia
-akjbbbbbbbbeddddddebbjia
-akjbbbbbbbbbcdddddebbjia
-akjbbbbbbbbbheddddecbjia
-akjbbbbbbbbhgcdddddebjia
-akjbbbbbbbhgfbcddddebjia
-akjbbbbbbbhfbbbeddcebjia
-akjbbbbbbhgfbbbccccbbjia
-akjbbbbbhgfbbbbbbbbbbjia
-akjbbbbbhfbbbbbbbbbbbjia
-akjbbbbhgfbbbbbbbbbbbjia
-akjbbbhgfbbbbbbbbbbbbjia
-akjbbbhfbbbbbbbbbbbbbjia
-akjbbhgfbbbbbbbbbbbbbjia
-akjbhgfbbbbbbbbbbbbbbjia
-akjbffbbbbbbbbbbbbbbbjia
-akjjjjjjjjjjjjjjjjjjjjia
-aiiiiiiiiiiiiiiiiiiiiiia
+aeeeeeeeeeehheeeeeeeeeda
+aeddddddddddddddddddddca
+aeddddddddddddddddddddca
+aeddbbbbbbbbbbbbbbbbddca
+aeddbbaaaaaaaaaaabbbddca
+aeddbahhhhhhhhhhhabbddca
+aeddagggggggggggggabddca
+aeddbafffffaafffaabbddca
+aeddbbaahhallaahhabbddca
+aeddbbaggalkkkiaabbbddca
+ahddbbbaalkkkkiaabbbddha
+ahddbbbbbajkkjiabbbbddha
+aeddbbbbagaaaiabbbbbddca
+aeddbbbbbafaiabbbbbbddca
+aeddbbbbbbaiaabbbbbbddca
+aeddbbbbbagaabbbbbbbddca
+aeddbbbbbbafabbbbbbbddca
+aeddbbbbbbbabbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbddca
+aeddddddddddddddddddddca
+aeddddddddddddddddddddca
+adcccccccccchhccccccccca
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

@@ -1,41 +1,42 @@
-# Mưa Tên — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a rain of arrows falling from the sky
-name: Mưa Tên
+# Xạ Thủ Văn Lang · R «Mưa Tên» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: mưa tên
+name: Xạ Thủ Văn Lang · R «Mưa Tên»
 size: 24x24
 colors:
   a = vien
-  b = khoi
+  b = sat-toi
   c = sat
   d = sat-sang
-  e = bac
-  f = dong-toi
-  g = dong
-  h = dong-sang
+  e = dat
+  f = dong
+  g = vang-nghe
+  h = vang-sang
+  i = son-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
+aihhhhhhhhhiihhhhhhhhhia
 ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbecfa
-ahgbbbbbbbbbbbbbbbbedcfa
-ahgbbbbbbbbbbbbbbbedcgfa
-ahgbbbbbbbbbbbbbbedcbgfa
-ahgbbbbbbbbbbbbbedcbbgfa
-ahgbbbbbbbbbbbbedcbbbgfa
-ahgbbbbbbbbbbbedcbbbbgfa
-ahgbbbbbbbbbbedcbbbbbgfa
-ahgbbbbbbbbbedcbbbbbbgfa
-ahgbbbdbbbbedcbbbbbbbgfa
-ahgbbbbdbbedcbbbbbbbbgfa
-ahgbbbbbeedcbbbbbbbbbgfa
-ahgbbbbbedcbbbbbbbbbbgfa
-ahgbbbbedccbbbbbbbbbbgfa
-ahgbbbedcbbbbbbbbbbbbgfa
-ahgbbedcbbbbbbbbbbbbbgfa
-ahgbedcbbbbbbbbbbbbbbgfa
-ahgbccbbbbbbbbbbbbbbbgfa
+ahgdddadddddadddddaddgfa
+ahgdbaeabbbaeabbbaeadgfa
+ahgdbaeababaeababaeadgfa
+ahgdbaeaaeaaeaaeaaeadgfa
+ahgdbaeaaeaaeaaeaaeadgfa
+ahgdbaeaaeaaeaaeaaeadgfa
+ahgdadcdaeadcdaeadcdagfa
+ahgdbacaaeaacaaeaacadgfa
+aigdbbaadcdaabadcdabdgia
+aigdbbbbacabbbbacabbdgia
+ahgdbbabbabbbbbbaabbdgfa
+ahgdbaeabbbabbbbaeabdgfa
+ahgdbaeabbaeabbbaeabdgfa
+ahgdadcdabaeabbadcdadgfa
+ahgdbacabadcdabbacabdgfa
+ahgdbbabbbacabbbbabbdgfa
+ahgdbbbbbbbabbbbbbbbdgfa
+ahgddddddddddddddddddgfa
 ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+aiffffffffffiiffffffffia
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

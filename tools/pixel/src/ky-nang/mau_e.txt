@@ -1,44 +1,47 @@
-# Cây Đa Thần — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a sacred banyan tree
-name: Cây Đa Thần
+# Mẫu Thượng Ngàn · E «Cây Đa Thần» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: cây đa + toả sáng
+name: Mẫu Thượng Ngàn · E «Cây Đa Thần»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-toi
-  d = dat
-  e = dat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = la
-  j = la-ma
-  k = la-sang
+  b = dat-toi
+  c = dat
+  d = dat-sang
+  e = vang-nghe
+  f = vang-sang
+  g = la-toi
+  h = la-ma
+  i = la-sang
+  j = reu-toi
+  k = reu
+  l = reu-sang
+  m = ngoc
+  n = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbkkkkkkkibbbbbgfa
-ahgbbbkkjjjjjjjjkibbbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbkjjjjjjjjjjjjjjibgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbkjjjjjjjjjjjjjjibgfa
-ahgbbijjjjjjjjjjjjibbgfa
-ahgbbbiiiiiiiiiiiibbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbccccbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+annnnnnnnnniinnnnnnnnnma
+anmmmmmmmmmmmmmmmmmmmmga
+anmhhhhhhhhfhhhhhhhhhmga
+anmhfgggaaaegaaaaggfhmga
+anmhgfaalllaallllafghmga
+anmhgallkkkllkkkklaghmga
+anmhalkkkkkkkkkkkkkahmga
+anmalkkkkkkkkkkkkkkjamga
+anmalkkkkkkkkkkkkkkjamga
+anmakkkkkkkkkkkkkkjjamga
+aimhajjjkjcjcjjjkjjahmia
+aimfeaacaadccaaacaaeemia
+anmhggacaadccagacagghmga
+anmhgacaaddcccagacaghmga
+anmhgacaadccccaeacaghmga
+anmhggaaadccccaaeagghmga
+anmhggaddccccccbaegghmga
+anmhgabccbbbccccbafghmga
+anmhfgaaaaaaaaaaaggfhmga
+anmhhhhhhhhhehhhhhhhhmga
+anmmmmmmmmmmmmmmmmmmmmga
+amggggggggggiiggggggggga
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

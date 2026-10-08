@@ -1,41 +1,47 @@
-# Địa Chấn — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: cracked ground with a shockwave
-name: Địa Chấn
+# Thần Kim Quy · E «Địa Chấn» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: mặt đất nứt toác + sóng âm
+name: Thần Kim Quy · E «Địa Chấn»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = sat
-  d = sat-sang
-  e = bac
-  f = dong-toi
-  g = dong
+  b = sat-toi
+  c = sat-sang
+  d = trang-xam
+  e = sang
+  f = dat-toi
+  g = dat
   h = dong-sang
+  i = vang-nghe
+  j = vang-sang
+  k = la-toi
+  l = la-sang
+  m = ngoc
+  n = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbecfa
-ahgbbbbbbbbbbbbbbbbedcfa
-ahgbbbbbbbbbbbbbbbedcgfa
-ahgbbbbbbbbbbbbbbedcbgfa
-ahgbbbbbbbbbbbbbedcbbgfa
-ahgbbbbbbbbbbbbedcbbbgfa
-ahgbbbbbbbbbbbedcbbbbgfa
-ahgbbbbbbbbbbedcbbbbbgfa
-ahgbbbbbbbbbedcbbbbbbgfa
-ahgbbbdbbbbedcbbbbbbbgfa
-ahgbbbbdbbedcbbbbbbbbgfa
-ahgbbbbbeedcbbbbbbbbbgfa
-ahgbbbbbedcbbbbbbbbbbgfa
-ahgbbbbedccbbbbbbbbbbgfa
-ahgbbbedcbbbbbbbbbbbbgfa
-ahgbbedcbbbbbbbbbbbbbgfa
-ahgbedcbbbbbbbbbbbbbbgfa
-ahgbccbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+annnnnnnnnnllnnnnnnnnnma
+anmmmmmmmmmmmmmmmmmmmmka
+anmccccccccccccccccccmka
+anmcbbbbbbbbbbbbbbbbcmka
+anmcbbbbbbbbbbbbdbbbcmka
+anmcbbabbbbbbbbadbbbcmka
+anmcbajabbbbbbajadbbcmka
+anmcajijabbbeajijabbcmka
+anmcaahaaabbaaahaaabcmka
+anmajjjjjjaajjjjjjjacmka
+almaiiiiijaajiiiiiabcmla
+almaiiiiiaajiiiiiiabcmla
+anmaiiiiaajiiiiiiiabcmka
+anmaggggaagggggggggacmka
+anmagggaaggggggggggacmka
+anmafffaaffffffffffacmka
+anmcaaabbaaaaaaaaaabcmka
+anmcbbbbbbbbbbbbdbbbcmka
+anmcbbbbbbbbbbbbbbbbcmka
+anmccccccccccccccccccmka
+anmmmmmmmmmmmmmmmmmmmmka
+amkkkkkkkkkkllkkkkkkkkka
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 
