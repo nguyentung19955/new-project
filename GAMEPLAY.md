@@ -2372,6 +2372,30 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 231 — tướng pixel dễ phân biệt (tester đạt)
+
+- 15 tướng đổi màu chủ đạo/dấu hiệu riêng (Lực Sĩ, Đắp Đê, Chăn Trâu, Tre, Chuông Đồng, Xạ Thủ, Giáo Đồng, Thầy Lang, Tiên Dung, Thổ Công, Mặt Trời, Lạc Hầu, An Tiêm, Chử Đồng Tử…): 19 cặp giống nhau → 0 (tools/pixel/do-giong-tuong.py).
+
+## Phiên bản 230 — gộp an-cong-ky-nang (tester đạt)
+
+- Nút "+1đ" cạnh ô kỹ năng ẩn khi 4 kỹ năng đã max; điểm dư tự đổi thành chỉ số (+2 thuộc tính/điểm). Test hợp thể đọc ★ dạng icon pixel.
+
+## Phiên bản 229 — kỹ năng hỗ trợ không dùng giữa 2 đợt (tester đạt)
+
+- 10 kỹ năng hỗ trợ (khiên, hồi máu, cây thiêng, trống trận…) chỉ dùng khi sân còn quái.
+
+## Phiên bản 228 — hào quang tướng Tím/Vàng (tester đạt)
+
+- Viền bám dáng nhấp nháy (Tím #B070FF, Vàng #FFD24A) + hạt sáng bay vòng có đuôi (Tím 4, Vàng 6), cả pixel lẫn hình cũ; không che thanh máu/sao.
+
+## Phiên bản 227 — gộp pixel-con-lai (tester đạt)
+
+- Ảnh cũ chuyển sang pixel (tool chế độ chuyển ảnh): 5 cổng thành có mái, núi Tản Viên, bản đồ chương, thắng/thua, truyện, thẻ chế độ, tranh sính lễ, khung thanh máu, đế ô; khung bảng/nút pixel; emoji → icon pixel. Nền menu giữ tranh cũ (pixel mất hoa văn).
+
+## Phiên bản 226 — gộp sua-tam-skill (tester đạt)
+
+- Kỹ năng chỉ tung khi có quái trong tầm (tầm đánh × hệ số trong mô tả); chưa có thì không tốn năng lượng, không chạy hồi chiêu. Buff/khiên chỉ khi đồng đội giao chiến/bị thương. Kỹ năng toàn bản đồ: Gióng R, An Tiêm R, Sọ Dừa R, Cuội R, Mẫu R (+ Kim Quy R khi quái sắp lọt thành).
+
 ## Phiên bản 225 — PIXEL MẶC ĐỊNH (tester đạt)
 
 - Game mở là hình pixel; tắt bằng Cài đặt → Hình pixel hoặc ?pixel=0. Nạp pixel theo đợt (menu hiện ~0,5 s), chân dung thẻ chợ nạp sẵn.
@@ -2636,6 +2660,50 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 - Còn hình cũ (cảnh/nền menu/cổng thành… bản tool chỉ là phác thảo thô nên chưa nối; một số chưa có pixel): ghi ở
   `docs/pixel/DANH-SACH.md` mục "Bổ sung".
 - **Nền pixel riêng (sau khi gộp v223 có tool bản đồ):** sinh `ban-do/<gốc>-<dạng>` cho 14 bản đồ dạng của các ải (`node tools/build-ban-do-spec.js` → lọc mã có dạng → `node tools/ve-pixel.js --spec … --nap`): ô sát đường cùng kiểu bệ đá, xa đường chỉ trang trí, chỗ tự cắt có cầu. `mapLayer` chọn ảnh theo mã `id` (thay `~` bằng `-`); bản đồ dạng không có ảnh (Vô tận ghép gốc × dạng khác, Vòng quanh núi, Bến đò — có núi / sông game tự vẽ) dùng `pxMapGround`. Tool spec: nạp thêm `js/chapters.js` (đăng ký bản đồ dạng của ải), nhánh phụ chỉ xuất đoạn không trùng nhánh trước (tránh cầu giả ở chỗ chia / nhập nhánh), bỏ qua bản đồ có núi / bến đò.
+
+## claude/sua-tam-skill — Kỹ năng chỉ dùng khi quái vào tầm
+- Lỗi: kỹ năng tự dùng khi quái còn ngoài tầm (đa số chiêu tìm mục tiêu trong tầm ×1,1–1,3; 15 chiêu ×1,5 — Ném Đá Tảng, Lướt, Bắn
+  Săn, Hổ, Kim Độc, Cuốn Ngược, Bọc Trăm Trứng, Thành Đêm…), khiên/buff dùng khi quanh mình không ai đang đánh.
+- Sửa gốc ở vòng tung chiêu (`js/game.js`, Game.updateHero): kỹ năng tấn công chỉ tung khi có quái trong **tầm đánh của tướng ×
+  hệ số tầm ghi trong mô tả** (Thợ Săn Q "tầm gấp đôi" ×2 · LLQ E "tầm x1.2" · Thần Săn Q "tầm x1.6", R "tầm x2"); chưa có ai trong
+  tầm thì giữ hồi chiêu sẵn sàng, không tốn năng lượng. Vùng sát thương của chiêu giữ nguyên.
+- Hỗ trợ: hồi máu khi có đồng đội bị thương (như cũ); khiên (Mai Rùa), Chia Bánh, Trống Trận, Cây Đa, Lời Thề: chỉ khi có đồng đội
+  trong vùng của chiêu đang có quái trong tầm đánh (hoặc bị thương).
+- **Kỹ năng TOÀN BẢN ĐỒ** (dùng khi quái ở bất kỳ đâu trên đường) — người dùng soát:
+  · Thánh Gióng R «Bay Về Trời»: cưỡi ngựa sắt bay dọc cả dòng sông, đánh mọi quái trên bản đồ (≥3 quái hoặc có boss)
+  · An Tiêm R «Mưa Dưa»: dưa rơi khắp bản đồ (≥4 quái) · Sọ Dừa R: dừa rơi khắp trận (≥4 quái)
+  · Chú Cuội R «Gió Trăng»: quật mọi quái dưới đất · Mẫu R: rễ cây trồi khắp bờ sông, trói mọi quái dưới đất (≥3 quái hoặc boss)
+  · Kim Quy R «Hộ Thành»: không theo tầm — dùng khi quái sắp lọt thành
+  · Hỗ trợ toàn quân (theo đồng đội, không theo quái): Lang Liêu R «Lễ Tổ Tiên» (có tướng dưới 50% máu), Lạc Hầu R «Lời Thề».
+- Test: `tests/sua-tam-skill/` (164 kỹ năng: vừa ngoài tầm → không tung, hồi chiêu không chạy; trong tầm → tung; toàn bản đồ tung
+  khi quái ở xa; hỗ trợ không dùng khi đồng đội khoẻ và quái ngoài tầm; trận thật: Bổ Rìu tung đúng lúc quái vào tầm).
+- Áp pixel nốt phần còn lại (yêu cầu "toàn bộ giao diện"): ảnh nền menu, màn thắng/thua theo chương, tranh truyện (phông
+  `canh/truyen-nen-*`), bản đồ chương, nền màn phụ, núi Tản Viên, sính lễ, cổng thành cuối đường (nen/cong-*) — đều dùng ảnh pixel
+  khi bật pixel. Mọi bảng `.metal` dùng khung pixel tối mới `giao-dien/khung-bang-toi`, nút `.metal` dùng nút đồng pixel, nút chính
+  menu dùng nút vàng pixel. Emoji / ký hiệu chữ trong giao diện (★ ✓ 🔒 🎁 🏆 ⚔ 📖 …) tự đổi sang icon pixel cùng nghĩa (js/pixel.js
+  PX_EMO, quét DOM khi bật pixel, alt giữ ký tự cũ). Giữ hình cũ: nút tròn (đóng) và nút đổi chợ (theo tester).
+
+## claude/pixel-con-lai — chuyển nốt hình cũ sang pixel bằng tool (chế độ chuyển ảnh)
+- Tool `tools/ve-pixel.js` thêm khoá spec `"anh"`: đọc ảnh gen cũ (hoặc ảnh chụp hình SVG cũ bằng `tools/chup-nguon-pixel.js`), thu nhỏ
+  trung bình vùng, lượng tử về bảng màu chung (Lab, giữ sắc độ), giới hạn số màu, khử chấm lẻ, nền trong suốt + viền — giữ đúng bố cục,
+  màu của hình cũ (không còn khối thô). Ghi trong SPEC.md / LENH-TOOL.md.
+- Đã chuyển + nối (khi bật pixel, `?pixel=0` vẫn hình cũ): nền menu / đăng nhập / màn tải, nền màn phụ, bản đồ chương, cảnh thắng / thua
+  từng chương, tranh truyện, nền chủ đề + thẻ chế độ, 5 cổng thành (có mái, cột, cửa), núi Tản Viên 1..5, tranh nhỏ (trống đồng, hũ, kho
+  lúa, xoay máy, quà sính lễ), khung thanh máu tướng / quái / boss, đế ô ngập / núi / chọn / sẵn sàng.
+- Sửa kèm: bảng kết quả dùng khung tối (giấy kem làm chữ khó đọc), số ải trên huy hiệu chương chữ sáng, thẻ chế độ không bị skin nút đè.
+- Giữ bản sinh hình học: icon 16 px (chuyển ảnh ra nhoè). Không cần: vân đường / trang trí cũ (bản đồ pixel đã có riêng).
+## claude/hao-quang-tim-vang — Hào quang tướng Tím / Vàng (viền + hạt bay quanh)
+
+- **Lỗi:** tướng Tím (Sử thi) / Vàng (Huyền thoại) gần như không khác tướng Thường. Bật pixel thì `pxDrawHero` bỏ qua hẳn hào quang bậc (chỉ có viền màu hệ khi ★★); hình cũ chỉ có quầng mờ rất nhạt (`packGlow`).
+- **Mới (cả pixel lẫn hình cũ, `js/render.js` → `RANK_FX`):**
+  - Viền sáng **bám dáng sprite**, nhấp nháy nhẹ: Tím `#B070FF`, Vàng `#FFD24A`. Pixel: đúng 1 ô pixel (`pxBlit` → `outline`); hình cũ: ~2–3 điểm ảnh màn hình, Vàng thêm vành hổ phách sẫm ngoài để nổi trên nền cát / áo trắng. Viền dựng sẵn một lần cho mỗi khung (`outlineSprite`), mỗi khung hình chỉ `drawImage`.
+  - **Hạt sáng bay vòng elip** quanh thân (nửa sau vẽ sau lưng, nửa trước vẽ trước người), hạt vuông bám lưới pixel, có đuôi 3 vệt mờ dần: Tím 4 hạt, Vàng 6 hạt to hơn (đồ hoạ thấp: bớt 2 hạt). Quỹ đạo nằm dưới đỉnh hình → không che thanh máu / sao.
+  - Pixel thêm quầng nhẹ màu bậc (Vàng đậm hơn Tím). Màu quầng cũ `AURA_C` đổi theo cùng bảng màu.
+  - Tướng Thường: không có gì. Tướng đang ngã: tắt. `o.noRankFx` để tắt khi cần.
+- Đường vẽ ảnh đơn tự cử động (`js/tu-cu-dong.js`, cả rig 3 lớp) cũng có viền.
+- Đã kiểm khung chân dung Tím / Vàng ở bảng chi tiết, Anh Hùng: đúng màu bậc (không đổi).
+- Hiệu năng: 20 tướng Tím / Vàng thêm ~0,3 ms / khung.
+- Test: `node tests/run-all.js hao-quang` (Tím/Vàng có viền + hạt, Thường không có; ?pixel=0 và PIXEL_BAT_EP; hạt chuyển động; đo thời gian; chụp 844×390 + 1920×934).
 - Sửa theo tester: (1) mở game — `js/pixel.js` thôi nạp sẵn cả ~920 ảnh pixel lúc mở; ngay: khung giao diện; sau khi menu hiện (theo lô
   60 ảnh, lúc rảnh): tướng, quái, boss, nền, bản đồ, hiệu ứng, icon; nhóm hiện bằng <img> (đồ, kỹ năng, ấn phù, thần khí) và canh/* không
   nạp sẵn → menu hiện ~0,6 s (trước ~1,4 s, ngang ?pixel=0). (2) chợ: chân dung pixel mọi tướng nạp + giải mã sẵn vào bộ đệm chợ
@@ -2657,3 +2725,30 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
   bản vẽ tay trống đồng Q/R) < 50%.
 - Đã nạp vào game (`--nap --ghi-de`: assets/pixel/ky-nang, js/pixel/ky-nang.js) + gói `tools/pixel/goi/ky-nang.zip`.
 - Test mới `tests/ve-pixel/ky-nang.test.js`: spec khớp bảng, đủ Q W E R cho 60 tướng, không trùng, khung đúng phím, ảnh trong game khớp tool.
+## claude/tuong-pixel-ro — Tướng pixel dễ phân biệt hơn trên sân
+
+- **Đo tự động:** `python3 tools/pixel/do-giong-tuong.py [--ten=-sau] [--nguong 0.72]` — so từng cặp tướng (khung idle, căn theo
+  chân): bóng dáng (IoU) · màu chủ đạo (biểu đồ họ màu, bỏ viền) · nhìn thu nhỏ 16×16; điểm = 0.35·bóng + 0.45·màu + 0.20·nhỏ.
+  Ghi `tools/pixel/mau/phan-biet/do-giong*.txt`, `bang-tong*.png` (cỡ ×3, ×1 như trên sân, bóng đen), `cap-giong*.png`.
+- **Trước:** 19 cặp vượt ngưỡng 0.72 (cụm nâu đất Lực Sĩ · Đắp Đê · Chăn Trâu · Tre · Thợ Săn · Sọ Dừa; Lạc Tướng ~ Xạ Thủ;
+  Chuông Đồng ~ Thổ Công; Ông Táo ~ Tiên Dung; Kinh Dương ~ Mặt Trời; Chử Đồng Tử ~ Ông Đùng ~ An Tiêm…). **Sau: 0 cặp**
+  (cao nhất 0.72 → còn 0.720 adv ~ langlieu, không vượt).
+- Mỗi tướng chỉnh một màu chủ đạo riêng / dấu hiệu riêng (giữ dáng, vũ khí, đủ khung động tác):
+  Lực Sĩ đất sét VÀNG ĐẤT + khố đỏ · Đắp Đê mặt tay da người lấm bùn, NÓN LÁ to, quần CHÀM, xẻng lưỡi sắt · Chăn Trâu bột tò he
+  HỒNG ĐẤT · Tre nan TRE XANH + áo đan kem · Chuông Đồng áo lễ BẠC + dải sơn son chéo ngực, gậy chuông cao hơn ·
+  Xạ Thủ áo quấn XANH THÉP + dây đỏ chéo · Giáo Đồng vảy XÁM THIẾC sáng (cả chân) · Thầy Lang thân cuống nấm TRẮNG NGÀ ·
+  Tiên Dung váy TÍM · Thổ Công áo vàng nghệ · Mặt Trời áo lửa cam · Lạc Hầu đá ong ĐỎ CAM · An Tiêm áo lá XANH RÊU ·
+  Chử Đồng Tử khố CHÀM. Không đụng phần vẽ hào quang (nhánh hao-quang-tim-vang).
+- Chụp trận nhiều tướng cạnh nhau 844×390 + 1920×934: `tools/pixel/mau/phan-biet/tran-*.png`.
+- Sửa theo tester: nền menu / đăng nhập / màn tải giữ tranh cũ (bản pixel 320×180 mất hoa văn trống đồng, kể cả khi tăng màu / khử
+  nhiễu); thẻ người chơi và nút Xuất Quân dùng khung vẽ tay chuyển sang pixel (có lại huy hiệu avatar tròn và 2 huy hiệu hai bên), không
+  bị khung bảng / nút chung đè; icon Vô Tận vẽ lại thành ∞ rõ.
+
+## claude/an-cong-ky-nang — Ẩn nút cộng điểm khi kỹ năng đã max
+
+- Thanh tướng: nút **+1đ** (cộng điểm dư vào chỉ số) cạnh 4 ô kỹ năng **không hiện nữa khi cả 4 kỹ năng đã đạt tối đa** (Q W E 4/4, R 3/3). Chỉ hiện khi còn điểm và còn kỹ năng chưa max.
+- Kỹ năng đã max thì điểm kỹ năng (đang dư + nhận thêm mỗi lần lên cấp / lên ★★★ / ghép sao) **tự đổi thành chỉ số** (+2 thuộc tính chính mỗi điểm), không cần bấm — không mất giá trị điểm.
+- Ô kỹ năng chỉ sáng "có thể nâng" khi thật sự nâng được (có điểm / đủ vàng, chưa max, đủ cấp tướng) — như cũ, có test.
+- Test: `node tests/an-cong-ky-nang/an-cong-ky-nang.test.js`.
+- Sửa thêm: kỹ năng hỗ trợ (khiên, buff, hồi máu — Kim Quy Q, Cây Đa của Cuội/Mẫu E…) chỉ dùng TRONG ĐỢT: sân hết quái (giữa hai đợt)
+  thì không dùng dù tướng đang bị thương. Test: tests/sua-tam-skill (giữa hai đợt, tướng 30% máu → không kỹ năng hỗ trợ nào tung).

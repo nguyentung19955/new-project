@@ -1,0 +1,104 @@
+# Độ giống nhau tướng pixel (60 mã, 1770 cặp) — ngưỡng 0.72
+# diem  bong  mau   nho   cặp  (hạng)
+0.775 0.74  0.75  0.88  dapde(thuong) ~ lucsi(thuong)   <<< VƯỢT
+0.758 0.77  0.71  0.84  chuongdong(thuong) ~ thocong(tim)   <<< VƯỢT
+0.756 0.56  0.86  0.87  dapde(thuong) ~ sodua(tim)   <<< VƯỢT
+0.756 0.60  0.82  0.88  chantrau(thuong) ~ tre(thuong)   <<< VƯỢT
+0.752 0.59  0.82  0.88  chantrau(thuong) ~ lucsi(thuong)   <<< VƯỢT
+0.750 0.57  0.88  0.78  cdt(tim) ~ ongdung(tim)   <<< VƯỢT
+0.747 0.57  0.84  0.86  lucsi(thuong) ~ tre(thuong)   <<< VƯỢT
+0.744 0.65  0.75  0.89  chantrau(thuong) ~ sodua(tim)   <<< VƯỢT
+0.738 0.63  0.77  0.86  chantrau(thuong) ~ dapde(thuong)   <<< VƯỢT
+0.735 0.63  0.77  0.84  ongtao(tim) ~ tiendung(tim)   <<< VƯỢT
+0.732 0.77  0.63  0.89  thogom(thuong) ~ tre(thuong)   <<< VƯỢT
+0.732 0.73  0.70  0.81  lactuong(thuong) ~ xathu(thuong)   <<< VƯỢT
+0.732 0.78  0.71  0.70  kinhduong(vang) ~ matroi(vang)   <<< VƯỢT
+0.731 0.67  0.73  0.84  dapde(thuong) ~ tre(thuong)   <<< VƯỢT
+0.729 0.57  0.81  0.81  lachau(tim) ~ trongdong(tim)   <<< VƯỢT
+0.728 0.58  0.82  0.78  giaodong(thuong) ~ giong(vang)   <<< VƯỢT
+0.726 0.78  0.61  0.89  dapde(thuong) ~ thosan(thuong)   <<< VƯỢT
+0.723 0.67  0.70  0.87  antiem(tim) ~ cdt(tim)   <<< VƯỢT
+0.722 0.77  0.64  0.83  thaylang(thuong) ~ thosan(thuong)   <<< VƯỢT
+0.720 0.74  0.65  0.83  adv(vang) ~ langlieu(tim)
+0.718 0.61  0.76  0.81  antiem(tim) ~ ongdung(tim)
+0.715 0.63  0.72  0.85  antiem(tim) ~ truongchi(tim)
+0.715 0.55  0.77  0.87  lucsi(thuong) ~ sodua(tim)
+0.712 0.59  0.78  0.78  langlieu(tim) ~ melua(vang)
+0.709 0.59  0.78  0.76  kinhduong(vang) ~ tiendung(tim)
+0.709 0.73  0.61  0.88  lucsi(thuong) ~ thosan(thuong)
+0.708 0.68  0.67  0.85  thoren(thuong) ~ xathu(thuong)
+0.706 0.78  0.62  0.77  matroi(vang) ~ viemde(vang)
+0.704 0.71  0.64  0.85  caolo(tim) ~ xathu(thuong)
+0.704 0.51  0.83  0.75  nghedong(tim) ~ trongdong(tim)
+0.704 0.64  0.72  0.78  maudia(vang) ~ thaylang(thuong)
+0.701 0.85  0.50  0.90  caolo(tim) ~ langlieu(tim)
+0.701 0.70  0.64  0.83  ongdung(tim) ~ thachsanh(tim)
+0.700 0.69  0.64  0.84  cdt(tim) ~ thachsanh(tim)
+0.700 0.61  0.72  0.81  giaodong(thuong) ~ lactuong(thuong)
+0.696 0.79  0.62  0.70  longnu(vang) ~ mauthoai(vang)
+0.695 0.64  0.65  0.88  thaylang(thuong) ~ tre(thuong)
+0.695 0.62  0.71  0.78  langlieu(tim) ~ thocong(tim)
+0.694 0.70  0.66  0.76  giong(vang) ~ lactuong(thuong)
+0.690 0.63  0.66  0.87  chantrau(thuong) ~ thosan(thuong)
+# vượt ngưỡng: 19 cặp
+# màu chủ đạo từng mã:
+adv          vang   dong 40%, da 25%, cham 22%
+antiem       tim    dat 43%, da 34%, la 13%
+auco         vang   trang 49%, da 22%, dong 10%
+baahoa       tim    son 36%, lua 30%, trang 29%
+caolo        tim    sat 36%, dat 26%, da 20%
+caong        tim    cham 61%, trang 16%, nuoc 16%
+cdt          tim    da 56%, dat 30%, ngoc 7%
+chantrau     thuong dat 73%, dong 12%, son 8%
+chodo        thuong dat 28%, nuoc 27%, cham 20%
+chuongdong   thuong trang 39%, da 26%, dong 22%
+cuoi         vang   dat 29%, la 24%, da 19%
+dapde        thuong dat 96%, dong 3%
+denroi       thuong son 29%, dong 28%, lua 25%
+dotnuong     thuong sat 49%, lua 26%, son 14%
+giaodong     thuong sat 47%, dong 28%, da 15%
+giong        vang   sat 47%, da 21%, dong 18%
+haisen       thuong la 48%, nuoc 25%, son 20%
+halong       vang   ngoc 45%, nuoc 25%, trang 15%
+kimquy       vang   dong 53%, ngoc 24%, la 10%
+kinhduong    vang   son 43%, dong 27%, da 12%
+kylan        vang   dong 61%, trang 34%, lua 1%
+lachau       tim    dong 70%, dat 15%, sat 4%
+lactuong     thuong sat 52%, dong 23%, trang 14%
+langlieu     tim    dong 46%, da 23%, dat 14%
+llq          vang   cham 27%, dong 24%, da 20%
+longnu       vang   ngoc 28%, nuoc 26%, da 17%
+lucsi        thuong dat 72%, sat 13%, dong 10%
+lyngu        tim    lua 46%, dong 14%, trang 10%
+matroi       vang   dong 33%, lua 24%, son 17%
+mau          vang   la 34%, ngoc 24%, da 19%
+maudia       vang   dat 46%, son 28%, dong 18%
+mauthoai     vang   nuoc 28%, cham 24%, trang 19%
+melua        vang   dong 42%, la 32%, da 12%
+mychau       tim    tim 47%, trang 31%, da 19%
+nghedong     tim    dong 75%, ngoc 17%, son 5%
+nguphu       thuong trang 40%, ngoc 18%, dat 16%
+ongdung      tim    da 54%, dat 36%, reu 3%
+ongho        vang   lua 59%, trang 16%, dong 15%
+ongtao       tim    da 41%, son 35%, dong 9%
+ongthoi      thuong reu 43%, la 28%, dat 11%
+potaoapui    tim    da 39%, dat 16%, dong 9%
+sodua        tim    dat 86%, la 6%, tim 4%
+tanvien      vang   reu 44%, dong 20%, da 17%
+thachsanh    tim    da 53%, dong 16%, la 11%
+thansan      tim    trang 39%, dat 24%, reu 20%
+thansuong    thuong trang 49%, nuoc 47%, cham 2%
+thaylang     thuong dat 42%, reu 16%, son 13%
+thaymo       thuong trang 49%, tim 25%, lua 12%
+thienloi     vang   sat 26%, cham 25%, dong 15%
+thocong      tim    dong 29%, trang 20%, da 16%
+thogom       thuong dat 48%, dong 34%, cham 9%
+thoren       thuong sat 46%, dat 40%, lua 10%
+thosan       thuong dat 61%, reu 32%, trang 4%
+tiendung     tim    son 48%, da 24%, dong 17%
+tre          thuong dat 69%, la 15%, dong 14%
+trongdong    tim    dong 79%, dat 8%, trang 6%
+truongchi    tim    dat 37%, da 29%, cham 27%
+trutroi      vang   sat 69%, dong 13%, dat 8%
+viemde       vang   da 23%, trang 20%, lua 18%
+xathu        thuong sat 57%, dat 18%, trang 8%

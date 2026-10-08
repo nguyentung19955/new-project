@@ -156,7 +156,9 @@ function storyFoe(type, x, sc) {
   return `<g transform="translate(${x + w / 2} ${168 - h - fly}) scale(-1 1)"><svg width="${w}" height="${h}" style="width:${w}px;height:${h}px" viewBox="0 0 ${a.w} ${a.h}">${inner}</svg></g>`;
 }
 function storyScene(p) {
-  const body = storyBackdrop(p.bg, p)
+  // claude/xuat-goi-pixel: phông tranh truyện pixel (canh/truyen-nen-<bg>) khi bật pixel
+  const pb = typeof pxUrl === 'function' && p.bg && pxUrl('canh', 'truyen-nen-' + p.bg);
+  const body = (pb ? `<image href="${pb}" x="0" y="0" width="320" height="200" preserveAspectRatio="xMidYMid slice" style="image-rendering:pixelated"/>` : storyBackdrop(p.bg, p))
     + (p.heroes || []).map(([t, x, sc]) => storyHero(t, x, sc)).join('')
     + (p.foes || []).map(([t, x, sc]) => storyFoe(t, x, sc)).join('');
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200" preserveAspectRatio="xMidYMid slice">${body}</svg>`;
@@ -201,6 +203,8 @@ function rosterOfLevel(level) {
 const RESULT_FILE = (id, win) => [`scenes/${win ? 'thang' : 'thua'}-${id}.png`, ...(id === 'sontinh' ? SCENE_FILE[win ? 'win' : 'lose'] : [])];
 // tranh / khung giao diện luôn dùng khi có file (như ảnh nền menu, nút ui/), không phụ thuộc cài đặt "Dùng ảnh AI" của nhân vật
 function resultImg(id, win) {
+  const px = typeof pxUrl === 'function' && pxUrl('canh', `${win ? 'thang' : 'thua'}-${id}`);   // claude/xuat-goi-pixel
+  if (px) return px;
   for (const p of RESULT_FILE(id, win)) if (asset(p, true)) return assetSrc(p);
   return '';
 }

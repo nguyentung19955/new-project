@@ -2,15 +2,15 @@
  "code": "khung-nguoi-choi",
  "group": "giao-dien",
  "name": "khung người chơi (menu)",
- "w": 96,
- "h": 32,
- "ax": 48,
- "ay": 31,
+ "w": 192,
+ "h": 66,
+ "ax": 96,
+ "ay": 65,
  "bbox": [
   0,
   0,
-  96,
-  32
+  192,
+  66
  ],
  "n": 1,
  "anims": {

@@ -74,6 +74,16 @@ theo tướng: `node tools/kiem-ky-nang.js --anh tong-quan.png` (lỗi khi cùng
 tướng) — toạ độ thiết kế 932×430. Sinh spec từ game: `node tools/build-ban-do-spec.js` (chạy js/data.js + js/game.js trong vm, `setMap` →
 `CONFIG.slots`). Lỗi `E_BAN_DO` khi `duong` / `o_dat` sai dạng.
 
+**Chuyển ảnh → pixel** (claude/pixel-con-lai) — khoá `anh`, giữ đúng bố cục / màu ảnh gen cũ thay vì khối thô:
+`{ "ma": "canh/nen-menu", "co": "320x180", "anh": { "tep": "assets/ui/nen-menu.jpg", "so_mau": 28, "khu_nhieu": 1, "lam_net": 1 } }`.
+`tep` ảnh nguồn (png / jpg, đường dẫn trong repo) · `cat` [x, y, w, h] cắt trước (điểm ảnh, hoặc tỉ lệ 0..1) · `vua` `phu` (phủ kín, cắt
+giữa — cảnh) / `chua` (vừa khít, nền trong suốt — vật) · `lam_net` 0..3 (làm nét trước khi lượng tử) · `so_mau` giữ tối đa N màu dùng
+nhiều nhất · `khu_nhieu` số lượt xoá chấm lẻ · `nen_trong` alpha < 128 → trong suốt · `vien` thêm viền đen quanh vật · `tron` dither Bayer
+chỗ bảng màu thiếu tông (thường để tắt — trời phẳng bị sọc). CLI đọc + cắt + thu nhỏ (trung bình vùng BOX) bằng `python3` Pillow rồi lõi
+`tuAnh()` lượng tử về bảng màu chung (khoảng cách Lab, sắc độ ×2,5, màu có sắc không về xám). Hình cũ vẽ bằng SVG (cảnh kết trận, chương,
+truyện, tranh nhỏ): chụp trước bằng `node tools/chup-nguon-pixel.js` → `tools/pixel/nguon/<mã>.png` (không commit). Lỗi `E_ANH`.
+Kinh nghiệm: hợp với ảnh ≥ 48 px (cảnh, cổng, núi, tranh); icon 16 px chuyển ra nhoè, mất nghĩa → giữ bản sinh hình học.
+
 **Từ khoá `mo`** (tiếng Việt / Anh, khớp nguyên từ): bộ xương · người đá · hồn / ma · giấy / vàng mã · con rối / đất nung · thân đồng · ma cây ·
 tóc búi / dựng / dài / trọc · khăn · nón · mũ lông chim / quạt lông · vương miện · mũ trùm · sừng · mũ · áo / giáp / giao lĩnh / cởi trần ·
 khố / váy / quần · áo choàng · gậy / giáo / rìu / kiếm / đao / cung / nỏ / chèo / chuông / tay không · cánh · hổ / nghê / lân / trâu / rùa (thú) ·

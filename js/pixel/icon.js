@@ -152,7 +152,7 @@ Object.assign(window.PIXEL_MANIFEST, {
 "icon/ui-tran-4-3": {"name":"khoá","w":16,"h":16,"ax":8,"ay":15,"bbox":[2,2,12,13],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}}},
 "icon/ui-tran-4-4": {"name":"đổi hàng / làm mới","w":16,"h":16,"ax":8,"ay":15,"bbox":[1,1,13,14],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}}},
 "icon/ui-tran-5-1": {"name":"mẹo","w":16,"h":16,"ax":8,"ay":15,"bbox":[1,0,13,14],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}}},
-"icon/ui-tran-5-2": {"name":"vô tận","w":16,"h":16,"ax":8,"ay":15,"bbox":[1,4,14,8],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}}},
+"icon/ui-tran-5-2": {"name":"vô tận","w":16,"h":16,"ax":8,"ay":15,"bbox":[0,3,16,10],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}}},
 "icon/ui-tran-5-3": {"name":"vào trận","w":16,"h":16,"ax":8,"ay":15,"bbox":[1,2,14,13],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}}},
 "icon/ui-tran-5-4": {"name":"xong","w":16,"h":16,"ax":8,"ay":15,"bbox":[1,2,14,12],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}}},
 "icon/vai-danhlan": {"name":"vai trò: Đánh lan","w":12,"h":12,"ax":6,"ay":11,"bbox":[1,1,10,10],"n":1,"anims":{"main":{"start":0,"n":1,"fps":1,"loop":false}}},

@@ -21,7 +21,44 @@ function loadCore() {
   const w = {};
   new Function('window', fs.readFileSync(path.join(__dirname, 've-pixel-ds.js'), 'utf8'))(w);
   require('./pixel/thu-vien.js');
-  return require('./ve-pixel-core.js')(w.VE_PIXEL_DS, globalThis.VE_PIXEL_TV || {});
+  const K = require('./ve-pixel-core.js')(w.VE_PIXEL_DS, globalThis.VE_PIXEL_TV || {});
+  K.DS_MA = w.VE_PIXEL_DS.ma;
+  return K;
+}
+
+// ---------------------------------------------------------------- chuyển ảnh → pixel (claude/pixel-con-lai)
+// spec "anh": { "tep": "assets/ui/nen-menu.jpg", "cat": [x, y, w, h] (điểm ảnh nguồn, hoặc tỉ lệ 0..1), "vua": "phu" | "chua",
+//   "lam_net": 0..3, "so_mau", "khu_nhieu", "vien", "nen_trong" } → đọc + cắt + thu nhỏ (trung bình vùng BOX) bằng python3 Pillow
+//   thành RGBA đúng cỡ "co", lõi tuAnh() lượng tử về bảng màu.
+const PY_ANH = `
+import sys, json
+from PIL import Image, ImageFilter
+a = json.loads(sys.argv[1]); im = Image.open(a['tep']).convert('RGBA')
+c = a.get('cat')
+if c:
+    if all(v <= 1 for v in c): c = [c[0] * im.width, c[1] * im.height, c[2] * im.width, c[3] * im.height]
+    im = im.crop((int(c[0]), int(c[1]), int(c[0] + c[2]), int(c[1] + c[3])))
+W, H = a['w'], a['h']
+if a.get('vua') == 'chua':
+    k = min(W / im.width, H / im.height); nw, nh = max(1, round(im.width * k)), max(1, round(im.height * k))
+    sm = im.resize((nw, nh), Image.BOX); out = Image.new('RGBA', (W, H), (0, 0, 0, 0)); out.paste(sm, ((W - nw) // 2, H - nh)); im = out
+else:
+    k = max(W / im.width, H / im.height); nw, nh = max(W, round(im.width * k)), max(H, round(im.height * k))
+    im = im.resize((nw, nh), Image.BOX); x, y = (nw - W) // 2, (nh - H) // 2; im = im.crop((x, y, x + W, y + H))
+for _ in range(int(a.get('lam_net', 0))): im = im.filter(ImageFilter.UnsharpMask(radius=1, percent=80, threshold=2))
+sys.stdout.buffer.write(im.tobytes())
+`;
+function docAnh(K, list) {
+  for (const sp of list) {
+    if (!sp || !sp.anh || typeof sp.anh !== 'object') continue;
+    const g = String(sp.ma || '').split('/')[0], d = (K.DS_MA || []).find((x) => x.k === sp.ma) || {};
+    const [w, h] = K.coMacDinh(g, sp.co || d.co).split('x').map(Number);
+    const tep = path.resolve(ROOT, sp.anh.tep || '');
+    if (!sp.anh.tep || !fs.existsSync(tep)) { sp.anh.loi = 'không thấy tệp'; continue; }
+    const r = spawnSync('python3', ['-c', PY_ANH, JSON.stringify({ ...sp.anh, tep, w, h })], { maxBuffer: 1 << 26 });
+    if (r.status || !r.stdout || r.stdout.length !== w * h * 4) { sp.anh.loi = String(r.stderr || 'python3 / Pillow lỗi').trim().split('\n').pop(); continue; }
+    Object.defineProperty(sp.anh, 'rgba', { value: new Uint8Array(r.stdout), enumerable: false });
+  }
 }
 
 // ---------------------------------------------------------------- ảnh RGBA + PNG (đồng bộ)
@@ -188,6 +225,7 @@ async function main(argv) {
   if (!spec) { console.error('Cách dùng: node tools/ve-pixel.js --spec <file.json|thư mục> [--out goi-pixel.zip] [--xem <thư mục>] [--nap [--ghi-de]]\n           node tools/ve-pixel.js --mau · --thu-vien [nhóm/mã] [--loai vk]   (xem docs/pixel/SPEC.md)'); return 2; }
   if (!fs.existsSync(spec)) { console.error(`E_SPEC: không thấy ${spec}`); return 2; }
   const t = docTep(spec);
+  docAnh(K, t.list);
   const r = K.docSpec(t.list);
   const loi = [...t.loi, ...r.loi];
   if (loi.length) { inLoi(loi); console.error(`ve-pixel: ${loi.length} lỗi — chưa ghi gì.`); return 1; }

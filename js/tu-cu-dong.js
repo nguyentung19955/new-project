@@ -620,10 +620,18 @@ function cdRigFrame(ctx, R, P, st, o) {
     ctx.save(); ctx.translate(T.pv[0], T.pv[1]); ctx.rotate(T.ang);
     const ux = (R.tip[0] - R.pivot[0]) / R.len, uy = (R.tip[1] - R.pivot[1]) / R.len;
     ctx.translate(ux * T.d * R.len, uy * T.d * R.len);
-    if (img === 'glow') drawGlowOnly(ctx, R.arm, R.ax0 - R.pivot[0], R.ay0 - R.pivot[1], R.arm.width, R.arm.height, glow[0], glow[1], glow[2]);
+    if (img === 'outline') drawOutlineOnly(ctx, R.arm, R.ax0 - R.pivot[0], R.ay0 - R.pivot[1], R.arm.width, R.arm.height, o.outline[0], o.outline[1], 0, o.outline[2]);
+    else if (img === 'glow') drawGlowOnly(ctx, R.arm, R.ax0 - R.pivot[0], R.ay0 - R.pivot[1], R.arm.width, R.arm.height, glow[0], glow[1], glow[2]);
     else ctx.drawImage(img, R.ax0 - R.pivot[0], R.ay0 - R.pivot[1]);
     ctx.restore();
   };
+  // claude/hao-quang-tim-vang: viền bậc Tím / Vàng quanh từng lớp (vẽ trước thân → chỗ nối bị thân che)
+  if (o.outline && typeof drawOutlineOnly === 'function') {
+    const [oc, oa, ow] = o.outline;
+    drawOutlineOnly(ctx, R.legs, 0, 0, R.W, R.H, oc, oa, 0, ow);
+    drawOutlineOnly(ctx, R.upper, cdRigBend(P) * R.hip * 0.3, 0, R.W, R.upper.height, oc, oa, 0, ow);
+    armDraw('outline');
+  }
   if (glow) {
     drawGlowOnly(ctx, R.legs, 0, 0, R.W, R.H, glow[0], glow[1], glow[2]);
     drawGlowOnly(ctx, R.upper, cdRigBend(P) * R.hip * 0.3, 0, R.W, R.upper.height, glow[0], glow[1], glow[2]);
@@ -713,6 +721,7 @@ function cdDrawHero(ctx, h, x, y, o, s, look, def, img, tierShown, ascShown) {
   CD.stats.hero++; CD.seen.add(h.type);
   const t = o.t || 0, dir = o.dir || 1, seed = cdSeed(h.id, h.type);
   const kind = cdWeapon(h.type, def.attack);
+  const rk = !o.noRankFx && typeof rankFxOf === 'function' && rankFxOf(def);   // claude/hao-quang-tim-vang
   const P = cdPose({ t, seed, swing: o.swing || 0, castT: o.castT || 0, castUlt: !!o.castUlt, hurt: o.hurt || 0, fall: o.fall, win: o.win,
     melee: def.attack === 'melee' });
   if (o.noIdle) { P.sy = 1; P.sx = 1; }
@@ -763,7 +772,8 @@ function cdDrawHero(ctx, h, x, y, o, s, look, def, img, tierShown, ascShown) {
     const PP = dying ? { ...P, bend: 0, dx: 0, rot: 0, sy: 1, phase: '' } : P;
     const tg = P.glow > 0 ? [o.castColor || look.attrColor || '#FFE08A', 12 * P.glow * (o.castUlt ? 1.4 : 1), 0.85 * P.glow] : !dying && cdTierGlow(h, look, def, t, tierShown, ascShown);
     cdRigFrame(ctx, R, PP, st, { kind, col: look.attrColor, glow: tg ? [tg[0], tg[1] / k, tg[2]] : null,
-      flashC: o.hurt > 0 ? (Math.floor(t * 30) % 2 ? '#FFFFFF' : '#FF5A4A') : null, noArm: CD.noArm, noFx: CD.noFx || dying });
+      flashC: o.hurt > 0 ? (Math.floor(t * 30) % 2 ? '#FFFFFF' : '#FF5A4A') : null, noArm: CD.noArm, noFx: CD.noFx || dying,
+      outline: rk && !dying ? [rk.c, rankAlpha(rk, t, seed), rk.w] : null });
     ctx.restore();
     if (!dying) drawPackFront(ctx, h, def, t, H, ascShown);
     // không tách được tay: vệt chém / đạn / quả cầu vẽ theo vị trí tay ước lượng như khi cử động nguyên khối
@@ -777,6 +787,7 @@ function cdDrawHero(ctx, h, x, y, o, s, look, def, img, tierShown, ascShown) {
   const w = H * p.ar, base = ctx.globalAlpha;
   if (P.glow > 0) drawGlowOnly(ctx, p.c, -w * p.fx, -H, w, H, o.castColor || look.attrColor || '#FFE08A', 12 * P.glow * (o.castUlt ? 1.4 : 1), 0.85 * P.glow);
   else if (!dying) packGlow(ctx, p.c, w, H, h, look, def, t, tierShown, ascShown);
+  if (rk && !dying) drawRankOutline(ctx, p.c, -w * p.fx, -H, w, H, rk, rankAlpha(rk, t, seed));
   // bóng mờ lùi sau thân khi lao tới (cận chiến)
   if (P.phase === 'strike' && def.attack === 'melee') {
     ctx.save(); ctx.globalAlpha = base * 0.16 * (1 - P.k); ctx.translate(-0.08 * H, 0);
