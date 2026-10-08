@@ -95,10 +95,10 @@ def trang_thai_bdn():
             r = '<rect x="7.5" y="7.5" width="29" height="29" fill="%s" stroke="%s" stroke-width="3"/>' % (NEN_KHUNG, mau)
         return '<svg width="44" height="44">%s</svg>' % r
     return ('<div class="trang-thai">'
-            '<div class="muc">%s<span>Phòng đang đứng: sáng, có viền</span></div>'
-            '<div class="muc">%s<span>Phòng đã qua: tô đặc</span></div>'
+            '<div class="muc">%s<span>Đang đứng: sáng, có viền</span></div>'
+            '<div class="muc">%s<span>Đã qua: tô đặc</span></div>'
             '<div class="muc">%s<span>Phòng kề đã biết: chỉ có viền</span></div>'
-            '<div class="muc"><span>Phòng chưa biết: không hiện</span></div>'
+            '<div class="muc"><span>Chưa biết: không hiện</span></div>'
             '</div>') % (o('dang'), o('qua'), o('biet'))
 
 
@@ -189,14 +189,14 @@ def ve_B():
 
 
 def ve_C():
-    S = 204
-    svg, W, H, vt = so_do_lon(C, S=S, G=64, chia=['q1', 'q2', 'ta'], nhan_rieng={'bd': 'Bắt đầu'}, co_chu=23)
+    S = 216
+    svg, W, H, vt = so_do_lon(C, S=S, G=64, chia=['q1', 'q2', 'ta'], co_chu=22, o_trong=False)
     ghi = ''.join([
-        ghi_chu(vt, S, 3, 1, '<span>◀ Cửa này <b>khóa</b> cho tới khi gom đủ 3 mảnh chìa</span>', lech=(0, 40)),
-        ghi_chu(vt, S, 0, 1, '<span><b>Cánh trái</b><br>cuối cánh là Rương báu ▼</span>', lech=(0, 30)),
-        ghi_chu(vt, S, 4, 1, '<span><b>Cánh phải</b><br>cuối cánh là Thương nhân ▼</span>', lech=(0, 30)),
-        ghi_chu(vt, S, 3, 3, '<span>◀ <b>Cánh dưới</b><br>ngắn nhưng khó: quái Tinh anh</span>'),
-        ghi_chu(vt, S, 1, 3, '<span>Sảnh giữa cũng là nơi vào ải ▲</span>', lech=(30, -20)),
+        ghi_chu(vt, S, 3, 1, '<span>◀ Cửa này <b>khóa</b> cho tới khi gom đủ 3 mảnh chìa</span>', lech=(-30, 60)),
+        ghi_chu(vt, S, 0, 1, '<span><b>Cánh trái</b><br>cuối cánh là<br>Rương báu ▼</span>', lech=(0, 40)),
+        ghi_chu(vt, S, 4, 1, '<span><b>Cánh phải</b><br>cuối cánh là<br>Thương nhân ▼</span>', lech=(0, 40)),
+        ghi_chu(vt, S, 3, 3, '<span>◀ <b>Cánh dưới</b><br>ngắn mà khó:<br>quái Tinh anh</span>'),
+        ghi_chu(vt, S, 1, 1, '<span>Phòng Bắt đầu là <b>sảnh giữa</b>, đi cánh nào xong cũng quay về đây ↘</span>', lech=(20, 40)),
         ghi_chu(vt, S, 3, 0, '<span>◀ Suối hồi rồi mới tới Trùm</span>', lech=(0, 30)),
     ])
     than = dau_trang('KIỂU C', 'Sảnh trung tâm có các cánh',
