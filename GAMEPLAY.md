@@ -2837,3 +2837,6 @@ Người dùng chọn phương án 4: máu quái tăng dần theo đợt + hạ 
 - Nút / cử chỉ Back trên web: luôn gài sẵn một mục lịch sử (gài lại ở lần chạm đầu). Back khi đang mở bảng → đóng bảng (như cũ); trong trận → **tạm dừng + hộp "Rời trận?"** (Ở lại = chạy tiếp, Rời trận = Dừng chơi; Back/Esc lần nữa = Ở lại); ở menu → nhắc "Thoát game?", bấm Back lần 2 trong 2 giây mới rời trang.
 - Đóng/tải lại trang khi đang trong trận: trình duyệt hỏi lại (beforeunload). Trong app Capacitor giữ hành vi cũ (chỉ đóng bảng).
 - Test: `node tests/chan-vuot-lui/chan-vuot-lui.test.js` (giả lập điện thoại hasTouch, 844×390 + dọc 390×844).
+
+## claude/vo-tan-su-kien — Test báo trước sự kiện lỗi thời sau banner xếp hàng
+- Test "troibua: hết đợt 59 → báo trước" lỗi lặp trên nhánh chính: game không sai — banner "vượt qua" của sự kiện trước còn hiện nên banner báo trước được xếp hàng (`ui.queueBanner`, không chồng). Test nay chờ banner tới lượt (≤ 3,5 giây, trận đứng yên lúc chờ) rồi mới kiểm, vẫn bắt buộc có báo trước.
