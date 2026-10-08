@@ -578,6 +578,8 @@ function drawWaterLevel(ctx, water, t) {
 const SPOT_THEME = { song: 'co', dam: 'co', dong: 'co', rung: 'dat', hang: 'da', bien: 'cat', thanh: 'gach' };
 // Ô đặt tướng theo bản thiết kế: ellipse 15×10 (tọa độ thiết kế)
 // state: dry | flooded | raised | target | free | hint | soon
+// claude/pixel-con-lai: khung pixel nhóm giao-dien (thanh máu…) khi bật pixel → canvas khung 0; không có thì null
+const pxUiFrame = (code) => { const e = typeof pixelOn === 'function' && pixelOn() && pxEntry('giao-dien', code); return (e && pxFrame(e, 0)) || null; };
 function drawSpot(ctx, x, y, o, t) {
   const rx = 15 * DK, ry = 10 * DK;
   // v156: đế đặt tướng vẽ tay (tiles/de-tuong-*.png, cắt bằng tools/cat-items.py de-tuong / de-tuong-chu-de):
@@ -588,11 +590,13 @@ function drawSpot(ctx, x, y, o, t) {
   de.push(SPOT_THEME[th] || 'co', 'thuong');
   // ảnh đế là một phần bản đồ (như nền vẽ tay) → luôn dùng nếu có, kể cả khi tắt "Dùng ảnh AI"
   let base = null;
-  for (const k of de) { const img = asset(`tiles/de-tuong-${k}.png`, true); if (img) { base = { img }; break; } }
+  // claude/pixel-con-lai: đế pixel cho trạng thái đặc biệt (ngập / núi / chọn / sẵn sàng); ô thường đã có bệ đá trong nền bản đồ pixel
+  if (typeof pixelOn === 'function' && pixelOn()) for (const k of de.slice(0, -2)) { const pe = pxEntry('nen', 'de-tuong-' + k), pf = pe && pxFrame(pe, 0); if (pf) { base = { img: pf }; break; } }
+  if (!base) for (const k of de) { const img = asset(`tiles/de-tuong-${k}.png`, true); if (img) { base = { img }; break; } }
   if (base) {
     // ảnh vuông, đế elip nằm giữa; mặt đế hơi cao hơn tâm ảnh (phối cảnh 3/4) → hạ ảnh xuống một chút
     const s = rx * 2.9;
-    ctx.drawImage(base.img, x - s / 2, y - s / 2 + ry * 0.3, s, s);
+    ctx.imageSmoothingEnabled = !base.img.getContext; ctx.drawImage(base.img, x - s / 2, y - s / 2 + ry * 0.3, s, s); ctx.imageSmoothingEnabled = true;
     o = { ...o, tileArt: true };
   }
   const tk = o.flooded ? 'ngap' : o.raised || o.tier === 2 ? 'cao' : o.tier === 1 ? 'giua' : 'thap';
@@ -2355,8 +2359,8 @@ function drawEnemy(ctx, e, t, o = {}) {
   const r = e.hp / e.maxHp;
   ctx.fillStyle = r > 0.5 ? '#3EBE3E' : r > 0.25 ? '#E0B030' : '#D84A2A';
   ctx.fillRect(e.x - w / 2, by, w * Math.max(0, r), 3);
-  const fr = asset(e.def.boss ? 'ui/thanh-mau-boss.png' : 'ui/thanh-mau-quai.png', true);   // v163: khung thanh máu vẽ tay (nếu có)
-  if (fr) ctx.drawImage(fr, e.x - w / 2 - (e.def.boss ? 8 : 4), by - 3, w + (e.def.boss ? 16 : 8), 9);
+  const fr = pxUiFrame(e.def.boss ? 'thanh-mau-boss' : 'thanh-mau-quai') || asset(e.def.boss ? 'ui/thanh-mau-boss.png' : 'ui/thanh-mau-quai.png', true);   // v163: khung thanh máu vẽ tay (nếu có) · pixel trước
+  if (fr) { ctx.imageSmoothingEnabled = !fr.getContext; ctx.drawImage(fr, e.x - w / 2 - (e.def.boss ? 8 : 4), by - 3, w + (e.def.boss ? 16 : 8), 9); ctx.imageSmoothingEnabled = true; }
   // chấm hành bên trái thanh máu (quái tinh anh có thể có hành phụ)
   if (detail) [e.el, e.el2].filter(Boolean).forEach((el, k) => {
     circle(ctx, e.x - w / 2 - 5 - k * 7, by + 1.5, 3.4, '#0D0B08');

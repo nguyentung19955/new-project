@@ -643,7 +643,7 @@ function VePixelCore(DS, TV) {
         break;
       }
       case 'thanh': {
-        const t = H <= 6 ? 1 : 2, x0 = H <= 6 ? 1 : 2;
+        const t = H <= 8 ? 1 : 2, x0 = H <= 8 ? 1 : 2;
         paint(g, M().rect(x0, 1, W - 2 * x0, H - 2).cut(M().rect(x0 + t, 1 + t, W - 2 * x0 - 2 * t, H - 2 - 2 * t)), rk);
         if (o.vien === 'sao') for (const x of [0, W - 1]) for (let y = 1; y < H - 1; y++) g.set(x, y, kl);
         if (o.vien === 'rang') for (const x of [0, W - 1]) { g.set(x, 0, kb); g.set(x, H - 1, kb); }
@@ -829,6 +829,35 @@ function VePixelCore(DS, TV) {
       paint(g, new Mask(W, H).ell(sx, sy + 0.5, 3.6, 1.6), ['trang-xam', 'trang-xam', 'trang-xam'].map(C), 'base');
     }
     return [{ name: 'main', fps: 1, loop: false, frames: [g] }];
+  }
+
+  // ---- chuyển ảnh → pixel (claude/pixel-con-lai): ảnh gen / ảnh chụp hình cũ đã thu nhỏ đúng cỡ (CLI dùng PIL BOX) →
+  //   lượng tử về bảng màu chung (khoảng cách Lab) · giới hạn số màu (giữ màu dùng nhiều) · khử chấm lẻ · nền trong suốt + viền đen
+  const lab = (() => { const f = (c) => { c /= 255; return c > 0.04045 ? ((c + 0.055) / 1.055) ** 2.4 : c / 12.92; }, g = (t) => (t > 0.008856 ? Math.cbrt(t) : 7.787 * t + 16 / 116);
+    return (r, gg, b) => { const R = f(r), G = f(gg), B = f(b), X = g((R * 0.4124 + G * 0.3576 + B * 0.1805) / 0.95047), Y = g(R * 0.2126 + G * 0.7152 + B * 0.0722), Z = g((R * 0.0193 + G * 0.1192 + B * 0.9505) / 1.08883); return [116 * Y - 16, 500 * (X - Y), 200 * (Y - Z)]; }; })();
+  let PAL_LAB = null;
+  function ganNhat(L, ds) { let bi = 0, bd = 1e18; for (const i of ds) { const q = PAL_LAB[i], d = (L[0] - q[0]) ** 2 + (L[1] - q[1]) ** 2 + (L[2] - q[2]) ** 2; if (d < bd) { bd = d; bi = i; } } return bi; }
+  function tuAnh(rgba, W, H, o = {}) {
+    if (!PAL_LAB) PAL_LAB = PAL.map((p) => lab(...p.rgb));
+    const all = PAL.map((_, i) => i), nen = o.nen_trong !== false && o.nen_trong !== undefined ? (o.nguong_alpha || 128) : 0;
+    const L = [], idx = new Int16Array(W * H).fill(-1), dem = new Map();
+    for (let i = 0; i < W * H; i++) { const a = rgba[i * 4 + 3]; if (nen && a < nen) continue; L[i] = lab(rgba[i * 4], rgba[i * 4 + 1], rgba[i * 4 + 2]); idx[i] = ganNhat(L[i], all); dem.set(idx[i], (dem.get(idx[i]) || 0) + 1); }
+    const soMau = o.so_mau || 24;
+    if (dem.size > soMau) {   // giữ soMau màu dùng nhiều nhất, điểm còn lại về màu gần nhất trong số đó
+      const giu = [...dem.entries()].sort((a, b) => b[1] - a[1]).slice(0, soMau).map(([i]) => i);
+      for (let i = 0; i < W * H; i++) if (idx[i] >= 0 && !giu.includes(idx[i])) idx[i] = ganNhat(L[i], giu);
+    }
+    for (let k = 0; k < (o.khu_nhieu ?? 1); k++) {   // chấm lẻ (không điểm kề nào cùng màu) → màu chiếm ≥5/8 xung quanh
+      const cu = Int16Array.from(idx);
+      for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+        const v = cu[y * W + x]; if (v < 0) continue; const c = new Map(); let cung = 0;
+        for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { if (!dx && !dy) continue; const xx = x + dx, yy = y + dy; if (xx < 0 || yy < 0 || xx >= W || yy >= H) continue; const n = cu[yy * W + xx]; if (n === v) cung++; c.set(n, (c.get(n) || 0) + 1); }
+        if (cung) continue; let best = v, bn = 0; for (const [n, m] of c) if (m > bn) { bn = m; best = n; } if (bn >= 5 && best >= 0) idx[y * W + x] = best;
+      }
+    }
+    const g = new Grid(W, H); for (let i = 0; i < W * H; i++) if (idx[i] >= 0) g.d[i] = idx[i] + 1;
+    if (o.vien) outline(g);
+    return g;
   }
   function sinh(it) {
     // mẫu vẽ tay trong thư viện (tools/pixel/thu-vien.js): dựng từ công thức khung + thay bộ phận + đổi màu
@@ -1099,7 +1128,7 @@ function VePixelCore(DS, TV) {
   }
 
   // ═════════════ SPEC (JSON) → mã — dùng cho CLI tools/ve-pixel.js; định dạng: docs/pixel/SPEC.md ═════════════
-  const SPEC_KEYS = new Set(['ma', 'ten', 'mo', 'co', 'bo_phan', 'hanh', 'dong_tac', 'mau', 'thay', 'doi_mau', 've_tay', 'ghi_chu', 'so_sanh', 'nguong', 'duong', 'o_dat']);
+  const SPEC_KEYS = new Set(['ma', 'ten', 'mo', 'co', 'bo_phan', 'hanh', 'dong_tac', 'mau', 'thay', 'doi_mau', 've_tay', 'ghi_chu', 'so_sanh', 'nguong', 'duong', 'o_dat', 'anh']);
   const HANH_TU = { kim: 'kim', moc: 'moc', 'mộc': 'moc', thuy: 'thuy', 'thủy': 'thuy', 'thuỷ': 'thuy', hoa: 'hoa', 'hỏa': 'hoa', 'hoả': 'hoa', tho: 'tho', 'thổ': 'tho' };
   // → { it, loi: [{ ma: 'E_…', msg }] }
   function tuSpec(sp, i = 0) {
@@ -1117,7 +1146,14 @@ function VePixelCore(DS, TV) {
     if (sp.hanh !== undefined) { hanh = HANH_TU[lc(sp.hanh)] || ''; if (!hanh) L('E_HANH', `"hanh" phải là kim / moc / thuy / hoa / tho, đang là ${JSON.stringify(sp.hanh)}`); }
     if (loi.length) return { loi };
     let it;
-    if (sp.mau) {
+    if (sp.anh) {   // chuyển ảnh → pixel: CLI đã đọc + thu nhỏ ảnh vào sp.anh.rgba (Uint8Array W×H×4) theo "co"
+      const A = sp.anh;
+      if (!A.tep || typeof A.tep !== 'string') { L('E_ANH', '"anh": { "tep": "assets/…png|jpg", "so_mau", "khu_nhieu", "vien", "nen_trong", "cat", "vua" }'); return { loi }; }
+      if (!A.rgba) { L('E_ANH', `"anh": chưa đọc được ảnh ${A.tep} (chạy bằng CLI tools/ve-pixel.js — cần python3 + Pillow)${A.loi ? ': ' + A.loi : ''}`); return { loi }; }
+      const [w, h] = coMacDinh(g, sp.co || d.co).split('x').map(Number);
+      it = { k: sp.ma, g, code, ten: sp.ten || d.ten || code, mo: sp.mo || d.mo || '', w, h, ax: Math.floor(w / 2), ay: h - 1, opt: { anh: A.tep },
+        anims: [{ name: 'main', fps: 1, loop: false, frames: [tuAnh(A.rgba, w, h, A)] }] };
+    } else if (sp.mau) {
       if (!TV[sp.mau]) { L('E_MAU_TV', `"mau": không có "${sp.mau}" trong thư viện vẽ tay (tools/pixel/thu-vien.js)`); return { loi }; }
       if (sp.mau.split('/')[0] !== g && !(NHAN_VAT(g) && NHAN_VAT(sp.mau.split('/')[0]))) L('E_MAU_TV', `"mau" ${sp.mau} khác nhóm ${g}`);
       let r;
@@ -1189,7 +1225,7 @@ function VePixelCore(DS, TV) {
     return tong ? khac / tong : 0;
   }
 
-  return { PAL, PI, C, ANIM_RANGE, NHOM_TEN, NHAN_VAT, VERSION_GOI, RAMP, MAU_TEN, HANH, OPT_NV, OPT_ICON, OPT_NEN, OPT_UI, OPT_CANH, OPT_BANDO, HINH_THEM, OPT_TRONG, optSet, MAU_KEYS, HANH_KEYS, optValues, defOpts, lc, MAU_TU, RE_TU, tu, mauTrong, coTu, som, hieuMoTa, Grid, Mask, rampOf, paint, outline, blit, shift, flipX, rot90, swapC, bbox, scaleGrid, SEED, rnd, seedOf, weaponGrid, stampWeapon, burst, SKIN, veNguoi, veThu, veRan, ve, nam, toi, sang, rage, sinhNhanVat, sinhIcon, sinhNen, sinhUI, sinhCanh, sinhBanDo, duongSvg, veHinhThem, sinh, coMacDinh, taoItem, kiemTra, CRC, crc32, zlibStore, zlib, chunk, encodePNG, makeZip, readZip, chanDung, CHARS, nguonTxt, goiZip, TV, docNguon, LOAI_PART, loaiPart, mauTV, boPhanTV, dungMau, tuSpec, docSpec, soSanh
+  return { PAL, PI, C, ANIM_RANGE, NHOM_TEN, NHAN_VAT, VERSION_GOI, RAMP, MAU_TEN, HANH, OPT_NV, OPT_ICON, OPT_NEN, OPT_UI, OPT_CANH, OPT_BANDO, HINH_THEM, OPT_TRONG, optSet, MAU_KEYS, HANH_KEYS, optValues, defOpts, lc, MAU_TU, RE_TU, tu, mauTrong, coTu, som, hieuMoTa, Grid, Mask, rampOf, paint, outline, blit, shift, flipX, rot90, swapC, bbox, scaleGrid, SEED, rnd, seedOf, weaponGrid, stampWeapon, burst, SKIN, veNguoi, veThu, veRan, ve, nam, toi, sang, rage, sinhNhanVat, sinhIcon, sinhNen, sinhUI, sinhCanh, sinhBanDo, duongSvg, tuAnh, veHinhThem, sinh, coMacDinh, taoItem, kiemTra, CRC, crc32, zlibStore, zlib, chunk, encodePNG, makeZip, readZip, chanDung, CHARS, nguonTxt, goiZip, TV, docNguon, LOAI_PART, loaiPart, mauTV, boPhanTV, dungMau, tuSpec, docSpec, soSanh
   };
 }
 if (typeof module !== 'undefined' && module.exports) module.exports = VePixelCore;

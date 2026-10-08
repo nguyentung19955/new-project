@@ -10,14 +10,14 @@ colors:
   e = dong-sang
 
 part k0
-a.aaaaaaaaaaaaaaaaaaaaaaaaaaaa.a
-eaeeeeeeeeeeeeeeeeeeeeeeeeeeecae
-eaedccccccccccccccccccccccccdcae
-eaecaaaaaaaaaaaaaaaaaaaaaaaaecae
-eaeebeaaaaaaaaaaaaaaaaaaaaebecae
-eaedeeeeeeeeeeeeeeeeeeeeeeeedcae
-eaccccccccccccccccccccccccccccae
-a.aaaaaaaaaaaaaaaaaaaaaaaaaaaa.a
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+eeddddddddddddddddddddddddddddce
+edaaaaaaaaaaaaaaaaaaaaaaaaaaaade
+edaaa......................aaade
+edebea....................aebede
+edaaaaaaaaaaaaaaaaaaaaaaaaaaaade
+ecddddddddddddddddddddddddddddce
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 end
 
 anim main fps=1 once

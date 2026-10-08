@@ -22,7 +22,7 @@
   {"ma":"canh/thang-thachsanh","co":"320x180","bo_phan":{"canh":"rung","gio":"chieu"}},
   {"ma":"canh/thua-thachsanh","co":"320x180","bo_phan":{"canh":"rung","gio":"u"}},
   {"ma":"canh/nen-man-phu","co":"320x180","bo_phan":{"canh":"nui","gio":"dem"}},
-  {"ma":"canh/nen-menu","co":"320x180","bo_phan":{"canh":"menu","gio":"ngay"}},
+  {"ma": "canh/nen-menu", "co": "320x180", "anh": {"tep": "assets/ui/nen-menu.jpg", "so_mau": 32, "khu_nhieu": 1, "lam_net": 1}},
   {"ma":"canh/nen-thang","co":"320x180","bo_phan":{"canh":"menu","gio":"chieu"}},
   {"ma":"canh/nen-thua","co":"320x180","bo_phan":{"canh":"song","gio":"u"}},
   {"ma":"canh/truyen-nen-bien","co":"320x180","bo_phan":{"canh":"bien","gio":"ngay"}},
