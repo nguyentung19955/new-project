@@ -1,16 +1,16 @@
 {
  "code": "cong-phong-chau",
  "group": "nen",
- "name": "thành Phong Châu (castle — song, dam, bien)",
- "w": 48,
- "h": 48,
- "ax": 24,
- "ay": 47,
+ "name": "Thành Phong Châu",
+ "w": 64,
+ "h": 64,
+ "ax": 32,
+ "ay": 63,
  "bbox": [
-  1,
-  6,
-  46,
-  36
+  0,
+  0,
+  64,
+  62
  ],
  "n": 1,
  "anims": {

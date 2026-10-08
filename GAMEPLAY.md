@@ -2837,3 +2837,13 @@ Người dùng chọn phương án 4: máu quái tăng dần theo đợt + hạ 
 - Nút / cử chỉ Back trên web: luôn gài sẵn một mục lịch sử (gài lại ở lần chạm đầu). Back khi đang mở bảng → đóng bảng (như cũ); trong trận → **tạm dừng + hộp "Rời trận?"** (Ở lại = chạy tiếp, Rời trận = Dừng chơi; Back/Esc lần nữa = Ở lại); ở menu → nhắc "Thoát game?", bấm Back lần 2 trong 2 giây mới rời trang.
 - Đóng/tải lại trang khi đang trong trận: trình duyệt hỏi lại (beforeunload). Trong app Capacitor giữ hành vi cũ (chỉ đóng bảng).
 - Test: `node tests/chan-vuot-lui/chan-vuot-lui.test.js` (giả lập điện thoại hasTouch, 844×390 + dọc 390×844).
+
+## claude/ve-lai-pixel — Vẽ lại tay các hình pixel "chuyển ảnh" / phác thảo thô
+
+Người dùng chê các hình chuyển ảnh → pixel xấu → bỏ chuyển ảnh tự động, **tự thiết kế + vẽ tay** (bản thiết kế `docs/pixel/THIET-KE-LAI.md`,
+nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, so trước/sau `tools/pixel/mau/ve-lai/*-truoc-sau.png`).
+- **Cổng thành 5 kiểu** (`nen/cong-*`, 48 → 64×64): cổng làng mái ngói 2 tầng đầu đao + trụ biểu + tre; Phong Châu nhà mái thuyền Đông Sơn
+  + mặt trống đồng; hang đá mảng phẳng + nhũ đá + đuốc; bản rừng cổng gỗ sọ trâu + rào cọc + cây đa; Cổ Loa 3 vòng thành ốc + vọng lâu + nỏ thần.
+- **Bệ đặt tướng** (`nen/de-tuong-*`, 32×32): bệ trụ đá 3/4 có vành khắc trống đồng; chọn = vành vàng + 4 góc ngắm, sẵn sàng = vành ngọc,
+  ngập = chìm trong vũng nước gợn sóng, núi = bệ cao mặt rêu.
+- Các mã vẽ lại gỡ khỏi `tools/pixel/spec/*.json` (`tools/pixel/ve-lai/DA-VE-LAI.json`) để `--nap --ghi-de` không ghi đè.
