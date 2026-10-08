@@ -2372,6 +2372,10 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 243 — bỏ Đền Anh Hùng
+
+- Bỏ trang Đền Anh Hùng (den-anh-hung.html, tools/build-den.js) và nút mở nó ở màn Anh Hùng (người dùng yêu cầu 08/10).
+
 ## Phiên bản 242 — sửa 10 lỗi giao diện theo designer (tester đạt)
 
 - Bảng không còn trong suốt (khung pixel + nền đặc), da pixel đồng bộ (góc 2px, công tắc pixel), menu/đăng nhập pixel hoá + hoa văn Đông Sơn; Ngân khố: chip thỏi bạc trên topbar nháy "+X" + dòng trên bảng Sính lễ; Hợp thể dưới topbar; thoại góc trái trên chợ; vùng chạm ≥40px; Kho Báu ô "?" chạm xem nơi kiếm; 3 font, số thẳng hàng, 1 kiểu tab.
