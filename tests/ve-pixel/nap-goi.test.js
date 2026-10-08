@@ -2,7 +2,7 @@
 // Gói tạo bằng chính tools/ve-pixel.html (headless) vào thư mục tạm — không ghi gì vào assets/ hay js/ thật.
 // 1. Cài đặt (ngoài trận) có dòng "Gói pixel": nút Pixel bật/tắt (lưu trên máy), Nạp gói (.zip); không có trong bảng Tạm dừng
 // 2. zip hỏng / không phải gói / ảnh sai cỡ → báo lỗi, không lưu; gói tốt → kiểm tra, lưu IndexedDB, dùng ngay khi bật pixel:
-//    mã chưa có pixel (thachsanh) vẽ bằng ảnh trong gói, mã có sẵn (giong) bị gói ghi đè; mã ngoài gói (chodo) vẫn như cũ
+//    mã chưa có pixel (tướng + quái chọn tự động) vẽ bằng ảnh trong gói, mã có sẵn (giong) bị gói ghi đè; mã ngoài gói (chodo) vẫn như cũ
 // 3. tải lại trang: gói vẫn còn (IndexedDB); Gỡ gói → về như cũ; pixel tắt → gói không dùng (hình cũ)
 // 4. chụp Cài đặt 1920×934 · 844×390 → tests/ve-pixel/shots/
 const path = require('path');
@@ -45,16 +45,22 @@ function unzip(buf) {
 (async () => {
   const browser = await chromium.launch({ args: ['--allow-file-access-from-files'] });
   try {
+    // tướng + quái chưa có pixel: chọn tự động (không vỡ khi gộp thêm lô pixel)
+    const pick = await (await browser.newContext()).newPage();
+    await pick.route('**/firebase-config.js*', (rr) => rr.fulfill({ contentType: 'application/javascript', body: "const FIREBASE_CONFIG={apiKey:''};" }));
+    await pick.goto('file://' + path.join(ROOT, 'index.html'));
+    const [HERO, QUAI] = await pick.evaluate(() => [Object.keys(HEROES).find((k) => !window.PIXEL_MANIFEST['tuong/' + k]), Object.keys(ENEMIES).find((k) => !ENEMIES[k].boss && !window.PIXEL_MANIFEST['quai/' + k] && !window.PIXEL_MANIFEST['boss/' + k])]);
+    await pick.close();
+    ok(HERO && QUAI, `mã chưa có pixel để thử: tuong/${HERO}, quai/${QUAI}`);
     // ---- gói tạo bằng tool
     console.log('— tạo gói bằng tools/ve-pixel.html');
     const tp = await (await browser.newContext()).newPage();
     await tp.goto('file://' + path.join(ROOT, 'tools/ve-pixel.html'));
-    const bytes = await tp.evaluate(async () => {
+    const bytes = await tp.evaluate(async ([h, q]) => {
       const V = window.__vePixel; V.ITEMS.length = 0;
-      V.themMa(['tuong/thachsanh', 'tuong/giong', 'quai/casau']);
-      // đánh dấu giong bằng một pixel lạ để phân biệt với bản có sẵn
+      V.themMa(['tuong/' + h, 'tuong/giong', 'quai/' + q]);
       const z = await V.goiZip(); return z.errors.length ? z.errors : [...z.data];
-    });
+    }, [HERO, QUAI]);
     ok(typeof bytes[0] === 'number', 'tool xuất được gói 3 mã ' + (typeof bytes[0] === 'number' ? '' : bytes.join('; ')));
     const GOOD = path.join(TMP, 'goi-pixel.zip');
     fs.writeFileSync(GOOD, Buffer.from(bytes));
@@ -66,7 +72,7 @@ function unzip(buf) {
     const RAC = path.join(TMP, 'rac.zip'); fs.writeFileSync(RAC, Buffer.from('không phải zip'.repeat(5)));
     const KHONGGOI = path.join(TMP, 'khong-goi.zip'); fs.writeFileSync(KHONGGOI, makeZip([{ name: 'anh.png', data: files.get('assets/pixel/tuong/giong.png') }]));
     const SAICO = path.join(TMP, 'sai-co.zip');
-    fs.writeFileSync(SAICO, makeZip([...files].map(([n, d]) => ({ name: n, data: n.endsWith('thachsanh.json') ? Buffer.from(JSON.stringify({ ...JSON.parse(d), w: 16 })) : d }))));
+    fs.writeFileSync(SAICO, makeZip([...files].map(([n, d]) => ({ name: n, data: n.endsWith(`/${HERO}.json`) ? Buffer.from(JSON.stringify({ ...JSON.parse(d), w: 16 })) : d }))));
 
     // ---- game
     const ctx = await browser.newContext({ viewport: { width: 844, height: 390 } });
@@ -99,14 +105,14 @@ function unzip(buf) {
       else ok(/không hợp lệ/.test(t) && t.includes(why), `${path.basename(f)} → báo "${t}"`);
     }
     const s1 = await page.evaluate(() => ({ goi: PXGOI.goi && PXGOI.goi.items.map((i) => i.key) }));
-    ok(String(s1.goi) === 'tuong/giong,quai/casau', 'gói sai cỡ: chỉ nhận 2 mã đúng (thachsanh bị loại)');
+    ok(String(s1.goi.sort()) === String([`quai/${QUAI}`, 'tuong/giong'].sort()), `gói sai cỡ: chỉ nhận 2 mã đúng (${HERO} bị loại)`);
     await page.click('[data-act=pxg-go]');
     await page.waitForTimeout(300);
-    ok(await page.evaluate(() => !PXGOI.goi && !window.PIXEL_MANIFEST['quai/casau']), 'Gỡ gói → bỏ mã của gói');
+    ok(await page.evaluate((q) => !PXGOI.goi && !window.PIXEL_MANIFEST['quai/' + q], QUAI), 'Gỡ gói → bỏ mã của gói');
     // gói tốt khi pixel đang tắt: lưu nhưng game vẫn hình cũ
     let t = await nap(WRAP);
     ok(/Đã nạp 3 mã pixel/.test(t) && /bật Pixel/.test(t), `zip bọc thư mục: nạp 3 mã, nhắc bật Pixel ("${t}")`);
-    const off = await page.evaluate(() => ({ on: pixelOn(), e: pxEntry('tuong', 'thachsanh'), m: !!window.PIXEL_MANIFEST['tuong/thachsanh'] }));
+    const off = await page.evaluate((h) => ({ on: pixelOn(), e: pxEntry('tuong', h), m: !!window.PIXEL_MANIFEST['tuong/' + h] }), HERO);
     ok(!off.on && off.e === null && off.m, 'pixel tắt: gói đã ghép vào manifest nhưng pxEntry = null (vẽ hình cũ)');
 
     // bật pixel bằng nút → tải lại trang
@@ -114,7 +120,7 @@ function unzip(buf) {
     await Promise.all([page.waitForEvent('load'), page.click('[data-act=pxg-bat]')]);
     await page.waitForTimeout(800);
     await page.evaluate(() => PXGOI.ready);
-    const on = await page.evaluate(() => ({ on: pixelOn(), ls: localStorage.getItem('ttv.pixel'), goi: PXGOI.goi && PXGOI.goi.items.length, gi: window.PIXEL_MANIFEST['tuong/giong'].goi, ts: !!pxEntry('tuong', 'thachsanh'), url: window.ASSET_DATA['pixel/tuong/thachsanh.png'] }));
+    const on = await page.evaluate((h) => ({ on: pixelOn(), ls: localStorage.getItem('ttv.pixel'), goi: PXGOI.goi && PXGOI.goi.items.length, gi: window.PIXEL_MANIFEST['tuong/giong'].goi, ts: !!pxEntry('tuong', h), url: window.ASSET_DATA['pixel/tuong/' + h + '.png'] }), HERO);
     ok(on.on && on.ls === '1', 'nút Pixel lưu bật trên máy (localStorage ttv.pixel) → tải lại trang thì pixel bật');
     ok(on.goi === 3 && on.ts && on.gi === 1 && /^blob:/.test(on.url), 'tải lại trang: gói còn trong IndexedDB, 3 mã ghép vào game (ảnh blob:), giong bị gói ghi đè');
     await page.evaluate(() => ui.showSettings(false));
@@ -131,16 +137,16 @@ function unzip(buf) {
     await page.setViewportSize({ width: 844, height: 390 });
     await page.click('[data-act=set-close]');
 
-    // vào trận: thachsanh (chỉ có trong gói) vẽ pixel, chodo (ngoài gói, có sẵn) vẫn pixel cũ, casau quái trong gói
+    // vào trận: HERO (chỉ có trong gói) vẽ pixel, chodo (ngoài gói, có sẵn) vẫn pixel cũ, QUAI quái trong gói
     await page.evaluate(() => ui.playLevel(0, false));
     await page.waitForSelector('#prep:not([hidden])');
     await page.click('[data-act=prep-go]');
     await page.waitForTimeout(400);
-    await page.evaluate(() => { game.gold += 99999; const f = game.freeSlots(); ['thachsanh', 'giong', 'chodo'].forEach((t, i) => game.spawnHero(f[i], t)); game.spawn('casau', 200); game.spawn('tom', 300); });
+    await page.evaluate(([h, q]) => { game.gold += 99999; const f = game.freeSlots(); [h, 'giong', 'chodo'].forEach((t, i) => game.spawnHero(f[i], t)); game.spawn(q, 200); game.spawn('tom', 300); }, [HERO, QUAI]);
     await page.waitForTimeout(1200);
     const seen = await page.evaluate(() => [...PX.seen]);
-    ok(['tuong/thachsanh', 'tuong/giong', 'tuong/chodo', 'quai/casau'].every((k) => seen.includes(k)), `trong trận vẽ pixel: thachsanh + casau (từ gói), giong (gói ghi đè), chodo (sẵn có) — ${seen.join(', ')}`);
-    const fr = await page.evaluate(() => { const e = pxEntry('tuong', 'thachsanh'); const c = pxFrame(e, 0); return c && [c.width, c.height]; });
+    ok([`tuong/${HERO}`, 'tuong/giong', 'tuong/chodo', `quai/${QUAI}`].every((k) => seen.includes(k)), `trong trận vẽ pixel: ${HERO} + ${QUAI} (từ gói), giong (gói ghi đè), chodo (sẵn có) — ${seen.join(', ')}`);
+    const fr = await page.evaluate((h) => { const e = pxEntry('tuong', h); const c = pxFrame(e, 0); return c && [c.width, c.height]; }, HERO);
     ok(String(fr) === '32,32', 'khung sprite từ gói tải được (32×32)');
     // trong trận: bảng Tạm dừng không có dòng gói pixel
     await page.evaluate(() => ui.showSettings(true));
@@ -150,16 +156,16 @@ function unzip(buf) {
     await page.waitForTimeout(300);
     await page.screenshot({ path: path.join(SHOT, 'tran-co-goi-844x390.png') });
 
-    // gỡ gói → về như cũ (giong bản sẵn có, thachsanh không còn pixel); tải lại vẫn không có gói
+    // gỡ gói → về như cũ (giong bản sẵn có, tướng thử không còn pixel); tải lại vẫn không có gói
     console.log('— gỡ gói');
     await page.evaluate(() => ui.showSettings(false));
     await page.click('[data-act=pxg-go]');
     await page.waitForTimeout(300);
-    const g = await page.evaluate(() => ({ ts: pxEntry('tuong', 'thachsanh'), gi: window.PIXEL_MANIFEST['tuong/giong'], url: window.ASSET_DATA && window.ASSET_DATA['pixel/tuong/giong.png'] }));
-    ok(g.ts === null && g.gi && !g.gi.goi && !g.url, 'Gỡ gói: thachsanh hết pixel, giong trả về bản có sẵn trong game');
+    const g = await page.evaluate((h) => ({ ts: pxEntry('tuong', h), gi: window.PIXEL_MANIFEST['tuong/giong'], url: window.ASSET_DATA && window.ASSET_DATA['pixel/tuong/giong.png'] }), HERO);
+    ok(g.ts === null && g.gi && !g.gi.goi && !g.url, `Gỡ gói: ${HERO} hết pixel, giong trả về bản có sẵn trong game`);
     await page.reload();
     await page.waitForTimeout(600);
-    ok(await page.evaluate(async () => { await PXGOI.ready; return !PXGOI.goi && !(window.PIXEL_MANIFEST['tuong/thachsanh']); }), 'tải lại sau khi gỡ: không còn gói');
+    ok(await page.evaluate(async (h) => { await PXGOI.ready; return !PXGOI.goi && !(window.PIXEL_MANIFEST['tuong/' + h]); }, HERO), 'tải lại sau khi gỡ: không còn gói');
     ok(!errors.length, 'không lỗi console ' + errors.join(' | '));
   } finally { await browser.close(); fs.rmSync(TMP, { recursive: true, force: true }); }
   console.log('nap-goi: ĐẠT');

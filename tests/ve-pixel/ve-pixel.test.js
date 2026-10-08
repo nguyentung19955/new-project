@@ -57,7 +57,7 @@ const DS = (() => { const w = {}; new Function('window', fs.readFileSync(path.jo
 ok(DS.palette.length === 46 && DS.palette[0][0] === 'vien', 'bảng màu 46 màu, đủ màu viền');
 const groups = new Set(DS.ma.map((d) => d.k.split('/')[0]));
 ok(DS.ma.length > 700 && ['tuong', 'quai', 'boss', 'nen', 'icon', 'ky-nang', 'do', 'an-phu', 'than-khi'].every((g) => groups.has(g)) && !groups.has('vfx'), `${DS.ma.length} mã, đủ nhóm (không gồm vfx)`);
-ok(DS.ma.some((d) => d.k === 'tuong/giong' && d.daCo) && DS.ma.some((d) => d.k === 'tuong/thachsanh' && !d.daCo), 'đánh dấu mã đã có pixel (giong) / chưa có (thachsanh)');
+ok(DS.ma.some((d) => d.k === 'tuong/giong' && d.daCo) && DS.ma.filter((d) => d.k.startsWith('tuong/')).every((d) => !!d.daCo === fs.readFileSync(path.join(ROOT, 'js/pixel/tuong.js'), 'utf8').includes(`"${d.k}"`)), 'đánh dấu đúng mã tướng đã có / chưa có pixel');
 
 // ---------------------------------------------------------------- 2. tool
 let chromium;
