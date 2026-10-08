@@ -48,14 +48,16 @@
     b.hp = b.maxhp;
     setWeak(b);
     if (kind === 'moc') {
-      Object.assign(b, { x: w.w - 140, y: w.y1 - 24, r: 24, hr: 70, h: 124, armSwing: 0 });
-      b.rangedShield = (P) => Math.abs(P.x - b.x) > 130;
+      // Mộc Tinh đứng sát tường phải, cao gần hết phòng: đứng hàng nào cũng đánh trúng thân nó.
+      Object.assign(b, { x: w.x1 - 30, y: mid + 46, r: 24, hr: 96, h: 124, armSwing: 0 });
+      b.homeX = b.x;
+      b.rangedShield = (P) => Math.abs(P.x - b.x) > 110;
       w.px1 = b.x - 26;
     } else if (kind === 'ngu') {
-      Object.assign(b, { x: w.w - 130, y: mid + 6, r: 44, hr: 70, h: 44 });
+      Object.assign(b, { x: w.x1 - 44, y: mid + 6, r: 44, hr: 96, h: 44 });
       w.px1 = b.x - 62;
     } else if (kind === 'ho') {
-      Object.assign(b, { x: w.w - 130, y: mid, r: 18, hr: 10, h: 42, tails: 9, tpCd: 0, hopCd: 2, speed: 84 });
+      Object.assign(b, { x: w.x1 - 40, y: mid, r: 18, hr: 10, h: 42, tails: 9, tpCd: 0, hopCd: 2, speed: 84 });
       b.onHit = function (hit) {
         if (hit.ranged && has(b, 'antiRanged') && b.tpCd <= 0 && b.seq.length === 0 && !b.dead) {
           const P = w.P;
@@ -72,7 +74,7 @@
         }
       };
     } else {
-      Object.assign(b, { x: w.w - 200, y: mid, r: 16, hr: 10, h: 58, scale: 2.4, role: 'mini', skin: reg.skin, el: reg.el, speed: 30 * w.haste, resist: null });
+      Object.assign(b, { x: w.x1 - 60, y: mid, r: 16, hr: 10, h: 58, scale: 2.4, role: 'mini', skin: reg.skin, el: reg.el, speed: 30 * w.haste, resist: null });
     }
     w.boss = b;
     return b;
@@ -154,6 +156,7 @@
   }
 
   // ---------- Ngư Tinh ----------
+  const ROW = 38, GAP = 62; // bề ngang hàng lao và khe hở của sóng, tính cho phòng cao gần 190
   function thinkNgu(b) {
     const w = W(), P = w.P, ph = b.phase;
     const opts = ['charge', 'spout', 'wave'];
@@ -168,16 +171,16 @@
       const an = act(b, 'charge', 0.3 + n * 0.95 + 0.6 + 0.6, { rows: [], dive: 0.3, up: 0.3 + n * 0.95 + 0.6 });
       for (let i = 0; i < n; i++) {
         later(b, 0.3 + i * 0.95, () => {
-          const zy = G.clamp(P.y, w.y0 + 8, w.y1 - 8) - 13;
-          an.rows.push({ y: zy + 13, t: an.t, fire: 0.85, dir: an.rows.length % 2 ? 1 : -1 });
-          G.zoneRect(-10, zy, w.w + 20, 26, 0.85, b.dmg * 1.35, 'ice', {
+          const zy = G.clamp(P.y, w.y0 + 8, w.y1 - 8) - ROW / 2;
+          an.rows.push({ y: zy + ROW / 2, t: an.t, fire: 0.85, dir: an.rows.length % 2 ? 1 : -1 });
+          G.zoneRect(w.x0 - 9, zy, w.x1 - w.x0 + 18, ROW, 0.85, b.dmg * 1.35, 'ice', {
             fxKind: 'charge',
-            onFire: (z) => { for (let k = 0; k < 8; k++) G.burst(w.x0 + k * 55, z.y + 13, '#9fd0e8', 4, 60); G.sfx('boom', 1.2); },
+            onFire: (z) => { for (let k = 0; k < 8; k++) G.burst(w.x0 + k * (w.x1 - w.x0) / 7, z.y + ROW / 2, '#9fd0e8', 4, 60); G.sfx('boom', 1.2); },
           });
           if (has(b, 'antiDodge') && i === n - 1) later(b, 0.45, () => {
-            const zy2 = G.clamp(P.y, w.y0 + 8, w.y1 - 8) - 13;
-            an.rows.push({ y: zy2 + 13, t: an.t, fire: 0.6, dir: an.rows.length % 2 ? 1 : -1 });
-            G.zoneRect(-10, zy2, w.w + 20, 26, 0.6, b.dmg * 1.2, 'ice', { fxKind: 'charge' });
+            const zy2 = G.clamp(P.y, w.y0 + 8, w.y1 - 8) - ROW / 2;
+            an.rows.push({ y: zy2 + ROW / 2, t: an.t, fire: 0.6, dir: an.rows.length % 2 ? 1 : -1 });
+            G.zoneRect(w.x0 - 9, zy2, w.x1 - w.x0 + 18, ROW, 0.6, b.dmg * 1.2, 'ice', { fxKind: 'charge' });
           });
         });
       }
@@ -193,8 +196,8 @@
       later(b, 1.5, () => {});
     } else if (a === 'wave') {
       const mk = () => {
-        const g0 = G.rr(w.y0, w.y1 - 38);
-        w.zones.push({ wave: true, x: b.x - 50, vx: -150, wait: 0.9, g0, g1: g0 + 38, dmg: b.dmg * 1.2, el: 'ice' });
+        const g0 = G.rr(w.y0, w.y1 - GAP);
+        w.zones.push({ wave: true, x: b.x - 50, vx: -150, wait: 0.9, g0, g1: g0 + GAP, dmg: b.dmg * 1.2, el: 'ice' });
       };
       mk();
       act(b, 'wave', ph >= 1 ? 2.3 : 1.4, { slaps: ph >= 1 ? [0.9, 1.8] : [0.9] }); // slaps: các lúc đuôi đập, sóng bắt đầu tràn
@@ -218,9 +221,9 @@
   }
   function phaseNgu(b) {
     const w = W();
-    if (b.phase === 1) { w.y0 += 14; w.y1 -= 14; }
-    if (b.phase === 2) { w.x0 = 150; }
-    w.shrink = { y0: w.y0 - 6, y1: w.y1 + 8, x0: w.x0 > 20 ? w.x0 - 8 : 0 };
+    if (b.phase === 1) { w.y0 += 24; w.y1 -= 24; }
+    if (b.phase === 2) { w.x0 += 56; }
+    w.shrink = { y0: w.y0 - 6, y1: w.y1 + 8, x0: b.phase >= 2 ? w.x0 - 8 : 0 };
     w.banner = { s: 'Nước dâng!', col: '#7fd4ff', t: 2 };
   }
 
@@ -315,10 +318,10 @@
       later(b, 1.1, () => {});
     } else if (a === 'charge') {
       const dir = P.x >= b.x ? 1 : -1, py = P.y;
-      const x0 = dir > 0 ? b.x : b.x - 210;
+      const x0 = Math.max(w.x0 - 6, dir > 0 ? b.x : b.x - 210), x1 = Math.min(w.x1 + 6, dir > 0 ? b.x + 210 : b.x);
       // fx, fy: chỗ lấy đà; hình vẽ lướt từ đó tới chỗ mới trong dash giây sau khi vùng nổ
       act(b, 'charge', 1.5, { fire: 0.8, dash: 0.2, dir, fx: b.x, fy: b.y, ty: py });
-      G.zoneRect(x0, py - 12, 210, 24, 0.8, b.dmg * 1.4, b.el, {
+      G.zoneRect(x0, py - 12, x1 - x0, 24, 0.8, b.dmg * 1.4, b.el, {
         fxKind: 'charge',
         onFire: () => { b.x = G.clamp(b.x + dir * 190, w.x0 + 10, w.x1 - 10); b.y = py; G.sfx('boom'); b.exposed = 1.6; },
       });
@@ -382,8 +385,9 @@
     }
     if (b.kind === 'ho') b.tails = Math.max(1, Math.ceil(9 * frac));
     if (b.kind === 'moc') {
-      b.walking = b.phase === 2 && b.x > 360; // đang lết tới, để vẽ dáng đi
-      if (b.phase === 2 && b.x > 360) b.x -= 7 * dt;
+      const stopX = b.homeX - 56; // giai đoạn cuối lết dần vào giữa phòng, sân hẹp lại
+      b.walking = b.phase === 2 && b.x > stopX; // đang lết tới, để vẽ dáng đi
+      if (b.phase === 2 && b.x > stopX) b.x -= 7 * dt;
       w.px1 = b.x - 26;
     }
     for (const s of b.seq) s.t -= dt;

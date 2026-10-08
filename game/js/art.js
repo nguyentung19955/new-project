@@ -3223,14 +3223,15 @@
 
   // Vùng nguy hiểm và vũng trên mặt đất
   A.zone = function (c, z) {
+    const ZK = G.ZK || 0.6; // độ dẹt của vùng tròn (data.js)
     const tele = z.t > 0;
     const blink = Math.floor(G.time * 10) % 2;
     const pulse = 0.3 + 0.16 * Math.abs(Math.sin(G.time * 14));
     if (z.pool) {
       const hex = z.team === 'player' ? (z.el ? G.EL[z.el].col : '#6fcf3a') : z.el ? G.EL[z.el].col : '#d03c28';
       if (z.shape === 'circle') {
-        A.ellipse(c, z.x, z.y, z.r, z.r * 0.6, hexA(hex, 0.34));
-        ring(c, z.x, z.y, z.r, z.r * 0.6, hexA(hex, z.team === 'player' ? 0.7 : 0.95));
+        A.ellipse(c, z.x, z.y, z.r, z.r * ZK, hexA(hex, 0.34));
+        ring(c, z.x, z.y, z.r, z.r * ZK, hexA(hex, z.team === 'player' ? 0.7 : 0.95));
         const f = Math.floor(G.time * 5) % 3;
         p(c, Math.round(z.x - z.r * 0.4) + f, Math.round(z.y - 3 - f), 2, 2, hexA(hex, 0.8));
         p(c, Math.round(z.x + z.r * 0.3) - f, Math.round(z.y + 2 - f), 2, 2, hexA(hex, 0.8));
@@ -3240,13 +3241,13 @@
     }
     if (z.shape === 'circle') {
       if (tele) {
-        A.ellipse(c, z.x, z.y, z.r, z.r * 0.6, 'rgba(255,40,24,' + pulse + ')');
-        if (z.t0) { const k = 1 - z.t / z.t0; A.ellipse(c, z.x, z.y, z.r * k, z.r * 0.6 * k, 'rgba(255,90,50,0.45)'); }
-        ring(c, z.x, z.y, z.r, z.r * 0.6, blink ? '#ff3a22' : '#ffb09a');
-        ring(c, z.x, z.y, z.r + 2, z.r * 0.6 + 1.5, 'rgba(120,0,0,0.6)');
+        A.ellipse(c, z.x, z.y, z.r, z.r * ZK, 'rgba(255,40,24,' + pulse + ')');
+        if (z.t0) { const k = 1 - z.t / z.t0; A.ellipse(c, z.x, z.y, z.r * k, z.r * ZK * k, 'rgba(255,90,50,0.45)'); }
+        ring(c, z.x, z.y, z.r, z.r * ZK, blink ? '#ff3a22' : '#ffb09a');
+        ring(c, z.x, z.y, z.r + 2, z.r * ZK + 1.5, 'rgba(120,0,0,0.6)');
       } else {
-        A.ellipse(c, z.x, z.y, z.r, z.r * 0.6, 'rgba(255,244,210,0.85)');
-        ring(c, z.x, z.y, z.r, z.r * 0.6, '#ffffff');
+        A.ellipse(c, z.x, z.y, z.r, z.r * ZK, 'rgba(255,244,210,0.85)');
+        ring(c, z.x, z.y, z.r, z.r * ZK, '#ffffff');
       }
     } else {
       const x = Math.round(z.x), y = Math.round(z.y), w = Math.round(z.w), h = Math.round(z.h);

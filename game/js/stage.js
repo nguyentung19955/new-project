@@ -1,4 +1,4 @@
-// Một ải: chuỗi 7 đến 8 phòng, điều khiển, bảng thông tin trên màn hình và các bảng chọn trong ải.
+// Một ải: bản đồ 8 phòng vuông (js/mapgen.js), cửa bốn phía và chuyển phòng, điều khiển, bảng thông tin trên màn hình và các bảng chọn trong ải.
 (function () {
   const G = window.G, ui = G.ui;
   let S = null;
@@ -17,32 +17,47 @@
   };
   const PROP_OF = { fire: 'brazier', poison: 'mushroom', ice: 'crystal' };
   const ROOM_NAME = {
-    fight: 'Đánh quái', elite: 'Đánh quái', chest: 'Rương báu', fountain: 'Suối hồi', choice: 'Chọn cửa', boss: 'Trùm',
-    fight2: 'Đánh quái thêm', merchant: 'Thương nhân', challenge: 'Thử thách', curse: 'Lời nguyền',
+    start: 'Bắt đầu', fight: 'Đánh quái', elite: 'Tinh anh', chest: 'Rương báu', fountain: 'Suối hồi', boss: 'Trùm',
+    merchant: 'Thương nhân', challenge: 'Thử thách', curse: 'Lời nguyền',
   };
-  const TUT = [
-    'Kéo cần bên trái để di chuyển. Giữ nút Đánh để ra đòn, bấm Né để lăn tránh.',
-    'Đánh vỡ chậu than để đốt quái. Kết liễu quái đang cháy thì kiếm nhận dấu ấn Lửa.',
-    'Lại gần rương rồi bấm Đánh để mở. Bùa hệ phủ hệ đó lên vũ khí trong 60 giây.',
-    'Thanh xanh là mana. Đủ 25 mana thì bấm Đặc biệt để tung đòn mạnh.',
-    'Quái tinh anh mang hệ. Chạm ô vũ khí ở góc trên bên phải để đổi sang cung.',
-    'Lại gần suối đỏ để hồi máu hoặc suối xanh để hồi mana rồi bấm Đánh, chỉ chọn được một. Dòng chữ phía trên cho biết trùm đã học gì từ bạn.',
-    'Trùm kháng hệ bạn dùng nhiều nhất. Đánh vỡ vật mang hệ khắc chế ở gần nó để gây sát thương lớn.',
-  ];
+  // Lời chỉ dẫn của ải đầu, theo loại phòng.
+  const TUT = {
+    start: 'Kéo cần bên trái để di chuyển. Giữ nút Đánh để ra đòn, bấm Né để lăn tránh. Hết quái thì cửa mở.',
+    fight1: 'Đánh vỡ chậu than để đốt quái. Kết liễu quái đang cháy thì kiếm nhận dấu ấn Lửa.',
+    chest: 'Lại gần rương rồi bấm Đánh để mở. Bùa hệ phủ hệ đó lên vũ khí trong 60 giây.',
+    fight2: 'Thanh xanh là mana. Đủ 25 mana thì bấm Đặc biệt để tung đòn mạnh.',
+    elite: 'Quái tinh anh mang hệ. Chạm ô vũ khí ở góc trên bên phải để đổi sang cung.',
+    fountain: 'Lại gần suối đỏ để hồi máu hoặc suối xanh để hồi mana rồi bấm Đánh, chỉ chọn được một. Dòng chữ phía trên cho biết trùm đã học gì từ bạn.',
+    boss: 'Trùm kháng hệ bạn dùng nhiều nhất. Đánh vỡ vật mang hệ khắc chế ở gần nó để gây sát thương lớn.',
+    merchant: 'Thương nhân bán bình máu, bùa hệ và quặng. Lại gần rồi bấm Đánh để xem hàng.',
+    challenge: 'Phòng thử thách: hạ hết quái trước khi hết giờ để nhận thưởng.',
+    curse: 'Bàn thờ lời nguyền: chịu một bất lợi để dấu ấn tăng gấp đôi đến hết ải. Bỏ qua cũng được.',
+    door: 'Hết quái rồi, cửa đã mở. Đi vào cửa có mũi tên để sang phòng kề. Bản đồ nhỏ ở góc phải cho biết phòng nào ở đâu.',
+  };
+  const DIRV = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
+  const OPP = { up: 'down', down: 'up', left: 'right', right: 'left' };
+  let runNo = 0;
 
-  G.startStage = function (r, i, diff) {
-    const rooms = i < 2
-      ? ['fight', 'fight', 'chest', 'fight', 'elite', 'fountain', 'boss']
-      : ['fight', 'fight', 'chest', 'fight', 'choice', 'elite', 'fountain', 'boss'];
+  // o (không bắt buộc): { kind: 'A' | 'B' | 'C', seed } để dựng lại đúng một bản đồ khi kiểm tra.
+  G.startStage = function (r, i, diff, o) {
+    o = o || {};
+    const tut = r === 0 && i === 0 && !diff && !G.save.tut.done;
+    // Ải cuối vùng luôn là Kiểu C; ải dạy chơi dùng Kiểu A cho dễ theo; còn lại ngẫu nhiên, tránh kiểu vừa chơi.
+    const kind = o.kind || (tut ? 'A' : G.mapgen.pickKind(i, G.save.lastKind, G.rnd));
+    const seed = o.seed || 1 + Math.floor(G.rnd() * 999999);
+    const map = G.mapgen.make(kind, seed);
+    G.save.lastKind = kind;
     S = {
-      r, i, diff: diff ? 1 : 0, base: G.stageStats(r, i, diff), P: G.buildPlayer(), rooms, idx: -1,
+      r, i, diff: diff ? 1 : 0, base: G.stageStats(r, i, diff), P: G.buildPlayer(), map, rooms: map.rooms.map((x) => x.type), idx: -1,
+      worlds: {}, cleared: {}, seen: {}, known: {}, visits: 0, uid: ++runNo, trans: null, doorCd: 0,
       stats: { el: { fire: 0, poison: 0, ice: 0, none: 0 }, ranged: 0, melee: 0, dodges: 0 },
       loot: { kills: 0, charm: false, bossDown: false, finalEl: null }, got: [], curse: null, marksMult: 1, haste: 1,
-      tut: r === 0 && i === 0 && !diff && !G.save.tut.done, mode: 'play', endT: 0, layers: null, usedPotion: false, marks: 0,
+      tut, mode: 'play', endT: 0, layers: null, usedPotion: false, marks: 0,
       fade: 0, W: null, near: null, sel: null, swapped: false, opts: null, result: null,
     };
     if (S.tut) S.marksMult = 2;
-    nextRoom();
+    enterRoom(map.start, null);
+    S.fade = 0.35;
     G.setScene(G.StageScene);
   };
 
@@ -56,87 +71,133 @@
     return { layers, kind: big ? reg.boss : 'mini', name: big ? reg.bossName : reg.mini };
   }
 
+  // Sàn nhỏ (khoảng 40% diện tích cũ): mỗi đợt ít quái hơn, bù lại bằng nhiều đợt hơn.
+  // Số đợt và hệ số điểm nằm ở G.ROOM_WAVES (data.js) để dễ cân chỉnh.
   function buildWaves(type) {
-    const waves = [];
-    const count = type === 'fight2' ? 2 : S.i >= 3 ? 3 : 2;
+    const waves = [], B = G.ROOM_WAVES;
+    const late = S.i >= 3;
+    const count = type === 'start' ? (S.i >= 2 ? B.start[1] : B.start[0]) : type === 'challenge' ? B.challenge : late ? B.late : B.early;
     const roles = ['rusher', 'swarm', 'archer'];
     if (S.i >= 1 || S.r > 0) roles.push('shield');
     if (S.i >= 2 || S.r > 0) roles.push('nimble');
     const cost = { rusher: 1, swarm: 1.5, archer: 1, shield: 1.5, nimble: 1.2 };
     for (let k = 0; k < count; k++) {
-      let pts = 3 + Math.min(1.5, S.i * 0.4) + S.r * 0.5 + (S.diff ? 1 : 0);
+      let pts = (3 + Math.min(1.5, S.i * 0.4) + S.r * 0.5 + (S.diff ? 1 : 0)) * (late ? B.ptsLate : B.pts);
       const list = [];
       if (type === 'elite' && k === count - 1) { list.push('elite'); pts -= 2.5; }
-      for (let guard = 0; guard < 30 && pts > 0.9; guard++) {
+      for (let guard = 0; guard < 30 && pts > 0.9 && list.length < B.maxPerWave; guard++) {
         const r = G.pick(roles);
         if (cost[r] > pts + 0.3) continue;
         if (r === 'swarm') list.push('swarm', 'swarm', 'swarm'); else list.push(r);
         pts -= cost[r];
       }
+      if (!list.length) list.push('rusher');
       waves.push(list);
     }
     return waves;
   }
+  // Quái hiện ra ngay trong phòng: một vệt tối loang trên sàn báo trước nửa giây rồi quái trồi lên.
+  function freeSpot(minD, pad) {
+    const W = S.W, P = S.P;
+    let best = null, bd = -1;
+    for (let k = 0; k < 14; k++) {
+      const x = G.rr(W.x0 + pad, (W.px1 != null ? W.px1 : W.x1) - pad), y = G.rr(W.y0 + pad, W.y1 - 6);
+      let d = Math.hypot(x - P.x, y - P.y);
+      for (const s of W.spawns) d = Math.min(d, Math.hypot(x - s.x, y - s.y) * 3);
+      if (d >= minD) return [x, y];
+      if (d > bd) { bd = d; best = [x, y]; }
+    }
+    return best;
+  }
   function spawnWave(list) {
     const W = S.W;
+    list.forEach((role, j) => {
+      const q = freeSpot(role === 'archer' ? 84 : 58, role === 'elite' ? 18 : 10);
+      const t = 0.5 + j * 0.07;
+      W.spawns.push({ role, x: q[0], y: q[1], t, t0: t, big: role === 'elite' });
+    });
+    G.sfx('warn', 0.8);
+  }
+  function tickSpawns(dt) {
+    const W = S.W;
+    if (!W.spawns.length) return;
     const el = S.stats.el, tot = el.fire + el.poison + el.ice + el.none;
     const top = G.ELS.slice().sort((a, b) => el[b] - el[a])[0];
-    list.forEach((role, j) => {
-      const left = G.rnd() < 0.25 && W.P.x > 170;
-      const e = G.spawnEnemy(role, left ? -12 - j * 9 : W.w + 12 + j * 9, G.rr(W.y0, W.y1), {});
+    for (const s of W.spawns) {
+      s.t -= dt;
+      if (s.t > 0) continue;
+      const e = G.spawnEnemy(s.role, s.x, s.y, {});
+      e.inside = true;
+      e.cd = Math.max(e.cd, 0.6); // vừa hiện ra thì chưa đánh ngay
       // Quái tinh anh cũng học: kháng nhẹ hệ bạn dùng nhiều nhất
-      if (role === 'elite' && tot > 0 && el[top] / tot > 0.4) e.resist = top;
-    });
+      if (s.role === 'elite' && tot > 0 && el[top] / tot > 0.4) e.resist = top;
+      G.burst(s.x, s.y - 6, ['#c2f58a', '#bfeaff', '#ffd0a0'][S.r] || '#ffffff', s.big ? 14 : 7, 60);
+    }
+    W.spawns = W.spawns.filter((s) => s.t > 0);
+  }
+  // Chỗ đặt vật mang hệ: trong sàn, không nằm trên lối vào cửa, không đè lên vật khác.
+  function propSpot() {
+    const W = S.W, g = W.geo;
+    for (let k = 0; k < 30; k++) {
+      const x = G.rr(W.x0 + 16, (W.px1 != null ? W.px1 : W.x1) - 16), y = G.rr(W.y0 + 16, W.y1 - 8);
+      if (Math.abs(x - g.cx) < 26 && (y < W.y0 + 44 || y > W.y1 - 40)) continue;
+      if (Math.abs(y - g.cy) < 26 && (x < W.x0 + 40 || x > W.x1 - 40)) continue;
+      if (W.props.some((p) => p.type !== 'roomFore' && Math.hypot(p.x - x, p.y - y) < 30)) continue;
+      return [x, y];
+    }
+    return [g.cx + G.rr(-40, 40), g.cy + G.rr(-30, 30)];
   }
   function addEnv(n, el) {
     const W = S.W, reg = G.REGIONS[S.r];
     for (let k = 0; k < n; k++) {
       const e = el || (G.rnd() < 0.65 ? reg.el : G.pick(G.ELS));
-      W.props.push({ type: PROP_OF[e], env: true, x: G.rr(130, W.w - 110), y: G.rr(W.y0 + 6, W.y1 - 4) });
+      const q = propSpot();
+      W.props.push({ type: PROP_OF[e], env: true, x: q[0], y: q[1] });
     }
   }
 
-  function enterRoom(type) {
-    const P = S.P;
+  // Dựng một phòng lần đầu bước vào.
+  function buildRoom(id) {
+    const P = S.P, R = S.map.rooms[id], type = R.type, M = G.mapgen;
     const bs = type === 'boss' ? bossSetup() : null;
+    const geo = G.roomArt.geo(type === 'boss');
     const W = G.newWorld(P, {
-      w: !bs ? 480 : bs.kind === 'ngu' ? 560 : 640, base: S.base, region: S.r, stats: S.stats, marksMult: S.marksMult, haste: S.haste,
-      hpFloor: S.tut && type !== 'boss', loot: S.loot, seed: S.r * 100 + S.i * 10 + S.idx + 1,
+      w: G.W, base: S.base, region: S.r, stats: S.stats, marksMult: S.marksMult, haste: S.haste,
+      hpFloor: S.tut && type !== 'boss', loot: S.loot, seed: (S.map.seed % 100000) * 10 + id + 1,
     });
-    W.noPotion = S.curse === 'dry';
-    W.type = type; W.cleared = false; W.waves = []; W.waveI = -1; W.waveT = 0.6;
-    S.W = W; S.near = null; S.endT = 0; S.fade = 0.35; S.challenge = null; S.roomT = 0;
-    if (S.idx > 0 && P.roomHeal) P.hp = Math.min(P.maxhp, P.hp + P.maxhp * P.roomHeal);
-    const mid = (W.y0 + W.y1) / 2;
-    S.hint = S.tut ? TUT[Math.min(S.idx, TUT.length - 1)] : null;
-    if (type === 'fight' || type === 'elite' || type === 'fight2' || type === 'challenge') {
+    Object.assign(W, geo.bounds);
+    W.geo = geo; W.room = id; W.uid = S.uid + ':' + id; W.variant = (S.map.seed + id * 7) % 3;
+    W.type = type; W.cleared = false; W.waves = []; W.waveI = -1; W.waveT = 0.6; W.spawns = []; W.hadWaves = false;
+    W.doors = M.DKEYS.filter((d) => R.doors[d] != null).map((d) => ({ dir: d, to: R.doors[d], gate: M.isGate(S.map, id, R.doors[d]), boss: S.map.rooms[R.doors[d]].type === 'boss', open: false }));
+    W.props.push({ type: 'roomFore', x: 0, y: 9999 }); // lớp phủ trước của phòng, vẽ sau nhân vật
+    S.W = W; S.challenge = null;
+    const cx = geo.cx, cy = geo.cy;
+    if (type === 'start' || type === 'fight' || type === 'elite' || type === 'challenge') {
       W.waves = buildWaves(type);
-      if (S.tut && S.idx === 0) W.waves = [['rusher', 'rusher', 'rusher']];
-      else if (S.tut && S.idx === 1) {
+      if (S.tut && type === 'start') W.waves = [['rusher', 'rusher', 'rusher']];
+      else if (S.tut && id === 1) {
         W.waves = [['swarm', 'swarm', 'swarm', 'swarm', 'swarm'], ['swarm', 'swarm', 'swarm', 'swarm', 'rusher']];
-        W.props.push({ type: 'brazier', env: true, x: 250, y: mid - 8 }, { type: 'brazier', env: true, x: 340, y: mid + 18 });
-      } else addEnv(1 + (G.rnd() < 0.5 ? 1 : 0));
-      if (type === 'challenge') S.challenge = { t: 30, hits: 0, hp: P.hp };
+        W.props.push({ type: 'brazier', env: true, x: cx - 34, y: cy - 12 }, { type: 'brazier', env: true, x: cx + 36, y: cy + 22 });
+      } else if (type !== 'start') {
+        if (type === 'challenge') W.props.push({ type: 'pedestal', x: cx, y: cy - 2 });
+        addEnv(1 + (G.rnd() < 0.5 ? 1 : 0));
+      }
+      if (type === 'challenge') S.challenge = { t: G.ROOM_WAVES.challengeTime, hits: 0, hp: P.hp };
+      W.hadWaves = true;
     } else if (type === 'chest') {
-      W.props.push({ type: 'chest', x: 250, y: mid, act: 'chest' });
+      W.props.push({ type: 'chest', x: cx, y: cy + 4, act: 'chest' });
       W.cleared = true;
     } else if (type === 'fountain') {
-      W.props.push({ type: 'fountain', kind: 'hp', x: 190, y: mid + 6, act: 'fountain' });
-      W.props.push({ type: 'fountain', kind: 'mana', x: 300, y: mid + 6, act: 'fountain' });
-      W.props.push({ type: 'stash', x: 245, y: W.y0 + 2, act: 'stash' });
-      S.preview = bossSetup().layers;
+      W.props.push({ type: 'fountain', kind: 'hp', x: cx - 44, y: cy + 14, act: 'fountain' });
+      W.props.push({ type: 'fountain', kind: 'mana', x: cx + 44, y: cy + 14, act: 'fountain' });
+      W.props.push({ type: 'stash', x: geo.fx0 + 40, y: W.y0 + 6, act: 'stash' });
       W.cleared = true;
-    } else if (type === 'choice') {
-      const kinds = ['fight2', 'merchant', 'challenge', 'curse'].sort(() => G.rnd() - 0.5).slice(0, 2);
-      const col = { fight2: '#6a2a22', merchant: '#6a5a22', challenge: '#22506a', curse: '#4a226a' };
-      W.props.push({ type: 'door', x: 180, y: W.y0, act: 'door', choice: kinds[0], col: col[kinds[0]] });
-      W.props.push({ type: 'door', x: 310, y: W.y0, act: 'door', choice: kinds[1], col: col[kinds[1]] });
     } else if (type === 'merchant') {
-      W.props.push({ type: 'merchant', x: 250, y: mid - 6, act: 'merchant' });
+      W.props.push({ type: 'merchant', x: cx, y: cy - 2, act: 'merchant' });
       S.shop = { el: G.pick(G.ELS), bought: {} };
       W.cleared = true;
     } else if (type === 'curse') {
-      W.props.push({ type: 'altar', x: 250, y: mid - 4, act: 'altar' });
+      W.props.push({ type: 'altar', x: cx, y: cy - 2, act: 'altar' });
       S.curseOffer = G.pick(G.CURSES);
       W.cleared = true;
     } else if (type === 'boss') {
@@ -144,20 +205,74 @@
       const b = G.makeBoss(bs.kind, { name: bs.name, layers: bs.layers });
       const res = bs.layers.find((l) => l.type === 'resist');
       const el = res ? G.WEAK[res.el] : G.pick(G.ELS);
-      const xmax = (W.px1 != null ? W.px1 : W.x1) - 40;
-      W.props.push({ type: PROP_OF[el], env: true, x: xmax * 0.45, y: W.y0 + 14 }, { type: PROP_OF[el], env: true, x: xmax * 0.75, y: W.y1 - 10 });
+      const xr = (W.px1 != null ? W.px1 : W.x1) - W.x0;
+      W.props.push({ type: PROP_OF[el], env: true, x: W.x0 + xr * 0.3, y: W.y0 + 20 }, { type: PROP_OF[el], env: true, x: W.x0 + xr * 0.68, y: W.y1 - 14 });
       W.banner = { s: b.name + (bs.layers.length ? ': ' + bs.layers.map(G.layerText).join(' · ') : ' xuất hiện'), col: '#ff6a5a', t: 4 };
       G.sfx('gong');
     }
+    if (W.cleared) S.cleared[id] = true;
+    return W;
   }
-  function nextRoom() {
-    if (S.W) { S.marks += S.W.marksGained; if (S.W.usedPotion) S.usedPotion = true; }
-    S.idx++;
-    enterRoom(S.rooms[S.idx]);
+  // Cửa của phòng hiện tại: mở khi phòng đã dọn; cửa dẫn tới Trùm còn phải đủ điều kiện của bản đồ.
+  function updateDoors() {
+    const W = S.W, ok = G.mapgen.gateOpen(S.map, S.cleared);
+    for (const d of W.doors) d.open = !!W.cleared && W.type !== 'boss' && (!d.gate || ok);
+  }
+  // Rời phòng: gom dấu ấn, dọn những thứ chỉ sống trong lúc đánh.
+  function leaveRoom() {
+    const W = S.W;
+    if (!W) return;
+    S.marks += W.marksGained; W.marksGained = 0;
+    if (W.usedPotion) S.usedPotion = true;
+    W.projs = []; W.zones = []; W.parts = []; W.texts = []; W.slashes = []; W.spawns = []; W.banner = null; W.shake = 0;
+    for (const p of W.props) if (p.type === 'trap') p.dead = true;
+    W.props = W.props.filter((p) => !p.dead);
+  }
+  // Vào phòng id. from: hướng vừa đi (ví dụ 'up' là đi qua cửa trên, sẽ hiện ra ở cửa dưới của phòng mới).
+  function enterRoom(id, from) {
+    const P = S.P, map = S.map;
+    leaveRoom();
+    S.idx = id;
+    let W = S.worlds[id];
+    const first = !W;
+    if (first) {
+      W = buildRoom(id);
+      S.worlds[id] = W;
+      S.visits++;
+      if (S.visits > 1 && P.roomHeal) P.hp = Math.min(P.maxhp, P.hp + P.maxhp * P.roomHeal);
+    } else {
+      G.setWorld(W);
+      S.W = W;
+      if (W.cleared) W.waves = [];
+    }
+    W.marksMult = S.marksMult; W.haste = S.haste; W.noPotion = S.curse === 'dry';
+    S.near = null; S.endT = 0; S.roomT = 0; S.doorCd = 0.3;
+    S.seen[id] = true; S.known[id] = true;
+    for (const d of W.doors) S.known[d.to] = true;
+    // vị trí xuất hiện: ngay trong cửa đối diện với hướng vừa đi, hoặc giữa phòng nếu là phòng đầu
+    const g = W.geo;
+    if (from) {
+      const q = G.roomArt.doorPos(g, OPP[from]);
+      P.x = q.x + DIRV[from][0] * 14; P.y = q.y + DIRV[from][1] * 14;
+    } else { P.x = W.boss ? W.x0 + 30 : g.cx; P.y = g.cy + (W.boss ? 0 : 26); }
+    if (W.boss && from && first) {
+      const b = W.boss;
+      if (b.kind === 'mini') {
+        // trùm nhỏ đứng ở nửa phòng đối diện với cửa vừa vào
+        b.x = G.clamp(g.cx + DIRV[from][0] * 70, W.x0 + 30, W.x1 - 30); b.y = G.clamp(g.cy + DIRV[from][1] * 46, W.y0 + 20, W.y1 - 10);
+      } else if (W.px1 != null) P.x = Math.min(P.x, W.px1 - 24); // boss vùng chắn bên phải: không hiện ra sau lưng nó
+    }
+    P.inv = Math.max(P.inv, first ? 0.6 : 0.3);
+    P.dashT = 0; P.dodgeT = 0;
+    if (W.type === 'fountain') S.preview = bossSetup().layers;
+    S.hint = S.tut ? TUT[W.type === 'fight' ? (id === 1 ? 'fight1' : 'fight2') : W.type] || null : null;
+    updateDoors();
   }
   function clearRoom() {
-    const W = S.W;
+    const W = S.W, map = S.map, M = G.mapgen;
+    const was = M.gateOpen(map, S.cleared);
     W.cleared = true;
+    S.cleared[S.idx] = true;
     G.sfx('pick', 0.8);
     S.P.hp = Math.min(S.P.maxhp, S.P.hp + S.P.maxhp * 0.08);
     if (S.challenge) {
@@ -168,7 +283,33 @@
         W.banner = { s: 'Vượt thử thách! Nhận ' + S.got[S.got.length - 1] + ' và 80 vàng', col: '#ffd23f', t: 3 };
       } else W.banner = { s: 'Hết giờ, không có thưởng', col: '#b8b0a0', t: 2.5 };
       S.challenge = null;
+      for (const p of W.props) if (p.type === 'pedestal') p.used = true;
     }
+    // điều kiện mở cửa Trùm: mảnh chìa (Kiểu C) hoặc số phòng quái đã dọn (Kiểu B)
+    if (map.gate && map.gate.ids.includes(S.idx)) {
+      const n = M.gateCount(map, S.cleared), keys = map.gate.rule === 'keys';
+      if (!was && M.gateOpen(map, S.cleared)) {
+        W.banner = { s: keys ? 'Đủ 3 mảnh chìa! Cửa phía trên sảnh đã mở' : 'Dọn đủ 3 phòng quái! Cửa Trùm đã mở', col: '#ffd23f', t: 3.5 };
+        G.sfx('evolve');
+      } else if (!W.banner) W.banner = { s: keys ? 'Nhặt được mảnh chìa ' + n + '/3' : 'Đã dọn ' + n + '/3 phòng quái', col: '#ffd27a', t: 2.5 };
+    }
+    updateDoors();
+  }
+  // Người chơi đang đẩy vào cửa nào (đứng sát mép sàn, đúng chỗ cửa, và đang đi về phía cửa).
+  function doorAt(inp) {
+    const W = S.W, P = S.P;
+    let mx = inp.mx, my = inp.my;
+    const l = Math.hypot(mx, my);
+    if (l > 1) { mx /= l; my /= l; }
+    if (P.dodgeT > 0) { mx = P.ddx; my = P.ddy; }
+    for (const d of W.doors) {
+      const q = G.roomArt.doorPos(W.geo, d.dir), v = DIRV[d.dir];
+      if (mx * v[0] + my * v[1] < 0.35) continue;
+      const along = v[0] ? Math.abs(P.y - q.y) : Math.abs(P.x - q.x);
+      const depth = v[0] ? (q.x - P.x) * v[0] : (q.y - P.y) * v[1];
+      if (along <= 12 && depth <= 1.5) return d;
+    }
+    return null;
   }
 
   function chestOptions() {
@@ -188,10 +329,7 @@
       G.burst(pr.x, pr.y, pr.kind === 'hp' ? '#ff6a5a' : '#6ab0ff', 20, 80);
       G.sfx('evolve', 0.8);
     } else if (pr.act === 'stash') { S.mode = 'swap'; S.sel = null; } else if (pr.act === 'merchant') S.mode = 'merchant';
-    else if (pr.act === 'altar' && !pr.used) { S.mode = 'curse'; S.prop = pr; } else if (pr.act === 'door') {
-      S.rooms[S.idx] = pr.choice;
-      enterRoom(pr.choice);
-    }
+    else if (pr.act === 'altar' && !pr.used) { S.mode = 'curse'; S.prop = pr; }
   }
   function rebuildWeapons() {
     const P = S.P;
@@ -202,7 +340,7 @@
 
   function finish(win) {
     const sv = G.save, reg = G.REGIONS[S.r], W = S.W;
-    S.marks += W.marksGained;
+    S.marks += W.marksGained; W.marksGained = 0;
     if (W.usedPotion) S.usedPotion = true;
     const R = { win, lines: [], stars: 0, up: 0 };
     if (win) {
@@ -244,7 +382,7 @@
       R.up = G.addXp(sv.hero, xp);
       G.sfx('win');
     } else {
-      const xp = Math.round(S.base.xp * 0.4 * (S.idx / S.rooms.length));
+      const xp = Math.round(S.base.xp * 0.4 * (Math.max(0, S.visits - 1) / S.rooms.length));
       const gold = S.loot.kills * 2;
       sv.gold += gold;
       R.lines.push('+' + xp + ' kinh nghiệm', '+' + gold + ' vàng');
@@ -258,7 +396,12 @@
     G.persist();
   }
   G.finishStage = finish;
-  G.gotoRoom = function (n) { S.idx = n - 1; nextRoom(); }; // dùng khi chạy thử
+  // Dùng khi chạy thử: nhảy thẳng tới phòng số n (0 là Bắt đầu, 7 là Trùm). type: ép loại phòng và dựng lại phòng đó.
+  G.gotoRoom = function (n, type) {
+    if (type) { S.map.rooms[n].type = type; S.rooms[n] = type; delete S.worlds[n]; delete S.cleared[n]; }
+    S.trans = null;
+    enterRoom(n, null);
+  };
 
   // ---------- điều khiển ----------
   const BTN0 = { atk: [430, 220, 28], dodge: [380, 246, 18], special: [384, 196, 18], skill: [434, 166, 18] };
@@ -277,10 +420,12 @@
       my: (k.ArrowDown || k.KeyS ? 1 : 0) - (k.ArrowUp || k.KeyW ? 1 : 0),
       atk: !!(k.KeyJ || k.KeyZ || k.Space), atkP: !!(kp.KeyJ || kp.KeyZ || kp.Space),
       dodgeP: !!(kp.KeyK || kp.KeyX || kp.ShiftLeft), specialP: !!(kp.KeyL || kp.KeyC), skillP: !!(kp.KeyI || kp.KeyV),
-      swapP: !!(kp.KeyQ || kp.Tab), potionP: !!(kp.KeyE || kp.KeyH), pauseP: !!(kp.Escape || kp.KeyP),
+      swapP: !!(kp.KeyQ || kp.Tab), potionP: !!(kp.KeyE || kp.KeyH), pauseP: !!(kp.Escape || kp.KeyP), mapP: !!kp.KeyM,
     };
+    const mm = G.minimap.rect(S);
     for (const d of G.downs) {
       if (G.inRect(d, 368, 0, 112, 38)) { inp.swapP = true; d.role = 'ui'; continue; }
+      if (G.inRect(d, mm[0] - 2, mm[1], mm[2] + 4, mm[3] + 3)) { inp.mapP = true; d.role = 'ui'; continue; }
       if (hitBox(d, POT)) { inp.potionP = true; d.role = 'ui'; continue; }
       if (hitBox(d, PAU)) { inp.pauseP = true; d.role = 'ui'; continue; }
       // nút tròn: lấy nút gần ngón nhất, vùng chạm rộng hơn hình vẽ một chút
@@ -318,15 +463,25 @@
       const W = S.W, P = S.P;
       if (S.mode !== 'play') {
         const kp = G.keyP;
-        if (kp.Escape || (kp.KeyP && S.mode === 'paused')) {
+        if (kp.Escape || (kp.KeyP && S.mode === 'paused') || (kp.KeyM && S.mode === 'map')) {
           if (S.mode === 'result' || S.mode === 'dead') { S = null; G.setScene(G.Village); return; }
           setMode('play'); G.sfx('ui');
         }
         return;
       }
+      // đang chuyển phòng: màn hình trượt theo hướng đi, trận đấu đứng yên
+      if (S.trans) {
+        const T = S.trans;
+        T.t += dt;
+        if (T.phase === 0 && T.t >= TRANS_OUT) { enterRoom(T.to, T.dir); T.phase = 1; T.t = 0; }
+        else if (T.phase === 1 && T.t >= TRANS_IN) S.trans = null;
+        return;
+      }
       const inp = G.botInput ? G.botInput(S) : readInput();
       if (inp.pauseP) { setMode('paused'); return; }
+      if (inp.mapP) { setMode('map'); G.sfx('ui'); return; }
       S.roomT = (S.roomT || 0) + dt;
+      if (S.doorCd > 0) S.doorCd -= dt;
       // tương tác với đồ vật gần nhất
       S.near = null;
       let bd = 26;
@@ -338,9 +493,13 @@
       if (S.near && inp.atkP) { inp.atk = false; inp.atkP = false; interact(S.near); if (S.mode !== 'play' || S.W !== W) return; }
       else if (S.near) inp.atk = false;
       G.updateWorld(dt, inp);
+      // đạn không bay xuyên tường ra lề màn hình
+      if (W.projs.length) W.projs = W.projs.filter((o) => o.x > W.geo.fx0 - 2 && o.x < W.geo.fx1 + 2 && o.y > W.geo.fy0 - 26 && o.y < W.geo.fy1 + 8);
+      for (const z of W.zones) if (z.wave && z.x < W.geo.fx0 + 3) z.dead = true; // sóng của Ngư Tinh tan khi chạm tường trái
       // đợt quái
+      tickSpawns(dt);
       if (W.waves.length && !W.cleared) {
-        if (W.ents.filter((e) => !e.add).length === 0) {
+        if (W.ents.filter((e) => !e.add).length === 0 && !W.spawns.length) {
           W.waveT -= dt;
           if (W.waveT <= 0) {
             W.waveI++;
@@ -352,7 +511,13 @@
       if (S.challenge) S.challenge.t -= dt;
       if (W.type === 'boss' && S.loot.bossDown) { S.endT += dt; if (S.endT > 1.6) finish(true); return; }
       if (W.over === 'dead') { S.endT += dt; if (S.endT > 1.2) finish(false); return; }
-      if (W.cleared && W.type !== 'boss' && P.x >= W.x1 - 2) nextRoom();
+      // bước vào cửa đang mở thì sang phòng kề
+      if (W.cleared && W.type !== 'boss' && S.doorCd <= 0) {
+        const d = doorAt(inp);
+        if (d && d.open) { S.trans = { to: d.to, dir: d.dir, phase: 0, t: 0 }; G.sfx('swing', 0.5); }
+        else if (d && d.gate && !S.gateMsgT) { S.gateMsgT = 2; }
+      }
+      if (S.gateMsgT > 0) S.gateMsgT = Math.max(0, S.gateMsgT - dt);
     },
     // Trang bị ẩn (chuyển ứng dụng, tắt màn hình): tự tạm dừng.
     hide() { if (S && S.mode === 'play') setMode('paused'); },
@@ -363,8 +528,10 @@
         S.shownMode = S.mode; S.modeT = G.time; G.stalePointers(); G.click = null;
       }
       G.drawWorld(S.r);
+      if (S.trans) slideWorld();
       drawHud();
-      if (S.mode === 'chest') panelChest();
+      if (S.mode === 'map') { G.minimap.drawBig(S); if (G.click) { G.click = null; setMode('play'); G.sfx('ui'); } }
+      else if (S.mode === 'chest') panelChest();
       else if (S.mode === 'swap') panelSwap();
       else if (S.mode === 'merchant') panelMerchant();
       else if (S.mode === 'curse') panelCurse();
@@ -373,6 +540,23 @@
       if (S && S.fade > 0) ui.rect(0, 0, G.W, G.H, 'rgba(0,0,0,' + Math.min(1, S.fade / 0.35) + ')'); // S có thể vừa bị xoá khi bấm Về làng
     },
   };
+
+  // Chuyển phòng: phòng cũ trượt ra và tối dần, phòng mới trượt vào từ phía cửa vừa bước qua.
+  const TRANS_OUT = 0.13, TRANS_IN = 0.2, SLIDE = 40;
+  function slideWorld() {
+    const T = S.trans, c = G.wx, v = DIRV[T.dir];
+    const k = T.phase === 0 ? Math.min(1, T.t / TRANS_OUT) : 1 - Math.min(1, T.t / TRANS_IN);
+    const sgn = T.phase === 0 ? -1 : 1;
+    const ox = Math.round(v[0] * SLIDE * k * sgn), oy = Math.round(v[1] * SLIDE * k * sgn);
+    c.setTransform(1, 0, 0, 1, 0, 0);
+    if (ox || oy) {
+      c.globalCompositeOperation = 'copy';
+      c.drawImage(c.canvas, ox, oy);
+      c.globalCompositeOperation = 'source-over';
+    }
+    c.fillStyle = 'rgba(0,0,0,' + Math.min(1, k * 1.1).toFixed(3) + ')';
+    c.fillRect(0, 0, G.W, G.H);
+  }
 
   function markInfo(w) {
     if (!w.branch) {
@@ -401,15 +585,9 @@
     for (const k of G.ELS) if (P.st[k] > 0) { ui.rect(sx, 48, 10, 10, G.EL[k].col, '#000'); sx += 12; }
     const cw = G.curW(P), coat = P.coats[cw.id];
     if (coat && coat.t > 0) ui.text('Bùa ' + G.EL[coat.el].name + ' ' + Math.ceil(coat.t) + ' giây', sx, 56.5, { size: 7.5, color: G.EL[coat.el].col, bold: true });
-    // chấm phòng
-    const n = S.rooms.length;
-    for (let i = 0; i < n; i++) {
-      const x = 240 - (n * 9) / 2 + i * 9;
-      const t = S.rooms[i];
-      const col = i < S.idx ? '#7a6a55' : i === S.idx ? '#ffd27a' : t === 'boss' ? '#a0382e' : t === 'chest' ? '#b08a2a' : t === 'fountain' ? '#3a7ab0' : '#4a4038';
-      ui.rect(x, 5, 7, 5, col, '#000');
-    }
-    ui.text(ROOM_NAME[W.type] + ' · ' + G.REGIONS[S.r].name + ' ' + (S.i + 1), 240, 19, { size: 7, align: 'center', color: '#d9cdb8' });
+    // tên vùng và loại phòng ở lề trái; bản đồ nhỏ ở lề phải (thay hàng chấm phòng trước đây)
+    ui.text(G.REGIONS[S.r].name + ' ' + (S.i + 1) + ' · ' + ROOM_NAME[W.type], 6, 69, { size: 7, color: '#d9cdb8' });
+    G.minimap.draw(S);
     // vũ khí: hình và bậc ở trên, mốc tiến hóa ở dưới, thanh dấu ấn sát đáy
     P.weapons.forEach((w, i) => {
       const x = 368 + i * 56, on = i === P.cur;
@@ -422,67 +600,82 @@
       ui.text(G.STAGE_NAMES[G.wStage(w)], x + 27, 29.5, { size: 6.5, align: 'center', color: w.branch ? G.EL[w.branch].col : '#b8b0a0' });
       ui.bar(x + 3, 32.5, 48, 3, mi.frac, mi.col);
     });
-    if (P.weapons.length > 1 && S.tut && S.idx === 4) ui.text('Chạm để đổi vũ khí', 478, 47, { size: 7, align: 'right', bold: true, color: '#ffd27a' });
-    // trùm
+    if (P.weapons.length > 1 && S.tut && W.type === 'elite') ui.text('↑ Chạm để đổi vũ khí', 366, 24, { size: 7, align: 'right', bold: true, color: '#ffd27a' });
+    // trùm: thanh máu và các lớp thích nghi nằm trên mặt tường sau, không che sàn
     const b = W.boss;
     if (b && !b.dead) {
-      ui.bar(140, 24, 200, 6, b.hp / b.maxhp, '#c23a2e');
-      ui.rect(140 + 200 * 0.6, 24, 1, 6, '#000');
-      ui.rect(140 + 200 * 0.3, 24, 1, 6, '#000');
-      ui.text(b.name, 140, 39, { size: 7.5, bold: true, color: '#ffd9c8' });
+      ui.bar(140, 9, 200, 6, b.hp / b.maxhp, '#c23a2e');
+      ui.rect(140 + 200 * 0.6, 9, 1, 6, '#000');
+      ui.rect(140 + 200 * 0.3, 9, 1, 6, '#000');
+      ui.text(b.name, 140, 24, { size: 7.5, bold: true, color: '#ffd9c8' });
       let lx = 340;
       for (const l of b.layers.slice().reverse()) {
         const s = l.type === 'resist' ? 'Kháng ' + G.EL[l.el].name : G.layerText(l);
         ui.font(6.5, true);
         const tw = G.ux.measureText(s).width + 6;
         lx -= tw + 2;
-        ui.rect(lx, 32, tw, 9, l.type === 'resist' ? G.EL[l.el].dark : '#4a4038', '#000');
-        ui.text(s, lx + 3, 39, { size: 6.5, bold: true });
+        ui.rect(lx, 17, tw, 9, l.type === 'resist' ? G.EL[l.el].dark : '#4a4038', '#000');
+        ui.text(s, lx + 3, 24, { size: 6.5, bold: true });
       }
-      if (b.weak.length) ui.text('Yếu ' + b.weak.map((e) => G.EL[e].name).join(', '), 240, 50, { size: 7, align: 'center', color: G.EL[b.weak[0]].col, bold: true });
-      if (b.exposed > 0) ui.text('LỘ ĐIỂM YẾU!', 240, 60, { size: 8, align: 'center', color: '#ffd23f', bold: true });
+      if (b.weak.length) ui.text('Yếu ' + b.weak.map((e) => G.EL[e].name).join(', '), 240, 35, { size: 7, align: 'center', color: G.EL[b.weak[0]].col, bold: true });
+      if (b.exposed > 0) ui.text('LỘ ĐIỂM YẾU!', 240, 46, { size: 8, align: 'center', color: '#ffd23f', bold: true });
     }
+    let by = b && !b.dead ? 58 : 30;
     if (W.type === 'fountain') {
       const t = S.preview.length ? 'Trùm đã học: ' + S.preview.map(G.layerText).join(' · ') : 'Trùm chưa học được gì từ bạn';
-      ui.rect(96, 30, 268, 13, 'rgba(20,16,14,0.8)');
-      ui.text(t, 240, 39.5, { size: 7.5, align: 'center', color: '#ffd9c8', bold: true });
+      const lines = ui.wrap(t, 228, 7, true);
+      ui.rect(122, 9, 236, lines.length * 9 + 5, 'rgba(20,16,14,0.8)');
+      lines.forEach((l, i) => ui.text(l, 240, 18 + i * 9, { size: 7, align: 'center', color: '#ffd9c8', bold: true }));
+      by = 14 + lines.length * 9 + 4;
     }
-    if (S.challenge) ui.text('Thử thách: hạ hết quái trong ' + Math.max(0, Math.ceil(S.challenge.t)) + ' giây', 240, 40, { size: 8, align: 'center', color: S.challenge.t > 8 ? '#ffd27a' : '#ff6a5a', bold: true });
-    if (W.type === 'choice') {
-      for (const pr of W.props) ui.text(ROOM_NAME[pr.choice], pr.x - W.cam, pr.y - 52, { size: 8, align: 'center', bold: true, color: '#ffd27a' });
-      ui.text('Lại gần một cửa rồi bấm Đánh để chọn', 240, 60, { size: 8, align: 'center' });
-    }
-    // Lời chỉ dẫn của ải đầu. Ở phòng trùm thì nằm dưới thanh máu trùm và tự ẩn sau 12 giây.
-    let by = 66;
+    if (S.challenge) { ui.text('Thử thách: hạ hết quái trong ' + Math.max(0, Math.ceil(S.challenge.t)) + ' giây', 240, 20, { size: 8, align: 'center', color: S.challenge.t > 8 ? '#ffd27a' : '#ff6a5a', bold: true }); }
+    // Lời chỉ dẫn của ải đầu nằm ở lề trái, không che phòng. Ở phòng trùm tự ẩn sau 12 giây.
     let hint = S.hint;
-    if (hint && W.cleared && W.waves.length) hint = 'Hết quái rồi. Đi sang mép phải màn hình để qua phòng kế tiếp.';
+    if (hint && W.cleared && W.hadWaves) hint = TUT.door;
     if (hint && W.type === 'boss' && S.roomT > 12) hint = null;
     if (hint && S.mode === 'play') {
-      const lines = ui.wrap(hint, 286, 8);
-      const hy = W.type === 'boss' ? 64 : 46, hh = lines.length * 11 + 6;
-      ui.rect(90, hy, 300, hh, 'rgba(10,8,6,0.78)', '#7a5a3a');
-      lines.forEach((l, i) => ui.text(l, 240, hy + 10 + i * 11, { size: 8, align: 'center' }));
-      by = hy + hh + 3;
+      const lines = ui.wrap(hint, 108, 7);
+      ui.rect(3, 75, 116, lines.length * 9.5 + 7, 'rgba(10,8,6,0.78)', '#7a5a3a');
+      lines.forEach((l, i) => ui.text(l, 7, 85 + i * 9.5, { size: 7 }));
     }
     if (W.banner) {
-      ui.font(10, true);
-      const tw = Math.min(440, G.ux.measureText(W.banner.s).width + 16);
-      ui.rect(240 - tw / 2, by, tw, 16, 'rgba(10,8,6,0.82)', W.banner.col);
-      ui.text(W.banner.s, 240, by + 11.5, { size: tw >= 440 ? 7.5 : 10, align: 'center', bold: true, color: W.banner.col });
+      // dòng báo nằm trên tường sau; dài quá thì thu chữ, vẫn dài thì xuống dòng
+      const maxW = W.geo.big ? 290 : 228;
+      let size = 10, lines = [W.banner.s];
+      for (const sz of [10, 8.5, 7.5]) { size = sz; ui.font(sz, true); if (G.ux.measureText(W.banner.s).width <= maxW) break; }
+      ui.font(size, true);
+      if (G.ux.measureText(W.banner.s).width > maxW) lines = ui.wrap(W.banner.s, maxW, size, true);
+      let tw = 0;
+      ui.font(size, true);
+      for (const l of lines) tw = Math.max(tw, G.ux.measureText(l).width);
+      tw += 14;
+      const lh = size + 3, bh = lines.length * lh + 5;
+      ui.rect(240 - tw / 2, by, tw, bh, 'rgba(10,8,6,0.82)', W.banner.col);
+      lines.forEach((l, i) => ui.text(l, 240, by + size + 1.5 + i * lh, { size, align: 'center', bold: true, color: W.banner.col }));
+    }
+    // cửa dẫn tới Trùm còn khóa: ghi rõ còn thiếu gì, ngay cạnh cửa
+    if (S.mode === 'play' && W.cleared && !S.trans) {
+      const gi = G.minimap.gateInfo(S);
+      for (const d of W.doors) {
+        if (!d.gate || d.open || !gi) continue;
+        const q = G.roomArt.doorPos(W.geo, d.dir), v = DIRV[d.dir];
+        const tx = q.x - v[0] * 34, ty = q.y - v[1] * 22 + (v[1] < 0 ? 4 : 0);
+        const hot = S.gateMsgT > 0 && Math.floor(G.time * 6) % 2;
+        ui.text(gi.keys ? 'Cần 3 mảnh chìa' : 'Dọn 3 phòng quái', tx, ty, { size: 7, align: 'center', bold: true, color: hot ? '#ffffff' : '#ff9a8a' });
+        ui.text('Đã có ' + gi.n + '/' + gi.need, tx, ty + 9, { size: 7, align: 'center', bold: true, color: '#ffd27a' });
+      }
     }
     // tên các vật bấm được, để người mới biết đó là gì
     const PNAME = { chest: 'Rương báu', stash: 'Rương đồ', merchant: 'Thương nhân', altar: 'Bàn thờ lời nguyền' };
     if (S.mode === 'play') {
       for (const pr of W.props) {
-        if (!pr.act || pr.used || pr.act === 'door') continue;
+        if (!pr.act || pr.used) continue;
         const nm = pr.act === 'fountain' ? (pr.kind === 'hp' ? 'Hồi máu' : 'Hồi mana') : PNAME[pr.act];
         const py = pr.y - (pr.act === 'stash' ? 28 : pr.act === 'fountain' ? 40 : 36);
         if (pr === S.near) ui.text('Bấm Đánh', pr.x - W.cam, py, { size: 8, align: 'center', bold: true, color: '#fff3b0' });
         else if (nm) ui.text(nm, pr.x - W.cam, py, { size: 7, align: 'center', bold: true, color: pr.act === 'fountain' ? (pr.kind === 'hp' ? '#ff9a8a' : '#9ac8ff') : '#f0d9b0' });
       }
-      if (S.near && S.near.act === 'door') ui.text('Bấm Đánh', S.near.x - W.cam, S.near.y - 62, { size: 8, align: 'center', bold: true, color: '#fff3b0' });
     }
-    if (W.cleared && W.type !== 'boss' && Math.floor(G.time * 2.5) % 2) ui.text('ĐI TIẾP →', 474, 132, { size: 10, align: 'right', bold: true, color: '#ffd27a' });
     // nút cảm ứng
     if (S.mode === 'play') {
       const joy = [...G.pointers.values()].find((p) => p.role === 'joy');
@@ -608,7 +801,7 @@
     const R = S.result;
     if (G.time - S.modeT < 0.45) G.click = null; // tránh bấm nhầm khi bảng vừa hiện lúc đang đánh
     ui.rect(0, 0, G.W, G.H, 'rgba(0,0,0,0.65)');
-    ui.panel(70, 22, 340, 228, R.win ? 'Qua ải ' + G.REGIONS[S.r].name + ' ' + (S.i + 1) : S.quit ? 'Đã bỏ ải ở phòng ' + (S.idx + 1) : 'Bạn đã gục ở phòng ' + (S.idx + 1));
+    ui.panel(70, 22, 340, 228, R.win ? 'Qua ải ' + G.REGIONS[S.r].name + ' ' + (S.i + 1) : S.quit ? 'Đã bỏ ải ở phòng ' + ROOM_NAME[S.rooms[S.idx]] : 'Bạn đã gục ở phòng ' + ROOM_NAME[S.rooms[S.idx]]);
     let y = 54;
     if (R.win) {
       const notes = ['Qua ải', 'Không dùng bình máu', 'Hạ trùm bằng hệ khắc chế'];
