@@ -47,7 +47,7 @@ XEM.khung = function (k) { const S = XEM.S, [di, t] = S.kh[k], dn = S.doan[di], 
     lc.save(); lc.beginPath(); lc.rect(cx + 1, cy + 1, ow - 2, oh - 2); lc.clip(); nenO(lc, cx + 1, cy + 1, ow - 2, oh - 2, S.mauNen);
     let tt = t, anim = 'idle', ta = t, het = true; for (const a of (dn.rieng && dn.rieng[o.id] || dn.anims)) { const an = d.anims[a]; if (!an) continue; const dd = an.lap ? (dn.giay || 2) : an.d; if (tt < dd) { anim = a; ta = tt; het = false; break; } tt -= dd; if (a === 'die') { anim = null; } else { anim = 'idle'; ta = tt; } }
     const ph = dn.phase || o.phase || 1; o._nhan = anim && !het ? d.anims[anim].nhan : (anim ? d.anims.idle.nhan : '');
-    if (anim) M.draw(lc, o.id, fx, fy, { anim, t: ta, dir: dn.dir, face: dn.face || (dn.dir == null ? -1 : 0), phase: typeof ph === 'function' ? ph(anim) : ph });
+    if (anim) M.draw(lc, o.id, fx, fy, { anim, t: ta, dir: o.dir != null ? o.dir : dn.dir, face: dn.face || ((o.dir != null ? o.dir : dn.dir) == null ? -1 : 0), phase: typeof ph === 'function' ? ph(anim) : ph });
     lc.restore(); });
   c.drawImage(XEM.lo, 0, S.top, XEM.lo.width * s, XEM.lo.height * s);
   S.o.forEach((o, i) => { const d = D(o.id), cx = o._r[0] * s, cy = o._r[1] * s + S.top, ow = o._r[2], oh = o._r[3], day = o.day != null ? o.day : (S.day || 26); if (S.be !== false) XEM.be(c, cx + (S.beX || 16) * s, cy + (o.y != null ? o.y : oh - day) * s, s);
