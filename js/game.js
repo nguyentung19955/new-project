@@ -588,13 +588,16 @@ function knockback(e, dist) {
 
 // claude/sua-tam-skill: ĐIỀU KIỆN TUNG CHIÊU — kỹ năng tấn công chỉ dùng khi có quái TRONG TẦM (tầm đánh của tướng × hệ số
 // tầm ghi trong mô tả kỹ năng), không bắn vào khoảng trống, không tốn hồi chiêu khi chưa có ai trong tầm.
-// Ngoại lệ: kỹ năng mô tả "toàn bản đồ / khắp trận / cả dòng sông" (SKILL_GLOBAL) dùng khi có quái ở bất kỳ đâu trên đường;
-// kỹ năng hỗ trợ (SKILL_SUPPORT) tự xét đồng đội cần (bị thương / đang giao chiến trong vùng của chiêu).
-const SKILL_GLOBAL = new Set(['skyride', 'melonrain', 'forestwrath', 'guardcity']);
+// Không còn kỹ năng toàn bản đồ: lúc tung, chiêu CHỈ thấy quái trong tầm kỹ năng (Game.updateHero lọc game.enemies) — chiêu
+// từng đánh cả sân (Gióng R, Mưa Dưa, Rừng Thiêng…) có hệ số tầm lớn hơn nhưng vẫn là một vùng quanh tướng.
+// Kỹ năng hỗ trợ (SKILL_SUPPORT) tự xét đồng đội cần (bị thương / đang giao chiến) trong vùng của chiêu; chỉ dùng trong đợt.
 const SKILL_SUPPORT = new Set(['goldshell', 'flowerheal', 'staffheal', 'lotus', 'feast', 'herbheal', 'sacredtree', 'oath', 'rally', 'ancestor']);
 // hệ số tầm theo mô tả: "trong tầm gấp đôi", "(tầm x1.2)", "(tầm x1.6)", "mọi quái trong tầm x2"
 const SKILL_REACH = { 'thosan.shadowstep': 2, 'llq.l_e': 1.2, 'thansan.s_q': 1.6, 'thansan.s_r': 2 };
-const skillReach = (type, sk) => SKILL_REACH[type + '.' + sk.id] || 1;
+// chiêu từng toàn bản đồ: tầm x2 quanh tướng
+const SKILL_REACH_CAST = { skyride: 2, melonrain: 2, forestwrath: 2, guardcity: 2 };
+const ALLY_R = 220;   // đồng đội trong tầm của chiêu hỗ trợ toàn quân cũ (Lời Thề, Lễ Tổ Tiên, hồi máu Rừng Thiêng)
+const skillReach = (type, sk) => SKILL_REACH[type + '.' + sk.id] || (sk.active && SKILL_REACH_CAST[sk.active.cast]) || 1;
 // có đồng đội (trong bán kính r quanh x, y — gồm cả người tung) đang có quái trong tầm đánh của mình
 const allyEngaged = (game, x, y, r) => game.heroes.some((o) => o && !o.dead && Math.hypot(o.x - x, o.y - y) <= r
   && !!game.findTarget(o.x, o.y, heroStats(o).range, true));
@@ -924,16 +927,17 @@ const SKILL_CASTS = {
     return true;
   },
   skyride(game, h, st, n) {
-    // cưỡi ngựa sắt bay dọc cả dòng sông: đánh mọi quái trên bản đồ (cả quái bay)
+    // cưỡi ngựa sắt bay qua quái trong tầm x2 (cả quái bay) — sua-tam-skill: không còn toàn bản đồ
     const list = game.enemies.filter((e) => !e.dead);
     if (list.length < 3 && !list.some((e) => e.def.boss)) return false;
-    game.effects.push({ type: 'skyride', d1: 0, d2: PATH.total, ttl: 1.1, max: 1.1 });
+    const ds = list.map((e) => e.dist);   // sua-tam-skill: ngựa bay qua đoạn đường có quái trong tầm (không còn cả dòng sông)
+    game.effects.push({ type: 'skyride', d1: Math.max(0, Math.min(...ds) - 60), d2: Math.min(PATH.total, Math.max(...ds) + 60), ttl: 1.1, max: 1.1 });
     game.effects.push({ type: 'banner', str: st.skName || 'Bay Về Trời', color: '#FFB04A', ttl: 1.6, max: 1.6 });
     game.effects.push({ type: 'flash', color: '#FFE0A0', ttl: 0.3, max: 0.3 });
     game.shake = Math.max(game.shake, 8);
     for (const e of list) {
       // ngựa chạy từ cửa sông về thành: quái càng gần thành bị đánh càng sau
-      const delay = 0.05 + 0.85 * (e.dist / PATH.total);
+      const delay = 0.05 + 0.85 * ((e.dist - Math.min(...ds)) / Math.max(1, Math.max(...ds) - Math.min(...ds)));
       game.effects.push({ type: 'none', ttl: delay, max: delay,
         onEnd: () => { if (!e.dead) game.hit(e, (st.damage * 4 + n * 2) * st.skillPower, h, { big: true, color: '#FFB04A' }); } });
     }
@@ -1231,11 +1235,13 @@ const SKILL_CASTS = {
     return true;
   },
   oath(game, h, st, n) {
-    const hurt = game.heroes.some((o) => o && !o.dead && o.hp < heroStats(o).hpMax * 0.8);
-    if (!hurt && game.enemies.filter((e) => !e.dead && game.heroes.some((o) => o && !o.dead && Math.hypot(e.x - o.x, e.y - o.y) <= heroStats(o).range)).length < 6) return false;
-    game.oathT = 6;
+    // sua-tam-skill: chỉ đồng đội trong tầm (ALLY_R) — không còn toàn quân trên sân
+    const near = game.heroes.filter((o) => o && !o.dead && Math.hypot(o.x - h.x, o.y - h.y) <= ALLY_R);
+    const hurt = near.some((o) => o.hp < heroStats(o).hpMax * 0.8);
+    if (!hurt && game.enemies.filter((e) => !e.dead && near.some((o) => Math.hypot(e.x - o.x, e.y - o.y) <= heroStats(o).range)).length < 6) return false;
+    for (const o of near) o.oathT = 6;
     game.effects.push({ type: 'banner', str: st.skName || 'Lời Thề Bộ Lạc', color: '#D9A84E', ttl: 1.6, max: 1.6 });
-    for (const o of game.heroes) if (o && !o.dead) game.effects.push({ type: 'dome', x: o.x, y: o.y, r: 34, color: '#D9A84E', ttl: 0.8, max: 0.8 });
+    for (const o of near) game.effects.push({ type: 'dome', x: o.x, y: o.y, r: 34, color: '#D9A84E', ttl: 0.8, max: 0.8 });
     return true;
   },
   // ----- Thần Săn Ba Vì
@@ -1336,7 +1342,7 @@ const SKILL_CASTS = {
       game.stun(e, e.def.boss ? 0.6 : 1.8, 'root');
       game.hit(e, (st.damage * 2 + n) * st.skillPower, h, { color: '#5FD06A' });
     }
-    healHeroes(game, h.x, h.y, 2000, 0.2, '#5FD06A');
+    healHeroes(game, h.x, h.y, ALLY_R, 0.2, '#5FD06A');
     return true;
   },
   // ----- chiêu cũ tách cho khác nhau
@@ -1368,11 +1374,12 @@ const SKILL_CASTS = {
     return true;
   },
   ancestor(game, h, st) {
-    if (!game.heroes.some((o) => o && !o.dead && o.hp < heroStats(o).hpMax * 0.5)) return false;
+    const near = (o) => o && !o.dead && Math.hypot(o.x - h.x, o.y - h.y) <= ALLY_R;   // sua-tam-skill: đồng đội trong tầm
+    if (!game.heroes.some((o) => near(o) && o.hp < heroStats(o).hpMax * 0.5)) return false;
     game.effects.push({ type: 'banner', str: st.skName || 'Lễ Tổ Tiên', color: '#FFE08A', ttl: 1.6, max: 1.6 });
     game.effects.push({ type: 'flash', color: '#FFF1C4', ttl: 0.4, max: 0.4 });
     for (const o of game.heroes) {
-      if (!o || o.dead) continue;
+      if (!near(o)) continue;
       o.hp = heroStats(o).hpMax;
       o.invulnT = 2;
       game.effects.push({ type: 'heal', x: o.x, y: o.y, r: 36, color: '#FFE08A', ttl: 0.9, max: 0.9 });
@@ -3273,7 +3280,7 @@ class Game {
     }
     if (h.earthT > 0) amount *= 0.7;
     if (st.lg.lowHpDr && h.hp < st.hpMax * 0.4) amount *= 1 - st.lg.lowHpDr / 100;     // Thần khí
-    if (this.oathT > 0) amount *= 0.7;             // Lạc Hầu: Lời Thề Bộ Lạc
+    if (h.oathT > 0) amount *= 0.7;                // Lạc Hầu: Lời Thề Bộ Lạc (đồng đội trong tầm)
     // Lạc Hầu: Giáp Da Tê Gai phản sát thương lên quái gần nhất
     if (st.thorns && amount > 0) {
       const foe = this.enemiesInRange(h.x, h.y, 260).sort((a, b) => Math.hypot(a.x - h.x, a.y - h.y) - Math.hypot(b.x - h.x, b.y - h.y))[0];
@@ -3386,7 +3393,8 @@ class Game {
     }
     // Bộ Sơn Tinh: quái chạm vào bị chậm
     if (st.touchSlow) for (const e of this.enemiesInRange(h.x, h.y, 60, false)) this.slow(e, st.touchSlow, 0.5);
-    const heal = ((h.buff.healPct || 0) / 100 + (h.hotT > 0 ? h.hotPct || 0 : 0) + (this.oathT > 0 ? 0.03 : 0)) * st.hpMax;
+    const heal = ((h.buff.healPct || 0) / 100 + (h.hotT > 0 ? h.hotPct || 0 : 0) + (h.oathT > 0 ? 0.03 : 0)) * st.hpMax;
+    if (h.oathT > 0) h.oathT -= dt;
     h.hp = Math.min(st.hpMax, h.hp + (st.regen + heal) * dt);
     h.mana = Math.min(st.maxMana, h.mana + st.manaRegen * dt);
     h.swing = Math.max(0, h.swing - dt * (h.swingRate || SWING_RATE));
@@ -3438,12 +3446,19 @@ class Game {
       if (!sk.active || !lv || h.skillCd[sk.id] > 0 || h.mana < sk.active.mana || h.silenceT > 0) continue;
       if (sk.active.mana < reserve && h.mana - sk.active.mana < reserve) continue;
       // sua-tam-skill: chưa có quái trong tầm → chưa tung (giữ hồi chiêu sẵn sàng, xét lại khung sau)
-      if (!SKILL_GLOBAL.has(sk.active.cast) && !SKILL_SUPPORT.has(sk.active.cast) && !this.findTarget(h.x, h.y, st.range * skillReach(h.type, sk), true)) continue;
+      const sup = SKILL_SUPPORT.has(sk.active.cast), reachR = st.range * skillReach(h.type, sk);
+      if (!sup && !this.findTarget(h.x, h.y, reachR, true)) continue;
       // hỗ trợ (khiên / buff / hồi máu): chỉ trong đợt — sân hết quái (giữa hai đợt) thì không dùng
       if (SKILL_SUPPORT.has(sk.active.cast) && !this.enemies.some((e) => !e.dead)) continue;
       const cst = { ...st, skillPower: st.skillPower * skillMult(lv), lv, skName: sk.name };
       this.ultCast = i === 3;
-      const castOk = SKILL_CASTS[sk.active.cast](this, h, cst, skillN(h.level));
+      // chiêu tấn công chỉ thấy quái trong tầm kỹ năng; quái sinh thêm trong lúc tung (tách đôi…) trả về danh sách thật
+      const all = this.enemies;
+      if (!sup) this.enemies = all.filter((e) => !e.dead && Math.hypot(e.x - h.x, e.y - h.y) <= reachR);
+      let castOk;
+      try { castOk = SKILL_CASTS[sk.active.cast](this, h, cst, skillN(h.level)); } finally {
+        if (this.enemies !== all) { const seen = new Set(all); for (const e of this.enemies) if (!seen.has(e)) all.push(e); this.enemies = all; }
+      }
       this.ultCast = false;
       if (castOk) {
         // ẩn Gậy Thời Không: 10% dùng chiêu không tốn năng lượng
