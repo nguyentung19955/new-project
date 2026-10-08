@@ -2215,3 +2215,8 @@ Test: cập nhật `cho-tuong` (màn Chuẩn bị không còn chọn đội, sau
 - Pixel art (quy tắc mới): cầu tre / cầu đá, miệng hang ngầm, cột mốc cửa vào vẽ bằng code — **chưa có bản pixel** (docs/pixel chưa có trên nhánh chính); cần bổ sung vào danh sách pixel khi nhánh pixel có QUY-CHUAN / DANH-SACH.
 - Test thêm (tests/duong-di-moi): chạy thật đợt boss 10 bằng vòng lặp game, hạ boss → bảng Sính lễ mở 4 giây: vẫn đợt 10, đếm ngược đứng yên, chưa đổi màn; đóng bảng → màn 2, trận chạy lại, nghỉ ≥ 17 giây; 1 banner, không bảng bộ quái, ≤ 2 thông báo; nhãn Tiếp tục bản lưu cũ đúng vùng đất.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
+
+## claude/duong-di-moi — sửa lỗi mất nền vẽ tay ở bản đồ đường gốc
+- Lỗi hồi quy @7d1446b: `mapLayer` (js/maps.js) có ảnh nền nhưng bản đồ không có `m.shape` thì rơi vào nhánh `else` tô màu đất đè lên ảnh → Bến Sông Đà, Biển Đông… chỉ còn màu trơn.
+- Sửa: có ảnh nền thì vẽ ảnh (+ `drawBgClean` nếu là dạng đường mới); chỉ khi không có ảnh nền mới tô màu đất.
+- Test mới `tests/duong-di-moi/nen-goc.test.js`: mọi bản đồ gốc có ảnh nền phải còn nhiều màu ở góc nền (trước khi sửa: 1 màu); chụp Sông Đà + Biển Đông ở 844×390 và 1920×934.

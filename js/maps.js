@@ -465,9 +465,10 @@ function mapLayer(id, bgImg, svgImg, pw, ph) {
   c.width = pw; c.height = ph;
   const x = c.getContext('2d');
   x.setTransform(pw / CONFIG.W, 0, 0, ph / CONFIG.H, 0, 0);
-  if (bgImg) x.drawImage(bgImg, 0, 0, CONFIG.W, CONFIG.H);
-  if (bgImg && m.shape) drawBgClean(x, bgImg, m.theme, pw);   // dạng đường mới: xoá dải hoa văn của đường cũ trên nền
-  else { x.fillStyle = (MAP_THEMES[m.theme] || MAP_THEMES.song).ground; x.fillRect(0, 0, CONFIG.W, CONFIG.H); }
+  if (bgImg) {
+    x.drawImage(bgImg, 0, 0, CONFIG.W, CONFIG.H);
+    if (m.shape) drawBgClean(x, bgImg, m.theme, pw);   // dạng đường mới: xoá dải hoa văn của đường cũ trên nền
+  } else { x.fillStyle = (MAP_THEMES[m.theme] || MAP_THEMES.song).ground; x.fillRect(0, 0, CONFIG.W, CONFIG.H); }
   drawThemedPath(x, id);
   drawEntry(x, id);
   if (gate) {
