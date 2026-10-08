@@ -2418,3 +2418,6 @@ html.pixel :is(.hx-auto, .hx-pin, .hx-st.hx-open, .hx-sk) { border-radius: 2px; 
 :is(.hx-auto, .hs-c, .hx-pin, .hx-st.hx-open)::after { content: ''; position: absolute; z-index: 3; left: 0; right: 0; top: 50%; height: max(100%, calc(40px / var(--k, 1))); transform: translateY(-50%); }
 .hx-pin::after { top: auto; bottom: 0; transform: none; }
 .hx-st.hx-open::after { top: 0; transform: none; }
+/* sua-giao-dien-10 (tester): chân bảng (Cây kỹ năng…) dài thì xuống dòng, không cắt "…kỹ năng ma" */
+.foot { display: block; height: auto; min-height: 30px; white-space: normal; line-height: 1.3; padding: 5px 12px; box-sizing: border-box; }
+.foot > .coin, .foot > img { vertical-align: -3px; margin-right: 4px; }
