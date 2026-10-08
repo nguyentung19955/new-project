@@ -110,6 +110,8 @@
     this.nol = new Uint8Array(n); // điểm hiệu ứng, không cần viền
     this.rim = new Uint8Array(n); // điểm thuộc phần được mạ viền theo bậc
     this.lay = null; this.clip = false;
+    this.buf = new Array(n).fill(null); // lớp nháp dùng lại cho mọi phần
+    this.bx0 = 1e9; this.bx1 = -1; this.by0 = 1e9; this.by1 = -1; // vùng lớp nháp đã chạm tới
     this.t0 = 1e9; this.t1 = -1e9; this.q0 = 1e9; this.q1 = -1e9; // tầm vươn của thân theo trục vũ khí (không tính tua)
   }
   Spr.prototype._i = function (x, y) {
@@ -122,6 +124,8 @@
     const i = this._i(x, y); if (i < 0) return;
     if (this.clip && !this.lay[i]) return;
     this.lay[i] = c === 0 ? null : norm(c);
+    const bx = Math.round(x) + this.ox, by = Math.round(y) + this.oy;
+    if (bx < this.bx0) this.bx0 = bx; if (bx > this.bx1) this.bx1 = bx; if (by < this.by0) this.by0 = by; if (by > this.by1) this.by1 = by;
     if (!this.nomeasure && c !== 0) {
       const f = this.fr, t = x * f.ux + y * f.uy, q = x * f.vx + y * f.vy;
       if (t < this.t0) this.t0 = t; if (t > this.t1) this.t1 = t; if (q < this.q0) this.q0 = q; if (q > this.q1) this.q1 = q;
@@ -187,18 +191,23 @@
   // opt.fx: lớp hiệu ứng không viền; opt.under: chỉ vẽ vào chỗ còn trống; opt.rim: phần này được mạ viền theo bậc.
   Spr.prototype.part = function (opt, fn) {
     if (typeof opt === 'function') { fn = opt; opt = {}; }
-    const W = this.w, n = W * this.h;
-    this.lay = new Array(n).fill(null); this.clip = false;
+    const W = this.w, L = this.buf;
+    this.lay = L; this.clip = false;
+    this.bx0 = 1e9; this.bx1 = -1; this.by0 = 1e9; this.by1 = -1;
     fn(this);
-    const L = this.lay, ol = opt.fx ? false : (opt.ol === undefined ? INK : opt.ol);
+    this.lay = null;
+    if (this.bx1 < 0) return;
+    // chỉ quét trong vùng lớp này đã vẽ
+    const x0 = this.bx0, x1 = this.bx1, y0 = this.by0, y1 = this.by1;
+    const ol = opt.fx ? false : (opt.ol === undefined ? INK : opt.ol);
     if (opt.bevel !== false && !opt.fx) {
-      for (let i = W; i < n - W; i++) {
+      for (let y = y0; y <= y1; y++) for (let x = x0, i = y * W + x0; x <= x1; x++, i++) {
         const q = L[i]; if (!q || q.f) continue;
         q.t = !L[i - W] ? 2 : (!L[i + W] || !L[i - 1]) ? 0 : 1;
       }
     }
     if (ol) {
-      for (let i = W; i < n - W; i++) {
+      for (let y = y0; y <= y1; y++) for (let x = x0, i = y * W + x0; x <= x1; x++, i++) {
         if (!L[i]) continue;
         for (let d = 0; d < 4; d++) {
           const k = i + (d === 0 ? -1 : d === 1 ? 1 : d === 2 ? -W : W);
@@ -206,12 +215,12 @@
         }
       }
     }
-    for (let i = 0; i < n; i++) {
+    for (let y = y0; y <= y1; y++) for (let x = x0, i = y * W + x0; x <= x1; x++, i++) {
       const q = L[i]; if (!q) continue;
+      L[i] = null;
       if (opt.under && this.main[i]) continue;
       this.main[i] = q.c[q.t]; this.olf[i] = 0; this.nol[i] = opt.fx ? 1 : 0; this.rim[i] = opt.rim ? 1 : 0;
     }
-    this.lay = null;
   };
   // Mạ viền theo bậc: các điểm sát mép của phần "rim" đổi sang màu bậc.
   Spr.prototype.gild = function (rar) {
