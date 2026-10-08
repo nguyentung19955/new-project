@@ -1073,7 +1073,7 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 - Khi mở thì trận tạm dừng; bấm quay lại là về trận và chạy tiếp. Tướng vừa mua ghép được ngay.
 
 ## Phiên bản 91 — Bảng Ấn Phù, bảng thông tin quái
-- **Bảng Ấn Phù** (menu chính cạnh Anh Hùng, hoặc menu ≡ trong trận): 36 ấn chia 3 nhánh, mua bằng Ngân khố, áp cho mọi tướng.
+- **Bảng Ấn Phù** (menu chính cạnh Anh Hùng, hoặc menu ≡ trong trận): 36 ấn chia 3 nhánh, (từ v95–v123: khắc bằng điểm Tu Vi, riêng từng tướng, **chỉ dành cho tướng Vàng** — chốt lại 08/10).
   - **Ấn Núi** (sức mạnh, bền bỉ), **Ấn Gió** (tốc độ, chí mạng), **Ấn Sấm** (phép, năng lượng).
   - Mỗi nhánh có 9 ấn chỉ số (tối đa 5 cấp, giá 40/70/110 × cấp theo hàng) và 3 ấn kỹ năng (tối đa 3 cấp, giá 700 / 1.400 / 2.400).
   - Hàng 2, 3, 4 mở khi nhánh có 4, 10, 18 điểm.
@@ -2372,6 +2372,15 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 237 — quái không phình + gợi ý hợp thể (tester đạt)
+
+- Quái pixel không còn to lên khi trúng đòn/bơi (bỏ co giãn, cỡ cố định theo bảng tĩnh js/pixel/quai-cao.js).
+- Gợi ý chợ rõ hơn (xanh ghép ★, tím/cam hợp thể + dấu góc); ghim "Theo đuổi" công thức + dải nguyên liệu trên chợ; tự gợi ý công thức gần xong; tìm tên không dấu + lọc; chạm giữ thẻ chợ xem công thức.
+
+## Phiên bản 236 — cân bằng PA4 (tester đạt)
+
+- Khó: máu quái ×1,03/đợt từ đợt 15; Thường ×1,02/đợt (ải 4+); Dễ giữ nguyên. Thế trận: +6%/tướng từ tướng 3 + 3/4/5 hành +10/20/30% (chip ⚔ trên thanh trên). R hồi chiêu tối thiểu 12 s.
+
 ## Phiên bản 235 — chặn vuốt về trang trước (tester đạt)
 
 - Tắt overscroll, chặn vuốt mép 24px; Back: đóng bảng / trong trận hỏi "Rời trận?" / menu bấm 2 lần mới thoát.
@@ -2696,6 +2705,58 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
   `docs/pixel/DANH-SACH.md` mục "Bổ sung".
 - **Nền pixel riêng (sau khi gộp v223 có tool bản đồ):** sinh `ban-do/<gốc>-<dạng>` cho 14 bản đồ dạng của các ải (`node tools/build-ban-do-spec.js` → lọc mã có dạng → `node tools/ve-pixel.js --spec … --nap`): ô sát đường cùng kiểu bệ đá, xa đường chỉ trang trí, chỗ tự cắt có cầu. `mapLayer` chọn ảnh theo mã `id` (thay `~` bằng `-`); bản đồ dạng không có ảnh (Vô tận ghép gốc × dạng khác, Vòng quanh núi, Bến đò — có núi / sông game tự vẽ) dùng `pxMapGround`. Tool spec: nạp thêm `js/chapters.js` (đăng ký bản đồ dạng của ải), nhánh phụ chỉ xuất đoạn không trùng nhánh trước (tránh cầu giả ở chỗ chia / nhập nhánh), bỏ qua bản đồ có núi / bến đò.
 
+## claude/can-bang-tuong-vang — Cân bằng độ khó, tướng Vàng/Tím, chiêu R, thưởng Thế trận
+
+Người dùng chọn phương án 4: máu quái tăng dần theo đợt + hạ riêng chiêu vượt trội + thưởng đội hình.
+
+- **Khó**: máu quái ×HARD (như cũ) × **1,03 mỗi đợt từ đợt 15** (dừng tăng ở đợt 100; bản đầu 1,04 — tester: quá dốc, đội 8 ★★★ mạnh lọt 74% máu ở đợt 50 → người dùng chọn dịu bớt); ải 1–3 bật Khó **không còn hệ số giảm máu cho người mới** — máu và tốc tăng theo đợt lấy ít nhất bằng ải chuẩn `HARD_REF` (Cửa Sông Hồng). Nguyên nhân lỗi người dùng báo: Vô tận từ ải 1 giữ hệ số ải 1 (máu ~1/5 ải 7) suốt trận, Khó chỉ ×1,6 mà Ngân khố ×1,5 → 1 Vàng phép đi tới ~đợt 60. Tooltip nút Khó ghi rõ.
+- **Thường**: từ ải 4 trở đi máu ×**1,02 mỗi đợt từ đợt 15** (bản đầu 1,03). **Dễ** (ải 1–3 Thường) giữ nguyên.
+- **Thế trận** (mới, `TEAM_BONUS` js/data.js): toàn quân +6% sát thương mỗi tướng từ tướng thứ 3 (tối đa 8 tướng) + theo số hành khác nhau 3/4/5 hành: +10/20/30% (đủ 5 hành cộng thêm Ngũ hành tề tựu +10%). Đội 6 tướng đủ 5 hành: **+64%**; 8 tướng: +76%. Chip ⚔ +X% trên thanh trên (cạnh mạng), chạm → giải thích. Ảnh pixel icon ghi ở `docs/pixel/DANH-SACH.md`.
+- **Chiêu R**: hồi chiêu thực tế **không dưới 12 giây** sau mọi giảm hồi chiêu (`R_MIN_CD`, trước đây trí lực + đồ giảm tới 50% → R 10 s chỉ còn 5 s). Mô tả kỹ năng ghi "(tối thiểu 12 giây)".
+- R toàn bản đồ / vùng lớn chiếm 60–94% sát thương trận (đo `node tests/can-bang-vang/do-r.js all 45 55`) → tăng hồi chiêu trước, rồi hạ sát thương:
+
+| R | Tướng | Hồi chiêu trước → sau | Sát thương / khống chế |
+|---|---|---|---|
+| Mưa Dừa (melonrain) | Sơ Dừa (Tím) | 20 → 30 | x2 → x1.5 |
+| Mưa Dưa (melonrain) | An Tiêm (Tím) | 18 → 26 | x2 → x1.5 |
+| Bay Về Trời (skyride) | Thánh Gióng | 20 → 30 | x4 → x3 |
+| Cung Trăng Gọi Gió (forestwrath) | Chú Cuội | 22 → 30 | x2 → x1.5, trói 1,8 → 1,2 s (boss 0,6 → 0,4) |
+| Rừng Thiêng Nổi Giận (forestwrath) | Mẫu Thượng Ngàn | 22 → 30 | như trên |
+| Mưa Đầm Sen (blizzard) | Hải Sen | 16 → 22 | — |
+| Mù Sương Tản Viên (blizzard) | Thần Sương | 16 → 20 | — |
+| Khúc Ca Cuối (tidegate) | Trương Chi (Tím) | 22 → 26 | — |
+| Long Cung Nổi Sóng (tidegate) | Long Nữ | 22 → 26 | — |
+
+  % sát thương từ R (đợt 45–55, tướng max đứng một mình) trước → sau: Gióng 94 → 86, Mẫu T.Ngàn 91 → 87, Sơ Dừa 91 → 83, Cuội 93 → 81, An Tiêm 84 → 73, Hải Sen 90 → 87, Thần Sương 74 → 68. R nhanh nhất trước đây: Thầy Mo 8,5 s, Xạ Thủ 8,6 s, Lạc Tướng 8,8 s → nay 12 s.
+- Tím đơn độc (21 tướng, ải 4 Thường): đa số thua ~đợt 15–24; Sơ Dừa vượt trội (thua ~49) → hạ qua R ở trên.
+- Bảng bot bản chốt (Khó ×1,03, Thường ×1,02; 3 ván; mất mạng đầu → thua · mạng còn sau đợt 40/50; đội 8 = 2 Vàng + 3 Tím + 3 Thường ★★★ khác hành):
+
+| Đội | Thường (ải 4) | Khó ải 1 | Khó ải 4 |
+|---|---|---|---|
+| 1 Vàng Mặt Trời | 22 → 26 · 0/0 | 33 → 45 · 11–23/0 | 22 → 28 · 0/0 |
+| Hỗn hợp 6 | 56 → ≥55 · 32/35 | 37 → 46 · 0–32/0–26 | 40 → 46 · 2–32/0–6 |
+| Đội 8 mạnh | 57 → ≥60 · 32/35 | 45 → 56 · 30/17–35 | 43 → 52 · 15–31/0–34 |
+
+- Bảng bot bản đầu (Khó ×1,04, Thường ×1,03) trước → sau (3 ván mỗi ô; đợt mất mạng đầu → đợt thua; Dễ = ải 1 Thường, Thường = ải 4, Khó = ải 1 bật Khó, Khó4 = ải 4 bật Khó; đội 6 = 6 Thường ★★★ khác hành; hỗn hợp = 1 Vàng tầm xa + 2 Tím + 3 Thường ★★★):
+
+| Đội | Dễ | Thường | Khó (ải 1) | Khó4 |
+|---|---|---|---|---|
+| 1 Vàng Mặt Trời | 60→70 / 60→70 | 22→27 / 22→26 | **55,7→62,7 / 34→41,3** | 21,7→27,7 / 22→28 |
+| 1 Vàng Thiên Lôi | 55,7→69 / 55,7→69 | 21,7→27 / 21,7→27,7 | **54,3→60 / 27,7→42,3** | 21,7→28 / 22→27,3 |
+| 1 Tím Sơ Dừa | 53,3→67,7 / 38,7→61,3 | 23→48,7 / 22→36,3 | **49,3→61,7 / 10→22** | 16,7→43,3 / 15,3→23,7 |
+| Đội 6 Thường | 54,7→66 / 61→66,7 | 50,3→53,7 / 47,3→49,3 | 53,7→59,3 / 37,3→41 | 42→49,3 / 33,7→38,3 |
+| Đội hỗn hợp | 61,3→70 / 65,7→67,7 | 55,7→59,3 / 50→53,7 | 61,3→66,3 / 36→44 | 51→56,3 / 34,7→43,3 |
+
+  Qua đợt 30: mọi đội 3/3 ở mọi chế độ; Vàng đơn độc Thường/Khó4 0/3 (như trước), ở Khó ải 1 vẫn 3/3; Sơ Dừa Khó ải 1 3/3 → 0/3.
+  Hạn chế: bot không mặc đồ / không mua thêm tướng; đội bot max cấp ★★★ quanh đợt 30–40 rồi bị máu tăng đuổi kịp, nên Thế trận (+64%) chỉ kéo đội thêm vài đợt — Vàng đơn độc ở Khó ải 1 vẫn mất mạng đầu ~đợt 28–34 (mục tiêu 20–25).
+- Công cụ: `tests/can-bang-vang/mo-phong.js` (bot Vô tận: `node tests/can-bang-vang/mo-phong.js vang:matroi,tim:sodua,thuong6,hon de,thuong,kho,kho4 3`), `tests/can-bang-vang/do-r.js` (bảng R). Test hồi quy: `tests/can-bang-vang/can-bang-vang.test.js`.
+
+### Đo ban đầu (trước khi chọn phương án)
+
+- Công cụ: `node tests/can-bang-vang/mo-phong.js [vang1|doi6] [0,1 = Thường,Khó] [ải] [số ván] [mã tướng Vàng]` — bot Vô tận đặt tướng vào ô phủ đường nhiều nhất, dồn vàng lên cấp / kỹ năng / Thần tinh; ghi đợt mất mạng đầu + đợt thua. `SET='lệnh JS'` để thử đòn bẩy, `SH=1` in màn đi qua, `DBG=1` in chỉ số tướng mỗi 10 đợt.
+- Kết quả (ải 1, Khó; mất mạng đầu → thua): Mặt Trời 57 → 65, Thiên Lôi 54 → 60, Mẫu Thượng Ngàn 44 → 63, Âu Cơ 34 → 53, Vàng cận chiến 7 → 13–17; đội 6 (1 Vàng + 2 Tím ★★★ + 3 Thường ★★ ngẫu nhiên) 41 → 58. Thường: Mặt Trời 58 → 65, đội 6 48 → 65.
+- Nguyên nhân: Khó chỉ nhân máu ×1,6 cố định nhưng Ngân khố ×1,5 → Khó ≈ Thường vài đợt; máu quái hiệu dụng ải 1 chỉ ×1,09/đợt, tướng Vàng phép max cấp ~đợt 40 vẫn đủ lực tới ~đợt 55–60; Mặt Trời / Thiên Lôi hơn các Vàng phép khác ~10 đợt.
+- Đã thử: Khó dùng đường nhiều cửa từ đợt 20 → tướng tầm xa đứng cạnh thành vẫn giữ được (mọi cửa dồn về thành), đội 6 lại yếu đi (bỏ). Máu Khó tăng ×1,04/đợt từ đợt 15 → Mặt Trời mất mạng đầu 44 / thua 55, đội 6 thua 41; ×1,06 → Mặt Trời 39 / 52, đội 6 38. Thu nhỏ vùng nổ W của Mặt Trời / Thiên Lôi không đổi kết quả.
 ## claude/sua-tam-skill — Kỹ năng chỉ dùng khi quái vào tầm
 - Lỗi: kỹ năng tự dùng khi quái còn ngoài tầm (đa số chiêu tìm mục tiêu trong tầm ×1,1–1,3; 15 chiêu ×1,5 — Ném Đá Tảng, Lướt, Bắn
   Săn, Hổ, Kim Độc, Cuốn Ngược, Bọc Trăm Trứng, Thành Đêm…), khiên/buff dùng khi quanh mình không ai đang đánh.
@@ -2792,6 +2853,24 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 - Sửa thêm: kỹ năng hỗ trợ (khiên, buff, hồi máu — Kim Quy Q, Cây Đa của Cuội/Mẫu E…) chỉ dùng TRONG ĐỢT: sân hết quái (giữa hai đợt)
   thì không dùng dù tướng đang bị thương. Test: tests/sua-tam-skill (giữa hai đợt, tướng 30% máu → không kỹ năng hỗ trợ nào tung).
 - Theo tester: bỏ luật ẩn mọi phần tử con của chợ (chỉ ẩn khung ngoài, con tự ẩn theo); `closeScreen` bỏ lớp panel-open ngay khi đóng. Lỗi chập chờn của cho-tuong ("ảnh chưa sẵn sàng") khi chạy 6 test song song cũng xảy ra trên nhánh chính (1/6 lần), không do nhánh này; chạy lần lượt 5/5 đạt.
+
+## claude/quai-to-dan — Quái pixel không còn "to lên" giữa trận
+- Lỗi người dùng báo: quái pixel cứ phình to / nhảy cỡ khi đang chơi.
+- Nguyên nhân thật: `drawEnemy` co giãn quái khi bơi (±3,5%) và khi trúng đòn giật lùi (×1,1); với pixel, `pxBlit` làm tròn cỡ một điểm ảnh sprite theo tỉ lệ khung (`round(unit × scale)`) → chỉ cần ×1,1 là nhảy lên cả bậc: 1→2 px (×2: voi chiến, kỵ binh, Triệu Đà…), 2→3 px (×1,5)… Quái bị đánh liên tục nên trông như cứ to lên.
+- Sửa: quái pixel chỉ lật trái/phải, không nhận co giãn bơi / giật lùi (đã có khung hurt/walk riêng; vẫn giữ giật lùi ngang + nghiêng). Hình cũ (không pixel) giữ như trước.
+- Phòng thêm: cỡ quái pixel co theo chiều cao hình cũ lấy từ bảng tĩnh `js/pixel/quai-cao.js` (sinh bằng `node tools/build-quai-cao.js`, chạy lại khi thêm quái / đổi ảnh cũ / đổi ENEMY_W) thay vì đo lúc chơi → không phụ thuộc ảnh cũ tải xong hay chưa, không còn kéo ảnh cũ packs/* về khi bật pixel. Cỡ boss giữ đúng như v217 (tests/pixel/boss-cao ×1,00).
+- Tinh anh ×1,15, quái champion (thủ lĩnh) ×1,5 vẫn to hơn có chủ đích (cố định từ lúc sinh).
+- Test: `node tests/pixel/quai-co-dinh.test.js` (41 loại quái: hộp + cỡ vẽ thật không đổi quá 2% qua 30 s, bị giật lùi liên tục, ép tải ảnh cũ; chụp đầu trận / sau 30 s ở 1920×934 · 844×390).
+## claude/goi-y-ro — Sáng gợi ý triệu hồi rõ hơn
+- Thẻ chợ có gợi ý: viền trong 2px + quầng sáng nằm TRÊN khung thẻ pixel, thở 1,3 s (chỉ đổi opacity của `::before` → không vẽ lại,
+  không tốn FPS). Màu theo loại: xanh lá = mua là ghép ★ (quy ước cũ), tím = nguyên liệu hợp thể Sử thi, cam vàng = hợp thể Huyền thoại
+  (`marketNeeds().hopTo` cho biết tướng đích). Thẻ vừa ghép vừa là nguyên liệu → ưu tiên xanh ghép.
+- Dấu góc cho người mù màu: `▲★` (ghép) / `⇧` (hợp thể), chữ thường hệ thống (`no-pxemo`, không đổi thành icon pixel) — cạnh chân dung, không che mặt.
+- Trên sân: khi đang xem chợ (không chọn / không kéo), tướng ★ mà thẻ chợ mua là ghép luôn có vòng xanh nhịp dưới chân (viền tối lót
+  để nổi trên nền pixel) + mũi tên xanh nhỏ nhấp nhô trên đầu. Vòng "ghép được" lúc kéo tướng/thẻ cũng thở theo cùng nhịp (`drawTwinRing`).
+- Chạy cả pixel và `?pixel=0` (lớp sáng là CSS/canvas chung, không cần ảnh pixel riêng).
+- Test: `node tests/goi-y-ro/goi-y-ro.test.js` (đúng điều kiện có/không tướng cùng loại, 3 màu khác nhau, nhịp 1,2–1,5 s, đo điểm ảnh viền
+  so với thẻ thường: tương phản ≥ 1,8 ở pixel/pixel0, 844×390 · 667×375 · 1920×934).
 - Lỗi gấp "Ấn GỌI SỚM không gọi được": KHÔNG do panel-open — bản v229 (trước khi gộp nhánh này) cũng không bấm được. Gốc: luật cũ `#nextwaves { … pointer-events: none }` (đầu style.css) đè `#ui > * { pointer-events: auto }` (cùng độ ưu tiên, viết sau thắng) → chạm/nhấp xuyên xuống bản đồ. Sửa: `#nextwaves.early { pointer-events: auto }` (dải thường vẫn cho chạm xuyên). Test `tests/goi-som/` (844×390 chuột + chạm, 1920×934): giữa đợt bấm Gọi sớm → đợt kế bắt đầu + toast vàng; sau khi mở/đóng Túi đồ; sau khi kéo tướng.
 
 ## claude/chan-vuot-lui — Chơi trên web: vuốt không còn lỡ về trang trước
@@ -2800,3 +2879,14 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 - Nút / cử chỉ Back trên web: luôn gài sẵn một mục lịch sử (gài lại ở lần chạm đầu). Back khi đang mở bảng → đóng bảng (như cũ); trong trận → **tạm dừng + hộp "Rời trận?"** (Ở lại = chạy tiếp, Rời trận = Dừng chơi; Back/Esc lần nữa = Ở lại); ở menu → nhắc "Thoát game?", bấm Back lần 2 trong 2 giây mới rời trang.
 - Đóng/tải lại trang khi đang trong trận: trình duyệt hỏi lại (beforeunload). Trong app Capacitor giữ hành vi cũ (chỉ đóng bảng).
 - Test: `node tests/chan-vuot-lui/chan-vuot-lui.test.js` (giả lập điện thoại hasTouch, 844×390 + dọc 390×844).
+- **Mở rộng (chưa có tướng Tím thì khó biết mua gì):**
+  - **Mục tiêu hợp thể:** bảng Hợp thể có nút ghim **Theo đuổi** trên mỗi công thức Tím/Vàng (tối đa 2, ghim thứ 3 thì bỏ cái cũ nhất; lưu ở
+    `settings.pins`). Thẻ chợ là nguyên liệu Thường còn thiếu sáng **xanh ngọc** + dấu ghim (công thức Vàng thì đi xuống công thức Tím chưa có trên sân).
+    Ưu tiên màu: ghép ★ > ghim > hợp thể. Dải nhỏ trên chợ: [đích] = [nguyên liệu ★ hiện tại/cần] + […], thiếu thì mờ; chạm dải → mở Hợp thể.
+    Chưa ghim gì: tự gợi ý 1 công thức Tím gần xong nhất (viền mảnh, dải nét đứt chữ "Gợi ý"); ✕ trên dải hoặc nút **Tự gợi ý** trong Hợp thể để tắt/bật
+    (`settings.autoPin`). Chỉ là giao diện — không đổi tỉ lệ rút thẻ (chơi nhóm không lệch).
+  - **Tìm tên không dấu** ("thach sanh" → Thạch Sanh, đ → d) + lọc hành (5 nút) ở Hợp thể (tìm cả 2 tab), Anh Hùng và Bách khoa · Vai trò (thêm lọc bậc
+    Thường/Tím/Vàng). Anh Hùng: chạm tướng → khung "Phát triển thành" (dùng trong công thức nào / cần gì); Bách khoa: chạm tướng → thẻ thông tin.
+  - **Chạm giữ thẻ chợ** ~0,45 s: hiện tên + vai trò + "Góp vào: + bạn ghép ➜ tướng Tím" (có dấu ghim nếu đang theo đuổi); thả tay ẩn, không mua.
+  - Test: `node tests/goi-y-ro/muc-tieu.test.js` (gợi ý tự động, ghim đúng thẻ sáng, tối đa 2, lưu, dải có/thiếu, chạm giữ không mua, chạm nhanh vẫn mua,
+    tắt gợi ý, nút Theo đuổi, tìm không dấu không mất ô nhập, lọc bậc — pixel + pixel0, 844×390 · 667×375 · 1920×934).

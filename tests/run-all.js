@@ -37,7 +37,8 @@ for (const d of fs.readdirSync(DIR).sort()) {
   const p = path.join(DIR, d);
   if (!fs.statSync(p).isDirectory()) continue;
   for (const f of fs.readdirSync(p).sort()) if (f.endsWith('.test.js')) all.push(`${d}/${f}`);
-  if (d === 'coop' && fs.existsSync(path.join(p, 'run-all.js'))) all.push('coop/run-all.js');
+  // tạm dừng test chơi nhóm (người dùng 08/10): chỉ chạy khi gọi rõ `node tests/run-all.js coop`
+  if (d === 'coop' && fs.existsSync(path.join(p, 'run-all.js')) && argv.includes('coop')) all.push('coop/run-all.js');
 }
 const tests = filters.length ? all.filter((t) => filters.some((f) => t.includes(f))) : all;
 if (!tests.length) { console.error(`Không có test nào khớp: ${filters.join(' ')}`); process.exit(2); }

@@ -709,13 +709,25 @@ function drawSpot(ctx, x, y, o, t) {
     ctx.ellipse(x, y, rx + 4 + Math.sin(t * 5) * 3, ry + 3 + Math.sin(t * 5) * 2, 0, 0, Math.PI * 2);
     ctx.stroke();
     ctx.globalAlpha = 1;
-  } else if (o.mode === 'sel') {
-    ctx.strokeStyle = '#3EDC4E';
-    ctx.lineWidth = 2.5 * DK;
-    ctx.beginPath();
-    ctx.ellipse(x, y, 21 * DK, 9 * DK, 0, 0, Math.PI * 2);
-    ctx.stroke();
-  }
+  } else if (o.mode === 'sel') drawTwinRing(ctx, x, y, true, t);
+  ctx.restore();
+}
+
+// goi-y-ro: vòng xanh "ghép được" dưới chân tướng — viền tối lót dưới (nổi trên nền pixel tối lẫn sáng) + thở ~1,3 s;
+// sel = đang kéo (dày hơn)
+function drawTwinRing(ctx, x, y, sel, t) {
+  const k = 0.5 + Math.sin(t * 4.8) * 0.5, w = (sel ? 3 : 2.5) * DK;
+  ctx.save();
+  ctx.beginPath();
+  ctx.ellipse(x, y, 21 * DK + k * 2 * DK, 9 * DK + k * DK, 0, 0, Math.PI * 2);
+  ctx.globalAlpha = 0.55;
+  ctx.strokeStyle = '#0B2A0B';
+  ctx.lineWidth = w + 2.5 * DK;
+  ctx.stroke();
+  ctx.globalAlpha = 0.6 + k * 0.4;
+  ctx.strokeStyle = '#7CFF6A';
+  ctx.lineWidth = w;
+  ctx.stroke();
   ctx.restore();
 }
 
@@ -2193,14 +2205,14 @@ function enemyBox(e) {
   if (pb) return pb;
   return enemyBoxOld(e, a, w, k);
 }
-// chiều cao hình cũ (đơn vị logic, k = 1 tính theo rộng) — nhớ theo mã khi đo được ảnh cũ để không nhảy cỡ
-const ENEMY_OLD_HW = new Map();
+// chiều cao hình cũ (đơn vị logic) — CỐ ĐỊNH theo mã từ bảng tĩnh js/pixel/quai-cao.js (tools/build-quai-cao.js).
+// Trước đây đo lúc chơi: pixel mặc định không nạp sẵn ảnh cũ → đầu trận quái cỡ pixel gốc, ảnh cũ tải xong thì nhảy to.
+// Mã chưa có trong bảng: chỉ dùng hình vector (đồng bộ, không đợi tải) để cỡ không đổi giữa trận.
 function enemyBoxOldH(e, a, w, k) {
-  const b = enemyBoxOld(e, a, w, k);
-  if (b.solo || a) ENEMY_OLD_HW.set(e.type, b.h / w);
-  const r = ENEMY_OLD_HW.get(e.type);
+  const r = typeof ENEMY_OLD_HW_TABLE !== 'undefined' && ENEMY_OLD_HW_TABLE[e.type];
   if (r) return r * w;
-  return e.def && e.def.boss ? 112 * k : 0;   // ảnh cũ chưa tải: boss cao chuẩn như cdEnemySize, quái thường giữ nguyên
+  if (a) return w * a.h / a.w;
+  return e.def && e.def.boss ? 112 * k : 0;   // boss cao chuẩn như cdEnemySize, quái thường theo rộng
 }
 function enemyBoxOld(e, a, w, k) {
   // tự cử động: ảnh đơn → cao theo khung bao của ảnh (thanh máu nằm trên đỉnh hình thật)
@@ -2322,7 +2334,9 @@ function drawEnemy(ctx, e, t, o = {}) {
   const flip = e.dir < 0 ? -1 : 1;
   const flapY = d.flying ? 1 + Math.sin(t * 16 + e.id) * 0.12 : 1;
   const swim = d.flying || e.stunT > 0 || box.solo ? 0 : Math.sin(t * 9 + e.id) * 0.035;
-  ctx.scale(flip * (1 + swim + kb * 0.1), flapY * (1 - swim - kb * 0.1));
+  // pixel: KHÔNG co giãn (bơi / giật lùi) — pxBlit làm tròn cỡ điểm ảnh theo tỉ lệ khung → ×1,1 khi trúng đòn làm quái nhảy to cả bậc (đến ×2)
+  if (box.px) ctx.scale(flip, 1);
+  else ctx.scale(flip * (1 + swim + kb * 0.1), flapY * (1 - swim - kb * 0.1));
   if (e.enraged) {
     ctx.shadowColor = '#ff2d2d';
     ctx.shadowBlur = 14;
