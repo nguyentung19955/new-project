@@ -1474,6 +1474,8 @@ class UI {
 
   // ---------- thông báo
   toast(msg, color = '#F2D27A') {
+    // sua-giao-dien-10: bảng Sính lễ đang mở → thông báo (Đã hạ boss!, Rơi đồ…) chờ tới khi đóng bảng (trước đây đè tiêu đề "Vua Hùng ban thưởng")
+    if ((!$('#reward').hidden && !this.toastFree) || this.toastGom) { (this.toastHold = this.toastHold || []).push([msg, color]); return; }
     const box = $('#toasts');
     const el = document.createElement('div');
     el.className = 'toast';
@@ -2325,11 +2327,12 @@ class UI {
     el.hidden = false;
   }
   flushKhoHold() {
-    const L = this.khoHold || []; this.khoHold = [];
-    if (!L.length) return;
-    const n = L.reduce((a, e) => a + e.n, 0);
-    this.toast(`Ngân khố ${bac(1)} +${fmt(n)} · ${L.map((e) => esc(e.why)).join(' · ')}`, '#E4ECF4');
-    this.khoBump(n);
+    // một thông báo gộp: các thông báo hoãn (Đã hạ boss!, Rơi đồ…) + Ngân khố nhận lúc bảng mở
+    const H = this.toastHold || [], L = this.khoHold || []; this.toastHold = []; this.khoHold = [];
+    const lines = H.map((x) => x[0]), n = L.reduce((a, e) => a + e.n, 0);
+    if (L.length) lines.push(`Ngân khố ${bac(1)} +${fmt(n)} · ${L.map((e) => esc(e.why)).join(' · ')}`);
+    if (lines.length) this.toast(lines.join('<br>'), L.length ? '#E4ECF4' : H[H.length - 1][1]);
+    if (L.length) this.khoBump(n);
   }
   // chip Ngân khố trên thanh trên: nháy + số "+X" bay lên khi nhận
   khoBump(n) {
@@ -3284,6 +3287,9 @@ class UI {
   //  SÍNH LỄ, KẾT QUẢ
   // ============================================================
   showReward(ev) {
+    // thông báo vừa bật cùng lúc hạ boss (trước khi bảng mở) → cất lại, hiện sau khi chọn quà
+    const now = performance.now();
+    for (const t of [...$('#toasts').children]) if (now - (t.born || 0) < 600) { (this.toastHold = this.toastHold || []).push([t.innerHTML, t.style.borderLeftColor || '#F2D27A']); t.remove(); }
     this.rewardOpts = ev.options;
     this.rewardId = ev.id;
     this.rewardBoss = ev.boss;
@@ -3354,7 +3360,10 @@ class UI {
     const g = this.game;
     g.claimReward(o);
     $('#reward').hidden = true;
+    // quà vừa chọn + thông báo hoãn + Ngân khố → một thông báo gộp (lớp phủ vừa đóng chỉ giữ 1 thông báo)
+    const held = this.toastHold || []; this.toastHold = []; this.toastGom = true;
     this.rewardToast(o);
+    this.toastGom = false; this.toastHold = [...(this.toastHold || []), ...held];
     this.flushKhoHold();
     if (!g.over && this.rewardWasRunning != null) g.running = this.rewardWasRunning;
     this.rewardWasRunning = null;
