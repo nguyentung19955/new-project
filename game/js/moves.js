@@ -18,8 +18,9 @@
     hold: 0.8,  // lấy đà đầy rồi mà vẫn giữ quá ngần này giây thì đòn tự tung ra
     buffer: 0.25, // bấm sớm khi đòn trước chưa xong thì được nhớ trong ngần này giây
     // Đòn Đặc biệt lao tới của kiếm và giáo: dài bằng frac lần bề ngang chỗ đứng được của phòng, kẹp trong [min, max].
-    // Phòng thường (190): kiếm 76, giáo 95. Phòng trùm (282): kiếm 92, giáo 112. Chạm tường thì dừng ngay.
-    dash: { sword: { frac: 0.4, min: 70, max: 92 }, spear: { frac: 0.5, min: 84, max: 112 } },
+    // Phòng thường (190): kiếm 84, giáo 101. Phòng trùm (282): kiếm 92, giáo 112. Chạm tường thì dừng ngay.
+    // (Đã thử ngắn hơn, kiếm 76 và giáo 95: bot lao không thoát khỏi đám quái nên thua nhiều hơn hẳn ở vùng 3.)
+    dash: { sword: { frac: 0.44, min: 70, max: 92 }, spear: { frac: 0.53, min: 84, max: 112 } },
     sword: {
       gap: 0.45, // ngừng bấm quá lâu thì chuỗi về đầu
       chain: [

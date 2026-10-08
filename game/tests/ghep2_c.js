@@ -8,10 +8,10 @@
   const waitDash = () => { let n = 0; while (P.dashT > 0 && n++ < 120) step(1); return n; };
 
   // ---------- đường lao của kiếm và giáo (đòn Đặc biệt) ----------
-  for (const [type, small, big] of [['sword', 76, 92], ['spear', 95, 112]]) {
+  for (const [type, small, big] of [['sword', 84, 92], ['spear', 101, 112]]) {
     go({ melee: type }); P.x = W.x0 + 4; let x0 = P.x;
     step(1, { specialP: true }); waitDash();
-    ok('C: ' + (type === 'sword' ? 'kiếm' : 'giáo') + ' lao trong phòng thường dài khoảng ' + small + ' điểm ảnh (0,' + (type === 'sword' ? 4 : 5) + ' bề ngang phòng)', near(P.x - x0, small, 4), (P.x - x0).toFixed(1));
+    ok('C: ' + (type === 'sword' ? 'kiếm' : 'giáo') + ' lao trong phòng thường dài khoảng ' + small + ' điểm ảnh (0,' + (type === 'sword' ? 44 : 53) + ' bề ngang phòng)', near(P.x - x0, small, 4), (P.x - x0).toFixed(1));
     go({ melee: type, big: true }); P.x = W.x0 + 4; x0 = P.x;
     step(1, { specialP: true }); waitDash();
     ok('C: ' + (type === 'sword' ? 'kiếm' : 'giáo') + ' lao trong phòng trùm dài khoảng ' + big + ' điểm ảnh', near(P.x - x0, big, 4), (P.x - x0).toFixed(1));

@@ -1,5 +1,5 @@
 // Bản đồ nhỏ ở góc trên bên phải (dưới hai ô vũ khí) và bản đồ to khi chạm vào.
-// Chỉ hiện phòng đã qua (tô đặc), phòng đang đứng (sáng, có viền) và phòng kề đã biết (chỉ viền và biểu tượng).
+// Chỉ hiện phòng đã qua (đậm), phòng đang đứng (sáng, viền nổi) và phòng kề mới biết (nhạt). Mọi ô cùng một màu, loại phòng xem ở biểu tượng.
 (function () {
   const G = window.G, ui = G.ui;
   const MM = (G.minimap = {});
@@ -17,15 +17,23 @@
     lock: ['..###..', '.#...#.', '.#...#.', '#######', '###.###', '###.###', '#######'],
     key: ['.###...', '#...#..', '#...#..', '.###...', '..#....', '..##...', '..###..'],
   };
-  const COL = {
-    start: '#7fc060', fight: '#a09488', elite: '#e8853a', chest: '#e8c040', fountain: '#4a9fe0',
-    merchant: '#c8a070', challenge: '#40c0b0', curse: '#a070e0', boss: '#d84a40',
+  // MỘT MÀU cho mọi ô phòng (yêu cầu của chủ dự án): một màu nền, một màu viền, một màu biểu tượng.
+  // Loại phòng chỉ phân biệt bằng biểu tượng. Chỉ còn ba khác biệt:
+  //   1. ô đang đứng sáng hơn và có viền nổi;  2. ô đã qua đậm, ô mới biết (chưa vào) nhạt;  3. cửa Trùm còn khóa có ổ khóa.
+  const PAL = {
+    fill: '#5a4c3e',      // nền ô đã qua
+    faint: 'rgba(90,76,62,0.28)', // cùng màu nền, nhạt hơn hẳn: ô mới biết (chưa vào)
+    edge: '#8c7658',      // viền ô và lối nối
+    icon: '#f4ead0',      // mọi biểu tượng, kể cả ổ khóa
+    cur: '#9a8466',       // ô đang đứng: cùng tông, sáng hơn
+    curEdge: '#fff6d8',   // viền nổi của ô đang đứng
   };
+  MM.PAL = PAL;
   const NAME = {
     start: 'Bắt đầu', fight: 'Đánh quái', elite: 'Tinh anh', chest: 'Rương báu', fountain: 'Suối hồi',
     merchant: 'Thương nhân', challenge: 'Thử thách', curse: 'Lời nguyền', boss: 'Trùm',
   };
-  MM.COL = COL; MM.NAME = NAME; MM.ICON = ICON;
+  MM.NAME = NAME; MM.ICON = ICON;
   function icon(name, x, y, s, col) {
     const rows = ICON[name];
     if (!rows) return;
@@ -34,10 +42,6 @@
     for (let j = 0; j < 7; j++) for (let i = 0; i < 7; i++) if (rows[j][i] === '#') c.fillRect(x + i * s, y + j * s, s + 0.05, s + 0.05);
   }
   MM.icon = icon;
-  function dark(hex, k) {
-    const n = parseInt(hex.slice(1), 16);
-    return 'rgb(' + Math.round((n >> 16) * k) + ',' + Math.round(((n >> 8) & 255) * k) + ',' + Math.round((n & 255) * k) + ')';
-  }
   // Trạng thái hiển thị của một phòng: 'cur' đang đứng, 'seen' đã qua, 'known' kề phòng đã qua, null là chưa biết.
   function stateOf(S, id) {
     if (id === S.idx) return 'cur';
@@ -53,6 +57,7 @@
     const gw = map.w * cw + (map.w - 1) * gp, gh = map.h * ch + (map.h - 1) * gp;
     const x0 = x + (w - gw) / 2, y0 = y + (h - gh) / 2;
     const X = (i) => x0 + i * (cw + gp), Y = (j) => y0 + j * (ch + gp);
+    if (s === 'cells') return map.rooms.map((r) => ({ id: r.id, type: r.type, st: stateOf(S, r.id), x: X(r.x), y: Y(r.y), w: cw, h: ch }));
     const open = M.gateOpen(map, S.cleared);
     const lw = Math.max(2, Math.round(s * 1.6));
     // lối nối giữa các phòng đã biết
@@ -63,38 +68,34 @@
         const sa = stateOf(S, r.id), sb = stateOf(S, n);
         if (!sa || !sb || (sa === 'known' && sb === 'known')) continue;
         const gate = M.isGate(map, r.id, n) && !open;
-        const faint = sa === 'known' || sb === 'known';
-        const col = gate ? '#e0443a' : faint ? 'rgba(200,170,120,0.5)' : '#c8a878';
-        if (d === 'right') ui.rect(X(r.x) + cw, Y(r.y) + ch / 2 - lw / 2, gp, lw, col);
-        else ui.rect(X(r.x) + cw / 2 - lw / 2, Y(r.y) + ch, lw, gp, col);
+        if (d === 'right') ui.rect(X(r.x) + cw, Y(r.y) + ch / 2 - lw / 2, gp, lw, PAL.edge);
+        else ui.rect(X(r.x) + cw / 2 - lw / 2, Y(r.y) + ch, lw, gp, PAL.edge);
         if (gate) {
-          // ổ khóa đỏ nằm giữa lối vào
+          // cửa Trùm còn khóa: ổ khóa nằm giữa lối vào (cùng màu với mọi biểu tượng)
           const lx = d === 'right' ? X(r.x) + cw + gp / 2 : X(r.x) + cw / 2, ly = d === 'right' ? Y(r.y) + ch / 2 : Y(r.y) + ch + gp / 2;
-          const k = Math.max(0.6, s * 0.75);
-          ui.rect(lx - 3.5 * k - 1, ly - 3.5 * k - 1, 7 * k + 2, 7 * k + 2, '#2a0c0a');
-          icon('lock', lx - 3.5 * k, ly - 3.5 * k, k, '#ff6a5a');
+          const k = G.clamp(gp / 7, 0.7, s); // ổ khóa vừa khe giữa hai ô
+          ui.rect(lx - 3.5 * k - 1, ly - 3.5 * k - 1, 7 * k + 2, 7 * k + 2, '#17110e');
+          icon('lock', lx - 3.5 * k, ly - 3.5 * k, k, PAL.icon);
         }
       }
     }
     for (const r of map.rooms) {
       const st = stateOf(S, r.id);
       if (!st) continue;
-      const cx = X(r.x), cy = Y(r.y), col = COL[r.type];
-      const ix = cx + (cw - 7 * s) / 2, iy = cy + (ch - 7 * s) / 2;
-      if (st === 'cur') {
-        const blink = Math.floor(G.time * 3) % 2;
-        ui.rect(cx - 2, cy - 2, cw + 4, ch + 4, blink ? 'rgba(255,230,160,0.5)' : 'rgba(255,210,122,0.28)');
-        ui.rect(cx, cy, cw, ch, '#ffd27a', '#fff6d8');
-        icon(r.type, ix, iy, s, '#4a2408');
-      } else if (st === 'seen') {
-        ui.rect(cx, cy, cw, ch, dark(col, 0.55), dark(col, 0.95));
-        icon(r.type, ix, iy, s, S.cleared[r.id] || !G.mapgen.isFight(r.type) ? '#f4ead0' : '#1a1210');
-      } else {
-        ui.rect(cx, cy, cw, ch, 'rgba(0,0,0,0.35)', col);
-        icon(r.type, ix, iy, s, col);
-      }
+      const cx = X(r.x), cy = Y(r.y);
+      cell(st, cx, cy, cw, ch);
+      icon(r.type, cx + (cw - 7 * s) / 2, cy + (ch - 7 * s) / 2, s, PAL.icon);
     }
   }
+  // Một ô phòng theo trạng thái: đang đứng (sáng, viền nổi, nhấp nháy nhẹ), đã qua (đậm), mới biết (nhạt).
+  function cell(st, cx, cy, cw, ch) {
+    if (st === 'cur') {
+      const blink = Math.floor(G.time * 3) % 2;
+      ui.rect(cx - 2, cy - 2, cw + 4, ch + 4, blink ? 'rgba(255,246,216,0.55)' : 'rgba(255,246,216,0.3)');
+      ui.rect(cx, cy, cw, ch, PAL.cur, PAL.curEdge);
+    } else ui.rect(cx, cy, cw, ch, st === 'seen' ? PAL.fill : PAL.faint, PAL.edge);
+  }
+  MM.cell = cell;
 
   // Số ghi ở góc bản đồ nhỏ: mảnh chìa (Kiểu C), phòng quái đã dọn (Kiểu B), số phòng đã qua (Kiểu A).
   function gateInfo(S) {
@@ -123,9 +124,8 @@
     ui.text('Bản đồ', x + 6, y + 10.5, { size: 7, bold: true, color: '#ffd27a' });
     const gi = gateInfo(S);
     if (gi) {
-      const col = gi.open ? '#8fe06a' : gi.keys ? '#ffd27a' : '#ff9a8a';
-      ui.text(gi.n + '/' + gi.need, x + w - 6, y + 10.5, { size: 7, align: 'right', bold: true, color: col });
-      icon(gi.keys ? 'key' : 'lock', x + w - 27, y + 4, 1, col);
+      ui.text(gi.n + '/' + gi.need, x + w - 6, y + 10.5, { size: 7, align: 'right', bold: true, color: PAL.icon });
+      icon(gi.keys ? 'key' : 'lock', x + w - 27, y + 4, 1, PAL.icon);
     } else {
       const n = S.map.rooms.filter((r) => S.seen[r.id]).length;
       ui.text('Phòng ' + n + '/8', x + w - 6, y + 10.5, { size: 6.5, align: 'right', color: '#d9cdb8' });
@@ -133,6 +133,12 @@
     grid(S, x + 4, y + 14, w - 8, h - 17, 13, 9, 4, 1);
   };
 
+  // Chỗ đặt từng ô phòng trên bản đồ nhỏ (big = false) hoặc bản đồ to (big = true): để bài kiểm tra soi màu.
+  MM.cells = function (S, big) {
+    if (big) return grid(S, 64, 40, 244, 164, 36, 28, 12, 'cells');
+    const b = MM.rect(S);
+    return grid(S, b[0] + 4, b[1] + 14, b[2] - 8, b[3] - 17, 13, 9, 4, 'cells');
+  };
   // Bản đồ to: hiện khi chạm vào bản đồ nhỏ, trò chơi tạm dừng.
   MM.drawBig = function (S) {
     const reg = G.REGIONS[S.r];
@@ -144,16 +150,28 @@
     const types = [];
     for (const r of S.map.rooms) if (stateOf(S, r.id) && !types.includes(r.type)) types.push(r.type);
     const order = ['start', 'fight', 'elite', 'chest', 'fountain', 'merchant', 'challenge', 'curse', 'boss'].filter((t) => types.includes(t));
-    ui.text('Chú giải', 322, 46, { size: 8, bold: true, color: '#ffd27a' });
+    ui.text('Chú giải', 322, 45, { size: 8, bold: true, color: '#ffd27a' });
+    // mọi loại phòng cùng một màu ô, chỉ khác biểu tượng
     order.forEach((t, k) => {
-      const y = 53 + k * 15;
-      ui.rect(322, y, 13, 11, 'rgba(0,0,0,0.35)', COL[t]);
-      icon(t, 325, y + 2, 1, COL[t]);
+      const y = 50 + k * 13;
+      cell('seen', 322, y, 13, 11);
+      icon(t, 325, y + 2, 1, PAL.icon);
       ui.text(NAME[t], 340, y + 8.5, { size: 7.5, color: '#f1ead9' });
     });
-    const ky = 53 + order.length * 15 + 4;
-    ui.rect(322, ky, 13, 11, '#ffd27a', '#fff6d8');
-    ui.text('Bạn đang ở đây', 340, ky + 8.5, { size: 7, color: '#ffd27a' });
+    // ba khác biệt còn lại
+    let ky = 50 + order.length * 13 + 5;
+    ui.rect(322, ky - 3, 98, 1, 'rgba(140,118,88,0.5)');
+    const rows = [['cur', 'Bạn đang ở đây'], ['seen', 'Phòng đã qua'], ['known', 'Phòng mới biết']];
+    for (const [st, label] of rows) {
+      cell(st, 322, ky, 13, 11);
+      ui.text(label, 340, ky + 8.5, { size: 7, color: '#f1ead9' });
+      ky += st === 'cur' ? 15 : 13;
+    }
+    {
+      ui.rect(324, ky + 1, 9, 9, '#17110e');
+      icon('lock', 325, ky + 2, 1, PAL.icon);
+      ui.text('Cửa Trùm còn khóa', 340, ky + 8.5, { size: 7, color: '#f1ead9' });
+    }
     ui.para(MM.gateText(S), 62, 222, 250, { size: 7.5, color: '#ffd9c8' });
     ui.text('Chạm để chơi tiếp', 420, 246, { size: 8, align: 'right', bold: true, color: Math.floor(G.time * 2.5) % 2 ? '#ffd27a' : '#fff3da' });
   };

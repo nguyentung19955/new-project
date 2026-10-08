@@ -216,7 +216,7 @@ JS_B = r"""
 }
 """
 
-PARTS = []  # (tên, mã JS, tham số) cho các mục chạy ở màn hình dài; thêm dần ở cuối tệp
+PARTS = []  # (tên, mã JS, tham số, cỡ màn hình); thêm dần ở cuối tệp
 
 
 def run_page(p, size, parts):
@@ -248,10 +248,11 @@ def main():
             for tag, size in (('màn dài 844x390', (844, 390)), ('màn 16:9 667x375', (667, 375)), ('máy tính 1280x720', (1280, 720))):
                 r, e = run_page(p, size, [(JS_A, tag)])
                 res += r; errs += e
-        parts = [(js, arg) for key, js, arg in PARTS if want(key)]
-        if parts:
-            r, e = run_page(p, (844, 390), parts)
-            res += r; errs += e
+        for size in sorted(set(q[3] for q in PARTS)):
+            parts = [(js, arg) for key, js, arg, sz in PARTS if want(key) and sz == size]
+            if parts:
+                r, e = run_page(p, size, parts)
+                res += r; errs += e
     bad = 0
     for name, good, detail in res:
         if not good:
@@ -262,13 +263,13 @@ def main():
     sys.exit(1 if bad or errs else 0)
 
 
-PARTS.append(('BE', JS_B, None))
+PARTS.append(('BE', JS_B, None, (844, 390)))
 
 # Các mục C, D, F, G, H nằm ở tệp riêng cho dễ đọc; nạp vào đây nếu có.
 for _name in ('ghep2_c.js', 'ghep2_d.js', 'ghep2_fgh.js'):
     _p = os.path.join(HERE, _name)
     if os.path.exists(_p):
-        PARTS.append((_name[6:-3].upper(), open(_p, encoding='utf-8').read(), None))
+        PARTS.append((_name[6:-3].upper(), open(_p, encoding='utf-8').read(), None, (844, 390)))
 
 if __name__ == '__main__':
     main()

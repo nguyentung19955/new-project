@@ -153,8 +153,10 @@ BOT = r"""
 ([r, i, kind, seed, side]) => {
   G.testSave({ lvl: 6 + r * 7 + i, tier: Math.min(2, r + (i > 2 ? 1 : 0)), sharpen: 2 + r * 2, armor: ['a_r1', 'a_r2', 'a_r3'][r], helm: ['h_r1', 'h_r2', 'h_r3'][r] });
   G.botCfg.side = side;
+  G.rnd = G.srand(seed * 101 + r * 7 + i); // có hạt giống: chạy lại ra đúng kết quả cũ (tỉ lệ thắng thật thì đo bằng balance.py)
   G.startStage(r, i, 0, { kind, seed });
   const res = G.probeRun(900), S = G.getRun();
+  G.rnd = Math.random;
   return { win: res.win, t: res.t, rooms: res.rooms.length, seen: Object.keys(S.seen).length, bad: res.bad, kind: S.map.kind, last: res.rooms.length ? res.rooms[res.rooms.length - 1][0] : null,
     prev: res.rooms.length > 1 ? res.rooms[res.rooms.length - 2][0] : null, fights: S.map.rooms.filter((o) => (o.type === 'fight' || o.type === 'elite') && S.cleared[o.id]).length };
 }
