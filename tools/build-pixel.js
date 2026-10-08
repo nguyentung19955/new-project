@@ -353,7 +353,7 @@ function run(argv) {
   const errors = [], warns = [], entries = {}, outputs = [], warnedPal = new Set();
   for (const s of all) {
     const rel = `${s.group}/${s.code}`;
-    if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(s.code)) { errors.push(`${rel}.txt: tên file phải viết thường không dấu, nối bằng '-' (vd hanh-kim.txt)`); continue; }
+    if (!/^[a-z0-9]+([-_][a-z0-9]+)*$/.test(s.code)) { errors.push(`${rel}.txt: tên file phải viết thường không dấu, nối bằng '-' hoặc '_' (vd hanh-kim.txt, lactuong_q.txt — mã trong DANH-SACH)`); continue; }
     const pick = !opt.filters.length || opt.filters.some((f) => rel.includes(f));
     let src, sp;
     try { src = parseSource(fs.readFileSync(s.file, 'utf8'), path.relative(ROOT, s.file)); }

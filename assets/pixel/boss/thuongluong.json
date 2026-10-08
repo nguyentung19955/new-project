@@ -1,0 +1,50 @@
+{
+ "code": "thuongluong",
+ "group": "boss",
+ "name": "Thuồng Luồng",
+ "w": 64,
+ "h": 64,
+ "ax": 30,
+ "ay": 60,
+ "bbox": [
+  1,
+  4,
+  60,
+  57
+ ],
+ "n": 13,
+ "anims": {
+  "walk": {
+   "start": 0,
+   "n": 4,
+   "fps": 5,
+   "loop": true
+  },
+  "attack": {
+   "start": 4,
+   "n": 3,
+   "fps": 7,
+   "loop": false
+  },
+  "hurt": {
+   "start": 7,
+   "n": 1,
+   "fps": 8,
+   "loop": false
+  },
+  "die": {
+   "start": 8,
+   "n": 3,
+   "fps": 4,
+   "loop": false
+  },
+  "rage": {
+   "start": 11,
+   "n": 2,
+   "fps": 6,
+   "loop": true
+  }
+ },
+ "cd": 1,
+ "sheet": "thuongluong.png"
+}

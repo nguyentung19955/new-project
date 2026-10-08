@@ -1,0 +1,302 @@
+# Chim Bão (mã chimbao) — quái BAY 32×32, hành Mộc. Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:425 · PROMPT-DUNG-XUONG.txt:1468 · DANH-SACH Lô 8): chim thật SẢI 2 CÁNH RỘNG, lông xám xanh, mắt giận,
+# mỏ nhọn, đuôi quạt, TIA SÉT nhỏ ở đầu cánh — không rồng. Phá cách (DANH-SACH "diều sáo yêu"): con diều hình chim khung tre
+# phất giấy xám xanh hoá yêu — nan tre nổi, mắt + mày vẽ son, dây diều đứt phất phơ. walk = vỗ cánh. Quay mặt sang PHẢI.
+name: Chim Bão
+size: 32x32
+anchor: 16,26
+colors:
+  k = vien
+  P = bac
+  p = sat-sang
+  o = sat
+  O = sat-toi
+  b = cat
+  B = dat-sang
+  R = son
+  y = vang-nghe
+  D = dong-sang
+  d = dong
+  w = trang-xam
+  z = vang-sang
+  Z = sang
+
+part canhT_len
+b...........
+Pb..........
+.Pbb........
+.oPPbb......
+..ooPPb.....
+...oppPbb...
+....oopPPbb.
+.....opppPPb
+......oppppP
+.......opppp
+.......ooppp
+.........opp
+.........oop
+...........o
+...........o
+end
+
+part canhP_len
+...........b
+..........bp
+........bbp.
+......bbppO.
+.....bppOO..
+...bbpooO...
+.bbpppOO....
+bppppoO.....
+ppppoO......
+pppoO.......
+ppoOO.......
+poO.........
+oOO.........
+O...........
+O...........
+end
+
+part canhT_ngang
+bbbbbbb.....
+PPPPPPPbbbbb
+.ooopppPPPPP
+...ooopppppp
+.....ooppppp
+.......opppp
+.......ooopp
+.........ooo
+...........o
+end
+
+part canhP_ngang
+.....bbbbbbb
+bbbbbppppppp
+ppppppooOOO.
+pppppoOOO...
+ppppoOO.....
+ppooO.......
+ooOOO.......
+OOO.........
+O...........
+end
+
+part canhT_xuong
+...........b
+.........bbP
+.......bbPPp
+.....bbPPppp
+...bbPPppppp
+..bPPppppppp
+bbPopopopopo
+PPoooooooooo
+.o..........
+end
+
+part canhP_xuong
+b...........
+pbb.........
+pppbb.......
+pppppbb.....
+pppppppbb...
+opopopoppb..
+OoOoOoOoOpbb
+OOOOOOOOOOpp
+..........O.
+end
+
+part dau
+..oPPo....
+.oPRRRo...
+oPPpykoDD.
+oPppppoDdd
+.oppppoo..
+..oppo....
+end
+
+part than
+..oPPPo.
+.oPPpppo
+oPPpbppo
+oPppbppo
+oPppbppo
+oPppbppO
+.ppppbpO
+.oppbpoO
+..opbpO.
+..oobOO.
+end
+
+part duoi
+...PPpo....
+..PPpbpo...
+.PPpobopo..
+PPpoobooppo
+PpopobopopO
+p.p.pbp.p.o
+end
+
+part set
+..Z
+.Zz
+Zz.
+.zZ
+.z.
+end
+
+part day1
+w..
+w..
+.w.
+..w
+end
+
+part day2
+..w
+.w.
+.w.
+w..
+end
+
+part mat_X
+k.k
+.k.
+k.k
+end
+
+part dau_ha
+..oPPo....
+.oPRRRo...
+oPPpykoDD.
+oPpppok...
+.oppppoDd.
+..oppo....
+end
+
+part mat_x
+k.k
+.k.
+end
+
+anim walk fps=8 loop
+frame walk
+  use day1 15 27
+  use duoi 10 21
+  use canhP_len 19 5
+  use canhT_len 1 5
+  use than 12 11
+  use dau 16 6
+  use set 1 1
+  use set 28 1
+  outline
+end
+frame walk
+  use day2 15 26
+  use duoi 10 20
+  use canhP_ngang 19 10
+  use canhT_ngang 1 10
+  use than 12 10
+  use dau 16 5
+  use set 1 6
+  use set 28 6
+  outline
+end
+frame walk
+  use day1 15 25
+  use duoi 10 19
+  use canhP_xuong 19 10
+  use canhT_xuong 1 10
+  use than 12 9
+  use dau 16 4
+  use set 1 12
+  use set 28 12
+  outline
+end
+frame walk
+  use day2 15 26
+  use duoi 10 20
+  use canhP_ngang 19 10
+  use canhT_ngang 1 10
+  use than 12 10
+  use dau 16 5
+  use set 1 6
+  use set 28 6
+  outline
+end
+
+# đánh: dựng cánh, sét loé → đập cánh xuống phóng sét → về
+anim attack fps=8 once
+frame attack
+  use day1 15 27
+  use duoi 10 21
+  use canhP_len 19 5
+  use canhT_len 1 5
+  use than 12 11
+  use dau 16 6
+  use set 1 1
+  use set 28 1
+  set 2 4 Z
+  set 29 4 Z
+  outline
+end
+frame attack
+  use day2 15 25
+  use duoi 10 19
+  use canhP_xuong 19 10
+  use canhT_xuong 1 10
+  use than 12 9
+  use dau 16 4
+  use set 1 12
+  use set 28 12
+  outline
+end
+frame attack
+  use @walk.0
+end
+
+anim hurt fps=8 once
+frame hurt
+  use day2 15 26
+  use duoi 10 20
+  use canhP_xuong 19 11
+  use canhT_xuong 1 11
+  use than 12 10
+  use dau_ha 15 4
+  use set 1 13
+  use set 28 13
+  use mat_X 18 5
+  swap p P
+  swap o p
+  outline
+end
+
+# chết: mắt X, cánh rũ → rơi xuống → nằm bẹp sẫm màu
+anim die fps=5 once
+frame die
+  use duoi 10 22
+  use canhP_xuong 19 13
+  use canhT_xuong 1 13
+  use than 12 12
+  use dau 16 7
+  use set 1 15
+  use set 28 15
+  use mat_x 20 9
+  outline
+end
+frame die
+  use duoi 10 24
+  use canhP_ngang 19 14
+  use canhT_ngang 1 14
+  use than 12 14
+  use dau 16 9
+  use set 1 10
+  use set 28 10
+  use mat_x 20 11
+  outline
+end
+frame die
+  use @die.1
+  swap p o
+  swap P p
+  swap b B
+end
