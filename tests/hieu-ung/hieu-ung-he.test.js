@@ -61,9 +61,10 @@ async function run(withArt) {
     game.effects.length = 0;
     return [...used];
   }, ELS);
-  await drawAll();
-  await page.waitForTimeout(700);
-  const used = new Set((await drawAll()).map((s) => s.replace(/\.png$/, '')));
+  // lần vẽ đầu mới bắt đầu tải ảnh; máy bận (chạy song song) tải lâu → vẽ lại tới khi số ảnh dùng được đứng yên 3 lần liền (tối đa ~15 giây)
+  let list = await drawAll(), same = 0;
+  for (let k = 0; k < 30 && same < 3; k++) { await page.waitForTimeout(500); const n = await drawAll(); same = n.length === list.length ? same + 1 : 0; list = n; }
+  const used = new Set(list.map((s) => s.replace(/\.png$/, '')));
   return { browser, page, errors, used };
 }
 
