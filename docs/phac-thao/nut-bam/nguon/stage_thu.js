@@ -510,7 +510,7 @@
       const dir = Math.hypot(kx, ky) > 0.18 ? Math.atan2(ky, kx) : P.face > 0 ? 0 : Math.PI;
       let bt = btnPos('atk');
       A.draw(c, 'atk', bt[0], bt[1], bt[2] + 1, {
-        weapon: wst, pressed: held('atk'), glow: !!S.near, label: showLab ? (S.near ? 'Bấm' : 'Đánh') : null, labelAt: 'top',
+        weapon: wst, pressed: held('atk'), glow: !!S.near, label: showLab ? 'Đánh' : null,
         // Khi game có đòn giữ rồi thả thì truyền thêm: charge: <0 đến 1>, chargeSteps: <số nấc>
       });
       bt = btnPos('special');

@@ -281,18 +281,19 @@
       rect(-0.32, 0.5, 0.32, 0.62, GOLD.m), rect(-0.07, 0.62, 0.07, 0.86, HANDLE.l),
     ]);
   };
-  ICON.h_hunter = function () { // Đặt bẫy: bẫy kẹp răng cưa
-    const out = [rect(-0.9, 0.52, 0.9, 0.72, IRON.d), rect(-0.9, 0.52, 0.9, 0.6, IRON.m)];
-    const tooth = (deg) => {
-      const r = (d, rad) => [Math.cos((d * Math.PI) / 180) * rad, 0.52 + Math.sin((d * Math.PI) / 180) * rad];
-      return poly([r(deg - 9, 0.78), r(deg + 9, 0.78), r(deg, 0.36)], '#ffffff');
-    };
-    for (const d of [198, 222, 246]) out.push(tooth(d), tooth(540 - d));
-    out.push(arc(0, 0.52, 0.86, 0.2, 180, 262, IRON.m), arc(0, 0.52, 0.86, 0.2, 278, 360, IRON.m));
-    out.push(arc(0, 0.52, 0.92, 0.08, 180, 262, IRON.l), arc(0, 0.52, 0.92, 0.08, 278, 360, IRON.l));
-    out.push(circ(0, 0.5, 0.2, '#e0483a'), circ(-0.04, 0.46, 0.08, '#ffb0a0'));
-    out.push(circ(-0.86, 0.6, 0.12, GOLD.m), circ(0.86, 0.6, 0.12, GOLD.m));
-    return xf(0, 1, 0, -0.1, out);
+  ICON.h_hunter = function () { // Đặt bẫy: bẫy kẹp há miệng, hai hàm răng cưa, đĩa đạp đỏ ở giữa
+    const out = [], rad = Math.PI / 180;
+    // răng của hàm dưới chĩa lên, răng của hàm trên chĩa xuống
+    for (const d of [52, 76, 104, 128]) {
+      const at = (deg, r, cy) => [Math.cos(deg * rad) * r, cy + Math.sin(deg * rad) * r];
+      out.push(poly([at(d - 10, 0.98, -0.42), at(d + 10, 0.98, -0.42), at(d, 0.56, -0.42)], '#ffffff'));
+      out.push(poly([at(-d - 10, 0.98, 0.42), at(-d + 10, 0.98, 0.42), at(-d, 0.56, 0.42)], '#e4e9f0'));
+    }
+    out.push(arc(0, -0.42, 1.04, 0.2, 33, 147, IRON.m), arc(0, -0.42, 1.1, 0.08, 33, 147, IRON.d));
+    out.push(arc(0, 0.42, 1.04, 0.2, 213, 327, IRON.m), arc(0, 0.42, 1.1, 0.08, 213, 327, IRON.l));
+    out.push(circ(0, 0, 0.2, '#e0483a'), circ(-0.05, -0.05, 0.08, '#ffb0a0'));
+    out.push(circ(-0.88, 0, 0.15, GOLD.m), circ(0.88, 0, 0.15, GOLD.m), circ(-0.9, -0.03, 0.06, GOLD.l), circ(0.86, -0.03, 0.06, GOLD.l));
+    return out;
   };
   ICON.h_healer = function () { // Bình thuốc: bầu hồ lô thuốc xanh, sủi bọt
     return xf(0, 1, -0.08, 0.04, [

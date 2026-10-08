@@ -1,8 +1,10 @@
 """Chụp game thật có bộ nút mới (trang thu.html) ở cỡ điện thoại.
-Dùng: python3 chup_game.py [url trang thử] [thư mục ra] [tiền tố tên file]"""
+Dùng: python3 chup_game.py [url trang thử] [thư mục ra] [tiền tố tên file] [--them]"""
 import sys, os
 from playwright.sync_api import sync_playwright
 here = os.path.dirname(os.path.abspath(__file__))
+THEM = '--them' in sys.argv  # chụp thêm ba hero còn lại
+sys.argv = [a for a in sys.argv if a != '--them']
 url = sys.argv[1] if len(sys.argv) > 1 else 'file://' + os.path.join(here, 'thu.html')
 out = sys.argv[2] if len(sys.argv) > 2 else os.path.join(here, '..')
 pre = sys.argv[3] if len(sys.argv) > 3 else 'trong-game'
@@ -36,7 +38,7 @@ with sync_playwright() as p:
     pg.evaluate("""() => { const P = G.getRun().P; P.skillCd = 3.4; P.dodgeCd = 0.55 * P.dodgeCdMax; P.specCd = 0; P.mana = 12; P.swapCd = 0.9; P.potions = 0; P.coats[G.curW(P).id] = { el: 'fire', t: 4.4 }; G.sim(1); }""")
     pg.evaluate(DUNG); shot('-dang-hoi')
     # 3. các hero khác và vũ khí khác (ảnh phụ)
-    if '--them' in sys.argv:
+    if THEM:
         for hero, cur in [('hunter', 1), ('healer', 0), ('wrestler', 1)]:
             pg.reload(); pg.wait_for_function('window.G && G.scene')
             pg.evaluate(VAO, hero); pg.evaluate("(c) => { G.getRun().P.cur = c; G.sim(2); }", cur)
