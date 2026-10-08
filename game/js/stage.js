@@ -282,7 +282,7 @@
   G.gotoRoom = function (n) { S.idx = n - 1; nextRoom(); }; // dùng khi chạy thử
 
   // ---------- điều khiển ----------
-  const BTN0 = { atk: [430, 220, 28], dodge: [380, 246, 18], special: [384, 196, 18], skill: [434, 166, 18] };
+  const BTN0 = { atk: [430, 220, 28], dodge: [380, 246, 18], special: [384, 196, 18], skill: [434, 162, 18] }; // nút kỹ năng nhích lên 4 để ngọn lửa của nút Đánh không chạm thẻ giá
   // Có lề trống (màn hình dài hoặc đang cầm dọc) thì đẩy nút ra lề để không che trận đấu.
   function btnPos(name) { const b = BTN0[name]; return [b[0] + G.cx, b[1] + G.cy, b[2]]; }
   const BTN = BTN0;
