@@ -48,7 +48,7 @@
     G.botInput = () => cur;
     const step = (i) => { cur = i; G.tick(); cur = inp(); };
     for (let i = 0; i < (o.warm || 6); i++) step(Object.assign(inp(), o.move || {}));
-    const hits = o.hits || 1;
+    const hits = o.hits == null ? 1 : o.hits;
     for (let h = 0; h < hits; h++) {
       step(Object.assign(inp(), { atk: true, atkP: true }));
       const stopAt = h === hits - 1 ? (o.stopAt || 0.5) : 0.98;
@@ -65,10 +65,11 @@
 
   // Vẽ thế giới bằng G.drawWorld thật, chỉ thay nền bằng phòng của mình.
   // view: { w, h } kích thước khung nhìn gốc; k: hệ số phóng ra ảnh cuối (3 hoặc 4,5)
-  function renderWorld(room, view, k, reg, camX) {
+  function renderWorld(room, view, k, reg, camX, outW) {
+    outW = outW || 1440;
     const S = G.getRun(), W = S.W;
     const wc = mk(view.w, view.h);
-    const ov = mk(1440, 810);
+    const ov = mk(outW, Math.round(outW * 9 / 16));
     ov.imageSmoothingEnabled = true;
     const keep = { wx: G.wx, ux: G.ux, bg: A.bg, W: G.W, H: G.H };
     G.wx = wc; G.ux = ov;
@@ -80,13 +81,13 @@
     try { G.drawWorld(reg); } finally { G.wx = keep.wx; A.bg = keep.bg; }
     wc.setTransform(1, 0, 0, 1, 0, 0);
     if (room && room.fore) wc.drawImage(room.fore, -Math.round(W.cam), 0);
-    ov.setTransform(3, 0, 0, 3, 0, 0);
+    ov.setTransform(outW / 480, 0, 0, outW / 480, 0, 0);
     return { wc, ov, restore() { G.ux = keep.ux; } };
   }
   function compose(wc, ov) {
-    const out = mk(1440, 810);
+    const out = mk(ov.canvas.width, ov.canvas.height);
     out.imageSmoothingEnabled = false;
-    out.drawImage(wc.canvas, 0, 0, 1440, 810);
+    out.drawImage(wc.canvas, 0, 0, ov.canvas.width, ov.canvas.height);
     out.imageSmoothingEnabled = true;
     out.drawImage(ov.canvas, 0, 0);
     return out;
@@ -95,7 +96,7 @@
 
   // ---------- bản đồ nhỏ ----------
   // Ô phòng: 'cur' đang đứng, 'seen' đã qua, 'next' kề bên chưa vào (chỉ viền). Phòng chưa biết không vẽ.
-  const MAP = {
+  const MAP0 = {
     cells: [[0, 1, 'seen'], [1, 1, 'seen'], [1, 2, 'seen', 'chest'], [2, 1, 'cur'], [3, 1, 'next'], [2, 0, 'next'], [2, 2, 'next']],
     links: [[0, 1, 1, 1], [1, 1, 1, 2], [1, 1, 2, 1], [2, 1, 3, 1], [2, 1, 2, 0], [2, 1, 2, 2]],
   };
@@ -106,8 +107,9 @@
     ui.rect(x, y, w, h, 'rgba(14,10,10,0.88)', '#7a5a3a');
     ui.rect(x + 1.5, y + 1.5, w - 3, h - 3, null, 'rgba(255,220,160,0.12)');
     ui.text('Bản đồ', x + 6, y + 10.5, { size: 7, bold: true, color: '#ffd27a' });
-    ui.text('Phòng 4/8', x + w - 6, y + 10.5, { size: 6.5, align: 'right', color: '#d9cdb8' });
+    ui.text(o.sub || 'Phòng 4/8', x + w - 6, y + 10.5, { size: 6.5, align: 'right', color: '#d9cdb8' });
     const X = (i) => x + 6 + i * (cw + gp), Y = (j) => y + 16 + j * (ch + gp);
+    const MAP = o.map || MAP0;
     const st = {}; for (const cl of MAP.cells) st[cl[0] + ',' + cl[1]] = cl[2];
     for (const l of MAP.links) {
       const dim = st[l[2] + ',' + l[3]] === 'next' || st[l[0] + ',' + l[1]] === 'next';
@@ -191,7 +193,8 @@
     const T = M.themes[theme], g = M.geoA(o.states);
     const room = M.buildRoom(T, g, o.seed || 11);
     const el = ['poison', 'ice', 'fire'][T.reg];
-    setup({
+    if (o.bounds) Object.assign(g.bounds, o.bounds);
+    setup(Object.assign({
       reg: T.reg, w: 480, bounds: g.bounds, seed: 5,
       hero: { x: 212, y: 174, face: 1 },
       ents: [
@@ -206,17 +209,17 @@
         { x: 190, y: 122, r: 20, pool: true, team: 'enemy', el },
         { x: 262, y: 216, r: 24, t: 3, t0: 4.2, life: 0.12 },
       ],
-    });
-    play({ warm: 5, move: { mx: 1 }, hits: 1, stopAt: 0.52, hp: 0.86 });
+    }, o.scene || {}));
+    play(Object.assign({ warm: 5, move: { mx: 1 }, hits: 1, stopAt: 0.52, hp: 0.86 }, o.play || {}));
     return { room, g, T };
   };
-  M.kieuA = function () {
+  M.cvA = function () {
     const { room, T } = M.sceneA('castle');
     const S = G.getRun();
     const R = renderWorld(room, { w: 480, h: 270 }, 3, T.reg, 0);
     hudA(S.P, S);
     R.restore();
-    return compose(R.wc, R.ov).canvas.toDataURL('image/png');
+    return compose(R.wc, R.ov).canvas;
   };
   // Giao diện thật của game (thanh máu, vũ khí, nút bấm), vẽ lên lớp phủ.
   function realHud(o) {
@@ -231,7 +234,7 @@
   // ====================================================================
   // KIỂU B: giữ phòng nhìn ngang, thêm cửa bốn hướng
   // ====================================================================
-  M.kieuB = function () {
+  M.cvB = function () {
     setup({
       reg: 2, seed: 5,
       hero: { x: 196, y: 198, face: 1 },
@@ -257,7 +260,7 @@
     realHud({ noDots: true });
     M.minimap(389, 42);
     R.restore();
-    return compose(R.wc, R.ov).canvas.toDataURL('image/png');
+    return compose(R.wc, R.ov).canvas;
   };
   // Cửa của Kiểu B. Trái, phải: dùng luôn cổng sắt có sẵn trên tường bên của game.
   // Lên: một cửa vòm trên tường sau, có bậc bước lên. Xuống: miệng cầu thang ở mép trước của sàn.
@@ -321,7 +324,7 @@
     g.bounds = { x0: g.fx0 + 9, x1: g.fx1 - 9, y0: g.fy0 + 8, y1: g.fy1 - 4 };
     return g;
   };
-  M.kieuC = function () {
+  M.cvC = function () {
     const g = M.geoC(), cam = 236;
     const room = M.buildRoom(M.themes.castle, g, 23);
     const X = (sx) => cam + sx;
@@ -346,7 +349,21 @@
     realHud({ noDots: true });
     M.minimap(389, 42);
     R.restore();
-    return compose(R.wc, R.ov).canvas.toDataURL('image/png');
+    return compose(R.wc, R.ov).canvas;
   };
+  // Vẽ Kiểu A của một chủ đề, không có giao diện, trả về canvas 480x270 (đã có chữ sát thương thì bỏ qua).
+  M.plainA = function (theme, o, outW) {
+    o = o || {};
+    const { room, T } = M.sceneA(theme, o);
+    outW = outW || 1440;
+    const R = renderWorld(room, { w: 480, h: 270 }, outW / 480, T.reg, 0, outW);
+    if (o.after) o.after(R);
+    R.restore();
+    return compose(R.wc, R.ov).canvas;
+  };
+  M.thu = (theme) => M.plainA(theme).toDataURL('image/png');
+  M.kieuA = () => M.cvA().toDataURL('image/png');
+  M.kieuB = () => M.cvB().toDataURL('image/png');
+  M.kieuC = () => M.cvC().toDataURL('image/png');
   M.png = (cv) => cv.toDataURL('image/png');
 })();
