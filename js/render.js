@@ -609,13 +609,15 @@ function drawSpot(ctx, x, y, o, t) {
   de.push(SPOT_THEME[th] || 'co', 'thuong');
   // ảnh đế là một phần bản đồ (như nền vẽ tay) → luôn dùng nếu có, kể cả khi tắt "Dùng ảnh AI"
   let base = null;
-  // claude/pixel-con-lai: đế pixel cho trạng thái đặc biệt (ngập / núi / chọn / sẵn sàng); ô thường đã có bệ đá trong nền bản đồ pixel
-  if (typeof pixelOn === 'function' && pixelOn()) for (const k of de.slice(0, -2)) { const pe = pxEntry('nen', 'de-tuong-' + k), pf = pe && pxFrameVe(pe, 0); if (pf) { base = { img: pf }; break; } }
+  // claude/pixel-con-lai: đế pixel cho trạng thái đặc biệt (ngập / núi / chọn / sẵn sàng)
+  // claude/ve-lai-pixel: ô thường cũng dùng bệ pixel trống đồng theo chủ đề (de-tuong-co / gach / …) — trước đây rơi về elip vẽ code
+  // (ô trống) hoặc lộ bệ đá trắng nướng sẵn trong ảnh bản đồ (ô có tướng)
+  if (typeof pixelOn === 'function' && pixelOn()) for (const k of de) { const pe = pxEntry('nen', 'de-tuong-' + k), pf = pe && pxFrameVe(pe, 0); if (pf) { base = { img: pf, px: true }; break; } }
   if (!base) for (const k of de) { const img = asset(`tiles/de-tuong-${k}.png`, true); if (img) { base = { img }; break; } }
   if (base) {
     // ảnh vuông, đế elip nằm giữa; mặt đế hơi cao hơn tâm ảnh (phối cảnh 3/4) → hạ ảnh xuống một chút
-    const s = rx * 2.9;
-    ctx.imageSmoothingEnabled = pxMin(base.img); ctx.drawImage(base.img, x - s / 2, y - s / 2 + ry * 0.3, s, s); ctx.imageSmoothingEnabled = true;
+    const s = rx * (base.px ? 3.15 : 2.9);   // bệ pixel nới hơn chút: che kín bệ đá nướng sẵn trong ảnh bản đồ pixel
+    ctx.imageSmoothingEnabled = pxMin(base.img); ctx.drawImage(base.img, x - s / 2 + (base.px ? rx * 0.08 : 0), y - s / 2 + ry * 0.3, s, s);   // bệ đá trong ảnh bản đồ lệch phải ~1 điểm ctx.imageSmoothingEnabled = true;
     o = { ...o, tileArt: true };
   }
   const tk = o.flooded ? 'ngap' : o.raised || o.tier === 2 ? 'cao' : o.tier === 1 ? 'giua' : 'thap';

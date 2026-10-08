@@ -1599,7 +1599,7 @@ i.c { background: #1F4A2A; color: #8AE09A; } i.h { background: #4A2A5A; color: #
 @keyframes mkGy { 50% { opacity: .3; } }
 .mk-card .mk-gy { position: absolute; right: 2px; top: 2px; z-index: 4; padding: 0 2px; border-radius: 3px; background: var(--gy); color: #140C04;
   font: normal 900 8.5px/11px system-ui, 'Segoe UI Symbol', sans-serif; letter-spacing: -.5px; box-shadow: 0 0 0 1px #000b, 0 0 4px var(--gy); pointer-events: none; }
-.mk-card.poor > img { filter: grayscale(.7) brightness(.55); }
+.mk-card.poor > img { filter: grayscale(.35) brightness(.82); }   /* claude/ve-lai-pixel: lọc nhẹ — lọc đậm làm chân dung pixel thành bóng đen như hình chưa tải (giá đỏ đã báo thiếu vàng) */
 .mk-card.poor .cost { background: #5A3A2A; color: #FFB08A; }
 .mk-card.poor .nm { color: #9A8E78; }
 .mk-card:active { transform: scale(.96); }
@@ -1932,7 +1932,7 @@ svg.icn { overflow: visible; }
 .hx-m { position: relative; width: 34px; height: 34px; flex: none; border-radius: 7px; border: 1.5px solid var(--r-com); background: #120D09; }
 .hx-m.epic { border-color: var(--r-epic); } .hx-m.legendary { border-color: var(--r-legend); }
 .hx-m img { width: 100%; height: 100%; object-fit: contain; display: block; border-radius: 6px; }
-.hx-m.no img { filter: grayscale(1) brightness(.5); }
+.hx-m.no img { filter: grayscale(.6) brightness(.78); }   /* như .mp-m.no: không thành bóng đen */
 .hx-m.part img { filter: grayscale(.4) brightness(.8); }
 .hx-m i { position: absolute; right: -4px; top: -5px; min-width: 15px; height: 15px; padding: 0 2px; border-radius: 8px; font-style: normal; font-size: 9px; font-weight: 900; line-height: 15px; text-align: center; background: #3A3226; color: #FFD66B; letter-spacing: -.3px; white-space: nowrap; }
 .hx-m i:empty { display: none; }
@@ -2350,7 +2350,7 @@ html.pixel #menu .mc-sub { height: max(30px, calc(36px / var(--k, 1))); padding:
 .mp-to, .mp-m { position: relative; width: 24px; height: 24px; flex: none; border-radius: 6px; border: 1.5px solid var(--rc); background: #120D09; }
 .mp-m { width: 22px; height: 22px; border: 1px solid #6A5A3A; }
 .mp-to img, .mp-m img { width: 100%; height: 100%; object-fit: contain; display: block; border-radius: 5px; }
-.mp-m.no img { filter: grayscale(1) brightness(.45); }
+.mp-m.no img { filter: grayscale(.6) brightness(.78); }   /* chưa có: nhạt nhưng vẫn nhận ra tướng (trước: bóng đen) */
 .mp-m.part img { filter: grayscale(.35) brightness(.8); }
 .mp-m.ok { border-color: #6AE06A; }
 .mp-m i { position: absolute; left: 50%; bottom: -5px; transform: translateX(-50%); padding: 0 2px; border-radius: 4px; background: #000c; color: #FFD66B;

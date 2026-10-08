@@ -367,6 +367,7 @@ function render() {
     // v138: ô đã có tướng không vẽ vòng (kể cả khi chọn tướng — đã có vòng tầm đánh); chỉ hiện lúc đang kéo để ghép
     if (o.mode === 'twin') drawTwinRing(ctx, x, y, false, t);
     else if (!(h && !o.mode)) drawSpot(ctx, x, y, o, t);
+    else if (typeof pixelOn === 'function' && pixelOn()) drawSpot(ctx, x, y, o, t);   // pixel: tướng đứng trên bệ pixel (không lộ bệ đá trắng của ảnh bản đồ)
     if (mate) drawMateSpot(x, y, !!h);
   });
 

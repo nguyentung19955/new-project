@@ -3041,3 +3041,9 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
   giữ (sát mép trên thì xuống dưới), không tràn mép, scale theo `--hz`. Bảng chỉ số khi giữ chân dung ở thanh tướng (`#hero-stats`) vốn đã ngang, giữ nguyên.
   Test thêm trong `tests/goi-y-ro/muc-tieu.test.js`: 3 cột, rộng > 2× cao, ≤ 1/3 cao, không che thẻ, không tràn — cả 390×844; giữ thẻ + chợ
   dựng lại giữa chừng (lỗi kẹt v250) → thả: gợi ý ẩn, không mua, chạm tiếp vẫn mua.
+
+## claude/ve-lai-pixel — bỏ chỗ còn trông như "hình vẽ" khi bật pixel (báo từ iPhone, Vô tận đợt 52)
+
+- Ô đặt tướng: pixel bật thì MỌI ô (thường, có tướng đứng) dùng bệ pixel trống đồng theo chủ đề (`nen/de-tuong-<chủ đề>`), trước chỉ ô ngập/núi/chọn dùng. Ô trống trước rơi về elip vẽ code xanh viền trắng, ô có tướng lộ bệ đá trắng nướng sẵn trong ảnh bản đồ. Bệ pixel nới 3,15×rx, lệch phải 0,08rx cho che kín bệ đá cũ.
+- Thẻ chợ thiếu vàng: lọc nhẹ `grayscale(.35) brightness(.82)` (trước .7/.55 làm chân dung pixel thành bóng đen như ảnh chưa tải). Nguyên liệu công thức chưa có (`.mp-m.no`, `.hx-m.no`): `grayscale(.6) brightness(.78)` (trước thành bóng đen).
+- Đường gạch / cổng giữa bản đồ dạng xoáy ốc (thanh1~xoanoc) là ảnh pixel `ban-do/` đúng thiết kế. sw.js: ảnh cache theo VERSION, ảnh `pixel-muot/` tải mạng lần đầu → không rơi về hình vẽ.
