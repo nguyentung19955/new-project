@@ -164,7 +164,7 @@
       const D = M.MON[rg.reg][role], big = role === 'elite';
       c = card(row, 556);
       const hit = role === 'nimble' ? { lg: 1 } : { sk: 1 };
-      const st = el('div', null, null, c); st.style.height = '176px'; st.style.display = 'flex'; st.style.alignItems = 'flex-end'; st.style.justifyContent = 'center';
+      const st = el('div', null, null, c); st.style.minHeight = '176px'; st.style.display = 'flex'; st.style.alignItems = 'flex-end'; st.style.justifyContent = 'center';
       st.appendChild(strip([[mon(rg.reg, role, {}), 'đứng'], [mon(rg.reg, role, { an: 3 }), 'sắp đánh'], [mon(rg.reg, role, hit), 'ra đòn']], big ? 3 : 4, { minW: 26, gap: big ? 10 : 8 }));
       el('div', 'ten', D.name, c);
       el('div', 'vai', ROLE[role] + (big ? ' · to gần gấp đôi quái thường' : ''), c).style.color = ELC[rg.el];

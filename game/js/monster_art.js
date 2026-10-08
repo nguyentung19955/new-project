@@ -1,6 +1,9 @@
 // Quái và trùm vẽ lại cho cùng nét với em bé tinh linh và vũ khí sống.
-// Nạp SAU art.js thì thay G.art.enemy và G.art.boss; hàm cũ giữ ở G.art.enemyOld và G.art.bossOld,
-// bản mới lỗi thì tự gọi lại hàm cũ. File tự đứng một mình: tờ phác thảo cũng nạp chính file này.
+// Nạp SAU art.js thì thay G.art.enemy, G.art.boss và G.art.proj (chỉ phần đạn của quái xạ thủ);
+// hàm cũ giữ ở G.art.enemyOld, G.art.bossOld, G.art.projOld. Bản mới lỗi thì tự gọi lại hàm cũ.
+// Chữ ký và mọi trường hoạt ảnh đọc từ quái, trùm giữ đúng như art.js cũ. Không sửa luật chơi, không dùng G.rnd.
+// File tự đứng một mình: tờ phác thảo cũng nạp chính file này. Mục lục: 1 bộ vẽ, 2 bảng màu, 3 mắt miệng,
+// 4 quái ba vùng (kèm trùm nhỏ và hình trùm), 8 vẽ trong game (quái, trùm nhỏ, Mộc Tinh, Ngư Tinh, Hồ Tinh), 9 nối vào game.
 // Gốc (0,0) của mọi hình là điểm giữa chân chạm đất, x sang phải, y âm là lên trên. Hình gốc quay mặt sang PHẢI.
 (function () {
   'use strict';
@@ -911,7 +914,7 @@
   }
 
   BOSS.moc = {
-    name: 'Mộc Tinh', size: [300, 180], org: [196, 152], top: 122, sh: 34,
+    name: 'Mộc Tinh', size: [240, 176], org: [134, 150], top: 122, sh: 34,
     // ----- Tư thế Q (mọi trường là số liên tục, trừ eye) -----
     pose() {
       return {
@@ -919,7 +922,7 @@
         slump: 0,    // 0..1: thân trên sụp xuống (mệt, lộ sơ hở, cúi cắm tay xuống đất)
         breath: 0,   // 0..1: nhịp thở, nửa thân trên nhô lên một chút
         sway: 0,     // -1..1: dây leo, rêu, lửa mắt đung đưa
-        eye: 'normal', // 'normal' | 'angry' | 'dazed' (choáng) | 'dead'
+        eye: 'normal', // 'normal' | 'angry' | 'tired' (mệt, mí sụp) | 'dazed' (choáng, mắt xoáy) | 'dead'
         blink: 0,    // 0..1: mí sụp dần, từ 0.8 là nhắm hẳn
         lookX: -1, lookY: 0, // -1..1: hướng nhìn
         eyeGlow: 0,  // 0..1: mắt rực lên (từ 0.5 có lửa ở đuôi mắt); phase 1 trở đi luôn rực
@@ -929,7 +932,8 @@
         ra1: 42, ra2: 100, // như trên cho tay PHẢI (tự lật gương)
         gripL: 0, gripR: 0, // 0..1: nắm ngón cành lại
         whip: 0,     // 0..1: tay trái hoá roi dây leo, 1 là vươn tới hẳn điểm (whipX, whipY)
-        whipX: -150, whipY: -8, // đầu roi, tính từ gốc (giữa chân). Khung vẽ chỉ chứa được tới x = -194, xa hơn bị cắt (xem anchor)
+        whipX: -120, whipY: -8, // đầu roi, tính từ gốc (giữa chân). Khung vẽ chỉ chứa tới x = -132; trong game roi dài do 81-moc.js vẽ riêng theo toạ độ thế giới
+        stub: 0,     // 1: bàn tay trái không vẽ ngón, chỉ còn mấu xanh làm gốc roi (để game tự nối roi dài vào)
         whipWave: 0.5, // -1..1: độ uốn lượn của roi
         dig: 0,      // 0..1: cẳng tay mọc dài cắm xuống đất (đòn rễ)
         pump: 0,     // 0..1: nhịp bơm của đòn rễ, rễ trồi lên chạy ra xa
@@ -953,7 +957,7 @@
       const ph = X.phase || 0, E = X.el ? X.E || ELP[X.el] : null, W = X.weak ? X.W || ELP[X.weak] : null;
       const SAP = ELP.poison, geo = rgMocGeo(Q), T = geo.T, sw = Q.sway * 2;
       const C = (x, y) => { const q = T(x, y); return [q[0] + Q.shake, q[1]]; }; // điểm thuộc tán cây
-      const burn = ph >= 1 || Q.eyeGlow >= 0.5, angry = ph >= 1 || Q.eye === 'angry';
+      const burn = (ph >= 1 || Q.eyeGlow >= 0.5) && Q.eye !== 'tired', angry = ph >= 1 || Q.eye === 'angry';
       const AC = E ? (X.el === 'fire' ? rgCHAR : E.B) : null; // chất liệu lớp giáp hệ
       const fx = [];
       // ---- đồ nghề vẽ giáp hệ ----
@@ -1092,7 +1096,7 @@
       // mày vỏ cây
       S.part((s) => {
         for (const sg of [-1, 1]) {
-          const iy = Q.eye === 'dazed' ? -62 : angry ? -55 : -57, oy = Q.eye === 'dazed' ? -57 : angry ? -64 : -60;
+          const sad = Q.eye === 'dazed' || Q.eye === 'tired', iy = sad ? -62 : angry ? -55 : -57, oy = sad ? -57 : angry ? -64 : -60;
           const a = T(sg * 4, iy), b = T(sg * 19, oy);
           s.l(a[0], a[1], b[0], b[1], 4, rgBROW); s.l(b[0], b[1], b[0] + sg * 3, b[1] - 2, 2, rgBROW);
         }
@@ -1109,7 +1113,7 @@
             rd(s, x - 5, y - 5, 11, 11, INK); rd(s, x - 4, y - 4, 9, 9, col); rd(s, x - 3 + o, y - 3, 7, 7, INK); rd(s, x - 2 + o, y - 2, 5, 5, col); s.r(x - 1 + o, y - 1, 3, 3, INK); s.p(x + o, y, col); s.p(x + 2 + o, y + 2, col); s.p(x - 3 + o, y, col);
           } else {
             const shut = Q.blink >= 0.8;
-            eye(s, x, y, { w: 9, h: 9, look: lk, col, shut: shut ? 1 : 0, lid: shut ? 0 : Math.round(Q.blink * 8) + (angry ? 0 : 1), glow: burn ? SAP.glow : SAP.B[1] });
+            eye(s, x, y, { w: 9, h: 9, look: Q.eye === 'tired' ? [lk[0], 1] : lk, col, shut: shut ? 1 : 0, lidc: shut ? BARK[1] : null, lid: shut ? 0 : Math.max(Q.eye === 'tired' ? 4 : 0, Math.round(Q.blink * 8) + (angry ? 0 : 1)), glow: burn ? SAP.glow : SAP.B[1] });
             if (burn) { // lửa xanh ở đuôi mắt
               const fxx = x + sg * 5, fy = y - 6;
               for (let i = 0; i < 6; i++) { const yy = fy - i, ww = i < 2 ? 3 : i < 4 ? 2 : 1, xo = Math.round(Math.sin(i * 0.9 + Q.sway * 3) * 1.2) + sg * (i >> 1); for (let j = 0; j < ww; j++) fx.push([fxx + xo + j * sg, yy, i < 3 ? SAP.hot : SAP.glow]); }
@@ -1156,7 +1160,7 @@
 
       // ============ 9. HAI TAY CÀNH ============
       const drawArm = (A, left) => {
-        const sg = A.sg, sh = A.sh, el = A.el, hd = A.hd, r2 = A.a2 * D2R, dug = hd[1] > -4, whipOn = left && Q.whip > 0.02;
+        const sg = A.sg, sh = A.sh, el = A.el, hd = A.hd, r2 = A.a2 * D2R, dug = hd[1] > -4, stub = left && Q.stub > 0.5, whipOn = left && Q.whip > 0.02 && !stub;
         const ux = el[0] - sh[0], uy = el[1] - sh[1], ul = Math.hypot(ux, uy) || 1, px = -uy / ul, py = ux / ul;
         const mid = [(sh[0] + el[0]) / 2, (sh[1] + el[1]) / 2];
         const up = py < 0 ? 1 : -1; // phía "trên" của bắp tay
@@ -1165,7 +1169,8 @@
           if (dug) s.r(hd[0] - 16, 0, 32, 40, 0);
           else {
             s.e(hd[0], hd[1], 5, 5, BARK);
-            if (!whipOn) {
+            if (stub) s.e(hd[0], hd[1], 4, 4, GRN);
+            else if (!whipOn) {
               const grip = left ? Q.gripL : Q.gripR;
               for (let i = -1; i <= 1; i++) {
                 const a = r2 + i * (0.62 - grip * 0.35), L = (i ? 8 : 10) * (1 - grip * 0.45), cx = sg * Math.cos(a), cy = Math.sin(a);
@@ -1238,8 +1243,8 @@
       { id: 'phase1', label: 'Nổi giận (giai đoạn 1)', Q: { eye: 'angry', mouth: 0.3, la1: 35, la2: 70, ra1: 35, ra2: 70, gripL: 0.6, gripR: 0.6 }, X: { phase: 1 } },
       { id: 'phase2', label: 'Hóa cuồng, bước đi', Q: { eye: 'angry', mouth: 0.6, core: 0.6, lean: -0.5, footL: 1, la1: 20, la2: 60, ra1: 65, ra2: 115, crack: 1 }, X: { phase: 2 } },
       { id: 'sweepUp', label: 'Quét: giơ tay lấy đà', Q: { eye: 'angry', mouth: 0.2, lean: 0.7, la1: -55, la2: -105, gripL: 0.3, ra1: 60, ra2: 110 }, X: {} },
-      { id: 'sweepOut', label: 'Quét: roi vươn dài', Q: { eye: 'angry', mouth: 0.7, lean: -0.8, la1: 12, la2: 6, whip: 1, whipX: -186, whipY: -7, whipWave: 0.7, ra1: 30, ra2: 120 }, X: {} },
-      { id: 'exposed', label: 'Mệt, lộ lõi nhựa', Q: { eye: 'dazed', sway: 1, slump: 1, lean: -0.3, mouth: 0.95, core: 1, la1: 55, la2: 108, ra1: 55, ra2: 108 }, X: {} },
+      { id: 'sweepOut', label: 'Quét: roi vươn dài', Q: { eye: 'angry', mouth: 0.7, lean: -0.8, la1: 12, la2: 6, whip: 1, whipX: -124, whipY: -7, whipWave: 0.7, ra1: 30, ra2: 120 }, X: {} },
+      { id: 'exposed', label: 'Mệt, lộ lõi nhựa', Q: { eye: 'tired', slump: 1, lean: -0.3, mouth: 0.95, core: 1, la1: 55, la2: 108, ra1: 55, ra2: 108 }, X: {} },
       { id: 'roots', label: 'Cắm tay, bơm rễ', Q: { eye: 'angry', mouth: 0.3, slump: 0.8, dig: 1, pump: 0.6, la1: 32, la2: 86, ra1: 32, ra2: 86 }, X: {} },
       { id: 'fruit', label: 'Rung tán rụng quả', Q: { eye: 'angry', mouth: 0.5, shake: 3, fruit: 1, la1: -58, la2: -82, ra1: -58, ra2: -82 }, X: {} },
       { id: 'roar', label: 'Gầm gọi bầy', Q: { eye: 'angry', eyeGlow: 1, mouth: 1, core: 0.6, lean: -0.4, la1: -30, la2: -70, ra1: -30, ra2: -70 }, X: {} },
@@ -1251,6 +1256,7 @@
       { id: 'aM', label: 'Chống đánh gần: vòng gai', Q: {}, X: { aM: 1 } },
       { id: 'aD', label: 'Đọc cú né: mắt thứ ba', Q: {}, X: { aD: 1 } },
       { id: 'all', label: 'Bật hết', Q: { eye: 'angry', mouth: 0.3 }, X: { el: 'fire', weak: 'ice', aR: 1, aM: 1, aD: 1 } },
+      { id: 'stun', label: 'Choáng', Q: { eye: 'dazed', sway: 1, lean: 0.15 }, X: {} },
       { id: 'dead', label: 'Gục', Q: { eye: 'dead', slump: 1, lean: 0.4, mouth: 0.5, core: 0, la1: 80, la2: 100, ra1: 80, ra2: 100 }, X: { phase: 2 } },
     ],
   };
@@ -1844,7 +1850,7 @@
       // --- bong bóng nước che chắn: chống đánh xa ---
       if (X.aR) {
         for (let i = 0; i < 3; i++) {
-          const a = (-64 + i * 52 + Q.orb * 40) * D2R, bx = 66 + Math.cos(a) * 40, by = -28 + Math.sin(a) * 40, r = 9 - (i === 1 ? 0 : 1.5);
+          const a = (-64 + i * 52 + Q.orb * 52) * D2R, bx = 66 + Math.cos(a) * 40, by = -28 + Math.sin(a) * 40, r = 9 - (i === 1 ? 0 : 1.5);
           S.part({ ol: ICE[0] }, (s) => { s.e(bx, by, r, r, Md(ICE)); s.in(() => { s.e(bx, by, r - 1.6, r - 1.6, Md(SEA)); s.e(bx + 1, by + 1, r - 3, r - 3, Dk(SEA)); s.r(bx - 3, by - 4, 2, 2, '#ffffff'); s.p(bx - 4, by - 2, '#ffffff'); s.p(bx + 3, by + 4, Lt(ICE)); s.cv([[bx - 2, by + 2], [bx + 1, by], [bx + 3, by - 3]], 1, 1, Md(ICE)); }); });
         }
       }
@@ -2788,16 +2794,1352 @@
   function S0fr(o, deg) { const r = deg * D2R, cs = Math.cos(r), sn = Math.sin(r); return (u, v) => [o[0] + u * cs - v * sn, o[1] + u * sn + v * cs]; }
 
   // ====================================================================
-  // 9. XUẤT RA
+  // 8. VẼ TRONG GAME
+  // Phần này chỉ đọc trạng thái của quái và trùm (không đụng luật chơi, không dùng G.rnd).
+  // Hình dựng bằng bộ vẽ ở trên rồi cất vào kho; tư thế đổi 10 đến 12 lần mỗi giây, còn vị trí, rung, nghiêng thì mượt theo từng khung.
+  // ====================================================================
+  const ST0 = { fire: 0, poisonN: 0, iceN: 0, frozen: 0, stun: 0, root: 0 };
+  function mk(w, h) {
+    const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+    const g = cv.getContext('2d'); g.imageSmoothingEnabled = false;
+    return g;
+  }
+  const SCR = {};
+  // Khung nháp dùng lại theo tên.
+  function scr(slot, w, h) {
+    let g = SCR[slot];
+    if (!g || g.canvas.width < w || g.canvas.height < h) g = SCR[slot] = mk(Math.max(w, g ? g.canvas.width : 0), Math.max(h, g ? g.canvas.height : 0));
+    g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over';
+    g.clearRect(0, 0, g.canvas.width, g.canvas.height);
+    return g;
+  }
+  // Bản phủ màu của một hình: mode 'source-atop' là nhuộm, 'source-in' là bóng đặc một màu. Trả về canvas cùng cỡ với src.
+  function tinted(slot, src, col, alpha, mode) {
+    const g = scr(slot, src.width, src.height);
+    g.drawImage(src, 0, 0);
+    g.globalCompositeOperation = mode || 'source-atop'; g.globalAlpha = alpha; g.fillStyle = col;
+    g.fillRect(0, 0, src.width, src.height);
+    g.globalAlpha = 1; g.globalCompositeOperation = 'source-over';
+    return g.canvas;
+  }
+  // Vẽ src đã phủ màu ra c tại (dx, dy): chỉ lấy đúng vùng của src trong khung nháp.
+  function blitT(c, slot, src, dx, dy, col, alpha, mode) {
+    const t = tinted(slot, src, col, alpha, mode);
+    c.drawImage(t, 0, 0, src.width, src.height, dx, dy, src.width, src.height);
+  }
+  const px = (c, x, y, w, h, col) => { c.fillStyle = col; c.fillRect(Math.round(x), Math.round(y), w, h); };
+  function hexA(hex, a) { const v = rgbOf(hex); return 'rgba(' + v[0] + ',' + v[1] + ',' + v[2] + ',' + Math.max(0, Math.min(1, a)).toFixed(2) + ')'; }
+  // Bầu dục đặc theo điểm ảnh.
+  function ell(c, x, y, rx, ry, col) {
+    c.fillStyle = col; x = Math.round(x); y = Math.round(y);
+    const R = Math.max(1, Math.round(ry));
+    for (let j = -R; j <= R; j++) { const w = Math.round(rx * Math.sqrt(Math.max(0, 1 - (j * j) / (R * R + 0.01)))); if (w > 0 || j === 0) c.fillRect(x - w, y + j, w * 2 + 1, 1); }
+  }
+  // Vành bầu dục mảnh.
+  function ring(c, x, y, rx, ry, col, th) {
+    c.fillStyle = col; x = Math.round(x); y = Math.round(y); th = th || 1;
+    const n = Math.max(10, Math.round((rx + ry) * 1.6));
+    for (let i = 0; i < n; i++) { const a = (i / n) * Math.PI * 2; c.fillRect(Math.round(x + Math.cos(a) * rx), Math.round(y + Math.sin(a) * ry), th, th); }
+  }
+  function line(c, x0, y0, x1, y1, col, th) {
+    c.fillStyle = col; th = th || 1;
+    const dx = x1 - x0, dy = y1 - y0, n = Math.max(1, Math.ceil(Math.max(Math.abs(dx), Math.abs(dy))));
+    for (let i = 0; i <= n; i++) c.fillRect(Math.round(x0 + (dx * i) / n), Math.round(y0 + (dy * i) / n), th, th);
+  }
+  // Mảnh vụn bay ra theo vòng quanh gốc toạ độ hiện tại: v là tiến độ 0..1.
+  function bits(c, n, v, r, col, col2, seed, up) {
+    if (v <= 0 || v >= 1) return;
+    for (let i = 0; i < n; i++) {
+      const an = i * 2.399 + seed, sp = 0.5 + hsh(i + seed * 7) * 0.7;
+      const bx = Math.cos(an) * r * sp * easeOut(v), by = Math.sin(an) * r * 0.5 * sp * easeOut(v) - (up || 12) * v + (up || 12) * 2.2 * v * v;
+      const s = v < 0.5 && i % 3 === 0 ? 2 : 1;
+      if (v > 0.75 && i % 2) continue;
+      px(c, bx, by, s, s, i % 3 === 1 && col2 ? col2 : col);
+    }
+  }
+  // Viên đạn tròn có viền: B là bộ ba màu.
+  function blob(c, x, y, r, B) {
+    x = Math.round(x); y = Math.round(y);
+    ell(c, x, y, r + 1, r + 1, INK); ell(c, x, y, r, r, B[1]);
+    px(c, x - r + 1, y + 1, r * 2 - 1, r - 1, B[0]); ell(c, x, y - 1, r - 1, r - 1, B[1]);
+    px(c, x - Math.ceil(r / 2), y - r + 1, Math.max(1, r - 1), 1, B[2]); px(c, x - r + 1, y - Math.ceil(r / 2), 1, Math.max(1, r - 2), B[2]);
+  }
+  // Vật bay theo cung từ (x0, y0 - z0) xuống mặt đất tại (x1, y1); u là tiến độ 0..1, h là độ cao cung.
+  function lob(c, x0, y0, z0, x1, y1, u, h, B, big) {
+    if (u <= 0 || u >= 1) return;
+    ell(c, x1, y1, 3 + 5 * u, 1 + 2 * u, 'rgba(0,0,0,' + (0.15 + 0.2 * u).toFixed(2) + ')');
+    for (let i = 2; i >= 0; i--) {
+      const v = u - i * 0.05;
+      if (v <= 0) continue;
+      const bx = lerp(x0, x1, v), by = lerp(y0 - z0, y1, v) - h * 4 * v * (1 - v);
+      if (i) px(c, bx - 1, by - 1, 3 - i, 3 - i, hexA(B[1], 0.6 - i * 0.2));
+      else blob(c, bx, by, big ? 4 : 3, B);
+    }
+  }
+  // Nước bắn toé tại (x, y): v là tiến độ 0..1.
+  function splash(c, x, y, v, r, n) {
+    if (v <= 0 || v >= 1) return;
+    x = Math.round(x); y = Math.round(y);
+    ring(c, x, y, r * (0.4 + 0.6 * easeOut(v)), r * 0.35 * (0.4 + 0.6 * easeOut(v)), 'rgba(225,245,255,' + (0.9 * (1 - v)).toFixed(2) + ')', 2);
+    c.save(); c.translate(x, y - 4); bits(c, n || 12, v, r * 0.9, '#bfeaff', '#ffffff', r * 0.13, 30); c.restore();
+    const h = Math.round(r * 0.5 * Math.sin(Math.min(1, v * 1.6) * Math.PI));
+    if (h > 1) { px(c, x - 8, y - h, 5, h, '#eafcff'); px(c, x + 3, y - Math.round(h * 0.7), 5, Math.round(h * 0.7), '#bfeaff'); px(c, x - 2, y - Math.round(h * 1.2), 4, Math.round(h * 1.2), '#ffffff'); px(c, x - 9, y - h - 1, 7, 1, INK); px(c, x - 3, y - Math.round(h * 1.2) - 1, 6, 1, INK); }
+  }
+  // Gai nhọn có viền (dùng cho rễ, gai đất, tinh thể): gốc (x, y), cao h, rộng w, nghiêng ln; B là bộ ba màu.
+  function spikeUp(c, x, y, h, w, ln, B) {
+    if (h < 2) return;
+    for (let j = 0; j <= h; j++) {
+      const k = j / h, ww = Math.max(1, Math.round(w * (1 - k))), cx = Math.round(x + ln * k);
+      px(c, cx - ww - 1, y - j, ww * 2 + 2, 1, INK);
+    }
+    px(c, Math.round(x + ln) - 1, y - h - 1, 2, 1, INK);
+    for (let j = 0; j <= h; j++) {
+      const k = j / h, ww = Math.max(1, Math.round(w * (1 - k))), cx = Math.round(x + ln * k);
+      px(c, cx - ww, y - j, ww * 2, 1, B[1]); px(c, cx - ww, y - j, Math.max(1, ww >> 1), 1, B[0]); if (ww > 1) px(c, cx + ww - 1, y - j, 1, 1, B[2]);
+    }
+  }
+  // Hiệu ứng ngắn do trùm tạo ra (b.fx), toạ độ thế giới: gai rễ, vòng gai, cột nước, vũng toé, đất nứt.
+  function drawFx(c, b) {
+    if (!b.fx) return;
+    for (const f of b.fx) {
+      const v = clamp01(f.t / f.d), x = Math.round(f.x), y = Math.round(f.y);
+      if (f.k === 'spike') {
+        const H = v < 0.15 ? easeOut(v / 0.15) : v < 0.6 ? 1 : 1 - (v - 0.6) / 0.4;
+        ring(c, x, y, 6 + 12 * easeOut(v), 3 + 6 * easeOut(v), 'rgba(60,36,20,' + (0.7 * (1 - v)).toFixed(2) + ')');
+        spikeUp(c, x - 7, y + 1, Math.round(19 * H), 3, -4, BARK); spikeUp(c, x + 7, y + 2, Math.round(15 * H), 3, 5, BARK);
+        spikeUp(c, x, y + 2, Math.round(30 * H), 4, 1, WD);
+        if (H > 0.5) { px(c, x + 1, y - Math.round(30 * H), 1, 3, CREAM[2]); px(c, x + 3, y - 12, 3, 1, TOX[1]); px(c, x - 5, y - 18, 3, 1, TOX[2]); }
+        c.save(); c.translate(x, y - 2); bits(c, 8, clamp01(v * 1.6), 18, '#5a3a22', '#8a6040', 0.9, 14); c.restore();
+      } else if (f.k === 'thorns') {
+        const H = v < 0.18 ? easeOut(v / 0.18) : v < 0.55 ? 1 : 1 - (v - 0.55) / 0.45, r = f.r || 60;
+        for (let i = 0; i < 16; i++) {
+          const an = i * 0.393 + 0.2, rr = r * (0.45 + 0.5 * hsh(i + 2));
+          spikeUp(c, Math.round(x + Math.cos(an) * rr), Math.round(y + Math.sin(an) * rr * 0.6), Math.round((10 + hsh(i) * 10) * H), 2, Math.round(Math.cos(an) * 4 * H), BONE);
+        }
+      } else if (f.k === 'column') {
+        const up = v < 0.3 ? easeOut(v / 0.3) : 1, fall = v < 0.3 ? 0 : (v - 0.3) / 0.7;
+        const h = Math.round(36 * up * (1 - fall * fall)), w = Math.round(10 - 4 * fall);
+        ring(c, x, y, 8 + 14 * v, 4 + 7 * v, 'rgba(225,245,255,' + (0.9 * (1 - v)).toFixed(2) + ')', 2);
+        if (h > 1) {
+          px(c, x - (w >> 1) - 2, y - h - 1, w + 4, h + 1, INK);
+          px(c, x - (w >> 1) - 1, y - h, w + 2, h, ICE[0]); px(c, x - (w >> 1), y - h, w, h, ICE[1]); px(c, x - (w >> 1) + 1, y - h, 2, h, ICE[2]);
+          px(c, x - (w >> 1) - 3, y - h - 3, w + 6, 4, INK); px(c, x - (w >> 1) - 2, y - h - 2, w + 4, 3, '#ffffff');
+        }
+        c.save(); c.translate(x, y - 6); bits(c, 9, v, 22, '#bfeaff', '#ffffff', 1.7, 26); c.restore();
+      } else if (f.k === 'splat') {
+        ring(c, x, y, 6 + 14 * easeOut(v), 3 + 8 * easeOut(v), hexA(f.col || '#8fe04a', 0.9 * (1 - v)), 2);
+        c.save(); c.translate(x, y - 3); bits(c, 9, v, 20, f.col || '#8fe04a', '#ffffff', 2.9, 16); c.restore();
+      } else if (f.k === 'quake') {
+        const r = f.r || 30, e = easeOut(v);
+        ring(c, x, y, r * (0.4 + 0.6 * e), r * 0.6 * (0.4 + 0.6 * e), 'rgba(255,240,200,' + (0.8 * (1 - v)).toFixed(2) + ')', 2);
+        for (let i = 0; i < 6; i++) {
+          const an = i * 1.047 + 0.3, len = r * (0.4 + 0.5 * hsh(i)) * Math.min(1, v * 4);
+          line(c, x, y, Math.round(x + Math.cos(an) * len), Math.round(y + Math.sin(an) * len * 0.6), 'rgba(30,18,14,' + (0.8 * (1 - v)).toFixed(2) + ')', 1);
+        }
+        c.save(); c.translate(x, y - 3); bits(c, 10, v, r, '#8a7a6a', '#d8cfa8', 1.1, 20); c.restore();
+      }
+    }
+  }
+  // Dấu chấm than báo sắp ra đòn.
+  function bang(c, x, ty, now) {
+    const cc = Math.floor(now * 10) & 1 ? '#fff3b0' : '#ff4030';
+    px(c, x - 2, ty - 15, 4, 7, INK); px(c, x - 2, ty - 7, 4, 4, INK);
+    px(c, x - 1, ty - 14, 2, 5, cc); px(c, x - 1, ty - 6, 2, 2, cc);
+  }
+  const statusOf = (c, e, x, top) => { if (G.art && G.art.status) G.art.status(c, e, x, top); };
+  const regionNow = () => { const w = G.getWorld && G.getWorld(); return w && w.region != null ? Math.max(0, Math.min(2, w.region)) : 0; };
+
+  // ---------- kho hình ----------
+  const MCACHE = new Map(), BCACHE = new Map();
+  function monSpr(reg, role, P, el) {
+    const key = reg + role + (el || '-') + P.w + P.br + P.bl + P.tl + P.an + P.sk + P.lg + (P.dead ? 'd' : '');
+    let s = MCACHE.get(key);
+    if (s) return s;
+    if (MCACHE.size > 1500) MCACHE.clear();
+    s = build(MON[reg][role], Object.assign({}, P0, P), { el: el || null, E: el ? ELP[el] : null });
+    MCACHE.set(key, s);
+    return s;
+  }
+  function miniSpr(reg, P, el) {
+    const key = 'm' + reg + (el || '-') + P.w + P.br + P.bl + P.tl + P.an + P.sk + P.kd + P.roar + P.f3 + P.tired + (P.dead ? 'd' : '');
+    let s = MCACHE.get(key);
+    if (s) return s;
+    if (MCACHE.size > 1500) MCACHE.clear();
+    s = build(MINI[reg], P, { el: el || null, E: el ? ELP[el] : null });
+    MCACHE.set(key, s);
+    return s;
+  }
+  // Hình trùm theo tư thế Q và dạng thích nghi X. Số trong Q được làm tròn để các khung giống nhau dùng lại được.
+  function bossSpr(kind, Q, X) {
+    let key = kind;
+    for (const k in Q) { const v = Q[k]; key += '|' + (typeof v === 'number' ? Math.round(v * 50) / 50 : Array.isArray(v) ? v.join(',') : v); }
+    key += '#' + (X.el || '') + (X.weak || '') + (X.aR ? 'R' : '') + (X.aM ? 'M' : '') + (X.aD ? 'D' : '') + (X.phase | 0);
+    let s = BCACHE.get(key);
+    if (s) return s;
+    if (BCACHE.size > 90) { let n = 30; for (const k of BCACHE.keys()) { BCACHE.delete(k); if (--n <= 0) break; } } // bỏ bớt hình cũ nhất
+    s = build(BOSS[kind], Q, X);
+    BCACHE.set(key, s);
+    return s;
+  }
+  // Dạng thích nghi của trùm đọc từ b.layers: { el, E, weak, W, aR, aM, aD, phase }.
+  function layersX(b) {
+    const L = b.layers || [], res = L.find((l) => l.type === 'resist'), el = res ? res.el : null;
+    const weak = el ? (b.weak && b.weak.length ? b.weak[0] : (L.some((l) => l.type === 'resist' && l.el === WEAK[el]) ? null : WEAK[el])) : null;
+    return {
+      el, E: el ? ELP[el] : null, weak, W: weak ? ELP[weak] : null,
+      aR: L.some((l) => l.type === 'antiRanged') ? 1 : 0, aM: L.some((l) => l.type === 'antiMelee') ? 1 : 0, aD: L.some((l) => l.type === 'antiDodge') ? 1 : 0,
+      phase: b.phase | 0,
+    };
+  }
+  // Dán một hình s = { cv, ox, oy } tại (x, y). o: flip (lật ngang), rot (radian, quanh điểm px, py tính từ gốc), sx, sy (co giãn quanh gốc),
+  // alpha, tint [màu, độ pha], sil (màu bóng đặc thay cho hình).
+  function blit(c, s, x, y, o) {
+    o = o || {};
+    c.save();
+    c.translate(Math.round(x), Math.round(y));
+    if (o.flip) c.scale(-1, 1);
+    if (o.rot) { c.translate(o.px || 0, o.py || 0); c.rotate(o.rot); c.translate(-(o.px || 0), -(o.py || 0)); }
+    if (o.sx || o.sy) c.scale(o.sx || 1, o.sy || 1);
+    if (o.alpha != null) c.globalAlpha *= o.alpha;
+    if (o.sil) blitT(c, 'sil', s.cv, -s.ox, -s.oy, o.sil, 1, 'source-in');
+    else if (o.tint) blitT(c, 'tint', s.cv, -s.ox, -s.oy, o.tint[0], o.tint[1]);
+    else c.drawImage(s.cv, -s.ox, -s.oy);
+    c.restore();
+  }
+  // Viền một màu quanh hình (báo đòn, đóng băng): dán bóng đặc lệch bốn phía.
+  function halo(c, s, col, alpha) {
+    const t = tinted('sil', s.cv, col, 1, 'source-in'), w = s.cv.width, h = s.cv.height;
+    if (alpha != null) c.globalAlpha = alpha;
+    for (const d of [[-1, 0], [1, 0], [0, -1], [0, 1]]) c.drawImage(t, 0, 0, w, h, -s.ox + d[0], -s.oy + d[1], w, h);
+    c.globalAlpha = 1;
+  }
+
+  // ---------- quái thường và tinh anh ----------
+  const RATE = { rusher: 8, swarm: 11, shield: 6, archer: 8, nimble: 12, elite: 7, mini: 6 };
+  const SKD = 0.27; // thời gian giữ dáng ra đòn sau khi hết lấy đà
+  // Trí nhớ nhỏ gắn vào từng con để biết lúc nó vừa tung đòn (chỉ dùng cho hình vẽ).
+  function mem(e) { return e._ma || (e._ma = { pw: 0, w0: 0.4, skT: -9 }); }
+  function monPose(e, a, flying) {
+    const st = e.st || ST0, now = G.time || 0, t = e.t || 0;
+    const stopped = st.frozen > 0 || st.stun > 0;
+    const wind = e.wind > 0 ? e.wind : 0;
+    if (wind > 0 && (a.pw <= 0 || wind > a.w0)) a.w0 = wind;
+    if (a.pw > 0 && wind <= 0 && !stopped && !e.dead && e.dying == null) a.skT = now; // đòn vừa tung
+    a.pw = wind;
+    const P = { w: -1, br: 0, bl: 0, tl: 0, an: 0, sk: 0, lg: 0 };
+    if (st.frozen > 0) return P;
+    const sd = now - a.skT;
+    if (e.lunge > 0) P.lg = 1;
+    else if (wind > 0) { const u = 1 - wind / a.w0; P.an = u < 0.3 ? 1 : u < 0.65 ? 2 : 3; }
+    else if (sd >= 0 && sd < SKD && e.role !== 'nimble') P.sk = sd < 0.1 ? 1 : sd < 0.19 ? 2 : 3;
+    else if (st.stun > 0) P.bl = 1;
+    else if (e.moving) { P.w = Math.floor(t * (RATE[e.role] || 8)) & 3; P.tl = P.w; }
+    else { P.br = Math.floor(t * 2.4) & 1; P.bl = t % 3.3 < 0.13 ? 1 : 0; P.tl = Math.floor(t * 5) & 3; }
+    if (flying) P.tl = Math.floor(t * 12) & 3; // loài bay lúc nào cũng đập cánh
+    return P;
+  }
+  // Kiểu gục của từng loài.
+  const DIE = [
+    { swarm: 'pop', shield: 'flip', archer: 'melt', nimble: 'flip' },
+    { rusher: 'pop', swarm: 'pop', shield: 'flip', archer: 'melt', nimble: 'melt', elite: 'melt' },
+    { rusher: 'melt', swarm: 'fall', shield: 'shatter', archer: 'fall', nimble: 'flip', elite: 'shatter' },
+  ];
+  const DUST = [['#8fe04a', '#a56fd0'], ['#bfeaff', '#ffffff'], ['#ffb347', '#e8492a']];
+  function dieMon(c, e, reg) {
+    const k = clamp01(e.dying), x = Math.round(e.x), y = Math.round(e.y), f = e.face < 0 ? -1 : 1;
+    const role = MON[reg][e.role] ? e.role : 'rusher', D = MON[reg][role], style = DIE[reg][role] || 'topple';
+    const s = monSpr(reg, role, { w: -1, br: 0, bl: 0, tl: 0, an: 0, sk: 0, lg: 0, dead: 1 }, e.el || null);
+    const col = e.el ? ELP[e.el].B[1] : DUST[reg][0], col2 = e.el ? ELP[e.el].B[2] : DUST[reg][1];
+    if (k < 0.9) ell(c, x, y, D.sh * (1 - k * 0.5), 2, 'rgba(0,0,0,' + (0.3 * (1 - k)).toFixed(2) + ')');
+    const A0 = 0.28, u = clamp01(k / A0), v = clamp01((k - A0) / (1 - A0));
+    const hot = k < A0 ? 1 - u : 0, mid = Math.round(D.top / 2);
+    const o = { flip: f < 0, tint: hot > 0 ? ['#ffffff', hot * 0.9] : null };
+    let dx = -f * 6 * easeOut(u), dy = 0;
+    c.save();
+    if (style === 'pop') {
+      const g = 1 + 0.5 * easeOut(v);
+      if (v < 0.35) blit(c, s, x + dx, y, Object.assign(o, { sx: g, sy: g, tint: ['#ffffff', Math.max(hot, v * 2.4)] }));
+      c.translate(x + dx, y - mid); bits(c, 10, clamp01((v - 0.15) / 0.85), 22, col, col2, 1.3, 10);
+    } else if (style === 'shatter') {
+      // vỡ thành từng mảng văng ra
+      const cols = 3, rows = 3, w = s.cv.width, h = s.cv.height, tw = Math.ceil(w / cols), th = Math.ceil(h / rows);
+      const src = hot > 0 ? tinted('tint', s.cv, '#ffffff', hot * 0.9) : s.cv;
+      c.translate(x + dx, y); c.scale(f, 1);
+      for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) {
+        const n = i * rows + j, vv = clamp01((v - hsh(n + 3) * 0.1) / 0.9);
+        if (vv >= 0.97 || (vv > 0.8 && n % 2)) continue;
+        const ddx = (i - 1) * 9 * easeOut(vv) + (hsh(n) - 0.5) * 6 * vv, up = (rows - j) * 5 + 4, floor = (rows - j - 1) * th;
+        const ddy = Math.min(floor, -up * vv * 1.6 + (up * 1.6 + floor + 2) * vv * vv);
+        c.drawImage(src, i * tw, j * th, tw, th, Math.round(-s.ox + i * tw + ddx), Math.round(-s.oy + j * th + ddy), tw, th);
+      }
+      c.translate(0, -8); bits(c, 8, v, 18, col, col2, 2.1, 10);
+    } else {
+      let rot = 0, sx = 1, sy = 1, alpha = 1, py = 0;
+      if (style === 'topple') {
+        // ngã ngửa ra sau, nảy nhẹ
+        const fall = clamp01(v / 0.5);
+        rot = -(0.2 * u + (Math.PI / 2 - 0.2) * easeIn(fall));
+        if (v > 0.5 && v < 0.68) dy = -3 * Math.sin(((v - 0.5) / 0.18) * Math.PI);
+      } else if (style === 'flip') {
+        // bật ngửa, chổng chân lên trời
+        const fl = clamp01(v / 0.45);
+        dy = -10 * Math.sin(fl * Math.PI); rot = -Math.PI * easeOut(fl); py = -mid;
+      } else if (style === 'melt') {
+        // xẹp xuống thành một vũng
+        const m = smooth(clamp01(v / 0.7));
+        sy = 1 - 0.8 * m; sx = 1 + 0.5 * m;
+      } else if (style === 'fall') {
+        // loài bay: xoáy rơi xuống đất
+        const fl = clamp01(v / 0.5);
+        dy = 4 * easeIn(fl); rot = -fl * 4; py = -mid;
+        if (v > 0.5) { rot = Math.PI; sy = 0.7; }
+      }
+      alpha = v > 0.9 ? 0.4 : v > 0.75 ? 0.7 : 1;
+      blit(c, s, x + dx, y + dy, Object.assign(o, { rot: f < 0 ? rot : rot, py, sx, sy, alpha }));
+      c.translate(x - f * 6, y - 4);
+      bits(c, 6, clamp01((v - 0.3) / 0.6), 14, col2, col, 0.4, 8);
+    }
+    c.restore();
+  }
+  function drawMon(c, e, reg) {
+    const role = MON[reg][e.role] ? e.role : 'rusher', D = MON[reg][role];
+    const x = Math.round(e.x), y = Math.round(e.y), f = e.face < 0 ? -1 : 1;
+    const st = e.st || ST0, a = mem(e), now = G.time || 0;
+    const P = monPose(e, a, !!D.fly);
+    ell(c, x, y, D.sh, 2, 'rgba(0,0,0,0.3)');
+    if (e.resist && ELP[e.resist]) {
+      // vòng hào quang kháng hệ dưới chân
+      const rc = ELP[e.resist].B[1], rr = D.sh + 4, k = Math.floor(now * 6) % 3;
+      ring(c, x, y, rr, 3, rc);
+      px(c, x - rr, y - 6 - k, 1, 3, rc); px(c, x + rr - 1, y - 9 + k, 1, 3, rc);
+    }
+    const s = monSpr(reg, role, P, e.el || null);
+    const frozen = st.frozen > 0;
+    const u = P.an ? clamp01(1 - e.wind / a.w0) : 0;
+    let ox = 0, rot = 0, sx = 1, sy = 1;
+    if (P.an && u > 0.6 && (Math.floor(now * 30) & 1)) ox = 1; // dồn lực, rung nhẹ
+    if (P.lg) { sx = 1.12; sy = 0.92; }
+    if (!frozen) {
+      if (st.stun > 0) rot = Math.sin(now * 9 + x) * 0.14;
+      if (st.root > 0) ox += [1, 0, -1, 0][Math.floor(now * 14) & 3]; // giãy giụa
+      if (e.flash > 0) { ox -= 2; rot -= 0.1; } // giật lùi
+    }
+    c.save();
+    c.translate(x, y);
+    c.scale(f, 1);
+    c.translate(ox, 0);
+    if (rot) c.rotate(rot);
+    if (sx !== 1 || sy !== 1) c.scale(sx, sy);
+    if (frozen) {
+      // bọc trong lớp băng
+      halo(c, s, '#e9f9ff');
+      blitT(c, 'tint', s.cv, -s.ox, -s.oy, '#a8dcf5', 0.7);
+    } else if (e.flash > 0) blitT(c, 'tint', s.cv, -s.ox, -s.oy, '#ffffff', 0.6);
+    else if (P.an) {
+      // viền đỏ báo đòn, càng gần lúc ra đòn càng chớp gấp
+      const hot = u > 0.55 && (Math.floor(now * 20) & 1);
+      halo(c, s, hot ? '#ffd27a' : '#d02818');
+      if (hot && u > 0.8) blitT(c, 'tint', s.cv, -s.ox, -s.oy, '#fff0c8', 0.35); else c.drawImage(s.cv, -s.ox, -s.oy);
+    } else c.drawImage(s.cv, -s.ox, -s.oy);
+    c.restore();
+    const top = y - D.top - 2;
+    if (P.lg) for (let i = 0; i < 3; i++) px(c, x - f * (13 + i * 6) - (f > 0 ? 7 : 0), y - 5 - i * 3, 8 - i * 2, 1, 'rgba(255,255,255,' + (0.6 - i * 0.15) + ')');
+    if (frozen) {
+      px(c, x - 7, y - 3, 4, 3, '#bfeaff'); px(c, x + 3, y - 2, 4, 2, '#e9f9ff'); px(c, x - 2, y - 1, 5, 1, '#bfeaff');
+    } else {
+      if (st.stun > 0) for (let i = 0; i < 3; i++) { const an = now * 6 + i * 2.09; px(c, x + Math.cos(an) * 7 - 1, top - 3 + Math.sin(an) * 2 - 1, 2, 2, Math.sin(an) > 0 ? '#ffd23f' : '#b8922a'); } // sao xoay trên đầu
+      if (st.root > 0) { px(c, x - 6, y - 4, 2, 4, '#4d6b28'); px(c, x + 4, y - 5, 2, 5, '#4d6b28'); px(c, x - 5, y - 2, 10, 1, '#8fae4a'); px(c, x - 3, y - 5, 1, 2, '#8fae4a'); } // dây leo quấn chân
+    }
+    if (e.wind > 0) bang(c, x, top - (role === 'elite' ? 4 : 0), now);
+    statusOf(c, e, x, top);
+  }
+
+  // ---------- trùm nhỏ ----------
+  function miniState(b, reg) {
+    const an = b.dying != null ? null : b.anim, st = b.st || ST0, t = b.t || 0, now = G.time || 0;
+    const P = { w: -1, br: 0, bl: 0, tl: Math.floor(now * 8) & 3, an: 0, sk: 0, kd: '', roar: b.roarT > 0 && b.dying == null ? 1 : 0, f3: Math.floor(now * 10) % 3, tired: 0, dead: 0 };
+    const O = { vx: 0, vy: 0, oy: 0, trail: 0, U: 0 };
+    if (an) {
+      P.kd = an.name;
+      if (an.name === 'charge') {
+        if (an.t < an.fire) { O.U = an.t / an.fire; P.an = O.U < 0.3 ? 1 : O.U < 0.65 ? 2 : 3; }
+        else {
+          const dd = (an.t - an.fire) / an.dash;
+          if (dd < 1) { const k = 1 - easeOut(clamp01(dd)); O.vx = (an.fx - b.x) * k; O.vy = (an.fy - b.y) * k; P.sk = 1; O.trail = 1; }
+          else if (dd < 2.2) P.sk = 2;
+          else P.kd = '';
+        }
+      } else if (an.fire != null) {
+        if (an.t < an.fire) { O.U = an.t / an.fire; P.an = O.U < 0.3 ? 1 : O.U < 0.65 ? 2 : 3; }
+        else { const sd = an.t - an.fire; P.sk = sd < 0.12 ? 1 : sd < 0.26 ? 2 : sd < 0.42 ? 3 : 0; if (!P.sk) P.kd = ''; }
+      } else if (an.name === 'burst' && an.shots && an.shots.length) {
+        const t0 = an.shots[0].land - 0.55;
+        if (an.t < t0) { O.U = an.t / t0; P.an = O.U < 0.4 ? 1 : O.U < 0.75 ? 2 : 3; }
+        else {
+          P.an = 3;
+          for (const s of an.shots) { const d0 = an.t - (s.land - 0.55); if (d0 >= 0 && d0 < 0.09) { P.an = 0; P.sk = 1; } }
+          if (an.t > an.shots[an.shots.length - 1].land - 0.4) { P.an = 0; if (!P.sk) P.sk = 2; }
+        }
+      } else if (an.name === 'summon') { P.an = 3; P.roar = 1; O.vx = Math.floor(now * 30) & 1; }
+      // Nấm Chúa nhảy lên rồi nện xuống
+      if (an.name === 'slam' && reg === 0 && P.an && O.U > 0.5) O.oy = -26 * Math.sin(((O.U - 0.5) / 0.5) * Math.PI * 0.85);
+    } else if (b.wind > 0 && b.dying == null) { P.an = 2; P.kd = 'swipe'; }
+    if (P.roar) O.vx += Math.floor(now * 30) & 1;
+    if (!P.an && !P.sk && !P.roar) {
+      if (b.moving) P.w = Math.floor(t * RATE.mini) & 3;
+      else { P.br = Math.floor(t * 2) & 1; P.bl = t % 3.7 < 0.14 ? 1 : 0; }
+      if (b.exposed > 0 && b.dying == null) { P.tired = 1; P.br = Math.floor(t * 7) & 1; P.w = -1; } // thở dốc sau cú lao
+    }
+    if (st.stun > 0) P.bl = 1;
+    return { P, O };
+  }
+  // Hệ để tô tinh thể, lửa, bào tử của trùm nhỏ: đang kháng hệ nào thì hiện màu hệ đó, không thì màu hệ của vùng.
+  const miniEl = (b, reg) => { const r = b.layers && b.layers.find((l) => l.type === 'resist'); return (r && r.el) || b.el || ['poison', 'ice', 'fire'][reg]; };
+  function drawMini(c, b, reg) {
+    const D = MINI[reg], x = Math.round(b.x), y = Math.round(b.y), f = b.face < 0 ? -1 : 1, now = G.time || 0, st = b.st || ST0;
+    const S2 = miniState(b, reg), P = S2.P, O = S2.O, an = b.anim, el = miniEl(b, reg), E = ELP[el];
+    const s = miniSpr(reg, P, el);
+    const bx = x + Math.round(O.vx), by = y + Math.round(O.vy);
+    ell(c, bx, by, D.sh * (O.oy < 0 ? 0.75 : 1), 4, 'rgba(0,0,0,0.3)');
+    const res = b.layers && b.layers.find((l) => l.type === 'resist');
+    if (res && ELP[res.el]) { const k = Math.floor(now * 6) % 3; ring(c, bx, by, D.sh + 5, 5, ELP[res.el].B[1], 2); px(c, bx - D.sh - 5, by - 8 - k, 2, 4, ELP[res.el].B[2]); px(c, bx + D.sh + 3, by - 11 + k, 2, 4, ELP[res.el].B[2]); }
+    let rot = 0, ox = 0;
+    if (st.stun > 0) rot = Math.sin(now * 9) * 0.08;
+    if (b.flash > 0) ox = -1;
+    if (P.an === 3 && (Math.floor(now * 30) & 1)) ox += 1;
+    c.save();
+    c.translate(bx, by + Math.round(O.oy));
+    c.scale(f, 1);
+    c.translate(ox, 0);
+    if (rot) c.rotate(rot);
+    if (O.trail) {
+      // bóng mờ kéo theo sau cú lao
+      const dir = (an.dir || 1) * f, t2 = tinted('sil', s.cv, E.B[1], 1, 'source-in');
+      for (let i = 3; i >= 1; i--) { c.globalAlpha = 0.5 - i * 0.12; c.drawImage(t2, 0, 0, s.cv.width, s.cv.height, -s.ox - dir * i * 10, -s.oy, s.cv.width, s.cv.height); }
+      c.globalAlpha = 1;
+    }
+    if (st.frozen > 0) { halo(c, s, '#e9f9ff'); blitT(c, 'tint', s.cv, -s.ox, -s.oy, '#a8dcf5', 0.6); }
+    else if (b.flash > 0) blitT(c, 'tint', s.cv, -s.ox, -s.oy, '#ffffff', 0.5);
+    else {
+      if (P.an) { const hot = O.U > 0.55 && (Math.floor(now * 20) & 1); halo(c, s, hot ? '#ffd27a' : '#d02818', 0.5 + 0.5 * O.U); }
+      c.drawImage(s.cv, -s.ox, -s.oy);
+    }
+    c.restore();
+    // đạn hệ bắn vòng cầu của đòn rải
+    if (an && an.name === 'burst' && an.shots) {
+      const EB = (ELP[an.el] || E).B;
+      for (const sh of an.shots) lob(c, x, y, D.top - 4, sh.x, sh.y, (an.t - (sh.land - 0.55)) / 0.55, 26, EB);
+    }
+    if (an && an.name === 'summon') { const v = clamp01(an.t / 0.6); ring(c, x, y - D.top * 0.5, 12 + 40 * v, 8 + 22 * v, 'rgba(255,255,255,' + (0.6 * (1 - v)).toFixed(2) + ')', 2); } // vòng sóng gầm
+    drawFx(c, b);
+    const top = y - D.top - 2;
+    if (b.wind > 0) bang(c, x, top + 4, now);
+    statusOf(c, b, x, top);
+  }
+  function dieMini(c, b, reg) {
+    const D = MINI[reg], k = clamp01(b.dying), x = Math.round(b.x), y = Math.round(b.y), f = b.face < 0 ? -1 : 1;
+    const el = miniEl(b, reg), E = ELP[el], col = E.B[1], col2 = E.B[2];
+    const A0 = 0.42, u = clamp01(k / A0), v = clamp01((k - A0) / (1 - A0));
+    const P = { w: -1, br: 0, bl: 0, tl: 0, an: 0, sk: 0, kd: '', roar: k < A0 ? 1 : 0, f3: Math.floor(k * 40) % 3, tired: 0, dead: k < A0 ? 0 : 1 };
+    const s = miniSpr(reg, P, el), mid = Math.round(D.top / 2);
+    if (k < 0.92) ell(c, x, y, D.sh * (1 - v * 0.5), 4, 'rgba(0,0,0,' + (0.3 * (1 - v)).toFixed(2) + ')');
+    if (k < A0) {
+      // co giật, loé sáng
+      const fl = Math.abs(Math.sin(u * 14));
+      blit(c, s, x + (Math.floor(k * 70) & 1) * 2 - 1, y, { flip: f < 0, tint: ['#ffffff', 0.75 * fl] });
+      c.save(); c.translate(x, y - mid); for (let i = 0; i < 3; i++) bits(c, 7, (u - i * 0.3) / 0.4, 34, col, col2, i * 1.9 + 0.5, 18); c.restore();
+      return;
+    }
+    c.save();
+    if (reg === 1) {
+      // Cua Đá: vỡ vụn thành đá và băng
+      const cols = 5, rows = 4, w = s.cv.width, h = s.cv.height, tw = Math.ceil(w / cols), th = Math.ceil(h / rows);
+      const src = v > 0.4 ? tinted('tint', s.cv, '#0c1420', Math.min(0.6, v - 0.4)) : s.cv;
+      c.translate(x, y); c.scale(f, 1);
+      for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) {
+        const n = i * rows + j, late = hsh(n + 5) * 0.3, vv = clamp01((v - late) / (1 - late));
+        if (vv >= 0.96 || (vv > 0.8 && n % 2)) continue;
+        const dx = (i - 2) * 8 * easeOut(vv) + (hsh(n) - 0.5) * 6 * vv, up = (rows - j) * 4 + 5 + hsh(n + 9) * 6, floor = (rows - j - 1) * th;
+        const dy = Math.min(floor, -up * vv * 1.8 + (up * 1.8 + floor) * vv * vv);
+        c.drawImage(src, i * tw, j * th, tw, th, Math.round(-s.ox + i * tw + dx), Math.round(-s.oy + j * th + dy), tw, th);
+      }
+      c.translate(0, -mid); bits(c, 16, v, 50, '#7fd4ff', '#e9f9ff', 1.4, 26);
+    } else if (reg === 0) {
+      // Nấm Chúa: xẹp xuống, bào tử bay mù
+      const m = smooth(clamp01(v / 0.7));
+      blit(c, s, x, y, { flip: f < 0, sx: 1 + 0.35 * m, sy: 1 - 0.7 * m, alpha: v > 0.85 ? 0.5 : 1, tint: ['#3d1d55', 0.4 * v] });
+      c.translate(x, y - mid * (1 - m));
+      bits(c, 14, v, 44, '#8fe04a', '#a56fd0', 0.3, 30); bits(c, 10, clamp01(v * 1.3 - 0.2), 30, '#f6e8c8', '#8fe04a', 2.2, 40);
+    } else {
+      // Hổ Lửa: lửa tắt, hoá tro rồi tan
+      blit(c, s, x, y, { flip: f < 0, alpha: v > 0.8 ? 0.4 : v > 0.6 ? 0.7 : 1, tint: ['#4a4040', Math.min(0.85, 0.2 + v)] });
+      c.translate(x, y - 8);
+      for (let i = 0; i < 9; i++) { const bu = clamp01(v * 1.5 - i * 0.09); if (bu > 0 && bu < 1) px(c, -30 + i * 8 + Math.sin(bu * 7 + i) * 4, 4 - bu * 46, bu < 0.5 ? 2 : 1, bu < 0.5 ? 2 : 1, i % 2 ? '#ff7a2a' : '#ffd23f'); } // tàn lửa bay lên
+    }
+    c.restore();
+  }
+
+  // ---------- đạn của xạ thủ: mỗi vùng một kiểu ----------
+  const SHOT = [[PURP, TOX], [ICE, FOAM], [FIRE, FLAME]];
+  function monShot(c, o, reg) {
+    const x = Math.round(o.x), y = Math.round(o.y - (o.z || 10)), f = Math.floor((G.time || 0) * 12) % 2, k = o.vx < 0 ? 1 : -1;
+    const B = o.el && ELP[o.el] ? ELP[o.el].B : SHOT[reg][0], B2 = SHOT[reg][1];
+    px(c, x - 3, Math.round(o.y), 6, 1, 'rgba(0,0,0,0.3)');
+    px(c, x + k * 5, y - 1 + f, 2, 2, hexA(B[1], 0.7)); px(c, x + k * 8, y + 1 - f, 1, 1, hexA(B[2], 0.6));
+    blob(c, x, y, 3, B);
+    if (reg === 0) { px(c, x - 1, y - 5, 2, 2, B2[1]); px(c, x + 1, y - 6, 1, 1, B2[2]); }
+    else if (reg === 1) { px(c, x - 1, y - 1, 2, 2, '#ffffff'); if (f) { px(c, x - 5, y, 1, 1, '#ffffff'); px(c, x + 4, y - 3, 1, 1, '#ffffff'); } }
+    else { px(c, x - 1, y - 1, 3, 2, B2[1]); px(c, x, y - 1, 1, 1, B2[2]); px(c, x + k * 3, y - 4 - f, 2, 2, B[2]); }
+  }
+
+  // ---------- trùm vùng: mỗi trùm một hàm vẽ riêng, khai ở các phần dưới ----------
+  // BDRAW[kind](c, b, t): c đã dời theo camera, b.x và b.y là toạ độ thế giới.
+  const BDRAW = {};
+
+  // ====================================================================
+  // 8A. MỘC TINH TRONG GAME
+  // Đòn: sweep (giơ tay lấy đà rồi quất roi dây leo ngang nửa sân, sau đó mệt lộ lõi nhựa), roots (cắm tay bơm rễ, ụ đất chạy ngầm tới chỗ rễ trồi),
+  // fruit (rung tán cho quả độc rụng), summon (gầm gọi bầy), thorn (gai quanh gốc bung ra). Thêm: gầm đổi giai đoạn, lết đi ở giai đoạn 2, choáng, đóng băng, gục.
+  // Thân trùm là hình dựng sẵn (BOSS.moc); roi dài, ụ đất, quả bay, lá rơi thì vẽ thẳng lên màn theo toạ độ thế giới.
+  // ====================================================================
+  const mcQz = (v, n) => Math.round(v * n) / n;
+  const MCV_L = 480; // chiều dài dải hình roi
+  let mcVineS = null, mcStumpS = null;
+  // Dải hình roi dây leo nằm ngang: ngọn ở x = 0 (bên trái), gốc dày dần về bên phải.
+  function mcVine() {
+    if (mcVineS) return mcVineS;
+    const S = new Spr(MCV_L + 20, 30, 10, 15), wy = (x) => Math.sin(x * 0.045) * 1.6;
+    S.part((s) => {
+      for (let x = 14, i = 0; x < MCV_L - 6; x += 15, i++) rgLeaf(s, x, wy(x) + (i & 1 ? -1 : 1), i & 1 ? -40 : 40, 6, 3.4, i % 3 ? GRN : TOX);
+      const pts = []; for (let x = 0; x <= MCV_L; x += 30) pts.push([x, wy(x)]);
+      s.cv(pts, 2, 6, GRN);
+      s.e(1, 0, 2.6, 2.6, PURP);
+      s.in(() => { for (let x = 8, i = 0; x < MCV_L; x += 7, i++) s.p(x, wy(x) - (x > 240 ? 1 : 0), i & 1 ? Lt(GRN) : Dk(GRN)); s.p(0, -1, Lt(PURP)); });
+    });
+    S.finish();
+    return (mcVineS = S.toCanvas());
+  }
+  // Gốc cây cụt còn lại sau khi thân tách đôi đổ xuống.
+  function mcStump() {
+    if (mcStumpS) return mcStumpS;
+    const S = new Spr(96, 34, 48, 28);
+    S.part((s) => { s.l(-28, -4, -38, -2, 4, BARK); s.l(28, -4, 38, -2, 4, BARK); });
+    S.part((s) => {
+      s.g([[-27, -1], [-26, -9], [-19, -13], [-13, -8], [-6, -14], [1, -9], [8, -15], [14, -9], [21, -12], [26, -8], [27, -1]], BARK);
+      s.in(() => { s.e(0, -5, 10, 2.6, Dk(BARK)); s.e(1, -5, 6, 1.4, '#160e0c'); s.l(-18, -9, -17, -3, 1, Dk(BARK)); s.l(17, -8, 18, -3, 1, Dk(BARK)); s.e(-20, -3, 4, 1.4, Md(MOSS)); });
+    });
+    S.finish();
+    return (mcStumpS = S.toCanvas());
+  }
+  // Roi nằm vắt ngang: dán dải hình theo từng cột, mỗi cột lệch dọc theo đường cong. H là bàn tay, T là ngọn (T ở bên trái H), ya và yb là độ cao hai mốc giữa.
+  function mcWhipStrip(c, H, T, ya, yb) {
+    const s = mcVine(), L = Math.min(MCV_L, Math.round(H[0] - T[0]));
+    if (L < 8) return;
+    const P = [[0, T[1]], [1, yb], [2, ya], [3, H[1]]], h = s.cv.height, tx = Math.round(T[0]);
+    for (let j = -4; j < L; j += 2) {
+      const yy = Math.round(rgCR(P, Math.max(0, j) / L)[1]);
+      c.drawImage(s.cv, s.ox + j, 0, 2, h, tx + j, yy - s.oy, 2, h);
+    }
+  }
+  // Roi đang vung nhanh: vẽ bằng nét thẳng nối nhau (đi được mọi hướng), có viền tối và vài chiếc lá.
+  function mcWhipLine(c, pts) {
+    const N = 14, q = [];
+    for (let i = 0; i <= N; i++) { const p = rgCR(pts, i / N); q.push([Math.round(p[0]), Math.round(p[1])]); }
+    const th = (i) => (i < 5 ? 4 : i < 10 ? 3 : 2);
+    for (let i = 0; i < N; i++) line(c, q[i][0] - 1, q[i][1] - 1, q[i + 1][0] - 1, q[i + 1][1] - 1, INK, th(i) + 2);
+    for (let i = 0; i < N; i++) line(c, q[i][0], q[i][1], q[i + 1][0], q[i + 1][1], GRN[1], th(i));
+    for (let i = 0; i < N; i++) line(c, q[i][0], q[i][1], q[i + 1][0], q[i + 1][1], GRN[2], 1);
+    for (let i = 2; i < N; i += 2) { px(c, q[i][0] - 1, q[i][1] - 3, 4, 3, INK); px(c, q[i][0], q[i][1] - 2, 2, 2, i & 2 ? TOX[2] : TOX[1]); }
+    const e = q[N]; px(c, e[0] - 2, e[1] - 2, 5, 5, INK); px(c, e[0] - 1, e[1] - 1, 3, 3, PURP[2]);
+  }
+  // Lá rơi quanh gốc (x, y): n lá, v là tiến độ 0..1, spread là độ toả ngang, fall là quãng rơi.
+  function mcLeaves(c, x, y, n, v, spread, seed, fall, dry) {
+    if (v <= 0 || v >= 1) return;
+    for (let i = 0; i < n; i++) {
+      const h1 = hsh(i + seed), h2 = hsh(i * 3 + seed + 5), vv = clamp01(v * 1.3 - h2 * 0.3);
+      if (vv <= 0 || vv >= 1) continue;
+      const lx = (h1 - 0.5) * 100 + (h1 - 0.5) * spread * vv + Math.sin(vv * 9 + i) * 5, ly = -120 + h2 * 34 + (fall || 110) * vv * vv - 10 * vv;
+      px(c, x + lx, y + ly, 2 + (i & 1), 1 + ((i >> 1) & 1), dry ? (i % 3 ? WD[1] : WD[2]) : i % 3 ? GRN[1] : TOX[2]);
+    }
+  }
+  // Làm tròn tư thế để các khung giống nhau dùng lại hình trong kho.
+  function mcQuant(Q) {
+    Q.lean = mcQz(Q.lean, 20); Q.slump = mcQz(clamp01(Q.slump), 6); Q.breath = mcQz(Q.breath, 2); Q.sway = mcQz(Q.sway, 2); Q.blink = Q.blink > 0.5 ? 1 : 0;
+    Q.mouth = mcQz(clamp01(Q.mouth), 10); Q.core = mcQz(clamp01(Q.core), 5); Q.eyeGlow = Q.eyeGlow > 0.5 ? 1 : 0;
+    for (const k of ['la1', 'la2', 'ra1', 'ra2']) Q[k] = Math.round(Q[k] / 2) * 2;
+    Q.gripL = mcQz(Q.gripL, 2); Q.gripR = mcQz(Q.gripR, 2); Q.dig = mcQz(Q.dig, 3); Q.pump = mcQz(Q.pump, 3); Q.shake = Math.round(Q.shake);
+    Q.thorn = mcQz(Q.thorn, 5); Q.burst = mcQz(Q.burst, 3); Q.footL = Q.footL > 0.5 ? 1 : 0; Q.footR = Q.footR > 0.5 ? 1 : 0; Q.crack = mcQz(Q.crack, 2); Q.pulse = mcQz(Q.pulse, 2);
+    Q.whip = 0; Q.fruit = 0; // roi và quả do phần này tự vẽ
+    return Q;
+  }
+  const mcKey = (Q, X) => { let k = (X.el || '') + (X.weak || '') + X.aR + X.aM + X.aD + X.phase; for (const f in Q) k += '|' + Q[f]; return k; };
+  // Chỗ quả mọc trên tán (tính từ gốc), theo thứ tự rụng.
+  const MC_FRUIT = [[-19, -96], [25, -95], [5, -99], [-39, -84], [41, -85]];
+
+  BDRAW.moc = function (c, b, t) {
+    const x = Math.round(b.x), y = Math.round(b.y), X = layersX(b), st = b.st || ST0, D = BOSS.moc;
+    if (b.dying != null) return mcDie(c, b, t, x, y, X, clamp01(b.dying));
+    const an = b.anim, a = an ? an.t : 0, j2 = Math.floor(t * 30) & 1, frozen = st.frozen > 0, leafy = X.phase < 1;
+    const Q = D.pose();
+    let jx = 0, dy = 0, urgent = false, whip = null;
+    const pre = [], post = []; // phần vẽ trước và sau thân
+    // ---- đứng yên: vòng lặp 16 khung (6 khung mỗi giây), mọi thứ suy ra từ i16 ----
+    // Chỉ lúc thật sự rảnh mới chạy vòng lặp này; đang ra đòn, gầm, mệt, đi, choáng thì các số nền đứng yên để số tư thế không nhân lên.
+    const calm = !an && !(b.roarT > 0) && !(b.exposed > 0) && !b.walking && !(st.stun > 0);
+    if (calm) {
+      const i16 = frozen ? 0 : Math.floor(t * 6) % 16, ph = (i16 / 16) * Math.PI * 2;
+      Q.lean = 0.1 * Math.sin(ph); Q.breath = 0.5 - 0.5 * Math.cos(ph * 2); Q.sway = Math.sin(ph);
+      Q.blink = i16 === 5 ? 1 : 0; Q.mouth = i16 === 11 || i16 === 12 ? 0.2 : 0; Q.core = i16 & 4 ? 0.4 : 0.2;
+      Q.la2 = 100 + 4 * Math.sin(ph); Q.ra2 = 100 + 4 * Math.sin(ph + 2);
+      Q.pulse = (i16 >> 1) & 1 ? 1 : 0; Q.crack = (i16 >> 2) & 1 ? 1 : 0.5;
+    } else { Q.core = 0.4; Q.pulse = 0.5; Q.crack = 1; }
+    if (b.exposed > 0) {
+      // mệt, thở dốc, lõi nhựa lòi ra: lúc để người chơi đánh
+      const k = Math.floor(t * 6) & 3;
+      Q.eye = 'tired'; Q.slump = k === 1 ? 0.83 : 1; Q.mouth = k & 1 ? 1 : 0.8; Q.core = 1; Q.lean = -0.25;
+      Q.la1 = 55; Q.la2 = 108; Q.ra1 = 55; Q.ra2 = 108; Q.pulse = k >> 1;
+    }
+    if (b.walking && !an) {
+      // lết từng bước: nghiêng qua lại, hai chân rễ thay nhau nhấc lên (vòng 12 khung)
+      const i12 = Math.floor(t * 10) % 12, s = Math.sin((i12 / 12) * Math.PI * 2);
+      Q.lean = 0.28 * s; Q.footL = s > 0.3 ? 1 : 0; Q.footR = s < -0.3 ? 1 : 0; dy = Math.abs(s) > 0.75 ? -1 : 0;
+      Q.la1 = 42 - 8 * s; Q.la2 = 100 + 10 * s; Q.ra1 = 42 + 8 * s; Q.ra2 = 100 - 10 * s; Q.sway = s; Q.crack = i12 % 6 < 3 ? 1 : 0.5;
+      if (!(b.exposed > 0)) { Q.eye = 'angry'; Q.mouth = 0.3; }
+      const ss = Math.sin(t * 5.236), v = Math.abs(ss) < 0.3 ? 1 - Math.abs(ss) / 0.3 : 0;
+      if (v > 0) post.push(() => { const fx = x + (ss > 0 ? 34 : -42); px(c, fx - 4, y - 2 - Math.round(v * 3), 2, 2, 'rgba(230,214,170,0.7)'); px(c, fx + 8, y - 1 - Math.round(v * 4), 2, 1, 'rgba(230,214,170,0.6)'); px(c, fx + 2, y - 3 - Math.round(v * 5), 1, 1, 'rgba(230,214,170,0.5)'); });
+    }
+    if (an) {
+      if (an.name === 'sweep') {
+        const F = an.fire, zc = (an.y0 + an.y1) / 2 - b.y, far = Math.min(-120, an.x0 - b.x + 30);
+        const aim = Math.atan2(zc + 62, 70) / D2R, L0 = F - 0.09, L1 = L0 + 0.14; // roi quất trong khoảng L0..L1, vắt qua đúng lúc F
+        Q.ra1 = 60; Q.ra2 = 110;
+        if (a < L0) {
+          // giơ tay ra sau lấy đà, dây leo mọc dài ra từ bàn tay
+          const k0 = smooth(clamp01(a / (F * 0.7))), k = mcQz(k0, 6);
+          Q.lean = 0.45 * k; Q.eye = 'angry'; Q.eyeGlow = k > 0.5 ? 1 : 0; Q.mouth = k > 0.5 ? 0.2 : 0; Q.core = 0.3 + 0.5 * k; Q.slump = 0;
+          Q.la1 = lerp(42, -55, k); Q.la2 = lerp(100, -105, Math.min(1, k * 1.8)); Q.stub = k > 0.3 ? 1 : 0;
+          if (a > F * 0.7) jx = j2;
+          if (k > 0.3) whip = { m: 'up', k: smooth(clamp01((k0 - 0.3) / 0.7)), q: a > F * 0.7 ? j2 * 2 - 1 : 0 };
+        } else {
+          Q.stub = 1; Q.slump = 0;
+          if (a < L1) {
+            // quất xuống
+            const v = (a - L0) / 0.14, h = v < 0.3 ? 0.4 : 1;
+            Q.lean = lerp(0.45, -0.6, h); Q.eye = 'angry'; Q.eyeGlow = 1; Q.mouth = 0.7; Q.core = 0.8;
+            Q.la1 = lerp(-55, aim + 6, h); Q.la2 = lerp(-105, aim - 6, h); urgent = true;
+            whip = { m: 'lash', v, zc, far };
+          } else if (a < F + 0.5) {
+            // roi nằm vắt ngang sân, bụi tung dọc đường quất
+            const v = (a - L1) / (F + 0.5 - L1);
+            Q.lean = v < 0.5 ? -0.6 : -0.45; Q.eye = 'angry'; Q.mouth = 0.7; Q.core = Math.max(Q.core, 0.8);
+            Q.la1 = aim + 6; Q.la2 = aim - 6; urgent = v < 0.2;
+            whip = { m: 'hold', v, zc, far, sh: v < 0.3 ? j2 : 0 };
+          } else {
+            // thu roi về, người sụp xuống
+            const v = smooth(clamp01((a - F - 0.5) / 0.45)), vq = mcQz(v, 4);
+            Q.lean = lerp(-0.45, -0.25, vq); Q.eye = vq > 0.4 ? 'tired' : 'angry'; Q.mouth = 0.8; Q.core = 1; Q.slump = vq;
+            Q.la1 = lerp(aim + 6, 55, vq); Q.la2 = lerp(aim - 6, 108, vq); Q.ra1 = lerp(60, 55, vq); Q.ra2 = lerp(110, 108, vq); Q.stub = vq < 1 ? 1 : 0;
+            if (v < 0.97) whip = { m: 'back', v, zc, far };
+          }
+        }
+      } else if (an.name === 'roots') {
+        // cắm hai tay xuống đất, bơm rễ; ụ đất chạy ngầm tới từng chỗ rễ sắp trồi
+        const m = Math.min(smooth(clamp01(a / 0.2)), smooth(clamp01((an.dur - a) / 0.3))), mq = mcQz(m, 3), beat = Math.floor(a * 10) % 4;
+        Q.eye = 'angry'; Q.mouth = 0.3 * mq; Q.slump = 0.8 * mq; Q.dig = mq; Q.lean = -0.15 * mq;
+        Q.la1 = lerp(42, 32, mq); Q.la2 = lerp(100, 86, mq); Q.ra1 = Q.la1; Q.ra2 = Q.la2; Q.gripL = Q.gripR = mq;
+        Q.pump = mq >= 1 ? beat / 3 : 0;
+        if (m > 0.5) { jx = j2 * 2 - 1; dy = beat === 3 ? 1 : 0; }
+        post.push(() => {
+          const sx = x - 58, sy = y - 1;
+          for (const h of an.hits) {
+            const u = (a - h.t) / h.fire;
+            if (u < 0 || u >= 1) continue;
+            const e = easeIn(u), mx = Math.round(lerp(sx, h.x, e)), my = Math.round(lerp(sy, h.y, e)), hx = Math.round(h.x), hy = Math.round(h.y);
+            for (let i = 0; i < 10; i++) { const k = (i / 10) * e; if ((i + Math.floor(a * 20)) % 3) px(c, lerp(sx, h.x, k), lerp(sy, h.y, k) + (i % 2), 3, 1, 'rgba(30,18,12,0.7)'); }
+            ell(c, mx, my - 2, 6, 3, INK); ell(c, mx, my - 2, 5, 2, rgSOIL[1]); px(c, mx - 4, my - 1, 9, 2, rgSOIL[0]); px(c, mx - 2, my - 4, 4, 1, rgSOIL[2]);
+            px(c, mx + 6 + (j2 ? 1 : 0), my - 4 - j2, 2, 2, rgSOIL[2]); px(c, mx - 8 - j2, my - 3, 1, 1, rgSOIL[1]);
+            if (u > 0.75) { px(c, hx - 6 + j2 * 2, hy - 3 - j2, 2, 2, rgSOIL[1]); px(c, hx + 4 - j2 * 2, hy - 2 - j2, 2, 2, rgSOIL[2]); px(c, hx - 1, hy - 4 - j2 * 2, 2, 2, rgSOIL[0]); }
+          }
+        });
+      } else if (an.name === 'fruit') {
+        // giơ hai tay rung tán: quả chín dần rồi rụng, bay tới chỗ đã báo
+        const k = clamp01(1 - a / 0.75), up = smooth(clamp01(a / 0.15)) * smooth(clamp01((an.dur - a) / 0.3)), uq = mcQz(up, 3);
+        const shake = k > 0 ? (Math.floor(a * 12) & 1 ? 1 : -1) * Math.round(3 * k) : 0;
+        Q.shake = shake; Q.eye = 'angry'; Q.mouth = 0.5 * uq;
+        Q.la1 = lerp(42, -58, uq); Q.la2 = lerp(100, -82, Math.min(1, uq * 1.8)); Q.ra1 = Q.la1; Q.ra2 = Q.la2; Q.gripL = Q.gripR = uq > 0.5 ? 0.5 : 0;
+        if (k > 0.4) jx = j2;
+        post.push(() => {
+          an.shots.forEach((s, i) => {
+            const f = MC_FRUIT[i % 5], t0 = 0.22 + i * 0.06, sx = x + f[0], z0 = -f[1];
+            if (a < t0) {
+              const kk = clamp01(a / t0), r = kk > 0.6 ? 3 : 2;
+              px(c, sx + shake, y - z0 - r - 3, 1, 3, INK); blob(c, sx + shake, y - z0, r, kk > 0.6 ? PURP : TOX);
+            } else lob(c, sx, y, z0, s.x, s.y, (a - t0) / (s.land - t0), 34, PURP, true);
+          });
+          mcLeaves(c, x, y, leafy ? 8 : 3, clamp01(a / 0.9), 30, 11, 110, !leafy);
+        });
+      } else if (an.name === 'thorn') {
+        // gồng người, gai quanh gốc dựng dần rồi bung ra
+        const u = clamp01(a / an.fire), aft = a - an.fire, uq = mcQz(smooth(u), 5);
+        Q.eye = 'angry'; Q.lean = -0.15 * uq;
+        Q.la1 = lerp(42, 70, uq); Q.la2 = lerp(100, 40, uq); Q.ra1 = Q.la1; Q.ra2 = Q.la2; Q.gripL = Q.gripR = uq;
+        if (aft < 0) { Q.thorn = uq; Q.slump = 0.5 * uq; if (u > 0.6) jx = j2; dy = u > 0.5 ? 1 : 0; }
+        else if (aft < 0.15) { Q.thorn = 1; Q.burst = 1; Q.slump = 0.67; Q.mouth = 0.7; dy = 2; urgent = true; }
+        else { const d = mcQz(Math.max(0, 1 - (aft - 0.15) / 0.33), 3); Q.thorn = d; Q.burst = 0; Q.slump = 0.5 * d; Q.mouth = aft < 0.3 ? 0.7 : 0; }
+      }
+    }
+    // ---- gầm: gọi bầy, hoặc lúc đổi giai đoạn (to hơn, lá rụng đầy sân) ----
+    let roar = an && an.name === 'summon' ? clamp01(a / 0.75) : 0, big = false;
+    if (b.roarT > 0) { roar = Math.max(roar, clamp01(1 - b.roarT / 1.2)); big = true; }
+    if (roar > 0 && roar < 1) {
+      const n = big ? 12 : 8, r = Math.floor(roar * n) / n; // nấc của tư thế
+      const tail = r > 0.8 ? (1 - r) / 0.2 : 1;
+      Q.lean = (r < 0.2 ? 0.4 * (r / 0.2) : lerp(0.4, -0.4, smooth(clamp01((r - 0.2) / 0.25)))) * tail;
+      Q.mouth = r < 0.15 ? 0.5 : 1; Q.core = 0.6; Q.eye = 'angry'; Q.eyeGlow = 1; Q.slump = 0;
+      if (roar > 0.2 && roar < 0.85) jx = j2 * 2 - 1;
+      if (!an || an.name === 'summon') {
+        const k = smooth(clamp01(r / 0.25)) * tail;
+        Q.la1 = lerp(42, -30, k); Q.la2 = lerp(100, -70, Math.min(1, k * 1.8)); Q.ra1 = Q.la1; Q.ra2 = Q.la2;
+      }
+      post.push(() => {
+        const mx = x + Math.round(Q.lean * 5);
+        for (let i = 0; i < 3; i++) { const v = clamp01((roar - 0.22 - i * 0.14) / 0.45); if (v > 0 && v < 1) ring(c, mx - 16 - 64 * v, y - 36, 5 + 12 * v, 10 + 22 * v, 'rgba(236,255,200,' + (0.75 * (1 - v)).toFixed(2) + ')', 2); }
+        mcLeaves(c, x, y, big ? 30 : 12, roar, big ? 190 : 60, 3, big ? 150 : 110, !leafy && !(big && b.roarPh === 1));
+      });
+    }
+    if (st.stun > 0) { Q.eye = 'dazed'; Q.sway = Math.floor(t * 6) & 1 ? 1 : -1; Q.lean += 0.14 * Math.round(Math.sin(t * 9)); Q.eyeGlow = 0; }
+    if (b.flash > 0) jx += 1;
+    // ---- lấy hình: tư thế đổi không quá khoảng 13 lần mỗi giây, trừ lúc cần khớp đúng khoảnh khắc ra đòn ----
+    mcQuant(Q);
+    const mm = b._mm || (b._mm = { key: '', s: null, Q: null, tc: -9, loop: new Map() }), key = mcKey(Q, X);
+    if (!mm.s || (key !== mm.key && (urgent || t - mm.tc >= 0.075 || t < mm.tc))) {
+      // hình của vòng lặp đứng yên và bước đi giữ riêng theo từng con trùm, để kho chung có đẩy ra thì cũng không phải dựng lại
+      const keep = calm || (b.walking && !an && !(b.roarT > 0) && !(b.exposed > 0) && !(st.stun > 0));
+      let s = keep ? mm.loop.get(key) : null;
+      if (!s) { s = bossSpr('moc', Q, X); if (keep) { if (mm.loop.size > 40) mm.loop.clear(); mm.loop.set(key, s); } }
+      mm.s = s; mm.Q = Q; mm.key = key; mm.tc = t;
+    }
+    const s = mm.s, bx = x + jx, by = y + dy;
+    ell(c, x, y, 48, 5, 'rgba(0,0,0,0.35)');
+    for (const fn of pre) fn();
+    if (frozen) { c.save(); c.translate(bx, by); halo(c, s, '#e9f9ff'); blitT(c, 'tint', s.cv, -s.ox, -s.oy, '#a8dcf5', 0.6); c.restore(); }
+    else blit(c, s, bx, by, { tint: b.flash > 0 ? ['#fff6dc', 0.35] : null });
+    // ---- roi dây leo nối từ bàn tay trái ----
+    if (whip) {
+      const A = D.anchor(mm.Q), H = [bx + A.handL[0], by + A.handL[1]];
+      if (whip.m === 'up') {
+        // dây vắt ngược ra sau, phía trên tán
+        const k = whip.k, T = [H[0] + 62 * k, H[1] - 24 * k + whip.q];
+        mcWhipLine(c, [H, [lerp(H[0], T[0], 0.3), H[1] - 16 * k - whip.q], [lerp(H[0], T[0], 0.7), T[1] - 10 * k + whip.q], T]);
+      } else if (whip.m === 'lash') {
+        // ngọn roi vòng qua đầu rồi quất xuống sân; ba vệt mờ bám theo
+        const tx = x + whip.far, ty = y + whip.zc, R1 = Math.hypot(tx - H[0], ty - H[1]), a1 = Math.atan2(ty - H[1], tx - H[0]) - (ty > H[1] ? Math.PI * 2 : 0);
+        // góc quay xong đúng lúc đòn nổ (v = 0.42), sau đó roi mới duỗi hết chiều dài
+        const pa = (v) => smooth(clamp01(v / 0.42)), pr = (v) => easeIn(clamp01(v / 0.75));
+        const at = (v, f, lag) => { const ang = lerp(-0.4, a1, pa(v)) + lag * (1 - pa(v)), R = lerp(66, R1, pr(v)) * f; return [H[0] + Math.cos(ang) * R, H[1] + Math.sin(ang) * R]; };
+        for (let i = 3; i >= 1; i--) { const v2 = whip.v - i * 0.07; if (v2 > 0) { const p = at(v2, 1, 0), q = at(v2, 0.45, 0.4); line(c, Math.round(q[0]), Math.round(q[1]), Math.round(p[0]), Math.round(p[1]), 'rgba(236,255,200,' + (0.45 - i * 0.1).toFixed(2) + ')', 2); } }
+        mcWhipLine(c, [H, at(whip.v, 0.4, 0.5), at(whip.v, 0.75, 0.22), at(whip.v, 1, 0)]);
+      } else {
+        const tx = x + whip.far, ty = y + whip.zc;
+        if (whip.m === 'hold') {
+          const sh = whip.sh;
+          mcWhipStrip(c, H, [tx, ty], lerp(H[1], ty, 0.7) - 5 + sh, ty - 3 - sh);
+          const v = whip.v;
+          if (v < 0.25) { const al = (1 - v / 0.25).toFixed(2); px(c, tx, ty - 1, Math.round(H[0] - tx) - 20, 2, 'rgba(255,255,255,' + al + ')'); px(c, tx + 10, ty - 6, Math.round(H[0] - tx) - 60, 1, 'rgba(236,255,200,' + al + ')'); px(c, tx + 10, ty + 5, Math.round(H[0] - tx) - 60, 1, 'rgba(236,255,200,' + al + ')'); }
+          const nD = Math.max(6, Math.round((H[0] - tx) / 34));
+          for (let i = 0; i < nD; i++) { // bụi đất dọc đường roi quất
+            const dx = lerp(H[0] - 30, tx, i / (nD - 1)), h = hsh(i + 1), vv = clamp01(v * 1.6 - h * 0.3);
+            if (vv > 0 && vv < 1) { px(c, dx + (h - 0.5) * 10, ty - 4 - 18 * vv + 12 * vv * vv, 2, 2, 'rgba(230,214,170,' + (0.9 * (1 - vv)).toFixed(2) + ')'); px(c, dx + 5, ty - 2 - 10 * vv, 1, 1, '#8a6a44'); px(c, dx - 7 + h * 6, ty + 2 - 7 * vv, 2, 1, 'rgba(230,214,170,' + (0.6 * (1 - vv)).toFixed(2) + ')'); }
+          }
+        } else {
+          // rút roi về: ngọn chạy ngược về bàn tay
+          const v = whip.v, T = [lerp(tx, H[0] - 6, v), lerp(ty, H[1] + 8, v)];
+          mcWhipStrip(c, H, T, lerp(H[1], T[1], 0.7) - 5 * (1 - v), T[1] - 3 * (1 - v));
+        }
+      }
+    }
+    // ---- hiệu ứng nhẹ quanh thân ----
+    if (b.exposed > 0 && mm.Q.core >= 0.8) {
+      // lõi nhựa đập: vòng sáng nhấp nháy và nhựa nhỏ giọt, cho thấy đây là lúc đánh
+      const A = D.anchor(mm.Q), mx = bx + Math.round(A.mouth[0]), my = by + Math.round(A.mouth[1]) + 6, k = (t * 2.2) % 1;
+      ring(c, mx, my, 9 + 9 * k, 9 + 9 * k, hexA(ELP.poison.glow, 0.8 * (1 - k)), 1);
+      for (let i = 0; i < 3; i++) { const v = (t * 1.3 + i * 0.37) % 1; px(c, mx - 5 + i * 5, my + 9 + v * v * 26, 2, v < 0.5 ? 3 : 2, hexA(ELP.poison.B[1], 1 - v)); }
+    }
+    if (!frozen) {
+      if (leafy) mcLeaves(c, x, y, 2, (t * 0.35) % 1, 20, Math.floor(t * 0.35), 110, false);
+      else for (let i = 0; i < 3; i++) { const ly = (t * 16 + i * 37) % 110; px(c, x - 34 + i * 30 + Math.sin(t * 2 + i) * 5, y - 118 + ly, 2, 1, i & 1 ? WD[2] : MOSS[1]); }
+    }
+    for (const fn of post) fn();
+    drawFx(c, b);
+  };
+
+  // Mộc Tinh gục: nứt toác từ lõi, lõi tắt, thân tách đôi đổ sang hai bên, còn lại gốc cụt bốc khói.
+  const MC_CRACK = [[0, -34], [-3, -46], [2, -58], [-2, -70], [3, -82], [-1, -96], [2, -110], [0, -122], [0, -34], [3, -26], [-2, -18], [2, -9], [0, 0]];
+  function mcDie(c, b, t, x, y, X, k) {
+    const D = BOSS.moc, SAP = ELP.poison, leafy = X.phase < 1;
+    const A0 = 0.42, u = clamp01(k / A0), v = clamp01((k - A0) / (1 - A0)), uq = mcQz(u, 3);
+    const Q = D.pose();
+    Q.eye = k > 0.3 ? 'dead' : 'angry'; Q.mouth = 1; Q.core = k > 0.3 ? 0 : (Math.floor(t * 10) & 1 ? 1 : 0.6); Q.eyeGlow = k > 0.3 ? 0 : 1; Q.lookX = 0;
+    Q.slump = 0.5 * uq; Q.la1 = lerp(42, 78, uq); Q.la2 = lerp(100, 102, uq); Q.ra1 = Q.la1; Q.ra2 = Q.la2; Q.crack = 1; Q.pulse = 0;
+    mcQuant(Q);
+    const s = bossSpr('moc', Q, X), w = s.cv.width, h = s.cv.height;
+    ell(c, x, y, 48 + 20 * v, 5, 'rgba(0,0,0,' + (0.35 * (1 - v * 0.6)).toFixed(2) + ')');
+    // ghép thân và vết nứt vào một khung nháp để tách đôi
+    const g = scr('mocAll', w, h);
+    g.drawImage(s.cv, 0, 0);
+    g.globalCompositeOperation = 'source-atop';
+    const hot = k < 0.33, n = Math.round((MC_CRACK.length - 1) * clamp01(u * 1.3));
+    for (let i = 0; i < n; i++) {
+      if (i === 7) continue;
+      const a0 = MC_CRACK[i], a1 = MC_CRACK[i + 1], x0 = s.ox + a0[0], y0 = s.oy + a0[1], x1 = s.ox + a1[0], y1 = s.oy + a1[1];
+      line(g, x0 - 1, y0, x1 - 1, y1, hot ? SAP.B[1] : '#160e0c', 3);
+      if (hot) line(g, x0, y0, x1, y1, SAP.hot, 1);
+      if (i % 2) line(g, x1, y1, x1 + (i % 4 === 1 ? 8 : -8), y1 - 5, hot ? SAP.glow : '#160e0c', 1);
+    }
+    g.globalCompositeOperation = 'source-over';
+    let img = g.canvas;
+    if (k > 0.3 && k < 0.36) img = tinted('mt', img, '#ffffff', 0.7); // loé sáng lúc lõi tắt
+    else if (k >= 0.36) img = tinted('mt', img, '#120c0c', Math.min(0.55, 0.25 + v * 0.4));
+    if (k < A0) {
+      // rung bần bật, tia nhựa sáng bắn ra từ các vết nứt
+      const j = (Math.floor(t * 30) & 1) * 2 - 1;
+      c.drawImage(img, 0, 0, w, h, x - s.ox + j * (u > 0.5 ? 2 : 1), y - s.oy, w, h);
+    } else {
+      // hai nửa đổ sang hai bên, nảy nhẹ khi chạm đất
+      const fall = easeIn(clamp01(v / 0.62)), bounce = v > 0.62 && v < 0.8 ? Math.sin(((v - 0.62) / 0.18) * Math.PI) * 0.06 : 0;
+      const ang = (Math.PI / 2 - 0.12) * fall - bounce, al = v > 0.94 ? 0.35 : v > 0.88 ? 0.6 : v > 0.82 ? 0.85 : 1;
+      c.save(); c.globalAlpha *= al;
+      c.save(); c.translate(x - 27, y); c.rotate(-ang); c.drawImage(img, 0, 0, s.ox, h, -s.ox + 27, -s.oy, s.ox, h); c.restore();
+      c.save(); c.translate(x + 27, y); c.rotate(ang * 0.92); c.drawImage(img, s.ox, 0, w - s.ox, h, -27, -s.oy, w - s.ox, h); c.restore();
+      c.restore();
+      const sp = mcStump(); c.drawImage(tinted('mt', sp.cv, '#120c0c', 0.3), 0, 0, sp.cv.width, sp.cv.height, x - sp.ox, y - sp.oy, sp.cv.width, sp.cv.height);
+      for (let i = 0; i < 8; i++) { // khói và tàn nhựa bốc lên từ lõi
+        const bu = clamp01(v * 1.6 - i * 0.1);
+        if (bu > 0 && bu < 1) px(c, x - 12 + i * 4 + Math.sin(bu * 6 + i) * 5, y - 10 - bu * 70, bu < 0.4 ? 3 : 2, bu < 0.4 ? 3 : 2, bu < 0.25 ? SAP.glow : i % 2 ? '#5a4a44' : '#3a302c');
+      }
+      if (v > 0.6) { c.save(); c.translate(x - 84, y - 6); bits(c, 12, (v - 0.6) / 0.4, 36, '#8a6a44', GRN[1], 0.6, 16); c.translate(168, 0); bits(c, 12, (v - 0.6) / 0.4, 36, '#8a6a44', GRN[1], 2.6, 16); c.restore(); }
+    }
+    mcLeaves(c, x, y, leafy ? 34 : 10, clamp01(k * 1.15), 150, 7, 150, !leafy);
+    c.save(); c.translate(x, y - 42); for (let i = 0; i < 3; i++) bits(c, 9, (u - i * 0.3) / 0.45, 48, SAP.glow, BARK[2], i * 2.2 + 0.4, 20); c.restore();
+  }
+
+  // ====================================================================
+  // 8B. NGƯ TINH TRONG GAME
+  // Đòn: charge (lặn rồi lao ngang từng hàng), spout (phun bọc nước), wave (đập đuôi tạo sóng), dive (lặn rồi trồi lên dưới chân),
+  // spikes (dựng gai bung ra). Thêm: gầm lúc nước dâng, mệt lộ mang, choáng, gục.
+  // ====================================================================
+  const NGF = {};
+  // Vây lưng rẽ nước lúc cá đang lặn.
+  function nguFinSpr(small) {
+    const k = small ? 's' : 'b';
+    if (NGF[k]) return NGF[k];
+    const S = new Spr(48, 40, 24, 34);
+    S.part((s) => {
+      if (small) s.g([[-6, 0], [-3, -8], [1, -13], [3, -7], [7, 0]], ICE);
+      else s.g([[-10, 0], [-7, -9], [-2, -17], [2, -24], [5, -14], [8, -8], [12, 0]], ICE);
+      s.in(() => { if (small) { s.l(0, -11, -2, -1, 1, Dk(ICE)); s.l(2, -7, 3, -1, 1, Dk(ICE)); } else { s.l(1, -21, -3, -1, 1, Dk(ICE)); s.l(4, -13, 4, -1, 1, Dk(ICE)); s.l(-5, -9, -6, -1, 1, Dk(ICE)); s.l(2, -23, 2, -18, 1, Lt(FOAM)); } });
+    });
+    S.finish();
+    return (NGF[k] = S.toCanvas());
+  }
+  function nguFin(c, x, y, t, small, shake) {
+    const fx = Math.round(Math.sin(t * 3) * 3) + (shake ? (Math.floor(t * 30) & 1) : 0), f = Math.floor(t * 6) % 2;
+    x = Math.round(x); y = Math.round(y);
+    ell(c, x, y + (small ? 2 : 3), small ? 16 : 46, small ? 3 : 6, 'rgba(8,18,34,0.4)');
+    const s = nguFinSpr(small);
+    c.drawImage(s.cv, x + fx - s.ox, y - s.oy);
+    const w = small ? 14 : 34;
+    px(c, x - (w >> 1), y - 1, w, 2, 'rgba(225,245,255,0.9)');
+    px(c, x - (w >> 1) - 8 - f * 2, y + 1, 10, 1, 'rgba(210,240,252,0.6)');
+    px(c, x + (w >> 1) - 2 + f * 2, y + 1, 10, 1, 'rgba(210,240,252,0.6)');
+    if (!small) px(c, x - 12 + f * 3, y + 3, 8, 1, 'rgba(210,240,252,0.4)');
+  }
+  // Bọt và sóng quanh thân. back = true là lớp bóng nước phía sau; false là bọt phía trước.
+  function nguFoam(c, x, y, t, f, back, wild) {
+    if (back) { ell(c, x, y + 1, 80, 7, 'rgba(8,18,34,0.38)'); ell(c, x, y + 1, 74, 5, 'rgba(120,190,225,0.42)'); return; }
+    const k = Math.floor(t * 5) % 2;
+    for (const q of [[-72, 2, 16], [-46, 4, 22], [-14, 3, 18], [18, 5, 24], [48, 3, 16], [70, 1, 10]]) px(c, x + f * q[0] - q[2] / 2 + (k ? 3 : 0), y + q[1], q[2], 2, 'rgba(234,248,255,0.92)');
+    for (const q of [[-58, 7, 20], [-20, 8, 26], [30, 9, 22], [64, 6, 12], [-90, 4, 10], [88, 4, 10]]) px(c, x + f * q[0] - q[2] / 2 - (k ? 3 : 0), y + q[1], q[2], 1, 'rgba(159,212,240,0.8)');
+    const n = wild ? 10 : 6;
+    for (let i = 0; i < n; i++) { const v = (t * (0.7 + (i % 3) * 0.2) + i * 0.37) % 1; px(c, x - 84 + ((i * 53) % 168), y + 1 - Math.round(v * (wild ? 12 : 7)), 2, 2, 'rgba(255,255,255,' + (0.9 * (1 - v)).toFixed(2) + ')'); }
+  }
+  // Dán con cá: (x, y) là mặt nước dưới bụng. o.f hướng mặt (1 phải, -1 trái), o.pitch ngóc đầu (radian, dương là đầu lên),
+  // o.px, o.py tâm xoay (hệ quay mặt sang phải), o.sx, o.sy co giãn quanh giữa thân, o.clipY cắt phần chìm.
+  function nguBlit(c, s, x, y, o) {
+    c.save();
+    if (o.clipY != null) { c.beginPath(); c.rect(x - 320, o.clipY - 420, 640, 420); c.clip(); }
+    c.translate(Math.round(x + (o.dx || 0)), Math.round(y + (o.dy || 0)));
+    c.scale(o.f < 0 ? -1 : 1, 1);
+    if (o.pitch) { const ax = o.px || 0, ay = o.py == null ? -24 : o.py; c.translate(ax, ay); c.rotate(-o.pitch); c.translate(-ax, -ay); }
+    if ((o.sx && o.sx !== 1) || (o.sy && o.sy !== 1)) { c.translate(0, -24); c.scale(o.sx || 1, o.sy || 1); c.translate(0, 24); }
+    if (o.alpha != null) c.globalAlpha *= o.alpha;
+    if (o.sil) blitT(c, 'sil', s.cv, -s.ox, -s.oy, o.sil, 1, 'source-in');
+    else if (o.tint) blitT(c, 'tint', s.cv, -s.ox, -s.oy, o.tint[0], o.tint[1]);
+    else c.drawImage(s.cv, -s.ox, -s.oy);
+    c.restore();
+  }
+  const qz = (v, n) => Math.round(v * n) / n;
+  // Làm tròn tư thế để các khung giống nhau dùng lại hình trong kho.
+  function nguQ(Q) {
+    Q.jaw = qz(clamp01(Q.jaw), 6); Q.tail = qz(Math.max(-1, Math.min(1, Q.tail)), 6); Q.up = qz(Math.max(0, Q.up), 5); Q.red = Q.red > 0.5 ? 1 : 0;
+    Q.wh = qz(Q.wh, 3); Q.puff = qz(Q.puff, 2); Q.glow = Q.glow > 0.5 ? 1 : 0; Q.pf = qz(Q.pf, 2); Q.pulse = Q.pulse > 0.5 ? 1 : 0; Q.orb = qz(Q.orb, 8); Q.blink = Q.blink > 0.5 ? 1 : 0;
+    return Q;
+  }
+  BDRAW.ngu = function (c, b, t) {
+    const x = Math.round(b.x), y = Math.round(b.y), W = (G.getWorld && G.getWorld()) || {}, cam = W.cam || 0;
+    const dying = b.dying != null ? clamp01(b.dying) : null;
+    const an = dying != null ? null : b.anim, a = an ? an.t : 0;
+    const f = b.face > 0 ? 1 : -1, X = layersX(b), j2 = Math.floor(t * 30) & 1;
+    // tư thế mặc định: bơi tại chỗ, nhấp nhô, há ngậm miệng, mang phập phồng, râu phất (vòng lặp 2 giây, 16 khung)
+    const i16 = Math.floor(t * 8) % 16, ph = (i16 / 16) * Math.PI * 2;
+    const Q = { jaw: 0.17 + 0.12 * Math.sin(ph), tail: 0.16 * Math.sin(ph * 2), up: 0, red: 0, eye: 'normal', blink: t % 3.9 < 0.12 ? 1 : 0, look: 1, gill: Math.sin(ph) > 0.3 ? 1 : 0, pf: (i16 >> 2) & 1 ? 0.5 : 0, wh: Math.sin(ph + 1) * 0.67, puff: 0, glow: 0, pulse: (i16 >> 2) & 1, orb: i16 / 16 };
+    const O = { f, dy: Math.round(Math.sin(t * 1.7) * 2), dx: 0, pitch: 0, px: 0, py: -24, sx: 1, sy: 1, clipY: y + 4 };
+    let body = true, fin = null, foam = true;
+    const post = []; // phần vẽ sau thân (nước bắn, đạn nước...)
+    if (b.spikes) { Q.up = 0.6; Q.red = 1; }
+    if (b.exposed > 0 && dying == null) {
+      // nổi lên thở dốc, lộ mang
+      Q.jaw = 0.55 + 0.3 * (Math.floor(t * 8) & 1); Q.eye = 'dazed'; Q.gill = 2; O.dy += 2; Q.tail = 0.2 * Math.sin(t * 8);
+      const v = (t * 1.6) % 1;
+      post.push(() => { px(c, x + f * (78 + v * 12), y - 26 - v * 10, 2, 2, 'rgba(225,245,255,' + (0.8 * (1 - v)).toFixed(2) + ')'); px(c, x + f * (72 + v * 8), y - 16 - v * 16, 2, 2, 'rgba(225,245,255,0.7)'); });
+    }
+    if (b.st && b.st.stun > 0 && dying == null) { Q.eye = 'dazed'; O.pitch = Math.sin(t * 9) * 0.04; }
+    const surface = (v) => {
+      // trồi lên khỏi mặt nước
+      v = clamp01(v);
+      O.dy = Math.round(50 * (1 - easeOut(v)) - 6 * Math.sin(v * Math.PI)); O.pitch = 0.18 * (1 - v); Q.jaw = 0.8;
+      post.push(() => splash(c, x + f * 10, y, v, 66, 18));
+    };
+    const dive = (v) => {
+      // chúi đầu lặn xuống
+      O.pitch = -0.55 * easeOut(v); O.dy = Math.round(56 * easeIn(v)); O.dx = f * Math.round(10 * v); Q.jaw = 0; Q.tail = 0.7 * v;
+      post.push(() => splash(c, x + f * 30, y, v, 52, 12));
+    };
+    if (an) {
+      if (an.name === 'spout') {
+        // ngửa đầu, phồng má rồi phun từng bọc nước
+        const first = an.shots.length ? an.shots[0].land - 0.5 : 0.35, last = an.shots.length ? an.shots[an.shots.length - 1].land - 0.5 : 0.5;
+        const up = smooth(clamp01(a / first)) * smooth(clamp01((an.dur - a) / 0.4));
+        O.pitch = 0.3 * up; O.px = -30; O.py = -8; Q.eye = 'angry';
+        Q.jaw = 0; Q.puff = a < first ? clamp01(a / first * 1.5) : 0;
+        if (a >= first && a < last + 0.12) { Q.jaw = 0.66; Q.glow = 1; }
+        for (const s of an.shots) { const d0 = a - (s.land - 0.5); if (d0 >= 0 && d0 < 0.07) { O.dx = -f * 3; Q.jaw = 1; } }
+        const mx = x + f * 60, mz = 30 + 30 * up;
+        post.push(() => { for (const s of an.shots) lob(c, mx, y, mz, s.x, s.y, (a - (s.land - 0.5)) / 0.5, 30, ICE, true); });
+      } else if (an.name === 'wave') {
+        // vểnh đuôi lên rồi đập xuống tạo sóng
+        for (const s of an.slaps) {
+          const pre = a - (s - 0.55), aft = a - s;
+          if (pre >= 0 && aft < 0) { const r = smooth(clamp01(pre / 0.45)); Q.tail = r; O.pitch = -0.1 * r; O.px = 20; Q.eye = 'angry'; if (pre > 0.45) O.dx = j2; }
+          else if (aft >= 0 && aft < 0.45) {
+            const r = clamp01(aft / 0.12);
+            Q.tail = aft < 0.25 ? lerp(1, -0.6, easeOut(r)) : 0; O.pitch = 0.06 * (1 - clamp01(aft / 0.3)); O.dy += aft < 0.15 ? 2 : 0; Q.jaw = 0.66; Q.eye = 'angry';
+            const tx = x - f * 74, v = aft / 0.45;
+            post.push(() => { splash(c, tx, y, v, 48, 16); const fx2 = lerp(tx, x + f * 50, easeOut(v)); px(c, fx2 - 6, y + 2, 12, 1, 'rgba(225,245,255,' + (0.8 * (1 - v)).toFixed(2) + ')'); px(c, fx2 - 3, y + 5, 8, 1, 'rgba(225,245,255,0.5)'); });
+          }
+        }
+      } else if (an.name === 'spikes') {
+        // gai dựng dần rồi bung ra
+        const u = clamp01(a / an.fire), aft = a - an.fire;
+        Q.red = 1; Q.eye = 'angry';
+        if (aft < 0) { Q.up = 0.8 * smooth(u); O.dx = u > 0.5 ? j2 : 0; O.dy += Math.round(2 * u); Q.jaw = 0.3 * u; }
+        else if (aft < 0.14) { Q.up = 1.6; O.dy -= 2; Q.jaw = 0.9; }
+        else { Q.up = Math.max(0, 1.6 * (1 - (aft - 0.14) / 0.25)); Q.red = aft < 0.3 ? 1 : 0; }
+        if (aft >= 0 && aft < 0.22) {
+          const v = aft / 0.22, zx = an.zx, zy = an.zy, r = an.r;
+          post.push(() => {
+            for (let i = 0; i < 16; i++) {
+              const ang = i * 0.3927 + 0.2, r0 = r * (0.25 + 0.7 * v), r1 = r * (0.4 + 0.7 * v);
+              line(c, Math.round(zx + Math.cos(ang) * r0), Math.round(zy - 14 * (1 - v) + Math.sin(ang) * r0 * 0.6), Math.round(zx + Math.cos(ang) * r1), Math.round(zy - 14 * (1 - v) + Math.sin(ang) * r1 * 0.6), i % 2 ? '#fff0c0' : '#e8492a', 2);
+            }
+          });
+        }
+      } else if (an.name === 'charge' || an.name === 'dive') {
+        body = false; foam = false;
+        if (a < an.dive) { body = true; dive(a / an.dive); }
+        else if (a >= an.up) {
+          body = true; foam = true;
+          const v = (a - an.up) / 0.4;
+          if (v < 1) surface(v);
+        } else if (a > an.up - 0.35) fin = [x, y, false, a > an.up - 0.12];
+        if (an.name === 'charge') {
+          for (const r of an.rows) {
+            const tt = a - r.t;
+            if (tt < 0) continue;
+            const uu = tt / r.fire, D = 0.36;
+            const xs = r.dir < 0 ? cam + 500 : cam - 20, xe = r.dir < 0 ? cam - 110 : cam + 590;
+            if (uu < 1) {
+              // vây lượn vào đầu hàng, rung lên trước khi lao
+              const fx2 = xs + r.dir * (26 + 44 * smooth(uu));
+              fin = [fx2, r.y, false, uu > 0.7];
+              post.push(() => { for (let i = 0; i < 4; i++) { const k = (uu * 3 + i * 0.25) % 1; px(c, fx2 - r.dir * (14 + k * 30), r.y - 3 + (i % 2) * 5, 6, 1, 'rgba(225,245,255,' + (0.7 * (1 - k)).toFixed(2) + ')'); } });
+            } else if (tt < r.fire + D + 0.25) {
+              // cả thân vọt qua hàng, nước rẽ thành vệt
+              const vv = (tt - r.fire) / D, bx = lerp(xs + r.dir * 40, xe, vv);
+              post.push(() => {
+                for (let i = 0; i < 14; i++) {
+                  const sx = lerp(xs, xe, i / 13);
+                  if (r.dir < 0 ? sx < bx : sx > bx) continue;
+                  const age = clamp01((tt - r.fire) / (D + 0.25) - (i / 13) * 0.5), h = hsh(i + 3);
+                  px(c, sx, r.y - 2 + h * 6, 16, 1, 'rgba(225,245,255,' + (0.85 * (1 - age)).toFixed(2) + ')');
+                  px(c, sx + h * 10, r.y - 6 - 22 * age + 30 * age * age - h * 6, 2, 2, 'rgba(191,234,255,' + (0.9 * (1 - age)).toFixed(2) + ')');
+                  px(c, sx + 8 - h * 6, r.y - 3 - 14 * age + 20 * age * age, 1, 1, '#ffffff');
+                }
+                if (vv < 1) {
+                  const s2 = bossSpr('ngu', nguQ(Object.assign({}, Q, { jaw: 1, eye: 'angry', tail: 0.3 * Math.sin(t * 40), up: 0.3, gill: 1, blink: 0 })), X);
+                  const o2 = { f: r.dir, dy: -Math.round(12 * Math.sin(vv * Math.PI)) + 6, pitch: 0.14 * Math.cos(vv * Math.PI), clipY: r.y + 5, sx: 1.06, sy: 0.95 };
+                  ell(c, bx, r.y, 64, 5, 'rgba(8,18,34,0.3)');
+                  nguBlit(c, s2, bx - r.dir * 26, r.y, Object.assign({}, o2, { alpha: 0.3, sil: '#e9f9ff' }));
+                  nguBlit(c, s2, bx, r.y, o2);
+                  px(c, bx + r.dir * 72 - 8, r.y - 1, 16, 2, '#ffffff');
+                  px(c, bx + r.dir * 60 - 6, r.y + 3, 12, 1, '#e9f9ff');
+                }
+              });
+            }
+          }
+        } else if (an.tx != null) {
+          const tx = Math.round(an.tx), ty = Math.round(an.ty), tt = a - an.dive;
+          if (a < an.fire) {
+            // bóng đen lớn dần dưới chân, vây lượn vòng
+            const u = clamp01(tt / (an.fire - an.dive));
+            post.push(() => {
+              ell(c, tx, ty, 8 + 22 * u, 4 + 12 * u, 'rgba(8,18,34,' + (0.4 + 0.35 * u).toFixed(2) + ')');
+              ring(c, tx, ty, 8 + 22 * u, 4 + 12 * u, 'rgba(160,220,250,0.7)');
+              for (let i = 0; i < 3; i++) { const k = (a * 1.8 + i * 0.33) % 1; px(c, tx - 12 + i * 11 + Math.sin(a * 5 + i) * 3, ty - k * 12, 2, 2, 'rgba(225,245,255,' + (0.8 * (1 - k)).toFixed(2) + ')'); }
+            });
+            const ang = a * 7;
+            fin = [tx + Math.cos(ang) * 20 * (1 - u * 0.5), ty + Math.sin(ang) * 9 * (1 - u * 0.5), true, u > 0.75];
+          } else if (a < an.fire + 0.45) {
+            // vọt thẳng lên từ dưới chân người chơi, miệng há hết cỡ
+            const vv = (a - an.fire) / 0.45;
+            const rise = vv < 0.4 ? lerp(80, -6, easeOut(vv / 0.4)) : lerp(-6, 100, easeIn((vv - 0.4) / 0.6));
+            post.push(() => {
+              const s2 = bossSpr('ngu', nguQ(Object.assign({}, Q, { jaw: vv < 0.5 ? 1 : 0.34, eye: 'angry', up: 0.4, tail: 0.3 * Math.sin(t * 30), blink: 0 })), X);
+              c.save();
+              c.beginPath(); c.rect(tx - 90, ty - 280, 180, 284); c.clip();
+              c.translate(tx + (vv > 0.4 ? Math.round((vv - 0.4) * 10) : 0), ty + Math.round(rise));
+              c.rotate(-Math.PI / 2 - 0.2 * (vv - 0.4));
+              c.drawImage(s2.cv, -s2.ox, -s2.oy + 26);
+              c.restore();
+              splash(c, tx, ty, vv, 46, 20);
+              if (vv > 0.55) splash(c, tx + 6, ty, (vv - 0.55) / 0.45, 38, 10);
+            });
+          }
+        }
+      }
+    } else if (b.hidden && dying == null) { body = false; foam = false; fin = [x, y, false, false]; }
+    if (b.roarT > 0 && dying == null && body) {
+      // gầm lúc nước dâng
+      const r = 1 - b.roarT / 1.2, k = smooth(clamp01(r / 0.2)) * smooth(clamp01((1 - r) / 0.25));
+      O.pitch += 0.22 * k; O.px = -30; O.py = -8; Q.jaw = Math.max(Q.jaw, k); Q.eye = 'angry'; O.dx += k > 0.6 ? j2 : 0; Q.up = Math.max(Q.up, 0.6 * k); Q.wh = -0.67 * k;
+      post.push(() => { for (let i = 0; i < 3; i++) { const v = clamp01((r - 0.15 - i * 0.15) / 0.45); if (v > 0 && v < 1) ring(c, x + f * (78 + 50 * v), y - 40, 5 + 12 * v, 10 + 22 * v, 'rgba(225,245,255,' + (0.7 * (1 - v)).toFixed(2) + ')', 2); } });
+    }
+    let tint = null;
+    if (dying != null) {
+      // quẫy đạp, lật ngửa bụng rồi chìm dần
+      const k = dying;
+      Q.jaw = 0.83; Q.eye = 'dead'; Q.gill = 0; Q.up = 0; Q.red = 0; Q.blink = 0; Q.wh = 0; Q.pf = 0;
+      if (k < 0.45) { const u = k / 0.45; O.pitch = Math.sin(u * 22) * 0.3 * (1 - u * 0.6); O.dy = Math.round(-6 * Math.abs(Math.sin(u * 22))); Q.tail = Math.sin(u * 40) * 0.6; Q.eye = 'angry'; post.push(() => { for (let i = 0; i < 3; i++) splash(c, x - 40 + i * 44, y, (u * 3 - i * 0.8) % 1, 40, 10); }); }
+      else if (k < 0.68) { const u = (k - 0.45) / 0.23; O.sy = Math.cos(u * Math.PI); if (Math.abs(O.sy) < 0.12) O.sy = O.sy < 0 ? -0.12 : 0.12; O.dy = Math.round(u * 6); }
+      else { const u = (k - 0.68) / 0.32; O.sy = -1; O.dy = 6 + Math.round(64 * easeIn(u)); O.pitch = 0.12 * u; post.push(() => { for (let i = 0; i < 7; i++) { const bu = clamp01(u * 1.7 - i * 0.1); if (bu > 0 && bu < 1) px(c, x - 50 + i * 16 + Math.sin(bu * 8 + i) * 4, y - 2 - bu * 34, bu < 0.6 ? 3 : 2, bu < 0.6 ? 3 : 2, 'rgba(225,245,255,' + (0.9 * (1 - bu)).toFixed(2) + ')'); } }); }
+      if (k > 0.45) tint = ['#c8d8e0', Math.min(0.45, k - 0.45)];
+    } else if (b.flash > 0) tint = ['#fff6dc', 0.35];
+    if (foam) nguFoam(c, x, y, t, f, true, X.phase >= 2);
+    if (body) {
+      const s = bossSpr('ngu', nguQ(Q), X);
+      O.tint = tint;
+      nguBlit(c, s, x, y, O);
+    }
+    if (foam) nguFoam(c, x, y, t, f, false, X.phase >= 2);
+    if (fin) nguFin(c, fin[0], fin[1], t, fin[2], fin[3]);
+    for (const fn of post) fn();
+    drawFx(c, b);
+  };
+
+  // ====================================================================
+  // 8C. HỒ TINH TRONG GAME
+  // Đòn: pounce (thu mình rồi vồ theo cung), fox (xoè đuôi hú, thả cầu lửa), nova (đuôi xoay vòng rồi nổ theo hệ đã học),
+  // illusion (tách ảo ảnh), hop (nhảy lùi khi bị áp sát), bite (vụt biến ra sau lưng rồi ngoạm).
+  // Thêm: chạy, mệt lộ sơ hở, choáng, đóng băng, tru đổi giai đoạn và lớn lên 1.5 lần, mất đuôi theo máu, gục. Hàm này cũng vẽ ảo ảnh (b.illusion).
+  // Hình cáo quay mặt sang PHẢI; b.face = 1 là nhìn sang phải.
+  // ====================================================================
+  // Làm tròn tư thế để các khung giống nhau dùng lại hình trong kho.
+  function hoQ(Q) {
+    Q.crouch = qz(Math.max(0, Q.crouch), 4); Q.stretch = qz(clamp01(Q.stretch), 2); Q.pitch = qz(Q.pitch, 4);
+    Q.headX = Math.round(Q.headX); Q.headY = Math.round(Q.headY); Q.headTilt = qz(Q.headTilt, 4); Q.ears = qz(clamp01(Q.ears), 2);
+    Q.mouth = Q.mouth < 0.2 ? 0 : Q.mouth < 0.55 ? 0.35 : Q.mouth < 0.9 ? 0.75 : 1;
+    Q.fan = qz(Q.fan, 5); Q.tlen = qz(Q.tlen, 5); Q.flare = qz(clamp01(Q.flare), 3); Q.ring = qz(clamp01(Q.ring), 4);
+    Q.spin = (Math.round(Q.spin / 8) * 8) % 40; // chín đuôi cách nhau 40 độ nên vòng quay lặp lại sau 40 độ
+    Q.lagX = qz(Math.max(-1, Math.min(1, Q.lagX)), 3); Q.lagY = qz(Math.max(-1, Math.min(1, Q.lagY)), 3);
+    Q.sway = qz(Q.sway, 3); Q.breath = Q.breath > 0.5 ? 1 : 0; Q.blink = Q.blink > 0.5 ? 1 : 0; Q.tired = Q.tired > 0.5 ? 1 : 0;
+    Q.burst = Q.burst > 0.5 ? 1 : 0; Q.pulse = Q.pulse > 0.5 ? 1 : 0; Q.orb = qz(Q.orb, 16) % 1; Q.n = Math.max(0, Math.round(Q.n));
+    return Q;
+  }
+  // Dán cáo: (x, y) là điểm chân trên mặt đất. o: z độ cao, rot ngẩng đầu (radian, dương là đầu lên), sx sy co giãn, alpha, tint, sil, ice.
+  function hoBlit(c, s, x, y, face, scale, o) {
+    c.save();
+    c.translate(Math.round(x), Math.round(y - (o.z || 0)));
+    c.scale((face < 0 ? -1 : 1) * scale, scale);
+    if (o.rot) { c.translate(0, -18); c.rotate(-o.rot); c.translate(0, 18); }
+    if (o.sx || o.sy) c.scale(o.sx || 1, o.sy || 1);
+    if (o.alpha != null) c.globalAlpha *= o.alpha;
+    if (o.ice) { halo(c, s, '#e9f9ff'); blitT(c, 'tint', s.cv, -s.ox, -s.oy, '#a8dcf5', 0.6); }
+    else if (o.sil) blitT(c, 'sil', s.cv, -s.ox, -s.oy, o.sil, 1, 'source-in');
+    else if (o.tint) blitT(c, 'tint', s.cv, -s.ox, -s.oy, o.tint[0], o.tint[1]);
+    else c.drawImage(s.cv, -s.ox, -s.oy);
+    c.restore();
+  }
+  // Đốm lửa hồn bay lên: v là tiến độ 0..1.
+  function hoWisp(c, x, y, v, col, col2, seed) {
+    if (v <= 0 || v >= 1) return;
+    const wx = Math.round(x + Math.sin(v * 7 + seed) * 5), wy = Math.round(y - 30 * v);
+    const s = v < 0.5 ? 3 : v < 0.8 ? 2 : 1;
+    px(c, wx - 1, wy - 1, s + 2, s + 2, hexA(col, 0.5 * (1 - v)));
+    px(c, wx, wy, s, s, col2);
+    px(c, wx, wy + s + 1, 1, 2, hexA(col, 0.6 * (1 - v)));
+  }
+  BDRAW.ho = function (c, b, t) {
+    const ill = !!b.illusion, D = BOSS.ho;
+    const dying = b.dying != null ? clamp01(b.dying) : null;
+    const an = dying != null || ill ? null : b.anim, a = an ? an.t : 0;
+    const aS = Math.floor(a * 12) / 12; // đồng hồ của đòn làm tròn 12 nhịp mỗi giây: tư thế chỉ đổi theo nhịp này
+    const st = b.st || ST0, frozen = st.frozen > 0 && dying == null;
+    // trí nhớ riêng của hình vẽ: đuôi trễ, số đuôi lần trước, đuôi vừa mất
+    const m = b._hm || (b._hm = { lx: 0, ly: 0, px: b.x, py: b.y, pz: 0, pt: t, tails: b.tails, lost: [], orb: 0 });
+    const n0 = b.tails != null ? b.tails : 9;
+    const X0 = layersX(b);
+    // ảo ảnh: đơn giản hơn, không có ngọc điểm yếu, bùa hay lửa chân
+    const X = ill ? { el: X0.el, E: X0.E, weak: null, W: null, aR: 0, aM: 0, aD: X0.aD, phase: 0 } : X0;
+    const TB = X.E ? X.E.B : FIRE, big = b.big && !ill ? 1 : 0;
+    const tired = b.exposed > 0 && !ill && dying == null;
+    let x = b.x, y = b.y, z = 0, face = b.face < 0 ? -1 : 1;
+    const O = { rot: 0, sx: 0, sy: 0 };
+    let alpha = b.alpha != null ? b.alpha : null, scale = big ? 1.5 : 1;
+    let tint = null, ghosts = null, show = true;
+    const pre = [], post = [];
+    // ---- tư thế mặc định: vòng lặp 2 giây, 16 khung (ảo ảnh chỉ 4 khung) ----
+    const tI = frozen ? 0 : t, i16 = Math.floor(tI * 8) % 16, ph = (i16 / 16) * Math.PI * 2;
+    const Q = {
+      feet: 0, crouch: 0, stretch: 0, pitch: 0, breath: i16 < 8 ? 0 : 1, headX: 0, headY: 0, headTilt: 0, ears: 0, mouth: 0,
+      blink: i16 === 0 && !ill && !frozen ? 1 : 0, eye: 'normal', tired: 0, n: n0, fan: 1, tlen: 1, lagX: 0, lagY: 0,
+      sway: ill ? ((i16 >> 2) & 1 ? 0.34 : -0.34) : Math.sin(ph), flare: 0, ring: 0, spin: 0, burst: 0, big,
+      orb: X.aR ? i16 / 16 : 0, pulse: (i16 >> 2) & 1,
+    };
+    if (an) { Q.sway = 0; Q.breath = 0; Q.blink = 0; Q.pulse = 1; Q.orb = m.orb; } else m.orb = Q.orb; // trong đòn thì đứng nhịp thở lại, khỏi dựng thừa hình
+    if (tired) {
+      // lộ sơ hở: thở dốc, thè lưỡi, sao xoay trên đầu
+      Q.tired = 1; Q.crouch = 0.34; Q.breath = Math.floor(t * 4) & 1; Q.sway = 0; Q.blink = 0; Q.orb = m.orb;
+      post.push(() => { const f = Math.floor(t * 6) % 4, hx = x + face * 18 * scale, hy = y - 50 * scale; px(c, hx - 8 + f * 4, hy + (f % 2) * 2, 2, 2, '#ffd23f'); px(c, hx + 6 - f * 4, hy - 1 + ((f + 1) % 2) * 2, 2, 2, '#ffd23f'); });
+    }
+    // ---- dáng chạy khi đổi chỗ ----
+    const moving = (ill ? b.moving : b.moving && !an) && !frozen && !(st.stun > 0);
+    if (moving && !tired) {
+      const f = Math.floor((b.t || t) * 11) & 3;
+      Q.feet = 1 + f; Q.stretch = 0.5; Q.ears = 1; Q.crouch = f === 0 ? 0.25 : 0; Q.headY = f === 1 ? 1 : 0; Q.sway = 0; Q.breath = 0; Q.blink = 0; Q.pulse = 1; Q.orb = m.orb;
+    }
+    if (ill && b.wind > 0) { Q.mouth = 0.75; Q.headX = 2; Q.crouch = 0.34; Q.ears = 1; Q.eye = 'angry'; } // ảo ảnh sắp cắn
+    if (ill && b.fromX != null && (b.t || 0) < 0.6 && dying == null) {
+      // ảo ảnh tách ra từ chỗ cáo thật
+      const v = clamp01(((b.t || 0) - 0.12) / 0.45), e = easeOut(v);
+      x = lerp(b.fromX, b.x, e); y = lerp(b.fromY, b.y, e);
+      alpha = 0.35 + 0.35 * v; Q.feet = 5; Q.stretch = 1; Q.ears = 1; Q.sway = 0; Q.breath = 0;
+      if ((b.t || 0) < 0.12) tint = ['#ffffff', 0.8];
+    }
+    if (an) {
+      Q.eye = 'angry';
+      if (an.name === 'pounce') {
+        const F = an.fire, c0 = F * 0.45;
+        if (a < c0) {
+          // thu mình lấy đà: chúi đầu, chổng mông, đuôi chụm lại
+          const k = smooth(a / c0), kS = smooth(clamp01(aS / c0));
+          x = an.fx; y = an.fy;
+          Q.crouch = 0.9 * kS; Q.pitch = -0.3 * kS; Q.fan = 1 - 0.55 * kS; Q.tlen = 1 + 0.15 * kS; Q.headY = 2 * kS; Q.headX = 2 * kS; Q.ears = 1; Q.mouth = kS > 0.6 ? 0.35 : 0;
+          O.sx = 1 + 0.08 * k; O.sy = 1 - 0.1 * k;
+          if (k > 0.7) x += Math.floor(t * 30) & 1;
+        } else if (a < F) {
+          // bay theo cung tới chỗ vồ
+          const v = (a - c0) / (F - c0), v2 = Math.max(0, v - 0.12);
+          x = lerp(an.fx, an.tx, v); y = lerp(an.fy, an.ty, v); z = 34 * Math.sin(v * Math.PI);
+          face = an.tx >= an.fx ? 1 : -1;
+          Q.feet = v < 0.55 ? 5 : 6; Q.stretch = v < 0.55 ? 1 : 0.5; Q.ears = 1; Q.mouth = v > 0.5 ? 0.75 : 0.35; Q.fan = 0.6;
+          O.rot = 0.5 * Math.cos(v * Math.PI); O.sx = 1.12; O.sy = 0.92;
+          ghosts = [[lerp(an.fx, an.tx, v2), lerp(an.fy, an.ty, v2), 34 * Math.sin(v2 * Math.PI), 0.3]];
+        } else {
+          // đáp xuống, khựng lại
+          const w = (a - F) / 0.2, dv = (a - F) / 0.4;
+          if (w < 1) { O.sx = 1 + 0.22 * (1 - w); O.sy = 1 - 0.26 * (1 - w); Q.crouch = 1; Q.pitch = -0.25; Q.mouth = 0.75; Q.tired = 0; Q.fan = 1.2; Q.ears = 1; }
+          post.push(() => {
+            const e = easeOut(clamp01(dv));
+            ring(c, b.x, b.y, 10 + 26 * e, 4 + 12 * e, 'rgba(240,230,200,' + (0.8 * (1 - clamp01(dv))).toFixed(2) + ')', 2);
+            c.save(); c.translate(Math.round(b.x), Math.round(b.y - 3)); bits(c, 10, dv, 30, '#d8cfa8', '#ffffff', 1.9, 12); c.restore();
+          });
+        }
+      } else if (an.name === 'fox') {
+        // đuôi xoè rộng, chóp đuôi bùng lửa, ngửa đầu hú lúc cầu lửa bay ra
+        const k = 1 - smooth(clamp01(aS / 0.75)), v = a / 0.3;
+        Q.flare = k; Q.fan = 1 + 0.4 * k; Q.tlen = 1 + 0.2 * k; Q.crouch = 0.5 * k; Q.ears = 1;
+        if (k > 0.3) Q.tipB = FIRE;
+        if (a < 0.45) { Q.headTilt = 0.75; Q.mouth = 1; Q.pitch = 0.25; }
+        post.push(() => {
+          if (v >= 1) return;
+          const cx = x - face * 12 * scale, cy = y - 34 * scale, e = easeOut(v);
+          ring(c, cx, cy, 10 + 30 * e, 8 + 22 * e, 'rgba(255,200,90,' + (0.9 * (1 - v)).toFixed(2) + ')', 2);
+          ring(c, cx, cy, 6 + 20 * e, 5 + 14 * e, 'rgba(255,255,255,' + (0.8 * (1 - v)).toFixed(2) + ')');
+        });
+      } else if (an.name === 'nova') {
+        // đuôi xoay thành bánh xe, thân nhấc lên, rồi nổ theo màu hệ đã học
+        const F = an.fire, E = ELP[an.el] || ELP.fire;
+        Q.tipB = E.B; Q.ears = 1;
+        if (a < F) {
+          const u = a / F, uS = clamp01(aS / F);
+          Q.ring = smooth(clamp01(uS / 0.35)); Q.spin = uS * uS * 900; Q.flare = uS; Q.tlen = 1 + 0.15 * uS; Q.feet = 6; Q.headY = -1; Q.mouth = uS > 0.6 ? 0.35 : 0;
+          z = 12 * smooth(u);
+          if (u > 0.75) x += Math.floor(t * 30) & 1;
+          pre.push(() => {
+            ell(c, x, y, 20 + 42 * u, (20 + 42 * u) * 0.6, hexA(E.B[1], 0.12 + 0.15 * u));
+            for (let i = 0; i < 8; i++) { const ang = i * 0.785 - a * 6, r = 62 * (1 - ((u * 2 + i * 0.13) % 1)); px(c, x + Math.cos(ang) * r, y + Math.sin(ang) * r * 0.6, 2, 2, E.glow); }
+          });
+        } else {
+          const w = clamp01((a - F) / 0.35), wS = clamp01((aS - F) / 0.35);
+          Q.ring = 1 - smooth(wS); Q.spin = 900 + wS * 120; Q.tlen = 1.4 - 0.4 * wS; Q.flare = 1 - wS; Q.mouth = 1; Q.headTilt = 0.5; Q.burst = wS < 0.4 ? 1 : 0; Q.feet = w < 0.45 ? 6 : 0;
+          z = 12 * (1 - easeIn(clamp01(w * 2.2)));
+          if (w > 0.45 && w < 0.8) { O.sx = 1.12; O.sy = 0.88; }
+          post.push(() => {
+            if (w >= 1) return;
+            const r = an.r * (0.3 + 0.7 * easeOut(w));
+            ring(c, x, y, r, r * 0.6, hexA(E.hot, 1 - w), 2); ring(c, x, y, r - 3, r * 0.6 - 2, hexA(E.B[1], 0.9 * (1 - w)), 2); ring(c, x, y, r * 0.6, r * 0.36, hexA(E.B[1], 0.6 * (1 - w)));
+            for (let i = 0; i < 14; i++) {
+              const ang = i * 0.449 + 0.1, r0 = r * 0.75, r1 = r * 1.02;
+              line(c, Math.round(x + Math.cos(ang) * r0), Math.round(y - 10 * (1 - w) + Math.sin(ang) * r0 * 0.6), Math.round(x + Math.cos(ang) * r1), Math.round(y - 10 * (1 - w) + Math.sin(ang) * r1 * 0.6), i % 2 ? E.B[1] : E.glow, 2);
+            }
+          });
+        }
+      } else if (an.name === 'illusion') {
+        // loé sáng tại chỗ cũ rồi các bóng tách ra
+        const v = clamp01((a - 0.12) / 0.45), e = easeOut(v);
+        Q.eye = 'normal';
+        if (a < 0.6) {
+          x = lerp(an.fx, b.x, e); y = lerp(an.fy, b.y, e);
+          alpha = 0.35 + 0.35 * v; Q.feet = 5; Q.stretch = 1; Q.ears = 1;
+          if (a < 0.12) { tint = ['#ffffff', 0.8]; O.sx = 1 + 0.3 * Math.sin((a / 0.12) * Math.PI); }
+          pre.push(() => { const r = clamp01(a / 0.4); ring(c, an.fx, an.fy - 16, 8 + 36 * r, 6 + 22 * r, 'rgba(255,255,255,' + (0.9 * (1 - r)).toFixed(2) + ')', 2); });
+        }
+      } else if (an.name === 'hop') {
+        // nhảy lùi theo cung
+        const v = clamp01(a / an.air);
+        if (v < 1) {
+          const v2 = Math.max(0, v - 0.2);
+          x = lerp(an.fx, b.x, smooth(v)); y = lerp(an.fy, b.y, v); z = 16 * Math.sin(v * Math.PI);
+          Q.feet = 6; Q.ears = 1; Q.fan = 0.8;
+          O.rot = -0.3 * Math.cos(v * Math.PI) - 0.1;
+          ghosts = [[lerp(an.fx, b.x, smooth(v2)), y, z * 0.7, 0.25]];
+        } else { const w = (a - an.air) / (an.dur - an.air); O.sx = 1 + 0.12 * (1 - w); O.sy = 1 - 0.14 * (1 - w); Q.crouch = 0.5; Q.mouth = 0.35; }
+      } else if (an.name === 'bite') {
+        // vụt biến tới sau lưng, vệt nhoè nối hai chỗ, rồi ngoạm
+        const F = an.fire, Wd = G.getWorld && G.getWorld(), P = Wd && Wd.P;
+        if (P && Math.abs(P.x - b.x) > 2) face = P.x >= b.x ? 1 : -1; // luôn quay mặt về phía người chơi lúc cắn
+        if (a < 0.1) {
+          show = false;
+          const v = a / 0.1;
+          post.push(() => {
+            const s2 = bossSpr('ho', hoQ(Object.assign({}, Q, { feet: 5, stretch: 1, ears: 1, mouth: 0 })), X);
+            for (let i = 0; i < 5; i++) { const k = i / 4; if (k > v + 0.3) continue; hoBlit(c, s2, lerp(an.fx, b.x, k), lerp(an.fy, b.y, k), face, scale, { sx: 1.5, sy: 0.6, alpha: 0.18 + 0.4 * k * v, sil: '#ffffff' }); }
+          });
+        } else if (a < 0.24) {
+          const w = (a - 0.1) / 0.14;
+          O.sx = lerp(0.3, 1, easeOut(w)); O.sy = lerp(1.35, 1, easeOut(w)); tint = ['#ffffff', 0.9 * (1 - w)];
+          pre.push(() => line(c, Math.round(an.fx), Math.round(an.fy - 16), Math.round(b.x), Math.round(b.y - 16), 'rgba(255,255,255,' + (0.5 * (1 - w)).toFixed(2) + ')', 2));
+        } else if (a < F) {
+          // rụt đầu lấy đà, hàm há dần
+          const u = (a - 0.24) / (F - 0.24), uS = clamp01((aS - 0.24) / (F - 0.24));
+          Q.crouch = 0.5 * uS; Q.headX = -4 * uS; Q.headY = -3 * uS; Q.mouth = uS < 0.5 ? 0.35 : 0.75; Q.ears = 1; Q.fan = 1 + 0.2 * uS; Q.pitch = 0.25 * uS;
+          if (u > 0.7) x += Math.floor(t * 30) & 1;
+        } else if (a < F + 0.16) {
+          const w = (a - F) / 0.16;
+          Q.headX = 7; Q.headY = 2; Q.mouth = w < 0.4 ? 0.75 : 0.35; Q.ears = 1; Q.stretch = 0.5; Q.pitch = -0.25; O.sx = 1.14; x += face * 5;
+          post.push(() => { const jx = Math.round(x + face * 36 * scale), jy = Math.round(y - 27 * scale); if (w > 0.35) { px(c, jx - 4, jy, 9, 1, '#ffffff'); px(c, jx, jy - 4, 1, 9, '#ffffff'); px(c, jx - 2, jy - 2, 5, 5, 'rgba(255,255,255,0.6)'); } });
+        } else { const w = clamp01((a - F - 0.16) / 0.2); Q.headX = 7 * (1 - w); Q.mouth = 0.35; x += face * 5 * (1 - w); }
+      }
+    }
+    if (b.roarT > 0 && dying == null && !ill) {
+      // tru lên khi đổi giai đoạn; lớn dần lúc hoá cuồng
+      const r = 1 - b.roarT / 1.2, k = smooth(clamp01(r / 0.2)) * smooth(clamp01((1 - r) / 0.25)), kS = qz(k, 3);
+      if (!an) { Q.headTilt = kS; Q.mouth = kS > 0.8 ? 1 : kS > 0.3 ? 0.75 : 0; Q.pitch = 0.25 * kS; Q.fan = 1 + 0.4 * kS; Q.flare = Math.max(Q.flare, 0.67 * kS); Q.tired = 0; Q.blink = 0; Q.eye = 'angry'; Q.ears = kS; Q.sway = 0; Q.breath = 0; if (k > 0.6) x += Math.floor(t * 30) & 1; }
+      if (b.big && b.roarPh === 2) { const g = clamp01(r / 0.35); scale = lerp(1, 1.5, easeOut(g)); if (g < 1) tint = ['#ff6a3a', 0.6 * (1 - g)]; }
+      post.push(() => { for (let i = 0; i < 3; i++) { const v = clamp01((r - 0.12 - i * 0.15) / 0.45); if (v > 0 && v < 1) ring(c, x, y - 30 * scale, 12 + 50 * v, 8 + 30 * v, hexA(TB[1], 0.7 * (1 - v)), 2); } });
+    }
+    if (st.stun > 0 && dying == null && !frozen) {
+      Q.eye = 'dazed'; Q.blink = 0; O.rot += Math.sin(t * 9) * 0.06;
+      post.push(() => { for (let i = 0; i < 3; i++) { const ang = t * 6 + i * 2.09; px(c, x + face * 16 * scale + Math.cos(ang) * 9 - 1, y - 54 * scale + Math.sin(ang) * 3, 2, 2, Math.sin(ang) > 0 ? '#ffd23f' : '#b8922a'); } });
+    }
+    // ---- đuôi trễ theo vận tốc của hình vẽ (tính trong hệ quay mặt sang phải) ----
+    const dt = Math.max(1 / 120, Math.min(0.1, t - m.pt));
+    if (t !== m.pt) {
+      let vx = (x - m.px) / dt, vy = (y - z - (m.py - m.pz)) / dt;
+      if (Math.abs(x - m.px) > 40) { vx = 0; vy = 0; }
+      const k = Math.min(1, dt * 9);
+      m.lx += (clamp01(Math.abs(vx) / 110) * -Math.sign(vx) * face - m.lx) * k;
+      m.ly += (Math.max(-1, Math.min(1, -vy / 220)) - m.ly) * k;
+      m.px = x; m.py = y; m.pz = z; m.pt = t;
+    }
+    if (!frozen && Q.ring < 0.5) { Q.lagX = m.lx * 1.1; Q.lagY = m.ly * 0.9; if (ill) { Q.lagX = qz(Q.lagX, 1); Q.lagY = 0; } }
+    // ---- mất đuôi khi máu tụt: đuôi vừa mất hoá thành đốm lửa hồn ----
+    if (!ill && dying == null) {
+      if (m.tails != null && n0 < m.tails) for (let i = n0; i < m.tails; i++) m.lost.push({ i, n: m.tails, t });
+      m.tails = n0;
+      m.lost = m.lost.filter((o) => t - o.t < 0.7);
+    }
+    // chóp đuôi thứ i (khi còn n đuôi) trong toạ độ thế giới
+    const tipAt = (i, n) => { const tp = D.anchor({ n, fan: 1 }).tips, q = tp[Math.min(i, tp.length - 1)] || [-30, -40]; return [x + face * q[0] * scale, y - z + q[1] * scale]; };
+    for (const o of m.lost) post.push(() => { const q2 = tipAt(o.i, o.n); hoWisp(c, q2[0], q2[1], (t - o.t) / 0.7, TB[1], '#ffffff', o.i); });
+    if (dying != null) {
+      // đuôi tắt dần từng chiếc, thân khuỵu xuống rồi tan thành đốm lửa hồn
+      const k = dying;
+      if (ill) { alpha = 0.7 * (1 - k); tint = ['#ffffff', 0.5]; O.sx = 1 + 0.25 * k; O.sy = 1 + 0.25 * k; Q.sway = 0; Q.breath = 0; Q.lagX = 0; Q.lagY = 0; Q.feet = 0; }
+      else {
+        const left = k < 0.6 ? Math.ceil(n0 * (1 - k / 0.6)) : 0;
+        Object.assign(Q, { n: left, feet: 0, stretch: 0, blink: 0, tired: 0, sway: 0, breath: 0, lagX: 0, lagY: 0, flare: 0, ring: 0, burst: 0, orb: m.orb, pulse: 0, headTilt: 0, pitch: 0, headX: 0 });
+        Q.eye = k < 0.3 ? 'dazed' : 'dead'; Q.mouth = k < 0.3 ? 0.75 : 0; Q.ears = 1;
+        Q.crouch = qz(1.5 * smooth(clamp01(k / 0.6)), 3); Q.headY = Math.round(6 * smooth(clamp01((k - 0.2) / 0.4))); Q.fan = 1 - 0.3 * qz(k, 3);
+        if (k < 0.25) x += (Math.floor(k * 60) & 1) * 2 - 1;
+        for (let i = left; i < n0; i++) { const k0 = 0.6 * (1 - (i + 1) / n0); post.push(() => { const q2 = tipAt(i, n0); hoWisp(c, q2[0], q2[1] - 4, (k - k0) / 0.3, TB[1], '#ffffff', i); }); }
+        if (k > 0.55) {
+          const v = (k - 0.55) / 0.45;
+          tint = ['#ffffff', Math.min(0.85, v * 1.2)]; alpha = v < 0.3 ? 1 : Math.max(0, 1 - (v - 0.3) / 0.6);
+          O.sx = 1 + 0.1 * v; O.sy = 1 - 0.25 * v;
+          post.push(() => {
+            for (let i = 0; i < 16; i++) { const h = hsh(i + 2), vv = clamp01(v * 1.5 - h * 0.5); hoWisp(c, x - 30 * scale + h * 60 * scale + Math.sin(i) * 6, y - 6 - hsh(i * 3) * 26 * scale - 26 * vv, vv, TB[1], i % 3 ? '#ffffff' : '#bfeaff', i * 1.7); }
+            if (v > 0.5) { const w = (v - 0.5) / 0.5, wy = Math.round(y - 20 * scale - 50 * w); px(c, x - 3, wy - 3, 7, 7, hexA(TB[1], 0.5 * (1 - w))); px(c, x - 2, wy - 2, 5, 5, 'rgba(255,255,255,' + (1 - w).toFixed(2) + ')'); px(c, x, wy + 4, 1, 4, 'rgba(255,255,255,' + (0.6 * (1 - w)).toFixed(2) + ')'); }
+          });
+        }
+      }
+    }
+    // ---- bóng đổ ----
+    if (!ill && (dying == null || dying < 0.8)) ell(c, x, y, 24 * scale * (z > 0 ? Math.max(0.5, 1 - z / 60) : 1), big ? 5 : 4, 'rgba(0,0,0,' + (0.35 * (z > 0 ? 0.7 : 1)).toFixed(2) + ')');
+    for (const fn of pre) fn();
+    if (big && dying == null && show && !frozen) {
+      // lửa giận bốc quanh chân
+      for (let i = 0; i < 6; i++) { const k = (t * 1.4 + i * 0.17) % 1; px(c, x - 36 + i * 14 + Math.sin(t * 5 + i) * 3, y + 2 - z - k * 26, k < 0.5 ? 2 : 1, k < 0.5 ? 3 : 2, k < 0.3 ? '#ffd23f' : hexA(TB[1], 0.9 * (1 - k))); }
+    }
+    if (show) {
+      // giữ tư thế tối thiểu 1/12 giây: mỗi con cáo không dựng quá 12 hình mỗi giây, còn vị trí và co giãn vẫn mượt từng khung
+      let Qn = hoQ(Q);
+      const key = Object.values(Qn).join('|') + (X.el || '') + X.phase;
+      if (key !== m.qk) { if (m.q && t - m.qt < 1 / 12 && t >= m.qt && m.qx === (X.el || '') + X.phase) Qn = m.q; else { m.q = Qn; m.qk = key; m.qt = t; m.qx = (X.el || '') + X.phase; } }
+      const s = bossSpr('ho', Qn, X);
+      if (ghosts) for (const gq of ghosts) hoBlit(c, s, gq[0], gq[1], face, scale, { z: gq[2], rot: O.rot, sx: O.sx, sy: O.sy, alpha: gq[3], sil: '#ffffff' });
+      if (b.flash > 0 && dying == null && !frozen) tint = ['#ffffff', 0.4];
+      hoBlit(c, s, x, y, face, scale, { z, rot: O.rot, sx: O.sx, sy: O.sy, alpha, tint, ice: frozen });
+      if (frozen) { px(c, x - 14, y - 3, 6, 3, '#bfeaff'); px(c, x + 6, y - 2, 7, 2, '#e9f9ff'); px(c, x - 5, y - 1, 9, 1, '#bfeaff'); }
+    }
+    for (const fn of post) fn();
+    if (!ill) drawFx(c, b);
+  };
+
+  // ====================================================================
+  // 9. XUẤT RA VÀ NỐI VÀO GAME
   // ====================================================================
   const P0 = { w: -1, br: 0, bl: 0, an: 0, sk: 0, lg: 0, tl: 0, dead: 0 };
-  function buildMon(reg, role, P, el) {
-    const D = MON[reg][role];
-    const S = new Spr(D.size[0], D.size[1], D.org[0], D.org[1]);
-    D.draw(S, Object.assign({}, P0, P), { el: el || null, E: el ? ELP[el] : null });
-    S.finish();
-    return S.toCanvas();
-  }
   // Dựng một hình bất kỳ từ khai báo D (quái, trùm nhỏ, trùm): trả về { cv, ox, oy, bb }.
   function build(D, a, b) {
     const S = new Spr(D.size[0], D.size[1], D.org[0], D.org[1]);
@@ -2805,5 +4147,62 @@
     S.finish();
     return S.toCanvas();
   }
-  G.monsterArt = { Spr, MON, MINI, BOSS, ELP, buildMon, build, pal: { INK } };
+  function buildMon(reg, role, P, el) { return build(MON[reg][role], Object.assign({}, P0, P), { el: el || null, E: el ? ELP[el] : null }); }
+  if (MON[2].swarm) MON[2].swarm.fly = true; // Dơi Lửa lúc nào cũng đập cánh
+
+  let warned = 0;
+  let fallbacks = 0; // số lần phải gọi lại hình cũ (bài thử đọc số này)
+  const warn = (what, e) => { fallbacks++; if (warned < 3 && window.console) { warned++; console.warn('monster_art: ' + what + ' lỗi, dùng lại hình cũ', e); } };
+  // Chữ ký giống hệt G.art.enemy cũ: (c, e). Quái vẽ theo vùng hiện tại của ải.
+  function enemy(c, e) {
+    const A = G.art;
+    if (e.illusion) return boss(c, e); // ảo ảnh của Hồ Tinh dùng chung hình cáo
+    const reg = regionNow();
+    c.save();
+    try {
+      if (e.role === 'mini' || e.kind === 'mini') { if (!MINI[reg]) throw new Error('thiếu trùm nhỏ'); if (e.dying != null) dieMini(c, e, reg); else drawMini(c, e, reg); }
+      else if (e.dying != null) dieMon(c, e, reg);
+      else drawMon(c, e, reg);
+      c.restore();
+    } catch (err) {
+      c.restore();
+      warn('quái', err);
+      if (A && A.enemyOld) return A.enemyOld.call(A, c, e);
+    }
+  }
+  // Chữ ký giống hệt G.art.boss cũ: (c, b). Cũng vẽ ảo ảnh của Hồ Tinh (b.illusion).
+  function boss(c, b) {
+    const A = G.art, fn = BDRAW[b.kind];
+    if (!fn) { if (A && A.bossOld) return A.bossOld.call(A, c, b); return; }
+    c.save();
+    try { fn(c, b, G.time || 0); c.restore(); }
+    catch (err) {
+      c.restore();
+      warn('trùm ' + b.kind, err);
+      if (A && A.bossOld) return A.bossOld.call(A, c, b);
+    }
+  }
+  // Đạn của xạ thủ (kind 'fruit' của phe quái) đổi theo vùng; đạn khác để nguyên hàm cũ.
+  function proj(c, o) {
+    const A = G.art;
+    if (o && o.kind === 'fruit' && o.team === 'enemy') { try { return monShot(c, o, regionNow()); } catch (err) { warn('đạn', err); } }
+    if (A && A.projOld) return A.projOld.call(A, c, o);
+  }
+  G.monsterArt = {
+    Spr, MON, MINI, BOSS, ELP, buildMon, build, pal: { INK },
+    enemy, boss, proj, bossSpr, layersX, BDRAW,
+    cacheSize: () => MCACHE.size + BCACHE.size,
+    fallbacks: () => fallbacks,
+    // Tháo ra, trả lại hàm vẽ cũ (dùng khi thử).
+    unhook() { const A = G.art; if (!A) return; if (A.enemyOld) A.enemy = A.enemyOld; if (A.bossOld) A.boss = A.bossOld; if (A.projOld) A.proj = A.projOld; },
+    hook() {
+      const A = G.art; if (!A || !A.enemy) return false;
+      if (!A.enemyOld) A.enemyOld = A.enemy;
+      if (!A.bossOld) A.bossOld = A.boss;
+      if (!A.projOld) A.projOld = A.proj;
+      A.enemy = enemy; A.boss = boss; A.proj = proj;
+      return true;
+    },
+  };
+  G.monsterArt.hook();
 })();
