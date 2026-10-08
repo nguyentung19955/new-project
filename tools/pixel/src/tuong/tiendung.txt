@@ -1,0 +1,254 @@
+# Tiên Dung (mã tiendung) — pixel 32×32 (tướng Tím · hành Hỏa). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:826 ưu tiên + PROMPT-DUNG-XUONG.txt:558): công chúa ~17 mảnh mai, tóc 2 VÒNG KHUYÊN to trên đỉnh,
+# áo tứ thân đỏ thắm, yếm + thắt lưng hồng đào, gấu váy viền tím (Tím); cầm QUẠT lụa tròn to (KHÔNG kiếm). Không má hồng (QUY-CHUAN mục 0).
+# Chiêu (Mưa Hoa Tiên): phẩy quạt — cánh hoa sen hồng bay lả tả.
+name: Tiên Dung
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  T = toi
+  K = khoi
+  f = da-toi
+  F = da
+  h = da-sang
+  e = trang
+  m = son-toi
+  r = son
+  R = son-sang
+  H = hong
+  c = da-sang
+  o = dong-toi
+  y = dong
+  Y = dong-sang
+  v = vang-nghe
+  V = vang-sang
+  l = lua-sang
+  q = tim-toi
+  p = tim
+  P = tim-sang
+  W = sang
+
+part dau
+..KKK..KKK..
+..K.K..K.K..
+..KKKKKKKK..
+.KKKKKKKKKK.
+KKKKKKKKKKKK
+KKKKKhKhhKhF
+KKKfFTFFFTFF
+.KffFekFFekF
+.KKfFFFFFFFh
+.KK.fFFFmFF.
+.K...fffff..
+end
+
+part than
+......fFf.....
+....rRhhRRr...
+...rRRHHHRRr..
+...rRrHHHRrr..
+..rRRrRHRRRrr.
+..rR.rRRRRRr..
+..rr.cHcccHc..
+..Fh.rRRrRRr..
+.....rRRrRRr..
+end
+
+part chan
+....rRRrRRRr..
+....rRRrRRRr..
+...rRRRrRRRRr.
+...rRRRrRRRRr.
+...mmmmmmmmmm.
+...pPpPpPpPpp.
+....TT...TT...
+end
+
+part quat
+..yYYYy..
+.yVVlVVy.
+yVVlRlVVy
+yVlRRRlVy
+yVVlRlVVy
+.yVVlVVy.
+..yYYYy..
+....o....
+....o....
+end
+
+part quat_nghieng
+.yYYy..
+yVVlVy.
+yVlRlVy
+yVVlVVy
+.yVlVy.
+..yYy..
+...o...
+..o....
+end
+
+part tay
+fF.
+.FF
+.Fh
+end
+
+part tay_len
+.FF
+.Fh
+.F.
+fF.
+end
+
+part tay_dam
+fFFF
+.FFh
+end
+
+part gio
+.W..W.
+W..W..
+end
+
+part hoa
+.H.
+HWH
+.H.
+end
+
+anim idle fps=3 loop
+frame idle
+  use chan 8 23
+  use than 8 14
+  use dau 9 2
+  use quat 20 9
+  use tay 19 16
+  outline
+end
+frame idle
+  use chan 8 23
+  use than 8 15
+  use dau 9 3
+  use quat 20 10
+  use tay 19 17
+  outline
+end
+frame idle
+  use chan 8 23
+  use than 8 14
+  use dau 9 2
+  use quat 20 9
+  use tay 19 16
+  set 24 12 W
+  outline
+end
+
+# đánh: giơ quạt → phẩy mạnh ra trước → luồng gió → thu quạt
+anim attack fps=10 once
+frame attack
+  use chan 8 23
+  use than 8 14
+  use dau 9 2
+  use quat 19 2
+  use tay_len 19 11
+  outline
+end
+frame attack
+  use chan 8 23
+  use than 9 14
+  use dau 10 2
+  use quat_nghieng 23 11
+  use tay_dam 20 17
+  outline
+end
+frame attack
+  use chan 8 23
+  use than 9 14
+  use dau 10 2
+  use quat_nghieng 23 11
+  use tay_dam 20 17
+  use gio 25 20
+  outline
+end
+frame attack
+  use chan 8 23
+  use than 8 14
+  use dau 9 2
+  use quat 20 9
+  use tay 19 16
+  outline
+end
+
+# chiêu Mưa Hoa Tiên: quạt giơ cao, hoa sen hồng rơi
+anim cast fps=8 loop
+frame cast
+  use chan 8 23
+  use than 8 14
+  use dau 9 2
+  use quat 19 2
+  use tay_len 19 11
+  use hoa 3 4
+  outline
+end
+frame cast
+  use chan 8 23
+  use than 8 14
+  use dau 9 2
+  use quat 19 2
+  use tay_len 19 11
+  use hoa 4 9
+  use hoa 27 14
+  outline
+end
+frame cast
+  use chan 8 23
+  use than 8 14
+  use dau 9 2
+  use quat 19 2
+  use tay_len 19 11
+  use hoa 3 15
+  use hoa 27 19
+  use hoa 1 3
+  outline
+end
+
+anim hurt fps=8 once
+frame hurt
+  use @idle.0
+  shift -2 0
+  set 12 9 T
+  set 13 9 T
+  set 16 9 T
+  set 17 9 T
+  swap F h
+  swap r R
+end
+
+anim die fps=5 once
+frame die
+  use chan 8 23
+  use than 8 17
+  use dau 9 6
+  use quat 21 21
+  set 14 13 T
+  set 15 13 T
+  outline
+end
+frame die
+  use chan 8 23
+  use than 8 17
+  use dau 9 6
+  set 14 13 T
+  set 15 13 T
+  set 18 13 T
+  set 19 13 T
+  rot 90
+  shift 0 3
+  use quat_nghieng 23 23
+  outline
+end
+frame die
+  use @die.1
+  swap R r
+end

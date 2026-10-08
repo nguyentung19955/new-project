@@ -1,0 +1,308 @@
+# Lý Ngư Tướng Quân (mã lyngu) — pixel 32×32 (tướng Tím · hành Thủy). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# PHÁ CÁCH (DANH-SACH): NGƯỜI CÁ CHÉP — đầu cá chép râu dài đội mũ trụ, thân người giáp vảy (đang hoá rồng).
+# Đặc trưng (PROMPT-GEN-LAI.txt:86 ưu tiên + PROMPT-DUNG-XUONG.txt:707): tướng trẻ ~25 (NGƯỜI — cá chép hoá tướng, không vẽ cá),
+# 2 sợi râu chép dài; GIÁP VẢY CHÉP cam + trắng, giáp vai hình vây, đai viền tím (Tím); MÀO MŨ hình ĐUÔI CÁ CHÉP cong to;
+# cầm ĐAO CÁN DÀI lưỡi hình vây cá. Chiêu (Quẫy Đuôi / Hóa Rồng): xoay đao — sóng nước cuộn lên.
+name: Lý Ngư Tướng Quân
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  T = toi
+  K = khoi
+  f = da-toi
+  F = da
+  h = da-sang
+  e = trang
+  t = trang-xam
+  W = sang
+  m = son-toi
+  s = son
+  l = lua
+  L = lua-sang
+  o = dong-toi
+  y = dong
+  Y = dong-sang
+  x = sat-toi
+  S = sat
+  b = sat-sang
+  w = bac
+  r = dat-toi
+  d = dat
+  D = dat-sang
+  q = tim-toi
+  p = tim
+  P = tim-sang
+  n = nuoc
+  N = nuoc-sang
+
+part duoi
+Ls......Ls
+sLs....sLs
+.sLs..sLs.
+..sLllLs..
+...sLLs...
+....sls...
+.....ss...
+end
+
+part dau
+..yYYYYYYy....
+.yYlLLLLlYy...
+yYlLLLLLLlYy..
+yoooooooooYy..
+lLLLLLLLLLLLl.
+lLsLLLLeeLLLLl
+lLsLlLLeTLLLLL
+llsLLLLLLLLLmm
+.lsLlLLLLLLmee
+..llLLLLLLLLmm
+...lllllllTlT.
+..........T..T
+end
+
+part than
+.....fFFf......
+..LLLLeLLLLl...
+.LlLLlelLlLLl..
+.lL.LLeLLLLLl..
+.Ll.lLelLlLlm..
+.lL.LLeLLLLLm..
+.FF.qpPpPpPpq..
+.Ff.eteteteet..
+end
+
+part chan
+....etteette..
+....et...et...
+....et...et...
+....yy...yy...
+....oo...oo...
+...ooo..oooo..
+end
+
+part dao
+.wb..
+wbbS.
+wbSSl
+.bSl.
+..bL.
+..yY.
+..dD.
+..dD.
+..dD.
+..dD.
+..dD.
+..dD.
+..dD.
+..dD.
+..dD.
+..dD.
+..dD.
+..dD.
+..dD.
+..dD.
+..dD.
+..rd.
+end
+
+part dao_ngang
+rdDdDdDdDdDdyYbSSbw.
+............lLSSbbw.
+.............lbSSw..
+end
+
+part dao_cheo
+............wb
+...........wbS
+..........lbSS
+.........LbSl.
+........yY....
+.......dD.....
+......dD......
+.....dD.......
+....dD........
+...dD.........
+..dD..........
+.rd...........
+end
+
+part dao_xuong
+rd...........
+.dD..........
+..dD.........
+...dD........
+....dD.......
+.....yY......
+......lbSSw..
+.......LbSbw.
+........bSSw.
+.........www.
+end
+
+part tay
+fF.
+.FF
+.Fh
+end
+
+part tay_len
+.FF
+.Fh
+.F.
+fF.
+end
+
+part tay_dam
+fFFF
+.FFh
+end
+
+part song
+..N...
+.NnN.N
+NnnnNn
+end
+
+part mat_nham
+TT
+end
+
+anim idle fps=3 loop
+frame idle
+  use duoi 6 1
+  use chan 8 24
+  use than 8 16
+  use dau 9 5
+  use dao 23 7
+  use tay 22 18
+  outline
+end
+frame idle
+  use duoi 6 2
+  use chan 8 24
+  use than 8 17
+  use dau 9 6
+  use dao 23 7
+  use tay 22 19
+  outline
+end
+frame idle
+  use duoi 6 1
+  use chan 8 24
+  use than 8 16
+  use dau 9 5
+  use dao 23 7
+  use tay 22 18
+  set 24 8 W
+  outline
+end
+
+# đánh: vung đao chéo → chém ngang → bổ xuống → thủ thế
+anim attack fps=10 once
+frame attack
+  use duoi 6 1
+  use dao_cheo 15 2
+  use chan 8 24
+  use than 8 16
+  use dau 9 5
+  use tay_len 21 14
+  outline
+end
+frame attack
+  use duoi 6 1
+  use chan 8 24
+  use than 9 16
+  use dau 10 5
+  use dao_ngang 11 19
+  use tay_dam 20 19
+  outline
+end
+frame attack
+  use duoi 6 1
+  use chan 8 24
+  use than 8 16
+  use dau 9 5
+  use dao_xuong 17 19
+  use tay 22 18
+  outline
+end
+frame attack
+  use duoi 6 1
+  use chan 8 24
+  use than 8 16
+  use dau 9 5
+  use dao 23 7
+  use tay 22 18
+  outline
+end
+
+# chiêu Quẫy Đuôi: giơ đao, sóng nước cuộn lên hai bên
+anim cast fps=8 loop
+frame cast
+  use duoi 6 1
+  use chan 8 24
+  use than 8 16
+  use dau 9 5
+  use dao 24 1
+  use tay_len 21 14
+  use song 0 26
+  outline
+end
+frame cast
+  use duoi 6 1
+  use chan 8 24
+  use than 8 16
+  use dau 9 5
+  use dao 24 1
+  use tay_len 21 14
+  use song 0 24
+  use song 25 26
+  outline
+end
+frame cast
+  use duoi 6 1
+  use chan 8 24
+  use than 8 16
+  use dau 9 5
+  use dao 24 1
+  use tay_len 21 14
+  use song 1 22
+  use song 25 23
+  set 29 1 W
+  outline
+end
+
+anim hurt fps=8 once
+frame hurt
+  use @idle.0
+  shift -2 0
+  use mat_nham 14 11
+  swap F h
+  swap l L
+end
+
+anim die fps=5 once
+frame die
+  use dao_xuong 17 20
+  use duoi 6 3
+  use chan 8 24
+  use than 8 19
+  use dau 9 8
+  use mat_nham 16 14
+  outline
+end
+frame die
+  use duoi 6 3
+  use chan 8 24
+  use than 8 19
+  use dau 9 8
+  use mat_nham 16 14
+  rot 90
+  shift 0 1
+  outline
+end
+frame die
+  use @die.1
+  swap L l
+end
