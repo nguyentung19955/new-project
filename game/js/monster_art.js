@@ -1845,7 +1845,7 @@
       if (X.aD) {
         S.part((s) => { s.cv([[34, -70], [34, -92], [48, -106], [68, -106], [74, -98]], 3, 2, DEEP); });
         S.part({ fx: 1 }, (s) => { rd(s, 66, -105, 17, 17, '#ffe36a'); s.r(74, -108, 1, 2, '#ffe36a'); s.r(63, -97, 2, 1, '#ffe36a'); s.r(84, -97, 2, 1, '#ffe36a'); s.r(74, -87, 1, 2, '#ffe36a'); });
-        S.flat((s) => { eye(s, 74, -97, { w: 11, h: 11, rim: PURP[0], col: '#ffffff', pc: PURP[1], look: [lk, 1] }); });
+        S.flat((s) => { rd(s, 68, -103, 13, 13, PURP[0]); rd(s, 69, -102, 11, 11, '#ffffff'); rd(s, 71 + lk, -99, 7, 7, PURP[1]); s.r(73 + lk * 2, -97, 3, 4, INK); s.r(75 + lk * 2, -98, 2, 2, '#ffffff'); });
       }
       // --- bong bóng nước che chắn: chống đánh xa ---
       if (X.aR) {
