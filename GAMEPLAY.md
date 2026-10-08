@@ -3031,4 +3031,5 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
   thấp tối đa min(560px, bề rộng) × ≤ 1/3 cao, 3 cột: chân dung + tên/bậc/hành/vai · Công/Tầm/kiểu đánh + 4 icon kỹ năng · "Cần"/"Góp vào" dạng
   hàng icon + ➜ đích (gạch chân xanh ngọc nếu đang theo đuổi). Gắn trong `#ui` nên xoay theo màn dọc (390×844) như phần còn lại, đặt trên ô đang
   giữ (sát mép trên thì xuống dưới), không tràn mép, scale theo `--hz`. Bảng chỉ số khi giữ chân dung ở thanh tướng (`#hero-stats`) vốn đã ngang, giữ nguyên.
-  Test thêm trong `tests/goi-y-ro/muc-tieu.test.js`: 3 cột, rộng > 2× cao, ≤ 1/3 cao, không che thẻ, không tràn — cả 390×844.
+  Test thêm trong `tests/goi-y-ro/muc-tieu.test.js`: 3 cột, rộng > 2× cao, ≤ 1/3 cao, không che thẻ, không tràn — cả 390×844; giữ thẻ + chợ
+  dựng lại giữa chừng (lỗi kẹt v250) → thả: gợi ý ẩn, không mua, chạm tiếp vẫn mua.

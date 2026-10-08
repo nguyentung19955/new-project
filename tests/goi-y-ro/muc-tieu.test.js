@@ -63,6 +63,19 @@ async function run(pixel, w, h, full) {
   ok(await page.evaluate((g) => game.gold === g && document.querySelector('#hero-tip').hidden, g0), `[${tag}] thả tay: ẩn thông tin, không mua`);
   await page.click('#deck .mk-card[data-mk="0"]'); await page.waitForTimeout(150);
   ok(await page.evaluate((g) => game.gold < g, g0), `[${tag}] chạm nhanh vẫn mua như cũ`);
+  // v250: giữ thẻ → chợ dựng lại giữa lúc giữ (thẻ bị thay) → thả: gợi ý ẩn, không kẹt; chạm tiếp vẫn mua
+  {
+    const g1 = await page.evaluate(() => { game.gold = 3000; ui.sig.deck = null; return game.gold; });
+    await page.waitForTimeout(100);
+    const c = await page.locator('#deck .mk-card[data-mk="2"]').boundingBox();
+    await page.mouse.move(c.x + c.width / 2, c.y + c.height / 2); await page.mouse.down(); await page.waitForTimeout(600);
+    const shown = await page.evaluate(() => !document.querySelector('#hero-tip').hidden);
+    await page.evaluate(() => { ui.sig.deck = null; ui.updateDeck(); });     // ép dựng lại thanh chợ khi đang giữ
+    await page.mouse.up(); await page.waitForTimeout(150);
+    ok(shown && await page.evaluate((g) => document.querySelector('#hero-tip').hidden && game.gold === g, g1), `[${tag}] giữ thẻ + chợ dựng lại giữa chừng → thả: gợi ý ẩn, không mua`);
+    await page.click('#deck .mk-card[data-mk="2"]'); await page.waitForTimeout(150);
+    ok(await page.evaluate((g) => game.gold < g, g1), `[${tag}] sau đó chạm thẻ vẫn mua được (chợ không kẹt)`);
+  }
 
   // tắt gợi ý tự động từ dải
   await page.evaluate(() => { ui.save.settings.pins = []; ui.pinCache = null; ui.sig.deck = null; }); await page.waitForTimeout(200);
