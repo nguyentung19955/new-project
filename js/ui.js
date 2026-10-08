@@ -2105,12 +2105,14 @@ class UI {
     this.evQueued = this.rosterEvN === e.n ? null : { n: e.n, args };
   }
   // banner đổi màn + banner sự kiện cùng lúc (vd đợt 60) → hiện lần lượt, cái sau đợi cái trước tắt (một #banner, không đè mất)
-  queueBanner(args, then) {
+  queueBanner(args, then, gen = this.bannerGen) {
+    if (gen !== this.bannerGen) return;   // clearBanners() đã huỷ hàng đợi
     const wait = $('#banner').hidden ? 0 : (this.bannerEnd || 0) - performance.now();
-    if (wait > 0) { setTimeout(() => this.queueBanner(args, then), wait + 60); return; }
+    if (wait > 0) { setTimeout(() => this.queueBanner(args, then, gen), wait + 60); return; }
     this.banner(...args);
     if (then) then();
   }
+  clearBanners() { this.bannerGen = (this.bannerGen || 0) + 1; this.evQueued = null; clearTimeout(this.bannerT); $('#banner').hidden = true; this.bannerEnd = 0; }
   flushEvBanner() {
     if (this.evQueued && $('#roster-hint').hidden && $('#banner').hidden) { const a = this.evQueued.args; this.evQueued = null; this.queueBanner(a); }
   }

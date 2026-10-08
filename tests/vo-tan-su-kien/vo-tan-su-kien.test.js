@@ -16,8 +16,8 @@ const setup = (page, n, evId) => page.evaluate(([n, evId]) => {
   g.gold = 5000; g.lives = 20;
   // vô tận theo màn (claude/duong-di-moi): nhảy thẳng tới đợt n thì sang luôn màn của đợt đó (im lặng) trước khi đặt tướng
   if (g.endless && typeof endlessStageAt === 'function') { const st = endlessStageAt(n - 1, g.level); if (!g.stage || st.k !== g.stage.k) g.setStage(st, true); }
-  // banner còn sót từ phần test trước (banner xếp hàng, không đè) → tắt để banner sự kiện hiện ngay
-  document.querySelector('#banner').hidden = true; ui.bannerEnd = 0;
+  // banner còn sót / đang xếp hàng từ phần test trước (banner xếp hàng, không đè) → huỷ để banner sự kiện hiện ngay
+  ui.clearBanners();
   for (const [sl, t] of [[1, 'xathu'], [3, 'lactuong'], [5, 'thaymo'], [7, 'thansuong'], [9, 'lucsi'], [11, 'thosan']]) if (!g.heroes[sl] && !g.isFlooded(sl)) { g.placeHero(sl, t); }
   for (const h of g.heroes) if (h) { h.dead = false; h.respawnT = 0; h.stunT = 0; h.cursed = 0; h.hp = heroStats(h).hpMax; }
   g.wave = n - 1; g.evWave = n - 1; g.waveActive = false; g.enemies = []; g.spawnQueue = [];
