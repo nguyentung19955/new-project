@@ -1,5 +1,5 @@
 # Khung thanh máu boss — VẼ LẠI tay (claude/ve-lai-pixel), thiết kế: docs/pixel/THIET-KE-LAI.md
-# Khung sơn son đinh đồng, hai đầu ốp đồng có đinh vàng, mấu đồng giữa; lòng trong suốt (cột 6..89, hàng 4..7)
+# Khung sơn son đinh đồng, hai đầu ốp đồng có đinh vàng, mấu đồng giữa; lòng trong suốt (cột 10..85, hàng 4..7)
 # Nguồn vẽ: tools/pixel/ve-lai/khung.js — sửa ở đó rồi chạy lại, đừng sửa tay file này.
 name: Khung thanh máu boss
 size: 96x12
@@ -16,16 +16,16 @@ colors:
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbccccccccbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.
-adbbbeffffffdfffffffdfffffffdfffffffdfffffffdffggfffdfffffffdfffffffdfffffffdfffffffdfffffebbbda
-adbbbehhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhebbbda
-adbbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbda
-adbbba....................................................................................abbbda
-adbgba....................................................................................abgbda
-adbcba....................................................................................abcbda
-adbbba....................................................................................abbbda
-adbbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbda
-adbbbehhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhebbbda
-adbbbeiiiiiibiiiiiiibiiiiiiibiiiiiiibiiiiiiibiiiiiiibiiiiiiibiiiiiiibiiiiiiibiiiiiiibiiiiiebbbda
+adbbbbbbeeffffffdfffffffdfffffffdfffffffdffffffggfffffffdfffffffdfffffffdfffffffdfffffeebbbbbbda
+adbbbbbbeehhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhheebbbbbbda
+adbbbbbbeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaebbbbbbda
+adbbbbbbea............................................................................aebbbbbbda
+adbbgcbbea............................................................................aebbcgbbda
+adbbcebbea............................................................................aebbecbbda
+adbbbbbbea............................................................................aebbbbbbda
+adbbbbbbeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaebbbbbbda
+adbbbbbbeehhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhheebbbbbbda
+adbbbbbbeeiiiiiibiiiiiiibiiiiiiibiiiiiiibiiiiiiibiiiiiiibiiiiiiibiiiiiiibiiiiiiibiiiiieebbbbbbda
 .aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.
 end
 

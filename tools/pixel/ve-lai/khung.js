@@ -24,14 +24,14 @@ function boss() {   // sơn son viền đồng, hai đầu mũi giáo đồng + 
   const v = khung(96, 12, SON, 2, (v) => {
     // hai đầu ốp đồng
     for (const [x0, s] of [[0, 1], [95, -1]]) {
-      for (let i = 0; i < 6; i++) v.vl(x0 + s * i, 1 + (i === 0 ? 1 : 0), 10 - (i === 0 ? 1 : 0), i < 2 ? 'dong-sang' : i < 5 ? 'dong' : 'dong-toi');
-      v.vl(x0, 2, 9, 'vien'); v.p(x0 + s * 3, 5, 'vang-sang'); v.p(x0 + s * 3, 6, 'vang-nghe');
+      for (let i = 0; i < 10; i++) v.vl(x0 + s * i, 1 + (i === 0 ? 1 : 0), 10 - (i === 0 ? 1 : 0), i < 2 ? 'dong-sang' : i < 8 ? 'dong' : 'dong-toi');
+      v.vl(x0, 2, 9, 'vien'); v.p(x0 + s * 4, 5, 'vang-sang'); v.p(x0 + s * 4, 6, 'vang-nghe'); v.p(x0 + s * 5, 5, 'vang-nghe'); v.p(x0 + s * 5, 6, 'dong-toi');
     }
-    for (let x = 12; x < 86; x += 8) { v.p(x, 1, 'dong-sang'); v.p(x, 10, 'dong'); }   // đinh đồng trên gờ son
+    for (let x = 16; x < 82; x += 8) { v.p(x, 1, 'dong-sang'); v.p(x, 10, 'dong'); }   // đinh đồng trên gờ son
     v.hl(42, 53, 0, 'dong'); v.hl(44, 51, 0, 'vang-nghe'); v.p(47, 1, 'vang-sang'); v.p(48, 1, 'vang-sang');
   });
-  // lòng: cột 6..89 hàng 4..7 trong suốt
-  v.rect(6, 4, 84, 4, '_'); v.hl(5, 90, 3, 'vien'); v.hl(5, 90, 8, 'vien'); v.vl(5, 3, 8, 'vien'); v.vl(90, 3, 8, 'vien');
+  // lòng: cột 10..85 hàng 4..7 trong suốt — khít đúng thanh máu game vẽ (khung kéo w+16 quanh thanh w ≈ 60: lề 8 / 76 ≈ 10 cột)
+  v.rect(10, 4, 76, 4, '_'); v.hl(9, 86, 3, 'vien'); v.hl(9, 86, 8, 'vien'); v.vl(9, 3, 8, 'vien'); v.vl(86, 3, 8, 'vien');
   return v;
 }
 // khung người chơi (menu, 192×66 — CSS kéo 100%): huy chương trống đồng bên trái ôm ảnh đại diện (tâm 32,32, lỗ r≈11),
@@ -51,7 +51,11 @@ function nguoiChoi() {
   v.ring(32, 33, 24, 24, 'dong-toi'); v.ring(32, 33, 15, 15, 'dong-sang');
   for (let k = 0; k < 24; k++) { const a = (k * Math.PI) / 12; v.p(32 + Math.cos(a) * 20, 33 + Math.sin(a) * 20, 'vang-nghe'); }
   for (let k = 0; k < 4; k++) { const a = (k * Math.PI) / 2 + Math.PI / 4; v.stamp(['.kk..', 'kkkkk', '..k..'], { k: 'dong-toi' }, Math.round(32 + Math.cos(a) * 26) - 2, Math.round(33 + Math.sin(a) * 26) - 1); }
-  v.ell(32, 33, 13, 13, 'vien'); v.ell(32, 33, 12, 12, 'dat-toi');   // lỗ ảnh đại diện
+  v.ell(32, 33, 13, 13, 'vien'); v.ell(32, 33, 12, 12, 'dat-toi');   // lòng huy hiệu (ảnh đại diện .av phủ lên khi đăng nhập có ảnh)
+  // huy hiệu mặt trời trống đồng (khách không có ảnh đại diện → không để lỗ trống): sao 12 tia vàng + mặt trời giữa
+  for (let k = 0; k < 12; k++) { const a = (k * Math.PI) / 6, b = a + Math.PI / 12, c = a - Math.PI / 12;
+    v.poly([[32 + Math.cos(c) * 4, 33 + Math.sin(c) * 4], [32 + Math.cos(a) * 11, 33 + Math.sin(a) * 11], [32 + Math.cos(b) * 4, 33 + Math.sin(b) * 4]], k % 2 ? 'dong-sang' : 'vang-nghe'); }
+  v.ell(32, 33, 5, 5, 'vang-nghe'); v.ell(31, 32, 3.2, 3.2, 'vang-sang'); v.p(30, 31, 'sang'); v.ring(32, 33, 5, 5, 'dong');
   return v;
 }
 // nút chính (menu, 208×46 — CSS kéo 100%): tấm vàng nghệ vát cạnh, hai đầu ốp đồng khắc sao trống, răng cưa mép
@@ -63,14 +67,18 @@ function nutChinh() {
   v.rect(22, 6, 164, 34, 'vang-nghe'); v.rect(22, 6, 164, 3, 'vang-sang'); v.hl(22, 185, 9, 'sang'); v.rect(22, 34, 164, 6, 'dong-sang'); v.hl(22, 185, 39, 'dong');
   v.vl(21, 6, 39, 'dong-toi'); v.vl(186, 6, 39, 'dong-toi');
   for (let x = 24; x < 184; x++) { const t = x % 8, h = t < 4 ? t : 8 - t; if (h) v.p(x, 40 - h + 1, 'dong'); }   // răng cưa đáy
-  // hai đầu ốp đồng + sao trống
-  for (const cx of [11, 196]) {
-    v.rect(cx - 8, 3, 17, 40, 'dong'); v.vl(cx - 8, 3, 42, 'dong-sang'); v.vl(cx + 8, 3, 42, 'dong-toi');
-    v.ell(cx, 23, 7, 7, 'dong-toi'); v.ell(cx, 23, 6, 6, 'dong-sang'); v.ring(cx, 23, 6, 6, 'dong');
-    for (let k = 0; k < 8; k++) { const a = (k * Math.PI) / 4; v.line(cx, 23, cx + Math.cos(a) * 4, 23 + Math.sin(a) * 4, 'vang-nghe'); }
-    v.p(cx, 23, 'sang'); v.p(cx, 6, 'vang-sang'); v.p(cx, 40, 'vang-nghe');
-  }
   v.hl(3, 204, 3, 'dong-sang');
+  // hai huy hiệu tròn trống đồng nhô ở hai đầu (giữ bố cục bản cũ b424fa8)
+  for (const cx of [22, 185]) {
+    v.ell(cx, 23, 22, 22, 'vien'); v.ell(cx, 23, 21, 21, 'dong-toi'); v.ell(cx, 23, 20, 20, 'dong');
+    for (let y = 0; y < 46; y++) for (let x = cx - 21; x <= cx + 21; x++) { const d = Math.hypot(x + 0.5 - cx, y + 0.5 - 23); if (d < 20 && d > 8) { if (Math.hypot(x + 0.5 - (cx - 12), y + 0.5 - 11) < 12) v.p(x, y, 'dong-sang'); else if (Math.hypot(x + 0.5 - (cx + 13), y + 0.5 - 36) < 12) v.p(x, y, 'dong-toi'); } }
+    v.ring(cx, 23, 17, 17, 'dong-toi'); v.ring(cx, 23, 9, 9, 'dong-toi');
+    for (let k = 0; k < 20; k++) { const a = (k * Math.PI) / 10; v.p(cx + Math.cos(a) * 13.5, 23 + Math.sin(a) * 13.5, 'vang-nghe'); }
+    v.ell(cx, 23, 8, 8, 'dong-toi');
+    for (let k = 0; k < 12; k++) { const a = (k * Math.PI) / 6; v.line(cx, 23, cx + Math.cos(a) * 7, 23 + Math.sin(a) * 7, k % 2 ? 'dong-sang' : 'vang-nghe'); }
+    v.ell(cx, 23, 2.4, 2.4, 'vang-sang'); v.p(cx, 23, 'sang');
+  }
+
   return v;
 }
 const DS = {
@@ -78,7 +86,7 @@ const DS = {
   'khung-nut-chinh': [nutChinh, 'Khung nút chính', 'Tấm vàng nghệ vát sáng trên / đồng dưới, răng cưa đáy, hai đầu ốp đồng khắc sao trống'],
   'thanh-mau-tuong': [tuong, 'Khung thanh máu tướng', 'Khung đồng 3 tông, khe tối, đinh vàng hai đầu, mấu đồng giữa mép trên; lòng trong suốt (cột 2..29, hàng 2..5)'],
   'thanh-mau-quai': [quai, 'Khung thanh máu quái', 'Khung sắt 3 tông mộc mạc; lòng trong suốt (cột 2..21, hàng 2..5)'],
-  'thanh-mau-boss': [boss, 'Khung thanh máu boss', 'Khung sơn son đinh đồng, hai đầu ốp đồng có đinh vàng, mấu đồng giữa; lòng trong suốt (cột 6..89, hàng 4..7)'],
+  'thanh-mau-boss': [boss, 'Khung thanh máu boss', 'Khung sơn son đinh đồng, hai đầu ốp đồng có đinh vàng, mấu đồng giữa; lòng trong suốt (cột 10..85, hàng 4..7)'],
 };
 module.exports = { DS };
 if (require.main === module) {

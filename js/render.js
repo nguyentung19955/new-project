@@ -466,12 +466,14 @@ function itemPngPath(id, rarity) {
   return list;
 }
 // claude/xuat-goi-pixel: mã pixel nhóm "do" của một món — đồ trang phục thường theo loại × độ hiếm (như itemPngPath), còn lại theo mã món
+// claude/ve-lai-pixel: món có icon riêng theo mã (vd mu_sung, riu_lua) thì ưu tiên icon riêng (độ hiếm vẫn hiện bằng viền ô)
 function pxItemCode(id, rarity) {
   const it = ITEMS[id];
   if (!it || typeof pxEntry !== 'function') return null;
+  if (pxEntry('do', id)) return id;
   const kind = KIND_FILE[it.slot === 'weapon' ? it.wclass : it.slot];
   const loai = !it.set && kind ? `do_${kind}_${RAR_FILE[rarity || it.rarity]}` : null;
-  return (loai && pxEntry('do', loai) && loai) || (pxEntry('do', id) && id) || null;
+  return (loai && pxEntry('do', loai) && loai) || null;
 }
 // v107: icon kỹ năng vẽ tay cắt bằng tools/cat-icons.py → assets/packs/<tướng>/sk-q.png … sk-r.png
 const SKILL_PACK = new Set(['lyngu', 'thaylang', 'thienloi', 'langlieu', 'thoren', 'thogom', 'nguphu', 'baahoa', 'caong', 'chantrau', 'chodo', 'chuongdong', 'cuoi', 'dapde', 'denroi', 'dotnuong', 'giaodong', 'haisen', 'halong', 'kinhduong', 'kylan', 'longnu', 'matroi', 'maudia', 'mauthoai', 'melua', 'mychau', 'nghedong', 'ongdung', 'ongho', 'ongtao', 'ongthoi', 'potaoapui', 'sodua', 'tanvien', 'thocong', 'tre', 'trongdong', 'truongchi', 'trutroi', 'viemde']);

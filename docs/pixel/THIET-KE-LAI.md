@@ -151,3 +151,9 @@ Mọi tranh `giao-dien/tranh-*` cùng canvas 96×96, **lề trong 4px** (nội d
 vật đứng (voi, gà, ngựa, hũ, kho) **đáy cùng đường chân y = 91**; vật tròn (trống đồng, xoay) cân giữa dọc. Tia hũ báu thu ngắn không vượt lề,
 mặt trống thu bán kính 46 → 42. CSS: 3 thẻ Vua Hùng ban thưởng có **giếng tranh cố định 44% chiều cao thẻ** (trước giếng thẻ Sính lễ thấp hơn
 vì mô tả dài), nút Chọn luôn sát đáy.
+
+### 10b. Sửa theo tester (@1ea8410)
+- `khung-nguoi-choi`: lòng huy chương vẽ **mặt trời trống đồng** (sao 12 tia + mặt trời vàng) — khách không có `.av` nên trước hiện vòng tối trống.
+- `khung-nut-chinh`: thêm lại **2 huy hiệu tròn trống đồng** nhô ở hai đầu (bố cục bản cũ b424fa8).
+- `thanh-mau-boss`: lòng khung cột 10..85 (đầu ốp đồng rộng 10) cho khít thanh máu game vẽ (khung w+16 quanh thanh w ≈ 60) — hết khe lộ nền ở đầu phải.
+- `pxItemCode` (js/render.js): món có icon riêng theo mã thì dùng icon riêng trước, rồi mới tới icon loại × độ hiếm.
