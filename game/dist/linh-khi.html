@@ -232,6 +232,8 @@
   G.ROOM_WAVES = { start: [1, 2], early: 3, late: 4, challenge: 2, pts: 0.85, ptsLate: 0.85, maxPerWave: 7, stagger: 2, challengeTime: 30 };
   // Độ dẹt của vùng nguy hiểm và vũng hệ: cao bằng bấy nhiêu lần rộng. Trước là 0,6 (nhìn ngang), nay tròn hơn cho sàn nhìn từ trên.
   G.ZK = 0.85;
+  // Lăn né: tốc độ ngang (điểm ảnh mỗi giây) và tỉ lệ chiều dọc so với chiều ngang (bằng tỉ lệ lúc đi bộ).
+  G.DODGE = { vx: 195, ky: 0.75 };
   G.MINI_HP = 12; // máu trùm nhỏ = hệ số x máu quái thường
   G.BOSS_HP = 24; // máu boss vùng = hệ số x máu quái thường
   // Hồ Tinh né nhiều nên ít lúc đánh trúng, cho ít máu hơn để trận không kéo quá 3 phút.
@@ -8621,7 +8623,8 @@
     c.imageSmoothingEnabled = false;
     if (!o.noShadow) {
       const sw = fr.dead ? 12 : Math.round(fr.sh * (1 - 0.4 * fr.air)), sx = fr.dead ? x - f * 12 : x;
-      c.fillStyle = 'rgba(0,0,0,0.3)'; c.fillRect(sx - sw + 2, y - 1, sw * 2 - 4, 1); c.fillRect(sx - sw, y, sw * 2, 1); c.fillRect(sx - sw + 2, y + 1, sw * 2 - 4, 1);
+      if (o.roundShadow && A && A.ellipse) A.ellipse(c, sx, y, sw + 1, Math.max(2, Math.round((sw + 1) * 0.45)), 'rgba(0,0,0,0.3)'); // ghép đợt 2: bóng tròn cho sàn nhìn từ trên
+      else { c.fillStyle = 'rgba(0,0,0,0.3)'; c.fillRect(sx - sw + 2, y - 1, sw * 2 - 4, 1); c.fillRect(sx - sw, y, sw * 2, 1); c.fillRect(sx - sw + 2, y + 1, sw * 2 - 4, 1); }
     }
     c.translate(x + (f < 0 ? 1 : 0), y);
     c.scale(f, 1);
@@ -10637,8 +10640,9 @@
     if (P.dodgeT > 0) {
       P.dodgeT -= dt;
       const ox = P.x;
-      P.x += P.ddx * 195 * dt;
-      P.y += P.ddy * 120 * dt;
+      // Phòng vuông nhìn từ trên: lộn dọc đi xa gần bằng lộn ngang (cùng tỉ lệ 0,75 như lúc đi bộ), tám hướng đều đúng góc.
+      P.x += P.ddx * G.DODGE.vx * dt;
+      P.y += P.ddy * G.DODGE.vx * G.DODGE.ky * dt;
       if (P.charm === 'c_mist' || P.set === 'ngu') {
         for (const e of G.targets()) {
           if (!e.misted && e.x >= Math.min(ox, P.x) - e.r && e.x <= Math.max(ox, P.x) + e.r && Math.abs(e.y - P.y) < 14 + e.hr) {
@@ -10665,7 +10669,8 @@
         P.dodgeT = 0.27; P.dodgeCd = 1 * P.dodgeCdMax; P.inv = Math.max(P.inv, 0.32);
         P.atkT = 0;
         // Không đẩy cần thì lộn theo hướng di chuyển gần nhất; chưa đi bước nào thì mới theo hướng mặt.
-        if (ml > 0.12) { P.ddx = mx; P.ddy = my; } else if (P.ldx != null) { P.ddx = P.ldx; P.ddy = P.ldy; } else { P.ddx = P.face; P.ddy = 0; }
+        // Hướng lộn luôn dài bằng 1: đẩy cần nhẹ hay mạnh thì quãng lộn vẫn như nhau.
+        if (ml > 0.12) { const l0 = Math.hypot(mx, my); P.ddx = mx / l0; P.ddy = my / l0; } else if (P.ldx != null) { P.ddx = P.ldx; P.ddy = P.ldy; } else { P.ddx = P.face; P.ddy = 0; }
         if (Math.abs(P.ddx) > 0.2) P.face = P.ddx > 0 ? 1 : -1;
         W.stats.dodges++;
         G.sfx('swing', 0.7);
@@ -10938,6 +10943,7 @@
       flash: P.hurtT > 0, alpha: P.inv > 0 && P.dodgeT <= 0 && Math.floor(G.time * 20) % 2 ? 0.5 : null,
       weapon: Object.assign({}, w, { coat: P.coats[w.id] && P.coats[w.id].t > 0 ? P.coats[w.id].el : null }),
       helm: P.helm, armor: P.armor, gong: P.gongT > 0,
+      roundShadow: !!W.geo, // phòng vuông nhìn từ trên: bóng đổ tròn
     };
   };
   // Thứ tự lớp: nền, vùng và vũng, hiệu ứng sát đất, nhân vật (kèm hiệu ứng bám theo), đạn, hiệu ứng phía trên, rồi lớp giao diện.
@@ -15295,13 +15301,18 @@
   // ---------- điều khiển ----------
   const BTN0 = { atk: [430, 220, 28], dodge: [380, 246, 18], special: [384, 196, 18], skill: [434, 162, 18] }; // nút kỹ năng nhích lên 4 để ngọn lửa của nút Đánh không chạm thẻ giá
   // Có lề trống (màn hình dài hoặc đang cầm dọc) thì đẩy nút ra lề để không che trận đấu.
-  function btnPos(name) { const b = BTN0[name]; return [b[0] + G.cx, b[1] + G.cy, b[2]]; }
+  // Phòng trùm rộng hơn (sàn tới x = 380): màn hình không đủ lề (16:9) thì dùng bộ nút thu nhỏ, nằm sát mép phải, không đè lên sàn.
+  const BTN_BIG = { atk: [450, 222, 26], dodge: [400, 248, 17], special: [401, 200, 17], skill: [448, 167, 17] };
+  const bigRoom = () => !!(S && S.W && S.W.geo && S.W.geo.big);
+  function btnPos(name) { const b = (bigRoom() && G.cx < 20 ? BTN_BIG : BTN0)[name]; return [b[0] + G.cx, b[1] + G.cy, b[2]]; }
+  // Cần điều khiển lúc chưa chạm: phòng trùm thì lùi sát mép trái để không đè tường.
+  function stickPos() { return [(bigRoom() && G.cx < 30 ? 42 : 62) - G.cx * 0.6, 216 + G.cy, 24]; }
   const BTN = BTN0;
   // Ô bình máu và nút tạm dừng: [x, y, rộng, cao]. Vùng chạm rộng hơn hình vẽ 4 đơn vị mỗi phía.
   const POT = [4, 23, 50, 21], PAU = [58, 23, 30, 21];
   const hitBox = (d, b) => G.inRect(d, b[0] - 4, b[1] - 3, b[2] + 8, b[3] + 7);
   function setMode(m) { S.mode = m; S.sel = null; }
-  G.stageUi = { btnPos, POT, PAU }; // để bài kiểm tra biết nút nằm ở đâu
+  G.stageUi = { btnPos, stickPos, POT, PAU }; // để bài kiểm tra biết nút nằm ở đâu
   function readInput() {
     const k = G.keys, kp = G.keyP;
     const inp = {
@@ -15579,7 +15590,7 @@
         const jl = Math.hypot(jdx, jdy);
         if (jl > 24) { jdx *= 24 / jl; jdy *= 24 / jl; }
         BA.stick(c, joy.sx, joy.sy, 24, jdx, jdy, true);
-      } else BA.stick(c, 62 - G.cx * 0.6, 216 + G.cy, 24, 0, 0, false);
+      } else { const sp = stickPos(); BA.stick(c, sp[0], sp[1], sp[2], 0, 0, false); }
       const held = (name) => [...G.pointers.values()].some((p) => p.role === name);
       const cw2 = G.curW(P);
       // Vũ khí đang cầm: loại, hệ đang có hiệu lực (kể cả lúc đang Nung), mốc tiến hóa, bậc.
@@ -15588,7 +15599,9 @@
       // Mũi tên trên nút Né: theo cần điều khiển hoặc phím; không đẩy thì theo hướng di chuyển gần nhất (đúng hướng sẽ lộn).
       const kx = (G.keys.ArrowRight || G.keys.KeyD ? 1 : 0) - (G.keys.ArrowLeft || G.keys.KeyA ? 1 : 0) + jdx / 24;
       const ky = (G.keys.ArrowDown || G.keys.KeyS ? 1 : 0) - (G.keys.ArrowUp || G.keys.KeyW ? 1 : 0) + jdy / 24;
-      const dir = Math.hypot(kx, ky) > 0.18 ? Math.atan2(ky, kx) : P.ldx != null ? Math.atan2(P.ldy, P.ldx) : P.face > 0 ? 0 : Math.PI;
+      const DK = G.DODGE.ky; // mũi tên chỉ đúng góc sẽ lộn trên màn hình (chiều dọc đi ngắn hơn chiều ngang)
+      const dir = P.dodgeT > 0 ? Math.atan2(P.ddy * DK, P.ddx) : Math.hypot(kx, ky) > 0.18 ? Math.atan2(ky * DK, kx) : P.ldx != null ? Math.atan2(P.ldy * DK, P.ldx) : P.face > 0 ? 0 : Math.PI;
+      S.dodgeDir = dir; // để bài kiểm tra đọc
       // Vòng nạp quanh nút Đánh khi đang giữ để lấy đà (P.mv của js/moves.js). Búa có 2 nấc.
       const mv = P.mv, chg = mv && mv.holding ? mv.charge : 0, mcfg = G.MOVES && G.MOVES[cw2.type];
       let bt = btnPos('atk');

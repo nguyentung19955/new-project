@@ -1033,7 +1033,8 @@
     c.imageSmoothingEnabled = false;
     if (!o.noShadow) {
       const sw = fr.dead ? 12 : Math.round(fr.sh * (1 - 0.4 * fr.air)), sx = fr.dead ? x - f * 12 : x;
-      c.fillStyle = 'rgba(0,0,0,0.3)'; c.fillRect(sx - sw + 2, y - 1, sw * 2 - 4, 1); c.fillRect(sx - sw, y, sw * 2, 1); c.fillRect(sx - sw + 2, y + 1, sw * 2 - 4, 1);
+      if (o.roundShadow && A && A.ellipse) A.ellipse(c, sx, y, sw + 1, Math.max(2, Math.round((sw + 1) * 0.45)), 'rgba(0,0,0,0.3)'); // ghép đợt 2: bóng tròn cho sàn nhìn từ trên
+      else { c.fillStyle = 'rgba(0,0,0,0.3)'; c.fillRect(sx - sw + 2, y - 1, sw * 2 - 4, 1); c.fillRect(sx - sw, y, sw * 2, 1); c.fillRect(sx - sw + 2, y + 1, sw * 2 - 4, 1); }
     }
     c.translate(x + (f < 0 ? 1 : 0), y);
     c.scale(f, 1);

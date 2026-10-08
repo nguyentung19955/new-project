@@ -432,13 +432,18 @@
   // ---------- điều khiển ----------
   const BTN0 = { atk: [430, 220, 28], dodge: [380, 246, 18], special: [384, 196, 18], skill: [434, 162, 18] }; // nút kỹ năng nhích lên 4 để ngọn lửa của nút Đánh không chạm thẻ giá
   // Có lề trống (màn hình dài hoặc đang cầm dọc) thì đẩy nút ra lề để không che trận đấu.
-  function btnPos(name) { const b = BTN0[name]; return [b[0] + G.cx, b[1] + G.cy, b[2]]; }
+  // Phòng trùm rộng hơn (sàn tới x = 380): màn hình không đủ lề (16:9) thì dùng bộ nút thu nhỏ, nằm sát mép phải, không đè lên sàn.
+  const BTN_BIG = { atk: [450, 222, 26], dodge: [400, 248, 17], special: [401, 200, 17], skill: [448, 167, 17] };
+  const bigRoom = () => !!(S && S.W && S.W.geo && S.W.geo.big);
+  function btnPos(name) { const b = (bigRoom() && G.cx < 20 ? BTN_BIG : BTN0)[name]; return [b[0] + G.cx, b[1] + G.cy, b[2]]; }
+  // Cần điều khiển lúc chưa chạm: phòng trùm thì lùi sát mép trái để không đè tường.
+  function stickPos() { return [(bigRoom() && G.cx < 30 ? 42 : 62) - G.cx * 0.6, 216 + G.cy, 24]; }
   const BTN = BTN0;
   // Ô bình máu và nút tạm dừng: [x, y, rộng, cao]. Vùng chạm rộng hơn hình vẽ 4 đơn vị mỗi phía.
   const POT = [4, 23, 50, 21], PAU = [58, 23, 30, 21];
   const hitBox = (d, b) => G.inRect(d, b[0] - 4, b[1] - 3, b[2] + 8, b[3] + 7);
   function setMode(m) { S.mode = m; S.sel = null; }
-  G.stageUi = { btnPos, POT, PAU }; // để bài kiểm tra biết nút nằm ở đâu
+  G.stageUi = { btnPos, stickPos, POT, PAU }; // để bài kiểm tra biết nút nằm ở đâu
   function readInput() {
     const k = G.keys, kp = G.keyP;
     const inp = {
@@ -716,7 +721,7 @@
         const jl = Math.hypot(jdx, jdy);
         if (jl > 24) { jdx *= 24 / jl; jdy *= 24 / jl; }
         BA.stick(c, joy.sx, joy.sy, 24, jdx, jdy, true);
-      } else BA.stick(c, 62 - G.cx * 0.6, 216 + G.cy, 24, 0, 0, false);
+      } else { const sp = stickPos(); BA.stick(c, sp[0], sp[1], sp[2], 0, 0, false); }
       const held = (name) => [...G.pointers.values()].some((p) => p.role === name);
       const cw2 = G.curW(P);
       // Vũ khí đang cầm: loại, hệ đang có hiệu lực (kể cả lúc đang Nung), mốc tiến hóa, bậc.
@@ -725,7 +730,9 @@
       // Mũi tên trên nút Né: theo cần điều khiển hoặc phím; không đẩy thì theo hướng di chuyển gần nhất (đúng hướng sẽ lộn).
       const kx = (G.keys.ArrowRight || G.keys.KeyD ? 1 : 0) - (G.keys.ArrowLeft || G.keys.KeyA ? 1 : 0) + jdx / 24;
       const ky = (G.keys.ArrowDown || G.keys.KeyS ? 1 : 0) - (G.keys.ArrowUp || G.keys.KeyW ? 1 : 0) + jdy / 24;
-      const dir = Math.hypot(kx, ky) > 0.18 ? Math.atan2(ky, kx) : P.ldx != null ? Math.atan2(P.ldy, P.ldx) : P.face > 0 ? 0 : Math.PI;
+      const DK = G.DODGE.ky; // mũi tên chỉ đúng góc sẽ lộn trên màn hình (chiều dọc đi ngắn hơn chiều ngang)
+      const dir = P.dodgeT > 0 ? Math.atan2(P.ddy * DK, P.ddx) : Math.hypot(kx, ky) > 0.18 ? Math.atan2(ky * DK, kx) : P.ldx != null ? Math.atan2(P.ldy * DK, P.ldx) : P.face > 0 ? 0 : Math.PI;
+      S.dodgeDir = dir; // để bài kiểm tra đọc
       // Vòng nạp quanh nút Đánh khi đang giữ để lấy đà (P.mv của js/moves.js). Búa có 2 nấc.
       const mv = P.mv, chg = mv && mv.holding ? mv.charge : 0, mcfg = G.MOVES && G.MOVES[cw2.type];
       let bt = btnPos('atk');

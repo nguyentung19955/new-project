@@ -189,6 +189,8 @@
   G.ROOM_WAVES = { start: [1, 2], early: 3, late: 4, challenge: 2, pts: 0.85, ptsLate: 0.85, maxPerWave: 7, stagger: 2, challengeTime: 30 };
   // Độ dẹt của vùng nguy hiểm và vũng hệ: cao bằng bấy nhiêu lần rộng. Trước là 0,6 (nhìn ngang), nay tròn hơn cho sàn nhìn từ trên.
   G.ZK = 0.85;
+  // Lăn né: tốc độ ngang (điểm ảnh mỗi giây) và tỉ lệ chiều dọc so với chiều ngang (bằng tỉ lệ lúc đi bộ).
+  G.DODGE = { vx: 195, ky: 0.75 };
   G.MINI_HP = 12; // máu trùm nhỏ = hệ số x máu quái thường
   G.BOSS_HP = 24; // máu boss vùng = hệ số x máu quái thường
   // Hồ Tinh né nhiều nên ít lúc đánh trúng, cho ít máu hơn để trận không kéo quá 3 phút.

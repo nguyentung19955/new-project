@@ -551,8 +551,9 @@
     if (P.dodgeT > 0) {
       P.dodgeT -= dt;
       const ox = P.x;
-      P.x += P.ddx * 195 * dt;
-      P.y += P.ddy * 120 * dt;
+      // Phòng vuông nhìn từ trên: lộn dọc đi xa gần bằng lộn ngang (cùng tỉ lệ 0,75 như lúc đi bộ), tám hướng đều đúng góc.
+      P.x += P.ddx * G.DODGE.vx * dt;
+      P.y += P.ddy * G.DODGE.vx * G.DODGE.ky * dt;
       if (P.charm === 'c_mist' || P.set === 'ngu') {
         for (const e of G.targets()) {
           if (!e.misted && e.x >= Math.min(ox, P.x) - e.r && e.x <= Math.max(ox, P.x) + e.r && Math.abs(e.y - P.y) < 14 + e.hr) {
@@ -579,7 +580,8 @@
         P.dodgeT = 0.27; P.dodgeCd = 1 * P.dodgeCdMax; P.inv = Math.max(P.inv, 0.32);
         P.atkT = 0;
         // Không đẩy cần thì lộn theo hướng di chuyển gần nhất; chưa đi bước nào thì mới theo hướng mặt.
-        if (ml > 0.12) { P.ddx = mx; P.ddy = my; } else if (P.ldx != null) { P.ddx = P.ldx; P.ddy = P.ldy; } else { P.ddx = P.face; P.ddy = 0; }
+        // Hướng lộn luôn dài bằng 1: đẩy cần nhẹ hay mạnh thì quãng lộn vẫn như nhau.
+        if (ml > 0.12) { const l0 = Math.hypot(mx, my); P.ddx = mx / l0; P.ddy = my / l0; } else if (P.ldx != null) { P.ddx = P.ldx; P.ddy = P.ldy; } else { P.ddx = P.face; P.ddy = 0; }
         if (Math.abs(P.ddx) > 0.2) P.face = P.ddx > 0 ? 1 : -1;
         W.stats.dodges++;
         G.sfx('swing', 0.7);
@@ -852,6 +854,7 @@
       flash: P.hurtT > 0, alpha: P.inv > 0 && P.dodgeT <= 0 && Math.floor(G.time * 20) % 2 ? 0.5 : null,
       weapon: Object.assign({}, w, { coat: P.coats[w.id] && P.coats[w.id].t > 0 ? P.coats[w.id].el : null }),
       helm: P.helm, armor: P.armor, gong: P.gongT > 0,
+      roundShadow: !!W.geo, // phòng vuông nhìn từ trên: bóng đổ tròn
     };
   };
   // Thứ tự lớp: nền, vùng và vũng, hiệu ứng sát đất, nhân vật (kèm hiệu ứng bám theo), đạn, hiệu ứng phía trên, rồi lớp giao diện.
