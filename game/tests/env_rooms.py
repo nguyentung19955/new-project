@@ -1,7 +1,7 @@
 # Đi qua mọi loại phòng ở cả ba vùng, kiểm tra phòng vuông mới vẽ được: sàn, tường, cửa khóa và cửa mở ở từng phía, lớp phủ trước, đồ vật.
 import sys
 from playwright.sync_api import sync_playwright
-URL = 'file:///home/claude/new-project/game/index.html'
+URL = 'file://' + __import__('os').path.dirname(__import__('os').path.dirname(__import__('os').path.abspath(__file__))) + '/index.html'
 TYPES = ['start', 'fight', 'elite', 'challenge', 'chest', 'fountain', 'merchant', 'curse', 'boss']
 JS = """([r, i, t, kind, seed]) => {
   G.startStage(r, i, 0, { kind, seed }); const S = G.getRun();

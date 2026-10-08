@@ -23,9 +23,9 @@ with sync_playwright() as p:
     pg = br.new_page(viewport={'width': 844, 'height': 390})
     pg.on('pageerror', lambda e: errs.append(str(e)))
     pg.on('console', lambda m: errs.append(m.text) if m.type == 'error' and 'ERR_' not in m.text else None)
-    pg.goto('file:///home/claude/new-project/game/index.html')
+    pg.goto('file://' + __import__('os').path.dirname(__import__('os').path.dirname(__import__('os').path.abspath(__file__))) + '/index.html')
     pg.wait_for_timeout(1200)
-    pg.add_script_tag(path='/home/claude/new-project/game/tests/bot.js')
+    pg.add_script_tag(path=__import__('os').path.join(__import__('os').path.dirname(__import__('os').path.abspath(__file__)), 'bot.js'))
     for r in range(3):
         for i in (1, 4):
             print(r, i, json.dumps(pg.evaluate(JS, [r, i]))[:600])

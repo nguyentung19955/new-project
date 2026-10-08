@@ -7,7 +7,7 @@ with sync_playwright() as p:
     pg = b.new_page(viewport={'width': 844, 'height': 390})
     pg.on('console', lambda m: errs.append(m.text) if m.type == 'error' and 'ERR_' not in m.text else None)
     pg.on('pageerror', lambda e: errs.append('PAGEERROR ' + str(e)))
-    pg.goto('file:///home/claude/new-project/game/index.html')
+    pg.goto('file://' + __import__('os').path.dirname(__import__('os').path.dirname(__import__('os').path.abspath(__file__))) + '/index.html')
     pg.wait_for_timeout(1800)
     pg.screenshot(path=OUT + '/01-title.png')
     pg.mouse.click(400, 200); pg.wait_for_timeout(400)

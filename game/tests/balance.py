@@ -23,7 +23,7 @@ JS = r"""
 
 def main():
     n = int(sys.argv[1]) if len(sys.argv) > 1 else 3
-    url = sys.argv[2] if len(sys.argv) > 2 else 'file:///home/claude/new-project/game/index.html'
+    url = sys.argv[2] if len(sys.argv) > 2 else 'file://' + __import__('os').path.dirname(__import__('os').path.dirname(__import__('os').path.abspath(__file__))) + '/index.html'
     errs = []
     tot = {'t': 0, 'win': 0, 'n': 0, 'marks': 0, 'kills': 0, 'boss': 0, 'bn': 0, 'hurt': 0}
     with sync_playwright() as p:

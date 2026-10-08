@@ -51,7 +51,7 @@ def main():
         b = p.chromium.launch()
         pg = b.new_page(viewport={'width': 844, 'height': 390})
         pg.on('pageerror', lambda e: errs.append(str(e)))
-        pg.goto('file:///home/claude/new-project/game/index.html')
+        pg.goto('file://' + __import__('os').path.dirname(__import__('os').path.dirname(__import__('os').path.abspath(__file__))) + '/index.html')
         pg.wait_for_function('window.G && G.mapgen')
         out = pg.evaluate(JS, n)
         b.close()

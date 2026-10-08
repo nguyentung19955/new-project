@@ -6,7 +6,7 @@ with sync_playwright() as p:
     b = p.chromium.launch()
     pg = b.new_page(viewport={'width': 844, 'height': 390})
     pg.on('pageerror', lambda e: errs.append(str(e)))
-    pg.goto('file:///home/claude/new-project/game/index.html')
+    pg.goto('file://' + __import__('os').path.dirname(__import__('os').path.dirname(__import__('os').path.abspath(__file__))) + '/index.html')
     pg.wait_for_timeout(1500)
     pg.add_script_tag(path='tests/bot.js')
     pg.evaluate("""() => { G.resetSave(); const sv = G.save; sv.sound=false; sv.gold=2400; sv.ore=40; sv.stones=3; sv.mats=[20,20,20]; sv.shards=[3,3,3];
