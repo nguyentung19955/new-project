@@ -1,0 +1,46 @@
+# Ngọc Thành Đảo — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: pearl island — Ngọc rồng phun ra hóa nghìn hòn đảo
+name: Ngọc Thành Đảo
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = trang-xam
+  d = trang
+  e = sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbebbbbbbbbbgfa
+ahgbbbbbbbedcbbbbbbbbgfa
+ahgbbbbbeedddecbbbbbbgfa
+ahgbbbbedddddddcbbbbbgfa
+ahgbbbedddddddddcbbbbgfa
+ahgbbedddddddddddcbbbgfa
+ahgeedddddddddddddecbgfa
+ahgbedddddddddddddcbbgfa
+ahgbcdddddddddddddcbbgfa
+ahgbbcdddddddddddcbbbgfa
+ahgbbbcdddddddddcbbbbgfa
+ahgbbbbcdddddddcbbbbbgfa
+ahgbbbbbcdddddcbbbbbbgfa
+ahgbbbbbbedddcbbbbbbbgfa
+ahgbbbbbbcdddcbbbbbbbgfa
+ahgbbbbbbbcdcbbbbbbbbgfa
+ahgbbbbbbbbcbbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

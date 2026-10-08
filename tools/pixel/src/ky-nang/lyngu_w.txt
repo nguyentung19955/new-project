@@ -1,0 +1,48 @@
+# Lý Ngư Tướng Quân · W «Vảy Chép Vàng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: golden carp scale
+name: Lý Ngư Tướng Quân · W «Vảy Chép Vàng»
+size: 24x24
+colors:
+  a = vien
+  b = dong-toi
+  c = dong
+  d = dong-sang
+  e = vang-nghe
+  f = vang-sang
+  g = son-sang
+  h = lua-sang
+  i = cham-toi
+  j = nuoc
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adcjjjaaaaajaaaaaagajcba
+adcjiafffffafffffghgacba
+adcjafcfffefcfffefgajcba
+adcjaceffeeceffeecaijcba
+adcafcfeeeccfeeeccfajcba
+adcfccccccccccccccffacba
+adccffccccffccccfffefcba
+adcfffffffffffffffeeccba
+aecfeeeccfeeeccfeeecccea
+aeccccccccccccccccccccea
+adcccccffccccffcccccacba
+adcaafffffffffffffaajcba
+adcjacfeeeccfeeeccaijcba
+adcjacccccffccccccaijcba
+adcjiacccccfcccccaiijcba
+adcjiiaacffeffcaaiiijcba
+adcjiiiacccccccaiiiijcba
+adcjjjjjacccccajjjjjjcba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

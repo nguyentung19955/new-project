@@ -1,0 +1,35 @@
+# nút chính menu (Xuất trận) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: nút vàng lớn
+name: nút chính menu (Xuất trận)
+size: 64x16
+colors:
+  a = vien
+  b = sang
+  c = dong-sang
+  d = vang-nghe
+  e = vang-sang
+
+part k0
+...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...
+..aeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeca..
+.aeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeca.
+aeddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddca
+aeddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddca
+aeddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddca
+aeddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddca
+aededdddddddddddddddddddddddddddddddddddddddddddddddddddddddedca
+aeebeddddddddddddddddddddddddddddddddddddddddddddddddddddddebeca
+aededdddddddddddddddddddddddddddddddddddddddddddddddddddddddedca
+aeddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddca
+aeddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddca
+acddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddca
+.acddddddddddddddddddddddddddddddddddddddddddddddddddddddddddca.
+..acccccccccccccccccccccccccccccccccccccccccccccccccccccccccca..
+...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

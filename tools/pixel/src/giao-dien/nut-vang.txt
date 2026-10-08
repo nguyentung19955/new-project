@@ -1,0 +1,35 @@
+# nút vàng (menu cũ) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: nút vàng
+name: nút vàng (menu cũ)
+size: 48x16
+colors:
+  a = vien
+  b = sang
+  c = dong-sang
+  d = vang-nghe
+  e = vang-sang
+
+part k0
+...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...
+..aeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeca..
+.aeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeca.
+aeddddddddddddddddddddddddddddddddddddddddddddca
+aeddddddddddddddddddddddddddddddddddddddddddddca
+aeddddddddddddddddddddddddddddddddddddddddddddca
+aeddddddddddddddddddddddddddddddddddddddddddddca
+aededdddddddddddddddddddddddddddddddddddddddedca
+aeebeddddddddddddddddddddddddddddddddddddddebeca
+aededdddddddddddddddddddddddddddddddddddddddedca
+aeddddddddddddddddddddddddddddddddddddddddddddca
+aeddddddddddddddddddddddddddddddddddddddddddddca
+acddddddddddddddddddddddddddddddddddddddddddddca
+.acddddddddddddddddddddddddddddddddddddddddddca.
+..acccccccccccccccccccccccccccccccccccccccccca..
+...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

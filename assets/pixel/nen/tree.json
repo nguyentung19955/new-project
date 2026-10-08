@@ -1,0 +1,25 @@
+{
+ "code": "tree",
+ "group": "nen",
+ "name": "trang trí: tree",
+ "w": 32,
+ "h": 32,
+ "ax": 16,
+ "ay": 31,
+ "bbox": [
+  3,
+  1,
+  26,
+  30
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "tree.png"
+}

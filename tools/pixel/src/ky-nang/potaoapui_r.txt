@@ -1,0 +1,52 @@
+# Vua Lửa Pơtao Apui · R «Núi Lửa Thức Giấc» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: erupting volcano
+name: Vua Lửa Pơtao Apui · R «Núi Lửa Thức Giấc»
+size: 24x24
+colors:
+  a = vien
+  b = dat-toi
+  c = dat
+  d = dat-sang
+  e = dong-toi
+  f = dong
+  g = dong-sang
+  h = vang-nghe
+  i = vang-sang
+  j = son-toi
+  k = son
+  l = son-sang
+  m = lua
+  n = lua-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+agggggggggghhgggggggggfa
+agffffffffffffffffffffea
+agfllllllllllllllaaalfea
+agfljaaajjjajjjjannnafea
+agflannnajanajjjaknkafea
+agflaknkaanmnajjaknkafea
+agflaknkaanmmnajjaaalfea
+agfljaaajankkkajanajlfea
+agfljjjjankiinnanmnalfea
+agfljjjjakkmmnkaakajlfea
+ahfljjjjadknnkaajajjlfha
+ahfljjjadcddddddajjjlfha
+agfljjadccbmnmdcdajjlfea
+agfljjadccbmnmbcbajjlfea
+agfljadccbmmnmmdcdajlfea
+agfladcccbmdndmdcbajlfea
+agfladcccbmbnbmdccdalfea
+agfadccccbmddbmbcccdafea
+agfadcccbmdcccdmdccbafea
+agfdbbbbbmbbbbbmbbbbdfea
+agffffffffffffffffffffea
+afeeeeeeeeeehheeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

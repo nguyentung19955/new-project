@@ -1,0 +1,47 @@
+# Lông Ngỗng Bay — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Lông ngỗng hóa đàn chim lao xuống quái, x2 sát thương +1
+name: Lông Ngỗng Bay
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = sat
+  d = sat-sang
+  e = bac
+  f = dat
+  g = dong-toi
+  h = dong
+  i = dong-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aiiiiiiiiiiiiiiiiiiiiiga
+aihhhhhhhhhhhhhhhhhhhhga
+aihbbbbbbbbbbbbbbbbbbhga
+aihbbbbbbbbbbbbbbbdbbhga
+aihbbbbbbbbbbbbbecbbbhga
+aihbbbbbbbbbbbbedfbbbhga
+aihbbbbbbbbbbeedfbbbbhga
+aihbbbbbbbbbeddfcbbbbhga
+aihbbbbbbbbeddfcbbbbbhga
+aihbbbbbbeeddfdcbbbbbhga
+aihbbbbbbeddfdcbbbbbbhga
+aihbbbbbeddfddcbbbbbbhga
+aihbbbbeddfddcbbbbbbbhga
+aihbbbbedfddccbbbbbbbhga
+aihbbbedfdccbbbbbbbbbhga
+aihbbbefccbbbbbbbbbbbhga
+aihbbefcbbbbbbbbbbbbbhga
+aihbbfbbbbbbbbbbbbbbbhga
+aihbfbbbbbbbbbbbbbbbbhga
+aihfbbbbbbbbbbbbbbbbbhga
+aihhhhhhhhhhhhhhhhhhhhga
+agggggggggggggggggggggga
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -1,0 +1,46 @@
+# Vảy Vàng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: +10.2% máu, −3% sát thương nhận
+name: Vảy Vàng
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = sat
+  d = sat-sang
+  e = bac
+  f = dong-toi
+  g = dong
+  h = dong-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbeeecbbbbbbbgfa
+ahgbbbbbeeddddecbbbbbgfa
+ahgbbbbeddddddddcbbbbgfa
+ahgbbbedcdddcddcdcbbbgfa
+ahgbbbeddcdcdccdcccbbgfa
+ahgbbeddddcddcdddccbbgfa
+ahgbbeddddddddddddcbbgfa
+ahgbbeddddddddddddcbbgfa
+ahgbbecddccddcddcdcbbgfa
+ahgbbedccddccdccddcbbgfa
+ahgbbcddddddddddddcbbgfa
+ahgbbbeddddddddddcbbbgfa
+ahgbbbcdcdddcddcdcbbbgfa
+ahgbbbbcdcdcdccdcbcbbgfa
+ahgbbbbbcccddcccbcbbbgfa
+ahgbbbbbbbccccbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

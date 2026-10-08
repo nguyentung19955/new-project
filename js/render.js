@@ -461,6 +461,14 @@ function itemPngPath(id, rarity) {
   list.push(`items/${ITEM_FILE[id] || id.replace(/_/g, '-')}.png`);
   return list;
 }
+// claude/xuat-goi-pixel: mã pixel nhóm "do" của một món — đồ trang phục thường theo loại × độ hiếm (như itemPngPath), còn lại theo mã món
+function pxItemCode(id, rarity) {
+  const it = ITEMS[id];
+  if (!it || typeof pxEntry !== 'function') return null;
+  const kind = KIND_FILE[it.slot === 'weapon' ? it.wclass : it.slot];
+  const loai = !it.set && kind ? `do_${kind}_${RAR_FILE[rarity || it.rarity]}` : null;
+  return (loai && pxEntry('do', loai) && loai) || (pxEntry('do', id) && id) || null;
+}
 // v107: icon kỹ năng vẽ tay cắt bằng tools/cat-icons.py → assets/packs/<tướng>/sk-q.png … sk-r.png
 const SKILL_PACK = new Set(['lyngu', 'thaylang', 'thienloi', 'langlieu', 'thoren', 'thogom', 'nguphu', 'baahoa', 'caong', 'chantrau', 'chodo', 'chuongdong', 'cuoi', 'dapde', 'denroi', 'dotnuong', 'giaodong', 'haisen', 'halong', 'kinhduong', 'kylan', 'longnu', 'matroi', 'maudia', 'mauthoai', 'melua', 'mychau', 'nghedong', 'ongdung', 'ongho', 'ongtao', 'ongthoi', 'potaoapui', 'sodua', 'tanvien', 'thocong', 'tre', 'trongdong', 'truongchi', 'trutroi', 'viemde']);
 // v112: icon Thần Khí vẽ tay (cat-icons.py … 3) → assets/packs/<tướng>/tk-1 … tk-3.png theo thứ tự LEGACY[tướng]
@@ -538,9 +546,9 @@ function mapImage(pw, ph, level) {
 function drawMapFallback(ctx) {
   ctx.fillStyle = '#3A5A28';
   ctx.fillRect(0, 0, CONFIG.W, CONFIG.H);
-  strokePath(ctx, CONFIG.path, 104 * DK, 'rgba(44,106,134,0.5)');
-  strokePath(ctx, CONFIG.path, 54 * DK, '#8A7650');
-  strokePath(ctx, CONFIG.path, 42 * DK, '#1F5670');
+  for (const p of CONFIG.paths) strokePath(ctx, p, 104 * DK, 'rgba(44,106,134,0.5)');
+  for (const p of CONFIG.paths) strokePath(ctx, p, 54 * DK, '#8A7650');
+  for (const p of CONFIG.paths) strokePath(ctx, p, 42 * DK, '#1F5670');
 }
 
 function strokePath(ctx, pts, w, color, dash) {
@@ -561,9 +569,9 @@ function drawWaterLevel(ctx, water, t) {
   const w = (104 + water * 70) * DK;
   ctx.save();
   ctx.globalAlpha = 0.28 + Math.sin(t * 1.5) * 0.03;
-  strokePath(ctx, CONFIG.path, w, '#2C6A86');
+  for (const p of CONFIG.paths) strokePath(ctx, p, w, '#2C6A86');
   ctx.globalAlpha = 0.35;
-  strokePath(ctx, CONFIG.path, w, 'rgba(158,221,242,0.5)', [6, 18]);
+  for (const p of CONFIG.paths) strokePath(ctx, p, w, 'rgba(158,221,242,0.5)', [6, 18]);
   ctx.restore();
 }
 
@@ -1075,6 +1083,8 @@ const DOLL_ANCHOR = {
 };
 function gearImg(inst) {
   if (!inst) return null;
+  const pc = pxItemCode(inst.id, inst.rarity), pe = pc && pxEntry('do', pc), pf = pe && pxFrame(pe, 0);   // pixel art (js/pixel.js)
+  if (pf) return pf;
   const a = assetAny(itemPngPath(inst.id, inst.rarity));
   if (a) return a.img;
   const svg = (HAS_ART && ART.item[inst.id]) || '';

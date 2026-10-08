@@ -1,0 +1,83 @@
+# thành Phong Châu lớn (chương Sơn Tinh, khi không có ảnh bản đồ) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: thành lớn có cổng, cờ Văn Lang
+name: thành Phong Châu lớn (chương Sơn Tinh, khi không có ảnh bản đồ)
+size: 64x64
+colors:
+  a = vien
+  b = vang-nghe
+  c = son-toi
+  d = son
+  e = son-sang
+
+part k0
+................................................................
+.......................aaaaaaaaaaaaaaaaaaa......................
+......................aeeeeeeeeeeeeeeeeeeca.....................
+......................aedddddddddddddddddca.....................
+......................aedddddddddddddddddca.....................
+......................aedddddddddddddddddca.....................
+......................aedddddddddddddddddca.....................
+......................aedddddddddddddddddca.....................
+......................aedddddddddddddddddca.....................
+......................aeddddddbddddddddddca.....................
+......................aeddddddbddddddddddca.....................
+......................aedddddddddddddddddca.....................
+......................aedddddddddddddddddca.....................
+......................aedddddddddddddddddca.....................
+......................aedddddddddddddddddca.....................
+......................aedddddddddddddddddca.....................
+......................aedddddddddddddddddca.....................
+......................aedddddddddddddddddca.....................
+......................aedddddddddddddddddca.....................
+..aaaaaaaaa......aaaaaaedddddddddddddddddca....aaaaaaaaa......aa
+.aeeeeeeeeca....aeeeeeeddddddddddddddddddca...aeeeeeeeeca....aec
+.aedddddddca....aedddddddddddddddddddddddca...aedddddddca....aec
+.aedddddddca....aedddddddddddddddddddddddca...aedddddddca....aec
+.aedddddddca....aedddddddddddddddddddddddca...aedddddddca....aec
+.aedddddddca....aedddddddddddddddddddddddca...aedddddddca....aec
+.aedddddddcaaaaaaedddddddddddddddddddddddcaaaaaedddddddcaaaaaaec
+.aeddddddddeeeeeedddddddddddddddddddddddddeeeeedddddddddeeeeeedc
+.aeddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddc
+.aedddddddddddddddddddddddddddddddddddddddddddddddddddddddddddca
+.aedddddddddddddddddddddddddddddddddddddddddddddddddddddddddddca
+.aedddddddddddddddddddddddddddddddddddddddddddddddddddddddddddca
+.aedddddddddddddddddddddddddddddddddddddddddddddddddddddddddddca
+.aedddddddddddddddddddddddddddddddddddddddddddddddddddddddddddca
+.aedddddddddddddddddddddddddddddddddddddddddddddddddddddddddddca
+.aedddddddddddddddddddddddddddddddddddddddddddddddddddddddddddca
+.aedddddddddddddddddddddddddddddddddddddddddddddddddddddddddddca
+.aedddddddddddddddddddddddddddddddddddddddddddddddddddddddddddca
+.aedddddddddddddddddddddddddddddddddddddddddddddddddddddddddddca
+.aeddddddddddddddddddddddddddaaaaaadddddddddddddddddddddddddddca
+.aedddddddddddddddddddddddddaaaaaaaaddddddddddddddddddddddddddca
+.aeddddddddddddddddddddddddaaaaaaaaaadddddddddddddddddddddddddca
+.aedddddddddddddddddddddddaaaaaaaaaaaaddddddddddddddddddddddddca
+.aedddddddddddddddddddddddaaaaaaaaaaaaddddddddddddddddddddddddca
+.aeddddddddddddddddddddddaaaaaaaaaaaaaadddddddddddddddddddddddca
+.aeddddddddddddddddddddddaaaaaaaaaaaaaadddddddddddddddddddddddca
+.aeddddddddddddddddddddddaaaaaaaaaaaaaadddddddddddddddddddddddca
+.aedddddddddddddddddddddaaaaaaaaaaaaaaaaddddddddddddddddddddddca
+.aedddddddddddddddddddddaaaaaaaaaaaaaaaaddddddddddddddddddddddca
+.aedddddddddddddddddddddaaaaaaaaaaaaaaaaddddddddddddddddddddddca
+.aedddddddddddddddddddddaaaaaaaaaaaaaaaaddddddddddddddddddddddca
+.aedddddddddddddddddddddaaaaaaaaaaaaaaaaddddddddddddddddddddddca
+.aedddddddddddddddddddddaaaaaaaaaaaaaaaaddddddddddddddddddddddca
+.aedddddddddddddddddddddaaaaaaaaaaaaaaaaddddddddddddddddddddddca
+.aedddddddddddddddddddddaaaaaaaaaaaaaaaaddddddddddddddddddddddca
+.aedddddddddddddddddddddaaaaaaaaaaaaaaaaddddddddddddddddddddddca
+.aedddddddddddddddddddddaaaaaaaaaaaaaaaaddddddddddddddddddddddca
+.aedddddddddddddddddddddaaaaaaaaaaaaaaaaddddddddddddddddddddddca
+.aedddddddddddddddddddddaaaaaaaaaaaaaaaaddddddddddddddddddddddca
+.aedddddddddddddddddddddaaaaaaaaaaaaaaaaddddddddddddddddddddddca
+.aedddddddddddddddddddddaaaaaaaaaaaaaaaaddddddddddddddddddddddca
+.aedddddddddddddddddddddaaaaaaaaaaaaaaaaddddddddddddddddddddddca
+.accccccccccccccccccccccaaaaaaaaaaaaaaaaccccccccccccccccccccccca
+..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.
+................................................................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -1,0 +1,30 @@
+# nhiệm vụ ngày — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: mặt trời
+name: nhiệm vụ ngày
+size: 12x12
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = vang-sang
+
+part k0
+............
+.....a......
+...aaca.a...
+..acaadaca..
+...addcba...
+..aadccbaa..
+.adccccccba.
+..aabbcbaa..
+..acaacaca..
+...a.abaa...
+......a.....
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

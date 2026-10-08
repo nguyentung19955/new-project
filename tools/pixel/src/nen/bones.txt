@@ -1,0 +1,34 @@
+# trang trí: bones — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: xương trắng D8D0B8
+name: trang trí: bones
+size: 16x16
+colors:
+  a = vien
+  b = trang-xam
+  c = trang
+  d = sang
+
+part k0
+................
+................
+..aa........aa..
+.adbaa.....adba.
+.adcbba...adcba.
+.abbbcba.adcbba.
+..aaabcbadcbaa..
+.....adcdcba....
+.....adcbcba....
+..aaadcbabcbaa..
+.adbdcba.abcdba.
+.adcbba...adcba.
+.abbaa.....abba.
+..aa........aa..
+................
+................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

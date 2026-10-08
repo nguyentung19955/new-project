@@ -1,0 +1,25 @@
+{
+ "code": "do_gay_su-thi",
+ "group": "do",
+ "name": "gậy thầy mo đầu chạm · Sử thi (epic)",
+ "w": 24,
+ "h": 24,
+ "ax": 12,
+ "ay": 23,
+ "bbox": [
+  2,
+  1,
+  21,
+  22
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "do_gay_su-thi.png"
+}

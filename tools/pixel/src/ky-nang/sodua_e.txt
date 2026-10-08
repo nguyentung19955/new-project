@@ -1,0 +1,46 @@
+# Hóa Chàng Trai — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Hồi 25% máu cho mọi tướng quanh mình
+name: Hóa Chàng Trai
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = la
+  g = la-ma
+  h = la-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbhhhfbbbbbbbdca
+aedbbbbhhhgggghhfbbbbdca
+aedbbbhggggggggggfbbbdca
+aedbbhfggfggfgfggffbbdca
+aedbbhgfgfggfgfgfgfbbdca
+aedbbhggfgfgfgfgfgfbbdca
+aedbhgggfgfgffgfgggfbdca
+aedbfggggffgfffggggfbdca
+aedbbffffgfffffffffbbdca
+aedbbbbbbfffffbbbbbbbdca
+aedbbbbbbbhffbbbbbbbbdca
+aedbbbbbbbfffbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

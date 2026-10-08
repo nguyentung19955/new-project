@@ -1,0 +1,25 @@
+{
+ "code": "nut-vang",
+ "group": "giao-dien",
+ "name": "nút vàng (menu cũ)",
+ "w": 48,
+ "h": 16,
+ "ax": 24,
+ "ay": 15,
+ "bbox": [
+  0,
+  0,
+  48,
+  16
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "nut-vang.png"
+}

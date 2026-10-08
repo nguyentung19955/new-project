@@ -1,0 +1,52 @@
+# Lý Ngư Tướng Quân · Q «Ngọn Giáo Vũ Môn» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: trident
+name: Lý Ngư Tướng Quân · Q «Ngọn Giáo Vũ Môn»
+size: 24x24
+colors:
+  a = vien
+  b = sat
+  c = sat-sang
+  d = bac
+  e = dong-toi
+  f = dong
+  g = dong-sang
+  h = vang-nghe
+  i = vang-sang
+  j = cham-toi
+  k = cham
+  l = nuoc
+  m = nuoc-sang
+  n = troi
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+agggggggggghhgggggggggfa
+agffffffffffffffffffffea
+agfladdalladdalladdalfea
+agfladdajjaddajjaddalfea
+agfladbajadccdajadbalfea
+agfladbajabccbajadbalfea
+agflabcdaaadbaaadcbalfea
+agfljabcdddccdddcbajlfea
+agfljjabbbbbbbbbbajjlfea
+agfljjjaaaiiiiaaajjjlfea
+ahfljjjjjjaifajjjjjjlfha
+ahfljjjjjjaifajjjjjjlfha
+agfljjjjjjaifajjjjjjlfea
+agfljjjjjjaifajjjjjjlfea
+agfljajjjjaifajjjjajlfea
+agflamajjjaifajjjamalfea
+agfannnajjaifajjannnafea
+agfnlmmnaanffnaanmmmmfea
+agfmmllmmmmmmmmmmlllkfea
+agfkkkkkkkkkkkkkkkkkkfea
+agffffffffffffffffffffea
+afeeeeeeeeeehheeeeeeeeea
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

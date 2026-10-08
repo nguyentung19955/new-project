@@ -1,0 +1,53 @@
+# Thánh Gióng · R «Bay Về Trời» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: a hero silhouette flying up into the sky on an iron horse with a light beam
+name: Thánh Gióng · R «Bay Về Trời»
+size: 24x24
+colors:
+  a = vien
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = trang-xam
+  f = trang
+  g = sang
+  h = dong-toi
+  i = dong
+  j = dong-sang
+  k = vang-nghe
+  l = vang-sang
+  m = son-toi
+  n = son
+  o = son-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ajjjjjjjjjjkkjjjjjjjjjia
+ajiiiiiiiiiiiiiiiiiiiiha
+ajiooooooalggglaoooooiha
+ajiommmmmalggglammmmoiha
+ajiommmmmalggglammmmoiha
+ajiommmmmalggdlammmmoiha
+ajiommmmaalggblaammmoiha
+ajiommmaoolggbladammoiha
+ajiommaonnoodcddcdamoiha
+ajiomaommmmgdccccbamoiha
+akiommaaaalgdcccbammoika
+akiommmmmaddcccbammmoika
+ajiommmmadcccccbammmoiha
+ajiommmadccccccbammmoiha
+ajiommadccccbbbbamamoiha
+ajiomagbcccbgglamagaoiha
+ajiaagfgbbbggglaagfgaiha
+ajiggfffgalggglggfffgiha
+ajigffffealggglgffffeiha
+ajieeeeeealgggleeeeeeiha
+ajiiiiiiiiiiiiiiiiiiiiha
+aihhhhhhhhhhkkhhhhhhhhha
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

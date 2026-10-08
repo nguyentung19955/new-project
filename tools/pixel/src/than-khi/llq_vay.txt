@@ -1,0 +1,46 @@
+# Vảy Rồng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: dragon scale — Vảy rồng Lạc Việt, sóng nào cũng không xuyên thủng
+name: Vảy Rồng
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = cham
+  g = nuoc
+  h = nuoc-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbhhhfbbbbbbbdca
+aedbbbbbhhgggghfbbbbbdca
+aedbbbbhggggggggfbbbbdca
+aedbbbhgfgggfggfgfbbbdca
+aedbbbhgghgfgffgfffbbdca
+aedbbhggggfggfgggffbbdca
+aedbbhggggggggggggfbbdca
+aedbbhggggggggggggfbbdca
+aedbbhfggffggfggfgfbbdca
+aedbbhgffggffgffggfbbdca
+aedbbfggggggggggggfbbdca
+aedbbbhggggggggggfbbbdca
+aedbbbfgfgggfggfgfbbbdca
+aedbbbbfgfgfgffgfbfbbdca
+aedbbbbbfffggfffbfbbbdca
+aedbbbbbbbffffbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

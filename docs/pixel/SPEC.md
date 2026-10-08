@@ -28,7 +28,7 @@ Một tệp là `{ "ma": [ … ] }`, hoặc một mảng `[ … ]`, hoặc một
 
 | khoá | bắt buộc | ý nghĩa |
 |---|---|---|
-| `ma` | ✓ | `"nhóm/mã"` — nhóm: `tuong quai boss nen icon do an-phu ky-nang than-khi giao-dien canh`; mã chữ thường không dấu, nối `-` / `_` |
+| `ma` | ✓ | `"nhóm/mã"` — nhóm: `tuong quai boss nen icon do an-phu ky-nang than-khi giao-dien canh ban-do`; mã chữ thường không dấu, nối `-` / `_` |
 | `ten` | | tên hiển thị (mặc định: theo DANH-SACH) |
 | `mo` | | mô tả ngắn — tool đọc từ khoá (bảng dưới). Bỏ trống: dùng mô tả trong DANH-SACH |
 | `co` | | `"32x32"` … (mặc định theo nhóm / DANH-SACH; boss `48x48` / `64x64`) |
@@ -46,7 +46,23 @@ Một tệp là `{ "ma": [ … ] }`, hoặc một mảng `[ … ]`, hoặc một
 `quan` (quan · kho · vay) · `vk` (khong · gay · giao · riu · kiem · cung · cheo · chuong) · `canh` (khong · co) · `dien` (boss: khong · co) ·
 màu: `mauToc mauMu mauAo mauQuan mauVk choang` (= tên dải ở trên; `choang` thêm `khong`) · `hanh`.
 Icon / đồ / kỹ năng / ấn phù / thần khí: `khung` (tron · khien · vuong · khong), `hinh` (lua · nuoc · la · nui · kiem · riu · khien · muiten ·
-set · mattroi · tim · xu · sao · ngoc), `mauKhung`, `mauHinh`. Ô nền: `nen` (co · dat · da · nuoc · cat · gach · tron), `mauNen`.
+set · mattroi · tim · xu · sao · ngoc + **hình vật** dưới đây), `mauKhung`, `mauHinh`, `mauPhu` (cán gỗ, dây, lông…), `mauNgoc` (ngọc điểm;
+`khong` = bỏ). Ô nền: `nen` (co · dat · da · nuoc · cat · gach · tron · **vat** = vật trang trí nền trong suốt, dùng `hinh` + màu như icon), `mauNen`.
+Giao diện (`giao-dien`, cỡ tuỳ 8..320): `loai` (khung · nut · nuttron · thanh · o · the · huy · dai · nui), `mauKhung`, `mauNen`,
+`vien` (tron · rang · cham · dut · sao), `trang` (thuong · nhan · khoa · chon). Cảnh (`canh`): `canh` (nui · song · bien · rung · hang · dam ·
+thanh · dong · menu), `gio` (ngay · chieu · dem · u), `mauTroi`, `mauDat`.
+
+**Hình vật** (`hinh`, claude/xuat-goi-pixel — tool cũng tự chọn theo từ khoá trong tên / mô tả): mu · mulong · ao · giap · no · cung · gay ·
+trong · gang · dep · khan · bua-deo · long · vay · ngua · mat · hat · cay · may · trang · noi · chuong · vuot · hoa · tui · sung · luoi · liem ·
+chim · thu · voi · ca · rua · ran · riudong · bua · cot · co · thuyen · nha · cong · thanh · hang · da · bui · lau · so · xuong · tinhthe ·
+mangda · dua · ruong · de · khoa · khoamo · dau · x · play · dung · doi · len · phai · tua1 · tua2 · tua3 · them · cuon · sach · phongbi · but ·
+chat · canhbao · hoi · dongho · cup · huychuong · mien · bia · quyen · daulau · bang · xoay · nam · binh · nguoi · nhom · ruongbau · giot.
+Lệnh xuất gói từng nhóm (spec có sẵn trong `tools/pixel/spec/`): [`LENH-TOOL.md`](LENH-TOOL.md).
+
+**Bản đồ** (`ban-do`, 320×148 = sân 1280×590 ÷ 4): `bo_phan` `chu_de` (song · dam · rung · hang · dong · bien · thanh), `duong_loai`
+(nuoc · dat · da · de · cat · gach) + khoá riêng `duong` (chuỗi path SVG `M … C … S …`, hoặc mảng nhiều nhánh) và `o_dat` (`[[x, y], …]` ô đặt
+tướng) — toạ độ thiết kế 932×430. Sinh spec từ game: `node tools/build-ban-do-spec.js` (chạy js/data.js + js/game.js trong vm, `setMap` →
+`CONFIG.slots`). Lỗi `E_BAN_DO` khi `duong` / `o_dat` sai dạng.
 
 **Từ khoá `mo`** (tiếng Việt / Anh, khớp nguyên từ): bộ xương · người đá · hồn / ma · giấy / vàng mã · con rối / đất nung · thân đồng · ma cây ·
 tóc búi / dựng / dài / trọc · khăn · nón · mũ lông chim / quạt lông · vương miện · mũ trùm · sừng · mũ · áo / giáp / giao lĩnh / cởi trần ·

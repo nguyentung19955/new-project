@@ -1,0 +1,49 @@
+# Trương Chi · W «Lời Ca Sông Nước» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: singing mouth with notes
+name: Trương Chi · W «Lời Ca Sông Nước»
+size: 24x24
+colors:
+  a = vien
+  b = trang
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = vang-nghe
+  g = cham-toi
+  h = cham
+  i = nuoc
+  j = nuoc-sang
+  k = troi
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeffeeeeeeeeeda
+aeddddddddddddddddddddca
+aediiiiiiaaaaaaaiiiiidca
+aediggggabbbbbbbagggidca
+aediggggabbbbbbbagggidca
+aediggggabaaaaabagggidca
+aediggggabagggabagggidca
+aedigggaabaggaabagggidca
+aediggabbbagabbbagggidca
+aedigabbbbaabbbbagggidca
+afdigabbbagabbbagaggidfa
+afdiggaaagggaaagajagidfa
+aedaaajagaaagggajajaidca
+aedkkaaaakkkaaaakkaaadca
+aedjjkkkkjjjkkkkjjkkkdca
+aedjijjjjiiijjjjiijjjdca
+aedjiiiiiiiiiiiiiiiihdca
+aedjiiiiiiiiiiiiiiiihdca
+aedjiiiiiiiiiiiiiiiihdca
+aedhhhhhhhhhhhhhhhhhhdca
+aeddddddddddddddddddddca
+adccccccccccffccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

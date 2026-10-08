@@ -1,0 +1,47 @@
+# Nỏ Liên Châu — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: repeating crossbow — Nỏ bắn một phát mười mũi tên
+name: Nỏ Liên Châu
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = trang-xam
+  d = dat-toi
+  e = dat-sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = vang-nghe
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbedbbbbbbbbgfa
+ahgbbbbbhgggggggfbbbbgfa
+ahghfbhfbbbedbbbfghhfgfa
+ahghffbbbbbedbbbbbfffgfa
+ahgfbbcbbbbedbbbbcbbfgfa
+ahgbbbbccbbedbbccbbbbgfa
+ahgbbbbbbccedccbbbbbbgfa
+ahgbbbbbbbbccbbbbbbbbgfa
+ahgbbbbbbbbiibbbbbbbbgfa
+ahgbbbbbbbbiibbbbbbbbgfa
+ahgbbbbbbbbedbbbbbbbbgfa
+ahgbbbbbbbbedbbbbbbbbgfa
+ahgbbbbbbbbedbbbbbbbbgfa
+ahgbbbbbbbbedbbbbbbbbgfa
+ahgbbbbbbbbddbbbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -1,0 +1,32 @@
+# túi vàng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: túi vải + đồng vàng
+name: túi vàng
+size: 12x12
+colors:
+  a = vien
+  b = dat
+  c = dat-sang
+  d = cat
+  e = vang-nghe
+  f = vang-sang
+
+part k0
+............
+....aaaa....
+...afffca...
+...acccca...
+...abbbbba..
+..afddddca..
+..afdeedca..
+.afddeeddca.
+..acddddca..
+...acccca...
+....aaaa....
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

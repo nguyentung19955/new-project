@@ -1,0 +1,46 @@
+# Thành Một Đêm — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: a citadel appearing overnight under a crescent moon
+name: Thành Một Đêm
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = cham
+  g = nuoc
+  h = nuoc-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbhhhhhhfbbbbbdca
+aedbbbbbbhgggggfbbbbbdca
+aedbbbbbbhgggggfbbbbbdca
+aedbbbbbbhgggggfbbbbbdca
+aedbbbbbbhgggggfbbbbbdca
+aedhhhhhhggggggghhhhhhhf
+aedhgggggggggggggggggggf
+aedhgggggggggggggggggfff
+aedhggggggggggggggggfdca
+aedhggggggggggggggggfdca
+aedhgggggggaagggggggfdca
+aedhggggggaaaaggggggfdca
+aedhggggggaaaaggggggfdca
+aedhggggggaaaaggggggfdca
+aedhgggggaaaaaagggggfdca
+aedhgggggaaaaaagggggfdca
+aedhgggggaaaaaagggggfdca
+aedffffffaaaaaaffffffdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

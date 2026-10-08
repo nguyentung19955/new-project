@@ -1,0 +1,27 @@
+# khung thanh máu tướng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đồng bóng mảnh, đinh sao 2 đầu
+name: khung thanh máu tướng
+size: 32x8
+colors:
+  a = vien
+  b = sang
+  c = dong-toi
+  d = dong
+  e = dong-sang
+
+part k0
+a.aaaaaaaaaaaaaaaaaaaaaaaaaaaa.a
+eaeeeeeeeeeeeeeeeeeeeeeeeeeeecae
+eaedccccccccccccccccccccccccdcae
+eaecaaaaaaaaaaaaaaaaaaaaaaaaecae
+eaeebeaaaaaaaaaaaaaaaaaaaaebecae
+eaedeeeeeeeeeeeeeeeeeeeeeeeedcae
+eaccccccccccccccccccccccccccccae
+a.aaaaaaaaaaaaaaaaaaaaaaaaaaaa.a
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

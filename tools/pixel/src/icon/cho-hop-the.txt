@@ -1,0 +1,38 @@
+# thẻ chợ: nguyên liệu hợp thể — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: ✦ trên nền tím
+name: thẻ chợ: nguyên liệu hợp thể
+size: 16x16
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = tim-toi
+  g = tim
+  h = tim-sang
+
+part k0
+.aaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeca
+aeddddddddddddca
+aedbbbbhbbbbbdca
+aedbbbbgbbbbbdca
+aedbbbbgbbbbbdca
+aedbbbhgfbbbbdca
+aedhgggggggfbdca
+aedbbbfgfbbbbdca
+aedbbbbgbbbbbdca
+aedbbbbgbbbbbdca
+aedbbbbfbbbbbdca
+aedbbbbbbbbbbdca
+aeddddddddddddca
+acccccccccccccca
+.aaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

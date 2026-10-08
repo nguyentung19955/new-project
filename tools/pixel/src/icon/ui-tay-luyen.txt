@@ -1,0 +1,37 @@
+# tẩy luyện — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: chậu đồng + mũi tên vòng
+name: tẩy luyện
+size: 16x16
+colors:
+  a = vien
+  b = sang
+  c = dat-toi
+  d = dat-sang
+  e = dong-toi
+  f = dong
+  g = dong-sang
+
+part k0
+................
+.....a...a......
+....aba.aba.....
+.....abaaba.....
+...aaaadcaaaa...
+..aggggccgggga..
+..agggggggggga..
+..agffffffffea..
+..agffffffffea..
+..agffffffffea..
+..agffffffffea..
+..aeffffffffea..
+...aeeeffeeea...
+....aaaeeaaa....
+.......aa.......
+................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

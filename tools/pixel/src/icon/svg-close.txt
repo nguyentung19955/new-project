@@ -1,0 +1,30 @@
+# icon SVG: đóng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: dấu ✕
+name: icon SVG: đóng
+size: 12x12
+colors:
+  a = vien
+  b = trang-xam
+  c = trang
+  d = sang
+
+part k0
+............
+..aa....aa..
+.adba..adba.
+.abcbaadcba.
+..abcddcba..
+...adccba...
+...adccba...
+..adcbbcba..
+.adcbaabcba.
+.abba..abba.
+..aa....aa..
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -1,0 +1,46 @@
+# Cơm Mới — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Tướng trong 170 hồi 12% máu, +20% sát thương 6 giây
+name: Cơm Mới
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = la
+  g = la-ma
+  h = la-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbhhhhfbbhhhhfbbbdca
+aedbbhggggghhgggggfbbdca
+aedbhggggggggggggggfbdca
+aedbhggggggggggggggfbdca
+aedbhggggggggggggggfbdca
+aedbfggggggggggggggfbdca
+aedbbfggggggggggggfbbdca
+aedbbbfgggggggggffbbbdca
+aedbbbbfgggggggfbbbbbdca
+aedbbbbbhgggggfbbbbbbdca
+aedbbbbbfgggggfbbbbbbdca
+aedbbbbbbfgggfbbbbbbbdca
+aedbbbbbbbfgfbbbbbbbbdca
+aedbbbbbbbbfbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

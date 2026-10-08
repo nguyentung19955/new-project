@@ -1,0 +1,34 @@
+# nền nút 2 — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: tấm chữ nhật viền răng cưa (giữa trống)
+name: nền nút 2
+size: 48x16
+colors:
+  a = vien
+  b = dong-toi
+  c = dong
+  d = dong-sang
+
+part k0
+....a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a...
+..aadadadadadadadadadadadadadadadadadadadadaba..
+.adddddddddddddddddddddddddddddddddddddddddddba.
+adccccccccccccccccccccccccccccccccccccccccccccba
+adccccccccccccccccccccccccccccccccccccccccccccba
+adccccccccccccccccccccccccccccccccccccccccccccba
+adccccccccccccccccccccccccccccccccccccccccccccba
+adccccccccccccccccccccccccccccccccccccccccccccba
+adccccccccccccccccccccccccccccccccccccccccccccba
+adccccccccccccccccccccccccccccccccccccccccccccba
+adccccccccccccccccccccccccccccccccccccccccccccba
+adccccccccccccccccccccccccccccccccccccccccccccba
+abccccccccccccccccccccccccccccccccccccccccccccba
+.abccccccccccccccccccccccccccccccccccccccccccba.
+..aabababababababababababababababababababababa..
+....a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a...
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

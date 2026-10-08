@@ -1,0 +1,27 @@
+# thanh tiến độ (border-image) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: khung thanh đồng 2 đầu chạm
+name: thanh tiến độ (border-image)
+size: 64x8
+colors:
+  a = vien
+  b = sang
+  c = dong-toi
+  d = dong
+  e = dong-sang
+
+part k0
+a.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.a
+eaeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeecae
+eaedccccccccccccccccccccccccccccccccccccccccccccccccccccccccdcae
+eaecaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaecae
+eaeebeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaebecae
+eaedeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeedcae
+eaccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccae
+a.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.a
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

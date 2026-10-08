@@ -1,0 +1,35 @@
+# cỏ đầm lầy (dam) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đất 3E5530, cỏ 56703A, chấm 2E3E22
+name: cỏ đầm lầy (dam)
+size: 16x16
+colors:
+  a = vang-nghe
+  b = la-sang
+  c = reu-toi
+  d = reu
+  e = reu-sang
+
+part k0
+dddddddddddddddd
+ddeddddddddcdddd
+debedddddddddddd
+ddcdddddeddddddd
+dddddddddedddcdd
+dddddcdddcdddded
+ddddddddddddddbe
+dedddddddddddddc
+dbeddddedddddddd
+ddcdddebeddddddd
+dddddddcddddcddd
+ddddddddddddeddd
+dddcdddddddebedd
+dddddddadddddcdd
+deddddddddcddddd
+dddddddddddddddd
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

@@ -1,0 +1,46 @@
+# Kỳ Lân Phun Lửa — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Phun lửa vàng một dải: x5 sát thương +2
+name: Kỳ Lân Phun Lửa
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = sat
+  d = sat-sang
+  e = bac
+  f = dong-toi
+  g = dong
+  h = dong-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbebbbbbbbbbgfa
+ahgbbbbbbbbecbbbbbbbbgfa
+ahgbbbbbbbbecbbbbbbbbgfa
+ahgbbbbbbbeddcbbbbbbbgfa
+ahgbbbbbbbedddcbbbbbbgfa
+ahgbbbbbbedddddcbbbbbgfa
+ahgbbbbbbeddddddcbbbbgfa
+ahgbbbbbedddddddcbbbbgfa
+ahgbbbbedddddddddcbbbgfa
+ahgbbeedddddddddddcbbgfa
+ahgbeddddddddddddddcbgfa
+ahgedddddddddddddddcbgfa
+ahgbcdddddddddddddcbbgfa
+ahgbbedddddddddddcbbbgfa
+ahgbbcdddddddddddcbbbgfa
+ahgbbbcdddddddddcbbbbgfa
+ahgbbbbcccccccccbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

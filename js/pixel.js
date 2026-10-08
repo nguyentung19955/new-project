@@ -213,8 +213,11 @@ function pxTilePattern(x, code, dev) {
 function pxMapGround(x, m, kind, k) {
   if (!pxEntry('nen', 'co')) return false;
   const unit = 3.5;   // một điểm ảnh ô nền ≈ 3,5 đơn vị bản đồ (ô 16 px ≈ 56 đơn vị ≈ bề rộng đường đi)
-  const grass = pxTilePattern(x, 'co', unit * k);
-  const road = pxTilePattern(x, kind === 'nuoc' ? 'nuoc' : 'dat', unit * k);
+  // claude/xuat-goi-pixel: ô cỏ / đường theo chủ đề bản đồ (mã chưa có thì về co / dat / nuoc)
+  const th = m && m.theme, gk = { dam: 'co-dam', dong: 'co-dong', rung: 'co-rung', thanh: 'co-thanh', hang: 'nen-hang', bien: 'cat-bien' }[th];
+  const rk = kind === 'nuoc' ? (th === 'bien' ? 'nuoc-bien' : 'nuoc') : kind;
+  const grass = (gk && pxEntry('nen', gk) && pxTilePattern(x, gk, unit * k)) || pxTilePattern(x, 'co', unit * k);
+  const road = (rk !== 'nuoc' && pxEntry('nen', rk) && pxTilePattern(x, rk, unit * k)) || pxTilePattern(x, kind === 'nuoc' ? 'nuoc' : 'dat', unit * k);
   if (!grass || !road) return false;
   const inv = new DOMMatrix().scale(1 / k);
   grass.setTransform(inv); road.setTransform(inv);
@@ -223,12 +226,16 @@ function pxMapGround(x, m, kind, k) {
   x.fillRect(0, 0, CONFIG.W, CONFIG.H);
   const L = (typeof PATH_LOOK !== 'undefined' && PATH_LOOK[kind]) || { w: 42, edge: 54 };
   x.lineCap = 'round'; x.lineJoin = 'round';
-  strokePath(x, CONFIG.path, L.edge * DK, kind === 'nuoc' ? '#1A2448' : '#4A2E1A');
+  // mọi nhánh (chianhanh, haicong…): viền của mọi nhánh trước rồi mới lòng đường → chỗ chia / nhập nhánh liền một mảng
+  const lanes = CONFIG.paths && CONFIG.paths.length ? CONFIG.paths : [CONFIG.path];
+  for (const pts of lanes) strokePath(x, pts, L.edge * DK, kind === 'nuoc' ? '#1A2448' : '#4A2E1A');
   x.strokeStyle = road;
   x.lineWidth = L.w * DK;
   x.beginPath();
-  CONFIG.path.forEach(([px, py], i) => (i ? x.lineTo(px, py) : x.moveTo(px, py)));
+  for (const pts of lanes) pts.forEach(([px, py], i) => (i ? x.lineTo(px, py) : x.moveTo(px, py)));
   x.stroke();
+  // cầu ở chỗ đường tự cắt (caucheo) — dùng lại cầu của đường vẽ tay (js/maps.js)
+  if (m.bridge && typeof drawBridge === 'function') for (const [cx, cy, a] of pathCrossings(lanes[0])) drawBridge(x, cx, cy, a, kind);
   x.restore();
   return true;
 }

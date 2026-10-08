@@ -1,0 +1,47 @@
+# Cột Đá Chống Trời — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: stone sky pillar — Cột đá đắp cao tách trời khỏi đất
+name: Cột Đá Chống Trời
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = sat-toi
+  d = sat
+  e = sat-sang
+  f = dat
+  g = dong-toi
+  h = dong
+  i = dong-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aiiiiiiiiiiiiiiiiiiiiiga
+aihhhhhhhhhhhhhhhhhhhhga
+aihbbbbbbbbbbbbbbbbbbhga
+aihbbbbeeeeeeeeeebbbbhga
+aihbbbbeeeeeeeeeebbbbhga
+aihbbbbeeeeeeeeeebbbbhga
+aihbbbbbbedddddcbbbbbhga
+aihbbbbbbedddddcbbbbbhga
+aihbbbbbbedddddcbbbbbhga
+aihbbbbbbedddddcbbbbbhga
+aihbbbbbbfffffffbbbbbhga
+aihbbbbbbfffffffbbbbbhga
+aihbbbbbbedddddcbbbbbhga
+aihbbbbbbedddddcbbbbbhga
+aihbbbbbbedddddcbbbbbhga
+aihbbbbbbedddddcbbbbbhga
+aihbbbbbbedddddcbbbbbhga
+aihbbbbeeeeeeeeeebbbbhga
+aihbbbbeeeeeeeeeebbbbhga
+aihbbbbbbbbbbbbbbbbbbhga
+aihhhhhhhhhhhhhhhhhhhhga
+agggggggggggggggggggggga
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

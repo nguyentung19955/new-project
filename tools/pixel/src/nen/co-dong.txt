@@ -1,0 +1,34 @@
+# nền đồng lúa (dong) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đất 5E7A30, cỏ 7A9A3E, chấm 4A6224
+name: nền đồng lúa (dong)
+size: 16x16
+colors:
+  a = vang-nghe
+  b = la
+  c = la-ma
+  d = la-sang
+
+part k0
+cccccccccccccccc
+ccdccccccccbcccc
+cdddcccccccccccc
+ccbcccccdccccccc
+cccccccccdcccbcc
+cccccbcccbccccdc
+ccccccccccccccdd
+cdcccccccccccccb
+cddccccdcccccccc
+ccbcccdddccccccc
+cccccccbccccbccc
+ccccccccccccdccc
+cccbcccccccdddcc
+cccccccacccccbcc
+cdccccccccbccccc
+cccccccccccccccc
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

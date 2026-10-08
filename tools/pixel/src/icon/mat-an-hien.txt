@@ -1,0 +1,31 @@
+# ẩn / hiện giao diện — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: con mắt
+name: ẩn / hiện giao diện
+size: 12x12
+colors:
+  a = vien
+  b = trang-xam
+  c = trang
+  d = sang
+  e = cham
+
+part k0
+............
+............
+.....a......
+...aadaa....
+.aaddeebaa..
+adcceaaecba.
+.aabeaaeaa..
+...aaeea....
+.....aa.....
+............
+............
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

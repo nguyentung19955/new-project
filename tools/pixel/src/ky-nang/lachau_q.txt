@@ -1,0 +1,46 @@
+# Lạc Hầu · Q «Trống Hiệu Triệu» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: a bronze war drum with sound rings
+name: Lạc Hầu · Q «Trống Hiệu Triệu»
+size: 24x24
+colors:
+  a = vien
+  b = dat-toi
+  c = cat
+  d = dong-toi
+  e = dong
+  f = dong-sang
+  g = vang-nghe
+  h = vang-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+affffffffffggfffffffffea
+afeeeeeeeeeeeeeeeeeeeeda
+afeffffffffffffffffffeda
+afefbbbbbbbbabbbbbbbfeda
+afefbbbbbbbafabbbbbbfeda
+afefbbbbbbafafabbbbbfeda
+afefababbbbababbbbabaeda
+afeacahabbbbbbbbbahaceda
+afecahabbbaaaaabbbahaeda
+afecahaaaahhhhhaaaahaeda
+agechaahhhgeeeghhhaahega
+ageahahgggeggghggghahega
+afeahafeeeghhhgeeefaheda
+afeahaffffeeeeefffdaheda
+afechadeeeeeeeeeeedaheda
+afecahffffffffffffdhaeda
+afecahdeeeeeeeeeeedhaeda
+afeacahfeeeeeeeeedhaceda
+afefaafdddddddddddfaaeda
+afefffaaaaaaaaaaaaaffeda
+afeeeeeeeeeeeeeeeeeeeeda
+aeddddddddddggddddddddda
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

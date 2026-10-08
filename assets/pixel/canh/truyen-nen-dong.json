@@ -1,0 +1,25 @@
+{
+ "code": "truyen-nen-dong",
+ "group": "canh",
+ "name": "nền tranh truyện: dong",
+ "w": 320,
+ "h": 180,
+ "ax": 160,
+ "ay": 179,
+ "bbox": [
+  0,
+  0,
+  320,
+  180
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "truyen-nen-dong.png"
+}

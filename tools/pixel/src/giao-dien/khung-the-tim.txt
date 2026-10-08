@@ -1,0 +1,66 @@
+# khung thẻ tướng Tím — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: viền bạc-tím
+name: khung thẻ tướng Tím
+size: 40x48
+colors:
+  a = vien
+  b = tim-toi
+  c = tim
+  d = tim-sang
+
+part k0
+...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...
+..adddddddddddddddddddddddddddddddddba..
+.adcdccdccdccdccdccdccdccdccdccdccdccba.
+adccbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbccba
+adcbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaadcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcba..............................adcba
+adcbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaadcba
+adccddddddddddddddddddddddddddddddddccba
+adccccccccccccccccccccccccccccccccccccba
+adccccccccccccccccccccccccccccccccccccba
+adccccccccccccccccccccccccccccccccccccba
+adccccccccccccccccccccccccccccccccccccba
+adccccccccccccccccccccccccccccccccccccba
+abccccccccccccccccccccccccccccccccccccba
+.abcdccdccdccdccdccdccdccdccdccdccdccba.
+..abbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbba..
+...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -1,0 +1,48 @@
+# Bắt Chim (Ấn Gió, hàng 2) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: —
+name: Bắt Chim (Ấn Gió, hàng 2)
+size: 24x24
+colors:
+  a = vien
+  b = trang
+  c = dong
+  d = vang-nghe
+  e = vang-sang
+  f = son
+  g = la-toi
+  h = reu-toi
+  i = reu
+  j = reu-sang
+
+part k0
+........................
+........aaaaaaaa........
+......aajjjjjjjjaa......
+.....ajjhhhhhhhhjja.....
+....ajihgggggggghija....
+...ajihghhhhhhhhghija...
+..ajihghhhhhhhhhhghija..
+..ajhghhhhhhhhhhhhghha..
+.ajhghheehhhhhhheehghja.
+.ajhghhheddhhhdddaaijha.
+.ajhghhhheddhdddcahijha.
+.ajhghhhhheddddcaahijha.
+.ajhghhhhhhdddcaahhijha.
+.ajhghhhhhedbdcahhhijha.
+.ajhghhhhhhdddfahhhijha.
+.ahhghhhhhhdcdaahhhihha.
+..ajjghhhhdhcadhhhijha..
+..ahijghhhhahahahijiha..
+...ahijghhhhhhhhijiha...
+....ahijgiiiiiiijiha....
+.....ahhhjjjjjjhhha.....
+......aahhhhhhhhaa......
+........aaaaaaaa........
+........................
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

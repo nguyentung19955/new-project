@@ -1,0 +1,48 @@
+# Bùa Hộ Mệnh (Ấn Sấm, hàng 2) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: —
+name: Bùa Hộ Mệnh (Ấn Sấm, hàng 2)
+size: 24x24
+colors:
+  a = vien
+  b = trang
+  c = cat
+  d = vang-nghe
+  e = son
+  f = cham-toi
+  g = cham
+  h = cham-sang
+  i = nuoc
+  j = nuoc-sang
+
+part k0
+........................
+........aaaaaaaa........
+......aajjjjjjjjaa......
+.....ajjfggggggfjja.....
+....ajhgffffffffghja....
+...ajhgffffffffffghja...
+..ajhgffffffffffffghja..
+..ajgffffcccccccfffgga..
+.ajffffffceeeeecaffffja.
+.ajgfffffcaeaeacaffgjga.
+.ajgfffffcdddddcaffgjga.
+.ajgfffffdbbibbdaffgjga.
+.ajgfffffcdddddcaffgjga.
+.ajgfffffcaeeeacaffgjga.
+.ajgfffffcafeaacaffgjga.
+.agffffffceeeeecaffgfga.
+..ajjffffcccccccafgjga..
+..aghjffffeaaaeaagjhga..
+...aghjffffafffagjhga...
+....aghjfgggggggjhga....
+.....aggfjjjjjjfgga.....
+......aaggggggggaa......
+........aaaaaaaa........
+........................
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

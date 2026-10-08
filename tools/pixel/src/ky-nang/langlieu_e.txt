@@ -1,0 +1,47 @@
+# Ruộng Lúa — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Lúa mọc làm chậm 40% quái trong vùng 4 giây, 8 sát thương/giây
+name: Ruộng Lúa
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dat-toi
+  d = dat
+  e = dat-sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = vang-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgeeeeeeeeeeeeeeeeecgfa
+ahgedidddiddddidddidcgfa
+ahgedidddiddddidddidcgfa
+ahgedidddiddddidddidcgfa
+ahgedidddiddddidddidcgfa
+ahgedidddiddddidddidcgfa
+ahgedidddiddddidddidcgfa
+ahgeddddddddddddddddcgfa
+ahgedidddiddddidddidcgfa
+ahgedidddiddddidddidcgfa
+ahgedidddiddddidddidcgfa
+ahgeddddddddddddddddcgfa
+ahgccccccccccccccccccgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

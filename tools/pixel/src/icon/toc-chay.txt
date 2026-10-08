@@ -1,0 +1,32 @@
+# tốc chạy — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: dép cỏ + vệt tốc độ
+name: tốc chạy
+size: 12x12
+colors:
+  a = vien
+  b = dat-toi
+  c = dat
+  d = dat-sang
+  e = cat
+  f = vang-sang
+
+part k0
+............
+....aa......
+...afda.....
+...afda.....
+...afda.....
+...afda.....
+...afdaaaa..
+...afefffda.
+...adddddda.
+...adcccccba
+....aaaaaaa.
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

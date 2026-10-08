@@ -1,0 +1,49 @@
+# Lý Ngư Tướng Quân · E «Quẫy Đuôi» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: carp tail splash
+name: Lý Ngư Tướng Quân · E «Quẫy Đuôi»
+size: 24x24
+colors:
+  a = vien
+  b = dong-toi
+  c = dong
+  d = dong-sang
+  e = vang-nghe
+  f = vang-sang
+  g = cham-toi
+  h = cham
+  i = nuoc
+  j = nuoc-sang
+  k = troi
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adciiiiiiiiiiiiiiiiiicba
+adciaaaaggggggggaaaaicba
+adcaffffaggggggaffffacba
+adciacccfaggggafeccaicba
+adcigaccffaggafecccaacba
+adcaggaccefaafeeccaakcba
+adckagafcceffeeccagaacba
+adcaaggaccfececccaajacba
+aecajaggaccccfccaggaicea
+aeciagggafcccccaggggicea
+adcigagggacccccaggagicba
+adciajagggacccaggajaicba
+adcigagggggacaggggagicba
+adcaggggagafffagggagicba
+adckaaaajafccjfaaakaacba
+adcikkjjkkjjkkjjjkikjcba
+adcjjjiijjiijjiiijjjhcba
+adchhhhhhhhhhhhhhhhhhcba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

@@ -1,0 +1,25 @@
+{
+ "code": "trong_dong",
+ "group": "do",
+ "name": "Trống Đồng = Mặt Trống + Dùi Trống + Bùa Chim Lạc",
+ "w": 24,
+ "h": 24,
+ "ax": 12,
+ "ay": 23,
+ "bbox": [
+  2,
+  4,
+  20,
+  17
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "trong_dong.png"
+}

@@ -1,0 +1,48 @@
+# Sấm Truyền (Ấn Sấm, hàng 4) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: —
+name: Sấm Truyền (Ấn Sấm, hàng 4)
+size: 24x24
+colors:
+  a = vien
+  b = sat-sang
+  c = trang
+  d = sang
+  e = dong
+  f = vang-nghe
+  g = vang-sang
+  h = cham-toi
+  i = cham
+  j = nuoc-sang
+
+part k0
+.........aaaaaa.........
+......aaageeeegaaa......
+.....ageeejiijeeega.....
+....agejhiihhiihjega....
+...ageiihhhhhhhhiiega...
+..ageihhhhhhhhhhhhiega..
+.agejhhhhhhhhhhhhhhjega.
+.agjihhhhhcccchhhhiijga.
+.aehhhhhccdddcchhhhhhea.
+agejhhhcdddddcccchhijega
+agjihhhccccccccccchiijga
+agjhhhhhbbbbbbbbbaahhjga
+agjhhhhhhagfaaagfahhijga
+agijhhhhhgfaahgfaahijiga
+aegjhhhhhhgfhhhgfhhijgea
+.aehhhhhhgfaahgfaahihea.
+.agijhhhhfaahhfaahijiga.
+.aegihhhhhahhhhahhiigea.
+..aegihihhhhhhhhiiigea..
+...aegijhiihhiiijigea...
+....aegihijhijihigea....
+.....aeeegiiiigeeea.....
+......aaaeeeeeeaaa......
+.........aaaaaa.........
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

@@ -1,0 +1,33 @@
+# đường đá (hang) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đá 5A5348, mép 2E2922, viền bó 4E473C
+name: đường đá (hang)
+size: 16x16
+colors:
+  a = sat-toi
+  b = sat
+  c = sat-sang
+
+part k0
+ccccccccbccccccc
+cccccccccccccbcc
+cccccbcccccccccc
+cbcccccccccccccc
+cccccccabccccccc
+ccccccccccccccbc
+cccccccccccbcccc
+cccccbcccccccccc
+cccccccccccccccc
+cccbcccccccccccc
+cccccccccccccccc
+cccccccabcccccbc
+cbcccccccccccccc
+ccccccccccccbccc
+cccccccccccccccc
+cccccccccbcccccc
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

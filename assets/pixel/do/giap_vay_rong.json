@@ -1,0 +1,25 @@
+{
+ "code": "giap_vay_rong",
+ "group": "do",
+ "name": "Giáp Vảy Rồng (Bộ Lạc Long)",
+ "w": 24,
+ "h": 24,
+ "ax": 12,
+ "ay": 23,
+ "bbox": [
+  3,
+  2,
+  19,
+  20
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "giap_vay_rong.png"
+}

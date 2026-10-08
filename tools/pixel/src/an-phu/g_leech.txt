@@ -1,0 +1,46 @@
+# Hút Sinh Lực (Ấn Gió, hàng 3) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: —
+name: Hút Sinh Lực (Ấn Gió, hàng 3)
+size: 24x24
+colors:
+  a = vien
+  b = son
+  c = son-sang
+  d = hong
+  e = la-toi
+  f = reu-toi
+  g = reu
+  h = reu-sang
+
+part k0
+........................
+........aaaaaaaa........
+......aahhhhhhhhaa......
+.....ahhffffffffhha.....
+....ahgfeeeeeeeefgha....
+...ahgfeffffffffefgha...
+..ahgfeffffffffffefgha..
+..ahfeffffffbfffffeffa..
+.ahfeffffffbcbfffffefha.
+.ahfeffffffbcbaffffghfa.
+.ahfefffffbcccbffffghfa.
+.ahfeffffbdccccbfffghfa.
+.ahfefffbdccccccbffghfa.
+.ahfefffbdccccccbafghfa.
+.ahfefffbccccccbbafghfa.
+.affeffffbccccbbaafgffa.
+..ahheffffbbbbbaafghfa..
+..afgheffffaaaaafghgfa..
+...afgheffffffffghgfa...
+....afgheggggggghgfa....
+.....afffhhhhhhfffa.....
+......aaffffffffaa......
+........aaaaaaaa........
+........................
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

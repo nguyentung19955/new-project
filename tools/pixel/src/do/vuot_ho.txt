@@ -1,0 +1,42 @@
+# Vuốt Hổ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: vuốt hổ xâu dây
+name: Vuốt Hổ
+size: 24x24
+colors:
+  a = vien
+  b = trang-xam
+  c = trang
+  d = sang
+
+part k0
+........................
+........................
+........a.....a....a....
+.......ada...ada..ada...
+.......abba..aca..abba..
+........aca..aca...aca..
+........adba.adba..adba.
+........adba.adba..adba.
+........adba.adba..adba.
+........adba.adba..adba.
+........adba.adba..adba.
+........adba.adba..adba.
+.......adcba.adba.adcba.
+.......adcba.adba.adcba.
+.......adba.adcba.adba..
+.......adba.adba..adba..
+......adcba.adba.adcba..
+......adba.adcba.adba...
+.....adcba.adcbaadcba...
+.....adcbaadcba.adcba...
+.....adba.adcba.adba....
+.....adba.adba..adba....
+.....abba.abba..abba....
+......aa...aa....aa.....
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

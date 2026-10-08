@@ -1,0 +1,78 @@
+# ô tầng ngập (dự phòng khi thiếu đế) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: ô đất theo bậc núi Tản Viên
+name: ô tầng ngập (dự phòng khi thiếu đế)
+size: 16x16
+colors:
+  a = reu
+  b = reu-sang
+  c = cham-sang
+  d = troi
+
+part k0
+aaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaa
+aabbdaaaaaaaaaaa
+aaaaaaaaaaaaaaaa
+aaaaaaaaaacaaaaa
+aaaaaaaaaaaaaaaa
+aaaaaaaaaaaabbaa
+aaaaaaaaaaaaaaaa
+aacaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaa
+aaaaaaabbdaaaaaa
+aaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaca
+aaaaaaaaaaaaaaaa
+daaaaaaaaaaaaabb
+aaaaaaaaaaaaaaaa
+end
+
+part k1
+aaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaa
+aaaabbdaaaaaaaaa
+aaaaaaaaaaaaaaaa
+aaaaaaaaaaaacaaa
+aaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaabb
+aaaaaaaaaaaaaaaa
+aaaacaaaaaaaaaaa
+aaaaaaaaaaaaaaaa
+aaaaaaaaabbdaaaa
+aaaaaaaaaaaaaaaa
+caaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaa
+bbdaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaa
+end
+
+part k2
+aaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaa
+aaaaaabbdaaaaaaa
+aaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaca
+aaaaaaaaaaaaaaaa
+bbaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaa
+aaaaaacaaaaaaaaa
+aaaaaaaaaaaaaaaa
+aaaaaaaaaaabbdaa
+aaaaaaaaaaaaaaaa
+aacaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaa
+aabbdaaaaaaaaaaa
+end
+
+anim main fps=3 loop
+frame main
+  use k0
+end
+frame main
+  use k1
+end
+frame main
+  use k2
+end
+

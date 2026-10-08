@@ -1,0 +1,25 @@
+{
+ "code": "svg-up",
+ "group": "icon",
+ "name": "icon SVG: nâng (mũi tên lên)",
+ "w": 12,
+ "h": 12,
+ "ax": 6,
+ "ay": 11,
+ "bbox": [
+  2,
+  1,
+  7,
+  9
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "svg-up.png"
+}

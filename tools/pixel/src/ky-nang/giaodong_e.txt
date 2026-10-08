@@ -1,0 +1,46 @@
+# Thế Giáo — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: +3.1% chí mạng · +10% sát thương lên boss
+name: Thế Giáo
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = sat
+  d = sat-sang
+  e = bac
+  f = dong-toi
+  g = dong
+  h = dong-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbeeeecbbeeeecbbbgfa
+ahgbbedddddeedddddcbbgfa
+ahgbeddddddddddddddcbgfa
+ahgbeddddddddddddddcbgfa
+ahgbeddddddddddddddcbgfa
+ahgbcddddddddddddddcbgfa
+ahgbbcddddddddddddcbbgfa
+ahgbbbcdddddddddccbbbgfa
+ahgbbbbcdddddddcbbbbbgfa
+ahgbbbbbedddddcbbbbbbgfa
+ahgbbbbbcdddddcbbbbbbgfa
+ahgbbbbbbcdddcbbbbbbbgfa
+ahgbbbbbbbcdcbbbbbbbbgfa
+ahgbbbbbbbbcbbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

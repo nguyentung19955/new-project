@@ -1,0 +1,49 @@
+# Búa Nung Đỏ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: glowing red-hot hammer
+name: Búa Nung Đỏ
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dat-toi
+  d = dat
+  e = dat-sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = son
+  j = lua
+  k = lua-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbbbbbkbbbbbgfa
+ahgbbbbbbbbbbkkjibbbbgfa
+ahgbbbbbbbbbkjjjjibbbgfa
+ahgbbbbbbbbkjjjjjjibbgfa
+ahgbbbbbbbbijjjjjjibbgfa
+ahgbbbbbbbbbkjjjjjiibgfa
+ahgbbbbbbbbbijjjjibbbgfa
+ahgbbbbbbbbbbijjibbbbgfa
+ahgbbbbbbbbbeciibbbbbgfa
+ahgbbbbbbbbedcbbbbbbbgfa
+ahgbbbbbbbedcbbbbbbbbgfa
+ahgbbbbbbedcbbbbbbbbbgfa
+ahgbbbbbedcbbbbbbbbbbgfa
+ahgbbbbedcbbbbbbbbbbbgfa
+ahgbbbbecbbbbbbbbbbbbgfa
+ahgbbbedcbbbbbbbbbbbbgfa
+ahgbbedcbbbbbbbbbbbbbgfa
+ahgbbccbbbbbbbbbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

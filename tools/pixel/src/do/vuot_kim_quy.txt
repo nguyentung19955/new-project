@@ -1,0 +1,42 @@
+# Vuốt Kim Quy = Cung Mắt Chim + Mũi Sừng Phá Giáp — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: lẫy nỏ vuốt rùa vàng, ánh F2D27A
+name: Vuốt Kim Quy = Cung Mắt Chim + Mũi Sừng Phá Giáp
+size: 24x24
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = vang-sang
+
+part k0
+........................
+........................
+........a.....a....a....
+.......ada...ada..ada...
+.......abba..aca..abba..
+........aca..aca...aca..
+........adba.adba..adba.
+........adba.adba..adba.
+........adba.adba..adba.
+........adba.adba..adba.
+........adba.adba..adba.
+........adba.adba..adba.
+.......adcba.adba.adcba.
+.......adcba.adba.adcba.
+.......adba.adcba.adba..
+.......adba.adba..adba..
+......adcba.adba.adcba..
+......adba.adcba.adba...
+.....adcba.adcbaadcba...
+.....adcbaadcba.adcba...
+.....adba.adcba.adba....
+.....adba.adba..adba....
+.....abba.abba..abba....
+......aa...aa....aa.....
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

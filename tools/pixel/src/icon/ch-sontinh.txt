@@ -1,0 +1,38 @@
+# biểu tượng chương sontinh — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: giọt nước
+name: biểu tượng chương sontinh
+size: 16x16
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = reu-toi
+  g = reu
+  h = reu-sang
+
+part k0
+......aaaa......
+....aaeeecaa....
+...aeededdeca...
+..aedbbbbbbdca..
+.aedbbbbbbbbdca.
+.aebbbbbhfbbbea.
+aedbbbhbhfbbbdca
+aedbbhghgfbbbdca
+aeebbhggggfbbeca
+acdbhgggggfbbdca
+.aebfffffffbbea.
+.acdbbbbbbbbdca.
+..acdbbbbbbdca..
+...aceddedeca...
+....aaccccaa....
+......aaaa......
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

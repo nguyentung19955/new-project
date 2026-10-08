@@ -1,0 +1,31 @@
+# icon SVG: túi — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: túi có quai
+name: icon SVG: túi
+size: 12x12
+colors:
+  a = vien
+  b = dat-toi
+  c = dat
+  d = dat-sang
+  e = dong
+
+part k0
+............
+....aaaa....
+...adddba...
+...abbbba...
+...aeeeeea..
+..adccccba..
+..adccccba..
+.adccccccba.
+..abccccba..
+...abbbba...
+....aaaa....
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

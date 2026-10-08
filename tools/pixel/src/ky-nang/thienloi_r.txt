@@ -1,0 +1,46 @@
+# Thiên Lôi Giáng Thế — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Sét trời giáng xuống: x5 sát thương +2 vùng lớn
+name: Thiên Lôi Giáng Thế
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = sat
+  d = sat-sang
+  e = bac
+  f = dong-toi
+  g = dong
+  h = dong-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbbbdbbbbbbbgfa
+ahgbbbbbbbbecbbbbbbbbgfa
+ahgbbbbbbbedcbbbbbbbbgfa
+ahgbbbbbbedcbbbbbbbbbgfa
+ahgbbbbbeddcbbbbbbbbbgfa
+ahgbbbbedddcbbbbbbbbbgfa
+ahgbbbedddddeeeeeecbbgfa
+ahgbbedddddddddddcbbbgfa
+ahgbeccccccdddddcbbbbgfa
+ahgbbbbbbbbedddcbbbbbgfa
+ahgbbbbbbbbeddcbbbbbbgfa
+ahgbbbbbbbbedcbbbbbbbgfa
+ahgbbbbbbbedcbbbbbbbbgfa
+ahgbbbbbbbccbbbbbbbbbgfa
+ahgbbbbbbdbbbbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

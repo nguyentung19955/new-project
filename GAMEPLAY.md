@@ -2155,8 +2155,26 @@ Test: `node tests/run-all.js` đạt (tu-cu-dong: mẫu trang thử đổi xathu
 - Ảnh đã xem: `docs/tat-anh-moi/tat-tran-*.jpg`, `tat-anh-hung-*.jpg` (1920×934, 844×390, 667×375 — toàn hình cũ); so sánh khi bật: `bat-tran-1920x934.jpg`.
 ## claude/bo-chon-doi — Bỏ phần chọn đội (chợ tướng đã rút ngẫu nhiên)
 
-Chợ tướng đã rút từ mọi tướng Thường đã mở khoá, nên đội 6 tướng ("đội ưu tiên" ×2) không còn ý nghĩa — bỏ hẳn:
+## claude/duong-di-moi — Dạng đường mới + Vô tận theo màn (đổi vùng đất sau mỗi boss)
 
+- **Trước đây:** 14 bản đồ (MAPS, data.js) đều là đường cong SVG một nhánh, từ trái sang thành bên phải (trừ Cổ Loa xoắn vào giữa); nhiều ải dùng chung đường (song4 ×3, song1 ×2, song5 = rung2). Vô tận phải chọn 1 trong 17 bản đồ và chơi mãi trên bản đồ đó.
+- **9 dạng đường mới** (`PATH_SHAPES`, data.js; điểm gấp bo góc bằng `rpath` → M / L / C; `sampleSvgPath` hiểu thêm lệnh L):
+  - `zigzag` **Đê zíc-zắc** (gấp khúc nhọn, ô trong khúc gấp đánh hai phía) · `uonkhuc` **Đê uốn khúc** · `caucheo` **Cầu tre bắc chéo** (vòng một vòng rồi đi qua **cầu tre** bắc ngang chính nó — cầu vẽ tự động ở chỗ đường tự cắt; hang / thành thì cầu đá) · `vongve` **Khúc quanh chữ U** (quay về thành bên trái) · `bacthang` **Ruộng bậc thang** (hai bậc góc vuông) · `chianhanh` **Ngã ba chia nhánh** (2 nhánh quanh cồn đất rồi nhập lại) · `xoanoc` **Xoắn ốc Cổ Loa** (cuộn vào thành giữa bản đồ);
+  - dạng khó: `haicong` **Hai cửa giặc** (2 cổng vào cùng lúc, nhập một đường) · `duongtat` **Đường tắt hang ngầm** (quái chui lên từ miệng hang giữa đồng, đường rất ngắn).
+  - Vùng an toàn: tim đường y ∈ [125, 312] (thiết kế 932×430), không vào cột nút phải (x > 865, y > 235); thành không đè thanh trên / hàng thẻ / cột nút.
+- **Nhiều nhánh** (`MAPS[id].lanes`, `CONFIG.paths`): `PATH.lanes`, `PATH.at(d, nhánh)` (quãng đường mọi nhánh quy về độ dài nhánh 0 — các nhánh dài lệch < 1%), quái đầu đợt chia lượt từng nhánh (`e.lane`), quái đẻ / tách ra theo nhánh con mẹ; vật chặn đường + vệt lửa vẽ và tác dụng trên mọi nhánh; `distToPath` / `PATH.distOf` xét mọi nhánh. Mỗi cổng vào một cặp cột mốc.
+- **Vô tận theo màn** (yêu cầu bổ sung của người dùng):
+  - Chọn chế độ **Vô Tận → vào trận luôn** ở màn đầu (Bến Sông Đà, đường gốc) — bỏ bước chọn bản đồ; nút **🔥 Khó** chuyển vào màn Chuẩn bị xuất quân; bỏ nút "Bản đồ" ở Tạm dừng / Kết quả (Chơi lại = trận mới từ màn đầu); nút menu "Chơi mới (chọn bản đồ)" → "Chơi mới". Màn chọn bản đồ (`showCampaign`) không còn đường vào từ Vô tận.
+  - **Sau mỗi đợt boss** (đợt 10, 20, 25, 30, 40, …) sang **màn mới**: bản đồ + nền chủ đề + **bộ quái và boss** của một ải khác (`ENDLESS_STAGES.order`: sông → rừng → đồng → biển → hang → đầm → Cổ Loa → …, bỏ ải trùng bản đồ) + dạng đường (cứ 3 màn có 1 màn dùng đường gốc của ải đó, còn lại lần lượt 7 dạng thường; **từ đợt 60** màn lẻ dùng dạng khó Hai cửa giặc / Đường tắt). Đợt boss vẫn theo lịch của trận; quái / boss lấy theo màn (`bossAt / rosterFor / waveKind / buildWave(n, level, st)`; game: `stLv()`, `placeName()`).
+  - `endlessStage(k, wave, start)`, `endlessStageAt(wave, start)` (màn là hàm của số đợt), `stageMapId(st)`; game: `stageTick()` (gọi khi xong đợt — sân đã hết quái, gọi sớm vượt boss vẫn đổi khi đợt gộp xong), `setStage(st)`.
+  - **Chuyển cảnh:** đổi màn lúc xong đợt boss — thường lúc bảng Sính lễ đang mở; banner "Màn N · vùng đất mới" + tên dạng đường / mô tả hiện khi đóng bảng Sính lễ (hoặc ngay nếu đã đóng); nền cũ mờ dần sang nền mới (1,6 giây); thêm 10 giây nghỉ để kéo đổi ô tướng (miễn phí) trước đợt kế; bảng "Bộ quái mới" báo quân của màn.
+  - **Tướng:** ghép tướng ↔ ô mới theo khoảng cách gần nhất (dời sang ô gần nhất, có vệt bay); chỉ khi số tướng > số ô mới thì tướng thừa được **hoàn trọn số vàng đã bỏ vào** (giá + nâng cấp), đồ đang mặc về túi.
+  - **Lưu tiến trình:** bản lưu ghi `stage` {k, lv, shape}, `mapId`, `pathHp`, đợt → Tiếp tục vào đúng bản đồ / đường / nền / bộ quái. Bản lưu cũ (không có `stage`) → suy ra màn từ số đợt (`endlessStageAt`), dời tướng sang bản đồ của màn (im lặng). Nút Tiếp tục ở menu ghi tên vùng đất đang chơi. (Trận đơn không có hạt giống ngẫu nhiên — đợt kế rút lại khi nạp như trước.)
+  - Chơi nhóm (Cùng Giữ Thành) **giữ nguyên** bản đồ của phòng (ô đã chia theo người chơi).
+  - Sự kiện thử thách mỗi 10 đợt từ đợt 60 (nhánh claude/vo-tan-su-kien) độc lập với việc đổi màn — nhánh này không sửa chỗ đó.
+- **Cân bằng** (`mapExposure` / `stageHpFor`, game.js): máu quái của màn × (độ phơi bản đồ màn / bản đồ màn đầu)^0,5 × độ khó dạng (khó ×1,12; Ngã ba chia nhánh ×0,85), kẹp 0,8–1,4. Độ phơi = tổng quãng đường quái đi trong tầm 190 của 10 ô phủ đường tốt nhất (trung bình theo nhánh). Mô phỏng trận (đội 8 tướng ★3 cấp 20 đặt ô tốt nhất, 3 đợt, cùng bộ quái): bù tuyến tính (^1) làm đường dài khó hơn đường gốc (chữ U lọt 47% máu quái so với 15%) → chọn ^0,5: dạng thường lọt ~0,5–1,4 lần đường gốc, dạng khó ~1–2 lần. Ví dụ từ Bến Sông Đà: zíc-zắc ×1,22, uốn khúc ×1,19, cầu tre ×1,29, chữ U ×1,27, chia nhánh ×0,82, xoắn ốc ×1,18, bậc thang ×1,07, hai cửa ×1,09, đường tắt ×1,11, Cổ Loa gốc ×1,22.
+- Kim Quy Hộ Thành + thành Phong Châu vẽ tay đặt theo vị trí thành của bản đồ (không cố định góc phải).
+- Test: `node tests/duong-di-moi/duong-di-moi.test.js` — hình học (liền mạch, cuối đường sát thành, nhánh đều, vùng an toàn, ≥ 12 ô, ô không đè đường), thứ tự màn (đổi đúng sau boss, màn liền nhau khác bản đồ, dạng khó từ đợt 60, đủ 9 dạng trong 400 đợt), quái đi hết đường ở mọi dạng + mọi nhánh, tua 1 → 200 (chạy thật đợt boss: đúng boss + bộ quái của màn), đầy sân → hoàn vàng, lưu / nạp, chơi nhóm, **giao diện: chọn Vô tận vào luôn → qua boss 10 → sang màn → tải lại trang → Tiếp tục cùng bản đồ / bộ quái / đợt / ô tướng; bản lưu cũ suy ra màn**, mô phỏng cân bằng, không đè giao diện ở 1920×934 / 844×390 / 667×375 + ảnh từng dạng (cả dọc 390×844) ở `tests/duong-di-moi/shots/`. `tests/vo-tan` sửa theo luồng mới.
 - **Màn Chuẩn bị:** bỏ khối "Đội ưu tiên · 6 tướng", nút "✎ Chọn đội" và bảng chọn đội (Gợi ý / Xong, thẻ khoá). Màn vẫn giữ vì còn **Hậu cần** (Lương thảo, Hũ đồng, Hũ Vua Hùng, Đắp thành, Lò đúc đồng), tướng Tím/Vàng đã sở hữu và **Tướng khắc chế** — không trống, không thừa nút.
 - **Nghỉ chân** (sau đợt boss, dừng trận để đổi tối đa 2 tướng trong đội) chỉ dùng để đổi đội → **bỏ hẳn**: hạ boss xong trận chạy tiếp. Bỏ `restDeck` / `skipRest`, khung `#rest`, `REST_SWAPS`, `REST_COOP_T`.
 - **Code:** bỏ `suggestDeck`, `validDeck`, `deckIngredients`, `DECK_SIZE` (thay bằng `MIN_COMMONS` cho `openCommons`), `game.summonList()` (Triệu hồi ngẫu nhiên / gợi ý bộ quái mới dùng `game.marketPool()`), `MARKET_W.doi`. CSS bảng chọn đội (`.dk-modal`, `.dk-pick`…) xoá theo.
@@ -2281,6 +2299,20 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
 ## Phiên bản 201 — quy tắc hình mới phải có bản pixel
 - CLAUDE.md: thêm quy tắc "Đang chuyển sang pixel art: hình mới phải có bản pixel" — session thêm/đổi hình (kể cả vẽ bằng code) vẽ luôn bản pixel theo docs/pixel/QUY-CHUAN.md hoặc ghi vào docs/pixel/DANH-SACH.md mục "Bổ sung"; giữ đường vẽ dự phòng.
 
+## claude/duong-di-moi — Sửa theo tester (Sính lễ dừng trận, gộp thông báo, xoá "đường ma", nhãn Tiếp tục)
+
+- **Bảng Sính lễ dừng hẳn trận** (chơi đơn): mở bảng → `game.running = false` + `game.holdStage` (đặt ngay lúc hạ boss trong game.js, kể cả khi đợt boss xong cùng khung hình). Đóng bảng (`ui.pickReward`) → trận chạy lại, **lúc này mới** sang màn mới (`game.stageTick()`), banner + nghỉ 20 giây trước đợt kế. Nạp trận lưu lúc bảng còn mở → màn tự khớp số đợt.
+- **Gộp thông báo đổi màn:** 1 banner "Màn N · vùng đất mới / tên ải" + 1 thông báo sau banner (dạng đường, mô tả, quân, số tướng dời); bỏ thông báo "Sang vùng đất mới…" của game; ẩn bảng "Đợt N · bộ quái mới" khi đổi màn (quân đã ghi trong thông báo).
+- **Xoá "đường ma":** nền vẽ tay có dải hoa văn / khung theo đường cũ (sông: khung chữ nhật; rừng: dải chữ S; biển, đầm, thành) → màn dùng dạng đường mới phủ vùng giữa bằng mảng đất / cỏ sạch lấy từ chính ảnh nền (lát gương 2×2 cho liền mép, viền mờ dần 34 đơn vị) — `BG_CLEAN` / `drawBgClean` trong maps.js. Hang (đá nứt) và Đồng (bờ ruộng) giữ nguyên.
+- **Nhãn Tiếp tục** dùng cùng hàm suy ra màn (`endlessStageAt(đợt)`) → bản lưu cũ ghi đúng vùng đất sẽ vào.
+- Pixel art (quy tắc mới): cầu tre / cầu đá, miệng hang ngầm, cột mốc cửa vào vẽ bằng code — **chưa có bản pixel** (docs/pixel chưa có trên nhánh chính); cần bổ sung vào danh sách pixel khi nhánh pixel có QUY-CHUAN / DANH-SACH.
+- Test thêm (tests/duong-di-moi): chạy thật đợt boss 10 bằng vòng lặp game, hạ boss → bảng Sính lễ mở 4 giây: vẫn đợt 10, đếm ngược đứng yên, chưa đổi màn; đóng bảng → màn 2, trận chạy lại, nghỉ ≥ 17 giây; 1 banner, không bảng bộ quái, ≤ 2 thông báo; nhãn Tiếp tục bản lưu cũ đúng vùng đất.
+- **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
+
+## claude/duong-di-moi — sửa lỗi mất nền vẽ tay ở bản đồ đường gốc
+- Lỗi hồi quy @7d1446b: `mapLayer` (js/maps.js) có ảnh nền nhưng bản đồ không có `m.shape` thì rơi vào nhánh `else` tô màu đất đè lên ảnh → Bến Sông Đà, Biển Đông… chỉ còn màu trơn.
+- Sửa: có ảnh nền thì vẽ ảnh (+ `drawBgClean` nếu là dạng đường mới); chỉ khi không có ảnh nền mới tô màu đất.
+- Test mới `tests/duong-di-moi/nen-goc.test.js`: mọi bản đồ gốc có ảnh nền phải còn nhiều màu ở góc nền (trước khi sửa: 1 màu); chụp Sông Đà + Biển Đông ở 844×390 và 1920×934.
 ## claude/pixel-tuong-tim — Pixel art 18 tướng Tím (DANH-SACH lô 3–4)
 
 - Vẽ pixel 32×32 theo `docs/pixel/QUY-CHUAN.md` (tỉ lệ đầu:thân ≈ 1:1,6, mắt nhỏ trắng+đen có lông mày, không má hồng, bóng 3 tông,
@@ -2339,6 +2371,14 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
 - Không màu mới, không sửa build-pixel / js/pixel.js. Test `tests/pixel`: mã "chưa có pixel" đổi `lactuong` → `thachsanh`
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
+
+## Phiên bản 223 — gộp xuat-goi-pixel (tester đạt)
+
+- Pixel sinh bằng tool: đồ 98, icon 160, thần khí 60, giao diện 45, nền 51, kỹ năng 240 (mã gạch dưới), ấn phù 36, bản đồ 14 (ô sát đường cùng kiểu bệ đá, xa đường chỉ trang trí). Gói zip ở tools/pixel/goi/, lệnh ở docs/pixel/LENH-TOOL.md. Bản đồ dạng đường mới (m.shape) không dùng ảnh ban-do dựng sẵn mà vẽ lát ô theo đường thật.
+
+## Phiên bản 222 — gộp duong-di-moi (tester đạt)
+
+- Dạng đường mới (xoắn ốc, zíc-zắc, chia nhánh, hai cửa giặc, cầu tre, đường tắt hang) + Vô tận theo màn; nền vẽ tay đường gốc giữ nguyên; pixel vẽ đủ mọi nhánh + cầu. Đợt 60: banner sự kiện và "Màn N" xếp hàng, không chồng.
 
 ## Phiên bản 221 — khối băng pha lê (tester đạt)
 
@@ -2513,6 +2553,10 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
   tí hon trên lưng, ngọc trong vuốt) · `ongho` Chúa Sơn Lâm (hổ 4 chân, vằn nét tranh Đông Hồ, khăn lá, chữ 王) — đều có chân dung riêng.
 - Không sửa js/pixel.js hay file lô khác; file sinh ra (`assets/pixel/tuong/`, `js/pixel/tuong.js`, `js/asset-list.js`) dựng lại.
 
+## claude/duong-di-moi — nền pixel vẽ đủ mọi nhánh + cầu
+- Lỗi khi bật pixel (`?pixel=1`): `pxMapGround` (js/pixel.js) chỉ vẽ `CONFIG.path` (nhánh 0) → chianhanh / haicong mất nhánh 2 (quái đi trên cỏ), caucheo mất cầu chỗ đường tự cắt.
+- Sửa: vẽ viền + lòng đường cho mọi nhánh `CONFIG.paths`, rồi vẽ cầu (`drawBridge` của js/maps.js) khi `m.bridge`.
+- Test mới `tests/duong-di-moi/nen-pixel.test.js`: mọi điểm trên mọi nhánh không phải màu cỏ, chỗ tự cắt có màu gỗ của cầu (code cũ: FAIL); chụp 4 dạng ở 844×390 và 1920×934.
 ## claude/sua-trieu-hoi — sửa lỗi "chơi một lúc thì không triệu hồi (mua thẻ Chợ) được nữa"
 - **Nguyên nhân gốc:** khi kéo tướng, `#wrap` nhận lớp `dragging-hero` (CSS ẩn thanh chợ + `pointer-events:none` để thùng 🗑 nằm đúng chỗ).
   Nếu đang kéo (ngón 1) mà một ngón khác chạm vào tướng khác, `pointerdown` của canvas **ghi đè biến `drag`** → ngón 1 nhấc ra bị bỏ qua
@@ -2534,11 +2578,40 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
   cả thanh tướng; nếu việc này rơi vào 0,35 giây đang giữ tay (hoặc 0,15 giây rê chuột) thì ô cũ đã rời trang → mô tả **không hiện**
   (phải nhấc tay giữ lại). Gợi ý sửa: khi hết giờ chờ, tìm lại ô bằng `elementFromPoint` như vòng `setInterval` cập nhật mô tả.
   Test `mo-ta-ky-nang` tạm dừng trận trong đoạn giữ tay, chờ `assetVersion` đứng yên và rê chuột ra/vào lại nếu mô tả chưa hiện.
+## claude/duong-di-moi — gộp với vo-tan-su-kien (sự kiện đợt) + banner đợt 60
+- Gộp nhánh chính (đã có sự kiện vô tận): `buildWave(n, level, st)` giữ cả WAVE_CAP/hpx/sự kiện `ev` lẫn quân + boss theo màn (`st`); `spawn(type, dist, elite, it, lane)` nhận cả máu đợt (hpx, ev.hp) lẫn nhánh đường + `pathHp`; phân thân của sự kiện đi đúng nhánh con mẹ; lưu trận giữ cả `evWave/evDone` và `stage/pathHp/mapId`; thưởng sự kiện tính trước rồi mới đổi màn.
+- Đợt 60 (sự kiện thử thách + đổi màn sau boss): banner sự kiện và banner "Màn N" dùng chung một `#banner` → nay xếp hàng (`ui.queueBanner`), cái sau đợi cái trước tắt; banner sự kiện còn hoãn (bảng bộ quái mới đang mở) mà đợt đã vượt thì bỏ, không báo muộn sau "Màn N".
+- Test mới `tests/duong-di-moi/dot60.test.js` (thường + pixel): thứ tự báo trước → mở màn sự kiện → "Màn 8", mỗi banner hiện đủ giờ, không banner sự kiện muộn.
+- `ui.clearBanners()` huỷ banner đang hiện + hàng đợi banner. `tests/vo-tan-su-kien`: nhảy thẳng tới đợt N thì sang màn của đợt đó trước (im lặng); huỷ banner sót / đang xếp hàng của phần test trước (banner nay xếp hàng, không đè); đầu đợt sự kiện có thể không mở bảng "bộ quái mới" (bộ quái đổi theo màn, đã báo trong thông báo đổi màn) — mở thì vẫn phải sau banner và có dòng sự kiện.
+- `tests/cho-tuong/cho-tuong.test.js` lỗi "thả thẻ lên tướng ★ cùng loại → ghép ★★" có sẵn trên nhánh chính (không do nhánh này).
+## claude/xuat-goi-pixel — xuất gói pixel bằng tool cho mọi nhóm còn thiếu
+- Sinh **451 mã pixel bằng tool** `tools/ve-pixel.js` (không vẽ tay từng điểm): đồ 98, icon 160, thần khí 60, giao diện 45, nền 51, cảnh 37.
+  Spec `tools/pixel/spec/<nhóm>.json` · gói `tools/pixel/goi/<nhóm>.zip` (nạp tay trong Cài đặt → Gói pixel) · đã `--nap` vào
+  `tools/pixel/src` + `assets/pixel` + `js/pixel/*.js`. Lệnh chạy lại từng bước: `docs/pixel/LENH-TOOL.md`.
+- Tool mở rộng: thư viện ~90 **hình vật** (mũ, giáp, nỏ, gậy, trống, rùa, cổng, đế, khoá, đồng hồ cát…) + `mauPhu` / `mauNgoc`;
+  ô nền `nen: vat` (vật trang trí nền trong suốt); **bộ sinh giao diện** (khung · nút · nút tròn · thanh · ô · thẻ · huy hiệu · dải · núi,
+  trạng thái thường / nhấn / khoá / chọn) và **bộ sinh cảnh** 320×180 (trời · núi · đất / nước theo chủ đề, ngày / chiều / đêm / u ám).
+  Kiểm tra cỡ giao diện 8..320 như build-pixel; `--nap` lỗi build thì gỡ nguồn vừa ghi.
+- Game (khi bật pixel, giữ đường vẽ cũ làm dự phòng): icon đồ trong túi / lò rèn / ghép / mặc đồ lên tướng (theo loại × độ hiếm hoặc
+  theo mã món), icon nhỏ (`ic()`, `UIE`, `ICON` đóng/quay lại/tích/túi/nâng/núi, ổ khoá), đồng vàng / nén bạc, icon Thần Khí,
+  skin nút vàng / đồng / tròn, khung bảng, thanh đáy, thẻ chợ, huy hiệu ải, thanh máu boss (ảnh pixel, phóng không làm mịn),
+  ô cỏ / đường bản đồ theo chủ đề (đầm, đồng, rừng, thành, hang, biển; đường cát / đá / gạch / đê).
+- Chưa nối: cảnh `canh/*` (menu, kết quả, truyện) và cổng thành `nen/cong-*` — bản tool sinh là phác thảo, kém ảnh vẽ tay hiện tại.
 ## claude/pixel-quai-boss — Sửa lỗi tester: boss pixel cao vọt, Đại Bàng lọt dưới thanh trên
 - Quái/boss pixel giờ co theo **chiều cao hình cũ** (giữ tỉ lệ, rộng tối đa 1,15× rộng cũ) thay vì theo rộng → Đại Bàng 92, Ngư Tinh 65, Hồ Tinh 71, Chằn Tinh 106, Triệu Đà 142 (đơn vị logic) khớp bản cũ; Triệu Đà sát thành không còn đè thành. Chiều cao cũ nhớ theo mã (`ENEMY_OLD_HW`), ảnh cũ chưa tải thì boss lấy 112.
 - Kẹp mép trên: `PLAY_TOP` (đáy thanh trên, tính khi đổi cỡ màn) — quái bay / boss cao ở khúc đường sát trên tự hạ độ nâng để đỉnh hình + thanh máu nằm dưới thanh trên.
 - Test mới `tests/pixel/boss-cao.test.js`: so chiều cao pixel vs cũ (≤15%) ở 1920×934 + 844×390, đo đỉnh hình Đại Bàng ở điểm đường cao nhất, chụp ảnh.
 - (vòng 2, theo tester) Vòng choáng hạ sát đầu: đáy vòng chạm đỉnh hình ±3 (quái pixel lấy cao hình thật sau làm tròn điểm ảnh), chim Lạc / xoáy khí đậu lên đường vòng; nét vòng dày 2 ô cho dễ thấy ở 844×390. Lửa bỏng: 1–2 ngọn lửa 5×7 ô rõ dáng, ngang vai, cao ~26% hình quái (cỡ ô theo cỡ quái). Test hat-vfx: đáy vòng–đỉnh đầu ±3, lửa cao 18–45%.
 - (yêu cầu thêm) Đóng băng pixel: khối băng BÁT GIÁC (viền nước sáng 1 ô, mặt trong trong suốt nhạt, vệt sáng chéo, đáy chàm sáng) bọc trọn hộp hình thật từng con (lề ~11%, cắt góc < 2 lề nên góc hộp vẫn nằm trong) — boss to khối to, lính nhỏ khối nhỏ, quái bay bọc đúng chỗ đang bay. pxDrawEnemy trả hộp hình thật (cao, rộng, lệch tâm, đáy) để vòng choáng / khối băng bám đúng. Test hat-vfx: bát giác bao trọn bbox, lề ≤ 15% cho tôm, voi chiến, Thuồng Luồng, Đại Bàng.
+- Bổ sung (yêu cầu thêm): **kỹ năng** 240 mã (40 bản vẽ tay từ `claude/pixel-ky-nang-2` đổi tên `giong-q` → `giong_q` qua `mau`,
+  200 sinh từ tên chiêu + mô tả, màu theo hành) và **ấn phù** 36 mã (bản vẽ tay `claude/pixel-anphu-thankhi`, `g-air` → `g_air`) —
+  nạp bằng tool, game dùng ở `skillIcon` / `runeIc` khi bật pixel.
+- **Bản đồ pixel** (nhóm mới `ban-do`, 320×148): `node tools/build-ban-do-spec.js` chạy js/data.js + js/game.js trong vm để lấy đường đi
+  và ô đặt tướng đúng như trong trận → tool vẽ nền: ô đặt tướng cùng một kiểu bệ đá viền đậm, vùng xa đường chỉ trang trí theo chủ đề
+  (không viền ô), đường cắt nhau → cầu tre (hỗ trợ nhiều nhánh `paths` / `d` mảng cho dạng đường mới). 14 bản đồ → `goi/ban-do.zip`;
+  `mapLayer` vẽ nền này khi bật pixel (chưa tải xong / không có mã → nền ô cỏ / đường như trước).
 - (người dùng) Khối băng đổi từ bát giác sang THẬP LỤC GIÁC: 4 cạnh thẳng + mỗi góc bo bằng 3 cạnh (cung 90° chia 3) = 16 cạnh; bán kính bo ≤ 3 lề nên vẫn bao trọn hộp hình, lề ~11% (16 cạnh đều phải nới lề ~40% nên không dùng).
 - (người dùng) Khối băng thập lục giác "cứng" kiểu pha lê: 16 cạnh thẳng nối đỉnh bằng nét pixel, viền trong thụt vào + nét vát từ cả 16 đỉnh, mặt vát tô sáng (trên) / tối (dưới) và xen sáng–tối giữa các mặt kề, chấm sáng ở đỉnh → thấy rõ từng cạnh; dải vát mỏng (~1/3 bán kính góc) không che quái.
+- Sửa theo tester (icon pixel phải giữ nghĩa icon cũ): nút quay lại = mũi tên «, nút đóng giữ ô vuông + X trắng to (bỏ skin pixel
+  nút tròn), Ngân khố = thỏi bạc, nút đổi chợ giữ skin cũ + icon đồng xu có mũi tên vòng; soát icon chức năng: tạm dừng ‖, menu ≡,
+  vô tận ∞, vào trận / lực chiến = hai kiếm chéo, cài đặt = bánh răng; bộ ui-tran-* bỏ đĩa trống cho hình to rõ.

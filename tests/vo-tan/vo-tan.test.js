@@ -37,6 +37,10 @@ const txt = (page, sel) => page.evaluate((s) => document.querySelector(s).innerT
   ok(await page.locator('#modes .md-card').count() === 2 && /Vô Tận/.test(modes) && /Cùng Giữ Thành/.test(modes) && !NO_AI.test(modes), 'Chọn chế độ: chỉ Vô Tận + Cùng Giữ Thành');
   await page.screenshot({ path: path.join(SHOT, 'chon-che-do-844x390.png') });
   await page.click('#modes .md-card.endl');
+  // claude/duong-di-moi: Vô tận không chọn bản đồ — vào màn đầu luôn (màn chọn bản đồ còn mở được bằng ui.showCampaign)
+  await page.waitForSelector('#prep:not([hidden])');
+  ok(await page.evaluate(() => $('#campaign').hidden && game.level === 0), 'chọn Vô Tận → vào màn đầu luôn (không chọn bản đồ)');
+  await page.evaluate(() => { game.started = false; ui.showCampaign(0); });
   await page.waitForSelector('#campaign:not([hidden])');
   const nTabs = await page.locator('#campaign .cp-tab').count();
   ok(nTabs === (await page.evaluate(() => CHAPTERS.length)), `chọn bản đồ: ${nTabs} nhóm truyền thuyết`);
@@ -85,7 +89,8 @@ const txt = (page, sel) => page.evaluate((s) => document.querySelector(s).innerT
   // đợt 12: cuối trận 6 × 11 = 66 + kỷ lục mới (v182) 15 × 11 = 165 + trận đầu ngày qua đợt 10: 300
   ok(k2.kho - k1.kho === 66 + 165 + 300 && k2.best === 12 && k2.daily && !k2.run, `thưởng cuối trận đúng: +${k2.kho - k1.kho} (66 theo đợt + 165 kỷ lục mới + 300 trận đầu ngày), kỷ lục 12`);
   ok(await page.locator('#result [data-act=next-level], #result [data-act=endless]').count() === 0, 'không còn nút Ải tiếp theo / Chơi vô tận');
-  await page.click('#result [data-act=to-map]');
+  ok(await page.locator('#result [data-act=to-map]').count() === 0, 'kết quả: bỏ nút Bản đồ (vô tận không chọn bản đồ)');
+  await page.evaluate(() => ui.showCampaign(2));
   await page.waitForSelector('#campaign:not([hidden])');
   ok((await txt(page, '#campaign .cp-side')).includes('đợt 12'), 'Bản đồ: hiện kỷ lục vừa lập');
   // trận thứ hai trong ngày: không thưởng ngày nữa
@@ -104,7 +109,7 @@ const txt = (page, sel) => page.evaluate((s) => document.querySelector(s).innerT
   const lbl = await txt(page, '#continue-label');
   const lv4 = await page.evaluate(() => LEVELS[4].name);
   ok(lbl.includes(lv4) && /Đợt 3/.test(lbl) && !NO_AI.test(lbl), 'nút Tiếp tục: ' + lbl);
-  ok(!(await page.locator('#btn-newgame').isHidden()) && /chọn bản đồ/.test(await txt(page, '#btn-newgame')), 'có nút Chơi mới (chọn bản đồ)');
+  ok(!(await page.locator('#btn-newgame').isHidden()) && /Chơi mới/.test(await txt(page, '#btn-newgame')), 'có nút Chơi mới');
   await page.click('#btn-continue'); await page.waitForTimeout(300);
   ok(await page.evaluate(() => game.started && game.endless && game.level === 4 && game.wave === 3), 'Tiếp tục: trận vô tận dở chơi tiếp đúng bản đồ / đợt');
   // tạm dừng, bảng xếp hạng, cài đặt

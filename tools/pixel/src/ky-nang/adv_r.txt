@@ -1,0 +1,49 @@
+# Linh Quang Thần Nỏ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: a glowing golden turtle-claw crossbow with radiant light
+name: Linh Quang Thần Nỏ
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = sat
+  d = sat-sang
+  e = bac
+  f = trang-xam
+  g = dat-toi
+  h = dat-sang
+  i = dong-toi
+  j = dong
+  k = dong-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+akkkkkkkkkkkkkkkkkkkkkia
+akjjjjjjjjjjjjjjjjjjjjia
+akjbbbbbbbbbbbbbbbbbbjia
+akjbbbbbbbbbbbbbbbbbbjia
+akjbbbbbbbbbbbbbbbbbbjia
+akjbbbbbbbbhgbbbbbbbbjia
+akjbbbbbedddddddcbbbbjia
+akjecbecbbbhgbbbcdeecjia
+akjeccbbbbbhgbbbbbcccjia
+akjcbbfbbbbhgbbbbfbbcjia
+akjbbbbffbbhgbbffbbbbjia
+akjbbbbbbffhgffbbbbbbjia
+akjbbbbbbbbffbbbbbbbbjia
+akjbbbbbbbbhgbbbbbbbbjia
+akjbbbbbbbbhgbbbbbbbbjia
+akjbbbbbbbbhgbbbbbbbbjia
+akjbbbbbbbbhgbbbbbbbbjia
+akjbbbbbbbbhgbbbbbbbbjia
+akjbbbbbbbbhgbbbbbbbbjia
+akjbbbbbbbbggbbbbbbbbjia
+akjjjjjjjjjjjjjjjjjjjjia
+aiiiiiiiiiiiiiiiiiiiiiia
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

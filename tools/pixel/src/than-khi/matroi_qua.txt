@@ -1,0 +1,48 @@
+# Quạ Lửa Ba Chân — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: three-legged crow — Quạ vàng ba chân sống trong mặt trời
+name: Quạ Lửa Ba Chân
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = vang-nghe
+  g = vang-sang
+  h = son
+  i = lua
+  j = lua-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbjbbbbbbbbbbdca
+aedbbbbbbbibbbbggebbbdca
+aedbbbbbbbjhbbgfffebbdca
+aedbbbbbbjiihbgffahbbdca
+aedbbbbbbjiihbgfffebbdca
+aedgbbbbjhhhhhffeeebbdca
+aedggebgfffffffebbbbbdca
+aedgffgfffffffffebbbbdca
+aedgeeffffffffffebbbbdca
+aedebbefffffffffebbbbdca
+aedbbbbefffffffebbbbbdca
+aedbbbbbeeeehehbbbbbbdca
+aedbbbbbbbbhbbhbbbbbbdca
+aedbbbbbbbbhbbhbbbbbbdca
+aedbbbbbbbbhbbhbbbbbbdca
+aedbbbbbbbbbbbhbbbbbbdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -1,0 +1,35 @@
+# xếp hạng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: cúp trống đồng nhỏ
+name: xếp hạng
+size: 16x16
+colors:
+  a = vien
+  b = dong-sang
+  c = vang-nghe
+  d = vang-sang
+  e = son
+
+part k0
+................
+...aaaaaaaaa....
+..addddddddbaa..
+.abbbcccccbbbba.
+.ababcceecbbaba.
+.ababcceecbbaba.
+.abbbbceebbbbba.
+..aaaabcbaaaaa..
+......adcba.....
+......adcba.....
+....aaadcbaa....
+...adddcccdba...
+...abbbbbbbba...
+....aaaaaaaa....
+................
+................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

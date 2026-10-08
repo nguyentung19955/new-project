@@ -1,0 +1,45 @@
+# Linh Lực (Ấn Sấm, hàng 1) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: —
+name: Linh Lực (Ấn Sấm, hàng 1)
+size: 24x24
+colors:
+  a = vien
+  b = vang-nghe
+  c = vang-sang
+  d = cham-toi
+  e = cham
+  f = cham-sang
+  g = nuoc-sang
+
+part k0
+........................
+........aaaaaaaa........
+......aaggggggggaa......
+.....aggdeeeeeedgga.....
+....agfeddddddddefga....
+...agfeddddddddddefga...
+..agfeddddddddddddefga..
+..agedddddddcddddddeea..
+.agdddddcdddcaddcddddga.
+.agedddddcddcadcdadegea.
+.ageddddddabbbddaddegea.
+.ageddddddbcccbddddegea.
+.agedddcccbcbcbcccdegea.
+.ageddddaabcccbaaaaegea.
+.agedddddddbbbaadddegea.
+.aeddddddcddcaacdddedea.
+..aggdddcdadcaddcdegea..
+..aefgdddaddcadddagfea..
+...aefgddddddaddegfea...
+....aefgdeeeeeeegfea....
+.....aeedggggggdeea.....
+......aaeeeeeeeeaa......
+........aaaaaaaa........
+........................
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

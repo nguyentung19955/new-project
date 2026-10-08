@@ -1,0 +1,34 @@
+# nút tròn (quay lại / đóng) — nhan — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đĩa đồng tròn; nhấn
+name: nút tròn (quay lại / đóng) — nhan
+size: 16x16
+colors:
+  a = vien
+  b = dong-toi
+  c = dong
+  d = dong-sang
+
+part k0
+................
+.....aaaaaa.....
+...aaccdccbaa...
+..accdbbbbdcba..
+.acbbbbbbbbbbba.
+.adbbbbbbbbbbda.
+acbbbbbbbbbbbbba
+acbbbbbbbbbbbbba
+acdbbbbbbbbbbdba
+acbbbbbbbbbbbbba
+abbbbbbbbbbbbbba
+.adbbbbbbbbbbda.
+.abbbbbbbbbbbba.
+..abbdbbbbdbba..
+...aabbbdbbaa...
+.....aaaaaa.....
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -1,0 +1,30 @@
+# điểm Ấn Phù — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: ấn đá có mặt trời
+name: điểm Ấn Phù
+size: 12x12
+colors:
+  a = vien
+  b = sat-toi
+  c = sat
+  d = sat-sang
+
+part k0
+............
+.....a......
+...aaca.a...
+..acaadaca..
+...addcba...
+..aadccbaa..
+.adccccccba.
+..aabbcbaa..
+..acaacaca..
+...a.abaa...
+......a.....
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

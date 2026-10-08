@@ -1,0 +1,49 @@
+# Lưỡi Tầm Sét — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: +0.5 sát thương phép · vùng nổ 40
+name: Lưỡi Tầm Sét
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = sat
+  d = sat-sang
+  e = bac
+  f = trang-xam
+  g = trang
+  h = sang
+  i = dong-toi
+  j = dong
+  k = dong-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+akkkkkkkkkkkkkkkkkkkkkia
+akjjjjjjjjjjjjjjjjjjjjia
+akjbbbbbbbbbbbbbbbbbbjia
+akjbbbbbbeeeeecbbbbbbjia
+akjbbbbeeddddddecbbbbjia
+akjbbbeddddddddddcbbbjia
+akjbbedddhhhhhfdddcbbjia
+akjbbeddhggggggfddcbbjia
+akjbeddhggddddggfddcbjia
+akjbeddhgddddddgfddcbjia
+akjbeddhgddddddgfddcbjia
+akjbeddhgddddddgfddcbjia
+akjbeddhgddddddgfddcbjia
+akjbcddfggddddggfddcbjia
+akjbbeddfggggggfddcbbjia
+akjbbcdddffffffdddcbbjia
+akjbbbcddddddddddcbbbjia
+akjbbbbccddddddccbbbbjia
+akjbbbbbbccccccbbbbbbjia
+akjbbbbbbbbbbbbbbbbbbjia
+akjjjjjjjjjjjjjjjjjjjjia
+aiiiiiiiiiiiiiiiiiiiiiia
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

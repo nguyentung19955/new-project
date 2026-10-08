@@ -1,0 +1,49 @@
+# Giáp Đá (Ấn Núi, hàng 4) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: —
+name: Giáp Đá (Ấn Núi, hàng 4)
+size: 24x24
+colors:
+  a = vien
+  b = toi
+  c = sat-sang
+  d = bac
+  e = dat-toi
+  f = dat
+  g = dong-toi
+  h = dong
+  i = dong-sang
+  j = vang-nghe
+  k = vang-sang
+
+part k0
+.........aaaaaa.........
+......aaakhhhhkaaa......
+.....akhhhiggihhhka.....
+....akhigggbbgggihka....
+...akhggbbbeebbbgghka...
+..akhgbbeeeeeeeebbghka..
+.akhibeeeeeeeeeeeebihka.
+.akigbeeeeeccceeeefgika.
+.ahgbeeeeccdddcceeebgha.
+akhibeeecdddcdddceefihka
+akigbeecddcdddcdccefgika
+akibeeecddddjdddccaebika
+akibeeecdcdjkjdcccaefika
+akgibeeecdddjddccaafigka
+ahkibeeecddcddcccaefikha
+.ahgbeeeecdddcccaaefgha.
+.akgibeeeecccccaaefigka.
+.ahkgbeeeeecccaaeefgkha.
+..ahkgbfeeeeaaaeffgkha..
+...ahkgibffeefffigkha...
+....ahkgggibfigggkha....
+.....ahhhkggggkhhha.....
+......aaahhhhhhaaa......
+.........aaaaaa.........
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

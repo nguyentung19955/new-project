@@ -1,0 +1,51 @@
+# Bình Gốm Nổ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: clay pot bursting
+name: Bình Gốm Nổ
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = trang-xam
+  d = trang
+  e = sang
+  f = dat-toi
+  g = dat
+  h = dat-sang
+  i = dong-toi
+  j = dong
+  k = dong-sang
+  l = vang-nghe
+  m = vang-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+akkkkkkkkkkkkkkkkkkkkkia
+akjjjjjjjjjjjjjjjjjjjjia
+akjbbbbbbbhhhhfbbbbbbjia
+akjbbbbbbbhgggfbbbbbbjia
+akjbbbbbbbfffffbbbbbbjia
+akjbbbbbbbeeecbbbbbbbjia
+akjbbbbbbbeddcbbbbbbbjia
+akjbbbbbbbccccbbbbbbbjia
+akjbbbbbbmmmmmkbbbbbbjia
+akjbbbbmmllllllmkbbbbjia
+akjbbbbmllllllllkbbbbjia
+akjbbbmllllllllllkbbbjia
+akjbbbmllllllllllkbbbjia
+akjbbbmllllllllllkbbbjia
+akjbbbmllllllllllkbbbjia
+akjbbbkllllllllllkbbbjia
+akjbbbbmllllllllkbbbbjia
+akjbbbbkkllllllkkbbbbjia
+akjbbbbbbkkkkkkbbbbbbjia
+akjbbbbbbbbbbbbbbbbbbjia
+akjjjjjjjjjjjjjjjjjjjjia
+aiiiiiiiiiiiiiiiiiiiiiia
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -1969,6 +1969,95 @@ const MAP_THEMES = {
   thanh:{ ground: '#4A5A2E', grass: '#5E7038', dot: '#36441E', water: true, bank: '#7E6A48', deco: ['tree', 'rock', 'hut', 'banner'], gate: 'citadel' },
 };
 
+// ============================================================
+//  DẠNG ĐƯỜNG MỚI (claude/duong-di-moi): ngoài các khúc sông cong mềm của từng ải, thêm các dạng
+//  đường khác hẳn — zíc-zắc gấp, uốn khúc, vòng chéo qua cầu tre, chữ U quay về, chia hai nhánh,
+//  xoắn ốc vào giữa, ruộng bậc thang, hai cửa giặc, đường tắt hang ngầm.
+//  Toạ độ thiết kế 932 × 430 như MAPS. Mỗi dạng là danh sách điểm gấp (rpath bo tròn góc → M / L / C);
+//  lanes: một hoặc nhiều nhánh (quái chia lượt đi từng nhánh), end: chỗ đặt thành / cổng.
+//  Vùng an toàn (không đè giao diện ở 1920×934, 844×390, 667×375 và màn dọc tự xoay):
+//    tim đường y ∈ [125, 312] (thanh trên / hàng thẻ tướng), không vào cột nút phải x > 865 & y > 235.
+//  Cân bằng (game.js mapExposure): khi đổi màn, máu quái nhân theo "độ phơi" của đường mới so với màn đầu
+//    (10 ô phủ đường tốt nhất, tầm 190: tổng quãng đường quái đi trong tầm) → đường dài / vòng gần nhau (tướng đánh
+//    được nhiều lần) thì quái dày máu hơn, đường ngắn / hai cửa thì mỏng hơn. diff: dạng khó (dùng cho đợt cao) khó hơn ~12%.
+// ============================================================
+// bo tròn góc một đường gấp khúc: điểm → chuỗi SVG (M, L, C)
+function rpath(pts, r = 40) {
+  const f = (v) => +v.toFixed(1);
+  let d = `M ${pts[0][0]} ${pts[0][1]}`;
+  for (let i = 1; i < pts.length - 1; i++) {
+    const [ax, ay] = pts[i - 1], [px, py] = pts[i], [bx, by] = pts[i + 1];
+    const la = Math.hypot(ax - px, ay - py), lb = Math.hypot(bx - px, by - py);
+    const rr = Math.min(r, la / 2, lb / 2);
+    const p1 = [px + (ax - px) / la * rr, py + (ay - py) / la * rr], p2 = [px + (bx - px) / lb * rr, py + (by - py) / lb * rr];
+    d += ` L ${f(p1[0])} ${f(p1[1])} C ${f(p1[0] + (px - p1[0]) * 0.55)} ${f(p1[1] + (py - p1[1]) * 0.55)} ${f(p2[0] + (px - p2[0]) * 0.55)} ${f(p2[1] + (py - p2[1]) * 0.55)} ${f(p2[0])} ${f(p2[1])}`;
+  }
+  const [lx, ly] = pts[pts.length - 1];
+  return d + ` L ${lx} ${ly}`;
+}
+const PATH_SHAPES = {
+  zigzag: { name: 'Đê zíc-zắc', desc: 'Đường gấp khúc zíc-zắc như đê ngăn lũ: ô trong mỗi khúc gấp đánh được cả hai phía.', r: 16,
+    lanes: [[[-20, 140], [120, 140], [215, 305], [310, 140], [405, 305], [500, 140], [595, 305], [690, 140], [880, 150]]], end: [899, 146] },
+  uonkhuc: { name: 'Đê uốn khúc', desc: 'Con đê uốn lên xuống như khúc ruột: quái đi dọc, tướng đặt giữa hai khúc.', r: 62,
+    lanes: [[[-20, 140], [100, 140], [100, 305], [290, 305], [290, 135], [480, 135], [480, 305], [670, 305], [670, 150], [880, 150]]], end: [899, 146] },
+  caucheo: { name: 'Cầu tre bắc chéo', desc: 'Đường vòng một vòng rồi đi qua cầu tre bắc ngang chính nó: ô trong vòng đánh được hai lần.', r: 46,
+    lanes: [[[-20, 205], [560, 205], [560, 128], [300, 128], [300, 308], [740, 308], [740, 160], [880, 160]]], end: [899, 156], bridge: true },
+  vongve: { name: 'Khúc quanh chữ U', desc: 'Quái đi hết bờ trên rồi vòng chữ U quay về bến bên trái: ô ở dải giữa đánh được cả lượt đi lẫn lượt về.', r: 70,
+    lanes: [[[-20, 135], [800, 135], [800, 305], [70, 305]]], end: [52, 300] },
+  chianhanh: { name: 'Ngã ba chia nhánh', desc: 'Đường tách hai nhánh vòng quanh cồn đất rồi nhập lại: quái chia nhau đi hai ngả.', r: 46, diff: 0.85,
+    lanes: [[[-20, 222], [170, 222], [260, 135], [600, 135], [690, 222], [880, 180]], [[-20, 222], [170, 222], [260, 308], [600, 308], [690, 222], [880, 180]]], end: [899, 176] },
+  xoanoc: { name: 'Xoắn ốc Cổ Loa', desc: 'Đường xoắn ốc như thành Cổ Loa, cuộn dần vào thành ở giữa: rất dài nhưng quái dày máu.', r: 52,
+    lanes: [[[-20, 130], [830, 130], [830, 308], [110, 308], [110, 220], [370, 220]]], end: [405, 218], center: true },
+  bacthang: { name: 'Ruộng bậc thang', desc: 'Đường leo hai bậc như ruộng bậc thang lên đồi, góc gấp vuông: ô ở góc bậc đánh được cả hai đoạn.', r: 18,
+    lanes: [[[-20, 305], [260, 305], [260, 218], [540, 218], [540, 135], [880, 140]]], end: [899, 136] },
+  haicong: { name: 'Hai cửa giặc', desc: 'Giặc tràn vào từ HAI cửa cùng lúc rồi nhập một đường: phải chia tướng giữ cả hai ngả.', r: 50, diff: 1.12,
+    lanes: [[[-20, 135], [360, 135], [480, 222], [880, 170]], [[-20, 308], [360, 308], [480, 222], [880, 170]]], end: [899, 166] },
+  duongtat: { name: 'Đường tắt hang ngầm', desc: 'Quái chui ra từ hang ngầm giữa đồng, đường tới thành rất ngắn: ít thời gian bắn.', r: 70, diff: 1.12,
+    lanes: [[[170, 300], [420, 300], [560, 185], [880, 165]]], end: [899, 161], hole: true },
+};
+// ============================================================
+//  VÔ TẬN THEO MÀN (claude/duong-di-moi): vào Vô tận không chọn bản đồ — bắt đầu ở màn đầu (Bến Sông Đà),
+//  SAU MỖI ĐỢT BOSS sang màn mới: bản đồ + nền chủ đề + bộ quái của một ải khác (ENDLESS_STAGES.order)
+//  + một dạng đường (đường gốc của ải đó hoặc PATH_SHAPES). Dạng khó (hai cửa, đường tắt) chỉ từ đợt hardFrom.
+//  Màn là hàm của số đợt (endlessStageAt) → bản lưu cũ không có trường màn vẫn suy ra được.
+// ============================================================
+const ENDLESS_STAGES = {
+  // thứ tự ải nguồn: chủ đề xen nhau (sông → rừng → đồng → biển → hang → đầm → thành …)
+  order: [0, 8, 11, 13, 10, 3, 15, 9, 12, 16, 2, 6, 1, 4],   // bỏ ải trùng bản đồ (5, 14 = song4; 7 = song1)
+  normal: ['zigzag', 'uonkhuc', 'caucheo', 'vongve', 'bacthang', 'chianhanh', 'xoanoc'],
+  hard: ['haicong', 'duongtat'],
+  hardFrom: 60,     // đợt cao: màn lẻ dùng dạng khó
+  alpha: 0.5,       // máu quái × (độ phơi màn / màn đầu)^alpha — chỉnh bằng mô phỏng trận (tests/duong-di-moi)
+  hpMin: 0.8, hpMax: 1.4,
+};
+// màn thứ k (0 = màn đầu = bản đồ gốc của ải start), mở sau đợt boss `wave`
+function endlessStage(k, wave, start = 0) {
+  const E = ENDLESS_STAGES, o = E.order, i0 = Math.max(0, o.indexOf(start));
+  const lv = k ? o[(i0 + k) % o.length] : start;
+  let shape = null;
+  if (k > 0 && k % 3 !== 0) shape = wave >= E.hardFrom && k % 2 ? E.hard[(k >> 1) % E.hard.length] : E.normal[(k - 1 - Math.floor(k / 3)) % E.normal.length];
+  return { k, lv, shape, at: k ? wave : 0 };
+}
+// màn đang chơi khi đã XONG đợt `wave` của trận bắt đầu ở ải `start` (đếm số đợt boss đã qua)
+function endlessStageAt(wave, start = 0) {
+  let st = endlessStage(0, 0, start);
+  for (let w = 1; w <= wave; w++) if (bossAt(w, start)) st = endlessStage(st.k + 1, w, start);
+  return st;
+}
+// mã bản đồ của màn
+const stageMapId = (st) => (st.shape ? mapVariant(LEVELS[st.lv].map || 'song1', st.shape) : LEVELS[st.lv].map || 'song1');
+// bản đồ "gốc~dạng": chủ đề của bản đồ gốc + đường của dạng (đăng ký vào MAPS khi cần)
+function mapVariant(base, shape) {
+  const id = `${base}~${shape}`;
+  const b = MAPS[base], sh = PATH_SHAPES[shape];
+  if (!b || !sh) return null;
+  if (!MAPS[id]) {
+    const [d, ...lanes] = sh.lanes.map((pts) => rpath(pts, sh.r));
+    MAPS[id] = { theme: b.theme, d, lanes, end: sh.end.slice(), center: !!sh.center, shape, base, bridge: !!sh.bridge, hole: !!sh.hole };
+  }
+  return id;
+}
+
 const LEVELS = [
   { name: 'Bến Sông Đà', map: 'song1', waves: 10, hp: 0.75, bosses: { 10: 'thuongluong' },
     desc: 'Bến sông yên bình nơi Thủy Tinh thử quân lần đầu. Bản đồ dễ nhất, hợp để làm quen.', hint: ['xathu', 'lactuong', 'thaymo'] },
@@ -1989,11 +2078,13 @@ const LEVELS = [
 ];
 
 // Đợt có boss không (theo ải đang chơi; vô tận: boss mỗi 10 đợt)
-function bossAt(n, level) {
+// st: ải nguồn của màn vô tận đang chơi (claude/duong-di-moi) — đợt boss vẫn theo ải của trận, boss là boss của màn
+function bossAt(n, level, st) {
   const lv = LEVELS[level || 0];
-  if (lv.bosses[n]) return lv.bosses[n];
-  if (n > lv.waves && n % 10 === 0) { const B = endlessBosses(); return B[(n / 10 + (level || 0)) % B.length]; }
-  return null;
+  const b = lv.bosses[n] || (n > lv.waves && n % 10 === 0 ? endlessBosses()[(n / 10 + (level || 0)) % endlessBosses().length] : null);
+  if (!b || st == null || !LEVELS[st]) return b;
+  const B = [...new Set(Object.values(LEVELS[st].bosses))];
+  return B[Math.floor(n / 10) % B.length];
 }
 // v70: chơi vô tận — mỗi 10 đợt đổi sang quân của một chương khác, boss lấy từ mọi chương
 function endlessBosses() {
@@ -2002,30 +2093,31 @@ function endlessBosses() {
   for (const lv of LEVELS) for (const id of Object.values(lv.bosses || {})) if (!out.includes(id)) out.push(id);
   return out.length ? out : BOSS_ORDER;
 }
-function rosterFor(n, level) {
+function rosterFor(n, level, st) {
   const lv = LEVELS[level || 0] || {};
   const own = lv.roster || 'thuy';
   if (typeof ROSTERS === 'undefined') return null;
+  if (st != null && LEVELS[st]) return ROSTERS[LEVELS[st].roster || 'thuy'];   // màn vô tận: quân của ải nguồn
   if (!lv.waves || n <= lv.waves) return ROSTERS[own];
   const keys = Object.keys(ROSTERS);
   const k = Math.floor((n - lv.waves - 1) / 10) + 1;          // đợt vô tận 1–10: chương kế tiếp, 11–20: chương sau nữa…
   return ROSTERS[keys[(keys.indexOf(own) + k) % keys.length]];
 }
-const waveKind = (n, level) => (bossAt(n, level) ? 'boss'
+const waveKind = (n, level, st) => (bossAt(n, level, st) ? 'boss'
   : AIR_WAVES.includes(n) || (n > 27 && (n % 10 === 4 || n % 10 === 7)) ? 'air' : n % 10 === 5 ? 'champion' : 'normal');
 
 // vo-tan-su-kien: tối đa WAVE_CAP quái mỗi đợt; quá thì phần dư dồn thành máu (tổng máu đợt giữ nguyên).
 // Trước đây số quái tăng mãi: đợt 1000 ≈ 1.000 con, ra quân mất ~13 phút một đợt.
 const WAVE_CAP = 80;
-function buildWave(n, level) {
+function buildWave(n, level, st) {
   const list = [];
   const e = effWave(n, level);
   const raw = 8 + Math.floor(e * 1.6);
   const count = Math.min(WAVE_CAP, raw), hpx = raw > WAVE_CAP ? raw / WAVE_CAP : 1;
-  const kind = waveKind(n, level);
+  const kind = waveKind(n, level, st);
   const ev = eventAt(n, level);
   // v48: quân theo chương (ROSTERS trong enemies2.js); mặc định quân Thủy Tinh
-  const ro = rosterFor(n, level);
+  const ro = rosterFor(n, level, st);
   // tỉ lệ tinh anh: trước tăng mãi tới 100% (đợt rất xa toàn tinh anh) — chặn 45%; sự kiện Âm Binh nâng lên
   const eliteP = Math.min(0.9, Math.min(0.45, 0.08 + e * 0.006) + (ev && ev.p.elite || 0));
   const airT = ev && ev.p.air ? (ro && ro.air) || 'chimbao' : ro && ro.air;
@@ -2048,7 +2140,7 @@ function buildWave(n, level) {
     list.push(it);
   }
   if (kind === 'champion') list.push({ type: ro ? ro.champ : 'rua', elite: 'armored', champion: true, gap: 2 });
-  if (kind === 'boss') list.push({ type: bossAt(n, level), gap: 3, ...(ev && ev.p.hp ? { ev: { hp: ev.p.hp } } : {}) });
+  if (kind === 'boss') list.push({ type: bossAt(n, level, st), gap: 3, ...(ev && ev.p.hp ? { ev: { hp: ev.p.hp } } : {}) });
   return list;
 }
 

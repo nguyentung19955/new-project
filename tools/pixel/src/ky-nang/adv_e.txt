@@ -1,0 +1,46 @@
+# Lũy Nỏ Cổ Loa — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: a fan of five crossbow bolts flying up from a bronze rampart
+name: Lũy Nỏ Cổ Loa
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = sat
+  d = sat-sang
+  e = bac
+  f = dong-toi
+  g = dong
+  h = dong-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbeeeeeecbbbbbgfa
+ahgbbbbbbedddddcbbbbbgfa
+ahgbbbbbbedddddcbbbbbgfa
+ahgbbbbbbedddddcbbbbbgfa
+ahgbbbbbbedddddcbbbbbgfa
+ahgeeeeeedddddddeeeeeeec
+ahgedddddddddddddddddddc
+ahgedddddddddddddddddccc
+ahgeddddddddddddddddcgfa
+ahgeddddddddddddddddcgfa
+ahgedddddddaadddddddcgfa
+ahgeddddddaaaaddddddcgfa
+ahgeddddddaaaaddddddcgfa
+ahgeddddddaaaaddddddcgfa
+ahgedddddaaaaaadddddcgfa
+ahgedddddaaaaaadddddcgfa
+ahgedddddaaaaaadddddcgfa
+ahgccccccaaaaaaccccccgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

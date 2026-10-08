@@ -1,0 +1,49 @@
+# Rìu Đốn Củi — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: a woodcutter axe chopping a log
+name: Rìu Đốn Củi
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dat-toi
+  d = dat
+  e = dat-sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = la
+  j = la-ma
+  k = la-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbbbbkibbbbbgfa
+ahgbbbbbbbbbbkjjkibbbgfa
+ahgbbbbbbbbbkjjjjjkbbgfa
+ahgbbbbbbbbkjjjjjjkbbgfa
+ahgbbbbbbbbbijjjjjkbbgfa
+ahgbbbbbbbbbekjjjjkibgfa
+ahgbbbbbbbbedijjjjjkbgfa
+ahgbbbbbbbedcbijjjjkbgfa
+ahgbbbbbbbecbbbkjjikbgfa
+ahgbbbbbbedcbbbiiiibbgfa
+ahgbbbbbedcbbbbbbbbbbgfa
+ahgbbbbbecbbbbbbbbbbbgfa
+ahgbbbbedcbbbbbbbbbbbgfa
+ahgbbbedcbbbbbbbbbbbbgfa
+ahgbbbecbbbbbbbbbbbbbgfa
+ahgbbedcbbbbbbbbbbbbbgfa
+ahgbedcbbbbbbbbbbbbbbgfa
+ahgbccbbbbbbbbbbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

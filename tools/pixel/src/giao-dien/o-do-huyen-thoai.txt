@@ -1,0 +1,39 @@
+# ô đồ (slot) độ hiếm huyen-thoai — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: nền ô tối + viền vàng nghệ + góc sao
+name: ô đồ (slot) độ hiếm huyen-thoai
+size: 20x20
+colors:
+  a = vien
+  b = khoi
+  c = sang
+  d = dong-sang
+  e = vang-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeda
+aecbbbbbbbbbbbbbbcda
+aebbbbbbbbbbbbbbbbda
+aebbbbbbbbbbbbbbbbda
+aebbbbbbbbbbbbbbbbda
+aebbbbbbbbbbbbbbbbda
+aebbbbbbbbbbbbbbbbda
+aebbbbbbbbbbbbbbbbda
+aebbbbbbbbbbbbbbbbda
+aebbbbbbbbbbbbbbbbda
+aebbbbbbbbbbbbbbbbda
+aebbbbbbbbbbbbbbbbda
+aebbbbbbbbbbbbbbbbda
+aebbbbbbbbbbbbbbbbda
+aebbbbbbbbbbbbbbbbda
+aebbbbbbbbbbbbbbbbda
+aecbbbbbbbbbbbbbbcda
+adddddddddddddddddda
+.aaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

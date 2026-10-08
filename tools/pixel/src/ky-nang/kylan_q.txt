@@ -1,0 +1,46 @@
+# Sừng Kỳ Lân — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Húc sừng: x2.5 sát thương +1
+name: Sừng Kỳ Lân
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = sat
+  d = sat-sang
+  e = bac
+  f = dong-toi
+  g = dong
+  h = dong-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+ahhhhhhhhhhhhhhhhhhhhhfa
+ahggggggggggggggggggggfa
+ahgbbbbbbbbbbbbbbbbbbgfa
+ahgbbbbeccbbbbbbbbbbbgfa
+ahgbbbbccccbbbbbbbbbbgfa
+ahgbbbbbccccbbbbbbbbbgfa
+ahgbbbbbbccccbbbbbbbbgfa
+ahgbbbbbbcccccbbbbbbbgfa
+ahgbbbbbbbcccccbbbbbbgfa
+ahgbbbbbbbccccccbbbbbgfa
+ahgbbbbbbbbcccccbbbbbgfa
+ahgbbbbbbbbcccdccbbbbgfa
+ahgbbbbbbbbccccccbbbbgfa
+ahgbbbbbbbbeccccccbbbgfa
+ahgbbbbbbbbcccccccbbbgfa
+ahgbbbbbbbbcccccccbbbgfa
+ahgbbbbbbbbcccccccbbbgfa
+ahgbbbbbbbbcccccccbbbgfa
+ahgbbbbbbbbbcccccbbbbgfa
+ahgbbbbbbbbbbccbbbbbbgfa
+ahggggggggggggggggggggfa
+affffffffffffffffffffffa
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

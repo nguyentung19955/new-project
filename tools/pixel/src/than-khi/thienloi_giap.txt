@@ -1,0 +1,46 @@
+# Giáp Thiên Đình — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: Giáp trời Ngọc Hoàng ban cho
+name: Giáp Thiên Đình
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = vang-nghe
+  g = vang-sang
+  h = son
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbggebbbggebbbbbdca
+aedbbbgfffebgfffebbbbdca
+aedbbbgfffebgfffebbbbdca
+aedbbgfffffgfffffebbbdca
+aedbbgfffffhhffffebbbdca
+aedbbgffffhhhhfffebbbdca
+aedbbgfffffhhffffebbbdca
+aedbbgfeeeeeeeeeeebbbdca
+aedbbgfffffffffffebbbdca
+aedbbefffffffffffebbbdca
+aedbbbgeeeeeeeeeebbbbdca
+aedbbbgfffffffffebbbbdca
+aedbbbgfffffffffebbbbdca
+aedbbbgeeeeeeeeeebbbbdca
+aedbbbgfffffffffebbbbdca
+aedbbbeeeeeeeeeeebbbbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

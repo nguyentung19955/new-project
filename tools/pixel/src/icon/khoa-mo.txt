@@ -1,0 +1,37 @@
+# khoá chợ — mở — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: ổ khoá mở
+name: khoá chợ — mở
+size: 16x16
+colors:
+  a = vien
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = dong-toi
+  f = dong
+  g = dong-sang
+
+part k0
+................
+.........aaa....
+........adcba...
+.......adbabba..
+......adba.aca..
+......abba.aca..
+...aaaaaaaaaca..
+..agggggggggea..
+..agffffffffea..
+..agfffaffffea..
+..agfffaffffea..
+..agfffaffffea..
+..agffffffffea..
+..aeeeeeeeeeea..
+...aaaaaaaaaa...
+................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

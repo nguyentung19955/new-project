@@ -1,0 +1,33 @@
+# Trí tuệ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: sách tre mở
+name: Trí tuệ
+size: 12x12
+colors:
+  a = vien
+  b = trang
+  c = dat-toi
+  d = vang-nghe
+  e = cham-toi
+  f = cham
+  g = cham-sang
+
+part k0
+............
+...aaaaaaa..
+..acgggggea.
+..acfffffea.
+..acfdddfea.
+..acfdddfea.
+..acffdffea.
+..acfffffea.
+..acbbbbbea.
+...aaaaaaa..
+............
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

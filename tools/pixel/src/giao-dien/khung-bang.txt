@@ -1,0 +1,67 @@
+# khung bảng / popup giấy dó viền đồng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: giấy dó kem, viền đồng răng cưa, góc chạm mặt trời
+name: khung bảng / popup giấy dó viền đồng
+size: 48x48
+colors:
+  a = vien
+  b = cat
+  c = dong-toi
+  d = dong
+  e = dong-sang
+
+part k0
+....a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a...
+..aaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaca..
+.aeddddddddddddddddddddddddddddddddddddddddddca.
+aeddddddddddddddddddddddddddddddddddddddddddddca
+aeddebbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbeddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbddca
+aeddebbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbeddca
+acddddddddddddddddddddddddddddddddddddddddddddca
+.acddddddddddddddddddddddddddddddddddddddddddca.
+..aacacacacacacacacacacacacacacacacacacacacaca..
+....a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a...
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

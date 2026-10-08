@@ -1,0 +1,46 @@
+# Tre Ngà — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: +8.2% tốc đánh
+name: Tre Ngà
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = la
+  g = la-ma
+  h = la-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbhffbbbbbbbbbbbdca
+aedbbbbffffbbbbbbbbbbdca
+aedbbbbbffffbbbbbbbbbdca
+aedbbbbbbffffbbbbbbbbdca
+aedbbbbbbfffffbbbbbbbdca
+aedbbbbbbbfffffbbbbbbdca
+aedbbbbbbbffffffbbbbbdca
+aedbbbbbbbbfffffbbbbbdca
+aedbbbbbbbbfffgffbbbbdca
+aedbbbbbbbbffffffbbbbdca
+aedbbbbbbbbhffffffbbbdca
+aedbbbbbbbbfffffffbbbdca
+aedbbbbbbbbfffffffbbbdca
+aedbbbbbbbbfffffffbbbdca
+aedbbbbbbbbfffffffbbbdca
+aedbbbbbbbbbfffffbbbbdca
+aedbbbbbbbbbbffbbbbbbdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

@@ -14,12 +14,16 @@ const setup = (page, n, evId) => page.evaluate(([n, evId]) => {
   const g = game;
   if (evId) { window.__ev0 = window.__ev0 || eventAt; eventAt = (w, lv) => (w === n ? waveEventOf(evId, n, (n - 60) / 10) : window.__ev0(w, lv)); }
   g.gold = 5000; g.lives = 20;
+  // vô tận theo màn (claude/duong-di-moi): nhảy thẳng tới đợt n thì sang luôn màn của đợt đó (im lặng) trước khi đặt tướng
+  if (g.endless && typeof endlessStageAt === 'function') { const st = endlessStageAt(n - 1, g.level); if (!g.stage || st.k !== g.stage.k) g.setStage(st, true); }
+  // banner còn sót / đang xếp hàng từ phần test trước (banner xếp hàng, không đè) → huỷ để banner sự kiện hiện ngay
+  ui.clearBanners();
   for (const [sl, t] of [[1, 'xathu'], [3, 'lactuong'], [5, 'thaymo'], [7, 'thansuong'], [9, 'lucsi'], [11, 'thosan']]) if (!g.heroes[sl] && !g.isFlooded(sl)) { g.placeHero(sl, t); }
   for (const h of g.heroes) if (h) { h.dead = false; h.respawnT = 0; h.stunT = 0; h.cursed = 0; h.hp = heroStats(h).hpMax; }
   g.wave = n - 1; g.evWave = n - 1; g.waveActive = false; g.enemies = []; g.spawnQueue = [];
-  g.nextWave = buildWave(n, g.level); g.nextWaveT = 3; g.running = true; g.events.length = 0;
+  g.nextWave = buildWave(n, g.level, g.stLv()); g.nextWaveT = 3; g.running = true; g.events.length = 0;
   // nhảy thẳng tới đợt n (không chơi qua) → khung "bộ quái mới" bật ra; chơi thật thì đã báo từ trước
-  ui.rosterKey = rosterKeyOf(rosterFor(n + 1, g.level)); ui.rosterLevel = g.level; document.querySelector('#roster-hint').hidden = true;
+  ui.rosterKey = rosterKeyOf(rosterFor(n + 1, g.level, g.stLv())); ui.rosterLevel = g.level; document.querySelector('#roster-hint').hidden = true;
 }, [n, evId]);
 const CHI_ANH = !!process.env.CHI_ANH;   // CHI_ANH=1: chỉ chụp ảnh
 
@@ -257,9 +261,10 @@ const CHI_ANH = !!process.env.CHI_ANH;   // CHI_ANH=1: chỉ chụp ảnh
     for (const N of [60, 90, 100]) {
       await page.evaluate((N) => {
         const g = game; g.gold = 5000; g.lives = 20;
+        if (typeof endlessStageAt === 'function') { const st = endlessStageAt(N - 1, g.level); if (st.k !== g.stage.k) g.setStage(st, true); }   // vô tận theo màn: sang màn của đợt N (im lặng)
         for (const [sl, t] of [[1, 'xathu'], [3, 'lactuong'], [5, 'thaymo'], [7, 'thansuong']]) if (!g.heroes[sl] && !g.isFlooded(sl)) g.placeHero(sl, t);
         g.wave = N - 1; g.evWave = N - 2; g.waveActive = true; g.enemies = []; g.spawnQueue = []; g.running = false; g.events.length = 0;
-        ui.rosterKey = rosterKeyOf(rosterFor(N, g.level)); ui.rosterLevel = g.level;
+        ui.rosterKey = rosterKeyOf(rosterFor(N, g.level, g.stLv())); ui.rosterLevel = g.level;
         document.querySelector('#roster-hint').hidden = true; document.querySelector('#banner').hidden = true; ui.evQueued = null;
         g.waveComplete(); g.events = g.events.filter((e) => e.type !== 'rest'); ui.handleEvents(); ui.checkRosterHint();
       }, N);
@@ -282,10 +287,12 @@ const CHI_ANH = !!process.env.CHI_ANH;   // CHI_ANH=1: chỉ chụp ảnh
       await page.waitForTimeout(2300);
       await page.evaluate(() => ui.checkRosterHint());
       v = await vis();
-      ok(!v.bn && v.rh && /bộ quái mới/i.test(v.rhH) && v.rhEv.includes(ev.name), `${w}x${h} đợt ${N}: banner tắt rồi bảng "${v.rhH}" mới mở, có dòng sự kiện "${v.rhEv.slice(0, 50)}…"`);
+      // vô tận theo màn (claude/duong-di-moi): bộ quái đổi theo màn (sau đợt boss, báo trong thông báo đổi màn) → đầu đợt N
+      // có thể không mở bảng "bộ quái mới"; mở thì phải sau khi banner tắt và có dòng sự kiện
+      ok(!v.bn && (!v.rh || (/bộ quái mới/i.test(v.rhH) && v.rhEv.includes(ev.name))), `${w}x${h} đợt ${N}: banner tắt rồi ${v.rh ? `bảng "${v.rhH}" mới mở, có dòng sự kiện "${v.rhEv.slice(0, 50)}…"` : 'không có bảng che (bộ quái theo màn)'}`);
       await page.screenshot({ path: path.join(SHOT, `trung-${N}-bang-${w}x${h}.png`) });
-      const fit = await page.evaluate(() => { const r = document.querySelector('#roster-hint').getBoundingClientRect(); return r.left >= -1 && r.right <= innerWidth + 1 && r.top >= -1 && r.bottom <= innerHeight + 1; });
-      ok(fit, `${w}x${h} đợt ${N}: bảng nằm gọn trong màn`);
+      if (v.rh) { const fit = await page.evaluate(() => { const r = document.querySelector('#roster-hint').getBoundingClientRect(); return r.left >= -1 && r.right <= innerWidth + 1 && r.top >= -1 && r.bottom <= innerHeight + 1; });
+      ok(fit, `${w}x${h} đợt ${N}: bảng nằm gọn trong màn`); }
     }
     // bảng đang mở mà sự kiện báo trước tới → banner xếp hàng, bảng đóng mới hiện
     await page.evaluate(() => { const g = game; document.querySelector('#roster-hint').hidden = false; document.querySelector('#banner').hidden = true; ui.rosterEvN = 0;

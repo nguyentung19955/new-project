@@ -13,7 +13,7 @@ function newId() { return SIM.coop && !SIM.active ? -(++SIM.tmpId) : nextId++; }
 // --- Đường quái đi: lấy mẫu đường cong SVG của bản đồ đang chơi (MAPS, data.js)
 let RIVER_D = MAPS.song1.d;
 function sampleSvgPath(d, steps = 26) {
-  const tok = d.match(/[MCS]|-?\d*\.?\d+/g);
+  const tok = d.match(/[MCSL]|-?\d*\.?\d+/g);
   const pts = [];
   let i = 0, cx = 0, cy = 0, lastC = null, cmd = '';
   const num = () => parseFloat(tok[i++]);
@@ -26,8 +26,13 @@ function sampleSvgPath(d, steps = 26) {
     lastC = [x2, y2]; cx = x; cy = y;
   };
   while (i < tok.length) {
-    if (/[MCS]/.test(tok[i])) cmd = tok[i++];
+    if (/[MCSL]/.test(tok[i])) cmd = tok[i++];
     if (cmd === 'M') { cx = num(); cy = num(); pts.push([cx, cy]); lastC = null; }
+    else if (cmd === 'L') {   // đoạn thẳng: chia nhỏ ≤ 24 đơn vị để mọi thứ đặt theo quãng đường vẫn mịn
+      const x = num(), y = num(), n = Math.max(1, Math.ceil(Math.hypot(x - cx, y - cy) / 24));
+      for (let k = 1; k <= n; k++) pts.push([cx + (x - cx) * k / n, cy + (y - cy) * k / n]);
+      cx = x; cy = y; lastC = null;
+    }
     else if (cmd === 'C') cubic(num(), num(), num(), num(), num(), num());
     else if (cmd === 'S') {
       const [rx, ry] = lastC ? [2 * cx - lastC[0], 2 * cy - lastC[1]] : [cx, cy];
@@ -47,34 +52,51 @@ function distToPolyline(pts, x, y) {
   }
   return best;
 }
-const distToPath = (x, y) => distToPolyline(CONFIG.path, x, y);
+const distToPath = (x, y) => Math.min(...(CONFIG.paths || [CONFIG.path]).map((p) => distToPolyline(p, x, y)));
 
 // --- Đường đi: độ dài từng đoạn để quái di chuyển theo quãng đường (dựng lại khi đổi bản đồ)
+// Nhiều nhánh (lane, CONFIG.paths): nhánh 0 là đường chính, quãng đường mọi nhánh quy về độ dài nhánh 0
+// (e.dist, PATH.total như cũ; PATH.at(d, nhánh) co giãn theo tỉ lệ k của nhánh — các nhánh dài gần bằng nhau).
 const PATH = {
-  total: 0, segs: [],
+  total: 0, segs: [], lanes: [],
   build() {
-    this.segs = []; this.total = 0;
-    for (let i = 1; i < CONFIG.path.length; i++) {
-      const [ax, ay] = CONFIG.path[i - 1], [bx, by] = CONFIG.path[i];
-      const len = Math.hypot(bx - ax, by - ay);
-      this.segs.push({ ax, ay, bx, by, len, start: this.total });
-      this.total += len;
-    }
+    this.lanes = (CONFIG.paths || [CONFIG.path]).map((pts) => {
+      const segs = [];
+      let total = 0;
+      for (let i = 1; i < pts.length; i++) {
+        const [ax, ay] = pts[i - 1], [bx, by] = pts[i];
+        const len = Math.hypot(bx - ax, by - ay);
+        if (len < 1e-6) continue;
+        segs.push({ ax, ay, bx, by, len, start: total });
+        total += len;
+      }
+      return { segs, total, k: 1 };
+    });
+    this.segs = this.lanes[0].segs; this.total = this.lanes[0].total;
+    for (const L of this.lanes) L.k = L.total / (this.total || 1);
   },
-  at(d) {
-    const segs = this.segs;
+  at(d, lane) {
+    const L = (lane && this.lanes[lane]) || this.lanes[0];
+    const segs = L.segs;
+    d *= L.k;
     const s = segs.find((g) => d <= g.start + g.len) || segs[segs.length - 1];
     const k = Math.max(0, Math.min(1, (d - s.start) / s.len));
     return { x: s.ax + (s.bx - s.ax) * k, y: s.ay + (s.by - s.ay) * k, dx: s.bx - s.ax };
   },
-  // quãng đường gần nhất với một điểm (để đặt vệt lửa, thành chặn...)
+  // các nhánh có vị trí khác nhau ở quãng đường d (để vẽ vật chặn / vệt lửa trên mọi nhánh)
+  lanesAt(d) {
+    const out = [], seen = [];
+    this.lanes.forEach((_, i) => { const p = this.at(d, i); if (seen.every((q) => Math.hypot(q.x - p.x, q.y - p.y) > 16)) { seen.push(p); out.push(i); } });
+    return out;
+  },
+  // quãng đường gần nhất với một điểm (để đặt vệt lửa, thành chặn...) — xét mọi nhánh
   distOf(x, y) {
     let best = 0, bd = Infinity;
-    for (const s of this.segs) {
+    for (const L of this.lanes) for (const s of L.segs) {
       const dx = s.bx - s.ax, dy = s.by - s.ay;
       const k = Math.max(0, Math.min(1, ((x - s.ax) * dx + (y - s.ay) * dy) / (dx * dx + dy * dy || 1)));
       const d = Math.hypot(s.ax + dx * k - x, s.ay + dy * k - y);
-      if (d < bd) { bd = d; best = s.start + s.len * k; }
+      if (d < bd) { bd = d; best = (s.start + s.len * k) / L.k; }
     }
     return best;
   },
@@ -120,17 +142,39 @@ function buildSpots(map) {
 // Đổi bản đồ: đường đi, ô đặt tướng (gọi khi vào ải)
 let MAP_ID = '';
 function setMap(id) {
+  if (!MAPS[id] && typeof mapVariant === 'function' && String(id).includes('~')) mapVariant(...String(id).split('~'));   // bản đồ đổi đường (vô tận)
   const map = MAPS[id] || MAPS.song1;
   if (MAP_ID === id && CONFIG.slots.length) return map;
   MAP_ID = MAPS[id] ? id : 'song1';
   RIVER_D = map.d;
-  CONFIG.path = sampleSvgPath(map.d).map(([x, y]) => [x * DK, y * DK]);
+  CONFIG.paths = [map.d].concat(map.lanes || []).map((d) => sampleSvgPath(d).map(([x, y]) => [x * DK, y * DK]));
+  CONFIG.path = CONFIG.paths[0];
   CONFIG.mapEnd = [map.end[0] * DK, map.end[1] * DK];
   PATH.build();
   buildSpots(map);
   return map;
 }
 setMap('song1');
+
+// Độ phơi của bản đồ đang dựng (cân bằng dạng đường vô tận): N ô phủ đường tốt nhất, mỗi ô cộng quãng đường quái
+// đi trong tầm R (trung bình theo nhánh — quái chia đều các nhánh). Đường dài / vòng gần nhau → phơi nhiều.
+function mapExposure(N = 10, R = 190) {
+  const step = 6, samples = PATH.lanes.map((_, li) => { const out = []; for (let d = 0; d < PATH.total; d += step) { const p = PATH.at(d, li); out.push([p.x, p.y]); } return out; });
+  const cov = CONFIG.slots.map(([x, y]) => samples.reduce((c, pts) => c + pts.filter(([px, py]) => Math.hypot(px - x, py - y) <= R).length * step, 0) / samples.length);
+  return cov.sort((a, b) => b - a).slice(0, N).reduce((a, b) => a + b, 0);
+}
+const exposureCache = new Map();
+// độ phơi của bản đồ id (dựng tạm bản đồ đó — gọi trước khi setMap bản đồ cần dùng)
+function exposureOf(id) {
+  if (!exposureCache.has(id)) { setMap(id); exposureCache.set(id, mapExposure()); }
+  return exposureCache.get(id);
+}
+// hệ số máu quái của màn vô tận `st` so với màn đầu của trận (ải `start`): (độ phơi màn / màn đầu)^alpha × độ khó dạng
+function stageHpFor(st, start) {
+  if (!st || !st.k) return 1;
+  const E = ENDLESS_STAGES, r = Math.pow(exposureOf(stageMapId(st)) / exposureOf(LEVELS[start || 0].map || 'song1'), E.alpha) * ((st.shape && PATH_SHAPES[st.shape].diff) || 1);
+  return Math.round(Math.max(E.hpMin, Math.min(E.hpMax, r)) * 100) / 100;
+}
 
 // ------------------------------------------------------------
 //  ĐỒ: mỗi món trong túi là một bản riêng { uid, id, rarity, plus, locked, spent }
@@ -1362,6 +1406,9 @@ class Game {
     this.level = level || 0;
     this.lv = LEVELS[this.level];
     setMap(this.lv.map || 'song1');
+    this.stage = endlessStage(0, 0, this.level);   // màn vô tận đang chơi { k, lv: ải nguồn, shape: dạng đường | null }
+    this.pathHp = 1;          // hệ số máu quái của màn
+    this.laneN = 0;
     this.gold = CONFIG.startGold;
     this.lives = CONFIG.startLives;
     this.maxLives = CONFIG.startLives;   // v169: mạng tối đa của trận (hiện "còn/tối đa")
@@ -1382,7 +1429,7 @@ class Game {
     this.flags = { equipped: false, shopOpened: false };
     this.running = false;
     this.nextWaveT = 0;
-    this.nextWave = buildWave(1, this.level);
+    this.nextWave = buildWave(1, this.level, this.stLv());
     this.shake = 0;
     this.bossesKilled = 0;
     this.slHist = [];         // v181: sính lễ đã ra trong trận (chống trùng liên tiếp)
@@ -1444,7 +1491,7 @@ class Game {
   }
   // lần dâng nước sắp tới (đợt boss) hoặc -1
   floodSoon() {
-    const boss = this.waveActive ? bossAt(this.wave, this.level) : bossAt(this.wave + 1, this.level);
+    const boss = this.waveActive ? bossAt(this.wave, this.level, this.stLv()) : bossAt(this.wave + 1, this.level, this.stLv());
     return -1;
   }
   mocMax() { return this.mountainStage() >= 4 ? 2 : 1; }
@@ -2398,7 +2445,7 @@ class Game {
     this.eventStart();
     this.spawnQueue = this.nextWave;
     this.waveTotal = this.spawnQueue.length;
-    this.nextWave = buildWave(this.wave + 1, this.level);
+    this.nextWave = buildWave(this.wave + 1, this.level, this.stLv());
     this.spawnTimer = 0;
     this.waveActive = true;
     // ẩn Trống Đồng: gõ trống đầu đợt, mọi tướng +20% tốc đánh 5 giây
@@ -2460,7 +2507,7 @@ class Game {
       this.eventStart();
       this.spawnQueue = this.spawnQueue.concat(this.nextWave);
       this.waveTotal += this.nextWave.length;
-      this.nextWave = buildWave(this.wave + 1, this.level);
+      this.nextWave = buildWave(this.wave + 1, this.level, this.stLv());
     } else {
       this.startWave();
     }
@@ -2577,7 +2624,7 @@ class Game {
     const tiers = typeof roleTiers === 'function' ? roleTiers(roleCounts(alive)) : {};
     for (const r in tiers) if (tiers[r] > ((this.vtTiers || {})[r] || 0)) this.notify(`Cộng hưởng ${ROLES[r].name} ${tiers[r] * 2}: ${ROLE_SYN[r].t[tiers[r] - 1]}`, ROLES[r].color);
     this.vtTiers = tiers;
-    const airWave = this.waveActive && waveKind(this.wave, this.level) === 'air';
+    const airWave = this.waveActive && waveKind(this.wave, this.level, this.stLv()) === 'air';
     const fog = this.fogNow();
     const wev = this.waveActive && this.waveEvent(), weak = wev && wev.p.weak ? wev.p : null;
     for (const h of alive) {
@@ -2713,7 +2760,7 @@ class Game {
     for (const h of this.heroes) if (h) { log[h.type] = (log[h.type] || 0) + 1; for (const a of heroLineage(h)) log[a.type] = (log[a.type] || 0) + 0.5; }
     // v103: Vô tận — mỗi 10 đợt cộng Ngân khố (tài khoản) ngay
     if (this.endless && this.wave % PREP.endlessEvery === 0) this.events.push({ type: 'kho', n: Math.round(PREP.endlessMilestone * (1 + Math.floor(this.wave / 50) * 0.5) * (this.hard ? 1.5 : 1)), why: `mốc đợt ${this.wave}` });
-    if (bossAt(this.wave, this.level)) this.riseWater();
+    if (bossAt(this.wave, this.level, this.stLv())) this.riseWater();
     // vo-tan-su-kien: vượt qua đợt sự kiện (kể cả đợt bị gộp khi Gọi sớm) → thưởng vàng + Ngân khố; đợt kế có sự kiện → báo trước
     for (let w = Math.max((this.evWave || 0) + 1, this.wave - 20); w <= this.wave; w++) {
       const ev = eventAt(w, this.level);
@@ -2726,6 +2773,7 @@ class Game {
     }
     this.evWave = this.wave;
     { const nx = eventAt(this.wave + 1, this.level); if (nx) this.events.push({ type: 'waveEvent', phase: 'soon', ev: nx }); }
+    this.stageTick();
     this.events.push({ type: 'checkpoint' });   // v74: lưu màn đang chơi giữa hai đợt
     if (this.wave >= this.levelWaves && !this.endless && !this.won) {
       this.won = true;
@@ -2734,13 +2782,70 @@ class Game {
     }
   }
 
+  // ---------- Vô tận theo màn (claude/duong-di-moi): sau mỗi đợt boss sang màn mới (endlessStageAt, data.js) —
+  // bản đồ + nền + bộ quái + dạng đường. Gọi khi xong đợt (sân đã hết quái). Chơi nhóm giữ nguyên bản đồ (ô chia theo người).
+  stLv() { return this.stage && this.stage.k > 0 ? this.stage.lv : undefined; }   // ải nguồn của màn (bộ quái, boss)
+  placeName() { return LEVELS[this.stage ? this.stage.lv : this.level].name; }
+  stageTick() {
+    if (!this.endless || this.co || this.holdStage || typeof endlessStageAt !== 'function') return;   // holdStage: bảng Sính lễ đang mở — đổi màn khi đóng bảng
+    const want = endlessStageAt(this.wave, this.level);
+    if (!this.stage || want.k !== this.stage.k) this.setStage(want);
+  }
+  // sang màn `st`: tướng giữ ô gần nhất còn trống (đi theo), hết ô thì hoàn trọn vàng + trả đồ vào túi
+  setStage(st, quiet) {
+    const id = stageMapId(st), cur = MAP_ID;
+    const old = this.heroes.map((h) => h && { h, x: h.x, y: h.y });
+    this.pathHp = stageHpFor(st, this.level);   // (dựng tạm bản đồ để đo độ phơi, rồi mới dựng bản đồ mới)
+    this.stage = st;
+    this.nextWave = buildWave(this.wave + 1, this.level, this.stLv());   // quân của màn mới
+    if (id === cur) { setMap(id); return false; }
+    setMap(id);
+    this.laneN = 0;
+    this.zones = []; this.blocks = [];
+    const n = CONFIG.slots.length;
+    // ghép tướng ↔ ô mới theo khoảng cách gần nhất (tham lam: cặp gần nhất trước)
+    const pairs = [];
+    old.forEach((o, i) => { if (o) CONFIG.slots.forEach(([x, y], j) => pairs.push([Math.hypot(x - o.x, y - o.y), i, j])); });
+    pairs.sort((a, b) => a[0] - b[0] || a[1] - b[1] || a[2] - b[2]);
+    const heroes = new Array(n).fill(null), doneH = new Set();
+    let moved = 0;
+    for (const [d, i, j] of pairs) {
+      if (doneH.has(i) || heroes[j]) continue;
+      doneH.add(i);
+      const { h } = old[i];
+      heroes[j] = h; h.slot = j;
+      [h.x, h.y] = CONFIG.slots[j];
+      if (d > 6) { moved++; if (!quiet) this.effects.push({ type: 'streak', x: old[i].x, y: old[i].y - 20, x2: h.x, y2: h.y - 20, color: '#9dffc4', ttl: 0.6, max: 0.6 }); }
+      if (!quiet) this.effects.push({ type: 'summon', x: h.x, y: h.y, ttl: 0.6, max: 0.6 });
+    }
+    // không còn ô: hoàn trọn số vàng đã bỏ vào tướng, đồ đang mặc về túi
+    let refund = 0, lost = 0;
+    old.forEach((o, i) => {
+      if (!o || doneH.has(i)) return;
+      for (const sl of SLOTS) if (o.h.equip[sl]) this.addItem(o.h.equip[sl], true);
+      refund += o.h.spent || 0; lost++;
+    });
+    if (refund) { this.gold += refund; this.stats.goldRefund += refund; }
+    this.heroes = heroes;
+    this.raised = CONFIG.slots.map(() => false);
+    this.tempFlood = CONFIG.slots.map(() => 0);
+    this.updateAuras();
+    if (quiet) return true;
+    this.stageFade = true;   // main.js: nền cũ mờ dần sang nền mới
+    this.nextWaveT = Math.max(this.nextWaveT, CONFIG.waveBreak + 10);   // thêm thời gian xếp lại tướng (kéo đổi ô miễn phí)
+    const name = this.placeName() + (st.shape ? ` · ${PATH_SHAPES[st.shape].name}` : '');   // (giao diện báo bằng 1 banner + 1 thông báo: ui.stageBanner)
+    this.events.push({ type: 'stage', stage: st, name, moved, lost, refund });
+    return true;
+  }
+
   // v74: lưu / nạp màn đang chơi (giữa hai đợt). Bỏ trạng thái tạm (hiệu ứng, đạn, quái đang đi).
   snapshot() {
     const skip = new Set(['_anim', 'target', 'tgt', 'notice', 'unlockFx', 'procT', 'strike', '_va']);   // v131: strike giữ hàm (đòn đang vung) — không lưu được
     const heroes = JSON.parse(JSON.stringify(this.heroes, (k, v) => (skip.has(k) ? undefined : v)));
     const o = { v: 1, at: Date.now(), heroes };
     for (const k of ['level', 'hard', 'endless', 'won', 'gold', 'lives', 'maxLives', 'wave', 'summonN', 'bossesKilled', 'slHist', 'seen', 'water', 'raised', 'moc',
-      'mountain', 'stats', 'inventory', 'jarCount', 'shop', 'time', 'flags', 'runId', 'guardT', 'oathT', 'xpLog', 'market', 'evWave', 'evDone']) o[k] = this[k];
+      'mountain', 'stats', 'inventory', 'jarCount', 'shop', 'time', 'flags', 'runId', 'guardT', 'oathT', 'xpLog', 'market', 'evWave', 'evDone', 'stage', 'pathHp']) o[k] = this[k];
+    o.mapId = MAP_ID;   // màn vô tận: bản đồ đang chơi (ô tướng đánh số theo bản đồ này)
     return JSON.parse(JSON.stringify(o));
   }
   restore(o) {
@@ -2753,6 +2858,14 @@ class Game {
     this.offer = null;
     if (!('evWave' in o)) this.evWave = this.wave;   // bản lưu trước khi có sự kiện đợt: không thưởng bù các đợt cũ
     this.maxLives = Math.max(o.maxLives || CONFIG.startLives, this.lives);   // v169: bản lưu cũ chưa có mạng tối đa
+    // vô tận theo màn: dựng lại đúng màn lúc lưu (ô tướng đánh số theo bản đồ đó); bản lưu cũ chưa có màn → suy ra sau
+    const okStage = (st) => st && Number.isInteger(st.k) && LEVELS[st.lv] && (!st.shape || PATH_SHAPES[st.shape]);
+    this.stage = okStage(o.stage) ? o.stage : endlessStage(0, 0, this.level);
+    if (okStage(o.stage)) {
+      this.pathHp = o.pathHp || stageHpFor(this.stage, this.level);
+      setMap(stageMapId(this.stage));
+      this.raised = CONFIG.slots.map((_, i) => !!(o.raised && o.raised[i])); this.tempFlood = CONFIG.slots.map(() => 0);
+    } else this.pathHp = 1;
     this.ensureMarket();
     this.heroes = CONFIG.slots.map((_, i) => {
       const h = o.heroes && o.heroes[i];
@@ -2763,12 +2876,15 @@ class Game {
     for (const h of this.heroes) if (h) h.hp = heroStats(h).hpMax;
     this.started = true; this.running = false; this.over = false;
     this.waveActive = false; this.enemies = []; this.spawnQueue = [];
+    // màn phải khớp số đợt: bản lưu cũ (chưa ghi màn) hoặc lưu lúc bảng Sính lễ còn mở (chưa đổi màn) → sang đúng màn (im lặng)
+    this.holdStage = false;
+    if (this.endless && !this.co) { const st = endlessStageAt(this.wave, this.level); if (st.k !== this.stage.k) this.setStage(st, true); }
     this.nextWaveT = 0;
-    this.nextWave = buildWave(this.wave + 1, this.level);
+    this.nextWave = buildWave(this.wave + 1, this.level, this.stLv());
     this.updateAuras();
   }
 
-  spawn(type, dist, elite, it) {
+  spawn(type, dist, elite, it, lane) {
     const def = ENEMIES[type];
     // boss tăng máu chậm hơn quái thường để không đột biến ở cuối chiến dịch
     const ew = effWave(this.wave, this.level);
@@ -2777,10 +2893,13 @@ class Game {
     if (this.hard) hp *= HARD.hp(this.level);
     if (it && it.hpx) hp *= it.hpx;                 // đợt quá WAVE_CAP con: phần dư dồn vào máu
     if (it && it.ev && it.ev.hp) hp *= 1 + it.ev.hp; // sự kiện Quân Hùng Hậu
+    hp *= this.pathHp || 1;   // dạng đường vô tận (PATH_SHAPES[..].hp)
     hp = Math.min(hp, 1e250);                       // không bao giờ thành Infinity
-    const p = PATH.at(dist);
+    // nhiều nhánh / hai cửa: quái đầu đợt chia lượt từng nhánh; quái đẻ ra / tách ra đi theo nhánh của con mẹ
+    if (lane == null) lane = PATH.lanes.length > 1 ? (this.laneN = ((this.laneN || 0) + 1) % PATH.lanes.length) : 0;
+    const p = PATH.at(dist, lane);
     const e = {
-      id: newId(), type, def, hp, maxHp: hp, dist, x: p.x, y: p.y, dir: 1,
+      id: newId(), type, def, hp, maxHp: hp, dist, lane, x: p.x, y: p.y, dir: 1,
       slowT: 0, slowPct: 0, stunT: 0, poisonT: 0, poisonDps: 0, poisonBy: null, dotColor: '#2ecc71', dotType: 'pure',
       atkCd: 1, slamCd: 4, summonCd: 6, healCd: 2, burnT: 0, dead: false, stunKind: 'stun', pullT: 0, pullSpeed: 0,
       elite: elite || null, armor: (def.armor || 0) + (elite === 'armored' ? 10 : 0), mr: def.mr || 0,
@@ -2907,7 +3026,7 @@ class Game {
       const ph = Math.floor((1 - e.hp / e.maxHp) / 0.25);
       while (e.phase < Math.min(3, ph)) {
         e.phase++;
-        for (let i = 0; i < d.phaseSummon.count; i++) this.spawn(d.phaseSummon.type, Math.max(0, e.dist - 8 - i * 16));
+        for (let i = 0; i < d.phaseSummon.count; i++) this.spawn(d.phaseSummon.type, Math.max(0, e.dist - 8 - i * 16), undefined, undefined, e.lane);
         this.effects.push({ type: 'ring', x: e.x, y: e.y, r: 70, color: '#5AB4D6', ttl: 0.6, max: 0.6 });
         this.text(e.x, e.y - 60, 'Nước dâng lên!', '#9EDDF2', 1.2, 15);
         this.shake = Math.max(this.shake, 4);
@@ -2949,7 +3068,7 @@ class Game {
       e.summonCd -= dt;
       if (e.summonCd <= 0) {
         e.summonCd = d.summon.cd;
-        for (let i = 0; i < d.summon.count; i++) this.spawn(d.summon.type, Math.max(0, e.dist - 10 - i * 18));
+        for (let i = 0; i < d.summon.count; i++) this.spawn(d.summon.type, Math.max(0, e.dist - 10 - i * 18), undefined, undefined, e.lane);
         this.effects.push({ type: 'ring', x: e.x, y: e.y, r: 40, color: '#5AB4D6', ttl: 0.4, max: 0.4 });
       }
     }
@@ -2998,7 +3117,7 @@ class Game {
         e.blinkN++;
         this.effects.push({ type: 'ring', x: e.x, y: e.y, r: 50, color: '#C85AFF', ttl: 0.5, max: 0.5 });
         e.dist = Math.min(PATH.total - 60, e.dist + d.blink.dist);
-        const p = PATH.at(e.dist); e.x = p.x; e.y = p.y;
+        const p = PATH.at(e.dist, e.lane); e.x = p.x; e.y = p.y;
         this.effects.push({ type: 'ring', x: e.x, y: e.y, r: 50, color: '#C85AFF', ttl: 0.5, max: 0.5 });
         this.text(e.x, e.y - 60, d.blink.name || 'Ảo ảnh!', '#C85AFF', 1.1, 16);
       }
@@ -3018,7 +3137,7 @@ class Game {
       // bị kéo / đẩy lùi
       e.pullT -= dt;
       e.dist = Math.max(0, e.dist - e.pullSpeed * dt);
-      const p = PATH.at(e.dist);
+      const p = PATH.at(e.dist, e.lane);
       e.x = p.x; e.y = p.y;
       return;
     }
@@ -3058,7 +3177,7 @@ class Game {
       }
       return;
     }
-    const p = PATH.at(e.dist);
+    const p = PATH.at(e.dist, e.lane);
     if (Math.abs(p.dx) > 0.1) e.dir = p.dx > 0 ? 1 : -1;
     e.x = p.x;
     e.y = p.y;
@@ -3676,7 +3795,7 @@ class Game {
     e.dead = true;
     // sự kiện Yêu Tinh Phân Thân: quái thường chết tách 1 phân thân (không tách tiếp, không cho vàng)
     if (e.evSplit && !e.split && !e.def.boss && !e.champion && !e.def.minion && !e.def.general) {
-      const c = this.spawn(e.type, Math.max(0, e.dist - 12), null);
+      const c = this.spawn(e.type, Math.max(0, e.dist - 12), null, null, e.lane);
       c.hp = c.maxHp = e.maxHp * e.evSplit; c.split = true; c.evSpeed = e.evSpeed;
       this.effects.push({ type: 'ring', x: e.x, y: e.y - 10, r: 26, color: '#C08CF0', ttl: 0.5, max: 0.5 });
       this.text(e.x, e.y - 34, 'Phân thân!', '#C08CF0', 0.8, 12);
@@ -3728,7 +3847,7 @@ class Game {
     }
 
     if (e.def.split) {
-      for (let i = 0; i < e.def.split.count; i++) this.spawn(e.def.split.type, Math.max(0, e.dist - 6 + i * 8));
+      for (let i = 0; i < e.def.split.count; i++) this.spawn(e.def.split.type, Math.max(0, e.dist - 6 + i * 8), undefined, undefined, e.lane);
       this.effects.push({ type: 'ring', x: e.x, y: e.y, r: 30, color: e.def.color, ttl: 0.4, max: 0.4 });
     }
 
@@ -3740,6 +3859,7 @@ class Game {
       this.shake = Math.max(this.shake, 8);
       this.sparks(e.x, e.y - 20, '#F2D27A', 24);
       const options = this.bossRewards(e.type);
+      if (!this.co) this.holdStage = true;   // chơi đơn: bảng Sính lễ dừng trận, đổi màn đợi đóng bảng (ui.pickReward)
       if (this.co) this.co.reward = { id: e.id, options, taken: -1 };   // co-op: ai chọn trước thì nhận (lệnh 'reward')
       this.events.push({ type: 'reward', boss: e.type, options, id: e.id });
     }

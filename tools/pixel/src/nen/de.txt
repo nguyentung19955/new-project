@@ -1,0 +1,34 @@
+# đường bờ ruộng / đê (dong) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đất nện A58656, mép cỏ 5E7A2E
+name: đường bờ ruộng / đê (dong)
+size: 16x16
+colors:
+  a = dat-toi
+  b = dat
+  c = dat-sang
+  d = la-ma
+
+part k0
+ccccccccbccccccc
+ccdccccccccccbcc
+cccccbcccccccccc
+cbccccccccdccccc
+cccccccabccccccc
+ccccccccccccccbc
+cdcccccccccbcccc
+cccccbcccccccccc
+cccccccccccccdcc
+cccbcccccdcccccc
+cccccccccccccccc
+cccccccabcccccbc
+cbcccccccccccccc
+cccccdccccccbccc
+cccccccccccccccc
+cccccccccbccccdc
+end
+
+anim main fps=1 loop
+frame main
+  use k0
+end
+

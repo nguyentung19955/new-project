@@ -1,0 +1,30 @@
+# khiên — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bong bóng xanh
+name: khiên
+size: 12x12
+colors:
+  a = vien
+  b = cham
+  c = nuoc
+  d = nuoc-sang
+
+part k0
+............
+.....aa.....
+...aadbaa...
+..addccdba..
+..adccccba..
+.adccccccba.
+.abcccaccba.
+..adccccba..
+..abbccbba..
+...aabbaa...
+.....aa.....
+............
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

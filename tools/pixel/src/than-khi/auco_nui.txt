@@ -1,0 +1,46 @@
+# Núi Mẹ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: mother mountain — Năm mươi con theo mẹ lên núi
+name: Núi Mẹ
+size: 24x24
+colors:
+  a = vien
+  b = khoi
+  c = dong-toi
+  d = dong
+  e = dong-sang
+  f = reu-toi
+  g = reu
+  h = reu-sang
+
+part k0
+.aaaaaaaaaaaaaaaaaaaaaa.
+aeeeeeeeeeeeeeeeeeeeeeca
+aeddddddddddddddddddddca
+aedbbbbbbbbbbbbbbbbbbdca
+aedbbbbbbbbbbbhbbbbbbdca
+aedbbbbbbbbbbbhfbbbbbdca
+aedbbbbbbbbbbhgfbbbbbdca
+aedbbbbbbbbbbhgfbbbbbdca
+aedbbbbbhfbbbhggfbbbbdca
+aedbbbbbhfbbhgggfbbbbdca
+aedbbbbhggfbhgggfbbbbdca
+aedbbbbhggghggggfbbbbdca
+aedbbbhggggggggggfbbbdca
+aedbbbhggggggggggfbbbdca
+aedbbbhggggggggggfbbbdca
+aedbbhggggggggggggfbbdca
+aedbbhggggggggggggfbbdca
+aedbhgggggggggggggfbbdca
+aedbhggggggggggggggfbdca
+aedhffffffffffffffffbdca
+aedbbbbbbbbbbbbbbbbbbdca
+aeddddddddddddddddddddca
+acccccccccccccccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+
