@@ -1,0 +1,256 @@
+# Mẫu Địa (mã maudia) — pixel 32×32 (tướng Vàng · hành Thổ). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:1044 ưu tiên + PROMPT-DUNG-XUONG.txt:1089): NỮ Thánh Mẫu đất ~40, vai rộng, áo đất nung hoa văn rễ,
+# vương miện vàng có mầm xanh, tóc tết rễ + hoa; ôm CHUM HẠT GIỐNG đất nung (không kiếm); GẤU ÁO THÀNH RỄ lan xuống đất; chiêu: mầm + đất nổi.
+# PHÁ CÁCH (QUY-CHUAN 0b): da là ĐẤT RẠN NỨT (da màu đất nung, vết nứt nâu tối trên trán/má/tay) có MẦM XANH mọc ra từ vết nứt,
+# gấu áo hoá RỄ lan xuống đất (rễ có mầm); vẫn nữ, vương miện vàng mầm xanh, ôm CHUM HẠT. Cả hình trong 1..30 (không chạm mép).
+name: Mẫu Địa
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  K = toi
+  T = dat-toi
+  g = dat
+  G = dat-sang
+  F = dat-sang
+  h = cat
+  f = dat
+  e = trang
+  r = son
+  R = son-sang
+  L = lua
+  y = vang-nghe
+  Y = vang-sang
+  j = dong-sang
+  b = dong
+  c = dong-toi
+  m = la-ma
+  M = la-sang
+  x = la
+  p = hong
+  z = sang
+  q = cat
+
+part tren
+................................
+................................
+..........yYy.yMy.yYy...........
+.........jyyyyyyyyyyyj..........
+........TgggTTTTTTTTTTT.........
+.......TgTTTTTTTTTTTTTTT........
+......TgTTTTThhhFFFTFFFF........
+......TgTTTThFFFFFFFTFFF........
+......TgTTTTFFKKFFFFKKFF........
+......TgTTTTFFekFFFFekFF........
+......TTTTTfFTFFFFFFFFFFF.......
+......pTTTTfFFTMFFFFffFF........
+......TpTTTTffFTFFFFFFf.........
+......gTTTT...fffFffff..........
+......TgT.rLRyhFTmyRRr..........
+......gTrLRRRRyFFyRRRRr.........
+......TgrLRRRRRyyRRRRRrr........
+.......TrLRRRRRRyRRRRRrr........
+......MTrLRRRRRRyRRRRRrr........
+.....mx.rLRRRRRRyRRRRrrr........
+.......fFyyyyyyyyyyyyyyY........
+.......FTrLRRrRRRRRrRRrr........
+......M.mrLRrRRRRRRRrRrr........
+.........rLrRRRRRRRRRrrr........
+end
+
+part chan
+........rLRrRRRRRRRRRRrRrr......
+........LRrRRRRRRRRRRRRrRrr.....
+.......yyyyyyyyYyyyyyyyyyyy.....
+......TgGgTTgGTTTgGgTTgGTT......
+....TTgT.TgT.mTgT.TgTm.TgTT.....
+...TT.m..T..M.T....T..m..TT.....
+end
+
+part tay
+hT
+fM
+end
+
+part vay
+.........rLRrRRRRRRRRrRrr.......
+........rLRrRRRRRRRRRRrRrr......
+........LRrRRRRRRRRRRRRrRrr.....
+.......yyyyyyyyYyyyyyyyyyyy.....
+end
+
+part chum
+..M.M.
+..mMx.
+.jjbc.
+jbbbbc
+yYyyyy
+jbqbbc
+jbbbbc
+.jbcc.
+end
+
+part chum_hat
+.z.M.M.z
+z..mMx..
+.zjjbc.z
+jbbbbc..
+yYyyyy..
+jbqbbc..
+jbbbbc..
+.jbcc...
+end
+
+part dat_bay
+.Gg..
+GggT.
+.TT..
+end
+
+part da_no
+..G.....g..
+.GgT..GgT..
+..T..GggT.G
+.g....TT.gT
+end
+
+part mam
+.M.
+mMx
+.x.
+end
+
+part mam_to
+M...M
+mM.Mx
+.mMx.
+..x..
+end
+
+part mat_nham
+FFFFFFFFF
+FKKFFFFKK
+end
+
+anim idle fps=3 loop
+frame idle
+  use chan 0 24
+  use tren
+  use chum 22 13
+  use tay 21 17
+  outline
+end
+frame idle
+  use chan 0 24
+  use tren 0 1
+  use chum 22 14
+  use tay 21 18
+  outline
+end
+frame idle
+  use @idle.0
+end
+
+# đánh: nâng chum lên (lấy đà) → đưa chum ra trước → hạt + đất văng trúng → thu về
+anim attack fps=10 once
+frame attack
+  use chan 0 24
+  use tren
+  use chum 21 7
+  use tay 21 13
+  outline
+end
+frame attack
+  use chan 0 24
+  use tren 1 0
+  use chum 24 10
+  use tay 23 15
+  outline
+end
+frame attack
+  use chan 0 24
+  use tren 1 0
+  use chum 24 10
+  use tay 23 15
+  use dat_bay 25 6
+  set 28 11 G
+  set 29 13 g
+  outline
+end
+frame attack
+  use chan 0 24
+  use tren
+  use chum 22 13
+  use tay 21 17
+  outline
+end
+
+# chiêu (Thổ): chum hạt toả sáng, mầm xanh mọc quanh rễ, đất nổi lên
+anim cast fps=6 loop
+frame cast
+  use chan 0 24
+  use tren
+  use chum_hat 22 10
+  use tay 21 15
+  use mam 2 26
+  use mam 27 26
+  outline
+end
+frame cast
+  use chan 0 24
+  use tren
+  use chum_hat 22 10
+  use tay 21 15
+  use mam_to 2 24
+  use mam_to 25 24
+  use da_no 19 2
+  outline
+end
+frame cast
+  use chan 0 24
+  use tren 0 1
+  use chum_hat 22 10
+  use tay 21 16
+  use mam_to 2 24
+  use mam_to 25 24
+  use da_no 19 3
+  set 3 20 M
+  set 29 20 M
+  outline
+end
+
+# trúng đòn: giật lùi, nhắm mắt, nháy sáng da
+anim hurt fps=8 once
+frame hurt
+  use @idle.0
+  shift -1 0
+  use mat_nham 12 8
+  swap F h
+end
+
+# chết: khuỵu → ngã nằm → tối dần (rễ ở lại dưới đất)
+anim die fps=5 once
+frame die
+  use chan 0 24
+  use tren 0 3
+  use chum 22 17
+  use tay 21 21
+  use mat_nham 13 11
+  outline
+end
+frame die
+  use vay 0 24
+  use tren 0 3
+  use mat_nham 13 11
+  rot 90
+  shift 0 1
+  use chum 24 22
+  outline
+end
+frame die
+  use @die.1
+  swap y j
+  swap R r
+  swap L R
+  swap m x
+end

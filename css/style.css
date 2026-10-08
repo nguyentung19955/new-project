@@ -2135,6 +2135,17 @@ html.sk-the-cho .mk-card .rl { z-index: 2; }
 @media (max-height: 520px) { #banner { top: 70px; padding: 4px 22px; } #banner b { font-size: 22px; } #banner small { font-size: 11px; } }
 #tb-wave .wn { display: inline-block; min-width: 1.15em; text-align: center; }
 
+/* vo-tan-su-kien: sự kiện đợt (từ đợt 60, mỗi 10 đợt) — banner viền màu sự kiện, biểu tượng trên dải đợt kế */
+#banner.ev { background: linear-gradient(90deg, transparent, #0D0B08f0 18%, #0D0B08f0 82%, transparent); box-shadow: inset 0 2px 0 -1px var(--bn-c), inset 0 -2px 0 -1px var(--bn-c); }
+#banner.ev small { color: var(--bn-c); }
+#banner .ev-ic { height: 1.5em; width: auto; vertical-align: -0.45em; margin-right: 4px; }
+#nextwaves .evt { color: var(--c); font-weight: 800; display: inline-flex; align-items: center; gap: 3px; }
+#nextwaves .evd { color: var(--text); opacity: .9; }
+#nextwaves .ev-ic { height: 15px; width: auto; }
+#toasts .ev-ic { height: 1.25em; width: auto; vertical-align: -0.3em; margin-right: 2px; }
+/* banner sự kiện nằm dưới dải "đợt kế" (dải luôn hiện tên sự kiện nên không được che dòng phụ của banner) */
+#banner.ev { top: 104px; }
+@media (max-height: 520px) { #banner.ev { top: 84px; } }
 /* cho-6-the: chợ 6 thẻ, thanh chợ thấp gọn (48px thay 70px ≈ 69%) để thấy nhiều sân hơn.
    Thẻ 66×44: chân dung tròn 24px, icon hệ (trái) + vai trò (phải) ở góc trên, dải giá riêng 16px (xu 15px viền sáng, chữ 14px).
    Tên tướng không hiện trên thẻ (ở tiêu đề/aria và thanh tướng khi chọn) — tên chen dưới ảnh đè cằm chân dung (tester T8). */
@@ -2173,6 +2184,27 @@ html.sk-the-cho .mk-card .rl { z-index: 2; }
 /* ===== PIXEL ART (claude/pixel-nen-tang · js/pixel.js, bật bằng ?pixel=1 / PIXEL_BAT) =====
    ảnh pixel phóng nearest-neighbor; tiêu đề Handjet, số VT323 (Google Fonts, có dấu tiếng Việt); chữ dài giữ Alegreya Sans */
 html.pixel img[src*="pixel/"], html.pixel canvas:not(#game) { image-rendering: pixelated; image-rendering: crisp-edges; }
-html.pixel { --title: 'Handjet', 'Alegreya SC', 'Palatino Linotype', Georgia, serif; }
-html.pixel .ttl, html.pixel #tb-wave, html.pixel #banner b, html.pixel #bossbar .bn span:first-child { font-weight: 700; letter-spacing: .02em; }
-html.pixel .tb-res b, html.pixel #tb-wave { font-family: 'VT323', var(--body); font-weight: 400; font-size: 1.2em; line-height: 1; }
+/* chỉ tiêu đề bảng / banner / tên boss dùng Handjet (đậm, viền tối cho tương phản); logo menu, nút ("Vào trận"…), "Đợt N · …"
+   giữ font cũ (góp ý tester: Handjet mảnh làm logo / nút nhạt). Số tài nguyên (vàng, mạng) dùng VT323. */
+html.pixel .ttl:not(#menu-logo *), html.pixel #banner b, html.pixel #bossbar .bn span:first-child {
+  font-family: 'Handjet', var(--title); font-weight: 700; letter-spacing: .03em;
+  text-shadow: 0 1px 0 #000, 1px 0 0 #000, -1px 0 0 #000, 0 -1px 0 #000, 0 2px 3px #000; }
+html.pixel .tb-res b { font-family: 'VT323', var(--body); font-weight: 400; font-size: 1.2em; line-height: 1; }
+/* góp ý tester2: Handjet nét mảnh → banner boss / tên boss to 1,2× và sáng hơn để dấu (Ồ, Ỗ…) đọc rõ ở 844×390 */
+html.pixel #banner b { font-size: 36px; color: #FFE7A0; font-weight: 800; }
+html.pixel #bossbar .bn span:first-child { font-size: 17px; color: #FFE7A0; font-weight: 800; }
+/* vo-tan-su-kien: dòng sự kiện trong bảng "Bộ quái mới" (trùng mốc đợt thì gộp một thông báo) */
+#roster-hint .rh-ev { font-size: 11.5px; line-height: 1.25; color: var(--text); border-left: 3px solid var(--c); padding: 2px 6px; background: #1A120C; border-radius: 3px; }
+#roster-hint .rh-ev b { color: var(--c); }
+#roster-hint .rh-ev .ev-ic { height: 1.3em; width: auto; vertical-align: -0.3em; margin-right: 3px; }
+/* cầm dọc: cả game xoay 90° (#wrap.rot) nên chiều cao thật là bề ngang máy (~390) — media max-height không bắt được,
+   banner phải dùng cỡ gọn như màn ngang thấp (trước đây chữ 30px bị cắt "NGŨ HÀNH NGH…" và toast đè lên) */
+#wrap.rot #banner { top: 70px; padding: 4px 22px; }
+#wrap.rot #banner b { font-size: 22px; }
+#wrap.rot #banner small { font-size: 11px; }
+#wrap.rot #banner.ev { top: 84px; }
+/* vo-tan-su-kien (tester): đang đợt sự kiện, dải trên hiện "tên sự kiện · thử thách" → banner boss/thăng thần cũng hạ xuống như banner sự kiện
+   (trước đây ở 844×390 và cầm dọc dải che dòng nhỏ "Boss xuất hiện") */
+#nextwaves:not([hidden]):has(.evt) ~ #banner { top: 104px; }
+@media (max-height: 520px) { #nextwaves:not([hidden]):has(.evt) ~ #banner { top: 84px; } }
+#wrap.rot #nextwaves:not([hidden]):has(.evt) ~ #banner { top: 84px; }

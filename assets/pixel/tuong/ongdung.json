@@ -1,0 +1,50 @@
+{
+ "code": "ongdung",
+ "group": "tuong",
+ "name": "Ông Đùng",
+ "w": 32,
+ "h": 32,
+ "ax": 15,
+ "ay": 30,
+ "bbox": [
+  0,
+  0,
+  32,
+  31
+ ],
+ "n": 14,
+ "anims": {
+  "idle": {
+   "start": 0,
+   "n": 3,
+   "fps": 3,
+   "loop": true
+  },
+  "attack": {
+   "start": 3,
+   "n": 4,
+   "fps": 10,
+   "loop": false
+  },
+  "cast": {
+   "start": 7,
+   "n": 3,
+   "fps": 8,
+   "loop": true
+  },
+  "hurt": {
+   "start": 10,
+   "n": 1,
+   "fps": 8,
+   "loop": false
+  },
+  "die": {
+   "start": 11,
+   "n": 3,
+   "fps": 5,
+   "loop": false
+  }
+ },
+ "cd": 1,
+ "sheet": "ongdung.png"
+}

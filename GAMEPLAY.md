@@ -2176,6 +2176,37 @@ Test: cập nhật `cho-tuong` (màn Chuẩn bị không còn chọn đội, sau
 - Sửa theo tester (sau v195): đồng xu bay khi hạ quái ~16 px CSS, rương rơi đồ ~30 px CSS (cỡ tính theo `view.scale`, không nhỏ lại trên điện thoại), quầng tròn + viền vòng đậm màu độ hiếm (xám / xanh / tím / cam) nhấp nháy nhẹ, chỉ mờ ở cuối. Icon tựa màn thua chương Sơn Tinh "Phong Châu thất thủ": thay mũi tên sóng (`ic-nuoc-dang`, trông như biểu đồ tăng) bằng cổng thành `tiles/cong-phong-chau.png` chìm trong 2 ngọn sóng `ic-hanh-thuy`.
 - Ảnh bảng Hợp thể (nút Mở ở Anh Hùng) và màn kết quả (nhắc mở 1 tướng Tím): `docs/cho-6-the/bang-hop-the-844x390.jpg`, `docs/cho-6-the/ket-qua-667x375.jpg`.
 
+## claude/vo-tan-su-kien — Vô tận có vô tận thật không + sự kiện thử thách mỗi 10 đợt từ đợt 60
+
+**Kiểm tra Vô tận (trước khi sửa):** không có mảng đợt / index hết phần tử nên về lý thuyết chơi mãi, nhưng:
+- Số quái mỗi đợt tăng mãi (`8 + 1,6 × đợt hiệu dụng`): đợt 200 ≈ 200 con, đợt 1000 ≈ 950–1.250 con → ra quân mất ~13 phút một đợt.
+- Máu quái ×1,16 mỗi đợt hiệu dụng mãi mãi → khoảng đợt 8.000+ máu = `Infinity` (không hạ được, thanh máu NaN).
+- Tỉ lệ tinh anh tăng tới 100% (đợt rất xa toàn tinh anh).
+- Thanh máu boss in số đầy đủ: đợt 1000 là "112.000.000.000…" (36 chữ số) tràn khung.
+- Thanh tiến độ đợt đứng yên 100% sau đợt cuối cũ của bản đồ; vòng tìm boss trên thanh trên chạy từ đợt 1 mỗi khung hình.
+
+**Đã sửa:** tối đa 80 quái / đợt, phần dư dồn thành máu (tổng máu giữ nguyên) · từ đợt hiệu dụng 150 máu tăng ×1,06 / đợt, trần 1e200 (không bao giờ Infinity) · tinh anh tối đa 45% · số ≥ 1 tỷ viết gọn (`1,5 tỷ`, `2,3 nghìn tỷ`, `4,17e20`) · thanh tiến độ sau đợt cuối cũ chạy theo chặng 10 đợt. Test tua tới đợt 1000 / 5000 / 1.000.000: luôn có quái, không NaN / Infinity, tổng máu đợt tăng ~×1,04–1,10 mỗi đợt.
+
+**Sự kiện đợt** (`WAVE_EVENTS` / `eventAt(n, bản đồ)` trong khối riêng cuối `buildWave`, js/data.js): đợt 60, 70, 80 … vô tận (trước đợt 60 không đổi gì; đợt sự kiện cũng là đợt boss). Mục đích **tăng độ khó một chút**, nặng dần theo số lần gặp (k = 0 ở đợt 60, 1 ở đợt 70… có trần). 9 sự kiện xoay vòng ngẫu nhiên có kiểm soát: mỗi vòng 9 lần đủ cả 9, xáo cố định theo (vòng, bản đồ), không bao giờ lặp 2 lần liên tiếp; hàm thuần nên chơi nhóm / lưu–nạp / dải "đợt kế" thấy giống nhau.
+
+| Sự kiện | Thử thách (đợt 60 → trần) |
+|---|---|
+| Âm Binh Tinh Nhuệ | thêm 30% → 50% quái thành tinh anh |
+| Nước Thánh Hà Bá | quái hồi 1,2% → 2,5% máu / giây |
+| Gió Bão Thủy Tinh | quái chạy nhanh +30% → +50% |
+| Sương Mù Lam Chướng | tầm đánh tướng −8% → −20% (sương phủ bản đồ) |
+| Yêu Tinh Phân Thân | quái thường chết tách 1 phân thân 35% → 55% máu (không vàng, không tách tiếp) |
+| Ngũ Hành Nghịch | một hành (theo đợt / bản đồ) −30% → −45% sát thương |
+| Bùa Yểm Thủy Tinh | cứ 6 → 4,5 giây trói ngẫu nhiên 1 tướng 5 → 6 giây (`srand`, chơi nhóm khớp) |
+| Quân Hùng Hậu | cả đợt kể cả boss +25% → +60% máu |
+| Đàn Chim Bão | 40% → 70% quân thành quái bay, mang máu hiệu dụng của con bị thay × 0,85 → 1,3 |
+
+Tham khảo game khác: làm yếu một nhóm tướng (Arknights *Contingency Contract*), trói / cấm tháp ngẫu nhiên (Kingdom Rush, Rogue Tower), quái tái sinh / tách đôi (Bloons), sương mù giảm tầm.
+- **Báo trước:** hết đợt 59, 69… → banner "Đợt 60 · sự kiện" + toast nêu thử thách và thưởng; dải "đợt kế" dưới thanh trên có biểu tượng + tên sự kiện. Vào đợt: banner "Sự kiện · …" + dải hiện thử thách suốt đợt. Banner sự kiện nằm dưới dải (không che), nhãn "Đã dừng" nhường chỗ khi banner hiện.
+- **Thưởng khi vượt qua:** vàng = 60% thưởng hết đợt (đợt 60: +192), Ngân khố 60 + 12 × k (trần 250; Khó ×1,5). Đếm cả đợt bị gộp khi Gọi sớm; bản lưu cũ không được thưởng bù (`evWave`).
+- **Cân bằng (mô phỏng `node tests/vo-tan-su-kien/mo-phong.js`):** đội 8 tướng cố định, hệ số lực M = nhỏ nhất để qua đợt 60 thường mất ≤ 2 mạng; mỗi sự kiện đánh 24 trận (lực ×0,8 / ×1 / ×1,25 × 8 seed). Đợt 60: đợt thường mất 34 mạng / 24 trận, các sự kiện mất 43–66 (máu lọt ×1,2–2,2); đợt 100 (k = 4) máu lọt ×1,2–4. Đội mạnh hơn 50% qua mọi sự kiện mất TB ≤ 0,5 mạng → khó hơn chút, không phải tường. Các bản đầu bị "dễ hơn" đã sửa: chim ra dồn cục 0,45 giây bị đánh lan (giờ giãn như quân thường), Chim Bão 55 máu thay Cua 240 máu / 18 giáp (giờ mang máu hiệu dụng của con bị thay), tinh anh ghi đè thay vì cộng thêm.
+- **Icon vẽ tạm bằng code** (chưa có ảnh): `ui/ic-suong-mu.png` (mây xám xanh + 2 vệt sương), `ui/ic-phan-than.png` (2 hồn ma tím chồng nhau) — đã thêm vào `IC_SHEETS['ic-su-kien']` của tools/build-prompts.js (lần sinh prompt sau tự có). Sự kiện khác dùng icon có sẵn (tinh-anh, hoi-mau, toc-chay, khac-che, cam-lang, mau, bay).
+- Test: `node tests/vo-tan-su-kien/vo-tan-su-kien.test.js` (lịch 60/70/…/12000 cả 17 bản đồ, không lặp liền, mỗi sự kiện kích hoạt / hiệu ứng / thưởng đúng, đợt 1000 chạy thật, mô phỏng cân bằng; `CHI_ANH=1` chỉ chụp ảnh). Ảnh đã xem: `tests/vo-tan-su-kien/shots/bao-truoc-*.png`, `trong-su-kien-*.png` ở 1920×934, 844×390, 667×375, `dot-1000-844x390.png`.
 ## claude/pixel-nen-tang — Nền tảng chuyển toàn bộ hình sang PIXEL ART (vẽ bằng code)
 
 Người dùng chốt: đổi toàn bộ hình ảnh sang **pixel art do Claude vẽ bằng code** (lưới ký tự + bảng màu chung → PNG), không gen AI.
@@ -2211,6 +2242,12 @@ Session này dựng khung để nhiều session vẽ song song không xung độ
   3 tướng mẫu vẽ lại theo hướng này (đai đồng hoa văn trống đồng trên giáp Gióng / Sơn Tinh).
 - **Phá cách** (chỉ đạo người dùng, QUY-CHUAN mục 0b): được diễn giải lại táo bạo (pháp sư bộ xương, hình nhân giấy, hồn ma…) nhưng giữ vai trò / vũ khí / ngũ hành; nhân vật huyền thoại có danh tính chỉ phá cách tạo hình. Mẫu: `chodo` thành **hồn lái đò sông Âm** (da xanh tái, nón lá, chân tan thành sương, vẫn cầm mái chèo). DANH-SACH thêm cột "Hướng phá cách". Không vẽ đồ trang bị lên tướng 32px.
 - Quyết định điều phối: Thánh Gióng cầm **gậy sắt** (nhổ tre / lửa ở chiêu), Cuội đòn gánh, Triệu Đà kích; không vẽ đồ lên tướng 32px. Đã gộp nhánh chính v202 (chợ 6 thẻ: chân dung qua `marketPortrait` → `heroImgUrl` đã móc pixel).
+- Sửa theo tester (sau v203): khung trúng đòn rõ hơn (lùi 2px + da / giáp sáng, game thêm nháy trắng 0,2 giây); Gióng và Sơn Tinh
+  khác dáng — Gióng **giáp sắt đen, đường nối cháy lửa, gậy sắt to 3px**, Sơn Tinh **áo bào dài loe chân (chữ A), gấu hoa văn Đông
+  Sơn**; font pixel không còn đổi `--title` toàn cục: logo menu, nút ("Xuất quân"…), "Đợt N · …" giữ font cũ, chỉ tiêu đề bảng /
+  banner / tên boss dùng Handjet (đậm, viền tối), số vàng / mạng dùng VT323. Test pixel thêm kiểm tra font menu + ảnh `pixel-menu-*`.
+- Sửa tool (báo từ vfx-kenney): `rot` với khung không vuông trước đây làm build-pixel crash (TypeError) — nay `rot 180` chạy với mọi khung, `rot 90/270` khung không vuông và góc không phải bội 90 báo lỗi rõ. Test `tests/pixel` thêm 4 kiểm tra.
+- Sửa theo tester2: khi bật pixel, banner boss (`#banner b`) 36px và tên boss trên thanh máu 17px, màu vàng sáng #FFE7A0, đậm hơn — dấu (Ồ, Ỗ…) đọc rõ ở 844×390.
 - Nhóm hiệu ứng là `vfx` (nhánh vfx-kenney; cho phép `tools/pixel/src/vfx/palette.txt` tạm hoặc `KHONG-BUILD`).
 
 Test mới `tests/pixel` (tool: nguồn thật hợp lệ --strict, 5 kiểu nguồn lỗi bị chặn, dựng ra thư mục tạm khớp file trong repo;
@@ -2228,6 +2265,26 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
 ## Phiên bản 201 — quy tắc hình mới phải có bản pixel
 - CLAUDE.md: thêm quy tắc "Đang chuyển sang pixel art: hình mới phải có bản pixel" — session thêm/đổi hình (kể cả vẽ bằng code) vẽ luôn bản pixel theo docs/pixel/QUY-CHUAN.md hoặc ghi vào docs/pixel/DANH-SACH.md mục "Bổ sung"; giữ đường vẽ dự phòng.
 
+## claude/pixel-tuong-tim — Pixel art 18 tướng Tím (DANH-SACH lô 3–4)
+
+- Vẽ pixel 32×32 theo `docs/pixel/QUY-CHUAN.md` (tỉ lệ đầu:thân ≈ 1:1,6, mắt nhỏ trắng+đen có lông mày, không má hồng, bóng 3 tông,
+  viền `vien`) cho 18 tướng Tím: `thachsanh` (rìu lưỡi rộng + đàn tròn sau lưng), `caolo` (nỏ máy bánh răng đồng, kính lúp, râu vuông),
+  `antiem` (áo tơi rơm, dưa hấu trên vai), `cdt` (chỉ đóng khố, gậy trơn + nón lá thần sáng ngọc), `tiendung` (2 vòng tóc, quạt tròn,
+  áo tứ thân đỏ thắm), `langlieu` (mâm bánh chưng, băng vàng), `mychau` (áo lông ngỗng trắng kéo đất, tóc dài, rắc lông), `sodua`
+  (thân quả dừa, chỏm vỏ làm mũ, dừa xanh, sáo), `ongdung` (khổng lồ gánh 2 sọt đất), `thocong` (cụ tròn, mũ tròn đen, râu trắng tới
+  bụng, gậy tre hồ lô), `lyngu` (mào đuôi cá chép, giáp vảy cam, đao vây cá), `truongchi` (đứng trong thuyền nan, sáo ngang, nón sau
+  lưng, nhắm mắt), `potaoapui` (mũ sừng trâu, khố thổ cẩm đen-đỏ, gươm lửa, vạch sơn chiến thay chấm má), `baahoa` (lơ lửng, tóc bốc
+  như lửa, cầu lửa), `trongdong` (trống đồng Đông Sơn có sao sau lưng, dùi, mũ lông chim Lạc), `ongtao` (mũ cánh chuồn, không quần,
+  kẹp than, cá chép vàng), `lachau` (mũ nhọn, búa đá + khiên đồng, cờ chim Lạc nhỏ), `thansan` (gạc hươu, sơn chiến, áo choàng lông,
+  đao rừng). Mỗi tướng: idle 3 · attack 4 · cast 3 (hiệu ứng theo chiêu) · hurt 1 · die 3; chân dung tự cắt từ khung đứng (đã xem, đủ dấu hiệu).
+- Theo cột **Hướng phá cách** của DANH-SACH: `lyngu` = người cá chép (đầu cá chép đội mũ trụ), `trongdong` = trống đồng sống
+  (thân trống đồng gỉ xanh, mặt sao trên đỉnh, mặt hô trên tang trống), `lachau` = tượng đá ong lỗ chỗ có rêu, `thansan` = người-hươu
+  (mặt sọ hươu mắt đỏ, chân móng guốc), `sodua` = vỏ dừa khắc mặt dữ mắt sáng, tay chân xơ dừa; phá cách nhẹ: `baahoa` mặt tro trắng +
+  thân dưới là lửa, `potaoapui` mặt nạ gỗ + lửa trên vai, `cdt` búp sen đầu gậy, `ongdung` cỏ mọc trên vai, `thocong` chân lẫn ụ đất.
+- Trúng đòn (góp ý tester): lùi 2px (1px khi vật cầm sát mép khung) + nhắm mắt + nháy sáng da và màu áo chính; Ông Đùng / Ông Táo dựng
+  khung riêng (đòn gánh / cánh chuồn chạm mép). Pơtao Apui thân vạm vỡ rộng hơn Thạch Sanh để không trùng dáng.
+- Chi tiết Tím: mỗi tướng có 1 điểm tím (quai đàn / thắt lưng / gấu áo / vành vỏ dừa). Không vẽ trang bị lên người.
+- Chỉ thêm nguồn `tools/pixel/src/tuong/<mã>.txt` + file sinh ra (`assets/pixel/tuong/`, `js/pixel/*.js`, `js/asset-list.js`); không sửa js/pixel.js.
 ## claude/r-cap-12 — Kỹ năng R tối đa ở tướng cấp 12
 
 - **Đổi:** `R_REQ = [0, 6, 9, 12]` (trước `[0, 6, 11, 16]`): R1 vẫn mở ở cấp 6 (`COSTS.unlockReq` không đổi), R2 cấp 9, **R3 cấp 12**. Với Q/W/E tối đa ở cấp 7, "kỹ năng tối đa" (điều kiện hợp thể Tím) giờ đạt ở **tướng cấp 12**.
@@ -2245,6 +2302,26 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   Độ khó (nhánh chính, chơi đến 4000 s): mạng còn TB ải 1: 27.8 → 34.8 · ải 3: 22.3 → 12.5 (1 ván thua đ68) · ải 5: 8.8 (3 thua) → 16.3 (2 thua) — dao động lớn, không thấy xu hướng dễ hẳn.
 - **Nhận xét:** hạ R3 xuống cấp 12 chỉ sớm Tím 0–2 đợt; với bot này điểm nghẽn chính là gom đủ hai tướng ★★★ (vàng mua thẻ / ghép), không phải cấp R. Game không dễ hơn rõ rệt → **không bù** (không đổi sức mạnh R hay giá nâng). Muốn Tím ở đợt 12–16 cần thêm thay đổi khác (vd ★★★ rẻ hơn / chợ ra đúng nguyên liệu hơn).
 - Test: `hop-the` thêm kiểm tra R cần tướng cấp 6/9/12, cấp 11 bị chặn R3 ("Cần tướng cấp 12"), cấp 12 nâng được. Ảnh đã xem: `docs/r-cap-12/skills-844x390.png`, `docs/r-cap-12/skills-1920x934.png`.
+## claude/pixel-tuong-thuong — Pixel art 19 tướng Thường (DANH-SACH lô 1–2)
+
+- Vẽ đủ 19 mã tướng Thường (lô 1: `lactuong lucsi xathu thosan thaymo thansuong giaodong chuongdong tre ongthoi`; lô 2: `dapde chantrau
+  haisen dotnuong denroi thoren nguphu thogom thaylang`; `chodo` đã có ở lô 0). Mỗi tướng 15 khung 32×32: idle 3 · attack 4 · cast 3 ·
+  hurt 1 (lùi 1 điểm + nhắm mắt + nháy sáng mọi màu lên một tông) · die 3 (quỳ → nằm → tối màu) + `portrait` 1 (đầu + vai cắt 16×16 phóng ×2 → chân dung thẻ chợ / Anh Hùng rõ mặt).
+- Theo **"Hướng phá cách"** của DANH-SACH (QUY-CHUAN mục 0b) — đội hình đa dạng hình thể, vẫn giữ vũ khí / kiểu đánh / màu hành:
+  Lạc Tướng = giáp đồng rỗng (2 đốm mắt gỉ xanh, mũ lông chim Lạc, rìu xéo) · Lực Sĩ = khổng lồ đất sét nứt, cỏ trên vai, vác tảng đá ·
+  Xạ Thủ = người-chim Lạc mỏ dài, cung dài · Thợ Săn = ma cây mặt hốc cây mắt cam, mũ trùm tai báo, cung · Thầy Mo = bộ xương đội vòng
+  lông đỏ-đen, lửa trong hốc mắt, gậy hồ lô lửa · Thần Sương = hồn sương mặt nạ băng, tóc khói dựng ngược, ôm tinh thể băng ·
+  Giáo Đồng = người tê tê, giáo dài + khiên đồng trống đồng · Chuông Đồng = con rối nước gỗ sơn bóng, chốt vai, gậy treo chuông ·
+  Tre Làng = hình nhân tre đan, sào tre ngọn lá · Ống Thổi = người cóc tía, ống thổi ngang · Đắp Đê = người bùn (nữ, váy bùn, rơm),
+  nón lá, xẻng · Chăn Trâu = tượng tò he, gậy đầu trâu, que tre làm đế · Hái Sen = tinh sen (tóc cánh sen, da xanh, chân cuống sen),
+  lá sen làm ô · Đốt Nương = ma trơi đầu ngọn lửa, thân khói tro, dao rựa + đuốc · Đèn Trời = hình nhân giấy xếp nếp, mặt vẽ mực,
+  nâng đèn trời · Thợ Rèn = người đá bazan nứt lửa, búa tạ đầu đỏ · Ngư Phủ = bộ xương rêu, vỏ hến, lưới + phao cam + chĩa ba ·
+  Thợ Gốm = tượng đất nung rạn men lam, bình gốm men lam · Thầy Lang = người nấm linh chi, gùi lá thuốc, gậy chống.
+- Nguồn: `tools/pixel/src/tuong/<mã>.txt` **sinh tự động** từ `tools/pixel/src/tuong/_gen-thuong.js` (thư viện vẽ: thân / đầu / tay /
+  vũ khí theo dáng, hiệu ứng chiêu theo hành, khung chết xoay) + `_tuong-thuong.js` (hàm vẽ từng tướng). Sửa: chỉnh hàm vẽ →
+  `node tools/pixel/src/tuong/_gen-thuong.js [mã…]` → `node tools/build-pixel.js --strict`. build-pixel chỉ đọc `.txt`, bỏ qua `.js`.
+- Không màu mới, không sửa build-pixel / js/pixel.js. Test `tests/pixel`: mã "chưa có pixel" đổi `lactuong` → `thachsanh`
+  (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
 ## claude/sao3-re-nhanh — Tướng ★★★ rẻ hơn, Tím đến sớm hơn
@@ -2255,3 +2332,117 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   - ★★★ đầu tiên: đợt ~7.7 (không đổi — giới hạn bởi số thẻ cần ghép, tăng trọng số chợ không làm nhanh hơn).
   - Tím đầu tiên: trước đợt **19.1 / 18.8 / 18.6** → sau **14.9 / 15.4 / 15.6** (mục tiêu 12–16).
   - Độ khó (chơi hết ải, `het`): bot thua 17/24 ván trước, 15/24 sau, đợt thua TB tương đương → không dễ đi rõ rệt.
+## Phiên bản 216 — gộp vo-tan-su-kien (tester đạt)
+
+- Sự kiện Vô tận: banner báo trước, bảng Bộ quái mới đợi banner, banner boss hạ xuống dưới dải sự kiện (không che "Boss xuất hiện"). Test bỏ Ếch Mẹ (chết đẻ nòng nọc) khi chọn quái thử phân thân — hết chập chờn.
+
+## Phiên bản 215 — gộp tool-pixel
+
+- Tool vẽ pixel tools/ve-pixel.html + CLI `node tools/ve-pixel.js` (spec JSON → sprite, --out zip, --xem ảnh, --nap vào game); thư viện bộ phận từ bản vẽ tay; bộ mẫu tools/pixel/mau/. Game: Cài đặt → Gói pixel (Bật/Tắt, Nạp gói .zip, Gỡ gói). Hướng dẫn docs/pixel/HUONG-DAN-TOOL.md, SPEC.md.
+
+## Phiên bản 214 — chốt tên mã kỹ năng pixel
+
+- Mã icon kỹ năng pixel dùng gạch dưới: `<tướng>_<phím>` (vd `lactuong_q`); ghi trong docs/pixel/QUY-CHUAN.md.
+
+## Phiên bản 213 — gộp sua-trieu-hoi (tester đạt)
+
+- Sửa lỗi không triệu hồi được sau vài màn: kéo tướng 1 ngón + ngón 2 chạm tướng khác làm kẹt lớp dragging-hero (chợ ẩn, thùng 🗑 kẹt). Đang kéo thì bỏ qua ngón khác; vào trận mới tự gỡ thùng.
+
+## Phiên bản 212 — gộp pixel-tuong-vang (tester đạt)
+
+- 14 tướng Vàng + 6 linh thú pixel (sprite + chân dung).
+
+## Phiên bản 211 — gộp pixel-tuong-tim (tester đạt)
+
+- 18 tướng Tím pixel (sprite 14 khung + chân dung). Test pixel tự chọn 1 tướng chưa vẽ để kiểm tra đường vẽ dự phòng (không cố định thachsanh nữa).
+
+## Phiên bản 210 — gộp pixel-nen-tang (tester đạt)
+
+- Banner boss + tên boss trên thanh máu (pixel) to, sáng hơn; ở màn thấp chữ banner ×1,6 so với gốc 22px.
+
+## Phiên bản 209 — gộp pixel-tuong-thuong (tester đạt)
+
+- Gộp bản chỉnh màu hành + mặt nạ 4 tướng pixel (Lạc Tướng, Ống Thổi, Thợ Gốm, Thợ Rèn) — tester đạt ở 844×390 + 1920×934.
+
+## claude/vo-tan-su-kien — Sửa theo tester2: bảng "Bộ quái mới" che banner sự kiện
+
+- Bản đồ 30 / 40 đợt đổi bộ quái ở đợt 61, 71, 91, 101… nên bảng "Đợt 61 · bộ quái mới" bật đúng lúc đợt sự kiện 60 / 70 / 90 / 100 bắt đầu, nằm giữa màn che banner. Sửa (đụng ít code bảng): bảng **đợi banner (boss / sự kiện) tắt** rồi mới mở; bảng có thêm **1 dòng sự kiện** (icon + "Đợt 60 · tên" + thử thách) khi trùng mốc; banner sự kiện tới lúc bảng đang mở thì **xếp hàng**, bảng đóng mới hiện (bảng đã ghi sự kiện đó thì bỏ banner).
+- Cầm dọc (game xoay 90°, `#wrap.rot`): banner dùng cỡ gọn như màn ngang thấp (trước đây chữ 30px bị cắt "NGŨ HÀNH NGH…"); `placeToasts` đổi toạ độ đúng khi xoay nên toast né được banner / bảng (trước đây đè lên chữ banner — lỗi có từ trước, ảnh hưởng cả banner boss).
+- Test thêm (bản đồ 30 đợt, mốc 59/60, 89/90, 99/100 ở 1920×934, 844×390, dọc 390×844): báo trước không bị che, mở màn banner trước / bảng đợi, bảng sau có dòng sự kiện, bảng nằm gọn màn, toast không đè banner, banner xếp hàng khi bảng mở. Ảnh đã xem: `tests/vo-tan-su-kien/shots/trung-{59,89,99}-bao-truoc-*.png`, `trung-{60,90,100}-mo-man-*.png`, `trung-{60,90,100}-bang-*.png`.
+
+## claude/vo-tan-su-kien — Sửa theo tester: dải sự kiện che "Boss xuất hiện"
+- Boss ra trong đợt sự kiện (vd vô tận ải 1, đợt 60 Gió Bão Thủy Tinh, Hồ Tinh Chín Đuôi): ở 844×390 và cầm dọc, dải trên "tên sự kiện · thử thách" che dòng nhỏ "Boss xuất hiện". Nay khi dải đang hiện sự kiện, mọi banner (boss, thăng thần…) hạ xuống như banner sự kiện (104px; màn thấp / cầm dọc 84px).
+- Test `vo-tan-su-kien`: đo khung dải sự kiện × hai dòng banner boss ở 844×390, 390×844, 1920×934, 667×375 (trước khi sửa chồng 1320 px²); ảnh `shots/boss-trong-su-kien-*.png`.
+## Phiên bản 208 — bàn giao điều phối, quy tắc tiết kiệm token
+- Thêm docs/BAN-GIAO-DIEU-PHOI.md và mục "Tiết kiệm token" trong CLAUDE.md. Dừng mọi session con.
+
+## claude/tool-pixel — Tool vẽ pixel → goi-pixel.zip → nạp vào game
+
+- **Tool `tools/ve-pixel.html`** (mở thẳng bằng Chrome / Edge, không mạng, không thư viện ngoài): chọn nhiều mã một lần từ danh sách
+  `docs/pixel/DANH-SACH.md` (836 mã, đánh dấu mã đã có pixel; thêm mã tự đặt được) → tự sinh sprite theo QUY-CHUAN từ **mô tả ngắn**
+  (đọc từ khoá tiếng Việt / Anh: thân xương / đá / hồn ma / giấy / gỗ / đồng / cây, tóc, khăn, nón, mũ lông chim, vương miện, sừng,
+  áo / giáp / khố / váy + màu, áo choàng, vũ khí gậy / giáo / rìu / kiếm / cung / chèo / chuông, cánh, hành; dáng người / thú 4 chân /
+  rắn-cá-rồng) hoặc chọn **bộ phận** → tướng `idle 3 · attack 4 · cast 3 (phép theo hành) · hurt 1 · die 3`, quái `walk 4 · attack 3 ·
+  hurt 1 · die 3`, boss 48/64 (+`rage 2`), icon / đồ / kỹ năng / ấn phù / thần khí 24 (khung + biểu tượng), ô nền 16 lát liền (nước 3
+  khung gợn), giao diện / cảnh: khung trống. Chỉ dùng 46 màu `palette.txt`, tô 3 tông tự động, viền `vien`.
+- Lưới chỉnh tay: bút / tẩy (chuột phải) / đổ màu / hút màu, hoàn tác, viền, lật, dịch, thêm / xoá / chép khung, bóng khung trước;
+  xem trước động phóng to (một động tác hoặc lần lượt mọi động tác); kiểm tra quy chuẩn (cỡ, động tác + số khung, điểm viền).
+  Bản nháp tự lưu trên máy + Lưu / Mở nháp `.json`; mở lại được cả `.zip` đã xuất để vẽ tiếp.
+- **Xuất `goi-pixel.zip`**: `goi-pixel.json` (loại `goi-pixel-ttv`, phiên bản 1, danh sách mã) + mỗi mã `assets/pixel/<nhóm>/<mã>.png`
+  (dải khung) + `.json` (y hệt build-pixel) + `-chan-dung.png` (tướng / quái / boss) + nguồn `tools/pixel/src/<nhóm>/<mã>.txt`.
+  Giải nén vào repo rồi `node tools/build-pixel.js` ra **đúng từng điểm ảnh** như tool (test kiểm). Mã lỗi quy chuẩn không vào zip.
+- **Nạp vào game** (`js/pixel-goi.js`, Cài đặt ngoài trận → dòng **"Gói pixel (thử)"**: `Pixel: Bật/Tắt` · `Nạp gói (.zip)` · `Gỡ gói`):
+  đọc zip (không nén / deflate, nhận cả zip bọc thư mục), kiểm tra (goi-pixel.json, nhóm, mã, w/h/n/anims, PNG đúng cỡ dải) — mã
+  lỗi bỏ qua + báo, cả gói hỏng thì từ chối; lưu IndexedDB `ttv-pixel-goi`; mỗi lần mở game ghép vào `PIXEL_MANIFEST` + `ASSET_DATA`
+  (ảnh `blob:`), dùng ngay (xoá đệm ảnh / khung). Mã trong gói ghi đè bản có sẵn; mã ngoài gói vẽ như cũ; gỡ gói trả lại nguyên trạng.
+  Nút `Pixel: Bật` lưu `localStorage ttv.pixel=1` (js/pixel.js đọc thêm công tắc này) rồi tải lại trang. Bảng Tạm dừng không có dòng này.
+- Sửa kèm: ảnh tải xong khi đang mở Cài đặt trên menu không còn đóng bảng Cài đặt (vẽ lại menu lúc đóng) · build-pixel nhận tên
+  file có `_` (mã DANH-SACH như `ky-nang/lactuong_q`, `an-phu/g_air`).
+- Danh sách mã + bảng màu cho tool: `node tools/build-ve-pixel.js` → `tools/ve-pixel-ds.js` (chạy lại khi DANH-SACH / palette đổi;
+  test báo nếu quên). Hướng dẫn cho người không lập trình: `docs/pixel/HUONG-DAN-TOOL.md`.
+- Test: `tests/ve-pixel/ve-pixel.test.js` (tool) · `tests/ve-pixel/nap-goi.test.js` (nạp / gỡ / IndexedDB / zip lỗi trong game).
+- **Pixel art:** nhánh không thêm hình game mới (nút trong Cài đặt là nút HTML chữ, như các dòng khác).
+- **Bổ sung (session Claude tự chạy, người dùng không ngồi máy):** lõi dùng chung `tools/ve-pixel-core.js` (trang HTML và Node cùng
+  gọi) + CLI `node tools/ve-pixel.js --spec <json|thư mục> [--out zip] [--xem dir] [--nap [--ghi-de]]` — spec JSON (mã, mô tả, bộ phận,
+  hành, động tác, mẫu vẽ tay + thay bộ phận + đổi màu, vẽ tay từng điểm), mã lỗi `E_…` rõ ràng; `--xem` ảnh phóng to + tong-quan.png;
+  `--nap` ghi nguồn tools/pixel/src + build-pixel --strict (game tự dùng khi mở, không cần bấm Nạp gói; nút nạp tay vẫn giữ).
+  Định dạng + ví dụ: `docs/pixel/SPEC.md`.
+- **Thư viện mẫu vẽ tay** `tools/pixel/thu-vien.js` (`node tools/build-thu-vien.js`): 236 nguồn từ nhánh chính + các nhánh pixel chưa
+  gộp (git show, không merge) — bộ phận (`part`, xếp loại đầu / thân / chân / tay / vũ khí / phép…) + công thức khung động tác. Lõi
+  dựng lại trùng từng điểm ảnh với build-pixel (test 185 mẫu, trừ vfx bảng màu riêng). Trang HTML: ô "Mẫu vẽ tay" (mã đã có bản vẽ
+  tay tự chọn sẵn) + Thay bộ phận + Đổi màu. Bộ mẫu input→output `tools/pixel/mau/<nhóm>/` (17 mẫu, 7 nhóm: spec + PNG tool +
+  PNG vẽ tay + tong-quan.png); mẫu dựng từ thư viện lệch bản vẽ tay 0% (ngưỡng 2%), mẫu sinh từ mô tả để tham khảo.
+- Test thêm `tests/ve-pixel/cli.test.js`. Không vẽ mã mới ngoài bộ mẫu.
+- Chỉnh theo tester (sau v207): màu hành rõ hơn — Lạc Tướng (Kim) giáp + mũ ánh bạc-sắt viền đồng, mặt nạ bạc 2 hốc mắt (khác mặt tối
+  trùm mũ của Thợ Săn); Ống Thổi (Mộc) cóc xanh rêu đốm tía; Thợ Gốm (Thổ) đất nung nâu / vàng đất; Thợ Rèn đá xám sáng hơn (vẫn nứt lửa).
+## claude/pixel-tuong-vang — Pixel lô 5–7: 14 tướng Vàng + 6 linh thú
+
+Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools/build-pixel.js --strict`) cho 20 mã theo
+`docs/pixel/DANH-SACH.md` lô 5–7 (bỏ `giong`, `tanvien` thuộc lô 0). Mỗi mã đủ idle 3 · attack 4 · cast 3 · hurt 1 · die 3
+(hurt khác idle rõ: lùi / gục 1px + nháy sáng), có chú thích đặc trưng + nguồn prompt + hướng **phá cách** (QUY-CHUAN 0b) đầu file.
+
+- **Tướng Vàng (14):** `llq` Lạc Long Quân (tóc bờm rồng, vảy ngọc, sừng nhánh, giáo, sóng quanh chân) · `auco` Âu Cơ (cánh hạc,
+  tóc lông hạc, bọc trăm trứng sáng, đũa lông hạc; chân dung riêng) · `thienloi` Thiên Lôi (da mây giông, tóc trắng dựng sét,
+  cánh lông, lưỡi tầm sét) · `cuoi` Chú Cuội (cây đa sau lưng, trăng khuyết, **đòn gánh** quấn rễ đa, chân lơ lửng; chân dung riêng)
+  · `melua` Mẹ Lúa (tóc bông lúa, áo lá lúa, ôm bó lúa) · `maudia` Mẫu Địa (da đất nứt mọc mầm, gấu áo thành rễ, chum hạt) ·
+  `longnu` Long Nữ (tóc dòng nước, gấu váy vây cá, nâng ngọc rồng) · `kinhduong` Kinh Dương Vương (râu tóc lửa, vương miện mặt
+  trời, đao bản rộng theo game `glaive`) · `viemde` Viêm Đế (sừng bò mọc mầm lúa, áo choàng lá rơm bén lửa, cuốc lửa) ·
+  `matroi` Nữ Thần Mặt Trời (đĩa 12 tia sau lưng, tóc tia nắng, quyền trượng; chân dung riêng) · `mauthoai` Mẫu Thoải (ngồi đài
+  sen trên sóng, tóc thác nước, gậy gáo bạc) · `trutroi` Thần Trụ Trời (người đá vôi nứt, mắt hốc hang sáng, cột đá chống trời,
+  mây vướng vai) · `adv` An Dương Vương (vương miện xoắn Cổ Loa, áo vảy mai rùa, nỏ thần lẫy vuốt rùa) · `mau` Mẫu Thượng Ngàn
+  (tóc tán lá, quạt lá xoè, vương miện hoa, chim đậu vai, cành hoa; chân dung riêng).
+- **Linh thú (6) — vẽ THÚ:** `nghedong` Nghê Đồng (tượng nghê gỉ xanh, bờm như đao mái đình, chuông vàng) · `caong` Thần Cá Ông
+  (hồn cá voi bán trong suốt thấy xương ngà, vòi nước) · `kimquy` Kim Quy (mai mặt trống đồng, râu trắng, vuốt sáng) · `kylan`
+  Kỳ Lân Vàng (đầu lân–rồng, 1 sừng vàng, vảy ngói men, bờm + đuôi mây) · `halong` Rồng Mẹ Hạ Long (thân rồng uốn, núi đá vôi
+  tí hon trên lưng, ngọc trong vuốt) · `ongho` Chúa Sơn Lâm (hổ 4 chân, vằn nét tranh Đông Hồ, khăn lá, chữ 王) — đều có chân dung riêng.
+- Không sửa js/pixel.js hay file lô khác; file sinh ra (`assets/pixel/tuong/`, `js/pixel/tuong.js`, `js/asset-list.js`) dựng lại.
+
+## claude/sua-trieu-hoi — sửa lỗi "chơi một lúc thì không triệu hồi (mua thẻ Chợ) được nữa"
+- **Nguyên nhân gốc:** khi kéo tướng, `#wrap` nhận lớp `dragging-hero` (CSS ẩn thanh chợ + `pointer-events:none` để thùng 🗑 nằm đúng chỗ).
+  Nếu đang kéo (ngón 1) mà một ngón khác chạm vào tướng khác, `pointerdown` của canvas **ghi đè biến `drag`** → ngón 1 nhấc ra bị bỏ qua
+  (khác pointerId), ngón 2 chỉ là chạm chọn → không ai gọi `hideTrash()`. Lớp `dragging-hero` kẹt mãi (cả sang ải sau, không có chỗ nào gỡ):
+  chợ tướng biến mất / không nhận chạm, thùng 🗑 vẫn hiện → "không triệu hồi được nữa". Dễ gặp khi chơi nhanh bằng 2 tay trên điện thoại.
+  Đã loại trừ: chợ rỗng / thẻ null (MARKET_CAP, bảo hiểm), lỗi JS khi tự ghép, lớp phủ khác — chơi thử 30 đợt mua liên tục đều mua được.
+- **Sửa (js/main.js):** đang kéo tướng thì bỏ qua ngón khác (`if (drag) return`); `pointercancel` của ngón khác không huỷ lần kéo đang dở;
+  chạm canvas mà còn sót thùng 🗑 thì gỡ luôn. **js/ui.js `startLevel`:** vào trận mới gọi `hideTrash()` (không mang lớp kẹt sang).
+- **Test:** `tests/cho-tuong/keo-hai-ngon.test.js` (chạm 2 ngón bằng CDP: code cũ FAIL "chợ hiện lại", code mới đạt; mua thẻ được sau đó).

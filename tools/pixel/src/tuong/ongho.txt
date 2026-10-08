@@ -1,0 +1,305 @@
+# Chúa Sơn Lâm — linh thú 32×32 (tướng Vàng · hành Mộc). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:268, PROMPT-DUNG-XUONG.txt:1257): HỔ THẬT đi 4 chân, vai to, chân nặng, mình dài — KHÔNG người,
+# không quần áo, không kiếm; lông cam VẰN ĐEN đậm, ngực + mõm trắng, chữ 王 trên trán, nanh + vuốt;
+# KHĂN CHOÀNG LÁ xanh ngọc trên vai, VÒNG CỔ ĐỒNG viền vàng (đồ Vàng). Chiêu hành Mộc: gầm, lá xanh cuộn quanh.
+# Phá cách (QUY-CHUAN 0b): vằn đen nét cọ cong dày như tranh Đông Hồ «Ông Ba Mươi», MẮT LỬA VÀNG.
+name: Chúa Sơn Lâm
+size: 32x32
+anchor: 16,30
+colors:
+  k = vien
+  K = khoi
+  O = lua-sang
+  o = lua
+  d = dong
+  D = dong-toi
+  e = trang
+  E = trang-xam
+  w = sang
+  G = ngoc-sang
+  g = ngoc
+  x = la-toi
+  y = vang-nghe
+  Y = vang-sang
+  j = dong-sang
+  m = son-toi
+  r = son-sang
+  l = la-ma
+  L = la-sang
+
+part duoi
+...OK.
+..Oo..
+..oK..
+...oK.
+...Ko.
+..oo..
+.oK...
+oo....
+end
+
+part than
+...OOOOOOOOOOOOOO...
+.OOKKOOOOKKOOOOKKOO.
+OOOoKKoOooKKoOOoKKOO
+OooooKoooooKoooooKoE
+ooooKKooooKKooooKKEE
+oooKKooooKKooooKKoEE
+dooKooooKoooooKooEEE
+ddoooooooooooooooEEd
+.dddEEEEEEEEEEEEEEd.
+end
+
+part chan
+.OOoKd.ood.....ood.OOooK
+.OoKod.oKd.....oKd.OoKod
+..OooK.ood.....ood..OooK
+..OKod.oKd.....oKd..OoKd
+..Ood..odd.....odd..Ood.
+.OOod..odd.....odd.OOod.
+eeEEE.eEEd....eEEd.eeEEE
+end
+
+part dau
+.dd.....dd....
+dEOd...dEOd...
+dOOOOOOOOOd...
+OOOKKKOOOOOd..
+OOOOKOOOKKOo..
+OOOKKKOKKOoo..
+KKOOOKKKKOOOo.
+OKKOOoYYKOOOoo
+eOKOOOOOOOOeeK
+eeKKOOOOOeeEEK
+EeeOoOOoeEmmm.
+.EEEdoooeEEE..
+end
+
+part khan
+..GGGGGy..
+.GGgGgggGx
+GgggggggGx
+ggxggxggxx
+.gx.gx.gx.
+..x..x..x.
+end
+
+part co
+DyjyD
+.DYD.
+end
+
+part mat_nham
+oKKK
+end
+
+part dau_gam
+.dd.....dd....
+dEOd...dEOd...
+dOOOOOOOOOd...
+OOOKKKOOOOOd..
+OOOOKOOOKKOo..
+OOOKKKOKKOoo..
+KKOOOKKKKOOOo.
+OKKOOoYYKOOOoo
+eOKOOOOOOOOeeK
+eeKKOOOOOmmmmK
+EeeOoOOomewmw.
+.EEEdooomEEEE.
+end
+
+part vuot
+....eEe
+...Oodk
+..OodK.
+.OodK..
+OodK...
+odK....
+end
+
+part la1
+.L.
+LlL
+.l.
+end
+
+part la2
+..Ll.
+.LllL
+LlLl.
+.lL..
+end
+
+part chan_sau
+.OOoKd.ood.....ood......
+.OoKod.oKd.....oKd......
+..OooK.ood.....ood......
+..OKod.oKd.....oKd......
+..Ood..odd.....odd......
+.OOod..odd.....odd......
+eeEEE.eEEd....eEEd......
+end
+
+part chan_gap
+.OOoKoo.oodd....oodd.OOoKooo
+eeEEEEdeEEEd...eEEEdeeEEEEEE
+end
+
+anim idle fps=3 loop
+frame idle
+  use duoi 1 8
+  use chan 2 23
+  use than 3 14
+  use khan 11 12
+  use dau 17 5
+  use co 21 17
+  outline
+end
+frame idle
+  use duoi 1 9
+  use chan 2 23
+  use than 3 15
+  use khan 11 13
+  use dau 17 6
+  use co 21 18
+  outline
+end
+frame idle
+  use duoi 1 9
+  use chan 2 23
+  use than 3 15
+  use khan 11 13
+  use dau 17 5
+  use co 21 17
+  outline
+end
+
+# vồ: hạ mình lấy đà → chồm tới giơ vuốt → gầm cắn → thu về
+anim attack fps=10 once
+frame attack
+  use duoi 1 10
+  use chan 2 23
+  use than 3 16
+  use khan 11 14
+  use dau 17 8
+  use co 21 20
+  outline
+end
+frame attack
+  use duoi 1 6
+  use chan_sau 2 23
+  use than 3 13
+  use khan 11 11
+  use dau 17 3
+  use co 21 15
+  use vuot 22 17
+  outline
+end
+frame attack
+  use duoi 1 7
+  use chan_sau 2 23
+  use than 3 14
+  use khan 11 12
+  use dau_gam 17 4
+  use co 21 16
+  use vuot 23 19
+  outline
+end
+frame attack
+  use @idle.0
+end
+
+# chiêu (hành Mộc): gầm vang rừng — khăn lá loé xanh, lá non cuộn quanh
+anim cast fps=8 loop
+frame cast
+  use duoi 1 8
+  use chan 2 23
+  use than 3 14
+  use khan 11 12
+  use dau_gam 17 4
+  use co 21 16
+  outline
+  use la1 2 2
+  use la1 27 20
+end
+frame cast
+  use duoi 1 8
+  use chan 2 23
+  use than 3 14
+  use khan 11 12
+  use dau_gam 17 4
+  use co 21 16
+  swap G l
+  swap y Y
+  outline
+  use la2 9 3
+  use la1 27 18
+  use la1 1 18
+end
+frame cast
+  use duoi 1 8
+  use chan 2 23
+  use than 3 14
+  use khan 11 12
+  use dau_gam 17 4
+  use co 21 16
+  swap G L
+  swap g l
+  outline
+  use la2 12 1
+  use la2 26 19
+  use la1 4 4
+end
+
+# trúng đòn: giật lùi, nhắm mắt, nháy sáng
+anim hurt fps=8 once
+frame hurt
+  use duoi 1 9
+  use chan 1 23
+  use than 2 14
+  use khan 10 12
+  use dau 16 6
+  use mat_nham 21 13
+  use co 20 18
+  swap O Y
+  outline
+end
+
+# chết: khuỵu chân → nằm phục → tối màu
+anim die fps=5 once
+frame die
+  use duoi 1 11
+  use chan 2 23
+  use than 3 17
+  use khan 11 15
+  use dau 17 9
+  use mat_nham 22 16
+  use co 21 21
+  outline
+end
+frame die
+  use chan_gap 1 28
+  use duoi 1 15
+  use than 3 20
+  use khan 11 18
+  use dau 17 17
+  use mat_nham 22 24
+  outline
+end
+frame die
+  use @die.1
+  swap O o
+  swap Y y
+  swap G g
+  swap e E
+end
+
+# chân dung: đầu hổ chữ 王 mắt lửa + khăn lá + vòng cổ đồng
+anim portrait fps=1 once
+frame portrait
+  use than 1 19
+  use khan 6 16
+  use dau 11 7
+  use co 15 19
+  outline
+end

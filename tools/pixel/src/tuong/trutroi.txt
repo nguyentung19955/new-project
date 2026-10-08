@@ -1,0 +1,301 @@
+# Thần Trụ Trời (mã trutroi) — pixel 32×32 (tướng Vàng · hành Thổ). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:1308–1313 ưu tiên + PROMPT-DUNG-XUONG.txt:1236): NAM người khổng lồ ĐÁ xám, thân trên to, chân như cột,
+# đá trên vai, KHỐ DÂY THỪNG tết, dải đất son; cầm CỘT ĐÁ CHỐNG TRỜI cao quá đầu như chày (không kiếm), MÂY XANH quanh đỉnh cột; viền vàng.
+# Phá cách tạo hình: thân là CỘT ĐÁ VÔI NỨT (vết nứt sẫm trên mặt, ngực, tay), MÂY XANH VƯỚNG TRÊN VAI, 2 MẮT LÀ 2 HỐC HANG
+# phát sáng vàng (nhắm mắt = hốc tắt sáng); vẫn cầm CỘT ĐÁ chống trời. Chết: ngã NGỬA NẰM NGANG trên đất, cột đổ phía sau, mây trôi đi.
+name: Thần Trụ Trời
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  K = toi
+  X = sat-toi
+  s = sat
+  S = sat-sang
+  a = bac
+  d = dat-toi
+  g = dat
+  G = dat-sang
+  c = cat
+  o = dong
+  O = dong-sang
+  j = dong-toi
+  y = vang-nghe
+  Y = vang-sang
+  e = trang
+  t = troi
+  N = nuoc-sang
+  n = nuoc
+  z = sang
+
+part tren
+................................
+................................
+............Y...Y...Y...........
+...........yYy.yYy.yYy..........
+..........OyyyyyyyyyyyO.........
+..........aaaSSSSSSSSSS.........
+.........aaSSSSSXsSSSSSSs.......
+.........SSSSSXXXXXSSXXXs.......
+.........SSSsSSKzKSSSKzKs.......
+.........sSSsSSKYKSSSKYKs.......
+.........sSSSsSSSSSSXssSs.......
+.........ssXSSSSSXXXXXXs........
+...tNzt...sssSSSSSSSSSs..tNt....
+..tzttNtN..sssssssssss.tzNtN....
+..NtNNtNNtaSSSSSSSSSSdGGGgd.....
+..aSSXSSSSSSSSSSSSSXSSSSSSs.....
+..aSSSXSSOOSSSSSSSXSSSaSSSs.....
+..aSSSXsSSOOOSSSSSSXsaSSSSs.....
+..SSSXs.sSSSOOOSSSSXsaSSSSs.....
+..SSSSs.sSSSXSOOOSSSsaSSSs......
+..sSSSs.sSSSSSSSOOOSs.aSSs......
+..sSSss.yyyyyyyyyyyyyy.aSSs.....
+..aSSSa.ycccGcccGcccGy..........
+..sSSSs..cgcgcgcgcgcg...........
+end
+
+part chan
+........cgcgcgcgcgcgc...........
+........cg.SSSs.SSSScg..........
+.........aSSSs..aSSSs...........
+.........aSSSs..aSSSs...........
+.........sSSSs..sSSSs...........
+........XXXXXX.XXXXXXX..........
+end
+
+# cột đá chống trời (đứng)
+part cot
+yYYy
+yyyO
+aSSs
+aSsX
+aSSs
+aSSs
+aSsX
+OOOo
+aSSs
+aSSs
+aSsX
+aSSs
+OOOo
+aSSs
+aSSs
+aSsX
+aSSs
+OOOo
+aSSs
+aSSs
+aSSs
+aSsX
+OOOo
+aSSs
+aSSs
+XssX
+end
+
+part nam_tay
+aSSa
+SSSs
+sssX
+end
+
+part may
+..tNt.....
+.tzttNtt..
+tztttttzN.
+.NNtNtttN.
+...NNNNN..
+end
+
+part may_to
+....tNt..tt...
+..ttzttNtzttN.
+.tzttttttttttN
+tzttttttttNNt.
+.NNNtNNNNNN...
+end
+
+part cot_ngang
+yaaaaOaaaaOaaaaOaa
+YSSSSOSSSSOSSSSOSS
+ySSSSOSSSSOSSSSOSS
+yssssossssossssoss
+end
+
+part cot_cheo
+yYa.........
+yaSSs.......
+.aSSSs......
+..OOOOo.....
+...aSSSs....
+....aSSSs...
+.....aSSSs..
+......OOOOo.
+.......aSSSs
+........aSSs
+end
+
+part bui
+..c....G...c.
+.GcG..GcG.cGc
+GcgcGcGgcGcgG
+end
+
+part da_bay
+..G....
+.GGg..O
+.gg...o
+.......
+O..Gg..
+...gG..
+end
+
+part mat_nham
+SKKKSSSKKKs
+SXXXSSSXXXs
+end
+
+# ngã ngửa nằm ngang (chết): đầu bên trái (vương miện chĩa trái), hốc mắt nhìn trời, thân đá, khố tết, chân duỗi phải
+part nam
+...aaaa.....aaaaaa..........
+.yaSSKzKa..aSSSSSSSa......aX
+YyaSSKYKSa.aSSSXSSSSSa...aSX
+.yaSSSSSSSaaSSXSSOOSSyGcaaSX
+YySSXSSSSSSSSSSSSOOSsycgaSSs
+.ysSSXSSSXSSaSSSSSSOOyGcSSXs
+YysSSSSSsSSSaSSSXSSSSycgsSSs
+.yssssssssssassssssssyGcssss
+..XXXXXXXXXXXXXXXXXXXXXXXXX.
+end
+
+anim idle fps=3 loop
+frame idle
+  use cot 26 2
+  use may 20 2
+  use chan 0 24
+  use tren
+  use nam_tay 24 19
+  outline
+end
+frame idle
+  use cot 26 2
+  use may 20 3
+  use chan 0 24
+  use tren 0 1
+  use nam_tay 24 20
+  outline
+end
+frame idle
+  use cot 26 2
+  use may 19 3
+  use chan 0 24
+  use tren 0 1
+  use nam_tay 24 20
+  outline
+end
+
+# đánh: nhấc cột ra sau → giơ cao → nện ngang xuống (bụi đất) → thu về
+anim attack fps=9 once
+frame attack
+  use cot_cheo 2 2
+  use chan 0 24
+  use tren
+  use nam_tay 23 11
+  outline
+end
+frame attack
+  use cot 26 2
+  use chan 0 24
+  use tren 0 1
+  use nam_tay 24 11
+  outline
+end
+frame attack
+  use chan 0 24
+  use tren 1 1
+  use cot_ngang 12 19
+  use nam_tay 23 19
+  use bui 16 26
+  outline
+end
+frame attack
+  use cot 26 2
+  use chan 0 24
+  use tren
+  use nam_tay 24 19
+  use bui 16 26
+  outline
+end
+
+# chiêu: giơ cột lên trời, mây xanh dâng, đá đất bay lên (hành Thổ)
+anim cast fps=6 loop
+frame cast
+  use cot 26 2
+  use may 20 2
+  use chan 0 24
+  use tren
+  use nam_tay 24 14
+  outline
+end
+frame cast
+  use cot 26 2
+  use may_to 16 2
+  use chan 0 24
+  use tren
+  use nam_tay 24 14
+  use da_bay 2 23
+  outline
+end
+frame cast
+  use cot 26 2
+  use may_to 16 2
+  use chan 0 24
+  use tren 0 1
+  use nam_tay 24 15
+  use da_bay 2 21
+  set 23 25 O
+  set 25 27 G
+  outline
+end
+
+# trúng đòn: giật lùi (lún xuống, cột nghiêng lùi), hốc mắt tắt sáng, nháy sáng
+anim hurt fps=8 once
+frame hurt
+  use cot 25 2
+  use chan 0 24
+  use tren 0 1
+  use nam_tay 23 20
+  use mat_nham 14 9
+  swap S a
+  outline
+end
+
+# chết: khuỵu gối → ngã ngửa nằm ngang (cột đổ phía sau, mây trôi đi) → đá xám tối, hốc mắt tắt
+anim die fps=5 once
+frame die
+  use cot_cheo 18 14
+  use chan 0 24
+  use tren 0 3
+  use mat_nham 14 11
+  outline
+end
+frame die
+  use may 2 14
+  use cot_ngang 12 16
+  use nam 2 21
+  outline
+end
+frame die
+  use cot_ngang 12 16
+  use nam 2 21
+  outline
+  swap y j
+  swap Y O
+  swap z K
+  swap a S
+  swap S s
+  use may 2 11
+  swap z t
+  swap N t
+end

@@ -1919,7 +1919,10 @@ const ELITE_MODS = {
   shield:  { name: 'Màng Nước', color: '#5AB4D6', desc: 'Khiên chặn sát thương bằng 40% máu' },
 };
 
-const waveHpMult = (n) => Math.pow(1.16, n - 1);
+// vo-tan-su-kien: đợt rất xa (hiệu dụng > 150) máu tăng chậm lại ×1,06 / đợt và chặn trần 1e200 — trước đây ×1,16 mãi
+// nên quanh đợt ~8000 máu thành Infinity (không hạ được, thanh máu NaN)
+const HP_KNEE = 150, HP_CAP_LOG = Math.log(1e200);
+const waveHpMult = (n) => { const m = n - 1 <= HP_KNEE ? (n - 1) * Math.log(1.16) : HP_KNEE * Math.log(1.16) + (n - 1 - HP_KNEE) * Math.log(1.06); return Math.exp(Math.min(HP_CAP_LOG, m)); };
 // v54: đợt "hiệu dụng" — ải dài hơn thì quái mạnh lên chậm hơn (đợt cuối vẫn mạnh như bản cũ)
 const effWave = (n, level) => { const lv = LEVELS[level || 0]; const sc = (lv && lv.waveScale) || 1; return 1 + (n - 1) * sc; };
 
@@ -2011,26 +2014,92 @@ function rosterFor(n, level) {
 const waveKind = (n, level) => (bossAt(n, level) ? 'boss'
   : AIR_WAVES.includes(n) || (n > 27 && (n % 10 === 4 || n % 10 === 7)) ? 'air' : n % 10 === 5 ? 'champion' : 'normal');
 
+// vo-tan-su-kien: tối đa WAVE_CAP quái mỗi đợt; quá thì phần dư dồn thành máu (tổng máu đợt giữ nguyên).
+// Trước đây số quái tăng mãi: đợt 1000 ≈ 1.000 con, ra quân mất ~13 phút một đợt.
+const WAVE_CAP = 80;
 function buildWave(n, level) {
   const list = [];
   const e = effWave(n, level);
-  const count = 8 + Math.floor(e * 1.6);
+  const raw = 8 + Math.floor(e * 1.6);
+  const count = Math.min(WAVE_CAP, raw), hpx = raw > WAVE_CAP ? raw / WAVE_CAP : 1;
   const kind = waveKind(n, level);
+  const ev = eventAt(n, level);
   // v48: quân theo chương (ROSTERS trong enemies2.js); mặc định quân Thủy Tinh
   const ro = rosterFor(n, level);
+  // tỉ lệ tinh anh: trước tăng mãi tới 100% (đợt rất xa toàn tinh anh) — chặn 45%; sự kiện Âm Binh nâng lên
+  const eliteP = Math.min(0.9, Math.min(0.45, 0.08 + e * 0.006) + (ev && ev.p.elite || 0));
+  const airT = ev && ev.p.air ? (ro && ro.air) || 'chimbao' : ro && ro.air;
+  const ehp = (t) => ENEMIES[t].hp * (1 + 0.06 * (ENEMIES[t].armor || 0));
   for (let i = 0; i < count; i++) {
     const r = srand();
-    let type = ro ? ro.base : 'tom';
-    if (kind === 'air' && ro && ro.air && r < 0.55) type = ro.air;
+    let type = ro ? ro.base : 'tom', hx = hpx, evAir = false;
+    if (kind === 'air' && airT && r < 0.55) type = airT;
     else if (ro) { for (const [from, p, t] of ro.list) if (e >= from && r < p) { type = t; break; } }
-    const elite = e >= 6 && srand() < 0.08 + e * 0.006
+    // Đàn Chim Bão: chim thay chỗ con vừa chọn và mang máu hiệu dụng (máu × giáp) của con đó × airHp
+    // (Chim Bão gốc chỉ 55 máu, không giáp — thay Cua Khổng Lồ 240 máu / 18 giáp thì đợt lại dễ hơn)
+    if (ev && ev.p.air && airT && type !== airT && srand() < ev.p.air) { hx *= ev.p.airHp * Math.max(1, ehp(type) / ehp(airT)); type = airT; evAir = true; }
+    const elite = (e >= 6 || (ev && ev.p.elite)) && srand() < eliteP
       ? Object.keys(ELITE_MODS)[Math.floor(srand() * 4)] : null;
-    const fast = ro ? ro.fast.includes(type) : false;
-    list.push({ type, elite, gap: fast ? 0.45 : 0.8 });
+    // chim của sự kiện ra giãn như quân thường (ra dồn cục 0,45 giây thì bị đánh lan, đợt lại dễ hơn)
+    const fast = ro ? ro.fast.includes(type) && !evAir : false;
+    const it = { type, elite, gap: fast ? 0.45 : 0.8 };
+    if (hx !== 1) it.hpx = hx;
+    if (ev && (ev.p.regen || ev.p.speed || ev.p.split || ev.p.hp)) it.ev = { regen: ev.p.regen || 0, speed: ev.p.speed || 0, split: ev.p.split || 0, hp: ev.p.hp || 0 };
+    list.push(it);
   }
   if (kind === 'champion') list.push({ type: ro ? ro.champ : 'rua', elite: 'armored', champion: true, gap: 2 });
-  if (kind === 'boss') list.push({ type: bossAt(n, level), gap: 3 });
+  if (kind === 'boss') list.push({ type: bossAt(n, level), gap: 3, ...(ev && ev.p.hp ? { ev: { hp: ev.p.hp } } : {}) });
   return list;
+}
+
+// ===== vo-tan-su-kien: SỰ KIỆN ĐỢT — từ đợt 60, cứ 10 đợt một thử thách (60, 70, 80… vô tận) =====
+// Mỗi sự kiện làm đợt đó khó hơn một chút (nặng dần theo số lần đã gặp: k = 0 ở đợt 60, 1 ở đợt 70…),
+// vượt qua thì được thưởng vàng + Ngân khố. Báo trước ở đợt liền trước (59, 69…). Xoay vòng: mỗi 6 lần là đủ
+// 6 sự kiện theo thứ tự xáo cố định theo (vòng, bản đồ) — không bao giờ lặp 2 lần liên tiếp; hàm thuần
+// (không dùng srand) nên chơi nhóm, lưu / nạp, dải "đợt kế" đều thấy cùng một sự kiện.
+const WAVE_EVENT = { start: 60, every: 10 };
+const WAVE_EVENTS = {
+  tinhanh:  { name: 'Âm Binh Tinh Nhuệ', ic: 'tinh-anh', color: '#E25A3A', lore: 'Âm binh dưới trướng Thủy Tinh kéo lên',
+    p: (k) => ({ elite: Math.min(0.5, 0.3 + 0.02 * k) }), desc: (p) => `thêm ${Math.round(p.elite * 100)}% quái thành tinh anh` },
+  hoimau:   { name: 'Nước Thánh Hà Bá', ic: 'hoi-mau', color: '#3EDC4E', lore: 'Hà Bá rưới nước thánh lên quân',
+    p: (k) => ({ regen: Math.min(2.5, 1.2 + 0.1 * k) }), desc: (p) => `quái hồi ${String(+p.regen.toFixed(1)).replace('.', ',')}% máu mỗi giây` },
+  giobao:   { name: 'Gió Bão Thủy Tinh', ic: 'toc-chay', color: '#9EDDF2', lore: 'Thủy Tinh hô gió gọi bão',
+    p: (k) => ({ speed: Math.min(0.5, 0.3 + 0.02 * k) }), desc: (p) => `quái chạy nhanh hơn ${Math.round(p.speed * 100)}%` },
+  suongmu:  { name: 'Sương Mù Lam Chướng', ic: 'suong-mu', color: '#B8C6CC', lore: 'Sương độc rừng thiêng phủ kín trận',
+    p: (k) => ({ fog: Math.min(0.2, 0.08 + 0.01 * k) }), desc: (p) => `tầm đánh của tướng −${Math.round(p.fog * 100)}%` },
+  phanthan: { name: 'Yêu Tinh Phân Thân', ic: 'phan-than', color: '#C08CF0', lore: 'Yêu tinh núi Tản hoá phép phân thân',
+    p: (k) => ({ split: Math.min(0.55, 0.35 + 0.02 * k) }), desc: (p) => `quái thường chết tách 1 phân thân ${Math.round(p.split * 100)}% máu` },
+  // tham khảo game thủ thành khác: làm yếu một nhóm tướng (Arknights "Contingency Contract"), cấm / trói tháp ngẫu nhiên
+  // (Rogue Tower, Kingdom Rush: phù thuỷ làm choáng tháp), cả đợt quái được tăng sức
+  hesuy:    { name: 'Ngũ Hành Nghịch', ic: 'khac-che', color: '#F0A030', lore: 'Âm dương đảo lộn, một hành suy yếu',
+    p: (k, n, lv) => ({ weak: Math.min(0.45, 0.3 + 0.015 * k), el: EL_ORDER[(n * 7 + (lv || 0) * 3 + k) % 5] }),
+    desc: (p) => `tướng hành ${ELEMENTS[p.el].name} −${Math.round(p.weak * 100)}% sát thương` },
+  troibua:  { name: 'Bùa Yểm Thủy Tinh', ic: 'cam-lang', color: '#7FA8F0', lore: 'Phù thủy nước yểm bùa trói tướng',
+    p: (k) => ({ every: Math.max(4.5, 6 - 0.15 * k), lock: Math.min(6, 5 + 0.1 * k) }),
+    desc: (p) => `cứ ${String(+p.every.toFixed(1)).replace('.', ',')} giây trói ngẫu nhiên 1 tướng ${String(+p.lock.toFixed(1)).replace('.', ',')} giây` },
+  hunghau:  { name: 'Quân Hùng Hậu', ic: 'mau', color: '#E25A3A', lore: 'Thủy Tinh dốc toàn quân',
+    p: (k) => ({ hp: Math.min(0.6, 0.25 + 0.03 * k) }), desc: (p) => `cả đợt (kể cả boss) +${Math.round(p.hp * 100)}% máu` },
+  chimbao:  { name: 'Đàn Chim Bão', ic: 'bay', color: '#F2D27A', lore: 'Chim Bão che kín trời',
+    p: (k) => ({ air: Math.min(0.7, 0.4 + 0.02 * k), airHp: Math.min(1.3, 0.85 + 0.04 * k) }), desc: (p) => `${Math.round(p.air * 100)}% quân là quái bay, máu ×${String(+p.airHp.toFixed(2)).replace('.', ',')}` },
+};
+const WAVE_EVENT_IDS = Object.keys(WAVE_EVENTS);
+function waveEventCycle(c, level) {
+  const ids = WAVE_EVENT_IDS.slice();
+  let s = ((c + 1) * 7919 + ((level || 0) + 1) * 131) % 2147483647;
+  for (let i = ids.length - 1; i > 0; i--) { s = (s * 16807) % 2147483647; const j = s % (i + 1); [ids[i], ids[j]] = [ids[j], ids[i]]; }
+  return ids;
+}
+function eventAt(n, level) {
+  if (!(n >= WAVE_EVENT.start) || (n - WAVE_EVENT.start) % WAVE_EVENT.every) return null;
+  const k = (n - WAVE_EVENT.start) / WAVE_EVENT.every, L = WAVE_EVENT_IDS.length, c = Math.floor(k / L);
+  const cyc = waveEventCycle(c, level);
+  // vòng mới mở đầu trùng sự kiện cuối vòng trước → đổi chỗ 2 sự kiện đầu (không đụng phần tử cuối nên không đệ quy)
+  if (c > 0 && cyc[0] === waveEventCycle(c - 1, level)[L - 1]) [cyc[0], cyc[1]] = [cyc[1], cyc[0]];
+  return waveEventOf(cyc[k % L], n, k, level);
+}
+function waveEventOf(id, n, k, level) {
+  const d = WAVE_EVENTS[id], p = d.p(k, n, level);
+  return { id, n, k, p, name: d.name, ic: d.ic, color: d.color, lore: d.lore, desc: d.desc(p), gold: Math.round((20 + n * 5) * 0.6), kho: Math.min(250, 60 + 12 * k) };
 }
 
 // Núi Tản Viên: cao dần qua các đợt, cho vàng, hồi mạng thành, mọc Linh Chi

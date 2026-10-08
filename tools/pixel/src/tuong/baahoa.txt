@@ -1,0 +1,260 @@
+# Bà Hỏa (mã baahoa) — pixel 32×32 (tướng Tím · hành Hỏa). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# PHÁ CÁCH (DANH-SACH): thân dưới tan thành ngọn lửa (không chân), mặt tro trắng bình thản.
+# Đặc trưng (PROMPT-GEN-LAI.txt:88 ưu tiên + PROMPT-DUNG-XUONG.txt:770): nữ thần lửa bí ẩn ~40, mảnh, LƠ LỬNG (thân áo thuôn thành
+# đuôi, không chạm đất), mắt hẹp sắc, môi đỏ sẫm, cười lạnh; TÓC KHỔNG LỒ bốc ngược như lửa khói, rộng hơn thân; áo đỏ rượu hoa văn
+# lửa đen, dải tím (Tím); QUẢ CẦU LỬA trong lòng bàn tay. Chiêu (Biển Lửa): hai tay giơ cao — lửa bùng quanh.
+name: Bà Hỏa
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  T = toi
+  K = khoi
+  f = trang-xam
+  F = trang
+  h = sang
+  e = trang
+  W = sang
+  t = trang-xam
+  m = son-toi
+  s = son
+  R = son-sang
+  l = lua
+  L = lua-sang
+  q = tim-toi
+  p = tim
+  P = tim-sang
+
+part toc
+....l.....L....l..
+...lL....lL...lL..
+.l.KL..L.Ks..lK...
+.LlKK..lKKK..KK.l.
+..KKs.lKKKKl.sKlL.
+.lKKKKKsKKKKKKKKK.
+.KKKsKKKKKKKsKKKK.
+KKKKKKKKKKKKKKKKK.
+.KKKKKKKKKKKKKKKK.
+.KKKKKKKKKKKKKKK..
+.KKKs......KKKK...
+..KK..............
+..K...............
+end
+
+part toc2
+...l.....L....l...
+...Ll....Ll...Ll..
+..lK..L..sK.lK..l.
+.lKK..KlKKK.KK.lL.
+..KsK.KKKKKlKsKl..
+.lKKKKKsKKKKKKKKK.
+.KKKsKKKKKKKsKKKK.
+KKKKKKKKKKKKKKKKK.
+.KKKKKKKKKKKKKKKK.
+.KKKKKKKKKKKKKKK..
+.KKKs......KKKK...
+..KK..............
+..K...............
+end
+
+part mat
+KhKhhKhhF.
+fTTFFFTTF.
+fFekFFFek.
+fFFFFFFFh.
+.fFFmsFF..
+..ffffff..
+end
+
+part than
+....fFf.....
+..smsssssm..
+.ssKsssKsssm
+.sssKsKsssm.
+.ss.ssKsssm.
+.sm.qpPpPq..
+..s.sKssKsm.
+...ssssKssm.
+end
+
+part duoi
+...slLlLs...
+....lLLl.L..
+..L.sLl.....
+....lL..l...
+.....L......
+end
+
+part cau
+.LL.
+LWLl
+lLll
+.ll.
+end
+
+part cau_to
+..LL..
+.LWWL.
+LWWLLl
+lLLLll
+.lllm.
+..ll..
+end
+
+part tay
+fFF
+.Fh
+end
+
+part tay_len
+.FF
+.Fh
+fF.
+end
+
+part lua
+..L..
+.LlL.
+LlRlL
+.lRl.
+end
+
+part mat_nham
+TT...TT
+end
+
+anim idle fps=3 loop
+frame idle
+  use toc 6 2
+  use duoi 9 22
+  use than 9 14
+  use mat 11 8
+  use tay 19 17
+  use cau 21 14
+  outline
+end
+frame idle
+  use toc2 6 1
+  use duoi 9 21
+  use than 9 13
+  use mat 11 7
+  use tay 19 16
+  use cau 21 13
+  outline
+end
+frame idle
+  use toc 6 1
+  use duoi 9 21
+  use than 9 13
+  use mat 11 7
+  use tay 19 16
+  use cau 21 13
+  set 22 14 L
+  outline
+end
+
+# đánh: giơ cầu lửa → ném → cầu lửa bay → thu tay
+anim attack fps=10 once
+frame attack
+  use toc2 6 2
+  use duoi 9 22
+  use than 9 14
+  use mat 11 8
+  use tay_len 19 12
+  use cau_to 19 6
+  outline
+end
+frame attack
+  use toc 6 2
+  use duoi 9 22
+  use than 10 14
+  use mat 12 8
+  use tay 20 17
+  use cau_to 23 13
+  outline
+end
+frame attack
+  use toc2 6 2
+  use duoi 9 22
+  use than 10 14
+  use mat 12 8
+  use tay 20 17
+  use cau 27 11
+  outline
+end
+frame attack
+  use toc 6 2
+  use duoi 9 22
+  use than 9 14
+  use mat 11 8
+  use tay 19 17
+  outline
+end
+
+# chiêu Biển Lửa: tay giơ cao, lửa bùng quanh, tóc bốc mạnh
+anim cast fps=8 loop
+frame cast
+  use toc2 6 2
+  use duoi 9 22
+  use than 9 14
+  use mat 11 8
+  use tay_len 19 12
+  use cau_to 19 6
+  use lua 1 23
+  outline
+end
+frame cast
+  use toc 6 1
+  use duoi 9 21
+  use than 9 13
+  use mat 11 7
+  use tay_len 19 11
+  use cau_to 19 5
+  use lua 1 21
+  use lua 25 23
+  outline
+end
+frame cast
+  use toc2 6 2
+  use duoi 9 22
+  use than 9 14
+  use mat 11 8
+  use tay_len 19 12
+  use cau_to 19 6
+  use lua 26 20
+  use lua 0 25
+  outline
+end
+
+anim hurt fps=8 once
+frame hurt
+  use @idle.0
+  shift -2 0
+  use mat_nham 11 10
+  swap F t
+  swap s R
+end
+
+anim die fps=5 once
+frame die
+  use toc 6 6
+  use duoi 9 24
+  use than 9 17
+  use mat 11 12
+  use mat_nham 13 14
+  outline
+end
+frame die
+  use toc 6 6
+  use than 9 17
+  use mat 11 12
+  use mat_nham 13 14
+  rot 90
+  shift 0 1
+  outline
+end
+frame die
+  use @die.1
+  swap L l
+  swap R m
+end
