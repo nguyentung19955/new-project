@@ -2293,6 +2293,10 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 212 — gộp pixel-tuong-vang (tester đạt)
+
+- 14 tướng Vàng + 6 linh thú pixel (sprite + chân dung).
+
 ## Phiên bản 211 — gộp pixel-tuong-tim (tester đạt)
 
 - 18 tướng Tím pixel (sprite 14 khung + chân dung). Test pixel tự chọn 1 tướng chưa vẽ để kiểm tra đường vẽ dự phòng (không cố định thachsanh nữa).
@@ -2336,3 +2340,24 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
 - **Pixel art:** nhánh không thêm hình game mới (nút trong Cài đặt là nút HTML chữ, như các dòng khác).
 - Chỉnh theo tester (sau v207): màu hành rõ hơn — Lạc Tướng (Kim) giáp + mũ ánh bạc-sắt viền đồng, mặt nạ bạc 2 hốc mắt (khác mặt tối
   trùm mũ của Thợ Săn); Ống Thổi (Mộc) cóc xanh rêu đốm tía; Thợ Gốm (Thổ) đất nung nâu / vàng đất; Thợ Rèn đá xám sáng hơn (vẫn nứt lửa).
+## claude/pixel-tuong-vang — Pixel lô 5–7: 14 tướng Vàng + 6 linh thú
+
+Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools/build-pixel.js --strict`) cho 20 mã theo
+`docs/pixel/DANH-SACH.md` lô 5–7 (bỏ `giong`, `tanvien` thuộc lô 0). Mỗi mã đủ idle 3 · attack 4 · cast 3 · hurt 1 · die 3
+(hurt khác idle rõ: lùi / gục 1px + nháy sáng), có chú thích đặc trưng + nguồn prompt + hướng **phá cách** (QUY-CHUAN 0b) đầu file.
+
+- **Tướng Vàng (14):** `llq` Lạc Long Quân (tóc bờm rồng, vảy ngọc, sừng nhánh, giáo, sóng quanh chân) · `auco` Âu Cơ (cánh hạc,
+  tóc lông hạc, bọc trăm trứng sáng, đũa lông hạc; chân dung riêng) · `thienloi` Thiên Lôi (da mây giông, tóc trắng dựng sét,
+  cánh lông, lưỡi tầm sét) · `cuoi` Chú Cuội (cây đa sau lưng, trăng khuyết, **đòn gánh** quấn rễ đa, chân lơ lửng; chân dung riêng)
+  · `melua` Mẹ Lúa (tóc bông lúa, áo lá lúa, ôm bó lúa) · `maudia` Mẫu Địa (da đất nứt mọc mầm, gấu áo thành rễ, chum hạt) ·
+  `longnu` Long Nữ (tóc dòng nước, gấu váy vây cá, nâng ngọc rồng) · `kinhduong` Kinh Dương Vương (râu tóc lửa, vương miện mặt
+  trời, đao bản rộng theo game `glaive`) · `viemde` Viêm Đế (sừng bò mọc mầm lúa, áo choàng lá rơm bén lửa, cuốc lửa) ·
+  `matroi` Nữ Thần Mặt Trời (đĩa 12 tia sau lưng, tóc tia nắng, quyền trượng; chân dung riêng) · `mauthoai` Mẫu Thoải (ngồi đài
+  sen trên sóng, tóc thác nước, gậy gáo bạc) · `trutroi` Thần Trụ Trời (người đá vôi nứt, mắt hốc hang sáng, cột đá chống trời,
+  mây vướng vai) · `adv` An Dương Vương (vương miện xoắn Cổ Loa, áo vảy mai rùa, nỏ thần lẫy vuốt rùa) · `mau` Mẫu Thượng Ngàn
+  (tóc tán lá, quạt lá xoè, vương miện hoa, chim đậu vai, cành hoa; chân dung riêng).
+- **Linh thú (6) — vẽ THÚ:** `nghedong` Nghê Đồng (tượng nghê gỉ xanh, bờm như đao mái đình, chuông vàng) · `caong` Thần Cá Ông
+  (hồn cá voi bán trong suốt thấy xương ngà, vòi nước) · `kimquy` Kim Quy (mai mặt trống đồng, râu trắng, vuốt sáng) · `kylan`
+  Kỳ Lân Vàng (đầu lân–rồng, 1 sừng vàng, vảy ngói men, bờm + đuôi mây) · `halong` Rồng Mẹ Hạ Long (thân rồng uốn, núi đá vôi
+  tí hon trên lưng, ngọc trong vuốt) · `ongho` Chúa Sơn Lâm (hổ 4 chân, vằn nét tranh Đông Hồ, khăn lá, chữ 王) — đều có chân dung riêng.
+- Không sửa js/pixel.js hay file lô khác; file sinh ra (`assets/pixel/tuong/`, `js/pixel/tuong.js`, `js/asset-list.js`) dựng lại.
