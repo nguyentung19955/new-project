@@ -2324,6 +2324,10 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 218 — gộp sao3-re-nhanh (tester đạt)
+
+- Tướng Thường ★★★: lên cấp ⅓ giá, mở W/E/R miễn phí → Tím (Thăng thần) đầu tiên ~đợt 15 (trước ~19), độ khó không đổi rõ.
+
 ## Phiên bản 217 — gộp pixel-quai-boss (tester đạt)
 
 - 41 quái/boss pixel; boss pixel co theo chiều cao hình cũ, quái bay/boss cao không lọt dưới thanh trên. Test nạp gói tự bỏ tạm 1 quái khỏi manifest khi đã vẽ đủ.
