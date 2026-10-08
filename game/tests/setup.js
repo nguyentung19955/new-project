@@ -29,6 +29,16 @@
     sv.gold = o.gold || 0;
     return sv;
   };
+  // Nhảy tới phòng thuộc loại cho trước trong ải đang chơi, trả về số phòng.
+  // Loại phòng phụ (merchant, challenge, curse) mà bản đồ không có thì đổi phòng phụ của bản đồ thành loại đó.
+  G.testGoto = function (type) {
+    const S = G.getRun(), M = G.mapgen;
+    let r = S.map.rooms.find((o) => o.type === type);
+    if (r) { G.gotoRoom(r.id); return r.id; }
+    r = S.map.rooms.find((o) => M.SIDE.includes(o.type));
+    G.gotoRoom(r.id, type);
+    return r.id;
+  };
   // Chơi một ải bằng bot và ghi lại: thời gian từng phòng, nguồn sát thương lên người chơi, lỗi số liệu.
   G.probeRun = function (maxSec) {
     const out = { t: 0, rooms: [], hurt: {}, bad: [] };

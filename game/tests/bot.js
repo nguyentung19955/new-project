@@ -1,7 +1,23 @@
 // Bot chơi thử tự động, chỉ dùng khi kiểm tra. Không được nạp trong game thật.
 (function () {
   const G = window.G;
-  G.botCfg = { chest: 'smart', props: true, swapOnResist: true, fountain: 'auto', explore: false, react: 0.2, missProj: 0.25 }; // explore: thử cả rương đồ, thương nhân, bàn thờ
+  G.botCfg = { chest: 'smart', props: true, swapOnResist: true, fountain: 'auto', explore: false, react: 0.2, missProj: 0.25, side: true }; // explore: thử cả rương đồ, thương nhân, bàn thờ; side: ghé cả phòng phụ
+  // Phòng kế tiếp nên tới: phòng chưa vào gần nhất, Suối hồi để sau cùng, hết phòng thì tới Trùm. Trả về hướng cửa cần đi.
+  G.botNextDoor = function (S) {
+    const M = G.mapgen, map = S.map, cur = S.idx, cfg = G.botCfg;
+    const pass = (a, b) => !M.isGate(map, a, b) || M.gateOpen(map, S.cleared);
+    let best = null, bc = 1e9;
+    for (const o of map.rooms) {
+      if (S.seen[o.id] || o.type === 'boss') continue;
+      if (!cfg.side && !o.main) continue;
+      const p = M.path(map, cur, o.id, pass);
+      if (!p) continue;
+      const cost = p.length + (o.type === 'fountain' ? 50 : 0);
+      if (cost < bc) { bc = cost; best = p; }
+    }
+    if (!best) best = M.path(map, cur, map.boss, pass);
+    return best && best.length > 1 ? M.dirTo(map, cur, best[1]) : null;
+  };
   function away(P, z, W) {
     if (z.shape === 'circle') {
       let dx = P.x - z.x, dy = P.y - z.y;
@@ -95,6 +111,8 @@
         if (!pr.act || pr.used) continue;
         if (pr.act === 'stash' || pr.act === 'merchant' || pr.act === 'altar') { if (!cfg.explore || pr.botSeen) continue; }
         if (pr.act === 'fountain') {
+          // suối chỉ dùng một lần: để dành tới lúc sắp vào Trùm (ở Kiểu B có thể đi ngang qua suối từ sớm)
+          if (S.map.rooms.some((o) => !S.seen[o.id] && o.type !== 'boss' && (cfg.side || o.main))) continue;
           const want = cfg.fountain === 'auto' ? (P.hp < P.maxhp * 0.7 ? 'hp' : 'mana') : cfg.fountain;
           if (pr.kind !== want) continue;
         }
@@ -106,7 +124,17 @@
         else { inp.mx = Math.sign(dx) * Math.min(1, Math.abs(dx) / 6); inp.my = Math.sign(dy) * Math.min(1, Math.abs(dy) / 6); }
         return inp;
       }
-      if (W.cleared) inp.mx = 1;
+      // phòng đã dọn: đi tới cửa dẫn sang phòng cần tới rồi đẩy vào cửa
+      if (W.cleared && W.type !== 'boss') {
+        const dir = G.botNextDoor(S);
+        if (dir) {
+          const q = G.roomArt.doorPos(W.geo, dir), v = G.mapgen.DIRS[dir];
+          const dx = q.x - P.x, dy = q.y - P.y;
+          const off = v[0] ? Math.abs(dy) : Math.abs(dx); // lệch khỏi trục cửa
+          if (off > 5) { inp.mx = v[0] ? 0.4 * v[0] : Math.sign(dx); inp.my = v[1] ? 0.4 * v[1] : Math.sign(dy); }
+          else { inp.mx = v[0]; inp.my = v[1]; }
+        }
+      }
       return inp;
     }
     // chọn mục tiêu gần nhất
@@ -154,7 +182,7 @@
     // né khi quái sắp ra đòn ở gần
     if (P.dodgeCd <= 0) {
       for (const e of W.ents) {
-        if (e.wind > 0 && e.wind < 0.2 && e.role !== 'archer' && Math.abs(e.x - P.x) < 30 && Math.abs(e.y - P.y) < 14 && G.rnd() < 0.5) { inp.dodgeP = true; inp.my = P.y > 190 ? -1 : 1; inp.mx = 0; inp.atk = false; break; }
+        if (e.wind > 0 && e.wind < 0.2 && e.role !== 'archer' && Math.abs(e.x - P.x) < 30 && Math.abs(e.y - P.y) < 14 && G.rnd() < 0.5) { inp.dodgeP = true; inp.my = P.y > (W.y0 + W.y1) / 2 ? -1 : 1; inp.mx = 0; inp.atk = false; break; }
       }
     }
     if (!t.prop && P.mana >= P.specCost && P.specCd <= 0 && (T.ranged || ad < 60) && G.rnd() < 0.2) { inp.specialP = true; }

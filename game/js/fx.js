@@ -816,7 +816,7 @@
     if (z.team === 'player' || z.team === 'fx') return;
     if (z.shape === 'circle') { impact(z.x, z.y, z.r, z.el); trauma(Math.min(0.5, 0.15 + z.r / 120)); kick(0, 1.5); return; }
     // vùng chữ nhật lớn: rải nhiều điểm nổ, chỉ trong phần đang thấy trên màn hình
-    const W = S.W, x0 = Math.max(z.x, W.cam - 10), x1 = Math.min(z.x + z.w, W.cam + G.W + 10);
+    const W = S.W, x0 = Math.max(z.x, W.cam - 10, W.x0 - 12), x1 = Math.min(z.x + z.w, W.cam + G.W + 10, W.x1 + 12);
     const n = Math.max(2, Math.min(9, Math.round(((x1 - x0) * z.h) / 1500)));
     const cols = Math.max(1, Math.round(n / (z.h > 40 ? 2 : 1)));
     for (let i = 0; i < n; i++) {
@@ -872,7 +872,7 @@
     if (k <= 0) return;
     const fade = Math.min(1, z.life / 0.45);
     const x = Math.round(z.x), y = Math.round(z.y);
-    const rx = z.r * (1 - (1 - k) * (1 - k)) * (0.75 + 0.25 * fade), ry = rx * 0.6;
+    const rx = z.r * (1 - (1 - k) * (1 - k)) * (0.75 + 0.25 * fade), ry = rx * (G.ZK || 0.6);
     const foe = z.team !== 'player';
     if (z.rain) {
       // vòng ngắm của mưa tên: nét đứt xoay chậm
@@ -920,7 +920,7 @@
     for (const z of W.zones) {
       if (z.wave) {
         if (!(z.wait > 0) && tick) for (let i = 0; i < 3; i++) {
-          const top = R() < 0.5, yy = top ? rr(W.y0 - 6, z.g0) : rr(z.g1, G.H - 4);
+          const top = R() < 0.5, yy = top ? rr(W.y0 - 6, z.g0) : rr(z.g1, W.y1 + 4);
           emit(5, z.x + rr(2, 8), yy, rr(20, 70), rr(-60, -10), rr(0.25, 0.45), RAMP.water, R() < 0.3 ? 2 : 1, 260, 0, yy + 6, 1);
         }
         continue;
@@ -929,7 +929,7 @@
       if (!z.fxId) z.fxId = 1 + R() * 50;
       z.fxA = (z.fxA || 0) + dt;
       if (!tick || z.rain || z.fxA < (z.fxD || 0)) continue;
-      const a = R() * TAU, d = Math.sqrt(R()) * 0.85, x = z.x + Math.cos(a) * z.r * d, y = z.y + Math.sin(a) * z.r * 0.6 * d;
+      const a = R() * TAU, d = Math.sqrt(R()) * 0.85, x = z.x + Math.cos(a) * z.r * d, y = z.y + Math.sin(a) * z.r * (G.ZK || 0.6) * d;
       if (z.heal) { if (R() < 0.6) emit(10, x, y - 2, 0, rr(-30, -16), rr(0.6, 1.0), RAMP.heal, 1, 0, 0, null, 1); }
       else if (z.el === 'fire') { if (R() < 0.6) emit(9, x, y, rr(-5, 5), rr(-50, -25), rr(0.3, 0.5), RAMP.fire, 3, -20, 0, null, 1); if (R() < 0.15) emit(2, x, y - 10, 0, -18, 0.6, RAMP.dark, 3, 0, 0, null, 1); }
       else if (z.el === 'ice') { if (R() < 0.3) emit(2, x, y - 1, rr(-8, 8), -4, rr(0.5, 0.8), RAMP.mist, 3, 0, 0, null, 0); if (R() < 0.2) emit(6, x, y - rr(0, 6), 0, 0, 0.3, RAMP.ice, 2, 0, 0, null, 1); }
@@ -952,7 +952,7 @@
         if (((y / 3 + ((t * 8) | 0)) | 0) % 3 === 0) { p(c, x - 9 + o, y, 2, 1, '#e9f9ff'); p(c, x + 10 + o, y + 1, 3, 1, 'rgba(159,208,232,0.7)'); }
       }
     };
-    col(W.y0 - 6, z.g0); col(z.g1, G.H);
+    col(W.y0 - 6, z.g0); col(z.g1, W.y1 + 7);
     // mép khe hở: chỗ đứng an toàn
     const g = wait ? (blink ? '#ffffff' : '#9fd0e8') : '#ffffff';
     p(c, x - 8, Math.round(z.g0) - 1, 16, 2, g); p(c, x - 8, Math.round(z.g1) - 1, 16, 2, g);
@@ -963,7 +963,7 @@
     if (G.noRender || !S) return false;
     try {
       if (z.wave) { wave(c, z, W); return true; }
-      if (z.team === 'fx') { ring(c, z.x, z.y, z.r, z.r * 0.6, 2, 'rgba(255,240,200,0.5)'); return true; }
+      if (z.team === 'fx') { ring(c, z.x, z.y, z.r, z.r * (G.ZK || 0.6), 2, 'rgba(255,240,200,0.5)'); return true; }
       if (z.pool && z.shape === 'circle' && !(z.t > 0)) { pool(c, z); return true; }
     } catch (e) { fail(e); }
     return false;
@@ -1307,7 +1307,7 @@
     }
     if (W.cleared && !S.cleared && W.waves && W.waves.length) {
       // dọn sạch phòng: lấp lánh vàng chạy khắp sân và một dòng chữ ngắn
-      for (let i = 0; i < 26; i++) { const o = emit(6, W.cam + rr(20, G.W - 20), rr(W.y0, W.y1), 0, rr(-34, -12), rr(0.5, 1.1), RAMP.gold, R() < 0.4 ? 4 : 2, 0, 0, null, 1); o.t0 = o.t; }
+      for (let i = 0; i < 26; i++) { const o = emit(6, rr(W.x0, W.x1), rr(W.y0, W.y1), 0, rr(-34, -12), rr(0.5, 1.1), RAMP.gold, R() < 0.4 ? 4 : 2, 0, 0, null, 1); o.t0 = o.t; }
       addRing(W.P.x, W.P.y, 6, 90, 0.6, 'rgba(255,210,63,0.8)', 3, 0);
       num(W.cam + G.W / 2, 112, 'Sạch bóng quái!', { col: '#ffd23f', size: 12, pop: 1.4, t: 1.5, vx: 0, vy: -6, edge: 'rgba(90,40,0,0.95)', kind: 2 });
     }

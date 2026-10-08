@@ -183,6 +183,12 @@
       gold: Math.round((80 + 30 * n) * (diff ? 1.5 : 1)),
     };
   };
+  // Phòng vuông: số đợt quái và hệ số điểm mỗi đợt (so với phòng dài trước đây).
+  // start: phòng Bắt đầu [ải 1-2, ải 3-5]; early: ải 1-3; late: ải 4-5; maxPerWave: số quái tối đa một đợt;
+  // stagger: nửa sau của một đợt hiện ra chậm hơn bấy nhiêu giây.
+  G.ROOM_WAVES = { start: [1, 2], early: 3, late: 4, challenge: 2, pts: 0.85, ptsLate: 0.85, maxPerWave: 7, stagger: 2, challengeTime: 30 };
+  // Độ dẹt của vùng nguy hiểm và vũng hệ: cao bằng bấy nhiêu lần rộng. Trước là 0,6 (nhìn ngang), nay tròn hơn cho sàn nhìn từ trên.
+  G.ZK = 0.85;
   G.MINI_HP = 12; // máu trùm nhỏ = hệ số x máu quái thường
   G.BOSS_HP = 24; // máu boss vùng = hệ số x máu quái thường
   // Hồ Tinh né nhiều nên ít lúc đánh trúng, cho ít máu hơn để trận không kéo quá 3 phút.

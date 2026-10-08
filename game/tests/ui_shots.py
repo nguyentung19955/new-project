@@ -17,6 +17,8 @@ RICH = """() => { G.resetSave(); const sv = G.save; sv.sound=false; sv.gold=2400
   sv.tut.done = true; G.setScene(G.Village); }"""
 with sync_playwright() as p:
     g = Game(p, size, url=url)
+    g.pg.add_script_tag(path=os.path.join(ROOT, 'tests', 'setup.js'))  # G.testGoto: nhảy tới phòng theo loại
+    ACT = "(a) => { const S = G.getRun(), pr = S.W.props.find((p) => p.act === a); S.P.x = pr.x - 10; S.P.y = pr.y + 4; S.prop = pr; }"  # đứng cạnh một đồ vật
     n = [0]
     def shot(name):
         n[0] += 1
@@ -25,11 +27,14 @@ with sync_playwright() as p:
     g.tap(240, 200); shot('hub-moi')
     # ải hướng dẫn: từng phòng
     g.ev("G.startStage(0,0,0)"); g.wait(500); shot('tut-1')
-    for k in range(1, 7):
-        g.ev(f"G.gotoRoom({k}); G.sim(100)"); g.wait(450); shot(f'tut-{k+1}')
-    g.ev("G.gotoRoom(2); G.sim(30); const S=G.getRun(); S.P.x=240; S.P.y=S.W.props[0].y+4"); g.wait(300); shot('tut-ruong-gan')
-    g.ev("G.gotoRoom(6); G.finishStage(true)"); g.wait(700); shot('ketqua-thang')
-    g.ev("G.startStage(0,0,0); G.gotoRoom(3); G.finishStage(false)"); g.wait(700); shot('ketqua-thua')
+    for k in range(1, 8):
+        t = g.ev(f"G.gotoRoom({k}); G.sim(100); G.getRun().W.type"); g.wait(450); shot(f'tut-{k+1}-{t}')
+    g.ev("G.testGoto('chest'); G.sim(30)"); g.ev(ACT, 'chest'); g.wait(300); shot('tut-ruong-gan')
+    # phòng đầu dọn xong: cửa mở, có mũi tên chỉ lối và lời chỉ dẫn về cửa
+    g.ev("G.gotoRoom(0); (() => { const S = G.getRun(); S.P.inv = 999; for (let k = 0; k < 40 && !S.W.cleared; k++) { for (const e of S.W.ents.slice()) G.damage(e, 1e6, {}); G.sim(50); S.P.inv = 999; } })()"); g.wait(400); shot('tut-cua-mo')
+    mm = g.ev("G.minimap.rect(G.getRun())"); g.tap(mm[0] + mm[2] / 2, mm[1] + mm[3] / 2); shot('bang-ban-do-A'); g.ev("G.getRun().mode='play'")
+    g.ev("G.testGoto('boss'); G.finishStage(true)"); g.wait(700); shot('ketqua-thang')
+    g.ev("G.startStage(0,0,0); G.testGoto('elite'); G.finishStage(false)"); g.wait(700); shot('ketqua-thua')
     g.ev(RICH); shot('hub-giau')
     V = "G.villageApi.V"
     for tab in ['map', 'forge', 'gear', 'hero', 'help', 'settings']:
@@ -41,19 +46,22 @@ with sync_playwright() as p:
         g.ev(f"{V}.tab='forge'; {V}.ftab='{ft}'; {V}.sel = {'G.save.carry[0]' if ft!='craft' else chr(39)+'a_ngu'+chr(39)}")
         shot('lo-' + ft)
     g.ev(f"{V}.ftab='sharpen'")
-    g.ev("G.startStage(1,2,0); G.gotoRoom(2); G.getRun().opts = null"); g.wait(400)
-    g.ev("const S=G.getRun(); S.P.x=250; S.P.y=S.W.props[0].y+4"); g.wait(200)
+    g.ev("G.startStage(1,2,0,{kind:'B',seed:1}); G.testGoto('chest'); G.getRun().opts = null"); g.wait(400)
+    g.ev(ACT, 'chest'); g.wait(200)
     g.down(430 + g.ev("G.cx"), 220 + g.ev("G.cy")); g.wait(80); g.up(); shot('bang-ruong')
-    g.ev("G.getRun().mode='play'; G.gotoRoom(4)"); g.wait(400); shot('phong-chon-cua')
+    # phòng phụ đúng như bản đồ sinh ra (thay cho phòng chọn cửa trước đây), rồi lần lượt cả ba loại phòng phụ
+    t = g.ev("G.getRun().mode='play'; (() => { const S = G.getRun(); G.gotoRoom(S.rooms.findIndex((t) => G.mapgen.SIDE.includes(t))); return S.W.type; })()"); g.wait(400); shot('phong-phu-' + t)
     for kind in ['merchant', 'curse', 'challenge']:
-        g.ev(f"const S=G.getRun(); S.rooms[4]='{kind}'; G.gotoRoom(4); G.sim(90)"); g.wait(400); shot('phong-' + kind)
+        g.ev(f"G.testGoto('{kind}'); G.sim(90)"); g.wait(400); shot('phong-' + kind)
         if kind != 'challenge':
-            g.ev(f"G.getRun().mode='{kind}'; G.getRun().prop=G.getRun().W.props[0]"); shot('bang-' + kind); g.ev("G.getRun().mode='play'")
-    g.ev("G.gotoRoom(6)"); g.wait(400); shot('phong-suoi')
+            g.ev(ACT, 'merchant' if kind == 'merchant' else 'altar'); g.ev(f"G.getRun().mode='{kind}'"); shot('bang-' + kind); g.ev("G.getRun().mode='play'")
+    g.ev("G.testGoto('fountain')"); g.wait(400); shot('phong-suoi')
+    g.ev("G.getRun().mode='map'"); shot('bang-ban-do-B'); g.ev("G.getRun().mode='play'")
     g.ev("G.getRun().mode='swap'"); shot('bang-doi-do')
-    g.ev("G.getRun().mode='play'; const S=G.getRun(); S.stats.el.fire=500; S.stats.melee=500; G.gotoRoom(7); G.sim(200)"); g.wait(300); shot('trum-nho')
+    g.ev("G.getRun().mode='play'; const S=G.getRun(); S.stats.el.fire=500; S.stats.melee=500; G.testGoto('boss'); G.sim(200)"); g.wait(300); shot('trum-nho')
     g.ev("G.getRun().mode='paused'"); shot('bang-dung')
-    g.ev("G.startStage(0,4,0); const S=G.getRun(); S.stats.el.fire=500; S.stats.melee=500; S.stats.dodges=300; G.gotoRoom(7); G.sim(240); G.addCoat('ice',60); S.P.st.fire=3; S.W.boss.exposed=3"); g.wait(300); shot('trum-lon')
-    g.ev("G.startStage(2,3,0); G.gotoRoom(3); G.sim(240)"); g.wait(300); shot('danh-quai')
+    g.ev("G.startStage(0,4,0); const S=G.getRun(); S.stats.el.fire=500; S.stats.melee=500; S.stats.dodges=300; G.testGoto('boss'); G.sim(240); G.addCoat('ice',60); S.P.st.fire=3; S.W.boss.exposed=3"); g.wait(300); shot('trum-lon')
+    g.ev("G.getRun().mode='map'"); shot('bang-ban-do-C'); g.ev("G.getRun().mode='play'")
+    g.ev("G.startStage(2,3,0); G.testGoto('fight'); G.sim(240)"); g.wait(300); shot('danh-quai')
     print('lỗi:', g.errs[:5])
     g.close()

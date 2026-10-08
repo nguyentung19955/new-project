@@ -25,8 +25,8 @@ WALK = """async () => {
     for (const f of ['sharpen', 'tier', 'reforge', 'craft', 'up']) { G.villageApi.V.ftab = f; await wait(40); }
   }
   G.startStage(0, 0, 0); await wait(120); G.sim(200);
-  for (let k = 1; k < 7; k++) { G.gotoRoom(k); G.sim(40); await wait(40); }
-  G.finishStage(true); await wait(120);
+  for (let k = 1; k < G.getRun().rooms.length; k++) { G.gotoRoom(k); G.sim(40); await wait(40); }
+  G.finishStage(true); await wait(120); // phòng cuối là phòng Trùm
   G.persist();
   return { carry: G.save.carry, n: G.save.weapons.length, hero: G.save.hero, gold: G.save.gold };
 }"""
@@ -61,7 +61,7 @@ with sync_playwright() as p:
     # ---- xoay màn hình, ẩn trang, khung hình chậm
     c = Checker('xoay, ẩn trang, khung hình chậm')
     g = Game(p, 'phone', url=url); ev = g.ev
-    ev("G.save.tut.done = true; G.startStage(0, 1, 0); G.gotoRoom(2)"); g.wait(400)
+    ev("G.save.tut.done = true; G.startStage(0, 1, 0, { kind: 'A', seed: 1 }); G.gotoRoom(G.getRun().rooms.indexOf('chest'))"); g.wait(400)  # phòng rương: không có quái
     bp = lambda n: ev(f"G.stageUi.btnPos('{n}')")[:2]
     g.down(60, 200); g.move(100, 200); g.wait(150)
     g.pg.set_viewport_size({'width': 390, 'height': 844}); g.wait(400)

@@ -149,7 +149,7 @@
   };
   G.inZone = function (z, e) {
     if (z.shape === 'circle') {
-      const dx = (e.x - z.x) / z.r, dy = (e.y - z.y) / (z.r * 0.6);
+      const dx = (e.x - z.x) / z.r, dy = (e.y - z.y) / (z.r * (G.ZK || 0.6));
       return dx * dx + dy * dy <= 1;
     }
     return e.x >= z.x && e.x <= z.x + z.w && e.y >= z.y && e.y <= z.y + z.h;
@@ -662,7 +662,7 @@
     e.face = dx >= 0 ? 1 : -1;
     let tx = P.x, ty = P.y;
     if (e.role === 'archer') {
-      const want = 150;
+      const want = Math.min(150, (W.x1 - W.x0) * 0.45); // phòng hẹp thì đứng gần hơn
       tx = P.x - e.face * want;
       tx = G.clamp(tx, W.x0 + 6, W.x1 - 6);
       if (Math.abs(tx - e.x) < 14 && Math.abs(dy) < 60 && e.cd <= 0 && e.x > W.x0 && e.x < W.x1) { e.wind = 0.5; G.sfx('warn', 1.3); return; }
@@ -872,7 +872,7 @@
         const wc = z.wait > 0 ? 'rgba(160,220,250,' + (Math.floor(G.time * 10) % 2 ? 0.3 : 0.5) + ')' : 'rgba(160,220,250,0.85)';
         A.p(c, Math.round(z.x) - 3, W.y0 - 6, 6, z.g0 - W.y0 + 6, wc);
         A.p(c, Math.round(z.x) - 3, z.g1, 6, G.H - z.g1, wc);
-      } else if (z.team === 'fx') A.ellipse(c, z.x, z.y, z.r, z.r * 0.6, 'rgba(255,240,200,0.35)');
+      } else if (z.team === 'fx') A.ellipse(c, z.x, z.y, z.r, z.r * (G.ZK || 0.6), 'rgba(255,240,200,0.35)');
       else A.zone(c, z);
     }
     if (F && F.drawGround) F.drawGround(c);

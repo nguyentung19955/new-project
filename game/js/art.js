@@ -1387,7 +1387,7 @@
   function drawMon(c, e, reg) {
     const x = Math.round(e.x), y = Math.round(e.y), sc = e.scale || 1, f = e.face < 0 ? -1 : 1;
     const st = e.st || ST0, a = mem(e), P = monPose(e, a, reg), now = G.time;
-    A.ellipse(c, x, y, e.r * 1.1, 2, 'rgba(0,0,0,0.3)');
+    A.ellipse(c, x, y, e.r * 1.1, Math.max(2, e.r * 0.42), 'rgba(0,0,0,0.3)'); // bóng tròn hơn cho sàn nhìn từ trên
     if (e.resist) {
       // vòng hào quang kháng hệ dưới chân
       const rc = G.EL[e.resist].col, rr = Math.round(e.r * 1.1) + 3, k = Math.floor(now * 6) % 3;
@@ -1510,7 +1510,7 @@
     }
     if (st.stun > 0) { rot += Math.sin(now * 9) * 0.1; P.bl = 1; }
     if (b.flash > 0) ox -= 1;
-    A.ellipse(c, x + vx, y + vy, b.r * 1.6 * (oy < 0 ? 0.8 : 1), 4, 'rgba(0,0,0,0.3)');
+    A.ellipse(c, x + vx, y + vy, b.r * 1.6 * (oy < 0 ? 0.8 : 1), 8, 'rgba(0,0,0,0.3)');
     const g = scr('mini', MNW, MNH);
     OC = DARK;
     bake(g, MNX, MNY, () => MINI[reg](P));
@@ -1983,7 +1983,7 @@
     const S = mocState(b, t);
     const an = dying != null ? null : b.anim;
     if (dying != null) return mocDie(c, b, T, el, t, S, dying);
-    A.ellipse(c, 0, 0, 46, 5, 'rgba(0,0,0,0.35)');
+    A.ellipse(c, 0, 0, 46, 10, 'rgba(0,0,0,0.35)');
     const pcx = cx;
     c.save();
     c.translate(S.jx, S.dy);
@@ -2704,7 +2704,7 @@
         if (a < F) {
           const u = a / F;
           P.ring = smooth(clamp01(u / 0.35)); P.spin = u * u * 900; P.flare = u; z = 12 * smooth(u); P.feet = [[-16, -3], [-9, -2], [13, -2], [8, -3]]; P.hy = -1; P.tlen = 1 + 0.15 * u;
-          pre.push(() => { A.ellipse(c, x, y, 20 + 42 * u, (20 + 42 * u) * 0.6, A.hexA(E.col, 0.12 + 0.15 * u)); for (let i = 0; i < 8; i++) { const ang = i * 0.785 - a * 6, r = 62 * (1 - ((u * 2 + i * 0.13) % 1)); p(c, Math.round(x + Math.cos(ang) * r), Math.round(y + Math.sin(ang) * r * 0.6), 2, 2, E.col2); } });
+          pre.push(() => { A.ellipse(c, x, y, 20 + 42 * u, (20 + 42 * u) * (G.ZK || 0.6), A.hexA(E.col, 0.12 + 0.15 * u)); for (let i = 0; i < 8; i++) { const ang = i * 0.785 - a * 6, r = 62 * (1 - ((u * 2 + i * 0.13) % 1)); p(c, Math.round(x + Math.cos(ang) * r), Math.round(y + Math.sin(ang) * r * 0.6), 2, 2, E.col2); } });
         } else {
           const w = clamp01((a - F) / 0.35);
           P.ring = 1 - smooth(w); P.spin = 900 + w * 120; P.tlen = 1.55 - 0.55 * w; P.flare = 1 - w; z = 12 * (1 - easeIn(clamp01(w * 2.2))); P.mouth = 3; P.hy = -2;
@@ -2712,7 +2712,7 @@
           post.push(() => {
             if (w >= 1) return;
             const r = an.r * (0.3 + 0.7 * easeOut(w));
-            ring(c, x, y, r, r * 0.6, A.hexA(E.col2, 1 - w)); ring(c, x, y, r - 3, r * 0.6 - 2, A.hexA(E.col, 0.9 * (1 - w))); ring(c, x, y, r * 0.6, r * 0.36, A.hexA(E.col, 0.6 * (1 - w)));
+            ring(c, x, y, r, r * (G.ZK || 0.6), A.hexA(E.col2, 1 - w)); ring(c, x, y, r - 3, r * (G.ZK || 0.6) - 2, A.hexA(E.col, 0.9 * (1 - w))); ring(c, x, y, r * 0.6, r * 0.36, A.hexA(E.col, 0.6 * (1 - w)));
             for (let i = 0; i < 14; i++) { const ang = i * 0.449 + 0.1, r0 = r * 0.75, r1 = r * 1.02; A.line(c, Math.round(x + Math.cos(ang) * r0), Math.round(y - 10 * (1 - w) + Math.sin(ang) * r0 * 0.6), Math.round(x + Math.cos(ang) * r1), Math.round(y - 10 * (1 - w) + Math.sin(ang) * r1 * 0.6), i % 2 ? E.col : E.col2, 2); }
           });
         }
@@ -3231,14 +3231,15 @@
 
   // Vùng nguy hiểm và vũng trên mặt đất
   A.zone = function (c, z) {
+    const ZK = G.ZK || 0.6; // độ dẹt của vùng tròn (data.js)
     const tele = z.t > 0;
     const blink = Math.floor(G.time * 10) % 2;
     const pulse = 0.3 + 0.16 * Math.abs(Math.sin(G.time * 14));
     if (z.pool) {
       const hex = z.team === 'player' ? (z.el ? G.EL[z.el].col : '#6fcf3a') : z.el ? G.EL[z.el].col : '#d03c28';
       if (z.shape === 'circle') {
-        A.ellipse(c, z.x, z.y, z.r, z.r * 0.6, hexA(hex, 0.34));
-        ring(c, z.x, z.y, z.r, z.r * 0.6, hexA(hex, z.team === 'player' ? 0.7 : 0.95));
+        A.ellipse(c, z.x, z.y, z.r, z.r * ZK, hexA(hex, 0.34));
+        ring(c, z.x, z.y, z.r, z.r * ZK, hexA(hex, z.team === 'player' ? 0.7 : 0.95));
         const f = Math.floor(G.time * 5) % 3;
         p(c, Math.round(z.x - z.r * 0.4) + f, Math.round(z.y - 3 - f), 2, 2, hexA(hex, 0.8));
         p(c, Math.round(z.x + z.r * 0.3) - f, Math.round(z.y + 2 - f), 2, 2, hexA(hex, 0.8));
@@ -3248,13 +3249,13 @@
     }
     if (z.shape === 'circle') {
       if (tele) {
-        A.ellipse(c, z.x, z.y, z.r, z.r * 0.6, 'rgba(255,40,24,' + pulse + ')');
-        if (z.t0) { const k = 1 - z.t / z.t0; A.ellipse(c, z.x, z.y, z.r * k, z.r * 0.6 * k, 'rgba(255,90,50,0.45)'); }
-        ring(c, z.x, z.y, z.r, z.r * 0.6, blink ? '#ff3a22' : '#ffb09a');
-        ring(c, z.x, z.y, z.r + 2, z.r * 0.6 + 1.5, 'rgba(120,0,0,0.6)');
+        A.ellipse(c, z.x, z.y, z.r, z.r * ZK, 'rgba(255,40,24,' + pulse + ')');
+        if (z.t0) { const k = 1 - z.t / z.t0; A.ellipse(c, z.x, z.y, z.r * k, z.r * ZK * k, 'rgba(255,90,50,0.45)'); }
+        ring(c, z.x, z.y, z.r, z.r * ZK, blink ? '#ff3a22' : '#ffb09a');
+        ring(c, z.x, z.y, z.r + 2, z.r * ZK + 1.5, 'rgba(120,0,0,0.6)');
       } else {
-        A.ellipse(c, z.x, z.y, z.r, z.r * 0.6, 'rgba(255,244,210,0.85)');
-        ring(c, z.x, z.y, z.r, z.r * 0.6, '#ffffff');
+        A.ellipse(c, z.x, z.y, z.r, z.r * ZK, 'rgba(255,244,210,0.85)');
+        ring(c, z.x, z.y, z.r, z.r * ZK, '#ffffff');
       }
     } else {
       const x = Math.round(z.x), y = Math.round(z.y), w = Math.round(z.w), h = Math.round(z.h);
