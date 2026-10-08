@@ -10,8 +10,29 @@
   G.wx.imageSmoothingEnabled = false;
   G.scale = 1;
 
+  // Khoá ngang: cầm máy dọc thì xoay cả khung game 90 độ để game luôn nằm ngang kín màn hình.
+  // Trình duyệt không cho trang web tắt tự xoay của máy, nên ta tự xoay hình và tự đổi toạ độ ngón tay.
+  const shell = document.getElementById('shell');
+  G.rot = false;
+  function applyRot() {
+    const de = document.documentElement;
+    const vw = window.innerWidth || de.clientWidth, vh = window.innerHeight || de.clientHeight;
+    const rot = !G.noRotLock && vh > vw * 1.1;
+    G.rot = rot; G.rotW = vw;
+    if (!shell) return;
+    if (rot) {
+      shell.style.position = 'fixed'; shell.style.left = '0'; shell.style.top = '0';
+      shell.style.width = vh + 'px'; shell.style.height = vw + 'px';
+      shell.style.transformOrigin = '0 0';
+      shell.style.transform = 'translate(' + vw + 'px,0) rotate(90deg)';
+    } else {
+      for (const k of ['position', 'left', 'top', 'width', 'height', 'transformOrigin', 'transform']) shell.style[k] = '';
+    }
+  }
   function resize() {
-    const box = fit.getBoundingClientRect();
+    applyRot();
+    // Kích thước theo bố cục (không bị phép xoay làm đổi), để lúc xoay vẫn tính đúng.
+    const box = { width: fit.clientWidth, height: fit.clientHeight };
     const s = Math.max(0.4, Math.min(box.width / G.W, box.height / G.H));
     const cw = Math.floor(G.W * s), ch = Math.floor(G.H * s);
     wrap.style.width = cw + 'px';
@@ -29,11 +50,14 @@
     G.portrait = box.height > box.width * 1.1;
   }
   function onResize() {
-    const was = G.portrait;
+    const was = G.portrait, wasRot = G.rot;
     resize();
     // Xoay máy thì vị trí các ngón đang giữ không còn đúng nữa, bỏ hết.
-    if (was !== G.portrait && G.dropPointers) G.dropPointers();
+    if ((was !== G.portrait || wasRot !== G.rot) && G.dropPointers) G.dropPointers();
   }
+  // Máy nào cho phép (Android khi toàn màn hình) thì xin khoá ngang thật; không được cũng không sao.
+  G.lockLandscape = function () { try { const o = screen.orientation; if (o && o.lock) o.lock('landscape').catch(() => {}); } catch (e) { /* không sao */ } };
+  document.addEventListener('fullscreenchange', () => { if (document.fullscreenElement) G.lockLandscape(); setTimeout(onResize, 80); });
   window.addEventListener('resize', onResize);
   window.addEventListener('orientationchange', () => setTimeout(onResize, 60));
   if (window.ResizeObserver) { try { new ResizeObserver(onResize).observe(fit); } catch (e) { /* không sao */ } }
@@ -71,6 +95,12 @@
   G.click = null; // một lần chạm hoàn chỉnh trong khung hình này
   G.downs = []; // các lần vừa chạm xuống trong khung hình này
   function pos(e) {
+    if (G.rot) {
+      // Khung đang xoay 90 độ: điểm (x, y) trên màn hình ứng với (y, rộng - x) trong khung.
+      const sr = shell.getBoundingClientRect();
+      const lx = e.clientY - sr.top, ly = sr.right - e.clientX;
+      return { x: (lx - fit.offsetLeft - wrap.offsetLeft) / G.scale, y: (ly - fit.offsetTop - wrap.offsetTop) / G.scale };
+    }
     const r = wrap.getBoundingClientRect();
     return { x: (e.clientX - r.left) / G.scale, y: (e.clientY - r.top) / G.scale };
   }

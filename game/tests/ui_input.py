@@ -244,7 +244,11 @@ def run(p, size, url=None):
     last = ev(RUN + ".rooms.length - 1")
     ev(f"G.gotoRoom({last}); G.finishStage(true)"); g.wait(700)
     c.ok(mode() == 'result', 'hiện bảng thắng')
-    g.tap(324, 229, 400); c.ok(mode() == 'play' and ev(RUN + ".idx") == 0, 'Chơi lại ải này')
+    si = ev(RUN + ".i")
+    g.tap(230, 229, 400); c.ok(mode() == 'play' and ev(RUN + ".idx") == 0 and ev(RUN + ".i") == si, 'Chơi lại ải này')
+    ev(f"G.gotoRoom({last}); G.finishStage(true)"); g.wait(700)
+    g.tap(342, 229, 400); c.ok(mode() == 'play' and ev(RUN + ".idx") == 0 and ev(RUN + ".i") == si + 1, 'Ải tiếp theo: vào thẳng ải kế, không về làng')
+    last = ev(RUN + ".rooms.length - 1")
     ev(f"G.gotoRoom({last}); G.finishStage(true)"); g.wait(700)
     g.tap(156, 229, 300); c.ok(ev("G.scene === G.Village") and tab() == 'hub', 'Về làng sau khi thắng')
     # ---- gục: đang giữ cần thì bảng hiện ra, nhấc ngón không được bấm nhầm

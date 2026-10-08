@@ -39,9 +39,13 @@ class Game:
         self.pg.wait_for_timeout(ms)
 
     def xy(self, x, y):
-        """Toạ độ game (480x270) -> toạ độ màn hình."""
-        r = self.ev("(() => { const r = document.getElementById('stage').getBoundingClientRect(); return [r.left, r.top, G.scale]; })()")
-        return r[0] + x * r[2], r[1] + y * r[2]
+        """Toạ độ game (480x270) -> toạ độ màn hình. Khi cầm dọc, khung game xoay 90 độ (khoá ngang) nên đổi theo phép xoay."""
+        r = self.ev("""(() => { const st = document.getElementById('stage'), fit = document.getElementById('fit'), sh = document.getElementById('shell');
+          if (G.rot) { const s = sh.getBoundingClientRect(); return [1, s.right, s.top, fit.offsetLeft + st.offsetLeft, fit.offsetTop + st.offsetTop, G.scale]; }
+          const r = st.getBoundingClientRect(); return [0, r.left, r.top, 0, 0, G.scale]; })()""")
+        if r[0]:
+            return r[1] - (r[4] + y * r[5]), r[2] + (r[3] + x * r[5])
+        return r[1] + x * r[5], r[2] + y * r[5]
 
     def tap(self, x, y, wait=140):
         cx, cy = self.xy(x, y)
