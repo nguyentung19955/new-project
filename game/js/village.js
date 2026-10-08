@@ -1,7 +1,7 @@
 // Làng: màn hình chính, bản đồ chọn ải, lò rèn, trang bị, hero và cây kỹ năng, hướng dẫn, cài đặt.
 (function () {
   const G = window.G, ui = G.ui;
-  const V = { tab: 'hub', sel: null, ftab: 'sharpen', node: null, page: 0, confirm: false, diff: 0, msg: null, msgT: 0 };
+  const V = { tab: 'hub', sel: null, ftab: 'sharpen', node: null, page: 0, confirm: false, diff: 0, msg: null, msgT: 0, wid: null, back: 'hub' };
 
   function say(s) { V.msg = s; V.msgT = 2.5; }
   function canPay(c) {
@@ -55,10 +55,10 @@
     if (V.tab === 'hub') {
       const sv = G.save;
       c.save();
-      c.translate(232, 236);
+      c.translate(226, 244);
       c.scale(3, 3);
       const w = G.weaponById(sv.carry[0]);
-      A.hero(c, { x: 0, y: 0, face: 1, key: sv.hero, move: false, t: G.time, atk: -1, dodge: -1, weapon: w, helm: sv.helm, armor: sv.armor });
+      A.hero(c, { x: 0, y: 0, face: 1, key: sv.hero, move: false, t: G.time, atk: -1, dodge: -1, weapon: w, helm: sv.helm, armor: sv.armor, wmood: 'idle' });
       c.restore();
     }
   }
@@ -99,7 +99,7 @@
     ui.text('Máu ' + P.maxhp + ' · Mana ' + P.maxmana, 326, 68, { size: 7.5 });
     const pts = Math.floor(hs.lvl / 3) - (hs.sk.atk + hs.sk.def + hs.sk.elem);
     if (pts > 0) ui.text('Còn ' + pts + ' điểm kỹ năng chưa dùng', 326, 80, { size: 7.5, color: '#9be07a', bold: true });
-    sv.carry.forEach((id, i) => { const w = G.weaponById(id); if (w) G.weaponLine(w, 326, 88 + i * 26, 138, false); });
+    sv.carry.forEach((id, i) => { const w = G.weaponById(id); if (w && G.weaponLine(w, 326, 88 + i * 26, 138, false)) { G.click = null; viewWeapon(w.id, 'hub'); } });
     ui.text((sv.helm ? G.GEAR.helm[sv.helm].name : 'Chưa đội mũ') + ' · ' + (sv.armor ? G.GEAR.armor[sv.armor].name : 'Chưa mặc áo'), 326, 152, { size: 6.5, color: '#d9cdb8' });
     if (P.set) ui.text('Đủ bộ ' + G.REGIONS.find((r) => r.boss === P.set).bossName, 326, 163, { size: 6.5, color: '#9be07a' });
     const cleared = Object.keys(sv.stars).length;
@@ -148,9 +148,74 @@
     } else ui.text('Chạm một ải để xem thông tin.', 24, 238, { size: 8.5, color: '#d9cdb8' });
   }
 
+  // ---------- xem một vũ khí: bậc, dòng phụ, đặc trưng hệ đã mở và sắp mở ----------
+  function viewWeapon(id, back) { V.wid = id; V.back = back || 'hub'; V.tab = 'weapon'; G.sfx('ui'); }
+  function weaponView() {
+    const sv = G.save, w = G.weaponById(V.wid);
+    ui.panel(8, 26, 464, 240, 'Xem vũ khí');
+    if (ui.btn(390, 29, 78, 22, '← Quay lại', { size: 8.5 }) || !w) { V.tab = V.back; if (V.tab === 'hub') goHub(); return; }
+    const r = G.wRar(w), rar = G.RARITY[r], st = G.wStage(w), WA = G.weaponArt;
+    const fam = WA ? WA.FAMILIES[w.type][w.family] : null;
+    // ô hình lớn, khung màu bậc
+    ui.rect(18, 56, 70, 70, rar.bg, rar.frame);
+    ui.rect(20, 58, 66, 66, null, rar.frame);
+    G.art.weaponIcon(G.ux, w, 53, 91, 60, 'idle');
+    ui.text(G.wName(w), 96, 68, { size: 10.5, bold: true, color: rar.col });
+    ui.text('Bậc ' + rar.name + ' · ' + G.WTYPES[w.type].name + (fam ? ' · dòng ' + fam.name + (fam.nature ? ' (' + fam.nature + ')' : '') : ''), 96, 81, { size: 7.5, color: '#d9cdb8' });
+    ui.text('Sát thương mỗi đòn ' + G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1) + ' · hệ số bậc x' + String(G.wRarMult(w)).replace('.', ','), 96, 93, { size: 7.5 });
+    const mi = G.markInfo(w);
+    ui.text(mi.txt, 96, 105, { size: 7.5, color: mi.col });
+    ui.bar(96, 109, 150, 4, mi.frac, mi.col);
+    ui.text('Tiến hóa cao nhất của bậc này: ' + G.STAGE_NAMES[rar.maxStage], 96, 124, { size: 7, color: '#d9cdb8' });
+    // dòng phụ và dòng mạnh
+    let y = 142;
+    ui.text('Dòng phụ', 18, y, { size: 8.5, bold: true, color: '#ffd27a' });
+    y += 12;
+    if (!w.affixes || !w.affixes.length) { ui.text(r === 0 ? 'Bậc Thường không có dòng phụ.' : 'Chưa có.', 18, y, { size: 7.5, color: '#b8b0a0' }); y += 11; }
+    for (const k of w.affixes || []) { ui.text('• ' + G.AFFIX[k], 18, y, { size: 7.5 }); y += 11; }
+    if (w.power && G.POWER[w.power]) {
+      y += 3;
+      ui.text('Dòng mạnh: ' + G.POWER[w.power].name, 18, y, { size: 8.5, bold: true, color: G.RARITY[3].col });
+      y = ui.para(G.POWER[w.power].desc, 18, y + 11, 200, { size: 7.5 });
+    }
+    ui.para(r >= 3 ? 'Đã ở bậc cao nhất.' : 'Lò rèn nâng bậc được, không mất dấu ấn và tiến hóa.', 18, 250, 220, { size: 7, color: '#b8b0a0' });
+    // đặc trưng hệ theo cấp
+    const x0 = 250;
+    ui.text('Đặc trưng hệ theo cấp', x0, 68, { size: 8.5, bold: true, color: '#ffd27a' });
+    const el = w.branch, E = el ? G.EL[el] : null;
+    if (!el) ui.para('Chưa khóa nhánh hệ. Kết liễu quái đang dính hiệu ứng để nhận dấu ấn; đủ ' + G.MARKS[0] + ' dấu ấn của một hệ thì vũ khí theo hệ đó.', x0, 80, 212, { size: 7, color: '#d9cdb8' });
+    const rows = [
+      ['Trắng', 'Chỉ có chỉ số, chưa mang hệ.'],
+      ['Mầm', 'Chỉ số tăng. ' + Math.round(G.PROC[1] * 100) + '% mỗi đòn gây ' + (el ? (el === 'fire' ? 'cháy' : el === 'poison' ? 'độc' : 'chậm') : 'hiệu ứng hệ') + ', vệt chém nhuốm màu hệ. Chưa có luật hệ.'],
+      ['Thành hình', null, 0],
+      ['Thức tỉnh', null, 1],
+    ];
+    let ry = el ? 78 : 110;
+    rows.forEach((q, i) => {
+      const got = st >= i, locked = i > rar.maxStage;
+      const h = i < 2 ? (el ? 24 : 0) : (el ? 44 : 38);
+      if (!h) return;
+      ui.rect(x0, ry, 214, h - 2, got ? 'rgba(60,52,36,0.9)' : 'rgba(40,36,34,0.9)', got && E ? E.dark : '#51463d');
+      ui.text(q[0], x0 + 5, ry + 10, { size: 8, bold: true, color: got && E ? E.col : '#b8b0a0' });
+      ui.text(locked ? 'Bậc ' + rar.name + ' không lên tới' : got ? 'Đã mở' : i === st + 1 ? 'Sắp mở: ' + G.MARKS[i - 1] + ' dấu ấn' : 'Chưa mở', x0 + 209, ry + 10, { size: 6.5, align: 'right', bold: got, color: locked ? '#ff9a5a' : got ? '#9be07a' : '#d9cdb8' });
+      if (q[1]) ui.para(q[1], x0 + 5, ry + 19, 204, { size: 6.5, color: '#d9cdb8' });
+      else if (el) {
+        const f = G.HE_FEATURES[el][q[2]];
+        ui.text('Đặc trưng ' + (q[2] + 1) + ': ' + f.name, x0 + 62, ry + 10, { size: 7.5, bold: true, color: got ? E.col2 : '#d9cdb8' });
+        ui.para(f.desc, x0 + 5, ry + 20, 204, { size: 6.5, color: '#d9cdb8' });
+      } else {
+        ui.para(G.ELS.map((e) => G.EL[e].name + ': ' + G.HE_FEATURES[e][q[2]].name).join(' · ') + '.', x0 + 5, ry + 21, 204, { size: 7, color: '#d9cdb8' });
+        ui.text(q[2] ? 'Đặc trưng 2 (phản ứng dây chuyền)' : 'Đặc trưng 1 (để lại trên sân)', x0 + 62, ry + 10, { size: 6.5, color: '#d9cdb8' });
+      }
+      ry += h;
+    });
+  }
+
   // ---------- lò rèn ----------
   function weaponGrid(y0, filter) {
-    const list = G.save.weapons.filter(filter || (() => true));
+    // vũ khí đang mang lên đầu, rồi tới bậc cao
+    const carry = G.save.carry;
+    const list = G.save.weapons.filter(filter || (() => true)).sort((a, b) => (carry.includes(b.id) - carry.includes(a.id)) || (G.wRar(b) - G.wRar(a)) || (a.id - b.id));
     list.slice(0, 12).forEach((w, k) => {
       const x = 16 + (k % 2) * 226, y = y0 + Math.floor(k / 2) * 25;
       if (G.weaponLine(w, x, y, 220, V.sel === w.id)) { V.sel = w.id; G.click = null; G.sfx('ui'); }
@@ -187,17 +252,32 @@
       weaponGrid(54);
       const w = G.weaponById(V.sel);
       ui.rect(16, 210, 448, 50, 'rgba(50,42,36,0.9)', '#6a5a4a');
-      if (!w) ui.text('Nâng bậc giữ nguyên dấu ấn. Bậc Sắt chỉ tiến hóa tới Thành hình, bậc Bạc và Linh tới Thức tỉnh.', 24, 238, { size: 7.5, color: '#d9cdb8' });
-      else if (w.tier >= 2) { ui.text(G.wName(w), 24, 225, { size: 8.5, bold: true }); ui.text('Đã ở bậc cao nhất.', 24, 240, { size: 8 }); }
-      else {
-        const cost = G.TIER_UP[w.tier + 1];
-        ui.text(G.wName(w) + ' · bậc ' + G.TIERS[w.tier].name + ' lên ' + G.TIERS[w.tier + 1].name + ' (sát thương gốc +20%)', 24, 225, { size: 8.5, bold: true });
-        ui.text('Tốn: ' + costText(cost), 24, 240, { size: 8, color: canPay(cost) ? '#d9cdb8' : '#ff9a5a' });
-        if (ui.btn(372, 218, 84, 34, 'Nâng bậc', { size: 10, disabled: !canPay(cost) })) {
-          pay(cost); w.tier++;
-          if (w.tier === 2 && !w.affix) w.affix = G.pick(Object.keys(G.AFFIX));
-          if (G.wStage(w) === 3 && !w.name) G.addMarks(w, w.branch, 0.001);
-          G.persist(); G.sfx('evolve');
+      const R4 = G.RARITY, xm = (m) => 'x' + String(m).replace('.', ',');
+      const raise = (to, gold) => { // lên một nấc: giữ nguyên dấu ấn và tiến hóa, bù dòng phụ cho đủ theo bậc mới
+        w.rarity = to; if (to === 3) w.gold = gold;
+        G.fitAffixes(w);
+        if (G.wStage(w) === 3 && !w.named) G.addMarks(w, w.branch, 0.001);
+        G.persist(); G.sfx('evolve');
+      };
+      if (!w) {
+        ui.text('Bốn bậc: ' + R4.map((q) => q.name + ' ' + xm(q.mult)).join(' → ') + '. Nâng bậc không mất dấu ấn và tiến hóa.', 24, 228, { size: 7.5, color: '#d9cdb8' });
+        ui.text('Thường chỉ tiến hóa tới Thành hình. Lam có 1 dòng phụ, Tím 2, Vàng 2 và 1 dòng mạnh. Lên Vàng cần mảnh trùm vùng.', 24, 244, { size: 7, color: '#d9cdb8' });
+      } else if (G.wRar(w) < 2) {
+        const r = G.wRar(w), cost = G.TIER_UP[r + 1];
+        ui.text(G.wName(w) + ': ' + R4[r].name + ' lên ' + R4[r + 1].name + ' (sát thương gốc ' + xm(R4[r].mult) + ' lên ' + xm(R4[r + 1].mult) + ')', 24, 223, { size: 8, bold: true, color: R4[r + 1].col });
+        ui.text('Thêm 1 dòng phụ' + (r === 0 ? ', tiến hóa được tới Thức tỉnh' : '') + '. Tốn: ' + costText(cost), 24, 236, { size: 7.5, color: canPay(cost) ? '#d9cdb8' : '#ff9a5a' });
+        ui.text('Dấu ấn và tiến hóa được giữ nguyên.', 24, 249, { size: 7, color: '#b8b0a0' });
+        if (ui.btn(372, 218, 84, 34, 'Nâng bậc', { size: 10, disabled: !canPay(cost) })) raise(r + 1, 0);
+      } else {
+        // Nấc cuối lên Vàng: cần mảnh trùm (chỉ trùm vùng rơi). Dùng mảnh trùm vùng nào thì nhận hệ số Vàng của vùng đó.
+        const isGold = G.wRar(w) === 3, opts = [0, 1, 2].filter((k) => !isGold || k > w.gold);
+        if (!opts.length) { ui.text(G.wName(w), 24, 225, { size: 8.5, bold: true, color: R4[3].col }); ui.text('Đã ở bậc cao nhất (Vàng ' + xm(G.wRarMult(w)) + ').', 24, 240, { size: 8 }); }
+        else {
+          ui.text(G.wName(w) + (isGold ? ': luyện Vàng mạnh hơn' : ': Tím lên Vàng, thêm 1 dòng mạnh') + '. Chọn mảnh trùm (mỗi lần 4 mảnh, 2 đá tôi):', 24, 222, { size: 7.5, bold: true, color: R4[3].col });
+          opts.forEach((k, j) => {
+            const cost = G.goldCost(k);
+            if (ui.btn(22 + j * 146, 228, 142, 28, G.REGIONS[k].bossName + ': Vàng ' + xm(G.GOLD_MULT[k]), { size: 8.5, sub: cost.gold + ' vàng, 4 mảnh ' + G.REGIONS[k].bossName, subSize: 6.5, disabled: !canPay(cost), color: '#7a5a12' })) { pay(cost); raise(3, k); }
+          });
         }
       }
     } else if (V.ftab === 'reforge') {
@@ -272,6 +352,7 @@
       if (w && G.weaponLine(w, 16, 66 + slot * 25, 220, false)) {
         G.click = null;
         if (V.sel != null && !sv.carry.includes(V.sel)) { sv.carry[slot] = V.sel; V.sel = null; G.persist(); G.sfx('pick'); }
+        else viewWeapon(w.id, 'gear'); // chưa chọn gì để thay: mở màn xem vũ khí
       }
     });
     ui.text('Rương đồ', 16, 128, { size: 7.5, color: '#d9cdb8' });
@@ -285,7 +366,8 @@
     if (pages > 1 && ui.btn(16, 236, 70, 20, 'Trang ' + (V.page + 1) + '/' + pages, { size: 8 })) V.page = (V.page + 1) % pages;
     const selW = G.weaponById(V.sel);
     if (selW && !sv.carry.includes(selW.id)) {
-      const price = 20 * (selW.tier + 1) + selW.sharpen * 15;
+      const price = [20, 60, 150, 400][G.wRar(selW)] + selW.sharpen * 15;
+      if (ui.btn(92, 236, 52, 20, 'Xem', { size: 8 })) viewWeapon(selW.id, 'gear');
       if (ui.btn(150, 236, 86, 20, 'Bán ' + price + ' vàng', { size: 8, color: '#6a2a22' })) {
         sv.weapons = sv.weapons.filter((w) => w.id !== selW.id);
         sv.gold += price; V.sel = null; G.persist(); G.sfx('pick');
@@ -310,7 +392,7 @@
     ui.text('Máu ' + P.maxhp + ' · Mana ' + P.maxmana + ' · Giảm sát thương ' + Math.round(P.dr * 100) + '%', 246, 190, { size: 7.5 });
     const y2 = ui.para(P.set ? G.SETS[P.set] : 'Mặc mũ và áo của cùng một trùm để có hiệu ứng bộ.', 246, 204, 216, { size: 7.5, color: P.set ? '#9be07a' : '#d9cdb8' });
     // chỉ cách đổi vũ khí đang mang
-    const tip = !stash.length ? '' : selW && !sv.carry.includes(selW.id) ? 'Đã chọn ' + G.wName(selW) + '. Giờ chạm một vũ khí đang mang để thay, hoặc bấm Bán.' : 'Muốn đổi vũ khí đang mang: chạm một vũ khí trong rương đồ để chọn trước.';
+    const tip = !stash.length ? 'Chạm một vũ khí đang mang để xem bậc, dòng phụ và đặc trưng hệ.' : selW && !sv.carry.includes(selW.id) ? 'Đã chọn ' + G.wName(selW) + '. Giờ chạm một vũ khí đang mang để thay, hoặc bấm Xem, Bán.' : 'Chạm vũ khí đang mang để xem. Muốn đổi: chạm một vũ khí trong rương đồ để chọn trước.';
     if (tip) ui.para(tip, 246, Math.max(y2 + 8, 236), 216, { size: 7.5, color: '#ffd27a' });
   }
 
@@ -321,9 +403,13 @@
     G.HKEYS.forEach((k, i) => {
       const H = G.HEROES[k], hs = sv.heroes[k];
       const x = 16 + i * 113;
-      if (ui.btn(x, 54, 108, 34, H.name, { size: 10, disabled: !hs.unlocked, color: sv.hero === k ? '#b5672f' : '#5a4030', sub: hs.unlocked ? 'Cấp ' + hs.lvl + (sv.hero === k ? ' · đang chọn' : '') : H.unlock })) {
+      if (ui.btn(x, 54, 108, 34, '', { disabled: !hs.unlocked, color: sv.hero === k ? '#b5672f' : '#5a4030' })) {
         sv.hero = k; G.persist();
       }
+      // chân dung em bé tinh linh của từng hero; hero đang chọn thì nhún nhảy, chưa mở thì mờ
+      G.art.hero(G.ux, { x: x + 15, y: 85, face: 1, key: k, move: sv.hero === k, t: G.time, atk: -1, dodge: -1, weapon: null, noShadow: true, alpha: hs.unlocked ? null : 0.4 });
+      ui.text(H.name, x + 66, 68, { size: 10, bold: true, align: 'center', color: hs.unlocked ? '#fff3da' : '#8a7f74' });
+      ui.text(hs.unlocked ? 'Cấp ' + hs.lvl + (sv.hero === k ? ' · đang chọn' : '') : H.unlock, x + 66, 80, { size: 7, align: 'center', color: hs.unlocked ? '#f0d9b0' : '#8a7f74' });
     });
     const k = sv.hero, H = G.HEROES[k], hs = sv.heroes[k];
     ui.text(H.name + ' · cấp ' + hs.lvl, 16, 104, { size: 10, bold: true, color: '#ffd27a' });
@@ -366,14 +452,19 @@
       ['Ba hệ', G.HINTS[4] + ' ' + G.HINTS[5]],
       ['Trùm học theo bạn', G.HINTS[2] + ' ' + G.HINTS[3]],
       ['Vật trong phòng', 'Chậu than, nấm độc và tinh thể băng phát nổ khi bị đánh, gây hiệu ứng lên quái đứng gần. Đây là cách gây hệ khi vũ khí còn trắng.'],
+    ], [
+      ['Bốn bậc màu', 'Thường (sát thương x1, tiến hóa tới Thành hình), Lam (x1,15, có 1 dòng phụ), Tím (x1,3, có 2 dòng phụ), Vàng (x1,5 trở lên, 2 dòng phụ và 1 dòng mạnh riêng). Từ Lam trở lên tiến hóa được tới Thức tỉnh.'],
+      ['Nguồn vũ khí', 'Rương và quái tinh anh rơi vũ khí bậc ngẫu nhiên, cao nhất là Tím; vùng sau dễ ra bậc cao hơn. Trùm vùng lần đầu bị hạ chắc chắn rơi một vũ khí Vàng. Lò rèn nâng bậc từng nấc mà không mất tiến hóa; nấc lên Vàng cần mảnh trùm.'],
+      ['Đặc trưng hệ theo cấp', 'Trắng: chỉ có chỉ số. Mầm: có tỉ lệ gây cháy, độc, chậm nhưng chưa có luật hệ. Thành hình: mở đặc trưng 1, thứ để lại trên sân (vệt cháy, vũng độc, gai băng). Thức tỉnh: mở đặc trưng 2, phản ứng dây chuyền (nổ lan, lây độc, băng vỡ).'],
+      ['Xem vũ khí', 'Ở làng, chạm một vũ khí đang mang để xem bậc, dòng phụ và các đặc trưng đã mở, sắp mở.'],
     ]];
     V.page = G.clamp(V.page, 0, pages.length - 1);
     for (const l of pages[V.page]) {
       ui.text(l[0], 18, y, { size: 8.5, bold: true, color: '#ffd27a' });
       y = ui.para(l[1], 18, y + 11, 440, { size: 7.5, color: '#e8dfcc' }) + 7;
     }
-    if (ui.btn(18, 238, 150, 22, V.page === 0 ? 'Xem tiếp: dấu ấn và hệ →' : '← Xem lại: cách điều khiển', { size: 8 })) V.page = 1 - V.page;
-    ui.text('Trang ' + (V.page + 1) + '/2', 178, 252, { size: 7.5, color: '#d9cdb8' });
+    if (ui.btn(18, 238, 150, 22, ['Xem tiếp: dấu ấn và hệ →', 'Xem tiếp: bậc và đặc trưng →', '← Xem lại: cách điều khiển'][V.page], { size: 8 })) V.page = (V.page + 1) % pages.length;
+    ui.text('Trang ' + (V.page + 1) + '/' + pages.length, 178, 252, { size: 7.5, color: '#d9cdb8' });
   }
   function settings() {
     const sv = G.save;
@@ -397,7 +488,7 @@
     update(dt) {
       if (V.msgT > 0) V.msgT -= dt;
       // Esc: huỷ câu hỏi xoá, hoặc quay về màn hình làng
-      if (G.keyP.Escape) { if (V.confirm) V.confirm = false; else if (V.tab !== 'hub') goHub(); }
+      if (G.keyP.Escape) { if (V.confirm) V.confirm = false; else if (V.tab === 'weapon' && V.back !== 'hub') V.tab = V.back; else if (V.tab !== 'hub') goHub(); }
     },
     draw() {
       drawScene();
@@ -408,6 +499,7 @@
       else if (V.tab === 'gear') gear();
       else if (V.tab === 'hero') hero();
       else if (V.tab === 'help') help();
+      else if (V.tab === 'weapon') weaponView();
       else settings();
       if (V.msgT > 0) { ui.rect(120, 246, 240, 18, 'rgba(10,8,6,0.9)', '#ffd27a'); ui.text(V.msg, 240, 258, { size: 8, align: 'center' }); }
     },
@@ -422,7 +514,7 @@
       V.tab = 'title';
       drawScene();
       c.save(); c.translate(240, 236); c.scale(3, 3);
-      A.hero(c, { x: 0, y: 0, face: 1, key: 'smith', move: false, t: G.time, atk: (G.time % 1.6) < 0.4 ? (G.time % 1.6) / 0.4 : -1, dodge: -1, weapon: { type: 'sword', tier: 0, marks: { fire: 300, poison: 0, ice: 0 }, branch: 'fire', sharpen: 0 } });
+      A.hero(c, { x: 0, y: 0, face: 1, key: 'smith', move: false, t: G.time, atk: (G.time % 1.6) < 0.4 ? (G.time % 1.6) / 0.4 : -1, dodge: -1, weapon: { type: 'sword', family: 0, rarity: 3, marks: { fire: 300, poison: 0, ice: 0 }, branch: 'fire', sharpen: 0 } });
       c.restore();
       ui.rect(0, 0, 480, 270, 'rgba(10,6,8,0.35)');
       ui.text('LINH KHÍ', 240, 78, { size: 40, bold: true, align: 'center', color: '#ffd27a' });

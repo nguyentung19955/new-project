@@ -158,12 +158,33 @@
 
   // ---------- lưu game ----------
   const KEY = 'linhkhi_save_v1';
-  G.newWeapon = function (save, type, tier) {
+  // Trường "tier" cũ là tên khác của "rarity": đọc và ghi w.tier vẫn chạy, nhưng bản lưu chỉ ghi rarity.
+  G.linkTier = function (w) {
+    delete w.tier;
+    Object.defineProperty(w, 'tier', { get() { return this.rarity; }, set(v) { this.rarity = v; }, enumerable: false, configurable: true });
+    return w;
+  };
+  // Cho đủ số dòng phụ và dòng mạnh theo bậc. pick(danh sách) chọn một dòng; không truyền thì chọn ngẫu nhiên.
+  G.fitAffixes = function (w, pick) {
+    const R = G.RARITY[w.rarity], keys = Object.keys(G.AFFIX);
+    pick = pick || G.pick;
+    w.affixes = (w.affixes || []).filter((k, i, a) => G.AFFIX[k] && a.indexOf(k) === i).slice(0, R.affixes);
+    while (w.affixes.length < R.affixes) w.affixes.push(pick(keys.filter((k) => !w.affixes.includes(k))));
+    if (!R.power) { w.power = null; w.gold = 0; } else if (!G.POWER[w.power]) w.power = pick(Object.keys(G.POWER));
+    return w;
+  };
+  // o: { family: dòng 0..9 (không truyền thì ngẫu nhiên), gold: vùng của vũ khí Vàng 0..2 }
+  G.newWeapon = function (save, type, rarity, o) {
+    o = o || {};
     const w = {
-      id: save.nextId++, type, tier, marks: { fire: 0, poison: 0, ice: 0 }, branch: null,
-      sharpen: 0, name: null, kills: 0, bossKills: {}, affix: null,
+      id: save.nextId++, type, family: o.family != null ? o.family : Math.floor(G.rnd() * G.FAMILIES) % G.FAMILIES,
+      rarity: G.clamp(rarity | 0, 0, G.RARITY.length - 1), gold: 0,
+      marks: { fire: 0, poison: 0, ice: 0 }, branch: null,
+      sharpen: 0, name: null, title: '', kills: 0, bossKills: {}, affixes: [], power: null,
     };
-    if (tier === 2) w.affix = G.pick(Object.keys(G.AFFIX));
+    if (w.rarity === 3) w.gold = G.clamp(o.gold | 0, 0, G.GOLD_MULT.length - 1);
+    G.linkTier(w);
+    G.fitAffixes(w);
     save.weapons.push(w);
     return w;
   };
@@ -172,11 +193,11 @@
       v: 1, gold: 0, ore: 0, stones: 0, mats: [0, 0, 0], shards: [0, 0, 0], forge: 1,
       heroes: {}, hero: 'smith', weapons: [], nextId: 1, carry: [null, null],
       owned: { helm: [], armor: [], charm: [] }, helm: null, armor: null, charm: null,
-      stars: {}, stars2: {}, scars: {}, tut: {}, sound: true, wins: 0,
+      stars: {}, stars2: {}, scars: {}, tut: {}, sound: true, wins: 0, bossGold: {},
     };
     for (const k of G.HKEYS) s.heroes[k] = { unlocked: k === 'smith', lvl: 1, xp: 0, sk: { atk: 0, def: 0, elem: 0 } };
-    s.carry[0] = G.newWeapon(s, 'sword', 0).id;
-    s.carry[1] = G.newWeapon(s, 'bow', 0).id;
+    s.carry[0] = G.newWeapon(s, 'sword', 0, { family: 0 }).id; // Kiếm Rèn
+    s.carry[1] = G.newWeapon(s, 'bow', 0, { family: 3 }).id;   // Cung Tre
     return s;
   };
   G.loadSave = function () {
@@ -219,20 +240,34 @@
       s.weapons = (Array.isArray(s.weapons) ? s.weapons : []).filter((w) => {
         if (!w || typeof w !== 'object' || !G.WTYPES[w.type] || typeof w.id !== 'number' || seen[w.id]) return false;
         seen[w.id] = true;
-        w.tier = G.clamp(Math.floor(num(w.tier, 0)), 0, G.TIERS.length - 1);
+        // Bản lưu cũ chỉ có tier (Sắt, Bạc, Linh): chuyển thành rarity (Thường, Lam, Tím). Bản mới đã có rarity.
+        w.rarity = G.clamp(Math.floor(num(w.rarity != null ? w.rarity : w.tier, 0)), 0, G.RARITY.length - 1);
+        G.linkTier(w);
+        // Dòng vũ khí: bản lưu cũ chưa có thì gán theo quy tắc cố định là số thứ tự của món chia 10 lấy dư.
+        w.family = Number.isInteger(w.family) && w.family >= 0 && w.family < G.FAMILIES ? w.family : ((Math.floor(w.id) % G.FAMILIES) + G.FAMILIES) % G.FAMILIES;
+        w.gold = w.rarity === 3 ? G.clamp(Math.floor(num(w.gold, 0)), 0, G.GOLD_MULT.length - 1) : 0;
         const m = obj(w.marks);
         w.marks = { fire: Math.max(0, num(m.fire, 0)), poison: Math.max(0, num(m.poison, 0)), ice: Math.max(0, num(m.ice, 0)) };
         w.branch = G.ELS.includes(w.branch) ? w.branch : null;
         w.sharpen = G.clamp(Math.floor(num(w.sharpen, 0)), 0, 10);
-        w.name = typeof w.name === 'string' ? w.name : null;
+        // Tên nay lấy theo hình (G.weaponArt.name); chỉ giữ lại danh hiệu phía sau dấu phẩy của tên cũ.
+        if (typeof w.title !== 'string') w.title = typeof w.name === 'string' && w.name.indexOf(', ') > 0 ? w.name.slice(w.name.indexOf(', ')) : '';
+        w.name = null;
         w.kills = Math.max(0, num(w.kills, 0));
         w.bossKills = obj(w.bossKills);
-        w.affix = G.AFFIX[w.affix] ? w.affix : null;
+        // Dòng phụ: dòng cũ (affix) được giữ; thiếu thì bù theo số thứ tự của món để lần nào nạp cũng ra như nhau.
+        const af = Array.isArray(w.affixes) ? w.affixes.slice() : [];
+        if (G.AFFIX[w.affix] && !af.includes(w.affix)) af.unshift(w.affix);
+        delete w.affix;
+        w.affixes = af;
+        let n = Math.floor(w.id);
+        G.fitAffixes(w, (list) => list[Math.abs(n++) % list.length]);
         return true;
       });
       s.nextId = Math.max(Math.floor(num(s.nextId, 1)), 1, ...s.weapons.map((w) => w.id + 1));
-      if (!s.weapons.length) G.newWeapon(s, 'sword', 0);
-      if (s.weapons.length < 2) G.newWeapon(s, 'bow', 0);
+      if (!s.weapons.length) G.newWeapon(s, 'sword', 0, { family: 0 });
+      if (s.weapons.length < 2) G.newWeapon(s, 'bow', 0, { family: 3 });
+      s.bossGold = obj(s.bossGold); // trùm vùng nào đã rơi vũ khí Vàng lần đầu
       const has = (id) => s.weapons.some((w) => w.id === id);
       const c = Array.isArray(s.carry) ? s.carry.slice(0, 2) : [];
       for (let i = 0; i < 2; i++) {

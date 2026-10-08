@@ -32,10 +32,11 @@
     spear: {
       gap: 0.45,
       chain: [
-        { name: 'Đâm', dur: 0.34, mult: 0.85, reach: 54, depth: 12 },
-        { name: 'Đâm', dur: 0.3, mult: 0.85, reach: 54, depth: 12 },
-        { name: 'Đâm', dur: 0.3, mult: 0.85, reach: 56, depth: 12 },
-        { name: 'Quét vòng', dur: 0.5, mult: 1.5, r: 40, push: 8, heavy: true, sweep: true, finish: 1 },
+        // Ghép: giáo sống dài gần 60 điểm ảnh nên tầm đâm nới từ 54-56 lên 60-62, vòng quét từ 40 lên 44 cho khớp hình.
+        { name: 'Đâm', dur: 0.34, mult: 0.85, reach: 60, depth: 12 },
+        { name: 'Đâm', dur: 0.3, mult: 0.85, reach: 60, depth: 12 },
+        { name: 'Đâm', dur: 0.3, mult: 0.85, reach: 62, depth: 12 },
+        { name: 'Quét vòng', dur: 0.5, mult: 1.5, r: 44, push: 8, heavy: true, sweep: true, finish: 1 },
       ],
       // giữ rồi thả: lao một đoạn ngắn xuyên qua quái (đòn Đặc biệt "Lao tới" thì dài hơn và làm choáng)
       charge: { name: 'Xốc tới', time: 0.5, min: 0.3, slow: 0.6, len0: 30, len1: 58, t: 0.16, mult0: 1.0, mult1: 2.2, depth: 12 },
@@ -96,7 +97,7 @@
   }
   M.state = st;
   function cancel(mv) { mv.holding = false; mv.charge = 0; mv.level = 0; mv.chargeT = 0; mv.fullT = 0; }
-  const reachOf = (w, r) => r * (w.affix === 'reach' ? 1.15 : 1);
+  const reachOf = (w, r) => r * (G.wHas(w, 'reach') ? 1.15 : 1);
   // Mức hiệu ứng hệ của vũ khí: null nếu đòn đang không mang hệ. lv 1..3 theo mốc Mầm, Thành hình, Thức tỉnh.
   function heOf(P, w) {
     const el = G.activeEl(P, w);
@@ -159,7 +160,7 @@
   }
   function gain(P, w, n) {
     if (n <= 0) return;
-    P.mana = Math.min(P.maxmana, P.mana + P.manaHit + (w.affix === 'mana' ? 1 : 0));
+    P.mana = Math.min(P.maxmana, P.mana + P.manaHit + (G.wHas(w, 'mana') ? 1 : 0));
     G.sfx('hit');
   }
   // Đánh mọi quái trong hộp trước mặt. Trả về danh sách quái trúng đòn.

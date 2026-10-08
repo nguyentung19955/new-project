@@ -4,9 +4,31 @@
   let S = null;
   G.getRun = () => S;
 
-  G.giveWeapon = function (type, tier) {
-    if (G.save.weapons.length >= 12) { G.save.gold += 30 * (tier + 1); return null; }
-    return G.newWeapon(G.save, type, tier);
+  // o: { family, gold } như G.newWeapon. Rương đồ đầy (12 món) thì đổi thành vàng, trừ vũ khí Vàng luôn được giữ.
+  G.giveWeapon = function (type, tier, o) {
+    if (G.save.weapons.length >= 12 && tier < 3) { G.save.gold += 30 * (tier + 1); return null; }
+    return G.newWeapon(G.save, type, tier, o);
+  };
+  // Bậc của vũ khí rơi từ rương và tinh anh ở vùng r: đa số Thường, cao nhất Tím, vùng sau tỉ lệ tốt hơn.
+  G.rollRarity = function (r) {
+    const t = G.DROP.table[G.clamp(r | 0, 0, G.DROP.table.length - 1)], x = G.rnd();
+    return x < t[0] ? 0 : x < t[0] + t[1] ? 1 : 2;
+  };
+  // Vũ khí rơi của trùm vùng r: lần đầu hạ chắc chắn Vàng, đánh lại thì 12% Vàng, còn lại Tím.
+  G.bossDrop = function (r) {
+    const sv = G.save, key = G.REGIONS[r].boss, first = !sv.bossGold[key];
+    const gold = first || G.rnd() < G.DROP.bossAgain;
+    sv.bossGold[key] = true;
+    return G.giveWeapon(G.pick(G.WKEYS), gold ? 3 : 2, { gold: r });
+  };
+  const rarName = (w) => G.wName(w) + ' (' + G.RARITY[G.wRar(w)].name + ')';
+  // Tinh anh gục: có thể rơi một vũ khí bậc ngẫu nhiên (combat.js gọi).
+  G.onEliteDown = function (e) {
+    if (!S || !S.W || G.rnd() >= G.DROP.elite) return;
+    const w = G.giveWeapon(G.pick(G.WKEYS), G.rollRarity(S.r));
+    if (!w) { S.got.push('vàng (rương đồ đầy)'); return; }
+    S.got.push({ s: rarName(w), w });
+    S.W.banner = { s: 'Tinh anh rơi ' + rarName(w), col: G.RARITY[G.wRar(w)].col, t: 3 };
   };
   G.addXp = function (key, xp) {
     const hs = G.save.heroes[key];
@@ -172,10 +194,11 @@
   }
 
   function chestOptions() {
-    const tier = S.challengeChest ? Math.min(2, (S.r >= 1 ? 1 : 0) + 1) : S.r >= 1 && G.rnd() < 0.6 ? 1 : G.rnd() < 0.15 ? 1 : 0;
-    const type = G.pick(G.WKEYS);
+    const tier = G.rollRarity(S.r);
+    const type = G.pick(G.WKEYS), family = Math.floor(G.rnd() * G.FAMILIES) % G.FAMILIES;
+    const look = { type, family, rarity: tier, marks: { fire: 0, poison: 0, ice: 0 }, branch: null, sharpen: 0 };
     return [
-      { kind: 'weapon', type, tier, label: G.WTYPES[type].name + ' ' + G.TIERS[tier].name, sub: 'Vũ khí mới, cất vào rương đồ' },
+      { kind: 'weapon', type, tier, family, look, label: G.wName(look), sub: 'Bậc ' + G.RARITY[tier].name + '. Vũ khí mới, cất vào rương đồ' },
       { kind: 'ore', n: 5 + S.r * 3, label: (5 + S.r * 3) + ' quặng', sub: 'Dùng để mài vũ khí ở lò rèn' },
       { kind: 'charm', el: S.tut ? 'fire' : G.pick(G.ELS), label: '', sub: 'Phủ hệ lên cả hai vũ khí trong 60 giây' },
     ].map((o) => { if (o.kind === 'charm') o.label = 'Bùa ' + G.EL[o.el].name; return o; });
@@ -224,12 +247,10 @@
       R.lines.push('+' + xp + ' kinh nghiệm', '+' + gold + ' vàng', '+' + ore + ' quặng', '+' + mat + ' ' + reg.mat.toLowerCase());
       if (big) { const ns = S.diff ? 4 : 3; sv.shards[S.r] += ns; R.lines.push('+' + ns + ' mảnh ' + reg.bossName); }
       if ((R.stars === 3 && prev < 3) || (!big && G.rnd() < 0.15)) { sv.stones++; R.lines.push('+1 đá tôi'); }
-      let wdrop = null;
-      if (big) wdrop = [G.pick(G.WKEYS), G.rnd() < 0.35 ? 2 : 1];
-      else if (G.rnd() < 0.5) wdrop = [G.pick(G.WKEYS), S.r >= 1 ? (G.rnd() < 0.6 ? 1 : 0) : G.rnd() < 0.25 ? 1 : 0];
-      if (wdrop) {
-        const nw = G.giveWeapon(wdrop[0], wdrop[1]);
-        R.lines.push(nw ? 'Nhặt được ' + G.wName(nw) : 'Rương đồ đầy, vũ khí rớt đổi thành vàng');
+      // Vũ khí rơi: trùm vùng theo G.bossDrop (lần đầu chắc chắn Vàng); ải thường thì 50% một món bậc ngẫu nhiên.
+      if (big || G.rnd() < G.DROP.stage) {
+        const nw = big ? G.bossDrop(S.r) : G.giveWeapon(G.pick(G.WKEYS), G.rollRarity(S.r));
+        R.lines.push(nw ? { s: (big ? reg.bossName + ' rơi ' : 'Nhặt được ') + rarName(nw), w: nw } : 'Rương đồ đầy, vũ khí rớt đổi thành vàng');
       }
       if (S.loot.charm) {
         const left = Object.keys(G.GEAR.charm).filter((k) => !sv.owned.charm.includes(k));
@@ -252,7 +273,7 @@
     }
     if (S.marks > 0) R.lines.push('Vũ khí nhận ' + Math.round(S.marks) + ' dấu ấn');
     if (R.up) R.lines.push(G.HEROES[sv.hero].name + ' lên cấp ' + sv.heroes[sv.hero].lvl + '!');
-    for (const g of S.got) R.lines.push('Trong ải: ' + g);
+    for (const g of S.got) R.lines.push(g.w ? { s: 'Trong ải: ' + g.s, w: g.w } : 'Trong ải: ' + g);
     S.result = R;
     S.mode = win ? 'result' : 'dead';
     G.persist();
@@ -380,7 +401,7 @@
       return { frac: w.marks[top] / G.MARKS[0], col: w.marks[top] > 0 ? G.EL[top].col : '#666', txt: w.marks[top] > 0 ? G.EL[top].name + ' ' + Math.floor(w.marks[top]) + '/' + G.MARKS[0] : 'Chưa có dấu ấn' };
     }
     const st = G.wStage(w), m = w.marks[w.branch];
-    const cap = G.TIERS[w.tier].maxStage;
+    const cap = G.RARITY[G.wRar(w)].maxStage;
     if (st >= cap) return { frac: 1, col: G.EL[w.branch].col, txt: G.EL[w.branch].name + ' · ' + G.STAGE_NAMES[st] + ' (tối đa)' };
     return { frac: (m - (st ? G.MARKS[st - 1] : 0)) / (G.MARKS[st] - (st ? G.MARKS[st - 1] : 0)), col: G.EL[w.branch].col, txt: G.EL[w.branch].name + ' · ' + G.STAGE_NAMES[st] + ' ' + Math.floor(m) + '/' + G.MARKS[st] };
   }
@@ -393,10 +414,11 @@
     ui.text(Math.ceil(P.hp) + '/' + P.maxhp, 62, 12, { size: 6.5, align: 'center', bold: true });
     ui.bar(6, 15, 112, 5, P.mana / P.maxmana, '#3f8be0');
     const canDrink = P.potions > 0 && !W.noPotion;
-    ui.rect(POT[0], POT[1], POT[2], POT[3], canDrink ? 'rgba(160,40,30,0.85)' : 'rgba(40,36,32,0.8)', canDrink ? '#e2b36a' : '#6a5a4a');
-    ui.text(W.noPotion ? 'Bình: cấm' : 'Bình máu ×' + P.potions, POT[0] + POT[2] / 2, POT[1] + 13.5, { size: 7, align: 'center', bold: true, color: canDrink ? '#fff3da' : '#a89c8c' });
-    ui.rect(PAU[0], PAU[1], PAU[2], PAU[3], 'rgba(40,36,32,0.8)', '#e2b36a');
-    ui.text('Dừng', PAU[0] + PAU[2] / 2, PAU[1] + 13.5, { size: 7, align: 'center', bold: true });
+    const BA = G.btnArt; // bộ nút riêng (js/btn_art.js)
+    const heldBox = (b) => [...G.pointers.values()].some((p) => p.role === 'ui' && hitBox({ x: p.sx, y: p.sy }, b));
+    BA.draw(c, 'potion', POT[0] + 13, POT[1] + 11, 11, { count: P.potions, disabled: !canDrink, pressed: heldBox(POT) });
+    ui.text(W.noPotion ? 'Cấm' : 'Bình máu', POT[0] + 28, POT[1] + 14, { size: 6.5, bold: true, color: canDrink ? '#fff3da' : '#a89c8c' });
+    BA.draw(c, 'pause', PAU[0] + PAU[2] / 2 + 6, PAU[1] + 11, 10, { pressed: heldBox(PAU) });
     let sx = 6;
     for (const k of G.ELS) if (P.st[k] > 0) { ui.rect(sx, 48, 10, 10, G.EL[k].col, '#000'); sx += 12; }
     const cw = G.curW(P), coat = P.coats[cw.id];
@@ -413,12 +435,15 @@
     // vũ khí: hình và bậc ở trên, mốc tiến hóa ở dưới, thanh dấu ấn sát đáy
     P.weapons.forEach((w, i) => {
       const x = 368 + i * 56, on = i === P.cur;
-      ui.rect(x, 3, 54, 35, on ? 'rgba(90,60,30,0.9)' : 'rgba(30,26,22,0.75)', on ? '#ffd27a' : '#6a5a4a');
-      c.save(); c.translate(x + 12, 13);
-      G.art.weaponIcon(c, Object.assign({}, w, { coat: P.coats[w.id] && P.coats[w.id].t > 0 ? P.coats[w.id].el : null }), 0, 0);
-      c.restore();
+      // Khung ô vũ khí cùng bộ với nút, viền mang màu bậc. Hình vũ khí sống và chữ do game vẽ ở các dòng dưới.
+      const rar = G.RARITY[G.wRar(w)];
+      BA.slot(c, x, 3, 54, 35, {
+        weapon: { type: w.type, branch: G.activeEl(P, w), stage: G.wStage(w), rarity: G.wRar(w) },
+        active: on, cd: on ? 0 : P.swapCd / 1.5, icon: false, gem: false, id: 'slot' + i,
+      });
+      G.art.weaponIcon(c, Object.assign({}, w, { coat: P.coats[w.id] && P.coats[w.id].t > 0 ? P.coats[w.id].el : null }), x + 14, 14, 22, on ? (P.atkT > 0 ? 'attack' : 'idle') : 'sleep');
       const mi = markInfo(w);
-      ui.text(G.TIERS[w.tier].name + (w.sharpen ? ' +' + w.sharpen : ''), x + 51, 14, { size: 7, align: 'right', bold: on, color: on ? '#fff3da' : '#b8b0a0' });
+      ui.text(rar.name + (w.sharpen ? ' +' + w.sharpen : ''), x + 51, 14, { size: 7, align: 'right', bold: on, color: rar.col });
       ui.text(G.STAGE_NAMES[G.wStage(w)], x + 27, 29.5, { size: 6.5, align: 'center', color: w.branch ? G.EL[w.branch].col : '#b8b0a0' });
       ui.bar(x + 3, 32.5, 48, 3, mi.frac, mi.col);
     });
@@ -486,23 +511,43 @@
     // nút cảm ứng
     if (S.mode === 'play') {
       const joy = [...G.pointers.values()].find((p) => p.role === 'joy');
+      let jdx = 0, jdy = 0;
       if (joy) {
-        ui.circle(joy.sx, joy.sy, 24, 'rgba(255,255,255,0.08)', 'rgba(255,255,255,0.35)');
-        const dx = G.clamp(joy.x - joy.sx, -24, 24), dy = G.clamp(joy.y - joy.sy, -24, 24);
-        ui.circle(joy.sx + dx, joy.sy + dy, 11, 'rgba(255,255,255,0.35)');
-      } else {
-        ui.circle(62 - G.cx * 0.6, 216 + G.cy, 24, 'rgba(255,255,255,0.05)', 'rgba(255,255,255,0.22)');
-        ui.circle(62 - G.cx * 0.6, 216 + G.cy, 10, 'rgba(255,255,255,0.14)');
-      }
-      const ready = { atk: true, dodge: P.dodgeCd <= 0, special: P.mana >= P.specCost, skill: P.mana >= 40 && P.skillCd <= 0 };
-      const lab = { atk: 'Đánh', dodge: 'Né', special: 'Đặc biệt', skill: G.HEROES[P.key].skill };
-      const colr = { atk: '200,90,40', dodge: '120,120,120', special: '63,139,224', skill: '160,110,220' };
-      for (const name in BTN) {
-        const bt = btnPos(name);
-        const glow = name === 'atk' && S.near && Math.floor(G.time * 4) % 2; // nhấp nháy khi có vật để bấm
-        ui.circle(bt[0], bt[1], bt[2], 'rgba(' + colr[name] + ',' + (glow ? 0.6 : ready[name] ? 0.3 : 0.1) + ')', 'rgba(255,255,255,' + (ready[name] ? 0.55 : 0.2) + ')');
-        ui.text(lab[name], bt[0], bt[1] + 2.5, { size: name === 'atk' ? 9 : 6.5, align: 'center', bold: true, color: ready[name] ? '#fff' : '#999' });
-      }
+        jdx = joy.x - joy.sx; jdy = joy.y - joy.sy;
+        const jl = Math.hypot(jdx, jdy);
+        if (jl > 24) { jdx *= 24 / jl; jdy *= 24 / jl; }
+        BA.stick(c, joy.sx, joy.sy, 24, jdx, jdy, true);
+      } else BA.stick(c, 62 - G.cx * 0.6, 216 + G.cy, 24, 0, 0, false);
+      const held = (name) => [...G.pointers.values()].some((p) => p.role === name);
+      const cw2 = G.curW(P);
+      // Vũ khí đang cầm: loại, hệ đang có hiệu lực (kể cả lúc đang Nung), mốc tiến hóa, bậc.
+      const wst = { type: cw2.type, branch: G.activeEl(P, cw2), stage: G.wStage(cw2), rarity: G.wRar(cw2) };
+      const showLab = !!S.tut; // chữ tên nút chỉ hiện ở ải hướng dẫn
+      // Mũi tên trên nút Né: theo cần điều khiển hoặc phím; không đẩy thì theo hướng di chuyển gần nhất (đúng hướng sẽ lộn).
+      const kx = (G.keys.ArrowRight || G.keys.KeyD ? 1 : 0) - (G.keys.ArrowLeft || G.keys.KeyA ? 1 : 0) + jdx / 24;
+      const ky = (G.keys.ArrowDown || G.keys.KeyS ? 1 : 0) - (G.keys.ArrowUp || G.keys.KeyW ? 1 : 0) + jdy / 24;
+      const dir = Math.hypot(kx, ky) > 0.18 ? Math.atan2(ky, kx) : P.ldx != null ? Math.atan2(P.ldy, P.ldx) : P.face > 0 ? 0 : Math.PI;
+      // Vòng nạp quanh nút Đánh khi đang giữ để lấy đà (P.mv của js/moves.js). Búa có 2 nấc.
+      const mv = P.mv, chg = mv && mv.holding ? mv.charge : 0, mcfg = G.MOVES && G.MOVES[cw2.type];
+      let bt = btnPos('atk');
+      BA.draw(c, 'atk', bt[0], bt[1], bt[2] + 1, {
+        weapon: wst, pressed: held('atk') || G.keys.KeyJ, glow: !!S.near, label: showLab ? 'Đánh' : null,
+        charge: chg > 0 ? chg : undefined, chargeSteps: mcfg && mcfg.charge ? (mcfg.charge.lv1 != null ? 2 : 1) : 0,
+      });
+      bt = btnPos('special');
+      BA.draw(c, 'special', bt[0], bt[1], bt[2] + 1, {
+        weapon: wst, cost: P.specCost, disabled: P.mana < P.specCost, pressed: held('special'),
+        cd: P.specCd / 0.8, cdSec: P.specCd, label: showLab ? G.WTYPES[cw2.type].special : null, labelAt: 'top',
+      });
+      bt = btnPos('skill');
+      BA.draw(c, 'skill', bt[0], bt[1], bt[2] + 1, {
+        hero: P.key, cost: 40, disabled: P.mana < 40, pressed: held('skill'),
+        cd: P.skillCd / 5, cdSec: P.skillCd, label: showLab ? G.HEROES[P.key].skill : null, labelAt: 'top',
+      });
+      bt = btnPos('dodge');
+      BA.draw(c, 'dodge', bt[0], bt[1], bt[2] + 1, {
+        dir, pressed: held('dodge'), cd: P.dodgeCd / P.dodgeCdMax, cdSec: P.dodgeCd, label: showLab ? 'Né' : null, labelAt: 'top',
+      });
     }
   }
 
@@ -512,23 +557,32 @@
     ui.panel(60, 56, 360, 150, 'Rương báu: chọn một phần thưởng');
     S.opts.forEach((o, i) => {
       const x = 72 + i * 114;
-      if (ui.btn(x, 84, 108, 100, o.label, { sub: '', size: 10 })) {
-        if (o.kind === 'weapon') { const w = G.giveWeapon(o.type, o.tier); S.got.push(w ? G.wName(w) : 'vàng (rương đồ đầy)'); }
+      const isW = o.kind === 'weapon';
+      if (ui.btn(x, 84, 108, 100, isW ? '' : o.label, { sub: '', size: 10 })) {
+        if (isW) { const w = G.giveWeapon(o.type, o.tier, { family: o.family }); S.got.push(w ? { s: rarName(w), w } : 'vàng (rương đồ đầy)'); }
         if (o.kind === 'ore') { G.save.ore += o.n; S.got.push(o.n + ' quặng'); }
         if (o.kind === 'charm') G.addCoat(o.el, 60);
         S.prop.used = true;
         S.mode = 'play';
         G.sfx('pick');
       }
-      ui.para(o.sub, x + 6, 160, 96, { size: 6.5, color: '#f0d9b0' });
+      if (isW) { // hình vũ khí sống trong khung màu bậc, tên mang màu bậc
+        const rar = G.RARITY[o.tier];
+        ui.rect(x + 36, 89, 36, 36, rar.bg, rar.frame);
+        G.art.weaponIcon(G.ux, o.look, x + 54, 107, 30, 'idle');
+        ui.wrap(o.label, 100, 8.5, true).slice(0, 2).forEach((l, k) => ui.text(l, x + 54, 137 + k * 10, { size: 8.5, bold: true, align: 'center', color: rar.col }));
+      }
+      ui.para(o.sub, x + 6, isW ? 162 : 160, 96, { size: 6.5, color: '#f0d9b0' });
     });
   }
   function weaponLine(w, x, y, wd, sel) {
     const mi = markInfo(w);
+    const rar = G.RARITY[G.wRar(w)];
     ui.rect(x, y, wd, 22, sel ? 'rgba(120,80,30,0.9)' : 'rgba(50,42,36,0.9)', sel ? '#ffd27a' : '#6a5a4a');
-    const c = G.ux;
-    c.save(); c.translate(x + 12, y + 11); G.art.weaponIcon(c, w, 0, 0); c.restore();
-    ui.text(G.wName(w), x + 26, y + 9.5, { size: 7.5, bold: true, color: G.TIERS[w.tier].col });
+    // ô hình vũ khí: nền và khung mang màu bậc
+    ui.rect(x + 2, y + 2, 20, 18, rar.bg, rar.frame);
+    G.art.weaponIcon(G.ux, w, x + 12, y + 11, 17);
+    ui.text(G.wName(w), x + 26, y + 9.5, { size: 7.5, bold: true, color: rar.col });
     ui.text(mi.txt, x + 26, y + 18.5, { size: 6.5, color: mi.col });
     return G.click && G.inRect(G.click, x, y, wd, 22);
   }
@@ -622,7 +676,10 @@
     const two = R.lines.length > 8;
     R.lines.slice(0, 16).forEach((l, i) => {
       const cx = two && i >= 8 ? 244 : 86, cy = y + (two && i >= 8 ? i - 8 : i) * 11.5;
-      ui.text(l, cx, cy, { size: 7.5, color: l.includes('lên cấp') || l.includes('Cứu được') ? '#ffd27a' : '#e8dfcc' });
+      if (l.w) { // vũ khí nhận được: hình nhỏ và tên mang màu bậc
+        G.art.weaponIcon(G.ux, l.w, cx + 5, cy - 3, 11);
+        ui.text(l.s, cx + 13, cy, { size: 7.5, bold: true, color: G.RARITY[G.wRar(l.w)].col });
+      } else ui.text(l, cx, cy, { size: 7.5, color: l.includes('lên cấp') || l.includes('Cứu được') ? '#ffd27a' : '#e8dfcc' });
     });
     if (!R.win && !S.quit) ui.para('Mẹo: về làng mài vũ khí ở lò rèn, hoặc chơi lại ải cũ để lên cấp rồi quay lại.', 86, 196, 308, { size: 7.5, color: '#d9cdb8' });
     if (ui.btn(86, 216, 140, 26, 'Về làng')) { S = null; G.setScene(G.Village); return; }

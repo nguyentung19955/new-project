@@ -830,9 +830,12 @@
         return ps;
       }
       case 'dodge': {
-        ps.rot = f * 45; ps.pivot = true; ps.y = -[2, 5, 7, 8, 7, 5, 3, 1][f]; ps.hdy = 1; ps.eyes = 'shut';
+        // Ghép: v là hướng lộn (0..4: chếch lên hẳn, chếch lên, ngang, chếch xuống, xuống hẳn). Thân nghiêng theo hướng lộn,
+        // lộn dọc thì nảy thấp hơn, vũ khí chĩa theo hướng lộn.
+        const tilt = ((v | 0) - 2) * 45, flat = Math.abs(tilt) >= 90 ? 0.4 : Math.abs(tilt) >= 45 ? 0.7 : 1;
+        ps.rot = f * 45 + tilt; ps.pivot = true; ps.y = -Math.round([2, 5, 7, 8, 7, 5, 3, 1][f] * flat); ps.hdy = 1; ps.eyes = 'shut';
         ps.hn = [3, -7]; ps.hf = [-3, -7]; ps.ff = [2, -2]; ps.fb = [-2, -2]; ps.free = false;
-        if (R) ps.w = { x: 4, y: -11, ang: wt === 'bow' ? -90 : 0, pull: 0, front: false, mood: 'attack' };
+        if (R) ps.w = { x: 4, y: -11, ang: wt === 'bow' ? -90 + tilt : tilt, pull: 0, front: false, mood: 'attack' };
         return ps;
       }
       case 'die': {
@@ -857,6 +860,30 @@
         ps.free = false; ps.eyes = 'wide';
         return attach(wt, wt === 'bow' ? { x: 16, y: -17, ang: 0, stand: 1, lean: 20 } : { x: 10 + (f & 1), y: -12, ang: 0, hang: 86 }, ps);
       }
+      // Ghép: đang giữ nút Đánh để lấy đà (P.mv.holding). f: 0..4 là mức đà, v: bit 0 là rung khi đầy, bit 1 là đang bước đi.
+      case 'hold': {
+        if (!R) return ps;
+        const c = f / 4, sh = v & 1 ? 1 : 0, wk = v & 2 ? -1 : 0;
+        ps.free = false; ps.eyes = c >= 1 ? 'wide' : 'open';
+        let k;
+        if (wt === 'bow') k = { x: 16 + 4 * c, y: -17 + wk, ang: -3 * c, pull: Math.max(0.15, c), stand: 1, lean: -14 * c };
+        else if (wt === 'spear') k = { x: 2 - 8 * c - sh, y: -12 + wk, ang: -4 + 6 * c, stand: 1, lean: -8 - 10 * c };
+        else if (wt === 'hammer') k = { x: 3 - 5 * c, y: -14 - 14 * c + wk - sh, ang: -85 - 55 * c, stand: 1, lean: -10 * c };
+        else k = { x: 3, y: -14 + wk, ang: -95 - 30 * c, stand: 1 };
+        k.mood = 'attack';
+        return attach(wt, k, ps);
+      }
+      // Ghép: giáo quét một vòng ngang quanh người (P.mv.kind === 'quet'). Vũ khí bẹt dần theo chiều ngang rồi vòng ra sau lưng.
+      case 'sweep': {
+        if (!R) return ps;
+        const th = ((f + 0.5) / 10) * TAU, cs = Math.cos(th), sn = Math.sin(th);
+        ps.free = false; ps.eyes = 'wide'; ps.rot = Math.round(8 * cs); ps.y = -[0, 1, 2, 2, 1, 0, 1, 2, 1, 0][f];
+        ps.hn = [4 + 3 * cs, -9]; ps.hf = [-3 + 3 * cs, -8];
+        let sx = Math.round(cs * 8) / 8; if (Math.abs(sx) < 0.25) sx = sn >= 0 ? 0.25 : -0.25;
+        ps.w = { x: 3 + 5 * cs, y: -12 + 2 * sn, ang: Math.round(7 * sn), pull: 0, front: sn >= 0, mood: 'attack', sx };
+        ps.hands = sn >= 0 ? [[ps.w.x - 6 * sx, ps.w.y]] : null;
+        return ps;
+      }
       case 'spec':
       case 'atk': {
         if (!R) { ps.hn = [7, -11]; ps.rot = 8; return ps; }
@@ -880,10 +907,21 @@
     const p = o.p, t = (o.t != null ? o.t : G.time) || 0;
     if (o.anim) return [o.anim, o.f | 0, o.v | 0];
     if (p && p.dead) return ['die', Math.min(7, Math.floor((p.deadT || 0) / 0.075)), 0];
-    if (o.dodge >= 0) return ['dodge', Math.min(7, Math.floor(o.dodge * 8)), 0];
+    if (o.dodge >= 0) {
+      // hướng lộn: lấy từ người chơi (ddx, ddy), không có thì lộn ngang
+      let dv = 2;
+      if (p && p.ddx != null) dv = 2 + Math.max(-2, Math.min(2, Math.round(Math.atan2(p.ddy || 0, Math.abs(p.ddx || 0)) / (Math.PI / 4))));
+      return ['dodge', Math.min(7, Math.floor(o.dodge * 8)), dv];
+    }
     if (p && p.dashT > 0) return ['dash', Math.floor(t * 30) % 2, 0];
     if (p && p.specT > 0) return ['spec', Math.min(6, Math.max(0, Math.floor((1 - p.specT / 0.35) * 7))), 0];
     if (p && p.castT > 0) return ['cast', Math.min(7, Math.max(0, Math.floor((1 - p.castT / 0.4) * 8))), 0];
+    const mv = p && p.mv;
+    if (mv && mv.holding && !(o.atk >= 0) && REST[wt]) {
+      const top = mv.charge >= 1;
+      return ['hold', Math.min(4, Math.round(mv.charge * 4)), (top && Math.floor(t * 18) % 2 ? 1 : 0) + (o.move && Math.floor(t * 8) % 2 ? 2 : 0)];
+    }
+    if (o.atk >= 0 && mv && mv.kind === 'quet' && wt === 'spear') return ['sweep', Math.min(9, Math.floor(o.atk * 10)), 0];
     if (o.atk >= 0) {
       const n = ATKN[wt] || 8, combo = p ? Math.max(0, p.comboI | 0) % 3 : Math.floor(t / 1.6) % 3;
       return ['atk', Math.min(n - 1, Math.floor(o.atk * n)), combo];
@@ -924,7 +962,7 @@
       anim: sel[0], f: sel[1], v: sel[2], hands: ps.hands || null, tint: tintK,
       // Thông tin cho vũ khí: điểm cầm (x,y) tính từ chân bé lúc quay phải, góc (độ, 0 là chĩa về trước, âm là chĩa lên),
       // độ kéo dây, trước hay sau bé, tâm trạng.
-      weapon: ps.w ? { type: wt, x: Math.round(ps.w.x), y: Math.round(ps.w.y), ang: Math.round(ps.w.ang), pull: ps.w.pull || 0, front: !!ps.w.front, mood: ps.w.mood || 'idle' } : null,
+      weapon: ps.w ? { type: wt, x: Math.round(ps.w.x), y: Math.round(ps.w.y), ang: Math.round(ps.w.ang), pull: ps.w.pull || 0, front: !!ps.w.front, mood: ps.w.mood || 'idle', sx: ps.w.sx == null ? null : ps.w.sx } : null,
     };
     KCACHE.set(id, fr);
     return fr;
@@ -943,7 +981,13 @@
     const w = o.weapon || {}, lk = wLook(w);
     if (G.weaponArt && typeof G.weaponArt.draw === 'function' && !o.plainWeapon) {
       try {
-        G.weaponArt.draw(c, { type: wp.type, family: lk.el, branch: w.branch || null, stage: lk.stage, rarity: w.tier | 0, mood: wp.mood, t, weapon: w }, wp.x, wp.y, wp.ang, wp.pull);
+        // Ghép: lấy đúng dòng, nhánh, mốc, bậc của món vũ khí. Đang phủ hệ (bùa, Nung) mà chưa có nhánh thì hiện như mốc Mầm của hệ đó.
+        const wo = G.weaponArt.fromWeapon(w, { mood: o.wmood || wp.mood, t });
+        if (w.coat && !wo.branch) { wo.branch = w.coat; wo.stage = 1; }
+        if (wp.sx != null) { // quét vòng: ép bẹt theo chiều ngang quanh điểm cầm
+          c.save(); c.translate(wp.x, wp.y); c.scale(wp.sx, 1);
+          try { G.weaponArt.draw(c, wo, 0, 0, wp.ang, wp.pull); } finally { c.restore(); }
+        } else G.weaponArt.draw(c, wo, wp.x, wp.y, wp.ang, wp.pull);
         return;
       } catch (e) { if (!warnedW) { warnedW = true; if (window.console) console.warn('hero_tinhlinh: G.weaponArt lỗi, dùng hình tạm', e); } }
     }
@@ -969,6 +1013,7 @@
   // Chữ ký giống hệt G.art.hero cũ: (c, o) với o gồm x, y, face, key, move, t, atk, dodge, flash, alpha, weapon, helm, armor, gong, p.
   // Thêm: o.outfit = { hat, robe, back, hand, mask, wing: { kind, level } }.
   let warned = false;
+  const HURT = new WeakMap();
   function hero(c, o) {
     let fr = null;
     try { fr = frame(o); } catch (e) {
@@ -977,6 +1022,12 @@
     const A = G.art;
     if (!fr) { if (A && A.heroOld) return A.heroOld.call(A, c, o); return; }
     const x = Math.round(o.x), y = Math.round(o.y), f = o.face < 0 ? -1 : 1, t = (o.t != null ? o.t : G.time) || 0;
+    // Ghép: vũ khí nhăn mặt khoảng nửa giây sau khi bé trúng đòn; ở làng (o.wmood) thì theo ý nơi gọi.
+    if (o.p && !o.wmood) {
+      if (o.p.hurtT > 0) HURT.set(o.p, t + 0.5);
+      const hu = HURT.get(o.p);
+      if (hu != null && t < hu && hu - t <= 0.5 && !o.p.dead) o.wmood = 'hurt';
+    }
     c.save();
     if (o.alpha != null) c.globalAlpha = c.globalAlpha * o.alpha;
     c.imageSmoothingEnabled = false;

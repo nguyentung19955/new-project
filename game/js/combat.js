@@ -15,25 +15,27 @@
     if (!w || !w.branch) return 0;
     const m = w.marks[w.branch];
     const s = m >= G.MARKS[2] ? 3 : m >= G.MARKS[1] ? 2 : m >= G.MARKS[0] ? 1 : 0;
-    return Math.min(s, G.TIERS[w.tier].maxStage);
+    return Math.min(s, G.RARITY[G.wRar(w)].maxStage);
   };
+  // Bậc 0..3 (Thường, Lam, Tím, Vàng). Bản sao vũ khí hoặc vũ khí dựng tạm chỉ có tier cũ vẫn đọc được.
+  G.wRar = (w) => G.clamp((w.rarity != null ? w.rarity : w.tier) | 0, 0, G.RARITY.length - 1);
+  G.wHas = (w, k) => !!(w && w.affixes && w.affixes.includes(k)); // có dòng phụ k không
+  // Tên hiển thị lấy theo hình (dòng, nhánh, mốc) từ js/weapon_art.js, kèm danh hiệu và cấp mài.
   G.wName = function (w) {
-    const t = G.WTYPES[w.type].name;
-    if (w.name) return w.name + (w.sharpen ? ' +' + w.sharpen : ''); // vũ khí có tên riêng vẫn hiện cấp mài
-    const st = G.wStage(w);
-    return t + ' ' + G.TIERS[w.tier].name + (st ? ' ' + G.EL[w.branch].name : '') + (w.sharpen ? ' +' + w.sharpen : '');
+    const st = G.wStage(w), WA = G.weaponArt;
+    const base = WA ? WA.name(WA.fromWeapon(w)) : G.WTYPES[w.type].name + (st ? ' ' + G.NAME_WORDS[w.branch][st - 1] : '');
+    return base + (w.title || '') + (w.sharpen ? ' +' + w.sharpen : '');
   };
+  // Hệ số bậc: Vàng của vùng sau cao hơn (G.GOLD_MULT).
+  G.wRarMult = (w) => (G.wRar(w) === 3 ? G.GOLD_MULT[w.gold | 0] || G.GOLD_MULT[0] : G.RARITY[G.wRar(w)].mult);
   G.wBase = function (w, lvl) {
-    return G.WTYPES[w.type].dmg * G.TIERS[w.tier].mult * (1 + 0.08 * w.sharpen) * (1 + 0.01 * ((lvl || 1) - 1));
+    return G.WTYPES[w.type].dmg * G.wRarMult(w) * G.STAGE_MULT[G.wStage(w)] * (1 + 0.08 * w.sharpen) * (1 + 0.01 * ((lvl || 1) - 1));
   };
   function nameWeapon(w) {
-    const word = G.pick(G.NAME_WORDS[w.branch]);
-    let title = '';
     // Danh hiệu chỉ tính boss vùng, không tính trùm nhỏ.
     const bk = Object.keys(w.bossKills || {}).filter((k) => G.REGIONS.some((r) => r.bossName === k)).sort((a, b) => w.bossKills[b] - w.bossKills[a])[0];
-    if (bk) title = ', kẻ hạ ' + bk;
-    else if (w.kills >= 1000) title = ', nghìn mạng';
-    w.name = G.WTYPES[w.type].name + ' ' + word + title;
+    w.title = bk ? ', kẻ hạ ' + bk : w.kills >= 1000 ? ', nghìn mạng' : '';
+    w.named = true;
   }
   G.addMarks = function (w, el, n) {
     if (!w || n <= 0) return;
@@ -47,9 +49,11 @@
       const next = G.MARKS[Math.min(2, after)];
       G.sfx('mark', 0.8 + 0.6 * Math.min(1, w.marks[el] / next));
     }
-    if (after === 3 && !w.name) nameWeapon(w);
+    if (after === 3 && !w.named) nameWeapon(w);
     if (after > before) {
-      if (W) W.banner = { s: G.wName(w) + ' đạt mốc ' + G.STAGE_NAMES[after] + '!', col: G.EL[w.branch].col, t: 3.5 };
+      // Lên Thành hình và Thức tỉnh: báo luôn tên đặc trưng hệ vừa mở.
+      const ft = after >= 2 ? G.HE_FEATURES[w.branch][after - 2] : null;
+      if (W) W.banner = { s: G.wName(w) + ' đạt mốc ' + G.STAGE_NAMES[after] + '!' + (ft ? ' Mở đặc trưng: ' + ft.name : ''), col: G.EL[w.branch].col, t: ft ? 4.5 : 3.5, feature: ft ? ft.name : null };
       G.sfx('evolve');
       if (W) FX('evolve', w.branch, after);
     }
@@ -290,18 +294,13 @@
       FX('markOrbs', e);
       if (P.charm === 'c_spirit') P.mana = Math.min(P.maxmana, P.mana + 5);
     }
-    if (e.st.fire > 0) {
-      for (const t of G.targets()) if (t !== e && Math.hypot(t.x - e.x, (t.y - e.y) * 1.5) < 30) G.applyStatus(t, 'fire', e.st.fireDmg * 5);
-    }
-    if (G.moves) G.moves.onKill(e, o, w); // luật riêng của hệ khi quái chết
-    if (w && G.wStage(w) === 3 && w.branch === 'poison' && !e.isBoss) {
-      W.zones.push({ shape: 'circle', x: e.x, y: e.y, r: 22, t: 0, pool: true, team: 'player', el: 'poison', life: 3, tick: 0, src: G.pDamage(P, w) });
-    }
+    if (G.moves) G.moves.onKill(e, o, w); // đặc trưng hệ khi quái chết: Nổ lan, Lây độc (chỉ ở Thức tỉnh)
     P.mana = Math.min(P.maxmana, P.mana + 5);
     if (P.charm === 'c_leech') P.hp = Math.min(P.maxhp, P.hp + P.maxhp * 0.02);
     if (!e.add) {
       W.loot.kills++;
       if (e.role === 'elite' && G.rnd() < 0.25) W.loot.charm = true;
+      if (e.role === 'elite' && G.onEliteDown) G.onEliteDown(e); // tinh anh có thể rơi vũ khí (js/stage.js)
     }
     if (e.isBoss) {
       W.loot.bossDown = true;
@@ -319,7 +318,10 @@
     const P = W.P, w = o.w;
     let d = G.pDamage(P, w) * mult;
     let crit = false;
-    if (G.rnd() < P.crit + (w.affix === 'crit' ? 0.1 : 0)) { d *= 2; crit = true; }
+    if (G.rnd() < P.crit + (G.wHas(w, 'crit') ? 0.1 : 0)) { d *= 2; crit = true; }
+    // dòng mạnh riêng của bậc Vàng
+    if (w.power === 'boss' && (e.isBoss || e.role === 'elite')) d *= 1.2;
+    if (w.power === 'first' && e.hp >= e.maxhp) d *= 2;
     if (G.hasStatus(e)) d *= P.statusBonus;
     if (P.charm === 'c_ember' && e.st.fire > 0) d *= 1.15;
     if (P.key === 'hunter' && (e.st.frozen > 0 || e.st.stun > 0 || e.st.root > 0 || e.exposed > 0)) d *= 1.25;
@@ -335,14 +337,9 @@
       const stage = G.wStage(w);
       const coat = P.coats[w.id] && P.coats[w.id].t > 0;
       let chance = coat ? 1 : G.PROC[stage];
+      if (w.power === 'proc') chance += 0.25;
       if (P.firstHit && P.swapProc) chance = 1;
-      if (G.rnd() < chance) {
-        G.applyStatus(e, el, d, 1);
-        if (stage === 3 && w.branch === el) {
-          if (el === 'ice') { P.hitCount++; if (P.hitCount % 3 === 0) G.applyStatus(e, 'ice', d, 2); }
-          if (el === 'fire') for (const t of G.targets()) if (t !== e && Math.hypot(t.x - e.x, (t.y - e.y) * 1.5) < 30) G.applyStatus(t, 'fire', d);
-        }
-      }
+      if (G.rnd() < chance) G.applyStatus(e, el, d, 1);
     }
     P.firstHit = false;
   }
@@ -394,7 +391,7 @@
 
   function startAttack(P) {
     const w = curW(P), T = G.WTYPES[w.type];
-    const reach = T.ranged ? 320 : T.reach * (w.affix === 'reach' ? 1.15 : 1);
+    const reach = T.ranged ? 320 : T.reach * (G.wHas(w, 'reach') ? 1.15 : 1);
     const tgt = nearest(P, reach + 34, T.ranged ? 44 : 22, false);
     if (tgt && Math.abs(tgt.x - P.x) > 3) P.face = tgt.x > P.x ? 1 : -1;
     P.comboI = G.time - P.lastAtk < T.cd + 0.35 ? (P.comboI + 1) % 3 : 0;
@@ -415,13 +412,13 @@
       if (tgt) vy = G.clamp(((tgt.y - P.y) / Math.max(20, Math.abs(tgt.x - P.x))) * 270, -90, 90);
       W.projs.push({ team: 'player', kind: 'arrow', x: P.x + P.face * 8, y: P.y, vx: P.face * 270, vy, t: 1.3, w, mult: third ? 1.6 : 1, pierce: third ? 3 : 0, big: third, col, seen: [] });
     } else {
-      const reach = T.reach * (w.affix === 'reach' ? 1.15 : 1);
+      const reach = T.reach * (G.wHas(w, 'reach') ? 1.15 : 1);
       hits = meleeBox(P, reach, T.depth, w.type === 'sword' && third ? 1.5 : 1, { w, heavy: third });
       if (!G.noRender) FX('swing', P, { type: w.type, combo: P.comboI, reach, el, stage: G.wStage(w) });
       if (w.type === 'hammer') W.shake = Math.max(W.shake, 0.08);
     }
     if (hits > 0) {
-      P.mana = Math.min(P.maxmana, P.mana + P.manaHit + (w.affix === 'mana' ? 1 : 0));
+      P.mana = Math.min(P.maxmana, P.mana + P.manaHit + (G.wHas(w, 'mana') ? 1 : 0));
       G.sfx('hit');
     }
   }
@@ -576,11 +573,13 @@
         P.y += my * sp * 0.75 * dt;
         P.moving = true;
         if (P.atkT <= 0 && Math.abs(mx) > 0.2) P.face = mx > 0 ? 1 : -1;
+        { const l1 = Math.hypot(mx, my); P.ldx = mx / l1; P.ldy = my / l1; } // nhớ hướng di chuyển gần nhất, để Né khi không đẩy cần
       }
       if (inp.dodgeP && P.dodgeCd <= 0) {
         P.dodgeT = 0.27; P.dodgeCd = 1 * P.dodgeCdMax; P.inv = Math.max(P.inv, 0.32);
         P.atkT = 0;
-        if (ml > 0.12) { P.ddx = mx; P.ddy = my; } else { P.ddx = P.face; P.ddy = 0; }
+        // Không đẩy cần thì lộn theo hướng di chuyển gần nhất; chưa đi bước nào thì mới theo hướng mặt.
+        if (ml > 0.12) { P.ddx = mx; P.ddy = my; } else if (P.ldx != null) { P.ddx = P.ldx; P.ddy = P.ldy; } else { P.ddx = P.face; P.ddy = 0; }
         if (Math.abs(P.ddx) > 0.2) P.face = P.ddx > 0 ? 1 : -1;
         W.stats.dodges++;
         G.sfx('swing', 0.7);
@@ -749,7 +748,7 @@
             o.seen.push(e);
             playerHit(e, o.mult, { w: o.w, ranged: true, heavy: o.big, dir: o.vx < 0 ? -1 : 1 });
             if (G.moves) G.moves.arrowHit(o, e);
-            P.mana = Math.min(P.maxmana, P.mana + P.manaHit + (o.w.affix === 'mana' ? 1 : 0));
+            P.mana = Math.min(P.maxmana, P.mana + P.manaHit + (G.wHas(o.w, 'mana') ? 1 : 0));
             G.sfx('hit', 1.3);
             if (o.pierce > 0) o.pierce--; else { o.t = 0; break; }
           }

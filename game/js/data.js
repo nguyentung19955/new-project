@@ -18,27 +18,70 @@
   G.WTYPES = {
     sword: { name: 'Kiếm', dmg: 10, cd: 0.36, reach: 32, depth: 17, special: 'Chém lướt' },
     bow: { name: 'Cung', dmg: 9, cd: 0.5, ranged: true, special: 'Mưa tên' },
-    spear: { name: 'Giáo', dmg: 11, cd: 0.44, reach: 50, depth: 12, special: 'Lao tới' },
+    spear: { name: 'Giáo', dmg: 11, cd: 0.44, reach: 56, depth: 12, special: 'Lao tới' },
     hammer: { name: 'Búa', dmg: 23, cd: 0.8, reach: 32, depth: 25, stagger: 0.4, special: 'Nện đất' },
   };
   G.WKEYS = ['sword', 'bow', 'spear', 'hammer'];
-  G.TIERS = [
-    { name: 'Sắt', mult: 1, maxStage: 2, col: '#b9c0c9' },
-    { name: 'Bạc', mult: 1.2, maxStage: 3, col: '#e8eef5' },
-    { name: 'Linh', mult: 1.4, maxStage: 3, col: '#ffe9a3' },
+  // BỐN BẬC MÀU của vũ khí (thay ba bậc Sắt, Bạc, Linh cũ). mult: hệ số sát thương gốc; maxStage: mốc tiến hóa cao nhất
+  // (2 là Thành hình, 3 là Thức tỉnh); affixes: số dòng phụ; power: có thêm một dòng mạnh riêng. col: màu chữ, frame: màu khung ô đồ.
+  G.RARITY = [
+    { key: 'thuong', name: 'Thường', mult: 1, maxStage: 2, affixes: 0, power: false, col: '#d6d2c8', frame: '#8f8c86', bg: '#34323a' },
+    { key: 'lam', name: 'Lam', mult: 1.15, maxStage: 3, affixes: 1, power: false, col: '#6fb2ff', frame: '#3f86e8', bg: '#1c2f52' },
+    { key: 'tim', name: 'Tím', mult: 1.3, maxStage: 3, affixes: 2, power: false, col: '#c88cff', frame: '#9a4fe0', bg: '#33204f' },
+    { key: 'vang', name: 'Vàng', mult: 1.5, maxStage: 3, affixes: 2, power: true, col: '#ffd24a', frame: '#f0b020', bg: '#4a3812' },
   ];
+  G.TIERS = G.RARITY; // tên cũ, giữ cho mã và bài kiểm tra cũ
+  // Vũ khí Vàng của vùng sau có sát thương gốc cao hơn: vùng 1 x1,5; vùng 2 x1,6; vùng 3 x1,7 (w.gold = 0, 1, 2).
+  G.GOLD_MULT = [1.5, 1.6, 1.7];
+  G.FAMILIES = 10; // mỗi loại vũ khí có 10 dòng (hình và tên do js/weapon_art.js giữ)
   G.MARKS = [30, 120, 300];
   G.STAGE_NAMES = ['Trắng', 'Mầm', 'Thành hình', 'Thức tỉnh'];
+  // Mỗi mốc tiến hóa tăng nhẹ sát thương gốc.
+  G.STAGE_MULT = [1, 1.04, 1.08, 1.12];
   G.PROC = [0, 0.2, 0.5, 1];
+  // Dòng phụ: bậc Lam có 1, Tím và Vàng có 2.
   G.AFFIX = {
     mana: 'Mỗi đòn trúng hồi thêm 1 mana',
     crit: '10% cơ hội gây gấp đôi sát thương',
     reach: 'Tầm đánh xa hơn 15%',
   };
+  // Dòng mạnh riêng của bậc Vàng (mỗi món có một dòng).
+  G.POWER = {
+    boss: { name: 'Diệt yêu', desc: 'Gây thêm 20% sát thương lên tinh anh và trùm' },
+    proc: { name: 'Thấm hệ', desc: 'Tỉ lệ gây hiệu ứng hệ tăng thêm 25%' },
+    first: { name: 'Mở màn', desc: 'Đòn đầu lên quái còn đầy máu gây gấp đôi sát thương' },
+  };
+  // ĐẶC TRƯNG HỆ THEO CẤP: Trắng chỉ có chỉ số; Mầm có hiệu ứng hệ nhẹ (tỉ lệ G.PROC, vệt chém nhuốm màu) nhưng chưa có luật hệ;
+  // Thành hình mở đặc trưng 1 (thứ để lại trên sân); Thức tỉnh mở đặc trưng 2 (phản ứng dây chuyền).
+  G.HE_FEATURES = {
+    fire: [
+      { name: 'Vệt cháy', desc: 'Nhát kết, đòn giữ rồi thả và đòn Đặc biệt nổ ra, để lại vệt cháy đốt quái đi qua' },
+      { name: 'Nổ lan', desc: 'Quái đang cháy mà chết thì nổ, đốt và làm cháy quái đứng gần' },
+    ],
+    poison: [
+      { name: 'Vũng độc', desc: 'Nhát kết, đòn giữ rồi thả và đòn Đặc biệt để lại vũng độc, quái đứng trong bị thêm tầng Độc' },
+      { name: 'Lây độc', desc: 'Quái đang trúng độc mà chết thì độc lây sang quái bên cạnh' },
+    ],
+    ice: [
+      { name: 'Gai băng', desc: 'Nhát kết, đòn giữ rồi thả và đòn Đặc biệt mọc gai băng trên đất, gây sát thương và làm chậm' },
+      { name: 'Băng vỡ', desc: 'Quái đang đóng băng bị đánh thì lớp băng vỡ, mảnh văng trúng quái quanh đó' },
+    ],
+  };
+  // Mốc tiến hóa st (0..3) của hệ el đã mở những đặc trưng nào: trả về số đặc trưng (0, 1 hoặc 2).
+  G.heFeatures = (st) => (st >= 3 ? 2 : st >= 2 ? 1 : 0);
+  // VŨ KHÍ RƠI. Rương và tinh anh: bậc ngẫu nhiên theo vùng [Thường, Lam, Tím], không bao giờ ra Vàng.
+  // Trùm vùng (ải 5, 10, 15): lần đầu hạ chắc chắn rơi 1 vũ khí Vàng; đánh lại thì 12% Vàng, còn lại Tím.
+  G.DROP = {
+    table: [[0.72, 0.24, 0.04], [0.52, 0.38, 0.10], [0.36, 0.44, 0.20]],
+    elite: 0.35,      // cơ hội tinh anh rơi vũ khí
+    stage: 0.5,       // cơ hội nhận vũ khí khi qua một ải thường (trùm nhỏ)
+    bossAgain: 0.12,  // cơ hội ra Vàng khi đánh lại trùm vùng
+  };
+  // Chữ nối vào tên theo nhánh và mốc (khớp với js/weapon_art.js).
   G.NAME_WORDS = {
-    fire: ['Than Hồng', 'Xích Diệm', 'Tàn Tro'],
-    poison: ['Rêu Xanh', 'Nọc Rừng', 'Gai Độc'],
-    ice: ['Sương Giá', 'Hàn Ngọc', 'Tuyết Trắng'],
+    fire: ['Than Hồng', 'Xích Diệm', 'Hỏa Thần'],
+    poison: ['Rêu Xanh', 'Nọc Rừng', 'Độc Vương'],
+    ice: ['Sương Giá', 'Hàn Ngọc', 'Băng Đế'],
   };
 
   G.HEROES = {
@@ -189,8 +232,15 @@
   };
   G.FORGE_CAP = [0, 3, 6, 10];
   G.FORGE_UP = [null, { gold: 200, mat: [6, 0, 0] }, { gold: 600, mat: [0, 6, 0] }];
-  // Nâng bậc vũ khí (giữ nguyên dấu ấn): chi phí để lên bậc 1 (Bạc) và bậc 2 (Linh)
-  G.TIER_UP = [null, { gold: 200, shard: [1, 0, 0] }, { gold: 500, shard: [0, 1, 0], stones: 1 }];
+  // Nâng bậc vũ khí (giữ nguyên dấu ấn và tiến hóa): chi phí để lên Lam (1) và Tím (2).
+  // Nấc cuối lên Vàng cần mảnh trùm, thứ chỉ trùm vùng rơi: xem G.goldCost.
+  G.TIER_UP = [null, { gold: 150, ore: 4, mat: [6, 0, 0] }, { gold: 450, stones: 1, mat: [0, 8, 0] }, null];
+  // Lên Vàng bằng mảnh của trùm vùng r (0..2); dùng mảnh trùm vùng nào thì nhận sát thương gốc Vàng của vùng đó.
+  G.goldCost = function (r) {
+    const shard = [0, 0, 0];
+    shard[r] = 4;
+    return { gold: 800 + 300 * r, stones: 2, shard };
+  };
 
   G.HINTS = [
     'Kết liễu quái đang dính hiệu ứng thì vũ khí nhận dấu ấn của hệ đó.',
@@ -200,5 +250,7 @@
     'Lửa hợp với bầy quái, Độc hợp với quái trâu và trùm, Băng hợp với quái nhanh.',
     'Lửa gặp Độc gây Nổ khói. Lửa gặp Băng gây Sốc nhiệt.',
     'Hạ trùm bằng hệ khắc chế nó để nhận sao thứ ba.',
+    'Vũ khí có bốn bậc: Thường, Lam, Tím, Vàng. Trùm vùng lần đầu bị hạ chắc chắn rơi một vũ khí Vàng.',
+    'Thành hình mở đặc trưng hệ thứ nhất, Thức tỉnh mở đặc trưng thứ hai. Bậc Thường chỉ lên tới Thành hình.',
   ];
 })();

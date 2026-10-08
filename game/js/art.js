@@ -92,7 +92,7 @@
     const el = w ? (w.coat || (stage > 0 ? w.branch : null)) : null;
     return {
       type: w ? w.type : 'sword', stage,
-      col: el ? G.EL[el].col : w ? G.TIERS[w.tier].col : '#b9c0c9',
+      col: el ? G.EL[el].col : w ? G.RARITY[G.wRar(w)].col : '#b9c0c9',
       col2: el ? G.EL[el].col2 : '#ffffff', el,
     };
   };
@@ -140,7 +140,15 @@
       if (pull) { A.line(c, sx, y0, x0 + 8, y0, '#e8e2d0', 1); p(c, x0 + 8, y0 - 1, 2, 3, look.col); }
     }
   };
-  A.weaponIcon = function (c, w, x, y) {
+  // Biểu tượng vũ khí trong ô đồ, tâm tại (x, y). Có js/weapon_art.js thì dùng hình vũ khí sống (đúng dòng, nhánh, mốc, bậc).
+  A.weaponIcon = function (c, w, x, y, size, mood) {
+    const WA = G.weaponArt;
+    if (WA && w) {
+      const o = WA.fromWeapon(w, { mood: mood || 'calm', t: G.time });
+      if (w.coat && !o.branch) { o.branch = w.coat; o.stage = 1; }
+      WA.icon(c, o, x, y, size || 22);
+      return;
+    }
     c.save();
     c.translate(Math.round(x), Math.round(y));
     const look = A.weaponLook(w);

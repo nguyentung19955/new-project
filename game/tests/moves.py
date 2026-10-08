@@ -114,7 +114,7 @@ JS = r"""
     ok('Cung: tên thường bay tối đa khoảng 215 điểm ảnh (hợp phòng nhỏ)', lost(e) === 0);
 
     // ================= GIÁO =================
-    room('spear'); e = dummy(250); const side = dummy(200, 172), back = dummy(176);
+    room('spear'); e = dummy(256); const side = dummy(200, 172), back = dummy(176);
     const sn = [], sd = [];
     for (let k = 0; k < 4; k++) {
       const h0 = e.hp; tap(); sn.push(P.mv.name + P.mv.step);
@@ -122,7 +122,7 @@ JS = r"""
       sd.push((h0 - e.hp) / base());
     }
     ok('Giáo: bấm liên tiếp ra ba nhát đâm rồi quét vòng', sn.join() === 'Đâm0,Đâm1,Đâm2,Quét vòng3', sn.join());
-    ok('Giáo: đâm xa (trúng quái cách 50 điểm ảnh) 0,85 lần; quét vòng không với tới quái đó', near(sd[0], 0.85, 0.01) && near(sd[2], 0.85, 0.01) && sd[3] === 0, sd.map((x) => x.toFixed(2)).join('/'));
+    ok('Giáo: đâm xa (trúng quái cách 56 điểm ảnh) 0,85 lần; quét vòng không với tới quái đó', near(sd[0], 0.85, 0.01) && near(sd[2], 0.85, 0.01) && sd[3] === 0, sd.map((x) => x.toFixed(2)).join('/'));
     ok('Giáo: đâm hẹp, không trúng quái đứng lệch 18 điểm ảnh theo chiều sâu; quét vòng thì trúng', near(lost(side) / base(), 1.5, 0.01), (lost(side) / base()).toFixed(2));
     ok('Giáo: quét vòng trúng cả quái sau lưng và hất nó ra', near(lost(back) / base(), 1.5, 0.01) && near(back.x, 168, 0.5), (lost(back) / base()).toFixed(2) + ' x=' + back.x);
     room('spear'); const l1 = dummy(225), l2 = dummy(245);

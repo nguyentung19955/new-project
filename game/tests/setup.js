@@ -1,7 +1,7 @@
 // Dựng nhanh một bản lưu để thử, và công cụ đo trong ải. Chỉ dùng khi kiểm tra.
 (function () {
   const G = window.G;
-  // o: { hero, lvl, tier, sharpen, armor, helm, charm, forge, branch, marks, melee, sk }
+  // o: { hero, lvl, tier (bậc 0..3), sharpen, armor, helm, charm, forge, branch, marks, melee, sk, affixes, power, family }
   G.testSave = function (o) {
     o = o || {};
     G.resetSave();
@@ -16,6 +16,8 @@
     sv.weapons = []; sv.nextId = 1;
     const a = G.newWeapon(sv, o.melee || 'sword', o.tier || 0), b = G.newWeapon(sv, 'bow', o.tier || 0);
     for (const w of [a, b]) {
+      // Dòng phụ và dòng mạnh chọn ngẫu nhiên sẽ làm số đo lệch: bài kiểm tra chỉ có khi tự yêu cầu (o.affixes, o.power).
+      w.affixes = (o.affixes || []).slice(); w.power = o.power || null; w.family = o.family || 0;
       w.sharpen = o.sharpen || 0;
       if (o.branch) { w.marks[o.branch] = o.marks == null ? 30 : o.marks; if (w.marks[o.branch] >= G.MARKS[0]) w.branch = o.branch; }
     }
