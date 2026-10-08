@@ -2352,3 +2352,11 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 - **Sửa (js/main.js):** đang kéo tướng thì bỏ qua ngón khác (`if (drag) return`); `pointercancel` của ngón khác không huỷ lần kéo đang dở;
   chạm canvas mà còn sót thùng 🗑 thì gỡ luôn. **js/ui.js `startLevel`:** vào trận mới gọi `hideTrash()` (không mang lớp kẹt sang).
 - **Test:** `tests/cho-tuong/keo-hai-ngon.test.js` (chạm 2 ngón bằng CDP: code cũ FAIL "chợ hiện lại", code mới đạt; mua thẻ được sau đó).
+
+## claude/sua-test-cho — test ổn định khi chạy song song (`node tests/run-all.js --j 6`)
+- Chỉ sửa test, không đụng code game. Thay chờ cố định bằng chờ điều kiện (đọc lại tới khi đúng, có trần thời gian):
+  `icon-nho` (kiểm từng ảnh ic-*.png tải được bằng `Image()` thay vì soi `<img>` đang hiện — thanh máu boss có thể vẽ lại),
+  `mo-ta-ky-nang` (khung mô tả hiện/ẩn, cấp kỹ năng sau bấm; rê lại chuột nếu ô bị dựng lại), `cho-tuong` (chờ ảnh nạp sẵn của chợ
+  tải xong trước mỗi lần ↻; chờ ghép / mua xong), `sua-loi-tester` L07 (chờ hội thoại boss + thông báo "Quái mới" tới 10 giây),
+  `vo-tan` (chờ thông báo "Phó bản đã gộp").
+- `tu-cu-dong`: so FPS ảnh đơn / nhiều khung chỉ kiểm khi chạy riêng; chạy song song (`CHAY_SONG_SONG=1`) thì in tham khảo.

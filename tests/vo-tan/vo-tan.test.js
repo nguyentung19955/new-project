@@ -128,6 +128,8 @@ const txt = (page, sel) => page.evaluate((s) => document.querySelector(s).innerT
   ok(o.kho === 100 + 12 * 40 && o.conv === 1, `quy đổi một lần: 12 sao → +480 Ngân khố (${o.kho})`);
   ok(o.be[0] === 25 && o.be[1] === 40 && o.be[4] === 18, 'đợt xa nhất Phó bản cũ tính vào kỷ lục vô tận (giữ kỷ lục cao hơn)');
   ok(JSON.stringify(o.stars) === JSON.stringify(stars) && o.unlocked === 6, 'dữ liệu sao / ải đã mở vẫn giữ nguyên (không xoá)');
+  // máy bận (chạy song song): chờ thông báo hiện (tối đa 8 giây) thay vì tin 900 ms sau khi mở là đủ
+  await page.waitForFunction(() => /Phó bản đã gộp vào/.test(document.querySelector('#toasts').innerText), null, { timeout: 8000 }).catch(() => {});
   ok(/Phó bản đã gộp vào/.test(await txt(page, '#toasts')), 'báo một lần: Phó bản đã gộp vào Vô tận');
   // trận Phó bản dở trong bản lưu cũ → chơi tiếp thành vô tận
   await page.evaluate(() => { ui.startLevel(1); document.querySelector('[data-act=prep-go]').click(); const r = game.snapshot(); r.endless = false; r.wave = 5; ui.save.run = r; game.started = false; writeSave(ui.save); });

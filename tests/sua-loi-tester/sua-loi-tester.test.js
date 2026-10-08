@@ -172,9 +172,17 @@ const bossWave = (page) => page.evaluate(() => { const g = ui.game; g.wave = 9; 
       const s1 = await page.evaluate(() => ({ dlg: !document.getElementById('dialogue').hidden, toast: [...document.querySelectorAll('#toasts .toast')].some((t) => /Quái mới/.test(t.textContent)) }));
       ok(!s1.dlg && !s1.toast, 'L07 lúc banner đang hiện: chưa có hội thoại / thông báo "Quái mới" chồng lên');
       await page.screenshot({ path: path.join(SHOT, `L07-banner-${tag}.png`) });
-      await sleep(2600);
-      const dl = await rect(page, '#dialogue'), ts = await page.evaluate(() => [...document.querySelectorAll('#toasts .toast')].map((t) => { const r = t.getBoundingClientRect(); return { l: r.left, t: r.top, r: r.right, b: r.bottom, x: t.textContent }; }));
-      const bt = ts.find((t) => /Quái mới/.test(t.x));
+      // máy bận (chạy song song): đọc lại tới khi có đủ hội thoại + thông báo (tối đa ~10 giây) thay vì chờ cố định 2,6 giây
+      let dl = null, bt = null;
+      for (let i = 0; i < 100 && !(dl && bt); i++) {
+        await sleep(100);
+        dl = await rect(page, '#dialogue');
+        const ts = await page.evaluate(() => [...document.querySelectorAll('#toasts .toast')].map((t) => { const r = t.getBoundingClientRect(); return { l: r.left, t: r.top, r: r.right, b: r.bottom, x: t.textContent }; }));
+        bt = ts.find((t) => /Quái mới/.test(t.x));
+      }
+      await sleep(300);   // để hiệu ứng hiện xong rồi mới đo chồng nhau / chụp
+      dl = await rect(page, '#dialogue') || dl;
+      bt = (await page.evaluate(() => [...document.querySelectorAll('#toasts .toast')].map((t) => { const r = t.getBoundingClientRect(); return { l: r.left, t: r.top, r: r.right, b: r.bottom, x: t.textContent }; }))).find((t) => /Quái mới/.test(t.x)) || bt;
       ok(dl && bt, 'L07 sau banner: hiện hội thoại boss và thông báo "Quái mới"');
       ok(!inter(dl, bt) && !inter(bt, await gateRect(page)), 'L07 hội thoại, thông báo, thành không chồng nhau');
       await page.screenshot({ path: path.join(SHOT, `L07-sau-banner-${tag}.png`) });

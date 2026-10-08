@@ -302,7 +302,12 @@ s.save(out+'-khung.png')
       await page.close();
     }
   }
-  for (const [w] of SIZES) ok(fps['?solo=1' + w] >= fps[w] * 0.8, `${w}: FPS ảnh đơn ${fps['?solo=1' + w].toFixed(1)} ≥ 80% nhiều khung ${fps[w].toFixed(1)} (Chromium không GPU, tham khảo)`);
+  // FPS phụ thuộc tải máy: chạy song song (run-all, CHAY_SONG_SONG=1) hai lần đo cách nhau vài chục giây nên không so được → chỉ in tham khảo
+  for (const [w] of SIZES) {
+    const m = `${w}: FPS ảnh đơn ${fps['?solo=1' + w].toFixed(1)} ≥ 80% nhiều khung ${fps[w].toFixed(1)} (Chromium không GPU, tham khảo)`;
+    if (process.env.CHAY_SONG_SONG) console.log('  (bỏ so khi chạy song song) ' + m);
+    else ok(fps['?solo=1' + w] >= fps[w] * 0.8, m);
+  }
   await browser.close();
   console.log('Tất cả đạt');
 }

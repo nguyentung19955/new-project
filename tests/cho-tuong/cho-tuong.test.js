@@ -65,11 +65,14 @@ async function main() {
   ok(am3.r2 === am3.r && am3.tier === 2 && am3.empty, 'kéo thẻ ghép được vào ô trống khác → vẫn ghép vào tướng ★ trên sân (ô trống để trống)');
   // cho-6-the: dựng lại thanh chợ (đổi ↻ / mua) không tạo lại ảnh đã có → không nháy trắng; ảnh mới đã giải mã sẵn
   const nf = await page.evaluate(async () => {
-    game.gold = 1e5; ui.sig.deck = null; ui.updateDeck(); await new Promise((r) => setTimeout(r, 400));
+    // máy bận (chạy song song): chờ các ảnh nạp sẵn (ui.mkPre) tải xong — tối đa 10 giây — thay vì tin 400 / 250 ms là đủ
+    const preReady = async (ms) => { const end = performance.now() + ms; while (performance.now() < end && ui.mkPre && [...ui.mkPre.values()].some((L) => L.some((im) => !(im.complete && im.naturalWidth > 0)))) await new Promise((r) => setTimeout(r, 50)); };
+    game.gold = 1e5; ui.sig.deck = null; ui.updateDeck(); await new Promise((r) => setTimeout(r, 400)); await preReady(10000);
     let blank = 0, kept = 0, total = 0;
     for (let k = 0; k < 20; k++) {
       const before = new Map([...document.querySelectorAll('#deck .mk-card > img')].map((im) => [im.getAttribute('src'), im]));
       await new Promise((r) => setTimeout(r, 250));     // nhịp bấm ↻ của người (≥ 1/4 giây)
+      await preReady(5000);
       game.market.rr = 0; game.rerollMarket(); ui.updateDeck();
       for (const im of document.querySelectorAll('#deck .mk-card > img')) { total++; if (before.get(im.getAttribute('src')) === im) kept++; if (!(im.complete && im.naturalWidth > 0)) blank++; }
     }
@@ -100,6 +103,7 @@ async function main() {
   // kéo thẻ ghép thả lên tướng ★ cùng loại → lên ★★
   await dragTo(page, await center(page, '#deck .mk-card[data-mk="2"]'), await slotXY(page, twin.slot));
   await page.mouse.up(); await page.waitForTimeout(150);
+  await page.waitForFunction((s) => game.heroes[s] && game.heroes[s].tier === 2, twin.slot, { timeout: 5000 }).catch(() => {});   // máy bận: chờ ghép xong
   ok(await page.evaluate((s) => game.heroes[s] && game.heroes[s].tier === 2 && game.heroes.length === CONFIG.slots.length, twin.slot), 'thả thẻ lên tướng ★ cùng loại → ghép thành ★★');
 
   // chợ ẩn khi kéo tướng, thùng Hủy ở đúng chỗ thanh đáy
@@ -146,6 +150,7 @@ async function main() {
     // chạm mua cũng chạy khi xoay
     const n0 = await page.evaluate(() => game.heroes.filter(Boolean).length);
     await page.click('#deck .mk-card[data-mk="3"]'); await page.waitForTimeout(100);
+    await page.waitForFunction((n0) => game.heroes.filter(Boolean).length === n0 + 1, n0, { timeout: 5000 }).catch(() => {});   // máy bận: chờ mua xong
     ok(await page.evaluate(() => game.heroes.filter(Boolean).length) === n0 + 1, `${name}: chạm thẻ mua được`);
     ok(errors.length === 0, `không lỗi trang (${name}) ` + errors.join(' | '));
     await browser.close();

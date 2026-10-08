@@ -37,7 +37,12 @@ async function hover(page, sel, tag, name, shot) {
   await page.mouse.move(c[0], c[1], { steps: 3 }); await page.waitForTimeout(350);
   // máy bận: chờ khung hiện (tối đa 3 giây) thay vì tin 350 ms là đủ
   let s = await tipState(page, sel);
-  for (let k = 0; k < 15 && !s.shown; k++) { await page.waitForTimeout(200); s = await tipState(page, sel); }
+  // (ô có thể bị dựng lại trong 150 ms chờ hiện → nhích chuột như người rê lại để trình duyệt báo ô mới)
+  for (let k = 0; k < 15 && !s.shown; k++) {
+    await page.waitForTimeout(200); s = await tipState(page, sel);
+    if (!s.shown && k % 3 === 2) { await page.mouse.move(c[0] + 2, c[1] + 1); await page.mouse.move(c[0], c[1]); }
+  }
+  if (!s.shown) console.log('  (gỡ lỗi) ', JSON.stringify(await page.evaluate(([sel, x, y]) => { const e = document.elementFromPoint(x, y); const el = document.querySelector(sel); return { at: e && (e.id || e.className || e.tagName) + ' < ' + (e.parentElement && (e.parentElement.id || e.parentElement.className)), el: el && el.outerHTML.slice(0, 200), tip: ui.tip && ui.tip.mode, scr: ui.screen }; }, [sel, c[0], c[1]])));
   ok(s.shown, `[${tag}] ${name}: rê chuột → hiện mô tả`);
   ok(s.inside, `[${tag}] ${name}: khung nằm trong màn`);
   ok(!s.over, `[${tag}] ${name}: không che ô đang chỉ (đặt phía ${s.side})`);
@@ -45,6 +50,12 @@ async function hover(page, sel, tag, name, shot) {
   return s;
 }
 
+// máy bận (chạy song song): đọc lại tới khi đúng (tối đa 3 giây) thay vì tin một lần chờ cố định là đủ
+async function until(read, good, ms = 3000) {
+  const end = Date.now() + ms; let v = await read();
+  while (!good(v) && Date.now() < end) { await new Promise((r) => setTimeout(r, 150)); v = await read(); }
+  return v;
+}
 async function touch(cdp, type, x, y) {
   await cdp.send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x, y }] });
 }
@@ -77,14 +88,15 @@ async function run(w, h) {
   const run1 = await page.evaluate(() => ({ r: game.running, t: game.time || game.t || 0 }));
   ok(run1.r && (run1.t > t0 || !t0), `[${tag}] game không dừng khi đang xem mô tả`);
   await page.mouse.move(2, h / 2); await page.waitForTimeout(150);
-  ok(!(await tipState(page, SK(0))).shown, `[${tag}] rời chuột → ẩn mô tả`);
+  ok(!(await until(() => tipState(page, SK(0)), (v) => !v.shown)).shown, `[${tag}] rời chuột → ẩn mô tả`);
 
   // 2) bấm chuột vẫn nâng như cũ (khung đang hiện cũng không chặn)
   const q0 = await lv(0);
   const cq = await center(page, SK(0)); await page.mouse.move(cq[0], cq[1]); await page.waitForTimeout(300);
   await page.mouse.click(cq[0], cq[1]); await page.waitForTimeout(450);
+  await until(() => lv(0), (v) => v === q0 + 1);
   ok((await lv(0)) === q0 + 1, `[${tag}] bấm chuột ô Q vẫn nâng kỹ năng (${q0} → ${await lv(0)})`);
-  const s2 = await tipState(page, SK(0));
+  const s2 = await until(() => tipState(page, SK(0)), (v) => v.shown && new RegExp(`cấp ${q0 + 1}/`).test(v.text));
   ok(s2.shown && new RegExp(`cấp ${q0 + 1}/`).test(s2.text), `[${tag}] mô tả tự cập nhật cấp mới sau khi nâng`);
   await page.mouse.move(2, h / 2); await page.waitForTimeout(150);
 
@@ -99,17 +111,20 @@ async function run(w, h) {
   if (dtEarly < 300) ok(!early, `[${tag}] giữ 0,2 giây chưa hiện (tránh hiện khi chạm nhanh)`);
   else console.log(`  · [${tag}] máy chậm (${dtEarly} ms) — bỏ kiểm "giữ 0,2 giây chưa hiện"`);
   await page.waitForTimeout(250);
-  const s3 = await tipState(page, SK(2));
+  // máy bận: chờ khung hiện (tối đa 3 giây) thay vì tin 450 ms là đủ
+  let s3 = await tipState(page, SK(2));
+  for (let k = 0; k < 15 && !s3.shown; k++) { await page.waitForTimeout(200); s3 = await tipState(page, SK(2)); }
   ok(s3.shown && /E · /.test(s3.text), `[${tag}] giữ tay ~0,35 giây → hiện mô tả ô E`);
   ok(s3.inside && !s3.over, `[${tag}] mô tả giữ tay nằm trong màn, không che ngón tay / ô (${s3.side})`);
   ok(/Thả tay để đóng/.test(s3.text), `[${tag}] gợi ý thả tay để đóng`);
   await page.screenshot({ path: path.join(SHOT, `${tag}-deck-giu-tay.png`) });
   await touch(cdp, 'touchEnd'); await page.waitForTimeout(250);
-  ok(!(await tipState(page, SK(2))).shown, `[${tag}] thả tay → ẩn mô tả`);
+  ok(!(await until(() => tipState(page, SK(2)), (v) => !v.shown)).shown, `[${tag}] thả tay → ẩn mô tả`);
   ok((await lv(2)) === e0 && (await page.evaluate(() => game.heroes[ui.sel].skillPts)) === pts0, `[${tag}] giữ tay xem mô tả không nâng / mở kỹ năng`);
   const cq2 = await center(page, SK(0)); const qa = await lv(0);
   // chạm nhanh: gửi chạm + thả liền một mạch (không chờ giữa 2 lệnh) → trình duyệt nhận cả hai trước mốc 0,35 giây dù máy bận
   await Promise.all([touch(cdp, 'touchStart', cq2[0], cq2[1]), touch(cdp, 'touchEnd')]); await page.waitForTimeout(400);
+  await until(() => lv(0), (v) => v === qa + 1);
   ok((await lv(0)) === qa + 1, `[${tag}] chạm nhanh vẫn nâng kỹ năng (${qa} → ${await lv(0)})`);
   ok(!(await tipState(page, SK(0))).shown, `[${tag}] chạm nhanh không hiện mô tả`);
   // giữ rồi kéo ngón tay đi (cuộn) → không hiện
