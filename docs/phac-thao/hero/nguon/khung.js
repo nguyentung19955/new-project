@@ -155,8 +155,9 @@ function toSoSanh(DS, anhHienTai) {
     c.drawImage(anhHienTai[i], x - 40 * K, yy - 66 * K - K, 96 * K, 72 * K);
   });
   for (const H of DS) {
-    const cao = Math.max(...H.hero.map(caoHinh)) * K + 30;
-    hang(H.ten, H.ngan, cao, (i, x, yy) => datHinh(c, H.hero[i], H.mau, x + (H.hero[i].lech || 0) * K, yy, K));
+    const cm = Math.max(...H.hero.map(h => h.chan || 0)) * K;
+    const cao = Math.max(...H.hero.map(caoHinh)) * K + 30 + cm;
+    hang(H.ten, H.ngan, cao, (i, x, yy) => datHinh(c, H.hero[i], H.mau, x + (H.hero[i].lech || 0) * K, yy - cm, K));
   }
   y += LE - 14;
   const ra = document.createElement('canvas'); ra.width = RONG; ra.height = y;
