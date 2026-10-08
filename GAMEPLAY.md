@@ -2640,3 +2640,8 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
   60 ảnh, lúc rảnh): tướng, quái, boss, nền, bản đồ, hiệu ứng, icon; nhóm hiện bằng <img> (đồ, kỹ năng, ấn phù, thần khí) và canh/* không
   nạp sẵn → menu hiện ~0,6 s (trước ~1,4 s, ngang ?pixel=0). (2) chợ: chân dung pixel mọi tướng nạp + giải mã sẵn vào bộ đệm chợ
   (ui.preloadMarket) ngay sau lô cuối → đổi ↻ không nháy thẻ trống.
+
+## claude/an-cho-kho-do — Mở Túi đồ / bảng toàn màn thì ẩn hẳn thanh chợ
+- Lỗi báo: vào Kho đồ (Túi đồ) vẫn thấy thanh Triệu hồi (chợ) ở dưới. Trước đây chợ chỉ bị bảng `#screen` (z-index 10) đè lên — dễ lộ khi thứ tự lớp đổi.
+- Sửa: `ui.watchToasts` (đã theo dõi `hidden` của mọi bảng) bật lớp `#wrap.panel-open` khi có bảng toàn màn mở (Túi đồ, Cây kỹ năng, Tiến hoá, Lò đúc, Bách khoa, Anh Hùng, Ấn phù, Cài đặt, Phần thưởng, Kết quả…). CSS ẩn hẳn `#deck` (chợ + Hợp thể/Khoá/↻), `#fuse-strip`, `#auto-btns`, `#btn-moc`, `#nextwaves`, `#trash`, `#more` (visibility + không nhận chạm). Đóng bảng → bỏ lớp → hiện lại đúng trạng thái. Không đụng lớp `dragging-hero` (sửa lỗi kẹt chợ v213 giữ nguyên).
+- Test: `tests/an-cho-kho-do/` (844×390 pixel + ?pixel=0, 1920×934, 667×375): mở từng bảng → chợ ẩn, đóng → chợ hiện, kéo tướng + mở túi rồi thả → chợ hiện, chạm thẻ vẫn mua được.
