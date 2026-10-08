@@ -618,14 +618,22 @@ class UI {
     $('#deck').addEventListener('contextmenu', (ev) => { if (ev.target.closest('.dk-pt')) ev.preventDefault(); });
     // v182: mô tả khi RÊ CHUỘT (máy tính) hoặc GIỮ TAY ~0,35 giây (điện thoại) lên ô kỹ năng / ô có data-tip
     // (thanh tướng trong trận, Cây kỹ năng, Anh Hùng, Ấn Phù, Thần Khí, thẻ tướng…). Chạm / bấm nhanh giữ hành vi cũ.
-    let hovEl = null, hovT = 0, prT = 0, pr = null;
+    let hovEl = null, hovT = 0, hovP = false, mx = 0, my = 0, prT = 0, pr = null;
+    // claude/bo-diem-thua: thanh tướng dựng lại (ô khác đổi hồi chiêu / mana) trong lúc chờ → ô cũ rời trang;
+    // tìm ô mới cùng chỗ thay vì bỏ mô tả
+    const tipAt = (el, x, y) => { if (el && el.isConnected) return el; const nx = document.elementFromPoint(x, y); return nx && nx.closest(TIP_SEL); };
+    window.addEventListener('pointermove', (ev) => { if (ev.pointerType === 'mouse') { mx = ev.clientX; my = ev.clientY; } }, true);
     document.addEventListener('pointerover', (ev) => {
       if (ev.pointerType !== 'mouse') return;
+      mx = ev.clientX; my = ev.clientY;
       const el = ev.target.closest && ev.target.closest(TIP_SEL);
       if (el === hovEl) return;
-      hovEl = el; clearTimeout(hovT);
+      // ô vừa được dựng lại dưới chuột: giữ nguyên giờ chờ đang chạy
+      if (el && hovP && hovEl && !hovEl.isConnected) { hovEl = el; return; }
+      hovEl = el; clearTimeout(hovT); hovP = false;
       if (!el) return this.hideTip();
-      hovT = setTimeout(() => { if (hovEl === el && el.isConnected) this.openTip(el, 'hover'); }, 150);
+      hovP = true;
+      hovT = setTimeout(() => { hovP = false; const e = tipAt(hovEl, mx, my); if (e) { hovEl = e; this.openTip(e, 'hover'); } }, 150);
     });
     document.addEventListener('pointerout', (ev) => { if (ev.pointerType === 'mouse' && !ev.relatedTarget) { hovEl = null; clearTimeout(hovT); this.hideTip(); } });
     $('#ui').addEventListener('pointerdown', (ev) => {
@@ -636,7 +644,7 @@ class UI {
       const el = ev.target.closest(TIP_SEL);
       if (!el) return;
       pr = { id: ev.pointerId, x: ev.clientX, y: ev.clientY };
-      prT = setTimeout(() => { if (pr && el.isConnected) { this.tipShown = true; this.openTip(el, 'press'); } }, 350);
+      prT = setTimeout(() => { const e = pr && tipAt(el, pr.x, pr.y); if (e) { this.tipShown = true; this.openTip(e, 'press'); } }, 350);
     }, true);
     window.addEventListener('pointermove', (ev) => { if (pr && ev.pointerId === pr.id && !this.tipShown && Math.hypot(ev.clientX - pr.x, ev.clientY - pr.y) > 12) { clearTimeout(prT); pr = null; } });
     const prEnd = (ev) => {
@@ -2297,6 +2305,8 @@ class UI {
         this.save.secrets = [...g.known];
         writeSave(this.save);
         this.toast(`<b>Đã khám phá!</b> ${secretTitle(ev.key)}: ${esc(SECRETS[ev.key].desc)}`, '#FFD66B');
+      } else if (ev.type === 'autoStat') {
+        this.toast('Kỹ năng đã tối đa — điểm dư cộng vào chỉ số', '#9dffc4');
       } else if (ev.type === 'ascend') {
         this.banner('Thăng thần', `${ev.from} hóa thân ${ev.to}`);
         this.toast(`<b>${ev.to}</b>: ${esc(HEROES[ev.hero.type].trait.name)} · ${esc(HEROES[ev.hero.type].trait.desc)}`, '#F0A030');
@@ -2588,12 +2598,12 @@ class UI {
   preloadMarket(pool) {
     for (const t of pool) { const u = marketPortrait(t); if (u) this.preImg(u); }
   }
-  // mỗi ảnh giữ sẵn 3 bản đã tải (hàng chợ có thể ra vài thẻ trùng loại)
+  // mỗi ảnh giữ sẵn MARKET_SIZE bản đã tải (chợ có thể ra cả 6 thẻ cùng loại — trước giữ 3 bản, thẻ thứ 4 nháy trắng)
   preImg(u) {
     const P = this.mkPre || (this.mkPre = new Map());
     const abs = new URL(u, document.baseURI).href, L = P.get(abs) || [];
     P.set(abs, L);
-    while (L.length < 3) { const im = new Image(); im.decoding = 'sync'; im.src = u; if (im.decode) im.decode().catch(() => {}); L.push(im); }
+    while (L.length < MARKET_SIZE) { const im = new Image(); im.decoding = 'sync'; im.src = u; if (im.decode) im.decode().catch(() => {}); L.push(im); }
   }
   // lấy ảnh đã nạp xong (đưa thẳng vào thẻ, không tạo ảnh mới chưa tải) rồi nạp sẵn bản khác cho lần sau
   takeMarketImg(abs) {
@@ -2671,8 +2681,7 @@ class UI {
         return `<button class="dk-sk metal ${sk.active && h.mana < sk.active.mana ? 'nomana' : ''} ${i === fresh ? 'fresh' : ''} ${lvOk && pay ? 'canup' : ''}" data-act="cmd-skill" data-i="${i}" data-skt="${i}" aria-label="${sk.name} cấp ${lv}">
           ${tag}${svgI(skillIcon(h.type, i))}<span class="lvn">${lv}</span>${lvOk ? '' : lv < max ? `<span class="req">cấp ${skillReqLevel(i, lv + 1)}</span>` : ''}
           ${sk.active ? `<span class="cdov" style="height:${cd > 0.4 ? Math.min(100, cd / mx * 100) : 0}%"></span><span class="cdn">${cd > 0.4 ? Math.ceil(cd) : ''}</span>` : ''}</button>`;
-      }).join('') + (h.from || !h.skillPts || g.skillsMaxed(h) ? '' : `<button class="dk-sk metal stat ${h.skillPts ? 'canup' : 'off'}" data-act="sk-stat-deck" aria-label="Cộng điểm dư vào chỉ số">
-          <span class="sk-tag ${h.skillPts ? 'ok' : 'no'}">+1đ</span><b style="color:${ELEMENTS[def.el].color}">+${COSTS.statPt}</b><small>${ATTRS[heroMain(def)].short}</small>${h.skillPts ? `<span class="badge">${h.skillPts}</span>` : ''}</button>`);
+      }).join('');  // claude/bo-diem-thua: bỏ nút "+1đ / +2 SỨC" — điểm chỉ dùng nâng kỹ năng, điểm thừa tự đổi thành chỉ số
       const maxed = h.level >= CONFIG.maxLevel;
       const tc = g.trainCost(h);
       html = `<button class="dk-x metal" data-act="deck-close" aria-label="Bỏ chọn">${ICON.close}</button>
@@ -3767,14 +3776,6 @@ class UI {
         });
         break;
       }
-      case 'sk-stat-deck': {
-        if (!h) break;
-        C('spendStat', [h], (r) => {
-          if (r !== true) this.toast(`Cộng chỉ số: ${r}. Lên cấp tướng để có điểm`, '#C8BFA8');
-          this.sig.deck = null;
-        });
-        break;
-      }
       case 'moc':
         this.raising = !this.raising;
         this.moving = -1;
@@ -3834,7 +3835,6 @@ class UI {
       // Cây kỹ năng
       case 'sk-sel': sc.skill = +d.i; this.renderScreen(true); break;
       case 'sk-up': if (h) C('upgradeSkill', [h, +d.i], (r) => { if (fail(r)) rs(); }); break;
-      case 'sk-stat': if (h) C('spendStat', [h], (r) => { if (fail(r)) rs(); }); break;
       case 'sk-unlock': if (h) { const i = +d.i, nm = HEROES[h.type].skills[i].name; C('unlockSkill', [h, i], (r) => { if (fail(r)) { this.toast(`Mở khóa [${SKILL_KEYS[i]}] ${nm}!`, '#A86CE0'); rs(); } }); } break;
       case 'sk-level': if (h) { this.doLevelUp(h); this.renderScreen(true); } break;
       // Tiến hoá
@@ -4125,7 +4125,6 @@ class UI {
           ? `<button class="big-btn btn-gold" data-act="sk-up" data-i="${si}" ${nextOk && g.gold >= COSTS.skillGold(si, lv) ? '' : 'disabled'}>${ICON.up} Nâng lên cấp ${lv + 1} · ${coin(1)} ${COSTS.skillGold(si, lv)}</button>`
           : `<button class="big-btn btn-gold" data-act="sk-up" data-i="${si}" ${nextOk && h.skillPts ? '' : 'disabled'}>${ICON.up} Nâng lên cấp ${lv + 1} · 1 điểm</button>`)
         : '<button class="big-btn metal" disabled style="color:#FFD66B">Đã tối đa</button>'}
-      ${h.skillPts && !g.canSpendSkillPts(h) ? `<button class="btn btn-gold stat-btn" data-act="sk-stat">Nâng chỉ số: 1 điểm → +${COSTS.statPt} ${ATTRS[heroMain(def)].short}${h.statPts ? ` · đã +${h.statPts * COSTS.statPt}` : ''}</button>` : ''}
       ${!h.skillPts && h.level < CONFIG.maxLevel ? `<button class="btn metal" style="height:34px;color:#F2D27A" data-act="sk-level">Nâng cấp tướng · ${coin(1)} ${g.levelCost(h)} (+1 điểm)</button>` : ''}
     </div>`;
     const hk = 'h.' + h.type, hd = SECRETS[hk];
@@ -4134,7 +4133,7 @@ class UI {
     const pst = heroStats(h);
     const penChip = `<span class="chip dark" title="Xuyên giáp / xuyên kháng phép (chiêu R xuyên thêm ${ULT_PEN}%)">${ic('xuyen-giap', 'Xuyên giáp')}${Math.round(pst.pierce)}% · ${ic('xuyen-phep', 'Xuyên kháng phép')}${Math.round(pst.mpen)}%</span>`;
     return `${this.head('Cây kỹ năng', `<span class="chip dark">${def.name} · Cấp ${h.level}${h.train ? ` ✦${h.train}` : ''}</span>${penChip}${elChip(def.el)}${hidChip}
-        ${h.skillPts ? `<span class="chip ok">Còn ${h.skillPts} điểm kỹ năng</span>` : ''}${this.runChip()}`)}
+        ${h.skillPts && g.canSpendSkillPts(h) ? `<span class="chip ok">Còn ${h.skillPts} điểm kỹ năng</span>` : ''}${this.runChip()}`)}
       <div class="scr-body" style="padding-bottom:4px"><div class="sk-cols">${cols}</div>${detail}</div>
       <div class="foot">${h.from ? `${coin(1)} <b>Đã thăng thần:</b> mở khóa <b>W ${COSTS.unlockAsc[1]} · E ${COSTS.unlockAsc[2]} · R ${COSTS.unlockAsc[3]}</b>, nâng kỹ năng bằng vàng · điểm kỹ năng đổi thành chỉ số` : `${coin(1)} Giá mở khóa: <b>W ${unlockCost(h, 1) || 'miễn phí'}</b> · <b>E ${unlockCost(h, 2) || 'miễn phí'}</b> (cấp ${COSTS.unlockReq[2]}) · <b>R ${unlockCost(h, 3) || 'miễn phí'}</b> (cấp ${COSTS.unlockReq[3]})${unlockCost(h, 3) ? ' vàng' : ' (★★★)'}`} <span style="color:#5C4620">|</span> Mỗi cấp tướng +1 điểm · mỗi cấp kỹ năng +25% sức mạnh · kỹ năng mạnh dần theo cấp tướng</div>`;
   }
