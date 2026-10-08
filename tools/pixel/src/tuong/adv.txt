@@ -1,0 +1,261 @@
+# An Dương Vương (mã adv) — pixel 32×32 (tướng Vàng · hành Kim). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:1332–1337 ưu tiên + PROMPT-DUNG-XUONG.txt:1278): NAM vua ~50 cao gầy, ria dài rủ + chòm râu nhọn;
+# VƯƠNG MIỆN TẦNG XOẮN ỐC cao như thành Cổ Loa; áo bào CHÀM ĐEN + phiến giáp BẠC, viền vàng; cầm NỎ THẦN đồng ngang nhắm, LẪY VUỐT RÙA vàng (không kiếm).
+# Phá cách tạo hình: VƯƠNG MIỆN XOẮN ỐC 3 tầng như 3 vòng thành Cổ Loa (dải xoắn sẫm chạy vòng), ÁO BÀO XẾP VẢY MAI RÙA
+# lục giác (lưới vảy chàm sẫm), LẪY NỎ VUỐT RÙA VÀNG SÁNG RỰC (3 móng trắng-vàng); vẫn NỎ THẦN.
+name: An Dương Vương
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  K = toi
+  H = khoi
+  x = cham-toi
+  b = cham
+  B = cham-sang
+  s = sat
+  S = sat-sang
+  a = bac
+  f = da-toi
+  F = da
+  h = da-sang
+  e = trang
+  y = vang-nghe
+  Y = vang-sang
+  j = dong-toi
+  o = dong
+  O = dong-sang
+  z = sang
+
+part tren
+................................
+................................
+..............YO................
+.............Yyjj...............
+...........jjYyyyo..............
+...........yyjjjYyo.............
+.........jjjYyyyyyyo............
+.........yyyjjjjYyyyj...........
+.........HHHHHHHHHHHH...........
+........HHHHhhFFFFFFFF..........
+........HHHhFHHFFFFHHF..........
+........HHHFFFekFFFFek..........
+........HHfFFFFFFFFFfF..........
+........HHfFFFHHHHHHFF..........
+.........HfFFHFFFFFFHF..........
+..........ffFHFFHHFFHf..........
+...........fffffHHff............
+........aSs.ySbHHbySas..........
+.......aSSsyBbbbbbyaSss.........
+.......aSsxyBaSSsbyxsss.........
+........xBbyBSSssbybx...........
+........xBbyyyyyyyybx...........
+.........xxbyxxbbxxBx...........
+.........BBxyBbxxBbxx...........
+end
+
+part chan
+.........BBxyBbxxBbxx...........
+.........xxbyxxbbxxbbx..........
+.........yyyyyyyyyyyyy..........
+..........xbx....xbx............
+..........sSs....sSs............
+.........KKKK...KKKKK...........
+end
+
+# nỏ thần: báng đồng ngang, cánh nỏ dựng ở đầu, tên đồng, lẫy vuốt rùa vàng
+part no
+.............jO..
+.............joO.
+..............jO.
+.sSSSSSSSSSSSSSOa
+jOOOOOOOOOOOOOOOj
+jooooooooooooooj.
+..yYzYy.......jO.
+..Y.z.Y......jO..
+.............Oj..
+end
+
+part no_ban
+.............jO..
+.............joO.
+..............jO.
+...............O.
+jOOOOOOOOOOOOOOOj
+jooooooooooooooj.
+..yYzYy.......jO.
+..Y.z.Y......jO..
+.............Oj..
+end
+
+part tay_truoc
+Fh
+fF
+end
+
+part tay_sau
+xF
+.f
+end
+
+part ten
+sSSSSa
+end
+
+part tia
+.z.
+zYz
+.z.
+end
+
+part sang_vang
+..z...z..
+...Y.Y...
+z.YzYzY.z
+...Y.Y...
+..z...z..
+end
+
+part mat_nham
+FFFFFFFF
+HHFFFFHH
+end
+
+anim idle fps=3 loop
+frame idle
+  use chan 0 24
+  use tren
+  use no 12 14
+  use tay_sau 15 19
+  use tay_truoc 22 18
+  outline
+end
+frame idle
+  use chan 0 24
+  use tren 0 1
+  use no 12 15
+  use tay_sau 15 20
+  use tay_truoc 22 19
+  outline
+end
+frame idle
+  use chan 0 24
+  use tren 0 1
+  use no 12 15
+  use tay_sau 15 20
+  use tay_truoc 22 19
+  set 17 21 z
+  outline
+end
+
+# bắn: nâng nỏ ngắm → nhả lẫy, tên bay → trúng đích loé sáng → hạ nỏ
+anim attack fps=10 once
+frame attack
+  use chan 0 24
+  use tren
+  use no 13 13
+  use tay_sau 16 18
+  use tay_truoc 23 17
+  outline
+end
+frame attack
+  use chan 0 24
+  use tren -1 0
+  use no_ban 12 13
+  use tay_sau 15 18
+  use tay_truoc 22 17
+  use ten 24 16
+  use tia 27 15
+  outline
+end
+frame attack
+  use chan 0 24
+  use tren -1 0
+  use no_ban 12 13
+  use tay_sau 15 18
+  use tay_truoc 22 17
+  use sang_vang 21 12
+  outline
+end
+frame attack
+  use chan 0 24
+  use tren
+  use no_ban 12 15
+  use tay_sau 15 20
+  use tay_truoc 22 19
+  outline
+end
+
+# chiêu: Linh Quang — lẫy vuốt rùa bừng sáng vàng, tia bạc toả (hành Kim)
+anim cast fps=6 loop
+frame cast
+  use chan 0 24
+  use tren
+  use no 12 14
+  use tay_sau 15 19
+  use tay_truoc 22 18
+  set 16 22 z
+  outline
+end
+frame cast
+  use chan 0 24
+  use tren
+  use no 12 14
+  use tay_sau 15 19
+  use tay_truoc 22 18
+  use sang_vang 11 18
+  use sang_vang 21 10
+  outline
+end
+frame cast
+  use chan 0 24
+  use tren 0 1
+  use no 12 15
+  use tay_sau 15 20
+  use tay_truoc 22 19
+  use sang_vang 11 19
+  use sang_vang 21 9
+  set 28 18 a
+  set 29 17 a
+  outline
+end
+
+# trúng đòn: giật lùi, nhắm mắt, nháy sáng
+anim hurt fps=8 once
+frame hurt
+  use chan 0 24
+  use tren -1 0
+  use no 11 14
+  use tay_sau 14 19
+  use tay_truoc 21 18
+  use mat_nham 11 10
+  swap F h
+  swap b B
+  outline
+end
+
+# chết: khuỵu gối → ngã nằm → tối lại
+anim die fps=5 once
+frame die
+  use chan 0 24
+  use tren 0 3
+  use no_ban 12 19
+  use mat_nham 12 13
+  outline
+end
+frame die
+  use chan 0 24
+  use tren 0 3
+  use mat_nham 12 13
+  rot 90
+  shift 0 1
+  use no_ban 13 21
+  outline
+end
+frame die
+  use @die.1
+  swap y o
+  swap Y O
+  swap a s
+  swap B b
+end

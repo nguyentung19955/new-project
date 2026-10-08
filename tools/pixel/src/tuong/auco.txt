@@ -1,0 +1,404 @@
+# Âu Cơ (mã auco) — pixel 32×32 (tướng Vàng · hành Thổ). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (DANH-SACH Lô 5 · PROMPT-GEN-LAI.txt:778 FIX · PROMPT-DUNG-XUONG.txt:963): Mẹ Tiên ~25 thanh cao, tóc đen dài búi, vương miện nhỏ vàng ngọc san hô,
+# áo kem viền vàng thắt lưng san hô; CÁNH HẠC trắng to xoè lên sau lưng (đầu cánh đen); cầm ĐŨA LÔNG HẠC (tay trước) + túi lụa BỌC TRĂM TRỨNG (tay sau) — không giáo.
+# Chiêu: giơ đũa, trứng sáng + hạt ánh đồng vàng bay lên (hành Thổ).
+# PHÁ CÁCH (QUY-CHUAN 0b): tóc bạc trắng như LÔNG HẠC (lớp lông xám-trắng, chóp lông đen thò ra), lông vũ mọc từ cẳng tay nối vào cánh hạc,
+# BỌC TRĂM TRỨNG phát sáng như đèn lồng (trứng vàng sáng trong lụa son); vẫn nữ, cánh hạc + đũa lông hạc. Cả hình trong 1..30, chân dung 28×28 ở 2,2.
+name: Âu Cơ
+size: 32x32
+anchor: 15,30
+colors:
+  k = vien
+  K = toi
+  Q = khoi
+  f = da-toi
+  F = da
+  h = da-sang
+  e = trang
+  X = trang-xam
+  z = sang
+  q = sat-sang
+  y = vang-nghe
+  Y = vang-sang
+  j = dong-sang
+  d = dong
+  r = son-sang
+  R = hong
+  m = son
+  G = dat-sang
+  t = dat
+  T = dat-toi
+  c = cat
+
+part canh
+.............
+QQ.QQ..Q.....
+QzQQzQ.QQ....
+.QzQzeQQzQ...
+.QzezeeQeeQ..
+..QzeeeezeeX.
+..XzeeeeeeeX.
+..qXzeeeeeeeX
+...qXzeeeeeee
+...qXXzeeeeee
+....qXXzeeeee
+....qXzXzeeee
+.....qXXzeeee
+.....qXXXzeee
+......qXXXzee
+.......qXXXze
+........qXXXe
+.........qXXe
+..........qXX
+end
+
+part canh_xa
+.........
+...QQQ.Q.
+..QzQ.QQ.
+.QzeQQzQ.
+.XeeXzeQ.
+.qXeeeX..
+..qXeeX..
+...qXX...
+end
+
+part tren
+................................
+................................
+..........qXeXq.................
+.........jyYRYyj................
+........qXeezeeXXeXq............
+.......qXeeXeezeXeeXq...........
+.......qXeXqhhFFFFFFF...........
+.......qeXqhFFFFFFFFFF..........
+.......qXqhFFKKFFFFKKF..........
+.......qeXFFFekFFFFekF..........
+.......qXqFFFFFFFFFFFF..........
+......QqXefFFFFFFFFFfF..........
+.......qXeXfFFFFFFfFFF..........
+......QqXeqXffFFFFFFf...........
+.......qXeXeqfffffff............
+.......QqQXQ..fFFf..............
+.......QqjyyyyFFFyyyj...........
+.......qXzeeeyhFyeeeX...........
+.......qXzeeeeyyeeeeX...........
+.......QqzeeeeeyeeeeX...........
+.......QXrrrrrrRrrrrrm..........
+........XzeeeerrmeeeX...........
+........XzeeeeerreeeX...........
+........XzeeeeeemeeeX...........
+end
+
+part chan
+........XzeeeeeeeeeeX..
+.......XzeeeeeeeeeeeX..
+.......XzeeeeeeeeeeeeX.
+......jyyyyyyyyyyyyyyyj
+.........TtT...TtT.....
+........TTTT..TTTTT....
+end
+
+part tay
+eX..
+XeX.
+eXFF
+QeFh
+.Q..
+end
+
+part dua
+.QQ
+.Qe
+Qze
+Qze
+.ze
+.eX
+.eX
+.yj
+.Y.
+.G.
+.G.
+.G.
+.G.
+.G.
+.G.
+.G.
+.T.
+end
+
+part dua_ngang
+...........eeeQ.
+TGGGGGGGGyjzezQQ
+...........XXX..
+end
+
+part dua_xuong
+G........
+.G.......
+..G......
+...yj....
+....eX...
+....zeX..
+.....zeX.
+......eeQ
+.......QQ
+end
+
+part boc
+.eze.
+ezYze
+rYzYr
+rzYzm
+rYzYm
+.rmm.
+end
+
+part tay_sau
+zeXX.
+XeeX.
+QeFF.
+.Q...
+end
+
+part tay_len
+.FF
+.Fh
+.e.
+Xe.
+Xe.
+end
+
+part tay_dam
+eXFF
+XeFh
+end
+
+part hat_nho
+.Y.
+YjY
+.Y.
+end
+
+part hat
+..Y..
+.YjY.
+YjzjY
+.YjY.
+..Y..
+end
+
+part mat_nham
+ffFFFFff
+end
+
+part chan_dung
+..kk..kkqqXXeeXXqqkk........
+..kk..kkqqXXeeXXqqkk........
+kkQQkkjjyyYYRRYYyyjjkkkkkkkk
+kkQQkkjjyyYYRRYYyyjjkkkkkkkk
+kkQQqqXXeeeezzeeeeXXXXeeXXqq
+kkQQqqXXeeeezzeeeeXXXXeeXXqq
+QQqqXXeeeeXXeeeezzeeXXeeeeXX
+QQqqXXeeeeXXeeeezzeeXXeeeeXX
+eeqqXXeeXXqqhhhhFFFFFFFFFFFF
+eeqqXXeeXXqqhhhhFFFFFFFFFFFF
+eeqqeeXXqqhhFFFFFFFFFFFFFFFF
+eeqqeeXXqqhhFFFFFFFFFFFFFFFF
+eeqqXXqqhhFFFFKKKKFFFFFFFFKK
+eeqqXXqqhhFFFFKKKKFFFFFFFFKK
+eeqqeeXXFFFFFFeekkFFFFFFFFee
+eeqqeeXXFFFFFFeekkFFFFFFFFee
+eeqqXXqqFFFFFFFFFFFFFFFFFFFF
+eeqqXXqqFFFFFFFFFFFFFFFFFFFF
+QQqqXXeeffFFFFFFFFFFFFFFFFFF
+QQqqXXeeffFFFFFFFFFFFFFFFFFF
+XXqqXXeeXXffFFFFFFFFFFFFffFF
+XXqqXXeeXXffFFFFFFFFFFFFffFF
+QQqqXXeeqqXXffffFFFFFFFFFFFF
+QQqqXXeeqqXXffffFFFFFFFFFFFF
+XXqqXXeeXXeeqqffffffffffffff
+XXqqXXeeXXeeqqffffffffffffff
+XXQQqqQQXXQQeekkffFFFFffkkkk
+XXQQqqQQXXQQeekkffFFFFffkkkk
+end
+
+
+anim idle fps=3 loop
+frame idle
+  use canh_xa 20 2
+  use canh 2 2
+  use chan 2 24
+  use tren 2 0
+  use boc 4 21
+  use tay_sau 6 19
+  use dua 23 6
+  use tay 21 17
+  outline
+end
+frame idle
+  use canh_xa 20 3
+  use canh 2 2
+  use chan 2 24
+  use tren 2 1
+  use boc 4 22
+  use tay_sau 6 20
+  use dua 23 7
+  use tay 21 18
+  outline
+end
+frame idle
+  use canh_xa 20 1
+  use canh 2 1
+  use chan 2 24
+  use tren 2 0
+  use boc 4 21
+  use tay_sau 6 19
+  use dua 23 6
+  use tay 21 17
+  outline
+end
+
+# đánh: lấy đà (rút đũa về sau) → phẩy đũa lông hạc ra trước → trúng (tia sáng) → thu về
+anim attack fps=10 once
+frame attack
+  use canh_xa 20 1
+  use canh 2 1
+  use chan 2 24
+  use tren 1 0
+  use boc 4 21
+  use tay_sau 5 19
+  use dua 22 4
+  use tay_len 21 14
+  outline
+end
+frame attack
+  use canh_xa 20 2
+  use canh 2 2
+  use chan 2 24
+  use tren 3 0
+  use boc 4 21
+  use tay_sau 7 19
+  use dua_ngang 14 17
+  use tay_dam 22 18
+  outline
+end
+frame attack
+  use canh_xa 20 2
+  use canh 2 2
+  use chan 2 24
+  use tren 3 0
+  use boc 4 21
+  use tay_sau 7 19
+  use dua_ngang 14 17
+  use tay_dam 22 18
+  use hat 25 14
+  outline
+end
+frame attack
+  use canh_xa 20 2
+  use canh 2 2
+  use chan 2 24
+  use tren 2 0
+  use boc 4 21
+  use tay_sau 6 19
+  use dua_xuong 21 19
+  use tay 21 17
+  outline
+end
+
+# chiêu: giơ đũa lông hạc, cánh xoè cao, bọc trứng sáng + hạt ánh đồng (hành Thổ)
+anim cast fps=8 loop
+frame cast
+  use canh_xa 20 1
+  use canh 2 1
+  use chan 2 24
+  use tren 2 0
+  use boc 4 21
+  use tay_sau 6 19
+  use dua 23 3
+  use tay_len 22 14
+  use hat_nho 24 2
+  outline
+end
+frame cast
+  use canh_xa 20 1
+  use canh 2 1
+  use chan 2 24
+  use tren 2 0
+  use boc 4 21
+  use tay_sau 6 19
+  use dua 23 3
+  use tay_len 22 14
+  use hat 25 2
+  swap R Y
+  outline
+end
+frame cast
+  use canh_xa 20 1
+  use canh 2 1
+  use chan 2 24
+  use tren 2 1
+  use boc 4 22
+  use tay_sau 6 20
+  use dua 23 4
+  use tay_len 22 15
+  use hat 25 2
+  swap R Y
+  set 5 20 Y
+  set 28 9 z
+  set 20 2 j
+  outline
+end
+
+# trúng đòn: giật lùi, nhắm mắt, nháy sáng
+anim hurt fps=8 once
+frame hurt
+  use canh_xa 19 2
+  use canh 2 2
+  use chan 1 24
+  use tren 1 0
+  use boc 3 21
+  use tay_sau 5 19
+  use dua 22 6
+  use tay 20 17
+  use mat_nham 13 9
+  outline
+  swap F h
+  swap e z
+end
+
+# chết: khuỵu → ngã nằm → tối dần
+anim die fps=5 once
+frame die
+  use canh 2 5
+  use chan 0 24
+  use tren 0 3
+  use boc 2 24
+  use dua_xuong 20 19
+  use mat_nham 12 12
+  outline
+end
+frame die
+  use chan 0 24
+  use tren 0 3
+  use mat_nham 12 12
+  rot 90
+  shift 0 6
+  use dua_ngang 2 27
+  outline
+end
+frame die
+  use @die.1
+  swap e X
+  swap z e
+  swap y d
+  swap r m
+end
+
+# chân dung riêng: đầu phóng ×2 (cắt 14×14 từ khung đứng đầu tiên, giữ nét; 28×28 đặt ở 2,2 để không chạm mép)
+anim portrait fps=1 once
+frame portrait
+  use chan_dung 2 2
+  outline
+end
