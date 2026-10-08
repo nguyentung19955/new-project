@@ -381,7 +381,7 @@ function heroStats(h) {
   if (s.hid['i.moc2'] && (h.still || 0) >= 10) s.bonusDmgPct += 15;
   if (s.hid['i.thuy1'] && b.thuyAdj) s.bonusDmgPct += 10;   // đứng kề tướng hành Thủy
   if (b.vt) for (const k in b.vt) s[k] += b.vt[k];        // v182: cộng hưởng vai trò
-  s.bonusDmgPct += (b.sinh || 0) * ELEM.sinh + (b.full ? ELEM.full : 0) + (b.drum || 0) - (b.llqPen ? 10 : 0);
+  s.bonusDmgPct += (b.sinh || 0) * ELEM.sinh + (b.full ? ELEM.full : 0) + (b.team || 0) + (b.drum || 0) - (b.llqPen ? 10 : 0);
   s.airMult += s.airPct / 100;
   if (s.hitAir) s.canAir = true;
   if (h.huntT > 0) s.haste += 30;
@@ -935,7 +935,7 @@ const SKILL_CASTS = {
       // ngựa chạy từ cửa sông về thành: quái càng gần thành bị đánh càng sau
       const delay = 0.05 + 0.85 * (e.dist / PATH.total);
       game.effects.push({ type: 'none', ttl: delay, max: delay,
-        onEnd: () => { if (!e.dead) game.hit(e, (st.damage * 4 + n * 2) * st.skillPower, h, { big: true, color: '#FFB04A' }); } });
+        onEnd: () => { if (!e.dead) game.hit(e, (st.damage * 3 + n * 2) * st.skillPower, h, { big: true, color: '#FFB04A' }); } });
     }
     return true;
   },
@@ -1078,7 +1078,7 @@ const SKILL_CASTS = {
       game.effects.push({ type: 'lob', kind: 'dua', x: e.x - 40, y: e.y - 220, x2: e.x, y2: e.y, color: '#3EDC4E', ttl: 0.4 + srand() * 0.5, max: 0.9,
         onEnd: () => {
           game.effects.push({ type: 'splat', x: e.x, y: e.y, r: 30, color: '#E04848', ttl: 0.4, max: 0.4 });
-          if (!e.dead) { game.hit(e, (st.damage * 2 + n) * st.skillPower, h, { color: '#3EDC4E' }); if (!e.dead) game.slow(e, 40, 2); }
+          if (!e.dead) { game.hit(e, (st.damage * 1.5 + n) * st.skillPower, h, { color: '#3EDC4E' }); if (!e.dead) game.slow(e, 40, 2); }
         } });
     }
     return true;
@@ -1333,8 +1333,8 @@ const SKILL_CASTS = {
     game.effects.push({ type: 'banner', str: st.skName || 'Rừng Thiêng Nổi Giận', color: '#5FD06A', ttl: 1.6, max: 1.6 });
     game.effects.push({ type: 'flash', color: '#BFF0A0', ttl: 0.3, max: 0.3 });
     for (const e of list) {
-      game.stun(e, e.def.boss ? 0.6 : 1.8, 'root');
-      game.hit(e, (st.damage * 2 + n) * st.skillPower, h, { color: '#5FD06A' });
+      game.stun(e, e.def.boss ? 0.4 : 1.2, 'root');   // claude/can-bang-tuong-vang: 1.8/0.6 → 1.2/0.4, x2 → x1.5
+      game.hit(e, (st.damage * 1.5 + n) * st.skillPower, h, { color: '#5FD06A' });
     }
     healHeroes(game, h.x, h.y, 2000, 0.2, '#5FD06A');
     return true;
@@ -2652,8 +2652,11 @@ class Game {
     const alive = list.filter((h) => !h.dead);
     const els = new Set(alive.map((h) => HEROES[h.type].el));
     const full = els.size >= 5;
-    if (full && !this.fullEl) this.notify('Ngũ hành tề tựu! Toàn quân +10% sát thương', '#FFD66B');
+    if (full && !this.fullEl) this.notify(`Ngũ hành tề tựu! Thế trận toàn quân +${TEAM_BONUS.el[5] + ELEM.full}% sát thương`, '#FFD66B');
     this.fullEl = full;
+    // claude/can-bang-tuong-vang: Thế trận — số tướng + số hành trên sân
+    const tb = teamBonus(alive.length, els.size);
+    this.teamB = { n: alive.length, el: els.size, ...tb };
     // v182: cộng hưởng vai trò (2 / 4 tướng khác loại cùng vai trò chính)
     const tiers = typeof roleTiers === 'function' ? roleTiers(roleCounts(alive)) : {};
     for (const r in tiers) if (tiers[r] > ((this.vtTiers || {})[r] || 0)) this.notify(`Cộng hưởng ${ROLES[r].name} ${tiers[r] * 2}: ${ROLE_SYN[r].t[tiers[r] - 1]}`, ROLES[r].color);
@@ -2667,6 +2670,7 @@ class Game {
       h.buff.full = full;
       h.buff.vt = typeof roleSynStats === 'function' ? roleSynStats(h.type, tiers) : null;
       h.buff.tamGioi = els.size >= 3;
+      h.buff.team = tb.q + tb.e - (full ? ELEM.full : 0);   // Thế trận (phần Ngũ hành tề tựu tính riêng ở b.full)
       h.buff.airWave = airWave;
       h.buff.fog = fog;
       h.buff.weak = weak && weak.el === HEROES[h.type].el ? weak.weak : 0;
@@ -2922,9 +2926,11 @@ class Game {
     const def = ENEMIES[type];
     // boss tăng máu chậm hơn quái thường để không đột biến ở cuối chiến dịch
     const ew = effWave(this.wave, this.level);
-    let hp = def.hp * (def.boss ? Math.pow(waveHpMult(ew), 0.85) : waveHpMult(ew)) * this.lv.hp;
+    const ewHp = this.hard ? hardEffWave(this.wave, this.level) : ew;   // claude/can-bang-tuong-vang: Khó không giảm máu theo ải dễ
+    let hp = def.hp * (def.boss ? Math.pow(waveHpMult(ewHp), 0.85) : waveHpMult(ewHp)) * (this.hard ? hardLvHp(this.level) : this.lv.hp);
     if (elite) hp *= 1.8;
     if (this.hard) hp *= HARD.hp(this.level);
+    hp *= waveRamp(this.wave, this.level, this.hard);   // claude/can-bang-tuong-vang: máu tăng dần theo đợt
     if (it && it.hpx) hp *= it.hpx;                 // đợt quá WAVE_CAP con: phần dư dồn vào máu
     if (it && it.ev && it.ev.hp) hp *= 1 + it.ev.hp; // sự kiện Quân Hùng Hậu
     hp *= this.pathHp || 1;   // dạng đường vô tận (PATH_SHAPES[..].hp)
@@ -3440,7 +3446,7 @@ class Game {
           h.mana -= sk.active.mana;
           if (runeFx(h) && runeFx(h).sk.s_echo && srand() * 100 < runeFx(h).sk.s_echo) { h.mana += sk.active.mana * 0.5; this.text(h.x, h.y - 84, 'Vang Vọng!', '#7FA8F0', 0.8, 12); }
         }
-        h.skillCd[sk.id] = sk.active.cooldown * (1 - st.cdr / 100);
+        h.skillCd[sk.id] = skillCdOf(sk, i, st.cdr);
         // ẩn Lang Liêu: đợt có Thủy Tinh, Lễ Tổ Tiên giảm 50% hồi chiêu
         if (sk.active.cast === 'ancestor' && this.enemies.some((e) => !e.dead && e.type === 'thuytinh')) {
           h.skillCd[sk.id] *= 0.5;

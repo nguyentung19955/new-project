@@ -123,6 +123,11 @@ button:disabled { cursor: default; }
 #tb-lives.lv-low b { color: #FF4A3A; animation: livesLow 1.2s ease-in-out infinite; }
 @keyframes livesLow { 50% { opacity: .55; } }
 #tb-water { color: var(--water-t); }
+/* claude/can-bang-tuong-vang: chip Thế trận (+% sát thương theo số tướng + số hành) */
+#tb-team { color: #FFD66B; cursor: pointer; }
+#tb-team b { color: #FFE9B0; }
+#tb-team.off { opacity: .55; }
+#tb-team.full b { color: #FFD66B; text-shadow: 0 0 6px #FFB04A; }
 #btn-speed.on { color: var(--gold-hi); border-color: var(--gold-hi); }
 #btn-run.go { background: linear-gradient(180deg, #F2D27A, #B8852A); border: 2px solid var(--gold-pale); color: #2A1A08; box-shadow: 0 0 10px #FFD66B88; }
 #btn-early { color: var(--text); }

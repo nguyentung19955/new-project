@@ -2637,7 +2637,33 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
   `docs/pixel/DANH-SACH.md` mục "Bổ sung".
 - **Nền pixel riêng (sau khi gộp v223 có tool bản đồ):** sinh `ban-do/<gốc>-<dạng>` cho 14 bản đồ dạng của các ải (`node tools/build-ban-do-spec.js` → lọc mã có dạng → `node tools/ve-pixel.js --spec … --nap`): ô sát đường cùng kiểu bệ đá, xa đường chỉ trang trí, chỗ tự cắt có cầu. `mapLayer` chọn ảnh theo mã `id` (thay `~` bằng `-`); bản đồ dạng không có ảnh (Vô tận ghép gốc × dạng khác, Vòng quanh núi, Bến đò — có núi / sông game tự vẽ) dùng `pxMapGround`. Tool spec: nạp thêm `js/chapters.js` (đăng ký bản đồ dạng của ải), nhánh phụ chỉ xuất đoạn không trùng nhánh trước (tránh cầu giả ở chỗ chia / nhập nhánh), bỏ qua bản đồ có núi / bến đò.
 
-## claude/can-bang-tuong-vang — Đo cân bằng tướng Vàng đơn độc ở độ Khó (chưa đổi game, chờ quyết định)
+## claude/can-bang-tuong-vang — Cân bằng độ khó, tướng Vàng/Tím, chiêu R, thưởng Thế trận
+
+Người dùng chọn phương án 4: máu quái tăng dần theo đợt + hạ riêng chiêu vượt trội + thưởng đội hình.
+
+- **Khó**: máu quái ×HARD (như cũ) × **1,04 mỗi đợt từ đợt 15** (dừng tăng ở đợt 100); ải 1–3 bật Khó **không còn hệ số giảm máu cho người mới** — máu và tốc tăng theo đợt lấy ít nhất bằng ải chuẩn `HARD_REF` (Cửa Sông Hồng). Nguyên nhân lỗi người dùng báo: Vô tận từ ải 1 giữ hệ số ải 1 (máu ~1/5 ải 7) suốt trận, Khó chỉ ×1,6 mà Ngân khố ×1,5 → 1 Vàng phép đi tới ~đợt 60. Tooltip nút Khó ghi rõ.
+- **Thường**: từ ải 4 trở đi máu ×**1,03 mỗi đợt từ đợt 15**. **Dễ** (ải 1–3 Thường) giữ nguyên.
+- **Thế trận** (mới, `TEAM_BONUS` js/data.js): toàn quân +6% sát thương mỗi tướng từ tướng thứ 3 (tối đa 8 tướng) + theo số hành khác nhau 3/4/5 hành: +10/20/30% (đủ 5 hành cộng thêm Ngũ hành tề tựu +10%). Đội 6 tướng đủ 5 hành: **+64%**; 8 tướng: +76%. Chip ⚔ +X% trên thanh trên (cạnh mạng), chạm → giải thích. Ảnh pixel icon ghi ở `docs/pixel/DANH-SACH.md`.
+- **Chiêu R**: hồi chiêu thực tế **không dưới 12 giây** sau mọi giảm hồi chiêu (`R_MIN_CD`, trước đây trí lực + đồ giảm tới 50% → R 10 s chỉ còn 5 s). Mô tả kỹ năng ghi "(tối thiểu 12 giây)".
+- R toàn bản đồ / vùng lớn chiếm 60–94% sát thương trận (đo `node tests/can-bang-vang/do-r.js all 45 55`) → tăng hồi chiêu trước, rồi hạ sát thương:
+
+| R | Tướng | Hồi chiêu trước → sau | Sát thương / khống chế |
+|---|---|---|---|
+| Mưa Dừa (melonrain) | Sơ Dừa (Tím) | 20 → 30 | x2 → x1.5 |
+| Mưa Dưa (melonrain) | An Tiêm (Tím) | 18 → 26 | x2 → x1.5 |
+| Bay Về Trời (skyride) | Thánh Gióng | 20 → 30 | x4 → x3 |
+| Cung Trăng Gọi Gió (forestwrath) | Chú Cuội | 22 → 30 | x2 → x1.5, trói 1,8 → 1,2 s (boss 0,6 → 0,4) |
+| Rừng Thiêng Nổi Giận (forestwrath) | Mẫu Thượng Ngàn | 22 → 30 | như trên |
+| Mưa Đầm Sen (blizzard) | Hải Sen | 16 → 22 | — |
+| Mù Sương Tản Viên (blizzard) | Thần Sương | 16 → 20 | — |
+| Khúc Ca Cuối (tidegate) | Trương Chi (Tím) | 22 → 26 | — |
+| Long Cung Nổi Sóng (tidegate) | Long Nữ | 22 → 26 | — |
+
+  % sát thương từ R (đợt 45–55, tướng max đứng một mình) trước → sau: Gióng 94 → 86, Mẫu T.Ngàn 91 → 87, Sơ Dừa 91 → 83, Cuội 93 → 81, An Tiêm 84 → 73, Hải Sen 90 → 87, Thần Sương 74 → 68. R nhanh nhất trước đây: Thầy Mo 8,5 s, Xạ Thủ 8,6 s, Lạc Tướng 8,8 s → nay 12 s.
+- Tím đơn độc (21 tướng, ải 4 Thường): đa số thua ~đợt 15–24; Sơ Dừa vượt trội (thua ~49) → hạ qua R ở trên.
+- Công cụ: `tests/can-bang-vang/mo-phong.js` (bot Vô tận: `node tests/can-bang-vang/mo-phong.js vang:matroi,tim:sodua,thuong6,hon de,thuong,kho,kho4 3`), `tests/can-bang-vang/do-r.js` (bảng R). Test hồi quy: `tests/can-bang-vang/can-bang-vang.test.js`.
+
+### Đo ban đầu (trước khi chọn phương án)
 
 - Công cụ: `node tests/can-bang-vang/mo-phong.js [vang1|doi6] [0,1 = Thường,Khó] [ải] [số ván] [mã tướng Vàng]` — bot Vô tận đặt tướng vào ô phủ đường nhiều nhất, dồn vàng lên cấp / kỹ năng / Thần tinh; ghi đợt mất mạng đầu + đợt thua. `SET='lệnh JS'` để thử đòn bẩy, `SH=1` in màn đi qua, `DBG=1` in chỉ số tướng mỗi 10 đợt.
 - Kết quả (ải 1, Khó; mất mạng đầu → thua): Mặt Trời 57 → 65, Thiên Lôi 54 → 60, Mẫu Thượng Ngàn 44 → 63, Âu Cơ 34 → 53, Vàng cận chiến 7 → 13–17; đội 6 (1 Vàng + 2 Tím ★★★ + 3 Thường ★★ ngẫu nhiên) 41 → 58. Thường: Mặt Trời 58 → 65, đội 6 48 → 65.

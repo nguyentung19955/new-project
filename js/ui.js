@@ -534,6 +534,11 @@ class UI {
         this.say(op[0], op[1]);
       }
     };
+    // claude/can-bang-tuong-vang: chạm chip Thế trận → giải thích thưởng đội hình
+    $('#tb-team').onclick = () => {
+      const tb = this.game.teamB || { n: 0, el: 0, q: 0, e: 0, all: 0 };
+      this.toast(`Thế trận +${tb.all}% sát thương toàn quân · ${tb.n} tướng: +${tb.q}% (mỗi tướng từ tướng thứ ${TEAM_BONUS.from + 1}: +${TEAM_BONUS.per}%, tối đa ${TEAM_BONUS.maxN}) · ${tb.el} hành: +${tb.e}% (3/4/5 hành: +${TEAM_BONUS.el[3]}/${TEAM_BONUS.el[4]}/${TEAM_BONUS.el[5] + ELEM.full}%)`, '#FFD66B');
+    };
     $('#btn-detail').onclick = () => {
       const st = this.save.settings;
       st.detail = !st.detail;
@@ -826,7 +831,7 @@ class UI {
     const legends = Object.keys(HEROES).filter((t) => HEROES[t].legend === 'legendary');
     const epics = Object.keys(HEROES).filter((t) => HEROES[t].legend === 'epic');
     $('#prep').innerHTML = `<div class="screen" style="z-index:auto">
-      <div class="scr-head metal"><h1 class="ttl">Chuẩn bị xuất quân</h1><span class="chip dark">${UIE.endless()} Vô tận · ${g.placeName()}</span><button class="chip ${this.save.settings.hard ? 'on' : ''}" data-act="prep-diff" title="Máu quái ×${HARD.hp(g.level).toFixed(2)} · Ngân khố ×1,5">🔥 Khó: ${this.save.settings.hard ? 'Bật' : 'Tắt'}</button><div class="sp"></div>
+      <div class="scr-head metal"><h1 class="ttl">Chuẩn bị xuất quân</h1><span class="chip dark">${UIE.endless()} Vô tận · ${g.placeName()}</span><button class="chip ${this.save.settings.hard ? 'on' : ''}" data-act="prep-diff" title="Máu quái ×${HARD.hp(g.level).toFixed(2)}, tăng thêm ×${String(WAVE_RAMP.hard.k).replace('.', ',')} mỗi đợt từ đợt ${WAVE_RAMP.hard.from} · Ngân khố ×1,5">🔥 Khó: ${this.save.settings.hard ? 'Bật' : 'Tắt'}</button><div class="sp"></div>
         <span class="chip kho">Ngân khố ${bac(1)} ${fmt(kho)}</span>
         <button class="btn btn-gold title" style="height:40px;padding:0 18px;font-size:17px" data-act="prep-go">Vào trận ▶</button></div>
       <div class="prep-body">
@@ -1298,7 +1303,7 @@ class UI {
           <div class="desc">Quái mạnh dần mãi, boss mỗi 10 đợt. Sau đợt ${lv.waves}, cứ 10 đợt đổi sang quân truyền thuyết khác. Mỗi 10 đợt và mỗi boss hạ được nhận Ngân khố ngay. Hết mạng là kết thúc, ghi điểm bảng xếp hạng.</div>
           <div class="cp-rec">${UIE.endless()} Kỷ lục bản đồ này: <b>đợt ${rec[i] || 0}</b></div>
           ${this.counterHtml(i)}</div>
-          <div class="cp-act"><div class="cp-diff"><button class="${this.save.settings.hard ? 'metal' : 'btn-gold'}" data-act="diff" data-k="0">Thường</button><button class="${this.save.settings.hard ? 'on' : 'metal'}" data-act="diff" data-k="1" title="Máu quái ×${HARD.hp(i).toFixed(2)} · Ngân khố ×1,5">🔥 Khó <small>×${HARD.hp(i).toFixed(2).replace('.', ',')}</small></button></div>
+          <div class="cp-act"><div class="cp-diff"><button class="${this.save.settings.hard ? 'metal' : 'btn-gold'}" data-act="diff" data-k="0">Thường</button><button class="${this.save.settings.hard ? 'on' : 'metal'}" data-act="diff" data-k="1" title="Máu quái ×${HARD.hp(i).toFixed(2)}, tăng thêm ×${String(WAVE_RAMP.hard.k).replace('.', ',')} mỗi đợt từ đợt ${WAVE_RAMP.hard.from} · Ngân khố ×1,5">🔥 Khó <small>×${HARD.hp(i).toFixed(2).replace('.', ',')}</small></button></div>
           <button class="go btn-gold" data-act="cp-go">${UIE.endless()} Vào vô tận</button></div>
         </div>
       </div></div>`;
@@ -2192,6 +2197,8 @@ class UI {
       this.setHTML('#tb-lives b', g.lives + '/' + mx, `${g.lives}<small>/${mx}</small>`);
       $('#tb-lives').className = r <= 0.25 ? 'lv-low' : r <= 0.5 ? 'lv-mid' : ''; }
     this.setText('#tb-water b', `${g.water}/3`);
+    { const tb = g.teamB || { all: 0, el: 0 }; this.setText('#tb-team b', `+${tb.all}%`);   // claude/can-bang-tuong-vang: Thế trận
+      $('#tb-team').classList.toggle('off', !tb.all); $('#tb-team').classList.toggle('full', tb.el >= 5 && tb.n >= TEAM_BONUS.maxN); }
     // thanh mực nước: tiến tới lần dâng nước kế (sau đợt boss tiếp theo)
     let prev = 0, next = 0;
     for (let n = Math.max(1, g.wave - 20); n <= Math.max(g.levelWaves, g.wave + 10); n++) {
@@ -2408,7 +2415,7 @@ class UI {
             <span class="dim">${svgI(skillIcon(h.type, i))}</span>${ICON.lock}${can ? '' : `<b class="no">cấp ${COSTS.unlockReq[i]}</b>`}</button>`;
         }
         const cd = sk.active ? Math.max(0, h.skillCd[sk.id] || 0) : 0;
-        const mx = sk.active ? sk.active.cooldown * (1 - st.cdr / 100) : 1;
+        const mx = sk.active ? skillCdOf(sk, i, st.cdr) : 1;
         const lvOk = lv < max && h.level >= skillReqLevel(i, lv + 1);
         const pay = h.from ? g.gold >= COSTS.skillGold(i, lv) : h.skillPts > 0;
         const tag = lv >= max ? '<span class="sk-tag max">MAX</span>'
@@ -2456,7 +2463,7 @@ class UI {
         const i = +el.dataset.i, sk = HEROES[h.type].skills[i];
         const ov = el.querySelector('.cdov');
         if (!ov || !sk.active) return;
-        const cd = Math.max(0, h.skillCd[sk.id] || 0), max = sk.active.cooldown * (1 - st.cdr / 100);
+        const cd = Math.max(0, h.skillCd[sk.id] || 0), max = skillCdOf(sk, i, st.cdr);
         const hgt = cd > 0.4 ? `${Math.min(100, cd / max * 100)}%` : '0%';
         if (ov.style.height !== hgt) ov.style.height = hgt;
         const txt = cd > 0.4 ? String(Math.ceil(cd)) : '';
@@ -2909,10 +2916,10 @@ class UI {
     // hiệu lực: mỗi cấp kỹ năng +25%
     rows.push(row('Hiệu lực', lv >= max ? `cấp ${lv}: ${pct(lv)} · tối đa` : lv ? `cấp ${lv}: ${pct(lv)} <i>➜</i> cấp ${lv + 1}: <em>${pct(lv + 1)}</em>` : `cấp 1: ${pct(1)} <i>➜</i> cấp 2: <em>${pct(2)}</em>`));
     if (a) {
-      let cd = a.cooldown;
-      if (h) { try { cd = a.cooldown * (1 - (heroStats(h).cdr || 0) / 100); } catch (e) { /* bỏ qua */ } }
+      let cd = skillCdOf(sk, i, 0);
+      if (h) { try { cd = skillCdOf(sk, i, heroStats(h).cdr); } catch (e) { /* bỏ qua */ } }
       const left = h ? Math.max(0, h.skillCd[sk.id] || 0) : 0;
-      rows.push(row('Hồi chiêu', `${+cd.toFixed(1)} giây · ${a.mana} năng lượng${left > 0 ? ` · <span class="no">còn ${Math.ceil(left)}s</span>` : ''}`));
+      rows.push(row('Hồi chiêu', `${+cd.toFixed(1)} giây${i === 3 && cd <= R_MIN_CD ? ` (tối thiểu ${R_MIN_CD} giây)` : ''} · ${a.mana} năng lượng${left > 0 ? ` · <span class="no">còn ${Math.ceil(left)}s</span>` : ''}`));
     }
     const needOpen = COSTS.unlockReq[i];
     if (!lv) rows.push(row('Mở khóa', `tướng cấp ${needOpen}${h ? (hl >= needOpen ? ' ✓' : ` (đang ${hl})`) : ''}`, h ? (hl >= needOpen ? 'ok' : 'no') : ''));
