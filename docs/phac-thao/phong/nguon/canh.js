@@ -307,5 +307,46 @@
       U.glow(px + 3, y - 15, 9, 7, '#ff9a40', 0.08, 3);
     }
   };
+  // ====================================================================
+  // KIỂU C: phòng rộng hơn màn hình, camera theo hero
+  // ====================================================================
+  // Khung nhìn gốc 320x180 phóng 4,5 lần (thay vì 480x270 phóng 3 lần) để nhân vật to gấp rưỡi Kiểu A
+  // mà điểm ảnh vẫn đều. Phòng rộng khoảng hai màn hình mỗi chiều.
+  M.geoC = function () {
+    const g = { W: 700, H: 420, fx0: 40, fy0: 52, fx1: 640, fy1: 384, wh: 42, cap: 7, sw: 14, fw: 12 };
+    g.doors = [
+      { side: 'top', at: 340, state: 'locked' }, { side: 'bottom', at: 340, state: 'locked' },
+      { side: 'left', at: 218, state: 'locked' }, { side: 'right', at: 218, state: 'locked' },
+    ];
+    g.bounds = { x0: g.fx0 + 9, x1: g.fx1 - 9, y0: g.fy0 + 8, y1: g.fy1 - 4 };
+    return g;
+  };
+  M.kieuC = function () {
+    const g = M.geoC(), cam = 236;
+    const room = M.buildRoom(M.themes.castle, g, 23);
+    const X = (sx) => cam + sx;
+    setup({
+      reg: 2, w: g.W, bounds: g.bounds, seed: 5,
+      hero: { x: X(140), y: 116, face: 1 },
+      ents: [
+        { role: 'rusher', x: X(168), y: 117, hp: 0.6, cd: 9 },
+        { role: 'shield', x: X(210), y: 92, cd: 9 },
+        { role: 'swarm', x: X(186), y: 72, cd: 9 }, { role: 'swarm', x: X(226), y: 162, cd: 9 },
+        { role: 'archer', x: X(244), y: 120, wind: 1.2 },
+        { role: 'nimble', x: X(84), y: 156, face: 1, cd: 9 },
+      ],
+      props: [{ type: 'brazier', x: X(148), y: 70 }, { type: 'chest', x: X(40), y: 84 }],
+      zones: [
+        { x: X(92), y: 110, r: 20, pool: true, team: 'enemy', el: 'fire' },
+        { x: X(176), y: 154, r: 24, t: 3, t0: 4.2, life: 0.12 },
+      ],
+    });
+    play({ warm: 5, move: { mx: 1 }, hits: 1, stopAt: 0.52, hp: 0.86 });
+    const R = renderWorld(room, { w: 320, h: 180 }, 4.5, 2, cam);
+    realHud({ noDots: true });
+    M.minimap(389, 42);
+    R.restore();
+    return compose(R.wc, R.ov).canvas.toDataURL('image/png');
+  };
   M.png = (cv) => cv.toDataURL('image/png');
 })();
