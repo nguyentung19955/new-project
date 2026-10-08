@@ -1312,6 +1312,7 @@ function risingSparks(ctx, cx, cy, color, t, spread) {
 // ★★★ 3 vòng + hạt sáng màu hệ (vẽ ở drawHeroSprite)
 // Thần tinh (sao sau Thăng thần): vòng lửa thần cam đỏ, mỗi bậc thêm một vòng và nhiều tia hơn
 function drawAscAura(ctx, asc, s, t) {
+  if (typeof VFX !== 'undefined' && VFX.px && VFX.px.ascAura(ctx, asc, s, t)) return;   // claude/vfx-pixel-2
   const k = s / 0.28;
   const rx = 30 * DK * k, ry = 10 * DK * k;
   ctx.save();
@@ -1337,6 +1338,7 @@ function drawAscAura(ctx, asc, s, t) {
 }
 
 function drawEvoAura(ctx, tier, attrColor, s, t) {
+  if (typeof VFX !== 'undefined' && VFX.px && VFX.px.evoAura(ctx, tier, attrColor, s, t)) return;   // claude/vfx-pixel-2
   const k = s / 0.28;
   const rx = 24 * DK * k, ry = 8 * DK * k;
   // ảnh vẽ tay vòng hào quang (tien-hoa_1..3): vẽ dẹt theo phối cảnh, xoay chậm
@@ -1375,6 +1377,7 @@ function drawEvoAura(ctx, tier, attrColor, s, t) {
 
 // Hào quang phụ kiện (1 món mạnh nhất): Trống Đồng có sóng âm lan ra, Giáp Đồng Bất Diệt đồng đỏ
 function drawAccAura(ctx, a, s, t, glowOnly) {
+  if (typeof VFX !== 'undefined' && VFX.px && VFX.px.accAura(ctx, a, s, t, glowOnly)) return;   // claude/vfx-pixel-2: hào quang đồ pixel
   const k = s / 0.28;
   const rx = 30 * DK * k, ry = 10 * DK * k;
   const color = a.kind === 'copper' ? '#C8603A' : a.color;
@@ -1445,6 +1448,7 @@ function softDot(rgb) {
   return c;
 }
 function drawSmokeAura(ctx, t, rgb, k, h) {
+  if (typeof VFX !== 'undefined' && VFX.px && VFX.px.smokeAura(ctx, t, rgb, k, h)) return;   // claude/vfx-pixel-2
   const seed = ((h && h.id) || 0) * 1.37;
   const lv = GFX_LEVEL();
   const n = Math.round((9 + 5 * k) * (lv >= 2 ? 0.4 : lv === 1 ? 0.65 : 1));
@@ -1468,6 +1472,10 @@ function packGlow(ctx, png, w, hgt, h, look, def, t, tier, asc) {
 }
 function drawPackFront(ctx, h, def, t, hgt, asc) {
   const L = def.legend;
+  if (typeof VFX !== 'undefined' && VFX.px && VFX.px.packFront(ctx, L, hasLegendGear(h), t, hgt)) {
+    if (asc > 0) { ctx.save(); ctx.translate(-100, -222); drawAscStars(ctx, t, asc, L, true); ctx.restore(); }
+    return;
+  }
   if (L) {
     // bụi sáng bay lên quanh người (Vàng nhiều hơn Tím, Thần tinh càng nhiều)
     ctx.save();
@@ -1495,6 +1503,7 @@ function drawPackFront(ctx, h, def, t, hgt, asc) {
 }
 // ngôi sao Thần tinh bay vòng quanh người (nửa sau vẽ trước, nửa trước vẽ sau)
 function drawAscStars(ctx, t, asc, L, front) {
+  if (typeof VFX !== 'undefined' && VFX.px && VFX.px.ascGems(ctx, t, asc, L, front)) return;   // claude/vfx-pixel-2: ngọc thay sao
   const col = L === 'epic' ? '#E6B8FF' : '#FFF1A8';
   for (let i = 0; i < asc; i++) {
     const a = t * 1.6 + i * (Math.PI * 2 / asc);
@@ -1514,6 +1523,7 @@ function drawAscStars(ctx, t, asc, L, front) {
 }
 
 function drawSunHalo(ctx, t) {
+  if (typeof VFX !== 'undefined' && VFX.px && VFX.px.sunHalo(ctx, t)) return;   // claude/vfx-pixel-2: vầng trống đồng pixel
   ctx.save();
   ctx.translate(100, 112);
   ctx.rotate(t * 0.15);
@@ -1554,6 +1564,7 @@ function drawGlowEyes(ctx, color, t) {
 
 function drawBogWater(ctx, x, y, s, t) {
   const k = s / 0.28;
+  if (typeof VFX !== 'undefined' && VFX.px && VFX.px.bog(ctx, x, y, 17 * DK * k, 7 * DK * k, t)) return;   // claude/vfx-pixel-2: sa lầy pixel
   ctx.save();
   ctx.fillStyle = 'rgba(44,106,134,0.75)';
   ctx.beginPath();
@@ -2120,7 +2131,9 @@ function drawEnemy(ctx, e, t, o = {}) {
       ctx.stroke();
       ctx.globalAlpha = 1;
     }
-    if (e.elite) {
+    if (e.elite && typeof VFX !== 'undefined' && VFX.px && VFX.px.elite(ctx, e.elite, ELITE_MODS[e.elite].color, box.w, t)) {
+      // claude/vfx-pixel-2: vòng tinh anh pixel + dấu loại (js/vfx.js)
+    } else if (e.elite) {
       ctx.strokeStyle = ELITE_MODS[e.elite].color;
       ctx.lineWidth = 2.2;
       ctx.globalAlpha = 0.6 + Math.sin(t * 6) * 0.3;
@@ -2129,7 +2142,9 @@ function drawEnemy(ctx, e, t, o = {}) {
       ctx.stroke();
       ctx.globalAlpha = 1;
     }
-    if (d.burnAura && d.burnAura.kind) {
+    if (d.burnAura && typeof VFX !== 'undefined' && VFX.px && VFX.px.aura(ctx, d.burnAura, t)) {
+      // claude/vfx-pixel-2: hào quang đốt pixel (trống trận / lửa ma / mưa gió)
+    } else if (d.burnAura && d.burnAura.kind) {
       // v48: hào quang khác mưa — trống trận (sóng âm vàng đồng) / lửa ma (đốm lửa tím bay lên)
       const R = d.burnAura.radius, c = d.burnAura.color;
       ctx.fillStyle = hexA(c, '22');
@@ -2201,11 +2216,15 @@ function drawEnemy(ctx, e, t, o = {}) {
   const pxOk = box.px && pxDrawEnemy(ctx, e, t, box);
   const packRef = !box.solo && !pxOk && !vectorHeroesOn() && enemyPackRef(e.type);
   let png = box.solo || pxOk ? null : (packRef && enemyPackImg(e, t)) || enemyPng(e.type, e.elite || e.champion, e);
+  // claude/vfx-pixel-2: hộp hình thật đã vẽ (ảnh vẽ tay có thể cao hơn box, pixel làm tròn điểm ảnh) — vòng choáng / khối băng pixel bám theo
+  let artH = pxOk ? pxOk.h : box.ay;
+  const artBox = pxOk ? { w: pxOk.w, dx: pxOk.dx * flip, db: pxOk.db } : null;
   if (box.solo) cdDrawEnemy(ctx, e, t, box, box.solo, o);
   if (png) {
     // ảnh vẽ tay: chân ở giữa đáy ảnh, rộng theo ENEMY_W (bộ ảnh quái: cao theo ảnh bước 1 để đổi khung không đổi cỡ)
     const h2 = packRef ? box.w * packRef.naturalHeight / packRef.naturalWidth : box.w * png.naturalHeight / png.naturalWidth;
     const w2 = packRef ? h2 * png.naturalWidth / png.naturalHeight : box.w;
+    artH = Math.max(box.ay, d.flying ? h2 * 0.5 : h2);
     if (!o.icon) { const tr = ctx.getTransform(); png = fitSprite(png, Math.hypot(tr.a, tr.b) * w2); }
     const fxc = d.fx && ENEMY_FX[d.fx];
     if (fxc) drawEnemyFxBack(ctx, d.fx, fxc, w2, h2, t, e.id || 0, d.flying);
@@ -2239,7 +2258,10 @@ function drawEnemy(ctx, e, t, o = {}) {
   ctx.restore();
 
   const top = e.y - lift - box.ay - 4;
-  if (!o.icon) drawEnemyStatus(ctx, e, box, lift, t);
+  // trạng thái bằng ảnh assets/vfx/ (js/vfx.js: ảnh vẽ tay tt-*.png, không có thì hạt Kenney);
+  // ảnh chưa có / hết hạn mức → cờ false → vẽ bằng code như cũ
+  const vs = !o.icon && typeof VFX !== 'undefined' && VFX.status ? VFX.status(ctx, e, artH !== box.ay || artBox ? Object.assign({}, box, { ay: artH }, artBox) : box, lift, t) : {};
+  if (!o.icon) drawEnemyStatus(ctx, e, box, lift, t, vs);
   ctx.save();
   ctx.translate(e.x, 0);
   // bị làm chậm: phủ sương xanh
@@ -2260,13 +2282,15 @@ function drawEnemy(ctx, e, t, o = {}) {
   }
   if (e.stunT > 0) {
     if (e.stunKind === 'ice') {
-      ctx.fillStyle = 'rgba(189,235,250,0.45)';
-      ctx.strokeStyle = '#E8FBFF';
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.rect(-box.w * 0.5, e.y - lift - box.h, box.w, box.h + 2);
-      ctx.fill();
-      ctx.stroke();
+      if (!vs.iceArt) {   // có ảnh khối băng vẽ tay thì js/vfx.js đã vẽ
+        ctx.fillStyle = 'rgba(189,235,250,0.45)';
+        ctx.strokeStyle = '#E8FBFF';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.rect(-box.w * 0.5, e.y - lift - box.h, box.w, box.h + 2);
+        ctx.fill();
+        ctx.stroke();
+      }
     } else if (e.stunKind === 'root') {
       // dây rừng trói chân
       ctx.strokeStyle = '#3E9A4A'; ctx.lineWidth = 3;
@@ -2284,7 +2308,7 @@ function drawEnemy(ctx, e, t, o = {}) {
         const a2 = t * 3 + i * Math.PI;
         ctx.fillText('♪', Math.cos(a2) * box.w * 0.3, top - 6 + Math.sin(a2 * 2) * 4);
       }
-    } else {
+    } else if (!vs.stun) {
       for (let i = 0; i < 3; i++) {
         const a2 = t * 6 + (i * Math.PI * 2) / 3;
         drawStar(ctx, Math.cos(a2) * box.w * 0.3, top - 6 + Math.sin(a2) * 3, 3.5, '#F2D27A');
@@ -2297,7 +2321,7 @@ function drawEnemy(ctx, e, t, o = {}) {
     const ry = top - 14;
     ctx.beginPath(); ctx.arc(0, ry, 6, 0, Math.PI * 2); ctx.moveTo(-9, ry); ctx.lineTo(9, ry); ctx.moveTo(0, ry - 9); ctx.lineTo(0, ry + 9); ctx.stroke();
   }
-  if (e.poisonT > 0 && Math.random() < 0.3) {
+  if (e.poisonT > 0 && !vs.dot && Math.random() < 0.3) {
     circle(ctx, (Math.random() - 0.5) * box.w * 0.5, top + box.h * 0.3, 2, e.dotColor);
   }
   // v93: câm lặng — mây xám trên đầu, không dùng được kỹ năng
@@ -2344,6 +2368,7 @@ const ENEMY_FX = {
   poison: { glow: '#5FD06A', blur: 12, p: '#8BF07A' }, water: { glow: '#3EDCC0', blur: 12, p: '#BFF0FF' },
 };
 function drawEnemyFxBack(ctx, kind, c, w, h, t, id, fly) {
+  if (typeof VFX !== 'undefined' && VFX.px && VFX.px.enemyFx(ctx, kind, w, h, t, id, fly)) return;   // claude/vfx-pixel-2: hạt pixel
   if (!c.p) return;
   const base = fly ? h * 0.5 : 0;
   ctx.save();
@@ -2360,10 +2385,10 @@ function drawEnemyFxBack(ctx, kind, c, w, h, t, id, fly) {
   ctx.restore();
 }
 
-function drawEnemyStatus(ctx, e, box, lift, t) {
+function drawEnemyStatus(ctx, e, box, lift, t, vs = {}) {
   const cx = e.x, cy = e.y - lift - box.h * 0.4;
   ctx.save();
-  if (e.stunT > 0 && e.stunKind === 'ice') {
+  if (e.stunT > 0 && e.stunKind === 'ice' && !vs.iceArt) {
     ctx.fillStyle = 'rgba(190,235,250,0.38)';
     ctx.strokeStyle = 'rgba(232,248,255,0.9)';
     ctx.lineWidth = 1.4;

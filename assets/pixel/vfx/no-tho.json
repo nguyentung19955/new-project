@@ -1,0 +1,25 @@
+{
+ "code": "no-tho",
+ "group": "vfx",
+ "name": "Vụ nổ hệ Thổ",
+ "w": 18,
+ "h": 18,
+ "ax": 9,
+ "ay": 9,
+ "bbox": [
+  6,
+  6,
+  6,
+  6
+ ],
+ "n": 4,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 4,
+   "fps": 10,
+   "loop": false
+  }
+ },
+ "sheet": "no-tho.png"
+}

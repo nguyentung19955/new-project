@@ -1,0 +1,25 @@
+{
+ "code": "giot-nuoc",
+ "group": "vfx",
+ "name": "Giọt nước thánh",
+ "w": 8,
+ "h": 10,
+ "ax": 4,
+ "ay": 9,
+ "bbox": [
+  0,
+  0,
+  8,
+  9
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": true
+  }
+ },
+ "sheet": "giot-nuoc.png"
+}

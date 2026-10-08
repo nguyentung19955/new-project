@@ -1,0 +1,25 @@
+{
+ "code": "song-cuon",
+ "group": "vfx",
+ "name": "Sóng cuốn",
+ "w": 12,
+ "h": 8,
+ "ax": 6,
+ "ay": 7,
+ "bbox": [
+  0,
+  0,
+  12,
+  8
+ ],
+ "n": 2,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 2,
+   "fps": 4,
+   "loop": true
+  }
+ },
+ "sheet": "song-cuon.png"
+}

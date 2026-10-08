@@ -1,0 +1,34 @@
+# Đạn hệ Thủy — cầu nước chàm xoáy bọt trắng, đuôi nước bắn (bay sang PHẢI).
+name: Đạn hệ Thủy
+size: 14x9
+anchor: 9,4
+colors:
+  k = cham-toi
+  c = cham-sang
+  n = nuoc
+  w = nuoc-sang
+  t = troi
+part a
+..............
+........nnn...
+..w....nwttnn.
+.w.ww.nwtnnnc.
+w.wwwwnnnwtnc.
+.w.ww.nnnnwnc.
+..w....ncccc..
+........ccc...
+..............
+end
+anim main fps=8 loop
+frame main
+  use a
+  outline k
+end
+frame main
+  use a
+  set 9 3 n
+  set 10 3 t
+  set 10 4 n
+  set 9 5 w
+  outline k
+end

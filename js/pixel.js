@@ -155,9 +155,11 @@ function pxDrawEnemy(ctx, e, t, box) {
   if (!img) return false;
   const d = e.def || {};
   const fxc = d.fx && typeof ENEMY_FX !== 'undefined' && ENEMY_FX[d.fx];
-  pxBlit(ctx, img, pe, 0, 0, box.unit, false, { glow: fxc ? { color: fxc.glow, blur: fxc.blur * 0.6, alpha: 0.9 } : null, flash: e.hitT > 0 && !pe.anims.hurt ? e.hitT / 0.12 * 0.55 : 0 });
+  const u = pxBlit(ctx, img, pe, 0, 0, box.unit, false, { glow: fxc ? { color: fxc.glow, blur: fxc.blur * 0.6, alpha: 0.9 } : null, flash: e.hitT > 0 && !pe.anims.hurt ? e.hitT / 0.12 * 0.55 : 0 });
   PX.seen.add(pe.key);
-  return true;
+  // hộp hình thật đã vẽ (điểm ảnh làm tròn theo màn hình), so với chân (chưa lật): cao trên chân, rộng, lệch tâm ngang, đáy dưới chân
+  const [bx, by, bw, bh] = pe.bbox;
+  return { h: (pe.ay + 1 - by) * u, w: bw * u, dx: (bx + bw / 2 - pe.ax - 0.5) * u, db: (by + bh - pe.ay - 1) * u };
 }
 // biểu tượng quái (bảng đợt, bách khoa)
 function pxEnemyIcon(cv, type, pad) {

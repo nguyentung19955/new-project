@@ -1,0 +1,25 @@
+{
+ "code": "bang-tinh",
+ "group": "vfx",
+ "name": "Tinh thể băng",
+ "w": 10,
+ "h": 11,
+ "ax": 5,
+ "ay": 10,
+ "bbox": [
+  0,
+  1,
+  10,
+  10
+ ],
+ "n": 2,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 2,
+   "fps": 3,
+   "loop": true
+  }
+ },
+ "sheet": "bang-tinh.png"
+}

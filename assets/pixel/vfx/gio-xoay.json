@@ -1,0 +1,25 @@
+{
+ "code": "gio-xoay",
+ "group": "vfx",
+ "name": "Xoáy khí",
+ "w": 8,
+ "h": 8,
+ "ax": 4,
+ "ay": 4,
+ "bbox": [
+  1,
+  2,
+  6,
+  4
+ ],
+ "n": 2,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 2,
+   "fps": 6,
+   "loop": true
+  }
+ },
+ "sheet": "gio-xoay.png"
+}

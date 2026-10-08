@@ -2133,6 +2133,17 @@ Test: `node tests/run-all.js` đạt (tu-cu-dong: mẫu trang thử đổi xathu
 - Ảnh trước / sau (4 cỡ): `docs/cho-6-the/truoc-*.jpg`, `docs/cho-6-the/sau-*.jpg` (dải đáy).
 - Gộp claude/dung-anh-co-san: đồng xu, nén bạc, tim mạng, icon ngăn kéo, Lò đúc, Bách khoa, rương rơi đồ… dùng ảnh thật.
 
+## claude/vfx-kenney — Hiệu ứng hạt bằng ảnh Kenney (lửa, độc, choáng, băng, nổ, quái / boss chết)
+
+- **Ảnh mới `assets/vfx/` (22 ảnh, ~95 KB):** chọn lọc từ 2 gói miễn phí CC0 của Kenney (Particle Pack + Smoke Particles), cắt sát viền, thu nhỏ 48–128 px. Ảnh xám (`lua-1/2/3`, `khoi-1/2`, `khoi-trang-1/2`, `choang-sao`, `sao-lap-lanh`, `bang-1/2`, `tia-set`, `vong-1`, `anh-sang`, `manh-vo`) được **tô màu lúc chạy** theo hệ / trạng thái (không nhân bản file màu); ảnh có màu sẵn: `no-1/2/3` (mây nổ lửa), `doc-1/2` (mây độc xanh), `chop-1` (chớp vàng), `khoi-den`. Nguồn + giấy phép: `assets/vfx/NGUON-KENNEY.txt`. Gói gốc `incoming/kenney-vfx/` đã xoá khỏi nhánh (còn trong lịch sử git).
+- **Trạng thái trên quái (vẽ trước thanh máu, không vượt đỉnh hình → không che thanh máu):**
+  - Bỏng (DOT màu đỏ / cam): 2–3 ngọn lửa bốc lên từ thân + tàn lửa. Độc (DOT xanh / tím): mây độc mờ quanh thân + bong bóng nổi lên.
+  - Choáng: 3 ngôi sao vàng xoay vòng quanh đầu. Đóng băng: khối băng cũ + ánh lấp lánh + mảnh băng. Làm chậm: sương lạnh dưới chân + bông tuyết rơi (giữ lớp phủ xanh cũ).
+  - Mỗi khung có **hạn mức ảnh trạng thái** (180, máy yếu tối thiểu 100); hết hạn mức hoặc ảnh chưa tải → vẽ cách cũ bằng code (sao vẽ tay, chấm độc…).
+- **Hiệu ứng sự kiện thêm ảnh:** trúng đòn theo **ngũ hành** của tướng bắn (Kim lấp lánh, Mộc lá bay, Thủy vòng nước + giọt, Hỏa tàn lửa, Thổ mảnh vỡ); đạn nổ lan có mây nổ / khói theo hệ; vụ nổ lớn có mây lửa + khói đen + mảnh vỡ; cột lửa, đất cháy (`scorch`) có ngọn lửa; băng (nova / tuyết) có bông tuyết xoay; sét có tia sét; đòn nặng có chớp vàng; tung chiêu có sao lấp lánh. **Quái chết**: phụt khói trắng chibi + ánh sao; **boss chết**: nổ lớn + vòng sáng + khói đen bốc lên + tàn lửa.
+- **Hệ hạt (js/vfx.js):** có **pool** dùng lại object hạt (xoá bằng đổi chỗ O(1), không tạo rác mỗi khung); đầy MAX (700 / 380 / 180 theo mức đồ hoạ) thì bỏ hạt mới, hạt quan trọng (`must`: nổ lớn, boss chết) thế chỗ. Hạt ảnh `vfx/` chưa tải được thì vẽ quầng gradient dự phòng.
+- **Đo FPS sơ bộ** (máy test không GPU, 120 quái, ¾ dính trạng thái): ~36 FPS khi có ảnh trạng thái so với ~37 FPS khi tắt — gần như không tốn thêm.
+- Test: `tests/hieu-ung/hat-vfx.test.js` (không lỗi console, số hạt bị giới hạn, pool dùng lại, hạn mức ảnh trạng thái, ảnh không lên thanh máu, thiếu ảnh → vẽ cách cũ; chụp 1920×934, 844×390, 667×375 vào `tests/hieu-ung/shots/`).
 ## claude/tat-anh-moi — Tạm tắt ảnh tướng mới, quay về toàn bộ hình cũ
 
 - Người dùng: "Trước mắt cứ revert về toàn bộ hình ảnh tướng cũ, sau khi có đủ hết ảnh thì sẽ dùng cái mới sau."
@@ -2176,6 +2187,11 @@ Test: cập nhật `cho-tuong` (màn Chuẩn bị không còn chọn đội, sau
 - Sửa theo tester (sau v195): đồng xu bay khi hạ quái ~16 px CSS, rương rơi đồ ~30 px CSS (cỡ tính theo `view.scale`, không nhỏ lại trên điện thoại), quầng tròn + viền vòng đậm màu độ hiếm (xám / xanh / tím / cam) nhấp nháy nhẹ, chỉ mờ ở cuối. Icon tựa màn thua chương Sơn Tinh "Phong Châu thất thủ": thay mũi tên sóng (`ic-nuoc-dang`, trông như biểu đồ tăng) bằng cổng thành `tiles/cong-phong-chau.png` chìm trong 2 ngọn sóng `ic-hanh-thuy`.
 - Ảnh bảng Hợp thể (nút Mở ở Anh Hùng) và màn kết quả (nhắc mở 1 tướng Tím): `docs/cho-6-the/bang-hop-the-844x390.jpg`, `docs/cho-6-the/ket-qua-667x375.jpg`.
 
+## claude/vfx-kenney — Chỗ nhận ảnh trạng thái vẽ tay (prompt phần E)
+
+- Người dùng thấy hạt Kenney cho choáng / băng "chưa đẹp" → thêm **prompt phần E** trong `docs/PROMPT-HIEU-UNG.txt`: 5 ảnh kiểu sticker chibi (viền nâu đậm, màu phẳng 2 tông, không quầng sáng mờ, nền hồng tím): `tt-choang` (vòng sao xoay trên đầu), `tt-bang` (khối băng bọc quái), `tt-cham` (vòng sương lạnh dưới chân), `tt-bong` (cụm lửa trên thân), `tt-doc` (bong bóng độc). Cắt: `python3 tools/cat-fx.py dai <ảnh> <tên>` → `assets/vfx/<tên>.png`, rồi `node tools/build-asset-list.js`.
+- Game (js/vfx.js `VFX.status`) ưu tiên: ảnh vẽ tay `tt-*.png` (dải khung chạy lặp) → hạt Kenney → vẽ bằng code. Có `tt-bang.png` thì tắt khối băng vẽ bằng code. Mọi ảnh trạng thái đặt sao cho nội dung không lên tới thanh máu.
+- Test `tests/hieu-ung/hat-vfx.test.js` thêm phần ảnh vẽ tay giả (phục vụ qua route, không ghi vào assets/).
 ## claude/vo-tan-su-kien — Vô tận có vô tận thật không + sự kiện thử thách mỗi 10 đợt từ đợt 60
 
 **Kiểm tra Vô tận (trước khi sửa):** không có mảng đợt / index hết phần tử nên về lý thuyết chơi mãi, nhưng:
@@ -2328,6 +2344,29 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
 
 - Tướng Thường ★★★: lên cấp ⅓ giá, mở W/E/R miễn phí → Tím (Thăng thần) đầu tiên ~đợt 15 (trước ~19), độ khó không đổi rõ.
 
+## claude/vfx-kenney — Hiệu ứng PIXEL ART (thay ảnh Kenney): lô 1
+
+- **Theo chỉ đạo người dùng (qua điều phối):** toàn bộ hiệu ứng chuyển sang **pixel art vẽ bằng code**, màu trầm cổ kính, không trẻ con, không gen AI, bỏ ảnh Kenney. Đã xoá `assets/vfx/` (22 ảnh Kenney của nhánh) và `assets/fx/` (32 ảnh Kenney cũ + giấy phép — không còn chỗ nào dùng). Phần E prompt sticker trong `docs/PROMPT-HIEU-UNG.txt` ghi KHÔNG DÙNG.
+- **30 sprite** `tools/pixel/src/vfx/*.txt` (định dạng + bảng màu chung `docs/pixel/QUY-CHUAN.md`), dựng bằng tool chung `node tools/build-pixel.js` → `assets/pixel/vfx/*.png` + manifest `js/pixel/vfx.js`. Lửa đuôi rồng son–vàng nghệ, chim Lạc nét khắc trống đồng, xoáy khí, tinh thể băng, sương lạnh, mây + bong bóng độc, nổ, khói, chém, sét, nước bắn, lá tre, bụi đất, ánh kim, mầm lá hồi máu, đồng xu lỗ vuông, mũi lên cấp, 10 loại đạn (cầu lửa, mũi băng, tên tre, tên nỏ, ngọc, lông vũ, cánh sen, dưa hấu, hạt gạo, tà khí).
+- **js/vfx.js viết lại thành hệ pixel:** mọi hạt / sprite / vòng / tia bám lưới điểm ảnh màn hình (1 điểm ảnh sprite = 2 đơn vị bản đồ, phóng số nguyên, `imageSmoothingEnabled=false`, độ mờ theo bậc), màu bất kỳ quy về màu gần nhất của bảng chung. Giữ pool hạt, giới hạn MAX, hạn mức sprite trạng thái mỗi khung.
+  - **Trạng thái trên quái** (`VFX.status`, vẽ trước thanh máu, không vượt đỉnh): bỏng = lửa; độc = mây + bong bóng; **choáng = 2 chim Lạc + 2 xoáy khí lượn trên vòng xoáy sáng** (thay ngôi sao hoạt hình); đóng băng = vỏ băng pixel + tinh thể (thay khối băng code); làm chậm = sương + tuyết.
+  - **Đạn bay** (`VFX.drawProj`, móc đầu `drawProjectile`), **hiệu ứng mỗi khung** (`VFX.drawFx`, móc đầu `drawEffects`: vòng, chém, sét, cháy đất, đập, tia, mưa tên, cảnh báo, cột lửa, thiên thạch, nổ, xoáy, băng, tuyết, hồi máu, hồi sinh, sóng, gió, khiên, nứt đất, đá rơi, triệu hồi, kích hoạt đồ, lên cấp, tiến hoá, xu, dưa ném…), **hạt sự kiện** (`VFX.onEffect`: trúng đòn theo ngũ hành, nổ lan, quái / boss chết…), **đòn đánh tướng** (costume.js `fxImage` → `VFX.pxTex`).
+  - Thứ tự vẽ: sprite pixel → (ảnh vẽ tay nếu có) → vẽ code cũ dự phòng. Thiếu sprite → các hàm trả false, game vẽ như cũ.
+- Tiến độ / phần còn lại của lô vfx: `docs/pixel/DANH-SACH.md` Lô 44 mục "Tiến độ".
+- FPS sơ bộ (máy test không GPU, 120 quái ¾ dính trạng thái + nổ liên tục): 34–42 FPS (bản Kenney cũ ~26–36).
+- Test `tests/hieu-ung/hat-vfx.test.js` (bản pixel); `hieu-ung-game.test.js` bỏ manifest pixel để kiểm tra đường dự phòng ảnh vẽ tay.
+
+## claude/vfx-pixel-2 — Hiệu ứng PIXEL lô 2 (phần còn lại Lô 44)
+
+- **21 sprite mới** `tools/pixel/src/vfx/` (bảng màu chung, `node tools/build-pixel.js`): đạn theo hệ Kim (lưỡi bạc) / Mộc (phi tiêu lá) / Thủy (cầu nước) / Thổ (cục đất); vật ném đá lăn, đèn trời, chai sành, bình gốm; nổ lan theo hệ `no-kim/moc/thuy/tho`; Hổ Ba Vì, Chim Thần, Ngựa sắt, Gióng bay, Cây Đa Thần, Lạc Tử; dấu tinh anh khiên đồng / giọt nước thánh / sóng cuốn.
+- **Móc pixel mới** (thứ tự: pixel → hình cũ dự phòng): đạn chung đổi theo hệ tướng; vật ném (`lob`), Gióng bay dọc sông / đá Lạc Hầu lăn (`skyride`), hổ vồ, chim Lạc / Chim Thần, ngựa sắt phun lửa, quét gậy, dấu săn, bóng lướt, móc kéo, mọc núi, nốt nhạc; vùng đất (vệt lửa, ruộng lúa, Cây Đa, đá núi); đàn Lạc Tử; hào quang đốt quanh boss (trống trận, lửa ma, mưa gió Thủy Tinh); hạt quái biến thể; vòng tinh anh + dấu loại; **tướng bị choáng = chim Lạc + xoáy khí** (thay ngôi sao); sa lầy; hào quang đồ, Thần tinh, tiến hoá, khói Tím/Vàng, vầng trống đồng; Thần tinh bay quanh là **ngọc** thay ngôi sao.
+- Đồ / bộ đồ hiện trên người tướng (`sau-lung-*`, `trang-phuc-*`, `do-*`, cánh): không vẽ pixel (quyết định điều phối). Tiến độ đầy đủ: `docs/pixel/DANH-SACH.md` Lô 44.
+- Test mới `tests/hieu-ung/hat-vfx-2.test.js` (móc trả về pixel, không lỗi console, chụp 1920×934 / 844×390 / 667×375).
+
+## claude/vfx-pixel-2 — sửa lỗi tester: vòng choáng + lửa bỏng pixel
+- Vòng choáng pixel (chim Lạc + xoáy khí) của quái và tướng giờ nằm TRÊN đỉnh đầu: tính theo đỉnh bbox hình (quái ảnh vẽ tay lấy cao ảnh thật đã vẽ), điểm thấp nhất của vòng không xuống dưới đỉnh đầu → không còn cắt ngang mặt. Thanh máu vẽ sau đè lên như ngôi sao cũ.
+- Lửa bỏng pixel thu nhỏ: thay ngọn lửa sprite 10×14 (to bằng nửa con quái) bằng ngọn lửa nhỏ 3×4 ô liếm theo nhịp, cỡ tương đương chấm lửa bản không pixel.
+- Test hat-vfx: thêm kiểm tra vòng choáng quái/tướng trên đỉnh đầu, lửa bỏng ≤ 45% chiều cao và không rộng quá thân quái.
 ## Phiên bản 217 — gộp pixel-quai-boss (tester đạt)
 
 - 41 quái/boss pixel; boss pixel co theo chiều cao hình cũ, quái bay/boss cao không lọt dưới thanh trên. Test nạp gói tự bỏ tạm 1 quái khỏi manifest khi đã vẽ đủ.
@@ -2475,3 +2514,5 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 - Quái/boss pixel giờ co theo **chiều cao hình cũ** (giữ tỉ lệ, rộng tối đa 1,15× rộng cũ) thay vì theo rộng → Đại Bàng 92, Ngư Tinh 65, Hồ Tinh 71, Chằn Tinh 106, Triệu Đà 142 (đơn vị logic) khớp bản cũ; Triệu Đà sát thành không còn đè thành. Chiều cao cũ nhớ theo mã (`ENEMY_OLD_HW`), ảnh cũ chưa tải thì boss lấy 112.
 - Kẹp mép trên: `PLAY_TOP` (đáy thanh trên, tính khi đổi cỡ màn) — quái bay / boss cao ở khúc đường sát trên tự hạ độ nâng để đỉnh hình + thanh máu nằm dưới thanh trên.
 - Test mới `tests/pixel/boss-cao.test.js`: so chiều cao pixel vs cũ (≤15%) ở 1920×934 + 844×390, đo đỉnh hình Đại Bàng ở điểm đường cao nhất, chụp ảnh.
+- (vòng 2, theo tester) Vòng choáng hạ sát đầu: đáy vòng chạm đỉnh hình ±3 (quái pixel lấy cao hình thật sau làm tròn điểm ảnh), chim Lạc / xoáy khí đậu lên đường vòng; nét vòng dày 2 ô cho dễ thấy ở 844×390. Lửa bỏng: 1–2 ngọn lửa 5×7 ô rõ dáng, ngang vai, cao ~26% hình quái (cỡ ô theo cỡ quái). Test hat-vfx: đáy vòng–đỉnh đầu ±3, lửa cao 18–45%.
+- (yêu cầu thêm) Đóng băng pixel: khối băng BÁT GIÁC (viền nước sáng 1 ô, mặt trong trong suốt nhạt, vệt sáng chéo, đáy chàm sáng) bọc trọn hộp hình thật từng con (lề ~11%, cắt góc < 2 lề nên góc hộp vẫn nằm trong) — boss to khối to, lính nhỏ khối nhỏ, quái bay bọc đúng chỗ đang bay. pxDrawEnemy trả hộp hình thật (cao, rộng, lệch tâm, đáy) để vòng choáng / khối băng bám đúng. Test hat-vfx: bát giác bao trọn bbox, lề ≤ 15% cho tôm, voi chiến, Thuồng Luồng, Đại Bàng.

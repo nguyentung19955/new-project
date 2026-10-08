@@ -1,0 +1,30 @@
+# Cánh sen (hoa sen hồng nhạt viền son) — xoay 2 khung khi bay.
+name: Cánh sen
+size: 9x9
+anchor: 4,4
+colors:
+  k = son-toi
+  h = hong
+  w = trang
+  y = vang-nghe
+part a
+.........
+....h....
+...hwh...
+.h.hwh.h.
+.hhhyhhh.
+..hhhhh..
+...hhh...
+.........
+.........
+end
+anim main fps=8 loop
+frame main
+  use a
+  outline k
+end
+frame main
+  use a
+  rot 90
+  outline k
+end

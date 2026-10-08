@@ -1,0 +1,41 @@
+# Đạn cầu lửa — đầu lửa tròn vàng nghệ, đuôi lửa son vẫy như đuôi rồng (bay sang phải).
+name: Cầu lửa
+size: 14x9
+anchor: 9,4
+colors:
+  k = son-toi
+  r = son
+  o = lua
+  y = vang-nghe
+  Y = vang-sang
+part a
+..............
+.........rr...
+..r....rrooor.
+.rrr..rooyyyor
+..rrrroyyYYyor
+...rrrooyyyor.
+.r....rrooor..
+.........rr...
+..............
+end
+part b
+..............
+.r.......rr...
+..rr...rrooor.
+...rrrrooyyyor
+.rrrr.oyyYYyor
+......rooyyyor
+.......rooor..
+.........rr...
+..............
+end
+anim main fps=10 loop
+frame main
+  use a
+  outline k
+end
+frame main
+  use b
+  outline k
+end

@@ -1,0 +1,29 @@
+# Sóng Cuốn (tinh anh "Sóng Cuốn", chạy nhanh) — ngọn sóng cuộn kiểu hoa văn trống đồng sau gót.
+name: Sóng cuốn
+size: 12x8
+anchor: 6,7
+colors:
+  k = cham-toi
+  n = nuoc
+  w = nuoc-sang
+  t = troi
+part a
+............
+.....nnn....
+....nwttn...
+...nw..tn...
+..nw..nwn...
+.nwwnnnwnn..
+nwwwwwwwwwn.
+............
+end
+anim main fps=4 loop
+frame main
+  use a
+  outline k
+end
+frame main
+  use a
+  shift 1 0
+  outline k
+end
