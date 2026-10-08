@@ -2193,14 +2193,14 @@ function enemyBox(e) {
   if (pb) return pb;
   return enemyBoxOld(e, a, w, k);
 }
-// chiều cao hình cũ (đơn vị logic, k = 1 tính theo rộng) — nhớ theo mã khi đo được ảnh cũ để không nhảy cỡ
-const ENEMY_OLD_HW = new Map();
+// chiều cao hình cũ (đơn vị logic) — CỐ ĐỊNH theo mã từ bảng tĩnh js/pixel/quai-cao.js (tools/build-quai-cao.js).
+// Trước đây đo lúc chơi: pixel mặc định không nạp sẵn ảnh cũ → đầu trận quái cỡ pixel gốc, ảnh cũ tải xong thì nhảy to.
+// Mã chưa có trong bảng: chỉ dùng hình vector (đồng bộ, không đợi tải) để cỡ không đổi giữa trận.
 function enemyBoxOldH(e, a, w, k) {
-  const b = enemyBoxOld(e, a, w, k);
-  if (b.solo || a) ENEMY_OLD_HW.set(e.type, b.h / w);
-  const r = ENEMY_OLD_HW.get(e.type);
+  const r = typeof ENEMY_OLD_HW_TABLE !== 'undefined' && ENEMY_OLD_HW_TABLE[e.type];
   if (r) return r * w;
-  return e.def && e.def.boss ? 112 * k : 0;   // ảnh cũ chưa tải: boss cao chuẩn như cdEnemySize, quái thường giữ nguyên
+  if (a) return w * a.h / a.w;
+  return e.def && e.def.boss ? 112 * k : 0;   // boss cao chuẩn như cdEnemySize, quái thường theo rộng
 }
 function enemyBoxOld(e, a, w, k) {
   // tự cử động: ảnh đơn → cao theo khung bao của ảnh (thanh máu nằm trên đỉnh hình thật)
@@ -2322,7 +2322,9 @@ function drawEnemy(ctx, e, t, o = {}) {
   const flip = e.dir < 0 ? -1 : 1;
   const flapY = d.flying ? 1 + Math.sin(t * 16 + e.id) * 0.12 : 1;
   const swim = d.flying || e.stunT > 0 || box.solo ? 0 : Math.sin(t * 9 + e.id) * 0.035;
-  ctx.scale(flip * (1 + swim + kb * 0.1), flapY * (1 - swim - kb * 0.1));
+  // pixel: KHÔNG co giãn (bơi / giật lùi) — pxBlit làm tròn cỡ điểm ảnh theo tỉ lệ khung → ×1,1 khi trúng đòn làm quái nhảy to cả bậc (đến ×2)
+  if (box.px) ctx.scale(flip, 1);
+  else ctx.scale(flip * (1 + swim + kb * 0.1), flapY * (1 - swim - kb * 0.1));
   if (e.enraged) {
     ctx.shadowColor = '#ff2d2d';
     ctx.shadowBlur = 14;
