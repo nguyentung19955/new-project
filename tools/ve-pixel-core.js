@@ -706,17 +706,17 @@ function VePixelCore(DS, TV) {
     }
     // núi: dải xa (nhạt) rồi dải gần (màu đất)
     const ridge = (base, amp, f, ph) => { const a = []; for (let x = 0; x < W; x++) a.push(base - amp * (0.55 * Math.sin(x / W * f * 6.28 + ph) + 0.3 * Math.sin(x / W * f * 13 + ph * 2) + 0.15 * Math.sin(x / W * f * 29 + ph * 3))); return a; };
-    const fill = (r, ramp, mode = 'base', y1 = H) => { const m = M(); for (let x = 0; x < W; x++) for (let y = Math.max(0, Math.round(r[x])); y < y1; y++) m.px(x, y); paint(g, m, ramp, mode); };
+    const fill = (r, ramp, mode = 'base', y1 = H) => { const m = M(); for (let x = 0; x < W; x++) for (let y = Math.max(0, Math.round(r[x])); y < y1; y++) m.px(x, y); paint(g, m, Array.isArray(ramp) ? ramp.map((v) => (typeof v === 'string' ? C(v) : v)) : ramp, mode); };
     const p1 = rnd() * 6, p2 = rnd() * 6;
     if (o.canh !== 'hang') {
       fill(ridge(hz - H * 0.05, H * (o.canh === 'nui' || o.canh === 'menu' ? 0.22 : 0.1), 1.2, p1), o.gio === 'dem' ? ['cham-toi', 'cham-toi', 'cham'] : ['cham', 'cham-sang', 'cham-sang'], 'base');
       fill(ridge(hz, H * (o.canh === 'nui' ? 0.16 : 0.06), 2, p2), o.gio === 'dem' ? ['la-toi', 'la-toi', 'la-toi'] : [C('reu-toi'), C('reu'), C('reu')], 'base');
     }
     const dat = o.canh === 'bien' ? 'cat' : o.canh === 'hang' ? 'da' : o.canh === 'thanh' ? 'reu' : o.canh === 'dam' ? 'reu' : o.mauDat;
-    const datR = dat === 'da' ? ['toi', 'khoi', 'sat-toi'] : dat;
+    const datR = dat === 'da' ? ['toi', 'khoi', 'sat-toi'].map(C) : dat;
     // đất
     const gy = Math.round(hz + H * 0.04);
-    { const m = M().rect(0, gy, W, H - gy); paint(g, m, datR, 'base'); const [dk, , lt] = (Array.isArray(datR) ? datR.map(C) : rampOf(datR)); for (let i = 0; i < W * (H - gy) * 0.06; i++) { const x = Math.floor(rnd() * W), y = gy + Math.floor(rnd() * (H - gy)); g.set(x, y, rnd() < 0.5 ? dk : lt); } }
+    { const m = M().rect(0, gy, W, H - gy); paint(g, m, datR, 'base'); const [dk, , lt] = (Array.isArray(datR) ? datR : rampOf(datR)); for (let i = 0; i < W * (H - gy) * 0.06; i++) { const x = Math.floor(rnd() * W), y = gy + Math.floor(rnd() * (H - gy)); g.set(x, y, rnd() < 0.5 ? dk : lt); } }
     const nuoc = (y0, y1) => { const m = M(); for (let x = 0; x < W; x++) { const w = Math.round(Math.sin(x / 9 + p1) * 1.5); for (let y = y0 + w; y < y1 - w; y++) m.px(x, y); } paint(g, m, 'nuoc', 'base'); for (let i = 0; i < W * (y1 - y0) * 0.03; i++) { const x = Math.floor(rnd() * (W - 4)), y = y0 + 2 + Math.floor(rnd() * Math.max(1, y1 - y0 - 4)); g.set(x, y, C('nuoc-sang')); g.set(x + 1, y, C('nuoc-sang')); g.set(x + 2, y, C('troi')); } };
     const cay = (x, y, r) => { paint(g, M().rect(x - 1, y, 3, r * 1.2), 'dat'); paint(g, M().ell(x, y - r * 0.4, r, r * 0.9).ell(x - r * 0.6, y, r * 0.6, r * 0.5).ell(x + r * 0.6, y, r * 0.6, r * 0.5), o.gio === 'dem' ? 'la' : 'la'); };
     switch (o.canh) {
