@@ -1001,7 +1001,7 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 
 ### Phiên bản 77
 
-- **Dừng chơi**: menu ≡ trong trận có nút 🏳 Dừng chơi (bấm 2 lần để chắc chắn) — bỏ trận, không giữ để Tiếp tục, cộng thành tích, ghi điểm vô tận nếu đang vô tận, về menu.
+- **Dừng chơi**: menu ≡ trong trận có nút 🏳 Dừng chơi (bấm 2 lần để chắc chắn) — nay tên **Rời trận**, bấm 1 lần: lưu trận và về menu; bấm Tiếp tục để chơi tiếp (claude/giu-tran-dang-choi; trước đây nút này bỏ trận).
 - **Lò đúc đồng (cửa hàng + đúc đồ) đưa ra ngoài trận**: bỏ khỏi menu ≡ trong trận; mở từ bảng **Chuẩn bị xuất quân** trước khi vào trận (dùng vàng đầu trận), đóng thì quay lại bảng. Bảng chuẩn bị giờ luôn hiện khi vào ải.
 
 ### Phiên bản 78
@@ -2372,6 +2372,14 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 239 — bỏ kỹ năng toàn bản đồ (tester đạt)
+
+- Mọi chiêu chỉ tác động quái/đồng đội trong tầm. R cũ toàn sân (Gióng, An Tiêm, Sọ Dừa, Cuội, Mẹ Lúa) nay tầm ×2 quanh tướng; Kim Quy R khi quái trong tầm ×2 sắp lọt thành; Lời Thề, Lễ Tổ Tiên, hồi máu Rừng Thiêng chỉ tướng trong 220. Mô tả đã sửa.
+
+## Phiên bản 238 — Rời trận lưu trận (tester đạt)
+
+- ☰ → Rời trận (1 lần) và Back trong trận: lưu trận + về menu ngay, không hỏi; Tiếp tục đúng màn/đợt/tướng/vàng/mạng (trước: Dừng chơi xoá bản lưu → về màn 1). Chơi mới không hỏi, trả Ngân khố bỏ trận.
+
 ## Phiên bản 237 — quái không phình + gợi ý hợp thể (tester đạt)
 
 - Quái pixel không còn to lên khi trúng đòn/bơi (bỏ co giãn, cỡ cố định theo bảng tĩnh js/pixel/quai-cao.js).
@@ -2746,12 +2754,15 @@ Người dùng chọn phương án 4: máu quái tăng dần theo đợt + hạ 
   tầm thì giữ hồi chiêu sẵn sàng, không tốn năng lượng. Vùng sát thương của chiêu giữ nguyên.
 - Hỗ trợ: hồi máu khi có đồng đội bị thương (như cũ); khiên (Mai Rùa), Chia Bánh, Trống Trận, Cây Đa, Lời Thề: chỉ khi có đồng đội
   trong vùng của chiêu đang có quái trong tầm đánh (hoặc bị thương).
-- **Kỹ năng TOÀN BẢN ĐỒ** (dùng khi quái ở bất kỳ đâu trên đường) — người dùng soát:
-  · Thánh Gióng R «Bay Về Trời»: cưỡi ngựa sắt bay dọc cả dòng sông, đánh mọi quái trên bản đồ (≥3 quái hoặc có boss)
-  · An Tiêm R «Mưa Dưa»: dưa rơi khắp bản đồ (≥4 quái) · Sọ Dừa R: dừa rơi khắp trận (≥4 quái)
-  · Chú Cuội R «Gió Trăng»: quật mọi quái dưới đất · Mẫu R: rễ cây trồi khắp bờ sông, trói mọi quái dưới đất (≥3 quái hoặc boss)
-  · Kim Quy R «Hộ Thành»: không theo tầm — dùng khi quái sắp lọt thành
-  · Hỗ trợ toàn quân (theo đồng đội, không theo quái): Lang Liêu R «Lễ Tổ Tiên» (có tướng dưới 50% máu), Lạc Hầu R «Lời Thề».
+- ~~Kỹ năng toàn bản đồ~~ → **không còn** (người dùng đổi luật: chỉ kỹ năng trong tầm). Lúc tung, chiêu CHỈ thấy quái trong tầm
+  kỹ năng (Game.updateHero lọc danh sách quái); chiêu từng đánh cả sân có tầm x2 quanh tướng:
+  · Thánh Gióng R «Bay Về Trời»: ngựa sắt bay qua quái trong tầm x2 · An Tiêm R «Mưa Dưa», Sọ Dừa R: rơi xuống quái trong tầm x2
+  · Chú Cuội R «Gió Trăng», Mẫu R «Rễ Cây»: quái dưới đất trong tầm x2 (Mẫu R hồi 20% máu tướng trong 220)
+  · Kim Quy R «Hộ Thành»: dùng khi quái trong tầm x2 sắp lọt thành
+  · Lang Liêu R «Lễ Tổ Tiên», Lạc Hầu R «Lời Thề»: chỉ tướng trong tầm 220 (trước: toàn quân trên sân)
+  · Thạch Sanh/… «Lăn tảng đá», mũi tên xuyên: chỉ quái trong tầm trên đường lăn / bay
+  Mô tả các kỹ năng trên (js/data.js) đã đổi theo: bỏ "khắp bản đồ / cả dòng sông / toàn quân", ghi tầm.
+  Vùng đất / lửa / lúa đặt tại mục tiêu (vệt lửa Gióng E, ruộng lúa, cây đa…) vẫn là vùng cố định quanh mục tiêu trong tầm.
 - Test: `tests/sua-tam-skill/` (164 kỹ năng: vừa ngoài tầm → không tung, hồi chiêu không chạy; trong tầm → tung; toàn bản đồ tung
   khi quái ở xa; hỗ trợ không dùng khi đồng đội khoẻ và quái ngoài tầm; trận thật: Bổ Rìu tung đúng lúc quái vào tầm).
 - Áp pixel nốt phần còn lại (yêu cầu "toàn bộ giao diện"): ảnh nền menu, màn thắng/thua theo chương, tranh truyện (phông
@@ -2854,6 +2865,16 @@ Người dùng chọn phương án 4: máu quái tăng dần theo đợt + hạ 
   so với thẻ thường: tương phản ≥ 1,8 ở pixel/pixel0, 844×390 · 667×375 · 1920×934).
 - Lỗi gấp "Ấn GỌI SỚM không gọi được": KHÔNG do panel-open — bản v229 (trước khi gộp nhánh này) cũng không bấm được. Gốc: luật cũ `#nextwaves { … pointer-events: none }` (đầu style.css) đè `#ui > * { pointer-events: auto }` (cùng độ ưu tiên, viết sau thắng) → chạm/nhấp xuyên xuống bản đồ. Sửa: `#nextwaves.early { pointer-events: auto }` (dải thường vẫn cho chạm xuyên). Test `tests/goi-som/` (844×390 chuột + chạm, 1920×934): giữa đợt bấm Gọi sớm → đợt kế bắt đầu + toast vàng; sau khi mở/đóng Túi đồ; sau khi kéo tướng.
 
+## claude/giu-tran-dang-choi — rời trận không còn bị về màn 1 đợt 1
+- **Nguyên nhân:** nút ≡ → 🏳 Dừng chơi (đường duy nhất để rời trận về menu) gọi `quitRun()` → `clearRun()` xoá hẳn bản lưu trận; vào lại chỉ còn "Xuất Quân" → trận mới từ màn 1 đợt 1. Tải lại trang / đóng app thì vốn không mất (bản lưu đầu mỗi đợt).
+- **Rời trận (trước gọi Dừng chơi) giờ = lưu trận + về menu.** Giữa hai đợt: lưu đúng lúc rời (vàng, tướng, chợ, màn/bản đồ vô tận, sự kiện, độ Khó). Đang giữa đợt: giữ bản lưu đầu đợt; còn mở game thì Tiếp tục quay lại đúng khoảnh khắc (trận tạm dừng trong bộ nhớ), tải lại trang thì chơi lại từ đầu đợt đó. Nhãn xác nhận: "Bấm lần nữa · lưu & về menu". Trận nhóm vẫn bỏ trận như cũ.
+- Ngân khố / Tu Vi / nhiệm vụ ngày của trận dừng giữa chừng trả khi trận kết thúc thật (thua), hoặc khi bấm **Chơi mới** đè lên trận dở (tính như bỏ trận: 4 Ngân khố mỗi đợt đã qua, Tu Vi 60%).
+- Bảng Sính lễ đang mở khi lưu (đợt boss đã xong) → lưu luôn 3 lựa chọn; Tiếp tục mở lại bảng, không mất thưởng boss.
+- Thành tích trọn đời (lifeKills/lifeGold) nhớ phần đã cộng qua tải lại (`save.banked`) → Tiếp tục không cộng trùng.
+- Nút Tiếp tục 2 dòng: "Tiếp tục · Đợt N ♾" + tên vùng đất (một dòng bị cắt mất số đợt).
+- Theo người dùng: **Rời trận là rời luôn, không hỏi.** Nút ☰ → 🏳 đổi tên **Rời trận**, bấm 1 lần là lưu + về menu (trận nhóm vẫn bấm 2 lần vì bỏ thật). **Back** của trình duyệt / vuốt Back trong trận cũng = Rời trận (bỏ hộp "Rời trận?" của claude/chan-vuot-lui; vẫn chặn vuốt mép, Back ở menu vẫn bấm 2 lần mới thoát trang). Không có hộp xác nhận cho Chơi mới, không thêm nút Bỏ trận. Test chan-vuot-lui cập nhật theo.
+- Test: `node tests/giu-tran/giu-tran.test.js` (đợt 16 màn 2: Back trong trận, Dừng chơi giữa / sau đợt, tải lại, ẩn app, Sính lễ mở, Chơi mới).
+
 ## claude/chan-vuot-lui — Chơi trên web: vuốt không còn lỡ về trang trước
 - CSS: `html, body, #wrap` thêm `overscroll-behavior: none` (Chrome Android không vuốt ngang/kéo xuống để về trang/tải lại); `#wrap` `touch-action: none` (bảng cuộn vẫn cuộn như cũ).
 - Vuốt từ sát mép trái/phải (24px): chặn `touchstart`/`touchmove` ngang (passive:false) để Safari iOS khó bắt cử chỉ Quay lại; chạm vào nút/thẻ ở mép vẫn bấm được, vuốt dọc sát mép (cuộn bảng) không bị chặn.
@@ -2888,3 +2909,5 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
   - **Chạm giữ thẻ chợ** ~0,45 s: hiện tên + vai trò + "Góp vào: + bạn ghép ➜ tướng Tím" (có dấu ghim nếu đang theo đuổi); thả tay ẩn, không mua.
   - Test: `node tests/goi-y-ro/muc-tieu.test.js` (gợi ý tự động, ghim đúng thẻ sáng, tối đa 2, lưu, dải có/thiếu, chạm giữ không mua, chạm nhanh vẫn mua,
     tắt gợi ý, nút Theo đuổi, tìm không dấu không mất ô nhập, lọc bậc — pixel + pixel0, 844×390 · 667×375 · 1920×934).
+- Test thêm: 3 quái trong tầm + 3 quái ngoài tầm (cách xa cả trên đường), chạy 1,5 giây kể cả hiệu ứng trễ → 133 chiêu tấn công tung,
+  không chiêu nào làm quái ngoài tầm mất máu / choáng / chậm; Gióng R trong trận thật chỉ trúng quái trong tầm x2.

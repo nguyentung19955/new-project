@@ -184,7 +184,7 @@ const HEROES = {
     look: { aura: '#2ecc71', weapon: { type: 'crossbow', color: '#8e5a2b' } },
     skills: [
       { id: 'pierce', name: 'Tên Xuyên Thấu', active: { cooldown: 7, cast: 'pierce', mana: 40 },
-        info: (n) => `Bắn mũi tên xuyên qua mọi quái trên đường bay: x2 sát thương +${(n * 0.8).toFixed(0)}` },
+        info: (n) => `Bắn mũi tên xuyên qua mọi quái trong tầm trên đường bay: x2 sát thương +${(n * 0.8).toFixed(0)}` },
       { id: 'multishot', name: 'Đa Tiễn',
         info: (n) => `Bắn ${Math.min(5, 2 + Math.floor(n / 40))} mũi tên · +${(n * 0.25).toFixed(1)} sát thương · +${Math.min(80, Math.round(n * 0.4))} tầm`,
         apply: (s, n) => { s.arrows = Math.min(5, 2 + Math.floor(n / 40)); s.damage += n * 0.25; s.range += Math.min(80, n * 0.4); } },
@@ -270,7 +270,7 @@ const HEROES = {
       { id: 'g_e', name: 'Ngựa Sắt Phun Lửa', active: { cooldown: 9, cast: 'firetrail', mana: 80 },
         info: (n) => `Để lại vệt lửa dọc đường quái đi trong 4 giây: ${(10 + n * 0.5).toFixed(0)} sát thương/giây` },
       { id: 'g_r', name: 'Bay Về Trời', active: { cooldown: 30, cast: 'skyride', mana: 120 },
-        info: (n) => `Cưỡi ngựa sắt bay dọc cả dòng sông, đánh mọi quái trên bản đồ (cả quái bay): x3 sát thương +${n * 2}` },
+        info: (n) => `Cưỡi ngựa sắt bay vút qua quái trong tầm x2 (cả quái bay): x3 sát thương +${n * 2}` },
     ],
   },
   llq: {
@@ -308,7 +308,7 @@ const HEROES = {
       { id: 'k_e', name: 'Địa Chấn', active: { cooldown: 10, cast: 'quake', mana: 90 },
         info: (n) => `Dậm đất làm choáng quái trong tầm 1.2 giây, x1.5 sát thương +${n}` },
       { id: 'k_r', name: 'Kim Quy Hộ Thành', active: { cooldown: 40, cast: 'guardcity', mana: 120 },
-        info: () => 'Trong 5 giây, quái lọt vào thành không trừ mạng (chỉ dùng khi quái sắp lọt)' },
+        info: () => 'Trong 5 giây, quái lọt vào thành không trừ mạng (chỉ dùng khi quái trong tầm x2 sắp lọt)' },
     ],
   },
   thachsanh: {
@@ -365,7 +365,7 @@ const HEROES = {
       { id: 'a_e', name: 'Chim Thần', active: { cooldown: 9, cast: 'birds', mana: 70 },
         info: (n) => `Đàn chim mổ 6 lần vào quái trong tầm, mỗi lần x1 sát thương +${(n * 0.5).toFixed(0)}` },
       { id: 'a_r', name: 'Mưa Dưa', active: { cooldown: 26, cast: 'melonrain', mana: 110 },
-        info: (n) => `Dưa rơi khắp bản đồ: mọi quái nhận x1.5 sát thương +${n} và bị làm chậm` },
+        info: (n) => `Mưa dưa rơi xuống quái trong tầm x2: x1.5 sát thương +${n} và bị làm chậm` },
     ],
   },
   auco: {
@@ -441,7 +441,7 @@ const HEROES = {
       { id: 'b_e', name: 'Ruộng Lúa', active: { cooldown: 10, cast: 'ricefield', mana: 80 },
         info: (n) => `Lúa mọc làm chậm 40% quái trong vùng 4 giây, ${(8 + n * 0.3).toFixed(0)} sát thương/giây` },
       { id: 'b_r', name: 'Lễ Tổ Tiên', active: { cooldown: 30, cast: 'ancestor', mana: 120 },
-        info: () => 'Khi có tướng dưới 50% máu: toàn quân hồi đầy máu, bất tử 2 giây' },
+        info: () => 'Khi có tướng trong tầm (220) dưới 50% máu: các tướng trong tầm hồi đầy máu, bất tử 2 giây' },
     ],
   },
   // ================= v101: ĐỢT HÀNH KIM + MỘC — đủ 60 tướng (mỗi hành 4 Thường / 4 Tím / 4 Vàng) =================
@@ -607,7 +607,7 @@ const HEROES = {
       { id: 'sd_e', name: 'Hóa Chàng Trai', active: { cooldown: 18, cast: 'flowerheal', mana: 90 },
         info: (n) => `Hồi ${Math.round(25 + n * 0.3)}% máu cho mọi tướng quanh mình` },
       { id: 'sd_r', name: 'Mưa Dừa', active: { cooldown: 30, cast: 'melonrain', mana: 120 },
-        info: (n) => `Dừa rơi khắp trận, x1.5 sát thương +${n}` },
+        info: (n) => `Dừa rơi xuống quái trong tầm x2, x1.5 sát thương +${n}` },
     ],
   },
   cuoi: {
@@ -626,7 +626,7 @@ const HEROES = {
       { id: 'cu_e', name: 'Cây Đa Bay', active: { cooldown: 14, cast: 'sacredtree', mana: 80 },
         info: (n) => `Cây đa thần mọc giữa trận: hồi máu tướng, làm chậm quái` },
       { id: 'cu_r', name: 'Cung Trăng Gọi Gió', active: { cooldown: 30, cast: 'forestwrath', mana: 130 },
-        info: (n) => `Gió trăng quật mọi quái dưới đất: trói 1.2 giây (boss 0.4), x1.5 sát thương +${n}` },
+        info: (n) => `Gió trăng quật quái dưới đất trong tầm x2: trói 1.2 giây (boss 0.4), x1.5 sát thương +${n}` },
     ],
   },
   melua: {
@@ -1203,9 +1203,9 @@ const HEROES = {
         info: (n) => `Bị đánh thì phản ${Math.round(Math.min(80, 30 + n * 0.3))}% sát thương lại quái gần nhất · +${Math.min(40, Math.floor(n / 3))} sức mạnh`,
         apply: (s, n) => { s.thorns = Math.min(80, 30 + n * 0.3); s.str += Math.min(40, Math.floor(n / 3)); } },
       { id: 'h_e', name: 'Đá Lăn Phong Châu', active: { cooldown: 9, cast: 'boulder', mana: 70 },
-        info: (n) => `Lăn tảng đá ngược dòng 300: đè mọi quái trên đường lăn x2 sát thương +${n}, đẩy lùi` },
+        info: (n) => `Lăn tảng đá ngược dòng 300: đè quái trong tầm trên đường lăn x2 sát thương +${n}, đẩy lùi` },
       { id: 'h_r', name: 'Lời Thề Bộ Lạc', active: { cooldown: 24, cast: 'oath', mana: 110 },
-        info: () => 'Toàn quân trên sân giảm 30% sát thương nhận và hồi 3% máu/giây trong 6 giây' },
+        info: () => 'Tướng trong tầm (220) giảm 30% sát thương nhận và hồi 3% máu/giây trong 6 giây' },
     ],
   },
   thansan: {
@@ -1262,7 +1262,7 @@ const HEROES = {
       { id: 'm_e', name: 'Cây Đa Thần', active: { cooldown: 12, cast: 'sacredtree', mana: 80 },
         info: (n) => `Trồng cây đa 6 giây: quái quanh cây chậm 30%; tướng trong 170 hồi ${(3 + n * 0.03).toFixed(1)}% máu/giây` },
       { id: 'm_r', name: 'Rừng Thiêng Nổi Giận', active: { cooldown: 30, cast: 'forestwrath', mana: 120 },
-        info: (n) => `Rễ cây trồi khắp bờ sông: mọi quái dưới đất bị trói 1.2 giây (boss 0.4), x1.5 sát thương +${n}; toàn quân hồi 20% máu` },
+        info: (n) => `Rễ cây trồi lên quanh mình (tầm x2): quái dưới đất bị trói 1.2 giây (boss 0.4), x1.5 sát thương +${n}; tướng trong 220 hồi 20% máu` },
     ],
   },
 };
