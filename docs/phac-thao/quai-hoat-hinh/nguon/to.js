@@ -14,6 +14,9 @@ function toVung(vung, ten, mauNen) { const o = ids(vung, ['thuong', 'tinhanh']).
 GIFS['quai-bien'] = () => toVung('bien', 'Hang biển: quái thường và tinh anh', '#18222e');
 GIFS['quai-rung'] = () => toVung('rung', 'Rừng già: quái thường và tinh anh', '#172218');
 GIFS['quai-lau-dai'] = () => toVung('laudai', 'Lâu đài cổ: quái thường và tinh anh', '#241a1a');
+GIFS['trum-nho'] = () => ({ tieuDe: 'Ba trùm nhỏ', cols: 3, cw: 200, ch: 160, s: 3, day: 44, lech: 22, beX: 14, mauNen: '#1c1a24', nhanO: true, o: ids('bien', ['trumnho']).concat(ids('rung', ['trumnho']), ids('laudai', ['trumnho'])).map(id => ({ id })),
+  doan: doanQuai([{ ten: 'Chiêu 1', anims: ['chieu1'], dir: PI * .85, nghi: .5 }, { ten: 'Chiêu 2', anims: ['chieu2'], dir: PI * 1.1, nghi: .5 }]) });
+BANGS['trum-nho'] = () => XEM.bangQuai(['cuaDa', 'namChua', 'hoLua'], 'Ba trùm nhỏ: mỗi cử động ba khung hình', { cw: 150, ch: 120, s: 2, day: 30, k: 3 });
 const bangVung = (vung, ten) => () => XEM.bangQuai(ids(vung, ['thuong', 'tinhanh']), ten + ': mỗi cử động ba khung hình', { cw: 78, ch: 70, s: 2, day: 20 });
 BANGS['quai-bien'] = bangVung('bien', 'Hang biển'); BANGS['quai-rung'] = bangVung('rung', 'Rừng già'); BANGS['quai-lau-dai'] = bangVung('laudai', 'Lâu đài cổ');
 })();
