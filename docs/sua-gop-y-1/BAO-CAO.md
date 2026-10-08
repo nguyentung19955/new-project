@@ -94,7 +94,7 @@ Nguyên tắc: càng chậm hoặc càng phải áp sát thì mỗi đòn càng 
 | Loại | Tầm với (điểm ảnh) | Giây mỗi đòn, trước → sau | Sát thương mỗi đòn, trước → sau | Sát thương mỗi giây trên giấy, trước → sau |
 | --- | --- | --- | --- | --- |
 | Kiếm (chuỗi 3 nhát) | 32-40 | 0,35 | 11,8 → **12,8** | 33,5 → 36,3 |
-| Giáo (3 đâm + quét vòng) | 60-62 | 0,36 → **0,40** | 11,1 → **13,5** | 30,9 → 34,1 |
+| Giáo (3 đâm + quét vòng) | 60-62 | 0,36 → **0,40** | 11,1 → **14,2** | 30,9 → 35,9 |
 | Búa (nện) | 32 (vùng rộng) | 0,80 | 23,0 → **22,0** | 28,8 → 27,5 |
 | Cung (bắn thường) | 180 | 0,40 → **0,38** | 9,0 → **11,0** | 22,5 → 28,9 |
 
@@ -108,7 +108,7 @@ Số trên giấy chưa tính chuyện đánh trúng nhiều quái, nên cung tr
 | --- | --- | --- |
 | Kiếm: sức ba nhát | 0,9 / 0,95 / 1,7 | 1 / 1,05 / 1,8 |
 | Giáo: thời gian ba đâm và quét | 0,34 / 0,3 / 0,3 / 0,5 | 0,38 / 0,34 / 0,34 / 0,52 |
-| Giáo: sức mỗi đâm và quét | 0,85 / 1,5 | 1,05 / 1,75 |
+| Giáo: sức mỗi đâm và quét | 0,85 / 1,5 | 1,1 / 1,85 |
 | Búa: sát thương gốc | 23 | 22 |
 | Cung: sát thương gốc | 9 | 11 |
 | Cung: bắn thường đứng yên / vừa đi | 0,4 / 0,47 giây | 0,38 / 0,45 |
@@ -116,7 +116,7 @@ Số trên giấy chưa tính chuyện đánh trúng nhiều quái, nên cung tr
 | Cung: tên mạnh xuyên thêm (đà thấp, trên 60%, đầy) | 1 / 2 / 4 quái, không giảm | 1 / 1 / 2 quái, mỗi con sau 0,6 lần |
 | Cung: mưa tên mỗi đợt | 0,5 | 0,28 |
 
-Tôi đã thử cách khác cho kiếm: giữ sức mỗi nhát cũ nhưng cho ra tay nhanh hơn (0,27 giây). Số đo đẹp, nhưng bot cầm kiếm lại thua ở vùng 3 trong bài `doors.py`: nó đứng chém liên tục và ít né hơn. Vì vậy tôi giữ nhịp kiếm cũ (vẫn nhanh nhất), chỉ tăng nhẹ sức mỗi nhát, rồi tăng giáo nhiều hơn để giáo vẫn mạnh hơn kiếm mỗi nhát.
+Tôi đã thử cách khác cho kiếm: giữ sức mỗi nhát cũ nhưng cho ra tay nhanh hơn (0,27 giây). Số đo đẹp, nhưng bot cầm kiếm lại thua ở vùng 3 trong bài `doors.py`: nó đứng chém liên tục và ít né hơn. Vì vậy tôi giữ nhịp kiếm cũ (vẫn nhanh nhất), chỉ tăng nhẹ sức mỗi nhát, rồi tăng giáo nhiều hơn để giáo vẫn mạnh hơn kiếm mỗi nhát. Bot cầm giáo lúc đầu chỉ thắng 10/14 lượt ở các ải khó (thấp hơn ngưỡng 75%), nên giáo được tăng thêm một nấc (đâm 1,1, quét 1,85).
 
 Sau đợt sửa cung ở mục 1, cung bắn trúng gần như mọi phát, và bắn trúng cả cụm bằng tên xuyên và mưa tên. Vì vậy phần đánh cụm của cung bị giảm mạnh, còn mỗi phát đơn thì mạnh hơn: đánh một con, cung không quá yếu; đánh cả đám, cung không vượt kiếm.
 
@@ -127,14 +127,14 @@ Sau đợt sửa cung ở mục 1, cung bắn trúng gần như mọi phát, và
 | | Cụm 5 quái, phòng thường: trước | Cụm 5 quái, phòng thường: sau | Một quái: trước | Một quái: sau | Cụm 5 quái, phòng trùm: trước | Cụm 5 quái, phòng trùm: sau |
 | --- | --- | --- | --- | --- | --- | --- |
 | Kiếm | 61,9 | **64,3** | 36,3 | **39,1** | 50,2 | **54,7** |
-| Giáo | 62,4 | **67,0** | 35,8 | **41,6** | 52,1 | **55,4** |
+| Giáo | 62,4 | **68,7** | 35,8 | **42,8** | 52,1 | **56,8** |
 | Búa | 68,9 | **68,8** | 43,7 | **41,3** | 53,7 | **53,5** |
-| Cung | 58,6 | **52,2** | 28,8 | **32,1** | 52,9 | **46,4** |
-| Cung thấp hơn kiếm | 5% | **19%** | 21% | **18%** | -5% (cung cao hơn) | **15%** |
-| Ba vũ khí cận chiến lệch nhiều nhất | 7% | **4%** | 13% | **4%** | 4% | **2%** |
-| Vũ khí yếu nhất so với mạnh nhất | 85% | **76%** | 66% | **77%** | 93% | **84%** |
+| Cung | 58,6 | **50,9** | 28,8 | **32,1** | 52,9 | **46,4** |
+| Cung thấp hơn kiếm | 5% | **21%** | 21% | **18%** | -5% (cung cao hơn) | **15%** |
+| Ba vũ khí cận chiến lệch nhiều nhất | 7% | **4%** | 13% | **5%** | 4% | **3%** |
+| Vũ khí yếu nhất so với mạnh nhất | 85% | **74%** | 66% | **75%** | 93% | **82%** |
 
-Bản gốc đánh cụm thì cung gần ngang kiếm, còn đánh một con thì búa bỏ xa mọi loại (cung chỉ bằng 66% búa). Riêng việc sửa cung ở mục 1 (chưa cân bằng) đã đưa cung đánh cụm lên ngang kiếm: 62,4 so với 60,7, đo 60 giây × 8 hạt giống. Nay đánh một con hay cả cụm, phòng thường hay phòng trùm, cung đều thấp nhất và thấp hơn kiếm 15-19%. Ba vũ khí cận chiến sát nhau hơn trước.
+Bản gốc đánh cụm thì cung gần ngang kiếm, còn đánh một con thì búa bỏ xa mọi loại (cung chỉ bằng 66% búa). Riêng việc sửa cung ở mục 1 (chưa cân bằng) đã đưa cung đánh cụm lên ngang kiếm: 62,4 so với 60,7, đo 60 giây × 8 hạt giống. Nay đánh một con hay cả cụm, phòng thường hay phòng trùm, cung đều thấp nhất và thấp hơn kiếm 15-21%. Ba vũ khí cận chiến sát nhau hơn trước.
 
 Khi có hệ ở Thức tỉnh (cụm, phòng thường, sau): Lửa 90,5; Độc 97,3; Băng 80,3. Ba hệ lệch nhau 10%, trong ngưỡng 15%. Cung có hệ: Lửa 83,4, Độc 90,3, Băng 85,4.
 

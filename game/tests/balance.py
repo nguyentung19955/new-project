@@ -2,6 +2,7 @@
 Mỗi ải chạy n lần, in thời gian trung bình, tỉ lệ thắng, dấu ấn, số quái hạ, thời gian đánh trùm.
 Chạy: python3 tests/balance.py [n mỗi ải, mặc định 3] [đường dẫn index.html khác để so với bản cũ] [danh sách ải 0..14, cách nhau bằng dấu phẩy]
        python3 tests/balance.py n - [ải] vukhi   chạy lại với từng loại vũ khí (kiếm, cung, giáo, búa) thay cho vũ khí của bản lưu
+                                               (vukhi:spear,bow: chỉ chạy vài loại)
 Ngưỡng (sửa góp ý 3): bot thắng từ 85% số lượt; khi chạy "vukhi" thì loại vũ khí nào cũng phải thắng từ 75% (không loại nào vô dụng).
 Thời gian đánh trùm tính tới lúc trùm gục (sau đó bot còn đi nhặt đồ và vào cổng dịch chuyển). Thoát mã 1 nếu dưới ngưỡng."""
 import sys, json
@@ -41,8 +42,9 @@ def main():
         base = url.rsplit('/', 1)[0].replace('file://', '')
         pg.add_script_tag(path=base + '/tests/bot.js')
         pg.add_script_tag(path=base + '/tests/setup.js')
-        only = [int(x) for x in sys.argv[3].split(',')] if len(sys.argv) > 3 and sys.argv[3] not in ('-', 'vukhi') else range(15)
-        wts = ['sword', 'bow', 'spear', 'hammer'] if 'vukhi' in sys.argv else [None]
+        only = [int(x) for x in sys.argv[3].split(',')] if len(sys.argv) > 3 and sys.argv[3] != '-' and not sys.argv[3].startswith('vukhi') else range(15)
+        vk = [a for a in sys.argv if a.startswith('vukhi')]
+        wts = (vk[0].split(':')[1].split(',') if ':' in vk[0] else ['sword', 'bow', 'spear', 'hammer']) if vk else [None]  # vukhi:spear,bow để chạy vài loại
         per = {}
         for wt in wts:
           if wt: print('== vũ khí:', wt)

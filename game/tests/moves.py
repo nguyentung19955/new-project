@@ -132,9 +132,9 @@ JS = r"""
       sd.push((h0 - e.hp) / base());
     }
     ok('Giáo: bấm liên tiếp ra ba nhát đâm rồi quét vòng', sn.join() === 'Đâm0,Đâm1,Đâm2,Quét vòng3', sn.join());
-    ok('Giáo: đâm xa (trúng quái cách 56 điểm ảnh) 1,05 lần (sửa góp ý 3: trước 0,85); quét vòng không với tới quái đó', near(sd[0], 1.05, 0.01) && near(sd[2], 1.05, 0.01) && sd[3] === 0, sd.map((x) => x.toFixed(2)).join('/'));
-    ok('Giáo: đâm hẹp, không trúng quái đứng lệch 18 điểm ảnh theo chiều sâu; quét vòng thì trúng (1,75 lần)', near(lost(side) / base(), 1.75, 0.01), (lost(side) / base()).toFixed(2));
-    ok('Giáo: quét vòng trúng cả quái sau lưng và hất nó ra', near(lost(back) / base(), 1.75, 0.01) && near(back.x, 168, 0.5), (lost(back) / base()).toFixed(2) + ' x=' + back.x);
+    ok('Giáo: đâm xa (trúng quái cách 56 điểm ảnh) 1,1 lần (sửa góp ý 3: trước 0,85); quét vòng không với tới quái đó', near(sd[0], G.MOVES.spear.chain[0].mult, 0.01) && near(sd[2], G.MOVES.spear.chain[2].mult, 0.01) && near(sd[0], 1.1, 0.01) && sd[3] === 0, sd.map((x) => x.toFixed(2)).join('/'));
+    ok('Giáo: đâm hẹp, không trúng quái đứng lệch 18 điểm ảnh theo chiều sâu; quét vòng thì trúng (1,85 lần)', near(lost(side) / base(), G.MOVES.spear.chain[3].mult, 0.01), (lost(side) / base()).toFixed(2));
+    ok('Giáo: quét vòng trúng cả quái sau lưng và hất nó ra', near(lost(back) / base(), G.MOVES.spear.chain[3].mult, 0.01) && near(back.x, 168, 0.5), (lost(back) / base()).toFixed(2) + ' x=' + back.x);
     room('spear'); const l1 = dummy(225), l2 = dummy(245);
     sec(0.16 + 0.5 + 0.05, { atk: true });
     ok('Giáo: giữ nút thì thu giáo lấy đà đầy sau 0,5 giây', P.mv.holding && P.mv.charge === 1, P.mv.charge);
