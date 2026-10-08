@@ -109,7 +109,7 @@
       skin: ['#5f8fb0', '#3c6788', '#cfe8f5'], rescue: 'healer',
     },
     {
-      name: 'Núi đá', el: 'fire', boss: 'ho', bossName: 'Hồ Tinh', mat: 'Đá lửa', mini: 'Hổ Lửa',
+      name: 'Lâu đài cổ', el: 'fire', boss: 'ho', bossName: 'Hồ Tinh', mat: 'Đá lửa', mini: 'Hổ Lửa',
       sky: ['#2a1410', '#4a2016', '#70301c'], ground: '#6b4a38', ground2: '#5c3f30', deco: '#2e1812',
       skin: ['#c0603a', '#8f3f24', '#ffd0a0'], rescue: 'wrestler',
     },

@@ -3,6 +3,12 @@
   const G = window.G;
   let W = null; // thế giới của phòng hiện tại
   G.getWorld = () => W;
+  // Gọi lớp hiệu ứng (js/fx.js). Chạy không vẽ thì bỏ qua hẳn; thiếu fx.js game vẫn chạy.
+  function FX(n, a, b, c, d, e) {
+    if (G.noRender) return;
+    const f = G.fx && G.fx[n];
+    if (f) f(a, b, c, d, e);
+  }
 
   // ---------- vũ khí ----------
   G.wStage = function (w) {
@@ -37,7 +43,7 @@
     const after = G.wStage(w);
     if (W) {
       W.marksGained += n;
-      if (n >= 0.5) W.texts.push({ x: W.P.x, y: W.P.y - 40, s: '+' + Math.round(n) + ' ' + G.EL[el].name, col: G.EL[el].col, t: 0.9, size: 8 });
+      FX('marks', el, n);
       const next = G.MARKS[Math.min(2, after)];
       G.sfx('mark', 0.8 + 0.6 * Math.min(1, w.marks[el] / next));
     }
@@ -45,6 +51,7 @@
     if (after > before) {
       if (W) W.banner = { s: G.wName(w) + ' đạt mốc ' + G.STAGE_NAMES[after] + '!', col: G.EL[w.branch].col, t: 3.5 };
       G.sfx('evolve');
+      if (W) FX('evolve', w.branch, after);
     }
   };
 
@@ -66,6 +73,7 @@
       weapons: sv.carry.map((id) => G.weaponById(id)).filter(Boolean), cur: 0, coats: {},
       atkT: 0, atkDur: 0, cdT: 0, hitDone: true, comboI: -1, lastAtk: 0, hitCount: 0,
       dodgeT: 0, dodgeCd: 0, ddx: 1, ddy: 0, inv: 0, hurtT: 0, dashT: 0, dashHit: null,
+      castT: 0, specT: 0, deadT: 0, // đồng hồ cho hoạt ảnh: dùng kỹ năng, tung đòn đặc biệt, gục
       st: { fire: 0, poison: 0, ice: 0 }, dot: 0, dotT: 0,
       potions: 2, skillCd: 0, specCd: 0, swapCd: 0, gongT: 0, firstHit: false, boost: false, stillT: 0, t: 0, moving: false,
       dmgMult: (1 + (sk.atk >= 1 ? 0.08 : 0) + (sk.atk >= 4 ? 0.08 : 0)),
@@ -133,16 +141,8 @@
 
   // ---------- hiệu ứng nhỏ ----------
   G.burst = function (x, y, col, n, sp) {
-    if (G.noRender) return;
-    for (let i = 0; i < n; i++) {
-      const a = G.rnd() * 6.283, v = G.rr(10, sp || 50);
-      W.parts.push({ x, y: y - 10, vx: Math.cos(a) * v, vy: Math.sin(a) * v * 0.6 - 20, t: G.rr(0.25, 0.6), col, s: G.rnd() < 0.3 ? 2 : 1 });
-    }
+    FX('burst', x, y, col, n, sp);
   };
-  function text(x, y, s, col, size) {
-    if (G.noRender) return;
-    W.texts.push({ x: x + G.rr(-4, 4), y, s, col: col || '#ffffff', t: 0.7, size: size || 8 });
-  }
   G.inZone = function (z, e) {
     if (z.shape === 'circle') {
       const dx = (e.x - z.x) / z.r, dy = (e.y - z.y) / (z.r * 0.6);
@@ -191,7 +191,7 @@
     t.hp -= d;
     t.flash = 0.07;
     t.lastEl = o.el || null;
-    text(t.x, t.y - (t.h || 24) * (t.scale || 1) - 4, String(Math.max(1, Math.round(d))), o.crit ? '#ffd23f' : o.el ? G.EL[o.el].col2 : m < 0.8 ? '#9a9a9a' : '#ffffff', o.crit || m > 1.25 ? 10 : 8);
+    if (!G.noRender) FX('dmg', t, d, { crit: o.crit, el: o.el, m, dot: o.src === 'dot' });
     if (t.hp <= 0) G.kill(t, o);
     return d;
   };
@@ -209,17 +209,14 @@
         for (const o of G.targets()) if (o !== t && Math.hypot(o.x - t.x, (o.y - t.y) * 1.6) < 42) G.damage(o, 1.5 * src * P.comboMult, { el: 'fire', src: 'combo' });
         G.damage(t, 1.5 * src * P.comboMult, { el: 'fire', src: 'combo' });
         st.poisonN = 0; st.poisonDmg = 0; st.poisonT = 0;
-        G.burst(t.x, t.y, '#b8b0a0', 16, 80);
-        G.burst(t.x, t.y, '#ff7a2a', 8, 60);
-        text(t.x, t.y - 44, 'Nổ khói', '#ffd23f', 9);
+        FX('combo', 'smoke', t);
         G.sfx('boom');
         if (el === 'poison') return;
       } else if ((el === 'fire' && has.ice) || (el === 'ice' && has.fire)) {
         st.comboCd = 0.6;
         G.damage(t, 2.5 * src * P.comboMult, { el: 'fire', src: 'combo' });
         st.fire = 0; st.fireDmg = 0; st.iceN = 0; st.iceT = 0; st.frozen = Math.min(st.frozen, 0);
-        G.burst(t.x, t.y, '#e9f9ff', 14, 70);
-        text(t.x, t.y - 44, 'Sốc nhiệt', '#7fd4ff', 9);
+        FX('combo', 'shock', t);
         G.sfx('boom', 1.6);
         return;
       }
@@ -246,10 +243,11 @@
         st.iceN = 0;
         st.freezeImm = 5;
         if (t.isBoss) st.stun = Math.max(st.stun, 0.5); else st.frozen = 1.5 * dur;
-        G.burst(t.x, t.y, '#e9f9ff', 10, 50);
+        FX('freeze', t);
       }
       G.sfx('ice');
     }
+    FX('status', t, el);
   };
 
   function tickStatus(e, dt) {
@@ -281,7 +279,7 @@
     e.dead = true;
     const P = W.P, w = (o && o.w) || curW(P);
     G.sfx('die');
-    G.burst(e.x, e.y, e.el ? G.EL[e.el].col : e.skin ? e.skin[0] : '#ffffff', e.isBoss ? 40 : 10, e.isBoss ? 120 : 50);
+    FX('death', e, o);
     if (e.illusion) return;
     if (w) w.kills++;
     if (G.hasStatus(e)) {
@@ -289,6 +287,7 @@
       const on = { fire: e.st.fire > 0, poison: e.st.poisonN > 0, ice: e.st.iceN > 0 || e.st.frozen > 0 };
       const el = e.st.last && on[e.st.last] ? e.st.last : on.fire ? 'fire' : on.poison ? 'poison' : 'ice';
       G.addMarks(w, el, (e.marks == null ? 1 : e.marks) * P.markMult * W.marksMult);
+      FX('markOrbs', e);
       if (P.charm === 'c_spirit') P.mana = Math.min(P.maxmana, P.mana + 5);
     }
     if (e.st.fire > 0) {
@@ -326,6 +325,7 @@
     if (P.boost) { d *= 1.6; P.boost = false; }
     const el = G.activeEl(P, w);
     G.damage(e, d, { el, ranged: o.ranged, src: 'hit', w, crit });
+    if (!G.noRender) FX('hit', e, { el, type: w.type, ranged: o.ranged, crit, dead: e.dead, heavy: o.heavy, rain: o.rain, dir: o.dir || (e.x >= P.x ? 1 : -1) });
     const T = G.WTYPES[w.type];
     if (T.stagger && !e.isBoss && !e.dead) e.st.stun = Math.max(e.st.stun, T.stagger);
     if (o.stun && !e.dead) e.st.stun = Math.max(e.st.stun, e.isBoss ? o.stun * 0.4 : o.stun);
@@ -355,7 +355,7 @@
     pr.dead = true;
     const el = pr.type === 'brazier' ? 'fire' : pr.type === 'mushroom' ? 'poison' : 'ice';
     const src = G.pDamage(P, w);
-    G.burst(pr.x, pr.y, G.EL[el].col, 22, 90);
+    FX('propBlast', pr, el);
     G.sfx('boom', 1.3);
     for (const t of G.targets()) {
       if (Math.hypot(t.x - pr.x, (t.y - pr.y) * 1.5) < 52) {
@@ -414,8 +414,8 @@
       W.projs.push({ team: 'player', kind: 'arrow', x: P.x + P.face * 8, y: P.y, vx: P.face * 270, vy, t: 1.3, w, mult: third ? 1.6 : 1, pierce: third ? 3 : 0, big: third, col, seen: [] });
     } else {
       const reach = T.reach * (w.affix === 'reach' ? 1.15 : 1);
-      hits = meleeBox(P, reach, T.depth, w.type === 'sword' && third ? 1.5 : 1, { w });
-      if (!G.noRender) W.slashes.push({ x: P.x + P.face * 6, y: P.y, face: P.face, r: reach * 0.8, t: 0.14, t0: 0.14, col, wide: third || w.type === 'hammer' });
+      hits = meleeBox(P, reach, T.depth, w.type === 'sword' && third ? 1.5 : 1, { w, heavy: third });
+      if (!G.noRender) FX('swing', P, { type: w.type, combo: P.comboI, reach, el, stage: G.wStage(w) });
       if (w.type === 'hammer') W.shake = Math.max(W.shake, 0.08);
     }
     if (hits > 0) {
@@ -426,9 +426,9 @@
   function special(P) {
     const w = curW(P);
     P.mana -= P.specCost;
+    P.specT = 0.35;
     P.specCd = 0.8;
     const el = G.activeEl(P, w);
-    const col = el ? G.EL[el].col : '#f1ead9';
     G.sfx('boom', 1.8);
     if (w.type === 'sword' || w.type === 'spear') {
       const len = w.type === 'sword' ? 92 : 112;
@@ -436,11 +436,11 @@
       P.dashMult = w.type === 'sword' ? 2.2 : 2.0;
       P.dashStun = w.type === 'spear' ? 0.5 : 0;
       P.atkT = 0.2; P.atkDur = 0.2; P.cdT = 0.3; P.hitDone = true;
-      if (!G.noRender) W.slashes.push({ x: P.x + P.face * 30, y: P.y, face: P.face, r: 46, t: 0.25, t0: 0.25, col, wide: true });
+      FX('dash', P, w.type, el);
     } else if (w.type === 'hammer') {
       W.shake = 0.3;
-      G.burst(P.x, P.y, col, 26, 110);
-      for (const e of G.targets()) if (Math.hypot(e.x - P.x, (e.y - P.y) * 1.5) < 58 + e.r) playerHit(e, 2.4, { w, stun: 0.8 });
+      FX('slam', P, el);
+      for (const e of G.targets()) if (Math.hypot(e.x - P.x, (e.y - P.y) * 1.5) < 58 + e.r) playerHit(e, 2.4, { w, stun: 0.8, heavy: true });
       hitProps(P.x - 58, P.x + 58, P.y, 36);
       W.zones.push({ shape: 'circle', x: P.x, y: P.y, r: 58, t: 0, life: 0.15, team: 'fx' });
     } else {
@@ -452,21 +452,24 @@
   function heroSkill(P) {
     const w = curW(P);
     P.mana -= 40;
+    P.castT = 0.4;
     P.skillCd = 5;
     G.sfx('evolve', 1.4);
     if (P.key === 'smith') {
       P.coats[w.id] = { el: 'fire', t: 6 };
-      G.burst(P.x, P.y, '#ff7a2a', 18, 70);
+      FX('nung', P);
     } else if (P.key === 'hunter') {
       const traps = W.props.filter((p) => p.type === 'trap' && !p.dead);
       if (traps.length >= 2) traps[0].dead = true;
       W.props.push({ type: 'trap', x: G.clamp(P.x + P.face * 26, W.x0, W.x1), y: P.y, el: G.activeEl(P, w), t: 15, w });
+      FX('trapPlace', G.clamp(P.x + P.face * 26, W.x0, W.x1), P.y, G.activeEl(P, w));
     } else if (P.key === 'healer') {
       W.zones.push({ shape: 'circle', x: G.clamp(P.x + P.face * 22, W.x0, W.x1), y: P.y, r: 42, t: 0, pool: true, team: 'player', el: 'poison', heal: true, life: 5, tick: 0, src: G.pDamage(P, w) });
+      FX('bottle', P, W.zones[W.zones.length - 1]);
     } else {
       P.gongT = 3;
       W.shake = 0.2;
-      G.burst(P.x, P.y, '#ffd27a', 20, 100);
+      FX('gong', P);
       for (const e of G.targets()) {
         const d = Math.hypot(e.x - P.x, (e.y - P.y) * 1.5);
         if (d < 60 + e.r) {
@@ -492,7 +495,7 @@
     P.inv = 0.55; P.hurtT = 0.2;
     W.shake = Math.max(W.shake, 0.18);
     G.sfx('hurt');
-    text(P.x, P.y - 38, '-' + Math.round(amt), '#ff6a5a', 9);
+    if (!G.noRender) FX('hurt', P, amt, el, P.gongT > 0);
     if (P.key === 'wrestler' && melee && src && !src.dead) G.damage(src, raw * 0.5, { src: 'reflect', fromPlayer: false });
     if (el) {
       const k = 1 - P.resist[el];
@@ -506,7 +509,8 @@
 
   G.updatePlayer = function (P, inp, dt) {
     P.t += dt;
-    for (const k of ['atkT', 'cdT', 'dodgeCd', 'inv', 'hurtT', 'skillCd', 'specCd', 'swapCd', 'gongT']) if (P[k] > 0) P[k] -= dt;
+    for (const k of ['atkT', 'cdT', 'dodgeCd', 'inv', 'hurtT', 'skillCd', 'specCd', 'swapCd', 'gongT', 'castT', 'specT']) if (P[k] > 0) P[k] -= dt;
+    if (P.dead) P.deadT += dt;
     for (const id in P.coats) if (P.coats[id].t > 0) P.coats[id].t -= dt;
     // hiệu ứng trên người chơi
     P.dotT -= dt;
@@ -573,6 +577,7 @@
         if (Math.abs(P.ddx) > 0.2) P.face = P.ddx > 0 ? 1 : -1;
         W.stats.dodges++;
         G.sfx('swing', 0.7);
+        FX('dodge', P);
       } else if (inp.specialP && P.mana >= P.specCost && P.specCd <= 0) {
         special(P);
       } else if (inp.skillP && P.mana >= 40 && P.skillCd <= 0) {
@@ -586,12 +591,13 @@
         P.firstHit = true;
         P.comboI = -1;
         G.sfx('pick');
+        if (!G.noRender) FX('swap', P, G.activeEl(P, curW(P)));
       }
       if (inp.potionP && P.potions > 0 && P.hp < P.maxhp && !W.noPotion) {
         P.potions--;
         P.hp = Math.min(P.maxhp, P.hp + P.maxhp * 0.3);
         W.usedPotion = true;
-        G.burst(P.x, P.y, '#ff6a5a', 12, 50);
+        FX('potion', P);
         G.sfx('pick', 1.4);
       }
     }
@@ -629,8 +635,10 @@
           W.projs.push({ team: 'enemy', kind: 'fruit', x: e.x + e.face * 6, y: e.y, vx: (dx / d) * 135, vy: (dy / d) * 135, t: 3, dmg: e.dmg, el: e.el, col: e.el ? G.EL[e.el].col : null });
         } else if (e.role === 'nimble') {
           e.lunge = 0.18; e.lv = e.face * 230;
+          FX('lunge', e);
         } else {
           strike(e, 30 + e.r, 12 + e.hr * 0.5, 1);
+          FX('enemySwing', e);
         }
         e.cd = e.role === 'archer' ? 2.3 : e.role === 'swarm' ? 1.3 : 1.4;
       }
@@ -705,6 +713,8 @@
   // ---------- cập nhật mỗi khung ----------
   G.updateWorld = function (dt, inp) {
     const P = W.P;
+    // Khựng hình khi đòn trúng: chỉ có khi đang vẽ, nút bấm trong lúc khựng được giữ lại cho khung sau.
+    if (!G.noRender && G.fx && G.fx.frozen && G.fx.frozen(dt, inp)) return;
     G.updatePlayer(P, inp, dt);
     for (const e of W.ents) if (!e.dead) updateEnemy(e, dt);
     separate();
@@ -728,7 +738,7 @@
           if (o.seen.includes(e)) continue;
           if (Math.abs(e.x - o.x) < e.r + 4 && Math.abs(e.y - o.y) < e.hr + 7) {
             o.seen.push(e);
-            playerHit(e, o.mult, { w: o.w, ranged: true });
+            playerHit(e, o.mult, { w: o.w, ranged: true, heavy: o.big, dir: o.vx < 0 ? -1 : 1 });
             P.mana = Math.min(P.maxmana, P.mana + P.manaHit + (o.w.affix === 'mana' ? 1 : 0));
             G.sfx('hit', 1.3);
             if (o.pierce > 0) o.pierce--; else { o.t = 0; break; }
@@ -756,6 +766,7 @@
           if (z.team !== 'player' && z.team !== 'fx' && G.inZone(z, P)) G.hurtPlayer(z.dmg, z.el, null, false);
           if (z.onFire) z.onFire(z);
           if (z.then) { z.pool = true; z.life = z.then; z.tick = 0.4; }
+          FX('zoneFire', z);
           W.shake = Math.max(W.shake, 0.06);
         }
         continue;
@@ -767,8 +778,9 @@
           if (z.team === 'player') {
             if (z.rain) {
               z.tick = 0.15;
-              for (const e of G.targets()) if (Math.hypot(e.x - z.x, (e.y - z.y) * 1.6) < z.r + e.r) playerHit(e, 0.5, { w: z.w, ranged: true });
-              G.burst(z.x + G.rr(-30, 30), z.y + G.rr(-12, 12), z.el ? G.EL[z.el].col : '#e8e2d0', 3, 30);
+              for (const e of G.targets()) if (Math.hypot(e.x - z.x, (e.y - z.y) * 1.6) < z.r + e.r) playerHit(e, 0.5, { w: z.w, ranged: true, rain: true });
+              const rx = z.x + G.rr(-30, 30), ry = z.y + G.rr(-12, 12); // vẫn rút hai số ngẫu nhiên như trước
+              FX('rainDrop', rx, ry, z.el);
             } else {
               z.tick = 1;
               for (const e of G.targets()) if (Math.hypot(e.x - z.x, (e.y - z.y) * 1.6) < z.r + e.r) G.applyStatus(e, z.el, z.src, 1);
@@ -796,6 +808,7 @@
           if (pr.el) G.applyStatus(e, pr.el, src, pr.el === 'fire' ? 1 : 2);
           G.damage(e, src * 1.5, { el: pr.el, src: 'trap', w: pr.w });
           G.sfx('hit', 0.6);
+          FX('trapSnap', pr, e);
           break;
         }
       }
@@ -815,17 +828,35 @@
     const lead = W.boss && !W.boss.dead && W.boss.kind !== 'ho' ? 150 : G.W / 2;
     const camTo = G.clamp(P.x - lead, 0, Math.max(0, W.w - G.W));
     W.cam += (camTo - W.cam) * Math.min(1, dt * 6);
+    if (!G.noRender && G.fx && G.fx.update) G.fx.update(dt);
   };
 
   // ---------- vẽ ----------
+  // Tham số vẽ hero. fx.js cũng dùng để vẽ bóng mờ ở vị trí cũ.
+  G.heroArgs = function (P) {
+    const w = curW(P);
+    return {
+      p: P, // hero_art.js đọc thêm trạng thái hoạt ảnh từ đây (chỉ đọc)
+      x: P.x, y: P.y, face: P.face, key: P.key, move: P.moving, t: P.t,
+      atk: P.atkT > 0 ? 1 - P.atkT / P.atkDur : -1, dodge: P.dodgeT > 0 ? 1 - P.dodgeT / 0.27 : -1,
+      flash: P.hurtT > 0, alpha: P.inv > 0 && P.dodgeT <= 0 && Math.floor(G.time * 20) % 2 ? 0.5 : null,
+      weapon: Object.assign({}, w, { coat: P.coats[w.id] && P.coats[w.id].t > 0 ? P.coats[w.id].el : null }),
+      helm: P.helm, armor: P.armor, gong: P.gongT > 0,
+    };
+  };
+  // Thứ tự lớp: nền, vùng và vũng, hiệu ứng sát đất, nhân vật (kèm hiệu ứng bám theo), đạn, hiệu ứng phía trên, rồi lớp giao diện.
   G.drawWorld = function (reg) {
     const c = G.wx, A = G.art, P = W.P;
+    const F = G.noRender ? null : G.fx;
     const cam = Math.round(W.cam);
-    const sx = W.shake > 0 ? Math.round(G.rr(-2, 2)) : 0, sy = W.shake > 0 ? Math.round(G.rr(-1, 1)) : 0;
+    let sx = 0, sy = 0;
+    if (F && F.shakeOffset) { const o = F.shakeOffset(); sx = o.x; sy = o.y; }
+    else if (W.shake > 0) { sx = Math.round(Math.random() * 4 - 2); sy = Math.round(Math.random() * 2 - 1); }
     c.setTransform(1, 0, 0, 1, 0, 0);
     A.bg(c, reg, W.seed, cam, W.w, W.shrink);
     c.setTransform(1, 0, 0, 1, -cam + sx, sy);
     for (const z of W.zones) {
+      if (F && F.zone && F.zone(c, z, W)) continue;
       if (z.wave) {
         // lúc còn báo trước thì sóng mờ và nhấp nháy, khe hở nhìn thấy ngay
         const wc = z.wait > 0 ? 'rgba(160,220,250,' + (Math.floor(G.time * 10) % 2 ? 0.3 : 0.5) + ')' : 'rgba(160,220,250,0.85)';
@@ -834,34 +865,47 @@
       } else if (z.team === 'fx') A.ellipse(c, z.x, z.y, z.r, z.r * 0.6, 'rgba(255,240,200,0.35)');
       else A.zone(c, z);
     }
+    if (F && F.drawGround) F.drawGround(c);
+    const ent = F && F.entity, rec = F && F.recoil;
     const list = [];
-    for (const e of W.ents) list.push({ y: e.y, f: () => (e.illusion ? A.boss(c, e) : A.enemy(c, e)) });
+    for (const e of W.ents) {
+      list.push({ y: e.y, f: () => {
+        const k = rec ? rec(e) : 0; // giật lùi khi trúng đòn: chỉ dời hình
+        if (k) c.translate(k, 0);
+        if (e.illusion) A.boss(c, e); else A.enemy(c, e);
+        if (k) c.translate(-k, 0);
+        if (ent) ent(c, e);
+      } });
+    }
     for (const pr of W.props) list.push({ y: pr.y - (pr.type === 'door' ? 200 : 0), f: () => A.prop(c, pr) });
     if (W.boss && !W.boss.dead) {
       const b = W.boss;
-      list.push({ y: b.y + (b.kind === 'moc' ? -30 : 0), f: () => { if (b.kind === 'mini') A.enemy(c, b); else A.boss(c, b); if (!b.hidden) A.status(c, b, Math.round(b.x), Math.round(b.y - b.h - 6)); } });
+      list.push({ y: b.y + (b.kind === 'moc' ? -30 : 0), f: () => {
+        const k = rec ? rec(b) : 0;
+        if (k) c.translate(k, 0);
+        if (b.kind === 'mini') A.enemy(c, b); else A.boss(c, b);
+        if (k) c.translate(-k, 0);
+        if (!b.hidden) A.status(c, b, Math.round(b.x), Math.round(b.y - b.h - 6));
+        if (ent) ent(c, b);
+      } });
     }
-    const w = G.curW(P);
-    list.push({
-      y: P.y,
-      f: () => A.hero(c, {
-        x: P.x, y: P.y, face: P.face, key: P.key, move: P.moving, t: P.t,
-        atk: P.atkT > 0 ? 1 - P.atkT / P.atkDur : -1, dodge: P.dodgeT > 0 ? 1 - P.dodgeT / 0.27 : -1,
-        flash: P.hurtT > 0, alpha: P.inv > 0 && P.dodgeT <= 0 && Math.floor(G.time * 20) % 2 ? 0.5 : null,
-        weapon: Object.assign({}, w, { coat: P.coats[w.id] && P.coats[w.id].t > 0 ? P.coats[w.id].el : null }),
-        helm: P.helm, armor: P.armor, gong: P.gongT > 0,
-      }),
-    });
+    list.push({ y: P.y, f: () => { A.hero(c, G.heroArgs(P)); if (ent) ent(c, P); } });
+    if (F && F.sorted) F.sorted(list, c);
     list.sort((a, b) => a.y - b.y);
     for (const o of list) o.f();
-    if (P.st.fire > 0) { A.p(c, Math.round(P.x) - 3, Math.round(P.y) - 38, 2, 3, '#ff7a2a'); A.p(c, Math.round(P.x) + 1, Math.round(P.y) - 40, 2, 4, '#ffd23f'); }
-    if (P.st.poison > 0) A.p(c, Math.round(P.x) - 2, Math.round(P.y) - 38, 3, 3, '#6fcf3a');
-    if (P.st.ice > 0) A.p(c, Math.round(P.x) - 5, Math.round(P.y) - 2, 10, 2, '#7fd4ff');
-    for (const o of W.projs) A.proj(c, o);
+    if (!ent) {
+      if (P.st.fire > 0) { A.p(c, Math.round(P.x) - 3, Math.round(P.y) - 38, 2, 3, '#ff7a2a'); A.p(c, Math.round(P.x) + 1, Math.round(P.y) - 40, 2, 4, '#ffd23f'); }
+      if (P.st.poison > 0) A.p(c, Math.round(P.x) - 2, Math.round(P.y) - 38, 3, 3, '#6fcf3a');
+      if (P.st.ice > 0) A.p(c, Math.round(P.x) - 5, Math.round(P.y) - 2, 10, 2, '#7fd4ff');
+    }
+    const pj = F && F.proj;
+    for (const o of W.projs) { if (pj) pj(c, o); A.proj(c, o); }
     for (const s of W.slashes) A.slash(c, s);
     for (const o of W.parts) A.p(c, Math.round(o.x), Math.round(o.y), o.s, o.s, o.col);
+    if (F && F.drawOver) F.drawOver(c);
     c.setTransform(1, 0, 0, 1, 0, 0);
     // chữ sát thương vẽ ở lớp giao diện cho nét
     for (const o of W.texts) G.ui.text(o.s, o.x - cam, o.y, { size: o.size, align: 'center', color: o.col, bold: true });
+    if (F && F.drawUI) F.drawUI(cam);
   };
 })();
