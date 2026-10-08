@@ -2372,6 +2372,10 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 260 — game khít màn iPhone thật
+
+- Khung game theo visualViewport (cỡ + offset) trừ lề an toàn (cầm dọc trừ cả status bar + thanh home), #wrap fixed căn giữa vùng nhìn thấy thật; đặt lại khi resize/xoay/thanh Safari thu-hiện (+100/300/700 ms). Giá thẻ chợ không bị huy hiệu che ("22C" → 220). Test mới khit-man.
+
 ## Phiên bản 259 — sửa nóng: chạm 2 lần trên iPhone kéo trang sang nửa màn đen
 
 - html/body ghim position:fixed (không cuộn được), nút/ô nhập touch-action:manipulation, chặn dblclick + gesture phóng to, tự đưa về 0 nếu trang bị cuộn.
