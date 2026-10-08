@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><title>Phác thảo hero Linh Khí</title>
+<style>html,body{margin:0;background:#1f1a26}canvas{display:block}</style></head>
+<body>
+<img id="phong" src="tu-game/phong.png" hidden>
+<img id="ht0" src="tu-game/hien-tai-smith.png" hidden><img id="ht1" src="tu-game/hien-tai-hunter.png" hidden>
+<img id="ht2" src="tu-game/hien-tai-healer.png" hidden><img id="ht3" src="tu-game/hien-tai-wrestler.png" hidden>
+<script src="khung.js"></script>
+<script src="huong1.js"></script>
+<script src="huong2.js"></script>
+<script src="huong3.js"></script>
+<script src="huong4.js"></script>
+<script>
+// ?to=1..4 : tờ của một hướng; ?to=sosanh : tờ tổng quan; ?nhanh=1..4&k=8 : bảng xem nhanh
+window.addEventListener('load', () => {
+  const q = new URLSearchParams(location.search);
+  const tim = (n) => HUONG.find(h => h.so === +n);
+  let cv;
+  if (q.get('nhanh')) cv = toXemNhanh(tim(q.get('nhanh')), +(q.get('k') || 8));
+  else if (q.get('to') === 'sosanh') cv = toSoSanh(HUONG.slice().sort((a, b) => a.so - b.so), [0, 1, 2, 3].map(i => document.getElementById('ht' + i)));
+  else cv = toHuong(tim(q.get('to') || 1), document.getElementById('phong'));
+  cv.id = 'to'; document.body.appendChild(cv); document.title = 'xong';
+});
+</script>
+</body></html>
