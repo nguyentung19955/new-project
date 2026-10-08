@@ -586,6 +586,18 @@ function knockback(e, dist) {
   e.pullSpeed = dist / 0.3;
 }
 
+// claude/sua-tam-skill: ĐIỀU KIỆN TUNG CHIÊU — kỹ năng tấn công chỉ dùng khi có quái TRONG TẦM (tầm đánh của tướng × hệ số
+// tầm ghi trong mô tả kỹ năng), không bắn vào khoảng trống, không tốn hồi chiêu khi chưa có ai trong tầm.
+// Ngoại lệ: kỹ năng mô tả "toàn bản đồ / khắp trận / cả dòng sông" (SKILL_GLOBAL) dùng khi có quái ở bất kỳ đâu trên đường;
+// kỹ năng hỗ trợ (SKILL_SUPPORT) tự xét đồng đội cần (bị thương / đang giao chiến trong vùng của chiêu).
+const SKILL_GLOBAL = new Set(['skyride', 'melonrain', 'forestwrath', 'guardcity']);
+const SKILL_SUPPORT = new Set(['goldshell', 'flowerheal', 'staffheal', 'lotus', 'feast', 'herbheal', 'sacredtree', 'oath', 'rally', 'ancestor']);
+// hệ số tầm theo mô tả: "trong tầm gấp đôi", "(tầm x1.2)", "(tầm x1.6)", "mọi quái trong tầm x2"
+const SKILL_REACH = { 'thosan.shadowstep': 2, 'llq.l_e': 1.2, 'thansan.s_q': 1.6, 'thansan.s_r': 2 };
+const skillReach = (type, sk) => SKILL_REACH[type + '.' + sk.id] || 1;
+// có đồng đội (trong bán kính r quanh x, y — gồm cả người tung) đang có quái trong tầm đánh của mình
+const allyEngaged = (game, x, y, r) => game.heroes.some((o) => o && !o.dead && Math.hypot(o.x - x, o.y - y) <= r
+  && !!game.findTarget(o.x, o.y, heroStats(o).range, true));
 const SKILL_CASTS = {
 
   // ===== v96: chiêu hành Hỏa mới =====
@@ -956,7 +968,7 @@ const SKILL_CASTS = {
   },
   // ----- Thần Kim Quy
   goldshell(game, h, st, n) {
-    if (!hurtNear(game, h.x, h.y, 170, 0.95) && !game.enemiesInRange(h.x, h.y, 200).length) return false;
+    if (!hurtNear(game, h.x, h.y, 170, 0.95) && !allyEngaged(game, h.x, h.y, 170)) return false;
     shieldHeroes(game, h.x, h.y, 170, (0.2 + n * 0.0025) * skillMult(st.lv || 1), '#F2D27A');
     game.effects.push({ type: 'dome', x: h.x, y: h.y, r: 170, color: '#F2D27A', ttl: 0.8, max: 0.8 });
     return true;
@@ -1190,7 +1202,7 @@ const SKILL_CASTS = {
   // ===== v29: bộ chiêu riêng cho 4 tướng thần mới + tách các chiêu trùng =====
   // ----- Lạc Hầu
   rally(game, h, st, n) {
-    if (!game.enemiesInRange(h.x, h.y, st.range * 1.5).length) return false;
+    if (!allyEngaged(game, h.x, h.y, 180)) return false;
     const pct = Math.round(25 + n * 0.15);
     for (const o of game.heroes) {
       if (!o || o.dead || Math.hypot(o.x - h.x, o.y - h.y) > 180) continue;
@@ -1220,7 +1232,7 @@ const SKILL_CASTS = {
   },
   oath(game, h, st, n) {
     const hurt = game.heroes.some((o) => o && !o.dead && o.hp < heroStats(o).hpMax * 0.8);
-    if (!hurt && game.enemies.filter((e) => !e.dead).length < 6) return false;
+    if (!hurt && game.enemies.filter((e) => !e.dead && game.heroes.some((o) => o && !o.dead && Math.hypot(e.x - o.x, e.y - o.y) <= heroStats(o).range)).length < 6) return false;
     game.oathT = 6;
     game.effects.push({ type: 'banner', str: st.skName || 'Lời Thề Bộ Lạc', color: '#D9A84E', ttl: 1.6, max: 1.6 });
     for (const o of game.heroes) if (o && !o.dead) game.effects.push({ type: 'dome', x: o.x, y: o.y, r: 34, color: '#D9A84E', ttl: 0.8, max: 0.8 });
@@ -1308,7 +1320,7 @@ const SKILL_CASTS = {
     return true;
   },
   sacredtree(game, h, st, n) {
-    const t = game.findTarget(h.x, h.y, st.range * 1.2, false);
+    const t = game.findTarget(h.x, h.y, st.range, false);
     if (!t && !hurtNear(game, h.x, h.y, 200)) return false;
     const x = t ? (t.x + h.x) / 2 : h.x, y = t ? (t.y + h.y) / 2 : h.y;
     game.zones.push({ kind: 'tree', x, y, r: 110, ttl: 6, max: 6, slow: 30, dps: (4 + n * 0.15) * st.skillPower, hero: h, dt: 'magic',
@@ -1329,7 +1341,7 @@ const SKILL_CASTS = {
   },
   // ----- chiêu cũ tách cho khác nhau
   feast(game, h, st, n) {
-    if (!game.enemiesInRange(h.x, h.y, 220).length && !hurtNear(game, h.x, h.y, 170)) return false;
+    if (!allyEngaged(game, h.x, h.y, 170) && !hurtNear(game, h.x, h.y, 170)) return false;
     const pct = (0.12 + n * 0.0015) * skillMult(st.lv || 1);
     for (const o of game.heroes) {
       if (!o || o.dead || Math.hypot(o.x - h.x, o.y - h.y) > 170) continue;
@@ -3411,6 +3423,8 @@ class Game {
       const lv = skillLevel(h, i);
       if (!sk.active || !lv || h.skillCd[sk.id] > 0 || h.mana < sk.active.mana || h.silenceT > 0) continue;
       if (sk.active.mana < reserve && h.mana - sk.active.mana < reserve) continue;
+      // sua-tam-skill: chưa có quái trong tầm → chưa tung (giữ hồi chiêu sẵn sàng, xét lại khung sau)
+      if (!SKILL_GLOBAL.has(sk.active.cast) && !SKILL_SUPPORT.has(sk.active.cast) && !this.findTarget(h.x, h.y, st.range * skillReach(h.type, sk), true)) continue;
       const cst = { ...st, skillPower: st.skillPower * skillMult(lv), lv, skName: sk.name };
       this.ultCast = i === 3;
       const castOk = SKILL_CASTS[sk.active.cast](this, h, cst, skillN(h.level));
