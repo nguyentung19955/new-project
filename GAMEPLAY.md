@@ -2372,6 +2372,10 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 221 — khối băng pha lê (tester đạt)
+
+- Đóng băng pixel: thập lục giác kiểu pha lê, cạnh cứng, mặt vát sáng/tối, không che quái.
+
 ## Phiên bản 220 — khối băng thập lục giác (tester đạt)
 
 - Đóng băng pixel: khối 16 cạnh (4 cạnh thẳng + góc bo), bọc vừa từng con.
@@ -2568,3 +2572,4 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 - (vòng 2, theo tester) Vòng choáng hạ sát đầu: đáy vòng chạm đỉnh hình ±3 (quái pixel lấy cao hình thật sau làm tròn điểm ảnh), chim Lạc / xoáy khí đậu lên đường vòng; nét vòng dày 2 ô cho dễ thấy ở 844×390. Lửa bỏng: 1–2 ngọn lửa 5×7 ô rõ dáng, ngang vai, cao ~26% hình quái (cỡ ô theo cỡ quái). Test hat-vfx: đáy vòng–đỉnh đầu ±3, lửa cao 18–45%.
 - (yêu cầu thêm) Đóng băng pixel: khối băng BÁT GIÁC (viền nước sáng 1 ô, mặt trong trong suốt nhạt, vệt sáng chéo, đáy chàm sáng) bọc trọn hộp hình thật từng con (lề ~11%, cắt góc < 2 lề nên góc hộp vẫn nằm trong) — boss to khối to, lính nhỏ khối nhỏ, quái bay bọc đúng chỗ đang bay. pxDrawEnemy trả hộp hình thật (cao, rộng, lệch tâm, đáy) để vòng choáng / khối băng bám đúng. Test hat-vfx: bát giác bao trọn bbox, lề ≤ 15% cho tôm, voi chiến, Thuồng Luồng, Đại Bàng.
 - (người dùng) Khối băng đổi từ bát giác sang THẬP LỤC GIÁC: 4 cạnh thẳng + mỗi góc bo bằng 3 cạnh (cung 90° chia 3) = 16 cạnh; bán kính bo ≤ 3 lề nên vẫn bao trọn hộp hình, lề ~11% (16 cạnh đều phải nới lề ~40% nên không dùng).
+- (người dùng) Khối băng thập lục giác "cứng" kiểu pha lê: 16 cạnh thẳng nối đỉnh bằng nét pixel, viền trong thụt vào + nét vát từ cả 16 đỉnh, mặt vát tô sáng (trên) / tối (dưới) và xen sáng–tối giữa các mặt kề, chấm sáng ở đỉnh → thấy rõ từng cạnh; dải vát mỏng (~1/3 bán kính góc) không che quái.
