@@ -2279,3 +2279,18 @@ html.pixel .mc-btn.main { background-image: url('../assets/pixel/giao-dien/khung
 .cp-map .bgart .cp-bgimg.fill { object-fit: fill; }
 @media (max-height: 520px) { html.pixel #banner b { font-size: 26px; } }
 html.pixel #wrap.rot #banner b { font-size: 26px; }
+/* sua-giao-dien-10 (V3/V4): MỘT kiểu tab cho cả game (tab chương, Bách khoa, Lò đúc, Hợp thể, Xếp hạng): góc vuông, viền 2px,
+   chưa chọn = gỗ tối chìm, đang chọn = vàng nghệ nổi (trước đây 3 kiểu: viên thuốc bạc, tab gỗ, tab đồng — tab chưa chọn nổi hơn tab đang chọn) */
+:is(.cp-tab, .hx-tab, .tabs > .tab, .seg button) { border-radius: 2px; border: 2px solid #5A4426; background: #2A1C10; color: #B8A888;
+  box-shadow: inset 0 -2px 0 #1A110A; text-shadow: none; font-weight: 800; }
+:is(.cp-tab, .hx-tab, .tabs > .tab, .seg button).on { background: #E8B83A; border-color: #FFE7A0; color: #2A1A08;
+  box-shadow: inset 0 2px 0 #FFF1C4, inset 0 -3px 0 #B8852A, 0 0 8px #F2B44A55; text-shadow: none; }
+:is(.cp-tab, .hx-tab, .tabs > .tab, .seg button):not(.on):hover { color: #E8DCC0; border-color: #8C6A2E; }
+.tabs > .tab, .tabs > .tab.on { height: 34px; margin-bottom: 4px; }
+.seg { gap: 4px; background: transparent; }
+/* thẻ quái Bách khoa: bỏ dải đồng cam (chữ xám trên cam ≈ 2:1) → thẻ gỗ tối, tên vàng, mô tả sáng tối đa 2 dòng, thẻ cao đều */
+.bk-card { background: #2A2118; border: 2px solid #5A4A30; border-radius: 3px; height: 128px; overflow: hidden; }
+.bk-card .nm { color: #F2D27A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: none; }
+.bk-card .ds { color: #E8DCC0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.bk-card.on { border-color: var(--gold-hi); }
+.hx-q, .hx-x { border-radius: 3px; }

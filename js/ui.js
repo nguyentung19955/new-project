@@ -3894,9 +3894,9 @@ class UI {
     const g = this.game;
     const sc = this.screen;
     const tabs = `<div class="tabs">
-      <button class="tab ${sc.tab === 'recipe' ? 'on' : 'metal'}" data-act="tab" data-tab="recipe">${emoArt('📜')} Công thức</button>
-      <button class="tab ${sc.tab === 'shop' ? 'on' : 'metal'}" data-act="tab" data-tab="shop">${ic('vang')}Cửa hàng</button>
-      <button class="tab ${sc.tab === 'chest' ? 'on' : 'metal'}" data-act="tab" data-tab="chest">${ic('hu-bau')}Hũ báu</button><span class="zig"></span></div>`;
+      <button class="tab ${sc.tab === 'recipe' ? 'on' : ''}" data-act="tab" data-tab="recipe">${emoArt('📜')} Công thức</button>
+      <button class="tab ${sc.tab === 'shop' ? 'on' : ''}" data-act="tab" data-tab="shop">${ic('vang')}Cửa hàng</button>
+      <button class="tab ${sc.tab === 'chest' ? 'on' : ''}" data-act="tab" data-tab="chest">${ic('hu-bau')}Hũ báu</button><span class="zig"></span></div>`;
     let body = '';
     if (sc.tab === 'recipe') {
       const recipes = Object.keys(ITEMS).filter((id) => ITEMS[id].recipe);
@@ -4379,7 +4379,7 @@ class UI {
       }
       const cur = list.includes(sc.pick) ? sc.pick : list.includes('rua') ? 'rua' : list[0];
       const d = ENEMIES[cur];
-      const cards = list.map((id) => `<button class="bk-card ${id === cur ? 'on' : ''} metal" data-act="bk-sel" data-id="${id}">
+      const cards = list.map((id) => `<button class="bk-card ${id === cur ? 'on' : ''}" data-act="bk-sel" data-id="${id}">
         <div class="well inset"><canvas data-enemy="${id}" data-pad="0.08" width="200" height="80"></canvas></div>
         <span class="nm">${ENEMIES[id].name}${ENEMIES[id].flying ? ' <span style="font-family:var(--body);font-size:12px;color:#9EDDF2">(bay)</span>' : ''}</span><span class="ds">${ENEMIES[id].short}</span></button>`).join('');
       const tags = [];
