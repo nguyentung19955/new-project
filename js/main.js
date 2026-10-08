@@ -170,11 +170,14 @@ cardGhost.id = 'mk-ghost'; cardGhost.hidden = true;
 document.body.appendChild(cardGhost);
 $('#deck').addEventListener('pointerdown', (ev) => {
   const b = ev.target.closest('[data-mk]');
-  if (!b || !game.started || game.over || cardDrag) return;
+  // v250: lần chạm trước bị "kẹt" (iOS: thẻ chợ dựng lại giữa lúc giữ → pointerup không về window) → dọn rồi xử lý lần chạm mới
+  if (cardDrag) { clearTimeout(cardDrag.holdT); cardDrag = null; cardGhost.hidden = true; ui.hideHeroTip(); }
+  if (!b || !game.started || game.over) return;
   const i = +b.dataset.mk, type = game.market && game.market.types[i];
   if (!type) return;
   ev.preventDefault();
   cardDrag = { i, type, id: ev.pointerId, sx: ev.clientX, sy: ev.clientY, moved: false, x: -9999, y: -9999 };
+  try { $('#deck').setPointerCapture(ev.pointerId); } catch (e) {}     // v250: thẻ bị thay giữa chừng vẫn nhận pointerup
   // goi-y-ro: chạm GIỮ ~0,45 giây (không kéo) → tên + công thức Tím/Vàng tướng này góp vào; thả tay là ẩn, không mua
   const d = cardDrag;
   d.holdT = setTimeout(() => { if (cardDrag === d && !d.moved) { d.held = true; ui.showHeroTip(type, b.getBoundingClientRect()); } }, 450);
@@ -207,6 +210,8 @@ const endCardDrag = (ev, cancel) => {
   const slot = ui.slotAt(d.x, d.y);
   if (slot >= 0) ui.buyCard(d.i, slot);
 };
+// v250: chạm bất kỳ đâu bằng ngón khác mà lần giữ trước còn kẹt → dọn (gợi ý không treo, chợ không bị khoá)
+window.addEventListener('pointerdown', (ev) => { const d = cardDrag; if (d && ev.pointerId !== d.id) { clearTimeout(d.holdT); cardDrag = null; cardGhost.hidden = true; ui.hideHeroTip(); } }, true);
 window.addEventListener('pointerup', (ev) => endCardDrag(ev, false));
 window.addEventListener('pointercancel', (ev) => endCardDrag(ev, true));
 
