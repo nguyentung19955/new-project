@@ -264,8 +264,8 @@ function itemIcon(id, rarity) {
 // claude/xuat-goi-pixel: cảnh / tranh pixel khi bật pixel (mã chưa có thì ảnh cũ)
 const SCENE_PX = { menu: 'canh/nen-menu', story1: 'canh/truyen-sontinh-1', story2: 'canh/truyen-sontinh-2', story3: 'canh/truyen-sontinh-3',
   win: 'canh/nen-thang', lose: 'canh/nen-thua', mountain1: 'giao-dien/nui-tan-vien-1', mountain2: 'giao-dien/nui-tan-vien-2', mountain3: 'giao-dien/nui-tan-vien-3',
-  mountain4: 'giao-dien/nui-tan-vien-4', mountain5: 'giao-dien/nui-tan-vien-5', voi: 'do/voi_chin_nga', ga: 'do/ga_chin_cua', ngua: 'do/ngua_hong_mao',
-  hubau: 'icon/hu-bau', kholua: 'icon/ui-kho-lua', huvua: 'icon/ui-hu-vua-hung' };
+  mountain4: 'giao-dien/nui-tan-vien-4', mountain5: 'giao-dien/nui-tan-vien-5', voi: 'giao-dien/tranh-qua-voi', ga: 'giao-dien/tranh-qua-ga', ngua: 'giao-dien/tranh-qua-ngua',
+  hubau: 'giao-dien/tranh-hu-bau', kholua: 'giao-dien/tranh-kho-lua', huvua: 'giao-dien/tranh-hu-bau', drum: 'giao-dien/tranh-trong-dong', rotate: 'giao-dien/tranh-xoay' };
 function sceneArt(k) {
   const pk = SCENE_PX[k] && SCENE_PX[k].split('/'), pu = pk && pxUrl2(pk[0], pk[1]);
   if (pu) return `<img src="${pu}" alt="">`;

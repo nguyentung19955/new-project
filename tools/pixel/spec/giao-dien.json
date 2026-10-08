@@ -44,5 +44,12 @@
   {"ma":"giao-dien/ui-nen-nut-2","bo_phan":{"loai":"nut","mauKhung":"dong","mauNen":"dong","vien":"rang","trang":"thuong"}},
   {"ma":"giao-dien/ui-nen-nut-3","bo_phan":{"loai":"o","mauKhung":"dong","mauNen":"den","vien":"cham","trang":"thuong"}},
   {"ma":"giao-dien/ui-nen-nut-4","bo_phan":{"loai":"huy","mauKhung":"dong","mauNen":"den","vien":"tron","trang":"thuong"}},
-  {"ma":"giao-dien/khung-bang-toi","co":"48x48","bo_phan":{"loai":"khung","mauKhung":"dong","mauNen":"den","vien":"cham","trang":"thuong"}}
+  {"ma":"giao-dien/khung-bang-toi","co":"48x48","bo_phan":{"loai":"khung","mauKhung":"dong","mauNen":"den","vien":"cham","trang":"thuong"}},
+  {"ma": "giao-dien/tranh-trong-dong", "co": "96x96", "ten": "tranh trong-dong", "anh": {"tep": "tools/pixel/nguon/tranh-trong-dong.png", "vua": "chua", "nen_trong": true, "so_mau": 24, "vien": true, "lam_net": 1}},
+  {"ma": "giao-dien/tranh-kho-lua", "co": "96x96", "ten": "tranh kho-lua", "anh": {"tep": "tools/pixel/nguon/tranh-kho-lua.png", "vua": "chua", "nen_trong": true, "so_mau": 24, "vien": true, "lam_net": 1}},
+  {"ma": "giao-dien/tranh-xoay", "co": "96x96", "ten": "tranh xoay", "anh": {"tep": "tools/pixel/nguon/tranh-xoay.png", "vua": "chua", "nen_trong": true, "so_mau": 24, "vien": true, "lam_net": 1}},
+  {"ma": "giao-dien/tranh-hu-bau", "co": "96x96", "ten": "tranh hu-bau", "anh": {"tep": "assets/ui_hu-bau.png", "vua": "chua", "nen_trong": true, "so_mau": 24, "vien": true, "lam_net": 1}},
+  {"ma": "giao-dien/tranh-qua-voi", "co": "96x96", "ten": "tranh qua-voi", "anh": {"tep": "assets/sinh-le_voi-chin-nga.png", "vua": "chua", "nen_trong": true, "so_mau": 24, "vien": true, "lam_net": 1}},
+  {"ma": "giao-dien/tranh-qua-ga", "co": "96x96", "ten": "tranh qua-ga", "anh": {"tep": "assets/sinh-le_ga-chin-cua.png", "vua": "chua", "nen_trong": true, "so_mau": 24, "vien": true, "lam_net": 1}},
+  {"ma": "giao-dien/tranh-qua-ngua", "co": "96x96", "ten": "tranh qua-ngua", "anh": {"tep": "assets/sinh-le_ngua-chin-hong-mao.png", "vua": "chua", "nen_trong": true, "so_mau": 24, "vien": true, "lam_net": 1}}
 ] }

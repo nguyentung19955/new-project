@@ -21,7 +21,7 @@
   {"ma": "canh/chuong-thachsanh", "co": "320x180", "anh": {"tep": "tools/pixel/nguon/chuong-thachsanh.png", "so_mau": 28, "khu_nhieu": 1, "lam_net":1}},
   {"ma": "canh/thang-thachsanh", "co": "320x180", "anh": {"tep": "tools/pixel/nguon/thang-thachsanh.png", "so_mau": 28, "khu_nhieu": 1, "lam_net":1}},
   {"ma": "canh/thua-thachsanh", "co": "320x180", "anh": {"tep": "tools/pixel/nguon/thua-thachsanh.png", "so_mau": 28, "khu_nhieu": 1, "lam_net":1}},
-  {"ma":"canh/nen-man-phu","co":"320x180","bo_phan":{"canh":"nui","gio":"dem"}},
+  {"ma": "canh/nen-man-phu", "co": "320x180", "ghi_chu": "hình cũ chỉ là nền tối — dùng phông menu (lớp phủ tối CSS)", "anh": {"tep": "assets/ui/nen-menu.jpg", "so_mau": 24, "khu_nhieu": 1, "lam_net": 1}},
   {"ma": "canh/nen-menu", "co": "320x180", "anh": {"tep": "assets/ui/nen-menu.jpg", "so_mau": 32, "khu_nhieu": 1, "lam_net":1}},
   {"ma": "canh/nen-thang", "co": "320x180", "anh": {"tep": "tools/pixel/nguon/nen-thang.png", "so_mau": 28, "khu_nhieu": 1, "lam_net":1}},
   {"ma": "canh/nen-thua", "co": "320x180", "anh": {"tep": "tools/pixel/nguon/nen-thua.png", "so_mau": 28, "khu_nhieu": 1, "lam_net":1}},

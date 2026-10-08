@@ -2225,3 +2225,8 @@ html.pixel img.pxemo { height: 1.15em; width: auto; vertical-align: -0.2em; imag
 /* claude/pixel-con-lai: huy hiệu ải pixel lòng tối → số ải chữ sáng */
 html.pixel.sk-huy-hieu .cp-node .c { color: #FFE7A0; text-shadow: 0 1px 0 #000, 0 0 3px #000; }
 html.pixel.sk-huy-hieu .cp-node.lock .c { color: #9A9080; }
+/* claude/pixel-con-lai: màn tải khi bật pixel — nền menu pixel (canh/nen-menu), chữ nổi trên nền */
+html.pixel #loading { background: #0D0B08 url('../assets/pixel/canh/nen-menu.png') center / cover no-repeat; image-rendering: pixelated; text-shadow: 0 2px 0 #000, 0 0 6px #000; }
+/* claude/pixel-con-lai: nền màn phụ pixel (phông menu) phủ tối hơn để chữ nhỏ dễ đọc */
+html.pixel.sk-nen-man-phu #prep .screen, html.pixel.sk-nen-man-phu #result .screen, html.pixel.sk-nen-man-phu #reward .screen {
+  background: linear-gradient(#0D0B08d8, #0D0B08d8), var(--sk-nen-man-phu) center / cover no-repeat, var(--bg); image-rendering: pixelated; }

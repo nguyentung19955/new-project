@@ -4,9 +4,9 @@ name: núi Tản Viên bậc 3 (Đắp núi)
 size: 48x48
 colors:
   a = vien
-  b = khoi
-  c = trang-xam
-  d = sang
+  b = trang-xam
+  c = sang
+  d = da-sang
   e = dat-toi
   f = dat
   g = cat
@@ -16,57 +16,57 @@ colors:
   k = la-toi
   l = la
   m = la-ma
-  n = ngoc
+  n = reu-toi
 
 part k0
-hfhfehehfa.........aaaaaaaaaa.........afhehefhfe
-fffcccfha.......aaahhhhhhhhhhaaa.......ahfcccfdf
-ffhhccca.....aaahhiheaaaaaaehhihaaa.....acccfhfe
-hdcfhcha....aehieaakbkkkkkkbbaaehhea....ahccccde
-efccfea...aahiaabkklllllllllkkkkaahhaa...aefccfe
-hcfdcafa.aeheaakllllllmmllllllllkkaaiha.afacdfch
-hfcfhaa.ahhaakllmlmmlkkkkkklllmmlkkaahha.aahfcfe
-fchaa..aheabkllmllababkkkbaaghkmmklkkaeia..aaecf
-hha...aieakkmmmkbbklllmllllhddghllmllkaeia...ahh
-aa...aheakllmmbbkllmmmmmmmlgjjjjgelmllkaaia...aa
-....ahhabkllkbkllmmmmmmmmmkjjjjdddikmlkbbeha....
-...aehabllmkbklmmmmmmmmmmlidjjjjjjdikmllkahea...
-...aiabbmmkaklmmmmmmmmmmmkjddddjjjjjgkmllkaia...
-..ahhalllkbklmmmjmlllkaaaagjddjjjjdjjikmkkbeha..
-..ahakllmihlmmmjmlkkfgjjjgiigdjdddjjjjflmllaia..
-.aheallmkilmmmmmlkgjggllllgggggjddjjjjjkmllkeha.
-.ahakklliklmmmmlkggllkkkbkklggglmjdjjddilllkaia.
-.aiaklllhkmmmmlkgglkkigjjgkklggglcdddgehkmllahha
-ahebkllhelmmmmkgglkhjjjjjjjgakljkkgkkklkimlmkaha
-ahakkmmikmmmmlkglkijjjcccjjjgalgjakmmmmkhlmkkaia
-aiakkmkiklmmlkggkkjjgnnnnncjjiblgfkmmmmlikmklaia
-aiakkmkjghakkbjlagjgnnnnnnngjjklggkmmmmlekmlkaha
-ahbklmkddjdgefglkjjnnnnnnnnnjjhkljklmmmlkemllahh
-ahbllmkjdjddgggkhjgnnnnnnnnngjikljkmmmmmkkmkkbeh
-ahakmmkjjjjdigglhjgnnnnnnnnngjiklgkkmmmlkhlllbeh
-ahaklmkjjjjdiigledjnnnnnnnnnjdikljkmmmmlkhmklaee
-aiakkmbjjjjdlkglajjnnnnnnnnnjjklfjbklmmlakmkkaha
-aiakklkgjjddmkjlkgjjnnnnnnnjjjalggeghkkkhlmlkbha
-ahaklmmfjjjddkggkkjjjnnnnnjjjkklgggddjgeillkkaia
-aeekllmkdjjjdmhjlkhjjjjjjjjjiklggbjddjjdhmllkaha
-aehbllmkgjjdddigjlkkgjjjjjjkkklgkgdddjjjlmllaeha
-.aiakkllhjdjjdjhggkkkbhihkakkggfeddjjjjfklklaia.
-.aheblllkjjjdjddeggglkkkklllgjflagdjjjjkmllkbha.
-.aehaklllkjjjjjjdihggggggggjgklmmagdjdkmllkahea.
-..ahbbkkmlidjjjjjdjihgggggfkklmjmmajdhkmlkbaha..
-..aeiaklmmkidjjjjdjjjiaakllmlmjmmmkhikmllkaiha..
-...ahhaklkmkgdjjjjjjdjjelmmmmmmmmlhikmmkkaeha...
-....aibaklmmkijjjjjdjddjiakmmmmlkhhkmlllbaia....
-aa..aeiablllmlkgdjjdjjjjjjikkkkeiklmllkaaia...aa
-hha..aeiaaklmmmkhgdjjjjjjjjjgihkklmllkaaiea..ahh
-fceaa.aeiakkkllmmkkfgjjjjjjggellmkllkbaiaa.aaecf
-ffcchaaaeiaakkllmlmllkkkbkkkllmmllkbaeieaaahccfe
-hcfccafaaahhakakkmlllmmmmlmmmlllkkaahhaaafaccfch
-hfccfea...ahieaabklllllllmllmkkaaaeiea...aefccfe
-hddcfcha...aahieaaabbkkkklkkbaaahihaa...ahccccde
-hfffccfa.....aahhieaaaaaaaaaehihhaa.....acccfffe
-fffcccfha......aaahhhiiiiiihheaaa......ahfcccfff
-efhfehehfa........aaaaaaaaaaaa........afhehefefe
+eehbehehea.........aaaaaaaaaa.........aehehhbhfe
+fcfbbbeha.......aaaehhhiihhhhaaa.......ahebbbfce
+efhfbbba.....aaahhiheaaaaaaehhihaaa.....abbbfhfe
+hcbbbbha....aehieaakkkkkkkkakaaehhea....ahbbbbce
+hebbfea...aahiaakkklllllllllkkkkaahhaa...aefbbfe
+hbfcbafa.aeieaakllllllmmllllllllkkaeiha.afabcfbe
+ebbfhaa.ahhaakllmlmmlkkkkkklllmmlkkaahha.aahfbbe
+bbhaa..aheakkllmllaaakkkkkkaihkmmklkkaeia..aahbb
+hha...aieakkmmlkakklllmmmllhccghllmllkaeia...ahh
+aa...aheakllmmkknlmmmmmmmmlijjjjdelmllkaaia...aa
+....ahhakkllkakllmmmmmmmmmkjddjcccikmlkkkeha....
+...aeiakllmkknlmmmmmmmmmmlicddddddcikmllkahea...
+...aiaakmmkanlmmmmmmmmmmmkdcddcddddjgkmllkaia...
+..ahhalllkaklmmmmmmllkaaaagjccdjjjcgjikmkkaeha..
+..aiakllmhhlmmmmmlkkfgjjjggggcjcccdddjhlmllaia..
+.aheallmkilmmmmmlkgdgglnllgggggdccjdjjjkmllkeha.
+.ahakklliklmmmmmkgglllkkkkllggglmjcddccilllkaia.
+.aiakllnhkmmmmmkgglkkigidgnklggglbccdgnhkmllahea
+ahekkllhnlmmmmkgglkhjjjjcjjgalggnngnkllkimlmkaha
+ahakkmmikmmmmlnglkijjjbbbdjjialgjkkmmmmkhlmkkaia
+aiakkmkiklmmlkggknjjgkkbkkbjjiklgnlmmmmlikmklaia
+aiakkmkjghakkkjlagjgkbbkbbkgjjklggkmmmmlnnmlkaha
+ahaklmkccjcienglkjjkbbkkkkbkjjnknjkmmmmlkemllahe
+ahkllmkjcjccggglnjgkkkkbbkkkgjikljnmmmmmknmkkkeh
+ahakmmkjjjdcggglhjgkbkbbbkbkgjiklgnmmmmlknlllaeh
+ahaklmkjddjcigglecgkbkkbkkkbjcikljnmmmmlkhmklahe
+aiakkmkjjddclnglkjjkbkkkkkbkjjnlhjkklmmlkkmkkaha
+aiakklkgjddcmkjlkgjjkbbbbkkjjialggnghkkkhlmlkkha
+ahaklmmfjdjcckggkkjjjbbbkljjjnklgngccjghillkkaia
+ahekllmkjjjjcmhjllhjjjjjjjjjhklggejccjjcnmllkaha
+aehalkmkdjdccjigjlkkgjjjjjdnklngngcdcjjdlmllahha
+.aiakkllnjcddcjhggnkkkhihnkkkggnecjdjjjnklklaia.
+.aheklllkdjjddcdegggllklkllnggnlkgcdjjjkmklkaha.
+.aeiaklllnjjddddcinggggggggjgklmmagcjjkmllkahea.
+..aheakkmlicdddjdcjihnggggnnllmmmmajjhkmlkkaia..
+..aeiaklmmkicdddjcdjjiaakllmlmmmmmkhikmllkaiea..
+...ahhaklkmkicddddddcjjnlmmmmmmmmlhikmmkkaeha...
+....aiaakllmkijjddjcdccjialmmmmlnhhkmlllkaia....
+aa..aeiaklllmlkdddjcdjddjjinllkeinlmllkaaia...aa
+hha..aeiaaklmmmkhdcjjjjddjjjdiinklmllkaaiea..ahh
+fbeaa.aeiakkkllmmknfdjjjjjjdgellmkllkaaiaa.aaebf
+efbbhaaaeieakkllmlmllkknekkkllmmllkkaeieaaahbbfe
+hbfbbafaaahhakakkmlllmmmmlmmmlllkkaahhaaafabbfbh
+hfbbfha...ahieaakklllllllmllmkkaaahiea...ahfbbfh
+hccbfbha...aahieaaaaakkkklkkaaaahihaa...ahbhbbch
+efffbbba.....aahhiheaaaaaaaaehihhaa.....abbbbffe
+ecfbbbeha......aaahhhiiiiiihheaaa......ahfbbbfee
+eehfehehfa........aaaaaaaaaaaa........aeheheeeee
 end
 
 anim main fps=1 once

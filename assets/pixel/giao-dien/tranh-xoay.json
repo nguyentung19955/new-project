@@ -1,0 +1,25 @@
+{
+ "code": "tranh-xoay",
+ "group": "giao-dien",
+ "name": "tranh xoay",
+ "w": 96,
+ "h": 96,
+ "ax": 48,
+ "ay": 95,
+ "bbox": [
+  8,
+  16,
+  78,
+  65
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "tranh-xoay.png"
+}
