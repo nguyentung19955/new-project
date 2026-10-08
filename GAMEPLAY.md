@@ -1001,7 +1001,7 @@ Làm theo GAMEPLAY v15 (mục 2, 5, 14). Số liệu cũ giữ nguyên; số m�
 
 ### Phiên bản 77
 
-- **Dừng chơi**: menu ≡ trong trận có nút 🏳 Dừng chơi (bấm 2 lần để chắc chắn) — lưu trận và về menu; bấm Tiếp tục để chơi tiếp (claude/giu-tran-dang-choi; trước đây nút này bỏ trận).
+- **Dừng chơi**: menu ≡ trong trận có nút 🏳 Dừng chơi (bấm 2 lần để chắc chắn) — nay tên **Rời trận**, bấm 1 lần: lưu trận và về menu; bấm Tiếp tục để chơi tiếp (claude/giu-tran-dang-choi; trước đây nút này bỏ trận).
 - **Lò đúc đồng (cửa hàng + đúc đồ) đưa ra ngoài trận**: bỏ khỏi menu ≡ trong trận; mở từ bảng **Chuẩn bị xuất quân** trước khi vào trận (dùng vàng đầu trận), đóng thì quay lại bảng. Bảng chuẩn bị giờ luôn hiện khi vào ải.
 
 ### Phiên bản 78
@@ -2833,13 +2833,13 @@ Người dùng chọn phương án 4: máu quái tăng dần theo đợt + hạ 
 
 ## claude/giu-tran-dang-choi — rời trận không còn bị về màn 1 đợt 1
 - **Nguyên nhân:** nút ≡ → 🏳 Dừng chơi (đường duy nhất để rời trận về menu) gọi `quitRun()` → `clearRun()` xoá hẳn bản lưu trận; vào lại chỉ còn "Xuất Quân" → trận mới từ màn 1 đợt 1. Tải lại trang / đóng app thì vốn không mất (bản lưu đầu mỗi đợt).
-- **Dừng chơi giờ = lưu trận + về menu.** Giữa hai đợt: lưu đúng lúc rời (vàng, tướng, chợ, màn/bản đồ vô tận, sự kiện, độ Khó). Đang giữa đợt: giữ bản lưu đầu đợt; còn mở game thì Tiếp tục quay lại đúng khoảnh khắc (trận tạm dừng trong bộ nhớ), tải lại trang thì chơi lại từ đầu đợt đó. Nhãn xác nhận: "Bấm lần nữa · lưu & về menu". Trận nhóm vẫn bỏ trận như cũ.
+- **Rời trận (trước gọi Dừng chơi) giờ = lưu trận + về menu.** Giữa hai đợt: lưu đúng lúc rời (vàng, tướng, chợ, màn/bản đồ vô tận, sự kiện, độ Khó). Đang giữa đợt: giữ bản lưu đầu đợt; còn mở game thì Tiếp tục quay lại đúng khoảnh khắc (trận tạm dừng trong bộ nhớ), tải lại trang thì chơi lại từ đầu đợt đó. Nhãn xác nhận: "Bấm lần nữa · lưu & về menu". Trận nhóm vẫn bỏ trận như cũ.
 - Ngân khố / Tu Vi / nhiệm vụ ngày của trận dừng giữa chừng trả khi trận kết thúc thật (thua), hoặc khi bấm **Chơi mới** đè lên trận dở (tính như bỏ trận: 4 Ngân khố mỗi đợt đã qua, Tu Vi 60%).
 - Bảng Sính lễ đang mở khi lưu (đợt boss đã xong) → lưu luôn 3 lựa chọn; Tiếp tục mở lại bảng, không mất thưởng boss.
 - Thành tích trọn đời (lifeKills/lifeGold) nhớ phần đã cộng qua tải lại (`save.banked`) → Tiếp tục không cộng trùng.
 - Nút Tiếp tục 2 dòng: "Tiếp tục · Đợt N ♾" + tên vùng đất (một dòng bị cắt mất số đợt).
-- Hộp **"Rời trận?"** (Back trong trận, claude/chan-vuot-lui) → Rời trận cũng lưu trận (chữ trong hộp ghi rõ), Tiếp tục chạy tiếp như trước khi hỏi. Test chan-vuot-lui cập nhật theo.
-- Test: `node tests/giu-tran/giu-tran.test.js` (đợt 16 màn 2: hộp Rời trận?, Dừng chơi giữa / sau đợt, tải lại, ẩn app, Sính lễ mở, Chơi mới).
+- Theo người dùng: **Rời trận là rời luôn, không hỏi.** Nút ☰ → 🏳 đổi tên **Rời trận**, bấm 1 lần là lưu + về menu (trận nhóm vẫn bấm 2 lần vì bỏ thật). **Back** của trình duyệt / vuốt Back trong trận cũng = Rời trận (bỏ hộp "Rời trận?" của claude/chan-vuot-lui; vẫn chặn vuốt mép, Back ở menu vẫn bấm 2 lần mới thoát trang). Không có hộp xác nhận cho Chơi mới, không thêm nút Bỏ trận. Test chan-vuot-lui cập nhật theo.
+- Test: `node tests/giu-tran/giu-tran.test.js` (đợt 16 màn 2: Back trong trận, Dừng chơi giữa / sau đợt, tải lại, ẩn app, Sính lễ mở, Chơi mới).
 
 ## claude/chan-vuot-lui — Chơi trên web: vuốt không còn lỡ về trang trước
 - CSS: `html, body, #wrap` thêm `overscroll-behavior: none` (Chrome Android không vuốt ngang/kéo xuống để về trang/tải lại); `#wrap` `touch-action: none` (bảng cuộn vẫn cuộn như cũ).

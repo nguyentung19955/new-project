@@ -1,5 +1,5 @@
 // claude/chan-vuot-lui: chơi trên web điện thoại, vuốt mép / cử chỉ Back hay lỡ về trang trước.
-// Kiểm: vuốt ngang từ mép bị chặn (vuốt dọc thì không); Back trong trận → tạm dừng + hỏi "Rời trận?", không rời trang;
+// Kiểm: vuốt ngang từ mép bị chặn (vuốt dọc thì không); Back trong trận → Rời trận (lưu + về menu, giu-tran-dang-choi), không rời trang;
 // Back khi đang mở bảng → đóng bảng; Back ở menu → hỏi, bấm lần 2 trong 2 giây mới rời trang.
 // Chạy: node tests/chan-vuot-lui/chan-vuot-lui.test.js
 const path = require('path');
@@ -33,7 +33,6 @@ async function swipe(cdp, x0, y0, x1, y1) {
 }
 const back = async (page) => { await page.evaluate(() => history.back()); await page.waitForTimeout(300); };
 const onGame = (page) => page.url().startsWith('file:') && page.url().endsWith('index.html');
-const askOn = (page) => page.evaluate(() => { const e = document.getElementById('leave-ask'); return !!e && !e.hidden; });
 
 (async () => {
   for (const [w, h, name] of [[844, 390, '844x390'], [390, 844, 'doc-390x844']]) {
@@ -60,22 +59,19 @@ const askOn = (page) => page.evaluate(() => { const e = document.getElementById(
     // trong trận
     await enter(page, 0, true);
     await page.evaluate(() => { game.running = true; });
-    await back(page);
-    ok(onGame(page) && await askOn(page), `${name} trận: Back → hiện "Rời trận?", không rời trang`);
-    ok(await page.evaluate(() => !game.running && game.started), `${name} trận: trận tạm dừng`);
+    // giu-tran-dang-choi: Back trong trận = Rời trận ngay (lưu + về menu, không hỏi), vẫn ở trang game
+    await back(page); await page.waitForTimeout(300);
+    ok(onGame(page) && await page.evaluate(() => !document.querySelector('#menu').hidden && !game.running && !!ui.save.run && /Tiếp tục/.test($('#continue-label').textContent)), `${name} trận: Back → Rời trận: về menu, giữ trận để Tiếp tục, không rời trang`);
     await page.screenshot({ path: path.join(SHOT, `roi-tran-${name}.png`) });
-    await page.click('#leave-ask [data-la=stay]'); await page.waitForTimeout(150);
-    ok(!(await askOn(page)) && await page.evaluate(() => game.running), `${name} trận: Ở lại → đóng hộp, trận chạy tiếp`);
-    await back(page); ok(await askOn(page), `${name} trận: Back lần nữa → lại hỏi`);
-    await back(page); ok(onGame(page) && !(await askOn(page)) && await page.evaluate(() => game.running), `${name} trận: Back khi đang hỏi = Ở lại`);
+    await page.click('#btn-continue'); await page.waitForTimeout(200);
+    ok(await page.evaluate(() => document.querySelector('#menu').hidden && game.running), `${name} trận: Tiếp tục → trận chạy tiếp`);
     // bảng trong trận
     await page.evaluate(() => ui.openScreen('bag')); await page.waitForTimeout(200);
     ok(await page.evaluate(() => !document.querySelector('#screen').hidden), `${name} trận: mở Túi đồ`);
     await back(page);
-    ok(onGame(page) && await page.evaluate(() => document.querySelector('#screen').hidden) && !(await askOn(page)), `${name} trận: Back → đóng Túi đồ, không hỏi rời trận`);
-    // Rời trận
-    await back(page); await page.click('#leave-ask [data-la=leave]'); await page.waitForTimeout(300);
-    ok(onGame(page) && await page.evaluate(() => !document.querySelector('#menu').hidden && !game.running && !!ui.save.run && /Tiếp tục/.test($('#continue-label').textContent)), `${name} trận: Rời trận → về menu, giữ trận để Tiếp tục (giu-tran-dang-choi)`);
+    ok(onGame(page) && await page.evaluate(() => document.querySelector('#screen').hidden) && await page.evaluate(() => document.querySelector('#menu').hidden), `${name} trận: Back → đóng Túi đồ, vẫn trong trận`);
+    await back(page); await page.waitForTimeout(300);
+    ok(onGame(page) && await page.evaluate(() => !document.querySelector('#menu').hidden), `${name} trận: Back lần nữa → về menu`);
 
     // menu: Back 1 lần hỏi, 2 lần (trong 2 giây) mới rời trang
     await page.waitForTimeout(2100);

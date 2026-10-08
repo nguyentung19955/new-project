@@ -25,7 +25,7 @@ const W = 16;   // đợt 16 = màn 2 (boss đợt 10 Bến Sông Đà sang màn
     t: game.heroes.filter(Boolean).map((h) => h.type).join(','), wa: game.waveActive, started: game.started, ingame: $('#menu').hidden }));
   const lab = (t, w) => { const m = /^Tiếp tục · Đợt (\d+)/.exec(t); return !!m && +m[1] === w && t.endsWith(' · ' + mapName); };
   let mapName = '';
-  const quit = async () => { await page.click('#btn-menu'); await page.click('#drawer [data-act="quit-run"]'); await page.click('#drawer [data-act="quit-run"]'); await page.waitForSelector('#menu:not([hidden])'); };
+  const quit = async () => { await page.click('#btn-menu'); ok(/Rời trận/.test(await page.evaluate(() => $('#quit-label').textContent)), 'nút ☰ → Rời trận'); await page.click('#drawer [data-act="quit-run"]'); await page.waitForSelector('#menu:not([hidden])', { timeout: 2000 }); };   // bấm 1 lần là rời
   const reload = async () => { await page.reload(); await page.waitForTimeout(900); };
 
   // vào trận vô tận mới, tua tới đợt 16 (màn 2), có tướng, vàng, mạng riêng
@@ -77,14 +77,12 @@ const W = 16;   // đợt 16 = màn 2 (boss đợt 10 Bến Sông Đà sang màn
   s = await st();
   ok(s.ingame && s.wave === W && s.k === 1 && !s.wa && s.lives === 13 && s.t === s0.t, 'tải lại giữa đợt → Tiếp tục từ đầu đợt 17 (màn 2)');
 
-  // 3b) Back trong trận → hộp "Rời trận?" → Rời trận (claude/chan-vuot-lui) cũng giữ trận
-  await page.evaluate(() => { game.running = true; ui.leaveAsk(true); });
-  ok(/lưu trận/.test(await page.evaluate(() => $('#leave-ask').innerText)), 'hộp Rời trận?: ghi rõ lưu trận');
-  await page.click('#leave-ask [data-la="leave"]');
-  await page.waitForSelector('#menu:not([hidden])');
-  ok(await page.evaluate(() => !!ui.save.run && ui.save.run.wave === 16) && lab(await label(), W), 'hộp Rời trận? → Rời trận: giữ bản lưu, menu ' + await label());
+  // 3b) Back của trình duyệt / vuốt Back trong trận = Rời trận ngay (lưu + về menu, không hỏi)
+  await page.evaluate(() => { game.running = true; history.back(); });
+  await page.waitForSelector('#menu:not([hidden])', { timeout: 3000 });
+  ok(await page.evaluate(() => !!ui.save.run && ui.save.run.wave === 16 && !document.getElementById('leave-ask')) && lab(await label(), W), 'Back trong trận → về menu, giữ bản lưu, không hộp hỏi: ' + await label());
   await page.click('#btn-continue');
-  ok(await page.evaluate(() => { const r = game.wave === 16 && game.stage.k === 1 && game.running; game.running = false; game.waveActive = false; game.enemies = []; game.spawnQueue = []; return r; }), 'Tiếp tục sau Rời trận: đúng đợt / màn, trận chạy tiếp');
+  ok(await page.evaluate(() => { const r = game.wave >= 16 && game.wave <= 17 && game.stage.k === 1 && game.running; game.running = false; game.wave = 16; game.waveActive = false; game.enemies = []; game.spawnQueue = []; return r; }), 'Tiếp tục sau Back: đúng đợt / màn, trận chạy tiếp');
   // 4) bảng Sính lễ đang mở (đợt boss đã xong) → Dừng chơi, tải lại → bảng mở lại
   await page.evaluate(() => { game.events.push({ type: 'reward', boss: 'thuongluong', options: game.bossRewards('thuongluong'), id: 1 }); ui.handleEvents(); });
   ok(await page.evaluate(() => !$('#reward').hidden), 'bảng Sính lễ mở');

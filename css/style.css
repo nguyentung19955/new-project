@@ -2239,10 +2239,3 @@ html.pixel.sk-nen-man-phu #prep .screen, html.pixel.sk-nen-man-phu #result .scre
 html.pixel .pl-box { background-image: url('../assets/pixel/giao-dien/khung-nguoi-choi.png'); image-rendering: pixelated; }
 html.pixel .mc-btn.main { background-image: url('../assets/pixel/giao-dien/khung-nut-chinh.png'); image-rendering: pixelated; }
 /* claude/chan-vuot-lui: hộp "Rời trận?" khi bấm / vuốt Quay lại trong trận */
-#leave-ask { position: absolute; inset: 0; z-index: 70; display: flex; align-items: center; justify-content: center; background: #000a; touch-action: none; }
-#leave-ask .la-box { width: min(340px, 86%); padding: 16px 18px 14px; border-radius: 12px; text-align: center; box-shadow: 0 10px 34px #000c; }
-#leave-ask h2 { margin: 0 0 8px; font-family: var(--title); font-size: 24px; color: var(--gold); }
-#leave-ask p { margin: 0 0 14px; font-size: 14px; line-height: 1.4; color: var(--text); }
-#leave-ask .la-btns { display: flex; gap: 10px; justify-content: center; }
-#leave-ask .la-btns button { flex: 1; min-height: 42px; font-size: 17px; border-radius: 8px; }
-#leave-ask .la-leave { color: #FFB3A0; }
