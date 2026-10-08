@@ -172,9 +172,17 @@ const bossWave = (page) => page.evaluate(() => { const g = ui.game; g.wave = 9; 
       const s1 = await page.evaluate(() => ({ dlg: !document.getElementById('dialogue').hidden, toast: [...document.querySelectorAll('#toasts .toast')].some((t) => /Quái mới/.test(t.textContent)) }));
       ok(!s1.dlg && !s1.toast, 'L07 lúc banner đang hiện: chưa có hội thoại / thông báo "Quái mới" chồng lên');
       await page.screenshot({ path: path.join(SHOT, `L07-banner-${tag}.png`) });
-      await sleep(2600);
-      const dl = await rect(page, '#dialogue'), ts = await page.evaluate(() => [...document.querySelectorAll('#toasts .toast')].map((t) => { const r = t.getBoundingClientRect(); return { l: r.left, t: r.top, r: r.right, b: r.bottom, x: t.textContent }; }));
-      const bt = ts.find((t) => /Quái mới/.test(t.x));
+      // máy bận (chạy song song): đọc lại tới khi có đủ hội thoại + thông báo (tối đa ~10 giây) thay vì chờ cố định 2,6 giây
+      let dl = null, bt = null;
+      for (let i = 0; i < 100 && !(dl && bt); i++) {
+        await sleep(100);
+        dl = await rect(page, '#dialogue');
+        const ts = await page.evaluate(() => [...document.querySelectorAll('#toasts .toast')].map((t) => { const r = t.getBoundingClientRect(); return { l: r.left, t: r.top, r: r.right, b: r.bottom, x: t.textContent }; }));
+        bt = ts.find((t) => /Quái mới/.test(t.x));
+      }
+      await sleep(300);   // để hiệu ứng hiện xong rồi mới đo chồng nhau / chụp
+      dl = await rect(page, '#dialogue') || dl;
+      bt = (await page.evaluate(() => [...document.querySelectorAll('#toasts .toast')].map((t) => { const r = t.getBoundingClientRect(); return { l: r.left, t: r.top, r: r.right, b: r.bottom, x: t.textContent }; }))).find((t) => /Quái mới/.test(t.x)) || bt;
       ok(dl && bt, 'L07 sau banner: hiện hội thoại boss và thông báo "Quái mới"');
       ok(!inter(dl, bt) && !inter(bt, await gateRect(page)), 'L07 hội thoại, thông báo, thành không chồng nhau');
       await page.screenshot({ path: path.join(SHOT, `L07-sau-banner-${tag}.png`) });
@@ -248,6 +256,8 @@ const bossWave = (page) => page.evaluate(() => { const g = ui.game; g.wave = 9; 
       await p3.evaluate(() => document.getElementById('btn-heroes').click()); await sleep(400);
       await p3.evaluate(() => document.querySelector('#roster .ro-card.lock').click()); await sleep(250);
       await p3.evaluate(() => document.querySelector('#roster [data-act=ro-buy]').click()); await sleep(300);
+      // máy bận: chờ thông báo hiện + trượt vào xong (tối đa 5 giây) — đo giữa lúc đang trượt thì vị trí sai
+      await p3.waitForFunction(() => { const t = document.querySelector('#toasts .toast'); return t && t.getAnimations({ subtree: true }).every((a) => a.playState !== 'running' || a.effect.getComputedTiming().iterations === Infinity); }, null, { timeout: 5000 }).catch(() => {});
       const hit = await p3.evaluate(() => { const t = document.querySelector('#toasts .toast'); if (!t) return null; const q = t.getBoundingClientRect(); return [...document.querySelectorAll('#roster button, #roster [data-act], #roster [data-tip], #roster h1, #roster .chip')].filter((e) => { const r = e.getBoundingClientRect(); return r.width && Math.min(r.right, q.right) - Math.max(r.left, q.left) > 2 && Math.min(r.bottom, q.bottom) - Math.max(r.top, q.top) > 2; }).map((e) => e.textContent.trim().slice(0, 16)); });
       ok(hit && hit.length === 0, `L05 Anh Hùng: thông báo "Đã mở khoá" không đè nút / thẻ (đè: ${hit ? hit.join(' | ') || 'không' : 'không có thông báo'})`);
       await p3.screenshot({ path: path.join(SHOT, `L05-anh-hung-${tag}.png`) });
