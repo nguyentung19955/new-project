@@ -80,6 +80,7 @@ function pxBlit(ctx, img, e, x, y, unit, flip, o = {}) {
   PX.blits = (PX.blits || 0) + 1; PX.smooth = ctx.imageSmoothingEnabled;
   const X = -(e.ax + 0.5) * n, Y = -(e.ay + 1) * n, W = e.w * n, H = e.h * n;
   if (o.glow) drawGlowOnly(ctx, img, X, Y, W, H, o.glow.color, o.glow.blur * k, o.glow.alpha);
+  if (o.outline) drawOutlineOnly(ctx, img, X, Y, W, H, o.outline.color, o.outline.alpha, 1);
   ctx.drawImage(img, X, Y, W, H);
   if (o.flash > 0) {
     ctx.globalCompositeOperation = 'lighter';
@@ -123,15 +124,19 @@ function pxDrawHero(ctx, h, x, y, o) {
     if (look.accAura) { ctx.save(); ctx.translate(x, y); drawAccAura(ctx, look.accAura, s, t, true); ctx.restore(); }
   }
   // chiêu: viền sáng màu chiêu; ★★ trở lên: viền sáng màu hệ (như ảnh vẽ tay)
+  // claude/hao-quang-tim-vang: Tím / Vàng — viền 1 ô pixel màu bậc (nhấp nháy) + quầng nhẹ; hạt bay quanh vẽ ở drawHeroSprite
+  const rk = !o.noRankFx && o.fall === undefined && typeof rankFxOf === 'function' && rankFxOf(def);
   const glowK = o.castT > 0 ? Math.min(1, o.castT / 0.25) : 0;
   const glow = glowK > 0 ? { color: o.castColor || '#FFE08A', blur: 10 * glowK * (o.castUlt ? 1.4 : 1), alpha: 0.8 * glowK }
+    : rk ? { color: rk.c, blur: rk.glow.blur, alpha: rk.glow.alpha + Math.sin(t * 3) * 0.08 }
     : tier >= 2 || asc > 0 ? { color: look.attrColor || '#FFE08A', blur: 5 + tier, alpha: 0.5 + Math.sin(t * 3) * 0.1 } : null;
   // trúng đòn: ngoài khung hurt (lùi + sáng da) thêm nháy trắng ngắn để không lẫn với khung đứng
-  const u = pxBlit(ctx, img, e, x, y + lift, unit, (o.dir || 1) < 0, { glow, flash: o.hurt > 0 ? Math.min(1, o.hurt / 0.2) * 0.6 : 0 });
+  const u = pxBlit(ctx, img, e, x, y + lift, unit, (o.dir || 1) < 0, { glow, flash: o.hurt > 0 ? Math.min(1, o.hurt / 0.2) * 0.6 : 0,
+    outline: rk ? { color: rk.c, alpha: rankAlpha(rk, t, (h.id || 0) * 0.37 % 6.28) } : null });
   ctx.restore();
   if (o.bog) drawBogWater(ctx, x, y, s, t);
   PX.seen.add(e.key);
-  return { top: y + lift - (e.ay + 1 - e.bbox[1]) * u, s };
+  return { top: y + lift - (e.ay + 1 - e.bbox[1]) * u, s, u };
 }
 
 // ---- QUÁI / BOSS: kích thước (enemyBox) + vẽ (drawEnemy, sau khi đã dịch / lật / nhún)
