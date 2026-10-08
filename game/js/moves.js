@@ -32,7 +32,10 @@
     },
     bow: {
       // Ghép đợt 2 (phòng vuông, sàn rộng 190, phòng trùm 282): tầm tên ngắn lại vừa một phòng; tên ngắm chéo được (aim).
-      aim: { dy: 60, slope: 0.7 }, // dy: quái lệch dọc tối đa bấy nhiêu thì còn ngắm tới; slope: tên bay chéo tối đa bấy nhiêu lần tốc độ ngang
+      // Sửa góp ý 1: tên bay theo góc bất kỳ tới quái gần nhất. lead: đón đầu bấy nhiêu lần quãng quái chạy được trong lúc tên bay.
+      // nock, nockX: tên sinh ra cách chân bé bấy nhiêu điểm ảnh theo hướng bắn (chỗ dây cung); z0: độ cao lúc rời dây cung,
+      // hạ dần về zFly. hitX, hitY: vùng trúng rộng hơn thân quái bấy nhiêu điểm ảnh theo ngang và theo chiều sâu.
+      lead: 0.85, nock: 8, nockX: 3, z0: 16, zFly: 11, hitX: 5, hitY: 8,
       shot: { name: 'Bắn', still: 0.4, move: 0.47, mult: 1, speed: 290, range: 180, pierce: 1, pierceMult: 0.75 }, // tên thường xuyên thêm 1 quái, con sau chỉ nhận 0,75 lần
       charge: { name: 'Tên mạnh', time: 0.75, min: 0.3, slow: 0.55, mult0: 1.2, mult1: 3.0, speed: 340, range: 250, recover: 0.5, pierce: [1, 2, 4] }, // pierce: số quái xuyên thêm khi đà thấp, trên 60%, đầy
     },
@@ -221,27 +224,96 @@
   }
 
   // ---------- cung ----------
+  // Sửa góp ý 1: mọi phát bắn của cung tự ngắm vào quái gần nhất theo góc bất kỳ (lên, xuống, chéo, sau lưng), đón đầu nhẹ
+  // quái đang chạy. Trước đây tên luôn bay với vận tốc ngang đầy đủ và chỉ chếch dọc tối đa 0,7 lần, quái ở thẳng trên/dưới
+  // bị bỏ qua (chỉ tìm quái lệch dọc dưới 60) nên tên bay ngang qua mặt quái.
+  // Vận tốc quái đo từ chỗ đứng các khung trước (M.update), để đón đầu.
+  function track(dt) {
+    if (!(dt > 0)) return;
+    const k = Math.min(1, dt * 20);
+    for (const e of G.targets()) {
+      if (e.lx != null) {
+        const vx = G.clamp((e.x - e.lx) / dt, -220, 220), vy = G.clamp((e.y - e.ly) / dt, -220, 220);
+        e.avx = (e.avx || 0) + (vx - (e.avx || 0)) * k; e.avy = (e.avy || 0) + (vy - (e.avy || 0)) * k;
+      }
+      e.lx = e.x; e.ly = e.y;
+    }
+  }
+  // Quái gần nhất trong tầm, theo khoảng cách thật trên sàn (không phân biệt trước mặt hay sau lưng, trên hay dưới).
+  function bowTarget(P, range) {
+    let best = null, bd = 1e9;
+    for (const e of G.targets()) {
+      const d = Math.hypot(e.x - P.x, e.y - P.y) - e.r;
+      if (d < range && d < bd) { bd = d; best = e; }
+    }
+    return best;
+  }
+  // Chỗ sẽ ngắm vào quái e với tên bay tốc độ speed: đón đầu theo vận tốc quái (C.bow.lead lần quãng quái chạy được).
+  function leadPoint(P, e, speed) {
+    let tx = e.x, ty = e.y;
+    for (let i = 0; i < 2; i++) {
+      const t = Math.min(0.8, Math.hypot(tx - P.x, ty - P.y) / speed);
+      tx = e.x + (e.avx || 0) * t * C.bow.lead; ty = e.y + (e.avy || 0) * t * C.bow.lead;
+    }
+    return [tx, ty];
+  }
+  // Hướng bắn (ux, uy dài 1). Không có quái thì theo hướng đang đi, đứng yên thì theo hướng mặt. Quay mặt theo hướng bắn
+  // và ghi P.aimRel (độ, 0 là thẳng trước mặt, âm là chếch lên) cho lớp vẽ xoay cung, tay và mũi tên cùng một hướng.
+  function bowAim(P, range, speed) {
+    const e = bowTarget(P, range);
+    let ux, uy;
+    if (e) {
+      const q = leadPoint(P, e, speed), dx = q[0] - P.x, dy = q[1] - P.y, d = Math.hypot(dx, dy);
+      if (d < 1) { ux = P.face; uy = 0; } else { ux = dx / d; uy = dy / d; }
+    } else if (P.moving && P.ldx != null) { ux = P.ldx; uy = P.ldy; }
+    else { ux = P.face; uy = 0; }
+    setAim(P, ux, uy);
+    return { e, ux, uy };
+  }
+  function setAim(P, ux, uy) {
+    if (Math.abs(ux) > 0.12) P.face = ux > 0 ? 1 : -1;
+    P.aimRel = G.clamp((Math.atan2(uy, ux * P.face) * 180) / Math.PI, -90, 90);
+    P.aimUx = ux; P.aimUy = uy;
+  }
+  M.bowAim = bowAim;
+  // Tâm của đòn dạng vùng (mưa tên, bẫy): quái gần nhất trong tầm, dời về giữa cụm quái quanh nó. Không có quái: null.
+  M.bowSpot = function (P, range, r, lead) {
+    const e = bowTarget(P, range);
+    if (!e) return null;
+    const lt = lead || 0.3;
+    let sx = 0, sy = 0, n = 0;
+    for (const t of G.targets()) {
+      if (Math.hypot(t.x - e.x, t.y - e.y) <= r * 0.9) { sx += t.x + (t.avx || 0) * lt; sy += t.y + (t.avy || 0) * lt; n++; }
+    }
+    let x = sx / n, y = sy / n;
+    // vẫn phải phủ chắc con gần nhất
+    const ex = e.x + (e.avx || 0) * lt, ey = e.y + (e.avy || 0) * lt, d = Math.hypot(x - ex, y - ey), lim = r * 0.5;
+    if (d > lim) { x = ex + ((x - ex) / d) * lim; y = ey + ((y - ey) / d) * lim; }
+    setAim(P, x - P.x || P.face, y - P.y);
+    return { x, y, e };
+  };
   function shoot(P, w, o) {
     const W = G.getWorld(), h = heOf(P, w);
     const col = h ? G.EL[h.el].col : '#f1ead9';
-    // Phòng vuông: quái tới từ cả trên lẫn dưới, nên tên ngắm chéo được tới khoảng 35 độ (C.bow.aim), không chỉ bay gần như ngang.
-    const A = C.bow.aim;
-    const tgt = G.cb.nearest(P, o.range + 10, A.dy, true);
-    let vy = 0;
-    if (tgt) vy = G.clamp(((tgt.y - P.y) / Math.max(20, Math.abs(tgt.x - P.x))) * o.speed, -A.slope * o.speed, A.slope * o.speed);
-    W.projs.push({ team: 'player', kind: 'arrow', x: P.x + P.face * 8, y: P.y, vx: P.face * o.speed, vy, t: o.range / o.speed, w, mult: o.mult, pierce: (o.pierce || 0) + (has1(h) && h.el === 'ice' ? HE.ice.pierce : 0), big: !!o.big, col, seen: [], he: h, charged: o.charged || 0, pierceMult: o.pierceMult });
+    const A = bowAim(P, o.range + 10, o.speed), B = C.bow;
+    // tên sinh ra ở dây cung (chỗ cung đang chĩa theo hướng bắn) nhưng đoạn kiểm tra trúng đầu tiên bắt đầu từ giữa người,
+    // nên quái đứng sát hay chồng lên người vẫn trúng, không có vùng chết ở cự ly gần.
+    W.projs.push({
+      team: 'player', kind: 'arrow', x: P.x + P.face * B.nockX + A.ux * B.nock, y: P.y + A.uy * B.nock, px: P.x, py: P.y, fresh: true, z: B.z0,
+      vx: A.ux * o.speed, vy: A.uy * o.speed, t: o.range / o.speed, w, mult: o.mult,
+      pierce: (o.pierce || 0) + (has1(h) && h.el === 'ice' ? HE.ice.pierce : 0), big: !!o.big, col, seen: [], he: h, charged: o.charged || 0, pierceMult: o.pierceMult,
+    });
   }
   function bowTap(P, w) {
     const s = C.bow.shot;
-    aim(P, s.range, C.bow.aim.dy);
+    bowAim(P, s.range + 10, s.speed);
     // đứng yên thì giương nhanh hơn một chút so với vừa chạy vừa bắn
     begin(P, w, { kind: 'ban', name: s.name, pose: 0, arrow: { mult: s.mult, speed: s.speed, range: s.range, pierce: s.pierce || 0, pierceMult: s.pierceMult } }, P.moving ? s.move : s.still);
   }
   function bowRelease(P, w, c) {
     const ch = C.bow.charge, full = c >= 1;
-    aim(P, ch.range, C.bow.aim.dy);
     const o = { kind: 'banManh', name: ch.name, pose: 2, charge: c };
-    begin(P, w, o, ch.recover, 0.43); // dây cung đã căng sẵn: buông tên ngay
+    begin(P, w, o, ch.recover, 0.45); // dây cung đã căng sẵn: buông tên ngay
     P.hitDone = true;
     shoot(P, w, { mult: ch.mult0 + (ch.mult1 - ch.mult0) * c, speed: ch.speed, range: ch.range * (0.7 + 0.3 * c), pierce: full ? ch.pierce[2] : c > 0.6 ? ch.pierce[1] : ch.pierce[0], big: true, charged: c });
     swingFx(P, w, o, { charge: c });
@@ -329,6 +401,7 @@
     const ch = cfg.charge;
     if (mv.holding) {
       if (!held) { release(P, w, cfg); return; }
+      if (w.type === 'bow') bowAim(P, ch.range + 10, ch.speed); // đang giương: cung xoay theo quái gần nhất
       const lv0 = mv.level;
       mv.chargeT += dt;
       mv.charge = Math.min(1, mv.chargeT / ch.time);
@@ -525,6 +598,7 @@
     }
   };
   M.update = function (W, dt) {
+    track(dt);
     const ts = W.mvTimers;
     if (ts && ts.length) {
       for (const q of ts) { q.t -= dt; if (q.t <= 0 && !W.over) q.fn(); }

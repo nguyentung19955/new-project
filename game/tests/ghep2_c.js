@@ -87,7 +87,7 @@
   go({ bow: true }); P.x = W.x0 + 30; P.y = W.geo.cy;
   e1 = dummy(P.x + 30, P.y + 80);
   step(2, { atk: true, atkP: true }); sec(0.9);
-  ok('C: quái lệch dọc quá xa (80) thì tên không tự bẻ góc tới', lost(e1) === 0);
+  ok('C: (sửa góp ý 1) quái lệch dọc xa (80, gần như thẳng phía dưới) thì tên vẫn tự bẻ góc tới và trúng', lost(e1) > 0);
   // mưa tên không có mục tiêu: rơi trong sàn
   go({ bow: true }); P.x = W.x1 - 10; P.face = 1;
   step(1, { specialP: true }); step(2);

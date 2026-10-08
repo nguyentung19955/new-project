@@ -766,6 +766,29 @@
   const P0 = { x: 2, y: -11, ang: -8, stand: 1 };
   const H0 = { x: 3, y: -14, ang: -85, stand: 1 };
   const B0 = { x: 15, y: -17, ang: 0, pull: 0, stand: 1 };
+  // Sửa góp ý 1: tư thế cung theo hướng ngắm. Trước đây cung, tay và thân đổi góc, đổi chỗ, nghiêng tới nghiêng lui giữa các khung
+  // (góc -3..4 độ, chỗ cầm 15..23, thân ngả -16..14 độ; đòn đặc biệt chĩa -25..-68 độ) và không bao giờ chĩa theo hướng tên bay,
+  // nên trông xiêu vẹo. Nay: cung quay quanh một điểm cố định ở vai (BPIV), luôn chĩa đúng góc ngắm rel (độ, 0 là trước mặt,
+  // âm là lên, dương là xuống; mỗi nấc 15 độ), thân đứng thẳng, tay kéo dây dọc theo trục cung, tên rời dây cung theo cùng trục.
+  // Chỉ có độ căng dây (pull) và một chút giật lùi (rec) đổi giữa các khung.
+  const BPIV = [3, -16], BRAD = 13;
+  function bowK(rel, pull, rec) {
+    const q = rotv(BRAD - (rec || 0), 0, rel);
+    return { x: BPIV[0] + q[0], y: BPIV[1] + q[1], ang: rel, pull, stand: 1, lean: 0, mood: 'attack' };
+  }
+  const bowRel = (v) => (((v | 0) % 13) - 6) * 15; // số nấc góc (0..12) -> độ
+  // Nhịp kéo, buông của một phát bắn (u: 0..1 của động tác). Tên rời dây ở u = 0,45 (lúc combat.js gọi đòn chạm).
+  function bowPull(u) {
+    if (u < 0.3) return [0.3 + 0.7 * (u / 0.3), 0];
+    if (u < 0.45) return [1, 0];
+    if (u < 0.6) return [0, 1];
+    return [0, 0];
+  }
+  function bowPose(ps, rel, pull, rec) {
+    attach('bow', bowK(rel, pull, rec), ps);
+    if (rel > 40) ps.w.front = true; // ngắm xuống thì cung ở trước người, không bị thân che
+    return ps;
+  }
   const ATK = {
     sword: [
       [[0, S0], [0.22, { x: -2, y: -25, ang: -150, hang: -12 }], [0.45, { x: 9, y: -17, ang: 15, hang: 55 }], [0.6, { x: 12, y: -19, ang: 38, hang: 75 }], [0.82, { x: 8, y: -14, ang: 10, hang: 25, stand: 0.4 }], [1, S1]],
@@ -866,7 +889,7 @@
         const c = f / 4, sh = v & 1 ? 1 : 0, wk = v & 2 ? -1 : 0;
         ps.free = false; ps.eyes = c >= 1 ? 'wide' : 'open';
         let k;
-        if (wt === 'bow') k = { x: 16 + 4 * c, y: -17 + wk, ang: -3 * c, pull: Math.max(0.15, c), stand: 1, lean: -14 * c };
+        if (wt === 'bow') return bowPose(ps, bowRel(v >> 2), Math.max(0.15, c), 0);
         else if (wt === 'spear') k = { x: 2 - 8 * c - sh, y: -12 + wk, ang: -4 + 6 * c, stand: 1, lean: -8 - 10 * c };
         else if (wt === 'hammer') k = { x: 3 - 5 * c, y: -14 - 14 * c + wk - sh, ang: -85 - 55 * c, stand: 1, lean: -10 * c };
         else k = { x: 3, y: -14 + wk, ang: -95 - 30 * c, stand: 1 };
@@ -888,6 +911,7 @@
       case 'atk': {
         if (!R) { ps.hn = [7, -11]; ps.rot = 8; return ps; }
         const n = anim === 'spec' ? 7 : ATKN[wt], u = (f + 0.5) / n;
+        if (wt === 'bow') { ps.free = false; ps.eyes = EYE_ATK(u); const q = bowPull(anim === 'spec' ? u * 0.9 : u); return bowPose(ps, bowRel(v), q[0], q[1]); }
         const k = kf(anim === 'spec' ? SPEC[wt] : ATK[wt][v % 3], u, wt);
         ps.free = false; ps.eyes = EYE_ATK(u);
         return attach(wt, k, ps);
@@ -914,16 +938,19 @@
       return ['dodge', Math.min(7, Math.floor(o.dodge * 8)), dv];
     }
     if (p && p.dashT > 0) return ['dash', Math.floor(t * 30) % 2, 0];
-    if (p && p.specT > 0) return ['spec', Math.min(6, Math.max(0, Math.floor((1 - p.specT / 0.35) * 7))), 0];
+    const ai = p && p.aimRel != null ? Math.max(0, Math.min(12, Math.round(p.aimRel / 15) + 6)) : 6; // nấc góc ngắm của cung
+    if (p && p.specT > 0) return ['spec', Math.min(6, Math.max(0, Math.floor((1 - p.specT / 0.35) * 7))), wt === 'bow' ? ai : 0];
     if (p && p.castT > 0) return ['cast', Math.min(7, Math.max(0, Math.floor((1 - p.castT / 0.4) * 8))), 0];
     const mv = p && p.mv;
     if (mv && mv.holding && !(o.atk >= 0) && REST[wt]) {
       const top = mv.charge >= 1;
+      if (wt === 'bow') return ['hold', Math.min(4, Math.round(mv.charge * 4)), ai << 2]; // cung: không rung, không nhún khi bước
       return ['hold', Math.min(4, Math.round(mv.charge * 4)), (top && Math.floor(t * 18) % 2 ? 1 : 0) + (o.move && Math.floor(t * 8) % 2 ? 2 : 0)];
     }
     if (o.atk >= 0 && mv && mv.kind === 'quet' && wt === 'spear') return ['sweep', Math.min(9, Math.floor(o.atk * 10)), 0];
     if (o.atk >= 0) {
       const n = ATKN[wt] || 8, combo = p ? Math.max(0, p.comboI | 0) % 3 : Math.floor(t / 1.6) % 3;
+      if (wt === 'bow') return ['atk', Math.min(n - 1, Math.floor(o.atk * n)), ai];
       return ['atk', Math.min(n - 1, Math.floor(o.atk * n)), combo];
     }
     if ((p && p.hurtT > 0) || (!p && o.flash)) return ['hurt', 0, 0];

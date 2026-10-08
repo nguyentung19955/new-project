@@ -38,7 +38,7 @@ Trên điện thoại (nên cầm ngang):
 - **Né** lộn theo hướng đang đẩy cần. Không đẩy cần thì lộn theo hướng vừa di chuyển gần nhất; mũi tên trên nút Né chỉ sẵn hướng đó.
 - Mỗi vũ khí có lối đánh riêng với nút **Đánh**:
   - Kiếm: bấm liên tiếp (hoặc giữ) ra chuỗi 3 nhát, nhát thứ ba mạnh và rộng hơn. Đánh ngay sau khi Né thì lướt tới chém.
-  - Cung: bấm để bắn nhanh; tên tự ngắm chéo tới quái đứng lệch trên dưới và xuyên thêm một con. Giữ để giương cung (có vạch lấy đà trên đầu), thả ra bắn tên mạnh xuyên qua nhiều quái.
+  - Cung: bấm để bắn nhanh; tên tự ngắm vào quái gần nhất theo mọi hướng (trên, dưới, chéo, sau lưng, kể cả quái đứng sát người), đón đầu nhẹ quái đang chạy, và xuyên thêm một con. Giữ để giương cung (có vạch lấy đà trên đầu), cung xoay theo quái gần nhất; thả ra bắn tên mạnh xuyên qua nhiều quái. Mưa tên (Đặc biệt) rơi vào quái hoặc cụm quái gần nhất; bẫy của Thợ Săn khi cầm cung ném thẳng vào chỗ quái gần nhất.
   - Giáo: bấm liên tiếp ra ba nhát đâm rồi quét một vòng. Giữ rồi thả để lao tới một đoạn ngắn xuyên qua quái.
   - Búa: bấm để nện, làm quái khựng. Giữ để lấy đà 2 nấc, thả ra nện đất tạo sóng chấn động; đủ nấc 2 thì làm choáng.
 - Hệ của vũ khí mạnh lên theo cấp tiến hóa:
@@ -152,6 +152,8 @@ python3 tests/rules.py             # luật ba hệ, dấu ấn, trùm thích ng
 python3 tests/fuzz.py              # bấm loạn tìm lỗi sập
 python3 tests/room_shots.py        # chụp ảnh phòng và bản đồ vào docs/phong-vuong/
 python3 tests/moves.py             # lối đánh của bốn vũ khí và luật riêng của ba hệ
+python3 tests/cung.py              # cung tự ngắm: mỗi kiểu bắn 40 phát vào quái ở tám hướng, gần và xa, đứng yên và đang chạy
+python3 tests/cung_shots.py        # chụp ảnh cung tám hướng vào docs/sua-gop-y-1/ (cần thêm Pillow)
 python3 tests/dps.py 90 16 nho     # đo sát thương của bốn vũ khí và ba hệ khi bot chơi trong phòng thường (thêm "trum" thay "nho": phòng trùm)
 python3 tests/perf.py              # đo thời gian một khung hình trong cảnh đông quái
 python3 tests/chieu_shots.py       # chụp ảnh các lối đánh và hiệu ứng theo hệ vào docs/chieu-thuc/

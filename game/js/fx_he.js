@@ -165,11 +165,12 @@
     }
     if (o.move === 'banManh') {
       // buông dây cung đã căng: chớp sáng ở cung, vòng gió, giật lùi
-      const h = hand(P), c = o.charge || 0;
-      add({ ty: 'flash', x: h.x + f * 6, y: h.y, r: 6 + 4 * c, t: 0.1, c: '#ffffff', c2: PL.c2, ly: 1 });
-      addRing(h.x + f * 4, h.y, 2, 10 + 8 * c, 0.18, PL.c2, 2, 1);
-      for (let i = 0; i < 4 + 4 * c; i++) streak(h.x, h.y + rr(-5, 5), f * rr(120, 240), rr(-20, 20), rr(0.1, 0.2), PL.ramp, 1, rr(6, 12), 0, 3);
-      kick(-f * (1 + 1.5 * c), 0);
+      // Sửa góp ý 1: chớp sáng, vòng gió và vệt gió đi theo hướng ngắm thật (P.aimUx, P.aimUy), không chỉ nằm ngang.
+      const h = hand(P), c = o.charge || 0, ux = P.aimUx != null ? P.aimUx : f, uy = P.aimUy || 0;
+      add({ ty: 'flash', x: h.x + ux * 6, y: h.y + uy * 6, r: 6 + 4 * c, t: 0.1, c: '#ffffff', c2: PL.c2, ly: 1 });
+      addRing(h.x + ux * 4, h.y + uy * 4, 2, 10 + 8 * c, 0.18, PL.c2, 2, 1);
+      for (let i = 0; i < 4 + 4 * c; i++) { const v = rr(120, 240), q = rr(-20, 20), j = rr(-5, 5); streak(h.x - uy * j, h.y + ux * j, ux * v - uy * q, uy * v + ux * q, rr(0.1, 0.2), PL.ramp, 1, rr(6, 12), 0, 3); }
+      kick(-ux * (1 + 1.5 * c), -uy * (1 + 1.5 * c));
       if (c >= 1) trauma(0.15);
       return;
     }
@@ -379,7 +380,11 @@
     try {
       const S = K.S();
       if (!S) return;
-      const x = Math.round(o.x), y = Math.round(o.y - (o.z || 10)), k = o.vx < 0 ? -1 : 1, t = S.t, lv = o.he.lv;
+      // Sửa góp ý 1: hình hệ bọc quanh tên xoay theo hướng bay: vẽ trong hệ trục của mũi tên (x tới trước, y lệch ngang).
+      const X = Math.round(o.x), Y = Math.round(o.y - (o.z || 10)), t = S.t, lv = o.he.lv, ang = Math.atan2(o.vy || 0, o.vx || 1);
+      const k = 1, x = 0, y = 0;
+      c.save(); c.translate(X, Y); c.rotate(ang);
+      try {
       if (o.he.el === 'fire') {
         // lửa bọc đầu tên, kéo dài ra sau
         const n = (o.big ? 3 : 1) + (lv >= 2 ? 1 : 0);
@@ -399,6 +404,7 @@
         if (o.big || lv >= 3) { line(c, x - k * 8, y - 4, x - k * 3, y - 1, '#bfeaff', 1); line(c, x - k * 8, y + 4, x - k * 3, y + 1, '#bfeaff', 1); }
         if (((t * 18) | 0) % 3 === 0) star(c, hx + k * 2, y, 2, '#ffffff');
       }
+      } finally { c.restore(); }
     } catch (e) { fail(e); }
   };
   // Vừa lên một nấc lấy đà: vòng sáng và lấp lánh ở tay

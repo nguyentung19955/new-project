@@ -388,6 +388,15 @@
     return best;
   }
   G.nearest = nearest;
+  // Đoạn tên bay (px,py)->(x,y) có cắt vùng trúng hình bầu dục của quái e không. Trả về vị trí cắt dọc đoạn (0..1), không cắt thì -1.
+  function segHit(o, e) {
+    const B = G.MOVES && G.MOVES.bow, kx = 1 / (e.r + (B ? B.hitX : 4)), ky = 1 / (e.hr + (B ? B.hitY : 7));
+    const ax = (o.px - e.x) * kx, ay = (o.py - e.y) * ky, dx = (o.x - o.px) * kx, dy = (o.y - o.py) * ky;
+    const L = dx * dx + dy * dy;
+    const t = L > 0 ? G.clamp(-(ax * dx + ay * dy) / L, 0, 1) : 0;
+    const qx = ax + dx * t, qy = ay + dy * t;
+    return qx * qx + qy * qy <= 1 ? t : -1;
+  }
 
   function startAttack(P) {
     const w = curW(P), T = G.WTYPES[w.type];
@@ -447,9 +456,16 @@
       hitProps(P.x - 58, P.x + 58, P.y, 58 * G.ZK);
       W.zones.push({ shape: 'circle', x: P.x, y: P.y, r: 58, t: 0, life: 0.15, team: 'fx' });
     } else {
-      const tgt = nearest(P, 330, 60, true);
-      // không có quái trước mặt thì mưa tên rơi phía trước, nhưng luôn nằm trong sàn phòng
-      const x = tgt ? tgt.x : G.clamp(P.x + P.face * Math.min(110, (W.x1 - W.x0) * 0.4), W.x0 + 20, W.x1 - 20), y = tgt ? tgt.y : P.y;
+      // Sửa góp ý 1: mưa tên đặt tâm vào quái (hoặc cụm quái) gần nhất theo mọi hướng, đón đầu nhẹ quái đang chạy.
+      // Không có quái thì mưa rơi phía trước theo hướng đang đi hoặc đang nhìn, luôn nằm trong sàn phòng.
+      const sp = G.moves ? G.moves.bowSpot(P, 330, 40, 0.25) : null;
+      let x, y;
+      if (sp) { x = sp.x; y = sp.y; }
+      else {
+        const ux = P.moving && P.ldx != null ? P.ldx : P.face, uy = P.moving && P.ldy != null ? P.ldy : 0, L = Math.min(110, (W.x1 - W.x0) * 0.4);
+        x = P.x + ux * L; y = P.y + uy * L * 0.6;
+      }
+      x = G.clamp(x, W.x0 + 20, W.x1 - 20); y = G.clamp(y, W.y0, W.y1); // tâm mưa luôn trong sàn (vùng mưa rộng 40 vẫn phủ quái sát tường)
       W.zones.push({ shape: 'circle', x, y, r: 40, t: 0, pool: true, team: 'player', rain: true, life: 0.95, tick: 0, w, el });
     }
     if (G.moves) G.moves.special(P, w); // phần riêng theo hệ của đòn đặc biệt
@@ -466,8 +482,11 @@
     } else if (P.key === 'hunter') {
       const traps = W.props.filter((p) => p.type === 'trap' && !p.dead);
       if (traps.length >= 2) traps[0].dead = true;
-      W.props.push({ type: 'trap', x: G.clamp(P.x + P.face * 26, W.x0, W.x1), y: P.y, el: G.activeEl(P, w), t: 15, w });
-      FX('trapPlace', G.clamp(P.x + P.face * 26, W.x0, W.x1), P.y, G.activeEl(P, w));
+      // Sửa góp ý 1: đang cầm cung thì bẫy ném thẳng vào chỗ quái gần nhất (trong tầm 150, đón đầu nhẹ); không có quái thì đặt trước mặt.
+      const sp = w.type === 'bow' && G.moves ? G.moves.bowSpot(P, 150, 14, 0.3) : null;
+      const tx = G.clamp(sp ? sp.x : P.x + P.face * 26, W.x0, W.x1), ty = G.clamp(sp ? sp.y : P.y, W.y0, W.y1);
+      W.props.push({ type: 'trap', x: tx, y: ty, el: G.activeEl(P, w), t: 15, w });
+      FX('trapPlace', tx, ty, G.activeEl(P, w));
     } else if (P.key === 'healer') {
       W.zones.push({ shape: 'circle', x: G.clamp(P.x + P.face * 22, W.x0, W.x1), y: P.y, r: 42, t: 0, pool: true, team: 'player', el: 'poison', heal: true, life: 5, tick: 0, src: G.pDamage(P, w) });
       FX('bottle', P, W.zones[W.zones.length - 1]);
@@ -748,20 +767,32 @@
         o.vx += ((dx / d) * o.homing - o.vx) * dt * 2.5;
         o.vy += ((dy / d) * o.homing - o.vy) * dt * 2.5;
       }
+      if (o.fresh) o.fresh = false; else { o.px = o.x; o.py = o.y; } // khung đầu của tên: giữ điểm đầu đoạn ở giữa người bắn
       o.x += o.vx * dt; o.y += o.vy * dt;
       if (o.team === 'player') {
+        // Sửa góp ý 1: kiểm tra trúng theo cả đoạn tên vừa bay trong khung (không chỉ điểm cuối), nên tên nhanh không "nhảy qua"
+        // quái; khung đầu tiên đoạn này bắt đầu từ giữa người bắn (px, py), nên quái đứng sát người vẫn trúng.
+        // Vùng trúng là hình bầu dục rộng hơn thân quái một chút (C.hitX, C.hitY), cùng hệ trục với chỗ đứng của quái.
+        const zf = G.MOVES && G.MOVES.bow ? G.MOVES.bow.zFly : 11;
+        if (o.kind === 'arrow' && o.z > zf) o.z = Math.max(zf, o.z - dt * 45); // rời dây cung ở trên cao rồi hạ dần về tầm bay
+        const hits = [];
         for (const e of G.targets()) {
           if (o.seen.includes(e)) continue;
-          if (Math.abs(e.x - o.x) < e.r + 4 && Math.abs(e.y - o.y) < e.hr + 7) {
-            o.seen.push(e);
-            playerHit(e, o.mult, { w: o.w, ranged: true, heavy: o.big, dir: o.vx < 0 ? -1 : 1 });
-            if (G.moves) G.moves.arrowHit(o, e);
-            P.mana = Math.min(P.maxmana, P.mana + P.manaHit + (G.wHas(o.w, 'mana') ? 1 : 0));
-            G.sfx('hit', 1.3);
-            if (o.pierce > 0) { o.pierce--; if (o.pierceMult) o.mult *= o.pierceMult; } else { o.t = 0; break; } // tên thường xuyên qua thì yếu đi (pierceMult)
-          }
+          const t = segHit(o, e);
+          if (t >= 0) hits.push([t, e]);
         }
-        for (const pr of W.props) if (pr.env && !pr.used && Math.abs(pr.x - o.x) < 8 && Math.abs(pr.y - o.y) < 10) { G.triggerProp(pr); o.t = 0; }
+        hits.sort((a, b) => a[0] - b[0]);
+        for (const hx of hits) {
+          const e = hx[1];
+          o.seen.push(e);
+          playerHit(e, o.mult, { w: o.w, ranged: true, heavy: o.big, dir: o.vx < 0 ? -1 : 1 });
+          if (G.moves) G.moves.arrowHit(o, e);
+          P.mana = Math.min(P.maxmana, P.mana + P.manaHit + (G.wHas(o.w, 'mana') ? 1 : 0));
+          G.sfx('hit', 1.3);
+          if (o.pierce > 0) { o.pierce--; if (o.pierceMult) o.mult *= o.pierceMult; } else { o.t = 0; break; } // tên thường xuyên qua thì yếu đi (pierceMult)
+        }
+        // đồ vật trên sàn (lò lửa, nấm, đá băng): tên bay qua thì kích nổ nhưng không bị chặn lại
+        for (const pr of W.props) if (pr.env && !pr.used && Math.abs(pr.x - o.x) < 8 && Math.abs(pr.y - o.y) < 10) G.triggerProp(pr);
       } else if (Math.abs(P.x - o.x) < 7 && Math.abs(P.y - o.y) < 8) {
         if (G.hurtPlayer(o.dmg, o.el, null, false) || P.inv <= 0) o.t = 0;
       }

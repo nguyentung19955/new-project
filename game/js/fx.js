@@ -530,15 +530,20 @@
     try {
       const x = Math.round(o.x), y = Math.round(o.y - (o.z || 10));
       if (o.kind === 'arrow') {
-        const k = o.vx < 0 ? -1 : 1, PL = rampOf(o.col || '#e8e2d0');
+        // Sửa góp ý 1: vệt sau tên chạy theo đúng hướng bay (mọi góc), không chỉ nằm ngang.
+        const PL = rampOf(o.col || '#e8e2d0'), sp = Math.hypot(o.vx, o.vy) || 1, ux = o.vx / sp, uy = o.vy / sp, k = 1;
         const L = o.big ? 34 : 18;
-        const seg = (a, len, h, col) => p(c, k > 0 ? x - a - len : x + a, y - (h >> 1), len, h, col);
+        const seg = (a, len, h, col) => {
+          c.fillStyle = col;
+          for (let i = 0; i < len; i++) for (let j = 0; j < h; j++) { const s = -a - i - 0.5, q = j - (h >> 1) + 0.5; c.fillRect(Math.floor(x + ux * s - uy * q), Math.floor(y + uy * s + ux * q), 1, 1); }
+        };
+        const pr = (dx, dy, w, h, col) => { c.fillStyle = col; for (let i = 0; i < w; i++) for (let j = 0; j < h; j++) { const s = dx + i + 0.5, q = dy + j + 0.5; c.fillRect(Math.floor(x + ux * s - uy * q), Math.floor(y + uy * s + ux * q), 1, 1); } };
         if (o.big) {
           seg(4, L, 3, PL[4]); seg(4, L * 0.7, 3, PL[2]); seg(4, L * 0.45, 1, '#ffffff');
           seg(6, 10, 5, PL[2]); seg(-7, 3, 5, PL[1]); seg(-9, 2, 3, '#ffffff');
           const f = ((S.t * 30) | 0) % 3;
           seg(L * 0.5 + f * 4, 5, 1, PL[1]);
-          p(c, x - k * (10 + f * 5), y - 3, 2, 1, PL[1]); p(c, x - k * (16 - f * 3), y + 3, 2, 1, PL[1]);
+          pr(-(10 + f * 5), -3, 2, 1, PL[1]); pr(-(16 - f * 3), 3, 2, 1, PL[1]);
         } else {
           seg(5, L, 1, 'rgba(255,255,255,0.55)'); seg(5, L * 0.55, 1, PL[1]);
           if (o.col && o.col !== '#f1ead9') seg(9, L * 0.5, 3, A_(o.col, 0.35));
@@ -970,7 +975,13 @@
   };
 
   // ---------- đòn đặc biệt và kỹ năng hero ----------
-  const hand = (P) => { HAND.x = P.x + P.face * 7; HAND.y = P.y - 14; return HAND; };
+  // Cung: tay là chỗ cầm cung, xoay theo hướng ngắm (cùng điểm quay với hình vẽ trong hero_tinhlinh.js), để chớp sáng, vòng lấy đà
+  // và vệt gió nằm đúng ở cung.
+  const hand = (P) => {
+    const w = G.curW && P.weapons ? G.curW(P) : null;
+    if (w && w.type === 'bow' && P.aimUx != null) { HAND.x = P.x + P.face * 3 + P.aimUx * 13; HAND.y = P.y - 16 + P.aimUy * 13; return HAND; }
+    HAND.x = P.x + P.face * 7; HAND.y = P.y - 14; return HAND;
+  };
   const HAND = { x: 0, y: 0 };
   api('dash', (P, type, el) => {
     const PL = pal(el), f = P.face;
