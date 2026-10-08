@@ -37,6 +37,8 @@
   function press(S, P, w, inp, tg) {
     const mv = P.mv, cfg = G.MOVES && G.MOVES[w.type];
     if (!cfg || !cfg.charge) { S.botHold = false; return; }
+    // Đang lấy đà mà quái còn ở gần thì giữ tiếp cho tới khi đủ đà (không buông giữa chừng chỉ vì quái vừa nhích khỏi tầm đòn thường).
+    if (w.type !== 'bow' && mv && mv.holding && S.botHold && tg.some((e) => Math.hypot(e.x - P.x, (e.y - P.y) * 1.5) < 80)) inp.keep = true; // (cung thì không: đứng giương cung giữa đám quái chỉ thiệt)
     if (!inp.atk) { if (!(mv && mv.holding && S.botHold && inp.keep)) S.botHold = false; if (!S.botHold) return; }
     if (!S.botHold && mv && !mv.holding && G.time - (S.botDecT || 0) > 0.35) {
       S.botDecT = G.time;

@@ -54,8 +54,9 @@
       charge: {
         name: 'Lấy đà', lv1: 0.5, time: 1.1, min: 0.45, slow: 0.45, recover: 0.7, ahead: 22, waveV: 200, waveDepth: 26, waveFrac: 0.45, // sóng chạy xa nhất 0,45 bề ngang phòng (phòng thường 85, phòng trùm đủ 96) và tan khi chạm tường
         slam: [null,
-          { name: 'Nện đất', mult: 1.1, r: 30, stun: 0, wave: { mult: 0.4, len: 60, stun: 0 } },
-          { name: 'Nện đất mạnh', mult: 1.6, r: 38, stun: 0.7, wave: { mult: 0.6, len: 96, stun: 0.5 } }],
+          // Ghép đợt 2: trong phòng vuông quái luôn đứng dồn, nện đất trúng cả đám (vùng nện nay tròn hơn), nên giảm 1,1 -> 1,0; 1,6 -> 1,25; sóng 0,6 -> 0,5.
+          { name: 'Nện đất', mult: 1.0, r: 30, stun: 0, wave: { mult: 0.4, len: 60, stun: 0 } },
+          { name: 'Nện đất mạnh', mult: 1.25, r: 38, stun: 0.7, wave: { mult: 0.5, len: 96, stun: 0.5 } }],
       },
     },
   };

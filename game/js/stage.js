@@ -904,6 +904,14 @@
       } else ui.text(l, cx, cy, { size: 7.5, color: l.includes('lên cấp') || l.includes('Cứu được') ? '#ffd27a' : '#e8dfcc' });
     });
     if (!R.win && !S.quit) ui.para('Mẹo: về làng mài vũ khí ở lò rèn, hoặc chơi lại ải cũ để lên cấp rồi quay lại.', 86, 196, 308, { size: 7.5, color: '#d9cdb8' });
+    // Thắng thì có nút đi thẳng sang ải kế (hoặc vùng kế sau trùm vùng), không phải vòng về làng.
+    const nx = R.win ? (S.i < 4 ? [S.r, S.i + 1] : S.r < G.REGIONS.length - 1 ? [S.r + 1, 0] : null) : null;
+    if (nx) {
+      if (ui.btn(80, 216, 96, 26, 'Về làng', { size: 8.5 })) { S = null; G.setScene(G.Village); return; }
+      if (ui.btn(182, 216, 96, 26, 'Chơi lại', { size: 8.5 })) { G.startStage(S.r, S.i, S.diff); return; }
+      if (ui.btn(284, 214, 116, 30, nx[1] === 0 ? 'Sang vùng mới ▶' : 'Ải tiếp theo ▶', { size: 9.5, color: '#a8452a' })) G.startStage(nx[0], nx[1], S.diff);
+      return;
+    }
     if (ui.btn(86, 216, 140, 26, 'Về làng')) { S = null; G.setScene(G.Village); return; }
     if (ui.btn(254, 216, 140, 26, R.win ? 'Chơi lại ải này' : 'Thử lại')) G.startStage(S.r, S.i, S.diff);
   }
