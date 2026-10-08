@@ -2,7 +2,7 @@
 // 1. tools/build-pixel.js: nguồn thật hợp lệ (--strict); nguồn lỗi (màu ngoài bảng màu, ký tự chưa khai báo, sai cỡ,
 //    thiếu động tác, tràn khung) bị chặn; dựng ra thư mục tạm: PNG đúng cỡ, JSON, manifest theo nhóm
 // 2. game ?pixel=1: không lỗi console; mã có pixel (giong · tanvien · chodo · tom · ô nền · icon ngũ hành) vẽ pixel,
-//    mã chưa có (1 tướng chưa vẽ chọn tự động · casau) giữ hình cũ; không bật thì không dùng pixel
+//    mã chưa có giữ hình cũ; mặc định BẬT, ?pixel=0 / Cài đặt tắt thì không dùng pixel
 // 3. chụp 1920×934 · 844×390 · 667×375 · dọc 390×844 + phóng to vùng sprite → tests/pixel/shots/ (xem tận mắt)
 const path = require('path');
 const fs = require('fs');
@@ -125,13 +125,26 @@ async function setup(page) {
 }
 
 (async () => {
-  // không bật: không dùng pixel
+  // pixel-mac-dinh: không tham số = BẬT pixel; ?pixel=0 = tắt (đường vẽ dự phòng); ttv.pixel='0' (Cài đặt) = tắt
   {
     const { browser, page, errors } = await open(844, 390, '');
     await setup(page);
     await page.waitForTimeout(600);
+    const s = await page.evaluate(() => ({ on: pixelOn(), seen: [...PX.seen], cls: document.documentElement.className }));
+    ok(s.on && s.seen.length && /pixel/.test(s.cls), 'không tham số URL: pixel bật mặc định, có vẽ pixel');
+    ok(!errors.length, 'không lỗi console (mặc định) ' + errors.join(' | '));
+    await page.evaluate(() => localStorage.setItem('ttv.pixel', '0'));
+    await page.reload(); await page.waitForTimeout(600);
+    ok(await page.evaluate(() => !pixelOn()), "Cài đặt tắt pixel (ttv.pixel='0') → tải lại thì tắt");
+    await page.evaluate(() => localStorage.removeItem('ttv.pixel'));
+    await browser.close();
+  }
+  {
+    const { browser, page, errors } = await open(844, 390, '?pixel=0');
+    await setup(page);
+    await page.waitForTimeout(600);
     const s = await page.evaluate(() => ({ on: pixelOn(), seen: [...PX.seen], cls: document.documentElement.className, url: heroImgUrl('giong', 'head') }));
-    ok(!s.on && !s.seen.length && !/pixel/.test(s.cls) && !/pixel\//.test(s.url), 'không có ?pixel=1: tắt, không vẽ pixel');
+    ok(!s.on && !s.seen.length && !/pixel/.test(s.cls) && !/pixel\//.test(s.url), '?pixel=0: tắt, không vẽ pixel (hình cũ)');
     ok(!errors.length, 'không lỗi console (tắt pixel) ' + errors.join(' | '));
     await browser.close();
   }

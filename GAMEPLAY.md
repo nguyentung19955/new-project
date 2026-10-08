@@ -2372,6 +2372,10 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 225 — PIXEL MẶC ĐỊNH (tester đạt)
+
+- Game mở là hình pixel; tắt bằng Cài đặt → Hình pixel hoặc ?pixel=0. Nạp pixel theo đợt (menu hiện ~0,5 s), chân dung thẻ chợ nạp sẵn.
+
 ## Phiên bản 224 — gộp ban-do-moi (tester đạt)
 
 - 8 dạng bản đồ mới: ngã ba sông, cầu nhiều chỗ, vòng quanh núi, hai đường song song, đèo dốc, ruộng bậc thang, bến đò (quái chậm ×0,5), cổng 3 phía (ải 7, 16 + Vô tận đợt ≥60). Chỉ ải 0 đường thẳng; máu quái chỉnh theo độ phơi đường (×0,8–1,4). Nền pixel khớp đường.
@@ -2621,6 +2625,16 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 - Sửa theo tester (icon pixel phải giữ nghĩa icon cũ): nút quay lại = mũi tên «, nút đóng giữ ô vuông + X trắng to (bỏ skin pixel
   nút tròn), Ngân khố = thỏi bạc, nút đổi chợ giữ skin cũ + icon đồng xu có mũi tên vòng; soát icon chức năng: tạm dừng ‖, menu ≡,
   vô tận ∞, vào trận / lực chiến = hai kiếm chéo, cài đặt = bánh răng; bộ ui-tran-* bỏ đĩa trống cho hình to rõ.
+
+## claude/pixel-mac-dinh — Pixel là mặc định
+- `js/pixel.js`: `PIXEL_BAT = true` — mọi người chơi thấy hình pixel ngay. Tắt: `?pixel=0`, hoặc nút "Hình pixel → Pixel: Bật/Tắt (hình cũ)"
+  trong Cài đặt (lưu `ttv.pixel = '0'`); chưa chọn = bật. Test ép tắt bằng `window.PIXEL_BAT_EP = false`. Đường vẽ dự phòng giữ nguyên.
+- Mở game nhanh hơn khi pixel: font pixel (Google Fonts) nạp sau sự kiện load; tải sẵn ảnh cũ `packs/*` (idle/head/walk1/khung)
+  bỏ qua mã đã có sprite pixel (vẫn tải lười khi cần).
+- Test: `tests/cho-tuong/helpers.js` thêm `noPixel(prep)` — test kiểm tra đường vẽ dự phòng (vân đường ảnh, khung ui/*, tự cử động,
+  hiệu ứng vẽ tay, khung chuyển động) ép tắt pixel; pixel.test kiểm mặc định bật + `?pixel=0` / Cài đặt tắt.
+- Còn hình cũ (cảnh/nền menu/cổng thành… bản tool chỉ là phác thảo thô nên chưa nối; một số chưa có pixel): ghi ở
+  `docs/pixel/DANH-SACH.md` mục "Bổ sung".
 - **Nền pixel riêng (sau khi gộp v223 có tool bản đồ):** sinh `ban-do/<gốc>-<dạng>` cho 14 bản đồ dạng của các ải (`node tools/build-ban-do-spec.js` → lọc mã có dạng → `node tools/ve-pixel.js --spec … --nap`): ô sát đường cùng kiểu bệ đá, xa đường chỉ trang trí, chỗ tự cắt có cầu. `mapLayer` chọn ảnh theo mã `id` (thay `~` bằng `-`); bản đồ dạng không có ảnh (Vô tận ghép gốc × dạng khác, Vòng quanh núi, Bến đò — có núi / sông game tự vẽ) dùng `pxMapGround`. Tool spec: nạp thêm `js/chapters.js` (đăng ký bản đồ dạng của ải), nhánh phụ chỉ xuất đoạn không trùng nhánh trước (tránh cầu giả ở chỗ chia / nhập nhánh), bỏ qua bản đồ có núi / bến đò.
 - Áp pixel nốt phần còn lại (yêu cầu "toàn bộ giao diện"): ảnh nền menu, màn thắng/thua theo chương, tranh truyện (phông
   `canh/truyen-nen-*`), bản đồ chương, nền màn phụ, núi Tản Viên, sính lễ, cổng thành cuối đường (nen/cong-*) — đều dùng ảnh pixel
@@ -2637,3 +2651,7 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
   lúa, xoay máy, quà sính lễ), khung thanh máu tướng / quái / boss, đế ô ngập / núi / chọn / sẵn sàng.
 - Sửa kèm: bảng kết quả dùng khung tối (giấy kem làm chữ khó đọc), số ải trên huy hiệu chương chữ sáng, thẻ chế độ không bị skin nút đè.
 - Giữ bản sinh hình học: icon 16 px (chuyển ảnh ra nhoè). Không cần: vân đường / trang trí cũ (bản đồ pixel đã có riêng).
+- Sửa theo tester: (1) mở game — `js/pixel.js` thôi nạp sẵn cả ~920 ảnh pixel lúc mở; ngay: khung giao diện; sau khi menu hiện (theo lô
+  60 ảnh, lúc rảnh): tướng, quái, boss, nền, bản đồ, hiệu ứng, icon; nhóm hiện bằng <img> (đồ, kỹ năng, ấn phù, thần khí) và canh/* không
+  nạp sẵn → menu hiện ~0,6 s (trước ~1,4 s, ngang ?pixel=0). (2) chợ: chân dung pixel mọi tướng nạp + giải mã sẵn vào bộ đệm chợ
+  (ui.preloadMarket) ngay sau lô cuối → đổi ↻ không nháy thẻ trống.

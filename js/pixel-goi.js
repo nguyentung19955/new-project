@@ -164,10 +164,10 @@ const PXGOI = {
     } catch (e) { /* không có IndexedDB (chế độ ẩn danh…) → chơi như thường */ }
   },
   // công tắc pixel lưu trên máy (đọc trong js/pixel.js lúc mở game)
-  setPixel(on) { try { if (on) localStorage.setItem('ttv.pixel', '1'); else localStorage.removeItem('ttv.pixel'); } catch (e) { /* chặn lưu */ } },
+  setPixel(on) { try { localStorage.setItem('ttv.pixel', on ? '1' : '0'); } catch (e) { /* chặn lưu */ } },   // pixel-mac-dinh: '0' = người chơi tự tắt
   status() {
     const g = this.goi, on = typeof pixelOn === 'function' && pixelOn();
-    if (!g) return on ? 'Pixel đang bật · chưa nạp gói' : 'Pixel đang tắt · chưa nạp gói';
+    if (!g) return on ? 'Pixel đang bật (mặc định)' : 'Pixel đang tắt · dùng hình cũ';
     return `Gói «${g.ten}» · ${g.items.length} mã${on ? '' : ' · bật pixel để thấy'}`;
   },
 };
