@@ -2351,3 +2351,8 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
   Kỳ Lân Vàng (đầu lân–rồng, 1 sừng vàng, vảy ngói men, bờm + đuôi mây) · `halong` Rồng Mẹ Hạ Long (thân rồng uốn, núi đá vôi
   tí hon trên lưng, ngọc trong vuốt) · `ongho` Chúa Sơn Lâm (hổ 4 chân, vằn nét tranh Đông Hồ, khăn lá, chữ 王) — đều có chân dung riêng.
 - Không sửa js/pixel.js hay file lô khác; file sinh ra (`assets/pixel/tuong/`, `js/pixel/tuong.js`, `js/asset-list.js`) dựng lại.
+
+## claude/pixel-quai-boss — Sửa lỗi tester: boss pixel cao vọt, Đại Bàng lọt dưới thanh trên
+- Quái/boss pixel giờ co theo **chiều cao hình cũ** (giữ tỉ lệ, rộng tối đa 1,15× rộng cũ) thay vì theo rộng → Đại Bàng 92, Ngư Tinh 65, Hồ Tinh 71, Chằn Tinh 106, Triệu Đà 142 (đơn vị logic) khớp bản cũ; Triệu Đà sát thành không còn đè thành. Chiều cao cũ nhớ theo mã (`ENEMY_OLD_HW`), ảnh cũ chưa tải thì boss lấy 112.
+- Kẹp mép trên: `PLAY_TOP` (đáy thanh trên, tính khi đổi cỡ màn) — quái bay / boss cao ở khúc đường sát trên tự hạ độ nâng để đỉnh hình + thanh máu nằm dưới thanh trên.
+- Test mới `tests/pixel/boss-cao.test.js`: so chiều cao pixel vs cũ (≤15%) ở 1920×934 + 844×390, đo đỉnh hình Đại Bàng ở điểm đường cao nhất, chụp ảnh.
