@@ -2998,3 +2998,4 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 ## claude/vo-tan-su-kien — Test báo trước sự kiện lỗi thời sau banner xếp hàng
 - Test "troibua: hết đợt 59 → báo trước" lỗi lặp trên nhánh chính: game không sai — banner "vượt qua" / "Màn N · vùng đất mới" của vòng test trước còn hiện/xếp hàng nên banner báo trước được xếp hàng (`ui.queueBanner`, không chồng). Test nay xoá hàng đợi banner (ui.clearBanners) trước mỗi sự kiện, chờ banner tới lượt (≤ 3,5 giây, trận đứng yên) rồi mới kiểm, in trạng thái banner khi lỗi, vẫn bắt buộc có báo trước.
 - (tester) Chân bảng `.foot` (Cây kỹ năng, nhất là tướng đã thăng thần ở 1920) xuống dòng thay vì cắt "…kỹ năng ma".
+- (main v247, test vai-tro) vùng chạm giả của nút lọc hành / Tự gợi ý / Theo đuổi / Mở chỉ áp trong bảng Hợp thể (`#legends`) — ở Anh Hùng / Bách khoa thanh lọc hành dùng chung nằm sát hàng lọc vai trò, `::after` che nút vai trò.
