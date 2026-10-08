@@ -2372,6 +2372,23 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
   (lactuong giờ đã có pixel), thêm kiểm tra `tuong/lactuong` vẽ pixel trong trận.
 - **Pixel art (CLAUDE.md v201):** nhánh này không thêm ảnh mới. Chân dung thẻ Chợ + ảnh nạp sẵn lấy qua một hàm `marketPortrait(t)` (js/ui.js, hiện = `heroImgUrl(t, 'head')`) — có chân dung pixel thì đổi ở đó. Cần đưa vào danh sách vẽ pixel (mục "Bổ sung" của `docs/pixel/DANH-SACH.md` khi có): ký hiệu nhỏ trên dải giá thẻ chợ — "⇄" (mua là ghép, nền xanh), "✦" (nguyên liệu hợp thể, nền tím), ổ khoá nhỏ 10px nền tím xám (nguyên liệu của tướng Tím chưa mở); hiện là chữ / `UIE.lock()`, giữ làm đường vẽ dự phòng.
 
+## Phiên bản 247 — chân Cây kỹ năng không bị cắt
+
+- Dòng chân bảng Cây kỹ năng xuống dòng thay vì cắt chữ (tester đạt).
+
+## Phiên bản 246 — vẽ lại pixel đợt cuối (tester đạt)
+
+- Khung thanh máu tướng/quái/boss không che thanh; khung người chơi có huy hiệu mặt trời; nút Xuất Quân 2 huy hiệu; 16 icon đồ vẽ lại; đồ có icon riêng ưu tiên icon riêng; 7 tranh Sính lễ cùng khung 96×96, cùng đường chân.
+
+## Phiên bản 245 — Sính lễ không bị toast đè (tester đạt)
+
+- Bảng Sính lễ mở thì hoãn mọi toast (Đã hạ, Rơi đồ, Ngân khố) → gộp 1 toast sau khi chọn quà. Hợp thể nới vùng chạm nút nhỏ (Tự gợi ý, lọc hành, Theo đuổi, Mở) trong giới hạn bố cục.
+
+## Phiên bản 244 — bỏ hẳn điểm cộng kỹ năng thừa (tester đạt)
+
+- Bỏ nút "+1đ/+2 SỨC" (thanh tướng) và "Nâng chỉ số" (Cây kỹ năng); điểm chỉ để nâng kỹ năng; max/thăng thần → tự đổi chỉ số + toast 1 lần/trận; chip "Còn N điểm" chỉ khi nâng được ngay. Nút "Nâng cấp tướng" ghi "+2 SỨC/TỐC/TRÍ" thay "+1 điểm" khi điểm sẽ tự đổi chỉ số.
+- Giữ tay ô kỹ năng: mô tả không mất khi thanh tướng dựng lại; chợ 4–6 thẻ cùng tướng không nháy trắng.
+
 ## Phiên bản 243 — bỏ Đền Anh Hùng
 
 - Bỏ trang Đền Anh Hùng (den-anh-hung.html, tools/build-den.js) và nút mở nó ở màn Anh Hùng (người dùng yêu cầu 08/10).
@@ -2871,6 +2888,17 @@ Người dùng chọn phương án 4: máu quái tăng dần theo đợt + hạ 
   nhiễu); thẻ người chơi và nút Xuất Quân dùng khung vẽ tay chuyển sang pixel (có lại huy hiệu avatar tròn và 2 huy hiệu hai bên), không
   bị khung bảng / nút chung đè; icon Vô Tận vẽ lại thành ∞ rõ.
 
+## claude/bo-diem-thua — Bỏ hẳn nút cộng điểm kỹ năng thừa
+
+- Bỏ nút **"+1đ / +2 SỨC"** cạnh 4 ô kỹ năng trên thanh tướng và nút **"Nâng chỉ số: 1 điểm → +X"** ở Cây kỹ năng. Điểm kỹ năng chỉ dùng để nâng kỹ năng (bấm ô kỹ năng sáng).
+- Điểm không dùng được tự đổi thành chỉ số (+2 thuộc tính chính/điểm): khi cả 4 kỹ năng đã max (như v230) và **với tướng đã thăng thần** (nâng kỹ năng bằng vàng) — đổi ngay khi lên cấp / thăng thần. Toast nhỏ 1 lần mỗi trận: "Kỹ năng đã tối đa — điểm dư cộng vào chỉ số".
+- Còn điểm nhưng kỹ năng chưa đủ cấp tướng: điểm giữ lại để nâng sau, không hiện nút gì; chip "Còn N điểm kỹ năng" ở Cây kỹ năng chỉ hiện khi còn kỹ năng nâng được ngay.
+- Test: `node tests/an-cong-ky-nang/an-cong-ky-nang.test.js` (viết lại theo hành vi mới).
+- Sửa thêm 2 lỗi nhỏ (session sua-test-cho phát hiện): (1) rê chuột / giữ tay lên ô kỹ năng mà thanh tướng dựng lại trong lúc chờ
+  (ô khác đổi hồi chiêu / mana) → trước mô tả không hiện; nay hết giờ chờ thì tìm ô mới cùng chỗ (`elementFromPoint`), ô dựng lại dưới chuột
+  không làm đếm lại giờ chờ. (2) `ui.preImg` giữ sẵn `MARKET_SIZE` (6) bản ảnh mỗi tướng (trước 3) → chợ ra ≥ 4 thẻ cùng loại không còn
+  thẻ nháy trắng; `cho-tuong` nay tính cả trường hợp này là lỗi. Test: `node tests/bo-diem-thua/giu-mo-ta-cho.test.js`.
+
 ## claude/an-cong-ky-nang — Ẩn nút cộng điểm khi kỹ năng đã max
 
 - Thanh tướng: nút **+1đ** (cộng điểm dư vào chỉ số) cạnh 4 ô kỹ năng **không hiện nữa khi cả 4 kỹ năng đã đạt tối đa** (Q W E 4/4, R 3/3). Chỉ hiện khi còn điểm và còn kỹ năng chưa max.
@@ -2969,5 +2997,7 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Test thêm: 3 quái trong tầm + 3 quái ngoài tầm (cách xa cả trên đường), chạy 1,5 giây kể cả hiệu ứng trễ → 133 chiêu tấn công tung,
   không chiêu nào làm quái ngoài tầm mất máu / choáng / chậm; Gióng R trong trận thật chỉ trúng quái trong tầm x2.
 - Gộp nhánh chính v241: bản đồ chương 2–5 và nền màn phụ đã được `claude/ve-lai-pixel` vẽ lại tay → dùng bản đó (không sửa ảnh pixel nhóm khác); bỏ bộ sinh `tools/pixel/sinh-ban-do-chuong.py`, bỏ ảnh trải khít / ẩn nét đứt (nét đứt nối ải hiện lại vì bản vẽ tay không có đường đất qua ải), bỏ lớp phủ tối + trống đồng thêm của nhánh này ở màn phụ (nền vẽ lại đã có trống đồng chìm).
+- (tester, sau v242) Bảng Sính lễ mở thì mọi thông báo ("Đã hạ …!", "Rơi đồ: …", Ngân khố) hoãn lại — cả thông báo vừa bật ngay trước khi bảng mở — rồi gộp thành MỘT thông báo cùng quà vừa chọn khi đóng bảng (không còn đè tiêu đề "Vua Hùng ban thưởng"). Hợp thể: Tự gợi ý, 5 nút lọc hành, Theo đuổi, 🔒 Mở có vùng chạm `::after` mở dọc tới 40px màn hình (không đổi bố cục); ở 667×375 các hàng sát nhau nên vùng chạm thực đo được 32 / 32 / 35 / 21px (bị nút hàng kế bên chia), muốn đủ 40 phải giãn bố cục.
 ## claude/vo-tan-su-kien — Test báo trước sự kiện lỗi thời sau banner xếp hàng
 - Test "troibua: hết đợt 59 → báo trước" lỗi lặp trên nhánh chính: game không sai — banner "vượt qua" / "Màn N · vùng đất mới" của vòng test trước còn hiện/xếp hàng nên banner báo trước được xếp hàng (`ui.queueBanner`, không chồng). Test nay xoá hàng đợi banner (ui.clearBanners) trước mỗi sự kiện, chờ banner tới lượt (≤ 3,5 giây, trận đứng yên) rồi mới kiểm, in trạng thái banner khi lỗi, vẫn bắt buộc có báo trước.
+- (tester) Chân bảng `.foot` (Cây kỹ năng, nhất là tướng đã thăng thần ở 1920) xuống dòng thay vì cắt "…kỹ năng ma".
