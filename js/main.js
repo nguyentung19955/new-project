@@ -31,11 +31,14 @@ let mapImg = null;
 // để khung game không tràn ra ngoài
 // claude/sua-giao-dien-10 (lỗi iPhone Safari): khung nhìn THẬT = visualViewport (thanh địa chỉ thu/hiện, bàn phím) + vị trí của nó
 // (offsetLeft/Top), trừ lề an toàn đặt ở padding body (tai thỏ / thanh trạng thái khi cầm dọc). Trả [w, h, x, y].
+// iPhone v261 "tự dưng to màn": khi người chơi lỡ phóng to (visualViewport.scale ≠ 1) thì visualViewport co lại → KHÔNG dùng nó,
+// lấy khung bố cục (documentElement.clientWidth/Height); visualViewport chỉ dùng khi scale ≈ 1 (thanh địa chỉ / bàn phím).
 function viewportSize() {
-  const vv = window.visualViewport;
+  const vv0 = window.visualViewport;
+  const vv = vv0 && Math.abs((vv0.scale || 1) - 1) < 0.02 ? vv0 : null;
   const de = document.documentElement;
-  let w = (vv && vv.width) || window.innerWidth || de.clientWidth;
-  let h = (vv && vv.height) || window.innerHeight || de.clientHeight;
+  let w = (vv && vv.width) || de.clientWidth || window.innerWidth;
+  let h = (vv && vv.height) || de.clientHeight || window.innerHeight;
   let x = vv ? vv.offsetLeft || 0 : 0, y = vv ? vv.offsetTop || 0 : 0;
   const px = (el, k) => parseFloat(getComputedStyle(el)[k]) || 0;
   for (const el of [de, document.body]) {
@@ -118,13 +121,28 @@ function resize() {
   canvas.height = Math.round(h * dpr);
   view = { scale, dpr, ox, oy };
   // mép trên vùng chơi (đơn vị logic): đáy thanh trên — quái bay / boss cao không vẽ lọt dưới thanh
-  PLAY_TOP = (($('#topbar') || {}).offsetHeight || 40) * HZ * DK - oy;
+  fitTopbar();
+  PLAY_TOP = (($('#topbar') || {}).offsetHeight || 40) * (fitTopbar.z || HZ) * DK - oy;
   ui.scale = scale;
   mapImg = mapImage(Math.round(CONFIG.W * scale * dpr), Math.round(CONFIG.H * scale * dpr), game.level);
 }
+// iPhone v261: thanh trên (cầm dọc = cột phải) dài hơn khung ở máy nhỏ → nút cuối tràn ra ngoài. Đo tràn, thu nhỏ riêng thanh trên
+// (--tbz = HZ / tỉ lệ tràn) cho vừa khít; đo lại định kỳ vì số vàng / Ngân khố dài ra
+function fitTopbar() {
+  const tb = $('#topbar'); if (!tb) return;
+  const z0 = fitTopbar.z || HZ;
+  wrap.style.removeProperty('--tbz');
+  const need = tb.scrollWidth, have = tb.clientWidth;
+  const z = need > have + 1 ? HZ * have / need * 0.99 : HZ;
+  fitTopbar.z = z;
+  if (z !== HZ) wrap.style.setProperty('--tbz', z);
+  if (Math.abs(z - z0) > 0.001) PLAY_TOP = (tb.offsetHeight || 40) * z * DK - view.oy;
+}
+setInterval(() => { if (!document.hidden) fitTopbar(); }, 800);
 // iOS Safari báo kích thước muộn / nhiều lần (xoay máy, thanh địa chỉ, bàn phím) → đặt lại ngay + sau 100 / 300 / 700 ms
 let reflowT = [];
-const reflow = () => { resize(); reflowT.forEach(clearTimeout); reflowT = [100, 300, 700].map((ms) => setTimeout(resize, ms)); };
+const reflow = () => { const vv = window.visualViewport; if (vv && Math.abs((vv.scale || 1) - 1) > 0.02) return;   // đang phóng to: giữ bố cục, đợi về 1
+  resize(); reflowT.forEach(clearTimeout); reflowT = [100, 300, 700].map((ms) => setTimeout(resize, ms)); };
 window.addEventListener('resize', reflow);
 window.addEventListener('orientationchange', reflow);
 if (window.visualViewport) { window.visualViewport.addEventListener('resize', reflow); window.visualViewport.addEventListener('scroll', reflow); }
@@ -2006,5 +2024,12 @@ document.addEventListener('dblclick', (e) => { if (!e.target.closest('input, tex
 for (const t of ['gesturestart', 'gesturechange']) document.addEventListener(t, (e) => e.preventDefault(), { passive: false });
 const keepTop = () => { if (window.scrollX || window.scrollY) window.scrollTo(0, 0); for (const el of [document.documentElement, document.body]) { if (el.scrollLeft || el.scrollTop) { el.scrollLeft = 0; el.scrollTop = 0; } } };
 window.addEventListener('scroll', keepTop, { passive: true });
+// iPhone v261: chạm 2 lần (< 300 ms) trên vùng không phải nút / ô nhập → chặn phóng to (pointer events mua / đặt tướng đã chạy trước touchend)
+let lastTouchEnd = 0;
+document.addEventListener('touchend', (e) => {
+  const now = Date.now();
+  if (now - lastTouchEnd < 300 && !e.target.closest('input, textarea, select, button, a, label, [data-act]')) e.preventDefault();
+  lastTouchEnd = now;
+}, { passive: false });
 document.body.addEventListener('scroll', keepTop, { passive: true });
 if (window.visualViewport) window.visualViewport.addEventListener('scroll', keepTop, { passive: true });

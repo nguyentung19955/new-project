@@ -40,6 +40,13 @@ const fit = (page) => page.evaluate(() => {
   await page.waitForTimeout(800);
   let f = await fit(page);
   ok(f.d <= 2 && !f.scroll, `visualViewport 390×760 lệch 30px: game khít đúng vùng nhìn thấy (game ${f.r} / khung ${f.V})`);
+  // 2b) người chơi lỡ phóng to (scale 2, visualViewport còn nửa) → bố cục giữ theo khung bố cục, không to ra
+  await page.evaluate(() => { Object.assign(window.__fakeVV, { width: 195, height: 422, offsetLeft: 40, offsetTop: 100, scale: 2 }); window.dispatchEvent(new Event('resize')); window.__fakeVV.dispatchEvent(new Event('resize')); });
+  await page.waitForTimeout(800);
+  const z = await page.evaluate(() => { const r = document.querySelector('#wrap').getBoundingClientRect(); return [r.left, r.top, r.right, r.bottom].map(Math.round); });
+  ok(z[2] - z[0] > 380 && z[3] - z[1] > 700, `phóng to (scale 2): khung game không co / lệch theo visualViewport (${z})`);
+  await page.evaluate(() => { Object.assign(window.__fakeVV, { width: 390, height: 760, offsetLeft: 0, offsetTop: 30, scale: 1 }); window.dispatchEvent(new Event('resize')); });
+  await page.waitForTimeout(800);
   // 3) trang không cuộn được (ảnh lỗi: 1/3 dưới đen)
   await page.evaluate(() => { window.scrollTo(0, 300); document.scrollingElement.scrollTop = 300; });
   await page.waitForTimeout(200);
@@ -57,7 +64,7 @@ const fit = (page) => page.evaluate(() => {
   }
   // 5) HỘP ĐEN: giả lề an toàn lớn (iPhone: trên 59, dưới 34, trái/phải 47) — khung game + mọi nút nằm trọn trong vùng an toàn − 8px
   await page.evaluate(() => { game.summonCost = () => 220; });
-  for (const [w, h, sf] of [[390, 844, [59, 0, 34, 0]], [390, 664, [59, 0, 34, 0]], [844, 390, [0, 47, 21, 47]]]) {
+  for (const [w, h, sf] of [[390, 844, [59, 0, 34, 0]], [390, 664, [59, 0, 34, 0]], [375, 600, [59, 0, 34, 0]], [844, 390, [0, 47, 21, 47]]]) {
     await page.setViewportSize({ width: w, height: h });
     await page.evaluate((sf) => { const d = document.documentElement.style; ['t', 'r', 'b', 'l'].forEach((k, i) => d.setProperty('--safe-' + k, sf[i] + 'px')); window.dispatchEvent(new Event('resize')); ui.sig = {}; }, sf);
     await page.waitForTimeout(900);
@@ -68,8 +75,10 @@ const fit = (page) => page.evaluate(() => {
         .filter((e) => { const q = e.getBoundingClientRect(); return q.width && (q.left < S.l - 1 || q.top < S.t - 1 || q.right > S.r + 1 || q.bottom > S.b + 1); }).map((e) => e.id || e.className);
       const fill = Math.abs(g.left - S.l) < 2 && Math.abs(g.top - S.t) < 2 && Math.abs(g.right - S.r) < 2 && Math.abs(g.bottom - S.b) < 2;
       const gia = [...document.querySelectorAll('#deck .mk-card .cost')].every((e) => e.textContent.includes('220'));
-      return { bad, fill, gia, g: [g.left, g.top, g.right, g.bottom].map(Math.round), S };
+      const tb = document.querySelector('#topbar');
+      return { bad, fill, gia, g: [g.left, g.top, g.right, g.bottom].map(Math.round), S, tb: tb.scrollWidth <= tb.clientWidth + 1, tbw: [tb.scrollWidth, tb.clientWidth] };
     }, sf);
+    ok(r.tb, `${w}×${h}: thanh trên không tràn (scrollWidth ${r.tbw[0]} ≤ ${r.tbw[1]})`);
     ok(r.fill && !r.bad.length && r.gia, `${w}×${h} lề ${sf}: game vừa khít vùng an toàn − 8px (${r.g}), không gì lọt ra ngoài ${r.bad.join(',')}`);
     await page.screenshot({ path: require('path').join(__dirname, `shots/hop-den-${w}x${h}.png`) }).catch(() => {});
   }

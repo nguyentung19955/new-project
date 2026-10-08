@@ -1174,7 +1174,7 @@ button:disabled { cursor: default; }
 #hero-stats .hs-g b { color: var(--text); font-variant-numeric: lining-nums tabular-nums; }
 /* v41: Cỡ chữ & nút (--hz do main.js đặt; điện thoại mặc định 1,2). Chỉ phóng các phần trong trận,
    mỗi phần phóng quanh cạnh nó bám vào màn hình nên không lệch chỗ. */
-#topbar { right: auto; width: calc(100% / var(--hz, 1)); transform: scale(var(--hz, 1)); transform-origin: 0 0; }
+#topbar { right: auto; width: calc(100% / var(--tbz, var(--hz, 1))); transform: scale(var(--tbz, var(--hz, 1))); transform-origin: 0 0; }   /* --tbz: main.js fitTopbar thu nhỏ thêm khi thanh dài hơn khung */
 #deck { transform: translateX(-50%) scale(var(--hz, 1)); transform-origin: 50% 100%; }
 #deck-hint { bottom: calc(82px * var(--hz, 1)); transform: translateX(-50%) scale(var(--hz, 1)); transform-origin: 50% 100%; }
 #hero-stats { transform: scale(var(--hz, 1)); transform-origin: 0 100%; }
