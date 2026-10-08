@@ -1,4 +1,5 @@
-// Lối đánh riêng của từng vũ khí: chuỗi kiếm, giương cung, loạt đâm của giáo, lấy đà của búa.
+// Lối đánh riêng của từng vũ khí: chuỗi kiếm, giương cung, loạt đâm của giáo, lấy đà của búa;
+// và đặc trưng hệ mở theo cấp tiến hóa (G.HE).
 // combat.js gọi sang đây qua G.moves. Mọi đòn vẫn đi qua playerHit và G.damage của combat.js,
 // nên dấu ấn tiến hóa và thống kê cho trùm (hệ, đánh xa hay gần, số lần né) được ghi như cũ.
 (function () {
@@ -52,25 +53,32 @@
       },
     },
   };
-  // Luật riêng của từng hệ khi vũ khí đã có nhánh hệ (hoặc đang được phủ hệ). Mọi sát thương là hệ số nhân với
-  // chỉ số vũ khí, rồi nhân tiếp với k theo mốc: Mầm 0,5 / Thành hình 0,75 / Thức tỉnh 1.
+  // ĐẶC TRƯNG HỆ THEO CẤP (mọi sát thương là hệ số nhân với chỉ số vũ khí):
+  //   Mầm (lv 1):        chưa có luật hệ nào ở đây. Chỉ có tỉ lệ gây cháy, độc, chậm của G.PROC và vệt chém nhuốm màu hệ.
+  //   Thành hình (lv 2): mở đặc trưng 1, thứ để lại trên sân: Lửa vệt cháy, Độc vũng độc, Băng gai băng làm chậm.
+  //   Thức tỉnh (lv 3):  mở đặc trưng 2, phản ứng dây chuyền: Lửa quái đang cháy chết thì nổ lan, Độc quái đang trúng độc chết
+  //                      thì lây sang con bên cạnh, Băng quái đóng băng bị đánh thì vỡ văng mảnh.
+  // Đặc trưng không mạnh dần theo cấp: mở là có đủ. Vũ khí đang được phủ hệ (bùa, Nung) tính như Mầm.
   G.HE = {
-    k: [0, 0.5, 0.75, 1],
-    maxZones: 6, // số vệt cháy, màn khói cùng lúc trên sân
+    f1: 2, f2: 3, // mốc mở đặc trưng 1 và đặc trưng 2
+    maxZones: 6,  // số vệt cháy, vũng độc cùng lúc trên sân
     fire: {
-      blast: 0.35, blastR: 20, blastRLv: 4,   // nhát kết, đòn thả, đòn đặc biệt: nổ nhỏ lan ra
-      trailR: 14, trailRLv: 2, trailLife: 1.2, trailLifeLv: 0.6, trailSrc: 0.5, trailEvery: 0.5, // vệt cháy đốt quái đi qua
-      arrow: 0.15, arrowR: 20,                 // tên lửa nổ khi trúng
+      // đặc trưng 1: nhát kết, đòn thả, đòn đặc biệt nổ ra rồi để lại vệt cháy đốt quái đi qua; tên lửa nổ khi trúng
+      blast: 0.3, blastR: 28, trailR: 18, trailLife: 2.4, trailSrc: 0.5, trailEvery: 0.5, arrow: 0.13, arrowR: 20,
+      // đặc trưng 2: quái đang cháy mà chết thì nổ, gây sát thương và làm cháy quái đứng gần (con bị cháy chết lại nổ tiếp)
+      boom: 0.5, boomR: 34,
     },
     poison: {
-      cloudR: 18, cloudRLv: 3, cloudLife: 2, cloudLifeLv: 0.6, cloudSrc: 0.8, cloudEvery: 1, // màn khói độc: quái đứng trong mỗi giây thêm 1 tầng Độc
-      spreadR: 32, spread: [0, 1, 1, 2],       // quái chết khi đang trúng độc thì lây sang quái gần: 1 tầng, Thức tỉnh thì 2 tầng
-      shards: [0, 1, 1, 1], shard: 0.15, shardRange: 50, shardV: 210, // tên độc tách thành mảnh khi trúng; tên mạnh đầy đà thêm 1 mảnh
+      // đặc trưng 1: vũng độc, quái đứng trong mỗi giây thêm 1 tầng Độc; tên độc tách mảnh khi trúng
+      cloudR: 25, cloudLife: 3.2, cloudSrc: 0.8, cloudEvery: 1, shards: 1, shard: 0.13, shardRange: 50, shardV: 210,
+      // đặc trưng 2: quái đang trúng độc mà chết thì lây 2 tầng Độc sang quái đứng gần
+      spreadR: 34, spread: 2,
     },
     ice: {
-      spikes: 0.45, spikeLen: 30, spikeLenLv: 10, spikeDepth: 22, stacks: [0, 1, 1, 2], // gai băng mọc theo hướng đánh: sát thương và thêm tầng Băng
-      shatter: 0.7, shatterSelf: 0.5, shatterR: 36, // quái đang đóng băng bị đánh thì lớp băng vỡ, mảnh văng trúng quái quanh đó (mỗi lần đóng băng một lần)
-      pierce: [0, 1, 1, 1],                    // tên băng xuyên thêm chừng này quái
+      // đặc trưng 1: gai băng mọc theo hướng đánh, gây sát thương và thêm tầng Băng (làm chậm); tên băng xuyên thêm 1 quái
+      spikes: 0.4, spikeLen: 52, spikeDepth: 22, stacks: 1, pierce: 1,
+      // đặc trưng 2: quái đang đóng băng bị đánh thì lớp băng vỡ, mảnh văng trúng quái quanh đó (mỗi lần đóng băng vỡ một lần)
+      shatter: 0.7, shatterSelf: 0.5, shatterR: 36,
     },
   };
   // Một dòng chỉ dẫn cho mỗi vũ khí, hiện khi vào ải và lần đầu đổi sang vũ khí đó.
@@ -105,6 +113,8 @@
     return { el, lv: w.branch === el ? Math.max(1, G.wStage(w)) : 1 };
   }
   M.heOf = heOf;
+  const has1 = (h) => !!h && h.lv >= HE.f1; // đã mở đặc trưng 1 (Thành hình)
+  const has2 = (h) => !!h && h.lv >= HE.f2; // đã mở đặc trưng 2 (Thức tỉnh)
 
   function tip(P, mv, w, W) {
     if (mv.tips[w.type] || !G.MOVE_TIPS[w.type]) return;
@@ -209,7 +219,7 @@
     const tgt = G.cb.nearest(P, o.range + 10, 44, true);
     let vy = 0;
     if (tgt) vy = G.clamp(((tgt.y - P.y) / Math.max(20, Math.abs(tgt.x - P.x))) * o.speed, -90, 90);
-    W.projs.push({ team: 'player', kind: 'arrow', x: P.x + P.face * 8, y: P.y, vx: P.face * o.speed, vy, t: o.range / o.speed, w, mult: o.mult, pierce: (o.pierce || 0) + (h && h.el === 'ice' ? HE.ice.pierce[h.lv] : 0), big: !!o.big, col, seen: [], he: h, charged: o.charged || 0 });
+    W.projs.push({ team: 'player', kind: 'arrow', x: P.x + P.face * 8, y: P.y, vx: P.face * o.speed, vy, t: o.range / o.speed, w, mult: o.mult, pierce: (o.pierce || 0) + (has1(h) && h.el === 'ice' ? HE.ice.pierce : 0), big: !!o.big, col, seen: [], he: h, charged: o.charged || 0 });
   }
   function bowTap(P, w) {
     const s = C.bow.shot;
@@ -377,16 +387,16 @@
     W.zones.push(z);
     return z;
   }
-  // Điểm nhấn của hệ ở nhát kết chuỗi, đòn giữ rồi thả và đòn đặc biệt.
+  // ĐẶC TRƯNG 1 (từ Thành hình): nhát kết chuỗi, đòn giữ rồi thả và đòn đặc biệt để lại thứ của hệ trên sân.
   // o: { x, y, dir, power, line (độ dài đường lao), round (toả quanh người), ranged }
   function finish(P, w, o) {
     const h = heOf(P, w);
-    if (!h) return;
-    const W = G.getWorld(), D = G.pDamage(P, w), k = HE.k[h.lv] * (o.power || 1);
+    if (!has1(h)) return; // Mầm chưa có luật hệ
+    const W = G.getWorld(), D = G.pDamage(P, w), k = o.power || 1;
     const info = { x: o.x, y: o.y, dir: o.dir, power: o.power || 1, line: o.line || 0, round: !!o.round, r: 0, pts: [] };
     if (h.el === 'fire') {
       // nổ nhỏ lan ra, rồi để lại vệt cháy trên đất
-      const F = HE.fire, r = F.blastR + F.blastRLv * h.lv, tr = F.trailR + F.trailRLv * h.lv, life = F.trailLife + F.trailLifeLv * h.lv;
+      const F = HE.fire, r = F.blastR, tr = F.trailR, life = F.trailLife;
       info.r = r;
       if (o.line) {
         const n = Math.max(2, Math.round(o.line / 24));
@@ -402,8 +412,8 @@
       }
     }
     else if (h.el === 'poison') {
-      // để lại màn khói độc lơ lửng; đường lao thì rải hai đám
-      const Q = HE.poison, r = Q.cloudR + Q.cloudRLv * h.lv, life = (Q.cloudLife + Q.cloudLifeLv * h.lv) * Math.min(1.2, 0.7 + 0.3 * (o.power || 1));
+      // để lại vũng độc bốc khói; đường lao thì rải hai vũng
+      const Q = HE.poison, r = Q.cloudR, life = Q.cloudLife * Math.min(1.2, 0.7 + 0.3 * (o.power || 1));
       info.r = r;
       if (o.line) {
         for (const u of [0.35, 0.85]) { const x = o.x + o.dir * o.line * u; heZone(W, x, o.y, r - 3, life, 'poison', D * Q.cloudSrc, Q.cloudEvery, { cloud: true }); info.pts.push(x); }
@@ -411,7 +421,7 @@
     }
     else {
       // gai băng mọc từ đất theo hướng đánh: làm chậm, đủ tầng thì đóng băng
-      const I = HE.ice, L = o.line || (I.spikeLen + I.spikeLenLv * h.lv) * Math.min(1.25, 0.8 + 0.2 * (o.power || 1)), n = I.stacks[h.lv], got = [];
+      const I = HE.ice, L = o.line || I.spikeLen * Math.min(1.25, 0.8 + 0.2 * (o.power || 1)), n = I.stacks, got = [];
       info.r = L;
       if (o.round) around(o.x, o.y, L * 0.75, (e) => got.push(e));
       else {
@@ -424,53 +434,62 @@
   }
   M.finish = finish;
 
+  // ĐẶC TRƯNG 2 của Băng (từ Thức tỉnh): quái đang đóng băng bị đánh thì lớp băng vỡ.
   M.onHit = function (e, d, el, o) {
     if (!(e.st.frozen > 0)) { e.mvShat = false; return; }
     if (el !== 'ice' || e.mvShat || !o.w) return;
     const W = G.getWorld(), P = W.P, h = heOf(P, o.w);
-    if (!h || h.el !== 'ice') return;
-    // lớp băng vỡ: con bị đóng băng ăn thêm sát thương, mảnh băng văng trúng quái quanh đó và làm chúng chậm lại
+    if (!has2(h) || h.el !== 'ice') return;
+    // con bị đóng băng ăn thêm sát thương, mảnh băng văng trúng quái quanh đó và làm chúng chậm lại
     e.mvShat = true;
-    const I = HE.ice, D = G.pDamage(P, o.w), k = HE.k[h.lv];
+    const I = HE.ice, D = G.pDamage(P, o.w);
     FX('heShatter', e, I.shatterR);
-    heDamage(e, D * I.shatterSelf * k, 'ice', o.w, o.ranged);
-    around(e.x, e.y, I.shatterR, (t) => { heDamage(t, D * I.shatter * k, 'ice', o.w, o.ranged); G.applyStatus(t, 'ice', D, 1); }, e);
+    heDamage(e, D * I.shatterSelf, 'ice', o.w, o.ranged);
+    around(e.x, e.y, I.shatterR, (t) => { heDamage(t, D * I.shatter, 'ice', o.w, o.ranged); G.applyStatus(t, 'ice', D, 1); }, e);
   };
+  // ĐẶC TRƯNG 2 của Lửa và Độc (từ Thức tỉnh): phản ứng dây chuyền khi quái chết.
   M.onKill = function (e, o, w) {
     const W = G.getWorld(), P = W.P;
     if (!w || e.illusion) return;
     const h = heOf(P, w);
-    if (!h) return;
+    if (!has2(h)) return;
+    if (h.el === 'fire' && e.st.fire > 0) {
+      // Nổ lan: quái đang cháy chết thì nổ, đốt và làm cháy quái đứng gần. Con nào chết vì vụ nổ khi đang cháy sẽ nổ tiếp.
+      const F = HE.fire, D = G.pDamage(P, w), got = [];
+      around(e.x, e.y, F.boomR, (t) => { got.push(t); }, e);
+      FX('heBoom', e, F.boomR, got.length);
+      for (const t of got) { if (t.dead) continue; G.applyStatus(t, 'fire', D, 1); heDamage(t, D * F.boom, 'fire', w, false); }
+    }
     if (h.el === 'poison' && e.st.poisonN > 0) {
-      // chết khi đang trúng độc: độc lây sang quái đứng gần
-      const n = Math.min(e.st.poisonN, HE.poison.spread[h.lv]), src = e.st.poisonDmg / 0.06, got = [];
+      // Lây độc: chết khi đang trúng độc thì độc lây sang quái đứng gần
+      const n = Math.min(e.st.poisonN, HE.poison.spread), src = e.st.poisonDmg / 0.06, got = [];
       around(e.x, e.y, HE.poison.spreadR, (t) => { got.push(t); }, e);
       for (const t of got) G.applyStatus(t, 'poison', src, n);
       if (got.length) FX('heSpread', e, got);
     }
   };
-  // Tên của người chơi vừa trúng một con quái
+  // Tên của người chơi vừa trúng một con quái (thuộc đặc trưng 1: từ Thành hình mới có)
   M.arrowHit = function (o, e) {
     const h = o.he;
-    if (!h || o.shard) return;
-    const W = G.getWorld(), P = W.P, D = G.pDamage(P, o.w), k = HE.k[h.lv];
+    if (!has1(h) || o.shard) return;
+    const W = G.getWorld(), P = W.P, D = G.pDamage(P, o.w);
     if (h.el === 'fire') {
       // tên lửa nổ khi trúng; tên mạnh đầy đà thì nổ to và để lại vệt cháy
       const F = HE.fire, c = o.charged || 0, r = F.arrowR + (c >= 1 ? 8 : 0);
-      around(e.x, e.y, r, (t) => heDamage(t, D * F.arrow * k * (1 + c), 'fire', o.w, true), e);
-      if (c >= 1 && !o.heTrail) { o.heTrail = true; heZone(W, e.x, e.y, F.trailR + F.trailRLv * h.lv, F.trailLife + F.trailLifeLv * h.lv, 'fire', D * F.trailSrc, F.trailEvery); }
+      around(e.x, e.y, r, (t) => heDamage(t, D * F.arrow * (1 + c), 'fire', o.w, true), e);
+      if (c >= 1 && !o.heTrail) { o.heTrail = true; heZone(W, e.x, e.y, F.trailR, F.trailLife, 'fire', D * F.trailSrc, F.trailEvery); }
       FX('heArrow', 'fire', h.lv, { x: e.x, y: e.y, r, big: c >= 1, dir: o.vx < 0 ? -1 : 1 });
     } else if (h.el === 'poison') {
       // tên độc tách thành mảnh khi trúng con quái đầu tiên
       if (o.split) return;
       o.split = true;
-      const Q = HE.poison, c = o.charged || 0, n = Q.shards[h.lv] + (c >= 1 ? 1 : 0), dir = o.vx < 0 ? -1 : 1;
+      const Q = HE.poison, c = o.charged || 0, n = Q.shards + (c >= 1 ? 1 : 0), dir = o.vx < 0 ? -1 : 1;
       for (let i = 0; i < n; i++) {
         // mảnh độc bay chéo ra sau lưng con quái vừa trúng; chỉ gây sát thương Độc, không tính là một đòn đánh mới
         const a = n === 1 ? ((W.mvFlip = !W.mvFlip) ? 0.42 : -0.42) : n === 3 ? (i - 1) * 0.5 : (i ? 0.42 : -0.42);
-        (W.mvShards || (W.mvShards = [])).push({ x: e.x + dir * 4, y: e.y, vx: dir * Q.shardV * Math.cos(a), vy: Q.shardV * Math.sin(a) * 0.7, left: Q.shardRange, w: o.w, dmg: D * Q.shard * k * (1 + 0.6 * c), skip: e, he: h });
+        (W.mvShards || (W.mvShards = [])).push({ x: e.x + dir * 4, y: e.y, vx: dir * Q.shardV * Math.cos(a), vy: Q.shardV * Math.sin(a) * 0.7, left: Q.shardRange, w: o.w, dmg: D * Q.shard * (1 + 0.6 * c), skip: e, he: h });
       }
-      if (c >= 1) heZone(W, e.x, e.y, Q.cloudR + Q.cloudRLv * h.lv, Q.cloudLife, 'poison', D * Q.cloudSrc, Q.cloudEvery, { cloud: true });
+      if (c >= 1) heZone(W, e.x, e.y, Q.cloudR, Q.cloudLife * 0.7, 'poison', D * Q.cloudSrc, Q.cloudEvery, { cloud: true });
       FX('heArrow', 'poison', h.lv, { x: e.x, y: e.y, r: 16, big: c >= 1, dir });
     } else {
       // tên băng xuyên qua (số quái xuyên thêm đã cộng lúc bắn); tên mạnh đầy đà chắc chắn làm chậm
@@ -483,7 +502,7 @@
   M.special = function (P, w) {
     const mv = st(P), W = G.getWorld();
     cancel(mv); mv.chain = 0;
-    if (!heOf(P, w)) return;
+    if (!has1(heOf(P, w))) return;
     if (w.type === 'sword' || w.type === 'spear') {
       const len = Math.abs(P.dashV) * P.dashT, end = G.clamp(P.x + P.face * len, W.x0, W.x1);
       finish(P, w, { x: P.x, y: P.y, dir: P.face, power: 1.2, line: Math.max(20, Math.abs(end - P.x)) });
@@ -526,7 +545,7 @@
         }
       }
       G.cb.hitProps(a - 4, b + 4, z.y, z.depth / 2 + 4);
-      if (z.he && z.level >= 2) {
+      if (has1(z.he) && z.level >= 2) {
         // sóng nấc 2 của búa mang hệ: cứ 30 điểm ảnh để lại một dấu của hệ trên đường đi
         z.heD = (z.heD || 0) + d;
         if (z.heD >= 30) { z.heD = 0; finish(W.P, z.w, { x: z.x, y: z.y, dir: z.dir, power: 0.5 }); }

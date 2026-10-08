@@ -1,4 +1,5 @@
 """Kiểm tra lối đánh riêng của từng vũ khí (js/moves.js) và luật riêng của ba hệ, ngay trong trang thật.
+Từ đợt ghép 1, luật hệ chia theo cấp: Mầm chưa có luật, Thành hình mở đặc trưng 1, Thức tỉnh mở đặc trưng 2 (xem thêm tests/ghep.py).
 Chạy: python3 tests/moves.py [-v]   (thoát mã 1 nếu có mục sai)"""
 import os, sys
 from playwright.sync_api import sync_playwright
@@ -171,10 +172,12 @@ JS = r"""
     const fire0 = S.stats.el.fire, m0 = w.marks.fire;
     combo3();
     let zs = W.zones.filter((z) => z.he && z.el === 'fire');
-    ok('Lửa: nhát kết của kiếm để lại một vệt cháy trên đất', zs.length === 1 && near(zs[0].x, 200 + 24, 1) && zs[0].life > 2.5, zs.length + ' vệt');
-    ok('Lửa: nhát kết nổ lan ra, quái đứng ngoài tầm kiếm vẫn dính 0,35 lần (Thức tỉnh)', lost(side2) / base() > 0.34 && lost(side2) / base() < 0.47, (lost(side2) / base()).toFixed(3)); // có thể lẫn một nhịp cháy lan 0,09
+    ok('Lửa: nhát kết của kiếm để lại một vệt cháy trên đất', zs.length === 1 && near(zs[0].x, 200 + 24, 1) && zs[0].life > 2.0, zs.length + ' vệt');
+    // side2 dính 0,3 của vụ nổ ở nhát kết, cộng 0,5 của Nổ lan vì con quái đang cháy (mk) chết ngay bên cạnh; có thể lẫn một nhịp cháy 0,1
+    ok('Lửa: nhát kết nổ ra 0,3 lần lên quái ngoài tầm kiếm; quái đang cháy chết bên cạnh thì Nổ lan thêm 0,5 lần (Thức tỉnh)', lost(side2) / base() > 0.79 && lost(side2) / base() < 0.92, (lost(side2) / base()).toFixed(3));
+    ok('Lửa: Nổ lan làm quái đứng gần bốc cháy', side2.st.fire > 0, side2.st.fire);
     ok('Lửa: quái ở xa không dính nổ', lost(far) === 0);
-    ok('Lửa: sát thương nổ tính vào thống kê hệ Lửa của trùm', S.stats.el.fire - fire0 > base() * 0.35, (S.stats.el.fire - fire0).toFixed(1));
+    ok('Lửa: sát thương nổ tính vào thống kê hệ Lửa của trùm', S.stats.el.fire - fire0 > base() * 0.3, (S.stats.el.fire - fire0).toFixed(1));
     ok('Lửa: quái đang cháy chết vì vụ nổ vẫn cho dấu ấn Lửa', mk.dead && near(w.marks.fire - m0, 1.2, 0.01), w.marks.fire - m0);
     const walker = dummy(zs[0].x, zs[0].y); sec(0.7, {});
     ok('Lửa: quái đi vào vệt cháy thì bị đốt', walker.st.fire > 0 && lost(walker) > 0, walker.st.fire);
@@ -182,14 +185,14 @@ JS = r"""
     ok('Lửa: vệt cháy tắt sau vài giây', W.zones.filter((z) => z.he).length === 0);
     room('sword', el3('fire', 30)); e = dummy(224); side2 = dummy(250);
     G.rnd = () => 0.999; combo3(); G.rnd = Math.random;
-    ok('Lửa: ở mốc Mầm vụ nổ chỉ bằng một nửa (0,175 lần)', near(lost(side2) / base(), 0.175, 0.01), (lost(side2) / base()).toFixed(3));
+    ok('Lửa: ở mốc Mầm chưa có luật hệ, nhát kết không nổ và không để lại vệt cháy', lost(side2) === 0 && W.zones.filter((z) => z.he).length === 0, (lost(side2) / base()).toFixed(3));
     room('sword'); e = dummy(224); combo3();
     ok('Chưa có hệ: nhát kết không để lại gì trên đất', W.zones.filter((z) => z.he).length === 0);
     room('bow', el3('fire')); e = dummy(300); side2 = dummy(312, 198);
     G.rnd = () => 0.999; // không cho đòn gây hiệu ứng lan (để đo riêng vụ nổ)
     tap(); wait(() => lost(e) === 0, {});
     G.rnd = Math.random;
-    ok('Lửa: tên lửa nổ khi trúng, quái đứng cạnh dính 0,15 lần', lost(side2) / base() >= 0.15 - 0.01 && lost(side2) / base() < 0.5, (lost(side2) / base()).toFixed(3));
+    ok('Lửa: tên lửa nổ khi trúng, quái đứng cạnh dính 0,13 lần', lost(side2) / base() >= 0.13 - 0.01 && lost(side2) / base() < 0.5, (lost(side2) / base()).toFixed(3));
     ok('Lửa: vụ nổ của tên tính là đánh xa', S.stats.ranged > 0 && S.stats.melee === 0);
     room('hammer', el3('fire')); e = dummy(226);
     for (let k = 0; k < 5; k++) { sec(0.16 + 1.15, { atk: true }); run(1, {}); sec(0.5, {}); }
@@ -206,7 +209,7 @@ JS = r"""
     ok('Độc: quái đứng trong màn khói mỗi giây thêm 1 tầng Độc', inCloud.st.poisonN >= 2 && inCloud.st.poisonN <= 3, inCloud.st.poisonN);
     sec(2.5, {});
     ok('Độc: màn khói tan sau vài giây', W.zones.filter((z) => z.he).length === 0);
-    room('sword', el3('poison')); let dy1 = dummy(300), nb = dummy(332), nb2 = dummy(300, 168), farP = dummy(380); // đứng ngoài vũng độc cũ của mốc Thức tỉnh (bán kính 22)
+    room('sword', el3('poison')); let dy1 = dummy(300), nb = dummy(332), nb2 = dummy(300, 168), farP = dummy(380); 
     for (let k = 0; k < 4; k++) G.applyStatus(dy1, 'poison', 100);
     const pm0 = w.marks.poison, ps0 = S.stats.el.poison;
     dy1.hp = 1; sec(0.6, {});
@@ -217,7 +220,7 @@ JS = r"""
     room('sword', el3('poison', 30)); dy1 = dummy(300); nb = dummy(320);
     for (let k = 0; k < 4; k++) G.applyStatus(dy1, 'poison', 100);
     dy1.hp = 1; sec(0.6, {});
-    ok('Độc: ở mốc Mầm chỉ lây 1 tầng', nb.st.poisonN === 1, nb.st.poisonN);
+    ok('Độc: ở mốc Mầm chưa có luật hệ, độc không lây', dy1.dead && nb.st.poisonN === 0, nb.st.poisonN);
     room('sword'); dy1 = dummy(300); nb = dummy(320);
     for (let k = 0; k < 4; k++) G.applyStatus(dy1, 'poison', 100);
     dy1.hp = 1; sec(0.6, {});
@@ -228,7 +231,7 @@ JS = r"""
     const nsh = (W.mvShards || []).length; sec(0.4, {});
     G.rnd = Math.random;
     ok('Độc: tên độc thường trúng quái thì tách ra 1 mảnh', nsh === 1, nsh);
-    ok('Độc: mảnh tên trúng quái đứng chéo phía sau, gây 0,15 lần', near((lost(behind) + lost(behind2)) / base(), 0.15, 0.01), (lost(behind) / base()).toFixed(2) + '/' + (lost(behind2) / base()).toFixed(2));
+    ok('Độc: mảnh tên trúng quái đứng chéo phía sau, gây 0,13 lần', near((lost(behind) + lost(behind2)) / base(), 0.13, 0.01), (lost(behind) / base()).toFixed(2) + '/' + (lost(behind2) / base()).toFixed(2));
     P.x = 200; P.face = 1; sec(1.0, { atk: true }); run(1, {}); G.rnd = () => 0.999; wait(() => !(W.mvShards && W.mvShards.length), {}); const nsh2 = W.mvShards.length; G.rnd = Math.random;
     ok('Độc: tên mạnh đầy đà tách ra 2 mảnh và để lại màn khói', nsh2 === 2 && W.zones.some((z) => z.he && z.cloud), nsh2);
     ok('Độc: mảnh tên tính là đánh xa', S.stats.ranged > base() && S.stats.melee === 0);
@@ -236,12 +239,12 @@ JS = r"""
     // ================= HỆ BĂNG =================
     room('sword', el3('ice')); e = dummy(224); let inLine = dummy(266), offLine = dummy(266, 214);
     combo3();
-    ok('Băng: nhát kết mọc gai băng theo hướng đánh, trúng quái ngoài tầm kiếm 0,45 lần và thêm 2 tầng Băng', near(lost(inLine) / base(), 0.45, 0.01) && inLine.st.iceN === 2, (lost(inLine) / base()).toFixed(2) + ' tầng ' + inLine.st.iceN);
+    ok('Băng: nhát kết mọc gai băng theo hướng đánh, trúng quái ngoài tầm kiếm 0,4 lần và thêm 1 tầng Băng', near(lost(inLine) / base(), 0.4, 0.01) && inLine.st.iceN === 1, (lost(inLine) / base()).toFixed(2) + ' tầng ' + inLine.st.iceN);
     ok('Băng: gai băng có bề rộng vừa phải, không trúng quái lệch 24 điểm ảnh theo chiều sâu', lost(offLine) === 0);
     ok('Băng: gai băng tính vào thống kê hệ Băng và cận chiến', S.stats.el.ice > 0 && S.stats.melee > 0 && S.stats.ranged === 0);
     room('sword', el3('ice', 30)); e = dummy(224); inLine = dummy(258);
     G.rnd = () => 0.999; combo3(); G.rnd = Math.random;
-    ok('Băng: ở mốc Mầm gai băng ngắn hơn, 0,225 lần và 1 tầng', near(lost(inLine) / base(), 0.225, 0.01) && inLine.st.iceN === 1, (lost(inLine) / base()).toFixed(3) + ' tầng ' + inLine.st.iceN);
+    ok('Băng: ở mốc Mầm chưa có luật hệ, nhát kết không mọc gai băng', lost(inLine) === 0 && inLine.st.iceN === 0, (lost(inLine) / base()).toFixed(3) + ' tầng ' + inLine.st.iceN);
     room('sword', el3('ice')); e = dummy(224); let nbI = dummy(248, 200), mkI = dummy(246, 180);
     for (let k = 0; k < 5; k++) G.applyStatus(e, 'ice', 1);
     G.applyStatus(mkI, 'ice', 1); mkI.hp = 1;

@@ -149,7 +149,180 @@ JS = r"""
   while (G.save.weapons.length < 12) G.newWeapon(G.save, 'sword', 0);
   ok('Rương đồ đầy: vũ khí thường đổi thành vàng, vũ khí Vàng vẫn được giữ', G.giveWeapon('bow', 2) === null && !!G.giveWeapon('bow', 3, { gold: 1 }) && G.save.weapons.length === 13);
   G.rnd = Math.random;
-  @@MORE@@
+  // ================= 4. ĐẶC TRƯNG HỆ THEO CẤP =================
+  ok('Đặc trưng: Trắng và Mầm chưa mở gì, Thành hình mở 1, Thức tỉnh mở 2', [0, 1, 2, 3].map(G.heFeatures).join() === '0,0,1,2');
+  ok('Đặc trưng: mỗi hệ có đủ tên hai đặc trưng', G.ELS.every((el) => G.HE_FEATURES[el].length === 2 && G.HE_FEATURES[el].every((f) => f.name && f.desc)));
+  const MARKS = { 1: 30, 2: 120, 3: 300 };
+  const combo3 = () => { for (let k = 0; k < 3; k++) { step(1, { atk: true, atkP: true }); let n = 0; while (!P.hitDone && n++ < 200) step(1); if (k < 2) { n = 0; while (P.atkT > 0 && n++ < 200) step(1); } } };
+  const fixRnd = (v) => { G.rnd = () => v; };
+  // st: mốc 1..3. Trả về kết quả đo của nhát kết kiếm và của phản ứng dây chuyền.
+  function probe(el, st, rar) {
+    const r = {};
+    // (a) nhát kết của kiếm: có để lại gì trên sân không
+    w = room({ hero: 'smith', melee: 'sword', tier: rar == null ? 1 : rar, branch: el, marks: MARKS[st] });
+    r.stage = G.wStage(w);
+    const near1 = dummy(224), far1 = dummy(262);
+    fixRnd(0.999); combo3(); G.rnd = Math.random;
+    r.zones = heZones(); r.farHit = lost(far1) > 0; r.farIce = far1.st.iceN;
+    // (b) phản ứng dây chuyền
+    w = room({ hero: 'smith', melee: 'sword', tier: rar == null ? 1 : rar, branch: el, marks: MARKS[st] });
+    if (el === 'fire') {
+      const a = dummy(300, 190, 1), b = dummy(322); // a đang cháy và sắp chết, b đứng cạnh
+      G.applyStatus(a, 'fire', 1); a.hp = 1e-6; G.damage(a, 1, { w });
+      r.chain = a.dead && lost(b) > 0 && b.st.fire > 0; r.chainDmg = lost(b) / G.pDamage(P, w);
+    } else if (el === 'poison') {
+      const a = dummy(300, 190, 1), b = dummy(322);
+      G.applyStatus(a, 'poison', 1, 3); a.hp = 1e-6; G.damage(a, 1, { w });
+      r.chain = a.dead && b.st.poisonN > 0; r.chainDmg = b.st.poisonN;
+    } else {
+      const a = dummy(224), b = dummy(248, 198);
+      for (let k = 0; k < 5; k++) G.applyStatus(a, 'ice', 1);
+      fixRnd(0.999); step(1, { atk: true, atkP: true }); let n = 0; while (!P.hitDone && n++ < 200) step(1); G.rnd = Math.random;
+      r.chain = a.st.frozen > 0 && lost(b) > 0; r.chainDmg = lost(b) / G.pDamage(P, w);
+    }
+    return r;
+  }
+  const FNAME = { fire: 'Lửa', poison: 'Độc', ice: 'Băng' };
+  for (const el of G.ELS) {
+    const f = G.HE_FEATURES[el];
+    const r1 = probe(el, 1), r2 = probe(el, 2), r3 = probe(el, 3);
+    const left = (r) => (el === 'ice' ? r.farHit && r.farIce > 0 : r.zones > 0);
+    ok(FNAME[el] + ' Mầm (cấp 2): chưa có luật hệ, nhát kết không để lại gì trên sân', r1.stage === 1 && !left(r1) && r1.zones === 0 && !r1.farHit, JSON.stringify(r1));
+    ok(FNAME[el] + ' Mầm (cấp 2): chưa có phản ứng dây chuyền', !r1.chain, JSON.stringify(r1));
+    ok(FNAME[el] + ' Thành hình (cấp 3): có đặc trưng 1 "' + f[0].name + '"', r2.stage === 2 && left(r2), JSON.stringify(r2));
+    ok(FNAME[el] + ' Thành hình (cấp 3): chưa có đặc trưng 2 "' + f[1].name + '"', !r2.chain, JSON.stringify(r2));
+    ok(FNAME[el] + ' Thức tỉnh (cấp 4): vẫn có đặc trưng 1 "' + f[0].name + '"', r3.stage === 3 && left(r3), JSON.stringify(r3));
+    ok(FNAME[el] + ' Thức tỉnh (cấp 4): có đặc trưng 2 "' + f[1].name + '"', r3.chain, JSON.stringify(r3));
+    const rT = probe(el, 3, 0);
+    ok(FNAME[el] + ' bậc Thường đủ 300 dấu ấn: dừng ở Thành hình nên chỉ có đặc trưng 1', rT.stage === 2 && left(rT) && !rT.chain, JSON.stringify(rT));
+  }
+  // Mầm vẫn có hiệu ứng hệ nhẹ: tỉ lệ gây cháy, độc, chậm theo G.PROC
+  for (const el of G.ELS) {
+    w = room({ hero: 'smith', melee: 'sword', tier: 1, branch: el, marks: 30 }); e = dummy(224);
+    fixRnd(0.19); step(1, { atk: true, atkP: true }); sec(0.3); const on = G.hasStatus(e);
+    w = room({ hero: 'smith', melee: 'sword', tier: 1, branch: el, marks: 30 }); e = dummy(224);
+    fixRnd(0.21); step(1, { atk: true, atkP: true }); sec(0.3); const off = !G.hasStatus(e);
+    G.rnd = Math.random;
+    ok(FNAME[el] + ' Mầm: mỗi đòn có 20% gây hiệu ứng hệ (số ngẫu nhiên dưới 0,2 thì dính, trên thì không)', on && off, on + '/' + off);
+  }
+  ok('Chỉ số tăng theo mốc: Trắng 1 / Mầm 1,04 / Thành hình 1,08 / Thức tỉnh 1,12', G.STAGE_MULT.join() === '1,1.04,1.08,1.12');
+  // bùa phủ hệ lên vũ khí trắng: tính như Mầm, không có luật hệ
+  w = room({ hero: 'smith', melee: 'sword', tier: 1 }); e = dummy(224);
+  G.addCoat('fire', 30); combo3();
+  ok('Bùa hệ trên vũ khí trắng: quái dính cháy nhưng nhát kết không để lại vệt cháy (tính như Mầm)', e.st.fire > 0 && heZones() === 0, e.st.fire + '/' + heZones());
+  // cung: luật của tên cũng chỉ có từ Thành hình
+  function arrowProbe(el, st) {
+    room({ hero: 'smith', tier: 1, branch: el, marks: MARKS[st] }); P.cur = 1; w = G.curW(P); step(2);
+    const a = dummy(280), b = dummy(el === 'ice' ? 310 : 292, el === 'ice' ? 190 : 197);
+    fixRnd(0.999); step(2, { atk: true, atkP: true }); sec(0.9); G.rnd = Math.random;
+    return lost(a) > 0 && lost(b) > 0;
+  }
+  ok('Cung Lửa: tên nổ lan sang quái bên cạnh từ Thành hình, Mầm thì không', !arrowProbe('fire', 1) && arrowProbe('fire', 2));
+  ok('Cung Băng: tên xuyên thêm 1 quái từ Thành hình, Mầm thì không', !arrowProbe('ice', 1) && arrowProbe('ice', 2));
+  // thông báo trong trận khi lên cấp 3 và cấp 4
+  for (const el of G.ELS) {
+    w = room({ hero: 'hunter', melee: 'sword', tier: 1 });
+    G.addMarks(w, el, 30);
+    const b1 = W.banner ? W.banner.s : '';
+    G.addMarks(w, el, 90);
+    const b2 = W.banner ? W.banner.s : '';
+    G.addMarks(w, el, 180);
+    const b3 = W.banner ? W.banner.s : '';
+    ok(FNAME[el] + ': lên Mầm có thông báo nhưng chưa nhắc đặc trưng', b1.includes('Mầm') && !b1.includes('Mở đặc trưng'), b1);
+    ok(FNAME[el] + ': lên Thành hình thông báo kèm tên đặc trưng vừa mở', b2.includes('Thành hình') && b2.includes('Mở đặc trưng: ' + G.HE_FEATURES[el][0].name), b2);
+    ok(FNAME[el] + ': lên Thức tỉnh thông báo kèm tên đặc trưng vừa mở', b3.includes('Thức tỉnh') && b3.includes('Mở đặc trưng: ' + G.HE_FEATURES[el][1].name), b3);
+  }
+  // Nổ lan dây chuyền: ba con đang cháy đứng thành hàng, con đầu chết thì cả hàng nổ theo
+  w = room({ hero: 'smith', melee: 'sword', tier: 1, branch: 'fire', marks: 300 });
+  const row = [dummy(300, 190, 1), dummy(326, 190, 1), dummy(352, 190, 1)];
+  for (const q of row) { G.applyStatus(q, 'fire', 1); q.hp = G.pDamage(P, w) * 0.3; }
+  row[0].hp = 1e-6; G.damage(row[0], 1, { w });
+  ok('Nổ lan: quái bị nổ chết khi đang cháy thì nổ tiếp (dây chuyền cả hàng)', row.every((q) => q.dead), row.map((q) => (q.dead ? 1 : 0)).join(''));
+
+  // ================= 5. NÉ THEO HƯỚNG DI CHUYỂN GẦN NHẤT =================
+  room({ hero: 'smith' });
+  let x0 = P.x, y0 = P.y;
+  step(1, { dodgeP: true }); sec(0.3);
+  ok('Né: chưa đi bước nào thì lộn theo hướng mặt', P.x > x0 + 30 && near(P.y, y0, 0.5), (P.x - x0).toFixed(0));
+  room({ hero: 'smith' });
+  sec(0.25, { mx: -1 }); step(4);
+  P.face = 1; // quay mặt sang phải (ví dụ vừa đánh quái bên phải) nhưng bước gần nhất là sang trái
+  x0 = P.x; y0 = P.y;
+  step(1, { dodgeP: true }); sec(0.3);
+  ok('Né: không đẩy cần thì lộn theo hướng di chuyển gần nhất (trái), không theo hướng mặt (phải)', P.x < x0 - 30 && near(P.y, y0, 0.5), (P.x - x0).toFixed(0));
+  ok('Né: lộn xong thì quay mặt theo hướng lộn', P.face === -1);
+  room({ hero: 'smith' });
+  sec(0.25, { my: -1 }); step(4);
+  x0 = P.x; y0 = P.y;
+  step(1, { dodgeP: true }); step(6);
+  const upFrame = G.tinhLinh.frame(G.heroArgs(P));
+  sec(0.3);
+  ok('Né: bước gần nhất là đi lên thì lộn thẳng lên', P.y < y0 - 12 && near(P.x, x0, 0.5), (P.x - x0).toFixed(0) + '/' + (P.y - y0).toFixed(0));
+  ok('Né: hình lộn dùng tư thế theo hướng lộn (lên hẳn là kiểu 0, ngang là kiểu 2)', upFrame.anim === 'dodge' && upFrame.v === 0, upFrame.anim + '/' + upFrame.v);
+  room({ hero: 'smith' });
+  sec(0.25, { mx: -1 }); step(4);
+  x0 = P.x;
+  step(1, { dodgeP: true, mx: 1 }); step(6, { mx: 1 });
+  const sideFrame = G.tinhLinh.frame(G.heroArgs(P));
+  sec(0.3);
+  ok('Né: đang đẩy cần thì vẫn lộn theo hướng cần (phải), dù bước trước đó sang trái', P.x > x0 + 30, (P.x - x0).toFixed(0));
+  ok('Né: lộn ngang dùng tư thế kiểu 2', sideFrame.anim === 'dodge' && sideFrame.v === 2, sideFrame.v);
+  room({ hero: 'smith' });
+  sec(0.25, { mx: 1, my: 1 }); step(4);
+  x0 = P.x; y0 = P.y;
+  step(1, { dodgeP: true }); step(6);
+  const dgFrame = G.tinhLinh.frame(G.heroArgs(P));
+  ok('Né: hướng chéo xuống cũng được nhớ, hình lộn nghiêng theo (kiểu 3)', P.x > x0 + 5 && P.y > y0 + 3 && dgFrame.v === 3, dgFrame.v);
+
+  // ================= 6. HERO MỚI, VŨ KHÍ SỐNG, NÚT MỚI =================
+  ok('Hero: em bé tinh linh thay hình hero cũ', G.art.hero === G.tinhLinh.hero && typeof G.art.heroOld === 'function');
+  const draws = [];
+  const realDraw = G.weaponArt.draw;
+  G.weaponArt.draw = function (c, o) { draws.push(Object.assign({}, o)); return realDraw.apply(this, arguments); };
+  const btns = [];
+  const realBtn = G.btnArt.draw;
+  G.btnArt.draw = function (c, kind, x, y, r, st) { btns.push([kind, Object.assign({}, st)]); return realBtn.apply(this, arguments); };
+  const paint = () => { draws.length = 0; btns.length = 0; G.ui.begin(); G.scene.draw(); G.click = null; };
+  w = room({ hero: 'hunter', melee: 'spear', tier: 3, family: 7, branch: 'ice', marks: 300 });
+  paint();
+  let d0 = draws.find((d) => d.type === 'spear');
+  ok('Vũ khí sống: hình lấy đúng loại, dòng, nhánh, mốc, bậc của món đang cầm', d0 && d0.family === 7 && d0.branch === 'ice' && d0.stage === 3 && d0.rarity === 3, JSON.stringify(d0));
+  ok('Vũ khí sống: lúc đứng yên thì mặt bình thường', d0 && d0.mood === 'idle', d0 && d0.mood);
+  step(1, { atk: true, atkP: true }); step(6); paint();
+  d0 = draws.find((d) => d.type === 'spear' && d.mood === 'attack');
+  ok('Vũ khí sống: lúc ra đòn thì mặt đang đánh', !!d0);
+  sec(0.6); P.inv = 0; G.hurtPlayer(1, null, null, false); step(1); paint();
+  d0 = draws.find((d) => d.type === 'spear' && d.mood === 'hurt');
+  ok('Vũ khí sống: bé trúng đòn thì vũ khí nhăn mặt', !!d0);
+  ok('Nút: đủ bộ Đánh, Đặc biệt, kỹ năng, Né, bình máu, tạm dừng vẽ bằng G.btnArt', ['atk', 'special', 'skill', 'dodge', 'potion', 'pause'].every((k) => btns.some((b) => b[0] === k)), btns.map((b) => b[0]).join());
+  w = room({ hero: 'hunter', melee: 'hammer', tier: 1 });
+  sec(0.8, { atk: true }); inp = { atk: true }; paint();
+  let ab = btns.find((b) => b[0] === 'atk');
+  const holdF = G.tinhLinh.frame(G.heroArgs(P));
+  ok('Nút Đánh: đang giữ để lấy đà thì hiện vòng nạp theo P.mv (búa có 2 nấc)', ab && ab[1].charge > 0.3 && ab[1].charge <= 1 && near(ab[1].charge, P.mv.charge, 0.05) && ab[1].chargeSteps === 2, ab && JSON.stringify([ab[1].charge, ab[1].chargeSteps]));
+  ok('Hero: đang lấy đà thì dùng tư thế lấy đà', holdF.anim === 'hold', holdF.anim);
+  step(2, {}); sec(0.9); paint();
+  ab = btns.find((b) => b[0] === 'atk');
+  ok('Nút Đánh: thả ra thì hết vòng nạp', ab && !(ab[1].charge > 0));
+  w = room({ hero: 'healer', melee: 'spear', tier: 1 }); e = dummy(230);
+  let sweep = false;
+  for (let k = 0; k < 4; k++) { step(2, { atk: true, atkP: true }); step(1); let n = 0; while (P.atkT > 0 && n++ < 200) { step(1); if (P.mv.kind === 'quet' && G.tinhLinh.frame(G.heroArgs(P)).anim === 'sweep') sweep = true; } }
+  ok('Hero: nhát thứ tư của giáo dùng tư thế quét vòng', sweep);
+  room({ hero: 'smith' });
+  sec(0.25, { mx: -1 }); step(4); P.face = 1; paint();
+  let db = btns.find((b) => b[0] === 'dodge');
+  ok('Nút Né: không đẩy cần thì mũi tên chỉ hướng di chuyển gần nhất (trái)', db && Math.abs(Math.abs(db[1].dir) - Math.PI) < 0.01, db && db[1].dir);
+  G.weaponArt.draw = realDraw; G.btnArt.draw = realBtn;
+  const icons = [];
+  const realIcon = G.weaponArt.icon;
+  G.weaponArt.icon = function (c, o) { icons.push(Object.assign({}, o)); return realIcon.apply(this, arguments); };
+  paint();
+  ok('Ô vũ khí trong trận: biểu tượng vẽ bằng G.weaponArt.icon cho cả hai món', icons.length >= 2, icons.length);
+  G.setScene(G.Village);
+  for (const t of ['hub', 'forge', 'gear']) { icons.length = 0; G.villageApi.V.tab = t; paint(); ok('Làng (' + t + '): biểu tượng vũ khí vẽ bằng G.weaponArt.icon', icons.length >= 2, icons.length); }
+  G.villageApi.V.tab = 'weapon'; G.villageApi.V.wid = G.save.carry[0]; icons.length = 0; paint();
+  ok('Làng: màn xem vũ khí mở được và có hình vũ khí', G.villageApi.V.tab === 'weapon' && icons.length >= 1);
+  G.weaponArt.icon = realIcon;
   G.botInput = null;
   G.setScene(G.Village);
   return out;

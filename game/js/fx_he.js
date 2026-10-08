@@ -1,4 +1,6 @@
 // Hiệu ứng ra chiêu theo lối đánh của từng vũ khí và theo hệ (Lửa, Độc, Băng).
+// Chia theo cấp: Mầm chỉ có vệt chém nhuốm màu hệ; Thành hình thêm hình của đặc trưng 1 (vệt cháy, vũng độc, gai băng);
+// Thức tỉnh thêm hình của đặc trưng 2 (nổ lan, lây độc, băng vỡ). Luật nằm trong js/moves.js, ở đây chỉ vẽ khi luật gọi.
 // Chỉ là hình ảnh: đọc trạng thái game, không ghi trường nào của luật chơi. Dùng chung kho hạt của fx.js.
 (function () {
   const G = window.G, fx = G.fx;
@@ -246,6 +248,15 @@
     for (let i = 0; i < 10; i++) { const a = R() * TAU, v = rr(50, 150); emit(i % 3 ? 4 : 8, e.x + rr(-B.w, B.w), e.y - rr(2, B.h), Math.cos(a) * v, Math.sin(a) * v * 0.6 - 50, rr(0.4, 0.75), RAMP.ice, i % 3 ? 2 : 3, 320, 0, e.y + rr(-3, 5), 1); }
     for (let i = 0; i < 4; i++) emit(2, e.x + rr(-6, 6), y + rr(-6, 6), rr(-24, 24), rr(-20, -4), rr(0.4, 0.7), RAMP.mist, 4, 0, 2, null, 1);
     trauma(0.35); K.stop(70);
+  });
+  // Nổ lan (đặc trưng 2 của Lửa): quái đang cháy chết thì nổ tung, lưỡi lửa liếm sang quái đứng gần trong bán kính r
+  api('heBoom', (e, r, n) => {
+    const y = e.y - Math.min(14, (e.h || 24) * 0.5);
+    K.blastFire(e.x, e.y, r, n > 0 ? 0.95 : 0.7);
+    addRing(e.x, e.y, 5, r, 0.26, '#ffd23f', 3, 0);
+    for (let i = 0; i < 8; i++) { const a = (i / 8) * TAU + rr(-0.2, 0.2), v = rr(90, 160); streak(e.x + Math.cos(a) * 4, y + Math.sin(a) * 3, Math.cos(a) * v, Math.sin(a) * v * 0.6, rr(0.14, 0.22), RAMP.fire, i % 3 === 0 ? 2 : 1, rr(6, 10), 0, 3); }
+    add({ ty: 'scorch', x: e.x, y: e.y, r: Math.min(22, r * 0.6), t: 1.4, ly: 0 });
+    trauma(0.22);
   });
   // Độc lây từ quái vừa chết sang quái gần: các giọt độc bắn sang từng con
   api('heSpread', (e, list) => {
