@@ -2836,6 +2836,13 @@ Người dùng chọn phương án 4: máu quái tăng dần theo đợt + hạ 
   nhiễu); thẻ người chơi và nút Xuất Quân dùng khung vẽ tay chuyển sang pixel (có lại huy hiệu avatar tròn và 2 huy hiệu hai bên), không
   bị khung bảng / nút chung đè; icon Vô Tận vẽ lại thành ∞ rõ.
 
+## claude/bo-diem-thua — Bỏ hẳn nút cộng điểm kỹ năng thừa
+
+- Bỏ nút **"+1đ / +2 SỨC"** cạnh 4 ô kỹ năng trên thanh tướng và nút **"Nâng chỉ số: 1 điểm → +X"** ở Cây kỹ năng. Điểm kỹ năng chỉ dùng để nâng kỹ năng (bấm ô kỹ năng sáng).
+- Điểm không dùng được tự đổi thành chỉ số (+2 thuộc tính chính/điểm): khi cả 4 kỹ năng đã max (như v230) và **với tướng đã thăng thần** (nâng kỹ năng bằng vàng) — đổi ngay khi lên cấp / thăng thần. Toast nhỏ 1 lần mỗi trận: "Kỹ năng đã tối đa — điểm dư cộng vào chỉ số".
+- Còn điểm nhưng kỹ năng chưa đủ cấp tướng: điểm giữ lại để nâng sau, không hiện nút gì; chip "Còn N điểm kỹ năng" ở Cây kỹ năng chỉ hiện khi còn kỹ năng nâng được ngay.
+- Test: `node tests/an-cong-ky-nang/an-cong-ky-nang.test.js` (viết lại theo hành vi mới).
+
 ## claude/an-cong-ky-nang — Ẩn nút cộng điểm khi kỹ năng đã max
 
 - Thanh tướng: nút **+1đ** (cộng điểm dư vào chỉ số) cạnh 4 ô kỹ năng **không hiện nữa khi cả 4 kỹ năng đã đạt tối đa** (Q W E 4/4, R 3/3). Chỉ hiện khi còn điểm và còn kỹ năng chưa max.

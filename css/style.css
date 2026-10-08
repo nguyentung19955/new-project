@@ -985,7 +985,6 @@ button:disabled { cursor: default; }
 .bag-det .det-btns .r2 .btn { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .asc-pw { display: block; font-style: normal; font-size: 10.5px; color: var(--text-2); }
 .asc-pw b { color: #6AE06A; }
-.stat-btn { height: 34px; font-size: 13px; white-space: nowrap; }
 
 /* v24: cửa hàng hàng mới, hũ báu 3 loại */
 .sh-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; flex: 1; align-content: start; }
@@ -1141,11 +1140,6 @@ button:disabled { cursor: default; }
 .dk-sk .sk-tag .coin, .dk-sk .sk-tag img { width: 10px; height: 10px; }
 .dk-sk.canup { border-color: #6AE06A; box-shadow: 0 0 8px #3EDC4E66; }
 .dk-sk.lock .dim { position: absolute; inset: 0; opacity: .35; filter: grayscale(1); display: flex; align-items: center; justify-content: center; }
-.dk-sk.stat { flex-direction: column; gap: 0; }
-.dk-sk.stat b { font-size: 16px; line-height: 1; }
-.dk-sk.stat small { font-size: 10px; font-weight: 800; color: var(--gold-pale); }
-.dk-sk.stat.off { opacity: .55; }
-.dk-sk.stat .badge { position: absolute; right: -5px; top: -5px; min-width: 16px; height: 16px; border-radius: 8px; background: #C8302A; color: #fff; font-size: 10px; font-weight: 800; line-height: 16px; text-align: center; padding: 0 3px; }
 .dk-pt { cursor: pointer; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; touch-action: none; }
 .dk-pt canvas { -webkit-touch-callout: none; pointer-events: none; }
 .dk-stbtn { width: 40px; height: 46px; padding: 0; border-radius: 6px; flex: none; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 16px; line-height: 1; }

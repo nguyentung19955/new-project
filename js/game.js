@@ -1921,6 +1921,7 @@ class Game {
     this.effects.push({ type: 'streak', x: a.x, y: a.y - 30, x2: b.x, y2: b.y - 30, color: d.color || '#FFE08A', ttl: 0.45, max: 0.45 });
     this.effects.push({ type: 'evolve', hero: b, x: b.x, y: b.y, color: d.color || ELEMENTS[d.el].color, big: true, ttl: 1.2, max: 1.2 });
     this.events.push({ type: 'ascend', from: fromName, to: d.name, hero: b });
+    this.autoStat(b);
     return true;
   }
 
@@ -2060,13 +2061,15 @@ class Game {
   // claude/an-cong-ky-nang: cả 4 kỹ năng đã đạt cấp tối đa (Q W E 4/4, R 3/3)
   skillsMaxed(h) { return HEROES[h.type].skills.every((sk, i) => skillLevel(h, i) >= SKILL_MAX[i]); }
   // kỹ năng đã max thì điểm kỹ năng (đang có + nhận thêm khi lên cấp) tự đổi thành chỉ số — không còn nút "+1đ" cạnh ô kỹ năng
+  // claude/bo-diem-thua: tướng đã thăng thần nâng kỹ năng bằng vàng → điểm kỹ năng cũng tự đổi (không còn nút "Nâng chỉ số")
   autoStat(h) {
-    if (!h || h.from || h.skillPts <= 0 || !this.skillsMaxed(h)) return;
+    if (!h || h.skillPts <= 0 || (!h.from && !this.skillsMaxed(h))) return;
     const n = h.skillPts, before = heroStats(h).hpMax;
     h.statPts = (h.statPts || 0) + n;
     h.skillPts = 0;
     if (!h.dead) h.hp += Math.max(0, heroStats(h).hpMax - before);
     this.text(h.x, h.y - 70, `+${COSTS.statPt * n} ${ATTRS[heroMain(HEROES[h.type])].short}`, ELEMENTS[HEROES[h.type].el].color, 0.9, 14);
+    if (!this.autoStatTold) { this.autoStatTold = true; this.events.push({ type: 'autoStat', hero: h }); }  // toast 1 lần mỗi trận
   }
   // còn kỹ năng nào nâng được bằng điểm không (để gợi ý dùng điểm vào chỉ số)
   canSpendSkillPts(h) {
@@ -2145,6 +2148,7 @@ class Game {
     this.shake = Math.max(this.shake, d.legend === 'legendary' ? 9 : 6);
     this.effects.push({ type: 'evolve', hero: h, x: h.x, y: h.y, color: d.color || ELEMENTS[d.el].color, big: true, ttl: 1.2, max: 1.2 });
     this.events.push({ type: 'ascend', from: from.name, to: d.name, hero: h });
+    this.autoStat(h);
     return true;
   }
 
