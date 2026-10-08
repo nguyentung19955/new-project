@@ -1,0 +1,25 @@
+{
+ "code": "long_chim_lac",
+ "group": "do",
+ "name": "Lông Chim Lạc",
+ "w": 24,
+ "h": 24,
+ "ax": 12,
+ "ay": 23,
+ "bbox": [
+  1,
+  2,
+  20,
+  22
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "long_chim_lac.png"
+}

@@ -1,0 +1,25 @@
+{
+ "code": "cung_mat_chim",
+ "group": "do",
+ "name": "Cung Mắt Chim = Lông Chim Lạc + Mắt Ngọc",
+ "w": 24,
+ "h": 24,
+ "ax": 12,
+ "ay": 23,
+ "bbox": [
+  2,
+  1,
+  21,
+  23
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "cung_mat_chim.png"
+}

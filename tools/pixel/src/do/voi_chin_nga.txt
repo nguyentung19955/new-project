@@ -1,0 +1,43 @@
+# Voi Chín Ngà (sính lễ boss · thuong) — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: voi con 9 ngà, khăn yên đỏ, ánh vàng
+name: Voi Chín Ngà (sính lễ boss · thuong)
+size: 24x24
+colors:
+  a = vien
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = trang
+
+part k0
+........................
+........................
+........................
+........................
+................aaa.....
+........aaaaa..addba....
+.....aaaddddbaadcccba...
+....adddcccccddcccccba..
+...adcccccccccccccacba..
+..adccccccccccccccccba..
+..adccccccccccccccccba..
+..adccccccccccccccccba..
+..adccccccccccccccecba..
+..abccccccccccccceadba..
+...adccccccccccceaadba..
+...adccbcccccccbeaadba..
+...adcbabbbbbccba.adba..
+...adcbaaaaaadcba.adba..
+...adcba....adcba.adba..
+...adcba....adcba.abba..
+...abbba....abbba..aa...
+....aaa......aaa........
+........................
+........................
+end
+
+anim main fps=1 once
+frame main
+  use k0
+end
+

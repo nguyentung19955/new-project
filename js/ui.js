@@ -222,7 +222,9 @@ function setItemIcon(id) {
   const pal = SET_PAL[it.set];
   return (setIconCache[id] = src && pal ? src.replace(/#[0-9A-Fa-f]{6}/g, (c) => (c.toUpperCase() in LL_COLORS ? pal[LL_COLORS[c.toUpperCase()]] : c)) : '');
 }
-function itemIcon(id) {
+function itemIcon(id, rarity) {
+  const pc = typeof pxItemCode === 'function' && pxItemCode(id, rarity), pu = pc && pxUrl('do', pc);   // pixel art 24×24 (js/pixel.js)
+  if (pu) return `<img src="${pu}" alt="">`;
   // v155: bộ icon đồ vẽ tay mới (file đầu danh sách, tools/cat-items.py) luôn dùng như ảnh quái; ảnh AI cũ vẫn theo Cài đặt
   const p = itemPngPath(id)[0];
   if (asset(p, true)) return `<img src="${assetSrc(p)}" alt="">`;
@@ -3809,7 +3811,7 @@ class UI {
         const gain = h && !o.sold ? upgradeGain(h, o.inst) : 0;
         const best = !o.sold && !gain ? g.bestHeroFor(o.inst) : null;
         return `<button class="sh-card ${i === si ? 'on' : 'metal'} ${o.sold ? 'sold' : ''}" data-act="sh-sel" data-i="${i}">
-          <span class="slot ${rarCls(o.inst.rarity)}">${svgI(itemIcon(o.inst.id))}${elDot(o.inst)}</span>
+          <span class="slot ${rarCls(o.inst.rarity)}">${svgI(itemIcon(o.inst.id, o.inst.rarity))}${elDot(o.inst)}</span>
           <span class="nm">${it.name}</span><small class="c-${o.inst.rarity}">${RARITY[o.inst.rarity].name} · ${SLOT_NAMES[it.slot]}</small>
           <span class="gn">${o.sold ? 'Đã mua' : gain ? `▲ +${gain} ${HEROES[h.type].name}` : best ? `▲ hợp ${HEROES[best.hero.type].name}` : (o.inst.aff || []).length ? `${o.inst.aff.length} dòng phụ` : ''}</span>
           <span class="pr">${o.sold ? '—' : coin(1) + o.price}</span></button>`;
@@ -3818,7 +3820,7 @@ class UI {
       if (cur) {
         const it = ITEMS[cur.inst.id];
         const gain = h ? upgradeGain(h, cur.inst) : 0;
-        det = `<div class="it-head"><span class="slot ${rarCls(cur.inst.rarity)}">${svgI(itemIcon(cur.inst.id))}</span><div><div class="ttl">${it.name}</div><small class="c-${cur.inst.rarity}">${RARITY[cur.inst.rarity].name} · ${SLOT_NAMES[it.slot]}${it.wclass ? ' ' + WCLASS_NAMES[it.wclass].toLowerCase() : ''}</small></div></div>
+        det = `<div class="it-head"><span class="slot ${rarCls(cur.inst.rarity)}">${svgI(itemIcon(cur.inst.id, cur.inst.rarity))}</span><div><div class="ttl">${it.name}</div><small class="c-${cur.inst.rarity}">${RARITY[cur.inst.rarity].name} · ${SLOT_NAMES[it.slot]}${it.wclass ? ' ' + WCLASS_NAMES[it.wclass].toLowerCase() : ''}</small></div></div>
           <div class="stat-list">${statLine(itemStats(cur.inst, h && h.type), true)}</div>
           ${cur.inst.el ? `<div class="elrow">${elChip(cur.inst.el)}</div>` : ''}
           ${(cur.inst.aff || []).map((a) => `<div class="aff">◆ ${AFFIXES[a].label(affixVal(cur.inst, a))}</div>`).join('')}
@@ -3878,7 +3880,7 @@ class UI {
           <div class="note" style="text-align:center">Mở thêm <b style="color:#C8A0F0">${Math.max(1, JAR_PITY - (g.jarCount || 0))}</b> hũ nữa: chắc chắn ra đồ Sử thi trở lên.</div>
         </div>
         <div class="panel metal" style="width:260px;flex:none"><div class="ttl" style="font-size:17px">Vừa mở được</div>
-          ${inst ? `<div class="inset" style="border-radius:6px;padding:10px;border-color:${RARITY[inst.rarity].color}"><div class="it-head"><span class="slot ${rarCls(inst.rarity)}">${svgI(itemIcon(inst.id))}</span>
+          ${inst ? `<div class="inset" style="border-radius:6px;padding:10px;border-color:${RARITY[inst.rarity].color}"><div class="it-head"><span class="slot ${rarCls(inst.rarity)}">${svgI(itemIcon(inst.id, inst.rarity))}</span>
             <div><div class="ttl">${ITEMS[inst.id].name}</div><small class="c-${inst.rarity}">${RARITY[inst.rarity].name} · ${SLOT_NAMES[ITEMS[inst.id].slot]}</small></div></div>
             <div class="stat-list" style="margin-top:6px">${statLine(itemStats(inst), true)}</div>${this.bestFor(inst)}</div>
             ${!op.hero ? `<button class="big-btn btn-gold" style="margin-top:0" data-act="equip-new" data-uid="${inst.uid}">Đeo cho tướng</button>
@@ -3899,7 +3901,7 @@ class UI {
       const inst = h && h.equip[s];
       const lab = { weapon: 'Vũ khí', helmet: 'Mũ', armor: 'Giáp' }[s] || '';
       return `<button class="slot ${inst ? rarCls(inst.rarity) : ''} ${inst && sc.pick === inst.uid ? 'sel' : ''}" data-act="bag-slot" data-slot="${s}" ${h ? '' : 'disabled'} aria-label="${SLOT_NAMES[s]}">
-        ${inst ? svgI(itemIcon(inst.id)) + (inst.plus ? `<span class="lv">+${inst.plus}${inst.temper ? '✦' : ''}</span>` : '') + elDot(inst) : `<span class="ph">${lab}</span>`}</button>`;
+        ${inst ? svgI(itemIcon(inst.id, inst.rarity)) + (inst.plus ? `<span class="lv">+${inst.plus}${inst.temper ? '✦' : ''}</span>` : '') + elDot(inst) : `<span class="ph">${lab}</span>`}</button>`;
     };
     const left = `<div class="panel metal bag-hero">
       <div class="hsel"><button class="metal" data-act="hero-prev" aria-label="Tướng trước">‹</button><span class="ttl">${h ? def.name : 'Chưa có tướng'}</span><button class="metal" data-act="hero-next" aria-label="Tướng sau">›</button></div>
@@ -3915,7 +3917,7 @@ class UI {
       const bad = h && !canEquip(h.type, inst.id);
       const gain = h && !bad ? upgradeGain(h, inst) : 0;
       cells.push(`<button class="slot ${rarCls(inst.rarity)} ${sc.pick === inst.uid ? 'sel' : ''} ${bad ? 'dim' : ''}" data-act="bag-pick" data-uid="${inst.uid}" aria-label="${ITEMS[inst.id].name}">
-        ${svgI(itemIcon(inst.id))}${inst.plus ? `<span class="lv">+${inst.plus}${inst.temper ? '✦' : ''}</span>` : ''}${inst.locked ? `<span class="lk">${ICON.lock}</span>` : ''}${elDot(inst)}${gain ? '<span class="upa">▲</span>' : ''}</button>`);
+        ${svgI(itemIcon(inst.id, inst.rarity))}${inst.plus ? `<span class="lv">+${inst.plus}${inst.temper ? '✦' : ''}</span>` : ''}${inst.locked ? `<span class="lk">${ICON.lock}</span>` : ''}${elDot(inst)}${gain ? '<span class="upa">▲</span>' : ''}</button>`);
     }
     const f = this.scrapFilter;
     const list = g.scrapList(f);
@@ -3949,7 +3951,7 @@ class UI {
         cmp = `<div class="cmp ${dd > 0 ? 'ok' : dd < 0 ? 'no' : ''}">Lực chiến ${def.name}: ${now} → <b>${after}</b> (${dd >= 0 ? '+' : ''}${dd})</div>`;
       }
       det = `<div class="panel metal bag-det">
-        <div class="it-head"><span class="slot ${rarCls(inst.rarity)}">${svgI(itemIcon(inst.id))}${inst.plus ? `<span class="lv">+${inst.plus}</span>` : ''}</span>
+        <div class="it-head"><span class="slot ${rarCls(inst.rarity)}">${svgI(itemIcon(inst.id, inst.rarity))}${inst.plus ? `<span class="lv">+${inst.plus}</span>` : ''}</span>
           <div style="min-width:0"><div class="ttl" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${it.name}</div><small class="c-${inst.rarity}">${RARITY[inst.rarity].name} · ${it.slot === 'weapon' ? 'Vũ khí ' + WCLASS_NAMES[it.wclass].toLowerCase() : SLOT_NAMES[it.slot]}${onHero ? ' · đang đeo' : ''}</small></div></div>
         <div class="enh inset"><div class="row1"><span>Cường hóa</span>${inst.plus >= 5 ? `<span class="full">FULL +5${inst.temper ? ` ✦${inst.temper}` : ''}</span>` : `<span style="color:#FFD66B;font-weight:800">+${inst.plus}</span>`}</div>
           <div class="pips">${[1, 2, 3, 4, 5].map((k) => `<i class="${inst.plus >= k ? 'on' : ''}"></i>`).join('')}</div>
@@ -4006,7 +4008,7 @@ class UI {
           <div class="tg"><span class="sw on" aria-hidden="true"></span><span>Bỏ qua đồ đã khóa</span><span class="n2">${lockedN} món</span></div>
           <div class="tg"><button class="sw ${f.skipUpgraded ? 'on' : ''}" data-act="flt-up" aria-label="Bỏ qua đồ đã nâng cấp"></button><span>Bỏ qua đồ đã nâng cấp</span><span class="n2">${upN} món</span></div></div>
         <div class="panel metal" style="flex:1.05"><div class="ph"><span class="ttl">Sẽ đổi ${list.length} món</span><small>Túi còn ${g.inventory.length - list.length} / ${CONFIG.bagSize} ô</small></div>
-          <div class="inset" style="border-radius:6px;padding:6px;display:flex;gap:4px;flex-wrap:wrap;min-height:50px">${list.slice(0, 11).map((i) => `<span class="slot ${rarCls(i.rarity)}" style="width:36px;height:36px">${svgI(itemIcon(i.id))}${i.plus ? `<span class="lv">+${i.plus}</span>` : ''}</span>`).join('')}${list.length > 11 ? `<span class="slot" style="width:36px;height:36px;font-weight:800;color:#C8BFA8">+${list.length - 11}</span>` : ''}</div>
+          <div class="inset" style="border-radius:6px;padding:6px;display:flex;gap:4px;flex-wrap:wrap;min-height:50px">${list.slice(0, 11).map((i) => `<span class="slot ${rarCls(i.rarity)}" style="width:36px;height:36px">${svgI(itemIcon(i.id, i.rarity))}${i.plus ? `<span class="lv">+${i.plus}</span>` : ''}</span>`).join('')}${list.length > 11 ? `<span class="slot" style="width:36px;height:36px;font-weight:800;color:#C8BFA8">+${list.length - 11}</span>` : ''}</div>
           <div class="sum inset">${rows || '<div><span>Chưa chọn món nào</span></div>'}${upgraded.length ? `<div><span>Hoàn 60% vàng đã nâng cấp (${upgraded.length} món)</span><b>${refund}</b></div>` : ''}
             <div class="tot"><span>Nhận được</span><b>${coin()} +${fmt(total)}</b></div></div>
           ${upgraded.length ? `<div class="warnbox">⚠ Có ${upgraded.length} món đã nâng cấp: ${upgraded.slice(0, 3).map((i) => `${ITEMS[i.id].name} +${i.plus}`).join(', ')}. Đổi rồi không lấy lại được.</div>` : ''}

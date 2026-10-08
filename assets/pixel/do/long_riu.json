@@ -1,0 +1,25 @@
+{
+ "code": "long_riu",
+ "group": "do",
+ "name": "Long Rìu (Bộ Lạc Long)",
+ "w": 24,
+ "h": 24,
+ "ax": 12,
+ "ay": 23,
+ "bbox": [
+  2,
+  1,
+  21,
+  23
+ ],
+ "n": 1,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 1,
+   "fps": 1,
+   "loop": false
+  }
+ },
+ "sheet": "long_riu.png"
+}
