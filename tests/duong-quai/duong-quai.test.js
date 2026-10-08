@@ -7,7 +7,7 @@
 const path = require('path');
 const fs = require('fs');
 const { execFileSync } = require('child_process');
-const { open, enter, ok } = require('../cho-tuong/helpers');
+const { open, enter, ok, noPixel } = require('../cho-tuong/helpers');   // kiểm tra vân đường ảnh cũ → tắt pixel
 global.ASSET_ALL_TEST = true;   // v189: test giả ảnh chưa có → bỏ qua danh sách js/asset-list.js
 
 const SHOT = path.join(__dirname, 'shots');
@@ -33,7 +33,7 @@ const routeTiles = (useFake) => (page) => page.route(new RegExp('/assets/tiles/(
 (async () => {
   // ---------- 1. mọi ải ----------
   {
-    const { browser, page, errors } = await open(844, 390, { unlocked: 17 }, routeTiles(false));
+    const { browser, page, errors } = await open(844, 390, { unlocked: 17 }, noPixel(routeTiles(false)));
     const n = await page.evaluate(() => LEVELS.length);
     ok(n >= 17, `có ${n} ải`);
     for (let i = 0; i < n; i++) {
@@ -71,7 +71,7 @@ const routeTiles = (useFake) => (page) => page.route(new RegExp('/assets/tiles/(
   // ---------- 2. ảnh đế + kết cấu giả ----------
   try {
     fake();
-    const { browser, page, errors } = await open(844, 390, { unlocked: 17, settings: { skipStory: true } }, routeTiles(true));
+    const { browser, page, errors } = await open(844, 390, { unlocked: 17, settings: { skipStory: true } }, noPixel(routeTiles(true)));
     await enter(page, 0);
     // chờ ảnh tải
     await page.evaluate(() => ['thuong', 'co', 'san-sang', 'chon', 'ngap', 'nui'].forEach((k) => asset(`tiles/de-tuong-${k}.png`, true)));

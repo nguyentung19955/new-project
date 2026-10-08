@@ -230,7 +230,7 @@ const bossWave = (page) => page.evaluate(() => { const g = ui.game; g.wave = 9; 
       const last = await page.evaluate(() => { const els = [...document.querySelectorAll('#result .res-main > *')]; const b = els[els.length - 1].getBoundingClientRect().bottom; const tv = [...document.querySelectorAll('#result .res-table div')].find((d) => /Tu Vi/.test(d.textContent)); return { b, ih: innerHeight, tv: tv ? tv.getBoundingClientRect().bottom : null }; });
       ok(last.b <= last.ih + 1, `L04 cuộn hết: khối cuối nằm trong màn (${last.b.toFixed(0)} ≤ ${last.ih})`);
       await page.screenshot({ path: path.join(SHOT, `L04-ket-qua-cuon-${tag}.png`) });
-      ok(await page.evaluate(() => { const d = [...document.querySelectorAll('#result .res-table div')].find((x) => /Mạng còn/.test(x.textContent)); const im = d && d.querySelector('img.icn'); return !!im && /ui-tai-nguyen-2/.test(im.src); }), 'L17 "Mạng còn" dùng trái tim đỏ (ui-tai-nguyen-2.png), không dùng khiên đồng giống đồng xu');
+      ok(await page.evaluate(() => { const d = [...document.querySelectorAll('#result .res-table div')].find((x) => /Mạng còn/.test(x.textContent)); const im = d && d.querySelector('img.icn'); return !!im && /ui-tai-nguyen-2|pixel\/icon\/mang/.test(im.src); }), 'L17 "Mạng còn" dùng trái tim đỏ (ui-tai-nguyen-2.png / pixel icon/mang), không dùng khiên đồng giống đồng xu');
     }
     // ---------- L12: xếp hạng ngoại tuyến có hình + kỷ lục trên máy
     {
@@ -303,9 +303,10 @@ const bossWave = (page) => page.evaluate(() => { const g = ui.game; g.wave = 9; 
         const base = g.spawnQueue.filter((q) => !q.champion); g.spawnQueue = []; for (let k = 0; k < 20; k++) g.spawnQueue.push(...base.map((q) => ({ ...q, gap: 0.25 })));
       });
       await sleep(6000);
-      const r = await page.evaluate(() => new Promise((res) => { let n = 0; const t0 = performance.now(); const f = (now) => { n++; if (now - t0 < 3000) requestAnimationFrame(f); else res({ fps: n / ((now - t0) / 1000), en: ui.game.enemies.length, builds: bgCache.builds, lv: GFX.level(), px: canvas.width * canvas.height }); }; requestAnimationFrame(f); }));
+      const r = await page.evaluate(() => new Promise((res) => { let n = 0; const t0 = performance.now(), b0 = bgCache.builds; const f = (now) => { n++; if (now - t0 < 3000) requestAnimationFrame(f); else res({ fps: n / ((now - t0) / 1000), en: ui.game.enemies.length, builds: bgCache.builds, db: bgCache.builds - b0, lv: GFX.level(), px: canvas.width * canvas.height }); }; requestAnimationFrame(f); }));
       console.log(`  ${w}x${h}: ${r.fps.toFixed(1)} FPS · ${r.en} quái · bậc đồ hoạ ${r.lv} · canvas ${(r.px / 1e6).toFixed(2)} triệu điểm`);
-      ok(r.builds <= 6, `L15 ${w}x${h} nền tĩnh chỉ vẽ lại ${r.builds} lần (không vẽ mỗi khung)`);
+      // pixel-mac-dinh: lúc ô nền pixel đang tải nền dựng lại vài lần; đo trong 3 giây chạy: không dựng lại mỗi khung
+      ok(r.builds <= 12 && r.db <= 1, `L15 ${w}x${h} nền tĩnh vẽ lại ${r.builds} lần lúc tải, ${r.db} lần trong 3 giây (không vẽ mỗi khung)`);
       ok(r.lv < 2 || r.px <= 1.1e6 * 1.02, `L15 ${w}x${h} bậc đồ hoạ thấp: canvas ≤ 1,1 triệu điểm ảnh`);
       ok(await page.evaluate(() => { const im = asset('packs/tom/walk1.png', true) || asset('quai_tom-binh.png'); if (!im) return true; const a = fitSprite(im, 40), b = fitSprite(im, 40); return a === b && a.width < (im.naturalWidth || im.width); }), `L15 ảnh quái thu nhỏ sẵn theo cỡ trên màn (dùng lại, không co mỗi khung)`);
       await page.context().close();

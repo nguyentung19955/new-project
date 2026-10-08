@@ -2604,3 +2604,9 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 - Sửa theo tester (icon pixel phải giữ nghĩa icon cũ): nút quay lại = mũi tên «, nút đóng giữ ô vuông + X trắng to (bỏ skin pixel
   nút tròn), Ngân khố = thỏi bạc, nút đổi chợ giữ skin cũ + icon đồng xu có mũi tên vòng; soát icon chức năng: tạm dừng ‖, menu ≡,
   vô tận ∞, vào trận / lực chiến = hai kiếm chéo, cài đặt = bánh răng; bộ ui-tran-* bỏ đĩa trống cho hình to rõ.
+
+## claude/pixel-mac-dinh — Pixel là mặc định
+- `js/pixel.js`: `PIXEL_BAT = true` — mọi người chơi thấy hình pixel ngay. Tắt: `?pixel=0`, hoặc nút "Hình pixel → Pixel: Bật/Tắt (hình cũ)"
+  trong Cài đặt (lưu `ttv.pixel = '0'`); chưa chọn = bật. Test ép tắt bằng `window.PIXEL_BAT_EP = false`. Đường vẽ dự phòng giữ nguyên.
+- Còn hình cũ (cảnh/nền menu/cổng thành… bản tool chỉ là phác thảo thô nên chưa nối; một số chưa có pixel): ghi ở
+  `docs/pixel/DANH-SACH.md` mục "Bổ sung".

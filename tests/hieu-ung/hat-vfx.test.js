@@ -10,7 +10,7 @@
 const path = require('path');
 const fs = require('fs');
 const { execFileSync } = require('child_process');
-const { open, enter, ok, ROOT } = require('../cho-tuong/helpers');
+const { open, enter, ok, ROOT, noPixel } = require('../cho-tuong/helpers');
 
 const SHOTS = path.join(__dirname, 'shots');
 fs.mkdirSync(SHOTS, { recursive: true });
@@ -60,7 +60,7 @@ const noPixelVfx = (p) => p.route('**/js/pixel/vfx.js*', (r) => r.fulfill({ cont
   }
   // ---------- 1. có sprite pixel
   {
-    const { browser, page, errors } = await open(844, 390);
+    const { browser, page, errors } = await open(844, 390, {}, noPixel());   // hiệu ứng vẽ tay (đường dự phòng)
     await enter(page, 0);
     await page.waitForFunction(() => ['lua-chay', 'chim-lac', 'gio-xoay', 'bang-tinh', 'suong-lanh', 'may-doc', 'bong-doc', 'tuyet', 'dan-lua', 'no'].every((n) => VFX.spr(n)), null, { timeout: 8000 });
     await stage(page);
