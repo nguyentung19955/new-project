@@ -1,0 +1,32 @@
+# Đạn hệ Mộc — phi tiêu lá tre xanh rêu cuốn dây leo (bay sang PHẢI).
+name: Đạn hệ Mộc
+size: 14x8
+anchor: 8,3
+colors:
+  k = la-toi
+  g = la
+  G = la-ma
+  l = la-sang
+  r = reu
+part a
+..............
+........gg....
+..r.r..gGGlg..
+.r.r.rrgGGGlgg
+..r.r..gGGlg..
+........gg....
+..............
+..............
+end
+anim main fps=8 loop
+frame main
+  use a
+  outline k
+end
+frame main
+  use a
+  set 1 3 _
+  set 2 2 r
+  set 2 4 _
+  outline k
+end

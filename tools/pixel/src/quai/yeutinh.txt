@@ -1,0 +1,253 @@
+# Yêu Tinh Rừng (mã yeutinh) — quái thường 32×32, hành Mộc. Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-DUNG-XUONG.txt:1532; PROMPT-GEN-LAI.txt:98; DANH-SACH Lô 9): yêu tinh rừng nhỏ, da xanh lá, TAI NHỌN dài,
+# KHỐ LÁ (lá khô), cầm CHÙY GỖ; phá cách: chỏm lá non trên đầu, hình xăm lá ở vai, vòng cổ răng thú, nanh trồi. Quay mặt sang PHẢI.
+# Không theo gợi ý "ma cây con" của cột Hướng phá cách: tướng Thợ Săn Rừng đã là ma cây — giữ yêu tinh tai nhọn để khác hình thể trên sân
+# (chỉ mượn ý "tóc là lá non" thành chỏm lá).
+name: Yêu Tinh Rừng
+size: 32x32
+anchor: 16,29
+colors:
+  k = vien
+  t = toi
+  L = la-sang
+  g = la-ma
+  G = la
+  q = la-toi
+  u = reu-sang
+  r = reu
+  R = reu-toi
+  o = dong-sang
+  p = dong
+  P = dong-toi
+  c = cat
+  b = dat-sang
+  n = dat
+  N = dat-toi
+  e = trang
+  E = trang-xam
+  Y = vang-sang
+  y = vang-nghe
+  m = son-toi
+
+part than
+................................
+...............u..u.............
+..............ur.urR............
+.....L.......LgrRgrGG...........
+.....gL....LLggggggggG..........
+......gL..LgggggggggggG.........
+......GgLLgggggggqqqggG.........
+.......GgggggggggggYyqgg........
+........GGggggggggggqggggG......
+.........GqgggggggggggGggGG.....
+..........GgggggggggGtetttG.....
+...........GGgggggGtmmmeG.......
+.............GGGGGGGqqqG........
+...........LLgNeNeNeNgG.........
+..........LgggegegegggG.........
+.........LgqgggggggggggG........
+.........gqLqggggggggggG........
+.........GqgqLgggggggGGG........
+.........GGq.LgggggggGGG........
+..........GG.bnnnbnnnnnN........
+.............oopoPopoPP.........
+.............opPpPopPpP.........
+.............o.P..o.PP..........
+end
+
+part tay
+.Gg..
+.gGGq
+.LgGq
+..gGG
+..LgG
+.LggG
+.GGGq
+end
+
+part tay_sau
+.......qGg
+.....qgggG
+...qggGGq.
+.LggGq....
+LgggG.....
+.GGG......
+end
+
+part tay_truoc
+gGg..
+LggGG
+.GgGG
+..GG.
+end
+
+part chuy
+.bn..
+.bn..
+.bnN.
+.bnN.
+bbnN.
+bcnnN
+bEnnN
+bcnNN
+bnnEN
+.bnNN
+..NN.
+end
+
+part chuy_sau
+..NNN..........
+.NbbcbbN.......
+bbcEbnnnnbbbnn.
+bcnnnnNNnnnnNN.
+.NnnENNN.......
+..NNN..........
+end
+
+part chuy_ngang
+..........NNN..
+.......bbbcbbN.
+nnbbbbbbcEbnnNN
+NNnnnnnnnnnnENN
+.......NnnNnNN.
+..........NNN..
+end
+
+part chuy_nam
+....NNNN....
+..bbcbbnNN..
+NbcEbnnnnnnN
+.NnnnENNNNN.
+..NNNNN.....
+end
+
+part chan1
+...gG......gG....
+...gG......gGG...
+..LgG.......gG...
+..gG........LgG..
+.LgGGG......LggGG
+.gggGG......GGGGG
+end
+
+part chan2
+.....gG..gG....
+.....gG..gG....
+....LgG..gG....
+....gG...LgG...
+...LgGGG.LggGG.
+...ggGGG.GGGGG.
+end
+
+part chan3
+....gG....gG...
+....gG....gG...
+...LgG....gG...
+...gG....LgG...
+..LgGGG..LggGG.
+..ggGGG..GGGGG.
+end
+
+part chan_quy
+...gGGG..LgGGG.
+..LgggG..gggGG.
+..GGGGG..GGGGG.
+end
+
+anim walk fps=6 loop
+frame walk
+  use than 0 1
+  use chan1 11 23
+  use chuy 23 18
+  use tay 21 14
+  outline
+end
+frame walk
+  use than
+  use chan2 11 23
+  use chuy 23 17
+  use tay 21 13
+  outline
+end
+frame walk
+  use than 0 1
+  use chan3 11 23
+  use chuy 23 18
+  use tay 21 14
+  outline
+end
+frame walk
+  use than
+  use chan2 11 23
+  use chuy 23 17
+  use tay 21 13
+  outline
+end
+
+# đánh: vung chùy ra sau → quật mạnh ra trước → về thế đi
+anim attack fps=8 once
+frame attack
+  use chuy_sau 1 15
+  use than -1 2
+  use chan1 10 23
+  use tay_sau 11 15
+  outline
+end
+frame attack
+  use than 1 1
+  use chan3 11 23
+  use chuy_ngang 16 12
+  use tay_truoc 22 14
+  outline
+end
+frame attack
+  use @walk.0
+end
+
+anim hurt fps=8 once
+frame hurt
+  use than -2 1
+  use chan1 11 23
+  use chuy 21 18
+  use tay 19 15
+  set 16 8 k
+  set 18 8 k
+  set 17 9 k
+  set 16 10 k
+  set 18 10 k
+  set 18 12 m
+  set 19 12 m
+  set 20 12 m
+  set 19 13 m
+  swap g L
+  swap G g
+  outline
+end
+
+# chết: khuỵu gối → đổ sấp → tối màu
+anim die fps=5 once
+frame die
+  use than 0 4
+  use chan_quy 11 26
+  use chuy_nam 19 24
+  swap Y q
+  swap y q
+  outline
+end
+frame die
+  use than 0 1
+  use chan2 11 23
+  use tay 21 14
+  swap Y q
+  swap y q
+  rot 90
+  shift 0 -2
+  use chuy_nam 2 24
+  outline
+end
+frame die
+  use @die.1
+  swap L g
+  swap g G
+  swap o p
+end

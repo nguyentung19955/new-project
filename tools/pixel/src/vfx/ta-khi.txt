@@ -1,0 +1,30 @@
+# Tà khí (đạn của quái bắn tướng) — khối khí chàm tím xoáy.
+name: Tà khí
+size: 9x9
+anchor: 4,4
+colors:
+  k = tim-toi
+  t = tim
+  c = cham-sang
+  T = tim-sang
+part a
+.........
+...tt....
+..tcTt...
+.tcttct..
+.tTt.tt..
+..tctct..
+...ttt...
+.........
+.........
+end
+anim main fps=8 loop
+frame main
+  use a
+  outline k
+end
+frame main
+  use a
+  flipx
+  outline k
+end

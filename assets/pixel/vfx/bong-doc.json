@@ -1,0 +1,25 @@
+{
+ "code": "bong-doc",
+ "group": "vfx",
+ "name": "Bong bóng độc",
+ "w": 8,
+ "h": 8,
+ "ax": 3,
+ "ay": 3,
+ "bbox": [
+  0,
+  0,
+  7,
+  7
+ ],
+ "n": 2,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 2,
+   "fps": 6,
+   "loop": true
+  }
+ },
+ "sheet": "bong-doc.png"
+}

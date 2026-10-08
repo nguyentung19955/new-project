@@ -1,0 +1,172 @@
+# Mực Tinh (mã muc) — quái thường 32×32, hành Thủy, [bắn xa: phun mực]. Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:99 "mực / bạch tuộc — giữ"; PROMPT-DUNG-XUONG.txt:1644): mực tinh hồng lơ lửng, mắt giận, 8 XÚC TU XOĂN, giọt mực đen.
+# Phá cách (DANH-SACH): "mực trong chum" — mực chui trong CHUM SÀNH vỡ đáy, đầu thò lên miệng chum, xúc tu thò ra từ đáy vỡ.
+# Màu: hồng (hong) bóng tím-hồng (tim-sang → tim) — palette không có hồng sáng nên mảng sáng và gốc cùng `hong`.
+name: Mực Tinh
+size: 32x32
+anchor: 16,29
+colors:
+  k = vien
+  P = hong
+  p = hong
+  q = tim-sang
+  Q = tim
+  L = da-sang
+  J = dat-sang
+  j = dat
+  z = dat-toi
+  c = cat
+  D = toi
+  e = vang-sang
+  i = khoi
+  I = sat
+
+part dau
+......P......
+.....PPp.....
+....PPppq....
+...PPpppqq...
+PP.PPpppqq.qq
+PPPPPppppqqqq
+.PPPpppppqqq.
+...Ppppppppq.
+...Ppppppppq.
+..PPpppppppqq
+..PpDDppqDDpq
+..PpeDppqeDpq
+..Pppppppppqq
+end
+
+part chum
+.cccccccccccc.
+cJJjjjjjjjjjzc
+.zzzzzzzzzzzz.
+.JJjjjjjjjjzz.
+JJjjjDjjjjjjzz
+JjjjjjDjjjjjjz
+JjjjjjDjjjjjjz
+.Jjjjjjjjjjzz.
+..jj.jjz.jzz..
+end
+
+part tua1
+........PpPpqPpqqpq.........
+......PPp.Pp.pq.pq.qqq......
+....PPp..Pp..pq..pq..qqq....
+...Pp...Pp...pq...pq...qq...
+..Pp...Pp....pq....pq...qq..
+..p.P..p.....pq.....q..q.q..
+..pPp..pP...pq......qQ.qQq..
+...p....pp..qq.......Q..q...
+end
+
+part tua2
+........PpPpqPpqqpq.........
+.......Pp.Pp.pq.pq.qq.......
+.....PPp..Pp.pq..pq..qq.....
+....Pp...Pp..pq...pq..qq....
+...Pp....Pp...pq..pq...qq...
+...p.P...p....pq..q...q.q...
+...pPp...pP..pq...qQ..qQq...
+....p.....p..qq....Q...q....
+end
+
+part muc_giot
+.I.
+Iii
+iii
+.i.
+end
+
+part mat_nham
+DDp.qDD
+end
+
+# lơ lửng: chum + đầu nhấp nhô, xúc tu uốn so le
+part mat_x2
+DPD
+PDP
+end
+
+anim walk fps=6 loop
+frame walk
+  use tua1 2 21
+  use dau 10 2
+  use chum 9 14
+  outline
+end
+frame walk
+  use tua2 2 21
+  use dau 10 1
+  use chum 9 13
+  outline
+end
+frame walk
+  use tua1 2 20
+  use dau 10 1
+  use chum 9 13
+  outline
+end
+frame walk
+  use tua2 2 22
+  use dau 10 2
+  use chum 9 14
+  outline
+end
+
+# đánh (bắn xa): rụt đầu vào chum → vươn lên phun giọt mực đen → về
+anim attack fps=8 once
+frame attack
+  use tua2 2 22
+  use dau 10 4
+  use chum 9 15
+  outline
+end
+frame attack
+  use tua1 2 20
+  use dau 10 1
+  use chum 9 13
+  use muc_giot 25 10
+  set 23 12 i
+  set 24 12 i
+  outline
+end
+frame attack
+  use @walk.0
+end
+
+# trúng đòn: đầu giật ngả ra sau, mắt chữ X, xúc tu xoè, sáng tông
+anim hurt fps=8 once
+frame hurt
+  use tua1 1 20
+  use dau 9 2
+  use mat_x2 12 12
+  use mat_x2 17 12
+  use chum 9 14
+  outline
+  swap p L
+  swap P L
+  swap q p
+end
+
+# chết: đầu rụt hẳn vào chum → chum đổ nghiêng → xúc tu rũ, mờ tối
+anim die fps=5 once
+frame die
+  use tua2 2 22
+  use dau 10 5
+  use mat_nham 13 16
+  use chum 9 15
+  outline
+end
+frame die
+  use @die.0
+  rot 90
+  shift 0 1
+end
+frame die
+  use @die.1
+  swap P p
+  swap p q
+  swap J j
+  swap j z
+end

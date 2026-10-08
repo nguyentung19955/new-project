@@ -1,0 +1,70 @@
+# Lửa bỏng trên thân quái — ngọn lửa cong như đuôi rồng, son đỏ → vàng nghệ (màu trầm, không neon). Trạng thái: bỏng.
+name: Lửa bỏng
+size: 10x14
+anchor: 5,13
+colors:
+  k = son-toi
+  r = son
+  o = lua
+  y = vang-nghe
+part a
+..........
+.....r....
+....rr....
+....ror...
+...rrorr..
+...roor...
+..rooyor..
+..royyor..
+.rroyyorr.
+.royyyyor.
+.royyyyor.
+..royyor..
+...rrrr...
+..........
+end
+part b
+..........
+....r.....
+....rr....
+...ror....
+...roorr..
+..rooor...
+..royyor..
+..royyorr.
+.rroyyyor.
+.royyyyor.
+.royyyyor.
+..royyor..
+...rrrr...
+..........
+end
+part c
+......r...
+..........
+.....rr...
+....rorr..
+....roor..
+...rooor..
+..rooyor..
+..royyor..
+.rroyyyor.
+.royyyyor.
+.roooyyor.
+..royyor..
+...rrrr...
+..........
+end
+anim main fps=8 loop
+frame main
+  use a
+  outline k
+end
+frame main
+  use b
+  outline k
+end
+frame main
+  use c
+  outline k
+end

@@ -1,0 +1,25 @@
+# Lên cấp / lên sao / buff — mũi tên vàng nghệ hai tầng bay lên (viền đồng tối).
+name: Lên cấp
+size: 9x10
+anchor: 4,9
+colors:
+  k = dong-toi
+  y = vang-nghe
+  Y = vang-sang
+part a
+.........
+....Y....
+...yYy...
+..yy.yy..
+.yy...yy.
+....Y....
+...yYy...
+..yy.yy..
+.yy...yy.
+.........
+end
+anim main fps=2 loop
+frame main
+  use a
+  outline k
+end

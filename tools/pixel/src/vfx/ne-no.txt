@@ -1,0 +1,21 @@
+# Tên nỏ (nỏ thần) — ngắn, mập, đầu đồng sáng, đuôi vàng nghệ (bay sang phải).
+name: Tên nỏ
+size: 14x8
+anchor: 9,3
+colors:
+  k = dong-toi
+  c = dat-sang
+  d = dong-sang
+  y = vang-nghe
+part a
+..............
+.yy.......dd..
+..yyccccccdddd
+.yy.......dd..
+..............
+end
+anim main fps=1 loop
+frame main
+  use a 0 1
+  outline k
+end

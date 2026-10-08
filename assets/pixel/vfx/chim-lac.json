@@ -1,0 +1,25 @@
+{
+ "code": "chim-lac",
+ "group": "vfx",
+ "name": "Chim Lạc",
+ "w": 13,
+ "h": 8,
+ "ax": 6,
+ "ay": 4,
+ "bbox": [
+  0,
+  1,
+  13,
+  6
+ ],
+ "n": 2,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 2,
+   "fps": 6,
+   "loop": true
+  }
+ },
+ "sheet": "chim-lac.png"
+}

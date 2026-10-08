@@ -1,0 +1,31 @@
+# Quả dưa hấu (An Tiêm) — xanh lá sọc tối, lăn 2 khung.
+name: Dưa hấu
+size: 10x10
+anchor: 5,5
+colors:
+  k = la-toi
+  g = la
+  G = la-ma
+  s = la-toi
+part a
+..........
+...gggg...
+..gGsGsg..
+.gGgsGgsg.
+.gGgsGgsg.
+.gggsggsg.
+.ggsgggsg.
+..gsgggg..
+...gggg...
+..........
+end
+anim main fps=8 loop
+frame main
+  use a
+  outline k
+end
+frame main
+  use a
+  flipx
+  outline k
+end

@@ -60,7 +60,8 @@ ok(d3.size[0] > d3.size[1] && d3.size[1] < 200, `cắt sát vật (${d3.size})`)
 console.log('PROMPT-HIEU-UNG.txt phủ đủ hiệu ứng game:');
 const txt = fs.readFileSync(path.join(ROOT, 'docs/PROMPT-HIEU-UNG.txt'), 'utf8');
 const vfxjs = fs.readFileSync(path.join(ROOT, 'js/vfx.js'), 'utf8');
-const kenney = [...new Set([...vfxjs.matchAll(/'((?:circle|dirt|fire|flame|flare|light|magic|muzzle|scorch|scratch|slash|smoke|spark|star|trace|twirl)_\d+)'/g)].map((m) => m[1]))];
+// claude/vfx-kenney: ảnh Kenney đã bỏ, tên cũ còn trong bảng TEXMAP (tên → sprite pixel) của js/vfx.js
+const kenney = [...new Set([...vfxjs.matchAll(/['\s]((?:circle|dirt|fire|flame|flare|light|magic|muzzle|scorch|scratch|slash|smoke|spark|star|trace|twirl)_\d+)'?:?/g)].map((m) => m[1]))];
 const missK = kenney.filter((n) => !txt.includes(n));
 ok(kenney.length >= 32 && !missK.length, `${kenney.length} ảnh Kenney trong js/vfx.js đều có prompt${missK.length ? ' — thiếu ' + missK : ''}`);
 const vf = fs.readFileSync(path.join(ROOT, 'js/render.js'), 'utf8').match(/const VFX_FILE = \{([\s\S]*?)\};/)[1];

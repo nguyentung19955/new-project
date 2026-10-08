@@ -1,0 +1,25 @@
+{
+ "code": "dan-moc",
+ "group": "vfx",
+ "name": "Đạn hệ Mộc",
+ "w": 14,
+ "h": 8,
+ "ax": 8,
+ "ay": 3,
+ "bbox": [
+  0,
+  0,
+  14,
+  7
+ ],
+ "n": 2,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 2,
+   "fps": 8,
+   "loop": true
+  }
+ },
+ "sheet": "dan-moc.png"
+}

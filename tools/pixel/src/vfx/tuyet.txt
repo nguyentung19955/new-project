@@ -1,0 +1,22 @@
+# Bông tuyết nhỏ (làm chậm, chiêu băng).
+name: Bông tuyết
+size: 8x8
+anchor: 3,3
+colors:
+  k = cham-sang
+  t = troi
+  x = sang
+part a
+.......
+...t...
+.t.t.t.
+..txt..
+.t.t.t.
+...t...
+.......
+end
+anim main fps=1 loop
+frame main
+  use a 0 0
+  outline k
+end

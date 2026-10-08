@@ -1,0 +1,25 @@
+{
+ "code": "chem",
+ "group": "vfx",
+ "name": "Vết chém",
+ "w": 16,
+ "h": 16,
+ "ax": 8,
+ "ay": 8,
+ "bbox": [
+  2,
+  0,
+  14,
+  13
+ ],
+ "n": 3,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 3,
+   "fps": 12,
+   "loop": false
+  }
+ },
+ "sheet": "chem.png"
+}

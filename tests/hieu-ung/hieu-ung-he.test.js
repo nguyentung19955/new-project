@@ -24,7 +24,8 @@ const RE_STRIP = /assets\/vfx\/((?:trung|no|vong-chieu)-(?:kim|moc|thuy|hoa|tho)
 const RE_DAN = /assets\/fx\/(dan-(?:kim|moc|thuy|hoa|tho)|dan_\w+)\.png/;
 
 async function run(withArt) {
-  const { browser, page, errors } = await open(844, 390);
+  // claude/vfx-kenney: hiệu ứng pixel (manifest js/pixel/vfx.js) vẽ trước ảnh theo hệ — test đường ảnh vẽ tay nên bỏ manifest pixel
+  const { browser, page, errors } = await open(844, 390, {}, (pg) => pg.route('**/js/pixel/vfx.js*', (r) => r.fulfill({ contentType: 'application/javascript', body: '' })));
   await page.route('**/assets/**', (r) => {
     const u = r.request().url();
     let m = u.match(RE_STRIP);

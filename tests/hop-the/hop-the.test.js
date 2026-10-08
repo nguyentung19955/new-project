@@ -105,8 +105,10 @@ async function skillCase(w, h) {
   r = await page.evaluate(([a, b]) => { const h = game.heroes[b]; h.tier = 2; const c = game.canFuse(h, game.heroes[a]); h.tier = 3; return c; }, [a, b]);
   ok(typeof r === 'string' && /Thầy Chuông Đồng cần ★★★/.test(r), `${tag}: ★★ dù đủ kỹ năng vẫn chưa hợp thể được ("${r}")`);
   // v181: tướng Thường ★★★ lên cấp nửa giá (★★ nguyên giá, tướng thần nguyên giá)
-  r = await page.evaluate((a) => { const h = game.heroes[a], full = COSTS.level(h.level), c3 = game.levelCost(h); h.tier = 2; const c2 = game.levelCost(h); h.tier = 3; return { full, c3, c2 }; }, a);
-  ok(r.c3 === Math.round(r.full / 2) && r.c2 === r.full, `${tag}: ★★★ lên cấp ½ giá (${r.c3} thay vì ${r.full}), ★★ nguyên giá`);
+  // claude/sao3-re-nhanh: ★★★ lên cấp ⅓ giá, mở kỹ năng miễn phí (★★ nguyên giá)
+  r = await page.evaluate((a) => { const h = game.heroes[a], full = COSTS.level(h.level), c3 = game.levelCost(h), u3 = [1, 2, 3].map((i) => unlockCost(h, i)); h.tier = 2; const c2 = game.levelCost(h), u2 = [1, 2, 3].map((i) => unlockCost(h, i)); h.tier = 3; return { full, c3, c2, u3, u2 }; }, a);
+  ok(r.c3 === Math.round(r.full / 3) && r.c2 === r.full, `${tag}: ★★★ lên cấp ⅓ giá (${r.c3} thay vì ${r.full}), ★★ nguyên giá`);
+  ok(r.u3.every((c) => c === 0) && r.u2.join() === '60,150,300', `${tag}: ★★★ mở W/E/R miễn phí (${r.u3}), ★★ nguyên giá (${r.u2})`);
   // bảng Hợp thể: thẻ Thần Trống Đồng có huy hiệu KN, nút khoá, chạm → toast nêu rõ tướng thiếu
   await page.click('#deck [data-act=legend-open]'); await page.waitForTimeout(200);
   const iTD = await page.evaluate(() => FUSION.findIndex((f) => f.to === 'trongdong'));

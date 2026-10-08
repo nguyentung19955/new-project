@@ -1,0 +1,25 @@
+{
+ "code": "chim-than",
+ "group": "vfx",
+ "name": "Chim Thần",
+ "w": 16,
+ "h": 10,
+ "ax": 8,
+ "ay": 5,
+ "bbox": [
+  1,
+  1,
+  14,
+  6
+ ],
+ "n": 2,
+ "anims": {
+  "main": {
+   "start": 0,
+   "n": 2,
+   "fps": 8,
+   "loop": true
+  }
+ },
+ "sheet": "chim-than.png"
+}

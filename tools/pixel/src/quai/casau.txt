@@ -1,0 +1,191 @@
+# Cá Sấu (mã casau) — quái thường 32×32, hành Kim, chương Sơn Tinh – Thủy Tinh (thủy quân). Quy chuẩn: docs/pixel/QUY-CHUAN.md
+# Đặc trưng (PROMPT-GEN-LAI.txt:368 · PROMPT-DUNG-XUONG.txt:1420 · DANH-SACH Lô 8): cá sấu THẬT, thân dẹt dài, 4 chân ngắn,
+# xanh lá, vảy lưng sần, mõm dẹt dài nhiều răng, VÒNG ĐỒNG ở đuôi — không rồng, không sừng/cánh. Quay mặt sang PHẢI.
+name: Cá Sấu
+size: 32x32
+anchor: 15,26
+colors:
+  k = vien
+  L = la-sang
+  g = la-ma
+  G = la
+  t = la-toi
+  b = cat
+  n = dat-sang
+  e = trang
+  y = vang-nghe
+  r = son-toi
+  R = son
+  d = dong
+  D = dong-sang
+  Y = vang-nghe
+  z = vang-sang
+
+part than
+...........t.t.t.t.t...
+.........tLtLtLtLtLtL..
+.......LLgggggggggggggg
+....dYdgGgGgGgGgGgGgggg
+.LLgdDdgggggggggggggggg
+...GdddGGGgggggggggggGG
+......GGGbbbbbbbbbbbbGG
+.........GGGGGGGGGGGGG.
+end
+
+part dau
+..ttt.........
+.tLLtt........
+LgykgG........
+gggggggLLLLLtt
+gggggggggggggg
+GGGekeekeekeeG
+GGGGGGGGGGGGG.
+.GbbbbbbbbbG..
+end
+
+part dau_mo
+...ttt........
+..tLLtt....Ltt
+.LgykgGgLLggg.
+Lggggggggggk..
+ggggekeekek...
+gGGrRRRRRR....
+GGGrRRRR......
+GGGekeekeekeG.
+GGGGGGGGGGGG..
+.GbbbbbbbbG...
+end
+
+part chan
+.gG..
+.gGG.
+.gGG.
+gGGt.
+ttktt
+end
+
+part chan_len
+..gG.
+.gGGt
+gGGt.
+tktt.
+end
+
+part chan_xa
+.Gt.
+.Gt.
+.Gt.
+Gtt.
+tkt.
+end
+
+part mat_x
+k.k
+.k.
+k.k
+end
+
+anim walk fps=6 loop
+frame walk
+  use chan_xa 10 21
+  use chan_xa 22 21
+  use than 1 15
+  use dau 17 15
+  use chan 7 21
+  use chan 19 21
+  outline
+end
+frame walk
+  use chan_xa 9 21
+  use chan_xa 23 21
+  use than 1 15
+  use dau 17 15
+  use chan_len 8 21
+  use chan 18 21
+  outline
+end
+frame walk
+  use chan_xa 10 21
+  use chan_xa 22 21
+  use than 1 15
+  use dau 17 15
+  use chan 7 21
+  use chan 19 21
+  outline
+end
+frame walk
+  use chan_xa 11 21
+  use chan_xa 21 21
+  use than 1 15
+  use dau 17 15
+  use chan 6 21
+  use chan_len 20 21
+  outline
+end
+
+# đánh: há mõm → đớp → về
+anim attack fps=8 once
+frame attack
+  use chan_xa 9 21
+  use chan_xa 21 21
+  use than 1 15
+  use dau_mo 16 13
+  use chan 6 21
+  use chan 18 21
+  outline
+end
+frame attack
+  use chan_xa 11 21
+  use chan_xa 23 21
+  use than 1 15
+  use dau 17 15
+  use chan 8 21
+  use chan 20 21
+  outline
+end
+frame attack
+  use @walk.0
+end
+
+anim hurt fps=8 once
+# trúng đòn: giật lùi, ngóc đầu há mõm, mắt X, sáng tông
+frame hurt
+  use chan_xa 10 22
+  use chan_xa 20 22
+  use than 0 15
+  use dau_mo 15 13
+  use chan 7 22
+  use chan_len 17 21
+  use mat_x 17 14
+  swap g L
+  swap G g
+  outline
+end
+
+# chết: gục mắt X → lật ngửa bụng → sẫm màu
+anim die fps=5 once
+frame die
+  use chan_xa 10 22
+  use chan_xa 22 22
+  use than 1 16
+  use dau 17 16
+  use chan 7 22
+  use chan 19 22
+  use mat_x 19 16
+  outline
+end
+frame die
+  use @walk.0
+  set 19 17 k
+  set 20 17 k
+  rot 180
+  flipx
+  shift 0 7
+  outline
+end
+frame die
+  use @die.1
+  swap L g
+  swap g G
+  swap G t
+end
