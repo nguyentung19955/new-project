@@ -73,12 +73,22 @@ const PATH = {
       return { segs, total, k: 1 };
     });
     this.segs = this.lanes[0].segs; this.total = this.lanes[0].total;
-    for (const L of this.lanes) L.k = L.total / (this.total || 1);
+    // nhánh ngắn hơn nhánh 0 quá 8% (cổng trên / dưới gần thành — claude/ban-do-moi): không co giãn tốc độ mà cho quái
+    // vào giữa chừng — quãng đường bắt đầu từ off (quái ở nhánh đó đã "gần thành" ngay khi ra)
+    for (const L of this.lanes) {
+      const r = L.total / (this.total || 1);
+      if (r < 0.92) { L.k = 1; L.off = this.total - L.total; } else { L.k = r; L.off = 0; }
+    }
+    this.slow = [];
   },
+  // quãng đường bắt đầu của nhánh (0, hoặc off với nhánh ngắn)
+  startOf(lane) { const L = lane && this.lanes[lane]; return (L && L.off) || 0; },
+  // hệ số tốc độ ở quãng đường d (bến đò: đoạn qua sông đi chậm) — PATH.slow [{ d0, d1, k }] theo nhánh 0
+  speedAt(d) { for (const z of this.slow) if (d >= z.d0 && d <= z.d1) return z.k; return 1; },
   at(d, lane) {
     const L = (lane && this.lanes[lane]) || this.lanes[0];
     const segs = L.segs;
-    d *= L.k;
+    d = Math.max(0, d - (L.off || 0)) * L.k;
     const s = segs.find((g) => d <= g.start + g.len) || segs[segs.length - 1];
     const k = Math.max(0, Math.min(1, (d - s.start) / s.len));
     return { x: s.ax + (s.bx - s.ax) * k, y: s.ay + (s.by - s.ay) * k, dx: s.bx - s.ax };
@@ -86,7 +96,7 @@ const PATH = {
   // các nhánh có vị trí khác nhau ở quãng đường d (để vẽ vật chặn / vệt lửa trên mọi nhánh)
   lanesAt(d) {
     const out = [], seen = [];
-    this.lanes.forEach((_, i) => { const p = this.at(d, i); if (seen.every((q) => Math.hypot(q.x - p.x, q.y - p.y) > 16)) { seen.push(p); out.push(i); } });
+    this.lanes.forEach((L, i) => { if (d < (L.off || 0)) return; const p = this.at(d, i); if (seen.every((q) => Math.hypot(q.x - p.x, q.y - p.y) > 16)) { seen.push(p); out.push(i); } });
     return out;
   },
   // quãng đường gần nhất với một điểm (để đặt vệt lửa, thành chặn...) — xét mọi nhánh
@@ -96,7 +106,7 @@ const PATH = {
       const dx = s.bx - s.ax, dy = s.by - s.ay;
       const k = Math.max(0, Math.min(1, ((x - s.ax) * dx + (y - s.ay) * dy) / (dx * dx + dy * dy || 1)));
       const d = Math.hypot(s.ax + dx * k - x, s.ay + dy * k - y);
-      if (d < bd) { bd = d; best = (s.start + s.len * k) / L.k; }
+      if (d < bd) { bd = d; best = (s.start + s.len * k) / L.k + (L.off || 0); }
     }
     return best;
   },
@@ -114,6 +124,7 @@ function buildSpots(map) {
       const d = distToPath(x * DK, y * DK) / DK;
       if (d < minD || d > maxD) continue;
       if (zones.some(([x1, y1, x2, y2]) => x >= x1 && x <= x2 && y >= y1 && y <= y2)) continue;
+      if (map.ferry && x >= map.ferry[0] - 2 && x <= map.ferry[1] + 2) continue;   // bến đò: không đặt ô giữa sông
       out.push({ x: Math.round(x * DK), y: Math.round(y * DK), d });
     }
   }
@@ -151,6 +162,13 @@ function setMap(id) {
   CONFIG.path = CONFIG.paths[0];
   CONFIG.mapEnd = [map.end[0] * DK, map.end[1] * DK];
   PATH.build();
+  // bến đò (claude/ban-do-moi): đoạn đường nằm trong dải sông x ∈ ferry (thiết kế) → quái đi chậm ferryK
+  if (map.ferry) {
+    const [x1, x2] = map.ferry.map((v) => v * DK);
+    let d0 = -1, d1 = -1;
+    for (let d = 0; d <= PATH.total; d += 3) { const p = PATH.at(d, 0); if (p.x >= x1 && p.x <= x2) { if (d0 < 0) d0 = d; d1 = d; } }
+    if (d0 >= 0) PATH.slow = [{ d0, d1, k: map.ferryK || 0.5 }];
+  }
   buildSpots(map);
   return map;
 }
@@ -159,8 +177,9 @@ setMap('song1');
 // Độ phơi của bản đồ đang dựng (cân bằng dạng đường vô tận): N ô phủ đường tốt nhất, mỗi ô cộng quãng đường quái
 // đi trong tầm R (trung bình theo nhánh — quái chia đều các nhánh). Đường dài / vòng gần nhau → phơi nhiều.
 function mapExposure(N = 10, R = 190) {
-  const step = 6, samples = PATH.lanes.map((_, li) => { const out = []; for (let d = 0; d < PATH.total; d += step) { const p = PATH.at(d, li); out.push([p.x, p.y]); } return out; });
-  const cov = CONFIG.slots.map(([x, y]) => samples.reduce((c, pts) => c + pts.filter(([px, py]) => Math.hypot(px - x, py - y) <= R).length * step, 0) / samples.length);
+  // đoạn đi chậm (bến đò) phơi lâu hơn: mỗi điểm mẫu tính theo thời gian quái ở đó (step / hệ số tốc độ)
+  const step = 6, samples = PATH.lanes.map((L, li) => { const out = []; for (let d = L.off || 0; d < PATH.total; d += step) { const p = PATH.at(d, li); out.push([p.x, p.y, step / PATH.speedAt(d)]); } return out; });
+  const cov = CONFIG.slots.map(([x, y]) => samples.reduce((c, pts) => c + pts.reduce((a, [px, py, w]) => a + (Math.hypot(px - x, py - y) <= R ? w : 0), 0), 0) / samples.length);
   return cov.sort((a, b) => b - a).slice(0, N).reduce((a, b) => a + b, 0);
 }
 const exposureCache = new Map();
@@ -170,11 +189,14 @@ function exposureOf(id) {
   return exposureCache.get(id);
 }
 // hệ số máu quái của màn vô tận `st` so với màn đầu của trận (ải `start`): (độ phơi màn / màn đầu)^alpha × độ khó dạng
+// (claude/ban-do-moi) so với ĐƯỜNG GỐC của ải start — màn đầu của ải có dạng đường cũng tính hệ số này
 function stageHpFor(st, start) {
-  if (!st || !st.k) return 1;
+  if (!st || (!st.k && !st.shape)) return 1;
   const E = ENDLESS_STAGES, r = Math.pow(exposureOf(stageMapId(st)) / exposureOf(LEVELS[start || 0].map || 'song1'), E.alpha) * ((st.shape && PATH_SHAPES[st.shape].diff) || 1);
   return Math.round(Math.max(E.hpMin, Math.min(E.hpMax, r)) * 100) / 100;
 }
+// hệ số máu quái của ải chiến dịch đi dạng đường (so với đường gốc mà ải đã được cân bằng trước đây)
+const levelHpFor = (level) => stageHpFor(endlessStage(0, 0, level || 0), level || 0);
 
 // ------------------------------------------------------------
 //  ĐỒ: mỗi món trong túi là một bản riêng { uid, id, rarity, plus, locked, spent }
@@ -1405,9 +1427,9 @@ class Game {
     this.evWave = 0; this.evDone = 0;   // vo-tan-su-kien: đợt đã xét thưởng sự kiện tới đâu
     this.level = level || 0;
     this.lv = LEVELS[this.level];
-    setMap(this.lv.map || 'song1');
     this.stage = endlessStage(0, 0, this.level);   // màn vô tận đang chơi { k, lv: ải nguồn, shape: dạng đường | null }
-    this.pathHp = 1;          // hệ số máu quái của màn
+    this.pathHp = levelHpFor(this.level);          // hệ số máu quái của màn (đo độ phơi trước khi dựng bản đồ ải)
+    setMap(levelMapId(this.level));
     this.laneN = 0;
     this.gold = CONFIG.startGold;
     this.lives = CONFIG.startLives;
@@ -2897,6 +2919,7 @@ class Game {
     hp = Math.min(hp, 1e250);                       // không bao giờ thành Infinity
     // nhiều nhánh / hai cửa: quái đầu đợt chia lượt từng nhánh; quái đẻ ra / tách ra đi theo nhánh của con mẹ
     if (lane == null) lane = PATH.lanes.length > 1 ? (this.laneN = ((this.laneN || 0) + 1) % PATH.lanes.length) : 0;
+    dist = Math.max(dist, PATH.startOf(lane));   // nhánh ngắn (cổng gần thành): quái ra ở giữa quãng đường
     const p = PATH.at(dist, lane);
     const e = {
       id: newId(), type, def, hp, maxHp: hp, dist, lane, x: p.x, y: p.y, dir: 1,
@@ -3150,7 +3173,7 @@ class Game {
       for (const b of this.auraBosses) if (!b.dead && Math.hypot(b.x - e.x, b.y - e.y) <= b.def.speedAura.radius) { aura = 1 + b.def.speedAura.pct; break; }
     }
     const speed = d.speed * (1 - slow) * (e.enraged ? d.enrage.speed : 1) * (e.elite === 'swift' ? 1.4 : 1)
-      * (e.dashT > 0 ? d.dash.mult : 1) * aura * (1 + (e.evSpeed || 0));
+      * (e.dashT > 0 ? d.dash.mult : 1) * aura * (1 + (e.evSpeed || 0)) * (d.flying ? 1 : PATH.speedAt(e.dist));   // bến đò: đi chậm
     let nd = e.dist + speed * dt;
     // vật chặn đường (Lạc Tử, Thành Một Đêm): quái đi bộ phải dừng lại
     if (!d.flying) {

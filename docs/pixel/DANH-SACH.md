@@ -1609,6 +1609,10 @@ Mục để các session sau ghi **hình mới** phát sinh ngoài danh sách tr
 | claude/duong-di-moi | `nen/ruong-bac-thang` | 16×16 | ruộng bậc thang (ô nền + mép bậc) |  |
 | claude/duong-di-moi | `nen/de` | 16×16 | đê (đã có ở lô 12 — kiểm tra khớp dạng đường mới) |  |
 | claude/duong-di-moi | `giao-dien/banner-man-moi` | 128×24 | banner "Màn N · vùng đất mới" | chữ vẽ bằng HTML, chỉ vẽ dải nền |
+| claude/ban-do-moi | `nen/nui-giua` | 96×48 | ngọn núi giữa (3 đỉnh đá, chân đồi cỏ) của Vòng quanh núi — ô đặt tướng trên sườn | vẽ canvas `drawShapeUnder` (js/maps.js) |
+| claude/ban-do-moi | `nen/do-ngang` | 32×16 | con đò ngang (thân gỗ, sàn tre) + cọc / dây chão bến đò | `drawShapeOver`; dải sông dùng ô `nen/nuoc` khi bật pixel |
+| claude/ban-do-moi | `nen/cong-giac` | 32×24 | cổng giặc gỗ mái cong (cổng trên / dưới của Cổng ba phía) | `drawGateArch` |
+| claude/ban-do-moi | `ban-do/<gốc>~<dạng>` | 320×148 | nền pixel riêng cho 16 ải đổi dạng đường (levelMapId) — sinh bằng `tools/build-ban-do-spec.js` khi nhánh xuat-goi-pixel gộp (tool duyệt MAPS: gọi `levelMapId(i)` cho mọi ải trước để đăng ký bản đồ dạng) | hiện nền pixel lát ô chung `pxMapGround` vẽ đúng mọi nhánh / cầu / sông |
 | claude/vo-tan-su-kien | `giao-dien/banner-su-kien`, `icon/su-kien-*` | 128×24 / 16×16 | banner + icon sự kiện thử thách: Ngũ Hành Nghịch, Bùa Yểm Thủy Tinh, Quân Hùng Hậu… | liệt kê đủ khi nhánh gộp |
 | claude/vfx-kenney | `vfx/*` | 16×16 / 32×32 | toàn bộ hiệu ứng (lô vfx) | nhánh đó tự vẽ, tự ghi mã mới vào đây |
 | claude/cho-6-the | `icon/cho-ghep`, `icon/cho-hop-the`, `icon/cho-khoa-tim` | ~10px trong ô 12×12 | 3 ký hiệu dải giá thẻ chợ (đã đưa vào lô icon) | chân dung thẻ qua `marketPortrait(t)` (js/ui.js) |

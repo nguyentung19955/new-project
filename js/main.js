@@ -235,9 +235,11 @@ function drawMateSpot(x, y, hero) {
 // độ mờ (lề) + một ảnh bản đồ cỡ màn hình. Nay vẽ sẵn một lần vào canvas đệm cùng cỡ, mỗi khung chỉ chép 1:1
 // (đo Chromium không GPU 1920×934, ~110 quái: xem GAMEPLAY.md v189). Rung màn (shake) thì vẽ trực tiếp như cũ.
 function backdropSrc() {
-  const map = asset(`maps/map-0${game.level + 1}.png`);
+  // claude/ban-do-moi: ảnh vẽ sẵn cả ải (có đường cũ) không dùng khi ải đi dạng đường mới
+  const shaped = typeof MAPS !== 'undefined' && MAPS[MAP_ID] && MAPS[MAP_ID].shape;
+  const map = !shaped && asset(`maps/map-0${game.level + 1}.png`);
   // v163: ảnh nền nen_ai-*.png là bản đồ sông Đà (chương Sơn Tinh – Thủy Tinh) — không dùng cho ải chương khác
-  const nen = !map && !(game.stage && game.stage.k) && NEN_AI[game.level] && asset(`nen_ai-${NEN_AI[game.level]}.png`);
+  const nen = !map && !shaped && !(game.stage && game.stage.k) && NEN_AI[game.level] && asset(`nen_ai-${NEN_AI[game.level]}.png`);
   const bg = !nen && mapBg();
   const margin = view.ox > 0.5 || view.oy > 0.5;
   const back = margin && (typeof mapLayerCache !== 'undefined' && mapLayerCache.key.startsWith(MAP_ID + '|') ? mapLayerCache.c : ready(mapImg) && mapImg);

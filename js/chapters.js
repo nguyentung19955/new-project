@@ -7,25 +7,27 @@
 
 // ải mới nối sau 8 ải Sơn Tinh – Thủy Tinh
 LEVELS.push(
-  { name: 'Miếu Chằn Tinh', map: 'rung1', roster: 'rung', waves: 15, hp: 1.0, bosses: { 15: 'chantinh' },
+  { name: 'Miếu Chằn Tinh', map: 'rung1', shape: 'vongve', roster: 'rung', waves: 15, hp: 1.0, bosses: { 15: 'chantinh' },
     desc: 'Đêm canh miếu thay Lý Thông. Yêu tinh rừng kéo đến, Chằn Tinh hiện hình cuối đêm.', hint: ['thosan', 'xathu', 'lactuong'] },
-  { name: 'Gốc Đa Cổ Thụ', map: 'rung2', roster: 'rung', waves: 20, hp: 1.05, bosses: { 10: 'chantinh', 20: 'chantinh' },
+  { name: 'Gốc Đa Cổ Thụ', map: 'rung2', shape: 'caucheo', roster: 'rung', waves: 20, hp: 1.05, bosses: { 10: 'chantinh', 20: 'chantinh' },
     desc: 'Rắn độc và Thạch Tinh giữ gốc đa nơi Thạch Sanh lớn lên.', hint: ['thaymo', 'thansuong', 'xathu'] },
-  { name: 'Hang Đại Bàng', map: 'hang1', roster: 'hang', waves: 20, hp: 1.1, bosses: { 10: 'chantinh', 20: 'daibang' },
+  { name: 'Hang Đại Bàng', map: 'hang1', shape: 'deodoc', roster: 'hang', waves: 20, hp: 1.1, bosses: { 10: 'chantinh', 20: 'daibang' },
     desc: 'Lần theo vết máu xuống hang sâu cứu công chúa Quỳnh Nga. Đại Bàng Tinh bay: cần tướng bắn xa.', hint: ['xathu', 'thaymo', 'thansuong'] },
-  { name: 'Làng Phù Đổng', map: 'dong1', roster: 'an', waves: 15, hp: 1.1, bosses: { 15: 'anvuong' },
+  { name: 'Làng Phù Đổng', map: 'dong1', shape: 'ruongdoc', roster: 'an', waves: 15, hp: 1.1, bosses: { 15: 'anvuong' },
     desc: 'Giặc Ân tràn vào làng. Cậu bé Gióng vươn vai thành tráng sĩ.', hint: ['lactuong', 'lucsi', 'xathu'] },
-  { name: 'Đồng Trâu', map: 'dong2', roster: 'an', waves: 20, hp: 1.15, bosses: { 10: 'anvuong', 20: 'anvuong' },
+  { name: 'Đồng Trâu', map: 'dong2', shape: 'songsong', roster: 'an', waves: 20, hp: 1.15, bosses: { 10: 'anvuong', 20: 'anvuong' },
     desc: 'Quỷ lợn rừng và voi chiến giặc Ân dàn trận giữa đồng. Nhổ tre quật giặc!', hint: ['thaymo', 'lucsi', 'thansuong'] },
-  { name: 'Biển Đông', map: 'bien1', roster: 'bien', waves: 20, hp: 1.2, bosses: { 10: 'ngutinh', 20: 'ngutinh' },
+  { name: 'Biển Đông', map: 'bien1', shape: 'bendo', roster: 'bien', waves: 20, hp: 1.2, bosses: { 10: 'ngutinh', 20: 'ngutinh' },
     desc: 'Ngư Tinh nuốt thuyền bè ngoài khơi. Cá Mập Yêu bơi rất nhanh, Cua Khổng Lồ mai cứng.', hint: ['thansuong', 'xathu', 'thosan'] },
-  { name: 'Đầm Xác Cáo', map: 'song4', roster: 'rung', waves: 20, hp: 1.25, bosses: { 10: 'hotinh', 20: 'hotinh' },
+  { name: 'Đầm Xác Cáo', map: 'song4', shape: 'haicong', roster: 'rung', waves: 20, hp: 1.25, bosses: { 10: 'hotinh', 20: 'hotinh' },
     desc: 'Hồ Tinh chín đuôi ẩn trong đầm lớn. Kháng phép cao: mang tướng đánh vật lý.', hint: ['lactuong', 'thosan', 'xathu'] },
-  { name: 'Thành Ốc Cổ Loa', map: 'thanh1', roster: 'trieu', waves: 25, hp: 1.3, bosses: { 12: 'trieuda', 25: 'trieuda' },
+  { name: 'Thành Ốc Cổ Loa', map: 'thanh1', shape: 'xoanoc', roster: 'trieu', waves: 25, hp: 1.3, bosses: { 12: 'trieuda', 25: 'trieuda' },
     desc: 'Thành xoắn như hình ốc: đường giặc đi rất dài. Giữ lấy thành trong cùng!', hint: ['xathu', 'thaymo', 'lucsi'] },
-  { name: 'Biển Mộ Dạ', map: 'bien2', roster: 'trieu', waves: 20, hp: 1.35, bosses: { 10: 'trieuda', 20: 'trieuda' },
+  { name: 'Biển Mộ Dạ', map: 'bien2', shape: 'cong3', roster: 'trieu', waves: 20, hp: 1.35, bosses: { 10: 'trieuda', 20: 'trieuda' },
     desc: 'An Dương Vương chạy về biển, Rùa Vàng rẽ nước đón vua. Trận cuối với quân Triệu Đà.', hint: ['xathu', 'lactuong', 'thansuong'] },
 );
+// claude/ban-do-moi: đăng ký sẵn bản đồ dạng đường của mọi ải vào MAPS (tool bản đồ pixel duyệt MAPS)
+if (typeof levelMapId === 'function') LEVELS.forEach((_, i) => levelMapId(i));
 
 // v49: số đợt và máu quái tăng dần theo ải; boss mỗi 10 đợt (lần lượt theo chương) + boss cuối ở đợt cuối
 const LEVEL_WAVES_V49 = [15, 20, 20, 25, 25, 30, 30, 30, 25, 30, 30, 30, 35, 35, 35, 35, 35];

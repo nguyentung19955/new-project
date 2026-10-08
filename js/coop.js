@@ -398,7 +398,7 @@ const COOP = {
   },
   // chủ phòng: chia ô theo dọc dòng sông (từng cặp 2 ô, xen kẽ) — tính 1 lần rồi gửi cho cả hai máy
   owners(level) {
-    setMap(LEVELS[level].map || 'song1');
+    setMap(levelMapId(level));
     const idx = CONFIG.slots.map((_, i) => i)
       .sort((a, b) => PATH.distOf(CONFIG.slots[a][0], CONFIG.slots[a][1]) - PATH.distOf(CONFIG.slots[b][0], CONFIG.slots[b][1]) || a - b);
     const own = [];
@@ -529,7 +529,7 @@ const COOP = {
     const W = coopDecode(o.pack);
     SIM.active = true;
     try {
-      setMap(LEVELS[o.level].map || 'song1');
+      setMap(levelMapId(o.level));
       if (!g.co) { g.co = new CoopState(); coopBind(g); }
       for (const k of Object.keys(g)) if (!COOP_SKIP.has(k)) delete g[k];
       Object.assign(g, W.fields);

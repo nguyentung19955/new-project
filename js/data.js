@@ -2014,6 +2014,23 @@ const PATH_SHAPES = {
     lanes: [[[-20, 135], [360, 135], [480, 222], [880, 170]], [[-20, 308], [360, 308], [480, 222], [880, 170]]], end: [899, 166] },
   duongtat: { name: 'Đường tắt hang ngầm', desc: 'Quái chui ra từ hang ngầm giữa đồng, đường tới thành rất ngắn: ít thời gian bắn.', r: 70, diff: 1.12,
     lanes: [[[170, 300], [420, 300], [560, 185], [880, 165]]], end: [899, 161], hole: true },
+  // ---- claude/ban-do-moi: thêm 8 dạng (nhánh ngắn hơn nhánh 0 quá 8% → quái nhánh đó vào giữa đường: PATH lane.off)
+  ngaba: { name: 'Ngã ba sông', desc: 'Ba dòng sông đổ về một ngã ba rồi chảy chung tới thành: ô ở hai cồn giữa đánh được hai nhánh.', r: 46,
+    lanes: [[[-20, 222], [540, 222], [880, 180]], [[-20, 135], [340, 135], [540, 222], [880, 180]], [[-20, 308], [340, 308], [540, 222], [880, 180]]], end: [899, 176] },
+  caunhieu: { name: 'Cầu phao hai vòng', desc: 'Đường vòng hai vòng, mỗi vòng đi qua một cây cầu bắc ngang chính nó: ô trong vòng đánh được nhiều lượt.', r: 40, bridge: true,
+    lanes: [[[-20, 215], [330, 215], [330, 130], [160, 130], [160, 305], [590, 305], [590, 130], [450, 130], [450, 215], [700, 215], [790, 165], [880, 160]]], end: [899, 156] },
+  vongnui: { name: 'Vòng quanh núi', desc: 'Đường vòng ba mặt quanh ngọn núi giữa: ô trên sườn núi đánh được cả ba phía.', r: 50, mount: [405, 232, 150, 62],
+    lanes: [[[-20, 300], [190, 300], [190, 135], [620, 135], [620, 300], [760, 300], [760, 180], [880, 165]]], end: [899, 161] },
+  songsong: { name: 'Hai đường song song', desc: 'Hai ngả song song chạy suốt bản đồ rồi nhập lại trước thành: dãy ô giữa đánh được cả hai ngả.', r: 50,
+    lanes: [[[-20, 150], [680, 150], [790, 220], [880, 180]], [[-20, 290], [680, 290], [790, 220], [880, 180]]], end: [899, 176] },
+  deodoc: { name: 'Đèo dốc gấp khúc', desc: 'Đường đèo hẹp gấp khúc liên tục lên xuống dốc: quái đi lâu nhưng ô chen giữa các khúc rất chật.', r: 30,
+    lanes: [[[-20, 305], [110, 305], [110, 135], [200, 135], [200, 305], [290, 305], [290, 135], [380, 135], [380, 305], [620, 305], [730, 175], [880, 165]]], end: [899, 161] },
+  ruongdoc: { name: 'Đồi ruộng bậc thang', desc: 'Đường men bờ ruộng lên đồi từng bậc rồi xuống bậc bên kia: rất nhiều góc quẹo.', r: 16,
+    lanes: [[[-20, 305], [120, 305], [120, 240], [240, 240], [240, 175], [360, 175], [360, 135], [560, 135], [560, 200], [680, 200], [680, 265], [800, 265], [800, 175], [880, 165]]], end: [899, 161] },
+  bendo: { name: 'Bến đò qua sông', desc: 'Đường phải qua sông bằng đò ngang: quái lên đò đi chậm hẳn — chỗ bắn tốt nhất ở hai bến.', r: 40, ferry: [400, 540], ferryK: 0.5,
+    lanes: [[[-20, 160], [330, 160], [330, 280], [610, 280], [610, 160], [880, 160]]], end: [899, 156] },
+  cong3: { name: 'Cổng ba phía', desc: 'Giặc ập vào từ BA cổng — trái, trên, dưới — cổng trên / dưới rất gần thành: phải giữ cả ba ngả.', r: 40, diff: 1.12,
+    lanes: [[[-20, 222], [560, 222], [880, 178]], [[330, 125], [330, 165], [470, 165], [560, 222], [880, 178]], [[330, 312], [330, 280], [470, 280], [560, 222], [880, 178]]], end: [899, 174] },
 };
 // ============================================================
 //  VÔ TẬN THEO MÀN (claude/duong-di-moi): vào Vô tận không chọn bản đồ — bắt đầu ở màn đầu (Bến Sông Đà),
@@ -2024,8 +2041,8 @@ const PATH_SHAPES = {
 const ENDLESS_STAGES = {
   // thứ tự ải nguồn: chủ đề xen nhau (sông → rừng → đồng → biển → hang → đầm → thành …)
   order: [0, 8, 11, 13, 10, 3, 15, 9, 12, 16, 2, 6, 1, 4],   // bỏ ải trùng bản đồ (5, 14 = song4; 7 = song1)
-  normal: ['zigzag', 'uonkhuc', 'caucheo', 'vongve', 'bacthang', 'chianhanh', 'xoanoc'],
-  hard: ['haicong', 'duongtat'],
+  normal: ['zigzag', 'ngaba', 'uonkhuc', 'caunhieu', 'caucheo', 'vongnui', 'vongve', 'songsong', 'bacthang', 'deodoc', 'chianhanh', 'bendo', 'xoanoc', 'ruongdoc'],
+  hard: ['haicong', 'cong3', 'duongtat'],
   hardFrom: 60,     // đợt cao: màn lẻ dùng dạng khó
   alpha: 0.5,       // máu quái × (độ phơi màn / màn đầu)^alpha — chỉnh bằng mô phỏng trận (tests/duong-di-moi)
   hpMin: 0.8, hpMax: 1.4,
@@ -2034,9 +2051,14 @@ const ENDLESS_STAGES = {
 function endlessStage(k, wave, start = 0) {
   const E = ENDLESS_STAGES, o = E.order, i0 = Math.max(0, o.indexOf(start));
   const lv = k ? o[(i0 + k) % o.length] : start;
-  let shape = null;
-  if (k > 0 && k % 3 !== 0) shape = wave >= E.hardFrom && k % 2 ? E.hard[(k >> 1) % E.hard.length] : E.normal[(k - 1 - Math.floor(k / 3)) % E.normal.length];
-  return { k, lv, shape, at: k ? wave : 0 };
+  // claude/ban-do-moi: chỉ màn đầu dùng đường gốc (song1 thẳng nhất). Màn sau luôn có dạng đường:
+  // cứ 3 màn có 1 màn dùng đúng dạng của ải đó trong chiến dịch (LEVELS[lv].shape), còn lại lần lượt dạng thường / dạng khó
+  if (!k) return { k, lv, shape: LEVELS[lv].shape || null, at: 0 };
+  let shape;
+  if (wave >= E.hardFrom && k % 2) shape = E.hard[(k >> 1) % E.hard.length];
+  else if (k % 3 === 0 && LEVELS[lv].shape) shape = LEVELS[lv].shape;
+  else shape = E.normal[(k - 1 - Math.floor(k / 3)) % E.normal.length];
+  return { k, lv, shape, at: wave };
 }
 // màn đang chơi khi đã XONG đợt `wave` của trận bắt đầu ở ải `start` (đếm số đợt boss đã qua)
 function endlessStageAt(wave, start = 0) {
@@ -2046,6 +2068,9 @@ function endlessStageAt(wave, start = 0) {
 }
 // mã bản đồ của màn
 const stageMapId = (st) => (st.shape ? mapVariant(LEVELS[st.lv].map || 'song1', st.shape) : LEVELS[st.lv].map || 'song1');
+// claude/ban-do-moi: bản đồ của ải trong chiến dịch — LEVELS[i].map là bản đồ gốc (chủ đề + nền vẽ tay), LEVELS[i].shape
+// là dạng đường của ải. Chỉ ải đầu (Bến Sông Đà) giữ đường gốc; mọi ải khác đi đường dạng khác.
+const levelMapId = (i) => { const L = LEVELS[i || 0] || LEVELS[0]; return L.shape ? mapVariant(L.map || 'song1', L.shape) : L.map || 'song1'; };
 // bản đồ "gốc~dạng": chủ đề của bản đồ gốc + đường của dạng (đăng ký vào MAPS khi cần)
 function mapVariant(base, shape) {
   const id = `${base}~${shape}`;
@@ -2054,6 +2079,8 @@ function mapVariant(base, shape) {
   if (!MAPS[id]) {
     const [d, ...lanes] = sh.lanes.map((pts) => rpath(pts, sh.r));
     MAPS[id] = { theme: b.theme, d, lanes, end: sh.end.slice(), center: !!sh.center, shape, base, bridge: !!sh.bridge, hole: !!sh.hole };
+    if (sh.mount) MAPS[id].mount = sh.mount.slice();
+    if (sh.ferry) Object.assign(MAPS[id], { ferry: sh.ferry.slice(), ferryK: sh.ferryK || 0.5 });
   }
   return id;
 }
@@ -2061,19 +2088,19 @@ function mapVariant(base, shape) {
 const LEVELS = [
   { name: 'Bến Sông Đà', map: 'song1', waves: 10, hp: 0.75, bosses: { 10: 'thuongluong' },
     desc: 'Bến sông yên bình nơi Thủy Tinh thử quân lần đầu. Bản đồ dễ nhất, hợp để làm quen.', hint: ['xathu', 'lactuong', 'thaymo'] },
-  { name: 'Thác Bờ', map: 'song2', waves: 20, hp: 0.85, bosses: { 10: 'thuongluong', 20: 'haba' },
+  { name: 'Thác Bờ', map: 'song2', shape: 'uonkhuc', waves: 20, hp: 0.85, bosses: { 10: 'thuongluong', 20: 'haba' },
     desc: 'Thác nước đổ mạnh, quân Thủy Tinh xuôi dòng nhanh hơn.', hint: ['thansuong', 'xathu', 'lucsi'] },
-  { name: 'Rừng Lim', map: 'song3', waves: 30, hp: 1, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'haba' },
+  { name: 'Rừng Lim', map: 'song3', shape: 'chianhanh', waves: 30, hp: 1, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'haba' },
     desc: 'Rừng lim cổ thụ phủ kín hai bờ. Đường quái dài, uốn quanh tán lá rậm.', hint: ['xathu', 'thaymo', 'lucsi'] },
-  { name: 'Bãi Phù Sa', map: 'song4', waves: 30, hp: 1.08, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'thuytinh' },
+  { name: 'Bãi Phù Sa', map: 'song4', shape: 'zigzag', waves: 30, hp: 1.08, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'thuytinh' },
     desc: 'Bãi phù sa màu mỡ, Núi Tản Viên mọc nhanh hơn ở đây.', hint: ['lactuong', 'thaymo', 'thansuong'] },
-  { name: 'Chân Núi Tản', map: 'song5', waves: 30, hp: 1.16, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'thuytinh' },
+  { name: 'Chân Núi Tản', map: 'song5', shape: 'vongnui', waves: 30, hp: 1.16, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'thuytinh' },
     desc: 'Dưới chân núi Tản, Sơn Tinh đứng ra chặn nước.', hint: ['thosan', 'xathu', 'thaymo'] },
-  { name: 'Đầm Lầy', map: 'song4', waves: 30, hp: 1.24, water: 1, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'thuytinh' },
+  { name: 'Đầm Lầy', map: 'song4', shape: 'caunhieu', waves: 30, hp: 1.24, water: 1, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'thuytinh' },
     desc: 'Đầm lầy: quái máu dày hơn.', hint: ['lactuong', 'xathu', 'thansuong'] },
-  { name: 'Cửa Sông Hồng', map: 'cuasong', waves: 30, hp: 1.32, bosses: { 10: 'haba', 20: 'thuytinh', 30: 'thuytinh' },
+  { name: 'Cửa Sông Hồng', map: 'cuasong', shape: 'ngaba', waves: 30, hp: 1.32, bosses: { 10: 'haba', 20: 'thuytinh', 30: 'thuytinh' },
     desc: 'Nơi sông Đà đổ về sông Hồng, nước dâng dữ nhất.', hint: ['thansuong', 'thaymo', 'xathu'] },
-  { name: 'Thành Phong Châu', map: 'song1', waves: 30, hp: 1.4, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'thuytinh' },
+  { name: 'Thành Phong Châu', map: 'song1', shape: 'cong3', waves: 30, hp: 1.4, bosses: { 10: 'thuongluong', 20: 'haba', 30: 'thuytinh' },
     desc: 'Trận cuối giữ kinh đô Văn Lang. Thủy Tinh đích thân dâng nước.', hint: ['lactuong', 'lucsi', 'thaymo'] },
 ];
 

@@ -35,7 +35,7 @@ fs.mkdirSync(SHOT, { recursive: true });
         // cuối đường sát thành
         CONFIG.paths.forEach((pts, li) => { const [x, y] = pts[pts.length - 1]; const d = Math.hypot(x / DK - m.end[0], y / DK - m.end[1]); if (d > 45) bad.push(`${id} nhánh ${li}: cuối đường cách thành ${d.toFixed(0)}`); });
         // các nhánh dài gần bằng nhau (quãng đường quy đổi không méo tốc độ quá 8%)
-        for (const L of PATH.lanes) if (L.k < 0.92 || L.k > 1.08) bad.push(`${id}: nhánh dài lệch ${L.k.toFixed(3)}`);
+        for (const L of PATH.lanes) if (!L.off && (L.k < 0.92 || L.k > 1.08)) bad.push(`${id}: nhánh dài lệch ${L.k.toFixed(3)}`);
         // ô đặt tướng: đủ, không đè đường, không trong vùng giao diện
         if (CONFIG.slots.length < (isNew ? 12 : 10)) bad.push(`${id}: chỉ ${CONFIG.slots.length} ô`);
         for (const [x, y] of CONFIG.slots) if (distToPath(x, y) / DK < CONFIG.buildGrid.minD - 0.5) bad.push(`${id}: ô (${x},${y}) đè đường`);
@@ -56,7 +56,7 @@ fs.mkdirSync(SHOT, { recursive: true });
       const seq = [];
       for (const lv of [0, 5, 10, 16]) {
         let prev = endlessStageAt(0, lv);
-        if (prev.k || prev.lv !== lv || prev.shape) bad.push(`ải ${lv}: màn đầu sai`);
+        if (prev.k || prev.lv !== lv || (prev.shape || null) !== (LEVELS[lv].shape || null)) bad.push(`ải ${lv}: màn đầu sai`);
         for (let w = 1; w <= 260; w++) {
           const st = endlessStageAt(w, lv);
           if (st.k !== prev.k) {
@@ -64,6 +64,7 @@ fs.mkdirSync(SHOT, { recursive: true });
             if (st.k !== prev.k + 1) bad.push(`ải ${lv}: nhảy màn ở đợt ${w}`);
             if (stageMapId(st) === stageMapId(prev)) bad.push(`ải ${lv}: màn ${st.k} trùng bản đồ màn trước`);
             if (st.shape && PATH_SHAPES[st.shape].diff > 1 && w < ENDLESS_STAGES.hardFrom) bad.push(`dạng khó ${st.shape} ở đợt ${w}`);
+            if (!st.shape) bad.push(`ải ${lv}: màn ${st.k} (đợt ${w}) đi đường gốc — chỉ màn đầu được đi đường gốc`);
             if (lv === 0) seq.push(`${w}:${LEVELS[st.lv].map}${st.shape ? '~' + st.shape : ''}`);
           } else if (bossAt(w, lv)) bad.push(`ải ${lv}: qua boss đợt ${w} mà không đổi màn`);
           prev = st;
