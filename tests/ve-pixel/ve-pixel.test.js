@@ -184,8 +184,9 @@ const CODES = ['tuong/lactuong', 'tuong/thaymo', 'tuong/kylan', 'tuong/rongme', 
         if (a.w !== b.w || a.h !== b.h || !a.px.equals(b.px)) throw new Error(`FAIL: ${k}${suf} khác bản build-pixel dựng`);
         same++;
       }
+      // m: hệ số bản làm mượt build-pixel sinh thêm (claude/ve-lai-pixel) — tool HTML không ghi
       const ja = JSON.parse(files.get(`assets/pixel/${k}.json`)), jb = JSON.parse(fs.readFileSync(path.join(TMP, 'out/assets/pixel', k + '.json'), 'utf8'));
-      if (JSON.stringify({ ...ja, name: 0 }) !== JSON.stringify({ ...jb, name: 0 })) throw new Error(`FAIL: ${k}.json khác build-pixel: ${JSON.stringify(ja)} / ${JSON.stringify(jb)}`);
+      if (JSON.stringify({ ...ja, name: 0, m: undefined }) !== JSON.stringify({ ...jb, name: 0, m: undefined })) throw new Error(`FAIL: ${k}.json khác build-pixel: ${JSON.stringify(ja)} / ${JSON.stringify(jb)}`);
     }
     ok(same > codes.length, `${same} ảnh + JSON của tool trùng từng điểm ảnh với bản build-pixel dựng từ nguồn`);
 

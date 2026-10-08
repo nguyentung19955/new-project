@@ -190,7 +190,7 @@ async function setup(page) {
     // giao diện: thẻ chợ tướng + Anh Hùng dùng ảnh pixel
     await page.evaluate(() => { const m = game.ensureMarket(); m.types[0] = 'chodo'; m.types[1] = 'thoren'; game.paused = false; });
     await page.waitForTimeout(500);
-    const card = await page.evaluate(() => { const i = document.querySelector('#deck img[src*="pixel/tuong/chodo"]'); return i ? { ok: i.complete && i.naturalWidth === 32 || i.naturalWidth > 0, r: i.getBoundingClientRect().toJSON() } : null; });
+    const card = await page.evaluate(() => { const i = document.querySelector('#deck img[src*="pixel/tuong/chodo"], #deck img[src*="pixel-muot/tuong/chodo"]'); return i ? { ok: i.complete && i.naturalWidth === 32 || i.naturalWidth > 0, r: i.getBoundingClientRect().toJSON() } : null; });
     ok(card && card.ok, `[${tag}] thẻ chợ: Chèo Đò dùng chân dung pixel`);
     const dk = await page.evaluate(() => document.querySelector('#deck').getBoundingClientRect().toJSON());
     await page.screenshot({ path: path.join(SHOT, `pixel-${tag}-cho.png`), clip: { x: Math.max(0, dk.x), y: Math.max(0, dk.y), width: Math.min(w, dk.width), height: Math.min(h - Math.max(0, dk.y), dk.height) } });
