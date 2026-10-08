@@ -1354,6 +1354,29 @@ const CH = MA.chuan = {
     else { const m = { khoi: 'hon', ghep: 'vo', tu: 'tu', bui: 'bui', quet: 'quet' }[k] || 'tu'; if (m === 'tu') P.tan = { k: 'tu', u, mau }; else if (m === 'quet') P.tan = { k: 'quet', u: seg(u, .1, .9), mau, len: 1 }; else P.tan = { k: m, u: 1 - EASE.io(seg(u, 0, .85)), mau, trai: P.face < 0, hien: true }; if (u > .85) { const st = kf(u, [[.85, 1.06], [.93, .96], [1, 1]]); P.sy *= st; } P.bong = seg(u, .3, .9); }
   },
 };
+
+// ---------- cử động chung của trùm vùng: chuyển pha, choáng, chết hoành tráng ----------
+const TRUM = MA.trum = {
+  // Chuyển pha: gồng mình, khí tụ vào, chớp trắng (đổi hình ở giữa), gầm lên với sóng lan. cols = [đậm, vừa, sáng]
+  doiPha(P, cols) { const u = P.u, bh = P.B.bh, bw = P.B.bw, cy = -P.h - bh * .5, R = Math.max(bw, bh) * .75;
+    if (u < .45) { const v = u / .45; P.x += (((u * 40) | 0) % 2 ? 1 : -1) * v * 1.5; P.sy *= 1 - .06 * v; P.sx *= 1 + .05 * v; P.tint = [cols[1], v * .45];
+      P.over(c => { for (let i = 0; i < 26; i++) { const a = hh(i, 1, 3) * TAU, q = (v * 1.8 + hh(i, 2, 3)) % 1, r = R * (1.1 - q); F.a(c, q); F.px(c, Math.cos(a) * r, cy + Math.sin(a) * r * .8, i % 3 ? cols[1] : cols[2], q > .6 ? 2 : 1, q > .6 ? 2 : 1); } F.a(c, 1); }); }
+    else if (u < .58) { const v = seg(u, .45, .58); P.flash = 1 - v * .5; P.sx *= 1 + .12 * v; P.sy *= 1 + .12 * v; P.over(c => { F.vong(c, 0, cy, R * (.5 + v * .8), R * .4 * (1 + v), '#ffffff', 3); F.hat(c, 0, cy, 24, 2, v, { v: R * .9, cols: ['#ffffff', cols[2]], to: 2 }); }); }
+    else { const v = seg(u, .58, 1), k = kf(v, [[0, 1.12], [.25, .96], [.5, 1.03], [1, 1]]); P.sx *= k; P.sy *= k; P.tint = [cols[1], .4 * (1 - v)]; P.x += v < .5 ? (((u * 40) | 0) % 2 ? 1 : -1) : 0;
+      P.under(c => { F.song(c, 0, 0, R * 1.6, v, [cols[2], cols[1]], 3); F.song(c, 0, 0, R * 1.2, seg(v, .15, 1), [cols[1], cols[0]], 2); });
+      P.over(c => { F.hat(c, 0, cy, 40, 7, v, { v: R * 1.3, cols: [cols[2], cols[1], cols[0]], to: 2 }); for (let i = 0; i < 12; i++) { const a = i / 12 * TAU + .2, r0 = R * .4, r1 = R * (.6 + v * 1.1); F.a(c, 1 - v); F.duong(c, Math.cos(a) * r0, cy + Math.sin(a) * r0, Math.cos(a) * r1, cy + Math.sin(a) * r1, cols[2], 1); } F.a(c, 1); }); } },
+  // Choáng: lảo đảo, sao vàng xoay quanh đỉnh đầu (hx, hy là điểm trên hình gốc).
+  choang(P, hx, hy) { const u = P.u; P.rot += 5 * sn(u); P.sh += 3 * sn(u + .25); P.sy *= .96 + .02 * sn(u * 2); const q = P.pt(hx, hy);
+    P.over(c => { for (let i = 0; i < 4; i++) { const a = (u + i / 4) * TAU, x = q[0] + Math.cos(a) * 20, y = q[1] - 10 + Math.sin(a) * 6; const truoc = Math.sin(a) > 0; F.a(c, truoc ? 1 : .6); F.sao(c, x, y, truoc ? 3 : 2, i % 2 ? '#ffd23c' : '#fff6b0'); F.dia(c, x, y, 1.2, '#ffffff'); } F.a(c, 1); }); },
+  // Chết hoành tráng: rung dữ dội, nổ lốp bốp khắp thân, tia sáng toả, chớp trắng lớn, rồi tan theo kiểu k.
+  chetLon(P, k, cols, mauTan) { const u = P.u, B = P.B, bh = B.bh, bw = B.bw, cy = -P.h - bh * .5, R = Math.max(bw, bh) * .6;
+    if (u < .55) { const v = u / .55; P.x += (((u * 48) | 0) % 2 ? 1 : -1) * (1 + v * 2); P.rot += 6 * v * sn(u * 6); P.flash = ((u * 24) | 0) % 3 === 0 ? .7 : 0; P.sy *= 1 - .05 * v;
+      P.over(c => { for (let i = 0; i < 9; i++) { const t0 = i / 9 * .9, e = seg(v, t0, t0 + .22); if (e <= 0 || e >= 1) continue; const x = (hh(i, 3, 1) - .5) * bw * .8, y = cy + (hh(i, 4, 1) - .5) * bh * .8; if (e < .3) F.dia(c, x, y, 3 + e * 14, '#ffffff'); F.dia(c, x, y, (2 + e * 7) * (1 - e), cols[1]); F.hat(c, x, y, 10, i, e, { v: 16, cols: [cols[2], cols[1], cols[0]], to: 2 }); }
+        for (let i = 0; i < 10; i++) { const a = i / 10 * TAU + v, L = R * (.3 + v * 1.6); F.a(c, v * .7); F.duong(c, Math.cos(a) * 8, cy + Math.sin(a) * 8, Math.cos(a) * L, cy + Math.sin(a) * L, i % 2 ? cols[2] : '#ffffff', i % 2 ? 1 : 2); } F.a(c, 1); }); }
+    else { const v = seg(u, .55, 1); P.tan = { k, u: seg(u, .6, 1), mau: mauTan || cols, trai: P.face > 0 }; P.flash = v < .15 ? 1 : 0; P.bong = 1 - v;
+      P.under(c => { F.song(c, 0, 0, R * 2.2, v, [cols[2], cols[1]], 3); F.song(c, 0, 0, R * 1.6, seg(v, .1, 1), ['#ffffff', cols[2]], 2); });
+      P.over(c => { if (v < .3) { const e = v / .3; F.vong(c, 0, cy, R * (.6 + e * 1.4), R * (.5 + e * 1.1), '#ffffff', Math.max(1, Math.round(4 * (1 - e)))); F.dia(c, 0, cy, R * .35 * (1 - e), '#ffffff'); } F.hat(c, 0, cy, 50, 3, v, { v: R * 2, cols: ['#ffffff', cols[2], cols[1], cols[0]], to: 2 }); }); } },
+};
 const DMAC = { idle: [1.2, true], move: [.6, true], tele: [.7, false], atk: [.55, false], hit: [.35, false], die: [1.1, false], spawn: [1.1, false] };
 
 // ---------- khai báo quái ----------
@@ -1375,11 +1398,12 @@ MA._xong = function () { MA.list.length = 0; const TT = ['bien', 'rung', 'laudai
 // dir (góc radian của đòn: 0 = phải, PI/2 = xuống), phase (1..3, chỉ trùm vùng), hit (0..1 chớp trắng), bao: false để tắt vùng báo trước, fx: false để tắt hết hiệu ứng rời}
 MA.draw = function (c, id, x, y, o) {
   const d = DEFS[id]; if (!d) return; o = o || {};
-  const ph = d.pha ? clamp(o.phase || 1, 1, d.pha) : 1, nm = d.anims[o.anim] ? o.anim : 'idle', an = d.anims[nm];
+  let ph = d.pha ? clamp(o.phase || 1, 1, d.pha) : 1; const nm = d.anims[o.anim] ? o.anim : 'idle', an = d.anims[nm];
   const t = Math.max(0, o.t || 0), nf = Math.max(1, Math.round(an.d * MA.fps)); let fi = Math.floor(t * MA.fps + 1e-6); fi = an.lap ? fi % nf : Math.min(fi, nf - 1);
   const u = an.lap ? fi / nf : (nf > 1 ? fi / (nf - 1) : 0);
   let face = o.face || 0, dir = o.dir; if (dir == null) dir = (face || -1) < 0 ? PI : 0; if (!face) { const cx = Math.cos(dir); face = cx > .01 ? 1 : -1; }
-  const hv = an.hinh ? an.hinh(u, ph) : 0, B = goc(d, ph, hv), P = new Pose(d, B, nm, u, fi / MA.fps, o, dir, face, ph);
+  const ph0 = ph; if (an.pha) ph = clamp(an.pha(u, ph) || ph, 1, d.pha || 1); // cử động chuyển pha tự đổi hình giữa chừng
+  const hv = an.hinh ? an.hinh(u, ph) : 0, B = goc(d, ph, hv), P = new Pose(d, B, nm, u, fi / MA.fps, o, dir, face, ph); P.pha0 = ph0;
   MA._tatBao = o.bao === false; an.f(P);
   const key = P.khongNho ? null : id + '|' + ph + '|' + (hv || '') + '|' + nm + '|' + fi + '|' + P.aim + (P.khoa || ''), fr = veKhung(B, P, key);
   c.save(); c.translate(Math.round(x), Math.round(y)); c.imageSmoothingEnabled = false; const ga = c.globalAlpha;
@@ -1798,5 +1822,205 @@ def('hoLua', { ten: 'Hổ Lửa', vung: 'laudai', loai: 'trumnho', tt: 1, luoi: 
   } });
 
 })(); } catch (e) { MA.loi.push('trumnho.js: ' + (e && e.stack || e)); if (typeof console !== 'undefined') console.error('monster_art trumnho.js', e); }
+// ----- ngutinh.js -----
+try { (function () {
+// TRÙM VÙNG Hang biển: NGƯ TINH. Ba pha (1 rình mồi, 2 giận dữ, 3 hoá băng). Cá khổng lồ trồi lên khỏi sóng; sóng giữ yên khi thân nhấp nhô.
+const NUOC = ['#3f8fd0', '#9fd8f5', '#ffffff'], BANG = ['#4f86b0', '#a9d8ee', '#ffffff'], GIAN = ['#b0261a', '#ff5a3c', '#ffd0a0'];
+const mauPha = P => P.phase === 3 ? BANG : P.phase === 2 ? ['#1b4c92', '#ff7a5a', '#ffffff'] : NUOC;
+// nhấp nhô: thân lên xuống còn sóng đứng yên
+function nhapNho(P, a) { P.h += a; P.m('song', 0, a); }
+// tung nước: tia nước bắn lên + vòng sóng
+const tungNuoc = (c, x, y, e, s, r, C) => { C = C || NUOC; F.song(c, x, y, r * .45, e, [C[2], C[1]], 1); F.hat(c, x, y - 2, 14, s, e, { v: r * .9, goc: -PI / 2, xoe: 1.6, g: r * 1.2, cols: [C[2], C[1], C[0]], to: 2 }); };
+// tường sóng ngang hướng dir, cách gốc d, rộng W
+function tuongSong(c, ox, oy, dir, d, W, H, C, a) { for (let k = 6; k >= 1; k -= 2) tuongSong1(c, ox, oy, dir, d - k * 2, W * (1 - k * .04), H * (1 - k * .1), [C[0], C[0], C[1]], (a == null ? 1 : a) * (.5 - k * .05)); tuongSong1(c, ox, oy, dir, d, W, H, C, a); }
+function tuongSong1(c, ox, oy, dir, d, W, H, C, a) { const ex = Math.cos(dir), ey = Math.sin(dir) * MA.det, nx = -ey, ny = ex; F.a(c, a == null ? 1 : a);
+  for (let j = -W / 2; j <= W / 2; j += 1) { const f = 1 - Math.pow(Math.abs(j) / (W / 2), 2), h = H * (.4 + .6 * f) * (.85 + .15 * Math.sin(j * .7 + d * .3)), x = ox + ex * d + nx * j, y = oy + ey * d + ny * j;
+    c.fillStyle = C[0]; c.fillRect(Math.round(x), Math.round(y - h), 1, Math.round(h)); c.fillStyle = C[1]; c.fillRect(Math.round(x), Math.round(y - h), 1, Math.round(h * .45)); c.fillStyle = C[2]; c.fillRect(Math.round(x), Math.round(y - h - 1), 1, 2); if (((j + d) | 0) % 3 === 0) F.px(c, x - ex * 2, y - h - 2 - hh(j, d | 0, 1) * 3, C[2]); } F.a(c, 1); }
+// cột băng nhọn cắm trên sàn (cao h)
+function cotBang(c, x, y, h, C) { C = C || BANG; for (let j = 0; j < h; j++) { const w = Math.max(1, Math.round(4 * (1 - j / h))); c.fillStyle = j < 2 ? C[0] : (j % 4 < 2 ? C[1] : C[0]); c.fillRect(Math.round(x - w / 2), Math.round(y - j), w, 1); } F.px(c, x - 1, y - h * .6, C[2], 1, Math.max(1, h * .3)); F.px(c, x, y - h, '#ffffff'); }
+const NT_P = ph => { const L = [{ n: 'duoi', m: [[112, 26, 150, 90]], pv: [113, 58] }, { n: 'vay', m: [[70, 0, 114, 40]], pv: [92, 42], keep: 0 }, { n: 'vayBung', m: [[62, 74, 100, 92]], pv: [70, 76] },
+  { n: 'ham', m: [{ p: [[24, 67], [63, 65], [65, 80], [57, 93], [28, 93], [22, 80]] }], pv: [62, 68] }, { n: 'rau', m: [{ p: [[4, 44], [25, 44], [25, 97], [4, 97]] }], pv: [25, 62] }];
+  if (ph < 3) L.unshift({ n: 'song', m: [[0, 86, 150, 104]], pv: [75, 96], keep: 0, z: 2 }); return L; };
+def('nguTinh', { ten: 'Ngư Tinh', vung: 'bien', loai: 'trum', tt: 1, pha: 3, luoi: p => Q2.nguTinh(p), parts: NT_P, bong: 0,
+  anims: {
+    // Ra mắt: bọt nổi, nước xoáy, cá trồi lên giữa cột nước, há miệng gầm.
+    intro: A(2.8, P => { const u = P.u, C = mauPha(P), q = seg(u, .25, .62), e = EASE.back(q);
+      P.tan = q < 1 ? { k: 'chim', u: clamp(1 - e, 0, 1) } : null; if (e > 1) P.h += (e - 1) * 30; if (u < .62) P.x += ((u * 30) | 0) % 2 ? .8 : -.8;
+      const g = kf(u, [[.62, 0], [.72, 1, 'out'], [.9, 1], [1, 0]]); P.r('ham', -22 * g).b('rau', 20 * g).r('vay', -10 * g); P.sy *= 1 + .06 * g; if (u > .7 && u < .9) P.x += ((u * 40) | 0) % 2 ? 1 : -1;
+      P.under(c => { for (let i = 0; i < 3; i++) { const q2 = (u * 2 + i / 3) % 1; F.a(c, (1 - q2) * (1 - seg(u, .6, .8))); F.vong(c, 0, 0, 30 + q2 * 50, 8 + q2 * 14, C[i % 2], 1); } F.a(c, 1); if (u > .62) F.song(c, 0, 0, 110, seg(u, .66, 1), [C[2], C[1]], 3); });
+      P.over(c => { if (u < .3) for (let i = 0; i < 10; i++) { const q2 = (u * 3 + hh(i, 1, 1)) % 1; F.vong(c, (hh(i, 2, 1) - .5) * 80, -q2 * 20, 1 + q2 * 1.5, 1 + q2 * 1.5, C[2], 1); }
+        if (u > .25 && u < .8) for (let i = 0; i < 5; i++) { const x = (i - 2) * 26, e2 = seg(u, .25 + i * .03, .7 + i * .02); if (e2 > 0 && e2 < 1) { F.a(c, 1 - e2); F.px(c, x - 3, -Math.sin(e2 * PI) * 70, C[1], 6, Math.sin(e2 * PI) * 70); F.px(c, x - 1, -Math.sin(e2 * PI) * 74, C[2], 2, Math.sin(e2 * PI) * 74); F.a(c, 1); tungNuoc(c, x, 0, e2, i, 22, C); } } }); }, { nhan: 'Ra mắt' }),
+    idle: A(2, P => { const u = P.u; nhapNho(P, sn(u) * 2.5); P.rot += 1.5 * sn(u + .1); P.w('song', 3, -u * 2, .25); P.w('duoi', 6, -u, .15).r('vay', 4 * sn(u)).b('rau', 12 * sn(u + .3)).r('ham', -3 - 3 * sn(u * 2)).r('vayBung', 8 * sn(u + .2)); }),
+    move: A(1.2, P => { const u = P.u; nhapNho(P, sn(u * 2) * 2); P.rot += -3; P.w('song', 4, -u * 3, .25); P.w('duoi', 12, -u * 2, .15).b('rau', 25 + 8 * sn(u * 2)).r('vay', -6).r('vayBung', 15 * sn(u * 2)); P.under(c => { F.hat(c, 60 * -P.face, -6, 10, (u * 4) | 0, (u * 4) % 1, { v: 14, goc: -PI / 2 + (P.face > 0 ? -1 : 1) * .6, xoe: 1, g: 8, cols: [NUOC[2], NUOC[1]] }); }); }),
+    // Chiêu 1: ĐỚP. Lùi lại há miệng (vệt đỏ thẳng), lao tới đớp, nước bắn tung toé.
+    c1: A(1.9, P => { const u = P.u, C = mauPha(P), tam = 90, ex = Math.cos(P.dir), ey = Math.sin(P.dir) * MA.det;
+      if (u < .4) { const v = u / .4; P.x -= ex * 6 * v; P.y -= ey * 6 * v; P.r('ham', -26 * EASE.out(v)).b('rau', 25 * v).w('duoi', 10, -u * 4, .15); P.x += v > .5 ? (((u * 40) | 0) % 2 ? .7 : -.7) : 0; P.flash = v > .75 && ((u * 30) | 0) % 2 ? .3 : 0; P.under(c => F.baoDuong(c, 0, 0, tam, 40, P.dir, v)); }
+      else if (u < .62) { const v = seg(u, .4, .62), f = kf(v, [[0, 0], [.4, 1, 'out'], [1, .9]]); P.x += ex * 50 * f - ex * 6 * (1 - f); P.y += ey * 50 * f; P.r('ham', v < .45 ? -26 : 4).b('rau', -20); P.sx *= 1.06; P.bongMa = [1, 2].map(i => ({ x: -ex * i * 10, y: -ey * i * 10, a: .25, mau: C[1] }));
+        if (v > .4) P.over(c => { const x = ex * tam * .75, y = ey * tam * .75; F.hat(c, x, y - 30, 16, 2, seg(v, .4, 1), { v: 26, cols: ['#ffffff', C[1], C[0]], to: 2 }); F.liem(c, x - ex * 10, y - 30, 22, P.dir + PI / 2, 2.4, seg(v, .4, 1), [C[0], C[1], '#ffffff'], 5); }); }
+      else { const v = seg(u, .62, 1), f = 1 - EASE.io(v); P.x += ex * 50 * f * .9; P.y += ey * 50 * f * .9; P.r('ham', -6 * (1 - v)); P.under(c => { tungNuoc(c, ex * tam * .7, ey * tam * .7, v, 3, 34, C); F.song(c, ex * tam * .7, ey * tam * .7, 50, seg(v, .2, 1), [C[1], C[0]], 1); }); } }, { nhan: 'Chiêu 1: đớp', moc: [.4, .62] }),
+    // Chiêu 2: SÓNG THẦN. Quẫy đuôi gọi sóng; một bức tường nước chạy theo hướng bé, để lại bọt.
+    c2: A(2.3, P => { const u = P.u, C = mauPha(P), L = 130, W = 80, dir = P.dir;
+      if (u < .38) { const v = u / .38; P.b('duoi', 35 * v).r('vay', -10 * v); nhapNho(P, 5 * v); P.w('song', 6 * v, -u * 6, .25); P.under(c => F.baoDuong(c, 0, 0, L, W, dir, v)); }
+      else { const v = seg(u, .38, .8), w = seg(u, .8, 1), k = kf(seg(u, .38, .5), [[0, 1], [1, -.6, 'in']]); P.b('duoi', 35 * k).r('vay', -10 * k); nhapNho(P, 5 * Math.max(0, k)); P.w('song', 8, -u * 6, .25);
+        P.under(c => { if (u < .82) tuongSong(c, 0, 0, dir, 10 + (L - 10) * v, W * (.7 + .3 * v), 20 + 10 * Math.sin(v * PI), [C[0], C[1], '#ffffff'], 1 - w);
+          for (let i = 0; i < 12; i++) { const d0 = 14 + i * 9; if (d0 > 10 + (L - 10) * v) continue; const j = (hh(i, 7, 2) - .5) * W * .8; F.a(c, .7 * (1 - w)); F.px(c, Math.cos(dir) * d0 - Math.sin(dir) * j, Math.sin(dir) * d0 + Math.cos(dir) * j, '#ffffff', 2, 1); } F.a(c, 1); if (w > 0) F.song(c, Math.cos(dir) * L, Math.sin(dir) * L, 40, w, [C[2], C[1]], 2); }); } }, { nhan: 'Chiêu 2: sóng thần', moc: [.38, .8] }),
+    // Chiêu 3: PHUN BĂNG. Há miệng hít vào (gió tụ), phun luồng băng hình quạt, sàn đóng gai băng rồi vỡ.
+    c3: A(2.2, P => { const u = P.u, C = BANG, tam = 100, span = 1;
+      const mo = () => P.pt(38, 76);
+      if (u < .4) { const v = u / .4; P.r('ham', -24 * v).b('rau', 15 * v); P.sx *= 1 + .05 * v; P.under(c => { const m = mo(); F.baoQuat(c, m[0], P.y, tam, P.dir, span, v); }); P.over(c => { const m = mo(); for (let i = 0; i < 14; i++) { const a = P.dir + (hh(i, 1, 4) - .5) * 1.6, q = (v * 2 + hh(i, 2, 4)) % 1, r = 50 * (1 - q); F.px(c, m[0] + Math.cos(a) * r, m[1] + Math.sin(a) * r, C[q > .5 ? 2 : 1]); } F.dia(c, m[0], m[1], 1 + v * 3, C[1]); }); }
+      else if (u < .75) { const v = seg(u, .4, .75); P.r('ham', -24).b('rau', -10); P.x += ((u * 40) | 0) % 2 ? .5 : -.5; P.under(c => { const m = mo(); F.baoQuat(c, m[0], P.y, tam, P.dir, span, .7); for (let i = 0; i < 9; i++) { const a = P.dir + (hh(i, 3, 3) - .5) * span * .9, d = 20 + hh(i, 4, 3) * (tam - 25); if (d > tam * v * 1.3) continue; cotBang(c, m[0] + Math.cos(a) * d, P.y + Math.sin(a) * d * MA.det, 4 + hh(i, 5, 3) * 7); } });
+        P.over(c => { const m = mo(), n = 50; for (let i = 0; i < n; i++) { const a = P.dir + (hh(i, 1, 6) - .5) * span, ph = (v * 2.6 + hh(i, 2, 6)) % 1; if (v < .1 && ph > v * 10) continue; const r = 4 + (tam - 4) * ph, x = m[0] + Math.cos(a) * r, y = m[1] + Math.sin(a) * r * MA.det + ph * (P.y - m[1]) * .8; F.dia(c, x, y, .6 + ph * 3, ph < .3 ? '#ffffff' : ph < .65 ? C[1] : C[0]); if (i % 5 === 0) F.sao(c, x, y - 2, 1, '#ffffff'); } }); }
+      else { const v = seg(u, .75, 1); P.r('ham', -24 * (1 - v)); P.under(c => { const m = mo(); for (let i = 0; i < 9; i++) { const a = P.dir + (hh(i, 3, 3) - .5) * span * .9, d = 20 + hh(i, 4, 3) * (tam - 25), x = m[0] + Math.cos(a) * d, y = P.y + Math.sin(a) * d * MA.det; if (v < .4) cotBang(c, x, y, 4 + hh(i, 5, 3) * 7); else F.hat(c, x, y - 3, 6, i, seg(v, .4, 1), { v: 8, g: 6, cols: ['#ffffff', C[1], C[0]] }); } }); } }, { nhan: 'Chiêu 3: phun băng', moc: [.4, .75] }),
+    // Chiêu 4: MƯA BĂNG NHỌN. Ngửa đầu gầm, sáu vùng tròn quanh bé, băng nhọn rơi thẳng từ trên xuống, vỡ vụn.
+    c4: A(2.2, P => { const u = P.u, C = BANG, T = []; for (let i = 0; i < 7; i++) { const a = P.dir + (i - 3) * .42, r = 45 + 50 * hh(i, 2, 8); T.push([Math.cos(a) * r, Math.sin(a) * r * MA.det, .32 + i * .06]); }
+      const g = kf(u, [[0, 0], [.25, 1, 'out'], [.8, 1], [1, 0]]); P.rot += 8 * g; P.r('ham', -20 * g).b('rau', 20 * g); P.sy *= 1 + .04 * g; if (u < .3) P.x += ((u * 40) | 0) % 2 ? .6 : -.6;
+      P.under(c => { for (const [x, y, t0] of T) { if (u < t0 + .12) F.baoTron(c, x, y, 11, clamp(u / (t0 + .12), 0, 1)); const e = seg(u, t0 + .12, t0 + .45); if (e > 0 && e < 1) { if (e < .5) cotBang(c, x, y, 12 * (1 - e)); F.hat(c, x, y - 2, 12, t0 * 100 | 0, e, { v: 14, g: 8, cols: ['#ffffff', C[1], C[0]], to: 2 }); F.song(c, x, y, 16, e, ['#ffffff', C[1]], 1); } } });
+      P.over(c => { for (const [x, y, t0] of T) { const q = seg(u, t0 - .1, t0 + .12); if (q > 0 && q < 1) { const yy = y - 90 * (1 - q * q); F.a(c, .35); F.elip(c, x, y, 4 * q + 1, 2 * q + 1, '#000000'); F.a(c, 1); F.duong(c, x, yy - 10, x, yy, C[1], 3); F.duong(c, x, yy - 9, x, yy - 1, '#ffffff', 1); F.px(c, x, yy + 1, '#ffffff'); } } }); }, { nhan: 'Chiêu 4: mưa băng nhọn', moc: [.38, .8] }),
+    // Chiêu 5: XOÁY NƯỚC. Xoay mình, nước cuộn thành xoáy lớn quanh thân hút vào; cuối cùng bung ra thành vòng sóng.
+    c5: A(2.6, P => { const u = P.u, C = mauPha(P), R = 95;
+      if (u < .3) { const v = u / .3; P.under(c => { F.baoTron(c, 0, 0, R, v); F.a(c, .5); F.vong(c, 0, 0, 34, 34 * MA.det, '#ffd0a0', 1); F.a(c, 1); }); P.b('duoi', 25 * v); P.rot += -5 * v; }
+      else if (u < .82) { const v = seg(u, .3, .82), sp = EASE.io(v) * 3, cc = Math.cos(sp * TAU); P.sx *= Math.sign(cc || 1) * Math.max(.25, Math.abs(cc)); nhapNho(P, 4 * Math.sin(v * PI)); P.w('duoi', 10, -u * 6, .15);
+        P.under(c => { for (let arm = 0; arm < 4; arm++) for (let k = 0; k < 40; k++) { const r = 12 + k / 40 * (R - 12), a = arm / 4 * TAU - sp * TAU * .6 - r * .045; F.a(c, Math.min(1, v * 4) * (1 - k / 60)); F.px(c, Math.cos(a) * r, Math.sin(a) * r * MA.det, k % 7 === 0 ? '#ffffff' : C[(k >> 3) % 2], 2, 2); } F.a(c, 1); F.vong(c, 0, 0, R, R * MA.det, C[0], 1); }); }
+      else { const v = seg(u, .82, 1); P.under(c => { F.song(c, 0, 0, R * 1.2, v, ['#ffffff', C[1]], 3); F.song(c, 0, 0, R * .8, seg(v, .1, 1), [C[1], C[0]], 2); }); P.over(c => F.hat(c, 0, -20, 30, 4, v, { v: R, goc: -PI / 2, xoe: TAU, g: 30, cols: ['#ffffff', C[1], C[0]], to: 2 })); } }, { nhan: 'Chiêu 5: xoáy nước', moc: [.3, .82] }),
+    phase2: A(2.2, P => { TRUM.doiPha(P, GIAN); nhapNho(P, 0); P.r('ham', -20 * Math.sin(seg(P.u, .5, 1) * PI)).b('rau', 30 * seg(P.u, .5, .7)); }, { nhan: 'Chuyển pha 2: giận dữ', pha: u => u < .5 ? 1 : 2 }),
+    phase3: A(2.4, P => { TRUM.doiPha(P, BANG); P.r('ham', -22 * Math.sin(seg(P.u, .5, 1) * PI)); if (P.u > .5) P.under(c => { const e = seg(P.u, .5, 1); for (let i = 0; i < 14; i++) { const a = i / 14 * TAU, r = 40 + 60 * e * hh(i, 1, 9); cotBang(c, Math.cos(a) * r, Math.sin(a) * r * MA.det * .6, 6 * Math.min(1, e * 3) * (.6 + hh(i, 2, 9))); } }); }, { nhan: 'Chuyển pha 3: hoá băng', pha: u => u < .5 ? 2 : 3 }),
+    stun: A(1.4, P => { TRUM.choang(P, 60, 26); P.r('ham', -10).b('rau', -15 + 8 * sn(P.u)); P.m('song', 0, 0); }, { lap: true }),
+    hit: A(.4, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.r('ham', -12 * k).b('rau', 25 * k).b('duoi', 20 * k); }),
+    die: A(3.2, P => { const u = P.u; TRUM.chetLon(P, P.phase === 3 ? 'vo' : 'chim', mauPha(P), P.phase === 3 ? BANG : NUOC); P.r('ham', -28 * seg(u, 0, .2)).b('rau', 30 * seg(u, 0, .4)).b('duoi', -25 * sn(u * 3)); if (u > .55) P.under(c => { for (let i = 0; i < 6; i++) tungNuoc(c, (i - 2.5) * 22, 0, seg(u, .55 + i * .04, .95), i, 26, NUOC); }); }, { nhan: 'Chết' }),
+  } });
+
+})(); } catch (e) { MA.loi.push('ngutinh.js: ' + (e && e.stack || e)); if (typeof console !== 'undefined') console.error('monster_art ngutinh.js', e); }
+// ----- moctinh.js -----
+try { (function () {
+// TRÙM VÙNG Rừng già: MỘC TINH. Ba pha (1 đứng lặng, 2 nổi giận: cành giơ cao, 3 hoá độc: tán tím). Cây cổ thụ có mặt người; cành và rễ là vuốt.
+const LAX = [LUCR[1], LUCR[2], LUCR[3]], GO = [NAUG[1], NAUG[2], NAUG[3]], GIAN = ['#5a0e0c', '#ff5a3c', '#ffd0a0'], TIM = [TIMD[1], TIMD[2], TIMD[3]], DOC = [DOCX[0], DOCX[1], DOCX[3]];
+const mauLa = P => P.phase === 3 ? TIM : LAX;
+const khiDoc = (c, x, y, r, e, s) => { F.a(c, (1 - e) * .5); F.khoi(c, x, y, r, e * .7, [DOCX[2], DOCX[1], TIMD[3]], s, 7); F.a(c, 1); };
+// lá rơi lả tả
+const laRoi = (c, x, y, n, s, e, C, R) => { for (let i = 0; i < n; i++) { const r1 = hh(i, s, 1), r2 = hh(i, s, 2); if (e > .6 + r2 * .4) continue; const px = x + (r1 - .5) * (R || 90) + Math.sin(e * 9 + i) * 5, py = y + e * 60 * (.5 + r2) - 30 * r2; c.fillStyle = C[i % 3]; c.fillRect(Math.round(px), Math.round(py), 2, 1); c.fillRect(Math.round(px) + ((e * 9 + i) | 0) % 2, Math.round(py) + 1, 1, 1); } };
+// gai rễ nhọn trồi lên từ đất
+function gaiRe(c, x, y, h, nghieng) { if (h < 1) return; const C = [NAUG[0], NAUG[1], NAUG[2], NAUG[3]]; for (let j = 0; j < h; j++) { const f = j / h, w = Math.max(1, Math.round(5 * (1 - f))), ox = (nghieng || 0) * f * h * .3; c.fillStyle = C[0]; c.fillRect(Math.round(x + ox - w / 2 - 1), Math.round(y - j), w + 2, 1); c.fillStyle = f < .7 ? C[1] : C[2]; c.fillRect(Math.round(x + ox - w / 2), Math.round(y - j), w, 1); if (w > 2) { c.fillStyle = C[2]; c.fillRect(Math.round(x + ox - w / 2), Math.round(y - j), 1, 1); } } F.px(c, x + (nghieng || 0) * h * .3, y - h, C[3]); F.px(c, x - 3, y, C[0], 7, 1); }
+// lá bùa giấy vàng chữ đỏ, nghiêng góc a
+function bua(c, x, y, a, s) { s = s || 1; const ca = Math.cos(a), sa = Math.sin(a); for (let j = -4; j <= 4; j++) for (let i = -2; i <= 2; i++) { const col = (Math.abs(i) === 2 || Math.abs(j) === 4) ? '#8a5a10' : ((i === 0 && j % 2 === 0) || (j === 1 && Math.abs(i) === 1)) ? '#c0261a' : '#ffd23c'; c.fillStyle = col; c.fillRect(Math.round(x + (i * ca - j * sa) * s), Math.round(y + (i * sa + j * ca) * s), 1, 1); } }
+function hangNo(P, n, buoc, rong, ve) { const u = P.u, ex = Math.cos(P.dir), ey = Math.sin(P.dir) * MA.det;
+  P.under(c => { for (let i = 0; i < n; i++) { const t0 = .25 + i * .09, x = ex * buoc * (i + 1), y = ey * buoc * (i + 1); if (u < t0) F.baoTron(c, x, y, rong, clamp(u / t0, 0, 1)); } });
+  P.over(c => { for (let i = 0; i < n; i++) { const t0 = .25 + i * .09, e = seg(u, t0, t0 + .35); if (e > 0 && e < 1) ve(c, ex * buoc * (i + 1), ey * buoc * (i + 1), e, i); } }); }
+const MT_P = ph => { const L = [{ n: 'tan', m: [[8, 0, 156, 54]], pv: [82, 58], keep: 0 }];
+  if (ph === 1) L.push({ n: 'canhT', m: [{ p: [[10, 54], [58, 56], [58, 76], [34, 100], [8, 100]] }], pv: [56, 66] }, { n: 'canhP', m: [{ p: [[154, 54], [106, 56], [106, 76], [130, 100], [156, 100]] }], pv: [108, 66] },
+    { n: 'reT', m: [[10, 110, 52, 134]], pv: [52, 120], z: -1 }, { n: 'reP', m: [[112, 110, 156, 134]], pv: [112, 120], z: -1 });
+  else L.push({ n: 'canhT', m: [{ p: [[6, 10], [32, 10], [36, 48], [60, 60], [60, 80], [40, 80], [6, 46]] }], pv: [58, 70] }, { n: 'canhP', m: [{ p: [[158, 10], [132, 10], [128, 48], [104, 60], [104, 80], [124, 80], [158, 46]] }], pv: [106, 70] },
+    { n: 'reT', m: [[8, 92, 52, 134]], pv: [52, 118], z: -1 }, { n: 'reP', m: [[112, 92, 158, 134]], pv: [112, 118], z: -1 });
+  L.push({ n: 'ham', m: [[58, 104, 108, 120]], pv: [82, 104] }); return L; };
+def('mocTinh', { ten: 'Mộc Tinh', vung: 'rung', loai: 'trum', tt: 1, pha: 3, luoi: p => QT.mocTinh(p), parts: MT_P,
+  anims: {
+    // Ra mắt: đất rung nứt, rễ ngoi lên, cây trồi lên khỏi đất, mắt bừng sáng, tán rung, lá bay.
+    intro: A(3, P => { const u = P.u, C = mauLa(P), q = seg(u, .25, .7), e = EASE.out(q);
+      P.tan = q < 1 ? { k: 'chim', u: clamp(1 - e, 0, 1) } : null; if (u < .75) P.x += (((u * 36) | 0) % 2 ? 1 : -1) * (u < .25 ? u * 4 : 1);
+      const g = kf(u, [[.7, 0], [.78, 1, 'out'], [.92, 1], [1, 0]]); P.r('canhT', -18 * g).r('canhP', 18 * g).r('ham', 0).m('ham', 0, 4 * g); P.s('tan', 1 + .05 * g); P.flash = u > .7 && u < .76 ? .6 : 0; P.bong = seg(u, .25, .7);
+      P.under(c => { const cr = Math.min(1, u * 3); for (let i = 0; i < 8; i++) { const a = i / 8 * TAU + .2; F.set(c, 0, 0, Math.cos(a) * 80 * cr, Math.sin(a) * 30 * cr, i + 1, NAUG[0], 1, 6); } if (u > .1 && u < .4) for (let i = 0; i < 5; i++) gaiRe(c, (i - 2) * 30, 0, 14 * Math.sin(seg(u, .1 + i * .03, .4) * PI), i - 2); });
+      P.over(c => { if (u > .25 && u < .75) F.hat(c, 0, 0, 30, 2, seg(u, .25, .75), { v: 70, goc: -PI / 2, xoe: 2.4, g: 60, cols: [NAUG[2], NAUG[1], NAUG[3]], to: 2 }); if (u > .7) laRoi(c, 0, -110, 40, 3, seg(u, .7, 1), C, 150); }); }, { nhan: 'Ra mắt' }),
+    idle: A(2.4, P => { const u = P.u; P.tho(.012); P.s('tan', 1 + .025 * sn(u), 1 + .02 * sn(u + .25)); P.m('tan', 1.5 * sn(u), 0); P.r('canhT', -4 * sn(u)).r('canhP', 4 * sn(u + .1)); P.r('reT', 2 * sn(u)).r('reP', -2 * sn(u)); P.r('ham', 0).m('ham', 0, 1 + sn(u * 2)); if (P.phase === 3) P.under(c => khiDoc(c, 0, -6, 45, (u * 2) % 1, (u * 2) | 0)); }),
+    // Di chuyển: rễ bò như chân, cả cây lắc lư.
+    move: A(1.4, P => { const u = P.u; P.rot += 2.5 * sn(u); P.h += Math.abs(sn(u)) * 2; P.m('tan', 3 * sn(u), 0); P.r('reT', 18 * sn(u)).r('reP', 18 * sn(u + .5)).m('reT', 0, -3 * Math.max(0, sn(u))).m('reP', 0, -3 * Math.max(0, sn(u + .5))); P.r('canhT', -8 * sn(u)).r('canhP', -8 * sn(u)); P.under(c => F.khoi(c, -50 * sn(u), 0, 8, (u * 2) % 1, [NAUG[2], NAUG[1]], (u * 2) | 0, 4)); }),
+    // Chiêu 1: QUẬT CÀNH. Kéo cành ra sau (vùng quạt lớn), quật mạnh thành vệt lá chém, lá rơi lả tả.
+    c1: A(2, P => { const u = P.u, C = mauLa(P), tam = 110, span = 2.2, ben = Math.cos(P.dir) < 0 ? 'canhT' : 'canhP', s = ben === 'canhT' ? 1 : -1;
+      if (u < .42) { const v = EASE.out(u / .42); P.r(ben, -30 * s * v).m(ben, 0, -5 * v); P.rot += 4 * s * v; P.x += v > .6 ? (((u * 40) | 0) % 2 ? .7 : -.7) : 0; P.under(c => F.baoQuat(c, 0, 0, tam, P.dir, span, u / .42)); }
+      else if (u < .65) { const v = seg(u, .42, .65); P.r(ben, lerp(-30, 55, EASE.in(Math.min(1, v * 1.6))) * s).m(ben, 0, -5 * (1 - v)); P.rot += lerp(4, -5, v) * s; P.over(c => { F.liem(c, 0, -50, tam - 6, P.dir, span, v, [C[0], C[1], C[2]], 9); F.liem(c, 0, -46, tam - 20, P.dir, span * .9, Math.max(0, v - .1), [GO[0], GO[1], GO[2]], 4); }); }
+      else { const v = seg(u, .65, 1); P.r(ben, 55 * s * (1 - EASE.io(v))); P.rot += -5 * s * (1 - v); P.over(c => laRoi(c, Math.cos(P.dir) * tam * .55, Math.sin(P.dir) * tam * .55 - 30, 26, 5, v, C, 90)); } }, { nhan: 'Chiêu 1: quật cành', moc: [.42, .65] }),
+    // Chiêu 2: RỄ ĐÂM. Cắm rễ xuống đất, một hàng gai rễ trồi lên nối nhau theo hướng bé, rồi rút xuống để lại bụi đất.
+    c2: A(2.2, P => { const u = P.u, k = kf(u, [[0, 0], [.2, 1, 'back'], [.85, 1], [1, 0]]); P.r('reT', -14 * k).r('reP', 14 * k).m('reT', 0, 4 * k).m('reP', 0, 4 * k); P.sy *= 1 - .03 * k; P.r('canhT', 10 * k).r('canhP', -10 * k); if (u < .3) P.x += ((u * 40) | 0) % 2 ? .7 : -.7;
+      hangNo(P, 6, 20, 11, (c, x, y, e, i) => { const h = 26 * Math.min(1, e * 5) * (1 - seg(e, .65, 1)); for (let j = -1; j <= 1; j++) gaiRe(c, x + j * 6, y + Math.abs(j) * 2, h * (j ? .65 : 1), j * 1.5); F.khoi(c, x, y, 10, e, [NAUG[2], NAUG[1]], i, 5); if (e < .3) F.hat(c, x, y - 2, 10, i, e / .3, { v: 12, goc: -PI / 2, xoe: 1.6, g: 10, cols: [NAUG[3], NAUG[2]] }); }); }, { nhan: 'Chiêu 2: rễ đâm', moc: [.25, .85] }),
+    // Chiêu 3: MƯA QUẢ ĐỘC. Lắc tán, quả độc tím rơi vòng cung xuống sáu chỗ, vỡ thành vũng khí độc.
+    c3: A(2.3, P => { const u = P.u; P.m('tan', 4 * sn(u * 6) * (u < .7 ? 1 : 0), 0).s('tan', 1 + .04 * Math.abs(sn(u * 6))); P.mom = null;
+      CHIEU.muaNem(P, 6, 100, 13, [TIMD[1], DOCX[2], '#f4ffb0'], (c, x, y, q) => { F.cau(c, x, y, 3.2, [TIMD[1], TIMD[2], TIMD[3]]); F.px(c, x, y - 4, LUCR[2], 2, 1); F.px(c, x + 1, y - 5, LUCR[3]); }, (c, x, y, e, i) => { F.a(c, (1 - e) * .7); F.elip(c, x, y, 12 * Math.min(1, e * 3), 5 * Math.min(1, e * 3), DOCX[1]); F.a(c, 1); khiDoc(c, x, y - 3, 14, e, i); }); }, { nhan: 'Chiêu 3: mưa quả độc', moc: [.4, .85] }),
+    // Chiêu 4: BÙA BAY. Bùa cũ trên cành bung ra, năm lá bùa bay uốn lượn theo hình quạt, cháy nổ tia tím vàng.
+    c4: A(2.2, P => { const u = P.u, n = 5, L = 120, k = kf(u, [[0, 0], [.35, 1, 'out'], [.9, 1], [1, 0]]); P.r('canhT', -12 * k).r('canhP', 12 * k); P.s('tan', 1 + .03 * k);
+      P.under(c => { for (let i = 0; i < n; i++) { const a = P.dir + (i - 2) * .32; if (u < .4) F.baoDuong(c, 0, 0, L, 9, a, u / .4); } });
+      P.over(c => { const m = P.pt(82, 70); for (let i = 0; i < n; i++) { const a = P.dir + (i - 2) * .32, q = seg(u, .35 + i * .03, .8 + i * .03), e = seg(u, .8 + i * .03, 1); if (u < .4) { const v = u / .4; bua(c, m[0] + (i - 2) * 14 * v, m[1] - 20 * v, Math.sin(u * 20 + i) * .3); }
+        else if (q < 1) { const r = 12 + (L - 12) * q, w = Math.sin(q * 10 + i) * 8 * (1 - q), x = m[0] + Math.cos(a) * r - Math.sin(a) * w, y = m[1] + Math.sin(a) * r + Math.cos(a) * w + q * (P.y - m[1]); for (let t = 1; t < 4; t++) { F.a(c, .4 - t * .1); F.px(c, x - Math.cos(a) * t * 4, y - Math.sin(a) * t * 4, TIMD[3], 2, 2); } F.a(c, 1); bua(c, x, y, a + PI / 2 + Math.sin(q * 14) * .4); }
+        else if (e < 1) { const x = m[0] + Math.cos(a) * L, y = m[1] + Math.sin(a) * L + (P.y - m[1]); if (e < .25) F.dia(c, x, y, 3 + e * 20, '#fff6b0'); F.hat(c, x, y, 14, i, e, { v: 14, cols: ['#fff6b0', '#ffd23c', TIMD[3], TIMD[2]], to: 2 }); F.a(c, 1 - e); laRoi(c, x, y - 10, 6, i, e, ['#3a2a1a', '#8a5a10', '#48424e'], 14); F.a(c, 1); } } }); }, { nhan: 'Chiêu 4: bùa bay', moc: [.4, .8] }),
+    // Chiêu 5: RỪNG GAI. Ba vòng gai rễ trồi lên lan ra từ gốc, chừa bốn khe trống để né (không cần nhảy).
+    c5: A(2.6, P => { const u = P.u, khe = [0, 1, 2, 3].map(i => P.dir + PI / 4 + i * PI / 2), rr = [40, 70, 100]; const trong = a => khe.some(k => Math.abs(Math.atan2(Math.sin(a - k), Math.cos(a - k))) < .3);
+      const k = kf(u, [[0, 0], [.3, 1, 'back'], [.85, 1], [1, 0]]); P.r('reT', -18 * k).r('reP', 18 * k).r('canhT', -15 * k).r('canhP', 15 * k); P.sy *= 1 + .03 * k; if (u < .35) P.x += ((u * 40) | 0) % 2 ? .7 : -.7;
+      P.under(c => { if (u < .35) for (let i = 0; i < 4; i++) F.baoQuat(c, 0, 0, 108, khe[i] + PI / 4, PI / 2 - .6, u / .35); for (let j = 0; j < 3; j++) { const e = seg(u, .35 + j * .12, .75 + j * .08), n = Math.round(rr[j] / 4.5); if (e <= 0 || e >= 1) continue;
+        for (let i = 0; i < n; i++) { const a = i / n * TAU; if (trong(a)) continue; gaiRe(c, Math.cos(a) * rr[j], Math.sin(a) * rr[j] * MA.det, 20 * Math.min(1, e * 4) * (1 - seg(e, .7, 1)) * (.7 + .3 * hh(i, j, 3)), Math.cos(a)); } F.song(c, 0, 0, rr[j] + 8, e, [NAUG[3], NAUG[2]], 1); } }); }, { nhan: 'Chiêu 5: rừng gai', moc: [.35, .9] }),
+    phase2: A(2.4, P => { const u = P.u; TRUM.doiPha(P, GIAN); if (u > .5) P.over(c => laRoi(c, 0, -110, 40, 7, seg(u, .5, 1), LAX, 150)); }, { nhan: 'Chuyển pha 2: nổi giận', pha: u => u < .5 ? 1 : 2 }),
+    phase3: A(2.6, P => { const u = P.u; TRUM.doiPha(P, TIM); if (u > .5) P.under(c => khiDoc(c, 0, -10, 60, seg(u, .5, 1), 9)); }, { nhan: 'Chuyển pha 3: hoá độc', pha: u => u < .5 ? 2 : 3 }),
+    stun: A(1.6, P => { TRUM.choang(P, 82, 62); P.r('canhT', 20 + 5 * sn(P.u)).r('canhP', -20 - 5 * sn(P.u)).m('ham', 0, 3); }, { lap: true }),
+    hit: A(.4, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.r('canhT', 12 * k).r('canhP', -12 * k).m('tan', 3 * k, 0); P.over(c => laRoi(c, 0, -100, 10, 1, P.u, mauLa(P), 120)); }),
+    die: A(3.4, P => { const u = P.u, C = mauLa(P); TRUM.chetLon(P, 'heo', [NAUG[1], C[1], '#fff6b0'], [NAUG[0], NAUG[1], '#5a4a3a', '#8a7a5a']); P.r('canhT', 35 * seg(u, 0, .5)).r('canhP', -35 * seg(u, 0, .5)).m('ham', 0, 5 * seg(u, 0, .3)); P.over(c => laRoi(c, 0, -110, 50, 9, u, C, 160)); }, { nhan: 'Chết' }),
+  } });
+
+})(); } catch (e) { MA.loi.push('moctinh.js: ' + (e && e.stack || e)); if (typeof console !== 'undefined') console.error('monster_art moctinh.js', e); }
+// ----- hotinh.js -----
+try { (function () {
+// TRÙM VÙNG Lâu đài cổ: HỒ TINH, dáng "RÌNH MỒI" (phương án 2 trong quai-ban-chot/ho-tinh-ve-lai.png): thân hạ thấp, đầu chúi, chín đuôi toả rộng, đầu đuôi có lửa ma xanh.
+// Pha 1 kiêu kỳ; pha 2 phân thân (mắt tím, bóng cáo mờ lượn hai bên); pha 3 hoá cuồng (to gấp rưỡi, lửa trùm thân).
+const MA_X = ['#1a3a9a', '#3a7aff', '#bfe8ff'], TIMX = ['#3a1060', '#9a48d4', '#e4a8ff'], LUA = [LUAV[0], LUAV[2], LUAV[3]];
+const mauHT = P => P.phase === 2 ? TIMX : MA_X;
+const TB = [124, 84], GOC = [-141, -123, -107, -88, -66, -46, -23, 4, 27], DAI = [70, 70, 72, 74, 76, 76, 70, 62, 58];
+const kHT = ph => ph === 3 ? 1.5 : 1;
+// đầu đuôi thứ i (toạ độ trên hình gốc, đã tính cỡ pha)
+const dinhDuoi = (i, ph) => { const k = kHT(ph), a = GOC[i] * PI / 180; return [(TB[0] + Math.cos(a) * DAI[i]) * k, (TB[1] + Math.sin(a) * DAI[i]) * k]; };
+const HT_PARTS = ph => { const k = kHT(ph), S = q => q.map(p => [p[0] * k, p[1] * k]), L = [
+  { n: 'chanT', m: [{ p: S([[36, 102], [84, 100], [84, 120], [36, 120]]) }], pv: [76 * k, 101 * k], z: -1 }, { n: 'chanS', m: [{ p: S([[94, 98], [146, 98], [146, 120], [94, 120]]) }], pv: [108 * k, 98 * k], z: -1 },
+  { n: 'dau', m: [{ p: S([[20, 66], [80, 70], [88, 96], [76, 106], [40, 106], [20, 104]]) }], pv: [82 * k, 92 * k] }];
+  for (let i = 0; i < 9; i++) { const a0 = (i ? (GOC[i - 1] + GOC[i]) / 2 : GOC[0] - 16) * PI / 180, a1 = (i < 8 ? (GOC[i] + GOC[i + 1]) / 2 : 36) * PI / 180, pts = [];
+    for (let j = 0; j <= 6; j++) { const a = a0 + (a1 - a0) * j / 6; pts.push([TB[0] + Math.cos(a) * 18, TB[1] + Math.sin(a) * 18]); }
+    for (let j = 6; j >= 0; j--) { const a = a0 + (a1 - a0) * j / 6; pts.push([TB[0] + Math.cos(a) * 125, TB[1] + Math.sin(a) * 125]); }
+    const g = GOC[i] * PI / 180; L.push({ n: 'd' + i, m: [{ p: S(pts) }], pv: [(TB[0] + Math.cos(g) * 16) * k, (TB[1] + Math.sin(g) * 16) * k], keep: 0, z: 1 + i * .01 }); }
+  return L; };
+// đuôi phe phẩy: biên độ a, nhịp sp
+function vayDuoi(P, a, sp, b) { for (let i = 0; i < 9; i++) P.w('d' + i, a, -P.u * sp + i * .11, .06).r('d' + i, (b || 0) * sn(P.u * sp * .5 + i * .1)); }
+// cầu lửa ma
+const cauMa = (c, x, y, r, C) => { F.dia(c, x, y, r + 1, C[0]); F.dia(c, x, y - .5, r, C[1]); F.dia(c, x - r * .2, y - r * .3, r * .55, C[2]); F.px(c, x - r * .3, y - r * .5, '#ffffff'); };
+const cotLuaMa = (c, x, y, e, C, t, s) => { const h = 34 * Math.sin(Math.min(1, e * 1.4) * PI * .5) * (1 - seg(e, .7, 1)); if (h < 1) return; F.lua(c, x, y, 9, h, t, [C[0], C[1], C[2], '#ffffff'], s); F.a(c, .5); F.elip(c, x, y, 9, 3, C[1]); F.a(c, 1); };
+def('hoTinh', { ten: 'Hồ Tinh', vung: 'laudai', loai: 'trum', tt: 1, pha: 3, luoi: p => HT_than(2, p), parts: HT_PARTS,
+  anims: {
+    // Ra mắt: đốm lửa ma bay tụ lại thành hình cáo, chín đuôi xoè ra như quạt, ngóc đầu gào, lửa đầu đuôi bùng lên.
+    intro: A(3, P => { const u = P.u, C = mauHT(P), q = seg(u, .1, .55), xoe = EASE.back(seg(u, .5, .75));
+      if (q < 1) P.tan = { k: 'tu', u: q, mau: [C[0], C[1], C[2]] }; for (let i = 0; i < 9; i++) P.r('d' + i, (GOC[4] - GOC[i]) * (1 - xoe)).s('d' + i, .5 + .5 * Math.min(1, xoe));
+      const g = kf(u, [[.72, 0], [.8, 1, 'out'], [.92, 1], [1, 0]]); P.r('dau', 14 * g); P.sy *= 1 + .04 * g; P.bong = q; if (u > .75 && u < .92) P.x += ((u * 40) | 0) % 2 ? .8 : -.8;
+      P.under(c => { if (u > .72) { F.song(c, 0, 0, 120, seg(u, .74, 1), [C[2], C[1]], 3); F.song(c, 0, 0, 85, seg(u, .8, 1), [C[1], C[0]], 2); } });
+      P.over(c => { if (u < .55) for (let i = 0; i < 16; i++) { const a = hh(i, 2, 1) * TAU, r = 140 * (1 - seg(u, hh(i, 3, 1) * .2, .55)), x = Math.cos(a + u * 3) * r, y = -50 + Math.sin(a + u * 3) * r * .6; if (r > 2) F.lua(c, x, y + 4, 4, 8, P.t + i, [C[0], C[1], C[2], '#ffffff'], i); }
+        if (u > .74) for (let i = 0; i < 9; i++) { const d = dinhDuoi(i, P.phase), m = P.pt(d[0], d[1]), e = seg(u, .74, 1); F.hat(c, m[0], m[1], 6, i, e, { v: 14, goc: -PI / 2, xoe: 2, cols: [C[2], C[1]] }); } }); }, { nhan: 'Ra mắt' }),
+    idle: A(2.4, P => { const u = P.u; P.tho(.02); vayDuoi(P, 7, 1, 4); P.r('dau', 2 * sn(u)).m('dau', -1 * sn(u * 2), 0); }),
+    // Di chuyển: bước rón rén sát đất, đuôi lượn sóng.
+    move: A(1.1, P => { const u = P.u; P.h += Math.abs(sn(u)) * 1.5; P.rot += 1.5 * sn(u); P.r('chanT', 22 * sn(u)).r('chanS', -22 * sn(u)); vayDuoi(P, 10, 2, 6); P.r('dau', 3 * sn(u * 2)); }),
+    // Chiêu 1: HỒ HOẢ. Lửa đầu chín đuôi bùng to, bắn chín cầu lửa ma bay vòng cung xuống chín chỗ quanh bé.
+    c1: A(2.4, P => { const u = P.u, C = mauHT(P), T = []; for (let i = 0; i < 9; i++) { const a = P.dir + (i - 4) * .22, r = 70 + 45 * hh(i, 4, 4); T.push([Math.cos(a) * r, Math.sin(a) * r * MA.det, .36 + i * .04]); }
+      vayDuoi(P, u < .35 ? 4 : 10, u < .35 ? 4 : 2, 3); P.r('dau', u < .35 ? -6 * u / .35 : -6);
+      P.under(c => { for (const [x, y, t0] of T) if (u < t0 + .18) F.baoTron(c, x, y, 10, clamp(u / (t0 + .18), 0, 1)); });
+      P.over(c => { for (let i = 0; i < 9; i++) { const d = dinhDuoi(i, P.phase), m = P.pt(d[0], d[1]), [x, y, t0] = T[i], q = seg(u, t0 - .1, t0 + .18), e = seg(u, t0 + .18, t0 + .5);
+        if (u < t0 - .1) F.lua(c, m[0], m[1] + 3, 4 + 4 * Math.min(1, u / .3), 9 + 10 * Math.min(1, u / .3), P.t + i, [C[0], C[1], C[2], '#ffffff'], i);
+        else if (q < 1) { const px = lerp(m[0], x, q), py = lerp(m[1], y, q) - Math.sin(q * PI) * 30; for (let t = 1; t < 5; t++) { const qq = Math.max(0, q - t * .04); F.a(c, .5 - t * .1); F.dia(c, lerp(m[0], x, qq), lerp(m[1], y, qq) - Math.sin(qq * PI) * 30, 3 - t * .5, C[1]); } F.a(c, 1); cauMa(c, px, py, 3, C); }
+        if (e > 0 && e < 1) { if (e < .3) F.dia(c, x, y - 3, 4 + e * 20, C[2]); F.lua(c, x, y, 7 * (1 - e), 16 * (1 - e), P.t + i, [C[0], C[1], C[2], '#ffffff'], i); F.hat(c, x, y - 3, 12, i, e, { v: 14, cols: ['#ffffff', C[2], C[1]], to: 2 }); } } }); }, { nhan: 'Chiêu 1: hồ hoả', moc: [.36, .8] }),
+    // Chiêu 2: VỒ MỒI. Rạp mình rồi vồ hai lần liền (zíc zắc), để bóng mờ, cuối cú vồ có vết vuốt.
+    c2: A(2, P => { const u = P.u, C = mauHT(P), q = (u * 2) % 1; CHIEU.laoNhieu(P, 2, 96, 26, [C[0], C[1], '#ffffff'], .5); vayDuoi(P, 8, 3, 0); P.r('chanT', q > .45 ? -30 : 10 * q / .45).r('chanS', q > .45 ? 25 : 0).r('dau', q > .45 ? -10 : 4);
+      if (q > .55 && q < .85) { const k = Math.min(1, u * 2) | 0, dir = P.dir + (k - .5) * .5, x = Math.cos(dir) * 92, y = Math.sin(dir) * 92 * MA.det; P.over(c => { for (let j = 0; j < 3; j++) F.liem(c, x + j * 3 - 3, y - 14 + j * 3, 16, dir + PI / 2, 1.6, seg(q, .55, .85), [C[0], C[1], '#ffffff'], 2); }); } }, { nhan: 'Chiêu 2: vồ mồi', moc: [.22, .9] }),
+    // Chiêu 3: QUẠT ĐUÔI. Chín đuôi kéo về một bên rồi quét mạnh, ba lớp vệt lửa ma hình trăng khuyết, sàn cháy lửa xanh.
+    c3: A(2.2, P => { const u = P.u, C = mauHT(P), tam = 120, span = 2.6;
+      if (u < .42) { const v = EASE.out(u / .42); for (let i = 0; i < 9; i++) P.r('d' + i, -25 * v).b('d' + i, -15 * v); P.rot += -4 * v; P.under(c => F.baoQuat(c, 0, 0, tam, P.dir, span, u / .42)); }
+      else if (u < .68) { const v = seg(u, .42, .68), a = lerp(-25, 40, EASE.in(Math.min(1, v * 1.5))); for (let i = 0; i < 9; i++) P.r('d' + i, a).b('d' + i, 20 * (1 - v)); P.rot += lerp(-4, 4, v);
+        P.over(c => { F.liem(c, 0, -30, tam - 4, P.dir, span, v, [C[0], C[1], '#ffffff'], 10); F.liem(c, 0, -30, tam - 22, P.dir, span * .9, Math.max(0, v - .08), [LUA[0], LUA[1], LUA[2]], 6); F.liem(c, 0, -30, tam - 40, P.dir, span * .8, Math.max(0, v - .16), [C[0], C[1], C[2]], 4); }); }
+      else { const v = seg(u, .68, 1); for (let i = 0; i < 9; i++) P.r('d' + i, 40 * (1 - EASE.io(v))); P.under(c => { for (let i = 0; i < 7; i++) { const a = P.dir + (i - 3) / 3 * span * .42, r = tam * (.55 + .3 * hh(i, 1, 2)); F.a(c, 1 - seg(v, .5, 1)); F.lua(c, Math.cos(a) * r, Math.sin(a) * r * MA.det, 6, 12, P.t + i, [C[0], C[1], C[2], '#ffffff'], i); } F.a(c, 1); }); } }, { nhan: 'Chiêu 3: quạt đuôi', moc: [.42, .68] }),
+    // Chiêu 4: VÒNG LỬA MA. Hai vòng cột lửa ma bùng lên lần lượt quanh mình (vòng trong rồi vòng ngoài, lệch chỗ nhau để có lối né).
+    c4: A(2.5, P => { const u = P.u, C = mauHT(P), V = [[62, 8, 0, .3], [102, 12, PI / 12, .5]]; vayDuoi(P, 6, 3, 8); P.r('dau', 8 * Math.sin(seg(u, .2, .5) * PI)); P.sy *= 1 + .04 * Math.sin(seg(u, .2, .5) * PI);
+      P.under(c => { for (const [R, n, lech, t0] of V) for (let i = 0; i < n; i++) { const a = P.dir + lech + i / n * TAU, x = Math.cos(a) * R, y = Math.sin(a) * R * MA.det, ti = t0 + i * .015; if (u < ti) F.baoTron(c, x, y, 11, u / ti); } });
+      P.over(c => { for (const [R, n, lech, t0] of V) for (let i = 0; i < n; i++) { const a = P.dir + lech + i / n * TAU, x = Math.cos(a) * R, y = Math.sin(a) * R * MA.det, ti = t0 + i * .015, e = seg(u, ti, ti + .42); if (e > 0 && e < 1) { cotLuaMa(c, x, y, e, C, P.t, i); if (e < .25) F.song(c, x, y, 14, e * 4, [C[2], C[1]], 1); } } }); }, { nhan: 'Chiêu 4: vòng lửa ma', moc: [.3, .92] }),
+    // Chiêu 5: BÃO HỒ HOẢ. Xoay đuôi tụ lửa, bắn ba đợt cầu lửa toả tròn xoáy (mỗi đợt lệch nhau để luồn qua khe).
+    c5: A(2.4, P => { const u = P.u, C = mauHT(P); CHIEU.vongDan(P, 10, 110, [C[0], C[1], C[2]], 3); for (let i = 0; i < 9; i++) P.r('d' + i, u > .35 ? 12 * sn(u * 4 + i * .1) : 0); vayDuoi(P, 8, 4, 0); }, { nhan: 'Chiêu 5: bão hồ hoả', moc: [.35, .95] }),
+    phase2: A(2.4, P => { const u = P.u; TRUM.doiPha(P, TIMX); vayDuoi(P, 12 * seg(u, 0, .45), 4, 0); }, { nhan: 'Chuyển pha 2: phân thân', pha: u => u < .5 ? 1 : 2 }),
+    phase3: A(2.6, P => { const u = P.u; TRUM.doiPha(P, LUA); vayDuoi(P, 12, 4, 0); if (u > .5) P.under(c => { for (let i = 0; i < 10; i++) { const a = i / 10 * TAU, r = 60 + 50 * seg(u, .5, 1); F.a(c, 1 - seg(u, .8, 1)); F.lua(c, Math.cos(a) * r, Math.sin(a) * r * MA.det, 8, 18, P.t + i, null, i); } F.a(c, 1); }); }, { nhan: 'Chuyển pha 3: hoá cuồng', pha: u => u < .5 ? 2 : 3 }),
+    stun: A(1.5, P => { const k = kHT(P.phase); TRUM.choang(P, 44 * k, 74 * k); P.r('dau', 10 + 4 * sn(P.u)); for (let i = 0; i < 9; i++) P.r('d' + i, 6 * sn(P.u + i * .05)).b('d' + i, 25); }, { lap: true }),
+    hit: A(.4, P => { const k = kf(P.u, [[0, 0], [.2, 1, 'out'], [1, 0]]); CH.hit(P); P.r('dau', 12 * k); for (let i = 0; i < 9; i++) P.b('d' + i, 25 * k); }),
+    die: A(3.4, P => { const u = P.u, C = mauHT(P); TRUM.chetLon(P, 'hon', [C[0], C[1], C[2]], [C[1], C[2], '#ffffff']); for (let i = 0; i < 9; i++) P.r('d' + i, (GOC[4] - GOC[i]) * .5 * seg(u, 0, .5)).b('d' + i, 30 * seg(u, 0, .5)); P.r('dau', 20 * seg(u, 0, .4)); }, { nhan: 'Chết' }),
+  } });
+// Lớp phủ theo pha cho mọi cử động: pha 2 có hai bóng cáo mờ màu tím lượn hai bên; pha 3 có lửa liếm khắp thân.
+(function () { const d = DEFS.hoTinh; for (const k of Object.keys(d.anims)) { const f = d.anims[k].f; d.anims[k].f = function (P) { f(P);
+  if (P.phase === 2 && !P.bongMa && k !== 'die' && !P.tan) { const t = P.t; P.bongMa = [{ x: -46 + 6 * Math.sin(t * 2.2), y: -4 + 3 * Math.sin(t * 3), a: .26 + .08 * Math.sin(t * 4), mau: TIMX[1] }, { x: 46 + 6 * Math.sin(t * 2.6 + 1), y: 4 + 3 * Math.sin(t * 2.4), a: .26 + .08 * Math.sin(t * 4 + 2), mau: TIMX[1] }]; }
+  if (P.phase === 3 && !P.tan) { const t = P.t, B = P.B; P.over(c => { for (let i = 0; i < 7; i++) { const sx = B.cx + (hh(i, 1, 7) - .3) * B.bw * .6, sy = B.foot - B.bh * (.25 + .3 * hh(i, 2, 7)), m = P.pt(sx, sy); F.a(c, .75); F.lua(c, m[0], m[1], 5, 10 + 5 * Math.sin(t * 7 + i), t + i, null, i); } F.a(c, 1); }); } }; } })();
+
+})(); } catch (e) { MA.loi.push('hotinh.js: ' + (e && e.stack || e)); if (typeof console !== 'undefined') console.error('monster_art hotinh.js', e); }
 MA._xong();
 })();

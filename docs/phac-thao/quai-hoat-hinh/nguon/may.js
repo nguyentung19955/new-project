@@ -250,6 +250,29 @@ const CH = MA.chuan = {
     else { const m = { khoi: 'hon', ghep: 'vo', tu: 'tu', bui: 'bui', quet: 'quet' }[k] || 'tu'; if (m === 'tu') P.tan = { k: 'tu', u, mau }; else if (m === 'quet') P.tan = { k: 'quet', u: seg(u, .1, .9), mau, len: 1 }; else P.tan = { k: m, u: 1 - EASE.io(seg(u, 0, .85)), mau, trai: P.face < 0, hien: true }; if (u > .85) { const st = kf(u, [[.85, 1.06], [.93, .96], [1, 1]]); P.sy *= st; } P.bong = seg(u, .3, .9); }
   },
 };
+
+// ---------- cử động chung của trùm vùng: chuyển pha, choáng, chết hoành tráng ----------
+const TRUM = MA.trum = {
+  // Chuyển pha: gồng mình, khí tụ vào, chớp trắng (đổi hình ở giữa), gầm lên với sóng lan. cols = [đậm, vừa, sáng]
+  doiPha(P, cols) { const u = P.u, bh = P.B.bh, bw = P.B.bw, cy = -P.h - bh * .5, R = Math.max(bw, bh) * .75;
+    if (u < .45) { const v = u / .45; P.x += (((u * 40) | 0) % 2 ? 1 : -1) * v * 1.5; P.sy *= 1 - .06 * v; P.sx *= 1 + .05 * v; P.tint = [cols[1], v * .45];
+      P.over(c => { for (let i = 0; i < 26; i++) { const a = hh(i, 1, 3) * TAU, q = (v * 1.8 + hh(i, 2, 3)) % 1, r = R * (1.1 - q); F.a(c, q); F.px(c, Math.cos(a) * r, cy + Math.sin(a) * r * .8, i % 3 ? cols[1] : cols[2], q > .6 ? 2 : 1, q > .6 ? 2 : 1); } F.a(c, 1); }); }
+    else if (u < .58) { const v = seg(u, .45, .58); P.flash = 1 - v * .5; P.sx *= 1 + .12 * v; P.sy *= 1 + .12 * v; P.over(c => { F.vong(c, 0, cy, R * (.5 + v * .8), R * .4 * (1 + v), '#ffffff', 3); F.hat(c, 0, cy, 24, 2, v, { v: R * .9, cols: ['#ffffff', cols[2]], to: 2 }); }); }
+    else { const v = seg(u, .58, 1), k = kf(v, [[0, 1.12], [.25, .96], [.5, 1.03], [1, 1]]); P.sx *= k; P.sy *= k; P.tint = [cols[1], .4 * (1 - v)]; P.x += v < .5 ? (((u * 40) | 0) % 2 ? 1 : -1) : 0;
+      P.under(c => { F.song(c, 0, 0, R * 1.6, v, [cols[2], cols[1]], 3); F.song(c, 0, 0, R * 1.2, seg(v, .15, 1), [cols[1], cols[0]], 2); });
+      P.over(c => { F.hat(c, 0, cy, 40, 7, v, { v: R * 1.3, cols: [cols[2], cols[1], cols[0]], to: 2 }); for (let i = 0; i < 12; i++) { const a = i / 12 * TAU + .2, r0 = R * .4, r1 = R * (.6 + v * 1.1); F.a(c, 1 - v); F.duong(c, Math.cos(a) * r0, cy + Math.sin(a) * r0, Math.cos(a) * r1, cy + Math.sin(a) * r1, cols[2], 1); } F.a(c, 1); }); } },
+  // Choáng: lảo đảo, sao vàng xoay quanh đỉnh đầu (hx, hy là điểm trên hình gốc).
+  choang(P, hx, hy) { const u = P.u; P.rot += 5 * sn(u); P.sh += 3 * sn(u + .25); P.sy *= .96 + .02 * sn(u * 2); const q = P.pt(hx, hy);
+    P.over(c => { for (let i = 0; i < 4; i++) { const a = (u + i / 4) * TAU, x = q[0] + Math.cos(a) * 20, y = q[1] - 10 + Math.sin(a) * 6; const truoc = Math.sin(a) > 0; F.a(c, truoc ? 1 : .6); F.sao(c, x, y, truoc ? 3 : 2, i % 2 ? '#ffd23c' : '#fff6b0'); F.dia(c, x, y, 1.2, '#ffffff'); } F.a(c, 1); }); },
+  // Chết hoành tráng: rung dữ dội, nổ lốp bốp khắp thân, tia sáng toả, chớp trắng lớn, rồi tan theo kiểu k.
+  chetLon(P, k, cols, mauTan) { const u = P.u, B = P.B, bh = B.bh, bw = B.bw, cy = -P.h - bh * .5, R = Math.max(bw, bh) * .6;
+    if (u < .55) { const v = u / .55; P.x += (((u * 48) | 0) % 2 ? 1 : -1) * (1 + v * 2); P.rot += 6 * v * sn(u * 6); P.flash = ((u * 24) | 0) % 3 === 0 ? .7 : 0; P.sy *= 1 - .05 * v;
+      P.over(c => { for (let i = 0; i < 9; i++) { const t0 = i / 9 * .9, e = seg(v, t0, t0 + .22); if (e <= 0 || e >= 1) continue; const x = (hh(i, 3, 1) - .5) * bw * .8, y = cy + (hh(i, 4, 1) - .5) * bh * .8; if (e < .3) F.dia(c, x, y, 3 + e * 14, '#ffffff'); F.dia(c, x, y, (2 + e * 7) * (1 - e), cols[1]); F.hat(c, x, y, 10, i, e, { v: 16, cols: [cols[2], cols[1], cols[0]], to: 2 }); }
+        for (let i = 0; i < 10; i++) { const a = i / 10 * TAU + v, L = R * (.3 + v * 1.6); F.a(c, v * .7); F.duong(c, Math.cos(a) * 8, cy + Math.sin(a) * 8, Math.cos(a) * L, cy + Math.sin(a) * L, i % 2 ? cols[2] : '#ffffff', i % 2 ? 1 : 2); } F.a(c, 1); }); }
+    else { const v = seg(u, .55, 1); P.tan = { k, u: seg(u, .6, 1), mau: mauTan || cols, trai: P.face > 0 }; P.flash = v < .15 ? 1 : 0; P.bong = 1 - v;
+      P.under(c => { F.song(c, 0, 0, R * 2.2, v, [cols[2], cols[1]], 3); F.song(c, 0, 0, R * 1.6, seg(v, .1, 1), ['#ffffff', cols[2]], 2); });
+      P.over(c => { if (v < .3) { const e = v / .3; F.vong(c, 0, cy, R * (.6 + e * 1.4), R * (.5 + e * 1.1), '#ffffff', Math.max(1, Math.round(4 * (1 - e)))); F.dia(c, 0, cy, R * .35 * (1 - e), '#ffffff'); } F.hat(c, 0, cy, 50, 3, v, { v: R * 2, cols: ['#ffffff', cols[2], cols[1], cols[0]], to: 2 }); }); } },
+};
 const DMAC = { idle: [1.2, true], move: [.6, true], tele: [.7, false], atk: [.55, false], hit: [.35, false], die: [1.1, false], spawn: [1.1, false] };
 
 // ---------- khai báo quái ----------
@@ -271,11 +294,12 @@ MA._xong = function () { MA.list.length = 0; const TT = ['bien', 'rung', 'laudai
 // dir (góc radian của đòn: 0 = phải, PI/2 = xuống), phase (1..3, chỉ trùm vùng), hit (0..1 chớp trắng), bao: false để tắt vùng báo trước, fx: false để tắt hết hiệu ứng rời}
 MA.draw = function (c, id, x, y, o) {
   const d = DEFS[id]; if (!d) return; o = o || {};
-  const ph = d.pha ? clamp(o.phase || 1, 1, d.pha) : 1, nm = d.anims[o.anim] ? o.anim : 'idle', an = d.anims[nm];
+  let ph = d.pha ? clamp(o.phase || 1, 1, d.pha) : 1; const nm = d.anims[o.anim] ? o.anim : 'idle', an = d.anims[nm];
   const t = Math.max(0, o.t || 0), nf = Math.max(1, Math.round(an.d * MA.fps)); let fi = Math.floor(t * MA.fps + 1e-6); fi = an.lap ? fi % nf : Math.min(fi, nf - 1);
   const u = an.lap ? fi / nf : (nf > 1 ? fi / (nf - 1) : 0);
   let face = o.face || 0, dir = o.dir; if (dir == null) dir = (face || -1) < 0 ? PI : 0; if (!face) { const cx = Math.cos(dir); face = cx > .01 ? 1 : -1; }
-  const hv = an.hinh ? an.hinh(u, ph) : 0, B = goc(d, ph, hv), P = new Pose(d, B, nm, u, fi / MA.fps, o, dir, face, ph);
+  const ph0 = ph; if (an.pha) ph = clamp(an.pha(u, ph) || ph, 1, d.pha || 1); // cử động chuyển pha tự đổi hình giữa chừng
+  const hv = an.hinh ? an.hinh(u, ph) : 0, B = goc(d, ph, hv), P = new Pose(d, B, nm, u, fi / MA.fps, o, dir, face, ph); P.pha0 = ph0;
   MA._tatBao = o.bao === false; an.f(P);
   const key = P.khongNho ? null : id + '|' + ph + '|' + (hv || '') + '|' + nm + '|' + fi + '|' + P.aim + (P.khoa || ''), fr = veKhung(B, P, key);
   c.save(); c.translate(Math.round(x), Math.round(y)); c.imageSmoothingEnabled = false; const ga = c.globalAlpha;

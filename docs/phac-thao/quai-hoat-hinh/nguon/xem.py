@@ -47,9 +47,10 @@ async def main():
                 n = await pg.evaluate('XEM.to(GIFS[%r]())' % ten); fd = os.path.join(tmp, ten); os.makedirs(fd, exist_ok=True)
                 for i in range(n): await shot(pg, 'XEM.khung(%d)' % i, os.path.join(fd, 'f%04d.png' % i))
                 gif = os.path.join(OUT, ten + '.gif')
-                for cols, sc in ((128, 1), (64, 1), (40, 1), (24, 1), (64, 2 / 3), (32, 2 / 3)):
-                    vf = ('scale=iw*%s:ih*%s:flags=neighbor,' % (sc, sc) if sc != 1 else '') + 'split[a][b];[a]palettegen=max_colors=%d:stats_mode=diff[p];[b][p]paletteuse=dither=none:diff_mode=rectangle' % cols
-                    subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-framerate', '12', '-i', os.path.join(fd, 'f%04d.png'), '-vf', vf, '-loop', '0', gif], check=True)
+                # thử lần lượt: bớt màu, rồi thu nhỏ, cuối cùng bỏ bớt một nửa khung (8 khung/giây) để GIF dưới 4MB
+                for cols, sc, bo in ((128, 1, 1), (64, 1, 1), (40, 1, 1), (24, 1, 1), (48, 1, 1.5), (32, 1, 1.5), (32, 1, 2), (32, 2 / 3, 2)):
+                    vf = ('select=lt(mod(n\\,%s)\\,1),' % bo if bo != 1 else '') + ('scale=iw*%s:ih*%s:flags=neighbor,' % (sc, sc) if sc != 1 else '') + 'split[a][b];[a]palettegen=max_colors=%d:stats_mode=diff[p];[b][p]paletteuse=dither=none:diff_mode=rectangle' % cols
+                    subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-framerate', '12', '-i', os.path.join(fd, 'f%04d.png'), '-vf', vf, '-r', str(12 / bo), '-loop', '0', gif], check=True)
                     if os.path.getsize(gif) < 3.9e6: break
                 print('đã ghi', gif, n, 'khung', os.path.getsize(gif) // 1024, 'KB')
                 if await pg.evaluate('typeof BANGS !== "undefined" && !!BANGS[%r]' % ten):
