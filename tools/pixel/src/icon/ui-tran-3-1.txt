@@ -4,30 +4,27 @@ name: gọi tướng / cảm ơn
 size: 16x16
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = dong-sang
+  c = vang-nghe
+  d = vang-sang
 
 part k0
-......aaaa......
-....aaeeecaa....
-...aeededdeca...
-..aedbbbbbbdca..
-.aedbbbbbbbbdca.
-.aebbggggggbbea.
-aedbggagggagbdca
-aedbggggggggbdca
-aeebgfggggfebeca
-acdbeeeeeeeebdca
-.aebgffffffebea.
-.acdeeeeeeeedca.
-..acdbbbbbbdca..
-...aceddedeca...
-....aaccccaa....
-......aaaa......
+................
+................
+................
+....aaaaaaaa....
+...adddddddda...
+..adddddddddda..
+.adddadddddadda.
+.adddddddddddba.
+.adccddddddccba.
+.abbbbbbbbbbbba.
+.adccccccccccba.
+.adccccccccccba.
+.abbbbbbbbbbbba.
+..aaaaaaaaaaaa..
+................
+................
 end
 
 anim main fps=1 once

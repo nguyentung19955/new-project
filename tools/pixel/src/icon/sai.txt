@@ -10,16 +10,16 @@ colors:
 
 part k0
 ............
-..aaa..aaa..
-.addbaaddba.
-.adccddccba.
-.abccccccba.
-..adccccba..
-..adccccba..
-.adccccccba.
-.adccbbccba.
-.abbbaabbba.
-..aaa..aaa..
+..aa....aa..
+.adba..adba.
+.abcbaadcba.
+..abcddcba..
+...adccba...
+...adccba...
+..adcbbcba..
+.adcbaabcba.
+.abba..abba.
+..aa....aa..
 ............
 end
 

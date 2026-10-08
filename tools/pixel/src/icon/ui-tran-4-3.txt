@@ -4,33 +4,30 @@ name: khoá
 size: 16x16
 colors:
   a = vien
-  b = khoi
-  c = sat-toi
-  d = sat
-  e = sat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = vang-nghe
-  j = vang-sang
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = dong-sang
+  f = vang-nghe
+  g = vang-sang
 
 part k0
+................
+................
 ......aaaa......
-....aahhhfaa....
-...ahhghgghfa...
-..ahgbbbbbbgfa..
-.ahgbbbecbbbgfa.
-.ahbbbecccbbbha.
-ahgbbbdbbdbbbgfa
-ahgbbjjjjjjhbgfa
-ahhbbjiaiiihbhfa
-afgbbjiaiiihbgfa
-.ahbbjiiiiihbha.
-.afgbhhhhhhhgfa.
-..afgbbbbbbgfa..
-...afhgghghfa...
-....aaffffaa....
-......aaaa......
+.....adccba.....
+....adbaabba....
+....aca..aca....
+...aacaaaacaa...
+..agggggggggea..
+..agffffffffea..
+..agfffaffffea..
+..agfffaffffea..
+..agfffaffffea..
+..agffffffffea..
+..aeeeeeeeeeea..
+...aaaaaaaaaa...
+................
 end
 
 anim main fps=1 once

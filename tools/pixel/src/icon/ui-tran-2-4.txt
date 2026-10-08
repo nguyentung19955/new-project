@@ -4,32 +4,28 @@ name: huỷ tướng / bán
 size: 16x16
 colors:
   a = vien
-  b = khoi
-  c = sang
-  d = dat-toi
-  e = dat
-  f = dat-sang
-  g = dong-toi
-  h = dong
-  i = dong-sang
+  b = sang
+  c = dat-toi
+  d = dat
+  e = dat-sang
 
 part k0
-......aaaa......
-....aaiiigaa....
-...aiihihhiga...
-..aihbbbbbbhga..
-.aihbbcbcbbbhga.
-.aibbbcfdcbbbia.
-aihbbffddfffbhga
-aihbbfeeeedbbhga
-aiibfeeeeeedbiga
-aghbdeeeeeedbhga
-.aibbdeeeedbbia.
-.aghbbddddbbhga.
-..aghbbbbbbhga..
-...agihhihiga...
-....aaggggaa....
-......aaaa......
+................
+.....a...a......
+....aba.aba.....
+.....abaaba.....
+...aaaaecaaaa...
+..aeeeecceeeea..
+..aeeeeeeeeeea..
+..aeddddddddca..
+..aeddddddddca..
+..aeddddddddca..
+..aeddddddddca..
+..acddddddddca..
+...acccddccca...
+....aaaccaaa....
+.......aa.......
+................
 end
 
 anim main fps=1 once

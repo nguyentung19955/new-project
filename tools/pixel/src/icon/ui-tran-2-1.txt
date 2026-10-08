@@ -4,32 +4,26 @@ name: menu
 size: 16x16
 colors:
   a = vien
-  b = khoi
-  c = trang-xam
-  d = trang
-  e = sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = vang-sang
+  b = dong-sang
+  c = vang-sang
 
 part k0
-......aaaa......
-....aahhhfaa....
-...ahhghgghfa...
-..ahgbbbbbbgfa..
-.ahgiiiiiiihgfa.
-.ahbbhhhhhhbbha.
-ahgbbeaaadcbbgfa
-ahgbbeddddcbbgfa
-ahhbbeaaadcbbhfa
-afgbbeaaadcbbgfa
-.ahbbiiiiihbbha.
-.afgihhhhhhhgfa.
-..afgbbbbbbgfa..
-...afhgghghfa...
-....aaffffaa....
-......aaaa......
+................
+................
+................
+...aaaaaaaaaaa..
+..accccccccccba.
+..abbbbbbbbbbba.
+...aaaaaaaaaaa..
+...aaaaaaaaaaa..
+..accccccccccba.
+..abbbbbbbbbbba.
+...aaaaaaaaaaa..
+...aaaaaaaaaaa..
+..accccccccccba.
+..abbbbbbbbbbba.
+...aaaaaaaaaaa..
+................
 end
 
 anim main fps=1 once

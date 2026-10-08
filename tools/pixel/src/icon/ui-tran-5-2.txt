@@ -4,30 +4,27 @@ name: vô tận
 size: 16x16
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = dong-sang
+  c = vang-nghe
+  d = vang-sang
 
 part k0
-......aaaa......
-....aaeeecaa....
-...aeededdeca...
-..aedbbbbbbdca..
-.aedbbbbbbbbdca.
-.aebbggebbbbbea.
-aedbgefefebbbdca
-aedbfbfbbeebbdca
-aeebebefebfbbeca
-acdbbfbbbgebbdca
-.aebbbgffebbbea.
-.acdbbbbbbbbdca.
-..acdbbbbbbdca..
-...aceddedeca...
-....aaccccaa....
-......aaaa......
+................
+................
+................
+................
+..aaaaa..aaaaa..
+.addddbaaddddba.
+.adcbccddccbcba.
+.adbadccccbadba.
+.adbadccccbadba.
+.adcdccbbccdcba.
+.abbbbbaabbbbba.
+..aaaaa..aaaaa..
+................
+................
+................
+................
 end
 
 anim main fps=1 once

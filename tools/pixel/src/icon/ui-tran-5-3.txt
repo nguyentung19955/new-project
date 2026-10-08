@@ -4,30 +4,28 @@ name: vào trận
 size: 16x16
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = dat
+  c = dong-sang
+  d = vang-nghe
+  e = vang-sang
 
 part k0
-......aaaa......
-....aaeeecaa....
-...aeededdeca...
-..aedbbbbbbgea..
-.aedbbbbbbgfeca.
-.aebbbbbbgfebea.
-aedbbbbbgfebbdca
-aedbbbbgfebbbdca
-aeebbggfebbbbeca
-acdbbgfebbbbbdca
-.aebgfeebbbbbea.
-.acdeebbbbbbdca.
-..acdbbbbbbdca..
-...aceddedeca...
-....aaccccaa....
-......aaaa......
+................
+................
+...aa......aa...
+..aeca....aeca..
+..acdca..aedca..
+...acdcaaedca...
+....acdcedca....
+.....acdcca.....
+...a.aecdca.a...
+..abaedccdcaba..
+...abdcaacdba...
+..aedba..abdca..
+.aedcabaabacdca.
+.acca.a..a.acca.
+..aa........aa..
+................
 end
 
 anim main fps=1 once

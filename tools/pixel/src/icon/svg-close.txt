@@ -4,22 +4,22 @@ name: icon SVG: đóng
 size: 12x12
 colors:
   a = vien
-  b = son-toi
-  c = son
-  d = son-sang
+  b = trang-xam
+  c = trang
+  d = sang
 
 part k0
 ............
-..aaa..aaa..
-.addbaaddba.
-.adccddccba.
-.abccccccba.
-..adccccba..
-..adccccba..
-.adccccccba.
-.adccbbccba.
-.abbbaabbba.
-..aaa..aaa..
+..aa....aa..
+.adba..adba.
+.abcbaadcba.
+..abcddcba..
+...adccba...
+...adccba...
+..adcbbcba..
+.adcbaabcba.
+.abba..abba.
+..aa....aa..
 ............
 end
 

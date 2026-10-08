@@ -2551,3 +2551,6 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
   `mapLayer` vẽ nền này khi bật pixel (chưa tải xong / không có mã → nền ô cỏ / đường như trước).
 - (người dùng) Khối băng đổi từ bát giác sang THẬP LỤC GIÁC: 4 cạnh thẳng + mỗi góc bo bằng 3 cạnh (cung 90° chia 3) = 16 cạnh; bán kính bo ≤ 3 lề nên vẫn bao trọn hộp hình, lề ~11% (16 cạnh đều phải nới lề ~40% nên không dùng).
 - (người dùng) Khối băng thập lục giác "cứng" kiểu pha lê: 16 cạnh thẳng nối đỉnh bằng nét pixel, viền trong thụt vào + nét vát từ cả 16 đỉnh, mặt vát tô sáng (trên) / tối (dưới) và xen sáng–tối giữa các mặt kề, chấm sáng ở đỉnh → thấy rõ từng cạnh; dải vát mỏng (~1/3 bán kính góc) không che quái.
+- Sửa theo tester (icon pixel phải giữ nghĩa icon cũ): nút quay lại = mũi tên «, nút đóng giữ ô vuông + X trắng to (bỏ skin pixel
+  nút tròn), Ngân khố = thỏi bạc, nút đổi chợ giữ skin cũ + icon đồng xu có mũi tên vòng; soát icon chức năng: tạm dừng ‖, menu ≡,
+  vô tận ∞, vào trận / lực chiến = hai kiếm chéo, cài đặt = bánh răng; bộ ui-tran-* bỏ đĩa trống cho hình to rõ.

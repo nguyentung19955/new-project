@@ -68,7 +68,9 @@ function loadUiSkins() {
     im.src = src;
   };
   // claude/xuat-goi-pixel: khung / nút / thanh pixel (nhóm "giao-dien") khi bật pixel — trước ảnh vẽ tay
-  for (const [name, cls] of UI_SKIN) { const px = typeof pxUrl === 'function' && pxUrl('giao-dien', name); if (px) one(px, name, cls); else if (hasAsset(`ui/${name}.png`)) one(assetSrc(`ui/${name}.png`), name, cls); }
+  // nút tròn (đóng) và nút đổi chợ giữ hình cũ: bản pixel mất nhận diện (ô vuông X trắng, đồng xu xoay) — góp ý tester
+  const PX_GIU = /^nut-tron-|^nut-doi-cho$/;
+  for (const [name, cls] of UI_SKIN) { const px = !PX_GIU.test(name) && typeof pxUrl === 'function' && pxUrl('giao-dien', name); if (px) one(px, name, cls); else if (hasAsset(`ui/${name}.png`)) one(assetSrc(`ui/${name}.png`), name, cls); }
   if (hasAsset('scenes/nen-man-phu.png')) one(assetSrc('scenes/nen-man-phu.png'), 'nen-man-phu', 'nen-man-phu');
 }
 if (typeof document !== 'undefined' && document.documentElement) loadUiSkins();

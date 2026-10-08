@@ -4,30 +4,27 @@ name: mặc đồ cả đội
 size: 16x16
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = dong-sang
+  c = vang-nghe
+  d = vang-sang
 
 part k0
-......aaaa......
-....aaeeecaa....
-...aeededdeca...
-..aggggggggeca..
-.aegfffffffedca.
-.aegfffffffebea.
-aedgfffffffebdca
-aedefffffffebdca
-aeebefffffebbeca
-acdbbefffebbbdca
-.aebbbeeebbbbea.
-.acdbbbbbbbbdca.
-..acdbbbbbbdca..
-...aceddedeca...
-....aaccccaa....
-......aaaa......
+.aaaaaaaaaaaaa..
+addddddddddddba.
+adcccccccccccba.
+adcccccccccccba.
+adcccccccccccba.
+adcccccccccccba.
+adcccccccccccba.
+abcccccccccccba.
+.abcccccccccba..
+..abcccccccba...
+...abcccccba....
+....abcccba.....
+.....abbba......
+......aaa.......
+................
+................
 end
 
 anim main fps=1 once

@@ -4,22 +4,23 @@ name: lực chiến
 size: 12x12
 colors:
   a = vien
-  b = dong-toi
-  c = dong
-  d = dong-sang
+  b = dat
+  c = dong-toi
+  d = dong
+  e = dong-sang
 
 part k0
-.........aa.
-........adba
-.......adcba
-......adcba.
-.....adcba..
-...aadcba...
-..addcba....
-..adcba.....
-.adcbba.....
-.abbaa......
-..aa........
+............
+..aa....aa..
+.aeca..aeca.
+.acdcaaedca.
+..acdcedca..
+...acdcca...
+...aecdcaa..
+..abdccdcba.
+.aedbaacbca.
+.accababcca.
+..aa.a.aaa..
 ............
 end
 
