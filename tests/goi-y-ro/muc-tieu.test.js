@@ -52,6 +52,12 @@ async function run(pixel, w, h, full) {
   await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2); await page.mouse.down(); await page.waitForTimeout(650);
   const tip = await page.evaluate(() => { const e = document.querySelector('#hero-tip'); return e && !e.hidden ? e.textContent : ''; });
   ok(tip.includes(await page.evaluate((t) => HEROES[t].name, f.b)) && tip.includes('Góp vào') && tip.includes(await page.evaluate((t) => HEROES[t].name, f.to)), `[${tag}] chạm giữ thẻ: tên + "Góp vào … ${f.to}"`);
+  // bảng giữ tay nằm NGANG (rộng > 2× cao, ≤ 1/3 cao #ui), trong khung #ui, không che thẻ đang giữ
+  const lay = await page.evaluate(() => { const e = document.querySelector('#hero-tip'), u = document.querySelector('#ui'), t = e.getBoundingClientRect(), c = document.querySelector('#deck .mk-card[data-mk="1"]').getBoundingClientRect(), U = u.getBoundingClientRect();
+    const ov = Math.min(t.right, c.right) - Math.max(t.left, c.left) > 1 && Math.min(t.bottom, c.bottom) - Math.max(t.top, c.top) > 1;
+    return { w: e.offsetWidth, h: e.offsetHeight, H: u.offsetHeight, inUi: e.parentNode === u, ov, inside: t.left >= U.left - 1 && t.right <= U.right + 1 && t.top >= U.top - 1 && t.bottom <= U.bottom + 1, cols: e.querySelectorAll('.ht-c').length }; });
+  ok(lay.inUi && lay.cols === 3 && lay.w > lay.h * 2 && lay.h <= lay.H / 3 + 1, `[${tag}] bảng giữ tay nằm ngang 3 cột (${lay.w}×${lay.h}, cao #ui ${lay.H})`);
+  ok(!lay.ov && lay.inside, `[${tag}] bảng không che thẻ đang giữ, không tràn mép`);
   if (full) await page.screenshot({ path: path.join(SHOT, `giu-the-${tag}.png`) });
   await page.mouse.up(); await page.waitForTimeout(150);
   ok(await page.evaluate((g) => game.gold === g && document.querySelector('#hero-tip').hidden, g0), `[${tag}] thả tay: ẩn thông tin, không mua`);
@@ -100,5 +106,6 @@ async function run(pixel, w, h, full) {
   await run(false, 844, 390, true);
   await run(true, 667, 375, true);
   await run(true, 1920, 934, true);
+  await run(true, 390, 844, true);     // dọc: game xoay 90°, bảng giữ tay xoay theo
   console.log('muc-tieu: OK');
 })().catch((e) => { console.error(e); process.exit(1); });
