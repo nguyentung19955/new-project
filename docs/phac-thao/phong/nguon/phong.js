@@ -313,5 +313,6 @@
   }
   M.buildRoom = buildRoom;
   M.themes = { castle: Castle };
+  M.K = K; M.torch = torch;
   M.util = { mk, r: (ctx) => { c = ctx; return r; }, mix, dim, lite, rgba, glow, ell, clipRect, padlock, arrow, spill, bricks, setC: (x) => { c = x; }, DARK };
 })();

@@ -17,7 +17,7 @@
     const rnd = G.srand(o.seed || 77);
     Math.random = rnd; G.rnd = rnd;
     G.startStage(o.reg, 2, 0);
-    G.gotoRoom(o.roomNo || 4);
+    G.gotoRoom(o.roomNo || 3); // phòng thứ tư của ải, loại đánh quái
     const S = G.getRun(), W = S.W, P = S.P;
     W.ents.length = 0; W.waves = []; W.zones.length = 0; W.projs.length = 0; W.texts.length = 0; W.parts.length = 0; W.slashes.length = 0;
     if (!o.keepProps) W.props.length = 0;
@@ -73,7 +73,8 @@
     const keep = { wx: G.wx, ux: G.ux, bg: A.bg, W: G.W, H: G.H };
     G.wx = wc; G.ux = ov;
     W.cam = camX || 0;
-    if (room) A.bg = (cx) => { cx.drawImage(room.base, -Math.round(W.cam), 0); };
+    if (room && room.base) A.bg = (cx) => { cx.drawImage(room.base, -Math.round(W.cam), 0); };
+    else if (room && room.bgFn) A.bg = function (cx) { keep.bg.apply(A, arguments); room.bgFn(cx); };
     ov.setTransform(k, 0, 0, k, 0, 0);
     ov.textBaseline = 'alphabetic';
     try { G.drawWorld(reg); } finally { G.wx = keep.wx; A.bg = keep.bg; }
@@ -216,6 +217,95 @@
     hudA(S.P, S);
     R.restore();
     return compose(R.wc, R.ov).canvas.toDataURL('image/png');
+  };
+  // Giao diện thật của game (thanh máu, vũ khí, nút bấm), vẽ lên lớp phủ.
+  function realHud(o) {
+    o = o || {};
+    const S = G.getRun();
+    const keep = { dw: G.drawWorld, cx: G.cx, cy: G.cy, rooms: S.rooms, idx: S.idx };
+    G.drawWorld = () => {}; G.cx = 0; G.cy = 0;
+    if (o.noDots) { S.rooms = []; }
+    try { G.StageScene.draw(); } finally { G.drawWorld = keep.dw; G.cx = keep.cx; G.cy = keep.cy; S.rooms = keep.rooms; }
+  }
+
+  // ====================================================================
+  // KIỂU B: giữ phòng nhìn ngang, thêm cửa bốn hướng
+  // ====================================================================
+  M.kieuB = function () {
+    setup({
+      reg: 2, seed: 5,
+      hero: { x: 196, y: 198, face: 1 },
+      ents: [
+        { role: 'rusher', x: 224, y: 199, hp: 0.6, cd: 9 },
+        { role: 'shield', x: 292, y: 180, cd: 9 },
+        { role: 'swarm', x: 268, y: 160, cd: 9 }, { role: 'swarm', x: 348, y: 206, cd: 9 },
+        { role: 'archer', x: 338, y: 164, wind: 1.2 },
+        { role: 'nimble', x: 140, y: 230, face: 1, cd: 9 },
+      ],
+      props: [{ type: 'brazier', x: 238, y: 156 }, { type: 'chest', x: 76, y: 170 }],
+      zones: [
+        { x: 118, y: 190, r: 20, pool: true, team: 'enemy', el: 'fire' },
+        { x: 300, y: 220, r: 24, t: 3, t0: 4.2, life: 0.12 },
+      ],
+    });
+    play({ warm: 5, move: { mx: 1 }, hits: 1, stopAt: 0.52, hp: 0.86 });
+    const S = G.getRun();
+    const fore = mk(480, 270);
+    const room = { bgFn: (cx) => M.doorsB(cx, 'locked'), fore: fore.canvas };
+    M.doorsBFore(fore, 'locked');
+    const R = renderWorld(room, { w: 480, h: 270 }, 3, 2, 0);
+    realHud({ noDots: true });
+    M.minimap(389, 42);
+    R.restore();
+    return compose(R.wc, R.ov).canvas.toDataURL('image/png');
+  };
+  // Cửa của Kiểu B. Trái, phải: dùng luôn cổng sắt có sẵn trên tường bên của game.
+  // Lên: một cửa vòm trên tường sau, có bậc bước lên. Xuống: miệng cầu thang ở mép trước của sàn.
+  const UPX = 181, DNX = 240;
+  M.doorsB = function (cx, state) {
+    const K = M.K, D = U.DARK, yb = G.GY0, at = UPX;
+    U.setC(cx);
+    const r = (x, y, w, h, col) => { cx.fillStyle = col; cx.fillRect(x, y, w, h); };
+    // khung vòm
+    r(at - 24, yb - 62, 48, 62, D);
+    r(at - 23, yb - 58, 46, 58, K.stone); r(at - 20, yb - 63, 40, 5, K.stone); r(at - 15, yb - 66, 30, 3, K.stone);
+    r(at - 23, yb - 58, 2, 58, K.stoneL); r(at - 20, yb - 63, 40, 1, K.stoneL); r(at - 15, yb - 66, 30, 1, K.stoneL); r(at + 21, yb - 58, 2, 58, U.dim(K.stone, 0.3));
+    for (let y = yb - 50; y < yb; y += 10) { r(at - 23, y, 7, 1, U.dim(K.stone, 0.4)); r(at + 16, y, 7, 1, U.dim(K.stone, 0.4)); }
+    // lòng cửa
+    r(at - 16, yb - 50, 32, 50, '#1a1214'); r(at - 13, yb - 55, 26, 5, '#1a1214'); r(at - 9, yb - 58, 18, 3, '#1a1214');
+    for (let x = at - 14; x <= at + 12; x += 5) { r(x, yb - 56, 2, 56, K.iron); r(x, yb - 56, 1, 56, K.ironL); }
+    for (const y of [yb - 42, yb - 26, yb - 10]) { r(at - 16, y, 32, 2, K.iron); r(at - 16, y, 32, 1, K.ironL); }
+    r(at - 3, yb - 73, 6, 6, D); r(at - 2, yb - 72, 4, 4, '#e03a2a'); r(at - 2, yb - 72, 2, 1, '#ffb09a');
+    U.padlock(at, yb - 24);
+    // bậc thềm bước lên cửa
+    r(at - 27, yb - 1, 54, 5, D); r(at - 26, yb - 1, 52, 4, K.stoneL); r(at - 26, yb + 2, 52, 1, U.dim(K.stone, 0.3));
+    r(at - 31, yb + 4, 62, 5, D); r(at - 30, yb + 4, 60, 4, K.stone); r(at - 30, yb + 4, 60, 1, K.stoneL); r(at - 30, yb + 8, 60, 1, 'rgba(0,0,0,0.35)');
+    // ổ khóa trên hai cổng bên
+    U.padlock(23, 150); U.padlock(457, 150);
+  };
+  M.doorsBFore = function (cx, state) {
+    const K = M.K, D = U.DARK, at = DNX, y = 238;
+    U.setC(cx);
+    const r = (x, yy, w, h, col) => { cx.fillStyle = col; cx.fillRect(x, yy, w, h); };
+    // miệng cầu thang đi xuống, khoét vào mép trước của sàn
+    r(at - 31, y - 3, 62, 25, D);
+    r(at - 30, y - 2, 60, 3, K.stoneL); r(at - 30, y + 1, 60, 1, U.dim(K.stone, 0.3));
+    r(at - 30, y + 1, 5, 20, K.stone); r(at + 25, y + 1, 5, 20, K.stone); r(at - 30, y + 1, 1, 20, K.stoneL); r(at + 29, y + 1, 1, 20, U.dim(K.stone, 0.4));
+    r(at - 25, y + 2, 50, 19, '#0c0808');
+    r(at - 24, y + 2, 48, 4, U.dim(K.floor, 0.1)); r(at - 24, y + 2, 48, 1, K.stoneL);
+    r(at - 22, y + 7, 44, 4, U.dim(K.floor, 0.35)); r(at - 22, y + 7, 44, 1, U.dim(K.stoneL, 0.3));
+    r(at - 20, y + 12, 40, 4, U.dim(K.floor, 0.58)); r(at - 20, y + 12, 40, 1, U.dim(K.stoneL, 0.55));
+    r(at - 18, y + 17, 36, 3, U.dim(K.floor, 0.75));
+    // song sắt đậy miệng cầu thang
+    for (let x = at - 21; x <= at + 19; x += 8) { r(x - 1, y + 1, 4, 20, D); r(x, y + 1, 2, 20, K.iron); r(x, y + 1, 1, 20, K.ironL); }
+    r(at - 25, y + 9, 50, 2, K.iron); r(at - 25, y + 9, 50, 1, K.ironL);
+    U.padlock(at, y + 14);
+    // hai trụ nhỏ có đèn đánh dấu lối xuống
+    for (const px of [at - 38, at + 32]) {
+      r(px - 1, y - 13, 8, 25, D); r(px, y - 12, 6, 23, K.stone); r(px, y - 12, 1, 23, K.stoneL); r(px, y - 12, 6, 2, K.stoneL);
+      r(px + 1, y - 19, 4, 7, D); r(px + 2, y - 18, 2, 5, '#ff7a2a'); r(px + 2, y - 16, 2, 3, '#ffd23f');
+      U.glow(px + 3, y - 15, 9, 7, '#ff9a40', 0.08, 3);
+    }
   };
   M.png = (cv) => cv.toDataURL('image/png');
 })();
