@@ -29,7 +29,8 @@
     // bảng kết quả vẽ được: hình vũ khí và tên mang màu bậc
     const realIcon = G.art.weaponIcon, realText = G.ui.text; let icons = 0, goldText = false;
     G.art.weaponIcon = function (c, w) { if (w === line.w) icons++; return realIcon.apply(this, arguments); };
-    G.ui.text = function (s2, x, y, o) { if (line && s2 === line.s && o && o.color === G.RARITY[3].col) goldText = true; return realText.apply(this, arguments); };
+    // màn kết quả mới: mỗi vũ khí là một thẻ viền màu bậc, tên món (không kèm lời dẫn) mang màu bậc
+    G.ui.text = function (s2, x, y, o) { if (line && (s2 === line.s || s2 === G.wName(line.w)) && o && o.color === G.RARITY[3].col) goldText = true; return realText.apply(this, arguments); };
     S.modeT = -9; paint();
     G.art.weaponIcon = realIcon; G.ui.text = realText;
     ok('F: bảng kết quả vẽ hình món Vàng và tên màu Vàng (vùng ' + (r + 1) + ')', icons === 1 && goldText, icons + '/' + goldText);

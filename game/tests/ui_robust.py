@@ -20,7 +20,7 @@ WALK = """async () => {
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
   G.save.sound = false;
   G.setScene(G.Village);
-  for (const t of ['hub', 'map', 'forge', 'gear', 'hero', 'help', 'settings']) {
+  for (const t of ['hub', 'map', 'forge', 'gear', 'outfit', 'hero', 'skill', 'help', 'settings', 'weapon']) {
     G.villageApi.V.tab = t;
     for (const f of ['sharpen', 'tier', 'reforge', 'craft', 'up']) { G.villageApi.V.ftab = f; await wait(40); }
   }

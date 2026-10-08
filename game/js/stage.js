@@ -901,16 +901,23 @@
     const line = (l, cx, cy) => ui.text(l, cx, cy, { size: 7.5, color: l.includes('lên cấp') || l.includes('Cứu được') ? '#ffd27a' : '#e8dfcc' });
     texts.slice(0, rows).forEach((l, i) => line(l, 86, y + i * 11.5));
     let ry = y - 9;
-    const maxCards = Math.max(1, Math.floor((208 - ry) / 26));
+    // ít vũ khí thì thẻ cao hai dòng; nhiều thì thẻ thấp lại một dòng để món nào cũng có hình
+    const avail = 208 - ry, nW = weps.length, pitch = G.clamp(Math.floor(avail / Math.max(1, nW)), 15, 26), maxCards = Math.max(1, Math.floor(avail / pitch));
+    const cut = (str, wd, sz) => { const a = ui.wrap(str, wd, sz, true); return a.length > 1 ? a[0] + '…' : a[0]; };
     weps.slice(0, maxCards).forEach((l, i) => {
-      if (i === maxCards - 1 && weps.length > maxCards) { ui.text('và ' + (weps.length - i) + ' vũ khí nữa (xem ở Bà Hàng Xén)', 246, ry + 10, { size: 7, color: '#ffd27a' }); ry += 14; return; }
-      const rar = G.wRar(l.w), nm = G.wName(l.w), k = l.s.indexOf(nm);
-      TH.card(244, ry, 152, 24, { rar });
-      TH.slot(247, ry + 2, 20, rar);
-      G.art.weaponIcon(G.ux, l.w, 257, ry + 12, 16);
-      ui.text((k > 0 ? l.s.slice(0, k).trim().replace(/:$/, '') : 'Nhận được') + ' · bậc ' + G.RARITY[rar].name, 271, ry + 9.5, { size: 6.5, color: '#a9c2b4' });
-      ui.text(ui.wrap(nm, 120, 7.5, true)[0], 271, ry + 19.5, { size: 7.5, bold: true, color: G.RARITY[rar].col });
-      ry += 26;
+      if (i === maxCards - 1 && nW > maxCards) { ui.text('và ' + (nW - i) + ' vũ khí nữa (xem ở Bà Hàng Xén)', 246, ry + 10, { size: 7, color: '#ffd27a' }); ry += 14; return; }
+      const rar = G.wRar(l.w), nm = G.wName(l.w), k = l.s.indexOf(nm), h = pitch - 2;
+      TH.card(244, ry, 152, h, { rar });
+      if (pitch >= 22) {
+        TH.slot(247, ry + 2, 20, rar);
+        G.art.weaponIcon(G.ux, l.w, 257, ry + 12, 16);
+        ui.text((k > 0 ? l.s.slice(0, k).trim().replace(/:$/, '') : 'Nhận được') + ' · bậc ' + G.RARITY[rar].name, 271, ry + 9.5, { size: 6.5, color: '#a9c2b4' });
+        ui.text(cut(nm, 118, 7.5), 271, ry + 19.5, { size: 7.5, bold: true, color: G.RARITY[rar].col });
+      } else {
+        G.art.weaponIcon(G.ux, l.w, 254, ry + h / 2, Math.min(12, h - 2));
+        ui.text(cut(nm, 128, 7), 263, ry + h / 2 + 2.6, { size: 7, bold: true, color: G.RARITY[rar].col });
+      }
+      ry += pitch;
     });
     // chữ còn dư thì xuống cột phải, dưới các thẻ vũ khí
     texts.slice(rows).forEach((l, i) => { const cy = ry + 9 + i * 11.5; if (cy <= 208) line(l, 246, cy); });

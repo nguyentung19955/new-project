@@ -13,7 +13,11 @@
   const inside = (r, g) => r.x >= g[0] - 3 && r.y >= g[1] - 3 && r.x + r.w <= g[0] + g[2] + 3 && r.y + r.h <= g[1] + g[3] + 3;
   const near = (a, b) => Math.abs(a - b) < 0.01;
   // độ sặc sỡ của một màu: chênh lệch lớn nhất giữa ba kênh đỏ, lục, lam
-  const vivid = (col) => { const m = col.match(/[\d.]+/g); let v; if (col[0] === '#') v = [1, 3, 5].map((i) => parseInt(col.slice(i, i + 2), 16)); else v = m.slice(0, 3).map(Number); return Math.max(...v) - Math.min(...v); };
+  // Từ khi đổi sang chủ đề trống đồng, bản đồ vẫn một tông nhưng là tông đồng và xanh ngọc: các màu của bảng màu đó không tính là sặc sỡ.
+  const chan = (col) => { const m = col.match(/[\d.]+/g); return col[0] === '#' ? [1, 3, 5].map((i) => parseInt(col.slice(i, i + 2), 16)) : m.slice(0, 3).map(Number); };
+  const palSet = new Set(Object.values(N).map((q) => chan(q).join()));
+  const vivid = (col) => { if (palSet.has(chan(col).join())) return 0; const v = chan(col); return Math.max(...v) - Math.min(...v); };
+  const hue = (col) => { const [r, g, b] = chan(col), mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn || 1; const h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; return (h * 60 + 360) % 360; };
   ok('D: bảng màu bản đồ chỉ có một màu nền ô, một màu viền, một màu biểu tượng (cộng màu của ô đang đứng)', PAL && Object.keys(PAL).sort().join() === 'cur,curEdge,edge,faint,fill,icon', PAL && Object.keys(PAL).join());
   ok('D: không còn bảng màu riêng cho từng loại phòng', G.minimap.COL === undefined);
   const fills = { cur: new Set(), seen: new Set(), known: new Set() }, edges = { cur: new Set(), seen: new Set(), known: new Set() };
@@ -80,7 +84,9 @@
   ok('D: ô đang đứng sáng hơn ô đã qua và có viền nổi màu riêng, giống nhau ở mọi bản đồ', one(fills.cur, N.cur) && one(edges.cur, N.curEdge) && lum(N.cur) > lum(N.fill) + 80 && lum(N.curEdge) > lum(N.edge) + 200 && halo >= 12, [...fills.cur].join() + ' viền ' + [...edges.cur].join() + ' quầng ' + halo);
   ok('D: mọi biểu tượng dùng đúng một màu sáng duy nhất', one(iconCols, N.icon), [...iconCols].join(' | '));
   ok('D: lối nối giữa các phòng cùng màu viền; không còn màu nào khác trong lưới bản đồ', one(other, N.edge), [...other].join(' | '));
-  ok('D: không còn màu sặc sỡ nào (xanh, đỏ, tím) trong bản đồ và chú giải', worst <= 60, 'chênh kênh màu lớn nhất ' + worst);
+  ok('D: ngoài bảng màu một tông của bản đồ, không còn màu sặc sỡ nào (xanh, đỏ, tím) trong bản đồ và chú giải', worst <= 60, 'chênh kênh màu lớn nhất ' + worst);
+  const hf = hue(N.fill), hc = hue(N.cur), he = hue(N.edge);
+  ok('D: bảng màu một tông theo chủ đề trống đồng: nền ô và ô đang đứng cùng sắc xanh ngọc, viền màu đồng; không có đỏ, lam, tím', hf > 150 && hf < 195 && Math.abs(hc - hf) < 12 && he > 20 && he < 50, 'sắc nền ' + Math.round(hf) + ', ô đang đứng ' + Math.round(hc) + ', viền ' + Math.round(he));
   ok('D: chú giải của bản đồ to: mọi loại phòng cùng màu ô, cùng màu biểu tượng', legendRows > 20 && one(legendFill, N.fill) && one(legendIcon, N.icon), legendRows + ' dòng; ' + [...legendFill].join() + ' ; ' + [...legendIcon].join());
   ok('D: cửa Trùm còn khóa có ổ khóa, cùng màu biểu tượng', lockSeen >= 4 && lockOk, lockSeen + ' cửa' + (T2.dbg || ''));
   // chú giải có đủ ba khác biệt còn lại

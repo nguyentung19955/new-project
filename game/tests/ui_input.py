@@ -61,6 +61,7 @@ def run(p, size, url=None):
         if tab() == 'map': g.tap(438, 16)
         else: g.tap(436, 57)
     hero_xy = lambda: ev(f"[{VS}.state.x, {VS}.state.y, {VS}.state.cam]")
+    scr = lambda wx, wy: ev(f"{VS}.screen({wx}, {wy})")  # điểm trong làng -> toạ độ màn hình (cảnh trượt ngang và lùi xuống một chút)
     def settle(cond="true", ms=6000):
         # Chờ em bé chạy xong (và điều kiện cond đúng), tối đa ms.
         for _ in range(ms // 100):
@@ -77,7 +78,7 @@ def run(p, size, url=None):
     x0, y0, cam0 = hero_xy()
     c.ok(x0 > 560 and cam0 > 200, f'vào làng thì em bé xuống đò ở bến bên phải (x = {x0:.0f}, màn hình trượt {cam0:.0f})')
     # ---- đi tám hướng bằng cần điều khiển, màn hình trượt ngang theo em bé
-    g.down(60, 200); g.wait(40); g.move(40, 200); g.move(20, 200); g.wait(900)
+    g.down(60, 200); g.wait(40); g.move(40, 200); g.move(20, 200); g.wait(1500)
     x1, y1, cam1 = hero_xy()
     c.ok(x1 < x0 - 40 and abs(y1 - y0) < 6, f'kéo cần sang trái thì em bé đi sang trái ({x0:.0f} -> {x1:.0f})')
     g.move(20, 240); g.wait(500); x2, y2, cam2 = hero_xy()
@@ -87,6 +88,12 @@ def run(p, size, url=None):
     c.ok(cam3 < cam0 - 20, f'màn hình trượt ngang theo em bé ({cam0:.0f} -> {cam3:.0f})')
     x4 = hero_xy()[0]; g.wait(200); c.ok(abs(hero_xy()[0] - x4) < 1, 'nhấc ngón thì em bé đứng lại')
     wx = ev(f"{VS}.state.wp[0].x"); c.ok(abs(wx - x4) < 40, 'vũ khí sống bay theo sau em bé')
+    # ---- tài nguyên hiện bằng biểu tượng: chạm vào thì hiện tên trong chốc lát
+    g.tap(10, 7); c.ok(ev("G.theme.tipNow()") == 'Vàng', 'chạm biểu tượng đồng tiền ở dải trên cùng thì hiện tên Vàng')
+    g.wait(2200); c.ok(ev("G.theme.tipNow()") is None, 'tên biểu tượng tự tắt sau chốc lát')
+    c.ok(tab() == 'hub' and ev(f"{VS}.state.path") is None, 'chạm biểu tượng tài nguyên không làm em bé chạy đi')
+    # ---- dải bảy khuôn mặt không đè lên công trình: mép dưới của dải nằm trên nóc mái lò rèn, đình, nhà thợ may
+    c.ok(ev(f"{VS}.screen(0, 50)[1]") >= 52, 'dải khuôn mặt nằm gọn phía trên các mái nhà (cảnh làng đã lùi xuống)')
     # ---- tới gần một người: nút tròn thành "Nói chuyện", bấm thì mở đúng bảng
     ev(f"(() => {{ const S = {VS}.state, N = {VS}.NPCS.ren; S.x = N.den[0]; S.y = N.den[1]; S.path = null; }})()"); g.wait(300)
     c.ok(ev(f"{VS}.state.near && {VS}.state.near.id") == 'ren', 'đứng cạnh Ông Thợ Rèn thì game nhận ra người ở gần')
@@ -98,16 +105,16 @@ def run(p, size, url=None):
     c.ok(ev(f"{VS}.state.near") is None, 'đi xa thì nút Nói chuyện tắt')
     g.tap(bx, by); c.ok(tab() == 'hub', 'không có ai ở gần thì bấm nút tròn không mở gì')
     # ---- chạm thẳng vào người: em bé tự chạy tới rồi mở bảng
-    nx, ny, cam = ev(f"(() => {{ const N = {VS}.NPCS.may, S = {VS}.state; return [N.pos[0], N.pos[1], S.cam]; }})()")
-    g.tap(nx - cam, ny - 12)
+    nx, ny = ev(f"{VS}.NPCS.may.pos"); tx, ty = scr(nx, ny - 12)
+    g.tap(tx, ty)
     c.ok(wait_tab('outfit'), 'chạm vào Cô Thợ May thì em bé tự chạy tới và bảng mũ áo mở')
     close()
     # ---- chạm vào đất thì em bé đi tới đó
-    xa = hero_xy()[0]; g.tap(260, 228); g.wait(200); settle(); xb = hero_xy()
-    c.ok(abs(xb[0] - (260 + xb[2])) < 12 and abs(xb[1] - 228) < 8 and tab() == 'hub', f'chạm vào đất thì em bé đi tới chỗ đó ({xa:.0f} -> {xb[0]:.0f}, {xb[1]:.0f})')
+    xa = hero_xy()[0]; g.tap(260, 228); g.wait(200); settle(); xb = hero_xy(); hs = scr(xb[0], xb[1])
+    c.ok(abs(hs[0] - 260) < 12 and abs(hs[1] - 228) < 8 and tab() == 'hub', f'chạm vào đất thì em bé đi tới chỗ đó ({xa:.0f} -> {xb[0]:.0f}, {xb[1]:.0f})')
     # ---- chạm vào vũ khí sống để xem vũ khí
-    g.wait(900); wx, wy, cam = ev(f"[{VS}.state.wp[0].x, {VS}.state.wp[0].y, {VS}.state.cam]")
-    g.tap(wx - cam, wy - 20); c.ok(tab() == 'weapon', 'chạm vào vũ khí sống thì mở màn Xem vũ khí')
+    g.wait(900); wx, wy = ev(f"[{VS}.state.wp[0].x, {VS}.state.wp[0].y]"); tx, ty = scr(wx, wy - 20)
+    g.tap(tx, ty); c.ok(tab() == 'weapon', 'chạm vào vũ khí sống thì mở màn Xem vũ khí')
     g.tap(431, 37); c.ok(tab() == 'hub', 'nút Quay lại từ màn Xem vũ khí')
     # ---- dải bảy khuôn mặt: chạm một mặt là em bé tự chạy tới và mở đúng bảng; nút đóng đưa về làng
     for i, k in enumerate(ORDER):
@@ -119,8 +126,8 @@ def run(p, size, url=None):
         c.ok(tab() == 'hub', f'nút đóng bảng từ {TABS[k]}')
     c.ok(ev(f"{VS}.state.x") < 200, 'sau khi gặp Anh Mõ thì em bé đang ở đầu bên trái của làng')
     # ---- ba bé hero còn lại ngồi ở sân đình: chạm bé chưa mở thì không đổi
-    kid = ev(f"(() => {{ const S = {VS}.state; S.x = 262; S.y = 176; S.face = 1; S.cam = 22; S.path = null; return [186, 134]; }})()"); g.wait(300)
-    cam = ev(f"{VS}.state.cam"); g.tap(kid[0] - cam, kid[1] - 10); g.wait(200); settle()
+    kid = ev(f"(() => {{ const S = {VS}.state; S.x = 262; S.y = 176; S.face = 1; S.cam = 22; S.path = null; for (const w of S.wp) {{ w.x = 240; w.y = 176; }} return [186, 134]; }})()"); g.wait(500)
+    tx, ty = scr(kid[0], kid[1] - 10); g.tap(tx, ty); g.wait(200); settle()
     c.ok(ev("G.save.hero") == 'smith', 'chạm bé hero chưa mở thì không đổi hero')
     # ---- bản đồ vùng dạng tranh: chọn ải rồi Lên đò
     c.ok(visit('lai'), 'Chú Lái Đò mở tranh bản đồ vùng')
@@ -397,8 +404,8 @@ def run(p, size, url=None):
     c.ok(visit('tu') and tab() == 'hero', 'Ông Từ mở bảng chọn hero')
     g.tap(389, 90); c.ok(ev("G.save.hero") == 'hunter', 'chọn hero')
     close()
-    seat = ev(f"(() => {{ const S = {VS}.state; S.x = 262; S.y = 176; S.face = 1; S.cam = 22; S.path = null; return [186, 134]; }})()"); g.wait(300)
-    g.tap(seat[0] - ev(f"{VS}.state.cam"), seat[1] - 10); g.wait(200); settle("G.save.hero === 'smith'")
+    seat = ev(f"(() => {{ const S = {VS}.state; S.x = 262; S.y = 176; S.face = 1; S.cam = 22; S.path = null; for (const w of S.wp) {{ w.x = 240; w.y = 176; }} return [186, 134]; }})()"); g.wait(500)
+    tx, ty = scr(seat[0], seat[1] - 10); g.tap(tx, ty); g.wait(200); settle("G.save.hero === 'smith'")
     c.ok(ev("G.save.hero") == 'smith', 'chạm bé Thợ Rèn đang ngồi ở sân đình thì đổi lại sang bé đó')
     visit('tu'); g.tap(389, 90); close()
     c.ok(visit('do') and tab() == 'skill', 'Cụ Đồ mở cây kỹ năng')

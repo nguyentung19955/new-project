@@ -37,7 +37,7 @@ with sync_playwright() as p:
     g.ev("G.startStage(0,0,0); G.testGoto('elite'); G.finishStage(false)"); g.wait(700); shot('ketqua-thua')
     g.ev(RICH); shot('hub-giau')
     V = "G.villageApi.V"
-    for tab in ['map', 'forge', 'gear', 'hero', 'help', 'settings']:
+    for tab in ['map', 'forge', 'gear', 'outfit', 'hero', 'skill', 'help', 'settings']:
         g.ev(f"{V}.tab = '{tab}'; {V}.sel = {'[1,4]' if tab=='map' else 'G.save.carry[0]' if tab=='forge' else 'null'}")
         shot('lang-' + tab)
     g.ev(f"{V}.tab='gear'; {V}.sel=G.save.weapons[3].id"); shot('lang-gear-chon')

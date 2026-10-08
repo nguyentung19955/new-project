@@ -18,7 +18,7 @@ with sync_playwright() as p:
       G.setScene(G.Village); }""")
     def shot(name): pg.wait_for_timeout(250); pg.screenshot(path=f'{OUT}/{name}.png')
     V = "G.villageApi.V"
-    for tab in ['map', 'forge', 'gear', 'hero', 'help', 'settings']:
+    for tab in ['map', 'forge', 'gear', 'outfit', 'hero', 'skill', 'help', 'settings']:
         pg.evaluate(f"{V}.tab = '{tab}'; {V}.sel = {'[1,4]' if tab=='map' else 'G.save.carry[0]' if tab=='forge' else 'null'}")
         shot('m-' + tab)
     for ft in ['tier', 'reforge', 'craft']:

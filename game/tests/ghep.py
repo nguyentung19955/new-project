@@ -320,7 +320,15 @@ JS = r"""
   paint();
   ok('Ô vũ khí trong trận: biểu tượng vẽ bằng G.weaponArt.icon cho cả hai món', icons.length >= 2, icons.length);
   G.setScene(G.Village);
-  for (const t of ['hub', 'forge', 'gear']) { icons.length = 0; G.villageApi.V.tab = t; paint(); ok('Làng (' + t + '): biểu tượng vũ khí vẽ bằng G.weaponArt.icon', icons.length >= 2, icons.length); }
+  // Từ khi làng có người: ở cảnh làng (hub) hai vũ khí đang mang bay theo em bé, vẽ bằng G.weaponArt.draw; trong các bảng vẫn là biểu tượng G.weaponArt.icon.
+  const flying = [], realDraw2 = G.weaponArt.draw;
+  G.weaponArt.draw = function (c, o) { flying.push(Object.assign({}, o)); return realDraw2.apply(this, arguments); };
+  for (const t of ['hub', 'forge', 'gear']) {
+    icons.length = 0; flying.length = 0; G.villageApi.V.tab = t; paint();
+    if (t === 'hub') ok('Làng (hub): hai vũ khí sống bay theo em bé vẽ bằng G.weaponArt.draw', flying.length >= 2, flying.length);
+    else ok('Làng (' + t + '): biểu tượng vũ khí vẽ bằng G.weaponArt.icon', icons.length >= 2, icons.length);
+  }
+  G.weaponArt.draw = realDraw2;
   G.villageApi.V.tab = 'weapon'; G.villageApi.V.wid = G.save.carry[0]; icons.length = 0; paint();
   ok('Làng: màn xem vũ khí mở được và có hình vũ khí', G.villageApi.V.tab === 'weapon' && icons.length >= 1);
   G.weaponArt.icon = realIcon;
