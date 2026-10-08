@@ -6,40 +6,40 @@ colors:
   a = vien
   b = trang-xam
   c = sang
-  d = dong-toi
-  e = dong
-  f = dong-sang
-  g = vang-nghe
-  h = cham-toi
-  i = cham
-  j = nuoc
-  k = nuoc-sang
-  l = troi
+  d = la-toi
+  e = la-sang
+  f = cham-toi
+  g = cham
+  h = nuoc
+  i = nuoc-sang
+  j = troi
+  k = ngoc
+  l = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-affffffffffggfffffffffea
-afeeeeeeeeeeeeeeeeeeeeda
-afejjjjjjjjjjjjjjjjjjeda
-afejaaaaaaaaahhhhahhjeda
-afeacccccccccahhalahjeda
-afeabbbbbbbbbahalllajeda
-afejaaaaaaaaaaaaalahjeda
-afejhhhacccccccccccajeda
-afejhhhabbbbbbbbbbbajeda
-afejhaaaaaaaaaaaaaahjeda
-agejaccccccccccccahhjega
-agejabbbbbbbbbbbbahhjega
-afejhaaaaaaaaaaaaahhjeda
-afejhhhhacccccccccahjeda
-afeaaaaaabbbbbbbbbaaaeda
-afekkkkklkkkklkkkkkkkeda
-afekjjilklkilklkjjjjieda
-afekjjjkjkjjkjkjjjjjieda
-afekjjjjjjjjjjjjjjjjieda
-afeiiiiiiiiiiiiiiiiiieda
-afeeeeeeeeeeeeeeeeeeeeda
-aeddddddddddggddddddddda
+alllllllllleelllllllllka
+alkkkkkkkkkkkkkkkkkkkkda
+alkhhhhhhhhhhhhhhhhhhkda
+alkhaaaaaaaaaffffaffhkda
+alkacccccccccaffajafhkda
+alkabbbbbbbbbafajjjahkda
+alkhaaaaaaaaaaaaajafhkda
+alkhfffacccccccccccahkda
+alkhfffabbbbbbbbbbbahkda
+alkhfaaaaaaaaaaaaaafhkda
+aekhaccccccccccccaffhkea
+aekhabbbbbbbbbbbbaffhkea
+alkhfaaaaaaaaaaaaaffhkda
+alkhffffacccccccccafhkda
+alkaaaaaabbbbbbbbbaaakda
+alkiiiiijiiiijiiiiiiikda
+alkihhgjijigjijihhhhgkda
+alkihhhihihhihihhhhhgkda
+alkihhhhhhhhhhhhhhhhgkda
+alkggggggggggggggggggkda
+alkkkkkkkkkkkkkkkkkkkkda
+akddddddddddeeddddddddda
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

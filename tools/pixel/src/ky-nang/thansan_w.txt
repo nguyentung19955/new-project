@@ -4,43 +4,42 @@ name: Thần Săn Ba Vì · W «Nanh Hổ»
 size: 24x24
 colors:
   a = vien
-  b = trang-xam
-  c = trang
-  d = sang
-  e = dat-toi
-  f = dat
-  g = dat-sang
-  h = dong-toi
-  i = dong
-  j = dong-sang
-  k = vang-nghe
-  l = la-toi
-  m = la-ma
+  b = sat
+  c = sat-sang
+  d = bac
+  e = trang-xam
+  f = trang
+  g = sang
+  h = dat-toi
+  i = dat
+  j = dat-sang
+  k = la-toi
+  l = la-ma
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ajjjjjjjjjjkkjjjjjjjjjia
-ajiiiiiiiiiiiiiiiiiiiiha
-ajimagammmmmmmmmagaamiha
-ajiagfgaaaaaaallagggaiha
-ajiaeeedddddddalaeeeaiha
-ajimaaaaddccccdalaaamiha
-ajimllladbccccballllmiha
-ajimlllladdccccdalllmiha
-ajimlllladbccccballlmiha
-ajimllllladdcccballlmiha
-akimllllladbccballllmika
-akimllllladddcballllmika
-ajimlllllladdcballllmiha
-ajimlllllladccballllmiha
-ajimlllllladcballlllmiha
-ajimllllllabballllllmiha
-ajimlllllllaballllllmiha
-ajimllllllllalllllllmiha
-ajimllllllllllllllllmiha
-ajimmmmmmmmmmmmmmmmmmiha
-ajiiiiiiiiiiiiiiiiiiiiha
-aihhhhhhhhhhkkhhhhhhhhha
+addddddddddggdddddddddca
+adccccccccccccccccccccba
+adclajalllllllllajaalcba
+adcajijaaaaaaakkajjjacba
+adcahhhgggggggakahhhacba
+adclaaaaggffffgakaaalcba
+adclkkkageffffeakkkklcba
+adclkkkkaggffffgakkklcba
+adclkkkkageffffeakkklcba
+adclkkkkkaggfffeakkklcba
+agclkkkkkageffeakkkklcga
+agclkkkkkagggfeakkkklcga
+adclkkkkkkaggfeakkkklcba
+adclkkkkkkagffeakkkklcba
+adclkkkkkkagfeakkkkklcba
+adclkkkkkkaeeakkkkkklcba
+adclkkkkkkkaeakkkkkklcba
+adclkkkkkkkkakkkkkkklcba
+adclkkkkkkkkkkkkkkkklcba
+adcllllllllllllllllllcba
+adccccccccccccccccccccba
+acbbbbbbbbbbggbbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

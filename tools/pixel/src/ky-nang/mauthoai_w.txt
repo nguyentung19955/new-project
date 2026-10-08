@@ -1,41 +1,44 @@
-# Nước Thánh — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: holy water lotus
-name: Nước Thánh
+# Mẫu Thoải · W «Nước Thánh» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bình nước thánh + dấu hồi máu
+name: Mẫu Thoải · W «Nước Thánh»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = cham
-  g = nuoc
-  h = nuoc-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = trang-xam
+  f = trang
+  g = sang
+  h = la-sang
+  i = cham-toi
+  j = cham
+  k = cham-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbgbbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbhggggggggggfbbbdca
-aedbbbfggggggggggfbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbfggggggggfbbbbdca
-aedbbbbbfggggggfbbbbbdca
-aedbbbbbbffggffbbbbbbdca
-aedbbbbbbbbffbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+addddddddddggdddddddddca
+adccccccccccccccccccccba
+adckkkkkkkkkkkkkkkkkkcba
+adckiiiiiiiiiiiiiiiikcba
+adckiiiiiiaaaaiiiiiikcba
+adckiiiiiaggggaiiiiikcba
+adckiiiiiagffeaiiiiikcba
+adckiiiiiiafeaiiiiiikcba
+adckiiiiiagffeaiiiiikcba
+adckiiiiagffffeaiiiikcba
+agckiiiagjjjjjjeaiiikcga
+agckiiagffffffffeaiikcga
+adckiiagfjfjjfjfeaiikcba
+adckiiagffffffffeaiikcba
+adckiiiagjjjjjjeaaaikcba
+adckiiiiafffffeaahaakcba
+adckiiiiageeeeeahhhakcba
+adckiiiiiaaaaaaaahaakcba
+adckiiiiiiiiiiiiaaaikcba
+adckkkkkkkkkkkkkkkkkkcba
+adccccccccccccccccccccba
+acbbbbbbbbbbggbbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

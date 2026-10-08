@@ -1,41 +1,47 @@
-# Giếng Ngọc — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Nước giếng ngọc hồi dần 30% máu cho tướng yếu nhất
-name: Giếng Ngọc
+# Mỵ Châu · E «Giếng Ngọc» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: giếng ngọc + dấu hồi máu
+name: Mỵ Châu · E «Giếng Ngọc»
 size: 24x24
 colors:
   a = vien
-  b = khoi
+  b = sat-toi
   c = sat
   d = sat-sang
-  e = bac
-  f = dong-toi
-  g = dong
-  h = dong-sang
+  e = sang
+  f = dat-toi
+  g = dat
+  h = dat-sang
+  i = vang-nghe
+  j = vang-sang
+  k = la-toi
+  l = la-sang
+  m = ngoc
+  n = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbebbbbbbbbbgfa
-ahgbbbbbbbedcbbbbbbbbgfa
-ahgbbbbbeedddecbbbbbbgfa
-ahgbbbbedddddddcbbbbbgfa
-ahgbbbedddddddddcbbbbgfa
-ahgbbedddddddddddcbbbgfa
-ahgeedddddddddddddecbgfa
-ahgbedddddddddddddcbbgfa
-ahgbcdddddddddddddcbbgfa
-ahgbbcdddddddddddcbbbgfa
-ahgbbbcdddddddddcbbbbgfa
-ahgbbbbcdddddddcbbbbbgfa
-ahgbbbbbcdddddcbbbbbbgfa
-ahgbbbbbbedddcbbbbbbbgfa
-ahgbbbbbbcdddcbbbbbbbgfa
-ahgbbbbbbbcdcbbbbbbbbgfa
-ahgbbbbbbbbcbbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+annnnnnnnnnllnnnnnnnnnma
+anmmmmmmmmmmmmmmmmmmmmka
+anmddddddddddddddddddmka
+anmdaaaaaaaaaaaaaaaadmka
+anmahggggggggggggggfamka
+anmdahgaaaagaaaaagfadmka
+anmdahgabbagabbbagfadmka
+anmdahgabaijiabbagfadmka
+anmdahgabaiiiabbagfadmka
+anmdahgaaaaaaaaaagfadmka
+almdadddddddddddddbadmla
+almadnmmmmmmmemmmmkbamla
+anmadckkkkkkkkkkkkcbamka
+anmadcaccaccaccacccbamka
+anmadcccccccccccaaabamka
+anmadcaccaccaccaalaaamka
+anmabbbbbbbbbbballlaamka
+anmdaaaaaaaaaaaaalaadmka
+anmdbbbbbbbbbbbbaaabdmka
+anmddddddddddddddddddmka
+anmmmmmmmmmmmmmmmmmmmmka
+amkkkkkkkkkkllkkkkkkkkka
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

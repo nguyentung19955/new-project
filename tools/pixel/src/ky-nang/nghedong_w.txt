@@ -1,41 +1,45 @@
-# Khiên Đồng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Khiên 20% máu cho tướng quanh mình
-name: Khiên Đồng
+# Nghê Đồng · W «Khiên Đồng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: khiên đồng trống đồng
+name: Nghê Đồng · W «Khiên Đồng»
 size: 24x24
 colors:
   a = vien
-  b = sat
-  c = sat-sang
-  d = bac
-  e = dong-toi
-  f = dong
-  g = dong-sang
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = bac
+  f = sang
+  g = dong-toi
+  h = dong
+  i = dong-sang
+  j = vang-nghe
+  k = vang-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-agggggggggggggggggggggea
-agffffffffffffffffffffea
-agfddddddddddddddddbffea
-agfdcccccccccccccccbffea
-agfdcccccccccccccccbffea
-agfdcccccccccccccccbffea
-agfdcccccccccccccccbffea
-agfdcccccccccccccccbffea
-agfdcccccccccccccccbffea
-agfdcccccccccccccccbffea
-agfdcccccccccccccccbffea
-agfbcccccccccccccccbffea
-aeffbcccccccccccccbfffea
-.aeefbcccccccccccbffeea.
-..aaefbbcccccccbbffeaa..
-....aeffbcccccbfffea....
-.....aeffbcccbfffea.....
-......aeffbcbfffea......
-.......aeffbfffea.......
-........aeffffea........
-.........aeffea.........
-..........aeea..........
-...........aa...........
+aeeeeeeeeeeffeeeeeeeeeda
+aeddddddddddddddddddddca
+aedddddddaaaaaadddddddca
+aeddbbbaaiiiiiiaabbbddca
+aeddbbaiihhhhhhiiabbddca
+aeddbaihjjjjjjjjhiabddca
+aeddaihjhhhhhhhhjhgaddca
+aeddaijhhhjhhjhhhjgaddca
+aedaihjhhjhffhjhhjhgadca
+aedaihjhhhfkkfhhhjhgadca
+afdaihjhhfkkkkfhhjhgadfa
+afdahhjhhhfkkfhhhjggadfa
+aedahhjhhjhffhjhhjggadca
+aeddahjhhhjhhjhhhjgaddca
+aeddaghjhhhhhhhhjggaddca
+aeddbaghjjjjjjjjggabddca
+aeddbbagghhhhhhggabbddca
+aeddbbbaaggggggaabbbddca
+aeddbbbbbaaaaaabbbbbddca
+aeddddddddddddddddddddca
+aeddddddddddddddddddddca
+adccccccccccffccccccccca
+.aaaaaaaaaaaaaaaaaaaaaa.
 end
 
 anim main fps=1 once

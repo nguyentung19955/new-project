@@ -1,43 +1,44 @@
-# Lông Vũ Tiên — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: one white fairy feather with a soft glow
-name: Lông Vũ Tiên
+# Âu Cơ · W «Lông Vũ Tiên» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: lông vũ + toả sáng
+name: Âu Cơ · W «Lông Vũ Tiên»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-toi
-  d = dat
-  e = dat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = vang-nghe
-  j = vang-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = trang-xam
+  f = trang
+  g = sang
+  h = dat-toi
+  i = dat-sang
+  j = vang-nghe
+  k = vang-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgecbbecbbecbbecbbecgfa
-ahgecbbecbbecbbecbbecgfa
-ahgcdcbecbbecbbecbedcgfa
-ahgbecbecbbecbbecbecbgfa
-ahgbecbcdcbecbedcbecbgfa
-ahgbcdcbecbecbecbedcbgfa
-ahgbbecbecbecbecbecbbgfa
-ahgbbcdcecbecbecedcbbgfa
-ahgbbbeccdcecedcecbbbgfa
-ahgbbbcdcecececedcbbbgfa
-ahgbbjjjjjjjjjjjjjhbbgfa
-ahgbbjiiiiiiiiiiiihbbgfa
-ahgbbjiiiiiiiiiiiihbbgfa
-ahgbbhhhhhhhhhhhhhhbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+addddddddddggdddddddddca
+adccccccccccccccccccccba
+adciiiiiiiikiiiiaaaiicba
+adcikhhhhhhjhhaagggaicba
+adcihkhhhkhjhaggfffaicba
+adcihhjhhkhjagffffeaicba
+adcihhhjhhjagfffffeaicba
+adcihhhhjhagffffefeaicba
+adcihkkhhagfffefffeaicba
+adcihhhjagfffeffffeaicba
+agcihhhagfffeffffeahicga
+agckjjagfffeffffeajjjcga
+adcihagfffefffeeahhhicba
+adcihagffefffeeahkkhicba
+adcihaffeffeeaajhhhhicba
+adciaefeeeeaajhhjhhhicba
+adciaeeaaaahjhkhhjhhicba
+adcaeaahhkhhjhkhhhkhicba
+adciahhhhhhhjhhhhhhkicba
+adciiiiiiiiijiiiiiiiicba
+adccccccccccccccccccccba
+acbbbbbbbbbbggbbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

@@ -1,44 +1,46 @@
-# Vồ Mồi — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: tiger pounce claw
-name: Vồ Mồi
+# Chúa Sơn Lâm · Q «Vồ Mồi» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: vết vuốt cào + vệt tốc độ
+name: Chúa Sơn Lâm · Q «Vồ Mồi»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-toi
-  d = dat
-  e = dat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = la
-  j = la-ma
-  k = la-sang
+  b = trang-xam
+  c = trang
+  d = sang
+  e = dong-toi
+  f = dong
+  g = dong-sang
+  h = vang-nghe
+  i = son
+  j = lua
+  k = lua-sang
+  l = la-toi
+  m = la-ma
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbkbbbbbgfa
-ahgbbbbbbbbbbkkjibbbbgfa
-ahgbbbbbbbbbkjjjjibbbgfa
-ahgbbbbbbbbkjjjjjjibbgfa
-ahgbbbbbbbbijjjjjjibbgfa
-ahgbbbbbbbbbkjjjjjiibgfa
-ahgbbbbbbbbbijjjjibbbgfa
-ahgbbbbbbbbbbijjibbbbgfa
-ahgbbbbbbbbbeciibbbbbgfa
-ahgbbbbbbbbedcbbbbbbbgfa
-ahgbbbbbbbedcbbbbbbbbgfa
-ahgbbbbbbedcbbbbbbbbbgfa
-ahgbbbbbedcbbbbbbbbbbgfa
-ahgbbbbedcbbbbbbbbbbbgfa
-ahgbbbbecbbbbbbbbbbbbgfa
-ahgbbbedcbbbbbbbbbbbbgfa
-ahgbbedcbbbbbbbbbbbbbgfa
-ahgbbccbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+agggggggggghhgggggggggfa
+agffffffffffffffffffffea
+agfmmmmmmmmmmmmmmmmmmfea
+agfmllllllllllalllalmfea
+agfmlllllllllakalakamfea
+agfmlllallllakjaakjamfea
+agfmccakallakjaakjalmfea
+agfmlakjalakjaakjallmfea
+agfmlajalakjaakjalllmfea
+agfmakjaakjaakjallllmfea
+ahfdajaakjaakjalllllmfha
+ahfakjakjaakjallllllmfha
+agfajaajaakjalllllllmfea
+agfajakjaajallllllllmfea
+agfaiajaakjallllllllmfea
+agfmaajaajalllllllllmfea
+agfmlaiaaialllllllllmfea
+agfmlbablallllllllllmfea
+agfmllllllllllllllllmfea
+agfmmmmmmmmmmmmmmmmmmfea
+agffffffffffffffffffffea
+afeeeeeeeeeehheeeeeeeeea
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

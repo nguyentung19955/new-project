@@ -1,40 +1,46 @@
-# Đê Vững — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: earthen dike
-name: Đê Vững
+# Người Đắp Đê · W «Đê Vững» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: khiên + mũi tên tăng
+name: Người Đắp Đê · W «Đê Vững»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = sang
+  f = dat-toi
+  g = dat-sang
+  h = cat
+  i = dong-toi
+  j = dong
+  k = dong-sang
+  l = vang-nghe
+  m = vang-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbgbbbbbbdca
-aedbbbbbbbbbbbgebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbgebbbgffebbbbdca
-aedbbbbbgebbgfffebbbbdca
-aedbbbbgffebgfffebbbbdca
-aedbbbbgfffgffffebbbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbgffffffffffffebbdca
-aedbbgffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbgffffffffffffffebdca
-aedgeeeeeeeeeeeeeeeebdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adcggggggggggggggggggcba
+adcgfaaaaaaaaaaaaaafgcba
+adcgakkkkkkkkkkkkkkagcba
+adcgakmhhhhhhhhhhgjagcba
+adcgakmhhhhhhhhhhgjagcba
+adcgakmhhhlmlhhhhgjagcba
+adcgakmhhlmemlhhhgjagcba
+adcgakmhhhlmlhhhhgjagcba
+aecgakmhhhhhhhhhhgjagcea
+aecgfakmhhhhhhhhgjafgcea
+adcgfakmhhhhhhhhgjafgcba
+adcgffakmhhhhhhgjaffgcba
+adcgfffakmhhhhgjamafgcba
+adcgffffakmhhgjamlmagcba
+adcgfffffakjjiaaalaagcba
+adcgffffffaaaaffalafgcba
+adcgffffffffffffaaafgcba
+adcggggggggggggggggggcba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

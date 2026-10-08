@@ -1,44 +1,45 @@
-# Chim Thần — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a magic bird carrying a seed
-name: Chim Thần
+# Mai An Tiêm · E «Chim Thần» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: chim bay + hạt
+name: Mai An Tiêm · E «Chim Thần»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-toi
-  d = dat
-  e = dat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = la
-  j = la-ma
-  k = la-sang
+  b = dong-sang
+  c = vang-nghe
+  d = vang-sang
+  e = son
+  f = lua
+  g = lua-sang
+  h = la-toi
+  i = la-ma
+  j = la-sang
+  k = ngoc
+  l = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbebbbbbbbbbbgfa
-ahgbbbbbbbdbbbbkkibbbgfa
-ahgbbbbbbbecbbkjjjibbgfa
-ahgbbbbbbeddcbkjjaibbgfa
-ahgbbbbbbeddcbkjjjibbgfa
-ahgkbbbbecccccjjiiibbgfa
-ahgkkibkjjjjjjjibbbbbgfa
-ahgkjjkjjjjjjjjjibbbbgfa
-ahgkiijjjjjjjjjjibbbbgfa
-ahgibbijjjjjjjjjibbbbgfa
-ahgbbbbijjjjjjjibbbbbgfa
-ahgbbbbbiiiicicbbbbbbgfa
-ahgbbbbbbbbcbbcbbbbbbgfa
-ahgbbbbbbbbcbbcbbbbbbgfa
-ahgbbbbbbbbcbbcbbbbbbgfa
-ahgbbbbbbbbbbbcbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+alllllllllljjlllllllllka
+alkkkkkkkkkkkkkkkkkkkkha
+alkiiiiiiiiiiiiiiiiiikha
+alkihhhhhhhhhhhhhhhhikha
+alkihhahhhhhhhhhhhhhikha
+alkihagahhhhhhhhhhhhikha
+alkihaggahhhhhhhhhhhikha
+alkihagfgahhhhhhhhhhikha
+alkihhagfgahhhhhhhhhikha
+alkihhagffgahhhaahhhikha
+ajkihhaagffgaaaggahhikja
+ajkihagggffffggffaahikja
+alkiagffffffffffdcdaikha
+alkagfffffffffffeaahikha
+alkiaeeaefffffeaaaahikha
+alkihaahaaaeeeahaddaikha
+alkihhhhhhhaaahadcccakha
+alkihhhhhhhhhhhadccbakha
+alkihhhhhhhhhhhhacbaikha
+alkiiiiiiiiiiiiiiaaiikha
+alkkkkkkkkkkkkkkkkkkkkha
+akhhhhhhhhhhjjhhhhhhhhha
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

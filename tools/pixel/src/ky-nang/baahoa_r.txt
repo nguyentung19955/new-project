@@ -4,41 +4,39 @@ name: Bà Hỏa · R «Biển Lửa»
 size: 24x24
 colors:
   a = vien
-  b = dong-toi
-  c = dong
-  d = dong-sang
-  e = vang-nghe
-  f = vang-sang
-  g = son-toi
-  h = son
-  i = son-sang
-  j = lua
-  k = lua-sang
+  b = dong
+  c = vang-nghe
+  d = vang-sang
+  e = son-toi
+  f = son
+  g = son-sang
+  h = lua
+  i = lua-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-addddddddddeedddddddddca
+agdddddddddggdddddddddga
 adccccccccccccccccccccba
-adciiiiiiiiiiiiiiiiiicba
-adcigggggaggggggggagicba
-adciggggakaggggggakaicba
-adcigagakhaaggaggahaacba
-adciakagahakaakagakkkcba
-adcakhaakhkhakhaakhjhcba
-adcakhakhfkhakhaahfhhcba
-adckhhkjhjhjkjhkkhffhcba
-aechffkhfkfkjhfkhfkjhcea
-aechfjkhfkjkhfjhhfkjhcea
-adchfjkhjkjkhfkfhjkjhcba
-adchfjkhkjjkhfjkhkjjhcba
-adchjkhfkkjkhjkhfkkjhcba
-adcaahfjhjkhhkhfjhhaacba
-adciahfkfkhffkhfkfhaicba
-adcaahjjjkhjjkhjjjhaacba
-adckkjkkkjjkkjjkkkjkkcba
-adchhhhhhhhhhhhhhhhhhcba
+adcggggggggggggggggggcba
+adcgeeeeeaeeeeeeeeaegcba
+adcgeeeeaiaeeeeeeaiagcba
+adcgeaeaifaaeeaeeafaacba
+adcgaiaeafaiaaiaeaiiicba
+adcaifaaififaifaaifhfcba
+adcaifaifdifaifaafdffcba
+adciffihfhfhihfiifddfcba
+agcfddifdidihfdifdihfcga
+agcfdhifdihifdhffdihfcga
+adcfdhifhihifdidfhihfcba
+adcfdhifihhifdhifihhfcba
+adcfhifdiihifhifdiihfcba
+adcaafdhfhiffifdhffaacba
+adcgafdidifddifdidfagcba
+adcaafhhhifhhifhhhfaacba
+adciihiiihhiihhiiihiicba
+adcffffffffffffffffffcba
 adccccccccccccccccccccba
-acbbbbbbbbbbeebbbbbbbbba
+agbbbbbbbbbbggbbbbbbbbga
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

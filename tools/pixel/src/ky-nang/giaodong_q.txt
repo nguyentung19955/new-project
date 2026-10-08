@@ -1,41 +1,45 @@
-# Đâm Xuyên — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Đâm mạnh: choáng mục tiêu, x2 sát thương +1
-name: Đâm Xuyên
+# Dũng Sĩ Giáo Đồng · Q «Đâm Xuyên» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: giáo + nổ va chạm
+name: Dũng Sĩ Giáo Đồng · Q «Đâm Xuyên»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = sat
-  d = sat-sang
-  e = bac
-  f = dong-toi
-  g = dong
-  h = dong-sang
+  b = sat-toi
+  c = sat-sang
+  d = sang
+  e = dat
+  f = dat-sang
+  g = dong-toi
+  h = dong
+  i = dong-sang
+  j = vang-nghe
+  k = vang-sang
+  l = son
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbeecbbbbbbbbgfa
-ahgbbbbeeedccbbbbbbbbgfa
-ahgbbbeddccbbbbbbbbbbgfa
-ahgbbeddcbeeeeecbbbbbgfa
-ahgbbedcbeddccddecbbbgfa
-ahgbedcbeddcbbccdcbbbgfa
-ahgbecbbedcbbbbbedcbbgfa
-ahgbecbbedcbbecbedcbbgfa
-ahgbcdcbcddeedcbedcbbgfa
-ahgbbedcbccccccbedcbbgfa
-ahgbbcddcbbbbbbedcbbbgfa
-ahgbbbccdeeeeeedccbbbgfa
-ahgbbbbbccccccccbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+aiiiiiiiiiijjiiiiiiiiiha
+aihhhhhhhhhhhhhhhhhhhhga
+aihcccccccccccccccacchga
+aihcbbbbbbbbbbbbbaiachga
+aihcbbbbbbbbbbbbaidhahga
+aihcbbbbbbbbbbbaidhgahga
+aihcbbbbbbbbbbaidhhachga
+aihcbbbbbbbbbaidhhgachga
+aihcbbbbbbbbaidhhgabchga
+aihcbbbbbbbaidhhgabbchga
+ajhcbbbbbbbaahhgabbbchja
+ajhcbbbbbbalalgabbbbchja
+aihcbbbdbafellabbbbbchga
+aihcbdbjadealabbbbbbchga
+aihcbbjkjeababbbbbbbchga
+aihcdjkdkjdbbbbbbbbbchga
+aihcbajkjbbbbbbbbbbbchga
+aihcadejbdbbbbbbbbbbchga
+aihafeadbbbbbbbbbbbbchga
+aihcaaccccccccccccccchga
+aihhhhhhhhhhhhhhhhhhhhga
+ahggggggggggjjggggggggga
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

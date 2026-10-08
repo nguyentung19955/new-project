@@ -1,44 +1,48 @@
-# Búa Nung Đỏ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: glowing red-hot hammer
-name: Búa Nung Đỏ
+# Thợ Rèn Đông Sơn · Q «Búa Nung Đỏ» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: búa + nổ va chạm
+name: Thợ Rèn Đông Sơn · Q «Búa Nung Đỏ»
 size: 24x24
 colors:
   a = vien
-  b = khoi
+  b = sang
   c = dat-toi
   d = dat
   e = dat-sang
   f = dong-toi
   g = dong
   h = dong-sang
-  i = son
-  j = lua
-  k = lua-sang
+  i = vang-nghe
+  j = vang-sang
+  k = son-toi
+  l = son
+  m = son-sang
+  n = lua
+  o = lua-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
+ahhhhhhhhhhiihhhhhhhhhga
 ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbkbbbbbgfa
-ahgbbbbbbbbbbkkjibbbbgfa
-ahgbbbbbbbbbkjjjjibbbgfa
-ahgbbbbbbbbkjjjjjjibbgfa
-ahgbbbbbbbbijjjjjjibbgfa
-ahgbbbbbbbbbkjjjjjiibgfa
-ahgbbbbbbbbbijjjjibbbgfa
-ahgbbbbbbbbbbijjibbbbgfa
-ahgbbbbbbbbbeciibbbbbgfa
-ahgbbbbbbbbedcbbbbbbbgfa
-ahgbbbbbbbedcbbbbbbbbgfa
-ahgbbbbbbedcbbbbbbbbbgfa
-ahgbbbbbedcbbbbbbbbbbgfa
-ahgbbbbedcbbbbbbbbbbbgfa
-ahgbbbbecbbbbbbbbbbbbgfa
-ahgbbbedcbbbbbbbbbbbbgfa
-ahgbbedcbbbbbbbbbbbbbgfa
-ahgbbccbbbbbbbbbbbbbbgfa
+ahgmmmmmmmmmmmmmmmmmmgfa
+ahgmkkaaaaaaaaaaaakkmgfa
+ahgmkaooooooooooooakmgfa
+ahgmaobnnnnnnnnnnnlamgfa
+ahgmaobnnannnnannnlamgfa
+ahgmaobnnnnnnnnnnnlamgfa
+ahgmkallllloellllaakmgfa
+ahgmkkaaaaoedlaaakkkmgfa
+aigmkkkkkkaedakkkkkkmgia
+aigmkkkkkkaedakkkkkkmgia
+ahgmkkkbkkaedakkkkkkmgfa
+ahgmkbkikbaedakkkkkkmgfa
+ahgmkkijikaedakkkkkkmgfa
+ahgmbijbjibedakkkkkkmgfa
+ahgmkkijiaacdaakkkkkmgfa
+ahgmkbkikbaaaakkkkkkmgfa
+ahgmkkkbkkkkkkkkkkkkmgfa
+ahgmmmmmmmmmmmmmmmmmmgfa
 ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+agffffffffffiifffffffffa
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

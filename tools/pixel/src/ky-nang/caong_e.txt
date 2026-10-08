@@ -1,43 +1,43 @@
-# Da Cá Voi — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: whale skin with spikes
-name: Da Cá Voi
+# Thần Cá Ông · E «Da Cá Voi» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: áo giáp đồng + mũi tên tăng
+name: Thần Cá Ông · E «Da Cá Voi»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-toi
-  d = dat-sang
-  e = dong-toi
-  f = dong
-  g = dong-sang
-  h = cham
-  i = nuoc
-  j = nuoc-sang
+  b = vang-nghe
+  c = vang-sang
+  d = la-toi
+  e = la-sang
+  f = cham-toi
+  g = cham
+  h = cham-sang
+  i = ngoc
+  j = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-agggggggggggggggggggggea
-agffffffffffffffffffffea
-agfbbbbbbbbbbbbbbbbbbfea
-agfbbbbbbbbbbbbbbbbbbfea
-agfbbbbbbbbbbbbbbbbbbfea
-agfbbbbbbbbbbbbbbbbbbfea
-agfbbbbbbbbbbdbbbbbbbfea
-agfjbbbbbbjjdcjhbbbbbfea
-agfjhbbbjjiiiiiijhbbbfea
-agfjihbjiiiiiiiiiihbbfea
-agfjiiiiiiiiiiiiaihbbfea
-agfjihbjiiiiiiiiiihbbfea
-agfjhbbhiiiiiiiiiihbbfea
-agfhbbbbhhiiiiiihhbbbfea
-agfbbbbbbbhhhhhhbbbbbfea
-agfbbbbbbbbbbbbbbbbbbfea
-agfbbbbbbbbbbbbbbbbbbfea
-agfbbbbbbbbbbbbbbbbbbfea
-agfbbbbbbbbbbbbbbbbbbfea
-agfbbbbbbbbbbbbbbbbbbfea
-agffffffffffffffffffffea
-aeeeeeeeeeeeeeeeeeeeeeea
+ajjjjjjjjjjeejjjjjjjjjia
+ajiiiiiiiiiiiiiiiiiiiida
+ajihhhhhhhhhhhhhhhhhhida
+ajihffffffffffffffffhida
+ajihfffaaaffffaaafffhida
+ajihffahhhaffahhhaffhida
+ajihfahggghaahgggfafhida
+ajihfahgggghhggggfafhida
+ajihahggggggggggggfahida
+ajihahgbbggbbggbbgfahida
+aeihahggggggggggggfahiea
+aeihfagbbggbbggbbgafhiea
+ajihfahggggggggggfafhida
+ajihfagbbggbbggbbaafhida
+ajihfahgggggggggacafhida
+ajihffaffffffffacbcahida
+ajihfffaaaaaaaaaabaahida
+ajihffffffffffffabafhida
+ajihffffffffffffaaafhida
+ajihhhhhhhhhhhhhhhhhhida
+ajiiiiiiiiiiiiiiiiiiiida
+aiddddddddddeeddddddddda
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

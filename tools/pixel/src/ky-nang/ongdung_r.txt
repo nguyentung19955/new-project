@@ -1,40 +1,41 @@
-# Dựng Núi — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: rising mountain
-name: Dựng Núi
+# Ông Đùng · R «Dựng Núi» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: núi cao vút + mũi tên tăng
+name: Ông Đùng · R «Dựng Núi»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
+  b = dat-toi
+  c = dat-sang
+  d = cat
+  e = dong
   f = vang-nghe
   g = vang-sang
+  h = son-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbgbbbbbbdca
-aedbbbbbbbbbbbgebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbgebbbgffebbbbdca
-aedbbbbbgebbgfffebbbbdca
-aedbbbbgffebgfffebbbbdca
-aedbbbbgfffgffffebbbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbgffffffffffffebbdca
-aedbbgffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbgffffffffffffffebdca
-aedgeeeeeeeeeeeeeeeebdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+ahggggggggghhgggggggggha
+agffffffffffffffffffffea
+agfccccccccacccccccccfea
+agfcbbbbbbagabbbbbbbcfea
+agfcbbbbbbagdabbbbbbcfea
+agfcbbbbbagddabbbbbbcfea
+agfcbbbbbagddcabbbbbcfea
+agfcbbbbagdadcabbbbbcfea
+agfcbbbbagddacabbbbbcfea
+agfcbbbagdddadcabbbbcfea
+ahfcbbbagddddacabbbbcfha
+ahfcbbagdddddadcabbbcfha
+agfcbbagddddddacabbbcfea
+agfcbagddddddddacabbcfea
+agfcbagdddddddddagabcfea
+agfcagdddddddddagfgacfea
+agfagddddddddddaafaaafea
+agfaccccccccccccafacafea
+agfcaaaaaaaaaaaaaaaacfea
+agfccccccccccccccccccfea
+agffffffffffffffffffffea
+aheeeeeeeeeehheeeeeeeeha
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

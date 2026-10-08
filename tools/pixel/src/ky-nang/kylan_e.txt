@@ -1,41 +1,43 @@
-# Điềm Lành Giáng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Tướng xung quanh +25% tốc đánh 5 giây
-name: Điềm Lành Giáng
+# Kỳ Lân Vàng · E «Điềm Lành Giáng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: mây lành cuộn + mũi tên tăng
+name: Kỳ Lân Vàng · E «Điềm Lành Giáng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = sat
-  d = sat-sang
-  e = bac
-  f = dong-toi
-  g = dong
-  h = dong-sang
+  b = sat-toi
+  c = sat-sang
+  d = dong-sang
+  e = vang-nghe
+  f = vang-sang
+  g = la-toi
+  h = la-sang
+  i = ngoc
+  j = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbecfa
-ahgbbbbbbbbbbbbbbbbedcfa
-ahgbbbbbbbbbbbbbbbedcgfa
-ahgbbbbbbbbbbbbbbedcbgfa
-ahgbbbbbbbbbbbbbedcbbgfa
-ahgbbbbbbbbbbbbedcbbbgfa
-ahgbbbbbbbbbbbedcbbbbgfa
-ahgbbbbbbbbbbedcbbbbbgfa
-ahgbbbbbbbbbedcbbbbbbgfa
-ahgbbbdbbbbedcbbbbbbbgfa
-ahgbbbbdbbedcbbbbbbbbgfa
-ahgbbbbbeedcbbbbbbbbbgfa
-ahgbbbbbedcbbbbbbbbbbgfa
-ahgbbbbedccbbbbbbbbbbgfa
-ahgbbbedcbbbbbbbbbbbbgfa
-ahgbbedcbbbbbbbbbbbbbgfa
-ahgbedcbbbbbbbbbbbbbbgfa
-ahgbccbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+ajjjjjjjjjjhhjjjjjjjjjia
+ajiiiiiiiiiiiiiiiiiiiiga
+ajicccccccccccccccccciga
+ajicbbbbbbbbbbbbbbbbciga
+ajicbbbbaaaabbbbbbbbciga
+ajicbbaaffffaabaaaabciga
+ajicbaffeeeeffaffffaciga
+ajicafedaaaadefeeeefaiga
+ajicafeafffaaeeedaaeaiga
+ajicafeafeedaeedafaeaiga
+ahicafeaadedaeeafeaeaiha
+ahicadeeaaaadeeaedaeaiha
+ajicaadeeeeeedaadddeaiga
+ajiafffffddddffffaeeaiga
+ajiaeeeeeeeeeeeeafadaiga
+ajicaddddddddddafefaciga
+ajicbaaaaaaaaaaaaeaaciga
+ajicbbbbbbbbbbbbaeabciga
+ajicbbbbbbbbbbbbaaabciga
+ajicccccccccccccccccciga
+ajiiiiiiiiiiiiiiiiiiiiga
+aigggggggggghhggggggggga
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

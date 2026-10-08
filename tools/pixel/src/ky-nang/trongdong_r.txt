@@ -13,31 +13,32 @@ colors:
   h = dong-sang
   i = vang-nghe
   j = vang-sang
+  k = son-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhiihhhhhhhhhga
-ahggggggggggggggggggggfa
-ahgccccccccccajeaccccgfa
-ahgcbbbbbbbbajeeabbbcgfa
-ahgcbbbbbbbajeeabbbbcgfa
-ahgcbbbbbbajeeabbbbbcgfa
-ahgcbbbbbajeeeaabbbbcgfa
-ahgcbbabbbaajeeeababcgfa
-ahgcbadabbbbajeeaadacgfa
-ahgcbaabbbbbajeabbaacgfa
-aigcacabbbbajeeabbacagia
-aigcbabaaaaajeaaaabacgia
-ahgcbaajjjjjejjjjjaacgfa
-ahgcajjiiigjiggiiijjagfa
-ahgcajiiigiiiiijiiigagfa
-ahgahggiiijjijjiiigghgfa
-ahgahhhgggggjggggghhfgfa
-ahgafgggggggggggggghfgfa
-ahgahhhhhhhhhhhhhhhgfgfa
-ahgafffffffffffffffffgfa
-ahggggggggggggggggggggfa
-agffffffffffiifffffffffa
+akjjjjjjjjjkkjjjjjjjjjka
+ajiiiiiiiiiiiiiiiiiiiiga
+ajiccccccccccajeacccciga
+ajicbbbbbbbbajeeabbbciga
+ajicbbbbbbbajeeabbbbciga
+ajicbbbbbbajeeabbbbbciga
+ajicbbbbbajeeeaabbbbciga
+ajicbbabbbaajeeeababciga
+ajicbadabbbbajeeaadaciga
+ajicbaabbbbbajeabbaaciga
+akicacabbbbajeeabbacaika
+akicbabaaaaajeaaaabacika
+ajicbaajjjjjejjjjjaaciga
+ajicajjiiigjiggiiijjaiga
+ajicajiiigiiiiijiiigaiga
+ajiahggiiijjijjiiigghiga
+ajiahhhgggggjggggghhfiga
+ajiafgggggggggggggghfiga
+ajiahhhhhhhhhhhhhhhgfiga
+ajiafffffffffffffffffiga
+ajiiiiiiiiiiiiiiiiiiiiga
+akggggggggggkkggggggggka
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

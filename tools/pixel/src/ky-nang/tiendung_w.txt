@@ -1,41 +1,45 @@
-# Ánh Ngọc — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a shining jewel
-name: Ánh Ngọc
+# Tiên Dung · W «Ánh Ngọc» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: viên ngọc + toả sáng
+name: Tiên Dung · W «Ánh Ngọc»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = son
-  g = lua
-  h = lua-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = sang
+  f = vang-nghe
+  g = vang-sang
+  h = son-toi
+  i = son-sang
+  j = la-toi
+  k = ngoc
+  l = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbhhggghfbbbbbbdca
-aedbbbbhgggggggfbbbbbdca
-aedbbbhgggggggggfbbbbdca
-aedbbhgggggggggggfbbbdca
-aedhhggggggggggggghfbdca
-aedbhgggggggggggggfbbdca
-aedbfgggggggggggggfbbdca
-aedbbfgggggggggggfbbbdca
-aedbbbfgggggggggfbbbbdca
-aedbbbbfgggggggfbbbbbdca
-aedbbbbbfgggggfbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbbfgggfbbbbbbbdca
-aedbbbbbbbfgfbbbbbbbbdca
-aedbbbbbbbbfbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adciiiiiiiigiiiiiiiiicba
+adcighhhhhhfhhhhhhhgicba
+adcihghhaaaaaaaaahghicba
+adcihhfalllllllljaahicba
+adcihhalellllllkkjjaicba
+adcihalellllllkkkkjaicba
+adcialllllllkkkkkkjjacba
+adciaakkkkklkkkkkjaaicba
+aecihaakkkklkkkkjaahicea
+aecgffaakkklkkkjjafffcea
+adcihhhaakklkkkjahhhicba
+adcihgghaaklkkjahgghicba
+adcihhhhfaakkjafhhhhicba
+adcihhhfhhaajahhfhhhicba
+adcihhfhhghaahghhfhhicba
+adcihghhhghhfhghhhghicba
+adcighhhhhhhfhhhhhhgicba
+adciiiiiiiiifiiiiiiiicba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

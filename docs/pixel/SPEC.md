@@ -59,6 +59,16 @@ mangda · dua · ruong · de · khoa · khoamo · dau · x · play · dung · do
 chat · canhbao · hoi · dongho · cup · huychuong · mien · bia · quyen · daulau · bang · xoay · nam · binh · nguoi · nhom · ruongbau · giot.
 Lệnh xuất gói từng nhóm (spec có sẵn trong `tools/pixel/spec/`): [`LENH-TOOL.md`](LENH-TOOL.md).
 
+**Kỹ năng** (`ky-nang`, 24×24, claude/icon-ky-nang-rieng — bộ ghép `tools/ve-pixel-ky-nang.js`, mỗi chiêu một hình riêng): icon = **khung theo
+phím** (`phim`: `tu` theo đuôi mã `_q/_w/_e/_r` · Q đồng · W bạc · E ngọc · R vàng + ngọc son ở 4 góc; cùng khuôn với 40 bản vẽ tay) + **nền
+theo hành** (`hanh` kim sắt · mộc lá · thủy chàm · hỏa son · thổ đất; `mauNen` ghi đè) + **hình chính** `vat` (≈170 hình vẽ tay dạng lưới ký
+tự: vũ khí / vật đặc trưng của tướng — rìu đồng, nỏ, đàn nguyệt, trống, chuông, vỏ dừa, nón lá, mái chèo… — hoặc hành động: mưa tên, lốc
+xoáy, sét đánh núi; `mauVat` / `mauPhuVat` đổi màu, `vi` dời, `lat` lật) + **hình phụ nhỏ** `vat2` rải theo `vi2` (`giua tren trenphai trentrai
+duoiphai duoitrai mua mua2 nam nhieu quanh ba doi`, `mauVat2`) + tối đa 2 **hiệu ứng** `hieu` / `hieu2` (`toc no sang vong xoay song dat lua khoi
+lap nhac doc trang sao thap mua tuyet len may set nui muctieu am khien hoa la chem nay tim gio phun nut`, `mauHieu`). Không có `vat` / `vat2`
+thì vẽ như icon cũ. Bảng thiết kế 200 chiêu ở `tools/build-ky-nang-spec.js` (sinh `tools/pixel/spec/ky-nang.json`), kiểm trùng + ảnh tổng
+theo tướng: `node tools/kiem-ky-nang.js --anh tong-quan.png` (lỗi khi cùng tướng trùng hình chính hoặc hai icon giống ≥ 50% điểm ảnh).
+
 **Bản đồ** (`ban-do`, 320×148 = sân 1280×590 ÷ 4): `bo_phan` `chu_de` (song · dam · rung · hang · dong · bien · thanh), `duong_loai`
 (nuoc · dat · da · de · cat · gach) + khoá riêng `duong` (chuỗi path SVG `M … C … S …`, hoặc mảng nhiều nhánh) và `o_dat` (`[[x, y], …]` ô đặt
 tướng) — toạ độ thiết kế 932×430. Sinh spec từ game: `node tools/build-ban-do-spec.js` (chạy js/data.js + js/game.js trong vm, `setMap` →

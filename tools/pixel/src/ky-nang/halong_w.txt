@@ -1,41 +1,44 @@
-# Vảy Ngọc — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: jade scale shield
-name: Vảy Ngọc
+# Rồng Mẹ Hạ Long · W «Vảy Ngọc» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: vảy
+name: Rồng Mẹ Hạ Long · W «Vảy Ngọc»
 size: 24x24
 colors:
   a = vien
-  b = dong-toi
-  c = dong
-  d = dong-sang
-  e = cham
-  f = nuoc
-  g = nuoc-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = sang
+  f = la-toi
+  g = cham-toi
+  h = cham-sang
+  i = ngoc
+  j = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-adddddddddddddddddddddba
+addddddddddeedddddddddca
 adccccccccccccccccccccba
+adchhhhhhhhhhhhhhhhhhcba
+adchggaaaaaaaaaaaagghcba
+adchgajjjjjjjjjjjjaghcba
+adchajeifeifeifeifaghcba
+adchajiifiiifiiifiiahcba
+adchajafaafaafaafafahcba
+adchgaeifeifeifeifaghcba
+adchajiifiiifiiifiiahcba
+aechajafaafaafaafafahcea
+aechajeifeifeifeiffahcea
+adchgaiifiiifiiififahcba
+adchgaafaafaafaafaaghcba
+adchggaeifeifeifeagghcba
+adchgggaiiifiiiafagghcba
+adchggggaafaafaaaggghcba
+adchgggggaaaaaaggggghcba
+adchgggggggggggggggghcba
+adchhhhhhhhhhhhhhhhhhcba
 adccccccccccccccccccccba
-adccccccccgggeccccccccba
-adccccccggffffgeccccccba
-adcccccgffffffffecccccba
-adccccgfefffeffefeccccba
-adccccgffefefeefeeecccba
-adcccgffffeffefffeecccba
-adcccgffffffffffffecccba
-adcccgffffffffffffecccba
-adcccgeffeeffeffefecccba
-abcccgfeeffeefeeffecccba
-.abbceffffffffffffecbba.
-..aabcgffffffffffecbaa..
-....abefefffeffefeba....
-.....abefefefeefebea....
-......abeeeffeeebea.....
-.......abceeeecbaa......
-........abccccba........
-.........abccba.........
-..........abba..........
-...........aa...........
+acbbbbbbbbbbeebbbbbbbbba
+.aaaaaaaaaaaaaaaaaaaaaa.
 end
 
 anim main fps=1 once

@@ -5,10 +5,10 @@ size: 24x24
 colors:
   a = vien
   b = trang
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
+  c = dong
+  d = vang-nghe
+  e = vang-sang
+  f = son-sang
   g = cham-toi
   h = cham
   i = cham-sang
@@ -18,7 +18,7 @@ colors:
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeffeeeeeeeeeda
+afeeeeeeeeeffeeeeeeeeefa
 aeddddddddddddddddddddca
 aedjjjjjjaaaaaaajjjjjdca
 aedjggggaiiiliiiagggjdca
@@ -39,7 +39,7 @@ aedjgagghiiikiiiljiajdca
 aedjggaaghhhihhhiaagjdca
 aedjjjjjagggggggajjjjdca
 aeddddddddddddddddddddca
-adccccccccccffccccccccca
+afccccccccccffccccccccfa
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

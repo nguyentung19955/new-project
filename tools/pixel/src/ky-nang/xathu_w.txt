@@ -1,41 +1,41 @@
-# Đa Tiễn — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: three arrows flying in a fan
-name: Đa Tiễn
+# Xạ Thủ Văn Lang · W «Đa Tiễn» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: ba mũi tên xoè
+name: Xạ Thủ Văn Lang · W «Đa Tiễn»
 size: 24x24
 colors:
   a = vien
-  b = khoi
+  b = sat-toi
   c = sat
   d = sat-sang
   e = bac
-  f = dong-toi
-  g = dong
-  h = dong-sang
+  f = trang
+  g = sang
+  h = dat
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbecfa
-ahgbbbbbbbbbbbbbbbbedcfa
-ahgbbbbbbbbbbbbbbbedcgfa
-ahgbbbbbbbbbbbbbbedcbgfa
-ahgbbbbbbbbbbbbbedcbbgfa
-ahgbbbbbbbbbbbbedcbbbgfa
-ahgbbbbbbbbbbbedcbbbbgfa
-ahgbbbbbbbbbbedcbbbbbgfa
-ahgbbbbbbbbbedcbbbbbbgfa
-ahgbbbdbbbbedcbbbbbbbgfa
-ahgbbbbdbbedcbbbbbbbbgfa
-ahgbbbbbeedcbbbbbbbbbgfa
-ahgbbbbbedcbbbbbbbbbbgfa
-ahgbbbbedccbbbbbbbbbbgfa
-ahgbbbedcbbbbbbbbbbbbgfa
-ahgbbedcbbbbbbbbbbbbbgfa
-ahgbedcbbbbbbbbbbbbbbgfa
-ahgbccbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+aeeeeeeeeeeggeeeeeeeeeda
+aeddddddddddddddddddddca
+aeddddddddddddddddddddca
+aeddbbabbbbbabbbbbabddca
+aeddbadabbbadabbbadaddca
+aeddadcdabadcdabadcdadca
+aeddacccabacccabacccadca
+aeddbahabbbahabbahaaddca
+aeddbahabbbahabahabbddca
+aeddbbahabbahabahabbddca
+agddbbahabbahaahabbbddga
+agddbbbahabahaahabbbddga
+aeddbbbahabahahabbbbddca
+aeddbbbbahaahahabbbbddca
+aeddbbbbagaghgabbbbbddca
+aeddbbbagfafhfabbbbbddca
+aeddbbbbaagfhabbbbbbddca
+aeddbbbbbbafhabbbbbbddca
+aeddbbbbbbbaabbbbbbbddca
+aeddddddddddddddddddddca
+aeddddddddddddddddddddca
+adccccccccccggccccccccca
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

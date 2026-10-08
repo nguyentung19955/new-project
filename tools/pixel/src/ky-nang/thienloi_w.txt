@@ -1,44 +1,41 @@
-# Lưỡi Tầm Sét — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: +0.5 sát thương phép · vùng nổ 40
-name: Lưỡi Tầm Sét
+# Thiên Lôi · W «Lưỡi Tầm Sét» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: lưỡi tầm sét (rìu đá sấm) + toả sáng
+name: Thiên Lôi · W «Lưỡi Tầm Sét»
 size: 24x24
 colors:
   a = vien
-  b = khoi
+  b = sat-toi
   c = sat
   d = sat-sang
   e = bac
-  f = trang-xam
-  g = trang
-  h = sang
-  i = dong-toi
-  j = dong
-  k = dong-sang
+  f = sang
+  g = nuoc-sang
+  h = troi
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-akkkkkkkkkkkkkkkkkkkkkia
-akjjjjjjjjjjjjjjjjjjjjia
-akjbbbbbbbbbbbbbbbbbbjia
-akjbbbbbbeeeeecbbbbbbjia
-akjbbbbeeddddddecbbbbjia
-akjbbbeddddddddddcbbbjia
-akjbbedddhhhhhfdddcbbjia
-akjbbeddhggggggfddcbbjia
-akjbeddhggddddggfddcbjia
-akjbeddhgddddddgfddcbjia
-akjbeddhgddddddgfddcbjia
-akjbeddhgddddddgfddcbjia
-akjbeddhgddddddgfddcbjia
-akjbcddfggddddggfddcbjia
-akjbbeddfggggggfddcbbjia
-akjbbcdddffffffdddcbbjia
-akjbbbcddddddddddcbbbjia
-akjbbbbccddddddccbbbbjia
-akjbbbbbbccccccbbbbbbjia
-akjbbbbbbbbbbbbbbbbbbjia
-akjjjjjjjjjjjjjjjjjjjjia
-aiiiiiiiiiiiiiiiiiiiiiia
+aeeeeeeeeeeffeeeeeeeeeda
+aeddddddddddddddddddddca
+aedddddddddhddddddddddca
+aeddhbbbbbbgbbbbbbbhddca
+aeddbhbbbhaaabhbbbhbddca
+aeddbbgbbadddahbbgbbddca
+aeddbbbgadcccbabgbbbddca
+aeddbbbadcccccbabbbbddca
+aeddbhadcccccccbahhbddca
+aeddbbadccccaccbabbbddca
+afddbadcccccacccbabbddfa
+afdhgadccccaccccbagggdfa
+aeddadccccaccccccbabddca
+aeddadcccacccccccbabddca
+aeddadccaccccccccbabddca
+aeddaffccccccccccfabddca
+aeddbafffffffffffabbddca
+aeddbhaaaaaaaaaaabhbddca
+aeddhbbbbbbbgbbbbbbhddca
+aeddddddddddgdddddddddca
+aeddddddddddddddddddddca
+adccccccccccffccccccccca
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

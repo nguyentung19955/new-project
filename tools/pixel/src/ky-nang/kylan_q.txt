@@ -1,41 +1,42 @@
-# Sừng Kỳ Lân — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Húc sừng: x2.5 sát thương +1
-name: Sừng Kỳ Lân
+# Kỳ Lân Vàng · Q «Sừng Kỳ Lân» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: sừng + nổ va chạm
+name: Kỳ Lân Vàng · Q «Sừng Kỳ Lân»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = sat
-  d = sat-sang
-  e = bac
-  f = dong-toi
-  g = dong
-  h = dong-sang
+  b = sat-toi
+  c = sat-sang
+  d = sang
+  e = dong-toi
+  f = dong
+  g = dong-sang
+  h = vang-nghe
+  i = vang-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbeccbbbbbbbbbbbgfa
-ahgbbbbccccbbbbbbbbbbgfa
-ahgbbbbbccccbbbbbbbbbgfa
-ahgbbbbbbccccbbbbbbbbgfa
-ahgbbbbbbcccccbbbbbbbgfa
-ahgbbbbbbbcccccbbbbbbgfa
-ahgbbbbbbbccccccbbbbbgfa
-ahgbbbbbbbbcccccbbbbbgfa
-ahgbbbbbbbbcccdccbbbbgfa
-ahgbbbbbbbbccccccbbbbgfa
-ahgbbbbbbbbeccccccbbbgfa
-ahgbbbbbbbbcccccccbbbgfa
-ahgbbbbbbbbcccccccbbbgfa
-ahgbbbbbbbbcccccccbbbgfa
-ahgbbbbbbbbcccccccbbbgfa
-ahgbbbbbbbbbcccccbbbbgfa
-ahgbbbbbbbbbbccbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+agggggggggghhgggggggggfa
+agffffffffffffffffffffea
+agfccccccccccccccccccfea
+agfcbbbbbbbbbbbbaabbcfea
+agfcbbbbbbbbbbbaiiabcfea
+agfcbbbbbbbbbbbbaihacfea
+agfcbbbbbbbbbbbbaihgafea
+agfcbbbbbbbbbbbaihhgafea
+agfcbbbbbbbbbaaihhhgafea
+agfcbbbbbbbaaiihhhgacfea
+ahfcbbbbbaaiihhhhgabcfha
+ahfcbbbaaiihhhhhgabbcfha
+agfcbaadihhhhhggabbbcfea
+agfcadihhdhhhggabbbbcfea
+agfaiihihhhhgggabbbbcfea
+agfadhidihdggaabbbbbcfea
+agfaihhihggaabbbbbbbcfea
+agfagdhhhdabbbbbbbbbcfea
+agfcaaadabbbbbbbbbbbcfea
+agfccccccccccccccccccfea
+agffffffffffffffffffffea
+afeeeeeeeeeehheeeeeeeeea
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

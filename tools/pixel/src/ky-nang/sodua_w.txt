@@ -1,41 +1,46 @@
-# Tiếng Sáo Chăn Dê — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: +6.2% sức mạnh kỹ năng
-name: Tiếng Sáo Chăn Dê
+# Sọ Dừa · W «Tiếng Sáo Chăn Dê» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: sáo trúc + nốt nhạc
+name: Sọ Dừa · W «Tiếng Sáo Chăn Dê»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = la
-  g = la-ma
-  h = la-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = sang
+  f = dat-sang
+  g = cat
+  h = vang-sang
+  i = son-toi
+  j = son
+  k = son-sang
+  l = la-toi
+  m = la-ma
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbhhhhfhhfhhhhfbbdca
-aedbbbhgggfggfggggfbbdca
-aedbbhggggfggfggggfbbdca
-aedbhgggggfggfggggfbbdca
-aedbhgggggggggggggfbbdca
-aedbhgggggggggggggfbbdca
-aedbhgggggggggggggfbbdca
-aedbfgggggggggggggfbbdca
-aedbbfffggggggggfffbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbbffffffffbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adcmmmmmmmmmmmmmmmammcba
+adcmlllllllllllllaaamcba
+adcmllaallllllllaahaacba
+adcmlahalllllllahaaamcba
+adcmlaalllllllahgaalmcba
+adcmlaallllllahaahalmcba
+adcmahalllllahgfaallmcba
+adcmaalllllahafallllmcba
+aecmllllllahgfalllllmcea
+aecmlllllahafallllllmcea
+adcmllllahgfalllllllmcba
+adcmlllahggfalllllllmcba
+adcmllahgfaallllllllmcba
+adcmlajgfallllllllllmcba
+adcmakjjalllllllllllmcba
+adcmaijallllllllllllmcba
+adcmlaalllllllllllllmcba
+adcmmmmmmmmmmmmmmmmmmcba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

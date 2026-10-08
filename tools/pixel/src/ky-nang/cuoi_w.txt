@@ -1,41 +1,42 @@
-# Lá Đa Thần — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: +10% máu, +1.6 hồi máu/giây
-name: Lá Đa Thần
+# Chú Cuội · W «Lá Đa Thần» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: lá đa + dấu hồi máu
+name: Chú Cuội · W «Lá Đa Thần»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = la
-  g = la-ma
-  h = la-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = sang
+  f = la-toi
+  g = la
+  h = la-ma
+  i = la-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbgbdca
-aedbbbbbbbbbbbbbbhfbbdca
-aedbbbbbbbbbbbbbhgfbbdca
-aedbbbbbbbbbbbhhgfbbbdca
-aedbbbbbbbbbhhgggfbbbdca
-aedbbbbbbbhhggggfbbbbdca
-aedbbbbbbhggggggfbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbhggggggfbbbbbbdca
-aedbbbbhggggggfbbbbbbdca
-aedbbbhggggggfbbbbbbbdca
-aedbbbhggggggfbbbbbbbdca
-aedbbhgggggffbbbbbbbbdca
-aedbbhgggffbbbbbbbbbbdca
-aedbhggffbbbbbbbbbbbbdca
-aedbfffbbbbbbbbbbbbbbdca
-aedgbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adchhhhhhhhhhhhhhhhhhcba
+adchffaaafffaaafffffhcba
+adchfahhhafahhhaffffhcba
+adchahggggahggggafffhcba
+adcahgggggggggggfaffhcba
+adcahggagggggaggfaffhcba
+adcahgggagggaggggfafhcba
+adcahggggagagggggfafhcba
+aechaggggggagggggfafhcea
+aechafggggagggggffafhcea
+adchfafgggaggggffaffhcba
+adchffafggagggffafffhcba
+adchfffafgaggffaaaafhcba
+adchffffafagffaaaiaahcba
+adchfffffaaffafaiiiahcba
+adchffffffafaffaaiaahcba
+adchfffffffaffffaaafhcba
+adchhhhhhhhhhhhhhhhhhcba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

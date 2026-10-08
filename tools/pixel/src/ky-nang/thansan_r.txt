@@ -14,16 +14,16 @@ colors:
   i = dat-toi
   j = dat
   k = dat-sang
-  l = dong-toi
-  m = dong
-  n = dong-sang
-  o = vang-nghe
+  l = dong
+  m = vang-nghe
+  n = vang-sang
+  o = son-sang
   p = la-toi
   q = la-ma
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-annnnnnnnnnoonnnnnnnnnma
+aonnnnnnnnnoonnnnnnnnnoa
 anmmmmmmmmmmmmmmmmmmmmla
 anmeaaqqqqqqqqqqqaeeamla
 anmceeapppppppppaedcamla
@@ -33,18 +33,18 @@ anmqaijkappppppakjjiamla
 anmqpaijkappppakhiiaqmla
 anmqppaijkapaakhbhapqmla
 anmqappaiikahkibbbapqmla
-aomahappamhhfmhhbhhaqmoa
-aomahhaahmhgfmhghfapqmoa
-anmahfahfmhgfmhggfapqmla
-anmafapafmhgfmhgfappqmla
-anmqappakmfffmffapppqmla
+aomahappalhhflhhbhhaqmoa
+aomahhaahlhgflhghfapqmoa
+anmahfahflhgflhggfapqmla
+anmafapaflhgflhgfappqmla
+anmqappaklffflffapppqmla
 anmqppakjkkafakkkappqmla
 anmqpakjjiapapaijkapqmla
 anmqakjjiapppppaijkaqmla
 anmqakjiapppppppaijkamla
 anmqaiiaqqqqqqqqqaiiamla
 anmmmmmmmmmmmmmmmmmmmmla
-amlllllllllloollllllllla
+aolllllllllloolllllllloa
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

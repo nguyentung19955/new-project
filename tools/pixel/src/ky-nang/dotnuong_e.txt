@@ -1,41 +1,46 @@
-# Khói Rẫy — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: smoke over a field
-name: Khói Rẫy
+# Chàng Đốt Nương · E «Khói Rẫy» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đám bụi / khói + nền đất nứt
+name: Chàng Đốt Nương · E «Khói Rẫy»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = son
-  g = lua
-  h = lua-sang
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = dat-toi
+  f = dat
+  g = dat-sang
+  h = son-toi
+  i = son-sang
+  j = la-toi
+  k = la-sang
+  l = ngoc
+  m = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbhhfbbbbbbbdca
-aedbbbbbbbhggghfbbbbbdca
-aedbbbbbbhggggggfbbbbdca
-aedbbbbbhgggggggfbbbbdca
-aedbbbhhggggggggfbbbbdca
-aedbbhggggggggggghfbbdca
-aedbhggggggggggggggfbdca
-aedbhggggggggggggggfbdca
-aedbfggggggggggggggfbdca
-aedbbhgggggggggggggfbdca
-aedbbfffffffffffffffbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+ammmmmmmmmmkkmmmmmmmmmla
+amllllllllllllllllllllja
+amliiiiiiiiiiiiiiiiiilja
+amlihhhhhaaahhhhhhhhilja
+amlihhhhadddahaaahhhilja
+amlihhaadcccdadddaahilja
+amlihadddccccdccccdailja
+amliadcccdcccccccccbalja
+amladccccccccccccccbalja
+amladcccccccccccccbbalja
+akliacccccccccccccbailka
+aklihabbccbbbccbbbahilka
+amlihhaabbaaabbaaahhilja
+amlihhhhaahhhaahhhhhilja
+amlihhhhhhhhhhhhhhhhilja
+amlihhhhhhhhhhhhhhhhilja
+amlihhhhhhhhhhhhhhhhilja
+amlaaaaaaaaaaaaaaaaaalja
+amlffgffagfffgfafgffflja
+amleeeeeeaaeeeeeaeeeelja
+amllllllllllllllllllllja
+aljjjjjjjjjjkkjjjjjjjjja
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

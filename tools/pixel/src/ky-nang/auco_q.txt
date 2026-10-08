@@ -1,43 +1,47 @@
-# Hoa Tiên — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a pink fairy flower with a green healing sparkle
-name: Hoa Tiên
+# Âu Cơ · Q «Hoa Tiên» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bông hoa + dấu hồi máu
+name: Âu Cơ · Q «Hoa Tiên»
 size: 24x24
 colors:
   a = vien
-  b = khoi
+  b = da-sang
   c = dat-toi
-  d = dat
-  e = dat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = vang-nghe
-  j = vang-sang
+  d = dat-sang
+  e = dong-toi
+  f = dong
+  g = dong-sang
+  h = vang-nghe
+  i = vang-sang
+  j = son
+  k = hong
+  l = la
+  m = la-ma
+  n = la-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbjbbbbbbbbbgfa
-ahgbbbbbbbbibbbbbbbbbgfa
-ahgbbbbbbbbibbbbbbbbbgfa
-ahgbbbbbbbjihbbbbbbbbgfa
-ahgbbbbbbbjihbbbbbbbbgfa
-ahgbbbbbbbjihbbbbbbbbgfa
-ahgbbjbbbjiiihbbbjbbbgfa
-ahgbbjjhbjiiihbjjhbbbgfa
-ahgbbjiijiiiiijiihbbbgfa
-ahgbbhiiiiiiiiiiihbbbgfa
-ahgbbbhiiihihiiihbbbbgfa
-ahgbbbbhhhbibhhhbbbbbgfa
-ahgbbbeeeeeheeeeecbbbgfa
-ahgbbeddddddddddddcbbgfa
-ahgbeddddddddddddddcbgfa
-ahgbccddddddddddddccbgfa
-ahgbbbccccccccccccbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+agggggggggghhgggggggggfa
+agffffffffffffffffffffea
+agfdddddddaaaddddddddfea
+agfdcccccabbbaccccccdfea
+agfdcaaaabkkkbaaaaccdfea
+agfdabbbabkkkbabbbacdfea
+agfabkkkbabkbabkkkbadfea
+agfabkkkkbhhhbkkkkjadfea
+agfdajkkkkhiihkkkjjadfea
+agfdcaajkkhiihkkjaacdfea
+ahfdcabbbkkhhhkkbbbadfha
+ahfdabkkkkkjkjkkkkjadfha
+agfdabkkkkjjajkkkkjadfea
+agfdcajkkjjacajkkjjadfea
+agfdccajjaalacaaaaacdfea
+agfdcccaacalaamaanaadfea
+agfdcccccamlmmlannnadfea
+agfdccccccalaaaaanaadfea
+agfdcccccccaccccaaacdfea
+agfddddddddddddddddddfea
+agffffffffffffffffffffea
+afeeeeeeeeeehheeeeeeeeea
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

@@ -1,41 +1,48 @@
-# Móng Đồng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Đánh lan 30% sát thương
-name: Móng Đồng
+# Nghê Đồng · E «Móng Đồng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: chân nghê đè quả cầu + vệt chém
+name: Nghê Đồng · E «Móng Đồng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = sat
-  d = sat-sang
-  e = bac
-  f = dong-toi
-  g = dong
-  h = dong-sang
+  b = sat-toi
+  c = sat-sang
+  d = sang
+  e = dong-toi
+  f = dong
+  g = dong-sang
+  h = vang-nghe
+  i = son-toi
+  j = son
+  k = son-sang
+  l = la-toi
+  m = la-sang
+  n = ngoc
+  o = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbebbbecbbbebbgfa
-ahgbbbbbbdbbbccbbbdbbgfa
-ahgbbbbbbdbbbbdbbbecbgfa
-ahgbbbbbbecbbbecbbcdcgfa
-ahgbbbbbbecbbbecbbbecgfa
-ahgbbbbbbecbbbecbbbecgfa
-ahgbbbbbbecbbbecbbbecgfa
-ahgbbbbbbecbbbecbbedcgfa
-ahgbbbbbbecbbedcbbecbgfa
-ahgbbbbbbecbbedcbbecbgfa
-ahgbbbbbedcbbecbbbecbgfa
-ahgbbbbbecbbedcbbedcbgfa
-ahgbbbbedcbbedcbbecbbgfa
-ahgbbbbedcbbecbbedcbbgfa
-ahgbbbbecbbedcbbedcbbgfa
-ahgbbbedcbbedcbbecbbbgfa
-ahgbbbcccbbccbbbccbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+aoooooooooommooooooooona
+aonnnnnnnnnnnnnnnnnnnnla
+aonccccccccccccccccccnla
+aoncbbbaaaaaaabbbbbdcnla
+aoncbbagggggggabbbdbcnla
+aoncbagfffffffeabdbbcnla
+aoncbaghfffffhfeddbbcnla
+aoncbagffffffffddbbbcnla
+aoncbagfaffaffddabbbcnla
+aoncbaddaddaddddabbbcnla
+amncbbakkkkkddaabbbbcnma
+amncbakjjjjddjiabbbbcnma
+aoncakjjdjddjjjiabbbcnla
+aoncakjjjddjjjjiabbbcnla
+aoncakjjddjjjjjiabbbcnla
+aoncbajdjjjjjjiabbbbcnla
+aoncbbdiiiiiiiabbbbbcnla
+aoncbdbaaaaaaabbbbbbcnla
+aoncbbbbbbbbbbbbbbbbcnla
+aonccccccccccccccccccnla
+aonnnnnnnnnnnnnnnnnnnnla
+anllllllllllmmllllllllla
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

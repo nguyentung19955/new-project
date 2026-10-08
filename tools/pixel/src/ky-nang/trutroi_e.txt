@@ -1,40 +1,47 @@
-# Thân Đá Núi — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: stone body
-name: Thân Đá Núi
+# Thần Trụ Trời · E «Thân Đá Núi» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: người khổng lồ + vòm che chắn
+name: Thần Trụ Trời · E «Thân Đá Núi»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = trang
+  f = dat-toi
+  g = dat
+  h = dat-sang
+  i = la-toi
+  j = la-sang
+  k = nuoc-sang
+  l = troi
+  m = ngoc
+  n = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbgbbbbbbbbbbbdca
-aedbbbbbgfggggebbbbbbdca
-aedbbbbgfffffffebbbbbdca
-aedbbbbgffefffffebbbbdca
-aedbbbgffffefffffebbbdca
-aedbbgfffffefffffebbbdca
-aedbbgfffffeffffffebbdca
-aedbbgffffffefffffebbdca
-aedbbgffffffefffffebbdca
-aedbgfffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbeeeeeeeeeeeeeeeebdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+annnnnnnnnnjjnnnnnnnnnma
+anmmmmmmmmmmmmmmmmmmmmia
+anmhhhhhhhhhhhhhhhhhhmia
+anmhffffffaaaaffffffhmia
+anmhfffffllllllfffffhmia
+anmhffflldckckbllfffhmia
+anmhfflfakeaceakflffhmia
+anmhfllkadccccbakalfhmia
+anmhlakdddccccdddklfhmia
+anmhldccccccccccccblhmia
+ajmalkcaccccccccacclamja
+ajmalccaaccccccaacclamja
+anmalccaadccccbaacclamia
+anmhaccaadccccbaacbahmia
+anmhabbaahggggfaabbahmia
+anmhfaafahgaagfafaafhmia
+anmhffffadcaacbaffffhmia
+anmhfffaddcaacbbafffhmia
+anmhffffaaaffaaaffffhmia
+anmhhhhhhhhhhhhhhhhhhmia
+anmmmmmmmmmmmmmmmmmmmmia
+amiiiiiiiiiijjiiiiiiiiia
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

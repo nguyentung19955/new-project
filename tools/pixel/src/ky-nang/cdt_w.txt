@@ -1,41 +1,45 @@
-# Nón Thần — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a conical magic hat (non la) with sparkles
-name: Nón Thần
+# Chử Đồng Tử · W «Nón Thần» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: nón lá + lấp lánh
+name: Chử Đồng Tử · W «Nón Thần»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = cham
-  g = nuoc
-  h = nuoc-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = trang
+  f = sang
+  g = dat-sang
+  h = cat
+  i = vang-sang
+  j = son
+  k = cham-toi
+  l = cham-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbgbbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbhggggggggggfbbbdca
-aedbbbfggggggggggfbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbfggggggggfbbbbdca
-aedbbbbbfggggggfbbbbbdca
-aedbbbbbbffggffbbbbbbdca
-aedbbbbbbbbffbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+addddddddddffdddddddddca
+adccccccccccccccccccccba
+adcllllllllllllllllllcba
+adclkekkkkkaakkkkkkklcba
+adclefekkkaiiakkkkkklcba
+adclkekkkaihhgakkkkklcba
+adclkkkkaihhhhgakkeklcba
+adclkkkaiahhahhgaefelcba
+adclkkaihhhhhahhgaeklcba
+adclkaiahhhhhhahhgaklcba
+afclaihhhhahhhhhhagalcfa
+afcaiiiiiiiiiiiiiiigacfa
+adclahhhhhhhhhhhhhgalcba
+adclkajaaaaaaaaajaaklcba
+adclkkajaakkkaajakkklcba
+adclkkkajjaaajjakkkklcba
+adclkkkkaajjjaakekkklcba
+adclkkkkkkaaakkefekklcba
+adclkkkkkkkkkkkkekkklcba
+adcllllllllllllllllllcba
+adccccccccccccccccccccba
+acbbbbbbbbbbffbbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

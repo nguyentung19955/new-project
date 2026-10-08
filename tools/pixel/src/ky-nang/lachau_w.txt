@@ -4,40 +4,40 @@ name: Lạc Hầu · W «Giáp Da Tê Gai»
 size: 24x24
 colors:
   a = vien
-  b = bac
-  c = dat-toi
-  d = dat
-  e = dat-sang
-  f = cat
-  g = dong-toi
-  h = dong
-  i = dong-sang
-  j = vang-nghe
+  b = sat
+  c = sat-sang
+  d = bac
+  e = sang
+  f = dat-toi
+  g = dat
+  h = dat-sang
+  i = cat
+  j = dong-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aiiiiiiiiiijjiiiiiiiiiha
-aihhhhhhhhhhhhhhhhhhhhga
-aihiiiiiiiiiiiiiiiiiihga
-aihiccccacccccccacccihga
-aihicccabacccaaabaccihga
-aihiccaaeeacaeeeaaccihga
-aihicaeeddeabeddeeacihga
-aihicaeddddeeddddcaaihga
-aihiabeddcdcdedcdcabahga
-aihiaeddcfecdecfedeaihga
-ajhiaeddceccdccecdcaihja
-ajhiaedcdddddddddecaahja
-aihabcddeeeedeeeedcabhga
-aihiaaedcfecdecfecacahga
-aihicaedceccdcceccacihga
-aihicaccdddddddddcaaihga
-aihiabaeeeeedeeeeaabahga
-aihicaacccfcdcfccacaihga
-aihicccaacecdcaaacccihga
-aihiiiiiiaaaaaiiiiiiihga
-aihhhhhhhhhhhhhhhhhhhhga
-ahggggggggggjjggggggggga
+addddddddddeedddddddddca
+adccccccccccccccccccccba
+adcjjjjjjjjjjjjjjjjjjcba
+adcjffffafffffffafffjcba
+adcjfffadafffaaadaffjcba
+adcjffaahhafahhhaaffjcba
+adcjfahhgghadhgghhafjcba
+adcjfahgggghhggggfaajcba
+adcjadhggfgfghgfgfadacba
+adcjahggfihfghfihghajcba
+aecjahggfhffgffhfgfajcea
+aecjahgfggggggggghfaacea
+adcadfgghhhhghhhhgfadcba
+adcjaahgfihfghfihfafacba
+adcjfahgfhffgffhffafjcba
+adcjfaffgggggggggfaajcba
+adcjadahhhhhghhhhaadacba
+adcjfaafffifgfiffafajcba
+adcjfffaafhfgfaaafffjcba
+adcjjjjjjaaaaajjjjjjjcba
+adccccccccccccccccccccba
+acbbbbbbbbbbeebbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

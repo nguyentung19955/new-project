@@ -1,41 +1,45 @@
-# Lệnh Vua — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: royal command banner
-name: Lệnh Vua
+# Kinh Dương Vương · E «Lệnh Vua» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: cờ lệnh
+name: Kinh Dương Vương · E «Lệnh Vua»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = son
-  g = lua
-  h = lua-sang
+  b = dat-toi
+  c = dat
+  d = vang-nghe
+  e = vang-sang
+  f = son-toi
+  g = son
+  h = son-sang
+  i = la-toi
+  j = la-sang
+  k = ngoc
+  l = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbgbbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbhbbbbhgggfbbbbhbbdca
-aedbhfbbbhgggfbbbhfbbdca
-aedbhgfbhgggggfbhgfbbdca
-aedbhgghggggggghggfbbdca
-aedbhgggggggggggggfbbdca
-aedbhgggggggggggggfbbdca
-aedbhgggggggggggggfbbdca
-aedbhgggggggggggggfbbdca
-aedbfffffffffffffffbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+alllllllllljjlllllllllka
+alkkkkkkkkkkkkkkkkkkkkia
+alkhhhhhhhhhhhhhhhhhhkia
+alkhfaffffffffffffffhkia
+alkhadaaaaaaaaaaffffhkia
+alkhachhhhhhhhhhafffhkia
+alkhachgggggggggdaffhkia
+alkhachgdedgggggfdafhkia
+alkhachggdggggggfaffhkia
+alkhachggggggggfdaffhkia
+ajkhachgggggggfaafffhkja
+ajkhachgggggfdafffffhkja
+alkhachgggfaaaffffffhkia
+alkhachgfdafffffffffhkia
+alkhacaaaaffffffffffhkia
+alkhacafffffffffffffhkia
+alkhacafffffffffffffhkia
+alkaabaaffffffffffffhkia
+alkhaaafffffffffffffhkia
+alkhhhhhhhhhhhhhhhhhhkia
+alkkkkkkkkkkkkkkkkkkkkia
+akiiiiiiiiiijjiiiiiiiiia
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

@@ -1,41 +1,42 @@
-# Sấm Sét — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Sét nổ giữa bầy quái: x2.5 sát thương +1
-name: Sấm Sét
+# Thiên Lôi · Q «Sấm Sét» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: tia sét + nổ va chạm
+name: Thiên Lôi · Q «Sấm Sét»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = sat
-  d = sat-sang
-  e = bac
-  f = dong-toi
-  g = dong
-  h = dong-sang
+  b = sat-toi
+  c = sat-sang
+  d = sang
+  e = dong-toi
+  f = dong
+  g = dong-sang
+  h = vang-nghe
+  i = vang-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbbbbdbbbbbbbgfa
-ahgbbbbbbbbecbbbbbbbbgfa
-ahgbbbbbbbedcbbbbbbbbgfa
-ahgbbbbbbedcbbbbbbbbbgfa
-ahgbbbbbeddcbbbbbbbbbgfa
-ahgbbbbedddcbbbbbbbbbgfa
-ahgbbbedddddeeeeeecbbgfa
-ahgbbedddddddddddcbbbgfa
-ahgbeccccccdddddcbbbbgfa
-ahgbbbbbbbbedddcbbbbbgfa
-ahgbbbbbbbbeddcbbbbbbgfa
-ahgbbbbbbbbedcbbbbbbbgfa
-ahgbbbbbbbedcbbbbbbbbgfa
-ahgbbbbbbbccbbbbbbbbbgfa
-ahgbbbbbbdbbbbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+agggggggggghhgggggggggfa
+agffffffffffffffffffffea
+agfcccccccccaaaaaacccfea
+agfcbbbbbbbaiiiiiiabcfea
+agfcbbbbbbaihhhhgabbcfea
+agfcbbbbbaihhhgaabbbcfea
+agfcbbbbaihhhgabbbbbcfea
+agfcbbbaihhhgaaaabbbcfea
+agfcbbaihhhhiiiiiabbcfea
+agfcbbahhhhhhhhhgabbcfea
+ahfcbbbaaaahhhhgabbbcfha
+ahfcbbbbbaihhhgabbbbcfha
+agfcbbbdaihhhgabbbbbcfea
+agfcbdbhidhhgabbbbbbcfea
+agfcbbhihhhgabbbbbbbcfea
+agfcdhidihdabbbbbbbbcfea
+agfcbbhihgabbbbbbbbbcfea
+agfcbdahgdbbbbbbbbbbcfea
+agfcbagdabbbbbbbbbbbcfea
+agfcccaccccccccccccccfea
+agffffffffffffffffffffea
+afeeeeeeeeeehheeeeeeeeea
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

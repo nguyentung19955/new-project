@@ -4,10 +4,10 @@ name: Lạc Long Quân · W «Vảy Rồng»
 size: 24x24
 colors:
   a = vien
-  b = dong-toi
-  c = dong
-  d = dong-sang
-  e = vang-nghe
+  b = sat
+  c = sat-sang
+  d = bac
+  e = sang
   f = cham-toi
   g = cham
   h = cham-sang

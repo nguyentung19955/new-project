@@ -1,44 +1,47 @@
-# Rừng Thiêng Nổi Giận — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: an angry forest: dark trees with glowing eyes and falling leaves
-name: Rừng Thiêng Nổi Giận
+# Mẫu Thượng Ngàn · R «Rừng Thiêng Nổi Giận» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: cây thiêng nổi giận + lá rơi
+name: Mẫu Thượng Ngàn · R «Rừng Thiêng Nổi Giận»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat-toi
-  d = dat
-  e = dat-sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = la
+  b = dat-toi
+  c = dat
+  d = dat-sang
+  e = dong
+  f = vang-nghe
+  g = vang-sang
+  h = son-sang
+  i = la-toi
   j = la-ma
   k = la-sang
+  l = reu-toi
+  m = reu
+  n = reu-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahgbbbbbkkkkkkkibbbbbgfa
-ahgbbbkkjjjjjjjjkibbbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbkjjjjjjjjjjjjjjibgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbbkjjjjjjjjjjjjibbgfa
-ahgbkjjjjjjjjjjjjjjibgfa
-ahgbbijjjjjjjjjjjjibbgfa
-ahgbbbiiiiiiiiiiiibbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbeddcbbbbbbbgfa
-ahgbbbbbbbccccbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+ahggggggggghhgggggggggha
+agffffffffffffffffffffea
+agfjjjjjjjjjjjjjjjjjjfea
+agfjiiiiaaaaaaaiiiiijfea
+agfjiaaannnnnnnaaiiijfea
+agfjakanmmmmmmmnnaaaafea
+agfjaammmmmmmmmmmmakafea
+agfanmmmmmmmmmmmmmaaafea
+agfammmmmmmmmmmmmmmlafea
+agfjalllmmllllmmmllajfea
+ahfjiaaadccccccbaaaijfha
+ahfjiiiadgcccgcbaiiijfha
+agfjiiiadccacccbaiiijfea
+agfjiiiadcaaaccbaiiijfea
+agfjiiadccccccccbaiijfea
+agfjiadccaccccaccbaijfea
+agfjabaaaabccbaaacbajfea
+agfjiakaiiaaaaiiiaaijfea
+agfjiaaiiiiiiiiiiiiijfea
+agfjjjjjjjjjjjjjjjjjjfea
+agffffffffffffffffffffea
+aheeeeeeeeeehheeeeeeeeha
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

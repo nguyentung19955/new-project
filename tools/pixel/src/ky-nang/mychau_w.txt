@@ -1,42 +1,43 @@
-# Áo Lông Trắng — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: +5.2% sức mạnh kỹ năng, +3% chí mạng
-name: Áo Lông Trắng
+# Mỵ Châu · W «Áo Lông Trắng» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: áo lông ngỗng
+name: Mỵ Châu · W «Áo Lông Trắng»
 size: 24x24
 colors:
   a = vien
-  b = khoi
+  b = sat-toi
   c = sat
   d = sat-sang
   e = bac
-  f = dat
-  g = dong-toi
-  h = dong
-  i = dong-sang
+  f = trang-xam
+  g = trang
+  h = sang
+  i = son
+  j = son-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aiiiiiiiiiiiiiiiiiiiiiga
-aihhhhhhhhhhhhhhhhhhhhga
-aihbbbbbbbbbbbbbbbbbbhga
-aihbbbbbeaeeeeabbbbbbhga
-aihbbbbeddaddadcbbbbbhga
-aihbbbedddaddaddcbbbbhga
-aihbeedddddaaddddecbbhga
-aihedddddddddddddddcbhga
-aihbcdcdddddddddcdcbbhga
-aihbbcbedddddddcbcbbbhga
-aihbbbbedddddddcbbbbbhga
-aihbbbbedddddddcbbbbbhga
-aihbbbbffffffffffbbbbhga
-aihbbbbffffffffffbbbbhga
-aihbbbbedddddddcbbbbbhga
-aihbbbbedddddddcbbbbbhga
-aihbbbbedddddddcbbbbbhga
-aihbbbbedddddddcbbbbbhga
-aihbbbeccccccccccbbbbhga
-aihbbbbbbbbbbbbbbbbbbhga
-aihhhhhhhhhhhhhhhhhhhhga
-agggggggggggggggggggggga
+aeeeeeeeeeehheeeeeeeeeda
+aeddddddddddddddddddddca
+aeddddddddddddddddddddca
+aeddbbbbbaabbaabbbbbddca
+aeddbbaaajjaajjaaabbddca
+aeddbahhhhjiijhhhhabddca
+aeddahgggfgiigfgggfaddca
+aedahgfggfggggfggfgfadca
+aedahfgfggfggfggfgffadca
+aeddaffffgfggfgffffaddca
+ahddbaahgfgfggfgffabddha
+ahddbbahfgfgfgfgffabddha
+aeddbbahgfgfgfgfgfabddca
+aeddbbahfgfgfgfgffabddca
+aeddbbahgfgfgfgfgfabddca
+aeddbbahfgfgfgfgffabddca
+aeddbbaffffffffffabbddca
+aeddbbbaaaaaaaaaabbbddca
+aeddbbbbbbbbbbbbbbbbddca
+aeddddddddddddddddddddca
+aeddddddddddddddddddddca
+adcccccccccchhccccccccca
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

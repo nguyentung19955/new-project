@@ -1,41 +1,45 @@
-# Phun Vòi Nước — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: water spout
-name: Phun Vòi Nước
+# Thần Cá Ông · Q «Phun Vòi Nước» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: cá voi + vòi nước phun
+name: Thần Cá Ông · Q «Phun Vòi Nước»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = cham
-  g = nuoc
-  h = nuoc-sang
+  b = trang
+  c = sang
+  d = dong-toi
+  e = dong
+  f = dong-sang
+  g = vang-nghe
+  h = cham-toi
+  i = cham
+  j = cham-sang
+  k = nuoc-sang
+  l = troi
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbhbbbbbbbbbdca
-aedbbbbbbbbgbbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbbhgfbbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbbhgggfbbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhgggggfbbbbbbdca
-aedbbbbbhggggggfbbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbhggggggggggfbbbdca
-aedbbbfggggggggggfbbbdca
-aedbbbbhggggggggfbbbbdca
-aedbbbbfggggggggfbbbbdca
-aedbbbbbfggggggfbbbbbdca
-aedbbbbbbffggffbbbbbbdca
-aedbbbbbbbbffbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+affffffffffggfffffffffea
+afeeeeeeeeeeeeeeeeeeeeda
+afejjjjjjljljljjjjjjjeda
+afejhhhhlklklklhhhhhjeda
+afejhhhhhalklahhhhhhjeda
+afejhhhhhhalahhhhhaajeda
+afejhhhhhaakaaahhajjaeda
+afejhhhaajakajjaaajiaeda
+afejhhajjiiiiiijjjiiaeda
+afejhajiiiiiiiiiiiihaeda
+agejajbaiiiiiiiiiiihaega
+ageajiiiiiiiiiiiiiihaega
+afeaicccccccccciiiihaeda
+afejaicbbbbbbbbciihhaeda
+afejhahhbbbbbbhhhaaajeda
+afejhhaahhhhhaaaahhhjeda
+afejhhhhaaaaahhhhhhhjeda
+afejhhhhhhhhhhhhhhhhjeda
+afejhhhhhhhhhhhhhhhhjeda
+afejjjjjjjjjjjjjjjjjjeda
+afeeeeeeeeeeeeeeeeeeeeda
+aeddddddddddggddddddddda
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

@@ -1,43 +1,45 @@
-# Quả Dừa Nổ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: Ném quả dừa nổ vùng: x2 sát thương +1
-name: Quả Dừa Nổ
+# Sọ Dừa · Q «Quả Dừa Nổ» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: quả dừa + nổ va chạm
+name: Sọ Dừa · Q «Quả Dừa Nổ»
 size: 24x24
 colors:
   a = vien
-  b = khoi
+  b = sang
   c = dat-toi
-  d = dat-sang
-  e = dong-toi
-  f = dong
-  g = dong-sang
-  h = la
-  i = la-ma
-  j = la-sang
+  d = dat
+  e = dat-sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = vang-nghe
+  j = vang-sang
+  k = la-toi
+  l = la-ma
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-agggggggggggggggggggggea
-agffffffffffffffffffffea
-agfbbbbbbbbbbbbbbbbbbfea
-agfbbbbjjhbbbbbjhbbbbfea
-agfbbbbhhijhbjjihbbbbfea
-agfbbbbbbhhijhhhbbbbbfea
-agfbbbjjjjjjihjjjjjhbfea
-agfjjjihhhhhhhhhhhhihfea
-agfhhhhbbbbbdcbbbbbhhfea
-agfbbbbbbbbbdcbbbbbbbfea
-agfbbbbbbbbbdcbbbbbbbfea
-agfbbbbbbbbbdcbbbbbbbfea
-agfbbbbbbbbbdcbbbbbbbfea
-agfbbbbbbbbbdcbbbbbbbfea
-agfbbbbbbbbbdcbbbbbbbfea
-agfbbbbbbbbdcbbbbbbbbfea
-agfbbbbbbbbdcbbbbbbbbfea
-agfbbbbbbbbdcbbbbbbbbfea
-agfbbbbbbbdcbbbbbbbbbfea
-agfbbbbbbbccbbbbbbbbbfea
-agffffffffffffffffffffea
-aeeeeeeeeeeeeeeeeeeeeeea
+ahhhhhhhhhhiihhhhhhhhhga
+ahggggggggggggggggggggfa
+ahgllllllllllllllllllgfa
+ahglkkkkkaaaaaakkkkklgfa
+ahglkkkaaeeeeeeaakkklgfa
+ahglkkaeeddddddeeakklgfa
+ahglkaeddddddddddeaklgfa
+ahglaeddddddddddddcalgfa
+ahglaeddddaadaadddcalgfa
+ahgaeddddddddddddddcagfa
+aigaedddddddaadddddcagia
+aigaeddddddddddddddcagia
+ahgadddbddddddddddccagfa
+ahglabdidbddddddddcalgfa
+ahglacijiddddddddccalgfa
+ahglbijbjibdddddccaklgfa
+ahglkkijicccccccaakklgfa
+ahglkbkiabaaaaaakkkklgfa
+ahglkkkbkkkkkkkkkkkklgfa
+ahgllllllllllllllllllgfa
+ahggggggggggggggggggggfa
+agffffffffffiifffffffffa
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

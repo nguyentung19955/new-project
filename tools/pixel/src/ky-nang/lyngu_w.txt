@@ -4,38 +4,40 @@ name: Lý Ngư Tướng Quân · W «Vảy Chép Vàng»
 size: 24x24
 colors:
   a = vien
-  b = dong-toi
-  c = dong
-  d = dong-sang
-  e = vang-nghe
-  f = vang-sang
-  g = son-sang
-  h = lua-sang
-  i = cham-toi
-  j = nuoc
+  b = sat
+  c = sat-sang
+  d = bac
+  e = sang
+  f = dong
+  g = vang-nghe
+  h = vang-sang
+  i = son-sang
+  j = lua-sang
+  k = cham-toi
+  l = nuoc
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
 addddddddddeedddddddddca
 adccccccccccccccccccccba
-adcjjjaaaaajaaaaaagajcba
-adcjiafffffafffffghgacba
-adcjafcfffefcfffefgajcba
-adcjaceffeeceffeecaijcba
-adcafcfeeeccfeeeccfajcba
-adcfccccccccccccccffacba
-adccffccccffccccfffefcba
-adcfffffffffffffffeeccba
-aecfeeeccfeeeccfeeecccea
-aeccccccccccccccccccccea
-adcccccffccccffcccccacba
-adcaafffffffffffffaajcba
-adcjacfeeeccfeeeccaijcba
-adcjacccccffccccccaijcba
-adcjiacccccfcccccaiijcba
-adcjiiaacffeffcaaiiijcba
-adcjiiiacccccccaiiiijcba
-adcjjjjjacccccajjjjjjcba
+adclllaaaaalaaaaaaialcba
+adclkahhhhhahhhhhijiacba
+adclahfhhhghfhhhghialcba
+adclafghhggfghhggfaklcba
+adcahfhgggffhgggffhalcba
+adchffffffffffffffhhacba
+adcfhhffffhhffffhhhghcba
+adchhhhhhhhhhhhhhhggfcba
+aechgggffhgggffhgggffcea
+aecffffffffffffffffffcea
+adcffffhhffffhhfffffacba
+adcaahhhhhhhhhhhhhaalcba
+adclafhgggffhgggffaklcba
+adclafffffhhffffffaklcba
+adclkafffffhfffffakklcba
+adclkkaafhhghhfaakkklcba
+adclkkkafffffffakkkklcba
+adclllllafffffallllllcba
 adccccccccccccccccccccba
 acbbbbbbbbbbeebbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.

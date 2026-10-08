@@ -1,40 +1,46 @@
-# Hương Hỏa — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: incense pot
-name: Hương Hỏa
+# Thổ Công · W «Hương Hỏa» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: lư hương ba nén nhang
+name: Thổ Công · W «Hương Hỏa»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = sat
+  c = sat-sang
+  d = bac
+  e = trang-xam
+  f = sang
+  g = dat-toi
+  h = dat-sang
+  i = dong-toi
+  j = dong
+  k = dong-sang
+  l = vang-nghe
+  m = son
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbgbbbbbbbbbdca
-aedbbbbbbbbgebbbbbbbbdca
-aedbbbbbbbbgebbbbbbbbdca
-aedbbbbbbbgffebbbbbbbdca
-aedbbbbbbbgfffebbbbbbdca
-aedbbbbbbgfffffebbbbbdca
-aedbbbbbbgffffffebbbbdca
-aedbbbbbgfffffffebbbbdca
-aedbbbbgfffffffffebbbdca
-aedbbggfffffffffffebbdca
-aedbgffffffffffffffebdca
-aedgfffffffffffffffebdca
-aedbefffffffffffffebbdca
-aedbbgfffffffffffebbbdca
-aedbbefffffffffffebbbdca
-aedbbbefffffffffebbbbdca
-aedbbbbeeeeeeeeebbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+addddddddddffdddddddddca
+adccccccccccccccccccccba
+adchhhhhhhhhhhhhhhhhhcba
+adchggaggggagggagggghcba
+adchgaeaggaeagaeaggghcba
+adchggaeaaeagaeagggghcba
+adchggaeagaeagaeaggghcba
+adchgggamagamagamagghcba
+adchgggamagamagamagghcba
+adchggaamaaamaaamagghcba
+afchgakkkkkkkkkkkagghcfa
+afchakllllllllllliaghcfa
+adchakjjjjajajjjjiaghcba
+adchakjjjjjjjjjjjjiahcba
+adchgaijjjjjjjjjiaaghcba
+adchggaiaiiiiiiaiagghcba
+adchggaaaaaaaaaaaagghcba
+adchgggaaggggggaaggghcba
+adchgggggggggggggggghcba
+adchhhhhhhhhhhhhhhhhhcba
+adccccccccccccccccccccba
+acbbbbbbbbbbffbbbbbbbbba
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

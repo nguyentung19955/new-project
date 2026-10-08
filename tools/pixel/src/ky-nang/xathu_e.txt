@@ -1,41 +1,46 @@
-# Tên Tẩm Nhựa Độc — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: an arrow tip dripping dark poison resin
-name: Tên Tẩm Nhựa Độc
+# Xạ Thủ Văn Lang · E «Tên Tẩm Nhựa Độc» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đầu mũi tên + giọt độc
+name: Xạ Thủ Văn Lang · E «Tên Tẩm Nhựa Độc»
 size: 24x24
 colors:
   a = vien
-  b = khoi
+  b = sat-toi
   c = sat
   d = sat-sang
-  e = bac
-  f = dong-toi
-  g = dong
-  h = dong-sang
+  e = sang
+  f = dat-toi
+  g = dat
+  h = dat-sang
+  i = la-toi
+  j = la-ma
+  k = la-sang
+  l = ngoc
+  m = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhhhhhhhhhhhhfa
-ahggggggggggggggggggggfa
-ahgbbbbbbbbebbbbbbbbbgfa
-ahgbbbbbbbbdbbbbbbbbbgfa
-ahgbbbbbbbedcbbbbbbbbgfa
-ahgbbbbbbbedcbbbbbbbbgfa
-ahgbbbbbbedddcbbbbbbbgfa
-ahgbbbbbbedddcbbbbbbbgfa
-ahgbbbbbedddddcbbbbbbgfa
-ahgbbbbbeddddddcbbbbbgfa
-ahgbbbbeddddddddcbbbbgfa
-ahgbbbbeddddddddcbbbbgfa
-ahgbbbbeddaddaddcbbbbgfa
-ahgbbbbeddddddddcbbbbgfa
-ahgbbbbeddddddddcbbbbgfa
-ahgbbbbeddddddddcbbbbgfa
-ahgbbbbcddddddddcbbbbgfa
-ahgbbbbbccddddccbbbbbgfa
-ahgbbbbbbbccccbbbbbbbgfa
-ahgbbbbbbbbbbbbbbbbbbgfa
-ahggggggggggggggggggggfa
-affffffffffffffffffffffa
+ammmmmmmmmmkkmmmmmmmmmla
+amllllllllllllllllllllia
+amlddddddddadddddddddlia
+amldbbbbbbadabbbbbbbdlia
+amldbbbbbadcdabbbbbbdlia
+amldbbbbbadcbabbbbbbdlia
+amldbbbbadeccbabbbbbdlia
+amldbbbbadeccbabbbbbdlia
+amldbbbadeccccbabbbbdlia
+amldbbbadeccccbabbbbdlia
+akldbbadeccccccbabbbdlka
+akldbbadcccaccccbabbdlka
+amldbadccaagaacccbabdlia
+amldbacbaahggaaacbabdlia
+amldbbaabahggabbaabbdlia
+amldbbbabahggabbabbbdlia
+amldbbajaahggabajabbdlia
+amldbbakaafagabakabbdlia
+amldbbbabbajabbbabbbdlia
+amldddddddakaddddddddlia
+amllllllllllllllllllllia
+aliiiiiiiiiikkiiiiiiiiia
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

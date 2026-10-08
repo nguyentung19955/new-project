@@ -1,40 +1,46 @@
-# Phù Hộ — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: blessing hand
-name: Phù Hộ
+# Thổ Công · Q «Phù Hộ» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: bàn tay ban phước + toả sáng
+name: Thổ Công · Q «Phù Hộ»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = da-toi
+  c = da
+  d = da-sang
+  e = dat-toi
+  f = dat-sang
+  g = dong-toi
+  h = dong
+  i = dong-sang
+  j = vang-nghe
+  k = vang-sang
+  l = son
+  m = son-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbgbbbbbbdca
-aedbbbbbbbbbbbgebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbgebbbgffebbbbdca
-aedbbbbbgebbgfffebbbbdca
-aedbbbbgffebgfffebbbbdca
-aedbbbbgfffgffffebbbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbgffffffffffffebbdca
-aedbbgffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbgffffffffffffffebdca
-aedgeeeeeeeeeeeeeeeebdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+aiiiiiiiiiijjiiiiiiiiiha
+aihhhhhhhhhhhhhhhhhhhhga
+aihffffffffkfffffffffhga
+aihfkeeaeaeaeaeeeeekfhga
+aihfekadadadadaeeekefhga
+aihfeeacacacacaeejeefhga
+aihfeeacacacacaejaeefhga
+aihfeeacacacacajadaefhga
+aihfekaccccccccadcaefhga
+aihfeeaccccccccdcaeefhga
+ajhfeeacccccccccaeeefhja
+ajhkjjaccccccccajjjjjhja
+aihfeeeaccccccbajeeefhga
+aihfekkaccccccbaekkefhga
+aihfeeeeacccccbaeeeefhga
+aihfeeejammmmmaejeeefhga
+aihfeejealllllaeejeefhga
+aihfekeeeaaaaakeeekefhga
+aihfkeeeeeeejeeeeeekfhga
+aihfffffffffjffffffffhga
+aihhhhhhhhhhhhhhhhhhhhga
+ahggggggggggjjggggggggga
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

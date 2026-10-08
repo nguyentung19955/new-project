@@ -8,40 +8,40 @@ colors:
   c = trang-xam
   d = trang
   e = sang
-  f = dong-toi
-  g = dong
-  h = dong-sang
-  i = vang-nghe
-  j = son
-  k = lua
-  l = lua-sang
-  m = la-toi
-  n = la-ma
+  f = vang-nghe
+  g = son
+  h = lua
+  i = lua-sang
+  j = la-toi
+  k = la-ma
+  l = la-sang
+  m = ngoc
+  n = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-ahhhhhhhhhhiihhhhhhhhhga
-ahggggggggggggggggggggfa
-ahgnnaannnnnnnnnnaanngfa
-ahgnallammmmmmmmallangfa
-ahgalellaaaaaaaaljelagfa
-ahgajclklbllllblkjcjagfa
-ahgnalkkjbbljbblkklangfa
-ahgabjkjjllkklljjkjbagfa
-ahgalbjialkjjkjaijblagfa
-ahgajlblljjeejjllbljagfa
-aigablljeeebbeeejljbagia
-aigaljeecdcbbedceellagia
-ahgajjecbcceeccbccljagfa
-ahgnajcbjjjjjjjjbcjangfa
-ahgnajcbejjjjjjebcjangfa
-ahgnmalebjjjjjjbelamngfa
-ahgnmmalebbbbbbelammngfa
-ahgnmmmalleeeellammmngfa
-ahgnmmmmajlllljammmmngfa
-ahgnnnnnnaaaaaannnnnngfa
-ahggggggggggggggggggggfa
-agffffffffffiifffffffffa
+annnnnnnnnnllnnnnnnnnnma
+anmmmmmmmmmmmmmmmmmmmmja
+anmkkaakkkkkkkkkkaakkmja
+anmkaiiajjjjjjjjaiiakmja
+anmaieiiaaaaaaaaigeiamja
+anmagcihibiiiibihgcgamja
+anmkaihhgbbigbbihhiakmja
+anmabghggiihhiigghgbamja
+anmaibgfaihgghgafgbiamja
+anmagibiiggeeggiibigamja
+almabiigeeebbeeegigbamla
+almaigeecdcbbedceeiiamla
+anmaggecbcceeccbccigamja
+anmkagcbggggggggbcgakmja
+anmkagcbeggggggebcgakmja
+anmkjaiebggggggbeiajkmja
+anmkjjaiebbbbbbeiajjkmja
+anmkjjjaiieeeeiiajjjkmja
+anmkjjjjagiiiigajjjjkmja
+anmkkkkkkaaaaaakkkkkkmja
+anmmmmmmmmmmmmmmmmmmmmja
+amjjjjjjjjjjlljjjjjjjjja
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

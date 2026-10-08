@@ -1,40 +1,45 @@
-# Dời Non — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: moving hill
-name: Dời Non
+# Sơn Tinh · Q «Dời Non» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: núi + vệt tốc độ
+name: Sơn Tinh · Q «Dời Non»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = vang-nghe
-  g = vang-sang
+  b = trang
+  c = sang
+  d = dat-toi
+  e = dat-sang
+  f = dong-toi
+  g = dong
+  h = dong-sang
+  i = vang-nghe
+  j = reu-toi
+  k = reu
+  l = reu-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbgbbbbbbdca
-aedbbbbbbbbbbbgebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbbbbbbgfebbbbbdca
-aedbbbbbgebbbgffebbbbdca
-aedbbbbbgebbgfffebbbbdca
-aedbbbbgffebgfffebbbbdca
-aedbbbbgfffgffffebbbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbbgffffffffffebbbdca
-aedbbgffffffffffffebbdca
-aedbbgffffffffffffebbdca
-aedbgfffffffffffffebbdca
-aedbgffffffffffffffebdca
-aedgeeeeeeeeeeeeeeeebdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+ahhhhhhhhhhiihhhhhhhhhga
+ahggggggggggggggggggggfa
+ahgeeeeeeeeeeeeeeeeeegfa
+ahgedddddddaddddddddegfa
+ahgeddddddacadddddddegfa
+ahgedddddacbbaddddddegfa
+ahgebbbbacbbkjadddddegfa
+ahgedddallkkkkjaddddegfa
+ahgeddallkkakkkjadddegfa
+ahgeddalkkkkakkjjaddegfa
+aigccallkkkkakkkjjadegia
+aigedalkkkkkkakkkjjaegia
+ahgeallkkkkkkakkkkjjagfa
+ahgealkkkkkkkkakkkkjagfa
+ahgallkkkkkkkkakkkjjagfa
+ahgalkkkkkkkkkkkkkkjagfa
+ahgakkkkkkkkkkkkkkjjagfa
+ahgeaaaaaaaaaaaaaaaaegfa
+ahgeddddddddddddddddegfa
+ahgeeeeeeeeeeeeeeeeeegfa
+ahggggggggggggggggggggfa
+agffffffffffiifffffffffa
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

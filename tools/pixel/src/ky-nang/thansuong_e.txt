@@ -1,41 +1,45 @@
-# Hơi Lạnh Đỉnh Núi — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: a cold wind swirl over a snowy mountain peak
-name: Hơi Lạnh Đỉnh Núi
+# Thần Sương Núi · E «Hơi Lạnh Đỉnh Núi» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: đỉnh núi tuyết + gió
+name: Thần Sương Núi · E «Hơi Lạnh Đỉnh Núi»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dong-toi
-  d = dong
-  e = dong-sang
-  f = cham
-  g = nuoc
-  h = nuoc-sang
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = trang
+  f = sang
+  g = la-toi
+  h = la-sang
+  i = cham-toi
+  j = cham-sang
+  k = ngoc
+  l = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-aeeeeeeeeeeeeeeeeeeeeeca
-aeddddddddddddddddddddca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbhfbbbbbbhfbbbbdca
-aedbbbbfgfbbbbhgfbbbbdca
-aedbbbbbhfbbbbhfbbbbbdca
-aedbbbbbfgfbbhgfbbbbbdca
-aedbbbbbbhfbbhfbbbbbbdca
-aedbbbbbbfghhgfbbbbbbdca
-aedbbbbbbbhggfbbbbbbbdca
-aedhhhhhhhgggghhhhhfbdca
-aedfffffffggggffffffbdca
-aedbbbbbbbhggfbbbbbbbdca
-aedbbbbbbhgffgfbbbbbbdca
-aedbbbbbhgfbbfgfbbbbbdca
-aedbbbbbhfbbbbhfbbbbbdca
-aedbbbbhgfbbbbfgfbbbbdca
-aedbbbbffbbbbbbffbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aedbbbbbbbbbbbbbbbbbbdca
-aeddddddddddddddddddddca
-acccccccccccccccccccccca
+allllllllllhhlllllllllka
+alkkkkkkkkkkkkkkkkkkkkga
+alkjjjjjjjjjjjjjjjjjjkga
+alkjiiiiiiiaiiiieiiijkga
+alkjiiiiiiafaiifiiiijkga
+alkjfffffafefafiiiiijkga
+alkjiiiiaffeefaiiiiijkga
+alkjiiiafefeeefaiiiijkga
+alkjiiafedfcecebaiiijkga
+alkjiiaddccccccbaiiifkga
+ahkjiaddcccaccccbaffjkha
+ahkjiadccccccaccbbaijkha
+alkjaddccccccacccbbajkga
+alkjadccccccccacccbajkga
+alkaddccccccccacccbbakga
+alkadccccccccccccccbakga
+alkaccccccccccccccbbakga
+alkjaaaaaaaaaaaaaaaajkga
+alkjiiiiiiiiiiiiiiiijkga
+alkjjjjjjjjjjjjjjjjjjkga
+alkkkkkkkkkkkkkkkkkkkkga
+akgggggggggghhggggggggga
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 

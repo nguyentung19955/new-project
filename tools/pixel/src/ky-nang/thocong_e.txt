@@ -1,40 +1,46 @@
-# Khiên Đất — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: earth dome shield
-name: Khiên Đất
+# Thổ Công · E «Khiên Đất» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: vòm đất che chắn + vòm che chắn
+name: Thổ Công · E «Khiên Đất»
 size: 24x24
 colors:
   a = vien
-  b = dong-toi
-  c = dong
-  d = dong-sang
+  b = dat-toi
+  c = dat
+  d = dat-sang
   e = vang-nghe
   f = vang-sang
+  g = la-toi
+  h = la
+  i = la-ma
+  j = la-sang
+  k = ngoc
+  l = ngoc-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-adddddddddddddddddddddba
-adccccccccccccccccccccba
-adcffffffffffffffffdccba
-adcfeeeeeeeeeeeeeeedccba
-adcfeeeeeeeeeeeeeeedccba
-adcfeeeeeeeeeeeeeeedccba
-adcfeeeeeeeeeeeeeeedccba
-adcfeeeeeeeeeeeeeeedccba
-adcfeeeeeeeeeeeeeeedccba
-adcfeeeeeeeeeeeeeeedccba
-adcfeeeeeeeeeeeeeeedccba
-adcdeeeeeeeeeeeeeeedccba
-abccdeeeeeeeeeeeeedcccba
-.abbcdeeeeeeeeeeedccbba.
-..aabcddeeeeeeeddccbaa..
-....abccdeeeeedcccba....
-.....abccdeeedcccba.....
-......abccdedcccba......
-.......abccdcccba.......
-........abccccba........
-.........abccba.........
-..........abba..........
-...........aa...........
+alllllllllljjlllllllllka
+alkkkkkkkkkkkkkkkkkkkkga
+alkddddddddddddddddddkga
+alkdbbbbbbbbbbbbbbbbdkga
+alkdbbbbbffffffbbbbbdkga
+alkdbbbffaaeaeaffbbbdkga
+alkdbbfaaedddddeafbbdkga
+alkdbffedccccccdeafbdkga
+alkdfaecacccccaccefbdkga
+alkdfdcccccaccccccbfdkga
+ajkdfecaccccccccacbfdkja
+ajkafccccccacccccccfakja
+alkafcaccccccccacccfakga
+alkadcccaccccccccccbakga
+alkaiiiiiiiiiiiiiiiiakga
+alkahhhhhhhhhhhhhhhhakga
+alkdaaaaaaaaaaaaaaaadkga
+alkdbbbbbbbbbbbbbbbbdkga
+alkdbbbbbbbbbbbbbbbbdkga
+alkddddddddddddddddddkga
+alkkkkkkkkkkkkkkkkkkkkga
+akggggggggggjjggggggggga
+.aaaaaaaaaaaaaaaaaaaaaa.
 end
 
 anim main fps=1 once

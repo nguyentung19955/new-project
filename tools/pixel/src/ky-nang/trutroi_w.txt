@@ -1,41 +1,41 @@
-# Cột Đá — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
-# Mô tả: stone pillar
-name: Cột Đá
+# Thần Trụ Trời · W «Cột Đá» — sinh bằng tools/ve-pixel.html (2026-10-08), chỉnh tay trong tool.
+# Mô tả: cột đá
+name: Thần Trụ Trời · W «Cột Đá»
 size: 24x24
 colors:
   a = vien
-  b = khoi
-  c = dat
-  d = dong-toi
-  e = dong
-  f = dong-sang
-  g = vang-nghe
-  h = vang-sang
+  b = sat-toi
+  c = sat
+  d = sat-sang
+  e = bac
+  f = sang
+  g = dat-toi
+  h = dat-sang
 
 part k0
 .aaaaaaaaaaaaaaaaaaaaaa.
-afffffffffffffffffffffda
-afeeeeeeeeeeeeeeeeeeeeda
-afebbbbbbbbbbbbbbbbbbeda
-afebbbbhhhhhhhhhhbbbbeda
-afebbbbhhhhhhhhhhbbbbeda
-afebbbbhhhhhhhhhhbbbbeda
-afebbbbbbhgggggfbbbbbeda
-afebbbbbbhgggggfbbbbbeda
-afebbbbbbhgggggfbbbbbeda
-afebbbbbbhgggggfbbbbbeda
-afebbbbbbcccccccbbbbbeda
-afebbbbbbcccccccbbbbbeda
-afebbbbbbhgggggfbbbbbeda
-afebbbbbbhgggggfbbbbbeda
-afebbbbbbhgggggfbbbbbeda
-afebbbbbbhgggggfbbbbbeda
-afebbbbbbhgggggfbbbbbeda
-afebbbbhhhhhhhhhhbbbbeda
-afebbbbhhhhhhhhhhbbbbeda
-afebbbbbbbbbbbbbbbbbbeda
-afeeeeeeeeeeeeeeeeeeeeda
-adddddddddddddddddddddda
+aeeeeeeeeeeffeeeeeeeeeda
+aeddddddddddddddddddddca
+aedhhhhhhhhhhhhhhhhhhdca
+aedhggaaaaaaaaaaaagghdca
+aedhgaddddddddddddaghdca
+aedhgacccccccccccbaghdca
+aedhggabbbbbbbbbbagghdca
+aedhgggadccccccbaggghdca
+aedhgggadacccccbaggghdca
+aedhgggadccccacbaggghdca
+afdhgggadcccaccbaggghdfa
+afdhgggadccccccbaggghdfa
+aedhgggadacccccbaggghdca
+aedhgggadccccacbaggghdca
+aedhgggadccccccbaggghdca
+aedhggaddddddddddagghdca
+aedhgadccccccccccbaghdca
+aedhgabbbbbbbbbbbbaghdca
+aedhggaaaaaaaaaaaagghdca
+aedhhhhhhhhhhhhhhhhhhdca
+aeddddddddddddddddddddca
+adccccccccccffccccccccca
 .aaaaaaaaaaaaaaaaaaaaaa.
 end
 
