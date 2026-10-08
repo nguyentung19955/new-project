@@ -28,7 +28,7 @@ Một tệp là `{ "ma": [ … ] }`, hoặc một mảng `[ … ]`, hoặc một
 
 | khoá | bắt buộc | ý nghĩa |
 |---|---|---|
-| `ma` | ✓ | `"nhóm/mã"` — nhóm: `tuong quai boss nen icon do an-phu ky-nang than-khi giao-dien canh`; mã chữ thường không dấu, nối `-` / `_` |
+| `ma` | ✓ | `"nhóm/mã"` — nhóm: `tuong quai boss nen icon do an-phu ky-nang than-khi giao-dien canh ban-do`; mã chữ thường không dấu, nối `-` / `_` |
 | `ten` | | tên hiển thị (mặc định: theo DANH-SACH) |
 | `mo` | | mô tả ngắn — tool đọc từ khoá (bảng dưới). Bỏ trống: dùng mô tả trong DANH-SACH |
 | `co` | | `"32x32"` … (mặc định theo nhóm / DANH-SACH; boss `48x48` / `64x64`) |
@@ -58,6 +58,11 @@ chim · thu · voi · ca · rua · ran · riudong · bua · cot · co · thuyen 
 mangda · dua · ruong · de · khoa · khoamo · dau · x · play · dung · doi · len · phai · tua1 · tua2 · tua3 · them · cuon · sach · phongbi · but ·
 chat · canhbao · hoi · dongho · cup · huychuong · mien · bia · quyen · daulau · bang · xoay · nam · binh · nguoi · nhom · ruongbau · giot.
 Lệnh xuất gói từng nhóm (spec có sẵn trong `tools/pixel/spec/`): [`LENH-TOOL.md`](LENH-TOOL.md).
+
+**Bản đồ** (`ban-do`, 320×148 = sân 1280×590 ÷ 4): `bo_phan` `chu_de` (song · dam · rung · hang · dong · bien · thanh), `duong_loai`
+(nuoc · dat · da · de · cat · gach) + khoá riêng `duong` (chuỗi path SVG `M … C … S …`, hoặc mảng nhiều nhánh) và `o_dat` (`[[x, y], …]` ô đặt
+tướng) — toạ độ thiết kế 932×430. Sinh spec từ game: `node tools/build-ban-do-spec.js` (chạy js/data.js + js/game.js trong vm, `setMap` →
+`CONFIG.slots`). Lỗi `E_BAN_DO` khi `duong` / `o_dat` sai dạng.
 
 **Từ khoá `mo`** (tiếng Việt / Anh, khớp nguyên từ): bộ xương · người đá · hồn / ma · giấy / vàng mã · con rối / đất nung · thân đồng · ma cây ·
 tóc búi / dựng / dài / trọc · khăn · nón · mũ lông chim / quạt lông · vương miện · mũ trùm · sừng · mũ · áo / giáp / giao lĩnh / cởi trần ·

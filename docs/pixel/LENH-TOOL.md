@@ -11,9 +11,11 @@ Chạy ở thư mục gốc dự án, **từng lệnh một, theo thứ tự**: 
 | giao-dien | 45 | `tools/pixel/spec/giao-dien.json` | `tools/pixel/goi/giao-dien.zip` | bộ sinh giao diện: khung · nút · nút tròn · thanh · ô · thẻ · huy hiệu · dải · núi |
 | nen (nền) | 51 | `tools/pixel/spec/nen.json` | `tools/pixel/goi/nen.zip` | ô lát: **mẫu vẽ tay** `nen/co · dat · nuoc` + `doi_mau`; vật / cổng / đế: hình vật nền trong suốt |
 | canh (cảnh) | 37 | `tools/pixel/spec/canh.json` | `tools/pixel/goi/canh.zip` | bộ sinh cảnh: trời 3 dải + núi xa + đất / nước / vật theo chủ đề |
+| an-phu (ấn phù) | 36 | `tools/pixel/spec/an-phu.json` | `tools/pixel/goi/an-phu.zip` | `mau` = bản vẽ tay nhánh `claude/pixel-anphu-thankhi` (tên cũ `g-air` → mã `g_air`) |
+| ky-nang (kỹ năng) | 240 | `tools/pixel/spec/ky-nang.json` | `tools/pixel/goi/ky-nang.zip` | 40 `mau` = bản vẽ tay nhánh `claude/pixel-ky-nang-2` (`giong-q` → `giong_q`); 200 sinh từ tên chiêu + mô tả, màu theo hành |
+| ban-do (bản đồ) | 14 | `tools/pixel/spec/ban-do.json` | `tools/pixel/goi/ban-do.zip` | bộ sinh bản đồ 320×148 từ dữ liệu game (`node tools/build-ban-do-spec.js`) |
 
-Bỏ qua: `tuong` `quai` `boss` (đã đủ, có bản vẽ tay ở nhánh chính / `claude/pixel-quai-boss`), `an-phu` (`claude/pixel-anphu-thankhi`),
-`ky-nang` (`claude/pixel-ky-nang-2`), `vfx` (`claude/vfx-pixel-2`).
+Bỏ qua: `tuong` `quai` `boss` (đã đủ, có bản vẽ tay ở nhánh chính), `vfx` (`claude/vfx-pixel-2`).
 
 ## 1. Đồ (do)
 
@@ -69,7 +71,40 @@ node tools/ve-pixel.js --spec tools/pixel/spec/canh.json --out tools/pixel/goi/c
 node tools/ve-pixel.js --spec tools/pixel/spec/canh.json --nap
 ```
 
-## 7. Sau khi nạp
+## 7. Ấn phù (an-phu)
+
+```
+node tools/ve-pixel.js --spec tools/pixel/spec/an-phu.json
+node tools/ve-pixel.js --spec tools/pixel/spec/an-phu.json --xem /tmp/xem-an-phu
+node tools/ve-pixel.js --spec tools/pixel/spec/an-phu.json --out tools/pixel/goi/an-phu.zip
+node tools/ve-pixel.js --spec tools/pixel/spec/an-phu.json --nap
+```
+
+## 8. Kỹ năng (ky-nang)
+
+```
+node tools/ve-pixel.js --spec tools/pixel/spec/ky-nang.json
+node tools/ve-pixel.js --spec tools/pixel/spec/ky-nang.json --xem /tmp/xem-ky-nang
+node tools/ve-pixel.js --spec tools/pixel/spec/ky-nang.json --out tools/pixel/goi/ky-nang.zip
+node tools/ve-pixel.js --spec tools/pixel/spec/ky-nang.json --nap
+```
+
+## 9. Bản đồ (ban-do)
+
+Spec đọc từ dữ liệu bản đồ của game (đường đi + ô đặt tướng đúng như trong trận) — thêm / sửa bản đồ trong `js/data.js` thì chạy lại lệnh đầu.
+
+```
+node tools/build-ban-do-spec.js
+node tools/ve-pixel.js --spec tools/pixel/spec/ban-do.json
+node tools/ve-pixel.js --spec tools/pixel/spec/ban-do.json --xem /tmp/xem-ban-do
+node tools/ve-pixel.js --spec tools/pixel/spec/ban-do.json --out tools/pixel/goi/ban-do.zip
+node tools/ve-pixel.js --spec tools/pixel/spec/ban-do.json --nap --ghi-de
+```
+
+Quy tắc bản đồ: ô SÁT đường (ô đặt tướng) cùng một kiểu bệ đá elip viền đậm → nhận ra ngay chỗ đặt được; vùng xa đường chỉ là nền
+trang trí theo chủ đề (cỏ, đá, cây, lau, nước…), không viền ô; đường cắt nhau (nhiều nhánh / tự cắt) → cầu tre.
+
+## 10. Sau khi nạp
 
 ```
 node tools/build-thu-vien.js

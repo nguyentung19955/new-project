@@ -2534,3 +2534,10 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 - Test mới `tests/pixel/boss-cao.test.js`: so chiều cao pixel vs cũ (≤15%) ở 1920×934 + 844×390, đo đỉnh hình Đại Bàng ở điểm đường cao nhất, chụp ảnh.
 - (vòng 2, theo tester) Vòng choáng hạ sát đầu: đáy vòng chạm đỉnh hình ±3 (quái pixel lấy cao hình thật sau làm tròn điểm ảnh), chim Lạc / xoáy khí đậu lên đường vòng; nét vòng dày 2 ô cho dễ thấy ở 844×390. Lửa bỏng: 1–2 ngọn lửa 5×7 ô rõ dáng, ngang vai, cao ~26% hình quái (cỡ ô theo cỡ quái). Test hat-vfx: đáy vòng–đỉnh đầu ±3, lửa cao 18–45%.
 - (yêu cầu thêm) Đóng băng pixel: khối băng BÁT GIÁC (viền nước sáng 1 ô, mặt trong trong suốt nhạt, vệt sáng chéo, đáy chàm sáng) bọc trọn hộp hình thật từng con (lề ~11%, cắt góc < 2 lề nên góc hộp vẫn nằm trong) — boss to khối to, lính nhỏ khối nhỏ, quái bay bọc đúng chỗ đang bay. pxDrawEnemy trả hộp hình thật (cao, rộng, lệch tâm, đáy) để vòng choáng / khối băng bám đúng. Test hat-vfx: bát giác bao trọn bbox, lề ≤ 15% cho tôm, voi chiến, Thuồng Luồng, Đại Bàng.
+- Bổ sung (yêu cầu thêm): **kỹ năng** 240 mã (40 bản vẽ tay từ `claude/pixel-ky-nang-2` đổi tên `giong-q` → `giong_q` qua `mau`,
+  200 sinh từ tên chiêu + mô tả, màu theo hành) và **ấn phù** 36 mã (bản vẽ tay `claude/pixel-anphu-thankhi`, `g-air` → `g_air`) —
+  nạp bằng tool, game dùng ở `skillIcon` / `runeIc` khi bật pixel.
+- **Bản đồ pixel** (nhóm mới `ban-do`, 320×148): `node tools/build-ban-do-spec.js` chạy js/data.js + js/game.js trong vm để lấy đường đi
+  và ô đặt tướng đúng như trong trận → tool vẽ nền: ô đặt tướng cùng một kiểu bệ đá viền đậm, vùng xa đường chỉ trang trí theo chủ đề
+  (không viền ô), đường cắt nhau → cầu tre (hỗ trợ nhiều nhánh `paths` / `d` mảng cho dạng đường mới). 14 bản đồ → `goi/ban-do.zip`;
+  `mapLayer` vẽ nền này khi bật pixel (chưa tải xong / không có mã → nền ô cỏ / đường như trước).
