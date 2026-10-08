@@ -2576,7 +2576,7 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
   `icon-nho` (kiểm từng ảnh ic-*.png tải được bằng `Image()` thay vì soi `<img>` đang hiện — thanh máu boss có thể vẽ lại),
   `mo-ta-ky-nang` (khung mô tả hiện/ẩn, cấp kỹ năng sau bấm; rê lại chuột nếu ô bị dựng lại), `cho-tuong` (chờ ảnh nạp sẵn của chợ
   tải xong trước mỗi lần ↻; chờ ghép / mua xong), `sua-loi-tester` L07 (chờ hội thoại boss + thông báo "Quái mới" tới 10 giây),
-  `vo-tan` (chờ thông báo "Phó bản đã gộp"), `vo-tan-su-kien` (chờ banner boss hiện hẳn), `sua-loi-tester` L05 (chờ thông báo trượt vào xong rồi mới đo đè), `ve-pixel/nap-goi` (chờ gỡ gói xong). `vo-tan-su-kien` gọi `ui.clearBanners()` trước khi thử banner (banner cũ còn trong hàng đợi đè banner boss khi máy chậm); `vo-tan` ghi lại mọi thông báo đã hiện (thông báo chỉ sống 2,6 giây).
+  `vo-tan` (chờ thông báo "Phó bản đã gộp"), `vo-tan-su-kien` (chờ banner boss hiện hẳn), `sua-loi-tester` L05 (chờ thông báo trượt vào xong rồi mới đo đè), `ve-pixel/nap-goi` (chờ gỡ gói xong). `vo-tan-su-kien` gọi `ui.clearBanners()` trước khi thử banner (banner cũ còn trong hàng đợi đè banner boss khi máy chậm), giữ banner boss hiện tới lúc đo, đo trước rồi mới chụp; `vo-tan` ghi lại mọi thông báo đã hiện (thông báo chỉ sống 2,6 giây).
 - `tests/run-all.js`: chạy song song (≥ 2 luồng) mà có test lỗi → xong cả bộ thì chạy lại RIÊNG từng test lỗi một lần (không `CHAY_SONG_SONG`);
   đạt → `CHẬP CHỜN` (không tính lỗi, in danh sách cuối bảng để sửa tiếp), vẫn lỗi → `LỖI`. Tắt bằng `--khong-chay-lai`.
 - `tu-cu-dong`: so FPS ảnh đơn / nhiều khung chỉ kiểm khi chạy riêng; chạy song song (`CHAY_SONG_SONG=1`) thì in tham khảo.
@@ -2584,6 +2584,10 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
   cả thanh tướng; nếu việc này rơi vào 0,35 giây đang giữ tay (hoặc 0,15 giây rê chuột) thì ô cũ đã rời trang → mô tả **không hiện**
   (phải nhấc tay giữ lại). Gợi ý sửa: khi hết giờ chờ, tìm lại ô bằng `elementFromPoint` như vòng `setInterval` cập nhật mô tả.
   Test `mo-ta-ky-nang` tạm dừng trận trong đoạn giữ tay, chờ `assetVersion` đứng yên và rê chuột ra/vào lại nếu mô tả chưa hiện.
+- **Lỗi game phát hiện 2 (chưa sửa, chỉ báo):** `ui.preImg` chỉ giữ sẵn 3 bản ảnh mỗi tướng, nhưng chợ 6 thẻ có thể ra ≥ 4 thẻ cùng loại
+  → thẻ thứ 4 tạo `<img>` mới chưa tải (nháy trắng). `cho-tuong` (bản gốc lỗi ~50% kể cả chạy riêng) giờ đếm riêng trường hợp này và in cảnh báo.
+- `cho-tuong` còn 2 chỗ ngẫu nhiên trong chính test: thẻ chợ ngẫu nhiên trùng loại tướng ★ trên sân → "chạm thẻ mua được" thành ghép
+  (số tướng không tăng); tướng ★ chọn để thử ghép có sẵn ★★ cùng loại → ghép dây chuyền lên ★★★. Nay chọn loại chưa có trên sân / tướng ★ duy nhất.
 ## claude/duong-di-moi — gộp với vo-tan-su-kien (sự kiện đợt) + banner đợt 60
 - Gộp nhánh chính (đã có sự kiện vô tận): `buildWave(n, level, st)` giữ cả WAVE_CAP/hpx/sự kiện `ev` lẫn quân + boss theo màn (`st`); `spawn(type, dist, elite, it, lane)` nhận cả máu đợt (hpx, ev.hp) lẫn nhánh đường + `pathHp`; phân thân của sự kiện đi đúng nhánh con mẹ; lưu trận giữ cả `evWave/evDone` và `stage/pathHp/mapId`; thưởng sự kiện tính trước rồi mới đổi màn.
 - Đợt 60 (sự kiện thử thách + đổi màn sau boss): banner sự kiện và banner "Màn N" dùng chung một `#banner` → nay xếp hàng (`ui.queueBanner`), cái sau đợi cái trước tắt; banner sự kiện còn hoãn (bảng bộ quái mới đang mở) mà đợt đã vượt thì bỏ, không báo muộn sau "Màn N".

@@ -207,18 +207,20 @@ const CHI_ANH = !!process.env.CHI_ANH;   // CHI_ANH=1: chỉ chụp ảnh
     await setup(page, 60, 'giobao');
     await page.evaluate(() => { const g = game; g.startWave(); for (let i = 0; i < 60; i++) g.update(1 / 30); ui.update && ui.update(0);
       g.running = false; document.querySelector('#roster-hint').hidden = true; ui.clearBanners();   // huỷ cả banner còn đợi trong hàng (máy bận dễ đè banner boss)
-      g.events.push({ type: 'boss', name: ENEMIES.hotinh.name }); ui.handleEvents(); });
+      g.events.push({ type: 'boss', name: ENEMIES.hotinh.name }); ui.handleEvents();
+      clearTimeout(ui.bannerT); });   // giữ banner hiện tới lúc đo / chụp (banner tự tắt sau 2,6 giây thật — máy bận dễ tắt trước khi đo)
     await page.waitForTimeout(700);
     // máy bận (chạy song song): chờ banner boss hiện hẳn + hết hiệu ứng (tối đa 5 giây) thay vì tin 700 ms là đủ
     await page.waitForFunction(() => { const b = document.querySelector('#banner'), s = document.querySelector('#banner-sub');
       return b && !b.hidden && s && /boss/i.test(s.innerText) && b.getAnimations({ subtree: true }).every((a) => a.playState !== 'running' || a.effect.getComputedTiming().iterations === Infinity); }, null, { timeout: 5000 }).catch(() => {});
-    await page.screenshot({ path: path.join(SHOT, `boss-trong-su-kien-${w}x${h}.png`) });
+    // đo TRƯỚC khi chụp: chụp 1920×934 lúc máy bận có thể mất vài giây, banner (sống 2,6 giây) đã tắt
     const r = await page.evaluate(() => {
       const R = (s) => { const el = document.querySelector(s); return el && !el.hidden && el.offsetWidth ? el.getBoundingClientRect() : null; };
       const a = R('#nextwaves'), sub = R('#banner-sub'), txt = R('#banner-text');
       const ov = (b) => a && b ? Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left)) * Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top)) : 0;
       return { strip: !!a && !!document.querySelector('#nextwaves .evt'), sub: sub && document.querySelector('#banner-sub').innerText, o1: ov(sub), o2: ov(txt) };
     });
+    await page.screenshot({ path: path.join(SHOT, `boss-trong-su-kien-${w}x${h}.png`) });
     ok(r.strip && /boss/i.test(r.sub || ''), `${w}x${h}: đợt sự kiện có dải trên + banner "${r.sub}"`);
     ok(r.o1 < 2 && r.o2 < 2, `${w}x${h}: dải sự kiện không che banner boss (dòng nhỏ ${Math.round(r.o1)} px², dòng to ${Math.round(r.o2)} px²)`);
     ok(errors.length === 0, `${w}x${h}: không lỗi trang ` + errors.join(' | '));
