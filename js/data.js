@@ -1954,8 +1954,8 @@ const HARD = {
 // Khó: mọi ải. Thường: từ ải minLevel (ải 1–3 "Dễ" giữ nguyên). Trước đây Khó chỉ ×1,6 cố định nhưng Ngân khố ×1,5
 // nên gần như ngang Thường — 1 tướng Vàng phép đơn độc đi tới ~đợt 60 không mất mạng.
 const WAVE_RAMP = {
-  hard: { from: 15, k: 1.04, to: 100 },
-  normal: { from: 15, k: 1.03, to: 100, minLevel: 3 },
+  hard: { from: 15, k: 1.03, to: 100 },     // tester: 1,04 quá dốc (đội 8 ★★★ mạnh lọt 74% máu đợt 50) → 1,03
+  normal: { from: 15, k: 1.02, to: 100, minLevel: 3 },
 };
 // Khó: ải dễ (1–3) không còn giảm máu cho người mới — hệ số máu + tốc độ tăng theo đợt ít nhất bằng ải HARD_REF (Cửa Sông Hồng).
 // (Vô tận bắt đầu từ ải 1 giữ hệ số ải 1 suốt trận: trước đây ải 1 Khó máu quái chỉ bằng ~1/5 ải 7.)

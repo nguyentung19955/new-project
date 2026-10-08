@@ -2681,8 +2681,8 @@ Vẽ pixel 32×32 (nguồn `tools/pixel/src/tuong/<mã>.txt`, dựng `node tools
 
 Người dùng chọn phương án 4: máu quái tăng dần theo đợt + hạ riêng chiêu vượt trội + thưởng đội hình.
 
-- **Khó**: máu quái ×HARD (như cũ) × **1,04 mỗi đợt từ đợt 15** (dừng tăng ở đợt 100); ải 1–3 bật Khó **không còn hệ số giảm máu cho người mới** — máu và tốc tăng theo đợt lấy ít nhất bằng ải chuẩn `HARD_REF` (Cửa Sông Hồng). Nguyên nhân lỗi người dùng báo: Vô tận từ ải 1 giữ hệ số ải 1 (máu ~1/5 ải 7) suốt trận, Khó chỉ ×1,6 mà Ngân khố ×1,5 → 1 Vàng phép đi tới ~đợt 60. Tooltip nút Khó ghi rõ.
-- **Thường**: từ ải 4 trở đi máu ×**1,03 mỗi đợt từ đợt 15**. **Dễ** (ải 1–3 Thường) giữ nguyên.
+- **Khó**: máu quái ×HARD (như cũ) × **1,03 mỗi đợt từ đợt 15** (dừng tăng ở đợt 100; bản đầu 1,04 — tester: quá dốc, đội 8 ★★★ mạnh lọt 74% máu ở đợt 50 → người dùng chọn dịu bớt); ải 1–3 bật Khó **không còn hệ số giảm máu cho người mới** — máu và tốc tăng theo đợt lấy ít nhất bằng ải chuẩn `HARD_REF` (Cửa Sông Hồng). Nguyên nhân lỗi người dùng báo: Vô tận từ ải 1 giữ hệ số ải 1 (máu ~1/5 ải 7) suốt trận, Khó chỉ ×1,6 mà Ngân khố ×1,5 → 1 Vàng phép đi tới ~đợt 60. Tooltip nút Khó ghi rõ.
+- **Thường**: từ ải 4 trở đi máu ×**1,02 mỗi đợt từ đợt 15** (bản đầu 1,03). **Dễ** (ải 1–3 Thường) giữ nguyên.
 - **Thế trận** (mới, `TEAM_BONUS` js/data.js): toàn quân +6% sát thương mỗi tướng từ tướng thứ 3 (tối đa 8 tướng) + theo số hành khác nhau 3/4/5 hành: +10/20/30% (đủ 5 hành cộng thêm Ngũ hành tề tựu +10%). Đội 6 tướng đủ 5 hành: **+64%**; 8 tướng: +76%. Chip ⚔ +X% trên thanh trên (cạnh mạng), chạm → giải thích. Ảnh pixel icon ghi ở `docs/pixel/DANH-SACH.md`.
 - **Chiêu R**: hồi chiêu thực tế **không dưới 12 giây** sau mọi giảm hồi chiêu (`R_MIN_CD`, trước đây trí lực + đồ giảm tới 50% → R 10 s chỉ còn 5 s). Mô tả kỹ năng ghi "(tối thiểu 12 giây)".
 - R toàn bản đồ / vùng lớn chiếm 60–94% sát thương trận (đo `node tests/can-bang-vang/do-r.js all 45 55`) → tăng hồi chiêu trước, rồi hạ sát thương:
@@ -2701,7 +2701,7 @@ Người dùng chọn phương án 4: máu quái tăng dần theo đợt + hạ 
 
   % sát thương từ R (đợt 45–55, tướng max đứng một mình) trước → sau: Gióng 94 → 86, Mẫu T.Ngàn 91 → 87, Sơ Dừa 91 → 83, Cuội 93 → 81, An Tiêm 84 → 73, Hải Sen 90 → 87, Thần Sương 74 → 68. R nhanh nhất trước đây: Thầy Mo 8,5 s, Xạ Thủ 8,6 s, Lạc Tướng 8,8 s → nay 12 s.
 - Tím đơn độc (21 tướng, ải 4 Thường): đa số thua ~đợt 15–24; Sơ Dừa vượt trội (thua ~49) → hạ qua R ở trên.
-- Bảng bot trước → sau (3 ván mỗi ô; đợt mất mạng đầu → đợt thua; Dễ = ải 1 Thường, Thường = ải 4, Khó = ải 1 bật Khó, Khó4 = ải 4 bật Khó; đội 6 = 6 Thường ★★★ khác hành; hỗn hợp = 1 Vàng tầm xa + 2 Tím + 3 Thường ★★★):
+- Bảng bot bản đầu (Khó ×1,04, Thường ×1,03) trước → sau (3 ván mỗi ô; đợt mất mạng đầu → đợt thua; Dễ = ải 1 Thường, Thường = ải 4, Khó = ải 1 bật Khó, Khó4 = ải 4 bật Khó; đội 6 = 6 Thường ★★★ khác hành; hỗn hợp = 1 Vàng tầm xa + 2 Tím + 3 Thường ★★★):
 
 | Đội | Dễ | Thường | Khó (ải 1) | Khó4 |
 |---|---|---|---|---|

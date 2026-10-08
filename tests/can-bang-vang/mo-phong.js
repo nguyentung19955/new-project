@@ -28,6 +28,12 @@ async function run({ kind, hard, level, seed, gold, maxW, set }) {
     const [k0, ty] = kind.split(':');
     if (k0 === 'vang' || k0 === 'tim') team.push(asc(place(ty || pick(kinds(k0 === 'vang' ? 'legendary' : 'epic')), { tier: 0 })));
     else if (k0 === 'thuong6') { for (const t of pickEl(kinds(), 6, new Set())) team.push(place(t, { tier: 3 })); }
+    else if (k0 === 'doi8') {   // đội 8 mạnh: 2 Vàng tầm xa + 3 Tím + 3 Thường ★★★, khác hành
+      const used = new Set(), ranged = kinds('legendary').filter((k) => HEROES[k].attack !== 'melee');
+      for (const t of pickEl(ranged, 2, used)) team.push(asc(place(t, {})));
+      for (const t of pickEl(kinds('epic'), 3, used)) team.push(asc(place(t, {})));
+      for (const t of pickEl(kinds(), 3, used)) team.push(place(t, { tier: 3 }));
+    }
     else {   // hon: 1 Vàng tầm xa + 2 Tím + 3 Thường ★★★, khác hành
       const used = new Set(), ranged = kinds('legendary').filter((k) => HEROES[k].attack !== 'melee');
       for (const t of pickEl(ranged, 1, used)) team.push(asc(place(t, {})));
@@ -43,19 +49,20 @@ async function run({ kind, hard, level, seed, gold, maxW, set }) {
       const h = team.slice().sort((a, b) => a.level - b.level)[0];
       if (h.level < CONFIG.maxLevel && g.gold >= g.levelCost(h)) g.levelUp(h);
     };
-    const shapes = [], dbg = {}; let w30 = false; let firstLoss = null, t = 0, guard = 0; const DT = 1 / 20;
+    const shapes = [], dbg = {}; let w30 = false; const lv = {}; let firstLoss = null, t = 0, guard = 0; const DT = 1 / 20;
     while (!g.over && g.wave < maxW && guard++ < 20 * 60 * 120) {
       const l0 = g.lives;
       g.update(DT); t += DT;
       if (g.lives < l0 && firstLoss == null) firstLoss = g.wave;
       if (g.wave >= 31 && !g.over) w30 = true;
+      for (const m of [40, 50]) if (g.wave === m + 1 && lv[m] == null) lv[m] = g.over ? 0 : g.lives;   // mạng còn sau đợt 40 / 50
       if (g.stage && (shapes[shapes.length - 1] || '').split('@')[0] !== String(g.stage.shape)) shapes.push(g.stage.shape + '@' + g.wave + (team[0] ? '/s' + team[0].slot : ''));
       if (g.rest) g.rest = null;
       if (g.holdStage) g.holdStage = false;
       if (g.wave % 10 === 0 && !dbg[g.wave]) { const h = team[0], st = heroStats(h); dbg[g.wave] = `đ${g.wave}: dmg ${Math.round(st.damage)} skP ${st.skillPower?.toFixed?.(2)} grow ${h.grow} train ${h.train || 0} skill ${JSON.stringify(h.skillLv)} vàng ${Math.round(g.gold)} máuQ ${Math.round(waveHpMult(effWave(g.wave, g.level)))} thếTrận ${JSON.stringify(g.teamB)} bonus% ${st.bonusDmgPct}`; }
       if (t >= 0.5) { t = 0; for (let k = 0; k < 4; k++) think(); }
     }
-    return { firstLoss, w30, over: g.over, wave: g.wave, lives: g.lives, team: team.map((h) => `${h.type}${h.tier}/L${h.level}`).join(' '), time: Math.round(g.time), shapes: shapes.join(' '), dbg: Object.values(dbg).join('\n') + (window.__tally ? '\n' + Object.entries(window.__tally).sort((a, b) => b[1] - a[1]).slice(0, 12).map(([k, v]) => k + ':' + v.toExponential(2)).join(' ') : '') };
+    return { firstLoss, w30, lv, over: g.over, wave: g.wave, lives: g.lives, team: team.map((h) => `${h.type}${h.tier}/L${h.level}`).join(' '), time: Math.round(g.time), shapes: shapes.join(' '), dbg: Object.values(dbg).join('\n') + (window.__tally ? '\n' + Object.entries(window.__tally).sort((a, b) => b[1] - a[1]).slice(0, 12).map(([k, v]) => k + ':' + v.toExponential(2)).join(' ') : '') };
   }, [kind, hard, level, seed, gold, maxW, set]);
   await browser.close();
   return Object.assign(r, { errors: errors.slice(0, 2) });
@@ -71,6 +78,6 @@ if (require.main === module) (async () => {
     const [level, hard] = MODES[m], rs = [];
     for (let k = 0; k < N; k += J) rs.push(...await Promise.all(Array.from({ length: Math.min(J, N - k) }, (_, j) => run({ kind, hard, level, seed: 4321 + (k + j) * 7919, gold: +(process.env.GOLD || 0), maxW, set: process.env.SET }))));
     const avg = (f) => (rs.reduce((a, x) => a + f(x), 0) / rs.length).toFixed(1);
-    console.log(`${kind.padEnd(12)} ${m.padEnd(6)}: mất mạng đầu đ${avg((x) => x.firstLoss ?? maxW)} · thua đ${avg((x) => x.wave)} · qua đợt 30: ${rs.filter((x) => x.w30).length}/${N} · ${rs.map((x) => `[${x.firstLoss ?? '-'}→${x.over ? '' : '≥'}${x.wave} ${x.team}]`).join(' ')}${process.env.SH ? '\n   màn: ' + rs.map((x) => x.shapes).join('\n   màn: ') : ''}${process.env.DBG ? '\n' + rs[0].dbg : ''}${rs[0].errors.length ? ' LỖI ' + rs[0].errors : ''}`);
+    console.log(`${kind.padEnd(12)} ${m.padEnd(6)}: mất mạng đầu đ${avg((x) => x.firstLoss ?? maxW)} · thua đ${avg((x) => x.wave)} · qua đợt 30: ${rs.filter((x) => x.w30).length}/${N} · mạng sau đ40/đ50: ${rs.map((x) => `${x.lv[40] ?? 0}/${x.lv[50] ?? 0}`).join(' ')} · ${rs.map((x) => `[${x.firstLoss ?? '-'}→${x.over ? '' : '≥'}${x.wave} ${x.team}]`).join(' ')}${process.env.SH ? '\n   màn: ' + rs.map((x) => x.shapes).join('\n   màn: ') : ''}${process.env.DBG ? '\n' + rs[0].dbg : ''}${rs[0].errors.length ? ' LỖI ' + rs[0].errors : ''}`);
   }
 })();
