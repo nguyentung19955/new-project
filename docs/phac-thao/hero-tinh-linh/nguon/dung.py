@@ -9,7 +9,7 @@ from playwright.async_api import async_playwright
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.abspath(os.path.join(HERE, '..'))
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..', '..', '..'))
-SHEETS = ['bon-be-tinh-linh', 'mac-do', 'truoc-va-sau', 'moi-be-bon-vu-khi', 'dong-tac', 'co-that-phong-vuong']
+SHEETS = ['bon-be-tinh-linh', 'mac-do', 'truoc-va-sau', 'moi-be-bon-vu-khi', 'dong-tac']  # tờ co-that-phong-vuong dựng bằng dung_phong.py
 
 def rd(p):
     return open(p, encoding='utf-8').read()
@@ -26,7 +26,7 @@ def page_html():
     cu = '(function(){const HUONGS=[];' + rd(os.path.join(old, 'lib.js')).replace("'use strict';", '') + rd(os.path.join(old, 'huong3.js')).replace("'use strict';", '') + ';window.CU={h:HUONGS[0],sprite:sprite};})();'
     js = ['window.G={};', rd(os.path.join(ROOT, 'game', 'js', 'data.js')), rd(os.path.join(ROOT, 'game', 'js', 'hero_tinhlinh.js')), cu, rd(os.path.join(HERE, 'to.js'))]
     tags = ''.join('<script>%s</script>' % s for s in js)
-    imgs = ''.join('<img id="%s" src="%s">' % (i, durl(n)) for i, n in (('bg', 'hien-tai-bg.png'), ('phong', 'phong-vuong.png'), ('quai', 'quai.png')))
+    imgs = '<img id="bg" src="%s">' % durl('hien-tai-bg.png')
     return '<!doctype html><html lang="vi"><meta charset="utf-8"><body style="background:#111">%s%s</body></html>' % (imgs, tags)
 
 async def main():

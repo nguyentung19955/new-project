@@ -30,16 +30,16 @@
       this.olf = new Uint8Array(n); // điểm này là viền
       this.nol = new Uint8Array(n); // điểm này không cần viền ngoài (hiệu ứng)
       this.lay = null; this.clip = false;
-    }
-    _i(x, y) {
-      x = Math.round(x) + this.ox; y = Math.round(y) + this.oy;
-      if (x < 1 || y < 1 || x >= this.w - 1 || y >= this.h - 1) return -1;
-      return y * this.w + x;
+      this.buf = new Array(n).fill(null); // lớp nháp dùng lại cho mọi miếng, chỉ quét trong khung bao của miếng cho nhanh
+      this.bx0 = 0; this.bx1 = -1; this.by0 = 0; this.by1 = -1;
     }
     p(x, y, c) {
-      const i = this._i(x, y); if (i < 0) return;
+      x = Math.round(x) + this.ox; y = Math.round(y) + this.oy;
+      if (x < 1 || y < 1 || x >= this.w - 1 || y >= this.h - 1) return;
+      const i = y * this.w + x;
       if (this.clip && !this.lay[i]) return;
       this.lay[i] = c === 0 ? null : norm(c);
+      if (x < this.bx0) this.bx0 = x; if (x > this.bx1) this.bx1 = x; if (y < this.by0) this.by0 = y; if (y > this.by1) this.by1 = y;
     }
     r(x, y, w, h, c) { for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) this.p(x + i, y + j, c); }
     e(cx, cy, rx, ry, c) {
@@ -81,25 +81,30 @@
     // Một miếng: opt.ol màu viền (false là không viền), opt.bevel false là không tự đánh sáng tối, opt.fx là hiệu ứng.
     part(opt, fn) {
       if (typeof opt === 'function') { fn = opt; opt = {}; }
-      const W = this.w, n = W * this.h;
-      this.lay = new Array(n).fill(null); this.clip = false;
+      const W = this.w, L = this.buf;
+      this.lay = L; this.clip = false; this.bx0 = this.w; this.bx1 = -1; this.by0 = this.h; this.by1 = -1;
       fn(this);
-      const L = this.lay, ol = opt.fx ? false : (opt.ol === undefined ? INK : opt.ol);
+      const x0 = this.bx0, x1 = this.bx1, y0 = this.by0, y1 = this.by1, ol = opt.fx ? false : (opt.ol === undefined ? INK : opt.ol);
       if (opt.bevel !== false && !opt.fx) {
-        const tone = new Int8Array(n);
-        for (let i = W; i < n - W; i++) {
+        for (let y = y0; y <= y1; y++) for (let x = x0, i = y * W + x0; x <= x1; x++, i++) {
           const q = L[i]; if (!q || q.f) continue;
-          if (!L[i - W]) tone[i] = 2; else if (!L[i + W] || !L[i - 1]) tone[i] = 0; else tone[i] = 1;
+          q.t = !L[i - W] ? 2 : !L[i + W] || !L[i - 1] ? 0 : 1;
         }
-        for (let i = W; i < n - W; i++) { const q = L[i]; if (q && !q.f) q.t = tone[i]; }
       }
       if (ol) {
-        for (let i = W; i < n - W; i++) {
+        for (let y = y0; y <= y1; y++) for (let x = x0, i = y * W + x0; x <= x1; x++, i++) {
           if (!L[i]) continue;
-          for (const d of [-1, 1, -W, W]) { const k = i + d; if (!L[k]) { this.main[k] = ol; this.olf[k] = 1; this.nol[k] = 0; } }
+          if (!L[i - 1]) { this.main[i - 1] = ol; this.olf[i - 1] = 1; this.nol[i - 1] = 0; }
+          if (!L[i + 1]) { this.main[i + 1] = ol; this.olf[i + 1] = 1; this.nol[i + 1] = 0; }
+          if (!L[i - W]) { this.main[i - W] = ol; this.olf[i - W] = 1; this.nol[i - W] = 0; }
+          if (!L[i + W]) { this.main[i + W] = ol; this.olf[i + W] = 1; this.nol[i + W] = 0; }
         }
       }
-      for (let i = 0; i < n; i++) { const q = L[i]; if (!q) continue; this.main[i] = q.c[q.t]; this.olf[i] = 0; this.nol[i] = opt.fx ? 1 : 0; }
+      const fx = opt.fx ? 1 : 0;
+      for (let y = y0; y <= y1; y++) for (let x = x0, i = y * W + x0; x <= x1; x++, i++) {
+        const q = L[i]; if (!q) continue;
+        this.main[i] = q.c[q.t]; this.olf[i] = 0; this.nol[i] = fx; L[i] = null;
+      }
       this.lay = null;
     }
     finish() {
@@ -495,9 +500,9 @@
     helm: { h_r1: 'non_la', h_r2: 'mu_da_ca', h_r3: 'khan_lua', h_moc: 'mu_sung', h_ngu: 'mu_vay_ca', h_ho: 'mu_tai_cao' },
     armor: { a_r1: 'ao_vai', a_r2: 'ao_da_bien', a_r3: 'giap_da', a_moc: 'ao_vo_cay', a_ngu: 'ao_vay', a_ho: 'ao_long' },
   };
-  // Gộp: bộ khởi đầu, rồi mũ áo đang mặc trong game (o.helm, o.armor), rồi o.outfit nếu có.
+  // Gộp: bộ khởi đầu, rồi mũ áo đang mặc trong game (o.helm, o.armor), rồi o.outfit nếu có (hoặc o.p.outfit: đồ gắn sẵn trên người chơi).
   function outfitOf(key, o) {
-    const st = HERO[key].outfit, x = (o && o.outfit) || {};
+    const st = HERO[key].outfit, x = (o && o.outfit) || (o && o.p && o.p.outfit) || {};
     const pick = (k, gear) => (x[k] !== undefined ? x[k] : gear || st[k]);
     return {
       hat: pick('hat', o && o.helm && L.fromGear.helm[o.helm]), robe: pick('robe', o && o.armor && L.fromGear.armor[o.armor]),
@@ -537,8 +542,8 @@
       else Pt((s) => { B.r(h[0] - 1, h[1] - 1, 2, 2, Md(MASK)); });
     };
     // 1. lớp lưng
-    if (wing) wing.draw(cx, Pb);
     if (back) back.draw(cx, Pb);
+    if (wing) wing.draw(cx, Pb); // cánh mọc từ vai nên nằm trước đồ đeo lưng
     // 2. thân trần
     arm(SHF, hf, false);
     const ff = ps.ff || [2, 0], fb = ps.fb || [-2, 0];
@@ -786,7 +791,8 @@
     sword: [[0, { x: 3, y: -16, ang: -90, hang: 0 }], [0.15, { x: 4, y: -25, ang: -130, hang: -40 }], [0.85, { x: 4, y: -25, ang: 230, hang: 320 }], [1, { x: 3, y: -16, ang: 270, hang: 360 }]],
     spear: [[0, { x: 13, y: -13, ang: 0, hang: 88 }], [0.5, { x: 15, y: -13, ang: 2, hang: 92 }], [1, { x: 6, y: -13, ang: -4, hang: 40, stand: 0.4 }]],
     bow: [[0, { x: 13, y: -20, ang: -55, pull: 0, stand: 1 }], [0.4, { x: 14, y: -21, ang: -68, pull: 1, stand: 1, lean: -10 }], [0.55, { x: 15, y: -22, ang: -62, pull: 0, stand: 1, lean: 8 }], [1, { x: 15, y: -19, ang: -25, pull: 0, stand: 1 }]],
-    hammer: ATK.hammer[2],
+    // Nện đất: game nổ vòng chấn động ngay lúc bấm nên búa nện xuống từ khung đầu
+    hammer: [[0, { x: 5, y: -27, ang: 44, hang: 30 }], [0.25, { x: 5, y: -27, ang: 44, hang: 180, dist: 18, rot: -30 }], [0.7, { x: 6, y: -21, ang: 10, hang: 155, dist: 9, rot: 8 }], [1, H0]],
   };
   const ATKN = { sword: 10, hammer: 14, spear: 10, bow: 12 };
   const EYE_ATK = (u) => (u > 0.3 && u < 0.85 ? 'wide' : 'open');
