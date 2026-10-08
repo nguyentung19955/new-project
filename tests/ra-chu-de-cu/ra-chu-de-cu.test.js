@@ -3,7 +3,7 @@
 // "Phong Châu thất thủ / Nước ngập thành" cho mọi ải), Vô tận chữ trung tính; khung / nút / tranh vẽ tay dùng khi có file.
 const path = require('path');
 const fs = require('fs');
-const { open, enter, ok, ROOT } = require('../cho-tuong/helpers');
+const { open, enter, ok, ROOT, noPixel } = require('../cho-tuong/helpers');
 global.ASSET_ALL_TEST = true;   // v189: test giả ảnh chưa có → bỏ qua danh sách js/asset-list.js
 const SHOTS = path.join(__dirname, 'shots');
 fs.mkdirSync(SHOTS, { recursive: true });
@@ -80,7 +80,7 @@ async function result(page, lv, win, endless) {
     const png = fs.readFileSync(path.join(ROOT, 'assets/ui/nut-vang.png'));
     const frames = JSON.parse(fs.readFileSync(path.join(ROOT, 'tools/ui-frames.json'), 'utf8'));
     const files = Object.values(frames).flatMap((v) => v.files);
-    const plain = await open(844, 390, { unlocked: 17 });
+    const plain = await open(844, 390, { unlocked: 17 }, noPixel());   // khung ảnh vẽ tay ui/* = đường khi tắt pixel
     const before = await plain.page.evaluate(() => document.documentElement.className);
     // v180: ảnh huy hiệu ải ui/ai-*.png đã có thật → sk-huy-hieu bật sẵn; các khung khác chưa có ảnh thì không bật
     const real = fs.existsSync(path.join(ROOT, 'assets/ui/ai-mo.png')) ? ['sk-huy-hieu'] : [];
@@ -92,6 +92,7 @@ async function result(page, lv, win, endless) {
     const errors = []; page.on('pageerror', (e) => errors.push(String(e)));
     await page.route('**/firebase-config.js*', (r) => r.fulfill({ contentType: 'application/javascript', body: "const FIREBASE_CONFIG={apiKey:''};" }));
     await page.route(/assets\/(ui\/(khung-bang|nut-|thanh-mau|khung-thanh-day|the-cho|ai-|dai-thong-bao)[\w-]*|scenes\/(thua|thang|chuong)-\w+|scenes\/nen-man-phu)\.png/, (r) => r.fulfill({ contentType: 'image/png', body: png }));
+    await page.addInitScript(() => { window.PIXEL_BAT_EP = false; });
     await page.addInitScript(() => { window.ASSET_ALL = true; });   // v189: ảnh giả không có trong js/asset-list.js
     await page.addInitScript(() => localStorage.setItem('nuicao.v1', JSON.stringify({ unlocked: 17, storySeen: true, settings: { skipStory: true } })));
     await page.goto('file://' + path.join(ROOT, 'index.html'));

@@ -4,15 +4,22 @@
 //  Bật pixel: mã CÓ sprite pixel thì vẽ pixel (tướng, quái/boss, chân dung, icon ngũ hành, ô nền bản đồ);
 //  mã CHƯA có thì giữ hình cũ → chuyển dần từng lô. Phóng nearest-neighbor theo bội số nguyên điểm ảnh màn hình.
 // ------------------------------------------------------------
-// ==== CÔNG TẮC PIXEL (một dòng): false = tắt (hình cũ); true = bật toàn cục khi đã đủ hình ====
-const PIXEL_BAT = false;
-// bật TẠM để thử: ?pixel=1 trên URL · test: window.PIXEL_BAT_EP = true (page.addInitScript). ?pixel=0 ép tắt.
+// ==== CÔNG TẮC PIXEL (một dòng): false = tắt (hình cũ); true = bật toàn cục ====
+// claude/pixel-mac-dinh: pixel là MẶC ĐỊNH cho mọi người chơi
+const PIXEL_BAT = true;
+// tắt: ?pixel=0 trên URL · công tắc trong Cài đặt (localStorage ttv.pixel = '0') · test: window.PIXEL_BAT_EP = false.
+// bật ép: ?pixel=1 · window.PIXEL_BAT_EP = true · ttv.pixel = '1'. Chưa chọn gì = theo PIXEL_BAT.
 const PX_ON = (() => {
   try {
     if (/[?&]pixel=0\b/.test(location.search)) return false;
-    // claude/tool-pixel: công tắc "Bật pixel" trong Cài đặt → Gói pixel (lưu trên máy, js/pixel-goi.js)
-    let may = false; try { may = localStorage.getItem('ttv.pixel') === '1'; } catch (e) { /* chặn lưu */ }
-    return PIXEL_BAT || !!window.PIXEL_BAT_EP || may || /[?&]pixel=1\b/.test(location.search);
+    if (/[?&]pixel=1\b/.test(location.search)) return true;
+    if (window.PIXEL_BAT_EP === false) return false;
+    if (window.PIXEL_BAT_EP) return true;
+    // claude/tool-pixel: công tắc "Pixel" trong Cài đặt (lưu trên máy, js/pixel-goi.js)
+    let may = null; try { may = localStorage.getItem('ttv.pixel'); } catch (e) { /* chặn lưu */ }
+    if (may === '0') return false;
+    if (may === '1') return true;
+    return PIXEL_BAT;
   } catch (e) { return PIXEL_BAT; }
 })();
 const pixelOn = () => PX_ON;
@@ -21,10 +28,14 @@ const pxSmoothOff = () => PX.blits > 0 && PX.smooth === false;
 if (PX_ON && typeof document !== 'undefined') {
   document.documentElement.classList.add('pixel');
   // font pixel có dấu tiếng Việt (VT323: số · Handjet: tiêu đề) — chỉ tải khi bật pixel
-  const l = document.createElement('link');
-  l.rel = 'stylesheet';
-  l.href = 'https://fonts.googleapis.com/css2?family=Handjet:wght@500;700&family=VT323&display=swap&subset=vietnamese';
-  document.head.appendChild(l);
+  // pixel-mac-dinh: nạp sau sự kiện load (font mạng chậm / bị chặn không làm trễ mở game; display=swap → chữ đổi font sau)
+  const font = () => {
+    const l = document.createElement('link');
+    l.rel = 'stylesheet';
+    l.href = 'https://fonts.googleapis.com/css2?family=Handjet:wght@500;700&family=VT323&display=swap&subset=vietnamese';
+    document.head.appendChild(l);
+  };
+  if (document.readyState === 'complete') font(); else window.addEventListener('load', font, { once: true });
 }
 
 function pxEntry(group, code) {
@@ -245,5 +256,24 @@ function pxMapGround(x, m, kind, k) {
   x.restore();
   return true;
 }
-// tải sẵn mọi dải khung có trong manifest (vài KB mỗi dải) để khỏi nháy hình cũ lúc đầu
-if (PX_ON && typeof Image !== 'undefined' && window.PIXEL_MANIFEST) for (const k of Object.keys(window.PIXEL_MANIFEST)) asset(`pixel/${k}.png`, true);
+// tải sẵn dải khung để khỏi nháy hình cũ lúc đầu — pixel-mac-dinh: chia đợt cho menu hiện nhanh
+//  · ngay: khung / nút giao diện (menu dùng) · sau khi menu hiện (theo lô, lúc rảnh): sprite vẽ trên canvas (tướng, quái, boss,
+//    nền, bản đồ, hiệu ứng, icon) + chân dung thẻ chợ (giải mã sẵn vào bộ đệm chợ ui.preImg → đổi chợ không nháy trống)
+//  · không tải sẵn: nhóm hiện bằng <img> (đồ, kỹ năng, ấn phù, thần khí — trình duyệt tự tải khi mở) và canh/* (chưa nối)
+const PX_NGAY = ['giao-dien'], PX_SAU = ['tuong', 'quai', 'boss', 'nen', 'ban-do', 'vfx', 'icon'];
+function pxPreload() {
+  const M = window.PIXEL_MANIFEST || {}, keys = Object.keys(M), grp = (k) => k.slice(0, k.indexOf('/'));
+  keys.filter((k) => PX_NGAY.includes(grp(k))).forEach((k) => asset(`pixel/${k}.png`, true));
+  const later = keys.filter((k) => PX_SAU.includes(grp(k))).sort((a, b) => PX_SAU.indexOf(grp(a)) - PX_SAU.indexOf(grp(b)));
+  const idle = window.requestIdleCallback ? (f) => requestIdleCallback(f, { timeout: 300 }) : (f) => setTimeout(f, 30);
+  const step = () => {
+    later.splice(0, 60).forEach((k) => asset(`pixel/${k}.png`, true));
+    if (later.length) return idle(step);
+    if (typeof ui !== 'undefined' && ui && ui.preloadMarket && typeof HEROES !== 'undefined') ui.preloadMarket(Object.keys(HEROES).filter((t) => pxEntry('tuong', t)));
+  };
+  const go = () => setTimeout(() => idle(step), 50);
+  if (document.readyState === 'complete') go(); else window.addEventListener('load', go, { once: true });
+}
+if (PX_ON && typeof Image !== 'undefined' && typeof document !== 'undefined') {
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', pxPreload, { once: true }); else pxPreload();
+}
