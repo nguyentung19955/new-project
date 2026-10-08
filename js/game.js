@@ -387,6 +387,8 @@ function heroStats(h) {
   const grow = 1 + (h.grow || 0) * 0.05;             // Thánh Gióng: Vươn Vai
   s.hpMax = Math.round((150 + s.str * 18 + s.hp) * grow * (1 + ((b.hpPct || 0) + s.hpPct) / 100));
   s.range *= 1 + s.rangePct / 100;
+  if (b.fog) s.range *= 1 - b.fog;                   // sự kiện Sương Mù Lam Chướng: tầm đánh giảm
+  if (b.weak) s.damage *= 1 - b.weak;                // sự kiện Ngũ Hành Nghịch: tướng hành bị suy
   s.regen += 0.5 + s.str * 0.06 + (b.regen || 0);
   s.skillPower = (1 + s.int * 0.015) * (1 + s.skillPct / 100) * (1 + evoSkill / 100);
   s.hpMax = Math.round(s.hpMax * (1 + evoHp / 100));
@@ -1400,6 +1402,7 @@ class Game {
   reset(level) {
     this.offer = null;
     this.market = null;     // v143: chợ tướng (MARKET_SIZE thẻ)
+    this.evWave = 0; this.evDone = 0;   // vo-tan-su-kien: đợt đã xét thưởng sự kiện tới đâu
     this.level = level || 0;
     this.lv = LEVELS[this.level];
     setMap(this.lv.map || 'song1');
@@ -2433,6 +2436,7 @@ class Game {
     if (this.waveActive || this.over) return;
     this.wave++;
     this.freshMarket();   // v143: đầu đợt mới chợ tướng làm mới miễn phí
+    this.eventStart();
     this.spawnQueue = this.nextWave;
     this.waveTotal = this.spawnQueue.length;
     this.nextWave = buildWave(this.wave + 1, this.level, this.stLv());
@@ -2458,6 +2462,29 @@ class Game {
     }
   }
 
+  // vo-tan-su-kien: sự kiện của đợt đang đánh (null nếu không có)
+  waveEvent() { return this.wave > 0 ? eventAt(this.wave, this.level) : null; }
+  fogNow() { const ev = this.waveActive && this.waveEvent(); return ev && ev.p.fog ? ev.p.fog : 0; }
+  eventStart() {
+    const ev = this.waveEvent();
+    if (ev) this.events.push({ type: 'waveEvent', phase: 'start', ev });
+  }
+
+  // sự kiện Bùa Yểm Thủy Tinh: cứ p.every giây trói (choáng) ngẫu nhiên 1 tướng p.lock giây — srand nên chơi nhóm vẫn khớp
+  updateEventCurse(dt) {
+    const ev = this.waveActive && this.waveEvent();
+    if (!ev || !ev.p.lock) { this.curseT = 0; return; }
+    if (!this.curseT) this.curseT = ev.p.every;
+    if ((this.curseT -= dt) > 0) return;
+    this.curseT = ev.p.every;
+    const list = this.heroes.filter((h) => h && !h.dead && !(h.stunT > 0));
+    if (!list.length) return;
+    const h = list[Math.floor(srand() * list.length)];
+    h.stunT = Math.max(h.stunT || 0, ev.p.lock); h.cursed = ev.p.lock;
+    this.effects.push({ type: 'ring', x: h.x, y: h.y - 20, r: 34, color: '#7FA8F0', ttl: 0.7, max: 0.7 });
+    this.text(h.x, h.y - 70, 'Bị yểm bùa!', '#7FA8F0', 1.2, 14);
+  }
+
   // Gọi sớm: giữa hai đợt thì bắt đầu ngay; đang trong đợt thì dồn đợt kế vào luôn
   earlyBonus() {
     if (this.wave === 0) return 0;
@@ -2471,6 +2498,7 @@ class Game {
     if (this.waveActive) {
       this.wave++;
       this.freshMarket();
+      this.eventStart();
       this.spawnQueue = this.spawnQueue.concat(this.nextWave);
       this.waveTotal += this.nextWave.length;
       this.nextWave = buildWave(this.wave + 1, this.level, this.stLv());
@@ -2591,6 +2619,8 @@ class Game {
     for (const r in tiers) if (tiers[r] > ((this.vtTiers || {})[r] || 0)) this.notify(`Cộng hưởng ${ROLES[r].name} ${tiers[r] * 2}: ${ROLE_SYN[r].t[tiers[r] - 1]}`, ROLES[r].color);
     this.vtTiers = tiers;
     const airWave = this.waveActive && waveKind(this.wave, this.level, this.stLv()) === 'air';
+    const fog = this.fogNow();
+    const wev = this.waveActive && this.waveEvent(), weak = wev && wev.p.weak ? wev.p : null;
     for (const h of alive) {
       const el = HEROES[h.type].el;
       h.buff.sinh = Math.min(ELEM.sinhMax, alive.filter((o) => near(h, o, ELEM.adj) && EL_SINH[HEROES[o.type].el] === el).length);
@@ -2598,6 +2628,8 @@ class Game {
       h.buff.vt = typeof roleSynStats === 'function' ? roleSynStats(h.type, tiers) : null;
       h.buff.tamGioi = els.size >= 3;
       h.buff.airWave = airWave;
+      h.buff.fog = fog;
+      h.buff.weak = weak && weak.el === HEROES[h.type].el ? weak.weak : 0;
       const own = owns.get(h);
       if (own.hid['r.gay_tam_gioi'] && els.size >= 3) this.discover('r.gay_tam_gioi', h.x, h.y);
       if (own.hid['r.cung_mat_chim'] && airWave) this.discover('r.cung_mat_chim', h.x, h.y);
@@ -2679,6 +2711,7 @@ class Game {
       if (this.nextWaveT <= 0) this.startWave();
     }
     this.updateAuras();
+    this.updateEventCurse(dt);
     this.updateSpawns(dt);
     this.updateZones(dt);
     this.auraBosses = this.enemies.filter((e) => !e.dead && e.def.speedAura);
@@ -2721,7 +2754,19 @@ class Game {
     for (const h of this.heroes) if (h) { log[h.type] = (log[h.type] || 0) + 1; for (const a of heroLineage(h)) log[a.type] = (log[a.type] || 0) + 0.5; }
     // v103: Vô tận — mỗi 10 đợt cộng Ngân khố (tài khoản) ngay
     if (this.endless && this.wave % PREP.endlessEvery === 0) this.events.push({ type: 'kho', n: Math.round(PREP.endlessMilestone * (1 + Math.floor(this.wave / 50) * 0.5) * (this.hard ? 1.5 : 1)), why: `mốc đợt ${this.wave}` });
-    if (bossAt(this.wave, this.level)) this.riseWater();
+    if (bossAt(this.wave, this.level, this.stLv())) this.riseWater();
+    // vo-tan-su-kien: vượt qua đợt sự kiện (kể cả đợt bị gộp khi Gọi sớm) → thưởng vàng + Ngân khố; đợt kế có sự kiện → báo trước
+    for (let w = Math.max((this.evWave || 0) + 1, this.wave - 20); w <= this.wave; w++) {
+      const ev = eventAt(w, this.level);
+      if (!ev) continue;
+      this.addGold(ev.gold);
+      const kho = Math.round(ev.kho * (this.hard ? 1.5 : 1));
+      this.evDone = (this.evDone || 0) + 1;
+      this.events.push({ type: 'waveEvent', phase: 'done', ev, gold: ev.gold });
+      if (this.endless) this.events.push({ type: 'kho', n: kho, why: `vượt ${ev.name}` });
+    }
+    this.evWave = this.wave;
+    { const nx = eventAt(this.wave + 1, this.level); if (nx) this.events.push({ type: 'waveEvent', phase: 'soon', ev: nx }); }
     this.stageTick();
     this.events.push({ type: 'checkpoint' });   // v74: lưu màn đang chơi giữa hai đợt
     if (this.wave >= this.levelWaves && !this.endless && !this.won) {
@@ -2793,7 +2838,7 @@ class Game {
     const heroes = JSON.parse(JSON.stringify(this.heroes, (k, v) => (skip.has(k) ? undefined : v)));
     const o = { v: 1, at: Date.now(), heroes };
     for (const k of ['level', 'hard', 'endless', 'won', 'gold', 'lives', 'maxLives', 'wave', 'summonN', 'bossesKilled', 'slHist', 'seen', 'water', 'raised', 'moc',
-      'mountain', 'stats', 'inventory', 'jarCount', 'shop', 'time', 'flags', 'runId', 'guardT', 'oathT', 'xpLog', 'market', 'stage', 'pathHp']) o[k] = this[k];
+      'mountain', 'stats', 'inventory', 'jarCount', 'shop', 'time', 'flags', 'runId', 'guardT', 'oathT', 'xpLog', 'market', 'evWave', 'evDone', 'stage', 'pathHp']) o[k] = this[k];
     o.mapId = MAP_ID;   // màn vô tận: bản đồ đang chơi (ô tướng đánh số theo bản đồ này)
     return JSON.parse(JSON.stringify(o));
   }
@@ -2805,6 +2850,7 @@ class Game {
     // v143: bản lưu cũ đang mở bảng chọn 1 trong 3 (đã trả vàng) → hoàn lại vàng, chuyển sang chợ tướng
     if (o.offer && o.offer.cost) { this.gold += o.offer.cost; this.summonN = Math.max(0, (this.summonN || 0) - 1); }
     this.offer = null;
+    if (!('evWave' in o)) this.evWave = this.wave;   // bản lưu trước khi có sự kiện đợt: không thưởng bù các đợt cũ
     this.maxLives = Math.max(o.maxLives || CONFIG.startLives, this.lives);   // v169: bản lưu cũ chưa có mạng tối đa
     // vô tận theo màn: dựng lại đúng màn lúc lưu (ô tướng đánh số theo bản đồ đó); bản lưu cũ chưa có màn → suy ra sau
     const okStage = (st) => st && Number.isInteger(st.k) && LEVELS[st.lv] && (!st.shape || PATH_SHAPES[st.shape]);
@@ -2832,14 +2878,17 @@ class Game {
     this.updateAuras();
   }
 
-  spawn(type, dist, elite, lane) {
+  spawn(type, dist, elite, it, lane) {
     const def = ENEMIES[type];
     // boss tăng máu chậm hơn quái thường để không đột biến ở cuối chiến dịch
     const ew = effWave(this.wave, this.level);
     let hp = def.hp * (def.boss ? Math.pow(waveHpMult(ew), 0.85) : waveHpMult(ew)) * this.lv.hp;
     if (elite) hp *= 1.8;
     if (this.hard) hp *= HARD.hp(this.level);
+    if (it && it.hpx) hp *= it.hpx;                 // đợt quá WAVE_CAP con: phần dư dồn vào máu
+    if (it && it.ev && it.ev.hp) hp *= 1 + it.ev.hp; // sự kiện Quân Hùng Hậu
     hp *= this.pathHp || 1;   // dạng đường vô tận (PATH_SHAPES[..].hp)
+    hp = Math.min(hp, 1e250);                       // không bao giờ thành Infinity
     // nhiều nhánh / hai cửa: quái đầu đợt chia lượt từng nhánh; quái đẻ ra / tách ra đi theo nhánh của con mẹ
     if (lane == null) lane = PATH.lanes.length > 1 ? (this.laneN = ((this.laneN || 0) + 1) % PATH.lanes.length) : 0;
     const p = PATH.at(dist, lane);
@@ -2856,6 +2905,7 @@ class Game {
     e.armor += gw * ENEMY_GROW.armor;
     if (e.mr > 0) e.mr = Math.min(ENEMY_GROW.mrCap, e.mr + gw * ENEMY_GROW.mr);
     e.baseArmor = e.armor;
+    if (it && it.ev) { e.evRegen = it.ev.regen; e.evSpeed = it.ev.speed; e.evSplit = it.ev.split; }   // sự kiện đợt
     if (type === 'giaolong') this.discover('e.giaolong');
     this.enemies.push(e);
     if (!def.minion && !this.seen[type]) {
@@ -2871,7 +2921,7 @@ class Game {
     if (this.spawnTimer > 0) return;
     const next = this.spawnQueue.shift();
     this.spawnTimer = next.gap;
-    const e = this.spawn(next.type, 0, next.elite);
+    const e = this.spawn(next.type, 0, next.elite, next);
     if (next.champion) {
       e.champion = true;
       e.hp = e.maxHp = e.maxHp * 3;
@@ -2933,6 +2983,7 @@ class Game {
     if (e.kbT > 0) e.kbT -= dt;
     if (e.groundT > 0) e.groundT -= dt;
     if (e.elite === 'regen' && !(e.noHealT > 0)) e.hp = Math.min(e.maxHp, e.hp + e.maxHp * 0.03 * dt);
+    if (e.evRegen && !(e.noHealT > 0)) e.hp = Math.min(e.maxHp, e.hp + e.maxHp * e.evRegen / 100 * dt);   // Nước Thánh Hà Bá
     if (d.enrage && !e.enraged && e.hp < e.maxHp * d.enrage.below) {
       e.enraged = true;
       this.text(e.x, e.y - 30, d.boss ? 'HÓA ĐIÊN!' : 'Điên!', '#ff4d4d', 0.9, d.boss ? 18 : 13);
@@ -2969,7 +3020,7 @@ class Game {
       const ph = Math.floor((1 - e.hp / e.maxHp) / 0.25);
       while (e.phase < Math.min(3, ph)) {
         e.phase++;
-        for (let i = 0; i < d.phaseSummon.count; i++) this.spawn(d.phaseSummon.type, Math.max(0, e.dist - 8 - i * 16), undefined, e.lane);
+        for (let i = 0; i < d.phaseSummon.count; i++) this.spawn(d.phaseSummon.type, Math.max(0, e.dist - 8 - i * 16), undefined, undefined, e.lane);
         this.effects.push({ type: 'ring', x: e.x, y: e.y, r: 70, color: '#5AB4D6', ttl: 0.6, max: 0.6 });
         this.text(e.x, e.y - 60, 'Nước dâng lên!', '#9EDDF2', 1.2, 15);
         this.shake = Math.max(this.shake, 4);
@@ -3011,7 +3062,7 @@ class Game {
       e.summonCd -= dt;
       if (e.summonCd <= 0) {
         e.summonCd = d.summon.cd;
-        for (let i = 0; i < d.summon.count; i++) this.spawn(d.summon.type, Math.max(0, e.dist - 10 - i * 18), undefined, e.lane);
+        for (let i = 0; i < d.summon.count; i++) this.spawn(d.summon.type, Math.max(0, e.dist - 10 - i * 18), undefined, undefined, e.lane);
         this.effects.push({ type: 'ring', x: e.x, y: e.y, r: 40, color: '#5AB4D6', ttl: 0.4, max: 0.4 });
       }
     }
@@ -3093,7 +3144,7 @@ class Game {
       for (const b of this.auraBosses) if (!b.dead && Math.hypot(b.x - e.x, b.y - e.y) <= b.def.speedAura.radius) { aura = 1 + b.def.speedAura.pct; break; }
     }
     const speed = d.speed * (1 - slow) * (e.enraged ? d.enrage.speed : 1) * (e.elite === 'swift' ? 1.4 : 1)
-      * (e.dashT > 0 ? d.dash.mult : 1) * aura;
+      * (e.dashT > 0 ? d.dash.mult : 1) * aura * (1 + (e.evSpeed || 0));
     let nd = e.dist + speed * dt;
     // vật chặn đường (Lạc Tử, Thành Một Đêm): quái đi bộ phải dừng lại
     if (!d.flying) {
@@ -3736,8 +3787,15 @@ class Game {
 
   kill(e, hero) {
     e.dead = true;
+    // sự kiện Yêu Tinh Phân Thân: quái thường chết tách 1 phân thân (không tách tiếp, không cho vàng)
+    if (e.evSplit && !e.split && !e.def.boss && !e.champion && !e.def.minion && !e.def.general) {
+      const c = this.spawn(e.type, Math.max(0, e.dist - 12), null, null, e.lane);
+      c.hp = c.maxHp = e.maxHp * e.evSplit; c.split = true; c.evSpeed = e.evSpeed;
+      this.effects.push({ type: 'ring', x: e.x, y: e.y - 10, r: 26, color: '#C08CF0', ttl: 0.5, max: 0.5 });
+      this.text(e.x, e.y - 34, 'Phân thân!', '#C08CF0', 0.8, 12);
+    }
     const eliteMult = e.elite ? 2.5 : 1;
-    let gold = Math.round(e.def.gold * (1 + this.wave * 0.04) * eliteMult);
+    let gold = e.split ? 0 : Math.round(e.def.gold * (1 + this.wave * 0.04) * eliteMult);
     if (hero && this.heroes[hero.slot] === hero) gold += Math.round(heroStats(hero).goldOnKill);
     if (e.huntT > 0) gold += 3;
     this.addGold(gold);
@@ -3783,7 +3841,7 @@ class Game {
     }
 
     if (e.def.split) {
-      for (let i = 0; i < e.def.split.count; i++) this.spawn(e.def.split.type, Math.max(0, e.dist - 6 + i * 8), undefined, e.lane);
+      for (let i = 0; i < e.def.split.count; i++) this.spawn(e.def.split.type, Math.max(0, e.dist - 6 + i * 8), undefined, undefined, e.lane);
       this.effects.push({ type: 'ring', x: e.x, y: e.y, r: 30, color: e.def.color, ttl: 0.4, max: 0.4 });
     }
 

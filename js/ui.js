@@ -15,7 +15,17 @@ function fitText(el, min) {
   let fs = parseFloat(getComputedStyle(el).fontSize);
   while (el.scrollWidth > el.clientWidth + 0.5 && fs > min) el.style.fontSize = (fs -= 0.5) + 'px';
 }
-const fmt = (n) => Math.round(n).toLocaleString('vi-VN');
+// vo-tan-su-kien: số rất lớn (máu quái đợt xa) viết gọn — trước đây "112.000.000.000.000…" tràn thanh boss
+const fmt = (n) => {
+  const a = Math.abs(n);
+  if (!(a < 1e9)) {
+    if (!isFinite(n)) return '∞';
+    if (a < 1e12) return (n / 1e9).toLocaleString('vi-VN', { maximumFractionDigits: 2 }) + ' tỷ';
+    if (a < 1e15) return (n / 1e12).toLocaleString('vi-VN', { maximumFractionDigits: 2 }) + ' nghìn tỷ';
+    return n.toExponential(2).replace('.', ',').replace('e+', 'e');
+  }
+  return Math.round(n).toLocaleString('vi-VN');
+};
 const ICON = {
   close: '<svg viewBox="0 0 16 16"><path d="M3 3 L13 13 M13 3 L3 13" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>',
   back: '<svg viewBox="0 0 16 16"><path d="M10 3 L5 8 L10 13" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>',
@@ -124,6 +134,9 @@ const IC_SVG = {
   bay: `<path d="M3 15 C6 7 13 4 21 4 C19 7 18 9 15 10 C17 10.5 18 11.5 18 12.5 C15.5 12.5 14 13 12.5 14.5 C13.5 15 14 16 14 17 C10 17 6 16.5 3 15 Z" fill="#F2F0E8" ${IC_O}/>`,
   boss: `<path d="M3 18 L4 7 L8.5 11 L12 4 L15.5 11 L20 7 L21 18 Z" fill="#E0402A" ${IC_O}/><rect x="3" y="18" width="18" height="3" fill="#C9963A" ${IC_O}/><circle cx="12" cy="14" r="1.8" fill="#FFD23A"/>`,
   'cam-lang': `<path d="M4 5 H20 V15 H11 L6 19.5 V15 H4 Z" fill="#E8E2D0" ${IC_O}/><path d="M5 20 L20 4" stroke="#E0402A" stroke-width="2.4" stroke-linecap="round"/>`,
+  // vo-tan-su-kien: vẽ tạm bằng code (chưa có ảnh ui/ic-suong-mu.png, ui/ic-phan-than.png — đã ghi vào docs/PROMPT-CAN-GEN.txt)
+  'suong-mu': `<path d="M5 10 C5 7 8 5.5 10.5 7 C11.5 4.5 16 4.5 17 7.5 C19.5 7.5 20.5 10 19 11.5 H5.5 C5 11 5 10.5 5 10 Z" fill="#D8E2E6" ${IC_O}/><path d="M3 14.5 H18 M6 18 H21" stroke="#B8C6CC" stroke-width="2.2" stroke-linecap="round"/>`,
+  'phan-than': `<path d="M4 20 V11 C4 6.5 7 4 10 4 C13 4 16 6.5 16 11 V20 L13.5 18 L11 20 L8.5 18 L6 20 Z" fill="#C08CF0" opacity=".55" ${IC_O}/><path d="M8 21 V12 C8 7.5 11 5 14 5 C17 5 20 7.5 20 12 V21 L17.5 19 L15 21 L12.5 19 L10 21 Z" fill="#C08CF0" ${IC_O}/><circle cx="12.5" cy="11" r="1.3" fill="#2A1608"/><circle cx="16.5" cy="11" r="1.3" fill="#2A1608"/>`,
   'tinh-anh': `<path d="M12 2.5 L20 9.5 L12 21.5 L4 9.5 Z" fill="#A86CE0" ${IC_O}/><path d="M4 9.5 H20 M9 9.5 L12 21.5 L15 9.5 M8 5.5 L9 9.5 M16 5.5 L15 9.5" stroke="#2A1608" stroke-width="1"/>`,
   lan: `<path d="M3 11 q3 -3 6 0 t6 0 t6 0 M3 16 q3 -3 6 0 t6 0 t6 0" stroke="#2A1608" stroke-width="3.6" fill="none" stroke-linecap="round"/><path d="M3 11 q3 -3 6 0 t6 0 t6 0 M3 16 q3 -3 6 0 t6 0 t6 0" stroke="#5AB4F0" stroke-width="1.8" fill="none" stroke-linecap="round"/>`,
   vang: `<circle cx="12" cy="12" r="9" fill="#F2C23A" ${IC_O}/><circle cx="12" cy="12" r="6.2" fill="none" stroke="#B8861A" stroke-width="1.2"/><rect x="10" y="10" width="4" height="4" fill="#7A5418"/>`,
@@ -737,6 +750,7 @@ class UI {
     g.running = false;
     g.speed = 1;
     this.sel = -1; this.spot = -1; this.armed = null; this.raising = false; this.moving = -1;
+    this.hideTrash();     // sua-trieu-hoi: không mang thùng 🗑 / lớp dragging-hero (ẩn chợ) sót từ trận trước sang
     this.screen = null;
     $('#screen').hidden = true;
     this.save.last = i;
@@ -1305,12 +1319,43 @@ class UI {
         <div class="tg metal"><div><b>Đồ hoạ</b><small>Tự động giảm hiệu ứng khi máy giật${typeof GFX !== 'undefined' && GFX.mode() === 'auto' && GFX.lv ? ` (đang giảm ${GFX.lv} bậc)` : ''}</small></div>
           <div style="margin-left:auto;display:flex;gap:4px">${[['auto', 'Tự động'], ['high', 'Đẹp'], ['low', 'Tiết kiệm']].map(([k, n]) => `<button class="btn ${(st.gfx || 'auto') === k ? 'btn-gold' : 'metal'}" style="height:34px;padding:0 10px;font-size:13px" data-act="set-gfx" data-k="${k}">${n}</button>`).join('')}</div></div>
         ${this.cloudRow()}
+        ${inGame || typeof PXGOI === 'undefined' ? '' : this.pxGoiRow()}
         <div class="tg metal"><div><b>Góp ý</b></div>
           <div style="margin-left:auto;display:flex;gap:4px;flex:none">${this.fbaBtn()}<button class="btn metal" data-act="set-feedback">✉ Góp ý</button></div></div>
         <div class="tg metal"><div><b>Xoá kỷ lục</b><small>Xoá kỷ lục đợt vô tận của mọi bản đồ trên máy này</small></div>
           <button class="btn metal" style="margin-left:auto;color:#FFB08A;border-color:#C8401E" data-act="wipe">${this.wipeArmed ? 'Bấm lần nữa để xoá' : 'Xoá'}</button></div>
-        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 212</div>
+        <div class="note" style="text-align:center">Thần Thoại Việt · Phiên bản 216</div>
       </div></div>`;
+  }
+
+  // claude/tool-pixel: gói pixel tự vẽ (tools/ve-pixel.html → goi-pixel.zip) — gọn một dòng trong Cài đặt (ngoài trận)
+  pxGoiRow() {
+    const on = pixelOn(), has = !!PXGOI.goi, bt = 'style="height:34px;padding:0 10px;font-size:13px"';
+    return `<div class="tg metal" id="pxgoi-row"><div><b>Gói pixel (thử)</b><small id="pxgoi-st">${PXGOI.status()}</small></div>
+          <div style="margin-left:auto;display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end">
+          <button class="btn ${on ? 'btn-gold' : 'metal'}" ${bt} data-act="pxg-bat" title="Tải lại trang để áp dụng">${on ? 'Pixel: Bật' : 'Pixel: Tắt'}</button>
+          <button class="btn metal" ${bt} data-act="pxg-nap">Nạp gói (.zip)</button>
+          ${has ? `<button class="btn metal" ${bt} data-act="pxg-go">Gỡ gói</button>` : ''}</div></div>`;
+  }
+  async pxGoiAct(act) {
+    if (act === 'pxg-bat') { PXGOI.setPixel(!pixelOn()); location.reload(); return; }
+    if (act === 'pxg-go') {
+      try { await PXGOI.remove(); this.toast('Đã gỡ gói pixel — dùng lại hình sẵn có'); } catch (e) { this.toast('Không gỡ được: ' + e.message, '#FF8A6A'); }
+      this.renderSettings(); return;
+    }
+    const inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = '.zip,application/zip'; inp.id = 'pxgoi-file'; inp.hidden = true;
+    document.body.appendChild(inp);
+    inp.onchange = async () => {
+      const f = inp.files[0]; inp.remove();
+      if (!f) return;
+      try {
+        const r = await PXGOI.install(f);
+        this.toast(`Đã nạp ${r.n} mã pixel${r.canhBao.length ? ` (bỏ ${r.canhBao.length} mã lỗi)` : ''}${pixelOn() ? '' : ' — bật Pixel để thấy'}`, '#8CE07A');
+      } catch (e) { this.toast('Gói không hợp lệ: ' + e.message, '#FF8A6A'); }
+      if (!$('#settings').hidden) this.renderSettings();
+    };
+    inp.click();
   }
 
   // ---------- thông báo
@@ -1364,13 +1409,18 @@ class UI {
       // thanh chợ, cột nút phải. Thử vài chỗ đặt cột thông báo, chọn chỗ đè ít nhất (ưu tiên chỗ cũ: góc phải dưới thanh trên)
       const hz = typeof HZ !== 'undefined' ? HZ : 1, w = 250 * hz, h = Math.max(40 * hz, box.offsetHeight * hz), G = 56;
       const p = PATH.at(PATH.total), gx = (p.x + MAPX) / DK, gy = (p.y + MAPY) / DK;
-      const ur = $('#ui').getBoundingClientRect(), k = ur.height / UIH || 1;
+      // cầm dọc cả game xoay 90° theo chiều kim đồng hồ (#wrap.rot): trục x giao diện → trục y màn hình, trục y → ngược trục x
+      // (trước đây đổi toạ độ như màn ngang nên toast không né được banner / bảng, đè lên chữ)
+      const rot = typeof ROT !== 'undefined' && ROT;
+      const ur = $('#ui').getBoundingClientRect(), k = (rot ? ur.width : ur.height) / UIH || 1;
       const R = [[gx - G, gy - G, gx + G, gy + G]];
       for (const id of ['#dialogue', '#roster-hint', '#bossbar', '#banner', '#deck', '#auto-btns', '#topbar']) {
         const el = $(id);
         if (el.hidden || !el.offsetParent) continue;
         const d = el.getBoundingClientRect();
-        if (d.width) R.push([(d.left - ur.left) / k, (d.top - ur.top) / k, (d.right - ur.left) / k, (d.bottom - ur.top) / k]);
+        if (!d.width) continue;
+        R.push(rot ? [(d.top - ur.top) / k, (ur.right - d.right) / k, (d.bottom - ur.top) / k, (ur.right - d.left) / k]
+          : [(d.left - ur.left) / k, (d.top - ur.top) / k, (d.right - ur.left) / k, (d.bottom - ur.top) / k]);
       }
       const area = (x0, y0) => R.reduce((s2, [l, t, r, b]) => s2 + Math.max(0, Math.min(r, x0 + w) - Math.max(l, x0)) * Math.max(0, Math.min(b, y0 + h) - Math.max(t, y0)), 0)
         + Math.max(0, y0 + h - UIH) * w;
@@ -1952,7 +2002,8 @@ class UI {
       this.applyUiArt();
       this.sig = {};
       this.buildSummon();
-      if (!$('#menu').hidden) this.showMenu();
+      // claude/tool-pixel: đang mở Cài đặt trên menu (vd vừa nạp gói pixel) thì để lúc đóng mới vẽ lại menu — showMenu() đóng mọi lớp phủ
+      if (!$('#menu').hidden) { if ($('#settings').hidden) this.showMenu(); else this.menuStale = true; }
       // v155: Kho Báu vẽ một lần — icon PNG tải xong sau thì vẽ lại (giữ chỗ cuộn), không thì kẹt hình vẽ code
       if (!$('#treasury').hidden) { const b = $('#treasury .tr-body'), y = b ? b.scrollTop : 0; this.showTreasury(); const b2 = $('#treasury .tr-body'); if (b2) b2.scrollTop = y; }
     }
@@ -1977,7 +2028,8 @@ class UI {
     this.updateDeck();
     this.updateCoach();
     if (!$('#legends').hidden && (this.lgT = (this.lgT || 0) + 1) % 10 === 0) this.renderLegends();   // v170: 6 lần / giây, chỉ dựng lại khi đổi
-    $('#paused-tag').hidden = g.running || g.wave === 0 || g.over || !!this.screen || !$('#settings').hidden;
+    // banner (boss / sự kiện đợt) nằm đúng chỗ nhãn "Đã dừng" → banner đang hiện thì nhường (banner chỉ 2,6 giây)
+    $('#paused-tag').hidden = g.running || g.wave === 0 || g.over || !!this.screen || !$('#settings').hidden || !$('#banner').hidden;
     if (this.screen) {
       this.refreshT -= dt;
       if (this.refreshT <= 0) { this.refreshT = 0.25; this.renderScreen(false); }
@@ -2002,6 +2054,8 @@ class UI {
         this.toast(`Ngân khố ${bac(1)} +${fmt(ev.n)} · ${esc(ev.why)}`, '#E4ECF4');
       } else if (ev.type === 'reward') {
         this.showReward(ev);
+      } else if (ev.type === 'waveEvent') {
+        this.waveEventMsg(ev);
       } else if (ev.type === 'boss') {
         this.banner(ev.champion ? 'Quái khổng lồ' : 'Boss xuất hiện', ev.name);
         if (ev.enemy) this.say(ev.enemy, BOSS_LINES[ev.enemy]);
@@ -2030,6 +2084,37 @@ class UI {
     }
   }
 
+  // vo-tan-su-kien: sự kiện đợt — báo trước (đợt liền trước), mở màn, vượt qua (thưởng)
+  waveEventMsg(m) {
+    const e = m.ev, icon = ic(e.ic, '', 'ev-ic');
+    if (m.phase === 'soon') {
+      this.evBanner(e, `Đợt ${e.n} · sự kiện`, e.name, icon, e.color);
+      this.toast(`<b>Đợt ${e.n}: ${esc(e.name)}</b> · ${esc(e.desc)} · vượt qua: +${fmt(e.gold)} vàng, +${fmt(e.kho)} Ngân khố`, e.color);
+    } else if (m.phase === 'start') {
+      this.evBanner(e, `Sự kiện · ${e.lore}`, e.name, icon, e.color);
+      this.toast(`${icon}<b>${esc(e.name)}</b>: ${esc(e.desc)}`, e.color);
+    } else {
+      if (this.evQueued && this.evQueued.n <= e.n) this.evQueued = null;   // banner sự kiện còn hoãn mà đợt đã qua → bỏ (không báo muộn)
+      this.toast(`<b>Vượt ${esc(e.name)}!</b> +${fmt(m.gold)} vàng`, '#F2D27A');
+    }
+  }
+
+  // bảng "Bộ quái mới" đang mở (nằm giữa màn, che banner) → hoãn banner tới khi bảng đóng; bảng đã ghi sự kiện này thì bỏ
+  evBanner(e, ...args) {
+    if ($('#roster-hint').hidden) { this.evQueued = null; return this.queueBanner(args); }
+    this.evQueued = this.rosterEvN === e.n ? null : { n: e.n, args };
+  }
+  // banner đổi màn + banner sự kiện cùng lúc (vd đợt 60) → hiện lần lượt, cái sau đợi cái trước tắt (một #banner, không đè mất)
+  queueBanner(args, then) {
+    const wait = $('#banner').hidden ? 0 : (this.bannerEnd || 0) - performance.now();
+    if (wait > 0) { setTimeout(() => this.queueBanner(args, then), wait + 60); return; }
+    this.banner(...args);
+    if (then) then();
+  }
+  flushEvBanner() {
+    if (this.evQueued && $('#roster-hint').hidden && $('#banner').hidden) { const a = this.evQueued.args; this.evQueued = null; this.queueBanner(a); }
+  }
+
   // Hộp thoại có ảnh nhân vật (theo bản thiết kế mobile)
   say(who, text) {
     if (!text) return;
@@ -2050,10 +2135,12 @@ class UI {
     this.sayT = setTimeout(() => { box.hidden = true; this.placeToasts(); }, 3000);
   }
 
-  banner(sub, text) {
-    $('#banner-sub').textContent = sub;
+  banner(sub, text, icon, color) {
+    if (icon) $('#banner-sub').innerHTML = icon + esc(sub); else $('#banner-sub').textContent = sub;
     $('#banner-text').textContent = text;
     const b = $('#banner');
+    b.classList.toggle('ev', !!color);
+    b.style.setProperty('--bn-c', color || '');
     b.hidden = false;
     b.style.animation = 'none';
     void b.offsetWidth;
@@ -2079,7 +2166,9 @@ class UI {
     // v189: số đợt nằm trong ô rộng cố định (3 chữ số) → chữ "Đợt" không nhích khi 9 → 10 → 100
     { const n = `<span class="wn">${g.wave}</span>`, wt = g.endless ? `Đợt ${n} · Vô tận` : `Đợt ${n} / ${total}`; this.setHTML('#tb-wave', wt + g.hard + assetVersion, wt + (g.hard ? ` · ${ic('kho')}Khó` : '')); }
     const prog = g.waveActive && g.waveTotal ? 1 - (g.spawnQueue.length + g.enemies.length * 0.5) / (g.waveTotal * 1.5) : 0;
-    $('#tb-fill').style.width = `${Math.max(0, Math.min(1, ((g.wave - 1 + Math.max(0, prog)) / total))) * 100}%`;
+    // vo-tan-su-kien: qua đợt cuối cũ của bản đồ thì thanh chạy theo chặng 10 đợt (trước đây đứng yên ở 100%)
+    const past = g.endless && g.wave > total, done = past ? ((g.wave - 1) % 10 + Math.max(0, prog)) / 10 : (g.wave - 1 + Math.max(0, prog)) / total;
+    $('#tb-fill').style.width = `${Math.max(0, Math.min(1, done)) * 100}%`;
     this.setText('#tb-gold b', fmt(g.gold));
     $('#tb-gold').classList.toggle('kho', !!this.prepForge);     // v95: đang tiêu Ngân khố (bạc), không phải vàng trận
     { const mx = Math.max(g.maxLives || CONFIG.startLives, g.lives), r = g.lives / mx;   // v169: mạng "còn/tối đa", đổi màu khi thấp
@@ -2088,7 +2177,7 @@ class UI {
     this.setText('#tb-water b', `${g.water}/3`);
     // thanh mực nước: tiến tới lần dâng nước kế (sau đợt boss tiếp theo)
     let prev = 0, next = 0;
-    for (let n = 1; n <= Math.max(g.levelWaves, g.wave + 10); n++) {
+    for (let n = Math.max(1, g.wave - 20); n <= Math.max(g.levelWaves, g.wave + 10); n++) {
       if (!bossAt(n, g.level)) continue;
       if (n <= g.wave && !(n === g.wave && g.waveActive)) prev = n; else { next = n; break; }
     }
@@ -2135,13 +2224,17 @@ class UI {
     const el = $('#nextwaves');
     const lim = g.endless ? Infinity : g.levelWaves;
     let html = '', early = false;
-    const kindTxt = (n) => {
+    let kindTxt = (n) => {
       const k = waveKind(n, g.level, g.stLv());
       if (k === 'boss') return `<span class="boss">Boss ${ENEMIES[bossAt(n, g.level, g.stLv())].name}</span>`;
       if (k === 'air') return 'Chim Bão <span class="air">(bay)</span>';
       if (k === 'champion') return 'Rùa khổng lồ';
       return '';
     };
+    // vo-tan-su-kien: đợt kế có sự kiện → biểu tượng + tên; đang đánh đợt sự kiện → nhắc thử thách
+    const evTxt = (e) => `<span class="evt" style="--c:${e.color}">${ic(e.ic, '', 'ev-ic')}${esc(e.name)}</span>`;
+    const nx = eventAt(g.wave + 1, g.level), cur = g.waveActive && g.waveEvent();
+    if (nx) { const k0 = kindTxt; kindTxt = (n) => k0(n) + (n === nx.n ? evTxt(nx) : ''); }
     if (g.wave > 0 && g.wave + 1 <= lim) {
       if (!g.waveActive && g.running) {
         early = true;
@@ -2151,6 +2244,7 @@ class UI {
         if (t) html = `<b>Đợt ${g.wave + 1}:</b> ${t}`;
       }
     }
+    if (cur && !early) html = `${evTxt(cur)}<span class="evd">${esc(cur.desc)}</span>${html ? ' · ' + html : ''}`;
     if (g.floodSoon() >= 0) html += `${html ? ' · ' : ''}<span class="flood">${ic('nuoc-dang')}Nước sắp dâng: thêm ${FLOOD_PER_RISE} ô sát sông ngập</span>`;
     el.classList.toggle('early', early);
     this.setHTML('#nextwaves', html, html);
@@ -2551,16 +2645,22 @@ class UI {
       this.rosterKey = rosterKeyOf(rosterFor(Math.max(1, g.wave), g.level, g.stLv())); this.rosterLevel = g.level;
       if (!g.endless) return;
     }
+    this.flushEvBanner();
     const key = rosterKeyOf(rosterFor(n, g.level, g.stLv()));
     if (key === this.rosterKey) return;
+    if (!$('#banner').hidden) return;     // banner (boss / sự kiện) đang hiện → đợi banner tắt rồi mới mở bảng (không che nhau)
     this.rosterKey = key;
     if (!g.endless || !key) return;
+    // vo-tan-su-kien: đợt mới đổi bộ quái trùng mốc sự kiện → ghi luôn sự kiện vào bảng (1 dòng icon + tên + thử thách)
+    const ev = eventAt(n, g.level) || (g.waveActive && g.waveEvent());
+    this.rosterEvN = ev ? ev.n : 0;
     const bosses = [];
     for (let w = n; w < n + 10; w++) { const b = bossAt(w, g.level, g.stLv()); if (b) bosses.push(b); }
     const pool = [...g.marketPool(), ...LEGEND_HEROES.filter((t) => (this.save.owned || []).includes(t))];
     const c = rosterCounters(ROSTERS[key], bosses, pool, []);
     const el = $('#roster-hint');
     el.innerHTML = `<div class="rh-h"><small>Đợt ${n} · bộ quái mới</small><b>${ROSTER_NAMES[key] || key}</b></div>
+      ${ev ? `<div class="rh-ev" style="--c:${ev.color}">${ic(ev.ic, '', 'ev-ic')}<b>Đợt ${ev.n} · ${esc(ev.name)}</b> · ${esc(ev.desc)}</div>` : ''}
       ${c.main ? `<div class="ch-sum">Quái chủ yếu hành <b style="color:${ELEMENTS[c.main].color}">${ELEMENTS[c.main].name}</b> → dùng hành <b style="color:${ELEMENTS[c.ce].color}">${ELEMENTS[c.ce].name}</b></div>` : ''}
       <div class="rh-foes">${c.foes.slice(0, 7).map((k) => `<span title="${esc(ENEMIES[k].name)}">${esc(ENEMIES[k].name)}${ENEMIES[k].boss ? ' ' + ic('boss', 'Boss') : ''}</span>`).join('')}</div>
       <div class="ch-row">${c.list.map((x) => `<span class="ch-av ${HEROES[x.t].legend || ''}" style="--c:${ELEMENTS[HEROES[x.t].el].color}"><img src="${heroImgUrl(x.t, 'head')}" alt="${esc(HEROES[x.t].name)}"><i>${elIcon(HEROES[x.t].el, 11)}</i><small>${x.why}</small></span>`).join('')}</div>
@@ -2962,11 +3062,12 @@ class UI {
     const key = rosterKeyOf(rosterFor(g.wave + 1, g.level, g.stLv()));
     this.rosterKey = key; this.rosterLevel = g.level;
     $('#roster-hint').hidden = true;
-    this.banner(`Màn ${ev.stage.k + 1} · vùng đất mới`, LEVELS[ev.stage.lv].name);
     const extra = ev.lost ? ` · ${ev.lost} tướng hết chỗ: hoàn ${fmt(ev.refund)} vàng` : ev.moved ? ` · ${ev.moved} tướng dời sang ô gần nhất (kéo để đổi ô)` : '';
     const msg = `<b>${esc(sh ? sh.name : 'Đường ' + LEVELS[ev.stage.lv].name)}</b>${sh ? ' · ' + esc(sh.desc) : ''}${key && ROSTER_NAMES[key] ? ` · Quân: <b>${esc(ROSTER_NAMES[key])}</b>` : ''}${extra}`;
-    const wait = Math.max(0, (this.bannerEnd || 0) - performance.now()) + 50;
-    setTimeout(() => this.toast(msg, '#9EDDF2'), wait);
+    this.queueBanner([`Màn ${ev.stage.k + 1} · vùng đất mới`, LEVELS[ev.stage.lv].name], () => {
+      const wait = Math.max(0, (this.bannerEnd || 0) - performance.now()) + 50;
+      setTimeout(() => this.toast(msg, '#9EDDF2'), wait);
+    });
   }
 
   pickReward(i) {
@@ -3222,8 +3323,10 @@ class UI {
       case 'fba-note': case 'fba-note-x': case 'fba-note-ok': case 'fba-del': case 'fba-del-x': case 'fba-del-ok': case 'fba-st':
         this.fbaAct(d); break;
       case 'set-feedback': this.showFeedback(this.settingsInGame ? 'tam-dung' : 'cai-dat'); break;
+      case 'pxg-bat': case 'pxg-nap': case 'pxg-go': this.pxGoiAct(d.act); break;
       case 'set-close':
         $('#settings').hidden = true;
+        if (this.menuStale) { this.menuStale = false; if (!$('#menu').hidden) this.showMenu(); }
         if (this.settingsInGame && this.pauseWasRunning) g.running = true;
         this.wipeArmed = false;
         break;
