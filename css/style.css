@@ -2412,3 +2412,9 @@ html.pixel .fb-shot .sw { width: 40px; height: 22px; } html.pixel .fb-shot .sw::
 /* màn thấp: bớt khoảng giữa các ô tài nguyên để chỗ chip Ngân khố */
 @media (max-height: 400px) { .tb-res { gap: 8px; } }
 html.pixel :is(.hx-auto, .hx-pin, .hx-st.hx-open, .hx-sk) { border-radius: 2px; }
+/* sua-giao-dien-10 (tester): nút nhỏ bảng Hợp thể — Tự gợi ý, lọc hành, Theo đuổi, 🔒 Mở — vùng chạm ≥ 40px màn hình (chỉ mở dọc, không đổi bố cục);
+   Theo đuổi (hàng tên) mở lên trên, Mở (hàng nguyên liệu) mở xuống dưới để hai vùng không chồng nhau */
+:is(.hx-auto, .hs-c, .hx-pin, .hx-st.hx-open) { position: relative; }
+:is(.hx-auto, .hs-c, .hx-pin, .hx-st.hx-open)::after { content: ''; position: absolute; z-index: 3; left: 0; right: 0; top: 50%; height: max(100%, calc(40px / var(--k, 1))); transform: translateY(-50%); }
+.hx-pin::after { top: auto; bottom: 0; transform: none; }
+.hx-st.hx-open::after { top: 0; transform: none; }
