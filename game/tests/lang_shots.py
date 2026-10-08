@@ -87,6 +87,7 @@ def main():
         def home(): ev("G.keyP.Escape = true"); g.wait(200)
 
         g.wait(600); shot('01-tieu-de')
+        g.tap(240, 150); g.wait(1600); shot('01b-lan-dau-vao-lang'); g.wait(9000); shot('01c-lan-dau-chi-duong-toi-lai-do')
         ev(RICH); g.wait(1700)
         shot('lang-trong-game'); shot('02-lang-dau-phai-vua-xuong-do')
         ev(f"(() => {{ const S = {VS}.state, N = {VS}.NPCS.ren; S.x = N.den[0]; S.y = N.den[1]; S.face = 1; S.path = null; }})()"); g.wait(900)
@@ -96,6 +97,7 @@ def main():
         x, y = ev(f"{VS}.stripAt(2)"); g.tap(x, y, 500); shot('05-cham-khuon-mat-em-be-tu-chay', 100)
         g.wait(3500); home()
         g.tap(10, 7); shot('06-cham-bieu-tuong-hien-ten', 150)
+        g.wait(2000)
         # từng người và bảng của họ
         talk('lai'); shot('10-lai-do-ban-do-vung')
         ev(f"{V}.sel = [0, 4]"); shot('10b-lai-do-chon-ai-trum'); home()

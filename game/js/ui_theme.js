@@ -169,7 +169,7 @@
       const s = r >= 22 ? 2 : 1, hasLab = !!o.label;
       icon(kind === 'atk' ? 'sword' : kind === 'skill' ? 'flame' : kind === 'sp' ? 'slash' : kind === 'talk' ? 'talk' : kind === 'boat' ? 'boat' : 'dash', c0, cyy - (hasLab ? 3 : 0), { a: dull ? '#7f948e' : '#fff0c4', b: dull ? '#7f948e' : '#ffb347', c: '#fff', s: '#fff6dc', d: '#c9b383', h: C.gold, w: '#fff', k: dull ? '#26403c' : '#3a1a12' }, hasLab ? 1 : s);
     });
-    put(cv, cx - r - 3, cy - r - 3, dull ? 0.7 : 1);
+    put(cv, cx - r - 3, cy - r - 3, dull ? 0.5 : 1);
     if (o.label) {
       const c = G.ux; ui.font(8, true); c.textAlign = 'center'; c.lineWidth = 2.2; c.lineJoin = 'round'; c.strokeStyle = 'rgba(20,10,6,0.9)'; c.strokeText(o.label, cx, cy + st + 10.5);
       txt(o.label, cx, cy + st + 10.5, { size: 8, bold: true, align: 'center', color: '#fff6dc', shadow: false });

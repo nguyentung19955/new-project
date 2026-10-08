@@ -560,7 +560,8 @@
       let talkP = !!(kp.KeyJ || kp.KeyZ || kp.Space || kp.Enter);
       for (const d of G.downs) {
         if (d.role) continue;
-        if (Math.hypot(d.x - bt[0], d.y - bt[1]) <= bt[2] + 6) { d.role = 'talk'; talkP = true; continue; }
+        // nút tròn chỉ nhận ngón khi đang có người ở gần; lúc mờ thì chạm xuyên qua được (để chạm người đứng dưới nút)
+        if (S.near && Math.hypot(d.x - bt[0], d.y - bt[1]) <= bt[2] + 6) { d.role = 'talk'; talkP = true; continue; }
         if (d.y < 50) continue; // dải trên cùng và dải khuôn mặt: xử lý như một lần chạm
         if (hitAt(d.x, d.y)) continue; // chạm vào người hay vật: chờ nhấc ngón
         if (d.x < 240 && !S.joy) { d.role = 'joy'; S.joy = { p: d, t: S.t, far: 0 }; }
