@@ -175,12 +175,16 @@ $('#deck').addEventListener('pointerdown', (ev) => {
   if (!type) return;
   ev.preventDefault();
   cardDrag = { i, type, id: ev.pointerId, sx: ev.clientX, sy: ev.clientY, moved: false, x: -9999, y: -9999 };
+  // goi-y-ro: chạm GIỮ ~0,45 giây (không kéo) → tên + công thức Tím/Vàng tướng này góp vào; thả tay là ẩn, không mua
+  const d = cardDrag;
+  d.holdT = setTimeout(() => { if (cardDrag === d && !d.moved) { d.held = true; ui.showHeroTip(type, b.getBoundingClientRect()); } }, 450);
 });
 window.addEventListener('pointermove', (ev) => {
   const d = cardDrag;
   if (!d || ev.pointerId !== d.id) return;
   if (!d.moved && Math.hypot(ev.clientX - d.sx, ev.clientY - d.sy) > 10) {
     d.moved = true;
+    clearTimeout(d.holdT); if (d.held) { d.held = false; ui.hideHeroTip(); }
     cardGhost.innerHTML = `<img src="${heroImgUrl(d.type, 'head')}" alt="">`;
     cardGhost.style.setProperty('--c', ELEMENTS[HEROES[d.type].el].color);
     cardGhost.classList.toggle('rot', ROT);
@@ -196,6 +200,8 @@ const endCardDrag = (ev, cancel) => {
   if (!d || (ev && ev.pointerId !== d.id)) return;
   cardDrag = null;
   cardGhost.hidden = true;
+  clearTimeout(d.holdT);
+  if (d.held) { ui.hideHeroTip(); return; }     // vừa giữ xem thông tin: không mua
   if (cancel) return;
   if (!d.moved) return ui.buyCard(d.i);
   const slot = ui.slotAt(d.x, d.y);
@@ -330,6 +336,7 @@ function render() {
   const dragging = drag && drag.moved ? drag : null;
   const dropSlot = dragging ? ui.slotAt(dragging.x, dragging.y) : -1;
   const soon = game.started ? game.floodSoon() : -1;
+  const twinH = twinMarks(dragging);
   CONFIG.slots.forEach(([x, y], i) => {
     const h = game.heroes[i];
     const o = { tier: CONFIG.slotTier[i], flooded: game.isFlooded(i), raised: game.raised[i], hero: !!h,
@@ -345,6 +352,7 @@ function render() {
       const tw = h && h.type === cardDrag.type && (h.tier || 0) === 1 && !h.from;
       o.mode = i === ui.slotAt(cardDrag.x, cardDrag.y) && (!h || tw) && !o.flooded ? 'target' : tw ? 'sel' : !h && !o.flooded ? 'free' : '';
     }
+    else if (h && twinH.has(h)) o.mode = 'twin';     // goi-y-ro: tướng ★ trên sân mà thẻ chợ mua là ghép luôn
     else if (ui.raising) o.mode = game.canRaise(i) && (o.flooded || o.soon) ? 'free' : '';
     else if (i === ui.spot && !h) o.mode = 'target';
     else if (!h && ui.armed && !o.flooded) o.mode = 'free';
@@ -352,7 +360,8 @@ function render() {
     // v141: chơi nhóm — ô của đồng đội viền xanh nét đứt (cả khi có tướng đứng trên)
     const mate = COOP.on && game.co && !game.co.canAct(COOP.me, i);
     // v138: ô đã có tướng không vẽ vòng (kể cả khi chọn tướng — đã có vòng tầm đánh); chỉ hiện lúc đang kéo để ghép
-    if (!(h && !o.mode)) drawSpot(ctx, x, y, o, t);
+    if (o.mode === 'twin') drawTwinRing(ctx, x, y, false, t);
+    else if (!(h && !o.mode)) drawSpot(ctx, x, y, o, t);
     if (mate) drawMateSpot(x, y, !!h);
   });
 
@@ -403,7 +412,7 @@ function render() {
   drawEffects(t);
   VFX.draw(ctx);
   if (dragging) drawDragGhost(dragging, dropSlot, t);
-  else drawFuseMarks(t);
+  else { drawFuseMarks(t); drawTwinMarks(twinH, t); }
 }
 
 // vo-tan-su-kien: Sương Mù Lam Chướng — các mảng sương trôi chậm phủ bản đồ (đậm theo mức giảm tầm)
@@ -684,6 +693,30 @@ function drawFuseMarks(t) {
     ctx.beginPath();
     ctx.moveTo(h.x - 13, y - 14); ctx.lineTo(h.x + 13, y - 14); ctx.lineTo(h.x, y + 3); ctx.closePath();
     ctx.fill(); ctx.stroke();
+  }
+}
+
+// goi-y-ro: tướng trên sân sẽ được ghép ★ nếu mua thẻ chợ cùng loại (chỉ khi đang xem chợ, không kéo gì)
+const NO_TWIN = new Set();
+function twinMarks(dragging) {
+  const m = game.market;
+  if (dragging || (cardDrag && cardDrag.moved) || ui.sel >= 0 || !m || !m.types || game.over || ui.raising) return NO_TWIN;
+  const s = new Set();
+  for (const t of m.types) { const h = game.marketTwin(t); if (h) s.add(h); }
+  return s;
+}
+// mũi tên xanh nhỏ nhấp nhô trên đầu tướng sắp ghép (nhịp ~1,3 s như viền thẻ chợ)
+function drawTwinMarks(set, t) {
+  for (const h of set) {
+    if (h.dead) continue;
+    const k = 0.5 + Math.sin(t * 4.8) * 0.5, top = HERO_TOP.get(h);
+    const y = (top != null ? top : h.y - 60) - 8 - k * 4;
+    ctx.save();
+    ctx.globalAlpha = 0.6 + k * 0.4;
+    ctx.fillStyle = '#7CFF6A'; ctx.strokeStyle = '#0B2A0B'; ctx.lineWidth = 2; ctx.lineJoin = 'round';
+    ctx.beginPath(); ctx.moveTo(h.x - 8, y - 9); ctx.lineTo(h.x + 8, y - 9); ctx.lineTo(h.x, y + 2); ctx.closePath();
+    ctx.stroke(); ctx.fill();
+    ctx.restore();
   }
 }
 

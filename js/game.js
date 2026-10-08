@@ -1609,7 +1609,7 @@ class Game {
   // v185: chỉ tướng Thường đã mở khoá bằng Ngân khố (owned = null: bot mô phỏng → mọi tướng)
   marketPool() { return openCommons(this.owned); }
   marketNeeds() {
-    const pool = this.marketPool(), cp = {}, ghep = new Set(), hop = new Set(), hopLock = new Map();
+    const pool = this.marketPool(), cp = {}, ghep = new Set(), hop = new Set(), hopLock = new Map(), hopTo = new Map();
     for (const t of pool) cp[t] = this.marketCopies(t);
     for (const t of pool) if (cp[t] > 0 && cp[t] < MARKET_CAP) ghep.add(t);
     const need = Math.pow(2, COSTS.ascendTier - 1);
@@ -1617,7 +1617,7 @@ class Game {
     const got = (f) => cp[f.a] > 0 || cp[f.b] > 0, left = (f) => cp[f.a] < need || cp[f.b] < need;
     const mine = rs.filter((f) => this.ownsHero(f.to) && left(f)), on = mine.filter(got);
     const follow = on.length ? on.map((f, i) => ({ f, i, k: (cp[f.a] > 0 && cp[f.b] > 0 ? 100 : 0) + Math.min(cp[f.a], need) + Math.min(cp[f.b], need) })).sort((a, b) => b.k - a.k || a.i - b.i).slice(0, MARKET_HOP.max).map((x) => x.f) : mine;
-    for (const f of follow) for (const x of [f.a, f.b]) if (cp[x] < need) hop.add(x);
+    for (const f of follow) for (const x of [f.a, f.b]) if (cp[x] < need) { hop.add(x); if (!hopTo.has(x)) hopTo.set(x, f.to); }
     for (const f of rs) if (!this.ownsHero(f.to) && got(f)) for (const x of [f.a, f.b]) if (cp[x] < need && !hopLock.has(x)) hopLock.set(x, f.to);
     for (const x of hop) hopLock.delete(x);
     // nguyên liệu thiếu nhất (ít bản sao nhất) trong các công thức đang theo — bảo hiểm hợp thể nhắm vào đây
@@ -1626,7 +1626,7 @@ class Game {
     for (const t of pool) w[t] = cp[t] >= MARKET_CAP ? 0 : hop.has(t) ? MARKET_W.hop : ghep.has(t) ? MARKET_W.ghep : 1;
     if (pool.every((t) => !w[t])) for (const t of pool) w[t] = 1;     // đủ hết bản sao: rút đều như cũ
     const top = ghep;     // bảo hiểm ghép (bảo hiểm hợp thể dùng hopNeed)
-    return { pool, w, ghep, hop, hopNeed, hopLock, top };
+    return { pool, w, ghep, hop, hopNeed, hopLock, hopTo, top };
   }
   // nhãn gợi ý trên thẻ: 'hop' = nguyên liệu hợp thể còn thiếu; 'hopLock' = nguyên liệu của tướng đích chưa mở khoá
   marketHint(t, nd = this.marketNeeds()) { return nd.hop.has(t) ? 'hop' : nd.hopLock.has(t) ? 'hopLock' : null; }

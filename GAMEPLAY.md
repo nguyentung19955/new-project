@@ -2837,6 +2837,16 @@ Người dùng chọn phương án 4: máu quái tăng dần theo đợt + hạ 
 - Phòng thêm: cỡ quái pixel co theo chiều cao hình cũ lấy từ bảng tĩnh `js/pixel/quai-cao.js` (sinh bằng `node tools/build-quai-cao.js`, chạy lại khi thêm quái / đổi ảnh cũ / đổi ENEMY_W) thay vì đo lúc chơi → không phụ thuộc ảnh cũ tải xong hay chưa, không còn kéo ảnh cũ packs/* về khi bật pixel. Cỡ boss giữ đúng như v217 (tests/pixel/boss-cao ×1,00).
 - Tinh anh ×1,15, quái champion (thủ lĩnh) ×1,5 vẫn to hơn có chủ đích (cố định từ lúc sinh).
 - Test: `node tests/pixel/quai-co-dinh.test.js` (41 loại quái: hộp + cỡ vẽ thật không đổi quá 2% qua 30 s, bị giật lùi liên tục, ép tải ảnh cũ; chụp đầu trận / sau 30 s ở 1920×934 · 844×390).
+## claude/goi-y-ro — Sáng gợi ý triệu hồi rõ hơn
+- Thẻ chợ có gợi ý: viền trong 2px + quầng sáng nằm TRÊN khung thẻ pixel, thở 1,3 s (chỉ đổi opacity của `::before` → không vẽ lại,
+  không tốn FPS). Màu theo loại: xanh lá = mua là ghép ★ (quy ước cũ), tím = nguyên liệu hợp thể Sử thi, cam vàng = hợp thể Huyền thoại
+  (`marketNeeds().hopTo` cho biết tướng đích). Thẻ vừa ghép vừa là nguyên liệu → ưu tiên xanh ghép.
+- Dấu góc cho người mù màu: `▲★` (ghép) / `⇧` (hợp thể), chữ thường hệ thống (`no-pxemo`, không đổi thành icon pixel) — cạnh chân dung, không che mặt.
+- Trên sân: khi đang xem chợ (không chọn / không kéo), tướng ★ mà thẻ chợ mua là ghép luôn có vòng xanh nhịp dưới chân (viền tối lót
+  để nổi trên nền pixel) + mũi tên xanh nhỏ nhấp nhô trên đầu. Vòng "ghép được" lúc kéo tướng/thẻ cũng thở theo cùng nhịp (`drawTwinRing`).
+- Chạy cả pixel và `?pixel=0` (lớp sáng là CSS/canvas chung, không cần ảnh pixel riêng).
+- Test: `node tests/goi-y-ro/goi-y-ro.test.js` (đúng điều kiện có/không tướng cùng loại, 3 màu khác nhau, nhịp 1,2–1,5 s, đo điểm ảnh viền
+  so với thẻ thường: tương phản ≥ 1,8 ở pixel/pixel0, 844×390 · 667×375 · 1920×934).
 - Lỗi gấp "Ấn GỌI SỚM không gọi được": KHÔNG do panel-open — bản v229 (trước khi gộp nhánh này) cũng không bấm được. Gốc: luật cũ `#nextwaves { … pointer-events: none }` (đầu style.css) đè `#ui > * { pointer-events: auto }` (cùng độ ưu tiên, viết sau thắng) → chạm/nhấp xuyên xuống bản đồ. Sửa: `#nextwaves.early { pointer-events: auto }` (dải thường vẫn cho chạm xuyên). Test `tests/goi-som/` (844×390 chuột + chạm, 1920×934): giữa đợt bấm Gọi sớm → đợt kế bắt đầu + toast vàng; sau khi mở/đóng Túi đồ; sau khi kéo tướng.
 
 ## claude/chan-vuot-lui — Chơi trên web: vuốt không còn lỡ về trang trước
@@ -2845,3 +2855,14 @@ Người dùng chọn phương án 4: máu quái tăng dần theo đợt + hạ 
 - Nút / cử chỉ Back trên web: luôn gài sẵn một mục lịch sử (gài lại ở lần chạm đầu). Back khi đang mở bảng → đóng bảng (như cũ); trong trận → **tạm dừng + hộp "Rời trận?"** (Ở lại = chạy tiếp, Rời trận = Dừng chơi; Back/Esc lần nữa = Ở lại); ở menu → nhắc "Thoát game?", bấm Back lần 2 trong 2 giây mới rời trang.
 - Đóng/tải lại trang khi đang trong trận: trình duyệt hỏi lại (beforeunload). Trong app Capacitor giữ hành vi cũ (chỉ đóng bảng).
 - Test: `node tests/chan-vuot-lui/chan-vuot-lui.test.js` (giả lập điện thoại hasTouch, 844×390 + dọc 390×844).
+- **Mở rộng (chưa có tướng Tím thì khó biết mua gì):**
+  - **Mục tiêu hợp thể:** bảng Hợp thể có nút ghim **Theo đuổi** trên mỗi công thức Tím/Vàng (tối đa 2, ghim thứ 3 thì bỏ cái cũ nhất; lưu ở
+    `settings.pins`). Thẻ chợ là nguyên liệu Thường còn thiếu sáng **xanh ngọc** + dấu ghim (công thức Vàng thì đi xuống công thức Tím chưa có trên sân).
+    Ưu tiên màu: ghép ★ > ghim > hợp thể. Dải nhỏ trên chợ: [đích] = [nguyên liệu ★ hiện tại/cần] + […], thiếu thì mờ; chạm dải → mở Hợp thể.
+    Chưa ghim gì: tự gợi ý 1 công thức Tím gần xong nhất (viền mảnh, dải nét đứt chữ "Gợi ý"); ✕ trên dải hoặc nút **Tự gợi ý** trong Hợp thể để tắt/bật
+    (`settings.autoPin`). Chỉ là giao diện — không đổi tỉ lệ rút thẻ (chơi nhóm không lệch).
+  - **Tìm tên không dấu** ("thach sanh" → Thạch Sanh, đ → d) + lọc hành (5 nút) ở Hợp thể (tìm cả 2 tab), Anh Hùng và Bách khoa · Vai trò (thêm lọc bậc
+    Thường/Tím/Vàng). Anh Hùng: chạm tướng → khung "Phát triển thành" (dùng trong công thức nào / cần gì); Bách khoa: chạm tướng → thẻ thông tin.
+  - **Chạm giữ thẻ chợ** ~0,45 s: hiện tên + vai trò + "Góp vào: + bạn ghép ➜ tướng Tím" (có dấu ghim nếu đang theo đuổi); thả tay ẩn, không mua.
+  - Test: `node tests/goi-y-ro/muc-tieu.test.js` (gợi ý tự động, ghim đúng thẻ sáng, tối đa 2, lưu, dải có/thiếu, chạm giữ không mua, chạm nhanh vẫn mua,
+    tắt gợi ý, nút Theo đuổi, tìm không dấu không mất ô nhập, lọc bậc — pixel + pixel0, 844×390 · 667×375 · 1920×934).

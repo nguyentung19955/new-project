@@ -709,13 +709,25 @@ function drawSpot(ctx, x, y, o, t) {
     ctx.ellipse(x, y, rx + 4 + Math.sin(t * 5) * 3, ry + 3 + Math.sin(t * 5) * 2, 0, 0, Math.PI * 2);
     ctx.stroke();
     ctx.globalAlpha = 1;
-  } else if (o.mode === 'sel') {
-    ctx.strokeStyle = '#3EDC4E';
-    ctx.lineWidth = 2.5 * DK;
-    ctx.beginPath();
-    ctx.ellipse(x, y, 21 * DK, 9 * DK, 0, 0, Math.PI * 2);
-    ctx.stroke();
-  }
+  } else if (o.mode === 'sel') drawTwinRing(ctx, x, y, true, t);
+  ctx.restore();
+}
+
+// goi-y-ro: vòng xanh "ghép được" dưới chân tướng — viền tối lót dưới (nổi trên nền pixel tối lẫn sáng) + thở ~1,3 s;
+// sel = đang kéo (dày hơn)
+function drawTwinRing(ctx, x, y, sel, t) {
+  const k = 0.5 + Math.sin(t * 4.8) * 0.5, w = (sel ? 3 : 2.5) * DK;
+  ctx.save();
+  ctx.beginPath();
+  ctx.ellipse(x, y, 21 * DK + k * 2 * DK, 9 * DK + k * DK, 0, 0, Math.PI * 2);
+  ctx.globalAlpha = 0.55;
+  ctx.strokeStyle = '#0B2A0B';
+  ctx.lineWidth = w + 2.5 * DK;
+  ctx.stroke();
+  ctx.globalAlpha = 0.6 + k * 0.4;
+  ctx.strokeStyle = '#7CFF6A';
+  ctx.lineWidth = w;
+  ctx.stroke();
   ctx.restore();
 }
 
