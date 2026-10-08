@@ -2328,6 +2328,14 @@ chodo · tom · ô nền dùng pixel, lactuong · casau · hành Hỏa giữ hì
 
 - 41 quái/boss pixel; boss pixel co theo chiều cao hình cũ, quái bay/boss cao không lọt dưới thanh trên. Test nạp gói tự bỏ tạm 1 quái khỏi manifest khi đã vẽ đủ.
 
+## claude/sao3-re-nhanh — Tướng ★★★ rẻ hơn, Tím đến sớm hơn
+
+- Tướng Thường **★★★**: lên cấp **⅓ giá** (trước ½), **mở kỹ năng W/E/R miễn phí** (trước 60/150/300). ★★ và tướng thần giữ nguyên giá. Núm trong `js/data.js`: `COSTS.lvDisc3`, `unlockDisc3` (thêm `lvDisc2`, `unlockDisc2`, `lv3Min` để chỉnh tiếp, mặc định không đổi).
+- Giao diện: nút Mở khóa / bảng chi tiết / dòng chân Cây kỹ năng ghi "Miễn phí" khi tướng ★★★; thông báo lên ★★★ ghi "Lên cấp giảm 67%, mở kỹ năng miễn phí".
+- Mô phỏng (`node tests/hop-the/mo-phong.js 8 own1`, bot tự chơi ải 1/3/5, 8 ván/ải; thêm dòng "★★★ đầu tiên"):
+  - ★★★ đầu tiên: đợt ~7.7 (không đổi — giới hạn bởi số thẻ cần ghép, tăng trọng số chợ không làm nhanh hơn).
+  - Tím đầu tiên: trước đợt **19.1 / 18.8 / 18.6** → sau **14.9 / 15.4 / 15.6** (mục tiêu 12–16).
+  - Độ khó (chơi hết ải, `het`): bot thua 17/24 ván trước, 15/24 sau, đợt thua TB tương đương → không dễ đi rõ rệt.
 ## Phiên bản 216 — gộp vo-tan-su-kien (tester đạt)
 
 - Sự kiện Vô tận: banner báo trước, bảng Bộ quái mới đợi banner, banner boss hạ xuống dưới dải sự kiện (không che "Boss xuất hiện"). Test bỏ Ếch Mẹ (chết đẻ nòng nọc) khi chọn quái thử phân thân — hết chập chờn.

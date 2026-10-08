@@ -1730,7 +1730,11 @@ class Game {
     if (!b.dead) b.hp = Math.min(heroStats(b).hpMax, b.hp + heroStats(b).hpMax - before + heroStats(b).hpMax * 0.3);
     this.effects.push({ type: 'evolve', hero: b, x: b.x, y: b.y, color: ELEMENTS[HEROES[b.type].el].color, ttl: 1.2, max: 1.2 });
     this.effects.push({ type: 'streak', x: a.x, y: a.y - 30, x2: b.x, y2: b.y - 30, color: '#FFE08A', ttl: 0.35, max: 0.35 });
-    this.notify(`${HEROES[b.type].name} lên ${'★'.repeat(b.tier)}!${b.tier >= 3 && COSTS.lvDisc3 < 1 ? ` Lên cấp giảm ${Math.round((1 - COSTS.lvDisc3) * 100)}%` : ''}`, '#F2D27A');
+    // claude/sao3-re-nhanh: lên ★★★ thì tướng nhận ít nhất cấp COSTS.lv3Min (kèm điểm kỹ năng của các cấp được nhận)
+    const up = b.tier >= 3 ? Math.max(0, Math.min(CONFIG.maxLevel, COSTS.lv3Min || 0) - b.level) : 0;
+    if (up) { const hp0 = heroStats(b).hpMax; b.level += up; b.skillPts += up; if (!b.dead) b.hp += Math.max(0, heroStats(b).hpMax - hp0); this.levelFx(b, up); }
+    const disc = this.levelDisc(b) < 1 ? ` Lên cấp giảm ${Math.round((1 - this.levelDisc(b)) * 100)}%${!b.from && b.tier >= 3 && !COSTS.unlockDisc3 ? ', mở kỹ năng miễn phí' : ''}` : '';
+    this.notify(`${HEROES[b.type].name} lên ${'★'.repeat(b.tier)}!${up ? ` Lên cấp ${b.level}.` : ''}${disc}`, '#F2D27A');
     b.notice.evo = b.tier >= 3;
     return true;
   }
@@ -1859,7 +1863,9 @@ class Game {
   }
 
   // Nâng cấp tướng bằng vàng: +1 cấp, +1 điểm kỹ năng
-  levelCost(h) { return Math.round(COSTS.level(h.level) * (!h.from && (h.tier || 0) >= 3 ? COSTS.lvDisc3 : 1)); }
+  // claude/sao3-re-nhanh: tướng Thường ★★ / ★★★ lên cấp giảm giá (COSTS.lvDisc2 / lvDisc3)
+  levelDisc(h) { return h.from ? 1 : (h.tier || 0) >= 3 ? COSTS.lvDisc3 : (h.tier || 0) === 2 ? COSTS.lvDisc2 : 1; }
+  levelCost(h) { return Math.round(COSTS.level(h.level) * this.levelDisc(h)); }
   levelUp(h) {
     if (h.level >= CONFIG.maxLevel) return 'Tướng đã đạt cấp tối đa';
     const c = this.levelCost(h);
