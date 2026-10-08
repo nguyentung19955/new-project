@@ -157,3 +157,18 @@ vì mô tả dài), nút Chọn luôn sát đáy.
 - `khung-nut-chinh`: thêm lại **2 huy hiệu tròn trống đồng** nhô ở hai đầu (bố cục bản cũ b424fa8).
 - `thanh-mau-boss`: lòng khung cột 10..85 (đầu ốp đồng rộng 10) cho khít thanh máu game vẽ (khung w+16 quanh thanh w ≈ 60) — hết khe lộ nền ở đầu phải.
 - `pxItemCode` (js/render.js): món có icon riêng theo mã thì dùng icon riêng trước, rồi mới tới icon loại × độ hiếm.
+
+## 12. Làm mượt đường cong (người dùng: "tăng độ mượt bo tròn góc")
+
+**(2) Khử răng cưa có chọn lọc** — `Ve.aa()` trong `tools/pixel/ve-lai/ve.js`, chỉ trên **viền ngoài** (giữ nét trong: mắt, khe áo):
+- *sel-out*: điểm viền ngoài ở chỗ **gấp khúc** (nối điểm viền kế tiếp theo đường chéo) đổi từ đen `vien` sang **tông tối nhất của mảng kề**
+  (`dong-toi`, `son-toi`, `la-toi`… — đều là màu viền hợp lệ `*`);
+- điểm tô ở **góc lồi bậc thang** sát viền ngoài hạ một tông (bảng `TOI_HON`), góc vuông của khối chữ nhật giữ nguyên.
+- Không thêm điểm ra nền trong suốt (nền đổi theo chỗ đặt). **Đang chờ duyệt** trên sprite tướng: `node tools/pixel/ve-lai/aa-thu.js tuong tanvien`
+  → `tools/pixel/mau/ve-lai/aa-thu-tanvien-x8.png` / `-x3.png` (trước | sau), boss `aa-thu-thuongluong-*` — chưa áp vào nguồn sprite nào.
+
+**(3) Không kéo giãn lẻ** — góc / huy hiệu giữ đúng tỉ lệ, chỉ phần giữa giãn:
+- nút **Xuất Quân** (`khung-nut-chinh`): CSS `border-image` cắt 9 mảnh, đầu 44 điểm × (chiều cao nút `--mh` / 46) → 2 huy hiệu luôn tròn;
+- **thanh máu** tướng / quái / boss trên canvas: `pxDraw3` (js/render.js) vẽ 3 mảnh (đầu 2 / 2 / 10 điểm giữ tỉ lệ theo chiều cao);
+- **#bossbar** (HTML): `border-image` 3 mảnh, đầu 10 điểm = 16.7px ở cao 20px;
+- `khung-nguoi-choi` đã đúng tỉ lệ (`aspect-ratio` 192×66) — không cần cắt.

@@ -19,6 +19,19 @@ const DAI = {
   tim: ['tim-toi', 'tim', 'tim-sang', 'tim-sang'], ngoc: ['cham-toi', 'ngoc', 'ngoc-sang', 'troi'], toi: ['vien', 'toi', 'khoi', 'dat-toi'],
 };
 
+// màu viền (không khử) + bảng "tối hơn một tông" lấy từ các dải màu 3–4 tông
+const VIEN = new Set(['vien', 'toi', 'khoi']);
+const TOI_HON = {};
+for (const d of [['dong-toi', 'dong', 'dong-sang', 'vang-nghe', 'vang-sang'], ['son-toi', 'son', 'son-sang'], ['lua', 'lua-sang'], ['dat-toi', 'dat', 'dat-sang', 'cat'],
+  ['sat-toi', 'sat', 'sat-sang', 'bac'], ['la-toi', 'la', 'la-ma', 'la-sang'], ['reu-toi', 'reu', 'reu-sang'], ['cham-toi', 'cham', 'cham-sang', 'nuoc', 'nuoc-sang', 'troi'],
+  ['trang-xam', 'trang', 'sang'], ['da-toi', 'da', 'da-sang'], ['tim-toi', 'tim', 'tim-sang'], ['cham-toi', 'ngoc', 'ngoc-sang'], ['son', 'hong']])
+  for (let i = 1; i < d.length; i++) if (!TOI_HON[d[i]]) TOI_HON[d[i]] = d[i - 1];
+// tông tối nhất cùng dải (cho sel-out viền) — đều là màu viền hợp lệ (*) của palette
+const TOI_NHAT = {};
+for (const [goc, ds] of Object.entries({ 'dong-toi': ['dong', 'dong-sang', 'vang-nghe', 'vang-sang'], 'son-toi': ['son', 'son-sang', 'lua', 'lua-sang', 'hong'],
+  'dat-toi': ['dat', 'dat-sang', 'cat', 'da-toi', 'da', 'da-sang'], 'sat-toi': ['sat', 'sat-sang', 'bac', 'trang-xam', 'trang', 'sang'], 'la-toi': ['la', 'la-ma', 'la-sang'],
+  'reu-toi': ['reu', 'reu-sang'], 'cham-toi': ['cham', 'cham-sang', 'nuoc', 'nuoc-sang', 'troi', 'ngoc', 'ngoc-sang'], 'tim-toi': ['tim', 'tim-sang'] })) for (const c of ds) TOI_NHAT[c] = goc;
+
 class Ve {
   constructor(w, h, nen = null) { this.w = w; this.h = h; this.g = Array.from({ length: h }, () => new Array(w).fill(nen)); }
   in(x, y) { return x >= 0 && y >= 0 && x < this.w && y < this.h; }
@@ -102,6 +115,33 @@ class Ve {
     for (let y = this.h - 1; y >= 0; y--) for (let x = this.w - 1; x >= 0; x--) if (mask.get(x - dx, y - dy) && !mask.get(x, y)) this.p(x, y, c);
     return this;
   }
+  // KHỬ RĂNG CƯA CÓ CHỌN LỌC (pixel art AA) — chỉ trên VIỀN NGOÀI (giữ nguyên nét bên trong: mắt, khe áo…):
+  // (1) sel-out: điểm viền ngoài ở chỗ GẤP KHÚC (nối điểm viền kế tiếp theo đường chéo) đổi từ đen sang tông tối nhất của mảng kề;
+  // (2) điểm tô ở góc lồi bậc thang sát viền ngoài hạ một tông. Không thêm điểm ra nền trong suốt. Trả về số điểm đã đổi.
+  aa() {
+    const T = (x, y) => !this.get(x, y);
+    const ngoai = (x, y) => { const c = this.get(x, y); return !!c && VIEN.has(c) && (T(x + 1, y) || T(x - 1, y) || T(x, y + 1) || T(x, y - 1)); };
+    const fill = (x, y) => { const c = this.get(x, y); return !!c && !VIEN.has(c); };
+    const doi = [];
+    for (let y = 0; y < this.h; y++) for (let x = 0; x < this.w; x++) {
+      const c = this.g[y][x];
+      if (ngoai(x, y)) {
+        // chỗ gấp: chỉ 1 điểm viền ngoài kề cạnh nhưng có điểm viền ngoài kề chéo không nối qua cạnh
+        const canh = [[1, 0], [-1, 0], [0, 1], [0, -1]].filter(([a, b]) => ngoai(x + a, y + b)).length;
+        const cheo = [[1, 1], [1, -1], [-1, 1], [-1, -1]].some(([a, b]) => ngoai(x + a, y + b) && !ngoai(x + a, y) && !ngoai(x, y + b));
+        const ke = [[1, 0], [-1, 0], [0, 1], [0, -1]].map(([a, b]) => this.get(x + a, y + b)).find((k) => k && !VIEN.has(k));
+        if (canh <= 1 && cheo && ke) doi.push([x, y, TOI_NHAT[ke] || 'toi']);
+        continue;
+      }
+      if (!c || VIEN.has(c) || !TOI_HON[c]) continue;
+      for (const [sx, sy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
+        if (!ngoai(x + sx, y) || !ngoai(x, y + sy) || !fill(x - sx, y) || !fill(x, y - sy)) continue;
+        if (fill(x + sx, y - sy) || fill(x - sx, y + sy)) { doi.push([x, y, TOI_HON[c]]); break; }
+      }
+    }
+    for (const [x, y, c] of doi) this.g[y][x] = c;
+    return doi.length;
+  }
   clone() { const v = new Ve(this.w, this.h); v.g = this.g.map((r) => r.slice()); return v; }
   colors() { const s = new Set(); for (const r of this.g) for (const c of r) if (c) s.add(c); return [...s]; }
   check() { for (const c of this.colors()) if (!PAL[c]) throw new Error('màu ngoài bảng màu: ' + c); return this; }
@@ -158,4 +198,4 @@ function sprite(nhom, ma, anim, i = 0) {
 // phóng nguyên lần k (nearest)
 function phong(v, k) { const o = new Ve(v.w * k, v.h * k); for (let y = 0; y < o.h; y++) for (let x = 0; x < o.w; x++) o.g[y][x] = v.g[Math.floor(y / k)][Math.floor(x / k)]; return o; }
 
-module.exports = { Ve, ghi, png, PAL, DAI, ROOT, sprite, phong };
+module.exports = { Ve, ghi, png, PAL, DAI, ROOT, sprite, phong, VIEN, TOI_HON, TOI_NHAT };

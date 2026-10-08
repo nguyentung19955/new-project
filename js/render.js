@@ -588,6 +588,15 @@ const SPOT_THEME = { song: 'co', dam: 'co', dong: 'co', rung: 'dat', hang: 'da',
 // Ô đặt tướng theo bản thiết kế: ellipse 15×10 (tọa độ thiết kế)
 // state: dry | flooded | raised | target | free | hint | soon
 // claude/pixel-con-lai: khung pixel nhóm giao-dien (thanh máu…) khi bật pixel → canvas khung 0; không có thì null
+// claude/ve-lai-pixel: vẽ khung 3 mảnh — hai đầu (cap điểm ảnh nguồn) giữ tỉ lệ theo chiều cao, chỉ giữa giãn ngang (góc / đinh không méo)
+function pxDraw3(ctx, fr, x, y, w, h, cap) {
+  const sw = fr.width, sh = fr.height, k = h / sh, cw = Math.min(cap * k, w / 2), sm = ctx.imageSmoothingEnabled;
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(fr, 0, 0, cap, sh, x, y, cw, h);
+  ctx.drawImage(fr, cap, 0, sw - cap * 2, sh, x + cw, y, w - cw * 2, h);
+  ctx.drawImage(fr, sw - cap, 0, cap, sh, x + w - cw, y, cw, h);
+  ctx.imageSmoothingEnabled = sm;
+}
 const pxUiFrame = (code) => { const e = typeof pixelOn === 'function' && pixelOn() && pxEntry('giao-dien', code); return (e && pxFrame(e, 0)) || null; };
 function drawSpot(ctx, x, y, o, t) {
   const rx = 15 * DK, ry = 10 * DK;
@@ -2476,7 +2485,8 @@ function drawEnemy(ctx, e, t, o = {}) {
   ctx.fillStyle = r > 0.5 ? '#3EBE3E' : r > 0.25 ? '#E0B030' : '#D84A2A';
   ctx.fillRect(e.x - w / 2, by, w * Math.max(0, r), 3);
   const fr = pxUiFrame(e.def.boss ? 'thanh-mau-boss' : 'thanh-mau-quai') || asset(e.def.boss ? 'ui/thanh-mau-boss.png' : 'ui/thanh-mau-quai.png', true);   // v163: khung thanh máu vẽ tay (nếu có) · pixel trước
-  if (fr) { ctx.imageSmoothingEnabled = !fr.getContext; ctx.drawImage(fr, e.x - w / 2 - (e.def.boss ? 8 : 4), by - 3, w + (e.def.boss ? 16 : 8), 9); ctx.imageSmoothingEnabled = true; }
+  if (fr && fr.getContext) pxDraw3(ctx, fr, e.x - w / 2 - (e.def.boss ? 8 : 4), by - 3, w + (e.def.boss ? 16 : 8), 9, e.def.boss ? 10 : 2);   // khung pixel 3 mảnh
+  else if (fr) ctx.drawImage(fr, e.x - w / 2 - (e.def.boss ? 8 : 4), by - 3, w + (e.def.boss ? 16 : 8), 9);
   // chấm hành bên trái thanh máu (quái tinh anh có thể có hành phụ)
   if (detail) [e.el, e.el2].filter(Boolean).forEach((el, k) => {
     circle(ctx, e.x - w / 2 - 5 - k * 7, by + 1.5, 3.4, '#0D0B08');

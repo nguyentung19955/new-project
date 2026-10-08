@@ -798,7 +798,8 @@ function drawHeroOnMap(h, t) {
     ctx.fillRect(h.x - 16, top - 4, 32 * Math.max(0, h.hp / st.hpMax), 2.5);
     if (detail) { ctx.fillStyle = '#4A90E2'; ctx.fillRect(h.x - 16, top - 1.2, 32 * Math.max(0, h.mana / st.maxMana), 1.6); }
     const fr = pxUiFrame('thanh-mau-tuong') || asset('ui/thanh-mau-tuong.png', true);      // v163: khung thanh máu vẽ tay (nếu có) · pixel trước
-    if (fr) { ctx.imageSmoothingEnabled = !fr.getContext; ctx.drawImage(fr, h.x - 20, top - 7.5, 40, detail ? 11 : 9); ctx.imageSmoothingEnabled = true; }
+    if (fr && fr.getContext) pxDraw3(ctx, fr, h.x - 20, top - 7.5, 40, detail ? 11 : 9, 2);   // khung pixel 3 mảnh (render.js)
+    else if (fr) ctx.drawImage(fr, h.x - 20, top - 7.5, 40, detail ? 11 : 9);
   }
   // sao mới hiện khi tướng hạ xuống (60% thời gian tiến hoá)
   const stars = (h.tier || 0) - (h.evoT > 0.48 ? 1 : 0);
