@@ -50,6 +50,17 @@ fs.mkdirSync(SHOT, { recursive: true });
     const idle = [];
     for (const type of Object.keys(HEROES)) HEROES[type].skills.forEach((sk, i) => { if (sk.active && trial(type, i, 0, 0).cast) idle.push(type + '.' + 'QWER'[i]); });
     out.idle = idle;
+    // giữa hai đợt (sân hết quái), đồng đội bị thương: khiên / buff / hồi máu không dùng
+    const gap = [];
+    for (const type of Object.keys(HEROES)) HEROES[type].skills.forEach((sk, i) => {
+      if (!sk.active || !SKILL_SUPPORT.has(sk.active.cast)) return;
+      g.heroes = g.heroes.map(() => null); g.enemies.length = 0;
+      g.spawnHero(slot, type); const h = g.heroes.find(Boolean);
+      h.level = 10; h.skillLv = { [sk.id]: 3 }; h.skillCd = {}; const st = heroStats(h); h.mana = st.maxMana; h.hp = st.hpMax * 0.3; h.cd = 99;
+      const m0 = h.mana; for (let f = 0; f < 3; f++) g.updateHero(h, 1 / 60);
+      if (h.mana < m0 - 1 || (h.skillCd[sk.id] || 0) > 1) gap.push(type + '.' + 'QWER'[i] + '(' + sk.active.cast + ')');
+    });
+    out.gap = gap;
     return out;
   });
   console.log(`  ${r.n} kỹ năng chủ động · trong tầm chưa tung (cần điều kiện riêng: ≥2 quái, boss, giáp…): ${r.inMiss.join(', ') || 'không'}`);
@@ -58,6 +69,7 @@ fs.mkdirSync(SHOT, { recursive: true });
   ok(r.globalMiss.length === 0 && r.globalOk.length >= 4, `kỹ năng toàn bản đồ dùng khi quái ở xa: ${r.globalOk.join(', ')}` + (r.globalMiss.length ? ' — HỎNG ' + r.globalMiss.join(', ') : ''));
   ok(r.support.length === 0, 'hỗ trợ (khiên / buff / hồi): đồng đội đầy máu, quái ngoài tầm → không dùng' + (r.support.length ? ' — ' + r.support.join(', ') : ''));
   ok(r.buffMiss.length === 0, 'khiên / buff: quái vào tầm → dùng' + (r.buffMiss.length ? ' — ' + r.buffMiss.join(', ') : ''));
+  ok(r.gap.length === 0, 'giữa hai đợt (sân hết quái, tướng bị thương): khiên / buff / hồi máu không dùng' + (r.gap.length ? ' — ' + r.gap.join(', ') : ''));
   ok(r.idle.length === 0, 'không có quái: không kỹ năng nào tung' + (r.idle.length ? ' — ' + r.idle.join(', ') : ''));
 
   // trận thật: quái đi tới, kỹ năng chỉ tung lúc có quái trong tầm của tướng tung
