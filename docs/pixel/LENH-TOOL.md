@@ -104,7 +104,22 @@ node tools/ve-pixel.js --spec tools/pixel/spec/ban-do.json --nap --ghi-de
 Quy tắc bản đồ: ô SÁT đường (ô đặt tướng) cùng một kiểu bệ đá elip viền đậm → nhận ra ngay chỗ đặt được; vùng xa đường chỉ là nền
 trang trí theo chủ đề (cỏ, đá, cây, lau, nước…), không viền ô; đường cắt nhau (nhiều nhánh / tự cắt) → cầu tre.
 
-## 10. Sau khi nạp
+## 10. Chuyển ảnh cũ → pixel (cảnh, cổng thành, núi, tranh nhỏ — claude/pixel-con-lai)
+
+Hình cũ vẽ bằng SVG được chụp làm ảnh nguồn trước (cần Playwright); ảnh gen có sẵn (`assets/ui/nen-menu.jpg`, `assets/tiles/cong-*.png`,
+`assets/maps/nen-*.jpg`, `assets/ban-do_nui-*.png`, `assets/sinh-le_*.png`…) dùng thẳng. Spec nằm luôn trong `canh.json`, `nen.json`,
+`giao-dien.json` (mục có khoá `"anh"`).
+
+```
+node tools/chup-nguon-pixel.js
+node tools/ve-pixel.js --spec tools/pixel/spec/canh.json --xem /tmp/xem-canh
+node tools/ve-pixel.js --spec tools/pixel/spec/canh.json --out tools/pixel/goi/canh.zip
+node tools/ve-pixel.js --spec tools/pixel/spec/canh.json --nap --ghi-de
+node tools/ve-pixel.js --spec tools/pixel/spec/nen.json --nap --ghi-de
+node tools/ve-pixel.js --spec tools/pixel/spec/giao-dien.json --nap --ghi-de
+```
+
+## 11. Sau khi nạp
 
 ```
 node tools/build-thu-vien.js
