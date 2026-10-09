@@ -1,4 +1,6 @@
-"""Cho bot chơi lần lượt 15 ải trên một bản lưu mới và in kết quả từng ải."""
+"""Cho bot chơi lần lượt 15 ải trên một bản lưu mới và in kết quả từng ải.
+Cân bằng phải cày: thua thì bot về làng nâng cấp rồi chơi lại ải trước một lượt (cày) và thử lại, như người chơi bình thường;
+thua 12 lần liền một ải thì dừng. Bài đếm số lần chơi chi tiết (nhiều lượt chiến dịch, bảng mục tiêu) là tests/cay.py."""
 import sys, json
 from playwright.sync_api import sync_playwright
 
@@ -75,7 +77,14 @@ def main():
         hurt = {}
         for n in range(stages):
             r, i = divmod(n, 5)
-            for attempt in range(1, 6):
+            for attempt in range(1, 13):
+                if attempt > 1 and n > 0:  # thua: về làng nâng cấp, cày ải trước một lượt rồi mới thử lại
+                    pg.evaluate(AUTO)
+                    pr, pi = divmod(n - 1, 5)
+                    pg.evaluate("([r, i]) => G.startStage(r, i, 0)", [pr, pi])
+                    g = pg.evaluate("G.probeRun(900)")
+                    total_t += g.get('t') or 0
+                    print(f"   cày lại {pr+1}-{pi+1}: {'thắng' if g.get('win') else 'thua'} {g.get('t')}s")
                 v = pg.evaluate(AUTO)
                 pg.evaluate("([r, i]) => G.startStage(r, i, 0)", [r, i])
                 res = pg.evaluate("G.probeRun(900)")
@@ -95,7 +104,7 @@ def main():
                 total_fail += 1
                 fails[r] += 1
             else:
-                print('Dừng: thua 5 lần liên tiếp'); break
+                print('Dừng: thua 12 lần liên tiếp'); break
         print('nguồn sát thương:', dict(sorted(hurt.items(), key=lambda kv: -kv[1])))
         print('tổng số lần thua:', total_fail, 'theo vùng', fails, '| tổng thời gian', round(total_t / 60), 'phút | lưu:', pg.evaluate("JSON.stringify({gold:G.save.gold, ore:G.save.ore, stones:G.save.stones, mats:G.save.mats, shards:G.save.shards, heroes:Object.fromEntries(G.HKEYS.map(k=>[k,G.save.heroes[k].unlocked?G.save.heroes[k].lvl:0])), weapons:G.save.weapons.filter(w=>G.save.carry.includes(w.id)).map(w=>G.WTYPES[w.type].name+' '+G.TIERS[w.tier].name+' +'+w.sharpen+' '+G.STAGE_NAMES[G.wStage(w)]), forge:G.save.forge, armor:G.save.armor, helm:G.save.helm, owned:G.save.owned, stars:Object.values(G.save.stars).join('')})"))
         b.close()

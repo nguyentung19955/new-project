@@ -739,7 +739,7 @@
       ['shard0', sv.shards[0], '#c8e8a0'], ['shard1', sv.shards[1], '#a8d8ff'], ['shard2', sv.shards[2], '#ffc0a0']];
   };
   VS.drawTop = function () {
-    const sv = G.save, ui = G.ui, parts = VS.resParts(), right = G.HEROES[sv.hero].name + ' · cấp ' + sv.heroes[sv.hero].lvl;
+    const sv = G.save, ui = G.ui, parts = VS.resParts(), right = G.HEROES[sv.hero].name + ' · cấp ' + sv.heroes[sv.hero].lvl + ' · sức mạnh ' + G.power();
     if (G.theme && G.theme.topBar) { G.theme.topBar(parts, right); return; }
     ui.rect(0, 0, 480, 15, 'rgba(12,10,18,0.82)');
     let x = 6; for (const q of parts) { const t = String(q[1]); ui.text(t, x, 10.5, { size: 7, bold: true, color: q[2] }); ui.font(7, true); x += G.ux.measureText(t).width + 8; }

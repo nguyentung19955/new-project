@@ -133,14 +133,15 @@
       const px = q[3] || q[1], py = q[4] || q[2] + 12;
       ui.font(6.5, true); ui.rect(px - 16, py - 7, 32, 10, 'rgba(74,54,38,0.85)'); ui.text('sắp có', px, py + 0.6, { size: 6.5, bold: true, align: 'center', color: '#f0e6c8', shadow: false });
     }
-    // 15 thẻ ải mặt trống
+    // 15 thẻ ải mặt trống; ải chưa qua ghi sức mạnh khuyên dùng, tô màu so với sức mạnh của bé (xanh đủ, vàng sát nút, đỏ thiếu)
+    const pw = G.power();
     let hit = null, hd = 19;
     for (let r = 0; r < 3; r++) for (let i = 0; i < 5; i++) {
       const q = M.nodes[r][i], st = map[r + '-' + i] || 0, ok = unlocked(r, i, V.diff), boss = i === 4, rad = boss ? 12 : 10;
       const selc = V.sel && V.sel[0] === r && V.sel[1] === i;
       T.stageCard(q[0] - 20, q[1] - rad - 4, 40, 36, i + 1, !ok ? 'lock' : selc ? 'sel' : st ? 'done' : 'open', st, { r: rad, boss, noClick: true, noStars: true });
       if (ok && st) inkText('★'.repeat(st) + '☆'.repeat(3 - st), q[0], q[1] + rad + 8.5, 6.5, '#ffd23f', 'rgba(74,54,38,0.95)');
-      else if (ok && !selc) inkText('mới', q[0], q[1] + rad + 8.5, 6.5, '#2f7a2a', halo);
+      else if (ok && !selc) { const need = G.stageRec(r, i, V.diff); inkText('⚔' + need, q[0], q[1] + rad + 8.5, 6.5, G.powerCol(pw, need), 'rgba(40,28,20,0.92)'); }
       if (ok && G.click) { const d = Math.hypot(G.click.x - q[0], G.click.y - q[1]); if (d < hd) { hd = d; hit = [r, i]; } }
     }
     if (hit && !(G.click.x > 246 && G.click.y > 206)) { V.sel = hit; G.click = null; G.sfx('ui'); }
@@ -160,8 +161,13 @@
     if (V.sel) {
       const r = V.sel[0], i = V.sel[1], R = G.REGIONS[r], b = G.stageStats(r, i, V.diff);
       ui.text(R.name + ' · ' + (i === 4 ? 'Ải trùm' : 'Ải ' + (i + 1)) + (V.diff ? ' · khó 2' : ''), 256, 219, { size: 9.5, bold: true, color: GOLD });
-      ui.text((i === 4 ? 'Trùm vùng ' + R.bossName : 'Trùm nhỏ ' + R.mini) + ' · ' + (i < 2 ? 7 : 8) + ' phòng', 256, 230, { size: 7, color: TXT });
-      ui.text('Hệ ' + G.EL[R.el].name + ' · gợi ý cấp hero ' + Math.max(1, Math.round((r * 5 + i) * 1.6 + 1 + (V.diff ? 6 : 0))), 256, 240, { size: 7, color: G.EL[R.el].col });
+      const l2 = (i === 4 ? 'Trùm vùng ' + R.bossName : 'Trùm nhỏ ' + R.mini) + ' · ' + (i < 2 ? 7 : 8) + ' phòng · ';
+      ui.text(l2, 256, 230, { size: 7, color: TXT });
+      ui.font(7); ui.text('hệ ' + G.EL[R.el].name, 256 + G.ux.measureText(l2).width, 230, { size: 7, color: G.EL[R.el].col });
+      // Sức mạnh khuyên dùng so với sức mạnh hiện tại của bé (G.power): xanh đủ, vàng sát nút, đỏ thiếu
+      const need = G.stageRec(r, i, V.diff), col = G.powerCol(pw, need);
+      const gr = !V.diff && G.save.grit ? G.save.grit[r + '-' + i] || 0 : 0;
+      ui.text((gr ? 'Khuyên dùng ' : 'Sức mạnh khuyên dùng ') + need + ' · bé ' + pw + (gr ? ' · quyết tâm +' + Math.round(G.GRIT.step * gr * 100) + '%' : ''), 256, 240, { size: gr ? 7 : 7.5, bold: true, color: col });
       ui.para('Thưởng: ' + b.xp + ' kinh nghiệm, ~' + b.gold + ' vàng, ' + (5 + i) + ' ' + R.mat.toLowerCase() + (i === 4 ? ', ' + (V.diff ? 4 : 3) + ' mảnh ' + R.bossName + ', vũ khí quý' : ''), 256, 250.5, 144, { size: 6.5, color: SOFT });
       if (T.btn(404, 217, 64, 38, 'Lên đò', { size: 11, primary: true })) G.startStage(r, i, V.diff);
     } else ui.text('Chạm một ải trên tranh để xem.', 256, 238, { size: 8, color: SOFT });
@@ -443,7 +449,11 @@
     ui.text(H.name + ' · cấp ' + hs.lvl, CX + 2, 164, { size: 10, bold: true, color: GOLD });
     T.bar(CX + 110, 157, 192, 'xp', hs.lvl >= G.MAX_LEVEL ? 1 : hs.xp / G.xpNeed(hs.lvl), null, { h: 7 });
     let y = 178;
-    ui.text('Máu gốc ' + H.hp + ' · Mana ' + H.mana + ' · Tốc độ ' + Math.round(H.speed * 100) + '%', CX + 2, y, { size: 7.5 });
+    // Sức mạnh: một con số tính từ cấp hero, vũ khí mạnh nhất đang mang (bậc, mài, tiến hóa), điểm kỹ năng, mũ và áo (G.power)
+    const pw = G.power();
+    ui.text('Sức mạnh ' + pw, CX + 2, y, { size: 8.5, bold: true, color: GOLD });
+    ui.font(8.5, true); const sx = CX + 2 + G.ux.measureText('Sức mạnh ' + pw).width + 6;
+    ui.text('Máu gốc ' + H.hp + ' · Mana ' + H.mana + ' · Tốc độ ' + Math.round(H.speed * 100) + '%', sx, y, { size: 7.5 });
     y = ui.para('Sở trường: ' + H.fav.map((f) => G.WTYPES[f].name).join(', ') + ' (+10% sát thương)', CX + 2, y + 11, 300, { size: 7.5 });
     y = ui.para('Nội tại: ' + H.passive, CX + 2, y + 2, 300, { size: 7.5, color: SOFT });
     ui.para('Kỹ năng ' + H.skill + ' (40 mana): ' + H.skillDesc, CX + 2, y + 2, 300, { size: 7.5, color: SOFT });

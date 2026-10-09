@@ -88,8 +88,15 @@
       loot: { kills: 0, charm: false, bossDown: false, finalEl: null }, won: false, portal: null, got: [], curse: null, marksMult: 1, haste: 1,
       tut, mode: 'play', endT: 0, layers: null, usedPotion: false, marks: 0,
       fade: 0, W: null, near: null, sel: null, swapped: false, opts: null, result: null,
+      power: G.power(), rec: G.stageRec(r, i, diff), // sức mạnh lúc vào ải và sức mạnh khuyên dùng (thanh trên, thưởng khi cày)
     };
     if (S.tut) S.marksMult = 2;
+    // Quyết tâm: thua liền ở ải này bao nhiêu lần thì bé mạnh thêm bấy nhiêu bậc (G.GRIT)
+    S.grit = (!diff && G.save.grit && G.save.grit[r + '-' + i]) || 0;
+    if (S.grit) {
+      const k = 1 + G.GRIT.step * S.grit;
+      S.P.dmgMult *= k; S.P.maxhp = Math.round(S.P.maxhp * k); S.P.hp = S.P.maxhp;
+    }
     enterRoom(map.start, null);
     S.fade = 0.35;
     G.setScene(G.StageScene);
@@ -166,9 +173,16 @@
     if (!W.spawns.length) return;
     const el = S.stats.el, tot = el.fire + el.poison + el.ice + el.none;
     const top = G.ELS.slice().sort((a, b) => el[b] - el[a])[0];
+    // Cân bằng phải cày: phòng thường nhỏ mà quái mới to, nên trong phòng chỉ có tối đa G.ROOM_WAVES.maxAlive quái cùng lúc
+    // (tinh anh tính là hai). Đủ số thì quái kế tiếp chờ (vòng đỏ vẫn hiện), có chỗ mới mọc: thành từng tốp nối nhau.
+    const cap = W.geo && W.geo.big ? 99 : G.ROOM_WAVES.maxAlive;
+    let alive = 0;
+    for (const e of W.ents) if (!e.dead && !e.add) alive += e.role === 'elite' ? 2 : 1;
     for (const s of W.spawns) {
       s.t -= dt;
       if (s.t > 0) continue;
+      if (alive >= cap) { s.t = 0.35 + G.rnd() * 0.3; continue; }
+      alive += s.role === 'elite' ? 2 : 1;
       const e = G.spawnEnemy(s.role, s.x, s.y, s.opt || {});
       e.inside = true;
       if (s.opt && s.opt.sumBy) e.sum = s.opt.sumBy;
@@ -425,17 +439,21 @@
       const prev = map[key] || 0;
       map[key] = Math.max(prev, R.stars);
       const big = S.i === 4;
-      const xp = S.base.xp;
-      let gold = S.base.gold + S.loot.kills * 2;
+      // Cân bằng phải cày: chơi lại ải đã qua vẫn được đủ thưởng, trừ khi em bé đã mạnh vượt xa ải (G.grindMult): kinh nghiệm
+      // và vàng giảm dần (thấp nhất 40%), nguyên liệu vùng và quặng thì vẫn đủ. Chơi lại có cơ hội rơi vũ khí bậc cao hơn.
+      const gm = G.grindMult(S.power, S.rec), again = prev > 0;
+      const xp = Math.round(S.base.xp * gm);
+      let gold = Math.round((S.base.gold + S.loot.kills * 2) * gm);
       if (S.P && S.P.charm === 'c_greed') gold = Math.round(gold * 1.25); // Bùa tham (đang đeo, hero từ cấp 5)
       const ore = 3 + R.stars, mat = 5 + S.i;
       sv.gold += gold; sv.ore += ore; sv.mats[S.r] += mat;
       R.lines.push('+' + xp + ' kinh nghiệm', '+' + gold + ' vàng', '+' + ore + ' quặng', '+' + mat + ' ' + reg.mat.toLowerCase());
+      if (gm < 1) R.lines.push('Ải đã quá dễ với sức mạnh của bé: kinh nghiệm và vàng còn ' + Math.round(gm * 100) + '%');
       if (big) { const ns = S.diff ? 4 : 3; sv.shards[S.r] += ns; R.lines.push('+' + ns + ' mảnh ' + reg.bossName); }
       if ((R.stars === 3 && prev < 3) || (!big && G.rnd() < 0.15)) { sv.stones++; R.lines.push('+1 đá tôi'); }
       // Vũ khí rơi: trùm vùng theo G.bossDrop (lần đầu chắc chắn Vàng); ải thường thì 50% một món bậc ngẫu nhiên.
       if (big || G.rnd() < G.DROP.stage) {
-        const nw = big ? G.bossDrop(S.r) : G.giveWeapon(G.pick(G.WKEYS), G.rollRarity(S.r));
+        const nw = big ? G.bossDrop(S.r) : G.giveWeapon(G.pick(G.WKEYS), G.rollRarity(S.r + (again ? G.DROP.againBonus : 0)));
         R.lines.push(nw ? { s: (big ? reg.bossName + ' rơi ' : 'Nhặt được ') + rarName(nw), w: nw } : 'Rương đồ đầy, vũ khí rớt đổi thành vàng');
       }
       // Bùa cũ (tinh anh 25%) nay là trang phục ô Bùa, bậc Lam; trùm rơi trang phục (trùm vùng: món Tím hoặc Vàng của bộ vùng).
@@ -455,14 +473,21 @@
       }
       if (big && S.loot.finalEl) sv.scars[reg.boss] = S.loot.finalEl;
       if (S.tut) sv.tut.done = true;
+      if (sv.grit && !S.diff) delete sv.grit[key];
       R.up = G.addXp(sv.hero, xp);
       G.sfx('win');
     } else {
-      const xp = Math.round(S.base.xp * 0.4 * (Math.max(0, S.visits - 1) / S.rooms.length));
-      const gold = S.loot.kills * 2;
+      const gm = G.grindMult(S.power, S.rec);
+      const xp = Math.round(S.base.xp * 0.4 * (Math.max(0, S.visits - 1) / S.rooms.length) * gm);
+      const gold = Math.round(S.loot.kills * 2 * gm);
       sv.gold += gold;
       R.lines.push('+' + xp + ' kinh nghiệm', '+' + gold + ' vàng');
       R.up = G.addXp(sv.hero, xp);
+      if (!S.diff && !S.quit) { // chỉ thua thật mới thêm quyết tâm, bỏ ải thì không
+        const gk = S.r + '-' + S.i, g = Math.min(G.GRIT.max, ((sv.grit = sv.grit || {})[gk] || 0) + 1);
+        sv.grit[gk] = g;
+        R.lines.push('Quyết tâm: lần sau vào lại ải này bé mạnh thêm ' + Math.round(G.GRIT.step * g * 100) + '%');
+      }
     }
     if (S.marks > 0 && !G.lk) R.lines.push('Vũ khí nhận ' + Math.round(S.marks) + ' dấu ấn'); // có js/linhkhi.js thì ghi từng vũ khí, từng hệ ở khối riêng
     if (R.up) R.lines.push(G.HEROES[sv.hero].name + ' lên cấp ' + sv.heroes[sv.hero].lvl + '!');
@@ -721,6 +746,8 @@
     if (coat && coat.t > 0) ui.text('Bùa ' + G.EL[coat.el].name + ' ' + Math.ceil(coat.t) + ' giây', sx, 56.5, { size: 7.5, color: G.EL[coat.el].col, bold: true });
     // tên vùng và loại phòng ở lề trái; bản đồ nhỏ ở lề phải (thay hàng chấm phòng trước đây)
     ui.text(G.REGIONS[S.r].name + ' ' + (S.i + 1) + ' · ' + ROOM_NAME[W.type], 6, 69, { size: 7, color: '#d9cdb8' });
+    // sức mạnh của bé lúc vào ải so với sức mạnh khuyên dùng của ải (xanh đủ, vàng sát nút, đỏ thiếu)
+    ui.text('Sức mạnh ' + S.power + ' / khuyên ' + S.rec + (S.grit ? ' · quyết tâm +' + Math.round(G.GRIT.step * S.grit * 100) + '%' : ''), 6, 79, { size: 7, bold: true, color: G.powerCol(S.power, S.rec) });
     G.minimap.draw(S);
     // vũ khí: hình và bậc ở trên, mốc tiến hóa ở dưới, thanh dấu ấn sát đáy
     P.weapons.forEach((w, i) => {
@@ -774,8 +801,8 @@
     if (hint && S.mode === 'play') {
       const hw = W.geo.big ? 62 : 116; // phòng trùm rộng hơn nên ô chữ hẹp lại, không đè lên sàn
       const lines = ui.wrap(hint, hw - 8, 7);
-      T.plate(3, 75, hw, Math.round(lines.length * 9.5 + 8));
-      lines.forEach((l, i) => ui.text(l, 7, 85 + i * 9.5, { size: 7 }));
+      T.plate(3, 85, hw, Math.round(lines.length * 9.5 + 8));
+      lines.forEach((l, i) => ui.text(l, 7, 95 + i * 9.5, { size: 7 }));
     }
     if (W.banner) {
       // dòng báo nằm trên tường sau; dài quá thì thu chữ, vẫn dài thì xuống dòng
