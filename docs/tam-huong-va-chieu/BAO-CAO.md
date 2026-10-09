@@ -77,3 +77,8 @@ Bot chơi 60 giây x 4 hạt giống, cụm năm quái (`python3 tests/dps.py 60
 - Bài mới `game/tests/tam_huong.py` (37 mục): quái đặt ở 8 hướng quanh em bé, gần và xa trong tầm; mỗi đòn (chuỗi kiếm, nhát lướt, đâm, quét, xốc tới, búa, búa tích lực, 4 chiêu Đặc biệt, bẫy) trúng quái đúng hướng và không trúng quái đặt ở hướng ngược lại; lướt và xốc tới đi đúng hướng và không xuyên tường ở cả 8 hướng và góc phòng; Phi Thương ghim con cuối, đấm tay khi giáo chưa về, giáo bay về tay và trúng lần nữa; Địa Chấn hất tung và choáng; Trảm Nguyệt xuyên mọi quái; vũng hồi và gồng.
 - Sửa cho khớp (không bớt nội dung): `tests/moves.py` (quái lệch chiều sâu đặt xa hơn để vẫn ngắm thẳng; quét vòng thử trong phòng riêng), `tests/ghep2_c.js` (đòn Đặc biệt của kiếm và giáo nay là chiêu bay: thử tầm bay theo bề ngang phòng, dừng ở tường, trúng quái sát tường; thử "lao vào cửa" bằng xốc tới của giáo), `tests/chieu_shots.py` (tên chiêu).
 - Ảnh: `game/tests/tam_huong_shots.py`.
+
+## Ghi chú gộp
+
+- Đã chờ đủ 75 phút cho hai phiên sửa cùng tệp. Phiên hiệu ứng đạn và linh khí đã xong và đã nằm trong nhánh chính. Phiên cân bằng phải cày (`claude/can-bang-cay`) đến lúc hết hạn vẫn chưa gộp vào nhánh chính, nên nhánh này làm từ nhánh chính hiện có. Khi gộp phiên cân bằng phải cày sau, cần chạy lại `tests/dps.py` (phiên đó cũng chỉnh cung so với kiếm) và có thể chỉnh lại số của bốn chiêu trong `G.MOVES.special` và `G.MOVES.bow.rain`.
+- Đã chạy toàn bộ `game/tests/` (đều đạt), đóng gói `python3 game/build.py`, mở bản dist chơi thử không có lỗi trong console.
