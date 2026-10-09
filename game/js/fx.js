@@ -1128,14 +1128,15 @@
     snap.dead = false; snap.wind = 0; snap.flash = 0.09; snap.moving = false; snap.dying = 0; snap.resist = null; snap.fxK = 0; snap.hidden = false;
     const B = bodyOf(e), x = e.x, y = e.y, PL = pal(el);
     const skin = e.skin && e.skin[0] ? rampOf(e.skin[0]) : RAMP.steel;
+    const ad = e.art && G.monsterArt ? G.monsterArt.dur(e.art, 'die') : 0; // quái mới: chết theo cử động riêng
     if (e.isBoss) {
-      S.dying.push({ e: snap, t: 1.25, t0: 1.25, boss: true, mini: e.kind === 'mini', pl: PL, skin, nb: 0, hh: Math.min(110, (e.h || 40) * (e.scale && e.kind !== 'mini' ? e.scale : 1)), w: Math.max(14, e.r) });
+      S.dying.push({ e: snap, t: ad || 1.25, t0: ad || 1.25, art: !!ad, boss: true, mini: e.kind === 'mini', pl: PL, skin, nb: 0, hh: Math.min(110, (e.h || 40) * (e.scale && e.kind !== 'mini' ? e.scale : 1)), w: Math.max(14, e.r) });
       S.flash = 0.5; S.flashCol = '255,255,255';
       trauma(1); stop(120);
       return;
     }
     if (S.dying.length >= 16) S.dying.shift();
-    S.dying.push({ e: snap, t: 0.42, t0: 0.42, boss: false, ill: !!e.illusion, pl: PL });
+    S.dying.push({ e: snap, t: ad || 0.42, t0: ad || 0.42, boss: false, ill: !!e.illusion, pl: PL, art: !!ad });
     if (e.st && e.st.frozen > 0) shatter(e);
     // khói theo hệ và mảnh vụn rơi
     for (let i = 0; i < 6; i++) emit(2, x + rr(-B.w, B.w), y - rr(2, B.h), rr(-24, 24), rr(-34, -8), rr(0.35, 0.65), el ? PL.puff : RAMP.dust, R() < 0.4 ? 5 : 4, 0, 2, null, 1);
@@ -1513,7 +1514,9 @@
     const k = 1 - d.t / d.t0, e = d.e;
     c.save();
     try {
-      if (d.boss) {
+      if (d.art) {
+        if (d.boss && !d.mini) A.boss(c, e); else A.enemy(c, e); // cử động chết tự tan dần
+      } else if (d.boss) {
         c.globalAlpha = k < 0.45 ? 1 : k < 0.6 ? 0.8 : k < 0.75 ? 0.6 : k < 0.9 ? 0.4 : 0.2;
         c.translate(Math.round((hash(k * 97) - 0.5) * 5 * (0.3 + k)), 0);
         if (d.mini) A.enemy(c, e); else A.boss(c, e);

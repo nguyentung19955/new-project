@@ -32,7 +32,8 @@ JS = r"""
     return W;
   }
   function dummy(x, y, role, hp) {
-    const e = G.spawnEnemy(role || 'rusher', x, y == null ? 190 : y, { hpMult: hp || 1e6 });
+    // bia thử cỡ chuẩn (thân rộng 8 như quái cũ) để đo tầm đòn của vũ khí cho đúng số; quái mới thân to hơn tuỳ hình
+    const e = G.spawnEnemy(role || 'rusher', x, y == null ? 190 : y, { hpMult: hp || 1e6, noArt: true });
     e.st.stun = 1e9; e.inside = true;
     return e;
   }

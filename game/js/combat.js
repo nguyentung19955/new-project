@@ -140,6 +140,7 @@
     };
     e.hp = e.maxhp;
     W.ents.push(e);
+    if (G.mobInit) G.mobInit(e, o); // hình mới và cơ chế theo vai (js/mobs.js)
     return e;
   };
 
@@ -147,7 +148,8 @@
   G.burst = function (x, y, col, n, sp) {
     FX('burst', x, y, col, n, sp);
   };
-  G.inZone = function (z, e) {
+  G.inZone = function (z, e, pad) {
+    if (z.shape !== 'circle' && z.shape !== 'rect' && G.inShape) return G.inShape(z, e, pad || 0); // đường thẳng, quạt, vành khăn (js/mobs.js)
     if (z.shape === 'circle') {
       const dx = (e.x - z.x) / z.r, dy = (e.y - z.y) / (z.r * (G.ZK || 0.6));
       return dx * dx + dy * dy <= 1;
@@ -167,16 +169,18 @@
 
   // ---------- sát thương ----------
   G.targets = function () {
-    const a = W.ents.filter((e) => !e.dead);
+    const a = W.ents.filter((e) => !e.dead && !e.hidden && !e.ghost); // đang lặn dưới đất hay đang nổ thì không nhắm được
     if (W.boss && !W.boss.dead && !W.boss.hidden) a.push(W.boss);
     return a;
   };
   G.damage = function (t, amt, o) {
     o = o || {};
-    if (t.dead || t.hidden || amt <= 0) return 0;
+    if (t.dead || t.hidden || t.ghost || amt <= 0) return 0;
+    if (t.invuln > 0) return 0; // trùm đang ra mắt hay đang chuyển pha
     let m = 1;
     m *= 1 + 0.04 * t.st.poisonN;
-    if (t.armor) m *= 1 - Math.max(0, t.armor - 0.09 * t.st.poisonN);
+    const arm = G.mobArmor ? G.mobArmor(t, o) : t.armor; // giáp quái mới chỉ che phía trước
+    if (arm) m *= 1 - Math.max(0, arm - 0.09 * t.st.poisonN);
     if (t.resist && o.el === t.resist) m *= 0.75;
     if (t.isBoss) {
       for (const l of t.layers) {
@@ -281,6 +285,7 @@
   G.kill = function (e, o) {
     if (e.dead) return;
     e.dead = true;
+    if (G.mobOnKill) G.mobOnKill(e); // tinh anh nổ khi chết, đồng hồ màn chết của trùm (js/mobs.js)
     const P = W.P, w = (o && o.w) || curW(P);
     G.sfx('die');
     FX('death', e, o);
@@ -330,6 +335,7 @@
     G.damage(e, d, { el, ranged: o.ranged, src: 'hit', w, crit });
     if (!G.noRender) FX('hit', e, { el, type: w.type, ranged: o.ranged, crit, dead: e.dead, heavy: o.heavy, rain: o.rain, dir: o.dir || (e.x >= P.x ? 1 : -1) });
     if (G.moves) G.moves.onHit(e, d, el, o); // luật riêng của hệ khi đòn trúng (js/moves.js)
+    if (G.mobOnHit) G.mobOnHit(e, d, o); // quái gai phản đòn, giáp vỡ (js/mobs.js)
     const T = G.WTYPES[w.type];
     if (T.stagger && !e.isBoss && !e.dead) e.st.stun = Math.max(e.st.stun, T.stagger);
     if (o.stun && !e.dead) e.st.stun = Math.max(e.st.stun, e.isBoss ? o.stun * 0.4 : o.stun);
@@ -515,6 +521,7 @@
     amt *= 1 - Math.min(0.75, P.dr);
     if (P.gongT > 0) amt *= 0.4;
     P.hp -= amt;
+    if (src && src.trait === 'hut' && !src.dead) src.hp = Math.min(src.maxhp, src.hp + amt * 1.5); // tinh anh hút máu
     if (W.hpFloor && P.hp < 1) P.hp = 1;
     P.inv = 0.55; P.hurtT = 0.2;
     W.shake = Math.max(W.shake, 0.18);
@@ -547,6 +554,7 @@
       }
     }
     if (W.over) { P.moving = false; return; }
+    if (P.frozenT > 0) { P.frozenT -= dt; P.moving = false; P.atkT = 0; return; } // bị nổ băng: đóng băng ngắn
     const w = curW(P);
     const MV = G.moves; // lối đánh riêng của từng vũ khí; thiếu moves.js thì đánh kiểu cũ
     if (MV) MV.input(P, inp, dt);
@@ -657,6 +665,7 @@
     if (e.flash > 0) e.flash -= dt;
     tickStatus(e, dt);
     if (e.dead) return;
+    if (G.mob && e.art) { G.mob.update(e, dt); return; } // quái mới (js/mobs.js)
     e.moving = false;
     if (e.st.frozen > 0 || e.st.stun > 0) { e.wind = 0; return; }
     const sp = e.speed * slowOf(e) * (e.st.root > 0 ? 0 : 1);
@@ -759,6 +768,7 @@
       else if (e.inside) e.x = G.clamp(e.x, W.x0, W.x1);
     }
     if (W.boss && !W.boss.dead) G.updateBoss(W.boss, dt);
+    if (G.mob) G.mob.tick(dt); // chuỗi đòn hẹn giờ của quái mới
     // đạn
     for (const o of W.projs) {
       o.t -= dt;
@@ -794,13 +804,14 @@
         // đồ vật trên sàn (lò lửa, nấm, đá băng): tên bay qua thì kích nổ nhưng không bị chặn lại
         for (const pr of W.props) if (pr.env && !pr.used && Math.abs(pr.x - o.x) < 8 && Math.abs(pr.y - o.y) < 10) G.triggerProp(pr);
       } else if (Math.abs(P.x - o.x) < 7 && Math.abs(P.y - o.y) < 8) {
-        if (G.hurtPlayer(o.dmg, o.el, null, false) || P.inv <= 0) o.t = 0;
+        if (G.hurtPlayer(o.dmg, o.el, o.src || null, false) || P.inv <= 0) { o.t = 0; if (o.onHit) o.onHit(o); }
       }
       if (o.x < -30 || o.x > W.w + 30) o.t = 0;
     }
     W.projs = W.projs.filter((o) => o.t > 0);
     // vùng nguy hiểm và vũng
     for (const z of W.zones) {
+      if (z.wall && G.mobWall) { G.mobWall(z, dt, P); continue; } // tường nước chạy (js/mobs.js)
       if (z.wave) {
         if (z.wait > 0) { z.wait -= dt; continue; } // sóng đứng yên báo trước rồi mới tràn tới
         z.x += z.vx * dt;
@@ -808,10 +819,12 @@
         if (z.x < -20) z.dead = true;
         continue;
       }
+      if (z.src && z.src.dead && z.cancel) { z.dead = true; continue; } // quái chết hoặc bị choáng trước khi ra đòn: huỷ vùng báo
+      if (z.wait > 0) { z.wait -= dt; continue; } // vùng chưa bắt đầu báo (chuỗi đòn nối nhau)
       if (z.t > 0) {
         z.t -= dt;
         if (z.t <= 0) {
-          if (z.team !== 'player' && z.team !== 'fx' && G.inZone(z, P)) G.hurtPlayer(z.dmg, z.el, null, false);
+          if (z.team !== 'player' && z.team !== 'fx' && z.dmg && G.inZone(z, P)) { if (G.hurtPlayer(z.dmg, z.el, z.src || null, !!z.melee) && z.onHit) z.onHit(z); }
           if (z.onFire) z.onFire(z);
           if (z.then) { z.pool = true; z.life = z.then; z.tick = 0.4; }
           FX('zoneFire', z);
@@ -943,6 +956,7 @@
     if (F && F.sorted) F.sorted(list, c);
     list.sort((a, b) => a.y - b.y);
     for (const o of list) o.f();
+    if (G.mobHeroOver) G.mobHeroOver(c, P); // em bé đứng sau quái to: vẽ thêm bóng mờ của bé lên trên để không bị che mất
     if (!ent) {
       if (P.st.fire > 0) { A.p(c, Math.round(P.x) - 3, Math.round(P.y) - 38, 2, 3, '#ff7a2a'); A.p(c, Math.round(P.x) + 1, Math.round(P.y) - 40, 2, 4, '#ffd23f'); }
       if (P.st.poison > 0) A.p(c, Math.round(P.x) - 2, Math.round(P.y) - 38, 3, 3, '#6fcf3a');

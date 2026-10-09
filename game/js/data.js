@@ -164,11 +164,29 @@
   // Vai trò quái. hp và dmg là hệ số nhân với chỉ số chuẩn của ải.
   G.ROLES = {
     rusher: { name: 'Lính xông', hp: 1, dmg: 1, speed: 44, r: 8, marks: 1 },
-    swarm: { name: 'Bầy nhỏ', hp: 0.34, dmg: 0.6, speed: 60, r: 5, marks: 0.34 },
+    swarm: { name: 'Bầy nhỏ', hp: 0.9, dmg: 0.6, speed: 60, r: 9, marks: 1 }, // một con là cả bầy (hình vẽ cả đàn)
     shield: { name: 'Khiên', hp: 1.7, dmg: 1.1, speed: 26, r: 10, armor: 0.45, marks: 1 },
     archer: { name: 'Xạ thủ', hp: 0.7, dmg: 0.9, speed: 38, r: 7, marks: 1 },
     nimble: { name: 'Nhanh nhẹn', hp: 0.7, dmg: 0.85, speed: 78, r: 7, marks: 1 },
     elite: { name: 'Tinh anh', hp: 5, dmg: 1.3, speed: 40, r: 12, marks: 5 },
+    kami: { name: 'Cảm tử', hp: 0.55, dmg: 1.4, speed: 48, r: 7, marks: 1 },
+    bomber: { name: 'Đặt bom', hp: 0.75, dmg: 1.1, speed: 34, r: 8, marks: 1 },
+    spiky: { name: 'Gai', hp: 1.1, dmg: 0.9, speed: 26, r: 7, marks: 1 },
+  };
+  // Quái mới theo vùng (js/mobs.js): mỗi vai có một con riêng ở từng vùng [Rừng già, Hang biển, Lâu đài cổ].
+  G.MOB_ART = {
+    rusher: ['heoCon', 'cua', 'linhMa'], swarm: ['ongVo', 'caCon', 'doiThan'], shield: ['boHung', 'oc', 'tuongDa'],
+    archer: ['hoaBaoTu', 'haiQuy', 'denLong'], nimble: ['chonBong', 'caChuon', 'meoDen'], kami: ['namPhong', 'caNoc', 'huLua'],
+    bomber: ['socNo', 'sua', 'tieuYeu'], spiky: ['nhimDoc', 'nhim', 'nhimThan'],
+    elite: [['heoNanh', 'namPhongChua'], ['cuaTuong', 'caNocChua'], ['tuongMa', 'huChua']],
+    mini: ['namChua', 'cuaDa', 'hoLua'], boss: { moc: 'mocTinh', ngu: 'nguTinh', ho: 'hoTinh' },
+  };
+  // Dấu hiệu ngẫu nhiên của tinh anh (biểu tượng nhỏ trên đầu).
+  G.ELITE_TRAITS = {
+    nhanh: { name: 'Nhanh', desc: 'Chạy và ra đòn nhanh hơn' },
+    giap: { name: 'Bọc giáp', desc: 'Giảm 35% sát thương mọi phía' },
+    no: { name: 'Nổ khi chết', desc: 'Chết thì nổ: tránh xa vòng đỏ' },
+    hut: { name: 'Hút máu', desc: 'Đánh trúng bé thì hồi máu' },
   };
 
   // Chỉ số chuẩn theo ải. r: vùng 0..2, i: ải 0..4, diff: 0 thường, 1 độ khó thứ hai.

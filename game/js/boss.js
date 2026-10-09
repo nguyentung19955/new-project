@@ -1,7 +1,14 @@
-// Trùm: lớp thích nghi theo cách chơi, trùm nhỏ và ba boss vùng (Mộc Tinh, Ngư Tinh, Hồ Tinh).
+// Trùm: lớp thích nghi theo cách chơi, trùm nhỏ (2 chiêu riêng) và ba trùm vùng (Mộc Tinh, Ngư Tinh, Hồ Tinh: ba pha, năm chiêu).
+// Hình và cử động lấy từ G.monsterArt (js/monster_art.js); mọi đòn ngắm theo góc bất kỳ tới em bé.
+// Người chơi không nhảy: chiêu nào cũng né được bằng đi bộ hoặc lộn (vùng đỏ luôn có chỗ đứng hoặc khe hở).
 (function () {
   const G = window.G;
   const W = () => G.getWorld();
+  const PI = Math.PI, TAU = PI * 2;
+  const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
+  function FX(n, a, b, c, d, e) { if (G.noRender) return; const f = G.fx && G.fx[n]; if (f) f(a, b, c, d, e); }
+  function dur(id, a) { const m = G.monsterArt; return (m && m.dur(id, a)) || 1; }
+  function moc(id, a) { const m = G.monsterArt, l = m && m.list.find((x) => x.id === id), an = l && l.anims.find((x) => x.id === a); return (an && an.moc) || [0.45, 0.75]; }
 
   // Từ số liệu cách chơi trong ải, chọn ra các lớp thích nghi của trùm.
   G.computeLayers = function (stats, max, pct) {
@@ -36,327 +43,264 @@
   }
   const has = (b, type) => b.layers.some((l) => l.type === type);
 
+  // Kích thước thân để đánh trúng (r: nửa bề ngang, hr: độ sâu, h: chiều cao hình)
+  const BODY = { mocTinh: [30, 14, 124], nguTinh: [36, 16, 100], hoTinh: [32, 14, 110], cuaDa: [26, 12, 68], namChua: [22, 12, 62], hoLua: [26, 12, 62] };
+  const SPEED = { moc: 16, ngu: 36, ho: 60, mini: 30 };
+
   G.makeBoss = function (kind, o) {
     const w = W();
-    const mid = (w.y0 + w.y1) / 2;
     const reg = G.REGIONS[w.region];
+    const g = w.geo || { cx: (w.x0 + w.x1) / 2, cy: (w.y0 + w.y1) / 2 };
+    const M = G.MOB_ART || { boss: {}, mini: [] };
+    const art = G.monsterArt ? (kind === 'mini' ? M.mini[w.region] : M.boss[kind]) : null;
+    const bd = BODY[art] || [20, 10, 50];
     const b = {
       isBoss: true, kind, name: o.name, layers: o.layers, weak: [], weakHits: 0, phase: 0, exposed: 0, flash: 0,
-      seq: [], cd: 1.8, face: -1, t: 0, hidden: false, st: G.st0(), dmg: w.base.dmg, marks: kind === 'mini' ? 10 : 20,
+      seq: [], cd: 1.2, face: -1, t: 0, hidden: false, st: G.st0(), dmg: w.base.dmg, marks: kind === 'mini' ? 10 : 20,
       maxhp: w.base.hp * (kind === 'mini' ? G.MINI_HP : (G.BOSS_HP_OF && G.BOSS_HP_OF[kind]) || G.BOSS_HP), last: null, wind: 0, moving: false,
+      x: g.cx + 60, y: g.cy - 6, r: bd[0], hr: bd[1], h: bd[2], art, scale: 1, busy: 0, tired: 0,
+      speed: (SPEED[kind] || 30) * (w.haste || 1), el: reg.el, skin: reg.skin, resist: null, dirA: PI,
     };
+    if (kind === 'mini') Object.assign(b, { role: 'mini' });
     b.hp = b.maxhp;
     setWeak(b);
-    if (kind === 'moc') {
-      // Mộc Tinh đứng sát tường phải, cao gần hết phòng: đứng hàng nào cũng đánh trúng thân nó.
-      Object.assign(b, { x: w.x1 - 30, y: mid + 46, r: 24, hr: 96, h: 124, armSwing: 0 });
-      b.homeX = b.x;
-      b.rangedShield = (P) => Math.abs(P.x - b.x) > 110;
-      w.px1 = b.x - 26;
-    } else if (kind === 'ngu') {
-      Object.assign(b, { x: w.x1 - 44, y: mid + 6, r: 44, hr: 96, h: 44 });
-      w.px1 = b.x - 62;
-    } else if (kind === 'ho') {
-      Object.assign(b, { x: w.x1 - 40, y: mid, r: 18, hr: 10, h: 42, tails: 9, tpCd: 0, hopCd: 2, speed: 84 });
+    // Chống đánh xa: đứng xa trùm quá 120 thì tên chỉ còn 30% sức.
+    b.rangedShield = (P) => Math.hypot(P.x - b.x, P.y - b.y) > 120;
+    if (kind === 'ho') {
+      b.hopCd = 2; b.tpCd = 0;
       b.onHit = function (hit) {
-        if (hit.ranged && has(b, 'antiRanged') && b.tpCd <= 0 && b.seq.length === 0 && !b.dead) {
+        // Chống đánh xa: bị bắn thì Hồ Tinh biến mất rồi hiện ra ngay sau lưng em bé, vồ một cái
+        if (hit.ranged && has(b, 'antiRanged') && b.tpCd <= 0 && b.busy <= 0 && !b.dead && !(b.invuln > 0)) {
           const P = w.P;
-          b.tpCd = 4;
-          G.burst(b.x, b.y, '#ffffff', 12, 60);
-          act(b, 'bite', 0.95, { fire: 0.55, fx: b.x, fy: b.y }); // fx, fy: chỗ vừa biến mất
-          b.x = P.x - P.face * 26;
-          if (b.x < w.x0 + 4 || b.x > w.x1 - 4) b.x = P.x + P.face * 26; // sát mép sân thì hiện ra phía trước mặt
-          b.x = G.clamp(b.x, w.x0, w.x1);
-          b.y = P.y;
-          G.zoneCircle(P.x, P.y, 22, 0.55, b.dmg, null);
+          b.tpCd = 4.5;
+          FX('burst', b.x, b.y - 30, '#ffffff', 12, 60);
+          b.x = clamp(P.x - P.face * 40, w.x0 + 10, w.x1 - 10); b.y = clamp(P.y, w.y0, w.y1);
+          b.face = P.x >= b.x ? 1 : -1;
+          G.zoneCircle(P.x, P.y, 24, 0.6, b.dmg, null, { src: b });
           G.sfx('warn', 1.5);
-          b.seq.push({ t: 0.7, f: () => {} });
+          b.busy = 0.8; b.cd = Math.max(b.cd, 0.6);
+          play(b, 'idle');
         }
       };
-    } else {
-      Object.assign(b, { x: w.x1 - 60, y: mid, r: 16, hr: 10, h: 58, scale: 2.4, role: 'mini', skin: reg.skin, el: reg.el, speed: 30 * w.haste, resist: null });
     }
+    // Ra mắt: trùm vùng diễn màn ra mắt, trùm nhỏ diễn cử động xuất hiện; lúc này chưa đánh và không nhận sát thương.
+    const intro = art ? dur(art, kind === 'mini' ? 'spawn' : 'intro') : 0.5;
+    b.invuln = intro; b.busy = intro; b.intro = intro;
+    play(b, kind === 'mini' ? 'spawn' : 'intro');
+    if (kind !== 'mini') w.shake = Math.max(w.shake, 0.4);
+    w.px1 = null; w.shrink = null;
     w.boss = b;
     return b;
   };
 
+  function play(b, n, spd, o) { b.an = Object.assign({ n, t: 0, spd: spd || 1 }, o || {}); }
   function later(b, t, f) { b.seq.push({ t, f }); }
-  // Trạng thái hoạt ảnh: chỉ để vẽ, không đụng tới luật chơi hay số ngẫu nhiên.
-  // b.anim = { name, t, dur, fire, ... }: đòn đang diễn, t tăng dần, fire là lúc vùng nguy hiểm nổ.
-  // b.fx = [{ k, x, y, t, d }]: hiệu ứng ngắn tại một điểm (gai rễ trồi, cột nước...).
-  function act(b, name, dur, o) { b.anim = Object.assign({ name, t: 0, dur }, o || {}); return b.anim; }
-  function fx(b, k, x, y, d, o) { if (!b.fx) b.fx = []; b.fx.push(Object.assign({ k, x, y, t: 0, d }, o || {})); }
-  // Chỉ dùng khi thử: ép trùm ra một đòn cho trước ở lượt kế tiếp.
+  // Chỉ dùng khi thử: ép trùm ra một chiêu cho trước ở lượt kế tiếp ('c1'..'c5' cho trùm vùng, 'atk', 'chieu1', 'chieu2' cho trùm nhỏ).
   G.bossDebug = function (name) { const b = W().boss; if (b) { b.dbg = name; b.cd = 0; } return b; };
   function choose(b, opts) {
-    if (b.dbg) { b.last = b.dbg; b.dbg = null; return b.last; }
+    if (b.dbg) { const n = b.dbg; b.dbg = null; b.last = n; return n; }
     let pool = opts.filter((x) => x !== b.last);
     if (!pool.length) pool = opts;
     b.last = G.pick(pool);
     return b.last;
   }
-  const adds = () => W().ents.filter((e) => e.add && !e.dead).length;
-  function near(x, y, dx, dy) {
-    const w = W();
-    return [G.clamp(x + G.rr(-dx, dx), w.x0 + 6, (w.px1 != null ? w.px1 : w.x1) - 4), G.clamp(y + G.rr(-dy, dy), w.y0, w.y1)];
+  const near = (x, y, dx, dy) => G.mobNear(x, y, dx, dy);
+  const ang = (b, P) => Math.atan2(P.y - b.y, P.x - b.x);
+  const Z = (shape, geo, t, dmg, el, o) => G.mobZone(shape, geo, t, dmg, el, Object.assign({ src: W().boss }, o || {}));
+  function circle(x, y, r, t, dmg, el, o) { return G.zoneCircle(x, y, r, t, dmg, el, Object.assign({ src: W().boss }, o || {})); }
+  function shot(b, a, sp, o) {
+    W().projs.push(Object.assign({ team: 'enemy', kind: 'orb', x: b.x + Math.cos(a) * 14, y: b.y + Math.sin(a) * 10, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, t: 3.2, dmg: b.dmg * 0.8, el: b.el, src: b, z: 22 }, o || {}));
+  }
+  function aimFace(b, a) { b.dirA = a; if (Math.abs(Math.cos(a)) > 0.15) b.face = Math.cos(a) > 0 ? 1 : -1; }
+  // Lao thân: dời vị trí thật trong T giây theo góc a, quãng L (giữ trong sàn)
+  function lunge(b, a, L, T) { b.lunge = { vx: Math.cos(a) * L / T, vy: Math.sin(a) * L / T, t: T }; }
+
+  // ======================= CHIÊU CỦA TRÙM VÙNG =======================
+  // Mỗi chiêu: anim cX đã gồm báo trước → ra đòn → dư âm; T là lúc vùng đỏ nổ (mốc moc[0]), D là độ dài cả chiêu.
+  const SK = {
+    ngu: {
+      c1: { name: 'Đớp', f(b, P, T, D, a, sp) { // lao tới đớp theo đường thẳng
+        const L = clamp(Math.hypot(P.x - b.x, P.y - b.y) + 24, 80, 160);
+        Z('line', { x: b.x, y: b.y, ang: a, len: L, w: 46 }, T, b.dmg * 1.4, 'ice', { melee: true });
+        later(b, T, () => lunge(b, a, L - 36, (moc(b.art, 'c1')[1] - moc(b.art, 'c1')[0]) * D));
+        b.an.cut = moc(b.art, 'c1')[1]; // cú lao tự lùi về trong hình: chỉ dùng tới lúc đớp xong
+      } },
+      c2: { name: 'Sóng thần', f(b, P, T, D, a, sp) { // tường nước chạy theo hướng em bé, chừa một khe
+        const mk = (wait, off) => {
+          const lat = G.rr(-70, 70) + off;
+          W().zones.push({ wall: true, x: b.x, y: b.y, ang: a, s: 10, v: 155, th: 14, half: 260, g: clamp(lat, -110, 110), gw: 26, wait, maxS: 340, dmg: b.dmg * 1.2, el: 'ice', src: b });
+        };
+        mk(T, 0);
+        if (b.phase >= 1) later(b, 0.7, () => mk(T - 0.2, G.rnd() < 0.5 ? 60 : -60));
+      } },
+      c3: { name: 'Phun băng', near: true, f(b, P, T, D, a) { // quạt băng, sàn mọc gai băng làm chậm
+        Z('cone', { x: b.x, y: b.y, ang: a, r: 125, span: 1.0 }, T, b.dmg * 1.3, 'ice');
+        later(b, T, () => { for (let i = 1; i <= 3; i++) G.zoneCircle(clamp(b.x + Math.cos(a) * i * 34, W().x0, W().x1), clamp(b.y + Math.sin(a) * i * 34, W().y0, W().y1), 15, 0, b.dmg * 0.4, 'ice', { pool: true, life: 2, tick: 0.3 }); });
+      } },
+      c4: { name: 'Mưa băng nhọn', f(b, P, T, D) { // băng rơi thẳng xuống 7 chỗ quanh em bé
+        for (let i = 0; i < 7; i++) { const q = i ? near(P.x, P.y, 75, 45) : [P.x, P.y]; circle(q[0], q[1], 16, T + i * 0.08, b.dmg, 'ice', { fxKind: 'spout' }); }
+      } },
+      c5: { name: 'Xoáy nước', near: true, f(b, P, T, D) { // xoáy quanh thân rồi bung vòng sóng (đứng ngoài xa, hoặc chạy vào giữa sau khi xoáy tan)
+        circle(b.x, b.y, 60, T, b.dmg * 1.3, 'ice');
+        Z('donut', { x: b.x, y: b.y, r0: 60, r1: 112 }, T + 0.55, b.dmg * 1.2, 'ice');
+        later(b, D, () => tire(b, 1.5));
+      } },
+    },
+    moc: {
+      c1: { name: 'Quật cành', near: true, f(b, P, T, D, a) {
+        Z('cone', { x: b.x, y: b.y - 6, ang: a, r: 118, span: 2.0 }, T, b.dmg * 1.4, null, { melee: true });
+      } },
+      c2: { name: 'Rễ đâm', f(b, P, T, D, a) { // hàng gai rễ trồi lên nối nhau theo hướng em bé
+        const rows = b.phase >= 1 ? [-0.32, 0.32] : [0];
+        for (const off of rows) for (let i = 0; i < 7; i++) {
+          const x = b.x + Math.cos(a + off) * (26 + i * 22), y = b.y + Math.sin(a + off) * (26 + i * 22);
+          if (x < W().x0 - 4 || x > W().x1 + 4 || y < W().y0 - 4 || y > W().y1 + 4) continue;
+          circle(x, y, 14, T + i * 0.09, b.dmg * 1.1, null, { fxKind: 'root' });
+        }
+      } },
+      c3: { name: 'Mưa quả độc', f(b, P, T, D) { // quả độc vỡ thành vũng độc
+        const n = b.phase >= 2 ? 6 : 5;
+        for (let i = 0; i < n; i++) { const q = i ? near(P.x, P.y, 70, 40) : [P.x, P.y]; circle(q[0], q[1], 18, T + i * 0.1, b.dmg * 0.8, 'poison', { then: 3.5, fxKind: 'fruit' }); }
+      } },
+      c4: { name: 'Bùa bay', f(b, P, T, D, a) { // năm lá bùa bay uốn lượn đuổi theo em bé rồi cháy nổ
+        later(b, T, () => { for (let i = 0; i < 5; i++) shot(b, a + (i - 2) * 0.45, 62, { kind: 'bua', homing: 44, t: 3.6, dmg: b.dmg * 0.85, el: 'poison' }); });
+      } },
+      c5: { name: 'Rừng gai', near: true, f(b, P, T, D) { // ba vòng gai lan ra, mỗi vòng chừa bốn khe để né
+        const R = [[24, 58], [58, 92], [92, 126]];
+        R.forEach((r, i) => { const o = G.rnd() * TAU; Z('donut', { x: b.x, y: b.y, r0: r[0], r1: r[1], gaps: [0, 1, 2, 3].map((k) => o + k * PI / 2), gw: 0.3 }, T + i * 0.38, b.dmg * 1.2, 'poison'); });
+        later(b, D, () => tire(b, 1.5));
+      } },
+    },
+    ho: {
+      c1: { name: 'Hồ hoả', f(b, P, T, D, a) { // cầu lửa ma từ đầu đuôi bay vòng cung đuổi theo
+        const n = [5, 7, 9][b.phase];
+        for (let i = 0; i < n; i++) later(b, T + i * 0.05, () => shot(b, a + PI + (i / (n - 1) - 0.5) * 2.6, 75, { kind: 'fire', homing: 52, t: 3.4, dmg: b.dmg * 0.75, el: 'fire' }));
+      } },
+      c2: { name: 'Vồ mồi', f(b, P, T, D, a) { // vồ hai lần, lần hai nhắm lại
+        const L = clamp(Math.hypot(P.x - b.x, P.y - b.y) + 20, 70, 140);
+        Z('line', { x: b.x, y: b.y, ang: a, len: L, w: 40 }, T, b.dmg * 1.25, null, { melee: true });
+        later(b, T, () => { lunge(b, a, L - 26, 0.22); FX('burst', b.x, b.y, '#ffffff', 8, 60); });
+        later(b, T + 0.55, () => {
+          const a2 = ang(b, P), L2 = clamp(Math.hypot(P.x - b.x, P.y - b.y) + 20, 60, 130);
+          aimFace(b, a2);
+          Z('line', { x: b.x, y: b.y, ang: a2, len: L2, w: 40 }, 0.5, b.dmg * 1.25, null, { melee: true });
+          later(b, 0.5, () => lunge(b, a2, L2 - 26, 0.22));
+        });
+        b.an.cut = 0.9;
+      } },
+      c3: { name: 'Quạt đuôi', near: true, f(b, P, T, D, a) { // ba lớp vệt lửa hình trăng khuyết, sàn cháy xanh
+        [[0, 62], [56, 98], [92, 134]].forEach((r, i) => Z('donut', { x: b.x, y: b.y, r0: r[0], r1: r[1], gaps: [a + PI], gw: PI - 0.85 }, T + i * 0.12, b.dmg * 1.2, 'fire'));
+        later(b, T + 0.3, () => { for (let i = 1; i <= 3; i++) G.zoneCircle(clamp(b.x + Math.cos(a) * i * 36, W().x0, W().x1), clamp(b.y + Math.sin(a) * i * 36, W().y0, W().y1), 16, 0, b.dmg * 0.5, 'fire', { pool: true, life: 2.5, tick: 0.3 }); });
+      } },
+      c4: { name: 'Vòng lửa ma', f(b, P, T, D, a) { // hai vòng cột lửa lệch chỗ nhau (giữa hai cột là khe đứng được)
+        const V = [[62, 8, 0, 0.3], [102, 12, PI / 12, 0.5]];
+        for (const [R, n, lech, t0] of V) for (let i = 0; i < n; i++) {
+          const q = a + lech + (i / n) * TAU, x = b.x + Math.cos(q) * R, y = b.y + Math.sin(q) * R;
+          if (x < W().x0 - 8 || x > W().x1 + 8 || y < W().y0 - 8 || y > W().y1 + 8) continue;
+          circle(x, y, 12, (t0 + i * 0.015) * D, b.dmg * 1.1, 'fire', { fxKind: 'nova' });
+        }
+      } },
+      c5: { name: 'Bão hồ hoả', f(b, P, T, D, a) { // ba đợt cầu lửa toả tròn, mỗi đợt lệch nhau để luồn qua khe
+        for (let j = 0; j < 3; j++) later(b, T + j * 0.32, () => { for (let i = 0; i < 10; i++) shot(b, a + ((i + j * 0.5) / 10) * TAU, 82, { kind: 'fire', t: 2.6, dmg: b.dmg * 0.75, el: 'fire' }); });
+        later(b, D, () => tire(b, 1.4));
+      } },
+    },
+  };
+  // Mệt sau chiêu lớn: choáng một lúc, nhận thêm sát thương (cơ hội phản công)
+  function tire(b, t) { if (b.dead) return; b.tired = t; b.exposed = Math.max(b.exposed, t); b.busy = Math.max(b.busy, t); }
+
+  function thinkBig(b) {
+    const w = W(), P = w.P, ph = b.phase, S = SK[b.kind];
+    const opts = ['c1', 'c2', 'c3'];
+    if (ph >= 1) opts.push('c4');
+    if (ph >= 2) opts.push('c5');
+    // Chống áp sát: em bé đứng sát thì trùm hay dùng chiêu đánh quanh mình hơn
+    if (has(b, 'antiMelee') && Math.hypot(P.x - b.x, P.y - b.y) < 75) for (const k of opts.slice()) if (S[k].near) opts.push(k, k);
+    const k = choose(b, opts), sk = S[k] || S.c1;
+    const spd = [1, 1.1, 1.2][ph], D = dur(b.art, k) / spd, T = moc(b.art, k)[0] * D, a = ang(b, P);
+    aimFace(b, a);
+    play(b, k, spd);
+    sk.f(b, P, T, D, a, spd);
+    b.busy = D; b.wind = T;
+    G.sfx('warn', 1.1);
+    // Bắt bài lăn né: thêm một vùng đỏ đúng chỗ em bé sẽ lăn tới
+    if (has(b, 'antiDodge')) later(b, T + 0.3, () => { const P2 = W().P; circle(clamp(P2.x + (P2.ddx || 0) * 46, w.x0, w.x1), clamp(P2.y + (P2.ddy || 0) * 34, w.y0, w.y1), 18, 0.6, b.dmg, null); });
+    b.cd = [1.3, 1.0, 0.8][ph];
   }
 
-  // ---------- Mộc Tinh ----------
-  function thinkMoc(b) {
-    const w = W(), P = w.P, ph = b.phase;
-    const opts = ['sweep', 'roots', 'fruit'];
-    if (ph >= 1 && adds() === 0) opts.push('summon'); // chỉ gọi quái từ giai đoạn 2, và khi sân đã sạch
-    if (has(b, 'antiMelee') && Math.abs(P.x - b.x) < 100) opts.push('thorn', 'thorn');
-    const a = choose(b, opts);
-    const tele = ph >= 1 ? 0.95 : 1.05;
-    G.sfx('warn');
-    if (a === 'sweep') {
-      const mid = (w.y0 + w.y1) / 2, top = P.y < mid;
-      b.armSwing = -0.4;
-      act(b, 'sweep', tele + 0.95, { fire: tele, top, x0: w.x0 - 4, y0: top ? w.y0 - 6 : mid, y1: top ? mid : w.y1 + 6 });
-      G.zoneRect(w.x0 - 4, top ? w.y0 - 6 : mid, b.x - 22 - w.x0, top ? mid - w.y0 + 6 : w.y1 - mid + 6, tele, b.dmg * 1.4, null, {
-        onFire: () => { b.armSwing = 1; b.exposed = 2.6; G.sfx('boom'); },
-      });
-      later(b, tele + 0.5, () => { b.armSwing = 0; });
-    } else if (a === 'roots') {
-      const n = ph >= 1 ? 3 : 1;
-      const an = act(b, 'roots', n * 0.45 + 1.0, { n, hits: [] });
-      const erupt = (z) => fx(b, 'spike', z.x, z.y, 0.55);
-      for (let i = 0; i < n; i++) {
-        later(b, i * 0.45, () => {
-          G.zoneCircle(P.x, P.y, 16, 0.7, b.dmg, null, { fxKind: 'root', onFire: erupt });
-          an.hits.push({ x: P.x, y: P.y, t: an.t, fire: 0.7 });
-          if (has(b, 'antiDodge')) later(b, 0.35, () => {
-            const zx = G.clamp(P.x + P.ddx * 46, w.x0, w.px1);
-            G.zoneCircle(zx, P.y, 16, 0.6, b.dmg, null, { fxKind: 'root', onFire: erupt });
-            an.hits.push({ x: zx, y: P.y, t: an.t, fire: 0.6 });
-          });
-        });
-      }
-      later(b, n * 0.45 + 0.5, () => {});
-    } else if (a === 'fruit') {
-      const n = ph >= 2 ? 5 : 3;
-      const an = act(b, 'fruit', 1.0 + n * 0.12 + 0.3, { shots: [] });
-      for (let i = 0; i < n; i++) {
-        const q = near(P.x, P.y, 70, 30);
-        G.zoneCircle(q[0], q[1], 18, 1.0 + i * 0.12, b.dmg * 0.8, 'poison', { then: 4, fxKind: 'fruit', onFire: (z) => fx(b, 'splat', z.x, z.y, 0.4, { col: '#8fe04a' }) });
-        an.shots.push({ x: q[0], y: q[1], land: 1.0 + i * 0.12 });
-      }
-      later(b, 1.3, () => {});
-    } else if (a === 'summon') {
-      for (let i = 0; i < 2; i++) G.spawnEnemy('rusher', b.x - 46, w.y0 + 14 + i * (w.y1 - w.y0 - 28), { add: true, hpMult: 0.5, dmgMult: 0.7 });
-      act(b, 'summon', 0.9);
-      later(b, 0.6, () => {});
-    } else {
-      act(b, 'thorn', 1.5, { fire: 1.0, zx: b.x - 14, zy: (w.y0 + w.y1) / 2, r: 64 });
-      G.zoneCircle(b.x - 14, (w.y0 + w.y1) / 2, 64, 1.0, b.dmg, null, { fxKind: 'thorn', onFire: (z) => fx(b, 'thorns', z.x, z.y, 0.5, { r: z.r }) });
-      later(b, 1.2, () => {});
-    }
-    b.cd = [1.7, 1.3, 1.0][ph];
-  }
-
-  // ---------- Ngư Tinh ----------
-  const ROW = 38, GAP = 62; // bề ngang hàng lao và khe hở của sóng, tính cho phòng cao gần 190
-  function thinkNgu(b) {
-    const w = W(), P = w.P, ph = b.phase;
-    const opts = ['charge', 'spout', 'wave'];
-    if (has(b, 'antiRanged')) opts.push('dive', 'dive');
-    if (has(b, 'antiMelee') && P.x > w.px1 - 56) opts.push('spikes', 'spikes');
-    const a = choose(b, opts);
-    G.sfx('warn');
-    if (a === 'charge') {
-      const n = ph >= 2 ? 3 : 1;
-      b.hidden = true;
-      // rows: từng hàng lao qua (y là tâm hàng, t là lúc bắt đầu báo, fire là thời gian báo, dir là hướng lao)
-      const an = act(b, 'charge', 0.3 + n * 0.95 + 0.6 + 0.6, { rows: [], dive: 0.3, up: 0.3 + n * 0.95 + 0.6 });
-      for (let i = 0; i < n; i++) {
-        later(b, 0.3 + i * 0.95, () => {
-          const zy = G.clamp(P.y, w.y0 + 8, w.y1 - 8) - ROW / 2;
-          an.rows.push({ y: zy + ROW / 2, t: an.t, fire: 0.85, dir: an.rows.length % 2 ? 1 : -1 });
-          G.zoneRect(w.x0 - 9, zy, w.x1 - w.x0 + 18, ROW, 0.85, b.dmg * 1.35, 'ice', {
-            fxKind: 'charge',
-            onFire: (z) => { for (let k = 0; k < 8; k++) G.burst(w.x0 + k * (w.x1 - w.x0) / 7, z.y + ROW / 2, '#9fd0e8', 4, 60); G.sfx('boom', 1.2); },
-          });
-          if (has(b, 'antiDodge') && i === n - 1) later(b, 0.45, () => {
-            const zy2 = G.clamp(P.y, w.y0 + 8, w.y1 - 8) - ROW / 2;
-            an.rows.push({ y: zy2 + ROW / 2, t: an.t, fire: 0.6, dir: an.rows.length % 2 ? 1 : -1 });
-            G.zoneRect(w.x0 - 9, zy2, w.x1 - w.x0 + 18, ROW, 0.6, b.dmg * 1.2, 'ice', { fxKind: 'charge' });
-          });
-        });
-      }
-      later(b, 0.3 + n * 0.95 + 0.6, () => { b.hidden = false; b.exposed = 2.6; });
-    } else if (a === 'spout') {
-      const n = ph >= 1 ? 6 : 4;
-      const an = act(b, 'spout', 1.7, { shots: [] });
-      for (let i = 0; i < n; i++) {
-        const q = i === 0 ? [P.x, P.y] : near(P.x, P.y, 80, 34);
-        G.zoneCircle(q[0], q[1], 17, 0.85 + i * 0.1, b.dmg, 'ice', { fxKind: 'spout', onFire: (z) => fx(b, 'column', z.x, z.y, 0.45) });
-        an.shots.push({ x: q[0], y: q[1], land: 0.85 + i * 0.1 });
-      }
-      later(b, 1.5, () => {});
-    } else if (a === 'wave') {
-      const mk = () => {
-        const g0 = G.rr(w.y0, w.y1 - GAP);
-        w.zones.push({ wave: true, x: b.x - 50, vx: -150, wait: 0.9, g0, g1: g0 + GAP, dmg: b.dmg * 1.2, el: 'ice' });
-      };
-      mk();
-      act(b, 'wave', ph >= 1 ? 2.3 : 1.4, { slaps: ph >= 1 ? [0.9, 1.8] : [0.9] }); // slaps: các lúc đuôi đập, sóng bắt đầu tràn
-      if (ph >= 1) later(b, 0.9, mk);
-      later(b, 2.4, () => {});
-    } else if (a === 'dive') {
-      b.hidden = true;
-      const an = act(b, 'dive', 2.1, { dive: 0.3, fire: 1.15, up: 1.6, tx: null, ty: null }); // tx, ty: chỗ sẽ trồi lên
-      later(b, 0.3, () => {
-        an.tx = P.x; an.ty = P.y;
-        G.zoneCircle(P.x, P.y, 30, 0.85, b.dmg * 1.4, 'ice', { fxKind: 'emerge', onFire: (z) => G.burst(z.x, z.y, '#9fd0e8', 20, 90) });
-      });
-      later(b, 1.6, () => { b.hidden = false; });
-    } else {
-      b.spikes = true;
-      act(b, 'spikes', 1.3, { fire: 0.9, zx: b.x - 34, zy: b.y, r: 68 });
-      G.zoneCircle(b.x - 34, b.y, 68, 0.9, b.dmg, null, { fxKind: 'spikes', onFire: () => { b.spikes = false; } });
-      later(b, 1.1, () => {});
-    }
-    b.cd = [1.6, 1.25, 0.95][ph];
-  }
-  function phaseNgu(b) {
-    const w = W();
-    if (b.phase === 1) { w.y0 += 24; w.y1 -= 24; }
-    if (b.phase === 2) { w.x0 += 56; }
-    w.shrink = { y0: w.y0 - 6, y1: w.y1 + 8, x0: b.phase >= 2 ? w.x0 - 8 : 0 };
-    w.banner = { s: 'Nước dâng!', col: '#7fd4ff', t: 2 };
-  }
-
-  // ---------- Hồ Tinh ----------
-  function thinkHo(b) {
-    const w = W(), P = w.P, ph = b.phase;
-    const opts = ['pounce', 'pounce', 'fox', 'nova'];
-    if (w.ents.filter((e) => e.illusion && !e.dead).length < 2) opts.push('illusion');
-    const a = choose(b, opts);
-    G.sfx('warn', 1.2);
-    if (a === 'pounce') {
-      const go = (tele) => {
-        const tx = P.x, ty = P.y;
-        // fx, fy: chỗ lấy đà; tx, ty: chỗ sẽ đáp (b.x, b.y chỉ đổi lúc vùng nổ, hình vẽ bay trước theo cung)
-        act(b, 'pounce', tele + 0.45, { fire: tele, fx: b.x, fy: b.y, tx: G.clamp(tx + (b.x < tx ? -8 : 8), w.x0, w.x1), ty });
-        G.zoneCircle(tx, ty, 24, tele, b.dmg * 1.15, null, {
-          fxKind: 'pounce',
-          onFire: () => { b.x = G.clamp(tx + (b.x < tx ? -8 : 8), w.x0, w.x1); b.y = ty; b.exposed = 2.0; G.burst(tx, ty, '#ffffff', 10, 60); },
-        });
-      };
-      go(0.6);
-      if (has(b, 'antiDodge')) later(b, 1.0, () => go(0.5));
-      later(b, has(b, 'antiDodge') ? 2.6 : 2.0, () => {});
-    } else if (a === 'fox') {
-      const n = ph >= 1 ? 4 : 3;
-      act(b, 'fox', 1.0, { n });
-      for (let i = 0; i < n; i++) {
-        const an = -1.2 + (i * 2.4) / (n - 1);
-        w.projs.push({ team: 'enemy', kind: 'fire', x: b.x, y: b.y, vx: Math.cos(an) * 70 * b.face, vy: Math.sin(an) * 70, homing: 58, t: 3.6, dmg: b.dmg * 0.8, el: 'fire' });
-      }
-      later(b, 1.0, () => {});
-    } else if (a === 'nova') {
-      const el = w.stats.el;
-      const top = G.ELS.slice().sort((x, y) => el[y] - el[x])[0];
-      b.tailEl = el[top] > 0 ? top : 'fire';
-      act(b, 'nova', 1.3, { fire: 0.8, el: b.tailEl, r: 62 });
-      G.zoneCircle(b.x, b.y, 62, 0.8, b.dmg * 1.2, b.tailEl, { fxKind: 'nova' });
-      later(b, 1.2, () => {});
-    } else {
-      G.burst(b.x, b.y, '#ffffff', 14, 70);
-      const ox = b.x, oy = b.y;
-      for (let i = 0; i < 2; i++) {
-        if (w.ents.filter((e) => e.illusion && !e.dead).length >= 2) break;
-        const q = near(P.x, P.y, 130, 40);
-        w.ents.push({
-          illusion: true, kind: 'ho', layers: b.layers, alpha: 0.7, x: q[0], y: q[1], r: 16, hr: 9, h: 36, hp: 1, maxhp: 1,
-          st: G.st0(), dmg: b.dmg * 0.6, face: -1, t: 0, cd: ph >= 1 ? 1.2 : 99, tails: 9, add: true, role: 'illusion',
-          speed: ph >= 1 ? 62 : 30, marks: 0, armor: 0, flash: 0, wind: 0, scale: 1, slamCd: 99,
-          fromX: ox, fromY: oy, // chỗ tách ra, chỉ để vẽ
-        });
-      }
-      const q = near(P.x, P.y, 150, 40);
-      b.x = q[0]; b.y = q[1];
-      act(b, 'illusion', 0.8, { fx: ox, fy: oy });
-      later(b, 0.8, () => {});
-    }
-    b.cd = [1.5, 1.1, 0.8][ph];
-  }
-  function moveHo(b, dt) {
-    const w = W(), P = w.P;
-    if (b.seq.length || b.st.stun > 0 || b.st.root > 0) return;
-    const dx = P.x - b.x || 0.01, dy = P.y - b.y, d = Math.hypot(dx, dy); // d không bao giờ bằng 0
-    b.face = dx >= 0 ? 1 : -1;
-    if (has(b, 'antiMelee') && d < 42 && b.hopCd <= 0 && b.exposed <= 0) {
-      b.hopCd = 3.5;
-      w.zones.push({ shape: 'circle', x: b.x, y: b.y, r: 24, t: 0, pool: true, team: 'enemy', el: 'fire', life: 3, tick: 0.3, dmg: b.dmg });
-      act(b, 'hop', 0.4, { fx: b.x, fy: b.y, air: 0.28 });
-      b.x = G.clamp(b.x - b.face * 100, w.x0, w.x1);
-      return;
-    }
-    const want = 105;
-    const sp = b.speed * Math.max(0.4, 1 - 0.15 * b.st.iceN);
-    if (d > want + 20) { b.x += (dx / d) * sp * dt; b.y += (dy / d) * sp * 0.7 * dt; } else if (d < want - 30) { b.x -= (dx / d) * sp * 0.45 * dt; } // lùi chậm để người đánh gần còn đuổi kịp
-    b.y += Math.sin(b.t * 1.7) * 18 * dt;
-    b.x = G.clamp(b.x, w.x0, w.x1); b.y = G.clamp(b.y, w.y0, w.y1);
-  }
-
-  // ---------- trùm nhỏ ----------
+  // ======================= TRÙM NHỎ =======================
   function thinkMini(b) {
-    const w = W(), P = w.P, ph = b.phase;
-    const d = Math.hypot(P.x - b.x, (P.y - b.y) * 1.5);
-    const opts = ['slam', 'charge', 'burst'];
-    if (adds() < 4) opts.push('summon');
-    if (d < 44) opts.push('swipe', 'swipe');
-    const a = choose(b, opts);
+    const w = W(), P = w.P, ph = b.phase, id = b.art;
+    const d = Math.hypot(P.x - b.x, P.y - b.y), a = ang(b, P);
+    const opts = ['chieu1', 'chieu2'];
+    if (d < 70) opts.push('atk', 'atk');
+    const k = choose(b, opts), spd = [1, 1.08, 1.16][ph];
+    aimFace(b, a);
     G.sfx('warn');
-    b.wind = 0.7;
-    if (a === 'slam') {
-      act(b, 'slam', 1.2, { fire: 0.8, tx: P.x, ty: P.y });
-      G.zoneCircle(P.x, P.y, 30, 0.8, b.dmg * 1.3, b.el, { fxKind: 'slam', onFire: (z) => fx(b, 'quake', z.x, z.y, 0.4, { r: z.r }) });
-      if (has(b, 'antiDodge')) later(b, 0.4, () => G.zoneCircle(G.clamp(P.x + P.ddx * 46, w.x0, w.x1), P.y, 26, 0.7, b.dmg, b.el, { fxKind: 'slam', onFire: (z) => fx(b, 'quake', z.x, z.y, 0.4, { r: z.r }) }));
-      later(b, 1.1, () => {});
-    } else if (a === 'charge') {
-      const dir = P.x >= b.x ? 1 : -1, py = P.y;
-      const x0 = Math.max(w.x0 - 6, dir > 0 ? b.x : b.x - 210), x1 = Math.min(w.x1 + 6, dir > 0 ? b.x + 210 : b.x);
-      // fx, fy: chỗ lấy đà; hình vẽ lướt từ đó tới chỗ mới trong dash giây sau khi vùng nổ
-      act(b, 'charge', 1.5, { fire: 0.8, dash: 0.2, dir, fx: b.x, fy: b.y, ty: py });
-      G.zoneRect(x0, py - 12, x1 - x0, 24, 0.8, b.dmg * 1.4, b.el, {
-        fxKind: 'charge',
-        onFire: () => { b.x = G.clamp(b.x + dir * 190, w.x0 + 10, w.x1 - 10); b.y = py; G.sfx('boom'); b.exposed = 1.6; },
-      });
-      later(b, 2.2, () => {});
-    } else if (a === 'burst') {
-      const an = act(b, 'burst', 0.9 + (3 + ph) * 0.12 + 0.3, { shots: [], el: b.el });
-      for (let i = 0; i < 3 + ph; i++) {
-        const q = near(P.x, P.y, 70, 30);
-        G.zoneCircle(q[0], q[1], 18, 0.9 + i * 0.12, b.dmg * 0.8, b.el, { then: 3, fxKind: 'burst', onFire: (z) => fx(b, 'splat', z.x, z.y, 0.4, { col: G.EL[b.el].col }) });
-        an.shots.push({ x: q[0], y: q[1], land: 0.9 + i * 0.12 });
-      }
-      later(b, 1.3, () => {});
-    } else if (a === 'summon') {
-      for (let i = 0; i < 2; i++) G.spawnEnemy('swarm', b.x + G.rr(-20, 20), G.clamp(b.y + (i ? 24 : -24), w.y0, w.y1), { add: true });
-      act(b, 'summon', 0.8);
-      later(b, 0.6, () => {});
+    if (k === 'atk') {
+      const T = 0.75 / spd;
+      play(b, 'tele', 0.7 / 0.75 * spd);
+      later(b, T, () => play(b, 'atk', spd));
+      if (id === 'namChua') Z('cone', { x: b.x, y: b.y, ang: a, r: 64, span: 1.2 }, T, b.dmg * 1.1, 'poison');
+      else Z('cone', { x: b.x, y: b.y, ang: a, r: 58, span: 2.0 }, T, b.dmg * 1.2, null, { melee: true });
+      b.busy = T + dur(id, 'atk') / spd; b.wind = T;
     } else {
-      act(b, 'swipe', 1.0, { fire: 0.6, r: 38 });
-      G.zoneCircle(b.x, b.y, 38, 0.6, b.dmg, b.el, { fxKind: 'swipe' });
-      later(b, 0.9, () => {});
+      const D = dur(id, k) / spd, T = 0.5 * D;
+      play(b, k, spd);
+      b.busy = D; b.wind = T;
+      if (id === 'cuaDa' && k === 'chieu1') {
+        // Đập càng rung sàn: sóng chấn động quanh mình, chạy ra ngoài vòng đỏ
+        circle(b.x, b.y, 80, T, b.dmg * 1.3, null, { fxKind: 'slam' });
+        if (ph >= 1) Z('donut', { x: b.x, y: b.y, r0: 80, r1: 118 }, T + 0.5, b.dmg, null);
+      } else if (id === 'cuaDa') {
+        // Mưa tinh thể: tinh thể trên lưng bắn lên rồi cắm xuống 5 chỗ
+        for (let i = 0; i < 5 + ph; i++) { const q = i ? near(P.x, P.y, 70, 40) : [P.x, P.y]; circle(q[0], q[1], 16, T + i * 0.1, b.dmg, 'ice', { fxKind: 'spout' }); }
+      } else if (id === 'namChua' && k === 'chieu1') {
+        // Hàng nấm độc: nấm mọc vọt nối nhau theo hướng em bé
+        for (let i = 0; i < 7; i++) { const x = b.x + Math.cos(a) * (22 + i * 21), y = b.y + Math.sin(a) * (22 + i * 21); if (x > w.x0 - 6 && x < w.x1 + 6 && y > w.y0 - 6 && y < w.y1 + 6) circle(x, y, 14, T + i * 0.08, b.dmg, 'poison', { fxKind: 'root', then: ph >= 2 ? 2 : 0 }); }
+      } else if (id === 'namChua') {
+        // Bão bào tử: hai đợt bào tử toả tròn và vòng khí độc
+        for (let j = 0; j < 2; j++) later(b, T + j * 0.4, () => { for (let i = 0; i < 9; i++) shot(b, a + ((i + j * 0.5) / 9) * TAU, 78, { kind: 'orb', col: '#c4f43c', col2: '#58208c', el: 'poison', t: 2.2 }); });
+        later(b, T, () => G.zoneCircle(b.x, b.y, 34, 0, b.dmg * 0.5, 'poison', { pool: true, life: 3, tick: 0.3 }));
+      } else if (id === 'hoLua' && k === 'chieu1') {
+        // Vồ lửa: chồm tới một đường dài, để lại vệt lửa trên sàn
+        const L = clamp(d + 30, 90, 160);
+        Z('line', { x: b.x, y: b.y, ang: a, len: L, w: 32 }, T, b.dmg * 1.4, 'fire', { melee: true });
+        later(b, T, () => {
+          const x0 = b.x, y0 = b.y;
+          lunge(b, a, L - 30, 0.25);
+          for (let i = 0; i < 4; i++) G.zoneCircle(clamp(x0 + Math.cos(a) * (20 + i * (L - 30) / 3), w.x0, w.x1), clamp(y0 + Math.sin(a) * (20 + i * (L - 30) / 3), w.y0, w.y1), 15, 0, b.dmg * 0.5, 'fire', { pool: true, life: 2.6, tick: 0.3 });
+        });
+        b.an.cut = 0.75;
+      } else {
+        // Gầm phun lửa: phun lửa hình quạt rộng
+        Z('cone', { x: b.x, y: b.y, ang: a, r: 112, span: 1.5 }, T, b.dmg * 1.3, 'fire');
+      }
     }
-    b.cd = [1.6, 1.3, 1.0][ph];
+    if (has(b, 'antiDodge')) later(b, b.wind + 0.3, () => { const P2 = W().P; circle(clamp(P2.x + (P2.ddx || 0) * 46, w.x0, w.x1), clamp(P2.y + (P2.ddy || 0) * 34, w.y0, w.y1), 18, 0.6, b.dmg, b.el); });
+    b.cd = [1.4, 1.15, 0.9][ph];
   }
-  function moveMini(b, dt) {
+
+  // ======================= DI CHUYỂN =======================
+  function move(b, dt) {
     const w = W(), P = w.P;
     b.moving = false;
-    if (b.seq.length || b.st.stun > 0 || b.st.root > 0) return;
-    const dx = P.x - b.x, dy = P.y - b.y, d = Math.hypot(dx, dy);
-    b.face = dx >= 0 ? 1 : -1;
-    if (d > 44) {
-      const sp = b.speed * Math.max(0.4, 1 - 0.15 * b.st.iceN);
-      b.x += (dx / d) * sp * dt; b.y += (dy / d) * sp * 0.75 * dt;
-      b.moving = true;
+    if (b.busy > 0 || b.st.stun > 0 || b.st.root > 0 || b.st.frozen > 0) return;
+    const dx = P.x - b.x, dy = P.y - b.y, d = Math.hypot(dx, dy) || 0.01;
+    if (Math.abs(dx) > 4) b.face = dx > 0 ? 1 : -1;
+    b.dirA = b.face > 0 ? 0 : PI;
+    if (b.kind === 'ho' && has(b, 'antiMelee') && d < 46 && b.hopCd <= 0) {
+      // Chống áp sát: Hồ Tinh bật lùi ra xa, để lại vũng lửa chỗ cũ
+      b.hopCd = 3.5;
+      G.zoneCircle(b.x, b.y, 24, 0, b.dmg, 'fire', { pool: true, life: 3, tick: 0.3 });
+      lunge(b, Math.atan2(-dy, -dx), 90, 0.25);
+      return;
     }
-    b.y = G.clamp(b.y, w.y0, w.y1);
+    const want = b.kind === 'moc' ? 70 : b.kind === 'ngu' ? 85 : b.kind === 'ho' ? 100 : 44;
+    const sp = b.speed * Math.max(0.4, 1 - 0.15 * b.st.iceN);
+    if (d > want + 12) { b.x += (dx / d) * sp * dt; b.y += (dy / d) * sp * 0.8 * dt; b.moving = true; }
+    else if (d < want - 30 && b.kind !== 'mini') { b.x -= (dx / d) * sp * 0.45 * dt; b.y -= (dy / d) * sp * 0.3 * dt; b.moving = true; }
+    if (b.kind === 'ho') b.y += Math.sin(b.t * 1.7) * 14 * dt;
   }
 
   G.updateBoss = function (b, dt) {
@@ -367,51 +311,73 @@
     if (b.wind > 0) b.wind -= dt;
     if (b.tpCd > 0) b.tpCd -= dt;
     if (b.hopCd > 0) b.hopCd -= dt;
-    // đồng hồ hoạt ảnh
-    if (b.anim) { b.anim.t += dt; if (b.anim.t >= b.anim.dur) b.anim = null; }
-    if (b.fx && b.fx.length) { for (const f of b.fx) f.t += dt; b.fx = b.fx.filter((f) => f.t < f.d); }
-    if (b.roarT > 0) b.roarT -= dt;
+    if (b.invuln > 0) b.invuln -= dt;
+    if (b.busy > 0) b.busy -= dt;
+    if (b.tired > 0) b.tired -= dt;
+    if (b.an) b.an.t += dt * (b.an.spd || 1);
+    if (b.hitT > 0) b.hitT -= dt;
     G.tickStatus(b, dt);
     if (b.dead) return;
-    const frac = b.hp / b.maxhp;
-    const ph = frac > 0.6 ? 0 : frac > 0.3 ? 1 : 2;
-    if (ph > b.phase) {
-      b.phase = ph;
-      if (b.kind === 'ngu') phaseNgu(b);
-      if (b.kind === 'ho' && ph === 2) b.big = true;
-      b.roarT = 1.2; b.roarPh = ph; // gầm khi đổi giai đoạn
-      if (b.kind !== 'ngu') w.banner = { s: b.name + (ph === 1 ? ' nổi giận!' : ' hóa cuồng!'), col: '#ff6a5a', t: 2 };
-      G.sfx('gong');
+    if (b.lunge) {
+      const L = b.lunge, k = Math.min(dt, L.t);
+      b.x += L.vx * k; b.y += L.vy * k; L.t -= dt;
+      if (L.t <= 0) b.lunge = null;
     }
-    if (b.kind === 'ho') b.tails = Math.max(1, Math.ceil(9 * frac));
-    if (b.kind === 'moc') {
-      const stopX = b.homeX - 56; // giai đoạn cuối lết dần vào giữa phòng, sân hẹp lại
-      b.walking = b.phase === 2 && b.x > stopX; // đang lết tới, để vẽ dáng đi
-      if (b.phase === 2 && b.x > stopX) b.x -= 7 * dt;
-      w.px1 = b.x - 26;
+    b.x = clamp(b.x, w.x0 + 4, w.x1 - 4); b.y = clamp(b.y, w.y0, w.y1);
+    // Ba pha: đổi ở 66% và 33% máu. Trùm vùng diễn cảnh chuyển pha (không nhận sát thương), hình đổi theo pha.
+    const frac = b.hp / b.maxhp;
+    const ph = frac > 0.66 ? 0 : frac > 0.33 ? 1 : 2;
+    if (ph > b.phase && !(b.intro > 0 && b.invuln > 0)) {
+      b.phase = ph;
+      b.seq.length = 0; b.lunge = null; b.tired = 0;
+      w.zones = w.zones.filter((z) => z.src !== b || !(z.t > 0 || z.wall));
+      if (b.kind !== 'mini') {
+        const D = dur(b.art, ph === 1 ? 'phase2' : 'phase3');
+        play(b, ph === 1 ? 'phase2' : 'phase3');
+        b.invuln = D; b.busy = D; b.cd = 0.4;
+        w.projs = w.projs.filter((o) => o.team !== 'enemy');
+        w.shake = Math.max(w.shake, 0.5);
+      }
+      b.roarT = 1.2; b.roarPh = ph;
+      w.banner = { s: b.name + (ph === 1 ? ' nổi giận!' : ' hóa cuồng!'), col: '#ff6a5a', t: 2 };
+      G.sfx('gong');
     }
     for (const s of b.seq) s.t -= dt;
     const due = b.seq.filter((s) => s.t <= 0);
     b.seq = b.seq.filter((s) => s.t > 0);
     for (const s of due) s.f();
-    const px = b.x, py = b.y;
-    if (b.kind === 'ho') moveHo(b, dt);
-    if (b.kind === 'mini') moveMini(b, dt);
-    if (b.kind === 'ho') {
-      // vận tốc để vẽ dáng chạy và đuôi trễ; bỏ qua các cú nhảy vị trí tức thời
-      const vx = (b.x - px) / dt, vy = (b.y - py) / dt;
-      const jump = Math.abs(b.x - px) > 6 || Math.abs(b.y - py) > 6;
-      b.vx = jump ? 0 : vx; b.vy = jump ? 0 : vy;
-      b.moving = !jump && Math.abs(vx) > 20;
+    move(b, dt);
+    // hình: đang ra chiêu thì giữ cử động chiêu; xong chiêu thì đứng thở hoặc đi
+    const busyAnim = b.an && (b.an.n === 'intro' || b.an.n === 'spawn' || b.an.n === 'phase2' || b.an.n === 'phase3' || /^c\d$|^chieu|^atk|^tele/.test(b.an.n));
+    if (b.busy <= 0 || !busyAnim) {
+      const n = b.moving ? 'move' : 'idle';
+      if (!b.an || b.an.n !== n) play(b, n);
     }
-    if (b.seq.length === 0 && b.st.stun <= 0 && b.st.frozen <= 0) {
+    if (b.busy <= 0 && b.st.stun <= 0 && b.st.frozen <= 0) {
       b.cd -= dt;
-      if (b.cd <= 0) {
-        if (b.kind === 'moc') thinkMoc(b);
-        else if (b.kind === 'ngu') thinkNgu(b);
-        else if (b.kind === 'ho') thinkHo(b);
-        else thinkMini(b);
-      }
+      if (b.cd <= 0) { if (b.kind === 'mini') thinkMini(b); else thinkBig(b); }
     }
   };
+
+  // ======================= VẼ =======================
+  const A = G.art;
+  if (A) {
+    const boss0 = A.boss;
+    A.boss = function (c, b) {
+      if (!b.art || !G.monsterArt || b.kind === 'mini' || b.illusion) return boss0(c, b);
+      let n = b.an ? b.an.n : 'idle', t = b.an ? b.an.t : 0;
+      if (b.an && b.an.cut) { const D = dur(b.art, n); t = Math.min(t, b.an.cut * D); }
+      if (b.dying != null) { n = 'die'; t = b.dying * dur(b.art, 'die'); }
+      else if ((b.st && b.st.stun > 0) || b.tired > 0) { n = 'stun'; t = G.time; }
+      else if (b.hitT > 0 && (n === 'idle' || n === 'move')) { n = 'hit'; t = 0.4 - b.hitT; }
+      const phase = (b.phase | 0) + 1;
+      const pha3 = b.kind === 'ho' && (phase >= 3 && !(n === 'phase3' && t < dur(b.art, 'phase3') * 0.5));
+      const s = pha3 ? 0.72 : 1; // Hồ Tinh pha 3 to gấp rưỡi: thu nhỏ cho vừa phòng
+      b.drawW = (pha3 ? 281 : b.kind === 'ho' ? 174 : 150) * s; b.drawH = (pha3 ? 174 : b.h) * s;
+      const o = { anim: n, t, face: b.face, dir: b.dirA != null ? b.dirA : b.face > 0 ? 0 : PI, phase, hit: b.flash > 0 ? 0.7 : 0, bao: false };
+      if (s !== 1) { c.save(); c.translate(Math.round(b.x), Math.round(b.y)); c.scale(s, s); G.monsterArt.draw(c, b.art, 0, 0, o); c.restore(); }
+      else G.monsterArt.draw(c, b.art, b.x, b.y, o);
+      if (b.dying == null && b.invuln > 0 && b.intro == null) {} // (chỗ trống cho dấu hiệu miễn sát thương)
+    };
+  }
 })();

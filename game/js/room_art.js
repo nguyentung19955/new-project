@@ -963,7 +963,12 @@
       }
       // chỗ quái sắp hiện ra: vệt tối loang dần, viền sáng theo màu chủ đề
       for (const sp of W.spawns || []) {
+        if (sp.t > sp.t0) continue; // chưa tới lượt (đợt mọc lần lượt)
         const k = 1 - Math.max(0, sp.t) / sp.t0, rx = 4 + 7 * k + (sp.big ? 5 : 0);
+        // vòng đỏ báo chỗ quái sắp mọc: viền nhấp nháy, lõi đầy dần
+        const R0 = sp.big ? 22 : 16, bl = Math.floor(t * 10) % 2;
+        ell(sp.x, sp.y, R0, R0 * 0.6, bl ? 'rgba(255,58,34,0.30)' : 'rgba(255,120,90,0.22)');
+        ell(sp.x, sp.y, R0 * k, R0 * 0.6 * k, 'rgba(255,70,40,0.28)');
         ell(sp.x, sp.y, rx + 2, (rx + 2) * 0.7, rgba(room.T.light, 0.18 + 0.2 * k));
         ell(sp.x, sp.y, rx, rx * 0.7, 'rgba(8,4,10,0.75)');
         if (Math.floor(t * 12) % 2) ell(sp.x, sp.y, rx * 0.5, rx * 0.35, rgba(room.T.light, 0.35));

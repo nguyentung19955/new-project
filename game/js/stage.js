@@ -99,10 +99,11 @@
     const waves = [], B = G.ROOM_WAVES;
     const late = S.i >= 3;
     const count = type === 'start' ? (S.i >= 2 ? B.start[1] : B.start[0]) : type === 'challenge' ? B.challenge : late ? B.late : B.early;
-    const roles = ['rusher', 'swarm', 'archer'];
-    if (S.i >= 1 || S.r > 0) roles.push('shield');
-    if (S.i >= 2 || S.r > 0) roles.push('nimble');
-    const cost = { rusher: 1, swarm: 1.5, archer: 1, shield: 1.5, nimble: 1.2 };
+    // Vùng đầu mở dần các vai; từ vùng hai trở đi có đủ tám vai (js/mobs.js).
+    const roles = ['rusher', 'swarm', 'archer', 'kami'];
+    if (S.i >= 1 || S.r > 0) roles.push('shield', 'spiky');
+    if (S.i >= 2 || S.r > 0) roles.push('nimble', 'bomber');
+    const cost = { rusher: 1, swarm: 1.3, archer: 1, shield: 1.5, nimble: 1.2, kami: 0.9, bomber: 1.2, spiky: 1.2 };
     for (let k = 0; k < count; k++) {
       let pts = (3 + Math.min(1.5, S.i * 0.4) + S.r * 0.5 + (S.diff ? 1 : 0)) * (late ? B.ptsLate : B.pts);
       const list = [];
@@ -110,8 +111,9 @@
       for (let guard = 0; guard < 30 && pts > 0.9 && list.length < B.maxPerWave; guard++) {
         const r = G.pick(roles);
         // sàn nhỏ: mỗi đợt chỉ một bầy nhỏ, để người chơi không bị sáu con vây cùng lúc
-        if (cost[r] > pts + 0.3 || (r === 'swarm' && (list.includes('swarm') || list.length + 3 > B.maxPerWave))) continue;
-        if (r === 'swarm') list.push('swarm', 'swarm', 'swarm'); else list.push(r);
+        // sàn nhỏ: mỗi đợt chỉ một bầy nhỏ và một con cảm tử
+        if (cost[r] > pts + 0.3 || ((r === 'swarm' || r === 'kami' || r === 'bomber') && list.includes(r))) continue;
+        list.push(r);
         pts -= cost[r];
       }
       if (!list.length) list.push('rusher');
@@ -132,14 +134,18 @@
     }
     return best;
   }
+  // Kiểu xuất hiện của một đợt: lần lượt từng con, cả đợt cùng lúc, hoặc từng tốp ba con.
+  // Chỗ sắp mọc có vòng đỏ báo trước; quái mọc lên thì đẩy em bé ra khỏi vòng.
+  G.SPAWN_MODES = { one: 'Lần lượt từng con', all: 'Cả đợt cùng lúc', group: 'Từng tốp' };
   function spawnWave(list) {
     const W = S.W;
-    // Sàn nhỏ nên quái không ập ra cùng lúc: nửa đầu hiện trước, nửa sau hiện sau một nhịp.
-    const half = Math.ceil(list.length / 2);
+    const r = G.rnd();
+    const mode = list.length <= 4 && r < 0.3 ? 'all' : r < 0.62 ? 'group' : 'one';
+    W.spawnMode = mode;
     list.forEach((role, j) => {
-      const q = freeSpot(role === 'archer' ? 84 : 66, role === 'elite' ? 18 : 10);
-      const t = 0.5 + j * 0.07 + (j >= half && list.length > 3 ? G.ROOM_WAVES.stagger : 0);
-      W.spawns.push({ role, x: q[0], y: q[1], t, t0: t, big: role === 'elite' });
+      const q = freeSpot(role === 'archer' || role === 'bomber' ? 84 : 66, role === 'elite' ? 18 : 10);
+      const t = mode === 'all' ? 1.0 : mode === 'group' ? 0.9 + Math.floor(j / 3) * 1.9 + (j % 3) * 0.08 : 0.9 + j * 0.6;
+      W.spawns.push({ role, x: q[0], y: q[1], t, t0: Math.min(t, 1.0), big: role === 'elite' });
     });
     G.sfx('warn', 0.8);
   }
@@ -151,9 +157,13 @@
     for (const s of W.spawns) {
       s.t -= dt;
       if (s.t > 0) continue;
-      const e = G.spawnEnemy(s.role, s.x, s.y, {});
+      const e = G.spawnEnemy(s.role, s.x, s.y, s.opt || {});
       e.inside = true;
-      e.cd = Math.max(e.cd, 0.9); // vừa hiện ra thì chưa đánh ngay
+      if (s.opt && s.opt.sumBy) e.sum = s.opt.sumBy;
+      e.cd = Math.max(e.cd, e.art ? 0.3 : 0.9); // vừa hiện ra thì chưa đánh ngay (quái mới còn diễn cử động xuất hiện)
+      // em bé đứng ngay chỗ quái mọc: bị đẩy ra ngoài vòng
+      const P = S.P, dx = P.x - s.x, dy = P.y - s.y, d = Math.hypot(dx, dy), R0 = s.big ? 22 : 16;
+      if (d < R0) { const k = d > 0.5 ? 1 / d : 0; P.x = G.clamp(s.x + (k ? dx * k : 1) * R0, W.x0, W.x1); P.y = G.clamp(s.y + (k ? dy * k : 0) * R0, W.y0, W.y1); }
       // Quái tinh anh cũng học: kháng nhẹ hệ bạn dùng nhiều nhất
       if (s.role === 'elite' && tot > 0 && el[top] / tot > 0.4) e.resist = top;
       G.burst(s.x, s.y - 6, ['#c2f58a', '#bfeaff', '#ffd0a0'][S.r] || '#ffffff', s.big ? 14 : 7, 60);
@@ -202,7 +212,7 @@
       W.waves = buildWaves(type);
       if (S.tut && type === 'start') W.waves = [['rusher', 'rusher', 'rusher']];
       else if (S.tut && id === 1) {
-        W.waves = [['swarm', 'swarm', 'swarm', 'swarm', 'swarm'], ['swarm', 'swarm', 'swarm', 'swarm', 'rusher']];
+        W.waves = [['swarm', 'swarm'], ['swarm', 'swarm', 'rusher']];
         W.props.push({ type: 'brazier', env: true, x: cx - 34, y: cy - 12 }, { type: 'brazier', env: true, x: cx + 36, y: cy + 22 });
       } else if (type !== 'start') {
         if (type === 'challenge') W.props.push({ type: 'pedestal', x: cx, y: cy - 2 });
@@ -251,7 +261,7 @@
     S.marks += W.marksGained; W.marksGained = 0;
     if (W.usedPotion) S.usedPotion = true;
     S.challenge = null;
-    W.projs = []; W.zones = []; W.parts = []; W.texts = []; W.slashes = []; W.spawns = []; W.banner = null; W.shake = 0;
+    W.projs = []; W.zones = []; W.parts = []; W.texts = []; W.slashes = []; W.spawns = []; W.timers = []; W.banner = null; W.shake = 0;
     for (const p of W.props) if (p.type === 'trap') p.dead = true;
     W.props = W.props.filter((p) => !p.dead);
   }
@@ -301,6 +311,8 @@
     const was = M.gateOpen(map, S.cleared);
     W.cleared = true;
     S.cleared[S.idx] = true;
+    for (const e of W.ents) if (e.add && !e.dead) G.kill(e, {}); // quái phụ (bầy được gọi thêm) tan theo
+    W.zones = W.zones.filter((z) => z.team === 'player' || !(z.t > 0) && !z.wall);
     G.sfx('pick', 0.8);
     S.P.hp = Math.min(S.P.maxhp, S.P.hp + S.P.maxhp * 0.08);
     if (S.challenge) {
@@ -608,7 +620,8 @@
         }
       }
       if (S.challenge) S.challenge.t -= dt;
-      if (W.type === 'boss' && S.loot.bossDown && !S.won) { S.endT += dt; if (S.endT > 1.2) winPortal(); return; }
+      // trùm chết hoành tráng (cử động chết dài vài giây) rồi mới mọc cổng dịch chuyển
+      if (W.type === 'boss' && S.loot.bossDown && !S.won) { S.endT += dt; if (S.endT > (W.bossDieT || 1.2)) winPortal(); return; }
       if (W.over === 'dead' && !S.won) { S.endT += dt; if (S.endT > 1.2) finish(false); return; }
       if (S.won) pickLoot(W, P);
       // bước vào cửa đang mở thì sang phòng kề (phòng trùm: chỉ sau khi đã thắng)

@@ -173,7 +173,7 @@ JS = r"""
     if (el) { S.stats.el[el] = 900; S.stats.el.none = 100; }
     G.gotoRoom(S.rooms.length - 1);
     W = G.getWorld(); P = S.P;
-    const bb = W.boss; bb.cd = 1e9;
+    const bb = W.boss; bb.cd = 1e9; bb.invuln = 0; bb.busy = 0; // bỏ qua màn ra mắt của trùm
     return bb;
   }
   b = boss('fire');
@@ -193,7 +193,7 @@ JS = r"""
     const bb = boss('fire');
     if (potion) W.usedPotion = true;
     G.damage(bb, 1e12, { el });
-    sec(2.5);
+    sec(4.5); // trùm chết hoành tráng (cử động chết khoảng 3,4 giây) rồi mới mọc cổng
     return S.result ? S.result.starNote.map((x) => (x ? 1 : 0)).join('') + '/' + S.result.stars : 'chưa xong';
   };
   ok('Sao: hạ trùm bằng hệ khắc chế, không dùng bình thì 3 sao', endWith('ice') === '111/3', endWith('ice'));
