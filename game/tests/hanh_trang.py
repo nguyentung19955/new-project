@@ -108,7 +108,7 @@ def run(p, size, shots):
     # ---- kỹ năng: học ở làng ----
     ev("G.save.heroes.smith.lvl = 12")
     g.tap(*tab_xy(4), 250)
-    g.tap(136, 118, 250)
+    g.tap(136, 136, 250)  # (thẻ Kỹ năng có thêm hàng thẻ con Cây kỹ năng | Cây chưởng nên nút Học nằm thấp hơn 18)
     c.ok(ev("G.save.heroes.smith.sk.atk") == 2, 'bấm Học thì học nút kế tiếp nhánh Công')
 
     # ---- đóng ----

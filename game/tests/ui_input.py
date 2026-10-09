@@ -419,7 +419,8 @@ def run(p, size, url=None):
     g.tap(434, 129); c.ok(ev("G.save.heroes.hunter.sk.atk") == 1, 'học kỹ năng')
     g.tap(434, 171); g.tap(434, 213)
     c.ok(ev("G.save.heroes.hunter.sk.def") == 1 and ev("G.save.heroes.hunter.sk.elem") == 0, 'hết điểm thì không học thêm được')
-    g.tap(311, 80); c.ok(tab() == 'help', 'thẻ Hướng dẫn ở chỗ Cụ Đồ (thẻ giữa trong ba thẻ, thẻ thứ ba là Bảng vàng)')
+    g.tap(273, 80); c.ok(tab() == 'chuong', 'thẻ Cây chưởng ở chỗ Cụ Đồ (thẻ thứ hai trong bốn thẻ)')
+    g.tap(350, 80); c.ok(tab() == 'help', 'thẻ Hướng dẫn ở chỗ Cụ Đồ (thẻ thứ ba trong bốn thẻ, thẻ cuối là Bảng vàng)')
     g.tap(452, 250); c.ok(ev("G.villageApi.V.page") == 1, 'lật trang hướng dẫn'); close()
     # ---- Anh Mõ: cài đặt
     c.ok(visit('mo') and tab() == 'settings', 'Anh Mõ mở cài đặt')

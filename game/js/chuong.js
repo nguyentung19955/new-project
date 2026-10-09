@@ -398,6 +398,9 @@
   }
   // Gọi mỗi khung từ G.updateWorld (js/combat.js)
   CH.update = function (W, dt) {
+    // mẹo lần đầu vào ải (sau ải hướng dẫn): giới thiệu nút Chưởng một lần
+    const sv = G.save, run = G.getRun && G.getRun();
+    if (sv && sv.tut && !sv.tut.chIn && run && !run.tut && !G.noRender && !W.banner && W.P && W.P.t > 1.5) { sv.tut.chIn = 1; W.banner = { s: CH.tip, col: '#ffd27a', t: 5, tip: true }; }
     const L = W.chs;
     if (L && L.length) {
       for (const q of L.slice()) if (!q.done) step(W, q, dt);

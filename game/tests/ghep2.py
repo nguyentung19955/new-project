@@ -63,10 +63,10 @@ JS_A = r"""
     room({ big, r: 0, i: 4, kind: 'C' });
     const W = T2.W, g = W.geo, where = (big ? 'phòng trùm' : 'phòng thường') + ', ' + tag;
     btns = []; stick = null; paint();
-    const round = btns.filter((b) => ['atk', 'dodge', 'special', 'skill'].includes(b.kind));
+    const round = btns.filter((b) => ['atk', 'dodge', 'special', 'skill', 'chuong'].includes(b.kind));
     ok('A: đủ bốn nút tròn vẽ bằng G.btnArt (' + where + ')', round.length === 4, round.map((b) => b.kind).join());
     // nút vẽ đúng chỗ vùng chạm
-    ok('A: hình nút nằm đúng tâm vùng chạm (' + where + ')', round.every((b) => { const q = G.stageUi.btnPos(b.kind); return Math.abs(q[0] - b.x) < 0.01 && Math.abs(q[1] - b.y) < 0.01 && Math.abs(q[2] + 1 - b.r) < 0.01; }));
+    ok('A: hình nút nằm đúng tâm vùng chạm (' + where + ')', round.every((b) => { const q = G.stageUi.btnPos(b.kind === 'chuong' ? 'skill' : b.kind); return Math.abs(q[0] - b.x) < 0.01 && Math.abs(q[1] - b.y) < 0.01 && Math.abs(q[2] + 1 - b.r) < 0.01; }));
     // không đè sàn: mép trái của nút so với mép phải của sàn
     const over = Math.max(0, ...round.map((b) => g.fx1 - (b.x - b.r)));
     ok('A: nút tròn không đè lên sàn quá 3 điểm ảnh (' + where + ')', over <= 3, 'đè ' + over.toFixed(1));

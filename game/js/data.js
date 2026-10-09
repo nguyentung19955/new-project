@@ -107,7 +107,7 @@
     },
     hunter: {
       name: 'Thợ Săn', hp: 75, mana: 90, speed: 1.15, fav: ['bow', 'spear'],
-      passive: 'Gây thêm 25% sát thương lên mục tiêu bị choáng, đóng băng, mắc bẫy hoặc lộ điểm yếu',
+      passive: 'Gây thêm 25% sát thương lên mục tiêu bị choáng, đóng băng, giữ chân hoặc lộ điểm yếu',
       skill: 'Chưởng', skillDesc: 'Nét riêng: chưởng bay xa hơn 30% và nhanh hơn 25%', // trước là Đặt bẫy
       unlock: 'Hạ Mộc Tinh',
     },
