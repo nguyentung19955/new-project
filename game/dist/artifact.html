@@ -57,10 +57,11 @@
     // mưa tên yếu đi hẳn (G.MOVES.bow), để cung an toàn nhất có sát thương mỗi giây thấp nhất, cả khi đánh một con lẫn cả cụm;
     // búa 23 -> 22 (vẫn mạnh nhất mỗi đòn).
     // Cân bằng phải cày: đánh quái mới thật thì cận chiến khó hơn (giáp, gai, lặn) nên cung chỉ còn thấp hơn kiếm khoảng 11%;
-    // cung 11 -> 10,2 và giáo 11 -> 10,7 (giáo đang cao nhất): cung thấp hơn kiếm khoảng 22% cả trên bia tập lẫn quái mới (tests/dps.py).
-    bow: { name: 'Cung', dmg: 10.2, cd: 0.5, ranged: true, special: 'Mưa tên' },
+    // cung 11 -> 10,5, giáo 11 -> 10,7 và búa 22 -> 21,3 (sau khi gộp các phiên khác búa thành cao nhất): cung thấp hơn kiếm khoảng
+    // 20% trên bia tập và 24% trên quái mới (tests/dps.py, 8 và 12 hạt giống), vũ khí yếu nhất vẫn từ 70% vũ khí mạnh nhất.
+    bow: { name: 'Cung', dmg: 10.5, cd: 0.5, ranged: true, special: 'Mưa tên' },
     spear: { name: 'Giáo', dmg: 10.7, cd: 0.44, reach: 56, depth: 12, special: 'Lao tới' },
-    hammer: { name: 'Búa', dmg: 22, cd: 0.8, reach: 32, depth: 25, stagger: 0.4, special: 'Nện đất' },
+    hammer: { name: 'Búa', dmg: 21.3, cd: 0.8, reach: 32, depth: 25, stagger: 0.4, special: 'Nện đất' },
   };
   G.WKEYS = ['sword', 'bow', 'spear', 'hammer'];
   // BỐN BẬC MÀU của vũ khí (thay ba bậc Sắt, Bạc, Linh cũ). mult: hệ số sát thương gốc; maxStage: mốc tiến hóa cao nhất
@@ -239,8 +240,8 @@
   // CÂN BẰNG PHẢI CÀY: hệ số riêng của từng ải (15 ải, theo thứ tự 1-1 .. 3-5) nhân thêm vào chỉ số trên.
   // mob: [máu, sát thương] quái thường; boss: [máu, sát thương] trùm nhỏ (ải 1-4) hoặc trùm vùng (ải 5).
   G.STAGE_K = {
-    mob: [[1.12, 1.29], [1.21, 1.56], [1.22, 1.59], [1.17, 1.43], [1.26, 1.77], [1.26, 2.59], [1.44, 2.33], [1.48, 2.47], [1.27, 2.69], [1.13, 2.12], [1.58, 3.71], [1.52, 3.27], [1.55, 3.53], [1.54, 3.51], [1.16, 2.29]],
-    boss: [[1.12, 1.29], [1.21, 1.56], [1.22, 1.59], [1.17, 1.43], [1.26, 1.77], [1.26, 2.59], [1.44, 2.33], [1.48, 2.47], [1.27, 2.69], [1.13, 2.12], [1.58, 3.71], [1.52, 3.27], [1.55, 3.53], [1.54, 3.51], [1.16, 2.29]],
+    mob: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.66], [1.23, 1.66], [1.27, 1.81], [1.32, 2.95], [1.44, 2.32], [1.48, 2.49], [1.31, 2.91], [1.24, 2.81], [1.7, 4.54], [1.66, 4.28], [1.67, 4.43], [1.65, 4.34], [1.29, 3.11]],
+    boss: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.66], [1.23, 1.66], [1.27, 1.81], [1.32, 2.95], [1.44, 2.32], [1.48, 2.49], [1.31, 2.91], [1.24, 2.81], [1.7, 4.54], [1.66, 4.28], [1.67, 4.43], [1.65, 4.34], [1.29, 3.11]],
   };
   // Độ khó thứ hai: [máu, sát thương] nhân thêm theo vùng. Trước là x2,2 máu, x1,5 sát thương cho mọi vùng; nay quái thường đã mạnh
   // theo ải, nên vùng sau nhân ít hơn để người chơi đã cày đầy (cấp 30, vũ khí Vàng) vẫn với tới được.
@@ -261,14 +262,14 @@
   };
   // SỨC MẠNH KHUYÊN DÙNG của từng ải (15 ải). So với G.power() (js/combat.js): đủ số này thì bot thắng phần lớn lượt chơi
   // (đo bằng tests/cay.py). Độ khó thứ hai cần gấp căn bậc hai của (máu x sát thương) nhân thêm của G.DIFF2.
-  G.STAGE_REC = [100, 110, 125, 140, 190, 200, 225, 265, 280, 310, 335, 355, 385, 400, 430];
+  G.STAGE_REC = [100, 110, 135, 150, 215, 240, 270, 315, 340, 385, 400, 440, 470, 485, 500];
   G.stageRec = function (r, i, diff) {
     const v = G.STAGE_REC[r * 5 + i] || 100;
     return diff ? Math.round((v * Math.sqrt(G.DIFF2[r][0] * G.DIFF2[r][1])) / 5) * 5 : v;
   };
   // QUYẾT TÂM: thua liền ở một ải thì lần sau vào lại chính ải đó bé mạnh thêm mỗi lần G.GRIT.step (sát thương và máu), tối đa
   // G.GRIT.max lần; qua ải thì hết. Để người chơi đã cày tới trần (cấp 30, mài +10) không bị kẹt mãi ở một trùm vì xui.
-  G.GRIT = { step: 0.04, max: 5 };
+  G.GRIT = { step: 0.05, max: 5 };
   // Thưởng khi cày: sức mạnh vượt quá 130% khuyên dùng thì kinh nghiệm và vàng giảm dần, thấp nhất còn 40%.
   G.grindMult = function (power, rec) {
     const q = rec > 0 ? power / rec : 1;
@@ -10478,7 +10479,7 @@
   // SỨC MẠNH của em bé (một con số để so với "Sức mạnh khuyên dùng" của ải): căn bậc hai của (đòn mạnh nhất x máu hữu hiệu).
   // Đòn: vũ khí mạnh nhất đang mang, quy về thang của kiếm (cấp hero, bậc, mài, mốc tiến hóa, điểm Công, chí mạng).
   // Máu hữu hiệu: máu tối đa (cấp hero, áo, điểm Thủ) chia cho phần sát thương còn nhận (giáp, nội tại), cộng chút kháng hệ của mũ.
-  // Em bé mới cấp 1 cầm kiếm Thường có sức mạnh 100. Trang phục có chỉ số (G.outfitStats nếu có) cũng được tính.
+  // Em bé mới cấp 1 cầm kiếm Thường có sức mạnh 99. Trang phục đang mặc cũng được tính (máu, giảm sát thương, kháng, bộ, tác dụng, cánh).
   G.power = function () {
     if (!G.save || !G.save.heroes) return 0;
     const P = G.buildPlayer();
@@ -10488,7 +10489,12 @@
     off *= 1 + P.crit;
     let res = 0;
     for (const e of G.ELS) res = Math.max(res, P.resist[e] || 0);
-    const ehp = (P.maxhp / (1 - Math.min(0.75, P.dr))) * (1 + 0.25 * Math.min(0.8, res));
+    let ehp = (P.maxhp / (1 - Math.min(0.75, P.dr))) * (1 + 0.25 * Math.min(0.8, res));
+    // Trang phục (js/outfit.js): máu, giảm sát thương, kháng hệ đã nằm trong P; thêm phần thưởng đủ bộ (sát thương hệ),
+    // mỗi tác dụng riêng của món Tím, Vàng (khiên, vệt, vũng, nổ) và cánh (lộn xa hơn, khiên sau khi lộn).
+    if (P.elBonus) { let eb = 0; for (const e in P.elBonus) eb = Math.max(eb, P.elBonus[e] || 0); off *= 1 + eb * 0.6; }
+    if (P.oSp) { let n = 0; for (const k in P.oSp) n += P.oSp[k].length; ehp *= 1 + 0.04 * Math.min(5, n); }
+    if (P.dodgeMul > 1) ehp *= 1 + (P.dodgeMul - 1) * 0.3;
     return Math.round(3 * Math.sqrt(off * ehp) * (P.powerMult || 1));
   };
   // Màu so sánh: đủ (xanh), sát nút (vàng, từ 90% khuyên dùng), thiếu (đỏ).
@@ -11157,6 +11163,8 @@
           const k = ((min - d) / d) * 0.5;
           A1.x -= dx * k; B.x += dx * k;
           A1.y -= (dy * k) / 1.6; B.y += (dy * k) / 1.6;
+          // đẩy nhau sát mép sàn thì không được lọt ra ngoài sàn theo chiều dọc (tests/fuzz.py)
+          A1.y = G.clamp(A1.y, W.y0, W.y1); B.y = G.clamp(B.y, W.y0, W.y1);
         }
       }
     }
@@ -22227,7 +22235,7 @@ MA._xong();
       // Sức mạnh khuyên dùng so với sức mạnh hiện tại của bé (G.power): xanh đủ, vàng sát nút, đỏ thiếu
       const need = G.stageRec(r, i, V.diff), col = G.powerCol(pw, need);
       const gr = !V.diff && G.save.grit ? G.save.grit[r + '-' + i] || 0 : 0;
-      ui.text((gr ? 'Khuyên dùng ' : 'Sức mạnh khuyên dùng ') + need + ' · bé ' + pw + (gr ? ' · quyết tâm +' + Math.round(G.GRIT.step * gr * 100) + '%' : ''), 256, 240, { size: gr ? 7 : 7.5, bold: true, color: col });
+      ui.text((gr ? 'Khuyên dùng ' : 'Sức mạnh khuyên dùng ') + need + ' · bé ' + pw + (gr ? ' · quyết tâm +' + Math.round(G.GRIT.step * gr * 100) + '%' : ''), 256, 240, { size: gr ? 6.5 : 7.5, bold: true, color: col });
       ui.para('Thưởng: ' + b.xp + ' kinh nghiệm, ~' + b.gold + ' vàng, ' + (5 + i) + ' ' + R.mat.toLowerCase() + (i === 4 ? ', ' + (V.diff ? 4 : 3) + ' mảnh ' + R.bossName + ', vũ khí quý' : ''), 256, 250.5, 144, { size: 6.5, color: SOFT });
       if (T.btn(404, 217, 64, 38, 'Lên đò', { size: 11, primary: true })) G.startStage(r, i, V.diff);
     } else ui.text('Chạm một ải trên tranh để xem.', 256, 238, { size: 8, color: SOFT });

@@ -21,10 +21,11 @@
     // mưa tên yếu đi hẳn (G.MOVES.bow), để cung an toàn nhất có sát thương mỗi giây thấp nhất, cả khi đánh một con lẫn cả cụm;
     // búa 23 -> 22 (vẫn mạnh nhất mỗi đòn).
     // Cân bằng phải cày: đánh quái mới thật thì cận chiến khó hơn (giáp, gai, lặn) nên cung chỉ còn thấp hơn kiếm khoảng 11%;
-    // cung 11 -> 10,2 và giáo 11 -> 10,7 (giáo đang cao nhất): cung thấp hơn kiếm khoảng 22% cả trên bia tập lẫn quái mới (tests/dps.py).
-    bow: { name: 'Cung', dmg: 10.2, cd: 0.5, ranged: true, special: 'Mưa tên' },
+    // cung 11 -> 10,5, giáo 11 -> 10,7 và búa 22 -> 21,3 (sau khi gộp các phiên khác búa thành cao nhất): cung thấp hơn kiếm khoảng
+    // 20% trên bia tập và 24% trên quái mới (tests/dps.py, 8 và 12 hạt giống), vũ khí yếu nhất vẫn từ 70% vũ khí mạnh nhất.
+    bow: { name: 'Cung', dmg: 10.5, cd: 0.5, ranged: true, special: 'Mưa tên' },
     spear: { name: 'Giáo', dmg: 10.7, cd: 0.44, reach: 56, depth: 12, special: 'Lao tới' },
-    hammer: { name: 'Búa', dmg: 22, cd: 0.8, reach: 32, depth: 25, stagger: 0.4, special: 'Nện đất' },
+    hammer: { name: 'Búa', dmg: 21.3, cd: 0.8, reach: 32, depth: 25, stagger: 0.4, special: 'Nện đất' },
   };
   G.WKEYS = ['sword', 'bow', 'spear', 'hammer'];
   // BỐN BẬC MÀU của vũ khí (thay ba bậc Sắt, Bạc, Linh cũ). mult: hệ số sát thương gốc; maxStage: mốc tiến hóa cao nhất
@@ -203,8 +204,8 @@
   // CÂN BẰNG PHẢI CÀY: hệ số riêng của từng ải (15 ải, theo thứ tự 1-1 .. 3-5) nhân thêm vào chỉ số trên.
   // mob: [máu, sát thương] quái thường; boss: [máu, sát thương] trùm nhỏ (ải 1-4) hoặc trùm vùng (ải 5).
   G.STAGE_K = {
-    mob: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.66], [1.23, 1.66], [1.3, 1.92], [1.32, 2.95], [1.44, 2.32], [1.48, 2.49], [1.31, 2.91], [1.26, 2.92], [1.7, 4.54], [1.66, 4.28], [1.67, 4.43], [1.65, 4.34], [1.26, 2.89]],
-    boss: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.66], [1.23, 1.66], [1.3, 1.92], [1.32, 2.95], [1.44, 2.32], [1.48, 2.49], [1.31, 2.91], [1.26, 2.92], [1.7, 4.54], [1.66, 4.28], [1.67, 4.43], [1.65, 4.34], [1.26, 2.89]],
+    mob: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.66], [1.23, 1.66], [1.27, 1.81], [1.32, 2.95], [1.44, 2.32], [1.48, 2.49], [1.31, 2.91], [1.24, 2.81], [1.7, 4.54], [1.66, 4.28], [1.67, 4.43], [1.65, 4.34], [1.29, 3.11]],
+    boss: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.66], [1.23, 1.66], [1.27, 1.81], [1.32, 2.95], [1.44, 2.32], [1.48, 2.49], [1.31, 2.91], [1.24, 2.81], [1.7, 4.54], [1.66, 4.28], [1.67, 4.43], [1.65, 4.34], [1.29, 3.11]],
   };
   // Độ khó thứ hai: [máu, sát thương] nhân thêm theo vùng. Trước là x2,2 máu, x1,5 sát thương cho mọi vùng; nay quái thường đã mạnh
   // theo ải, nên vùng sau nhân ít hơn để người chơi đã cày đầy (cấp 30, vũ khí Vàng) vẫn với tới được.
@@ -225,14 +226,14 @@
   };
   // SỨC MẠNH KHUYÊN DÙNG của từng ải (15 ải). So với G.power() (js/combat.js): đủ số này thì bot thắng phần lớn lượt chơi
   // (đo bằng tests/cay.py). Độ khó thứ hai cần gấp căn bậc hai của (máu x sát thương) nhân thêm của G.DIFF2.
-  G.STAGE_REC = [100, 110, 135, 150, 225, 245, 270, 315, 345, 395, 405, 440, 475, 495, 515];
+  G.STAGE_REC = [100, 110, 135, 150, 215, 240, 270, 315, 340, 385, 400, 440, 470, 485, 500];
   G.stageRec = function (r, i, diff) {
     const v = G.STAGE_REC[r * 5 + i] || 100;
     return diff ? Math.round((v * Math.sqrt(G.DIFF2[r][0] * G.DIFF2[r][1])) / 5) * 5 : v;
   };
   // QUYẾT TÂM: thua liền ở một ải thì lần sau vào lại chính ải đó bé mạnh thêm mỗi lần G.GRIT.step (sát thương và máu), tối đa
   // G.GRIT.max lần; qua ải thì hết. Để người chơi đã cày tới trần (cấp 30, mài +10) không bị kẹt mãi ở một trùm vì xui.
-  G.GRIT = { step: 0.04, max: 5 };
+  G.GRIT = { step: 0.05, max: 5 };
   // Thưởng khi cày: sức mạnh vượt quá 130% khuyên dùng thì kinh nghiệm và vàng giảm dần, thấp nhất còn 40%.
   G.grindMult = function (power, rec) {
     const q = rec > 0 ? power / rec : 1;

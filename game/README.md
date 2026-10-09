@@ -141,7 +141,7 @@ Em bé mặc đồ theo năm ô: **Mũ**, **Áo**, **Đồ đeo lưng** (gùi, k
 - Mỗi ải có **Sức mạnh khuyên dùng**, ghi dưới thẻ ải trên tranh bản đồ của Chú Lái Đò và trong thẻ thông tin ải. Màu so với sức mạnh của bé: xanh là đủ, vàng là sát nút (từ 90%), đỏ là còn thiếu.
 - Vùng 1 nhẹ: ải 1 đến 4 thường chơi một hai lần là qua. Ải 3, ải 4 của vùng 2 và 3 cần cày thêm vài lượt; ải trùm vùng (5, 10, 15) cần cày nhiều nhất, vùng sau nhiều hơn vùng trước.
 - **Cày**: chơi lại ải cũ vẫn được kinh nghiệm, vàng, quặng và nguyên liệu vùng (cần cho mài từ +5, nâng bậc, rèn đồ). Chơi lại một ải đã qua có cơ hội rơi vũ khí bậc cao hơn lần đầu. Khi bé đã mạnh hơn 130% khuyên dùng của ải thì kinh nghiệm và vàng giảm dần (thấp nhất 40%), nguyên liệu vẫn đủ.
-- **Quyết tâm**: thua thật ở một ải (không tính bỏ ải) thì lần sau vào lại chính ải đó bé mạnh thêm 4% máu và sát thương, cộng dồn tối đa 20%; qua ải thì hết.
+- **Quyết tâm**: thua thật ở một ải (không tính bỏ ải) thì lần sau vào lại chính ải đó bé mạnh thêm 5% máu và sát thương, cộng dồn tối đa 25%; qua ải thì hết.
 - Lên cấp chậm hơn trước (cần 50 + 50 x cấp kinh nghiệm), mỗi cấp tăng 1,5% sát thương và 3,5% máu.
 - Đi hết 15 ải lần đầu mất khoảng 3 đến 4 giờ chơi (bot đo bằng `tests/cay.py`).
 
@@ -208,7 +208,7 @@ python3 tests/ui_build.py          # đóng gói rồi chơi thử cả hai tệ
 python3 tests/ui_shots.py anh phone   # chụp mọi màn hình vào thư mục anh/ để xem bằng mắt
 python3 tests/smoke.py anh         # nạp game và đánh thử vài giây
 python3 tests/campaign.py          # bot tự chơi hết 15 ải để xem độ khó (thua thì cày ải trước một lượt rồi thử lại)
-python3 tests/cay.py               # cân bằng phải cày: kiểm luật sức mạnh, quyết tâm; bot chơi từ đầu 8 lượt, đếm số lần chơi từng ải và tổng thời gian ("lieu": bot không nhìn lời khuyên)
+python3 tests/cay.py               # cân bằng phải cày: kiểm luật sức mạnh, quyết tâm; bot chơi từ đầu 12 lượt, đếm số lần chơi từng ải và tổng thời gian ("lieu": bot không nhìn lời khuyên)
 python3 tests/cay_shots.py         # chụp ảnh sức mạnh khuyên dùng trên thẻ ải, bảng hero, dải trên vào docs/can-bang-cay/
 python3 tests/mapgen.py            # bộ sinh bản đồ ải: 1000 hạt giống cho mỗi kiểu A, B, C
 python3 tests/doors.py             # luật cửa, điều kiện mở cửa Trùm, bot đi hết ải ở cả ba kiểu

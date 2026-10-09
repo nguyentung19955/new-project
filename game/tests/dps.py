@@ -93,7 +93,7 @@ def main():
     one = 'mot' in sys.argv
     noel = 'khonghe' in sys.argv
     secs = int(args[0]) if len(args) > 0 else 60
-    seeds = int(args[1]) if len(args) > 1 else 4
+    seeds = int(args[1]) if len(args) > 1 else 8  # 8 hạt giống (trước 4): 4 hạt dao động tới 5-7 điểm phần trăm giữa các lần đổi số
     errs = []
     table = {}
     with sync_playwright() as p:

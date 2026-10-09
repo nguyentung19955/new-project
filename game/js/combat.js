@@ -785,6 +785,8 @@
           const k = ((min - d) / d) * 0.5;
           A1.x -= dx * k; B.x += dx * k;
           A1.y -= (dy * k) / 1.6; B.y += (dy * k) / 1.6;
+          // đẩy nhau sát mép sàn thì không được lọt ra ngoài sàn theo chiều dọc (tests/fuzz.py)
+          A1.y = G.clamp(A1.y, W.y0, W.y1); B.y = G.clamp(B.y, W.y0, W.y1);
         }
       }
     }
