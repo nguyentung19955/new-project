@@ -8,7 +8,7 @@
    - **Tự bỏ lên GitHub**: mở repo, vào thư mục `game/art/custom/`, bấm *Add file → Upload files*, kéo tệp vào, bấm *Commit changes* trên nhánh `khoi-tao-du-an`. Game tự đóng gói và đăng lên spiritblade.web.app sau vài phút.
 3. Muốn bỏ hình tự vẽ, trở lại hình cũ: xoá tệp đó trong `game/art/custom/`.
 
-Người chơi không thấy công cụ: game không có nút hay màn nào mới. Chỉ có con quái (hoặc em bé) đổi sang hình bạn vẽ.
+Người chơi không thấy công cụ: game không có nút hay màn nào mới. Chỉ có con quái (em bé, món đồ, người làng) đổi sang hình bạn vẽ.
 
 ## Phần của Claude hoặc người làm code
 
@@ -29,12 +29,15 @@ Cùng thư mục `game/art/custom/`, cùng cách gửi. Mã tệp cho biết mó
 | `vk-<loại>-<dòng>` (ví dụ `vk-sword-3`) | cả dòng vũ khí đó, mọi hệ, mọi giai đoạn. Loại: `sword` kiếm, `bow` cung, `spear` giáo, `hammer` búa; dòng 0 đến 9 |
 | `vk-<loại>-<dòng>-<hệ>-<giai đoạn>` (ví dụ `vk-bow-0-fire-2`) | riêng hệ `fire`/`poison`/`ice` ở giai đoạn 1 Mầm, 2 Thành hình, 3 Thức tỉnh; có tệp riêng thì dùng tệp riêng, không thì dùng tệp cả dòng |
 | `tp-<ô>-<hình>` (ví dụ `tp-hats-non_la`, `tp-wings-lua`) | một hình trang phục trong `G.heroLooks`: ô `hats`, `robes`, `backs`, `hands`, `masks`, `wings` |
-| `vp-<loại>` (ví dụ `vp-gold`, `vp-potion`, `vp-linhkhi-fire`, `vp-ore`, `vp-stone`, `vp-mat0`, `vp-shard2`) | đồ rơi trên sàn và biểu tượng tài nguyên trên giao diện |
+| `vp-<loại>` (ví dụ `vp-gold`, `vp-potion`, `vp-linhkhi-fire`, `vp-ore`, `vp-stone`, `vp-mat0`, `vp-shard2`, `vp-xp`) | đồ rơi trên sàn và biểu tượng tài nguyên ở mọi chỗ: dải tài nguyên góc trên, Hành trang, giá bán và giá rèn |
+| `nl-<người>` (`nl-lai` Chú Lái Đò, `nl-ren` Ông Thợ Rèn, `nl-xen` Bà Hàng Xén, `nl-may` Cô Thợ May, `nl-do` Cụ Đồ, `nl-tu` Ông Từ, `nl-mo` Anh Mõ) | người làng trong làng, khuôn mặt ở dải lối tắt, người to trong khung nói chuyện |
 
 Cách game dùng (`game/js/sprite_custom.js`, chỉ nối vào khi có tệp):
 - **Vũ khí**: `G.weaponArt.draw` và `G.weaponArt.icon` xoay hình quanh điểm cầm theo góc đòn đánh (bước 5 độ, có nhớ), viền đổi màu theo bậc, cung có dây và mũi tên khi giương. Tên, chỉ số, đòn đánh không đổi.
 - **Trang phục**: thay mục tương ứng trong `G.heroLooks`, vẽ vào hệ toạ độ đầu hoặc thân của em bé nên tự bám theo mọi động tác; ô đồ (`G.tinhLinh.itemIcon`) và đồ rơi đổi theo. Chỉ số, bộ, bậc không đổi.
-- **Vật phẩm**: `G.theme.resIcon` và hình đồ rơi (`js/do_roi.js`) dùng hình tự vẽ.
+- **Vật phẩm**: `G.theme.resIcon` (mọi chỗ hiện biểu tượng tài nguyên, kể cả chữ có số như "400 vàng") và hình đồ rơi (`js/do_roi.js`) dùng hình tự vẽ.
+- **Vũ khí vẽ nằm ngang**: không cần gì thêm, tệp chỉ ghi điểm cầm `cam` và mũi `mui`; game xoay sao cho hướng cầm → mũi trùng hướng đòn đánh.
+- **Người làng** (`doi_tuong: "nguoi-lang"`): tệp có tấm sprite như quái, hai động tác `idle` (đứng thở) và `noi` (nói chuyện, vẫy tay). `js/village_scene.js` có hai chỗ hỏi hình tự vẽ (chỉ khi có tệp): `VS.tuVe` trong `putNpc` (người trong làng và người to cạnh bảng) và `VS.tuVeMat` trong `VS.face` (dải khuôn mặt). Khi em bé tới gần hoặc đang nói chuyện thì dùng động tác `noi`, quay về phía em bé; còn lại `idle`. Khuôn mặt cắt từ phần đầu (khoảng 42% trên cùng) của khung đứng thở đầu tiên. Vị trí đứng, chỗ chạm, câu nói không đổi.
 
 Khoá riêng của tệp đồ: `anh` (ảnh PNG đã có viền), `rong`, `cao`, và một trong `vu_khi` (`loai`, `dong`, `he`, `gd`, `cam` điểm cầm, `mui` mũi, `day` hai đầu dây cung), `trang_phuc` (`o`, `look`, `lech` độ lệch so với gốc đầu/thân/vai, `lop`, `kieu`, `tay_ao`), `vat_pham` (loại).
 

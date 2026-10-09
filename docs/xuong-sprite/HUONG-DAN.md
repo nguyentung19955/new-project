@@ -1,6 +1,6 @@
 # Hướng dẫn dùng Xưởng Sprite
 
-Xưởng Sprite là công cụ để **tự vẽ hình quái và em bé** cho Linh Khí. Bạn vẽ tay (trên giấy hoặc trên máy), đưa ảnh vào, công cụ biến nó thành hình pixel có đủ động tác, rồi bạn tải tệp về gửi cho Claude để đưa vào game.
+Xưởng Sprite là công cụ để **tự vẽ hình quái, em bé, vũ khí, trang phục, đồ và tài nguyên, người làng** cho Linh Khí. Bạn vẽ tay (trên giấy hoặc trên máy), đưa ảnh vào, công cụ biến nó thành hình pixel có đủ động tác, rồi bạn tải tệp về gửi cho Claude để đưa vào game.
 
 - Mở trên web: **https://spiritblade.web.app/xuong-sprite.html** (máy tính hoặc điện thoại cầm ngang). Không cần cài gì.
 - Hoặc mở tệp `tools/xuong-sprite/index.html` trong repo.
@@ -29,7 +29,9 @@ Mẫu ảnh vẽ tay dùng để thử: ![](ve-tay-mau-bon-chan.png)
 ## Các bước
 
 ### 1. Chọn
-Chọn quái muốn vẽ lại (hình nhỏ là hình đang có trong game để so), một em bé, hoặc **Quái mới** (đặt mã như `rongDat` và tên như `Rồng Đất`). Thẻ có nhãn **Đang làm** là bài còn nháp.
+Trang chọn chia sáu nhóm (hàng nút trên cùng, số bên cạnh là số thẻ): **Em bé · Quái (ba vùng) · Vũ khí · Trang phục · Đồ và tài nguyên · Người làng**. Bấm một nhóm để mở; công cụ nhớ nhóm bạn mở lần trước. Mỗi thẻ có hình nhỏ là hình đang có trong game (vẽ bằng code) để so. Nhóm Quái có thêm **Quái mới** (đặt mã như `rongDat` và tên như `Rồng Đất`). Thẻ có nhãn **Đang làm** là bài còn nháp.
+
+![Trang chọn, nhóm Vũ khí](chon-nhom-vu-khi.png)
 
 ![](buoc-1-chon.png)
 
@@ -68,34 +70,65 @@ Bấm **Tải về `<mã>.sprite.json`**, rồi gửi tệp đó cho Claude (xem
 
 ## Vũ khí, trang phục, vật phẩm
 
-Cũng 5 bước như quái, chỉ khác bước 3 và 4. Trong danh sách bước 1, kéo xuống sẽ thấy các nhóm **Vũ khí** (Kiếm, Cung, Giáo, Búa, mỗi loại 10 dòng), **Trang phục** (Mũ, Áo, Đồ đeo lưng, Bùa và vật cầm tay, Dấu mặt nạ, Cánh) và **Vật phẩm rơi ra** (vàng, bình máu, linh khí ba hệ, quặng, đá tôi, nguyên liệu, mảnh trùm). Prompt để nhờ AI vẽ có sẵn ở [PROMPT-AI.md](PROMPT-AI.md).
+Cũng 5 bước như quái, chỉ khác bước 3 và 4. Ở bước 1 mở nhóm **Vũ khí** (Kiếm, Cung, Giáo, Búa, mỗi loại 10 dòng), **Trang phục** (Mũ, Áo, Đồ đeo lưng, Bùa và vật cầm tay, Dấu mặt nạ, Cánh) hoặc **Đồ và tài nguyên** (vàng, bình máu, linh khí ba hệ, quặng, đá tôi, nguyên liệu ba vùng, mảnh trùm, kinh nghiệm). Prompt nhờ AI vẽ từng món (có nét phá cách dân gian) ở [PROMPT-VE.md](PROMPT-VE.md) phần 2; bộ prompt cũ vẫn ở [PROMPT-AI.md](PROMPT-AI.md).
 
 ![](do-1-chon-vu-khi.png)
 
 **Vũ khí**
-- Vẽ kiếm, giáo, búa **dựng đứng, mũi lên trên, chuôi ở dưới**. Vẽ cung **dựng đứng, bụng cung quay sang phải**.
-- Bước 3: kéo **hình thoi đỏ** vào chỗ tay cầm, **chấm vàng** vào mũi. Cung: bật "Có dây cung", kéo hai chấm xanh vào hai đầu dây; game tự vẽ dây và mũi tên khi giương.
+- Vẽ kiếm, giáo, búa **nằm ngang, chuôi bên trái, mũi hướng sang phải** (như prompt trong PROMPT-VE.md), hoặc **dựng đứng, mũi lên trên**: công cụ tự nhận ra và đặt sẵn điểm cầm, mũi. Vẽ cung **dựng đứng, bụng cung quay sang phải**.
+- Bước 2: thanh "Chiều cao trong game" của vũ khí là **chiều dài** vũ khí (cạnh dài), tự đặt bằng vũ khí gốc.
+- Bước 3: **chạm vào chỗ chuôi** là hình thoi đỏ (điểm cầm tay) tới đó; kéo **chấm vàng** vào mũi. Cung: bật "Có dây cung", kéo hai chấm xanh vào hai đầu dây; game tự vẽ dây và mũi tên khi giương.
 - "Áp dụng cho": **Cả dòng** (mọi hệ, mọi giai đoạn dùng một hình) hoặc một hệ (Lửa, Độc, Băng) và giai đoạn (Mầm, Thành hình, Thức tỉnh) để vũ khí đổi hình khi thức tỉnh. Mỗi lựa chọn là một tệp riêng.
-- Bước 4: xem em bé đứng, chạy, đánh, né, trúng đòn với vũ khí; xem ô đồ và đồ rơi; thử bậc Lam, Tím, Vàng (viền đổi màu bậc).
+- Bước 4: xem em bé đứng, chạy, đánh, né, trúng đòn với vũ khí; **Tám hướng**: tám hình vũ khí đúng như game xoay quanh điểm cầm (chấm đỏ); xem ô đồ và đồ rơi; thử bậc Lam, Tím, Vàng (viền đổi màu bậc). Ánh hệ, vệt chém khi đánh game vẫn tự thêm như cũ.
 - Đừng vẽ mắt quá nhỏ: game không vẽ thêm mắt cho vũ khí tự vẽ.
 
 ![](do-2-diem-cam.png)
+![Chạm vào chuôi để đặt điểm cầm (kiếm vẽ nằm ngang)](do-8-cham-chuoi.png)
+![Tám hướng game xoay vũ khí](do-9-tam-huong.png)
 ![](do-vu-khi-tren-tay.gif)
 
 **Trang phục**
 - Vẽ riêng món đồ (không vẽ em bé), nhìn ngang, quay sang phải. Cánh: vẽ **một bên cánh**, gốc cánh ở góc dưới bên phải; game tự vẽ cánh xa và cho cánh vỗ.
 - Bước 3: kéo món đồ trên em bé bên phải cho vừa (nút mũi tên để nhích từng điểm ảnh). Em bé bên trái mặc đồ gốc để so. Mũ có "Che cả mặt"; bùa chọn "Bùa đeo hông" hoặc "Vật cầm tay"; áo có "Có tay áo".
+- Góc trên bên phải của bước 3 có ngay ba dáng nhỏ **Đứng · Đi · Đánh**, đổi theo lúc bạn kéo. Bước 4 có cảnh **Đứng · Đi · Đánh** to.
 - Đồ tự vẽ tự bám theo đầu, thân em bé khi chạy, đánh, lăn né. Ô đồ trong Hành trang và đồ rơi cũng đổi theo.
 
 ![](do-4-dat-len-nguoi.png)
 ![](do-5-mac-thu.png)
+![Ba dáng ngay khi đặt món đồ](do-10-dat-mu-ba-dang.png)
 
-**Vật phẩm**
+**Đồ và tài nguyên**
 - Hình rất nhỏ (khoảng 14 đến 18 điểm ảnh): vẽ khối đơn giản, màu tương phản. Không có bước 3.
-- Đổi cả đồ rơi trên sàn lẫn biểu tượng tài nguyên trên giao diện (dải trên cùng, giá tiền).
+- Một hình đổi ở **mọi chỗ** hiện món đó: dải tài nguyên ở góc trên màn hình, Hành trang (thẻ Tài nguyên), giá bán và giá rèn, đồ rơi trên sàn.
+- "Xem trong game": đồ rơi quanh em bé trong trận; bấm **Xem ở làng / trong trận** để thấy biểu tượng ở dải tài nguyên của làng.
 
 ![](do-6-vat-pham.png)
 ![](do-7-xem-trong-game.png)
+![Quặng tự vẽ ở ô đồ và biểu tượng](do-12-quang.png)
+
+## Người làng
+
+Bảy người làng (Chú Lái Đò, Ông Thợ Rèn, Bà Hàng Xén, Cô Thợ May, Cụ Đồ, Ông Từ, Anh Mõ) làm giống quái hai chân: mở nhóm **Người làng**, đưa hình, chọn khung **Người** (đã gợi ý sẵn), kéo khớp.
+
+- Vẽ người **nhìn chếch sang phải**, hai tay tách khỏi thân (một tay để vẫy). Giữ mặt tròn trắng như mặt nạ tinh linh của người làng trong game cho hợp làng.
+- Bước 4 chỉ có hai động tác: **Đứng thở** và **Nói chuyện, vẫy tay**, trên nền sân làng, cạnh em bé. Bật "Hình code để so" để thấy người làng gốc bên cạnh.
+- Trong game: người làng tự vẽ đứng thở ở chỗ cũ; khi em bé tới gần thì quay về phía em bé, nói chuyện và vẫy tay. Khuôn mặt ở dải lối tắt trên cùng lấy phần đầu hình của bạn; khung nói chuyện (người to cạnh bảng) cũng dùng hình này.
+- "Xem trong game" mở thẳng làng, em bé đứng cạnh người đó; nút **Mở / đóng khung nói chuyện** mở bảng của người đó.
+
+![](nl-1-khung.png)
+![Nói chuyện, vẫy tay (bên phải là hình code)](nl-2-noi-chuyen.png)
+![Xem trong game: Chú Lái Đò tự vẽ trong làng](nl-3-xem-trong-game.png)
+
+## Trước và sau trong game
+
+| | |
+|---|---|
+| Làng: người làng, dải khuôn mặt, quặng ở dải tài nguyên | ![](truoc-sau-lang.png) |
+| Khung nói chuyện | ![](truoc-sau-noi-chuyen.png) |
+| Hành trang, thẻ Tài nguyên | ![](truoc-sau-hanh-trang.png) |
+| Trong trận: kiếm và khăn tự vẽ | ![](truoc-sau-tran.png) |
+
+Mẫu ảnh vẽ tay dùng để thử: ![](ve-tay-mau-kiem-ngang.png) ![](ve-tay-mau-quang.png) ![](ve-tay-mau-nguoi-lang.png)
 
 ## Động tác mẫu
 | Quái bốn chân tự vẽ | Em bé tự vẽ |
@@ -108,5 +141,5 @@ Dùng trên điện thoại cầm ngang:
 
 ## Hỏi nhanh
 - **Mất nháp?** Nháp lưu trong trình duyệt của máy đó. Đổi máy hoặc xoá dữ liệu trình duyệt thì mất; hãy bấm Tải về để giữ.
-- **Em bé tự vẽ có cầm vũ khí không?** Vũ khí vẫn do game vẽ. Hãy vẽ em bé tay không.
+- **Em bé tự vẽ có cầm vũ khí không?** Vũ khí vẫn do game vẽ (hoặc vũ khí bạn tự vẽ ở nhóm Vũ khí). Hãy vẽ em bé tay không.
 - **Quái mới có vào trận ngay không?** Chưa: cần người làm code xếp nó vào vùng và vai. Trong lúc chờ, "Xem trong game" cho nó tạm đứng vào chỗ một quái có sẵn.

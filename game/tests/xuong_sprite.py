@@ -6,6 +6,8 @@
   4. Bỏ tệp vào game/art/custom/ tạm, đóng gói, vào game: quái dùng hình mới (đủ động tác, lật hướng, chớp trúng đòn);
      em bé cũng vậy. Xoá tệp, đóng gói lại: trở về hình code.
   5. Nút "Xem trong game" mở bản game thử có quái mới đánh nhau thật, không ghi bản lưu thật.
+  6. Đồ: vũ khí (xoay tám hướng đúng điểm cầm), trang phục (theo cử động), biểu tượng tài nguyên (góc màn hình, Hành trang),
+     người làng (trong làng, dải khuôn mặt, khung nói chuyện); xoá tệp thì về hình code.
 Cuối bài game/art/custom/ chỉ còn .gitkeep và bản đóng gói được dựng lại sạch.
 Chạy: python3 tests/xuong_sprite.py
 """
@@ -20,7 +22,7 @@ from playwright.sync_api import sync_playwright
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from xuong_sprite_ve import ve_bon_chan, ve_nguoi, ve_kiem, ve_mu, ve_xu  # noqa: E402
+from xuong_sprite_ve import ve_bon_chan, ve_nguoi, ve_kiem, ve_mu, ve_xu, ve_kiem_ngang, ve_quang, ve_nguoi_lang  # noqa: E402
 
 GAME = os.path.dirname(HERE)
 REPO = os.path.dirname(GAME)
@@ -36,7 +38,7 @@ bad = []
 
 def chon(pg, ma):
     """Mở nhóm chứa thẻ (trang chọn chia nhóm) rồi bấm vào thẻ."""
-    pg.evaluate('ma => XS_UI.moNhom(XS_UI.nhomCuaMa(ma))', ma)
+    pg.evaluate('ma => { if (XS_S.buoc !== 1) XS_UI.denBuoc(1); XS_UI.moNhom(XS_UI.nhomCuaMa(ma)); }', ma)
     pg.click('.the[data-ma="' + ma + '"]')
 
 def ok(name, cond, extra=''):
@@ -90,7 +92,7 @@ def kiem_do(pw, tmp):
     n_tp = pg.evaluate("['hats','robes','backs','hands','masks','wings'].reduce((a, o) => a + Object.keys(G.heroLooks[o]).length, 0)")
     ok('Danh sách có 40 vũ khí (4 loại x 10 dòng)', len([m for m in ma if m.startswith('vk-')]) == 40)
     ok('Danh sách có mọi trang phục của game', len([m for m in ma if m.startswith('tp-')]) == n_tp, (n_tp, len([m for m in ma if m.startswith('tp-')])))
-    ok('Danh sách có 13 vật phẩm rơi ra', len([m for m in ma if m.startswith('vp-')]) == 13)
+    ok('Danh sách có 14 vật phẩm và biểu tượng tài nguyên', len([m for m in ma if m.startswith('vp-')]) == 14)
     tep = {}
     # --- vũ khí ---
     chon(pg, 'vk-sword-0'); pg.set_input_files('#chonAnh', kiem); pg.wait_for_function('XS_S.R')
@@ -164,6 +166,143 @@ def kiem_do(pw, tmp):
     ok('Không có lỗi trang trong game có đồ tự vẽ', not errs, errs[:3])
     b.close()
     don_custom()
+
+
+def kiem_them(pw, tmp):
+    """Đợt 3: trang chọn chia nhóm; vũ khí vẽ nằm ngang, chạm đặt điểm cầm, tám hướng; trang phục theo cử động;
+    biểu tượng tài nguyên ở góc màn hình và Hành trang; người làng trong làng và khung nói chuyện."""
+    kn, mu, qu, nl = (ve_kiem_ngang(os.path.join(tmp, 'kiem-ngang.png')), ve_mu(os.path.join(tmp, 'mu2.png')),
+                      ve_quang(os.path.join(tmp, 'quang.png')), ve_nguoi_lang(os.path.join(tmp, 'nguoi-lang.png')))
+    b, ctx, pg, errs = mo(pw, TOOL)
+    pg.wait_for_function('window.XS_UI')
+    nhom = pg.eval_on_selector_all('#nhomChon .chip', 'e => e.map(x => x.dataset.nhom)')
+    ok('Trang chọn chia sáu nhóm: Em bé, Quái, Vũ khí, Trang phục, Đồ và tài nguyên, Người làng', nhom == ['em-be', 'quai', 'vu-khi', 'trang-phuc', 'do', 'nguoi-lang'], nhom)
+    CO_HINH = """(k) => { XS_UI.moNhom(k); return new Promise((r) => setTimeout(() => { const g = document.querySelector('#dsChon [data-nhom="' + k + '"]'); const cs = [...g.querySelectorAll('.the canvas')];
+      const co = cs.filter((c) => { const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; for (let i = 3; i < d.length; i += 4) if (d[i]) return true; return false; }).length;
+      const an = [...document.querySelectorAll('#dsChon [data-nhom]')].filter((x) => x.dataset.nhom !== k).every((x) => x.classList.contains('an')); r([cs.length, co, an]); }, 600)); }"""
+    for k, n in (('vu-khi', 40), ('trang-phuc', 51), ('do', 14), ('nguoi-lang', 7)):
+        r = pg.evaluate(CO_HINH, k)
+        ok('Nhóm %s: %d thẻ, thẻ nào cũng có hình code để so, nhóm khác ẩn' % (k, n), r[0] == n and r[1] == n and r[2], r)
+    # --- vũ khí vẽ nằm ngang ---
+    chon(pg, 'vk-sword-2'); pg.set_input_files('#chonAnh', kn); pg.wait_for_function('XS_S.R && XS_S.muc.ma === "vk-sword-2"')
+    R = pg.evaluate('[XS_S.R.w, XS_S.R.h, XS_S.tach.cao]')
+    ok('Kiếm vẽ nằm ngang: thu cỡ theo chiều dài vũ khí trong game', abs(max(R[0], R[1]) - R[2]) <= 3 and R[0] > R[1], R)
+    pg.evaluate('XS_UI.denBuoc(3)'); pg.wait_for_timeout(300)
+    d = pg.evaluate('XS_S.dd')
+    ok('Vẽ nằm ngang: tự đặt điểm cầm bên trái (chuôi), mũi bên phải', d['cam'][0] < R[0] * 0.3 and d['mui'][0] > R[0] * 0.9, d)
+    bx = pg.eval_on_selector('#cv3', 'e => { const r = e.getBoundingClientRect(); return [r.x + r.width / 2, r.y + r.height / 2]; }')
+    pg.mouse.click(bx[0], bx[1]); pg.wait_for_timeout(200)
+    c2 = pg.evaluate('XS_S.dd.cam')
+    ok('Chạm vào chỗ chuôi: điểm cầm tới đúng chỗ chạm', abs(c2[0] - R[0] / 2) < 3 and abs(c2[1] - R[1] / 2) < 3, (c2, R))
+    pg.evaluate("XS_S.dd.cam = [%f, %f]" % (d['cam'][0], d['cam'][1]))
+    pg.evaluate('XS_UI.denBuoc(4)'); pg.wait_for_timeout(200)
+    pg.click('#dsDongTac [data-dt="tam"]'); pg.wait_for_timeout(300)
+    ok('Bước xem có cảnh Tám hướng', pg.evaluate('XS_S.xem.ten') == 'tam')
+    tep = {'vk': pg.evaluate('XS_UI.taoTep(true, true)')}
+    # --- trang phục ---
+    chon(pg, 'tp-hats-khan_xep'); pg.set_input_files('#chonAnh', mu); pg.wait_for_function('XS_S.R && XS_S.muc.ma === "tp-hats-khan_xep"')
+    pg.evaluate("() => { const e = document.getElementById('caoPx'); e.value = 14; e.dispatchEvent(new Event('input')); }"); pg.wait_for_function('XS_S.R.h === 14')
+    pg.evaluate('XS_UI.denBuoc(4)'); pg.wait_for_timeout(200)
+    pg.click('#dsDongTac [data-dt="ba"]'); pg.wait_for_timeout(300)
+    ok('Trang phục: xem cùng lúc ba dáng Đứng, Đi, Đánh', pg.evaluate('XS_S.xem.ten') == 'ba')
+    tep['tp'] = pg.evaluate('XS_UI.taoTep(true, true)')
+    # --- đồ và tài nguyên ---
+    chon(pg, 'vp-ore'); pg.set_input_files('#chonAnh', qu); pg.wait_for_function('XS_S.R && XS_S.muc.ma === "vp-ore"')
+    tep['vp'] = pg.evaluate('XS_UI.taoTep(true, true)')
+    ok('Có thẻ biểu tượng Kinh nghiệm', pg.evaluate("!!document.querySelector('.the[data-ma=\"vp-xp\"]')"))
+    # --- người làng ---
+    chon(pg, 'nl-lai'); pg.set_input_files('#chonAnh', nl); pg.wait_for_function('XS_S.R && XS_S.muc.ma === "nl-lai"')
+    pg.evaluate('XS_UI.denBuoc(3)'); pg.wait_for_timeout(300)
+    ok('Người làng: gợi ý khung Người', pg.evaluate('XS_S.kh.mau') == 'nguoi')
+    pg.evaluate('XS_UI.denBuoc(4)'); pg.wait_for_timeout(300)
+    dt = pg.eval_on_selector_all('#dsDongTac .chip', 'e => e.map(x => x.dataset.dt)')
+    ok('Người làng có hai động tác: Đứng thở, Nói chuyện vẫy tay', dt == ['idle', 'noi'], dt)
+    t = pg.evaluate('XS_UI.taoTep(true, true)')
+    ok('Tệp người làng: doi_tuong nguoi-lang, có tấm sprite và hai động tác', t['doi_tuong'] == 'nguoi-lang' and t['tam'].startswith('data:image/png') and sorted(t['dong_tac']) == ['idle', 'noi'] and t['dong_tac']['noi']['so'] >= 4, (t['doi_tuong'], list(t['dong_tac'])))
+    tep['nl'] = t
+    # khung idle và khung nói chuyện khác nhau (tay vẫy)
+    r = pg.evaluate("""() => { const sp = XS_S.sp, f = (ten, i) => { const cv = document.createElement('canvas'); cv.width = sp.fw; cv.height = sp.fh; const c = cv.getContext('2d'); c.drawImage(sp.img, i * sp.fw, sp.dt[ten].hang * sp.fh, sp.fw, sp.fh, 0, 0, sp.fw, sp.fh); const d = c.getImageData(0, 0, sp.fw, sp.fh).data; let h = 0; for (let k = 0; k < d.length; k += 4) if (d[k + 3] > 20) h = (h * 31 + (k >> 2)) >>> 0; return h; };
+      return [f('idle', 0), f('noi', 0), f('noi', Math.round(sp.dt.noi.so / 8))]; }""")
+    ok('Nói chuyện: tay vẫy, khác đứng thở và đổi qua các khung', len(set(r)) == 3, r)
+    # xem trong game: vào làng, đứng cạnh Chú Lái Đò, mở khung nói chuyện
+    pg.evaluate('XS_UI.moGame()')
+    pg.wait_for_timeout(1500)
+    fr = [f for f in pg.frames if 'thu' in f.url][0]
+    fr.wait_for_function("!!(window.G && G.scene === G.Village && G.spriteCustom.cuaNguoiLang('lai') && G.villageScene.tuVe)", timeout=30000)
+    fr.wait_for_timeout(600)
+    ok('Xem trong game: em bé đứng ngay cạnh người làng trong làng', fr.evaluate("(() => { const S = G.villageScene.state; return S.near && S.near.id === 'lai'; })()"))
+    pg.click('#nutLaiGame'); pg.wait_for_timeout(600)
+    ok('Xem trong game: nút mở khung nói chuyện với Chú Lái Đò', fr.evaluate("G.villageApi.V.who") == 'lai')
+    ok('Không có lỗi trang khi làm đồ và người làng', not errs, errs[:3])
+    b.close()
+    # --- vào game thật ---
+    for k, t in tep.items():
+        with open(os.path.join(CUSTOM, t['ma'] + '.sprite.json'), 'w', encoding='utf-8') as f:
+            json.dump(t, f)
+    good, out = build()
+    ok('Đóng gói nhúng vũ khí, trang phục, quặng, người làng tự vẽ', good and all(t['ma'] in out for t in tep.values()), out[-300:])
+    b, ctx, pg, errs = mo(pw, GAME_DIST, 960, 540)
+    pg.wait_for_function('window.G && G.scene')
+    pg.wait_for_function("!!(G.spriteCustom.timVuKhi({ type: 'sword', family: 2 }) && G.spriteCustom.vatPham('ore') && G.heroLooks.hats.khan_xep.tuVe && G.spriteCustom.cuaNguoiLang('lai') && G.villageScene.tuVe)")
+    HUONG = """([a, code]) => { const cv = document.createElement('canvas'); cv.width = 160; cv.height = 160; const c = cv.getContext('2d'); const WA = G.weaponArt;
+      (code ? WA.drawCode : WA.draw).call(WA, c, { type: 'sword', family: 2, rarity: 0 }, 80, 80, a, 0); const d = c.getImageData(0, 0, 160, 160).data;
+      let n = 0, sx = 0, sy = 0, gan = 1e9, h = 0; for (let y = 0; y < 160; y++) for (let x = 0; x < 160; x++) { const i = (y * 160 + x) * 4; if (d[i + 3] > 20) { n++; sx += x + 0.5 - 80; sy += y + 0.5 - 80; gan = Math.min(gan, Math.hypot(x + 0.5 - 80, y + 0.5 - 80)); h = (h * 31 + d[i] + i) >>> 0; } }
+      return [n, Math.atan2(sy, sx) * 180 / Math.PI, gan, h]; }"""
+    sai = []
+    for a in range(0, 360, 45):
+        r, r0 = pg.evaluate(HUONG, [a, False]), pg.evaluate(HUONG, [a, True])
+        lech = abs((r[1] - a + 540) % 360 - 180)
+        if not (r[0] > 60 and lech < 25 and r[2] < 3 and r[3] != r0[3]):
+            sai.append((a, r))
+    ok('Kiếm tự vẽ xoay đúng tám hướng quanh điểm cầm (chuôi ở tay, mũi chĩa theo hướng đánh)', not sai, sai)
+    KID = """(o) => { const cv = document.createElement('canvas'); cv.width = 80; cv.height = 80; const c = cv.getContext('2d');
+      G.art.hero(c, Object.assign({ x: 40, y: 66, face: 1, key: 'smith', move: false, t: 0.2, atk: -1, dodge: -1, outfit: { hat: 'khan_xep' } }, o)); const d = c.getImageData(0, 0, 80, 80).data;
+      let n = 0, sx = 0, sy = 0; for (let y = 0; y < 80; y++) for (let x = 0; x < 80; x++) { const i = (y * 80 + x) * 4; if (d[i + 3] > 20 && d[i] > 110 && d[i] < 190 && d[i + 1] < 110 && d[i + 2] > 150) { n++; sx += x; sy += y; } }
+      return n ? [n, sx / n, sy / n] : [0, 0, 0]; }"""
+    ds = [pg.evaluate(KID, o) for o in ({}, {'move': True, 't': 0.15}, {'atk': 0.5}, {'dodge': 0.5})]
+    ok('Em bé đội Khăn xếp tự vẽ khi đứng, đi, đánh, lăn né', all(q[0] > 15 for q in ds), ds)
+    ok('Khăn xếp đi theo cử động của em bé (lăn né thì khăn xoay theo đầu)', abs(ds[3][2] - ds[0][2]) > 2 or abs(ds[3][1] - ds[0][1]) > 2, ds)
+    r = pg.evaluate("""() => { const cv = document.createElement('canvas'); cv.width = 30; cv.height = 30; const old = G.ux; G.ux = cv.getContext('2d'); try { G.theme.resIcon('ore', 2, 2, 14); } finally { G.ux = old; }
+      const d = cv.getContext('2d').getImageData(0, 0, 30, 30).data; let m = 0; for (let i = 0; i < d.length; i += 4) if (d[i + 3] > 20 && d[i] > 150 && d[i + 1] < 90 && d[i + 2] > 80) m++; return m; }""")
+    ok('Biểu tượng quặng dùng hình tự vẽ (đỏ tím)', r > 15, r)
+    # ở làng: dải tài nguyên góc trên, Hành trang (thẻ Tài nguyên), người làng, dải khuôn mặt
+    pg.evaluate("""() => { const sv = G.newSave(); sv.tut = Object.assign(sv.tut || {}, { done: true }); sv.ore = 42; G.save = sv; G.setScene(G.Village);
+      const SC = G.spriteCustom; window.__dem = { vp: {}, nl: 0, mat: 0 };
+      const v0 = SC.veVatPham; SC.veVatPham = function (c, sp) { __dem.vp[sp.vp] = (__dem.vp[sp.vp] || 0) + 1; return v0.apply(this, arguments); };
+      const n0 = SC.veNguoiLang; SC.veNguoiLang = function () { __dem.nl++; return n0.apply(this, arguments); };
+      const VS = G.villageScene, m0 = VS.tuVeMat; VS.tuVeMat = function () { const r = m0.apply(this, arguments); if (r) __dem.mat++; return r; }; }""")
+    pg.wait_for_timeout(800)
+    dem = pg.evaluate('JSON.parse(JSON.stringify(__dem))')
+    ok('Ở làng: quặng tự vẽ hiện ở dải tài nguyên góc trên', dem['vp'].get('ore', 0) > 0, dem)
+    ok('Ở làng: Chú Lái Đò tự vẽ đứng trong làng và ở dải khuôn mặt', dem['nl'] > 0 and dem['mat'] > 0, dem)
+    pg.evaluate("() => { G.hanhTrang.openVillage(); G.hanhTrang.tab = 'res'; __dem.vp = {}; }"); pg.wait_for_timeout(600)
+    dem = pg.evaluate('JSON.parse(JSON.stringify(__dem))')
+    ok('Hành trang (thẻ Tài nguyên) dùng biểu tượng quặng tự vẽ', dem['vp'].get('ore', 0) > 0 and G_TAB(pg) == 'bag', dem)
+    pg.evaluate("() => { G.villageApi.goHub(); G.villageScene.goNpc('lai', true); __dem.nl = 0; }"); pg.wait_for_timeout(600)
+    r = pg.evaluate("[G.villageApi.V.who, __dem.nl]")
+    ok('Khung nói chuyện với Chú Lái Đò dùng hình tự vẽ (người to cạnh bảng)', r[0] == 'lai' and r[1] > 0, r)
+    NPC = """(look) => { const cv = document.createElement('canvas'); cv.width = 90; cv.height = 90; const c = cv.getContext('2d'); G.villageScene.bigNpc(c, 'lai', 45, 80, 2, 0);
+      if (look === 0) { c.clearRect(0, 0, 90, 90); G.villageScene.tuVe ? G.villageScene.tuVe(c, 'lai', 45, 80, 2, { t: 0 }) : 0; }
+      const d = c.getImageData(0, 0, 90, 90).data; let h = 0, n = 0; for (let i = 0; i < d.length; i += 4) if (d[i + 3] > 20) { n++; h = (h * 31 + d[i] + i) >>> 0; } return [n, h]; }"""
+    n1, n0 = pg.evaluate(NPC, 1), pg.evaluate(NPC, 0)
+    ok('Người làng: nói chuyện (vẫy tay) khác đứng thở', n1[0] > 100 and n1 != n0, (n1, n0))
+    code = pg.evaluate("""() => { const sp = G.villageScene.npcCode('ren', 0, {}); const cv = document.createElement('canvas'); cv.width = 90; cv.height = 90; const c = cv.getContext('2d'); G.villageScene.bigNpc(c, 'ren', 45, 80, 1, 0);
+      const d = c.getImageData(0, 0, 90, 90).data, e = sp.cv.getContext('2d').getImageData(0, 0, 64, 64).data; let a = 0, b2 = 0; for (let i = 3; i < d.length; i += 4) if (d[i] > 20) a++; for (let i = 3; i < e.length; i += 4) if (e[i] > 20) b2++; return [a, b2]; }""")
+    ok('Người làng khác (Ông Thợ Rèn) vẫn vẽ bằng code', code[0] == code[1] and code[0] > 100, code)
+    ok('Không có lỗi trang trong làng có hình tự vẽ', not errs, errs[:3])
+    b.close()
+    don_custom()
+    good, out = build()
+    b, ctx, pg, errs = mo(pw, GAME_DIST, 960, 540)
+    pg.wait_for_function('window.G && G.scene'); pg.wait_for_timeout(300)
+    r = pg.evaluate("[!!G.villageScene.tuVe, !!G.weaponArt._spriteCustom, !!(G.theme && G.theme._spriteCustom), G.heroLooks.hats.khan_xep && !!G.heroLooks.hats.khan_xep.tuVe]")
+    ok('Xoá tệp rồi đóng gói lại: vũ khí, khăn, biểu tượng, người làng trở lại hình code (bộ nạp không nối vào đâu)', good and r == [False, False, False, False], r)
+    ok('Không có lỗi trang', not errs, errs[:3])
+    b.close()
+
+
+def G_TAB(pg):
+    return pg.evaluate('G.villageApi.V.tab')
 
 
 def main():
@@ -364,6 +503,7 @@ def main():
             ok('Không có lỗi trang', not errs, errs[:3])
             b.close()
             kiem_do(pw, tmp)
+            kiem_them(pw, tmp)
     finally:
         don_custom()
         build()

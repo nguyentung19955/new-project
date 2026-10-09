@@ -149,3 +149,59 @@ def ve_xu(path, seed=11):
     d.ellipse([100, 100, 140, 130], fill=(200, 255, 220))
     im.filter(ImageFilter.GaussianBlur(0.6)).save(path)
     return path
+
+
+def ve_kiem_ngang(path, seed=13):
+    """Thanh kiếm nằm ngang: chuôi bên trái, mũi chĩa sang phải (đúng kiểu prompt vẽ đồ vật), lưỡi đỏ cam có mắt."""
+    W, H = 640, 300
+    im = giay(W, H, seed)
+    d = ImageDraw.Draw(im)
+    d.polygon([(600, 150), (520, 104), (200, 104), (200, 196), (520, 196)], fill=INK)
+    d.polygon([(578, 150), (514, 118), (212, 118), (212, 182), (514, 182)], fill=(240, 110, 60))
+    d.polygon([(578, 150), (212, 150), (212, 118), (514, 118)], fill=(255, 190, 120))
+    d.ellipse([330, 122, 386, 178], fill=INK); d.ellipse([338, 130, 378, 170], fill=(255, 255, 255)); d.ellipse([352, 140, 376, 164], fill=INK)
+    d.rectangle([168, 60, 210, 240], fill=INK); d.rectangle([176, 70, 202, 230], fill=(90, 200, 120))
+    d.rectangle([60, 126, 172, 174], fill=INK); d.rectangle([68, 136, 168, 164], fill=(120, 70, 40))
+    d.ellipse([22, 118, 76, 182], fill=INK); d.ellipse([32, 128, 66, 172], fill=(90, 200, 120))
+    im.filter(ImageFilter.GaussianBlur(0.6)).save(path)
+    return path
+
+
+def ve_quang(path, seed=15):
+    """Cục quặng đỏ tím có ba đốm vàng (khác hẳn quặng bạc của game)."""
+    W, H = 360, 320
+    im = giay(W, H, seed)
+    d = ImageDraw.Draw(im)
+    pts = [(70, 220), (110, 90), (220, 60), (300, 140), (290, 250), (150, 280)]
+    d.polygon(pts, fill=INK)
+    d.polygon([(88, 214), (124, 102), (216, 78), (282, 146), (274, 236), (154, 262)], fill=(200, 40, 120))
+    for q in [(140, 130), (200, 180), (230, 120)]:
+        d.ellipse([q[0] - 16, q[1] - 16, q[0] + 16, q[1] + 16], fill=(255, 230, 40))
+    im.filter(ImageFilter.GaussianBlur(0.6)).save(path)
+    return path
+
+
+def ve_nguoi_lang(path, seed=17):
+    """Người làng nhìn chếch sang phải: mặt nạ tinh linh trắng, nón lá vàng, áo xanh lục, hai tay tách khỏi thân, hai chân."""
+    W, H = 420, 640
+    im = giay(W, H, seed)
+    d = ImageDraw.Draw(im)
+    XANH, XANH_T, NON, DA = (60, 170, 110), (30, 110, 70), (235, 200, 80), (250, 250, 248)
+    # chân
+    chan(d, 180, 430, 168, 590, (60, 50, 70), 30)
+    chan(d, 240, 430, 256, 590, (60, 50, 70), 30)
+    # tay sau (trái), tay trước (phải)
+    chan(d, 140, 270, 70, 400, XANH_T, 26)
+    chan(d, 280, 270, 352, 400, XANH, 26)
+    # thân áo
+    d.polygon([(130, 240), (290, 240), (320, 460), (100, 460)], fill=INK)
+    d.polygon([(142, 254), (278, 254), (304, 448), (116, 448)], fill=XANH)
+    d.rectangle([150, 360, 270, 380], fill=(200, 60, 50))
+    # đầu: mặt nạ trắng, hai mắt đen
+    elip(d, [120, 90, 300, 250], DA, 10)
+    d.ellipse([200, 150, 226, 190], fill=INK); d.ellipse([250, 150, 276, 190], fill=INK)
+    # nón lá
+    d.polygon([(210, 10), (360, 120), (60, 120)], fill=INK)
+    d.polygon([(210, 30), (330, 110), (90, 110)], fill=NON)
+    im.filter(ImageFilter.GaussianBlur(0.6)).save(path)
+    return path

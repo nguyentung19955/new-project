@@ -1,4 +1,4 @@
-# Báo cáo: Xưởng Sprite (công cụ tự vẽ quái và em bé)
+# Báo cáo: Xưởng Sprite (công cụ tự vẽ quái, em bé, đồ và người làng)
 
 ## Đã làm
 
@@ -26,6 +26,24 @@
 - Game: `js/sprite_custom.js` thêm phần đồ; sửa nhỏ, không đổi hành vi: `js/hero_tinhlinh.js` có thêm `G.tinhLinh.clearCache()`, `js/do_roi.js` hỏi hình tự vẽ trước khi vẽ đồ rơi và có `G.doRoi.xoaNho()`.
 - [PROMPT-AI.md](PROMPT-AI.md): bộ prompt nhờ AI vẽ (mỗi dòng một ảnh, theo bộ) và các câu giữ AI không vẽ lệch.
 - Bài kiểm tra `xuong_sprite.py` thêm phần đồ: **86/86 mục đạt**.
+
+## Đợt 3: trang chọn chia nhóm, vũ khí nằm ngang, người làng
+
+- **Trang chọn** chia sáu nhóm: Em bé (5) · Quái (36, ba vùng và Quái mới) · Vũ khí (40) · Trang phục (51) · Đồ và tài nguyên (14) · Người làng (7). Mỗi lần hiện một nhóm, thẻ nào cũng có hình code để so; công cụ nhớ nhóm mở lần trước. ![](chon-nhom-vu-khi.png)
+- **Vũ khí**: vẽ nằm ngang mũi sang phải (đúng kiểu prompt mới) hay dựng đứng đều được, công cụ tự đặt điểm cầm và mũi; thanh cỡ là chiều dài vũ khí; **chạm vào chuôi** là đặt điểm cầm; bước xem có **Tám hướng** (đúng đường vẽ của game). Game vẫn tự thêm ánh hệ, vệt chém; làm được một hình cho cả dòng hoặc riêng từng hệ, giai đoạn như trước.
+- **Trang phục**: ba dáng nhỏ Đứng · Đi · Đánh ngay khi kéo đặt món đồ lên em bé mẫu, và cảnh ba dáng to ở bước xem.
+- **Đồ và tài nguyên**: thêm biểu tượng Kinh nghiệm; "Xem trong game" có nút sang làng để thấy biểu tượng ở dải tài nguyên góc trên. Một hình dùng ở mọi chỗ (góc màn hình, Hành trang, giá bán, đồ rơi).
+- **Người làng** (mới): bảy người, khung Người, hai động tác Đứng thở và Nói chuyện vẫy tay; thay hình trong làng, dải khuôn mặt, khung nói chuyện. "Xem trong game" mở thẳng làng, em bé đứng cạnh người đó, có nút mở khung nói chuyện.
+- **Game** (chỉ đổi hình, không đổi luật chơi, cân bằng, giao diện người chơi): `js/sprite_custom.js` thêm phần người làng; `js/village_scene.js` thêm hai chỗ hỏi hình tự vẽ (`VS.tuVe`, `VS.tuVeMat`, chỉ được gắn khi có tệp `nl-…`) và `VS.npcCode` cho công cụ so hình. Thư mục `game/art/custom/` chỉ có `.gitkeep` thì game y hệt trước.
+- **Prompt**: [PROMPT-VE.md](PROMPT-VE.md) phần 2: 40 vũ khí, 51 trang phục, 14 đồ và tài nguyên, 7 người làng, mỗi món một dòng prompt đầy đủ có nét phá cách dân gian (`Twist:`), kèm đoạn "Phong cách chung cho đồ vật".
+- Kiểm tra `game/tests/xuong_sprite.py` thêm phần đợt 3: **118/118 mục đạt** (trong đó: kiếm vẽ nằm ngang xoay đúng tám hướng quanh điểm cầm, khăn xếp theo đứng/đi/đánh/lăn né, quặng tự vẽ ở dải tài nguyên và Hành trang, Chú Lái Đò trong làng, dải khuôn mặt và khung nói chuyện, người làng khác vẫn hình code, xoá tệp thì về hình code). Ảnh trước/sau: `game/tests/xuong_sprite_them_shots.py`.
+
+| Trước / sau | |
+|---|---|
+| Làng | ![](truoc-sau-lang.png) |
+| Khung nói chuyện | ![](truoc-sau-noi-chuyen.png) |
+| Hành trang | ![](truoc-sau-hanh-trang.png) |
+| Trong trận | ![](truoc-sau-tran.png) |
 
 ## Kiểm tra
 

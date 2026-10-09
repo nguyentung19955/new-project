@@ -28,7 +28,7 @@ GAME_DIST = 'file://' + os.path.join(GAME, 'dist', 'linh-khi.html')
 
 def chon(pg, ma):
     """Mở nhóm chứa thẻ (trang chọn chia nhóm) rồi bấm vào thẻ."""
-    pg.evaluate('ma => XS_UI.moNhom(XS_UI.nhomCuaMa(ma))', ma)
+    pg.evaluate('ma => { if (XS_S.buoc !== 1) XS_UI.denBuoc(1); XS_UI.moNhom(XS_UI.nhomCuaMa(ma)); }', ma)
     pg.click('.the[data-ma="' + ma + '"]')
 
 def build():
