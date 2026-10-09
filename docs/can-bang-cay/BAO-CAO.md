@@ -178,12 +178,12 @@ Số "trước" đo trên bản trước đợt này: bot chơi lần lượt, c
 
 ## Kiểm tra đã chạy
 
-Chạy trên bản đã gộp mọi phiên (trang phục, làm mượt báo trước, đạn và linh khí, tám hướng, đồ rơi và quái chi tiết).
+Chạy trên bản đã gộp mọi phiên (trang phục, làm mượt báo trước, đạn và linh khí, tám hướng, đồ rơi và quái chi tiết, Firebase).
 
 - Mọi bài trong `game/tests/` đều qua:
   - `rules` 82/82, `moves` 93/93, `doors`, `mapgen`, `fuzz` (0 lỗi), `cong` 66/66, `cung` 16/16.
   - `env_rooms`, `fx_check`, `ghep` 109/109, `ghep2` 192/192, `quai` 105/105.
-  - `trang_phuc` 66/66, `linhkhi` 36/36, `bao_truoc` 21/21, `tam_huong` 37/37, `do_roi` 45/45.
+  - `trang_phuc` 66/66, `linhkhi` 36/36, `bao_truoc` 21/21, `tam_huong` 37/37, `do_roi` 45/45, `may` 100/100 (Firebase, gộp vào cuối; Bảng vàng dùng chính chỉ số Sức mạnh này).
   - `perf` (3,0 ms mỗi khung), `anim_smoke`, `smoke`, `dps`, `ui_robust`, `ui_build`.
   - `ui_input all` (162 hoặc 153 mục mỗi cỡ màn hình), `probe`, `campaign`, `balance`, `cay`.
 - `fuzz` một lần bắt được quái bị quái khác đẩy lọt ra ngoài sàn theo chiều dọc. Đã sửa: lúc các quái đẩy nhau thì giữ trong sàn (`js/combat.js`).
