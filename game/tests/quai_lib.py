@@ -9,6 +9,8 @@ LIB = r"""
 (() => {
   const T = (window.T = {});
   T.inp = {};
+  T.bot = G.botInput; // bot thật (tests/bot.js), dùng lại khi cần cho bot tự đánh
+  T.useBot = (on) => { G.botInput = on ? T.bot : () => Object.assign({ mx: 0, my: 0 }, T.inp); };
   G.botInput = () => Object.assign({ mx: 0, my: 0 }, T.inp);
   T.frame = (n, i) => { for (let k = 0; k < (n || 1); k++) { if (i) T.inp = Object.assign({}, i); G.tick(); G.ui.begin(); G.scene.draw(); G.click = null; for (const q of ['atkP', 'dodgeP', 'specialP', 'skillP', 'swapP']) delete T.inp[q]; } };
   T.sim = (n, keepHp) => { const S = G.getRun(); for (let k = 0; k < n; k++) { G.sim(1); if (keepHp && S && S.P) { S.P.hp = S.P.maxhp; S.P.dead = false; S.W.over = null; } } };

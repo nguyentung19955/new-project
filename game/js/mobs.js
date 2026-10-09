@@ -133,7 +133,7 @@
     // Gai: đang dựng gai mà bị đánh cận chiến thì phản đòn (kèm hệ của vùng).
     if (e.spikeUp > 0 && !o.ranged && !(e.reflT > 0)) {
       e.reflT = 0.45;
-      G.hurtPlayer(e.dmg * 0.8, regEl(), e, false);
+      G.hurtPlayer(e.dmg * 0.7, regEl(), e, false);
       FX('text', P.x, P.y - 46, 'Phản đòn!', '#ff7a5a', 8);
     }
     // Giáp phía trước: đánh trúng giáp thì giáp mòn dần, mòn hết thì vỡ một lúc.

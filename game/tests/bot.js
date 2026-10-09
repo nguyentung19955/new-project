@@ -19,6 +19,7 @@
     return best && best.length > 1 ? M.dirTo(map, cur, best[1]) : null;
   };
   function away(P, z, W) {
+    if (z.shape !== 'circle' && z.shape !== 'rect' && G.zoneEscape) return G.zoneEscape(z, P); // đường thẳng, quạt, vành khăn của quái mới
     if (z.shape === 'circle') {
       let dx = P.x - z.x, dy = P.y - z.y;
       if (Math.abs(dx) + Math.abs(dy) < 1) { dx = 1; dy = 0; }
@@ -78,9 +79,21 @@
         }
         continue;
       }
+      if (z.wall) {
+        // tường nước chạy: đi ngang về phía khe trước khi tường tới
+        const c = Math.cos(z.ang), s = Math.sin(z.ang), dx = P.x - z.x, dy = P.y - z.y, al = dx * c + dy * s, ac = -dx * s + dy * c;
+        if (al - z.s > -6 && al - z.s < 110 && Math.abs(ac - z.g) > z.gw - 8) {
+          if (z.botAt == null) z.botAt = G.time;
+          if (G.time - z.botAt < cfg.react) continue;
+          const k = z.g > ac ? 1 : -1;
+          inp.mx = -s * k; inp.my = c * k;
+          return inp;
+        }
+        continue;
+      }
       const pad = { shape: z.shape, x: z.x, y: z.y, r: (z.r || 0) + 8, w: z.w, h: (z.h || 0) + 12 };
       if (z.shape === 'rect') { pad.y = z.y - 6; }
-      if (G.inZone(pad, P)) {
+      if (z.shape === 'circle' || z.shape === 'rect' ? G.inZone(pad, P) : G.inZone(z, P, 8)) {
         // phản xạ của người thường: khoảng 0,2 giây sau khi thấy mình đứng trong vùng đỏ mới bắt đầu chạy
         if (z.botAt == null) z.botAt = G.time;
         if (G.time - z.botAt < cfg.react) continue;
@@ -142,7 +155,14 @@
     }
     // chọn mục tiêu gần nhất
     let t = null, bd = 1e9;
-    for (const e of tg) { const d = Math.abs(e.x - P.x) + Math.abs(e.y - P.y) * 1.5 - e.r; if (d < bd) { bd = d; t = e; } }
+    // quái gai đang dựng gai: người chơi bình thường không chém vào (bị phản đòn), chọn con khác hoặc đứng chờ
+    const spiky = (e) => e.spikeUp > 0 && !T.ranged;
+    for (const e of tg) { const d = Math.abs(e.x - P.x) + Math.abs(e.y - P.y) * 1.5 - e.r + (spiky(e) ? 400 : 0); if (d < bd) { bd = d; t = e; } }
+    if (t && spiky(t)) {
+      const dx0 = P.x - t.x, dy0 = P.y - t.y, l0 = Math.hypot(dx0, dy0) || 1;
+      if (l0 < 70) { inp.mx = dx0 / l0; inp.my = dy0 / l0; }
+      return inp;
+    }
     // dùng đồ vật mang hệ nếu có quái đứng gần nó
     if (cfg.props) {
       for (const pr of W.props) {

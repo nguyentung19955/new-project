@@ -173,8 +173,8 @@
     },
     ho: {
       c1: { name: 'Hồ hoả', f(b, P, T, D, a) { // cầu lửa ma từ đầu đuôi bay vòng cung đuổi theo
-        const n = [5, 7, 9][b.phase];
-        for (let i = 0; i < n; i++) later(b, T + i * 0.05, () => shot(b, a + PI + (i / (n - 1) - 0.5) * 2.6, 75, { kind: 'fire', homing: 52, t: 3.4, dmg: b.dmg * 0.75, el: 'fire' }));
+        const n = [5, 6, 8][b.phase];
+        for (let i = 0; i < n; i++) later(b, T + i * 0.05, () => shot(b, a + PI + (i / (n - 1) - 0.5) * 2.6, 72, { kind: 'fire', homing: 40, t: 3, dmg: b.dmg * 0.7, el: 'fire' }));
       } },
       c2: { name: 'Vồ mồi', f(b, P, T, D, a) { // vồ hai lần, lần hai nhắm lại
         const L = clamp(Math.hypot(P.x - b.x, P.y - b.y) + 20, 70, 140);
