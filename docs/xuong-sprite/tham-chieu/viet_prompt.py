@@ -23,9 +23,14 @@ def ten_mau(hx):
     if v < 0.16:
         return 'near-black'
     if s < 0.16:
+        if v > 0.92 and r > b + 0.02:
+            return 'off-white'
         return 'white' if v > 0.92 else 'light grey' if v > 0.7 else 'grey' if v > 0.42 else 'dark grey'
     if s < 0.3 and v > 0.8 and 20 <= h <= 70:
         return 'cream'
+    if s < 0.32 and not (15 <= h < 50):
+        fam = 'blue' if 180 <= h < 260 else 'green' if 70 <= h < 180 else 'purple' if 260 <= h < 330 else 'red'
+        return ('dark ' if v < 0.45 else 'light ' if v > 0.78 else '') + 'grey-' + fam
     if 15 <= h < 48 and v < 0.66:
         return 'dark brown' if v < 0.4 else 'brown'
     if 20 <= h < 50 and s < 0.55 and v >= 0.66:
@@ -35,9 +40,9 @@ def ten_mau(hx):
     ten = next(n for lim, n in bins if h < lim)
     if ten == 'yellow' and v < 0.8:
         ten = 'golden'
-    if v < 0.45:
+    if v < 0.56:
         return 'dark ' + ten
-    if s < 0.45 and v > 0.8:
+    if s < 0.6 and v > 0.85:
         return 'light ' + ten
     return ten
 
@@ -67,10 +72,10 @@ def so_mau(o, tran=20):
     return max(4, min(tran, o['so_mau']))
 
 
-def vien(o, ten):
-    return ('one clean dark %s outline (%s) all around the shape, about 1/%d of the height thick (exactly one game pixel), '
-            'flat solid colors, at most %d colors, simple 3-tone cel shading (dark, base, light) with light from the top left, no gradients, no glow, no blur, no anti-aliasing'
-            % (ten, o['vien'] or '#1b1118', max(o['cao'], 6), so_mau(o)))
+def vien(o, ten, sang='top left'):
+    return ('one clean %s outline (%s) all around the shape, about 1/%d of the height thick (exactly one game pixel), '
+            'flat solid colors, at most %d colors, simple 3-tone cel shading (dark, base, light) with light from the %s, no gradients, no glow, no blur, no anti-aliasing'
+            % (ten, o['vien'] or '#1b1118', max(o['cao'], 6), so_mau(o), sang))
 
 
 NEN = ('Single subject only, whole thing visible and centered with white margin around it, on a pure plain white background (#ffffff), '
@@ -162,7 +167,7 @@ def prompt_quai(sub, ma):
     khung, goc, dang = QUAI[ma]
     dang = dang or DANG[khung]
     du = DU + (TINH_ANH if o['loai'] == 'tinhanh' else TRUM if o['loai'] in ('trumnho', 'trum') else '')
-    return ('%s %s, %s, aggressive pose leaning a little toward the right. Proportions like the game sprite: the whole figure is %s. %s Main colors as in the game: %s. %s. Pixel-art game sprite: %s. %s'
+    return ('%s %s, %s, aggressive pose leaning a little toward the right. Proportions like the game sprite: the whole figure is %s. %s Main colors as in the game (the twist detail may add its own colors): %s. %s. Pixel-art game sprite: %s. %s'
             % (sub, goc, dang, ti_le(o), co_that(o), mau_chinh(o), du, vien(o, 'navy-black'), NEN)), khung
 
 
@@ -170,15 +175,15 @@ def prompt_em_be(sub, ma):
     o = DO[ma]
     return ('%s %s (the body faces right, the face looks a little toward the viewer), %s, empty hands with no weapon (the game adds the weapon). '
             'Chibi proportions like the game sprite: the head with its hood is about half of the total height, a small body and short legs, the whole figure is %s. %s '
-            'Main colors as in the game: %s; the face is a round pale mask-like face (#f6f0e2) with simple calm closed eyes. Cute chibi child hero inspired by Vietnamese folklore. Pixel-art game sprite: %s. %s'
-            % (sub, GOC_CHEO, DANG['Người'], ti_le(o), co_that(o), mau_chinh(o), vien(o, 'dark plum'), NEN))
+            'Main colors as in the game (the twist detail may add its own colors): %s; the face is a round pale mask-like face (#f6f0e2) with simple calm closed eyes. Cute chibi child hero inspired by Vietnamese folklore. Pixel-art game sprite: %s. %s'
+            % (sub, GOC_CHEO, DANG['Người'], ti_le(o), co_that(o), mau_chinh(o), vien(o, 'dark plum', 'top right'), NEN))
 
 
 def prompt_nl(sub, ma):
     o = DO[ma]
     return ('%s %s, %s, one hand free to wave. Chibi proportions like the game sprite: a big head about two fifths of the total height, the whole figure is %s. %s '
-            'Main colors as in the game: %s; the face is a round white spirit mask (#f4eee0) with small dark dot eyes and pink cheeks. Cute chibi villager inspired by Vietnamese folklore and Dong Son bronze drum patterns. Pixel-art game sprite: %s. %s'
-            % (sub, GOC_THANG, DANG['Người'], ti_le(o), co_that(o), mau_chinh(o), vien(o, 'dark purple'), NEN))
+            'Main colors as in the game (the twist detail may add its own colors): %s; the face is a round white spirit mask (#f4eee0) with small dark dot eyes and pink cheeks. Cute chibi villager inspired by Vietnamese folklore and Dong Son bronze drum patterns. Pixel-art game sprite: %s. %s'
+            % (sub, GOC_THANG, DANG['Người'], ti_le(o), co_that(o), mau_chinh(o), vien(o, 'dark purple', 'top'), NEN))
 
 
 def prompt_vk(sub, ma, loai):
@@ -189,9 +194,9 @@ def prompt_vk(sub, ma, loai):
     else:
         dat = ('Weapon lying perfectly horizontal in flat side view: handle on the LEFT, the tip or head pointing to the RIGHT, the blade or head edge facing up, a pair of small cute eyes on the blade or head (it is a living weapon). '
                'Proportions like the game: %s, shown in the game at only %d pixels long and %d pixels thick' % (ti_le(o), o['rong'], o['cao']))
-    return ('%s %s, so use big simple chunky shapes, no small patterns or tiny details, and draw the twist detail BIG and obvious. Main colors as in the game: %s. '
+    return ('%s %s, so use big simple chunky shapes, no small patterns or tiny details, and draw the twist detail BIG and obvious. Main colors as in the game (the twist detail may add its own colors): %s. '
             'One single object only, nobody holding it. Game item sprite for a pixel-art action game inspired by Vietnamese folklore and Dong Son bronze drum patterns: %s. %s'
-            % (sub, dat, mau_chinh(o), vien(o, 'dark plum'), NEN))
+            % (sub, dat, mau_chinh(o), vien(o, 'dark plum', 'top'), NEN))
 
 
 DAT_TP = {
@@ -206,15 +211,15 @@ DAT_TP = {
 
 def prompt_tp(sub, ma, o_):
     o = DO[ma]
-    return ('%s %s. Proportions like the game: %s. %s Main colors as in the game: %s. One single object only. Game item sprite for a pixel-art action game inspired by Vietnamese folklore and Dong Son bronze drum patterns: %s. %s'
-            % (sub, DAT_TP[o_], ti_le(o), co_that(o), mau_chinh(o, 3), vien(o, 'dark plum'), NEN))
+    return ('%s %s. Proportions like the game: %s. %s Main colors as in the game (the twist detail may add its own colors): %s. One single object only. Game item sprite for a pixel-art action game inspired by Vietnamese folklore and Dong Son bronze drum patterns: %s. %s'
+            % (sub, DAT_TP[o_], ti_le(o), co_that(o), mau_chinh(o, 3), vien(o, 'dark plum', 'top right'), NEN))
 
 
 def prompt_vp(sub, ma):
     o = DO[ma]
     return ('%s Tiny game icon in flat front view: it is shown in the game at only %d x %d pixels (resource bar, bag, shop and loot on the floor), so draw ONE bold simple silhouette with 2 or 3 flat colors plus the outline, high contrast, no small details; the twist detail must still read at that size. '
-            'Proportions like the game: %s. Main colors as in the game: %s. One single object only. Game icon for a pixel-art action game inspired by Vietnamese folklore: %s. %s'
-            % (sub, o['rong'], o['cao'], ti_le(o), mau_chinh(o, 3), vien(o, 'dark'), NEN))
+            'Proportions like the game: %s. Main colors as in the game (the twist detail may add its own colors): %s. One single object only. Game icon for a pixel-art action game inspired by Vietnamese folklore: %s. %s'
+            % (sub, o['rong'], o['cao'], ti_le(o), mau_chinh(o, 3), vien(o, 'dark', 'top'), NEN))
 
 
 def link(ma):
