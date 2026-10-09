@@ -96,6 +96,34 @@
     if (bv > 0.82 * dau || bv > 0.92 * than) return null;
     return { vi: best, rong: bv };
   }
+  // Cổ dự phòng khi lõi không thắt (mũ trùm liền áo, nhìn chính diện), theo thứ tự:
+  //  1) hàng hẹp nhất của cả hình (không chỉ lõi) so với phần trên và phần dưới;
+  //  2) mảng màu mặt (mảng sáng không phải màu áo chính, nằm ở nửa trên): cổ ngay dưới mặt, nhích thêm vành mũ;
+  //  3) đầu chibi chiếm khoảng 42% chiều cao.
+  function coDuPhong(R, A, rong, gau) {
+    const { w, h, bb } = A, top = bb.y0, H = bb.h;
+    let best = -1, bv = 1;
+    for (let y = Math.round(top + H * 0.25); y <= Math.min(gau - 2, Math.round(top + H * 0.68)); y++) {
+      let tren = 0, duoi = 0;
+      for (let yy = top; yy < y; yy++) tren = Math.max(tren, rong[yy]);
+      for (let yy = y + 1; yy <= Math.min(bb.y1, y + Math.round(H * 0.3)); yy++) duoi = Math.max(duoi, rong[yy]);
+      const k = (rong[y - 1] + rong[y] * 2 + rong[y + 1]) / 4 / Math.max(1, Math.min(tren, duoi));
+      if (k < bv - 0.01) { bv = k; best = y; }
+    }
+    if (best > 0 && bv < 0.86) return { y: best, chac: 0.6 };
+    // mảng mặt
+    const chinh = A.mauLoi || [], da = new Uint8Array(w * h); let mat = null;
+    for (let s = 0; s < w * h; s++) {
+      const c0 = R.px[s]; if (!c0 || da[s] || SANG(c0) < 110 || chinh.some((c) => KC(c, c0) < 55)) continue;
+      const ds = [s]; da[s] = 1;
+      for (let a = 0; a < ds.length; a++) { const i = ds[a], x = i % w; for (const j of [x > 0 ? i - 1 : -1, x < w - 1 ? i + 1 : -1, i - w, i + w]) if (j >= 0 && j < w * h && !da[j] && R.px[j] && SANG(R.px[j]) >= 110 && KC(R.px[j], c0) < 60) { da[j] = 1; ds.push(j); } }
+      const b = bao(ds, w), t = tam(ds, w);
+      if (ds.length < A.dt * 0.04 || t[1] > top + H * 0.5 || b.w < bb.w * 0.25) continue;
+      if (!mat || ds.length > mat.n) mat = { n: ds.length, y1: b.y1 };
+    }
+    if (mat) return { y: Math.min(Math.round(top + H * 0.62), mat.y1 + 1 + Math.max(1, Math.round(H * 0.03))), chac: 0.6 };
+    return { y: Math.round(top + H * 0.42), chac: 0.5 };
+  }
   // Lan bộ phận k vào các điểm lõi cùng màu (găng, giày) dính liền, nếu màu đó khác màu chính của lõi.
   function lanMau(R, A, bo, k, ds, gioiHan) {
     const { w, h } = A, chinh = A.mauLoi;
@@ -203,6 +231,11 @@
     } else {
       const dd = dauTheoVien(R, A, 'tren');
       if (dd) { let y1 = 0; for (const i of dd) if (bo[i] === id.than) { bo[i] = id.dau; y1 = Math.max(y1, (i / w) | 0); } khop.co = [cx, y1 + 1]; khop.dinh = [cx, top]; chac.dau = 0.65; }
+      else { // mũ trùm liền áo, nhìn chính diện: không có cổ thắt rõ
+        const c2 = coDuPhong(R, A, rongM, gau);
+        for (let y = top; y < c2.y; y++) for (let x = 0; x < w; x++) { const i = y * w + x; if (R.px[i] && bo[i] === id.than) bo[i] = id.dau; }
+        khop.co = [cx, c2.y]; khop.dinh = [cx, top]; chac.dau = c2.chac;
+      }
     }
     // 3) tay
     for (const ben of ['tayT', 'tayS']) {

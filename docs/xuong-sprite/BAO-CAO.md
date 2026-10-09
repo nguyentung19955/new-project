@@ -68,6 +68,37 @@ Góp ý 2: "Tool đang làm cử động cả đầu". Chủ dự án chọn **t
 | Hành trang | ![](truoc-sau-hanh-trang.png) |
 | Trong trận | ![](truoc-sau-tran.png) |
 
+## Đợt 5: sửa vỡ hình và Tự đoán (theo góp ý dùng thử)
+
+Góp ý: "hay bị bẻ vỡ hình" khi cử động, và "Tự đoán cũng không ok" với ảnh thật (ảnh vẽ AI: em bé áo trùm đỏ, mặt nạ giấy,
+găng to, nhìn chính diện hơi nghiêng). Ảnh thật không có trong máy làm việc nên dùng năm ảnh giả lập kiểu ảnh AI
+(`game/tests/xuong_sprite_ai.py`: em bé áo trùm đỏ chính diện, em bé áo xanh, quái bốn chân, cá bay, khối mềm).
+
+**Nguyên nhân vỡ hình (đo trên ảnh thử):**
+- Tự đoán cũ chia theo tỉ lệ khung cố định: với ảnh chính diện, "tay" bị cắt từ giữa áo, "chân" cắt chéo qua người, nên khi
+  cử động là cả mảng áo bị bẻ đi.
+- Chỗ thân bị tay chân che bị khoét trống: tay xoay ra là lộ lỗ giữa hình (em bé áo đỏ: 113 điểm lỗ kín qua các động tác).
+- Tay áp sát thân bị xoay góc lớn (đánh 60 đến 70 độ) nên rách cả vai.
+- Xoay lấy điểm thẳng nên mép răng cưa, khe một điểm ở khớp; viền khép miệng khe hẹp thành lỗ.
+
+**Đã sửa** (`tools/xuong-sprite/nguon/khung.js`): lấp chỗ khoét bằng màu thân xung quanh (vẽ dưới cùng, theo thân); mép
+thân dư ở khớp đi theo bộ phận (vá khớp, giữ viền); giới hạn góc xoay theo độ dính sát thân; xoay quanh khớp bằng cách lấy
+điểm gần nhất trên hình phóng to kiểu Scale2x (không răng cưa, không màu mới); thứ tự lớp (tay sau dưới thân, tay trước
+trên thân); vá lỗ kín và khe một điểm mới sinh ra (lỗ có sẵn trong hình vẽ giữ nguyên); lỗ nhỏ do viền khép thì tô màu viền.
+Kết quả: năm ảnh thử, mọi động tác, mọi khung, cả bảy mẫu khung: **0 lỗ kín mới, 0 mảnh rời** (kiểu cũ: 21 đến 113 điểm lỗ).
+
+**Tự đoán mới** (`tools/xuong-sprite/nguon/tu-doan.js`): theo độ dày (lõi dày và nhánh mỏng), chỗ thắt (cổ), khe giữa
+các chân từ đáy lên, mảng màu riêng sát mép (găng, bàn tay khi tay áp sát thân), cổ dự phòng theo mảng màu mặt khi mũ trùm
+liền áo; đặt khớp theo kết quả. Không chắc thì để dính thân, hiện "Tô thêm cho đúng". Tô tay: bút 1 đến 10, cục tẩy trả về
+thân, phóng ×2 ×3, kéo hình, hoàn tác, nút to hơn trên màn hình cảm ứng.
+
+| | |
+|---|---|
+| Trước / sau khi cử động | ![](sua-vo-truoc-sau.gif) |
+| Tự đoán cũ / mới | ![](tu-doan-truoc-sau.png) |
+
+Ảnh do `game/tests/xuong_sprite_sua_vo_shots.py` tạo. Bài kiểm tra: phần 8 của `game/tests/xuong_sprite.py`.
+
 ## Kiểm tra
 
 - `game/tests/xuong_sprite.py`: **65/65 mục đạt**. Ảnh vẽ tay giả lập trên giấy trắng loang có vết bẩn → tách nền (góc trống, giữ tròng mắt trắng), đúng cỡ, giảm màu, cục tẩy và hoàn tác, mẫu gợi ý, tự đoán đủ bộ phận, kéo khớp và tô bằng chuột, mọi khung đều có hình và có cử động, tốc độ và biên độ, tải về và mở lại tệp, nháp còn sau khi tải lại trang, em bé; xem trong game (quái mới đứng vào chỗ Cua Lính ở Hang biển, bé tự đánh, không ghi bản lưu); bỏ tệp vào `game/art/custom/`, đóng gói, vào game: Heo Rừng Con và em bé dùng hình mới ở mọi cử động, lật gương đúng, chớp trắng, chết mờ dần, quái khác vẫn hình code, thời lượng đòn như cũ, trận 4 giây không lỗi; xoá tệp thì về hình code. Cuối bài thư mục chỉ còn `.gitkeep`.

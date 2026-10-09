@@ -11,6 +11,9 @@
   7. Giữ nét: thu nhỏ em bé áo đỏ về cỡ game giữ viền liền, giữ màu chi tiết (so với kiểu Mềm cũ); viền chỉ ở mép ngoài.
      Đứng yên: em bé mặc định chỉ cử động tay chân, đầu không đổi vị trí, góc qua mọi khung (trong công cụ và trong game);
      tệp cũ (chưa có lựa chọn) vẫn mở được và cử động như trước.
+  8. Sửa vỡ hình và Tự đoán, với ảnh kiểu AI vẽ (tay áp sát thân, chân sát nhau, nhìn chính diện; quái bốn chân, cá bay,
+     khối mềm): Tự đoán ra đầu, thân, tay, chân đúng chỗ; mọi động tác, mọi mẫu khung không còn lỗ kín, mảnh rời; chữ
+     "Tô thêm cho đúng", bút to nhỏ, phóng to, hoàn tác, cục tẩy; tấm sprite trong game không vỡ ở khung nào.
 Cuối bài game/art/custom/ chỉ còn .gitkeep và bản đóng gói được dựng lại sạch.
 Chạy: python3 tests/xuong_sprite.py
 """
@@ -422,6 +425,130 @@ def kiem_giu_net_dung_yen(pw, tmp):
     don_custom()
 
 
+
+# ---------- Sửa vỡ hình và Tự đoán (ảnh thử kiểu ảnh AI vẽ) ----------
+# DO_VO: đo một khung (mảng màu, rộng, cao): lỗ kín (điểm trống bị hình bao kín) và số điểm ở các mảnh rời khỏi thân.
+# CHAY_VO: dựng mọi khung của mọi động tác (có viền) cho một mẫu khung, so với tư thế đứng yên của chính hình đó.
+JS_VO = """window.VO = {
+  do(px, W, H) { const n = W * H, ng = new Uint8Array(n), q = new Int32Array(n); let a = 0, b = 0;
+    const vao = (i) => { if (!px[i] && !ng[i]) { ng[i] = 1; q[b++] = i; } };
+    for (let x = 0; x < W; x++) { vao(x); vao((H - 1) * W + x); } for (let y = 0; y < H; y++) { vao(y * W); vao(y * W + W - 1); }
+    while (a < b) { const i = q[a++], x = i % W, y = (i / W) | 0; if (x > 0) vao(i - 1); if (x < W - 1) vao(i + 1); if (y > 0) vao(i - W); if (y < H - 1) vao(i + W); }
+    let lo = 0; for (let i = 0; i < n; i++) if (!px[i] && !ng[i]) lo++;
+    const nh = new Int32Array(n).fill(-1), co = [];
+    for (let s = 0; s < n; s++) { if (!px[s] || nh[s] >= 0) continue; a = 0; b = 0; q[b++] = s; nh[s] = co.length; let d = 0;
+      while (a < b) { const i = q[a++], x = i % W, y = (i / W) | 0; d++; for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { const xx = x + dx, yy = y + dy; if (xx < 0 || yy < 0 || xx >= W || yy >= H) continue; const j = yy * W + xx; if (px[j] && nh[j] < 0) { nh[j] = co.length; q[b++] = j; } } }
+      co.push(d); }
+    co.sort((u, v) => v - u); return { lo, roi: co.slice(1).reduce((s, v) => s + v, 0) }; },
+  async nap(src, cao) { const img = await XS.tuDataUrl(src), A = XS.tuAnh(img), m = XS.tachNen(A, { nguong: 40, kieu: 'mep', boDom: true });
+    return XS.pixelHoa(A, m, { cao, soMau: 20, kieuThu: 'net' }); },
+  // Mọi động tác, mọi khung; tho: dựng kiểu cũ (không vá) để so trước/sau.
+  chay(R, kh, doi, tho) { const vien = 0xff1e1418, bb = XS.khungHinh(R), cfg = { mau: kh.mau, khop: kh.khop, bo: kh.bo };
+    const goc = this.do(XS.dungKhung(R, cfg, XS.tuThe(kh.mau, 'idle', 0, 0), { bb, le: 40, vien, khongVa: tho }).px, R.w + 80, R.h + 80);
+    const kq = { lo: 0, roi: 0, xau: [] };
+    for (const ten of XS.dsDongTac(doi)) { const n = 10;
+      for (let i = 0; i < n; i++) { const u = XS.DONG_TAC[ten].lap ? i / n : i / (n - 1);
+        const f = XS.dungKhung(R, cfg, XS.tuThe(kh.mau, ten, u, 1), { bb, le: 40, vien, khongVa: tho }), m = this.do(f.px, f.w, f.h);
+        const lo = Math.max(0, m.lo - goc.lo), roi = Math.max(0, m.roi - goc.roi); kq.lo += lo; kq.roi += roi; if (lo || roi) kq.xau.push(ten + i); } }
+    return kq; },
+  // Tâm (x, y) và số điểm của từng bộ phận.
+  tam(R, kh) { const M = XS.MAU[kh.mau], o = {}; M.bo.forEach((b) => { o[b.id] = [0, 0, 0]; });
+    for (let i = 0; i < R.w * R.h; i++) { if (!R.px[i] || kh.bo[i] === 255) continue; const t = o[M.bo[kh.bo[i]].id]; t[0] += (i % R.w) + 0.5; t[1] += ((i / R.w) | 0) + 0.5; t[2]++; }
+    for (const k in o) if (o[k][2]) { o[k][0] /= o[k][2]; o[k][1] /= o[k][2]; } return o; },
+};"""
+
+
+def kiem_sua_vo_tu_doan(pw, tmp):
+    """Ảnh kiểu AI vẽ (tay áp sát thân, chân sát nhau, nhìn chính diện): Tự đoán hợp lý, không vỡ hình ở mọi động tác, mọi mẫu khung."""
+    import base64
+    from xuong_sprite_ai import ANH_AI, MAU_AI
+    du = lambda p: 'data:image/png;base64,' + base64.b64encode(open(p, 'rb').read()).decode()  # noqa: E731
+    anh = {k: f(os.path.join(tmp, 'ai-' + k + '.png')) for k, f in ANH_AI.items()}
+    b, ctx, pg, errs = mo(pw, TOOL)
+    pg.wait_for_function('window.XS_UI')
+    pg.add_script_tag(content=JS_VO)
+    CAO = {'nguoi': 28, 'bonChan': 32, 'bay': 30, 'mem': 30}
+    tong_truoc = 0
+    for ten, (mau, ma) in MAU_AI.items():
+        r = pg.evaluate("""async ([src, mau, cao, doi]) => { const R = await VO.nap(src, cao); window['R_' + mau] = R; const d = XS.tuDoanHinh(R, mau), kh = { mau, khop: d.khop, bo: d.bo };
+            return { tam: VO.tam(R, kh), thieu: d.thieu, w: R.w, h: R.h, sau: VO.chay(R, kh, doi, false), truoc: VO.chay(R, kh, doi, true) }; }""", [du(anh[ten]), mau, CAO[mau], 'em-be' if mau == 'nguoi' else 'quai'])
+        t, s = r['tam'], r['sau']
+        tong_truoc += r['truoc']['lo'] + r['truoc']['roi']
+        print('     %s: thiếu %s, trước sửa: %d điểm lỗ, %d điểm rời; sau: %d, %d' % (ten, r['thieu'], r['truoc']['lo'], r['truoc']['roi'], s['lo'], s['roi']))
+        ok('%s: không còn lỗ kín hay mảnh rời ở mọi động tác' % ten, s['lo'] == 0 and s['roi'] == 0, s)
+        co = lambda k: t[k][2] > 0  # noqa: E731
+        if mau == 'nguoi':
+            dung = co('dau') and co('than') and t['dau'][1] < t['than'][1] and t['dau'][1] < r['h'] * 0.45
+            if co('chanT') and co('chanS'):
+                dung = dung and t['chanT'][1] > t['than'][1] and t['chanS'][1] > t['than'][1] and t['chanT'][0] > t['chanS'][0]
+            if co('tayT') and co('tayS'):
+                dung = dung and t['tayT'][0] > t['tayS'][0]
+            for k in ('tayT', 'tayS'):
+                if co(k):
+                    dung = dung and t['dau'][1] < t[k][1] and abs(t[k][0] - t['than'][0]) > 1.5
+            ok('%s: đầu ở trên, thân giữa, tay hai bên, chân dưới' % ten, dung and co('chanT') and (co('tayT') or co('tayS')), {k: [round(v, 1) for v in t[k]] for k in t})
+        elif mau == 'bonChan':
+            chan = [k for k in ('chanTN', 'chanTX', 'chanSN', 'chanSX') if co(k)]
+            dung = co('dau') and t['dau'][0] > t['than'][0] and len(chan) >= 3 and all(t[k][1] > t['than'][1] for k in chan)
+            dung = dung and (not co('duoi') or t['duoi'][0] < t['than'][0])
+            ok('%s: đầu bên phải, chân dưới bụng, đuôi bên trái' % ten, dung, {k: [round(v, 1) for v in t[k]] for k in t})
+        elif mau == 'bay':
+            ok('%s: đuôi bên trái thân' % ten, co('duoi') and t['duoi'][0] < t['than'][0], {k: [round(v, 1) for v in t[k]] for k in t})
+        elif mau == 'mem':
+            ok('%s: phần trên ở trên thân dưới, tua hai bên' % ten, co('dinh') and t['dinh'][1] < t['than'][1] and (not (co('tuaT') and co('tuaS')) or t['tuaT'][0] > t['tuaS'][0]), t)
+    ok('Kiểu cũ (chưa sửa) đúng là vỡ hình trên các ảnh này (bài đo bắt được lỗi)', tong_truoc > 0, tong_truoc)
+    # mọi mẫu khung trên em bé chính diện: không vỡ
+    r = pg.evaluate("""() => { const R = window.R_nguoi, out = {}; for (const mau of XS.MAU_THU_TU) { const d = XS.tuDoanHinh(R, mau); out[mau] = VO.chay(R, { mau, khop: d.khop, bo: d.bo }, 'quai', false); } return out; }""")
+    ok('Mọi mẫu khung (7 mẫu) dựng trên em bé chính diện: không lỗ kín, không mảnh rời', all(v['lo'] == 0 and v['roi'] == 0 for v in r.values()), {k: v for k, v in r.items() if v['lo'] or v['roi']})
+    # tay áp sát thân xoay ít lại
+    gh = pg.evaluate("""() => { const R = window.R_nguoi, d = XS.tuDoanHinh(R, 'nguoi'), va = XS.chuanBiVa(R, { mau: 'nguoi', khop: d.khop, bo: d.bo }); const o = {}; XS.MAU.nguoi.bo.forEach((b, k) => { o[b.id] = Math.round(va.gioiHan[k]); }); return o; }""")
+    ok('Tay áp sát thân bị giới hạn góc xoay (không bẻ gãy thân)', min(gh['tayT'], gh['tayS']) < 70, gh)
+    # ---- trong giao diện: Tự đoán, chữ "Tô thêm cho đúng", bút tô, phóng to, hoàn tác ----
+    chon(pg, 'em-be'); pg.set_input_files('#chonAnh', anh['em-be-ao-do']); pg.wait_for_function('XS_S.R && XS_S.muc.ma === "em-be"')
+    pg.evaluate('XS_UI.denBuoc(3)'); pg.wait_for_timeout(300)
+    ok('Bước khung: có kết quả Tự đoán theo hình dáng', pg.evaluate('!!(XS_S.doan && XS_S.doan.cach)'), pg.evaluate('XS_S.doan'))
+    pg.evaluate("XS_S.doan = Object.assign({}, XS_S.doan, { thieu: ['tayS'] })"); pg.click('[data-che="khop"]'); pg.wait_for_timeout(150)
+    ok('Bộ phận không chắc: hiện chữ "Tô thêm cho đúng"', 'Tô thêm cho đúng' in pg.inner_text('#ghiDoan'), pg.inner_text('#ghiDoan'))
+    pg.click('[data-che="to"]'); pg.click('#dsBoPhan [data-bo="3"]')
+    pg.fill('#coTo', '6'); pg.dispatch_event('#coTo', 'input')
+    pg.click('[data-phong="3"]'); pg.wait_for_timeout(150)
+    bo0 = pg.evaluate('Array.from(XS_S.kh.bo).join()')
+    box = pg.locator('#cv3').bounding_box()
+    pg.mouse.move(box['x'] + box['width'] * 0.5, box['y'] + box['height'] * 0.5); pg.mouse.down(); pg.mouse.move(box['x'] + box['width'] * 0.55, box['y'] + box['height'] * 0.52, steps=4); pg.mouse.up()
+    bo1 = pg.evaluate('Array.from(XS_S.kh.bo).join()')
+    ok('Bút tô cỡ to khi phóng ×3: tô được bộ phận', bo1 != bo0)
+    pg.click('#nutHoanTac3'); pg.wait_for_timeout(150)
+    ok('Hoàn tác trả lại chỗ vừa tô', pg.evaluate('Array.from(XS_S.kh.bo).join()') == bo0)
+    pg.click('[data-che="tay"]')
+    pg.mouse.move(box['x'] + box['width'] * 0.5, box['y'] + box['height'] * 0.5); pg.mouse.down(); pg.mouse.move(box['x'] + box['width'] * 0.52, box['y'] + box['height'] * 0.5, steps=3); pg.mouse.up()
+    ok('Cục tẩy trả chỗ tô về thân', pg.evaluate('Array.from(XS_S.kh.bo).join()') != bo0 or pg.evaluate('XS_S.kh.bo.filter((v) => v === 0).length') > 0)
+    pg.click('#nutTuDoan'); pg.wait_for_timeout(200)
+    pg.evaluate('XS_UI.denBuoc(4)'); pg.wait_for_timeout(400)
+    pg.evaluate('XS_UI.denBuoc(5)'); pg.wait_for_timeout(200)
+    tep = pg.evaluate('XS_UI.taoTep(true, true)')
+    ok('Không có lỗi trang khi sửa vỡ hình, tự đoán, tô tay', not errs, errs[:3])
+    b.close()
+    # ---- trong game: tấm sprite của em bé áo đỏ (kiểu AI) không vỡ ở khung nào ----
+    with open(os.path.join(CUSTOM, 'em-be.sprite.json'), 'w', encoding='utf-8') as f:
+        t2 = dict(tep); t2.pop('cong_cu', None); json.dump(t2, f)
+    good, out = build()
+    ok('Đóng gói nhúng em bé vẽ kiểu AI', good and 'em-be' in out, out[-200:])
+    b, ctx, pg, errs = mo(pw, GAME_DIST, 960, 540)
+    pg.wait_for_function('window.G && G.scene'); pg.wait_for_function("G.spriteCustom.get('em-be')")
+    pg.add_script_tag(content=JS_VO.replace('window.VO', 'window.VO2'))
+    r = pg.evaluate("""() => { const sp = G.spriteCustom.get('em-be'), cv = document.createElement('canvas'); cv.width = sp.img.width; cv.height = sp.img.height;
+        const c = cv.getContext('2d'); c.drawImage(sp.img, 0, 0); const d = new Uint32Array(c.getImageData(0, 0, cv.width, cv.height).data.buffer);
+        const khung = (ten, i) => { const a = sp.dt[ten], px = new Uint32Array(sp.fw * sp.fh); for (let y = 0; y < sp.fh; y++) for (let x = 0; x < sp.fw; x++) { const v = d[(a.hang * sp.fh + y) * cv.width + i * sp.fw + x]; px[y * sp.fw + x] = (v >>> 24) > 127 ? v : 0; } return VO2.do(px, sp.fw, sp.fh); };
+        const g = khung('idle', 0), xau = []; let n = 0;
+        for (const ten in sp.dt) for (let i = 0; i < sp.dt[ten].so; i++) { const m = khung(ten, i); n++; if (m.lo > g.lo || m.roi > g.roi) xau.push(ten + i + ':' + m.lo + '/' + m.roi); }
+        let err = null; try { for (let k = 0; k < 12; k++) { const cv2 = document.createElement('canvas'); cv2.width = 80; cv2.height = 70; G.art.hero(cv2.getContext('2d'), { x: 40, y: 60, face: k % 2 ? 1 : -1, key: 'smith', move: k > 5, t: k * 0.08, atk: k === 3 ? 0.5 : -1, dodge: k === 4 ? 0.5 : -1 }); } } catch (e) { err = String(e); }
+        return { n, xau, err }; }""")
+    ok('Trong game: mọi khung (%d) của em bé không có lỗ kín hay mảnh rời, vẽ không lỗi' % r['n'], not r['xau'] and r['err'] is None and r['n'] > 20, r)
+    ok('Không có lỗi trang trong game có em bé vẽ kiểu AI', not errs, errs[:3])
+    b.close()
+    don_custom()
+
+
 def main():
     tmp = tempfile.mkdtemp(prefix='xuong_sprite_')
     bon, nguoi = ve_bon_chan(os.path.join(tmp, 've-tay-bon-chan.png')), ve_nguoi(os.path.join(tmp, 've-tay-nguoi.png'))
@@ -622,6 +749,7 @@ def main():
             kiem_do(pw, tmp)
             kiem_them(pw, tmp)
             kiem_giu_net_dung_yen(pw, tmp)
+            kiem_sua_vo_tu_doan(pw, tmp)
     finally:
         don_custom()
         build()

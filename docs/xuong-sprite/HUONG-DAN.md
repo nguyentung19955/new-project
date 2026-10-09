@@ -64,8 +64,29 @@ Thêm nữa:
 ### 3. Khung cơ thể
 Chọn mẫu khung (dấu ★ là gợi ý theo cách quái gốc di chuyển): **Người (2 chân)**, **Bốn chân**, **Cua, bọ (nhiều chân)**, **Cá, chim bay**, **Khối mềm (slime, lửa, ma)**, **Rắn**, **Cây, đứng yên**.
 
-- **Kéo khớp**: kéo các chấm tròn vào đúng vai, hông, cổ, gốc đuôi… Hình thoi trắng là điểm chân chạm đất. Xong bấm **Tự đoán bộ phận**.
-- **Tô bộ phận**: chọn một bộ phận (Đầu, Chân trước gần…) rồi tô lên chỗ bị chia sai.
+Vừa chọn mẫu, công cụ **tự đoán** bộ phận theo hình dáng và màu của hình (không chỉ theo tỉ lệ khung như trước):
+phần trên cùng tròn là đầu, chỗ hẹp nhất là cổ, nhánh mỏng hai bên là tay, các mảng tách nhau bởi khe ở đáy là chân,
+phần dài phía sau là đuôi. Ảnh nhìn chính diện, tay áp sát thân (kiểu ảnh AI vẽ) thì tay được nhận theo mảng màu riêng sát
+mép hai bên (găng, bàn tay, tay áo). Khớp (vai, hông, cổ…) được đặt theo kết quả đoán.
+
+- Bộ phận nào **chưa chắc** thì công cụ để nó **dính thân** (không cử động riêng, không cắt sai) và hiện chữ vàng
+  **"Tô thêm cho đúng: …"**, tên bộ phận đó có dấu **?**. Muốn nó cử động thì tô thêm (xem dưới).
+- **Kéo khớp**: kéo các chấm tròn vào đúng vai, hông, cổ, gốc đuôi… Hình thoi trắng là điểm chân chạm đất.
+  Bấm **Chia theo khớp** để chia lại theo khớp vừa kéo; bấm **Tự đoán bộ phận** để đoán lại từ đầu.
+- **Bút tô bộ phận**: chọn bộ phận rồi tô lên hình. **Cục tẩy (trả về thân)**: chỗ tô sai trả về thân.
+- Trên điện thoại: kéo thanh **Cỡ bút** (1 đến 10), bấm **×2**, **×3** để phóng to, **✋ Kéo hình** để dời chỗ đang xem,
+  **↶ Hoàn tác** để bỏ nét vừa tô.
+
+![](tu-doan-truoc-sau.png)
+
+**Không còn vỡ hình khi cử động.** Trước đây khi tay chân xoay, hình hay bị rách ở khớp: lộ lỗ trên thân chỗ tay vừa che,
+khe hở ở vai, hông, mảnh bị cắt sai. Bây giờ công cụ tự làm khi dựng từng khung:
+lấp sẵn chỗ thân bị tay chân che bằng màu thân xung quanh; mỗi bộ phận lấy dư một mép thân ở khớp để vá khớp;
+bộ phận áp sát thân thì xoay ít lại; xoay quanh đúng khớp, lấy điểm gần nhất trên hình phóng to (không răng cưa, không viền
+mờ, không màu mới); tay sau vẽ dưới thân, tay trước vẽ trên thân; lỗ nhỏ, khe một điểm mới sinh ra được vá, viền tối liền.
+Bên trái là cách cũ, bên phải là bây giờ:
+
+![](sua-vo-truoc-sau.gif)
 
 ![](buoc-3-khung.png)
 
