@@ -2506,3 +2506,22 @@ html.doc #wrap { visibility: hidden; }
 :is(#roster, #screen) :is(.rl-f, .hs-t, .tag.el, .ro-card .nm, .ro-price, .rl-chip, .rl-chip b, .rl-chip span, .ev-lb, .ev-lb b, .ev-sl, .tags > span, .ev-p b) { font-size: 12px; }
 :is(#roster, #screen) .ev-p i { font-size: 10px; }
 :is(#roster, #screen) .rl-chip i { font-size: 10px; }
+/* claude/gon-khung: mọi thứ gọn trong khung 844×390 — nút hành động không bao giờ nằm trong vùng phải cuộn */
+/* Ấn Phù: khung chi tiết = phần cuộn (thông tin, 5 cấp gọn 2 cột) + nút Khắc ghim đáy; 3 cột ấn cao bằng khung chi tiết */
+.rn-det { overflow: hidden; gap: 6px; }
+.rn-dsc { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; gap: 6px; }
+.rn-dsc > * { flex: none; }
+.rn-det > .rn-buy, .rn-det > .rn-lockmsg, .rn-det > .chip { flex: none; margin-top: 0; }
+.rn-lvs { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; font-size: 11.5px; }
+.rn-lv { padding: 2px 5px; line-height: 1.25; }
+.rn-lv.next { grid-column: 1 / -1; }
+.rn-board { align-content: stretch; grid-auto-rows: 1fr; }
+.rn-col { display: flex; flex-direction: column; justify-content: space-between; }
+/* Kết quả: dòng mở tướng (nút Mở …) lên trên bảng số liệu — không phải cuộn mới thấy */
+.res-pin:empty { display: none; }
+.res-pin .res-unl { margin: 0; }
+/* Góp ý: hộp co theo khung — ô viết co lại (tối thiểu 56px) thay vì đẩy nút Gửi / Huỷ xuống vùng cuộn */
+.fb-box:not(.fb-thanks) { display: flex; flex-direction: column; overflow: hidden; }
+.fb-box:not(.fb-thanks) > * { flex: none; }
+.fb-box:not(.fb-thanks) > .fb-tw { flex: 0 1 auto; min-height: 56px; display: flex; flex-direction: column; }
+.fb-box:not(.fb-thanks) #fb-text { flex: 1 1 92px; height: auto; min-height: 56px; max-height: 92px; }

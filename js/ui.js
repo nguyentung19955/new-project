@@ -3109,11 +3109,11 @@ class UI {
       <div class="scr-body rn-body">
         <div class="rn-board">${RUNE_BRANCHES.map(col).join('')}</div>
         <div class="panel metal rn-det" style="--rc:${br.color}">
-          <div class="rn-tv"><img src="${heroImgUrl(t, 'head')}" alt=""><div><b>${d.name}</b><small>${ic('tu-vi')}Tu Vi ${tl} · ${tuviRank(xp)}</small>
+          <div class="rn-dsc"><div class="rn-tv"><img src="${heroImgUrl(t, 'head')}" alt=""><div><b>${d.name}</b><small>${ic('tu-vi')}Tu Vi ${tl} · ${tuviRank(xp)}</small>
             <div class="rn-xp"><i style="width:${bar * 100}%"></i></div><small>${nx ? `${fmt(Math.floor(xp))} / ${fmt(nx)} — hạ quái bằng tướng này để lên bậc` : 'Đã đạt bậc cao nhất'}</small></div></div>
           <div class="rn-pts">${ic('diem-an-phu')}Điểm Ấn còn <b>${left}</b> / ${tuviPoints(xp)} <button class="btn ${this.runeResetArm ? 'btn-gold' : 'metal'}" data-act="rn-reset" ${runeSpent(lvs) ? '' : 'disabled'}>${this.runeResetArm ? 'Bấm lần nữa' : 'Tẩy ấn'}</button></div>
           <div class="rn-dh"><span class="rn-big">${runeIc(r)}</span><div><b>${r.name}</b><small>${br.name} · ${r.skill ? 'Ấn kỹ năng · 3 điểm / cấp' : 'Ấn chỉ số · 1 điểm / cấp'} · cấp ${lv}/${r.max}</small></div></div>
-          <div class="rn-lvs">${lines.join('')}</div>
+          <div class="rn-lvs">${lines.join('')}</div></div>
           ${lv >= r.max ? '<div class="chip ok" style="text-align:center">Đã tối đa</div>'
             : !open ? `<div class="rn-lockmsg">${UIE.lock()} Cần ${RUNE_ROW_NEED[r.row]} cấp trong ${br.name} (đang có ${runeBranchPts(lvs, r.br)})</div>`
             : `<button class="btn btn-gold rn-buy" data-act="rn-buy" data-k="${r.id}" ${left < cost ? 'disabled' : ''}>${lv ? 'Nâng' : 'Khắc'} cấp ${lv + 1} · ${cost} điểm Ấn</button>`}
@@ -3483,7 +3483,6 @@ class UI {
       ${daily ? `<div><span>☀ Nhiệm vụ ngày: trận đầu qua đợt ${PREP.dailyWave}</span><b style="color:#FFE08A">${bac(1)} +${fmt(daily)}</b></div>` : ''}
       ${qDone.map((x) => `<div><span>☀ Nhiệm vụ ngày: ${esc(x.name)}</span><b style="color:#FFE08A">${bac(1)} +${fmt(x.kho)}</b></div>`).join('')}
       <div class="res-qd"><span>Nhiệm vụ ngày</span><b>${this.questLine()}</b></div>
-      ${this.unlockHint()}
       ${tv.rows.length ? `<div><span>${ic('tu-vi')}Tu Vi${fullTv ? '' : ' (60% · chưa qua đợt ' + PREP.dailyWave + ')'}</span><b style="color:#C8A0F0">${tv.rows.join(' · ')}</b></div>` : ''}
       ${tv.up.map((u) => `<div><span></span><b style="color:#FFD66B">${u}</b></div>`).join('')}`;
     const name = `${coop ? '🤝 Cùng giữ thành · ' : UIE.endless() + ' Vô tận · '}${LEVELS[lv].name}${coop ? ` · cùng ${esc(mate)}` : ''}`;
@@ -3506,6 +3505,7 @@ class UI {
             <div style="flex:1">${newBest ? '<div class="chip ok" style="display:inline-block">★ Kỷ lục mới!</div>' : `<div class="inset" style="height:12px;border-radius:4px;overflow:hidden"><i style="display:block;height:100%;width:${Math.min(1, g.wave / (endBest || 1)) * 100}%;background:linear-gradient(90deg,${th.bar[0]},${th.bar[1]})"></i></div>`}
             <div class="note" style="margin-top:4px">${coop ? 'Chơi nhóm' : `Kỷ lục bản đồ này: đợt ${s.bestEndless[lv]}`}</div></div>
             <div class="res-khobox inset"><small>Ngân khố cả trận</small><b>${bac()} +${fmt(khoAll)}</b><small>còn ${fmt(s.kho)} · đã mở ${this.openCount().n}/${this.openCount().all} tướng</small></div></div>
+          <div class="res-pin">${this.unlockHint()}</div>
           <div class="res-table inset">${rows}</div>
           <div class="res-tips"><div class="h">${UIE.tip()} MẸO LẦN SAU</div>
             <div class="t"><i>1</i><span><b>Ghép</b> 2 tướng cùng loại cùng sao và <b>hợp thể</b> đúng cặp để có tướng thần mạnh hơn hẳn.</span></div>
