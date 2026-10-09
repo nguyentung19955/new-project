@@ -1,0 +1,6149 @@
+[
+ {
+  "ma": "em-be-smith",
+  "nhom": "em-be",
+  "ten": "Thợ Rèn",
+  "rong": 19,
+  "cao": 31,
+  "so_mau": 15,
+  "phu_kin": 69,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    36
+   ],
+   [
+    "#d2362e",
+    16
+   ],
+   [
+    "#f6f0e2",
+    16
+   ],
+   [
+    "#8c1c1f",
+    14
+   ],
+   [
+    "#f47a62",
+    7
+   ],
+   [
+    "#c9c0ae",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "em-be-hunter",
+  "nhom": "em-be",
+  "ten": "Thợ Săn",
+  "rong": 22,
+  "cao": 33,
+  "so_mau": 14,
+  "phu_kin": 61,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    30
+   ],
+   [
+    "#479544",
+    21
+   ],
+   [
+    "#255a2c",
+    17
+   ],
+   [
+    "#f6f0e2",
+    13
+   ],
+   [
+    "#8fd070",
+    7
+   ],
+   [
+    "#8a5a34",
+    4
+   ]
+  ]
+ },
+ {
+  "ma": "em-be-healer",
+  "nhom": "em-be",
+  "ten": "Thầy Lang",
+  "rong": 24,
+  "cao": 32,
+  "so_mau": 23,
+  "phu_kin": 65,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    34
+   ],
+   [
+    "#27407f",
+    14
+   ],
+   [
+    "#4468c0",
+    14
+   ],
+   [
+    "#f6f0e2",
+    11
+   ],
+   [
+    "#86a8f0",
+    6
+   ],
+   [
+    "#e09c4a",
+    6
+   ]
+  ]
+ },
+ {
+  "ma": "em-be-wrestler",
+  "nhom": "em-be",
+  "ten": "Đô Vật",
+  "rong": 20,
+  "cao": 29,
+  "so_mau": 15,
+  "phu_kin": 67,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    37
+   ],
+   [
+    "#9a4a16",
+    16
+   ],
+   [
+    "#dd7c2a",
+    12
+   ],
+   [
+    "#f6f0e2",
+    12
+   ],
+   [
+    "#8c1c1f",
+    5
+   ],
+   [
+    "#f47a62",
+    4
+   ]
+  ]
+ },
+ {
+  "ma": "cua",
+  "nhom": "quai",
+  "ten": "Cua Lính",
+  "vung": "bien",
+  "loai": "thuong",
+  "w0": 48,
+  "h0": 36,
+  "bay": false,
+  "parts": [
+   "tayT",
+   "cangT",
+   "tayP",
+   "cangP",
+   "cT1",
+   "cT2",
+   "cT3",
+   "cP1",
+   "cP2",
+   "cP3"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "spawn"
+  ],
+  "rong": 47,
+  "cao": 36,
+  "so_mau": 28,
+  "phu_kin": 64,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#14182e",
+    31
+   ],
+   [
+    "#ee5c3a",
+    9
+   ],
+   [
+    "#3883d4",
+    9
+   ],
+   [
+    "#1b4c92",
+    8
+   ],
+   [
+    "#b32a2c",
+    7
+   ],
+   [
+    "#6a1220",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "caCon",
+  "nhom": "quai",
+  "ten": "Bầy Cá Con",
+  "vung": "bien",
+  "loai": "thuong",
+  "w0": 36,
+  "h0": 31,
+  "bay": true,
+  "parts": [
+   "ca1",
+   "ca2",
+   "ca3",
+   "duoi1",
+   "duoi2",
+   "duoi3"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "spawn"
+  ],
+  "rong": 36,
+  "cao": 34,
+  "so_mau": 19,
+  "phu_kin": 39,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#14182e",
+    34
+   ],
+   [
+    "#b32a2c",
+    6
+   ],
+   [
+    "#0e746e",
+    6
+   ],
+   [
+    "#1b4c92",
+    5
+   ],
+   [
+    "#6a1220",
+    5
+   ],
+   [
+    "#063b3c",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "oc",
+  "nhom": "quai",
+  "ten": "Ốc Mượn Hồn",
+  "vung": "bien",
+  "loai": "thuong",
+  "w0": 52,
+  "h0": 41,
+  "bay": false,
+  "parts": [
+   "cang",
+   "chan1",
+   "chan2",
+   "chan3"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "spawn"
+  ],
+  "rong": 52,
+  "cao": 41,
+  "so_mau": 29,
+  "phu_kin": 51,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#9bb4e8",
+    12
+   ],
+   [
+    "#5265ae",
+    8
+   ],
+   [
+    "#a9d8ee",
+    7
+   ],
+   [
+    "#2c3a7c",
+    7
+   ],
+   [
+    "#b32a2c",
+    6
+   ],
+   [
+    "#d84e38",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "haiQuy",
+  "nhom": "quai",
+  "ten": "Hải Quỳ",
+  "vung": "bien",
+  "loai": "thuong",
+  "w0": 45,
+  "h0": 40,
+  "bay": false,
+  "parts": [
+   "tuaT",
+   "tuaG",
+   "tuaP",
+   "rong"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "spawn"
+  ],
+  "rong": 44,
+  "cao": 43,
+  "so_mau": 26,
+  "phu_kin": 55,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#14182e",
+    28
+   ],
+   [
+    "#6a1220",
+    13
+   ],
+   [
+    "#0e746e",
+    9
+   ],
+   [
+    "#b32a2c",
+    8
+   ],
+   [
+    "#ee5c3a",
+    7
+   ],
+   [
+    "#063b3c",
+    6
+   ]
+  ]
+ },
+ {
+  "ma": "caChuon",
+  "nhom": "quai",
+  "ten": "Cá Chuồn",
+  "vung": "bien",
+  "loai": "thuong",
+  "w0": 53,
+  "h0": 34,
+  "bay": true,
+  "parts": [
+   "canh",
+   "duoi",
+   "vay"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "spawn"
+  ],
+  "rong": 53,
+  "cao": 35,
+  "so_mau": 17,
+  "phu_kin": 35,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#a9d8ee",
+    18
+   ],
+   [
+    "#1b4c92",
+    9
+   ],
+   [
+    "#3883d4",
+    8
+   ],
+   [
+    "#4f86b0",
+    7
+   ],
+   [
+    "#d9ecfa",
+    7
+   ]
+  ]
+ },
+ {
+  "ma": "caNoc",
+  "nhom": "quai",
+  "ten": "Cá Nóc",
+  "vung": "bien",
+  "loai": "thuong",
+  "w0": 32,
+  "h0": 26,
+  "bay": true,
+  "parts": [
+   "vay",
+   "duoi",
+   "gai",
+   "gaiD"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "spawn"
+  ],
+  "rong": 33,
+  "cao": 28,
+  "so_mau": 17,
+  "phu_kin": 56,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#14182e",
+    29
+   ],
+   [
+    "#e6f4f2",
+    11
+   ],
+   [
+    "#063b3c",
+    9
+   ],
+   [
+    "#1fb49c",
+    8
+   ],
+   [
+    "#ffffff",
+    8
+   ],
+   [
+    "#a9d8ee",
+    7
+   ]
+  ]
+ },
+ {
+  "ma": "sua",
+  "nhom": "quai",
+  "ten": "Sứa Bom",
+  "vung": "bien",
+  "loai": "thuong",
+  "w0": 39,
+  "h0": 37,
+  "bay": true,
+  "parts": [
+   "tuaT",
+   "tuaP",
+   "bom"
+  ],
+  "anims": [
+   "spawn",
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die"
+  ],
+  "rong": 39,
+  "cao": 37,
+  "so_mau": 24,
+  "phu_kin": 57,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#14182e",
+    31
+   ],
+   [
+    "#50bde6",
+    14
+   ],
+   [
+    "#0f437a",
+    9
+   ],
+   [
+    "#2273b2",
+    9
+   ],
+   [
+    "#3fa8d8",
+    5
+   ],
+   [
+    "#2b5f9e",
+    4
+   ]
+  ]
+ },
+ {
+  "ma": "nhim",
+  "nhom": "quai",
+  "ten": "Nhím Biển",
+  "vung": "bien",
+  "loai": "thuong",
+  "w0": 29,
+  "h0": 24,
+  "bay": false,
+  "parts": [
+   "gaiTren",
+   "gaiT",
+   "gaiP"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "spawn"
+  ],
+  "rong": 29,
+  "cao": 24,
+  "so_mau": 18,
+  "phu_kin": 63,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#14182e",
+    32
+   ],
+   [
+    "#4836a0",
+    13
+   ],
+   [
+    "#bfe9ff",
+    9
+   ],
+   [
+    "#ffffff",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "cuaTuong",
+  "nhom": "quai",
+  "ten": "Cua Tướng",
+  "vung": "bien",
+  "loai": "tinhanh",
+  "w0": 84,
+  "h0": 63,
+  "bay": false,
+  "parts": [],
+  "anims": [
+   "chieu1",
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "spawn"
+  ],
+  "rong": 84,
+  "cao": 63,
+  "so_mau": 30,
+  "phu_kin": 56,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#ee5c3a",
+    16
+   ],
+   [
+    "#3883d4",
+    10
+   ],
+   [
+    "#1b4c92",
+    10
+   ],
+   [
+    "#b32a2c",
+    7
+   ],
+   [
+    "#6a1220",
+    4
+   ]
+  ]
+ },
+ {
+  "ma": "caNocChua",
+  "nhom": "quai",
+  "ten": "Cá Nóc Chúa",
+  "vung": "bien",
+  "loai": "tinhanh",
+  "w0": 66,
+  "h0": 61,
+  "bay": true,
+  "parts": [],
+  "anims": [
+   "chieu1",
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "spawn"
+  ],
+  "rong": 66,
+  "cao": 63,
+  "so_mau": 22,
+  "phu_kin": 37,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#ffffff",
+    13
+   ],
+   [
+    "#dff6ff",
+    9
+   ],
+   [
+    "#e6f4f2",
+    9
+   ],
+   [
+    "#1aa894",
+    7
+   ],
+   [
+    "#a9d8ee",
+    5
+   ],
+   [
+    "#8fc4e0",
+    4
+   ]
+  ]
+ },
+ {
+  "ma": "cuaDa",
+  "nhom": "quai",
+  "ten": "Cua Đá",
+  "vung": "bien",
+  "loai": "trumnho",
+  "w0": 116,
+  "h0": 70,
+  "bay": false,
+  "parts": [
+   "cangT",
+   "cangP",
+   "chanT",
+   "chanP"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "spawn",
+   "chieu1",
+   "chieu2"
+  ],
+  "rong": 117,
+  "cao": 71,
+  "so_mau": 30,
+  "phu_kin": 56,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#7187a8",
+    26
+   ],
+   [
+    "#46567a",
+    15
+   ],
+   [
+    "#222a40",
+    10
+   ],
+   [
+    "#a9bcd8",
+    5
+   ],
+   [
+    "#5ff0d8",
+    2
+   ]
+  ]
+ },
+ {
+  "ma": "nguTinh",
+  "nhom": "quai",
+  "ten": "Ngư Tinh",
+  "vung": "bien",
+  "loai": "trum",
+  "w0": 150,
+  "h0": 102,
+  "bay": false,
+  "parts": [
+   "song",
+   "duoi",
+   "vay",
+   "vayBung",
+   "ham",
+   "rau"
+  ],
+  "anims": [
+   "intro",
+   "idle",
+   "move",
+   "c1",
+   "c2",
+   "c3",
+   "c4",
+   "c5",
+   "phase2",
+   "phase3",
+   "stun",
+   "hit",
+   "die",
+   "tele",
+   "atk",
+   "spawn"
+  ],
+  "rong": 152,
+  "cao": 105,
+  "so_mau": 43,
+  "phu_kin": 55,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#149c8c",
+    14
+   ],
+   [
+    "#1f559a",
+    12
+   ],
+   [
+    "#1f5f9c",
+    10
+   ],
+   [
+    "#2f8fc8",
+    7
+   ],
+   [
+    "#2b6cb8",
+    4
+   ]
+  ]
+ },
+ {
+  "ma": "heoCon",
+  "nhom": "quai",
+  "ten": "Heo Rừng Con",
+  "vung": "rung",
+  "loai": "thuong",
+  "w0": 56,
+  "h0": 32,
+  "bay": false,
+  "parts": [
+   "dau",
+   "chanT",
+   "chanS",
+   "bom",
+   "bui"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "spawn"
+  ],
+  "rong": 52,
+  "cao": 32,
+  "so_mau": 23,
+  "phu_kin": 63,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#80542c",
+    21
+   ],
+   [
+    "#4e3018",
+    15
+   ],
+   [
+    "#c89460",
+    4
+   ],
+   [
+    "#22692c",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "ongVo",
+  "nhom": "quai",
+  "ten": "Bầy Ong Vò Vẽ",
+  "vung": "rung",
+  "loai": "thuong",
+  "w0": 44,
+  "h0": 39,
+  "bay": true,
+  "parts": [
+   "ong1",
+   "ong2",
+   "ong3",
+   "canh1",
+   "canh2",
+   "canh3"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "spawn"
+  ],
+  "rong": 43,
+  "cao": 39,
+  "so_mau": 22,
+  "phu_kin": 43,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#14182e",
+    34
+   ],
+   [
+    "#7aa8a4",
+    4
+   ],
+   [
+    "#d8f4ec",
+    4
+   ],
+   [
+    "#c45a1a",
+    3
+   ],
+   [
+    "#a8901a",
+    3
+   ],
+   [
+    "#c8e8e0",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "boHung",
+  "nhom": "quai",
+  "ten": "Bọ Hung Mai Cứng",
+  "vung": "rung",
+  "loai": "thuong",
+  "w0": 54,
+  "h0": 34,
+  "bay": false,
+  "parts": [
+   "mai",
+   "c1",
+   "c2",
+   "c3"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "spawn"
+  ],
+  "rong": 54,
+  "cao": 34,
+  "so_mau": 28,
+  "phu_kin": 62,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#3a9a5c",
+    13
+   ],
+   [
+    "#b08a3a",
+    9
+   ],
+   [
+    "#6a4a1e",
+    7
+   ],
+   [
+    "#1a5a40",
+    6
+   ]
+  ]
+ },
+ {
+  "ma": "hoaBaoTu",
+  "nhom": "quai",
+  "ten": "Hoa Phun Bào Tử",
+  "vung": "rung",
+  "loai": "thuong",
+  "w0": 53,
+  "h0": 36,
+  "bay": false,
+  "parts": [
+   "dau",
+   "la",
+   "bao"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "spawn"
+  ],
+  "rong": 53,
+  "cao": 37,
+  "so_mau": 28,
+  "phu_kin": 59,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#78b818",
+    8
+   ],
+   [
+    "#22692c",
+    7
+   ],
+   [
+    "#123a1c",
+    6
+   ],
+   [
+    "#58208c",
+    5
+   ],
+   [
+    "#9a48d4",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "chonBong",
+  "nhom": "quai",
+  "ten": "Chồn Bóng",
+  "vung": "rung",
+  "loai": "thuong",
+  "w0": 63,
+  "h0": 28,
+  "bay": false,
+  "parts": [
+   "dau",
+   "duoi",
+   "chanT",
+   "chanS"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "spawn"
+  ],
+  "rong": 63,
+  "cao": 28,
+  "so_mau": 18,
+  "phu_kin": 49,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#40305e",
+    12
+   ],
+   [
+    "#9a48d4",
+    6
+   ],
+   [
+    "#9a88c8",
+    5
+   ],
+   [
+    "#b8a8d8",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "namPhong",
+  "nhom": "quai",
+  "ten": "Nấm Phồng",
+  "vung": "rung",
+  "loai": "thuong",
+  "w0": 32,
+  "h0": 27,
+  "bay": false,
+  "parts": [
+   "mu",
+   "reT",
+   "reP"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "spawn"
+  ],
+  "rong": 32,
+  "cao": 29,
+  "so_mau": 21,
+  "phu_kin": 63,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#9a48d4",
+    13
+   ],
+   [
+    "#b0a488",
+    10
+   ],
+   [
+    "#58208c",
+    8
+   ],
+   [
+    "#3c5a0c",
+    5
+   ],
+   [
+    "#e8e0c4",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "socNo",
+  "nhom": "quai",
+  "ten": "Sóc Ném Quả Nổ",
+  "vung": "rung",
+  "loai": "thuong",
+  "w0": 49,
+  "h0": 37,
+  "bay": false,
+  "parts": [
+   "qua",
+   "duoi",
+   "dau"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "spawn"
+  ],
+  "rong": 49,
+  "cao": 38,
+  "so_mau": 32,
+  "phu_kin": 65,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#d0682a",
+    22
+   ],
+   [
+    "#8a3a14",
+    20
+   ],
+   [
+    "#f0d8a8",
+    4
+   ],
+   [
+    "#7a38b0",
+    2
+   ],
+   [
+    "#ffb870",
+    2
+   ]
+  ]
+ },
+ {
+  "ma": "nhimDoc",
+  "nhom": "quai",
+  "ten": "Nhím Gai Độc",
+  "vung": "rung",
+  "loai": "thuong",
+  "w0": 44,
+  "h0": 28,
+  "bay": false,
+  "parts": [
+   "dau",
+   "gai",
+   "chanT",
+   "chanS"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "spawn"
+  ],
+  "rong": 44,
+  "cao": 29,
+  "so_mau": 19,
+  "phu_kin": 64,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1c1210",
+    26
+   ],
+   [
+    "#6a4c38",
+    12
+   ],
+   [
+    "#3e2a20",
+    12
+   ],
+   [
+    "#9a48d4",
+    11
+   ],
+   [
+    "#e8e0c4",
+    4
+   ],
+   [
+    "#b89878",
+    2
+   ]
+  ]
+ },
+ {
+  "ma": "heoNanh",
+  "nhom": "quai",
+  "ten": "Heo Rừng Nanh Dài",
+  "vung": "rung",
+  "loai": "tinhanh",
+  "w0": 90,
+  "h0": 44,
+  "bay": false,
+  "parts": [
+   "dau",
+   "chanT",
+   "chanS",
+   "bui",
+   "bom"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "chieu1",
+   "spawn"
+  ],
+  "rong": 90,
+  "cao": 46,
+  "so_mau": 35,
+  "phu_kin": 61,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#644022",
+    19
+   ],
+   [
+    "#fff8e0",
+    4
+   ],
+   [
+    "#b0a488",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "namPhongChua",
+  "nhom": "quai",
+  "ten": "Nấm Phồng Chúa",
+  "vung": "rung",
+  "loai": "tinhanh",
+  "w0": 83,
+  "h0": 44,
+  "bay": false,
+  "parts": [
+   "mu"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "chieu1",
+   "spawn"
+  ],
+  "rong": 83,
+  "cao": 45,
+  "so_mau": 26,
+  "phu_kin": 42,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#a048e0",
+    11
+   ],
+   [
+    "#b0a488",
+    8
+   ],
+   [
+    "#5c1c98",
+    7
+   ],
+   [
+    "#f4ffb0",
+    7
+   ],
+   [
+    "#3c5a0c",
+    5
+   ],
+   [
+    "#e8e0c4",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "namChua",
+  "nhom": "quai",
+  "ten": "Nấm Chúa",
+  "vung": "rung",
+  "loai": "trumnho",
+  "w0": 97,
+  "h0": 64,
+  "bay": false,
+  "parts": [
+   "mu",
+   "tayT",
+   "tayP"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "chieu1",
+   "chieu2",
+   "spawn"
+  ],
+  "rong": 97,
+  "cao": 63,
+  "so_mau": 37,
+  "phu_kin": 72,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#9a48d4",
+    14
+   ],
+   [
+    "#5c3a1e",
+    8
+   ],
+   [
+    "#58208c",
+    7
+   ],
+   [
+    "#9a8a78",
+    4
+   ],
+   [
+    "#4a3c40",
+    4
+   ]
+  ]
+ },
+ {
+  "ma": "mocTinh",
+  "nhom": "quai",
+  "ten": "Mộc Tinh",
+  "vung": "rung",
+  "loai": "trum",
+  "w0": 140,
+  "h0": 126,
+  "bay": false,
+  "parts": [
+   "tan",
+   "canhT",
+   "canhP",
+   "reT",
+   "reP",
+   "ham"
+  ],
+  "anims": [
+   "intro",
+   "idle",
+   "move",
+   "c1",
+   "c2",
+   "c3",
+   "c4",
+   "c5",
+   "phase2",
+   "phase3",
+   "stun",
+   "hit",
+   "die",
+   "tele",
+   "atk",
+   "spawn"
+  ],
+  "rong": 140,
+  "cao": 131,
+  "so_mau": 44,
+  "phu_kin": 66,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#46a83c",
+    19
+   ],
+   [
+    "#5c3a1e",
+    18
+   ],
+   [
+    "#22692c",
+    13
+   ],
+   [
+    "#123a1c",
+    7
+   ],
+   [
+    "#96643a",
+    6
+   ],
+   [
+    "#b4ec6c",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "linhMa",
+  "nhom": "quai",
+  "ten": "Lính Ma Giáp Gỉ",
+  "vung": "laudai",
+  "loai": "thuong",
+  "w0": 50,
+  "h0": 31,
+  "bay": false,
+  "parts": [
+   "giao",
+   "non",
+   "ao"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "spawn"
+  ],
+  "rong": 50,
+  "cao": 31,
+  "so_mau": 26,
+  "phu_kin": 52,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#5c1a22",
+    13
+   ],
+   [
+    "#a85a26",
+    11
+   ],
+   [
+    "#6e3418",
+    9
+   ],
+   [
+    "#9a3428",
+    5
+   ],
+   [
+    "#e07048",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "doiThan",
+  "nhom": "quai",
+  "ten": "Bầy Dơi Than",
+  "vung": "laudai",
+  "loai": "thuong",
+  "w0": 46,
+  "h0": 31,
+  "bay": true,
+  "parts": [
+   "d1",
+   "cT1",
+   "cP1",
+   "d2",
+   "cT2",
+   "cP2",
+   "d3",
+   "cT3",
+   "cP3"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "spawn"
+  ],
+  "rong": 45,
+  "cao": 38,
+  "so_mau": 14,
+  "phu_kin": 44,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#14182e",
+    32
+   ],
+   [
+    "#48424e",
+    19
+   ],
+   [
+    "#f0506e",
+    6
+   ],
+   [
+    "#a8324a",
+    5
+   ],
+   [
+    "#fff8e0",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "tuongDa",
+  "nhom": "quai",
+  "ten": "Tượng Đá Cầm Khiên",
+  "vung": "laudai",
+  "loai": "thuong",
+  "w0": 50,
+  "h0": 32,
+  "bay": false,
+  "parts": [
+   "khien",
+   "chuy"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "spawn"
+  ],
+  "rong": 51,
+  "cao": 32,
+  "so_mau": 19,
+  "phu_kin": 71,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#8a8288",
+    22
+   ],
+   [
+    "#57505a",
+    16
+   ],
+   [
+    "#2c2830",
+    15
+   ],
+   [
+    "#cbc3c0",
+    8
+   ],
+   [
+    "#f0582a",
+    5
+   ],
+   [
+    "#6e3418",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "denLong",
+  "nhom": "quai",
+  "ten": "Đèn Lồng Ma",
+  "vung": "laudai",
+  "loai": "thuong",
+  "w0": 44,
+  "h0": 34,
+  "bay": true,
+  "parts": [
+   "tua",
+   "quai"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "spawn"
+  ],
+  "rong": 44,
+  "cao": 32,
+  "so_mau": 20,
+  "phu_kin": 37,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#14182e",
+    26
+   ],
+   [
+    "#f0582a",
+    10
+   ],
+   [
+    "#ff8a1e",
+    8
+   ],
+   [
+    "#ffd23c",
+    6
+   ],
+   [
+    "#b0261a",
+    6
+   ],
+   [
+    "#c43c10",
+    6
+   ]
+  ]
+ },
+ {
+  "ma": "meoDen",
+  "nhom": "quai",
+  "ten": "Mèo Đen Hai Đuôi",
+  "vung": "laudai",
+  "loai": "thuong",
+  "w0": 58,
+  "h0": 32,
+  "bay": false,
+  "parts": [
+   "dau",
+   "duoi",
+   "chanT",
+   "chanS"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "spawn"
+  ],
+  "rong": 58,
+  "cao": 33,
+  "so_mau": 16,
+  "phu_kin": 50,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#26222c",
+    32
+   ],
+   [
+    "#14182e",
+    29
+   ],
+   [
+    "#a8324a",
+    8
+   ],
+   [
+    "#48424e",
+    6
+   ],
+   [
+    "#f0582a",
+    4
+   ],
+   [
+    "#c43c10",
+    2
+   ]
+  ]
+ },
+ {
+  "ma": "huLua",
+  "nhom": "quai",
+  "ten": "Hũ Lửa Sống",
+  "vung": "laudai",
+  "loai": "thuong",
+  "w0": 30,
+  "h0": 30,
+  "bay": false,
+  "parts": [
+   "nap",
+   "taiT",
+   "taiP",
+   "chanT",
+   "chanS"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "spawn"
+  ],
+  "rong": 30,
+  "cao": 31,
+  "so_mau": 18,
+  "phu_kin": 57,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#14182e",
+    26
+   ],
+   [
+    "#5c2418",
+    20
+   ],
+   [
+    "#96402a",
+    15
+   ],
+   [
+    "#ffd23c",
+    7
+   ],
+   [
+    "#f0582a",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "tieuYeu",
+  "nhom": "quai",
+  "ten": "Tiểu Yêu Ném Pháo",
+  "vung": "laudai",
+  "loai": "thuong",
+  "w0": 44,
+  "h0": 32,
+  "bay": false,
+  "parts": [
+   "phao",
+   "dau",
+   "duoi"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "spawn"
+  ],
+  "rong": 44,
+  "cao": 32,
+  "so_mau": 28,
+  "phu_kin": 57,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#14182e",
+    31
+   ],
+   [
+    "#b0261a",
+    16
+   ],
+   [
+    "#f0582a",
+    13
+   ],
+   [
+    "#ffb070",
+    5
+   ],
+   [
+    "#fff8e0",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "nhimThan",
+  "nhom": "quai",
+  "ten": "Nhím Than Hồng",
+  "vung": "laudai",
+  "loai": "thuong",
+  "w0": 30,
+  "h0": 27,
+  "bay": false,
+  "parts": [
+   "gaiTren",
+   "gaiT",
+   "gaiP",
+   "chanT",
+   "chanS"
+  ],
+  "anims": [
+   "idle",
+   "tele",
+   "atk",
+   "hit",
+   "move",
+   "die",
+   "spawn"
+  ],
+  "rong": 31,
+  "cao": 28,
+  "so_mau": 16,
+  "phu_kin": 56,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#14182e",
+    30
+   ],
+   [
+    "#48424e",
+    11
+   ],
+   [
+    "#f0506e",
+    9
+   ],
+   [
+    "#ffb070",
+    4
+   ]
+  ]
+ },
+ {
+  "ma": "tuongMa",
+  "nhom": "quai",
+  "ten": "Tướng Ma",
+  "vung": "laudai",
+  "loai": "tinhanh",
+  "w0": 64,
+  "h0": 44,
+  "bay": false,
+  "parts": [
+   "dao",
+   "ao",
+   "ngu"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "chieu1",
+   "spawn"
+  ],
+  "rong": 64,
+  "cao": 43,
+  "so_mau": 29,
+  "phu_kin": 61,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#a85a26",
+    13
+   ],
+   [
+    "#6e3418",
+    11
+   ],
+   [
+    "#ff8a1e",
+    6
+   ],
+   [
+    "#e8e0c4",
+    5
+   ],
+   [
+    "#ffd23c",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "huChua",
+  "nhom": "quai",
+  "ten": "Hũ Lửa Chúa",
+  "vung": "laudai",
+  "loai": "tinhanh",
+  "w0": 68,
+  "h0": 42,
+  "bay": false,
+  "parts": [
+   "mien"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "chieu1",
+   "spawn"
+  ],
+  "rong": 59,
+  "cao": 42,
+  "so_mau": 19,
+  "phu_kin": 44,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#8a1c16",
+    16
+   ],
+   [
+    "#d2401e",
+    11
+   ],
+   [
+    "#ff8a1e",
+    9
+   ],
+   [
+    "#ffd23c",
+    9
+   ],
+   [
+    "#fff6b0",
+    6
+   ]
+  ]
+ },
+ {
+  "ma": "hoLua",
+  "nhom": "quai",
+  "ten": "Hổ Lửa",
+  "vung": "laudai",
+  "loai": "trumnho",
+  "w0": 109,
+  "h0": 65,
+  "bay": false,
+  "parts": [
+   "dau",
+   "chanT",
+   "chanS",
+   "duoi",
+   "bom"
+  ],
+  "anims": [
+   "idle",
+   "move",
+   "tele",
+   "atk",
+   "hit",
+   "die",
+   "chieu1",
+   "chieu2",
+   "spawn"
+  ],
+  "rong": 109,
+  "cao": 64,
+  "so_mau": 25,
+  "phu_kin": 66,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#52302a",
+    17
+   ],
+   [
+    "#c43c10",
+    7
+   ],
+   [
+    "#ff8a1e",
+    6
+   ],
+   [
+    "#ffd23c",
+    4
+   ],
+   [
+    "#f0582a",
+    4
+   ]
+  ]
+ },
+ {
+  "ma": "hoTinh",
+  "nhom": "quai",
+  "ten": "Hồ Tinh",
+  "vung": "laudai",
+  "loai": "trum",
+  "w0": 174,
+  "h0": 115,
+  "bay": false,
+  "parts": [
+   "chanT",
+   "chanS",
+   "dau",
+   "d0",
+   "d1",
+   "d2",
+   "d3",
+   "d4",
+   "d5",
+   "d6",
+   "d7",
+   "d8"
+  ],
+  "anims": [
+   "intro",
+   "idle",
+   "move",
+   "c1",
+   "c2",
+   "c3",
+   "c4",
+   "c5",
+   "phase2",
+   "phase3",
+   "stun",
+   "hit",
+   "die",
+   "tele",
+   "atk",
+   "spawn"
+  ],
+  "rong": 177,
+  "cao": 119,
+  "so_mau": 47,
+  "phu_kin": 49,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#f2e6cf",
+    14
+   ],
+   [
+    "#c9ad98",
+    11
+   ],
+   [
+    "#e8442a",
+    8
+   ],
+   [
+    "#fffdf2",
+    6
+   ],
+   [
+    "#ff9a3a",
+    6
+   ],
+   [
+    "#7a5a52",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "vk-sword-0",
+  "nhom": "vu-khi",
+  "loai": "sword",
+  "dong": 0,
+  "ten": "Kiếm Rèn",
+  "len": 44,
+  "rong": 44,
+  "cao": 19,
+  "so_mau": 11,
+  "phu_kin": 52,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    32
+   ],
+   [
+    "#b4c0d4",
+    25
+   ],
+   [
+    "#5f6b84",
+    14
+   ],
+   [
+    "#f4f8ff",
+    7
+   ],
+   [
+    "#e2b64e",
+    5
+   ],
+   [
+    "#ffffff",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "vk-sword-1",
+  "nhom": "vu-khi",
+  "loai": "sword",
+  "dong": 1,
+  "ten": "Đao Lưỡi Liềm",
+  "len": 43,
+  "rong": 44,
+  "cao": 28,
+  "so_mau": 10,
+  "phu_kin": 34,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    33
+   ],
+   [
+    "#b4c0d4",
+    25
+   ],
+   [
+    "#5f6b84",
+    16
+   ],
+   [
+    "#f4f8ff",
+    10
+   ],
+   [
+    "#ffffff",
+    4
+   ],
+   [
+    "#b78350",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "vk-sword-2",
+  "nhom": "vu-khi",
+  "loai": "sword",
+  "dong": 2,
+  "ten": "Kiếm Lá Lúa",
+  "len": 45,
+  "rong": 45,
+  "cao": 20,
+  "so_mau": 9,
+  "phu_kin": 43,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    38
+   ],
+   [
+    "#b9d8a6",
+    17
+   ],
+   [
+    "#5f8a5a",
+    16
+   ],
+   [
+    "#e0c060",
+    8
+   ],
+   [
+    "#f2fbe2",
+    7
+   ],
+   [
+    "#ffffff",
+    6
+   ]
+  ]
+ },
+ {
+  "ma": "vk-sword-3",
+  "nhom": "vu-khi",
+  "loai": "sword",
+  "dong": 3,
+  "ten": "Gươm Rồng",
+  "len": 46,
+  "rong": 46,
+  "cao": 24,
+  "so_mau": 13,
+  "phu_kin": 56,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    33
+   ],
+   [
+    "#b4c0d4",
+    19
+   ],
+   [
+    "#e2b64e",
+    10
+   ],
+   [
+    "#9c7426",
+    9
+   ],
+   [
+    "#5f6b84",
+    8
+   ],
+   [
+    "#f4f8ff",
+    6
+   ]
+  ]
+ },
+ {
+  "ma": "vk-sword-4",
+  "nhom": "vu-khi",
+  "loai": "sword",
+  "dong": 4,
+  "ten": "Mã Tấu",
+  "len": 46,
+  "rong": 46,
+  "cao": 17,
+  "so_mau": 13,
+  "phu_kin": 63,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    35
+   ],
+   [
+    "#7a8496",
+    25
+   ],
+   [
+    "#3d4354",
+    11
+   ],
+   [
+    "#ffffff",
+    5
+   ],
+   [
+    "#c2cad8",
+    5
+   ],
+   [
+    "#ffe9a0",
+    4
+   ]
+  ]
+ },
+ {
+  "ma": "vk-sword-5",
+  "nhom": "vu-khi",
+  "loai": "sword",
+  "dong": 5,
+  "ten": "Dao Rựa",
+  "len": 47,
+  "rong": 48,
+  "cao": 18,
+  "so_mau": 10,
+  "phu_kin": 48,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#7a8496",
+    36
+   ],
+   [
+    "#1b1118",
+    32
+   ],
+   [
+    "#c2cad8",
+    10
+   ],
+   [
+    "#3d4354",
+    9
+   ],
+   [
+    "#5f6b84",
+    3
+   ],
+   [
+    "#b4c0d4",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "vk-sword-6",
+  "nhom": "vu-khi",
+  "loai": "sword",
+  "dong": 6,
+  "ten": "Kiếm Tre",
+  "len": 44,
+  "rong": 45,
+  "cao": 22,
+  "so_mau": 10,
+  "phu_kin": 44,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    36
+   ],
+   [
+    "#6f7a2a",
+    21
+   ],
+   [
+    "#b3b84a",
+    18
+   ],
+   [
+    "#e6e28a",
+    16
+   ],
+   [
+    "#2f6a2c",
+    3
+   ],
+   [
+    "#ffffff",
+    2
+   ]
+  ]
+ },
+ {
+  "ma": "vk-sword-7",
+  "nhom": "vu-khi",
+  "loai": "sword",
+  "dong": 7,
+  "ten": "Đoản Kiếm Đông Sơn",
+  "len": 47,
+  "rong": 48,
+  "cao": 22,
+  "so_mau": 7,
+  "phu_kin": 48,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    29
+   ],
+   [
+    "#c4853a",
+    22
+   ],
+   [
+    "#754418",
+    22
+   ],
+   [
+    "#f6d07c",
+    14
+   ],
+   [
+    "#ffffff",
+    11
+   ],
+   [
+    "#5fa58a",
+    2
+   ]
+  ]
+ },
+ {
+  "ma": "vk-sword-8",
+  "nhom": "vu-khi",
+  "loai": "sword",
+  "dong": 8,
+  "ten": "Đao Cá Chép",
+  "len": 47,
+  "rong": 47,
+  "cao": 21,
+  "so_mau": 14,
+  "phu_kin": 48,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    32
+   ],
+   [
+    "#b4c0d4",
+    23
+   ],
+   [
+    "#5f6b84",
+    14
+   ],
+   [
+    "#f4f8ff",
+    9
+   ],
+   [
+    "#9a4a16",
+    5
+   ],
+   [
+    "#f8b25c",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "vk-sword-9",
+  "nhom": "vu-khi",
+  "loai": "sword",
+  "dong": 9,
+  "ten": "Kiếm Sóng Nước",
+  "len": 46,
+  "rong": 46,
+  "cao": 18,
+  "so_mau": 12,
+  "phu_kin": 48,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    36
+   ],
+   [
+    "#a9c6e0",
+    16
+   ],
+   [
+    "#4f6f94",
+    15
+   ],
+   [
+    "#f0f8ff",
+    9
+   ],
+   [
+    "#e2b64e",
+    7
+   ],
+   [
+    "#ffffff",
+    7
+   ]
+  ]
+ },
+ {
+  "ma": "vk-bow-0",
+  "nhom": "vu-khi",
+  "loai": "bow",
+  "dong": 0,
+  "ten": "Cung Rồng Rắn",
+  "len": 38,
+  "rong": 22,
+  "cao": 38,
+  "so_mau": 10,
+  "phu_kin": 47,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    34
+   ],
+   [
+    "#479544",
+    20
+   ],
+   [
+    "#255a2c",
+    15
+   ],
+   [
+    "#e2b64e",
+    9
+   ],
+   [
+    "#8fd070",
+    7
+   ],
+   [
+    "#d2362e",
+    6
+   ]
+  ]
+ },
+ {
+  "ma": "vk-bow-1",
+  "nhom": "vu-khi",
+  "loai": "bow",
+  "dong": 1,
+  "ten": "Nỏ Thần",
+  "len": 37,
+  "rong": 31,
+  "cao": 37,
+  "so_mau": 14,
+  "phu_kin": 39,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    33
+   ],
+   [
+    "#a8783e",
+    15
+   ],
+   [
+    "#8a5a34",
+    9
+   ],
+   [
+    "#e8e2d0",
+    7
+   ],
+   [
+    "#754418",
+    6
+   ],
+   [
+    "#c4853a",
+    6
+   ]
+  ]
+ },
+ {
+  "ma": "vk-bow-2",
+  "nhom": "vu-khi",
+  "loai": "bow",
+  "dong": 2,
+  "ten": "Cung Sừng Trâu",
+  "len": 37,
+  "rong": 21,
+  "cao": 37,
+  "so_mau": 13,
+  "phu_kin": 51,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    34
+   ],
+   [
+    "#5a4c58",
+    16
+   ],
+   [
+    "#2c2530",
+    13
+   ],
+   [
+    "#e8e2d0",
+    8
+   ],
+   [
+    "#7a6458",
+    8
+   ],
+   [
+    "#b09a88",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "vk-bow-3",
+  "nhom": "vu-khi",
+  "loai": "bow",
+  "dong": 3,
+  "ten": "Cung Tre",
+  "len": 40,
+  "rong": 22,
+  "cao": 40,
+  "so_mau": 13,
+  "phu_kin": 44,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    32
+   ],
+   [
+    "#a8842e",
+    11
+   ],
+   [
+    "#e6e28a",
+    10
+   ],
+   [
+    "#6f7a2a",
+    9
+   ],
+   [
+    "#b3b84a",
+    9
+   ],
+   [
+    "#e0c060",
+    9
+   ]
+  ]
+ },
+ {
+  "ma": "vk-bow-4",
+  "nhom": "vu-khi",
+  "loai": "bow",
+  "dong": 4,
+  "ten": "Ná Thun",
+  "len": 32,
+  "rong": 19,
+  "cao": 32,
+  "so_mau": 8,
+  "phu_kin": 56,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    32
+   ],
+   [
+    "#a8783e",
+    28
+   ],
+   [
+    "#6e4a26",
+    19
+   ],
+   [
+    "#d2362e",
+    8
+   ],
+   [
+    "#d6a868",
+    7
+   ],
+   [
+    "#8c1c1f",
+    2
+   ]
+  ]
+ },
+ {
+  "ma": "vk-bow-5",
+  "nhom": "vu-khi",
+  "loai": "bow",
+  "dong": 5,
+  "ten": "Cung Cánh Cò",
+  "len": 37,
+  "rong": 25,
+  "cao": 37,
+  "so_mau": 12,
+  "phu_kin": 48,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    36
+   ],
+   [
+    "#eeeaf2",
+    22
+   ],
+   [
+    "#b9b4c4",
+    13
+   ],
+   [
+    "#ffffff",
+    9
+   ],
+   [
+    "#e8e2d0",
+    7
+   ],
+   [
+    "#8c1c1f",
+    4
+   ]
+  ]
+ },
+ {
+  "ma": "vk-bow-6",
+  "nhom": "vu-khi",
+  "loai": "bow",
+  "dong": 6,
+  "ten": "Cung Trăng Khuyết",
+  "len": 37,
+  "rong": 20,
+  "cao": 44,
+  "so_mau": 10,
+  "phu_kin": 52,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#f2df8a",
+    42
+   ],
+   [
+    "#b89a3e",
+    19
+   ],
+   [
+    "#e8e2d0",
+    8
+   ],
+   [
+    "#fffbe0",
+    4
+   ],
+   [
+    "#ffe9a0",
+    1
+   ],
+   [
+    "#ffffff",
+    1
+   ]
+  ]
+ },
+ {
+  "ma": "vk-bow-7",
+  "nhom": "vu-khi",
+  "loai": "bow",
+  "dong": 7,
+  "ten": "Cung Đàn Bầu",
+  "len": 39,
+  "rong": 21,
+  "cao": 39,
+  "so_mau": 16,
+  "phu_kin": 47,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    34
+   ],
+   [
+    "#a8783e",
+    14
+   ],
+   [
+    "#a8642a",
+    10
+   ],
+   [
+    "#e8e2d0",
+    9
+   ],
+   [
+    "#6e4a26",
+    5
+   ],
+   [
+    "#d6a868",
+    4
+   ]
+  ]
+ },
+ {
+  "ma": "vk-bow-8",
+  "nhom": "vu-khi",
+  "loai": "bow",
+  "dong": 8,
+  "ten": "Cung Xương Cá",
+  "len": 40,
+  "rong": 20,
+  "cao": 40,
+  "so_mau": 5,
+  "phu_kin": 46,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    45
+   ],
+   [
+    "#e6dcc4",
+    21
+   ],
+   [
+    "#a89c84",
+    15
+   ],
+   [
+    "#ffffff",
+    12
+   ],
+   [
+    "#e8e2d0",
+    7
+   ]
+  ]
+ },
+ {
+  "ma": "vk-bow-9",
+  "nhom": "vu-khi",
+  "loai": "bow",
+  "dong": 9,
+  "ten": "Cung Đèn Ông Sao",
+  "len": 37,
+  "rong": 25,
+  "cao": 40,
+  "so_mau": 12,
+  "phu_kin": 45,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    45
+   ],
+   [
+    "#e2b64e",
+    10
+   ],
+   [
+    "#b3b84a",
+    8
+   ],
+   [
+    "#e8e2d0",
+    7
+   ],
+   [
+    "#ffe9a0",
+    7
+   ],
+   [
+    "#6f7a2a",
+    6
+   ]
+  ]
+ },
+ {
+  "ma": "vk-spear-0",
+  "nhom": "vu-khi",
+  "loai": "spear",
+  "dong": 0,
+  "ten": "Giáo Tre Vót",
+  "len": 57,
+  "rong": 58,
+  "cao": 18,
+  "so_mau": 10,
+  "phu_kin": 40,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    38
+   ],
+   [
+    "#6f7a2a",
+    19
+   ],
+   [
+    "#e6e28a",
+    14
+   ],
+   [
+    "#b3b84a",
+    11
+   ],
+   [
+    "#ffffff",
+    5
+   ],
+   [
+    "#d2362e",
+    4
+   ]
+  ]
+ },
+ {
+  "ma": "vk-spear-1",
+  "nhom": "vu-khi",
+  "loai": "spear",
+  "dong": 1,
+  "ten": "Đinh Ba",
+  "len": 57,
+  "rong": 58,
+  "cao": 23,
+  "so_mau": 16,
+  "phu_kin": 37,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    44
+   ],
+   [
+    "#5f6b84",
+    9
+   ],
+   [
+    "#f4f8ff",
+    8
+   ],
+   [
+    "#754418",
+    7
+   ],
+   [
+    "#b4c0d4",
+    5
+   ],
+   [
+    "#b78350",
+    4
+   ]
+  ]
+ },
+ {
+  "ma": "vk-spear-2",
+  "nhom": "vu-khi",
+  "loai": "spear",
+  "dong": 2,
+  "ten": "Câu Liêm",
+  "len": 56,
+  "rong": 57,
+  "cao": 22,
+  "so_mau": 13,
+  "phu_kin": 33,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    41
+   ],
+   [
+    "#5f6b84",
+    14
+   ],
+   [
+    "#b4c0d4",
+    9
+   ],
+   [
+    "#f4f8ff",
+    6
+   ],
+   [
+    "#b78350",
+    5
+   ],
+   [
+    "#5a3822",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "vk-spear-3",
+  "nhom": "vu-khi",
+  "loai": "spear",
+  "dong": 3,
+  "ten": "Mác",
+  "len": 58,
+  "rong": 59,
+  "cao": 15,
+  "so_mau": 13,
+  "phu_kin": 47,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    38
+   ],
+   [
+    "#5f6b84",
+    12
+   ],
+   [
+    "#b4c0d4",
+    11
+   ],
+   [
+    "#f4f8ff",
+    5
+   ],
+   [
+    "#b78350",
+    5
+   ],
+   [
+    "#ffffff",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "vk-spear-4",
+  "nhom": "vu-khi",
+  "loai": "spear",
+  "dong": 4,
+  "ten": "Lao Phóng",
+  "len": 57,
+  "rong": 58,
+  "cao": 20,
+  "so_mau": 13,
+  "phu_kin": 36,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    44
+   ],
+   [
+    "#d2362e",
+    8
+   ],
+   [
+    "#e09c4a",
+    7
+   ],
+   [
+    "#8c1c1f",
+    7
+   ],
+   [
+    "#5f6b84",
+    5
+   ],
+   [
+    "#b78350",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "vk-spear-5",
+  "nhom": "vu-khi",
+  "loai": "spear",
+  "dong": 5,
+  "ten": "Giáo Đồng Đông Sơn",
+  "len": 57,
+  "rong": 58,
+  "cao": 15,
+  "so_mau": 11,
+  "phu_kin": 44,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    34
+   ],
+   [
+    "#754418",
+    16
+   ],
+   [
+    "#ffffff",
+    13
+   ],
+   [
+    "#c4853a",
+    9
+   ],
+   [
+    "#f6d07c",
+    9
+   ],
+   [
+    "#b78350",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "vk-spear-6",
+  "nhom": "vu-khi",
+  "loai": "spear",
+  "dong": 6,
+  "ten": "Xà Mâu",
+  "len": 61,
+  "rong": 62,
+  "cao": 16,
+  "so_mau": 13,
+  "phu_kin": 45,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    40
+   ],
+   [
+    "#3d4354",
+    13
+   ],
+   [
+    "#7a8496",
+    11
+   ],
+   [
+    "#c2cad8",
+    9
+   ],
+   [
+    "#9c7426",
+    5
+   ],
+   [
+    "#b78350",
+    4
+   ]
+  ]
+ },
+ {
+  "ma": "vk-spear-7",
+  "nhom": "vu-khi",
+  "loai": "spear",
+  "dong": 7,
+  "ten": "Mái Chèo",
+  "len": 56,
+  "rong": 57,
+  "cao": 13,
+  "so_mau": 12,
+  "phu_kin": 57,
+  "vien": "#1b1118",
+  "vien_day": 2,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    34
+   ],
+   [
+    "#a8783e",
+    22
+   ],
+   [
+    "#6e4a26",
+    13
+   ],
+   [
+    "#d6a868",
+    9
+   ],
+   [
+    "#5a3822",
+    6
+   ],
+   [
+    "#b78350",
+    4
+   ]
+  ]
+ },
+ {
+  "ma": "vk-spear-8",
+  "nhom": "vu-khi",
+  "loai": "spear",
+  "dong": 8,
+  "ten": "Cờ Lau",
+  "len": 59,
+  "rong": 60,
+  "cao": 21,
+  "so_mau": 13,
+  "phu_kin": 40,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    39
+   ],
+   [
+    "#b8a890",
+    16
+   ],
+   [
+    "#efe6d2",
+    13
+   ],
+   [
+    "#ffffff",
+    8
+   ],
+   [
+    "#6f7a2a",
+    7
+   ],
+   [
+    "#e6e28a",
+    4
+   ]
+  ]
+ },
+ {
+  "ma": "vk-spear-9",
+  "nhom": "vu-khi",
+  "loai": "spear",
+  "dong": 9,
+  "ten": "Bút Lông",
+  "len": 61,
+  "rong": 62,
+  "cao": 11,
+  "so_mau": 15,
+  "phu_kin": 54,
+  "vien": "#1b1118",
+  "vien_day": 3,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    39
+   ],
+   [
+    "#6f7a2a",
+    9
+   ],
+   [
+    "#ffffff",
+    9
+   ],
+   [
+    "#b9b4c4",
+    8
+   ],
+   [
+    "#b3b84a",
+    6
+   ],
+   [
+    "#e6e28a",
+    6
+   ]
+  ]
+ },
+ {
+  "ma": "vk-hammer-0",
+  "nhom": "vu-khi",
+  "loai": "hammer",
+  "dong": 0,
+  "ten": "Búa Lò Rèn",
+  "len": 41,
+  "rong": 41,
+  "cao": 25,
+  "so_mau": 12,
+  "phu_kin": 49,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    30
+   ],
+   [
+    "#7a8496",
+    17
+   ],
+   [
+    "#3d4354",
+    16
+   ],
+   [
+    "#f4f8ff",
+    7
+   ],
+   [
+    "#b4c0d4",
+    7
+   ],
+   [
+    "#ffffff",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "vk-hammer-1",
+  "nhom": "vu-khi",
+  "loai": "hammer",
+  "dong": 1,
+  "ten": "Chày Giã Gạo",
+  "len": 44,
+  "rong": 44,
+  "cao": 17,
+  "so_mau": 12,
+  "phu_kin": 63,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#a8783e",
+    37
+   ],
+   [
+    "#1b1118",
+    26
+   ],
+   [
+    "#6e4a26",
+    10
+   ],
+   [
+    "#d6a868",
+    10
+   ],
+   [
+    "#eeeaf2",
+    8
+   ],
+   [
+    "#d2362e",
+    2
+   ]
+  ]
+ },
+ {
+  "ma": "vk-hammer-2",
+  "nhom": "vu-khi",
+  "loai": "hammer",
+  "dong": 2,
+  "ten": "Chùy Gai",
+  "len": 44,
+  "rong": 45,
+  "cao": 27,
+  "so_mau": 16,
+  "phu_kin": 40,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    38
+   ],
+   [
+    "#7a8496",
+    18
+   ],
+   [
+    "#3d4354",
+    9
+   ],
+   [
+    "#ffffff",
+    5
+   ],
+   [
+    "#c2cad8",
+    4
+   ],
+   [
+    "#d2362e",
+    4
+   ]
+  ]
+ },
+ {
+  "ma": "vk-hammer-3",
+  "nhom": "vu-khi",
+  "loai": "hammer",
+  "dong": 3,
+  "ten": "Rìu Đá",
+  "len": 42,
+  "rong": 43,
+  "cao": 26,
+  "so_mau": 12,
+  "phu_kin": 40,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    30
+   ],
+   [
+    "#8e9099",
+    23
+   ],
+   [
+    "#a8842e",
+    11
+   ],
+   [
+    "#e0c060",
+    6
+   ],
+   [
+    "#c9cbd2",
+    5
+   ],
+   [
+    "#5a3822",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "vk-hammer-4",
+  "nhom": "vu-khi",
+  "loai": "hammer",
+  "dong": 4,
+  "ten": "Vồ Gỗ",
+  "len": 40,
+  "rong": 41,
+  "cao": 29,
+  "so_mau": 14,
+  "phu_kin": 48,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    25
+   ],
+   [
+    "#a8783e",
+    18
+   ],
+   [
+    "#7a8496",
+    18
+   ],
+   [
+    "#6e4a26",
+    17
+   ],
+   [
+    "#d6a868",
+    5
+   ],
+   [
+    "#d2362e",
+    4
+   ]
+  ]
+ },
+ {
+  "ma": "vk-hammer-5",
+  "nhom": "vu-khi",
+  "loai": "hammer",
+  "dong": 5,
+  "ten": "Chiêng Đồng",
+  "len": 45,
+  "rong": 46,
+  "cao": 25,
+  "so_mau": 16,
+  "phu_kin": 45,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    27
+   ],
+   [
+    "#c4853a",
+    22
+   ],
+   [
+    "#754418",
+    15
+   ],
+   [
+    "#f6d07c",
+    10
+   ],
+   [
+    "#ffffff",
+    7
+   ],
+   [
+    "#d2362e",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "vk-hammer-6",
+  "nhom": "vu-khi",
+  "loai": "hammer",
+  "dong": 6,
+  "ten": "Trống Đồng",
+  "len": 42,
+  "rong": 43,
+  "cao": 26,
+  "so_mau": 14,
+  "phu_kin": 49,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    30
+   ],
+   [
+    "#c4853a",
+    20
+   ],
+   [
+    "#754418",
+    15
+   ],
+   [
+    "#f6d07c",
+    11
+   ],
+   [
+    "#ffffff",
+    9
+   ],
+   [
+    "#d2362e",
+    4
+   ]
+  ]
+ },
+ {
+  "ma": "vk-hammer-7",
+  "nhom": "vu-khi",
+  "loai": "hammer",
+  "dong": 7,
+  "ten": "Rìu Xéo Đông Sơn",
+  "len": 41,
+  "rong": 42,
+  "cao": 23,
+  "so_mau": 14,
+  "phu_kin": 44,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    29
+   ],
+   [
+    "#c4853a",
+    27
+   ],
+   [
+    "#754418",
+    12
+   ],
+   [
+    "#f6d07c",
+    7
+   ],
+   [
+    "#ffffff",
+    5
+   ],
+   [
+    "#d2362e",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "vk-hammer-8",
+  "nhom": "vu-khi",
+  "loai": "hammer",
+  "dong": 8,
+  "ten": "Búa Đầu Trâu",
+  "len": 44,
+  "rong": 44,
+  "cao": 35,
+  "so_mau": 20,
+  "phu_kin": 33,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    37
+   ],
+   [
+    "#7a6458",
+    10
+   ],
+   [
+    "#5a4c58",
+    7
+   ],
+   [
+    "#4a3a34",
+    7
+   ],
+   [
+    "#c9a59a",
+    7
+   ],
+   [
+    "#b09a88",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "vk-hammer-9",
+  "nhom": "vu-khi",
+  "loai": "hammer",
+  "dong": 9,
+  "ten": "Chùy Hồ Lô",
+  "len": 45,
+  "rong": 45,
+  "cao": 22,
+  "so_mau": 16,
+  "phu_kin": 49,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    28
+   ],
+   [
+    "#a8642a",
+    18
+   ],
+   [
+    "#e09c4a",
+    16
+   ],
+   [
+    "#8c1c1f",
+    10
+   ],
+   [
+    "#d2362e",
+    7
+   ],
+   [
+    "#f9d08c",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "tp-hats-trum_sung",
+  "nhom": "trang-phuc",
+  "o": "hats",
+  "ten": "Mũ trùm sừng nhỏ",
+  "rong": 17,
+  "cao": 20,
+  "so_mau": 7,
+  "phu_kin": 71,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#d2362e",
+    46
+   ],
+   [
+    "#1b1118",
+    25
+   ],
+   [
+    "#8c1c1f",
+    17
+   ],
+   [
+    "#f47a62",
+    6
+   ],
+   [
+    "#f6f0e2",
+    3
+   ],
+   [
+    "#c9c0ae",
+    2
+   ]
+  ]
+ },
+ {
+  "ma": "tp-hats-trum_nhon",
+  "nhom": "trang-phuc",
+  "o": "hats",
+  "ten": "Mũ trùm chóp nhọn",
+  "rong": 17,
+  "cao": 22,
+  "so_mau": 4,
+  "phu_kin": 65,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#d2362e",
+    54
+   ],
+   [
+    "#8c1c1f",
+    19
+   ],
+   [
+    "#f47a62",
+    7
+   ]
+  ]
+ },
+ {
+  "ma": "tp-hats-trum_la",
+  "nhom": "trang-phuc",
+  "o": "hats",
+  "ten": "Mũ trùm mầm lá",
+  "rong": 17,
+  "cao": 21,
+  "so_mau": 7,
+  "phu_kin": 64,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#d2362e",
+    49
+   ],
+   [
+    "#8c1c1f",
+    18
+   ],
+   [
+    "#f47a62",
+    7
+   ],
+   [
+    "#479544",
+    3
+   ],
+   [
+    "#8fd070",
+    0
+   ],
+   [
+    "#255a2c",
+    0
+   ]
+  ]
+ },
+ {
+  "ma": "tp-hats-trum_khan",
+  "nhom": "trang-phuc",
+  "o": "hats",
+  "ten": "Mũ trùm quấn khăn đỏ",
+  "rong": 20,
+  "cao": 18,
+  "so_mau": 5,
+  "phu_kin": 71,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#d2362e",
+    35
+   ],
+   [
+    "#1b1118",
+    33
+   ],
+   [
+    "#8c1c1f",
+    23
+   ],
+   [
+    "#f47a62",
+    7
+   ]
+  ]
+ },
+ {
+  "ma": "tp-hats-non_la",
+  "nhom": "trang-phuc",
+  "o": "hats",
+  "ten": "Nón lá",
+  "rong": 25,
+  "cao": 22,
+  "so_mau": 5,
+  "phu_kin": 39,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#d8b45c",
+    36
+   ],
+   [
+    "#1b1118",
+    29
+   ],
+   [
+    "#8f6c2a",
+    17
+   ],
+   [
+    "#f8e6a4",
+    14
+   ],
+   [
+    "#d2362e",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "tp-hats-khan_xep",
+  "nhom": "trang-phuc",
+  "o": "hats",
+  "ten": "Khăn xếp",
+  "rong": 18,
+  "cao": 9,
+  "so_mau": 5,
+  "phu_kin": 91,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#2e2d55",
+    30
+   ],
+   [
+    "#1b1118",
+    28
+   ],
+   [
+    "#5c5a92",
+    20
+   ],
+   [
+    "#e2b64e",
+    1
+   ]
+  ]
+ },
+ {
+  "ma": "tp-hats-mu_rom",
+  "nhom": "trang-phuc",
+  "o": "hats",
+  "ten": "Mũ rơm",
+  "rong": 26,
+  "cao": 9,
+  "so_mau": 4,
+  "phu_kin": 63,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    45
+   ],
+   [
+    "#f8e6a4",
+    22
+   ],
+   [
+    "#8f6c2a",
+    18
+   ],
+   [
+    "#d8b45c",
+    16
+   ]
+  ]
+ },
+ {
+  "ma": "tp-hats-mu_sung",
+  "nhom": "trang-phuc",
+  "o": "hats",
+  "ten": "Mũ sừng",
+  "rong": 25,
+  "cao": 14,
+  "so_mau": 8,
+  "phu_kin": 55,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    39
+   ],
+   [
+    "#e2b64e",
+    16
+   ],
+   [
+    "#8a5a34",
+    14
+   ],
+   [
+    "#b78350",
+    10
+   ],
+   [
+    "#a89c84",
+    8
+   ],
+   [
+    "#fffaf0",
+    6
+   ]
+  ]
+ },
+ {
+  "ma": "tp-hats-vong_la",
+  "nhom": "trang-phuc",
+  "o": "hats",
+  "ten": "Vòng lá",
+  "rong": 17,
+  "cao": 7,
+  "so_mau": 6,
+  "phu_kin": 84,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    37
+   ],
+   [
+    "#479544",
+    31
+   ],
+   [
+    "#8fd070",
+    15
+   ],
+   [
+    "#255a2c",
+    11
+   ],
+   [
+    "#d2362e",
+    4
+   ],
+   [
+    "#ffe9a0",
+    2
+   ]
+  ]
+ },
+ {
+  "ma": "tp-hats-mu_da_ca",
+  "nhom": "trang-phuc",
+  "o": "hats",
+  "ten": "Mũ da cá",
+  "rong": 19,
+  "cao": 16,
+  "so_mau": 4,
+  "phu_kin": 50,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    37
+   ],
+   [
+    "#2a5a70",
+    26
+   ],
+   [
+    "#4a7f9a",
+    19
+   ],
+   [
+    "#8fc0d4",
+    18
+   ]
+  ]
+ },
+ {
+  "ma": "tp-hats-khan_lua",
+  "nhom": "trang-phuc",
+  "o": "hats",
+  "ten": "Khăn đá lửa",
+  "rong": 22,
+  "cao": 9,
+  "so_mau": 5,
+  "phu_kin": 76,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    36
+   ],
+   [
+    "#7a2a12",
+    25
+   ],
+   [
+    "#b0502a",
+    20
+   ],
+   [
+    "#f08a4a",
+    16
+   ],
+   [
+    "#ffe9a0",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "tp-hats-mu_vay_ca",
+  "nhom": "trang-phuc",
+  "o": "hats",
+  "ten": "Mũ vây cá",
+  "rong": 22,
+  "cao": 17,
+  "so_mau": 7,
+  "phu_kin": 55,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    38
+   ],
+   [
+    "#8fd0ea",
+    25
+   ],
+   [
+    "#3f8fb5",
+    13
+   ],
+   [
+    "#7fc4f2",
+    12
+   ],
+   [
+    "#2f62ad",
+    6
+   ],
+   [
+    "#eafcff",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "tp-hats-mu_tai_cao",
+  "nhom": "trang-phuc",
+  "o": "hats",
+  "ten": "Mũ tai cáo",
+  "rong": 17,
+  "cao": 21,
+  "so_mau": 6,
+  "phu_kin": 75,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#f0ece2",
+    46
+   ],
+   [
+    "#1b1118",
+    26
+   ],
+   [
+    "#b8b0a8",
+    17
+   ],
+   [
+    "#ffffff",
+    9
+   ],
+   [
+    "#f0a0a0",
+    1
+   ],
+   [
+    "#d2362e",
+    1
+   ]
+  ]
+ },
+ {
+  "ma": "tp-robes-ao_trum",
+  "nhom": "trang-phuc",
+  "o": "robes",
+  "ten": "Áo trùm",
+  "rong": 13,
+  "cao": 13,
+  "so_mau": 4,
+  "phu_kin": 84,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    35
+   ],
+   [
+    "#d2362e",
+    30
+   ],
+   [
+    "#8c1c1f",
+    19
+   ],
+   [
+    "#f47a62",
+    16
+   ]
+  ]
+ },
+ {
+  "ma": "tp-robes-ao_toi",
+  "nhom": "trang-phuc",
+  "o": "robes",
+  "ten": "Áo tơi lá",
+  "rong": 15,
+  "cao": 14,
+  "so_mau": 4,
+  "phu_kin": 76,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    39
+   ],
+   [
+    "#d8b45c",
+    26
+   ],
+   [
+    "#8f6c2a",
+    18
+   ],
+   [
+    "#f8e6a4",
+    17
+   ]
+  ]
+ },
+ {
+  "ma": "tp-robes-ao_the",
+  "nhom": "trang-phuc",
+  "o": "robes",
+  "ten": "Áo the",
+  "rong": 12,
+  "cao": 13,
+  "so_mau": 6,
+  "phu_kin": 86,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    37
+   ],
+   [
+    "#2e2d55",
+    29
+   ],
+   [
+    "#5c5a92",
+    7
+   ],
+   [
+    "#f6f0e2",
+    7
+   ],
+   [
+    "#ffffff",
+    1
+   ]
+  ]
+ },
+ {
+  "ma": "tp-robes-giap_tre",
+  "nhom": "trang-phuc",
+  "o": "robes",
+  "ten": "Giáp tre",
+  "rong": 15,
+  "cao": 13,
+  "so_mau": 5,
+  "phu_kin": 82,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    42
+   ],
+   [
+    "#6c6a2c",
+    28
+   ],
+   [
+    "#b4ae58",
+    19
+   ],
+   [
+    "#e6e298",
+    6
+   ],
+   [
+    "#d2362e",
+    6
+   ]
+  ]
+ },
+ {
+  "ma": "tp-robes-ao_da",
+  "nhom": "trang-phuc",
+  "o": "robes",
+  "ten": "Áo da",
+  "rong": 11,
+  "cao": 13,
+  "so_mau": 9,
+  "phu_kin": 93,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    35
+   ],
+   [
+    "#8a5a34",
+    23
+   ],
+   [
+    "#5a3822",
+    10
+   ],
+   [
+    "#f0ece2",
+    8
+   ],
+   [
+    "#ffffff",
+    7
+   ],
+   [
+    "#b8b0a8",
+    7
+   ]
+  ]
+ },
+ {
+  "ma": "tp-robes-ao_la",
+  "nhom": "trang-phuc",
+  "o": "robes",
+  "ten": "Áo lá",
+  "rong": 15,
+  "cao": 14,
+  "so_mau": 5,
+  "phu_kin": 80,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    27
+   ],
+   [
+    "#479544",
+    27
+   ],
+   [
+    "#255a2c",
+    23
+   ],
+   [
+    "#8fd070",
+    21
+   ],
+   [
+    "#d2362e",
+    1
+   ]
+  ]
+ },
+ {
+  "ma": "tp-robes-kho_vat",
+  "nhom": "trang-phuc",
+  "o": "robes",
+  "ten": "Khố đô vật",
+  "rong": 11,
+  "cao": 8,
+  "so_mau": 5,
+  "phu_kin": 67,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    46
+   ],
+   [
+    "#8c1c1f",
+    19
+   ],
+   [
+    "#d2362e",
+    19
+   ],
+   [
+    "#f47a62",
+    15
+   ],
+   [
+    "#e2b64e",
+    2
+   ]
+  ]
+ },
+ {
+  "ma": "tp-robes-ao_vai",
+  "nhom": "trang-phuc",
+  "o": "robes",
+  "ten": "Áo vải thô",
+  "rong": 12,
+  "cao": 12,
+  "so_mau": 6,
+  "phu_kin": 85,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    39
+   ],
+   [
+    "#7a6a4a",
+    24
+   ],
+   [
+    "#a89872",
+    23
+   ],
+   [
+    "#d8ccaa",
+    10
+   ],
+   [
+    "#8a5a34",
+    4
+   ],
+   [
+    "#ffe9a0",
+    1
+   ]
+  ]
+ },
+ {
+  "ma": "tp-robes-ao_da_bien",
+  "nhom": "trang-phuc",
+  "o": "robes",
+  "ten": "Áo da biển",
+  "rong": 11,
+  "cao": 13,
+  "so_mau": 8,
+  "phu_kin": 93,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    35
+   ],
+   [
+    "#4a7f9a",
+    23
+   ],
+   [
+    "#7fc4f2",
+    11
+   ],
+   [
+    "#2a5a70",
+    10
+   ],
+   [
+    "#eafcff",
+    7
+   ],
+   [
+    "#2f62ad",
+    7
+   ]
+  ]
+ },
+ {
+  "ma": "tp-robes-giap_da",
+  "nhom": "trang-phuc",
+  "o": "robes",
+  "ten": "Áo giáp đá",
+  "rong": 15,
+  "cao": 13,
+  "so_mau": 6,
+  "phu_kin": 82,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    42
+   ],
+   [
+    "#5a4e4a",
+    28
+   ],
+   [
+    "#8a7a74",
+    18
+   ],
+   [
+    "#bdb0a8",
+    6
+   ],
+   [
+    "#b0502a",
+    6
+   ],
+   [
+    "#ffc64c",
+    1
+   ]
+  ]
+ },
+ {
+  "ma": "tp-robes-ao_vo_cay",
+  "nhom": "trang-phuc",
+  "o": "robes",
+  "ten": "Áo vỏ cây",
+  "rong": 15,
+  "cao": 16,
+  "so_mau": 6,
+  "phu_kin": 71,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    42
+   ],
+   [
+    "#4a3018",
+    31
+   ],
+   [
+    "#7a5632",
+    18
+   ],
+   [
+    "#479544",
+    5
+   ],
+   [
+    "#a8804e",
+    4
+   ],
+   [
+    "#255a2c",
+    1
+   ]
+  ]
+ },
+ {
+  "ma": "tp-robes-ao_vay",
+  "nhom": "trang-phuc",
+  "o": "robes",
+  "ten": "Áo vảy",
+  "rong": 12,
+  "cao": 12,
+  "so_mau": 6,
+  "phu_kin": 85,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    39
+   ],
+   [
+    "#3f8fb5",
+    21
+   ],
+   [
+    "#8fd0ea",
+    20
+   ],
+   [
+    "#1f5f85",
+    16
+   ],
+   [
+    "#e2b64e",
+    4
+   ],
+   [
+    "#ffe9a0",
+    1
+   ]
+  ]
+ },
+ {
+  "ma": "tp-robes-ao_long",
+  "nhom": "trang-phuc",
+  "o": "robes",
+  "ten": "Áo lông trắng",
+  "rong": 15,
+  "cao": 14,
+  "so_mau": 5,
+  "phu_kin": 76,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    39
+   ],
+   [
+    "#f0ece2",
+    33
+   ],
+   [
+    "#b8b0a8",
+    14
+   ],
+   [
+    "#ffffff",
+    8
+   ],
+   [
+    "#d2362e",
+    6
+   ]
+  ]
+ },
+ {
+  "ma": "tp-backs-ho_lo",
+  "nhom": "trang-phuc",
+  "o": "backs",
+  "ten": "Bầu hồ lô",
+  "rong": 20,
+  "cao": 28,
+  "so_mau": 16,
+  "phu_kin": 36,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    43
+   ],
+   [
+    "#e09c4a",
+    23
+   ],
+   [
+    "#a8642a",
+    13
+   ],
+   [
+    "#f9d08c",
+    6
+   ],
+   [
+    "#d2362e",
+    3
+   ],
+   [
+    "#f47a62",
+    2
+   ]
+  ]
+ },
+ {
+  "ma": "tp-backs-ong_ten",
+  "nhom": "trang-phuc",
+  "o": "backs",
+  "ten": "Ống tên",
+  "rong": 18,
+  "cao": 18,
+  "so_mau": 8,
+  "phu_kin": 42,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    47
+   ],
+   [
+    "#8a5a34",
+    22
+   ],
+   [
+    "#5a3822",
+    16
+   ],
+   [
+    "#b78350",
+    7
+   ],
+   [
+    "#e2b64e",
+    3
+   ],
+   [
+    "#ffffff",
+    1
+   ]
+  ]
+ },
+ {
+  "ma": "tp-backs-ao_choang",
+  "nhom": "trang-phuc",
+  "o": "backs",
+  "ten": "Áo choàng",
+  "rong": 13,
+  "cao": 15,
+  "so_mau": 7,
+  "phu_kin": 55,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#d2362e",
+    37
+   ],
+   [
+    "#1b1118",
+    35
+   ],
+   [
+    "#8c1c1f",
+    13
+   ],
+   [
+    "#f47a62",
+    7
+   ],
+   [
+    "#e2b64e",
+    4
+   ],
+   [
+    "#ffe9a0",
+    2
+   ]
+  ]
+ },
+ {
+  "ma": "tp-backs-gui_tre",
+  "nhom": "trang-phuc",
+  "o": "backs",
+  "ten": "Gùi tre",
+  "rong": 12,
+  "cao": 16,
+  "so_mau": 9,
+  "phu_kin": 66,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    42
+   ],
+   [
+    "#b4ae58",
+    21
+   ],
+   [
+    "#6c6a2c",
+    15
+   ],
+   [
+    "#e6e298",
+    6
+   ],
+   [
+    "#5a3822",
+    6
+   ],
+   [
+    "#8fd070",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "tp-backs-khan_bang",
+  "nhom": "trang-phuc",
+  "o": "backs",
+  "ten": "Khăn choàng sương",
+  "rong": 18,
+  "cao": 16,
+  "so_mau": 8,
+  "phu_kin": 44,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    46
+   ],
+   [
+    "#eafcff",
+    18
+   ],
+   [
+    "#2f62ad",
+    10
+   ],
+   [
+    "#4a7f9a",
+    8
+   ],
+   [
+    "#7fc4f2",
+    7
+   ],
+   [
+    "#2a5a70",
+    6
+   ]
+  ]
+ },
+ {
+  "ma": "tp-backs-trong_nho",
+  "nhom": "trang-phuc",
+  "o": "backs",
+  "ten": "Trống đồng nhỏ",
+  "rong": 16,
+  "cao": 25,
+  "so_mau": 10,
+  "phu_kin": 45,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    36
+   ],
+   [
+    "#754418",
+    23
+   ],
+   [
+    "#c4853a",
+    11
+   ],
+   [
+    "#ffe9a0",
+    7
+   ],
+   [
+    "#d2362e",
+    7
+   ],
+   [
+    "#f6d07c",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "tp-hands-bua_con",
+  "nhom": "trang-phuc",
+  "o": "hands",
+  "ten": "Búa rèn tí hon",
+  "rong": 7,
+  "cao": 11,
+  "so_mau": 5,
+  "phu_kin": 61,
+  "vien": "#1b1118",
+  "vien_day": 3,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    57
+   ],
+   [
+    "#5f6b84",
+    19
+   ],
+   [
+    "#5a3822",
+    11
+   ],
+   [
+    "#f4f8ff",
+    6
+   ],
+   [
+    "#b4c0d4",
+    6
+   ]
+  ]
+ },
+ {
+  "ma": "tp-hands-gang_dong",
+  "nhom": "trang-phuc",
+  "o": "hands",
+  "ten": "Găng đồng",
+  "rong": 14,
+  "cao": 5,
+  "so_mau": 5,
+  "phu_kin": 60,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    57
+   ],
+   [
+    "#754418",
+    19
+   ],
+   [
+    "#f6d07c",
+    10
+   ],
+   [
+    "#c4853a",
+    10
+   ],
+   [
+    "#ffffff",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "tp-hands-bua_nanh",
+  "nhom": "trang-phuc",
+  "o": "hands",
+  "ten": "Bùa nanh rắn",
+  "rong": 5,
+  "cao": 13,
+  "so_mau": 8,
+  "phu_kin": 65,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    62
+   ],
+   [
+    "#f47a62",
+    10
+   ],
+   [
+    "#fffaf0",
+    7
+   ],
+   [
+    "#a89c84",
+    7
+   ],
+   [
+    "#5a3822",
+    5
+   ],
+   [
+    "#d2362e",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "tp-hands-bua_oc",
+  "nhom": "trang-phuc",
+  "o": "hands",
+  "ten": "Bùa vỏ ốc",
+  "rong": 5,
+  "cao": 13,
+  "so_mau": 9,
+  "phu_kin": 68,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    59
+   ],
+   [
+    "#f47a62",
+    9
+   ],
+   [
+    "#5a3822",
+    7
+   ],
+   [
+    "#2f62ad",
+    7
+   ],
+   [
+    "#eafcff",
+    5
+   ],
+   [
+    "#7fc4f2",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "tp-hands-bua_lua",
+  "nhom": "trang-phuc",
+  "o": "hands",
+  "ten": "Bùa đá lửa",
+  "rong": 5,
+  "cao": 13,
+  "so_mau": 9,
+  "phu_kin": 71,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    57
+   ],
+   [
+    "#a32418",
+    9
+   ],
+   [
+    "#f47a62",
+    9
+   ],
+   [
+    "#ffc64c",
+    7
+   ],
+   [
+    "#f2622a",
+    7
+   ],
+   [
+    "#5a3822",
+    4
+   ]
+  ]
+ },
+ {
+  "ma": "tp-hands-bua_hut",
+  "nhom": "trang-phuc",
+  "o": "hands",
+  "ten": "Bùa hút máu",
+  "rong": 5,
+  "cao": 13,
+  "so_mau": 6,
+  "phu_kin": 71,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    57
+   ],
+   [
+    "#f47a62",
+    15
+   ],
+   [
+    "#8c1c1f",
+    11
+   ],
+   [
+    "#d2362e",
+    11
+   ],
+   [
+    "#5a3822",
+    4
+   ],
+   [
+    "#ffffff",
+    2
+   ]
+  ]
+ },
+ {
+  "ma": "tp-hands-bua_tan",
+  "nhom": "trang-phuc",
+  "o": "hands",
+  "ten": "Bùa tàn lửa",
+  "rong": 5,
+  "cao": 13,
+  "so_mau": 9,
+  "phu_kin": 68,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    59
+   ],
+   [
+    "#f47a62",
+    9
+   ],
+   [
+    "#5a3822",
+    7
+   ],
+   [
+    "#7a2a12",
+    7
+   ],
+   [
+    "#f08a4a",
+    5
+   ],
+   [
+    "#b0502a",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "tp-hands-bua_suong",
+  "nhom": "trang-phuc",
+  "o": "hands",
+  "ten": "Bùa sương",
+  "rong": 5,
+  "cao": 13,
+  "so_mau": 9,
+  "phu_kin": 71,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    57
+   ],
+   [
+    "#27407f",
+    9
+   ],
+   [
+    "#f47a62",
+    9
+   ],
+   [
+    "#86a8f0",
+    7
+   ],
+   [
+    "#4468c0",
+    7
+   ],
+   [
+    "#5a3822",
+    4
+   ]
+  ]
+ },
+ {
+  "ma": "tp-hands-bua_tham",
+  "nhom": "trang-phuc",
+  "o": "hands",
+  "ten": "Bùa tham",
+  "rong": 5,
+  "cao": 13,
+  "so_mau": 9,
+  "phu_kin": 68,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    59
+   ],
+   [
+    "#f47a62",
+    9
+   ],
+   [
+    "#5a3822",
+    7
+   ],
+   [
+    "#9c7426",
+    7
+   ],
+   [
+    "#ffe9a0",
+    5
+   ],
+   [
+    "#e2b64e",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "tp-hands-bua_linh",
+  "nhom": "trang-phuc",
+  "o": "hands",
+  "ten": "Bùa linh",
+  "rong": 5,
+  "cao": 13,
+  "so_mau": 8,
+  "phu_kin": 71,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    57
+   ],
+   [
+    "#a56fd0",
+    9
+   ],
+   [
+    "#3d1d55",
+    9
+   ],
+   [
+    "#f47a62",
+    9
+   ],
+   [
+    "#6b3a8f",
+    7
+   ],
+   [
+    "#5a3822",
+    4
+   ]
+  ]
+ },
+ {
+  "ma": "tp-masks-lua",
+  "nhom": "trang-phuc",
+  "o": "masks",
+  "ten": "Dấu lửa",
+  "rong": 4,
+  "cao": 4,
+  "so_mau": 3,
+  "phu_kin": 62,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    70
+   ],
+   [
+    "#d2362e",
+    20
+   ],
+   [
+    "#ffe9a0",
+    10
+   ]
+  ]
+ },
+ {
+  "ma": "tp-masks-la",
+  "nhom": "trang-phuc",
+  "o": "masks",
+  "ten": "Dấu lá",
+  "rong": 11,
+  "cao": 8,
+  "so_mau": 2,
+  "phu_kin": 20,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    78
+   ],
+   [
+    "#479544",
+    22
+   ]
+  ]
+ },
+ {
+  "ma": "tp-masks-xoay",
+  "nhom": "trang-phuc",
+  "o": "masks",
+  "ten": "Dấu nước",
+  "rong": 4,
+  "cao": 4,
+  "so_mau": 3,
+  "phu_kin": 62,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    70
+   ],
+   [
+    "#4468c0",
+    20
+   ],
+   [
+    "#86a8f0",
+    10
+   ]
+  ]
+ },
+ {
+  "ma": "tp-masks-du",
+  "nhom": "trang-phuc",
+  "o": "masks",
+  "ten": "Dấu đô vật",
+  "rong": 10,
+  "cao": 5,
+  "so_mau": 2,
+  "phu_kin": 48,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    75
+   ],
+   [
+    "#d2362e",
+    25
+   ]
+  ]
+ },
+ {
+  "ma": "tp-masks-ho",
+  "nhom": "trang-phuc",
+  "o": "masks",
+  "ten": "Mặt nạ hổ",
+  "rong": 11,
+  "cao": 9,
+  "so_mau": 2,
+  "phu_kin": 36,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    72
+   ],
+   [
+    "#dd7c2a",
+    28
+   ]
+  ]
+ },
+ {
+  "ma": "tp-wings-chuon",
+  "nhom": "trang-phuc",
+  "o": "wings",
+  "ten": "Cánh chuồn chuồn",
+  "rong": 17,
+  "cao": 17,
+  "so_mau": 5,
+  "phu_kin": 68,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#a8dcf0",
+    34
+   ],
+   [
+    "#5a8fb8",
+    20
+   ],
+   [
+    "#f0fcff",
+    17
+   ],
+   [
+    "#2c4a6a",
+    6
+   ]
+  ]
+ },
+ {
+  "ma": "tp-wings-la",
+  "nhom": "trang-phuc",
+  "o": "wings",
+  "ten": "Cánh lá",
+  "rong": 17,
+  "cao": 17,
+  "so_mau": 5,
+  "phu_kin": 62,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#255a2c",
+    30
+   ],
+   [
+    "#479544",
+    29
+   ],
+   [
+    "#1b1118",
+    26
+   ],
+   [
+    "#8fd070",
+    8
+   ]
+  ]
+ },
+ {
+  "ma": "tp-wings-lua",
+  "nhom": "trang-phuc",
+  "o": "wings",
+  "ten": "Cánh lửa",
+  "rong": 18,
+  "cao": 19,
+  "so_mau": 5,
+  "phu_kin": 59,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#f2622a",
+    32
+   ],
+   [
+    "#1b1118",
+    26
+   ],
+   [
+    "#a32418",
+    21
+   ],
+   [
+    "#ffc64c",
+    14
+   ],
+   [
+    "#7a1810",
+    6
+   ]
+  ]
+ },
+ {
+  "ma": "tp-wings-bang",
+  "nhom": "trang-phuc",
+  "o": "wings",
+  "ten": "Cánh băng",
+  "rong": 18,
+  "cao": 18,
+  "so_mau": 6,
+  "phu_kin": 59,
+  "vien": "#1b1118",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1b1118",
+    30
+   ],
+   [
+    "#7fc4f2",
+    23
+   ],
+   [
+    "#2f62ad",
+    17
+   ],
+   [
+    "#ffffff",
+    14
+   ],
+   [
+    "#eafcff",
+    10
+   ],
+   [
+    "#1c3a70",
+    6
+   ]
+  ]
+ },
+ {
+  "ma": "vp-gold",
+  "nhom": "do",
+  "ten": "Vàng",
+  "rong": 7,
+  "cao": 7,
+  "so_mau": 4,
+  "phu_kin": 76,
+  "vien": "#7a4a10",
+  "vien_day": 0,
+  "mau_chinh": [
+   [
+    "#ffd23f",
+    46
+   ],
+   [
+    "#7a4a10",
+    43
+   ],
+   [
+    "#e0a020",
+    8
+   ],
+   [
+    "#fff6c0",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "vp-potion",
+  "nhom": "do",
+  "ten": "Bình máu",
+  "rong": 8,
+  "cao": 9,
+  "so_mau": 5,
+  "phu_kin": 83,
+  "vien": "#14182e",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#c4202c",
+    53
+   ],
+   [
+    "#14182e",
+    30
+   ],
+   [
+    "#e8e0d0",
+    7
+   ],
+   [
+    "#ff5a5a",
+    7
+   ],
+   [
+    "#5a3a1e",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "vp-linhkhi-fire",
+  "nhom": "do",
+  "ten": "Linh khí Lửa",
+  "rong": 10,
+  "cao": 10,
+  "so_mau": 4,
+  "phu_kin": 84,
+  "vien": "#a8320a",
+  "vien_day": 0,
+  "mau_chinh": [
+   [
+    "#a8320a",
+    43
+   ],
+   [
+    "#ff7a2a",
+    43
+   ],
+   [
+    "#ffd23f",
+    13
+   ],
+   [
+    "#ffffff",
+    1
+   ]
+  ]
+ },
+ {
+  "ma": "vp-linhkhi-poison",
+  "nhom": "do",
+  "ten": "Linh khí Độc",
+  "rong": 10,
+  "cao": 10,
+  "so_mau": 4,
+  "phu_kin": 84,
+  "vien": "#2f6b1a",
+  "vien_day": 0,
+  "mau_chinh": [
+   [
+    "#2f6b1a",
+    43
+   ],
+   [
+    "#6fcf3a",
+    43
+   ],
+   [
+    "#c2f58a",
+    13
+   ],
+   [
+    "#ffffff",
+    1
+   ]
+  ]
+ },
+ {
+  "ma": "vp-linhkhi-ice",
+  "nhom": "do",
+  "ten": "Linh khí Băng",
+  "rong": 10,
+  "cao": 10,
+  "so_mau": 4,
+  "phu_kin": 84,
+  "vien": "#2b6ea3",
+  "vien_day": 0,
+  "mau_chinh": [
+   [
+    "#2b6ea3",
+    43
+   ],
+   [
+    "#7fd4ff",
+    43
+   ],
+   [
+    "#e9f9ff",
+    13
+   ],
+   [
+    "#ffffff",
+    1
+   ]
+  ]
+ },
+ {
+  "ma": "vp-ore",
+  "nhom": "do",
+  "ten": "Quặng",
+  "rong": 7,
+  "cao": 7,
+  "so_mau": 4,
+  "phu_kin": 69,
+  "vien": "#2a2e36",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#2a2e36",
+    44
+   ],
+   [
+    "#c9ccd2",
+    35
+   ],
+   [
+    "#8a8f98",
+    18
+   ],
+   [
+    "#ffffff",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "vp-stone",
+  "nhom": "do",
+  "ten": "Đá tôi",
+  "rong": 7,
+  "cao": 7,
+  "so_mau": 4,
+  "phu_kin": 51,
+  "vien": "#34143f",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#34143f",
+    48
+   ],
+   [
+    "#d48af5",
+    40
+   ],
+   [
+    "#8a4ab0",
+    8
+   ],
+   [
+    "#ffffff",
+    4
+   ]
+  ]
+ },
+ {
+  "ma": "vp-mat0",
+  "nhom": "do",
+  "ten": "Gỗ linh",
+  "rong": 7,
+  "cao": 6,
+  "so_mau": 5,
+  "phu_kin": 74,
+  "vien": "#2e1c10",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#2e1c10",
+    55
+   ],
+   [
+    "#a06a3a",
+    23
+   ],
+   [
+    "#9bd14a",
+    13
+   ],
+   [
+    "#f0d090",
+    6
+   ],
+   [
+    "#6a4424",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "vp-mat1",
+  "nhom": "do",
+  "ten": "Vảy cá",
+  "rong": 7,
+  "cao": 7,
+  "so_mau": 4,
+  "phu_kin": 71,
+  "vien": "#143a6a",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#143a6a",
+    46
+   ],
+   [
+    "#7fd4ff",
+    46
+   ],
+   [
+    "#3f8be0",
+    6
+   ],
+   [
+    "#ffffff",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "vp-mat2",
+  "nhom": "do",
+  "ten": "Đá lửa",
+  "rong": 7,
+  "cao": 7,
+  "so_mau": 4,
+  "phu_kin": 61,
+  "vien": "#4a1408",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#ff7a2a",
+    40
+   ],
+   [
+    "#4a1408",
+    37
+   ],
+   [
+    "#ffe07a",
+    13
+   ],
+   [
+    "#ffb040",
+    10
+   ]
+  ]
+ },
+ {
+  "ma": "vp-shard0",
+  "nhom": "do",
+  "ten": "Mảnh Mộc Tinh",
+  "rong": 6,
+  "cao": 7,
+  "so_mau": 4,
+  "phu_kin": 71,
+  "vien": "#1e3a12",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#1e3a12",
+    57
+   ],
+   [
+    "#8ac84a",
+    37
+   ],
+   [
+    "#eaffc0",
+    3
+   ],
+   [
+    "#4a8a2a",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "vp-shard1",
+  "nhom": "do",
+  "ten": "Mảnh Ngư Tinh",
+  "rong": 6,
+  "cao": 7,
+  "so_mau": 4,
+  "phu_kin": 71,
+  "vien": "#12284a",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#12284a",
+    57
+   ],
+   [
+    "#5ab0f0",
+    37
+   ],
+   [
+    "#e0f4ff",
+    3
+   ],
+   [
+    "#2a6ab0",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "vp-shard2",
+  "nhom": "do",
+  "ten": "Mảnh Hồ Tinh",
+  "rong": 6,
+  "cao": 7,
+  "so_mau": 4,
+  "phu_kin": 71,
+  "vien": "#4a1a08",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#4a1a08",
+    57
+   ],
+   [
+    "#ff8a4a",
+    37
+   ],
+   [
+    "#fff0d0",
+    3
+   ],
+   [
+    "#c04a1a",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "vp-xp",
+  "nhom": "do",
+  "ten": "Kinh nghiệm",
+  "rong": 7,
+  "cao": 7,
+  "so_mau": 2,
+  "phu_kin": 35,
+  "vien": "#8fd0ff",
+  "vien_day": 0,
+  "mau_chinh": [
+   [
+    "#8fd0ff",
+    71
+   ],
+   [
+    "#ffffff",
+    29
+   ]
+  ]
+ },
+ {
+  "ma": "nl-lai",
+  "nhom": "nguoi-lang",
+  "ten": "Chú Lái Đò",
+  "viec": "Vào ải",
+  "rong": 29,
+  "cao": 40,
+  "so_mau": 15,
+  "phu_kin": 58,
+  "vien": "#1a1420",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#8a5632",
+    16
+   ],
+   [
+    "#f4eee0",
+    12
+   ],
+   [
+    "#b8a45a",
+    10
+   ],
+   [
+    "#d9cfbb",
+    9
+   ],
+   [
+    "#f0e4b4",
+    7
+   ],
+   [
+    "#e8d9a0",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "nl-ren",
+  "nhom": "nguoi-lang",
+  "ten": "Ông Thợ Rèn",
+  "viec": "Lò rèn",
+  "rong": 28,
+  "cao": 40,
+  "so_mau": 19,
+  "phu_kin": 59,
+  "vien": "#1a1420",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#3a2a26",
+    13
+   ],
+   [
+    "#9a4a30",
+    11
+   ],
+   [
+    "#7a3622",
+    10
+   ],
+   [
+    "#f4eee0",
+    10
+   ],
+   [
+    "#d4cfc4",
+    8
+   ],
+   [
+    "#d8482e",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "nl-xen",
+  "nhom": "nguoi-lang",
+  "ten": "Bà Hàng Xén",
+  "viec": "Hàng xén",
+  "rong": 19,
+  "cao": 29,
+  "so_mau": 14,
+  "phu_kin": 84,
+  "vien": "#1a1420",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#2e2838",
+    24
+   ],
+   [
+    "#f4eee0",
+    19
+   ],
+   [
+    "#8a5a38",
+    11
+   ],
+   [
+    "#6fb060",
+    7
+   ],
+   [
+    "#6e4428",
+    6
+   ],
+   [
+    "#c8402e",
+    2
+   ]
+  ]
+ },
+ {
+  "ma": "nl-may",
+  "nhom": "nguoi-lang",
+  "ten": "Cô Thợ May",
+  "viec": "Thợ may",
+  "rong": 24,
+  "cao": 33,
+  "so_mau": 13,
+  "phu_kin": 66,
+  "vien": "#1a1420",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#2e2838",
+    29
+   ],
+   [
+    "#f4eee0",
+    15
+   ],
+   [
+    "#d86a7a",
+    8
+   ],
+   [
+    "#b04a5e",
+    7
+   ],
+   [
+    "#6fc0d0",
+    6
+   ],
+   [
+    "#d9cfbb",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "nl-do",
+  "nhom": "nguoi-lang",
+  "ten": "Cụ Đồ",
+  "viec": "Kỹ năng",
+  "rong": 21,
+  "cao": 28,
+  "so_mau": 12,
+  "phu_kin": 83,
+  "vien": "#1a1420",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#363e6c",
+    18
+   ],
+   [
+    "#f4eee0",
+    15
+   ],
+   [
+    "#4a548c",
+    13
+   ],
+   [
+    "#fbf7ee",
+    9
+   ],
+   [
+    "#d9cfbb",
+    6
+   ],
+   [
+    "#3a3248",
+    3
+   ]
+  ]
+ },
+ {
+  "ma": "nl-tu",
+  "nhom": "nguoi-lang",
+  "ten": "Ông Từ",
+  "viec": "Chọn hero",
+  "rong": 26,
+  "cao": 32,
+  "so_mau": 16,
+  "phu_kin": 69,
+  "vien": "#1a1420",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#d0a440",
+    19
+   ],
+   [
+    "#f4eee0",
+    14
+   ],
+   [
+    "#7a3a2a",
+    10
+   ],
+   [
+    "#a87e2a",
+    8
+   ],
+   [
+    "#b08a4a",
+    5
+   ],
+   [
+    "#8a5a34",
+    5
+   ]
+  ]
+ },
+ {
+  "ma": "nl-mo",
+  "nhom": "nguoi-lang",
+  "ten": "Anh Mõ",
+  "viec": "Cài đặt",
+  "rong": 25,
+  "cao": 31,
+  "so_mau": 16,
+  "phu_kin": 68,
+  "vien": "#1a1420",
+  "vien_day": 1,
+  "mau_chinh": [
+   [
+    "#f4eee0",
+    16
+   ],
+   [
+    "#3f9a8c",
+    15
+   ],
+   [
+    "#3a4a8a",
+    11
+   ],
+   [
+    "#2c7468",
+    8
+   ],
+   [
+    "#8a5a34",
+    6
+   ],
+   [
+    "#e8c04a",
+    4
+   ]
+  ]
+ }
+]
