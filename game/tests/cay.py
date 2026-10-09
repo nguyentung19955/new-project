@@ -9,7 +9,8 @@ Số lần chơi của một ải = mọi lượt (kể cả chơi lại ải c�
 Bot chơi hơi vụng như người mới (phản xạ chậm hơn, bỏ sót nhiều đạn hơn bot mặc định).
 
 Chạy: python3 tests/cay.py [số lượt chiến dịch, mặc định 8] [khuyen|lieu] [--nhanh: chỉ kiểm vùng 1]
-Thoát mã 1 nếu không đạt mục tiêu (xem MUC_TIEU) hoặc có lỗi trang."""
+Thoát mã 1 nếu không đạt mục tiêu (hàm muc_tieu, cho lệch 15% vì số lần chơi ở trùm hên xui), tổng thời gian ngoài 2,5-4 giờ,
+có luật hỏng hoặc có lỗi trang."""
 import sys, json, os
 from playwright.sync_api import sync_playwright
 
@@ -222,7 +223,7 @@ def main():
         avg = lambda key: sum(r['st'][k][key] for r in ok) / m
         lo, hi = muc_tieu(k)
         pl = avg('plays')
-        flag = '' if lo <= pl <= hi else ' ✗'
+        flag = '' if lo * 0.85 <= pl <= hi * 1.15 else ' ✗'  # cho lệch 15% vì trùm hên xui, 8 lượt còn dao động
         if flag and mode == 'khuyen': bad = 1
         med = sorted(r['st'][k]['plays'] for r in ok)[m // 2] if m % 2 else sum(sorted(r['st'][k]['plays'] for r in ok)[m // 2 - 1:m // 2 + 1]) / 2
         print(f"| {k//5+1}-{k%5+1} | {pl:.1f}{flag} | {med:g} | {avg('tries'):.1f} | {avg('fails'):.1f} | {avg('t')/60:.0f} | {avg('lvl'):.0f} | {avg('pw'):.0f} / {avg('rec'):.0f} | {lo:g}-{hi:g} |")

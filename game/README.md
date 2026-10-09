@@ -82,14 +82,14 @@ Mỗi vùng có tám loại quái thường, hai tinh anh, một trùm nhỏ (�
 | Xông tới | Heo Rừng Con | Cua Lính | Lính Ma Giáp Gỉ | Áp sát, báo trước rồi lao hoặc chém |
 | Bầy nhỏ | Bầy Ong Vò Vẽ | Bầy Cá Con | Bầy Dơi Than | Nhanh, lao cắn liên tục |
 | Giáp | Bọ Hung Mai Cứng | Ốc Mượn Hồn | Tượng Đá Cầm Khiên | Che phía trước (vệt vàng), quay mặt chậm, hồi máu cho bạn đứng gần. Vòng ra sau, hoặc đánh mãi vào giáp cho vỡ |
-| Bắn xa | Hoa Phun Bào Tử | Hải Quỳ | Đèn Lồng Ma | Giữ khoảng cách, có đường ngắm đỏ rồi bắn; thỉnh thoảng gọi thêm hai bầy nhỏ |
+| Bắn xa | Hoa Phun Bào Tử | Hải Quỳ | Đèn Lồng Ma | Giữ khoảng cách, có đường ngắm đỏ (0,7 giây) rồi bắn, mỗi 3 giây một phát, đạn đủ chậm để né; thỉnh thoảng gọi thêm hai bầy nhỏ |
 | Nhanh nhẹn | Chồn Bóng | Cá Chuồn | Mèo Đen Hai Đuôi | Lặn hoặc chui xuống (không đánh được), vòng đỏ báo chỗ trồi lên cạnh em bé |
 | Cảm tử | Nấm Phồng | Cá Nóc | Hũ Lửa Sống | Lao vào, phồng lên (vòng đỏ) rồi nổ, nổ xong thì mất |
 | Đặt bom | Sóc Ném Quả Nổ | Sứa Bom | Tiểu Yêu Ném Pháo | Ném hoặc thả bom; bom nằm đếm ngược trong vòng đỏ rồi nổ |
 | Gai | Nhím Gai Độc | Nhím Biển | Nhím Than Hồng | Có lúc dựng gai (vòng đỏ nhấp nháy, dấu chấm than): chém lúc đó bị phản đòn, bắn tên thì không. Hạ gai thì bắn gai tám hướng |
 
 - Nổ theo hệ của vùng: Hang biển đóng băng em bé một lúc ngắn, Rừng già để lại vũng độc, Lâu đài cổ để lại vệt cháy.
-- Quái xuất hiện theo ba kiểu: lần lượt từng con, cả đợt cùng lúc, hoặc từng tốp. Chỗ sắp mọc có vòng đỏ; đứng trong vòng lúc quái mọc thì bị đẩy ra.
+- Quái xuất hiện theo ba kiểu: lần lượt từng con, cả đợt cùng lúc, hoặc từng tốp. Chỗ sắp mọc có vòng đỏ; đứng trong vòng lúc quái mọc thì bị đẩy ra. Phòng thường chỉ có tối đa 4 quái cùng lúc (tinh anh tính là hai): đủ số thì quái kế tiếp chờ, có chỗ mới mọc.
 - Tinh anh mạnh hơn, có một chiêu riêng và một dấu hiệu trên đầu: tia chớp (nhanh), khiên (bọc giáp mọi phía), quả bom (nổ khi chết), giọt máu (đánh trúng thì hồi máu).
 - Trùm nhỏ (Nấm Chúa, Cua Đá, Hổ Lửa) có đòn thường và hai chiêu riêng.
 - Trùm vùng (Mộc Tinh, Ngư Tinh, Hồ Tinh) có màn ra mắt, ba pha đổi ở 2/3 và 1/3 máu (cảnh chuyển pha, hình đổi, không nhận sát thương lúc đó), năm chiêu (pha 1 ba chiêu, pha 2 thêm một, pha 3 đủ năm và nhanh hơn). Sau chiêu lớn nhất trùm choáng một lúc. Chết xong cổng dịch chuyển mới mọc.
@@ -112,6 +112,16 @@ Mỗi vùng có tám loại quái thường, hai tinh anh, một trùm nhỏ (�
 - Lò rèn, mục **Nâng bậc**: mỗi lần lên một nấc (Thường, Lam, Tím, Vàng), không mất dấu ấn và tiến hóa. Nấc lên Vàng cần mảnh trùm, thứ chỉ trùm vùng rơi.
 - Ở làng, chạm vào vũ khí đang bay theo em bé (hoặc bấm **Xem** ở chỗ Bà Hàng Xén) để mở màn **Xem vũ khí**: bậc, dòng phụ, các đặc trưng hệ đã mở và sắp mở.
 - Bản lưu cũ tự được nâng cấp khi mở game: Sắt thành Thường, Bạc thành Lam, Linh thành Tím; dòng lấy theo số thứ tự của món chia 10 lấy dư.
+
+## Sức mạnh và cày
+
+- **Sức mạnh** của em bé là một con số tính từ cấp hero, vũ khí mạnh nhất đang mang (bậc, mài, mốc tiến hóa), điểm kỹ năng, mũ và áo. Em bé mới có sức mạnh 100. Xem ở dải trên cùng trong làng, ở bảng hero của Ông Từ và ở góc trái khi đang trong ải.
+- Mỗi ải có **Sức mạnh khuyên dùng**, ghi dưới thẻ ải trên tranh bản đồ của Chú Lái Đò và trong thẻ thông tin ải. Màu so với sức mạnh của bé: xanh là đủ, vàng là sát nút (từ 90%), đỏ là còn thiếu.
+- Vùng 1 nhẹ: ải 1 đến 4 thường chơi một hai lần là qua. Ải 3, ải 4 của vùng 2 và 3 cần cày thêm vài lượt; ải trùm vùng (5, 10, 15) cần cày nhiều nhất, vùng sau nhiều hơn vùng trước.
+- **Cày**: chơi lại ải cũ vẫn được kinh nghiệm, vàng, quặng và nguyên liệu vùng (cần cho mài từ +5, nâng bậc, rèn đồ). Chơi lại một ải đã qua có cơ hội rơi vũ khí bậc cao hơn lần đầu. Khi bé đã mạnh hơn 130% khuyên dùng của ải thì kinh nghiệm và vàng giảm dần (thấp nhất 40%), nguyên liệu vẫn đủ.
+- **Quyết tâm**: thua thật ở một ải (không tính bỏ ải) thì lần sau vào lại chính ải đó bé mạnh thêm 4% máu và sát thương, cộng dồn tối đa 20%; qua ải thì hết.
+- Lên cấp chậm hơn trước (cần 50 + 50 x cấp kinh nghiệm), mỗi cấp tăng 1,5% sát thương và 3,5% máu.
+- Đi hết 15 ải lần đầu mất khoảng 3 đến 4 giờ chơi (bot đo bằng `tests/cay.py`).
 
 ## Các tệp
 
@@ -170,7 +180,9 @@ python3 tests/ui_robust.py         # xoay màn hình, ẩn trang, khung hình ch
 python3 tests/ui_build.py          # đóng gói rồi chơi thử cả hai tệp trong dist/
 python3 tests/ui_shots.py anh phone   # chụp mọi màn hình vào thư mục anh/ để xem bằng mắt
 python3 tests/smoke.py anh         # nạp game và đánh thử vài giây
-python3 tests/campaign.py          # bot tự chơi hết 15 ải để xem độ khó
+python3 tests/campaign.py          # bot tự chơi hết 15 ải để xem độ khó (thua thì cày ải trước một lượt rồi thử lại)
+python3 tests/cay.py               # cân bằng phải cày: kiểm luật sức mạnh, quyết tâm; bot chơi từ đầu 8 lượt, đếm số lần chơi từng ải và tổng thời gian ("lieu": bot không nhìn lời khuyên)
+python3 tests/cay_shots.py         # chụp ảnh sức mạnh khuyên dùng trên thẻ ải, bảng hero, dải trên vào docs/can-bang-cay/
 python3 tests/mapgen.py            # bộ sinh bản đồ ải: 1000 hạt giống cho mỗi kiểu A, B, C
 python3 tests/doors.py             # luật cửa, điều kiện mở cửa Trùm, bot đi hết ải ở cả ba kiểu
 python3 tests/env_rooms.py         # vẽ thử mọi loại phòng ở ba vùng, cửa khóa và cửa mở
@@ -189,7 +201,7 @@ python3 tests/ghep.py              # bản lưu cũ, bốn bậc, trùm rơi Và
 python3 tests/ghep2.py             # đợt ghép 2: nút trong hai lề, bóng và chiều sâu, lối đánh trong phòng hẹp, bản đồ một màu, né tám hướng, vũ khí rơi, suối khóa, hoạt ảnh trùm
 python3 tests/quai.py              # quái mới: mỗi cơ chế (bom, cảm tử, gai, giáp, bắn xa, lặn, tinh anh, kiểu xuất hiện), đòn tám hướng, trùm đủ ba pha và chết được
 python3 tests/quai_shots.py        # chụp ảnh và GIF quái mới trong game vào docs/quai-vao-game/ (cần thêm Pillow)
-python3 tests/balance.py 4         # bot chơi 15 ải với bản lưu cố định, mỗi ải 4 lần: tỉ lệ thắng, thời gian, máu mất (thêm "- 0,4,9 vukhi": chạy với từng loại vũ khí)
+python3 tests/balance.py 4         # bot chơi 15 ải với bản lưu thật vừa đủ sức mạnh khuyên dùng (tests/cay_luu.json), mỗi ải 4 lần: tỉ lệ thắng, thời gian, máu mất (thêm "- 0,4,9 vukhi": chạy với từng loại vũ khí)
 python3 tests/ghep2_shots.py       # chụp ảnh và ảnh động của đợt ghép 2 vào docs/ghep-2/ (cần thêm Pillow)
 python3 tests/ghep_shots.py        # chụp sáu ảnh của đợt ghép 1 vào docs/ghep/ (cần thêm Pillow)
 python3 tests/lang_shots.py        # chụp từng màn hình của giao diện trống đồng và làng có người vào docs/giao-dien-va-lang/
