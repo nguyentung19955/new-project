@@ -25678,7 +25678,7 @@ window.FIREBASE_CONFIG = {
       const old = r.b[reg.boss];
       if (!old || t < old) {
         r.b[reg.boss] = Math.round(t * 10) / 10;
-        R.lines.push(old ? '★ Kỷ lục mới: hạ ' + reg.bossName + ' trong ' + secs(t) + ' (cũ ' + secs(old) + ')' : '★ Kỷ lục đầu tiên: hạ ' + reg.bossName + ' trong ' + secs(t));
+        R.lines.push((old ? '★ Kỷ lục mới: ' : '★ Kỷ lục đầu: ') + reg.bossName + ' ' + secs(t)); // ngắn cho vừa cột phải màn kết quả
         R.record = true;
       }
     }

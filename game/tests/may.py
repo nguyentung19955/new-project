@@ -342,9 +342,9 @@ if run('xephang'):
             res.append([l for l in g.ev("G.getRun().result.lines.filter(l => typeof l === 'string')") if 'Kỷ lục' in l and 'Ngư' in l])
             if t == 41.5:
                 g.shot(os.path.join(ROOT, '..', 'docs', 'firebase-linh-khi', 'ket-qua-ky-luc.png'))
-        ck.ok(res[0] and 'đầu tiên' in res[0][0] and '64,0' in res[0][0], 'lần đầu hạ Ngư Tinh → báo kỷ lục đầu tiên: ' + str(res[0]))
+        ck.ok(res[0] and 'Kỷ lục đầu' in res[0][0] and '64,0' in res[0][0], 'lần đầu hạ Ngư Tinh → báo kỷ lục đầu tiên: ' + str(res[0]))
         ck.ok(not res[1], 'chậm hơn → không báo')
-        ck.ok(res[2] and 'Kỷ lục mới' in res[2][0] and '41,5' in res[2][0] and 'cũ 64,0' in res[2][0], 'nhanh hơn → Kỷ lục mới: ' + str(res[2]))
+        ck.ok(res[2] and 'Kỷ lục mới' in res[2][0] and '41,5' in res[2][0], 'nhanh hơn → Kỷ lục mới: ' + str(res[2]))
         g.wait(2500)
         ck.ok(g.ev(f"window.__fs['linhkhi_scores/{uid}'].b_ngu") == 41.5, 'thời gian hạ trùm nhanh nhất lên bảng (41,5 giây)')
         # xem bảng ở Cụ Đồ
@@ -402,6 +402,7 @@ if run('quantri'):
         ck.ok(g.ev("G.cloud.isAdmin()") and g.ev("G.cloud.adminNew") == 24, 'quản trị: đếm 24 góp ý mới (1 đã xử lý)')
         anh_mo(g); spy(g)
         ck.ok(any('Góp ý nhận được (24 mới)' in l for l in labels(g)), 'nút 📥 Góp ý nhận được có số mới (chấm đỏ)')
+        g.ev("window.__fs['linhkhi_feedback/f24'].shot = G.cloudUI.capture()")  # ảnh thật chụp từ khung cảnh làng
         g.tap(*BTN_ADMIN); g.wait(400)
         ck.ok(g.pg.is_visible('#lk-inbox'), 'mở màn Góp ý nhận được')
         items = g.pg.eval_on_selector_all('#lk-in-list .lk-item', 'a => a.map(e => e.dataset.id)')

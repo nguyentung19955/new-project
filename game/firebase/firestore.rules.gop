@@ -1,0 +1,195 @@
+// LUẬT FIRESTORE ĐẦY ĐỦ của dự án sontinhthuytinh = luật hiện có của Thần Thoại Việt (nhánh claude/mobile-tower-defense-game-k5oxzo,
+// tệp firestore.rules, giữ nguyên) + ba khối của Linh Khí ở cuối. Dán TOÀN BỘ tệp này vào Firebase console → Firestore → Rules → Publish.
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // mỗi người chơi chỉ đọc / ghi được bản lưu của chính mình
+    match /users/{uid} {
+      allow read, delete: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.save is string && request.resource.data.save.size() < 400000;
+    }
+    // bảng xếp hạng: ai cũng xem được; mỗi người chỉ ghi dòng của mình, chỉ được tăng điểm
+    match /boards/{board}/scores/{uid} {
+      allow read: if true;
+      allow delete: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.score is number
+        && request.resource.data.name is string && request.resource.data.name.size() <= 24
+        && request.resource.data.detail is string && request.resource.data.detail.size() <= 60
+        && (resource == null || request.resource.data.score >= resource.data.score);
+    }
+    // góp ý: ai đã đăng nhập (kể cả khách ẩn danh) chỉ được tạo.
+    // v163: chỉ tài khoản quản trị (email đã xác minh) được đọc, đổi trạng thái / ghi chú, xoá — màn "Góp ý nhận được" trong game.
+    match /feedback/{id} {
+      // email quản trị đặt ở MỘT chỗ này (game: ADMIN_EMAILS trong js/cloud.js chỉ để hiện nút)
+      function isAdmin() {
+        return request.auth != null
+          && request.auth.token.get('email', '').lower() == 'ly230595@gmail.com'
+          && request.auth.token.get('email_verified', false) == true;
+      }
+      allow get, list: if isAdmin();
+      allow delete: if isAdmin();
+      allow update: if isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'note'])
+        && request.resource.data.get('status', 'new') in ['new', 'seen', 'done']
+        && request.resource.data.get('note', '') is string && request.resource.data.get('note', '').size() <= 300;
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly(['kind', 'text', 'contact', 'shot', 'ver', 'where', 'scr', 'ua', 'at', 'uid', 'guest'])
+        && request.resource.data.keys().hasAll(['kind', 'text', 'ver', 'uid', 'at'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.kind in ['bug', 'idea', 'balance', 'other']
+        && request.resource.data.text is string && request.resource.data.text.size() >= 10 && request.resource.data.text.size() <= 1000
+        && request.resource.data.get('contact', '') is string && request.resource.data.get('contact', '').size() <= 120
+        && request.resource.data.get('shot', '') is string && request.resource.data.get('shot', '').size() <= 200000
+        && request.resource.data.ver is string && request.resource.data.ver.size() <= 20
+        && request.resource.data.get('where', '') is string && request.resource.data.get('where', '').size() <= 120
+        && request.resource.data.get('scr', '') is string && request.resource.data.get('scr', '').size() <= 40
+        && request.resource.data.get('ua', '') is string && request.resource.data.get('ua', '').size() <= 160
+        && request.resource.data.at is number
+        && request.resource.data.get('guest', false) is bool;
+    }
+    // v141: CHƠI NHÓM — phòng rooms/{mã 6 ký tự}: chỉ 2 thành viên đọc / ghi, hết hạn sau ~12 giờ (expiresAt)
+    function signedIn() { return request.auth != null; }
+    function roomOf(code) { return get(/databases/$(database)/documents/rooms/$(code)).data; }
+    function liveRoom(d) { return d.expiresAt > request.time; }
+    function inRoom(code) { return signedIn() && request.auth.uid in roomOf(code).members && liveRoom(roomOf(code)); }
+    function isAuth(code) { return roomOf(code).auth == request.auth.uid; }
+    function ttlOk(d) { return d.expiresAt is timestamp && d.expiresAt < request.time + duration.value(13, 'h'); }
+    match /rooms/{code} {
+      allow get: if signedIn() && request.auth.uid in resource.data.members && liveRoom(resource.data);
+      allow list: if false;
+      allow create: if signedIn() && code.size() == 6
+        && request.resource.data.keys().hasOnly(['host', 'members', 'names', 'meta', 'level', 'state', 'auth', 'epoch', 'away', 'expiresAt'])
+        && request.resource.data.host == request.auth.uid
+        && request.resource.data.members == [request.auth.uid]
+        && request.resource.data.auth == request.auth.uid
+        && request.resource.data.state == 'lobby'
+        && request.resource.data.names.size() <= 2 && request.resource.data.meta.size() <= 2
+        && ttlOk(request.resource.data);
+      allow update: if signedIn() && liveRoom(resource.data)
+        && request.resource.data.host == resource.data.host
+        && request.resource.data.expiresAt == resource.data.expiresAt
+        && request.resource.data.names.size() <= 2 && request.resource.data.meta.size() <= 2
+        && request.resource.data.keys().hasOnly(['host', 'members', 'names', 'meta', 'level', 'state', 'auth', 'epoch', 'away', 'expiresAt', 'seed', 'own'])
+        && (
+          // thành viên: chọn ải, bắt đầu, chuyển quyền điều phối, rời phòng (không thêm người)
+          (request.auth.uid in resource.data.members && request.resource.data.members.hasOnly(resource.data.members))
+          // người thứ hai vào phòng đang chờ
+          || (!(request.auth.uid in resource.data.members) && resource.data.state == 'lobby' && resource.data.members.size() == 1
+              && request.resource.data.members == resource.data.members.concat([request.auth.uid])
+              && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['members', 'names', 'meta']))
+        );
+      allow delete: if signedIn() && request.auth.uid == resource.data.host;
+      // lô lệnh của người điều phối (chỉ tạo mới, không sửa — số thứ tự trùng bị từ chối)
+      match /cmds/{id} {
+        allow read: if inRoom(code);
+        allow create: if inRoom(code) && isAuth(code)
+          && request.resource.data.keys().hasOnly(['seq', 'by', 'd', 'expiresAt'])
+          && request.resource.data.by == request.auth.uid && request.resource.data.seq is int
+          && request.resource.data.d is string && request.resource.data.d.size() < 20000
+          && ttlOk(request.resource.data);
+      }
+      // yêu cầu của người chơi gửi người điều phối (lệnh, tín hiệu còn sống, xin đồng bộ)
+      match /reqs/{id} {
+        allow read: if inRoom(code);
+        allow create: if inRoom(code)
+          && request.resource.data.keys().hasOnly(['by', 'd', 'expiresAt'])
+          && request.resource.data.by == request.auth.uid
+          && request.resource.data.d is string && request.resource.data.d.size() < 4000
+          && ttlOk(request.resource.data);
+      }
+      // ảnh chụp trạng thái để đồng bộ lại / vào lại phòng
+      match /snap/{id} {
+        allow read: if inRoom(code);
+        allow create, update: if inRoom(code) && isAuth(code) && id == 'last'
+          && request.resource.data.keys().hasOnly(['by', 'tick', 'd', 'expiresAt'])
+          && request.resource.data.by == request.auth.uid && request.resource.data.tick is int
+          && request.resource.data.d is string && request.resource.data.d.size() < 900000
+          && ttlOk(request.resource.data);
+      }
+      // v153: trò chuyện trong trận — chỉ 2 thành viên đọc / gửi; tin ≤ 120 ký tự, thời điểm là giờ máy chủ, không sửa / xoá
+      match /chat/{id} {
+        allow read: if inRoom(code);
+        allow create: if inRoom(code)
+          && request.resource.data.keys().hasOnly(['by', 'name', 'text', 'at', 'expiresAt'])
+          && request.resource.data.by == request.auth.uid
+          && request.resource.data.name is string && request.resource.data.name.size() <= 24
+          && request.resource.data.text is string && request.resource.data.text.size() >= 1 && request.resource.data.text.size() <= 120
+          && request.resource.data.at == request.time
+          && ttlOk(request.resource.data);
+      }
+    }
+
+    // ===================== LINH KHÍ (bắt đầu) =====================
+    // Dán ba khối này vào BÊN TRONG  match /databases/{database}/documents { ... }  của firestore.rules (cạnh các khối của
+    // Thần Thoại Việt, không sửa khối nào của game đó). Bản luật đầy đủ đã ghép sẵn: game/firebase/firestore.rules.gop
+
+    // Bản lưu: mỗi người chơi chỉ đọc / ghi bản lưu của chính mình.
+    match /linhkhi_users/{uid} {
+      allow read, delete: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['save', 'updatedAt', 'prog', 'v', 'ver'])
+        && request.resource.data.save is string && request.resource.data.save.size() < 400000
+        && request.resource.data.updatedAt is number
+        && request.resource.data.get('prog', 0) is number
+        && request.resource.data.get('ver', '') is string && request.resource.data.get('ver', '').size() <= 20;
+    }
+
+    // Bảng vàng: ai cũng xem được; mỗi người chỉ ghi dòng của mình, số chỉ được tốt lên (Sức mạnh, sao, ải xa nhất chỉ tăng;
+    // thời gian hạ trùm chỉ giảm), giá trị phải nằm trong khoảng hợp lý.
+    match /linhkhi_scores/{uid} {
+      function okBoss(d, k) { return !(k in d) || (d[k] is number && d[k] >= 5 && d[k] <= 3600); }
+      function notSlower(k) { return !(k in resource.data) || (k in request.resource.data && request.resource.data[k] <= resource.data[k]); }
+      allow read: if true;
+      allow delete: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['name', 'power', 'stars', 'far', 'hero', 'g', 'at', 'b_moc', 'b_ngu', 'b_ho'])
+        && request.resource.data.keys().hasAll(['name', 'power', 'stars', 'far', 'hero', 'at'])
+        && request.resource.data.name is string && request.resource.data.name.size() >= 2 && request.resource.data.name.size() <= 16
+        && request.resource.data.power is int && request.resource.data.power >= 0 && request.resource.data.power <= 1000000
+        && request.resource.data.stars is int && request.resource.data.stars >= 0 && request.resource.data.stars <= 90
+        && request.resource.data.far is int && request.resource.data.far >= 0 && request.resource.data.far <= 15
+        && request.resource.data.hero in ['smith', 'hunter', 'healer', 'wrestler']
+        && request.resource.data.get('g', false) is bool
+        && request.resource.data.at is number
+        && okBoss(request.resource.data, 'b_moc') && okBoss(request.resource.data, 'b_ngu') && okBoss(request.resource.data, 'b_ho')
+        && (resource == null || (
+          request.resource.data.power >= resource.data.power
+          && request.resource.data.stars >= resource.data.stars
+          && request.resource.data.far >= resource.data.far
+          && notSlower('b_moc') && notSlower('b_ngu') && notSlower('b_ho')));
+    }
+
+    // Góp ý: ai đã đăng nhập (kể cả khách ẩn danh) chỉ được tạo; chỉ tài khoản quản trị (email đã xác minh) được đọc,
+    // đổi trạng thái / ghi chú, xoá. Email quản trị đặt ở hàm isAdmin() dưới đây (game: ADMIN_EMAILS trong js/cloud.js chỉ để hiện nút).
+    match /linhkhi_feedback/{id} {
+      function isAdmin() {
+        return request.auth != null
+          && request.auth.token.get('email', '').lower() == 'ly230595@gmail.com'
+          && request.auth.token.get('email_verified', false) == true;
+      }
+      allow get, list: if isAdmin();
+      allow delete: if isAdmin();
+      allow update: if isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'note'])
+        && request.resource.data.get('status', 'new') in ['new', 'seen', 'done']
+        && request.resource.data.get('note', '') is string && request.resource.data.get('note', '').size() <= 300;
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly(['kind', 'text', 'contact', 'shot', 'ver', 'where', 'scr', 'ua', 'at', 'uid', 'guest'])
+        && request.resource.data.keys().hasAll(['kind', 'text', 'ver', 'uid', 'at'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.kind in ['bug', 'idea', 'balance', 'other']
+        && request.resource.data.text is string && request.resource.data.text.size() >= 10 && request.resource.data.text.size() <= 1000
+        && request.resource.data.get('contact', '') is string && request.resource.data.get('contact', '').size() <= 120
+        && request.resource.data.get('shot', '') is string && request.resource.data.get('shot', '').size() <= 200000
+        && request.resource.data.ver is string && request.resource.data.ver.size() <= 20
+        && request.resource.data.get('where', '') is string && request.resource.data.get('where', '').size() <= 120
+        && request.resource.data.get('scr', '') is string && request.resource.data.get('scr', '').size() <= 40
+        && request.resource.data.get('ua', '') is string && request.resource.data.get('ua', '').size() <= 160
+        && request.resource.data.at is number
+        && request.resource.data.get('guest', false) is bool;
+    }
+    // ===================== LINH KHÍ (hết) =====================
+  }
+}
