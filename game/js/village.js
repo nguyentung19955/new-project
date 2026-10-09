@@ -654,6 +654,7 @@
       ui.text(CL.label(), CX + 4, 125, { size: 7.5, color: on && !CL.dirty ? GOOD : SOFT });
       ui.text(on ? (CL.isGuest() ? 'Tài khoản: Khách. Đăng nhập Google để giữ tiến trình khi đổi máy.' : 'Tài khoản Google: ' + CL.who()) : 'Tiến trình luôn được lưu trong trình duyệt này.', CX + 4, 136, { size: 7, color: SOFT });
       if (on && CL.isGuest()) {
+        G.syncTaps.push({ x: CX + 4, y: 142, w: 146, h: 24, fn: () => titleLogin(CL) });
         if (T.btn(CX + 4, 142, 146, 24, 'Đăng nhập Google', { size: 8.5, primary: true }) && !V.gBusy) {
           V.gBusy = true; say('Đang mở cửa sổ đăng nhập Google…');
           CL.google().then((r) => say(r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google. Tiến trình được giữ nguyên.' : 'Đã đăng nhập Google.'), (e) => say('Chưa đăng nhập được: ' + e.message)).then(() => { V.gBusy = false; });
@@ -705,6 +706,7 @@
       if (G.keyP.Escape) { if (G.banDo && G.banDo.ask) { G.banDo.ask = null; G.keyP.Escape = false; } else if (V.confirm) V.confirm = false; else if (V.tab === 'weapon' && V.back !== 'hub') V.tab = V.back; else if (V.tab !== 'hub') goHub(); }
     },
     draw() {
+      G.syncTaps = [];
       if (V.tab === 'title') V.tab = 'hub';
       if (V.tab === 'map') { mapScreen(); return; }
       VS.drawWorld(V.tab === 'hub' ? null : { dim: 0.62, hideHero: true });
@@ -738,13 +740,14 @@
     if (V.gBusy) return;
     V.gBusy = true; V.tMsg = 'Đang mở trang đăng nhập Google…'; V.tMsgT = 30;
     CL.google().then((r) => { V.tMsg = r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google, giữ nguyên tiến trình.' : 'Đã đăng nhập Google.'; }, (e) => { V.tMsg = 'Chưa đăng nhập được: ' + e.message; })
-      .then(() => { V.gBusy = false; V.tMsgT = 8; });
+      .then(() => { V.gBusy = false; V.tMsgT = 8; say(V.tMsg); });
   }
   G.Title = {
     enter() { VS.enter({ from: 'keep' }); VS.state.x = 470; VS.state.cam = 230; },
     update(dt) {
       VS.update(dt, true);
       const g = titleGate();
+      if (V.tRank) { if (G.keyP.Escape) V.tRank = false; return; } // đang xem Bảng vàng
       if (g.need) { if (g.ok && (G.keyP.Enter || G.keyP.Space)) G.setScene(G.Village); return; } // vào bằng nút "Vào game"
       // không có mây: chạm chỗ trống để vào; chạm dải nút thì không
       const onBtns = G.downs.some((d) => d.y > 200 && d.y < 236 && d.x > 120 && d.x < 360);
@@ -761,7 +764,20 @@
       const u = G.ux; ui.font(40, true); u.textAlign = 'center'; u.lineJoin = 'round'; u.lineWidth = 5; u.strokeStyle = '#1a120a'; u.strokeText('LINH KHÍ', 240, 78);
       ui.text('LINH KHÍ', 240, 78, { size: 40, bold: true, align: 'center', color: GOLD });
       ui.text('Vũ khí lớn lên theo bạn. Yêu tinh học theo bạn.', 240, 100, { size: 10, align: 'center', color: TXT });
+      G.syncTaps = [];
+      // Bảng vàng mở ngay trên màn mở đầu (không vào làng), có nút đóng
+      if (V.tRank && G.bangVang) {
+        const px = 80; // giữa màn hình
+        T.panel(px, PY, PW, PH, 'Bảng vàng', { rightPad: 74, noBand: true });
+        if (T.sbtn(px + PW - 66, PY + 3, 60, 17, '✕ Đóng', { size: 8, pad: 5 })) V.tRank = false;
+        G.bangVang.panel(px + (CX - PX), CW);
+        return;
+      }
       const { CL, need, ok } = titleGate();
+      if (CL && CL.online() && CL.isGuest()) { // nút Đăng nhập chạy ngay trong lúc chạm để Safari không chặn cửa sổ Google
+        if (need && !ok) G.syncTaps.push({ x: 150, y: 150, w: 180, h: 30, fn: () => titleLogin(CL) });
+        if (!need || ok) G.syncTaps.push({ x: 126, y: 206, w: 112, h: 24, fn: () => titleLogin(CL) });
+      }
       if (!need) {
         if (Math.floor(G.time * 2) % 2) T.toastFit(240, 112, 'Chạm để bắt đầu', { size: 11 });
       } else if (ok) {
@@ -777,7 +793,7 @@
         const on = CL.online(), guest = CL.isGuest();
         if (!need || ok) {
           if (T.btn(126, 206, 112, 24, on && !guest ? '✓ ' + String(CL.who()).slice(0, 14) : 'Đăng nhập Google', { size: 8.5, primary: on && guest, disabled: !on || !guest })) titleLogin(CL);
-          if (T.btn(242, 206, 112, 24, '🏆 Bảng vàng', { size: 8.5, disabled: !PANELS.rank })) { G.setScene(G.Village); V.dtab = 'rank'; open('do'); }
+          if (T.btn(242, 206, 112, 24, '🏆 Bảng vàng', { size: 8.5, disabled: !G.bangVang })) { V.tRank = true; G.bangVang.reload && G.bangVang.reload(); }
         }
         if (CL.gMsg) { V.tMsg = CL.gMsg; V.tMsgT = 8; CL.gMsg = ''; }
         if (V.tMsgT > 0) V.tMsgT -= 1 / 60;

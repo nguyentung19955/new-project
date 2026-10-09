@@ -350,7 +350,7 @@ if run('xephang'):
         # xem bảng ở Cụ Đồ
         g.ev("G.setScene(G.Village); G.villageApi.V.dtab = 'rank'; G.villageApi.open('do')"); g.wait(600)
         spy(g); lab = labels(g)
-        ck.ok(all(x in lab for x in ['Cây kỹ năng', 'Hướng dẫn', 'Bảng vàng', 'Sức mạnh', 'Sao', 'Ngư Tinh', 'Mộc Tinh', 'Hồ Tinh', 'Đổi tên']), 'Cụ Đồ có thẻ Bảng vàng, các thẻ Sức mạnh / Sao / từng trùm, nút Đổi tên')
+        ck.ok(all(x in lab for x in ['Cây kỹ năng', 'Hướng dẫn', 'Bảng vàng', 'Đổi tên']) and not any(x in lab for x in ['Sao', 'Ngư Tinh']), 'Cụ Đồ có thẻ Bảng vàng (một bảng theo Sức mạnh, không chia thẻ), nút Đổi tên')
         reads = g.ev("window.__fsReads")
         ck.ok(g.ev("G.bangVang.data.power.items.length") == 8, 'trang đầu tải 8 dòng (đỡ lượt đọc)')
         g.shot(os.path.join(ROOT, '..', 'docs', 'firebase-linh-khi', 'bang-vang-suc-manh.png'))
@@ -358,14 +358,8 @@ if run('xephang'):
         ck.ok(g.ev("G.bangVang.data.power.items.length") == 14 and not g.ev("G.bangVang.data.power.more"), 'sang trang 2 mới tải tiếp (đủ 14 người, hết)')
         top = g.ev("G.bangVang.data.power.items.map(x => x.power)")
         ck.ok(top == sorted(top, reverse=True), 'xếp Sức mạnh giảm dần')
-        g.ev("G.bangVang.cat = 'b_ngu'; G.bangVang.page = 0"); g.wait(500)
-        b = g.ev("G.bangVang.data.b_ngu.items.map(x => x.b_ngu)")
-        ck.ok(b[0] == 41.5 and b == sorted(b), 'thẻ Ngư Tinh: nhanh nhất lên đầu, mình đứng đầu với 41,5 giây')
-        g.shot(os.path.join(ROOT, '..', 'docs', 'firebase-linh-khi', 'bang-vang-ngu-tinh.png'))
-        g.ev("G.bangVang.cat = 'b_ho'; G.bangVang.page = 0"); g.wait(400)
-        g.shot(os.path.join(ROOT, '..', 'docs', 'firebase-linh-khi', 'bang-vang-trong.png'))
         # đổi tên
-        g.ev("G.bangVang.cat = 'stars'"); g.wait(200)
+        g.ev("G.bangVang.page = 0"); g.wait(200)
         g.tap(160 + 150 + 36, 252); g.wait(300)
         ck.ok(g.pg.is_visible('#lk-rename'), 'Đổi tên mở khung nhập')
         g.pg.fill('#lk-name', 'a'); g.pg.click('[data-act=name-ok]'); g.wait(100)
@@ -376,8 +370,7 @@ if run('xephang'):
         ck.ok(clean == ['Ăn Quả 99', '', '', '', 'Tèo_-2'], 'luật tên 2-16 ký tự: ' + str(clean))
         for _ in range(3):
             g.ev("G.bangVang.page++"); g.wait(300)
-        ck.ok(g.ev("G.bangVang.data.stars.items.some(x => x.uid === G.cloud.user.uid && x.name === 'Bé Nab')"), 'dòng của mình có trên bảng sao (tên mới)')
-        g.shot(os.path.join(ROOT, '..', 'docs', 'firebase-linh-khi', 'bang-vang-sao.png'))
+        ck.ok(g.ev("G.bangVang.data.power.items.some(x => x.uid === G.cloud.user.uid && x.name === 'Bé Nab')"), 'dòng của mình có trên bảng (tên mới)')
         ck.done(g); g.close()
         # ngoại tuyến: bảng báo cần mạng, vẫn thấy kỷ lục của mình
         g = Game(p, 'phone')

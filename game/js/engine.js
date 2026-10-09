@@ -131,6 +131,21 @@
     G.audioStart();
   }
   fit.addEventListener('pointerup', up);
+  // Nút cần chạy NGAY trong lúc chạm (mở cửa sổ đăng nhập Google: Safari chỉ cho mở cửa sổ phụ trong chính sự kiện chạm,
+  // còn nút vẽ trên canvas được xử lý ở khung hình sau nên bị chặn [popup-blocked]). Màn nào cần thì mỗi khung hình
+  // đặt G.syncTaps = [{ x, y, w, h, fn }] (toạ độ khung game 480x270).
+  G.syncTaps = [];
+  let syncAt = 0;
+  function syncTap(e) {
+    if (!G.syncTaps.length || performance.now() - syncAt < 400) return;
+    const t0 = e.changedTouches && e.changedTouches[0];
+    const p = pos(t0 ? { clientX: t0.clientX, clientY: t0.clientY } : e);
+    for (const b of G.syncTaps) {
+      if (p.x >= b.x && p.x <= b.x + b.w && p.y >= b.y && p.y <= b.y + b.h) { syncAt = performance.now(); try { b.fn(); } catch (err) { /* bỏ qua */ } return; }
+    }
+  }
+  fit.addEventListener('touchend', syncTap);
+  fit.addEventListener('pointerup', (e) => { if (e.pointerType !== 'touch') syncTap(e); });
   fit.addEventListener('pointercancel', up);
   // Bỏ hết ngón đang giữ (khi mất tiêu điểm, xoay máy, ẩn trang).
   G.dropPointers = function () { G.pointers.clear(); G.downs.length = 0; G.click = null; };
@@ -420,6 +435,7 @@
   G.scene = null;
   G.setScene = function (s) {
     G.scene = s;
+    G.syncTaps = [];
     G.click = null;
     G.stalePointers();
     if (s.enter) s.enter();

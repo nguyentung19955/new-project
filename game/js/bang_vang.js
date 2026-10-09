@@ -79,9 +79,8 @@
 
   // ---------- tải bảng theo trang ----------
   function cats() {
-    const a = [['power', 'Sức mạnh'], ['stars', 'Sao']];
-    for (const R of G.REGIONS) a.push(['b_' + R.boss, R.bossName]);
-    return a;
+    // chủ dự án: bảng vàng chỉ cần MỘT bảng xếp hạng (theo Sức mạnh), không chia nhiều thẻ
+    return [['power', 'Sức mạnh']];
   }
   function cur() { return (B.data[B.cat] = B.data[B.cat] || { items: [], cursor: null, more: true, loading: false, err: '' }); }
   async function loadMore() {
@@ -110,7 +109,9 @@
     const A = G.villageApi;
     const list = cats();
     const w = Math.floor((CW - (list.length - 1) * 3) / list.length);
-    list.forEach(([k, n], i) => { if (T.sbtn(CX + i * (w + 3), 95, w, 18, n, { size: 7.5, pad: 2, sel: B.cat === k })) { B.cat = k; B.page = 0; } });
+    B.cat = 'power';
+    if (list.length > 1) list.forEach(([k, n], i) => { if (T.sbtn(CX + i * (w + 3), 95, w, 18, n, { size: 7.5, pad: 2, sel: B.cat === k })) { B.cat = k; B.page = 0; } });
+    else ui.text('Xếp hạng theo Sức mạnh', CX + 2, 108, { size: 9, bold: true, color: GOLD });
     if (!C.online()) {
       const r = rec(), sv = G.save;
       T.inset(CX, 120, CW, 92, false);
