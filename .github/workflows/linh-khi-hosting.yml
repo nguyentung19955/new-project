@@ -1,11 +1,12 @@
 name: Linh Khí lên spiritblade.web.app
 
 # Mỗi lần nhánh khoi-tao-du-an có code game mới: gói game Linh Khí rồi đăng lên https://spiritblade.web.app
+# (kèm công cụ Xưởng Sprite ở https://spiritblade.web.app/xuong-sprite.html)
 # Chỉ đụng site "spiritblade" trong dự án sontinhthuytinh, không đụng sontinhthuytinh.web.app hay thanthoaiviet.web.app.
 on:
   push:
     branches: [khoi-tao-du-an]
-    paths: ['game/**', '.github/workflows/linh-khi-hosting.yml']
+    paths: ['game/**', 'tools/xuong-sprite/**', '.github/workflows/linh-khi-hosting.yml']
   workflow_dispatch:
 
 permissions:
@@ -41,6 +42,8 @@ jobs:
           mkdir -p "$RUNNER_TEMP/web/site"
           cp game/dist/linh-khi.html "$RUNNER_TEMP/web/site/index.html"
           cp game/web/* "$RUNNER_TEMP/web/site/"
+          # Xưởng Sprite: công cụ tự vẽ sprite (https://spiritblade.web.app/xuong-sprite.html) và bản game thử nó mở bên trong
+          cp game/dist/xuong-sprite.html game/dist/xuong-sprite-thu.html "$RUNNER_TEMP/web/site/"
           cat > "$RUNNER_TEMP/web/firebase.json" <<EOF
           {
             "hosting": {

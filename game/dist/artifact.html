@@ -17824,7 +17824,8 @@ MA._xong();
         img.src = tep.tam;
       }
       SC.ds[sp.ma] = sp;
-      if (sp.doi === 'quai') themVaoDanhSach(sp);
+      // Chỉ nối vào game khi thật sự có hình tự vẽ: không có tệp nào thì game y hệt như chưa có tệp này.
+      if (sp.doi === 'quai') { noiQuai(); themVaoDanhSach(sp); } else noiEmBe();
       return sp;
     } catch (e) {
       SC.loi.push((tep && tep.ma) + ': ' + e.message);
@@ -17939,9 +17940,9 @@ MA._xong();
   function noiQuai() {
     MA = G.monsterArt;
     if (!MA || MA._spriteCustom) return;
+    if (!SC.noi) return;
     MA._spriteCustom = true;
     draw0 = MA.draw; dur0 = MA.dur;
-    MA.drawCode = draw0; // vẽ bằng code (bỏ qua hình tự vẽ), cho công cụ so sánh
     MA.draw = function (c, id, x, y, o) {
       const sp = SC.ds[id];
       if (!sp || !sp.ready) return draw0.call(MA, c, id, x, y, o);
@@ -17995,10 +17996,9 @@ MA._xong();
   SC.emBeTint = emBeTint;
   function noiEmBe() {
     const A = G.art;
-    if (!A || !A.hero || A._spriteCustom) return;
+    if (!A || !A.hero || A._spriteCustom || !SC.noi) return;
     A._spriteCustom = true;
     const hero0 = A.hero;
-    A.heroCode = hero0;
     A.hero = function (c, o) {
       const sp = SC.cuaEmBe(o && o.key);
       if (!sp || !G.tinhLinh) return hero0.call(A, c, o);
@@ -18023,8 +18023,10 @@ MA._xong();
     };
   }
 
-  noiQuai();
-  noiEmBe();
+  // Hàm vẽ bằng code (bỏ qua hình tự vẽ), cho công cụ so sánh.
+  if (G.monsterArt && !G.monsterArt.drawCode) G.monsterArt.drawCode = G.monsterArt.draw;
+  if (G.art && G.art.hero && !G.art.heroCode) G.art.heroCode = G.art.hero;
+  SC.noi = true;
   // Tệp do game/build.py nhúng vào bản đóng gói.
   if (Array.isArray(G.customSpriteData)) { for (const t of G.customSpriteData) SC.add(t); delete G.customSpriteData; }
 })();
