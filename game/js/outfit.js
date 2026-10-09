@@ -163,6 +163,7 @@
       seen[it.id] = true;
       it.r = G.clamp(Math.floor(num(it.r, 0)), 0, 3);
       it.n = it.n ? 1 : 0;
+      if (it.lock) it.lock = 1; else delete it.lock; // khoá đồ (js/ban_do.js): bản lưu cũ không có thì không khoá
       if (I[it.k].slot === 'wing') it.lv = G.clamp(Math.floor(num(it.lv, 1)), 1, 3); else delete it.lv;
       if (it.old != null && !O.FROM_OLD[it.old]) delete it.old;
       return true;
