@@ -179,12 +179,20 @@
     ui.text('Bậc ' + rar.name + (fam ? ' · dòng ' + fam.name : ' · ' + G.WTYPES[w.type].name), 96, 80, { size: 7.5, color: SOFT });
     if (fam && fam.nature) ui.text('Tính nết: ' + fam.nature, 96, 91, { size: 7.5, color: SOFT });
     ui.text('Sát thương mỗi đòn ' + G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1) + ' · hệ số bậc x' + String(G.wRarMult(w)).replace('.', ','), 96, 102, { size: 7.5 });
+    // Hai thẻ ở cột trái: Linh khí (bảng dấu ấn ba hệ, js/linhkhi.js) và Dòng phụ (dòng phụ, dòng mạnh). Mặc định mở Linh khí.
+    const lkTab = G.lk && V.wvTab !== 'aff';
+    if (G.lk) {
+      if (T.sbtn(246, 29, 70, 17, 'Linh khí', { size: 8, pad: 4, primary: lkTab })) V.wvTab = 'lk';
+      if (T.sbtn(320, 29, 70, 17, 'Dòng phụ', { size: 8, pad: 4, primary: !lkTab })) V.wvTab = 'aff';
+    }
     const mi = G.markInfo(w);
     ui.text(mi.txt, 96, 113, { size: 7.5, color: mi.col });
     ui.bar(96, 117, 146, 4, mi.frac, mi.col);
-    ui.text('Tiến hóa cao nhất của bậc này: ' + G.STAGE_NAMES[rar.maxStage], 18, 140, { size: 7, color: SOFT });
-    // dòng phụ và dòng mạnh
     let y = 156;
+    if (lkTab) G.lk.panel(w, 18, 140, 224);
+    else ui.text('Tiến hóa cao nhất của bậc này: ' + G.STAGE_NAMES[rar.maxStage], 18, 140, { size: 7, color: SOFT });
+    // dòng phụ và dòng mạnh
+    if (!lkTab) {
     T.head('Dòng phụ', 18, y);
     y += 12;
     if (!w.affixes || !w.affixes.length) { ui.text(r === 0 ? 'Bậc Thường không có dòng phụ.' : 'Chưa có.', 18, y, { size: 7.5, color: SOFT }); y += 11; }
@@ -193,6 +201,7 @@
       y += 3;
       ui.text('Dòng mạnh: ' + G.POWER[w.power].name, 18, y, { size: 8.5, bold: true, color: G.RARITY[3].col });
       y = ui.para(G.POWER[w.power].desc, 18, y + 11, 200, { size: 7.5 });
+    }
     }
     ui.para(r >= 3 ? 'Đã ở bậc cao nhất.' : 'Ông Thợ Rèn nâng bậc được, không mất dấu ấn và tiến hóa.', 18, 250, 220, { size: 7, color: SOFT });
     // đặc trưng hệ theo cấp
@@ -240,6 +249,9 @@
       if (carry.includes(w.id)) ui.text('đang mang', CX + CW - 6, y + 9.5, { size: 6.5, align: 'right', color: GOOD });
     });
     ui.text(list.length + ' vũ khí', CX + 2, 200.5, { size: 7, color: SOFT });
+    // xem bảng linh khí (dấu ấn hệ) và đặc trưng của món đang chọn
+    const sw = V.sel != null && G.weaponById(V.sel);
+    if (sw && list.includes(sw) && T.sbtn(CX + 52, 190, 88, 16, 'Xem linh khí', { size: 7.5, pad: 3 })) viewWeapon(sw.id, 'forge');
     return list;
   }
   const actBtn = (label, o) => T.btn(CX + CW - 92, DET_Y + 9, 86, 34, label, Object.assign({ size: 11, primary: true }, o));
@@ -497,6 +509,7 @@
     ['Mở rương, qua cửa', 'Lại gần rương, suối hay thương nhân rồi bấm Đánh. Hết quái thì cửa mở: đi vào cửa có mũi tên để sang phòng kề. Chạm bản đồ nhỏ để xem cả ải.'],
     ['Bàn phím', 'Mũi tên hoặc WASD để đi, J đánh (ở làng: nói chuyện), K né, L đặc biệt, I kỹ năng, Q đổi vũ khí, E uống bình máu, M xem bản đồ, Esc tạm dừng hoặc đóng bảng.'],
     ['Ba sao', 'Sao 1: qua ải. Sao 2: không dùng bình máu. Sao 3: ra đòn kết liễu trùm bằng hệ khắc chế nó.'],
+    G.lk ? ['Linh khí', '', G.lk.guide] : null, // trang vẽ hình về linh khí (dấu ấn hệ), js/linhkhi.js
     ['Dấu ấn', G.HINTS[0] + ' ' + G.HINTS[1]],
     ['Ba hệ', G.HINTS[4] + ' ' + G.HINTS[5]],
     ['Trùm học theo bạn', G.HINTS[2] + ' ' + G.HINTS[3]],
@@ -513,16 +526,17 @@
     frame('Gốc đa: hướng dẫn');
     doTabs();
     // xếp các mục vào từng trang cho vừa bảng
-    const secs = HELP(), pages = [[]], top = 106, bottom = 236;
+    const secs = HELP().filter(Boolean), pages = [[]], top = 106, bottom = 236;
     let y = top;
     for (const s of secs) {
-      const h = 11 + ui.wrap(s[1], 298, 7.5).length * 10.5 + 5;
+      const h = s[2] ? bottom - top : 11 + ui.wrap(s[1], 298, 7.5).length * 10.5 + 5; // trang vẽ hình (Linh khí) đứng riêng một trang
       if (y + h > bottom && pages[pages.length - 1].length) { pages.push([]); y = top; }
       pages[pages.length - 1].push(s); y += h;
     }
     V.page = G.clamp(V.page, 0, pages.length - 1);
     y = top;
     for (const l of pages[V.page]) {
+      if (l[2]) { l[2].draw(CX + 2, y, 298); y += l[2].h; continue; }
       T.head(l[0], CX + 2, y);
       y = ui.para(l[1], CX + 2, y + 11, 298, { size: 7.5, color: TXT }) + 5 + 2.5;
     }

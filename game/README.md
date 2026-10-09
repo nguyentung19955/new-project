@@ -134,6 +134,8 @@ Mỗi vùng có tám loại quái thường, hai tinh anh, một trùm nhỏ (�
 | `js/bao_truoc.js` | Vùng báo trước đòn của quái và trùm (quạt, chữ nhật, tròn, đường thẳng, vành, vòng bom, vòng mọc quái, tường nước): vẽ mịn ở lớp giao diện, nằm dưới chân nhân vật, hiện ra mượt, thanh đếm ngược, chớp khi ra đòn |
 | `js/fx.js` | Hiệu ứng hình ảnh chung: vệt chém, hạt, số sát thương, rung màn hình |
 | `js/fx_he.js` | Hiệu ứng ra chiêu theo lối đánh và theo hệ Lửa, Độc, Băng; vạch lấy đà |
+| `js/fx_dan.js` | Hiệu ứng đạn: hình riêng từng loại đạn theo vùng, xoay theo hướng bay, vệt bay, quầng sáng hệ, chớp lúc bắn, toé hạt lúc trúng, cắm tường, vỡ tan |
+| `js/linhkhi.js` | Hiển thị linh khí (dấu ấn hệ): ba vạch dưới ô vũ khí, biểu tượng hệ trên đầu quái, khối linh khí ở màn kết quả, bảng Xem vũ khí, trang hướng dẫn |
 | `js/stage.js` | Một ải: bản đồ 8 phòng, cửa và chuyển phòng, đợt quái, nút điều khiển, thông tin trên màn hình, các bảng chọn, bảng kết quả |
 | `js/mapgen.js` | Sinh bản đồ ải ngẫu nhiên theo hạt giống (ba kiểu bố cục A, B, C) và hàm kiểm tra bản đồ |
 | `js/room_art.js` | Vẽ phòng vuông nhìn từ trên cho ba vùng: sàn, tường, cửa khóa và cửa mở |
@@ -189,6 +191,8 @@ python3 tests/chieu_shots.py       # chụp ảnh các lối đánh và hiệu �
 python3 tests/ghep.py              # bản lưu cũ, bốn bậc, trùm rơi Vàng, đặc trưng hệ theo cấp, né theo hướng cuối, hero và nút mới
 python3 tests/ghep2.py             # đợt ghép 2: nút trong hai lề, bóng và chiều sâu, lối đánh trong phòng hẹp, bản đồ một màu, né tám hướng, vũ khí rơi, suối khóa, hoạt ảnh trùm
 python3 tests/quai.py              # quái mới: mỗi cơ chế (bom, cảm tử, gai, giáp, bắn xa, lặn, tinh anh, kiểu xuất hiện), đòn tám hướng, trùm đủ ba pha và chết được
+python3 tests/linhkhi.py           # hiệu ứng đạn (hình theo vùng, không đổi đường bay, cắm tường, nhiều đạn) và linh khí (vạch tăng đúng, hạt bay vào vạch, màn kết quả ghi đúng số)
+python3 tests/dan_linhkhi_shots.py # chụp ảnh và GIF đạn, linh khí vào docs/dan-va-linh-khi/ (cần thêm Pillow)
 python3 tests/bao_truoc.py          # vùng báo trước vẽ mịn: đủ mọi hình, không vẽ lên lớp điểm ảnh, nằm dưới em bé, hiện ra mượt, đếm ngược, chớp khi nổ, thời gian không đổi
 python3 tests/bao_truoc_shots.py chup <thư mục game> <thư mục ra>   # chụp ảnh trước/sau vùng báo trước (rồi "ghep", "gif") vào docs/bao-truoc-muot/
 python3 tests/quai_shots.py        # chụp ảnh và GIF quái mới trong game vào docs/quai-vao-game/ (cần thêm Pillow)

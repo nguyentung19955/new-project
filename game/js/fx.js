@@ -1093,10 +1093,19 @@
       add({ ty: 'orb', x: e.x + rr(-4, 4), y: e.y - hh + rr(-4, 4), vx: Math.cos(a) * v, vy: Math.sin(a) * v, t: 1.4, pl: pal(m.el), ly: 1, d: i * 0.05, el: m.el, n: i === 0 ? m.n : 0, big: e.isBoss, px: 0, py: 0 });
     }
   });
+  // Hạt dấu ấn bay vào vạch linh khí của hệ đó cạnh ô vũ khí (js/linhkhi.js); không có vạch thì bay vào tay em bé.
+  function barAt(el) {
+    const q = G.lk && G.lk.barPos ? G.lk.barPos(el) : null;
+    return q ? { x: q.x + Math.round(S.W.cam || 0), y: q.y } : null;
+  }
   function markText(P, el, n) {
-    if (n >= 0.5) num(P.x, P.y - 42, '+' + Math.round(n) + ' ' + G.EL[el].name, { col: G.EL[el].col, size: 8.5, pop: 0.9, t: 0.95, vx: 0, vy: -20, kind: 3 });
+    if (n < 0.5) return;
+    const q = barAt(el);
+    const tp = q && G.lk.textPos;
+    num(q ? tp.x + Math.round(S.W.cam || 0) : P.x, q ? tp.y : P.y - 42, '+' + Math.round(n) + ' ' + G.EL[el].name, { col: G.EL[el].col, size: 8.5, pop: 0.9, t: 1.1, vx: 0, vy: q ? -8 : -20, kind: 3 });
   }
   function orbArrive(o) {
+    if (barAt(o.el)) { G.lk.pulse(o.el); if (o.n) markText(S.W.P, o.el, o.n); return; }
     const P = S.W.P, h = hand(P);
     addRing(h.x, h.y, 2, o.big ? 14 : 9, 0.18, o.pl.c2, 2, 1);
     add({ ty: 'flash', x: h.x, y: h.y, r: o.big ? 6 : 4, t: 0.08, c: '#ffffff', c2: o.pl.c2, ly: 1 });
@@ -1215,7 +1224,7 @@
       if (o.d > 0) { o.d -= dt; E[w++] = o; continue; }
       o.t -= dt;
       if (o.ty === 'orb') {
-        const h = hand(S.W.P), dx = h.x - o.x, dy = h.y - o.y, d = Math.hypot(dx, dy) || 1, age = o.t0 - o.t;
+        const h = barAt(o.el) || hand(S.W.P), dx = h.x - o.x, dy = h.y - o.y, d = Math.hypot(dx, dy) || 1, age = o.t0 - o.t;
         if (age > 0.16) {
           const sp = 180 + age * 520, k = Math.min(1, dt * (5 + age * 14));
           o.vx += ((dx / d) * sp - o.vx) * k; o.vy += ((dy / d) * sp - o.vy) * k;

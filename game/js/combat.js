@@ -45,6 +45,7 @@
     const after = G.wStage(w);
     if (W) {
       W.marksGained += n;
+      if (G.lk) G.lk.log(w, el, n); // sổ ghi dấu ấn từng hệ cho màn kết quả (js/linhkhi.js)
       FX('marks', el, n);
       const next = G.MARKS[Math.min(2, after)];
       G.sfx('mark', 0.8 + 0.6 * Math.min(1, w.marks[el] / next));
