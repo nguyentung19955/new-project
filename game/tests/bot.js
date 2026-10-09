@@ -212,7 +212,7 @@
       }
     }
     if (!t.prop && P.mana >= P.specCost && P.specCd <= 0 && (T.ranged || ad < 60) && G.rnd() < 0.2) { inp.specialP = true; }
-    else if (!t.prop && P.mana >= 40 + P.specCost && P.skillCd <= 0 && G.rnd() < 0.1) inp.skillP = true;
+    else if (!t.prop && P.mana >= (G.chuong ? G.chuong.cost(P) : 40) + P.specCost && P.skillCd <= 0 && G.rnd() < 0.1) inp.skillP = true; // nút Chưởng (js/chuong.js)
     press(S, P, w, inp, tg);
     return inp;
   };

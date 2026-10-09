@@ -110,7 +110,7 @@
       T.head('Hero', x, y); y += 3;
       y = ui.para('Sở trường: ' + H.fav.map((f) => G.WTYPES[f].name).join(', ') + ' (+10% sát thương)', x, y + 8, w, { size: 7 });
       y = ui.para('Nội tại: ' + H.passive, x, y, w, { size: 7, color: SOFT });
-      y = ui.para('Kỹ năng ' + H.skill + ' (40 mana): ' + H.skillDesc, x, y, w, { size: 7, color: SOFT });
+      y = ui.para('Chưởng (' + (G.CHUONG ? G.CHUONG.cost : 30) + ' mana, ' + (G.chuong ? G.CHUONG.trees[G.chuong.state(sv.heroes[sv.hero], sv.hero).cay].name : '') + '). ' + H.skillDesc, x, y, w, { size: 7, color: SOFT });
       // trang phục
       y += 8; T.head('Trang phục đang mặc', x, y); y += 3;
       const O = G.outfit;
@@ -354,9 +354,19 @@
 
   // ---------- 5. Kỹ năng ----------
   function skillTab(sv) {
+    // hai thẻ con: Cây kỹ năng (điểm mỗi 3 cấp) và Cây chưởng (điểm mỗi cấp, js/chuong_ui.js)
+    if (G.chuongUI) {
+      const cp = G.chuong.pts(sv.heroes[sv.hero], sv.hero).left;
+      if (T.tab(CX, CY - 1, 120, 16, 'Cây kỹ năng', B.ktab !== 'chuong', { pad: 1, size: 7.5 })) B.ktab = 'skill';
+      if (T.tab(CX + 124, CY - 1, 120, 16, 'Cây chưởng' + (cp > 0 ? ' (' + cp + ')' : ''), B.ktab === 'chuong', { pad: 1, size: 7.5, dot: cp > 0 && !RO })) B.ktab = 'chuong';
+      if (B.ktab === 'chuong') { G.chuongUI.tree(CX, CY + 18, CW - 4, CH - 18, { ro: RO }); return; }
+    }
+    skillTree(sv);
+  }
+  function skillTree(sv) {
     const k = sv.hero, H = G.HEROES[k], hs = sv.heroes[k];
     const spent = hs.sk.atk + hs.sk.def + hs.sk.elem, pts = Math.floor(hs.lvl / 3) - spent;
-    region('skill', CX, CY, CW - 4, CH, (y) => {
+    region('skill', CX, CY + 18, CW - 4, CH - 18, (y) => {
       ui.text('Còn ' + pts + ' điểm kỹ năng', CX, y + 10, { size: 9, bold: true, color: pts > 0 ? GOOD : SOFT });
       tx('Mỗi 3 cấp nhận 1 điểm. Đã học ' + spent + ' nút. ' + (RO ? 'Về làng để học thêm.' : pts > 0 ? 'Bấm Học để học nút kế tiếp.' : ''), CX + 130, y + 10, CW - 140, { size: 7, color: RO ? WARN : SOFT });
       y += 16;
@@ -379,8 +389,8 @@
         bottom = Math.max(bottom, yy);
       });
       y = bottom + 6;
-      T.head('Kỹ năng riêng của ' + H.name, CX, y + 6);
-      y = ui.para(H.skill + ' (40 mana): ' + H.skillDesc + '. Nội tại: ' + H.passive + '.', CX, y + 16, CW - 8, { size: 7, color: TXT });
+      T.head('Chưởng và nội tại của ' + H.name, CX, y + 6);
+      y = ui.para('Chưởng (' + (G.CHUONG ? G.CHUONG.cost : 30) + ' mana). ' + H.skillDesc + '. Nội tại: ' + H.passive + '.', CX, y + 16, CW - 8, { size: 7, color: TXT });
       if (!RO) { y += 2; if (goBtn(CX, y, 220, 'do', 'Đến Cụ Đồ: cây kỹ năng, đặt lại điểm')) return y; y += 20; }
       return y;
     });

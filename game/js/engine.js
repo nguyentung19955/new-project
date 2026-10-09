@@ -240,7 +240,7 @@
       owned: { helm: [], armor: [], charm: [] }, helm: null, armor: null, charm: null, outfit: G.outfit ? G.outfit.blank() : null,
       stars: {}, stars2: {}, scars: {}, tut: {}, sound: true, wins: 0, bossGold: {},
     };
-    for (const k of G.HKEYS) s.heroes[k] = { unlocked: k === 'smith', lvl: 1, xp: 0, sk: { atk: 0, def: 0, elem: 0 } };
+    for (const k of G.HKEYS) s.heroes[k] = { unlocked: k === 'smith', lvl: 1, xp: 0, sk: { atk: 0, def: 0, elem: 0 }, ch: { cay: G.CHUONG ? G.CHUONG.defTree[k] : 'hoa', n: {} } };
     s.carry[0] = G.newWeapon(s, 'sword', 0, { family: 0 }).id; // Kiếm Rèn
     s.carry[1] = G.newWeapon(s, 'bow', 0, { family: 3 }).id;   // Cung Tre
     return s;
@@ -280,6 +280,8 @@
         for (const b of G.SKEYS) fix.sk[b] = G.clamp(Math.floor(num(sk[b], 0)), 0, 5);
         if (fix.sk.atk + fix.sk.def + fix.sk.elem > Math.floor(lvl / 3)) fix.sk = { atk: 0, def: 0, elem: 0 };
         s.heroes[k] = Object.assign(h, fix);
+        // Cây chưởng (js/chuong.js): bản lưu cũ chưa có thì nhận cây mặc định, điểm chưởng tính theo cấp nên tự có đủ điểm bù.
+        if (G.chuong) G.chuong.fix(s.heroes[k], k);
       }
       if (!G.HKEYS.includes(s.hero) || !s.heroes[s.hero].unlocked) s.hero = 'smith';
       // vũ khí

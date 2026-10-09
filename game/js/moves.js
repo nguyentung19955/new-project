@@ -630,6 +630,7 @@
   // ĐẶC TRƯNG 2 của Băng (từ Thức tỉnh): quái đang đóng băng bị đánh thì lớp băng vỡ.
   M.onHit = function (e, d, el, o) {
     if (!(e.st.frozen > 0)) { e.mvShat = false; return; }
+    if (e.st.ch && e.st.ch.ice) return; // đóng băng do chưởng: không kết hợp với đặc trưng của vũ khí (js/chuong.js)
     if (el !== 'ice' || e.mvShat || !o.w) return;
     const W = G.getWorld(), P = W.P, h = heOf(P, o.w);
     if (!has2(h) || h.el !== 'ice') return;
@@ -646,14 +647,15 @@
     if (!w || e.illusion) return;
     const h = heOf(P, w);
     if (!has2(h)) return;
-    if (h.el === 'fire' && e.st.fire > 0) {
+    const chs = e.st.ch || {}; // hiệu ứng do chưởng gây không kích đặc trưng Thức tỉnh của vũ khí (js/chuong.js)
+    if (h.el === 'fire' && e.st.fire > 0 && !chs.fire) {
       // Nổ lan: quái đang cháy chết thì nổ, đốt và làm cháy quái đứng gần. Con nào chết vì vụ nổ khi đang cháy sẽ nổ tiếp.
       const F = HE.fire, D = G.pDamage(P, w), got = [];
       around(e.x, e.y, F.boomR, (t) => { got.push(t); }, e);
       FX('heBoom', e, F.boomR, got.length);
       for (const t of got) { if (t.dead) continue; G.applyStatus(t, 'fire', D, 1); heDamage(t, D * F.boom, 'fire', w, false); }
     }
-    if (h.el === 'poison' && e.st.poisonN > 0) {
+    if (h.el === 'poison' && e.st.poisonN > 0 && !chs.poison) {
       // Lây độc: chết khi đang trúng độc thì độc lây sang quái đứng gần
       const n = Math.min(e.st.poisonN, HE.poison.spread), src = e.st.poisonDmg / 0.06, got = [];
       around(e.x, e.y, HE.poison.spreadR, (t) => { got.push(t); }, e);

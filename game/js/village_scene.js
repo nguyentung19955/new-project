@@ -451,7 +451,7 @@
     for (const k in c) n[k] = c[k] > (sn[k] || 0);
     try {
       const hs = sv.heroes[sv.hero];
-      n.do = Math.floor(hs.lvl / 3) - (hs.sk.atk + hs.sk.def + hs.sk.elem) > 0;
+      n.do = Math.floor(hs.lvl / 3) - (hs.sk.atk + hs.sk.def + hs.sk.elem) > 0 || !!(G.chuong && G.chuong.pts(hs, sv.hero).left > 0);
       // thợ may: có món trang phục mới chưa xem, hoặc đủ nguyên liệu may một món chưa có
       const O = G.outfit;
       n.may = !!(O && sv.outfit && (O.newCount(sv) > 0 || O.canCraftNew(sv)));

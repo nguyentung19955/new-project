@@ -25,7 +25,7 @@ Làng là một cảnh đi lại được, rộng gấp rưỡi màn hình; màn
 | Ông Thợ Rèn | lò rèn | Mài, Nâng bậc, Tôi lại, Rèn đồ, Nâng lò |
 | Bà Hàng Xén | gánh hàng | Rương vũ khí, chọn hai món mang theo, xem, bán; bán trang phục thường (nút **Trang phục ›**) |
 | Cô Thợ May | khung cửi | Trang phục năm ô: mặc, tháo, may, nâng bậc, mở cấp cánh, mặc thử |
-| Cụ Đồ | gốc đa | Cây kỹ năng, đặt lại điểm, hướng dẫn, **Bảng vàng** (xếp hạng Sức mạnh, sao, thời gian hạ từng trùm vùng) |
+| Cụ Đồ | gốc đa | Cây kỹ năng, **Cây chưởng** (học điểm chưởng, đổi cây), đặt lại điểm, hướng dẫn, **Bảng vàng** (xếp hạng Sức mạnh, sao, thời gian hạ từng trùm vùng) |
 | Ông Từ | sân đình | Chọn hero, xem chỉ số |
 | Anh Mõ | cổng làng | Cài đặt: âm thanh, toàn màn hình, lưu mây và **Đăng nhập Google**, **✉ Góp ý**, xoá tiến trình |
 
@@ -34,7 +34,7 @@ Làng là một cảnh đi lại được, rộng gấp rưỡi màn hình; màn
 Trên điện thoại (nên cầm ngang):
 
 - Đặt ngón ở nửa trái màn hình rồi kéo để di chuyển.
-- Các nút tròn bên phải: **Đánh** để ra đòn, **Né** để lăn tránh, **Đặc biệt** để tung đòn mạnh (tốn mana), nút còn lại là kỹ năng riêng của hero. Nút đổi hình theo vũ khí và hệ đang cầm. Khi giữ **Đánh** để lấy đà, quanh nút có vòng nạp.
+- Các nút tròn bên phải: **Đánh** để ra đòn, **Né** để lăn tránh, **Đặc biệt** để tung đòn mạnh (tốn mana), nút trên cùng là **Chưởng**. Nút đổi hình theo vũ khí và hệ đang cầm. Khi giữ **Đánh** để lấy đà, quanh nút có vòng nạp.
 - **Né** lộn theo hướng đang đẩy cần. Không đẩy cần thì lộn theo hướng vừa di chuyển gần nhất; mũi tên trên nút Né chỉ sẵn hướng đó.
 - Mỗi vũ khí có lối đánh riêng với nút **Đánh**:
   - Kiếm: bấm liên tiếp (hoặc giữ) ra chuỗi 3 nhát, nhát thứ ba mạnh và rộng hơn. Đánh ngay sau khi Né thì lướt tới chém.
@@ -53,11 +53,16 @@ Trên điện thoại (nên cầm ngang):
 - Linh khí (dấu ấn) có từ:
   - Hạ tinh anh (+5), trùm nhỏ (+10), trùm vùng (+20): vũ khí kết liễu luôn nhận. Hệ là hệ quái đang dính lúc gục; không dính gì thì theo vùng (Rừng già Độc, Hang biển Băng, Lâu đài cổ Lửa).
   - Quái thường có 5% rơi một viên linh khí của vùng (+3) nằm trên sàn; đi lại gần là nhặt, vũ khí đang cầm nhận.
-  - Kết liễu quái thường đang dính hiệu ứng hệ (+1 của hệ đó), như cũ. Muốn vũ khí theo hệ khác vùng thì dùng vật mang hệ, bùa hệ, kỹ năng Nung trước khi kết liễu tinh anh và trùm.
+  - Kết liễu quái thường đang dính hiệu ứng hệ (+1 của hệ đó), như cũ. Muốn vũ khí theo hệ khác vùng thì dùng vật mang hệ, bùa hệ trước khi kết liễu tinh anh và trùm.
   - Mầm (30 dấu ấn): chỉ số tăng, mỗi đòn có 20% gây cháy, độc hoặc chậm, vệt chém nhuốm màu hệ. Chưa có luật hệ.
   - Thành hình (120 dấu ấn): mở đặc trưng thứ nhất, thứ để lại trên sân. Lửa: vệt cháy. Độc: vũng độc. Băng: gai băng làm chậm.
   - Thức tỉnh (300 dấu ấn): mở đặc trưng thứ hai, phản ứng dây chuyền. Lửa: quái đang cháy chết thì nổ lan. Độc: quái đang trúng độc chết thì lây sang con bên cạnh. Băng: quái đóng băng bị đánh thì vỡ, văng mảnh.
   - Lên Thành hình và Thức tỉnh giữa trận thì có dòng thông báo kèm tên đặc trưng vừa mở.
+- **Chưởng** (thay nút kỹ năng riêng của hero cũ): bắn một luồng chưởng linh khí, tốn 30 mana, hồi 1 giây, tự ngắm quái gần nhất theo tám hướng.
+  - Ba cây chưởng, mỗi lúc dùng một cây: **Hỏa chưởng** (cầu lửa nổ lan, gây cháy; nhánh nổ to, vệt cháy, lửa dai, Tích lực, mưa tàn lửa), **Độc chưởng** (luồng độc để lại mây độc; nhánh mây dày, lây độc, ăn mòn giáp, tách 3 luồng, mây hút), **Băng chưởng** (mũi băng xuyên 3 quái, làm chậm; nhánh tầm xa, xuyên thêm, đóng băng, băng vỡ, vòng băng). Mỗi cây 6 nút, 28 điểm để đầy.
+  - Mỗi cấp nhân vật +1 điểm chưởng (riêng với điểm kỹ năng). Học ở Cụ Đồ (thẻ Cây chưởng) hoặc Hành trang (thẻ Kỹ năng) khi ở làng; đổi cây miễn phí, điểm được trả lại hết.
+  - Kỹ năng cũ thành nét riêng của chưởng: Thợ Rèn đẩy lùi mạnh, Thợ Săn bay xa và nhanh hơn, Thầy Lang trúng thì hồi chút máu, Đô Vật tầm gần mà to.
+  - Chưởng không cho linh khí cho vũ khí, không kết hợp hệ với vũ khí, trùm không học theo chưởng.
 - Chạm ô vũ khí ở góc trên bên phải để đổi giữa hai vũ khí.
 - Chạm ô **Bình máu** để hồi máu, chạm **Dừng** để tạm nghỉ.
 - Lại gần rương, suối, thương nhân, bàn thờ rồi bấm **Đánh** để mở hoặc chọn.
@@ -74,7 +79,7 @@ Trên máy tính:
 | J | Đánh (kiếm: giữ để đánh liên tục; cung, giáo, búa: giữ để lấy đà, thả để tung đòn), mở rương |
 | K | Né |
 | L | Đòn đặc biệt |
-| I | Kỹ năng của hero |
+| I | Chưởng (Hỏa chưởng có Tích lực: giữ để tích, thả để bắn) |
 | Q | Đổi vũ khí |
 | E | Uống bình máu |
 | M | Mở hoặc đóng bản đồ ải |

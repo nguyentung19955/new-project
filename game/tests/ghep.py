@@ -298,7 +298,7 @@ JS = r"""
   sec(0.6); P.inv = 0; G.hurtPlayer(1, null, null, false); step(1); paint();
   d0 = draws.find((d) => d.type === 'spear' && d.mood === 'hurt');
   ok('Vũ khí sống: bé trúng đòn thì vũ khí nhăn mặt', !!d0);
-  ok('Nút: đủ bộ Đánh, Đặc biệt, kỹ năng, Né, bình máu, tạm dừng vẽ bằng G.btnArt', ['atk', 'special', 'skill', 'dodge', 'potion', 'pause'].every((k) => btns.some((b) => b[0] === k)), btns.map((b) => b[0]).join());
+  ok('Nút: đủ bộ Đánh, Đặc biệt, Chưởng, Né, bình máu, tạm dừng vẽ bằng G.btnArt', ['atk', 'special', 'chuong', 'dodge', 'potion', 'pause'].every((k) => btns.some((b) => b[0] === k)), btns.map((b) => b[0]).join());
   w = room({ hero: 'hunter', melee: 'hammer', tier: 1 });
   sec(0.8, { atk: true }); inp = { atk: true }; paint();
   let ab = btns.find((b) => b[0] === 'atk');

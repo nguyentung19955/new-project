@@ -10,7 +10,7 @@
   const G = window.G, ui = G.ui, T = G.theme, VS = G.villageScene;
   const V = { tab: 'hub', who: null, sel: null, ftab: 'sharpen', node: null, page: 0, confirm: false, diff: 0, msg: null, msgT: 0, wid: null, back: 'hub', dtab: 'skill' };
   const TAB_OF = { lai: 'map', ren: 'forge', xen: 'gear', may: 'outfit', do: 'skill', tu: 'hero', mo: 'settings' };
-  const WHO_OF = { map: 'lai', forge: 'ren', gear: 'xen', outfit: 'may', skill: 'do', help: 'do', rank: 'do', hero: 'tu', settings: 'mo' };
+  const WHO_OF = { map: 'lai', forge: 'ren', gear: 'xen', outfit: 'may', skill: 'do', chuong: 'do', help: 'do', rank: 'do', hero: 'tu', settings: 'mo' };
   // Khung bảng bên phải và vùng nội dung bên trong
   const PX = 152, PY = 46, PW = 320, PH = 220, CX = 160, CW = 304;
   const SOFT = '#a9c2b4', TXT = '#f1e6c6', GOLD = '#f6dc92', GOOD = '#9be07a', WARN = '#ff9a5a';
@@ -45,7 +45,7 @@
   function open(k) {
     V.who = k; V.tab = TAB_OF[k]; V.sel = null; V.page = 0; V.confirm = false; V.node = null; V.msgT = 0;
     if (G.banDo) G.banDo.reset();
-    if (k === 'do') V.tab = V.dtab === 'help' || (V.dtab === 'rank' && PANELS.rank) ? V.dtab : 'skill';
+    if (k === 'do') V.tab = V.dtab === 'help' || V.dtab === 'chuong' || (V.dtab === 'rank' && PANELS.rank) ? V.dtab : 'skill';
     if (k === 'lai') pickNext();
   }
   function goHub() {
@@ -558,7 +558,7 @@
     ui.text('Máu gốc ' + H.hp + ' · Mana ' + H.mana + ' · Tốc độ ' + Math.round(H.speed * 100) + '%', sx, y, { size: 7.5 });
     y = ui.para('Sở trường: ' + H.fav.map((f) => G.WTYPES[f].name).join(', ') + ' (+10% sát thương)', CX + 2, y + 11, 300, { size: 7.5 });
     y = ui.para('Nội tại: ' + H.passive, CX + 2, y + 2, 300, { size: 7.5, color: SOFT });
-    ui.para('Kỹ năng ' + H.skill + ' (40 mana): ' + H.skillDesc, CX + 2, y + 2, 300, { size: 7.5, color: SOFT });
+    ui.para('Chưởng (' + (G.CHUONG ? G.CHUONG.cost : 30) + ' mana). ' + H.skillDesc, CX + 2, y + 2, 300, { size: 7.5, color: SOFT });
     const lock = G.HKEYS.filter((q) => !sv.heroes[q].unlocked);
     line = lock.length ? 'Khẽ thôi, các bé đang chơi trong sân. Còn ' + lock.length + ' bé chưa về làng: hạ trùm vùng để đón về.' : 'Khẽ thôi, các bé đang chơi trong sân. Chạm một bé để đổi.';
     return line;
@@ -567,10 +567,11 @@
   // ---------- cây kỹ năng và hướng dẫn (Cụ Đồ) ----------
   function doTabs() {
     // thẻ Bảng vàng (js/bang_vang.js) chỉ có khi tệp đó được nạp
-    const tabs = [['skill', 'Cây kỹ năng'], ['help', 'Hướng dẫn']].concat(PANELS.rank ? [['rank', 'Bảng vàng']] : []);
+    const tabs = [['skill', 'Cây kỹ năng'], ['chuong', 'Cây chưởng'], ['help', 'Hướng dẫn']].concat(PANELS.rank ? [['rank', 'Bảng vàng']] : []);
     const w = Math.floor((CW - (tabs.length - 1) * 4) / tabs.length);
     tabs.forEach((t, i) => {
-      if (T.tab(CX + i * (w + 4), PY + 23, w, 22, t[1], V.tab === t[0], { pad: 2 })) { V.tab = t[0]; V.dtab = t[0]; V.page = 0; }
+      const dot = t[0] === 'chuong' && G.chuong && G.chuong.pts(G.save.heroes[G.save.hero], G.save.hero).left > 0;
+      if (T.tab(CX + i * (w + 4), PY + 23, w, 22, t[1], V.tab === t[0], { pad: 2, size: tabs.length > 3 ? 7.5 : 8, dot })) { V.tab = t[0]; V.dtab = t[0]; V.page = 0; }
     });
   }
   function skill() {
@@ -595,14 +596,25 @@
     }
     return pts > 0 ? 'Ngồi xuống đây, lão chỉ cho một chiêu. Con còn ' + pts + ' điểm chưa dùng đấy.' : 'Lên thêm cấp rồi quay lại, lão dạy tiếp. Cứ 3 cấp con được 1 điểm.';
   }
+  // ---------- cây chưởng (Cụ Đồ): bảng vẽ ở js/chuong_ui.js ----------
+  function chuong() {
+    const sv = G.save, H = G.HEROES[sv.hero];
+    frame('Gốc đa: chưởng của ' + H.name);
+    doTabs();
+    if (!sv.tut.chTip) { sv.tut.chTip = 1; G.persist(); } // đã xem thẻ Cây chưởng: thôi nhắc ở làng
+    if (!G.chuongUI) return null;
+    return G.chuongUI.tree(CX, 96, CW, 166, {});
+  }
   const HELP = () => [
     ['Đi lại trong làng', 'Kéo ở nửa trái màn hình để đi, hoặc chạm vào một người để em bé tự chạy tới. Dải khuôn mặt ở mép trên là lối tắt. Ai có việc mới thì có dấu chấm than vàng.'],
-    ['Di chuyển và đánh', 'Cảm ứng: đặt ngón ở nửa trái màn hình rồi kéo để đi. Bên phải có các nút tròn: giữ Đánh để ra đòn liên tục, Né để lăn tránh, Đặc biệt để tung đòn mạnh (tốn mana), nút còn lại là kỹ năng riêng của hero.'],
+    ['Di chuyển và đánh', 'Cảm ứng: đặt ngón ở nửa trái màn hình rồi kéo để đi. Bên phải có các nút tròn: giữ Đánh để ra đòn liên tục, Né để lăn tránh, Đặc biệt để tung đòn mạnh (tốn mana), nút trên cùng là Chưởng.'],
+    ['Chưởng', 'Nút Chưởng bắn một luồng chưởng linh khí (tốn ' + (G.CHUONG ? G.CHUONG.cost : 30) + ' mana), tự ngắm quái gần nhất theo tám hướng. Hệ của chưởng theo cây chưởng đang dùng. Mỗi em bé có nét riêng: Thợ Rèn đẩy lùi mạnh, Thợ Săn bay xa và nhanh, Thầy Lang trúng thì hồi chút máu, Đô Vật tầm gần mà to. Chưởng không cho linh khí cho vũ khí (linh khí chỉ đến từ vũ khí) và không kết hợp hệ với vũ khí.'],
+    ['Ba cây chưởng', 'Hỏa chưởng: cầu lửa nổ lan, vệt cháy, giữ nút để tích lực. Độc chưởng: mây độc, lây độc, ăn mòn giáp, tách 3 luồng. Băng chưởng: mũi băng xuyên nhiều quái, làm chậm, đóng băng, băng vỡ. Mỗi cấp nhận 1 điểm chưởng (riêng với điểm kỹ năng). Mỗi lúc dùng một cây; ở làng đổi cây miễn phí ở Cụ Đồ (thẻ Cây chưởng) hoặc Hành trang, điểm đã học được trả lại hết.'],
     ['Đánh tám hướng', 'Mọi đòn tự quay về quái gần nhất trong tầm, theo cả tám hướng (lên, xuống, chéo). Không có quái gần thì đánh theo hướng đang kéo cần, hoặc hướng vừa đi.'],
     ['Chiêu Đặc biệt', 'Mỗi loại vũ khí một chiêu (tốn mana). Kiếm, Trảm Nguyệt: phóng vệt chém trăng khuyết bay xuyên mọi quái. Giáo, Phi Thương: ném giáo xuyên một hàng quái, ghim con cuối, giáo tự bay về tay (lúc giáo chưa về thì nút Đánh là cú đấm tay). Búa, Địa Chấn: nện ra vệt nứt đất hất tung quái, kèm vòng chấn quanh người. Cung, Mưa Tên: mưa tên rơi vào cụm quái gần nhất.'],
     ['Các ô ở mép trên', 'Chạm ô vũ khí ở góc trên bên phải để đổi giữa hai vũ khí. Chạm ô Bình máu để hồi máu. Chạm Dừng để tạm nghỉ.'],
     ['Mở rương, qua cửa', 'Lại gần rương, suối hay thương nhân rồi bấm Đánh. Hết quái thì cửa mở: đi vào cửa có mũi tên để sang phòng kề. Chạm bản đồ nhỏ để xem cả ải.'],
-    ['Bàn phím', 'Mũi tên hoặc WASD để đi, J đánh (ở làng: nói chuyện), K né, L đặc biệt, I kỹ năng, Q đổi vũ khí, E uống bình máu, M xem bản đồ, Esc tạm dừng hoặc đóng bảng.'],
+    ['Bàn phím', 'Mũi tên hoặc WASD để đi, J đánh (ở làng: nói chuyện), K né, L đặc biệt, I chưởng (giữ để tích lực), Q đổi vũ khí, E uống bình máu, M xem bản đồ, Esc tạm dừng hoặc đóng bảng.'],
     ['Ba sao', 'Sao 1: qua ải. Sao 2: không dùng bình máu. Sao 3: ra đòn kết liễu trùm bằng hệ khắc chế nó.'],
     G.lk ? ['Linh khí', '', G.lk.guide] : null, // trang vẽ hình về linh khí (dấu ấn hệ), js/linhkhi.js
     ['Dấu ấn', G.HINTS[0] + ' ' + G.HINTS[1]],
@@ -678,7 +690,7 @@
     return V.confirm ? 'Ấy ấy! Xoá là mất hết đấy, nghĩ kỹ chưa?' : 'Cốc cốc cốc! Làng nước nghe đây! Cần chỉnh gì cứ bảo anh.';
   }
 
-  const PANELS = { forge, gear, outfit, hero, skill, help, settings };
+  const PANELS = { forge, gear, outfit, hero, skill, chuong, help, settings };
   Object.assign(G.villageApi, { PANELS, pager, say, costText, frame, npcSide, viewWeapon, weaponView, doTabs });
   G.Village = {
     enter() {
@@ -693,7 +705,7 @@
       if (g.otab) V.otab = g.otab;
       if (g.oslot) V.oslot = g.oslot;
       if (g.who === 'xen') V.gtab = g.gtab || 'weapon';
-      if (g.who === 'do') V.tab = 'skill';
+      if (g.who === 'do') { V.tab = g.tab === 'chuong' ? 'chuong' : 'skill'; V.dtab = V.tab; }
       if (g.sel != null) V.sel = g.sel;
       if (g.page != null) V.page = g.page;
       if (g.stage) { V.diff = 0; V.sel = g.stage; }
@@ -715,6 +727,8 @@
         if (G.hanhTrang) G.hanhTrang.hubButton(); // nút Hành trang (túi vải) góc trên bên phải, js/hanh_trang.js
         const S = VS.state;
         if (!Object.keys(G.save.stars).length && S.hintT <= 0 && !S.near && !S.path && S.msgT <= 0) T.toastFit(240, 244, 'Tới bến đò bên phải, gặp Chú Lái Đò để vào ải', { size: 7.5 });
+        // mẹo lần đầu có điểm chưởng: tới Cụ Đồ, thẻ Cây chưởng (tắt khi đã mở thẻ đó)
+        else if (G.chuong && !G.save.tut.chTip && Object.keys(G.save.stars).length && S.hintT <= 0 && !S.near && S.msgT <= 0 && G.chuong.pts(G.save.heroes[G.save.hero], G.save.hero).left > 0) T.toastFit(240, 244, 'Có điểm chưởng! Gặp Cụ Đồ ở gốc đa, thẻ Cây chưởng để học', { size: 7.5 });
         return;
       }
       VS.drawTop();

@@ -85,6 +85,11 @@
     if (pts(hs) > 0) {
       for (const b of G.SKEYS) if (hs.sk[b] < 5) out.push({ kind: 'skill', key: 'skill', br: b, title: 'Còn ' + pts(hs) + ' điểm kỹ năng chưa học (nhánh ' + G.SKILLS[b].name + ')', cost: {}, apply: (s) => { s.heroes[s.hero].sk[b]++; }, go: { who: 'do' } });
     }
+    // cây chưởng (js/chuong.js): điểm chưởng chưa học
+    if (G.chuong) {
+      const cp = G.chuong.pts(hs, sv.hero);
+      if (cp.left > 0) out.push({ kind: 'chuong', key: 'chuong', title: 'Còn ' + cp.left + ' điểm chưởng chưa học (' + G.CHUONG.trees[hs.ch.cay].name + ')', cost: {}, apply: (s) => { const h = s.heroes[s.hero]; G.chuong.autoLearn(h, s.hero); }, go: { who: 'do', tab: 'chuong' } });
+    }
     // vũ khí đang mang: mài, nâng bậc, lên Vàng, nâng lò
     const cap = G.FORGE_CAP[sv.forge];
     let needForge = false;
@@ -212,6 +217,8 @@
       const all = U.rate(sv, U.list(sv).filter((q) => !(o.skip && o.skip.includes(q.kind))));
       // Điểm kỹ năng luôn học hết (nút như hồi máu mỗi phòng, lăn né hồi nhanh không làm tăng con số Sức mạnh nhưng giúp sống sót):
       // nhánh tăng sức mạnh nhiều nhất trước, bằng nhau thì nhánh đang ít điểm nhất (Thủ trước).
+      const chq = all.find((q) => q.kind === 'chuong'); // điểm chưởng không tốn gì: học hết trước
+      if (chq) { U.doIt(sv, chq); done.push(chq.title); continue; }
       const sk = all.filter((q) => q.kind === 'skill');
       if (sk.length) {
         const hs = sv.heroes[sv.hero], ord = ['def', 'atk', 'elem'];
@@ -231,7 +238,7 @@
   // Nên chơi lại ải nào để cày: chỗ kiếm phần thiếu của việc đáng làm nhất còn thiếu đồ (như gợi ý ở bảng thua). null: ải mới nhất đã qua.
   U.grindTarget = function (sv) {
     sv = sv || G.save;
-    const list = U.rate(sv, U.list(sv).filter((q) => q.kind !== 'carry' && q.kind !== 'skill')).filter((q) => !q.ok && q.gain > 0 && q.where);
+    const list = U.rate(sv, U.list(sv).filter((q) => q.kind !== 'carry' && q.kind !== 'skill' && q.kind !== 'chuong')).filter((q) => !q.ok && q.gain > 0 && q.where);
     if (!list.length) return null;
     list.sort((a, b) => b.gain / (25 + b.val * 0.15 + b.missVal) - a.gain / (25 + a.val * 0.15 + a.missVal));
     return list[0].where;
@@ -244,21 +251,21 @@
     if (!sv || !sv.heroes) return null;
     const rec = G.stageRec(r, i, diff);
     let list = [];
-    try { list = U.rate(sv, U.list(sv)).filter((q) => q.gain > 0 || q.kind === 'skill'); } catch (e) { list = []; }
+    try { list = U.rate(sv, U.list(sv)).filter((q) => q.gain > 0 || q.kind === 'skill' || q.kind === 'chuong'); } catch (e) { list = []; }
     // Đường nào gần làm được mà tăng nhiều thì xếp trước; làm ngay được thì ưu tiên hẳn.
     // điểm kỹ năng chưa học luôn nhắc trước; việc cần mảnh của trùm chưa hạ (chưa cày được) xếp sau cùng
-    const score = (q) => q.kind === 'skill' ? 1e9 + q.gain : (q.gain / (25 + q.val * 0.15 + q.missVal)) * (q.ok ? 4 : 1) * (q.miss && !q.where ? 0.05 : 1);
+    const score = (q) => q.kind === 'skill' ? 1e9 + q.gain : q.kind === 'chuong' ? 1e8 + q.gain : (q.gain / (25 + q.val * 0.15 + q.missVal)) * (q.ok ? 4 : 1) * (q.miss && !q.where ? 0.05 : 1);
     list.sort((a, b) => score(b) - score(a));
     const tips = [], seen = {};
     for (const q of list) {
-      const grp = { skill: 'skill', carry: 'carry', wear: 'wear', buy: 'new', craft: 'new' }[q.kind] || q.key;
+      const grp = { skill: 'skill', chuong: 'chuong', carry: 'carry', wear: 'wear', buy: 'new', craft: 'new' }[q.kind] || q.key;
       if (seen[grp]) continue;
       seen[grp] = true;
       let sub;
       if (q.kind === 'level') { const g = q.go.stage; sub = 'còn thiếu ' + q.need.xp + ' kinh nghiệm' + (g ? ' — chơi lại ' + stName(g[0], g[1]) : ''); }
       else if (q.kind === 'evolve') sub = 'còn thiếu ' + q.need.lk + ' linh khí ' + G.EL[q.need.el].name + ' — kết liễu quái đang dính ' + G.EL[q.need.el].name;
       else if (q.miss) sub = U.missText(sv, q.miss);
-      else sub = q.kind === 'skill' ? 'học ngay ở Cụ Đồ' : q.kind === 'carry' ? 'đổi ngay ở Bà Hàng Xén' : q.kind === 'wear' ? 'mặc ngay ở Cô Thợ May' : 'đủ đồ rồi — tới ' + WHO_NAME[q.go.who] + ' làm ngay';
+      else sub = q.kind === 'skill' ? 'học ngay ở Cụ Đồ' : q.kind === 'chuong' ? 'học ngay ở Cụ Đồ, thẻ Cây chưởng' : q.kind === 'carry' ? 'đổi ngay ở Bà Hàng Xén' : q.kind === 'wear' ? 'mặc ngay ở Cô Thợ May' : 'đủ đồ rồi — tới ' + WHO_NAME[q.go.who] + ' làm ngay';
       tips.push({ text: q.title, sub, gain: Math.round(q.gain), ok: q.ok, go: q.go, kind: q.kind });
       if (tips.length >= (n || 3)) break;
     }

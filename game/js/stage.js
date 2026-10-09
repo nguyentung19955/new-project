@@ -567,7 +567,7 @@
       mx: (k.ArrowRight || k.KeyD ? 1 : 0) - (k.ArrowLeft || k.KeyA ? 1 : 0),
       my: (k.ArrowDown || k.KeyS ? 1 : 0) - (k.ArrowUp || k.KeyW ? 1 : 0),
       atk: !!(k.KeyJ || k.KeyZ || k.Space), atkP: !!(kp.KeyJ || kp.KeyZ || kp.Space),
-      dodgeP: !!(kp.KeyK || kp.KeyX || kp.ShiftLeft), specialP: !!(kp.KeyL || kp.KeyC), skillP: !!(kp.KeyI || kp.KeyV),
+      dodgeP: !!(kp.KeyK || kp.KeyX || kp.ShiftLeft), specialP: !!(kp.KeyL || kp.KeyC), skillP: !!(kp.KeyI || kp.KeyV), skill: !!(k.KeyI || k.KeyV),
       swapP: !!(kp.KeyQ || kp.Tab), potionP: !!(kp.KeyE || kp.KeyH), pauseP: !!(kp.Escape || kp.KeyP), mapP: !!kp.KeyM,
     };
     const mm = G.minimap.rect(S);
@@ -593,6 +593,7 @@
     }
     for (const p of G.pointers.values()) {
       if (p.role === 'atk') inp.atk = true;
+      if (p.role === 'skill') inp.skill = true; // giữ nút Chưởng (Tích lực của Hỏa chưởng)
       if (p.role === 'joy') {
         let dx = (p.x - p.sx) / 24, dy = (p.y - p.sy) / 24;
         const l = Math.hypot(dx, dy);
@@ -882,9 +883,12 @@
         cd: P.specCd / 0.8, cdSec: P.specCd, label: showLab ? G.WTYPES[cw2.type].special : null, labelAt: 'top',
       });
       bt = btnPos('skill');
-      BA.draw(c, 'skill', bt[0], bt[1], bt[2] + 1, {
-        hero: P.key, cost: 40, disabled: P.mana < 40, pressed: held('skill'),
-        cd: P.skillCd / 5, cdSec: P.skillCd, label: showLab ? G.HEROES[P.key].skill : null, labelAt: 'top',
+      // nút Chưởng (thay nút kỹ năng riêng): hình theo cây chưởng đang dùng, vòng tích lực khi giữ (Hỏa chưởng có Tích lực)
+      const chs = P.ch, chc = chs ? G.chuong.cost(P) : 30, chg2 = G.chuong ? G.chuong.chargeOf(P) : 0;
+      BA.draw(c, chs ? 'chuong' : 'skill', bt[0], bt[1], bt[2] + 1, {
+        hero: P.key, el: chs ? chs.el : null, cost: chc, disabled: P.mana < chc, pressed: held('skill') || !!P.chHold,
+        cd: P.skillCd / ((chs ? chs.cd : 5) * (P.cdMul || 1)), cdSec: P.skillCd, label: showLab ? 'Chưởng' : null, labelAt: 'top',
+        charge: chg2 > 0 ? chg2 : undefined, chargeSteps: 1,
       });
       bt = btnPos('dodge');
       BA.draw(c, 'dodge', bt[0], bt[1], bt[2] + 1, {
