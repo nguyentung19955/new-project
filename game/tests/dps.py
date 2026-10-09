@@ -4,7 +4,9 @@ Từ đợt ghép 2 game chỉ còn phòng vuông, nên bài này đo trong phò
   python3 tests/dps.py [giây mỗi lượt] [số hạt giống] [nho | trum] [mot] [khonghe]
     nho (mặc định): phòng thường, sàn 208x196      trum: phòng trùm, sàn 300x198 (không có trùm)
     mot: chỉ một quái (máu dày) thay cho cụm năm quái     khonghe: chỉ đo vũ khí chưa có hệ (nhanh hơn)
-    quaimoi: đánh quái mới thật (js/mobs.js: giáp che trước, lặn, cử động xuất hiện...) thay cho bia tập kiểu cũ; chỉ để xem, không dùng để chấm
+    quaimoi: đánh quái mới thật (js/mobs.js: giáp che trước, lặn, cử động xuất hiện...) thay cho bia tập kiểu cũ.
+      Cân bằng phải cày: cụm quái mới có máu x2,5 (như quái các ải sau khi cân bằng), để số đo không bị giới hạn bởi thời gian quái
+      diễn cử động xuất hiện (trước đây quái chết nhanh hơn tốc độ mọc nên mọi vũ khí như nhau, cung chỉ thấp hơn kiếm khoảng 11%).
   Mặc định đo trên bia tập kiểu cũ (cỡ và cách đánh của quái trước đợt quái mới), để số đo vũ khí không đổi theo cơ chế quái.
 Trước khi đo, in bảng số liệu của bốn loại: tầm với, thời gian một đòn, sát thương mỗi đòn, sát thương mỗi giây trên giấy.
 Nguyên tắc cân bằng (sửa góp ý 3): càng chậm hoặc càng phải áp sát thì mỗi đòn càng mạnh.
@@ -48,7 +50,7 @@ JS = r"""
       const alive = W.ents.filter((e) => !e.dead).length;
       if (alive < (one ? 1 : 5)) {
         const side = G.rnd() < 0.5 ? W.x0 + 8 : W.x1 - 8;
-        const e = G.spawnEnemy(one ? 'rusher' : roles[ri++ % roles.length], side + G.rr(-4, 4), G.rr(W.y0 + 6, W.y1 - 6), Object.assign(one ? { hpMult: 8 } : {}, real ? {} : { noArt: true }));
+        const e = G.spawnEnemy(one ? 'rusher' : roles[ri++ % roles.length], side + G.rr(-4, 4), G.rr(W.y0 + 6, W.y1 - 6), Object.assign(one ? { hpMult: 8 } : real ? { hpMult: 2.5 } : {}, real ? {} : { noArt: true }));
         if (!real && e.role === 'swarm') { e.maxhp *= 0.34 / G.ROLES.swarm.hp; e.hp = e.maxhp; e.r = 5; } // bia bầy nhỏ kiểu cũ: một con nhỏ, máu mỏng
         e.inside = true; kills++;
       }
