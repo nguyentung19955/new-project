@@ -144,7 +144,9 @@
     },
   };
   G.SKEYS = ['atk', 'def', 'elem'];
-  G.MAX_LEVEL = 30;
+  // CÀY NÂNG CẤP: trần cấp hero 30 -> 40 (cấp 31-40 cho thêm máu, sát thương, 3 điểm kỹ năng), để người chơi đã chạm trần ở cuối
+  // vùng ba vẫn còn đường cày lên mạnh hơn thay vì phải trông vào may rủi.
+  G.MAX_LEVEL = 40;
   // Cân bằng phải cày: lên cấp chậm hơn trước (40 + 25 x cấp) để cấp hero còn tăng tới cuối vùng ba.
   G.xpNeed = (lvl) => 50 + 50 * lvl;
   // Mỗi cấp hero: sát thương +1,5% và máu +3,5% (trước là 1% và 3%), để cày lên cấp thấy rõ là mạnh lên.
@@ -230,9 +232,6 @@
     const v = G.STAGE_REC[r * 5 + i] || 100;
     return diff ? Math.round((v * Math.sqrt(G.DIFF2[r][0] * G.DIFF2[r][1])) / 5) * 5 : v;
   };
-  // QUYẾT TÂM: thua liền ở một ải thì lần sau vào lại chính ải đó bé mạnh thêm mỗi lần G.GRIT.step (sát thương và máu), tối đa
-  // G.GRIT.max lần; qua ải thì hết. Để người chơi đã cày tới trần (cấp 30, mài +10) không bị kẹt mãi ở một trùm vì xui.
-  G.GRIT = { step: 0.04, max: 5 };
   // Thưởng khi cày: sức mạnh vượt quá 130% khuyên dùng thì kinh nghiệm và vàng giảm dần, thấp nhất còn 40%.
   G.grindMult = function (power, rec) {
     const q = rec > 0 ? power / rec : 1;
@@ -290,12 +289,20 @@
     { id: 'haste', name: 'Quái nhanh hơn 15% đến hết ải' },
   ];
 
-  // Chi phí mài từ cấp n lên n+1
+  // Chi phí mài từ cấp n lên n+1 (mat: số nguyên liệu vùng, vùng nào xem G.sharpenFull)
   G.sharpenCost = function (n) {
-    return { ore: 2 + n * 2, gold: 50 * (n + 1), mat: n >= 5 ? 3 : 0 };
+    return { ore: 2 + n * 2, gold: 50 * (n + 1), mat: n >= 10 ? 5 : n >= 5 ? 3 : 0 };
   };
-  G.FORGE_CAP = [0, 3, 6, 10];
-  G.FORGE_UP = [null, { gold: 200, mat: [6, 0, 0] }, { gold: 600, mat: [0, 6, 0] }];
+  // CÀY NÂNG CẤP: mài tối đa +10 -> +15. Lò cấp 4 (cần đá lửa của Lâu đài cổ) mài được tới +15.
+  G.MAX_SHARPEN = 15;
+  G.FORGE_CAP = [0, 3, 6, 10, 15];
+  G.FORGE_UP = [null, { gold: 200, mat: [6, 0, 0] }, { gold: 600, mat: [0, 6, 0] }, { gold: 1500, ore: 20, mat: [0, 0, 10] }];
+  // Chi phí mài đầy đủ (dạng trả được): +5..+6 tốn vảy cá, +7..+15 tốn đá lửa.
+  G.sharpenFull = function (n) {
+    const c = G.sharpenCost(n), cost = { ore: c.ore, gold: c.gold, mat: [0, 0, 0] };
+    if (c.mat) cost.mat[n < 7 ? 1 : 2] = c.mat;
+    return cost;
+  };
   // Nâng bậc vũ khí (giữ nguyên dấu ấn và tiến hóa): chi phí để lên Lam (1) và Tím (2).
   // Nấc cuối lên Vàng cần mảnh trùm, thứ chỉ trùm vùng rơi: xem G.goldCost.
   G.TIER_UP = [null, { gold: 150, ore: 4, mat: [6, 0, 0] }, { gold: 450, stones: 1, mat: [0, 8, 0] }, null];

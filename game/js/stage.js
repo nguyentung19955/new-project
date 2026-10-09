@@ -91,12 +91,6 @@
       power: G.power(), rec: G.stageRec(r, i, diff), // sức mạnh lúc vào ải và sức mạnh khuyên dùng (thanh trên, thưởng khi cày)
     };
     if (S.tut) S.marksMult = 2;
-    // Quyết tâm: thua liền ở ải này bao nhiêu lần thì bé mạnh thêm bấy nhiêu bậc (G.GRIT)
-    S.grit = (!diff && G.save.grit && G.save.grit[r + '-' + i]) || 0;
-    if (S.grit) {
-      const k = 1 + G.GRIT.step * S.grit;
-      S.P.dmgMult *= k; S.P.maxhp = Math.round(S.P.maxhp * k); S.P.hp = S.P.maxhp;
-    }
     enterRoom(map.start, null);
     S.fade = 0.35;
     G.setScene(G.StageScene);
@@ -473,7 +467,6 @@
       }
       if (big && S.loot.finalEl) sv.scars[reg.boss] = S.loot.finalEl;
       if (S.tut) sv.tut.done = true;
-      if (sv.grit && !S.diff) delete sv.grit[key];
       R.up = G.addXp(sv.hero, xp);
       G.sfx('win');
     } else {
@@ -483,11 +476,8 @@
       sv.gold += gold;
       R.lines.push('+' + xp + ' kinh nghiệm', '+' + gold + ' vàng');
       R.up = G.addXp(sv.hero, xp);
-      if (!S.diff && !S.quit) { // chỉ thua thật mới thêm quyết tâm, bỏ ải thì không
-        const gk = S.r + '-' + S.i, g = Math.min(G.GRIT.max, ((sv.grit = sv.grit || {})[gk] || 0) + 1);
-        sv.grit[gk] = g;
-        R.lines.push('Quyết tâm: lần sau vào lại ải này bé mạnh thêm ' + Math.round(G.GRIT.step * g * 100) + '%');
-      }
+      // Thua không làm bé mạnh thêm (chủ dự án: sức mạnh chỉ đến từ cày nâng cấp). Thay vào đó bảng thua gợi ý nên cày gì (G.upgradeTips).
+      if (!S.quit && G.upgradeTips) R.tips = G.upgradeTips(S.r, S.i, S.diff);
     }
     if (S.marks > 0 && !G.lk) R.lines.push('Vũ khí nhận ' + Math.round(S.marks) + ' dấu ấn'); // có js/linhkhi.js thì ghi từng vũ khí, từng hệ ở khối riêng
     if (R.up) R.lines.push(G.HEROES[sv.hero].name + ' lên cấp ' + sv.heroes[sv.hero].lvl + '!');
@@ -747,7 +737,7 @@
     // tên vùng và loại phòng ở lề trái; bản đồ nhỏ ở lề phải (thay hàng chấm phòng trước đây)
     ui.text(G.REGIONS[S.r].name + ' ' + (S.i + 1) + ' · ' + ROOM_NAME[W.type], 6, 69, { size: 7, color: '#d9cdb8' });
     // sức mạnh của bé lúc vào ải so với sức mạnh khuyên dùng của ải (xanh đủ, vàng sát nút, đỏ thiếu)
-    ui.text('Sức mạnh ' + S.power + ' / khuyên ' + S.rec + (S.grit ? ' · quyết tâm +' + Math.round(G.GRIT.step * S.grit * 100) + '%' : ''), 6, 79, { size: 7, bold: true, color: G.powerCol(S.power, S.rec) });
+    ui.text('Sức mạnh ' + S.power + ' / khuyên ' + S.rec, 6, 79, { size: 7, bold: true, color: G.powerCol(S.power, S.rec) });
     G.minimap.draw(S);
     // vũ khí: hình và bậc ở trên, mốc tiến hóa ở dưới, thanh dấu ấn sát đáy
     P.weapons.forEach((w, i) => {
@@ -1020,6 +1010,7 @@
       }
       y += 2;
     }
+    if (!R.win && !S.quit && R.tips) { panelLose(R); return; }
     // Phần thưởng: chữ ở cột trái; vũ khí nhận được thành thẻ viền màu bậc ở cột phải (khung thẻ của chủ đề trống đồng).
     const TH = G.theme, texts = R.lines.filter((l) => !l.w), weps = R.lines.filter((l) => l.w);
     // Khối linh khí (js/linhkhi.js) nằm sát trên hàng nút: mỗi vũ khí đang mang một dòng. Phần thưởng xếp phía trên khối này.
@@ -1061,5 +1052,37 @@
     }
     if (ui.btn(86, 216, 140, 26, 'Về làng')) { S = null; G.setScene(G.Village); return; }
     if (ui.btn(254, 216, 140, 26, R.win ? 'Chơi lại ải này' : 'Thử lại')) G.startStage(S.r, S.i, S.diff);
+  }
+  // BẢNG THUA: không có "thua nhiều thì mạnh thêm". Bảng chỉ rõ nên cày gì: Sức mạnh hiện tại so với khuyên dùng, rồi 2-3 gợi ý
+  // nâng cấp cụ thể (G.upgradeTips, js/upgrade.js). Bấm một gợi ý thì về làng và mở thẳng bảng của người làng làm việc đó.
+  function panelLose(R) {
+    const T2 = R.tips, W0 = 86;
+    // phần nhận được: gộp một dòng
+    const texts = R.lines.filter((l) => !l.w), nW = R.lines.length - texts.length;
+    const got = texts.join(' · ') + (nW ? ' · nhặt ' + nW + ' vũ khí (ở Bà Hàng Xén)' : '');
+    const gl = ui.wrap(got, 308, 7, true);
+    ui.text(gl[0] + (gl.length > 1 ? '…' : ''), W0, 52, { size: 7, color: '#e8dfcc' });
+    // sức mạnh hiện tại / khuyên dùng
+    const pw = T2.power, rec = T2.rec, col = G.powerCol(pw, rec);
+    ui.text('Sức mạnh ' + pw + ' / khuyên dùng ' + rec + (pw < rec ? ' · còn thiếu ' + (rec - pw) : ' · đủ sức, thử lại né kỹ hơn nhé'), W0, 65, { size: 8, bold: true, color: col });
+    ui.bar(W0, 69, 308, 3, G.clamp(pw / rec, 0, 1), col);
+    ui.text(T2.tips.length ? 'Nên cày gì (bấm để tới chỗ người làng):' : 'Đã nâng cấp hết mức hiện có: chơi lại ải cũ để lên cấp.', W0, 82, { size: 7, bold: true, color: '#f6dc92' });
+    T2.tips.forEach((t, k) => {
+      const y = 86 + k * 23, h = 21;
+      ui.rect(W0, y, 308, h, t.ok ? 'rgba(60,110,60,0.45)' : 'rgba(30,48,46,0.85)', t.ok ? '#8fd07a' : '#5f7a74');
+      const hit = G.click && G.inRect(G.click, W0, y, 308, h);
+      ui.text((k + 1) + '. ' + t.text, W0 + 5, y + 8.5, { size: 7.5, bold: true, color: '#fff0c4' });
+      ui.text('+' + t.gain + ' sức mạnh', W0 + 302, y + 8.5, { size: 7, bold: true, align: 'right', color: '#9be07a' });
+      const sl = ui.wrap(t.sub, 270, 6.5, true);
+      ui.text(sl[0] + (sl.length > 1 ? '…' : ''), W0 + 12, y + 17.5, { size: 6.5, color: t.ok ? '#c8f0b0' : '#d9cdb8' });
+      ui.text('▶', W0 + 302, y + 17.5, { size: 7, align: 'right', color: '#f6dc92' });
+      if (hit) { G.click = null; G.sfx('ui'); G.villageGo = t.go; S = null; G.setScene(G.Village); }
+    });
+    if (!S) return;
+    // khối linh khí của từng vũ khí (js/linhkhi.js) nằm dưới các gợi ý
+    const lkN = G.lk && S.P ? S.P.weapons.length : 0;
+    if (lkN) G.lk.resultBlock(S, 84, Math.max(86 + T2.tips.length * 23 + 2, 213 - (11 + lkN * 21)), 312);
+    if (ui.btn(86, 216, 140, 26, 'Về làng')) { S = null; G.setScene(G.Village); return; }
+    if (ui.btn(254, 216, 140, 26, 'Thử lại')) G.startStage(S.r, S.i, S.diff);
   }
 })();

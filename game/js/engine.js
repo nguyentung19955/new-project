@@ -223,7 +223,7 @@
       v: 1, gold: 0, ore: 0, stones: 0, mats: [0, 0, 0], shards: [0, 0, 0], forge: 1,
       heroes: {}, hero: 'smith', weapons: [], nextId: 1, carry: [null, null],
       owned: { helm: [], armor: [], charm: [] }, helm: null, armor: null, charm: null, outfit: G.outfit ? G.outfit.blank() : null,
-      stars: {}, stars2: {}, scars: {}, tut: {}, sound: true, wins: 0, bossGold: {}, grit: {},
+      stars: {}, stars2: {}, scars: {}, tut: {}, sound: true, wins: 0, bossGold: {},
     };
     for (const k of G.HKEYS) s.heroes[k] = { unlocked: k === 'smith', lvl: 1, xp: 0, sk: { atk: 0, def: 0, elem: 0 } };
     s.carry[0] = G.newWeapon(s, 'sword', 0, { family: 0 }).id; // Kiếm Rèn
@@ -254,9 +254,8 @@
       for (const k of ['stars', 'stars2', 'scars', 'tut']) s[k] = obj(s[k]);
       for (const k of ['stars', 'stars2']) for (const id in s[k]) s[k][id] = G.clamp(Math.floor(num(s[k][id], 1)), 1, 3);
       for (const id in s.scars) if (!G.ELS.includes(s.scars[id])) delete s.scars[id];
-      // Quyết tâm (cân bằng phải cày): số lần thua liền ở từng ải, 0..G.GRIT.max. Bản lưu cũ chưa có thì là {}.
-      s.grit = obj(s.grit);
-      for (const id in s.grit) { const g = Math.floor(num(s.grit[id], 0)); if (g > 0) s.grit[id] = Math.min(G.GRIT ? G.GRIT.max : 5, g); else delete s.grit[id]; }
+      // "Quyết tâm" (thua nhiều thì mạnh thêm) đã bỏ: bản lưu cũ còn trường grit thì xoá đi, phần còn lại đọc bình thường.
+      delete s.grit;
       // hero
       s.heroes = obj(s.heroes);
       for (const k of G.HKEYS) {
@@ -282,7 +281,7 @@
         const m = obj(w.marks);
         w.marks = { fire: Math.max(0, num(m.fire, 0)), poison: Math.max(0, num(m.poison, 0)), ice: Math.max(0, num(m.ice, 0)) };
         w.branch = G.ELS.includes(w.branch) ? w.branch : null;
-        w.sharpen = G.clamp(Math.floor(num(w.sharpen, 0)), 0, 10);
+        w.sharpen = G.clamp(Math.floor(num(w.sharpen, 0)), 0, G.MAX_SHARPEN || 15);
         // Tên nay lấy theo hình (G.weaponArt.name); chỉ giữ lại danh hiệu phía sau dấu phẩy của tên cũ.
         if (typeof w.title !== 'string') w.title = typeof w.name === 'string' && w.name.indexOf(', ') > 0 ? w.name.slice(w.name.indexOf(', ')) : '';
         w.name = null;

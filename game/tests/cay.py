@@ -20,78 +20,20 @@ BOT = {'react': 0.3, 'missProj': 0.33}
 AUTO = r"""
 () => {
   const sv = G.save, api = G.villageApi;
-  // điểm kỹ năng: Công 1, Thủ 1, rồi lần lượt
-  for (const k of G.HKEYS) {
-    const hs = sv.heroes[k];
-    let pts = Math.floor(hs.lvl / 3) - (hs.sk.atk + hs.sk.def + hs.sk.elem), i = 0;
-    while (pts > 0 && i < 40) { const b = G.SKEYS[(hs.sk.atk + hs.sk.def + hs.sk.elem) % 3]; if (hs.sk[b] < 5) { hs.sk[b]++; pts--; } i++; }
-  }
   // chọn vũ khí theo sức tiềm năng: bậc cao mà chưa mài vẫn đáng mang (mài lại được), như người chơi tính trước
-  const cap = G.FORGE_CAP[Math.min(3, sv.forge + 1)];
+  const cap = G.FORGE_CAP[Math.min(G.FORGE_CAP.length - 1, sv.forge + 1)];
   const pw = (w) => G.wRarMult(w) * G.STAGE_MULT[G.wStage(w)] * (1 + 0.08 * Math.max(w.sharpen, cap - 3));
   const melee = sv.weapons.filter((w) => w.type !== 'bow').sort((a, b) => pw(b) - pw(a))[0];
   const bow = sv.weapons.filter((w) => w.type === 'bow').sort((a, b) => pw(b) - pw(a))[0];
   if (melee) sv.carry[0] = melee.id;
   if (bow) sv.carry[1] = bow.id;
-  const up = G.FORGE_UP[sv.forge];
-  if (up && api.canPay(up)) { api.pay(up); sv.forge++; }
-  const carry = () => sv.carry.map(G.weaponById).filter(Boolean);
-  for (const w of carry()) {
-    while (w.tier < 2 && api.canPay(G.TIER_UP[w.tier + 1])) { api.pay(G.TIER_UP[w.tier + 1]); w.tier++; if (w.rarity != null) w.rarity = w.tier; }
-    if (w.tier === 2) for (let r = 2; r >= 0; r--) { const c = G.goldCost(r); if (api.canPay(c)) { api.pay(c); w.tier = 3; if (w.rarity != null) w.rarity = 3; w.gold = r; break; } }
-  }
-  for (let n = 0; n < 30; n++) {
-    const ws = carry().sort((a, b) => (a.type === 'bow') - (b.type === 'bow') || a.sharpen - b.sharpen);
-    let done = false;
-    for (const w of ws) {
-      if (w.sharpen >= G.FORGE_CAP[sv.forge]) continue;
-      const c = G.sharpenCost(w.sharpen), cost = { ore: c.ore, gold: c.gold, mat: [0, 0, 0] };
-      if (c.mat) cost.mat[w.sharpen < 7 ? 1 : 2] = c.mat;
-      if (api.canPay(cost)) { api.pay(cost); w.sharpen++; done = true; break; }
-    }
-    if (!done) break;
-  }
-  // Trang phục (js/outfit.js): mua món thường ở Bà Hàng Xén, may món ở Cô Thợ May, mặc món làm sức mạnh cao nhất ở từng ô,
-  // nâng bậc món đang mặc và mở cấp cánh khi đủ tiền (sau khi đã lo vũ khí), như người chơi bình thường.
+  // Nâng cấp như người chơi (js/upgrade.js): lặp "việc làm ngay được mà Sức mạnh tăng nhiều nhất trên mỗi đồng bỏ ra" — học kỹ năng,
+  // mài, nâng bậc, lên Vàng, nâng lò, mua, may, mặc, nâng bậc trang phục, mở cấp cánh. Vũ khí mang theo đã chọn ở trên.
+  const did = G.upg.auto(sv, { skip: ['carry'] });
   const O = G.outfit;
-  if (O && sv.outfit) {
-    for (const k of O.shopList()) if (!O.has(sv, k) && sv.gold >= 400) O.buy(sv, k);
-    for (const k of O.craftList()) if (!O.has(sv, k) && O.canPay(sv, O.craftCost(k))) O.craft(sv, k);
-    const wearBest = () => {
-      for (const slot of O.SLOTS) {
-        const cands = sv.outfit.items.filter((it) => O.ITEMS[it.k] && O.ITEMS[it.k].slot === slot);
-        if (!cands.length) continue;
-        let best = sv.outfit.wear[slot], bp = -1;
-        for (const it of cands) { O.wear(sv, it); const p = G.power() + it.r * 2 + (it.lv || 0); if (p > bp) { bp = p; best = it.id; } }
-        sv.outfit.wear[slot] = best;
-      }
-    };
-    wearBest();
-    for (let n = 0; n < 10; n++) {
-      let done = false;
-      for (const slot of O.SLOTS) {
-        const it = O.worn(sv, slot);
-        if (!it) continue;
-        if (O.ITEMS[it.k].slot === 'wing' && O.wingUp(sv, it)) done = true;
-        else if (it.r < 3 && O.upgrade(sv, it)) done = true;
-      }
-      if (!done) break;
-    }
-    wearBest();
-  } else for (const slot of ['armor', 'helm']) {
-    for (const id of Object.keys(G.GEAR[slot]).reverse()) {
-      const g = G.GEAR[slot][id];
-      if (!sv.owned[slot].includes(id) && api.canPay(g.cost)) { api.pay(g.cost); sv.owned[slot].push(id); }
-    }
-    const best = (id) => slot === 'armor' ? G.GEAR.armor[id].hp * (1 + 4 * G.GEAR.armor[id].dr) : G.GEAR.helm[id].pct * 100 + Object.keys(G.GEAR.helm).indexOf(id);
-    const own = sv.owned[slot].slice().sort((a, b) => best(b) - best(a));
-    if (own.length) sv[slot] = own[0];
-  }
-  const pref = ['c_leech', 'c_ember', 'c_spirit', 'c_mist', 'c_greed'];
-  sv.charm = pref.find((c) => sv.owned.charm.includes(c)) || null;
   const hs = sv.heroes[sv.hero];
   const look = O && sv.outfit ? O.SLOTS.map((k) => { const it = O.worn(sv, k); return it ? it.k + it.r : '-'; }).join(',') : sv.armor;
-  return { lvl: hs.lvl, power: G.power(), gold: sv.gold, ore: sv.ore, forge: sv.forge, armor: look,
+  return { did, lvl: hs.lvl, power: G.power(), gold: sv.gold, ore: sv.ore, forge: sv.forge, armor: look,
     carry: carry().map((w) => G.WTYPES[w.type].name + ' ' + G.RARITY[G.wRar(w)].name + ' +' + w.sharpen) };
 }
 """
@@ -181,21 +123,68 @@ LUAT = r"""
   const w = G.weaponById(G.save.carry[0]); w.sharpen = 3; const p2 = G.power(); w.tier = 1; if (w.rarity != null) w.rarity = 1; const p3 = G.power();
   G.save.owned.armor.push('a_r1'); G.save.armor = 'a_r1'; const p4 = G.power();
   ok(p1 > p0 && p2 > p1 && p3 > p2 && p4 > p3, 'sức mạnh tăng theo cấp, mài, bậc, áo: ' + [p0, p1, p2, p3, p4].join(' < '));
-  // quyết tâm: thua thật thì tăng, bỏ ải thì không, thắng thì hết
+  // KHÔNG còn "Quyết tâm": thua bao nhiêu lần cũng không làm bé mạnh thêm, không có chữ, không có trường lưu
   G.resetSave(); G.save.sound = false; G.save.tut.done = true;
-  G.startStage(0, 1, 0); G.getRun().P.hp = 0; G.getRun().W.over = 'dead'; G.sim(120);
-  ok(G.save.grit['0-1'] === 1, 'thua thật ở ải 1-2 thì quyết tâm 1: ' + JSON.stringify(G.save.grit));
+  const P0 = G.buildPlayer(), pw0 = G.power();
+  for (let k = 0; k < 6; k++) { G.startStage(0, 1, 0); G.getRun().P.hp = 0; G.getRun().W.over = 'dead'; G.sim(120); }
+  const R6 = G.getRun().result;
+  ok(G.save.grit === undefined && G.GRIT === undefined, 'thua 6 lần liền ở ải 1-2: không còn trường quyết tâm trong bản lưu và trong dữ liệu');
   G.startStage(0, 1, 0); const S = G.getRun();
-  ok(S.grit === 1 && S.P.maxhp === Math.round(G.buildPlayer().maxhp * (1 + G.GRIT.step)), 'vào lại ải đó thì máu và sát thương tăng ' + G.GRIT.step * 100 + '%');
+  ok(S.P.maxhp === P0.maxhp && S.P.dmgMult === P0.dmgMult && S.power === pw0 && !('grit' in S), 'vào lại ải sau 6 lần thua: máu ' + S.P.maxhp + ', sát thương x' + S.P.dmgMult + ', sức mạnh ' + S.power + ' như lúc đầu (không tăng)');
+  ok(!R6.lines.some((l) => typeof l === 'string' && /quyết tâm|mạnh thêm/i.test(l)), 'bảng thua không còn dòng "quyết tâm"');
+  ok(S.base.hp === G.stageStats(0, 1, 0).hp && S.base.dmg === G.stageStats(0, 1, 0).dmg, 'thua nhiều cũng không làm quái yếu đi');
   S.quit = true; G.finishStage(false);
-  ok(G.save.grit['0-1'] === 1, 'bỏ ải thì không thêm quyết tâm');
-  G.startStage(0, 1, 0); G.getRun().W.boss = G.getRun().W.boss || { weak: [], dead: true }; G.finishStage(true);
-  ok(!G.save.grit['0-1'], 'qua ải thì hết quyết tâm');
-  // bản lưu cũ không có quyết tâm vẫn đọc được
-  const old = JSON.parse(JSON.stringify(G.save)); delete old.grit; old.grit = undefined;
+  // bản lưu cũ còn trường grit vẫn đọc được, trường đó bị xoá
+  const old = JSON.parse(JSON.stringify(G.save)); old.grit = { '0-1': 3, '2-4': 99, x: 'a' }; old.heroes.smith.lvl = 12;
   const fx = G.fixSave(JSON.parse(JSON.stringify(old)));
-  ok(fx.grit && typeof fx.grit === 'object' && fx.heroes.smith.lvl === old.heroes.smith.lvl, 'bản lưu cũ (chưa có quyết tâm) vẫn đọc được');
-  ok(G.fixSave(Object.assign(JSON.parse(JSON.stringify(old)), { grit: { '0-1': 99, x: 'a' } })).grit['0-1'] === G.GRIT.max, 'quyết tâm trong bản lưu bị sửa tay vẫn bị chặn ở mức tối đa');
+  ok(fx.grit === undefined && fx.heroes.smith.lvl === 12, 'bản lưu cũ có "quyết tâm" vẫn đọc được, trường đó bị bỏ');
+  // TRẦN MỚI: cấp 40, mài +15 (lò cấp 4)
+  ok(G.MAX_LEVEL === 40 && G.MAX_SHARPEN === 15 && G.FORGE_CAP[G.FORGE_CAP.length - 1] === 15 && G.FORGE_UP[3] && G.FORGE_UP[3].mat[2] > 0, 'trần mới: cấp 40, mài +15 với lò cấp 4 (cần đá lửa)');
+  const big = JSON.parse(JSON.stringify(G.save)); big.heroes.smith.lvl = 40; big.forge = 4; big.weapons[0].sharpen = 15;
+  const fb = G.fixSave(big);
+  ok(fb.heroes.smith.lvl === 40 && fb.forge === 4 && fb.weapons[0].sharpen === 15, 'bản lưu cấp 40, lò 4, mài +15 đọc lại đúng');
+  // chỉ cày nâng cấp (không đồ của Hồ Tinh) mà vẫn vượt xa khuyên dùng của Hồ Tinh
+  G.resetSave(); G.save.tut.done = true;
+  const sv = G.save, w0 = G.weaponById(sv.carry[0]);
+  sv.heroes.smith.lvl = 40; sv.heroes.smith.sk = { atk: 5, def: 5, elem: 3 }; sv.forge = 4;
+  w0.rarity = 3; w0.gold = 1; w0.sharpen = 15; w0.branch = 'fire'; w0.marks.fire = 300;
+  const O = G.outfit; for (const k of ['mu_vay_ca', 'ao_vay', 'khan_bang', 'bua_oc']) O.wear(sv, O.add(sv, k, 3)); O.wear(sv, O.add(sv, 'canh_bang', 3, { lv: 3 }));
+  const top = G.power(), need = G.STAGE_REC[14];
+  ok(top >= need * 1.4, 'trần trước Hồ Tinh (cấp 40, Vàng Ngư Tinh +15, Thức tỉnh, bộ Hang Biển Vàng, cánh lớn): sức mạnh ' + top + ' >= 1,4 x khuyên dùng Hồ Tinh ' + need);
+  sv.heroes.smith.lvl = 30; sv.forge = 3; w0.sharpen = 10; const old30 = G.power();
+  ok(top > old30 * 1.15, 'trần mới cao hơn trần cũ (cấp 30, mài +10) rõ rệt: ' + old30 + ' -> ' + top);
+  // GỢI Ý Ở BẢNG THUA
+  G.resetSave(); G.save.tut.done = true;
+  const s2 = G.save; s2.heroes.smith.lvl = 7; s2.gold = 120; s2.ore = 3; s2.mats = [2, 0, 0]; s2.stars = { '0-0': 3, '0-1': 2, '0-2': 2, '0-3': 1 };
+  G.startStage(0, 4, 0); G.getRun().P.hp = 0; G.getRun().W.over = 'dead'; G.sim(120);
+  const T = G.getRun().result.tips;
+  ok(T && T.tips.length >= 2 && T.tips.length <= 3, 'bảng thua có 2-3 gợi ý: ' + (T ? T.tips.map((t) => t.text + ' (' + t.sub + ')').join(' | ') : 'không có'));
+  ok(T && T.power === G.power() && T.rec === G.stageRec(0, 4, 0), 'bảng thua so Sức mạnh hiện tại ' + (T && T.power) + ' với khuyên dùng ' + (T && T.rec));
+  ok(T && T.tips[0].kind === 'skill' && /2 điểm kỹ năng/.test(T.tips[0].text), 'còn điểm kỹ năng thì gợi ý học trước tiên');
+  ok(T && T.tips.every((t) => t.gain > 0 && t.go && (t.go.who || t.go.weapon != null)), 'gợi ý nào cũng tăng sức mạnh và có chỗ để đi tới');
+  // gợi ý đúng số còn thiếu: mài khi thiếu vàng
+  G.resetSave(); G.save.tut.done = true;
+  const s3 = G.save, w3 = G.weaponById(s3.carry[0]); s3.forge = 2; w3.sharpen = 5; s3.gold = 220; s3.ore = 50; s3.mats = [0, 9, 0]; s3.stars = { '0-0': 1, '0-1': 1, '1-0': 1, '1-1': 1 };
+  const L3 = G.upg.rate(s3, G.upg.list(s3)), sh = L3.find((q) => q.kind === 'sharpen' && q.key === 'sh' + w3.id);
+  const tx = sh && G.upg.missText(s3, sh.miss);
+  ok(sh && sh.title === 'Mài ' + G.wName(w3).replace(/ \+\d+$/, '') + ' lên +6' && !sh.ok && tx.indexOf('thiếu 80 vàng') === 0, 'gợi ý mài lên +6 ghi đúng "thiếu 80 vàng" (giá 300, có 220): ' + (sh && sh.title) + ' — ' + tx);
+  const ti = L3.find((q) => q.kind === 'tier' && q.key === 'ti' + w3.id);
+  s3.gold = 1000; s3.mats = [6, 2, 0]; s3.ore = 10; w3.rarity = 1;
+  const L4 = G.upg.rate(s3, G.upg.list(s3)), ti2 = L4.find((q) => q.kind === 'tier' && q.key === 'ti' + w3.id), tx2 = ti2 && G.upg.missText(s3, ti2.miss);
+  ok(ti2 && /lên Tím/.test(ti2.title) && /thiếu 6 vảy cá.* — chơi lại Hang biển 2/.test(tx2) && /1 đá tôi/.test(tx2), 'gợi ý nâng lên Tím: thiếu vảy cá thì chỉ chơi lại ải Hang biển đã qua: ' + tx2);
+  // bấm gợi ý thì về làng mở đúng người
+  G.villageGo = { who: 'ren', ftab: 'tier', sel: w3.id }; G.setScene(G.Village);
+  const V = G.villageApi.V;
+  ok(V.who === 'ren' && V.tab === 'forge' && V.ftab === 'tier' && V.sel === w3.id, 'bấm gợi ý nâng bậc: về làng mở lò rèn, thẻ Nâng bậc, chọn sẵn vũ khí');
+  G.villageGo = { who: 'lai', stage: [1, 1] }; G.setScene(G.Village);
+  ok(V.who === 'lai' && V.tab === 'map' && V.sel && V.sel[0] === 1 && V.sel[1] === 1, 'bấm gợi ý lên cấp: mở tranh bản đồ, chọn sẵn ải nên chơi lại');
+  G.villageGo = { who: 'do' }; G.setScene(G.Village);
+  ok(V.who === 'do' && V.tab === 'skill', 'bấm gợi ý kỹ năng: mở cây kỹ năng của Cụ Đồ');
+  G.villageApi.goHub();
+  // bot nâng cấp tự động chỉ tiêu tài nguyên đang có, không bao giờ âm
+  G.resetSave(); const s5 = G.save; s5.heroes.smith.lvl = 9; s5.gold = 2000; s5.ore = 40; s5.mats = [30, 10, 0]; s5.stones = 2;
+  const pb = G.power(), did = G.upg.auto(s5), pa = G.power();
+  ok(pa > pb && s5.gold >= 0 && s5.ore >= 0 && s5.mats.every((x) => x >= 0) && s5.stones >= 0, 'nâng cấp tự động (bot): sức mạnh ' + pb + ' -> ' + pa + ' sau ' + did.length + ' việc, không tiêu quá số có');
   G.resetSave();
   return out;
 }

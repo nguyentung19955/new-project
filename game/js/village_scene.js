@@ -463,7 +463,7 @@
         if (up && pay(up)) n.ren = true;
         for (const id of sv.carry) {
           const w = G.weaponById(id); if (!w) continue;
-          if (w.sharpen < Math.min(10, G.FORGE_CAP[sv.forge])) { const q = G.sharpenCost(w.sharpen), cost = { ore: q.ore, gold: q.gold, mat: [0, 0, 0] }; if (q.mat) cost.mat[w.sharpen < 7 ? 1 : 2] = q.mat; if (pay(cost)) n.ren = true; }
+          if (w.sharpen < Math.min(G.MAX_SHARPEN, G.FORGE_CAP[sv.forge]) && pay(G.sharpenFull(w.sharpen))) n.ren = true;
           if (G.wRar(w) < 2 && pay(G.TIER_UP[G.wRar(w) + 1])) n.ren = true;
         }
       }

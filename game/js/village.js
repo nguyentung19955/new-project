@@ -166,8 +166,7 @@
       ui.font(7); ui.text('hệ ' + G.EL[R.el].name, 256 + G.ux.measureText(l2).width, 230, { size: 7, color: G.EL[R.el].col });
       // Sức mạnh khuyên dùng so với sức mạnh hiện tại của bé (G.power): xanh đủ, vàng sát nút, đỏ thiếu
       const need = G.stageRec(r, i, V.diff), col = G.powerCol(pw, need);
-      const gr = !V.diff && G.save.grit ? G.save.grit[r + '-' + i] || 0 : 0;
-      ui.text((gr ? 'Khuyên dùng ' : 'Sức mạnh khuyên dùng ') + need + ' · bé ' + pw + (gr ? ' · quyết tâm +' + Math.round(G.GRIT.step * gr * 100) + '%' : ''), 256, 240, { size: gr ? 7 : 7.5, bold: true, color: col });
+      ui.text('Sức mạnh khuyên dùng ' + need + ' · bé ' + pw, 256, 240, { size: 7.5, bold: true, color: col });
       ui.para('Thưởng: ' + b.xp + ' kinh nghiệm, ~' + b.gold + ' vàng, ' + (5 + i) + ' ' + R.mat.toLowerCase() + (i === 4 ? ', ' + (V.diff ? 4 : 3) + ' mảnh ' + R.bossName + ', vũ khí quý' : ''), 256, 250.5, 144, { size: 6.5, color: SOFT });
       if (T.btn(404, 217, 64, 38, 'Lên đò', { size: 11, primary: true })) G.startStage(r, i, V.diff);
     } else ui.text('Chạm một ải trên tranh để xem.', 256, 238, { size: 8, color: SOFT });
@@ -281,12 +280,10 @@
       if (!w) ui.text('Chạm một vũ khí ở trên để chọn.', CX + 8, DET_Y + 30, { size: 8.5, color: SOFT });
       else {
         const cap = G.FORGE_CAP[sv.forge];
-        const c = G.sharpenCost(w.sharpen);
-        const cost = { ore: c.ore, gold: c.gold, mat: [0, 0, 0] };
-        if (c.mat) cost.mat[w.sharpen < 7 ? 1 : 2] = c.mat;
+        const cost = G.sharpenFull(w.sharpen);
         ui.text(G.wName(w), CX + 8, DET_Y + 14, { size: 8.5, bold: true, color: R4[G.wRar(w)].col });
         ui.text('Sát thương mỗi đòn ' + G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1), CX + 8, DET_Y + 26, { size: 7.5 });
-        if (w.sharpen >= 10) { ui.text('Đã mài tối đa.', CX + 8, DET_Y + 40, { size: 8, color: GOOD }); line = 'Lưỡi này bén hết cỡ rồi cháu ạ.'; }
+        if (w.sharpen >= G.MAX_SHARPEN) { ui.text('Đã mài tối đa.', CX + 8, DET_Y + 40, { size: 8, color: GOOD }); line = 'Lưỡi này bén hết cỡ rồi cháu ạ.'; }
         else if (w.sharpen >= cap) { ui.para('Lò cấp ' + sv.forge + ' chỉ mài tới +' + cap + '. Hãy nâng lò.', CX + 8, DET_Y + 38, 290, { size: 7.5, color: WARN }); line = 'Lò còn yếu, phải nâng lò mới mài tiếp được.'; }
         else {
           ui.para('Lên +' + (w.sharpen + 1) + ' tốn: ' + costText(cost), CX + 8, DET_Y + 38, 198, { size: 7.5, color: canPay(cost) ? TXT : WARN });
@@ -557,7 +554,23 @@
   const PANELS = { forge, gear, outfit, hero, skill, help, settings };
   Object.assign(G.villageApi, { PANELS, pager, say, costText, frame, npcSide, viewWeapon });
   G.Village = {
-    enter() { goHub(); VS.enter({}); G.persist(); },
+    enter() {
+      goHub(); VS.enter({}); G.persist();
+      // Bấm một gợi ý ở bảng thua (G.upgradeTips): về làng là mở luôn bảng của người làng tương ứng, chọn sẵn món cần nâng.
+      const g = G.villageGo; G.villageGo = null;
+      if (!g) return;
+      if (g.weapon != null && G.weaponById(g.weapon)) { viewWeapon(g.weapon, 'hub'); return; }
+      if (!g.who || !TAB_OF[g.who]) return;
+      open(g.who);
+      if (g.ftab) V.ftab = g.ftab;
+      if (g.otab) V.otab = g.otab;
+      if (g.oslot) V.oslot = g.oslot;
+      if (g.who === 'xen') V.gtab = g.gtab || 'weapon';
+      if (g.who === 'do') V.tab = 'skill';
+      if (g.sel != null) V.sel = g.sel;
+      if (g.page != null) V.page = g.page;
+      if (g.stage) { V.diff = 0; V.sel = g.stage; }
+    },
     hide() { /* không có gì phải dừng */ },
     update(dt) {
       if (V.msgT > 0) V.msgT -= dt;

@@ -7,49 +7,14 @@ from playwright.sync_api import sync_playwright
 AUTO = r"""
 () => {
   const sv = G.save, api = G.villageApi;
-  // điểm kỹ năng: chia đều
-  for (const k of G.HKEYS) {
-    const hs = sv.heroes[k];
-    let pts = Math.floor(hs.lvl / 3) - (hs.sk.atk + hs.sk.def + hs.sk.elem), i = 0;
-    while (pts > 0 && i < 30) { const b = G.SKEYS[(hs.sk.atk + hs.sk.def + hs.sk.elem) % 3]; if (hs.sk[b] < 5) { hs.sk[b]++; pts--; } i++; }
-  }
   // mang vũ khí tốt nhất: một cận chiến, một cung
-  const score = (w) => w.tier * 4 + w.sharpen + G.wStage(w) * 6;
+  const score = (w) => G.wRar(w) * 4 + w.sharpen + G.wStage(w) * 6;
   const melee = sv.weapons.filter((w) => w.type !== 'bow').sort((a, b) => score(b) - score(a))[0];
   const bow = sv.weapons.filter((w) => w.type === 'bow').sort((a, b) => score(b) - score(a))[0];
   if (melee) sv.carry[0] = melee.id;
   if (bow) sv.carry[1] = bow.id;
-  // nâng lò, mài
-  const up = G.FORGE_UP[sv.forge];
-  if (up && api.canPay(up)) { api.pay(up); sv.forge++; }
-  for (const w of sv.carry.map(G.weaponById).filter(Boolean)) {
-    while (w.tier < 2 && api.canPay(G.TIER_UP[w.tier + 1])) { api.pay(G.TIER_UP[w.tier + 1]); w.tier++; }
-  }
-  for (let n = 0; n < 20; n++) {
-    const ws = sv.carry.map(G.weaponById).filter(Boolean).sort((a, b) => a.sharpen - b.sharpen);
-    let done = false;
-    for (const w of ws) {
-      if (w.sharpen >= G.FORGE_CAP[sv.forge]) continue;
-      const c = G.sharpenCost(w.sharpen), cost = { ore: c.ore, gold: c.gold, mat: [0, 0, 0] };
-      if (c.mat) cost.mat[w.sharpen < 7 ? 1 : 2] = c.mat;
-      if (api.canPay(cost)) { api.pay(cost); w.sharpen++; done = true; break; }
-    }
-    if (!done) break;
-  }
-  // rèn đồ: ưu tiên đồ boss, rồi đồ thường của vùng cao nhất
-  for (const slot of ['armor', 'helm']) {
-    const ids = Object.keys(G.GEAR[slot]).reverse();
-    for (const id of ids) {
-      const g = G.GEAR[slot][id];
-      if (!sv.owned[slot].includes(id) && api.canPay(g.cost)) { api.pay(g.cost); sv.owned[slot].push(id); }
-    }
-    const best = (id) => slot === 'armor' ? G.GEAR.armor[id].hp : G.GEAR.helm[id].pct * 100 + Object.keys(G.GEAR.helm).indexOf(id);
-    const own = sv.owned[slot].slice().sort((a, b) => best(b) - best(a));
-    if (own.length) sv[slot] = own[0];
-  }
-  // bùa: ưu tiên bùa có lợi khi đánh, bùa tham (trừ máu) xếp cuối
-  const pref = ['c_leech', 'c_ember', 'c_spirit', 'c_mist', 'c_greed'];
-  sv.charm = pref.find((c) => sv.owned.charm.includes(c)) || null;
+  // nâng cấp như người chơi: việc rẻ mà hiệu quả trước (js/upgrade.js: kỹ năng, mài, nâng bậc, lò, trang phục, cánh)
+  G.upg.auto(sv, { skip: ['carry'] });
   const hs = sv.heroes[sv.hero];
   return { lvl: hs.lvl, gold: sv.gold, ore: sv.ore, forge: sv.forge, carry: sv.carry.map(G.weaponById).map((w) => G.wName(w) + '[' + Object.values(w.marks).map(Math.round).join('/') + ']'), armor: sv.armor, helm: sv.helm, stones: sv.stones };
 }
