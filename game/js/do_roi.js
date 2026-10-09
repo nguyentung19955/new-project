@@ -29,7 +29,10 @@
     const k = khoa(o); let cv = cache.get(k); if (cv) return cv;
     const S = 22, src = canvas(S, S), c = src.getContext('2d'); c.imageSmoothingEnabled = false;
     try {
-      if (o.kind === 'weapon' && o.w && G.weaponArt && G.weaponArt.icon) {
+      // Vật phẩm có hình tự vẽ (Xưởng Sprite, js/sprite_custom.js) thì dùng hình đó.
+      const tv = G.spriteCustom && G.spriteCustom.vatPham ? G.spriteCustom.vatPham(o.kind === 'linhkhi' ? 'linhkhi-' + o.el : o.kind) : null;
+      if (tv) G.spriteCustom.veVatPham(c, tv, S / 2, S / 2, 18);
+      else if (o.kind === 'weapon' && o.w && G.weaponArt && G.weaponArt.icon) {
         const wo = G.weaponArt.fromWeapon(o.w, { mood: 'calm', t: 0 });
         if (o.w.coat && !wo.branch) { wo.branch = o.w.coat; wo.stage = 1; }
         G.weaponArt.icon(c, wo, S / 2, S / 2, 18);
@@ -88,6 +91,7 @@
     return 0;
   }
   D.bac = bac;
+  D.xoaNho = () => cache.clear(); // xoá hình đã nhớ (khi vừa có hình tự vẽ)
   function mauBac(o) {
     if (/^shard/.test(o.kind)) return MAU_TRUM[+o.kind.slice(-1)] || '#c88cff';
     const r = bac(o); return (G.RARITY[r] || G.RARITY[0]).col;
