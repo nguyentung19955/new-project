@@ -39,8 +39,15 @@ Trên điện thoại (nên cầm ngang):
 - Mỗi vũ khí có lối đánh riêng với nút **Đánh**:
   - Kiếm: bấm liên tiếp (hoặc giữ) ra chuỗi 3 nhát, nhát thứ ba mạnh và rộng hơn. Đánh ngay sau khi Né thì lướt tới chém.
   - Cung: bấm để bắn nhanh; tên tự ngắm vào quái gần nhất theo mọi hướng (trên, dưới, chéo, sau lưng, kể cả quái đứng sát người), đón đầu nhẹ quái đang chạy, và xuyên thêm một con (con sau nhận khoảng một phần ba sát thương). Giữ để giương cung (có vạch lấy đà trên đầu), cung xoay theo quái gần nhất; thả ra bắn tên mạnh xuyên qua nhiều quái. Mưa tên (Đặc biệt) rơi vào quái hoặc cụm quái gần nhất; bẫy của Thợ Săn khi cầm cung ném thẳng vào chỗ quái gần nhất.
-  - Giáo: bấm liên tiếp ra ba nhát đâm rồi quét một vòng. Giữ rồi thả để lao tới một đoạn ngắn xuyên qua quái.
+  - Giáo: bấm liên tiếp ra ba nhát đâm rồi quét một vòng. Giữ rồi thả để xốc tới một đoạn ngắn xuyên qua quái. Quét vòng quét ba phần tư vòng quanh người, chỉ chừa khe ngay sau lưng.
   - Búa: bấm để nện, làm quái khựng. Giữ để lấy đà 2 nấc, thả ra nện đất tạo sóng chấn động; đủ nấc 2 thì làm choáng.
+- Mọi đòn đánh theo **tám hướng**: tự quay về quái gần nhất trong tầm của đòn (lên, xuống, chéo); không có quái thì theo hướng đang kéo cần, rồi hướng vừa đi. Em bé chỉ lật trái phải, còn vũ khí, vệt chém và vùng trúng xoay đúng góc. Lướt và lao đi theo hướng đó, chạm tường thì dừng.
+- Mỗi loại vũ khí một chiêu **Đặc biệt** riêng (tốn mana, cũng tám hướng):
+  - Kiếm, **Trảm Nguyệt**: vung một nhát phóng vệt chém trăng khuyết bay thẳng chừng 2/3 phòng, xuyên mọi quái; em bé lùi nửa bước.
+  - Giáo, **Phi Thương**: ném giáo bay thẳng xuyên một hàng quái, con cuối (hoặc con sát tường) bị ghim, choáng ngắn; giáo cắm 0,6 giây rồi tự bay về tay, trúng lần nữa trên đường về. Giáo chưa về thì nút Đánh của cây giáo đó là cú đấm tay yếu (đổi sang vũ khí kia vẫn đánh bình thường).
+  - Búa, **Địa Chấn**: nện xuống, vòng chấn nhỏ quanh người, rồi vệt nứt chạy nhanh theo hướng nhắm chừng nửa phòng (có vết nứt báo trước rất ngắn), quái trên vệt bị hất tung và choáng.
+  - Cung, **Mưa Tên**: như cũ, rơi vào cụm quái gần nhất.
+  - Đặc trưng hệ (vệt cháy, vũng độc, gai băng) để lại dọc đường chiêu bay.
 - Hệ của vũ khí mạnh lên theo cấp tiến hóa:
   - Trắng: chỉ có chỉ số.
   - Mầm (30 dấu ấn): chỉ số tăng, mỗi đòn có 20% gây cháy, độc hoặc chậm, vệt chém nhuốm màu hệ. Chưa có luật hệ.

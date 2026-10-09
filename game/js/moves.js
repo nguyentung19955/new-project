@@ -21,13 +21,13 @@
     // Tầm tính bằng frac lần bề ngang chỗ đứng được của phòng, kẹp trong [min, max] (phòng thường 190, phòng trùm 282).
     // Đo khoảng cách trên sàn: chiều dọc trên màn hình ngắn hơn thật (G.ZK), nên mọi vùng trúng tính trên sàn rồi mới vẽ.
     special: {
-      // Trảm Nguyệt: phóng vệt chém hình trăng lưỡi liềm bay thẳng, xuyên mọi quái trên đường; bé lùi nửa bước.
-      sword: { name: 'Trảm Nguyệt', frac: 0.66, min: 110, max: 170, speed: 330, half: 13, mult: 2.2, back: 9 },
+      // Trảm Nguyệt: phóng vệt chém hình trăng lưỡi liềm bay thẳng, xuyên mọi quái trên đường (mỗi con sau nhận fall lần con trước); bé lùi nửa bước.
+      sword: { name: 'Trảm Nguyệt', frac: 0.66, min: 110, max: 170, speed: 330, half: 13, mult: 2.0, fall: 0.7, back: 9 },
       // Phi Thương: phóng cây giáo bay thẳng xuyên một hàng quái; con cuối cùng bị ghim (choáng), giáo cắm lại stick giây
       // rồi tự bay về tay, trúng lần nữa trên đường về. Giáo chưa về thì nút Đánh của cây giáo này là cú đấm tay (punch).
-      spear: { name: 'Phi Thương', frac: 0.62, min: 110, max: 165, speed: 380, half: 9, mult: 1.45, pin: 1.0, stick: 0.6, backV: 420, backMult: 0.8, catchR: 12 },
+      spear: { name: 'Phi Thương', frac: 0.62, min: 110, max: 165, speed: 380, half: 9, mult: 1.6, pin: 1.0, stick: 0.6, backV: 420, backMult: 0.9, catchR: 12 },
       // Địa Chấn: nện xuống, vòng chấn nhỏ quanh người, rồi vệt nứt chạy theo hướng nhắm (báo trước warn giây), quái trên vệt bị hất tung choáng.
-      hammer: { name: 'Địa Chấn', frac: 0.5, min: 90, max: 140, warn: 0.12, speed: 700, half: 15, mult: 1.9, stun: 0.9, ringR: 28, ringMult: 0.9, ringStun: 0.3, lift: 0.45 },
+      hammer: { name: 'Địa Chấn', frac: 0.5, min: 90, max: 140, warn: 0.12, speed: 700, half: 15, mult: 2.1, stun: 0.9, ringR: 28, ringMult: 1.0, ringStun: 0.3, lift: 0.45 },
     },
     punch: { name: 'Đấm', dur: 0.3, mult: 0.45, reach: 18, depth: 14 }, // nút Đánh của giáo khi giáo đang bay (Phi Thương)
     sword: {
@@ -47,7 +47,7 @@
       // nock, nockX: tên sinh ra cách chân bé bấy nhiêu điểm ảnh theo hướng bắn (chỗ dây cung); z0: độ cao lúc rời dây cung,
       // hạ dần về zFly. hitX, hitY: vùng trúng rộng hơn thân quái bấy nhiêu điểm ảnh theo ngang và theo chiều sâu.
       lead: 0.85, nock: 8, nockX: 3, z0: 16, zFly: 11, hitX: 5, hitY: 8,
-      rain: { mult: 0.28 }, // mưa tên (đòn Đặc biệt): mỗi đợt mưa (0,15 giây một đợt, chừng 6 đợt) gây bấy nhiêu lần lên mỗi quái trong vùng
+      rain: { mult: 0.34 }, // mưa tên (đòn Đặc biệt): mỗi đợt mưa (0,15 giây một đợt, chừng 6 đợt) gây bấy nhiêu lần lên mỗi quái trong vùng
       // Sửa góp ý 3: cung bắn nhanh hơn chút (0,4 -> 0,38 giây khi đứng yên), mỗi phát mạnh hơn (G.WTYPES.bow.dmg 9 -> 11) nhưng
       // đánh cụm yếu đi: tên thường xuyên qua thì con sau 0,75 -> 0,35 lần; tên mạnh xuyên tối đa 2 quái (trước 4), mỗi con sau
       // nhận 0,6 lần con trước; mưa tên mỗi đợt 0,5 -> 0,28.
@@ -714,9 +714,12 @@
       G.sfx('swing', 1.5);
     } else if (w.type === 'spear') {
       // Phi Thương: giáo rời tay bay thẳng
-      const q = along(P.x, P.y, ux, uy, 8);
+      const q = along(P.x, P.y, ux, uy, 8), R = spanOf(S0), E = along(q[0], q[1], ux, uy, wallLen(q[0], q[1], ux, uy, R));
+      // con cuối của hàng quái trên đường bay: giáo dừng lại ghim nó
+      let tgt = null, ta = -1;
+      for (const e of G.targets()) { const a = onStrip(e, q[0], q[1], E[0], E[1], ux, uy, S0.half); if (a > ta) { ta = a; tgt = e; } }
       P.spearOut = w.id;
-      list.push({ kind: 'spear', phase: 'out', x: q[0], y: q[1], x0: q[0], y0: q[1], ux, uy, left: spanOf(S0), v: S0.speed, half: S0.half, mult: S0.mult, w, seen: [], back: [], he: h, last: null, t: 0, wid: w.id });
+      list.push({ target: tgt, kind: 'spear', phase: 'out', x: q[0], y: q[1], x0: q[0], y0: q[1], ux, uy, left: spanOf(S0), v: S0.speed, half: S0.half, mult: S0.mult, w, seen: [], back: [], he: h, last: null, t: 0, wid: w.id });
       G.sfx('swing', 1.6);
     } else {
       // Địa Chấn: vòng chấn nhỏ quanh người ngay lúc nện, rồi vệt nứt chạy theo hướng nhắm
@@ -738,7 +741,7 @@
     if (z && z.rain) (W.mvTimers || (W.mvTimers = [])).push({ t: 0.8, fn: () => finish(P, w, { x: z.x, y: z.y, dir: P.face, power: 0.8, ranged: true, round: true }) });
   };
   // Một chiêu đang bay (vệt trăng, cây giáo) quét qua đoạn (ax,ay)-(q.x,q.y): đánh mỗi quái một lần
-  function sweepSeg(q, ax, ay, seen, mult, o) {
+  function sweepSeg(q, ax, ay, seen, mult, o, noHit) {
     const out = [];
     for (const e of G.targets()) {
       if (seen.includes(e)) continue;
@@ -746,9 +749,10 @@
       if (a > -1e8) { seen.push(e); out.push([a, e]); }
     }
     out.sort((a, b) => a[0] - b[0]);
-    for (const [, e] of out) G.cb.playerHit(e, mult, Object.assign({ w: q.w, dir: q.ux < 0 ? -1 : 1 }, o || {}));
+    if (!noHit) for (const [, e] of out) G.cb.playerHit(e, mult, Object.assign({ w: q.w, dir: q.ux < 0 ? -1 : 1 }, o || {}));
     return out.map((a) => a[1]);
   }
+  // Đòn Đặc biệt không hồi mana khi trúng (như đòn lao cũ), để không tung liên tiếp được.
   function stepSpecials(W, dt) {
     const list = W.mvSp;
     if (!list || !list.length) return;
@@ -758,8 +762,8 @@
       if (q.kind === 'cres') {
         const ax = q.x, ay = q.y, d = Math.min(q.left, q.v * dt), lim = wallLen(ax, ay, q.ux, q.uy, d);
         q.x += q.ux * lim; q.y += q.uy * lim * k; q.left -= d; q.walked += lim;
-        const got = sweepSeg(q, ax, ay, q.seen, q.mult, { heavy: true });
-        if (got.length) gain(P, q.w, got.length);
+        const got = [];
+        for (const e of sweepSeg(q, ax, ay, q.seen, 0, null, true)) { G.cb.playerHit(e, q.mult, { w: q.w, heavy: true, dir: q.ux < 0 ? -1 : 1 }); q.mult *= C.special.sword.fall; got.push(e); }
         propsBox({ x: ax, y: ay }, q.ux, q.uy, lim, q.half * 2);
         if (lim < d - 0.01) q.left = 0; // chạm tường
         if (q.left <= 0) {
@@ -773,9 +777,11 @@
           const ax = q.x, ay = q.y, d = Math.min(q.left, q.v * dt), lim = wallLen(ax, ay, q.ux, q.uy, d);
           q.x += q.ux * lim; q.y += q.uy * lim * k; q.left -= d;
           const got = sweepSeg(q, ax, ay, q.seen, q.mult, { heavy: true });
-          if (got.length) { q.last = got[got.length - 1]; gain(P, q.w, got.length); }
+          if (got.length) q.last = got[got.length - 1];
           propsBox({ x: ax, y: ay }, q.ux, q.uy, lim, q.half * 2);
-          if (lim < d - 0.01 || q.left <= 0) {
+          const hitT = q.target && got.includes(q.target);
+          if (hitT) { q.x = q.target.x; q.y = q.target.y; }
+          if (hitT || lim < d - 0.01 || q.left <= 0) {
             // dừng: ghim con cuối cùng trúng (nếu còn đứng gần), không có thì con đứng sát chỗ giáo cắm (thường là sát tường)
             let pin = q.last && !q.last.dead && Math.hypot(q.last.x - q.x, (q.last.y - q.y) / k) < 30 ? q.last : null;
             if (!pin) for (const e of G.targets()) if (Math.hypot(e.x - q.x, (e.y - q.y) / k) < e.r + 10) { pin = e; break; }
@@ -806,8 +812,7 @@
           q.x += bx * m; q.y += by * m * k; q.bx = bx; q.by = by;
           const tmp = { x: q.x, y: q.y, ux: bx, uy: by, half: q.half, w: q.w };
           const got = sweepSeg(tmp, ax, ay, q.back, S0.backMult);
-          if (got.length) gain(P, q.w, got.length);
-        }
+          }
       } else if (q.kind === 'crack') {
         // vết nứt chạy trước (báo trước), rồi đất trồi lên đuổi theo: quái trên vệt bị hất tung, choáng
         if (q.t < q.warn) continue;
@@ -817,7 +822,6 @@
         const seg = { x: B[0], y: B[1], ux: q.ux, uy: q.uy, half: q.half, w: q.w };
         const got = sweepSeg(seg, A[0], A[1], q.seen, q.mult, { stun: q.stun, heavy: true });
         for (const e of got) if (!e.dead && !e.isBoss) e.mvLift = C.special.hammer.lift;
-        if (got.length) gain(P, q.w, got.length);
         propsBox({ x: A[0], y: A[1] }, q.ux, q.uy, a1 - a0, q.half * 2);
         if (q.at >= q.len) {
           q.done = true;

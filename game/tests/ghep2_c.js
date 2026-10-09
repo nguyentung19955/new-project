@@ -7,29 +7,30 @@
   const inRoom = () => P.x >= W.x0 - 0.01 && P.x <= W.x1 + 0.01 && P.y >= W.y0 - 0.01 && P.y <= W.y1 + 0.01;
   const waitDash = () => { let n = 0; while (P.dashT > 0 && n++ < 120) step(1); return n; };
 
-  // ---------- đường lao của kiếm và giáo (đòn Đặc biệt) ----------
-  for (const [type, small, big] of [['sword', 84, 92], ['spear', 101, 112]]) {
-    go({ melee: type }); P.x = W.x0 + 4; let x0 = P.x;
-    step(1, { specialP: true }); waitDash();
-    ok('C: ' + (type === 'sword' ? 'kiếm' : 'giáo') + ' lao trong phòng thường dài khoảng ' + small + ' điểm ảnh (0,' + (type === 'sword' ? 44 : 53) + ' bề ngang phòng)', near(P.x - x0, small, 4), (P.x - x0).toFixed(1));
-    go({ melee: type, big: true }); P.x = W.x0 + 4; x0 = P.x;
-    step(1, { specialP: true }); waitDash();
-    ok('C: ' + (type === 'sword' ? 'kiếm' : 'giáo') + ' lao trong phòng trùm dài khoảng ' + big + ' điểm ảnh', near(P.x - x0, big, 4), (P.x - x0).toFixed(1));
-    // lao vào tường: dừng ở tường, điều khiển lại được ngay
+  // ---------- đòn Đặc biệt của kiếm và giáo (tám hướng và chiêu riêng): vệt Trảm Nguyệt, giáo Phi Thương bay theo bề ngang phòng ----------
+  // Trước đây là cú lao người ngang; nay chiêu bay đi còn em bé đứng lại. Tầm = frac lần bề ngang phòng, kẹp [min, max]; chạm tường thì dừng.
+  const spLen = (q) => (q.kind === 'cres' ? q.walked : Math.hypot(q.x - q.x0, (q.y - q.y0) / (G.ZK || 0.85)));
+  const flyOut = () => { let q = null, n = 0; step(1, { specialP: true }); q = (W.mvSp || [])[0]; let L = 0; while (q && n++ < 120) { L = Math.max(L, spLen(q)); if (q.done || (q.phase && q.phase !== 'out')) break; step(1); } return [q, L]; };
+  for (const [type, frac, mn, mx] of [['sword', 0.66, 110, 170], ['spear', 0.62, 110, 165]]) {
+    const nm = type === 'sword' ? 'Trảm Nguyệt' : 'Phi Thương';
+    go({ melee: type }); P.x = W.x0 + 4; P.face = 1; P.ldx = 1; P.ldy = 0; let px0 = P.x;
+    let [q, L] = flyOut(); const small = G.clamp((W.x1 - W.x0) * frac, mn, mx);
+    ok('C: ' + nm + ' trong phòng thường bay khoảng ' + Math.round(small) + ' điểm ảnh (' + frac + ' bề ngang phòng), em bé không lao theo', !!q && near(L, small, 6) && Math.abs(P.x - px0) < 12, L.toFixed(1));
+    go({ melee: type, big: true }); P.x = W.x0 + 4; P.face = 1; P.ldx = 1; P.ldy = 0;
+    [q, L] = flyOut(); const big = G.clamp((W.x1 - W.x0) * frac, mn, mx);
+    ok('C: ' + nm + ' trong phòng trùm bay khoảng ' + Math.round(big) + ' điểm ảnh', !!q && near(L, big, 6), L.toFixed(1));
+    // bay vào tường: dừng ở tường, không xuyên
     for (const side of [1, -1]) {
-      go({ melee: type }); P.x = side > 0 ? W.x1 - 20 : W.x0 + 20; P.face = side; x0 = P.x;
-      step(1, { specialP: true });
-      let frames = 0; while (P.dashT > 0 && frames++ < 60) step(1);
-      const atWall = side > 0 ? near(P.x, W.x1, 0.01) : near(P.x, W.x0, 0.01);
-      ok('C: ' + type + ' lao vào tường ' + (side > 0 ? 'phải' : 'trái') + ' thì dừng đúng mép sàn, không xuyên tường', atWall && inRoom(), P.x.toFixed(1));
-      ok('C: ' + type + ' chạm tường thì đòn lao kết thúc ngay (không chạy tại chỗ)', frames <= 5, frames + ' khung');
+      go({ melee: type }); P.x = side > 0 ? W.x1 - 20 : W.x0 + 20; P.face = side; P.ldx = side; P.ldy = 0;
+      [q] = flyOut();
+      ok('C: ' + type + ' chiêu bay vào tường ' + (side > 0 ? 'phải' : 'trái') + ' thì dừng ở mép sàn, không xuyên tường', !!q && q.x <= W.x1 + 0.5 && q.x >= W.x0 - 0.5 && inRoom(), q && q.x.toFixed(1));
       const xw = P.x; sec(0.25, { mx: -side });
-      ok('C: ' + type + ' vừa lao vào tường xong là đi lại được ngay', Math.abs(P.x - xw) > 8, Math.abs(P.x - xw).toFixed(1));
+      ok('C: ' + type + ' tung chiêu sát tường xong là đi lại được ngay', Math.abs(P.x - xw) > 8, Math.abs(P.x - xw).toFixed(1));
     }
-    // lao qua quái đứng sát tường vẫn trúng
+    // quái đứng sát tường vẫn trúng
     go({ melee: type }); P.x = W.x1 - 30; P.face = 1; const e = dummy(W.x1 - 8, P.y);
-    step(1, { specialP: true }); waitDash();
-    ok('C: ' + type + ' lao vào quái đứng sát tường vẫn trúng', lost(e) > 0);
+    flyOut(); sec(0.2);
+    ok('C: ' + type + ' chiêu bay trúng quái đứng sát tường', lost(e) > 0);
   }
   // lao ngay tại cửa (cửa trái, phải, đang mở): không tự sang phòng, không kẹt, đẩy cần vào cửa thì mới sang
   {
@@ -39,9 +40,9 @@
     const side = W.doors.find((d) => d.open && (d.dir === 'left' || d.dir === 'right'));
     if (side) {
       const v = G.mapgen.DIRS[side.dir], q = G.roomArt.doorPos(W.geo, side.dir), id0 = S.idx;
-      P.x = q.x - v[0] * 40; P.y = q.y; P.face = v[0]; P.mana = P.maxmana;
+      P.x = q.x - v[0] * 40; P.y = q.y; P.face = v[0]; P.mana = P.maxmana; P.ldx = v[0]; P.ldy = 0;
       sec(0.5);
-      step(1, { specialP: true }); waitDash(); sec(0.3);
+      sec(0.75, { atk: true }); step(1); waitDash(); sec(0.3); // giáo giữ rồi thả: xốc tới (đòn Đặc biệt nay là ném giáo)
       ok('C: lao thẳng vào cửa đang mở thì dừng ở ngưỡng cửa, không tự sang phòng kề', S.idx === id0 && !S.trans && near(P.x, q.x, 0.5), S.idx + ' x=' + P.x.toFixed(1));
       const xw = P.x; sec(0.25, { mx: -v[0] });
       ok('C: lao vào cửa xong không bị kẹt, lùi ra được', Math.abs(P.x - xw) > 8);

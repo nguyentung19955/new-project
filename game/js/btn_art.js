@@ -234,11 +234,12 @@
     ]);
   };
   // Đòn đặc biệt của từng vũ khí
-  ICON.s_sword = function (el) { // Chém lướt: vệt chém hình trăng khuyết và ba vạch gió
+  ICON.s_sword = function (el) { // Trảm Nguyệt: vệt trăng lưỡi liềm bay đi, hai bóng mờ phía sau
     const a = accent(el);
     return [
-      rect(-0.98, -0.56, -0.3, -0.42, a.m), rect(-0.84, -0.08, -0.12, 0.08, a.l), rect(-0.98, 0.42, -0.3, 0.56, a.m),
-      cres(0.02, 0, 0.94, -0.4, 0, 0.9, a.m), cres(0.02, 0, 0.94, -0.26, 0, 0.92, '#ffffff'),
+      cres(-0.62, 0, 0.62, -0.28, 0, 0.6, a.d || a.m), cres(-0.3, 0, 0.78, -0.3, 0, 0.75, a.m),
+      cres(0.14, 0, 0.96, -0.4, 0, 0.92, a.m), cres(0.14, 0, 0.96, -0.24, 0, 0.94, '#ffffff'),
+      rect(-1, -0.08, -0.7, 0.06, a.l),
     ];
   };
   ICON.s_bow = function (el) { // Mưa tên: ba mũi tên cắm xuống
@@ -251,24 +252,24 @@
     ];
     return xf(18, 0.96, 0, 0, [].concat(arrow(-0.58, -0.62, 0.42), arrow(0.58, -0.4, 0.62), arrow(0, -0.9, 0.98)));
   };
-  ICON.s_spear = function (el) { // Lao tới: mũi giáo phóng ngang và vạch gió
+  ICON.s_spear = function (el) { // Phi Thương: cây giáo bay chéo lên, mũi tên cong quay về tay
     const a = accent(el), s = blade(el);
     return [
-      rect(-0.98, -0.6, -0.2, -0.46, a.m), rect(-0.98, 0.46, -0.2, 0.6, a.m), rect(-0.98, -0.07, -0.66, 0.07, a.l),
-      rect(-0.56, -0.1, 0.3, 0, HANDLE.l), rect(-0.56, 0, 0.3, 0.1, HANDLE.d),
-      poly([[1.02, 0], [0.3, -0.42], [0.12, 0]], s.l), poly([[1.02, 0], [0.3, 0.42], [0.12, 0]], s.m),
-    ];
+      arc(0.05, 0.25, 0.86, 0.12, 100, 250, a.m), poly([[-0.98, 0.18], [-0.66, 0.12], [-0.86, 0.46]], a.m),
+    ].concat(xf(-35, 1, 0.08, -0.06, [
+      rect(-0.9, -0.07, 0.36, 0, HANDLE.l), rect(-0.9, 0, 0.36, 0.07, HANDLE.d),
+      poly([[1.0, 0], [0.36, -0.3], [0.2, 0]], s.l), poly([[1.0, 0], [0.36, 0.3], [0.2, 0]], s.m),
+      rect(0.2, -0.11, 0.3, 0.11, GOLD.m),
+    ]));
   };
-  ICON.s_hammer = function (el) { // Nện đất: búa giáng xuống, đất nứt và sóng chấn động
+  ICON.s_hammer = function (el) { // Địa Chấn: búa nện xuống bên trái, vệt nứt đất chạy sang phải, đá trồi
     const a = accent(el), s = blade(el);
     return [
-      rect(-0.09, -1, 0, -0.5, HANDLE.l), rect(0, -1, 0.09, -0.5, HANDLE.d),
-      rect(-0.52, -0.56, 0.52, 0.12, s.m), rect(-0.52, -0.56, 0.52, -0.4, s.l), rect(-0.52, -0.04, 0.52, 0.12, s.d),
-      rect(-0.64, -0.62, -0.46, 0.18, GOLD.m), rect(0.46, -0.62, 0.64, 0.18, GOLD.m),
-      poly([[-0.58, 0.42], [-1, -0.08], [-0.8, 0.42]], a.l), poly([[0.58, 0.42], [1, -0.08], [0.8, 0.42]], a.l),
-      poly([[-0.34, 0.42], [-0.5, 0.2], [-0.46, 0.42]], a.m), poly([[0.34, 0.42], [0.5, 0.2], [0.46, 0.42]], a.m),
-      rect(-0.98, 0.42, 0.98, 0.58, '#e8dcc0'),
-      poly([[-0.24, 0.58], [0.04, 1], [0.26, 0.58]], a.m), poly([[-0.7, 0.58], [-0.56, 0.84], [-0.44, 0.58]], a.m), poly([[0.5, 0.58], [0.66, 0.8], [0.76, 0.58]], a.m),
+      rect(-0.62, -1, -0.54, -0.42, HANDLE.l), rect(-0.54, -1, -0.46, -0.42, HANDLE.d),
+      rect(-0.98, -0.5, -0.1, 0.06, s.m), rect(-0.98, -0.5, -0.1, -0.36, s.l), rect(-0.98, -0.06, -0.1, 0.06, s.d),
+      rect(-1, 0.14, 1, 0.26, '#e8dcc0'),
+      poly([[-0.2, 0.26], [0.1, 0.44], [0.36, 0.3], [0.62, 0.5], [1, 0.36], [1, 0.46], [0.62, 0.62], [0.36, 0.42], [0.1, 0.56], [-0.2, 0.38]], '#3a2e26'),
+      poly([[0.02, 0.14], [0.14, -0.3], [0.28, 0.14]], a.m), poly([[0.4, 0.14], [0.56, -0.5], [0.72, 0.14]], a.l), poly([[0.78, 0.14], [0.9, -0.2], [1, 0.14]], a.m),
     ];
   };
   // Kỹ năng của bốn hero
