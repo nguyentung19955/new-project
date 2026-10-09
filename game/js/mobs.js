@@ -170,7 +170,7 @@
   // ---------- đòn đánh theo kiểu của từng con (don.kieu trong js/monster_art.js) ----------
   // Trả về vùng báo trước, đã xoay theo góc a.
   function strikeZone(e, a, T, mult, o) {
-    const d = e.don, k = d.kieu || 'chem', tam = d.tam || 26, dmg = e.dmg * (mult || 1), base = Object.assign({ src: e, cancel: true, melee: true }, o || {});
+    const d = e.don, k = d.kieu || 'chem', tam = d.tam || 26, dmg = e.dmg * (mult || 1), base = Object.assign({ src: e, cancel: true, melee: true, quiet: true }, o || {}); // đòn thường (chém, húc, lao, đập): không vẽ vùng báo trước, chỉ có cử động lấy đà
     if (k === 'lao') return addZone('line', { x: e.x, y: e.y, ang: a, len: tam + 8, w: Math.max(14, (d.rong || 12) + 4) }, T, dmg, null, base);
     if (k === 'dap' || k === 'no') return addZone('circle', { x: e.x, y: e.y, r: tam }, T, dmg, null, base);
     if (k === 'phun') return addZone('cone', { x: e.x, y: e.y, ang: a, r: tam + 8, span: d.xoe || 1.2 }, T, dmg, null, base);
@@ -401,7 +401,7 @@
         const side = G.rnd() < 0.5 ? -P.face : (G.rnd() < 0.5 ? 1 : -1);
         const x = clamp(P.x + side * 34, w.x0 + 6, w.x1 - 6), y = clamp(P.y + G.rr(-16, 16), w.y0 + 3, w.y1 - 3);
         D.x = x; D.y = y; D.k = 'warn'; D.t = 0; D.T = 0.75;
-        D.zone = addZone('circle', { x, y, r: 20 }, 0.75, e.dmg, null, { src: e, melee: true });
+        D.zone = addZone('circle', { x, y, r: 20 }, 0.75, e.dmg, null, { src: e, melee: true, quiet: true }); // trồi lên húc: không vẽ vòng báo, chỉ có đất nứt khi trồi
         e.x = x; e.y = y;
       }
     } else if (D.k === 'warn') {
@@ -683,7 +683,7 @@
       if (BT && BT.on && !G.noRender) BT.add({ k: 'circle', x: e.x, y: e.y, r: e.r + 7, ky: 0.6, u: 0, age: 1, el: e.el || null, dim: 0.8 + 0.2 * Math.sin(G.time * 12) }); // vẽ mịn ở js/bao_truoc.js
       else A.ellipse(c, e.x, e.y, e.r + 7, (e.r + 7) * 0.6, bl ? 'rgba(255,58,34,0.35)' : 'rgba(255,176,154,0.25)');
     }
-    if (e.act && e.act.aim && e.wind > 0) {
+    if (false && e.act && e.act.aim && e.wind > 0) { // chủ dự án: bắn thường không cần đường ngắm báo trước
       // đường ngắm của quái bắn xa
       const P = W().P, a = Math.atan2(P.y - e.y, P.x - e.x), L = Math.min(150, Math.hypot(P.x - e.x, P.y - e.y));
       const bl = Math.floor(G.time * 14) % 2, BT = G.baoTruoc;
