@@ -13942,6 +13942,14 @@ MA._xong();
       c.strokeStyle = 'rgba(246,220,146,.35)'; c.lineWidth = 1; c.strokeRect(x0 + W2 * z + 0.5, y0 + 0.5, W2 * z - 1, H2 * z - 1);
       c.fillStyle = '#a9c2b4'; c.font = Math.round(12 * d) + 'px "Be Vietnam Pro", sans-serif'; c.textAlign = 'center';
       c.fillText('Đồ gốc', x0 + W2 * z / 2, y0 + H2 * z + 14 * d); c.fillText('Đồ của bạn (kéo để đặt)', x0 + W2 * z * 1.5, y0 + H2 * z + 14 * d);
+      // ba dáng nhỏ ở góc trên bên phải: đứng, đi, đánh (xem ngay khi kéo)
+      const bt = XS.taoCanvas(150, 52), btc = bt.getContext('2d'), tt = (performance.now() / 1000) % 1;
+      btc.imageSmoothingEnabled = false; btc.fillStyle = 'rgba(0,0,0,.35)'; btc.fillRect(0, 0, 150, 52);
+      const w0 = oEmBe(m.tp.look);
+      [{ move: false }, { move: true, t: tt * 2 }, { atk: tt }].forEach((q, i) => veEmBe(btc, 25 + i * 50, 46, Object.assign({}, w0, q)));
+      const kz = Math.max(1, Math.round(1.5 * d)); c.drawImage(bt, w - 150 * kz - 8 * d, 8 * d, 150 * kz, 52 * kz);
+      c.fillStyle = '#f1e6c6'; c.fillText('Đứng · Đi · Đánh', w - 75 * kz - 8 * d, 8 * d + 52 * kz + 14 * d);
+      if (!ve3.hen) ve3.hen = setInterval(() => { if (S.buoc === 3 && laDo() && S.muc.doi === 'trang-phuc' && !keo) ve3(); }, 120);
       $('goiY3').textContent = 'Lệch: ' + D.lech[0] + ', ' + D.lech[1] + ' điểm ảnh so với ' + (SC.MOC_TRANG_PHUC[m.tp.o] === 'H' ? 'giữa đầu' : SC.MOC_TRANG_PHUC[m.tp.o] === 'vai' ? 'vai em bé' : 'chân em bé') + '.';
     }
     function toaDo(e) { const r = cv3.getBoundingClientRect(), d = window.devicePixelRatio || 1; return [((e.clientX - r.left) * d - bo3.x0) / bo3.z, ((e.clientY - r.top) * d - bo3.y0) / bo3.z]; }
