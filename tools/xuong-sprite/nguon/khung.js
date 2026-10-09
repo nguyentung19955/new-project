@@ -324,6 +324,20 @@
   //  - gioiHan[k]: góc xoay lớn nhất (độ) để mép cắt xa khớp nhất không lệch quá ~2,5 điểm ảnh (bộ phận dính sát thân xoay ít).
   const SANG = (c) => (c & 255) * 0.3 + ((c >>> 8) & 255) * 0.59 + ((c >>> 16) & 255) * 0.11;
   const nhoChuan = new WeakMap();
+  // Scale2x trên bản đồ chỉ số: mỗi ô mới trỏ về một điểm ảnh gốc (không tạo màu mới). Phóng hai lần (4x) rồi lấy mẫu
+  // điểm gần nhất khi xoay thì mép chéo, nét viền đi liền như vẽ tay (kiểu RotSprite), không răng cưa lởm chởm.
+  function phong2(src, W, H, khoa) {
+    const out = new Int32Array(W * H * 4), W2 = W * 2;
+    const at = (x, y) => src[clamp(y, 0, H - 1) * W + clamp(x, 0, W - 1)];
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const E = src[y * W + x], B = at(x, y - 1), Dd = at(x - 1, y), F = at(x + 1, y), Hh = at(x, y + 1);
+      const kB = khoa(B), kD = khoa(Dd), kF = khoa(F), kH = khoa(Hh);
+      let e0 = E, e1 = E, e2 = E, e3 = E;
+      if (kB !== kH && kD !== kF) { if (kD === kB) e0 = Dd; if (kB === kF) e1 = F; if (kD === kH) e2 = Dd; if (kH === kF) e3 = F; }
+      const o = y * 2 * W2 + x * 2; out[o] = e0; out[o + 1] = e1; out[o + W2] = e2; out[o + W2 + 1] = e3;
+    }
+    return out;
+  }
   XS.chuanBiVa = function (R, Kh) {
     const M = MAU[Kh.mau], w = R.w, h = R.h, n = w * h, bomap = Kh.bo, khop = Kh.khop;
     const cu = nhoChuan.get(bomap);
@@ -384,7 +398,10 @@
     const dac = (ds) => { if (!ds.length) return null; const px = new Uint32Array(n); let x0 = w, y0 = h, x1 = -1, y1 = -1;
       for (let j = 0; j < ds.length; j += 2) { const i = ds[j], x = i % w, y = (i / w) | 0; px[i] = ds[j + 1]; if (x < x0) x0 = x; if (y < y0) y0 = y; if (x > x1) x1 = x; if (y > y1) y1 = y; }
       return { px, bb: [x0, y0, x1, y1] }; };
-    const kq = { px: R.px, khopS: JSON.stringify(khop), lap: lap.map(dac), mep: mep.map(dac), gioiHan, chu, goc, loGoc };
+    const id0 = new Int32Array(n); for (let i = 0; i < n; i++) id0[i] = i;
+    const khoa = (i) => (R.px[i] ? R.px[i] + (bomap[i] + 1) * 4294967296 : 0);
+    const up = phong2(phong2(id0, w, h, khoa), w * 2, h * 2, khoa);
+    const kq = { px: R.px, khopS: JSON.stringify(khop), lap: lap.map(dac), mep: mep.map(dac), gioiHan, chu, goc, loGoc, up };
     nhoChuan.set(bomap, kq);
     return kq;
   };
@@ -427,8 +444,26 @@
     }
   }
 
+  // Vá khe rộng một điểm mới sinh ra khi cử động (hai bên đều có hình, mà ở hình gốc theo cả người chỗ đó cũng có hình):
+  // tô màu hay gặp quanh đó. Khe có sẵn trong hình vẽ (chỗ gốc trống) giữ nguyên.
+  function vaKhe(out, W, H, R, invG) {
+    for (let lan = 0; lan < 2; lan++) {
+      const sua = [];
+      for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) {
+        const i = y * W + x; if (out[i] || !((out[i - 1] && out[i + 1]) || (out[i - W] && out[i + W]))) continue;
+        const sx = Math.floor(invG[0] * (x + 0.5) + invG[2] * (y + 0.5) + invG[4]), sy = Math.floor(invG[1] * (x + 0.5) + invG[3] * (y + 0.5) + invG[5]);
+        if (sx < 0 || sy < 0 || sx >= R.w || sy >= R.h || !R.px[sy * R.w + sx]) continue;
+        const dem = new Map(); let best = 0, bc = 0;
+        for (const j of [i - 1, i + 1, i - W, i + W, i - W - 1, i - W + 1, i + W - 1, i + W + 1]) { const c = out[j]; if (!c) continue; const v = (dem.get(c) || 0) + (SANG(c) < 72 ? 1 : 2); dem.set(c, v); if (v > bc) { bc = v; best = c; } }
+        if (best) sua.push([i, best]);
+      }
+      if (!sua.length) break;
+      for (const [i, c] of sua) out[i] = c;
+    }
+  }
+
   // R: {w, h, px} hình pixel; Kh: {mau, khop, bo (bản đồ bộ phận)}. Trả về {w, h, ox, oy, px} với (ox, oy) là chân, D: lề.
-  // Xoay từng điểm ảnh bằng cách lấy mẫu điểm gần nhất (không tạo màu pha, không viền mờ). Thứ tự vẽ (dưới lên):
+  // Xoay từng điểm ảnh bằng cách lấy mẫu điểm gần nhất trên hình phóng to Scale2x (không tạo màu pha, không viền mờ, không răng cưa). Thứ tự vẽ (dưới lên):
   // chỗ lấp trên thân, mép dư, phần quanh khớp, các bộ phận theo lớp (tay sau dưới thân, tay trước trên thân), rồi vá lỗ nhỏ, viền ngoài.
   XS.dungKhung = function (R, Kh, P, o) {
     o = o || {};
@@ -475,12 +510,13 @@
       for (const c of [[q[0] - pad, q[1] - pad], [q[2] + 1 + pad, q[1] - pad], [q[0] - pad, q[3] + 1 + pad], [q[2] + 1 + pad, q[3] + 1 + pad]]) { const p = apDung(M2, c[0], c[1]); x0 = Math.min(x0, p[0]); y0 = Math.min(y0, p[1]); x1 = Math.max(x1, p[0]); y1 = Math.max(y1, p[1]); }
       x0 = Math.max(0, Math.floor(x0)); y0 = Math.max(0, Math.floor(y0)); x1 = Math.min(W - 1, Math.ceil(x1)); y1 = Math.min(H - 1, Math.ceil(y1));
       const rk = chiKhop ? Math.max(1.6, Math.min(4, L * 0.25)) : 0;
+      const xoay = !!va && (song || Math.abs(M2[1]) > 0.009 || Math.abs(M2[2]) > 0.009); // có xoay: lấy mẫu trên hình phóng to
       for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
         let sx = inv[0] * (x + 0.5) + inv[2] * (y + 0.5) + inv[4], sy = inv[1] * (x + 0.5) + inv[3] * (y + 0.5) + inv[5];
         if (song && !chiKhop) { const t = clamp(((sx - A0[0]) * ux + (sy - A0[1]) * uy) / L, 0, 1.3), d = song[0] * t * Math.sin(song[1] * TAU - t * 3); sx -= -uy * d; sy -= ux * d; }
-        const ix = Math.floor(sx), iy = Math.floor(sy);
-        if (ix < 0 || iy < 0 || ix >= w || iy >= h) continue;
-        const i = iy * w + ix; if (bomap[i] !== k || !R.px[i]) continue;
+        if (sx < 0 || sy < 0 || sx >= w || sy >= h) continue;
+        const i = xoay ? va.up[Math.floor(sy * 4) * w * 4 + Math.floor(sx * 4)] : Math.floor(sy) * w + Math.floor(sx);
+        if (bomap[i] !== k || !R.px[i]) continue;
         if (chiKhop && Math.hypot(sx - A0[0], sy - A0[1]) > rk) continue;
         out[y * W + x] = R.px[i]; if (nhanBo) nhanBo[y * W + x] = k;
       }
@@ -501,7 +537,7 @@
     const toiDaVa = Math.max(6, Math.round(w * h * 0.01));
     const nghichBo = va ? M.bo.map((b) => nghich(tinh(b))) : null;
     const giu = va ? (i) => { const x = i % W + 0.5, y = ((i / W) | 0) + 0.5; for (let k = 0; k < M.bo.length; k++) { const m = nghichBo[k], sx = Math.floor(m[0] * x + m[2] * y + m[4]), sy = Math.floor(m[1] * x + m[3] * y + m[5]); if (sx >= 0 && sy >= 0 && sx < w && sy < h && va.loGoc[sy * w + sx] === k) return true; } return false; } : null;
-    if (va) vaLo(out, W, H, toiDaVa, giu);
+    if (va) { vaKhe(out, W, H, R, nghich(Gm)); vaLo(out, W, H, toiDaVa, giu); }
     let px = out;
     if (o.vien) { px = XS.themVien(out, W, H, o.vien); if (va) vaLo(px, W, H, toiDaVa, giu); } // viền có thể khép miệng khe hẹp thành lỗ kín
     // lỗ kín còn lại không phải lỗ có sẵn trong hình (bài kiểm tra đếm: phải bằng 0)
