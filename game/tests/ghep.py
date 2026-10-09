@@ -26,7 +26,7 @@ JS = r"""
     return P.weapons[0];
   }
   function dummy(x, y, hp) {
-    const e = G.spawnEnemy('rusher', x, y == null ? 190 : y, { hpMult: hp || 1e6 });
+    const e = G.spawnEnemy('rusher', x, y == null ? 190 : y, { hpMult: hp || 1e6, noArt: true }); // bia thử cỡ chuẩn để đo tầm đòn
     e.st.stun = 1e9; e.inside = true;
     return e;
   }
@@ -103,7 +103,7 @@ JS = r"""
   step(2, { atk: true, atkP: true }); sec(0.32);
   const d1 = lost(e); step(2, { atk: true, atkP: true }); sec(0.32);
   ok('Dòng mạnh Mở màn: đòn đầu lên quái đầy máu gấp đôi (nhát chém đầu x 2), đòn sau như thường (nhát chém thứ hai)', near(d1 / G.pDamage(P, w), 2 * G.MOVES.sword.chain[0].mult, 0.01) && near((lost(e) - d1) / G.pDamage(P, w), G.MOVES.sword.chain[1].mult, 0.01), (d1 / G.pDamage(P, w)).toFixed(2) + '/' + ((lost(e) - d1) / G.pDamage(P, w)).toFixed(2));
-  w = room({ hero: 'smith', melee: 'sword', tier: 3, power: 'boss' }); e = dummy(220); const el2 = G.spawnEnemy('elite', 224, 196, { hpMult: 1e6 }); el2.st.stun = 1e9; el2.inside = true; el2.hp -= 1; e.hp -= 1;
+  w = room({ hero: 'smith', melee: 'sword', tier: 3, power: 'boss' }); e = dummy(220); const el2 = G.spawnEnemy('elite', 224, 196, { hpMult: 1e6, noArt: true }); el2.st.stun = 1e9; el2.inside = true; el2.hp -= 1; e.hp -= 1;
   step(2, { atk: true, atkP: true }); sec(0.32);
   ok('Dòng mạnh Diệt yêu: tinh anh nhận thêm 20%, quái thường thì không', near((el2.maxhp - el2.hp - 1) / (lost(e) - 1), 1.2, 0.01), ((el2.maxhp - el2.hp - 1) / (lost(e) - 1)).toFixed(3));
 
@@ -123,8 +123,9 @@ JS = r"""
     const S2 = G.getRun(); G.getWorld().waves = [];
     G.gotoRoom(S2.rooms.length - 1);
     const before = G.save.weapons.map((x) => x.id);
-    G.damage(G.getWorld().boss, 1e12, { el: null });
-    G.sim(60 * 3);
+    const bb = G.getWorld().boss; bb.invuln = 0; // bỏ qua màn ra mắt của trùm
+    G.damage(bb, 1e12, { el: null });
+    G.sim(60 * 4.5); // trùm chết hoành tráng rồi mới mọc cổng và tính đồ rơi
     return G.save.weapons.filter((x) => !before.includes(x.id) && x.rarity >= 2);
   }
   for (let r = 0; r < 3; r++) {

@@ -40,9 +40,9 @@
       return Math.abs(da) <= z.span / 2 + (4 + pad) / Math.max(d, 1);
     }
     if (z.shape === 'donut') {
-      const d = Math.hypot(dx, dy);
+      const d = Math.hypot(dx, dy / (G.ZK || 1)); // vành khăn dẹt theo chiều dọc như vùng tròn (G.ZK)
       if (d < z.r0 - 3 - pad || d > z.r1 + 3 + pad) return false;
-      if (z.gaps) { const a = Math.atan2(dy, dx); for (const g of z.gaps) { let da = a - g; da = Math.atan2(Math.sin(da), Math.cos(da)); if (Math.abs(da) < z.gw - (pad ? 0 : 3 / Math.max(d, 1))) return false; } }
+      if (z.gaps) { const a = Math.atan2(dy / (G.ZK || 1), dx); for (const g of z.gaps) { let da = a - g; da = Math.atan2(Math.sin(da), Math.cos(da)); if (Math.abs(da) < z.gw - (pad ? 0 : 3 / Math.max(d, 1))) return false; } }
       return true;
     }
     return false;
@@ -62,13 +62,13 @@
     const d = Math.hypot(dx, dy) || 1;
     if (z.shape === 'donut' && z.gaps) {
       // chạy về khe gần nhất
-      const a = Math.atan2(dy, dx);
+      const a = Math.atan2(dy / (G.ZK || 1), dx);
       let best = z.gaps[0], bd = 9;
       for (const g of z.gaps) { const da = Math.abs(Math.atan2(Math.sin(a - g), Math.cos(a - g))); if (da < bd) { bd = da; best = g; } }
-      const r = (z.r0 + z.r1) / 2, tx = z.x + Math.cos(best) * r, ty = z.y + Math.sin(best) * r, l = Math.hypot(tx - P.x, ty - P.y) || 1;
+      const r = (z.r0 + z.r1) / 2, tx = z.x + Math.cos(best) * r, ty = z.y + Math.sin(best) * r * (G.ZK || 1), l = Math.hypot(tx - P.x, ty - P.y) || 1;
       return [(tx - P.x) / l, (ty - P.y) / l];
     }
-    if (z.shape === 'donut' && d < (z.r0 + z.r1) / 2) return [-dx / d, -dy / d];
+    if (z.shape === 'donut' && Math.hypot(dx, dy / (G.ZK || 1)) < (z.r0 + z.r1) / 2) return [-dx / d, -dy / d];
     return [dx / d, dy / d];
   };
   function addZone(shape, geo, t, dmg, el, o) {
@@ -504,44 +504,52 @@
   }
   function zcols(z) {
     const tele = z.t > 0, blink = Math.floor(G.time * 10) % 2;
-    if (!tele) return ['rgba(255,244,210,0.8)', 'rgba(255,244,210,0.8)', '#ffffff'];
+    if (!tele) { const a = (0.45 * clamp((z.life || 0) / 0.12, 0, 1)).toFixed(2); return ['rgba(255,244,210,' + a + ')', 'rgba(255,244,210,' + a + ')', 'rgba(255,255,255,' + a + ')']; } // chớp sáng nhẹ lúc nổ
     const pulse = (0.26 + 0.14 * Math.abs(Math.sin(G.time * 14))).toFixed(2);
     return ['rgba(255,40,24,' + pulse + ')', 'rgba(255,90,50,0.5)', blink ? '#ff3a22' : '#ffb09a'];
   }
   function prog(z) { return z.t > 0 && z.t0 ? clamp(1 - z.t / z.t0, 0, 1) : 1; }
+  // Lòng vùng tô bằng đường viền của canvas (nhanh), mép vẽ bằng từng điểm ảnh cho sắc nét.
+  function dots(c, pts, col) { c.fillStyle = col; for (const q of pts) c.fillRect(Math.round(q[0]), Math.round(q[1]), 1, 1); }
   function drawLine(c, z) {
-    const cs = Math.cos(z.ang), sn = Math.sin(z.ang), L = z.len, hw = z.w / 2, u = prog(z), lu = L * u;
-    const pts = [[0, -hw], [0, hw], [L, -hw], [L, hw]].map(([a, b]) => [z.x + a * cs - b * sn, z.y + a * sn + b * cs]);
-    const xs = pts.map((q) => q[0]), ys = pts.map((q) => q[1]);
-    scan(c, Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys), (px, py) => {
-      const dx = px - z.x, dy = py - z.y, al = dx * cs + dy * sn, ac = -dx * sn + dy * cs;
-      if (al < 0 || al > L || Math.abs(ac) > hw) return 0;
-      if (al < 1.2 || al > L - 1.2 || Math.abs(ac) > hw - 1.2) return 3;
-      return al <= lu ? 2 : 1;
-    }, zcols(z));
+    const cs = Math.cos(z.ang), sn = Math.sin(z.ang), L = z.len, hw = z.w / 2, u = prog(z), col = zcols(z);
+    const at = (a, b) => [z.x + a * cs - b * sn, z.y + a * sn + b * cs];
+    const quad = (len) => { const q = [at(0, -hw), at(len, -hw), at(len, hw), at(0, hw)]; c.beginPath(); c.moveTo(q[0][0], q[0][1]); for (let i = 1; i < 4; i++) c.lineTo(q[i][0], q[i][1]); c.closePath(); c.fill(); };
+    c.fillStyle = col[0]; quad(L);
+    if (u > 0 && u < 1) { c.fillStyle = col[1]; quad(L * u); }
+    const e = [];
+    for (let a = 0; a <= L; a += 1) { e.push(at(a, -hw)); e.push(at(a, hw)); }
+    for (let b = -hw; b <= hw; b += 1) { e.push(at(0, b)); e.push(at(L, b)); }
+    dots(c, e, col[2]);
   }
   function drawCone(c, z) {
-    const r = z.r, u = prog(z), ru = r * u, half = z.span / 2;
-    let x0 = z.x, x1 = z.x, y0 = z.y, y1 = z.y;
-    for (let i = 0; i <= 8; i++) { const a = z.ang - half + (z.span * i) / 8; x0 = Math.min(x0, z.x + Math.cos(a) * r); x1 = Math.max(x1, z.x + Math.cos(a) * r); y0 = Math.min(y0, z.y + Math.sin(a) * r); y1 = Math.max(y1, z.y + Math.sin(a) * r); }
-    scan(c, x0 - 1, y0 - 1, x1 + 1, y1 + 1, (px, py) => {
-      const dx = px - z.x, dy = py - z.y, d = Math.hypot(dx, dy);
-      if (d > r) return 0;
-      let da = Math.atan2(dy, dx) - z.ang; da = Math.atan2(Math.sin(da), Math.cos(da));
-      if (Math.abs(da) > half) return 0;
-      if (d > r - 1.3 || Math.abs(da) > half - 1.3 / Math.max(d, 1)) return 3;
-      return d <= ru ? 2 : 1;
-    }, zcols(z));
+    const r = z.r, u = prog(z), half = z.span / 2, col = zcols(z), a0 = z.ang - half, a1 = z.ang + half;
+    const fan = (rr) => { c.beginPath(); c.moveTo(z.x, z.y); c.arc(z.x, z.y, rr, a0, a1); c.closePath(); c.fill(); };
+    c.fillStyle = col[0]; fan(r);
+    if (u > 0 && u < 1) { c.fillStyle = col[1]; fan(r * u); }
+    const e = [], n = Math.ceil(r * z.span);
+    for (let i = 0; i <= n; i++) { const a = a0 + (z.span * i) / n; e.push([z.x + Math.cos(a) * r, z.y + Math.sin(a) * r]); }
+    for (let d = 0; d <= r; d += 1) { e.push([z.x + Math.cos(a0) * d, z.y + Math.sin(a0) * d]); e.push([z.x + Math.cos(a1) * d, z.y + Math.sin(a1) * d]); }
+    dots(c, e, col[2]);
   }
   function drawDonut(c, z) {
-    const u = prog(z), rm = z.r0 + (z.r1 - z.r0) * u, gw = z.gw || 0;
-    scan(c, z.x - z.r1 - 1, z.y - z.r1 - 1, z.x + z.r1 + 1, z.y + z.r1 + 1, (px, py) => {
-      const dx = px - z.x, dy = py - z.y, d = Math.hypot(dx, dy);
-      if (d > z.r1 || d < z.r0) return 0;
-      if (z.gaps) { const a = Math.atan2(dy, dx); for (const g of z.gaps) { let da = a - g; da = Math.atan2(Math.sin(da), Math.cos(da)); if (Math.abs(da) < gw) return Math.abs(da) > gw - 1.3 / d ? 3 : 0; } }
-      if (d > z.r1 - 1.3 || d < z.r0 + 1.3) return 3;
-      return d <= rm ? 2 : 1;
-    }, zcols(z));
+    const u = prog(z), rm = z.r0 + (z.r1 - z.r0) * u, col = zcols(z);
+    // các cung còn lại sau khi trừ khe
+    let segs = [[0, TAU]];
+    if (z.gaps && z.gw) {
+      const g = z.gaps.map((x) => ((x % TAU) + TAU) % TAU).sort((p1, p2) => p1 - p2);
+      segs = g.map((x, i) => [x + z.gw, (i + 1 < g.length ? g[i + 1] : g[0] + TAU) - z.gw]).filter((q) => q[1] > q[0]);
+    }
+    const K = G.ZK || 1;
+    const band = (ra, rb) => { for (const [s0, s1] of segs) { c.beginPath(); c.ellipse(z.x, z.y, rb, rb * K, 0, s0, s1); c.ellipse(z.x, z.y, Math.max(0, ra), Math.max(0, ra) * K, 0, s1, s0, true); c.closePath(); c.fill(); } };
+    c.fillStyle = col[0]; band(z.r0, z.r1);
+    if (u > 0 && u < 1) { c.fillStyle = col[1]; band(z.r0, rm); }
+    const e = [];
+    for (const [s0, s1] of segs) {
+      for (const R of [z.r0, z.r1]) { if (R < 1) continue; const n = Math.ceil(R * (s1 - s0)); for (let i = 0; i <= n; i++) { const a = s0 + ((s1 - s0) * i) / n; e.push([z.x + Math.cos(a) * R, z.y + Math.sin(a) * R * K]); } }
+      if (segs.length > 1 || s1 - s0 < TAU - 0.01) for (const a of [s0, s1]) for (let d = z.r0; d <= z.r1; d += 1) e.push([z.x + Math.cos(a) * d, z.y + Math.sin(a) * d * K]);
+    }
+    dots(c, e, col[2]);
   }
   // Tường nước chạy: dải nước vuông góc hướng chạy, chừa khe (mép khe sáng trắng)
   function drawWall(c, z) {
@@ -598,13 +606,13 @@
   if (G.fx && G.fx.zoneFire) {
     const zf0 = G.fx.zoneFire;
     G.fx.zoneFire = function (z) {
-      if (z.shape === 'circle' || z.shape === 'rect' || z.wave) return zf0(z);
+      if (!z || z.shape === 'circle' || z.shape === 'rect' || z.wave) return zf0(z);
       if (G.noRender || z.team === 'player') return;
       const pts = [];
       if (z.shape === 'line') for (let i = 0; i <= 3; i++) pts.push([z.x + Math.cos(z.ang) * z.len * i / 3, z.y + Math.sin(z.ang) * z.len * i / 3]);
       else if (z.shape === 'cone') for (let i = 0; i < 4; i++) { const a = z.ang + (i / 3 - 0.5) * z.span; pts.push([z.x + Math.cos(a) * z.r * 0.7, z.y + Math.sin(a) * z.r * 0.7]); }
-      else if (z.shape === 'donut') for (let i = 0; i < 8; i++) { const a = i / 8 * TAU, r = (z.r0 + z.r1) / 2; pts.push([z.x + Math.cos(a) * r, z.y + Math.sin(a) * r]); }
-      const col = z.el ? G.EL[z.el].col : '#fff0c8';
+      else if (z.shape === 'donut') for (let i = 0; i < 8; i++) { const a = i / 8 * TAU, r = (z.r0 + z.r1) / 2; pts.push([z.x + Math.cos(a) * r, z.y + Math.sin(a) * r * (G.ZK || 1)]); }
+      const col = z.el && G.EL[z.el] ? G.EL[z.el].col : '#fff0c8';
       for (const q of pts) G.fx.burst(q[0], q[1], col, 4, 60);
       if (G.fx.shake) G.fx.shake(0.15);
     };
@@ -704,11 +712,12 @@
     const w = W();
     if (!w || P.dead) return;
     const big = [];
-    for (const e of w.ents) if (e.art && !e.dead && !e.hidden && e.h > 30) big.push(e);
+    for (const e of w.ents) if (e.art && !e.dead && !e.hidden) big.push(e);
     if (w.boss && !w.boss.dead && w.boss.art) big.push(w.boss);
     for (const e of big) {
       const hw = (e.drawW || e.w || 40) * 0.42, hh = e.drawH || e.h || 30;
-      if (e.y > P.y && Math.abs(P.x - e.x) < hw && P.y > e.y - hh) {
+      // chỉ khi hình quái che hẳn thân bé (không chỉ chạm gót chân)
+      if (e.y > P.y && Math.abs(P.x - e.x) < hw - 3 && P.y - 8 > e.y - hh * 0.9) {
         const a = G.heroArgs(P); a.alpha = 0.5;
         A.hero(c, a);
         return;

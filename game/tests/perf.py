@@ -16,7 +16,8 @@ JS = r"""
   W.waves = []; W.spawns = []; W.props = W.props.filter((p) => p.type === 'roomFore'); // giữ lớp phủ trước của phòng để đo cả phần vẽ phòng
   Object.assign(G.botCfg, { prefer: wtype, explore: false, props: false });
   if (G.curW(P).type !== wtype) P.cur = 1 - P.cur;
-  const roles = ['rusher', 'swarm', 'shield', 'rusher', 'nimble', 'swarm', 'archer'];
+  // đủ tám vai quái mới và một tinh anh (bản cũ không có các vai mới thì G.ROLES tự dùng vai xông tới)
+  const roles = ['rusher', 'swarm', 'shield', 'kami', 'nimble', 'bomber', 'archer', 'spiky', 'elite'].map((r) => (G.ROLES[r] ? r : 'rusher'));
   // phòng vuông: rải 14 quái khắp sàn phòng
   const rw = W.x1 - W.x0 - 20, rh = W.y1 - W.y0 - 30;
   for (let i = 0; i < 14; i++) { const e = G.spawnEnemy(roles[i % roles.length], W.x0 + 10 + (i * 53) % rw, W.y0 + 20 + (i * 37) % rh, { hpMult: 1e5 }); e.inside = true; }

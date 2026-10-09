@@ -21,7 +21,7 @@
     G.botInput = () => ({ mx: 0, my: 0 });
     const b = W.boss;
     ok('F: phòng trùm của ải cuối vùng ' + (r + 1) + ' có đúng trùm vùng', b && b.kind === G.REGIONS[r].boss, b && b.kind);
-    P.inv = 99; b.hp = 1; G.damage(b, 99, { w: G.curW(P), el: 'fire' });
+    P.inv = 99; b.invuln = 0; b.hp = 1; G.damage(b, 99, { w: G.curW(P), el: 'fire' }); // bỏ qua màn ra mắt của trùm
     for (let k = 0; k < 400 && S.mode === 'play' && !S.won; k++) { P.inv = 99; G.sim(1); }
     G.usePortal(); // sửa góp ý 2: hạ trùm thì cổng dịch chuyển mọc lên, vào cổng mới hiện bảng kết quả
     const R = S.result, line = R && R.lines.find((l) => l.w && l.s.indexOf('rơi') >= 0);
@@ -196,32 +196,27 @@
   // ================= H. HOẠT ẢNH TRÙM KHỚP VÙNG CẢNH BÁO =================
   {
     const ZK = G.ZK;
-    // Ngư Tinh: vòng gai
+    // Đợt quái mới: trùm dùng hình và cử động của js/monster_art.js; vùng cảnh báo do luật chơi vẽ (vòng tròn và vành khăn
+    // cùng độ dẹt G.ZK), hình trùm không vẽ thêm vùng báo riêng nữa. Các mục dưới thay cho bài cũ về vòng gai, vòng nứt đất.
+    // Ngư Tinh: chiêu xoáy nước (c5): vòng tròn quanh thân rồi vành sóng bên ngoài
     go({ r: 1, i: 4, kind: 'C', seed: 3, big: true, keep: true, lvl: 20 });
     G.botInput = () => ({ mx: 0, my: 0 });
-    let b = W.boss; P.inv = 1e9;
+    let b = W.boss; P.inv = 1e9; b.invuln = 0; b.busy = 0; b.hp = b.maxhp * 0.3;
     ok('H: (chuẩn bị) phòng trùm vùng 2 có Ngư Tinh', b && b.kind === 'ngu', b && b.kind);
-    const realLine = G.art.line; let lines = [];
-    G.art.line = function (c, x0, y0, x1, y1) { lines.push([x0, y0, x1, y1]); return realLine.apply(this, arguments); };
-    let zone = null, best = null, an0 = null;
-    for (let k = 0; k < 900 && !best; k++) {
-      if (!b.anim || b.anim.name !== 'spikes') { if (!(b.anim && b.anim.name) || k % 40 === 0) G.bossDebug('spikes'); }
+    let zone = null, ring = null, an0 = null;
+    for (let k = 0; k < 900 && !(zone && ring); k++) {
+      if (!(b.an && b.an.n === 'c5') && b.busy <= 0 && k % 20 === 0) G.bossDebug('c5');
       P.inv = 1e9; P.hp = P.maxhp; G.sim(1);
-      const z = W.zones.find((q) => q.fxKind === 'spikes');
-      if (z) zone = { x: z.x, y: z.y, r: z.r };
-      const an = b.anim;
-      if (an && an.name === 'spikes' && an.t - an.fire > 0.16 && an.t - an.fire < 0.22) { lines = []; S.fade = 0; paint(); if (lines.length >= 16) { best = lines.slice(); an0 = { zx: an.zx, zy: an.zy, r: an.r, v: (an.t - an.fire) / 0.22 }; } }
+      const z = W.zones.find((q) => q.src === b && q.shape === 'circle' && q.t > 0), d = W.zones.find((q) => q.src === b && q.shape === 'donut' && q.t > 0);
+      if (z && d && b.an && b.an.n === 'c5') { zone = { x: z.x, y: z.y, r: z.r }; ring = { x: d.x, y: d.y, r0: d.r0, r1: d.r1 }; an0 = { x: b.x, y: b.y }; }
     }
-    G.art.line = realLine;
-    ok('H: Ngư Tinh ra được đòn vòng gai và có vùng cảnh báo tròn', !!zone && !!best, zone ? JSON.stringify(zone) : 'không thấy vùng');
-    if (best && zone) {
-      let maxX = 0, maxY = 0;
-      for (const l of best) for (const [x, y] of [[l[0], l[1]], [l[2], l[3]]]) { maxX = Math.max(maxX, Math.abs(x - an0.zx)); maxY = Math.max(maxY, Math.abs(y - (an0.zy - 14 * (1 - an0.v)))); }
-      ok('H: vòng gai của Ngư Tinh cùng tâm, cùng bán kính với vùng cảnh báo', near(an0.zx, zone.x, 1) && near(an0.zy, zone.y, 1) && near(an0.r, zone.r, 1));
-      ok('H: vòng gai của Ngư Tinh tròn theo đúng độ dẹt của vùng cảnh báo (không còn dẹt 0,6)', near(maxY / maxX, ZK, 0.06), (maxY / maxX).toFixed(2) + ' so với ' + ZK);
-      ok('H: gai bung ra phủ gần hết vùng cảnh báo, không tràn quá mép', maxX > zone.r * 0.85 && maxX <= zone.r * 1.12 && maxY > zone.r * ZK * 0.85 && maxY <= zone.r * ZK * 1.12, maxX.toFixed(0) + 'x' + maxY.toFixed(0) + ' trong ' + zone.r + 'x' + (zone.r * ZK).toFixed(0));
+    ok('H: Ngư Tinh ra được đòn xoáy nước và có vùng cảnh báo tròn', !!zone && !!ring, zone ? JSON.stringify(zone) : 'không thấy vùng');
+    if (zone && ring) {
+      ok('H: vòng xoáy của Ngư Tinh cùng tâm với chỗ trùm đứng', near(an0.x, zone.x, 1) && near(an0.y, zone.y, 1));
+      ok('H: vành sóng ngoài cùng tâm với vòng xoáy, mép trong khớp mép ngoài vòng xoáy', near(ring.x, zone.x, 0.01) && near(ring.y, zone.y, 0.01) && near(ring.r0, zone.r, 0.01));
+      ok('H: vành sóng rộng ra ngoài vòng xoáy một khoảng vừa phải (còn chỗ đứng trong phòng)', ring.r1 > ring.r0 + 30 && ring.r1 < 140, ring.r0 + '..' + ring.r1);
     }
-    // Mộc Tinh: vòng gai rễ quanh gốc (so điểm ảnh có và không có hiệu ứng)
+    // Vùng cảnh báo tròn và vành khăn tròn theo độ dẹt G.ZK (so điểm ảnh có và không có vùng)
     go({ r: 0, i: 4, kind: 'C', seed: 3, big: true, keep: true, lvl: 12 });
     G.botInput = () => ({ mx: 0, my: 0 });
     b = W.boss; P.inv = 1e9;
@@ -229,13 +224,14 @@
     const shot = () => { G.ui.begin(); G.scene.draw(); return c.getImageData(0, 0, cw, chh).data; };
     const diffBox = (A0, B0) => { let x0 = 1e9, x1 = -1, y0 = 1e9, y1 = -1; for (let y = 0; y < chh; y++) for (let x = 0; x < cw; x++) { const i = (y * cw + x) * 4; if (A0[i] !== B0[i] || A0[i + 1] !== B0[i + 1] || A0[i + 2] !== B0[i + 2]) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; } } return [x0, y0, x1, y1]; };
     const freeze = G.time;
-    for (const [kind, r, name] of [['thorns', 64, 'vòng gai rễ của Mộc Tinh'], ['quake', 40, 'vòng nứt đất của trùm nhỏ']]) {
-      W.zones = []; W.parts = []; W.texts = []; b.fx = []; b.anim = null; W.shake = 0; S.fade = 0; W.banner = null;
+    b.x = W.geo.cx + 90; b.y = W.y0 + 10; // dời trùm ra góc cho khỏi đè lên vùng đang đo
+    for (const [kind, r, name] of [['donut', 64, 'vành gai rễ của Mộc Tinh'], ['circle', 40, 'vòng nứt đất của trùm nhỏ']]) {
+      W.zones = []; W.parts = []; W.texts = []; W.shake = 0; S.fade = 0; W.banner = null;
       const zx = W.geo.cx - 40, zy = W.geo.cy + 10;
       G.time = freeze; const base = shot();
-      b.fx = [{ k: kind, x: zx, y: zy, t: kind === 'thorns' ? 0.15 : 0.2, d: 0.5, r }];
+      W.zones = [kind === 'donut' ? { shape: 'donut', x: zx, y: zy, r0: 30, r1: r, t: 0.5, t0: 1, dmg: 1 } : { shape: 'circle', x: zx, y: zy, r, t: 0.5, t0: 1, dmg: 1 }];
       G.time = freeze; const withFx = shot();
-      b.fx = [];
+      W.zones = [];
       const bx = diffBox(base, withFx);
       const down = bx[3] - zy, half = (bx[2] - bx[0]) / 2;
       ok('H: ' + name + ' tròn theo vùng cảnh báo: mép dưới xuống tới khoảng ' + Math.round(r * ZK) + ' điểm ảnh (trước chỉ ' + Math.round(r * 0.6) + ')', bx[3] > 0 && down >= r * ZK * 0.72 && down <= r * ZK * 1.15 && half <= r * 1.2, 'xuống ' + down + ', rộng nửa ' + half.toFixed(0));

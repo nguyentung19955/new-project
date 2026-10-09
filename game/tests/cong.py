@@ -7,6 +7,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from ui_lib import Game, Checker, ROOT
 from playwright.sync_api import sync_playwright
 
+# trùm mới có màn ra mắt (không nhận sát thương): bài thử bỏ qua màn đó bằng invuln = 0
 KILL = """(o) => {
   G.testSave({ hero: 'smith', lvl: 10, tier: 1 });
   G.save.gold = 100;
@@ -14,7 +15,7 @@ KILL = """(o) => {
   const S = G.getRun();
   G.gotoRoom(S.map.boss);
   const W = G.getWorld(), b = W.boss;
-  b.hp = 1; G.damage(b, 99, { w: G.curW(S.P), el: 'fire' });
+  b.invuln = 0; b.hp = 1; G.damage(b, 99, { w: G.curW(S.P), el: 'fire' });
   return true;
 }"""
 
@@ -33,8 +34,8 @@ LOGIC = r"""
       G.startStage(r, i, 0);
       const S = G.getRun(); G.gotoRoom(S.map.boss);
       let W = G.getWorld(); const b = W.boss, P = S.P;
-      b.hp = 1; G.damage(b, 99, { w: G.curW(P), el: 'fire' });
-      run(150, {});
+      b.invuln = 0; b.hp = 1; G.damage(b, 99, { w: G.curW(P), el: 'fire' });
+      run(300, {}); // trùm chết hoành tráng khoảng 3,5 giây rồi cổng mới mọc
       const saved = JSON.parse(localStorage.getItem(Object.keys(localStorage).find((k) => localStorage.getItem(k).indexOf('"gold"') >= 0)));
       ok(tag + 'hạ trùm xong không hiện bảng kết quả, vẫn chơi tiếp', S.mode === 'play' && S.won, S.mode);
       ok(tag + 'phần thưởng tính ngay lúc thắng và đã lưu', S.result && S.result.win && G.save.gold > 100 && saved && saved.gold === G.save.gold, G.save.gold + ' / ' + (saved && saved.gold));
@@ -72,8 +73,8 @@ LOGIC = r"""
       G.testSave({ hero: 'smith', lvl: 10, tier: 1 });
       G.startStage(0, 1, 0);
       const S = G.getRun(); G.gotoRoom(S.map.boss);
-      const W = G.getWorld(); W.boss.hp = 1; G.damage(W.boss, 99, { w: G.curW(S.P) });
-      run(150, {});
+      const W = G.getWorld(); W.boss.invuln = 0; W.boss.hp = 1; G.damage(W.boss, 99, { w: G.curW(S.P) });
+      run(300, {}); // trùm chết hoành tráng khoảng 3,5 giây rồi cổng mới mọc
       const P = S.P, txt = [], real = G.ui.btn;
       G.ui.btn = function (x, y, w, h, label) { txt.push(label); return real.apply(this, arguments); };
       run(1, { pauseP: true }); G.ui.begin(); G.scene.draw();
@@ -95,7 +96,7 @@ LOGIC = r"""
       G.testSave({ hero: 'smith', lvl: 10, tier: 1 });
       G.startStage(0, 1, 0);
       const S = G.getRun(); G.gotoRoom(S.map.boss);
-      const W = G.getWorld(); W.boss.hp = 1; G.damage(W.boss, 99, { w: G.curW(S.P) });
+      const W = G.getWorld(); W.boss.invuln = 0; W.boss.hp = 1; G.damage(W.boss, 99, { w: G.curW(S.P) });
       G.botInput = hold0;
       const r = G.botRun(30);
       ok('Bot tự đi tới cổng và vào cổng', r.win === true && S.mode === 'result', JSON.stringify({ win: r.win, t: r.t }));
@@ -123,7 +124,7 @@ def main():
             g = Game(p, size)
             g.pg.add_script_tag(path=os.path.join(ROOT, 'tests', 'setup.js'))
             mode = lambda: g.ev("G.getRun() ? G.getRun().mode : 'none'")
-            g.ev(KILL, {'r': 0, 'i': 2}); g.wait(2600)
+            g.ev(KILL, {'r': 0, 'i': 2}); g.wait(4800)  # chờ màn chết của trùm rồi cổng mới mọc
             c.ok(mode() == 'play' and g.ev("G.getRun().won"), f'[{size}] hạ trùm xong vẫn đang chơi, chưa có bảng ({mode()})')
             labels = g.ev("""(() => { const out = []; const real = G.theme.round; G.theme.round = function (x, y, r, kind, o) { out.push(o && o.label); return real.apply(this, arguments); };
               const S = G.getRun(), pt = S.W.props.find((q) => q.type === 'portal'); S.P.x = pt.x + 8; S.P.y = pt.y; window.__lab = out; window.__real = real; return true; })()""")
@@ -137,7 +138,7 @@ def main():
             g.tap(342, 229, 500)
             c.ok(mode() == 'play' and g.ev("G.getRun().i") == si + 1, f'[{size}] bảng kết quả vẫn có nút Ải tiếp theo')
             # tạm dừng sau khi thắng -> Rời ải
-            g.ev(KILL, {'r': 0, 'i': 2}); g.wait(2600)
+            g.ev(KILL, {'r': 0, 'i': 2}); g.wait(4800)  # chờ màn chết của trùm rồi cổng mới mọc
             pau = g.ev("G.stageUi.PAU")
             g.tap(pau[0] + pau[2] / 2, pau[1] + pau[3] / 2, 400)
             c.ok(mode() == 'paused', f'[{size}] chạm Dừng sau khi thắng thì hiện bảng tạm dừng ({mode()})')

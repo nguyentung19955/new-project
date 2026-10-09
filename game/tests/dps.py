@@ -4,6 +4,8 @@ Từ đợt ghép 2 game chỉ còn phòng vuông, nên bài này đo trong phò
   python3 tests/dps.py [giây mỗi lượt] [số hạt giống] [nho | trum] [mot] [khonghe]
     nho (mặc định): phòng thường, sàn 208x196      trum: phòng trùm, sàn 300x198 (không có trùm)
     mot: chỉ một quái (máu dày) thay cho cụm năm quái     khonghe: chỉ đo vũ khí chưa có hệ (nhanh hơn)
+    quaimoi: đánh quái mới thật (js/mobs.js: giáp che trước, lặn, cử động xuất hiện...) thay cho bia tập kiểu cũ; chỉ để xem, không dùng để chấm
+  Mặc định đo trên bia tập kiểu cũ (cỡ và cách đánh của quái trước đợt quái mới), để số đo vũ khí không đổi theo cơ chế quái.
 Trước khi đo, in bảng số liệu của bốn loại: tầm với, thời gian một đòn, sát thương mỗi đòn, sát thương mỗi giây trên giấy.
 Nguyên tắc cân bằng (sửa góp ý 3): càng chậm hoặc càng phải áp sát thì mỗi đòn càng mạnh.
 Thoát mã 1 nếu một trong các điều sau sai:
@@ -18,7 +20,7 @@ from playwright.sync_api import sync_playwright
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 JS = r"""
-([wtype, el, secs, seed, small, one]) => {
+([wtype, el, secs, seed, small, one, real]) => {
   for (const k of G.HKEYS) G.HEROES[k].fav = [];           // bỏ thưởng vũ khí ưa thích để so cho công bằng
   G.testSave({ hero: 'smith', melee: wtype === 'bow' ? 'sword' : wtype, lvl: 10, tier: 1, sharpen: 3, branch: el || undefined, marks: el ? 300 : 0 });
   G.rnd = G.srand(seed);
@@ -46,7 +48,8 @@ JS = r"""
       const alive = W.ents.filter((e) => !e.dead).length;
       if (alive < (one ? 1 : 5)) {
         const side = G.rnd() < 0.5 ? W.x0 + 8 : W.x1 - 8;
-        const e = G.spawnEnemy(one ? 'rusher' : roles[ri++ % roles.length], side + G.rr(-4, 4), G.rr(W.y0 + 6, W.y1 - 6), one ? { hpMult: 8 } : {});
+        const e = G.spawnEnemy(one ? 'rusher' : roles[ri++ % roles.length], side + G.rr(-4, 4), G.rr(W.y0 + 6, W.y1 - 6), Object.assign(one ? { hpMult: 8 } : {}, real ? {} : { noArt: true }));
+        if (!real && e.role === 'swarm') { e.maxhp *= 0.34 / G.ROLES.swarm.hp; e.hp = e.maxhp; e.r = 5; } // bia bầy nhỏ kiểu cũ: một con nhỏ, máu mỏng
         e.inside = true; kills++;
       }
       G.sim(1);
@@ -78,7 +81,8 @@ STATIC = r"""
 
 
 def main():
-    args = [a for a in sys.argv[1:] if a not in ('nho', 'trum', 'mot', 'khonghe')]
+    args = [a for a in sys.argv[1:] if a not in ('nho', 'trum', 'mot', 'khonghe', 'quaimoi')]
+    real = 'quaimoi' in sys.argv
     small = 'trum' not in sys.argv
     one = 'mot' in sys.argv
     noel = 'khonghe' in sys.argv
@@ -108,7 +112,7 @@ def main():
                 tot = {'dps': 0, 'hurt': 0, 'kills': 0, 'marks': 0}
                 for s in range(seeds):
                     if os.environ.get('DPS_PRE'): pg.evaluate(os.environ['DPS_PRE'])  # đoạn JS chỉnh thử con số trước khi đo
-                    r = pg.evaluate(JS, [wt, el, secs, 1000 + s * 77, small, one])
+                    r = pg.evaluate(JS, [wt, el, secs, 1000 + s * 77, small, one, real])
                     if r['bad'] or errs:
                         print('LỖI', wt, el, r['bad'], errs[:3]); sys.exit(1)
                     for k in tot:

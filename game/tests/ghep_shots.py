@@ -146,7 +146,7 @@ def kho_do(pg):
     # bảng rương báu trong ải và bảng kết quả khi trùm vùng rơi Vàng: phần thưởng cũng dùng hình vũ khí sống
     pg.evaluate("""() => { T.thaw(); G.testSave({ hero: 'smith', lvl: 20 }); G.rnd = G.srand(21); G.startStage(1, 4, 0);
       const S = G.getRun(); S.W.waves = []; G.onEliteDown({}); G.onEliteDown({}); G.onEliteDown({}); G.onEliteDown({});
-      G.gotoRoom(S.rooms.length - 1); G.damage(G.getWorld().boss, 1e12, { el: 'ice' }); T.frame(130, {}); G.rnd = Math.random; }""")
+      G.gotoRoom(S.rooms.length - 1); G.getWorld().boss.invuln = 0; G.damage(G.getWorld().boss, 1e12, { el: 'ice' }); T.frame(260, {}); G.rnd = Math.random; }""")
     ims.append(grab(pg))
     return stack(ims, 1)
 

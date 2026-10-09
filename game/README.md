@@ -73,6 +73,28 @@ Trên máy tính:
 
 Chuột dùng được như ngón tay.
 
+## Quái và trùm
+
+Mỗi vùng có tám loại quái thường, hai tinh anh, một trùm nhỏ (ải 1 đến 4) và một trùm vùng (ải 5). Mọi đòn của quái ngắm thẳng vào em bé theo góc bất kỳ (trên, dưới, chéo), vùng đỏ báo trước xoay theo góc đó. Em bé không nhảy: chiêu nào cũng né được bằng đi hoặc lộn.
+
+| Vai | Rừng già | Hang biển | Lâu đài cổ | Cách đánh |
+| --- | --- | --- | --- | --- |
+| Xông tới | Heo Rừng Con | Cua Lính | Lính Ma Giáp Gỉ | Áp sát, báo trước rồi lao hoặc chém |
+| Bầy nhỏ | Bầy Ong Vò Vẽ | Bầy Cá Con | Bầy Dơi Than | Nhanh, lao cắn liên tục |
+| Giáp | Bọ Hung Mai Cứng | Ốc Mượn Hồn | Tượng Đá Cầm Khiên | Che phía trước (vệt vàng), quay mặt chậm, hồi máu cho bạn đứng gần. Vòng ra sau, hoặc đánh mãi vào giáp cho vỡ |
+| Bắn xa | Hoa Phun Bào Tử | Hải Quỳ | Đèn Lồng Ma | Giữ khoảng cách, có đường ngắm đỏ rồi bắn; thỉnh thoảng gọi thêm hai bầy nhỏ |
+| Nhanh nhẹn | Chồn Bóng | Cá Chuồn | Mèo Đen Hai Đuôi | Lặn hoặc chui xuống (không đánh được), vòng đỏ báo chỗ trồi lên cạnh em bé |
+| Cảm tử | Nấm Phồng | Cá Nóc | Hũ Lửa Sống | Lao vào, phồng lên (vòng đỏ) rồi nổ, nổ xong thì mất |
+| Đặt bom | Sóc Ném Quả Nổ | Sứa Bom | Tiểu Yêu Ném Pháo | Ném hoặc thả bom; bom nằm đếm ngược trong vòng đỏ rồi nổ |
+| Gai | Nhím Gai Độc | Nhím Biển | Nhím Than Hồng | Có lúc dựng gai (vòng đỏ nhấp nháy, dấu chấm than): chém lúc đó bị phản đòn, bắn tên thì không. Hạ gai thì bắn gai tám hướng |
+
+- Nổ theo hệ của vùng: Hang biển đóng băng em bé một lúc ngắn, Rừng già để lại vũng độc, Lâu đài cổ để lại vệt cháy.
+- Quái xuất hiện theo ba kiểu: lần lượt từng con, cả đợt cùng lúc, hoặc từng tốp. Chỗ sắp mọc có vòng đỏ; đứng trong vòng lúc quái mọc thì bị đẩy ra.
+- Tinh anh mạnh hơn, có một chiêu riêng và một dấu hiệu trên đầu: tia chớp (nhanh), khiên (bọc giáp mọi phía), quả bom (nổ khi chết), giọt máu (đánh trúng thì hồi máu).
+- Trùm nhỏ (Nấm Chúa, Cua Đá, Hổ Lửa) có đòn thường và hai chiêu riêng.
+- Trùm vùng (Mộc Tinh, Ngư Tinh, Hồ Tinh) có màn ra mắt, ba pha đổi ở 2/3 và 1/3 máu (cảnh chuyển pha, hình đổi, không nhận sát thương lúc đó), năm chiêu (pha 1 ba chiêu, pha 2 thêm một, pha 3 đủ năm và nhanh hơn). Sau chiêu lớn nhất trùm choáng một lúc. Chết xong cổng dịch chuyển mới mọc.
+- Trùm vẫn học theo bạn: kháng hệ dùng nhiều nhất, chống đánh xa, chống áp sát, bắt bài lăn né.
+
 ## Vũ khí: dòng và bậc
 
 - Mỗi loại vũ khí (kiếm, cung, giáo, búa) có 10 dòng, mỗi dòng một hình và một tính nết. Tên và hình đổi theo nhánh hệ và mốc tiến hóa.
@@ -98,7 +120,7 @@ Chuột dùng được như ngón tay.
 | `index.html` | Trang game: bố cục, màu sắc, thứ tự nạp các tệp JS |
 | `js/data.js` | Số liệu: hệ, vũ khí, bốn bậc, dòng phụ, tỉ lệ rơi, hero, quái, vùng, trang bị, giá cả |
 | `js/engine.js` | Bộ máy: co giãn màn hình, bàn phím và cảm ứng, âm thanh, lưu game, vẽ chữ và nút, vòng lặp |
-| `js/art.js` | Hình vẽ: quái, trùm, đồ vật, phông nền; hình hero và vũ khí kiểu cũ (chỉ còn dùng khi thiếu các tệp mới) |
+| `js/art.js` | Hình vẽ: đồ vật, phông nền, vùng nguy hiểm, đạn; hình quái, trùm, hero và vũ khí kiểu cũ (chỉ còn dùng khi thiếu các tệp mới) |
 | `js/weapon_art.js` | Vũ khí sống: 400 hình (4 loại, 10 dòng, 3 nhánh hệ, 3 mốc), 4 bậc, khuôn mặt theo tâm trạng, biểu tượng ô đồ, tên |
 | `js/hero_art.js` | Hình hero kiểu cũ (dự phòng khi hình mới lỗi) |
 | `js/hero_tinhlinh.js` | Em bé tinh linh: bốn hero vẽ theo lớp (thân, áo, mũ, đồ đeo lưng, cánh), tư thế theo từng đòn đánh, cầm vũ khí sống |
@@ -106,7 +128,9 @@ Chuột dùng được như ngón tay.
 | `js/ui_theme.js` | Bộ giao diện chủ đề trống đồng Đông Sơn (`G.theme`): nút, bảng, thanh máu và mana, ô đồ bốn bậc, thẻ ải mặt trống, thông báo, khung thoại, biểu tượng tài nguyên. Tệp này cũng đổi cách vẽ chung `G.ui.btn`, `G.ui.panel`, `G.ui.bar`, `G.ui.text` của cả game sang chủ đề |
 | `js/combat.js` | Trận đánh: người chơi, quái, sát thương, hiệu ứng ba hệ, dấu ấn |
 | `js/moves.js` | Lối đánh riêng của từng vũ khí (chuỗi kiếm, giương cung, loạt đâm, lấy đà búa) và đặc trưng hệ mở theo cấp; mọi con số nằm ở đầu tệp |
-| `js/boss.js` | Trùm: các đòn đánh và cách trùm học theo người chơi |
+| `js/boss.js` | Trùm: trùm nhỏ (hai chiêu riêng), trùm vùng (ra mắt, ba pha, năm chiêu, choáng, chết), và cách trùm học theo người chơi |
+| `js/monster_art.js` | Hình và cử động của 36 quái và trùm (ghép tự động từ `docs/phac-thao/quai-hoat-hinh/nguon/`, không sửa tay) |
+| `js/mobs.js` | Quái mới trong trận: con nào ở vùng nào, cơ chế từng vai, tinh anh, đòn ngắm mọi hướng, vùng báo trước xoay theo góc, cách vẽ quái |
 | `js/fx.js` | Hiệu ứng hình ảnh chung: vệt chém, hạt, số sát thương, rung màn hình |
 | `js/fx_he.js` | Hiệu ứng ra chiêu theo lối đánh và theo hệ Lửa, Độc, Băng; vạch lấy đà |
 | `js/stage.js` | Một ải: bản đồ 8 phòng, cửa và chuyển phòng, đợt quái, nút điều khiển, thông tin trên màn hình, các bảng chọn, bảng kết quả |
@@ -163,6 +187,8 @@ python3 tests/perf.py              # đo thời gian một khung hình trong c�
 python3 tests/chieu_shots.py       # chụp ảnh các lối đánh và hiệu ứng theo hệ vào docs/chieu-thuc/
 python3 tests/ghep.py              # bản lưu cũ, bốn bậc, trùm rơi Vàng, đặc trưng hệ theo cấp, né theo hướng cuối, hero và nút mới
 python3 tests/ghep2.py             # đợt ghép 2: nút trong hai lề, bóng và chiều sâu, lối đánh trong phòng hẹp, bản đồ một màu, né tám hướng, vũ khí rơi, suối khóa, hoạt ảnh trùm
+python3 tests/quai.py              # quái mới: mỗi cơ chế (bom, cảm tử, gai, giáp, bắn xa, lặn, tinh anh, kiểu xuất hiện), đòn tám hướng, trùm đủ ba pha và chết được
+python3 tests/quai_shots.py        # chụp ảnh và GIF quái mới trong game vào docs/quai-vao-game/ (cần thêm Pillow)
 python3 tests/balance.py 4         # bot chơi 15 ải với bản lưu cố định, mỗi ải 4 lần: tỉ lệ thắng, thời gian, máu mất (thêm "- 0,4,9 vukhi": chạy với từng loại vũ khí)
 python3 tests/ghep2_shots.py       # chụp ảnh và ảnh động của đợt ghép 2 vào docs/ghep-2/ (cần thêm Pillow)
 python3 tests/ghep_shots.py        # chụp sáu ảnh của đợt ghép 1 vào docs/ghep/ (cần thêm Pillow)

@@ -18,7 +18,7 @@ SETUP = r"""(o) => {
   G.scene = { update() {}, draw() { sc.draw(); }, hide() {} };
   G.botInput = () => ({ mx: 0, my: 0 });
   S.fade = 0;
-  b.hp = 1; G.damage(b, 99, { w: G.curW(S.P), el: 'ice' });
+  b.invuln = 0; b.hp = 1; G.damage(b, 99, { w: G.curW(S.P), el: 'ice' });
   return true;
 }"""
 STEP = "(n) => { for (let k = 0; k < n; k++) { G.time += 1 / 60; window.SC.update(1 / 60); } return G.getRun().mode; }"

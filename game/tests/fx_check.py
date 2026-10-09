@@ -124,7 +124,10 @@ UNIT = r"""
     G.damage(e6, 1e9, {}); frame();
     ok('quái chết để lại xác đang tan', G.fx.state().dying.length === 1 && G.fx.state().dying[0].e !== e6);
     for (let i = 0; i < 40; i++) frame();
-    ok('xác tan hết sau dưới 0,6 giây', G.fx.state().dying.length === 0);
+    // quái mới chết theo cử động riêng của nó (khoảng 1,1 đến 1,4 giây); quái kiểu cũ vẫn tan dưới 0,6 giây
+    const dieT = e6.art && G.monsterArt ? G.monsterArt.dur(e6.art, 'die') : 0.6;
+    for (let i = 0; i < Math.ceil(dieT * 60) - 40 + 2; i++) frame();
+    ok('xác tan hết sau đúng thời gian cử động chết (quái cũ: dưới 0,6 giây)', G.fx.state().dying.length === 0, dieT);
     ok('dấu ấn vẫn được cộng', W.marksGained > 0, W.marksGained);
 
     // 7. Sang phòng mới thì hiệu ứng phòng cũ không theo sang
