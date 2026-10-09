@@ -155,6 +155,7 @@ Em bé mặc đồ theo năm ô: **Mũ**, **Áo**, **Đồ đeo lưng** (gùi, k
 | `js/boss.js` | Trùm: trùm nhỏ (hai chiêu riêng), trùm vùng (ra mắt, ba pha, năm chiêu, choáng, chết), và cách trùm học theo người chơi |
 | `js/monster_art.js` | Hình và cử động của 36 quái và trùm (ghép tự động từ `docs/phac-thao/quai-hoat-hinh/nguon/`, không sửa tay) |
 | `js/mobs.js` | Quái mới trong trận: con nào ở vùng nào, cơ chế từng vai, tinh anh, đòn ngắm mọi hướng, vùng báo trước xoay theo góc, cách vẽ quái |
+| `js/bao_truoc.js` | Vùng báo trước đòn của quái và trùm (quạt, chữ nhật, tròn, đường thẳng, vành, vòng bom, vòng mọc quái, tường nước): vẽ mịn ở lớp giao diện, nằm dưới chân nhân vật, hiện ra mượt, thanh đếm ngược, chớp khi ra đòn |
 | `js/fx.js` | Hiệu ứng hình ảnh chung: vệt chém, hạt, số sát thương, rung màn hình |
 | `js/fx_he.js` | Hiệu ứng ra chiêu theo lối đánh và theo hệ Lửa, Độc, Băng; vạch lấy đà |
 | `js/stage.js` | Một ải: bản đồ 8 phòng, cửa và chuyển phòng, đợt quái, nút điều khiển, thông tin trên màn hình, các bảng chọn, bảng kết quả |
@@ -214,6 +215,8 @@ python3 tests/chieu_shots.py       # chụp ảnh các lối đánh và hiệu �
 python3 tests/ghep.py              # bản lưu cũ, bốn bậc, trùm rơi Vàng, đặc trưng hệ theo cấp, né theo hướng cuối, hero và nút mới
 python3 tests/ghep2.py             # đợt ghép 2: nút trong hai lề, bóng và chiều sâu, lối đánh trong phòng hẹp, bản đồ một màu, né tám hướng, vũ khí rơi, suối khóa, hoạt ảnh trùm
 python3 tests/quai.py              # quái mới: mỗi cơ chế (bom, cảm tử, gai, giáp, bắn xa, lặn, tinh anh, kiểu xuất hiện), đòn tám hướng, trùm đủ ba pha và chết được
+python3 tests/bao_truoc.py          # vùng báo trước vẽ mịn: đủ mọi hình, không vẽ lên lớp điểm ảnh, nằm dưới em bé, hiện ra mượt, đếm ngược, chớp khi nổ, thời gian không đổi
+python3 tests/bao_truoc_shots.py chup <thư mục game> <thư mục ra>   # chụp ảnh trước/sau vùng báo trước (rồi "ghep", "gif") vào docs/bao-truoc-muot/
 python3 tests/quai_shots.py        # chụp ảnh và GIF quái mới trong game vào docs/quai-vao-game/ (cần thêm Pillow)
 python3 tests/balance.py 4         # bot chơi 15 ải với bản lưu cố định, mỗi ải 4 lần: tỉ lệ thắng, thời gian, máu mất (thêm "- 0,4,9 vukhi": chạy với từng loại vũ khí; thêm "- - trangphuc" hoặc "trangphuc:vang": mặc bộ trang phục của vùng)
 python3 tests/ghep2_shots.py       # chụp ảnh và ảnh động của đợt ghép 2 vào docs/ghep-2/ (cần thêm Pillow)

@@ -593,6 +593,7 @@
       p(c, x, by - s - 4, 1, 1, '#ffffff');
     }
   }
+  G.mobDrawBomb = drawBomb; // js/bao_truoc.js vẽ vòng đỏ, quả bom vẫn vẽ ở đây
   const zone0 = A.zone;
   A.zone = function (c, z) {
     if (z.wall) return drawWall(c, z);
@@ -678,14 +679,16 @@
     if (e.role === 'shield' && !(e.brokeT > 0) && e.dying == null) shieldArc(c, e);
     if (e.spikeUp > 0 && e.dying == null) {
       // đang dựng gai: vòng đỏ nhấp nháy quanh chân
-      const bl = Math.floor(G.time * 12) % 2;
-      A.ellipse(c, e.x, e.y, e.r + 7, (e.r + 7) * 0.6, bl ? 'rgba(255,58,34,0.35)' : 'rgba(255,176,154,0.25)');
+      const bl = Math.floor(G.time * 12) % 2, BT = G.baoTruoc;
+      if (BT && BT.on && !G.noRender) BT.add({ k: 'circle', x: e.x, y: e.y, r: e.r + 7, ky: 0.6, u: 0, age: 1, el: e.el || null, dim: 0.8 + 0.2 * Math.sin(G.time * 12) }); // vẽ mịn ở js/bao_truoc.js
+      else A.ellipse(c, e.x, e.y, e.r + 7, (e.r + 7) * 0.6, bl ? 'rgba(255,58,34,0.35)' : 'rgba(255,176,154,0.25)');
     }
     if (e.act && e.act.aim && e.wind > 0) {
       // đường ngắm của quái bắn xa
       const P = W().P, a = Math.atan2(P.y - e.y, P.x - e.x), L = Math.min(150, Math.hypot(P.x - e.x, P.y - e.y));
-      const bl = Math.floor(G.time * 14) % 2;
-      for (let i = 10; i < L; i += 4) p(c, e.x + Math.cos(a) * i, e.y - 6 + Math.sin(a) * i, 2, 1, bl ? 'rgba(255,58,34,0.8)' : 'rgba(255,200,180,0.6)');
+      const bl = Math.floor(G.time * 14) % 2, BT = G.baoTruoc;
+      if (BT && BT.on && !G.noRender) BT.add({ k: 'aim', x: e.x + Math.cos(a) * 10, y: e.y - 6 + Math.sin(a) * 10, ang: a, len: Math.max(0, L - 10), w: 3, el: null, u: clamp(1 - e.wind / (e.act.T || 0.6), 0, 1), age: (e.act.T || 0.6) - e.wind }); // vẽ mịn ở js/bao_truoc.js
+      else for (let i = 10; i < L; i += 4) p(c, e.x + Math.cos(a) * i, e.y - 6 + Math.sin(a) * i, 2, 1, bl ? 'rgba(255,58,34,0.8)' : 'rgba(255,200,180,0.6)');
     }
     G.monsterArt.draw(c, e.art, e.x, e.y, o);
     if (e.healFx > 0) { e.healFx -= 1 / 60; A.ellipse(c, e.x, e.y, 90 * (1 - e.healFx / 0.6), 90 * 0.6 * (1 - e.healFx / 0.6), 'rgba(143,232,106,0.18)'); }

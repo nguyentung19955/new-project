@@ -220,8 +220,10 @@
     go({ r: 0, i: 4, kind: 'C', seed: 3, big: true, keep: true, lvl: 12 });
     G.botInput = () => ({ mx: 0, my: 0 });
     b = W.boss; P.inv = 1e9;
-    const c = G.wx, cw = c.canvas.width, chh = c.canvas.height;
-    const shot = () => { G.ui.begin(); G.scene.draw(); return c.getImageData(0, 0, cw, chh).data; };
+    const cw = G.wx.canvas.width, chh = G.wx.canvas.height;
+    // vùng báo trước giờ vẽ mịn ở lớp giao diện (js/bao_truoc.js): ghép lớp #world và phần khung game của lớp #ui rồi mới so
+    const mix = document.createElement('canvas'); mix.width = cw; mix.height = chh; const c = mix.getContext('2d', { willReadFrequently: true });
+    const shot = () => { G.ui.begin(); G.scene.draw(); c.clearRect(0, 0, cw, chh); c.drawImage(G.wx.canvas, 0, 0); c.drawImage(G.ux.canvas, G.ox * G.dpr, G.oy * G.dpr, G.W * G.uiScale, G.H * G.uiScale, 0, 0, cw, chh); return c.getImageData(0, 0, cw, chh).data; };
     const diffBox = (A0, B0) => { let x0 = 1e9, x1 = -1, y0 = 1e9, y1 = -1; for (let y = 0; y < chh; y++) for (let x = 0; x < cw; x++) { const i = (y * cw + x) * 4; if (A0[i] !== B0[i] || A0[i + 1] !== B0[i + 1] || A0[i + 2] !== B0[i + 2]) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; } } return [x0, y0, x1, y1]; };
     const freeze = G.time;
     b.x = W.geo.cx + 90; b.y = W.y0 + 10; // dời trùm ra góc cho khỏi đè lên vùng đang đo
