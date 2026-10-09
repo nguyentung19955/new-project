@@ -63,13 +63,15 @@
   // ---------- chỉ số người chơi ----------
   G.buildPlayer = function () {
     const sv = G.save, key = sv.hero, H = G.HEROES[key], hs = sv.heroes[key];
+    if (G.outfit) G.outfit.sync(sv); // mũ, áo, bùa kiểu cũ (nếu còn) chuyển sang trang phục mới trước khi tính chỉ số
     const sk = hs.sk;
     const armor = sv.armor ? G.GEAR.armor[sv.armor] : null;
     const helm = sv.helm ? G.GEAR.helm[sv.helm] : null;
     const set = armor && helm && armor.set && armor.set === helm.set ? armor.set : null;
-    let maxhp = H.hp * (1 + 0.03 * (hs.lvl - 1)) + (armor ? armor.hp : 0);
+    const osum = G.outfit ? G.outfit.sum(sv) : null; // trang phục đang mặc: máu cộng vào trước các hệ số, như áo của bản cũ
+    let maxhp = H.hp * (1 + 0.03 * (hs.lvl - 1)) + (armor ? armor.hp : 0) + (osum ? osum.stats.hp || 0 : 0);
     if (sk.def >= 1) maxhp *= 1.1;
-    if (sv.charm === 'c_greed' && hs.lvl >= 5) maxhp *= 0.9;
+    if ((sv.charm === 'c_greed' || (osum && osum.oldCharm === 'c_greed')) && hs.lvl >= 5) maxhp *= 0.9;
     const P = {
       isPlayer: true, key, lvl: hs.lvl, sk, x: 60, y: 190, r: 7, hr: 6, face: 1,
       maxhp: Math.round(maxhp), hp: Math.round(maxhp),
@@ -92,6 +94,7 @@
     };
     if (helm) P.resist[helm.res] += helm.pct;
     if (sk.def >= 4) for (const e of G.ELS) P.resist[e] = Math.min(0.8, P.resist[e] + 0.3);
+    if (G.outfit) G.outfit.apply(P, sv); // trang phục: chỉ số, bộ, tác dụng đặc biệt, hình đang mặc (js/outfit.js)
     P.mana = Math.round(P.maxmana * 0.5);
     return P;
   };
@@ -117,6 +120,7 @@
     };
     P.x = 50; P.y = (W.y0 + W.y1) / 2;
     P.inv = 0.6;
+    if (G.outfit && P.oSp) G.outfit.onRoom(P); // khiên đầu phòng của trang phục
     return W;
   };
   G.setWorld = (w) => { W = w; };
@@ -192,6 +196,7 @@
       if (t.exposed > 0) m *= 1.5;
       if (t.onHit) t.onHit(o);
     }
+    if (o.fromPlayer !== false && o.el && G.outfit) m *= G.outfit.elMult(W.P, o.el); // đủ bộ trang phục một hệ: tăng sát thương hệ đó
     if (o.fromPlayer !== false) {
       W.stats.el[o.el || 'none'] += amt;
       if (o.src === 'hit') { if (o.ranged) W.stats.ranged += amt; else W.stats.melee += amt; }
@@ -301,12 +306,14 @@
       if (P.charm === 'c_spirit') P.mana = Math.min(P.maxmana, P.mana + 5);
     }
     if (G.moves) G.moves.onKill(e, o, w); // đặc trưng hệ khi quái chết: Nổ lan, Lây độc (chỉ ở Thức tỉnh)
+    if (G.outfit) G.outfit.onKill(P, e); // bùa có hệ: quái gục gần bé nổ nhỏ
     P.mana = Math.min(P.maxmana, P.mana + 5);
     if (P.charm === 'c_leech') P.hp = Math.min(P.maxhp, P.hp + P.maxhp * 0.02);
     if (!e.add) {
       W.loot.kills++;
       if (e.role === 'elite' && G.rnd() < 0.25) W.loot.charm = true;
       if (e.role === 'elite' && G.onEliteDown) G.onEliteDown(e); // tinh anh có thể rơi vũ khí (js/stage.js)
+      if (G.onMobDown) G.onMobDown(e); // quái, tinh anh, trùm có thể rơi trang phục (js/stage.js)
     }
     if (e.isBoss) {
       W.loot.bossDown = true;
@@ -444,7 +451,7 @@
     const w = curW(P);
     P.mana -= P.specCost;
     P.specT = 0.35;
-    P.specCd = 0.8;
+    P.specCd = 0.8 * (P.cdMul || 1);
     const el = G.activeEl(P, w);
     G.sfx('boom', 1.8);
     if (w.type === 'sword' || w.type === 'spear') {
@@ -481,7 +488,7 @@
     const w = curW(P);
     P.mana -= 40;
     P.castT = 0.4;
-    P.skillCd = 5;
+    P.skillCd = 5 * (P.cdMul || 1);
     G.sfx('evolve', 1.4);
     if (P.key === 'smith') {
       P.coats[w.id] = { el: 'fire', t: 6 };
@@ -518,6 +525,7 @@
   G.hurtPlayer = function (amt, el, src, melee) {
     const P = W.P;
     if (P.inv > 0 || P.dead || W.over || W.safe) return false; // W.safe: đã hạ trùm, đang đi dạo chờ vào cổng
+    if (G.outfit && G.outfit.block(P)) return false; // khiên của trang phục (cánh, khiên đầu phòng) chặn đòn này
     const raw = amt;
     amt *= 1 - Math.min(0.75, P.dr);
     if (P.gongT > 0) amt *= 0.4;
@@ -529,6 +537,7 @@
     G.sfx('hurt');
     if (!G.noRender) FX('hurt', P, amt, el, P.gongT > 0);
     if (P.key === 'wrestler' && melee && src && !src.dead) G.damage(src, raw * 0.5, { src: 'reflect', fromPlayer: false });
+    if (G.outfit) G.outfit.onHurt(P, src); // mũ có hệ: quái đánh trúng bé bị cháy, độc hoặc chậm
     if (el) {
       const k = 1 - P.resist[el];
       if (el === 'fire') { P.st.fire = 3 * k; P.dot = raw * 0.05; } // tổng cộng thêm khoảng 30% nếu cháy đủ 3 giây
@@ -544,6 +553,7 @@
     for (const k of ['atkT', 'cdT', 'dodgeCd', 'inv', 'hurtT', 'skillCd', 'specCd', 'swapCd', 'gongT', 'castT', 'specT']) if (P[k] > 0) P[k] -= dt;
     if (P.dead) P.deadT += dt;
     for (const id in P.coats) if (P.coats[id].t > 0) P.coats[id].t -= dt;
+    if (G.outfit) G.outfit.tick(P, dt); // tác dụng trang phục theo thời gian: vệt khi lộn, vũng mỗi vài giây
     // hiệu ứng trên người chơi
     P.dotT -= dt;
     for (const k of ['fire', 'poison', 'ice']) if (P.st[k] > 0) P.st[k] -= dt;
@@ -586,8 +596,9 @@
       P.dodgeT -= dt;
       const ox = P.x;
       // Phòng vuông nhìn từ trên: lộn dọc đi xa gần bằng lộn ngang (cùng tỉ lệ 0,75 như lúc đi bộ), tám hướng đều đúng góc.
-      P.x += P.ddx * G.DODGE.vx * dt;
-      P.y += P.ddy * G.DODGE.vx * G.DODGE.ky * dt;
+      const dm = P.dodgeMul || 1; // cánh cấp 2 trở lên: lộn xa hơn
+      P.x += P.ddx * G.DODGE.vx * dm * dt;
+      P.y += P.ddy * G.DODGE.vx * G.DODGE.ky * dm * dt;
       if (P.charm === 'c_mist' || P.set === 'ngu') {
         for (const e of G.targets()) {
           if (!e.misted && e.x >= Math.min(ox, P.x) - e.r && e.x <= Math.max(ox, P.x) + e.r && Math.abs(e.y - P.y) < 14 + e.hr) {
@@ -600,6 +611,7 @@
         for (const e of W.ents) e.misted = false;
         if (W.boss) W.boss.misted = false;
         if (P.set === 'ho') P.boost = true;
+        if (G.outfit) G.outfit.dodgeEnd(P);
       }
     } else {
       const sp = P.speed * slow * (P.atkT > 0 ? 0.4 : 1) * (MV ? MV.speed(P) : 1);
@@ -904,7 +916,7 @@
       atk: P.atkT > 0 ? 1 - P.atkT / P.atkDur : -1, dodge: P.dodgeT > 0 ? 1 - P.dodgeT / 0.27 : -1,
       flash: P.hurtT > 0, alpha: P.inv > 0 && P.dodgeT <= 0 && Math.floor(G.time * 20) % 2 ? 0.5 : null,
       weapon: Object.assign({}, w, { coat: P.coats[w.id] && P.coats[w.id].t > 0 ? P.coats[w.id].el : null }),
-      helm: P.helm, armor: P.armor, gong: P.gongT > 0,
+      helm: P.helm, armor: P.armor, outfit: P.outfit || null, gong: P.gongT > 0,
       roundShadow: !!W.geo, // phòng vuông nhìn từ trên: bóng đổ tròn
     };
   };

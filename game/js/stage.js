@@ -30,6 +30,18 @@
     S.got.push({ s: rarName(w), w });
     S.W.banner = { s: 'Tinh anh rơi ' + rarName(w), col: G.RARITY[G.wRar(w)].col, t: 3 };
   };
+  // Quái gục (combat.js gọi): có thể rơi trang phục. Trùm rơi lúc tính thưởng (settle), không ở đây.
+  G.onMobDown = function (e) {
+    const O = G.outfit;
+    if (!O || !S || !S.W || e.isBoss || e.add || e.illusion) return;
+    if (G.rnd() >= (e.role === 'elite' ? O.DROP.elite : O.DROP.mob)) return;
+    const it = O.roll(G.save, S.r, e.role === 'elite' ? 'elite' : 'mob');
+    if (!it) { S.got.push('vàng (kho trang phục đầy)'); return; }
+    const s = O.name(it) + ' (' + G.RARITY[it.r].name + ')';
+    S.got.push('trang phục ' + s);
+    if (!S.W.banner) S.W.banner = { s: 'Rơi trang phục: ' + s, col: G.RARITY[it.r].col, t: 3 }; // không che dòng báo vũ khí rơi
+    if (G.fx && G.fx.text) G.fx.text(e.x, e.y - 24, O.name(it), G.RARITY[it.r].col, 8);
+  };
   G.addXp = function (key, xp) {
     const hs = G.save.heroes[key];
     let up = 0;
@@ -339,7 +351,7 @@
   function pickLoot(W, P) {
     for (const pr of W.props) {
       if (pr.type !== 'loot' || pr.got || G.time < pr.born + 0.5) continue;
-      if (Math.hypot(pr.x - P.x, (pr.y - P.y) * 1.3) < 14) { pr.got = G.time; G.sfx('pick', 1.2); }
+      if (Math.hypot(pr.x - P.x, (pr.y - P.y) * 1.3) < 14 + (P.pickR || 0)) { pr.got = G.time; G.sfx('pick', 1.2); } // trang phục tăng tầm nhặt
     }
     for (const pr of W.props) if (pr.type === 'loot' && pr.got && G.time - pr.got > 0.9) pr.dead = true;
     if (W.props.some((p) => p.dead && p.type === 'loot')) W.props = W.props.filter((p) => !(p.dead && p.type === 'loot'));
@@ -415,7 +427,7 @@
       const big = S.i === 4;
       const xp = S.base.xp;
       let gold = S.base.gold + S.loot.kills * 2;
-      if (sv.charm === 'c_greed' && sv.heroes[sv.hero].lvl >= 5) gold = Math.round(gold * 1.25);
+      if (S.P && S.P.charm === 'c_greed') gold = Math.round(gold * 1.25); // Bùa tham (đang đeo, hero từ cấp 5)
       const ore = 3 + R.stars, mat = 5 + S.i;
       sv.gold += gold; sv.ore += ore; sv.mats[S.r] += mat;
       R.lines.push('+' + xp + ' kinh nghiệm', '+' + gold + ' vàng', '+' + ore + ' quặng', '+' + mat + ' ' + reg.mat.toLowerCase());
@@ -426,9 +438,16 @@
         const nw = big ? G.bossDrop(S.r) : G.giveWeapon(G.pick(G.WKEYS), G.rollRarity(S.r));
         R.lines.push(nw ? { s: (big ? reg.bossName + ' rơi ' : 'Nhặt được ') + rarName(nw), w: nw } : 'Rương đồ đầy, vũ khí rớt đổi thành vàng');
       }
-      if (S.loot.charm) {
-        const left = Object.keys(G.GEAR.charm).filter((k) => !sv.owned.charm.includes(k));
-        if (left.length) { const c = G.pick(left); sv.owned.charm.push(c); R.lines.push('Nhặt được ' + G.GEAR.charm[c].name); }
+      // Bùa cũ (tinh anh 25%) nay là trang phục ô Bùa, bậc Lam; trùm rơi trang phục (trùm vùng: món Tím hoặc Vàng của bộ vùng).
+      const O = G.outfit;
+      S.outfitLoot = [];
+      if (O && S.loot.charm) {
+        const left = Object.keys(O.ITEMS).filter((k) => O.ITEMS[k].old && !O.has(sv, k));
+        if (left.length) { const it = O.add(sv, G.pick(left), 1); if (it) { R.lines.push('Nhặt được ' + O.name(it)); S.outfitLoot.push(it); } }
+      }
+      if (O && (big || G.rnd() < O.DROP.mini)) {
+        const it = O.roll(sv, S.r, big ? 'boss' : 'mini');
+        if (it) { R.lines.push((big ? reg.bossName : 'Trùm') + ' rơi ' + O.name(it) + ' (' + G.RARITY[it.r].name + ')'); S.outfitLoot.push(it); }
       }
       if (big && !S.diff && !sv.heroes[reg.rescue].unlocked) {
         sv.heroes[reg.rescue].unlocked = true;
@@ -488,6 +507,7 @@
       const k = /vàng/.test(l) ? 'gold' : /quặng/.test(l) ? 'ore' : /đá tôi/.test(l) ? 'stone' : /mảnh/.test(l) ? 'shard' + S.r : /kinh nghiệm/.test(l) ? 'xp' : /^\+\d+ /.test(l) ? 'mat' + S.r : null;
       if (k) items.push({ kind: k, s: l });
     }
+    for (const it of S.outfitLoot || []) items.push({ kind: 'outfit', o: it, s: G.outfit.name(it) });
     items.forEach((it, i) => {
       const a = (i / Math.max(1, items.length)) * Math.PI * 2 + 0.4, rr = 18 + (i % 2) * 8;
       let x = G.clamp(bx + Math.cos(a) * rr, W.x0 + 8, W.x1 - 8), y = G.clamp(by + Math.sin(a) * rr * 0.7, W.y0 + 6, W.y1 - 4);
