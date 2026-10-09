@@ -12,5 +12,5 @@ window.FIREBASE_CONFIG = {
 // Đăng nhập Google kiểu chuyển trang (mở từ màn hình chính) chỉ chạy ổn khi authDomain trùng tên miền đang mở:
 // trình duyệt mới chặn dữ liệu "bên thứ ba" nên kết quả đăng nhập từ sontinhthuytinh.firebaseapp.com không về được trang.
 // spiritblade.web.app là site Firebase Hosting của cùng dự án, tự có /__/auth/handler.
-// Cần thêm https://spiritblade.web.app/__/auth/handler vào "Authorized redirect URIs" của OAuth client (xem docs/firebase-linh-khi/HUONG-DAN.md).
+// Cần thêm đường dẫn spiritblade.web.app + /__/auth/handler vào "Authorized redirect URIs" của OAuth client (xem docs/firebase-linh-khi/HUONG-DAN.md).
 try { if (location.hostname === 'spiritblade.web.app') window.FIREBASE_CONFIG.authDomain = 'spiritblade.web.app'; } catch (e) { /* bỏ qua */ }

@@ -26758,6 +26758,11 @@ window.FIREBASE_CONFIG = {
   messagingSenderId: '194086791076',
   appId: '1:194086791076:web:81b3be1d4b2f1c7afd4331',
 };
+// Đăng nhập Google kiểu chuyển trang (mở từ màn hình chính) chỉ chạy ổn khi authDomain trùng tên miền đang mở:
+// trình duyệt mới chặn dữ liệu "bên thứ ba" nên kết quả đăng nhập từ sontinhthuytinh.firebaseapp.com không về được trang.
+// spiritblade.web.app là site Firebase Hosting của cùng dự án, tự có /__/auth/handler.
+// Cần thêm đường dẫn spiritblade.web.app + /__/auth/handler vào "Authorized redirect URIs" của OAuth client (xem docs/firebase-linh-khi/HUONG-DAN.md).
+try { if (location.hostname === 'spiritblade.web.app') window.FIREBASE_CONFIG.authDomain = 'spiritblade.web.app'; } catch (e) { /* bỏ qua */ }
 
 // ===== js/cloud.js =====
 // LƯU MÂY (Firebase, dự án dùng chung "sontinhthuytinh"; dữ liệu Linh Khí nằm riêng ở linhkhi_users, linhkhi_scores, linhkhi_feedback).
@@ -26857,7 +26862,7 @@ window.FIREBASE_CONFIG = {
         this.auth.onAuthStateChanged((u) => this._onUser(u));
         // quay về từ trang đăng nhập Google (redirect): báo kết quả; tài khoản Google đã có dữ liệu thì chuyển sang nó
         let back = false; try { back = localStorage.getItem('lk_gredir') === '1'; localStorage.removeItem('lk_gredir'); } catch (e) { /* bỏ qua */ }
-        if (back) this.auth.getRedirectResult().then((r) => { this.gMsg = r && r.user ? 'Đã đăng nhập Google.' : ''; if (r && r.user) { this.myScore = null; setTimeout(() => this.push(true), 1500); } }, (e) => {
+        if (back) this.auth.getRedirectResult().then((r) => { this.gMsg = r && r.user ? 'Đã đăng nhập Google.' : 'Google chưa trả kết quả đăng nhập về [no-redirect-result]'; if (r && r.user) { this.myScore = null; setTimeout(() => this.push(true), 1500); } }, (e) => {
           if (e && e.code === 'auth/credential-already-in-use' && e.credential) { this.auth.signInWithCredential(e.credential).then(() => { this.gMsg = 'Đã đăng nhập Google.'; }, (e2) => { this.gMsg = 'Chưa đăng nhập được: ' + this._err(e2); }); return; }
           this.gMsg = 'Chưa đăng nhập được: ' + this._err(e);
         });
