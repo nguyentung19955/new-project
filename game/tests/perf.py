@@ -1,4 +1,4 @@
-"""Đo thời gian một khung hình (cập nhật + vẽ) trong cảnh đông quái, vũ khí ở mốc Thức tỉnh của từng hệ.
+"""Đo thời gian một khung hình (cập nhật + vẽ) trong cảnh đông quái và nhiều đồ rơi (16 món trên sàn), vũ khí ở mốc Thức tỉnh của từng hệ.
 Dùng để so trước và sau khi thêm hiệu ứng: chạy trên hai bản mã rồi so số.
 Chạy: python3 tests/perf.py [thư mục game] [số khung]      (mặc định: thư mục game chứa tệp này, 600 khung)
       python3 tests/perf.py --so <thư mục game cũ>          (đo cả hai bản, in tỉ lệ; thoát mã 1 nếu chậm hơn quá 20%)"""
@@ -21,7 +21,14 @@ JS = r"""
   // phòng vuông: rải 14 quái khắp sàn phòng
   const rw = W.x1 - W.x0 - 20, rh = W.y1 - W.y0 - 30;
   for (let i = 0; i < 14; i++) { const e = G.spawnEnemy(roles[i % roles.length], W.x0 + 10 + (i * 53) % rw, W.y0 + 20 + (i * 37) % rh, { hpMult: 1e5 }); e.inside = true; }
-  const frame = () => { G.tick(); G.ui.begin(); G.scene.draw(); G.click = null; if (!W.over) { P.hp = P.maxhp; P.mana = Math.max(P.mana, 30); } };
+  // nhiều đồ rơi trên sàn cùng lúc (đủ loại, đủ bậc): bị nhặt mất thì thả thêm cho luôn đủ 16 món
+  const sv = G.save, ws = [0, 1, 2, 3].map((k) => G.newWeapon(sv, ['sword', 'bow', 'spear', 'hammer'][k], k));
+  const KIND = [{ kind: 'weapon', w: ws[0] }, { kind: 'weapon', w: ws[2] }, { kind: 'weapon', w: ws[3] }, { kind: 'outfit', o: { k: 'ao_vay', r: 2, lv: 1 } }, { kind: 'outfit', o: { k: 'trong_nho', r: 3, lv: 1 } },
+    { kind: 'gold' }, { kind: 'ore' }, { kind: 'stone' }, { kind: 'mat1' }, { kind: 'shard1' }, { kind: 'xp' }];
+  let nd = 0;
+  const doRoi = () => { let n = 0; for (const o of W.props) if (o.type === 'loot' && !o.got) n++;
+    for (; n < 16; n++, nd++) W.props.push(Object.assign({ type: 'loot', x: W.x0 + 14 + (nd * 41) % rw, y: W.y0 + 24 + (nd * 29) % rh, born: G.time, s: 'đồ ' + nd }, KIND[nd % KIND.length])); };
+  const frame = () => { doRoi(); G.tick(); G.ui.begin(); G.scene.draw(); G.click = null; if (!W.over) { P.hp = P.maxhp; P.mana = Math.max(P.mana, 30); } };
   for (let i = 0; i < 90; i++) frame();
   const t0 = performance.now();
   let maxP = 0;
