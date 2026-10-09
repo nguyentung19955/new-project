@@ -1,6 +1,7 @@
 // Làng: cảnh làng có người (js/village_scene.js). Mỗi chức năng là một người đứng cạnh công trình của mình:
 //   Chú Lái Đò: tranh bản đồ vùng, chọn ải, độ khó, nút "Lên đò"      Ông Thợ Rèn: lò rèn (Mài, Nâng bậc, Tôi lại, Rèn đồ, Nâng lò)
-//   Bà Hàng Xén: rương vũ khí, chọn hai món mang theo, bán đồ           Cô Thợ May: mũ, áo, bùa
+//   Bà Hàng Xén: rương vũ khí, chọn hai món mang theo, bán đồ, bán trang phục thường
+//   Cô Thợ May: trang phục năm ô (bảng riêng ở js/tailor.js)
 //   Cụ Đồ: cây kỹ năng, đặt lại điểm, hướng dẫn                         Ông Từ: chọn hero, xem chỉ số
 //   Anh Mõ: cài đặt                                                     Chạm vũ khí sống đang bay theo: xem vũ khí
 // Bảng nằm bên phải, người đứng bên trái và nói một câu. Hình vẽ theo chủ đề trống đồng (js/ui_theme.js).
@@ -50,6 +51,8 @@
     V.tab = 'hub'; V.who = null; V.sel = null; V.node = null; V.confirm = false; V.page = 0;
     if (was !== 'hub' && was !== 'title' && was !== 'weapon') VS.closeTalk();
     VS.state.talk = null;
+    // rời Cô Thợ May: các món mới đã được thấy trong kho, bỏ dấu báo mới
+    if (was === 'outfit' && G.outfit && G.save.outfit) { for (const it of G.save.outfit.items) it.n = 0; G.persist(); VS.checkNews(); }
   }
   G.villageApi = { canPay, pay, V, open, goHub, TAB_OF };
   VS.onTalk = open;
@@ -145,7 +148,7 @@
     // em bé đứng ở ải đang chọn
     if (V.sel) {
       const q = M.nodes[V.sel[0]][V.sel[1]], rad = V.sel[1] === 4 ? 12 : 10;
-      G.art.hero(G.ux, { x: q[0], y: q[1] - rad + 1, face: 1, key: sv.hero, move: false, t: G.time, atk: -1, dodge: -1, weapon: null, helm: sv.helm, armor: sv.armor, noShadow: true });
+      G.art.hero(G.ux, { x: q[0], y: q[1] - rad + 1, face: 1, key: sv.hero, move: false, t: G.time, atk: -1, dodge: -1, weapon: null, outfit: G.outfit ? G.outfit.look(sv) : null, noShadow: true });
       VS.bubble(V.sel[1] === 4 ? 'Trùm ' + G.REGIONS[V.sel[0]].bossName : 'Ải ' + (V.sel[1] + 1), q[0], q[1] - rad - 26, { bg: '#ffe9a8', size: 7.5 });
     }
     VS.bubble(V.msgT > 0 && V.msg ? V.msg : V.sel ? 'Lên đò đi cháu, nước đang êm.' : 'Đi đâu hả cháu?', 40, 198, { maxW: 76, size: 7.5 });
@@ -185,12 +188,20 @@
     ui.text('Bậc ' + rar.name + (fam ? ' · dòng ' + fam.name : ' · ' + G.WTYPES[w.type].name), 96, 80, { size: 7.5, color: SOFT });
     if (fam && fam.nature) ui.text('Tính nết: ' + fam.nature, 96, 91, { size: 7.5, color: SOFT });
     ui.text('Sát thương mỗi đòn ' + G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1) + ' · hệ số bậc x' + String(G.wRarMult(w)).replace('.', ','), 96, 102, { size: 7.5 });
+    // Hai thẻ ở cột trái: Linh khí (bảng dấu ấn ba hệ, js/linhkhi.js) và Dòng phụ (dòng phụ, dòng mạnh). Mặc định mở Linh khí.
+    const lkTab = G.lk && V.wvTab !== 'aff';
+    if (G.lk) {
+      if (T.sbtn(246, 29, 70, 17, 'Linh khí', { size: 8, pad: 4, primary: lkTab })) V.wvTab = 'lk';
+      if (T.sbtn(320, 29, 70, 17, 'Dòng phụ', { size: 8, pad: 4, primary: !lkTab })) V.wvTab = 'aff';
+    }
     const mi = G.markInfo(w);
     ui.text(mi.txt, 96, 113, { size: 7.5, color: mi.col });
     ui.bar(96, 117, 146, 4, mi.frac, mi.col);
-    ui.text('Tiến hóa cao nhất của bậc này: ' + G.STAGE_NAMES[rar.maxStage], 18, 140, { size: 7, color: SOFT });
-    // dòng phụ và dòng mạnh
     let y = 156;
+    if (lkTab) G.lk.panel(w, 18, 140, 224);
+    else ui.text('Tiến hóa cao nhất của bậc này: ' + G.STAGE_NAMES[rar.maxStage], 18, 140, { size: 7, color: SOFT });
+    // dòng phụ và dòng mạnh
+    if (!lkTab) {
     T.head('Dòng phụ', 18, y);
     y += 12;
     if (!w.affixes || !w.affixes.length) { ui.text(r === 0 ? 'Bậc Thường không có dòng phụ.' : 'Chưa có.', 18, y, { size: 7.5, color: SOFT }); y += 11; }
@@ -199,6 +210,7 @@
       y += 3;
       ui.text('Dòng mạnh: ' + G.POWER[w.power].name, 18, y, { size: 8.5, bold: true, color: G.RARITY[3].col });
       y = ui.para(G.POWER[w.power].desc, 18, y + 11, 200, { size: 7.5 });
+    }
     }
     ui.para(r >= 3 ? 'Đã ở bậc cao nhất.' : 'Ông Thợ Rèn nâng bậc được, không mất dấu ấn và tiến hóa.', 18, 250, 220, { size: 7, color: SOFT });
     // đặc trưng hệ theo cấp
@@ -246,6 +258,9 @@
       if (carry.includes(w.id)) ui.text('đang mang', CX + CW - 6, y + 9.5, { size: 6.5, align: 'right', color: GOOD });
     });
     ui.text(list.length + ' vũ khí', CX + 2, 200.5, { size: 7, color: SOFT });
+    // xem bảng linh khí (dấu ấn hệ) và đặc trưng của món đang chọn
+    const sw = V.sel != null && G.weaponById(V.sel);
+    if (sw && list.includes(sw) && T.sbtn(CX + 52, 190, 88, 16, 'Xem linh khí', { size: 7.5, pad: 3 })) viewWeapon(sw.id, 'forge');
     return list;
   }
   const actBtn = (label, o) => T.btn(CX + CW - 92, DET_Y + 9, 86, 34, label, Object.assign({ size: 11, primary: true }, o));
@@ -334,33 +349,11 @@
         });
       }
     } else if (V.ftab === 'craft') {
-      const items = [];
-      for (const slot of ['helm', 'armor']) for (const id in G.GEAR[slot]) items.push([slot, id, G.GEAR[slot][id]]);
-      pager(items.length, ROWS, CX + CW - 100, 189);
-      ui.text(items.length + ' món mũ và áo', CX + 2, 200.5, { size: 7, color: SOFT });
-      items.slice(V.page * ROWS, V.page * ROWS + ROWS).forEach((it, k) => {
-        const y = LIST_Y + k * PITCH, g = it[2];
-        const own = sv.owned[it[0]].includes(it[1]);
-        T.inset(CX, y, CW, 22, V.sel === it[1]);
-        if (T.hit(CX, y, CW, 22)) V.sel = it[1];
-        ui.text(g.name, CX + 6, y + 9.5, { size: 7.5, bold: true, color: g.set ? GOLD : TXT });
-        ui.text(it[0] === 'helm' ? 'Mũ: giảm ' + Math.round(g.pct * 100) + '% thời gian dính ' + G.EL[g.res].name : 'Áo: máu +' + g.hp + (g.dr ? ', giảm ' + Math.round(g.dr * 100) + '% sát thương' : ''), CX + 6, y + 18.5, { size: 6.5, color: SOFT });
-        ui.text(own ? 'Đã có' : canPay(g.cost) ? 'Rèn được' : '', CX + CW - 6, y + 9.5, { size: 6.5, align: 'right', color: own ? GOOD : GOLD });
-      });
-      const slot = V.sel && (G.GEAR.helm[V.sel] ? 'helm' : G.GEAR.armor[V.sel] ? 'armor' : null);
-      line = 'Chọn một món để xem giá. Mũ và áo cùng một trùm tạo thành bộ.';
-      if (!slot) ui.text('Chạm một món ở trên để chọn.', CX + 8, DET_Y + 30, { size: 8.5, color: SOFT });
-      else {
-        const g = G.GEAR[slot][V.sel], own = sv.owned[slot].includes(V.sel);
-        ui.text(g.name, CX + 8, DET_Y + 13, { size: 8.5, bold: true, color: g.set ? GOLD : TXT });
-        if (g.set) line = G.SETS[g.set];
-        ui.para(own ? 'Bạn đã có món này. Sang Cô Thợ May để mặc.' : 'Tốn: ' + costText(g.cost), CX + 8, DET_Y + 26, 198, { size: 7.5, color: own || canPay(g.cost) ? TXT : WARN });
-        if (!own && actBtn('Rèn', { disabled: !canPay(g.cost) })) {
-          pay(g.cost); sv.owned[slot].push(V.sel);
-          if (!sv[slot]) sv[slot] = V.sel;
-          G.persist(); G.sfx('evolve'); say('Đã rèn xong ' + g.name + '!');
-        }
-      }
+      // Mũ, áo, bùa nay là trang phục: Cô Thợ May may, nâng bậc, mặc thử. Ông chỉ đường sang đó.
+      ui.para('Mũ, áo, đồ đeo lưng, bùa và cánh giờ do Cô Thợ May may từ gỗ linh, vảy cá, đá lửa. Mũ áo ông rèn trước đây đã được chuyển sang kho trang phục, không mất món nào.', CX + 6, LIST_Y + 8, 292, { size: 8, color: TXT });
+      ui.text('Kho trang phục: ' + (G.outfit ? sv.outfit.items.length : 0) + ' món', CX + 6, LIST_Y + 62, { size: 8, bold: true, color: GOLD });
+      line = 'Đồ vải vóc thì sang khung cửi của Cô Thợ May nhé cháu.';
+      if (actBtn('Sang Cô Thợ May', { size: 7.5 })) { VS.goNpc('may', true); return line; }
     } else {
       ui.para('Lò rèn cấp ' + sv.forge + ' mài được vũ khí tới +' + G.FORGE_CAP[sv.forge] + '.', CX + 4, 112, 296, { size: 9.5 });
       const up = G.FORGE_UP[sv.forge];
@@ -378,7 +371,9 @@
   // ---------- rương vũ khí, chọn hai món mang theo, bán đồ (Bà Hàng Xén) ----------
   function gear() {
     const sv = G.save;
+    if (V.gtab === 'outfit' && G.outfit) return shop();
     frame('Hàng xén: vũ khí');
+    if (G.outfit && T.sbtn(PX + PW - 150, PY + 3, 80, 17, 'Trang phục ›', { size: 8, pad: 4 })) { V.gtab = 'outfit'; V.sel = null; V.page = 0; return null; }
     ui.text('Đang mang', CX + 2, 77, { size: 7.5, color: SOFT });
     sv.carry.forEach((id, slot) => {
       const w = G.weaponById(id);
@@ -408,38 +403,33 @@
     return !stash.length ? 'Chạm một vũ khí đang mang để xem bậc, dòng phụ và đặc trưng hệ.' : selW && !sv.carry.includes(selW.id) ? 'Đã chọn ' + G.wName(selW) + '. Giờ chạm một vũ khí đang mang để thay, hoặc bấm Xem, Bán.' : 'Chạm vũ khí đang mang để xem. Muốn đổi: chạm một món trong rương để chọn trước.';
   }
 
-  // ---------- mũ, áo, bùa (Cô Thợ May) ----------
-  function cycle(slot) {
-    const sv = G.save, own = sv.owned[slot];
-    const list = [null].concat(own);
-    sv[slot] = list[(list.indexOf(sv[slot]) + 1) % list.length];
-    G.persist();
-  }
-  function outfit() {
-    const sv = G.save, hs = sv.heroes[sv.hero];
-    frame('Thợ may: mũ, áo, bùa');
-    const rows = [
-      ['helm', 'Mũ', sv.helm ? G.GEAR.helm[sv.helm].name : 'Không đội', sv.helm ? 'Giảm ' + Math.round(G.GEAR.helm[sv.helm].pct * 100) + '% thời gian dính ' + G.EL[G.GEAR.helm[sv.helm].res].name : 'Rèn mũ ở chỗ Ông Thợ Rèn'],
-      ['armor', 'Áo', sv.armor ? G.GEAR.armor[sv.armor].name : 'Không mặc', sv.armor ? 'Máu +' + G.GEAR.armor[sv.armor].hp : 'Rèn áo ở chỗ Ông Thợ Rèn'],
-      ['charm', 'Bùa', sv.charm ? G.GEAR.charm[sv.charm].name : 'Không đeo', sv.charm ? G.GEAR.charm[sv.charm].desc : 'Bùa rớt từ quái tinh anh'],
-    ];
-    rows.forEach((r, k) => {
-      const y = 72 + k * 40;
-      T.inset(CX, y, CW, 36, false);
-      ui.text(r[1] + ': ' + r[2], CX + 6, y + 13, { size: 8.5, bold: true });
-      ui.para(r[3], CX + 6, y + 24, 230, { size: 7, color: SOFT });
-      const locked = r[0] === 'charm' && hs.lvl < 5;
-      const n = sv.owned[r[0]].length;
-      if (T.sbtn(CX + CW - 58, y + 7, 52, 22, locked ? 'Cấp 5' : 'Đổi', { size: 8.5, pad: 4, disabled: locked || !n })) cycle(r[0]);
+  // ---------- trang phục thường (Bà Hàng Xén bán) ----------
+  function shop() {
+    const sv = G.save, O = G.outfit, list = O.shopList();
+    frame('Hàng xén: trang phục');
+    if (T.sbtn(PX + PW - 150, PY + 3, 80, 17, '‹ Vũ khí', { size: 8, pad: 4 })) { V.gtab = 'weapon'; V.sel = null; V.page = 0; return null; }
+    ui.text('Đồ thường, mặc ngay được. Đem tới Cô Thợ May để nâng bậc.', CX + 2, 78, { size: 7, color: SOFT });
+    pager(list.length, 5, CX + CW - 100, 239);
+    let line = 'Áo mũ thường đây cháu ơi, rẻ mà bền. Muốn đẹp hơn thì nhờ Cô Thợ May nâng bậc.';
+    list.slice(V.page * 5, V.page * 5 + 5).forEach((k, i) => {
+      const Ti = O.ITEMS[k], y = 84 + i * 30, own = O.has(sv, k);
+      T.inset(CX, y, CW, 28, false);
+      T.slot(CX + 3, y + 2, 24, 0);
+      O.drawIcon(G.ux, k, CX + 15, y + 14, 20);
+      ui.text(Ti.name + ' · ' + O.SLOT_NAME[Ti.slot], CX + 32, y + 11, { size: 8, bold: true, color: TXT });
+      const st = O.stats({ k, r: 0 });
+      ui.text(Object.keys(st).map((q) => O.statText(q, st[q])).join(', ') + (own ? ' · đã có' : ''), CX + 32, y + 22, { size: 6.5, color: own ? GOOD : SOFT });
+      if (T.sbtn(CX + CW - 84, y + 5, 78, 18, 'Mua ' + Ti.price + ' vàng', { size: 7.5, pad: 2, disabled: sv.gold < Ti.price || O.full(sv) })) {
+        const it = O.buy(sv, k);
+        if (it) { G.persist(); G.sfx('pick'); VS.checkNews(); say('Của cháu đây, ' + Ti.name + '. Sang Cô Thợ May mà mặc thử.'); }
+      }
     });
-    const P = G.buildPlayer();
-    ui.text('Máu ' + P.maxhp + ' · Mana ' + P.maxmana + ' · Giảm sát thương ' + Math.round(P.dr * 100) + '%', CX + 2, 204, { size: 7.5 });
-    ui.para(P.set ? G.SETS[P.set] : 'Mặc mũ và áo của cùng một trùm để có hiệu ứng bộ.', CX + 2, 217, 300, { size: 7.5, color: P.set ? GOOD : SOFT });
-    T.inset(CX, 242, CW, 18, false, { fill: '#17302f' });
-    ui.text('Sắp có: đồ đeo lưng, cánh', CX + 6, 254, { size: 7.5, color: '#7f948e' });
-    const none = !sv.owned.helm.length && !sv.owned.armor.length && !sv.owned.charm.length;
-    return none ? 'Cháu chưa có mũ áo nào. Sang Ông Thợ Rèn rèn mũ, áo rồi quay lại đây cô mặc cho.' : 'Bé thử cái mũ mới xem nào. Bấm Đổi để thay từng món.';
+    if (O.full(sv)) line = 'Kho trang phục của cháu đầy rồi, bà không bán thêm được.';
+    return line;
   }
+
+  // ---------- trang phục (Cô Thợ May): bảng nằm ở js/tailor.js, gắn vào PANELS.outfit ----------
+  function outfit() { frame('Thợ may'); return 'Khung cửi đang sửa, cháu quay lại sau nhé.'; }
 
   // ---------- chọn hero, xem chỉ số (Ông Từ) ----------
   function hero() {
@@ -451,7 +441,7 @@
       const x = CX + (i % 2) * 154, y = 72 + Math.floor(i / 2) * 40;
       if (T.btn(x, y, 150, 36, '', { disabled: !hs.unlocked, sel: sv.hero === k })) { sv.hero = k; G.persist(); VS.checkNews(); }
       // chân dung em bé tinh linh của từng hero; hero đang chọn thì nhún nhảy, chưa mở thì mờ
-      G.art.hero(G.ux, { x: x + 18, y: y + 32, face: 1, key: k, move: sv.hero === k, t: G.time, atk: -1, dodge: -1, weapon: null, noShadow: true, alpha: hs.unlocked ? null : 0.4 });
+      G.art.hero(G.ux, { x: x + 18, y: y + 32, face: 1, key: k, move: sv.hero === k, t: G.time, atk: -1, dodge: -1, weapon: null, noShadow: true, alpha: hs.unlocked ? null : 0.4, outfit: sv.hero === k && G.outfit ? G.outfit.look(sv) : null });
       ui.text(H.name, x + 88, y + 15, { size: 10, bold: true, align: 'center', color: hs.unlocked ? '#fff0c4' : '#8fa49e' });
       ui.text(hs.unlocked ? 'Cấp ' + hs.lvl + (sv.hero === k ? ' · đang chọn' : '') : H.unlock, x + 88, y + 27, { size: 7, align: 'center', color: hs.unlocked ? '#e8d9a8' : '#8fa49e' });
     });
@@ -507,6 +497,7 @@
     ['Mở rương, qua cửa', 'Lại gần rương, suối hay thương nhân rồi bấm Đánh. Hết quái thì cửa mở: đi vào cửa có mũi tên để sang phòng kề. Chạm bản đồ nhỏ để xem cả ải.'],
     ['Bàn phím', 'Mũi tên hoặc WASD để đi, J đánh (ở làng: nói chuyện), K né, L đặc biệt, I kỹ năng, Q đổi vũ khí, E uống bình máu, M xem bản đồ, Esc tạm dừng hoặc đóng bảng.'],
     ['Ba sao', 'Sao 1: qua ải. Sao 2: không dùng bình máu. Sao 3: ra đòn kết liễu trùm bằng hệ khắc chế nó.'],
+    G.lk ? ['Linh khí', '', G.lk.guide] : null, // trang vẽ hình về linh khí (dấu ấn hệ), js/linhkhi.js
     ['Dấu ấn', G.HINTS[0] + ' ' + G.HINTS[1]],
     ['Ba hệ', G.HINTS[4] + ' ' + G.HINTS[5]],
     ['Trùm học theo bạn', G.HINTS[2] + ' ' + G.HINTS[3]],
@@ -523,16 +514,17 @@
     frame('Gốc đa: hướng dẫn');
     doTabs();
     // xếp các mục vào từng trang cho vừa bảng
-    const secs = HELP(), pages = [[]], top = 106, bottom = 236;
+    const secs = HELP().filter(Boolean), pages = [[]], top = 106, bottom = 236;
     let y = top;
     for (const s of secs) {
-      const h = 11 + ui.wrap(s[1], 298, 7.5).length * 10.5 + 5;
+      const h = s[2] ? bottom - top : 11 + ui.wrap(s[1], 298, 7.5).length * 10.5 + 5; // trang vẽ hình (Linh khí) đứng riêng một trang
       if (y + h > bottom && pages[pages.length - 1].length) { pages.push([]); y = top; }
       pages[pages.length - 1].push(s); y += h;
     }
     V.page = G.clamp(V.page, 0, pages.length - 1);
     y = top;
     for (const l of pages[V.page]) {
+      if (l[2]) { l[2].draw(CX + 2, y, 298); y += l[2].h; continue; }
       T.head(l[0], CX + 2, y);
       y = ui.para(l[1], CX + 2, y + 11, 298, { size: 7.5, color: TXT }) + 5 + 2.5;
     }
@@ -561,6 +553,7 @@
   }
 
   const PANELS = { forge, gear, outfit, hero, skill, help, settings };
+  Object.assign(G.villageApi, { PANELS, pager, say, costText, frame, npcSide, viewWeapon });
   G.Village = {
     enter() { goHub(); VS.enter({}); G.persist(); },
     hide() { /* không có gì phải dừng */ },
@@ -586,6 +579,7 @@
       if (hit) { VS.goNpc(hit, true); return; }
       const fn = PANELS[V.tab] || settings;
       const tab = V.tab, line = fn();
+      if (fn.full) return; // bảng tự vẽ người nói (Cô Thợ May)
       if (V.tab === tab || (WHO_OF[V.tab] && WHO_OF[V.tab] === WHO_OF[tab])) npcSide(line);
     },
   };

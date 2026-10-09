@@ -25,6 +25,10 @@ JS = r"""
 ([wtype, el, secs, seed, small, one, real]) => {
   for (const k of G.HKEYS) G.HEROES[k].fav = [];           // bỏ thưởng vũ khí ưa thích để so cho công bằng
   G.testSave({ hero: 'smith', melee: wtype === 'bow' ? 'sword' : wtype, lvl: 10, tier: 1, sharpen: 3, branch: el || undefined, marks: el ? 300 : 0 });
+  if (window.__tp && G.outfit) { // "trangphuc": mặc đủ bộ 5 món bậc Vàng của hệ đang đo (chưa có hệ: bộ Lâu Đài), cánh cấp 3
+    const O = G.outfit, set = { fire: 'lau', poison: 'rung', ice: 'bien' }[el] || 'lau';
+    for (const k in O.ITEMS) if (O.ITEMS[k].set === set) O.wear(G.save, O.add(G.save, k, 3, { lv: 3 }));
+  }
   G.rnd = G.srand(seed);
   G.startStage(0, 2, 0, { kind: 'A', seed: 3 });
   const S = G.getRun();
@@ -83,7 +87,7 @@ STATIC = r"""
 
 
 def main():
-    args = [a for a in sys.argv[1:] if a not in ('nho', 'trum', 'mot', 'khonghe', 'quaimoi')]
+    args = [a for a in sys.argv[1:] if a not in ('nho', 'trum', 'mot', 'khonghe', 'quaimoi', 'trangphuc')]
     real = 'quaimoi' in sys.argv
     small = 'trum' not in sys.argv
     one = 'mot' in sys.argv
@@ -100,6 +104,7 @@ def main():
         pg.wait_for_function('window.G && G.scene')
         pg.add_script_tag(path=os.path.join(ROOT, 'tests', 'bot.js'))
         pg.add_script_tag(path=os.path.join(ROOT, 'tests', 'setup.js'))
+        if 'trangphuc' in sys.argv: pg.evaluate("() => { window.__tp = 1; }"); print('== mặc đủ bộ trang phục Vàng của hệ đang đo, cánh lớn')
         if os.environ.get('DPS_PRE'): pg.evaluate(os.environ['DPS_PRE'])
         st = pg.evaluate(STATIC)
         print('Trên giấy (sát thương gốc của loại vũ khí, chưa tính cấp, bậc, mài):')

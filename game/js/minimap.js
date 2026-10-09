@@ -116,7 +116,7 @@
 
   // Ô bản đồ nhỏ: [x, y, rộng, cao]. Trong phòng trùm (sàn rộng) thì thu lại thành một nút nhỏ.
   MM.rect = function (S) {
-    return S.W && S.W.geo && S.W.geo.big ? [424, 41, 52, 15] : [374, 41, 102, 68];
+    return S.W && S.W.geo && S.W.geo.big ? [424, 58, 52, 15] : [374, 58, 102, 68]; // dời xuống nhường chỗ cho ba vạch linh khí dưới ô vũ khí (js/linhkhi.js)
   };
   MM.draw = function (S) {
     const b = MM.rect(S), x = b[0], y = b[1], w = b[2], h = b[3];

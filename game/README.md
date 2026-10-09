@@ -23,8 +23,8 @@ Làng là một cảnh đi lại được, rộng gấp rưỡi màn hình; màn
 | --- | --- | --- |
 | Chú Lái Đò | bến đò | Tranh bản đồ vùng: chọn ải, đổi độ khó, **Lên đò** |
 | Ông Thợ Rèn | lò rèn | Mài, Nâng bậc, Tôi lại, Rèn đồ, Nâng lò |
-| Bà Hàng Xén | gánh hàng | Rương vũ khí, chọn hai món mang theo, xem, bán |
-| Cô Thợ May | khung cửi | Mũ, áo, bùa |
+| Bà Hàng Xén | gánh hàng | Rương vũ khí, chọn hai món mang theo, xem, bán; bán trang phục thường (nút **Trang phục ›**) |
+| Cô Thợ May | khung cửi | Trang phục năm ô: mặc, tháo, may, nâng bậc, mở cấp cánh, mặc thử |
 | Cụ Đồ | gốc đa | Cây kỹ năng, đặt lại điểm, hướng dẫn |
 | Ông Từ | sân đình | Chọn hero, xem chỉ số |
 | Anh Mõ | cổng làng | Cài đặt: âm thanh, toàn màn hình, xoá tiến trình |
@@ -95,6 +95,28 @@ Mỗi vùng có tám loại quái thường, hai tinh anh, một trùm nhỏ (�
 - Trùm vùng (Mộc Tinh, Ngư Tinh, Hồ Tinh) có màn ra mắt, ba pha đổi ở 2/3 và 1/3 máu (cảnh chuyển pha, hình đổi, không nhận sát thương lúc đó), năm chiêu (pha 1 ba chiêu, pha 2 thêm một, pha 3 đủ năm và nhanh hơn). Sau chiêu lớn nhất trùm choáng một lúc. Chết xong cổng dịch chuyển mới mọc.
 - Trùm vẫn học theo bạn: kháng hệ dùng nhiều nhất, chống đánh xa, chống áp sát, bắt bài lăn né.
 
+## Trang phục
+
+Em bé mặc đồ theo năm ô: **Mũ**, **Áo**, **Đồ đeo lưng** (gùi, khăn choàng, trống nhỏ...), **Bùa** (đeo hông) và **Cánh**. Ô nào trống thì bé mặc đồ khởi đầu của mình. Đồ mặc chung cho cả bốn bé.
+
+- Mỗi món có bậc Thường, Lam, Tím, Vàng như vũ khí (chỉ số x1; x1,25; x1,5; x1,8) và có thể có hệ Lửa, Độc, Băng.
+- Mỗi món có 1 đến 3 chỉ số: máu, mana, giảm sát thương, tốc chạy, hồi chiêu nhanh, tầm nhặt đồ, bớt thời gian dính hệ.
+- Món bậc Tím và Vàng có thêm một tác dụng đặc biệt (Vàng mạnh hơn):
+
+| Ô | Món có hệ | Món không hệ |
+| --- | --- | --- |
+| Mũ | Quái đánh trúng bé bị cháy, độc hoặc chậm | Khiên đầu phòng: vào phòng mới chặn 1 đòn (Vàng: 2) |
+| Áo | Lộn để lại vệt cháy, vũng độc hoặc vệt băng | như trên |
+| Đồ đeo lưng | Mỗi 5 giây (Vàng: 4) rải một vũng hệ dưới chân khi còn quái | như trên |
+| Bùa | Quái gục gần bé nổ nhỏ, làm quái quanh đó dính hệ | như trên |
+
+- Cánh có ba cấp: mầm cánh, cánh nhỏ, cánh lớn. Cánh không cho bay hay nhảy. Cánh nhỏ: lộn xa hơn 20%, lộn xong có khiên 0,5 giây chặn một đòn (hồi 4 giây). Cánh lớn: xa hơn 30%, khiên 0,8 giây (hồi 3 giây).
+- Ba bộ theo vùng: **Bộ Rừng Già** (Độc), **Bộ Hang Biển** (Băng), **Bộ Lâu Đài** (Lửa), mỗi bộ 5 món (cả cánh). Mặc 2 món cùng bộ: hiệu ứng bộ cũ (Mộc Tinh, Ngư Tinh, Hồ Tinh). Mặc 3 món trở lên: sát thương hệ của bộ +10% (4 món +14%, 5 món +18%) và vầng sáng quanh chân.
+- Hình: vải, khăn, tua đung đưa theo bước chạy và văng ra sau khi lộn; món Lam trở lên có tua màu bậc; Tím, Vàng có ánh viền quanh bé; món có hệ toả tàn lửa, giọt độc hoặc bông tuyết; khiên hiện thành vòng sáng quanh bé.
+- Cách kiếm: quái thường (1,2%) và tinh anh (12%) rơi món của vùng; trùm nhỏ 35% rơi một món Lam trở lên; trùm vùng luôn rơi một món của bộ vùng, bậc Tím (25% Vàng). Tinh anh vẫn có thể rơi bùa cũ (nay ở ô Bùa). Bà Hàng Xén bán đồ thường. Cô Thợ May may theo công thức từ gỗ linh, vảy cá, đá lửa (đồ bộ cần thêm 1 mảnh trùm), nâng bậc từng nấc (lên Vàng cần mảnh trùm), mở cấp cánh bằng mảnh trùm.
+- Cô Thợ May có dấu chấm than khi có món mới hoặc đủ nguyên liệu may một món chưa có. Kho chứa 40 món, đầy thì món rơi đổi thành vàng.
+- Bản lưu cũ: mũ, áo, bùa cũ tự chuyển sang kho trang phục, giữ nguyên chỉ số (đồ thường thành bậc Thường; đồ trùm và bùa thành bậc Lam), món đang mặc vẫn mặc. Thẻ **Rèn đồ** của Ông Thợ Rèn nay chỉ đường sang Cô Thợ May.
+
 ## Vũ khí: dòng và bậc
 
 - Mỗi loại vũ khí (kiếm, cung, giáo, búa) có 10 dòng, mỗi dòng một hình và một tính nết. Tên và hình đổi theo nhánh hệ và mốc tiến hóa.
@@ -133,7 +155,9 @@ Mỗi vùng có tám loại quái thường, hai tinh anh, một trùm nhỏ (�
 | `js/art.js` | Hình vẽ: đồ vật, phông nền, vùng nguy hiểm, đạn; hình quái, trùm, hero và vũ khí kiểu cũ (chỉ còn dùng khi thiếu các tệp mới) |
 | `js/weapon_art.js` | Vũ khí sống: 400 hình (4 loại, 10 dòng, 3 nhánh hệ, 3 mốc), 4 bậc, khuôn mặt theo tâm trạng, biểu tượng ô đồ, tên |
 | `js/hero_art.js` | Hình hero kiểu cũ (dự phòng khi hình mới lỗi) |
-| `js/hero_tinhlinh.js` | Em bé tinh linh: bốn hero vẽ theo lớp (thân, áo, mũ, đồ đeo lưng, cánh), tư thế theo từng đòn đánh, cầm vũ khí sống |
+| `js/hero_tinhlinh.js` | Em bé tinh linh: bốn hero vẽ theo lớp (thân, áo, mũ, đồ đeo lưng, bùa, cánh), tư thế theo từng đòn đánh, cầm vũ khí sống; vải và tua đung đưa, ánh viền, hạt theo hệ, vầng sáng đủ bộ, khiên |
+| `js/outfit.js` | Trang phục (`G.outfit`): danh mục món, bậc, hệ, bộ, chỉ số, tác dụng trong trận, rơi đồ, giá may, nâng bậc, mở cấp cánh, lưu và chuyển bản lưu cũ |
+| `js/tailor.js` | Bảng của Cô Thợ May: năm ô đang mặc, kho có lật trang, may, nâng bậc, cánh, em bé mặc thử |
 | `js/btn_art.js` | Bộ nút bấm: Đánh, Đặc biệt, kỹ năng, Né, bình máu, tạm dừng, ô vũ khí, cần điều khiển |
 | `js/ui_theme.js` | Bộ giao diện chủ đề trống đồng Đông Sơn (`G.theme`): nút, bảng, thanh máu và mana, ô đồ bốn bậc, thẻ ải mặt trống, thông báo, khung thoại, biểu tượng tài nguyên. Tệp này cũng đổi cách vẽ chung `G.ui.btn`, `G.ui.panel`, `G.ui.bar`, `G.ui.text` của cả game sang chủ đề |
 | `js/combat.js` | Trận đánh: người chơi, quái, sát thương, hiệu ứng ba hệ, dấu ấn |
@@ -141,8 +165,11 @@ Mỗi vùng có tám loại quái thường, hai tinh anh, một trùm nhỏ (�
 | `js/boss.js` | Trùm: trùm nhỏ (hai chiêu riêng), trùm vùng (ra mắt, ba pha, năm chiêu, choáng, chết), và cách trùm học theo người chơi |
 | `js/monster_art.js` | Hình và cử động của 36 quái và trùm (ghép tự động từ `docs/phac-thao/quai-hoat-hinh/nguon/`, không sửa tay) |
 | `js/mobs.js` | Quái mới trong trận: con nào ở vùng nào, cơ chế từng vai, tinh anh, đòn ngắm mọi hướng, vùng báo trước xoay theo góc, cách vẽ quái |
+| `js/bao_truoc.js` | Vùng báo trước đòn của quái và trùm (quạt, chữ nhật, tròn, đường thẳng, vành, vòng bom, vòng mọc quái, tường nước): vẽ mịn ở lớp giao diện, nằm dưới chân nhân vật, hiện ra mượt, thanh đếm ngược, chớp khi ra đòn |
 | `js/fx.js` | Hiệu ứng hình ảnh chung: vệt chém, hạt, số sát thương, rung màn hình |
 | `js/fx_he.js` | Hiệu ứng ra chiêu theo lối đánh và theo hệ Lửa, Độc, Băng; vạch lấy đà |
+| `js/fx_dan.js` | Hiệu ứng đạn: hình riêng từng loại đạn theo vùng, xoay theo hướng bay, vệt bay, quầng sáng hệ, chớp lúc bắn, toé hạt lúc trúng, cắm tường, vỡ tan |
+| `js/linhkhi.js` | Hiển thị linh khí (dấu ấn hệ): ba vạch dưới ô vũ khí, biểu tượng hệ trên đầu quái, khối linh khí ở màn kết quả, bảng Xem vũ khí, trang hướng dẫn |
 | `js/stage.js` | Một ải: bản đồ 8 phòng, cửa và chuyển phòng, đợt quái, nút điều khiển, thông tin trên màn hình, các bảng chọn, bảng kết quả |
 | `js/mapgen.js` | Sinh bản đồ ải ngẫu nhiên theo hạt giống (ba kiểu bố cục A, B, C) và hàm kiểm tra bản đồ |
 | `js/room_art.js` | Vẽ phòng vuông nhìn từ trên cho ba vùng: sàn, tường, cửa khóa và cửa mở |
@@ -187,6 +214,8 @@ python3 tests/mapgen.py            # bộ sinh bản đồ ải: 1000 hạt gi�
 python3 tests/doors.py             # luật cửa, điều kiện mở cửa Trùm, bot đi hết ải ở cả ba kiểu
 python3 tests/env_rooms.py         # vẽ thử mọi loại phòng ở ba vùng, cửa khóa và cửa mở
 python3 tests/rules.py             # luật ba hệ, dấu ấn, trùm thích nghi
+python3 tests/trang_phuc.py        # trang phục: bản lưu cũ và hỏng, mặc, tháo, mua, may, nâng bậc, cánh, rơi đồ, tác dụng trong trận, dấu chấm than
+python3 tests/trangphuc_shots.py   # chụp ảnh và GIF trang phục vào docs/trang-phuc/ (cần thêm Pillow)
 python3 tests/fuzz.py              # bấm loạn tìm lỗi sập
 python3 tests/room_shots.py        # chụp ảnh phòng và bản đồ vào docs/phong-vuong/
 python3 tests/moves.py             # lối đánh của bốn vũ khí và luật riêng của ba hệ
@@ -194,14 +223,18 @@ python3 tests/cung.py              # cung tự ngắm: mỗi kiểu bắn 40 ph�
 python3 tests/cung_shots.py        # chụp ảnh cung tám hướng vào docs/sua-gop-y-1/ (cần thêm Pillow)
 python3 tests/cong.py              # cổng dịch chuyển sau khi thắng: luật, và bấm thật trên điện thoại
 python3 tests/cong_shots.py        # chụp ảnh cổng dịch chuyển vào docs/sua-gop-y-1/ (cần thêm Pillow)
-python3 tests/dps.py 90 16 nho     # bảng tầm với, thời gian, sát thương mỗi đòn; đo sát thương mỗi giây của bốn vũ khí và ba hệ khi bot chơi ("trum": phòng trùm, "mot": một quái thay cho cụm, "khonghe": bỏ ba hệ)
+python3 tests/dps.py 90 16 nho     # bảng tầm với, thời gian, sát thương mỗi đòn; đo sát thương mỗi giây của bốn vũ khí và ba hệ khi bot chơi ("trum": phòng trùm, "mot": một quái thay cho cụm, "khonghe": bỏ ba hệ, "trangphuc": mặc đủ bộ trang phục Vàng)
 python3 tests/perf.py              # đo thời gian một khung hình trong cảnh đông quái
 python3 tests/chieu_shots.py       # chụp ảnh các lối đánh và hiệu ứng theo hệ vào docs/chieu-thuc/
 python3 tests/ghep.py              # bản lưu cũ, bốn bậc, trùm rơi Vàng, đặc trưng hệ theo cấp, né theo hướng cuối, hero và nút mới
 python3 tests/ghep2.py             # đợt ghép 2: nút trong hai lề, bóng và chiều sâu, lối đánh trong phòng hẹp, bản đồ một màu, né tám hướng, vũ khí rơi, suối khóa, hoạt ảnh trùm
 python3 tests/quai.py              # quái mới: mỗi cơ chế (bom, cảm tử, gai, giáp, bắn xa, lặn, tinh anh, kiểu xuất hiện), đòn tám hướng, trùm đủ ba pha và chết được
+python3 tests/linhkhi.py           # hiệu ứng đạn (hình theo vùng, không đổi đường bay, cắm tường, nhiều đạn) và linh khí (vạch tăng đúng, hạt bay vào vạch, màn kết quả ghi đúng số)
+python3 tests/dan_linhkhi_shots.py # chụp ảnh và GIF đạn, linh khí vào docs/dan-va-linh-khi/ (cần thêm Pillow)
+python3 tests/bao_truoc.py          # vùng báo trước vẽ mịn: đủ mọi hình, không vẽ lên lớp điểm ảnh, nằm dưới em bé, hiện ra mượt, đếm ngược, chớp khi nổ, thời gian không đổi
+python3 tests/bao_truoc_shots.py chup <thư mục game> <thư mục ra>   # chụp ảnh trước/sau vùng báo trước (rồi "ghep", "gif") vào docs/bao-truoc-muot/
 python3 tests/quai_shots.py        # chụp ảnh và GIF quái mới trong game vào docs/quai-vao-game/ (cần thêm Pillow)
-python3 tests/balance.py 4         # bot chơi 15 ải với bản lưu thật vừa đủ sức mạnh khuyên dùng (tests/cay_luu.json), mỗi ải 4 lần: tỉ lệ thắng, thời gian, máu mất (thêm "- 0,4,9 vukhi": chạy với từng loại vũ khí)
+python3 tests/balance.py 4         # bot chơi 15 ải với bản lưu thật vừa đủ sức mạnh khuyên dùng (tests/cay_luu.json), mỗi ải 4 lần: tỉ lệ thắng, thời gian, máu mất (thêm "- 0,4,9 vukhi": chạy với từng loại vũ khí; thêm "- - trangphuc" hoặc "trangphuc:vang": mặc bộ trang phục của vùng; "codinh": bản lưu dựng tay)
 python3 tests/ghep2_shots.py       # chụp ảnh và ảnh động của đợt ghép 2 vào docs/ghep-2/ (cần thêm Pillow)
 python3 tests/ghep_shots.py        # chụp sáu ảnh của đợt ghép 1 vào docs/ghep/ (cần thêm Pillow)
 python3 tests/lang_shots.py        # chụp từng màn hình của giao diện trống đồng và làng có người vào docs/giao-dien-va-lang/

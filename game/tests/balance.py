@@ -26,6 +26,10 @@ JS = r"""
     G.save = G.fixSave(JSON.parse(sv)); G.save.sound = false;
     if (wt && wt !== 'bow') G.weaponById(G.save.carry[0]).type = wt;
   } else G.testSave({ lvl: sv[0], tier: sv[1], sharpen: sv[2], armor: sv[3], helm: sv[4], melee: wt && wt !== 'bow' ? wt : sv[5], branch: sv[6] ? 'fire' : null, marks: sv[6] });
+  if (window.__tp && G.outfit) { // "trangphuc": mặc bộ trang phục của vùng đang đánh (ải 1-3 bậc Lam, ải 4-5 bậc Tím; "trangphuc:vang": bậc Vàng, cánh lớn)
+    const O = G.outfit, set = ['rung', 'bien', 'lau'][r], gold = window.__tp === 'vang';
+    for (const k in O.ITEMS) if (O.ITEMS[k].set === set) O.wear(G.save, O.add(G.save, k, gold ? 3 : i >= 3 ? 2 : 1, { lv: gold ? 3 : i >= 3 ? 2 : 1 }));
+  }
   G.botCfg.prefer = wt || null;
   G.startStage(r, i, 0);
   if (wt === 'bow') G.getRun().P.cur = 1;
@@ -54,7 +58,9 @@ def main():
         base = url.rsplit('/', 1)[0].replace('file://', '')
         pg.add_script_tag(path=base + '/tests/bot.js')
         pg.add_script_tag(path=base + '/tests/setup.js')
-        only = [int(x) for x in sys.argv[3].split(',')] if len(sys.argv) > 3 and sys.argv[3] != '-' and not sys.argv[3].startswith('vukhi') else range(15)
+        tp = [a for a in sys.argv if a.startswith('trangphuc')]
+        if tp: pg.evaluate("v => { window.__tp = v; }", 'vang' if tp[0] == 'trangphuc:vang' else 'co'); print('== mặc trang phục của vùng:', tp[0])
+        only = [int(x) for x in sys.argv[3].split(',')] if len(sys.argv) > 3 and sys.argv[3] != '-' and not sys.argv[3].startswith('vukhi') and not sys.argv[3].startswith('trangphuc') else range(15)
         vk = [a for a in sys.argv if a.startswith('vukhi')]
         wts = (vk[0].split(':')[1].split(',') if ':' in vk[0] else ['sword', 'bow', 'spear', 'hammer']) if vk else [None]  # vukhi:spear,bow để chạy vài loại
         per = {}
