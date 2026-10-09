@@ -7,7 +7,7 @@
   const G = window.G, SC = G.spriteCustom;
   G.persist = function () { /* trang thử không ghi đè bản lưu thật */ };
   G.XUONG_THU = true;
-  let tep = null, cho = null, tuDanh = false, lanCuoi = 0;
+  let tep = null, cho = null, tuDanh = false, lanCuoi = 0, oLang = false;
 
   function vaiCua(ma) { // tìm vai và vùng của quái trong game
     const M = G.MOB_ART;
@@ -27,6 +27,7 @@
   const DO = { 'vu-khi': 1, 'trang-phuc': 1, 'vat-pham': 1 };
   function thaVatPham() { // vật phẩm: thả mấy món quanh em bé
     const W = G.getWorld && G.getWorld(), S = G.getRun && G.getRun(); if (!W || !S || !G.doRoi) return;
+    if (tep.vat_pham === 'xp') return; // kinh nghiệm không rơi trên sàn, chỉ có biểu tượng
     const k = tep.vat_pham, it = /^linhkhi-/.test(k) ? { kind: 'linhkhi', el: k.split('-')[1] } : { kind: k };
     for (let i = 0; i < 4; i++) { const o = G.doRoi.tha(W, S.P.x + 30 + i * 12, S.P.y - 10 + (i % 2) * 20, it); if (o) o.got = null; }
   }
@@ -54,10 +55,25 @@
     const n = v.vai === 'elite' ? 1 : v.vai === 'swarm' ? 2 : 3;
     for (let i = 0; i < n; i++) { const e = G.spawnEnemy(v.vai, G.rr(W.x0 + 80, W.x1), G.rr(W.y0, W.y1), { art: dich }); e.inside = true; }
   }
+  // Người làng: vào làng, em bé đứng cạnh người đó (người đó quay sang nói chuyện, vẫy tay). "Gọi lại" mở hoặc đóng khung nói chuyện.
+  function vaoLang() {
+    const k = tep.ma.replace(/^nl-/, ''), VS = G.villageScene, N = VS && VS.NPCS[k];
+    if (!N) { baoLoi('Không có người làng ' + k); return; }
+    G.setScene(G.Village);
+    const S = VS.state; S.x = N.den[0]; S.y = N.den[1]; S.path = null; S.goal = null; S.face = N.pos[0] >= S.x ? 1 : -1; S.cam = Math.max(240, Math.min(VS.W - 240, S.x));
+    lanCuoi = Date.now();
+  }
+  function noiChuyen() {
+    const k = tep.ma.replace(/^nl-/, ''), VS = G.villageScene;
+    if (VS.state.talk || (G.villageApi && G.villageApi.V.tab !== 'hub')) { G.villageApi.goHub(); return; }
+    VS.goNpc(k, true);
+  }
   function batDau() {
     if (!tep || !G.scene) return;
+    oLang = false;
     SC.clear();
     luuThu();
+    if (tep.doi_tuong === 'nguoi-lang') { const sp = SC.add(tep); if (!sp) { baoLoi('Tệp hỏng: ' + SC.loi.join('; ')); return; } vaoLang(); return; }
     let tepDung = tep;
     if (tep.doi_tuong === 'vu-khi') { // cầm đúng loại, dòng, hệ, giai đoạn của vũ khí tự vẽ
       const V = tep.vu_khi, sv = G.save; sv.weapons = []; sv.nextId = 1;
@@ -112,6 +128,8 @@
   setInterval(() => {
     if (!tep) return;
     const S = G.getRun && G.getRun();
+    if (tep.doi_tuong === 'nguoi-lang') return; // người làng: đứng trong làng, không cần trận đánh
+    if (oLang) return; // vật phẩm: đang xem dải tài nguyên ở làng
     if (!S || !S.P) return;
     const P = S.P, W = S.W;
     if (P.hp < P.maxhp * 0.4) P.hp = P.maxhp;
@@ -123,6 +141,12 @@
     if (!d || typeof d !== 'object') return;
     if (d.kieu === 'xuong-sprite-thu' && d.tep) { tep = d.tep; if (G.scene) batDau(); }
     if (d.kieu === 'xuong-sprite-lenh') {
+      if (d.lenh === 'lai' && tep && tep.doi_tuong === 'nguoi-lang') { noiChuyen(); return; }
+      if (d.lenh === 'lai' && tep && tep.doi_tuong === 'vat-pham') { // đổi qua lại: trong trận (đồ rơi) và ở làng (dải tài nguyên góc trên)
+        if (oLang) { oLang = false; batDau(); return; }
+        const sv = G.save; sv.gold = 1234; sv.ore = 56; sv.stones = 7; sv.mats = [12, 34, 5]; sv.shards = [1, 2, 3];
+        oLang = true; G.setScene(G.Village); return;
+      }
       if (d.lenh === 'lai') { if (G.getRun && G.getRun() && G.getRun().W && !G.getRun().W.boss) goiQuai(); else batDau(); }
       if (d.lenh === 'tu-danh') { tuDanh = !!d.bat; G.botInput = tuDanh ? botDon : null; }
     }
@@ -134,5 +158,5 @@
     if (tep) batDau();
     try { window.parent.postMessage({ kieu: 'xuong-sprite-san-sang' }, '*'); } catch (e) { /* bỏ qua */ }
   }, 60);
-  G.xuongThu = { batDau, goiQuai, dat: (t) => { tep = t; batDau(); } };
+  G.xuongThu = { batDau, goiQuai, noiChuyen, dat: (t) => { tep = t; batDau(); } };
 })();

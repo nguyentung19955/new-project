@@ -142,15 +142,20 @@
     o = o || {}; const id = kind + f + '|' + (o.look || 0) + (o.blink ? 'b' : '');
     return NCACHE[id] || (NCACHE[id] = outlined(64, 64, 30, 50, (c) => drawNpc(c, kind, f, o)));
   }
+  VS.npcCode = npcSprite; // hình vẽ bằng code (Xưởng Sprite dùng để so)
   function putNpc(c, kind, x, y, f, o, s) {
-    s = s || 1; const sp = npcSprite(kind, f || 0, o);
+    s = s || 1;
     if (!(o && o.noShadow)) { c.fillStyle = 'rgba(10,8,20,0.35)'; c.fillRect(Math.round(x - 8 * s), Math.round(y - 1 * s), 16 * s, 3 * s); c.fillRect(Math.round(x - 6 * s), Math.round(y + 2 * s), 12 * s, s); }
+    // Hình tự vẽ (Xưởng Sprite, js/sprite_custom.js gắn VS.tuVe khi có tệp nl-<mã>.sprite.json). Không có tệp thì vẽ như cũ.
+    if (VS.tuVe && VS.tuVe(c, kind, x, y, s, o)) return;
+    const sp = npcSprite(kind, f || 0, o);
     c.imageSmoothingEnabled = false; c.drawImage(sp.cv, Math.round(x - sp.ox * s), Math.round(y - sp.oy * s), 64 * s, 64 * s);
   }
   // Dấu chấm than vàng "có việc mới"
   function bang(c, x, y) { x = Math.round(x); y = Math.round(y); p(c, x - 4, y - 11, 9, 11, INK); p(c, x - 3, y - 12, 7, 13, INK); p(c, x - 3, y - 10, 7, 9, '#ffd23f'); p(c, x - 2, y - 11, 5, 11, '#ffd23f'); p(c, x - 1, y - 9, 3, 5, '#7a2a12'); p(c, x - 1, y - 3, 3, 2, '#7a2a12'); }
   // Khuôn mặt một người (dùng cho dải lối tắt và khung thoại). ctx bất kỳ, s: số lần phóng.
   VS.face = function (ctx, k, cx, cy, s) {
+    if (VS.tuVeMat && VS.tuVeMat(ctx, k, cx, cy, s)) return;
     const sp = npcSprite(k, 0, { look: 1 }), ty = 50 + NPCS[k].top - 6;
     ctx.imageSmoothingEnabled = false; ctx.drawImage(sp.cv, 19, ty, 23, 20, cx - 11.5 * s, cy - 10 * s, 23 * s, 20 * s);
   };

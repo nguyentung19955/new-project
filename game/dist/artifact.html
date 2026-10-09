@@ -18248,8 +18248,8 @@ MA._xong();
   const G = (typeof window !== 'undefined') ? (window.G = window.G || {}) : (globalThis.G = globalThis.G || {});
   const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
   const seg = (u, a, b) => clamp((u - a) / (b - a), 0, 1);
-  const ANIMS = ['idle', 'move', 'tele', 'atk', 'hit', 'die', 'ne'];
-  const LOOP = { idle: true, move: true };
+  const ANIMS = ['idle', 'move', 'tele', 'atk', 'hit', 'die', 'ne', 'noi'];
+  const LOOP = { idle: true, move: true, noi: true };
 
   const SC = (G.spriteCustom = { ds: {}, ANIMS, LOOP, loi: [] });
 
@@ -18270,7 +18270,7 @@ MA._xong();
       }
       if (!dt.idle) throw new Error('thiếu động tác đứng thở');
       const sp = {
-        ma: tep.ma, ten: String(tep.ten || tep.ma), doi: tep.doi_tuong === 'em-be' ? 'em-be' : 'quai', fw, fh, ax: +goc[0] || 0, ay: +goc[1] || 0,
+        ma: tep.ma, ten: String(tep.ten || tep.ma), doi: tep.doi_tuong === 'em-be' ? 'em-be' : tep.doi_tuong === 'nguoi-lang' ? 'nguoi-lang' : 'quai', fw, fh, ax: +goc[0] || 0, ay: +goc[1] || 0,
         rong: tep.rong | 0 || fw, cao: tep.cao | 0 || fh, bong: +tep.bong || Math.max(6, (tep.rong | 0) * 0.62), dt, img: null, ready: false, mau: {}, vung: tep.vung || 'moi',
       };
       if (typeof Image !== 'undefined') {
@@ -18281,7 +18281,7 @@ MA._xong();
       }
       SC.ds[sp.ma] = sp;
       // Chỉ nối vào game khi thật sự có hình tự vẽ: không có tệp nào thì game y hệt như chưa có tệp này.
-      if (sp.doi === 'quai') { noiQuai(); themVaoDanhSach(sp); } else noiEmBe();
+      if (sp.doi === 'quai') { noiQuai(); themVaoDanhSach(sp); } else if (sp.doi === 'nguoi-lang') noiNguoiLang(); else noiEmBe();
       return sp;
     } catch (e) {
       SC.loi.push((tep && tep.ma) + ': ' + e.message);
@@ -18476,6 +18476,53 @@ MA._xong();
         return c.drawImage.apply(c, arguments);
       });
       return hero0.call(A, gia, o);
+    };
+  }
+
+  // ---------- NGƯỜI LÀNG ----------
+  // Mã tệp: nl-<mã người> (nl-lai Chú Lái Đò, nl-ren Ông Thợ Rèn, nl-xen Bà Hàng Xén, nl-may Cô Thợ May, nl-do Cụ Đồ, nl-tu Ông Từ, nl-mo Anh Mõ).
+  // Hai động tác: idle (đứng thở) và noi (nói chuyện, vẫy tay: khi em bé tới gần, khi mở bảng). Thay hình trong làng, ở dải khuôn mặt và khung nói chuyện.
+  SC.cuaNguoiLang = (k) => SC.get('nl-' + k);
+  // Vẽ người làng tự vẽ, chân tại (x, y). o: { anim: 'idle' | 'noi', t (giây), face, s (số lần phóng) }
+  SC.veNguoiLang = function (c, sp, x, y, o) {
+    o = o || {};
+    const ten = o.anim === 'noi' && sp.dt.noi ? 'noi' : 'idle', a = sp.dt[ten], s = o.s || 1;
+    c.save(); c.translate(Math.round(x), Math.round(y)); if (s !== 1) c.scale(s, s);
+    SC.veKhung(c, sp, ten, khungLap(a, Math.max(0, o.t || 0)), o.face < 0 ? -1 : 1, {});
+    c.restore();
+  };
+  // Vùng khuôn mặt (phần đầu) của khung đứng thở đầu tiên: [x, y, rộng, cao] trong tấm sprite.
+  function vungMat(sp) {
+    if (sp.mat) return sp.mat;
+    const a = sp.dt.idle, cv = document.createElement('canvas'); cv.width = sp.fw; cv.height = sp.fh;
+    const x = cv.getContext('2d'); x.drawImage(sp.img, 0, a.hang * sp.fh, sp.fw, sp.fh, 0, 0, sp.fw, sp.fh);
+    const d = x.getImageData(0, 0, sp.fw, sp.fh).data;
+    let y0 = -1, y1 = -1; for (let y = 0; y < sp.fh && y0 < 0; y++) for (let i = 0; i < sp.fw; i++) if (d[(y * sp.fw + i) * 4 + 3] > 127) { y0 = y; break; }
+    for (let y = sp.fh - 1; y >= 0 && y1 < 0; y--) for (let i = 0; i < sp.fw; i++) if (d[(y * sp.fw + i) * 4 + 3] > 127) { y1 = y; break; }
+    if (y0 < 0) return (sp.mat = [0, a.hang * sp.fh, sp.fw, sp.fh]);
+    const hh = Math.max(6, Math.round((y1 - y0 + 1) * 0.42)), ww = Math.round(hh * 1.15);
+    let n = 0, sx = 0; for (let y = y0; y < y0 + hh; y++) for (let i = 0; i < sp.fw; i++) if (d[(y * sp.fw + i) * 4 + 3] > 127) { n++; sx += i; }
+    const cx = n ? sx / n : sp.ax;
+    return (sp.mat = [Math.round(cx - ww / 2), a.hang * sp.fh + y0, ww, hh]);
+  }
+  SC.vungMat = vungMat;
+  let lanNL = 0;
+  function noiNguoiLang() {
+    const VS = G.villageScene;
+    if (!VS || !VS.NPCS) { if (lanNL++ < 50 && typeof setTimeout !== 'undefined') setTimeout(noiNguoiLang, 50); return; }
+    if (VS._spriteCustom) return;
+    VS._spriteCustom = true;
+    VS.tuVe = function (c, kind, x, y, s, o) {
+      const sp = SC.cuaNguoiLang(kind); if (!sp) return false;
+      const look = (o && o.look) || 0;
+      SC.veNguoiLang(c, sp, x, y, { anim: look ? 'noi' : 'idle', t: o && o.t != null ? o.t : G.time || 0, face: look < 0 ? -1 : 1, s: s || 1 });
+      return true;
+    };
+    VS.tuVeMat = function (ctx, k, cx, cy, s) {
+      const sp = SC.cuaNguoiLang(k); if (!sp) return false;
+      const m = vungMat(sp), k2 = Math.min((23 * s) / m[2], (20 * s) / m[3]), w = m[2] * k2, h = m[3] * k2, sm = ctx.imageSmoothingEnabled;
+      ctx.imageSmoothingEnabled = false; ctx.drawImage(sp.img, m[0], m[1], m[2], m[3], cx - w / 2, cy - h / 2, w, h); ctx.imageSmoothingEnabled = sm;
+      return true;
     };
   }
 
@@ -23456,15 +23503,20 @@ MA._xong();
     o = o || {}; const id = kind + f + '|' + (o.look || 0) + (o.blink ? 'b' : '');
     return NCACHE[id] || (NCACHE[id] = outlined(64, 64, 30, 50, (c) => drawNpc(c, kind, f, o)));
   }
+  VS.npcCode = npcSprite; // hình vẽ bằng code (Xưởng Sprite dùng để so)
   function putNpc(c, kind, x, y, f, o, s) {
-    s = s || 1; const sp = npcSprite(kind, f || 0, o);
+    s = s || 1;
     if (!(o && o.noShadow)) { c.fillStyle = 'rgba(10,8,20,0.35)'; c.fillRect(Math.round(x - 8 * s), Math.round(y - 1 * s), 16 * s, 3 * s); c.fillRect(Math.round(x - 6 * s), Math.round(y + 2 * s), 12 * s, s); }
+    // Hình tự vẽ (Xưởng Sprite, js/sprite_custom.js gắn VS.tuVe khi có tệp nl-<mã>.sprite.json). Không có tệp thì vẽ như cũ.
+    if (VS.tuVe && VS.tuVe(c, kind, x, y, s, o)) return;
+    const sp = npcSprite(kind, f || 0, o);
     c.imageSmoothingEnabled = false; c.drawImage(sp.cv, Math.round(x - sp.ox * s), Math.round(y - sp.oy * s), 64 * s, 64 * s);
   }
   // Dấu chấm than vàng "có việc mới"
   function bang(c, x, y) { x = Math.round(x); y = Math.round(y); p(c, x - 4, y - 11, 9, 11, INK); p(c, x - 3, y - 12, 7, 13, INK); p(c, x - 3, y - 10, 7, 9, '#ffd23f'); p(c, x - 2, y - 11, 5, 11, '#ffd23f'); p(c, x - 1, y - 9, 3, 5, '#7a2a12'); p(c, x - 1, y - 3, 3, 2, '#7a2a12'); }
   // Khuôn mặt một người (dùng cho dải lối tắt và khung thoại). ctx bất kỳ, s: số lần phóng.
   VS.face = function (ctx, k, cx, cy, s) {
+    if (VS.tuVeMat && VS.tuVeMat(ctx, k, cx, cy, s)) return;
     const sp = npcSprite(k, 0, { look: 1 }), ty = 50 + NPCS[k].top - 6;
     ctx.imageSmoothingEnabled = false; ctx.drawImage(sp.cv, 19, ty, 23, 20, cx - 11.5 * s, cy - 10 * s, 23 * s, 20 * s);
   };

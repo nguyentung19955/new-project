@@ -11,7 +11,8 @@
     { ma: 'em-be-healer', ten: 'Thầy Lang', key: 'healer' }, { ma: 'em-be-wrestler', ten: 'Đô Vật', key: 'wrestler' }];
   // Thời lượng động tác của em bé trong game (động tác một lần do game quyết định theo tiến độ).
   const GOC_EM_BE = { idle: 1.23, move: 0.62, tele: 0.4, atk: 0.4, hit: 0.2, die: 0.6, ne: 0.27 };
-  const OL_QUAI = XS.hex('#14182e'), OL_EM_BE = XS.hex('#1b1118');
+  const OL_QUAI = XS.hex('#14182e'), OL_EM_BE = XS.hex('#1b1118'), OL_NL = XS.hex('#1a1420');
+  const olCua = (doi) => (doi === 'em-be' ? OL_EM_BE : doi === 'nguoi-lang' ? OL_NL : OL_QUAI);
   const NHAP = 'xuongSprite.nhap.', THU = 'xuongSprite.thu';
   const THU_URL = window.XS_THU_URL || 'thu.html';
   const VU_KHI = { type: 'sword', family: 0, rarity: 1, marks: { fire: 0, poison: 0, ice: 0 }, sharpen: 0 };
@@ -89,6 +90,11 @@
   }
   function veNguoiLangCode(c, k, x, y, f, o) {
     try { if (VSC && VSC.npcCode) { const sp = VSC.npcCode(k, f || 0, o || {}); c.imageSmoothingEnabled = false; c.drawImage(sp.cv, Math.round(x - sp.ox), Math.round(y - sp.oy)); } } catch (e) { /* bỏ qua */ }
+  }
+  function caoNguoiLang(k) { // chiều cao hình người làng gốc (điểm ảnh, không tính viền)
+    try { const sp = VSC.npcCode(k, 0, {}), d = sp.cv.getContext('2d').getImageData(0, 0, sp.cv.width, sp.cv.height).data; let y0 = -1, y1 = -1;
+      for (let y = 0; y < sp.cv.height; y++) for (let x = 0; x < sp.cv.width; x++) if (d[(y * sp.cv.width + x) * 4 + 3] > 20) { if (y0 < 0) y0 = y; y1 = y; }
+      return y0 < 0 ? 34 : Math.max(16, y1 - y0 - 1); } catch (e) { return 34; }
   }
   function dsNhap() { const o = []; try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.indexOf(NHAP) === 0) o.push(k.slice(NHAP.length)); } } catch (e) { /* bỏ qua */ } return o; }
   // Các nhóm ở trang chọn. Mỗi lần chỉ hiện một nhóm cho gọn; thẻ nào cũng có hình hiện tại (vẽ bằng code) để so.
@@ -182,7 +188,7 @@
     datLaiCongViec();
     S.muc = muc;
     const g = thongTinGoc(muc.ma);
-    S.tach = { nguong: 40, kieu: 'mep', boDom: true, lat: false, cao: muc.doi === 'em-be' ? 28 : g ? g.h : XD.laDo(muc) ? XD.caoGoc(muc) : 36, soMau: 12, vien: true };
+    S.tach = { nguong: 40, kieu: 'mep', boDom: true, lat: false, cao: muc.doi === 'em-be' ? 28 : muc.doi === 'nguoi-lang' ? caoNguoiLang(muc.nl) : g ? g.h : XD.laDo(muc) ? XD.caoGoc(muc) : 36, soMau: 12, vien: true };
     if (!muc.vung && g) muc.vung = g.vung;
     const raw = docMay(NHAP + muc.ma);
     if (raw) { try { await khoiPhuc(JSON.parse(raw), true); bao('Đã mở bản nháp đang làm của ' + muc.ten); return; } catch (e) { bao('Bản nháp hỏng, làm mới từ đầu', true); } }
@@ -228,7 +234,7 @@
     $('boDom').checked = t.boDom; $('latAnh').checked = t.lat; $('vienToi').checked = t.vien;
     for (const b of document.querySelectorAll('[data-kieu]')) b.classList.toggle('chon', b.dataset.kieu === t.kieu);
     const g = S.muc && thongTinGoc(S.muc.ma);
-    $('ghiCo').textContent = laDo() ? (S.muc.doi === 'vu-khi' ? 'Vũ khí gốc dài khoảng ' + XD.caoGoc(S.muc) + ' điểm ảnh (vẽ nằm ngang hay dựng đứng thì thanh trượt đều là chiều dài).' : 'Hình gốc cao khoảng ' + XD.caoGoc(S.muc) + ' điểm ảnh.') : S.muc && S.muc.doi === 'em-be' ? 'Em bé trong game cao khoảng 26 đến 31 điểm ảnh (cả mũ).' : g ? 'Quái gốc: rộng ' + g.w + ', cao ' + g.h + ' điểm ảnh.' : 'Quái thường cao khoảng 25 đến 40, tinh anh 45 đến 60, trùm 65 đến 120 điểm ảnh.';
+    $('ghiCo').textContent = laDo() ? (S.muc.doi === 'vu-khi' ? 'Vũ khí gốc dài khoảng ' + XD.caoGoc(S.muc) + ' điểm ảnh (vẽ nằm ngang hay dựng đứng thì thanh trượt đều là chiều dài).' : 'Hình gốc cao khoảng ' + XD.caoGoc(S.muc) + ' điểm ảnh.') : S.muc && S.muc.doi === 'em-be' ? 'Em bé trong game cao khoảng 26 đến 31 điểm ảnh (cả mũ).' : S.muc && S.muc.doi === 'nguoi-lang' ? 'Người làng gốc cao khoảng ' + caoNguoiLang(S.muc.nl) + ' điểm ảnh. Khung nói chuyện tự phóng to gấp ba.' : g ? 'Quái gốc: rộng ' + g.w + ', cao ' + g.h + ' điểm ảnh.' : 'Quái thường cao khoảng 25 đến 40, tinh anh 45 đến 60, trùm 65 đến 120 điểm ảnh.';
     for (const id of ['nguong', 'boDom', 'latAnh', 'caoPx', 'soMau', 'vienToi']) $(id).disabled = S.chiAnh;
     $('vungTha').classList.toggle('an', !!S.nguon || S.chiAnh);
     $('nutSang3').disabled = !S.R;
@@ -317,10 +323,10 @@
     }
     // hình pixel: so cạnh hình code cùng cỡ
     const R = S.R; if (!R) { gy.textContent = 'Chưa có hình: thử giảm ngưỡng tách nền.'; return; }
-    const vien = S.tach.vien ? (S.muc.doi === 'em-be' || laDo() ? OL_EM_BE : OL_QUAI) : 0, P = XS.noi(R.px, R.w, R.h, 1), px = vien ? XS.themVien(P.px, P.w, P.h, vien) : P.px;
+    const vien = S.tach.vien ? (laDo() ? OL_EM_BE : olCua(S.muc.doi)) : 0, P = XS.noi(R.px, R.w, R.h, 1), px = vien ? XS.themVien(P.px, P.w, P.h, vien) : P.px;
     const goc = XS.taoCanvas(Math.max(8, R.w * 2 + 8), Math.max(8, R.h + 8)), gc = goc.getContext('2d'); gc.imageSmoothingEnabled = false;
     if (laDo()) XD.veCode(gc, S.muc, goc.width / 2, goc.height / 2, Math.min(goc.width, goc.height) - 4);
-    else if (S.muc.doi === 'em-be') veEmBeCode(gc, S.muc.key, goc.width / 2, goc.height - 3, 0, 1); else if (!S.muc.moi) veQuaiCode(gc, S.muc.ma, goc.width / 2, goc.height - 3, 0, 'idle', 1);
+    else if (S.muc.doi === 'em-be') veEmBeCode(gc, S.muc.key, goc.width / 2, goc.height - 3, 0, 1); else if (S.muc.doi === 'nguoi-lang') veNguoiLangCode(gc, S.muc.nl, goc.width / 2, goc.height - 3, 0); else if (!S.muc.moi) veQuaiCode(gc, S.muc.ma, goc.width / 2, goc.height - 3, 0, 'idle', 1);
     const gd = gc.getImageData(0, 0, goc.width, goc.height), gm = new Uint8Array(goc.width * goc.height); for (let i = 0; i < gm.length; i++) gm[i] = gd.data[i * 4 + 3] > 20 ? 1 : 0;
     const gb = XS.khung(gm, goc.width, goc.height);
     const totalW = P.w + (gb ? gb.w + 10 : 0), totalH = Math.max(P.h, gb ? gb.h : 0);
@@ -369,7 +375,7 @@
   function dungBuoc3() {
     const box = $('dsMau'); box.innerHTML = '';
     const goiY = XS.goiYMau(S.muc.ma, (thongTinGoc(S.muc.ma) || {}).bay);
-    $('goiYMau').textContent = 'Gợi ý: ' + XS.MAU[goiY].ten + (S.muc.moi ? '.' : ' (theo kiểu di chuyển của ' + (S.muc.doi === 'em-be' ? 'em bé' : 'quái gốc') + ').');
+    $('goiYMau').textContent = 'Gợi ý: ' + XS.MAU[goiY].ten + (S.muc.moi ? '.' : ' (theo kiểu di chuyển của ' + (S.muc.doi === 'em-be' ? 'em bé' : S.muc.doi === 'nguoi-lang' ? 'người làng' : 'quái gốc') + ').');
     for (const id of XS.MAU_THU_TU) {
       const b = document.createElement('button'); b.type = 'button'; b.className = 'chip' + (S.kh && S.kh.mau === id ? ' chon' : ''); b.dataset.mau = id;
       b.appendChild(bieuTuongMau(id)); b.appendChild(document.createTextNode(XS.MAU[id].ten + (id === goiY ? ' ★' : '')));
@@ -463,7 +469,7 @@
 
   // ================= TẤM SPRITE =================
   function cauHinh() {
-    return { mau: S.kh.mau, khop: S.kh.khop, bo: S.kh.bo, vien: S.tach.vien ? (S.muc.doi === 'em-be' ? OL_EM_BE : OL_QUAI) : 0, doi: S.muc.doi, dong_tac: S.dong_tac };
+    return { mau: S.kh.mau, khop: S.kh.khop, bo: S.kh.bo, vien: S.tach.vien ? olCua(S.muc.doi) : 0, doi: S.muc.doi, dong_tac: S.dong_tac };
   }
   function lamTam(ngay) {
     if (!S.R || !S.kh) return null;
@@ -490,6 +496,15 @@
       try { const W = { uid: 900 + r, region: r, type: 'fight', seed: 7 + r, geo: G.roomArt.geo(false), doors: [{ dir: 'left', open: true }, { dir: 'right', open: false }] }; PHONG[r] = G.roomArt.get(W).base; } catch (e) { PHONG[r] = null; }
     }
     return PHONG[r];
+  }
+  let NEN_LANG = null;
+  function nenLang() { // nền sân làng đơn giản: cỏ, đường đất (người làng đứng trong làng, không ở trong phòng)
+    if (NEN_LANG) return NEN_LANG;
+    const cv = XS.taoCanvas(480, 270), c = cv.getContext('2d'); let r = 7;
+    const rnd = () => { r = (r * 1103515245 + 12345) & 0x7fffffff; return r / 0x7fffffff; };
+    c.fillStyle = '#3f6a3a'; c.fillRect(0, 0, 480, 270); c.fillStyle = '#8a6a48'; c.fillRect(0, 150, 480, 46); c.fillStyle = '#a07e58'; c.fillRect(0, 156, 480, 34);
+    for (let i = 0; i < 260; i++) { const x = Math.floor(rnd() * 480), y = Math.floor(rnd() * 270); if (y > 146 && y < 198) continue; c.fillStyle = rnd() > 0.5 ? '#5a8a4a' : '#2f5a30'; c.fillRect(x, y, 1, 2); }
+    return (NEN_LANG = cv);
   }
   function dungBuoc4() {
     const box = $('dsDongTac'); box.innerHTML = '';
@@ -528,6 +543,11 @@
   // Vẽ hình tự làm vào cảnh (dùng đúng bộ vẽ của game: js/sprite_custom.js)
   function veTuVe(c, x, y, ten, t, face) {
     const sp = S.sp; if (!sp) return;
+    if (S.muc.doi === 'nguoi-lang') { // đúng đường vẽ người làng của game
+      c.fillStyle = 'rgba(10,8,20,0.35)'; c.fillRect(Math.round(x - 8), Math.round(y - 1), 16, 3); c.fillRect(Math.round(x - 6), Math.round(y + 2), 12, 1);
+      SC.veNguoiLang(c, sp, x, y, { anim: ten, t, face });
+      return;
+    }
     if (S.muc.doi === 'em-be') {
       const a = sp.dt[ten] || sp.dt.idle, D = a.giay, u = Math.min(1, t / D);
       const i = a.lap ? SC.khungLap(a, t) : SC.khungMot(a, u);
@@ -565,12 +585,12 @@
       else if (X.lap) X.t = 0; else X.t = D + 0.6;
     } else if (lap && X.lanLuot && X.t > Math.max(2, a.giay * 2)) { const ds = XS.dsDongTac(S.muc.doi), i = ds.indexOf(ten); datDongTac(ds[(i + 1) % ds.length]); }
     const c = buf4.getContext('2d'); c.imageSmoothingEnabled = false; G.time = now / 1000;
-    const vung = S.muc.vung && VUNG_SO[S.muc.vung] != null ? S.muc.vung : 'rung', bg = X.nen ? phong(vung) : null;
+    const vung = S.muc.vung && VUNG_SO[S.muc.vung] != null ? S.muc.vung : 'rung', bg = X.nen ? (S.muc.doi === 'nguoi-lang' ? nenLang() : phong(vung)) : null;
     if (bg) c.drawImage(bg, 0, 0); else { c.fillStyle = '#17363a'; c.fillRect(0, 0, 480, 270); c.fillStyle = '#12292a'; c.fillRect(0, 170, 480, 100); }
     const em = S.muc.doi === 'em-be', yS = 172;
     const xT = em ? 232 : 258, xB = em ? 196 : 206, f = X.face;
     if (X.emBe && !em) veEmBeCode(c, 'smith', xB, yS, G.time, 1);
-    if (X.soGoc) { if (em) veEmBeCode(c, S.muc.key, xT + 40, yS, G.time, f); else if (!S.muc.moi) veQuaiCode(c, S.muc.ma, xT + S.R.w + 18, yS, X.t, ten === 'ne' ? 'idle' : ten, f); }
+    if (X.soGoc) { if (em) veEmBeCode(c, S.muc.key, xT + 40, yS, G.time, f); else if (S.muc.doi === 'nguoi-lang') veNguoiLangCode(c, S.muc.nl, xT + S.R.w + 18, yS, Math.floor(G.time * 2.4) % 3, ten === 'noi' ? { look: f } : {}); else if (!S.muc.moi) veQuaiCode(c, S.muc.ma, xT + S.R.w + 18, yS, X.t, ten === 'ne' ? 'idle' : ten, f); }
     if (X.emBe && em) veEmBeCode(c, S.muc.key || 'smith', xB, yS, G.time, 1);
     veTuVe(c, xT, yS, ten, X.t, f);
     const { c: o, w, h, d } = oCanvas(cv4);
@@ -680,13 +700,14 @@
   }
   async function khoiPhuc(tep, tuNhap) {
     if (!tep || tep.loai !== 'linh-khi-sprite' || typeof tep.ma !== 'string') throw new Error('Không phải tệp của Xưởng Sprite');
-    const g = thongTinGoc(tep.ma), em = EM_BE.find((e) => e.ma === tep.ma), doMoi = /^(vu-khi|trang-phuc|vat-pham)$/.test(tep.doi_tuong);
+    const g = thongTinGoc(tep.ma), em = EM_BE.find((e) => e.ma === tep.ma), nl = /^nl-(\w+)$/.exec(tep.ma), doMoi = /^(vu-khi|trang-phuc|vat-pham)$/.test(tep.doi_tuong);
     datLaiCongViec();
     if (doMoi) XD.khoiPhuc(tep, tep.cong_cu || {});
+    else if (nl && tep.doi_tuong === 'nguoi-lang') { const q = dsNguoiLang().find((x) => x.ma === tep.ma); if (!q) throw new Error('Không nhận ra người làng ' + tep.ma); S.muc = q; }
     else S.muc = em ? { ma: em.ma, ten: em.ten, doi: 'em-be', key: em.key, vung: 'rung' } : { ma: tep.ma, ten: tep.ten || (g && g.ten) || tep.ma, doi: 'quai', vung: g ? g.vung : (tep.vung || 'rung'), moi: !g };
     if (S.muc.vung === 'moi') S.muc.vung = 'rung';
     const cc = tep.cong_cu || {};
-    S.tach = Object.assign({ nguong: 40, kieu: 'mep', boDom: true, lat: false, cao: g ? g.h : doMoi ? XD.caoGoc(S.muc) : 36, soMau: 12, vien: true }, cc.tach || {});
+    S.tach = Object.assign({ nguong: 40, kieu: 'mep', boDom: true, lat: false, cao: g ? g.h : doMoi ? XD.caoGoc(S.muc) : S.muc.doi === 'nguoi-lang' ? caoNguoiLang(S.muc.nl) : 36, soMau: 12, vien: true }, cc.tach || {});
     S.dong_tac = cc.chinh || {};
     if (!cc.chinh && tep.dong_tac) for (const k in tep.dong_tac) S.dong_tac[k] = { bien: tep.dong_tac[k].bien, toc: tep.dong_tac[k].toc };
     S.thay_cho = tep.thay_cho || null;
@@ -725,6 +746,11 @@
     ifr.src = THU_URL + '?cloud=0&t=' + Date.now();
     $('hopGame').classList.add('hien');
     tuDanh = false; $('nutTuDanh').textContent = 'Cho bé tự đánh';
+    const nl = S.muc.doi === 'nguoi-lang';
+    $('nutTuDanh').classList.toggle('an', nl);
+    const GHI = { 'nguoi-lang': 'người làng tự vẽ đứng trong làng, quay sang nói chuyện, vẫy tay khi em bé đứng gần; có cả ở dải khuôn mặt và khung nói chuyện.', 'vu-khi': 'em bé cầm vũ khí tự vẽ đánh nhau thật (game tự xoay theo tám hướng, thêm vệt chém).', 'trang-phuc': 'em bé mặc món đồ tự vẽ đánh nhau thật.', 'vat-pham': 'đồ tự vẽ rơi quanh em bé; bấm "Xem ở làng" để thấy biểu tượng ở dải tài nguyên góc trên.' };
+    $('ghiGame').textContent = 'Bản game thử: ' + (GHI[S.muc.doi] || 'quái tự vẽ đánh nhau thật trong phòng.') + ' Không ghi vào bản lưu của game.';
+    $('nutLaiGame').textContent = nl ? 'Mở / đóng khung nói chuyện' : S.muc.doi === 'vat-pham' ? 'Xem ở làng / trong trận' : 'Gọi quái lại';
     window._xsTepThu = tep;
   }
   window.addEventListener('message', (e) => {

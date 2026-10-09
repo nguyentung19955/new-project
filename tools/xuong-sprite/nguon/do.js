@@ -12,7 +12,7 @@
   const BAC = ['Thường', 'Lam', 'Tím', 'Vàng'];
   const BE = [['smith', 'Thợ Rèn'], ['hunter', 'Thợ Săn'], ['healer', 'Thầy Lang'], ['wrestler', 'Đô Vật']];
   const VP = [['gold', 'Vàng'], ['potion', 'Bình máu'], ['linhkhi-fire', 'Linh khí Lửa'], ['linhkhi-poison', 'Linh khí Độc'], ['linhkhi-ice', 'Linh khí Băng'],
-    ['ore', 'Quặng'], ['stone', 'Đá tôi'], ['mat0', 'Gỗ linh'], ['mat1', 'Vảy cá'], ['mat2', 'Đá lửa'], ['shard0', 'Mảnh Mộc Tinh'], ['shard1', 'Mảnh Ngư Tinh'], ['shard2', 'Mảnh Hồ Tinh']];
+    ['ore', 'Quặng'], ['stone', 'Đá tôi'], ['mat0', 'Gỗ linh'], ['mat1', 'Vảy cá'], ['mat2', 'Đá lửa'], ['shard0', 'Mảnh Mộc Tinh'], ['shard1', 'Mảnh Ngư Tinh'], ['shard2', 'Mảnh Hồ Tinh'], ['xp', 'Kinh nghiệm']];
   // Biểu tượng tài nguyên 7x7 của game (chép từ js/ui_theme.js để so trong công cụ).
   const RES = {
     gold: { rows: ['..ooo..', '.oyyyo.', 'oywyyyo', 'oyyyyyo', 'oyyyydo', '.oyddo.', '..ooo..'], pal: { o: '#7a4a10', y: '#ffd23f', w: '#fff6c0', d: '#e0a020' } },
@@ -24,6 +24,7 @@
     shard0: { rows: ['....k..', '...kak.', '..kaak.', '.kawak.', '.kaaak.', 'kaaadk.', 'kkkkkk.'], pal: { a: '#8ac84a', w: '#eaffc0', d: '#4a8a2a', k: '#1e3a12' } },
     shard1: { rows: ['....k..', '...kak.', '..kaak.', '.kawak.', '.kaaak.', 'kaaadk.', 'kkkkkk.'], pal: { a: '#5ab0f0', w: '#e0f4ff', d: '#2a6ab0', k: '#12284a' } },
     shard2: { rows: ['....k..', '...kak.', '..kaak.', '.kawak.', '.kaaak.', 'kaaadk.', 'kkkkkk.'], pal: { a: '#ff8a4a', w: '#fff0d0', d: '#c04a1a', k: '#4a1a08' } },
+    xp: { rows: ['...c...', '...c...', '..cwc..', 'ccwwwcc', '..cwc..', '...c...', '...c...'], pal: { c: '#8fd0ff', w: '#ffffff' } },
   };
   const EL = { fire: ['#ff8a3a', '#ffd27a', '#7a1810'], poison: ['#6fcf3a', '#c2f58a', '#12331a'], ice: ['#7fd4ff', '#e9f9ff', '#1c3a70'] };
   function veVpCode(c, kind, x, y, s) { // hình gốc của vật phẩm (gần đúng như game), tâm (x, y), cỡ s

@@ -87,7 +87,7 @@
     linhMa: 'nguoi', tuongDa: 'nguoi', tuongMa: 'nguoi', tieuYeu: 'nguoi',
     nguTinh: 'ran', haiQuy: 'cay', hoaBaoTu: 'cay', mocTinh: 'cay',
   };
-  XS.goiYMau = (ma, bay) => (/^em-be/.test(ma) ? 'nguoi' : GOI_Y[ma] || (bay ? 'bay' : 'bonChan'));
+  XS.goiYMau = (ma, bay) => (/^(em-be|nl-)/.test(ma) ? 'nguoi' : GOI_Y[ma] || (bay ? 'bay' : 'bonChan'));
   XS.MAU_BO = ['#ff5a46', '#ffd23c', '#3fd0a0', '#4aa3ff', '#c86bff', '#ff9a3c', '#9be05a', '#ff6fb0'];
 
   // ---------- đặt khớp lên hình, tự đoán bộ phận ----------
@@ -146,8 +146,10 @@
     hit: { ten: 'Trúng đòn', giay: 0.35 },
     die: { ten: 'Chết', giay: 1.1 },
     ne: { ten: 'Né lăn', giay: 0.27, emBe: true },
+    noi: { ten: 'Nói chuyện, vẫy tay', giay: 1.0, lap: true, nguoiLang: true },
   };
-  XS.dsDongTac = (doi) => Object.keys(XS.DONG_TAC).filter((k) => !XS.DONG_TAC[k].emBe || doi === 'em-be');
+  // Người làng chỉ có hai động tác: đứng thở và nói chuyện (vẫy tay) khi em bé tới gần.
+  XS.dsDongTac = (doi) => (doi === 'nguoi-lang' ? ['idle', 'noi'] : Object.keys(XS.DONG_TAC).filter((k) => (!XS.DONG_TAC[k].emBe || doi === 'em-be') && !XS.DONG_TAC[k].nguoiLang));
 
   // A: biên độ (1 = vừa). Trả về tư thế của động tác ten tại tiến độ u (0..1).
   XS.tuThe = function (mau, ten, u, A) {
@@ -256,6 +258,19 @@
         else if (b.vai === 'duoi' || b.vai === 'tua') p.r = 30 * A1 * k * (ph ? -1 : 1);
         else if (b.vai === 'dot') p.r = 15 * A1 * k * (b.so % 2 ? 1 : -1);
         else if (b.vai === 'dinh' || b.vai === 'tan') p.r = -20 * A1 * k;
+      });
+    } else if (ten === 'noi') { // người làng nói chuyện: tay trước giơ lên vẫy, đầu gật, người nhún nhẹ
+      const s2 = sn(u * 2);
+      g.sy = 1 + 0.03 * A * sn(u * 2 + 0.25); g.r = 2 * A * sn(u);
+      if (kieu === 'bay') g.dy = -2 * A * sn(u + 0.25);
+      moi((b, p, ph) => {
+        if (b.vai === 'tay') p.r = ph ? 8 * A * sn(u) : -115 * Math.min(1.3, A) + 28 * A * s2;
+        else if (b.vai === 'dau') p.r = 6 * A * sn(u * 2 + 0.1);
+        else if (b.vai === 'chan') p.r = 0;
+        else if (b.vai === 'duoi') { p.r = 12 * A * s2; p.song = [1.2 * A, u * 2]; }
+        else if (b.vai === 'canh' || b.vai === 'cang' || b.vai === 'tua') p.r = (ph ? 6 : -30) * A + (ph ? 0 : 18 * A * s2);
+        else if (b.vai === 'dinh' || b.vai === 'tan') { p.r = 5 * A * s2; p.song = [1 * A, u]; }
+        else if (b.vai === 'dot') p.r = 8 * A * sn(u * 2 + b.so * 0.2);
       });
     } else if (ten === 'ne') { // em bé lăn né
       g.pv = 'giua'; g.r = 360 * kf(u, [[0, 0], [1, 1, 'io']]); g.dy = -3 * Math.sin(u * PI); g.sx = g.sy = 1 - 0.1 * Math.sin(u * PI);
