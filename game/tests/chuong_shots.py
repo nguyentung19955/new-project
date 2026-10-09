@@ -34,7 +34,7 @@ LIB = r"""
     for (let i = 0; i < 8; i++) T.frame({});
     W.banner = null;
     P.x = W.geo.cx - (o.left || 40); P.y = W.geo.cy + 6; P.face = 1; P.inv = 0; P.mana = P.maxmana; P.hp = P.maxhp; P.ldx = null; P.ldy = null;
-    for (const d of dummies || []) { const e = G.spawnEnemy(d[2] || 'rusher', P.x + d[0], P.y + d[1], { hpMult: 1e5 }); e.st.stun = 1e9; e.inside = true; e.face = d[0] > 0 ? -1 : 1; e.speed = 0; }
+    for (const d of dummies || []) { const e = G.spawnEnemy(d[2] || 'rusher', P.x + d[0], P.y + d[1], { hpMult: 1e5 }); e.st.root = 1e9; e.inside = true; e.face = d[0] > 0 ? -1 : 1; e.speed = 0; e.cd = 1e9; /* đứng yên (không choáng: quái choáng nhấp nháy trắng) */ }
     for (let i = 0; i < 70; i++) T.frame({});
     W.zones = W.zones.filter((z) => z.team === 'player'); P.mana = P.maxmana; P.cdT = 0; P.specCd = 0; P.skillCd = 0;
     T.W = W; T.P = P; T.cx = P.x + (o.shift || 40); T.cy = P.y;
