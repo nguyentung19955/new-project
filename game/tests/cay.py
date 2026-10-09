@@ -82,6 +82,8 @@ def campaign(pg, mode, upto):
         else:
             grind = cleared >= 0 and (must_grind or (mode == 'khuyen' and v['power'] < rec * NGUONG and grind_run < 8))
         k = cleared if grind else nxt
+        if grind and cleared % 5 == 4 and v['power'] < 1.15 * pg.evaluate("([r, i]) => G.stageRec(r, i, 0)", list(divmod(cleared, 5))):
+            k = cleared - 1  # vừa qua trùm vùng mà chưa dư sức: cày ải 4 của vùng đó (dễ thắng hơn đánh lại trùm), như người chơi
         wh = v.get('where')
         if grind and wh is not None and wh <= cleared and (wh % 5 < 4 or v['power'] >= 1.15 * pg.evaluate("([r, i]) => G.stageRec(r, i, 0)", list(divmod(wh, 5)))):
             k = wh  # cày đúng chỗ bảng gợi ý chỉ: thiếu mảnh trùm thì đánh lại trùm, thiếu nguyên liệu vùng nào thì chơi lại vùng đó
@@ -157,10 +159,11 @@ LUAT = r"""
   const sv = G.save, w0 = G.weaponById(sv.carry[0]);
   sv.heroes.smith.lvl = 40; sv.heroes.smith.sk = { atk: 5, def: 5, elem: 3 }; sv.forge = 4;
   w0.rarity = 3; w0.gold = 1; w0.sharpen = 15; w0.branch = 'fire'; w0.marks.fire = 300;
+  const w1 = G.weaponById(sv.carry[1]); w1.rarity = 3; w1.gold = 1; w1.sharpen = 15; w1.branch = 'ice'; w1.marks.ice = 300;
   const O = G.outfit; for (const k of ['mu_vay_ca', 'ao_vay', 'khan_bang', 'bua_oc']) O.wear(sv, O.add(sv, k, 3)); O.wear(sv, O.add(sv, 'canh_bang', 3, { lv: 3 }));
   const top = G.power(), need = G.STAGE_REC[14];
-  ok(top >= need * 1.4, 'trần trước Hồ Tinh (cấp 40, Vàng Ngư Tinh +15, Thức tỉnh, bộ Hang Biển Vàng, cánh lớn): sức mạnh ' + top + ' >= 1,4 x khuyên dùng Hồ Tinh ' + need);
-  sv.heroes.smith.lvl = 30; sv.forge = 3; w0.sharpen = 10; const old30 = G.power();
+  ok(top >= need * 1.4, 'trần trước Hồ Tinh (cấp 40, hai vũ khí Vàng Ngư Tinh +15, Thức tỉnh, bộ Hang Biển Vàng, cánh lớn): sức mạnh ' + top + ' >= 1,4 x khuyên dùng Hồ Tinh ' + need);
+  sv.heroes.smith.lvl = 30; sv.forge = 3; w0.sharpen = 10; w1.sharpen = 10; const old30 = G.power();
   ok(top > old30 * 1.15, 'trần mới cao hơn trần cũ (cấp 30, mài +10) rõ rệt: ' + old30 + ' -> ' + top);
   // GỢI Ý Ở BẢNG THUA
   G.resetSave(); G.save.tut.done = true;

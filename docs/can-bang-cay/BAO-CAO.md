@@ -1,5 +1,7 @@
 # Cân bằng "phải cày mới qua"
 
+> **Cập nhật sau (đợt cày nâng cấp, `docs/cay-nang-cap/BAO-CAO.md`):** cơ chế "Quyết tâm" nói dưới đây đã bị **bỏ hẳn** theo ý chủ dự án. Thua không còn làm bé mạnh thêm; sức mạnh chỉ đến từ cày nâng cấp. Sức mạnh khuyên dùng và trần nâng cấp đã đo lại.
+
 Mục tiêu của chủ dự án: người chơi phải cày lên cấp, lên đồ mới qua được các ải quan trọng, nhưng cày phải có thưởng và không vô vị.
 
 ## Tóm tắt
@@ -176,7 +178,7 @@ Số "trước" đo trên bản trước đợt này: bot chơi lần lượt, c
 |---|---|
 | `the-ai-suc-manh-khuyen-dung.png` | Tranh bản đồ, chọn ải 2-3: thẻ ải ghi "Sức mạnh khuyên dùng 270 · bé 241" màu đỏ (thiếu) |
 | `the-ai-du-suc-manh.png` | Chọn ải 2-2: màu xanh (đủ); dưới thẻ ải 3 trên tranh ghi ⚔270 màu đỏ |
-| `the-ai-trum-vung-thieu-suc-manh-quyet-tam.png` | Chọn trùm Ngư Tinh sau hai lần thua: thiếu nhiều, có "quyết tâm +8%" |
+| `the-ai-trum-vung-thieu-suc-manh.png` | Chọn trùm Ngư Tinh: thiếu nhiều (ảnh cũ có "quyết tâm" đã bỏ, chụp lại không còn chữ này) |
 | `bang-hero-suc-manh.png` | Bảng hero của Ông Từ có "Sức mạnh 241" |
 | `lang-dai-tren-suc-manh.png` | Dải trên cùng ở làng: "Thợ Rèn · cấp 12 · sức mạnh 241" |
 | `trong-ai-thanh-tren-suc-manh.png` | Trong ải: "Sức mạnh 241 / khuyên 270" ở góc trái |
