@@ -44,12 +44,13 @@
   G.STAGE_NAMES = ['Trắng', 'Mầm', 'Thành hình', 'Thức tỉnh'];
   // Mỗi mốc tiến hóa tăng nhẹ sát thương gốc.
   G.STAGE_MULT = [1, 1.04, 1.08, 1.12];
-  // Tỉ lệ mỗi đòn gây hiệu ứng hệ theo mốc tiến hóa (Trắng dùng G.PROC_TRANG).
   G.PROC = [0, 0.2, 0.5, 1];
-  // Vũ khí Trắng (chưa có hệ) cũng có 15% mỗi đòn gây hiệu ứng nhẹ của hệ nó đang nghiêng về (hệ có nhiều dấu ấn nhất;
-  // chưa có dấu ấn nào thì theo hệ của vùng đang đánh). Trước đây vũ khí Trắng chỉ nhận linh khí khi đánh vỡ vật mang hệ
-  // trong ải rồi kết liễu quái đang dính hệ đó, nên lên Mầm rất chậm.
-  G.PROC_TRANG = 0.12;
+  // NGUỒN LINH KHÍ (góp ý của chủ dự án: kiếm linh khí bằng cách hạ tinh anh và trùm, quái thường thỉnh thoảng rơi linh khí để nhặt).
+  //  - Hạ tinh anh, trùm nhỏ, trùm vùng: vũ khí kết liễu luôn nhận bấy nhiêu dấu ấn. Hệ: hệ quái đang dính lúc gục (cách dùng của bé),
+  //    không dính gì thì hệ của vùng (Rừng già Độc, Hang biển Băng, Lâu đài cổ Lửa).
+  //  - Quái thường: tỉ lệ drop rơi một viên linh khí của vùng nằm trên sàn, nhặt (đi lại gần) thì vũ khí đang cầm nhận orb dấu ấn.
+  //  - Vẫn giữ luật cũ: kết liễu quái thường đang dính hiệu ứng hệ thì vũ khí nhận 1 dấu ấn của hệ đó.
+  G.LINHKHI = { elite: 5, mini: 10, boss: 20, drop: 0.05, orb: 3 };
   // Dòng phụ: bậc Lam có 1, Tím và Vàng có 2.
   G.AFFIX = {
     mana: 'Mỗi đòn trúng hồi thêm 1 mana',

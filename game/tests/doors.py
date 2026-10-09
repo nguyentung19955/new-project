@@ -152,7 +152,7 @@ JS = r"""
 BOT = r"""
 ([r, i, kind, seed, side]) => {
   // Bài này thử luật cửa, không đo độ khó: bản lưu đủ "Sức mạnh khuyên dùng" của ải (cân bằng phải cày làm quái mạnh hơn trước).
-  G.testSave({ lvl: Math.min(30, 8 + r * 10 + i * 2), tier: Math.min(3, r + 1), sharpen: Math.min(10, 3 + r * 3 + i), armor: ['a_r1', 'a_ngu', 'a_ho'][r], helm: ['h_r1', 'h_ngu', 'h_ho'][r], charm: 'c_leech' });
+  G.testSave({ lvl: Math.min(30, 8 + r * 10 + i * 2), tier: Math.min(3, r + 1), sharpen: Math.min(10, 3 + r * 3 + i), armor: ['a_r1', 'a_ngu', 'a_ho'][r], helm: ['h_r1', 'h_ngu', 'h_ho'][r], charm: 'c_leech', branch: r ? 'fire' : null, marks: [0, 120, 300][r] });
   for (const w of G.save.weapons) w.gold = r; // vũ khí Vàng của vùng đang chơi
   G.save.grit[r + '-' + i] = G.GRIT.max; // thêm Quyết tâm tối đa: bài này thử cửa, bot phải qua được ải với mọi hạt giống
   G.botCfg.side = side;

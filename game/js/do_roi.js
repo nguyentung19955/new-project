@@ -10,7 +10,7 @@
   const D = (G.doRoi = {});
   const OL = '#120c08';
   const TAU = Math.PI * 2;
-  const NHAN = { gold: 1, ore: 1, stone: 1, mat0: 1, mat1: 1, mat2: 1, shard0: 1, shard1: 1, shard2: 1, xp: 1 }; // loại hút xa
+  const NHAN = { linhkhi: 1, gold: 1, ore: 1, stone: 1, mat0: 1, mat1: 1, mat2: 1, shard0: 1, shard1: 1, shard2: 1, xp: 1 }; // loại hút xa
   const MAU_TRUM = ['#8ac84a', '#5ab0f0', '#ff8a4a']; // màu mảnh trùm theo vùng (Mộc Tinh, Ngư Tinh, Hồ Tinh)
   const cache = new Map();
 
@@ -37,6 +37,7 @@
       else if (o.kind === 'outfit' && o.o && G.outfit && G.outfit.drawIcon) G.outfit.drawIcon(c, o.o, S / 2, S / 2, 16);
       else if (o.kind === 'gold') dongXu(c, S / 2, S / 2 + 3);
       else if (o.kind === 'potion') binhMau(c, S / 2, S / 2);
+      else if (o.kind === 'linhkhi') vienLinhKhi(c, S / 2, S / 2, o.el);
       else {
         const d = G.theme && G.theme.RES && G.theme.RES[o.kind];
         if (d) for (let j = 0; j < 7; j++) for (let i = 0; i < 7; i++) { const ch = d.rows[j][i]; if (ch !== '.' && d.pal[ch]) { c.fillStyle = d.pal[ch]; c.fillRect(4 + i * 2, 4 + j * 2, 2, 2); } }
@@ -47,9 +48,18 @@
     if (cache.size > 200) cache.delete(cache.keys().next().value);
     return cv;
   }
+  // Viên linh khí: hạt tròn sáng màu hệ, lõi trắng (quái thường rơi, nhặt thì vũ khí đang cầm nhận dấu ấn).
+  function vienLinhKhi(c, x, y, el) {
+    const E = (G.EL && G.EL[el]) || { col: '#ffffff', col2: '#ffffff', dark: '#888888' };
+    const px = (cx, cy, w, h, col) => { c.fillStyle = col; c.fillRect(cx, cy, w, h); };
+    px(x - 3, y - 5, 6, 10, E.dark); px(x - 5, y - 3, 10, 6, E.dark);
+    px(x - 2, y - 4, 4, 8, E.col); px(x - 4, y - 2, 8, 4, E.col);
+    px(x - 1, y - 2, 2, 4, E.col2); px(x - 2, y - 1, 4, 2, E.col2); px(x - 1, y - 1, 1, 1, '#ffffff');
+  }
   function khoa(o) {
     if (o.kind === 'weapon' && o.w) return 'w|' + (o.w.id || '') + '|' + o.w.type + '|' + (o.w.family || 0) + '|' + bac(o) + '|' + (o.w.branch || '') + '|' + (G.wStage ? G.wStage(o.w) : 0);
     if (o.kind === 'outfit' && o.o) return 'o|' + o.o.k + '|' + o.o.r + '|' + (o.o.lv || 1);
+    if (o.kind === 'linhkhi') return 'lk|' + o.el;
     return o.kind;
   }
   // Đống xu vàng: ba đồng xu chồng lên nhau, mặt có lỗ vuông như tiền đồng.
@@ -180,7 +190,7 @@
       if (o.type !== 'loot' || o.got || G.time < (o.born || 0) + 0.8) continue;
       const dx = P.x - o.x, dy = P.y - 4 - o.y, d = Math.hypot(dx, dy * 1.3);
       const R = (NHAN[o.kind] ? 44 : 24) + (P.pickR || 0);
-      if (d < 9) { o.got = G.time; nhat = true; continue; }
+      if (d < 9) { o.got = G.time; nhat = true; if (o.onPick) { try { o.onPick(); } catch (e) { /* bỏ qua */ } o.onPick = null; } continue; }
       if (d < R) {
         const v = (60 + 220 * (1 - d / R)) * dt;
         o.x += (dx / (d || 1)) * Math.min(v, d); o.y += (dy / (d || 1)) * Math.min(v, d);

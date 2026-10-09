@@ -200,6 +200,19 @@ LUAT = r"""
   const fx = G.fixSave(JSON.parse(JSON.stringify(old)));
   ok(fx.grit && typeof fx.grit === 'object' && fx.heroes.smith.lvl === old.heroes.smith.lvl, 'bản lưu cũ (chưa có quyết tâm) vẫn đọc được');
   ok(G.fixSave(Object.assign(JSON.parse(JSON.stringify(old)), { grit: { '0-1': 99, x: 'a' } })).grit['0-1'] === G.GRIT.max, 'quyết tâm trong bản lưu bị sửa tay vẫn bị chặn ở mức tối đa');
+  // nguồn linh khí: tinh anh không dính hệ vẫn cho dấu ấn của vùng; quái thường rơi viên linh khí, nhặt mới có
+  G.testSave({ lvl: 20, sharpen: 6 }); G.save.tut.done = true;
+  G.startStage(0, 1, 0); let W = G.getWorld(); W.waves = []; W.spawns = []; W.ents = [];
+  const w0 = G.curW(G.getRun().P), m0 = w0.marks.poison;
+  const el = G.spawnEnemy('elite', W.P.x + 30, W.P.y, {}); el.inside = true; G.kill(el, {});
+  ok(Math.abs(w0.marks.poison - m0 - G.LINHKHI.elite * G.getRun().P.markMult) < 0.01, 'hạ tinh anh không dính hệ: +' + G.LINHKHI.elite + ' dấu ấn Độc của Rừng già');
+  const r0 = G.rnd; G.rnd = () => 0.01;
+  const mob = G.spawnEnemy('rusher', W.P.x + 60, W.P.y, {}); mob.inside = true; const m1 = w0.marks.poison; G.kill(mob, {});
+  G.rnd = r0;
+  const orb = W.props.find((o) => o.type === 'loot' && o.kind === 'linhkhi');
+  ok(orb && w0.marks.poison === m1, 'quái thường rơi viên linh khí trên sàn, chưa nhặt thì chưa có');
+  if (orb) { orb.born = -9; orb.x = W.P.x; orb.y = W.P.y - 4; G.doRoi.hut(W, W.P, 1 / 60); }
+  ok(Math.abs(w0.marks.poison - m1 - G.LINHKHI.orb * G.getRun().P.markMult) < 0.01, 'nhặt viên linh khí: vũ khí đang cầm +' + G.LINHKHI.orb + ' dấu ấn');
   G.resetSave();
   return out;
 }

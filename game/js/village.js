@@ -219,7 +219,7 @@
     const el = w.branch, E = el ? G.EL[el] : null;
     if (!el) ui.para('Chưa khóa nhánh hệ. Kết liễu quái đang dính hiệu ứng để nhận dấu ấn; đủ ' + G.MARKS[0] + ' dấu ấn của một hệ thì vũ khí theo hệ đó.', x0, 80, 212, { size: 7, color: SOFT });
     const rows = [
-      ['Trắng', 'Chưa mang hệ. ' + Math.round(G.PROC_TRANG * 100) + '% mỗi đòn gây hiệu ứng nhẹ của hệ đang nghiêng (chưa có dấu ấn thì theo hệ của vùng).'],
+      ['Trắng', 'Chưa mang hệ. Hạ tinh anh, trùm hoặc nhặt viên linh khí quái thường rơi để có dấu ấn.'],
       ['Mầm', 'Chỉ số tăng. ' + Math.round(G.PROC[1] * 100) + '% mỗi đòn gây ' + (el ? (el === 'fire' ? 'cháy' : el === 'poison' ? 'độc' : 'chậm') : 'hiệu ứng hệ') + ', vệt chém nhuốm màu hệ. Chưa có luật hệ.'],
       ['Thành hình', null, 0],
       ['Thức tỉnh', null, 1],
@@ -512,7 +512,7 @@
     ['Vật trong phòng', 'Chậu than, nấm độc và tinh thể băng phát nổ khi bị đánh, gây hiệu ứng lên quái đứng gần. Đây là cách gây hệ khi vũ khí còn trắng.'],
     ['Bốn bậc màu', 'Thường (sát thương x1, tiến hóa tới Thành hình), Lam (x1,15, có 1 dòng phụ), Tím (x1,3, có 2 dòng phụ), Vàng (x1,5 trở lên, 2 dòng phụ và 1 dòng mạnh riêng). Từ Lam trở lên tiến hóa được tới Thức tỉnh.'],
     ['Nguồn vũ khí', 'Rương và quái tinh anh rơi vũ khí bậc ngẫu nhiên, cao nhất là Tím; vùng sau dễ ra bậc cao hơn. Trùm vùng lần đầu bị hạ chắc chắn rơi một vũ khí Vàng. Ông Thợ Rèn nâng bậc từng nấc mà không mất tiến hóa; nấc lên Vàng cần mảnh trùm.'],
-    ['Đặc trưng hệ theo cấp', 'Trắng: ' + Math.round(G.PROC_TRANG * 100) + '% mỗi đòn gây hiệu ứng nhẹ của hệ đang nghiêng về (chưa có thì theo hệ của vùng), kết liễu quái đang dính hệ là có linh khí. Mầm: có tỉ lệ gây cháy, độc, chậm nhưng chưa có luật hệ. Thành hình: mở đặc trưng 1, thứ để lại trên sân (vệt cháy, vũng độc, gai băng). Thức tỉnh: mở đặc trưng 2, phản ứng dây chuyền (nổ lan, lây độc, băng vỡ).'],
+    ['Đặc trưng hệ theo cấp', 'Trắng: chưa có hệ. Linh khí (dấu ấn) có từ: hạ tinh anh (' + G.LINHKHI.elite + '), trùm nhỏ (' + G.LINHKHI.mini + '), trùm vùng (' + G.LINHKHI.boss + '); quái thường ' + Math.round(G.LINHKHI.drop * 100) + '% rơi viên linh khí của vùng (' + G.LINHKHI.orb + '), đi lại gần để nhặt; kết liễu quái đang dính hệ (+1). Hệ theo hệ quái đang dính, không dính thì theo vùng. Mầm: có tỉ lệ gây cháy, độc, chậm nhưng chưa có luật hệ. Thành hình: mở đặc trưng 1, thứ để lại trên sân (vệt cháy, vũng độc, gai băng). Thức tỉnh: mở đặc trưng 2, phản ứng dây chuyền (nổ lan, lây độc, băng vỡ).'],
     ['Xem vũ khí', 'Ở làng, chạm vào vũ khí đang bay theo em bé để xem bậc, dòng phụ và các đặc trưng đã mở, sắp mở. Ở chỗ Bà Hàng Xén cũng có nút Xem cho món trong rương.'],
   ];
   function help() {

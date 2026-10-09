@@ -227,23 +227,29 @@ Chụp lại: `python3 game/tests/cay_shots.py`.
 - **Quyết tâm sẽ bị bỏ.** Lúc gộp lần cuối, nhánh chính đã ghi chủ dự án không muốn "thua nhiều thì mạnh thêm" trên bản chơi. Bước đăng web tự bỏ qua khi code còn `G.GRIT`. Phiên `claude/cay-nang-cap` đang gỡ Quyết tâm và thêm nấc nâng cấp mới (cấp 40, mài +15). Khi gỡ, các lượt xui ở trùm vùng có thể lại dài hơn, nên đo lại bằng `tests/cay.py`.
 - **Độ khó thứ hai** chỉ thử nhanh ở ba trùm vùng với bản lưu đã cày đầy (trước khi gộp trang phục), chưa đo kỹ như độ khó thường.
 
-## Bổ sung sau góp ý: linh khí lên chậm
+## Bổ sung sau góp ý: nguồn linh khí
 
-- **Trước:**
-  - Vũ khí Trắng không gây hiệu ứng hệ nào. Muốn có linh khí phải đánh vỡ vật mang hệ trong ải (chậu than, nấm, pha lê) rồi kết liễu quái đang dính hệ đó.
-  - Bot đi lần lượt các ải không cày mà không đánh vật: 1-3 dấu ấn mỗi ải ở vùng 1. Lên Mầm (30) phải tới khoảng ải 2-3.
-- **Nay** (`G.PROC_TRANG`, `G.leanEl`):
-  - Vũ khí Trắng có 12% mỗi đòn gây hiệu ứng nhẹ của hệ nó đang nghiêng về: hệ có nhiều dấu ấn nhất, chưa có thì theo hệ của vùng đang đánh (Rừng già Độc, Hang biển Băng, Lâu đài cổ Lửa).
-  - Luật "tiến hóa theo cách dùng" giữ nguyên: dùng vật mang hệ khác hay bùa hệ thì vũ khí nghiêng sang hệ đó. Mốc 30/120/300 không đổi.
-- **Đo bằng bot, không đánh vật mang hệ, đi lần lượt ải:**
+Chủ dự án góp ý: linh khí lên chậm, và không muốn phải đánh vỡ vật trong ải rồi kết liễu quái dính hệ mới có. Ý muốn: hạ tinh anh và trùm để kiếm linh khí; quái thường 5% rơi linh khí của vùng để nhặt. Đã làm theo (`G.LINHKHI` trong `js/data.js`):
 
-| Mốc | Trước | Nay |
+- **Tinh anh, trùm:**
+  - Hạ tinh anh +5 dấu ấn, trùm nhỏ +10, trùm vùng +20 cho vũ khí kết liễu. Luôn có, kể cả khi quái không dính hệ.
+  - Hệ của dấu ấn: hệ quái đang dính lúc gục. Không dính gì thì theo vùng: Rừng già Độc, Hang biển Băng, Lâu đài cổ Lửa.
+- **Quái thường:**
+  - 5% rơi một viên linh khí của vùng nằm trên sàn (ảnh `vien-linh-khi.png`: viên sáng màu hệ). Đi lại gần là viên tự hút về.
+  - Nhặt thì vũ khí đang cầm +3 dấu ấn. Không nhặt thì không có.
+- **Giữ luật cũ** "tiến hóa theo cách dùng":
+  - Kết liễu quái thường đang dính hệ vẫn +1 dấu ấn hệ đó. Mốc 30/120/300 không đổi.
+  - Muốn vũ khí theo hệ khác vùng thì làm quái dính hệ đó (vật mang hệ, bùa hệ, kỹ năng Nung) trước khi hạ tinh anh và trùm.
+- **Bỏ** cách thử trước đó (vũ khí Trắng 12% mỗi đòn tự gây hiệu ứng).
+- **Đo bằng bot,** đi lần lượt ải, không đánh vật mang hệ:
+
+| Mốc | Bản gốc | Nay |
 |---|---|---|
 | Mầm (30) | sau ải 2-1 | sau ải 1-2 |
 | Thành hình (120) | chưa tới sau 10 ải | sau ải 1-5 |
 | Thức tỉnh (300) | chưa tới | khoảng ải 2-5 đến 3-1 |
 
-- Số dấu ấn mỗi ải: trước 1-3 ở vùng 1, nay 20-50.
-- Độ khó gần như không đổi: `tests/cay.py` vẫn đạt, đi hết 15 ải khoảng 2,8 giờ.
-- Cung so với kiếm trên quái mới: từ 29% còn 27%.
-- `tests/moves.py` tắt hiệu ứng nhẹ này khi đo sát thương từng đòn.
+- Dấu ấn mỗi ải: bản gốc 1-3 ở vùng 1, nay 20-55 (phần lớn từ tinh anh và trùm).
+- `tests/cay.py` thêm 3 luật: tinh anh không dính hệ vẫn cho dấu ấn của vùng; quái thường rơi viên linh khí, chưa nhặt thì chưa có; nhặt thì có.
+- Độ khó gần như không đổi: `cay.py` đạt, đi hết 15 ải khoảng 2,8 giờ.
+- `tests/doors.py` cho vũ khí bản lưu thử ở vùng 2, 3 đã có hệ, như người chơi thật lúc đó.

@@ -123,13 +123,6 @@
   G.powerCol = function (have, need) { return have >= need ? '#6fdc6a' : have >= need * 0.9 ? '#ffd23f' : '#ff6a5a'; };
   const curW = (P) => P.weapons[P.cur];
   G.curW = curW;
-  // Hệ vũ khí đang nghiêng về: hệ có nhiều dấu ấn nhất; chưa có dấu ấn thì hệ của vùng đang đánh (null nếu không ở trong ải).
-  G.leanEl = function (w) {
-    let best = null, bm = 0;
-    for (const e of G.ELS) if ((w.marks[e] || 0) > bm) { bm = w.marks[e]; best = e; }
-    if (best) return best;
-    return W && W.region != null && G.REGIONS[W.region] ? G.REGIONS[W.region].el : null;
-  };
   G.activeEl = function (P, w) {
     const c = P.coats[w.id];
     if (c && c.t > 0) return c.el;
@@ -328,13 +321,20 @@
     FX('death', e, o);
     if (e.illusion) return;
     if (w) w.kills++;
-    if (G.hasStatus(e)) {
-      // Hệ của dấu ấn: hiệu ứng gây sau cùng nếu nó còn hiệu lực, không thì hiệu ứng đang có.
+    const L = G.LINHKHI, big = e.role === 'elite' || e.isBoss, regEl = G.REGIONS[W.region] ? G.REGIONS[W.region].el : 'fire';
+    if (G.hasStatus(e) || (big && L)) {
+      // Hệ của dấu ấn: hiệu ứng gây sau cùng nếu nó còn hiệu lực, không thì hiệu ứng đang có; tinh anh, trùm không dính gì thì hệ của vùng.
       const on = { fire: e.st.fire > 0, poison: e.st.poisonN > 0, ice: e.st.iceN > 0 || e.st.frozen > 0 };
-      const el = e.st.last && on[e.st.last] ? e.st.last : on.fire ? 'fire' : on.poison ? 'poison' : 'ice';
-      G.addMarks(w, el, (e.marks == null ? 1 : e.marks) * P.markMult * W.marksMult);
+      const el = !G.hasStatus(e) ? regEl : e.st.last && on[e.st.last] ? e.st.last : on.fire ? 'fire' : on.poison ? 'poison' : 'ice';
+      const n = big && L ? (e.isBoss ? (e.kind === 'mini' ? L.mini : L.boss) : L.elite) : e.marks == null ? 1 : e.marks;
+      G.addMarks(w, el, n * P.markMult * W.marksMult);
       FX('markOrbs', e);
-      if (P.charm === 'c_spirit') P.mana = Math.min(P.maxmana, P.mana + 5);
+      if (P.charm === 'c_spirit' && G.hasStatus(e)) P.mana = Math.min(P.maxmana, P.mana + 5);
+    }
+    // quái thường thỉnh thoảng rơi một viên linh khí của vùng: phải nhặt mới có (js/do_roi.js gọi onPick)
+    if (!big && L && !e.add && G.doRoi && G.rnd() < L.drop) {
+      const n = Math.round(L.orb * W.marksMult);
+      G.doRoi.tha(W, e.x, e.y, { kind: 'linhkhi', el: regEl, s: 'Linh khí ' + G.EL[regEl].name, onPick: () => { const P2 = W.P, cw = curW(P2); if (cw) { G.addMarks(cw, regEl, n * P2.markMult); G.flashMarks && G.flashMarks(); } } });
     }
     if (G.moves) G.moves.onKill(e, o, w); // đặc trưng hệ khi quái chết: Nổ lan, Lây độc (chỉ ở Thức tỉnh)
     if (G.outfit) G.outfit.onKill(P, e); // bùa có hệ: quái gục gần bé nổ nhỏ
@@ -378,14 +378,13 @@
     const T = G.WTYPES[w.type];
     if (T.stagger && !e.isBoss && !e.dead) e.st.stun = Math.max(e.st.stun, T.stagger);
     if (o.stun && !e.dead) e.st.stun = Math.max(e.st.stun, e.isBoss ? o.stun * 0.4 : o.stun);
-    const pel = el || G.leanEl(w); // vũ khí Trắng: hiệu ứng nhẹ của hệ đang nghiêng (G.PROC_TRANG)
-    if (pel && !e.dead) {
+    if (el && !e.dead) {
       const stage = G.wStage(w);
       const coat = P.coats[w.id] && P.coats[w.id].t > 0;
-      let chance = coat ? 1 : el ? G.PROC[stage] : G.PROC_TRANG || 0;
+      let chance = coat ? 1 : G.PROC[stage];
       if (w.power === 'proc') chance += 0.25;
       if (P.firstHit && P.swapProc) chance = 1;
-      if (G.rnd() < chance) G.applyStatus(e, pel, el ? d : d * 0.5, 1);
+      if (G.rnd() < chance) G.applyStatus(e, el, d, 1);
     }
     P.firstHit = false;
   }

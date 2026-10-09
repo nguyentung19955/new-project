@@ -22,7 +22,6 @@ JS = r"""
   function room(type, o) {
     G.testSave(Object.assign({ hero: 'smith', melee: type === 'bow' ? 'sword' : type, tier: 1 }, o || {}));
     G.HEROES.smith.fav = [];
-    G.PROC_TRANG = 0; // bài đo sát thương từng đòn: tắt hiệu ứng nhẹ ngẫu nhiên của vũ khí Trắng (cân bằng linh khí) để số đo không lẫn sát thương độc, cháy
     G.startStage(0, 2, 0);
     S = G.getRun(); W = G.getWorld(); P = S.P;
     W.waves = []; W.props = []; W.banner = null;

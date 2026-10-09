@@ -49,7 +49,11 @@ Trên điện thoại (nên cầm ngang):
   - Cung, **Mưa Tên**: như cũ, rơi vào cụm quái gần nhất.
   - Đặc trưng hệ (vệt cháy, vũng độc, gai băng) để lại dọc đường chiêu bay.
 - Hệ của vũ khí mạnh lên theo cấp tiến hóa:
-  - Trắng: 12% mỗi đòn gây hiệu ứng nhẹ của hệ vũ khí đang nghiêng về (hệ có nhiều dấu ấn nhất; chưa có thì theo hệ của vùng đang đánh). Kết liễu quái đang dính hệ là có dấu ấn, không cần đánh vỡ vật mang hệ.
+  - Trắng: chưa có hệ.
+- Linh khí (dấu ấn) có từ:
+  - Hạ tinh anh (+5), trùm nhỏ (+10), trùm vùng (+20): vũ khí kết liễu luôn nhận. Hệ là hệ quái đang dính lúc gục; không dính gì thì theo vùng (Rừng già Độc, Hang biển Băng, Lâu đài cổ Lửa).
+  - Quái thường có 5% rơi một viên linh khí của vùng (+3) nằm trên sàn; đi lại gần là nhặt, vũ khí đang cầm nhận.
+  - Kết liễu quái thường đang dính hiệu ứng hệ (+1 của hệ đó), như cũ. Muốn vũ khí theo hệ khác vùng thì dùng vật mang hệ, bùa hệ, kỹ năng Nung trước khi kết liễu tinh anh và trùm.
   - Mầm (30 dấu ấn): chỉ số tăng, mỗi đòn có 20% gây cháy, độc hoặc chậm, vệt chém nhuốm màu hệ. Chưa có luật hệ.
   - Thành hình (120 dấu ấn): mở đặc trưng thứ nhất, thứ để lại trên sân. Lửa: vệt cháy. Độc: vũng độc. Băng: gai băng làm chậm.
   - Thức tỉnh (300 dấu ấn): mở đặc trưng thứ hai, phản ứng dây chuyền. Lửa: quái đang cháy chết thì nổ lan. Độc: quái đang trúng độc chết thì lây sang con bên cạnh. Băng: quái đóng băng bị đánh thì vỡ, văng mảnh.
