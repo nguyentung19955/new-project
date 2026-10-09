@@ -50,7 +50,7 @@
   //    không dính gì thì hệ của vùng (Rừng già Độc, Hang biển Băng, Lâu đài cổ Lửa).
   //  - Quái thường: tỉ lệ drop rơi một viên linh khí của vùng nằm trên sàn, nhặt (đi lại gần) thì vũ khí đang cầm nhận orb dấu ấn.
   //  - Vẫn giữ luật cũ: kết liễu quái thường đang dính hiệu ứng hệ thì vũ khí nhận 1 dấu ấn của hệ đó.
-  G.LINHKHI = { elite: 5, mini: 10, boss: 20, drop: 0.05, orb: 3 };
+  G.LINHKHI = { elite: 5, mini: 10, boss: 20, drop: 0, orb: 3 }; // drop 0: chủ dự án bỏ viên rơi từ quái thường (tinh anh, trùm đã đủ)
   // Dòng phụ: bậc Lam có 1, Tím và Vàng có 2.
   G.AFFIX = {
     mana: 'Mỗi đòn trúng hồi thêm 1 mana',
