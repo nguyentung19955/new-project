@@ -4,6 +4,7 @@
 //   Cô Thợ May: trang phục năm ô (bảng riêng ở js/tailor.js)
 //   Cụ Đồ: cây kỹ năng, đặt lại điểm, hướng dẫn                         Ông Từ: chọn hero, xem chỉ số
 //   Anh Mõ: cài đặt                                                     Chạm vũ khí sống đang bay theo: xem vũ khí
+//   Nút túi vải góc trên bên phải: Hành trang (js/hanh_trang.js), gom nhân vật, vũ khí, trang phục, linh khí, kỹ năng, tài nguyên
 // Bảng nằm bên phải, người đứng bên trái và nói một câu. Hình vẽ theo chủ đề trống đồng (js/ui_theme.js).
 (function () {
   const G = window.G, ui = G.ui, T = G.theme, VS = G.villageScene;
@@ -573,7 +574,7 @@
   }
 
   const PANELS = { forge, gear, outfit, hero, skill, help, settings };
-  Object.assign(G.villageApi, { PANELS, pager, say, costText, frame, npcSide, viewWeapon, doTabs });
+  Object.assign(G.villageApi, { PANELS, pager, say, costText, frame, npcSide, viewWeapon, weaponView, doTabs });
   G.Village = {
     enter() {
       goHub(); VS.enter({}); G.persist();
@@ -605,6 +606,7 @@
       VS.drawWorld(V.tab === 'hub' ? null : { dim: 0.62, hideHero: true });
       if (V.tab === 'hub') {
         VS.drawHud();
+        if (G.hanhTrang) G.hanhTrang.hubButton(); // nút Hành trang (túi vải) góc trên bên phải, js/hanh_trang.js
         const S = VS.state;
         if (!Object.keys(G.save.stars).length && S.hintT <= 0 && !S.near && !S.path && S.msgT <= 0) T.toastFit(240, 244, 'Tới bến đò bên phải, gặp Chú Lái Đò để vào ải', { size: 7.5 });
         return;

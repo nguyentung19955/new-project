@@ -611,6 +611,8 @@
       const W = S.W, P = S.P;
       if (S.mode !== 'play') {
         const kp = G.keyP;
+        // Hành trang mở từ bảng Tạm dừng (js/hanh_trang.js): Esc đóng chi tiết vũ khí rồi quay về Tạm dừng
+        if (S.mode === 'bag') { if (kp.Escape) { if (G.hanhTrang && G.hanhTrang.wv) G.hanhTrang.wv = false; else setMode('paused'); G.sfx('ui'); } return; }
         if (kp.Escape || (kp.KeyP && S.mode === 'paused') || (kp.KeyM && S.mode === 'map')) {
           if (S.mode === 'result' || S.mode === 'dead') { S = null; G.setScene(G.Village); return; }
           setMode('play'); G.sfx('ui');
@@ -688,6 +690,7 @@
       else if (S.mode === 'merchant') panelMerchant();
       else if (S.mode === 'curse') panelCurse();
       else if (S.mode === 'paused') panelPause();
+      else if (S.mode === 'bag') { ui.rect(0, 0, G.W, G.H, 'rgba(0,0,0,0.6)'); if (G.hanhTrang) G.hanhTrang.panel(true, () => setMode('paused')); else setMode('paused'); }
       else if (S.mode === 'result' || S.mode === 'dead') panelResult();
       if (S && S.fade > 0) ui.rect(0, 0, G.W, G.H, 'rgba(0,0,0,' + Math.min(1, S.fade / 0.35) + ')'); // S có thể vừa bị xoá khi bấm Về làng
     },
@@ -992,7 +995,7 @@
   }
   function panelPause() {
     ui.rect(0, 0, G.W, G.H, 'rgba(0,0,0,0.6)');
-    ui.panel(150, 48, 180, 182, 'Tạm dừng');
+    ui.panel(150, 48, 180, G.hanhTrang ? 210 : 182, 'Tạm dừng');
     if (ui.btn(165, 86, 150, 28, 'Chơi tiếp')) setMode('play');
     if (ui.btn(165, 120, 150, 28, 'Âm thanh: ' + (G.save.sound ? 'bật' : 'tắt'))) { G.save.sound = !G.save.sound; G.persist(); G.audioStart(); }
     // đã hạ trùm: không còn "bỏ ải" mà là rời ải, sang bảng kết quả thắng
@@ -1000,6 +1003,11 @@
     else if (ui.btn(165, 154, 150, 28, 'Bỏ ải, về làng', { color: '#6a2a22' })) { S.quit = true; finish(false); }
     // hòm thư góp ý (js/cloud_ui.js), kèm ảnh chụp trận
     if (G.cloudUI && ui.btn(165, 192, 150, 26, '✉ Góp ý', { color: '#2f5a52', size: 8.5 })) G.cloudUI.feedback({ shot: true });
+    // Hành trang (js/hanh_trang.js): xem nhân vật, vũ khí, trang phục, linh khí, kỹ năng, tài nguyên; trong ải chỉ xem
+    if (G.hanhTrang) {
+      if (ui.btn(165, 224, 150, 26, '    Hành trang (xem)', { size: 8.5 })) { G.hanhTrang.reset(); setMode('bag'); }
+      G.hanhTrang.icon(186, 237, 1);
+    }
   }
   function panelResult() {
     const R = S.result;
