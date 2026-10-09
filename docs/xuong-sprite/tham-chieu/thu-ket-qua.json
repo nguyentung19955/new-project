@@ -1,0 +1,241 @@
+[
+ {
+  "ma": "em-be-smith",
+  "ten": "Em bé Thợ Rèn",
+  "dung": true,
+  "game": [
+   19,
+   31
+  ],
+  "ra": [
+   16,
+   28
+  ],
+  "ti_le_game": 0.61,
+  "ti_le_ra": 0.57,
+  "mau": "nguoi",
+  "dung_bo": {
+   "dau": 87,
+   "tayS": 100,
+   "than": 49,
+   "tayT": 86,
+   "chanS": 100,
+   "chanT": 100
+  },
+  "manh_roi": {
+   "idle": 1,
+   "move": 1,
+   "tele": 1,
+   "atk": 1,
+   "hit": 1,
+   "die": 1,
+   "ne": 1
+  }
+ },
+ {
+  "ma": "em-be-smith",
+  "ten": "Em bé Thợ Rèn",
+  "dung": false,
+  "game": [
+   19,
+   31
+  ],
+  "ra": [
+   14,
+   28
+  ],
+  "ti_le_game": 0.61,
+  "ti_le_ra": 0.5,
+  "mau": "nguoi",
+  "dung_bo": {
+   "dau": 75,
+   "tayS": 45,
+   "tayT": 41,
+   "than": 15,
+   "chanS": 100,
+   "chanT": 78
+  },
+  "manh_roi": {
+   "idle": 1,
+   "move": 1,
+   "tele": 1,
+   "atk": 1,
+   "hit": 1,
+   "die": 1,
+   "ne": 1
+  }
+ },
+ {
+  "ma": "heoCon",
+  "ten": "Heo Rừng Con (bốn chân)",
+  "dung": true,
+  "game": [
+   52,
+   32
+  ],
+  "ra": [
+   48,
+   32
+  ],
+  "ti_le_game": 1.62,
+  "ti_le_ra": 1.5,
+  "mau": "bonChan",
+  "dung_bo": {
+   "than": 86,
+   "duoi": 100,
+   "dau": 84,
+   "chanSN": 88,
+   "chanTN": 79,
+   "chanSX": 100,
+   "chanTX": 100
+  },
+  "manh_roi": {
+   "idle": 1,
+   "move": 1,
+   "tele": 1,
+   "atk": 1,
+   "hit": 1,
+   "die": 1
+  }
+ },
+ {
+  "ma": "heoCon",
+  "ten": "Heo Rừng Con (bốn chân)",
+  "dung": false,
+  "game": [
+   52,
+   32
+  ],
+  "ra": [
+   41,
+   32
+  ],
+  "ti_le_game": 1.62,
+  "ti_le_ra": 1.28,
+  "mau": "bonChan",
+  "dung_bo": {
+   "than": 37,
+   "dau": 7
+  },
+  "manh_roi": {
+   "idle": 1,
+   "move": 1,
+   "tele": 1,
+   "atk": 1,
+   "hit": 1,
+   "die": 1
+  }
+ },
+ {
+  "ma": "caChuon",
+  "ten": "Cá Chuồn (bay)",
+  "dung": true,
+  "game": [
+   53,
+   35
+  ],
+  "ra": [
+   62,
+   34
+  ],
+  "ti_le_game": 1.51,
+  "ti_le_ra": 1.82,
+  "mau": "bay",
+  "dung_bo": {
+   "canhN": 76,
+   "canhX": 75,
+   "duoi": 57,
+   "than": 99,
+   "dau": 58
+  },
+  "manh_roi": {
+   "idle": 1,
+   "move": 1,
+   "tele": 1,
+   "atk": 1,
+   "hit": 1,
+   "die": 1
+  }
+ },
+ {
+  "ma": "caChuon",
+  "ten": "Cá Chuồn (bay)",
+  "dung": false,
+  "game": [
+   53,
+   35
+  ],
+  "ra": [
+   93,
+   34
+  ],
+  "ti_le_game": 1.51,
+  "ti_le_ra": 2.74,
+  "mau": "bay",
+  "dung_bo": {
+   "canhN": 0,
+   "canhX": 5,
+   "than": 60
+  },
+  "manh_roi": {
+   "idle": 1,
+   "move": 1,
+   "tele": 1,
+   "atk": 1,
+   "hit": 1,
+   "die": 1
+  }
+ },
+ {
+  "ma": "vk-sword-0",
+  "ten": "Kiếm Rèn (vũ khí)",
+  "dung": true,
+  "game": [
+   44,
+   19
+  ],
+  "ra": [
+   47,
+   17
+  ],
+  "ti_le_game": 2.32,
+  "ti_le_ra": 2.76,
+  "cam": [
+   6.9,
+   9.5
+  ],
+  "mui": [
+   49,
+   9.5
+  ],
+  "nam_ngang": true,
+  "cam_o_chuoi": true,
+  "mui_ben_phai": true
+ },
+ {
+  "ma": "vk-sword-0",
+  "ten": "Kiếm Rèn (vũ khí)",
+  "dung": false,
+  "game": [
+   44,
+   19
+  ],
+  "ra": [
+   48,
+   29
+  ],
+  "ti_le_game": 2.32,
+  "ti_le_ra": 1.66,
+  "cam": [
+   7.0,
+   15.5
+  ],
+  "mui": [
+   50,
+   15.5
+  ],
+  "nam_ngang": true,
+  "cam_o_chuoi": false,
+  "mui_ben_phai": true
+ }
+]

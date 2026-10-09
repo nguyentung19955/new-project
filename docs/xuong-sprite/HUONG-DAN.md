@@ -26,6 +26,8 @@ Cỡ khuyên dùng trong game (công cụ tự đặt theo quái gốc, có than
 
 Mẫu ảnh vẽ tay dùng để thử: ![](ve-tay-mau-bon-chan.png)
 
+Nhờ AI vẽ thay vì vẽ tay: dùng [PROMPT-VE.md](PROMPT-VE.md) (mỗi hình một dòng, đã ghi sẵn góc nhìn, tỉ lệ, màu, dáng hợp khung) và ảnh hình đang có trong game ở [tham-chieu/](tham-chieu/). Số đo hình trong game: [DAC-DIEM-HINH-GAME.md](DAC-DIEM-HINH-GAME.md).
+
 ## Các bước
 
 ### 1. Chọn
