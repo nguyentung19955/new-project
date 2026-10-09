@@ -232,13 +232,14 @@ python3 tests/ui_build.py          # đóng gói rồi chơi thử cả hai tệ
 python3 tests/ui_shots.py anh phone   # chụp mọi màn hình vào thư mục anh/ để xem bằng mắt
 python3 tests/smoke.py anh         # nạp game và đánh thử vài giây
 python3 tests/campaign.py          # bot tự chơi hết 15 ải để xem độ khó (thua thì cày ải trước một lượt rồi thử lại)
-python3 tests/cay.py               # cân bằng phải cày: kiểm luật sức mạnh, không còn quyết tâm, trần mới, gợi ý bảng thua; bot chơi từ đầu 12 lượt, đếm số lần chơi từng ải và tổng thời gian ("lieu": bot không nhìn lời khuyên)
+python3 tests/cay.py               # cân bằng phải cày: kiểm luật sức mạnh, không còn quyết tâm, trần mới, gợi ý bảng thua; bot chơi từ đầu 12 lượt, đếm số lần chơi từng ải và tổng thời gian ("lieu": bot không nhìn lời khuyên; "--ban": bot bán đồ thừa)
 python3 tests/cay_shots.py         # chụp ảnh sức mạnh khuyên dùng trên thẻ ải, bảng hero, dải trên vào docs/can-bang-cay/
 python3 tests/cay_nang_cap_shots.py # chụp bảng thua có gợi ý nên cày gì, và cảnh bấm gợi ý mở đúng người làng, vào docs/cay-nang-cap/
 python3 tests/mapgen.py            # bộ sinh bản đồ ải: 1000 hạt giống cho mỗi kiểu A, B, C
 python3 tests/doors.py             # luật cửa, điều kiện mở cửa Trùm, bot đi hết ải ở cả ba kiểu
 python3 tests/env_rooms.py         # vẽ thử mọi loại phòng ở ba vùng, cửa khóa và cửa mở
 python3 tests/rules.py             # luật ba hệ, dấu ấn, trùm thích nghi
+python3 tests/ban_do.py            # bán đồ lấy vàng: bán trang phục, khoá đồ, chọn nhiều, bán hết theo bậc, bảng hỏi lại, bán từ Hành trang (ngang và dọc)
 python3 tests/trang_phuc.py        # trang phục: bản lưu cũ và hỏng, mặc, tháo, mua, may, nâng bậc, cánh, rơi đồ, tác dụng trong trận, dấu chấm than
 python3 tests/trangphuc_shots.py   # chụp ảnh và GIF trang phục vào docs/trang-phuc/ (cần thêm Pillow)
 python3 tests/fuzz.py              # bấm loạn tìm lỗi sập

@@ -44,12 +44,14 @@
   // Mở bảng của một người (k: lai, ren, xen, may, do, tu, mo)
   function open(k) {
     V.who = k; V.tab = TAB_OF[k]; V.sel = null; V.page = 0; V.confirm = false; V.node = null; V.msgT = 0;
+    if (G.banDo) G.banDo.reset();
     if (k === 'do') V.tab = V.dtab === 'help' || (V.dtab === 'rank' && PANELS.rank) ? V.dtab : 'skill';
     if (k === 'lai') pickNext();
   }
   function goHub() {
     const was = V.tab;
     V.tab = 'hub'; V.who = null; V.sel = null; V.node = null; V.confirm = false; V.page = 0;
+    if (G.banDo) G.banDo.reset();
     if (was !== 'hub' && was !== 'title' && was !== 'weapon') VS.closeTalk();
     VS.state.talk = null;
     // rời Cô Thợ May: các món mới đã được thấy trong kho, bỏ dấu báo mới
@@ -367,45 +369,147 @@
   }
 
   // ---------- rương vũ khí, chọn hai món mang theo, bán đồ (Bà Hàng Xén) ----------
+  // Ba thẻ trên băng tiêu đề: Vũ khí (rương, đổi món mang theo, bán), Mua trang phục (đồ thường), Bán trang phục.
+  // Bán, khoá, chọn nhiều, bán hết theo bậc, hỏi lại: js/ban_do.js (G.banDo).
+  function xenTabs() {
+    const BD = G.banDo, tabs = [['weapon', 'Vũ khí', 40], ['outfit', 'Mua trang phục', 66], ['sell', 'Bán trang phục', 66]];
+    let x = PX + PW - 70 - tabs.reduce((a, t) => a + t[2] + 3, 0);
+    const cur = V.gtab === 'outfit' || V.gtab === 'sell' ? V.gtab : 'weapon';
+    for (const t of tabs) {
+      if ((t[0] === 'weapon' || G.outfit) && T.sbtn(x, PY + 3, t[2], 17, t[1], { size: 7, pad: 2, sel: cur === t[0] }) && cur !== t[0]) {
+        V.gtab = t[0]; V.sel = null; V.page = 0; if (BD) BD.reset(); return true;
+      }
+      x += t[2] + 3;
+    }
+    return false;
+  }
   function gear() {
-    const sv = G.save;
+    const BD = G.banDo, g = BD ? BD.guard() : undefined;
+    const line = gearBody();
+    if (BD && BD.modal(g)) return 'Cháu nghĩ kỹ chưa? Bán rồi bà không trả lại đâu nhé.';
+    return line;
+  }
+  function gearBody() {
+    const sv = G.save, BD = G.banDo;
     if (V.gtab === 'outfit' && G.outfit) return shop();
-    frame('Hàng xén: vũ khí');
-    if (G.outfit && T.sbtn(PX + PW - 150, PY + 3, 80, 17, 'Trang phục ›', { size: 8, pad: 4 })) { V.gtab = 'outfit'; V.sel = null; V.page = 0; return null; }
+    if (V.gtab === 'sell' && G.outfit && BD) return sellOutfit();
+    frame('Hàng xén');
+    if (xenTabs()) return null;
+    const multi = BD && BD.multi && BD.kind === 'w';
+    // ổ khoá ở mép phải mỗi dòng: chạm để khoá hoặc mở khoá (món khoá không bán được)
+    const lockAt = (w, y) => BD && BD.lockBtn(CX + CW - 16, y + 3, 14, 16, !!w.lock) && (BD.toggleLock(w), BD.tell(w.lock ? 'Đã khoá ' + G.wName(w) + ', bà sẽ không mua món này.' : 'Đã mở khoá ' + G.wName(w) + '.'), true);
     ui.text('Đang mang', CX + 2, 77, { size: 7.5, color: SOFT });
     sv.carry.forEach((id, slot) => {
-      const w = G.weaponById(id);
-      if (w && G.weaponLine(w, CX, 80 + slot * PITCH, CW, false)) {
+      const w = G.weaponById(id), y = 80 + slot * PITCH;
+      if (!w) return;
+      const hit = G.weaponLine(w, CX, y, CW - 18, false);
+      if (lockAt(w, y)) return;
+      if (hit) {
         G.click = null;
+        if (multi) { BD.tell('Vũ khí đang mang không bán được.'); return; }
         if (V.sel != null && !sv.carry.includes(V.sel)) { sv.carry[slot] = V.sel; V.sel = null; G.persist(); G.sfx('pick'); }
         else viewWeapon(w.id, 'gear'); // chưa chọn gì để thay: mở màn xem vũ khí
       }
     });
     const stash = sv.weapons.filter((w) => !sv.carry.includes(w.id));
     ui.text('Rương đồ' + (stash.length ? ' (' + stash.length + ' món)' : ''), CX + 2, 138, { size: 7.5, color: SOFT });
+    if (BD && stash.length) BD.quickBar(sv, 'w', CX + CW, 127, 12);
     if (!stash.length) ui.text('Trống. Vũ khí nhặt trong ải sẽ nằm ở đây.', CX + 2, 156, { size: 8 });
     pager(stash.length, ROWS, CX, 241);
     stash.slice(V.page * ROWS, V.page * ROWS + ROWS).forEach((w, k) => {
-      if (G.weaponLine(w, CX, 141 + k * PITCH, CW, V.sel === w.id)) { V.sel = V.sel === w.id ? null : w.id; G.click = null; G.sfx('ui'); }
+      const y = 141 + k * PITCH, picked = multi && BD.ids.has(w.id);
+      const hit = G.weaponLine(w, CX, y, CW - 18, picked || (!multi && V.sel === w.id));
+      if (BD) ui.text(BD.wPrice(w) + ' vàng', CX + CW - 22, y + 9.5, { size: 6.5, align: 'right', color: w.lock ? SOFT : GOLD });
+      if (lockAt(w, y)) return;
+      if (hit) {
+        G.click = null;
+        if (multi) BD.togglePick(sv, 'w', w);
+        else { V.sel = V.sel === w.id ? null : w.id; G.sfx('ui'); }
+      }
+      if (picked) BD.tick(CX + 1, y + 1);
     });
     const selW = G.weaponById(V.sel);
+    if (multi) {
+      BD.sellBtn(sv, 'w', CX + 108, 240, CW - 108, 19);
+      return 'Chạm các vũ khí trong rương để chọn, rồi bấm Bán. Món khoá thì bà không mua.';
+    }
     if (selW && !sv.carry.includes(selW.id)) {
-      const price = [20, 60, 150, 400][G.wRar(selW)] + selW.sharpen * 15;
+      const price = BD ? BD.wPrice(selW) : [20, 60, 150, 400][G.wRar(selW)] + selW.sharpen * 15;
       if (T.sbtn(CX + 112, 240, 56, 19, 'Xem', { size: 8.5, pad: 3 })) viewWeapon(selW.id, 'gear');
-      if (T.sbtn(CX + 176, 240, 128, 19, 'Bán ' + price + ' vàng', { size: 8.5, pad: 3, danger: true })) {
-        sv.weapons = sv.weapons.filter((w) => w.id !== selW.id);
-        sv.gold += price; V.sel = null; G.persist(); G.sfx('pick'); say('Bà mua rồi nhé, ' + price + ' vàng của cháu đây.');
+      if (T.sbtn(CX + 176, 240, 128, 19, selW.lock ? 'Đã khoá' : 'Bán ' + price + ' vàng', { size: 8.5, pad: 3, danger: true, disabled: !!selW.lock })) {
+        if (BD) { if (BD.request(sv, 'w', [selW.id])) V.sel = null; }
+        else { sv.weapons = sv.weapons.filter((w) => w.id !== selW.id); sv.gold += price; V.sel = null; G.persist(); G.sfx('pick'); say('Bà mua rồi nhé, ' + price + ' vàng của cháu đây.'); }
       }
+      if (selW.lock) return 'Món này cháu đã khoá. Chạm ổ khoá để mở nếu muốn bán.';
     }
     // bà chỉ cách đổi vũ khí đang mang
     return !stash.length ? 'Chạm một vũ khí đang mang để xem bậc, dòng phụ và đặc trưng hệ.' : selW && !sv.carry.includes(selW.id) ? 'Đã chọn ' + G.wName(selW) + '. Giờ chạm một vũ khí đang mang để thay, hoặc bấm Xem, Bán.' : 'Chạm vũ khí đang mang để xem. Muốn đổi: chạm một món trong rương để chọn trước.';
   }
 
+  // ---------- bán trang phục (Bà Hàng Xén mua lại) ----------
+  const OCOLS = 6, OROWS = 5, OPITCH = 31;
+  function sellOutfit() {
+    const sv = G.save, O = G.outfit, BD = G.banDo;
+    O.sync(sv);
+    frame('Hàng xén');
+    if (xenTabs()) return null;
+    const multi = BD.multi && BD.kind === 'o';
+    const isWorn = (it) => sv.outfit.wear[O.ITEMS[it.k].slot] === it.id;
+    const all = sv.outfit.items.slice().sort((a, b) => (isWorn(b) - isWorn(a)) || (b.r - a.r) || (O.SLOTS.indexOf(O.ITEMS[a.k].slot) - O.SLOTS.indexOf(O.ITEMS[b.k].slot)) || (a.id - b.id));
+    ui.text('Kho ' + all.length + '/' + O.MAX_ITEMS, CX + 2, 79, { size: 7.5, bold: true, color: all.length >= O.MAX_ITEMS ? WARN : SOFT });
+    if (all.length) BD.quickBar(sv, 'o', CX + CW, 69, 13);
+    const per = OCOLS * OROWS;
+    pager(all.length, per, CX, 241);
+    if (!all.length) ui.para('Kho trống. Đồ rơi trong ải, đồ mua và đồ may sẽ nằm ở đây.', CX + 2, 100, 180, { size: 8, color: SOFT });
+    all.slice(V.page * per, V.page * per + per).forEach((it, i) => {
+      const x = CX + (i % OCOLS) * OPITCH + 1, y = 86 + Math.floor(i / OCOLS) * OPITCH, picked = multi && BD.ids.has(it.id);
+      T.slot(x, y, 28, it.r, { sel: picked || (!multi && V.sel === it.id) });
+      O.drawIcon(G.ux, it, x + 14, y + 14, 20);
+      if (isWorn(it)) { G.ux.fillStyle = GOOD; G.ux.fillRect(x + 3, y + 3, 4, 4); }
+      if (it.lock) BD.lockIcon(x + 19, y + 17, true);
+      if (picked) BD.tick(x + 1, y + 1);
+      if (T.hit(x, y, 28, 28)) {
+        if (multi) BD.togglePick(sv, 'o', it);
+        else V.sel = V.sel === it.id ? null : it.id;
+      }
+    });
+    // bên phải: món đang xem hoặc tổng đã chọn
+    const RX = CX + OCOLS * OPITCH + 6, RW = CX + CW - RX;
+    T.inset(RX, 86, RW, 150, false);
+    const it = !multi && O.byId(sv, V.sel);
+    if (multi) {
+      const t = BD.total(sv, 'o', BD.ids);
+      ui.text('Đã chọn ' + t.n + ' món', RX + 5, 98, { size: 8.5, bold: true, color: GOLD });
+      ui.text('Bà trả ' + t.gold + ' vàng', RX + 5, 110, { size: 8, color: TXT });
+      ui.para('Chạm các ô bên trái để chọn hoặc bỏ. Món đang mặc (chấm xanh) và món khoá thì không chọn được.', RX + 5, 124, RW - 10, { size: 6.5, color: SOFT });
+      BD.sellBtn(sv, 'o', CX + 108, 240, CW - 108, 19);
+      return 'Chọn xong thì bấm Bán ở dưới, bà trả vàng ngay.';
+    }
+    if (!it) {
+      ui.para('Chạm một món để xem giá bà trả. Chấm xanh: đang mặc. Ổ khoá: món đã khoá, bà không mua.', RX + 5, 98, RW - 10, { size: 7, color: SOFT });
+      ui.para('Giá bà trả: Thường ' + BD.O_PRICE[0] + ', Lam ' + BD.O_PRICE[1] + ', Tím ' + BD.O_PRICE[2] + ', Vàng ' + BD.O_PRICE[3] + ' vàng.', RX + 5, 160, RW - 10, { size: 6.5, color: TXT });
+      return all.length >= O.MAX_ITEMS ? 'Kho của cháu đầy rồi. Bán bớt cho bà đi, kẻo đồ rơi trong ải bị đổi ra vàng rẻ.' : 'Đồ mặc chật, cũ thì bán lại cho bà. Bà trả rẻ thôi nhé, món nào quý thì khoá lại kẻo bán nhầm.';
+    }
+    const Ti = O.ITEMS[it.k], R = G.RARITY[it.r], why = BD.why(sv, 'o', it), price = BD.oPrice(it);
+    ui.text(BD.fit(O.name(it), RW - 10, 8), RX + 5, 98, { size: 8, bold: true, color: R.col });
+    let y = ui.para(O.SLOT_NAME[Ti.slot].split(',')[0] + ' · bậc ' + R.name + (isWorn(it) ? ' · đang mặc' : ''), RX + 5, 109, RW - 10, { size: 6.5, color: isWorn(it) ? GOOD : SOFT });
+    const st = O.stats(it), ks = Object.keys(st);
+    y = ui.para(ks.length ? ks.map((q) => O.statText(q, st[q])).join(', ') : 'Không tăng chỉ số', RX + 5, y + 1, RW - 10, { size: 6.5, color: TXT });
+    ui.text('Bà trả ' + price + ' vàng', RX + 5, 200, { size: 8, bold: true, color: why ? SOFT : GOLD });
+    if (T.sbtn(RX + 4, 210, 44, 19, it.lock ? 'Mở khoá' : 'Khoá', { size: 7, pad: 2, sel: !!it.lock })) {
+      BD.toggleLock(it); BD.tell(it.lock ? 'Đã khoá ' + O.name(it) + '.' : 'Đã mở khoá ' + O.name(it) + '.');
+    }
+    if (T.sbtn(RX + 52, 210, RW - 56, 19, why ? 'Không bán' : 'Bán', { size: 8, pad: 2, danger: !why, disabled: !!why })) {
+      if (BD.request(sv, 'o', [it.id])) V.sel = null;
+    }
+    return why === 'đang mặc' ? 'Món cháu đang mặc thì bà không mua. Tháo ra ở Cô Thợ May trước đã.' : why ? 'Món này cháu khoá rồi. Bấm Mở khoá nếu thật muốn bán.' : 'Món này bà trả ' + price + ' vàng. Bán thì bấm nút đỏ nhé.';
+  }
+
   // ---------- trang phục thường (Bà Hàng Xén bán) ----------
   function shop() {
     const sv = G.save, O = G.outfit, list = O.shopList();
-    frame('Hàng xén: trang phục');
-    if (T.sbtn(PX + PW - 150, PY + 3, 80, 17, '‹ Vũ khí', { size: 8, pad: 4 })) { V.gtab = 'weapon'; V.sel = null; V.page = 0; return null; }
+    frame('Hàng xén');
+    if (xenTabs()) return null;
     ui.text('Đồ thường, mặc ngay được. Đem tới Cô Thợ May để nâng bậc.', CX + 2, 78, { size: 7, color: SOFT });
     pager(list.length, 5, CX + CW - 100, 239);
     let line = 'Áo mũ thường đây cháu ơi, rẻ mà bền. Muốn đẹp hơn thì nhờ Cô Thợ May nâng bậc.';
@@ -422,7 +526,7 @@
         if (it) { G.persist(); G.sfx('pick'); VS.checkNews(); say('Của cháu đây, ' + Ti.name + '. Sang Cô Thợ May mà mặc thử.'); }
       }
     });
-    if (O.full(sv)) line = 'Kho trang phục của cháu đầy rồi, bà không bán thêm được.';
+    if (O.full(sv)) line = 'Kho trang phục của cháu đầy rồi. Sang thẻ Bán trang phục bán bớt cho bà nhé.';
     return line;
   }
 
@@ -598,7 +702,7 @@
       if (V.msgT > 0) V.msgT -= dt;
       VS.update(dt, V.tab !== 'hub');
       // Esc: huỷ câu hỏi xoá, hoặc đóng bảng quay về làng
-      if (G.keyP.Escape) { if (V.confirm) V.confirm = false; else if (V.tab === 'weapon' && V.back !== 'hub') V.tab = V.back; else if (V.tab !== 'hub') goHub(); }
+      if (G.keyP.Escape) { if (G.banDo && G.banDo.ask) { G.banDo.ask = null; G.keyP.Escape = false; } else if (V.confirm) V.confirm = false; else if (V.tab === 'weapon' && V.back !== 'hub') V.tab = V.back; else if (V.tab !== 'hub') goHub(); }
     },
     draw() {
       if (V.tab === 'title') V.tab = 'hub';

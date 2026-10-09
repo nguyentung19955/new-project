@@ -8,7 +8,7 @@ Cách bot chơi (mỗi lượt):
 Số lần chơi của một ải = mọi lượt (kể cả chơi lại ải cũ và lượt thua) từ lúc qua ải trước cho tới lúc qua ải đó.
 Bot chơi hơi vụng như người mới (phản xạ chậm hơn, bỏ sót nhiều đạn hơn bot mặc định).
 
-Chạy: python3 tests/cay.py [số lượt chiến dịch, mặc định 12] [khuyen|lieu] [--nhanh: chỉ kiểm vùng 1]
+Chạy: python3 tests/cay.py [số lượt chiến dịch, mặc định 12] [khuyen|lieu] [--nhanh: chỉ kiểm vùng 1] [--ban: bot bán đồ thừa]
 Thoát mã 1 nếu không đạt mục tiêu (hàm muc_tieu, cho lệch 20-25% vì số lần chơi ở trùm hên xui), tổng thời gian ngoài 2,5-4 giờ,
 có luật hỏng hoặc có lỗi trang."""
 import sys, json, os
@@ -30,6 +30,16 @@ AUTO = r"""
   // Nâng cấp như người chơi (js/upgrade.js): lặp "việc làm ngay được mà Sức mạnh tăng nhiều nhất trên mỗi đồng bỏ ra" — học kỹ năng,
   // mài, nâng bậc, lên Vàng, nâng lò, mua, may, mặc, nâng bậc trang phục, mở cấp cánh. Vũ khí mang theo đã chọn ở trên.
   const did = G.upg.auto(sv, { skip: ['carry'] });
+  // --ban: bán đồ thừa như người chơi dọn kho (js/ban_do.js) sau khi đã nâng cấp xong; vàng dùng cho lượt nâng cấp sau.
+  // Đồ thừa: trang phục không mặc, bậc không cao hơn món đang mặc cùng ô; vũ khí trong rương, bậc không cao hơn vũ khí đang mang.
+  if (window.__ban && G.banDo) {
+    const O2 = G.outfit, BD = G.banDo;
+    const oj = sv.outfit.items.filter((it) => { const w = O2.worn(sv, O2.ITEMS[it.k].slot); return w && w.id !== it.id && it.r <= w.r && !BD.why(sv, 'o', it); }).map((it) => it.id);
+    const minR = Math.min(...sv.carry.map(G.weaponById).filter(Boolean).map(G.wRar));
+    const wj = sv.weapons.filter((w) => !BD.why(sv, 'w', w) && G.wRar(w) <= minR).map((w) => w.id);
+    const a = BD.sell(sv, 'o', oj), b = BD.sell(sv, 'w', wj);
+    window.__banVang = (window.__banVang || 0) + a.gold + b.gold; window.__banTP = (window.__banTP || 0) + a.gold;
+  }
   const carry = () => sv.carry.map(G.weaponById).filter(Boolean);
   const O = G.outfit;
   const hs = sv.heroes[sv.hero];
@@ -64,6 +74,7 @@ def campaign(pg, mode, upto):
         if k in seen: return False
         seen.add(k); return True
     pg.evaluate("(c) => { G.resetSave(); G.save.sound = false; Object.assign(G.botCfg, c); }", BOT)
+    pg.evaluate("(b) => { window.__ban = b; window.__banVang = 0; window.__banTP = 0; }", '--ban' in sys.argv)
     cleared = -1
     st = [{'plays': 0, 'tries': 0, 'fails': 0, 't': 0, 'lvl': 0, 'pw': 0, 'rec': 0} for _ in range(15)]
     tot_t = 0
@@ -121,7 +132,7 @@ def campaign(pg, mode, upto):
             must_grind = True
     if cleared < upto - 1:
         return None, 'kẹt ở ải %d-%d' % divmod(cleared + 1, 5)
-    return {'st': st, 't': tot_t, 'hurt': hurt, 'log': log}, None
+    return {'st': st, 't': tot_t, 'hurt': hurt, 'log': log, 'ban': pg.evaluate('window.__banVang || 0'), 'banTP': pg.evaluate('window.__banTP || 0')}, None
 
 LUAT = r"""
 () => {
@@ -251,7 +262,7 @@ def main():
             runs.append(out)
             if '-v' in sys.argv:
                 print('\n'.join(out['log']))
-            print(f"lượt {k+1}: tổng {out['t']/60:.0f} phút, {sum(s['plays'] for s in out['st'])} lần chơi | " + ' '.join(str(s['plays']) for s in out['st'][:upto]))
+            print(f"lượt {k+1}: bán đồ được {out['ban']} vàng (trang phục {out['banTP']}), tổng {out['t']/60:.0f} phút, {sum(s['plays'] for s in out['st'])} lần chơi | " + ' '.join(str(s['plays']) for s in out['st'][:upto]))
             sys.stdout.flush()
         b.close()
     if luu: json.dump(SAVES, open(luu[0], 'w'))

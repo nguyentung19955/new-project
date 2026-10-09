@@ -286,6 +286,7 @@
         if (typeof w.title !== 'string') w.title = typeof w.name === 'string' && w.name.indexOf(', ') > 0 ? w.name.slice(w.name.indexOf(', ')) : '';
         w.name = null;
         w.kills = Math.max(0, num(w.kills, 0));
+        if (w.lock) w.lock = 1; else delete w.lock; // khoá đồ (js/ban_do.js): bản lưu cũ không có thì không khoá
         w.bossKills = obj(w.bossKills);
         // Dòng phụ: dòng cũ (affix) được giữ; thiếu thì bù theo số thứ tự của món để lần nào nạp cũng ra như nhau.
         const af = Array.isArray(w.affixes) ? w.affixes.slice() : [];
