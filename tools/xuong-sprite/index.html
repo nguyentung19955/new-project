@@ -14698,20 +14698,136 @@ MA._xong();
   }
   const apDung = (m, x, y) => [m[0] * x + m[2] * y + m[4], m[1] * x + m[3] * y + m[5]];
 
+  // ---------- CHỐNG VỠ HÌNH ----------
+  // Khi tay chân xoay ra, chỗ nó vừa che trên thân bị trống (lộ nền), mép cắt giữa hai bộ phận tách ra thành khe.
+  // Chuẩn bị một lần cho mỗi bản đồ bộ phận (lưu lại theo bản đồ):
+  //  - lap[k]: chỗ thân (bộ phận "chủ" k) bị bộ phận con che, tô bằng màu thân xung quanh (lấp chỗ khoét), vẽ dưới cùng.
+  //  - mep[k]: một mép thân dày 1 đến 2 điểm ảnh quanh đường cắt, đi theo bộ phận con k (vá khớp), vẽ dưới các bộ phận.
+  //  - gioiHan[k]: góc xoay lớn nhất (độ) để mép cắt xa khớp nhất không lệch quá ~2,5 điểm ảnh (bộ phận dính sát thân xoay ít).
+  const SANG = (c) => (c & 255) * 0.3 + ((c >>> 8) & 255) * 0.59 + ((c >>> 16) & 255) * 0.11;
+  const nhoChuan = new WeakMap();
+  XS.chuanBiVa = function (R, Kh) {
+    const M = MAU[Kh.mau], w = R.w, h = R.h, n = w * h, bomap = Kh.bo, khop = Kh.khop;
+    const cu = nhoChuan.get(bomap);
+    if (cu && cu.px === R.px && cu.khopS === JSON.stringify(khop)) return cu;
+    const idx = {}; M.bo.forEach((b, k) => { idx[b.id] = k; });
+    const goc = idx[XS.boGoc(Kh.mau)];
+    // chủ của k: bộ phận cha, không có cha thì bộ phận gốc (chân gắn vào thân)
+    const chu = M.bo.map((b, k) => (b.cha != null ? idx[b.cha] : k === goc ? -1 : goc));
+    const cuaAi = (i) => (R.px[i] ? (bomap[i] === 255 ? goc : bomap[i]) : -1);
+    const laConCua = (k, o) => { let c = k, d = 0; while (c >= 0 && d++ < 9) { if (chu[c] === o) return true; c = chu[c]; } return false; };
+    const L = Math.max(3, Math.ceil(Math.max(w, h) * 0.22)), le = Math.max(w, h) >= 40 ? 2 : 1;
+    const lap = M.bo.map(() => []), mep = M.bo.map(() => []), gioiHan = M.bo.map(() => 180);
+    // 1) lấp: điểm của con nằm kẹp giữa thân (cả hai phía ngang hoặc dọc đều có thân trong L điểm), hoặc sát thân
+    for (let o = 0; o < M.bo.length; o++) {
+      const cua = new Uint8Array(n); let co = false;
+      for (let i = 0; i < n; i++) if (cuaAi(i) === o) { cua[i] = 1; co = true; }
+      if (!co) continue;
+      const thay = (x, y, dx, dy) => { for (let s = 1; s <= L; s++) { const xx = x + dx * s, yy = y + dy * s; if (xx < 0 || yy < 0 || xx >= w || yy >= h) return false; const j = yy * w + xx; if (cua[j]) return true; if (!R.px[j]) return false; } return false; };
+      const can = new Uint8Array(n); let soCan = 0;
+      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+        const i = y * w + x, k = cuaAi(i); if (k < 0 || k === o || !laConCua(k, o)) continue;
+        const ke = (x > 0 && cua[i - 1]) || (x < w - 1 && cua[i + 1]) || (y > 0 && cua[i - w]) || (y < h - 1 && cua[i + w]);
+        if (ke || (thay(x, y, -1, 0) && thay(x, y, 1, 0)) || (thay(x, y, 0, -1) && thay(x, y, 0, 1))) { can[i] = 1; soCan++; }
+      }
+      if (!soCan) continue;
+      // màu: loang từ điểm thân không phải nét viền (qua cả nét viền) vào các điểm cần lấp
+      const mau = new Uint32Array(n), q = new Int32Array(n); let qa = 0, qb = 0;
+      for (let i = 0; i < n; i++) if (cua[i] && SANG(R.px[i]) >= 72) { mau[i] = R.px[i]; q[qb++] = i; }
+      if (!qb) for (let i = 0; i < n; i++) if (cua[i]) { mau[i] = R.px[i]; q[qb++] = i; }
+      while (qa < qb) {
+        const i = q[qa++], x = i % w;
+        for (const j of [x > 0 ? i - 1 : -1, x < w - 1 ? i + 1 : -1, i - w, i + w]) { if (j < 0 || j >= n || mau[j]) continue; if (!(can[j] || cua[j])) continue; mau[j] = mau[i]; q[qb++] = j; }
+      }
+      for (let i = 0; i < n; i++) if (can[i] && mau[i]) lap[o].push(i, mau[i]);
+    }
+    // 2) mép dư và giới hạn góc cho từng bộ phận con
+    for (let k = 0; k < M.bo.length; k++) {
+      const b = M.bo[k], A0 = khop[b.a]; let rs = 0, co = false;
+      const da = new Uint8Array(n);
+      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+        const i = y * w + x; if (cuaAi(i) !== k) continue; co = true;
+        for (let dy = -le; dy <= le; dy++) for (let dx = -le; dx <= le; dx++) {
+          const xx = x + dx, yy = y + dy; if (xx < 0 || yy < 0 || xx >= w || yy >= h) continue;
+          const j = yy * w + xx, o = cuaAi(j); if (o < 0 || o === k || laConCua(o, k)) continue;
+          if (Math.abs(dx) + Math.abs(dy) <= 1) rs = Math.max(rs, Math.hypot(x + 0.5 - A0[0], y + 0.5 - A0[1]));
+          if (!da[j] && chu[k] >= 0 && (o === chu[k] || laConCua(k, o))) { da[j] = 1; mep[k].push(j, R.px[j]); }
+        }
+      }
+      if (co && rs > 0 && k !== goc) gioiHan[k] = clamp((2.5 / rs) / D2R, 8, 180);
+    }
+    // lỗ có sẵn trong hình (cố ý, ví dụ khe giữa hai cánh): ghi lại thuộc bộ phận nào để khi dựng khung không vá mất
+    const loGoc = new Uint8Array(n).fill(255);
+    for (const c of XS.demLo(R.px, w, h).cum) for (const i of c) {
+      const dem = {}, x = i % w; for (const j of [x > 0 ? i - 1 : -1, x < w - 1 ? i + 1 : -1, i - w, i + w]) { if (j < 0 || j >= n || !R.px[j]) continue; const k = cuaAi(j); dem[k] = (dem[k] || 0) + 1; }
+      let bk = goc, bv = 0; for (const k in dem) if (dem[k] > bv) { bv = dem[k]; bk = +k; } loGoc[i] = bk;
+    }
+    // đổi danh sách [chỉ số, màu, ...] thành ảnh đặc cùng cỡ hình (tra nhanh khi dựng khung) kèm khung bao
+    const dac = (ds) => { if (!ds.length) return null; const px = new Uint32Array(n); let x0 = w, y0 = h, x1 = -1, y1 = -1;
+      for (let j = 0; j < ds.length; j += 2) { const i = ds[j], x = i % w, y = (i / w) | 0; px[i] = ds[j + 1]; if (x < x0) x0 = x; if (y < y0) y0 = y; if (x > x1) x1 = x; if (y > y1) y1 = y; }
+      return { px, bb: [x0, y0, x1, y1] }; };
+    const kq = { px: R.px, khopS: JSON.stringify(khop), lap: lap.map(dac), mep: mep.map(dac), gioiHan, chu, goc, loGoc };
+    nhoChuan.set(bomap, kq);
+    return kq;
+  };
+  // Lỗ kín: điểm trống không loang ra được tới mép khung. Trả về { dem, cum: [[chỉ số...]] }.
+  // Chỉ xét trong khung bao các điểm có hình (nới 1 điểm) cho nhanh: ngoài khung đó chắc chắn là "ngoài".
+  XS.demLo = function (px, W, H) {
+    let bx0 = W, by0 = H, bx1 = -1, by1 = -1;
+    for (let y = 0; y < H; y++) { const r = y * W; for (let x = 0; x < W; x++) if (px[r + x]) { if (x < bx0) bx0 = x; if (x > bx1) bx1 = x; if (y < by0) by0 = y; if (y > by1) by1 = y; } }
+    if (bx1 < 0) return { dem: 0, cum: [] };
+    bx0 = Math.max(0, bx0 - 1); by0 = Math.max(0, by0 - 1); bx1 = Math.min(W - 1, bx1 + 1); by1 = Math.min(H - 1, by1 + 1);
+    const ngoai = new Uint8Array(W * H), q = new Int32Array((bx1 - bx0 + 1) * (by1 - by0 + 1) + 4); let qa = 0, qb = 0;
+    const vao = (i) => { if (!px[i] && !ngoai[i]) { ngoai[i] = 1; q[qb++] = i; } };
+    for (let x = bx0; x <= bx1; x++) { vao(by0 * W + x); vao(by1 * W + x); }
+    for (let y = by0; y <= by1; y++) { vao(y * W + bx0); vao(y * W + bx1); }
+    while (qa < qb) { const i = q[qa++], x = i % W, y = (i / W) | 0; if (x > bx0) vao(i - 1); if (x < bx1) vao(i + 1); if (y > by0) vao(i - W); if (y < by1) vao(i + W); }
+    const cum = []; let dem = 0;
+    for (let y = by0; y <= by1; y++) for (let x = bx0; x <= bx1; x++) {
+      const s = y * W + x; if (px[s] || ngoai[s]) continue;
+      const c = []; ngoai[s] = 1; q[0] = s; qa = 0; qb = 1;
+      while (qa < qb) { const i = q[qa++], xi = i % W; c.push(i); for (const j of [xi > 0 ? i - 1 : -1, xi < W - 1 ? i + 1 : -1, i - W, i + W]) if (j >= 0 && j < W * H && !px[j] && !ngoai[j]) { ngoai[j] = 1; q[qb++] = j; } }
+      dem += c.length; cum.push(c);
+    }
+    return { dem, cum };
+  };
+  // Vá lỗ kín nhỏ còn sót (do làm tròn khi xoay): lấy màu không phải nét viền hay gặp nhất xung quanh.
+  // giu(i): điểm i của khung là lỗ có sẵn trong hình gốc (giữ nguyên, không vá).
+  function vaLo(out, W, H, toiDa, giu) {
+    const { cum } = XS.demLo(out, W, H);
+    for (const c of cum) {
+      if (c.length > toiDa || (giu && c.some(giu))) continue;
+      for (let lan = 0; lan < 4; lan++) for (const i of c) {
+        if (out[i]) continue;
+        const dem = new Map(), x = i % W;
+        for (const j of [x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1, i - W, i + W, x > 0 ? i - W - 1 : -1, x < W - 1 ? i - W + 1 : -1, x > 0 ? i + W - 1 : -1, x < W - 1 ? i + W + 1 : -1]) {
+          if (j < 0 || j >= W * H || !out[j]) continue; const v = out[j]; dem.set(v, (dem.get(v) || 0) + (SANG(v) < 72 ? 1 : 3));
+        }
+        let best = 0, bv = 0; for (const [v, d] of dem) if (d > bv) { bv = d; best = v; }
+        if (best && (bv >= 3 || lan > 1)) out[i] = best;
+      }
+    }
+  }
+
   // R: {w, h, px} hình pixel; Kh: {mau, khop, bo (bản đồ bộ phận)}. Trả về {w, h, ox, oy, px} với (ox, oy) là chân, D: lề.
+  // Xoay từng điểm ảnh bằng cách lấy mẫu điểm gần nhất (không tạo màu pha, không viền mờ). Thứ tự vẽ (dưới lên):
+  // chỗ lấp trên thân, mép dư, phần quanh khớp, các bộ phận theo lớp (tay sau dưới thân, tay trước trên thân), rồi vá lỗ nhỏ, viền ngoài.
   XS.dungKhung = function (R, Kh, P, o) {
     o = o || {};
     const M = MAU[Kh.mau], w = R.w, h = R.h, D = o.le != null ? o.le : Math.ceil(Math.max(w, h) * 1.05) + 4, W = w + 2 * D, H = h + 2 * D;
-    const out = new Uint32Array(W * H), khop = Kh.khop, bomap = Kh.bo;
+    const out = new Uint32Array(W * H), khop = Kh.khop, bomap = Kh.bo, nhanBo = o.nhan ? new Uint8Array(W * H).fill(255) : null; // nhanBo: bộ phận đã vẽ điểm đó (cho bài kiểm tra)
+    const va = o.khongVa ? null : XS.chuanBiVa(R, Kh);
     const chan = khop.chan, bb = o.bb || XS.khungHinh(R);
     const pv = P.g.pv === 'giua' ? [bb.x0 + bb.w / 2, bb.y0 + bb.h / 2] : chan;
     const Gm = nhan([1, 0, 0, 1, D, D], bienDoi(P.g, pv[0], pv[1]));
-    // ma trận thế giới của từng bộ phận (đi qua các bộ phận cha)
+    // ma trận thế giới của từng bộ phận (đi qua các bộ phận cha); góc xoay riêng bị giới hạn theo độ dính sát thân
     const idx = {}; M.bo.forEach((b, k) => { idx[b.id] = k; });
     const the = {};
     const tinh = (b) => {
       if (the[b.id]) return the[b.id];
-      const t = P.b[b.id] || {}, L = bienDoi(t, khop[b.a][0], khop[b.a][1]);
+      let t = P.b[b.id] || {};
+      if (va && t.r) { const gh = va.gioiHan[idx[b.id]]; if (Math.abs(t.r) > gh) t = Object.assign({}, t, { r: Math.sign(t.r) * gh }); }
+      const L = bienDoi(t, khop[b.a][0], khop[b.a][1]);
       const cha = b.cha ? tinh(M.bo[idx[b.cha]]) : Gm;
       return (the[b.id] = nhan(cha, L));
     };
@@ -14719,6 +14835,19 @@ MA._xong();
     const kbo = M.bo.map(() => [w, h, -1, -1]);
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const v = bomap[y * w + x]; if (v === 255 || !R.px[y * w + x]) continue; const q = kbo[v]; if (!q) continue; if (x < q[0]) q[0] = x; if (y < q[1]) q[1] = y; if (x > q[2]) q[2] = x; if (y > q[3]) q[3] = y; }
     const thuTu = M.bo.map((b, k) => k).sort((a, b) => M.bo[a].z - M.bo[b].z); // vẽ từ lớp dưới lên
+    // vẽ một danh sách điểm [chỉ số, màu, ...] theo ma trận M2 (lấy mẫu gần nhất: mỗi điểm đích hỏi ngược về nguồn)
+    const veDs = (A, M2, kNhan) => {
+      if (!A) return;
+      const tam = A.px, q = A.bb, inv = nghich(M2);
+      let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+      for (const c of [[q[0], q[1]], [q[2] + 1, q[1]], [q[0], q[3] + 1], [q[2] + 1, q[3] + 1]]) { const p = apDung(M2, c[0], c[1]); if (p[0] < x0) x0 = p[0]; if (p[1] < y0) y0 = p[1]; if (p[0] > x1) x1 = p[0]; if (p[1] > y1) y1 = p[1]; }
+      x0 = Math.max(0, Math.floor(x0)); y0 = Math.max(0, Math.floor(y0)); x1 = Math.min(W - 1, Math.ceil(x1)); y1 = Math.min(H - 1, Math.ceil(y1));
+      for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
+        const ix = Math.floor(inv[0] * (x + 0.5) + inv[2] * (y + 0.5) + inv[4]), iy = Math.floor(inv[1] * (x + 0.5) + inv[3] * (y + 0.5) + inv[5]);
+        if (ix < 0 || iy < 0 || ix >= w || iy >= h) continue;
+        const c = tam[iy * w + ix]; if (c) { out[y * W + x] = c; if (nhanBo) nhanBo[y * W + x] = kNhan; }
+      }
+    };
     const ve = (k, M2, chiKhop) => {
       const b = M.bo[k], q = kbo[k]; if (q[2] < 0) return;
       const inv = nghich(M2), song = (P.b[b.id] || {}).song, A0 = khop[b.a], A1 = khop[b.b];
@@ -14735,20 +14864,33 @@ MA._xong();
         if (ix < 0 || iy < 0 || ix >= w || iy >= h) continue;
         const i = iy * w + ix; if (bomap[i] !== k || !R.px[i]) continue;
         if (chiKhop && Math.hypot(sx - A0[0], sy - A0[1]) > rk) continue;
-        out[y * W + x] = R.px[i];
+        out[y * W + x] = R.px[i]; if (nhanBo) nhanBo[y * W + x] = k;
       }
     };
-    // lấp chỗ khớp: phần gần trục xoay vẽ theo bộ phận cha (để không hở khi tay chân xoay)
+    const maTran = (k) => (k < 0 ? Gm : tinh(M.bo[k]));
+    if (va) {
+      // lấp chỗ thân bị con che (dưới cùng, đi theo thân), rồi mép dư của thân đi theo từng bộ phận con
+      for (const k of thuTu) veDs(va.lap[k], maTran(k), k);
+      for (const k of thuTu) veDs(va.mep[k], maTran(k), va.chu[k]);
+    }
+    // phần gần trục xoay vẽ theo bộ phận cha (để không hở khi tay chân xoay)
     for (const k of thuTu) { const b = M.bo[k]; ve(k, b.cha ? tinh(M.bo[idx[b.cha]]) : Gm, true); }
     for (const k of thuTu) ve(k, tinh(M.bo[k]), false);
     // điểm ảnh chưa gán bộ phận: đi theo thân
     const bt = idx.than != null ? idx.than : 0;
     let co = false; for (let i = 0; i < w * h; i++) if (R.px[i] && bomap[i] === 255) { co = true; break; }
-    if (co) { const inv = nghich(tinh(M.bo[bt])); for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { if (out[y * W + x]) continue; const sx = Math.floor(inv[0] * (x + 0.5) + inv[2] * (y + 0.5) + inv[4]), sy = Math.floor(inv[1] * (x + 0.5) + inv[3] * (y + 0.5) + inv[5]); if (sx < 0 || sy < 0 || sx >= w || sy >= h) continue; const i = sy * w + sx; if (R.px[i] && bomap[i] === 255) out[y * W + x] = R.px[i]; } }
-    const px = o.vien ? XS.themVien(out, W, H, o.vien) : out;
+    if (co) { const inv = nghich(tinh(M.bo[bt])); for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { if (out[y * W + x]) continue; const sx = Math.floor(inv[0] * (x + 0.5) + inv[2] * (y + 0.5) + inv[4]), sy = Math.floor(inv[1] * (x + 0.5) + inv[3] * (y + 0.5) + inv[5]); if (sx < 0 || sy < 0 || sx >= w || sy >= h) continue; const i = sy * w + sx; if (R.px[i] && bomap[i] === 255) { out[y * W + x] = R.px[i]; if (nhanBo) nhanBo[y * W + x] = bt; } } }
+    const toiDaVa = Math.max(6, Math.round(w * h * 0.01));
+    const nghichBo = va ? M.bo.map((b) => nghich(tinh(b))) : null;
+    const giu = va ? (i) => { const x = i % W + 0.5, y = ((i / W) | 0) + 0.5; for (let k = 0; k < M.bo.length; k++) { const m = nghichBo[k], sx = Math.floor(m[0] * x + m[2] * y + m[4]), sy = Math.floor(m[1] * x + m[3] * y + m[5]); if (sx >= 0 && sy >= 0 && sx < w && sy < h && va.loGoc[sy * w + sx] === k) return true; } return false; } : null;
+    if (va) vaLo(out, W, H, toiDaVa, giu);
+    let px = out;
+    if (o.vien) { px = XS.themVien(out, W, H, o.vien); if (va) vaLo(px, W, H, toiDaVa, giu); } // viền có thể khép miệng khe hẹp thành lỗ kín
+    // lỗ kín còn lại không phải lỗ có sẵn trong hình (bài kiểm tra đếm: phải bằng 0)
+    let loMoi = 0; if (va && o.nhan) for (const cc of XS.demLo(px, W, H).cum) if (!cc.some(giu)) loMoi += cc.length;
     const c = apDung(Gm, chan[0], chan[1]);
     M.bo.forEach((b) => tinh(b));
-    return { w: W, h: H, px, ox: Math.round(chan[0] + D), oy: Math.round(chan[1] + D), D, chanTT: c, mt: the };
+    return { w: W, h: H, px, ox: Math.round(chan[0] + D), oy: Math.round(chan[1] + D), D, chanTT: c, mt: the, nhan: nhanBo, chu: va && va.chu, loMoi };
   };
 
   // ---------- TẤM SPRITE ----------
