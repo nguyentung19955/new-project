@@ -37,7 +37,7 @@ def main():
         g.tap(240, 86 + 23 + 10); g.wait(1200)
         print('mở:', ev("JSON.stringify({ who: G.villageApi.V.who, tab: G.villageApi.V.tab, ftab: G.villageApi.V.ftab, sel: G.villageApi.V.sel })"))
         shot('bam-goi-y-mo-nguoi-lang')
-        ev("(() => { const s = G.save; s.stars['1-4'] = 2; s.heroes.smith.lvl = 21; s.heroes.smith.sk = { atk: 3, def: 2, elem: 2 }; s.gold = 900; s.mats = [10, 12, 3]; })()")
+        ev("(() => { const s = G.save; s.stars['1-4'] = 2; s.heroes.smith.lvl = 21; s.heroes.smith.sk = { atk: 3, def: 2, elem: 2 }; s.gold = 150; s.ore = 6; s.stones = 0; s.mats = [2, 4, 3]; })()")
         print(ev(LOSE % (2, 0)))
         shot('bang-thua-goi-y-vung-ba')
         g.close()

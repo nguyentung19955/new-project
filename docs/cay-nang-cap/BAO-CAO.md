@@ -11,9 +11,9 @@
 - **Bảng thua chỉ rõ nên cày gì:** so Sức mạnh hiện tại với khuyên dùng, rồi 2-3 gợi ý cụ thể. Bấm một gợi ý là về làng, mở đúng người làng, chọn sẵn món cần nâng.
 - **Số lần chơi đạt mục tiêu** (bot 8 lượt):
   - Vùng 1 nhẹ: 1-2 lần mỗi ải.
-  - Ải có trùm nhỏ (ải 3, 4 vùng hai và ba): 2,4 đến 3,6 lần.
-  - Trùm vùng Mộc Tinh, Ngư Tinh, Hồ Tinh: **8,9 / 8,5 / 8,0** lần.
-  - Đi hết 15 ải lần đầu: trung bình **3 giờ 2 phút**, từ 2 giờ 28 đến 3 giờ 37 phút.
+  - Ải có trùm nhỏ (ải 3, 4 vùng hai và ba): 3,1 đến 3,6 lần.
+  - Trùm vùng Mộc Tinh, Ngư Tinh, Hồ Tinh: **5,8 / 8,0 / 8,2** lần.
+  - Đi hết 15 ải lần đầu: trung bình **3 giờ 1 phút**, từ 2 giờ 30 đến 3 giờ 32 phút.
 
 ## Đã bỏ gì
 
@@ -109,25 +109,25 @@ Kiểm trần (trong `tests/cay.py`), chỉ dùng thứ có trước khi hạ H�
 
 ### Bảng số lần chơi từng ải
 
-Số lần chơi tính mọi lượt, kể cả chơi lại ải cũ và lượt thua, từ lúc qua ải trước tới lúc qua ải đó. Chạy lại bằng: `python3 game/tests/cay.py 8`.
+Số lần chơi tính mọi lượt, kể cả chơi lại ải cũ và lượt thua, từ lúc qua ải trước tới lúc qua ải đó. Cột "Nay" đo trên bản đã gộp mọi phiên mới nhất của `khoi-tao-du-an`. Chạy lại bằng: `python3 game/tests/cay.py 8`.
 
 | Ải | Trước: có Quyết tâm (3 lượt) | Bỏ Quyết tâm, chưa sửa đường cày (3 lượt) | **Nay (8 lượt)** | Thua (nay) | Sức mạnh khi qua / khuyên dùng (nay) | Mục tiêu |
 |---|---|---|---|---|---|---|
 | 1-1 | 1,0 | 1,0 | **1,0** | 0 | 98 / 100 | 1-2 |
-| 1-2 | 1,0 | 1,0 | **1,2** | 0,1 | 123 / 110 | 1-2 |
-| 1-3 | 2,7 | 1,7 | **1,2** | 0 | 142 / 135 | 1-2 |
-| 1-4 | 1,3 | 1,3 | **2,0** | 0,2 | 159 / 150 | 1-2 |
-| 1-5 Mộc Tinh | 9,0 | 11,0 | **8,9** | 0,5 | 227 / 225 | 5-9 (vùng 1 nhẹ hơn) |
-| 2-1 | 1,0 | 1,0 | **1,4** | 0 | 251 / 245 | 1-2 |
-| 2-2 | 1,0 | 4,3 | **2,2** | 0,1 | 284 / 270 | 1-2 |
-| 2-3 | 5,0 | 2,3 | **3,6** | 0,2 | 330 / 315 | 3-5 |
-| 2-4 | 6,7 | 18,0 | **2,5** | 0 | 356 / 345 | 3-5 |
-| 2-5 Ngư Tinh | 9,3 | 19,3 | **8,5** | 0,8 | 428 / 420 | 6-10 |
-| 3-1 | 2,0 | 3,0 | **1,4** | 0 | 458 / 425 | 1-2 |
-| 3-2 | 4,7 | 2,7 | **1,1** | 0 | 470 / 445 | 1-2 |
-| 3-3 | 5,3 | 5,0 | **2,4** | 0 | 498 / 475 | 3-5 |
-| 3-4 | 6,7 | 4,3 | **3,1** | 0,2 | 540 / 525 | 3-5 |
-| 3-5 Hồ Tinh | 12,3 | 29,0 | **8,0** | 1,2 | 638 / 620 | 6-10 |
+| 1-2 | 1,0 | 1,0 | **1,0** | 0 | 117 / 110 | 1-2 |
+| 1-3 | 2,7 | 1,7 | **2,1** | 0,2 | 147 / 135 | 1-2 |
+| 1-4 | 1,3 | 1,3 | **2,4** | 0,6 | 176 / 150 | 1-2 |
+| 1-5 Mộc Tinh | 9,0 | 11,0 | **5,8** | 0,1 | 230 / 225 | 5-9 (vùng 1 nhẹ hơn) |
+| 2-1 | 1,0 | 1,0 | **1,9** | 0,1 | 257 / 245 | 1-2 |
+| 2-2 | 1,0 | 4,3 | **1,8** | 0 | 283 / 270 | 1-2 |
+| 2-3 | 5,0 | 2,3 | **3,2** | 0,1 | 324 / 315 | 3-5 |
+| 2-4 | 6,7 | 18,0 | **3,6** | 0,1 | 353 / 345 | 3-5 |
+| 2-5 Ngư Tinh | 9,3 | 19,3 | **8,0** | 0,6 | 423 / 420 | 6-10 |
+| 3-1 | 2,0 | 3,0 | **1,9** | 0,1 | 446 / 425 | 1-2 |
+| 3-2 | 4,7 | 2,7 | **2,2** | 0,4 | 472 / 445 | 1-2 |
+| 3-3 | 5,3 | 5,0 | **3,1** | 0,5 | 502 / 475 | 3-5 |
+| 3-4 | 6,7 | 4,3 | **3,4** | 0,4 | 549 / 525 | 3-5 |
+| 3-5 Hồ Tinh | 12,3 | 29,0 | **8,2** | 1,4 | 620 / 620 | 6-10 |
 | **Tổng thời gian 15 ải** | **4,1 giờ** | **6,7 giờ** | **3,0 giờ** | | | 2,5-4 giờ |
 
 - "Bỏ Quyết tâm, chưa sửa đường cày" là đo thử giữa chừng. Lúc đó đã bỏ Quyết tâm, đã nâng trần, nhưng chưa sửa chỗ kẹt khi cày. Trùm Ngư Tinh và Hồ Tinh cần 19 đến 29 lần, có lượt kẹt tới 35 lần.
@@ -135,13 +135,13 @@ Số lần chơi tính mọi lượt, kể cả chơi lại ải cũ và lượt
   - Cung đi kèm vẫn +0.
   - Bot bỏ trống điểm kỹ năng.
 - **Nay**, 8 lượt chiến dịch:
-  - Tổng thời gian trung bình 182 phút, trung vị 191, nhanh nhất 148, lâu nhất 217.
-  - Trung bình 49 lần chơi, khoảng 3,7 phút mỗi lần.
-  - Cấp hero khi tới Hồ Tinh khoảng 30.
+  - Tổng thời gian trung bình 181 phút, trung vị 191, nhanh nhất 150, lâu nhất 212.
+  - Trung bình 50 lần chơi, khoảng 3,6 phút mỗi lần.
+  - Cấp hero khi qua Hồ Tinh khoảng 29.
 - **Số lần chơi trùm vùng từng lượt:**
-  - Mộc Tinh 6-13.
-  - Ngư Tinh 5-15.
-  - Hồ Tinh 3-15.
+  - Mộc Tinh 3-7.
+  - Ngư Tinh 5-13.
+  - Hồ Tinh 4-14.
   - Không còn lượt kẹt vài chục lần.
 
 ## Kiểm tra đã chạy
