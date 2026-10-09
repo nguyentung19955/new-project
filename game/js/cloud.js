@@ -193,11 +193,11 @@
       const app = (window.matchMedia && (matchMedia('(display-mode: standalone)').matches || matchMedia('(display-mode: fullscreen)').matches)) || navigator.standalone === true;
       const REDIR = ['auth/popup-blocked', 'auth/operation-not-supported-in-this-environment', 'auth/web-storage-unsupported', 'auth/popup-closed-by-user'];
       const redirect = () => { try { localStorage.setItem('lk_gredir', '1'); } catch (e) { /* bỏ qua */ } return this.user.isAnonymous ? this.user.linkWithRedirect(prov) : this.auth.signInWithRedirect(prov); };
-      if (app) { try { await redirect(); return 'redirect'; } catch (e) { throw new Error(this._err(e)); } }
+      void app; // giống Thần Thoại Việt: luôn dùng cửa sổ phụ, kể cả khi mở từ màn hình chính (chuyển trang bị mất kết quả)
       try {
         if (this.user.isAnonymous) {
           try {
-            const r = await this.user.linkWithPopup(prov).catch((e) => { if (REDIR.includes(e.code) && e.code !== 'auth/popup-closed-by-user') return redirect().then(() => null); throw e; });
+            const r = await this.user.linkWithPopup(prov).catch((e) => { throw e; });
             if (r === null) return 'redirect';
             this.user = (r && r.user) || this.auth.currentUser || this.user;
             if (this.user.reload) await this.user.reload().catch(() => {});
@@ -215,7 +215,7 @@
             return 'switched';
           }
         }
-        try { await this.auth.signInWithPopup(prov); } catch (e) { if (REDIR.includes(e.code) && e.code !== 'auth/popup-closed-by-user') { await redirect(); return 'redirect'; } throw e; }
+        await this.auth.signInWithPopup(prov);
         return 'switched';
       } catch (e) { throw new Error(this._err(e)); }
     },
