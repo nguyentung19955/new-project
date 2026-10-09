@@ -29,7 +29,7 @@
   // Hệ số bậc: Vàng của vùng sau cao hơn (G.GOLD_MULT).
   G.wRarMult = (w) => (G.wRar(w) === 3 ? G.GOLD_MULT[w.gold | 0] || G.GOLD_MULT[0] : G.RARITY[G.wRar(w)].mult);
   G.wBase = function (w, lvl) {
-    return G.WTYPES[w.type].dmg * G.wRarMult(w) * G.STAGE_MULT[G.wStage(w)] * (1 + 0.08 * w.sharpen) * (1 + 0.01 * ((lvl || 1) - 1));
+    return G.WTYPES[w.type].dmg * G.wRarMult(w) * G.STAGE_MULT[G.wStage(w)] * (1 + 0.08 * w.sharpen) * (1 + G.LVL_DMG * ((lvl || 1) - 1));
   };
   function nameWeapon(w) {
     // Danh hiệu chỉ tính boss vùng, không tính trùm nhỏ.
@@ -66,7 +66,7 @@
     const armor = sv.armor ? G.GEAR.armor[sv.armor] : null;
     const helm = sv.helm ? G.GEAR.helm[sv.helm] : null;
     const set = armor && helm && armor.set && armor.set === helm.set ? armor.set : null;
-    let maxhp = H.hp * (1 + 0.03 * (hs.lvl - 1)) + (armor ? armor.hp : 0);
+    let maxhp = H.hp * (1 + G.LVL_HP * (hs.lvl - 1)) + (armor ? armor.hp : 0);
     if (sk.def >= 1) maxhp *= 1.1;
     if (sv.charm === 'c_greed' && hs.lvl >= 5) maxhp *= 0.9;
     const P = {
@@ -94,6 +94,24 @@
     P.mana = Math.round(P.maxmana * 0.5);
     return P;
   };
+  // SỨC MẠNH của em bé (một con số để so với "Sức mạnh khuyên dùng" của ải): căn bậc hai của (đòn mạnh nhất x máu hữu hiệu).
+  // Đòn: vũ khí mạnh nhất đang mang, quy về thang của kiếm (cấp hero, bậc, mài, mốc tiến hóa, điểm Công, chí mạng).
+  // Máu hữu hiệu: máu tối đa (cấp hero, áo, điểm Thủ) chia cho phần sát thương còn nhận (giáp, nội tại), cộng chút kháng hệ của mũ.
+  // Em bé mới cấp 1 cầm kiếm Thường có sức mạnh 100. Trang phục có chỉ số (G.outfitStats nếu có) cũng được tính.
+  G.power = function () {
+    if (!G.save || !G.save.heroes) return 0;
+    const P = G.buildPlayer();
+    let off = 0;
+    for (const w of P.weapons) off = Math.max(off, (G.pDamage(P, w) / G.WTYPES[w.type].dmg) * 10 * (G.wHas(w, 'crit') ? 1.1 : 1));
+    if (!off) off = 10 * (1 + 0.01 * (P.lvl - 1));
+    off *= 1 + P.crit;
+    let res = 0;
+    for (const e of G.ELS) res = Math.max(res, P.resist[e] || 0);
+    const ehp = (P.maxhp / (1 - Math.min(0.75, P.dr))) * (1 + 0.25 * Math.min(0.8, res));
+    return Math.round(3 * Math.sqrt(off * ehp) * (P.powerMult || 1));
+  };
+  // Màu so sánh: đủ (xanh), sát nút (vàng, từ 90% khuyên dùng), thiếu (đỏ).
+  G.powerCol = function (have, need) { return have >= need ? '#6fdc6a' : have >= need * 0.9 ? '#ffd23f' : '#ff6a5a'; };
   const curW = (P) => P.weapons[P.cur];
   G.curW = curW;
   G.activeEl = function (P, w) {

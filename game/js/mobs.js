@@ -106,7 +106,7 @@
     e.spawnT = o.add ? dur(id, 'spawn') * 0.7 : dur(id, 'spawn');
     e.cd = G.rr(0.4, 1.1);
     if (e.role === 'shield') { e.armor = G.ROLES.shield.armor || 0.45; e.armorMax = e.maxhp * 0.45; e.armorHp = e.armorMax; e.healCd = G.rr(3, 6); }
-    if (e.role === 'archer') e.sumCd = G.rr(5, 8);
+    if (e.role === 'archer') e.sumCd = G.rr(7, 10);
     if (e.role === 'nimble') e.diveCd = G.rr(0.6, 1.8);
     if (e.role === 'spiky') e.spikeCd = G.rr(1.2, 2.5);
     if (elite) {
@@ -279,15 +279,18 @@
       e.sumCd -= dt;
       const allies = w.ents.filter((x) => !x.dead && x.sum === e).length + (w.spawns || []).filter((s) => s.opt && s.opt.sumBy === e).length;
       if (e.sumCd <= 0 && allies < 2 && w.ents.length < 9) {
-        e.sumCd = G.rr(9, 12);
+        e.sumCd = G.rr(12, 16);
         begin(e, 'summon', a, 0.6, { cd: 1, fire: (q) => { for (let i = 0; i < 2; i++) { const b = a + PI + (i ? 0.9 : -0.9); summon('swarm', q.x + Math.cos(b) * 26, q.y + Math.sin(b) * 20, { hpMult: 0.45, sumBy: q }); } FX('sparkle', q.x, q.y - q.h * 0.5, '#ffd23f', 10); } });
         return;
       }
       const want = Math.min(120, (w.x1 - w.x0) * 0.42);
       keep(e, P, want, sp, dt, e.t % 6 < 3 ? 1 : -1);
       if (e.cd <= 0 && d < 190) {
-        if (e.don.kieu === 'nem') begin(e, 'lob', a, 0.55, { cd: 2.4, end: 0.55 + 0.5, fire: (q) => { bomb(q, P.x, P.y, 0.45, 0.55, 18); } });
-        else begin(e, 'shot', a, 0.55, { cd: 2.2, end: 1.0, aim: true, fire: (q, A) => { const b = angTo(q, P); q.dirA = b; shoot(q, b, 140); } });
+        // Cân bằng phải cày: quái bắn xa là nguồn mất máu lớn nhất, nên bắn thưa hơn (2,2 -> 3 giây), ngắm lâu hơn (0,55 -> 0,7 giây)
+        // và đạn chậm hơn (140 -> 118) để kịp né. Số nằm ở G.ROLES.archer (data.js).
+        const A = G.ROLES.archer;
+        if (e.don.kieu === 'nem') begin(e, 'lob', a, A.wind, { cd: A.shotCd, end: A.wind + 0.5, fire: (q) => { bomb(q, P.x, P.y, 0.45, 0.6, 18); } });
+        else begin(e, 'shot', a, A.wind, { cd: A.shotCd, end: A.wind + 0.45, aim: true, fire: (q, A2) => { const b = angTo(q, P); q.dirA = b; shoot(q, b, A.shotSpd); } });
         G.sfx('warn', 1.3);
       }
       return;

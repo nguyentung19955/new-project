@@ -20,7 +20,7 @@
     // Sửa góp ý 3 (càng chậm hoặc càng phải áp sát thì mỗi đòn càng mạnh): cung 9 -> 11 mỗi phát (vẫn dưới kiếm) nhưng tên xuyên và
     // mưa tên yếu đi hẳn (G.MOVES.bow), để cung an toàn nhất có sát thương mỗi giây thấp nhất, cả khi đánh một con lẫn cả cụm;
     // búa 23 -> 22 (vẫn mạnh nhất mỗi đòn).
-    bow: { name: 'Cung', dmg: 11, cd: 0.5, ranged: true, special: 'Mưa tên' },
+    bow: { name: 'Cung', dmg: 10.3, cd: 0.5, ranged: true, special: 'Mưa tên' },
     spear: { name: 'Giáo', dmg: 11, cd: 0.44, reach: 56, depth: 12, special: 'Lao tới' },
     hammer: { name: 'Búa', dmg: 22, cd: 0.8, reach: 32, depth: 25, stagger: 0.4, special: 'Nện đất' },
   };
@@ -75,7 +75,9 @@
   // VŨ KHÍ RƠI. Rương và tinh anh: bậc ngẫu nhiên theo vùng [Thường, Lam, Tím], không bao giờ ra Vàng.
   // Trùm vùng (ải 5, 10, 15): lần đầu hạ chắc chắn rơi 1 vũ khí Vàng; đánh lại thì 12% Vàng, còn lại Tím.
   G.DROP = {
-    table: [[0.72, 0.24, 0.04], [0.52, 0.38, 0.10], [0.36, 0.44, 0.20]],
+    // hàng thứ tư chỉ dùng khi chơi lại một ải Lâu đài cổ đã qua (chơi lại thì bảng rơi lên một hàng: G.DROP.againBonus)
+    table: [[0.72, 0.24, 0.04], [0.52, 0.38, 0.10], [0.36, 0.44, 0.20], [0.24, 0.46, 0.30]],
+    againBonus: 1,
     elite: 0.35,      // cơ hội tinh anh rơi vũ khí
     stage: 0.5,       // cơ hội nhận vũ khí khi qua một ải thường (trùm nhỏ)
     bossAgain: 0.12,  // cơ hội ra Vàng khi đánh lại trùm vùng
@@ -141,7 +143,11 @@
   };
   G.SKEYS = ['atk', 'def', 'elem'];
   G.MAX_LEVEL = 30;
-  G.xpNeed = (lvl) => 40 + 25 * lvl;
+  // Cân bằng phải cày: lên cấp chậm hơn trước (40 + 25 x cấp) để cấp hero còn tăng tới cuối vùng ba.
+  G.xpNeed = (lvl) => 50 + 50 * lvl;
+  // Mỗi cấp hero: sát thương +1,5% và máu +3,5% (trước là 1% và 3%), để cày lên cấp thấy rõ là mạnh lên.
+  G.LVL_DMG = 0.015;
+  G.LVL_HP = 0.035;
 
   G.REGIONS = [
     {
@@ -166,7 +172,7 @@
     rusher: { name: 'Lính xông', hp: 1, dmg: 1, speed: 44, r: 8, marks: 1 },
     swarm: { name: 'Bầy nhỏ', hp: 0.9, dmg: 0.6, speed: 60, r: 9, marks: 1 }, // một con là cả bầy (hình vẽ cả đàn)
     shield: { name: 'Khiên', hp: 1.7, dmg: 1.1, speed: 26, r: 10, armor: 0.45, marks: 1 },
-    archer: { name: 'Xạ thủ', hp: 0.7, dmg: 0.9, speed: 38, r: 7, marks: 1 },
+    archer: { name: 'Xạ thủ', hp: 0.7, dmg: 0.85, speed: 38, r: 7, marks: 1, shotCd: 3, wind: 0.7, shotSpd: 118 }, // bắn mỗi 3 giây, ngắm 0,7 giây, đạn bay 118
     nimble: { name: 'Nhanh nhẹn', hp: 0.7, dmg: 0.85, speed: 78, r: 7, marks: 1 },
     elite: { name: 'Tinh anh', hp: 5, dmg: 1.3, speed: 40, r: 12, marks: 5 },
     kami: { name: 'Cảm tử', hp: 0.55, dmg: 1.4, speed: 48, r: 7, marks: 1 },
@@ -192,22 +198,44 @@
   // Chỉ số chuẩn theo ải. r: vùng 0..2, i: ải 0..4, diff: 0 thường, 1 độ khó thứ hai.
   const HP_RANGE = [[60, 115], [130, 230], [250, 370]];
   const DMG_RANGE = [[8, 12], [12, 17], [18, 24]];
+  // CÂN BẰNG PHẢI CÀY: hệ số riêng của từng ải (15 ải, theo thứ tự 1-1 .. 3-5) nhân thêm vào chỉ số trên.
+  // mob: [máu, sát thương] quái thường; boss: [máu, sát thương] trùm nhỏ (ải 1-4) hoặc trùm vùng (ải 5).
+  G.STAGE_K = {
+    mob: [[1.12, 1.29], [1.21, 1.56], [1.22, 1.59], [1.17, 1.43], [1.26, 1.77], [1.26, 2.59], [1.46, 2.44], [1.51, 2.63], [1.28, 2.76], [1.13, 2.16], [1.45, 4.17], [1.4, 3.75], [1.45, 4.22], [1.42, 4.0], [1.21, 2.54]],
+    boss: [[1.12, 1.29], [1.21, 1.56], [1.22, 1.59], [1.17, 1.43], [1.26, 1.77], [1.26, 2.59], [1.46, 2.44], [1.51, 2.63], [1.28, 2.76], [1.13, 2.16], [1.45, 4.17], [1.4, 3.75], [1.45, 4.22], [1.42, 4.0], [1.21, 2.54]],
+  };
   G.stageStats = function (r, i, diff) {
     const t = i / 4;
     const k = diff ? 2.2 : 1;
     const kd = diff ? 1.5 : 1;
     const n = r * 5 + i;
+    const mk = G.STAGE_K.mob[n] || [1, 1], bk = G.STAGE_K.boss[n] || [1, 1];
     return {
-      hp: (HP_RANGE[r][0] + (HP_RANGE[r][1] - HP_RANGE[r][0]) * t) * k,
-      dmg: (DMG_RANGE[r][0] + (DMG_RANGE[r][1] - DMG_RANGE[r][0]) * t) * kd,
+      hp: (HP_RANGE[r][0] + (HP_RANGE[r][1] - HP_RANGE[r][0]) * t) * k * mk[0],
+      dmg: (DMG_RANGE[r][0] + (DMG_RANGE[r][1] - DMG_RANGE[r][0]) * t) * kd * mk[1],
+      bossHp: bk[0], bossDmg: bk[1], // trùm của ải: nhân thêm vào máu và sát thương (js/boss.js)
       xp: Math.round((100 + 60 * n) * (diff ? 1.5 : 1)),
       gold: Math.round((80 + 30 * n) * (diff ? 1.5 : 1)),
     };
   };
+  // SỨC MẠNH KHUYÊN DÙNG của từng ải (15 ải). So với G.power() (js/combat.js): đủ số này thì bot thắng phần lớn lượt chơi
+  // (đo bằng tests/cay.py). Độ khó thứ hai cần gấp G.REC_DIFF lần.
+  G.STAGE_REC = [100, 110, 125, 140, 190, 200, 225, 270, 285, 315, 340, 365, 395, 410, 425];
+  G.REC_DIFF = 1.8;
+  G.stageRec = function (r, i, diff) {
+    const v = G.STAGE_REC[r * 5 + i] || 100;
+    return diff ? Math.round((v * G.REC_DIFF) / 5) * 5 : v;
+  };
+  // Thưởng khi cày: sức mạnh vượt quá 130% khuyên dùng thì kinh nghiệm và vàng giảm dần, thấp nhất còn 40%.
+  G.grindMult = function (power, rec) {
+    const q = rec > 0 ? power / rec : 1;
+    return q <= 1.3 ? 1 : Math.max(0.4, Math.round((1 - (q - 1.3) * 1.2) * 20) / 20);
+  };
   // Phòng vuông: số đợt quái và hệ số điểm mỗi đợt (so với phòng dài trước đây).
   // start: phòng Bắt đầu [ải 1-2, ải 3-5]; early: ải 1-3; late: ải 4-5; maxPerWave: số quái tối đa một đợt;
   // stagger: nửa sau của một đợt hiện ra chậm hơn bấy nhiêu giây.
-  G.ROOM_WAVES = { start: [1, 2], early: 3, late: 4, challenge: 2, pts: 0.85, ptsLate: 0.85, maxPerWave: 7, stagger: 2, challengeTime: 30 };
+  G.ROOM_WAVES = { start: [1, 2], early: 3, late: 4, challenge: 2, pts: 0.85, ptsLate: 0.85, maxPerWave: 7, stagger: 2, challengeTime: 30, maxAlive: 4 };
+  // maxAlive: phòng thường chỉ có tối đa bấy nhiêu quái cùng lúc (tinh anh tính là hai), số còn lại chờ mọc nối tiếp.
   // Độ dẹt của vùng nguy hiểm và vũng hệ: cao bằng bấy nhiêu lần rộng. Trước là 0,6 (nhìn ngang), nay tròn hơn cho sàn nhìn từ trên.
   G.ZK = 0.85;
   // Lăn né: tốc độ ngang (điểm ảnh mỗi giây) và tỉ lệ chiều dọc so với chiều ngang (bằng tỉ lệ lúc đi bộ).

@@ -76,6 +76,7 @@
       loot: { kills: 0, charm: false, bossDown: false, finalEl: null }, won: false, portal: null, got: [], curse: null, marksMult: 1, haste: 1,
       tut, mode: 'play', endT: 0, layers: null, usedPotion: false, marks: 0,
       fade: 0, W: null, near: null, sel: null, swapped: false, opts: null, result: null,
+      power: G.power(), rec: G.stageRec(r, i, diff), // sức mạnh lúc vào ải và sức mạnh khuyên dùng (thanh trên, thưởng khi cày)
     };
     if (S.tut) S.marksMult = 2;
     enterRoom(map.start, null);
@@ -154,9 +155,16 @@
     if (!W.spawns.length) return;
     const el = S.stats.el, tot = el.fire + el.poison + el.ice + el.none;
     const top = G.ELS.slice().sort((a, b) => el[b] - el[a])[0];
+    // Cân bằng phải cày: phòng thường nhỏ mà quái mới to, nên trong phòng chỉ có tối đa G.ROOM_WAVES.maxAlive quái cùng lúc
+    // (tinh anh tính là hai). Đủ số thì quái kế tiếp chờ (vòng đỏ vẫn hiện), có chỗ mới mọc: thành từng tốp nối nhau.
+    const cap = W.geo && W.geo.big ? 99 : G.ROOM_WAVES.maxAlive;
+    let alive = 0;
+    for (const e of W.ents) if (!e.dead && !e.add) alive += e.role === 'elite' ? 2 : 1;
     for (const s of W.spawns) {
       s.t -= dt;
       if (s.t > 0) continue;
+      if (alive >= cap) { s.t = 0.35 + G.rnd() * 0.3; continue; }
+      alive += s.role === 'elite' ? 2 : 1;
       const e = G.spawnEnemy(s.role, s.x, s.y, s.opt || {});
       e.inside = true;
       if (s.opt && s.opt.sumBy) e.sum = s.opt.sumBy;
@@ -413,17 +421,21 @@
       const prev = map[key] || 0;
       map[key] = Math.max(prev, R.stars);
       const big = S.i === 4;
-      const xp = S.base.xp;
-      let gold = S.base.gold + S.loot.kills * 2;
+      // Cân bằng phải cày: chơi lại ải đã qua vẫn được đủ thưởng, trừ khi em bé đã mạnh vượt xa ải (G.grindMult): kinh nghiệm
+      // và vàng giảm dần (thấp nhất 40%), nguyên liệu vùng và quặng thì vẫn đủ. Chơi lại có cơ hội rơi vũ khí bậc cao hơn.
+      const gm = G.grindMult(S.power, S.rec), again = prev > 0;
+      const xp = Math.round(S.base.xp * gm);
+      let gold = Math.round((S.base.gold + S.loot.kills * 2) * gm);
       if (sv.charm === 'c_greed' && sv.heroes[sv.hero].lvl >= 5) gold = Math.round(gold * 1.25);
       const ore = 3 + R.stars, mat = 5 + S.i;
       sv.gold += gold; sv.ore += ore; sv.mats[S.r] += mat;
       R.lines.push('+' + xp + ' kinh nghiệm', '+' + gold + ' vàng', '+' + ore + ' quặng', '+' + mat + ' ' + reg.mat.toLowerCase());
+      if (gm < 1) R.lines.push('Ải đã quá dễ với sức mạnh của bé: kinh nghiệm và vàng còn ' + Math.round(gm * 100) + '%');
       if (big) { const ns = S.diff ? 4 : 3; sv.shards[S.r] += ns; R.lines.push('+' + ns + ' mảnh ' + reg.bossName); }
       if ((R.stars === 3 && prev < 3) || (!big && G.rnd() < 0.15)) { sv.stones++; R.lines.push('+1 đá tôi'); }
       // Vũ khí rơi: trùm vùng theo G.bossDrop (lần đầu chắc chắn Vàng); ải thường thì 50% một món bậc ngẫu nhiên.
       if (big || G.rnd() < G.DROP.stage) {
-        const nw = big ? G.bossDrop(S.r) : G.giveWeapon(G.pick(G.WKEYS), G.rollRarity(S.r));
+        const nw = big ? G.bossDrop(S.r) : G.giveWeapon(G.pick(G.WKEYS), G.rollRarity(S.r + (again ? G.DROP.againBonus : 0)));
         R.lines.push(nw ? { s: (big ? reg.bossName + ' rơi ' : 'Nhặt được ') + rarName(nw), w: nw } : 'Rương đồ đầy, vũ khí rớt đổi thành vàng');
       }
       if (S.loot.charm) {
@@ -439,8 +451,9 @@
       R.up = G.addXp(sv.hero, xp);
       G.sfx('win');
     } else {
-      const xp = Math.round(S.base.xp * 0.4 * (Math.max(0, S.visits - 1) / S.rooms.length));
-      const gold = S.loot.kills * 2;
+      const gm = G.grindMult(S.power, S.rec);
+      const xp = Math.round(S.base.xp * 0.4 * (Math.max(0, S.visits - 1) / S.rooms.length) * gm);
+      const gold = Math.round(S.loot.kills * 2 * gm);
       sv.gold += gold;
       R.lines.push('+' + xp + ' kinh nghiệm', '+' + gold + ' vàng');
       R.up = G.addXp(sv.hero, xp);
