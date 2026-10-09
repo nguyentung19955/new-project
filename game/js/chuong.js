@@ -196,7 +196,7 @@
     const W = G.getWorld(), P = W.P, ch = (q && q.ch) || P.ch;
     let d = 0;
     withCh(() => {
-      d = G.damage(e, amt, { el, src: 'ch', ch: true, ranged: true });
+      d = G.damage(e, amt, { el, src: 'ch', ch: true, ranged: false }); // không tính là đánh xa: trùm Chống đánh xa không phản ứng với chưởng
       if (!e.dead && stacks > 0) {
         G.applyStatus(e, el, src, stacks);
         if (el === 'fire' && e.st.fire > 0 && ch.burnDur > 1) { e.st.fire = Math.max(e.st.fire, 3 * P.statusDur * ch.burnDur); }

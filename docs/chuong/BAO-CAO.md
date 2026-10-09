@@ -67,17 +67,21 @@ Sức mạnh (thẻ ải, Bảng vàng): mỗi điểm chưởng đã học thê
 
 Ảnh chiêu: `ba-chuong.png` (bay, trúng, để lại), `chuong-8-huong.png`, GIF `hoa-chuong.gif` (bắn thường rồi tích lực, vệt cháy, tàn lửa), `doc-chuong.gif` (tách 3 luồng, mây hút), `bang-chuong.gif` (xuyên hàng quái, đóng băng).
 
-## Cân bằng (tests/cay.py, 24 lượt chiến dịch trước và sau)
+## Cân bằng (tests/cay.py: 36 lượt chiến dịch trước, 24 lượt sau)
 
 Bot học cây chưởng như người chơi: mỗi lần về làng học hết điểm chưởng theo thứ tự nút gốc trước (lượt 1, 4, 7… dùng Hỏa; 2, 5, 8… Độc; 3, 6, 9… Băng).
 
 | | Trước (kỹ năng cũ) | Sau (chưởng) |
 | --- | --- | --- |
-| Tổng thời gian đi hết 15 ải lần đầu | 180 phút (172 và 188) | 182 phút (172 và 191), chậm hơn 1% |
-| Theo cây | | Hỏa 178, Độc 178, Băng 189 phút |
-| Số lần chơi trùm Mộc Tinh / Ngư Tinh / Hồ Tinh | 6,8 / 9,2 / 8,8 | 6,0 / 8,9 / 11,4 |
+| Tổng thời gian đi hết 15 ải lần đầu | 179 phút (ba lần đo: 172, 188, 176) | 185 phút (185 và 184), chậm hơn 3% |
+| Theo cây | | Hỏa 192, Độc 185, Băng 177 phút |
+| Số lần chơi trùm Mộc Tinh / Ngư Tinh / Hồ Tinh | 6,4 / 9,3 / 8,3 | 6,3 / 8,9 / 11,4 |
 
-Không nhanh hơn (yêu cầu: không nhanh hơn quá 10%), các cây lệch nhau dưới 7%. Lần đo đầu (trùm còn học theo chưởng) chậm hơn 15% vì trùm kháng luôn hệ của chưởng; sau khi cho trùm chỉ học theo vũ khí thì về đúng như cũ. Không đổi số cân bằng nào khác.
+Không nhanh hơn (yêu cầu: không nhanh hơn quá 10%), các cây lệch nhau dưới 9%. Hai chỗ đã sửa trong lúc đo:
+- Lần đo đầu chậm hơn 15% vì trùm học theo cả chưởng (kháng luôn hệ của chưởng, đè lên hệ của vũ khí). Nay trùm chỉ học theo vũ khí.
+- Hồ Tinh có lớp "Chống đánh xa": bị đánh xa là biến ra sau lưng vồ. Chưởng từng bị tính là đánh xa nên mỗi phát chưởng làm Hồ Tinh vồ thêm (có lượt phải đánh 59 lần). Nay chưởng không tính là đánh xa (là nội lực, không phải tên).
+
+Hồ Tinh vẫn hơi khó hơn trước (11,4 so với 8,3 lần, dao động lớn giữa các lượt) vì Thợ Rèn mất Nung (phủ Lửa chắc chắn gây hiệu ứng) và bot hay tiêu mana vào chưởng thay cho đòn Đặc biệt. Tổng thời gian vẫn gần như cũ nên không đổi số cân bằng nào khác.
 
 ## Kiểm tra
 
