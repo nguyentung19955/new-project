@@ -118,6 +118,9 @@
   .the small { font-size: 11px; color: var(--sub); }
   .the .nhan { position: absolute; top: 4px; right: 4px; font-size: 10px; background: var(--cop); color: var(--ink); border-radius: 8px; padding: 0 6px; border: 1px solid var(--dk); }
   .the.moi { border-style: dashed; justify-content: center; }
+  .nhom-chon { position: sticky; top: -10px; z-index: 3; background: var(--bg); padding: 8px 2px 6px; margin: 0 -2px; border-bottom: 1px dashed var(--brD); }
+  .nhom-chon .chip { font-weight: 700; }
+  .nhom-chon .chip small { font-weight: 500; opacity: .75; margin-left: 2px; }
   .the.moi .cong { font-size: 34px; line-height: 1; color: var(--gold); font-weight: 700; }
 
   /* ----- bước 2 ----- */
@@ -173,9 +176,9 @@
     <polygon fill="#f6dc92" points="20,8 21.6,16 26,10.3 22.9,17.6 30.6,15 24,19.3 31,20 24,20.7 30.6,25 22.9,22.4 26,29.7 21.6,24 20,32 18.4,24 14,29.7 17.1,22.4 9.4,25 16,20.7 9,20 16,19.3 9.4,15 17.1,17.6 14,10.3 18.4,16"/>
     <circle cx="20" cy="20" r="2.4" fill="#1a120a"/>
   </svg>
-  <div class="ten-cc">Xưởng Sprite<small>Linh Khí · tự vẽ quái và em bé</small></div>
+  <div class="ten-cc">Xưởng Sprite<small>Linh Khí · tự vẽ quái, em bé, đồ và người làng</small></div>
   <canvas id="chimLac" aria-hidden="true"></canvas>
-  <div class="dang-lam" id="dangLam">Chưa chọn quái nào</div>
+  <div class="dang-lam" id="dangLam">Chưa chọn gì</div>
   <button class="nut nho phu" id="nutMoTep" title="Mở tệp .sprite.json đã tải về để sửa tiếp">Mở tệp</button>
   <button class="nut nho" id="nutHuongDan" title="Cách dùng">?</button>
   <input type="file" id="chonTep" accept=".json,application/json" class="an">
@@ -191,6 +194,7 @@
   <!-- BƯỚC 1: chọn quái hoặc em bé -->
   <section class="trang hien" id="b1">
     <p class="ghi" style="margin:0 2px">Chọn thứ bạn muốn tự vẽ. Hình nhỏ là hình đang có trong game (vẽ bằng code), để bạn so cỡ và dáng.</p>
+    <div class="chip-nhom nhom-chon" id="nhomChon"></div>
     <div id="dsChon"></div>
   </section>
 
@@ -255,7 +259,7 @@
     <div class="bang">
      <div id="bang3Vk" class="an">
       <h3>Điểm cầm và mũi</h3>
-      <p class="ghi">Kéo <b>hình thoi đỏ</b> vào chỗ bàn tay cầm. Kéo <b>chấm vàng</b> vào mũi vũ khí (cung: kéo ra phía trước, phía bụng cung). Game xoay vũ khí quanh điểm cầm.</p>
+      <p class="ghi"><b>Chạm vào chỗ chuôi</b> để đặt <b>hình thoi đỏ</b> (chỗ bàn tay cầm), hoặc kéo nó. Kéo <b>chấm vàng</b> vào mũi vũ khí (cung: kéo ra phía trước, phía bụng cung). Game xoay vũ khí quanh điểm cầm theo tám hướng. Vẽ nằm ngang mũi sang phải hay dựng đứng mũi lên trên đều được: công cụ tự đặt sẵn hai điểm.</p>
       <div class="dong" id="dongDay"><label><input type="checkbox" id="coDay"> Có dây cung (game vẽ dây và mũi tên khi giương)</label></div>
       <p class="ghi" id="ghiDay">Hai chấm xanh là hai đầu dây cung.</p>
       <div class="khoi">

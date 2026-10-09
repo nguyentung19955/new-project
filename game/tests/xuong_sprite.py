@@ -33,6 +33,12 @@ ok_n = 0
 bad = []
 
 
+
+def chon(pg, ma):
+    """Mở nhóm chứa thẻ (trang chọn chia nhóm) rồi bấm vào thẻ."""
+    pg.evaluate('ma => XS_UI.moNhom(XS_UI.nhomCuaMa(ma))', ma)
+    pg.click('.the[data-ma="' + ma + '"]')
+
 def ok(name, cond, extra=''):
     global ok_n
     if cond:
@@ -87,7 +93,7 @@ def kiem_do(pw, tmp):
     ok('Danh sách có 13 vật phẩm rơi ra', len([m for m in ma if m.startswith('vp-')]) == 13)
     tep = {}
     # --- vũ khí ---
-    pg.click('.the[data-ma="vk-sword-0"]'); pg.set_input_files('#chonAnh', kiem); pg.wait_for_function('XS_S.R')
+    chon(pg, 'vk-sword-0'); pg.set_input_files('#chonAnh', kiem); pg.wait_for_function('XS_S.R')
     pg.evaluate('XS_UI.denBuoc(3)'); pg.wait_for_timeout(200)
     d = pg.evaluate('XS_S.dd')
     ok('Vũ khí: điểm cầm ở chuôi (dưới), mũi ở trên', d['cam'][1] > d['mui'][1] + 10, d)
@@ -98,7 +104,7 @@ def kiem_do(pw, tmp):
     ok('Kéo điểm cầm bằng chuột', pg.evaluate('XS_S.dd.cam[1]') < d['cam'][1] - 1)
     ok('Hình vũ khí đi vào đường vẽ của game ngay trong công cụ', pg.evaluate("!!G.spriteCustom.timVuKhi({ type: 'sword', family: 0 }) && G.weaponArt._spriteCustom"))
     pg.evaluate('XS_UI.denBuoc(4)'); pg.wait_for_timeout(200)
-    ok('Vũ khí: xem đứng, chạy, đánh, né, trúng đòn, ô đồ', pg.eval_on_selector_all('#dsDongTac .chip', 'e => e.length') == 6 and pg.is_visible('#khoiBac'))
+    ok('Vũ khí: xem đứng, chạy, đánh, né, trúng đòn, tám hướng, ô đồ', pg.eval_on_selector_all('#dsDongTac .chip', 'e => e.length') == 7 and pg.is_visible('#khoiBac'))
     pg.click('#dsDongTac [data-dt="atk"]'); pg.wait_for_timeout(300)
     pg.evaluate('XS_UI.denBuoc(5)'); pg.wait_for_timeout(200)
     with pg.expect_download() as dl:
@@ -110,7 +116,7 @@ def kiem_do(pw, tmp):
     pg.evaluate('XS_UI.denBuoc(3)'); pg.click('#dsHe .chip:nth-child(2)'); pg.click('#dsGd .chip:nth-child(2)')
     ok('Chọn hệ Lửa, giai đoạn Thành hình: mã đổi thành vk-sword-0-fire-2', pg.evaluate('XS_S.muc.ma') == 'vk-sword-0-fire-2')
     # --- trang phục ---
-    pg.click('#cacBuoc [data-b="1"]'); pg.click('.the[data-ma="tp-hats-non_la"]'); pg.set_input_files('#chonAnh', mu); pg.wait_for_function('XS_S.R && XS_S.muc.ma === "tp-hats-non_la"')
+    pg.click('#cacBuoc [data-b="1"]'); chon(pg, 'tp-hats-non_la'); pg.set_input_files('#chonAnh', mu); pg.wait_for_function('XS_S.R && XS_S.muc.ma === "tp-hats-non_la"')
     pg.evaluate('XS_UI.denBuoc(3)'); pg.wait_for_timeout(200)
     l0 = pg.evaluate('XS_S.dd.lech.slice()')
     pg.click('[data-nhich="1,0"]'); pg.click('[data-nhich="0,-1"]'); pg.click('[data-nhich="0,-1"]')
@@ -120,7 +126,7 @@ def kiem_do(pw, tmp):
     pg.evaluate('XS_UI.denBuoc(5)'); pg.wait_for_timeout(200)
     tep['tp'] = pg.evaluate('XS_UI.taoTep(true, true)')
     # --- vật phẩm ---
-    pg.click('#cacBuoc [data-b="1"]'); pg.click('.the[data-ma="vp-gold"]'); pg.set_input_files('#chonAnh', xu); pg.wait_for_function('XS_S.R && XS_S.muc.ma === "vp-gold"')
+    pg.click('#cacBuoc [data-b="1"]'); chon(pg, 'vp-gold'); pg.set_input_files('#chonAnh', xu); pg.wait_for_function('XS_S.R && XS_S.muc.ma === "vp-gold"')
     pg.evaluate('XS_UI.denBuoc(3)'); pg.wait_for_timeout(200)
     ok('Vật phẩm: bỏ qua bước khung, sang thẳng bước xem', pg.evaluate('XS_S.buoc') == 4)
     tep['vp'] = pg.evaluate('XS_UI.taoTep(true, true)')
@@ -180,9 +186,10 @@ def main():
             b, ctx, pg, errs = mo(pw, TOOL)
             pg.wait_for_function('window.XS_UI')
             n_the = pg.eval_on_selector_all('#dsChon .the[data-ma]', 'e => e.map(x => x.dataset.ma)')
-            ok('Danh sách có 36 quái và 5 lựa chọn em bé', len([m for m in n_the if not m.startswith(('em-be', 'vk-', 'tp-', 'vp-'))]) == 36 and len([m for m in n_the if m.startswith('em-be')]) == 5, len(n_the))
+            ok('Danh sách có 36 quái và 5 lựa chọn em bé', len([m for m in n_the if not m.startswith(('em-be', 'vk-', 'tp-', 'vp-', 'nl-'))]) == 36 and len([m for m in n_the if m.startswith('em-be')]) == 5, len(n_the))
+            pg.evaluate("XS_UI.moNhom('quai')"); pg.wait_for_timeout(300)
             ok('Thẻ quái có hình code để so', pg.evaluate("""() => { const c = document.querySelector('.the[data-ma=cua] canvas'); const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let n = 0; for (let i = 3; i < d.length; i += 4) if (d[i]) n++; return n > 300; }"""))
-            pg.click('.the[data-ma="heoCon"]')
+            chon(pg, 'heoCon')
             ok('Chọn quái thì sang bước Đưa hình', pg.is_visible('#b2') and pg.is_visible('#vungTha'))
             pg.set_input_files('#chonAnh', bon)
             pg.wait_for_function('XS_S.R')
@@ -271,7 +278,7 @@ def main():
             sig2 = pg.evaluate('[XS_S.R.w, XS_S.R.h, XS_S.kh.mau, XS_S.dong_tac.atk && XS_S.dong_tac.atk.bien, XS_S.buoc, !!XS_S.nguon]')
             ok('Mở tệp khôi phục hình, khung, thông số, về bước Chuyển động', sig2[:4] == sig and sig2[4] == 4 and sig2[5], (sig, sig2))
             # em bé
-            pg.click('#cacBuoc [data-b="1"]'); pg.click('.the[data-ma="em-be"]'); pg.set_input_files('#chonAnh', nguoi); pg.wait_for_function('XS_S.R && XS_S.muc.ma === "em-be"')
+            pg.click('#cacBuoc [data-b="1"]'); chon(pg, 'em-be'); pg.set_input_files('#chonAnh', nguoi); pg.wait_for_function('XS_S.R && XS_S.muc.ma === "em-be"')
             pg.evaluate('XS_UI.denBuoc(4)'); pg.wait_for_timeout(300)
             eb = pg.evaluate('[XS_S.kh.mau, XS_S.R.h, Object.keys(XS_S.tam.dong_tac)]')
             ok('Em bé: mẫu Người, cao 28, có thêm né lăn', eb[0] == 'nguoi' and eb[1] == 28 and 'ne' in eb[2], eb)
@@ -282,7 +289,7 @@ def main():
             # ---------- bản game thử trong công cụ (bản đóng gói) ----------
             b, ctx, pg, errs = mo(pw, TOOL_DIST)
             pg.wait_for_function('window.XS_UI')
-            pg.click('#theMoi'); pg.fill('#moiMa', 'rongDat'); pg.fill('#moiTen', 'Rồng Đất'); pg.select_option('#moiVung', 'bien'); pg.click('#moiTao')
+            pg.evaluate("XS_UI.moNhom('quai')"); pg.click('#theMoi'); pg.fill('#moiMa', 'rongDat'); pg.fill('#moiTen', 'Rồng Đất'); pg.select_option('#moiVung', 'bien'); pg.click('#moiTao')
             pg.set_input_files('#chonAnh', bon); pg.wait_for_function('XS_S.R')
             pg.evaluate('XS_UI.denBuoc(5)'); pg.wait_for_timeout(200)
             ok('Quái mới: chọn quái có sẵn để mượn chỗ khi thử', pg.is_visible('#thayCho') and pg.eval_on_selector('#thayCho', 'e => e.value') != '')

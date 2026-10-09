@@ -81,11 +81,38 @@
     let k = Math.min((cv.width - 4) / bb.w, (cv.height - 4) / bb.h); if (k >= 1) k = Math.floor(k);
     x.drawImage(tam, bb.x0, bb.y0, bb.w, bb.h, Math.round((cv.width - bb.w * k) / 2), Math.round((cv.height - bb.h * k) / 2), Math.round(bb.w * k), Math.round(bb.h * k));
   }
+  // ---------- người làng (js/village_scene.js) ----------
+  const VSC = G.villageScene;
+  function dsNguoiLang() {
+    if (!VSC || !VSC.NPCS) return [];
+    return VSC.ORDER.map((k) => ({ ma: 'nl-' + k, ten: VSC.NPCS[k].ten, doi: 'nguoi-lang', nl: k, vung: 'rung', phu: VSC.NPCS[k].viec }));
+  }
+  function veNguoiLangCode(c, k, x, y, f, o) {
+    try { if (VSC && VSC.npcCode) { const sp = VSC.npcCode(k, f || 0, o || {}); c.imageSmoothingEnabled = false; c.drawImage(sp.cv, Math.round(x - sp.ox), Math.round(y - sp.oy)); } } catch (e) { /* bỏ qua */ }
+  }
   function dsNhap() { const o = []; try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.indexOf(NHAP) === 0) o.push(k.slice(NHAP.length)); } } catch (e) { /* bỏ qua */ } return o; }
+  // Các nhóm ở trang chọn. Mỗi lần chỉ hiện một nhóm cho gọn; thẻ nào cũng có hình hiện tại (vẽ bằng code) để so.
+  const NHOM = [['em-be', 'Em bé'], ['quai', 'Quái'], ['vu-khi', 'Vũ khí'], ['trang-phuc', 'Trang phục'], ['do', 'Đồ và tài nguyên'], ['nguoi-lang', 'Người làng']];
+  function nhomCua(m) {
+    if (!m) return null;
+    if (m.doi === 'vat-pham') return 'do';
+    return m.doi === 'em-be' || m.doi === 'vu-khi' || m.doi === 'trang-phuc' || m.doi === 'nguoi-lang' ? m.doi : 'quai';
+  }
+  const nhomCuaMa = (ma) => (/^em-be/.test(ma) ? 'em-be' : /^vk-/.test(ma) ? 'vu-khi' : /^tp-/.test(ma) ? 'trang-phuc' : /^vp-/.test(ma) ? 'do' : /^nl-/.test(ma) ? 'nguoi-lang' : 'quai');
+  S.xem.nhom = docMay('xuongSprite.nhom') || 'em-be';
+  function moNhom(k) {
+    if (!NHOM.some((n) => n[0] === k)) k = 'em-be';
+    S.xem.nhom = k; luuMay('xuongSprite.nhom', k);
+    for (const b of document.querySelectorAll('#nhomChon .chip')) b.classList.toggle('chon', b.dataset.nhom === k);
+    for (const g of document.querySelectorAll('#dsChon [data-nhom]')) g.classList.toggle('an', g.dataset.nhom !== k);
+    for (const cv of document.querySelectorAll('#dsChon [data-nhom="' + k + '"] canvas[data-cho]')) { const f = cv._ve; cv.removeAttribute('data-cho'); if (f) requestAnimationFrame(f); }
+  }
   function dungDanhSach() {
     const box = $('dsChon'); box.innerHTML = '';
-    const nhap = new Set(dsNhap());
-    const nhom = (ten) => { const h = document.createElement('div'); h.className = 'vung-ten'; h.textContent = ten; box.appendChild(h); const l = document.createElement('div'); l.className = 'luoi'; box.appendChild(l); return l; };
+    const nhap = new Set(dsNhap()), dem = {};
+    const khoi = {};
+    for (const n of NHOM) { const k = document.createElement('div'); k.dataset.nhom = n[0]; box.appendChild(k); khoi[n[0]] = k; dem[n[0]] = 0; }
+    const nhom = (ten, k) => { const h = document.createElement('div'); h.className = 'vung-ten'; h.textContent = ten; khoi[k].appendChild(h); const l = document.createElement('div'); l.className = 'luoi'; khoi[k].appendChild(l); l._nhom = k; return l; };
     const the = (l, muc, ve, phu) => {
       const b = document.createElement('button'); b.type = 'button'; b.className = 'the'; b.dataset.ma = muc.ma;
       const cv = XS.taoCanvas(192, 144); b.appendChild(cv);
@@ -93,24 +120,33 @@
       const s = document.createElement('small'); s.textContent = phu; b.appendChild(s);
       if (nhap.has(muc.ma)) { const n = document.createElement('span'); n.className = 'nhan'; n.textContent = 'Đang làm'; b.appendChild(n); }
       b.onclick = () => chonMuc(muc);
-      l.appendChild(b);
-      requestAnimationFrame(() => veVuaO(cv, ve, 260, 200));
+      l.appendChild(b); dem[l._nhom]++;
+      cv._ve = () => veVuaO(cv, ve, 260, 200); cv.dataset.cho = '1'; // vẽ khi nhóm được mở
     };
-    const l0 = nhom('Em bé');
+    const l0 = nhom('Em bé', 'em-be');
     for (const e of EM_BE) the(l0, { ma: e.ma, ten: e.ten, doi: 'em-be', key: e.key, vung: 'rung' }, (c, x, y) => veEmBeCode(c, e.key, x, y, 0, 1), e.ma === 'em-be' ? 'thay cả 4 em bé' : e.ma);
     for (const v of ['rung', 'bien', 'laudai']) {
-      const l = nhom(VUNG[v]);
+      const l = nhom(VUNG[v], 'quai');
       for (const m of MA.list) if (m.vung === v && !m.tuVe) the(l, { ma: m.id, ten: m.ten, doi: 'quai', vung: v }, (c, x, y) => veQuaiCode(c, m.id, x, y, 0), (LOAI[m.loai] || '') + ' · ' + m.id);
     }
-    for (const n of XD.cacNhom()) { const l = nhom(n.ten); for (const m of n.ds) the(l, m, (c) => XD.veCode(c, m, 130, 100, 64), m.phu); }
-    const l4 = nhom('Quái mới (chưa có trong game)');
-    for (const ma of nhap) if (!thongTinGoc(ma) && !/^(em-be|vk-|tp-|vp-)/.test(ma)) {
+    const l4 = nhom('Quái mới (chưa có trong game)', 'quai');
+    for (const ma of nhap) if (!thongTinGoc(ma) && !/^(em-be|vk-|tp-|vp-|nl-)/.test(ma)) {
       let ten = ma; try { ten = JSON.parse(docMay(NHAP + ma)).ten || ma; } catch (e) { /* bỏ qua */ }
       the(l4, { ma, ten, doi: 'quai', vung: 'moi', moi: true }, () => {}, ma);
     }
     const b = document.createElement('button'); b.type = 'button'; b.className = 'the moi'; b.id = 'theMoi';
     b.innerHTML = '<span class="cong">+</span><b>Quái mới</b><small>đặt mã và tên</small>';
     b.onclick = moHopMoi; l4.appendChild(b);
+    for (const n of XD.cacNhom()) { const l = nhom(n.ten, n.nhom); for (const m of n.ds) the(l, m, (c) => XD.veCode(c, m, 130, 100, 64), m.phu); }
+    const l6 = nhom('Người làng (thay hình trong làng và khung nói chuyện)', 'nguoi-lang');
+    for (const m of dsNguoiLang()) the(l6, m, (c, x, y) => veNguoiLangCode(c, m.nl, x, y, 0), m.phu);
+    const bar = $('nhomChon'); bar.innerHTML = '';
+    for (const n of NHOM) {
+      const e = document.createElement('button'); e.type = 'button'; e.className = 'chip'; e.dataset.nhom = n[0];
+      e.textContent = n[1]; const sm = document.createElement('small'); sm.textContent = dem[n[0]]; e.appendChild(sm);
+      e.onclick = () => moNhom(n[0]); bar.appendChild(e);
+    }
+    moNhom(S.muc ? nhomCua(S.muc) : S.xem.nhom);
   }
   function moHopMoi() {
     let hop = $('hopMoi');
@@ -154,7 +190,7 @@
   }
   function capNhatDau() {
     const m = S.muc;
-    $('dangLam').innerHTML = m ? 'Đang làm: <b></b> (' + m.ma + ')' : 'Chưa chọn quái nào';
+    $('dangLam').innerHTML = m ? 'Đang làm: <b></b> (' + m.ma + ')' : 'Chưa chọn gì';
     if (m) $('dangLam').querySelector('b').textContent = m.ten;
     for (const b of document.querySelectorAll('.the')) b.classList.toggle('chon', !!m && b.dataset.ma === m.ma);
   }
@@ -192,16 +228,22 @@
     $('boDom').checked = t.boDom; $('latAnh').checked = t.lat; $('vienToi').checked = t.vien;
     for (const b of document.querySelectorAll('[data-kieu]')) b.classList.toggle('chon', b.dataset.kieu === t.kieu);
     const g = S.muc && thongTinGoc(S.muc.ma);
-    $('ghiCo').textContent = laDo() ? 'Hình gốc cao khoảng ' + XD.caoGoc(S.muc) + ' điểm ảnh.' : S.muc && S.muc.doi === 'em-be' ? 'Em bé trong game cao khoảng 26 đến 31 điểm ảnh (cả mũ).' : g ? 'Quái gốc: rộng ' + g.w + ', cao ' + g.h + ' điểm ảnh.' : 'Quái thường cao khoảng 25 đến 40, tinh anh 45 đến 60, trùm 65 đến 120 điểm ảnh.';
+    $('ghiCo').textContent = laDo() ? (S.muc.doi === 'vu-khi' ? 'Vũ khí gốc dài khoảng ' + XD.caoGoc(S.muc) + ' điểm ảnh (vẽ nằm ngang hay dựng đứng thì thanh trượt đều là chiều dài).' : 'Hình gốc cao khoảng ' + XD.caoGoc(S.muc) + ' điểm ảnh.') : S.muc && S.muc.doi === 'em-be' ? 'Em bé trong game cao khoảng 26 đến 31 điểm ảnh (cả mũ).' : g ? 'Quái gốc: rộng ' + g.w + ', cao ' + g.h + ' điểm ảnh.' : 'Quái thường cao khoảng 25 đến 40, tinh anh 45 đến 60, trùm 65 đến 120 điểm ảnh.';
     for (const id of ['nguong', 'boDom', 'latAnh', 'caoPx', 'soMau', 'vienToi']) $(id).disabled = S.chiAnh;
     $('vungTha').classList.toggle('an', !!S.nguon || S.chiAnh);
     $('nutSang3').disabled = !S.R;
+  }
+  // Vũ khí vẽ nằm ngang: thanh trượt là chiều dài (cạnh dài) của vũ khí, đổi ra chiều cao thật để thu cỡ.
+  function caoThat(cao) {
+    if (!S.muc || S.muc.doi !== 'vu-khi' || !S.mat || !S.nguon) return cao;
+    const bb = XS.khung(S.mat, S.nguon.w, S.nguon.h);
+    return bb && bb.w > bb.h ? Math.max(3, Math.round((cao * bb.h) / bb.w)) : cao;
   }
   function tinhLai() {
     if (!S.nguon) return;
     const t = S.tach;
     S.mat = XS.tachNen(S.nguon, { nguong: t.nguong, kieu: t.kieu, boDom: t.boDom, sua: S.sua });
-    const Rmoi = XS.pixelHoa(S.nguon, S.mat, { cao: t.cao, soMau: t.soMau, lat: t.lat });
+    const Rmoi = XS.pixelHoa(S.nguon, S.mat, { cao: caoThat(t.cao), soMau: t.soMau, lat: t.lat });
     datHinh(Rmoi);
     veBuoc2(); hienSlider(); luuNhap();
   }
@@ -509,7 +551,7 @@
       const c = buf4.getContext('2d'); c.imageSmoothingEnabled = false;
       const r = XD.ve4(c, S.xem.t, phong(S.muc.vung || 'rung')), X = S.xem;
       const { c: o, w, h } = oCanvas(cv4); o.fillStyle = '#000'; o.fillRect(0, 0, w, h);
-      const vw = 480 / X.zoom, vh = 270 / X.zoom, cx = Math.max(vw / 2, Math.min(480 - vw / 2, r[0])), cy = Math.max(vh / 2, Math.min(270 - vh / 2, r[1]));
+      const zm = X.ten === 'tam' ? 1 : X.zoom, vw = 480 / zm, vh = 270 / zm, cx = Math.max(vw / 2, Math.min(480 - vw / 2, r[0])), cy = Math.max(vh / 2, Math.min(270 - vh / 2, r[1]));
       const k = Math.min(w / vw, h / vh), dw = vw * k, dh = vh * k;
       o.drawImage(buf4, cx - vw / 2, cy - vh / 2, vw, vh, (w - dw) / 2, (h - dh) / 2, dw, dh);
       $('goiY4').textContent = r[2];
@@ -653,7 +695,7 @@
     if (cc.nguon) {
       S.nguon = await XS.docPng(cc.nguon); S.sua = cc.sua ? XS.moDoan(cc.sua, S.nguon.w * S.nguon.h) : new Uint8Array(S.nguon.w * S.nguon.h);
       S.mat = XS.tachNen(S.nguon, { nguong: S.tach.nguong, kieu: S.tach.kieu, boDom: S.tach.boDom, sua: S.sua });
-      if (!R) R = XS.pixelHoa(S.nguon, S.mat, { cao: S.tach.cao, soMau: S.tach.soMau, lat: S.tach.lat });
+      if (!R) R = XS.pixelHoa(S.nguon, S.mat, { cao: caoThat(S.tach.cao), soMau: S.tach.soMau, lat: S.tach.lat });
     } else S.chiAnh = !!R;
     if (!R && tep.tam) throw new Error('Tệp chỉ có tấm sprite, thiếu phần để sửa tiếp');
     S.R = R;
@@ -698,7 +740,7 @@
 
   window.addEventListener('resize', () => { if (S.buoc === 2) veBuoc2(); if (S.buoc === 3) veBuoc3(); if (S.buoc === 5) veBuoc5(); });
   // Cho bài kiểm tra gọi thẳng
-  window.XS_UI = { denBuoc, chonMuc, nhanAnh, khoiPhuc, taoTep, tepChoGame, lamTam, chonMau, datDongTac, moGame, luuNhap };
+  window.XS_UI = { moNhom, nhomCuaMa, denBuoc, chonMuc, nhanAnh, khoiPhuc, taoTep, tepChoGame, lamTam, chonMau, datDongTac, moGame, luuNhap };
 
   XD = XS.taoDo({ S, $, bao, cho, oCanvas, oCo, chonChip, luuNhap: () => luuNhap(), denBuoc: (n) => denBuoc(n), capNhatDau: () => capNhatDau() });
   dungDanhSach();

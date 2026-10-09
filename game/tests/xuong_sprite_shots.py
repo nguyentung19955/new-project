@@ -25,6 +25,12 @@ TOOL = 'file://' + os.path.join(GAME, 'dist', 'xuong-sprite.html')
 GAME_DIST = 'file://' + os.path.join(GAME, 'dist', 'linh-khi.html')
 
 
+
+def chon(pg, ma):
+    """Mở nhóm chứa thẻ (trang chọn chia nhóm) rồi bấm vào thẻ."""
+    pg.evaluate('ma => XS_UI.moNhom(XS_UI.nhomCuaMa(ma))', ma)
+    pg.click('.the[data-ma="' + ma + '"]')
+
 def build():
     subprocess.run([sys.executable, os.path.join(GAME, 'build.py')], check=True, capture_output=True)
 
@@ -73,9 +79,9 @@ def shots_do(pw):
     kiem, mu, xu = ve_kiem(os.path.join(OUT, 've-tay-mau-kiem.png')), ve_mu(os.path.join(OUT, 've-tay-mau-mu.png')), ve_xu(os.path.join(OUT, 've-tay-mau-xu.png'))
     b = pw.chromium.launch(); pg = b.new_page(viewport={'width': 1280, 'height': 760})
     pg.goto(TOOL); pg.wait_for_function('window.XS_UI'); pg.wait_for_timeout(400)
-    pg.evaluate("document.querySelector('.the[data-ma=\"vk-sword-0\"]').scrollIntoView({ block: 'center' })"); pg.wait_for_timeout(300)
+    pg.evaluate("XS_UI.moNhom('vu-khi'), document.querySelector('.the[data-ma=\"vk-sword-0\"]').scrollIntoView({ block: 'center' })"); pg.wait_for_timeout(300)
     shot(pg, 'do-1-chon-vu-khi.png')
-    pg.click('.the[data-ma="vk-sword-0"]'); pg.set_input_files('#chonAnh', kiem); pg.wait_for_function('XS_S.R'); pg.wait_for_timeout(2600)
+    chon(pg, 'vk-sword-0'); pg.set_input_files('#chonAnh', kiem); pg.wait_for_function('XS_S.R'); pg.wait_for_timeout(2600)
     pg.evaluate('XS_UI.denBuoc(3)'); pg.wait_for_timeout(300); shot(pg, 'do-2-diem-cam.png')
     pg.evaluate('XS_UI.denBuoc(4)'); pg.click('#dsDongTac [data-dt="atk"]'); pg.click('[data-zoom="3"]')
     fr, ms = [], []
@@ -88,13 +94,13 @@ def shots_do(pw):
     fr[0].save(os.path.join(OUT, 'do-vu-khi-tren-tay.gif'), save_all=True, append_images=fr[1:], duration=ms, loop=0)
     print('gif do-vu-khi-tren-tay.gif')
     pg.click('#dsDongTac [data-dt="icon"]'); pg.click('[data-zoom="2"]'); pg.wait_for_timeout(400); shot(pg, 'do-3-o-do.png')
-    pg.click('#cacBuoc [data-b="1"]'); pg.click('.the[data-ma="tp-hats-non_la"]'); pg.set_input_files('#chonAnh', mu); pg.wait_for_function('XS_S.R && XS_S.muc.ma === "tp-hats-non_la"'); pg.wait_for_timeout(300)
+    pg.click('#cacBuoc [data-b="1"]'); chon(pg, 'tp-hats-non_la'); pg.set_input_files('#chonAnh', mu); pg.wait_for_function('XS_S.R && XS_S.muc.ma === "tp-hats-non_la"'); pg.wait_for_timeout(300)
     pg.evaluate('XS_UI.denBuoc(3)'); pg.wait_for_timeout(300); shot(pg, 'do-4-dat-len-nguoi.png')
     pg.evaluate('XS_UI.denBuoc(4)'); pg.click('#dsDongTac [data-dt="run"]'); pg.click('#coGoc'); pg.click('[data-zoom="3"]'); pg.wait_for_timeout(400); shot(pg, 'do-5-mac-thu.png')
     pg.click('#coGoc')
-    pg.click('#cacBuoc [data-b="1"]'); pg.click('.the[data-ma="vp-gold"]'); pg.set_input_files('#chonAnh', xu); pg.wait_for_function('XS_S.R && XS_S.muc.ma === "vp-gold"'); pg.wait_for_timeout(300)
+    pg.click('#cacBuoc [data-b="1"]'); chon(pg, 'vp-gold'); pg.set_input_files('#chonAnh', xu); pg.wait_for_function('XS_S.R && XS_S.muc.ma === "vp-gold"'); pg.wait_for_timeout(300)
     pg.evaluate('XS_UI.denBuoc(4)'); pg.click('#dsDongTac [data-dt="icon"]'); pg.click('#coGoc'); pg.wait_for_timeout(400); shot(pg, 'do-6-vat-pham.png')
-    pg.evaluate('XS_UI.denBuoc(1)'); pg.click('.the[data-ma="vk-sword-0"]'); pg.wait_for_timeout(300); pg.evaluate('XS_UI.denBuoc(5)')
+    pg.evaluate('XS_UI.denBuoc(1)'); chon(pg, 'vk-sword-0'); pg.wait_for_timeout(300); pg.evaluate('XS_UI.denBuoc(5)')
     pg.click('#nutXemGame5')
     for _ in range(60):
         pg.wait_for_timeout(150)
@@ -120,7 +126,7 @@ def main():
             pg = b.new_page(viewport={'width': 1280, 'height': 760})
             pg.goto(TOOL); pg.wait_for_function('window.XS_UI'); pg.wait_for_timeout(500)
             shot(pg, 'buoc-1-chon.png')
-            pg.click('.the[data-ma="heoCon"]'); pg.wait_for_timeout(300)
+            chon(pg, 'heoCon'); pg.wait_for_timeout(300)
             shot(pg, 'buoc-2-dua-hinh.png')
             pg.set_input_files('#chonAnh', bon); pg.wait_for_function('XS_S.R'); pg.wait_for_timeout(3000)
             shot(pg, 'buoc-2-tach-nen.png')
@@ -164,7 +170,7 @@ def main():
             shot(pg, 'xem-trong-game.png')
             pg.click('#nutDongGame')
             # em bé
-            pg.click('#cacBuoc [data-b="1"]'); pg.click('.the[data-ma="em-be"]'); pg.set_input_files('#chonAnh', nguoi)
+            pg.click('#cacBuoc [data-b="1"]'); chon(pg, 'em-be'); pg.set_input_files('#chonAnh', nguoi)
             pg.wait_for_function('XS_S.R && XS_S.muc.ma === "em-be"'); pg.evaluate('XS_UI.denBuoc(4)'); pg.wait_for_timeout(500)
             shot(pg, 'em-be-chuyen-dong.png')
             tep_be = pg.evaluate('XS_UI.taoTep(true, false)')
@@ -174,7 +180,7 @@ def main():
             b = pw.chromium.launch()
             ctx = b.new_context(viewport={'width': 844, 'height': 390}, has_touch=True, is_mobile=True, device_scale_factor=2)
             pg = ctx.new_page(); pg.goto(TOOL); pg.wait_for_function('window.XS_UI')
-            pg.click('.the[data-ma="heoCon"]'); pg.wait_for_timeout(300)
+            chon(pg, 'heoCon'); pg.wait_for_timeout(300)
             pg.evaluate('XS_UI.denBuoc(4)'); pg.wait_for_timeout(700)
             shot(pg, 'dien-thoai-ngang.png')
             b.close()

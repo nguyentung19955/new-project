@@ -42,9 +42,9 @@
     // ---------- danh sách ----------
     function cacNhom() {
       const out = [];
-      for (const t of LOAI_VK) out.push({ ten: 'Vũ khí: ' + TEN_VK[t], ds: WA.FAMILIES[t].map((F, f) => ({ ma: 'vk-' + t + '-' + f, ten: F.name, doi: 'vu-khi', vk: { loai: t, dong: f }, vung: 'rung', phu: 'dòng ' + (f + 1) })) });
-      for (const o of O_TP) out.push({ ten: 'Trang phục: ' + TEN_O[o], ds: GOC[o].map((k) => ({ ma: 'tp-' + o + '-' + k, ten: (L[o][k].cuGoc || L[o][k]).name || k, doi: 'trang-phuc', tp: { o, look: k }, vung: 'rung', phu: k })) });
-      out.push({ ten: 'Vật phẩm rơi ra', ds: VP.map((v) => ({ ma: 'vp-' + v[0], ten: v[1], doi: 'vat-pham', vp: v[0], vung: 'rung', phu: v[0] })) });
+      for (const t of LOAI_VK) out.push({ nhom: 'vu-khi', ten: TEN_VK[t] + ' (mỗi dòng một thẻ)', ds: WA.FAMILIES[t].map((F, f) => ({ ma: 'vk-' + t + '-' + f, ten: F.name, doi: 'vu-khi', vk: { loai: t, dong: f }, vung: 'rung', phu: 'dòng ' + (f + 1) })) });
+      for (const o of O_TP) out.push({ nhom: 'trang-phuc', ten: TEN_O[o], ds: GOC[o].map((k) => ({ ma: 'tp-' + o + '-' + k, ten: (L[o][k].cuGoc || L[o][k]).name || k, doi: 'trang-phuc', tp: { o, look: k }, vung: 'rung', phu: k })) });
+      out.push({ nhom: 'do', ten: 'Đồ rơi và biểu tượng tài nguyên (góc màn hình, Hành trang, giá bán, đồ rơi)', ds: VP.map((v) => ({ ma: 'vp-' + v[0], ten: v[1], doi: 'vat-pham', vp: v[0], vung: 'rung', phu: v[0] })) });
       return out;
     }
     function timMuc(ma) {
@@ -103,7 +103,8 @@
       if (m.doi === 'vu-khi') {
         const bb = XS.khungHinh({ w: A.w, h: A.h, px: A.px });
         if (m.vk.loai === 'bow') { d.cam = [bb.x0 + bb.w * 0.45, bb.y0 + bb.h * 0.5]; d.mui = [bb.x1 + 1, bb.y0 + bb.h * 0.5]; d.day = [[bb.x0 + bb.w * 0.2, bb.y0 + 1.5], [bb.x0 + bb.w * 0.2, bb.y1 - 0.5]]; d.coDay = true; }
-        else { d.cam = [bb.x0 + bb.w / 2, bb.y0 + bb.h * 0.86]; d.mui = [bb.x0 + bb.w / 2, bb.y0]; d.day = null; d.coDay = false; }
+        else if (bb.w > bb.h * 1.25) { d.cam = [bb.x0 + bb.w * 0.14, bb.y0 + bb.h / 2]; d.mui = [bb.x1 + 1, bb.y0 + bb.h / 2]; d.day = null; d.coDay = false; } // vẽ nằm ngang: chuôi trái, mũi phải
+        else { d.cam = [bb.x0 + bb.w / 2, bb.y0 + bb.h * 0.86]; d.mui = [bb.x0 + bb.w / 2, bb.y0]; d.day = null; d.coDay = false; } // vẽ dựng đứng: mũi lên trên
         if (d.he === undefined) { d.he = m.he || null; d.gd = m.gd || null; }
         if (d.rar == null) d.rar = 0;
       } else if (m.doi === 'trang-phuc') {
@@ -209,7 +210,7 @@
         const bf = XS.taoCanvas(80, 70), bc = bf.getContext('2d'); bc.imageSmoothingEnabled = false;
         veEmBe(bc, 34, 60, { weapon: vuKhiThu() });
         const k = Math.max(1, Math.round(2 * d)); c.drawImage(bf, w - 80 * k - 8 * d, h - 70 * k - 8 * d, 80 * k, 70 * k);
-        $('goiY3').textContent = 'Hình thoi đỏ: chỗ tay cầm. Chấm vàng: mũi (hướng vũ khí chĩa ra).' + (D.coDay ? ' Chấm xanh: hai đầu dây.' : '') + ' Góc dưới: trên tay em bé.';
+        $('goiY3').textContent = 'Chạm vào chỗ chuôi để đặt hình thoi đỏ (chỗ tay cầm). Chấm vàng: mũi (hướng vũ khí chĩa ra).' + (D.coDay ? ' Chấm xanh: hai đầu dây.' : '') + ' Góc dưới: trên tay em bé.';
         return;
       }
       // trang phục: em bé mặc đồ gốc (trái) và đồ tự vẽ (phải)
@@ -232,6 +233,7 @@
       if (S.muc.doi === 'vu-khi') {
         const ds = [['cam', D.cam], ['mui', D.mui]]; if (D.coDay && D.day) { ds.push(['day0', D.day[0]]); ds.push(['day1', D.day[1]]); }
         let best = null, bv = 16 * (window.devicePixelRatio || 1) / bo3.z; for (const q of ds) { const dd2 = Math.hypot(q[1][0] - p[0], q[1][1] - p[1]); if (dd2 < bv) { bv = dd2; best = q[0]; } }
+        if (!best && p[0] >= -1 && p[1] >= -1 && p[0] <= anh().w + 1 && p[1] <= anh().h + 1) { D.cam = [p[0], p[1]]; best = 'cam'; dangKy(); ve3(); } // chạm vào chuôi: đặt điểm cầm ngay
         keo = best;
       } else { keo = 'lech'; keoTu = [p[0], p[1], D.lech[0], D.lech[1]]; }
       return true;
@@ -248,8 +250,8 @@
 
     // ---------- BƯỚC 4 ----------
     const DT = {
-      'vu-khi': [['idle', 'Đứng'], ['run', 'Chạy'], ['atk', 'Đánh'], ['dodge', 'Né lăn'], ['hit', 'Trúng đòn'], ['icon', 'Ô đồ và đồ rơi']],
-      'trang-phuc': [['idle', 'Đứng'], ['run', 'Chạy'], ['atk', 'Đánh'], ['dodge', 'Né lăn'], ['hit', 'Trúng đòn'], ['icon', 'Ô đồ và đồ rơi']],
+      'vu-khi': [['idle', 'Đứng'], ['run', 'Chạy'], ['atk', 'Đánh'], ['dodge', 'Né lăn'], ['hit', 'Trúng đòn'], ['tam', 'Tám hướng'], ['icon', 'Ô đồ và đồ rơi']],
+      'trang-phuc': [['idle', 'Đứng'], ['run', 'Chạy'], ['atk', 'Đánh'], ['dodge', 'Né lăn'], ['hit', 'Trúng đòn'], ['ba', 'Đứng · Đi · Đánh'], ['icon', 'Ô đồ và đồ rơi']],
       'vat-pham': [['roi', 'Rơi trên sàn'], ['icon', 'Biểu tượng']],
     };
     function vuKhiThu() { const m = S.muc, d = S.dd || {}; if (m.doi !== 'vu-khi') return { type: 'sword', family: 0, rarity: 0, marks: { fire: 0, poison: 0, ice: 0 }, sharpen: 0 }; return { type: m.vk.loai, family: m.vk.dong, rarity: d.rar | 0, branch: d.he || null, stage: d.he ? d.gd || 1 : 0, marks: { fire: 0, poison: 0, ice: 0 }, sharpen: 0 }; }
@@ -290,6 +292,24 @@
           for (const q2 of [[190, 120, 7], [214, 120, 10], [244, 120, 14]]) { c.fillStyle = '#1a120a'; c.fillRect(q2[0] - q2[2] / 2 - 2, q2[1] - q2[2] / 2 - 2, q2[2] + 4, q2[2] + 4); tu(q2[0], q2[1], q2[2]); if (X.soGoc) { c.fillStyle = '#1a120a'; c.fillRect(q2[0] - q2[2] / 2 - 2, q2[1] + 26 - q2[2] / 2 - 2, q2[2] + 4, q2[2] + 4); goc(q2[0], q2[1] + 26, q2[2]); } }
         }
         return [250, 140, ten === 'icon' ? 'Ô đồ ba cỡ' + (X.soGoc ? ' (hàng dưới là hình gốc)' : '') + ' và đồ rơi nảy trên sàn.' : 'Đồ rơi nảy trên sàn' + (X.soGoc ? ' (bên trái là hình gốc).' : '.')];
+      }
+      if (ten === 'tam' && m.doi === 'vu-khi') { // tám hướng: game xoay vũ khí quanh điểm cầm (chấm đỏ)
+        const o0 = vuKhiThu(), WA2 = G.weaponArt, R = 62;
+        for (let i = 0; i < 8; i++) {
+          const a = i * 45, x = 240 + Math.round(Math.cos(a * Math.PI / 180) * R * 1.7), y = 140 + Math.round(Math.sin(a * Math.PI / 180) * R);
+          c.fillStyle = 'rgba(0,0,0,.28)'; c.fillRect(x - 13, y - 13, 26, 26);
+          WA2.draw(c, o0, x, y, a, 0);
+          c.fillStyle = '#ff3a2a'; c.fillRect(x - 1, y - 1, 2, 2);
+        }
+        return [240, 140, 'Tám hướng game xoay vũ khí (chấm đỏ là điểm cầm tay). Ánh hệ và vệt chém game vẫn tự thêm khi đánh.'];
+      }
+      if (ten === 'ba' && m.doi === 'trang-phuc') { // ba dáng cùng lúc: đứng, đi, đánh
+        const be = D.be || 'smith', of = Object.assign(mucMac(m.tp.o, m.tp.look), { rar: { hat: D.rar, robe: D.rar, back: D.rar, hand: D.rar } }), w0 = vuKhiThu();
+        [['Đứng', { move: false }], ['Đi', { move: true }], ['Đánh', { atk: (t % 0.5) / 0.5 }]].forEach((q, i) => {
+          G.art.hero(c, Object.assign({ x: 190 + i * 50, y: 175, face: X.face, key: be, t, move: false, atk: -1, dodge: -1, weapon: w0, outfit: of }, q[1]));
+          c.fillStyle = '#f1e6c6'; c.font = '7px sans-serif'; c.textAlign = 'center'; c.fillText(q[0], 190 + i * 50, 188);
+        });
+        return [240, 160, 'Món đồ bám theo đầu, thân em bé khi đứng, đi, đánh.'];
       }
       // em bé cầm vũ khí hoặc mặc đồ, làm động tác
       const be = D.be || 'smith', f = X.face, o = { x: 240, y: 175, face: f, key: be, t, move: ten === 'run', atk: ten === 'atk' ? (t % 0.5) / 0.5 : -1, dodge: ten === 'dodge' ? (t % 0.55) / 0.55 : -1, flash: ten === 'hit' && t % 0.6 < 0.2 };
