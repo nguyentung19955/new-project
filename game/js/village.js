@@ -747,6 +747,7 @@
     update(dt) {
       VS.update(dt, true);
       const g = titleGate();
+      if (V.tRank) { if (G.keyP.Escape) V.tRank = false; return; } // đang xem Bảng vàng
       if (g.need) { if (g.ok && (G.keyP.Enter || G.keyP.Space)) G.setScene(G.Village); return; } // vào bằng nút "Vào game"
       // không có mây: chạm chỗ trống để vào; chạm dải nút thì không
       const onBtns = G.downs.some((d) => d.y > 200 && d.y < 236 && d.x > 120 && d.x < 360);
@@ -764,6 +765,14 @@
       ui.text('LINH KHÍ', 240, 78, { size: 40, bold: true, align: 'center', color: GOLD });
       ui.text('Vũ khí lớn lên theo bạn. Yêu tinh học theo bạn.', 240, 100, { size: 10, align: 'center', color: TXT });
       G.syncTaps = [];
+      // Bảng vàng mở ngay trên màn mở đầu (không vào làng), có nút đóng
+      if (V.tRank && G.bangVang) {
+        const px = 80; // giữa màn hình
+        T.panel(px, PY, PW, PH, 'Bảng vàng', { rightPad: 74, noBand: true });
+        if (T.sbtn(px + PW - 66, PY + 3, 60, 17, '✕ Đóng', { size: 8, pad: 5 })) V.tRank = false;
+        G.bangVang.panel(px + (CX - PX), CW);
+        return;
+      }
       const { CL, need, ok } = titleGate();
       if (CL && CL.online() && CL.isGuest()) { // nút Đăng nhập chạy ngay trong lúc chạm để Safari không chặn cửa sổ Google
         if (need && !ok) G.syncTaps.push({ x: 150, y: 150, w: 180, h: 30, fn: () => titleLogin(CL) });
@@ -784,7 +793,7 @@
         const on = CL.online(), guest = CL.isGuest();
         if (!need || ok) {
           if (T.btn(126, 206, 112, 24, on && !guest ? '✓ ' + String(CL.who()).slice(0, 14) : 'Đăng nhập Google', { size: 8.5, primary: on && guest, disabled: !on || !guest })) titleLogin(CL);
-          if (T.btn(242, 206, 112, 24, '🏆 Bảng vàng', { size: 8.5, disabled: !PANELS.rank })) { G.setScene(G.Village); V.dtab = 'rank'; open('do'); }
+          if (T.btn(242, 206, 112, 24, '🏆 Bảng vàng', { size: 8.5, disabled: !G.bangVang })) { V.tRank = true; G.bangVang.reload && G.bangVang.reload(); }
         }
         if (CL.gMsg) { V.tMsg = CL.gMsg; V.tMsgT = 8; CL.gMsg = ''; }
         if (V.tMsgT > 0) V.tMsgT -= 1 / 60;
