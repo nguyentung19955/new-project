@@ -66,6 +66,37 @@ Bấm **Tải về `<mã>.sprite.json`**, rồi gửi tệp đó cho Claude (xem
 
 ![](buoc-5-xuat-tep.png)
 
+## Vũ khí, trang phục, vật phẩm
+
+Cũng 5 bước như quái, chỉ khác bước 3 và 4. Trong danh sách bước 1, kéo xuống sẽ thấy các nhóm **Vũ khí** (Kiếm, Cung, Giáo, Búa, mỗi loại 10 dòng), **Trang phục** (Mũ, Áo, Đồ đeo lưng, Bùa và vật cầm tay, Dấu mặt nạ, Cánh) và **Vật phẩm rơi ra** (vàng, bình máu, linh khí ba hệ, quặng, đá tôi, nguyên liệu, mảnh trùm). Prompt để nhờ AI vẽ có sẵn ở [PROMPT-AI.md](PROMPT-AI.md).
+
+![](do-1-chon-vu-khi.png)
+
+**Vũ khí**
+- Vẽ kiếm, giáo, búa **dựng đứng, mũi lên trên, chuôi ở dưới**. Vẽ cung **dựng đứng, bụng cung quay sang phải**.
+- Bước 3: kéo **hình thoi đỏ** vào chỗ tay cầm, **chấm vàng** vào mũi. Cung: bật "Có dây cung", kéo hai chấm xanh vào hai đầu dây; game tự vẽ dây và mũi tên khi giương.
+- "Áp dụng cho": **Cả dòng** (mọi hệ, mọi giai đoạn dùng một hình) hoặc một hệ (Lửa, Độc, Băng) và giai đoạn (Mầm, Thành hình, Thức tỉnh) để vũ khí đổi hình khi thức tỉnh. Mỗi lựa chọn là một tệp riêng.
+- Bước 4: xem em bé đứng, chạy, đánh, né, trúng đòn với vũ khí; xem ô đồ và đồ rơi; thử bậc Lam, Tím, Vàng (viền đổi màu bậc).
+- Đừng vẽ mắt quá nhỏ: game không vẽ thêm mắt cho vũ khí tự vẽ.
+
+![](do-2-diem-cam.png)
+![](do-vu-khi-tren-tay.gif)
+
+**Trang phục**
+- Vẽ riêng món đồ (không vẽ em bé), nhìn ngang, quay sang phải. Cánh: vẽ **một bên cánh**, gốc cánh ở góc dưới bên phải; game tự vẽ cánh xa và cho cánh vỗ.
+- Bước 3: kéo món đồ trên em bé bên phải cho vừa (nút mũi tên để nhích từng điểm ảnh). Em bé bên trái mặc đồ gốc để so. Mũ có "Che cả mặt"; bùa chọn "Bùa đeo hông" hoặc "Vật cầm tay"; áo có "Có tay áo".
+- Đồ tự vẽ tự bám theo đầu, thân em bé khi chạy, đánh, lăn né. Ô đồ trong Hành trang và đồ rơi cũng đổi theo.
+
+![](do-4-dat-len-nguoi.png)
+![](do-5-mac-thu.png)
+
+**Vật phẩm**
+- Hình rất nhỏ (khoảng 14 đến 18 điểm ảnh): vẽ khối đơn giản, màu tương phản. Không có bước 3.
+- Đổi cả đồ rơi trên sàn lẫn biểu tượng tài nguyên trên giao diện (dải trên cùng, giá tiền).
+
+![](do-6-vat-pham.png)
+![](do-7-xem-trong-game.png)
+
 ## Động tác mẫu
 | Quái bốn chân tự vẽ | Em bé tự vẽ |
 |---|---|

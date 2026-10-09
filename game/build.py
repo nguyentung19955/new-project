@@ -88,9 +88,11 @@ def main():
 CUSTOM = os.path.join(ROOT, 'art', 'custom')
 TOOL = os.path.join(os.path.dirname(ROOT), 'tools', 'xuong-sprite')
 # Mã game mà công cụ cần để vẽ hình gốc (quái, em bé, nền phòng) và vẽ hình tự làm giống hệt trong game.
-TOOL_GAME_JS = ['js/data.js', 'js/art.js', 'js/weapon_art.js', 'js/hero_art.js', 'js/hero_tinhlinh.js', 'js/monster_art.js', 'js/room_art.js', 'js/sprite_custom.js']
-TOOL_JS = ['xu-ly-anh.js', 'khung.js', 'giao-dien.js']
-RUNTIME_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'vung', 'thay_cho', 'tam', 'khung_rong', 'khung_cao', 'goc', 'rong', 'cao', 'bong', 'dong_tac')
+TOOL_GAME_JS = ['js/data.js', 'js/art.js', 'js/weapon_art.js', 'js/hero_art.js', 'js/hero_tinhlinh.js', 'js/monster_art.js', 'js/room_art.js', 'js/outfit.js', 'js/sprite_custom.js']
+TOOL_JS = ['xu-ly-anh.js', 'khung.js', 'do.js', 'giao-dien.js']
+RUNTIME_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'vung', 'thay_cho', 'tam', 'khung_rong', 'khung_cao', 'goc', 'rong', 'cao', 'bong', 'dong_tac',
+                'anh', 'vu_khi', 'trang_phuc', 'vat_pham')
+DO_LOAI = ('vu-khi', 'trang-phuc', 'vat-pham')  # đồ: một ảnh đứng yên, game tự xoay và đặt theo người
 SHIM = '''window.G = window.G || {};
 (function (G) {
   G.rnd = Math.random; G.rr = (a, b) => a + G.rnd() * (b - a); G.ri = (a, b) => Math.floor(G.rr(a, b + 1)); G.pick = (a) => a[Math.floor(G.rnd() * a.length)];
@@ -116,6 +118,13 @@ def custom_sprites():
         ma = t.get('ma')
         if t.get('loai') != 'linh-khi-sprite' or not isinstance(ma, str) or not re.match(r'^[A-Za-z0-9_-]{1,40}$', ma):
             sys.exit('art/custom/%s không phải tệp của Xưởng Sprite (thiếu loai hoặc mã)' % name)
+        if t.get('doi_tuong') in DO_LOAI:
+            if not re.match(r'^data:image/png;base64,[A-Za-z0-9+/=]+$', str(t.get('anh', ''))):
+                sys.exit('art/custom/%s thiếu ảnh PNG của món đồ' % name)
+            if not isinstance(t.get({'vu-khi': 'vu_khi', 'trang-phuc': 'trang_phuc', 'vat-pham': 'vat_pham'}[t['doi_tuong']]), (dict, str)):
+                sys.exit('art/custom/%s thiếu thông số món đồ' % name)
+            out.append({k: t[k] for k in RUNTIME_KEYS if k in t and k not in ('tam', 'dong_tac')})
+            continue
         if not re.match(r'^data:image/png;base64,[A-Za-z0-9+/=]+$', str(t.get('tam', ''))):
             sys.exit('art/custom/%s thiếu tấm sprite PNG' % name)
         if not isinstance(t.get('dong_tac'), dict) or 'idle' not in t['dong_tac']:

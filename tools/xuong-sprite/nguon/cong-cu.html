@@ -253,6 +253,37 @@
       <div class="san" id="san3"><canvas id="cv3"></canvas><div class="goi-y" id="goiY3"></div></div>
     </div>
     <div class="bang">
+     <div id="bang3Vk" class="an">
+      <h3>Điểm cầm và mũi</h3>
+      <p class="ghi">Kéo <b>hình thoi đỏ</b> vào chỗ bàn tay cầm. Kéo <b>chấm vàng</b> vào mũi vũ khí (cung: kéo ra phía trước, phía bụng cung). Game xoay vũ khí quanh điểm cầm.</p>
+      <div class="dong" id="dongDay"><label><input type="checkbox" id="coDay"> Có dây cung (game vẽ dây và mũi tên khi giương)</label></div>
+      <p class="ghi" id="ghiDay">Hai chấm xanh là hai đầu dây cung.</p>
+      <div class="khoi">
+        <h3>Áp dụng cho</h3>
+        <p class="ghi">Vũ khí sống đổi hình khi thức tỉnh theo hệ. "Cả dòng" là mọi hệ, mọi giai đoạn dùng hình này. Muốn từng giai đoạn một hình thì làm thêm tệp cho hệ và giai đoạn đó.</p>
+        <div class="chip-nhom" id="dsHe"></div>
+        <div class="chip-nhom" id="dsGd" style="margin-top:6px"></div>
+      </div>
+      <div class="khoi dong"><button class="nut" id="nutSang4b" type="button">Tiếp: xem trên tay em bé ▶</button></div>
+     </div>
+     <div id="bang3Tp" class="an">
+      <h3>Đặt lên người</h3>
+      <p class="ghi">Kéo món đồ trên em bé bên phải cho vừa chỗ. Bấm mũi tên để nhích từng điểm ảnh. Em bé bên trái mặc đồ gốc để so.</p>
+      <div class="chip-nhom" id="dsNhich">
+        <button class="chip" data-nhich="-1,0" type="button">◀</button><button class="chip" data-nhich="0,-1" type="button">▲</button>
+        <button class="chip" data-nhich="0,1" type="button">▼</button><button class="chip" data-nhich="1,0" type="button">▶</button>
+        <button class="chip" id="nutDatLaiCho" type="button">Về chỗ mặc định</button>
+      </div>
+      <div class="dong" id="dongLop"><label><input type="checkbox" id="truocMat"> Che cả mặt (vẽ trước mặt nạ)</label></div>
+      <div class="chip-nhom" id="dongKieu" style="margin:6px 0">
+        <button class="chip chon" data-kieu-tay="bua" type="button">Bùa đeo hông</button>
+        <button class="chip" data-kieu-tay="cam" type="button">Vật cầm tay</button>
+      </div>
+      <div class="dong" id="dongTayAo"><label><input type="checkbox" id="tayAo" checked> Có tay áo (màu theo áo)</label></div>
+      <div class="khoi"><h3>Em bé</h3><div class="chip-nhom" id="dsBe3"></div></div>
+      <div class="khoi dong"><button class="nut" id="nutSang4c" type="button">Tiếp: xem chuyển động ▶</button></div>
+     </div>
+     <div id="bang3Quai">
       <h3>Mẫu khung</h3>
       <p class="ghi" id="goiYMau"></p>
       <div class="chip-nhom" id="dsMau"></div>
@@ -272,6 +303,7 @@
         <div class="dong"><label><input type="checkbox" id="hienMau" checked> Hiện màu bộ phận</label></div>
       </div>
       <div class="khoi dong"><button class="nut" id="nutSang4" type="button">Tiếp: xem chuyển động ▶</button></div>
+     </div>
     </div>
   </section>
 
@@ -294,7 +326,13 @@
         <button class="chip chon" data-zoom="2" type="button">×2</button>
         <button class="chip" data-zoom="3" type="button">×3</button>
       </div>
-      <div class="khoi">
+      <div class="khoi an" id="khoiBac">
+        <h3>Bậc</h3>
+        <div class="chip-nhom" id="dsBac"></div>
+        <p class="ghi">Đồ bậc Lam, Tím, Vàng có viền màu bậc.</p>
+      </div>
+      <div class="khoi an" id="khoiBe4"><h3>Em bé</h3><div class="chip-nhom" id="dsBe4"></div></div>
+      <div class="khoi" id="khoiChinhDT">
         <h3 id="tenDongTac">Đứng thở</h3>
         <div class="truot"><span>Biên độ (mạnh nhẹ)</span><output id="oBien">100%</output><input type="range" id="bien" min="0" max="200" value="100"></div>
         <div class="truot" id="dongToc"><span>Tốc độ</span><output id="oToc">100%</output><input type="range" id="toc" min="40" max="250" value="100"></div>

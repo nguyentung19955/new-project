@@ -24,11 +24,28 @@
     for (const k of G.HKEYS) { s.heroes[k].unlocked = true; s.heroes[k].lvl = 12; }
     G.save = s;
   }
+  const DO = { 'vu-khi': 1, 'trang-phuc': 1, 'vat-pham': 1 };
+  function thaVatPham() { // vật phẩm: thả mấy món quanh em bé
+    const W = G.getWorld && G.getWorld(), S = G.getRun && G.getRun(); if (!W || !S || !G.doRoi) return;
+    const k = tep.vat_pham, it = /^linhkhi-/.test(k) ? { kind: 'linhkhi', el: k.split('-')[1] } : { kind: k };
+    for (let i = 0; i < 4; i++) { const o = G.doRoi.tha(W, S.P.x + 30 + i * 12, S.P.y - 10 + (i % 2) * 20, it); if (o) o.got = null; }
+  }
+  // Em bé mặc món đồ tự vẽ: món có trong kho đồ thì thêm và mặc; đồ khởi đầu của em bé thì chọn em bé có món đó;
+  // còn lại (không ai mặc) thì cho hình tự vẽ tạm thay hình khởi đầu của em bé để xem.
+  function macDo(t) {
+    const sv = G.save, O = G.outfit, SLOT = { hats: 'hat', robes: 'robe', backs: 'back', hands: 'hand', wings: 'wing', masks: 'mask' }, slot = SLOT[t.o];
+    if (O && slot !== 'mask') for (const k in O.ITEMS) { const T = O.ITEMS[k]; if (T.slot === slot && T.look === t.look) { const it = O.add(sv, k, 1, { lv: 2, quiet: true }); if (it) O.wear(sv, it); return null; } }
+    const st = G.heroLooks.starter || {};
+    for (const key of G.HKEYS) if (st[key] && st[key][slot] === t.look) { sv.hero = key; return null; }
+    for (const key of G.HKEYS) if (st[key] && st[key][slot]) { sv.hero = key; return st[key][slot]; }
+    return null;
+  }
   function goiQuai() {
     if (!tep) return;
     const W = G.getWorld && G.getWorld(), S = G.getRun && G.getRun();
     if (!W || !S) return;
-    if (tep.doi_tuong === 'em-be') {
+    if (tep.doi_tuong === 'vat-pham') thaVatPham();
+    if (tep.doi_tuong === 'em-be' || DO[tep.doi_tuong]) {
       for (let i = 0; i < 3; i++) { const e = G.spawnEnemy(i === 2 ? 'archer' : 'rusher', G.rr(W.x0 + 90, W.x1), G.rr(W.y0, W.y1), {}); e.inside = true; }
       return;
     }
@@ -40,15 +57,26 @@
   function batDau() {
     if (!tep || !G.scene) return;
     SC.clear();
-    const sp = SC.add(tep);
+    luuThu();
+    let tepDung = tep;
+    if (tep.doi_tuong === 'vu-khi') { // cầm đúng loại, dòng, hệ, giai đoạn của vũ khí tự vẽ
+      const V = tep.vu_khi, sv = G.save; sv.weapons = []; sv.nextId = 1;
+      const w = G.newWeapon(sv, V.loai, V.he ? 3 : 1, { family: V.dong });
+      if (V.he) { w.branch = V.he; w.marks[V.he] = G.MARKS[Math.max(0, (V.gd || 1) - 1)]; }
+      const w2 = G.newWeapon(sv, V.loai === 'bow' ? 'sword' : 'bow', 0, { family: 0 });
+      sv.carry = [w.id, w2.id];
+    } else if (tep.doi_tuong === 'trang-phuc') {
+      const thay = macDo(tep.trang_phuc);
+      if (thay) tepDung = Object.assign({}, tep, { trang_phuc: Object.assign({}, tep.trang_phuc, { look: thay }) });
+    }
+    const sp = SC.add(tepDung);
     if (!sp) { baoLoi('Tệp hỏng: ' + SC.loi.join('; ')); return; }
     let dich = null;
-    if (tep.doi_tuong !== 'em-be') {
+    if (tep.doi_tuong === 'quai') {
       dich = G.monsterArt._defs[tep.ma] ? tep.ma : tep.thay_cho;
       if (dich && dich !== tep.ma) SC.ds[dich] = sp; // quái mới: tạm mượn chỗ của một quái có sẵn
     }
     const v = dich ? vaiCua(dich) : { vai: 'rusher', r: 0 };
-    luuThu();
     if (tep.doi_tuong === 'em-be') { const k = tep.ma.replace(/^em-be-?/, ''); if (G.save.heroes[k]) G.save.hero = k; }
     G.rnd = G.srand(7);
     const r = v ? Math.max(0, v.r) : 0;

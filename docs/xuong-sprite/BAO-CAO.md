@@ -16,6 +16,17 @@
 
 **Đăng**: `.github/workflows/linh-khi-hosting.yml` chép thêm `xuong-sprite.html` và `xuong-sprite-thu.html` lên site. Giữ nguyên bước chặn "còn G.GRIT thì không đăng" và bước dọn giữ 2 bản.
 
+## Đợt 2: vũ khí, trang phục, vật phẩm
+
+- Công cụ có thêm 40 vũ khí (4 loại × 10 dòng, làm được riêng từng hệ và giai đoạn thức tỉnh), toàn bộ trang phục của game (mũ, áo, đồ lưng, bùa và vật cầm tay, dấu mặt nạ, cánh) và 13 vật phẩm rơi ra.
+- Vũ khí: chấm điểm cầm, mũi, hai đầu dây cung; xem trên tay em bé khi đứng, chạy, đánh, né, trúng đòn; ô đồ và đồ rơi; thử bốn bậc.
+- Trang phục: kéo đặt món đồ lên em bé (so với em bé mặc đồ gốc), nhích từng điểm ảnh, chọn lớp, kiểu bùa, tay áo; xem cả bốn em bé.
+- Vật phẩm: xem đồ rơi nảy trên sàn và biểu tượng trên giao diện, so với hình gốc.
+- Xem trong game: cầm đúng vũ khí, mặc đúng món đồ (đồ khởi đầu thì chọn em bé có món đó), thả vật phẩm quanh em bé.
+- Game: `js/sprite_custom.js` thêm phần đồ; sửa nhỏ, không đổi hành vi: `js/hero_tinhlinh.js` có thêm `G.tinhLinh.clearCache()`, `js/do_roi.js` hỏi hình tự vẽ trước khi vẽ đồ rơi và có `G.doRoi.xoaNho()`.
+- [PROMPT-AI.md](PROMPT-AI.md): bộ prompt nhờ AI vẽ (mỗi dòng một ảnh, theo bộ) và các câu giữ AI không vẽ lệch.
+- Bài kiểm tra `xuong_sprite.py` thêm phần đồ: **86/86 mục đạt**.
+
 ## Kiểm tra
 
 - `game/tests/xuong_sprite.py`: **65/65 mục đạt**. Ảnh vẽ tay giả lập trên giấy trắng loang có vết bẩn → tách nền (góc trống, giữ tròng mắt trắng), đúng cỡ, giảm màu, cục tẩy và hoàn tác, mẫu gợi ý, tự đoán đủ bộ phận, kéo khớp và tô bằng chuột, mọi khung đều có hình và có cử động, tốc độ và biên độ, tải về và mở lại tệp, nháp còn sau khi tải lại trang, em bé; xem trong game (quái mới đứng vào chỗ Cua Lính ở Hang biển, bé tự đánh, không ghi bản lưu); bỏ tệp vào `game/art/custom/`, đóng gói, vào game: Heo Rừng Con và em bé dùng hình mới ở mọi cử động, lật gương đúng, chớp trắng, chết mờ dần, quái khác vẫn hình code, thời lượng đòn như cũ, trận 4 giây không lỗi; xoá tệp thì về hình code. Cuối bài thư mục chỉ còn `.gitkeep`.

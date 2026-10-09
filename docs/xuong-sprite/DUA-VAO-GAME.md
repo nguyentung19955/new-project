@@ -20,6 +20,24 @@ Người chơi không thấy công cụ: game không có nút hay màn nào mớ
   - Quái mới (mã chưa có trong game): được thêm vào `G.monsterArt.list` để vẽ được, nhưng chưa xuất hiện trong trận. Muốn cho nó vào trận thì sửa `G.MOB_ART` trong `game/js/data.js` (đặt mã vào vai và vùng mong muốn) và thêm luật nếu cần.
   - Thư mục chỉ có `.gitkeep` thì game y hệt như chưa có công cụ.
 
+## Đồ: vũ khí, trang phục, vật phẩm
+
+Cùng thư mục `game/art/custom/`, cùng cách gửi. Mã tệp cho biết món nào được thay:
+
+| Mã | Thay cho |
+|---|---|
+| `vk-<loại>-<dòng>` (ví dụ `vk-sword-3`) | cả dòng vũ khí đó, mọi hệ, mọi giai đoạn. Loại: `sword` kiếm, `bow` cung, `spear` giáo, `hammer` búa; dòng 0 đến 9 |
+| `vk-<loại>-<dòng>-<hệ>-<giai đoạn>` (ví dụ `vk-bow-0-fire-2`) | riêng hệ `fire`/`poison`/`ice` ở giai đoạn 1 Mầm, 2 Thành hình, 3 Thức tỉnh; có tệp riêng thì dùng tệp riêng, không thì dùng tệp cả dòng |
+| `tp-<ô>-<hình>` (ví dụ `tp-hats-non_la`, `tp-wings-lua`) | một hình trang phục trong `G.heroLooks`: ô `hats`, `robes`, `backs`, `hands`, `masks`, `wings` |
+| `vp-<loại>` (ví dụ `vp-gold`, `vp-potion`, `vp-linhkhi-fire`, `vp-ore`, `vp-stone`, `vp-mat0`, `vp-shard2`) | đồ rơi trên sàn và biểu tượng tài nguyên trên giao diện |
+
+Cách game dùng (`game/js/sprite_custom.js`, chỉ nối vào khi có tệp):
+- **Vũ khí**: `G.weaponArt.draw` và `G.weaponArt.icon` xoay hình quanh điểm cầm theo góc đòn đánh (bước 5 độ, có nhớ), viền đổi màu theo bậc, cung có dây và mũi tên khi giương. Tên, chỉ số, đòn đánh không đổi.
+- **Trang phục**: thay mục tương ứng trong `G.heroLooks`, vẽ vào hệ toạ độ đầu hoặc thân của em bé nên tự bám theo mọi động tác; ô đồ (`G.tinhLinh.itemIcon`) và đồ rơi đổi theo. Chỉ số, bộ, bậc không đổi.
+- **Vật phẩm**: `G.theme.resIcon` và hình đồ rơi (`js/do_roi.js`) dùng hình tự vẽ.
+
+Khoá riêng của tệp đồ: `anh` (ảnh PNG đã có viền), `rong`, `cao`, và một trong `vu_khi` (`loai`, `dong`, `he`, `gd`, `cam` điểm cầm, `mui` mũi, `day` hai đầu dây cung), `trang_phuc` (`o`, `look`, `lech` độ lệch so với gốc đầu/thân/vai, `lop`, `kieu`, `tay_ao`), `vat_pham` (loại).
+
 ## Định dạng tệp `.sprite.json`
 
 | Khoá | Ý nghĩa |

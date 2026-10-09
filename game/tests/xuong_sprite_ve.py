@@ -107,3 +107,45 @@ def ve_nguoi(path, seed=5):
 if __name__ == '__main__':
     out = os.path.dirname(os.path.abspath(__file__))
     print(ve_bon_chan(os.path.join(out, '_thu_bon_chan.png')), ve_nguoi(os.path.join(out, '_thu_nguoi.png')))
+
+
+def ve_kiem(path, seed=7):
+    """Thanh kiếm dựng đứng, mũi lên trên, chuôi ở dưới, có một con mắt (vũ khí sống)."""
+    W, H = 300, 620
+    im = giay(W, H, seed)
+    d = ImageDraw.Draw(im)
+    d.polygon([(150, 30), (196, 110), (196, 420), (104, 420), (104, 110)], fill=INK)
+    d.polygon([(150, 52), (182, 114), (182, 408), (118, 408), (118, 114)], fill=(110, 200, 240))
+    d.polygon([(150, 52), (150, 408), (118, 408), (118, 114)], fill=(190, 235, 255))
+    d.ellipse([122, 200, 178, 256], fill=INK); d.ellipse([130, 208, 170, 248], fill=(255, 255, 255)); d.ellipse([146, 218, 166, 242], fill=INK)
+    d.rectangle([60, 410, 240, 452], fill=INK); d.rectangle([70, 418, 230, 444], fill=(230, 180, 60))
+    d.rectangle([126, 448, 174, 570], fill=INK); d.rectangle([136, 452, 164, 562], fill=(120, 70, 40))
+    d.ellipse([118, 556, 182, 604], fill=INK); d.ellipse([128, 564, 172, 596], fill=(230, 180, 60))
+    im.filter(ImageFilter.GaussianBlur(0.6)).save(path)
+    return path
+
+
+def ve_mu(path, seed=9):
+    """Cái mũ rộng vành màu tím có lông chim, nhìn ngang."""
+    W, H = 520, 360
+    im = giay(W, H, seed)
+    d = ImageDraw.Draw(im)
+    elip(d, [40, 210, 480, 300], (120, 60, 170), 10)
+    d.rectangle([150, 90, 370, 250], fill=INK); d.rectangle([162, 100, 358, 250], fill=(150, 80, 200))
+    d.rectangle([162, 200, 358, 228], fill=(250, 200, 60))
+    net(d, [(330, 110), (380, 40), (420, 20)], 14)
+    d.line([(330, 110), (380, 40), (420, 20)], fill=(240, 90, 80), width=6)
+    im.filter(ImageFilter.GaussianBlur(0.6)).save(path)
+    return path
+
+
+def ve_xu(path, seed=11):
+    """Đồng xu xanh lục có lỗ vuông."""
+    W, H = 360, 360
+    im = giay(W, H, seed)
+    d = ImageDraw.Draw(im)
+    elip(d, [60, 60, 300, 300], (60, 200, 120), 16)
+    d.rectangle([150, 150, 210, 210], fill=INK); d.rectangle([162, 162, 198, 198], fill=(250, 248, 240))
+    d.ellipse([100, 100, 140, 130], fill=(200, 255, 220))
+    im.filter(ImageFilter.GaussianBlur(0.6)).save(path)
+    return path

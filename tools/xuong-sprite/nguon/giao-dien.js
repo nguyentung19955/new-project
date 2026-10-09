@@ -24,6 +24,8 @@
     xem: { goc: true, cu: '', zoom3: 0, che: 'khop', boChon: 0, coTo: 2, ten: 'idle', t: 0, face: 1, nen: true, emBe: true, soGoc: false, lap: true, zoom: 2, lanLuot: false },
   };
   window.XS_S = S; // để bài kiểm tra đọc
+  let XD = null; // phần đồ (do.js): vũ khí, trang phục, vật phẩm
+  const laDo = () => !!(XD && XD.laDo());
 
   // ---------- tiện ích ----------
   let tbHen = 0;
@@ -100,8 +102,9 @@
       const l = nhom(VUNG[v]);
       for (const m of MA.list) if (m.vung === v && !m.tuVe) the(l, { ma: m.id, ten: m.ten, doi: 'quai', vung: v }, (c, x, y) => veQuaiCode(c, m.id, x, y, 0), (LOAI[m.loai] || '') + ' · ' + m.id);
     }
+    for (const n of XD.cacNhom()) { const l = nhom(n.ten); for (const m of n.ds) the(l, m, (c) => XD.veCode(c, m, 130, 100, 64), m.phu); }
     const l4 = nhom('Quái mới (chưa có trong game)');
-    for (const ma of nhap) if (!thongTinGoc(ma) && !/^em-be/.test(ma)) {
+    for (const ma of nhap) if (!thongTinGoc(ma) && !/^(em-be|vk-|tp-|vp-)/.test(ma)) {
       let ten = ma; try { ten = JSON.parse(docMay(NHAP + ma)).ten || ma; } catch (e) { /* bỏ qua */ }
       the(l4, { ma, ten, doi: 'quai', vung: 'moi', moi: true }, () => {}, ma);
     }
@@ -136,13 +139,14 @@
   // ---------- chọn một thứ ----------
   function datLaiCongViec() {
     S.nguon = null; S.sua = null; S.lichSu = []; S.mat = null; S.R = null; S.kh = null; S.tam = null; S.sp = null; S.tamCu = true; S.chiAnh = false;
-    S.dong_tac = {}; S.thay_cho = null;
+    S.dong_tac = {}; S.thay_cho = null; S.dd = null; S._anhDo = null;
+    if (XD) XD.boDangKy();
   }
   async function chonMuc(muc) {
     datLaiCongViec();
     S.muc = muc;
     const g = thongTinGoc(muc.ma);
-    S.tach = { nguong: 40, kieu: 'mep', boDom: true, lat: false, cao: muc.doi === 'em-be' ? 28 : g ? g.h : 36, soMau: 12, vien: true };
+    S.tach = { nguong: 40, kieu: 'mep', boDom: true, lat: false, cao: muc.doi === 'em-be' ? 28 : g ? g.h : XD.laDo(muc) ? XD.caoGoc(muc) : 36, soMau: 12, vien: true };
     if (!muc.vung && g) muc.vung = g.vung;
     const raw = docMay(NHAP + muc.ma);
     if (raw) { try { await khoiPhuc(JSON.parse(raw), true); bao('Đã mở bản nháp đang làm của ' + muc.ten); return; } catch (e) { bao('Bản nháp hỏng, làm mới từ đầu', true); } }
@@ -157,19 +161,23 @@
   function denBuoc(n) {
     if (n >= 2 && !S.muc) return;
     if (n >= 3 && !S.R) { bao('Hãy đưa hình vào trước', true); n = 2; }
+    if (n === 3 && S.muc.doi === 'vat-pham') n = S.buoc === 4 ? 2 : 4; // vật phẩm không cần bước khung
     S.buoc = n;
-    if (n >= 3 && !S.kh) chonMau(XS.goiYMau(S.muc.ma, (thongTinGoc(S.muc.ma) || {}).bay));
+    if (n >= 3 && !S.kh && !laDo()) chonMau(XS.goiYMau(S.muc.ma, (thongTinGoc(S.muc.ma) || {}).bay));
+    if (!laDo()) { $('bang3Vk').classList.add('an'); $('bang3Tp').classList.add('an'); $('bang3Quai').classList.remove('an'); $('khoiChinhDT').classList.remove('an'); $('khoiBac').classList.add('an'); $('khoiBe4').classList.add('an'); for (const id of ['coEmBe', 'lapLai']) $(id).parentNode.classList.remove('an'); }
     for (let i = 1; i <= 5; i++) $('b' + i).classList.toggle('hien', i === n);
     for (const b of document.querySelectorAll('#cacBuoc button')) {
       const k = +b.dataset.b;
-      b.disabled = (k >= 2 && !S.muc) || (k >= 3 && !S.R);
+      b.disabled = (k >= 2 && !S.muc) || (k >= 3 && !S.R) || (k === 3 && S.muc && S.muc.doi === 'vat-pham');
       b.classList.toggle('dang', k === n); b.classList.toggle('xong', k < n);
     }
     if (n === 1) dungDanhSach();
     if (n === 2) { veBuoc2(); }
-    if (n === 3) { if (!S.kh) chonMau(XS.goiYMau(S.muc.ma, (thongTinGoc(S.muc.ma) || {}).bay)); dungBuoc3(); veBuoc3(); }
-    if (n === 4) { dungBuoc4(); lamTam(true); S.xem.t = 0; }
-    if (n === 5) { lamTam(true); dungBuoc5(); veBuoc5(); }
+    if (n === 3 && laDo()) XD.dungBuoc3();
+    else if (n === 3) { if (!S.kh) chonMau(XS.goiYMau(S.muc.ma, (thongTinGoc(S.muc.ma) || {}).bay)); dungBuoc3(); veBuoc3(); }
+    if (n === 4 && laDo()) { XD.dungBuoc4(); S.xem.t = 0; }
+    else if (n === 4) { dungBuoc4(); lamTam(true); S.xem.t = 0; }
+    if (n === 5) { if (!laDo()) lamTam(true); else XD.dangKy(); dungBuoc5(); veBuoc5(); }
     capNhatDau();
   }
   for (const b of document.querySelectorAll('#cacBuoc button')) b.onclick = () => denBuoc(+b.dataset.b);
@@ -184,7 +192,7 @@
     $('boDom').checked = t.boDom; $('latAnh').checked = t.lat; $('vienToi').checked = t.vien;
     for (const b of document.querySelectorAll('[data-kieu]')) b.classList.toggle('chon', b.dataset.kieu === t.kieu);
     const g = S.muc && thongTinGoc(S.muc.ma);
-    $('ghiCo').textContent = S.muc && S.muc.doi === 'em-be' ? 'Em bé trong game cao khoảng 26 đến 31 điểm ảnh (cả mũ).' : g ? 'Quái gốc: rộng ' + g.w + ', cao ' + g.h + ' điểm ảnh.' : 'Quái thường cao khoảng 25 đến 40, tinh anh 45 đến 60, trùm 65 đến 120 điểm ảnh.';
+    $('ghiCo').textContent = laDo() ? 'Hình gốc cao khoảng ' + XD.caoGoc(S.muc) + ' điểm ảnh.' : S.muc && S.muc.doi === 'em-be' ? 'Em bé trong game cao khoảng 26 đến 31 điểm ảnh (cả mũ).' : g ? 'Quái gốc: rộng ' + g.w + ', cao ' + g.h + ' điểm ảnh.' : 'Quái thường cao khoảng 25 đến 40, tinh anh 45 đến 60, trùm 65 đến 120 điểm ảnh.';
     for (const id of ['nguong', 'boDom', 'latAnh', 'caoPx', 'soMau', 'vienToi']) $(id).disabled = S.chiAnh;
     $('vungTha').classList.toggle('an', !!S.nguon || S.chiAnh);
     $('nutSang3').disabled = !S.R;
@@ -201,6 +209,7 @@
   function datHinh(Rmoi) {
     const cu = S.R, kh = S.kh;
     S.R = Rmoi; S.tamCu = true;
+    if (laDo()) { if (Rmoi) { XD.doiCo(); XD.dangKy(); } return; }
     if (!Rmoi || !kh) return;
     if (cu && cu.w === Rmoi.w && cu.h === Rmoi.h) { const bo = kh.bo; for (let i = 0; i < bo.length; i++) if (Rmoi.px[i] && bo[i] === 255) { kh.bo = XS.doiCoBoPhan({ w: cu.w, h: cu.h, bo }, Rmoi, kh.mau, kh.khop); break; } return; }
     const kx = Rmoi.w / (cu ? cu.w : Rmoi.w), ky = Rmoi.h / (cu ? cu.h : Rmoi.h), khop = {};
@@ -266,9 +275,10 @@
     }
     // hình pixel: so cạnh hình code cùng cỡ
     const R = S.R; if (!R) { gy.textContent = 'Chưa có hình: thử giảm ngưỡng tách nền.'; return; }
-    const vien = S.tach.vien ? (S.muc.doi === 'em-be' ? OL_EM_BE : OL_QUAI) : 0, P = XS.noi(R.px, R.w, R.h, 1), px = vien ? XS.themVien(P.px, P.w, P.h, vien) : P.px;
+    const vien = S.tach.vien ? (S.muc.doi === 'em-be' || laDo() ? OL_EM_BE : OL_QUAI) : 0, P = XS.noi(R.px, R.w, R.h, 1), px = vien ? XS.themVien(P.px, P.w, P.h, vien) : P.px;
     const goc = XS.taoCanvas(Math.max(8, R.w * 2 + 8), Math.max(8, R.h + 8)), gc = goc.getContext('2d'); gc.imageSmoothingEnabled = false;
-    if (S.muc.doi === 'em-be') veEmBeCode(gc, S.muc.key, goc.width / 2, goc.height - 3, 0, 1); else if (!S.muc.moi) veQuaiCode(gc, S.muc.ma, goc.width / 2, goc.height - 3, 0, 'idle', 1);
+    if (laDo()) XD.veCode(gc, S.muc, goc.width / 2, goc.height / 2, Math.min(goc.width, goc.height) - 4);
+    else if (S.muc.doi === 'em-be') veEmBeCode(gc, S.muc.key, goc.width / 2, goc.height - 3, 0, 1); else if (!S.muc.moi) veQuaiCode(gc, S.muc.ma, goc.width / 2, goc.height - 3, 0, 'idle', 1);
     const gd = gc.getImageData(0, 0, goc.width, goc.height), gm = new Uint8Array(goc.width * goc.height); for (let i = 0; i < gm.length; i++) gm[i] = gd.data[i * 4 + 3] > 20 ? 1 : 0;
     const gb = XS.khung(gm, goc.width, goc.height);
     const totalW = P.w + (gb ? gb.w + 10 : 0), totalH = Math.max(P.h, gb ? gb.h : 0);
@@ -352,6 +362,7 @@
 
   let bo3 = null;
   function veBuoc3() {
+    if (laDo()) { XD.ve3(); return; }
     const { c, w, h, d } = oCanvas(cv3);
     c.fillStyle = '#0d1c1d'; c.fillRect(0, 0, w, h);
     const R = S.R, kh = S.kh; if (!R || !kh) return;
@@ -389,6 +400,7 @@
     S.tamCu = true; veBuoc3();
   }
   cv3.addEventListener('pointerdown', (e) => {
+    if (XD && XD.nhan3(e)) return;
     if (!bo3 || !S.kh) return;
     cv3.setPointerCapture(e.pointerId);
     const p = toaDo3(e);
@@ -400,10 +412,11 @@
   });
   let dangTo3 = false;
   cv3.addEventListener('pointermove', (e) => {
+    if (XD && XD.keo3(e)) return;
     if (keoKhop) { const p = toaDo3(e); S.kh.khop[keoKhop] = [Math.max(-2, Math.min(S.R.w + 2, p[0])), Math.max(-2, Math.min(S.R.h + 2, p[1]))]; S.tamCu = true; veBuoc3(); }
     else if (dangTo3) to3(e);
   });
-  const tha3 = () => { if (keoKhop || dangTo3) luuNhap(); keoKhop = null; dangTo3 = false; veBuoc3(); };
+  const tha3 = () => { if (XD && XD.tha3()) return; if (keoKhop || dangTo3) luuNhap(); keoKhop = null; dangTo3 = false; veBuoc3(); };
   cv3.addEventListener('pointerup', tha3); cv3.addEventListener('pointercancel', tha3);
 
   // ================= TẤM SPRITE =================
@@ -490,7 +503,18 @@
   function khung4(now) {
     requestAnimationFrame(khung4);
     const dt = Math.min(0.1, (now - tPrev) / 1000 || 0); tPrev = now;
-    if (S.buoc !== 4 || !S.sp) return;
+    if (S.buoc !== 4 || (!S.sp && !laDo())) return;
+    if (laDo()) {
+      S.xem.t += dt; G.time = now / 1000;
+      const c = buf4.getContext('2d'); c.imageSmoothingEnabled = false;
+      const r = XD.ve4(c, S.xem.t, phong(S.muc.vung || 'rung')), X = S.xem;
+      const { c: o, w, h } = oCanvas(cv4); o.fillStyle = '#000'; o.fillRect(0, 0, w, h);
+      const vw = 480 / X.zoom, vh = 270 / X.zoom, cx = Math.max(vw / 2, Math.min(480 - vw / 2, r[0])), cy = Math.max(vh / 2, Math.min(270 - vh / 2, r[1]));
+      const k = Math.min(w / vw, h / vh), dw = vw * k, dh = vh * k;
+      o.drawImage(buf4, cx - vw / 2, cy - vh / 2, vw, vh, (w - dw) / 2, (h - dh) / 2, dw, dh);
+      $('goiY4').textContent = r[2];
+      return;
+    }
     const X = S.xem, ten = X.ten, a = S.sp.dt[ten] || S.sp.dt.idle, lap = XS.DONG_TAC[ten].lap;
     X.t += dt;
     const goc = gocDongTac(S.muc), D = lap ? a.giay : (S.muc.doi === 'em-be' ? a.giay : (goc && goc[ten]) || a.giay);
@@ -520,8 +544,8 @@
   // ================= BƯỚC 5: xuất tệp =================
   const cv5 = $('cv5');
   function dungBuoc5() {
-    const moi = !!S.muc.moi;
-    $('khoiThayCho').classList.toggle('an', !moi || S.muc.doi === 'em-be');
+    const moi = !!S.muc.moi && S.muc.doi === 'quai';
+    $('khoiThayCho').classList.toggle('an', !moi);
     if (moi) {
       const sel = $('thayCho'); sel.innerHTML = '';
       const mau = S.kh && S.kh.mau;
@@ -538,6 +562,7 @@
       sel.value = S.thay_cho;
       sel.onchange = () => { S.thay_cho = sel.value; luuNhap(); };
     }
+    if (laDo()) S.muc.ma = XD.maHienTai();
     $('tenTep').textContent = S.muc.ma + '.sprite.json';
     $('nutTaiVe').textContent = 'Tải về ' + S.muc.ma + '.sprite.json';
     $('nutTaiAnh').textContent = 'Tải ảnh ' + S.muc.ma + '.png';
@@ -545,6 +570,7 @@
   function veBuoc5() {
     const { c, w, h, d } = oCanvas(cv5);
     c.fillStyle = '#0d1c1d'; c.fillRect(0, 0, w, h);
+    if (laDo()) { $('tomTat').textContent = XD.ve5(c, w, h, d); $('goiY5').textContent = 'Bên trái: hình món đồ. Bên phải: trong ô đồ.'; return; }
     const T = S.tam; if (!T) return;
     const nh = Object.keys(T.dong_tac).length, nmax = T.w / T.fw, lw = 110 * d;
     let z = Math.min((w - lw - 20 * d) / T.w, (h - 20 * d) / T.h); z = z >= 1 ? Math.floor(z) : z;
@@ -559,6 +585,13 @@
   }
   // Nội dung tệp .sprite.json. Phần cong_cu chỉ để mở lại sửa tiếp (game không dùng).
   function taoTep(coTam, coNguon) {
+    if (laDo()) {
+      const R = S.R, t = Object.assign({ loai: 'linh-khi-sprite', phien_ban: 1, vung: S.muc.vung || 'rung' }, R ? XD.phanTep(false) : { ma: S.muc.ma, ten: S.muc.ten, doi_tuong: S.muc.doi });
+      t.cong_cu = { anh: R ? XS.pngCua(R.w, R.h, R.px) : null, rong: R ? R.w : 0, cao: R ? R.h : 0, tach: S.tach, diem: XD.phanSua(),
+        nguon: coNguon && S.nguon ? XS.pngCua(S.nguon.w, S.nguon.h, S.nguon.px) : null, sua: coNguon && S.sua ? XS.nenDoan(S.sua) : null };
+      t.ngay = new Date().toISOString().slice(0, 10);
+      return t;
+    }
     const T = coTam ? lamTam(true) : null, R = S.R, m = S.muc;
     const tep = { loai: 'linh-khi-sprite', phien_ban: 1, ma: m.ma, ten: m.ten, doi_tuong: m.doi, vung: m.vung || (thongTinGoc(m.ma) || {}).vung || 'moi' };
     if (m.moi && m.doi === 'quai') tep.thay_cho = S.thay_cho || null;
@@ -576,13 +609,14 @@
   }
   function tepChoGame() { const t = taoTep(true, false); delete t.cong_cu; return t; }
   $('nutTaiVe').onclick = () => {
-    if (!S.R || !S.kh) { bao('Chưa có hình để xuất', true); return; }
+    if (!S.R || (!S.kh && !laDo())) { bao('Chưa có hình để xuất', true); return; }
     const tep = taoTep(true, true);
     taiXuong(S.muc.ma + '.sprite.json', new Blob([JSON.stringify(tep)], { type: 'application/json' }));
     luuNhap(true);
     bao('Đã tải về ' + S.muc.ma + '.sprite.json');
   };
   $('nutTaiAnh').onclick = () => {
+    if (laDo()) { const A = XD.anh(); if (A) A.cv.toBlob((b) => { if (b) taiXuong(S.muc.ma + '.png', b); }, 'image/png'); return; }
     const T = lamTam(true); if (!T) return;
     XS.raCanvas(T.w, T.h, T.px).toBlob((b) => { if (b) taiXuong(S.muc.ma + '.png', b); }, 'image/png');
   };
@@ -604,12 +638,13 @@
   }
   async function khoiPhuc(tep, tuNhap) {
     if (!tep || tep.loai !== 'linh-khi-sprite' || typeof tep.ma !== 'string') throw new Error('Không phải tệp của Xưởng Sprite');
-    const g = thongTinGoc(tep.ma), em = EM_BE.find((e) => e.ma === tep.ma);
+    const g = thongTinGoc(tep.ma), em = EM_BE.find((e) => e.ma === tep.ma), doMoi = /^(vu-khi|trang-phuc|vat-pham)$/.test(tep.doi_tuong);
     datLaiCongViec();
-    S.muc = em ? { ma: em.ma, ten: em.ten, doi: 'em-be', key: em.key, vung: 'rung' } : { ma: tep.ma, ten: tep.ten || (g && g.ten) || tep.ma, doi: 'quai', vung: g ? g.vung : (tep.vung || 'rung'), moi: !g };
+    if (doMoi) XD.khoiPhuc(tep, tep.cong_cu || {});
+    else S.muc = em ? { ma: em.ma, ten: em.ten, doi: 'em-be', key: em.key, vung: 'rung' } : { ma: tep.ma, ten: tep.ten || (g && g.ten) || tep.ma, doi: 'quai', vung: g ? g.vung : (tep.vung || 'rung'), moi: !g };
     if (S.muc.vung === 'moi') S.muc.vung = 'rung';
     const cc = tep.cong_cu || {};
-    S.tach = Object.assign({ nguong: 40, kieu: 'mep', boDom: true, lat: false, cao: g ? g.h : 36, soMau: 12, vien: true }, cc.tach || {});
+    S.tach = Object.assign({ nguong: 40, kieu: 'mep', boDom: true, lat: false, cao: g ? g.h : doMoi ? XD.caoGoc(S.muc) : 36, soMau: 12, vien: true }, cc.tach || {});
     S.dong_tac = cc.chinh || {};
     if (!cc.chinh && tep.dong_tac) for (const k in tep.dong_tac) S.dong_tac[k] = { bien: tep.dong_tac[k].bien, toc: tep.dong_tac[k].toc };
     S.thay_cho = tep.thay_cho || null;
@@ -622,6 +657,7 @@
     } else S.chiAnh = !!R;
     if (!R && tep.tam) throw new Error('Tệp chỉ có tấm sprite, thiếu phần để sửa tiếp');
     S.R = R;
+    if (doMoi) { if (R) { if (!S.dd || !S.dd.w) XD.datMacDinh(); XD.dangKy(); } hienSlider(); capNhatDau(); if (!tuNhap) luuNhap(true); denBuoc(R ? 4 : 2); return; }
     if (R && cc.mau_xuong && XS.MAU[cc.mau_xuong] && cc.khop) S.kh = { mau: cc.mau_xuong, khop: cc.khop, bo: cc.bo_phan ? XS.moDoan(cc.bo_phan, R.w * R.h) : XS.tuDoan(R, cc.mau_xuong, cc.khop) };
     S.tamCu = true;
     hienSlider(); capNhatDau();
@@ -638,7 +674,7 @@
   let tuDanh = false;
   function guiGame(msg) { try { $('khungGame').contentWindow.postMessage(msg, '*'); } catch (e) { /* bỏ qua */ } }
   function moGame() {
-    if (!S.R || !S.kh) { bao('Chưa có hình', true); return; }
+    if (!S.R || (!S.kh && !laDo())) { bao('Chưa có hình', true); return; }
     if (S.muc.moi && S.muc.doi === 'quai' && !S.thay_cho) { dungBuoc5(); }
     const tep = tepChoGame();
     luuMay(THU, JSON.stringify(tep)); // trang thử đọc khi mở (nếu cùng nguồn), còn lại gửi qua postMessage
@@ -664,6 +700,7 @@
   // Cho bài kiểm tra gọi thẳng
   window.XS_UI = { denBuoc, chonMuc, nhanAnh, khoiPhuc, taoTep, tepChoGame, lamTam, chonMau, datDongTac, moGame, luuNhap };
 
+  XD = XS.taoDo({ S, $, bao, cho, oCanvas, oCo, chonChip, luuNhap: () => luuNhap(), denBuoc: (n) => denBuoc(n), capNhatDau: () => capNhatDau() });
   dungDanhSach();
   denBuoc(1);
 })();

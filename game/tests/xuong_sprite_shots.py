@@ -15,7 +15,7 @@ from playwright.sync_api import sync_playwright
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from xuong_sprite_ve import ve_bon_chan, ve_nguoi  # noqa: E402
+from xuong_sprite_ve import ve_bon_chan, ve_nguoi, ve_kiem, ve_mu, ve_xu  # noqa: E402
 
 GAME = os.path.dirname(HERE)
 REPO = os.path.dirname(GAME)
@@ -66,6 +66,46 @@ def gif_dong_tac(tep, name, nen=(23, 54, 58), k=4):
             frames.append(frames[-1]); ms.append(120)
     frames[0].save(os.path.join(OUT, name), save_all=True, append_images=frames[1:], duration=ms, loop=0, disposal=2)
     print('gif', name)
+
+
+def shots_do(pw):
+    """Ảnh phần đồ: vũ khí, trang phục, vật phẩm."""
+    kiem, mu, xu = ve_kiem(os.path.join(OUT, 've-tay-mau-kiem.png')), ve_mu(os.path.join(OUT, 've-tay-mau-mu.png')), ve_xu(os.path.join(OUT, 've-tay-mau-xu.png'))
+    b = pw.chromium.launch(); pg = b.new_page(viewport={'width': 1280, 'height': 760})
+    pg.goto(TOOL); pg.wait_for_function('window.XS_UI'); pg.wait_for_timeout(400)
+    pg.evaluate("document.querySelector('.the[data-ma=\"vk-sword-0\"]').scrollIntoView({ block: 'center' })"); pg.wait_for_timeout(300)
+    shot(pg, 'do-1-chon-vu-khi.png')
+    pg.click('.the[data-ma="vk-sword-0"]'); pg.set_input_files('#chonAnh', kiem); pg.wait_for_function('XS_S.R'); pg.wait_for_timeout(2600)
+    pg.evaluate('XS_UI.denBuoc(3)'); pg.wait_for_timeout(300); shot(pg, 'do-2-diem-cam.png')
+    pg.evaluate('XS_UI.denBuoc(4)'); pg.click('#dsDongTac [data-dt="atk"]'); pg.click('[data-zoom="3"]')
+    fr, ms = [], []
+    for dt, n in [('idle', 6), ('run', 8), ('atk', 10), ('dodge', 8)]:
+        pg.click('#dsDongTac [data-dt="%s"]' % dt)
+        for _ in range(n):
+            pg.wait_for_timeout(60)
+            im = Image.open(io.BytesIO(pg.locator('#cv4').screenshot())).convert('RGB')
+            fr.append(im.resize((im.width // 2, im.height // 2), Image.NEAREST).convert('P', palette=Image.ADAPTIVE)); ms.append(80)
+    fr[0].save(os.path.join(OUT, 'do-vu-khi-tren-tay.gif'), save_all=True, append_images=fr[1:], duration=ms, loop=0)
+    print('gif do-vu-khi-tren-tay.gif')
+    pg.click('#dsDongTac [data-dt="icon"]'); pg.click('[data-zoom="2"]'); pg.wait_for_timeout(400); shot(pg, 'do-3-o-do.png')
+    pg.click('#cacBuoc [data-b="1"]'); pg.click('.the[data-ma="tp-hats-non_la"]'); pg.set_input_files('#chonAnh', mu); pg.wait_for_function('XS_S.R && XS_S.muc.ma === "tp-hats-non_la"'); pg.wait_for_timeout(300)
+    pg.evaluate('XS_UI.denBuoc(3)'); pg.wait_for_timeout(300); shot(pg, 'do-4-dat-len-nguoi.png')
+    pg.evaluate('XS_UI.denBuoc(4)'); pg.click('#dsDongTac [data-dt="run"]'); pg.click('#coGoc'); pg.click('[data-zoom="3"]'); pg.wait_for_timeout(400); shot(pg, 'do-5-mac-thu.png')
+    pg.click('#coGoc')
+    pg.click('#cacBuoc [data-b="1"]'); pg.click('.the[data-ma="vp-gold"]'); pg.set_input_files('#chonAnh', xu); pg.wait_for_function('XS_S.R && XS_S.muc.ma === "vp-gold"'); pg.wait_for_timeout(300)
+    pg.evaluate('XS_UI.denBuoc(4)'); pg.click('#dsDongTac [data-dt="icon"]'); pg.click('#coGoc'); pg.wait_for_timeout(400); shot(pg, 'do-6-vat-pham.png')
+    pg.evaluate('XS_UI.denBuoc(1)'); pg.click('.the[data-ma="vk-sword-0"]'); pg.wait_for_timeout(300); pg.evaluate('XS_UI.denBuoc(5)')
+    pg.click('#nutXemGame5')
+    for _ in range(60):
+        pg.wait_for_timeout(150)
+        f = next((x for x in pg.frames if 'xuong-sprite-thu' in x.url), None)
+        try:
+            if f and f.evaluate('!!(window.G && G.scene === G.StageScene)'):
+                break
+        except Exception:
+            pass
+    pg.click('#nutTuDanh'); pg.wait_for_timeout(2600); shot(pg, 'do-7-xem-trong-game.png')
+    b.close()
 
 
 def main():
@@ -139,6 +179,7 @@ def main():
             shot(pg, 'dien-thoai-ngang.png')
             b.close()
 
+            shots_do(pw)
             # trước / sau trong phòng game
             def phong(pg2):
                 pg2.evaluate('window.requestAnimationFrame = () => 0')

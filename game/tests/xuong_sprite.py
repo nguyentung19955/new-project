@@ -20,7 +20,7 @@ from playwright.sync_api import sync_playwright
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from xuong_sprite_ve import ve_bon_chan, ve_nguoi  # noqa: E402
+from xuong_sprite_ve import ve_bon_chan, ve_nguoi, ve_kiem, ve_mu, ve_xu  # noqa: E402
 
 GAME = os.path.dirname(HERE)
 REPO = os.path.dirname(GAME)
@@ -75,6 +75,91 @@ LAT = """([id, o]) => { const W = 260, H = 200, ve = (f) => { const cv = documen
   const a = ve(1), b = ve(-1); let best = 0, n = 0; for (const k of [-1, 0, 1]) { let same = 0; n = 0; for (let y = 0; y < H; y++) for (let x = 1; x < W - 1; x++) { const i = (y * W + x) * 4, j = (y * W + (259 - x + k)) * 4; if (a[i + 3] > 20) { n++; if (b[j + 3] > 20 && Math.abs(a[i] - b[j]) < 4) same++; } } best = Math.max(best, same); } return [n, best]; }"""
 
 
+def kiem_do(pw, tmp):
+    """Đồ: vũ khí, trang phục, vật phẩm từ công cụ vào game."""
+    kiem, mu, xu = ve_kiem(os.path.join(tmp, 'kiem.png')), ve_mu(os.path.join(tmp, 'mu.png')), ve_xu(os.path.join(tmp, 'xu.png'))
+    b, ctx, pg, errs = mo(pw, TOOL)
+    pg.wait_for_function('window.XS_UI')
+    ma = pg.eval_on_selector_all('#dsChon .the[data-ma]', 'e => e.map(x => x.dataset.ma)')
+    n_tp = pg.evaluate("['hats','robes','backs','hands','masks','wings'].reduce((a, o) => a + Object.keys(G.heroLooks[o]).length, 0)")
+    ok('Danh sách có 40 vũ khí (4 loại x 10 dòng)', len([m for m in ma if m.startswith('vk-')]) == 40)
+    ok('Danh sách có mọi trang phục của game', len([m for m in ma if m.startswith('tp-')]) == n_tp, (n_tp, len([m for m in ma if m.startswith('tp-')])))
+    ok('Danh sách có 13 vật phẩm rơi ra', len([m for m in ma if m.startswith('vp-')]) == 13)
+    tep = {}
+    # --- vũ khí ---
+    pg.click('.the[data-ma="vk-sword-0"]'); pg.set_input_files('#chonAnh', kiem); pg.wait_for_function('XS_S.R')
+    pg.evaluate('XS_UI.denBuoc(3)'); pg.wait_for_timeout(200)
+    d = pg.evaluate('XS_S.dd')
+    ok('Vũ khí: điểm cầm ở chuôi (dưới), mũi ở trên', d['cam'][1] > d['mui'][1] + 10, d)
+    box = pg.locator('#cv3').bounding_box()
+    z = pg.evaluate("""() => { const cv = document.getElementById('cv3'), A = XS_S._anhDo, dp = devicePixelRatio; const z = Math.max(1, Math.floor(Math.min((cv.width - 40 * dp) / A.w, (cv.height - 40 * dp) / A.h))); return [z, Math.round((cv.width - A.w * z) / 2), Math.round((cv.height - A.h * z) / 2), dp]; }""")
+    sx = box['x'] + (z[1] + d['cam'][0] * z[0]) / z[3]; sy = box['y'] + (z[2] + d['cam'][1] * z[0]) / z[3]
+    pg.mouse.move(sx, sy); pg.mouse.down(); pg.mouse.move(sx, sy - 15, steps=4); pg.mouse.up()
+    ok('Kéo điểm cầm bằng chuột', pg.evaluate('XS_S.dd.cam[1]') < d['cam'][1] - 1)
+    ok('Hình vũ khí đi vào đường vẽ của game ngay trong công cụ', pg.evaluate("!!G.spriteCustom.timVuKhi({ type: 'sword', family: 0 }) && G.weaponArt._spriteCustom"))
+    pg.evaluate('XS_UI.denBuoc(4)'); pg.wait_for_timeout(200)
+    ok('Vũ khí: xem đứng, chạy, đánh, né, trúng đòn, ô đồ', pg.eval_on_selector_all('#dsDongTac .chip', 'e => e.length') == 6 and pg.is_visible('#khoiBac'))
+    pg.click('#dsDongTac [data-dt="atk"]'); pg.wait_for_timeout(300)
+    pg.evaluate('XS_UI.denBuoc(5)'); pg.wait_for_timeout(200)
+    with pg.expect_download() as dl:
+        pg.click('#nutTaiVe')
+    p1 = os.path.join(tmp, dl.value.suggested_filename); dl.value.save_as(p1)
+    with open(p1, encoding='utf-8') as f:
+        tep['vk'] = json.load(f)
+    ok('Tải về vk-sword-0.sprite.json có ảnh, điểm cầm, mũi', dl.value.suggested_filename == 'vk-sword-0.sprite.json' and tep['vk']['anh'].startswith('data:image/png') and tep['vk']['vu_khi']['cam'])
+    pg.evaluate('XS_UI.denBuoc(3)'); pg.click('#dsHe .chip:nth-child(2)'); pg.click('#dsGd .chip:nth-child(2)')
+    ok('Chọn hệ Lửa, giai đoạn Thành hình: mã đổi thành vk-sword-0-fire-2', pg.evaluate('XS_S.muc.ma') == 'vk-sword-0-fire-2')
+    # --- trang phục ---
+    pg.click('#cacBuoc [data-b="1"]'); pg.click('.the[data-ma="tp-hats-non_la"]'); pg.set_input_files('#chonAnh', mu); pg.wait_for_function('XS_S.R && XS_S.muc.ma === "tp-hats-non_la"')
+    pg.evaluate('XS_UI.denBuoc(3)'); pg.wait_for_timeout(200)
+    l0 = pg.evaluate('XS_S.dd.lech.slice()')
+    pg.click('[data-nhich="1,0"]'); pg.click('[data-nhich="0,-1"]'); pg.click('[data-nhich="0,-1"]')
+    l1 = pg.evaluate('XS_S.dd.lech')
+    ok('Trang phục: nút nhích dời món đồ từng điểm ảnh', l1 == [l0[0] + 1, l0[1] - 2], (l0, l1))
+    ok('Trang phục: mũ tự vẽ thay hình Nón lá ngay trong công cụ', pg.evaluate('!!G.heroLooks.hats.non_la.tuVe'))
+    pg.evaluate('XS_UI.denBuoc(5)'); pg.wait_for_timeout(200)
+    tep['tp'] = pg.evaluate('XS_UI.taoTep(true, true)')
+    # --- vật phẩm ---
+    pg.click('#cacBuoc [data-b="1"]'); pg.click('.the[data-ma="vp-gold"]'); pg.set_input_files('#chonAnh', xu); pg.wait_for_function('XS_S.R && XS_S.muc.ma === "vp-gold"')
+    pg.evaluate('XS_UI.denBuoc(3)'); pg.wait_for_timeout(200)
+    ok('Vật phẩm: bỏ qua bước khung, sang thẳng bước xem', pg.evaluate('XS_S.buoc') == 4)
+    tep['vp'] = pg.evaluate('XS_UI.taoTep(true, true)')
+    # mở lại tệp vũ khí
+    pg.set_input_files('#chonTep', p1); pg.wait_for_timeout(700)
+    ok('Mở lại tệp vũ khí: đúng món, đúng điểm cầm', pg.evaluate('XS_S.muc.ma') == 'vk-sword-0' and pg.evaluate('XS_S.dd.cam') == tep['vk']['vu_khi']['cam'])
+    ok('Không có lỗi trang khi làm đồ', not errs, errs[:3])
+    b.close()
+    # --- vào game ---
+    for k, t in tep.items():
+        with open(os.path.join(CUSTOM, t['ma'] + '.sprite.json'), 'w', encoding='utf-8') as f:
+            json.dump(t, f)
+    good, out = build()
+    ok('Đóng gói nhúng ba món đồ tự vẽ', good and all(t['ma'] in out for t in tep.values()), out[-300:])
+    b, ctx, pg, errs = mo(pw, GAME_DIST, 960, 540)
+    pg.wait_for_function('window.G && G.scene')
+    pg.wait_for_function("G.spriteCustom.timVuKhi({ type: 'sword', family: 0 }) && G.spriteCustom.vatPham('gold') && G.heroLooks.hats.non_la.tuVe")
+    VK = """([fam, code]) => { const cv = document.createElement('canvas'); cv.width = 120; cv.height = 120; const c = cv.getContext('2d'); const WA = G.weaponArt;
+      (code ? WA.drawCode : WA.draw).call(WA, c, { type: 'sword', family: fam, rarity: 0 }, 60, 80, -60, 0); const d = c.getImageData(0, 0, 120, 120).data; let h = 0, n = 0; for (let i = 0; i < d.length; i += 4) if (d[i + 3] > 20) { n++; h = (h * 31 + d[i] + (i >> 2)) >>> 0; } return [n, h]; }"""
+    a, a0 = pg.evaluate(VK, [0, False]), pg.evaluate(VK, [0, True])
+    ok('Kiếm dòng 1 vẽ bằng hình tự vẽ', a[0] > 50 and a != a0, (a, a0))
+    ok('Kiếm dòng khác vẫn vẽ bằng code', pg.evaluate(VK, [1, False]) == pg.evaluate(VK, [1, True]))
+    KID = """(hat) => { const cv = document.createElement('canvas'); cv.width = 80; cv.height = 70; const c = cv.getContext('2d');
+      G.art.hero(c, { x: 40, y: 60, face: 1, key: 'smith', move: false, t: 0, atk: -1, dodge: -1, outfit: { hat } }); const d = c.getImageData(0, 0, 80, 70).data; let h = 0, n = 0; for (let i = 0; i < d.length; i += 4) if (d[i + 3] > 20) { n++; h = (h * 31 + d[i] + (i >> 2)) >>> 0; } return [n, h]; }"""
+    k1 = pg.evaluate(KID, 'non_la')
+    pg.evaluate("G.spriteCustom.remove('tp-hats-non_la')")
+    k0 = pg.evaluate(KID, 'non_la')
+    ok('Em bé đội Nón lá tự vẽ; bỏ tệp thì về Nón lá gốc', k1 != k0 and not pg.evaluate('G.heroLooks.hats.non_la.tuVe'), (k1, k0))
+    r = pg.evaluate("""() => { const cv = document.createElement('canvas'); cv.width = 30; cv.height = 30; const old = G.ux; G.ux = cv.getContext('2d'); try { G.theme.resIcon('gold', 2, 2, 14); } finally { G.ux = old; }
+      const d = cv.getContext('2d').getImageData(0, 0, 30, 30).data; let g = 0; for (let i = 0; i < d.length; i += 4) if (d[i + 3] > 20 && d[i + 1] > d[i] + 60) g++; return g; }""")
+    ok('Biểu tượng vàng trên giao diện dùng hình tự vẽ (xu xanh)', r > 20, r)
+    r = pg.evaluate("""() => { G.testSave ? 0 : 0; const sv = G.newSave(); G.save = sv; sv.tut.done = true; G.startStage(0, 2, 0); const W = G.getWorld(); W.waves = []; W.spawns = []; G.doRoi.tha(W, 240, 150, { kind: 'gold' });
+      let err = null; try { for (let k = 0; k < 120; k++) { G.tick(); if (k % 10 === 0) { G.ui.begin(); G.scene.draw(); } } } catch (e) { err = String(e); } return err; }""")
+    ok('Trận có vũ khí, đồ rơi tự vẽ chạy không lỗi', r is None, r)
+    ok('Không có lỗi trang trong game có đồ tự vẽ', not errs, errs[:3])
+    b.close()
+    don_custom()
+
+
 def main():
     tmp = tempfile.mkdtemp(prefix='xuong_sprite_')
     bon, nguoi = ve_bon_chan(os.path.join(tmp, 've-tay-bon-chan.png')), ve_nguoi(os.path.join(tmp, 've-tay-nguoi.png'))
@@ -95,7 +180,7 @@ def main():
             b, ctx, pg, errs = mo(pw, TOOL)
             pg.wait_for_function('window.XS_UI')
             n_the = pg.eval_on_selector_all('#dsChon .the[data-ma]', 'e => e.map(x => x.dataset.ma)')
-            ok('Danh sách có 36 quái và 5 lựa chọn em bé', len([m for m in n_the if not m.startswith('em-be')]) == 36 and len([m for m in n_the if m.startswith('em-be')]) == 5, len(n_the))
+            ok('Danh sách có 36 quái và 5 lựa chọn em bé', len([m for m in n_the if not m.startswith(('em-be', 'vk-', 'tp-', 'vp-'))]) == 36 and len([m for m in n_the if m.startswith('em-be')]) == 5, len(n_the))
             ok('Thẻ quái có hình code để so', pg.evaluate("""() => { const c = document.querySelector('.the[data-ma=cua] canvas'); const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let n = 0; for (let i = 3; i < d.length; i += 4) if (d[i]) n++; return n > 300; }"""))
             pg.click('.the[data-ma="heoCon"]')
             ok('Chọn quái thì sang bước Đưa hình', pg.is_visible('#b2') and pg.is_visible('#vungTha'))
@@ -271,6 +356,7 @@ def main():
             ok('Heo Rừng Con trở lại hình code', pg.evaluate(VAN, ['heoCon', {'anim': 'atk', 't': 0.2}, False]) == pg.evaluate(VAN, ['heoCon', {'anim': 'atk', 't': 0.2}, True]))
             ok('Không có lỗi trang', not errs, errs[:3])
             b.close()
+            kiem_do(pw, tmp)
     finally:
         don_custom()
         build()
