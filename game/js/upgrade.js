@@ -81,7 +81,7 @@
     const out = [], hs = sv.heroes[sv.hero], O = G.outfit;
     // cây kỹ năng
     if (pts(hs) > 0) {
-      for (const b of G.SKEYS) if (hs.sk[b] < 5) out.push({ kind: 'skill', key: 'skill', title: 'Còn ' + pts(hs) + ' điểm kỹ năng chưa học (nhánh ' + G.SKILLS[b].name + ')', cost: {}, apply: (s) => { s.heroes[s.hero].sk[b]++; }, go: { who: 'do' } });
+      for (const b of G.SKEYS) if (hs.sk[b] < 5) out.push({ kind: 'skill', key: 'skill', br: b, title: 'Còn ' + pts(hs) + ' điểm kỹ năng chưa học (nhánh ' + G.SKILLS[b].name + ')', cost: {}, apply: (s) => { s.heroes[s.hero].sk[b]++; }, go: { who: 'do' } });
     }
     // vũ khí đang mang: mài, nâng bậc, lên Vàng, nâng lò
     const cap = G.FORGE_CAP[sv.forge];
@@ -207,7 +207,16 @@
     o = o || {};
     const done = [];
     for (let n = 0; n < (o.max || 80); n++) {
-      const list = U.rate(sv, U.list(sv).filter((q) => !(o.skip && o.skip.includes(q.kind)))).filter((q) => q.ok && q.gain > 0);
+      const all = U.rate(sv, U.list(sv).filter((q) => !(o.skip && o.skip.includes(q.kind))));
+      // Điểm kỹ năng luôn học hết (nút như hồi máu mỗi phòng, lăn né hồi nhanh không làm tăng con số Sức mạnh nhưng giúp sống sót):
+      // nhánh tăng sức mạnh nhiều nhất trước, bằng nhau thì nhánh đang ít điểm nhất (Thủ trước).
+      const sk = all.filter((q) => q.kind === 'skill');
+      if (sk.length) {
+        const hs = sv.heroes[sv.hero], ord = ['def', 'atk', 'elem'];
+        sk.sort((a, b) => b.gain - a.gain || hs.sk[a.br] - hs.sk[b.br] || ord.indexOf(a.br) - ord.indexOf(b.br));
+        U.doIt(sv, sk[0]); done.push(sk[0].title); continue;
+      }
+      const list = all.filter((q) => q.ok && q.gain > 0);
       if (!list.length) break;
       list.sort((a, b) => b.gain / (5 + b.val) - a.gain / (5 + a.val));
       const best = list[0];
