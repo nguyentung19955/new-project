@@ -50,6 +50,33 @@ jobs:
           }
           EOF
 
+      # Người dùng đồng ý (09/10): mỗi site chỉ giữ 5 bản gần nhất để không vượt dung lượng Hosting miễn phí.
+      - name: Dọn bản cũ (giữ 5 bản gần nhất mỗi site)
+        continue-on-error: true
+        run: |
+          trap 'rm -f "$RUNNER_TEMP/sa.json"' EXIT
+          printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"
+          gcloud auth activate-service-account --key-file="$RUNNER_TEMP/sa.json" --quiet > /dev/null 2>&1
+          TOKEN=$(gcloud auth print-access-token)
+          API=https://firebasehosting.googleapis.com/v1beta1
+          for s in sontinhthuytinh thanthoaiviet spiritblade; do
+            curl -s -o /dev/null -w "$s config %{http_code}\n" -X PATCH -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+              "$API/sites/$s/config?updateMask=maxVersions" -d '{"maxVersions":5}'
+            : > all.txt; PT=""
+            while :; do
+              curl -s -H "Authorization: Bearer $TOKEN" "$API/sites/$s/versions?pageSize=100${PT:+&pageToken=$PT}" > page.json
+              jq -r '.versions[]? | select(.status == "FINALIZED" or .status == "ABANDONED") | [.createTime, .name, .status] | @tsv' page.json >> all.txt
+              PT=$(jq -r '.nextPageToken // empty' page.json); [ -z "$PT" ] && break
+            done
+            # Bản đang chạy trên site: không bao giờ xoá.
+            LIVE=$(curl -s -H "Authorization: Bearer $TOKEN" "$API/sites/$s/releases?pageSize=1" | jq -r '.releases[0].version.name // empty')
+            { grep -P '\tFINALIZED$' all.txt | sort -r | tail -n +6; grep -P '\tABANDONED$' all.txt; } | cut -f2 | while read -r v; do
+              [ -n "$v" ] && [ "$v" != "$LIVE" ] && curl -s -o /dev/null -X DELETE -H "Authorization: Bearer $TOKEN" "$API/$v"
+            done
+            echo "$s: có $(wc -l < all.txt) bản, giữ 5 bản mới nhất"
+            echo "- $s: $(wc -l < all.txt) bản → giữ 5" >> "$GITHUB_STEP_SUMMARY"
+          done
+
       - name: Tạo site và đăng
         working-directory: ${{ runner.temp }}/web
         run: |
