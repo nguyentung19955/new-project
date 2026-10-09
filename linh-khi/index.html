@@ -59,13 +59,16 @@
   G.WEAK = { fire: 'ice', ice: 'poison', poison: 'fire' };
 
   G.WTYPES = {
-    sword: { name: 'Kiếm', dmg: 10, cd: 0.36, reach: 32, depth: 17, special: 'Trảm Nguyệt' },
+    sword: { name: 'Kiếm', dmg: 9, cd: 0.36, reach: 32, depth: 17, special: 'Trảm Nguyệt' },
     // Sửa góp ý 3 (càng chậm hoặc càng phải áp sát thì mỗi đòn càng mạnh): cung 9 -> 11 mỗi phát (vẫn dưới kiếm) nhưng tên xuyên và
     // mưa tên yếu đi hẳn (G.MOVES.bow), để cung an toàn nhất có sát thương mỗi giây thấp nhất, cả khi đánh một con lẫn cả cụm;
     // búa 23 -> 22 (vẫn mạnh nhất mỗi đòn).
-    bow: { name: 'Cung', dmg: 11, cd: 0.5, ranged: true, special: 'Mưa Tên' },
-    spear: { name: 'Giáo', dmg: 11, cd: 0.44, reach: 56, depth: 12, special: 'Phi Thương' },
-    hammer: { name: 'Búa', dmg: 22, cd: 0.8, reach: 32, depth: 25, stagger: 0.4, special: 'Địa Chấn' },
+    // Cân bằng phải cày: giáo 11 -> 10,7, búa 22 -> 21,3. Sau khi gộp "tám hướng" (đòn cận chiến tự ngắm quái gần nhất) kiếm mạnh
+    // vượt hẳn (kiếm 84,6 so với giáo 71, búa 74 trên bia tập) nên kiếm 10 -> 9 và cung 11 -> 11,4 (mỗi phát vẫn dưới một nhát kiếm):
+    // cung thấp hơn kiếm 19% trên bia tập, khoảng 29% trên quái mới thật (tests/dps.py, 8 và 12 hạt giống).
+    bow: { name: 'Cung', dmg: 11.4, cd: 0.5, ranged: true, special: 'Mưa Tên' },
+    spear: { name: 'Giáo', dmg: 10.7, cd: 0.44, reach: 56, depth: 12, special: 'Phi Thương' },
+    hammer: { name: 'Búa', dmg: 21.3, cd: 0.8, reach: 32, depth: 25, stagger: 0.4, special: 'Địa Chấn' },
   };
   G.WKEYS = ['sword', 'bow', 'spear', 'hammer'];
   // BỐN BẬC MÀU của vũ khí (thay ba bậc Sắt, Bạc, Linh cũ). mult: hệ số sát thương gốc; maxStage: mốc tiến hóa cao nhất
@@ -85,6 +88,12 @@
   // Mỗi mốc tiến hóa tăng nhẹ sát thương gốc.
   G.STAGE_MULT = [1, 1.04, 1.08, 1.12];
   G.PROC = [0, 0.2, 0.5, 1];
+  // NGUỒN LINH KHÍ (góp ý của chủ dự án: kiếm linh khí bằng cách hạ tinh anh và trùm, quái thường thỉnh thoảng rơi linh khí để nhặt).
+  //  - Hạ tinh anh, trùm nhỏ, trùm vùng: vũ khí kết liễu luôn nhận bấy nhiêu dấu ấn. Hệ: hệ quái đang dính lúc gục (cách dùng của bé),
+  //    không dính gì thì hệ của vùng (Rừng già Độc, Hang biển Băng, Lâu đài cổ Lửa).
+  //  - Quái thường: tỉ lệ drop rơi một viên linh khí của vùng nằm trên sàn, nhặt (đi lại gần) thì vũ khí đang cầm nhận orb dấu ấn.
+  //  - Vẫn giữ luật cũ: kết liễu quái thường đang dính hiệu ứng hệ thì vũ khí nhận 1 dấu ấn của hệ đó.
+  G.LINHKHI = { elite: 5, mini: 10, boss: 20, drop: 0, orb: 3 }; // drop 0: chủ dự án bỏ viên rơi từ quái thường (tinh anh, trùm đã đủ)
   // Dòng phụ: bậc Lam có 1, Tím và Vàng có 2.
   G.AFFIX = {
     mana: 'Mỗi đòn trúng hồi thêm 1 mana',
@@ -118,7 +127,9 @@
   // VŨ KHÍ RƠI. Rương và tinh anh: bậc ngẫu nhiên theo vùng [Thường, Lam, Tím], không bao giờ ra Vàng.
   // Trùm vùng (ải 5, 10, 15): lần đầu hạ chắc chắn rơi 1 vũ khí Vàng; đánh lại thì 12% Vàng, còn lại Tím.
   G.DROP = {
-    table: [[0.72, 0.24, 0.04], [0.52, 0.38, 0.10], [0.36, 0.44, 0.20]],
+    // hàng thứ tư chỉ dùng khi chơi lại một ải Lâu đài cổ đã qua (chơi lại thì bảng rơi lên một hàng: G.DROP.againBonus)
+    table: [[0.72, 0.24, 0.04], [0.52, 0.38, 0.10], [0.36, 0.44, 0.20], [0.24, 0.46, 0.30]],
+    againBonus: 1,
     elite: 0.35,      // cơ hội tinh anh rơi vũ khí
     stage: 0.5,       // cơ hội nhận vũ khí khi qua một ải thường (trùm nhỏ)
     bossAgain: 0.12,  // cơ hội ra Vàng khi đánh lại trùm vùng
@@ -183,8 +194,14 @@
     },
   };
   G.SKEYS = ['atk', 'def', 'elem'];
-  G.MAX_LEVEL = 30;
-  G.xpNeed = (lvl) => 40 + 25 * lvl;
+  // CÀY NÂNG CẤP: trần cấp hero 30 -> 40 (cấp 31-40 cho thêm máu, sát thương, 3 điểm kỹ năng), để người chơi đã chạm trần ở cuối
+  // vùng ba vẫn còn đường cày lên mạnh hơn thay vì phải trông vào may rủi.
+  G.MAX_LEVEL = 40;
+  // Cân bằng phải cày: lên cấp chậm hơn trước (40 + 25 x cấp) để cấp hero còn tăng tới cuối vùng ba.
+  G.xpNeed = (lvl) => 50 + 50 * lvl;
+  // Mỗi cấp hero: sát thương +1,5% và máu +3,5% (trước là 1% và 3%), để cày lên cấp thấy rõ là mạnh lên.
+  G.LVL_DMG = 0.015;
+  G.LVL_HP = 0.035;
 
   G.REGIONS = [
     {
@@ -209,7 +226,7 @@
     rusher: { name: 'Lính xông', hp: 1, dmg: 1, speed: 44, r: 8, marks: 1 },
     swarm: { name: 'Bầy nhỏ', hp: 0.9, dmg: 0.6, speed: 60, r: 9, marks: 1 }, // một con là cả bầy (hình vẽ cả đàn)
     shield: { name: 'Khiên', hp: 1.7, dmg: 1.1, speed: 26, r: 10, armor: 0.45, marks: 1 },
-    archer: { name: 'Xạ thủ', hp: 0.7, dmg: 0.9, speed: 38, r: 7, marks: 1 },
+    archer: { name: 'Xạ thủ', hp: 0.7, dmg: 0.85, speed: 38, r: 7, marks: 1, shotCd: 3, wind: 0.7, shotSpd: 118 }, // bắn mỗi 3 giây, ngắm 0,7 giây, đạn bay 118
     nimble: { name: 'Nhanh nhẹn', hp: 0.7, dmg: 0.85, speed: 78, r: 7, marks: 1 },
     elite: { name: 'Tinh anh', hp: 5, dmg: 1.3, speed: 40, r: 12, marks: 5 },
     kami: { name: 'Cảm tử', hp: 0.55, dmg: 1.4, speed: 48, r: 7, marks: 1 },
@@ -235,22 +252,48 @@
   // Chỉ số chuẩn theo ải. r: vùng 0..2, i: ải 0..4, diff: 0 thường, 1 độ khó thứ hai.
   const HP_RANGE = [[60, 115], [130, 230], [250, 370]];
   const DMG_RANGE = [[8, 12], [12, 17], [18, 24]];
+  // CÂN BẰNG PHẢI CÀY: hệ số riêng của từng ải (15 ải, theo thứ tự 1-1 .. 3-5) nhân thêm vào chỉ số trên.
+  // mob: [máu, sát thương] quái thường; boss: [máu, sát thương] trùm nhỏ (ải 1-4) hoặc trùm vùng (ải 5).
+  G.STAGE_K = {
+    mob: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.66], [1.23, 1.66], [1.27, 1.81], [1.32, 2.95], [1.44, 2.32], [1.48, 2.49], [1.31, 2.91], [1.27, 3.02], [1.7, 4.54], [1.66, 4.28], [1.67, 4.43], [1.7, 4.74], [1.29, 3.11]],
+    boss: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.66], [1.23, 1.66], [1.27, 1.81], [1.32, 2.95], [1.44, 2.32], [1.48, 2.49], [1.31, 2.91], [1.27, 3.02], [1.7, 4.54], [1.66, 4.28], [1.67, 4.43], [1.7, 4.74], [1.29, 3.11]],
+  };
+  // Độ khó thứ hai: [máu, sát thương] nhân thêm theo vùng. Trước là x2,2 máu, x1,5 sát thương cho mọi vùng; nay quái thường đã mạnh
+  // theo ải, nên vùng sau nhân ít hơn để người chơi đã cày đầy (cấp 30, vũ khí Vàng) vẫn với tới được.
+  G.DIFF2 = [[1.6, 1.5], [1.3, 1.3], [1.1, 1.15]];
   G.stageStats = function (r, i, diff) {
     const t = i / 4;
-    const k = diff ? 2.2 : 1;
-    const kd = diff ? 1.5 : 1;
+    const k = diff ? G.DIFF2[r][0] : 1;
+    const kd = diff ? G.DIFF2[r][1] : 1;
     const n = r * 5 + i;
+    const mk = G.STAGE_K.mob[n] || [1, 1], bk = G.STAGE_K.boss[n] || [1, 1];
     return {
-      hp: (HP_RANGE[r][0] + (HP_RANGE[r][1] - HP_RANGE[r][0]) * t) * k,
-      dmg: (DMG_RANGE[r][0] + (DMG_RANGE[r][1] - DMG_RANGE[r][0]) * t) * kd,
+      hp: (HP_RANGE[r][0] + (HP_RANGE[r][1] - HP_RANGE[r][0]) * t) * k * mk[0],
+      dmg: (DMG_RANGE[r][0] + (DMG_RANGE[r][1] - DMG_RANGE[r][0]) * t) * kd * mk[1],
+      bossHp: bk[0], bossDmg: bk[1], // trùm của ải: nhân thêm vào máu và sát thương (js/boss.js)
       xp: Math.round((100 + 60 * n) * (diff ? 1.5 : 1)),
       gold: Math.round((80 + 30 * n) * (diff ? 1.5 : 1)),
     };
   };
+  // SỨC MẠNH KHUYÊN DÙNG của từng ải (15 ải). So với G.power() (js/combat.js): đủ số này thì bot thắng phần lớn lượt chơi
+  // (đo bằng tests/cay.py). Độ khó thứ hai cần gấp căn bậc hai của (máu x sát thương) nhân thêm của G.DIFF2.
+  // Cày nâng cấp (bỏ Quyết tâm, sức mạnh tính cả vũ khí thứ hai): đo lại bằng bot, Ngư Tinh 395 -> 420, đầu vùng ba theo đó,
+  // ải 3-4 495 -> 525, Hồ Tinh 515 -> 620 (bot học đủ điểm kỹ năng thì mạnh hơn trước ở cùng con số, nên trùm cuối cần cày thêm).
+  G.STAGE_REC = [100, 110, 135, 150, 225, 245, 270, 315, 345, 420, 425, 445, 475, 525, 620];
+  G.stageRec = function (r, i, diff) {
+    const v = G.STAGE_REC[r * 5 + i] || 100;
+    return diff ? Math.round((v * Math.sqrt(G.DIFF2[r][0] * G.DIFF2[r][1])) / 5) * 5 : v;
+  };
+  // Thưởng khi cày: sức mạnh vượt quá 130% khuyên dùng thì kinh nghiệm và vàng giảm dần, thấp nhất còn 40%.
+  G.grindMult = function (power, rec) {
+    const q = rec > 0 ? power / rec : 1;
+    return q <= 1.3 ? 1 : Math.max(0.4, Math.round((1 - (q - 1.3) * 1.2) * 20) / 20);
+  };
   // Phòng vuông: số đợt quái và hệ số điểm mỗi đợt (so với phòng dài trước đây).
   // start: phòng Bắt đầu [ải 1-2, ải 3-5]; early: ải 1-3; late: ải 4-5; maxPerWave: số quái tối đa một đợt;
   // stagger: nửa sau của một đợt hiện ra chậm hơn bấy nhiêu giây.
-  G.ROOM_WAVES = { start: [1, 2], early: 3, late: 4, challenge: 2, pts: 0.85, ptsLate: 0.85, maxPerWave: 7, stagger: 2, challengeTime: 30 };
+  G.ROOM_WAVES = { start: [1, 2], early: 3, late: 4, challenge: 2, pts: 0.85, ptsLate: 0.85, maxPerWave: 7, stagger: 2, challengeTime: 30, maxAlive: 4 };
+  // maxAlive: phòng thường chỉ có tối đa bấy nhiêu quái cùng lúc (tinh anh tính là hai), số còn lại chờ mọc nối tiếp.
   // Độ dẹt của vùng nguy hiểm và vũng hệ: cao bằng bấy nhiêu lần rộng. Trước là 0,6 (nhìn ngang), nay tròn hơn cho sàn nhìn từ trên.
   G.ZK = 0.85;
   // Lăn né: tốc độ ngang (điểm ảnh mỗi giây) và tỉ lệ chiều dọc so với chiều ngang (bằng tỉ lệ lúc đi bộ).
@@ -298,12 +341,22 @@
     { id: 'haste', name: 'Quái nhanh hơn 15% đến hết ải' },
   ];
 
-  // Chi phí mài từ cấp n lên n+1
+  // Chi phí mài từ cấp n lên n+1 (mat: số nguyên liệu vùng, vùng nào xem G.sharpenFull)
+  // Cày nâng cấp: quặng tối đa 16 mỗi lần (mài +11..+15 không đòi hàng chục quặng), +7..+9 tốn 5 nguyên liệu.
   G.sharpenCost = function (n) {
-    return { ore: 2 + n * 2, gold: 50 * (n + 1), mat: n >= 5 ? 3 : 0 };
+    return { ore: Math.min(16, 2 + n * 2), gold: 50 * (n + 1), mat: n >= 7 ? 5 : n >= 5 ? 3 : 0 };
   };
-  G.FORGE_CAP = [0, 3, 6, 10];
-  G.FORGE_UP = [null, { gold: 200, mat: [6, 0, 0] }, { gold: 600, mat: [0, 6, 0] }];
+  // CÀY NÂNG CẤP: mài tối đa +10 -> +15. Lò cấp 4 (cần đá lửa của Lâu đài cổ) mài được tới +15.
+  G.MAX_SHARPEN = 15;
+  G.FORGE_CAP = [0, 3, 6, 10, 15];
+  G.FORGE_UP = [null, { gold: 200, mat: [6, 0, 0] }, { gold: 600, mat: [0, 6, 0] }, { gold: 1500, ore: 20, mat: [0, 0, 10] }];
+  // Chi phí mài đầy đủ (dạng trả được): +5..+9 tốn vảy cá (vùng hai cày được), +10..+14 tốn đá lửa (vùng ba).
+  // Trước đây +7 trở lên đã đòi đá lửa nên ở vùng hai người chơi kẹt ở +7, vàng và vảy cá dồn lại không tiêu được.
+  G.sharpenFull = function (n) {
+    const c = G.sharpenCost(n), cost = { ore: c.ore, gold: c.gold, mat: [0, 0, 0] };
+    if (c.mat) cost.mat[n < 10 ? 1 : 2] = c.mat;
+    return cost;
+  };
   // Nâng bậc vũ khí (giữ nguyên dấu ấn và tiến hóa): chi phí để lên Lam (1) và Tím (2).
   // Nấc cuối lên Vàng cần mảnh trùm, thứ chỉ trùm vùng rơi: xem G.goldCost.
   G.TIER_UP = [null, { gold: 150, ore: 4, mat: [6, 0, 0] }, { gold: 450, stones: 1, mat: [0, 8, 0] }, null];
@@ -324,6 +377,7 @@
     'Hạ trùm bằng hệ khắc chế nó để nhận sao thứ ba.',
     'Vũ khí có bốn bậc: Thường, Lam, Tím, Vàng. Trùm vùng lần đầu bị hạ chắc chắn rơi một vũ khí Vàng.',
     'Thành hình mở đặc trưng hệ thứ nhất, Thức tỉnh mở đặc trưng thứ hai. Bậc Thường chỉ lên tới Thành hình.',
+    'Mỗi ải có Sức mạnh khuyên dùng. Số đỏ là bé còn yếu: chơi lại ải cũ để lên cấp, kiếm quặng và nguyên liệu, rồi mài và nâng bậc vũ khí.',
   ];
 })();
 
@@ -584,6 +638,8 @@
       for (const k of ['stars', 'stars2', 'scars', 'tut']) s[k] = obj(s[k]);
       for (const k of ['stars', 'stars2']) for (const id in s[k]) s[k][id] = G.clamp(Math.floor(num(s[k][id], 1)), 1, 3);
       for (const id in s.scars) if (!G.ELS.includes(s.scars[id])) delete s.scars[id];
+      // "Quyết tâm" (thua nhiều thì mạnh thêm) đã bỏ: bản lưu cũ còn trường grit thì xoá đi, phần còn lại đọc bình thường.
+      delete s.grit;
       // hero
       s.heroes = obj(s.heroes);
       for (const k of G.HKEYS) {
@@ -609,7 +665,7 @@
         const m = obj(w.marks);
         w.marks = { fire: Math.max(0, num(m.fire, 0)), poison: Math.max(0, num(m.poison, 0)), ice: Math.max(0, num(m.ice, 0)) };
         w.branch = G.ELS.includes(w.branch) ? w.branch : null;
-        w.sharpen = G.clamp(Math.floor(num(w.sharpen, 0)), 0, 10);
+        w.sharpen = G.clamp(Math.floor(num(w.sharpen, 0)), 0, G.MAX_SHARPEN || 15);
         // Tên nay lấy theo hình (G.weaponArt.name); chỉ giữ lại danh hiệu phía sau dấu phẩy của tên cũ.
         if (typeof w.title !== 'string') w.title = typeof w.name === 'string' && w.name.indexOf(', ') > 0 ? w.name.slice(w.name.indexOf(', ')) : '';
         w.name = null;
@@ -10386,7 +10442,7 @@
   // Hệ số bậc: Vàng của vùng sau cao hơn (G.GOLD_MULT).
   G.wRarMult = (w) => (G.wRar(w) === 3 ? G.GOLD_MULT[w.gold | 0] || G.GOLD_MULT[0] : G.RARITY[G.wRar(w)].mult);
   G.wBase = function (w, lvl) {
-    return G.WTYPES[w.type].dmg * G.wRarMult(w) * G.STAGE_MULT[G.wStage(w)] * (1 + 0.08 * w.sharpen) * (1 + 0.01 * ((lvl || 1) - 1));
+    return G.WTYPES[w.type].dmg * G.wRarMult(w) * G.STAGE_MULT[G.wStage(w)] * (1 + 0.08 * w.sharpen) * (1 + G.LVL_DMG * ((lvl || 1) - 1));
   };
   function nameWeapon(w) {
     // Danh hiệu chỉ tính boss vùng, không tính trùm nhỏ.
@@ -10426,7 +10482,7 @@
     const helm = sv.helm ? G.GEAR.helm[sv.helm] : null;
     const set = armor && helm && armor.set && armor.set === helm.set ? armor.set : null;
     const osum = G.outfit ? G.outfit.sum(sv) : null; // trang phục đang mặc: máu cộng vào trước các hệ số, như áo của bản cũ
-    let maxhp = H.hp * (1 + 0.03 * (hs.lvl - 1)) + (armor ? armor.hp : 0) + (osum ? osum.stats.hp || 0 : 0);
+    let maxhp = H.hp * (1 + G.LVL_HP * (hs.lvl - 1)) + (armor ? armor.hp : 0) + (osum ? osum.stats.hp || 0 : 0);
     if (sk.def >= 1) maxhp *= 1.1;
     if ((sv.charm === 'c_greed' || (osum && osum.oldCharm === 'c_greed')) && hs.lvl >= 5) maxhp *= 0.9;
     const P = {
@@ -10455,6 +10511,37 @@
     P.mana = Math.round(P.maxmana * 0.5);
     return P;
   };
+  // SỨC MẠNH của em bé (một con số để so với "Sức mạnh khuyên dùng" của ải): căn bậc hai của (đòn mạnh nhất x máu hữu hiệu).
+  // Đòn: vũ khí mạnh nhất đang mang, quy về thang của kiếm (cấp hero, bậc, mài, mốc tiến hóa, điểm Công, chí mạng).
+  // Máu hữu hiệu: máu tối đa (cấp hero, áo, điểm Thủ) chia cho phần sát thương còn nhận (giáp, nội tại), cộng chút kháng hệ của mũ.
+  // Em bé mới cấp 1 cầm kiếm Thường có sức mạnh 99. Trang phục đang mặc cũng được tính (máu, giảm sát thương, kháng, bộ, tác dụng, cánh).
+  G.power = function () {
+    const q = G.powerParts();
+    return q ? q.power : 0;
+  };
+  // Hai thành phần của sức mạnh: off (đòn mạnh nhất, thang kiếm) và ehp (máu hữu hiệu).
+  G.powerParts = function () {
+    if (!G.save || !G.save.heroes) return null;
+    const P = G.buildPlayer();
+    let off = 0;
+    // Cày nâng cấp: tính cả vũ khí thứ hai (75% món mạnh nhất + 25% món còn lại). Trùm thích nghi kháng hệ đang dùng nhiều nên phải đổi
+    // sang vũ khí kia; vũ khí thứ hai bỏ mặc +0 thì đánh trùm rất khó, nên con số Sức mạnh và gợi ý nâng cấp phải thấy được điều đó.
+    const offs = P.weapons.map((w) => (G.pDamage(P, w) / G.WTYPES[w.type].dmg) * 10 * (G.wHas(w, 'crit') ? 1.1 : 1)).sort((a, b) => b - a);
+    if (offs.length) off = offs.length > 1 ? offs[0] * 0.75 + offs[1] * 0.25 : offs[0];
+    if (!off) off = 10 * (1 + 0.01 * (P.lvl - 1));
+    off *= 1 + P.crit;
+    let res = 0;
+    for (const e of G.ELS) res = Math.max(res, P.resist[e] || 0);
+    let ehp = (P.maxhp / (1 - Math.min(0.75, P.dr))) * (1 + 0.25 * Math.min(0.8, res));
+    // Trang phục (js/outfit.js): máu, giảm sát thương, kháng hệ đã nằm trong P; thêm phần thưởng đủ bộ (sát thương hệ),
+    // mỗi tác dụng riêng của món Tím, Vàng (khiên, vệt, vũng, nổ) và cánh (lộn xa hơn, khiên sau khi lộn).
+    if (P.elBonus) { let eb = 0; for (const e in P.elBonus) eb = Math.max(eb, P.elBonus[e] || 0); off *= 1 + eb * 0.6; }
+    if (P.oSp) { let n = 0; for (const k in P.oSp) n += P.oSp[k].length; ehp *= 1 + 0.04 * Math.min(5, n); }
+    if (P.dodgeMul > 1) ehp *= 1 + (P.dodgeMul - 1) * 0.3;
+    return { off, ehp, power: Math.round(3 * Math.sqrt(off * ehp) * (P.powerMult || 1)) };
+  };
+  // Màu so sánh: đủ (xanh), sát nút (vàng, từ 90% khuyên dùng), thiếu (đỏ).
+  G.powerCol = function (have, need) { return have >= need ? '#6fdc6a' : have >= need * 0.9 ? '#ffd23f' : '#ff6a5a'; };
   const curW = (P) => P.weapons[P.cur];
   G.curW = curW;
   G.activeEl = function (P, w) {
@@ -10655,13 +10742,20 @@
     FX('death', e, o);
     if (e.illusion) return;
     if (w) w.kills++;
-    if (G.hasStatus(e)) {
-      // Hệ của dấu ấn: hiệu ứng gây sau cùng nếu nó còn hiệu lực, không thì hiệu ứng đang có.
+    const L = G.LINHKHI, big = e.role === 'elite' || e.isBoss, regEl = G.REGIONS[W.region] ? G.REGIONS[W.region].el : 'fire';
+    if (G.hasStatus(e) || (big && L)) {
+      // Hệ của dấu ấn: hiệu ứng gây sau cùng nếu nó còn hiệu lực, không thì hiệu ứng đang có; tinh anh, trùm không dính gì thì hệ của vùng.
       const on = { fire: e.st.fire > 0, poison: e.st.poisonN > 0, ice: e.st.iceN > 0 || e.st.frozen > 0 };
-      const el = e.st.last && on[e.st.last] ? e.st.last : on.fire ? 'fire' : on.poison ? 'poison' : 'ice';
-      G.addMarks(w, el, (e.marks == null ? 1 : e.marks) * P.markMult * W.marksMult);
+      const el = !G.hasStatus(e) ? regEl : e.st.last && on[e.st.last] ? e.st.last : on.fire ? 'fire' : on.poison ? 'poison' : 'ice';
+      const n = big && L ? (e.isBoss ? (e.kind === 'mini' ? L.mini : L.boss) : L.elite) : e.marks == null ? 1 : e.marks;
+      G.addMarks(w, el, n * P.markMult * W.marksMult);
       FX('markOrbs', e);
-      if (P.charm === 'c_spirit') P.mana = Math.min(P.maxmana, P.mana + 5);
+      if (P.charm === 'c_spirit' && G.hasStatus(e)) P.mana = Math.min(P.maxmana, P.mana + 5);
+    }
+    // quái thường thỉnh thoảng rơi một viên linh khí của vùng: phải nhặt mới có (js/do_roi.js gọi onPick)
+    if (!big && L && !e.add && G.doRoi && G.rnd() < L.drop) {
+      const n = Math.round(L.orb * W.marksMult);
+      G.doRoi.tha(W, e.x, e.y, { kind: 'linhkhi', el: regEl, s: 'Linh khí ' + G.EL[regEl].name, onPick: () => { const P2 = W.P, cw = curW(P2); if (cw) { G.addMarks(cw, regEl, n * P2.markMult); G.flashMarks && G.flashMarks(); } } });
     }
     if (G.moves) G.moves.onKill(e, o, w); // đặc trưng hệ khi quái chết: Nổ lan, Lây độc (chỉ ở Thức tỉnh)
     if (G.outfit) G.outfit.onKill(P, e); // bùa có hệ: quái gục gần bé nổ nhỏ
@@ -11125,6 +11219,8 @@
           const k = ((min - d) / d) * 0.5;
           A1.x -= dx * k; B.x += dx * k;
           A1.y -= (dy * k) / 1.6; B.y += (dy * k) / 1.6;
+          // đẩy nhau sát mép sàn thì không được lọt ra ngoài sàn theo chiều dọc (tests/fuzz.py)
+          A1.y = G.clamp(A1.y, W.y0, W.y1); B.y = G.clamp(B.y, W.y0, W.y1);
         }
       }
     }
@@ -12627,8 +12723,10 @@
     const reg = T.reg | 0, mat = [0, 0, 0];
     if (r === 0) { mat[reg] = 6; return { gold: 120, mat }; }
     if (r === 1) { mat[reg] = 10; return { gold: 350, mat, stones: 1 }; }
-    const shard = [0, 0, 0]; shard[reg] = 2;
-    return { gold: 700, shard, stones: 1 };
+    // Cày nâng cấp: Tím lên Vàng tốn vàng, nguyên liệu vùng và đá tôi (trước là 2 mảnh trùm). Mảnh trùm để dành cho vũ khí Vàng,
+    // cánh và may đồ bộ; trang phục thành đường cày máu và giáp bằng vàng và nguyên liệu, không bị kẹt chờ trùm.
+    mat[reg] = 18;
+    return { gold: 900, mat, stones: 2 };
   };
   // Mở cấp cánh từ lv lên lv+1 bằng mảnh trùm.
   O.wingCost = function (it) {
@@ -12756,8 +12854,8 @@
     const bd = BODY[art] || [20, 10, 50];
     const b = {
       isBoss: true, kind, name: o.name, layers: o.layers, weak: [], weakHits: 0, phase: 0, exposed: 0, flash: 0,
-      seq: [], cd: 1.2, face: -1, t: 0, hidden: false, st: G.st0(), dmg: w.base.dmg, marks: kind === 'mini' ? 10 : 20,
-      maxhp: w.base.hp * (kind === 'mini' ? G.MINI_HP : (G.BOSS_HP_OF && G.BOSS_HP_OF[kind]) || G.BOSS_HP), last: null, wind: 0, moving: false,
+      seq: [], cd: 1.2, face: -1, t: 0, hidden: false, st: G.st0(), dmg: w.base.dmg * (w.base.bossDmg || 1), marks: kind === 'mini' ? 10 : 20,
+      maxhp: w.base.hp * (kind === 'mini' ? G.MINI_HP : (G.BOSS_HP_OF && G.BOSS_HP_OF[kind]) || G.BOSS_HP) * (w.base.bossHp || 1), last: null, wind: 0, moving: false,
       x: g.cx + 60, y: g.cy - 6, r: bd[0], hr: bd[1], h: bd[2], art, scale: 1, busy: 0, tired: 0,
       speed: (SPEED[kind] || 30) * (w.haste || 1), el: reg.el, skin: reg.skin, resist: null, dirA: PI,
     };
@@ -17796,7 +17894,7 @@ MA._xong();
     e.spawnT = o.add ? dur(id, 'spawn') * 0.7 : dur(id, 'spawn');
     e.cd = G.rr(0.4, 1.1);
     if (e.role === 'shield') { e.armor = G.ROLES.shield.armor || 0.45; e.armorMax = e.maxhp * 0.45; e.armorHp = e.armorMax; e.healCd = G.rr(3, 6); }
-    if (e.role === 'archer') e.sumCd = G.rr(5, 8);
+    if (e.role === 'archer') e.sumCd = G.rr(7, 10);
     if (e.role === 'nimble') e.diveCd = G.rr(0.6, 1.8);
     if (e.role === 'spiky') e.spikeCd = G.rr(1.2, 2.5);
     if (elite) {
@@ -17969,15 +18067,18 @@ MA._xong();
       e.sumCd -= dt;
       const allies = w.ents.filter((x) => !x.dead && x.sum === e).length + (w.spawns || []).filter((s) => s.opt && s.opt.sumBy === e).length;
       if (e.sumCd <= 0 && allies < 2 && w.ents.length < 9) {
-        e.sumCd = G.rr(9, 12);
+        e.sumCd = G.rr(12, 16);
         begin(e, 'summon', a, 0.6, { cd: 1, fire: (q) => { for (let i = 0; i < 2; i++) { const b = a + PI + (i ? 0.9 : -0.9); summon('swarm', q.x + Math.cos(b) * 26, q.y + Math.sin(b) * 20, { hpMult: 0.45, sumBy: q }); } FX('sparkle', q.x, q.y - q.h * 0.5, '#ffd23f', 10); } });
         return;
       }
       const want = Math.min(120, (w.x1 - w.x0) * 0.42);
       keep(e, P, want, sp, dt, e.t % 6 < 3 ? 1 : -1);
       if (e.cd <= 0 && d < 190) {
-        if (e.don.kieu === 'nem') begin(e, 'lob', a, 0.55, { cd: 2.4, end: 0.55 + 0.5, fire: (q) => { bomb(q, P.x, P.y, 0.45, 0.55, 18); } });
-        else begin(e, 'shot', a, 0.55, { cd: 2.2, end: 1.0, aim: true, fire: (q, A) => { const b = angTo(q, P); q.dirA = b; shoot(q, b, 140); } });
+        // Cân bằng phải cày: quái bắn xa là nguồn mất máu lớn nhất, nên bắn thưa hơn (2,2 -> 3 giây), ngắm lâu hơn (0,55 -> 0,7 giây)
+        // và đạn chậm hơn (140 -> 118) để kịp né. Số nằm ở G.ROLES.archer (data.js).
+        const A = G.ROLES.archer;
+        if (e.don.kieu === 'nem') begin(e, 'lob', a, A.wind, { cd: A.shotCd, end: A.wind + 0.5, fire: (q) => { bomb(q, P.x, P.y, 0.45, 0.6, 18); } });
+        else begin(e, 'shot', a, A.wind, { cd: A.shotCd, end: A.wind + 0.45, aim: true, fire: (q, A2) => { const b = angTo(q, P); q.dirA = b; shoot(q, b, A.shotSpd); } });
         G.sfx('warn', 1.3);
       }
       return;
@@ -20890,6 +20991,7 @@ MA._xong();
       loot: { kills: 0, charm: false, bossDown: false, finalEl: null }, won: false, portal: null, got: [], curse: null, marksMult: 1, haste: 1,
       tut, mode: 'play', endT: 0, layers: null, usedPotion: false, marks: 0,
       fade: 0, W: null, near: null, sel: null, swapped: false, opts: null, result: null,
+      power: G.power(), rec: G.stageRec(r, i, diff), // sức mạnh lúc vào ải và sức mạnh khuyên dùng (thanh trên, thưởng khi cày)
     };
     if (S.tut) S.marksMult = 2;
     enterRoom(map.start, null);
@@ -20968,9 +21070,16 @@ MA._xong();
     if (!W.spawns.length) return;
     const el = S.stats.el, tot = el.fire + el.poison + el.ice + el.none;
     const top = G.ELS.slice().sort((a, b) => el[b] - el[a])[0];
+    // Cân bằng phải cày: phòng thường nhỏ mà quái mới to, nên trong phòng chỉ có tối đa G.ROOM_WAVES.maxAlive quái cùng lúc
+    // (tinh anh tính là hai). Đủ số thì quái kế tiếp chờ (vòng đỏ vẫn hiện), có chỗ mới mọc: thành từng tốp nối nhau.
+    const cap = W.geo && W.geo.big ? 99 : G.ROOM_WAVES.maxAlive;
+    let alive = 0;
+    for (const e of W.ents) if (!e.dead && !e.add) alive += e.role === 'elite' ? 2 : 1;
     for (const s of W.spawns) {
       s.t -= dt;
       if (s.t > 0) continue;
+      if (alive >= cap) { s.t = 0.35 + G.rnd() * 0.3; continue; }
+      alive += s.role === 'elite' ? 2 : 1;
       const e = G.spawnEnemy(s.role, s.x, s.y, s.opt || {});
       e.inside = true;
       if (s.opt && s.opt.sumBy) e.sum = s.opt.sumBy;
@@ -21228,17 +21337,21 @@ MA._xong();
       const prev = map[key] || 0;
       map[key] = Math.max(prev, R.stars);
       const big = S.i === 4;
-      const xp = S.base.xp;
-      let gold = S.base.gold + S.loot.kills * 2;
+      // Cân bằng phải cày: chơi lại ải đã qua vẫn được đủ thưởng, trừ khi em bé đã mạnh vượt xa ải (G.grindMult): kinh nghiệm
+      // và vàng giảm dần (thấp nhất 40%), nguyên liệu vùng và quặng thì vẫn đủ. Chơi lại có cơ hội rơi vũ khí bậc cao hơn.
+      const gm = G.grindMult(S.power, S.rec), again = prev > 0;
+      const xp = Math.round(S.base.xp * gm);
+      let gold = Math.round((S.base.gold + S.loot.kills * 2) * gm);
       if (S.P && S.P.charm === 'c_greed') gold = Math.round(gold * 1.25); // Bùa tham (đang đeo, hero từ cấp 5)
-      const ore = 3 + R.stars, mat = 5 + S.i;
+      const ore = 3 + R.stars + 2 * S.r, mat = 5 + S.i; // cày nâng cấp: vùng sau cho nhiều quặng hơn (mài cao tốn quặng)
       sv.gold += gold; sv.ore += ore; sv.mats[S.r] += mat;
       R.lines.push('+' + xp + ' kinh nghiệm', '+' + gold + ' vàng', '+' + ore + ' quặng', '+' + mat + ' ' + reg.mat.toLowerCase());
+      if (gm < 1) R.lines.push('Ải đã quá dễ với sức mạnh của bé: kinh nghiệm và vàng còn ' + Math.round(gm * 100) + '%');
       if (big) { const ns = S.diff ? 4 : 3; sv.shards[S.r] += ns; R.lines.push('+' + ns + ' mảnh ' + reg.bossName); }
       if ((R.stars === 3 && prev < 3) || (!big && G.rnd() < 0.15)) { sv.stones++; R.lines.push('+1 đá tôi'); }
       // Vũ khí rơi: trùm vùng theo G.bossDrop (lần đầu chắc chắn Vàng); ải thường thì 50% một món bậc ngẫu nhiên.
       if (big || G.rnd() < G.DROP.stage) {
-        const nw = big ? G.bossDrop(S.r) : G.giveWeapon(G.pick(G.WKEYS), G.rollRarity(S.r));
+        const nw = big ? G.bossDrop(S.r) : G.giveWeapon(G.pick(G.WKEYS), G.rollRarity(S.r + (again ? G.DROP.againBonus : 0)));
         R.lines.push(nw ? { s: (big ? reg.bossName + ' rơi ' : 'Nhặt được ') + rarName(nw), w: nw } : 'Rương đồ đầy, vũ khí rớt đổi thành vàng');
       }
       // Bùa cũ (tinh anh 25%) nay là trang phục ô Bùa, bậc Lam; trùm rơi trang phục (trùm vùng: món Tím hoặc Vàng của bộ vùng).
@@ -21261,11 +21374,14 @@ MA._xong();
       R.up = G.addXp(sv.hero, xp);
       G.sfx('win');
     } else {
-      const xp = Math.round(S.base.xp * 0.4 * (Math.max(0, S.visits - 1) / S.rooms.length));
-      const gold = S.loot.kills * 2;
+      const gm = G.grindMult(S.power, S.rec);
+      const xp = Math.round(S.base.xp * 0.4 * (Math.max(0, S.visits - 1) / S.rooms.length) * gm);
+      const gold = Math.round(S.loot.kills * 2 * gm);
       sv.gold += gold;
       R.lines.push('+' + xp + ' kinh nghiệm', '+' + gold + ' vàng');
       R.up = G.addXp(sv.hero, xp);
+      // Thua không làm bé mạnh thêm (chủ dự án: sức mạnh chỉ đến từ cày nâng cấp). Thay vào đó bảng thua gợi ý nên cày gì (G.upgradeTips).
+      if (!S.quit && G.upgradeTips) R.tips = G.upgradeTips(S.r, S.i, S.diff);
     }
     if (S.marks > 0 && !G.lk) R.lines.push('Vũ khí nhận ' + Math.round(S.marks) + ' dấu ấn'); // có js/linhkhi.js thì ghi từng vũ khí, từng hệ ở khối riêng
     if (R.up) R.lines.push(G.HEROES[sv.hero].name + ' lên cấp ' + sv.heroes[sv.hero].lvl + '!');
@@ -21525,6 +21641,8 @@ MA._xong();
     if (coat && coat.t > 0) ui.text('Bùa ' + G.EL[coat.el].name + ' ' + Math.ceil(coat.t) + ' giây', sx, 56.5, { size: 7.5, color: G.EL[coat.el].col, bold: true });
     // tên vùng và loại phòng ở lề trái; bản đồ nhỏ ở lề phải (thay hàng chấm phòng trước đây)
     ui.text(G.REGIONS[S.r].name + ' ' + (S.i + 1) + ' · ' + ROOM_NAME[W.type], 6, 69, { size: 7, color: '#d9cdb8' });
+    // sức mạnh của bé lúc vào ải so với sức mạnh khuyên dùng của ải (xanh đủ, vàng sát nút, đỏ thiếu)
+    ui.text('Sức mạnh ' + S.power + ' / khuyên ' + S.rec, 6, 79, { size: 7, bold: true, color: G.powerCol(S.power, S.rec) });
     G.minimap.draw(S);
     // vũ khí: hình và bậc ở trên, mốc tiến hóa ở dưới, thanh dấu ấn sát đáy
     P.weapons.forEach((w, i) => {
@@ -21578,8 +21696,8 @@ MA._xong();
     if (hint && S.mode === 'play') {
       const hw = W.geo.big ? 62 : 116; // phòng trùm rộng hơn nên ô chữ hẹp lại, không đè lên sàn
       const lines = ui.wrap(hint, hw - 8, 7);
-      T.plate(3, 75, hw, Math.round(lines.length * 9.5 + 8));
-      lines.forEach((l, i) => ui.text(l, 7, 85 + i * 9.5, { size: 7 }));
+      T.plate(3, 85, hw, Math.round(lines.length * 9.5 + 8));
+      lines.forEach((l, i) => ui.text(l, 7, 95 + i * 9.5, { size: 7 }));
     }
     if (W.banner) {
       // dòng báo nằm trên tường sau; dài quá thì thu chữ, vẫn dài thì xuống dòng
@@ -21800,6 +21918,7 @@ MA._xong();
       }
       y += 2;
     }
+    if (!R.win && !S.quit && R.tips) { panelLose(R); return; }
     // Phần thưởng: chữ ở cột trái; vũ khí nhận được thành thẻ viền màu bậc ở cột phải (khung thẻ của chủ đề trống đồng).
     const TH = G.theme, texts = R.lines.filter((l) => !l.w), weps = R.lines.filter((l) => l.w);
     // Khối linh khí (js/linhkhi.js) nằm sát trên hàng nút: mỗi vũ khí đang mang một dòng. Phần thưởng xếp phía trên khối này.
@@ -21841,6 +21960,38 @@ MA._xong();
     }
     if (ui.btn(86, 216, 140, 26, 'Về làng')) { S = null; G.setScene(G.Village); return; }
     if (ui.btn(254, 216, 140, 26, R.win ? 'Chơi lại ải này' : 'Thử lại')) G.startStage(S.r, S.i, S.diff);
+  }
+  // BẢNG THUA: không có "thua nhiều thì mạnh thêm". Bảng chỉ rõ nên cày gì: Sức mạnh hiện tại so với khuyên dùng, rồi 2-3 gợi ý
+  // nâng cấp cụ thể (G.upgradeTips, js/upgrade.js). Bấm một gợi ý thì về làng và mở thẳng bảng của người làng làm việc đó.
+  function panelLose(R) {
+    const T2 = R.tips, W0 = 86;
+    // phần nhận được: gộp một dòng
+    const texts = R.lines.filter((l) => !l.w), nW = R.lines.length - texts.length;
+    const got = texts.join(' · ') + (nW ? ' · nhặt ' + nW + ' vũ khí (ở Bà Hàng Xén)' : '');
+    const gl = ui.wrap(got, 308, 7, true);
+    ui.text(gl[0] + (gl.length > 1 ? '…' : ''), W0, 52, { size: 7, color: '#e8dfcc' });
+    // sức mạnh hiện tại / khuyên dùng
+    const pw = T2.power, rec = T2.rec, col = G.powerCol(pw, rec);
+    ui.text('Sức mạnh ' + pw + ' / khuyên dùng ' + rec + (pw < rec ? ' · còn thiếu ' + (rec - pw) : ' · đủ sức, thử lại né kỹ hơn nhé'), W0, 65, { size: 8, bold: true, color: col });
+    ui.bar(W0, 69, 308, 3, G.clamp(pw / rec, 0, 1), col);
+    ui.text(T2.tips.length ? 'Nên cày gì (bấm để tới chỗ người làng):' : 'Đã nâng cấp hết mức hiện có: chơi lại ải cũ để lên cấp.', W0, 82, { size: 7, bold: true, color: '#f6dc92' });
+    T2.tips.forEach((t, k) => {
+      const y = 86 + k * 23, h = 21;
+      ui.rect(W0, y, 308, h, t.ok ? 'rgba(60,110,60,0.45)' : 'rgba(30,48,46,0.85)', t.ok ? '#8fd07a' : '#5f7a74');
+      const hit = G.click && G.inRect(G.click, W0, y, 308, h);
+      ui.text((k + 1) + '. ' + t.text, W0 + 5, y + 8.5, { size: 7.5, bold: true, color: '#fff0c4' });
+      ui.text(t.gain > 0 ? '+' + t.gain + ' sức mạnh' : 'không tốn gì', W0 + 302, y + 8.5, { size: 7, bold: true, align: 'right', color: '#9be07a' });
+      const sl = ui.wrap(t.sub, 270, 6.5, true);
+      ui.text(sl[0] + (sl.length > 1 ? '…' : ''), W0 + 12, y + 17.5, { size: 6.5, color: t.ok ? '#c8f0b0' : '#d9cdb8' });
+      ui.text('▶', W0 + 302, y + 17.5, { size: 7, align: 'right', color: '#f6dc92' });
+      if (hit) { G.click = null; G.sfx('ui'); G.villageGo = t.go; S = null; G.setScene(G.Village); }
+    });
+    if (!S) return;
+    // khối linh khí của từng vũ khí (js/linhkhi.js) nằm dưới các gợi ý
+    const lkN = G.lk && S.P ? S.P.weapons.length : 0;
+    if (lkN) G.lk.resultBlock(S, 84, Math.max(86 + T2.tips.length * 23 + 2, 213 - (11 + lkN * 21)), 312);
+    if (ui.btn(86, 216, 140, 26, 'Về làng')) { S = null; G.setScene(G.Village); return; }
+    if (ui.btn(254, 216, 140, 26, 'Thử lại')) G.startStage(S.r, S.i, S.diff);
   }
 })();
 
@@ -22310,7 +22461,7 @@ MA._xong();
         if (up && pay(up)) n.ren = true;
         for (const id of sv.carry) {
           const w = G.weaponById(id); if (!w) continue;
-          if (w.sharpen < Math.min(10, G.FORGE_CAP[sv.forge])) { const q = G.sharpenCost(w.sharpen), cost = { ore: q.ore, gold: q.gold, mat: [0, 0, 0] }; if (q.mat) cost.mat[w.sharpen < 7 ? 1 : 2] = q.mat; if (pay(cost)) n.ren = true; }
+          if (w.sharpen < Math.min(G.MAX_SHARPEN, G.FORGE_CAP[sv.forge]) && pay(G.sharpenFull(w.sharpen))) n.ren = true;
           if (G.wRar(w) < 2 && pay(G.TIER_UP[G.wRar(w) + 1])) n.ren = true;
         }
       }
@@ -22586,7 +22737,7 @@ MA._xong();
       ['shard0', sv.shards[0], '#c8e8a0'], ['shard1', sv.shards[1], '#a8d8ff'], ['shard2', sv.shards[2], '#ffc0a0']];
   };
   VS.drawTop = function () {
-    const sv = G.save, ui = G.ui, parts = VS.resParts(), right = G.HEROES[sv.hero].name + ' · cấp ' + sv.heroes[sv.hero].lvl;
+    const sv = G.save, ui = G.ui, parts = VS.resParts(), right = G.HEROES[sv.hero].name + ' · cấp ' + sv.heroes[sv.hero].lvl + ' · sức mạnh ' + G.power();
     if (G.theme && G.theme.topBar) { G.theme.topBar(parts, right); return; }
     ui.rect(0, 0, 480, 15, 'rgba(12,10,18,0.82)');
     let x = 6; for (const q of parts) { const t = String(q[1]); ui.text(t, x, 10.5, { size: 7, bold: true, color: q[2] }); ui.font(7, true); x += G.ux.measureText(t).width + 8; }
@@ -22835,14 +22986,15 @@ MA._xong();
       const px = q[3] || q[1], py = q[4] || q[2] + 12;
       ui.font(6.5, true); ui.rect(px - 16, py - 7, 32, 10, 'rgba(74,54,38,0.85)'); ui.text('sắp có', px, py + 0.6, { size: 6.5, bold: true, align: 'center', color: '#f0e6c8', shadow: false });
     }
-    // 15 thẻ ải mặt trống
+    // 15 thẻ ải mặt trống; ải chưa qua ghi sức mạnh khuyên dùng, tô màu so với sức mạnh của bé (xanh đủ, vàng sát nút, đỏ thiếu)
+    const pw = G.power();
     let hit = null, hd = 19;
     for (let r = 0; r < 3; r++) for (let i = 0; i < 5; i++) {
       const q = M.nodes[r][i], st = map[r + '-' + i] || 0, ok = unlocked(r, i, V.diff), boss = i === 4, rad = boss ? 12 : 10;
       const selc = V.sel && V.sel[0] === r && V.sel[1] === i;
       T.stageCard(q[0] - 20, q[1] - rad - 4, 40, 36, i + 1, !ok ? 'lock' : selc ? 'sel' : st ? 'done' : 'open', st, { r: rad, boss, noClick: true, noStars: true });
       if (ok && st) inkText('★'.repeat(st) + '☆'.repeat(3 - st), q[0], q[1] + rad + 8.5, 6.5, '#ffd23f', 'rgba(74,54,38,0.95)');
-      else if (ok && !selc) inkText('mới', q[0], q[1] + rad + 8.5, 6.5, '#2f7a2a', halo);
+      else if (ok && !selc) { const need = G.stageRec(r, i, V.diff); inkText('⚔' + need, q[0], q[1] + rad + 8.5, 6.5, G.powerCol(pw, need), 'rgba(40,28,20,0.92)'); }
       if (ok && G.click) { const d = Math.hypot(G.click.x - q[0], G.click.y - q[1]); if (d < hd) { hd = d; hit = [r, i]; } }
     }
     if (hit && !(G.click.x > 246 && G.click.y > 206)) { V.sel = hit; G.click = null; G.sfx('ui'); }
@@ -22862,8 +23014,12 @@ MA._xong();
     if (V.sel) {
       const r = V.sel[0], i = V.sel[1], R = G.REGIONS[r], b = G.stageStats(r, i, V.diff);
       ui.text(R.name + ' · ' + (i === 4 ? 'Ải trùm' : 'Ải ' + (i + 1)) + (V.diff ? ' · khó 2' : ''), 256, 219, { size: 9.5, bold: true, color: GOLD });
-      ui.text((i === 4 ? 'Trùm vùng ' + R.bossName : 'Trùm nhỏ ' + R.mini) + ' · ' + (i < 2 ? 7 : 8) + ' phòng', 256, 230, { size: 7, color: TXT });
-      ui.text('Hệ ' + G.EL[R.el].name + ' · gợi ý cấp hero ' + Math.max(1, Math.round((r * 5 + i) * 1.6 + 1 + (V.diff ? 6 : 0))), 256, 240, { size: 7, color: G.EL[R.el].col });
+      const l2 = (i === 4 ? 'Trùm vùng ' + R.bossName : 'Trùm nhỏ ' + R.mini) + ' · ' + (i < 2 ? 7 : 8) + ' phòng · ';
+      ui.text(l2, 256, 230, { size: 7, color: TXT });
+      ui.font(7); ui.text('hệ ' + G.EL[R.el].name, 256 + G.ux.measureText(l2).width, 230, { size: 7, color: G.EL[R.el].col });
+      // Sức mạnh khuyên dùng so với sức mạnh hiện tại của bé (G.power): xanh đủ, vàng sát nút, đỏ thiếu
+      const need = G.stageRec(r, i, V.diff), col = G.powerCol(pw, need);
+      ui.text('Sức mạnh khuyên dùng ' + need + ' · bé ' + pw, 256, 240, { size: 7.5, bold: true, color: col });
       ui.para('Thưởng: ' + b.xp + ' kinh nghiệm, ~' + b.gold + ' vàng, ' + (5 + i) + ' ' + R.mat.toLowerCase() + (i === 4 ? ', ' + (V.diff ? 4 : 3) + ' mảnh ' + R.bossName + ', vũ khí quý' : ''), 256, 250.5, 144, { size: 6.5, color: SOFT });
       if (T.btn(404, 217, 64, 38, 'Lên đò', { size: 11, primary: true })) G.startStage(r, i, V.diff);
     } else ui.text('Chạm một ải trên tranh để xem.', 256, 238, { size: 8, color: SOFT });
@@ -22915,7 +23071,7 @@ MA._xong();
     const el = w.branch, E = el ? G.EL[el] : null;
     if (!el) ui.para('Chưa khóa nhánh hệ. Kết liễu quái đang dính hiệu ứng để nhận dấu ấn; đủ ' + G.MARKS[0] + ' dấu ấn của một hệ thì vũ khí theo hệ đó.', x0, 80, 212, { size: 7, color: SOFT });
     const rows = [
-      ['Trắng', 'Chỉ có chỉ số, chưa mang hệ.'],
+      ['Trắng', 'Chưa mang hệ. Hạ tinh anh, trùm hoặc nhặt viên linh khí quái thường rơi để có dấu ấn.'],
       ['Mầm', 'Chỉ số tăng. ' + Math.round(G.PROC[1] * 100) + '% mỗi đòn gây ' + (el ? (el === 'fire' ? 'cháy' : el === 'poison' ? 'độc' : 'chậm') : 'hiệu ứng hệ') + ', vệt chém nhuốm màu hệ. Chưa có luật hệ.'],
       ['Thành hình', null, 0],
       ['Thức tỉnh', null, 1],
@@ -22977,12 +23133,10 @@ MA._xong();
       if (!w) ui.text('Chạm một vũ khí ở trên để chọn.', CX + 8, DET_Y + 30, { size: 8.5, color: SOFT });
       else {
         const cap = G.FORGE_CAP[sv.forge];
-        const c = G.sharpenCost(w.sharpen);
-        const cost = { ore: c.ore, gold: c.gold, mat: [0, 0, 0] };
-        if (c.mat) cost.mat[w.sharpen < 7 ? 1 : 2] = c.mat;
+        const cost = G.sharpenFull(w.sharpen);
         ui.text(G.wName(w), CX + 8, DET_Y + 14, { size: 8.5, bold: true, color: R4[G.wRar(w)].col });
         ui.text('Sát thương mỗi đòn ' + G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1), CX + 8, DET_Y + 26, { size: 7.5 });
-        if (w.sharpen >= 10) { ui.text('Đã mài tối đa.', CX + 8, DET_Y + 40, { size: 8, color: GOOD }); line = 'Lưỡi này bén hết cỡ rồi cháu ạ.'; }
+        if (w.sharpen >= G.MAX_SHARPEN) { ui.text('Đã mài tối đa.', CX + 8, DET_Y + 40, { size: 8, color: GOOD }); line = 'Lưỡi này bén hết cỡ rồi cháu ạ.'; }
         else if (w.sharpen >= cap) { ui.para('Lò cấp ' + sv.forge + ' chỉ mài tới +' + cap + '. Hãy nâng lò.', CX + 8, DET_Y + 38, 290, { size: 7.5, color: WARN }); line = 'Lò còn yếu, phải nâng lò mới mài tiếp được.'; }
         else {
           ui.para('Lên +' + (w.sharpen + 1) + ' tốn: ' + costText(cost), CX + 8, DET_Y + 38, 198, { size: 7.5, color: canPay(cost) ? TXT : WARN });
@@ -23145,7 +23299,11 @@ MA._xong();
     ui.text(H.name + ' · cấp ' + hs.lvl, CX + 2, 164, { size: 10, bold: true, color: GOLD });
     T.bar(CX + 110, 157, 192, 'xp', hs.lvl >= G.MAX_LEVEL ? 1 : hs.xp / G.xpNeed(hs.lvl), null, { h: 7 });
     let y = 178;
-    ui.text('Máu gốc ' + H.hp + ' · Mana ' + H.mana + ' · Tốc độ ' + Math.round(H.speed * 100) + '%', CX + 2, y, { size: 7.5 });
+    // Sức mạnh: một con số tính từ cấp hero, vũ khí mạnh nhất đang mang (bậc, mài, tiến hóa), điểm kỹ năng, mũ và áo (G.power)
+    const pw = G.power();
+    ui.text('Sức mạnh ' + pw, CX + 2, y, { size: 8.5, bold: true, color: GOLD });
+    ui.font(8.5, true); const sx = CX + 2 + G.ux.measureText('Sức mạnh ' + pw).width + 6;
+    ui.text('Máu gốc ' + H.hp + ' · Mana ' + H.mana + ' · Tốc độ ' + Math.round(H.speed * 100) + '%', sx, y, { size: 7.5 });
     y = ui.para('Sở trường: ' + H.fav.map((f) => G.WTYPES[f].name).join(', ') + ' (+10% sát thương)', CX + 2, y + 11, 300, { size: 7.5 });
     y = ui.para('Nội tại: ' + H.passive, CX + 2, y + 2, 300, { size: 7.5, color: SOFT });
     ui.para('Kỹ năng ' + H.skill + ' (40 mana): ' + H.skillDesc, CX + 2, y + 2, 300, { size: 7.5, color: SOFT });
@@ -23204,7 +23362,7 @@ MA._xong();
     ['Vật trong phòng', 'Chậu than, nấm độc và tinh thể băng phát nổ khi bị đánh, gây hiệu ứng lên quái đứng gần. Đây là cách gây hệ khi vũ khí còn trắng.'],
     ['Bốn bậc màu', 'Thường (sát thương x1, tiến hóa tới Thành hình), Lam (x1,15, có 1 dòng phụ), Tím (x1,3, có 2 dòng phụ), Vàng (x1,5 trở lên, 2 dòng phụ và 1 dòng mạnh riêng). Từ Lam trở lên tiến hóa được tới Thức tỉnh.'],
     ['Nguồn vũ khí', 'Rương và quái tinh anh rơi vũ khí bậc ngẫu nhiên, cao nhất là Tím; vùng sau dễ ra bậc cao hơn. Trùm vùng lần đầu bị hạ chắc chắn rơi một vũ khí Vàng. Ông Thợ Rèn nâng bậc từng nấc mà không mất tiến hóa; nấc lên Vàng cần mảnh trùm.'],
-    ['Đặc trưng hệ theo cấp', 'Trắng: chỉ có chỉ số. Mầm: có tỉ lệ gây cháy, độc, chậm nhưng chưa có luật hệ. Thành hình: mở đặc trưng 1, thứ để lại trên sân (vệt cháy, vũng độc, gai băng). Thức tỉnh: mở đặc trưng 2, phản ứng dây chuyền (nổ lan, lây độc, băng vỡ).'],
+    ['Đặc trưng hệ theo cấp', 'Trắng: chưa có hệ. Linh khí (dấu ấn) có từ: hạ tinh anh (' + G.LINHKHI.elite + '), trùm nhỏ (' + G.LINHKHI.mini + '), trùm vùng (' + G.LINHKHI.boss + '); quái thường ' + Math.round(G.LINHKHI.drop * 100) + '% rơi viên linh khí của vùng (' + G.LINHKHI.orb + '), đi lại gần để nhặt; kết liễu quái đang dính hệ (+1). Hệ theo hệ quái đang dính, không dính thì theo vùng. Mầm: có tỉ lệ gây cháy, độc, chậm nhưng chưa có luật hệ. Thành hình: mở đặc trưng 1, thứ để lại trên sân (vệt cháy, vũng độc, gai băng). Thức tỉnh: mở đặc trưng 2, phản ứng dây chuyền (nổ lan, lây độc, băng vỡ).'],
     ['Xem vũ khí', 'Ở làng, chạm vào vũ khí đang bay theo em bé để xem bậc, dòng phụ và các đặc trưng đã mở, sắp mở. Ở chỗ Bà Hàng Xén cũng có nút Xem cho món trong rương.'],
   ];
   function help() {
@@ -23270,7 +23428,23 @@ MA._xong();
   const PANELS = { forge, gear, outfit, hero, skill, help, settings };
   Object.assign(G.villageApi, { PANELS, pager, say, costText, frame, npcSide, viewWeapon, doTabs });
   G.Village = {
-    enter() { goHub(); VS.enter({}); G.persist(); },
+    enter() {
+      goHub(); VS.enter({}); G.persist();
+      // Bấm một gợi ý ở bảng thua (G.upgradeTips): về làng là mở luôn bảng của người làng tương ứng, chọn sẵn món cần nâng.
+      const g = G.villageGo; G.villageGo = null;
+      if (!g) return;
+      if (g.weapon != null && G.weaponById(g.weapon)) { viewWeapon(g.weapon, 'hub'); return; }
+      if (!g.who || !TAB_OF[g.who]) return;
+      open(g.who);
+      if (g.ftab) V.ftab = g.ftab;
+      if (g.otab) V.otab = g.otab;
+      if (g.oslot) V.oslot = g.oslot;
+      if (g.who === 'xen') V.gtab = g.gtab || 'weapon';
+      if (g.who === 'do') V.tab = 'skill';
+      if (g.sel != null) V.sel = g.sel;
+      if (g.page != null) V.page = g.page;
+      if (g.stage) { V.diff = 0; V.sel = g.stage; }
+    },
     hide() { /* không có gì phải dừng */ },
     update(dt) {
       if (V.msgT > 0) V.msgT -= dt;
@@ -23548,6 +23722,277 @@ MA._xong();
   panel.full = true;
   VA.PANELS.outfit = panel;
   G.tailor = { panel };
+})();
+
+// ===== js/upgrade.js =====
+// CÀY NÂNG CẤP (G.upg): liệt kê mọi đường nâng cấp em bé đang có thể đi, tính mỗi đường thêm bao nhiêu Sức mạnh (G.power),
+// tốn gì, còn thiếu gì và nên chơi lại ải nào để kiếm cho đủ.
+//   - Bảng thua (js/stage.js) dùng G.upgradeTips để gợi ý 2-3 việc nên cày, bấm vào thì đi thẳng tới người làng tương ứng.
+//   - Bot kiểm tra cân bằng (tests/cay.py, tests/campaign.py) dùng G.upg.auto để nâng cấp như người chơi: làm việc rẻ mà hiệu quả trước.
+// Sức mạnh chỉ đến từ cày: cấp hero, mài, nâng bậc, tiến hóa theo linh khí, nâng lò, cây kỹ năng, trang phục (may, nâng bậc, cánh).
+// Thua KHÔNG làm bé mạnh thêm (đã bỏ "Quyết tâm").
+(function () {
+  const G = window.G;
+  const U = (G.upg = {});
+  // Quy mọi thứ ra vàng để so "rẻ" hay "đắt".
+  U.VAL = { gold: 1, ore: 12, stones: 120, mat: 20, shard: 150, xp: 0.35, lk: 4 };
+  U.costVal = function (c) {
+    if (!c) return 0;
+    let v = (c.gold || 0) * U.VAL.gold + (c.ore || 0) * U.VAL.ore + (c.stones || 0) * U.VAL.stones + (c.xp || 0) * U.VAL.xp + (c.lk || 0) * U.VAL.lk;
+    for (let i = 0; i < 3; i++) v += ((c.mat && c.mat[i]) || 0) * U.VAL.mat + ((c.shard && c.shard[i]) || 0) * U.VAL.shard;
+    return v;
+  };
+  // Phần còn thiếu của giá c so với bản lưu sv (null nếu đủ).
+  U.missing = function (sv, c) {
+    if (!c) return null;
+    const m = { gold: Math.max(0, (c.gold || 0) - sv.gold), ore: Math.max(0, (c.ore || 0) - sv.ore), stones: Math.max(0, (c.stones || 0) - sv.stones), mat: [0, 0, 0], shard: [0, 0, 0] };
+    let any = m.gold || m.ore || m.stones;
+    for (let i = 0; i < 3; i++) {
+      m.mat[i] = Math.max(0, ((c.mat && c.mat[i]) || 0) - sv.mats[i]);
+      m.shard[i] = Math.max(0, ((c.shard && c.shard[i]) || 0) - sv.shards[i]);
+      if (m.mat[i] || m.shard[i]) any = true;
+    }
+    return any ? m : null;
+  };
+  // Tên ải để chơi lại: ải thường cao nhất đã qua (trong vùng r nếu có).
+  const stName = (r, i) => (i === 4 ? 'trùm ' + G.REGIONS[r].bossName : G.REGIONS[r].name + ' ' + (i + 1));
+  U.grindStage = function (sv, r) {
+    let best = null;
+    for (let rr = 0; rr < 3; rr++) {
+      if (r != null && rr !== r) continue;
+      for (let i = 0; i < 4; i++) if (sv.stars[rr + '-' + i]) best = [rr, i];
+    }
+    // ưu tiên ải thường (dễ thắng, nhanh); chưa qua ải thường nào của vùng thì mới chỉ ải trùm
+    if (!best) for (let rr = 0; rr < 3; rr++) if ((r == null || rr === r) && sv.stars[rr + '-4']) best = [rr, 4];
+    return best;
+  };
+  // Ải nên chơi lại để kiếm phần thiếu m (mảnh trùm: đánh lại trùm; nguyên liệu: ải cao nhất đã qua của vùng đó; còn lại: ải cao nhất đã qua).
+  U.where = function (sv, m) {
+    if (m) {
+      for (let i = 0; i < 3; i++) if (m.shard[i] && !sv.stars[i + '-4']) return null; // cần mảnh của trùm chưa hạ: chưa cày được
+      for (let i = 0; i < 3; i++) if (m.shard[i]) return [i, 4];
+      for (let i = 0; i < 3; i++) if (m.mat[i]) return U.grindStage(sv, i);
+    }
+    return U.grindStage(sv);
+  };
+  // Câu "còn thiếu ..." kèm chỗ nên cày.
+  U.missText = function (sv, m) {
+    const a = [];
+    let where = null;
+    for (let i = 0; i < 3; i++) {
+      if (m.shard[i]) { a.push(m.shard[i] + ' mảnh ' + G.REGIONS[i].bossName); where = where || (sv.stars[i + '-4'] ? 'đánh lại trùm ' + G.REGIONS[i].bossName : 'hạ trùm ' + G.REGIONS[i].bossName); }
+    }
+    for (let i = 0; i < 3; i++) {
+      if (!m.mat[i]) continue;
+      a.push(m.mat[i] + ' ' + G.REGIONS[i].mat.toLowerCase());
+      const g = U.grindStage(sv, i);
+      where = where || (g ? 'chơi lại ' + stName(g[0], g[1]) : 'vào vùng ' + G.REGIONS[i].name);
+    }
+    if (m.gold) a.push(m.gold + ' vàng');
+    if (m.ore) a.push(m.ore + ' quặng');
+    if (m.stones) { a.push(m.stones + ' đá tôi'); where = where || 'đá tôi rơi từ rương, sao thứ ba lần đầu'; }
+    if (!where && (m.gold || m.ore)) { const g = U.grindStage(sv); if (g) where = 'chơi lại ' + stName(g[0], g[1]); }
+    return 'thiếu ' + a.join(', ') + (where ? ' — ' + where : '');
+  };
+
+  // ---------- các đường nâng cấp ----------
+  const wById = (sv, id) => sv.weapons.find((w) => w.id === id) || null;
+  const wNameOf = (w) => G.wName(w).replace(/ \+\d+$/, '');
+  const pts = (hs) => Math.floor(hs.lvl / 3) - (hs.sk.atk + hs.sk.def + hs.sk.elem);
+  function setRar(w, to, gold) {
+    w.rarity = to; if (w.tier != null) w.tier = to;
+    if (to === 3) w.gold = gold;
+    if (G.fitAffixes) G.fitAffixes(w);
+  }
+  // Danh sách thô: { kind, key, title, cost, apply(sv) (null nếu không làm ngay được), go: {who, ...}, need (thiếu kinh nghiệm, linh khí) }
+  U.list = function (sv) {
+    sv = sv || G.save;
+    const out = [], hs = sv.heroes[sv.hero], O = G.outfit;
+    // cây kỹ năng
+    if (pts(hs) > 0) {
+      for (const b of G.SKEYS) if (hs.sk[b] < 5) out.push({ kind: 'skill', key: 'skill', br: b, title: 'Còn ' + pts(hs) + ' điểm kỹ năng chưa học (nhánh ' + G.SKILLS[b].name + ')', cost: {}, apply: (s) => { s.heroes[s.hero].sk[b]++; }, go: { who: 'do' } });
+    }
+    // vũ khí đang mang: mài, nâng bậc, lên Vàng, nâng lò
+    const cap = G.FORGE_CAP[sv.forge];
+    let needForge = false;
+    for (const id of sv.carry) {
+      const w = wById(sv, id);
+      if (!w) continue;
+      const nm = wNameOf(w), r = G.wRar(w);
+      if (w.sharpen < Math.min(cap, G.MAX_SHARPEN)) {
+        out.push({ kind: 'sharpen', key: 'sh' + id, title: 'Mài ' + nm + ' lên +' + (w.sharpen + 1), cost: G.sharpenFull(w.sharpen), apply: (s) => { wById(s, id).sharpen++; }, go: { who: 'ren', ftab: 'sharpen', sel: id } });
+      } else if (w.sharpen < G.MAX_SHARPEN) needForge = true;
+      if (r < 2) out.push({ kind: 'tier', key: 'ti' + id, title: 'Nâng ' + nm + ' lên ' + G.RARITY[r + 1].name, cost: G.TIER_UP[r + 1], apply: (s) => setRar(wById(s, id), r + 1, 0), go: { who: 'ren', ftab: 'tier', sel: id } });
+      else {
+        // lên Vàng (hoặc Vàng mạnh hơn): mảnh trùm vùng cao nhất đã hạ, nếu chưa hạ trùm nào thì mảnh Mộc Tinh
+        let k = 0;
+        for (let q = 0; q < 3; q++) if (sv.stars[q + '-4']) k = q;
+        if (r < 3 || k > (w.gold | 0)) out.push({ kind: 'gold', key: 'go' + id, title: 'Nâng ' + nm + ' lên Vàng ' + G.REGIONS[k].bossName, cost: G.goldCost(k), apply: (s) => setRar(wById(s, id), 3, k), go: { who: 'ren', ftab: 'tier', sel: id } });
+      }
+      // tiến hóa theo linh khí (dấu ấn): không mua được, phải chơi
+      const st = G.wStage(w), maxSt = G.RARITY[r].maxStage;
+      if (st < maxSt) {
+        let el = w.branch;
+        if (!el) { el = G.ELS[0]; for (const e of G.ELS) if ((w.marks[e] || 0) > (w.marks[el] || 0)) el = e; }
+        const need = Math.ceil(G.MARKS[st] - (w.marks[el] || 0));
+        if (need > 0) out.push({ kind: 'evolve', key: 'ev' + id, title: 'Tiến hóa ' + nm + ' lên ' + G.STAGE_NAMES[st + 1], cost: {}, need: { lk: need, el },
+          sim: (s) => { const x = wById(s, id); x.marks[el] = G.MARKS[st]; if (!x.branch) x.branch = el; }, apply: null, go: { weapon: id } });
+      }
+    }
+    const up = G.FORGE_UP[sv.forge];
+    if (up && needForge) {
+      const main = sv.carry.map((id) => wById(sv, id)).filter(Boolean).sort((a, b) => b.sharpen - a.sharpen)[0];
+      out.push({ kind: 'forge', key: 'forge', title: 'Nâng lò lên cấp ' + (sv.forge + 1) + ' (mài tới +' + G.FORGE_CAP[sv.forge + 1] + ')', cost: up,
+        apply: (s) => { s.forge++; }, sim: (s) => { s.forge++; if (main) wById(s, main.id).sharpen++; }, extra: main ? G.sharpenFull(main.sharpen) : null, go: { who: 'ren', ftab: 'up' } });
+    }
+    // mang vũ khí tốt hơn trong rương
+    // (chỉ xét vài món mạnh nhất trong rương cho nhanh)
+    const wq = (w) => G.wRarMult(w) * G.STAGE_MULT[G.wStage(w)] * (1 + 0.08 * w.sharpen) * G.WTYPES[w.type].dmg / (G.WTYPES[w.type].cd || 0.4);
+    const stash = sv.weapons.filter((w) => !sv.carry.includes(w.id)).sort((a, b) => wq(b) - wq(a)).slice(0, 3);
+    for (const w of stash) for (let slot = 0; slot < Math.max(1, sv.carry.length); slot++) {
+      out.push({ kind: 'carry', key: 'ca' + w.id + '-' + slot, title: 'Mang ' + G.wName(w), cost: {}, apply: (s) => { s.carry[slot] = w.id; }, go: { who: 'xen' } });
+    }
+    // trang phục
+    if (O && sv.outfit) {
+      O.sync(sv);
+      for (const slot of O.SLOTS) {
+        const it = O.worn(sv, slot);
+        if (it) {
+          const id = it.id;
+          if (slot === 'wing') { const c = O.wingCost(it); if (c) out.push({ kind: 'wing', key: 'wi' + id, title: 'Mở cấp ' + (it.lv + 1) + ' cho ' + O.ITEMS[it.k].name, cost: c, apply: (s) => { s.outfit.items.find((x) => x.id === id).lv++; }, go: { who: 'may', otab: 'wing', sel: id } }); }
+          const c = O.upCost(it);
+          if (c) out.push({ kind: 'oup', key: 'ou' + id, title: 'Nâng ' + O.ITEMS[it.k].name + ' lên ' + G.RARITY[it.r + 1].name, cost: c, apply: (s) => { s.outfit.items.find((x) => x.id === id).r++; }, go: { who: 'may', otab: 'wear', sel: id, oslot: slot } });
+        }
+        const qk = (x) => x.r * 10 + (x.lv || 0) * 5 + Object.values(O.stats(x)).reduce((a, b) => a + (b < 1 ? b * 100 : b), 0) / 10;
+        const cands = sv.outfit.items.filter((x) => O.ITEMS[x.k].slot === slot && !(it && x.id === it.id)).sort((a, b) => qk(b) - qk(a)).slice(0, 2);
+        for (const x of cands) {
+          const id = x.id;
+          out.push({ kind: 'wear', key: 'we' + id, title: 'Mặc ' + O.name(x), cost: {}, apply: (s) => { O.wear(s, s.outfit.items.find((q) => q.id === id)); }, go: { who: 'may', otab: 'wear', sel: id, oslot: slot } });
+        }
+      }
+      if (!O.full(sv)) {
+        const list = O.craftList();
+        for (const k of list) {
+          if (O.has(sv, k)) continue;
+          out.push({ kind: 'craft', key: 'cr' + k, title: 'May ' + O.ITEMS[k].name, cost: O.craftCost(k), apply: (s) => { const it = O.craft(s, k); if (it) O.wear(s, it); }, go: { who: 'may', otab: 'craft', sel: k, page: Math.floor(list.indexOf(k) / 4) } });
+        }
+        for (const k of O.shopList()) {
+          if (O.has(sv, k)) continue;
+          out.push({ kind: 'buy', key: 'bu' + k, title: 'Mua ' + O.ITEMS[k].name, cost: { gold: O.ITEMS[k].price }, apply: (s) => { const it = O.buy(s, k); if (it) O.wear(s, it); }, go: { who: 'xen', gtab: 'outfit' } });
+        }
+      }
+    }
+    // cấp hero: không mua được, phải chơi
+    if (hs.lvl < G.MAX_LEVEL) {
+      const g = U.grindStage(sv);
+      out.push({ kind: 'level', key: 'lvl', title: 'Lên cấp ' + (hs.lvl + 1), cost: {}, need: { xp: Math.max(1, Math.ceil(G.xpNeed(hs.lvl) - hs.xp)) },
+        sim: (s) => { s.heroes[s.hero].lvl++; }, apply: null, go: { who: 'lai', stage: g } });
+    }
+    return out;
+  };
+  // Sức mạnh sau khi làm fn trên một bản sao của sv (bản lưu thật không đổi).
+  U.powerWith = function (sv, fn) {
+    const keep = G.save, c = JSON.parse(JSON.stringify(sv));
+    G.save = c;
+    try { if (fn) fn(c); return G.power(); } catch (e) { return 0; } finally { G.save = keep; }
+  };
+  // Tính thêm cho mỗi đường: gain (Sức mạnh tăng), ok (làm ngay được), miss (phần thiếu), val (độ đắt quy ra vàng).
+  U.rate = function (sv, list) {
+    sv = sv || G.save;
+    const base = U.powerWith(sv);
+    for (const o of list || U.list(sv)) {
+      o.gain = U.powerWith(sv, o.sim || o.apply) - base;
+      const full = o.extra ? addCost(o.cost, o.extra) : o.cost;
+      o.miss = U.missing(sv, o.cost);
+      o.ok = !!o.apply && !o.miss;
+      o.val = U.costVal(full) + (o.need ? U.costVal(o.need) : 0);
+      o.missVal = (o.miss ? U.costVal(o.miss) : 0) + (o.need ? U.costVal(o.need) : 0);
+      o.base = base;
+      o.where = o.miss || o.need ? U.where(sv, o.miss) : null;
+    }
+    return list;
+  };
+  function addCost(a, b) {
+    const c = { gold: (a.gold || 0) + (b.gold || 0), ore: (a.ore || 0) + (b.ore || 0), stones: (a.stones || 0) + (b.stones || 0), mat: [0, 0, 0], shard: [0, 0, 0] };
+    for (let i = 0; i < 3; i++) { c.mat[i] = ((a.mat && a.mat[i]) || 0) + ((b.mat && b.mat[i]) || 0); c.shard[i] = ((a.shard && a.shard[i]) || 0) + ((b.shard && b.shard[i]) || 0); }
+    return c;
+  }
+  function pay(sv, c) {
+    sv.gold -= c.gold || 0; sv.ore -= c.ore || 0; sv.stones -= c.stones || 0;
+    for (let i = 0; i < 3; i++) { sv.mats[i] -= (c.mat && c.mat[i]) || 0; sv.shards[i] -= (c.shard && c.shard[i]) || 0; }
+  }
+  // Làm một đường nâng cấp trên bản lưu thật.
+  U.doIt = function (sv, o) {
+    const O = G.outfit;
+    if (!o.apply || U.missing(sv, o.cost)) return false;
+    if (o.kind !== 'craft' && o.kind !== 'buy') pay(sv, o.cost); // may và mua: js/outfit.js tự trừ
+    o.apply(sv);
+    return true;
+  };
+  // Nâng cấp tự động như người chơi chăm chỉ: lặp lại "làm việc đáng nhất trong những việc làm ngay được" (Sức mạnh tăng / độ đắt),
+  // tới khi hết việc. Đổi đồ, mang vũ khí, học kỹ năng không tốn gì nên làm trước. Trả về danh sách việc đã làm.
+  U.auto = function (sv, o) {
+    sv = sv || G.save;
+    o = o || {};
+    const done = [];
+    for (let n = 0; n < (o.max || 80); n++) {
+      const all = U.rate(sv, U.list(sv).filter((q) => !(o.skip && o.skip.includes(q.kind))));
+      // Điểm kỹ năng luôn học hết (nút như hồi máu mỗi phòng, lăn né hồi nhanh không làm tăng con số Sức mạnh nhưng giúp sống sót):
+      // nhánh tăng sức mạnh nhiều nhất trước, bằng nhau thì nhánh đang ít điểm nhất (Thủ trước).
+      const sk = all.filter((q) => q.kind === 'skill');
+      if (sk.length) {
+        const hs = sv.heroes[sv.hero], ord = ['def', 'atk', 'elem'];
+        sk.sort((a, b) => b.gain - a.gain || hs.sk[a.br] - hs.sk[b.br] || ord.indexOf(a.br) - ord.indexOf(b.br));
+        U.doIt(sv, sk[0]); done.push(sk[0].title); continue;
+      }
+      const list = all.filter((q) => q.ok && q.gain > 0);
+      if (!list.length) break;
+      list.sort((a, b) => b.gain / (5 + b.val) - a.gain / (5 + a.val));
+      const best = list[0];
+      if (!U.doIt(sv, best)) break;
+      done.push(best.title);
+    }
+    return done;
+  };
+
+  // Nên chơi lại ải nào để cày: chỗ kiếm phần thiếu của việc đáng làm nhất còn thiếu đồ (như gợi ý ở bảng thua). null: ải mới nhất đã qua.
+  U.grindTarget = function (sv) {
+    sv = sv || G.save;
+    const list = U.rate(sv, U.list(sv).filter((q) => q.kind !== 'carry' && q.kind !== 'skill')).filter((q) => !q.ok && q.gain > 0 && q.where);
+    if (!list.length) return null;
+    list.sort((a, b) => b.gain / (25 + b.val * 0.15 + b.missVal) - a.gain / (25 + a.val * 0.15 + a.missVal));
+    return list[0].where;
+  };
+
+  // ---------- gợi ý ở bảng thua ----------
+  // Trả về { power, rec, tips: [{ text, sub, gain, ok, go }] } (tối đa n gợi ý, mặc định 3).
+  G.upgradeTips = function (r, i, diff, n) {
+    const sv = G.save;
+    if (!sv || !sv.heroes) return null;
+    const rec = G.stageRec(r, i, diff);
+    let list = [];
+    try { list = U.rate(sv, U.list(sv)).filter((q) => q.gain > 0 || q.kind === 'skill'); } catch (e) { list = []; }
+    // Đường nào gần làm được mà tăng nhiều thì xếp trước; làm ngay được thì ưu tiên hẳn.
+    // điểm kỹ năng chưa học luôn nhắc trước; việc cần mảnh của trùm chưa hạ (chưa cày được) xếp sau cùng
+    const score = (q) => q.kind === 'skill' ? 1e9 + q.gain : (q.gain / (25 + q.val * 0.15 + q.missVal)) * (q.ok ? 4 : 1) * (q.miss && !q.where ? 0.05 : 1);
+    list.sort((a, b) => score(b) - score(a));
+    const tips = [], seen = {};
+    for (const q of list) {
+      const grp = { skill: 'skill', carry: 'carry', wear: 'wear', buy: 'new', craft: 'new' }[q.kind] || q.key;
+      if (seen[grp]) continue;
+      seen[grp] = true;
+      let sub;
+      if (q.kind === 'level') { const g = q.go.stage; sub = 'còn thiếu ' + q.need.xp + ' kinh nghiệm' + (g ? ' — chơi lại ' + stName(g[0], g[1]) : ''); }
+      else if (q.kind === 'evolve') sub = 'còn thiếu ' + q.need.lk + ' linh khí ' + G.EL[q.need.el].name + ' — kết liễu quái đang dính ' + G.EL[q.need.el].name;
+      else if (q.miss) sub = U.missText(sv, q.miss);
+      else sub = q.kind === 'skill' ? 'học ngay ở Cụ Đồ' : q.kind === 'carry' ? 'đổi ngay ở Bà Hàng Xén' : q.kind === 'wear' ? 'mặc ngay ở Cô Thợ May' : 'đủ đồ rồi — tới ' + WHO_NAME[q.go.who] + ' làm ngay';
+      tips.push({ text: q.title, sub, gain: Math.round(q.gain), ok: q.ok, go: q.go, kind: q.kind });
+      if (tips.length >= (n || 3)) break;
+    }
+    return { power: G.power(), rec, tips };
+  };
+  const WHO_NAME = { ren: 'Ông Thợ Rèn', may: 'Cô Thợ May', xen: 'Bà Hàng Xén', do: 'Cụ Đồ', lai: 'Chú Lái Đò' };
+  U.WHO_NAME = WHO_NAME;
 })();
 
 // ===== js/mapgen.js =====
@@ -25230,7 +25675,7 @@ MA._xong();
   const D = (G.doRoi = {});
   const OL = '#120c08';
   const TAU = Math.PI * 2;
-  const NHAN = { gold: 1, ore: 1, stone: 1, mat0: 1, mat1: 1, mat2: 1, shard0: 1, shard1: 1, shard2: 1, xp: 1 }; // loại hút xa
+  const NHAN = { linhkhi: 1, gold: 1, ore: 1, stone: 1, mat0: 1, mat1: 1, mat2: 1, shard0: 1, shard1: 1, shard2: 1, xp: 1 }; // loại hút xa
   const MAU_TRUM = ['#8ac84a', '#5ab0f0', '#ff8a4a']; // màu mảnh trùm theo vùng (Mộc Tinh, Ngư Tinh, Hồ Tinh)
   const cache = new Map();
 
@@ -25257,6 +25702,7 @@ MA._xong();
       else if (o.kind === 'outfit' && o.o && G.outfit && G.outfit.drawIcon) G.outfit.drawIcon(c, o.o, S / 2, S / 2, 16);
       else if (o.kind === 'gold') dongXu(c, S / 2, S / 2 + 3);
       else if (o.kind === 'potion') binhMau(c, S / 2, S / 2);
+      else if (o.kind === 'linhkhi') vienLinhKhi(c, S / 2, S / 2, o.el);
       else {
         const d = G.theme && G.theme.RES && G.theme.RES[o.kind];
         if (d) for (let j = 0; j < 7; j++) for (let i = 0; i < 7; i++) { const ch = d.rows[j][i]; if (ch !== '.' && d.pal[ch]) { c.fillStyle = d.pal[ch]; c.fillRect(4 + i * 2, 4 + j * 2, 2, 2); } }
@@ -25267,9 +25713,18 @@ MA._xong();
     if (cache.size > 200) cache.delete(cache.keys().next().value);
     return cv;
   }
+  // Viên linh khí: hạt tròn sáng màu hệ, lõi trắng (quái thường rơi, nhặt thì vũ khí đang cầm nhận dấu ấn).
+  function vienLinhKhi(c, x, y, el) {
+    const E = (G.EL && G.EL[el]) || { col: '#ffffff', col2: '#ffffff', dark: '#888888' };
+    const px = (cx, cy, w, h, col) => { c.fillStyle = col; c.fillRect(cx, cy, w, h); };
+    px(x - 3, y - 5, 6, 10, E.dark); px(x - 5, y - 3, 10, 6, E.dark);
+    px(x - 2, y - 4, 4, 8, E.col); px(x - 4, y - 2, 8, 4, E.col);
+    px(x - 1, y - 2, 2, 4, E.col2); px(x - 2, y - 1, 4, 2, E.col2); px(x - 1, y - 1, 1, 1, '#ffffff');
+  }
   function khoa(o) {
     if (o.kind === 'weapon' && o.w) return 'w|' + (o.w.id || '') + '|' + o.w.type + '|' + (o.w.family || 0) + '|' + bac(o) + '|' + (o.w.branch || '') + '|' + (G.wStage ? G.wStage(o.w) : 0);
     if (o.kind === 'outfit' && o.o) return 'o|' + o.o.k + '|' + o.o.r + '|' + (o.o.lv || 1);
+    if (o.kind === 'linhkhi') return 'lk|' + o.el;
     return o.kind;
   }
   // Đống xu vàng: ba đồng xu chồng lên nhau, mặt có lỗ vuông như tiền đồng.
@@ -25400,7 +25855,7 @@ MA._xong();
       if (o.type !== 'loot' || o.got || G.time < (o.born || 0) + 0.8) continue;
       const dx = P.x - o.x, dy = P.y - 4 - o.y, d = Math.hypot(dx, dy * 1.3);
       const R = (NHAN[o.kind] ? 44 : 24) + (P.pickR || 0);
-      if (d < 9) { o.got = G.time; nhat = true; continue; }
+      if (d < 9) { o.got = G.time; nhat = true; if (o.onPick) { try { o.onPick(); } catch (e) { /* bỏ qua */ } o.onPick = null; } continue; }
       if (d < R) {
         const v = (60 + 220 * (1 - d / R)) * dt;
         o.x += (dx / (d || 1)) * Math.min(v, d); o.y += (dy / (d || 1)) * Math.min(v, d);
