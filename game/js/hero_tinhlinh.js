@@ -467,10 +467,10 @@
   // ---------- CÁNH ----------
   // Mỗi lá cánh: [góc (0 là chĩa ra sau, 90 là chĩa lên), dài, rộng]. Cấp càng cao càng nhiều lá, càng dài.
   const WINGS = {
-    chuon: { name: 'Cánh chuồn chuồn', ramp: ['#5a8fb8', '#a8dcf0', '#f0fcff'], ol: '#2c4a6a', shape: 'lobe', lv: [[[22, 8, 4]], [[42, 15, 5], [6, 12, 5]], [[52, 24, 7], [22, 22, 7], [-10, 14, 5]]] },
-    la: { name: 'Cánh lá', ramp: GRN, ol: '#12331a', shape: 'leaf', lv: [[[25, 8, 4]], [[40, 15, 7], [4, 12, 6]], [[56, 22, 9], [26, 24, 10], [-6, 17, 8]]] },
-    lua: { name: 'Cánh lửa', ramp: FIRE, ol: '#7a1810', shape: 'flame', lv: [[[25, 9, 4]], [[42, 16, 7], [8, 12, 6]], [[60, 22, 8], [34, 26, 10], [8, 20, 8], [-16, 12, 5]]] },
-    bang: { name: 'Cánh băng', ramp: ICE, ol: '#1c3a70', shape: 'shard', lv: [[[25, 9, 4]], [[50, 15, 5], [24, 15, 5], [-2, 11, 4]], [[66, 20, 5], [46, 25, 6], [26, 24, 6], [6, 19, 5], [-14, 12, 4]]] },
+    chuon: { name: 'Cánh chuồn chuồn', ramp: ['#5a8fb8', '#a8dcf0', '#f0fcff'], ol: '#2c4a6a', shape: 'lobe', lv: [[[26, 11, 5], [0, 8, 4]], [[42, 15, 5], [6, 12, 5]], [[52, 24, 7], [22, 22, 7], [-10, 14, 5]]] },
+    la: { name: 'Cánh lá', ramp: GRN, ol: '#12331a', shape: 'leaf', lv: [[[28, 11, 6]], [[40, 15, 7], [4, 12, 6]], [[56, 22, 9], [26, 24, 10], [-6, 17, 8]]] },
+    lua: { name: 'Cánh lửa', ramp: FIRE, ol: '#7a1810', shape: 'flame', lv: [[[28, 12, 6]], [[42, 16, 7], [8, 12, 6]], [[60, 22, 8], [34, 26, 10], [8, 20, 8], [-16, 12, 5]]] },
+    bang: { name: 'Cánh băng', ramp: ICE, ol: '#1c3a70', shape: 'shard', lv: [[[30, 12, 4], [4, 9, 4]], [[50, 15, 5], [24, 15, 5], [-2, 11, 4]], [[66, 20, 5], [46, 25, 6], [26, 24, 6], [6, 19, 5], [-14, 12, 4]]] },
   };
   function blade(W, a, len, wid, shape, C, hi) {
     const r = a * D2R, dx = -Math.cos(r), dy = -Math.sin(r), nx = -dy, ny = dx, h = wid / 2;
