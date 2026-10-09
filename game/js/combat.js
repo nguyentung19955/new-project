@@ -954,6 +954,7 @@
     }
     list.push({ y: P.y, f: () => { A.hero(c, G.heroArgs(P)); if (ent) ent(c, P); } });
     if (F && F.sorted) F.sorted(list, c);
+    if (G.baoTruoc) G.baoTruoc.snap(c); // chụp nền (đã có vũng, vết) trước khi vẽ nhân vật: để vùng báo trước nằm dưới nhân vật
     list.sort((a, b) => a.y - b.y);
     for (const o of list) o.f();
     if (G.mobHeroOver) G.mobHeroOver(c, P); // em bé đứng sau quái to: vẽ thêm bóng mờ của bé lên trên để không bị che mất
@@ -968,6 +969,7 @@
     for (const o of W.parts) A.p(c, Math.round(o.x), Math.round(o.y), o.s, o.s, o.col);
     if (F && F.drawOver) F.drawOver(c);
     c.setTransform(1, 0, 0, 1, 0, 0);
+    if (G.baoTruoc) G.baoTruoc.draw(cam, sx, sy); // vùng báo trước đòn: vẽ mịn ở lớp giao diện (js/bao_truoc.js)
     // chữ sát thương vẽ ở lớp giao diện cho nét
     for (const o of W.texts) G.ui.text(o.s, o.x - cam, o.y, { size: o.size, align: 'center', color: o.col, bold: true });
     if (F && F.drawUI) F.drawUI(cam);
