@@ -13163,6 +13163,7 @@ MA._xong();
     if (n >= 2 && !S.muc) return;
     if (n >= 3 && !S.R) { bao('Hãy đưa hình vào trước', true); n = 2; }
     S.buoc = n;
+    if (n >= 3 && !S.kh) chonMau(XS.goiYMau(S.muc.ma, (thongTinGoc(S.muc.ma) || {}).bay));
     for (let i = 1; i <= 5; i++) $('b' + i).classList.toggle('hien', i === n);
     for (const b of document.querySelectorAll('#cacBuoc button')) {
       const k = +b.dataset.b;
