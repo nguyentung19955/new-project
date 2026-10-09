@@ -654,6 +654,7 @@
       ui.text(CL.label(), CX + 4, 125, { size: 7.5, color: on && !CL.dirty ? GOOD : SOFT });
       ui.text(on ? (CL.isGuest() ? 'Tài khoản: Khách. Đăng nhập Google để giữ tiến trình khi đổi máy.' : 'Tài khoản Google: ' + CL.who()) : 'Tiến trình luôn được lưu trong trình duyệt này.', CX + 4, 136, { size: 7, color: SOFT });
       if (on && CL.isGuest()) {
+        G.syncTaps.push({ x: CX + 4, y: 142, w: 146, h: 24, fn: () => titleLogin(CL) });
         if (T.btn(CX + 4, 142, 146, 24, 'Đăng nhập Google', { size: 8.5, primary: true }) && !V.gBusy) {
           V.gBusy = true; say('Đang mở cửa sổ đăng nhập Google…');
           CL.google().then((r) => say(r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google. Tiến trình được giữ nguyên.' : 'Đã đăng nhập Google.'), (e) => say('Chưa đăng nhập được: ' + e.message)).then(() => { V.gBusy = false; });
@@ -705,6 +706,7 @@
       if (G.keyP.Escape) { if (G.banDo && G.banDo.ask) { G.banDo.ask = null; G.keyP.Escape = false; } else if (V.confirm) V.confirm = false; else if (V.tab === 'weapon' && V.back !== 'hub') V.tab = V.back; else if (V.tab !== 'hub') goHub(); }
     },
     draw() {
+      G.syncTaps = [];
       if (V.tab === 'title') V.tab = 'hub';
       if (V.tab === 'map') { mapScreen(); return; }
       VS.drawWorld(V.tab === 'hub' ? null : { dim: 0.62, hideHero: true });
@@ -738,7 +740,7 @@
     if (V.gBusy) return;
     V.gBusy = true; V.tMsg = 'Đang mở trang đăng nhập Google…'; V.tMsgT = 30;
     CL.google().then((r) => { V.tMsg = r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google, giữ nguyên tiến trình.' : 'Đã đăng nhập Google.'; }, (e) => { V.tMsg = 'Chưa đăng nhập được: ' + e.message; })
-      .then(() => { V.gBusy = false; V.tMsgT = 8; });
+      .then(() => { V.gBusy = false; V.tMsgT = 8; say(V.tMsg); });
   }
   G.Title = {
     enter() { VS.enter({ from: 'keep' }); VS.state.x = 470; VS.state.cam = 230; },
@@ -761,7 +763,12 @@
       const u = G.ux; ui.font(40, true); u.textAlign = 'center'; u.lineJoin = 'round'; u.lineWidth = 5; u.strokeStyle = '#1a120a'; u.strokeText('LINH KHÍ', 240, 78);
       ui.text('LINH KHÍ', 240, 78, { size: 40, bold: true, align: 'center', color: GOLD });
       ui.text('Vũ khí lớn lên theo bạn. Yêu tinh học theo bạn.', 240, 100, { size: 10, align: 'center', color: TXT });
+      G.syncTaps = [];
       const { CL, need, ok } = titleGate();
+      if (CL && CL.online() && CL.isGuest()) { // nút Đăng nhập chạy ngay trong lúc chạm để Safari không chặn cửa sổ Google
+        if (need && !ok) G.syncTaps.push({ x: 150, y: 150, w: 180, h: 30, fn: () => titleLogin(CL) });
+        if (!need || ok) G.syncTaps.push({ x: 126, y: 206, w: 112, h: 24, fn: () => titleLogin(CL) });
+      }
       if (!need) {
         if (Math.floor(G.time * 2) % 2) T.toastFit(240, 112, 'Chạm để bắt đầu', { size: 11 });
       } else if (ok) {
