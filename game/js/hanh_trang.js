@@ -145,11 +145,14 @@
     }).join(' · ');
   }
   function weaponRow(sv, w, x, y, wd, carried) {
-    const r = G.wRar(w), R = G.RARITY[r], sel = B.sel === w.id, mi = G.markInfo(w);
+    const r = G.wRar(w), R = G.RARITY[r], BD = G.banDo, sell = !RO && BD, multi = sell && BD.multi && BD.kind === 'w';
+    const picked = multi && BD.ids.has(w.id), sel = picked || (!multi && B.sel === w.id), mi = G.markInfo(w);
     T.inset(x, y, wd, 40, sel);
     T.slot(x + 3, y + 4, 32, r);
     G.art.weaponIcon(G.ux, w, x + 19, y + 20, 26);
-    const bw = 104, tw = wd - 44 - bw;
+    if (w.lock && BD) BD.lockIcon(x + 27, y + 26, true);
+    if (picked) BD.tick(x + 2, y + 2);
+    const bw = sell ? 150 : 104, tw = wd - 44 - bw;
     tx(G.wName(w), x + 40, y + 10, tw, { size: 8, bold: true, color: R.col });
     const aff = (w.affixes || []).map((k) => G.AFFIX[k]).concat(w.power && G.POWER[w.power] ? ['Dòng mạnh ' + G.POWER[w.power].name] : []);
     tx('Bậc ' + R.name + ' · mài +' + (w.sharpen | 0) + ' · đòn ' + G.wBase(w, sv.heroes[sv.hero].lvl).toFixed(1).replace('.', ',') + (aff.length ? ' · ' + aff.join(', ') : ' · không dòng phụ'), x + 40, y + 20, tw, { size: 6.5, color: TXT });
@@ -157,7 +160,17 @@
     tx(featText(w), x + 40, y + 37.5, tw, { size: 6.5, color: SOFT });
     // nút bên phải
     const bx = x + wd - bw - 2;
-    if (T.sbtn(bx, y + 3, bw, 15, 'Xem chi tiết', { size: 7, pad: 1 })) { openWeapon(w.id); return true; }
+    if (multi) { // đang chọn nhiều: chạm cả dòng để chọn, bên phải ghi giá
+      ui.text(carried ? 'đang mang, không bán' : w.lock ? 'đã khoá, không bán' : 'Bà trả ' + BD.wPrice(w) + ' vàng', bx + bw / 2, y + 23, { size: 7.5, bold: true, align: 'center', color: carried || w.lock ? SOFT : GOLD });
+      if (T.hit(x, y, wd, 40)) BD.togglePick(sv, 'w', w);
+      return false;
+    }
+    if (sell) {
+      const xw = carried ? 98 : 44;
+      if (T.sbtn(bx, y + 3, xw, 15, carried ? 'Xem chi tiết' : 'Xem', { size: 7, pad: 1 })) { openWeapon(w.id); return true; }
+      if (T.sbtn(bx + xw + 3, y + 3, 49, 15, w.lock ? 'Mở khoá' : 'Khoá', { size: 7, pad: 1, sel: !!w.lock })) { BD.toggleLock(w); VA.say((w.lock ? 'Đã khoá ' : 'Đã mở khoá ') + G.wName(w) + '.'); return true; }
+      if (!carried && T.sbtn(bx + 99, y + 3, 51, 15, w.lock ? 'Đã khoá' : 'Bán ' + BD.wPrice(w) + ' vàng', { size: 7, pad: 1, danger: true, disabled: !!w.lock })) { BD.request(sv, 'w', [w.id], () => { B.sel = null; }); return true; }
+    } else if (T.sbtn(bx, y + 3, bw, 15, 'Xem chi tiết', { size: 7, pad: 1 })) { openWeapon(w.id); return true; }
     if (carried) {
       ui.text('đang mang ô ' + (sv.carry.indexOf(w.id) + 1), bx + bw / 2, y + 30, { size: 7, bold: true, align: 'center', color: GOOD });
     } else if (RO) roNote(bx + bw / 2, y + 30, 'center');
@@ -179,22 +192,25 @@
   function weaponTab(sv) {
     const carry = sv.carry.map((id) => G.weaponById(id)).filter(Boolean);
     const stash = sv.weapons.filter((w) => !sv.carry.includes(w.id)).sort((a, b) => (G.wRar(b) - G.wRar(a)) || (b.sharpen - a.sharpen) || (a.id - b.id));
-    region('weapon', CX, CY, CW - 4, CH, (y) => {
+    const BD = G.banDo, sell = !RO && BD, multi = sell && BD.multi && BD.kind === 'w';
+    region('weapon', CX, CY, CW - 4, multi ? CH - 22 : CH, (y) => {
       T.head('Đang mang (' + carry.length + ')', CX, y + 9);
       y += 13;
       for (const w of carry) { weaponRow(sv, w, CX, y, CW - 6, true); y += 43; }
       T.head('Trong rương (' + stash.length + ')', CX, y + 9);
-      tx(RO ? 'Trong ải chỉ xem được. Về làng để thay vũ khí.' : 'Chạm một món rồi bấm "Mang ô 1" hoặc "Mang ô 2" để thay.', CX + 120, y + 9, CW - 130, { size: 6.5, color: RO ? WARN : SOFT });
+      if (sell && stash.length) { const x0 = BD.quickBar(sv, 'w', CX + CW - 8, y, 12); tx('Chạm một món để chọn, rồi mang hoặc bán.', CX + 100, y + 9, x0 - CX - 104, { size: 6.5, color: SOFT }); }
+      else tx(RO ? 'Trong ải chỉ xem được. Về làng để thay vũ khí.' : 'Chạm một món rồi bấm "Mang ô 1" hoặc "Mang ô 2" để thay.', CX + 120, y + 9, CW - 130, { size: 6.5, color: RO ? WARN : SOFT });
       y += 13;
       if (!stash.length) { ui.text('Rương trống. Vũ khí nhặt trong ải sẽ nằm ở đây.', CX + 4, y + 10, { size: 7.5, color: SOFT }); y += 16; }
       for (const w of stash) { weaponRow(sv, w, CX, y, CW - 6, false); y += 43; }
-      if (!RO) {
+      if (!RO && !multi) {
         y += 2;
         if (goBtn(CX, y, 214, 'ren', 'Đến Ông Thợ Rèn: mài, nâng bậc, tôi lại') || goBtn(CX + 220, y, 200, 'xen', 'Đến Bà Hàng Xén: bán vũ khí')) return y;
         y += 20;
       }
       return y;
     });
+    if (multi) BD.sellBtn(sv, 'w', CX, CY + CH - 19, CW - 6, 18);
   }
 
   // ---------- 3. Trang phục ----------
@@ -211,13 +227,15 @@
     O.sync(sv);
     const LW = 222;
     const wearing = (it) => sv.outfit.wear[O.ITEMS[it.k].slot] === it.id;
+    const BD = G.banDo, sell = !RO && BD, multi = sell && BD.multi && BD.kind === 'o';
     region('outfit', CX, CY, LW, CH, (y) => {
       T.head('Đang mặc', CX, y + 9);
       y += 13;
       O.SLOTS.forEach((slot, i) => {
         const x = CX + i * 44 + 2, it = O.worn(sv, slot);
         if (cell(it, x, y, 32, it ? B.osel === it.id : B.oslot === slot)) {
-          if (it) { B.osel = B.osel === it.id ? null : it.id; B.oslot = null; } else B.oslot = B.oslot === slot ? null : slot;
+          if (it && multi) BD.togglePick(sv, 'o', it);
+          else if (it) { B.osel = B.osel === it.id ? null : it.id; B.oslot = null; } else B.oslot = B.oslot === slot ? null : slot;
         }
         if (!it) ui.text('trống', x + 16, y + 20, { size: 6.5, align: 'center', color: '#5f7a74' });
         tx(O.SLOT_NAME[slot].split(',')[0], x + 16, y + 42, 42, { size: 6.5, align: 'center', color: B.oslot === slot ? GOLD : SOFT });
@@ -231,14 +249,23 @@
       if (!all.length) { y = ui.para(B.oslot ? 'Chưa có món nào cho ô này.' : 'Kho trống. Quái và trùm rơi trang phục, Bà Hàng Xén bán đồ thường, Cô Thợ May may đồ bộ.', CX, y + 9, LW - 4, { size: 7, color: SOFT }); return y; }
       all.forEach((it, i) => {
         const x = CX + (i % 7) * 31 + 2, yy = y + Math.floor(i / 7) * 31;
-        if (cell(it, x, yy, 28, B.osel === it.id)) B.osel = B.osel === it.id ? null : it.id;
+        const picked = multi && BD.ids.has(it.id);
+        if (cell(it, x, yy, 28, picked || (!multi && B.osel === it.id))) { if (multi) BD.togglePick(sv, 'o', it); else B.osel = B.osel === it.id ? null : it.id; }
         if (wearing(it)) { const c = G.ux; c.fillStyle = GOOD; c.fillRect(x + 2, yy + 2, 4, 4); }
+        if (it.lock && BD) BD.lockIcon(x + 19, yy + 17, true);
+        if (picked) BD.tick(x + 1, yy + 1);
       });
       return y + Math.ceil(all.length / 7) * 31 + 4;
     });
     // bên phải: chi tiết món đang chọn, nút mặc/tháo, tác dụng đang có
     const RX = CX + LW + 10, RW = CW - LW - 14;
-    region('outfit2', RX, CY, RW, CH, (y) => {
+    region('outfit2', RX, CY, RW, multi ? CH - 22 : CH, (y) => {
+      if (sell && sv.outfit.items.length) { BD.quickBar(sv, 'o', RX + RW, y, 12); y += 16; }
+      if (multi) {
+        const t = BD.total(sv, 'o', BD.ids);
+        ui.text('Đã chọn ' + t.n + ' món · Bà Hàng Xén trả ' + t.gold + ' vàng', RX, y + 9, { size: 8, bold: true, color: GOLD });
+        return ui.para('Chạm các ô bên trái để chọn hoặc bỏ. Món đang mặc (chấm xanh) và món khoá không chọn được.', RX, y + 20, RW, { size: 7, color: SOFT });
+      }
       const it = O.byId(sv, B.osel);
       if (!it) { y = ui.para('Chạm một món để xem chỉ số, bộ và tác dụng. Món đang mặc có dấu xanh.', RX, y + 9, RW, { size: 7, color: SOFT }); }
       else {
@@ -248,6 +275,12 @@
         else if (T.sbtn(RX + RW - 64, y, 64, 15, on ? 'Tháo ra' : 'Mặc', { size: 7.5, pad: 2, primary: !on })) {
           if (on) { O.unwear(sv, Ti.slot); VA.say('Đã tháo ' + O.name(it) + '.'); } else { O.wear(sv, it); VA.say('Đã mặc ' + O.name(it) + '.'); }
           G.persist(); G.sfx('pick'); VS.checkNews();
+        }
+        if (sell) { // khoá và bán món đang xem (chỉ ở làng)
+          const why = BD.why(sv, 'o', it);
+          if (T.sbtn(RX, y + 18, 60, 15, it.lock ? 'Mở khoá' : 'Khoá', { size: 7, pad: 1, sel: !!it.lock })) { BD.toggleLock(it); VA.say((it.lock ? 'Đã khoá ' : 'Đã mở khoá ') + O.name(it) + '.'); }
+          if (T.sbtn(RX + 64, y + 18, 96, 15, why ? (why === 'đang mặc' ? 'Đang mặc' : 'Đã khoá') : 'Bán ' + BD.oPrice(it) + ' vàng', { size: 7, pad: 1, danger: !why, disabled: !!why })) BD.request(sv, 'o', [it.id], () => { B.osel = null; });
+          y += 18;
         }
         const tags = [O.SLOT_NAME[Ti.slot], 'bậc ' + R.name]; if (Ti.el) tags.push('hệ ' + HN[Ti.el]); if (Ti.set) tags.push(O.SETS[Ti.set].name);
         y = ui.para(tags.join(' · ') + (on ? ' · đang mặc' : ''), RX, y + 20, RW, { size: 6.5, color: on ? GOOD : SOFT });
@@ -271,11 +304,12 @@
         y += 4;
         if (goBtn(RX, y, RW, 'may', 'Đến Cô Thợ May: may, nâng bậc')) return y;
         y += 20;
-        if (goBtn(RX, y, RW, 'xen', 'Đến Bà Hàng Xén: mua đồ thường')) return y;
+        if (goBtn(RX, y, RW, 'xen', 'Đến Bà Hàng Xén: mua, bán đồ')) return y;
         y += 20;
       }
       return y;
     });
+    if (multi) BD.sellBtn(sv, 'o', RX, CY + CH - 19, RW, 18);
   }
 
   // ---------- 4. Linh khí ----------
@@ -392,20 +426,23 @@
       if (G.keyP.Escape) { B.wv = false; G.keyP.Escape = false; }
       return;
     }
+    const BD = G.banDo, g = !RO && BD ? BD.guard() : undefined;
+    if (RO && BD) BD.reset();
     T.panel(X0, Y0, PW, PH, RO ? 'Hành trang (chỉ xem)' : 'Hành trang', { rightPad: 74, noBand: true });
     if (T.sbtn(X0 + PW - 66, Y0 + 3, 60, 17, RO ? '← Quay lại' : '✕ Xong', { size: 8, pad: 5 })) { close(); return; }
     if (RO) ui.text('Trong ải chỉ xem. Về làng để thay đồ, học kỹ năng.', X0 + PW - 72, Y0 + 15, { size: 6.5, align: 'right', color: WARN });
     const tw = (CW - 5 * 3) / 6;
     TABS.forEach((t, i) => {
-      if (T.tab(CX + i * (tw + 3), Y0 + 23, tw, 19, t[1], B.tab === t[0], { pad: 2 })) { B.tab = t[0]; B.sel = null; }
+      if (T.tab(CX + i * (tw + 3), Y0 + 23, tw, 19, t[1], B.tab === t[0], { pad: 2 })) { B.tab = t[0]; B.sel = null; if (G.banDo) G.banDo.reset(); }
     });
     const fn = { hero: heroTab, weapon: weaponTab, outfit: outfitTab, lk: lkTab, skill: skillTab, res: resTab }[B.tab] || heroTab;
     fn(sv);
     // lời nhắn ngắn (đã thay vũ khí, đã mặc...)
     if (!RO && V.msgT > 0 && V.msg) T.toastFit(240, Y0 + PH - 8, V.msg, { size: 7.5 });
+    if (BD && !RO) BD.modal(g, 110); // bảng hỏi lại trước khi bán đồ quý hoặc nhiều món (js/ban_do.js)
   }
   B.panel = panel;
-  B.reset = function () { B.sel = null; B.osel = null; B.oslot = null; B.wv = false; B.sc = {}; };
+  B.reset = function () { B.sel = null; B.osel = null; B.oslot = null; B.wv = false; B.sc = {}; if (G.banDo) G.banDo.reset(); };
 
   // ở làng: bảng 'bag' của village.js (tự vẽ, không có người nói bên trái)
   function bagPanel() { B.panel(false, () => { B.open = false; VA.goHub(); }); return null; }
