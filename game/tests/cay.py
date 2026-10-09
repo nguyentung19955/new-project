@@ -8,7 +8,7 @@ Cách bot chơi (mỗi lượt):
 Số lần chơi của một ải = mọi lượt (kể cả chơi lại ải cũ và lượt thua) từ lúc qua ải trước cho tới lúc qua ải đó.
 Bot chơi hơi vụng như người mới (phản xạ chậm hơn, bỏ sót nhiều đạn hơn bot mặc định).
 
-Chạy: python3 tests/cay.py [số lượt chiến dịch, mặc định 3] [khuyen|lieu] [--nhanh: chỉ kiểm vùng 1]
+Chạy: python3 tests/cay.py [số lượt chiến dịch, mặc định 8] [khuyen|lieu] [--nhanh: chỉ kiểm vùng 1]
 Thoát mã 1 nếu không đạt mục tiêu (xem MUC_TIEU) hoặc có lỗi trang."""
 import sys, json, os
 from playwright.sync_api import sync_playwright
@@ -139,7 +139,7 @@ def campaign(pg, mode, upto):
 
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith('-')]
-    n = int(args[0]) if args else 3
+    n = int(args[0]) if args else 8
     mode = args[1] if len(args) > 1 else 'khuyen'
     upto = 5 if '--nhanh' in sys.argv else 15
     global SAVES
@@ -175,17 +175,19 @@ def main():
         sys.exit(1)
     m = len(ok)
     print(f"\nKiểu bot: {mode}, {m} lượt chiến dịch. Số lần chơi = mọi lượt (cả chơi lại ải cũ và lượt thua) để qua ải đó.")
-    print('| Ải | Số lần chơi | Lần thử ải mới | Thua | Thời gian (phút) | Cấp khi qua | Sức mạnh khi qua / khuyên dùng | Mục tiêu |')
-    print('|---|---|---|---|---|---|---|---|')
+    print('| Ải | Số lần chơi (trung bình) | Trung vị | Lần thử ải mới | Thua | Thời gian (phút) | Cấp khi qua | Sức mạnh khi qua / khuyên dùng | Mục tiêu |')
+    print('|---|---|---|---|---|---|---|---|---|')
     for k in range(upto):
         avg = lambda key: sum(r['st'][k][key] for r in ok) / m
         lo, hi = muc_tieu(k)
         pl = avg('plays')
         flag = '' if lo <= pl <= hi else ' ✗'
         if flag and mode == 'khuyen': bad = 1
-        print(f"| {k//5+1}-{k%5+1} | {pl:.1f}{flag} | {avg('tries'):.1f} | {avg('fails'):.1f} | {avg('t')/60:.0f} | {avg('lvl'):.0f} | {avg('pw'):.0f} / {avg('rec'):.0f} | {lo:g}-{hi:g} |")
+        med = sorted(r['st'][k]['plays'] for r in ok)[m // 2] if m % 2 else sum(sorted(r['st'][k]['plays'] for r in ok)[m // 2 - 1:m // 2 + 1]) / 2
+        print(f"| {k//5+1}-{k%5+1} | {pl:.1f}{flag} | {med:g} | {avg('tries'):.1f} | {avg('fails'):.1f} | {avg('t')/60:.0f} | {avg('lvl'):.0f} | {avg('pw'):.0f} / {avg('rec'):.0f} | {lo:g}-{hi:g} |")
     tt = sum(r['t'] for r in ok) / m / 60
-    print(f"Tổng thời gian đi hết {upto} ải lần đầu: {tt:.0f} phút ({tt/60:.1f} giờ), {sum(sum(s['plays'] for s in r['st']) for r in ok)/m:.0f} lần chơi")
+    ts = sorted(r['t'] / 60 for r in ok)
+    print(f"Tổng thời gian đi hết {upto} ải lần đầu: trung bình {tt:.0f} phút ({tt/60:.1f} giờ), trung vị {ts[m//2]:.0f} phút, nhanh nhất {ts[0]:.0f}, lâu nhất {ts[-1]:.0f}; {sum(sum(s['plays'] for s in r['st']) for r in ok)/m:.0f} lần chơi")
     hurt = {}
     for r in ok:
         for kk, x in r['hurt'].items(): hurt[kk] = hurt.get(kk, 0) + x

@@ -203,13 +203,16 @@
   // CÂN BẰNG PHẢI CÀY: hệ số riêng của từng ải (15 ải, theo thứ tự 1-1 .. 3-5) nhân thêm vào chỉ số trên.
   // mob: [máu, sát thương] quái thường; boss: [máu, sát thương] trùm nhỏ (ải 1-4) hoặc trùm vùng (ải 5).
   G.STAGE_K = {
-    mob: [[1.12, 1.29], [1.21, 1.56], [1.22, 1.59], [1.17, 1.43], [1.26, 1.77], [1.26, 2.59], [1.46, 2.44], [1.51, 2.63], [1.28, 2.76], [1.13, 2.16], [1.45, 4.17], [1.4, 3.75], [1.45, 4.22], [1.42, 4.0], [1.21, 2.54]],
-    boss: [[1.12, 1.29], [1.21, 1.56], [1.22, 1.59], [1.17, 1.43], [1.26, 1.77], [1.26, 2.59], [1.46, 2.44], [1.51, 2.63], [1.28, 2.76], [1.13, 2.16], [1.45, 4.17], [1.4, 3.75], [1.45, 4.22], [1.42, 4.0], [1.21, 2.54]],
+    mob: [[1.12, 1.29], [1.21, 1.56], [1.22, 1.59], [1.17, 1.43], [1.26, 1.77], [1.26, 2.59], [1.46, 2.44], [1.51, 2.63], [1.27, 2.69], [1.14, 2.19], [1.44, 4.08], [1.38, 3.6], [1.41, 3.88], [1.4, 3.86], [1.17, 2.33]],
+    boss: [[1.12, 1.29], [1.21, 1.56], [1.22, 1.59], [1.17, 1.43], [1.26, 1.77], [1.26, 2.59], [1.46, 2.44], [1.51, 2.63], [1.27, 2.69], [1.14, 2.19], [1.44, 4.08], [1.38, 3.6], [1.41, 3.88], [1.4, 3.86], [1.17, 2.33]],
   };
+  // Độ khó thứ hai: [máu, sát thương] nhân thêm theo vùng. Trước là x2,2 máu, x1,5 sát thương cho mọi vùng; nay quái thường đã mạnh
+  // theo ải, nên vùng sau nhân ít hơn để người chơi đã cày đầy (cấp 30, vũ khí Vàng) vẫn với tới được.
+  G.DIFF2 = [[1.6, 1.5], [1.3, 1.3], [1.1, 1.15]];
   G.stageStats = function (r, i, diff) {
     const t = i / 4;
-    const k = diff ? 2.2 : 1;
-    const kd = diff ? 1.5 : 1;
+    const k = diff ? G.DIFF2[r][0] : 1;
+    const kd = diff ? G.DIFF2[r][1] : 1;
     const n = r * 5 + i;
     const mk = G.STAGE_K.mob[n] || [1, 1], bk = G.STAGE_K.boss[n] || [1, 1];
     return {
@@ -221,12 +224,11 @@
     };
   };
   // SỨC MẠNH KHUYÊN DÙNG của từng ải (15 ải). So với G.power() (js/combat.js): đủ số này thì bot thắng phần lớn lượt chơi
-  // (đo bằng tests/cay.py). Độ khó thứ hai cần gấp G.REC_DIFF lần.
-  G.STAGE_REC = [100, 110, 125, 140, 190, 200, 225, 270, 285, 315, 340, 365, 395, 410, 425];
-  G.REC_DIFF = 1.8;
+  // (đo bằng tests/cay.py). Độ khó thứ hai cần gấp căn bậc hai của (máu x sát thương) nhân thêm của G.DIFF2.
+  G.STAGE_REC = [100, 110, 125, 140, 190, 200, 225, 270, 280, 310, 335, 355, 385, 400, 430];
   G.stageRec = function (r, i, diff) {
     const v = G.STAGE_REC[r * 5 + i] || 100;
-    return diff ? Math.round((v * G.REC_DIFF) / 5) * 5 : v;
+    return diff ? Math.round((v * Math.sqrt(G.DIFF2[r][0] * G.DIFF2[r][1])) / 5) * 5 : v;
   };
   // Thưởng khi cày: sức mạnh vượt quá 130% khuyên dùng thì kinh nghiệm và vàng giảm dần, thấp nhất còn 40%.
   G.grindMult = function (power, rec) {
