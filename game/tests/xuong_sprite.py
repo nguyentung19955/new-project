@@ -14,6 +14,8 @@
   8. Sửa vỡ hình và Tự đoán, với ảnh kiểu AI vẽ (tay áp sát thân, chân sát nhau, nhìn chính diện; quái bốn chân, cá bay,
      khối mềm): Tự đoán ra đầu, thân, tay, chân đúng chỗ; mọi động tác, mọi mẫu khung không còn lỗ kín, mảnh rời; chữ
      "Tô thêm cho đúng", bút to nhỏ, phóng to, hoàn tác, cục tẩy; tấm sprite trong game không vỡ ở khung nào.
+  9. Bổ sung (xuong_sprite_vo.py): khe ở khớp (điểm trống kẹp giữa bộ phận con và bộ phận nó gắn vào, trừ khe có sẵn
+     trong hình vẽ), cả ảnh vẽ tay; chia theo khớp kiểu cũ cũng không vỡ; chạm để tô trên điện thoại, nút đủ to.
 Cuối bài game/art/custom/ chỉ còn .gitkeep và bản đóng gói được dựng lại sạch.
 Chạy: python3 tests/xuong_sprite.py
 """
@@ -29,6 +31,7 @@ from playwright.sync_api import sync_playwright
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from xuong_sprite_ve import ve_bon_chan, ve_nguoi, ve_kiem, ve_mu, ve_xu, ve_kiem_ngang, ve_quang, ve_nguoi_lang, ve_em_be_ao_do  # noqa: E402
+from xuong_sprite_vo import kiem_vo_khop_dien_thoai  # noqa: E402
 
 GAME = os.path.dirname(HERE)
 REPO = os.path.dirname(GAME)
@@ -750,6 +753,7 @@ def main():
             kiem_them(pw, tmp)
             kiem_giu_net_dung_yen(pw, tmp)
             kiem_sua_vo_tu_doan(pw, tmp)
+            kiem_vo_khop_dien_thoai(pw, tmp, ok, mo, TOOL, GAME_DIST, CUSTOM, build, don_custom)
     finally:
         don_custom()
         build()

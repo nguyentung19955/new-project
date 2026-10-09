@@ -98,6 +98,10 @@ thân, phóng ×2 ×3, kéo hình, hoàn tác, nút to hơn trên màn hình c�
 | Tự đoán cũ / mới | ![](tu-doan-truoc-sau.png) |
 
 Ảnh do `game/tests/xuong_sprite_sua_vo_shots.py` tạo. Bài kiểm tra: phần 8 của `game/tests/xuong_sprite.py`.
+Phần 9 (`game/tests/xuong_sprite_vo.py`, ảnh giả lập thêm ở `xuong_sprite_ve_ai.py`) đo thêm **khe ở khớp**: điểm trống kẹp giữa
+bộ phận con và bộ phận nó gắn vào (trừ khe có sẵn trong hình vẽ, như giữa hai vây cá). Tắt phần vá thì đếm được 1 đến 11 điểm khe
+mỗi động tác; bật lên thì 0 ở cả 6 ảnh thử (có ảnh vẽ tay), cả 7 mẫu khung, cả khi chia theo khớp kiểu cũ; chạm để tô trên
+điện thoại cầm ngang, nút ở bước Khung cao từ 36 điểm. Cả bài `xuong_sprite.py`: **191/191 mục đạt**.
 
 ## Kiểm tra
 
