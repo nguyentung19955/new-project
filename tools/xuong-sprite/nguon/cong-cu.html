@@ -100,6 +100,10 @@
   .chip.chon { background: linear-gradient(var(--hi), var(--gold)); color: #2b1a08; font-weight: 700; }
   .chip i { width: 12px; height: 12px; border-radius: 3px; border: 1px solid var(--dk); display: inline-block; }
   .ghi { font-size: 12px; color: var(--sub); }
+  .ds-yen { display: grid; grid-template-columns: 1fr; gap: 2px 8px; margin: 4px 0; }
+  .ds-yen label { display: flex; align-items: center; gap: 6px; font-size: 13px; min-height: 28px; cursor: pointer; }
+  .ds-yen label::after { content: 'Đứng yên'; font-size: 11px; color: var(--sub); margin-left: auto; }
+  .ds-yen i { width: 12px; height: 12px; border-radius: 3px; border: 1px solid var(--dk); display: inline-block; flex: none; }
   .canh-bao { background: rgba(138,47,34,.35); border: 1px solid var(--copL); border-radius: 6px; padding: 6px 8px; font-size: 12px; }
 
   /* ----- bước 1: danh sách ----- */
@@ -346,6 +350,15 @@
         <div class="truot" id="dongToc"><span>Tốc độ</span><output id="oToc">100%</output><input type="range" id="toc" min="40" max="250" value="100"></div>
         <p class="ghi" id="ghiToc"></p>
         <div class="dong"><button class="nut nho phu" id="nutMacDinh" type="button">Về mặc định</button><button class="nut nho phu" id="nutLanLuot" type="button">Xem lần lượt</button></div>
+      </div>
+      <div class="khoi" id="khoiYen">
+        <h3>Bộ phận nào cử động</h3>
+        <p class="ghi">Đánh dấu <b>Đứng yên</b> cho bộ phận không muốn cử động. Bộ phận đứng yên không xoay, không lắc; chỉ đi theo bộ phận nó gắn vào. Thân đứng yên thì cả người không lắc, không nhún.</p>
+        <div id="dsDungYen" class="ds-yen"></div>
+        <p class="ghi" id="ghiYen"></p>
+        <div class="truot"><span>Độ nhún cả người</span><output id="oNhun">100%</output><input type="range" id="nhun" min="0" max="200" step="10" value="100"></div>
+        <p class="ghi">0% = không nhấp nhô khi đứng thở và đi.</p>
+        <div class="dong"><button class="nut nho phu" id="nutYenMacDinh" type="button">Về mặc định của mẫu</button></div>
       </div>
       <div class="khoi dong">
         <button class="nut phu" id="nutXemGame4" type="button">Xem trong game</button>

@@ -100,6 +100,10 @@
   .chip.chon { background: linear-gradient(var(--hi), var(--gold)); color: #2b1a08; font-weight: 700; }
   .chip i { width: 12px; height: 12px; border-radius: 3px; border: 1px solid var(--dk); display: inline-block; }
   .ghi { font-size: 12px; color: var(--sub); }
+  .ds-yen { display: grid; grid-template-columns: 1fr; gap: 2px 8px; margin: 4px 0; }
+  .ds-yen label { display: flex; align-items: center; gap: 6px; font-size: 13px; min-height: 28px; cursor: pointer; }
+  .ds-yen label::after { content: 'Đứng yên'; font-size: 11px; color: var(--sub); margin-left: auto; }
+  .ds-yen i { width: 12px; height: 12px; border-radius: 3px; border: 1px solid var(--dk); display: inline-block; flex: none; }
   .canh-bao { background: rgba(138,47,34,.35); border: 1px solid var(--copL); border-radius: 6px; padding: 6px 8px; font-size: 12px; }
 
   /* ----- bước 1: danh sách ----- */
@@ -346,6 +350,15 @@
         <div class="truot" id="dongToc"><span>Tốc độ</span><output id="oToc">100%</output><input type="range" id="toc" min="40" max="250" value="100"></div>
         <p class="ghi" id="ghiToc"></p>
         <div class="dong"><button class="nut nho phu" id="nutMacDinh" type="button">Về mặc định</button><button class="nut nho phu" id="nutLanLuot" type="button">Xem lần lượt</button></div>
+      </div>
+      <div class="khoi" id="khoiYen">
+        <h3>Bộ phận nào cử động</h3>
+        <p class="ghi">Đánh dấu <b>Đứng yên</b> cho bộ phận không muốn cử động. Bộ phận đứng yên không xoay, không lắc; chỉ đi theo bộ phận nó gắn vào. Thân đứng yên thì cả người không lắc, không nhún.</p>
+        <div id="dsDungYen" class="ds-yen"></div>
+        <p class="ghi" id="ghiYen"></p>
+        <div class="truot"><span>Độ nhún cả người</span><output id="oNhun">100%</output><input type="range" id="nhun" min="0" max="200" step="10" value="100"></div>
+        <p class="ghi">0% = không nhấp nhô khi đứng thở và đi.</p>
+        <div class="dong"><button class="nut nho phu" id="nutYenMacDinh" type="button">Về mặc định của mẫu</button></div>
       </div>
       <div class="khoi dong">
         <button class="nut phu" id="nutXemGame4" type="button">Xem trong game</button>
@@ -12720,6 +12733,11 @@ MA._xong();
         ma: tep.ma, ten: String(tep.ten || tep.ma), doi: tep.doi_tuong === 'em-be' ? 'em-be' : 'quai', fw, fh, ax: +goc[0] || 0, ay: +goc[1] || 0,
         rong: tep.rong | 0 || fw, cao: tep.cao | 0 || fh, bong: +tep.bong || Math.max(6, (tep.rong | 0) * 0.62), dt, img: null, ready: false, mau: {}, vung: tep.vung || 'moi',
       };
+      // Bộ phận "Đứng yên" và độ nhún cả người chọn trong công cụ. Tấm sprite đã dựng sẵn theo lựa chọn này, nên game chỉ
+      // phát đúng từng khung, không tự thêm nhún, lắc hay xoay nào lên hình tự vẽ (bộ phận đứng yên giữ nguyên trong game).
+      // Tệp cũ không có hai mục này: null, phát như trước.
+      sp.dungYen = Array.isArray(tep.dung_yen) ? tep.dung_yen.filter((x) => typeof x === 'string' && /^[A-Za-z0-9_]{1,20}$/.test(x)).slice(0, 20) : null;
+      sp.nhun = tep.nhun == null || !isFinite(+tep.nhun) ? null : clamp(+tep.nhun, 0, 200);
       if (typeof Image !== 'undefined') {
         const img = new Image();
         img.onload = () => { sp.img = img; sp.ready = true; };
@@ -12740,6 +12758,7 @@ MA._xong();
   SC.clear = function () { for (const k of Object.keys(SC.ds)) delete SC.ds[k]; for (const k of Object.keys(SC.do)) boDo(k); };
   SC.get = function (ma) { const s = SC.ds[ma]; return s && s.ready ? s : null; };
   SC.has = (ma) => !!SC.ds[ma];
+  SC.dungYen = (ma, bo) => { const s = SC.ds[ma]; return !!(s && s.dungYen && s.dungYen.indexOf(bo) >= 0); };
 
   // ---------- chọn khung ----------
   // Động tác lặp: theo thời gian t (giây). Động tác một lần: theo tiến độ u (0..1).
@@ -13462,7 +13481,8 @@ MA._xong();
   // w: độ to (để tự đoán), z: lớp (lớn nằm trên), cha, vai: vai trò để chọn cử động, pha: lệch nhịp 0..1}.
   // kieu: cách đi (buoc: bước chân, bay: bay lượn, nay: nhún nhảy, truon: trườn). nga: chết thì ngã ngửa.
   const MAU = {
-    nguoi: { ten: 'Người (2 chân)', kieu: 'buoc', nga: true,
+    // dungYen: bộ phận mặc định "Đứng yên" (em bé: đầu và thân yên, chỉ tay chân cử động). nhun: độ nhún cả người mặc định (%).
+    nguoi: { ten: 'Người (2 chân)', kieu: 'buoc', nga: true, dungYen: ['dau', 'than'], nhun: 0,
       khop: { chan: [0.5, 1], hong: [0.5, 0.6], co: [0.5, 0.36], dinh: [0.5, 0.02], vaiT: [0.62, 0.42], tayT: [0.8, 0.62], vaiS: [0.4, 0.42], tayS: [0.24, 0.62], hongT: [0.56, 0.64], banT: [0.62, 0.99], hongS: [0.44, 0.64], banS: [0.38, 0.99] },
       bo: [
         { id: 'than', ten: 'Thân', a: 'hong', b: 'co', w: 1.8, z: 0, vai: 'than' },
@@ -13512,7 +13532,7 @@ MA._xong();
         { id: 'dau', ten: 'Đầu', a: 'g2', b: 'mui', w: 1.7, z: 1, cha: 'co', vai: 'dau' },
         { id: 'duoi1', ten: 'Đuôi gần', a: 'g0', b: 'd1', w: 1.3, z: -0.5, cha: 'than', vai: 'dot', so: -1 },
         { id: 'duoi2', ten: 'Chóp đuôi', a: 'd1', b: 'd2', w: 1, z: -1, cha: 'duoi1', vai: 'dot', so: -2 }] },
-    cay: { ten: 'Cây, đứng yên', kieu: 'nay', dungYen: true,
+    cay: { ten: 'Cây, đứng yên', kieu: 'nay', reCam: true,
       khop: { chan: [0.5, 1], re: [0.5, 1], goc: [0.5, 0.78], ngon: [0.5, 0.42], dinh: [0.5, 0], canhT0: [0.62, 0.5], canhT: [1, 0.32], canhS0: [0.38, 0.5], canhS: [0, 0.32] },
       bo: [
         { id: 'goc', ten: 'Gốc, rễ', a: 're', b: 'goc', w: 1.6, z: 0, vai: 'goc' },
@@ -13594,8 +13614,31 @@ MA._xong();
   };
   XS.dsDongTac = (doi) => Object.keys(XS.DONG_TAC).filter((k) => !XS.DONG_TAC[k].emBe || doi === 'em-be');
 
-  // A: biên độ (1 = vừa). Trả về tư thế của động tác ten tại tiến độ u (0..1).
-  XS.tuThe = function (mau, ten, u, A) {
+  // ---------- ĐỨNG YÊN TỪNG BỘ PHẬN ----------
+  // Lựa chọn mặc định của một mẫu: { dung_yen: [mã bộ phận], nhun: % độ nhún cả người }.
+  XS.chuyenMacDinh = (mau) => { const M = MAU[mau] || {}; return { dung_yen: (M.dungYen || []).slice(), nhun: M.nhun == null ? 100 : M.nhun }; };
+  // Bộ phận gốc (cả người đi theo nó): "Thân", hoặc bộ phận đầu tiên không có bộ phận cha.
+  XS.boGoc = (mau) => { const M = MAU[mau]; const t = M.bo.find((b) => b.id === 'than' && !b.cha); return (t || M.bo.find((b) => !b.cha) || M.bo[0]).id; };
+  const YEN = { r: 0, dx: 0, dy: 0, sx: 1, sy: 1, song: null };
+  // Áp lựa chọn lên tư thế P. tuy: { dung_yen: [...], nhun: 0..200 }. Không có tuy thì giữ nguyên (tệp cũ).
+  // - Độ nhún cả người: co giãn phần nhấp nhô, bóp dẹt của cả hình khi đứng thở và đi (0 = không nhún).
+  // - Bộ phận đứng yên: không xoay, không lắc, không nhún riêng; chỉ đi theo bộ phận cha nếu cha cử động.
+  // - Bộ phận gốc (thân) đứng yên: cả hình không lắc, không nhún, không lao tới. Riêng Chết và Né lăn vẫn ngã, lăn cả người
+  //   (game cần thấy rõ bé đã ngã, đang lăn né), nhưng bộ phận đứng yên vẫn không cử động riêng.
+  function apChuyen(P, mau, ten, tuy) {
+    if (!tuy) return P;
+    const g = P.g, k = tuy.nhun == null ? 1 : clamp(tuy.nhun / 100, 0, 2);
+    if (ten === 'idle' || ten === 'move') { g.dy *= k; g.sx = 1 + (g.sx - 1) * k; g.sy = 1 + (g.sy - 1) * k; }
+    const yen = new Set(tuy.dung_yen || []);
+    if (yen.has(XS.boGoc(mau)) && ten !== 'die' && ten !== 'ne') { g.r = 0; g.dx = 0; g.dy = 0; g.sx = 1; g.sy = 1; }
+    for (const id of yen) if (MAU[mau].bo.some((b) => b.id === id)) P.b[id] = Object.assign({}, YEN);
+    return P;
+  }
+  XS.apChuyen = apChuyen;
+
+  // A: biên độ (1 = vừa). Trả về tư thế của động tác ten tại tiến độ u (0..1). tuy: lựa chọn đứng yên, độ nhún (xem apChuyen).
+  XS.tuThe = function (mau, ten, u, A, tuy) { return apChuyen(tuThe0(mau, ten, u, A), mau, ten, tuy); };
+  function tuThe0(mau, ten, u, A) {
     const M = MAU[mau], P = new TT(), g = P.g, kieu = M.kieu, mem = mau === 'mem';
     const moi = (cb) => { for (const b of M.bo) cb(b, P.p(b.id), b.pha || 0); };
     if (ten === 'idle') {
@@ -13636,7 +13679,7 @@ MA._xong();
         g.dx = 0.5 * A * sn(u);
       } else { // nhún nhảy
         const hh = Math.sin(u * PI), cz = Math.cos(u * TAU);
-        g.dy = -(M.dungYen ? 3 : 5) * A * hh; g.sy = 1 - 0.1 * A * cz; g.sx = 1 + 0.08 * A * cz;
+        g.dy = -(M.reCam ? 3 : 5) * A * hh; g.sy = 1 - 0.1 * A * cz; g.sx = 1 + 0.08 * A * cz;
         moi((b, p, ph) => {
           if (b.vai === 'tua') p.r = 14 * A * sn(u + ph);
           else if (b.vai === 'dinh') { p.r = -5 * A * sn(u); p.song = [1.5 * A, u]; }
@@ -13707,7 +13750,7 @@ MA._xong();
       moi((b, p, ph) => { if (b.vai === 'tay') p.r = (ph ? -40 : 40) * Math.sin(u * PI); else if (b.vai === 'chan') p.r = (ph ? 30 : -30) * Math.sin(u * PI); });
     }
     return P;
-  };
+  }
 
   // ---------- DỰNG KHUNG HÌNH ----------
   // Ma trận 2x3 [a, b, c, d, e, f]: x' = a x + c y + e, y' = b x + d y + f.
@@ -13771,7 +13814,8 @@ MA._xong();
     if (co) { const inv = nghich(tinh(M.bo[bt])); for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { if (out[y * W + x]) continue; const sx = Math.floor(inv[0] * (x + 0.5) + inv[2] * (y + 0.5) + inv[4]), sy = Math.floor(inv[1] * (x + 0.5) + inv[3] * (y + 0.5) + inv[5]); if (sx < 0 || sy < 0 || sx >= w || sy >= h) continue; const i = sy * w + sx; if (R.px[i] && bomap[i] === 255) out[y * W + x] = R.px[i]; } }
     const px = o.vien ? XS.themVien(out, W, H, o.vien) : out;
     const c = apDung(Gm, chan[0], chan[1]);
-    return { w: W, h: H, px, ox: Math.round(chan[0] + D), oy: Math.round(chan[1] + D), D, chanTT: c };
+    M.bo.forEach((b) => tinh(b));
+    return { w: W, h: H, px, ox: Math.round(chan[0] + D), oy: Math.round(chan[1] + D), D, chanTT: c, mt: the };
   };
 
   // ---------- TẤM SPRITE ----------
@@ -13790,7 +13834,7 @@ MA._xong();
       const giay = XS.giayCua(ten, cfg, goc), n = XS.soKhung(ten, giay), A = ((cfg.dong_tac[ten] || {}).bien == null ? 100 : cfg.dong_tac[ten].bien) / 100, ks = [];
       for (let i = 0; i < n; i++) {
         const u = XS.DONG_TAC[ten].lap ? i / n : (n > 1 ? i / (n - 1) : 0);
-        const f = XS.dungKhung(R, cfg, XS.tuThe(cfg.mau, ten, u, A), { vien: cfg.vien, bb });
+        const f = XS.dungKhung(R, cfg, XS.tuThe(cfg.mau, ten, u, A, cfg.dung_yen ? { dung_yen: cfg.dung_yen, nhun: cfg.nhun } : null), { vien: cfg.vien, bb });
         W = f.w; ox = f.ox; oy = f.oy;
         for (let y = 0; y < f.h; y++) for (let x = 0; x < f.w; x++) if (f.px[y * f.w + x]) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
         ks.push(f);
@@ -14070,7 +14114,7 @@ MA._xong();
       const box = $('dsDongTac'); box.innerHTML = '';
       const ds = DT[S.muc.doi]; if (!ds.some((q) => q[0] === S.xem.ten)) S.xem.ten = ds[0][0];
       for (const q of ds) { const b = document.createElement('button'); b.type = 'button'; b.className = 'chip' + (S.xem.ten === q[0] ? ' chon' : ''); b.dataset.dt = q[0]; b.textContent = S.muc.doi === 'vu-khi' && q[0] === 'atk' && S.muc.vk.loai === 'bow' ? 'Bắn' : q[1]; b.onclick = () => { S.xem.ten = q[0]; S.xem.t = 0; U.chonChip(box, b); }; box.appendChild(b); }
-      $('khoiChinhDT').classList.add('an');
+      $('khoiChinhDT').classList.add('an'); $('khoiYen').classList.add('an');
       $('coEmBe').parentNode.classList.add('an'); $('lapLai').parentNode.classList.add('an');
       $('coGoc').parentNode.classList.remove('an');
       const bac = $('khoiBac'); bac.classList.toggle('an', S.muc.doi === 'vat-pham');
@@ -14279,7 +14323,7 @@ MA._xong();
   // ---------- chọn một thứ ----------
   function datLaiCongViec() {
     S.nguon = null; S.sua = null; S.lichSu = []; S.mat = null; S.R = null; S.kh = null; S.tam = null; S.sp = null; S.tamCu = true; S.chiAnh = false;
-    S.dong_tac = {}; S.thay_cho = null; S.dd = null; S._anhDo = null;
+    S.dong_tac = {}; S.thay_cho = null; S.dd = null; S._anhDo = null; S.chuyen = null;
     if (XD) XD.boDangKy();
   }
   async function chonMuc(muc) {
@@ -14304,7 +14348,7 @@ MA._xong();
     if (n === 3 && S.muc.doi === 'vat-pham') n = S.buoc === 4 ? 2 : 4; // vật phẩm không cần bước khung
     S.buoc = n;
     if (n >= 3 && !S.kh && !laDo()) chonMau(XS.goiYMau(S.muc.ma, (thongTinGoc(S.muc.ma) || {}).bay));
-    if (!laDo()) { $('bang3Vk').classList.add('an'); $('bang3Tp').classList.add('an'); $('bang3Quai').classList.remove('an'); $('khoiChinhDT').classList.remove('an'); $('khoiBac').classList.add('an'); $('khoiBe4').classList.add('an'); for (const id of ['coEmBe', 'lapLai']) $(id).parentNode.classList.remove('an'); }
+    if (!laDo()) { $('bang3Vk').classList.add('an'); $('bang3Tp').classList.add('an'); $('bang3Quai').classList.remove('an'); $('khoiChinhDT').classList.remove('an'); $('khoiYen').classList.remove('an'); $('khoiBac').classList.add('an'); $('khoiBe4').classList.add('an'); for (const id of ['coEmBe', 'lapLai']) $(id).parentNode.classList.remove('an'); }
     for (let i = 1; i <= 5; i++) $('b' + i).classList.toggle('hien', i === n);
     for (const b of document.querySelectorAll('#cacBuoc button')) {
       const k = +b.dataset.b;
@@ -14495,6 +14539,7 @@ MA._xong();
   function chonMau(mau) {
     const R = S.R; if (!R) return;
     const khop = XS.datKhop(R, mau);
+    if (!S.kh || S.kh.mau !== mau) S.chuyen = XS.chuyenMacDinh(mau); // đổi mẫu: về lựa chọn đứng yên mặc định của mẫu đó
     S.kh = { mau, khop, bo: XS.tuDoan(R, mau, khop) };
     S.xem.boChon = 0; S.tamCu = true; luuNhap();
   }
@@ -14601,7 +14646,9 @@ MA._xong();
 
   // ================= TẤM SPRITE =================
   function cauHinh() {
-    return { mau: S.kh.mau, khop: S.kh.khop, bo: S.kh.bo, vien: S.tach.vien ? (S.muc.doi === 'em-be' ? OL_EM_BE : OL_QUAI) : 0, doi: S.muc.doi, dong_tac: S.dong_tac };
+    const cfg = { mau: S.kh.mau, khop: S.kh.khop, bo: S.kh.bo, vien: S.tach.vien ? (S.muc.doi === 'em-be' ? OL_EM_BE : OL_QUAI) : 0, doi: S.muc.doi, dong_tac: S.dong_tac };
+    if (S.chuyen) { cfg.dung_yen = S.chuyen.dung_yen.slice(); cfg.nhun = S.chuyen.nhun; } // không có: tệp cũ, cử động như trước
+    return cfg;
   }
   function lamTam(ngay) {
     if (!S.R || !S.kh) return null;
@@ -14618,6 +14665,38 @@ MA._xong();
     if (ngay) f(); else cho('tam', 120, f);
     return S.tam;
   }
+
+  // ---------- đứng yên từng bộ phận, độ nhún cả người ----------
+  function chuyenHienTai() { return S.chuyen || { dung_yen: [], nhun: 100 }; }
+  function dungChuyen() {
+    const box = $('dsDungYen'); if (!box || !S.kh) return;
+    box.innerHTML = '';
+    const ch = chuyenHienTai(), goc = XS.boGoc(S.kh.mau);
+    XS.MAU[S.kh.mau].bo.forEach((b, k) => {
+      const l = document.createElement('label'); l.className = 'yen';
+      const cb = document.createElement('input'); cb.type = 'checkbox'; cb.dataset.yen = b.id; cb.checked = ch.dung_yen.includes(b.id);
+      cb.onchange = () => {
+        const c2 = S.chuyen || (S.chuyen = { dung_yen: [], nhun: 100 });
+        c2.dung_yen = c2.dung_yen.filter((x) => x !== b.id); if (cb.checked) c2.dung_yen.push(b.id);
+        S.tamCu = true; lamTam(false); luuNhap(); ghiChuyen();
+      };
+      const i = document.createElement('i'); i.style.background = XS.MAU_BO[k % 8];
+      l.appendChild(cb); l.appendChild(i); l.appendChild(document.createTextNode(b.ten + (b.id === goc ? ' (cả người)' : '')));
+      box.appendChild(l);
+    });
+    $('nhun').value = ch.nhun; $('oNhun').textContent = ch.nhun + '%';
+    ghiChuyen();
+  }
+  function ghiChuyen() {
+    const ch = chuyenHienTai(), M = XS.MAU[S.kh.mau], dong = M.bo.filter((b) => !ch.dung_yen.includes(b.id)).map((b) => b.ten.toLowerCase());
+    $('ghiYen').textContent = !ch.dung_yen.length ? 'Mọi bộ phận đều cử động.' : dong.length ? 'Chỉ ' + dong.join(', ') + ' cử động.' : 'Mọi bộ phận đứng yên: chỉ còn ngã khi chết và lăn khi né.';
+  }
+  $('nhun').oninput = (e) => {
+    $('oNhun').textContent = e.target.value + '%';
+    const c2 = S.chuyen || (S.chuyen = { dung_yen: [], nhun: 100 }); c2.nhun = +e.target.value;
+    S.tamCu = true; lamTam(false); luuNhap();
+  };
+  $('nutYenMacDinh').onclick = () => { if (!S.kh) return; S.chuyen = XS.chuyenMacDinh(S.kh.mau); S.tamCu = true; lamTam(false); luuNhap(); dungChuyen(); bao('Đã về lựa chọn mặc định của mẫu ' + XS.MAU[S.kh.mau].ten); };
 
   // ================= BƯỚC 4: chuyển động =================
   const cv4 = $('cv4'), buf4 = XS.taoCanvas(480, 270);
@@ -14638,6 +14717,7 @@ MA._xong();
     }
     if (!XS.dsDongTac(S.muc.doi).includes(S.xem.ten)) S.xem.ten = 'idle';
     datDongTac(S.xem.ten);
+    dungChuyen();
   }
   function datDongTac(ten) {
     S.xem.ten = ten; S.xem.t = 0;
@@ -14776,11 +14856,13 @@ MA._xong();
     const tep = { loai: 'linh-khi-sprite', phien_ban: 1, ma: m.ma, ten: m.ten, doi_tuong: m.doi, vung: m.vung || (thongTinGoc(m.ma) || {}).vung || 'moi' };
     if (m.moi && m.doi === 'quai') tep.thay_cho = S.thay_cho || null;
     if (T) Object.assign(tep, { tam: XS.pngCua(T.w, T.h, T.px), khung_rong: T.fw, khung_cao: T.fh, goc: [T.ax, T.ay], rong: R.w, cao: R.h, bong: Math.round(Math.max(6, R.w * 0.62)), dong_tac: T.dong_tac });
+    // bộ phận đứng yên và độ nhún: tấm sprite đã dựng theo đó; game đọc để biết (không có = tệp cũ, cử động đủ)
+    if (S.chuyen && S.kh) { tep.dung_yen = S.chuyen.dung_yen.slice(); tep.nhun = S.chuyen.nhun; }
     else if (S.tam) tep.dong_tac = S.tam.dong_tac;
     tep.cong_cu = {
       anh: R ? XS.pngCua(R.w, R.h, R.px) : null, rong: R ? R.w : 0, cao: R ? R.h : 0,
       mau_xuong: S.kh ? S.kh.mau : null, khop: S.kh ? S.kh.khop : null, bo_phan: S.kh ? XS.nenDoan(S.kh.bo) : null,
-      tach: S.tach, chinh: S.dong_tac,
+      tach: S.tach, chinh: S.dong_tac, chuyen: S.chuyen,
       nguon: coNguon && S.nguon ? XS.pngCua(S.nguon.w, S.nguon.h, S.nguon.px) : null,
       sua: coNguon && S.sua ? XS.nenDoan(S.sua) : null,
     };
@@ -14839,6 +14921,8 @@ MA._xong();
     if (!R && tep.tam) throw new Error('Tệp chỉ có tấm sprite, thiếu phần để sửa tiếp');
     S.R = R;
     if (doMoi) { if (R) { if (!S.dd || !S.dd.w) XD.datMacDinh(); XD.dangKy(); } hienSlider(); capNhatDau(); if (!tuNhap) luuNhap(true); denBuoc(R ? 4 : 2); return; }
+    S.chuyen = cc.chuyen && Array.isArray(cc.chuyen.dung_yen) ? { dung_yen: cc.chuyen.dung_yen.slice(), nhun: cc.chuyen.nhun == null ? 100 : +cc.chuyen.nhun }
+      : Array.isArray(tep.dung_yen) ? { dung_yen: tep.dung_yen.slice(), nhun: tep.nhun == null ? 100 : +tep.nhun } : null; // tệp cũ: null = cử động đủ như trước
     if (R && cc.mau_xuong && XS.MAU[cc.mau_xuong] && cc.khop) S.kh = { mau: cc.mau_xuong, khop: cc.khop, bo: cc.bo_phan ? XS.moDoan(cc.bo_phan, R.w * R.h) : XS.tuDoan(R, cc.mau_xuong, cc.khop) };
     S.tamCu = true;
     hienSlider(); capNhatDau();

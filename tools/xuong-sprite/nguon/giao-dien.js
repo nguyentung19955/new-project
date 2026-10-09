@@ -139,7 +139,7 @@
   // ---------- chọn một thứ ----------
   function datLaiCongViec() {
     S.nguon = null; S.sua = null; S.lichSu = []; S.mat = null; S.R = null; S.kh = null; S.tam = null; S.sp = null; S.tamCu = true; S.chiAnh = false;
-    S.dong_tac = {}; S.thay_cho = null; S.dd = null; S._anhDo = null;
+    S.dong_tac = {}; S.thay_cho = null; S.dd = null; S._anhDo = null; S.chuyen = null;
     if (XD) XD.boDangKy();
   }
   async function chonMuc(muc) {
@@ -164,7 +164,7 @@
     if (n === 3 && S.muc.doi === 'vat-pham') n = S.buoc === 4 ? 2 : 4; // vật phẩm không cần bước khung
     S.buoc = n;
     if (n >= 3 && !S.kh && !laDo()) chonMau(XS.goiYMau(S.muc.ma, (thongTinGoc(S.muc.ma) || {}).bay));
-    if (!laDo()) { $('bang3Vk').classList.add('an'); $('bang3Tp').classList.add('an'); $('bang3Quai').classList.remove('an'); $('khoiChinhDT').classList.remove('an'); $('khoiBac').classList.add('an'); $('khoiBe4').classList.add('an'); for (const id of ['coEmBe', 'lapLai']) $(id).parentNode.classList.remove('an'); }
+    if (!laDo()) { $('bang3Vk').classList.add('an'); $('bang3Tp').classList.add('an'); $('bang3Quai').classList.remove('an'); $('khoiChinhDT').classList.remove('an'); $('khoiYen').classList.remove('an'); $('khoiBac').classList.add('an'); $('khoiBe4').classList.add('an'); for (const id of ['coEmBe', 'lapLai']) $(id).parentNode.classList.remove('an'); }
     for (let i = 1; i <= 5; i++) $('b' + i).classList.toggle('hien', i === n);
     for (const b of document.querySelectorAll('#cacBuoc button')) {
       const k = +b.dataset.b;
@@ -355,6 +355,7 @@
   function chonMau(mau) {
     const R = S.R; if (!R) return;
     const khop = XS.datKhop(R, mau);
+    if (!S.kh || S.kh.mau !== mau) S.chuyen = XS.chuyenMacDinh(mau); // đổi mẫu: về lựa chọn đứng yên mặc định của mẫu đó
     S.kh = { mau, khop, bo: XS.tuDoan(R, mau, khop) };
     S.xem.boChon = 0; S.tamCu = true; luuNhap();
   }
@@ -461,7 +462,9 @@
 
   // ================= TẤM SPRITE =================
   function cauHinh() {
-    return { mau: S.kh.mau, khop: S.kh.khop, bo: S.kh.bo, vien: S.tach.vien ? (S.muc.doi === 'em-be' ? OL_EM_BE : OL_QUAI) : 0, doi: S.muc.doi, dong_tac: S.dong_tac };
+    const cfg = { mau: S.kh.mau, khop: S.kh.khop, bo: S.kh.bo, vien: S.tach.vien ? (S.muc.doi === 'em-be' ? OL_EM_BE : OL_QUAI) : 0, doi: S.muc.doi, dong_tac: S.dong_tac };
+    if (S.chuyen) { cfg.dung_yen = S.chuyen.dung_yen.slice(); cfg.nhun = S.chuyen.nhun; } // không có: tệp cũ, cử động như trước
+    return cfg;
   }
   function lamTam(ngay) {
     if (!S.R || !S.kh) return null;
@@ -478,6 +481,38 @@
     if (ngay) f(); else cho('tam', 120, f);
     return S.tam;
   }
+
+  // ---------- đứng yên từng bộ phận, độ nhún cả người ----------
+  function chuyenHienTai() { return S.chuyen || { dung_yen: [], nhun: 100 }; }
+  function dungChuyen() {
+    const box = $('dsDungYen'); if (!box || !S.kh) return;
+    box.innerHTML = '';
+    const ch = chuyenHienTai(), goc = XS.boGoc(S.kh.mau);
+    XS.MAU[S.kh.mau].bo.forEach((b, k) => {
+      const l = document.createElement('label'); l.className = 'yen';
+      const cb = document.createElement('input'); cb.type = 'checkbox'; cb.dataset.yen = b.id; cb.checked = ch.dung_yen.includes(b.id);
+      cb.onchange = () => {
+        const c2 = S.chuyen || (S.chuyen = { dung_yen: [], nhun: 100 });
+        c2.dung_yen = c2.dung_yen.filter((x) => x !== b.id); if (cb.checked) c2.dung_yen.push(b.id);
+        S.tamCu = true; lamTam(false); luuNhap(); ghiChuyen();
+      };
+      const i = document.createElement('i'); i.style.background = XS.MAU_BO[k % 8];
+      l.appendChild(cb); l.appendChild(i); l.appendChild(document.createTextNode(b.ten + (b.id === goc ? ' (cả người)' : '')));
+      box.appendChild(l);
+    });
+    $('nhun').value = ch.nhun; $('oNhun').textContent = ch.nhun + '%';
+    ghiChuyen();
+  }
+  function ghiChuyen() {
+    const ch = chuyenHienTai(), M = XS.MAU[S.kh.mau], dong = M.bo.filter((b) => !ch.dung_yen.includes(b.id)).map((b) => b.ten.toLowerCase());
+    $('ghiYen').textContent = !ch.dung_yen.length ? 'Mọi bộ phận đều cử động.' : dong.length ? 'Chỉ ' + dong.join(', ') + ' cử động.' : 'Mọi bộ phận đứng yên: chỉ còn ngã khi chết và lăn khi né.';
+  }
+  $('nhun').oninput = (e) => {
+    $('oNhun').textContent = e.target.value + '%';
+    const c2 = S.chuyen || (S.chuyen = { dung_yen: [], nhun: 100 }); c2.nhun = +e.target.value;
+    S.tamCu = true; lamTam(false); luuNhap();
+  };
+  $('nutYenMacDinh').onclick = () => { if (!S.kh) return; S.chuyen = XS.chuyenMacDinh(S.kh.mau); S.tamCu = true; lamTam(false); luuNhap(); dungChuyen(); bao('Đã về lựa chọn mặc định của mẫu ' + XS.MAU[S.kh.mau].ten); };
 
   // ================= BƯỚC 4: chuyển động =================
   const cv4 = $('cv4'), buf4 = XS.taoCanvas(480, 270);
@@ -498,6 +533,7 @@
     }
     if (!XS.dsDongTac(S.muc.doi).includes(S.xem.ten)) S.xem.ten = 'idle';
     datDongTac(S.xem.ten);
+    dungChuyen();
   }
   function datDongTac(ten) {
     S.xem.ten = ten; S.xem.t = 0;
@@ -636,11 +672,13 @@
     const tep = { loai: 'linh-khi-sprite', phien_ban: 1, ma: m.ma, ten: m.ten, doi_tuong: m.doi, vung: m.vung || (thongTinGoc(m.ma) || {}).vung || 'moi' };
     if (m.moi && m.doi === 'quai') tep.thay_cho = S.thay_cho || null;
     if (T) Object.assign(tep, { tam: XS.pngCua(T.w, T.h, T.px), khung_rong: T.fw, khung_cao: T.fh, goc: [T.ax, T.ay], rong: R.w, cao: R.h, bong: Math.round(Math.max(6, R.w * 0.62)), dong_tac: T.dong_tac });
+    // bộ phận đứng yên và độ nhún: tấm sprite đã dựng theo đó; game đọc để biết (không có = tệp cũ, cử động đủ)
+    if (S.chuyen && S.kh) { tep.dung_yen = S.chuyen.dung_yen.slice(); tep.nhun = S.chuyen.nhun; }
     else if (S.tam) tep.dong_tac = S.tam.dong_tac;
     tep.cong_cu = {
       anh: R ? XS.pngCua(R.w, R.h, R.px) : null, rong: R ? R.w : 0, cao: R ? R.h : 0,
       mau_xuong: S.kh ? S.kh.mau : null, khop: S.kh ? S.kh.khop : null, bo_phan: S.kh ? XS.nenDoan(S.kh.bo) : null,
-      tach: S.tach, chinh: S.dong_tac,
+      tach: S.tach, chinh: S.dong_tac, chuyen: S.chuyen,
       nguon: coNguon && S.nguon ? XS.pngCua(S.nguon.w, S.nguon.h, S.nguon.px) : null,
       sua: coNguon && S.sua ? XS.nenDoan(S.sua) : null,
     };
@@ -699,6 +737,8 @@
     if (!R && tep.tam) throw new Error('Tệp chỉ có tấm sprite, thiếu phần để sửa tiếp');
     S.R = R;
     if (doMoi) { if (R) { if (!S.dd || !S.dd.w) XD.datMacDinh(); XD.dangKy(); } hienSlider(); capNhatDau(); if (!tuNhap) luuNhap(true); denBuoc(R ? 4 : 2); return; }
+    S.chuyen = cc.chuyen && Array.isArray(cc.chuyen.dung_yen) ? { dung_yen: cc.chuyen.dung_yen.slice(), nhun: cc.chuyen.nhun == null ? 100 : +cc.chuyen.nhun }
+      : Array.isArray(tep.dung_yen) ? { dung_yen: tep.dung_yen.slice(), nhun: tep.nhun == null ? 100 : +tep.nhun } : null; // tệp cũ: null = cử động đủ như trước
     if (R && cc.mau_xuong && XS.MAU[cc.mau_xuong] && cc.khop) S.kh = { mau: cc.mau_xuong, khop: cc.khop, bo: cc.bo_phan ? XS.moDoan(cc.bo_phan, R.w * R.h) : XS.tuDoan(R, cc.mau_xuong, cc.khop) };
     S.tamCu = true;
     hienSlider(); capNhatDau();
