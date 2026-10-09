@@ -15,7 +15,7 @@ GOC = [
   ('quai-ban-chot/nguon/chung.js', 3, 4), ('quai-ban-chot/nguon/rung.js', 2, 220), ('quai-ban-chot/nguon/laudai.js', 2, 221),
   ('quai-ban-chot/nguon/trum.js', 2, 224), ('quai-ban-chot/nguon/hotinh.js', 2, 123),
 ]
-CU_DONG = ['bien.js', 'rung.js', 'laudai.js', 'trumnho.js', 'ngutinh.js', 'moctinh.js', 'hotinh.js']
+CU_DONG = ['bien.js', 'rung.js', 'laudai.js', 'trumnho.js', 'ngutinh.js', 'moctinh.js', 'hotinh.js', 'chitiet.js']
 rd = lambda p: open(p, encoding='utf-8').read()
 def ok(src):
     with tempfile.NamedTemporaryFile('w', suffix='.js', delete=False, encoding='utf-8') as f: f.write(src); n = f.name
