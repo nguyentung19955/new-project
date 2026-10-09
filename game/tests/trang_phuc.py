@@ -92,7 +92,9 @@ JS = r"""
     if (T.slot === 'wing') o.wing = { kind: T.look, level: 1 + (r % 3) }; else o[T.slot] = T.look;
     o.rar[T.slot] = r;
     for (const an of [{}, { move: true }, { dodge: 0.4 }]) {
-      try { G.art.hero(c, Object.assign({ x: 40, y: 60, face: 1, key: G.HKEYS[n % 4], t: n * 0.13, atk: -1, dodge: -1, weapon: null, outfit: o }, an)); n++; } catch (e) { drawErr = e; }
+      // gọi thẳng bộ dựng khung (G.art.hero tự lùi về hình cũ khi lỗi, nên phải gọi thẳng mới bắt được lỗi)
+      const oo = Object.assign({ x: 40, y: 60, face: 1, key: G.HKEYS[n % 4], t: n * 0.13, atk: -1, dodge: -1, weapon: null, outfit: o }, an);
+      try { G.tinhLinh.frame(oo); G.art.hero(c, oo); n++; } catch (e) { drawErr = e; }
     }
     try { O.drawIcon(c, { k, r, lv: 2 }, 20, 20, 24); } catch (e) { drawErr = e; }
   }
@@ -149,7 +151,7 @@ JS = r"""
   room();
   const hp0 = P.maxhp, sp0 = P.speed, mn0 = P.maxmana;
   room((sv) => { give(sv, 'ao_long', 3); give(sv, 'trong_nho', 2); give(sv, 'bua_oc', 1); });
-  ok('Áo lông Vàng: máu +187', P.maxhp === hp0 + 187, P.maxhp + ' / ' + hp0);
+  ok('Áo lông Vàng: máu +187 (nhân thêm 10% của cây kỹ năng Thủ như áo bản cũ)', near(P.maxhp, hp0 + 187 * 1.1, 1), P.maxhp + ' / ' + hp0);
   ok('Trống đồng Tím: mana +18', P.maxmana === mn0 + 18, P.maxmana);
   ok('Áo lông: chạy nhanh hơn', P.speed > sp0 * 1.1, P.speed / sp0);
   ok('Bùa vỏ ốc: tầm nhặt đồ +15, hồi chiêu nhanh hơn', P.pickR === 15 && P.cdMul < 1);
@@ -211,6 +213,30 @@ JS = r"""
   P = G.buildPlayer();
   ok('Bùa cũ ghi thẳng vào bản lưu sau khi nạp vẫn được chuyển và có tác dụng', P.charm === 'c_greed' && O.worn(G.save, 'hand').k === 'bua_tham');
   G.botInput = null;
+  // ----- 8. làng: dấu chấm than, bảng Cô Thợ May vẽ được mọi thẻ, em bé mặc đúng đồ -----
+  G.testSave({}); G.setScene(G.Village);
+  const VS = G.villageScene, VA = G.villageApi;
+  VS.checkNews(); const nw0 = !!VS.state.news.may;
+  O.add(G.save, 'mu_rom', 0); VS.checkNews();
+  ok('Có món mới: Cô Thợ May có dấu chấm than', !nw0 && VS.state.news.may);
+  G.save.outfit.items.forEach((it) => { it.n = 0; }); VS.checkNews();
+  ok('Xem hết món mới, chưa đủ nguyên liệu: hết dấu chấm than', !VS.state.news.may);
+  G.save.mats = [30, 30, 30]; G.save.gold = 999; VS.checkNews();
+  ok('Đủ nguyên liệu may món chưa có: có dấu chấm than', VS.state.news.may);
+  O.wear(G.save, O.add(G.save, 'canh_lua', 3, { lv: 3 })); O.wear(G.save, O.add(G.save, 'ao_long', 2));
+  VS.goNpc('may', true);
+  let perr = null;
+  for (const t of ['wear', 'craft', 'wing']) for (const pv of ['dung', 'chay', 'lon']) {
+    VA.V.otab = t; VA.V.pv = pv; VA.V.sel = t === 'craft' ? 'ao_vay' : G.save.outfit.wear.wing;
+    try { G.ui.begin(); G.scene.draw(); } catch (e) { perr = e; }
+  }
+  ok('Bảng Cô Thợ May vẽ được ba thẻ, ba kiểu mặc thử', VA.V.tab === 'outfit' && !perr, perr);
+  VA.goHub();
+  ok('Rời Cô Thợ May thì món mới thôi báo mới', O.newCount(G.save) === 0);
+  P = G.buildPlayer();
+  ok('Em bé trong trận mặc đúng đồ (cánh lửa cấp 3, áo lông)', P.outfit.wing.kind === 'lua' && P.outfit.wing.level === 3 && P.outfit.robe === 'ao_long');
+  const hf = G.tinhLinh.frame(G.heroArgs(Object.assign(P, { weapons: P.weapons })));
+  ok('Hình trong trận có lớp cánh và áo của trang phục', !!hf && G.tinhLinh.outfitOf('smith', { p: P }).robe === 'ao_long');
   G.setScene(G.Village);
   return out;
 }

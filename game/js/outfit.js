@@ -32,19 +32,19 @@
   def('ao_vo_cay', 'robe', 'Áo vỏ cây', { el: 'poison', set: 'rung', reg: 0, st: { hp: 36, dr: 0.064 }, src: ['craft', 'boss', 'drop'] });
   def('gui_tre', 'back', 'Gùi tre độc', { el: 'poison', set: 'rung', reg: 0, st: { mana: 10, cd: 0.05 }, src: ['craft', 'boss', 'drop'] });
   def('bua_nanh', 'hand', 'Bùa nanh rắn', { el: 'poison', set: 'rung', reg: 0, st: { pick: 10, mana: 6 }, src: ['craft', 'boss', 'drop'] });
-  def('canh_la', 'wing', 'Cánh lá', { look: 'la', el: 'poison', set: 'rung', reg: 0, st: { spd: 0.03, dr: 0.02 }, src: ['boss'] });
+  def('canh_la', 'wing', 'Cánh lá', { look: 'la', el: 'poison', set: 'rung', reg: 0, st: { spd: 0.03, dr: 0.015 }, src: ['boss'] });
   // --- Bộ Hang Biển (Băng) ---
   def('mu_vay_ca', 'hat', 'Mũ vây cá', { el: 'ice', set: 'bien', reg: 1, st: { res_ice: 0.32, hp: 8 }, src: ['craft', 'boss', 'drop'] });
   def('ao_vay', 'robe', 'Áo vảy', { el: 'ice', set: 'bien', reg: 1, st: { hp: 68, dr: 0.08 }, src: ['craft', 'boss', 'drop'] });
   def('khan_bang', 'back', 'Khăn choàng sương', { el: 'ice', set: 'bien', reg: 1, st: { spd: 0.04, mana: 8 }, src: ['craft', 'boss', 'drop'] });
   def('bua_oc', 'hand', 'Bùa vỏ ốc', { el: 'ice', set: 'bien', reg: 1, st: { pick: 12, cd: 0.05 }, src: ['craft', 'boss', 'drop'] });
-  def('canh_bang', 'wing', 'Cánh băng', { look: 'bang', el: 'ice', set: 'bien', reg: 1, st: { spd: 0.03, dr: 0.02 }, src: ['boss'] });
+  def('canh_bang', 'wing', 'Cánh băng', { look: 'bang', el: 'ice', set: 'bien', reg: 1, st: { spd: 0.03, dr: 0.015 }, src: ['boss'] });
   // --- Bộ Lâu Đài (Lửa) ---
   def('mu_tai_cao', 'hat', 'Mũ tai cáo', { el: 'fire', set: 'lau', reg: 2, st: { res_fire: 0.32, hp: 10 }, src: ['craft', 'boss', 'drop'] });
   def('ao_long', 'robe', 'Áo lông trắng', { el: 'fire', set: 'lau', reg: 2, st: { hp: 104, dr: 0.08, spd: 0.064 }, src: ['craft', 'boss', 'drop'] });
   def('trong_nho', 'back', 'Trống đồng nhỏ', { el: 'fire', set: 'lau', reg: 2, st: { mana: 12, cd: 0.06 }, src: ['craft', 'boss', 'drop'] });
   def('bua_lua', 'hand', 'Bùa đá lửa', { el: 'fire', set: 'lau', reg: 2, st: { pick: 14, mana: 8 }, src: ['craft', 'boss', 'drop'] });
-  def('canh_lua', 'wing', 'Cánh lửa', { look: 'lua', el: 'fire', set: 'lau', reg: 2, st: { spd: 0.03, dr: 0.02 }, src: ['boss'] });
+  def('canh_lua', 'wing', 'Cánh lửa', { look: 'lua', el: 'fire', set: 'lau', reg: 2, st: { spd: 0.03, dr: 0.015 }, src: ['boss'] });
   // --- Món lẻ ---
   def('non_la', 'hat', 'Nón lá rừng', { reg: 0, st: { res_poison: 0.25 }, src: ['craft'], cost: { mat: [6, 0, 0], gold: 80 } });
   def('mu_da_ca', 'hat', 'Mũ da cá', { reg: 1, st: { res_ice: 0.25 }, src: ['craft'], cost: { mat: [0, 6, 0], gold: 200 } });
@@ -67,7 +67,7 @@
   def('bua_suong', 'hand', 'Bùa sương', { el: 'ice', reg: 1, st: { mana: 4 }, old: 'c_mist', src: ['drop'] });
   def('bua_tham', 'hand', 'Bùa tham', { st: { pick: 10 }, old: 'c_greed', src: ['drop'] });
   def('bua_linh', 'hand', 'Bùa linh', { st: { mana: 8 }, old: 'c_spirit', src: ['drop'] });
-  def('canh_chuon', 'wing', 'Cánh chuồn chuồn', { look: 'chuon', st: { spd: 0.03, dr: 0.02 }, src: ['craft'], cost: { mat: [6, 6, 6], gold: 300 } });
+  def('canh_chuon', 'wing', 'Cánh chuồn chuồn', { look: 'chuon', st: { spd: 0.03, dr: 0.015 }, src: ['craft'], cost: { mat: [6, 6, 6], gold: 300 } });
   // Bản cũ: mã mũ, áo, bùa cũ -> [món mới, bậc].
   O.FROM_OLD = {
     h_r1: ['non_la', 0], h_r2: ['mu_da_ca', 0], h_r3: ['khan_lua', 0], h_moc: ['mu_sung', 1], h_ngu: ['mu_vay_ca', 1], h_ho: ['mu_tai_cao', 1],
@@ -83,8 +83,8 @@
       const lv = it.lv | 0;
       if (lv < 2) return { key: 'none', name: 'Mầm cánh', desc: 'Lên cấp 2 (cánh nhỏ) để lộn xa hơn và có khiên sau khi lộn.' };
       return lv >= 3
-        ? { key: 'wing', name: 'Cánh lớn', desc: 'Lộn xa hơn 30%. Sau mỗi lần lộn có khiên 0,9 giây chặn một đòn.' }
-        : { key: 'wing', name: 'Cánh nhỏ', desc: 'Lộn xa hơn 20%. Sau mỗi lần lộn có khiên 0,5 giây chặn một đòn.' };
+        ? { key: 'wing', name: 'Cánh lớn', desc: 'Lộn xa hơn 30%. Lộn xong có khiên 0,8 giây chặn một đòn (hồi 3 giây).' }
+        : { key: 'wing', name: 'Cánh nhỏ', desc: 'Lộn xa hơn 20%. Lộn xong có khiên 0,5 giây chặn một đòn (hồi 4 giây).' };
     }
     if ((it.r | 0) < 2) return null;
     const gold = it.r >= 3, el = T.el, hn = HN[el];
@@ -92,12 +92,12 @@
     const what = { fire: 'cháy', poison: 'trúng độc', ice: 'chậm' }[el];
     if (T.slot === 'hat') return { key: 'thorn', name: 'Mũ ' + hn.toLowerCase(), desc: 'Quái đánh trúng bé bị ' + what + (gold ? ' nặng.' : '.') };
     if (T.slot === 'robe') return { key: 'trail', name: 'Vệt ' + { fire: 'cháy', poison: 'độc', ice: 'băng' }[el], desc: 'Lộn để lại vệt ' + hn + ' trên đất, quái đi qua bị ' + what + (gold ? ', vệt lâu hơn.' : '.') };
-    if (T.slot === 'back') return { key: 'pulse', name: 'Vũng ' + hn.toLowerCase(), desc: 'Mỗi ' + (gold ? 3 : 4) + ' giây rải một vũng ' + hn + ' nhỏ dưới chân khi còn quái.' };
+    if (T.slot === 'back') return { key: 'pulse', name: 'Vũng ' + hn.toLowerCase(), desc: 'Mỗi ' + (gold ? 4 : 5) + ' giây rải một vũng ' + hn + ' nhỏ dưới chân khi còn quái.' };
     return { key: 'burst', name: 'Nổ ' + hn.toLowerCase(), desc: 'Quái gục gần bé nổ nhỏ, làm quái quanh đó bị ' + what + '.' };
   };
 
   // ---------- chỉ số một món ----------
-  O.wingMult = (lv) => [0, 1, 1.6, 2.2][G.clamp(lv | 0, 0, 3)];
+  O.wingMult = (lv) => [0, 1, 1.4, 1.8][G.clamp(lv | 0, 0, 3)];
   O.stats = function (it) {
     const T = I[it.k], out = {};
     if (!T) return out;
@@ -245,8 +245,7 @@
   // ---------- áp vào người chơi (combat.js gọi trong G.buildPlayer) ----------
   O.apply = function (P, sv) {
     const sm = O.sum(sv), s = sm.stats;
-    if (sm.oldCharm === 'c_greed' && P.lvl >= 5) P.maxhp *= 0.9; // Bùa tham như bản cũ: máu tối đa giảm 10%
-    P.maxhp = Math.round(P.maxhp + (s.hp || 0)); P.hp = P.maxhp;
+    // Máu của trang phục đã được G.buildPlayer cộng vào trước hệ số cây kỹ năng và Bùa tham (như áo của bản cũ).
     P.maxmana += s.mana || 0;
     P.dr += s.dr || 0;
     P.speed *= 1 + (s.spd || 0);
@@ -268,7 +267,9 @@
   const FX = (n, a, b, c, d, e) => { if (!G.noRender && G.fx && G.fx[n]) G.fx[n](a, b, c, d, e); };
   const W_ = () => (G.getWorld ? G.getWorld() : null);
   const top = (list) => list.reduce((a, b) => (b.r > a.r ? b : a));
-  const D = (P) => (G.curW && G.curW(P) ? G.pDamage(P, G.curW(P)) : 10);
+  // Sức của tác dụng trang phục: sát thương mỗi đòn của vũ khí đang cầm, quy về nhịp đánh của kiếm (0,36 giây một đòn),
+  // để vũ khí chậm hay nhanh đều được cộng thêm theo cùng một tỉ lệ sát thương mỗi giây (giữ nguyên thứ bậc giữa các vũ khí).
+  const D = (P) => { const w = G.curW && G.curW(P); if (!w) return 10; return G.pDamage(P, w) * Math.min(1, 0.36 / (G.WTYPES[w.type].cd || 0.36)); };
   const COL = { fire: '#ff9a4a', poison: '#9be05a', ice: '#a8e4ff' };
   const WORD = { fire: 'Cháy!', poison: 'Độc!', ice: 'Chậm!' };
   function zone(W, P, x, y, r, life, el, src) {
@@ -287,6 +288,7 @@
   O.tick = function (P, dt) {
     const W = W_(); if (!W || !P.oSp) return;
     if (P.oShieldT > 0) P.oShieldT -= dt;
+    if (P.oWingCd > 0) P.oWingCd -= dt;
     if (P.oThornCd > 0) P.oThornCd -= dt;
     if (P.oBurstCd > 0) P.oBurstCd -= dt;
     if (W.over || W.safe || P.dead) return;
@@ -295,9 +297,9 @@
     if (sp.trail && P.dodgeT > 0) {
       P.oTrailT -= dt;
       if (P.oTrailT <= 0) {
-        P.oTrailT = 0.08;
-        const q = top(sp.trail), k = q.r >= 3 ? 1.5 : 1;
-        zone(W, P, P.x, P.y, 13, 2.2 * k, q.el, D(P) * 0.45 * k);
+        P.oTrailT = 0.09;
+        const q = top(sp.trail), k = q.r >= 3 ? 1.3 : 1;
+        zone(W, P, P.x, P.y, 13, 1.8 * k, q.el, D(P) * 0.3 * k);
       }
     } else P.oTrailT = 0;
     // đồ đeo lưng có hệ: rải vũng mỗi vài giây khi còn quái
@@ -305,15 +307,16 @@
       const q = top(sp.pulse), live = W.ents.some((e) => !e.dead) || (W.boss && !W.boss.dead);
       P.oPulseT -= dt;
       if (P.oPulseT <= 0 && live) {
-        P.oPulseT = q.r >= 3 ? 3 : 4;
-        zone(W, P, P.x, P.y + 2, 20, 2.6, q.el, D(P) * 0.4 * (q.r >= 3 ? 1.5 : 1));
+        P.oPulseT = q.r >= 3 ? 4 : 5;
+        zone(W, P, P.x, P.y + 2, 20, 2.4, q.el, D(P) * 0.3 * (q.r >= 3 ? 1.3 : 1));
         FX('burst', P.x, P.y - 4, COL[q.el], 10, 50);
       }
     }
   };
   // Lộn xong (combat.js gọi): cánh cấp 2 trở lên cho khiên ngắn.
+  // Khiên cánh có thời gian hồi (cánh nhỏ 4 giây, cánh lớn 3 giây) để không lộn liên tục mà miễn đòn mãi.
   O.dodgeEnd = function (P) {
-    if (P.wingLv >= 2) { P.oShieldT = P.wingLv >= 3 ? 0.9 : 0.5; FX('sparkle', P.x, P.y - 12, '#e8f6ff', 6); }
+    if (P.wingLv >= 2 && !(P.oWingCd > 0)) { P.oShieldT = P.wingLv >= 3 ? 0.8 : 0.5; P.oWingCd = P.wingLv >= 3 ? 3 : 4; FX('sparkle', P.x, P.y - 12, '#e8f6ff', 6); }
   };
   // Bé sắp trúng đòn: còn khiên thì chặn. Trả về true nếu đã chặn.
   O.block = function (P) {
@@ -329,7 +332,7 @@
   O.onHurt = function (P, src) {
     const sp = P.oSp && P.oSp.thorn;
     if (!sp || !src || src.dead || src.isPlayer || !src.st || P.oThornCd > 0) return;
-    const q = top(sp), k = q.r >= 3 ? 1.5 : 1;
+    const q = top(sp), k = q.r >= 3 ? 1.3 : 1;
     P.oThornCd = 0.6;
     G.applyStatus(src, q.el, D(P) * 0.6 * k, q.el === 'ice' ? 2 : 1);
     FX('text', src.x, src.y - (src.h || 16) - 8, WORD[q.el], COL[q.el], 8);
@@ -339,9 +342,9 @@
     const sp = P.oSp && P.oSp.burst;
     if (!sp || P.oBurstCd > 0 || e.isBoss) return;
     if (Math.hypot(e.x - P.x, e.y - P.y) > 90) return;
-    const q = top(sp), k = q.r >= 3 ? 1.5 : 1, src = D(P) * 0.4 * k;
-    P.oBurstCd = 0.4;
-    for (const o of G.targets()) if (o !== e && Math.hypot(o.x - e.x, (o.y - e.y) / (G.ZK || 0.85)) < 30 + o.r) { G.applyStatus(o, q.el, src, 1); G.damage(o, src, { el: q.el, src: 'outfit' }); }
+    const q = top(sp), k = q.r >= 3 ? 1.3 : 1, src = D(P) * 0.3 * k;
+    P.oBurstCd = 1.2;
+    for (const o of G.targets()) if (o !== e && Math.hypot(o.x - e.x, (o.y - e.y) / (G.ZK || 0.85)) < 28 + o.r) { G.applyStatus(o, q.el, src, 1); G.damage(o, src * 0.5, { el: q.el, src: 'outfit' }); }
     FX('burst', e.x, e.y - 6, COL[q.el], 14, 70);
     FX('text', e.x, e.y - 22, 'Nổ ' + { fire: 'lửa', poison: 'độc', ice: 'băng' }[q.el], COL[q.el], 7.5);
   };

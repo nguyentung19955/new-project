@@ -209,7 +209,7 @@
   function hemOf(cx) { return -(cx.tr || 0) + (cx.sw || 0); }
   function hem(cx) { return Math.round(hemOf(cx) * 0.8); }
   // Tua rủ từ (x,y) trong hệ F, dài len, đầu tua lệch theo nhịp đung đưa. col: bộ ba sắc độ.
-  function tassel(cx, P, F, x, y, len, col, o) {
+  function tua(cx, P, F, x, y, len, col, o) {
     const dx = hemOf(cx) * (o && o.k != null ? o.k : 1), mx = x + dx * 0.5, my = y + len * 0.55;
     P({ ol: col[0] }, (s) => { F.l(x, y, mx, my, 1, Md(col)); F.l(mx, my, x + dx, y + len, 1, Md(col)); F.r(Math.round(x + dx) - 1, y + len, 2, 2, Lt(col)); });
   }
@@ -446,7 +446,7 @@
       const B = cx.B, k = [0, 1, 2, 1][cx.f % 4] + (cx.tr | 0), w = cx.sw || 0;
       P((s) => { B.g([[-2, -13], [-4, -12], [-9 - k, -8 + w], [-11 - k, -5 + w], [-8 - k, -5 + w], [-3, -10]], ICE); s.in(() => { B.l(-4, -11, -9 - k, -6 + w, 1, Lt(ICE)); B.p(-10 - k, -5 + w, SH); }); });
       P((s) => { B.g([[-3, -11], [-6 - (k >> 1), -4 - w], [-4 - (k >> 1), -3 - w], [-2, -9]], TEAL); });
-      tassel(cx, P, B, -11 - k, -5 + w, 3, ICE, { k: 0.6 });
+      tua(cx, P, B, -11 - k, -5 + w, 3, ICE, { k: 0.6 });
     },
     front: (cx, P) => { const B = cx.B; P((s) => { B.r(-3, -14, 7, 2, ICE); s.in(() => { B.r(-3, -14, 7, 1, Lt(ICE)); B.p(2, -13, SH); }); }); },
   });
@@ -459,7 +459,7 @@
         K.e(0, 0, 4.6, 5.4, BRZ);
         s.in(() => { K.e(0, 0, 3, 3.6, Dk(BRZ)); K.e(0, 0, 1.4, 1.6, Lt(GOLD)); K.p(0, -3, Lt(GOLD)); K.p(0, 3, Lt(GOLD)); K.p(-2, 0, Lt(GOLD)); K.p(2, 0, Lt(GOLD)); K.r(-4, -1, 1, 3, Dk(BRZ)); });
       });
-      tassel(cx, P, K, -1, 5, 3, RED, { k: 0.8 });
+      tua(cx, P, K, -1, 5, 3, RED, { k: 0.8 });
     },
     front: (cx, P) => { const B = cx.B; P({ ol: false, bevel: false }, (s) => { B.l(-3, -12, 2, -7, 1, RED[1]); }); },
   });
@@ -529,7 +529,7 @@
           else B.r(x - 1, y - 1, 3, 4, face);
           s.in(() => { if (mark) B.p(x, y, mark); });
         });
-        tassel(cx, P, B, x, y + 3, 2, RED, { k: 0.5 });
+        tua(cx, P, B, x, y + 3, 2, RED, { k: 0.5 });
       },
     });
   }
@@ -620,7 +620,7 @@
     Pt((s) => { B.e(0, -8, 3.6, 4.4, SKIN); s.in(() => { B.e(-2, -6, 2, 2.5, Dk(SKIN)); }); });
     // 3. áo
     if (robe) robe.draw(cx, Pa);
-    if (robe && rc('robe')) { tassel(cx, Pa, B, -4, -7, 4, rc('robe')); if (rar.robe >= 3) tassel(cx, Pa, B, -3, -6, 5, rc('robe'), { k: 1.3 }); }
+    if (robe && rc('robe')) { tua(cx, Pa, B, -4, -7, 4, rc('robe')); if (rar.robe >= 3) tua(cx, Pa, B, -3, -6, 5, rc('robe'), { k: 1.3 }); }
     if (back && back.front) back.front(cx, Pb);
     if (back && rc('back')) Pb({ ol: false, bevel: false }, (s) => { B.r(-2, -13, 2, 1, rc('back')[1]); B.p(-1, -12, rc('back')[2]); });
     if (hand && hand.belt) hand.belt(cx, Ph);
@@ -630,7 +630,7 @@
     Pt((s) => { H.e(0.5, 0, 6.3, 5.8, SKIN); s.in(() => { H.e(-3.5, 2.5, 3, 2.5, Dk(SKIN)); }); });
     // 4. mũ
     if (hat) hat.draw(cx, Pm);
-    if (hat && rc('hat')) { tassel(cx, Pm, H, -6, 0, 4, rc('hat')); if (rar.hat >= 3) tassel(cx, Pm, H, -5, 1, 5, rc('hat'), { k: 1.3 }); }
+    if (hat && rc('hat')) { tua(cx, Pm, H, -6, 0, 4, rc('hat')); if (rar.hat >= 3) tua(cx, Pm, H, -5, 1, 5, rc('hat'), { k: 1.3 }); }
     // mặt nạ trắng (thuộc thân trần) và dấu trên mặt nạ (lớp mặt)
     Pt({ ol: only === 'than' || !hat || !hat.tint ? SKIN[0] : C[0] }, (s) => {
       H.e(2.5, 0.5, 4.3, 4.3, Md(MASK));

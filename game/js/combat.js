@@ -67,9 +67,10 @@
     const armor = sv.armor ? G.GEAR.armor[sv.armor] : null;
     const helm = sv.helm ? G.GEAR.helm[sv.helm] : null;
     const set = armor && helm && armor.set && armor.set === helm.set ? armor.set : null;
-    let maxhp = H.hp * (1 + 0.03 * (hs.lvl - 1)) + (armor ? armor.hp : 0);
+    const osum = G.outfit ? G.outfit.sum(sv) : null; // trang phục đang mặc: máu cộng vào trước các hệ số, như áo của bản cũ
+    let maxhp = H.hp * (1 + 0.03 * (hs.lvl - 1)) + (armor ? armor.hp : 0) + (osum ? osum.stats.hp || 0 : 0);
     if (sk.def >= 1) maxhp *= 1.1;
-    if (sv.charm === 'c_greed' && hs.lvl >= 5) maxhp *= 0.9;
+    if ((sv.charm === 'c_greed' || (osum && osum.oldCharm === 'c_greed')) && hs.lvl >= 5) maxhp *= 0.9;
     const P = {
       isPlayer: true, key, lvl: hs.lvl, sk, x: 60, y: 190, r: 7, hr: 6, face: 1,
       maxhp: Math.round(maxhp), hp: Math.round(maxhp),

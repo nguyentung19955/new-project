@@ -38,7 +38,7 @@
     lai: { ten: 'Chú Lái Đò', viec: 'Vào ải', ngan: 'Vào ải', chao: 'Đi đâu hả cháu?', ve: 'Đi cẩn thận nhé!', robe: '#8a5632', robe2: '#6a3e22', wide: 0, top: -27, pos: [638, 152], den: [620, 163] },
     ren: { ten: 'Ông Thợ Rèn', viec: 'Lò rèn', ngan: 'Lò rèn', chao: 'Đưa đây ông xem lưỡi nào!', ve: 'Đi cẩn thận nhé!', robe: '#9a4a30', robe2: '#7a3622', wide: 2, top: -27, pos: [468, 132], den: [447, 141] },
     xen: { ten: 'Bà Hàng Xén', viec: 'Hàng xén', ngan: 'Vũ khí', chao: 'Mua gì bán gì, vào đây với bà.', ve: 'Lần sau lại ghé bà nhé.', robe: '#8a5a38', robe2: '#6e4428', wide: 1, top: -23, pos: [540, 198], den: [540, 214] },
-    may: { ten: 'Cô Thợ May', viec: 'Thợ may', ngan: 'Mũ áo', chao: 'Bé thử cái mũ mới xem nào.', ve: 'Mặc đẹp lắm đó!', robe: '#d86a7a', robe2: '#b04a5e', wide: -1, top: -28, pos: [574, 132], den: [555, 141] },
+    may: { ten: 'Cô Thợ May', viec: 'Thợ may', ngan: 'Mũ áo', chao: 'Bé thử bộ đồ mới xem nào.', ve: 'Mặc đẹp lắm đó!', robe: '#d86a7a', robe2: '#b04a5e', wide: -1, top: -28, pos: [574, 132], den: [555, 141] },
     do: { ten: 'Cụ Đồ', viec: 'Kỹ năng', ngan: 'Kỹ năng', chao: 'Ngồi xuống đây, lão chỉ cho một chiêu.', ve: 'Học rồi nhớ luyện nghe con.', robe: '#4a548c', robe2: '#363e6c', wide: 0, top: -24, sit: true, pos: [364, 150], den: [342, 160] },
     tu: { ten: 'Ông Từ', viec: 'Chọn hero', ngan: 'Hero', chao: 'Khẽ thôi, các bé đang chơi trong sân.', ve: 'Các bé chơi ngoan nhé.', robe: '#d0a440', robe2: '#a87e2a', wide: 0, top: -27, pos: [142, 140], den: [124, 151] },
     mo: { ten: 'Anh Mõ', viec: 'Cài đặt', ngan: 'Cài đặt', chao: 'Cốc cốc cốc! Làng nước nghe đây!', ve: 'Có gì cứ gọi anh Mõ!', robe: '#3f9a8c', robe2: '#2c7468', wide: -1, top: -26, pos: [100, 92], den: [118, 102] },
@@ -438,11 +438,10 @@
   // Người nào đang có việc mới. Mốc "đã xem" ghi vào save.tut.lang (bản lưu cũ không có thì coi như chưa xem gì).
   function seen() { const sv = G.save; if (!sv.tut || typeof sv.tut !== 'object') sv.tut = {}; if (!sv.tut.lang || typeof sv.tut.lang !== 'object') sv.tut.lang = {}; return sv.tut.lang; }
   function counts() {
-    const sv = G.save, o = sv.owned || {};
+    const sv = G.save;
     return {
       lai: Object.keys(sv.stars || {}).length + Object.keys(sv.stars2 || {}).length + 1,
       xen: sv.nextId || 0,
-      may: ['helm', 'armor', 'charm'].reduce((n, k) => n + ((o[k] || []).length), 0),
       tu: (G.HKEYS || []).filter((k) => sv.heroes[k] && sv.heroes[k].unlocked).length,
       mo: 1,
     };
@@ -453,6 +452,9 @@
     try {
       const hs = sv.heroes[sv.hero];
       n.do = Math.floor(hs.lvl / 3) - (hs.sk.atk + hs.sk.def + hs.sk.elem) > 0;
+      // thợ may: có món trang phục mới chưa xem, hoặc đủ nguyên liệu may một món chưa có
+      const O = G.outfit;
+      n.may = !!(O && sv.outfit && (O.newCount(sv) > 0 || O.canCraftNew(sv)));
       // thợ rèn: đủ nguyên liệu để mài một món đang mang, nâng lò, hoặc nâng bậc
       const pay = G.villageApi && G.villageApi.canPay;
       n.ren = false;
@@ -672,7 +674,7 @@
     }
     if (!o.hideHero) {
       for (let i = 1; i >= 0; i--) L.push([S.wp[i].y - 0.5, () => drawWeapon(c, i)]);
-      L.push([S.y, () => drawKid(c, sv.hero, S.x - cam, S.y, S.face, { move: S.moving, helm: sv.helm, armor: sv.armor })]);
+      L.push([S.y, () => drawKid(c, sv.hero, S.x - cam, S.y, S.face, { move: S.moving, outfit: G.outfit ? G.outfit.look(sv) : null })]);
     }
     L.sort((a, b) => a[0] - b[0]);
     for (const l of L) l[1]();

@@ -39,7 +39,7 @@
     if (!it) { S.got.push('vàng (kho trang phục đầy)'); return; }
     const s = O.name(it) + ' (' + G.RARITY[it.r].name + ')';
     S.got.push('trang phục ' + s);
-    S.W.banner = { s: 'Rơi trang phục: ' + s, col: G.RARITY[it.r].col, t: 3 };
+    if (!S.W.banner) S.W.banner = { s: 'Rơi trang phục: ' + s, col: G.RARITY[it.r].col, t: 3 }; // không che dòng báo vũ khí rơi
     if (G.fx && G.fx.text) G.fx.text(e.x, e.y - 24, O.name(it), G.RARITY[it.r].col, 8);
   };
   G.addXp = function (key, xp) {
