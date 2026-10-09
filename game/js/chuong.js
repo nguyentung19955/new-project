@@ -425,6 +425,24 @@
     }
   };
 
+  // ---------- học tự động (bot kiểm tra cân bằng tests/cay.py, như người chơi học dần từ nút gốc lên) ----------
+  CH.PLAN = {
+    hoa: ['luc', 'luc', 'no', 'luc', 'no', 'dai', 'dai', 'vet', 'luc', 'luc', 'tich', 'tich', 'dai', 'no', 'tich', 'vet', 'no', 'tich', 'tan', 'tich', 'tan', 'tan', 'dai', 'no', 'vet', 'dai', 'vet', 'vet'],
+    doc: ['luc', 'luc', 'may', 'luc', 'may', 'mon', 'mon', 'lay', 'luc', 'luc', 'tach', 'tach', 'mon', 'may', 'tach', 'lay', 'may', 'tach', 'hut', 'tach', 'hut', 'hut', 'mon', 'may', 'lay', 'mon', 'lay', 'lay'],
+    bang: ['luc', 'luc', 'xa', 'luc', 'xa', 'xuyen', 'xuyen', 'dong', 'luc', 'luc', 'vo', 'vo', 'xuyen', 'xa', 'dong', 'vo', 'xa', 'xuyen', 'phong', 'vo', 'phong', 'phong', 'xuyen', 'xa', 'dong', 'vo', 'dong', 'dong'],
+  };
+  // Học hết điểm chưởng đang có theo thứ tự trên; trả về số nút vừa học
+  CH.autoLearn = function (hs, key) {
+    const s = state(hs, key), plan = CH.PLAN[s.cay];
+    let n = 0;
+    for (let guard = 0; guard < 60 && CH.pts(hs, key).left > 0; guard++) {
+      const id = plan.find((x) => !CH.why(hs, x, key)) || C.trees[s.cay].nodes.map((x) => x.id).find((x) => !CH.why(hs, x, key));
+      if (!id || !CH.learn(hs, id, key)) break;
+      n++;
+    }
+    return n;
+  };
+
   // ---------- chữ hướng dẫn ----------
   CH.tip = 'Nút Chưởng (nút tròn trên cùng): bắn chưởng linh khí theo hệ của cây chưởng đang dùng, tự ngắm quái gần nhất. Tốn ' + C.cost + ' mana.';
 })();

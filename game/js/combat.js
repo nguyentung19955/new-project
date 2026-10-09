@@ -235,7 +235,7 @@
       if (t.onHit) t.onHit(o);
     }
     if (o.fromPlayer !== false && o.el && G.outfit) m *= G.outfit.elMult(W.P, o.el); // đủ bộ trang phục một hệ: tăng sát thương hệ đó
-    if (o.fromPlayer !== false) {
+    if (o.fromPlayer !== false && !o.ch) { // trùm chỉ học theo vũ khí (chưởng không tính, js/chuong.js)
       W.stats.el[o.el || 'none'] += amt;
       if (o.src === 'hit') { if (o.ranged) W.stats.ranged += amt; else W.stats.melee += amt; }
     }

@@ -1,6 +1,7 @@
 """CÂN BẰNG PHẢI CÀY: bot chơi từ bản lưu mới như một người chơi bình thường và đếm số lần chơi cần cho từng ải.
 
 Cách bot chơi (mỗi lượt):
+  - Cây chưởng: lượt chiến dịch 1, 4, 7... dùng Hỏa chưởng; 2, 5, 8... Độc chưởng; 3, 6, 9... Băng chưởng. Học hết điểm chưởng mỗi lần về làng.
   - Ở làng: học kỹ năng, nâng lò, nâng bậc, mài, rèn và mặc đồ tốt nhất, mang vũ khí mạnh nhất (như người chơi chăm chỉ).
   - Kiểu "khuyen" (mặc định): nhìn "Sức mạnh khuyên dùng" của ải kế; sức mạnh chưa đủ (chưa xanh) thì chơi lại ải mới nhất đã qua
     để cày (tối đa 8 lượt liền; cày 3 lượt mà sức mạnh không tăng thì thử luôn), đủ thì vào ải mới. Thua thì về làng nâng cấp và chơi lại ải cũ một lượt rồi mới thử lại.
@@ -68,12 +69,15 @@ def muc_tieu(k):
 SAVES = None
 NGUONG = 1.0  # bot kiểu khuyen: đợi sức mạnh đủ (xanh) mới vào ải mới
 KEHOACH = [0, 0, 0, 1, 5, 0, 1, 3, 3, 7, 0, 1, 3, 4, 8]
-def campaign(pg, mode, upto):
+CAY = ['hoa', 'doc', 'bang']  # cây chưởng bot dùng, lần lượt theo lượt chiến dịch (js/chuong.js)
+def campaign(pg, mode, upto, cay='hoa'):
     seen = set()
     def s_first(k):
         if k in seen: return False
         seen.add(k); return True
     pg.evaluate("(c) => { G.resetSave(); G.save.sound = false; Object.assign(G.botCfg, c); }", BOT)
+    # bot chọn một cây chưởng rồi học dần điểm chưởng như người chơi (G.upg.auto học hết điểm chưởng theo G.chuong.PLAN)
+    pg.evaluate("(c) => { if (G.chuong) for (const k of G.HKEYS) { G.chuong.use(G.save.heroes[k], c, k); G.save.heroes[k].ch.cay = c; } }", cay)
     pg.evaluate("(b) => { window.__ban = b; window.__banVang = 0; window.__banTP = 0; }", '--ban' in sys.argv)
     cleared = -1
     st = [{'plays': 0, 'tries': 0, 'fails': 0, 't': 0, 'lvl': 0, 'pw': 0, 'rec': 0} for _ in range(15)]
@@ -188,7 +192,8 @@ LUAT = r"""
   ok(T && T.tips.length >= 2 && T.tips.length <= 3, 'bảng thua có 2-3 gợi ý: ' + (T ? T.tips.map((t) => t.text + ' (' + t.sub + ')').join(' | ') : 'không có'));
   ok(T && T.power === G.power() && T.rec === G.stageRec(0, 4, 0), 'bảng thua so Sức mạnh hiện tại ' + (T && T.power) + ' với khuyên dùng ' + (T && T.rec));
   ok(T && T.tips[0].kind === 'skill' && /2 điểm kỹ năng/.test(T.tips[0].text), 'còn điểm kỹ năng thì gợi ý học trước tiên');
-  ok(T && T.tips.every((t) => (t.gain > 0 || t.kind === 'skill') && t.go && (t.go.who || t.go.weapon != null)), 'gợi ý nào cũng tăng sức mạnh (hoặc là điểm kỹ năng chưa học) và có chỗ để đi tới');
+  ok(T && T.tips[1] && T.tips[1].kind === 'chuong' && /7 điểm chưởng/.test(T.tips[1].text), 'còn điểm chưởng thì gợi ý học ngay sau điểm kỹ năng: ' + (T && T.tips[1] && T.tips[1].text));
+  ok(T && T.tips.every((t) => (t.gain > 0 || t.kind === 'skill' || t.kind === 'chuong') && t.go && (t.go.who || t.go.weapon != null)), 'gợi ý nào cũng tăng sức mạnh (hoặc là điểm kỹ năng chưa học) và có chỗ để đi tới');
   // gợi ý đúng số còn thiếu: mài khi thiếu vàng
   G.resetSave(); G.save.tut.done = true;
   const s3 = G.save, w3 = G.weaponById(s3.carry[0]); s3.forge = 2; w3.sharpen = 5; s3.gold = 220; s3.ore = 50; s3.mats = [0, 9, 0]; s3.stars = { '0-0': 1, '0-1': 1, '1-0': 1, '1-1': 1 };
@@ -255,7 +260,7 @@ def main():
                     print(('đạt ' if good else 'HỎNG ') + msg)
                     bad_luat += 0 if good else 1
                 if bad_luat: errs.append('%d luật hỏng' % bad_luat)
-            out, why = campaign(pg, mode, upto)
+            out, why = campaign(pg, mode, upto, CAY[k % 3])
             pg.close()
             if not out:
                 print('Lượt', k + 1, 'không xong:', why); runs.append(None); continue
