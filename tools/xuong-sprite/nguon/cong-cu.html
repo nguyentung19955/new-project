@@ -200,6 +200,7 @@
       <div class="the-xem">
         <button class="chip chon" id="xemGoc" type="button">Ảnh đã tách nền</button>
         <button class="chip" id="xemPixel" type="button">Hình pixel trong game</button>
+        <button class="chip" id="xemSoSanh" type="button">So sánh cạnh nhau</button>
       </div>
       <div class="san" id="san2">
         <canvas id="cv2"></canvas>
@@ -237,8 +238,15 @@
         <h3>Chất pixel</h3>
         <div class="truot"><span>Chiều cao trong game</span><output id="oCao">36 px</output><input type="range" id="caoPx" min="10" max="180" value="36"></div>
         <p class="ghi" id="ghiCo"></p>
-        <div class="truot"><span>Số màu</span><output id="oSoMau">12</output><input type="range" id="soMau" min="3" max="32" value="12"></div>
-        <div class="dong"><label><input type="checkbox" id="vienToi" checked> Viền tối 1px như hình game</label></div>
+        <div class="truot"><span>Số màu</span><output id="oSoMau">20</output><input type="range" id="soMau" min="3" max="32" value="20"></div>
+        <span class="ghi">Cách thu nhỏ:</span>
+        <div class="chip-nhom" style="margin:4px 0 6px">
+          <button class="chip chon" data-thu="net" type="button">Giữ nét</button>
+          <button class="chip" data-thu="mem" type="button">Mềm (kiểu cũ)</button>
+        </div>
+        <p class="ghi">"Giữ nét" giữ nguyên màu đã vẽ, viền liền, cứu chi tiết nhỏ như mắt, chuông. "Mềm" pha trộn màu, hình mịn hơn nhưng nhòe.</p>
+        <div class="dong"><label><input type="checkbox" id="vienToi" checked> Viền tối 1px ở mép ngoài</label></div>
+        <div class="dong"><label><input type="checkbox" id="hienMat" checked> Tô đỏ chi tiết sẽ mất (khi so sánh)</label></div>
       </div>
       <div class="khoi dong">
         <button class="nut phu" id="nutDoiAnh" type="button">Đổi ảnh khác</button>

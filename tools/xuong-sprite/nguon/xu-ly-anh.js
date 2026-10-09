@@ -122,32 +122,109 @@
   };
 
   // ---------- pixel hoá ----------
-  // S: ảnh làm việc, m: mặt nạ. o: { cao (điểm ảnh), soMau, lat }. Trả về { w, h, px } (px chỉ chứa thân, chưa có viền).
+  // S: ảnh làm việc, m: mặt nạ. o: { cao (điểm ảnh), soMau, lat, kieuThu: 'net' (giữ nét, mặc định) | 'mem' (lấy trung bình như cũ) }.
+  // Trả về { w, h, px } (px chỉ chứa thân, chưa có viền).
+  const sang = (c) => R(c) * 0.3 + Gc(c) * 0.59 + B(c) * 0.11;
+  const kc2c = (a, b) => (R(a) - R(b)) ** 2 + (Gc(a) - Gc(b)) ** 2 + (B(a) - B(b)) ** 2;
   XS.pixelHoa = function (S, m, o) {
     const bb = XS.khung(m, S.w, S.h);
     if (!bb) return null;
+    const net = o.kieuThu !== 'mem';
     const H = Math.max(4, Math.round(o.cao)), W = Math.max(1, Math.round(bb.w * H / bb.h)), out = new Uint32Array(W * H);
-    const kx = bb.w / W, ky = bb.h / H;
+    const kx = bb.w / W, ky = bb.h / H, phu = net ? [] : null, toiO = net ? [] : null; // toiO[ô] = [tỉ lệ nét tối, màu tối] // phu[ô] = màu thiểu số nổi bật trong ô (để cứu chi tiết nhỏ)
     for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) {
       const sx0 = bb.x0 + i * kx, sx1 = bb.x0 + (i + 1) * kx, sy0 = bb.y0 + j * ky, sy1 = bb.y0 + (j + 1) * ky;
       let tong = 0, giu = 0, r = 0, g = 0, b = 0, toi = 0, tr = 0, tg = 0, tb = 0;
+      const nhom = net ? new Map() : null;
       for (let y = Math.floor(sy0); y < Math.ceil(sy1); y++) for (let x = Math.floor(sx0); x < Math.ceil(sx1); x++) {
         if (x < 0 || y < 0 || x >= S.w || y >= S.h) continue;
         tong++;
         const k = y * S.w + x; if (!m[k]) continue;
         const c = S.px[k]; giu++; r += R(c); g += Gc(c); b += B(c);
-        if (R(c) * 0.3 + Gc(c) * 0.59 + B(c) * 0.11 < 72) { toi++; tr += R(c); tg += Gc(c); tb += B(c); }
+        const laToi = sang(c) < 72;
+        if (laToi) { toi++; tr += R(c); tg += Gc(c); tb += B(c); }
+        if (net) { // gom màu gần nhau thành nhóm (mỗi kênh 16 bậc)
+          const key = (R(c) >> 4) | ((Gc(c) >> 4) << 4) | ((B(c) >> 4) << 8);
+          let q = nhom.get(key); if (!q) nhom.set(key, (q = { n: 0, r: 0, g: 0, b: 0, toi: laToi }));
+          q.n++; q.r += R(c); q.g += Gc(c); q.b += B(c);
+        }
       }
-      if (!tong || giu / tong < 0.42) continue;
-      // nét vẽ đậm mảnh dễ bị pha nhạt: ô nào có đủ nét tối thì giữ màu tối
-      const c = toi / giu >= 0.3 ? rgba(tr / toi, tg / toi, tb / toi, 255) : rgba(r / giu, g / giu, b / giu, 255);
-      out[j * W + (o.lat ? W - 1 - i : i)] = c;
+      const o2 = j * W + (o.lat ? W - 1 - i : i);
+      if (!tong || giu / tong < (net ? 0.4 : 0.42)) continue;
+      if (!net) {
+        // nét vẽ đậm mảnh dễ bị pha nhạt: ô nào có đủ nét tối thì giữ màu tối
+        out[o2] = toi / giu >= 0.3 ? rgba(tr / toi, tg / toi, tb / toi, 255) : rgba(r / giu, g / giu, b / giu, 255);
+        continue;
+      }
+      // GIỮ NÉT: không trộn màu. Ô có đủ nét tối thì lấy màu tối (viền liền mạch), không thì lấy nhóm màu chiếm nhiều nhất.
+      const ds = [...nhom.values()].sort((a, b2) => b2.n - a.n), mau = (q) => rgba(q.r / q.n, q.g / q.n, q.b / q.n, 255);
+      let chon = ds[0];
+      if (toi) toiO[o2] = [toi / giu, rgba(tr / toi, tg / toi, tb / toi, 255)];
+      if (toi / giu >= (o.nguongToi || 0.36)) { const t = ds.find((q) => q.toi); if (t) chon = t; }
+      out[o2] = mau(chon);
+      // màu thiểu số khác hẳn (mắt, chuông, hoa văn) để lượt sau cứu nếu xung quanh không có
+      const c0 = out[o2];
+      for (const q of ds) { if (q === chon || q.n < giu * 0.16) continue; const c = mau(q); if (kc2c(c, c0) > 85 * 85) { phu[o2] = { c, n: q.n / giu }; break; } }
     }
-    giamMau(out, o.soMau || 12);
+    if (net) { noiVien(out, W, H, toiO); cuuChiTiet(out, W, H, phu); }
+    giamMau(out, o.soMau || 20, net);
     return { w: W, h: H, px: out };
   };
+  // Nối viền: ô có chút nét tối nằm giữa hai ô viền đối diện (ngang, dọc, chéo) thì tô tối để đường viền không đứt.
+  function noiVien(out, W, H, toiO) {
+    const toi = (x, y) => x >= 0 && y >= 0 && x < W && y < H && out[y * W + x] && sang(out[y * W + x]) < 72;
+    const them = [];
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const i = y * W + x, t = toiO[i]; if (!out[i] || !t || t[0] < 0.12 || toi(x, y)) continue;
+      if ((toi(x - 1, y) && toi(x + 1, y)) || (toi(x, y - 1) && toi(x, y + 1)) || (toi(x - 1, y - 1) && toi(x + 1, y + 1)) || (toi(x + 1, y - 1) && toi(x - 1, y + 1))) them.push([i, t[1]]);
+    }
+    for (const [i, c] of them) out[i] = c;
+  }
+  // Chi tiết nhỏ (mắt, chuông, nút áo) nhỏ hơn một ô thường bị màu nền của ô nuốt mất. Ô nào có màu thiểu số nổi bật mà
+  // cả 8 ô quanh đó không có màu gần giống, và màu chính của ô vẫn còn ở ít nhất 3 ô bên cạnh (đổi cũng không mất mảng chính), thì lấy màu thiểu số.
+  function cuuChiTiet(out, W, H, phu) {
+    const goc = out.slice();
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const i = y * W + x, p = phu[i]; if (!p || !goc[i]) continue;
+      if (sang(goc[i]) < 72 && p.n < 0.3) continue; // không phá viền tối
+      let coRoi = false, giong = 0;
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+        if (!dx && !dy) continue; const xx = x + dx, yy = y + dy; if (xx < 0 || yy < 0 || xx >= W || yy >= H) continue;
+        const c = goc[yy * W + xx]; if (!c) continue;
+        if (kc2c(c, p.c) < 45 * 45) coRoi = true;
+        if (kc2c(c, goc[i]) < 30 * 30) giong++;
+      }
+      if (!coRoi && giong >= 3) out[i] = p.c;
+    }
+  }
+  // Chi tiết sẽ mất ở cỡ hiện tại: so từng điểm ảnh gốc với điểm ảnh game phủ lên nó.
+  // Trả về { mat: Uint8Array (1 = chỗ mất trên ảnh gốc), tiLe: phần trăm diện tích hình bị mất, cum: số mảng chi tiết mất đáng kể }.
+  XS.chiTietMat = function (S, m, Rp, o) {
+    const bb = XS.khung(m, S.w, S.h), mat = new Uint8Array(S.w * S.h);
+    if (!bb || !Rp) return { mat, tiLe: 0, cum: 0 };
+    const W = Rp.w, H = Rp.h, kx = bb.w / W, ky = bb.h / H;
+    let giu = 0, mt = 0;
+    for (let y = bb.y0; y <= bb.y1; y++) for (let x = bb.x0; x <= bb.x1; x++) {
+      const k = y * S.w + x; if (!m[k]) continue; giu++;
+      const i = Math.min(W - 1, Math.floor((x - bb.x0) / kx)), j = Math.min(H - 1, Math.floor((y - bb.y0) / ky));
+      const c = Rp.px[j * W + (o && o.lat ? W - 1 - i : i)], s = S.px[k];
+      if (sang(s) < 72) continue; // nét mực: viền do game vẽ lại, không tính là chi tiết
+      if (!c || (kc2c(c, s) > 80 * 80)) { mat[k] = 1; mt++; }
+    }
+    // đếm mảng mất đáng kể (to bằng một ô trở lên)
+    const nguong = Math.max(4, kx * ky), da = new Uint8Array(mat.length), q = new Int32Array(mat.length);
+    let cum = 0;
+    for (let s = 0; s < mat.length; s++) {
+      if (!mat[s] || da[s]) continue;
+      let qa = 0, qb = 0, n = 0; q[qb++] = s; da[s] = 1;
+      while (qa < qb) { const i = q[qa++], x = i % S.w; n++; for (const j of [i - 1, i + 1, i - S.w, i + S.w]) { if (j < 0 || j >= mat.length || da[j] || !mat[j]) continue; if (Math.abs((j % S.w) - x) > 1) continue; da[j] = 1; q[qb++] = j; } }
+      if (n >= nguong) cum++;
+    }
+    return { mat, tiLe: giu ? Math.round((mt / giu) * 100) : 0, cum };
+  };
   // Giảm màu bằng k-means, khởi đầu từ các màu xa nhau nhất (kết quả cố định, không ngẫu nhiên).
-  function giamMau(px, k) {
+  // giuGoc: mỗi màu đại diện lấy đúng một màu có thật trong hình (không tạo màu trung gian).
+  function giamMau(px, k, giuGoc) {
     const dem = new Map();
     for (const c of px) if (c) dem.set(c, (dem.get(c) || 0) + 1);
     const mau = [...dem.keys()], so = mau.map((c) => dem.get(c));
@@ -172,6 +249,11 @@
       }
       for (let t = 0; t < tam.length; t++) if (tong[t][3]) tam[t] = [tong[t][0] / tong[t][3], tong[t][1] / tong[t][3], tong[t][2] / tong[t][3]];
     }
+    if (giuGoc) for (let t = 0; t < tam.length; t++) { // kéo tâm về màu có thật gần nhất (ưu tiên màu nhiều điểm)
+      let b = -1, bv = 1e18;
+      for (let i = 0; i < P.length; i++) { if (gan2[i] !== t) continue; const v = kc2(P[i], tam[t]) / Math.sqrt(so[i]); if (v < bv) { bv = v; b = i; } }
+      if (b >= 0) tam[t] = P[b].slice();
+    }
     const doi = new Map();
     for (let i = 0; i < mau.length; i++) { const t = tam[gan2[i]]; doi.set(mau[i], rgba(Math.round(t[0]), Math.round(t[1]), Math.round(t[2]), 255)); }
     for (let i = 0; i < px.length; i++) if (px[i]) px[i] = doi.get(px[i]);
@@ -179,10 +261,18 @@
   XS.giamMau = giamMau;
 
   // Thêm viền tối 1 điểm ảnh quanh hình (lên mảng mới rộng hơn 0 điểm: viền nằm trong khung đã chừa sẵn).
-  XS.themVien = function (px, w, h, mau) {
-    const out = px.slice();
+  // Chỉ viền MÉP NGOÀI: chỗ trống bị hình bao kín (lỗ nhỏ bên trong, khe giữa chi tiết) không bị tô viền đè lên.
+  XS.themVien = function (px, w, h, mau, caLoTrong) {
+    const out = px.slice(), ngoai = new Uint8Array(w * h);
+    if (!caLoTrong) { // loang từ mép khung qua các điểm trống: điểm trống chạm được ra ngoài mới là "ngoài"
+      const q = new Int32Array(w * h); let qa = 0, qb = 0;
+      const vao = (i) => { if (!px[i] && !ngoai[i]) { ngoai[i] = 1; q[qb++] = i; } };
+      for (let x = 0; x < w; x++) { vao(x); vao((h - 1) * w + x); }
+      for (let y = 0; y < h; y++) { vao(y * w); vao(y * w + w - 1); }
+      while (qa < qb) { const i = q[qa++], x = i % w, y = (i / w) | 0; if (x > 0) vao(i - 1); if (x < w - 1) vao(i + 1); if (y > 0) vao(i - w); if (y < h - 1) vao(i + w); }
+    }
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
-      const i = y * w + x; if (px[i]) continue;
+      const i = y * w + x; if (px[i] || (!caLoTrong && !ngoai[i])) continue;
       if ((x > 0 && px[i - 1]) || (x < w - 1 && px[i + 1]) || (y > 0 && px[i - w]) || (y < h - 1 && px[i + w])) out[i] = mau;
     }
     return out;

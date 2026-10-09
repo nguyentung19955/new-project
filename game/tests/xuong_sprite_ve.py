@@ -149,3 +149,47 @@ def ve_xu(path, seed=11):
     d.ellipse([100, 100, 140, 130], fill=(200, 255, 220))
     im.filter(ImageFilter.GaussianBlur(0.6)).save(path)
     return path
+
+
+def ve_em_be_ao_do(path, seed=13):
+    """Em bé áo trùm đỏ, mặt nạ giấy vẽ hoa văn, chuông nhỏ ở cổ, găng tay to, quay sang phải.
+    Vẽ to (600x820) với nét viền mảnh như tranh thật để thử kiểu thu nhỏ "Giữ nét"."""
+    W, H = 600, 820
+    im = giay(W, H, seed)
+    d = ImageDraw.Draw(im)
+    DO, DO_T, GIAY, NAU, VANG, XAM = (206, 38, 44), (140, 22, 34), (246, 236, 214), (112, 66, 38), (246, 196, 40), (70, 60, 72)
+    w = 8
+    # chân (quần xám, giày nâu)
+    for x0, x1 in ((250, 235), (340, 360)):
+        d.line([(x0, 600), (x1, 740)], fill=INK, width=58)
+        d.line([(x0, 600), (x1, 735)], fill=XAM, width=42)
+        d.ellipse([x1 - 40, 712, x1 + 46, 770], fill=INK)
+        d.ellipse([x1 - 32, 720, x1 + 38, 762], fill=NAU)
+    # tay sau + găng to
+    d.line([(230, 400), (170, 520)], fill=INK, width=50); d.line([(230, 400), (170, 520)], fill=DO_T, width=34)
+    d.ellipse([118, 488, 222, 588], fill=INK); d.ellipse([126, 496, 214, 580], fill=NAU)
+    # áo trùm đỏ (thân hình chuông)
+    d.polygon([(300, 250), (420, 360), (450, 620), (150, 620), (180, 360)], fill=INK)
+    d.polygon([(300, 262), (410, 368), (440, 612), (160, 612), (190, 368)], fill=DO)
+    for x in (220, 300, 380):  # nếp áo
+        d.line([(x, 420), (x + 6, 600)], fill=DO_T, width=w)
+    # mũ trùm
+    d.ellipse([140, 40, 470, 380], fill=INK)
+    d.ellipse([140 + w, 40 + w, 470 - w, 380 - w], fill=DO)
+    # mặt nạ giấy (ló ra trước mũ trùm)
+    d.ellipse([250, 110, 450, 330], fill=INK)
+    d.ellipse([250 + w, 110 + w, 450 - w, 330 - w], fill=GIAY)
+    d.ellipse([355, 170, 395, 215], fill=INK)                     # mắt
+    d.ellipse([368, 180, 384, 198], fill=(255, 255, 255))
+    d.arc([330, 230, 420, 290], 20, 160, fill=DO_T, width=10)      # miệng vẽ đỏ
+    d.ellipse([405, 220, 435, 250], fill=(236, 120, 130))         # má hồng
+    d.line([(300, 140), (330, 160)], fill=INK, width=6)             # chân mày vẽ
+    # chuông nhỏ ở cổ
+    d.ellipse([285, 340, 335, 392], fill=INK); d.ellipse([292, 347, 328, 385], fill=VANG); d.ellipse([306, 372, 314, 380], fill=INK)
+    # tay trước + găng to
+    d.line([(370, 400), (450, 500)], fill=INK, width=50); d.line([(370, 400), (450, 500)], fill=DO, width=34)
+    d.ellipse([410, 460, 530, 575], fill=INK); d.ellipse([419, 469, 521, 566], fill=NAU)
+    d.line([(440, 500), (500, 495)], fill=INK, width=6)
+    im = im.filter(ImageFilter.GaussianBlur(0.8))
+    im.save(path)
+    return path
