@@ -1,0 +1,72 @@
+name: Linh Khí lên spiritblade.web.app
+
+# Mỗi lần nhánh khoi-tao-du-an có code game mới: gói game Linh Khí rồi đăng lên https://spiritblade.web.app
+# Chỉ đụng site "spiritblade" trong dự án sontinhthuytinh, không đụng sontinhthuytinh.web.app hay thanthoaiviet.web.app.
+on:
+  push:
+    branches: [khoi-tao-du-an]
+    paths: ['game/**', '.github/workflows/linh-khi-hosting.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: linh-khi-hosting
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SONTINHTHUYTINH }}
+      SITE: spiritblade
+    steps:
+      - name: Kiểm tra secret
+        run: |
+          if [ -z "$FIREBASE_SA" ]; then
+            echo "::error title=Thiếu secret::Chưa có FIREBASE_SERVICE_ACCOUNT_SONTINHTHUYTINH trong Settings → Secrets → Actions."
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Gói game
+        run: |
+          python3 game/build.py
+          mkdir -p "$RUNNER_TEMP/web/site"
+          cp game/dist/linh-khi.html "$RUNNER_TEMP/web/site/index.html"
+          cat > "$RUNNER_TEMP/web/firebase.json" <<EOF
+          {
+            "hosting": {
+              "site": "$SITE",
+              "public": "site",
+              "headers": [ { "source": "**", "headers": [ { "key": "Cache-Control", "value": "no-cache" } ] } ]
+            }
+          }
+          EOF
+
+      - name: Tạo site và đăng
+        working-directory: ${{ runner.temp }}/web
+        run: |
+          trap 'rm -f "$RUNNER_TEMP/sa.json"' EXIT
+          printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
+          fb="npx --yes firebase-tools@latest --project sontinhthuytinh --non-interactive"
+          if ! $fb hosting:sites:get "$SITE" > out.txt 2>&1; then
+            $fb hosting:sites:create "$SITE" > out.txt 2>&1 || {
+              echo "::error title=Chưa tạo được site $SITE::$(tail -n 6 out.txt | tr '\n' ' ' | cut -c1-900)"
+              exit 1
+            }
+          fi
+          if $fb deploy --only hosting > out.txt 2>&1; then
+            echo "## ✅ Đã đăng https://$SITE.web.app (commit ${GITHUB_SHA::7})" >> "$GITHUB_STEP_SUMMARY"
+            echo "::notice title=Đã đăng::https://$SITE.web.app"
+          else
+            echo "::error title=Đăng thất bại::$(grep -iE 'error|denied|permission|invalid' out.txt | tail -n 6 | tr '\n' ' ' | cut -c1-900)"
+            exit 1
+          fi
