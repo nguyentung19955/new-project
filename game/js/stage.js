@@ -714,6 +714,8 @@
     if (coat && coat.t > 0) ui.text('Bùa ' + G.EL[coat.el].name + ' ' + Math.ceil(coat.t) + ' giây', sx, 56.5, { size: 7.5, color: G.EL[coat.el].col, bold: true });
     // tên vùng và loại phòng ở lề trái; bản đồ nhỏ ở lề phải (thay hàng chấm phòng trước đây)
     ui.text(G.REGIONS[S.r].name + ' ' + (S.i + 1) + ' · ' + ROOM_NAME[W.type], 6, 69, { size: 7, color: '#d9cdb8' });
+    // sức mạnh của bé lúc vào ải so với sức mạnh khuyên dùng của ải (xanh đủ, vàng sát nút, đỏ thiếu)
+    ui.text('Sức mạnh ' + S.power + ' / khuyên ' + S.rec, 6, 79, { size: 7, bold: true, color: G.powerCol(S.power, S.rec) });
     G.minimap.draw(S);
     // vũ khí: hình và bậc ở trên, mốc tiến hóa ở dưới, thanh dấu ấn sát đáy
     P.weapons.forEach((w, i) => {
@@ -766,8 +768,8 @@
     if (hint && S.mode === 'play') {
       const hw = W.geo.big ? 62 : 116; // phòng trùm rộng hơn nên ô chữ hẹp lại, không đè lên sàn
       const lines = ui.wrap(hint, hw - 8, 7);
-      T.plate(3, 75, hw, Math.round(lines.length * 9.5 + 8));
-      lines.forEach((l, i) => ui.text(l, 7, 85 + i * 9.5, { size: 7 }));
+      T.plate(3, 85, hw, Math.round(lines.length * 9.5 + 8));
+      lines.forEach((l, i) => ui.text(l, 7, 95 + i * 9.5, { size: 7 }));
     }
     if (W.banner) {
       // dòng báo nằm trên tường sau; dài quá thì thu chữ, vẫn dài thì xuống dòng
