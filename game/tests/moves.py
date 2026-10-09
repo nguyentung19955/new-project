@@ -125,7 +125,8 @@ JS = r"""
     ok('Cung: tên ngắm chéo được, trúng quái đứng lệch dọc 30 điểm ảnh ở cách 50', near(lost(q1) / base(), 1, 0.01), (lost(q1) / base()).toFixed(2));
 
     // ================= GIÁO =================
-    room('spear'); e = dummy(256); const side = dummy(200, 172), back = dummy(176);
+    // Tám hướng: mọi đòn tự ngắm quái gần nhất, nên quái lệch chiều sâu đặt xa hơn quái thẳng trước mặt (để vẫn ngắm thẳng)
+    room('spear'); e = dummy(256); const side = dummy(260, 172);
     const sn = [], sd = [];
     for (let k = 0; k < 4; k++) {
       const h0 = e.hp; tap(); sn.push(P.mv.name + P.mv.step);
@@ -134,8 +135,13 @@ JS = r"""
     }
     ok('Giáo: bấm liên tiếp ra ba nhát đâm rồi quét vòng', sn.join() === 'Đâm0,Đâm1,Đâm2,Quét vòng3', sn.join());
     ok('Giáo: đâm xa (trúng quái cách 56 điểm ảnh) 1,1 lần (sửa góp ý 3: trước 0,85); quét vòng không với tới quái đó', near(sd[0], G.MOVES.spear.chain[0].mult, 0.01) && near(sd[2], G.MOVES.spear.chain[2].mult, 0.01) && near(sd[0], 1.1, 0.01) && sd[3] === 0, sd.map((x) => x.toFixed(2)).join('/'));
-    ok('Giáo: đâm hẹp, không trúng quái đứng lệch 18 điểm ảnh theo chiều sâu; quét vòng thì trúng (1,85 lần)', near(lost(side) / base(), G.MOVES.spear.chain[3].mult, 0.01), (lost(side) / base()).toFixed(2));
-    ok('Giáo: quét vòng trúng cả quái sau lưng và hất nó ra', near(lost(back) / base(), G.MOVES.spear.chain[3].mult, 0.01) && near(back.x, 168, 0.5), (lost(back) / base()).toFixed(2) + ' x=' + back.x);
+    ok('Giáo: đâm hẹp, không trúng quái đứng lệch 18 điểm ảnh theo chiều sâu', lost(side) === 0, (lost(side) / base()).toFixed(2));
+    // quét vòng: ba phần tư vòng quanh người, mở đầu theo hướng nhắm (quái gần nhất ở phía trên), trúng cả quái bên hông và sau lưng
+    room('spear'); const sideB = dummy(200, 174), back = dummy(176);
+    for (let k = 0; k < 3; k++) { tap(); wait(() => P.atkT > 0, {}); }
+    const hs2 = sideB.hp, hb = back.hp; tap(); wait(() => P.atkT > 0, {});
+    ok('Giáo: quét vòng trúng quái đứng lệch chiều sâu sát người (1,85 lần)', near((hs2 - sideB.hp) / base(), G.MOVES.spear.chain[3].mult, 0.01), ((hs2 - sideB.hp) / base()).toFixed(2));
+    ok('Giáo: quét vòng trúng cả quái sau lưng và hất nó ra', near((hb - back.hp) / base(), G.MOVES.spear.chain[3].mult, 0.01) && near(back.x, 168, 0.5), ((hb - back.hp) / base()).toFixed(2) + ' x=' + back.x);
     room('spear'); const l1 = dummy(225), l2 = dummy(245);
     sec(0.16 + 0.5 + 0.05, { atk: true });
     ok('Giáo: giữ nút thì thu giáo lấy đà đầy sau 0,5 giây', P.mv.holding && P.mv.charge === 1, P.mv.charge);

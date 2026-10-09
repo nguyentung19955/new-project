@@ -313,7 +313,7 @@
       } else if (W.px1 != null) P.x = Math.min(P.x, W.px1 - 24); // boss vùng chắn bên phải: không hiện ra sau lưng nó
     }
     P.inv = Math.max(P.inv, first ? 0.6 : 0.3);
-    P.dashT = 0; P.dodgeT = 0;
+    P.dashT = 0; P.dodgeT = 0; P.slideT = 0; P.spearOut = null; if (W.mvSp) W.mvSp.length = 0;
     if (W.type === 'fountain') S.preview = bossSetup().layers;
     S.hint = S.tut ? TUT[W.type === 'fight' ? (id === 1 ? 'fight1' : 'fight2') : W.type] || null : null;
     updateDoors();

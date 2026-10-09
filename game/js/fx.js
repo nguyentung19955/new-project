@@ -179,12 +179,39 @@
   // ---------- hạt ----------
   // Loại: 0 vuông, 1 co dần, 2 khói phồng, 3 vệt theo hướng bay, 4 mảnh xoay, 5 giọt (dính đất), 6 lấp lánh,
   // 7 mũi tên rơi, 8 mảnh vụn nảy, 9 lưỡi lửa, 10 dấu cộng hồi máu, 11 bong bóng
+  let CAP = null; // đang gom hạt và hình vừa sinh ra để xoay theo hướng nhắm (aimed)
   function emit(k, x, y, vx, vy, t, c, s, g, dr, fy, ly) {
     let o;
     if (S.np < MAXP) o = PT[S.np++]; else { o = PT[S.ovr]; S.ovr = (S.ovr + 1) % MAXP; }
     o.k = k; o.x = x; o.y = y; o.vx = vx; o.vy = vy; o.t = t; o.t0 = t; o.c = c; o.s = s || 1;
     o.g = g || 0; o.dr = dr || 0; o.fy = fy == null ? 1e9 : fy; o.ly = ly == null ? 1 : ly; o.a = R(); o.b = 0;
+    if (CAP) CAP.p.push(o);
     return o;
+  }
+  // TÁM HƯỚNG: chạy fn (vẽ một đòn nằm ngang theo hướng mặt như cũ) rồi xoay mọi hạt và hình vừa sinh ra theo góc nhắm thật
+  // (P.aimRel, độ, so với hướng mặt). Hình trên không (vệt chém, mũi giáo) xoay quanh tay bé; hình sát đất (vết nứt, vòng sóng,
+  // bụi) chỉ dời chỗ, giữ dáng nằm trên sàn. opt.ground === false: hình sát đất đã đặt đúng chỗ thật, không dời.
+  function aimed(P, fn, opt) {
+    const rel = P && P.aimRel ? P.aimRel : 0;
+    if (!rel || CAP) { fn(); return; }
+    const cap = { p: [], e: [] };
+    CAP = cap;
+    try { fn(); } finally { CAP = null; }
+    const th = (rel * P.face * Math.PI) / 180, cs = Math.cos(th), sn = Math.sin(th);
+    const px = P.x, py = P.y - 13, ground = !opt || opt.ground !== false;
+    const rot = (o, cx, cy) => { const dx = o.x - cx, dy = o.y - cy; o.x = cx + dx * cs - dy * sn; o.y = cy + dx * sn + dy * cs; };
+    for (const o of cap.p) {
+      const vx = o.vx, vy = o.vy, y0 = o.y;
+      if (o.ly === 0) { if (!ground) continue; rot(o, P.x, P.y); } else rot(o, px, py);
+      o.vx = vx * cs - vy * sn; o.vy = vx * sn + vy * cs;
+      if (o.fy < 1e8) o.fy += o.y - y0;
+    }
+    for (const o of cap.e) {
+      if (o.ly === 0) { if (ground) rot(o, P.x, P.y); continue; }
+      if (o.ty === 'ring' || o.ty === 'flash') { rot(o, px, py); continue; }
+      o.rot = th; o.px = px; o.py = py;
+      if (o.ty === 'dashline') { o.sx = P.x; o.sy = P.y; }
+    }
   }
   function updParts(dt) {
     for (let i = 0; i < S.np; i++) {
@@ -270,6 +297,7 @@
     o.t0 = o.t; o.d = o.d || 0;
     if (S.E.length >= MAXE) S.E.shift();
     S.E.push(o);
+    if (CAP) CAP.e.push(o);
     return o;
   }
   function addRing(x, y, r0, r1, t, col, th, ly, d) { return add({ ty: 'ring', x, y, r0, r1, t, c: col, th: th || 2, ly: ly == null ? 0 : ly, d: d || 0 }); }
@@ -1234,7 +1262,7 @@
         emit(1, o.x, o.y, rr(-8, 8), rr(-8, 8), 0.22, o.pl.ramp, o.big ? 3 : 2, 0, 0, null, 1);
         if ((d < 8 && age > 0.16) || o.t <= 0) { orbArrive(o); o.t = 0; }
       } else if (o.ty === 'bottle' && o.t <= 0) bottleBreak(o);
-      else if (o.ty === 'dashline' && o.P.dashT > 0) o.x1 = o.P.x;
+      else if (o.ty === 'dashline' && o.P.dashT > 0) o.x1 = o.rot != null && o.sx != null ? o.x + o.f * Math.hypot(o.P.x - o.sx, o.P.y - o.sy) : o.P.x;
       if (o.t > 0) E[w++] = o;
     }
     E.length = w;
@@ -1372,6 +1400,7 @@
       const o = E[i];
       if (o.ly !== ly || o.d > 0) continue;
       const k = 1 - o.t / o.t0, x = Math.round(o.x), y = Math.round(o.y);
+      const rt = o.rot ? (c.save(), c.translate(o.px, o.py), c.rotate(o.rot), c.translate(-o.px, -o.py), 1) : 0; // đòn xoay theo hướng nhắm
       switch (o.ty) {
         case 'ring': {
           const e = 1 - (1 - k) * (1 - k), r = o.r0 + (o.r1 - o.r0) * e;
@@ -1501,6 +1530,7 @@
         }
         default: if (o.draw) o.draw(c, o, k, x, y); break; // hình riêng do js/fx_he.js thêm vào
       }
+      if (rt) c.restore();
     }
   }
 
@@ -1571,5 +1601,5 @@
     c.globalAlpha = 1;
   }
   // Bộ đồ nghề cho js/fx_he.js: dùng chung kho hạt, bảng màu và các hàm vẽ điểm ảnh ở trên.
-  fx.kit = { S: () => S, api, layer, fail, emit, streak, spray, puffs, add, addRing, trauma, kick, stop, num, pal, PAL, RAMP, R, rr, hash, p, ell, ring, line, star, crescent, tongue, slam, blastFire, blastPoison, blastIce, elemBits, bodyOf, hand, A_ };
+  fx.kit = { aimed, S: () => S, api, layer, fail, emit, streak, spray, puffs, add, addRing, trauma, kick, stop, num, pal, PAL, RAMP, R, rr, hash, p, ell, ring, line, star, crescent, tongue, slam, blastFire, blastPoison, blastIce, elemBits, bodyOf, hand, A_ };
 })();
