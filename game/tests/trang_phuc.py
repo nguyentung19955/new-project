@@ -155,7 +155,7 @@ JS = r"""
   ok('Trống đồng Tím: mana +18', P.maxmana === mn0 + 18, P.maxmana);
   ok('Áo lông: chạy nhanh hơn', P.speed > sp0 * 1.1, P.speed / sp0);
   ok('Bùa vỏ ốc: tầm nhặt đồ +15, hồi chiêu nhanh hơn', P.pickR === 15 && P.cdMul < 1);
-  P.mana = 100; press('skillP'); ok('Hồi chiêu nhanh: kỹ năng hồi ngắn hơn 5 giây', P.skillCd < 4.9 && P.skillCd > 4, P.skillCd);
+  P.mana = 100; press('skillP'); ok('Hồi chiêu nhanh: Chưởng hồi ngắn hơn ' + G.CHUONG.cd + ' giây', P.skillCd < G.CHUONG.cd * 0.98 && P.skillCd > G.CHUONG.cd * 0.6, P.skillCd);
 
   // ----- 7. tác dụng đặc biệt -----
   // Mũ băng (Tím): quái đánh trúng bé bị chậm

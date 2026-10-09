@@ -1,7 +1,8 @@
 // Bộ nút bấm trong trận: nút Đánh, Đặc biệt, kỹ năng hero, Né, bình máu, tạm dừng, ô vũ khí, cần điều khiển.
 // Mọi hình được vẽ thành pixel vào canvas đệm rồi phóng to theo số nguyên, nên nét luôn sắc ở mọi cỡ màn hình.
 // File này không sửa gì của game. Chỉ thêm G.btnArt:
-//   G.btnArt.draw(ctx, kind, x, y, r, st)      kind: 'atk' | 'special' | 'skill' | 'dodge' | 'potion' | 'pause'
+//   G.btnArt.draw(ctx, kind, x, y, r, st)      kind: 'atk' | 'special' | 'skill' | 'chuong' | 'dodge' | 'potion' | 'pause'
+//                                              ('chuong': nút Chưởng, st.el là hệ của cây chưởng đang dùng)
 //   G.btnArt.slot(ctx, x, y, w, h, st)         ô vũ khí
 //   G.btnArt.stick(ctx, cx, cy, r, dx, dy, active)   cần điều khiển
 // Toạ độ là toạ độ giao diện của game (480x270), ctx là canvas giao diện đang có sẵn phép co giãn.
@@ -322,6 +323,35 @@
     );
     return out;
   };
+  // Chưởng (nút kỹ năng riêng cũ): bàn tay đẩy ra, luồng chưởng theo hệ của cây chưởng đang dùng
+  const PALM = () => [
+    rect(-0.98, 0.0, -0.62, 0.62, '#c98a5c'), rect(-0.98, 0.0, -0.62, 0.14, '#f2b888'),
+    poly([[-0.7, -0.5], [-0.34, -0.5], [-0.3, 0.4], [-0.72, 0.4]], '#f2b888'), rect(-0.7, 0.18, -0.3, 0.4, '#d89a6a'),
+    rect(-0.34, -0.46, -0.2, -0.3, '#f2b888'), rect(-0.34, -0.26, -0.2, -0.1, '#f2b888'), rect(-0.34, -0.06, -0.2, 0.1, '#f2b888'), rect(-0.34, 0.14, -0.22, 0.28, '#d89a6a'),
+    rect(-0.66, -0.66, -0.48, -0.46, '#f2b888'),
+  ];
+  ICON.c_fire = function () { // Hỏa chưởng: cầu lửa rực, lưỡi lửa kéo về sau
+    return PALM().concat([
+      poly([[-0.2, -0.36], [0.12, -0.7], [0.08, -0.36], [0.3, -0.62], [0.3, -0.3]], '#ff7a2a'), poly([[-0.2, 0.36], [0.12, 0.7], [0.08, 0.36], [0.3, 0.62], [0.3, 0.3]], '#ff7a2a'),
+      circ(0.44, 0, 0.5, '#d8481a'), circ(0.46, -0.02, 0.4, '#ff7a2a'), circ(0.5, -0.06, 0.27, '#ffd23f'), circ(0.54, -0.12, 0.12, '#fff3b0'),
+      poly([[0.72, -0.52], [0.98, -0.86], [0.86, -0.4]], '#ffd23f'),
+    ]);
+  };
+  ICON.c_poison = function () { // Độc chưởng: cục độc xanh bốc khói tím, giọt nhỏ xuống
+    return PALM().concat([
+      circ(0.3, -0.62, 0.16, '#9a5fd6'), circ(0.62, -0.74, 0.12, '#b98af0'), circ(0.86, -0.5, 0.1, '#9a5fd6'),
+      circ(0.46, 0.02, 0.48, '#2f6b1a'), circ(0.44, 0, 0.4, '#6fcf3a'), circ(0.36, -0.1, 0.2, '#c2f58a'), circ(0.32, -0.14, 0.08, '#ffffff'),
+      circ(0.6, 0.22, 0.1, '#3f8f22'), rect(0.34, 0.5, 0.46, 0.7, '#6fcf3a'), rect(0.36, 0.7, 0.44, 0.84, '#8fe04a'),
+    ]);
+  };
+  ICON.c_ice = function () { // Băng chưởng: mũi băng nhọn bay ra, lấp lánh
+    return PALM().concat([
+      poly([[-0.24, -0.2], [0.6, -0.2], [1.02, 0], [0.6, 0.2], [-0.24, 0.2]], '#2b6ea3'),
+      poly([[-0.2, -0.14], [0.6, -0.14], [0.94, 0], [0.6, 0], [-0.2, 0]], '#e9f9ff'), poly([[-0.2, 0], [0.6, 0], [0.94, 0], [0.6, 0.14], [-0.2, 0.14]], '#7fd4ff'),
+      poly([[0.0, -0.18], [0.2, -0.52], [0.3, -0.18]], '#bfeaff'), poly([[0.0, 0.18], [0.2, 0.52], [0.3, 0.18]], '#7fd4ff'),
+      rect(0.66, -0.66, 0.72, -0.42, '#ffffff'), rect(0.57, -0.57, 0.81, -0.51, '#ffffff'),
+    ]);
+  };
   ICON.potion = function () {
     return [
       rect(-0.16, -0.94, 0.16, -0.66, HANDLE.m),
@@ -627,6 +657,11 @@
       const hero = HERO_FACE[st.hero] ? st.hero : 'smith';
       key = [kind, R, hero, st.cost, lack];
       make = () => common({ ring: GOLD, face: HERO_FACE[hero], icon: iconBuf('h_' + hero, S, ''), iconDy: st.cost != null ? -1 : 0, badge: st.cost != null ? costBadge(st.cost, lack) : null });
+    } else if (kind === 'chuong') {
+      // nút Chưởng: vòng và mặt nút theo hệ của cây chưởng đang dùng
+      const ce = EL_RING[st.el] && st.el !== 'none' ? st.el : 'fire';
+      key = [kind, R, ce, st.cost, lack];
+      make = () => common({ ring: EL_RING[ce], face: EL_FACE[ce], el: ce, studs: ce !== 'ice', icon: iconBuf('c_' + ce, S, ''), iconDy: st.cost != null ? -1 : 0, badge: st.cost != null ? costBadge(st.cost, lack) : null });
     } else if (kind === 'dodge') {
       // 16 hướng. Không đẩy cần thì mũi tên chỉ sang phải.
       const di = st.dir == null || isNaN(st.dir) ? 0 : ((Math.round((st.dir / TAU) * 16) % 16) + 16) % 16;

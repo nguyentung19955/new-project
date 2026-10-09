@@ -95,6 +95,7 @@
     if (helm) P.resist[helm.res] += helm.pct;
     if (sk.def >= 4) for (const e of G.ELS) P.resist[e] = Math.min(0.8, P.resist[e] + 0.3);
     if (G.outfit) G.outfit.apply(P, sv); // trang phục: chỉ số, bộ, tác dụng đặc biệt, hình đang mặc (js/outfit.js)
+    if (G.chuong) G.chuong.attach(P, sv); // nút Chưởng thay kỹ năng riêng: cây chưởng đang dùng, nét riêng của em bé (js/chuong.js)
     P.mana = Math.round(P.maxmana * 0.5);
     return P;
   };
@@ -117,6 +118,8 @@
     if (offs.length) off = offs.length > 1 ? offs[0] * 0.75 + offs[1] * 0.25 : offs[0];
     if (!off) off = 10 * (1 + 0.01 * (P.lvl - 1));
     off *= 1 + P.crit;
+    // Chưởng (js/chuong.js): mỗi điểm chưởng đã học cộng thêm một chút vào phần đòn
+    if (G.chuong) off *= G.chuong.powerMult(G.save, P.key);
     let res = 0;
     for (const e of G.ELS) res = Math.max(res, P.resist[e] || 0);
     let ehp = (P.maxhp / (1 - Math.min(0.75, P.dr))) * (1 + 0.25 * Math.min(0.8, res));
@@ -158,7 +161,7 @@
   G.setWorld = (w) => { W = w; };
 
   function st0() {
-    return { fire: 0, fireDmg: 0, poisonN: 0, poisonT: 0, poisonDmg: 0, iceN: 0, iceT: 0, frozen: 0, freezeImm: 0, stun: 0, root: 0, comboCd: 0, tick: 0, last: null };
+    return { fire: 0, fireDmg: 0, poisonN: 0, poisonT: 0, poisonDmg: 0, iceN: 0, iceT: 0, frozen: 0, freezeImm: 0, stun: 0, root: 0, comboCd: 0, tick: 0, last: null, ch: {} }; // ch: hệ nào do chưởng gây (js/chuong.js)
   }
   G.st0 = st0;
   G.hasStatus = (e) => e.st.fire > 0 || e.st.poisonN > 0 || e.st.iceN > 0 || e.st.frozen > 0;
@@ -217,7 +220,10 @@
     let m = 1;
     m *= 1 + 0.04 * t.st.poisonN;
     const arm = G.mobArmor ? G.mobArmor(t, o) : t.armor; // giáp quái mới chỉ che phía trước
-    if (arm) m *= 1 - Math.max(0, arm - 0.09 * t.st.poisonN);
+    // Ăn mòn của Độc chưởng (js/chuong.js): quái đang dính độc của chưởng mất thêm giáp và nhận thêm sát thương
+    const corr = t.st.chCorr && t.st.poisonN > 0 && t.st.ch && t.st.ch.poison ? t.st.chCorr : 0;
+    if (corr) m *= 1 + 0.04 * corr;
+    if (arm) m *= 1 - Math.max(0, arm - 0.09 * t.st.poisonN - 0.06 * corr);
     if (t.resist && o.el === t.resist) m *= 0.75;
     if (t.isBoss) {
       for (const l of t.layers) {
@@ -247,8 +253,11 @@
     const st = t.st, P = W.P;
     const dur = P.statusDur;
     stacks = stacks || 1;
-    const has = { fire: st.fire > 0, poison: st.poisonN > 0, ice: st.iceN > 0 || st.frozen > 0 };
-    if (st.comboCd <= 0) {
+    // Hiệu ứng do chưởng gây (G.chSrc, js/chuong.js) được đánh dấu st.ch[hệ]: không kết hợp hệ với vũ khí (không Nổ khói, Sốc nhiệt),
+    // không tính hệ cho dấu ấn linh khí. Vũ khí gây lại hệ đó thì hiệu ứng thành của vũ khí.
+    const chOn = !!G.chSrc, chs = st.ch || (st.ch = {});
+    const has = { fire: st.fire > 0 && !chs.fire, poison: st.poisonN > 0 && !chs.poison, ice: (st.iceN > 0 || st.frozen > 0) && !chs.ice };
+    if (st.comboCd <= 0 && !chOn) {
       if ((el === 'fire' && has.poison) || (el === 'poison' && has.fire)) {
         st.comboCd = 0.6;
         // Gây sát thương trước rồi mới tiêu độc, để kết liễu bằng Nổ khói vẫn được tính dấu ấn.
@@ -272,6 +281,7 @@
     const mine = el === 'fire' ? st.fire > 0 : el === 'poison' ? st.poisonN > 0 : st.iceN > 0 || st.frozen > 0;
     if (!mine && n >= 2) return;
     st.last = el;
+    chs[el] = chOn;
     if (el === 'fire') {
       st.fire = 3 * dur;
       st.fireDmg = Math.max(st.fireDmg, src * 0.2);
@@ -330,21 +340,26 @@
     if (e.illusion) return;
     if (w) w.kills++;
     const L = G.LINHKHI, big = e.role === 'elite' || e.isBoss, regEl = G.REGIONS[W.region] ? G.REGIONS[W.region].el : 'fire';
-    if (G.hasStatus(e) || (big && L)) {
+    // Linh khí chỉ đến từ vũ khí: hiệu ứng do chưởng gây (e.st.ch) không tính hệ, quái thường bị chưởng kết liễu không cho dấu ấn.
+    // Tinh anh, trùm gục vì chưởng vẫn cho phần thưởng linh khí của nó cho vũ khí đang cầm (hệ theo hiệu ứng của vũ khí, không thì của vùng).
+    const chs = e.st.ch || {};
+    const on = { fire: e.st.fire > 0 && !chs.fire, poison: e.st.poisonN > 0 && !chs.poison, ice: (e.st.iceN > 0 || e.st.frozen > 0) && !chs.ice };
+    const hasW = on.fire || on.poison || on.ice;
+    if ((hasW && !(o && o.ch)) || (big && L)) {
       // Hệ của dấu ấn: hiệu ứng gây sau cùng nếu nó còn hiệu lực, không thì hiệu ứng đang có; tinh anh, trùm không dính gì thì hệ của vùng.
-      const on = { fire: e.st.fire > 0, poison: e.st.poisonN > 0, ice: e.st.iceN > 0 || e.st.frozen > 0 };
-      const el = !G.hasStatus(e) ? regEl : e.st.last && on[e.st.last] ? e.st.last : on.fire ? 'fire' : on.poison ? 'poison' : 'ice';
+      const el = !hasW ? regEl : e.st.last && on[e.st.last] ? e.st.last : on.fire ? 'fire' : on.poison ? 'poison' : 'ice';
       const n = big && L ? (e.isBoss ? (e.kind === 'mini' ? L.mini : L.boss) : L.elite) : e.marks == null ? 1 : e.marks;
       G.addMarks(w, el, n * P.markMult * W.marksMult);
       FX('markOrbs', e);
-      if (P.charm === 'c_spirit' && G.hasStatus(e)) P.mana = Math.min(P.maxmana, P.mana + 5);
     }
+    if (P.charm === 'c_spirit' && G.hasStatus(e)) P.mana = Math.min(P.maxmana, P.mana + 5);
     // quái thường thỉnh thoảng rơi một viên linh khí của vùng: phải nhặt mới có (js/do_roi.js gọi onPick)
     if (!big && L && !e.add && G.doRoi && G.rnd() < L.drop) {
       const n = Math.round(L.orb * W.marksMult);
       G.doRoi.tha(W, e.x, e.y, { kind: 'linhkhi', el: regEl, s: 'Linh khí ' + G.EL[regEl].name, onPick: () => { const P2 = W.P, cw = curW(P2); if (cw) { G.addMarks(cw, regEl, n * P2.markMult); G.flashMarks && G.flashMarks(); } } });
     }
     if (G.moves) G.moves.onKill(e, o, w); // đặc trưng hệ khi quái chết: Nổ lan, Lây độc (chỉ ở Thức tỉnh)
+    if (G.chuong) G.chuong.onKill(e); // Lây độc của Độc chưởng, Băng vỡ của Băng chưởng
     if (G.outfit) G.outfit.onKill(P, e); // bùa có hệ: quái gục gần bé nổ nhỏ
     P.mana = Math.min(P.maxmana, P.mana + 5);
     if (P.charm === 'c_leech') P.hp = Math.min(P.maxhp, P.hp + P.maxhp * 0.02);
@@ -511,44 +526,7 @@
     }
     if (G.moves) G.moves.special(P, w); // phần riêng theo hệ của đòn đặc biệt
   }
-  function heroSkill(P) {
-    const w = curW(P);
-    P.mana -= 40;
-    P.castT = 0.4;
-    P.skillCd = 5 * (P.cdMul || 1);
-    G.sfx('evolve', 1.4);
-    if (P.key === 'smith') {
-      P.coats[w.id] = { el: 'fire', t: 6 };
-      FX('nung', P);
-    } else if (P.key === 'hunter') {
-      const traps = W.props.filter((p) => p.type === 'trap' && !p.dead);
-      if (traps.length >= 2) traps[0].dead = true;
-      // Sửa góp ý 1: đang cầm cung thì bẫy ném thẳng vào chỗ quái gần nhất (trong tầm 150, đón đầu nhẹ); không có quái thì đặt trước mặt.
-      // Tám hướng: cầm vũ khí nào cũng vậy, bẫy ném vào chỗ quái gần nhất (tầm 150); không có quái thì đặt 26 điểm ảnh theo hướng nhắm.
-      const sp = G.moves ? G.moves.bowSpot(P, 150, 14, 0.3) : null;
-      let ax = P.face, ay = 0;
-      if (!sp && G.moves) { const A = G.moves.aimM(P, 0); ax = A.ux; ay = A.uy * (G.ZK || 0.85); }
-      const tx = G.clamp(sp ? sp.x : P.x + ax * 26, W.x0, W.x1), ty = G.clamp(sp ? sp.y : P.y + ay * 26, W.y0, W.y1);
-      W.props.push({ type: 'trap', x: tx, y: ty, el: G.activeEl(P, w), t: 15, w });
-      FX('trapPlace', tx, ty, G.activeEl(P, w));
-    } else if (P.key === 'healer') {
-      // Tám hướng: có quái trong tầm 70 thì vũng hồi đặt lệch 22 điểm ảnh về phía quái, không thì ngay dưới chân.
-      const A = G.moves ? G.moves.aimM(P, 70) : null, hx = A && A.e ? A.ux * 22 : 0, hy = A && A.e ? A.uy * 22 * (G.ZK || 0.85) : 0;
-      W.zones.push({ shape: 'circle', x: G.clamp(P.x + hx, W.x0, W.x1), y: G.clamp(P.y + hy, W.y0, W.y1), r: 42, t: 0, pool: true, team: 'player', el: 'poison', heal: true, life: 5, tick: 0, src: G.pDamage(P, w) });
-      FX('bottle', P, W.zones[W.zones.length - 1]);
-    } else {
-      P.gongT = 3;
-      W.shake = 0.2;
-      FX('gong', P);
-      for (const e of G.targets()) {
-        const d = Math.hypot(e.x - P.x, (e.y - P.y) / G.ZK);
-        if (d < 60 + e.r) {
-          playerHit(e, 0.8, { w, stun: 0.4 });
-          if (!e.isBoss) { e.x += (e.x >= P.x ? 1 : -1) * 40; }
-        }
-      }
-    }
-  }
+  // Nút kỹ năng riêng của em bé nay là nút Chưởng (js/chuong.js). Kỹ năng cũ (Nung, Đặt bẫy, Bình thuốc, Gồng) thành nét riêng của chưởng.
   G.addCoat = function (el, t) {
     const P = W.P;
     for (const w of P.weapons) P.coats[w.id] = { el, t };
@@ -583,6 +561,7 @@
   G.updatePlayer = function (P, inp, dt) {
     P.t += dt;
     for (const k of ['atkT', 'cdT', 'dodgeCd', 'inv', 'hurtT', 'skillCd', 'specCd', 'swapCd', 'gongT', 'castT', 'specT']) if (P[k] > 0) P[k] -= dt;
+    if (P.dead && P.chHold) P.chHold = false;
     if (P.dead) P.deadT += dt;
     for (const id in P.coats) if (P.coats[id].t > 0) P.coats[id].t -= dt;
     if (G.outfit) G.outfit.tick(P, dt); // tác dụng trang phục theo thời gian: vệt khi lộn, vũng mỗi vài giây
@@ -658,7 +637,7 @@
         if (G.outfit) G.outfit.dodgeEnd(P);
       }
     } else {
-      const sp = P.speed * slow * (P.atkT > 0 ? 0.4 : 1) * (MV ? MV.speed(P) : 1);
+      const sp = P.speed * slow * (P.atkT > 0 ? 0.4 : 1) * (MV ? MV.speed(P) : 1) * (P.chHold ? 0.6 : 1); // đang tích lực chưởng: đi chậm
       if (ml > 0.12) {
         P.x += mx * sp * dt;
         P.y += my * sp * 0.75 * dt;
@@ -668,7 +647,7 @@
       }
       if (inp.dodgeP && P.dodgeCd <= 0) {
         P.dodgeT = 0.27; P.dodgeCd = 1 * P.dodgeCdMax; P.inv = Math.max(P.inv, 0.32);
-        P.atkT = 0;
+        P.atkT = 0; P.chHold = false; P.chT = 0; // lộn thì bỏ phần chưởng đang tích
         // Không đẩy cần thì lộn theo hướng di chuyển gần nhất; chưa đi bước nào thì mới theo hướng mặt.
         // Hướng lộn luôn dài bằng 1: đẩy cần nhẹ hay mạnh thì quãng lộn vẫn như nhau.
         if (ml > 0.12) { const l0 = Math.hypot(mx, my); P.ddx = mx / l0; P.ddy = my / l0; } else if (P.ldx != null) { P.ddx = P.ldx; P.ddy = P.ldy; } else { P.ddx = P.face; P.ddy = 0; }
@@ -678,8 +657,8 @@
         FX('dodge', P);
       } else if (inp.specialP && P.mana >= P.specCost && P.specCd <= 0 && !(G.moves && G.moves.canSpecial && !G.moves.canSpecial(P, w))) {
         special(P);
-      } else if (inp.skillP && P.mana >= 40 && P.skillCd <= 0) {
-        heroSkill(P);
+      } else if (G.chuong && G.chuong.input(P, !!inp.skillP, !!(inp.skill || inp.skillP), dt)) {
+        // nút Chưởng: bấm là bắn; Hỏa chưởng có Tích lực thì giữ để tích, thả ra mới bắn (js/chuong.js)
       } else if (MV) {
         MV.act(P, inp, dt);
       } else if ((inp.atk || inp.atkP) && P.cdT <= 0) {
@@ -916,6 +895,7 @@
     }
     W.zones = W.zones.filter((z) => !z.dead);
     if (G.moves) G.moves.update(W, dt); // sóng chấn động, đòn hẹn giờ của js/moves.js
+    if (G.chuong) G.chuong.update(W, dt); // chưởng đang bay, vệt lửa và mây độc của chưởng (js/chuong.js)
     // bẫy của Thợ Săn
     for (const pr of W.props) {
       if (pr.type !== 'trap' || pr.dead) continue;

@@ -1,7 +1,7 @@
 """Kiểm tra tám hướng và bốn chiêu Đặc biệt riêng (js/moves.js, js/combat.js), ngay trong trang thật.
 Với quái đặt ở 8 hướng quanh em bé (gần và xa trong tầm), mỗi đòn phải trúng quái đúng hướng và KHÔNG trúng quái đặt
 ở hướng ngược lại (đặt xa hơn một chút để quái đúng hướng là con gần nhất). Thêm: lướt và lao đi đúng hướng, không
-xuyên tường; Phi Thương ghim quái rồi bay về tay; bẫy của Thợ Săn và vũng hồi của Thầy Lang đặt theo hướng nhắm.
+xuyên tường; Phi Thương ghim quái rồi bay về tay; nút Chưởng (thay kỹ năng riêng của hero) bắn theo hướng nhắm.
 Chạy: python3 tests/tam_huong.py [-v]   (thoát mã 1 nếu có mục sai)"""
 import os, sys
 from playwright.sync_api import sync_playwright
@@ -95,21 +95,13 @@ JS = r"""
     eightWay('Giáo: Phi Thương', 'spear', [30, 90], spec, { gap: 8 });
     eightWay('Búa: Địa Chấn (vệt nứt)', 'hammer', [44, 90], spec, { gap: 6 });
     eightWay('Cung: Mưa Tên', 'bow', [56, 90], spec, { gap: 26 });
-    // ---------- kỹ năng hero: bẫy của Thợ Săn (cầm kiếm hay cung đều ném theo hướng nhắm) ----------
-    for (const wt of ['sword', 'bow']) eightWay('Thợ Săn cầm ' + (wt === 'bow' ? 'cung' : 'kiếm') + ': bẫy ném vào quái', wt, [50], () => { run(1, { skillP: true }); sec(0.6, {}); }, { hero: 'hunter', gap: 30 });
+    // ---------- nút Chưởng (thay kỹ năng riêng của hero, js/chuong.js): em bé nào cũng bắn theo hướng nhắm ----------
+    for (const hero of ['smith', 'hunter', 'healer', 'wrestler']) eightWay(G.HEROES[hero].name + ': Chưởng bắn vào quái', 'sword', [50], () => { P.skillCd = 0; run(1, { skillP: true }); sec(0.8, {}); }, { hero, gap: 30 });
     {
-      // không có quái: bẫy đặt theo hướng đang kéo cần
-      room('sword', { hero: 'hunter' }); inp = { mx: 0, my: -1 }; run(2); run(1, { skillP: true, mx: 0, my: -1 });
-      const tr = W.props.find((p) => p.type === 'trap');
-      ok('Thợ Săn: không có quái thì bẫy đặt theo hướng nhắm (kéo cần lên thì đặt phía trên)', tr && tr.y < P.y - 10 && Math.abs(tr.x - P.x) < 4, tr && (tr.x - P.x).toFixed(0) + ',' + (tr.y - P.y).toFixed(0));
-      room('sword', { hero: 'healer' }); const e = dummy(90, 50); P.mana = P.maxmana; run(1, { skillP: true });
-      const z = W.zones.find((q) => q.heal);
-      ok('Thầy Lang: vũng hồi đặt lệch về phía quái (quái ở dưới thì vũng lệch xuống)', z && z.y > P.y + 10, z && (z.y - P.y).toFixed(0));
-      room('sword', { hero: 'healer' }); P.mana = P.maxmana; run(1, { skillP: true });
-      const z2 = W.zones.find((q) => q.heal);
-      ok('Thầy Lang: không có quái gần thì vũng hồi ngay dưới chân', z2 && Math.abs(z2.x - P.x) < 1 && Math.abs(z2.y - P.y) < 1);
-      room('sword', { hero: 'wrestler' }); const l = dummy(180, 30), rgt = dummy(0, 30), up = dummy(270, 30); P.mana = P.maxmana; run(1, { skillP: true }); run(2, {});
-      ok('Đô Vật: gồng vẫn đánh vòng quanh người (trúng cả trái, phải, trên)', lost(l) > 0 && lost(rgt) > 0 && lost(up) > 0);
+      // không có quái: chưởng bay theo hướng đang kéo cần
+      room('sword', { hero: 'hunter' }); inp = { mx: 0, my: -1 }; run(2); P.skillCd = 0; run(1, { skillP: true, mx: 0, my: -1 });
+      const q = (W.chs || [])[0];
+      ok('Chưởng: không có quái thì bay theo hướng nhắm (kéo cần lên thì bay lên)', q && q.uy < -0.9 && Math.abs(q.ux) < 0.2, q && q.ux.toFixed(2) + ',' + q.uy.toFixed(2));
     }
     // ---------- lướt, lao đi đúng hướng và không xuyên tường ----------
     {
