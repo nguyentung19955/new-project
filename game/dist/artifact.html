@@ -23406,7 +23406,7 @@ MA._xong();
       if (on && CL.isGuest()) {
         if (T.btn(CX + 4, 142, 146, 24, 'Đăng nhập Google', { size: 8.5, primary: true }) && !V.gBusy) {
           V.gBusy = true; say('Đang mở cửa sổ đăng nhập Google…');
-          CL.google().then((r) => say(r === 'linked' ? 'Đã nối tài khoản Google. Tiến trình được giữ nguyên.' : 'Đã đăng nhập Google.'), (e) => say('Chưa đăng nhập được: ' + e.message)).then(() => { V.gBusy = false; });
+          CL.google().then((r) => say(r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google. Tiến trình được giữ nguyên.' : 'Đã đăng nhập Google.'), (e) => say('Chưa đăng nhập được: ' + e.message)).then(() => { V.gBusy = false; });
         }
       } else T.btn(CX + 4, 142, 146, 24, on ? 'Đã đăng nhập Google' : 'Đăng nhập Google', { size: 8.5, disabled: true });
     } else ui.para('Tiến trình được lưu trong trình duyệt này. Đổi máy hoặc xoá dữ liệu trình duyệt sẽ mất tiến trình.', CX + 4, 125, 292, { size: 7.5, color: SOFT });
@@ -23480,7 +23480,9 @@ MA._xong();
     enter() { VS.enter({ from: 'keep' }); VS.state.x = 470; VS.state.cam = 230; },
     update(dt) {
       VS.update(dt, true);
-      if (G.downs.length || G.keyP.Enter || G.keyP.Space || G.keyP.KeyJ) G.setScene(G.Village);
+      // chạm vào dải nút Đăng nhập / Bảng vàng thì không vào game
+      const onBtns = G.downs.some((d) => d.y > 200 && d.y < 236 && d.x > 120 && d.x < 360);
+      if ((G.downs.length && !onBtns) || G.keyP.Enter || G.keyP.Space || G.keyP.KeyJ) G.setScene(G.Village);
     },
     draw() {
       const c = G.wx, A = G.art;
@@ -23494,6 +23496,23 @@ MA._xong();
       ui.text('LINH KHÍ', 240, 78, { size: 40, bold: true, align: 'center', color: GOLD });
       ui.text('Vũ khí lớn lên theo bạn. Yêu tinh học theo bạn.', 240, 100, { size: 10, align: 'center', color: TXT });
       if (Math.floor(G.time * 2) % 2) T.toastFit(240, 112, 'Chạm để bắt đầu', { size: 11 });
+      // Tài khoản và Bảng vàng ngay ở màn mở đầu
+      const CL = G.cloud;
+      if (CL) {
+        const on = CL.online(), guest = CL.isGuest();
+        if (T.btn(126, 206, 112, 24, on && !guest ? '✓ ' + String(CL.who()).slice(0, 14) : 'Đăng nhập Google', { size: 8.5, primary: on && guest, disabled: !on || !guest }) && !V.gBusy) {
+          V.gBusy = true; V.tMsg = 'Đang mở trang đăng nhập Google…'; V.tMsgT = 30;
+          CL.google().then((r) => { V.tMsg = r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google, giữ nguyên tiến trình.' : 'Đã đăng nhập Google.'; }, (e) => { V.tMsg = 'Chưa đăng nhập được: ' + e.message; })
+            .then(() => { V.gBusy = false; V.tMsgT = 8; });
+        }
+        if (T.btn(242, 206, 112, 24, '🏆 Bảng vàng', { size: 8.5, disabled: !PANELS.rank })) {
+          G.setScene(G.Village); V.dtab = 'rank'; open('do');
+        }
+        if (CL.gMsg) { V.tMsg = CL.gMsg; V.tMsgT = 8; CL.gMsg = ''; }
+        if (V.tMsgT > 0) V.tMsgT -= 1 / 60;
+        const line = V.tMsgT > 0 && V.tMsg ? V.tMsg : CL.label();
+        ui.text(line, 240, 242, { size: 7, align: 'center', color: SOFT });
+      }
       ui.text('Bản thử · hình vẽ tạm', 240, 264, { size: 7, align: 'center', color: SOFT });
     },
   };
@@ -26432,6 +26451,12 @@ window.FIREBASE_CONFIG = {
         this.auth = app.auth(); this.db = app.firestore();
         if (this.auth.setPersistence && fb.auth.Auth) await this.auth.setPersistence(fb.auth.Auth.Persistence.LOCAL).catch(() => {});
         this.auth.onAuthStateChanged((u) => this._onUser(u));
+        // quay về từ trang đăng nhập Google (redirect): báo kết quả; tài khoản Google đã có dữ liệu thì chuyển sang nó
+        let back = false; try { back = localStorage.getItem('lk_gredir') === '1'; localStorage.removeItem('lk_gredir'); } catch (e) { /* bỏ qua */ }
+        if (back) this.auth.getRedirectResult().then((r) => { this.gMsg = r && r.user ? 'Đã đăng nhập Google.' : ''; if (r && r.user) { this.myScore = null; setTimeout(() => this.push(true), 1500); } }, (e) => {
+          if (e && e.code === 'auth/credential-already-in-use' && e.credential) { this.auth.signInWithCredential(e.credential).then(() => { this.gMsg = 'Đã đăng nhập Google.'; }, (e2) => { this.gMsg = 'Chưa đăng nhập được: ' + this._err(e2); }); return; }
+          this.gMsg = 'Chưa đăng nhập được: ' + this._err(e);
+        });
       } catch (e) {
         // không tải được thư viện (mất mạng, bị chặn): tắt mây, game chạy như cũ
         this.enabled = false; this.why = 'offline'; this.status = 'off';
@@ -26516,15 +26541,22 @@ window.FIREBASE_CONFIG = {
       const m = { 'auth/popup-blocked': 'Trình duyệt chặn cửa sổ đăng nhập', 'auth/popup-closed-by-user': 'Đã đóng cửa sổ đăng nhập',
         'auth/cancelled-popup-request': 'Đã đóng cửa sổ đăng nhập', 'auth/network-request-failed': 'Mất mạng, thử lại sau',
         'auth/unauthorized-domain': 'Tên miền này chưa được cho phép trong Firebase', 'auth/operation-not-supported-in-this-environment': 'Chỗ này không đăng nhập được' };
-      return (e && m[e.code]) || (e && (e.code || e.message)) || 'Lỗi';
+      const code = e && e.code ? String(e.code).replace('auth/', '') : '';
+      return ((e && m[e.code]) || (e && e.message) || 'Lỗi') + (code ? ' [' + code + ']' : ''); // kèm mã lỗi để chủ dự án báo lại
     },
     async google() {
       if (!this.online()) throw new Error('Chưa kết nối mây');
       const fb = window.firebase, prov = new fb.auth.GoogleAuthProvider();
+      // Mở từ biểu tượng màn hình chính (chế độ ứng dụng) hay khi cửa sổ phụ bị chặn: chuyển trang đăng nhập (redirect) thay cho cửa sổ phụ.
+      const app = (window.matchMedia && (matchMedia('(display-mode: standalone)').matches || matchMedia('(display-mode: fullscreen)').matches)) || navigator.standalone === true;
+      const REDIR = ['auth/popup-blocked', 'auth/operation-not-supported-in-this-environment', 'auth/web-storage-unsupported', 'auth/popup-closed-by-user'];
+      const redirect = () => { try { localStorage.setItem('lk_gredir', '1'); } catch (e) { /* bỏ qua */ } return this.user.isAnonymous ? this.user.linkWithRedirect(prov) : this.auth.signInWithRedirect(prov); };
+      if (app) { try { await redirect(); return 'redirect'; } catch (e) { throw new Error(this._err(e)); } }
       try {
         if (this.user.isAnonymous) {
           try {
-            const r = await this.user.linkWithPopup(prov);
+            const r = await this.user.linkWithPopup(prov).catch((e) => { if (REDIR.includes(e.code) && e.code !== 'auth/popup-closed-by-user') return redirect().then(() => null); throw e; });
+            if (r === null) return 'redirect';
             this.user = (r && r.user) || this.auth.currentUser || this.user;
             if (this.user.reload) await this.user.reload().catch(() => {});
             this.user = this.auth.currentUser || this.user;
@@ -26541,7 +26573,7 @@ window.FIREBASE_CONFIG = {
             return 'switched';
           }
         }
-        await this.auth.signInWithPopup(prov);
+        try { await this.auth.signInWithPopup(prov); } catch (e) { if (REDIR.includes(e.code) && e.code !== 'auth/popup-closed-by-user') { await redirect(); return 'redirect'; } throw e; }
         return 'switched';
       } catch (e) { throw new Error(this._err(e)); }
     },

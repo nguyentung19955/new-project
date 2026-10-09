@@ -93,6 +93,12 @@
         this.auth = app.auth(); this.db = app.firestore();
         if (this.auth.setPersistence && fb.auth.Auth) await this.auth.setPersistence(fb.auth.Auth.Persistence.LOCAL).catch(() => {});
         this.auth.onAuthStateChanged((u) => this._onUser(u));
+        // quay về từ trang đăng nhập Google (redirect): báo kết quả; tài khoản Google đã có dữ liệu thì chuyển sang nó
+        let back = false; try { back = localStorage.getItem('lk_gredir') === '1'; localStorage.removeItem('lk_gredir'); } catch (e) { /* bỏ qua */ }
+        if (back) this.auth.getRedirectResult().then((r) => { this.gMsg = r && r.user ? 'Đã đăng nhập Google.' : ''; if (r && r.user) { this.myScore = null; setTimeout(() => this.push(true), 1500); } }, (e) => {
+          if (e && e.code === 'auth/credential-already-in-use' && e.credential) { this.auth.signInWithCredential(e.credential).then(() => { this.gMsg = 'Đã đăng nhập Google.'; }, (e2) => { this.gMsg = 'Chưa đăng nhập được: ' + this._err(e2); }); return; }
+          this.gMsg = 'Chưa đăng nhập được: ' + this._err(e);
+        });
       } catch (e) {
         // không tải được thư viện (mất mạng, bị chặn): tắt mây, game chạy như cũ
         this.enabled = false; this.why = 'offline'; this.status = 'off';
@@ -177,15 +183,22 @@
       const m = { 'auth/popup-blocked': 'Trình duyệt chặn cửa sổ đăng nhập', 'auth/popup-closed-by-user': 'Đã đóng cửa sổ đăng nhập',
         'auth/cancelled-popup-request': 'Đã đóng cửa sổ đăng nhập', 'auth/network-request-failed': 'Mất mạng, thử lại sau',
         'auth/unauthorized-domain': 'Tên miền này chưa được cho phép trong Firebase', 'auth/operation-not-supported-in-this-environment': 'Chỗ này không đăng nhập được' };
-      return (e && m[e.code]) || (e && (e.code || e.message)) || 'Lỗi';
+      const code = e && e.code ? String(e.code).replace('auth/', '') : '';
+      return ((e && m[e.code]) || (e && e.message) || 'Lỗi') + (code ? ' [' + code + ']' : ''); // kèm mã lỗi để chủ dự án báo lại
     },
     async google() {
       if (!this.online()) throw new Error('Chưa kết nối mây');
       const fb = window.firebase, prov = new fb.auth.GoogleAuthProvider();
+      // Mở từ biểu tượng màn hình chính (chế độ ứng dụng) hay khi cửa sổ phụ bị chặn: chuyển trang đăng nhập (redirect) thay cho cửa sổ phụ.
+      const app = (window.matchMedia && (matchMedia('(display-mode: standalone)').matches || matchMedia('(display-mode: fullscreen)').matches)) || navigator.standalone === true;
+      const REDIR = ['auth/popup-blocked', 'auth/operation-not-supported-in-this-environment', 'auth/web-storage-unsupported', 'auth/popup-closed-by-user'];
+      const redirect = () => { try { localStorage.setItem('lk_gredir', '1'); } catch (e) { /* bỏ qua */ } return this.user.isAnonymous ? this.user.linkWithRedirect(prov) : this.auth.signInWithRedirect(prov); };
+      if (app) { try { await redirect(); return 'redirect'; } catch (e) { throw new Error(this._err(e)); } }
       try {
         if (this.user.isAnonymous) {
           try {
-            const r = await this.user.linkWithPopup(prov);
+            const r = await this.user.linkWithPopup(prov).catch((e) => { if (REDIR.includes(e.code) && e.code !== 'auth/popup-closed-by-user') return redirect().then(() => null); throw e; });
+            if (r === null) return 'redirect';
             this.user = (r && r.user) || this.auth.currentUser || this.user;
             if (this.user.reload) await this.user.reload().catch(() => {});
             this.user = this.auth.currentUser || this.user;
@@ -202,7 +215,7 @@
             return 'switched';
           }
         }
-        await this.auth.signInWithPopup(prov);
+        try { await this.auth.signInWithPopup(prov); } catch (e) { if (REDIR.includes(e.code) && e.code !== 'auth/popup-closed-by-user') { await redirect(); return 'redirect'; } throw e; }
         return 'switched';
       } catch (e) { throw new Error(this._err(e)); }
     },

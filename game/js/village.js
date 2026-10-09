@@ -552,7 +552,7 @@
       if (on && CL.isGuest()) {
         if (T.btn(CX + 4, 142, 146, 24, 'Đăng nhập Google', { size: 8.5, primary: true }) && !V.gBusy) {
           V.gBusy = true; say('Đang mở cửa sổ đăng nhập Google…');
-          CL.google().then((r) => say(r === 'linked' ? 'Đã nối tài khoản Google. Tiến trình được giữ nguyên.' : 'Đã đăng nhập Google.'), (e) => say('Chưa đăng nhập được: ' + e.message)).then(() => { V.gBusy = false; });
+          CL.google().then((r) => say(r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google. Tiến trình được giữ nguyên.' : 'Đã đăng nhập Google.'), (e) => say('Chưa đăng nhập được: ' + e.message)).then(() => { V.gBusy = false; });
         }
       } else T.btn(CX + 4, 142, 146, 24, on ? 'Đã đăng nhập Google' : 'Đăng nhập Google', { size: 8.5, disabled: true });
     } else ui.para('Tiến trình được lưu trong trình duyệt này. Đổi máy hoặc xoá dữ liệu trình duyệt sẽ mất tiến trình.', CX + 4, 125, 292, { size: 7.5, color: SOFT });
@@ -626,7 +626,9 @@
     enter() { VS.enter({ from: 'keep' }); VS.state.x = 470; VS.state.cam = 230; },
     update(dt) {
       VS.update(dt, true);
-      if (G.downs.length || G.keyP.Enter || G.keyP.Space || G.keyP.KeyJ) G.setScene(G.Village);
+      // chạm vào dải nút Đăng nhập / Bảng vàng thì không vào game
+      const onBtns = G.downs.some((d) => d.y > 200 && d.y < 236 && d.x > 120 && d.x < 360);
+      if ((G.downs.length && !onBtns) || G.keyP.Enter || G.keyP.Space || G.keyP.KeyJ) G.setScene(G.Village);
     },
     draw() {
       const c = G.wx, A = G.art;
@@ -640,6 +642,23 @@
       ui.text('LINH KHÍ', 240, 78, { size: 40, bold: true, align: 'center', color: GOLD });
       ui.text('Vũ khí lớn lên theo bạn. Yêu tinh học theo bạn.', 240, 100, { size: 10, align: 'center', color: TXT });
       if (Math.floor(G.time * 2) % 2) T.toastFit(240, 112, 'Chạm để bắt đầu', { size: 11 });
+      // Tài khoản và Bảng vàng ngay ở màn mở đầu
+      const CL = G.cloud;
+      if (CL) {
+        const on = CL.online(), guest = CL.isGuest();
+        if (T.btn(126, 206, 112, 24, on && !guest ? '✓ ' + String(CL.who()).slice(0, 14) : 'Đăng nhập Google', { size: 8.5, primary: on && guest, disabled: !on || !guest }) && !V.gBusy) {
+          V.gBusy = true; V.tMsg = 'Đang mở trang đăng nhập Google…'; V.tMsgT = 30;
+          CL.google().then((r) => { V.tMsg = r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google, giữ nguyên tiến trình.' : 'Đã đăng nhập Google.'; }, (e) => { V.tMsg = 'Chưa đăng nhập được: ' + e.message; })
+            .then(() => { V.gBusy = false; V.tMsgT = 8; });
+        }
+        if (T.btn(242, 206, 112, 24, '🏆 Bảng vàng', { size: 8.5, disabled: !PANELS.rank })) {
+          G.setScene(G.Village); V.dtab = 'rank'; open('do');
+        }
+        if (CL.gMsg) { V.tMsg = CL.gMsg; V.tMsgT = 8; CL.gMsg = ''; }
+        if (V.tMsgT > 0) V.tMsgT -= 1 / 60;
+        const line = V.tMsgT > 0 && V.tMsg ? V.tMsg : CL.label();
+        ui.text(line, 240, 242, { size: 7, align: 'center', color: SOFT });
+      }
       ui.text('Bản thử · hình vẽ tạm', 240, 264, { size: 7, align: 'center', color: SOFT });
     },
   };
