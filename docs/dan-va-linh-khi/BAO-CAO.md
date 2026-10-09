@@ -33,7 +33,7 @@ Mọi thứ bay trong trận giờ có hình riêng, xoay theo hướng bay, có
 
 ![Hang biển](03-dan-hang-bien.gif) ![Rừng già](04-dan-rung-gia.gif)
 
-Không đổi tốc độ, vùng trúng hay sát thương của đạn (có bài kiểm tra so đường bay khi có vẽ và khi không vẽ: giống hệt). Hình đạn được vẽ sẵn một lần cho mỗi hướng rồi dán lại, nên nhiều đạn vẫn nhẹ: cảnh đông quái trong `tests/perf.py` từ 1,91 lên 2,02 ms mỗi khung (giới hạn cho phép là chậm hơn 20%); 60 viên đạn bay cùng lúc vẫn dưới 8 ms mỗi khung.
+Không đổi tốc độ, vùng trúng hay sát thương của đạn (có bài kiểm tra so đường bay khi có vẽ và khi không vẽ: giống hệt). Hình đạn được vẽ sẵn một lần cho mỗi hướng rồi dán lại, nên nhiều đạn vẫn nhẹ: cảnh đông quái trong `tests/perf.py` chỉ chậm hơn bản trước 3% (trường hợp chậm nhất 12%; giới hạn cho phép là 20%); 60 viên đạn bay cùng lúc vẫn dưới 8 ms mỗi khung.
 
 ## B. Hiển thị linh khí
 
