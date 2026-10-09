@@ -51,7 +51,34 @@ AUTO = r"""
     }
     if (!done) break;
   }
-  for (const slot of ['armor', 'helm']) {
+  // Trang phục (js/outfit.js): mua món thường ở Bà Hàng Xén, may món ở Cô Thợ May, mặc món làm sức mạnh cao nhất ở từng ô,
+  // nâng bậc món đang mặc và mở cấp cánh khi đủ tiền (sau khi đã lo vũ khí), như người chơi bình thường.
+  const O = G.outfit;
+  if (O && sv.outfit) {
+    for (const k of O.shopList()) if (!O.has(sv, k) && sv.gold >= 400) O.buy(sv, k);
+    for (const k of O.craftList()) if (!O.has(sv, k) && O.canPay(sv, O.craftCost(k))) O.craft(sv, k);
+    const wearBest = () => {
+      for (const slot of O.SLOTS) {
+        const cands = sv.outfit.items.filter((it) => O.ITEMS[it.k] && O.ITEMS[it.k].slot === slot);
+        if (!cands.length) continue;
+        let best = sv.outfit.wear[slot], bp = -1;
+        for (const it of cands) { O.wear(sv, it); const p = G.power() + it.r * 2 + (it.lv || 0); if (p > bp) { bp = p; best = it.id; } }
+        sv.outfit.wear[slot] = best;
+      }
+    };
+    wearBest();
+    for (let n = 0; n < 10; n++) {
+      let done = false;
+      for (const slot of O.SLOTS) {
+        const it = O.worn(sv, slot);
+        if (!it) continue;
+        if (O.ITEMS[it.k].slot === 'wing' && O.wingUp(sv, it)) done = true;
+        else if (it.r < 3 && O.upgrade(sv, it)) done = true;
+      }
+      if (!done) break;
+    }
+    wearBest();
+  } else for (const slot of ['armor', 'helm']) {
     for (const id of Object.keys(G.GEAR[slot]).reverse()) {
       const g = G.GEAR[slot][id];
       if (!sv.owned[slot].includes(id) && api.canPay(g.cost)) { api.pay(g.cost); sv.owned[slot].push(id); }
@@ -63,7 +90,8 @@ AUTO = r"""
   const pref = ['c_leech', 'c_ember', 'c_spirit', 'c_mist', 'c_greed'];
   sv.charm = pref.find((c) => sv.owned.charm.includes(c)) || null;
   const hs = sv.heroes[sv.hero];
-  return { lvl: hs.lvl, power: G.power(), gold: sv.gold, ore: sv.ore, forge: sv.forge, armor: sv.armor,
+  const look = O && sv.outfit ? O.SLOTS.map((k) => { const it = O.worn(sv, k); return it ? it.k + it.r : '-'; }).join(',') : sv.armor;
+  return { lvl: hs.lvl, power: G.power(), gold: sv.gold, ore: sv.ore, forge: sv.forge, armor: look,
     carry: carry().map((w) => G.WTYPES[w.type].name + ' ' + G.RARITY[G.wRar(w)].name + ' +' + w.sharpen) };
 }
 """
