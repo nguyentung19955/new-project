@@ -23,7 +23,7 @@
     c.fillStyle = 'rgba(8,24,24,0.55)';
     c.beginPath(); c.ellipse(x, y, R + 2, (R + 2) * RY, 0, 0, Math.PI * 2); c.fill();
     c.fillStyle = K.patD;
-    c.beginPath(); c.ellipse(x, y, R - 2, (R - 2) * RY, 0, 0, Math.PI * 2); c.fill();
+    if (R > 2) { c.beginPath(); c.ellipse(x, y, R - 2, (R - 2) * RY, 0, 0, Math.PI * 2); c.fill(); } // lúc cổng vừa nhú (bán kính dưới 2) thì bỏ qua lòng cổng
     // xoáy xanh ngọc: ba cánh xoắn quay quanh tâm
     for (let arm = 0; arm < 3; arm++) {
       for (let j = 0; j < 16; j++) {

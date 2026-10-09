@@ -144,7 +144,7 @@
     W.spawnMode = mode;
     list.forEach((role, j) => {
       const q = freeSpot(role === 'archer' || role === 'bomber' ? 84 : 66, role === 'elite' ? 18 : 10);
-      const t = mode === 'all' ? 1.0 : mode === 'group' ? 0.9 + Math.floor(j / 3) * 1.9 + (j % 3) * 0.08 : 0.9 + j * 0.6;
+      const t = mode === 'all' ? 0.95 : mode === 'group' ? 0.8 + Math.floor(j / 3) * 1.9 + (j % 3) * 0.08 : 0.8 + j * 0.6;
       W.spawns.push({ role, x: q[0], y: q[1], t, t0: Math.min(t, 1.0), big: role === 'elite' });
     });
     G.sfx('warn', 0.8);

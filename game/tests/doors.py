@@ -37,7 +37,7 @@ JS = r"""
   start(0, 2, 'B', 1);
   ok('Vào ải: đứng ở phòng Bắt đầu, số 0', S.idx === 0 && W.type === 'start');
   ok('Phòng Bắt đầu có cửa ở đúng các phía có phòng kề', W.doors.length === M.DKEYS.filter((d) => S.map.rooms[0].doors[d] != null).length && W.doors.length >= 1, W.doors.length);
-  sec(1.5); grab();
+  sec(2); grab(); // vòng báo chỗ mọc gần một giây rồi quái mới hiện ra
   ok('Phòng có quái: quái hiện ra trong phòng', W.ents.length > 0, W.ents.length);
   ok('Quái hiện ra nằm trong sàn', W.ents.every((e) => e.x >= W.x0 && e.x <= W.x1 && e.y >= W.y0 && e.y <= W.y1));
   ok('Còn quái: mọi cửa khóa', W.doors.every((d) => !d.open));

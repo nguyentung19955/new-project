@@ -185,7 +185,7 @@
   function begin(e, k, a, T, o) {
     e.act = Object.assign({ k, t: 0, T, a, fired: false, end: T + dur(e.art, 'atk') * 0.75 }, o || {});
     e.dirA = a;
-    if (Math.abs(Math.cos(a)) > 0.15) e.face = Math.cos(a) > 0 ? 1 : -1;
+    if (!(o && o.keepFace) && Math.abs(Math.cos(a)) > 0.15) e.face = Math.cos(a) > 0 ? 1 : -1; // quái giáp giữ hướng mặt (quay chậm)
     play(e, o && o.anim0 ? o.anim0 : 'tele', o && o.spd0);
     e.wind = T;
   }
@@ -343,7 +343,8 @@
       }
       const dx = P.x - e.x, dd = Math.hypot(dx, P.y - e.y);
       if (dd > 20) { const k = sp / dd; e.x += dx * k * dt; e.y += (P.y - e.y) * k * 0.75 * dt; e.moving = true; }
-      if (e.cd <= 0 && d < reachOf(e) + 4) { const f = e.face > 0 ? 0 : PI; begin(e, 'hit', f, 0.6, { cd: 1.6, keepFace: true, zone: strikeZone(e, f, 0.6), fire: () => { W().shake = Math.max(W().shake, 0.08); } }); }
+      // đòn ngắm thẳng vào em bé (mọi góc), nhưng chỉ khi em bé ở nửa phía trước; đứng sau lưng thì nó phải quay lại trước
+      if (e.cd <= 0 && d < reachOf(e) + 4 && (P.x - e.x) * e.face > -8) begin(e, 'slam', a, 0.6, { cd: 1.6, keepFace: true, zone: strikeZone(e, a, 0.6), fire: () => { W().shake = Math.max(W().shake, 0.08); } });
       return;
     }
     if (role === 'nimble') {
@@ -550,8 +551,13 @@
       // báo trước: vệt đỏ dọc đường tường sẽ chạy qua, khe để trắng
       const blink = Math.floor(t * 10) % 2;
       for (let b = -z.half; b <= z.half; b += 2) {
-        if (Math.abs(b - z.g) <= z.gw) { if (Math.abs(Math.abs(b - z.g) - z.gw) < 2) { const q = at(z.s + 6, b); p(c, q[0], q[1], 2, 2, '#ffffff'); } continue; }
-        for (let a = 0; a < 26; a += 4) { const q = at(z.s + a, b); p(c, q[0], q[1], 2, 2, blink ? 'rgba(255,58,34,0.55)' : 'rgba(255,176,154,0.45)'); }
+        if (Math.abs(b - z.g) <= z.gw) {
+          // khe an toàn: hai cột trắng hai bên và lối xanh nhạt ở giữa
+          const edge = Math.abs(Math.abs(b - z.g) - z.gw) < 2;
+          for (let a = 0; a < 40; a += edge ? 2 : 6) { const q = at(z.s + a, b); p(c, q[0], q[1], 2, 2, edge ? '#ffffff' : 'rgba(150,255,170,0.35)'); }
+          continue;
+        }
+        for (let a = 0; a < 40; a += 3) { const q = at(z.s + a, b); p(c, q[0], q[1], 2, 2, blink ? 'rgba(255,58,34,0.5)' : 'rgba(255,176,154,0.4)'); }
       }
       return;
     }
