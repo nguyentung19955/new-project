@@ -43,6 +43,8 @@ Chỗ đặt khớp mặc định của từng khung (tính theo khung bao: 0 l�
 | **Rắn (trườn)** | thân giữa, cổ, đầu, đuôi gần, chóp đuôi | Thân dài nằm thấp (62–70% chiều cao) chạy hết bề ngang, **đầu ngẩng ở phải** (100%, 36%), **đuôi thon về trái** (0%, 66%). |
 | **Cây, đứng yên** | gốc rễ, thân, tán/đầu, cành phải, cành trái | Rễ ở đáy, thân đứng giữa (78% lên 42%), tán hoặc đầu trên cùng; **hai cành chĩa ra hai bên và hơi lên** tới (100%, 32%) và (0%, 32%). Gốc cắm đất, chỉ nhún. |
 
+**Chỗ lệch giữa game và khung Người:** em bé trong game có đầu cả mũ chiếm khoảng 1/2 chiều cao, chân chỉ khoảng 1/6; khung Người lại chờ cổ ở 36% và hông ở 60%. Thử thật (xem [PROMPT-THU.md](PROMPT-THU.md)) cho thấy đầu 1/2 làm phần áo bị chia nhầm sang tay chân. Vì vậy prompt em bé xin **đầu khoảng 2/5, áo choàng ngắn tới 2/3 chiều cao, hai chân lộ rõ**: vẫn rất chibi mà Tự đoán đúng hơn nhiều.
+
 Đồ vật (không có khung, đứng yên):
 
 - **Kiếm, giáo, búa**: nếu hình rộng hơn 1,25 lần chiều cao thì Xưởng coi là **nằm ngang**: điểm cầm ở 14% từ trái, mũi ở mép phải. Ngược lại coi là **dựng đứng**: điểm cầm ở 86% từ trên, mũi ở đỉnh. Thanh trượt cỡ là chiều dài.

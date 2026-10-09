@@ -88,7 +88,7 @@ KHUNG = {
 }
 DANG = {
     'Người': ('standing on two legs, torso upright in the middle, both arms held a little away from the body with a clear white gap between each arm and the torso '
-              '(hands at hip height, front arm toward the right, back arm toward the left), legs slightly apart with a white gap between them, both feet flat on the same bottom line'),
+              '(hands at hip height, front arm toward the right, back arm toward the left), legs slightly apart with a white gap between them, both legs clearly visible in the bottom third of the height (any robe or cloak ends above the knees), both feet flat on the same bottom line'),
     'Bốn chân': ('body horizontal, head at the right end, tail sticking out from the upper left of the body, four legs going straight down under the body '
                  '(front pair under the head end, back pair under the tail end, a clear white gap between the front and back legs), all four feet on the same bottom line, legs about one third of the height'),
     'Cua/bọ': ('wide low body in the middle, the two big claws or horns raised up and out toward the upper left and upper right with white gaps from the body, '
@@ -174,7 +174,7 @@ def prompt_quai(sub, ma):
 def prompt_em_be(sub, ma):
     o = DO[ma]
     return ('%s %s (the body faces right, the face looks a little toward the viewer), %s, empty hands with no weapon (the game adds the weapon). '
-            'Chibi proportions like the game sprite: the head with its hood is about half of the total height, a small body and short legs, the whole figure is %s. %s '
+            'Chibi proportions: a big head with its hood taking the top two fifths of the total height, a short cloak ending at two thirds of the height, then two short legs, the whole figure is %s. %s '
             'Main colors as in the game (the twist detail may add its own colors): %s; the face is a round pale mask-like face (#f6f0e2) with simple calm closed eyes. Cute chibi child hero inspired by Vietnamese folklore. Pixel-art game sprite: %s. %s'
             % (sub, GOC_CHEO, DANG['Người'], ti_le(o), co_that(o), mau_chinh(o), vien(o, 'dark plum', 'top right'), NEN))
 
