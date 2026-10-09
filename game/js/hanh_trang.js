@@ -260,8 +260,8 @@
     // bên phải: chi tiết món đang chọn, nút mặc/tháo, tác dụng đang có
     const RX = CX + LW + 10, RW = CW - LW - 14;
     region('outfit2', RX, CY, RW, multi ? CH - 22 : CH, (y) => {
-      if (sell && sv.outfit.items.length) { BD.quickBar(sv, 'o', RX + RW, y, 12); y += 16; }
       if (multi) {
+        BD.quickBar(sv, 'o', RX + RW, y, 12); y += 16;
         const t = BD.total(sv, 'o', BD.ids);
         ui.text('Đã chọn ' + t.n + ' món · Bà Hàng Xén trả ' + t.gold + ' vàng', RX, y + 9, { size: 8, bold: true, color: GOLD });
         return ui.para('Chạm các ô bên trái để chọn hoặc bỏ. Món đang mặc (chấm xanh) và món khoá không chọn được.', RX, y + 20, RW, { size: 7, color: SOFT });
@@ -290,6 +290,10 @@
         if (sp) y = ui.para('★ ' + sp.name + ': ' + sp.desc, RX, y, RW, { size: 6.5, color: sp.key === 'none' ? SOFT : PURP });
         else if (Ti.old) y = ui.para('Tác dụng cũ: ' + G.GEAR.charm[Ti.old].desc + ' (hero từ cấp 5).', RX, y, RW, { size: 6.5, color: PURP });
         else if (it.r < 2) y = ui.para('Lên bậc Tím ở Cô Thợ May để mở tác dụng đặc biệt.', RX, y, RW, { size: 6.5, color: SOFT });
+      }
+      if (sell && sv.outfit.items.length) { // bán nhiều món một lúc (js/ban_do.js)
+        y += 6; T.head('Bán đồ', RX, y + 6);
+        BD.quickBar(sv, 'o', RX + RW, y - 3, 12); y += 10;
       }
       y += 6;
       T.head('Bộ và tác dụng đang có', RX, y + 6); y += 9;

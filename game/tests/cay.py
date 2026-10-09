@@ -38,7 +38,7 @@ AUTO = r"""
     const minR = Math.min(...sv.carry.map(G.weaponById).filter(Boolean).map(G.wRar));
     const wj = sv.weapons.filter((w) => !BD.why(sv, 'w', w) && G.wRar(w) <= minR).map((w) => w.id);
     const a = BD.sell(sv, 'o', oj), b = BD.sell(sv, 'w', wj);
-    window.__banVang = (window.__banVang || 0) + a.gold + b.gold;
+    window.__banVang = (window.__banVang || 0) + a.gold + b.gold; window.__banTP = (window.__banTP || 0) + a.gold;
   }
   const carry = () => sv.carry.map(G.weaponById).filter(Boolean);
   const O = G.outfit;
@@ -74,7 +74,7 @@ def campaign(pg, mode, upto):
         if k in seen: return False
         seen.add(k); return True
     pg.evaluate("(c) => { G.resetSave(); G.save.sound = false; Object.assign(G.botCfg, c); }", BOT)
-    pg.evaluate("(b) => { window.__ban = b; window.__banVang = 0; }", '--ban' in sys.argv)
+    pg.evaluate("(b) => { window.__ban = b; window.__banVang = 0; window.__banTP = 0; }", '--ban' in sys.argv)
     cleared = -1
     st = [{'plays': 0, 'tries': 0, 'fails': 0, 't': 0, 'lvl': 0, 'pw': 0, 'rec': 0} for _ in range(15)]
     tot_t = 0
@@ -132,7 +132,7 @@ def campaign(pg, mode, upto):
             must_grind = True
     if cleared < upto - 1:
         return None, 'kẹt ở ải %d-%d' % divmod(cleared + 1, 5)
-    return {'st': st, 't': tot_t, 'hurt': hurt, 'log': log, 'ban': pg.evaluate('window.__banVang || 0')}, None
+    return {'st': st, 't': tot_t, 'hurt': hurt, 'log': log, 'ban': pg.evaluate('window.__banVang || 0'), 'banTP': pg.evaluate('window.__banTP || 0')}, None
 
 LUAT = r"""
 () => {
@@ -262,7 +262,7 @@ def main():
             runs.append(out)
             if '-v' in sys.argv:
                 print('\n'.join(out['log']))
-            print(f"lượt {k+1}: bán đồ được {out['ban']} vàng, tổng {out['t']/60:.0f} phút, {sum(s['plays'] for s in out['st'])} lần chơi | " + ' '.join(str(s['plays']) for s in out['st'][:upto]))
+            print(f"lượt {k+1}: bán đồ được {out['ban']} vàng (trang phục {out['banTP']}), tổng {out['t']/60:.0f} phút, {sum(s['plays'] for s in out['st'])} lần chơi | " + ' '.join(str(s['plays']) for s in out['st'][:upto]))
             sys.stdout.flush()
         b.close()
     if luu: json.dump(SAVES, open(luu[0], 'w'))

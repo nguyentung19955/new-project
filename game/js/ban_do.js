@@ -15,17 +15,18 @@
   // Vũ khí: giá cũ của Bà Hàng Xén (Thường 20, Lam 60, Tím 150, Vàng 400, mỗi cấp mài thêm 15).
   S.W_PRICE = [20, 60, 150, 400];
   S.W_SHARP = 15;
-  // Trang phục: cùng bậc giá với vũ khí. Đồ thường bà bán (60-140 vàng) thì bà mua lại tối đa 1/4 giá.
-  // Cánh: thêm 1/4 vàng đã bỏ ra mở cấp (cấp 2: +75, cấp 3: +275).
-  S.O_PRICE = [20, 60, 150, 400];
-  S.O_WING = [0, 0, 75, 275];
+  // Trang phục: Thường 10, Lam 30, Tím 80, Vàng 200 (khoảng 1/8 đến 1/5 công mua, may, nâng). Lần đầu đặt bằng giá vũ khí
+  // (20/60/150/400) thì bot cày (tests/cay.py --ban) đi hết 15 ải nhanh hơn 11% nên hạ còn khoảng một nửa.
+  // Đồ thường bà bán (60-140 vàng) thì bà mua lại tối đa 1/6 giá. Cánh: thêm khoảng 1/8 vàng đã bỏ ra mở cấp.
+  S.O_PRICE = [10, 30, 80, 200];
+  S.O_WING = [0, 0, 40, 140];
   S.wPrice = (w) => S.W_PRICE[G.clamp(G.wRar(w), 0, 3)] + (w.sharpen | 0) * S.W_SHARP;
   S.oPrice = function (it) {
     const O = G.outfit, Ti = O && O.ITEMS[it.k];
     if (!Ti) return 0;
     const r = G.clamp(it.r | 0, 0, 3);
     let p = S.O_PRICE[r];
-    if (r === 0 && Ti.price) p = Math.min(p, Math.round(Ti.price / 4));
+    if (r === 0 && Ti.price) p = Math.min(p, Math.round(Ti.price / 6));
     if (Ti.slot === 'wing') p += S.O_WING[G.clamp(it.lv | 0, 1, 3)];
     return p;
   };
@@ -152,8 +153,10 @@
     const ws = labs.map((s) => Math.ceil(G.ux.measureText(s).width) + 10);
     let x = xr - ws.reduce((a, b) => a + b + 3, -3);
     const x0 = x;
+    S.bar = []; // chỗ ba nút vừa vẽ (bài kiểm tra đọc để chạm đúng chỗ)
     for (let i = 0; i < 3; i++) {
       const on = i === 2 && S.multi && S.kind === kind;
+      S.bar.push([x, y, ws[i], h]);
       if (T.sbtn(x, y, ws[i], h, labs[i], { size: 7, pad: 1, danger: i < 2, sel: on })) {
         if (i < 2) {
           const ids = S.quickIds(sv, kind, i);
