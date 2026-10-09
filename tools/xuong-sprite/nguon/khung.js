@@ -103,7 +103,7 @@
     const dx = px - a[0] - vx * t, dy = py - a[1] - vy * t; return Math.sqrt(dx * dx + dy * dy);
   }
   // Mỗi điểm ảnh thuộc bộ phận có xương gần nhất (chia theo độ to), rồi làm mượt một lượt.
-  XS.tuDoan = function (R, mau, khop) {
+  XS.chiaTheoKhop = function (R, mau, khop) {
     const M = MAU[mau], w = R.w, h = R.h, bo = new Uint8Array(w * h).fill(255);
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
       const i = y * w + x; if (!R.px[i]) continue;
@@ -130,7 +130,7 @@
       const ox = Math.min(cu.w - 1, Math.floor((x + 0.5) * sx)), oy = Math.min(cu.h - 1, Math.floor((y + 0.5) * sy)), v = cu.bo[oy * cu.w + ox];
       if (v === 255 || v == null) thieu = true; else out[i] = v;
     }
-    if (thieu) { const doan = XS.tuDoan(R, mau, khopMoi); for (let i = 0; i < out.length; i++) if (R.px[i] && out[i] === 255) out[i] = doan[i]; }
+    if (thieu) { const doan = XS.chiaTheoKhop(R, mau, khopMoi); for (let i = 0; i < out.length; i++) if (R.px[i] && out[i] === 255) out[i] = doan[i]; }
     return out;
   };
 
@@ -315,6 +315,272 @@
     return m;
   }
   const apDung = (m, x, y) => [m[0] * x + m[2] * y + m[4], m[1] * x + m[3] * y + m[5]];
+
+  // ---------- TỰ ĐOÁN BỘ PHẬN THEO HÌNH DÁNG VÀ MÀU ----------
+  // Không dựa vào chỗ khớp mẫu (khớp mẫu đặt theo tỉ lệ khung nên hay lệch với ảnh thật, nhất là ảnh nhìn chính diện).
+  // Cách làm: chia hình thành các mảng màu (ngăn nhau bởi nét viền tối), rồi theo mẫu khung tìm:
+  //  - đầu: phần trên, cắt ở hàng "cổ" hẹp nhất (dưới mặt nếu có mảng mặt sáng màu);
+  //  - chân: các nhánh ở đáy (mảng tách nhau bởi khe trống hoặc nét viền), mọc ngược lên tới chỗ nhập vào thân;
+  //  - tay: dải sát mép trái, phải của thân có đường viền ngăn với thân (tay áp sát thân vẫn tìm được);
+  //  - đuôi, tua: phần mảnh nhô ra ở đầu bên kia; đầu thú, cá: mảng riêng ở phía trước;
+  //  - cánh, vây: mảng riêng nhô lên trên (hoặc dưới) thân.
+  // Chỗ không chắc thì KHÔNG cắt: bộ phận đó để trống (dính vào thân, không cử động riêng) và báo "Tô thêm cho đúng".
+  // Trả về bản đồ bộ phận (Uint8Array, 255 = chưa gán) kèm .khop (khớp đặt theo kết quả), .chac {id: true/false}, .goiY [{id, x, y}].
+  function phanTich(R) {
+    const w = R.w, h = R.h, n = w * h, m = new Uint8Array(n), L = new Float32Array(n);
+    const a = [];
+    for (let i = 0; i < n; i++) if (R.px[i]) { m[i] = 1; L[i] = sangC(R.px[i]); a.push(L[i]); }
+    a.sort((p, q) => p - q);
+    const thr = Math.min(70, (a[a.length >> 1] || 128) * 0.45), toi = new Uint8Array(n);
+    for (let i = 0; i < n; i++) if (m[i] && L[i] < thr) toi[i] = 1;
+    // mảng: điểm không tối, cùng họ màu (không khác hẳn nhau), nối 4 hướng
+    const gan2 = (p, q) => Math.abs((p & 255) - (q & 255)) + Math.abs(((p >>> 8) & 255) - ((q >>> 8) & 255)) + Math.abs(((p >>> 16) & 255) - ((q >>> 16) & 255)) < 110;
+    const cid = new Int32Array(n).fill(-1), comps = [];
+    for (let s = 0; s < n; s++) {
+      if (!m[s] || toi[s] || cid[s] >= 0) continue;
+      const c = { id: comps.length, ds: [s], x0: w, y0: h, x1: -1, y1: -1, sx: 0, sy: 0, sl: 0 }; cid[s] = c.id;
+      for (let q = 0; q < c.ds.length; q++) {
+        const i = c.ds[q], x = i % w, y = (i / w) | 0;
+        if (x < c.x0) c.x0 = x; if (x > c.x1) c.x1 = x; if (y < c.y0) c.y0 = y; if (y > c.y1) c.y1 = y; c.sx += x; c.sy += y; c.sl += L[i];
+        for (const j of [x > 0 ? i - 1 : -1, x < w - 1 ? i + 1 : -1, y > 0 ? i - w : -1, y < h - 1 ? i + w : -1]) if (j >= 0 && m[j] && !toi[j] && cid[j] < 0 && gan2(R.px[i], R.px[j])) { cid[j] = c.id; c.ds.push(j); }
+      }
+      c.n = c.ds.length; c.cx = c.sx / c.n; c.cy = c.sy / c.n; c.l = c.sl / c.n; comps.push(c);
+    }
+    const bb = XS.khung(m, w, h);
+    const rong = new Int32Array(h), trai = new Int32Array(h).fill(-1), phai = new Int32Array(h).fill(-1);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (m[y * w + x]) { rong[y]++; if (trai[y] < 0) trai[y] = x; phai[y] = x; }
+    const day = new Int32Array(w), tren = new Int32Array(w).fill(-1), duoi = new Int32Array(w).fill(-1);
+    for (let x = 0; x < w; x++) for (let y = 0; y < h; y++) if (m[y * w + x]) { day[x]++; if (tren[x] < 0) tren[x] = y; duoi[x] = y; }
+    let tong = 0; for (let i = 0; i < n; i++) tong += m[i];
+    return { w, h, n, m, L, toi, thr, cid, comps, bb, rong, trai, phai, day, tren, duoi, tong };
+  }
+  const BON = (i, w, h) => { const x = i % w, y = (i / w) | 0; return [x > 0 ? i - 1 : -1, x < w - 1 ? i + 1 : -1, y > 0 ? i - w : -1, y < h - 1 ? i + w : -1]; };
+  // Các nhánh ở đáy (chân): lấy hàng tham chiếu gần đáy có nhiều mảng/đoạn tách nhau nhất, rồi mọc ngược lên trong
+  // phạm vi cột của từng nhánh cho tới khi nhập vào phần rộng (thân). Trả về [{ds, x0, x1, y0, y1, cx, l}].
+  function timChan(A, toiDa, phamVi) {
+    const { w, h, m, toi, cid, bb } = A;
+    const yMin = bb.y0 + Math.round(bb.h * (phamVi || 0.55));
+    let best = null;
+    for (let y = bb.y1; y >= yMin; y--) {
+      // đoạn: chuỗi điểm không tối liên tiếp trong hàng (ngăn bởi chỗ trống hoặc nét tối)
+      const doan = []; let x = 0;
+      while (x < w) { const i = y * w + x; if (m[i] && !toi[i]) { const s = x; while (x < w && m[y * w + x] && !toi[y * w + x]) x++; doan.push([s, x - 1]); } else x++; }
+      if (doan.length >= 2 && (!best || doan.length > best.doan.length)) best = { y, doan };
+      if (best && y < best.y - 3) break;
+    }
+    if (!best) return [];
+    const chan = [], da = new Uint8Array(w * h);
+    for (const [s, e] of best.doan) {
+      const rongC = e - s + 1, ds = []; let lop = [];
+      for (let x = s; x <= e; x++) { const i = best.y * w + x; lop.push(i); da[i] = 1; }
+      ds.push(...lop);
+      let y0 = best.y, boQua = 0;
+      // mọc xuống dưới
+      for (let y = best.y + 1, cu = lop; y <= bb.y1 && cu.length; y++) {
+        const moi = []; for (const i of cu) { const j = i + w; if (j < w * h && m[j] && !toi[j] && !da[j] && Math.abs((j % w) - (s + e) / 2) <= rongC) { da[j] = 1; moi.push(j); } }
+        for (let k = 0; k < moi.length; k++) { for (const j of [moi[k] - 1, moi[k] + 1]) if (j >= 0 && ((j / w) | 0) === y && m[j] && !toi[j] && !da[j] && Math.abs((j % w) - (s + e) / 2) <= rongC + 1) { da[j] = 1; moi.push(j); } }
+        ds.push(...moi); cu = moi;
+      }
+      // mọc lên trên: dừng khi đoạn trong hàng rộng ra quá (đã nhập thân) hoặc quá nửa hình
+      for (let y = best.y - 1, cu = lop; y >= bb.y0 + bb.h * 0.35; y--) {
+        const moi = [];
+        for (let x = s - 1; x <= e + 1; x++) { if (x < 0 || x >= w) continue; const j = y * w + x; if (m[j] && !toi[j] && !da[j]) moi.push(j); }
+        if (!moi.length) { if (++boQua > 2) break; continue; }
+        // đoạn chứa các điểm này rộng bao nhiêu (tính cả phần lan ra ngoài phạm vi cột)
+        let xa = moi[0] % w, xb = moi[moi.length - 1] % w;
+        while (xa > 0 && m[y * w + xa - 1] && !toi[y * w + xa - 1]) xa--;
+        while (xb < w - 1 && m[y * w + xb + 1] && !toi[y * w + xb + 1]) xb++;
+        if (xb - xa + 1 > rongC * 1.7 + 1) break;
+        boQua = 0; for (const j of moi) da[j] = 1; ds.push(...moi); y0 = y; cu = moi;
+      }
+      if (ds.length < 2) continue;
+      let sx = 0, sl = 0, y1 = 0; for (const i of ds) { sx += i % w; sl += A.L[i]; y1 = Math.max(y1, (i / w) | 0); }
+      chan.push({ ds, x0: s, x1: e, y0, y1, cx: sx / ds.length, l: sl / ds.length, n: ds.length });
+    }
+    chan.sort((p, q) => p.cx - q.cx);
+    return chan.length > toiDa ? chan.sort((p, q) => q.n - p.n).slice(0, toiDa).sort((p, q) => p.cx - q.cx) : chan;
+  }
+  // Dải sát mép một bên (tay áp sát thân): trong mỗi hàng, từ mép vào: viền, phần tay, rồi một nét tối (hoặc đổi màu hẳn)
+  // ngăn với thân. Lấy các hàng liền nhau (lấp chỗ đứt 1-2 hàng). ben: -1 trái, 1 phải.
+  function timTay(A, ben, yA, yB) {
+    const { w, m, toi, R0 } = A, ngan = new Array(A.h).fill(-1);
+    const khacMau = (i, j) => { const a = R0[i], b = R0[j]; const d = Math.abs((a & 255) - (b & 255)) + Math.abs(((a >>> 8) & 255) - ((b >>> 8) & 255)) + Math.abs(((a >>> 16) & 255) - ((b >>> 16) & 255)); return d > 150; };
+    for (let y = yA; y <= yB; y++) {
+      const r = A.phai[y] - A.trai[y] + 1; if (A.trai[y] < 0 || r < 4) continue;
+      let x = ben < 0 ? A.trai[y] : A.phai[y]; const st = -ben, het = ben < 0 ? A.phai[y] : A.trai[y];
+      while (x !== het && toi[y * w + x]) x += st; // viền ngoài
+      let dai = 0, tr = -1;
+      while (x !== het && m[y * w + x] && !toi[y * w + x]) { const i = y * w + x; if (tr >= 0 && khacMau(tr, i)) break; tr = i; x += st; dai++; }
+      if (!dai || dai > r * 0.38 || !m[y * w + x]) continue;
+      const xn = x; // chỗ ngăn
+      while (x !== het && toi[y * w + x]) x += st;
+      if (x === het || !m[y * w + x]) continue; // sau chỗ ngăn phải còn thân
+      ngan[y] = xn;
+    }
+    // đoạn hàng liền dài nhất (cho phép đứt 2 hàng)
+    let tot = null, dang = null, dut = 0;
+    for (let y = yA; y <= yB + 1; y++) {
+      if (y <= yB && ngan[y] >= 0) { if (!dang) dang = { a: y, b: y, so: 0 }; dang.b = y; dang.so++; dut = 0; }
+      else if (dang && ++dut > 2) { if (!tot || dang.so > tot.so) tot = dang; dang = null; dut = 0; }
+    }
+    if (dang && (!tot || dang.so > tot.so)) tot = dang;
+    if (!tot || tot.so < Math.max(3, A.bb.h * 0.1)) return null;
+    for (let y = tot.a; y <= tot.b; y++) if (ngan[y] < 0) { let u = y - 1, v = y + 1; while (ngan[u] < 0) u--; while (ngan[v] < 0) v++; ngan[y] = Math.round(ngan[u] + (ngan[v] - ngan[u]) * (y - u) / (v - u)); }
+    const ds = [];
+    for (let y = tot.a; y <= tot.b; y++) { let x = ben < 0 ? A.trai[y] : A.phai[y]; while (x !== ngan[y]) { const i = y * w + x; if (m[i] && !toi[i]) ds.push(i); x -= ben; } }
+    // phần tay nhô ra dưới hàng cuối (găng, bàn tay) cùng mảng màu với hàng cuối
+    return ds.length ? { ds, y0: tot.a, y1: tot.b } : null;
+  }
+  // Vùng mảnh nhô ra ở một đầu (đuôi, tua): các cột từ mép vào có độ dày nhỏ hơn tiLe × dày nhất.
+  function timDauManh(A, ben, tiLe, boQua) {
+    const { w, h, m, bb } = A; let maxD = 0;
+    const dayCot = (x) => { let d = 0; for (let y = 0; y < h; y++) { const i = y * w + x; if (m[i] && !(boQua && boQua[i])) d++; } return d; };
+    for (let x = bb.x0; x <= bb.x1; x++) maxD = Math.max(maxD, dayCot(x));
+    const cot = []; let x = ben < 0 ? bb.x0 : bb.x1;
+    while (cot.length < bb.w * 0.4) { const d = dayCot(x); if (d > maxD * tiLe) break; cot.push(x); x -= ben; }
+    if (cot.length < 2 || cot.length >= bb.w * 0.4) return null;
+    const ds = []; for (const x2 of cot) for (let y = 0; y < h; y++) { const i = y * w + x2; if (m[i] && !(boQua && boQua[i])) ds.push(i); }
+    let yMax = 0; for (const i of ds) yMax = Math.max(yMax, (i / w) | 0);
+    if (yMax >= bb.y1 - 1) return null; // chạm đất: là chân, mép thân, không phải đuôi
+    return ds.length >= 3 ? { ds, x: cot[cot.length - 1] } : null;
+  }
+  // Hàng cổ: hàng hẹp nhất trong khoảng [a, b] của chiều cao (so với chỗ rộng nhất phía trên). Có mảng mặt sáng thì cắt dưới mặt.
+  function timCo(A, a, b) {
+    const { bb, rong, comps } = A;
+    let mat = null; for (const c of comps) if (c.cy < bb.y0 + bb.h * 0.6 && c.n >= A.tong * 0.03 && (!mat || c.l > mat.l)) mat = c;
+    if (mat && mat.l < 150) mat = null;
+    // có mặt: cổ ở ngay dưới mặt; không có: hàng hẹp nhất trong khoảng [a, b]
+    const ya = mat ? mat.y1 + 1 : bb.y0 + Math.round(bb.h * a), yb = mat ? Math.min(bb.y1, mat.y1 + Math.max(2, Math.round(bb.h * 0.12))) : bb.y0 + Math.round(bb.h * b);
+    let tot = -1, tl = 1e9;
+    for (let y = ya; y <= yb; y++) if (rong[y] < tl) { tl = rong[y]; tot = y; }
+    let mt = 0; for (let y = bb.y0; y < tot; y++) mt = Math.max(mt, rong[y]);
+    return { y: tot, hep: tot >= 0 && tl <= mt * 0.92, mat };
+  }
+  // Gán nốt điểm chưa có bộ phận (nét viền, chi tiết nhỏ): loang từ điểm đã gán; nét tối nằm giữa thân và tay chân
+  // thì về thân, đầu (để viền ở khớp liền, khi tay chân xoay ra thân vẫn còn viền).
+  function loangGan(A, bo, uuTien) {
+    const { w, h, n, m } = A;
+    let bien = []; for (let i = 0; i < n; i++) if (m[i] && bo[i] === 255) for (const j of BON(i, w, h)) if (j >= 0 && bo[j] !== 255) { bien.push(i); break; }
+    while (bien.length) {
+      const gan = [];
+      for (const i of bien) { if (bo[i] !== 255) continue; let tot = 255, tp = 1e9; for (const j of BON(i, w, h)) { if (j < 0 || bo[j] === 255) continue; const p = uuTien[bo[j]]; if (p < tp) { tp = p; tot = bo[j]; } } if (tot !== 255) gan.push(i, tot); }
+      const moi = [];
+      for (let k = 0; k < gan.length; k += 2) bo[gan[k]] = gan[k + 1];
+      for (let k = 0; k < gan.length; k += 2) for (const j of BON(gan[k], w, h)) if (j >= 0 && m[j] && bo[j] === 255) moi.push(j);
+      bien = moi;
+    }
+  }
+  XS.tuDoan = function (R, mau, khopCu) {
+    const M = MAU[mau], A = phanTich(R); A.R0 = R.px;
+    const { w, h, n, m, bb } = A, idx = {}; M.bo.forEach((b, k) => { idx[b.id] = k; });
+    if (!bb) return new Uint8Array(n).fill(255);
+    if (!['nguoi', 'bonChan', 'bay', 'mem'].includes(mau)) { // mẫu khác: chia theo khớp như trước
+      const khop = XS.datKhop(R, mau), bo = XS.chiaTheoKhop(R, mau, khop);
+      bo.khop = khop; bo.chac = {}; bo.goiY = []; M.bo.forEach((b) => { bo.chac[b.id] = true; }); return bo;
+    }
+    const bo = new Uint8Array(n).fill(255), khop = XS.datKhop(R, mau), chac = {}, goiY = [];
+    const gan = (id, ds) => { for (const i of ds) if (m[i] && bo[i] === 255) bo[i] = idx[id]; };
+    const tamDs = (ds) => { let sx = 0, sy = 0, x0 = 1e9, x1 = -1, y0 = 1e9, y1 = -1; for (const i of ds) { const x = i % w, y = (i / w) | 0; sx += x; sy += y; x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); } return { cx: sx / ds.length + 0.5, cy: sy / ds.length + 0.5, x0, x1, y0, y1 }; };
+    const dinhDay = (ds, tren) => { const t = tamDs(ds), y = tren ? t.y0 : t.y1; let sx = 0, k = 0; for (const i of ds) if (((i / w) | 0) === y) { sx += i % w; k++; } return [sx / k + 0.5, tren ? y : y + 1]; };
+    const cx = bb.x0 + bb.w / 2;
+    khop.chan = [cx, bb.y1 + 1];
+    if (mau === 'nguoi') {
+      const co = timCo(A, 0.25, 0.65), yCo = co.y >= 0 && (co.hep || co.mat) ? co.y : bb.y0 + Math.round(bb.h * 0.45);
+      chac.dau = co.hep || !!co.mat;
+      // chân
+      const chan = timChan(A, 2, 0.6).filter((c) => c.y1 >= bb.y0 + bb.h * 0.88 && c.y0 > yCo);
+      const yHong = chan.length === 2 ? Math.min(chan[0].y0, chan[1].y0) : bb.y1 + 1;
+      // tay: dải sát hai mép giữa cổ và hông
+      let tayS = timTay(A, -1, yCo + 1, yHong - 1), tayT = timTay(A, 1, yCo + 1, yHong - 1);
+      if (!tayT && tayS) { tayT = tayS; tayS = null; } // chỉ chắc một tay: cho làm tay trước (tay làm động tác chính: đánh, vẫy)
+      for (let i = 0; i < n; i++) if (m[i] && ((i / w) | 0) < yCo) bo[i] = idx.dau;
+      if (chan.length === 2) { gan('chanS', chan[0].ds); gan('chanT', chan[1].ds); khop.hongS = dinhDay(chan[0].ds, true); khop.banS = dinhDay(chan[0].ds, false); khop.hongT = dinhDay(chan[1].ds, true); khop.banT = dinhDay(chan[1].ds, false); }
+      chac.chanS = chac.chanT = chan.length === 2;
+      for (const [id, t, a, b] of [['tayS', tayS, 'vaiS', 'tayS'], ['tayT', tayT, 'vaiT', 'tayT']]) {
+        chac[id] = !!t; if (!t) continue;
+        gan(id, t.ds); const top = dinhDay(t.ds, true), d = tamDs(t.ds);
+        khop[a] = [top[0], top[1] + 0.5]; khop[b] = [d.cx, d.y1 + 1];
+      }
+      khop.co = [cx, yCo]; khop.dinh = [cx, bb.y0]; khop.hong = [cx, Math.min(yHong, bb.y0 + bb.h * 0.8)];
+      for (let i = 0; i < n; i++) if (m[i] && bo[i] === 255 && !A.toi[i]) bo[i] = idx.than;
+    } else if (mau === 'bonChan' || mau === 'bay' || mau === 'mem') {
+      const than = idx.than;
+      let chan = [];
+      if (mau === 'bonChan') {
+        chan = timChan(A, 4, 0.5).filter((c) => c.y1 >= bb.y0 + bb.h * 0.85);
+        const truoc = chan.filter((c) => c.cx >= cx), sau = chan.filter((c) => c.cx < cx);
+        const xep = (ds2, N, X, vaiN, banN, vaiX, banX) => {
+          ds2.sort((p, q) => q.l - p.l); // sáng hơn là chân gần, tối hơn là chân xa
+          if (ds2[0]) { gan(N, ds2[0].ds); khop[vaiN] = dinhDay(ds2[0].ds, true); khop[banN] = dinhDay(ds2[0].ds, false); }
+          if (ds2[1]) { for (const c of ds2.slice(1)) gan(X, c.ds); khop[vaiX] = dinhDay(ds2[1].ds, true); khop[banX] = dinhDay(ds2[1].ds, false); }
+          chac[N] = !!ds2[0]; chac[X] = !!ds2[1];
+        };
+        xep(truoc, 'chanTN', 'chanTX', 'vaiN', 'banTN', 'vaiX', 'banTX');
+        xep(sau, 'chanSN', 'chanSX', 'hongN', 'banSN', 'hongX', 'banSX');
+      }
+      const daChan = new Uint8Array(n); for (const c of chan) for (const i of c.ds) daChan[i] = 1;
+      // đuôi (bonChan, bay) / tua (mem): phần mảnh ở đầu sau (trái) và (mem) đầu trước
+      if (M.bo.some((b) => b.id === 'duoi')) {
+        let duoi = timDauManh(A, -1, mau === 'bay' ? 0.5 : 0.4, daChan);
+        if (!duoi && mau === 'bay') { // cá: vây đuôi là mảng riêng ở phía sau
+          const c = A.comps.filter((c) => c.cx < bb.x0 + bb.w * 0.3 && c.n >= A.tong * 0.02).sort((p, q) => p.cx - q.cx)[0];
+          const lon = A.comps.reduce((p, q) => (q.n > p.n ? q : p), A.comps[0]);
+          if (c && c !== lon) duoi = { ds: c.ds, x: c.x1 };
+        }
+        chac.duoi = !!duoi;
+        if (duoi) { gan('duoi', duoi.ds); const t = tamDs(duoi.ds); khop.goc = [duoi.x + 1, t.cy]; khop.duoi = [t.x0, t.cy]; }
+      }
+      if (mau === 'mem') for (const [id, ben, a, b] of [['tuaS', -1, 'vaiS', 'tuaS'], ['tuaT', 1, 'vaiT', 'tuaT']]) {
+        const t = timDauManh(A, ben, 0.35, daChan); chac[id] = !!t;
+        if (t) { gan(id, t.ds); const d = tamDs(t.ds); khop[a] = [ben < 0 ? d.x1 + 1 : d.x0, d.cy]; khop[b] = [ben < 0 ? d.x0 : d.x1 + 1, d.cy]; }
+      }
+      const lon = A.comps.reduce((p, q) => (q.n > p.n ? q : p), A.comps[0]);
+      if (M.bo.some((b) => b.id === 'dau')) {
+        // đầu: mảng riêng lớn ở phía trước (phải); không có thì cắt ở cột hẹp nhất phía trước nếu có chỗ thắt
+        const ung = A.comps.filter((c) => c !== lon && c.cx > bb.x0 + bb.w * 0.6 && c.n >= A.tong * 0.08 && c.y1 < bb.y1 - bb.h * 0.05);
+        let dau = null;
+        if (ung.length) {
+          const c = ung.sort((p, q) => q.n - p.n)[0]; dau = c.ds.slice();
+          for (const c2 of A.comps) if (c2 !== c && c2 !== lon && c2.cx >= c.x0 - 1 && c2.cx <= c.x1 + 2 && c2.cy >= c.y0 - (c.y1 - c.y0) * 0.6 && c2.cy <= c.y1 + 1 && c2.n < c.n) dau.push(...c2.ds);
+        } else {
+          let xt = -1, tl = 1e9, mx = 0; for (let x = bb.x0; x <= bb.x1; x++) mx = Math.max(mx, A.day[x]);
+          for (let x = bb.x0 + Math.round(bb.w * 0.55); x <= bb.x0 + Math.round(bb.w * 0.85); x++) if (A.day[x] < tl) { tl = A.day[x]; xt = x; }
+          if (xt >= 0 && tl < mx * 0.75) { dau = []; for (let i = 0; i < n; i++) if (m[i] && i % w > xt && !daChan[i]) dau.push(i); }
+        }
+        chac.dau = !!dau;
+        if (dau) { gan('dau', dau); const t = tamDs(dau); khop.co = [t.x0, t.cy]; khop.mui = [t.x1 + 1, t.cy]; khop[mau === 'bay' ? 'nguc' : 'vai'] = [t.x0, t.cy]; }
+      }
+      if (mau === 'bay') { // cánh, vây: mảng riêng nhô lên trên thân (cánh gần), mảng nhô xuống dưới hoặc cánh thứ hai (cánh xa)
+        const tl = lon || { y0: bb.y0, y1: bb.y1 };
+        const canh = A.comps.filter((c) => c !== lon && bo[c.ds[0]] === 255 && c.n >= A.tong * 0.02 && (c.y0 < tl.y0 - 1 || c.y1 > tl.y1 + 1)).sort((p, q) => q.n - p.n);
+        const tren = canh.filter((c) => c.cy < tl.y0 + (tl.y1 - tl.y0) * 0.5), duoi2 = canh.filter((c) => c.cy >= tl.y0 + (tl.y1 - tl.y0) * 0.5);
+        const N = tren[0] || duoi2[0], X = tren[0] ? tren[1] || duoi2[0] : duoi2[1];
+        for (const [id, c, a, b] of [['canhN', N, 'vaiN', 'canhN'], ['canhX', X, 'vaiX', 'canhX']]) {
+          chac[id] = !!c; if (!c) continue;
+          gan(id, c.ds); const lenTren = c.cy < (tl.y0 + tl.y1) / 2;
+          khop[a] = [c.cx + 0.5, lenTren ? c.y1 + 1 : c.y0]; khop[b] = [c.cx + 0.5, lenTren ? c.y0 : c.y1 + 1];
+        }
+      }
+      if (mau === 'mem') { // phần trên: nửa trên của hình (khối mềm cử động lắc phần trên)
+        const yg = bb.y0 + Math.round(bb.h * 0.5); for (let i = 0; i < n; i++) if (m[i] && bo[i] === 255 && ((i / w) | 0) < yg) bo[i] = idx.dinh;
+        khop.giua = [cx, yg]; khop.day = [cx, bb.y1 + 1]; khop.dinh = [cx, bb.y0]; chac.dinh = true;
+      }
+      for (let i = 0; i < n; i++) if (m[i] && bo[i] === 255 && !A.toi[i]) bo[i] = than;
+      if (mau !== 'mem') { const t = lon ? lon : bb; khop.hong = khop.hong && mau === 'bonChan' ? [bb.x0 + bb.w * 0.3, (t.y0 + t.y1) / 2] : khop.hong; }
+    }
+    chac.than = true;
+    // nét tối và điểm còn sót: về thân, đầu trước rồi mới tới tay chân
+    const uuTien = M.bo.map((b, k) => (k === idx[XS.boGoc(mau)] ? 0 : b.vai === 'dau' || b.vai === 'dinh' ? 1 : 2));
+    loangGan(A, bo, uuTien);
+    for (let i = 0; i < n; i++) if (m[i] && bo[i] === 255) bo[i] = idx[XS.boGoc(mau)];
+    // bộ phận không chắc: báo chỗ cần tô (giữa khớp mẫu của bộ phận đó)
+    for (const b of M.bo) {
+      if (chac[b.id] == null) chac[b.id] = false;
+      if (!chac[b.id]) { const p = khop[b.a], q = khop[b.b]; goiY.push({ id: b.id, ten: b.ten, x: (p[0] + q[0]) / 2, y: (p[1] + q[1]) / 2 }); }
+    }
+    bo.khop = khop; bo.chac = chac; bo.goiY = goiY;
+    return bo;
+  };
 
   // ---------- CHUẨN BỊ HÌNH ĐỂ CỬ ĐỘNG KHÔNG VỠ ----------
   // Làm một lần cho mỗi hình + bản đồ bộ phận (có bộ nhớ đệm), dùng cho mọi khung hình:

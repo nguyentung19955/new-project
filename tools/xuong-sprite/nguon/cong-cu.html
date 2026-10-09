@@ -97,6 +97,9 @@
   input[type=text], select { background: var(--dk); border: 2px solid var(--brD); border-radius: 6px; padding: 5px 8px; min-height: 34px; }
   .chip-nhom { display: flex; flex-wrap: wrap; gap: 6px; }
   .chip { border: 2px solid var(--dk); border-radius: 16px; padding: 3px 10px; background: var(--bg); color: var(--text); cursor: pointer; font-size: 13px; min-height: 30px; display: inline-flex; align-items: center; gap: 6px; }
+  .cu-to { margin: 6px 0; }
+  .cu-to .chip { min-height: 38px; padding: 4px 12px; font-size: 14px; }
+  .ghi.canh:not(:empty) { color: #ffd27a; }
   .chip.chon { background: linear-gradient(var(--hi), var(--gold)); color: #2b1a08; font-weight: 700; }
   .chip i { width: 12px; height: 12px; border-radius: 3px; border: 1px solid var(--dk); display: inline-block; }
   .ghi { font-size: 12px; color: var(--sub); }
@@ -308,12 +311,25 @@
         <div class="chip-nhom">
           <button class="chip chon" data-che="khop" type="button">Kéo khớp</button>
           <button class="chip" data-che="to" type="button">Tô bộ phận</button>
+          <button class="chip" data-che="doi" type="button">Dời hình</button>
         </div>
-        <p class="ghi" id="ghiChe">Kéo các chấm tròn (khớp) vào đúng chỗ vai, hông, cổ… rồi bấm "Tự đoán".</p>
+        <p class="ghi" id="ghiChe">Bấm "Tự đoán bộ phận": công cụ nhìn hình dáng và màu để chia đầu, thân, tay, chân. Sai chỗ nào thì tô lại chỗ đó.</p>
+        <p class="ghi canh" id="ghiDoan"></p>
         <div id="dsBoPhan" class="chip-nhom"></div>
-        <div class="truot" id="dongCoTo"><span>Cỡ bút tô</span><output id="oCoTo">2</output><input type="range" id="coTo" min="1" max="8" value="2"></div>
+        <div id="dongCoTo">
+          <div class="chip-nhom cu-to">
+            <button class="chip" id="nutTayBo" type="button" title="Tô về thân: chỗ tô đứng chung với cả người, không cử động riêng">⌫ Cục tẩy (về thân)</button>
+            <button class="chip" data-co="1" type="button">Bút nhỏ</button><button class="chip chon" data-co="2" type="button">Bút vừa</button><button class="chip" data-co="4" type="button">Bút to</button>
+          </div>
+          <div class="truot"><span>Cỡ bút tô</span><output id="oCoTo">2</output><input type="range" id="coTo" min="1" max="8" value="2"></div>
+        </div>
+        <div class="chip-nhom cu-to">
+          <button class="chip" id="nutPhong3" type="button" title="Phóng to">＋ Phóng to</button><button class="chip" id="nutThu3" type="button" title="Thu nhỏ">－ Thu nhỏ</button>
+          <button class="chip" id="nutHoanTac3" type="button">↶ Hoàn tác</button>
+        </div>
         <div class="dong">
           <button class="nut nho" id="nutTuDoan" type="button">Tự đoán bộ phận</button>
+          <button class="nut nho phu" id="nutChiaKhop" type="button" title="Chia theo chỗ các khớp đang đặt (cách cũ)">Chia theo khớp</button>
           <button class="nut nho phu" id="nutDatLaiKhop" type="button">Đặt lại khớp</button>
         </div>
         <div class="dong"><label><input type="checkbox" id="hienMau" checked> Hiện màu bộ phận</label></div>

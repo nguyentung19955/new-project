@@ -404,8 +404,15 @@
     const R = S.R; if (!R) return;
     const khop = XS.datKhop(R, mau);
     if (!S.kh || S.kh.mau !== mau) S.chuyen = XS.chuyenMacDinh(mau); // đổi mẫu: về lựa chọn đứng yên mặc định của mẫu đó
-    S.kh = { mau, khop, bo: XS.tuDoan(R, mau, khop) };
+    const bo = XS.tuDoan(R, mau, khop);
+    S.kh = { mau, khop: bo.khop || khop, bo, goiY: bo.goiY || [] };
+    S.lichSu3 = [];
     S.xem.boChon = 0; S.tamCu = true; luuNhap();
+  }
+  // Ghi chỗ không chắc sau khi tự đoán: bộ phận đó để dính thân, nhắc tô thêm.
+  function ghiDoan() {
+    const g = (S.kh && S.kh.goiY) || [];
+    $('ghiDoan').textContent = g.length ? 'Chưa chắc: ' + g.map((x) => x.ten.toLowerCase()).join(', ') + ' (đang để dính vào thân, không cử động riêng). Tô thêm cho đúng nếu muốn bộ phận đó cử động.' : '';
   }
   function bieuTuongMau(mau) { // hình que nhỏ của mẫu xương
     const cv = XS.taoCanvas(36, 26), c = cv.getContext('2d'), M = XS.MAU[mau];
@@ -427,11 +434,12 @@
   }
   function dungBoPhan() {
     const box = $('dsBoPhan'); box.innerHTML = '';
+    ghiDoan();
     if (!S.kh) return;
     XS.MAU[S.kh.mau].bo.forEach((b, k) => {
       const e = document.createElement('button'); e.type = 'button'; e.className = 'chip' + (S.xem.che === 'to' && S.xem.boChon === k ? ' chon' : ''); e.dataset.bo = k;
       e.innerHTML = '<i style="background:' + XS.MAU_BO[k % 8] + '"></i>'; e.appendChild(document.createTextNode(b.ten));
-      e.onclick = () => { S.xem.boChon = k; if (S.xem.che !== 'to') datChe('to'); chonChip(box, e); };
+      e.onclick = () => { S.xem.boChon = k; if (S.xem.che !== 'to') datChe('to'); chonChip(box, e); $('nutTayBo').classList.remove('chon'); };
       box.appendChild(e);
     });
     $('dongCoTo').classList.toggle('an', S.xem.che !== 'to');
@@ -439,12 +447,21 @@
   function datChe(che) {
     S.xem.che = che;
     for (const b of document.querySelectorAll('[data-che]')) b.classList.toggle('chon', b.dataset.che === che);
-    $('ghiChe').textContent = che === 'khop' ? 'Kéo các chấm tròn (khớp) vào đúng chỗ vai, hông, cổ… rồi bấm "Tự đoán bộ phận".' : 'Chọn một bộ phận bên dưới rồi tô lên hình. Chỗ tô sẽ cử động theo bộ phận đó.';
+    $('ghiChe').textContent = che === 'khop' ? 'Bấm "Tự đoán bộ phận" để công cụ tự chia theo hình dáng và màu. Kéo các chấm tròn (khớp) vào đúng chỗ vai, hông, cổ: tay chân xoay quanh chấm đó.'
+      : che === 'doi' ? 'Kéo trên hình để dời chỗ xem (khi đã phóng to).' : 'Chọn một bộ phận bên dưới rồi tô lên hình. Chỗ tô sẽ cử động theo bộ phận đó. Cục tẩy: tô về thân (không cử động riêng).';
     dungBoPhan(); veBuoc3();
   }
   for (const b of document.querySelectorAll('[data-che]')) b.onclick = () => datChe(b.dataset.che);
-  $('coTo').oninput = (e) => { $('oCoTo').textContent = e.target.value; S.xem.coTo = +e.target.value; };
-  $('nutTuDoan').onclick = () => { if (!S.kh) return; S.kh.bo = XS.tuDoan(S.R, S.kh.mau, S.kh.khop); S.tamCu = true; veBuoc3(); luuNhap(); bao('Đã chia lại bộ phận theo khớp'); };
+  const datCo = (v) => { S.xem.coTo = v; $('coTo').value = v; $('oCoTo').textContent = v; for (const b of document.querySelectorAll('[data-co]')) b.classList.toggle('chon', +b.dataset.co === v); };
+  $('coTo').oninput = (e) => datCo(+e.target.value);
+  for (const b of document.querySelectorAll('[data-co]')) b.onclick = () => datCo(+b.dataset.co);
+  $('nutTayBo').onclick = () => { if (!S.kh) return; S.xem.boChon = XS.MAU[S.kh.mau].bo.findIndex((b) => b.id === XS.boGoc(S.kh.mau)); if (S.xem.che !== 'to') datChe('to'); else dungBoPhan(); chonChip($('dsBoPhan'), $('dsBoPhan').querySelector('[data-bo="' + S.xem.boChon + '"]')); $('nutTayBo').classList.add('chon'); veBuoc3(); };
+  const zoom3 = (k) => { S.xem.zoom3 = Math.max(1, Math.min(6, (S.xem.zoom3 || 1) * k)); if (S.xem.zoom3 < 1.01) { S.xem.zoom3 = 1; S.xem.lech3 = [0, 0]; } veBuoc3(); };
+  $('nutPhong3').onclick = () => zoom3(1.5); $('nutThu3').onclick = () => zoom3(1 / 1.5);
+  const nhoLai3 = () => { if (!S.kh) return; (S.lichSu3 || (S.lichSu3 = [])).push({ bo: S.kh.bo.slice(), khop: JSON.parse(JSON.stringify(S.kh.khop)) }); if (S.lichSu3.length > 30) S.lichSu3.shift(); };
+  $('nutHoanTac3').onclick = () => { const h = S.lichSu3 && S.lichSu3.pop(); if (!h || !S.kh) { bao('Không còn gì để hoàn tác'); return; } S.kh.bo = h.bo; S.kh.khop = h.khop; S.tamCu = true; veBuoc3(); luuNhap(); };
+  $('nutTuDoan').onclick = () => { if (!S.kh) return; nhoLai3(); const bo = XS.tuDoan(S.R, S.kh.mau, S.kh.khop); S.kh.bo = bo; if (bo.khop) S.kh.khop = bo.khop; S.kh.goiY = bo.goiY || []; S.tamCu = true; dungBoPhan(); veBuoc3(); luuNhap(); bao(S.kh.goiY.length ? 'Đã tự chia bộ phận. Chỗ chưa chắc để dính thân: tô thêm cho đúng.' : 'Đã tự chia bộ phận theo hình dáng và màu'); };
+  $('nutChiaKhop').onclick = () => { if (!S.kh) return; nhoLai3(); S.kh.bo = XS.chiaTheoKhop(S.R, S.kh.mau, S.kh.khop); S.kh.goiY = []; S.tamCu = true; dungBoPhan(); veBuoc3(); luuNhap(); bao('Đã chia bộ phận theo chỗ các khớp'); };
   $('nutDatLaiKhop').onclick = () => { if (!S.kh) return; chonMau(S.kh.mau); veBuoc3(); bao('Đã đặt lại khớp theo mẫu'); };
   $('hienMau').onchange = () => veBuoc3();
   $('nutSang4').onclick = () => denBuoc(4);
@@ -455,7 +472,8 @@
     const { c, w, h, d } = oCanvas(cv3);
     c.fillStyle = '#0d1c1d'; c.fillRect(0, 0, w, h);
     const R = S.R, kh = S.kh; if (!R || !kh) return;
-    const z = Math.max(1, Math.floor(Math.min((w - 40 * d) / R.w, (h - 40 * d) / R.h))), x0 = Math.round((w - R.w * z) / 2), y0 = Math.round((h - R.h * z) / 2);
+    const z0 = Math.max(1, Math.floor(Math.min((w - 40 * d) / R.w, (h - 40 * d) / R.h))), zm = S.xem.zoom3 || 1, z = Math.max(1, Math.round(z0 * zm)), lech = S.xem.lech3 || [0, 0];
+    const x0 = Math.round((w - R.w * z) / 2 + lech[0] * z), y0 = Math.round((h - R.h * z) / 2 + lech[1] * z);
     bo3 = { x0, y0, z };
     oCo(c, x0, y0, R.w * z, R.h * z, Math.max(4, z));
     c.drawImage(XS.raCanvas(R.w, R.h, R.px), x0, y0, R.w * z, R.h * z);
@@ -475,7 +493,12 @@
       c.fill(); c.stroke();
       if (keoKhop === n) { c.strokeStyle = '#ff5a46'; c.beginPath(); c.arc(p[0], p[1], r + 4 * d, 0, Math.PI * 2); c.stroke(); }
     }
-    $('goiY3').textContent = S.xem.che === 'khop' ? 'Chấm tròn: khớp xoay. Hình thoi trắng: điểm chân chạm đất. Màu: bộ phận.' : 'Đang tô: ' + M.bo[S.xem.boChon].ten;
+    // chỗ không chắc: vòng nét đứt và chữ "Tô thêm cho đúng"
+    if ($('hienMau').checked) for (const g of kh.goiY || []) {
+      const p = P([g.x, g.y]); c.setLineDash([4 * d, 3 * d]); c.strokeStyle = '#ffd27a'; c.lineWidth = 2 * d; c.beginPath(); c.arc(p[0], p[1], Math.max(10 * d, z * 2.5), 0, Math.PI * 2); c.stroke(); c.setLineDash([]);
+      c.font = 'bold ' + Math.round(11 * d) + 'px sans-serif'; c.textAlign = 'center'; c.fillStyle = '#1a120a'; c.fillText('Tô thêm cho đúng', p[0] + d, p[1] - Math.max(12 * d, z * 2.5) - 3 * d + d); c.fillStyle = '#ffd27a'; c.fillText('Tô thêm cho đúng', p[0], p[1] - Math.max(12 * d, z * 2.5) - 3 * d); c.textAlign = 'start';
+    }
+    $('goiY3').textContent = S.xem.che === 'khop' ? 'Chấm tròn: khớp xoay. Hình thoi trắng: điểm chân chạm đất. Màu: bộ phận.' : S.xem.che === 'doi' ? 'Kéo để dời chỗ xem. Phóng to: nút ＋ hoặc lăn chuột.' : 'Đang tô: ' + M.bo[S.xem.boChon].ten;
   }
   let keoKhop = null;
   function toaDo3(e) { const r = cv3.getBoundingClientRect(), d = window.devicePixelRatio || 1; return [((e.clientX - r.left) * d - bo3.x0) / bo3.z, ((e.clientY - r.top) * d - bo3.y0) / bo3.z]; }
@@ -493,19 +516,23 @@
     if (!bo3 || !S.kh) return;
     cv3.setPointerCapture(e.pointerId);
     const p = toaDo3(e);
+    if (S.xem.che === 'doi') { doi3 = [e.clientX, e.clientY, (S.xem.lech3 || [0, 0]).slice()]; return; }
     if (S.xem.che === 'khop') {
       let best = null, bv = (14 / bo3.z) * (window.devicePixelRatio || 1);
       for (const n in S.kh.khop) { const q = S.kh.khop[n], dd = Math.hypot(q[0] - p[0], q[1] - p[1]); if (dd < bv) { bv = dd; best = n; } }
+      if (best) nhoLai3();
       keoKhop = best; veBuoc3();
-    } else { dangTo3 = true; to3(e); }
+    } else { nhoLai3(); dangTo3 = true; to3(e); }
   });
-  let dangTo3 = false;
+  let dangTo3 = false, doi3 = null;
   cv3.addEventListener('pointermove', (e) => {
     if (XD && XD.keo3(e)) return;
+    if (doi3 && bo3) { const d = window.devicePixelRatio || 1; S.xem.lech3 = [doi3[2][0] + (e.clientX - doi3[0]) * d / bo3.z, doi3[2][1] + (e.clientY - doi3[1]) * d / bo3.z]; veBuoc3(); return; }
     if (keoKhop) { const p = toaDo3(e); S.kh.khop[keoKhop] = [Math.max(-2, Math.min(S.R.w + 2, p[0])), Math.max(-2, Math.min(S.R.h + 2, p[1]))]; S.tamCu = true; veBuoc3(); }
     else if (dangTo3) to3(e);
   });
-  const tha3 = () => { if (XD && XD.tha3()) return; if (keoKhop || dangTo3) luuNhap(); keoKhop = null; dangTo3 = false; veBuoc3(); };
+  const tha3 = () => { if (XD && XD.tha3()) return; if (keoKhop || dangTo3) luuNhap(); keoKhop = null; dangTo3 = false; doi3 = null; veBuoc3(); };
+  cv3.addEventListener('wheel', (e) => { if (S.buoc !== 3 || laDo()) return; e.preventDefault(); zoom3(e.deltaY < 0 ? 1.25 : 1 / 1.25); }, { passive: false });
   cv3.addEventListener('pointerup', tha3); cv3.addEventListener('pointercancel', tha3);
 
   // ================= TẤM SPRITE =================
