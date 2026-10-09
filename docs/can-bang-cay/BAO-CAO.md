@@ -224,4 +224,5 @@ Chụp lại: `python3 game/tests/cay_shots.py`.
   - Tác dụng trang phục được cộng theo hệ số đoán, không đo từng món.
   - Chưa tính bùa cũ, dòng mạnh của bậc Vàng, đặc trưng hệ, nội tại riêng của hero (trừ giảm sát thương của Đô Vật).
   - Hai bé cùng con số có thể mạnh hơi khác nhau. Ở vùng 1, khuyên dùng của Mộc Tinh hơi an toàn hơn cần thiết.
+- **Quyết tâm sẽ bị bỏ.** Lúc gộp lần cuối, nhánh chính đã ghi chủ dự án không muốn "thua nhiều thì mạnh thêm" trên bản chơi. Bước đăng web tự bỏ qua khi code còn `G.GRIT`. Phiên `claude/cay-nang-cap` đang gỡ Quyết tâm và thêm nấc nâng cấp mới (cấp 40, mài +15). Khi gỡ, các lượt xui ở trùm vùng có thể lại dài hơn, nên đo lại bằng `tests/cay.py`.
 - **Độ khó thứ hai** chỉ thử nhanh ở ba trùm vùng với bản lưu đã cày đầy (trước khi gộp trang phục), chưa đo kỹ như độ khó thường.
