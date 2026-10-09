@@ -2,7 +2,7 @@
 
 Game đánh quái màn hình ngang cho điện thoại, chạy ngay trong trình duyệt. Bạn dẫn một em bé tinh linh (hero) cầm vũ khí sống đi qua từng ải, mỗi ải là một bản đồ 8 phòng vuông nhìn từ trên xuống, xếp ngẫu nhiên mỗi lần chơi, và kết thúc bằng một con trùm. Vũ khí lớn lên theo cách bạn đánh (nhận dấu ấn Lửa, Độc, Băng rồi tiến hóa), còn trùm thì học theo bạn: dùng một hệ quá nhiều, nó sẽ kháng hệ đó.
 
-Đây là bản thử. Tiến trình được lưu trong trình duyệt của máy đang chơi.
+Đây là bản thử. Tiến trình được lưu trong trình duyệt của máy đang chơi và, khi chơi trên web có mạng, lưu lên mây (Firebase). Hướng dẫn cho chủ dự án: `docs/firebase-linh-khi/HUONG-DAN.md`.
 
 ## Cách chơi
 
@@ -25,9 +25,9 @@ Làng là một cảnh đi lại được, rộng gấp rưỡi màn hình; màn
 | Ông Thợ Rèn | lò rèn | Mài, Nâng bậc, Tôi lại, Rèn đồ, Nâng lò |
 | Bà Hàng Xén | gánh hàng | Rương vũ khí, chọn hai món mang theo, xem, bán; bán trang phục thường (nút **Trang phục ›**) |
 | Cô Thợ May | khung cửi | Trang phục năm ô: mặc, tháo, may, nâng bậc, mở cấp cánh, mặc thử |
-| Cụ Đồ | gốc đa | Cây kỹ năng, đặt lại điểm, hướng dẫn |
+| Cụ Đồ | gốc đa | Cây kỹ năng, đặt lại điểm, hướng dẫn, **Bảng vàng** (xếp hạng Sức mạnh, sao, thời gian hạ từng trùm vùng) |
 | Ông Từ | sân đình | Chọn hero, xem chỉ số |
-| Anh Mõ | cổng làng | Cài đặt: âm thanh, toàn màn hình, xoá tiến trình |
+| Anh Mõ | cổng làng | Cài đặt: âm thanh, toàn màn hình, lưu mây và **Đăng nhập Google**, **✉ Góp ý**, xoá tiến trình |
 
 ### Trong ải
 
@@ -190,6 +190,11 @@ Em bé mặc đồ theo năm ô: **Mũ**, **Áo**, **Đồ đeo lưng** (gùi, k
 | `js/do_roi.js` | Hình đồ rơi trên sàn (viền, bóng, cột sáng theo bậc, nảy), tên khi lại gần, tự hút về |
 | `js/village_scene.js` | Cảnh làng có người (`G.villageScene`): nền làng 720 điểm, bảy người làng, em bé đi lại, vũ khí bay theo, tìm đường khi chạm, dải khuôn mặt lối tắt, tranh bản đồ vùng |
 | `js/village.js` | Màn hình đầu và làng: mỗi người mở một bảng (tranh bản đồ, lò rèn, rương vũ khí, mũ áo bùa, cây kỹ năng và hướng dẫn, chọn hero, cài đặt), màn xem vũ khí |
+| `js/firebase-config.js` | Cấu hình web công khai của dự án Firebase sontinhthuytinh (dùng chung với Thần Thoại Việt) |
+| `js/cloud.js` | Lưu mây (`G.cloud`): tự đăng nhập khách, lưu gộp 4 giây vào `linhkhi_users`, chọn bản mới hơn, nối Google, bảng vàng và góp ý trên Firestore; tự tắt khi không chạy được |
+| `js/cloud_ui.js` | Khung HTML nổi để gõ chữ (`G.cloudUI`): hòm thư góp ý, Góp ý nhận được (chỉ quản trị), hỏi chọn bản lưu, đổi tên |
+| `js/bang_vang.js` | Bảng vàng ở Cụ Đồ (`G.bangVang`), kỷ lục riêng trong bản lưu, dòng kỷ lục mới ở màn kết quả |
+| `firebase/linhkhi.rules`, `firebase/firestore.rules.gop` | Luật Firestore của Linh Khí, và bản luật đầy đủ (luật Thần Thoại Việt + Linh Khí) để dán vào Firebase console |
 | `js/main.js` | Khởi động game |
 | `build.py` | Đóng gói game vào thư mục `dist/` |
 | `tests/` | Các bài kiểm tra tự động |
@@ -216,6 +221,7 @@ Cần Python 3 và Playwright (`pip install playwright` rồi `playwright instal
 ```
 python3 tests/ui_input.py all      # điều khiển thật trên 4 cỡ màn hình (mỗi cỡ khoảng 1 phút)
 python3 tests/ui_input.py phone    # chỉ một cỡ: phone, p169, desk hoặc port
+python3 tests/may.py              # lưu mây, bảng vàng, góp ý với Firebase giả trong trang (không cần mạng)
 python3 tests/ui_robust.py         # xoay màn hình, ẩn trang, khung hình chậm, bản lưu hỏng
 python3 tests/ui_build.py          # đóng gói rồi chơi thử cả hai tệp trong dist/
 python3 tests/ui_shots.py anh phone   # chụp mọi màn hình vào thư mục anh/ để xem bằng mắt
