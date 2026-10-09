@@ -26,6 +26,7 @@ from playwright.sync_api import sync_playwright
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from xuong_sprite_ve import ve_bon_chan, ve_nguoi, ve_kiem, ve_mu, ve_xu, ve_kiem_ngang, ve_quang, ve_nguoi_lang, ve_em_be_ao_do  # noqa: E402
+from xuong_sprite_sua_vo import kiem_sua_vo, kiem_game_vo  # noqa: E402
 
 GAME = os.path.dirname(HERE)
 REPO = os.path.dirname(GAME)
@@ -422,7 +423,23 @@ def kiem_giu_net_dung_yen(pw, tmp):
     don_custom()
 
 
+def kiem_vo(pw, tmp):
+    """Cử động không vỡ hình, Tự đoán theo hình dáng và màu, tô tay trên điện thoại (xuong_sprite_sua_vo.py)."""
+    em_be, heo = kiem_sua_vo(pw, tmp, ok, mo, TOOL)
+    kiem_game_vo(pw, ok, mo, GAME_DIST, CUSTOM, build, don_custom, em_be, heo)
+
+
 def main():
+    if os.environ.get('XS_CHI') == 'sua-vo':  # chạy riêng phần sửa vỡ hình, tự đoán
+        tmp = tempfile.mkdtemp(prefix='xuong_sprite_')
+        try:
+            don_custom()
+            with sync_playwright() as pw:
+                kiem_vo(pw, tmp)
+        finally:
+            don_custom(); build(); shutil.rmtree(tmp, ignore_errors=True)
+        print('%d/%d mục đạt' % (ok_n, ok_n + len(bad)))
+        sys.exit(1 if bad else 0)
     tmp = tempfile.mkdtemp(prefix='xuong_sprite_')
     bon, nguoi = ve_bon_chan(os.path.join(tmp, 've-tay-bon-chan.png')), ve_nguoi(os.path.join(tmp, 've-tay-nguoi.png'))
     don_custom()
@@ -622,6 +639,7 @@ def main():
             kiem_do(pw, tmp)
             kiem_them(pw, tmp)
             kiem_giu_net_dung_yen(pw, tmp)
+            kiem_vo(pw, tmp)
     finally:
         don_custom()
         build()
