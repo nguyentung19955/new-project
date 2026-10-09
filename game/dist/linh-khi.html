@@ -23488,11 +23488,27 @@ MA._xong();
     },
   };
 
+  // Màn mở đầu. Khi lưu mây dùng được (spiritblade.web.app, link GitHub): PHẢI đăng nhập Google mới vào game (chủ dự án yêu cầu).
+  // Không có mây (bản xem trước trong Claude, mở tệp trên máy, mất mạng, ?cloud=0): chạm để chơi như cũ, chỉ lưu trên máy.
+  function titleGate() {
+    const CL = G.cloud;
+    const need = !!(CL && !CL.why);
+    const ok = !need || (CL.online() && !CL.isGuest());
+    return { CL, need, ok };
+  }
+  function titleLogin(CL) {
+    if (V.gBusy) return;
+    V.gBusy = true; V.tMsg = 'Đang mở trang đăng nhập Google…'; V.tMsgT = 30;
+    CL.google().then((r) => { V.tMsg = r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google, giữ nguyên tiến trình.' : 'Đã đăng nhập Google.'; }, (e) => { V.tMsg = 'Chưa đăng nhập được: ' + e.message; })
+      .then(() => { V.gBusy = false; V.tMsgT = 8; });
+  }
   G.Title = {
     enter() { VS.enter({ from: 'keep' }); VS.state.x = 470; VS.state.cam = 230; },
     update(dt) {
       VS.update(dt, true);
-      // chạm vào dải nút Đăng nhập / Bảng vàng thì không vào game
+      const g = titleGate();
+      if (g.need) { if (g.ok && (G.keyP.Enter || G.keyP.Space)) G.setScene(G.Village); return; } // vào bằng nút "Vào game"
+      // không có mây: chạm chỗ trống để vào; chạm dải nút thì không
       const onBtns = G.downs.some((d) => d.y > 200 && d.y < 236 && d.x > 120 && d.x < 360);
       if ((G.downs.length && !onBtns) || G.keyP.Enter || G.keyP.Space || G.keyP.KeyJ) G.setScene(G.Village);
     },
@@ -23507,22 +23523,27 @@ MA._xong();
       const u = G.ux; ui.font(40, true); u.textAlign = 'center'; u.lineJoin = 'round'; u.lineWidth = 5; u.strokeStyle = '#1a120a'; u.strokeText('LINH KHÍ', 240, 78);
       ui.text('LINH KHÍ', 240, 78, { size: 40, bold: true, align: 'center', color: GOLD });
       ui.text('Vũ khí lớn lên theo bạn. Yêu tinh học theo bạn.', 240, 100, { size: 10, align: 'center', color: TXT });
-      if (Math.floor(G.time * 2) % 2) T.toastFit(240, 112, 'Chạm để bắt đầu', { size: 11 });
-      // Tài khoản và Bảng vàng ngay ở màn mở đầu
-      const CL = G.cloud;
+      const { CL, need, ok } = titleGate();
+      if (!need) {
+        if (Math.floor(G.time * 2) % 2) T.toastFit(240, 112, 'Chạm để bắt đầu', { size: 11 });
+      } else if (ok) {
+        if (T.btn(180, 150, 120, 30, 'Vào game ▶', { size: 11, primary: true })) G.setScene(G.Village);
+      } else {
+        const loading = !CL.online();
+        if (T.btn(150, 150, 180, 30, loading ? 'Đang kết nối…' : 'Đăng nhập Google để vào', { size: 10, primary: !loading, disabled: loading || V.gBusy })) titleLogin(CL);
+        // mây kết nối hỏng quá 10 giây: cho chơi tạm, chỉ lưu trên máy, để không ai bị kẹt ngoài cửa
+        V.tWait = loading ? (V.tWait || 0) + 1 / 60 : 0;
+        if ((CL.status === 'error' || V.tWait > 10) && T.btn(180, 184, 120, 18, 'Chơi tạm (không lưu mây)', { size: 7.5 })) G.setScene(G.Village);
+      }
       if (CL) {
         const on = CL.online(), guest = CL.isGuest();
-        if (T.btn(126, 206, 112, 24, on && !guest ? '✓ ' + String(CL.who()).slice(0, 14) : 'Đăng nhập Google', { size: 8.5, primary: on && guest, disabled: !on || !guest }) && !V.gBusy) {
-          V.gBusy = true; V.tMsg = 'Đang mở trang đăng nhập Google…'; V.tMsgT = 30;
-          CL.google().then((r) => { V.tMsg = r === 'redirect' ? 'Đang chuyển sang trang Google…' : r === 'linked' ? 'Đã nối tài khoản Google, giữ nguyên tiến trình.' : 'Đã đăng nhập Google.'; }, (e) => { V.tMsg = 'Chưa đăng nhập được: ' + e.message; })
-            .then(() => { V.gBusy = false; V.tMsgT = 8; });
-        }
-        if (T.btn(242, 206, 112, 24, '🏆 Bảng vàng', { size: 8.5, disabled: !PANELS.rank })) {
-          G.setScene(G.Village); V.dtab = 'rank'; open('do');
+        if (!need || ok) {
+          if (T.btn(126, 206, 112, 24, on && !guest ? '✓ ' + String(CL.who()).slice(0, 14) : 'Đăng nhập Google', { size: 8.5, primary: on && guest, disabled: !on || !guest })) titleLogin(CL);
+          if (T.btn(242, 206, 112, 24, '🏆 Bảng vàng', { size: 8.5, disabled: !PANELS.rank })) { G.setScene(G.Village); V.dtab = 'rank'; open('do'); }
         }
         if (CL.gMsg) { V.tMsg = CL.gMsg; V.tMsgT = 8; CL.gMsg = ''; }
         if (V.tMsgT > 0) V.tMsgT -= 1 / 60;
-        const line = V.tMsgT > 0 && V.tMsg ? V.tMsg : CL.label();
+        const line = V.tMsgT > 0 && V.tMsg ? V.tMsg : need && !ok ? 'Đăng nhập Google để lưu tiến trình và lên Bảng vàng. ' + CL.label() : CL.label();
         ui.text(line, 240, 242, { size: 7, align: 'center', color: SOFT });
       }
       ui.text('Bản thử · hình vẽ tạm', 240, 264, { size: 7, align: 'center', color: SOFT });
