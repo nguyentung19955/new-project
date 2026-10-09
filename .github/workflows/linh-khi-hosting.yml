@@ -1,0 +1,104 @@
+name: Linh Khí lên spiritblade.web.app
+
+# Mỗi lần nhánh khoi-tao-du-an có code game mới: gói game Linh Khí rồi đăng lên https://spiritblade.web.app
+# Chỉ đụng site "spiritblade" trong dự án sontinhthuytinh, không đụng sontinhthuytinh.web.app hay thanthoaiviet.web.app.
+on:
+  push:
+    branches: [khoi-tao-du-an]
+    paths: ['game/**', '.github/workflows/linh-khi-hosting.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: linh-khi-hosting
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SONTINHTHUYTINH }}
+      SITE: spiritblade
+    steps:
+      - name: Kiểm tra secret
+        run: |
+          if [ -z "$FIREBASE_SA" ]; then
+            echo "::error title=Thiếu secret::Chưa có FIREBASE_SERVICE_ACCOUNT_SONTINHTHUYTINH trong Settings → Secrets → Actions."
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Gói game
+        run: |
+          python3 game/build.py
+          mkdir -p "$RUNNER_TEMP/web/site"
+          cp game/dist/linh-khi.html "$RUNNER_TEMP/web/site/index.html"
+          cat > "$RUNNER_TEMP/web/firebase.json" <<EOF
+          {
+            "hosting": {
+              "site": "$SITE",
+              "public": "site",
+              "headers": [ { "source": "**", "headers": [ { "key": "Cache-Control", "value": "no-cache" } ] } ]
+            }
+          }
+          EOF
+
+      # Người dùng đồng ý (09/10): mỗi site chỉ giữ 2 bản gần nhất để không vượt dung lượng Hosting miễn phí.
+      - name: Dọn bản cũ (giữ 2 bản gần nhất mỗi site)
+        continue-on-error: true
+        run: |
+          trap 'rm -f "$RUNNER_TEMP/sa.json"' EXIT
+          printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"
+          gcloud auth activate-service-account --key-file="$RUNNER_TEMP/sa.json" --quiet > /dev/null 2>&1
+          TOKEN=$(gcloud auth print-access-token)
+          API=https://firebasehosting.googleapis.com/v1beta1
+          for s in sontinhthuytinh thanthoaiviet spiritblade; do
+            curl -s -o /dev/null -w "$s config %{http_code}\n" -X PATCH -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+              "$API/sites/$s/config?updateMask=maxVersions" -d '{"maxVersions":2}'
+            : > all.txt; PT=""
+            while :; do
+              curl -s -H "Authorization: Bearer $TOKEN" "$API/sites/$s/versions?pageSize=100${PT:+&pageToken=$PT}" > page.json
+              jq -r '.versions[]? | select(.status == "FINALIZED" or .status == "ABANDONED") | [.createTime, .name, .status] | @tsv' page.json >> all.txt
+              PT=$(jq -r '.nextPageToken // empty' page.json); [ -z "$PT" ] && break
+            done
+            # Bản đang chạy trên site: không bao giờ xoá.
+            LIVE=$(curl -s -H "Authorization: Bearer $TOKEN" "$API/sites/$s/releases?pageSize=1" | jq -r '.releases[0].version.name // empty')
+            { grep -P '\tFINALIZED$' all.txt | sort -r | tail -n +3; grep -P '\tABANDONED$' all.txt; } | cut -f2 | while read -r v; do
+              [ -n "$v" ] && [ "$v" != "$LIVE" ] && curl -s -o /dev/null -X DELETE -H "Authorization: Bearer $TOKEN" "$API/$v"
+            done
+            echo "$s: có $(wc -l < all.txt) bản, giữ 2 bản mới nhất"
+            echo "- $s: $(wc -l < all.txt) bản → giữ 2" >> "$GITHUB_STEP_SUMMARY"
+          done
+
+      - name: Tạo site và đăng
+        working-directory: ${{ runner.temp }}/web
+        run: |
+          # Người dùng không muốn "Quyết tâm" (thua nhiều thì mạnh thêm) lên bản chơi: còn G.GRIT thì không đăng.
+          if grep -rq "G\.GRIT" "$GITHUB_WORKSPACE/game/js"; then
+            echo "::notice title=Chưa đăng::Code còn Quyết tâm (G.GRIT), chờ phiên cay-nang-cap gỡ xong."
+            exit 0
+          fi
+          trap 'rm -f "$RUNNER_TEMP/sa.json"' EXIT
+          printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
+          fb="npx --yes firebase-tools@latest --project sontinhthuytinh --non-interactive"
+          if ! $fb hosting:sites:get "$SITE" > out.txt 2>&1; then
+            $fb hosting:sites:create "$SITE" > out.txt 2>&1 || {
+              echo "::error title=Chưa tạo được site $SITE::$(tail -n 6 out.txt | tr '\n' ' ' | cut -c1-900)"
+              exit 1
+            }
+          fi
+          if $fb deploy --only hosting > out.txt 2>&1; then
+            echo "## ✅ Đã đăng https://$SITE.web.app (commit ${GITHUB_SHA::7})" >> "$GITHUB_STEP_SUMMARY"
+            echo "::notice title=Đã đăng::https://$SITE.web.app"
+          else
+            echo "::error title=Đăng thất bại::$(grep -iE 'error|denied|permission|invalid' out.txt | tail -n 6 | tr '\n' ' ' | cut -c1-900)"
+            exit 1
+          fi

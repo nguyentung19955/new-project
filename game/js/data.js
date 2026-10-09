@@ -16,15 +16,16 @@
   G.WEAK = { fire: 'ice', ice: 'poison', poison: 'fire' };
 
   G.WTYPES = {
-    sword: { name: 'Kiếm', dmg: 10, cd: 0.36, reach: 32, depth: 17, special: 'Trảm Nguyệt' },
+    sword: { name: 'Kiếm', dmg: 9, cd: 0.36, reach: 32, depth: 17, special: 'Trảm Nguyệt' },
     // Sửa góp ý 3 (càng chậm hoặc càng phải áp sát thì mỗi đòn càng mạnh): cung 9 -> 11 mỗi phát (vẫn dưới kiếm) nhưng tên xuyên và
     // mưa tên yếu đi hẳn (G.MOVES.bow), để cung an toàn nhất có sát thương mỗi giây thấp nhất, cả khi đánh một con lẫn cả cụm;
     // búa 23 -> 22 (vẫn mạnh nhất mỗi đòn).
-    // Cân bằng phải cày: đánh quái mới thật thì cận chiến khó hơn (giáp, gai, lặn) nên cung chỉ còn thấp hơn kiếm khoảng 11%;
-    // cung 11 -> 10,2 và giáo 11 -> 10,7 (giáo đang cao nhất): cung thấp hơn kiếm khoảng 22% cả trên bia tập lẫn quái mới (tests/dps.py).
-    bow: { name: 'Cung', dmg: 10.2, cd: 0.5, ranged: true, special: 'Mưa Tên' },
+    // Cân bằng phải cày: giáo 11 -> 10,7, búa 22 -> 21,3. Sau khi gộp "tám hướng" (đòn cận chiến tự ngắm quái gần nhất) kiếm mạnh
+    // vượt hẳn (kiếm 84,6 so với giáo 71, búa 74 trên bia tập) nên kiếm 10 -> 9 và cung 11 -> 11,4 (mỗi phát vẫn dưới một nhát kiếm):
+    // cung thấp hơn kiếm 19% trên bia tập, khoảng 29% trên quái mới thật (tests/dps.py, 8 và 12 hạt giống).
+    bow: { name: 'Cung', dmg: 11.4, cd: 0.5, ranged: true, special: 'Mưa Tên' },
     spear: { name: 'Giáo', dmg: 10.7, cd: 0.44, reach: 56, depth: 12, special: 'Phi Thương' },
-    hammer: { name: 'Búa', dmg: 22, cd: 0.8, reach: 32, depth: 25, stagger: 0.4, special: 'Địa Chấn' },
+    hammer: { name: 'Búa', dmg: 21.3, cd: 0.8, reach: 32, depth: 25, stagger: 0.4, special: 'Địa Chấn' },
   };
   G.WKEYS = ['sword', 'bow', 'spear', 'hammer'];
   // BỐN BẬC MÀU của vũ khí (thay ba bậc Sắt, Bạc, Linh cũ). mult: hệ số sát thương gốc; maxStage: mốc tiến hóa cao nhất
@@ -44,6 +45,12 @@
   // Mỗi mốc tiến hóa tăng nhẹ sát thương gốc.
   G.STAGE_MULT = [1, 1.04, 1.08, 1.12];
   G.PROC = [0, 0.2, 0.5, 1];
+  // NGUỒN LINH KHÍ (góp ý của chủ dự án: kiếm linh khí bằng cách hạ tinh anh và trùm, quái thường thỉnh thoảng rơi linh khí để nhặt).
+  //  - Hạ tinh anh, trùm nhỏ, trùm vùng: vũ khí kết liễu luôn nhận bấy nhiêu dấu ấn. Hệ: hệ quái đang dính lúc gục (cách dùng của bé),
+  //    không dính gì thì hệ của vùng (Rừng già Độc, Hang biển Băng, Lâu đài cổ Lửa).
+  //  - Quái thường: tỉ lệ drop rơi một viên linh khí của vùng nằm trên sàn, nhặt (đi lại gần) thì vũ khí đang cầm nhận orb dấu ấn.
+  //  - Vẫn giữ luật cũ: kết liễu quái thường đang dính hiệu ứng hệ thì vũ khí nhận 1 dấu ấn của hệ đó.
+  G.LINHKHI = { elite: 5, mini: 10, boss: 20, drop: 0, orb: 3 }; // drop 0: chủ dự án bỏ viên rơi từ quái thường (tinh anh, trùm đã đủ)
   // Dòng phụ: bậc Lam có 1, Tím và Vàng có 2.
   G.AFFIX = {
     mana: 'Mỗi đòn trúng hồi thêm 1 mana',
@@ -205,8 +212,8 @@
   // CÂN BẰNG PHẢI CÀY: hệ số riêng của từng ải (15 ải, theo thứ tự 1-1 .. 3-5) nhân thêm vào chỉ số trên.
   // mob: [máu, sát thương] quái thường; boss: [máu, sát thương] trùm nhỏ (ải 1-4) hoặc trùm vùng (ải 5).
   G.STAGE_K = {
-    mob: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.66], [1.23, 1.66], [1.3, 1.92], [1.32, 2.95], [1.44, 2.32], [1.48, 2.49], [1.31, 2.91], [1.26, 2.92], [1.7, 4.54], [1.66, 4.28], [1.67, 4.43], [1.65, 4.34], [1.26, 2.89]],
-    boss: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.66], [1.23, 1.66], [1.3, 1.92], [1.32, 2.95], [1.44, 2.32], [1.48, 2.49], [1.31, 2.91], [1.26, 2.92], [1.7, 4.54], [1.66, 4.28], [1.67, 4.43], [1.65, 4.34], [1.26, 2.89]],
+    mob: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.66], [1.23, 1.66], [1.27, 1.81], [1.32, 2.95], [1.44, 2.32], [1.48, 2.49], [1.31, 2.91], [1.27, 3.02], [1.7, 4.54], [1.66, 4.28], [1.67, 4.43], [1.7, 4.74], [1.29, 3.11]],
+    boss: [[1.12, 1.29], [1.2, 1.5], [1.24, 1.66], [1.23, 1.66], [1.27, 1.81], [1.32, 2.95], [1.44, 2.32], [1.48, 2.49], [1.31, 2.91], [1.27, 3.02], [1.7, 4.54], [1.66, 4.28], [1.67, 4.43], [1.7, 4.74], [1.29, 3.11]],
   };
   // Độ khó thứ hai: [máu, sát thương] nhân thêm theo vùng. Trước là x2,2 máu, x1,5 sát thương cho mọi vùng; nay quái thường đã mạnh
   // theo ải, nên vùng sau nhân ít hơn để người chơi đã cày đầy (cấp 30, vũ khí Vàng) vẫn với tới được.

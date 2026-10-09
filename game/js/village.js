@@ -9,7 +9,7 @@
   const G = window.G, ui = G.ui, T = G.theme, VS = G.villageScene;
   const V = { tab: 'hub', who: null, sel: null, ftab: 'sharpen', node: null, page: 0, confirm: false, diff: 0, msg: null, msgT: 0, wid: null, back: 'hub', dtab: 'skill' };
   const TAB_OF = { lai: 'map', ren: 'forge', xen: 'gear', may: 'outfit', do: 'skill', tu: 'hero', mo: 'settings' };
-  const WHO_OF = { map: 'lai', forge: 'ren', gear: 'xen', outfit: 'may', skill: 'do', help: 'do', hero: 'tu', settings: 'mo' };
+  const WHO_OF = { map: 'lai', forge: 'ren', gear: 'xen', outfit: 'may', skill: 'do', help: 'do', rank: 'do', hero: 'tu', settings: 'mo' };
   // Khung bảng bên phải và vùng nội dung bên trong
   const PX = 152, PY = 46, PW = 320, PH = 220, CX = 160, CW = 304;
   const SOFT = '#a9c2b4', TXT = '#f1e6c6', GOLD = '#f6dc92', GOOD = '#9be07a', WARN = '#ff9a5a';
@@ -43,7 +43,7 @@
   // Mở bảng của một người (k: lai, ren, xen, may, do, tu, mo)
   function open(k) {
     V.who = k; V.tab = TAB_OF[k]; V.sel = null; V.page = 0; V.confirm = false; V.node = null; V.msgT = 0;
-    if (k === 'do') V.tab = V.dtab === 'help' ? 'help' : 'skill';
+    if (k === 'do') V.tab = V.dtab === 'help' || (V.dtab === 'rank' && PANELS.rank) ? V.dtab : 'skill';
     if (k === 'lai') pickNext();
   }
   function goHub() {
@@ -218,7 +218,7 @@
     const el = w.branch, E = el ? G.EL[el] : null;
     if (!el) ui.para('Chưa khóa nhánh hệ. Kết liễu quái đang dính hiệu ứng để nhận dấu ấn; đủ ' + G.MARKS[0] + ' dấu ấn của một hệ thì vũ khí theo hệ đó.', x0, 80, 212, { size: 7, color: SOFT });
     const rows = [
-      ['Trắng', 'Chỉ có chỉ số, chưa mang hệ.'],
+      ['Trắng', 'Chưa mang hệ. Hạ tinh anh, trùm hoặc nhặt viên linh khí quái thường rơi để có dấu ấn.'],
       ['Mầm', 'Chỉ số tăng. ' + Math.round(G.PROC[1] * 100) + '% mỗi đòn gây ' + (el ? (el === 'fire' ? 'cháy' : el === 'poison' ? 'độc' : 'chậm') : 'hiệu ứng hệ') + ', vệt chém nhuốm màu hệ. Chưa có luật hệ.'],
       ['Thành hình', null, 0],
       ['Thức tỉnh', null, 1],
@@ -461,8 +461,11 @@
 
   // ---------- cây kỹ năng và hướng dẫn (Cụ Đồ) ----------
   function doTabs() {
-    [['skill', 'Cây kỹ năng'], ['help', 'Hướng dẫn']].forEach((t, i) => {
-      if (T.tab(CX + i * 154, PY + 23, 150, 22, t[1], V.tab === t[0], { pad: 2 })) { V.tab = t[0]; V.dtab = t[0]; V.page = 0; }
+    // thẻ Bảng vàng (js/bang_vang.js) chỉ có khi tệp đó được nạp
+    const tabs = [['skill', 'Cây kỹ năng'], ['help', 'Hướng dẫn']].concat(PANELS.rank ? [['rank', 'Bảng vàng']] : []);
+    const w = Math.floor((CW - (tabs.length - 1) * 4) / tabs.length);
+    tabs.forEach((t, i) => {
+      if (T.tab(CX + i * (w + 4), PY + 23, w, 22, t[1], V.tab === t[0], { pad: 2 })) { V.tab = t[0]; V.dtab = t[0]; V.page = 0; }
     });
   }
   function skill() {
@@ -506,7 +509,7 @@
     ['Vật trong phòng', 'Chậu than, nấm độc và tinh thể băng phát nổ khi bị đánh, gây hiệu ứng lên quái đứng gần. Đây là cách gây hệ khi vũ khí còn trắng.'],
     ['Bốn bậc màu', 'Thường (sát thương x1, tiến hóa tới Thành hình), Lam (x1,15, có 1 dòng phụ), Tím (x1,3, có 2 dòng phụ), Vàng (x1,5 trở lên, 2 dòng phụ và 1 dòng mạnh riêng). Từ Lam trở lên tiến hóa được tới Thức tỉnh.'],
     ['Nguồn vũ khí', 'Rương và quái tinh anh rơi vũ khí bậc ngẫu nhiên, cao nhất là Tím; vùng sau dễ ra bậc cao hơn. Trùm vùng lần đầu bị hạ chắc chắn rơi một vũ khí Vàng. Ông Thợ Rèn nâng bậc từng nấc mà không mất tiến hóa; nấc lên Vàng cần mảnh trùm.'],
-    ['Đặc trưng hệ theo cấp', 'Trắng: chỉ có chỉ số. Mầm: có tỉ lệ gây cháy, độc, chậm nhưng chưa có luật hệ. Thành hình: mở đặc trưng 1, thứ để lại trên sân (vệt cháy, vũng độc, gai băng). Thức tỉnh: mở đặc trưng 2, phản ứng dây chuyền (nổ lan, lây độc, băng vỡ).'],
+    ['Đặc trưng hệ theo cấp', 'Trắng: chưa có hệ. Linh khí (dấu ấn) có từ: hạ tinh anh (' + G.LINHKHI.elite + '), trùm nhỏ (' + G.LINHKHI.mini + '), trùm vùng (' + G.LINHKHI.boss + '); quái thường ' + Math.round(G.LINHKHI.drop * 100) + '% rơi viên linh khí của vùng (' + G.LINHKHI.orb + '), đi lại gần để nhặt; kết liễu quái đang dính hệ (+1). Hệ theo hệ quái đang dính, không dính thì theo vùng. Mầm: có tỉ lệ gây cháy, độc, chậm nhưng chưa có luật hệ. Thành hình: mở đặc trưng 1, thứ để lại trên sân (vệt cháy, vũng độc, gai băng). Thức tỉnh: mở đặc trưng 2, phản ứng dây chuyền (nổ lan, lây độc, băng vỡ).'],
     ['Xem vũ khí', 'Ở làng, chạm vào vũ khí đang bay theo em bé để xem bậc, dòng phụ và các đặc trưng đã mở, sắp mở. Ở chỗ Bà Hàng Xén cũng có nút Xem cho món trong rương.'],
   ];
   function help() {
@@ -532,27 +535,45 @@
   }
 
   // ---------- cài đặt (Anh Mõ) ----------
+  // Lưu mây, đăng nhập Google, góp ý: js/cloud.js, js/cloud_ui.js (không có thì bảng chỉ còn phần cũ)
   function settings() {
-    const sv = G.save;
+    const sv = G.save, CL = G.cloud, CU = G.cloudUI;
     frame('Cổng làng: cài đặt');
-    if (T.btn(CX + 4, 74, 200, 28, 'Âm thanh: ' + (sv.sound ? 'bật' : 'tắt'))) { sv.sound = !sv.sound; G.persist(); G.audioStart(); }
-    if (T.btn(CX + 4, 108, 200, 28, 'Toàn màn hình')) {
+    if (T.btn(CX + 4, 72, 146, 26, 'Âm thanh: ' + (sv.sound ? 'bật' : 'tắt'), { size: 9 })) { sv.sound = !sv.sound; G.persist(); G.audioStart(); }
+    if (T.btn(CX + 154, 72, 146, 26, 'Toàn màn hình', { size: 9 })) {
       try { const el = document.documentElement; if (document.fullscreenElement) document.exitFullscreen(); else el.requestFullscreen().catch(() => say('Thiết bị này không cho bật toàn màn hình.')); } catch (e) { say('Thiết bị này không cho bật toàn màn hình.'); }
     }
-    ui.para('Tiến trình được lưu trong trình duyệt này. Đổi máy hoặc xoá dữ liệu trình duyệt sẽ mất tiến trình.', CX + 4, 156, 292, { size: 8, color: SOFT });
-    if (!V.confirm) {
-      if (T.btn(CX + 4, 196, 200, 28, 'Xoá tiến trình, chơi lại từ đầu', { size: 8, danger: true })) V.confirm = true;
-    } else {
-      ui.text('Chắc chắn xoá hết? Không khôi phục được.', CX + 4, 192, { size: 8.5, color: WARN, bold: true });
-      // "Thôi" nằm đúng chỗ nút xoá vừa bấm, để bấm đúp nhầm cũng không mất tiến trình
-      if (T.btn(CX + 4, 200, 120, 28, 'Thôi')) V.confirm = false;
-      else if (T.btn(CX + 132, 200, 120, 28, 'Xoá hết', { danger: true })) { G.resetSave(); V.confirm = false; goHub(); VS.enter({}); VS.say('Đã xoá tiến trình.'); return null; }
+    T.head('Lưu tiến trình', CX + 4, 113);
+    if (CL) {
+      const on = CL.online();
+      ui.text(CL.label(), CX + 4, 125, { size: 7.5, color: on && !CL.dirty ? GOOD : SOFT });
+      ui.text(on ? (CL.isGuest() ? 'Tài khoản: Khách. Đăng nhập Google để giữ tiến trình khi đổi máy.' : 'Tài khoản Google: ' + CL.who()) : 'Tiến trình luôn được lưu trong trình duyệt này.', CX + 4, 136, { size: 7, color: SOFT });
+      if (on && CL.isGuest()) {
+        if (T.btn(CX + 4, 142, 146, 24, 'Đăng nhập Google', { size: 8.5, primary: true }) && !V.gBusy) {
+          V.gBusy = true; say('Đang mở cửa sổ đăng nhập Google…');
+          CL.google().then((r) => say(r === 'linked' ? 'Đã nối tài khoản Google. Tiến trình được giữ nguyên.' : 'Đã đăng nhập Google.'), (e) => say('Chưa đăng nhập được: ' + e.message)).then(() => { V.gBusy = false; });
+        }
+      } else T.btn(CX + 4, 142, 146, 24, on ? 'Đã đăng nhập Google' : 'Đăng nhập Google', { size: 8.5, disabled: true });
+    } else ui.para('Tiến trình được lưu trong trình duyệt này. Đổi máy hoặc xoá dữ liệu trình duyệt sẽ mất tiến trình.', CX + 4, 125, 292, { size: 7.5, color: SOFT });
+    if (CU && T.btn(CX + 154, 142, 146, 24, '✉ Góp ý', { size: 8.5 })) CU.feedback({});
+    if (CL && CU && CL.isAdmin()) {
+      const n = CL.adminNew;
+      if (T.btn(CX + 4, 170, 296, 22, '📥 Góp ý nhận được' + (n ? ' (' + n + ' mới)' : ''), { size: 8.5, gold: true, dot: !!n })) CU.inbox();
     }
+    if (!V.confirm) {
+      if (T.btn(CX + 4, 200, 200, 26, 'Xoá tiến trình, chơi lại từ đầu', { size: 8, danger: true })) V.confirm = true;
+    } else {
+      ui.text('Chắc chắn xoá hết? Không khôi phục được.', CX + 4, 204, { size: 8.5, color: WARN, bold: true });
+      // "Thôi" nằm đúng chỗ nút xoá vừa bấm, để bấm đúp nhầm cũng không mất tiến trình
+      if (T.btn(CX + 4, 208, 120, 26, 'Thôi')) V.confirm = false;
+      else if (T.btn(CX + 132, 208, 120, 26, 'Xoá hết', { danger: true })) { G.resetSave(); V.confirm = false; goHub(); VS.enter({}); VS.say('Đã xoá tiến trình.'); return null; }
+    }
+    if (G.VERSION) ui.text('Phiên bản ' + G.VERSION, CX + CW - 2, 258, { size: 6.5, align: 'right', color: SOFT });
     return V.confirm ? 'Ấy ấy! Xoá là mất hết đấy, nghĩ kỹ chưa?' : 'Cốc cốc cốc! Làng nước nghe đây! Cần chỉnh gì cứ bảo anh.';
   }
 
   const PANELS = { forge, gear, outfit, hero, skill, help, settings };
-  Object.assign(G.villageApi, { PANELS, pager, say, costText, frame, npcSide, viewWeapon });
+  Object.assign(G.villageApi, { PANELS, pager, say, costText, frame, npcSide, viewWeapon, doTabs });
   G.Village = {
     enter() {
       goHub(); VS.enter({}); G.persist();

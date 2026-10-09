@@ -29,6 +29,7 @@
     if (!w) { S.got.push('vàng (rương đồ đầy)'); return; }
     S.got.push({ s: rarName(w), w });
     S.W.banner = { s: 'Tinh anh rơi ' + rarName(w), col: G.RARITY[G.wRar(w)].col, t: 3 };
+    if (G.doRoi) G.doRoi.tha(S.W, e.x, e.y, { kind: 'weapon', w, s: G.wName(w) }); // nằm trên sàn chỗ tinh anh gục, đi qua là nhặt
   };
   // Quái gục (combat.js gọi): có thể rơi trang phục. Trùm rơi lúc tính thưởng (settle), không ở đây.
   G.onMobDown = function (e) {
@@ -40,7 +41,8 @@
     const s = O.name(it) + ' (' + G.RARITY[it.r].name + ')';
     S.got.push('trang phục ' + s);
     if (!S.W.banner) S.W.banner = { s: 'Rơi trang phục: ' + s, col: G.RARITY[it.r].col, t: 3 }; // không che dòng báo vũ khí rơi
-    if (G.fx && G.fx.text) G.fx.text(e.x, e.y - 24, O.name(it), G.RARITY[it.r].col, 8);
+    if (G.doRoi) G.doRoi.tha(S.W, e.x, e.y, { kind: 'outfit', o: it, s: O.name(it) }); // nằm trên sàn chỗ quái gục
+    else if (G.fx && G.fx.text) G.fx.text(e.x, e.y - 24, O.name(it), G.RARITY[it.r].col, 8);
   };
   G.addXp = function (key, xp) {
     const hs = G.save.heroes[key];
@@ -357,6 +359,7 @@
   }
   // Đồ rơi sau khi thắng: đi ngang qua là nhặt, hiện chữ phần thưởng bay lên (thưởng đã được cộng lúc thắng).
   function pickLoot(W, P) {
+    if (G.doRoi) { G.doRoi.hut(W, P, 1 / 60); return; } // hút về khi lại gần (js/do_roi.js)
     for (const pr of W.props) {
       if (pr.type !== 'loot' || pr.got || G.time < pr.born + 0.5) continue;
       if (Math.hypot(pr.x - P.x, (pr.y - P.y) * 1.3) < 14 + (P.pickR || 0)) { pr.got = G.time; G.sfx('pick', 1.2); } // trang phục tăng tầm nhặt
@@ -482,6 +485,7 @@
     if (S.marks > 0 && !G.lk) R.lines.push('Vũ khí nhận ' + Math.round(S.marks) + ' dấu ấn'); // có js/linhkhi.js thì ghi từng vũ khí, từng hệ ở khối riêng
     if (R.up) R.lines.push(G.HEROES[sv.hero].name + ' lên cấp ' + sv.heroes[sv.hero].lvl + '!');
     for (const g of S.got) R.lines.push(g.w ? { s: 'Trong ải: ' + g.s, w: g.w } : 'Trong ải: ' + g);
+    if (G.onStageEnd) G.onStageEnd(S, R); // bảng vàng (js/bang_vang.js): ghi kỷ lục, thêm dòng báo kỷ lục mới
     S.result = R; S.gotN = S.got.length; S.marksAt = S.marks;
     G.persist();
   }
@@ -658,7 +662,7 @@
       // trùm chết hoành tráng (cử động chết dài vài giây) rồi mới mọc cổng dịch chuyển
       if (W.type === 'boss' && S.loot.bossDown && !S.won) { S.endT += dt; if (S.endT > (W.bossDieT || 1.2)) winPortal(); return; }
       if (W.over === 'dead' && !S.won) { S.endT += dt; if (S.endT > 1.2) finish(false); return; }
-      if (S.won) pickLoot(W, P);
+      pickLoot(W, P); // đồ rơi trên sàn (sau trùm, tinh anh, quái): đi lại gần là nhặt
       // bước vào cửa đang mở thì sang phòng kề (phòng trùm: chỉ sau khi đã thắng)
       if (W.cleared && (W.type !== 'boss' || S.won) && S.doorCd <= 0) {
         const d = doorAt(inp);
@@ -988,18 +992,21 @@
   }
   function panelPause() {
     ui.rect(0, 0, G.W, G.H, 'rgba(0,0,0,0.6)');
-    ui.panel(150, 60, 180, 150, 'Tạm dừng');
+    ui.panel(150, 48, 180, 182, 'Tạm dừng');
     if (ui.btn(165, 86, 150, 28, 'Chơi tiếp')) setMode('play');
     if (ui.btn(165, 120, 150, 28, 'Âm thanh: ' + (G.save.sound ? 'bật' : 'tắt'))) { G.save.sound = !G.save.sound; G.persist(); G.audioStart(); }
     // đã hạ trùm: không còn "bỏ ải" mà là rời ải, sang bảng kết quả thắng
     if (S.won) { if (ui.btn(165, 154, 150, 28, 'Rời ải', { color: '#a8452a' })) finish(true); }
     else if (ui.btn(165, 154, 150, 28, 'Bỏ ải, về làng', { color: '#6a2a22' })) { S.quit = true; finish(false); }
+    // hòm thư góp ý (js/cloud_ui.js), kèm ảnh chụp trận
+    if (G.cloudUI && ui.btn(165, 192, 150, 26, '✉ Góp ý', { color: '#2f5a52', size: 8.5 })) G.cloudUI.feedback({ shot: true });
   }
   function panelResult() {
     const R = S.result;
     if (G.time - S.modeT < 0.45) G.click = null; // tránh bấm nhầm khi bảng vừa hiện lúc đang đánh
     ui.rect(0, 0, G.W, G.H, 'rgba(0,0,0,0.65)');
     ui.panel(70, 22, 340, 228, R.win ? 'Qua ải ' + G.REGIONS[S.r].name + ' ' + (S.i + 1) : S.quit ? 'Đã bỏ ải ở phòng ' + ROOM_NAME[S.rooms[S.idx]] : 'Bạn đã gục ở phòng ' + ROOM_NAME[S.rooms[S.idx]]);
+    if (G.cloudUI && G.theme.sbtn(338, 25, 68, 17, '✉ Góp ý', { size: 7.5, pad: 2 })) G.cloudUI.feedback({ shot: true });
     let y = 54;
     if (R.win) {
       const notes = ['Qua ải', 'Không dùng bình máu', 'Hạ trùm bằng hệ khắc chế'];
@@ -1017,7 +1024,7 @@
     const lkN = G.lk && S.P ? S.P.weapons.length : 0, lkTop = lkN ? (!R.win && !S.quit ? 186 : 213) - (11 + lkN * 21) : 0;
     const lim = lkN ? lkTop - 3 : 208;
     const rows = Math.max(1, Math.floor((lim - y) / 11.5));
-    const line = (l, cx, cy) => ui.text(l, cx, cy, { size: 7.5, color: l.includes('lên cấp') || l.includes('Cứu được') ? '#ffd27a' : '#e8dfcc' });
+    const line = (l, cx, cy) => ui.text(l, cx, cy, { size: 7.5, color: l.includes('lên cấp') || l.includes('Cứu được') || l.includes('Kỷ lục') ? '#ffd27a' : '#e8dfcc' });
     texts.slice(0, rows).forEach((l, i) => line(l, 86, y + i * 11.5));
     let ry = y - 9;
     // ít vũ khí thì thẻ cao hai dòng; nhiều thì thẻ thấp lại một dòng để món nào cũng có hình

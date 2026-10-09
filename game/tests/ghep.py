@@ -75,8 +75,10 @@ JS = r"""
   const sv = G.save;
   const mk = (r, o) => G.newWeapon(sv, 'sword', r, o);
   const ws = [mk(0), mk(1), mk(2), mk(3, { gold: 0 }), mk(3, { gold: 1 }), mk(3, { gold: 2 })];
-  ok('Bậc: sát thương gốc kiếm 10 / 11,5 / 13 / 15', ws.slice(0, 4).map((w) => G.wBase(w, 1).toFixed(2)).join() === '10.00,11.50,13.00,15.00', ws.slice(0, 4).map((w) => G.wBase(w, 1).toFixed(2)).join());
-  ok('Bậc: Vàng vùng 1, 2, 3 có hệ số 1,5 / 1,6 / 1,7', ws.slice(3).map((w) => G.wBase(w, 1).toFixed(2)).join() === '15.00,16.00,17.00', ws.slice(3).map((w) => G.wBase(w, 1).toFixed(2)).join());
+  // Cân bằng phải cày đổi sát thương gốc của kiếm (10 -> 9): bài so hệ số bậc trên sát thương gốc của kiếm, không ghi cứng số 10.
+  const k0 = G.WTYPES.sword.dmg, rel = (w) => (G.wBase(w, 1) / k0).toFixed(2);
+  ok('Bậc: sát thương gốc kiếm x1 / x1,15 / x1,3 / x1,5', ws.slice(0, 4).map(rel).join() === '1.00,1.15,1.30,1.50', ws.slice(0, 4).map(rel).join());
+  ok('Bậc: Vàng vùng 1, 2, 3 có hệ số 1,5 / 1,6 / 1,7', ws.slice(3).map(rel).join() === '1.50,1.60,1.70', ws.slice(3).map(rel).join());
   ok('Bậc: số dòng phụ 0 / 1 / 2 / 2', ws.slice(0, 4).map((w) => w.affixes.length).join() === '0,1,2,2', ws.slice(0, 4).map((w) => w.affixes.length).join());
   ok('Bậc: dòng phụ là affix sẵn có và không trùng nhau', ws.every((w) => w.affixes.every((k, i, a) => G.AFFIX[k] && a.indexOf(k) === i)));
   ok('Bậc: chỉ Vàng có dòng mạnh riêng', ws.slice(0, 3).every((w) => w.power === null) && ws.slice(3).every((w) => !!G.POWER[w.power]));

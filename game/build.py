@@ -16,6 +16,9 @@ import sys
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DIST = os.path.join(ROOT, 'dist')
 FONT_HOST = 'https://fonts.googleapis.com/'
+# Thư viện Firebase (lưu mây, js/cloud.js) được tải lúc chạy, chỉ khi trang chạy trên web thật (không phải tệp trên máy,
+# không trong khung xem trước). Đây là địa chỉ ngoài duy nhất được phép nằm trong mã JS ngoài phông chữ.
+FIREBASE_SDK = 'https://www.gstatic.com/firebasejs/'
 
 
 def read(path):
@@ -82,7 +85,7 @@ def check(full, frag, js):
             if not m.group(1).startswith(FONT_HOST):
                 errs.append(name + ' còn trỏ ra ngoài: ' + m.group(1))
         for u in re.findall(r'''https?://[^\s"'<>)]+''', text):
-            if not u.startswith(FONT_HOST):
+            if not u.startswith((FONT_HOST, FIREBASE_SDK)):
                 errs.append(name + ' có địa chỉ ngoài không được phép: ' + u)
     css = re.search(r'<style>(.*?)</style>', frag, re.S).group(1)
     css = re.sub(r'/\*.*?\*/', '', css, flags=re.S)

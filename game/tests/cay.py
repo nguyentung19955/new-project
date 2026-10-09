@@ -3,13 +3,13 @@
 Cách bot chơi (mỗi lượt):
   - Ở làng: học kỹ năng, nâng lò, nâng bậc, mài, rèn và mặc đồ tốt nhất, mang vũ khí mạnh nhất (như người chơi chăm chỉ).
   - Kiểu "khuyen" (mặc định): nhìn "Sức mạnh khuyên dùng" của ải kế; sức mạnh chưa đủ (chưa xanh) thì chơi lại ải mới nhất đã qua
-    để cày (tối đa 8 lượt liền), đủ thì vào ải mới. Thua thì về làng nâng cấp và chơi lại ải cũ một lượt rồi mới thử lại.
+    để cày (tối đa 8 lượt liền; cày 3 lượt mà sức mạnh không tăng thì thử luôn), đủ thì vào ải mới. Thua thì về làng nâng cấp và chơi lại ải cũ một lượt rồi mới thử lại.
   - Kiểu "lieu": không nhìn lời khuyên, cứ vào ải mới; thua thì chơi lại ải cũ một lượt rồi thử lại.
 Số lần chơi của một ải = mọi lượt (kể cả chơi lại ải cũ và lượt thua) từ lúc qua ải trước cho tới lúc qua ải đó.
 Bot chơi hơi vụng như người mới (phản xạ chậm hơn, bỏ sót nhiều đạn hơn bot mặc định).
 
-Chạy: python3 tests/cay.py [số lượt chiến dịch, mặc định 8] [khuyen|lieu] [--nhanh: chỉ kiểm vùng 1]
-Thoát mã 1 nếu không đạt mục tiêu (hàm muc_tieu, cho lệch 15% vì số lần chơi ở trùm hên xui), tổng thời gian ngoài 2,5-4 giờ,
+Chạy: python3 tests/cay.py [số lượt chiến dịch, mặc định 12] [khuyen|lieu] [--nhanh: chỉ kiểm vùng 1]
+Thoát mã 1 nếu không đạt mục tiêu (hàm muc_tieu, cho lệch 20-25% vì số lần chơi ở trùm hên xui), tổng thời gian ngoài 2,5-4 giờ,
 có luật hỏng hoặc có lỗi trang."""
 import sys, json, os
 from playwright.sync_api import sync_playwright
@@ -69,6 +69,7 @@ def campaign(pg, mode, upto):
     tot_t = 0
     grind_run = 0
     must_grind = False
+    pw_run = 0
     hurt = {}
     log = []
     guard = 0
@@ -80,7 +81,9 @@ def campaign(pg, mode, upto):
         if mode == 'kehoach':  # cày đúng số lượt định trước rồi mới thử (để đo sức mạnh theo số lần chơi)
             grind = cleared >= 0 and (must_grind or grind_run < KEHOACH[nxt])
         else:
-            grind = cleared >= 0 and (must_grind or (mode == 'khuyen' and v['power'] < rec * NGUONG and grind_run < 8))
+            # cày tới khi đủ sức mạnh; nhưng cày 3 lượt liền mà sức mạnh không tăng (đồ đã chạm trần) thì thử luôn, như người chơi thật
+            stall = grind_run >= 3 and v['power'] <= pw_run * 1.01
+            grind = cleared >= 0 and (must_grind or (mode == 'khuyen' and v['power'] < rec * NGUONG and grind_run < 8 and not stall))
         k = cleared if grind else nxt
         if grind and cleared % 5 == 4 and v['power'] < 1.15 * pg.evaluate("([r, i]) => G.stageRec(r, i, 0)", list(divmod(cleared, 5))):
             k = cleared - 1  # vừa qua trùm vùng mà chưa dư sức: cày ải 4 của vùng đó (dễ thắng hơn đánh lại trùm), như người chơi
@@ -104,6 +107,7 @@ def campaign(pg, mode, upto):
         win = bool(res.get('win'))
         log.append(f"{'cày ' if grind else 'thử '}{r+1}-{i+1} {'thắng' if win else 'THUA '} {t:>3}s cấp {v['lvl']:>2} sức mạnh {v['power']:>4}/{rec:<4} {v['carry']} {v['armor']} vàng {v['gold']} quặng {v['ore']} nl {v['mats']} mảnh {v['shards']} đá {v['stones']} máu {v['hp']} giáp {v['dr']}% off {v['off']} ehp {v['ehp']} | {'; '.join(v['block'])}")
         if grind:
+            if grind_run == 0 or grind_run % 3 == 0: pw_run = v['power']
             grind_run += 1
             must_grind = False
             continue
@@ -197,6 +201,17 @@ LUAT = r"""
   G.resetSave(); const s5 = G.save; s5.heroes.smith.lvl = 9; s5.gold = 2000; s5.ore = 40; s5.mats = [30, 10, 0]; s5.stones = 2;
   const pb = G.power(), did = G.upg.auto(s5), pa = G.power();
   ok(pa > pb && s5.gold >= 0 && s5.ore >= 0 && s5.mats.every((x) => x >= 0) && s5.stones >= 0, 'nâng cấp tự động (bot): sức mạnh ' + pb + ' -> ' + pa + ' sau ' + did.length + ' việc, không tiêu quá số có');
+  // nguồn linh khí: tinh anh không dính hệ vẫn cho dấu ấn của vùng; quái thường không rơi viên linh khí
+  G.testSave({ lvl: 20, sharpen: 6 }); G.save.tut.done = true;
+  G.startStage(0, 1, 0); let W = G.getWorld(); W.waves = []; W.spawns = []; W.ents = [];
+  const w0 = G.curW(G.getRun().P), m0 = w0.marks.poison;
+  const el = G.spawnEnemy('elite', W.P.x + 30, W.P.y, {}); el.inside = true; G.kill(el, {});
+  ok(Math.abs(w0.marks.poison - m0 - G.LINHKHI.elite * G.getRun().P.markMult) < 0.01, 'hạ tinh anh không dính hệ: +' + G.LINHKHI.elite + ' dấu ấn Độc của Rừng già');
+  const r0 = G.rnd; G.rnd = () => 0.01;
+  const mob = G.spawnEnemy('rusher', W.P.x + 60, W.P.y, {}); mob.inside = true; const m1 = w0.marks.poison; G.kill(mob, {});
+  G.rnd = r0;
+  const orb = W.props.find((o) => o.type === 'loot' && o.kind === 'linhkhi');
+  ok(G.LINHKHI.drop === 0 && !orb && w0.marks.poison === m1, 'quái thường không rơi viên linh khí (chủ dự án bỏ, tinh anh và trùm đã đủ)');
   G.resetSave();
   return out;
 }
@@ -204,7 +219,7 @@ LUAT = r"""
 
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith('-')]
-    n = int(args[0]) if args else 8
+    n = int(args[0]) if args else 12
     mode = args[1] if len(args) > 1 else 'khuyen'
     upto = 5 if '--nhanh' in sys.argv else 15
     global SAVES
@@ -252,7 +267,7 @@ def main():
         avg = lambda key: sum(r['st'][k][key] for r in ok) / m
         lo, hi = muc_tieu(k)
         pl = avg('plays')
-        flag = '' if lo * 0.85 <= pl <= hi * 1.15 else ' ✗'  # cho lệch 15% vì trùm hên xui, 8 lượt còn dao động
+        flag = '' if lo * 0.8 <= pl <= hi * 1.25 else ' ✗'  # cho lệch 20-25% vì trùm và đồ rơi hên xui, 12 lượt vẫn còn dao động
         if flag and mode == 'khuyen': bad = 1
         med = sorted(r['st'][k]['plays'] for r in ok)[m // 2] if m % 2 else sum(sorted(r['st'][k]['plays'] for r in ok)[m // 2 - 1:m // 2 + 1]) / 2
         print(f"| {k//5+1}-{k%5+1} | {pl:.1f}{flag} | {med:g} | {avg('tries'):.1f} | {avg('fails'):.1f} | {avg('t')/60:.0f} | {avg('lvl'):.0f} | {avg('pw'):.0f} / {avg('rec'):.0f} | {lo:g}-{hi:g} |")

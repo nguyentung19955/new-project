@@ -329,13 +329,20 @@
     FX('death', e, o);
     if (e.illusion) return;
     if (w) w.kills++;
-    if (G.hasStatus(e)) {
-      // Hệ của dấu ấn: hiệu ứng gây sau cùng nếu nó còn hiệu lực, không thì hiệu ứng đang có.
+    const L = G.LINHKHI, big = e.role === 'elite' || e.isBoss, regEl = G.REGIONS[W.region] ? G.REGIONS[W.region].el : 'fire';
+    if (G.hasStatus(e) || (big && L)) {
+      // Hệ của dấu ấn: hiệu ứng gây sau cùng nếu nó còn hiệu lực, không thì hiệu ứng đang có; tinh anh, trùm không dính gì thì hệ của vùng.
       const on = { fire: e.st.fire > 0, poison: e.st.poisonN > 0, ice: e.st.iceN > 0 || e.st.frozen > 0 };
-      const el = e.st.last && on[e.st.last] ? e.st.last : on.fire ? 'fire' : on.poison ? 'poison' : 'ice';
-      G.addMarks(w, el, (e.marks == null ? 1 : e.marks) * P.markMult * W.marksMult);
+      const el = !G.hasStatus(e) ? regEl : e.st.last && on[e.st.last] ? e.st.last : on.fire ? 'fire' : on.poison ? 'poison' : 'ice';
+      const n = big && L ? (e.isBoss ? (e.kind === 'mini' ? L.mini : L.boss) : L.elite) : e.marks == null ? 1 : e.marks;
+      G.addMarks(w, el, n * P.markMult * W.marksMult);
       FX('markOrbs', e);
-      if (P.charm === 'c_spirit') P.mana = Math.min(P.maxmana, P.mana + 5);
+      if (P.charm === 'c_spirit' && G.hasStatus(e)) P.mana = Math.min(P.maxmana, P.mana + 5);
+    }
+    // quái thường thỉnh thoảng rơi một viên linh khí của vùng: phải nhặt mới có (js/do_roi.js gọi onPick)
+    if (!big && L && !e.add && G.doRoi && G.rnd() < L.drop) {
+      const n = Math.round(L.orb * W.marksMult);
+      G.doRoi.tha(W, e.x, e.y, { kind: 'linhkhi', el: regEl, s: 'Linh khí ' + G.EL[regEl].name, onPick: () => { const P2 = W.P, cw = curW(P2); if (cw) { G.addMarks(cw, regEl, n * P2.markMult); G.flashMarks && G.flashMarks(); } } });
     }
     if (G.moves) G.moves.onKill(e, o, w); // đặc trưng hệ khi quái chết: Nổ lan, Lây độc (chỉ ở Thức tỉnh)
     if (G.outfit) G.outfit.onKill(P, e); // bùa có hệ: quái gục gần bé nổ nhỏ
@@ -799,6 +806,8 @@
           const k = ((min - d) / d) * 0.5;
           A1.x -= dx * k; B.x += dx * k;
           A1.y -= (dy * k) / 1.6; B.y += (dy * k) / 1.6;
+          // đẩy nhau sát mép sàn thì không được lọt ra ngoài sàn theo chiều dọc (tests/fuzz.py)
+          A1.y = G.clamp(A1.y, W.y0, W.y1); B.y = G.clamp(B.y, W.y0, W.y1);
         }
       }
     }
@@ -992,7 +1001,7 @@
         if (ent) ent(c, e);
       } });
     }
-    for (const pr of W.props) list.push({ y: pr.y - (pr.type === 'door' || pr.type === 'portal' ? 200 : 0), f: () => A.prop(c, pr) }); // cổng dịch chuyển nằm sát sàn: vẽ dưới mọi thứ
+    for (const pr of W.props) if (pr.type !== 'loot') list.push({ y: pr.y - (pr.type === 'door' || pr.type === 'portal' ? 200 : 0), f: () => A.prop(c, pr) }); // cổng dịch chuyển nằm sát sàn: vẽ dưới mọi thứ
     if (W.boss && !W.boss.dead) {
       const b = W.boss;
       list.push({ y: b.y + (b.kind === 'moc' ? -30 : 0), f: () => {
@@ -1006,6 +1015,7 @@
     }
     list.push({ y: P.y, f: () => { A.hero(c, G.heroArgs(P)); if (ent) ent(c, P); } });
     if (F && F.sorted) F.sorted(list, c);
+    for (const pr of W.props) if (pr.type === 'loot') A.prop(c, pr); // đồ rơi nằm ở lớp sàn: không che quái, em bé, vùng báo trước (js/do_roi.js)
     if (G.baoTruoc) G.baoTruoc.snap(c); // chụp nền (đã có vũng, vết) trước khi vẽ nhân vật: để vùng báo trước nằm dưới nhân vật
     list.sort((a, b) => a.y - b.y);
     for (const o of list) o.f();
@@ -1024,6 +1034,7 @@
     if (G.baoTruoc) G.baoTruoc.draw(cam, sx, sy); // vùng báo trước đòn: vẽ mịn ở lớp giao diện (js/bao_truoc.js)
     // chữ sát thương vẽ ở lớp giao diện cho nét
     for (const o of W.texts) G.ui.text(o.s, o.x - cam, o.y, { size: o.size, align: 'center', color: o.col, bold: true });
+    if (G.doRoi && !P.dead) G.doRoi.nhan(W, P); // tên ngắn của đồ rơi khi lại gần
     if (F && F.drawUI) F.drawUI(cam);
   };
 })();
