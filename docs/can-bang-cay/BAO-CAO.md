@@ -226,3 +226,24 @@ Chụp lại: `python3 game/tests/cay_shots.py`.
   - Hai bé cùng con số có thể mạnh hơi khác nhau. Ở vùng 1, khuyên dùng của Mộc Tinh hơi an toàn hơn cần thiết.
 - **Quyết tâm sẽ bị bỏ.** Lúc gộp lần cuối, nhánh chính đã ghi chủ dự án không muốn "thua nhiều thì mạnh thêm" trên bản chơi. Bước đăng web tự bỏ qua khi code còn `G.GRIT`. Phiên `claude/cay-nang-cap` đang gỡ Quyết tâm và thêm nấc nâng cấp mới (cấp 40, mài +15). Khi gỡ, các lượt xui ở trùm vùng có thể lại dài hơn, nên đo lại bằng `tests/cay.py`.
 - **Độ khó thứ hai** chỉ thử nhanh ở ba trùm vùng với bản lưu đã cày đầy (trước khi gộp trang phục), chưa đo kỹ như độ khó thường.
+
+## Bổ sung sau góp ý: linh khí lên chậm
+
+- **Trước:**
+  - Vũ khí Trắng không gây hiệu ứng hệ nào. Muốn có linh khí phải đánh vỡ vật mang hệ trong ải (chậu than, nấm, pha lê) rồi kết liễu quái đang dính hệ đó.
+  - Bot đi lần lượt các ải không cày mà không đánh vật: 1-3 dấu ấn mỗi ải ở vùng 1. Lên Mầm (30) phải tới khoảng ải 2-3.
+- **Nay** (`G.PROC_TRANG`, `G.leanEl`):
+  - Vũ khí Trắng có 12% mỗi đòn gây hiệu ứng nhẹ của hệ nó đang nghiêng về: hệ có nhiều dấu ấn nhất, chưa có thì theo hệ của vùng đang đánh (Rừng già Độc, Hang biển Băng, Lâu đài cổ Lửa).
+  - Luật "tiến hóa theo cách dùng" giữ nguyên: dùng vật mang hệ khác hay bùa hệ thì vũ khí nghiêng sang hệ đó. Mốc 30/120/300 không đổi.
+- **Đo bằng bot, không đánh vật mang hệ, đi lần lượt ải:**
+
+| Mốc | Trước | Nay |
+|---|---|---|
+| Mầm (30) | sau ải 2-1 | sau ải 1-2 |
+| Thành hình (120) | chưa tới sau 10 ải | sau ải 1-5 |
+| Thức tỉnh (300) | chưa tới | khoảng ải 2-5 đến 3-1 |
+
+- Số dấu ấn mỗi ải: trước 1-3 ở vùng 1, nay 20-50.
+- Độ khó gần như không đổi: `tests/cay.py` vẫn đạt, đi hết 15 ải khoảng 2,8 giờ.
+- Cung so với kiếm trên quái mới: từ 29% còn 27%.
+- `tests/moves.py` tắt hiệu ứng nhẹ này khi đo sát thương từng đòn.

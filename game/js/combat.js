@@ -123,6 +123,13 @@
   G.powerCol = function (have, need) { return have >= need ? '#6fdc6a' : have >= need * 0.9 ? '#ffd23f' : '#ff6a5a'; };
   const curW = (P) => P.weapons[P.cur];
   G.curW = curW;
+  // Hệ vũ khí đang nghiêng về: hệ có nhiều dấu ấn nhất; chưa có dấu ấn thì hệ của vùng đang đánh (null nếu không ở trong ải).
+  G.leanEl = function (w) {
+    let best = null, bm = 0;
+    for (const e of G.ELS) if ((w.marks[e] || 0) > bm) { bm = w.marks[e]; best = e; }
+    if (best) return best;
+    return W && W.region != null && G.REGIONS[W.region] ? G.REGIONS[W.region].el : null;
+  };
   G.activeEl = function (P, w) {
     const c = P.coats[w.id];
     if (c && c.t > 0) return c.el;
@@ -371,13 +378,14 @@
     const T = G.WTYPES[w.type];
     if (T.stagger && !e.isBoss && !e.dead) e.st.stun = Math.max(e.st.stun, T.stagger);
     if (o.stun && !e.dead) e.st.stun = Math.max(e.st.stun, e.isBoss ? o.stun * 0.4 : o.stun);
-    if (el && !e.dead) {
+    const pel = el || G.leanEl(w); // vũ khí Trắng: hiệu ứng nhẹ của hệ đang nghiêng (G.PROC_TRANG)
+    if (pel && !e.dead) {
       const stage = G.wStage(w);
       const coat = P.coats[w.id] && P.coats[w.id].t > 0;
-      let chance = coat ? 1 : G.PROC[stage];
+      let chance = coat ? 1 : el ? G.PROC[stage] : G.PROC_TRANG || 0;
       if (w.power === 'proc') chance += 0.25;
       if (P.firstHit && P.swapProc) chance = 1;
-      if (G.rnd() < chance) G.applyStatus(e, el, d, 1);
+      if (G.rnd() < chance) G.applyStatus(e, pel, el ? d : d * 0.5, 1);
     }
     P.firstHit = false;
   }

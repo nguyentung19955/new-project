@@ -49,7 +49,7 @@ Trên điện thoại (nên cầm ngang):
   - Cung, **Mưa Tên**: như cũ, rơi vào cụm quái gần nhất.
   - Đặc trưng hệ (vệt cháy, vũng độc, gai băng) để lại dọc đường chiêu bay.
 - Hệ của vũ khí mạnh lên theo cấp tiến hóa:
-  - Trắng: chỉ có chỉ số.
+  - Trắng: 12% mỗi đòn gây hiệu ứng nhẹ của hệ vũ khí đang nghiêng về (hệ có nhiều dấu ấn nhất; chưa có thì theo hệ của vùng đang đánh). Kết liễu quái đang dính hệ là có dấu ấn, không cần đánh vỡ vật mang hệ.
   - Mầm (30 dấu ấn): chỉ số tăng, mỗi đòn có 20% gây cháy, độc hoặc chậm, vệt chém nhuốm màu hệ. Chưa có luật hệ.
   - Thành hình (120 dấu ấn): mở đặc trưng thứ nhất, thứ để lại trên sân. Lửa: vệt cháy. Độc: vũng độc. Băng: gai băng làm chậm.
   - Thức tỉnh (300 dấu ấn): mở đặc trưng thứ hai, phản ứng dây chuyền. Lửa: quái đang cháy chết thì nổ lan. Độc: quái đang trúng độc chết thì lây sang con bên cạnh. Băng: quái đóng băng bị đánh thì vỡ, văng mảnh.

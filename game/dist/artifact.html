@@ -80,7 +80,12 @@
   G.STAGE_NAMES = ['Trắng', 'Mầm', 'Thành hình', 'Thức tỉnh'];
   // Mỗi mốc tiến hóa tăng nhẹ sát thương gốc.
   G.STAGE_MULT = [1, 1.04, 1.08, 1.12];
+  // Tỉ lệ mỗi đòn gây hiệu ứng hệ theo mốc tiến hóa (Trắng dùng G.PROC_TRANG).
   G.PROC = [0, 0.2, 0.5, 1];
+  // Vũ khí Trắng (chưa có hệ) cũng có 15% mỗi đòn gây hiệu ứng nhẹ của hệ nó đang nghiêng về (hệ có nhiều dấu ấn nhất;
+  // chưa có dấu ấn nào thì theo hệ của vùng đang đánh). Trước đây vũ khí Trắng chỉ nhận linh khí khi đánh vỡ vật mang hệ
+  // trong ải rồi kết liễu quái đang dính hệ đó, nên lên Mầm rất chậm.
+  G.PROC_TRANG = 0.12;
   // Dòng phụ: bậc Lam có 1, Tím và Vàng có 2.
   G.AFFIX = {
     mana: 'Mỗi đòn trúng hồi thêm 1 mana',
@@ -10513,6 +10518,13 @@
   G.powerCol = function (have, need) { return have >= need ? '#6fdc6a' : have >= need * 0.9 ? '#ffd23f' : '#ff6a5a'; };
   const curW = (P) => P.weapons[P.cur];
   G.curW = curW;
+  // Hệ vũ khí đang nghiêng về: hệ có nhiều dấu ấn nhất; chưa có dấu ấn thì hệ của vùng đang đánh (null nếu không ở trong ải).
+  G.leanEl = function (w) {
+    let best = null, bm = 0;
+    for (const e of G.ELS) if ((w.marks[e] || 0) > bm) { bm = w.marks[e]; best = e; }
+    if (best) return best;
+    return W && W.region != null && G.REGIONS[W.region] ? G.REGIONS[W.region].el : null;
+  };
   G.activeEl = function (P, w) {
     const c = P.coats[w.id];
     if (c && c.t > 0) return c.el;
@@ -10761,13 +10773,14 @@
     const T = G.WTYPES[w.type];
     if (T.stagger && !e.isBoss && !e.dead) e.st.stun = Math.max(e.st.stun, T.stagger);
     if (o.stun && !e.dead) e.st.stun = Math.max(e.st.stun, e.isBoss ? o.stun * 0.4 : o.stun);
-    if (el && !e.dead) {
+    const pel = el || G.leanEl(w); // vũ khí Trắng: hiệu ứng nhẹ của hệ đang nghiêng (G.PROC_TRANG)
+    if (pel && !e.dead) {
       const stage = G.wStage(w);
       const coat = P.coats[w.id] && P.coats[w.id].t > 0;
-      let chance = coat ? 1 : G.PROC[stage];
+      let chance = coat ? 1 : el ? G.PROC[stage] : G.PROC_TRANG || 0;
       if (w.power === 'proc') chance += 0.25;
       if (P.firstHit && P.swapProc) chance = 1;
-      if (G.rnd() < chance) G.applyStatus(e, el, d, 1);
+      if (G.rnd() < chance) G.applyStatus(e, pel, el ? d : d * 0.5, 1);
     }
     P.firstHit = false;
   }
@@ -23009,7 +23022,7 @@ MA._xong();
     const el = w.branch, E = el ? G.EL[el] : null;
     if (!el) ui.para('Chưa khóa nhánh hệ. Kết liễu quái đang dính hiệu ứng để nhận dấu ấn; đủ ' + G.MARKS[0] + ' dấu ấn của một hệ thì vũ khí theo hệ đó.', x0, 80, 212, { size: 7, color: SOFT });
     const rows = [
-      ['Trắng', 'Chỉ có chỉ số, chưa mang hệ.'],
+      ['Trắng', 'Chưa mang hệ. ' + Math.round(G.PROC_TRANG * 100) + '% mỗi đòn gây hiệu ứng nhẹ của hệ đang nghiêng (chưa có dấu ấn thì theo hệ của vùng).'],
       ['Mầm', 'Chỉ số tăng. ' + Math.round(G.PROC[1] * 100) + '% mỗi đòn gây ' + (el ? (el === 'fire' ? 'cháy' : el === 'poison' ? 'độc' : 'chậm') : 'hiệu ứng hệ') + ', vệt chém nhuốm màu hệ. Chưa có luật hệ.'],
       ['Thành hình', null, 0],
       ['Thức tỉnh', null, 1],
@@ -23302,7 +23315,7 @@ MA._xong();
     ['Vật trong phòng', 'Chậu than, nấm độc và tinh thể băng phát nổ khi bị đánh, gây hiệu ứng lên quái đứng gần. Đây là cách gây hệ khi vũ khí còn trắng.'],
     ['Bốn bậc màu', 'Thường (sát thương x1, tiến hóa tới Thành hình), Lam (x1,15, có 1 dòng phụ), Tím (x1,3, có 2 dòng phụ), Vàng (x1,5 trở lên, 2 dòng phụ và 1 dòng mạnh riêng). Từ Lam trở lên tiến hóa được tới Thức tỉnh.'],
     ['Nguồn vũ khí', 'Rương và quái tinh anh rơi vũ khí bậc ngẫu nhiên, cao nhất là Tím; vùng sau dễ ra bậc cao hơn. Trùm vùng lần đầu bị hạ chắc chắn rơi một vũ khí Vàng. Ông Thợ Rèn nâng bậc từng nấc mà không mất tiến hóa; nấc lên Vàng cần mảnh trùm.'],
-    ['Đặc trưng hệ theo cấp', 'Trắng: chỉ có chỉ số. Mầm: có tỉ lệ gây cháy, độc, chậm nhưng chưa có luật hệ. Thành hình: mở đặc trưng 1, thứ để lại trên sân (vệt cháy, vũng độc, gai băng). Thức tỉnh: mở đặc trưng 2, phản ứng dây chuyền (nổ lan, lây độc, băng vỡ).'],
+    ['Đặc trưng hệ theo cấp', 'Trắng: ' + Math.round(G.PROC_TRANG * 100) + '% mỗi đòn gây hiệu ứng nhẹ của hệ đang nghiêng về (chưa có thì theo hệ của vùng), kết liễu quái đang dính hệ là có linh khí. Mầm: có tỉ lệ gây cháy, độc, chậm nhưng chưa có luật hệ. Thành hình: mở đặc trưng 1, thứ để lại trên sân (vệt cháy, vũng độc, gai băng). Thức tỉnh: mở đặc trưng 2, phản ứng dây chuyền (nổ lan, lây độc, băng vỡ).'],
     ['Xem vũ khí', 'Ở làng, chạm vào vũ khí đang bay theo em bé để xem bậc, dòng phụ và các đặc trưng đã mở, sắp mở. Ở chỗ Bà Hàng Xén cũng có nút Xem cho món trong rương.'],
   ];
   function help() {

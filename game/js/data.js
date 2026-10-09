@@ -44,7 +44,12 @@
   G.STAGE_NAMES = ['Trắng', 'Mầm', 'Thành hình', 'Thức tỉnh'];
   // Mỗi mốc tiến hóa tăng nhẹ sát thương gốc.
   G.STAGE_MULT = [1, 1.04, 1.08, 1.12];
+  // Tỉ lệ mỗi đòn gây hiệu ứng hệ theo mốc tiến hóa (Trắng dùng G.PROC_TRANG).
   G.PROC = [0, 0.2, 0.5, 1];
+  // Vũ khí Trắng (chưa có hệ) cũng có 15% mỗi đòn gây hiệu ứng nhẹ của hệ nó đang nghiêng về (hệ có nhiều dấu ấn nhất;
+  // chưa có dấu ấn nào thì theo hệ của vùng đang đánh). Trước đây vũ khí Trắng chỉ nhận linh khí khi đánh vỡ vật mang hệ
+  // trong ải rồi kết liễu quái đang dính hệ đó, nên lên Mầm rất chậm.
+  G.PROC_TRANG = 0.12;
   // Dòng phụ: bậc Lam có 1, Tím và Vàng có 2.
   G.AFFIX = {
     mana: 'Mỗi đòn trúng hồi thêm 1 mana',
