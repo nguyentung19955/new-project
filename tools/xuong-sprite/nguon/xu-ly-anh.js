@@ -179,6 +179,14 @@
       if ((toi(x - 1, y) && toi(x + 1, y)) || (toi(x, y - 1) && toi(x, y + 1)) || (toi(x - 1, y - 1) && toi(x + 1, y + 1)) || (toi(x + 1, y - 1) && toi(x - 1, y + 1))) them.push([i, t[1]]);
     }
     for (const [i, c] of them) out[i] = c;
+    // mép ngoài của hình: ô sát chỗ trống mà có nét tối thì ưu tiên tối, để viền ngoài vẽ tay không đứt quãng
+    const trong = (x, y) => x < 0 || y < 0 || x >= W || y >= H || !out[y * W + x];
+    const mep = [];
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const i = y * W + x, t = toiO[i]; if (!out[i] || !t || t[0] < 0.2 || toi(x, y)) continue;
+      if (trong(x - 1, y) || trong(x + 1, y) || trong(x, y - 1) || trong(x, y + 1)) mep.push([i, t[1]]);
+    }
+    for (const [i, c] of mep) out[i] = c;
   }
   // Chi tiết nhỏ (mắt, chuông, nút áo) nhỏ hơn một ô thường bị màu nền của ô nuốt mất. Ô nào có màu thiểu số nổi bật mà
   // cả 8 ô quanh đó không có màu gần giống, và màu chính của ô vẫn còn ở ít nhất 3 ô bên cạnh (đổi cũng không mất mảng chính), thì lấy màu thiểu số.

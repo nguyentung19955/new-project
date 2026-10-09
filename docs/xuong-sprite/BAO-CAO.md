@@ -27,6 +27,27 @@
 - [PROMPT-AI.md](PROMPT-AI.md): bộ prompt nhờ AI vẽ (mỗi dòng một ảnh, theo bộ) và các câu giữ AI không vẽ lệch.
 - Bài kiểm tra `xuong_sprite.py` thêm phần đồ: **86/86 mục đạt**.
 
+## Đợt 3: giữ nét và đứng yên từng bộ phận (theo góp ý dùng thử)
+
+Góp ý 1: "Tool làm nhòe quá nhiều chi tiết đẹp". Chủ dự án chọn **thu nhỏ giữ nét, cỡ trong game giữ nguyên**.
+
+- Cách thu nhỏ mới **Giữ nét** (mặc định): mỗi điểm ảnh lấy màu chiếm nhiều nhất trong ô (không lấy trung bình), ưu tiên nét tối, nối viền đứt, ưu tiên viền ở mép ngoài, cứu chi tiết nhỏ nổi bật (mắt, chuông). Giảm màu giữ đúng màu có thật trong hình. Kiểu **Mềm** (cũ) vẫn chọn được; tệp làm từ trước tự giữ kiểu Mềm.
+- Số màu mặc định 20 (tối đa 32). Viền tối 1px chỉ ở mép ngoài (không đè lỗ, khe bên trong), có nút bật tắt.
+- Xem **So sánh cạnh nhau**: ảnh gốc (tô đỏ chỗ chi tiết sẽ mất, đếm số mảng mất) | cỡ game phóng to | cỡ thật trong phòng game cạnh em bé gốc.
+- Em bé thử (áo trùm đỏ, mặt nạ giấy, chuông, găng to) ở 28 điểm ảnh: điểm màu pha trộn **17 → 0**, viền mép ngoài liền **81% → 91%**, mặt nạ giấy còn **23 → 36** điểm đúng màu, vẫn còn chuông vàng, mắt, miệng, má hồng.
+
+Góp ý 2: "Tool đang làm cử động cả đầu". Chủ dự án chọn **tự chọn từng bộ phận**.
+
+- Bước Chuyển động có ô **Đứng yên** cho từng bộ phận và thanh **Độ nhún cả người** (0% = không nhún). Bộ phận đứng yên không xoay, lắc, nhún riêng, chỉ đi theo bộ phận cha. Thân đứng yên thì cả hình đứng yên (trừ ngã khi chết và lăn khi né).
+- Mẫu **Người** (em bé) mặc định: **đầu và thân đứng yên, không nhún, chỉ tay chân cử động**. Mẫu khác giữ mặc định cũ.
+- Tệp `.sprite.json` có thêm `dung_yen` (danh sách bộ phận) và `nhun`; `game/build.py` nhúng hai mục này; `game/js/sprite_custom.js` đọc (`sp.dungYen`, `sp.nhun`, `G.spriteCustom.dungYen(mã, bộ phận)`). Game chỉ phát từng khung đã dựng, không tự thêm nhún lắc, nên bộ phận đứng yên cũng đứng yên trong game. Tệp cũ không có hai mục: đọc và chạy y như trước.
+- Bài kiểm tra `xuong_sprite.py` thêm 23 mục (giữ nét so với kiểu cũ, viền mép ngoài, mặc định em bé, đầu và thân không đổi vị trí, góc qua mọi khung của đứng thở, đi, chuẩn bị đánh, đánh, trúng đòn trong công cụ; đầu đứng yên trong game qua 32 khung đứng thở và chạy; tệp cũ mở được trong công cụ và game): **109/109 mục đạt**.
+- Ảnh: [giu-net-truoc-sau.png](giu-net-truoc-sau.png), [chi-tay-chan.gif](chi-tay-chan.gif), [buoc-2-so-sanh.png](buoc-2-so-sanh.png), [buoc-4-dung-yen.png](buoc-4-dung-yen.png), tạo bằng `game/tests/xuong_sprite_giu_net_shots.py`.
+
+| Trước / sau giữ nét | Chỉ tay chân cử động (phải) |
+|---|---|
+| ![](giu-net-truoc-sau.png) | ![](chi-tay-chan.gif) |
+
 ## Kiểm tra
 
 - `game/tests/xuong_sprite.py`: **65/65 mục đạt**. Ảnh vẽ tay giả lập trên giấy trắng loang có vết bẩn → tách nền (góc trống, giữ tròng mắt trắng), đúng cỡ, giảm màu, cục tẩy và hoàn tác, mẫu gợi ý, tự đoán đủ bộ phận, kéo khớp và tô bằng chuột, mọi khung đều có hình và có cử động, tốc độ và biên độ, tải về và mở lại tệp, nháp còn sau khi tải lại trang, em bé; xem trong game (quái mới đứng vào chỗ Cua Lính ở Hang biển, bé tự đánh, không ghi bản lưu); bỏ tệp vào `game/art/custom/`, đóng gói, vào game: Heo Rừng Con và em bé dùng hình mới ở mọi cử động, lật gương đúng, chớp trắng, chết mờ dần, quái khác vẫn hình code, thời lượng đòn như cũ, trận 4 giây không lỗi; xoá tệp thì về hình code. Cuối bài thư mục chỉ còn `.gitkeep`.
