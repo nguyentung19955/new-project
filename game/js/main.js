@@ -19,3 +19,12 @@
     } else start();
   } catch (e) { start(); }
 })();
+
+// Thêm vào màn hình chính: đăng ký sw.js (chỉ có trên spiritblade.web.app) để máy mở game như ứng dụng, toàn màn hình.
+// Không chạy trong khung nhúng (bản xem trước) hay khi mở tệp trên máy; không có sw.js thì bỏ qua, không báo lỗi.
+(function () {
+  try {
+    if (!('serviceWorker' in navigator) || !/^https?:$/.test(location.protocol) || window.top !== window.self) return;
+    window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
+  } catch (e) { /* bỏ qua */ }
+})();

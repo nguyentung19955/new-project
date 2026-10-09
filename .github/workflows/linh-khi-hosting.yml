@@ -40,6 +40,7 @@ jobs:
           python3 game/build.py
           mkdir -p "$RUNNER_TEMP/web/site"
           cp game/dist/linh-khi.html "$RUNNER_TEMP/web/site/index.html"
+          cp game/web/* "$RUNNER_TEMP/web/site/"
           cat > "$RUNNER_TEMP/web/firebase.json" <<EOF
           {
             "hosting": {
