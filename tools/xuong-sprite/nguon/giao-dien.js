@@ -20,7 +20,7 @@
   // ---------- trạng thái ----------
   const S = {
     buoc: 1, muc: null, nguon: null, sua: null, lichSu: [], mat: null, R: null, kh: null, tam: null, sp: null, tamCu: true,
-    tach: { nguong: 40, kieu: 'mep', boDom: true, lat: false, cao: 36, soMau: 12, vien: true },
+    tach: { nguong: 40, kieu: 'mep', boDom: true, lat: false, cao: 36, soMau: 20, vien: true, kieuThu: 'net' },
     dong_tac: {}, thay_cho: null, chiAnh: false,
     xem: { goc: true, cu: '', zoom3: 0, che: 'khop', boChon: 0, coTo: 2, ten: 'idle', t: 0, face: 1, nen: true, emBe: true, soGoc: false, lap: true, zoom: 2, lanLuot: false },
   };
@@ -181,14 +181,14 @@
   // ---------- chọn một thứ ----------
   function datLaiCongViec() {
     S.nguon = null; S.sua = null; S.lichSu = []; S.mat = null; S.R = null; S.kh = null; S.tam = null; S.sp = null; S.tamCu = true; S.chiAnh = false;
-    S.dong_tac = {}; S.thay_cho = null; S.dd = null; S._anhDo = null;
+    S.dong_tac = {}; S.thay_cho = null; S.dd = null; S._anhDo = null; S.chuyen = null;
     if (XD) XD.boDangKy();
   }
   async function chonMuc(muc) {
     datLaiCongViec();
     S.muc = muc;
     const g = thongTinGoc(muc.ma);
-    S.tach = { nguong: 40, kieu: 'mep', boDom: true, lat: false, cao: muc.doi === 'em-be' ? 28 : muc.doi === 'nguoi-lang' ? caoNguoiLang(muc.nl) : g ? g.h : XD.laDo(muc) ? XD.caoGoc(muc) : 36, soMau: 12, vien: true };
+    S.tach = { nguong: 40, kieu: 'mep', boDom: true, lat: false, cao: muc.doi === 'em-be' ? 28 : muc.doi === 'nguoi-lang' ? caoNguoiLang(muc.nl) : g ? g.h : XD.laDo(muc) ? XD.caoGoc(muc) : 36, soMau: 20, vien: true, kieuThu: 'net' };
     if (!muc.vung && g) muc.vung = g.vung;
     const raw = docMay(NHAP + muc.ma);
     if (raw) { try { await khoiPhuc(JSON.parse(raw), true); bao('Đã mở bản nháp đang làm của ' + muc.ten); return; } catch (e) { bao('Bản nháp hỏng, làm mới từ đầu', true); } }
@@ -206,7 +206,7 @@
     if (n === 3 && S.muc.doi === 'vat-pham') n = S.buoc === 4 ? 2 : 4; // vật phẩm không cần bước khung
     S.buoc = n;
     if (n >= 3 && !S.kh && !laDo()) chonMau(XS.goiYMau(S.muc.ma, (thongTinGoc(S.muc.ma) || {}).bay));
-    if (!laDo()) { $('bang3Vk').classList.add('an'); $('bang3Tp').classList.add('an'); $('bang3Quai').classList.remove('an'); $('khoiChinhDT').classList.remove('an'); $('khoiBac').classList.add('an'); $('khoiBe4').classList.add('an'); for (const id of ['coEmBe', 'lapLai']) $(id).parentNode.classList.remove('an'); }
+    if (!laDo()) { $('bang3Vk').classList.add('an'); $('bang3Tp').classList.add('an'); $('bang3Quai').classList.remove('an'); $('khoiChinhDT').classList.remove('an'); $('khoiYen').classList.remove('an'); $('khoiBac').classList.add('an'); $('khoiBe4').classList.add('an'); for (const id of ['coEmBe', 'lapLai']) $(id).parentNode.classList.remove('an'); }
     for (let i = 1; i <= 5; i++) $('b' + i).classList.toggle('hien', i === n);
     for (const b of document.querySelectorAll('#cacBuoc button')) {
       const k = +b.dataset.b;
@@ -233,6 +233,7 @@
     $('soMau').value = t.soMau; $('oSoMau').textContent = t.soMau;
     $('boDom').checked = t.boDom; $('latAnh').checked = t.lat; $('vienToi').checked = t.vien;
     for (const b of document.querySelectorAll('[data-kieu]')) b.classList.toggle('chon', b.dataset.kieu === t.kieu);
+    for (const b of document.querySelectorAll('[data-thu]')) { b.classList.toggle('chon', b.dataset.thu === (t.kieuThu || 'net')); b.disabled = S.chiAnh; }
     const g = S.muc && thongTinGoc(S.muc.ma);
     $('ghiCo').textContent = laDo() ? (S.muc.doi === 'vu-khi' ? 'Vũ khí gốc dài khoảng ' + XD.caoGoc(S.muc) + ' điểm ảnh (vẽ nằm ngang hay dựng đứng thì thanh trượt đều là chiều dài).' : 'Hình gốc cao khoảng ' + XD.caoGoc(S.muc) + ' điểm ảnh.') : S.muc && S.muc.doi === 'em-be' ? 'Em bé trong game cao khoảng 26 đến 31 điểm ảnh (cả mũ).' : S.muc && S.muc.doi === 'nguoi-lang' ? 'Người làng gốc cao khoảng ' + caoNguoiLang(S.muc.nl) + ' điểm ảnh. Khung nói chuyện tự phóng to gấp ba.' : g ? 'Quái gốc: rộng ' + g.w + ', cao ' + g.h + ' điểm ảnh.' : 'Quái thường cao khoảng 25 đến 40, tinh anh 45 đến 60, trùm 65 đến 120 điểm ảnh.';
     for (const id of ['nguong', 'boDom', 'latAnh', 'caoPx', 'soMau', 'vienToi']) $(id).disabled = S.chiAnh;
@@ -249,7 +250,7 @@
     if (!S.nguon) return;
     const t = S.tach;
     S.mat = XS.tachNen(S.nguon, { nguong: t.nguong, kieu: t.kieu, boDom: t.boDom, sua: S.sua });
-    const Rmoi = XS.pixelHoa(S.nguon, S.mat, { cao: caoThat(t.cao), soMau: t.soMau, lat: t.lat });
+    const Rmoi = XS.pixelHoa(S.nguon, S.mat, { cao: caoThat(t.cao), soMau: t.soMau, lat: t.lat, kieuThu: t.kieuThu });
     datHinh(Rmoi);
     veBuoc2(); hienSlider(); luuNhap();
   }
@@ -271,7 +272,7 @@
       const A = await XS.docTep(file);
       S.nguon = A; S.sua = new Uint8Array(A.w * A.h); S.lichSu = []; S.chiAnh = false;
       tinhLai();
-      S.xem.goc = true; chonChip(cv2.parentNode.previousElementSibling, $('xemGoc'));
+      S.xem.goc = false; S.xem.ss = true; chonChip(cv2.parentNode.previousElementSibling, $('xemSoSanh')); veBuoc2();
       bao(S.R ? 'Đã tách nền và pixel hoá. Kiểm tra lại rồi bấm Tiếp.' : 'Không thấy hình: thử giảm ngưỡng tách nền', !S.R);
     } catch (e) { bao(e.message || 'Không đọc được ảnh', true); }
   }
@@ -290,11 +291,13 @@
   $('boDom').onchange = (e) => datTach('boDom', e.target.checked, 0);
   $('latAnh').onchange = (e) => datTach('lat', e.target.checked, 0);
   $('vienToi').onchange = (e) => { S.tach.vien = e.target.checked; S.tamCu = true; veBuoc2(); luuNhap(); };
+  for (const b of document.querySelectorAll('[data-thu]')) b.onclick = () => { chonChip(b.parentNode, b); datTach('kieuThu', b.dataset.thu, 0); };
   for (const b of document.querySelectorAll('[data-kieu]')) b.onclick = () => { chonChip(b.parentNode, b); datTach('kieu', b.dataset.kieu, 0); };
-  for (const b of document.querySelectorAll('[data-cu]')) b.onclick = () => { chonChip(b.parentNode, b); S.xem.cu = b.dataset.cu; if (S.xem.cu && !S.xem.goc) { S.xem.goc = true; chonChip($('xemGoc').parentNode, $('xemGoc')); } veBuoc2(); };
+  for (const b of document.querySelectorAll('[data-cu]')) b.onclick = () => { chonChip(b.parentNode, b); S.xem.cu = b.dataset.cu; if (S.xem.cu && !S.xem.goc) { S.xem.goc = true; S.xem.ss = false; chonChip($('xemGoc').parentNode, $('xemGoc')); } veBuoc2(); };
   $('coBut').oninput = (e) => { $('oCoBut').textContent = e.target.value; };
-  $('xemGoc').onclick = () => { S.xem.goc = true; chonChip($('xemGoc').parentNode, $('xemGoc')); veBuoc2(); };
-  $('xemPixel').onclick = () => { S.xem.goc = false; chonChip($('xemGoc').parentNode, $('xemPixel')); veBuoc2(); };
+  $('xemGoc').onclick = () => { S.xem.goc = true; S.xem.ss = false; chonChip($('xemGoc').parentNode, $('xemGoc')); veBuoc2(); };
+  $('xemPixel').onclick = () => { S.xem.goc = false; S.xem.ss = false; chonChip($('xemGoc').parentNode, $('xemPixel')); veBuoc2(); };
+  $('xemSoSanh').onclick = () => { S.xem.goc = false; S.xem.ss = true; S.xem.cu = ''; chonChip(document.querySelector('[data-cu=""]').parentNode, document.querySelector('[data-cu=""]')); chonChip($('xemGoc').parentNode, $('xemSoSanh')); veBuoc2(); };
   $('nutHoanTac').onclick = () => { if (!S.lichSu.length) { bao('Không còn gì để hoàn tác'); return; } S.sua = S.lichSu.pop(); tinhLai(); };
   $('nutXoaSua').onclick = () => { if (!S.sua) return; S.lichSu.push(S.sua.slice()); S.sua.fill(0); tinhLai(); };
   $('nutSang3').onclick = () => denBuoc(3);
@@ -321,6 +324,7 @@
       if (vtBut) { c.strokeStyle = S.xem.cu === 'tay' ? '#ff7a5c' : '#9be05a'; c.lineWidth = 2 * d; c.beginPath(); c.arc(vtBut[0], vtBut[1], (+$('coBut').value) * d, 0, Math.PI * 2); c.stroke(); }
       return;
     }
+    if (S.xem.ss && S.nguon && S.R) { veSoSanh(c, w, h, d); return; }
     // hình pixel: so cạnh hình code cùng cỡ
     const R = S.R; if (!R) { gy.textContent = 'Chưa có hình: thử giảm ngưỡng tách nền.'; return; }
     const vien = S.tach.vien ? (laDo() ? OL_EM_BE : olCua(S.muc.doi)) : 0, P = XS.noi(R.px, R.w, R.h, 1), px = vien ? XS.themVien(P.px, P.w, P.h, vien) : P.px;
@@ -341,6 +345,42 @@
     c.fillText('Hình của bạn', xr + P.w * z / 2, yb + 16 * d);
     gy.textContent = 'Hình pixel: rộng ' + R.w + ', cao ' + R.h + ' điểm ảnh, ' + XS.soMau(R.px) + ' màu. Phóng to ×' + z + '.';
   }
+  // Ba hình cạnh nhau: ảnh gốc (chỗ đỏ là chi tiết sẽ mất) | cỡ game phóng to thấy từng điểm ảnh | cỡ thật trong phòng game.
+  function veSoSanh(c, w, h, d) {
+    const A = S.nguon, R = S.R, gy = $('goiY2'), t = S.tach, laEmBe = S.muc.doi === 'em-be' || laDo();
+    const vien = t.vien ? (laEmBe ? OL_EM_BE : OL_QUAI) : 0, P = XS.noi(R.px, R.w, R.h, 1), px = vien ? XS.themVien(P.px, P.w, P.h, vien) : P.px;
+    const ct = XS.chiTietMat(A, S.mat, R, t);
+    S.chiTiet = { tiLe: ct.tiLe, cum: ct.cum };
+    const bb = XS.khung(S.mat, A.w, A.h); if (!bb) return;
+    const pad = 10 * d, cot = (w - pad * 4) / 3, cao = h - 60 * d, y0 = 26 * d;
+    c.font = Math.round(12 * d) + 'px "Be Vietnam Pro", sans-serif'; c.textAlign = 'center'; c.fillStyle = '#f1e6c6';
+    // 1) ảnh gốc, phủ đỏ chỗ mất
+    const k1 = Math.min(cot / bb.w, cao / bb.h), x1 = pad + (cot - bb.w * k1) / 2, yy1 = y0 + (cao - bb.h * k1) / 2;
+    oCo(c, x1, yy1, bb.w * k1, bb.h * k1, 10 * d);
+    const goc = new Uint32Array(A.w * A.h);
+    for (let i = 0; i < goc.length; i++) if (S.mat[i]) { const a = A.px[i]; goc[i] = ct.mat[i] && S.xem.hienMat !== false ? XS.rgba((XS.R(a) + 255 * 2) / 3 | 0, XS.G(a) / 3 | 0, (XS.B(a) + 60) / 3 | 0, 255) : a; }
+    c.imageSmoothingEnabled = true; c.drawImage(XS.raCanvas(A.w, A.h, goc), bb.x0, bb.y0, bb.w, bb.h, x1, yy1, bb.w * k1, bb.h * k1); c.imageSmoothingEnabled = false;
+    c.fillStyle = '#f1e6c6'; c.fillText('Ảnh gốc' + (S.xem.hienMat !== false ? ' (đỏ: chi tiết sẽ mất)' : ''), pad + cot / 2, 16 * d);
+    // 2) cỡ game phóng to
+    const z = Math.max(1, Math.floor(Math.min(cot / P.w, cao / P.h))), x2 = pad * 2 + cot + (cot - P.w * z) / 2, yy2 = y0 + (cao - P.h * z) / 2;
+    oCo(c, x2, yy2, P.w * z, P.h * z, Math.max(4, z * 2));
+    c.drawImage(XS.raCanvas(P.w, P.h, px), x2, yy2, P.w * z, P.h * z);
+    c.fillStyle = '#f1e6c6'; c.fillText('Cỡ game phóng to ×' + z, pad * 2 + cot * 1.5, 16 * d);
+    // 3) cỡ thật: nền phòng, em bé code cạnh bên, phóng như game trên máy tính (mỗi điểm ảnh game = 2 điểm màn hình)
+    const s3 = Math.max(1, Math.round(2 * d)), bw = Math.floor(cot / s3), bh = Math.floor(cao / s3), x3 = pad * 3 + cot * 2, cv3t = XS.taoCanvas(bw, bh), g3 = cv3t.getContext('2d');
+    g3.imageSmoothingEnabled = false;
+    const nen = phong(S.muc.vung || 'rung');
+    if (nen) g3.drawImage(nen, 150, 120, bw, bh, 0, 0, bw, bh); else { g3.fillStyle = '#2b3b2c'; g3.fillRect(0, 0, bw, bh); }
+    const chan = Math.round(bh * 0.72), xm = Math.round(bw * 0.62);
+    try { veEmBeCode(g3, 'smith', Math.round(bw * 0.25), chan, 0, 1); } catch (e) { /* bỏ qua */ }
+    g3.drawImage(XS.raCanvas(P.w, P.h, px), Math.round(xm - P.w / 2), chan - P.h + 1);
+    c.drawImage(cv3t, x3, y0, bw * s3, bh * s3);
+    c.fillStyle = '#f1e6c6'; c.fillText('Cỡ thật trong phòng game', x3 + cot / 2, 16 * d);
+    c.fillStyle = '#a9c2b4'; c.fillText('(em bé gốc bên trái để so cỡ)', x3 + cot / 2, y0 + bh * s3 + 16 * d);
+    gy.textContent = 'Cao ' + R.h + ' điểm ảnh, ' + XS.soMau(R.px) + ' màu, kiểu ' + ((t.kieuThu || 'net') === 'net' ? 'Giữ nét' : 'Mềm') + '. ' +
+      (ct.cum ? 'Có ' + ct.cum + ' mảng chi tiết sẽ mất ở cỡ này (' + ct.tiLe + '% hình): tô đỏ ở ảnh gốc. Tăng chiều cao hoặc vẽ chi tiết to hơn để giữ.' : 'Chi tiết chính còn đủ ở cỡ này.');
+  }
+  $('hienMat').onchange = (e) => { S.xem.hienMat = e.target.checked; veBuoc2(); };
   // bút và cục tẩy trên ảnh nguồn
   let vtBut = null, dangTo2 = false;
   function to2(e) {
@@ -363,6 +403,7 @@
   function chonMau(mau) {
     const R = S.R; if (!R) return;
     const khop = XS.datKhop(R, mau);
+    if (!S.kh || S.kh.mau !== mau) S.chuyen = XS.chuyenMacDinh(mau); // đổi mẫu: về lựa chọn đứng yên mặc định của mẫu đó
     S.kh = { mau, khop, bo: XS.tuDoan(R, mau, khop) };
     S.xem.boChon = 0; S.tamCu = true; luuNhap();
   }
@@ -469,7 +510,9 @@
 
   // ================= TẤM SPRITE =================
   function cauHinh() {
-    return { mau: S.kh.mau, khop: S.kh.khop, bo: S.kh.bo, vien: S.tach.vien ? olCua(S.muc.doi) : 0, doi: S.muc.doi, dong_tac: S.dong_tac };
+    const cfg = { mau: S.kh.mau, khop: S.kh.khop, bo: S.kh.bo, vien: S.tach.vien ? olCua(S.muc.doi) : 0, doi: S.muc.doi, dong_tac: S.dong_tac };
+    if (S.chuyen) { cfg.dung_yen = S.chuyen.dung_yen.slice(); cfg.nhun = S.chuyen.nhun; } // không có: tệp cũ, cử động như trước
+    return cfg;
   }
   function lamTam(ngay) {
     if (!S.R || !S.kh) return null;
@@ -486,6 +529,38 @@
     if (ngay) f(); else cho('tam', 120, f);
     return S.tam;
   }
+
+  // ---------- đứng yên từng bộ phận, độ nhún cả người ----------
+  function chuyenHienTai() { return S.chuyen || { dung_yen: [], nhun: 100 }; }
+  function dungChuyen() {
+    const box = $('dsDungYen'); if (!box || !S.kh) return;
+    box.innerHTML = '';
+    const ch = chuyenHienTai(), goc = XS.boGoc(S.kh.mau);
+    XS.MAU[S.kh.mau].bo.forEach((b, k) => {
+      const l = document.createElement('label'); l.className = 'yen';
+      const cb = document.createElement('input'); cb.type = 'checkbox'; cb.dataset.yen = b.id; cb.checked = ch.dung_yen.includes(b.id);
+      cb.onchange = () => {
+        const c2 = S.chuyen || (S.chuyen = { dung_yen: [], nhun: 100 });
+        c2.dung_yen = c2.dung_yen.filter((x) => x !== b.id); if (cb.checked) c2.dung_yen.push(b.id);
+        S.tamCu = true; lamTam(false); luuNhap(); ghiChuyen();
+      };
+      const i = document.createElement('i'); i.style.background = XS.MAU_BO[k % 8];
+      l.appendChild(cb); l.appendChild(i); l.appendChild(document.createTextNode(b.ten + (b.id === goc ? ' (cả người)' : '')));
+      box.appendChild(l);
+    });
+    $('nhun').value = ch.nhun; $('oNhun').textContent = ch.nhun + '%';
+    ghiChuyen();
+  }
+  function ghiChuyen() {
+    const ch = chuyenHienTai(), M = XS.MAU[S.kh.mau], dong = M.bo.filter((b) => !ch.dung_yen.includes(b.id)).map((b) => b.ten.toLowerCase());
+    $('ghiYen').textContent = !ch.dung_yen.length ? 'Mọi bộ phận đều cử động.' : dong.length ? 'Chỉ ' + dong.join(', ') + ' cử động.' : 'Mọi bộ phận đứng yên: chỉ còn ngã khi chết và lăn khi né.';
+  }
+  $('nhun').oninput = (e) => {
+    $('oNhun').textContent = e.target.value + '%';
+    const c2 = S.chuyen || (S.chuyen = { dung_yen: [], nhun: 100 }); c2.nhun = +e.target.value;
+    S.tamCu = true; lamTam(false); luuNhap();
+  };
+  $('nutYenMacDinh').onclick = () => { if (!S.kh) return; S.chuyen = XS.chuyenMacDinh(S.kh.mau); S.tamCu = true; lamTam(false); luuNhap(); dungChuyen(); bao('Đã về lựa chọn mặc định của mẫu ' + XS.MAU[S.kh.mau].ten); };
 
   // ================= BƯỚC 4: chuyển động =================
   const cv4 = $('cv4'), buf4 = XS.taoCanvas(480, 270);
@@ -515,6 +590,7 @@
     }
     if (!XS.dsDongTac(S.muc.doi).includes(S.xem.ten)) S.xem.ten = 'idle';
     datDongTac(S.xem.ten);
+    dungChuyen();
   }
   function datDongTac(ten) {
     S.xem.ten = ten; S.xem.t = 0;
@@ -658,11 +734,13 @@
     const tep = { loai: 'linh-khi-sprite', phien_ban: 1, ma: m.ma, ten: m.ten, doi_tuong: m.doi, vung: m.vung || (thongTinGoc(m.ma) || {}).vung || 'moi' };
     if (m.moi && m.doi === 'quai') tep.thay_cho = S.thay_cho || null;
     if (T) Object.assign(tep, { tam: XS.pngCua(T.w, T.h, T.px), khung_rong: T.fw, khung_cao: T.fh, goc: [T.ax, T.ay], rong: R.w, cao: R.h, bong: Math.round(Math.max(6, R.w * 0.62)), dong_tac: T.dong_tac });
+    // bộ phận đứng yên và độ nhún: tấm sprite đã dựng theo đó; game đọc để biết (không có = tệp cũ, cử động đủ)
+    if (S.chuyen && S.kh) { tep.dung_yen = S.chuyen.dung_yen.slice(); tep.nhun = S.chuyen.nhun; }
     else if (S.tam) tep.dong_tac = S.tam.dong_tac;
     tep.cong_cu = {
       anh: R ? XS.pngCua(R.w, R.h, R.px) : null, rong: R ? R.w : 0, cao: R ? R.h : 0,
       mau_xuong: S.kh ? S.kh.mau : null, khop: S.kh ? S.kh.khop : null, bo_phan: S.kh ? XS.nenDoan(S.kh.bo) : null,
-      tach: S.tach, chinh: S.dong_tac,
+      tach: S.tach, chinh: S.dong_tac, chuyen: S.chuyen,
       nguon: coNguon && S.nguon ? XS.pngCua(S.nguon.w, S.nguon.h, S.nguon.px) : null,
       sua: coNguon && S.sua ? XS.nenDoan(S.sua) : null,
     };
@@ -707,7 +785,8 @@
     else S.muc = em ? { ma: em.ma, ten: em.ten, doi: 'em-be', key: em.key, vung: 'rung' } : { ma: tep.ma, ten: tep.ten || (g && g.ten) || tep.ma, doi: 'quai', vung: g ? g.vung : (tep.vung || 'rung'), moi: !g };
     if (S.muc.vung === 'moi') S.muc.vung = 'rung';
     const cc = tep.cong_cu || {};
-    S.tach = Object.assign({ nguong: 40, kieu: 'mep', boDom: true, lat: false, cao: g ? g.h : doMoi ? XD.caoGoc(S.muc) : S.muc.doi === 'nguoi-lang' ? caoNguoiLang(S.muc.nl) : 36, soMau: 12, vien: true }, cc.tach || {});
+    S.tach = Object.assign({ nguong: 40, kieu: 'mep', boDom: true, lat: false, cao: g ? g.h : doMoi ? XD.caoGoc(S.muc) : S.muc.doi === 'nguoi-lang' ? caoNguoiLang(S.muc.nl) : 36, soMau: 20, vien: true, kieuThu: 'net' }, cc.tach || {});
+    if (cc.tach && !cc.tach.kieuThu) S.tach.kieuThu = 'mem'; // tệp cũ: thu nhỏ kiểu cũ để hình không đổi
     S.dong_tac = cc.chinh || {};
     if (!cc.chinh && tep.dong_tac) for (const k in tep.dong_tac) S.dong_tac[k] = { bien: tep.dong_tac[k].bien, toc: tep.dong_tac[k].toc };
     S.thay_cho = tep.thay_cho || null;
@@ -716,11 +795,13 @@
     if (cc.nguon) {
       S.nguon = await XS.docPng(cc.nguon); S.sua = cc.sua ? XS.moDoan(cc.sua, S.nguon.w * S.nguon.h) : new Uint8Array(S.nguon.w * S.nguon.h);
       S.mat = XS.tachNen(S.nguon, { nguong: S.tach.nguong, kieu: S.tach.kieu, boDom: S.tach.boDom, sua: S.sua });
-      if (!R) R = XS.pixelHoa(S.nguon, S.mat, { cao: caoThat(S.tach.cao), soMau: S.tach.soMau, lat: S.tach.lat });
+      if (!R) R = XS.pixelHoa(S.nguon, S.mat, { cao: caoThat(S.tach.cao), soMau: S.tach.soMau, lat: S.tach.lat, kieuThu: S.tach.kieuThu });
     } else S.chiAnh = !!R;
     if (!R && tep.tam) throw new Error('Tệp chỉ có tấm sprite, thiếu phần để sửa tiếp');
     S.R = R;
     if (doMoi) { if (R) { if (!S.dd || !S.dd.w) XD.datMacDinh(); XD.dangKy(); } hienSlider(); capNhatDau(); if (!tuNhap) luuNhap(true); denBuoc(R ? 4 : 2); return; }
+    S.chuyen = cc.chuyen && Array.isArray(cc.chuyen.dung_yen) ? { dung_yen: cc.chuyen.dung_yen.slice(), nhun: cc.chuyen.nhun == null ? 100 : +cc.chuyen.nhun }
+      : Array.isArray(tep.dung_yen) ? { dung_yen: tep.dung_yen.slice(), nhun: tep.nhun == null ? 100 : +tep.nhun } : null; // tệp cũ: null = cử động đủ như trước
     if (R && cc.mau_xuong && XS.MAU[cc.mau_xuong] && cc.khop) S.kh = { mau: cc.mau_xuong, khop: cc.khop, bo: cc.bo_phan ? XS.moDoan(cc.bo_phan, R.w * R.h) : XS.tuDoan(R, cc.mau_xuong, cc.khop) };
     S.tamCu = true;
     hienSlider(); capNhatDau();

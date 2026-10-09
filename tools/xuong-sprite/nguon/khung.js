@@ -17,7 +17,8 @@
   // w: độ to (để tự đoán), z: lớp (lớn nằm trên), cha, vai: vai trò để chọn cử động, pha: lệch nhịp 0..1}.
   // kieu: cách đi (buoc: bước chân, bay: bay lượn, nay: nhún nhảy, truon: trườn). nga: chết thì ngã ngửa.
   const MAU = {
-    nguoi: { ten: 'Người (2 chân)', kieu: 'buoc', nga: true,
+    // dungYen: bộ phận mặc định "Đứng yên" (em bé: đầu và thân yên, chỉ tay chân cử động). nhun: độ nhún cả người mặc định (%).
+    nguoi: { ten: 'Người (2 chân)', kieu: 'buoc', nga: true, dungYen: ['dau', 'than'], nhun: 0,
       khop: { chan: [0.5, 1], hong: [0.5, 0.6], co: [0.5, 0.36], dinh: [0.5, 0.02], vaiT: [0.62, 0.42], tayT: [0.8, 0.62], vaiS: [0.4, 0.42], tayS: [0.24, 0.62], hongT: [0.56, 0.64], banT: [0.62, 0.99], hongS: [0.44, 0.64], banS: [0.38, 0.99] },
       bo: [
         { id: 'than', ten: 'Thân', a: 'hong', b: 'co', w: 1.8, z: 0, vai: 'than' },
@@ -67,7 +68,7 @@
         { id: 'dau', ten: 'Đầu', a: 'g2', b: 'mui', w: 1.7, z: 1, cha: 'co', vai: 'dau' },
         { id: 'duoi1', ten: 'Đuôi gần', a: 'g0', b: 'd1', w: 1.3, z: -0.5, cha: 'than', vai: 'dot', so: -1 },
         { id: 'duoi2', ten: 'Chóp đuôi', a: 'd1', b: 'd2', w: 1, z: -1, cha: 'duoi1', vai: 'dot', so: -2 }] },
-    cay: { ten: 'Cây, đứng yên', kieu: 'nay', dungYen: true,
+    cay: { ten: 'Cây, đứng yên', kieu: 'nay', reCam: true,
       khop: { chan: [0.5, 1], re: [0.5, 1], goc: [0.5, 0.78], ngon: [0.5, 0.42], dinh: [0.5, 0], canhT0: [0.62, 0.5], canhT: [1, 0.32], canhS0: [0.38, 0.5], canhS: [0, 0.32] },
       bo: [
         { id: 'goc', ten: 'Gốc, rễ', a: 're', b: 'goc', w: 1.6, z: 0, vai: 'goc' },
@@ -151,8 +152,31 @@
   // Người làng chỉ có hai động tác: đứng thở và nói chuyện (vẫy tay) khi em bé tới gần.
   XS.dsDongTac = (doi) => (doi === 'nguoi-lang' ? ['idle', 'noi'] : Object.keys(XS.DONG_TAC).filter((k) => (!XS.DONG_TAC[k].emBe || doi === 'em-be') && !XS.DONG_TAC[k].nguoiLang));
 
-  // A: biên độ (1 = vừa). Trả về tư thế của động tác ten tại tiến độ u (0..1).
-  XS.tuThe = function (mau, ten, u, A) {
+  // ---------- ĐỨNG YÊN TỪNG BỘ PHẬN ----------
+  // Lựa chọn mặc định của một mẫu: { dung_yen: [mã bộ phận], nhun: % độ nhún cả người }.
+  XS.chuyenMacDinh = (mau) => { const M = MAU[mau] || {}; return { dung_yen: (M.dungYen || []).slice(), nhun: M.nhun == null ? 100 : M.nhun }; };
+  // Bộ phận gốc (cả người đi theo nó): "Thân", hoặc bộ phận đầu tiên không có bộ phận cha.
+  XS.boGoc = (mau) => { const M = MAU[mau]; const t = M.bo.find((b) => b.id === 'than' && !b.cha); return (t || M.bo.find((b) => !b.cha) || M.bo[0]).id; };
+  const YEN = { r: 0, dx: 0, dy: 0, sx: 1, sy: 1, song: null };
+  // Áp lựa chọn lên tư thế P. tuy: { dung_yen: [...], nhun: 0..200 }. Không có tuy thì giữ nguyên (tệp cũ).
+  // - Độ nhún cả người: co giãn phần nhấp nhô, bóp dẹt của cả hình khi đứng thở và đi (0 = không nhún).
+  // - Bộ phận đứng yên: không xoay, không lắc, không nhún riêng; chỉ đi theo bộ phận cha nếu cha cử động.
+  // - Bộ phận gốc (thân) đứng yên: cả hình không lắc, không nhún, không lao tới. Riêng Chết và Né lăn vẫn ngã, lăn cả người
+  //   (game cần thấy rõ bé đã ngã, đang lăn né), nhưng bộ phận đứng yên vẫn không cử động riêng.
+  function apChuyen(P, mau, ten, tuy) {
+    if (!tuy) return P;
+    const g = P.g, k = tuy.nhun == null ? 1 : clamp(tuy.nhun / 100, 0, 2);
+    if (ten === 'idle' || ten === 'move') { g.dy *= k; g.sx = 1 + (g.sx - 1) * k; g.sy = 1 + (g.sy - 1) * k; }
+    const yen = new Set(tuy.dung_yen || []);
+    if (yen.has(XS.boGoc(mau)) && ten !== 'die' && ten !== 'ne') { g.r = 0; g.dx = 0; g.dy = 0; g.sx = 1; g.sy = 1; }
+    for (const id of yen) if (MAU[mau].bo.some((b) => b.id === id)) P.b[id] = Object.assign({}, YEN);
+    return P;
+  }
+  XS.apChuyen = apChuyen;
+
+  // A: biên độ (1 = vừa). Trả về tư thế của động tác ten tại tiến độ u (0..1). tuy: lựa chọn đứng yên, độ nhún (xem apChuyen).
+  XS.tuThe = function (mau, ten, u, A, tuy) { return apChuyen(tuThe0(mau, ten, u, A), mau, ten, tuy); };
+  function tuThe0(mau, ten, u, A) {
     const M = MAU[mau], P = new TT(), g = P.g, kieu = M.kieu, mem = mau === 'mem';
     const moi = (cb) => { for (const b of M.bo) cb(b, P.p(b.id), b.pha || 0); };
     if (ten === 'idle') {
@@ -193,7 +217,7 @@
         g.dx = 0.5 * A * sn(u);
       } else { // nhún nhảy
         const hh = Math.sin(u * PI), cz = Math.cos(u * TAU);
-        g.dy = -(M.dungYen ? 3 : 5) * A * hh; g.sy = 1 - 0.1 * A * cz; g.sx = 1 + 0.08 * A * cz;
+        g.dy = -(M.reCam ? 3 : 5) * A * hh; g.sy = 1 - 0.1 * A * cz; g.sx = 1 + 0.08 * A * cz;
         moi((b, p, ph) => {
           if (b.vai === 'tua') p.r = 14 * A * sn(u + ph);
           else if (b.vai === 'dinh') { p.r = -5 * A * sn(u); p.song = [1.5 * A, u]; }
@@ -277,7 +301,7 @@
       moi((b, p, ph) => { if (b.vai === 'tay') p.r = (ph ? -40 : 40) * Math.sin(u * PI); else if (b.vai === 'chan') p.r = (ph ? 30 : -30) * Math.sin(u * PI); });
     }
     return P;
-  };
+  }
 
   // ---------- DỰNG KHUNG HÌNH ----------
   // Ma trận 2x3 [a, b, c, d, e, f]: x' = a x + c y + e, y' = b x + d y + f.
@@ -341,7 +365,8 @@
     if (co) { const inv = nghich(tinh(M.bo[bt])); for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { if (out[y * W + x]) continue; const sx = Math.floor(inv[0] * (x + 0.5) + inv[2] * (y + 0.5) + inv[4]), sy = Math.floor(inv[1] * (x + 0.5) + inv[3] * (y + 0.5) + inv[5]); if (sx < 0 || sy < 0 || sx >= w || sy >= h) continue; const i = sy * w + sx; if (R.px[i] && bomap[i] === 255) out[y * W + x] = R.px[i]; } }
     const px = o.vien ? XS.themVien(out, W, H, o.vien) : out;
     const c = apDung(Gm, chan[0], chan[1]);
-    return { w: W, h: H, px, ox: Math.round(chan[0] + D), oy: Math.round(chan[1] + D), D, chanTT: c };
+    M.bo.forEach((b) => tinh(b));
+    return { w: W, h: H, px, ox: Math.round(chan[0] + D), oy: Math.round(chan[1] + D), D, chanTT: c, mt: the };
   };
 
   // ---------- TẤM SPRITE ----------
@@ -360,7 +385,7 @@
       const giay = XS.giayCua(ten, cfg, goc), n = XS.soKhung(ten, giay), A = ((cfg.dong_tac[ten] || {}).bien == null ? 100 : cfg.dong_tac[ten].bien) / 100, ks = [];
       for (let i = 0; i < n; i++) {
         const u = XS.DONG_TAC[ten].lap ? i / n : (n > 1 ? i / (n - 1) : 0);
-        const f = XS.dungKhung(R, cfg, XS.tuThe(cfg.mau, ten, u, A), { vien: cfg.vien, bb });
+        const f = XS.dungKhung(R, cfg, XS.tuThe(cfg.mau, ten, u, A, cfg.dung_yen ? { dung_yen: cfg.dung_yen, nhun: cfg.nhun } : null), { vien: cfg.vien, bb });
         W = f.w; ox = f.ox; oy = f.oy;
         for (let y = 0; y < f.h; y++) for (let x = 0; x < f.w; x++) if (f.px[y * f.w + x]) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
         ks.push(f);

@@ -27,7 +27,30 @@
 - [PROMPT-AI.md](PROMPT-AI.md): bộ prompt nhờ AI vẽ (mỗi dòng một ảnh, theo bộ) và các câu giữ AI không vẽ lệch.
 - Bài kiểm tra `xuong_sprite.py` thêm phần đồ: **86/86 mục đạt**.
 
-## Đợt 3: trang chọn chia nhóm, vũ khí nằm ngang, người làng
+## Đợt 3: giữ nét và đứng yên từng bộ phận (theo góp ý dùng thử)
+
+Góp ý 1: "Tool làm nhòe quá nhiều chi tiết đẹp". Chủ dự án chọn **thu nhỏ giữ nét, cỡ trong game giữ nguyên**.
+
+- Cách thu nhỏ mới **Giữ nét** (mặc định): mỗi điểm ảnh lấy màu chiếm nhiều nhất trong ô (không lấy trung bình), ưu tiên nét tối, nối viền đứt, ưu tiên viền ở mép ngoài, cứu chi tiết nhỏ nổi bật (mắt, chuông). Giảm màu giữ đúng màu có thật trong hình. Kiểu **Mềm** (cũ) vẫn chọn được; tệp làm từ trước tự giữ kiểu Mềm.
+- Số màu mặc định 20 (tối đa 32). Viền tối 1px chỉ ở mép ngoài (không đè lỗ, khe bên trong), có nút bật tắt.
+- Xem **So sánh cạnh nhau**: ảnh gốc (tô đỏ chỗ chi tiết sẽ mất, đếm số mảng mất) | cỡ game phóng to | cỡ thật trong phòng game cạnh em bé gốc.
+- Em bé thử (áo trùm đỏ, mặt nạ giấy, chuông, găng to) ở 28 điểm ảnh: điểm màu pha trộn **17 → 0**, viền mép ngoài liền **81% → 91%**, mặt nạ giấy còn **23 → 36** điểm đúng màu, vẫn còn chuông vàng, mắt, miệng, má hồng.
+
+Góp ý 2: "Tool đang làm cử động cả đầu". Chủ dự án chọn **tự chọn từng bộ phận**.
+
+- Bước Chuyển động có ô **Đứng yên** cho từng bộ phận và thanh **Độ nhún cả người** (0% = không nhún). Bộ phận đứng yên không xoay, lắc, nhún riêng, chỉ đi theo bộ phận cha. Thân đứng yên thì cả hình đứng yên (trừ ngã khi chết và lăn khi né).
+- Mẫu **Người** (em bé) mặc định: **đầu và thân đứng yên, không nhún, chỉ tay chân cử động**. Mẫu khác giữ mặc định cũ.
+- Tệp `.sprite.json` có thêm `dung_yen` (danh sách bộ phận) và `nhun`; `game/build.py` nhúng hai mục này; `game/js/sprite_custom.js` đọc (`sp.dungYen`, `sp.nhun`, `G.spriteCustom.dungYen(mã, bộ phận)`). Game chỉ phát từng khung đã dựng, không tự thêm nhún lắc, nên bộ phận đứng yên cũng đứng yên trong game. Tệp cũ không có hai mục: đọc và chạy y như trước.
+- Bài kiểm tra `xuong_sprite.py` thêm 23 mục (giữ nét so với kiểu cũ, viền mép ngoài, mặc định em bé, đầu và thân không đổi vị trí, góc qua mọi khung của đứng thở, đi, chuẩn bị đánh, đánh, trúng đòn trong công cụ; đầu đứng yên trong game qua 32 khung đứng thở và chạy; tệp cũ mở được trong công cụ và game): **109/109 mục đạt**.
+- Ảnh: [giu-net-truoc-sau.png](giu-net-truoc-sau.png), [chi-tay-chan.gif](chi-tay-chan.gif), [buoc-2-so-sanh.png](buoc-2-so-sanh.png), [buoc-4-dung-yen.png](buoc-4-dung-yen.png), tạo bằng `game/tests/xuong_sprite_giu_net_shots.py`.
+
+- Đã gộp `khoi-tao-du-an` mới nhất (có phần Chuông), đóng gói lại, chạy lại: `xuong_sprite.py` 109/109, các bài cũ (anim_smoke, balance, ban_do, bao_truoc, campaign, cay, chuong, cong, cung, do_roi, doors, dps, env_rooms, fuzz, fx_check, hanh_trang, linhkhi, mapgen, moves, perf, quai, rules, tam_huong, trang_phuc, ui_build, ui_input, ui_robust) đều đạt; `may.py` vẫn 2 mục hỏng như bản gốc (404 của máy chủ thử).
+
+| Trước / sau giữ nét | Chỉ tay chân cử động (phải) |
+|---|---|
+| ![](giu-net-truoc-sau.png) | ![](chi-tay-chan.gif) |
+
+## Đợt 4: trang chọn chia nhóm, vũ khí nằm ngang, người làng
 
 - **Trang chọn** chia sáu nhóm: Em bé (5) · Quái (36, ba vùng và Quái mới) · Vũ khí (40) · Trang phục (51) · Đồ và tài nguyên (14) · Người làng (7). Mỗi lần hiện một nhóm, thẻ nào cũng có hình code để so; công cụ nhớ nhóm mở lần trước. ![](chon-nhom-vu-khi.png)
 - **Vũ khí**: vẽ nằm ngang mũi sang phải (đúng kiểu prompt mới) hay dựng đứng đều được, công cụ tự đặt điểm cầm và mũi; thanh cỡ là chiều dài vũ khí; **chạm vào chuôi** là đặt điểm cầm; bước xem có **Tám hướng** (đúng đường vẽ của game). Game vẫn tự thêm ánh hệ, vệt chém; làm được một hình cho cả dòng hoặc riêng từng hệ, giai đoạn như trước.
@@ -36,7 +59,7 @@
 - **Người làng** (mới): bảy người, khung Người, hai động tác Đứng thở và Nói chuyện vẫy tay; thay hình trong làng, dải khuôn mặt, khung nói chuyện. "Xem trong game" mở thẳng làng, em bé đứng cạnh người đó, có nút mở khung nói chuyện.
 - **Game** (chỉ đổi hình, không đổi luật chơi, cân bằng, giao diện người chơi): `js/sprite_custom.js` thêm phần người làng; `js/village_scene.js` thêm hai chỗ hỏi hình tự vẽ (`VS.tuVe`, `VS.tuVeMat`, chỉ được gắn khi có tệp `nl-…`) và `VS.npcCode` cho công cụ so hình. Thư mục `game/art/custom/` chỉ có `.gitkeep` thì game y hệt trước.
 - **Prompt**: [PROMPT-VE.md](PROMPT-VE.md) phần 2: 40 vũ khí, 51 trang phục, 14 đồ và tài nguyên, 7 người làng, mỗi món một dòng prompt đầy đủ có nét phá cách dân gian (`Twist:`), kèm đoạn "Phong cách chung cho đồ vật".
-- Kiểm tra `game/tests/xuong_sprite.py` thêm phần đợt 3: **118/118 mục đạt** (trong đó: kiếm vẽ nằm ngang xoay đúng tám hướng quanh điểm cầm, khăn xếp theo đứng/đi/đánh/lăn né, quặng tự vẽ ở dải tài nguyên và Hành trang, Chú Lái Đò trong làng, dải khuôn mặt và khung nói chuyện, người làng khác vẫn hình code, xoá tệp thì về hình code). Ảnh trước/sau: `game/tests/xuong_sprite_them_shots.py`.
+- Kiểm tra `game/tests/xuong_sprite.py` thêm phần đợt 4: **141/141 mục đạt** sau khi gộp đợt 3 (giữ nét) (trong đó: kiếm vẽ nằm ngang xoay đúng tám hướng quanh điểm cầm, khăn xếp theo đứng/đi/đánh/lăn né, quặng tự vẽ ở dải tài nguyên và Hành trang, Chú Lái Đò trong làng, dải khuôn mặt và khung nói chuyện, người làng khác vẫn hình code, xoá tệp thì về hình code). Ảnh trước/sau: `game/tests/xuong_sprite_them_shots.py`. Chạy lại các bài cũ: đều đạt, trừ `may.py` (2 mục 404 của máy chủ thử, bản gốc cũng vậy), `ghep2.py` 1 mục vành gai rễ Mộc Tinh (bản gốc `khoi-tao-du-an` hỏng y hệt, không liên quan Xưởng Sprite) và `cay.py` (mô phỏng cân bằng ngẫu nhiên: lần chạy đầu đạt, lần sau lệch ngưỡng một ải; lần này không đổi luật chơi hay cân bằng).
 
 | Trước / sau | |
 |---|---|

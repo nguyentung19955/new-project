@@ -268,7 +268,7 @@
       const box = $('dsDongTac'); box.innerHTML = '';
       const ds = DT[S.muc.doi]; if (!ds.some((q) => q[0] === S.xem.ten)) S.xem.ten = ds[0][0];
       for (const q of ds) { const b = document.createElement('button'); b.type = 'button'; b.className = 'chip' + (S.xem.ten === q[0] ? ' chon' : ''); b.dataset.dt = q[0]; b.textContent = S.muc.doi === 'vu-khi' && q[0] === 'atk' && S.muc.vk.loai === 'bow' ? 'Bắn' : q[1]; b.onclick = () => { S.xem.ten = q[0]; S.xem.t = 0; U.chonChip(box, b); }; box.appendChild(b); }
-      $('khoiChinhDT').classList.add('an');
+      $('khoiChinhDT').classList.add('an'); $('khoiYen').classList.add('an');
       $('coEmBe').parentNode.classList.add('an'); $('lapLai').parentNode.classList.add('an');
       $('coGoc').parentNode.classList.remove('an');
       const bac = $('khoiBac'); bac.classList.toggle('an', S.muc.doi === 'vat-pham');

@@ -18285,6 +18285,11 @@ MA._xong();
         ma: tep.ma, ten: String(tep.ten || tep.ma), doi: tep.doi_tuong === 'em-be' ? 'em-be' : tep.doi_tuong === 'nguoi-lang' ? 'nguoi-lang' : 'quai', fw, fh, ax: +goc[0] || 0, ay: +goc[1] || 0,
         rong: tep.rong | 0 || fw, cao: tep.cao | 0 || fh, bong: +tep.bong || Math.max(6, (tep.rong | 0) * 0.62), dt, img: null, ready: false, mau: {}, vung: tep.vung || 'moi',
       };
+      // Bộ phận "Đứng yên" và độ nhún cả người chọn trong công cụ. Tấm sprite đã dựng sẵn theo lựa chọn này, nên game chỉ
+      // phát đúng từng khung, không tự thêm nhún, lắc hay xoay nào lên hình tự vẽ (bộ phận đứng yên giữ nguyên trong game).
+      // Tệp cũ không có hai mục này: null, phát như trước.
+      sp.dungYen = Array.isArray(tep.dung_yen) ? tep.dung_yen.filter((x) => typeof x === 'string' && /^[A-Za-z0-9_]{1,20}$/.test(x)).slice(0, 20) : null;
+      sp.nhun = tep.nhun == null || !isFinite(+tep.nhun) ? null : clamp(+tep.nhun, 0, 200);
       if (typeof Image !== 'undefined') {
         const img = new Image();
         img.onload = () => { sp.img = img; sp.ready = true; };
@@ -18305,6 +18310,7 @@ MA._xong();
   SC.clear = function () { for (const k of Object.keys(SC.ds)) delete SC.ds[k]; for (const k of Object.keys(SC.do)) boDo(k); };
   SC.get = function (ma) { const s = SC.ds[ma]; return s && s.ready ? s : null; };
   SC.has = (ma) => !!SC.ds[ma];
+  SC.dungYen = (ma, bo) => { const s = SC.ds[ma]; return !!(s && s.dungYen && s.dungYen.indexOf(bo) >= 0); };
 
   // ---------- chọn khung ----------
   // Động tác lặp: theo thời gian t (giây). Động tác một lần: theo tiến độ u (0..1).
