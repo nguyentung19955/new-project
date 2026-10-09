@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Xưởng Sprite · Linh Khí</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;700&display=swap">
+<style>
+  /* Chủ đề trống đồng Đông Sơn, cùng bảng màu với game (js/ui_theme.js). Chỉ có giao diện tối. */
+  :root {
+    color-scheme: dark;
+    --dk: #1a120a; --brD: #5a3d1a; --br: #a8752f; --gold: #d9a441; --hi: #f6dc92;
+    --pat: #3f8f7f; --patL: #6fc1a8; --patD: #1f4f4a; --bg: #12292a; --bg2: #17363a;
+    --cop: #8a2f22; --copL: #b8452f; --ink: #fff0c4; --sub: #a9c2b4; --text: #f1e6c6;
+    --dau: 52px; --buoc: 42px;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--bg); color: var(--text); font: 500 14px/1.45 "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    display: flex; flex-direction: column; overflow: hidden;
+    background-image: radial-gradient(circle at 50% 120%, rgba(217,164,65,.07) 0 30%, transparent 31%), radial-gradient(circle at 50% 120%, rgba(217,164,65,.05) 0 45%, transparent 46%);
+  }
+  button, input, select { font: inherit; color: inherit; }
+  canvas { image-rendering: pixelated; image-rendering: crisp-edges; }
+
+  /* ----- dải đầu: mặt trống, tên công cụ, chim Lạc ----- */
+  header.dau {
+    height: var(--dau); flex: none; display: flex; align-items: center; gap: 10px; padding: 0 12px;
+    background: linear-gradient(#2a1d0f, var(--dk)); border-bottom: 2px solid var(--brD); position: relative;
+  }
+  header.dau::after { /* băng răng cưa */
+    content: ""; position: absolute; left: 0; right: 0; bottom: -8px; height: 6px; pointer-events: none;
+    background: linear-gradient(135deg, var(--br) 33%, transparent 34%) 0 0/8px 6px, linear-gradient(225deg, var(--br) 33%, transparent 34%) 0 0/8px 6px;
+    opacity: .55; z-index: 2;
+  }
+  .trong { width: 34px; height: 34px; flex: none; }
+  .ten-cc { font-weight: 700; font-size: 17px; color: var(--hi); letter-spacing: .3px; white-space: nowrap; }
+  .ten-cc small { display: block; font-weight: 500; font-size: 11px; color: var(--sub); letter-spacing: 0; }
+  #chimLac { flex: 1; min-width: 20px; height: 22px; }
+  .dang-lam { font-size: 12px; color: var(--sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 30vw; }
+  .dang-lam b { color: var(--ink); }
+
+  /* ----- nút đồng ----- */
+  .nut {
+    position: relative; border: 2px solid var(--dk); border-radius: 7px; padding: 6px 14px; cursor: pointer; font-weight: 700; color: #2b1a08;
+    background: linear-gradient(var(--hi), var(--gold) 45%, var(--br)); box-shadow: inset 0 1px 0 #fff4c8, 0 2px 0 var(--dk); white-space: nowrap;
+    touch-action: manipulation; min-height: 36px;
+  }
+  .nut::before, .nut::after { content: ""; position: absolute; top: 50%; width: 4px; height: 4px; margin-top: -2px; border-radius: 50%; background: var(--brD); box-shadow: inset 1px 1px 0 var(--hi); }
+  .nut::before { left: 4px; } .nut::after { right: 4px; }
+  .nut:hover { filter: brightness(1.08); }
+  .nut:active { transform: translateY(1px); box-shadow: inset 0 1px 0 #fff4c8, 0 1px 0 var(--dk); }
+  .nut:disabled { filter: grayscale(.8) brightness(.7); cursor: not-allowed; }
+  .nut.phu { color: var(--ink); background: linear-gradient(var(--patL), var(--pat) 45%, var(--patD)); box-shadow: inset 0 1px 0 #b8f0de, 0 2px 0 var(--dk); }
+  .nut.do { color: var(--ink); background: linear-gradient(var(--copL), var(--cop)); box-shadow: inset 0 1px 0 #e27a60, 0 2px 0 var(--dk); }
+  .nut.nho { padding: 3px 10px; min-height: 30px; font-size: 13px; }
+  .nut.chon { outline: 3px solid var(--hi); outline-offset: 1px; }
+
+  /* ----- các bước ----- */
+  nav.buoc { height: var(--buoc); flex: none; display: flex; gap: 6px; align-items: center; padding: 0 10px; overflow-x: auto; background: var(--patD); border-bottom: 2px solid var(--dk); margin-top: 6px; scrollbar-width: none; }
+  nav.buoc button {
+    flex: none; border: 2px solid var(--dk); border-radius: 20px; padding: 3px 12px 3px 4px; background: var(--bg2); color: var(--sub); cursor: pointer; display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 13px; min-height: 32px;
+  }
+  nav.buoc button .so { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: var(--dk); color: var(--gold); border: 2px solid var(--brD); font-size: 12px; }
+  nav.buoc button.dang { background: linear-gradient(var(--hi), var(--gold)); color: #2b1a08; }
+  nav.buoc button.dang .so { background: var(--cop); color: var(--ink); border-color: var(--dk); }
+  nav.buoc button.xong .so { background: var(--pat); color: var(--ink); }
+  nav.buoc button:disabled { opacity: .45; cursor: not-allowed; }
+
+  main { flex: 1; min-height: 0; position: relative; }
+  section.trang { position: absolute; inset: 0; display: none; padding: 10px; gap: 10px; }
+  section.trang.hien { display: flex; }
+  .cot-san { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+  .san {
+    flex: 1; min-height: 0; position: relative; border: 2px solid var(--brD); border-radius: 10px; overflow: hidden;
+    background: #0d1c1d; box-shadow: inset 0 0 0 2px var(--dk);
+  }
+  .san canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; }
+  .san .goi-y { position: absolute; left: 8px; bottom: 6px; right: 8px; font-size: 12px; color: var(--sub); pointer-events: none; text-shadow: 0 1px 2px #000; }
+  .bang {
+    width: 330px; flex: none; overflow-y: auto; border: 2px solid var(--brD); border-radius: 10px; padding: 10px 12px; background: var(--bg2);
+    box-shadow: inset 0 0 0 2px var(--dk);
+  }
+  .bang h3 { margin: 4px 0 8px; font-size: 15px; color: var(--hi); display: flex; align-items: center; gap: 6px; }
+  .bang h3::before { content: ""; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--gold); box-shadow: inset 0 0 0 2px var(--bg2), inset 0 0 0 5px var(--gold); flex: none; }
+  .bang p { margin: 4px 0 10px; color: var(--sub); font-size: 13px; }
+  .khoi { border-top: 1px dashed var(--brD); padding-top: 8px; margin-top: 8px; }
+  .dong { display: flex; align-items: center; gap: 8px; margin: 6px 0; flex-wrap: wrap; }
+  .dong label { flex: 1; min-width: 110px; font-size: 13px; }
+  .dong output { min-width: 42px; text-align: right; color: var(--hi); font-weight: 700; font-size: 13px; }
+  input[type=range] { width: 100%; accent-color: var(--gold); height: 26px; }
+  .truot { display: grid; grid-template-columns: 1fr auto; gap: 0 8px; align-items: center; margin: 4px 0; }
+  .truot span { font-size: 13px; }
+  .truot input { grid-column: 1 / 3; }
+  input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--gold); vertical-align: middle; }
+  input[type=text], select { background: var(--dk); border: 2px solid var(--brD); border-radius: 6px; padding: 5px 8px; min-height: 34px; }
+  .chip-nhom { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { border: 2px solid var(--dk); border-radius: 16px; padding: 3px 10px; background: var(--bg); color: var(--text); cursor: pointer; font-size: 13px; min-height: 30px; display: inline-flex; align-items: center; gap: 6px; }
+  .chip.chon { background: linear-gradient(var(--hi), var(--gold)); color: #2b1a08; font-weight: 700; }
+  .chip i { width: 12px; height: 12px; border-radius: 3px; border: 1px solid var(--dk); display: inline-block; }
+  .ghi { font-size: 12px; color: var(--sub); }
+  .canh-bao { background: rgba(138,47,34,.35); border: 1px solid var(--copL); border-radius: 6px; padding: 6px 8px; font-size: 12px; }
+
+  /* ----- bước 1: danh sách ----- */
+  #b1 { flex-direction: column; overflow-y: auto; }
+  .vung-ten { margin: 6px 2px 6px; font-weight: 700; color: var(--hi); font-size: 15px; display: flex; align-items: center; gap: 8px; }
+  .vung-ten::after { content: ""; flex: 1; height: 6px; background: radial-gradient(circle, var(--br) 0 1.5px, transparent 2px) 0 0/8px 6px; opacity: .6; }
+  .luoi { display: grid; grid-template-columns: repeat(auto-fill, minmax(124px, 1fr)); gap: 8px; }
+  .the {
+    border: 2px solid var(--brD); border-radius: 10px; background: var(--bg2); cursor: pointer; padding: 6px; display: flex; flex-direction: column; align-items: center; gap: 2px; position: relative;
+    box-shadow: inset 0 0 0 2px var(--dk); min-height: 120px; color: var(--text); text-align: center;
+  }
+  .the:hover { border-color: var(--gold); }
+  .the.chon { border-color: var(--hi); background: #22464a; }
+  .the canvas { width: 96px; height: 72px; }
+  .the b { font-size: 13px; line-height: 1.25; }
+  .the small { font-size: 11px; color: var(--sub); }
+  .the .nhan { position: absolute; top: 4px; right: 4px; font-size: 10px; background: var(--cop); color: var(--ink); border-radius: 8px; padding: 0 6px; border: 1px solid var(--dk); }
+  .the.moi { border-style: dashed; justify-content: center; }
+  .the.moi .cong { font-size: 34px; line-height: 1; color: var(--gold); font-weight: 700; }
+
+  /* ----- bước 2 ----- */
+  .tha { position: absolute; inset: 10px; border: 3px dashed var(--br); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center; padding: 16px; color: var(--sub); }
+  .tha.keo { background: rgba(217,164,65,.12); border-color: var(--hi); }
+  .tha b { color: var(--hi); font-size: 16px; }
+  .the-xem { display: flex; gap: 6px; }
+  .the-xem button { flex: 1; }
+
+  /* ----- hộp xem trong game ----- */
+  .hop { position: fixed; inset: 0; background: rgba(0,0,0,.72); display: none; align-items: center; justify-content: center; z-index: 20; padding: 10px; }
+  .hop.hien { display: flex; }
+  .hop .khung { width: min(100%, 1100px); height: 100%; max-height: 720px; display: flex; flex-direction: column; gap: 6px; background: var(--bg2); border: 2px solid var(--gold); border-radius: 12px; padding: 8px; }
+  .hop .thanh { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .hop .thanh .ghi { flex: 1; min-width: 120px; }
+  .hop iframe { flex: 1; width: 100%; border: 2px solid var(--dk); border-radius: 8px; background: #000; }
+  .hop .noi-dung { overflow-y: auto; flex: 1; padding: 4px 8px; }
+  .hop h2 { margin: 6px 0; color: var(--hi); font-size: 18px; }
+  .hop li { margin: 4px 0; }
+
+  #thongBao { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); background: var(--dk); color: var(--ink); border: 2px solid var(--gold); border-radius: 10px; padding: 8px 14px; font-weight: 700; display: none; z-index: 30; max-width: 90vw; text-align: center; }
+  #thongBao.hien { display: block; }
+  #thongBao.loi { border-color: var(--copL); background: #3a120c; }
+  .an { display: none !important; }
+
+  /* điện thoại cầm ngang và màn thấp */
+  @media (max-height: 520px) {
+    :root { --dau: 40px; --buoc: 36px; }
+    .ten-cc { font-size: 15px; } .ten-cc small { display: none; }
+    .trong { width: 28px; height: 28px; }
+    section.trang { padding: 6px; gap: 6px; }
+    .bang { width: 270px; padding: 6px 8px; }
+    .bang h3 { font-size: 14px; margin: 2px 0 4px; }
+    .bang p { margin: 2px 0 6px; font-size: 12px; }
+    .nut { min-height: 32px; padding: 4px 10px; font-size: 13px; }
+    nav.buoc button { min-height: 28px; font-size: 12px; }
+    nav.buoc button .so { width: 20px; height: 20px; }
+    .the canvas { width: 80px; height: 60px; }
+  }
+  @media (max-width: 700px) and (orientation: portrait) {
+    section.trang { flex-direction: column; overflow-y: auto; }
+    .bang { width: auto; flex: none; }
+    .cot-san { min-height: 55vh; }
+  }
+</style>
+</head>
+<body>
+<header class="dau">
+  <svg class="trong" viewBox="0 0 40 40" aria-hidden="true">
+    <circle cx="20" cy="20" r="19" fill="#5a3d1a" stroke="#1a120a" stroke-width="2"/>
+    <circle cx="20" cy="20" r="15.5" fill="none" stroke="#d9a441" stroke-width="1.5"/>
+    <circle cx="20" cy="20" r="12" fill="none" stroke="#a8752f" stroke-width="1" stroke-dasharray="2 2"/>
+    <polygon fill="#f6dc92" points="20,8 21.6,16 26,10.3 22.9,17.6 30.6,15 24,19.3 31,20 24,20.7 30.6,25 22.9,22.4 26,29.7 21.6,24 20,32 18.4,24 14,29.7 17.1,22.4 9.4,25 16,20.7 9,20 16,19.3 9.4,15 17.1,17.6 14,10.3 18.4,16"/>
+    <circle cx="20" cy="20" r="2.4" fill="#1a120a"/>
+  </svg>
+  <div class="ten-cc">Xưởng Sprite<small>Linh Khí · tự vẽ quái và em bé</small></div>
+  <canvas id="chimLac" aria-hidden="true"></canvas>
+  <div class="dang-lam" id="dangLam">Chưa chọn quái nào</div>
+  <button class="nut nho phu" id="nutMoTep" title="Mở tệp .sprite.json đã tải về để sửa tiếp">Mở tệp</button>
+  <button class="nut nho" id="nutHuongDan" title="Cách dùng">?</button>
+  <input type="file" id="chonTep" accept=".json,application/json" class="an">
+</header>
+<nav class="buoc" id="cacBuoc">
+  <button data-b="1" class="dang"><span class="so">1</span>Chọn</button>
+  <button data-b="2" disabled><span class="so">2</span>Đưa hình</button>
+  <button data-b="3" disabled><span class="so">3</span>Khung cơ thể</button>
+  <button data-b="4" disabled><span class="so">4</span>Chuyển động</button>
+  <button data-b="5" disabled><span class="so">5</span>Xuất tệp</button>
+</nav>
+<main>
+  <!-- BƯỚC 1: chọn quái hoặc em bé -->
+  <section class="trang hien" id="b1">
+    <p class="ghi" style="margin:0 2px">Chọn thứ bạn muốn tự vẽ. Hình nhỏ là hình đang có trong game (vẽ bằng code), để bạn so cỡ và dáng.</p>
+    <div id="dsChon"></div>
+  </section>
+
+  <!-- BƯỚC 2: đưa hình vào, tách nền, pixel hoá -->
+  <section class="trang" id="b2">
+    <div class="cot-san">
+      <div class="the-xem">
+        <button class="chip chon" id="xemGoc" type="button">Ảnh đã tách nền</button>
+        <button class="chip" id="xemPixel" type="button">Hình pixel trong game</button>
+      </div>
+      <div class="san" id="san2">
+        <canvas id="cv2"></canvas>
+        <div class="tha" id="vungTha">
+          <b>Kéo thả ảnh vào đây</b>
+          <span>hoặc</span>
+          <button class="nut" id="nutChonAnh" type="button">Chọn ảnh…</button>
+          <span class="ghi">PNG hoặc JPG. Ảnh chụp tranh vẽ trên giấy trắng cũng được. Vẽ con vật quay mặt sang phải.</span>
+        </div>
+        <div class="goi-y" id="goiY2"></div>
+      </div>
+      <input type="file" id="chonAnh" accept="image/png,image/jpeg,image/webp,image/gif" class="an">
+    </div>
+    <div class="bang">
+      <h3>Tách nền</h3>
+      <div class="truot"><span>Ngưỡng tách nền</span><output id="oNguong">40</output><input type="range" id="nguong" min="2" max="140" value="40"></div>
+      <div class="chip-nhom" style="margin:4px 0 6px">
+        <button class="chip chon" data-kieu="mep" type="button">Từ mép vào</button>
+        <button class="chip" data-kieu="het" type="button">Mọi chỗ cùng màu nền</button>
+      </div>
+      <p class="ghi">"Từ mép vào" giữ lại chỗ trắng bên trong (mắt, răng). Nếu nền lọt vào giữa hai chân thì chọn "Mọi chỗ cùng màu nền".</p>
+      <div class="dong"><label><input type="checkbox" id="boDom" checked> Bỏ đốm bẩn lẻ loi</label></div>
+      <div class="dong"><label><input type="checkbox" id="latAnh"> Hình quay sang trái (lật lại)</label></div>
+      <div class="khoi">
+        <h3>Sửa tay</h3>
+        <div class="chip-nhom">
+          <button class="chip chon" data-cu="" type="button">Không</button>
+          <button class="chip" data-cu="but" type="button">Bút giữ lại</button>
+          <button class="chip" data-cu="tay" type="button">Cục tẩy</button>
+        </div>
+        <div class="truot"><span>Cỡ bút</span><output id="oCoBut">12</output><input type="range" id="coBut" min="2" max="60" value="12"></div>
+        <div class="dong"><button class="nut nho phu" id="nutHoanTac" type="button">Hoàn tác</button><button class="nut nho phu" id="nutXoaSua" type="button">Xoá hết chỗ sửa</button></div>
+      </div>
+      <div class="khoi">
+        <h3>Chất pixel</h3>
+        <div class="truot"><span>Chiều cao trong game</span><output id="oCao">36 px</output><input type="range" id="caoPx" min="10" max="180" value="36"></div>
+        <p class="ghi" id="ghiCo"></p>
+        <div class="truot"><span>Số màu</span><output id="oSoMau">12</output><input type="range" id="soMau" min="3" max="32" value="12"></div>
+        <div class="dong"><label><input type="checkbox" id="vienToi" checked> Viền tối 1px như hình game</label></div>
+      </div>
+      <div class="khoi dong">
+        <button class="nut phu" id="nutDoiAnh" type="button">Đổi ảnh khác</button>
+        <button class="nut" id="nutSang3" type="button" disabled>Tiếp: khung cơ thể ▶</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- BƯỚC 3: khung cơ thể -->
+  <section class="trang" id="b3">
+    <div class="cot-san">
+      <div class="san" id="san3"><canvas id="cv3"></canvas><div class="goi-y" id="goiY3"></div></div>
+    </div>
+    <div class="bang">
+      <h3>Mẫu khung</h3>
+      <p class="ghi" id="goiYMau"></p>
+      <div class="chip-nhom" id="dsMau"></div>
+      <div class="khoi">
+        <h3>Chỉnh</h3>
+        <div class="chip-nhom">
+          <button class="chip chon" data-che="khop" type="button">Kéo khớp</button>
+          <button class="chip" data-che="to" type="button">Tô bộ phận</button>
+        </div>
+        <p class="ghi" id="ghiChe">Kéo các chấm tròn (khớp) vào đúng chỗ vai, hông, cổ… rồi bấm "Tự đoán".</p>
+        <div id="dsBoPhan" class="chip-nhom"></div>
+        <div class="truot" id="dongCoTo"><span>Cỡ bút tô</span><output id="oCoTo">2</output><input type="range" id="coTo" min="1" max="8" value="2"></div>
+        <div class="dong">
+          <button class="nut nho" id="nutTuDoan" type="button">Tự đoán bộ phận</button>
+          <button class="nut nho phu" id="nutDatLaiKhop" type="button">Đặt lại khớp</button>
+        </div>
+        <div class="dong"><label><input type="checkbox" id="hienMau" checked> Hiện màu bộ phận</label></div>
+      </div>
+      <div class="khoi dong"><button class="nut" id="nutSang4" type="button">Tiếp: xem chuyển động ▶</button></div>
+    </div>
+  </section>
+
+  <!-- BƯỚC 4: xem chuyển động -->
+  <section class="trang" id="b4">
+    <div class="cot-san">
+      <div class="chip-nhom" id="dsDongTac"></div>
+      <div class="san" id="san4"><canvas id="cv4"></canvas><div class="goi-y" id="goiY4"></div></div>
+    </div>
+    <div class="bang">
+      <h3>Xem</h3>
+      <div class="chip-nhom">
+        <button class="chip" data-huong="-1" type="button">◀ Quay trái</button>
+        <button class="chip chon" data-huong="1" type="button">Quay phải ▶</button>
+      </div>
+      <div class="dong"><label><input type="checkbox" id="coNen" checked> Nền phòng game</label><label><input type="checkbox" id="coEmBe" checked> Em bé cạnh bên</label></div>
+      <div class="dong"><label><input type="checkbox" id="coGoc"> Hình code để so</label><label><input type="checkbox" id="lapLai" checked> Lặp lại</label></div>
+      <div class="chip-nhom" style="margin:4px 0"><span class="ghi">Phóng to:</span>
+        <button class="chip" data-zoom="1" type="button">Cả phòng</button>
+        <button class="chip chon" data-zoom="2" type="button">×2</button>
+        <button class="chip" data-zoom="3" type="button">×3</button>
+      </div>
+      <div class="khoi">
+        <h3 id="tenDongTac">Đứng thở</h3>
+        <div class="truot"><span>Biên độ (mạnh nhẹ)</span><output id="oBien">100%</output><input type="range" id="bien" min="0" max="200" value="100"></div>
+        <div class="truot" id="dongToc"><span>Tốc độ</span><output id="oToc">100%</output><input type="range" id="toc" min="40" max="250" value="100"></div>
+        <p class="ghi" id="ghiToc"></p>
+        <div class="dong"><button class="nut nho phu" id="nutMacDinh" type="button">Về mặc định</button><button class="nut nho phu" id="nutLanLuot" type="button">Xem lần lượt</button></div>
+      </div>
+      <div class="khoi dong">
+        <button class="nut phu" id="nutXemGame4" type="button">Xem trong game</button>
+        <button class="nut" id="nutSang5" type="button">Tiếp: xuất tệp ▶</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- BƯỚC 5: xuất tệp -->
+  <section class="trang" id="b5">
+    <div class="cot-san">
+      <div class="san" id="san5"><canvas id="cv5"></canvas><div class="goi-y" id="goiY5"></div></div>
+    </div>
+    <div class="bang">
+      <h3>Tệp sprite</h3>
+      <p id="tomTat"></p>
+      <div class="dong"><button class="nut" id="nutTaiVe" type="button">Tải về .sprite.json</button></div>
+      <div class="dong"><button class="nut phu" id="nutTaiAnh" type="button">Tải ảnh .png để xem</button></div>
+      <div class="khoi" id="khoiThayCho">
+        <h3>Quái mới</h3>
+        <p class="ghi">Quái mới chưa có trong game. Khi "Xem trong game", nó tạm đứng vào chỗ của:</p>
+        <select id="thayCho"></select>
+      </div>
+      <div class="khoi dong"><button class="nut phu" id="nutXemGame5" type="button">Xem trong game</button></div>
+      <div class="khoi">
+        <h3>Đưa vào game</h3>
+        <p class="ghi">Gửi tệp <b id="tenTep">.sprite.json</b> cho Claude (hoặc tự bỏ vào thư mục <b>game/art/custom/</b> trên GitHub). Claude sẽ đóng gói và đăng lên game. Bản nháp đang làm vẫn được giữ trong máy này.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="hop" id="hopGame">
+  <div class="khung">
+    <div class="thanh">
+      <span class="ghi" id="ghiGame">Bản game thử: quái tự vẽ đánh nhau thật trong phòng. Bé không chết. Không ghi vào bản lưu của game.</span>
+      <button class="nut nho phu" id="nutTuDanh" type="button">Cho bé tự đánh</button>
+      <button class="nut nho phu" id="nutLaiGame" type="button">Gọi quái lại</button>
+      <button class="nut nho do" id="nutDongGame" type="button">Đóng</button>
+    </div>
+    <iframe id="khungGame" title="Bản game thử"></iframe>
+  </div>
+</div>
+
+<div class="hop" id="hopHuongDan">
+  <div class="khung" style="max-width:720px">
+    <div class="thanh"><b class="ghi" style="color:var(--hi);font-size:16px">Cách dùng Xưởng Sprite</b><button class="nut nho do" id="nutDongHD" type="button">Đóng</button></div>
+    <div class="noi-dung">
+      <ol>
+        <li><b>Chọn</b> quái hoặc em bé muốn vẽ lại (hoặc "Quái mới").</li>
+        <li><b>Đưa hình</b>: kéo thả ảnh vẽ tay. Công cụ tự xoá nền, cắt sát, thu nhỏ đúng cỡ game, giảm màu và thêm viền tối. Sai chỗ nào thì dùng bút hoặc cục tẩy.</li>
+        <li><b>Khung cơ thể</b>: chọn mẫu (người, bốn chân, cua, cá chim bay, khối mềm, rắn, cây). Kéo khớp vào đúng chỗ, bấm "Tự đoán", tô lại chỗ sai.</li>
+        <li><b>Chuyển động</b>: xem đứng thở, đi, chuẩn bị đánh, đánh, trúng đòn, chết trên nền phòng, cạnh em bé thật. Chỉnh biên độ, tốc độ.</li>
+        <li><b>Xuất tệp</b>: bấm "Tải về" rồi gửi tệp <b>.sprite.json</b> cho Claude để đưa vào game.</li>
+      </ol>
+      <h2>Vẽ thế nào cho đẹp</h2>
+      <ul>
+        <li>Vẽ trên nền trắng trơn, nét đậm rõ, tô màu kín.</li>
+        <li>Con vật quay mặt sang phải, nhìn ngang.</li>
+        <li>Tay, chân, đuôi, cánh tách xa thân một chút để công cụ dễ chia bộ phận.</li>
+        <li>Không cần vẽ to: hình game chỉ cao khoảng 25 đến 120 điểm ảnh. Ít chi tiết nhỏ, mảng màu lớn sẽ đẹp hơn.</li>
+      </ul>
+      <p class="ghi">Bài đang làm được lưu nháp trong máy này. Có thể đóng trang rồi mở lại làm tiếp.</p>
+    </div>
+  </div>
+</div>
+<div id="thongBao"></div>
+</body>
+</html>
