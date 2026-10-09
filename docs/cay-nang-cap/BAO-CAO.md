@@ -10,10 +10,10 @@
 - **Sửa chỗ kẹt khi cày:** ở vùng hai mài bị chặn ở +7, trang phục lên Vàng phải chờ mảnh trùm, quặng thiếu ở vùng ba. Trước đây người chơi cày mà vàng, vảy cá cứ dồn lại không tiêu được. Nay mỗi vùng đều có chỗ tiêu.
 - **Bảng thua chỉ rõ nên cày gì:** so Sức mạnh hiện tại với khuyên dùng, rồi 2-3 gợi ý cụ thể. Bấm một gợi ý là về làng, mở đúng người làng, chọn sẵn món cần nâng.
 - **Số lần chơi đạt mục tiêu** (bot 8 lượt):
-  - Vùng 1 nhẹ: 1-2 lần mỗi ải.
-  - Ải có trùm nhỏ (ải 3, 4 vùng hai và ba): 3,1 đến 3,6 lần.
-  - Trùm vùng Mộc Tinh, Ngư Tinh, Hồ Tinh: **5,8 / 8,0 / 8,2** lần.
-  - Đi hết 15 ải lần đầu: trung bình **3 giờ 1 phút**, từ 2 giờ 30 đến 3 giờ 32 phút.
+  - Vùng 1 nhẹ: 1 đến 2,5 lần mỗi ải.
+  - Ải có trùm nhỏ (ải 3, 4 vùng hai và ba): 2,9 đến 4,6 lần.
+  - Trùm vùng Mộc Tinh, Ngư Tinh, Hồ Tinh: **6,1 / 9,4 / 10,9** lần (Hồ Tinh hơi trên 10, trong mức cho lệch 15% của bài đo).
+  - Đi hết 15 ải lần đầu: trung bình **3 giờ 4 phút**, từ 2 giờ 11 đến 3 giờ 49 phút.
 
 ## Đã bỏ gì
 
@@ -113,36 +113,38 @@ Số lần chơi tính mọi lượt, kể cả chơi lại ải cũ và lượt
 
 | Ải | Trước: có Quyết tâm (3 lượt) | Bỏ Quyết tâm, chưa sửa đường cày (3 lượt) | **Nay (8 lượt)** | Thua (nay) | Sức mạnh khi qua / khuyên dùng (nay) | Mục tiêu |
 |---|---|---|---|---|---|---|
-| 1-1 | 1,0 | 1,0 | **1,0** | 0 | 98 / 100 | 1-2 |
-| 1-2 | 1,0 | 1,0 | **1,0** | 0 | 117 / 110 | 1-2 |
-| 1-3 | 2,7 | 1,7 | **2,1** | 0,2 | 147 / 135 | 1-2 |
-| 1-4 | 1,3 | 1,3 | **2,4** | 0,6 | 176 / 150 | 1-2 |
-| 1-5 Mộc Tinh | 9,0 | 11,0 | **5,8** | 0,1 | 230 / 225 | 5-9 (vùng 1 nhẹ hơn) |
-| 2-1 | 1,0 | 1,0 | **1,9** | 0,1 | 257 / 245 | 1-2 |
-| 2-2 | 1,0 | 4,3 | **1,8** | 0 | 283 / 270 | 1-2 |
-| 2-3 | 5,0 | 2,3 | **3,2** | 0,1 | 324 / 315 | 3-5 |
-| 2-4 | 6,7 | 18,0 | **3,6** | 0,1 | 353 / 345 | 3-5 |
-| 2-5 Ngư Tinh | 9,3 | 19,3 | **8,0** | 0,6 | 423 / 420 | 6-10 |
-| 3-1 | 2,0 | 3,0 | **1,9** | 0,1 | 446 / 425 | 1-2 |
-| 3-2 | 4,7 | 2,7 | **2,2** | 0,4 | 472 / 445 | 1-2 |
-| 3-3 | 5,3 | 5,0 | **3,1** | 0,5 | 502 / 475 | 3-5 |
-| 3-4 | 6,7 | 4,3 | **3,4** | 0,4 | 549 / 525 | 3-5 |
-| 3-5 Hồ Tinh | 12,3 | 29,0 | **8,2** | 1,4 | 620 / 620 | 6-10 |
-| **Tổng thời gian 15 ải** | **4,1 giờ** | **6,7 giờ** | **3,0 giờ** | | | 2,5-4 giờ |
+| 1-1 | 1,0 | 1,0 | **1,0** | 0,0 | 98 / 100 | 1-2 |
+| 1-2 | 1,0 | 1,0 | **1,0** | 0,0 | 121 / 110 | 1-2 |
+| 1-3 | 2,7 | 1,7 | **1,6** | 0,1 | 146 / 135 | 1-2 |
+| 1-4 | 1,3 | 1,3 | **2,5** | 0,6 | 168 / 150 | 1-2 |
+| 1-5 Mộc Tinh | 9,0 | 11,0 | **6,1** | 0,1 | 230 / 225 | 5-9 (vùng 1 nhẹ hơn) |
+| 2-1 | 1,0 | 1,0 | **1,8** | 0,1 | 259 / 245 | 1-2 |
+| 2-2 | 1,0 | 4,3 | **1,4** | 0,0 | 280 / 270 | 1-2 |
+| 2-3 | 5,0 | 2,3 | **4,6** | 0,1 | 323 / 315 | 3-5 |
+| 2-4 | 6,7 | 18,0 | **3,9** | 0,5 | 352 / 345 | 3-5 |
+| 2-5 Ngư Tinh | 9,3 | 19,3 | **9,4** | 0,8 | 422 / 420 | 6-10 |
+| 3-1 | 2,0 | 3,0 | **2,1** | 0,2 | 442 / 425 | 1-2 |
+| 3-2 | 4,7 | 2,7 | **2,5** | 0,4 | 463 / 445 | 1-2 |
+| 3-3 | 5,3 | 5,0 | **2,9** | 0,4 | 499 / 475 | 3-5 |
+| 3-4 | 6,7 | 4,3 | **3,2** | 0,5 | 550 / 525 | 3-5 |
+| 3-5 Hồ Tinh | 12,3 | 29,0 | **10,9** | 2,1 | 643 / 620 | 6-10 |
+| **Tổng thời gian 15 ải** | **4,1 giờ** | **6,7 giờ** | **3,1 giờ** | | | 2,5-4 giờ |
 
+- Cột "Trước" đo trên bản gộp lúc bắt đầu đợt này, còn Quyết tâm.
 - "Bỏ Quyết tâm, chưa sửa đường cày" là đo thử giữa chừng. Lúc đó đã bỏ Quyết tâm, đã nâng trần, nhưng chưa sửa chỗ kẹt khi cày. Trùm Ngư Tinh và Hồ Tinh cần 19 đến 29 lần, có lượt kẹt tới 35 lần.
   - Vàng dồn tới hơn 20.000 mà không có gì để mua.
   - Cung đi kèm vẫn +0.
   - Bot bỏ trống điểm kỹ năng.
 - **Nay**, 8 lượt chiến dịch:
-  - Tổng thời gian trung bình 181 phút, trung vị 191, nhanh nhất 150, lâu nhất 212.
-  - Trung bình 50 lần chơi, khoảng 3,6 phút mỗi lần.
-  - Cấp hero khi qua Hồ Tinh khoảng 29.
+  - Tổng thời gian trung bình 184 phút, trung vị 186, nhanh nhất 131, lâu nhất 229.
+  - Trung bình 55 lần chơi, khoảng 3,3 phút mỗi lần.
+  - Cấp hero khi qua Hồ Tinh khoảng 30.
 - **Số lần chơi trùm vùng từng lượt:**
-  - Mộc Tinh 3-7.
-  - Ngư Tinh 5-13.
-  - Hồ Tinh 4-14.
-  - Không còn lượt kẹt vài chục lần.
+  - Mộc Tinh 3-12.
+  - Ngư Tinh 5-19.
+  - Hồ Tinh 2-22.
+  - Không còn lượt kẹt 30-60 lần như lúc chưa sửa đường cày.
+  - Đợt đo trước đó (cùng luật, trước khi sửa chỗ chỉ ải cày nguyên liệu) ra Mộc Tinh 5,8, Ngư Tinh 8,0, Hồ Tinh 8,2 lần, tổng 3,0 giờ. Tám lượt vẫn dao động khoảng ±2 lần ở trùm.
 
 ## Kiểm tra đã chạy
 
@@ -162,7 +164,19 @@ Số lần chơi tính mọi lượt, kể cả chơi lại ải cũ và lượt
 ## Điểm còn yếu
 
 - **Bot không phải người.** Bot né đều tay. Người mới có thể cần thêm vài lượt ở trùm vùng, người giỏi thì ít hơn.
-- **Tám lượt chiến dịch vẫn dao động.** Đo nhiều đợt 8 lượt liền, trung bình số lần chơi Hồ Tinh xê dịch khoảng ±2.
+- **Tám lượt chiến dịch vẫn dao động.** Đo nhiều đợt 8 lượt liền, trung bình số lần chơi Hồ Tinh xê dịch từ 8 tới 11. Từng lượt có thể ít tới 2 hoặc nhiều tới 22 lần (bot mang vũ khí cùng hệ trùm đang kháng thì thua nhiều).
 - **Hệ khắc chế chưa vào con số Sức mạnh.** Mang vũ khí cùng hệ trùm đang kháng vẫn thiệt. Con số tính 25% vũ khí thứ hai, nhưng chưa xét hệ của từng món.
 - **Gợi ý chỉ tính những gì thấy trong con số Sức mạnh**, cộng điểm kỹ năng. Trang phục chỉ tăng tốc chạy hoặc tầm nhặt thì không được gợi ý.
 - **Phiên cân bằng phải cày chưa xong sau 60 phút chờ**, nên nhánh này gộp `claude/can-bang-cay` vào nền `khoi-tao-du-an` như hướng dẫn. Nếu phiên đó đẩy thêm thay đổi về khuyên dùng hoặc sức mạnh, cần đo lại bằng `tests/cay.py`.
+
+## Kết quả chạy toàn bộ
+
+Chạy trên bản cuối, đã gộp `khoi-tao-du-an` mới nhất. Mọi bài đều đạt:
+
+- `cay` 24/24 luật, 8 lượt đạt mục tiêu.
+- `rules` 82/82, `moves` 93/93, `doors`, `mapgen`, `fuzz` (0 lỗi), `cong` 66/66, `cung` 16/16.
+- `env_rooms` (108 phòng, 0 lỗi), `fx_check` (0 lỗi), `ghep` 109/109, `ghep2` 192/192, `quai` 105/105.
+- `perf` (3 ms mỗi khung), `anim_smoke`, `smoke`, `dps`, `ui_robust` 16/16, `ui_build`, `ui_input all` (4 cỡ màn hình, 162/162 mỗi cỡ).
+- `trang_phuc` 66/66, `may` 100/100, `do_roi` 45/45, `linhkhi` 36/36, `bao_truoc` 21/21, `tam_huong` 37/37, `probe` 3/3.
+- `balance 4`: thắng 52/60 với bản lưu thật mới (`tests/cay_luu.json` lấy từ bot đợt này).
+- `campaign`: đi hết 15 ải.
