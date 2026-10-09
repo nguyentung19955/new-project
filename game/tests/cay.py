@@ -137,6 +137,41 @@ def campaign(pg, mode, upto):
         return None, 'kẹt ở ải %d-%d' % divmod(cleared + 1, 5)
     return {'st': st, 't': tot_t, 'hurt': hurt, 'log': log}, None
 
+LUAT = r"""
+() => {
+  const out = [];
+  const ok = (c, m) => out.push([!!c, m]);
+  G.resetSave(); G.save.sound = false;
+  ok(G.power() >= 95 && G.power() <= 105, 'em bé mới (cấp 1, kiếm Thường) có sức mạnh khoảng 100: ' + G.power());
+  let mono = true; for (let k = 1; k < 15; k++) if (G.STAGE_REC[k] <= G.STAGE_REC[k - 1]) mono = false;
+  ok(mono, 'sức mạnh khuyên dùng tăng dần qua 15 ải');
+  ok(G.stageRec(2, 4, 1) > G.stageRec(2, 4, 0), 'độ khó thứ hai cần sức mạnh cao hơn');
+  ok(G.grindMult(100, 100) === 1 && G.grindMult(130, 100) === 1 && G.grindMult(160, 100) < 1 && G.grindMult(400, 100) === 0.4, 'thưởng khi cày: đủ khi chưa quá 130%, giảm dần, thấp nhất 40%');
+  // sức mạnh tăng theo cấp, mài, bậc, áo
+  const p0 = G.power(); G.save.heroes.smith.lvl = 10; const p1 = G.power();
+  const w = G.weaponById(G.save.carry[0]); w.sharpen = 3; const p2 = G.power(); w.tier = 1; if (w.rarity != null) w.rarity = 1; const p3 = G.power();
+  G.save.owned.armor.push('a_r1'); G.save.armor = 'a_r1'; const p4 = G.power();
+  ok(p1 > p0 && p2 > p1 && p3 > p2 && p4 > p3, 'sức mạnh tăng theo cấp, mài, bậc, áo: ' + [p0, p1, p2, p3, p4].join(' < '));
+  // quyết tâm: thua thật thì tăng, bỏ ải thì không, thắng thì hết
+  G.resetSave(); G.save.sound = false; G.save.tut.done = true;
+  G.startStage(0, 1, 0); G.getRun().P.hp = 0; G.getRun().W.over = 'dead'; G.sim(120);
+  ok(G.save.grit['0-1'] === 1, 'thua thật ở ải 1-2 thì quyết tâm 1: ' + JSON.stringify(G.save.grit));
+  G.startStage(0, 1, 0); const S = G.getRun();
+  ok(S.grit === 1 && S.P.maxhp === Math.round(G.buildPlayer().maxhp * (1 + G.GRIT.step)), 'vào lại ải đó thì máu và sát thương tăng ' + G.GRIT.step * 100 + '%');
+  S.quit = true; G.finishStage(false);
+  ok(G.save.grit['0-1'] === 1, 'bỏ ải thì không thêm quyết tâm');
+  G.startStage(0, 1, 0); G.getRun().W.boss = G.getRun().W.boss || { weak: [], dead: true }; G.finishStage(true);
+  ok(!G.save.grit['0-1'], 'qua ải thì hết quyết tâm');
+  // bản lưu cũ không có quyết tâm vẫn đọc được
+  const old = JSON.parse(JSON.stringify(G.save)); delete old.grit; old.grit = undefined;
+  const fx = G.fixSave(JSON.parse(JSON.stringify(old)));
+  ok(fx.grit && typeof fx.grit === 'object' && fx.heroes.smith.lvl === old.heroes.smith.lvl, 'bản lưu cũ (chưa có quyết tâm) vẫn đọc được');
+  ok(G.fixSave(Object.assign(JSON.parse(JSON.stringify(old)), { grit: { '0-1': 99, x: 'a' } })).grit['0-1'] === G.GRIT.max, 'quyết tâm trong bản lưu bị sửa tay vẫn bị chặn ở mức tối đa');
+  G.resetSave();
+  return out;
+}
+"""
+
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith('-')]
     n = int(args[0]) if args else 8
@@ -156,6 +191,12 @@ def main():
             pg.wait_for_timeout(1200)
             pg.add_script_tag(path=HERE + '/tests/bot.js')
             pg.add_script_tag(path=HERE + '/tests/setup.js')
+            if k == 0:
+                bad_luat = 0
+                for good, msg in pg.evaluate(LUAT):
+                    print(('đạt ' if good else 'HỎNG ') + msg)
+                    bad_luat += 0 if good else 1
+                if bad_luat: errs.append('%d luật hỏng' % bad_luat)
             out, why = campaign(pg, mode, upto)
             pg.close()
             if not out:

@@ -163,7 +163,8 @@
       ui.font(7); ui.text('hệ ' + G.EL[R.el].name, 256 + G.ux.measureText(l2).width, 230, { size: 7, color: G.EL[R.el].col });
       // Sức mạnh khuyên dùng so với sức mạnh hiện tại của bé (G.power): xanh đủ, vàng sát nút, đỏ thiếu
       const need = G.stageRec(r, i, V.diff), col = G.powerCol(pw, need);
-      ui.text('Sức mạnh khuyên dùng ' + need + ' · bé ' + pw, 256, 240, { size: 7.5, bold: true, color: col });
+      const gr = !V.diff && G.save.grit ? G.save.grit[r + '-' + i] || 0 : 0;
+      ui.text('Sức mạnh khuyên dùng ' + need + ' · bé ' + pw + (gr ? ' (+' + Math.round(G.GRIT.step * gr * 100) + '% quyết tâm)' : ''), 256, 240, { size: gr ? 6.5 : 7.5, bold: true, color: col });
       ui.para('Thưởng: ' + b.xp + ' kinh nghiệm, ~' + b.gold + ' vàng, ' + (5 + i) + ' ' + R.mat.toLowerCase() + (i === 4 ? ', ' + (V.diff ? 4 : 3) + ' mảnh ' + R.bossName + ', vũ khí quý' : ''), 256, 250.5, 144, { size: 6.5, color: SOFT });
       if (T.btn(404, 217, 64, 38, 'Lên đò', { size: 11, primary: true })) G.startStage(r, i, V.diff);
     } else ui.text('Chạm một ải trên tranh để xem.', 256, 238, { size: 8, color: SOFT });

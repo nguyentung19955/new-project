@@ -203,8 +203,8 @@
   // CÂN BẰNG PHẢI CÀY: hệ số riêng của từng ải (15 ải, theo thứ tự 1-1 .. 3-5) nhân thêm vào chỉ số trên.
   // mob: [máu, sát thương] quái thường; boss: [máu, sát thương] trùm nhỏ (ải 1-4) hoặc trùm vùng (ải 5).
   G.STAGE_K = {
-    mob: [[1.12, 1.29], [1.21, 1.56], [1.22, 1.59], [1.17, 1.43], [1.26, 1.77], [1.26, 2.59], [1.46, 2.44], [1.51, 2.63], [1.27, 2.69], [1.14, 2.19], [1.44, 4.08], [1.38, 3.6], [1.41, 3.88], [1.4, 3.86], [1.17, 2.33]],
-    boss: [[1.12, 1.29], [1.21, 1.56], [1.22, 1.59], [1.17, 1.43], [1.26, 1.77], [1.26, 2.59], [1.46, 2.44], [1.51, 2.63], [1.27, 2.69], [1.14, 2.19], [1.44, 4.08], [1.38, 3.6], [1.41, 3.88], [1.4, 3.86], [1.17, 2.33]],
+    mob: [[1.12, 1.29], [1.21, 1.56], [1.22, 1.59], [1.17, 1.43], [1.26, 1.77], [1.26, 2.59], [1.44, 2.33], [1.48, 2.47], [1.27, 2.69], [1.13, 2.12], [1.58, 3.71], [1.52, 3.27], [1.55, 3.53], [1.54, 3.51], [1.16, 2.29]],
+    boss: [[1.12, 1.29], [1.21, 1.56], [1.22, 1.59], [1.17, 1.43], [1.26, 1.77], [1.26, 2.59], [1.44, 2.33], [1.48, 2.47], [1.27, 2.69], [1.13, 2.12], [1.58, 3.71], [1.52, 3.27], [1.55, 3.53], [1.54, 3.51], [1.16, 2.29]],
   };
   // Độ khó thứ hai: [máu, sát thương] nhân thêm theo vùng. Trước là x2,2 máu, x1,5 sát thương cho mọi vùng; nay quái thường đã mạnh
   // theo ải, nên vùng sau nhân ít hơn để người chơi đã cày đầy (cấp 30, vũ khí Vàng) vẫn với tới được.
@@ -225,11 +225,14 @@
   };
   // SỨC MẠNH KHUYÊN DÙNG của từng ải (15 ải). So với G.power() (js/combat.js): đủ số này thì bot thắng phần lớn lượt chơi
   // (đo bằng tests/cay.py). Độ khó thứ hai cần gấp căn bậc hai của (máu x sát thương) nhân thêm của G.DIFF2.
-  G.STAGE_REC = [100, 110, 125, 140, 190, 200, 225, 270, 280, 310, 335, 355, 385, 400, 430];
+  G.STAGE_REC = [100, 110, 125, 140, 190, 200, 225, 265, 280, 310, 335, 355, 385, 400, 430];
   G.stageRec = function (r, i, diff) {
     const v = G.STAGE_REC[r * 5 + i] || 100;
     return diff ? Math.round((v * Math.sqrt(G.DIFF2[r][0] * G.DIFF2[r][1])) / 5) * 5 : v;
   };
+  // QUYẾT TÂM: thua liền ở một ải thì lần sau vào lại chính ải đó bé mạnh thêm mỗi lần G.GRIT.step (sát thương và máu), tối đa
+  // G.GRIT.max lần; qua ải thì hết. Để người chơi đã cày tới trần (cấp 30, mài +10) không bị kẹt mãi ở một trùm vì xui.
+  G.GRIT = { step: 0.04, max: 5 };
   // Thưởng khi cày: sức mạnh vượt quá 130% khuyên dùng thì kinh nghiệm và vàng giảm dần, thấp nhất còn 40%.
   G.grindMult = function (power, rec) {
     const q = rec > 0 ? power / rec : 1;

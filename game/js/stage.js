@@ -79,6 +79,12 @@
       power: G.power(), rec: G.stageRec(r, i, diff), // sức mạnh lúc vào ải và sức mạnh khuyên dùng (thanh trên, thưởng khi cày)
     };
     if (S.tut) S.marksMult = 2;
+    // Quyết tâm: thua liền ở ải này bao nhiêu lần thì bé mạnh thêm bấy nhiêu bậc (G.GRIT)
+    S.grit = (!diff && G.save.grit && G.save.grit[r + '-' + i]) || 0;
+    if (S.grit) {
+      const k = 1 + G.GRIT.step * S.grit;
+      S.P.dmgMult *= k; S.P.maxhp = Math.round(S.P.maxhp * k); S.P.hp = S.P.maxhp;
+    }
     enterRoom(map.start, null);
     S.fade = 0.35;
     G.setScene(G.StageScene);
@@ -448,6 +454,7 @@
       }
       if (big && S.loot.finalEl) sv.scars[reg.boss] = S.loot.finalEl;
       if (S.tut) sv.tut.done = true;
+      if (sv.grit && !S.diff) delete sv.grit[key];
       R.up = G.addXp(sv.hero, xp);
       G.sfx('win');
     } else {
@@ -457,6 +464,11 @@
       sv.gold += gold;
       R.lines.push('+' + xp + ' kinh nghiệm', '+' + gold + ' vàng');
       R.up = G.addXp(sv.hero, xp);
+      if (!S.diff && !S.quit) { // chỉ thua thật mới thêm quyết tâm, bỏ ải thì không
+        const gk = S.r + '-' + S.i, g = Math.min(G.GRIT.max, ((sv.grit = sv.grit || {})[gk] || 0) + 1);
+        sv.grit[gk] = g;
+        R.lines.push('Quyết tâm: lần sau vào lại ải này bé mạnh thêm ' + Math.round(G.GRIT.step * g * 100) + '%');
+      }
     }
     if (S.marks > 0) R.lines.push('Vũ khí nhận ' + Math.round(S.marks) + ' dấu ấn');
     if (R.up) R.lines.push(G.HEROES[sv.hero].name + ' lên cấp ' + sv.heroes[sv.hero].lvl + '!');
@@ -715,7 +727,7 @@
     // tên vùng và loại phòng ở lề trái; bản đồ nhỏ ở lề phải (thay hàng chấm phòng trước đây)
     ui.text(G.REGIONS[S.r].name + ' ' + (S.i + 1) + ' · ' + ROOM_NAME[W.type], 6, 69, { size: 7, color: '#d9cdb8' });
     // sức mạnh của bé lúc vào ải so với sức mạnh khuyên dùng của ải (xanh đủ, vàng sát nút, đỏ thiếu)
-    ui.text('Sức mạnh ' + S.power + ' / khuyên ' + S.rec, 6, 79, { size: 7, bold: true, color: G.powerCol(S.power, S.rec) });
+    ui.text('Sức mạnh ' + S.power + ' / khuyên ' + S.rec + (S.grit ? ' · quyết tâm +' + Math.round(G.GRIT.step * S.grit * 100) + '%' : ''), 6, 79, { size: 7, bold: true, color: G.powerCol(S.power, S.rec) });
     G.minimap.draw(S);
     // vũ khí: hình và bậc ở trên, mốc tiến hóa ở dưới, thanh dấu ấn sát đáy
     P.weapons.forEach((w, i) => {
