@@ -44,6 +44,8 @@ Góp ý 2: "Tool đang làm cử động cả đầu". Chủ dự án chọn **t
 - Bài kiểm tra `xuong_sprite.py` thêm 23 mục (giữ nét so với kiểu cũ, viền mép ngoài, mặc định em bé, đầu và thân không đổi vị trí, góc qua mọi khung của đứng thở, đi, chuẩn bị đánh, đánh, trúng đòn trong công cụ; đầu đứng yên trong game qua 32 khung đứng thở và chạy; tệp cũ mở được trong công cụ và game): **109/109 mục đạt**.
 - Ảnh: [giu-net-truoc-sau.png](giu-net-truoc-sau.png), [chi-tay-chan.gif](chi-tay-chan.gif), [buoc-2-so-sanh.png](buoc-2-so-sanh.png), [buoc-4-dung-yen.png](buoc-4-dung-yen.png), tạo bằng `game/tests/xuong_sprite_giu_net_shots.py`.
 
+- Đã gộp `khoi-tao-du-an` mới nhất (có phần Chuông), đóng gói lại, chạy lại: `xuong_sprite.py` 109/109, các bài cũ (anim_smoke, balance, ban_do, bao_truoc, campaign, cay, chuong, cong, cung, do_roi, doors, dps, env_rooms, fuzz, fx_check, hanh_trang, linhkhi, mapgen, moves, perf, quai, rules, tam_huong, trang_phuc, ui_build, ui_input, ui_robust) đều đạt; `may.py` vẫn 2 mục hỏng như bản gốc (404 của máy chủ thử).
+
 | Trước / sau giữ nét | Chỉ tay chân cử động (phải) |
 |---|---|
 | ![](giu-net-truoc-sau.png) | ![](chi-tay-chan.gif) |
