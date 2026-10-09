@@ -103,6 +103,19 @@ bộ phận con và bộ phận nó gắn vào (trừ khe có sẵn trong hình 
 mỗi động tác; bật lên thì 0 ở cả 6 ảnh thử (có ảnh vẽ tay), cả 7 mẫu khung, cả khi chia theo khớp kiểu cũ; chạm để tô trên
 điện thoại cầm ngang, nút ở bước Khung cao từ 36 điểm. Cả bài `xuong_sprite.py`: **191/191 mục đạt**.
 
+**Bổ sung (phiên kiểm tra lại, 09/10):** đo lại bằng một bộ ảnh thử khác (em bé chibi tay áp thân, heo, cá chuồn, khối mềm,
+cả ba ảnh vẽ tay cũ; 7 mẫu khung; biên độ 100% và 200%) và đếm trên **khung có viền** (đúng hình người chơi thấy):
+- Còn một lỗi: bộ phận khi thu nhỏ bị tách thân 1 đến 3 điểm ảnh (đuôi con mèo vẽ tay) ở dáng đứng chỉ dính thân nhờ nét viền,
+  cử động là **bay rời** (85 điểm rời khỏi thân ở động tác đứng thở). Bài cũ không bắt được vì đếm mảnh rời trên hình chưa có viền.
+- Còn khe rộng 1 điểm ngoài thân (giữa tay và thân khi tay xoay ra): 2 đến 12 điểm mỗi động tác, nhìn như vết rách.
+
+Đã sửa (`khung.js`): **cầu nối** vài điểm màu nét nối bộ phận tách rời với chỗ nó gắn vào (chỉ thêm khi cách nhau từ 1 đến 3 điểm);
+**khe 1 điểm ngoài thân tô màu viền** thành nét viền liền (khe có sẵn trong hình vẽ giữ nguyên). Sau sửa: 0 mảnh rời, 0 khe mới
+ở mọi ảnh thử, mọi mẫu khung. Bài `xuong_sprite_vo.py` thêm 2 mục (đếm trên khung có viền, đuôi mèo được nối):
+`xuong_sprite.py` **193/193 mục đạt**, `rules.py` 82/82.
+
+![Trước / sau: đuôi mèo vẽ tay không còn bay rời khi đứng thở, đi](cau-noi-truoc-sau.png)
+
 ## Kiểm tra
 
 - `game/tests/xuong_sprite.py`: **65/65 mục đạt**. Ảnh vẽ tay giả lập trên giấy trắng loang có vết bẩn → tách nền (góc trống, giữ tròng mắt trắng), đúng cỡ, giảm màu, cục tẩy và hoàn tác, mẫu gợi ý, tự đoán đủ bộ phận, kéo khớp và tô bằng chuột, mọi khung đều có hình và có cử động, tốc độ và biên độ, tải về và mở lại tệp, nháp còn sau khi tải lại trang, em bé; xem trong game (quái mới đứng vào chỗ Cua Lính ở Hang biển, bé tự đánh, không ghi bản lưu); bỏ tệp vào `game/art/custom/`, đóng gói, vào game: Heo Rừng Con và em bé dùng hình mới ở mọi cử động, lật gương đúng, chớp trắng, chết mờ dần, quái khác vẫn hình code, thời lượng đòn như cũ, trận 4 giây không lỗi; xoá tệp thì về hình code. Cuối bài thư mục chỉ còn `.gitkeep`.

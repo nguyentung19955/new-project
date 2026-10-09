@@ -90,6 +90,11 @@ Bên trái là cách cũ, bên phải là bây giờ:
 
 ![](sua-vo-truoc-sau.gif)
 
+Bộ phận vẽ hơi tách thân (đuôi, tai mảnh, khi thu nhỏ còn cách thân 1 đến 3 điểm ảnh) được tự nối bằng vài điểm nét, nên
+không bay rời khi cử động. Khe hẹp 1 điểm giữa tay và thân khi tay xoay ra được tô màu viền thành nét liền.
+
+![](cau-noi-truoc-sau.png)
+
 ![](buoc-3-khung.png)
 
 ### 4. Chuyển động

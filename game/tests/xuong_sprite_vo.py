@@ -45,6 +45,25 @@ VO_GAME = """(ds) => { const o = {}, LO = LO_JS;
     o[ma] = { lo, roi: rr, khung: n }; }
   return o; }""".replace('LO_JS', LO_JS)
 
+# So với khung đứng yên CÓ VIỀN (hình người chơi thấy): mảnh rời mới (điểm không dính mảng lớn nhất) và khe 1 điểm mới
+# (trống mà hai bên trái phải hoặc trên dưới đều có hình). Bắt lỗi bộ phận vốn chỉ dính thân nhờ nét viền (đuôi, tai bị
+# thu nhỏ tách 1, 2 điểm) mà cử động là bay rời.
+VO_VIEN = """() => { const S = XS_S, R = S.R, kh = S.kh, bb = XS.khungHinh(R);
+  const cfg = { mau: kh.mau, khop: kh.khop, bo: kh.bo, vien: XS.hex('#1b1118'), doi: S.muc.doi, dong_tac: {} }, tt = { dung_yen: [], nhun: 100 };
+  const doKhung = (px, w, h) => { const ng = new Uint8Array(w * h), q = []; const v = (i) => { if (!px[i] && !ng[i]) { ng[i] = 1; q.push(i); } };
+    for (let x = 0; x < w; x++) { v(x); v((h - 1) * w + x); } for (let y = 0; y < h; y++) { v(y * w); v(y * w + w - 1); }
+    while (q.length) { const i = q.pop(), x = i % w; if (x > 0) v(i - 1); if (x < w - 1) v(i + 1); if (i >= w) v(i - w); if (i < w * (h - 1)) v(i + w); }
+    let khe = 0, n = 0; for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) { const i = y * w + x; if (px[i]) continue; if (ng[i] && ((px[i - 1] && px[i + 1]) || (px[i - w] && px[i + w]))) khe++; }
+    const da = new Uint8Array(w * h); let lon = 0; for (let s = 0; s < w * h; s++) { if (!px[s]) continue; n++; if (da[s]) continue; let c = 0; const st = [s]; da[s] = 1;
+      while (st.length) { const i = st.pop(), x = i % w, y = (i / w) | 0; c++; for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { const xx = x + dx, yy = y + dy; if (xx < 0 || yy < 0 || xx >= w || yy >= h) continue; const j = yy * w + xx; if (px[j] && !da[j]) { da[j] = 1; st.push(j); } } }
+      lon = Math.max(lon, c); }
+    return { khe, manh: n - lon }; };
+  const g = XS.dungKhung(R, cfg, XS.tuThe(kh.mau, 'idle', 0, 0), { vien: cfg.vien, bb }), g0 = doKhung(g.px, g.w, g.h), xau = { khe: 0, manh: 0 };
+  for (const ten of XS.dsDongTac(S.muc.doi)) for (let i = 0; i < 10; i++) {
+    const u = XS.DONG_TAC[ten].lap ? i / 10 : i / 9, f = XS.dungKhung(R, cfg, XS.tuThe(kh.mau, ten, u, 1, tt), { vien: cfg.vien, bb }), m = doKhung(f.px, f.w, f.h);
+    xau.khe = Math.max(xau.khe, m.khe - g0.khe); xau.manh = Math.max(xau.manh, m.manh - g0.manh); }
+  return xau; }"""
+
 
 def mo_anh(pg, ma, anh):
     pg.evaluate('ma => { XS_UI.denBuoc(1); if (XS_UI.moNhom) XS_UI.moNhom(XS_UI.nhomCuaMa(ma)); }', ma)  # trang chọn chia nhóm
@@ -123,6 +142,14 @@ def kiem_vo_khop_dien_thoai(pw, tmp, ok, mo, TOOL, GAME_DIST, CUSTOM, build, don
             tat = False
             print('     ', ma, d)
     ok('Không vỡ hình: mọi động tác của 6 ảnh thử không có lỗ, khe ở khớp, mảnh rời', tat)
+    tat = {}
+    for ma, k in (('heoNanh', 'bon-chan'), ('em-be', 'ai-em-be'), ('heoCon', 'ai-bon-chan'), ('caChuon', 'ai-ca-bay'), ('sua', 'ai-khoi-mem'), ('em-be-smith', 'em-be-ao-do')):
+        mo_anh(pg, ma, anh[k])
+        tat[ma] = pg.evaluate(VO_VIEN)
+        if ma == 'heoNanh':
+            cau = pg.evaluate('() => { const c = XS.cauNoi(XS_S.R, XS_S.kh); if (!c) return 0; let n = 0; for (let i = 0; i < c.R.px.length; i++) if (c.R.px[i] && !XS_S.R.px[i]) n++; return n; }')
+    ok('Có viền: bộ phận chỉ dính thân nhờ nét viền (đuôi mèo vẽ tay) không bay rời; không có khe 1 điểm mới', all(v['manh'] <= 0 and v['khe'] <= 0 for v in tat.values()), tat)
+    ok('Cầu nối: đuôi mèo vẽ tay (tách thân vài điểm ảnh khi thu nhỏ) được nối bằng vài điểm nét', 0 < cau <= 12, cau)
     mo_anh(pg, 'em-be', anh['ai-em-be'])
     tat = True
     for mau in ('nguoi', 'bonChan', 'cua', 'bay', 'mem', 'ran', 'cay'):
