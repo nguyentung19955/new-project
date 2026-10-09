@@ -14,7 +14,7 @@
   const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
   const APPEAR = 0.15, FLASH = 0.22;
 
-  const BT = (G.baoTruoc = { q: [], ghosts: [], on: true, errs: 0 });
+  const BT = (G.baoTruoc = { q: [], ghosts: [], on: true, mask: true, errs: 0 });
   const seen = new WeakMap(); // vật -> lúc thấy lần đầu (G.time), để làm hiện ra mượt cho vùng không có t0
   const fired = new WeakSet(); // vùng đã chớp nổ (khỏi chớp hai lần)
   let curW = null;
@@ -51,7 +51,12 @@
   // Nhận một vùng của luật chơi. Trả về true nếu đã nhận (không vẽ gì lên #world nữa).
   BT.zone = function (z) {
     if (!BT.on || G.noRender) return false;
-    if (z.team === 'player' || z.team === 'fx' || z.pool || z.wave) return false;
+    if (z.team === 'player' || z.team === 'fx' || z.wave) return false;
+    if (z.pool) {
+      // vùng nổ xong để lại vũng (z.then): vẫn chớp một nhịp lúc nổ, vũng vẽ như cũ
+      if (z.then && !(z.t > 0) && !fired.has(z) && z.shape === 'circle') { fired.add(z); const it = geo(z); it.at = G.time; if (BT.ghosts.length < 80) BT.ghosts.push(it); }
+      return false;
+    }
     if (z.wall) {
       if (!(z.wait > 0)) return false; // tường nước đang chạy là đòn thật: vẽ như cũ
       const age = since(z), tot = age + z.wait;
@@ -191,13 +196,12 @@
   let snapCv = null, snapOk = false, mCv = null, mCx = null, aCv = null, aCx = null, filt = null;
   function makeFilter() {
     try {
-      const NS = 'http://www.w3.org/2000/svg', svg = document.createElementNS(NS, 'svg');
-      svg.setAttribute('width', '0'); svg.setAttribute('height', '0'); svg.setAttribute('aria-hidden', 'true');
-      svg.style.position = 'absolute'; svg.style.width = '0'; svg.style.height = '0'; svg.style.pointerEvents = 'none';
-      const f = document.createElementNS(NS, 'filter'); f.setAttribute('id', 'btMask'); f.setAttribute('color-interpolation-filters', 'sRGB');
-      const m = document.createElementNS(NS, 'feColorMatrix'); m.setAttribute('type', 'matrix');
-      m.setAttribute('values', '0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  8 8 8 0 0');
-      f.appendChild(m); svg.appendChild(f); document.body.appendChild(svg);
+      // bộ lọc SVG: độ trong = tổng độ khác nhau của ba màu (chỗ giống hệt nền thì trong suốt)
+      const box0 = document.createElement('div');
+      box0.setAttribute('aria-hidden', 'true');
+      box0.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden;pointer-events:none';
+      box0.innerHTML = '<svg width="0" height="0"><filter id="btMask" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  8 8 8 0 0"/></filter></svg>';
+      document.body.appendChild(box0);
       // thử một lần: điểm đen phải trong suốt, điểm trắng phải đục
       const a = document.createElement('canvas'), b = document.createElement('canvas');
       a.width = b.width = 2; a.height = b.height = 1;
@@ -209,36 +213,97 @@
       return d[3] < 40 && d[7] > 215 ? 1 : 0;
     } catch (e) { return 0; }
   }
+  // Gọi ngay trước khi vẽ nhân vật. Chỉ chụp phần nền quanh các vùng báo, và chỉ khi có nhân vật đứng chồng lên vùng.
+  const SB = [0, 0, 0, 0];
+  let need = false;
+  BT.hasMask = () => !!filt; // để bài kiểm tra biết máy có dùng được cách xoá đúng từng điểm ảnh không
   BT.snap = function (c) {
-    snapOk = false;
+    snapOk = false; need = false;
     if (!BT.on || G.noRender) return;
     try {
-      const w = c.canvas;
-      if (!snapCv) { snapCv = document.createElement('canvas'); }
+      const W = G.getWorld ? G.getWorld() : null;
+      if (!W) return;
+      // khung bao từng vùng báo
+      const Z = [], add = (x0, y0, x1, y1) => Z.push([x0, y0, x1, y1]), one = (it) => { const b = [1e9, 1e9, -1e9, -1e9]; box(it, b); Z.push(b); };
+      for (const z of W.zones) {
+        if (z.team === 'player' || z.team === 'fx' || z.pool || z.wave) continue;
+        if (z.wall) { if (z.wait > 0) one({ k: 'wall', x: z.x, y: z.y, ang: z.ang, s: z.s, half: z.half }); continue; }
+        if (z.shape === 'circle' || z.shape === 'rect' || z.shape === 'line' || z.shape === 'cone' || z.shape === 'donut') one(geo(z));
+      }
+      for (const g of BT.ghosts) one(g);
+      for (const it of BT.q) one(it); // vòng mọc quái (đã thêm lúc vẽ nền)
+      for (const e of W.ents) {
+        if (e.dead) continue;
+        if (e.spikeUp > 0) add(e.x - e.r - 12, e.y - e.r, e.x + e.r + 12, e.y + e.r);
+        if (e.act && e.act.aim && e.wind > 0 && W.P) add(Math.min(e.x, W.P.x) - 4, Math.min(e.y, W.P.y) - 14, Math.max(e.x, W.P.x) + 4, Math.max(e.y, W.P.y) + 4);
+      }
+      if (!Z.length) return;
+      // chỉ cần xoá ở phần giao giữa vùng báo và thân em bé, quái, trùm
+      const B = [1e9, 1e9, -1e9, -1e9];
+      const hit = (e, hw, hh) => {
+        if (!e || e.dead || e.hidden) return;
+        const ex0 = e.x - hw, ex1 = e.x + hw, ey0 = e.y - hh, ey1 = e.y + 4;
+        for (const b of Z) {
+          if (ex1 <= b[0] || ex0 >= b[2] || ey1 <= b[1] || ey0 >= b[3]) continue;
+          B[0] = Math.min(B[0], Math.max(ex0, b[0])); B[1] = Math.min(B[1], Math.max(ey0, b[1])); B[2] = Math.max(B[2], Math.min(ex1, b[2])); B[3] = Math.max(B[3], Math.min(ey1, b[3]));
+        }
+      };
+      hit(W.P, 14, 44);
+      for (const e of W.ents) hit(e, (e.drawW || e.w || 30) * 0.6, (e.drawH || e.h || 30) * 1.3 + 10);
+      if (W.boss) hit(W.boss, (W.boss.drawW || 120) * 0.6, (W.boss.drawH || 120) * 1.2 + 10);
+      if (B[2] <= B[0]) return;
+      need = true;
+      // từ toạ độ thế giới sang điểm ảnh #world (đang có phép dời của khung)
+      const m = c.getTransform(), w = c.canvas;
+      const x = clamp(Math.floor(B[0] + m.e) - 2, 0, w.width), y = clamp(Math.floor(B[1] + m.f) - 2, 0, w.height);
+      const x1 = clamp(Math.ceil(B[2] + m.e) + 2, 0, w.width), y1 = clamp(Math.ceil(B[3] + m.f) + 2, 0, w.height);
+      if (x1 <= x || y1 <= y) { need = false; return; }
+      SB[0] = x; SB[1] = y; SB[2] = x1 - x; SB[3] = y1 - y;
+      if (filt == null) filt = makeFilter();
+      if (!filt || !BT.mask) return; // không có bộ lọc: xoá gần đúng quanh thân (bodies)
+      if (!snapCv) snapCv = document.createElement('canvas');
       if (snapCv.width !== w.width || snapCv.height !== w.height) { snapCv.width = w.width; snapCv.height = w.height; }
       const s = snapCv.getContext('2d');
-      s.globalCompositeOperation = 'copy'; s.drawImage(w, 0, 0); s.globalCompositeOperation = 'source-over';
+      s.clearRect(x, y, SB[2], SB[3]);
+      s.drawImage(w, x, y, SB[2], SB[3], x, y, SB[2], SB[3]);
       snapOk = true;
-    } catch (e) { snapOk = false; }
+    } catch (e) { snapOk = false; need = false; }
   };
-  function maskOut(c, sc) {
-    if (filt == null) filt = makeFilter();
+  // chỉ làm trong khung bao (x, y, w, h: điểm ảnh của #world) để nhẹ máy
+  function maskOut(c, sc, x, y, w, h) {
     if (!filt || !snapOk) return false;
-    const w = G.wx.canvas, W0 = w.width, H0 = w.height;
+    const wv = G.wx.canvas, kx = c.canvas.width / wv.width, ky = c.canvas.height / wv.height;
     if (!mCv) { mCv = document.createElement('canvas'); mCx = mCv.getContext('2d'); aCv = document.createElement('canvas'); aCx = aCv.getContext('2d'); }
-    if (mCv.width !== W0 || mCv.height !== H0) { mCv.width = aCv.width = W0; mCv.height = aCv.height = H0; }
-    mCx.globalCompositeOperation = 'copy'; mCx.drawImage(w, 0, 0);
-    mCx.globalCompositeOperation = 'difference'; mCx.drawImage(snapCv, 0, 0);
+    if (mCv.width < w || mCv.height < h) { mCv.width = aCv.width = Math.max(w, mCv.width); mCv.height = aCv.height = Math.max(h, mCv.height); }
+    mCx.globalCompositeOperation = 'copy'; mCx.drawImage(wv, x, y, w, h, 0, 0, w, h);
+    mCx.globalCompositeOperation = 'difference'; mCx.drawImage(snapCv, x, y, w, h, 0, 0, w, h);
     mCx.globalCompositeOperation = 'source-over';
-    aCx.clearRect(0, 0, W0, H0);
-    aCx.filter = 'url(#btMask)'; aCx.drawImage(mCv, 0, 0); aCx.filter = 'none';
+    aCx.clearRect(0, 0, w, h);
+    aCx.filter = 'url(#btMask)'; aCx.drawImage(mCv, 0, 0, w, h, 0, 0, w, h); aCx.filter = 'none';
     c.save();
     c.setTransform(1, 0, 0, 1, 0, 0);
     c.imageSmoothingEnabled = false;
     c.globalCompositeOperation = 'destination-out';
-    c.drawImage(aCv, 0, 0, W0, H0, 0, 0, c.canvas.width, c.canvas.height);
+    c.drawImage(aCv, 0, 0, w, h, x * kx, y * ky, w * kx, h * ky);
     c.restore();
     return true;
+  }
+  // khung bao của một hình (toạ độ thế giới), nới thêm cho mép mềm và lúc chớp nở ra
+  function box(it, B) {
+    let x0, y0, x1, y1;
+    if (it.k === 'circle') { x0 = it.x - it.r; x1 = it.x + it.r; y0 = it.y - it.r * it.ky; y1 = it.y + it.r * it.ky; }
+    else if (it.k === 'rect') { x0 = it.x; x1 = it.x + it.w; y0 = it.y; y1 = it.y + it.h; }
+    else if (it.k === 'cone') { x0 = it.x - it.r; x1 = it.x + it.r; y0 = it.y - it.r; y1 = it.y + it.r; }
+    else if (it.k === 'donut') { x0 = it.x - it.r1; x1 = it.x + it.r1; y0 = it.y - it.r1 * it.ky; y1 = it.y + it.r1 * it.ky; }
+    else {
+      // đường thẳng, đường ngắm, tường nước: bốn góc của hình chữ nhật xoay
+      const cs = Math.cos(it.ang), sn = Math.sin(it.ang);
+      const a0 = it.k === 'wall' ? it.s : 0, a1 = it.k === 'wall' ? it.s + 40 : it.len, b = it.k === 'wall' ? it.half : it.w / 2;
+      x0 = y0 = 1e9; x1 = y1 = -1e9;
+      for (const a of [a0, a1]) for (const bb of [-b, b]) { const px = it.x + a * cs - bb * sn, py = it.y + a * sn + bb * cs; if (px < x0) x0 = px; if (px > x1) x1 = px; if (py < y0) y0 = py; if (py > y1) y1 = py; }
+    }
+    const p = 3 + Math.max(x1 - x0, y1 - y0) * 0.04;
+    if (x0 - p < B[0]) B[0] = x0 - p; if (y0 - p < B[1]) B[1] = y0 - p; if (x1 + p > B[2]) B[2] = x1 + p; if (y1 + p > B[3]) B[3] = y1 + p;
   }
   let GR = null;
   function soft(c, x, y, rx, ry, a) {
@@ -273,21 +338,34 @@
       if (!cv) { cv = document.createElement('canvas'); cx = cv.getContext('2d'); }
       if (cv.width !== cw || cv.height !== ch) { cv.width = cw; cv.height = ch; GR = null; }
       const c = cx;
+      // khung bao (điểm ảnh màn hình game) của mọi hình trong khung này
+      const B = [1e9, 1e9, -1e9, -1e9];
+      for (const it of q) box(it, B);
+      for (const g of BT.ghosts) box(g, B);
+      const ox = -cam + (sx || 0), oy = sy || 0;
+      const bx = clamp(Math.floor(B[0] + ox), 0, G.W), by = clamp(Math.floor(B[1] + oy), 0, G.H);
+      const bw = clamp(Math.ceil(B[2] + ox), 0, G.W) - bx, bh = clamp(Math.ceil(B[3] + oy), 0, G.H) - by;
+      if (bw <= 0 || bh <= 0) { q.length = 0; return; }
+      const dx = Math.floor(bx * sc), dy = Math.floor(by * sc), dw = Math.min(cw, Math.ceil((bx + bw) * sc)) - dx, dh = Math.min(ch, Math.ceil((by + bh) * sc)) - dy;
       c.setTransform(1, 0, 0, 1, 0, 0);
-      c.clearRect(0, 0, cw, ch);
+      c.clearRect(dx, dy, dw, dh);
       c.setTransform(sc, 0, 0, sc, (-cam + (sx || 0)) * sc, (sy || 0) * sc);
       for (const it of q) {
         if (it.k === 'wall') drawWallGap(c, it, sc);
         drawTele(c, it, sc);
       }
       for (const g of BT.ghosts) drawFlash(c, g, (G.time - g.at) / FLASH, sc);
-      if (!maskOut(c, sc)) bodies(c, W);
+      if (need && BT.mask !== 0) {
+        // xoá chỗ nhân vật: trong phần chung của khung bao lúc vẽ và phần nền đã chụp
+        const mx = Math.max(bx, SB[0]), my = Math.max(by, SB[1]), mw = Math.min(bx + bw, SB[0] + SB[2]) - mx, mh = Math.min(by + bh, SB[1] + SB[3]) - my;
+        if (!(snapOk && mw > 0 && mh > 0 && maskOut(c, sc, mx, my, mw, mh))) bodies(c, W);
+      }
       c.globalAlpha = 1;
       const u = G.ux;
       u.save();
       u.setTransform(sc, 0, 0, sc, G.ox * G.dpr, G.oy * G.dpr);
       u.globalAlpha = 1; u.globalCompositeOperation = 'source-over';
-      u.drawImage(cv, 0, 0, cw, ch, 0, 0, G.W, G.H);
+      u.drawImage(cv, dx, dy, dw, dh, dx / sc, dy / sc, dw / sc, dh / sc);
       u.restore();
     } catch (e) {
       BT.errs++;
