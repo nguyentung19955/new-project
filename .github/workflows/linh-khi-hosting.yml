@@ -73,13 +73,18 @@ jobs:
             { grep -P '\tFINALIZED$' all.txt | sort -r | tail -n +3; grep -P '\tABANDONED$' all.txt; } | cut -f2 | while read -r v; do
               [ -n "$v" ] && [ "$v" != "$LIVE" ] && curl -s -o /dev/null -X DELETE -H "Authorization: Bearer $TOKEN" "$API/$v"
             done
-            echo "$s: có $(wc -l < all.txt) bản, giữ 5 bản mới nhất"
+            echo "$s: có $(wc -l < all.txt) bản, giữ 2 bản mới nhất"
             echo "- $s: $(wc -l < all.txt) bản → giữ 2" >> "$GITHUB_STEP_SUMMARY"
           done
 
       - name: Tạo site và đăng
         working-directory: ${{ runner.temp }}/web
         run: |
+          # Người dùng không muốn "Quyết tâm" (thua nhiều thì mạnh thêm) lên bản chơi: còn G.GRIT thì không đăng.
+          if grep -rq "G\.GRIT" "$GITHUB_WORKSPACE/game/js"; then
+            echo "::notice title=Chưa đăng::Code còn Quyết tâm (G.GRIT), chờ phiên cay-nang-cap gỡ xong."
+            exit 0
+          fi
           trap 'rm -f "$RUNNER_TEMP/sa.json"' EXIT
           printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"
           export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
