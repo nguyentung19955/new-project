@@ -16,16 +16,16 @@
   G.WEAK = { fire: 'ice', ice: 'poison', poison: 'fire' };
 
   G.WTYPES = {
-    sword: { name: 'Kiếm', dmg: 10, cd: 0.36, reach: 32, depth: 17, special: 'Chém lướt' },
+    sword: { name: 'Kiếm', dmg: 10, cd: 0.36, reach: 32, depth: 17, special: 'Trảm Nguyệt' },
     // Sửa góp ý 3 (càng chậm hoặc càng phải áp sát thì mỗi đòn càng mạnh): cung 9 -> 11 mỗi phát (vẫn dưới kiếm) nhưng tên xuyên và
     // mưa tên yếu đi hẳn (G.MOVES.bow), để cung an toàn nhất có sát thương mỗi giây thấp nhất, cả khi đánh một con lẫn cả cụm;
     // búa 23 -> 22 (vẫn mạnh nhất mỗi đòn).
     // Cân bằng phải cày: đánh quái mới thật thì cận chiến khó hơn (giáp, gai, lặn) nên cung chỉ còn thấp hơn kiếm khoảng 11%;
     // cung 11 -> 10,5, giáo 11 -> 10,7 và búa 22 -> 21,3 (sau khi gộp các phiên khác búa thành cao nhất): cung thấp hơn kiếm khoảng
     // 20% trên bia tập và 24% trên quái mới (tests/dps.py, 8 và 12 hạt giống), vũ khí yếu nhất vẫn từ 70% vũ khí mạnh nhất.
-    bow: { name: 'Cung', dmg: 10.5, cd: 0.5, ranged: true, special: 'Mưa tên' },
-    spear: { name: 'Giáo', dmg: 10.7, cd: 0.44, reach: 56, depth: 12, special: 'Lao tới' },
-    hammer: { name: 'Búa', dmg: 21.3, cd: 0.8, reach: 32, depth: 25, stagger: 0.4, special: 'Nện đất' },
+    bow: { name: 'Cung', dmg: 10.5, cd: 0.5, ranged: true, special: 'Mưa Tên' },
+    spear: { name: 'Giáo', dmg: 10.7, cd: 0.44, reach: 56, depth: 12, special: 'Phi Thương' },
+    hammer: { name: 'Búa', dmg: 21.3, cd: 0.8, reach: 32, depth: 25, stagger: 0.4, special: 'Địa Chấn' },
   };
   G.WKEYS = ['sword', 'bow', 'spear', 'hammer'];
   // BỐN BẬC MÀU của vũ khí (thay ba bậc Sắt, Bạc, Linh cũ). mult: hệ số sát thương gốc; maxStage: mốc tiến hóa cao nhất

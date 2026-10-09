@@ -29,6 +29,7 @@
     if (!w) { S.got.push('vàng (rương đồ đầy)'); return; }
     S.got.push({ s: rarName(w), w });
     S.W.banner = { s: 'Tinh anh rơi ' + rarName(w), col: G.RARITY[G.wRar(w)].col, t: 3 };
+    if (G.doRoi) G.doRoi.tha(S.W, e.x, e.y, { kind: 'weapon', w, s: G.wName(w) }); // nằm trên sàn chỗ tinh anh gục, đi qua là nhặt
   };
   // Quái gục (combat.js gọi): có thể rơi trang phục. Trùm rơi lúc tính thưởng (settle), không ở đây.
   G.onMobDown = function (e) {
@@ -40,7 +41,8 @@
     const s = O.name(it) + ' (' + G.RARITY[it.r].name + ')';
     S.got.push('trang phục ' + s);
     if (!S.W.banner) S.W.banner = { s: 'Rơi trang phục: ' + s, col: G.RARITY[it.r].col, t: 3 }; // không che dòng báo vũ khí rơi
-    if (G.fx && G.fx.text) G.fx.text(e.x, e.y - 24, O.name(it), G.RARITY[it.r].col, 8);
+    if (G.doRoi) G.doRoi.tha(S.W, e.x, e.y, { kind: 'outfit', o: it, s: O.name(it) }); // nằm trên sàn chỗ quái gục
+    else if (G.fx && G.fx.text) G.fx.text(e.x, e.y - 24, O.name(it), G.RARITY[it.r].col, 8);
   };
   G.addXp = function (key, xp) {
     const hs = G.save.heroes[key];
@@ -327,7 +329,7 @@
       } else if (W.px1 != null) P.x = Math.min(P.x, W.px1 - 24); // boss vùng chắn bên phải: không hiện ra sau lưng nó
     }
     P.inv = Math.max(P.inv, first ? 0.6 : 0.3);
-    P.dashT = 0; P.dodgeT = 0;
+    P.dashT = 0; P.dodgeT = 0; P.slideT = 0; P.spearOut = null; if (W.mvSp) W.mvSp.length = 0;
     if (W.type === 'fountain') S.preview = bossSetup().layers;
     S.hint = S.tut ? TUT[W.type === 'fight' ? (id === 1 ? 'fight1' : 'fight2') : W.type] || null : null;
     updateDoors();
@@ -363,6 +365,7 @@
   }
   // Đồ rơi sau khi thắng: đi ngang qua là nhặt, hiện chữ phần thưởng bay lên (thưởng đã được cộng lúc thắng).
   function pickLoot(W, P) {
+    if (G.doRoi) { G.doRoi.hut(W, P, 1 / 60); return; } // hút về khi lại gần (js/do_roi.js)
     for (const pr of W.props) {
       if (pr.type !== 'loot' || pr.got || G.time < pr.born + 0.5) continue;
       if (Math.hypot(pr.x - P.x, (pr.y - P.y) * 1.3) < 14 + (P.pickR || 0)) { pr.got = G.time; G.sfx('pick', 1.2); } // trang phục tăng tầm nhặt
@@ -668,7 +671,7 @@
       // trùm chết hoành tráng (cử động chết dài vài giây) rồi mới mọc cổng dịch chuyển
       if (W.type === 'boss' && S.loot.bossDown && !S.won) { S.endT += dt; if (S.endT > (W.bossDieT || 1.2)) winPortal(); return; }
       if (W.over === 'dead' && !S.won) { S.endT += dt; if (S.endT > 1.2) finish(false); return; }
-      if (S.won) pickLoot(W, P);
+      pickLoot(W, P); // đồ rơi trên sàn (sau trùm, tinh anh, quái): đi lại gần là nhặt
       // bước vào cửa đang mở thì sang phòng kề (phòng trùm: chỉ sau khi đã thắng)
       if (W.cleared && (W.type !== 'boss' || S.won) && S.doorCd <= 0) {
         const d = doorAt(inp);

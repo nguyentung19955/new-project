@@ -52,6 +52,7 @@
   BT.zone = function (z) {
     if (!BT.on || G.noRender) return false;
     if (z.team === 'player' || z.team === 'fx' || z.wave) return false;
+    if (z.quiet) return true; // đòn thường của quái (bắn, húc, chém): không vẽ vùng báo trước; chỉ chiêu lớn của tinh anh và trùm mới có
     if (z.pool) {
       // vùng nổ xong để lại vũng (z.then): vẫn chớp một nhịp lúc nổ, vũng vẽ như cũ
       if (z.then && !(z.t > 0) && !fired.has(z) && z.shape === 'circle') { fired.add(z); const it = geo(z); it.at = G.time; if (BT.ghosts.length < 80) BT.ghosts.push(it); }
@@ -377,6 +378,7 @@
   // ---------- nối vào: thay chỗ vẽ vùng ở lớp #world ----------
   const zone0 = A.zone;
   A.zone = function (c, z) {
+    if (z.quiet && z.team !== 'player') return; // đòn thường của quái: không vẽ vùng báo trước ở bất kỳ lớp nào
     if (BT.zone(z)) {
       if (z.bomb && G.mobDrawBomb) G.mobDrawBomb(c, z); // quả bom vẫn vẽ điểm ảnh trên #world
       return;

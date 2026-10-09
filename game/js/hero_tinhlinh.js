@@ -884,7 +884,8 @@
   ATK.hammer[1] = ATK.hammer[0];
   ATK.hammer[2] = [[0, H0], [0.28, { x: -3, y: -32, ang: -155, hang: -22 }], [0.45, { x: 5, y: -27, ang: 44, hang: 30 }], [0.6, { x: 5, y: -27, ang: 44, hang: 180, dist: 18, rot: -30 }], [0.8, { x: 6, y: -21, ang: 10, hang: 155, dist: 9, rot: 8 }], [1, H0]];
   const SPEC = {
-    sword: [[0, { x: 3, y: -16, ang: -90, hang: 0 }], [0.15, { x: 4, y: -25, ang: -130, hang: -40 }], [0.85, { x: 4, y: -25, ang: 230, hang: 320 }], [1, { x: 3, y: -16, ang: 270, hang: 360 }]],
+    // Trảm Nguyệt: giơ kiếm cao ra sau rồi chém mạnh một nhát về trước (vệt trăng bay ra theo hướng nhắm)
+    sword: [[0, { x: 3, y: -16, ang: -90, hang: 0 }], [0.15, { x: -5, y: -29, ang: -170, hang: -25 }], [0.45, { x: 11, y: -17, ang: 20, hang: 80 }], [0.75, { x: 12, y: -16, ang: 30, hang: 70, stand: 0.6 }], [1, { x: 6, y: -13, ang: 10, hang: 30, stand: 1 }]],
     spear: [[0, { x: 13, y: -13, ang: 0, hang: 88 }], [0.5, { x: 15, y: -13, ang: 2, hang: 92 }], [1, { x: 6, y: -13, ang: -4, hang: 40, stand: 0.4 }]],
     bow: [[0, { x: 13, y: -20, ang: -55, pull: 0, stand: 1 }], [0.4, { x: 14, y: -21, ang: -68, pull: 1, stand: 1, lean: -10 }], [0.55, { x: 15, y: -22, ang: -62, pull: 0, stand: 1, lean: 8 }], [1, { x: 15, y: -19, ang: -25, pull: 0, stand: 1 }]],
     // Nện đất: game nổ vòng chấn động ngay lúc bấm nên búa nện xuống từ khung đầu
@@ -893,7 +894,18 @@
   const ATKN = { sword: 10, hammer: 14, spear: 10, bow: 12 };
   const EYE_ATK = (u) => (u > 0.3 && u < 0.85 ? 'wide' : 'open');
 
-  function pose(key, wt, anim, f, v) {
+  // Tám hướng: đòn cận chiến đánh lên, xuống, chéo thì vũ khí xoay quanh chỗ bàn tay nắm theo góc nhắm (rs: nấc 0..12 như cung,
+  // 6 là thẳng trước mặt). Bé vẫn chỉ lật trái phải. Đánh chếch lên thì vũ khí ra sau lưng bé, chếch xuống thì ra trước người.
+  function aimRot(ps, rs) {
+    const rel = rs == null ? 0 : bowRel(rs);
+    if (!rel || !ps.w) return ps;
+    const pv = ps.hands && ps.hands[0] ? ps.hands[0] : [ps.w.x, ps.w.y];
+    const q = rotv(ps.w.x - pv[0], ps.w.y - pv[1], rel);
+    ps.w.x = pv[0] + q[0]; ps.w.y = pv[1] + q[1]; ps.w.ang += rel;
+    if (rel <= -45) ps.w.front = false; else if (rel >= 45) ps.w.front = true;
+    return ps;
+  }
+  function pose(key, wt, anim, f, v, rs) {
     const ps = { x: 0, y: 0, rot: 0, f, free: true, eyes: 'open', anim };
     const R = REST[wt] || null;
     const wbob = [0, -1, -1, -2, -2, -1, -1, 0][f & 7];
@@ -954,7 +966,7 @@
       case 'dash': {
         if (!R) { ps.rot = 40; ps.y = -2; return ps; }
         ps.free = false; ps.eyes = 'wide';
-        return attach(wt, wt === 'bow' ? { x: 16, y: -17, ang: 0, stand: 1, lean: 20 } : { x: 10 + (f & 1), y: -12, ang: 0, hang: 86 }, ps);
+        return aimRot(attach(wt, wt === 'bow' ? { x: 16, y: -17, ang: 0, stand: 1, lean: 20 } : { x: 10 + (f & 1), y: -12, ang: 0, hang: 86 }, ps), rs);
       }
       // Ghép: đang giữ nút Đánh để lấy đà (P.mv.holding). f: 0..4 là mức đà, v: bit 0 là rung khi đầy, bit 1 là đang bước đi.
       case 'hold': {
@@ -987,7 +999,7 @@
         if (wt === 'bow') { ps.free = false; ps.eyes = EYE_ATK(u); const q = bowPull(anim === 'spec' ? u * 0.9 : u); return bowPose(ps, bowRel(v), q[0], q[1]); }
         const k = kf(anim === 'spec' ? SPEC[wt] : ATK[wt][v % 3], u, wt);
         ps.free = false; ps.eyes = EYE_ATK(u);
-        return attach(wt, k, ps);
+        return aimRot(attach(wt, k, ps), rs);
       }
     }
     return ps;
@@ -1010,9 +1022,9 @@
       if (p && p.ddx != null) dv = 2 + Math.max(-2, Math.min(2, Math.round(Math.atan2(p.ddy || 0, Math.abs(p.ddx || 0)) / (Math.PI / 4))));
       return ['dodge', Math.min(7, Math.floor(o.dodge * 8)), dv];
     }
-    if (p && p.dashT > 0) return ['dash', Math.floor(t * 30) % 2, 0];
-    const ai = p && p.aimRel != null ? Math.max(0, Math.min(12, Math.round(p.aimRel / 15) + 6)) : 6; // nấc góc ngắm của cung
-    if (p && p.specT > 0) return ['spec', Math.min(6, Math.max(0, Math.floor((1 - p.specT / 0.35) * 7))), wt === 'bow' ? ai : 0];
+    const ai = p && p.aimRel != null ? Math.max(0, Math.min(12, Math.round(p.aimRel / 15) + 6)) : 6; // nấc góc ngắm (cung, và mọi đòn cận chiến)
+    if (p && p.dashT > 0) return ['dash', Math.floor(t * 30) % 2, 0, ai];
+    if (p && p.specT > 0) return ['spec', Math.min(6, Math.max(0, Math.floor((1 - p.specT / 0.35) * 7))), wt === 'bow' ? ai : 0, ai];
     if (p && p.castT > 0) return ['cast', Math.min(7, Math.max(0, Math.floor((1 - p.castT / 0.4) * 8))), 0];
     const mv = p && p.mv;
     if (mv && mv.holding && !(o.atk >= 0) && REST[wt]) {
@@ -1024,7 +1036,7 @@
     if (o.atk >= 0) {
       const n = ATKN[wt] || 8, combo = p ? Math.max(0, p.comboI | 0) % 3 : Math.floor(t / 1.6) % 3;
       if (wt === 'bow') return ['atk', Math.min(n - 1, Math.floor(o.atk * n)), ai];
-      return ['atk', Math.min(n - 1, Math.floor(o.atk * n)), combo];
+      return ['atk', Math.min(n - 1, Math.floor(o.atk * n)), combo, ai];
     }
     if ((p && p.hurtT > 0) || (!p && o.flash)) return ['hurt', 0, 0];
     if (o.move) return ['run', Math.floor(t * 13) % 8, 0];
@@ -1055,7 +1067,7 @@
     let fr = KCACHE.get(id);
     if (fr) return fr;
     if (KCACHE.size >= 1400) KCACHE.clear();
-    const ps = finishPose(pose(key, wt, sel[0], sel[1], sel[2]));
+    const ps = finishPose(pose(key, wt, sel[0], sel[1], sel[2], sel[3]));
     const sp = kidSprite(key, of, ps, tintK);
     fr = {
       cv: sp.cv, ox: ps.x - sp.ox, oy: ps.y - sp.oy, sh: HERO[key].shadow, dead: !!ps.dead, air: ps.air || 0,

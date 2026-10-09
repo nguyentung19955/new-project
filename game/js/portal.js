@@ -95,7 +95,7 @@
   A.prop = function (cx, o) {
     if (o && (o.type === 'portal' || o.type === 'loot')) {
       const pv = c; c = cx;
-      try { if (o.type === 'portal') portal(o); else loot(o); } catch (e) { if (!A.portalErr) { A.portalErr = e; if (window.console) console.warn('portal', e); } }
+      try { if (o.type === 'portal') portal(o); else if (G.doRoi) G.doRoi.ve(cx, o); else loot(o); } // đồ rơi: hình mới ở js/do_roi.js catch (e) { if (!A.portalErr) { A.portalErr = e; if (window.console) console.warn('portal', e); } }
       finally { c = pv; cx.globalAlpha = 1; }
       return;
     }

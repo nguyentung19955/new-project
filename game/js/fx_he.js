@@ -140,7 +140,11 @@
       const g = a < 0.09 ? a / 0.09 : o.t < 0.2 ? o.t / 0.2 : 1;
       let x, y;
       if (o.round) { const an = (i / o.n) * TAU + o.sd; const d = 0.45 + hash(o.sd + i * 3) * 0.55; x = o.x + Math.cos(an) * o.L * 0.75 * d; y = o.y + Math.sin(an) * o.L * 0.45 * d; }
-      else { x = o.x + o.dir * (4 + (i / o.n) * o.L); y = o.y + (hash(o.sd + i * 5) - 0.5) * o.depth; }
+      else {
+        // dọc hướng đòn, lệch ngang (vuông góc) một chút cho tự nhiên
+        const ux = o.ux != null ? o.ux : o.dir, uy = o.uy || 0, s0 = 4 + (i / o.n) * o.L, j = (hash(o.sd + i * 5) - 0.5) * o.depth, ZK = G.ZK || 0.85;
+        x = o.x + ux * s0 - uy * j; y = o.y + (uy * s0 + ux * j) * ZK;
+      }
       spike(c, Math.round(x), Math.round(y), Math.round((o.h0 + hash(o.sd + i) * o.h0 * 0.9) * g * (1 + (i / o.n) * 0.4)));
     }
   }
@@ -153,7 +157,8 @@
   // ---------- vệt đòn theo lối đánh ----------
   const baseSwing = fx.swing;
   // o: { type, move, step, combo, reach, depth, el, lv, stage, charge, level }
-  api('mvSwing', (P, o) => { swing(P, o); decorate(P, o); });
+  // Tám hướng: vẽ đòn nằm ngang như cũ rồi xoay theo góc nhắm (K.aimed). Nện đất đã đặt vết nứt đúng chỗ thật nên không dời hình sát đất.
+  api('mvSwing', (P, o) => { K.aimed(P, () => { swing(P, o); decorate(P, o); }, { ground: o.move !== 'nenDat' }); });
   function swing(P, o) {
     const f = P.face, PL = pal(o.el);
     if (o.move === 'luot') {
@@ -206,36 +211,40 @@
   const FINISH = {
     fire(lv, o) {
       if (o.pts.length) {
-        // vệt lửa chạy dọc đường lao: các cột lửa nối nhau phụt lên
-        o.pts.forEach((x, i) => {
-          add({ ty: 'pillar', x, y: o.y, w: 4 + lv, h: 16 + lv * 5, t: 0.3, ly: 1, d: i * 0.035 });
-          for (let j = 0; j < 2; j++) emit(0, x, o.y - 4, rr(-50, 50), rr(-150, -70), rr(0.4, 0.7), RAMP.ember, 1, 260, 0, o.y + rr(-3, 5), 1);
+        // vệt lửa chạy dọc đường lao (tám hướng): các cột lửa nối nhau phụt lên
+        o.pts.forEach((q, i) => {
+          add({ ty: 'pillar', x: q[0], y: q[1], w: 4 + lv, h: 16 + lv * 5, t: 0.3, ly: 1, d: i * 0.035 });
+          for (let j = 0; j < 2; j++) emit(0, q[0], q[1] - 4, rr(-50, 50), rr(-150, -70), rr(0.4, 0.7), RAMP.ember, 1, 260, 0, q[1] + rr(-3, 5), 1);
         });
-        add({ ty: 'scorch', x: o.x + (o.dir * o.line) / 2, y: o.y, r: Math.min(30, o.line * 0.4), t: 1.6, ly: 0 });
+        const m = o.pts[(o.pts.length - 1) >> 1];
+        add({ ty: 'scorch', x: m[0], y: m[1], r: Math.min(30, o.line * 0.4), t: 1.6, ly: 0 });
         trauma(0.2);
         return;
       }
       K.blastFire(o.x, o.y, o.r, Math.min(1.2, (0.4 + 0.13 * lv) * Math.sqrt(o.power)));
-      trauma(0.16 + 0.07 * lv); kick(o.dir, 1);
+      trauma(0.16 + 0.07 * lv); kick(o.sx != null ? o.sx : o.dir, o.sy != null ? o.sy : 1);
     },
     poison(lv, o) {
       // nước độc toé ra rồi khói bốc lên (màn khói lơ lửng do vũng tự nhả ở heStep)
-      const xs = o.pts.length ? o.pts : [o.x];
-      for (const x of xs) {
-        addRing(x, o.y, 4, o.r, 0.34, '#c2f58a', 2, 0);
-        addRing(x, o.y, 2, o.r * 0.7, 0.3, '#9a5fd6', 2, 0, 0.06);
+      const xs = o.pts.length ? o.pts : [[o.x, o.y]];
+      for (const [x, y] of xs) {
+        addRing(x, y, 4, o.r, 0.34, '#c2f58a', 2, 0);
+        addRing(x, y, 2, o.r * 0.7, 0.3, '#9a5fd6', 2, 0, 0.06);
         const n = 4 + lv * 2;
-        for (let i = 0; i < n; i++) { const a = -Math.PI / 2 + rr(-1.3, 1.3), v = rr(50, 130); emit(5, x, o.y - 4, Math.cos(a) * v, Math.sin(a) * v, rr(0.4, 0.75), i % 3 ? RAMP.poison : PURPLE, 2, 380, 0, o.y + rr(-6, 8), 1); }
-        for (let i = 0; i < 3 + lv; i++) { const a = R() * TAU, v = rr(10, o.r * 1.2); emit(2, x, o.y - 8, Math.cos(a) * v, Math.sin(a) * v * 0.4 - 8, rr(0.6, 1.1), RAMP.vapor, R() < 0.5 ? 6 : 4, -6, 2.2, null, 1); }
+        for (let i = 0; i < n; i++) { const a = -Math.PI / 2 + rr(-1.3, 1.3), v = rr(50, 130); emit(5, x, y - 4, Math.cos(a) * v, Math.sin(a) * v, rr(0.4, 0.75), i % 3 ? RAMP.poison : PURPLE, 2, 380, 0, y + rr(-6, 8), 1); }
+        for (let i = 0; i < 3 + lv; i++) { const a = R() * TAU, v = rr(10, o.r * 1.2); emit(2, x, y - 8, Math.cos(a) * v, Math.sin(a) * v * 0.4 - 8, rr(0.6, 1.1), RAMP.vapor, R() < 0.5 ? 6 : 4, -6, 2.2, null, 1); }
       }
     },
     ice(lv, o) {
-      const L = o.r, n = Math.max(4, Math.round(L / 6)) + (o.round ? 3 : 0);
-      add({ ty: 'he', x: o.x, y: o.y, t: 0.75 + lv * 0.1, ly: 1, draw: drawSpikes, n, L, dir: o.dir, round: o.round, depth: 16, h0: 6 + lv * 2.5, sd: R() * 50 });
-      const mx = o.round ? o.x : o.x + (o.dir * L) / 2;
-      addRing(mx, o.y, 4, o.round ? L * 0.75 : L * 0.55, 0.26, '#e9f9ff', 2, 0);
-      for (let i = 0; i < 4 + lv * 2; i++) { const u = R(), x = o.round ? o.x + rr(-L, L) * 0.6 : o.x + o.dir * L * u; emit(4, x, o.y - rr(4, 14), o.dir * rr(-20, 70), rr(-110, -40), rr(0.35, 0.65), RAMP.ice, R() < 0.4 ? 2 : 1, 300, 0, o.y + rr(-4, 6), 1); }
-      for (let i = 0; i < 3 + lv; i++) { const x = o.round ? o.x + rr(-L, L) * 0.6 : o.x + o.dir * L * R(); emit(2, x, o.y - 1, rr(-14, 14), rr(-8, 0), rr(0.5, 0.9), RAMP.mist, 4, 0, 1.5, null, 0); }
+      // hàng gai mọc theo hướng đòn thật (tám hướng): (ux, uy) trên sàn, đổi ra màn hình bằng G.ZK
+      const L = o.r, n = Math.max(4, Math.round(L / 6)) + (o.round ? 3 : 0), ZK = G.ZK || 0.85;
+      const ux = o.ux != null ? o.ux : o.dir, uy = o.uy || 0;
+      const at = (u) => [o.x + ux * L * u, o.y + uy * L * u * ZK];
+      add({ ty: 'he', x: o.x, y: o.y, t: 0.75 + lv * 0.1, ly: 1, draw: drawSpikes, n, L, dir: o.dir, ux, uy, round: o.round, depth: 16, h0: 6 + lv * 2.5, sd: R() * 50 });
+      const mq = o.round ? [o.x, o.y] : at(0.5);
+      addRing(mq[0], mq[1], 4, o.round ? L * 0.75 : L * 0.55, 0.26, '#e9f9ff', 2, 0);
+      for (let i = 0; i < 4 + lv * 2; i++) { const q = o.round ? [o.x + rr(-L, L) * 0.6, o.y] : at(R()); emit(4, q[0], q[1] - rr(4, 14), ux * rr(-20, 70), rr(-110, -40), rr(0.35, 0.65), RAMP.ice, R() < 0.4 ? 2 : 1, 300, 0, q[1] + rr(-4, 6), 1); }
+      for (let i = 0; i < 3 + lv; i++) { const q = o.round ? [o.x + rr(-L, L) * 0.6, o.y] : at(R()); emit(2, q[0], q[1] - 1, rr(-14, 14), rr(-8, 0), rr(0.5, 0.9), RAMP.mist, 4, 0, 1.5, null, 0); }
       trauma(0.12 + 0.05 * lv);
     },
   };
@@ -455,12 +464,19 @@
     p(c, x - 2, Math.round(q.y), 4, 1, 'rgba(0,0,0,0.3)');
   }
   // Sóng chấn động của búa: một gờ đất chạy đi, bụi và đá văng hai bên
+  // Tám hướng: vẽ gờ sóng như khi chạy ngang rồi xoay quanh chỗ gờ theo hướng chạy thật (z.ux, z.uy)
   function drawWave(c, z) {
+    const ZK = G.ZK || 0.85, ux = z.ux != null ? z.ux : z.dir, uy = z.uy || 0, f = z.dir;
+    const th = Math.atan2(uy * ZK, Math.abs(ux) < 1e-3 ? 1e-3 * f : ux * f) * f;
+    if (Math.abs(th) > 0.01) { c.save(); c.translate(z.x, z.y); c.rotate(th); c.translate(-z.x, -z.y); try { drawWave0(c, z); } finally { c.restore(); } }
+    else drawWave0(c, z);
+  }
+  function drawWave0(c, z) {
     const x = Math.round(z.x), y = Math.round(z.y), h = Math.round(z.depth / 2) + 2, f = z.dir;
     const PL = pal(z.he ? z.he.el : null), k = Math.min(1, z.left / 24);
     const top = z.level >= 2 ? 11 : 7;
     // vết nứt kéo dài phía sau gờ sóng
-    const back = Math.min(40, Math.abs(z.x - z.x0));
+    const back = Math.min(40, Math.hypot(z.x - z.x0, z.y - (z.y0 != null ? z.y0 : z.y)));
     for (let i = 4; i < back; i += 3) p(c, x - f * i, y + (((i * 7) % 5) - 2), 2, 1, i % 2 ? 'rgba(20,14,12,0.6)' : (z.he ? PL.d : 'rgba(60,48,40,0.7)'));
     for (let dy = -h; dy <= h; dy += 2) {
       const q = Math.sqrt(Math.max(0, 1 - (dy * dy) / (h * h + 1))), bx = x - Math.round(f * (1 - q) * 9);
@@ -496,13 +512,14 @@
       if (tick) emit(1, q.x, q.y - 10, -q.vx * 0.05, -q.vy * 0.05, 0.22, R() < 0.3 ? PURPLE : RAMP.poison, 2, 0, 0, null, 1);
     }
     if (W.mvWaves) for (const z of W.mvWaves) {
-      if (!z.fxOn) { z.fxOn = 1; z.x0 = z.x; add({ ty: 'he', x: z.x, y: z.y, t: z.left / z.v + 0.05, ly: 0, draw: (c, o) => { if (o.z.left > 0) drawWave(c, o.z); }, z }); }
+      if (!z.fxOn) { z.fxOn = 1; z.x0 = z.x; z.y0 = z.y; add({ ty: 'he', x: z.x, y: z.y, t: z.left / z.v + 0.05, ly: 0, draw: (c, o) => { if (o.z.left > 0) drawWave(c, o.z); }, z }); }
       if (tick) {
         const PL = pal(z.he ? z.he.el : null);
         emit(2, z.x + rr(-3, 3), z.y + rr(-z.depth, z.depth) * 0.5, -z.dir * rr(10, 40), rr(-26, -8), rr(0.25, 0.45), RAMP.dust, R() < 0.4 ? 4 : 3, 0, 3, null, 1);
         emit(8, z.x, z.y + rr(-z.depth, z.depth) * 0.5, z.dir * rr(-20, 50), rr(-140, -70), rr(0.4, 0.7), z.he && R() < 0.5 ? PL.ramp : RAMP.rock, 2, 420, 0, z.y + rr(-2, 5), 1);
       }
     }
+    stepSp(W, tick);
     if (mv && mv.holding && tick && !P.dead) {
       // hạt sáng bị hút về tay, càng đầy càng dày
       const h = hand(P), w = G.curW(P), PL = pal(G.activeEl(P, w));
@@ -512,6 +529,158 @@
       }
     }
   };
+
+
+  // ====================================================================
+  // CHIÊU ĐẶC BIỆT RIÊNG (luật trong js/moves.js, W.mvSp): Trảm Nguyệt, Phi Thương, Địa Chấn. Mưa Tên giữ hình cũ.
+  // Mọi hình xoay theo hướng chiêu bay thật (q.ux, q.uy trên sàn; trên màn hình chiều dọc nhân G.ZK).
+  // ====================================================================
+  const zk = () => G.ZK || 0.85;
+  const scr = (q) => { const sy = q.uy * zk(), l = Math.hypot(q.ux, sy) || 1; return [q.ux / l, sy / l]; };
+  const angOf = (q) => { const v = scr(q); return Math.atan2(v[1], v[0]); };
+  // Trảm Nguyệt: vệt trăng lưỡi liềm sáng, hai bóng mờ đuổi sau, lớn dần khi bay
+  function drawCres(c, o) {
+    const q = o.q;
+    if (q.done) { q.gone = true; return; }
+    const PL = pal(q.he ? q.he.el : null), th = angOf(q), g = Math.min(1, 0.75 + q.walked / 160);
+    const X = Math.round(q.x), Y = Math.round(q.y - 12);
+    c.save(); c.translate(X, Y); c.rotate(th);
+    try {
+      for (let i = 2; i >= 1; i--) { c.globalAlpha = 0.22 * (3 - i); crescent(c, -i * 9, 0, 17 * g, 19 * g, -8, 0, 1, PL.c, 0, 1, true, true, 1, 0); }
+      c.globalAlpha = 1;
+      crescent(c, 1, 0, 19 * g, 21 * g, -8, 0, 1, PL.d, 0, 1, true, false, 1, 0);
+      crescent(c, 0, 0, 17 * g, 19 * g, -7, 0, 1, PL.c, 0, 1, true, false, 1, 0);
+      crescent(c, 1, 0, 16 * g, 17 * g, -4, 0, 1, PL.c2, 0.08, 0.92, true, false, 1, 0);
+      crescent(c, 1, 0, 15 * g, 14 * g, -2, 0, 1, '#ffffff', 0.18, 0.82, true, false, 1, 0);
+    } finally { c.restore(); c.globalAlpha = 1; }
+  }
+  // Phi Thương: cây giáo sống thật (G.weaponArt) bay theo hướng ném; cắm thì rung, bay về thì xoay vòng
+  function drawSpear(c, o) {
+    const q = o.q;
+    if (q.done) { q.gone = true; return; }
+    const t = K.S().t, v = scr(q);
+    let ang = (Math.atan2(v[1], v[0]) * 180) / Math.PI, x = q.x, y = q.y - 12;
+    if (q.phase === 'stick') { ang += 18 * Math.sign(v[0] || 1) + Math.sin(t * 60) * 4 * Math.max(0, q.stick - 0.3); y += 4; }
+    else if (q.phase === 'back') ang += (t * 1100) % 360;
+    // điểm cầm ở giữa thân giáo: dời lùi để mũi giáo nằm ở chỗ đang bay
+    const gx = x - v[0] * 22, gy = y - v[1] * 22;
+    if (q.phase !== 'back') p(c, Math.round(x - v[0] * 20) - 8, Math.round(q.y) - 1, 16, 2, 'rgba(0,0,0,0.25)'); // bóng
+    try {
+      if (G.weaponArt && G.weaponArt.draw && q.w) {
+        const wo = G.weaponArt.fromWeapon(q.w, { mood: 'attack', t });
+        G.weaponArt.draw(c, wo, q.phase === 'back' ? x : gx, q.phase === 'back' ? y : gy, ang, 0);
+        return;
+      }
+    } catch (e) { fail(e); }
+    line(c, Math.round(gx - v[0] * 20), Math.round(gy - v[1] * 20), Math.round(x), Math.round(y), '#8a5a2b', 2);
+    star(c, Math.round(x), Math.round(y), 3, '#ffffff');
+  }
+  // Địa Chấn: vết nứt mảnh chạy trước (báo trước), rồi đất trồi lên đuổi theo, để lại rãnh nứt
+  function drawCrack(c, o) {
+    const q = o.q, t = q.t || 0, PL = pal(q.he ? q.he.el : null), v = scr(q), nx = -v[1], ny = v[0];
+    const L = q.len, warn = Math.min(1, t / Math.max(0.01, q.warn)), runL = L * warn, at = q.at || 0;
+    const fade = q.done ? Math.max(0, 1 - (K.S().t - q.endAt) / 0.6) : 1;
+    if (fade <= 0) { q.gone = true; return; }
+    // điểm cách gốc s (trên sàn) dọc vệt, lệch ngang w cho vết nứt gãy khúc
+    const pt = (s, j) => { const w = (hash(q.sd + Math.floor(s / 5)) - 0.5) * 4 * (j || 1); return [q.x0 + q.ux * s + nx * w, q.y0 + q.uy * s * zk() + ny * w]; };
+    // vệt nứt mảnh (báo trước): nét đứt tối chạy rất nhanh tới cuối vệt
+    for (let s = 0; s < runL; s += 3) { const a = pt(s); p(c, Math.round(a[0]), Math.round(a[1]), 2, 1, s > at ? 'rgba(30,18,12,0.85)' : 'rgba(20,12,8,0.9)'); }
+    // rãnh đã trồi: rộng, viền màu hệ
+    c.globalAlpha = fade;
+    for (let s = 0; s < at; s += 2) {
+      const a = pt(s, 1.6), wd = 2 + Math.round(hash(q.sd + s) * 2);
+      p(c, Math.round(a[0] - nx * wd), Math.round(a[1] - ny * wd), 2, 2, '#1a120c');
+      p(c, Math.round(a[0] + nx * wd), Math.round(a[1] + ny * wd), 2, 2, '#1a120c');
+      if ((s & 7) === 0) p(c, Math.round(a[0]), Math.round(a[1]) - 1, 2, 1, q.he ? PL.c : '#b8a890');
+    }
+    // đá trồi ở đầu sóng đất
+    if (!q.done && t >= q.warn) {
+      for (let i = 0; i < 4; i++) {
+        const s = at - i * 7;
+        if (s < 0) break;
+        const a = pt(s), h = Math.round((10 - i * 2.2) * (0.8 + 0.4 * hash(q.sd + i + Math.floor(at))));
+        for (const sd of [-1, 1]) {
+          const bx = Math.round(a[0] + nx * sd * (5 + i)), by = Math.round(a[1] + ny * sd * (5 + i));
+          p(c, bx - 2, by - h, 4, h, q.he ? PL.d : '#6a5a4a'); p(c, bx - 1, by - h, 2, h - 1, q.he ? PL.c : '#b8a890'); p(c, bx - 1, by - h - 1, 1, 2, '#ffffff');
+        }
+      }
+    }
+    c.globalAlpha = 1;
+  }
+  const SPDRAW = { cres: [drawCres, 1], spear: [drawSpear, 1], crack: [drawCrack, 0] };
+  function stepSp(W, tick) {
+    const list = W.mvSp;
+    if (!list) return;
+    for (const q of list) {
+      if (!q.fxOn) { q.fxOn = 1; q.sd = R() * 100; const d = SPDRAW[q.kind]; if (d) add({ ty: 'he', x: q.x, y: q.y, t: 30, ly: d[1], draw: (c, o) => { if (o.q.gone) { o.t = 0; return; } d[0](c, o); }, q }); }
+      if (!tick) continue;
+      const PL = pal(q.he ? q.he.el : null), v = scr(q);
+      if (q.kind === 'cres') {
+        for (let i = 0; i < 2; i++) streak(q.x - v[0] * rr(4, 12) + v[1] * rr(-12, 12), q.y - 12 - v[1] * rr(4, 12) - v[0] * rr(-12, 12), -v[0] * rr(40, 90), -v[1] * rr(40, 90), rr(0.12, 0.2), PL.ramp, 1, rr(6, 12), 0, 2);
+        if (q.he) emit(q.he.el === 'fire' ? 9 : q.he.el === 'ice' ? 4 : 5, q.x + rr(-6, 6), q.y - 12 + rr(-8, 8), rr(-20, 20), rr(-40, -10), rr(0.25, 0.45), PL.ramp, 2, q.he.el === 'fire' ? -20 : 120, 0, q.y + 2, 1);
+      } else if (q.kind === 'spear' && q.phase !== 'stick') {
+        streak(q.x - v[0] * 10, q.y - 12 - v[1] * 10, -v[0] * 60, -v[1] * 60, 0.14, PL.ramp, 1, 10, 0, 2);
+      } else if (q.kind === 'crack' && (q.t || 0) >= q.warn && !q.done) {
+        const a = [q.x0 + q.ux * q.at, q.y0 + q.uy * q.at * zk()];
+        emit(2, a[0] + rr(-4, 4), a[1] + rr(-3, 3), rr(-30, 30), rr(-30, -10), rr(0.3, 0.5), RAMP.dust, R() < 0.4 ? 4 : 3, 0, 3, null, 1);
+        emit(8, a[0], a[1], rr(-50, 50), rr(-160, -80), rr(0.4, 0.7), q.he && R() < 0.5 ? PL.ramp : RAMP.rock, 2, 420, 0, a[1] + rr(-2, 4), 1);
+      }
+    }
+  }
+  api('spCast', (P, type, q, el) => {
+    const PL = pal(el), h = hand(P), v = q ? scr(q) : [P.face, 0];
+    if (type === 'sword') {
+      add({ ty: 'flash', x: h.x + v[0] * 10, y: h.y + v[1] * 10, r: 10, t: 0.12, c: '#ffffff', c2: PL.c2, ly: 1 });
+      addRing(h.x + v[0] * 6, h.y + v[1] * 6, 3, 20, 0.2, PL.c2, 2, 1);
+      for (let i = 0; i < 6; i++) streak(h.x, h.y, v[0] * rr(140, 240) + v[1] * rr(-30, 30), v[1] * rr(140, 240) - v[0] * rr(-30, 30), rr(0.12, 0.2), PL.ramp, 1, rr(8, 14), 0, 3);
+      for (let i = 0; i < 4; i++) emit(2, P.x - v[0] * rr(2, 8), P.y + rr(-2, 2), -v[0] * rr(30, 70), rr(-14, -4), rr(0.3, 0.5), RAMP.dust, 3, 0, 3, null, 1);
+      kick(-v[0] * 2, -v[1] * 2); trauma(0.2); K.stop(40);
+    } else if (type === 'spear') {
+      add({ ty: 'flash', x: h.x + v[0] * 8, y: h.y + v[1] * 8, r: 8, t: 0.1, c: '#ffffff', c2: PL.c2, ly: 1 });
+      addRing(h.x, h.y, 2, 16, 0.18, PL.c2, 2, 1);
+      for (let i = 0; i < 5; i++) streak(h.x, h.y, v[0] * rr(160, 260), v[1] * rr(160, 260), rr(0.1, 0.18), PL.ramp, 1, rr(8, 12), 0, 3);
+      kick(v[0] * 1.5, v[1] * 1.5); trauma(0.14);
+    } else if (type === 'hammer') {
+      K.slam(P.x, P.y, 26, el, 1.4);
+      addRing(P.x, P.y, 6, 30, 0.26, PL.c, 3, 0);
+      addRing(P.x + v[0] * 12, P.y + v[1] * 10, 3, 16, 0.2, '#ffffff', 2, 0, 0.04);
+      trauma(0.5); kick(0, 3); K.stop(60);
+    }
+  });
+  api('spPin', (q) => {
+    const PL = pal(q.he ? q.he.el : null), y = q.y - 12;
+    add({ ty: 'flash', x: q.x, y, r: 10, t: 0.12, c: '#ffffff', c2: PL.c2, ly: 1, sq: true });
+    addRing(q.x, q.y, 3, 18, 0.24, PL.c2, 2, 0);
+    for (let i = 0; i < 8; i++) { const a = R() * TAU, vv = rr(50, 120); emit(8, q.x, y, Math.cos(a) * vv, Math.sin(a) * vv * 0.6 - 40, rr(0.3, 0.55), q.pin ? RAMP.white : RAMP.rock, 2, 320, 0, q.y + rr(-2, 4), 1); }
+    trauma(q.pin ? 0.3 : 0.15); if (q.pin) K.stop(70);
+  });
+  api('spBack', (q) => { addRing(q.x, q.y - 12, 2, 12, 0.18, '#ffffff', 2, 1); });
+  api('spCatch', (P, q) => {
+    const h = hand(P), PL = pal(q.he ? q.he.el : null);
+    add({ ty: 'flash', x: h.x, y: h.y, r: 7, t: 0.1, c: '#ffffff', c2: PL.c2, ly: 1 });
+    for (let i = 0; i < 5; i++) emit(6, h.x + rr(-6, 6), h.y + rr(-8, 4), 0, -10, rr(0.2, 0.35), PL.ramp, 3, 0, 0, null, 1);
+  });
+  api('spEnd', (q) => {
+    const PL = pal(q.he ? q.he.el : null);
+    q.endT = q.t || 0;
+    if (q.kind === 'cres') {
+      q.gone = true;
+      add({ ty: 'flash', x: q.x, y: q.y - 12, r: 9, t: 0.1, c: '#ffffff', c2: PL.c2, ly: 1 });
+      for (let i = 0; i < 8; i++) { const a = R() * TAU, vv = rr(40, 110); streak(q.x, q.y - 12, Math.cos(a) * vv, Math.sin(a) * vv * 0.7, rr(0.12, 0.22), PL.ramp, 1, rr(4, 8), 0, 3); }
+    } else if (q.kind === 'crack') {
+      // rãnh nứt còn mờ dần thêm một lúc (vẽ theo q.done), rồi bỏ
+      q.endAt = K.S().t;
+      puffBits(q);
+    }
+  });
+  function puffBits(q) { for (let i = 0; i < 6; i++) emit(2, q.x0 + q.ux * q.len + rr(-6, 6), q.y0 + q.uy * q.len * zk() + rr(-4, 4), rr(-30, 30), rr(-20, -6), rr(0.4, 0.7), RAMP.dust, 4, 0, 2.5, null, 1); }
+  // Cú đấm tay (giáo đang bay): chớp nhỏ trước nắm tay theo hướng nhắm
+  api('punch', (P) => {
+    const v = P.aimUx != null ? [P.aimUx, P.aimUy] : [P.face, 0], x = P.x + v[0] * 12, y = P.y - 12 + v[1] * 12;
+    add({ ty: 'flash', x, y, r: 5, t: 0.08, c: '#ffffff', c2: '#ffe9a3', ly: 1 });
+    for (let i = 0; i < 3; i++) streak(x, y, v[0] * rr(60, 120), v[1] * rr(60, 120), 0.1, RAMP.white, 1, 5, 0, 3);
+    kick(v[0], v[1]);
+  });
 
   // ---------- vạch lấy đà trên đầu hero ----------
   function drawCharge(c) {

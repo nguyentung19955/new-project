@@ -143,6 +143,7 @@
     };
     P.x = 50; P.y = (W.y0 + W.y1) / 2;
     P.inv = 0.6;
+    P.spearOut = null; P.slideT = 0; // giáo Phi Thương đang bay ở phòng cũ thì coi như đã về tay
     if (G.outfit && P.oSp) G.outfit.onRoom(P); // khiên đầu phòng của trang phục
     return W;
   };
@@ -477,21 +478,9 @@
     P.specCd = 0.8 * (P.cdMul || 1);
     const el = G.activeEl(P, w);
     G.sfx('boom', 1.8);
-    if (w.type === 'sword' || w.type === 'spear') {
-      // Đường lao dài theo bề ngang phòng (G.MOVES.dash): phòng thường ngắn hơn phòng trùm, để không lao hết nửa phòng rồi đập tường.
-      const dc = G.MOVES && G.MOVES.dash && G.MOVES.dash[w.type];
-      const len = dc ? G.clamp((W.x1 - W.x0) * dc.frac, dc.min, dc.max) : w.type === 'sword' ? 92 : 112;
-      P.dashT = 0.2; P.dashV = (len / 0.2) * P.face; P.dashHit = []; P.inv = Math.max(P.inv, 0.25);
-      P.dashMult = w.type === 'sword' ? 2.2 : 2.0;
-      P.dashStun = w.type === 'spear' ? 0.5 : 0;
-      P.atkT = 0.2; P.atkDur = 0.2; P.cdT = 0.3; P.hitDone = true;
-      FX('dash', P, w.type, el);
-    } else if (w.type === 'hammer') {
-      W.shake = 0.3;
-      FX('slam', P, el);
-      for (const e of G.targets()) if (Math.hypot(e.x - P.x, (e.y - P.y) / G.ZK) < 58 + e.r) playerHit(e, 2.4, { w, stun: 0.8, heavy: true });
-      hitProps(P.x - 58, P.x + 58, P.y, 58 * G.ZK);
-      W.zones.push({ shape: 'circle', x: P.x, y: P.y, r: 58, t: 0, life: 0.15, team: 'fx' });
+    if (w.type !== 'bow' && G.moves && G.moves.cast) {
+      // Tám hướng và chiêu riêng: kiếm Trảm Nguyệt, giáo Phi Thương, búa Địa Chấn (luật trong js/moves.js, đều theo hướng nhắm)
+      G.moves.cast(P, w);
     } else {
       // Sửa góp ý 1: mưa tên đặt tâm vào quái (hoặc cụm quái) gần nhất theo mọi hướng, đón đầu nhẹ quái đang chạy.
       // Không có quái thì mưa rơi phía trước theo hướng đang đi hoặc đang nhìn, luôn nằm trong sàn phòng.
@@ -520,12 +509,17 @@
       const traps = W.props.filter((p) => p.type === 'trap' && !p.dead);
       if (traps.length >= 2) traps[0].dead = true;
       // Sửa góp ý 1: đang cầm cung thì bẫy ném thẳng vào chỗ quái gần nhất (trong tầm 150, đón đầu nhẹ); không có quái thì đặt trước mặt.
-      const sp = w.type === 'bow' && G.moves ? G.moves.bowSpot(P, 150, 14, 0.3) : null;
-      const tx = G.clamp(sp ? sp.x : P.x + P.face * 26, W.x0, W.x1), ty = G.clamp(sp ? sp.y : P.y, W.y0, W.y1);
+      // Tám hướng: cầm vũ khí nào cũng vậy, bẫy ném vào chỗ quái gần nhất (tầm 150); không có quái thì đặt 26 điểm ảnh theo hướng nhắm.
+      const sp = G.moves ? G.moves.bowSpot(P, 150, 14, 0.3) : null;
+      let ax = P.face, ay = 0;
+      if (!sp && G.moves) { const A = G.moves.aimM(P, 0); ax = A.ux; ay = A.uy * (G.ZK || 0.85); }
+      const tx = G.clamp(sp ? sp.x : P.x + ax * 26, W.x0, W.x1), ty = G.clamp(sp ? sp.y : P.y + ay * 26, W.y0, W.y1);
       W.props.push({ type: 'trap', x: tx, y: ty, el: G.activeEl(P, w), t: 15, w });
       FX('trapPlace', tx, ty, G.activeEl(P, w));
     } else if (P.key === 'healer') {
-      W.zones.push({ shape: 'circle', x: G.clamp(P.x + P.face * 22, W.x0, W.x1), y: P.y, r: 42, t: 0, pool: true, team: 'player', el: 'poison', heal: true, life: 5, tick: 0, src: G.pDamage(P, w) });
+      // Tám hướng: có quái trong tầm 70 thì vũng hồi đặt lệch 22 điểm ảnh về phía quái, không thì ngay dưới chân.
+      const A = G.moves ? G.moves.aimM(P, 70) : null, hx = A && A.e ? A.ux * 22 : 0, hy = A && A.e ? A.uy * 22 * (G.ZK || 0.85) : 0;
+      W.zones.push({ shape: 'circle', x: G.clamp(P.x + hx, W.x0, W.x1), y: G.clamp(P.y + hy, W.y0, W.y1), r: 42, t: 0, pool: true, team: 'player', el: 'poison', heal: true, life: 5, tick: 0, src: G.pDamage(P, w) });
       FX('bottle', P, W.zones[W.zones.length - 1]);
     } else {
       P.gongT = 3;
@@ -599,21 +593,33 @@
     P.moving = false;
 
     if (P.dashT > 0) {
+      // Lướt và lao đi theo hướng thật (P.dashVx, P.dashVy, tám hướng); chạm tường thì dừng ngay, không xuyên tường.
       const dd = Math.min(dt, P.dashT); // khung cuối chỉ đi nốt phần còn lại, để quãng lao đúng bằng con số đã định
       P.dashT -= dt;
-      const nx = G.clamp(P.x + P.dashV * dd, W.x0, W.px1 != null ? W.px1 : W.x1);
+      const vx = P.dashVx != null ? P.dashVx : P.dashV, vy = P.dashVy || 0;
+      const nx = G.clamp(P.x + vx * dd, W.x0, W.px1 != null ? W.px1 : W.x1), ny = G.clamp(P.y + vy * dd, W.y0, W.y1);
+      const K = G.ZK || 0.85, ux = P.dashUx != null ? P.dashUx : vx < 0 ? -1 : 1, uy = P.dashUy || 0;
       for (const e of G.targets()) {
         if (P.dashHit.includes(e)) continue;
-        if (e.x >= Math.min(P.x, nx) - e.r - 6 && e.x <= Math.max(P.x, nx) + e.r + 6 && Math.abs(e.y - P.y) <= 12 + e.hr) {
+        // đoạn vừa lướt qua, đo trên sàn; nằm ngang thì đúng bằng hộp cũ (lệch dọc 12 + thân quái, hai đầu nới 6 + thân quái)
+        const sx = nx - P.x, sy = (ny - P.y) / K, px = e.x - P.x, py = (e.y - P.y) / K, L = sx * sx + sy * sy;
+        const t = L > 0 ? G.clamp((px * sx + py * sy) / L, 0, 1) : 0, Ls = Math.sqrt(L);
+        const a = px * ux + py * uy, b = Math.abs(py * ux - px * uy);
+        if (a >= -e.r - 6 && a <= Ls + e.r + 6 && b <= Math.abs(ux) * (12 + e.hr) / K + Math.abs(uy) * (e.r + 8) && t >= 0) {
           P.dashHit.push(e);
           playerHit(e, P.dashMult, P.dashOpt ? Object.assign({ w }, P.dashOpt) : { w, stun: P.dashStun });
         }
       }
-      hitProps(Math.min(P.x, nx) - 4, Math.max(P.x, nx) + 4, P.y, 14);
+      hitProps(Math.min(P.x, nx) - 4, Math.max(P.x, nx) + 4, (P.y + ny) / 2, 14 + Math.abs(ny - P.y) / 2);
       // Chạm tường thì đòn lao dừng ngay tại đó (không chạy tại chỗ sát tường, không kẹt ở cửa): người chơi điều khiển lại được liền.
-      if (nx !== P.x + P.dashV * dd && P.dashT > 0) { P.dashT = 0; P.atkT = Math.min(P.atkT, 0.05); P.cdT = Math.min(P.cdT, 0.12); }
-      P.x = nx;
+      if ((nx !== P.x + vx * dd || ny !== P.y + vy * dd) && P.dashT > 0) { P.dashT = 0; P.atkT = Math.min(P.atkT, 0.05); P.cdT = Math.min(P.cdT, 0.12); }
+      P.x = nx; P.y = ny;
       return;
+    }
+    if (P.slideT > 0) { // lùi nửa bước khi tung Trảm Nguyệt (không chặn điều khiển)
+      const dd = Math.min(dt, P.slideT);
+      P.slideT -= dt;
+      P.x = G.clamp(P.x + P.slideVx * dd, W.x0, W.px1 != null ? W.px1 : W.x1); P.y = G.clamp(P.y + P.slideVy * dd, W.y0, W.y1);
     }
     if (P.dodgeT > 0) {
       P.dodgeT -= dt;
@@ -655,7 +661,7 @@
         W.stats.dodges++;
         G.sfx('swing', 0.7);
         FX('dodge', P);
-      } else if (inp.specialP && P.mana >= P.specCost && P.specCd <= 0) {
+      } else if (inp.specialP && P.mana >= P.specCost && P.specCd <= 0 && !(G.moves && G.moves.canSpecial && !G.moves.canSpecial(P, w))) {
         special(P);
       } else if (inp.skillP && P.mana >= 40 && P.skillCd <= 0) {
         heroSkill(P);
@@ -940,7 +946,8 @@
       x: P.x, y: P.y, face: P.face, key: P.key, move: P.moving, t: P.t,
       atk: P.atkT > 0 ? 1 - P.atkT / P.atkDur : -1, dodge: P.dodgeT > 0 ? 1 - P.dodgeT / 0.27 : -1,
       flash: P.hurtT > 0, alpha: P.inv > 0 && P.dodgeT <= 0 && Math.floor(G.time * 20) % 2 ? 0.5 : null,
-      weapon: Object.assign({}, w, { coat: P.coats[w.id] && P.coats[w.id].t > 0 ? P.coats[w.id].el : null }),
+      // giáo đang bay (Phi Thương): tay không, chưa vẽ cây giáo trên tay
+      weapon: Object.assign({}, w, { coat: P.coats[w.id] && P.coats[w.id].t > 0 ? P.coats[w.id].el : null }, P.spearOut === w.id ? { type: 'fist' } : null),
       helm: P.helm, armor: P.armor, outfit: P.outfit || null, gong: P.gongT > 0,
       roundShadow: !!W.geo, // phòng vuông nhìn từ trên: bóng đổ tròn
     };
@@ -972,13 +979,14 @@
     for (const e of W.ents) {
       list.push({ y: e.y, f: () => {
         const k = rec ? rec(e) : 0; // giật lùi khi trúng đòn: chỉ dời hình
-        if (k) c.translate(k, 0);
+        const up = e.mvLift > 0 ? Math.round(Math.sin((e.mvLift / 0.45) * Math.PI) * 10) : 0; // bị Địa Chấn hất tung
+        if (k || up) c.translate(k, -up);
         if (e.illusion) A.boss(c, e); else A.enemy(c, e);
-        if (k) c.translate(-k, 0);
+        if (k || up) c.translate(-k, up);
         if (ent) ent(c, e);
       } });
     }
-    for (const pr of W.props) list.push({ y: pr.y - (pr.type === 'door' || pr.type === 'portal' ? 200 : 0), f: () => A.prop(c, pr) }); // cổng dịch chuyển nằm sát sàn: vẽ dưới mọi thứ
+    for (const pr of W.props) if (pr.type !== 'loot') list.push({ y: pr.y - (pr.type === 'door' || pr.type === 'portal' ? 200 : 0), f: () => A.prop(c, pr) }); // cổng dịch chuyển nằm sát sàn: vẽ dưới mọi thứ
     if (W.boss && !W.boss.dead) {
       const b = W.boss;
       list.push({ y: b.y + (b.kind === 'moc' ? -30 : 0), f: () => {
@@ -992,6 +1000,7 @@
     }
     list.push({ y: P.y, f: () => { A.hero(c, G.heroArgs(P)); if (ent) ent(c, P); } });
     if (F && F.sorted) F.sorted(list, c);
+    for (const pr of W.props) if (pr.type === 'loot') A.prop(c, pr); // đồ rơi nằm ở lớp sàn: không che quái, em bé, vùng báo trước (js/do_roi.js)
     if (G.baoTruoc) G.baoTruoc.snap(c); // chụp nền (đã có vũng, vết) trước khi vẽ nhân vật: để vùng báo trước nằm dưới nhân vật
     list.sort((a, b) => a.y - b.y);
     for (const o of list) o.f();
@@ -1010,6 +1019,7 @@
     if (G.baoTruoc) G.baoTruoc.draw(cam, sx, sy); // vùng báo trước đòn: vẽ mịn ở lớp giao diện (js/bao_truoc.js)
     // chữ sát thương vẽ ở lớp giao diện cho nét
     for (const o of W.texts) G.ui.text(o.s, o.x - cam, o.y, { size: o.size, align: 'center', color: o.col, bold: true });
+    if (G.doRoi && !P.dead) G.doRoi.nhan(W, P); // tên ngắn của đồ rơi khi lại gần
     if (F && F.drawUI) F.drawUI(cam);
   };
 })();

@@ -150,7 +150,7 @@ def save(pg, js, name):
         f.write(base64.b64decode(data.split(',')[1]))
     print('đã lưu', path)
 
-SPEC = {'sword': 'Chém lướt', 'bow': 'Mưa tên', 'spear': 'Lao tới', 'hammer': 'Nện đất'}
+SPEC = {'sword': 'Trảm Nguyệt', 'bow': 'Mưa Tên', 'spear': 'Phi Thương', 'hammer': 'Địa Chấn'}
 NAMES = {'sword': 'Kiếm', 'bow': 'Cung', 'spear': 'Giáo', 'hammer': 'Búa'}
 FILES = {'sword': 'kiem', 'bow': 'cung', 'spear': 'giao', 'hammer': 'bua'}
 ELN = {None: 'Chưa có hệ', 'fire': 'Lửa', 'poison': 'Độc', 'ice': 'Băng'}

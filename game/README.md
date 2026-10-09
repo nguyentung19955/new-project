@@ -39,8 +39,15 @@ Trên điện thoại (nên cầm ngang):
 - Mỗi vũ khí có lối đánh riêng với nút **Đánh**:
   - Kiếm: bấm liên tiếp (hoặc giữ) ra chuỗi 3 nhát, nhát thứ ba mạnh và rộng hơn. Đánh ngay sau khi Né thì lướt tới chém.
   - Cung: bấm để bắn nhanh; tên tự ngắm vào quái gần nhất theo mọi hướng (trên, dưới, chéo, sau lưng, kể cả quái đứng sát người), đón đầu nhẹ quái đang chạy, và xuyên thêm một con (con sau nhận khoảng một phần ba sát thương). Giữ để giương cung (có vạch lấy đà trên đầu), cung xoay theo quái gần nhất; thả ra bắn tên mạnh xuyên qua nhiều quái. Mưa tên (Đặc biệt) rơi vào quái hoặc cụm quái gần nhất; bẫy của Thợ Săn khi cầm cung ném thẳng vào chỗ quái gần nhất.
-  - Giáo: bấm liên tiếp ra ba nhát đâm rồi quét một vòng. Giữ rồi thả để lao tới một đoạn ngắn xuyên qua quái.
+  - Giáo: bấm liên tiếp ra ba nhát đâm rồi quét một vòng. Giữ rồi thả để xốc tới một đoạn ngắn xuyên qua quái. Quét vòng quét ba phần tư vòng quanh người, chỉ chừa khe ngay sau lưng.
   - Búa: bấm để nện, làm quái khựng. Giữ để lấy đà 2 nấc, thả ra nện đất tạo sóng chấn động; đủ nấc 2 thì làm choáng.
+- Mọi đòn đánh theo **tám hướng**: tự quay về quái gần nhất trong tầm của đòn (lên, xuống, chéo); không có quái thì theo hướng đang kéo cần, rồi hướng vừa đi. Em bé chỉ lật trái phải, còn vũ khí, vệt chém và vùng trúng xoay đúng góc. Lướt và lao đi theo hướng đó, chạm tường thì dừng.
+- Mỗi loại vũ khí một chiêu **Đặc biệt** riêng (tốn mana, cũng tám hướng):
+  - Kiếm, **Trảm Nguyệt**: vung một nhát phóng vệt chém trăng khuyết bay thẳng chừng 2/3 phòng, xuyên mọi quái; em bé lùi nửa bước.
+  - Giáo, **Phi Thương**: ném giáo bay thẳng xuyên một hàng quái, con cuối (hoặc con sát tường) bị ghim, choáng ngắn; giáo cắm 0,6 giây rồi tự bay về tay, trúng lần nữa trên đường về. Giáo chưa về thì nút Đánh của cây giáo đó là cú đấm tay yếu (đổi sang vũ khí kia vẫn đánh bình thường).
+  - Búa, **Địa Chấn**: nện xuống, vòng chấn nhỏ quanh người, rồi vệt nứt chạy nhanh theo hướng nhắm chừng nửa phòng (có vết nứt báo trước rất ngắn), quái trên vệt bị hất tung và choáng.
+  - Cung, **Mưa Tên**: như cũ, rơi vào cụm quái gần nhất.
+  - Đặc trưng hệ (vệt cháy, vũng độc, gai băng) để lại dọc đường chiêu bay.
 - Hệ của vũ khí mạnh lên theo cấp tiến hóa:
   - Trắng: chỉ có chỉ số.
   - Mầm (30 dấu ấn): chỉ số tăng, mỗi đòn có 20% gây cháy, độc hoặc chậm, vệt chém nhuốm màu hệ. Chưa có luật hệ.
@@ -94,6 +101,11 @@ Mỗi vùng có tám loại quái thường, hai tinh anh, một trùm nhỏ (�
 - Trùm nhỏ (Nấm Chúa, Cua Đá, Hổ Lửa) có đòn thường và hai chiêu riêng.
 - Trùm vùng (Mộc Tinh, Ngư Tinh, Hồ Tinh) có màn ra mắt, ba pha đổi ở 2/3 và 1/3 máu (cảnh chuyển pha, hình đổi, không nhận sát thương lúc đó), năm chiêu (pha 1 ba chiêu, pha 2 thêm một, pha 3 đủ năm và nhanh hơn). Sau chiêu lớn nhất trùm choáng một lúc. Chết xong cổng dịch chuyển mới mọc.
 - Trùm vẫn học theo bạn: kháng hệ dùng nhiều nhất, chống đánh xa, chống áp sát, bắt bài lăn né.
+- Mười ba con trước trông chung chung (Cá Nóc, Sứa Bom, Cá Chuồn, Nhím Biển, Bầy Cá Con, Bầy Ong Vò Vẽ, Chồn Bóng, Nấm Phồng, Nhím Gai Độc, Bầy Dơi Than, Hũ Lửa Sống, Đèn Lồng Ma, Nhím Than Hồng) được thêm chi tiết nhận diện (đốm, vân, ánh mắt, nanh, lá bùa vàng trên Hũ Lửa...) và bộ phận cử động riêng (vây, cánh, đuôi, xúc tu, chùm gai, chân, quai), có tàn lửa, bào tử, khói bóng bay ra. Cỡ va chạm giữ nguyên.
+
+### Đồ rơi
+
+Đồ rơi nằm trên sàn chỗ trùm, tinh anh hay quái gục: vũ khí là hình thu nhỏ của chính vũ khí đó nằm nghiêng, trang phục là hình món đồ, vàng là đống xu, nguyên liệu, quặng, đá tôi, mảnh trùm dùng đúng biểu tượng ở dải trên cùng. Mỗi món có viền tối và bóng dưới chân. Đồ Lam, Tím, Vàng có cột sáng màu bậc bốc lên; đồ Vàng thêm tia sáng xoay và lấp lánh. Đồ nảy ra khi rơi rồi nhấp nhô. Lại gần thì hiện tên ngắn (màu theo bậc); rất gần thì tự bay về (vàng và nguyên liệu bay về từ xa hơn). Thưởng đã được cộng ngay khi rơi, đồ trên sàn chỉ để thấy và nhặt. Đồ rơi nằm ở lớp sàn nên không che quái và vùng báo trước.
 
 ## Trang phục
 
@@ -163,7 +175,7 @@ Em bé mặc đồ theo năm ô: **Mũ**, **Áo**, **Đồ đeo lưng** (gùi, k
 | `js/combat.js` | Trận đánh: người chơi, quái, sát thương, hiệu ứng ba hệ, dấu ấn |
 | `js/moves.js` | Lối đánh riêng của từng vũ khí (chuỗi kiếm, giương cung, loạt đâm, lấy đà búa) và đặc trưng hệ mở theo cấp; mọi con số nằm ở đầu tệp |
 | `js/boss.js` | Trùm: trùm nhỏ (hai chiêu riêng), trùm vùng (ra mắt, ba pha, năm chiêu, choáng, chết), và cách trùm học theo người chơi |
-| `js/monster_art.js` | Hình và cử động của 36 quái và trùm (ghép tự động từ `docs/phac-thao/quai-hoat-hinh/nguon/`, không sửa tay) |
+| `js/monster_art.js` | Hình và cử động của 36 quái và trùm (ghép tự động từ `docs/phac-thao/quai-hoat-hinh/nguon/`, không sửa tay; phần chi tiết thêm ở `nguon/chitiet.js`, ghép riêng bằng `nguon/ghep_chitiet.py`) |
 | `js/mobs.js` | Quái mới trong trận: con nào ở vùng nào, cơ chế từng vai, tinh anh, đòn ngắm mọi hướng, vùng báo trước xoay theo góc, cách vẽ quái |
 | `js/bao_truoc.js` | Vùng báo trước đòn của quái và trùm (quạt, chữ nhật, tròn, đường thẳng, vành, vòng bom, vòng mọc quái, tường nước): vẽ mịn ở lớp giao diện, nằm dưới chân nhân vật, hiện ra mượt, thanh đếm ngược, chớp khi ra đòn |
 | `js/fx.js` | Hiệu ứng hình ảnh chung: vệt chém, hạt, số sát thương, rung màn hình |
@@ -174,7 +186,8 @@ Em bé mặc đồ theo năm ô: **Mũ**, **Áo**, **Đồ đeo lưng** (gùi, k
 | `js/mapgen.js` | Sinh bản đồ ải ngẫu nhiên theo hạt giống (ba kiểu bố cục A, B, C) và hàm kiểm tra bản đồ |
 | `js/room_art.js` | Vẽ phòng vuông nhìn từ trên cho ba vùng: sàn, tường, cửa khóa và cửa mở |
 | `js/minimap.js` | Bản đồ nhỏ và bản đồ to |
-| `js/portal.js` | Hình cổng dịch chuyển sau khi thắng và đồ rơi trên sàn |
+| `js/portal.js` | Hình cổng dịch chuyển sau khi thắng |
+| `js/do_roi.js` | Hình đồ rơi trên sàn (viền, bóng, cột sáng theo bậc, nảy), tên khi lại gần, tự hút về |
 | `js/village_scene.js` | Cảnh làng có người (`G.villageScene`): nền làng 720 điểm, bảy người làng, em bé đi lại, vũ khí bay theo, tìm đường khi chạm, dải khuôn mặt lối tắt, tranh bản đồ vùng |
 | `js/village.js` | Màn hình đầu và làng: mỗi người mở một bảng (tranh bản đồ, lò rèn, rương vũ khí, mũ áo bùa, cây kỹ năng và hướng dẫn, chọn hero, cài đặt), màn xem vũ khí |
 | `js/main.js` | Khởi động game |
@@ -224,7 +237,7 @@ python3 tests/cung_shots.py        # chụp ảnh cung tám hướng vào docs/s
 python3 tests/cong.py              # cổng dịch chuyển sau khi thắng: luật, và bấm thật trên điện thoại
 python3 tests/cong_shots.py        # chụp ảnh cổng dịch chuyển vào docs/sua-gop-y-1/ (cần thêm Pillow)
 python3 tests/dps.py 90 16 nho     # bảng tầm với, thời gian, sát thương mỗi đòn; đo sát thương mỗi giây của bốn vũ khí và ba hệ khi bot chơi ("trum": phòng trùm, "mot": một quái thay cho cụm, "khonghe": bỏ ba hệ, "trangphuc": mặc đủ bộ trang phục Vàng)
-python3 tests/perf.py              # đo thời gian một khung hình trong cảnh đông quái
+python3 tests/perf.py              # đo thời gian một khung hình trong cảnh đông quái và 16 món đồ rơi
 python3 tests/chieu_shots.py       # chụp ảnh các lối đánh và hiệu ứng theo hệ vào docs/chieu-thuc/
 python3 tests/ghep.py              # bản lưu cũ, bốn bậc, trùm rơi Vàng, đặc trưng hệ theo cấp, né theo hướng cuối, hero và nút mới
 python3 tests/ghep2.py             # đợt ghép 2: nút trong hai lề, bóng và chiều sâu, lối đánh trong phòng hẹp, bản đồ một màu, né tám hướng, vũ khí rơi, suối khóa, hoạt ảnh trùm
@@ -237,6 +250,9 @@ python3 tests/quai_shots.py        # chụp ảnh và GIF quái mới trong game
 python3 tests/balance.py 4         # bot chơi 15 ải với bản lưu thật vừa đủ sức mạnh khuyên dùng (tests/cay_luu.json), mỗi ải 4 lần: tỉ lệ thắng, thời gian, máu mất (thêm "- 0,4,9 vukhi": chạy với từng loại vũ khí; thêm "- - trangphuc" hoặc "trangphuc:vang": mặc bộ trang phục của vùng; "codinh": bản lưu dựng tay)
 python3 tests/ghep2_shots.py       # chụp ảnh và ảnh động của đợt ghép 2 vào docs/ghep-2/ (cần thêm Pillow)
 python3 tests/ghep_shots.py        # chụp sáu ảnh của đợt ghép 1 vào docs/ghep/ (cần thêm Pillow)
+python3 tests/do_roi.py            # đồ rơi (đủ loại có viền, bóng, cột sáng theo bậc, tên, hút về, tinh anh rơi trên sàn) và quái chi tiết (cỡ không đổi, đủ bộ phận mới, mọi cử động vẽ được)
+python3 tests/chitiet_shots.py <thư mục ra> quai|do|gif 1   # chụp quái cỡ thật cạnh em bé, đồ rơi ba vùng, GIF trong game (cần thêm Pillow)
+python3 tests/quai_truoc_sau.py <thư mục game cũ> <ảnh ra> caNoc,sua   # ảnh trước/sau từng con (cỡ thật và phóng 3 lần)
 python3 tests/lang_shots.py        # chụp từng màn hình của giao diện trống đồng và làng có người vào docs/giao-dien-va-lang/
 ```
 
