@@ -1,5 +1,7 @@
 # Bộ prompt nhờ AI vẽ hình cho Xưởng Sprite
 
+Có thêm bộ prompt quái và em bé có nét phá cách dân gian, kèm khung cơ thể gợi ý: [PROMPT-VE.md](PROMPT-VE.md).
+
 Mỗi dòng trong khung là **một ảnh**: chép nguyên dòng dán vào AI vẽ ảnh (ChatGPT, Gemini, Midjourney, Leonardo, Bing Image Creator…). Viết bằng tiếng Anh vì các AI vẽ ảnh hiểu tiếng Anh tốt nhất.
 
 ## Làm sao cho hình thật chi tiết mà vẫn đẹp trong game
