@@ -103,10 +103,18 @@
   // Máu hữu hiệu: máu tối đa (cấp hero, áo, điểm Thủ) chia cho phần sát thương còn nhận (giáp, nội tại), cộng chút kháng hệ của mũ.
   // Em bé mới cấp 1 cầm kiếm Thường có sức mạnh 99. Trang phục đang mặc cũng được tính (máu, giảm sát thương, kháng, bộ, tác dụng, cánh).
   G.power = function () {
-    if (!G.save || !G.save.heroes) return 0;
+    const q = G.powerParts();
+    return q ? q.power : 0;
+  };
+  // Hai thành phần của sức mạnh: off (đòn mạnh nhất, thang kiếm) và ehp (máu hữu hiệu).
+  G.powerParts = function () {
+    if (!G.save || !G.save.heroes) return null;
     const P = G.buildPlayer();
     let off = 0;
-    for (const w of P.weapons) off = Math.max(off, (G.pDamage(P, w) / G.WTYPES[w.type].dmg) * 10 * (G.wHas(w, 'crit') ? 1.1 : 1));
+    // Cày nâng cấp: tính cả vũ khí thứ hai (75% món mạnh nhất + 25% món còn lại). Trùm thích nghi kháng hệ đang dùng nhiều nên phải đổi
+    // sang vũ khí kia; vũ khí thứ hai bỏ mặc +0 thì đánh trùm rất khó, nên con số Sức mạnh và gợi ý nâng cấp phải thấy được điều đó.
+    const offs = P.weapons.map((w) => (G.pDamage(P, w) / G.WTYPES[w.type].dmg) * 10 * (G.wHas(w, 'crit') ? 1.1 : 1)).sort((a, b) => b - a);
+    if (offs.length) off = offs.length > 1 ? offs[0] * 0.75 + offs[1] * 0.25 : offs[0];
     if (!off) off = 10 * (1 + 0.01 * (P.lvl - 1));
     off *= 1 + P.crit;
     let res = 0;
@@ -117,7 +125,7 @@
     if (P.elBonus) { let eb = 0; for (const e in P.elBonus) eb = Math.max(eb, P.elBonus[e] || 0); off *= 1 + eb * 0.6; }
     if (P.oSp) { let n = 0; for (const k in P.oSp) n += P.oSp[k].length; ehp *= 1 + 0.04 * Math.min(5, n); }
     if (P.dodgeMul > 1) ehp *= 1 + (P.dodgeMul - 1) * 0.3;
-    return Math.round(3 * Math.sqrt(off * ehp) * (P.powerMult || 1));
+    return { off, ehp, power: Math.round(3 * Math.sqrt(off * ehp) * (P.powerMult || 1)) };
   };
   // Màu so sánh: đủ (xanh), sát nút (vàng, từ 90% khuyên dùng), thiếu (đỏ).
   G.powerCol = function (have, need) { return have >= need ? '#6fdc6a' : have >= need * 0.9 ? '#ffd23f' : '#ff6a5a'; };

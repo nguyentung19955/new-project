@@ -30,10 +30,16 @@ AUTO = r"""
   // Nâng cấp như người chơi (js/upgrade.js): lặp "việc làm ngay được mà Sức mạnh tăng nhiều nhất trên mỗi đồng bỏ ra" — học kỹ năng,
   // mài, nâng bậc, lên Vàng, nâng lò, mua, may, mặc, nâng bậc trang phục, mở cấp cánh. Vũ khí mang theo đã chọn ở trên.
   const did = G.upg.auto(sv, { skip: ['carry'] });
+  const carry = () => sv.carry.map(G.weaponById).filter(Boolean);
   const O = G.outfit;
   const hs = sv.heroes[sv.hero];
   const look = O && sv.outfit ? O.SLOTS.map((k) => { const it = O.worn(sv, k); return it ? it.k + it.r : '-'; }).join(',') : sv.armor;
-  return { did, lvl: hs.lvl, power: G.power(), gold: sv.gold, ore: sv.ore, forge: sv.forge, armor: look,
+  const P = G.buildPlayer();
+  // chỗ nên cày: như người chơi đọc gợi ý ở bảng thua (js/upgrade.js), lấy việc đáng làm nhất còn thiếu đồ
+  const nx = G.upg.grindTarget(sv);
+  const block = G.upg.rate(sv, G.upg.list(sv).filter((q) => q.kind !== 'carry')).filter((q) => !q.ok && q.gain > 0 && q.miss).sort((a, b) => b.gain - a.gain).slice(0, 2).map((q) => q.title + ' [' + G.upg.missText(sv, q.miss) + ']');
+  const pp = G.powerParts();
+  return { off: Math.round(pp.off * 100) / 100, ehp: Math.round(pp.ehp), did, block, where: nx ? nx[0] * 5 + nx[1] : null, mats: sv.mats.join('/'), shards: sv.shards.join('/'), stones: sv.stones, hp: P.maxhp, dr: Math.round(P.dr * 100), lvl: hs.lvl, power: G.power(), gold: sv.gold, ore: sv.ore, forge: sv.forge, armor: look,
     carry: carry().map((w) => G.WTYPES[w.type].name + ' ' + G.RARITY[G.wRar(w)].name + ' +' + w.sharpen) };
 }
 """
@@ -76,6 +82,9 @@ def campaign(pg, mode, upto):
         else:
             grind = cleared >= 0 and (must_grind or (mode == 'khuyen' and v['power'] < rec * NGUONG and grind_run < 8))
         k = cleared if grind else nxt
+        wh = v.get('where')
+        if grind and wh is not None and wh <= cleared and (wh % 5 < 4 or v['power'] >= 1.15 * pg.evaluate("([r, i]) => G.stageRec(r, i, 0)", list(divmod(wh, 5)))):
+            k = wh  # cày đúng chỗ bảng gợi ý chỉ: thiếu mảnh trùm thì đánh lại trùm, thiếu nguyên liệu vùng nào thì chơi lại vùng đó
         r, i = divmod(k, 5)
         if not grind and SAVES is not None and s_first(nxt):
             SAVES.setdefault(nxt, []).append(pg.evaluate("JSON.stringify(G.save)"))
@@ -91,7 +100,7 @@ def campaign(pg, mode, upto):
         for kk, x in (res.get('hurt') or {}).items():
             kk = kk.split(':')[1]; hurt[kk] = hurt.get(kk, 0) + x
         win = bool(res.get('win'))
-        log.append(f"{'cày ' if grind else 'thử '}{r+1}-{i+1} {'thắng' if win else 'THUA '} {t:>3}s cấp {v['lvl']:>2} sức mạnh {v['power']:>4}/{rec:<4} {v['carry']} {v['armor']} vàng {v['gold']} quặng {v['ore']}")
+        log.append(f"{'cày ' if grind else 'thử '}{r+1}-{i+1} {'thắng' if win else 'THUA '} {t:>3}s cấp {v['lvl']:>2} sức mạnh {v['power']:>4}/{rec:<4} {v['carry']} {v['armor']} vàng {v['gold']} quặng {v['ore']} nl {v['mats']} mảnh {v['shards']} đá {v['stones']} máu {v['hp']} giáp {v['dr']}% off {v['off']} ehp {v['ehp']} | {'; '.join(v['block'])}")
         if grind:
             grind_run += 1
             must_grind = False
@@ -161,7 +170,7 @@ LUAT = r"""
   ok(T && T.tips.length >= 2 && T.tips.length <= 3, 'bảng thua có 2-3 gợi ý: ' + (T ? T.tips.map((t) => t.text + ' (' + t.sub + ')').join(' | ') : 'không có'));
   ok(T && T.power === G.power() && T.rec === G.stageRec(0, 4, 0), 'bảng thua so Sức mạnh hiện tại ' + (T && T.power) + ' với khuyên dùng ' + (T && T.rec));
   ok(T && T.tips[0].kind === 'skill' && /2 điểm kỹ năng/.test(T.tips[0].text), 'còn điểm kỹ năng thì gợi ý học trước tiên');
-  ok(T && T.tips.every((t) => t.gain > 0 && t.go && (t.go.who || t.go.weapon != null)), 'gợi ý nào cũng tăng sức mạnh và có chỗ để đi tới');
+  ok(T && T.tips.every((t) => (t.gain > 0 || t.kind === 'skill') && t.go && (t.go.who || t.go.weapon != null)), 'gợi ý nào cũng tăng sức mạnh (hoặc là điểm kỹ năng chưa học) và có chỗ để đi tới');
   // gợi ý đúng số còn thiếu: mài khi thiếu vàng
   G.resetSave(); G.save.tut.done = true;
   const s3 = G.save, w3 = G.weaponById(s3.carry[0]); s3.forge = 2; w3.sharpen = 5; s3.gold = 220; s3.ore = 50; s3.mats = [0, 9, 0]; s3.stars = { '0-0': 1, '0-1': 1, '1-0': 1, '1-1': 1 };

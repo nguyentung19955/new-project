@@ -439,7 +439,7 @@
       const xp = Math.round(S.base.xp * gm);
       let gold = Math.round((S.base.gold + S.loot.kills * 2) * gm);
       if (S.P && S.P.charm === 'c_greed') gold = Math.round(gold * 1.25); // Bùa tham (đang đeo, hero từ cấp 5)
-      const ore = 3 + R.stars, mat = 5 + S.i;
+      const ore = 3 + R.stars + 2 * S.r, mat = 5 + S.i; // cày nâng cấp: vùng sau cho nhiều quặng hơn (mài cao tốn quặng)
       sv.gold += gold; sv.ore += ore; sv.mats[S.r] += mat;
       R.lines.push('+' + xp + ' kinh nghiệm', '+' + gold + ' vàng', '+' + ore + ' quặng', '+' + mat + ' ' + reg.mat.toLowerCase());
       if (gm < 1) R.lines.push('Ải đã quá dễ với sức mạnh của bé: kinh nghiệm và vàng còn ' + Math.round(gm * 100) + '%');
@@ -1072,7 +1072,7 @@
       ui.rect(W0, y, 308, h, t.ok ? 'rgba(60,110,60,0.45)' : 'rgba(30,48,46,0.85)', t.ok ? '#8fd07a' : '#5f7a74');
       const hit = G.click && G.inRect(G.click, W0, y, 308, h);
       ui.text((k + 1) + '. ' + t.text, W0 + 5, y + 8.5, { size: 7.5, bold: true, color: '#fff0c4' });
-      ui.text('+' + t.gain + ' sức mạnh', W0 + 302, y + 8.5, { size: 7, bold: true, align: 'right', color: '#9be07a' });
+      ui.text(t.gain > 0 ? '+' + t.gain + ' sức mạnh' : 'không tốn gì', W0 + 302, y + 8.5, { size: 7, bold: true, align: 'right', color: '#9be07a' });
       const sl = ui.wrap(t.sub, 270, 6.5, true);
       ui.text(sl[0] + (sl.length > 1 ? '…' : ''), W0 + 12, y + 17.5, { size: 6.5, color: t.ok ? '#c8f0b0' : '#d9cdb8' });
       ui.text('▶', W0 + 302, y + 17.5, { size: 7, align: 'right', color: '#f6dc92' });

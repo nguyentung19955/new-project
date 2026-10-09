@@ -37,6 +37,15 @@
     }
     return best;
   };
+  // Ải nên chơi lại để kiếm phần thiếu m (mảnh trùm: đánh lại trùm; nguyên liệu: ải cao nhất đã qua của vùng đó; còn lại: ải cao nhất đã qua).
+  U.where = function (sv, m) {
+    if (m) {
+      for (let i = 0; i < 3; i++) if (m.shard[i] && !sv.stars[i + '-4']) return null; // cần mảnh của trùm chưa hạ: chưa cày được
+      for (let i = 0; i < 3; i++) if (m.shard[i]) return [i, 4];
+      for (let i = 0; i < 3; i++) if (m.mat[i]) return U.grindStage(sv, i);
+    }
+    return U.grindStage(sv);
+  };
   // Câu "còn thiếu ..." kèm chỗ nên cày.
   U.missText = function (sv, m) {
     const a = [];
@@ -170,6 +179,7 @@
       o.val = U.costVal(full) + (o.need ? U.costVal(o.need) : 0);
       o.missVal = (o.miss ? U.costVal(o.miss) : 0) + (o.need ? U.costVal(o.need) : 0);
       o.base = base;
+      o.where = o.miss || o.need ? U.where(sv, o.miss) : null;
     }
     return list;
   };
@@ -207,6 +217,15 @@
     return done;
   };
 
+  // Nên chơi lại ải nào để cày: chỗ kiếm phần thiếu của việc đáng làm nhất còn thiếu đồ (như gợi ý ở bảng thua). null: ải mới nhất đã qua.
+  U.grindTarget = function (sv) {
+    sv = sv || G.save;
+    const list = U.rate(sv, U.list(sv).filter((q) => q.kind !== 'carry' && q.kind !== 'skill')).filter((q) => !q.ok && q.gain > 0 && q.where);
+    if (!list.length) return null;
+    list.sort((a, b) => b.gain / (25 + b.val * 0.15 + b.missVal) - a.gain / (25 + a.val * 0.15 + a.missVal));
+    return list[0].where;
+  };
+
   // ---------- gợi ý ở bảng thua ----------
   // Trả về { power, rec, tips: [{ text, sub, gain, ok, go }] } (tối đa n gợi ý, mặc định 3).
   G.upgradeTips = function (r, i, diff, n) {
@@ -214,9 +233,10 @@
     if (!sv || !sv.heroes) return null;
     const rec = G.stageRec(r, i, diff);
     let list = [];
-    try { list = U.rate(sv, U.list(sv)).filter((q) => q.gain > 0); } catch (e) { list = []; }
+    try { list = U.rate(sv, U.list(sv)).filter((q) => q.gain > 0 || q.kind === 'skill'); } catch (e) { list = []; }
     // Đường nào gần làm được mà tăng nhiều thì xếp trước; làm ngay được thì ưu tiên hẳn.
-    const score = (q) => (q.gain / (25 + q.val * 0.15 + q.missVal)) * (q.ok ? 4 : 1) * (q.kind === 'skill' ? 10 : 1);
+    // điểm kỹ năng chưa học luôn nhắc trước; việc cần mảnh của trùm chưa hạ (chưa cày được) xếp sau cùng
+    const score = (q) => q.kind === 'skill' ? 1e9 + q.gain : (q.gain / (25 + q.val * 0.15 + q.missVal)) * (q.ok ? 4 : 1) * (q.miss && !q.where ? 0.05 : 1);
     list.sort((a, b) => score(b) - score(a));
     const tips = [], seen = {};
     for (const q of list) {

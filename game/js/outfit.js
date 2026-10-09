@@ -387,8 +387,10 @@
     const reg = T.reg | 0, mat = [0, 0, 0];
     if (r === 0) { mat[reg] = 6; return { gold: 120, mat }; }
     if (r === 1) { mat[reg] = 10; return { gold: 350, mat, stones: 1 }; }
-    const shard = [0, 0, 0]; shard[reg] = 2;
-    return { gold: 700, shard, stones: 1 };
+    // Cày nâng cấp: Tím lên Vàng tốn vàng, nguyên liệu vùng và đá tôi (trước là 2 mảnh trùm). Mảnh trùm để dành cho vũ khí Vàng,
+    // cánh và may đồ bộ; trang phục thành đường cày máu và giáp bằng vàng và nguyên liệu, không bị kẹt chờ trùm.
+    mat[reg] = 18;
+    return { gold: 900, mat, stones: 2 };
   };
   // Mở cấp cánh từ lv lên lv+1 bằng mảnh trùm.
   O.wingCost = function (it) {

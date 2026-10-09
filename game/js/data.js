@@ -227,7 +227,9 @@
   };
   // SỨC MẠNH KHUYÊN DÙNG của từng ải (15 ải). So với G.power() (js/combat.js): đủ số này thì bot thắng phần lớn lượt chơi
   // (đo bằng tests/cay.py). Độ khó thứ hai cần gấp căn bậc hai của (máu x sát thương) nhân thêm của G.DIFF2.
-  G.STAGE_REC = [100, 110, 135, 150, 225, 245, 270, 315, 345, 395, 405, 440, 475, 495, 515];
+  // Cày nâng cấp (bỏ Quyết tâm, sức mạnh tính cả vũ khí thứ hai): đo lại bằng bot, Ngư Tinh 395 -> 420, đầu vùng ba theo đó,
+  // ải 3-4 495 -> 505, Hồ Tinh 515 -> 530.
+  G.STAGE_REC = [100, 110, 135, 150, 225, 245, 270, 315, 345, 420, 425, 445, 475, 505, 530];
   G.stageRec = function (r, i, diff) {
     const v = G.STAGE_REC[r * 5 + i] || 100;
     return diff ? Math.round((v * Math.sqrt(G.DIFF2[r][0] * G.DIFF2[r][1])) / 5) * 5 : v;
@@ -290,17 +292,19 @@
   ];
 
   // Chi phí mài từ cấp n lên n+1 (mat: số nguyên liệu vùng, vùng nào xem G.sharpenFull)
+  // Cày nâng cấp: quặng tối đa 16 mỗi lần (mài +11..+15 không đòi hàng chục quặng), +7..+9 tốn 5 nguyên liệu.
   G.sharpenCost = function (n) {
-    return { ore: 2 + n * 2, gold: 50 * (n + 1), mat: n >= 10 ? 5 : n >= 5 ? 3 : 0 };
+    return { ore: Math.min(16, 2 + n * 2), gold: 50 * (n + 1), mat: n >= 7 ? 5 : n >= 5 ? 3 : 0 };
   };
   // CÀY NÂNG CẤP: mài tối đa +10 -> +15. Lò cấp 4 (cần đá lửa của Lâu đài cổ) mài được tới +15.
   G.MAX_SHARPEN = 15;
   G.FORGE_CAP = [0, 3, 6, 10, 15];
   G.FORGE_UP = [null, { gold: 200, mat: [6, 0, 0] }, { gold: 600, mat: [0, 6, 0] }, { gold: 1500, ore: 20, mat: [0, 0, 10] }];
-  // Chi phí mài đầy đủ (dạng trả được): +5..+6 tốn vảy cá, +7..+15 tốn đá lửa.
+  // Chi phí mài đầy đủ (dạng trả được): +5..+9 tốn vảy cá (vùng hai cày được), +10..+14 tốn đá lửa (vùng ba).
+  // Trước đây +7 trở lên đã đòi đá lửa nên ở vùng hai người chơi kẹt ở +7, vàng và vảy cá dồn lại không tiêu được.
   G.sharpenFull = function (n) {
     const c = G.sharpenCost(n), cost = { ore: c.ore, gold: c.gold, mat: [0, 0, 0] };
-    if (c.mat) cost.mat[n < 7 ? 1 : 2] = c.mat;
+    if (c.mat) cost.mat[n < 10 ? 1 : 2] = c.mat;
     return cost;
   };
   // Nâng bậc vũ khí (giữ nguyên dấu ấn và tiến hóa): chi phí để lên Lam (1) và Tím (2).

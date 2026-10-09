@@ -148,7 +148,8 @@ Em bé mặc đồ theo năm ô: **Mũ**, **Áo**, **Đồ đeo lưng** (gùi, k
 - Mỗi ải có **Sức mạnh khuyên dùng**, ghi dưới thẻ ải trên tranh bản đồ của Chú Lái Đò và trong thẻ thông tin ải. Màu so với sức mạnh của bé: xanh là đủ, vàng là sát nút (từ 90%), đỏ là còn thiếu.
 - Vùng 1 nhẹ: ải 1 đến 4 thường chơi một hai lần là qua. Ải 3, ải 4 của vùng 2 và 3 cần cày thêm vài lượt; ải trùm vùng (5, 10, 15) cần cày nhiều nhất, vùng sau nhiều hơn vùng trước.
 - **Cày**: chơi lại ải cũ vẫn được kinh nghiệm, vàng, quặng và nguyên liệu vùng (cần cho mài từ +5, nâng bậc, rèn đồ). Chơi lại một ải đã qua có cơ hội rơi vũ khí bậc cao hơn lần đầu. Khi bé đã mạnh hơn 130% khuyên dùng của ải thì kinh nghiệm và vàng giảm dần (thấp nhất 40%), nguyên liệu vẫn đủ.
-- **Quyết tâm**: thua thật ở một ải (không tính bỏ ải) thì lần sau vào lại chính ải đó bé mạnh thêm 4% máu và sát thương, cộng dồn tối đa 20%; qua ải thì hết.
+- **Thua không làm bé mạnh thêm** (đã bỏ "Quyết tâm"). Sức mạnh chỉ đến từ cày nâng cấp: cấp hero (tối đa 40), mài vũ khí (tối đa +15, lò cấp 4), nâng bậc Thường → Lam → Tím → Vàng, tiến hóa theo linh khí, cây kỹ năng, trang phục (may, nâng bậc, cánh), nâng lò.
+- **Bảng thua chỉ nên cày gì**: Sức mạnh hiện tại so với khuyên dùng, và 2-3 gợi ý cụ thể (ví dụ "Mài Kiếm lên +6: thiếu 80 vàng", "Nâng lên Tím: thiếu 3 vảy cá — chơi lại Hang biển 2", "Còn 2 điểm kỹ năng chưa học"). Bấm gợi ý là về làng mở đúng người làng (js/upgrade.js).
 - Lên cấp chậm hơn trước (cần 50 + 50 x cấp kinh nghiệm), mỗi cấp tăng 1,5% sát thương và 3,5% máu.
 - Đi hết 15 ải lần đầu mất khoảng 3 đến 4 giờ chơi (bot đo bằng `tests/cay.py`).
 
