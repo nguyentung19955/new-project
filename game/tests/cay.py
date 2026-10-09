@@ -201,6 +201,7 @@ LUAT = r"""
   G.resetSave(); const s5 = G.save; s5.heroes.smith.lvl = 9; s5.gold = 2000; s5.ore = 40; s5.mats = [30, 10, 0]; s5.stones = 2;
   const pb = G.power(), did = G.upg.auto(s5), pa = G.power();
   ok(pa > pb && s5.gold >= 0 && s5.ore >= 0 && s5.mats.every((x) => x >= 0) && s5.stones >= 0, 'nâng cấp tự động (bot): sức mạnh ' + pb + ' -> ' + pa + ' sau ' + did.length + ' việc, không tiêu quá số có');
+  {
   // nguồn linh khí: tinh anh không dính hệ vẫn cho dấu ấn của vùng; quái thường không rơi viên linh khí
   G.testSave({ lvl: 20, sharpen: 6 }); G.save.tut.done = true;
   G.startStage(0, 1, 0); let W = G.getWorld(); W.waves = []; W.spawns = []; W.ents = [];
@@ -212,6 +213,7 @@ LUAT = r"""
   G.rnd = r0;
   const orb = W.props.find((o) => o.type === 'loot' && o.kind === 'linhkhi');
   ok(G.LINHKHI.drop === 0 && !orb && w0.marks.poison === m1, 'quái thường không rơi viên linh khí (chủ dự án bỏ, tinh anh và trùm đã đủ)');
+  }
   G.resetSave();
   return out;
 }
