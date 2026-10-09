@@ -478,7 +478,7 @@
       c.save(); c.translate(Math.round(x), Math.round(y));
       c.fillStyle = 'rgba(0,0,0,0.3)'; c.fillRect(-6, -1, 12, 1); c.fillRect(-8, 0, 16, 1); c.fillRect(-6, 1, 12, 1);
       if (face < 0) c.translate(1, 0);
-      SC.veKhung(c, sp, sp.dt[ten] ? ten : 'idle', i, face, { tint: ten === 'hit' && u < 0.6 ? ['#ffffff', 0.6] : null, alpha: ten === 'die' ? 1 - Math.max(0, (u - 0.85) / 0.15) * 0 : 1 });
+      SC.veKhung(c, sp, sp.dt[ten] ? ten : 'idle', i, face, { tint: ten === 'hit' && u < 0.6 ? ['#ffffff', 0.6] : null });
       c.restore();
       return;
     }
