@@ -4,16 +4,17 @@ Mục tiêu của chủ dự án: người chơi phải cày lên cấp, lên đ
 
 ## Tóm tắt
 
-Số đo là của bản cuối, đã gộp các phiên trang phục, làm mượt báo trước, đạn và linh khí.
+Số đo là của bản cuối, đã gộp các phiên trang phục, làm mượt báo trước, đạn và linh khí, tám hướng và chiêu Đặc biệt, đồ rơi và quái chi tiết.
 
 - Trước đợt này bot chơi một mạch 15 ải không thua lần nào, mỗi ải đúng 1 lần, hết 15 ải trong khoảng **1 giờ**.
 - Sau đợt này (bot chơi như người bình thường, nhìn "Sức mạnh khuyên dùng"):
-  - Vùng 1 nhẹ: ải 1 đến 4 mỗi ải khoảng 1 đến 2,3 lần chơi.
-  - Ải 3, ải 4 của vùng 2 và 3: khoảng 3,5 đến 5 lần.
-  - Ải trùm vùng 1, 2, 3 cần trung bình **7,2 / 7,9 / 9,3** lần chơi, tăng dần qua ba vùng.
-  - Đi hết 15 ải lần đầu trung bình **3 giờ 22 phút**, nhanh nhất 2 giờ 24 phút, lâu nhất 5 giờ 27 phút.
+  - Vùng 1 nhẹ: ải 1 đến 4 mỗi ải khoảng 1 đến 2 lần chơi.
+  - Ải 3, ải 4 của vùng 2 và 3: khoảng 3 đến 4,7 lần.
+  - Ải trùm vùng 1, 2, 3 cần trung bình **4,9 / 8 / 10,8** lần chơi, tăng dần qua ba vùng.
+  - Đi hết 15 ải lần đầu trung bình **3 giờ 14 phút**, nhanh nhất 2 giờ 22 phút, lâu nhất 4 giờ 56 phút.
 - Mỗi ải có **Sức mạnh khuyên dùng**, em bé có chỉ số **Sức mạnh** (tính cả trang phục), so màu xanh (đủ), vàng (sát nút), đỏ (thiếu).
-- Quái bắn xa không còn là nguồn mất máu lớn nhất. Cung thấp hơn kiếm khoảng 22% trên cả quái mới. Phòng thường chỉ có tối đa 4 quái cùng lúc.
+- Quái bắn xa không còn là nguồn mất máu lớn nhất. Phòng thường chỉ có tối đa 4 quái cùng lúc.
+- Cung thấp hơn kiếm 19% trên bia tập. Trên quái mới, trước đợt cuối cung thấp hơn kiếm 24%; sau khi gộp phiên "tám hướng" vào phút chót thì thành khoảng 29%, nhỉnh hơn mục tiêu. Xem Điểm còn yếu.
 - Thêm **Quyết tâm**: thua thật ở một ải thì lần sau vào lại ải đó bé mạnh thêm 5%, tối đa 25%, để không ai kẹt mãi ở một trùm.
 - Luật lõi giữ nguyên: vũ khí tiến hóa theo cách dùng (mốc 30/120/300), trùm thích nghi, trùm vùng rơi vũ khí Vàng.
 
@@ -35,40 +36,40 @@ Bài mới `game/tests/cay.py`. Bot chơi từ một bản lưu mới tinh:
 - Bot được chỉnh hơi vụng như người mới: phản xạ chậm hơn và bỏ sót nhiều đạn hơn bot mặc định.
 - Bảng dưới là 16 lượt chiến dịch, mỗi lượt chơi từ đầu tới hết 15 ải. Chạy lại bằng: `python3 game/tests/cay.py 16`.
 
-### Số lần chơi từng ải (sau khi cân bằng, 16 lượt)
+### Số lần chơi từng ải (bản cuối, 16 lượt)
 
 | Ải | Số lần chơi (trung bình) | Trung vị | Ít nhất - nhiều nhất | Lần vào ải mới | Lần thua | Phút | Cấp hero khi qua | Sức mạnh khi qua / khuyên dùng | Mục tiêu |
 |---|---|---|---|---|---|---|---|---|---|
-| 1-1 | 1.0 | 1 | 1-1 | 1.0 | 0.0 | 3 | 1 | 99 / 100 | 1-2 |
-| 1-2 | 1.4 | 1 | 1-3 | 1.0 | 0.0 | 4 | 2 | 120 / 110 | 1-2 |
-| 1-3 | 2.3 | 2 | 1-4 | 1.1 | 0.1 | 8 | 4 | 148 / 135 | 1-2 |
-| 1-4 | 1.4 | 1 | 1-3 | 1.1 | 0.1 | 6 | 5 | 162 / 150 | 1-2 |
-| **1-5 Mộc Tinh** | **7.2** | 7.5 | 2-11 | 1.6 | 0.6 | 29 | 10 | 226 / 215 | 5-9 (vùng 1 nhẹ hơn) |
-| 2-1 | 2.2 | 1.5 | 1-6 | 1.4 | 0.5 | 8 | 10 | 270 / 240 | 1-2 |
-| 2-2 | 1.6 | 1 | 1-3 | 1.1 | 0.1 | 5 | 12 | 289 / 270 | 1-2 |
-| **2-3** | **4.9** | 5 | 2-9 | 1.6 | 0.6 | 17 | 14 | 330 / 315 | 3-5 |
-| **2-4** | **3.5** | 3.5 | 1-8 | 1.4 | 0.3 | 12 | 16 | 358 / 340 | 3-5 |
-| **2-5 Ngư Tinh** | **7.9** | 7.5 | 1-14 | 2.6 | 1.6 | 29 | 20 | 407 / 385 | 6-10 |
-| 3-1 | 2.2 | 1 | 1-7 | 1.3 | 0.3 | 8 | 21 | 426 / 400 | 1-2 |
-| 3-2 | 2.3 | 2 | 1-4 | 1.2 | 0.2 | 8 | 22 | 455 / 440 | 1-2 |
-| **3-3** | **3.7** | 3 | 1-13 | 1.3 | 0.3 | 13 | 24 | 479 / 470 | 3-5 |
-| **3-4** | **3.5** | 3.5 | 1-7 | 1.6 | 0.6 | 14 | 26 | 494 / 485 | 3-5 |
-| **3-5 Hồ Tinh** | **9.3** | 8 | 2-24 | 3.6 | 2.6 | 38 | 28 | 517 / 500 | 6-10 |
+| 1-1 | 1.0 | 1 | 1-1 | 1.0 | 0.0 | 2 | 1 | 99 / 100 | 1-2 |
+| 1-2 | 1.7 | 1 | 1-4 | 1.1 | 0.1 | 5 | 2 | 120 / 110 | 1-2 |
+| 1-3 | 2.0 | 2 | 1-4 | 1.1 | 0.1 | 6 | 4 | 150 / 135 | 1-2 |
+| 1-4 | 1.8 | 1 | 1-4 | 1.2 | 0.2 | 7 | 5 | 166 / 150 | 1-2 |
+| **1-5 Mộc Tinh** | **4.9** | 5 | 2-8 | 1.3 | 0.3 | 20 | 8 | 218 / 215 | 5-9 (vùng 1 nhẹ hơn) |
+| 2-1 | 2.3 | 2 | 1-6 | 1.3 | 0.3 | 8 | 10 | 264 / 240 | 1-2 |
+| 2-2 | 1.9 | 1 | 1-4 | 1.1 | 0.1 | 6 | 11 | 286 / 270 | 1-2 |
+| **2-3** | **4.5** | 4.5 | 1-9 | 1.2 | 0.2 | 14 | 14 | 322 / 315 | 3-5 |
+| **2-4** | **3.1** | 3 | 1-7 | 1.2 | 0.2 | 10 | 16 | 351 / 340 | 3-5 |
+| **2-5 Ngư Tinh** | **8.0** | 7.5 | 3-16 | 2.5 | 1.4 | 28 | 20 | 404 / 385 | 6-10 |
+| 3-1 | 2.9 | 2 | 1-6 | 1.4 | 0.4 | 10 | 21 | 430 / 400 | 1-2 |
+| 3-2 | 2.3 | 2 | 1-7 | 1.1 | 0.1 | 8 | 22 | 460 / 440 | 1-2 |
+| **3-3** | **3.7** | 3.5 | 1-7 | 1.4 | 0.5 | 12 | 24 | 486 / 470 | 3-5 |
+| **3-4** | **4.7** | 3.5 | 1-13 | 2.0 | 1.0 | 18 | 26 | 503 / 485 | 3-5 |
+| **3-5 Hồ Tinh** | **10.8** | 9 | 3-27 | 4.8 | 3.8 | 40 | 28 | 525 / 500 | 6-10 |
 
-- Tổng thời gian đi hết 15 ải lần đầu: trung bình **202 phút (3,4 giờ)**, trung vị 191 phút, nhanh nhất 144, lâu nhất 327. Mục tiêu là 2,5 đến 4 giờ. Hai lượt xui (312 và 327 phút) kẹt lâu ở Hồ Tinh: 20 đến 24 lần chơi.
-- Trung bình 55 lần chơi, khoảng 3,7 phút mỗi lần.
-- Ba trùm vùng tăng dần: **7,2 → 7,9 → 9,3** lần chơi. Trùm càng về sau càng hay thua: Mộc Tinh 0,6 lần, Ngư Tinh 1,6 lần, Hồ Tinh 2,6 lần.
-- Vùng 1 các ải trùm nhỏ để nhẹ (1 đến 2,3 lần), theo mục tiêu "vùng 1 nhẹ". Ải 3 và 4 có trùm nhỏ cần 3 đến 5 lần chỉ áp dụng cho vùng 2 và 3.
-- Ải 1-3, 2-1, 3-1, 3-2 hơi nhỉnh hơn mục tiêu 1 đến 2 (2,2 đến 2,3 lần) vì dao động giữa các lượt; trung vị vẫn 1 đến 2.
+- Tổng thời gian đi hết 15 ải lần đầu: trung bình **194 phút (3,2 giờ)**, trung vị 187 phút, nhanh nhất 142, lâu nhất 296. Mục tiêu là 2,5 đến 4 giờ.
+- Trung bình 56 lần chơi, khoảng 3,5 phút mỗi lần.
+- Ba trùm vùng tăng dần: **4,9 → 8 → 10,8** lần chơi. Lần thua cũng tăng dần: Mộc Tinh 0,3, Ngư Tinh 1,4, Hồ Tinh 3,8 (Quyết tâm giúp lượt sau).
+- Vùng 1 các ải trùm nhỏ để nhẹ (1 đến 2 lần), theo mục tiêu "vùng 1 nhẹ". Ải 3 và 4 có trùm nhỏ cần 3 đến 5 lần chỉ áp dụng cho vùng 2 và 3.
+- Mộc Tinh (4,9) hơi dưới 5. Ải 2-1, 3-1, 3-2 (2,3 đến 2,9) hơi trên 2. Đây là dao động giữa các lượt (trung vị 5 và 2).
 
 ### So với trước
 
 | | Trước đợt này | Sau đợt này |
 |---|---|---|
-| Số lần chơi mỗi ải | 1 ở mọi ải (bot không thua lần nào) | 1-2,3 ở ải thường, 3,5-5 ở ải 3 và 4 (vùng 2, 3), 7,2 / 7,9 / 9,3 ở ba trùm vùng |
-| Thời gian đi hết 15 ải | khoảng 61 phút | khoảng 202 phút (trung vị 191) |
+| Số lần chơi mỗi ải | 1 ở mọi ải (bot không thua lần nào) | 1-2,9 ở ải thường, 3-4,7 ở ải 3 và 4 (vùng 2, 3), 4,9 / 8 / 10,8 ở ba trùm vùng |
+| Thời gian đi hết 15 ải | khoảng 61 phút | khoảng 194 phút (trung vị 187) |
 | Cấp hero khi tới Hồ Tinh | 22 | 28 |
-| Nguồn mất máu lớn nhất | quái bắn xa 20-28%, quái gai 18-26% | trùm 36%, quái gai 17%, vùng chiêu trùm 15%, quái bắn xa 14% |
+| Nguồn mất máu lớn nhất | quái bắn xa 20-28%, quái gai 18-26% | trùm 28%, quái gai 22%, quái bắn xa 14%, vùng chiêu trùm 14% |
 
 Số "trước" đo trên bản trước đợt này: bot chơi lần lượt, cứ thua thì cày một lượt, 3 lượt chiến dịch.
 
@@ -76,8 +77,8 @@ Số "trước" đo trên bản trước đợt này: bot chơi lần lượt, c
 
 `python3 game/tests/cay.py 8 lieu`: bot cứ vào ải mới, thua thì cày một lượt rồi thử lại. Kết quả 8 lượt:
 
-- Đi hết 15 ải: trung bình 189 phút, 46 lần chơi, gần bằng người nghe lời khuyên. Nhưng bot liều thua nhiều hơn: 3,8 lần ở Ngư Tinh, 2,4 lần ở Hồ Tinh, 1 đến 2 lần ở mỗi ải 3, 4 của vùng 3.
-- Bot liều không cày ở vùng 1 nên tới Ngư Tinh với sức mạnh khoảng 330 (khuyên dùng 385). Nó cần 8,5 lần chơi ở Ngư Tinh, trong đó gần 4 lần thua.
+- Đi hết 15 ải: trung bình 185 phút, 49 lần chơi, gần bằng người nghe lời khuyên. Nhưng bot liều thua nhiều hơn: 5,8 lần ở Ngư Tinh, 3 lần ở Hồ Tinh, khoảng 2 lần ở ải 2-4 và 3-4.
+- Bot liều không cày ở vùng 1 nên tới Ngư Tinh với sức mạnh khoảng 290 (khuyên dùng 385). Nó cần 12,5 lần chơi ở Ngư Tinh, gần một nửa là thua.
 - Ngược lại, bot liều qua Mộc Tinh chỉ sau 2,8 lần chơi ở sức mạnh khoảng 190 (khuyên dùng 215). Ở vùng 1, con số khuyên dùng hơi an toàn hơn cần thiết.
 
 ## Đã chỉnh gì
@@ -152,11 +153,14 @@ Số "trước" đo trên bản trước đợt này: bot chơi lần lượt, c
   - Gọi bầy nhỏ thưa hơn: lần đầu sau 7 đến 10 giây, sau đó mỗi 12 đến 16 giây.
   - Kết quả: phần máu mất do quái bắn xa còn khoảng 14% (trước 20-28%), không còn là nguồn lớn nhất.
 - **Cung so với kiếm:**
-  - Cung 11 → 10,5 mỗi phát. Giáo 11 → 10,7 và búa 22 → 21,3, vì sau khi gộp các phiên khác hai vũ khí này cao nhất, cần giữ "vũ khí yếu nhất từ 70% mạnh nhất".
-  - Nguyên tắc vẫn đúng: càng chậm hoặc càng áp sát thì mỗi đòn càng mạnh. Mỗi đòn: búa > giáo > kiếm > cung.
-  - Đo bằng `tests/dps.py`, cung thấp hơn kiếm **20%** trên bia tập và **24%** trên quái mới thật (mục tiêu 15-25%).
+  - Trước khi gộp phiên "tám hướng": cung 11 → 10,5, giáo 11 → 10,7, búa 22 → 21,3. Cung thấp hơn kiếm 20% trên bia tập và 24% trên quái mới thật (mục tiêu 15-25%).
+  - Phiên "tám hướng" gộp vào ngay trước khi xong: đòn cận chiến tự ngắm quái gần nhất theo tám hướng. Kiếm mạnh vượt hẳn (85 so với giáo 71, búa 74 trên bia tập).
+  - Đã chỉnh lại: kiếm 10 → 9, cung → 11,4. Mỗi phát cung (11,4) vẫn nhẹ hơn một nhát kiếm trung bình (11,6). Thứ tự mỗi đòn búa > giáo > kiếm > cung vẫn đúng.
+  - Kết quả `tests/dps.py`: cung thấp hơn kiếm **19%** trên bia tập, đạt. Trên quái mới thật là **29%**, nhỉnh hơn mục tiêu 25%.
+  - Đã thử cho tên xuyên mạnh hơn nhưng không kéo được cả hai số vào khoảng 15-25%: bia tập tụt xuống 12-14% trong khi quái mới vẫn 24-27%. Nên để nguyên.
   - Bài đo trên quái mới trước đây ra 11% vì quái chết nhanh hơn tốc độ mọc, nên vũ khí nào cũng như nhau. Nay cụm quái mới trong bài đo có máu x2,5, giống quái các ải sau khi cân bằng.
   - `dps.py` mặc định đo 8 hạt giống thay cho 4: với 4 hạt, kết quả nhảy 5 đến 7 điểm phần trăm mỗi lần đổi số.
+  - `ghep.py` so hệ số bậc trên sát thương gốc của kiếm, thay cho ghi cứng số 10.
 - **Phòng chật:**
   - Phòng thường chỉ có tối đa 4 quái cùng lúc (`G.ROOM_WAVES.maxAlive`), tinh anh tính là hai. Đủ số thì quái kế tiếp chờ, vòng đỏ vẫn hiện, có chỗ mới mọc, thành từng tốp nối nhau.
   - Phòng trùm không giới hạn. Không đổi hình quái nào.
@@ -167,20 +171,20 @@ Số "trước" đo trên bản trước đợt này: bot chơi lần lượt, c
   - `tests/cay.py` (mặc định 12 lượt chiến dịch, cho lệch 20-25% quanh mục tiêu vì trùm và đồ rơi hên xui): 11 luật (sức mạnh 100 lúc đầu, tăng theo cấp, mài, bậc, áo; khuyên dùng tăng dần; thưởng khi cày; Quyết tâm thua thật thì tăng, bỏ ải thì không, thắng thì hết; bản lưu cũ đọc được), cộng chiến dịch đếm số lần chơi so với mục tiêu.
   - `tests/cay_shots.py`: chụp ảnh.
 - **Sửa ngưỡng cho đúng mục tiêu mới** (không bỏ mục nào):
-  - `balance.py`: dùng bản lưu thật của bot lúc vừa đủ khuyên dùng (`tests/cay_luu.json`, bộ số dựng tay cũ vẫn chạy bằng chữ `codinh`). Ngưỡng thắng 85% → 60% vì thiết kế là khoảng 75% ở đúng khuyên dùng; kết quả 35/45 (78%). Chế độ `trangphuc` của phiên trang phục vẫn giữ.
+  - `balance.py`: dùng bản lưu thật của bot lúc vừa đủ khuyên dùng (`tests/cay_luu.json`, bộ số dựng tay cũ vẫn chạy bằng chữ `codinh`). Ngưỡng thắng 85% → 60% vì thiết kế là khoảng 75% ở đúng khuyên dùng; kết quả 42/45 (93%). Chế độ `trangphuc` của phiên trang phục vẫn giữ.
   - `campaign.py`: thua thì cày ải trước một lượt rồi thử lại, tối đa 12 lần.
   - `doors.py`: bản lưu đủ sức mạnh của ải và Quyết tâm tối đa, vì bài này thử luật cửa chứ không đo độ khó.
   - `dps.py quaimoi`: cụm quái máu x2,5.
 
 ## Kiểm tra đã chạy
 
-Chạy trên bản đã gộp các phiên trang phục, làm mượt báo trước, đạn và linh khí.
+Chạy trên bản đã gộp mọi phiên (trang phục, làm mượt báo trước, đạn và linh khí, tám hướng, đồ rơi và quái chi tiết).
 
 - Mọi bài trong `game/tests/` đều qua:
-  - `rules` 82/82, `moves` 92/92, `doors`, `mapgen`, `fuzz` (0 lỗi), `cong` 66/66, `cung` 16/16.
-  - `env_rooms`, `fx_check`, `ghep` 109/109, `ghep2` 196/196, `quai` 105/105.
-  - `trang_phuc` 66/66, `linhkhi` 36/36, `bao_truoc` 21/21.
-  - `perf` (2,6 ms mỗi khung), `anim_smoke`, `smoke`, `dps`, `ui_robust`, `ui_build`.
+  - `rules` 82/82, `moves` 93/93, `doors`, `mapgen`, `fuzz` (0 lỗi), `cong` 66/66, `cung` 16/16.
+  - `env_rooms`, `fx_check`, `ghep` 109/109, `ghep2` 192/192, `quai` 105/105.
+  - `trang_phuc` 66/66, `linhkhi` 36/36, `bao_truoc` 21/21, `tam_huong` 37/37, `do_roi` 45/45.
+  - `perf` (3,0 ms mỗi khung), `anim_smoke`, `smoke`, `dps`, `ui_robust`, `ui_build`.
   - `ui_input all` (162 hoặc 153 mục mỗi cỡ màn hình), `probe`, `campaign`, `balance`, `cay`.
 - `fuzz` một lần bắt được quái bị quái khác đẩy lọt ra ngoài sàn theo chiều dọc. Đã sửa: lúc các quái đẩy nhau thì giữ trong sàn (`js/combat.js`).
 - Các bài chụp ảnh của đợt trước chỉ chạy thử (không lỗi), ảnh cũ để nguyên.
@@ -205,7 +209,7 @@ Chụp lại: `python3 game/tests/cay_shots.py`.
   - Bot né đạn và chiêu trùm đều tay. Người mới có thể cần cày thêm vài lượt ở trùm vùng so với bảng trên. Người giỏi né có thể qua sớm hơn khuyên dùng.
   - Con số khuyên dùng là "đủ thì phần lớn qua", không phải bảo đảm.
 - **Trùm vùng hên xui, nhất là Hồ Tinh.**
-  - Số lần chơi ở trùm vùng dao động lớn giữa các lượt (Ngư Tinh 1 đến 14 lần, Hồ Tinh 2 đến 24).
+  - Số lần chơi ở trùm vùng dao động lớn giữa các lượt (Ngư Tinh 3 đến 16 lần, Hồ Tinh 3 đến 27).
   - Đồ rơi (vũ khí Vàng, trang phục) cũng hên xui, nên sức mạnh cao nhất lúc tới Hồ Tinh mỗi lượt một khác (khoảng 485 đến 580). Có lượt sức mạnh 575 vẫn thua Hồ Tinh 5 lần (trùm thích nghi khắc lối đánh của bé).
   - Quyết tâm đã cắt bớt, nhưng vẫn có lượt kẹt lâu.
   - Nếu muốn chắc hơn: tăng Quyết tâm lên 6% mỗi lần, hoặc giảm máu Hồ Tinh.
@@ -214,7 +218,8 @@ Chụp lại: `python3 game/tests/cay_shots.py`.
   - Quái thường gây khoảng 72 đến 98 mỗi đòn (chưa nhân hệ số vai), em bé có khoảng 300 đến 350 máu.
   - Quái cảm tử nổ trúng mất gần nửa thanh máu. Bot ít bị nổ trúng, người mới có thể thấy gắt.
   - Khiên và tác dụng của trang phục bù lại một phần.
-- **Quái gai** vẫn là nguồn mất máu thứ hai (khoảng 17%). Đợt này chưa chỉnh vì yêu cầu chỉ nêu quái bắn xa.
+- **Quái gai** vẫn là nguồn mất máu thứ hai (khoảng 22%). Đợt này chưa chỉnh vì yêu cầu chỉ nêu quái bắn xa.
+- **Cung trên quái mới** thấp hơn kiếm khoảng 29%, trên mục tiêu 25%. Lý do: phiên "tám hướng" gộp vào phút chót làm kiếm mạnh lên nhiều nhất khi đánh quái thật. Trên quái thật, búa cũng yếu hơn kiếm khoảng 25%. Nên có một phiên riêng cân lại ba vũ khí cận chiến sau khi có tám hướng.
 - **Công thức sức mạnh** là ước lượng:
   - Tác dụng trang phục được cộng theo hệ số đoán, không đo từng món.
   - Chưa tính bùa cũ, dòng mạnh của bậc Vàng, đặc trưng hệ, nội tại riêng của hero (trừ giảm sát thương của Đô Vật).
