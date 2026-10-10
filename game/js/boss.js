@@ -24,7 +24,9 @@
       if (stats.ranged / rm > 0.6) L.push({ type: 'antiRanged' });
       else if (stats.melee / rm > 0.6) L.push({ type: 'antiMelee' });
     }
-    if (stats.dodges > 15) L.push({ type: 'antiDodge' });
+    // M4 + D1: trước đây né > 15 lần/ải là trùm "Bắt bài lăn né" (ai né cũng gặp), trái với thưởng Né chuẩn.
+    // Nay chỉ đếm cú né "rỗng" (không né được đòn nào: tổng cú lộn trừ số lần Né chuẩn) và ngưỡng 15 -> 30.
+    if ((stats.dodges || 0) - (stats.neChuan || 0) > 30) L.push({ type: 'antiDodge' });
     return L.slice(0, max);
   };
   // Gọi được qua layers.map(G.layerText): khi hệ khắc chế cũng đang bị kháng thì không ghi "yếu".

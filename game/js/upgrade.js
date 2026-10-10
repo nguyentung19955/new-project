@@ -298,6 +298,59 @@
   };
   // Chữ "+12 Sức mạnh" (hoặc "−5 Sức mạnh"); 0 thì trả chuỗi rỗng.
   U.gainText = (v, short) => (v > 0 ? '+' + v : v < 0 ? '−' + -v : '') + (v ? (short ? ' SM' : ' Sức mạnh') : '');
+  // ---------- D6 (Q7): nút Công 4 đổi thành Khai huyệt — hoàn điểm một lần ----------
+  // Bản lưu cũ có em bé đã học Công 4 ("+8% sát thương" lần hai) thì lùi nhánh Công về 3 nút; điểm của nút 4 (và nút 5 nếu đã học,
+  // vì nhánh phải học theo thứ tự) trở thành điểm chưa dùng để học lại tuỳ ý. Chỉ làm MỘT lần cho cả bản lưu (cờ sv.khaiHuyet = 1).
+  // sv.khaiHoan = số điểm vừa hoàn (để làng báo một câu rồi xoá; chưa có chỗ báo thì không sao, "Còn N điểm" vẫn hiện).
+  // combat.js G.buildPlayer gọi hàm này; bản lưu chỉ thật sự ghi lại ở lần G.persist() kế tiếp (chưa ghi thì lần mở sau làm lại, kết quả như nhau).
+  U.khaiHuyetFix = function (sv) {
+    if (!sv || typeof sv !== 'object' || !sv.heroes || sv.khaiHuyet) return 0;
+    let n = 0;
+    for (const k in sv.heroes) {
+      const h = sv.heroes[k];
+      if (h && h.sk && typeof h.sk.atk === 'number' && h.sk.atk >= 4) { n += h.sk.atk - 3; h.sk.atk = 3; }
+    }
+    sv.khaiHuyet = 1;
+    if (n > 0) sv.khaiHoan = (sv.khaiHoan | 0) + n;
+    return n;
+  };
+
+  // ---------- V18 bước 2 (Q11): Thợ Rèn truyền linh khí vượt 300 sang vũ khí khác cùng loại ----------
+  // Món nguồn giữ đúng 300 dấu ấn của hệ nó (vẫn Thức tỉnh); phần vượt chuyển nguyên sang món đích (không hao, không tốn gì).
+  // Món đích: cùng loại vũ khí (kiếm sang kiếm...), khác món, chưa khoá hệ hoặc đã khoá đúng hệ đó.
+  // Dùng ở lò rèn (giao diện ở js/village.js — chưa làm, xem docs/review/gd3/gd3-c.md):
+  //   G.upg.lkInfo(sv, w)            -> { el, du, dich: [vũ khí đích] }  (du = 0 thì không có gì để truyền)
+  //   G.upg.lkTruyen(sv, fromId, toId) -> { ok, n, el, msg }  (đổi bản lưu; người gọi tự G.persist())
+  const LK_GIU = () => G.MARKS[G.MARKS.length - 1]; // 300
+  U.lkEl = function (w) {
+    if (!w || !w.marks) return null;
+    if (w.branch) return w.branch;
+    let el = null;
+    for (const e of G.ELS) if ((w.marks[e] || 0) > 0 && (!el || w.marks[e] > w.marks[el])) el = e;
+    return el;
+  };
+  U.lkInfo = function (sv, w) {
+    sv = sv || G.save;
+    const el = U.lkEl(w), du = el ? Math.max(0, Math.floor((w.marks[el] || 0) - LK_GIU())) : 0;
+    const dich = !el ? [] : (sv.weapons || []).filter((x) => x && x.id !== w.id && x.type === w.type && (!x.branch || x.branch === el));
+    return { el, du, dich };
+  };
+  U.lkTruyen = function (sv, fromId, toId) {
+    sv = sv || G.save;
+    const a = wById(sv, fromId), b = wById(sv, toId);
+    if (!a || !b || a.id === b.id) return { ok: false, n: 0, msg: 'Chưa chọn đúng hai món.' };
+    if (a.type !== b.type) return { ok: false, n: 0, msg: 'Chỉ truyền được sang vũ khí cùng loại.' };
+    const I = U.lkInfo(sv, a), el = I.el;
+    if (!el || I.du <= 0) return { ok: false, n: 0, msg: 'Món này chưa vượt ' + LK_GIU() + ' linh khí.' };
+    if (b.branch && b.branch !== el) return { ok: false, n: 0, msg: 'Món kia đã theo hệ ' + G.EL[b.branch].name + '.' };
+    const n = I.du;
+    a.marks[el] -= n;
+    b.marks = b.marks || { fire: 0, poison: 0, ice: 0 };
+    b.marks[el] = (b.marks[el] || 0) + n;
+    if (!b.branch && b.marks[el] >= G.MARKS[0]) b.branch = el; // như G.addMarks: đủ 30 thì khoá nhánh hệ
+    return { ok: true, n, el, msg: 'Đã truyền ' + n + ' linh khí ' + G.EL[el].name + ' sang ' + G.wName(b) + '.' };
+  };
+
   const WHO_NAME = { ren: 'Ông Thợ Rèn', may: 'Cô Thợ May', xen: 'Bà Hàng Xén', do: 'Cụ Đồ', lai: 'Chú Lái Đò' };
   U.WHO_NAME = WHO_NAME;
 })();

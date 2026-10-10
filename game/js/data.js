@@ -136,7 +136,9 @@
       name: 'Công',
       nodes: [
         'Sát thương +8%', 'Đòn đặc biệt tốn ít hơn 5 mana', 'Sát thương +15% lên quái đang dính hiệu ứng',
-        'Sát thương +8%', '10% cơ hội chí mạng gấp đôi',
+        // D6 (Q7): nút thứ 4 trước là "Sát thương +8%" lần hai; nay là Khai huyệt (combat.js playerHit, G.khaiOpen).
+        // Bản lưu cũ đã học nút này được hoàn điểm một lần (js/upgrade.js G.upg.khaiHuyetFix).
+        'Khai huyệt: đòn nặng trúng quái đang lấy đà/vừa ra đòn +12% (không cộng chí mạng)', '10% cơ hội chí mạng gấp đôi',
       ],
     },
     def: {
@@ -155,6 +157,9 @@
     },
   };
   G.SKEYS = ['atk', 'def', 'elem'];
+  // Khai huyệt (Công 4). Đòn nặng: kiếm nhát kết (nhát 3), giáo Quét vòng, búa Nện đất mạnh (lấy đà đủ), cung tên nạp đầy.
+  // mult: hệ số sát thương; power: phần cộng ước tính vào con số Sức mạnh (G.powerParts), CHƯA ĐO.
+  G.KHAI_HUYET = { mult: 1.12, power: 0.04 };
   // CÀY NÂNG CẤP: trần cấp hero 30 -> 40 (cấp 31-40 cho thêm máu, sát thương, 3 điểm kỹ năng), để người chơi đã chạm trần ở cuối
   // vùng ba vẫn còn đường cày lên mạnh hơn thay vì phải trông vào may rủi.
   G.MAX_LEVEL = 40;
@@ -337,12 +342,14 @@
     'Trùm học theo bạn: dùng một hệ quá nhiều thì nó kháng hệ đó, nhưng yếu với hệ khắc chế.',
     'Kháng Lửa thì yếu Băng. Kháng Băng thì yếu Độc. Kháng Độc thì yếu Lửa.',
     // GĐ2 (V16, Q8): câu cũ "Lửa hợp với bầy quái" sai số đo (đánh đám Độc vẫn mạnh hơn Lửa). Chỉ sửa câu, chưa đổi số Lửa.
-    'Lửa đốt cháy; từ Thức tỉnh, quái đang cháy mà chết thì nổ lan sang con đứng gần. Độc cộng dồn tầng, mạnh với quái trâu, trùm và cả bầy đông. Băng làm chậm, đủ tầng thì đóng băng, hợp với quái nhanh.',
+    'Lửa đốt cháy; từ Thức tỉnh, quái đang cháy mà chết thì nổ lan sang con đứng gần. Độc cộng dồn tầng, mạnh với quái trâu, trùm và cả bầy đông. Băng làm chậm, đủ 5 tầng thì đóng băng (số tầng chớp trắng ở 4: thêm một nhát), huỷ luôn đòn quái đang lấy đà.',
     // GĐ2 (V48): ghi rõ phản ứng chỉ có giữa hai vũ khí khác hệ, và tương tác ẩn Độc - Băng.
     'Lửa gặp Độc gây Nổ khói. Lửa gặp Băng gây Sốc nhiệt. Độc gặp Băng không phản ứng, nhưng Băng làm Độc tan chậm một nửa. Phản ứng chỉ có giữa hai vũ khí khác hệ (đổi vũ khí khi quái còn dính hệ cũ); chưởng không gây phản ứng với vũ khí.',
     'Hạ trùm bằng hệ khắc chế nó để nhận sao thứ ba.',
     'Vũ khí có bốn bậc: Thường, Lam, Tím, Vàng. Trùm vùng lần đầu bị hạ chắc chắn rơi một vũ khí Vàng.',
     'Thành hình mở đặc trưng hệ thứ nhất, Thức tỉnh mở đặc trưng thứ hai. Bậc Thường chỉ lên tới Thành hình.',
     'Mỗi ải có Sức mạnh khuyên dùng. Số đỏ là bé còn yếu: chơi lại ải cũ để lên cấp, kiếm quặng và nguyên liệu, rồi mài và nâng bậc vũ khí.',
+    // GĐ3 (D1): Né chuẩn. Thêm ở cuối để không đổi thứ tự các câu cũ (G.HINTS[5] là trang "Ba hệ").
+    'Lộn né đúng lúc một đòn của quái (vùng đỏ vừa nổ, đạn bay tới, cú chém) là Né chuẩn: hồi 5 mana, mỗi cú lộn một lần.',
   ];
 })();

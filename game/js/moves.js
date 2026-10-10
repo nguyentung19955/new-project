@@ -116,7 +116,7 @@
     sword: 'Kiếm: bấm Đánh ra chuỗi 3 nhát, Né xong đánh ngay để lướt chém. Đặc biệt: Trảm Nguyệt phóng vệt chém xuyên quái.',
     bow: 'Cung: bấm để bắn nhanh, giữ rồi thả bắn tên mạnh. Đặc biệt: Mưa Tên rơi vào cụm quái gần nhất.',
     spear: 'Giáo: bấm để đâm rồi quét, giữ rồi thả để xốc tới. Đặc biệt: Phi Thương ném giáo ghim quái, giáo tự bay về.',
-    hammer: 'Búa: giữ Đánh lấy đà, thả ra nện đất. Đặc biệt: Địa Chấn nện ra vệt nứt hất tung quái.',
+    hammer: 'Búa: mỗi nhát làm quái khựng, cắt đòn nó đang lấy đà. Giữ Đánh lấy đà, thả ra nện đất. Đặc biệt: Địa Chấn hất tung quái.', // V37 (M7): búa không đẩy lùi, chỉ làm khựng
   };
   const C = G.MOVES, HE = G.HE;
 
@@ -307,7 +307,8 @@
   // Đẩy lùi theo hướng nhắm
   function push(P, list, d) {
     const ux = P.aimX != null ? P.aimX : P.face, uy = P.aimX != null ? P.aimY : 0;
-    for (const e of list) if (!e.dead && !e.isBoss) { e.x += ux * d; e.y += uy * d * ZK(); }
+    // V37: tinh anh nặng hơn, chỉ bị đẩy 40% quãng của quái thường
+    for (const e of list) if (!e.dead && !e.isBoss) { const k = e.role === 'elite' ? 0.4 : 1; e.x += ux * d * k; e.y += uy * d * ZK() * k; }
   }
   const aimOf = (P) => (P.aimX != null ? [P.aimX, P.aimY] : [P.face, 0]);
   // Bắt đầu một cú lướt theo hướng nhắm: len điểm ảnh trên sàn trong t giây (combat.js đi theo P.dashVx, P.dashVy, dừng ở tường)
@@ -490,7 +491,8 @@
   function hammerSlam(P, w, o) {
     const W = G.getWorld(), ch = C.hammer.charge, sl = o.sl, [ux, uy] = aimOf(P);
     const r = reachOf(w, sl.r), q = along(P.x, P.y, ux, uy, Math.min(ch.ahead, wallLen(P.x, P.y, ux, uy, ch.ahead))), cx = q[0], cy = q[1];
-    const n = circleHit(cx, cy, r, (e) => G.cb.playerHit(e, sl.mult, { w, stun: sl.stun, heavy: true, dir: e.x >= P.x ? 1 : -1 }));
+    const kh = o.level >= ch.slam.length - 1; // D6: chỉ nện mạnh nhất (đủ lực) mới được tính Khai huyệt
+    const n = circleHit(cx, cy, r, (e) => G.cb.playerHit(e, sl.mult, { w, stun: sl.stun, heavy: true, kh, dir: e.x >= P.x ? 1 : -1 }));
     G.cb.hitProps(cx - r, cx + r, cy, r * G.ZK);
     // sóng chấn động chạy trên mặt đất theo hướng đánh (tám hướng), tan khi chạm tường
     const left = Math.min(sl.wave.len, (W.x1 - W.x0) * ch.waveFrac, wallLen(cx, cy, ux, uy, 999));
@@ -566,7 +568,7 @@
     P.hitDone = true;
     if (o.kind === 'chem') {
       const m = o.m;
-      const list = boxHit(P, o.reach, o.depth, m.mult, { w, heavy: !!m.heavy });
+      const list = boxHit(P, o.reach, o.depth, m.mult, { w, heavy: !!m.heavy, kh: !!m.heavy }); // kh: nhát kết được tính Khai huyệt (D6)
       if (m.push) push(P, list, m.push);
       swingFx(P, w, o);
       if (m.finish) { const [ux, uy] = aimOf(P), q = along(P.x, P.y, ux, uy, Math.min(o.reach * 0.6, wallLen(P.x, P.y, ux, uy, 99))); finish(P, w, { x: q[0], y: q[1], ux, uy, power: 1 }); }
@@ -585,10 +587,10 @@
       const m = o.m, list = [], [ux, uy] = aimOf(P), k = ZK();
       for (const e of G.targets()) {
         const dx = e.x - P.x, dy = (e.y - P.y) / k, d = Math.hypot(dx, dy);
-        if (d < o.reach + e.r && (d < 8 || (dx * ux + dy * uy) / d > -0.77)) { G.cb.playerHit(e, m.mult, { w, heavy: true, dir: e.x >= P.x ? 1 : -1 }); list.push(e); }
+        if (d < o.reach + e.r && (d < 8 || (dx * ux + dy * uy) / d > -0.77)) { G.cb.playerHit(e, m.mult, { w, heavy: true, kh: true, dir: e.x >= P.x ? 1 : -1 }); list.push(e); } // kh: giáo quét (Khai huyệt)
       }
       G.cb.hitProps(P.x - o.reach, P.x + o.reach, P.y, o.reach * G.ZK);
-      for (const e of list) if (!e.dead && !e.isBoss) { const dx = e.x - P.x, dy = e.y - P.y, d = Math.hypot(dx, dy) || 1; e.x += (dx / d) * m.push; e.y += (dy / d) * m.push * k; }
+      for (const e of list) if (!e.dead && !e.isBoss) { const dx = e.x - P.x, dy = e.y - P.y, d = Math.hypot(dx, dy) || 1, pk = e.role === 'elite' ? 0.4 : 1; e.x += (dx / d) * m.push * pk; e.y += (dy / d) * m.push * k * pk; } // V37: tinh anh bị hất 40%
       swingFx(P, w, o);
       { const q = along(P.x, P.y, ux, uy, 10); finish(P, w, { x: q[0], y: q[1], ux, uy, power: 1, round: true }); }
       gain(P, w, list.length);

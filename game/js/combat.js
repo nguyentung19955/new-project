@@ -62,6 +62,7 @@
 
   // ---------- chỉ số người chơi ----------
   G.buildPlayer = function () {
+    if (G.upg && G.upg.khaiHuyetFix) G.upg.khaiHuyetFix(G.save); // D6: hoàn điểm một lần cho ai đã học nút Công 4 cũ (js/upgrade.js)
     const sv = G.save, key = sv.hero, H = G.HEROES[key], hs = sv.heroes[key];
     if (G.outfit) G.outfit.sync(sv); // mũ, áo, bùa kiểu cũ (nếu còn) chuyển sang trang phục mới trước khi tính chỉ số
     const sk = hs.sk;
@@ -83,7 +84,9 @@
       castT: 0, specT: 0, deadT: 0, // đồng hồ cho hoạt ảnh: dùng kỹ năng, tung đòn đặc biệt, gục
       st: { fire: 0, poison: 0, ice: 0 }, dot: 0, dotT: 0,
       potions: 2, skillCd: 0, specCd: 0, swapCd: 0, gongT: 0, firstHit: false, boost: false, stillT: 0, t: 0, moving: false,
-      dmgMult: (1 + (sk.atk >= 1 ? 0.08 : 0) + (sk.atk >= 4 ? 0.08 : 0)),
+      // D6 (Q7): nút Công 4 trước là "+8% sát thương" lần hai, nay là Khai huyệt (P.khaiHuyet, xem playerHit).
+      dmgMult: (1 + (sk.atk >= 1 ? 0.08 : 0)), khaiHuyet: sk.atk >= 4,
+      dodgeN: 0, neN: -1, // D1: đếm cú lộn / cú lộn đã được thưởng Né chuẩn
       crit: sk.atk >= 5 ? 0.1 : 0, specCost: 25 - (sk.atk >= 2 ? 5 : 0), statusBonus: sk.atk >= 3 ? 1.15 : 1,
       dodgeCdMax: sk.def >= 2 ? 0.75 : 1, roomHeal: sk.def >= 3 ? 0.08 : 0,
       dr: (armor ? armor.dr : 0) + (sk.def >= 5 ? 0.1 : 0) + (key === 'wrestler' ? 0.25 : 0),
@@ -118,6 +121,8 @@
     if (offs.length) off = offs.length > 1 ? offs[0] * 0.75 + offs[1] * 0.25 : offs[0];
     if (!off) off = 10 * (1 + 0.01 * (P.lvl - 1));
     off *= 1 + P.crit;
+    // D6: Khai huyệt chỉ cộng 12% khi đòn nặng trúng quái đang lấy đà/vừa ra đòn; ước tính góp ~4% đòn (CHƯA ĐO, xem docs/review/gd3/gd3-c.md).
+    if (P.khaiHuyet && G.KHAI_HUYET) off *= 1 + G.KHAI_HUYET.power;
     // Chưởng (js/chuong.js): mỗi điểm chưởng đã học cộng thêm một chút vào phần đòn
     if (G.chuong) off *= G.chuong.powerMult(G.save, P.key);
     let res = 0;
@@ -310,7 +315,12 @@
       else if (st.iceN >= 5) {
         st.iceN = 0;
         st.freezeImm = 5;
+        // V86 (hệ mẫu Băng): đếm lần đóng băng và đòn quái bị huỷ (quái đang lấy đà mà bị đóng băng thì js/mobs.js huỷ đòn),
+        // ghi vào sổ của ải W.stats.ice = { freeze, cancel } để màn kết quả/bảng thua đọc; hiện chữ "Huỷ đòn!" cho thấy giá trị khống chế.
+        const cancel = !t.isBoss && ((t.act && !t.act.fired) || t.wind > 0);
         if (t.isBoss) st.stun = Math.max(st.stun, 0.5); else st.frozen = 1.5 * dur;
+        if (W.stats) { const I = W.stats.ice || (W.stats.ice = { freeze: 0, cancel: 0 }); I.freeze++; if (cancel) I.cancel++; }
+        if (cancel && !G.noRender) FX('text', t.x, t.y - Math.min(60, (t.h || 24) * (t.scale || 1)) - 14, 'Huỷ đòn!', '#e9f9ff', 9);
         FX('freeze', t);
       }
       G.sfx('ice');
@@ -393,6 +403,14 @@
   };
 
   // ---------- người chơi ra đòn ----------
+  // D6 Khai huyệt: quái đang "hở" = đang lấy đà hoặc vừa ra đòn chưa hồi xong.
+  //   quái mới (js/mobs.js): e.act còn (từ lúc báo trước tới hết động tác); quái kiểu cũ: e.wind > 0;
+  //   trùm: e.wind > 0 (đang lấy đà), e.tired > 0 / e.exposed > 0 (mệt, sơ hở), hoặc e.busy > 0 khi không đang bất tử (đang ra chiêu).
+  G.khaiOpen = function (e) {
+    if (!e || e.dead) return false;
+    if (e.isBoss) return e.wind > 0 || e.tired > 0 || e.exposed > 0 || (e.busy > 0 && !(e.invuln > 0));
+    return !!e.act || e.wind > 0;
+  };
   function playerHit(e, mult, o) {
     const P = W.P, w = o.w;
     let d = G.pDamage(P, w) * mult;
@@ -405,9 +423,16 @@
     if (P.charm === 'c_ember' && e.st.fire > 0) d *= 1.15;
     if (P.key === 'hunter' && (e.st.frozen > 0 || e.st.stun > 0 || e.st.root > 0 || e.exposed > 0)) d *= 1.25;
     if (P.boost) { d *= 1.6; P.boost = false; }
+    // D6 (Q7) Khai huyệt: đòn nặng (o.kh: kiếm nhát 3, giáo quét, búa nện mạnh nhất, cung nạp đầy) trúng quái đang hở thì +12%.
+    // Không cộng với chí mạng (đòn chí mạng đã gấp đôi thì thôi). Mỗi lời gọi playerHit là một đòn trên một quái nên chỉ cộng 1 lần.
+    let khai = false;
+    if (o.kh && P.khaiHuyet && !crit && G.khaiOpen(e)) { d *= G.KHAI_HUYET ? G.KHAI_HUYET.mult : 1.12; khai = true; }
     const el = G.activeEl(P, w);
     G.damage(e, d, { el, ranged: o.ranged, src: 'hit', w, crit });
     if (!G.noRender) FX('hit', e, { el, type: w.type, ranged: o.ranged, crit, dead: e.dead, heavy: o.heavy, rain: o.rain, dir: o.dir || (e.x >= P.x ? 1 : -1) });
+    if (khai && !G.noRender && G.fx && G.fx.khaiHuyet) G.fx.khaiHuyet(e);
+    // V37 (phần hình): đánh vào mặt khiên / giáp thì có tia trắng xám bật ngược, khác với trúng thường
+    if (!G.noRender && G.fx && G.fx.blockSpark && G.mobArmor && !e.isBoss && G.mobArmor(e) > 0) G.fx.blockSpark(e, P);
     if (G.moves) G.moves.onHit(e, d, el, o); // luật riêng của hệ khi đòn trúng (js/moves.js)
     if (G.mobOnHit) G.mobOnHit(e, d, o); // quái gai phản đòn, giáp vỡ (js/mobs.js)
     const T = G.WTYPES[w.type];
@@ -505,7 +530,7 @@
       W.projs.push({ team: 'player', kind: 'arrow', x: P.x + P.face * 8, y: P.y, vx: P.face * 270, vy, t: 1.3, w, mult: third ? 1.6 : 1, pierce: third ? 3 : 0, big: third, col, seen: [] });
     } else {
       const reach = T.reach * (G.wHas(w, 'reach') ? 1.15 : 1);
-      hits = meleeBox(P, reach, T.depth, w.type === 'sword' && third ? 1.5 : 1, { w, heavy: third });
+      hits = meleeBox(P, reach, T.depth, w.type === 'sword' && third ? 1.5 : 1, { w, heavy: third, kh: third });
       if (!G.noRender) FX('swing', P, { type: w.type, combo: P.comboI, reach, el, stage: G.wStage(w) });
       if (w.type === 'hammer') W.shake = Math.max(W.shake, 0.08);
     }
@@ -576,9 +601,30 @@
     W.lastHurt = { key: info.key, name: info.name, skill: info.skill || null, boss: info.boss || null, amt: lost, el: el || null, t: G.time, fatal: P.hp <= 0 };
     if (W.stats) W.stats.lastHurt = W.lastHurt;
   }
-  G.hurtPlayer = function (amt, el, src, melee) {
+  // D1 (Q6) NÉ CHUẨN: đang lộn (P.dodgeT > 0) mà một ĐÒN CÓ NGUỒN bay qua người thì +5 mana, tối đa 1 lần mỗi cú lộn.
+  // Chỉ những chỗ gọi G.hurtPlayer với cờ don = true mới được tính (xem updateWorld): vùng báo trước nổ đúng khung z.t về 0
+  // (gồm đòn cận chiến của quái mới ở js/mobs.js, vì chúng là vùng melee; vệt nứt/đường đỏ của trùm), đạn quái W.projs,
+  // đòn chém/lao của quái kiểu cũ. KHÔNG tính: vũng sàn (z.pool), cháy/độc theo nhịp, chạm thân quái, sóng/tường nước
+  // (không qua chỗ có cờ), phòng an toàn/đã thắng/đã gục (G.hurtPlayer thoát trước khi xét).
+  G.NE_CHUAN = { mana: 5 };
+  G.neChuan = function () {
     const P = W.P;
-    if (P.inv > 0 || P.dead || W.over || W.safe) return false; // W.safe: đã hạ trùm, đang đi dạo chờ vào cổng
+    if (!(P.dodgeT > 0) || P.dead || W.over || W.safe) return false;
+    if (P.neN === P.dodgeN) return false; // cú lộn này đã thưởng rồi (nhiều đạn/nhiều vùng cùng lúc chỉ tính 1 lần)
+    P.neN = P.dodgeN;
+    const before = P.mana;
+    P.mana = Math.min(P.maxmana, P.mana + G.NE_CHUAN.mana);
+    const got = Math.round(P.mana - before);
+    if (W.stats) W.stats.neChuan = (W.stats.neChuan || 0) + 1; // boss.js computeLayers: né chuẩn không bị tính là "né rỗng"
+    G.sfx('mark', 1.5);
+    if (!G.noRender && G.fx && G.fx.neChuan) G.fx.neChuan(P, got);
+    return true;
+  };
+  // don: đây là một ĐÒN CÓ NGUỒN (đòn cận chiến có động tác, đạn, vùng báo trước đang nổ). Chỉ dùng cho Né chuẩn, không đổi luật mất máu.
+  G.hurtPlayer = function (amt, el, src, melee, don) {
+    const P = W.P;
+    if (P.dead || W.over || W.safe) return false; // W.safe: đã hạ trùm, đang đi dạo chờ vào cổng
+    if (P.inv > 0) { if (don) G.neChuan(); return false; }
     if (G.outfit && G.outfit.block(P)) return false; // khiên của trang phục (cánh, khiên đầu phòng) chặn đòn này
     const raw = amt;
     amt *= 1 - Math.min(0.75, P.dr);
@@ -707,6 +753,7 @@
       if ((inp.dodgeP || P.dodgeBuf > 0) && P.dodgeCd <= 0) {
         P.dodgeBuf = 0;
         P.dodgeT = 0.27; P.dodgeCd = 1 * P.dodgeCdMax; P.inv = Math.max(P.inv, 0.32); // Q13: giữ bất tử 0,32 giây
+        P.dodgeN = (P.dodgeN | 0) + 1; // D1: đếm cú lộn, để Né chuẩn chỉ thưởng 1 lần mỗi cú
         // V15 (Q5): Né huỷ nhát đang vung thì không bắt chờ hết thời gian nhát đó (búa trước phải chờ thêm ~0,43 giây sau cú lộn)
         if (P.atkT > 0) P.cdT = Math.min(P.cdT, 0.1);
         P.atkT = 0; P.chHold = false; P.chT = 0; // lộn thì bỏ phần chưởng đang tích
@@ -760,7 +807,7 @@
   function strike(e, reach, depth, mult) {
     const P = W.P;
     const dx = (P.x - e.x) * e.face;
-    if (dx > -6 && dx < reach && Math.abs(P.y - e.y) < depth) G.hurtPlayer(e.dmg * (mult || 1), e.el, e, true);
+    if (dx > -6 && dx < reach && Math.abs(P.y - e.y) < depth) G.hurtPlayer(e.dmg * (mult || 1), e.el, e, true, true); // D1: đòn chém có lấy đà
   }
   function updateEnemy(e, dt) {
     const P = W.P;
@@ -794,7 +841,7 @@
     if (e.lunge > 0) {
       e.lunge -= dt;
       e.x += e.lv * dt;
-      if (!e.lhit && Math.abs(P.x - e.x) < 12 && Math.abs(P.y - e.y) < 11) { e.lhit = true; G.hurtPlayer(e.dmg, e.el, e, true); }
+      if (!e.lhit && Math.abs(P.x - e.x) < 12 && Math.abs(P.y - e.y) < 11) { e.lhit = true; G.hurtPlayer(e.dmg, e.el, e, true, true); } // D1: cú lao có lấy đà
       if (e.lunge <= 0) { e.lhit = false; e.retreat = 0.7; }
       return;
     }
@@ -900,7 +947,7 @@
         for (const hx of hits) {
           const e = hx[1];
           o.seen.push(e);
-          playerHit(e, o.mult, { w: o.w, ranged: true, heavy: o.big, dir: o.vx < 0 ? -1 : 1 });
+          playerHit(e, o.mult, { w: o.w, ranged: true, heavy: o.big, kh: o.charged >= 1, dir: o.vx < 0 ? -1 : 1 }); // kh: tên nạp đầy (Khai huyệt)
           if (G.moves) G.moves.arrowHit(o, e);
           P.mana = Math.min(P.maxmana, P.mana + P.manaHit + (G.wHas(o.w, 'mana') ? 1 : 0));
           G.sfx('hit', 1.3);
@@ -909,7 +956,7 @@
         // đồ vật trên sàn (lò lửa, nấm, đá băng): tên bay qua thì kích nổ nhưng không bị chặn lại
         for (const pr of W.props) if (pr.env && !pr.used && Math.abs(pr.x - o.x) < 8 && Math.abs(pr.y - o.y) < 10) G.triggerProp(pr);
       } else if (Math.abs(P.x - o.x) < 7 && Math.abs(P.y - o.y) < 8) {
-        if (G.hurtPlayer(o.dmg, o.el, o.src || null, false) || P.inv <= 0) { o.t = 0; if (o.onHit) o.onHit(o); }
+        if (G.hurtPlayer(o.dmg, o.el, o.src || null, false, true) || P.inv <= 0) { o.t = 0; if (o.onHit) o.onHit(o); } // D1: đạn là đòn có nguồn
       }
       if (o.x < -30 || o.x > W.w + 30) o.t = 0;
     }
@@ -929,7 +976,7 @@
       if (z.t > 0) {
         z.t -= dt;
         if (z.t <= 0) {
-          if (z.team !== 'player' && z.team !== 'fx' && z.dmg && G.inZone(z, P)) { hurtKind = 'vung'; const hit = G.hurtPlayer(z.dmg, z.el, z.src || null, !!z.melee); hurtKind = null; if (hit && z.onHit) z.onHit(z); }
+          if (z.team !== 'player' && z.team !== 'fx' && z.dmg && G.inZone(z, P)) { hurtKind = 'vung'; const hit = G.hurtPlayer(z.dmg, z.el, z.src || null, !!z.melee, true); hurtKind = null; /* D1: vùng báo trước nổ đúng khung này */ if (hit && z.onHit) z.onHit(z); }
           if (z.onFire) z.onFire(z);
           if (z.then) { z.pool = true; z.life = z.then; z.tick = 0.4; }
           FX('zoneFire', z);

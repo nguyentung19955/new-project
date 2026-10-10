@@ -912,7 +912,8 @@
         }
         if (!e.isPlayer && v.pn >= 2) digit(c, x + 10, top - 1, v.pn, '#c2f58a');
       }
-      if (v.ice >= 2 && !v.frozen && !e.isPlayer) digit(c, x + 10, top + 6, Math.min(9, v.ice), '#bfeaff');
+      // V86: đủ 4/5 tầng Băng (chưa miễn đóng băng) thì số tầng chớp trắng có viền: thêm một nhát là đóng băng
+      if (v.ice >= 2 && !v.frozen && !e.isPlayer) { const hot = v.ice >= 4 && !(e.st && e.st.freezeImm > 0) && ((t * 8) | 0) % 2 === 0; if (hot) p(c, x + 8, top + 4, 7, 9, '#ffffff'); digit(c, x + 10, top + 6, Math.min(9, v.ice), hot ? '#ffffff' : '#bfeaff'); }
       if (v.root) {
         // hàm bẫy kẹp quanh chân
         const k = Math.min(1, (t - (e.fxRt0 || 0)) / 0.08), w = Math.round(B.w + 3), up = Math.round(5 * k);
@@ -1864,4 +1865,33 @@
     const top = t.y - Math.min(60, (t.h || 24) * (t.scale || 1)) - 16;
     G.fx.text(t.x, top, 'Xa quá!', '#d6d6d6', 10);
   };
+})();
+
+// GĐ3 (phiên gd3-c): ba hàm hình nhỏ, chỉ dùng kho hạt và hàm vẽ sẵn có (G.fx.kit), không đổi phần nào khác của tệp này.
+//   G.fx.neChuan(P, got)  D1 Né chuẩn: vòng ngọc lục 2 lớp + một tia vàng đồng + chữ "NÉ CHUẨN!" ngắn (0,32 s); got > 0 thì thêm "+5" mana.
+//                         Không rung, không khựng hình, không màu đỏ, không che vùng báo (vẽ ở người bé, nhỏ).
+//   G.fx.khaiHuyet(e)     D6 Khai huyệt: chấm sáng vàng trên quái khi đòn nặng trúng lúc nó đang hở.
+//   G.fx.blockSpark(e, P) V37: đánh vào khiên/giáp thì tia trắng xám bật ngược về phía bé.
+(function () {
+  const G = window.G;
+  const K = G && G.fx && G.fx.kit;
+  if (!K || G.fx.neChuan) return;
+  const JADE = ['#ffffff', '#c8ffe6', '#7fe8c0', '#3fc898', '#1f8a68'];
+  K.api('neChuan', (P, got) => {
+    K.addRing(P.x, P.y, 4, 20, 0.26, '#5fe0b0', 2, 0);
+    K.addRing(P.x, P.y - 1, 2, 13, 0.22, '#c8ffe6', 1, 1);
+    for (let i = 0; i < 6; i++) { const a = (i / 6) * Math.PI * 2 + K.rr(-0.3, 0.3); K.emit(6, P.x + Math.cos(a) * 10, P.y - 8 + Math.sin(a) * 6, 0, K.rr(-24, -8), K.rr(0.2, 0.32), JADE, 2, 0, 0, null, 1); }
+    K.streak(P.x, P.y - 18, K.rr(-20, 20), -90, 0.2, K.RAMP.gold, 1, 8, 0, 2);
+    K.num(P.x, P.y - 40, 'NÉ CHUẨN!', { col: '#7fe8c0', size: 8, t: 0.32, vx: 0, vy: -26, pop: 0.6, edge: 'rgba(6,30,22,0.95)' });
+    if (got > 0) K.num(P.x + 22, P.y - 30, '+' + got, { col: '#8fd0ff', size: 7, t: 0.32, vx: 0, vy: -26, pop: 0.4, edge: 'rgba(6,16,30,0.95)' });
+  });
+  K.api('khaiHuyet', (e) => {
+    const B = K.bodyOf(e), y = e.y - B.h * 0.55;
+    K.add({ ty: 'flash', x: e.x, y, r: 5, t: 0.1, c: '#ffffff', c2: '#ffd23f', ly: 1 });
+    for (let i = 0; i < 4; i++) { const a = (i / 4) * Math.PI * 2 + 0.785; K.streak(e.x, y, Math.cos(a) * 110, Math.sin(a) * 80, 0.14, K.RAMP.gold, 1, 6, 0, 2); }
+  });
+  K.api('blockSpark', (e, P) => {
+    const B = K.bodyOf(e), dir = P && P.x < e.x ? -1 : 1, x = e.x + dir * B.w * 0.8, y = e.y - B.h * 0.45;
+    for (let i = 0; i < 4; i++) K.streak(x, y + K.rr(-4, 4), dir * K.rr(70, 140), K.rr(-60, 10), K.rr(0.1, 0.18), K.RAMP.steel, 1, 5, 200, 2);
+  });
 })();
