@@ -338,7 +338,7 @@
       T.head('Nguồn linh khí (dấu ấn hệ)', CX, y + 9);
       const src = ['hạ tinh anh +' + L.elite, 'trùm nhỏ +' + L.mini, 'trùm vùng +' + L.boss, 'kết liễu quái thường đang dính hệ +1'];
       if (L.drop > 0) src.push('quái thường ' + Math.round(L.drop * 100) + '% rơi viên linh khí, nhặt +' + L.orb);
-      y = ui.para(src.join(' · ') + '. Hệ nhận được: hệ quái đang dính lúc gục, không dính thì theo hệ của vùng.' + (sv.hero === 'smith' ? ' Thợ Rèn nhận dấu ấn nhanh hơn 20%.' : ''), CX, y + 20, CW - 8, { size: 7, color: TXT });
+      y = ui.para(src.join(' · ') + '. Hệ nhận được: hệ quái đang dính lúc gục, không dính thì theo hệ của vùng.' + (sv.hero === 'smith' ? ' Cu Tí nhận dấu ấn nhanh hơn 20%.' : ''), CX, y + 20, CW - 8, { size: 7, color: TXT });
       y = ui.para('Mốc tiến hóa: ' + G.MARKS.map((m, i) => m + ' ' + G.STAGE_NAMES[i + 1]).join(' · ') + '. Vũ khí Thường chỉ lên tới Thành hình.', CX, y + 1, CW - 8, { size: 6.5, color: SOFT });
       y += 5;
       const cw = (CW - 8 - 150) / 3;

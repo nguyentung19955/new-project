@@ -277,7 +277,7 @@ const r05 = (v) => Math.round(v * 2) / 2;
 const sao = (o) => JSON.parse(JSON.stringify(o));
 function bao(t) { const b = $('thongBao'); b.textContent = t; b.hidden = false; clearTimeout(bao.h); bao.h = setTimeout(() => { b.hidden = true; }, 3200); }
 
-const NHAN_VAT = [['smith', 'Thợ Rèn'], ['hunter', 'Thợ Săn'], ['healer', 'Thầy Lang'], ['wrestler', 'Đô Vật']];
+const NHAN_VAT = [['smith', 'Cu Tí'], ['hunter', 'Cu Tèo'], ['healer', 'Cái Bống'], ['wrestler', 'Cu Lì']];
 const TEN_NV = Object.fromEntries(NHAN_VAT);
 // Mặt nạ đã bỏ khỏi game (4 em bé mask: null): không có ô Mặt nạ.
 const O_DO = [['hats', 'Mũ', 'hat'], ['robes', 'Áo', 'robe'], ['backs', 'Đồ lưng', 'back'], ['hands', 'Bùa / đồ cầm tay', 'hand'], ['wings', 'Cánh', 'wing']];

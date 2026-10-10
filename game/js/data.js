@@ -104,25 +104,25 @@
 
   G.HEROES = {
     smith: {
-      name: 'Thợ Rèn', hp: 100, mana: 100, speed: 1, fav: ['sword', 'hammer'],
+      name: 'Cu Tí', hp: 100, mana: 100, speed: 1, fav: ['sword', 'hammer'],
       passive: 'Vũ khí nhận dấu ấn nhanh hơn 20%',
       skill: 'Chưởng', skillDesc: 'Nét riêng: chưởng đẩy lùi quái mạnh (lực tay thợ rèn)', // trước là Nung (js/chuong.js)
       unlock: 'Có sẵn',
     },
     hunter: {
-      name: 'Thợ Săn', hp: 75, mana: 90, speed: 1.15, fav: ['bow', 'spear'],
+      name: 'Cu Tèo', hp: 75, mana: 90, speed: 1.15, fav: ['bow', 'spear'],
       passive: 'Gây thêm 25% sát thương lên mục tiêu bị choáng, đóng băng, giữ chân hoặc lộ điểm yếu',
       skill: 'Chưởng', skillDesc: 'Nét riêng: chưởng bay xa hơn 30% và nhanh hơn 25%', // trước là Đặt bẫy
       unlock: 'Hạ Mộc Tinh',
     },
     healer: {
-      name: 'Thầy Lang', hp: 85, mana: 130, speed: 1, fav: ['spear', 'bow'],
+      name: 'Cái Bống', hp: 85, mana: 130, speed: 1, fav: ['spear', 'bow'],
       passive: 'Hiệu ứng bạn gây ra kéo dài hơn 30%',
       skill: 'Chưởng', skillDesc: 'Nét riêng: chưởng trúng quái thì hồi 1,5% máu (tối đa 3 lần mỗi phát)', // trước là Bình thuốc
       unlock: 'Hạ Ngư Tinh',
     },
     wrestler: {
-      name: 'Đô Vật', hp: 140, mana: 80, speed: 0.9, fav: ['hammer', 'spear'],
+      name: 'Cu Lì', hp: 140, mana: 80, speed: 0.9, fav: ['hammer', 'spear'],
       passive: 'Giảm 25% sát thương nhận vào, phản lại 50% sát thương cận chiến',
       skill: 'Chưởng', skillDesc: 'Nét riêng: chưởng tầm gần (60%) mà to (rộng gấp rưỡi), mạnh hơn 15%', // trước là Gồng
       unlock: 'Hạ Hồ Tinh',

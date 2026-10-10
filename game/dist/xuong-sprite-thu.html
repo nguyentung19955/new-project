@@ -53,7 +53,7 @@
 </div><canvas id="ui"></canvas></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.11-0045";
+(window.G = window.G || {}).VERSION = "lk-2026.10.11-0048";
 
 // ===== js/data.js =====
 // Dữ liệu game: hệ, vũ khí, hero, quái, vùng, trang bị. Mọi con số cân bằng nằm ở đây.
@@ -162,25 +162,25 @@
 
   G.HEROES = {
     smith: {
-      name: 'Thợ Rèn', hp: 100, mana: 100, speed: 1, fav: ['sword', 'hammer'],
+      name: 'Cu Tí', hp: 100, mana: 100, speed: 1, fav: ['sword', 'hammer'],
       passive: 'Vũ khí nhận dấu ấn nhanh hơn 20%',
       skill: 'Chưởng', skillDesc: 'Nét riêng: chưởng đẩy lùi quái mạnh (lực tay thợ rèn)', // trước là Nung (js/chuong.js)
       unlock: 'Có sẵn',
     },
     hunter: {
-      name: 'Thợ Săn', hp: 75, mana: 90, speed: 1.15, fav: ['bow', 'spear'],
+      name: 'Cu Tèo', hp: 75, mana: 90, speed: 1.15, fav: ['bow', 'spear'],
       passive: 'Gây thêm 25% sát thương lên mục tiêu bị choáng, đóng băng, giữ chân hoặc lộ điểm yếu',
       skill: 'Chưởng', skillDesc: 'Nét riêng: chưởng bay xa hơn 30% và nhanh hơn 25%', // trước là Đặt bẫy
       unlock: 'Hạ Mộc Tinh',
     },
     healer: {
-      name: 'Thầy Lang', hp: 85, mana: 130, speed: 1, fav: ['spear', 'bow'],
+      name: 'Cái Bống', hp: 85, mana: 130, speed: 1, fav: ['spear', 'bow'],
       passive: 'Hiệu ứng bạn gây ra kéo dài hơn 30%',
       skill: 'Chưởng', skillDesc: 'Nét riêng: chưởng trúng quái thì hồi 1,5% máu (tối đa 3 lần mỗi phát)', // trước là Bình thuốc
       unlock: 'Hạ Ngư Tinh',
     },
     wrestler: {
-      name: 'Đô Vật', hp: 140, mana: 80, speed: 0.9, fav: ['hammer', 'spear'],
+      name: 'Cu Lì', hp: 140, mana: 80, speed: 0.9, fav: ['hammer', 'spear'],
       passive: 'Giảm 25% sát thương nhận vào, phản lại 50% sát thương cận chiến',
       skill: 'Chưởng', skillDesc: 'Nét riêng: chưởng tầm gần (60%) mà to (rộng gấp rưỡi), mạnh hơn 15%', // trước là Gồng
       unlock: 'Hạ Hồ Tinh',
@@ -8374,10 +8374,10 @@
 
   // Bộ khởi đầu của từng hero và màu áo.
   const HERO = {
-    smith: { name: 'Thợ Rèn', col: RED, outfit: { hat: 'trum_sung', robe: 'ao_trum', back: null, hand: 'bua_con', mask: null }, shadow: 7 },
-    hunter: { name: 'Thợ Săn', col: GRN, outfit: { hat: 'trum_nhon', robe: 'ao_trum', back: 'ong_ten', hand: null, mask: null }, shadow: 7 },
-    healer: { name: 'Thầy Lang', col: BLU, outfit: { hat: 'trum_la', robe: 'ao_trum', back: 'ho_lo', hand: null, mask: null }, shadow: 7 },
-    wrestler: { name: 'Đô Vật', col: ORG, outfit: { hat: 'trum_khan', robe: 'ao_trum', back: null, hand: 'gang_dong', mask: null }, shadow: 7 },
+    smith: { name: 'Cu Tí', col: RED, outfit: { hat: 'trum_sung', robe: 'ao_trum', back: null, hand: 'bua_con', mask: null }, shadow: 7 },
+    hunter: { name: 'Cu Tèo', col: GRN, outfit: { hat: 'trum_nhon', robe: 'ao_trum', back: 'ong_ten', hand: null, mask: null }, shadow: 7 },
+    healer: { name: 'Cái Bống', col: BLU, outfit: { hat: 'trum_la', robe: 'ao_trum', back: 'ho_lo', hand: null, mask: null }, shadow: 7 },
+    wrestler: { name: 'Cu Lì', col: ORG, outfit: { hat: 'trum_khan', robe: 'ao_trum', back: null, hand: 'gang_dong', mask: null }, shadow: 7 },
   };
   L.starter = {}; for (const k in HERO) L.starter[k] = HERO[k].outfit;
   // Nối món đồ đang có trong data.js (G.GEAR) sang các lớp mới.
@@ -27521,7 +27521,7 @@ MA._xong();
   const HELP = () => [
     ['Đi lại trong làng', 'Kéo ở nửa trái màn hình để đi, hoặc chạm vào một người để em bé tự chạy tới. Dải khuôn mặt ở mép trên là lối tắt. Ai có việc mới thì có dấu chấm than vàng.'],
     ['Di chuyển và đánh', 'Cảm ứng: đặt ngón ở nửa trái màn hình rồi kéo để đi. Bên phải có các nút tròn: giữ Đánh để ra đòn liên tục, Né để lăn tránh, Đặc biệt để tung đòn mạnh (tốn mana), nút trên cùng là Chưởng.'],
-    ['Chưởng', 'Nút Chưởng bắn một luồng chưởng linh khí (tốn ' + (G.CHUONG ? G.CHUONG.cost : 30) + ' mana), tự ngắm quái gần nhất theo tám hướng. Hệ của chưởng theo cây chưởng đang dùng. Mỗi em bé có nét riêng: Thợ Rèn đẩy lùi mạnh, Thợ Săn bay xa và nhanh, Thầy Lang trúng thì hồi chút máu, Đô Vật tầm gần mà to. Chưởng không cho linh khí cho vũ khí (linh khí chỉ đến từ vũ khí) và không kết hợp hệ với vũ khí.'],
+    ['Chưởng', 'Nút Chưởng bắn một luồng chưởng linh khí (tốn ' + (G.CHUONG ? G.CHUONG.cost : 30) + ' mana), tự ngắm quái gần nhất theo tám hướng. Hệ của chưởng theo cây chưởng đang dùng. Mỗi em bé có nét riêng: Cu Tí đẩy lùi mạnh, Cu Tèo bay xa và nhanh, Cái Bống trúng thì hồi chút máu, Cu Lì tầm gần mà to. Chưởng không cho linh khí cho vũ khí (linh khí chỉ đến từ vũ khí) và không kết hợp hệ với vũ khí.'],
     ['Ba cây chưởng', 'Hỏa chưởng: cầu lửa nổ lan, vệt cháy, giữ nút để tích lực. Độc chưởng: mây độc, lây độc, ăn mòn giáp, tách 3 luồng. Băng chưởng: mũi băng xuyên nhiều quái, làm chậm, đóng băng, băng vỡ. Mỗi cấp nhận 1 điểm chưởng (riêng với điểm kỹ năng). Mỗi lúc dùng một cây; ở làng đổi cây miễn phí ở Cụ Đồ (thẻ Cây chưởng) hoặc Hành trang, điểm đã học được trả lại hết.'],
     ['Đánh tám hướng', 'Mọi đòn tự quay về quái gần nhất trong tầm, theo cả tám hướng (lên, xuống, chéo). Không có quái gần thì đánh theo hướng đang kéo cần, hoặc hướng vừa đi.'],
     ['Chiêu Đặc biệt', 'Mỗi loại vũ khí một chiêu (tốn mana). Kiếm, Trảm Nguyệt: phóng vệt chém trăng khuyết bay xuyên mọi quái. Giáo, Phi Thương: ném giáo xuyên một hàng quái, ghim con cuối, giáo tự bay về tay (lúc giáo chưa về thì nút Đánh là cú đấm tay). Búa, Địa Chấn: nện ra vệt nứt đất hất tung quái, kèm vòng chấn quanh người. Cung, Mưa Tên: mưa tên rơi vào cụm quái gần nhất.'],
@@ -28362,7 +28362,7 @@ MA._xong();
       T.head('Nguồn linh khí (dấu ấn hệ)', CX, y + 9);
       const src = ['hạ tinh anh +' + L.elite, 'trùm nhỏ +' + L.mini, 'trùm vùng +' + L.boss, 'kết liễu quái thường đang dính hệ +1'];
       if (L.drop > 0) src.push('quái thường ' + Math.round(L.drop * 100) + '% rơi viên linh khí, nhặt +' + L.orb);
-      y = ui.para(src.join(' · ') + '. Hệ nhận được: hệ quái đang dính lúc gục, không dính thì theo hệ của vùng.' + (sv.hero === 'smith' ? ' Thợ Rèn nhận dấu ấn nhanh hơn 20%.' : ''), CX, y + 20, CW - 8, { size: 7, color: TXT });
+      y = ui.para(src.join(' · ') + '. Hệ nhận được: hệ quái đang dính lúc gục, không dính thì theo hệ của vùng.' + (sv.hero === 'smith' ? ' Cu Tí nhận dấu ấn nhanh hơn 20%.' : ''), CX, y + 20, CW - 8, { size: 7, color: TXT });
       y = ui.para('Mốc tiến hóa: ' + G.MARKS.map((m, i) => m + ' ' + G.STAGE_NAMES[i + 1]).join(' · ') + '. Vũ khí Thường chỉ lên tới Thành hình.', CX, y + 1, CW - 8, { size: 6.5, color: SOFT });
       y += 5;
       const cw = (CW - 8 - 150) / 3;
