@@ -46,7 +46,7 @@ JS = r"""
     if (!o || o.fromPlayer !== false) dealt += Math.max(0, h - Math.max(0, t.hp));
     return r;
   };
-  G.hurtPlayer = function (a, b, c, d) { const h = P.hp, r = hurt0(a, b, c, d); hurt += Math.max(0, h - P.hp); return r; };
+  G.hurtPlayer = function (a, b, c, d, e) { const h = P.hp, r = hurt0(a, b, c, d, e); hurt += Math.max(0, h - P.hp); return r; };
   const roles = ['rusher', 'rusher', 'swarm', 'shield', 'archer', 'nimble', 'swarm', 'rusher'];
   let ri = 0, kills = 0, bad = '';
   try {

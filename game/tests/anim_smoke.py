@@ -7,7 +7,7 @@ JS = """([r, i]) => {
   G.resetSave(); const sv = G.save; sv.sound = false;
   for (const k of G.HKEYS) { sv.heroes[k].unlocked = true; sv.heroes[k].lvl = 12; }
   const w = G.weaponById(sv.carry[0]); w.marks.fire = 140; w.branch='fire'; w.tier=2; w.sharpen=6;
-  G.startStage(r, i, 0); G.getRun().stats.el.fire = 300; G.getRun().stats.ranged = 300; G.getRun().stats.dodges = 30;
+  G.startStage(r, i, 0); G.getRun().stats.el.fire = 300; G.getRun().stats.ranged = 300; G.getRun().stats.dodges = 45; // GĐ3 (M4): ngưỡng "Bắt bài lăn né" nay là > 30 cú né rỗng
   let n = 0, draws = 0, err = null, modes = {};
   for (let s = 0; s < 60 * 900; s++) { // ải 8 phòng dài hơn trước, cho tối đa 900 giây
     const S = G.getRun(); if (!S) break;

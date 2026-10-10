@@ -45,9 +45,9 @@
   G.probeRun = function (maxSec) {
     const out = { t: 0, rooms: [], hurt: {}, bad: [] };
     const orig = G.hurtPlayer;
-    G.hurtPlayer = function (amt, el, src, melee) {
+    G.hurtPlayer = function (amt, el, src, melee, don) {
       const W = G.getWorld(), hp0 = W.P.hp;
-      const r = orig(amt, el, src, melee);
+      const r = orig(amt, el, src, melee, don);
       if (r) {
         const k = W.type + ':' + (src ? (src.isBoss ? 'trùm-đánh' : src.role) : W.boss ? 'vùng-trùm' : 'vùng/đạn');
         out.hurt[k] = Math.round((out.hurt[k] || 0) + (hp0 - W.P.hp));

@@ -49,7 +49,7 @@ JS = r"""
   const hp0 = P.maxhp;
   let t = 0, hurt = 0, hits = 0, dead = false, done = false;
   const hurt0 = G.hurtPlayer;
-  G.hurtPlayer = function (a, b, c, d) { const h = P.hp, x = hurt0(a, b, c, d); if (x) { hits++; hurt += Math.max(0, h - P.hp); } return x; };
+  G.hurtPlayer = function (a, b, c, d, e) { const h = P.hp, x = hurt0(a, b, c, d, e); if (x) { hits++; hurt += Math.max(0, h - P.hp); } return x; };
   try {
     for (let f = 0; f < 240 * 2; f++) {
       if (S.mode === 'dead' || P.dead || W.over === 'dead') { dead = true; break; }

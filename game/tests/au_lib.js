@@ -68,7 +68,7 @@
   };
   AU.hurtLog = function (fn) {
     const h0 = G.hurtPlayer, out = [];
-    G.hurtPlayer = function (a, b, c, d) { const W = G.getWorld(), P = W.P, inv = P.inv; const r = h0(a, b, c, d); out.push({ t: G.time, ok: r, inv }); return r; };
+    G.hurtPlayer = function (a, b, c, d, e) { const W = G.getWorld(), P = W.P, inv = P.inv; const r = h0(a, b, c, d, e); out.push({ t: G.time, ok: r, inv }); return r; };
     try { fn(); } finally { G.hurtPlayer = h0; }
     return out;
   };

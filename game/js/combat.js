@@ -62,7 +62,6 @@
 
   // ---------- chỉ số người chơi ----------
   G.buildPlayer = function () {
-    if (G.upg && G.upg.khaiHuyetFix) G.upg.khaiHuyetFix(G.save); // D6: hoàn điểm một lần cho ai đã học nút Công 4 cũ (js/upgrade.js)
     const sv = G.save, key = sv.hero, H = G.HEROES[key], hs = sv.heroes[key];
     if (G.outfit) G.outfit.sync(sv); // mũ, áo, bùa kiểu cũ (nếu còn) chuyển sang trang phục mới trước khi tính chỉ số
     const sk = hs.sk;

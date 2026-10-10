@@ -161,7 +161,9 @@ JS = r"""
   ok('Lớp: đánh xa trên 60% thì chống đánh xa', lay(st(0, 0, 0, 100, 61, 39, 0), 2) === 'antiRanged');
   ok('Lớp: cận chiến trên 60% thì chống áp sát', lay(st(0, 0, 0, 100, 39, 61, 0), 2) === 'antiMelee');
   ok('Lớp: đúng 60% thì chưa tính', lay(st(0, 0, 0, 100, 60, 40, 0), 2) === '');
-  ok('Lớp: lăn né trên 15 lần thì bắt bài lăn né', lay(st(0, 0, 0, 100, 50, 50, 16), 2) === 'antiDodge' && lay(st(0, 0, 0, 100, 50, 50, 15), 2) === '');
+  // GĐ3 (M4, D1): chỉ đếm cú né rỗng (tổng né trừ số lần Né chuẩn), ngưỡng 15 -> 30
+  ok('Lớp: né rỗng trên 30 lần thì bắt bài lăn né', lay(st(0, 0, 0, 100, 50, 50, 31), 2) === 'antiDodge' && lay(st(0, 0, 0, 100, 50, 50, 30), 2) === '');
+  ok('Lớp: Né chuẩn không tính là né rỗng', lay(Object.assign(st(0, 0, 0, 100, 50, 50, 50), { neChuan: 25 }), 2) === '' && lay(Object.assign(st(0, 0, 0, 100, 50, 50, 50), { neChuan: 19 }), 2) === 'antiDodge');
   ok('Lớp: boss vùng tối đa 2 lớp', lay(st(0, 90, 0, 10, 90, 10, 30), 2) === 'resist:poison,antiRanged');
   ok('Lớp: trùm nhỏ 1 lớp', lay(st(0, 90, 0, 10, 90, 10, 30), 1) === 'resist:poison');
   ok('Lớp: chưa đánh gì thì không có lớp nào', lay(st(0, 0, 0, 0, 0, 0, 0), 2) === '');

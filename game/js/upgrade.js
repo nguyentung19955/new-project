@@ -299,10 +299,12 @@
   // Chữ "+12 Sức mạnh" (hoặc "−5 Sức mạnh"); 0 thì trả chuỗi rỗng.
   U.gainText = (v, short) => (v > 0 ? '+' + v : v < 0 ? '−' + -v : '') + (v ? (short ? ' SM' : ' Sức mạnh') : '');
   // ---------- D6 (Q7): nút Công 4 đổi thành Khai huyệt — hoàn điểm một lần ----------
-  // Bản lưu cũ có em bé đã học Công 4 ("+8% sát thương" lần hai) thì lùi nhánh Công về 3 nút; điểm của nút 4 (và nút 5 nếu đã học,
-  // vì nhánh phải học theo thứ tự) trở thành điểm chưa dùng để học lại tuỳ ý. Chỉ làm MỘT lần cho cả bản lưu (cờ sv.khaiHuyet = 1).
-  // sv.khaiHoan = số điểm vừa hoàn (để làng báo một câu rồi xoá; chưa có chỗ báo thì không sao, "Còn N điểm" vẫn hiện).
-  // combat.js G.buildPlayer gọi hàm này; bản lưu chỉ thật sự ghi lại ở lần G.persist() kế tiếp (chưa ghi thì lần mở sau làm lại, kết quả như nhau).
+  // Bản lưu CŨ (chưa có cờ sv.khaiHuyet) có em bé đã học Công 4 ("+8% sát thương" lần hai) thì lùi nhánh Công về 3 nút; điểm của
+  // nút 4 (và nút 5 nếu đã học, vì nhánh phải học theo thứ tự) trở thành điểm chưa dùng để học lại tuỳ ý. Làm MỘT lần (cờ sv.khaiHuyet = 1).
+  // sv.khaiHoan = số điểm vừa hoàn (để làng báo một câu rồi xoá; chưa có chỗ báo thì không sao, "Còn N điểm" vẫn hiện ở Cụ Đồ).
+  // Cách gắn (không sửa engine.js): bọc G.newSave để bản lưu mới có sẵn cờ (không bị hoàn nhầm), bọc G.fixSave để bản lưu cũ
+  // (đọc từ máy hoặc kéo từ mây) được xét đúng một lần ngay khi đọc. Bản lưu chỉ thật sự ghi lại ở lần G.persist() kế tiếp;
+  // chưa ghi thì lần mở sau làm lại từ bản cũ, kết quả như nhau.
   U.khaiHuyetFix = function (sv) {
     if (!sv || typeof sv !== 'object' || !sv.heroes || sv.khaiHuyet) return 0;
     let n = 0;
@@ -314,6 +316,22 @@
     if (n > 0) sv.khaiHoan = (sv.khaiHoan | 0) + n;
     return n;
   };
+  if (G.newSave && !G.newSave.khai) {
+    const ns0 = G.newSave;
+    G.newSave = function () { const s = ns0.apply(this, arguments); if (s && typeof s === 'object') s.khaiHuyet = 1; return s; };
+    G.newSave.khai = true;
+  }
+  if (G.fixSave && !G.fixSave.khai) {
+    const fs0 = G.fixSave;
+    G.fixSave = function (s) {
+      // phải xét TRƯỚC khi gọi bản gốc: bản gốc chép mọi trường thiếu từ bản mới (gồm cờ khaiHuyet = 1) vào bản cũ
+      const old = !!(s && typeof s === 'object' && !Array.isArray(s) && s.v === 1 && !s.khaiHuyet);
+      const r = fs0.apply(this, arguments);
+      if (old && r === s) { try { r.khaiHuyet = 0; U.khaiHuyetFix(r); } catch (e) { r.khaiHuyet = 1; } }
+      return r;
+    };
+    G.fixSave.khai = true;
+  }
 
   // ---------- V18 bước 2 (Q11): Thợ Rèn truyền linh khí vượt 300 sang vũ khí khác cùng loại ----------
   // Món nguồn giữ đúng 300 dấu ấn của hệ nó (vẫn Thức tỉnh); phần vượt chuyển nguyên sang món đích (không hao, không tốn gì).
